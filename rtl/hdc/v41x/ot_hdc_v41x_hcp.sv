@@ -77,6 +77,7 @@ module ot_hdc_v41x_hcp #(
     // descriptor leaves on sd_* (tap 0), stage k multiplies term k from its OWN bank and adds it to the partial chunk
     // sum of stage k - 1 (stage 0 adds to +0), so csum's chunk order ((0 + t0) + t1) .. + t7 is kept op for op; stage
     // 7's W chunk sums come back on sys_sum SYS_LAT cycles after tap 0 (the tree leaves at tap SYS_LAT + 1).
+    parameter integer STATIC_CALENDAR = 0, // compiler schedules all raw reads; no credit/ready gating
     parameter integer SYS  = 0,
     parameter integer SYS_LAT = 0,
     parameter integer PW   = (PMAX > 1) ? $clog2(PMAX) : 1,
@@ -84,6 +85,7 @@ module ot_hdc_v41x_hcp #(
 ) (
     input  wire              clk,
     input  wire              rst_n,
+    input  wire              calendar_pop, // STATIC_CALENDAR: reserved raw-accumulator read slot
     // command
     input  wire              cmd_valid,
     output reg               cmd_ready,
@@ -164,7 +166,8 @@ module ot_hdc_v41x_hcp #(
     wire             first_r = (r == 0);
     wire             last_r = (r == nrun_r - 1'b1);
     wire             credit = (acc_cnt < DF);
-    wire             iss = active && (!first_r || credit);
+    wire             iss = active && (STATIC_CALENDAR || !first_r || credit);
+    wire             accept_cmd = STATIC_CALENDAR ? cmd_valid : (cmd_valid && cmd_ready);
     wire             last_o = ssph ? 1'b0 : ({1'b0, o} == nout_r - 1'b1);
     wire             last_p = ({1'b0, p} == npos_r - 1'b1);
     reg  [DW-1:0]    d0;
@@ -175,18 +178,18 @@ module ot_hdc_v41x_hcp #(
             busy <= 1'b0; active <= 1'b0; cmd_ready <= 1'b0; ph24 <= 5'd0; acc_cnt <= 0;
         end else begin
             ph24 <= (ph24 == 5'd23) ? 5'd0 : ph24 + 5'd1;
-            cmd_ready <= !busy && !(cmd_valid && cmd_ready);
-            acc_cnt <= acc_cnt + (iss && first_r) - pop_raw;
-            if (cmd_valid && cmd_ready) begin
+            cmd_ready <= !busy && !(accept_cmd);
+            if (!STATIC_CALENDAR) acc_cnt <= acc_cnt + (iss && first_r) - pop_raw;
+            if (accept_cmd) begin
                 busy <= 1'b1; active <= 1'b1;
             end else if (iss && last_r && last_o && last_p) begin
                 active <= 1'b0;
             end
-            if (o_valid && o_ready && o_last) busy <= 1'b0;
+            if (o_valid && (STATIC_CALENDAR || o_ready) && o_last) busy <= 1'b0;
         end
     end
     always @(posedge clk) begin
-        if (cmd_valid && cmd_ready) begin
+        if (accept_cmd) begin
             npos_r <= cmd_npos; nout_r <= cmd_nout; scale_r <= cmd_scale;
             nrun_r <= nrun_c; nlast_r <= ((cmd_nchunk - 1'b1) & (W - 1)) + 1'b1;
             nf_r <= cmd_nf; eps_r <= cmd_eps; wbase_r <= cmd_wbase;
@@ -426,7 +429,7 @@ module ot_hdc_v41x_hcp #(
     reg  [31:0]     rs_q, rs_h, rs_y, rs_a;
     localparam [3:0] S_IDLE = 4'd0, S_DIV = 4'd1, S_EPS = 4'd2, S_HALF = 4'd3, S_YY = 4'd4, S_HY = 4'd5,
                      S_SUB = 4'd6, S_MY = 4'd7;
-    wire rs_take = rq_ne && h_ss && (st == S_IDLE);
+    wire rs_take = STATIC_CALENDAR ? (calendar_pop && h_ss) : (rq_ne && h_ss && (st == S_IDLE));
     // units
     reg         dv, av, mv;
     reg  [31:0] da, db, aa, ab, ma, mb;
@@ -444,7 +447,7 @@ module ot_hdc_v41x_hcp #(
             st <= S_IDLE; pend <= 1'b0; dv <= 1'b0; av <= 1'b0; mv <= 1'b0; r_ok <= {PMAX{1'b0}};
         end else begin
             dv <= 1'b0; av <= 1'b0; mv <= 1'b0;
-            if (cmd_valid && cmd_ready) r_ok <= {PMAX{1'b0}};
+            if (accept_cmd) r_ok <= {PMAX{1'b0}};
             case (st)
                 S_IDLE: if (rs_take) begin st <= S_DIV; pend <= 1'b0; end
                 S_DIV:  if (!pend) begin dv <= 1'b1; pend <= 1'b1; end
@@ -495,7 +498,7 @@ module ot_hdc_v41x_hcp #(
     reg  [3:0]  ocnt;
     wire        o_room = ({1'b0, oinf} + {1'b0, ocnt} + {4'd0, o_valid}) < OQ;
     wire        h_ok = !scale_r || r_ok[h_pos];
-    wire        take_out = rq_ne && !h_ss && h_ok && o_room;
+    wire        take_out = STATIC_CALENDAR ? (calendar_pop && !h_ss) : (rq_ne && !h_ss && h_ok && o_room);
     assign pop_raw = rs_take || take_out;
     reg         ov_in;
     reg  [31:0] oa, ob;
@@ -511,6 +514,7 @@ module ot_hdc_v41x_hcp #(
     reg  [3:0]      oq_wp, oq_rp;
     wire            oq_ne = (oq_wp != oq_rp);
     wire            o_load = oq_ne && (!o_valid || o_ready);
+    generate if (!STATIC_CALENDAR) begin : g_legacy_output
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             ov_in <= 1'b0; oinf <= 4'd0; ocnt <= 4'd0; oq_wp <= 4'd0; oq_rp <= 4'd0; o_valid <= 1'b0;
@@ -525,12 +529,25 @@ module ot_hdc_v41x_hcp #(
         end
     end
     always @(posedge clk) begin
-        if (take_out) begin
-            oa <= h_val; ob <= scale_r ? rv[h_pos] : 32'h3F800000; otag_in <= {h_lo, h_pos, h_idx};
-        end
         if (ovo) oq[oq_wp] <= {otag, oy};
         if (o_load) {o_last, o_pos, o_idx, o_data} <= oq[oq_rp];
     end
+    end else begin : g_static_output
+        // A reserved read launches one result. No output queue or ready signal
+        // can move this event; the compiler reserves its multiplier+flop delay.
+        always @(posedge clk or negedge rst_n) begin
+            if (!rst_n) begin ov_in <= 0; o_valid <= 0; end
+            else begin ov_in <= take_out; o_valid <= ovo; end
+        end
+        always @(posedge clk) if (ovo) {o_last,o_pos,o_idx,o_data} <= {otag,oy};
+    end endgenerate
+    always @(posedge clk) if (take_out) begin
+        oa <= h_val; ob <= scale_r ? rv[h_pos] : 32'h3F800000; otag_in <= {h_lo,h_pos,h_idx};
+    end
+    wire calendar_fault = STATIC_CALENDAR && (
+        (calendar_pop && (!rq_ne || (h_ss ? (st != S_IDLE) : !h_ok))) ||
+        (raw_wv && ((rq_wp - rq_rp) == DF) && !calendar_pop) ||
+        (accept_cmd && busy));
 
     // ------------------------------------------------------------------ fault, idle
     reg lf_r, tf_r;
@@ -539,8 +556,8 @@ module ot_hdc_v41x_hcp #(
         else begin
             lf_r <= lane_fault_any;
             tf_r <= tree_fault || (|tail_fault) || raw_bad || rs_fault || (ovo && (|oerr));
-            if (cmd_valid && cmd_ready) fault <= tl_over_c;
-            else if (lf_r || tf_r) fault <= 1'b1;
+            if (accept_cmd) fault <= tl_over_c || (STATIC_CALENDAR && busy);
+            else if (lf_r || tf_r || calendar_fault) fault <= 1'b1;
             idle <= !busy;
         end
     end
