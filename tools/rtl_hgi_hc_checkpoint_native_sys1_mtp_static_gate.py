@@ -1,0 +1,134 @@
+#!/usr/bin/env python3
+"""Actual SRAM to projection to HC tail composition, fixed calendar and mutants."""
+import hashlib,json,subprocess,sys
+from pathlib import Path
+import numpy as np
+ROOT=Path(__file__).resolve().parents[1]
+sys.path.insert(0,str(ROOT/'tools'))
+import hdc_golden_v41 as G
+import rtl_hdc_v41x_hcp_campaign as hc
+from lower_hbm_hc_sys1_mtp_static_calendar import lower_sys1 as lower
+from lower_hbm_hc_native_sys1_component_calendar import lower_native_sys1 as lower_native
+
+def main():
+    import os
+    command_native=1
+    sys_latency=86
+    sys_delta=sys_latency-33
+    build_threads=int(os.environ.get('HC_BUILD_THREADS','4'))
+    if build_threads<1:raise ValueError('positive build threads')
+    if command_native not in (0,1):raise ValueError('HC_COMMAND_NATIVE0/1')
+    run=ROOT/'run_hc_command_native_sys1_mtp';run.mkdir(exist_ok=False)
+    rng=np.random.default_rng(20261015)
+    G.set_arith('chunk8')
+    c=hc.synth_case('production K20480, 24rows',rng,20480,24,8,1,'typical',{'fn_std':.001,'x_std':1.})
+    import os,shutil
+    checkpoint=Path(os.environ['HC_CHECKPOINT_INPUT'])
+    original=checkpoint/'fn-original-layout-fp32.bin'
+    c['fn']=np.fromfile(original,dtype='<f4').reshape(24,20480)
+    assert hashlib.sha256(original.read_bytes()).hexdigest()=='11c9abd39f35e3364aad812c3f2dcb9c5fa5cf71e0f837a1af684112a00f930c'
+    c['exp']=np.stack([hc.golden_mixes(c['fn'],c['x'][p].reshape(4,-1),c['eps'])[2] for p in range(8)])
+    # Reconstruct the off-chip sector image from exact original FP32 weights.
+    sectors=c['fn'].view(np.uint32).reshape(24,80,32,8).transpose(0,3,1,2).reshape(24,8,320,8)
+    (run/'all24rows.hex').write_text(''.join(''.join(f'{int(x):08x}' for x in words[::-1])+'\n' for words in sectors.reshape(-1,8)))
+    w=c['fn'].view(np.uint32).reshape(24,80,32,8).transpose(0,3,1,2)
+    x=(c['x'].view(np.uint32)>>16).reshape(8,80,32,8).transpose(3,0,1,2)
+    np.savetxt(run/'hc_static_w.mem',w.reshape(-1),fmt='%08x')
+    np.savetxt(run/'hc_static_x.mem',x.reshape(-1),fmt='%04x')
+    np.savetxt(run/'hc_static_exp.mem',c['exp'].view(np.uint32).reshape(-1),fmt='%08x')
+    mixes=c['exp']
+    bases=np.repeat(rng.normal(0,1,(1,24)).astype(G.F),8,axis=0)
+    scales=np.repeat(rng.uniform(.1,2,(1,3)).astype(G.F),8,axis=0)
+    expected=[]
+    for m,b,s in zip(mixes,bases,scales):
+        pre=G.add(G.sigmoid(G.add(G.mul(m[:4],s[0]),b[:4])),G.F(1e-6))
+        post=G.mul(G.sigmoid(G.add(G.mul(m[4:8],s[1]),b[4:8])),G.F(2))
+        c=G.add(G.mul(m[8:],s[2]),b[8:]).reshape(4,4)
+        e=G.exp(G.add(c,G.neg(np.max(c,axis=1,keepdims=True))))
+        c=G.add(G.div(e,G.seqsum([e[:,k] for k in range(4)])[:,None]),G.F(1e-6))
+        def cols(x):return G.div(x,G.add(G.seqsum([x[k,:] for k in range(4)]),G.F(1e-6))[None,:])
+        def rows(x):return G.div(x,G.add(G.seqsum([x[:,k] for k in range(4)]),G.F(1e-6))[:,None])
+        c=cols(c)
+        for _ in range(19):c=cols(rows(c))
+        expected.append(np.concatenate((pre,post,c.reshape(-1))))
+    for name,a in [('base',bases[:1]),('scale',scales[:1]),('tail_exp',np.array(expected))]:
+        np.savetxt(run/f'engine_{name}.mem',a.view(np.uint32).reshape(-1),fmt='%08x')
+    for n in (6,8):
+        tail_first=((7+24*((280+sys_delta+160*(n-1)))+15+6)//7)*7
+        words,meta=lower_native(npos=n,first_row_consumer_cycle=7,first_tail_consumer_cycle=tail_first,sys_latency=sys_latency)
+        (run/f'full_sys1_n{n}.mem').write_text(''.join(f'{w:064x}\n' for w in words))
+        (run/f'full_sys1_n{n}.json').write_text(json.dumps(meta,indent=2)+'\n')
+    files=['rtl/hbm_accel/loader/service_native/ot_hbm_svc_native_sector_owned_stack.sv',
+        'rtl/hbm_accel/loader/service_native/ot_hbm_svc_native_stream_pc_lease.sv',
+        'rtl/hbm_accel/loader/service_native/tb_hbm_svc_command_dram_pipeline_fixture.sv',
+        'rtl/chip/ot_chip_v41x_hbm3e_phy.sv','rtl/hdc/v41x/ot_hdc_v41x_idx_hbm.sv','rtl/hdc/kv/ot_hdc_hbm_model.sv',
+        'rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_native_sys1_mtp_static.sv',
+        'rtl/hbm_accel/generic/peers/hc_prefetch_static/ot_hgi_hc_prefetch_resident_static.sv',
+        'rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_region_cdc.sv',
+        'rtl/hbm_accel/ingest/ot_hbm_loader_kport_address.sv',
+        'rtl/lib/ot_reset_sync.sv','rtl/lib/ot_async_fifo.sv',
+        'rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_result_vm_static.sv',
+        'rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_vm_gather_adapter_static.sv',
+        'rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_gathered_mix_reader_static.sv',
+        'rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_residual_vm_static.sv',
+        'rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_tap.sv',
+        'rtl/hbm_accel/generic/vm/static/ot_vms_bank_static.sv',
+        'rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_programmed_sys1_mtp_static.sv',
+        'rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_programme_mtp_static.sv',
+        'rtl/hbm_accel/generic/peers/ot_hgi_sfu_program_stripe_static.sv',
+        'rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_engine_sys1_mtp_static.sv',
+        'rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_tail_static.sv',
+        'rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_projection_sys1_static.sv',
+        'rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_bank_memory_shared_static.sv',
+        'rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_bank_shell_shared_static.sv',
+        'rtl/hbm_accel/generic/peers/static_hc/ot_hdc_v41x_hcp_sys1_static.sv',
+        'rtl/model/hbm_pc40_native_sim_20261003/ot_sram_1r1w_128x256_m1_r2c2_sim.sv',
+        'physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v',
+        'rtl/hdc/ot_hdc_fastfp.sv','rtl/hdc/ot_hdc_fastfp_lat.sv','rtl/hdc/ot_hdc_delay.sv',
+        'rtl/hdc/ot_hdc_fp32_add_lat.sv','rtl/hdc/ot_hdc_fp32_mul_lat.sv','rtl/hdc/ot_hdc_prefix.sv',
+        'rtl/hdc/ot_hdc_sfu.sv','rtl/hdc/v41x/ot_hdc_v41x_hcp.sv',
+        'rtl/hdc/v41x/ot_hdc_v41x_sfu.sv','rtl/hdc/v41/ot_hdc_fdiv.sv',
+        'rtl/hdc/v41/ot_hdc_sinkhorn.sv','rtl/hdc/v41/ot_hdc_sk_arith.sv',
+        'rtl/hdc/v41/ot_hdc_sk_recip_rom.sv','rtl/test/tb_hgi_hc_checkpoint_native_sys1_mtp_static.sv',
+        'rtl/test/hgi_hc_checkpoint_native_sys1_mtp_static_harness.cpp']
+    pins=files+['tools/hdc_golden.py','tools/hdc_golden_v41.py','tools/rtl_hgi_hc_checkpoint_native_sys1_mtp_static_gate.py','tools/rtl_hdc_v41x_hcp_campaign.py','tools/lower_hbm_hc_mtp_static_calendar.py','tools/lower_hbm_hc_tail_loop_calendar.py','tools/lower_hbm_hc_sys1_mtp_static_calendar.py','tools/lower_hbm_hc_native_sys1_component_calendar.py']
+    receipt={'status':'PREPARED_NOT_RUN', 'SYS_LAT':sys_latency,'additional_pipeline_cycles':sys_delta,'residual_base_scales':'synthetic fixture; actual checkpoint FN only','canonical_G25_P1_qualified':False,'full_native_chip_qualified':False,'scope':'actual paged programme SRAM to SYS1 shared3830pin bankmemory/shell/32LG8MAC/core projection/tail; actual4SID32bankVM96SRAM and12LGtaps joined plus realresultVMwrites/readback; actual20GiB checkpoint PHY CDC staging128SRAM joined; only offchip PHY data model; no wholechip/physical qualification',
+        'source_sha256':{f:hashlib.sha256((ROOT/f).read_bytes()).hexdigest() for f in pins},
+        'fixture_sha256':{p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in [*run.glob('*.mem'),run/'all24rows.hex']},
+        'K':20480,'positions':[6,8],'projection_rows':24,'tail_words_per_position':24,'sink_clock_divisor':7,'checkpoint_fn_sha256':hashlib.sha256(original.read_bytes()).hexdigest(),'actual_SRAMs':306+128*command_native,'command_native':command_native,'build_threads':build_threads,'tail_configuration_words':497,'tail_programme_reconfigure_between_positions':False,'tail_body_period':497,'configuration_words_n6':1577+sys_delta,'configuration_words_n8':1897+sys_delta,'host_reconfigure_between_projection_and_tail':False,'PHY_model':('strict command-only offchipfixture canonical23edge; corrected owned-stacka7b86347d actualcontroller' if command_native else 'published request-level refresh-aware ot_chip_v41x_hbm3e_phy') ,'nominal_row_result_ages':[289+sys_delta+160*p for p in range(8)],'nominal_row_periods':{'6':1100+sys_delta,'8':1420+sys_delta},'early_row_result_ages':[269+sys_delta+160*p for p in range(8)],'early_row_periods':{'6':1080+sys_delta,'8':1400+sys_delta}}
+    (run/'source.json').write_text(json.dumps(receipt,indent=2)+'\n')
+    if os.environ.get('HC_SYS1_PREPARE_ONLY')=='1':
+        print('HC_SYS1_PREPARED_NOT_RUN source/fixtures pinned; actual engine verdict required before launch',flush=True)
+        return
+    with (run/'build.log').open('w') as log:
+        subprocess.run(['verilator','--cc','--exe','--build','-j',str(build_threads),'-O1','-Wno-fatal','-Wno-WIDTH','-Wno-TIMESCALEMOD',
+            f'-GCOMMAND_NATIVE={command_native}','--output-split','10000','--top-module','tb_hgi_hc_checkpoint_native_sys1_mtp_static','-Mdir',str(run/'obj'),*[str(ROOT/f) for f in files]],
+            cwd=run,stdout=log,stderr=subprocess.STDOUT,check=True)
+    build_log=(run/'build.log').read_text()
+    for warning in ('UNOPTFLAT','LATCH','MULTIDRIVEN'):
+        if f'%Warning-{warning}:' in build_log:raise RuntimeError(f'structural warning {warning}')
+    exe=run/'obj/Vtb_hgi_hc_checkpoint_native_sys1_mtp_static'
+    from concurrent.futures import ThreadPoolExecutor
+    def simulate(item):
+        name,args=item
+        p=subprocess.run([str(exe),*args],cwd=run,stdout=subprocess.PIPE,stderr=subprocess.STDOUT,text=True)
+        (run/f'{name}.log').write_text(p.stdout)
+        return name,p
+    cases=[('exact6',['+NPOS=6']),('exact8',['+NPOS=8']),('mutant6',['+NPOS=6','+WEIGHT_MUTANT']),('mutant8',['+NPOS=8','+WEIGHT_MUTANT'])]
+    with ThreadPoolExecutor(max_workers=5) as pool:
+        verdicts=list(pool.map(simulate,cases))
+    for name,p in verdicts:
+        print(name,p.returncode,p.stdout[-1800:],flush=True)
+        receipt[name]={'exit_code':p.returncode,'log_sha256':hashlib.sha256(p.stdout.encode()).hexdigest()}
+    current={f:hashlib.sha256((ROOT/f).read_bytes()).hexdigest() for f in pins}
+    if current!=receipt['source_sha256']:raise RuntimeError('source changed during gate')
+    receipt['source_hashes_match']=True
+    receipt['status']='TERMINAL_SEE_CASE_VERDICTS'
+    (run/'receipt.json').write_text(json.dumps(receipt,indent=2)+'\n')
+    if any('HC_CHECKPOINT_NATIVE_SYS1_MTP_DONE' not in p.stdout for name,p in verdicts if name.startswith('exact')):raise SystemExit('positive completion marker missing')
+    if any('programmed row data/time mismatch' not in p.stdout for name,p in verdicts if name.startswith('mutant')):raise SystemExit('payload mutant rejected for an unexpected reason')
+    if any(p.returncode for name,p in verdicts if name.startswith('exact')):raise SystemExit('positive failed; mutant unqualified')
+    if any(not p.returncode for name,p in verdicts if name.startswith('mutant')):raise SystemExit('mutant escaped')
+    receipt['status']='PASS_ACTUAL_SYS1_NATIVE_VM_COMPONENT_ONLY'
+    (run/'receipt.json').write_text(json.dumps(receipt,indent=2)+'\n')
+if __name__=='__main__':main()
