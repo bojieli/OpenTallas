@@ -100,7 +100,7 @@ def search(height, seed, sweeps, assigned_capture=None, width=1520.064, fsr_pitc
         ly=np.maximum(candidates[:,1,None],xy[None,:,1]-gap)
         ry=np.minimum(candidates[:,1,None]+size[i,1],xy[None,:,1]+size[None,:,1]+gap)
         area=np.maximum(rx-lx,0)*np.maximum(ry-ly,0);area[:,i]=0
-        value=area.sum(axis=1)*1000
+        value=area.sum(axis=1)*1000+(area>1e-9).sum(axis=1)*1e12
         for ia,ib,proj,bits,cls in incident[i]:
             da=xy[ia]-initial[ia] if ia>=0 else np.zeros(2)
             db=xy[ib]-initial[ib] if ib>=0 else np.zeros(2)

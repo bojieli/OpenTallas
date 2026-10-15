@@ -1,4 +1,8 @@
 `timescale 1ns/1ps
+// DIAGNOSTIC ONLY: credit-based servicing is not a production static schedule.
+// Owner 2026-10-14 requires compiler-known issue/response slots with no credits,
+// back-pressure or completion rescheduling. This module measures correctness and
+// cost; a production master must use the fixed service contract instead.
 // Bounded, ordered stream-domain adapter for the VM's existing ctrl row ports.
 // rq_credit/wq_credit are pulses, not ready levels: one initial token per slot,
 // returned when its buffered transaction retires. Registered die wires may delay
