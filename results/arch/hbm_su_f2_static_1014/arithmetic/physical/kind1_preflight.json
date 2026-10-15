@@ -1,0 +1,35 @@
+{
+ "verdict": "PASS",
+ "items": [
+  {
+   "severity": "INFO",
+   "check": "layer",
+   "message": "tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "oflop",
+   "message": "E face 10.5 pins/um (coll, fault, kv_waddr): recipe-2 hold stages take 3.52 um behind the face, the pin flops need gap 4.5 um and 6 columns (derived in the flow)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "oflop",
+   "message": "N face 10.5 pins/um (ld_c, clk_stage_0, clk_stage_1): recipe-2 hold stages take 2.3 um behind the face, the pin flops need gap 2.9 um and 21 columns (derived in the flow)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "oflop",
+   "message": "S face 10.5 pins/um (rst_n, lane_id, ld): recipe-2 hold stages take 2.3 um behind the face, the pin flops need gap 2.9 um and 21 columns (derived in the flow)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "oflop",
+   "message": "W face 10.5 pins/um (rd_q, side_y, vi_q): recipe-2 hold stages take 2.3 um behind the face, the pin flops need gap 2.9 um and 6 columns (derived in the flow)",
+   "fix": ""
+  }
+ ]
+}

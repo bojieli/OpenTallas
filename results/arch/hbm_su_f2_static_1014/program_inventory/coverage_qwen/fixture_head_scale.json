@@ -1,0 +1,57 @@
+{
+  "unit": "SU",
+  "tag": "head_scale",
+  "status": "UNQUALIFIED_NON_VM_FIXTURE",
+  "descriptors": {
+    "A": {
+      "space": "STREAM",
+      "fmt": "FP32",
+      "base": 0,
+      "n": 37984,
+      "m": 1,
+      "stride": 0,
+      "istride": 0,
+      "lstride": 0,
+      "dyn_sel": 0,
+      "dyn_mul": 0,
+      "n_sel": 0,
+      "l1stride": 0,
+      "ibcast": 0,
+      "indexed": 0
+    },
+    "B": {
+      "space": "VM",
+      "fmt": "FP32",
+      "base": 80640,
+      "n": 37984,
+      "m": 1,
+      "stride": 0,
+      "istride": 0,
+      "lstride": 0,
+      "dyn_sel": 0,
+      "dyn_mul": 0,
+      "n_sel": 0,
+      "l1stride": 0,
+      "ibcast": 0,
+      "indexed": 0
+    },
+    "O": {
+      "space": "STREAM",
+      "fmt": "FP32",
+      "base": 1,
+      "n": 37984,
+      "m": 1,
+      "stride": 0,
+      "istride": 0,
+      "lstride": 0,
+      "dyn_sel": 0,
+      "dyn_mul": 0,
+      "n_sel": 0,
+      "l1stride": 0,
+      "ibcast": 0,
+      "indexed": 0
+    }
+  },
+  "effective_dispatch_hex": "0094600000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001094600000000001020000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001094600000013B00010000000000000000000000000000000000000000000000109460000000000002000000000000000000000000000000000000000000000000000000100001000020004002700000000000000000000000",
+  "qualification": "actual canonical descriptor/dispatch fixture; native STREAM execution unqualified; no VM alias substitution"
+}
