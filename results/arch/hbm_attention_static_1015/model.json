@@ -82,10 +82,31 @@
   "service_bound": "max(query-prefetch phase, actual engine issue period, real PS staging fill) plus allocated source/boundary schedule; numerical/throughput unverified",
   "qualification": false,
   "remaining": [
+    "ActualKV8HBM17sector row bandwidth vsservice8sector/edge; no priorpricequalification",
     "Measured full H16 arithmetic + actual mapped staging/gather proof",
     "Actual PS producer burst/allocation; no hypothetical wide VM row port",
     "Native programme SRAM image/VM request schedule and physical station edges",
     "Actual controller/gather mapped footprint, clock-root census, slot and route",
     "Actual score/PV VM output drain/commit schedule"
-  ]
+  ],
+  "PS_source_bandwidth_audit": {
+    "format": "Actual legacy KV8 row D512 code512B + trailing scale-sector32B, internalpacked16x265bits=528B",
+    "source_bytes_per_row": 544,
+    "service_candidate_delivery_sectors_per_edge": 8,
+    "source_bytes_per_edge": 256,
+    "source_cycles_per_record": {
+      "128": 272,
+      "640": 1360
+    },
+    "immutable_attention_price": {
+      "128": 147.144,
+      "640": 339.144
+    },
+    "service_ratio_without_overlap_or_more_ports": {
+      "128": 1.848529331811015,
+      "640": 4.010096006416154
+    },
+    "status": "FAIL if this single8sector drain is allocated toATT at sustainedrecordrate; actualPSallocation unproven",
+    "required": "Actualsource landing/PSproducer and fixedslots; compile acrossrecordprefetch or widerindependentports withrealbuffer/cut/clock/area, no fictionalVMwideport"
+  }
 }
