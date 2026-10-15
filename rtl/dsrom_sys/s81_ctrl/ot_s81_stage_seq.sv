@@ -78,7 +78,7 @@ module ot_s81_stage_seq #(
     output reg  [3:0]              fault_code,
     output reg  [31:0]             st_jobs,
     output reg  [31:0]             st_cmds,
-    output reg  [31:0]             st_credit_stall     // cycles a port had a queued descriptor but no credit
+    output reg  [31:0]             st_credit_stall     // HISTORICAL dynamic sequencer diagnostic: cycles any port had a queued descriptor but no credit (not a production static-schedule path)
 );
     localparam integer FB = (FQ > 1) ? $clog2(FQ) : 1;
     localparam integer CB = $clog2(QD + 1);
@@ -147,6 +147,7 @@ module ot_s81_stage_seq #(
     wire              can_fetch = iss_v && (ip < len_q) && f_free && !(MUT == 1 && (prev_open || f_v));
 
     integer e, k;
+    reg cs_any;   // HISTORICAL/DIAGNOSTIC credit-stall observation: one count per cycle, not per port
     reg [NENG-1:0]    pop;                        // port FIFO -> command register
     always @(*) begin
         for (e = 0; e < NENG; e = e + 1)
@@ -202,6 +203,7 @@ module ot_s81_stage_seq #(
                 if (MUT == 1) prev_open <= 1'b1;
             end
             // ---- per port: FIFO -> command register under credit ----
+            cs_any = 1'b0;
             for (e = 0; e < NENG; e = e + 1) begin
                 cmd_v[e] <= 1'b0;
                 if (pop[e]) begin
@@ -214,11 +216,12 @@ module ot_s81_stage_seq #(
                                              fq_d[e][fq_r[e]][ARGW +: OPW]};
                     fq_r[e] <= fq_r[e] + 1'b1;
                 end else if (fq_n[e] != 0) begin
-                    st_credit_stall <= st_credit_stall + 1;
+                    cs_any = 1'b1;
                 end
                 fq_n[e] <= fq_n[e] + ((f_take && f_eng == e) ? 1'b1 : 1'b0) - (pop[e] ? 1'b1 : 1'b0);
                 cred[e] <= cred[e] - (pop[e] ? 1'b1 : 1'b0) + (dv_q[e] ? 1'b1 : 1'b0);
             end
+            if (cs_any) st_credit_stall <= st_credit_stall + 1;   // single NBA per cycle (guard-clean; was per stalled port under Verilator)
             st_cmds <= st_cmds + $countones(pop);
             // ---- completions ----
             add0 = 0; add1 = 0;

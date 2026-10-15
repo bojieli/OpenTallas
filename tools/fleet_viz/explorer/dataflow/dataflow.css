@@ -7,6 +7,7 @@
 .df-top{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center}
 .df-die{max-width:min(100%,420px)}
 .df-seg{display:inline-flex}.df-seg button{border-radius:0}.df-seg button:first-child{border-radius:7px 0 0 7px}.df-seg button:last-child{border-radius:0 7px 7px 0;margin-left:-1px}
+.df-w{width:84px;accent-color:var(--df-acc);vertical-align:middle}
 .df-tog{font:12px ui-monospace,Menlo,monospace;color:var(--df-dim);white-space:nowrap;display:inline-flex;align-items:center;gap:3px;min-height:28px}
 .df-cov{font:11px ui-monospace,Menlo,monospace;color:var(--df-dim);line-height:1.45}
 .df-stripbox{position:relative}.df-strip{display:block;width:100%;height:30px;border:1px solid var(--df-line);border-radius:6px;cursor:pointer;background:#070b16;touch-action:none}

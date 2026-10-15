@@ -1,0 +1,50 @@
+{
+  "status": "ELABORATION_PASS_WITH_WARNINGS",
+  "qualified": false,
+  "top": "qfd_native_compute_join_961",
+  "unit": "oth-ubuntu-505048-1792081905 (EPYC4)",
+  "command_exit": 0,
+  "actual_clock_roots": {
+    "tt": 4,
+    "seq": 3,
+    "su": 347,
+    "vm": 488,
+    "native": 6,
+    "io": 108,
+    "embed": 1,
+    "crom": 16,
+    "pt0": 49,
+    "pt0f": 49,
+    "pt1": 49,
+    "pt1f": 49,
+    "pt2": 49,
+    "pt2f": 49,
+    "rs0": 1,
+    "rs1": 1,
+    "rs2": 1
+  },
+  "clock_root_total": 1270,
+  "source_entries": 133,
+  "warnings": {
+    "PINMISSING": 54,
+    "WIDTHTRUNC": 148,
+    "WIDTHEXPAND": 216,
+    "WIDTHCONCAT": 14,
+    "SELRANGE": 3,
+    "ALWNEVER": 2,
+    "CMPCONST": 2
+  },
+  "errors": 0,
+  "res_ser_static_warning_lines": [
+    "%Warning-WIDTHEXPAND: rtl/qwen_split/qfd_res_ser_static.sv:48:32: Operator GTE expects 32 bits on the LHS, but LHS's VARREF 'age' generates 7 bits.",
+    "%Warning-WIDTHEXPAND: rtl/qwen_split/qfd_res_ser_static.sv:48:47: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'age' generates 7 bits.",
+    "%Warning-WIDTHEXPAND: rtl/qwen_split/qfd_res_ser_static.sv:50:43: Operator NOT expects 3 bits on the LHS, but LHS's SEL generates 1 bits.",
+    "%Warning-WIDTHEXPAND: rtl/qwen_split/qfd_res_ser_static.sv:54:30: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'age' generates 7 bits.",
+    "%Warning-WIDTHEXPAND: rtl/qwen_split/qfd_res_ser_static.sv:77:27: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'since' generates 7 bits."
+  ],
+  "log_sha256": "388bbbc214d30aa9f7913c3e4235173224a019a9a833a55b1073ecabe44397bf",
+  "maximum_rss_kbytes": 43512512,
+  "elapsed": "8:05.89",
+  "verilator": "5.050",
+  "scope": "Full actual hierarchy Verilator lint only; no simulation, physical phase, placement/routing, compiler calendar or whole-token qualification."
+}

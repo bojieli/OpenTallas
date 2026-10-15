@@ -17,7 +17,12 @@ module tb_qkh_head_native;
   ot_qwen_nearhbm_head_hs u_ref (.clk(clk),.rst_n(rst_n),.c_in(c),.row_in(row),
     .e_in(e),.lt_in(lt),.hid(hid),.q_valid_in(qv),.q_beat_in(qb),.q_data_in(qd),
     .sc_d(rsc),.sc_f(rsf),.g_f(rgf),.nb_d(rnb));
-`ifdef QKH_NATIVE_R4
+`ifdef QKH_STAGED
+  // v1.4 head stages: DUT = 2 t/e stages + r4 head + 1 score stage; the reference is compared +3 (score) / +2 (nb).
+  ot_qkh_head_native_r4_staged #(.Q_FP32(1),.MUT(MUT)) u_dut
+    (.ck_front({4{clk}}),.ck_score(clk),.ck_kt(clk),.ck_stin({16{clk}}),.ck_stk({16{clk}}),
+     .ck_nb1({16{clk}}),.ck_nb2({16{clk}}),.ck_lane({16{clk}}),.ck_t1(clk),.ck_t2(clk),.ck_s1(clk),
+`elsif QKH_NATIVE_R4
   ot_qkh_head_native_r4 #(.Q_FP32(1),.MUT(MUT)) u_dut
     (.ck_front({4{clk}}),.ck_score(clk),.ck_kt(clk),.ck_stin({16{clk}}),.ck_stk({16{clk}}),
      .ck_nb1({16{clk}}),.ck_nb2({16{clk}}),.ck_lane({16{clk}}),
@@ -31,6 +36,15 @@ module tb_qkh_head_native;
 `endif
      .rst_n(rst_n),.c_in(c),.row_in(row),.e_in(e),.lt_in(lt),.hid(hid),
      .q_valid_in(qv),.q_beat_in(qb),.q_data_in(qd),.sc_d(dsc),.sc_f(dsf),.g_f(dgf),.nb_d(dnb));
+`ifdef QKH_STAGED
+  reg [33:0] rs_q1=0,rs_q2=0,rs_q3=0; reg [1023:0] rnb_q1=0,rnb_q2=0;
+  always @(posedge clk) begin
+    rs_q1<={rsc,rsf,rgf}; rs_q2<=rs_q1; rs_q3<=rs_q2; rnb_q1<=rnb; rnb_q2<=rnb_q1;
+  end
+  wire [31:0] csc=rs_q3[33:2]; wire csf=rs_q3[1], cgf=rs_q3[0]; wire [1023:0] cnb=rnb_q2;
+`else
+  wire [31:0] csc=rsc; wire csf=rsf, cgf=rgf; wire [1023:0] cnb=rnb;
+`endif
   integer cycles=0,checks=0,errors=0,resets=0;
   reg check_on=0;
   reg [31:0] last_score=0;
@@ -41,9 +55,9 @@ module tb_qkh_head_native;
     cycles=cycles+1;
     if(check_on) begin
       checks=checks+1;
-      if({rsc,rsf,rgf,rnb} !== {dsc,dsf,dgf,dnb}) begin
+      if({csc,csf,cgf,cnb} !== {dsc,dsf,dgf,dnb}) begin
         if(errors<8) $display("HEAD_NATIVE_MISMATCH cycle=%0d sc=%h/%h sf=%b/%b gf=%b/%b nb_equal=%b",
-          cycles,rsc,dsc,rsf,dsf,rgf,dgf,rnb===dnb);
+          cycles,csc,dsc,csf,dsf,cgf,dgf,cnb===dnb);
         errors=errors+1;
       end
       if(rsc!=last_score) score_changes=score_changes+1;

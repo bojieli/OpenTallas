@@ -582,6 +582,41 @@
   },
   {
    "design": "r25gq",
+   "unit": "ARGMAX.LOCAL [static ot_hbm_argmax_static, DS STREAM1347 production record]",
+   "group": "ARGMAX.LOCAL [static ot_hbm_argmax_static, DS STREAM1347 production record]",
+   "measured": 202.0,
+   "price": 142.668,
+   "unit_of_measure": "cycles",
+   "unit_ratio": 1.4159,
+   "e2e_loss_pct": 0.0,
+   "binding_workload": "ds_ar",
+   "per_workload": {
+    "ds_ar": {
+     "model": "S2 schedule, op re-scheduled at its measured ratio",
+     "base_cycles": 576702.4,
+     "cycles": 576702.4,
+     "added_cycles": 0.0,
+     "program_records": 1,
+     "e2e_loss_pct": 0.0
+    },
+    "qwen_ar": {
+     "model": "S2 schedule, op re-scheduled at its measured ratio",
+     "base_cycles": 1269120.1,
+     "cycles": 1269120.1,
+     "added_cycles": 0.0,
+     "program_records": 1,
+     "e2e_loss_pct": 0.0
+    }
+   },
+   "within_unit_limit": true,
+   "evidence": "rtl/test/hbm_idx_static/evidence/argmax_ds1347_0821/receipt.json",
+   "evidence_grade": "committed_bench",
+   "date": "2026-10-15",
+   "status": "proposed",
+   "note": "Measured G..done 202 edges on the exact DS G25 rank-0 ARGMAX.LOCAL record (STREAM n1347, O VM n2) with closed ot_hgi_argmax18_m LP8 + fixed-slot SW read group 4 / record client 0 (gate 26e93ffc3, unit oth-ubuntu-4192676-1792077732, 30 records errors0, MUT1/2/3 fail). S2 schedule overlaps the record in both ds_ar and qwen_ar: 0 added cycles (also 0 at the VM2048 case 298 = 2.09x). Structural alternative if ever critical: LP16 engine (2 sectors/edge, new physical build). Component scope only; not die/physical qualification."
+  },
+  {
+   "design": "r25gq",
    "unit": "FUSED.QDQ_FP8 [bench of record, WIDE]",
    "group": "FUSED.QDQ_FP8",
    "measured": 65.8,

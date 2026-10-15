@@ -1,0 +1,73 @@
+{
+  "operation": {
+    "kind": "GROUP_REDUCE_MCAST",
+    "G": 96,
+    "subgroup": 8,
+    "n_FP32_per_rank": 1024,
+    "n_BF16_per_rank_output": 12288,
+    "quadrants": 4,
+    "FP32_flits_per_quadrant": 16,
+    "BF16_flits_per_subgroup_per_quadrant": 8,
+    "BF16_flits_output_per_quadrant": 96,
+    "exact_tree": {
+      "subgroup0": [
+        [
+          [
+            0,
+            1
+          ],
+          [
+            2,
+            3
+          ]
+        ],
+        [
+          [
+            4,
+            5
+          ],
+          [
+            6,
+            7
+          ]
+        ]
+      ],
+      "rounding": "FP32 native RNE after each pair; BF16 RNE exactly once at final root, two native16lane tags per publication"
+    },
+    "immutable_price_cycles": 1325.9,
+    "immutable_price_110percent": 1458.4900000000002
+  },
+  "cycles": 1044,
+  "ratio": 0.7873896975639187,
+  "within_110percent": true,
+  "physical_links": 768,
+  "candidate_offsets": [
+    1,
+    4,
+    16,
+    24
+  ],
+  "rank_diameter": 4,
+  "bridge_source": "d72069aec",
+  "relay_edges": 0,
+  "interleave_groups": false,
+  "local_retime": true,
+  "elastic_edges": 0,
+  "tx_extra": 1,
+  "rx_extra": 1,
+  "physical": "All port/package/FEC/clock/geometry bindings unqualified; zero relay is a lower bound only",
+  "program": "Native V2 expanded1536 and separate actual49/30-bit bridge commands; actual extra catalog/issuer integration and64-row compression absent",
+  "sources": {
+    "parent": "cc6d946ad",
+    "endpoint": "cc12ab88a TX5/RX1",
+    "transport": "359252cc2"
+  },
+  "counts": {
+    "arithmetic": 5376,
+    "publications": 5760,
+    "qroutes": 194208,
+    "transport_hops": 43392,
+    "bridge": 229536,
+    "rx_faces": 75936
+  }
+}
