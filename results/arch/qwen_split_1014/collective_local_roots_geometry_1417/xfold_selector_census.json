@@ -1,0 +1,69 @@
+{
+  "schema": "opentallas.qcoll.xfold_selector_census.v1",
+  "source_commit": "02ad4c7bb",
+  "scope": "ReadonlyYosysproc-opt-techmap-opt onactualsource; actualclosedot_coll_fold_slice.sv read-lib; no physical/nativequalification.",
+  "selector_instances": [
+    {
+      "inst": "g_rank[0].u_sel",
+      "module": "$paramod\\ot_coll_local_xfold_select\\ID=s32'00000000000000000000000000100000",
+      "FF": 4,
+      "output_fanouts": [
+        128,
+        128,
+        128,
+        128
+      ],
+      "keep_hierarchy": "00000000000000000000000000000001"
+    },
+    {
+      "inst": "g_rank[1].u_sel",
+      "module": "$paramod\\ot_coll_local_xfold_select\\ID=s32'00000000000000000000000000100100",
+      "FF": 4,
+      "output_fanouts": [
+        128,
+        128,
+        128,
+        128
+      ],
+      "keep_hierarchy": "00000000000000000000000000000001"
+    },
+    {
+      "inst": "g_rank[2].u_sel",
+      "module": "$paramod\\ot_coll_local_xfold_select\\ID=s32'00000000000000000000000000101000",
+      "FF": 4,
+      "output_fanouts": [
+        128,
+        128,
+        128,
+        128
+      ],
+      "keep_hierarchy": "00000000000000000000000000000001"
+    },
+    {
+      "inst": "g_rank[3].u_sel",
+      "module": "$paramod\\ot_coll_local_xfold_select\\ID=s32'00000000000000000000000000101100",
+      "FF": 4,
+      "output_fanouts": [
+        128,
+        128,
+        128,
+        128
+      ],
+      "keep_hierarchy": "00000000000000000000000000000001"
+    }
+  ],
+  "total_selectorFF": 16,
+  "max_selector_fanout": 128,
+  "physical_qualified": false,
+  "host": "ot-epyc1tb",
+  "unit": "oth-ubuntu-2727415-1792101297",
+  "measured_peak_MB": 32.41,
+  "script": "read_verilog -sv -lib fold.sv\nread_verilog -sv xfold.sv\nhierarchy -check -top ot_coll_local_xfold\nproc\nopt\ntechmap\nopt\nstat\nwrite_json selector.json\n",
+  "source_sha256": {
+    "xfold.sv": "9a3266346b48e625b0deffe9c1a7c22874f754a7cabff0acc48f97332eb941aa",
+    "fold.sv": "e57f799a6df0f3ba263a3108c18df058d2b554723f5a4f56cce909f61442d60e",
+    "census.ys": "9c5bb2eaf3eea6303f24567985a61eb98966580e80953f444a065c448bae1f69",
+    "selector.json": "cb256c8bbc1699033848de237166cb1e2a1dca4f51514a36368d607dd7ba614f"
+  },
+  "pass": true
+}
