@@ -75,9 +75,9 @@ module tb_hgi_hc_native_vm_mtp_static(input wire clk,sink_clk);
         if(state==3)for(integer p=0;p<8;p=p+1)
             if(p<npos&&(age==ssbase+160*p||age==rowbase+160*p))raw_read=1;
     end
-    ot_hgi_hc_programmed_mtp_static dut(.clk(clk),.sink_clk(sink_clk),.rst_n(rst_n),
+    ot_hgi_hc_programmed_mtp_static #(.ROW_LOOP(1)) dut(.clk(clk),.sink_clk(sink_clk),.rst_n(rst_n),
         .cfg_we(cfgwe),.cfg_addr(11'(cfgi)),.cfg_data(cfgdata),
-        .start_v(startv),.start_base(11'd0),.start_limit(12'(imagewords)),.start_loops(16'd1),
+        .start_v(startv),.start_base(11'd0),.start_limit(12'(imagewords)),.start_loops((row<24)?16'd24:16'd1),
         .weight_ap(ap),.x_wave_v(native_wave_v),.x_wave_word(native_word),.x_wave(native_wave),
         .gathered_mix_v(1'b0),.gathered_mix_row(5'd0),.gathered_mix_pos(3'd0),.gathered_mix_data(32'd0),
         .bases(bases),.scales(scales),.row_result_v(rv),.row_result_id(ri),.row_result_pos(rp),.row_result(rd),
@@ -160,12 +160,15 @@ module tb_hgi_hc_native_vm_mtp_static(input wire clk,sink_clk);
                 seen<=seen+1;
                 if(age!=269+160*rp||ri!=row||rp>=npos||rd!==expm[rp*24+row])$fatal(1,"programmed row data/time mismatch row%0d pos%0d age%0d",row,rp,age);
             end
-            if(program_done)begin
-                // Final word emits done one edge before the consumer observes it.
-                if(seen!=(row+1)*npos)$fatal(1,"missing programmed row results");
-                if(row==23)begin row<=24;pc<=0;loadimage(1,0);end
-                else begin row<=row+1;loadimage(0,row+1);end
-                state<=6;cfgi<=0;
+            if(age==period-1)begin
+                if(seen!=(row+1)*npos)$fatal(1,"missing repeated programme row results");
+                if(row==23)begin
+                    if(!program_done)$fatal(1,"programme failed final fixed loop boundary");
+                    row<=24;pc<=0;loadimage(1,0);state<=6;cfgi<=0;
+                end else begin
+                    if(program_done)$fatal(1,"programme ended before24row loop");
+                    row<=row+1;age<=0;
+                end
             end
         end
         if(state==5)begin
