@@ -36,5 +36,7 @@
     "root_sinks": 2572,
     "qualification": "synthesis/floorplan only; physical STA pending",
     "pin_fit": "four512bit input/output slices across fourfaces; no added registers"
-  }
+  },
+  "outer_parent_commit": "96f30a6a0",
+  "registered_cp_active_status": "Existing FF1 export retained on baseck; rawcopy occupancy remains local. Copyclock split adds no edge."
 }
