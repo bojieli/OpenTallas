@@ -127,5 +127,9 @@ if {[info exists ::env(OT_IO_INTER)] && $::env(OT_IO_INTER) ne ""} {
   puts "OT_IO_INTER [llength $ot_ii] inputs [llength $ot_io] outputs at $ot_ski ps"
 }
 if {[llength [get_ports -quiet tile_id*]]} { set_false_path -from [get_ports tile_id*] }
+# ---- sdc_extra tools/hbm_static/su_arith_bank_clock.sdc
+create_clock -name core_clk -period 1111.111111 [get_ports clk]
+set_clock_uncertainty -setup 60 [all_clocks]
+set_clock_uncertainty -hold 25 [all_clocks]
 
 set_propagated_clock [all_clocks]
