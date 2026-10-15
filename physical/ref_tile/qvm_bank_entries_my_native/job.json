@@ -1,5 +1,5 @@
 {
- "name": "qvm_bank_entries_my_native-ne1-COMMIT",
+ "name": "qvm_bank_entries_my_native-ne1-b55e80f50",
  "block": "qvm_bank_banked_native",
  "ref_tile": true,
  "owner": "Codex:q_vm_physical",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 8,
  "source": {
   "branch": "codex/q-vm-physical-1015",
-  "commit": "COMMIT",
+  "commit": "b55e80f50",
   "extra_paths": [
    "rtl/qwen_sys/vm_native_physical_20261015",
    "rtl/qwen_sys/vm_plane_20261013",
@@ -117,7 +117,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qvm_bank_entries_my_native/qvm_bank_entries_my_native-ne1-COMMIT"
+   "to": "results/rtl/ref_tile/qvm_bank_entries_my_native/qvm_bank_entries_my_native-ne1-b55e80f50"
   }
  ],
  "cycles_added": 0,
