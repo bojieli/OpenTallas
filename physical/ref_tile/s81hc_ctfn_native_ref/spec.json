@@ -69,7 +69,7 @@
  "job": {
   "owner": "Claude:S-NORM",
   "branch": "claude/s81-norm-tree-1014",
-  "tag": "np2-ck4-hb4",
+  "tag": "np2-hb4-hm30",
   "purpose": "Actual native boundary repair of inherited ctfn; strict launch220/capture190/spread80; same RTL arithmetic and reset epoch; immutable published predecessor remains separate",
   "no_bench_reason": "Source-bound PIPE1 full-shape numerical exact and prior observed within-leaf mutant receipts reused with all source/module SHA checks in results/rtl/s81_layer_tput_1013/norm_tree_1014/native_closure_1014/inherited_boundary/source_reuse.json. Physical mapped reset/clone equivalence and native timing are independent adoption gates; no full-native claim.",
   "views_to": "physical/ref_tile/s81hc_ctfn_native_ref/views",
@@ -88,16 +88,13 @@
   "cell": "ot_s81_hc_ctfn",
   "launch_ps": 296.0,
   "capture_ps": 378.2,
-  "fix": "np2 (S-NORM 2026-10-15): measured np1 cause = LATE CAPTURE ROOT: one clock root over 5,890 sinks along 426 um (depth 6-7, FF boundary arrival 264-328 ps vs the median pin-flop hold reference); the late quarter of capture flops needs ~37 ps more input hold than repair (margin 10) left, routed FF -12.44 i2r, ECO pads failed. Fix: (1) clock split into 4 equal-count x clusters, one BUFx24 local root each (clock_split.tcl), (2) hold pads HB4xp67 (common_flow/hold_pad_hb4.tcl, 2.4x delay/cell vs BUFx2) so (3) the recipe-2 hold margin 30 ps is affordable again (np1 ran 10). Same RTL, cycles, pins, SDC, acceptance."
+  "fix": "np2 (S-NORM 2026-10-15): np1 routed FF -12.44 i2r after CTS/GRT hold repair at margin 10 (route moved the pin-flop clock ~22 ps; FF boundary arrival 264-328); margin 30 was dropped in np1 because BUFx2 padding floods. Hold pads are now HB4xp67 (common_flow/hold_pad_hb4.tcl, 2.4x delay per cell: gate ws -86 -> +10 with 3,340 cells) so the recipe-2 30 ps margin is restored. Tried and rejected on the gate: a 4-way x clock split (TT spread 53 -> 71 ps, insertion +40). Same RTL, cycles, pins, clocks, SDC, acceptance."
  },
- "structural_change": "np2 (S-NORM 2026-10-15): measured np1 cause = LATE CAPTURE ROOT: one clock root over 5,890 sinks along 426 um (depth 6-7, FF boundary arrival 264-328 ps vs the median pin-flop hold reference); the late quarter of capture flops needs ~37 ps more input hold than repair (margin 10) left, routed FF -12.44 i2r, ECO pads failed. Fix: (1) clock split into 4 equal-count x clusters, one BUFx24 local root each (clock_split.tcl), (2) hold pads HB4xp67 (common_flow/hold_pad_hb4.tcl, 2.4x delay/cell vs BUFx2) so (3) the recipe-2 hold margin 30 ps is affordable again (np1 ran 10). Same RTL, cycles, pins, SDC, acceptance.",
+ "structural_change": "np2 (S-NORM 2026-10-15): np1 routed FF -12.44 i2r after CTS/GRT hold repair at margin 10 (route moved the pin-flop clock ~22 ps; FF boundary arrival 264-328); margin 30 was dropped in np1 because BUFx2 padding floods. Hold pads are now HB4xp67 (common_flow/hold_pad_hb4.tcl, 2.4x delay per cell: gate ws -86 -> +10 with 3,340 cells) so the recipe-2 30 ps margin is restored. Tried and rejected on the gate: a 4-way x clock split (TT spread 53 -> 71 ps, insertion +40). Same RTL, cycles, pins, clocks, SDC, acceptance.",
  "orfs_vars": {
   "POST_IO_PLACEMENT_TCL": "tools/s81_suhc/inherited_exact_iop.tcl",
   "OT_HC_NATIVE_IO_TCL": "/src/physical/s81_die_pins/v20_hc_inherited/ot_s81_hc_ctfn.tcl"
  },
- "pre_cts_extra": [
-  "physical/ref_tile/s81hc_ctfn_native_ref/clock_split.tcl"
- ],
  "boundary_tcl": [
   "physical/common_flow/hold_pad_hb4.tcl"
  ],
