@@ -1,0 +1,6 @@
+WARNING: rtl/test/hbm_idx_static/tb_argmax_static.sv:80: $readmemh(cal.mem): Not enough words in the file for the requested range [0:16383].
+WARNING: rtl/test/hbm_idx_static/tb_argmax_static.sv:80: $readmemh(stream.mem): Not enough words in the file for the requested range [0:16383].
+WARNING: rtl/test/hbm_idx_static/tb_argmax_static.sv:80: $readmemh(pre.mem): Not enough words in the file for the requested range [0:4095].
+WARNING: rtl/test/hbm_idx_static/tb_argmax_static.sv:80: $readmemh(chk.mem): Not enough words in the file for the requested range [0:1023].
+ARGMAX_STATIC MUT0 records30 dones28 faults2 sectors_checked44 errors0 schedule_edges2198
+rtl/test/hbm_idx_static/tb_argmax_static.sv:127: $finish called at 26140000 (1ps)

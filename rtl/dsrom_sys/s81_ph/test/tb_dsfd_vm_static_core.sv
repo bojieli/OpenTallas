@@ -21,7 +21,9 @@ module tb_dsfd_vm_static_core;
 `else
     localparam integer LAND_AGE = 2;
 `endif
-`ifdef OT_VM_NATIVE_READ_PINREG
+`ifdef OT_VM_NATIVE_READ_L16
+    localparam integer READ_PIPE=4;     // + pin-registered rsched / return lanes (L16)
+`elsif OT_VM_NATIVE_READ_PINREG
     localparam integer READ_PIPE=2;
 `elsif OT_VM_NATIVE_READ
     localparam integer READ_PIPE=1;
@@ -66,7 +68,7 @@ module tb_dsfd_vm_static_core;
     dsfd_vm_static_core #(.READ_PIPE(READ_PIPE)) dut (.cks(ck), .rss(rss),
         .ck_read_data({64{ck}}), .ck_read_valid({8{ck}}), .rst_read_data_n({64{rss}}), .rst_read_valid_n({8{rss}}),
         .ck_rsched(ck), .ck_seq(ck), .ck_landing(ck),
-        .ck_mem_fsr({16{ck}}), .ck_mem_return({4{ck}}), .ck_mem_bank({128{ck}}),
+        .ck_mem_fsr({16{ck}}), .ck_mem_return({16{ck}}), .ck_mem_bank({128{ck}}),
         .ck_mem_wcapture({128{ck}}), .ck_mem_wscatter({16{ck}}),
         .ck_mem_relay_req({48{ck}}), .ck_mem_relay_rsp({48{ck}}),
         .ck_write_control(ck), .ck_write_header(ck), .ck_write_payload({4{ck}}),

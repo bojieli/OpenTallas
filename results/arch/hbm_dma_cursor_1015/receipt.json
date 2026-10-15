@@ -1,0 +1,36 @@
+{
+  "schema": "opentallas.hbm.dma_cursor_proof.v1",
+  "status": "component_functional_pass",
+  "source_sha256": {
+    "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static.sv": "11389d87c141c8a0e3c4ba3c1e5f0c2cafd88dce2c48f16c2e4d2356c2ffbf5f",
+    "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_cursor.sv": "94d11ea3de92716d3c6ec0d39b3994dea82ac410fe5ca57a7ac9e32d10abe2c6",
+    "rtl/hbm_accel/generic/peers/static/tb_dma_back_cursor_equiv.sv": "31d2cada8809f0c72db0f9b0c666acbb3c0563bf6c5ee2262b97f5bbfae35344",
+    "tools/hbm_v15_harden/bench_dma_cursor.sh": "1cbbba4a992636e5fe4065e17d2ae037830eff91d40fd30f2c2abb9e2ecc3b3f"
+  },
+  "host": "ot-agidock128",
+  "unit": "oth-ubuntu-370187-1792077556",
+  "equivalence": {
+    "cases": 16,
+    "cycles_checked": 1153,
+    "valid_output_beats": 3591,
+    "comparison": "every control and valid bit; request/write payload compared whenever valid; inactive payload unspecified"
+  },
+  "production": {
+    "main_edges": 173,
+    "mirror_edges": 173,
+    "sectors_each": 2561,
+    "actual_vm_banks": 32,
+    "actual_vm_macros": 96,
+    "actual_landing_macros": 32,
+    "source_overwrite_and_true_ack_fence": true
+  },
+  "mutant": "drain row stride +256 bytes rejected by exact write-beat comparison cycle687",
+  "structural_change": "remove 128x32 route address and128x8 route mask FF tables, derive deterministic drain cursor; no extra cycles or memory",
+  "expected_ff_change_unmapped": -5112,
+  "physical_qualified": false,
+  "limits": [
+    "Projected FF count is not mapped evidence.",
+    "No CTS, native pin timing, FF hold, DRC, die slot fit or full-chip performance qualification.",
+    "173 edges is component STORE fixture, not whole service cold/hot chain."
+  ]
+}

@@ -686,7 +686,22 @@ module dsfd_sp_su_static #(
                 .o_rdy(o_rdy), .o_rjid(o_rjid));
             assign xpv[t] = 1'b0; assign xpi[t] = 8'd0; assign xpd[t] = 32'd0; assign xrv[t] = 1'b0; assign xrd[t] = 32'd0;
         end else if (TK == 14) begin : g_rx
-            if (RXH != 0) begin : g_head
+            if (RXH == 2) begin : g_clu
+                // RXH 2 (S-ELEM-C 2026-10-15): the hardened RX cluster ot_s81_su_rxh v2 at the spine head; it taps read
+                // slots 0..4 only (QR parameter rows 0..4, operand pairs 0 / 1); fixed added stages vs rxt: RA +3,
+                // RB / QR / RW +1 (rxh_eq_gate measured), to be taken by the static calendar
+                ot_s81_su_rxh #(.S_RD(5), .LM(LM), .LA(LA), .XMUT(XMUT)) u_rxt (
+                    .clk(sk), .rst_in(rst[0]), .dn_st_i(dst[0]), .dn_kind_i(dkd[0]), .dn_jid_i(dji[0]), .dn_v_i(dv[0][4:0]),
+                    .dn_d_i(dd[0][5 * 512 - 1:0]), .o_v(rx_v), .o_a(rx_a), .o_m(rx_m), .o_d(rx_d), .o_v2(rx_v2), .o_a2(rx_a2),
+                    .o_d2(rx_d2), .o_fu(rx_fu), .o_fo(rx_fo), .o_alive(rx_alive), .o_den(), .o_rdy(), .o_rjid());
+`ifndef SYNTHESIS
+                always @(posedge sk) if (|(dv[0] >> 5) && (dkd[0] >= 4'd8 && dkd[0] <= 4'd11))
+                    $display("SU_RXH_SLOT_FAULT: an RX row on read slot >= 5 (the cluster taps slots 0..4)");
+`endif
+                assign o_v = 1'b0; assign o_a = 0; assign o_m = 0; assign o_d = 0;
+                assign o_fu = 1'b0; assign o_fo = 1'b0; assign o_alive = 1'b1; assign o_den = 1'b1; assign o_rdy = 1'b0;
+                assign o_rjid = 8'd0;
+            end else if (RXH != 0) begin : g_head
                 // spine-head tile: tap = stop 0's down register, write slot merged at stop 0 (rx_*); its own stop
                 // here relays the spines only
                 ot_s81_su_rxt #(.S_RD(S_RD), .LM(LM), .LA(LA), .XMUT(XMUT), .QW(2)) u_rxt (

@@ -4,8 +4,8 @@
 // Compiler assigns every request and release edge; no ready/credits or waits.
 // Per-slice valids and commit observations remain separate: this parent does
 // not hide a late physical slice by pretending that a logical row is complete.
-module dsfd_vm_static512_suhc(
- input wire [15:0] ck_rscatter,input wire [3:0] ck_return,input wire [15:0] ck_wscatter,
+module dsfd_vm_static512_suhc #(parameter integer RET_PINREG=0)(
+ input wire [15:0] ck_rscatter,input wire [15:0] ck_return,input wire [15:0] ck_wscatter,
  input wire [127:0] ck_wcapture,ck_bank,
  input wire [47:0] ck_relay_req,ck_relay_rsp,
  input wire [15:0] rst_rscatter_n,input wire [3:0] rst_return_n,input wire [15:0] rst_wscatter_n,
@@ -46,7 +46,7 @@ module dsfd_vm_static512_suhc(
   // Four hardened return lanes (8 banks / 8 slots each) on the slice's return clock root;
   // completion tokens are exchanged lane-to-lane inside the wrapper (wires only).
   wire [11:0] lane_group;
-  dsfd_vm_static_return32_native_lanes u_return(.ck({4{ck_return[s]}}),.rst_n({4{rst_return_n[s]}}),.i_v(rv),.i_tag(rt),.i_data(rd),
+  dsfd_vm_static_return32_native_lanes #(.PINREG(RET_PINREG)) u_return(.ck(ck_return[4*s+:4]),.rst_n({4{rst_return_n[s]}}),.i_v(rv),.i_tag(rt),.i_data(rd),
    .release_v(release_v),.release_group(release_group),.release_mask(release_mask),
    .prepare_v(prepare_v),.prepare_group(prepare_group),.prepare_mask(prepare_mask),
    .o_v(group_v[NROW*s+:NROW]),.o_data(gd),.o_group(lane_group),.fault(fault[10*s+5+:4]));

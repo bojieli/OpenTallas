@@ -30,7 +30,7 @@
 module dsfd_sp_vm #(parameter integer CAP_PIPE=0, parameter integer READ_PIPE=0) (
     input  wire          ck_core_t, ck_rsched_t, ck_seq_t, ck_landing_t,
     input  wire [15:0]   ck_mem_fsr_t,
-    input  wire [3:0]    ck_mem_return_t,
+    input  wire [15:0]   ck_mem_return_t,
     input  wire [127:0]  ck_mem_bank_t, ck_mem_wcapture_t,
     input  wire [15:0]   ck_mem_wscatter_t,
     input  wire [47:0]   ck_mem_relay_req_t, ck_mem_relay_rsp_t,

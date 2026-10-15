@@ -6,7 +6,7 @@ W=$(cd "$(dirname "$0")/../.." && pwd); R=$(cd "$W/.." && pwd)
 TXL=${TXL:-6}; PHY=${PHY:-5}
 mkdir -p "$OUT"
 CTXL=$TXL; [ "$MUT" = 4 ] && CTXL=$((TXL-1))
-python3 "$R/tools/qwen_split/d2d_link_calendar.py" --out "$OUT/cal" --txl "$CTXL" --phy "$PHY" --profile dies --txd-c 1,2,1,2 --txd-k 1,2,1,1 > "$OUT/calendar.log"
+python3 "$R/tools/qwen_split/d2d_link_calendar.py" --out "$OUT/cal" --txl "$CTXL" --phy "$PHY" --profile dies_token --txd-c 1,2,1,2 --txd-k 1,2,1,1 > "$OUT/calendar.log"
 SRC=("$W/qwen_sys/split_20261014/ot_qwen_crc_parallel.sv" "$W/qwen_sys/split_20261014/ot_qwen_static_slot_link.sv"
  "$W/qwen_sys/split_20261014/ot_qkvd_d2d_llr.sv" "$W/qwen_sys/split_20261014/qkd_native_attention_record.sv"
  "$W/qwen_sys/d2d_static_20261015/ot_qwen_d2d_static.sv" "$W/qwen_sys/d2d_static_20261015/ot_qwen_d2d_services.sv" "$W/qwen_sys/d2d_static_20261015/ot_qwen_d2d_dies.sv" "$W/qwen_split/qfd_kvn_static_transport.sv"

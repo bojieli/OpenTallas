@@ -1,0 +1,326 @@
+{
+ "schema": "opentallas.s81.vm-cdc-native-audit.v1",
+ "scope": "Actual immutable published component libs; no parent related-clock arcs qualified",
+ "records": [
+  {
+   "cell": "ot_s81_vm_x43_s",
+   "view": "physical/ref_tile/ot_s81_vm_x43_s_w512_1015_f4/views/ot_s81_vm_x43_s",
+   "lib_cell": "ot_s81_vm_x43_s",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 144.8,
+   "spread_ps": 24.3,
+   "outputs": 514,
+   "inputs": 1545,
+   "launch_ps": 194.2,
+   "launch_pin": "o_d[296]",
+   "capture_ps": 196.1,
+   "capture_pin": "bpar[1]",
+   "launch_over": 0,
+   "capture_over": 2,
+   "comb_pins": 0,
+   "comb_first": [],
+   "pass": false,
+   "fail_why": "capture 196.1 > 190 (2 pins)",
+   "job": "ot_s81_vm_x43_s_w512_1015_f4-f4-5b4b102fa",
+   "view_commit": "470562b43118927b035a1645cb4b16dac4421c63",
+   "input_sha256": {
+    "physical/ref_tile/ot_s81_vm_x43_s_w512_1015_f4/views/ot_s81_vm_x43_s/ot_s81_vm_x43_s_tt.lib": "9260db7e48e337937ff4d916c8f94dedaaca3464a3724efaeb4bee9ba4b6cadb",
+    "physical/ref_tile/ot_s81_vm_x43_s_w512_1015_f4/views/ot_s81_vm_x43_s/insertion.json": "7dc6eb4ce1ac002add8ea15e2544a6ec8ae67bf957d212e6b78a94ea18c76fe0"
+   },
+   "route_tt_ps": 53.5,
+   "route_ff_ps": 16.23,
+   "drc": 0
+  },
+  {
+   "cell": "ot_s81_vm_x34_t",
+   "view": "physical/ref_tile/ot_s81_vm_x34_t_w514_1015_f4/views/ot_s81_vm_x34_t",
+   "lib_cell": "ot_s81_vm_x34_t",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 169.7,
+   "spread_ps": 13.4,
+   "outputs": 516,
+   "inputs": 1550,
+   "launch_ps": 179.7,
+   "launch_pin": "o_d[393]",
+   "capture_ps": 186.0,
+   "capture_pin": "bpar[0]",
+   "launch_over": 0,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "pass": true,
+   "fail_why": "",
+   "job": "ot_s81_vm_x34_t_w514_1015_f4-f4-5b4b102fa",
+   "view_commit": "672cebd9dcabdc94f9505c05b995bf3c42b9ba82",
+   "input_sha256": {
+    "physical/ref_tile/ot_s81_vm_x34_t_w514_1015_f4/views/ot_s81_vm_x34_t/ot_s81_vm_x34_t_tt.lib": "f50d4ee33d6378b167a3f74b135fec1d5174bc1e579fd2a0824e69dc0648290d",
+    "physical/ref_tile/ot_s81_vm_x34_t_w514_1015_f4/views/ot_s81_vm_x34_t/insertion.json": "439575cf90d71dddfc4867b460058fae1767c84b243408446f0d074f7b4bd211"
+   },
+   "route_tt_ps": 303.38,
+   "route_ff_ps": 13.66,
+   "drc": 0
+  },
+  {
+   "cell": "ot_s81_vm_x43_t",
+   "view": "physical/ref_tile/ot_s81_vm_x43_t_w1026_1015_f4/views/ot_s81_vm_x43_t",
+   "lib_cell": "ot_s81_vm_x43_t",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 253.9,
+   "spread_ps": 62.9,
+   "outputs": 3086,
+   "inputs": 1028,
+   "launch_ps": 237.8,
+   "launch_pin": "b0[927]",
+   "capture_ps": 177.9,
+   "capture_pin": "t_rst_n",
+   "launch_over": 124,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "pass": false,
+   "fail_why": "launch 237.8 > 220 (124 pins)",
+   "job": "ot_s81_vm_x43_t_w1026_1015_f4-f4-5b4b102fa",
+   "view_commit": "b3274bfdb4a65051c78f44df3ac3fd2962f33d5c",
+   "input_sha256": {
+    "physical/ref_tile/ot_s81_vm_x43_t_w1026_1015_f4/views/ot_s81_vm_x43_t/ot_s81_vm_x43_t_tt.lib": "097ebaa67005af6aabcdd6d937e62d6bdfecbbdd6e6f3ecfe82d77c62f13bf6d",
+    "physical/ref_tile/ot_s81_vm_x43_t_w1026_1015_f4/views/ot_s81_vm_x43_t/insertion.json": "ad983111b2cb083ea09919d7faa7680c74f788b36ab6885b757bb444633727fa"
+   },
+   "route_tt_ps": 239.9,
+   "route_ff_ps": 7.25,
+   "drc": 0
+  },
+  {
+   "cell": "ot_s81_vm_x43_t",
+   "view": "physical/ref_tile/ot_s81_vm_x43_t_w512_1015_f4/views/ot_s81_vm_x43_t",
+   "lib_cell": "ot_s81_vm_x43_t",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 182.2,
+   "spread_ps": 19.8,
+   "outputs": 1544,
+   "inputs": 514,
+   "launch_ps": 211.8,
+   "launch_pin": "b0[409]",
+   "capture_ps": 164.6,
+   "capture_pin": "s_d[442]",
+   "launch_over": 0,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "pass": true,
+   "fail_why": "",
+   "job": "ot_s81_vm_x43_t_w512_1015_f4-f4-5b4b102fa",
+   "view_commit": "b1368c461c4c49006071a40c2e923a4abb9efdbd",
+   "input_sha256": {
+    "physical/ref_tile/ot_s81_vm_x43_t_w512_1015_f4/views/ot_s81_vm_x43_t/ot_s81_vm_x43_t_tt.lib": "956edff72e56977b4dd3a51030230170b84b2f6350a0ecf72fac8c665c2c0f0d",
+    "physical/ref_tile/ot_s81_vm_x43_t_w512_1015_f4/views/ot_s81_vm_x43_t/insertion.json": "db7db376215cfc0846cbb74a39db1958d3e4b8773e8b49622ebc9a6ed0b798ad"
+   },
+   "route_tt_ps": 271.73,
+   "route_ff_ps": 18.25,
+   "drc": 0
+  },
+  {
+   "cell": "ot_s81_vm_x43_s",
+   "view": "physical/ref_tile/ot_s81_vm_x43_s_w1026_1015_f4/views/ot_s81_vm_x43_s",
+   "lib_cell": "ot_s81_vm_x43_s",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 177.2,
+   "spread_ps": 24.8,
+   "outputs": 1028,
+   "inputs": 3087,
+   "launch_ps": 193.9,
+   "launch_pin": "o_d[770]",
+   "capture_ps": 186.6,
+   "capture_pin": "bpar[1]",
+   "launch_over": 0,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "pass": true,
+   "fail_why": "",
+   "job": "ot_s81_vm_x43_s_w1026_1015_f4-f4-5b4b102fa",
+   "view_commit": "268c42a216c73075f75e1700e26a5ab712140c49",
+   "input_sha256": {
+    "physical/ref_tile/ot_s81_vm_x43_s_w1026_1015_f4/views/ot_s81_vm_x43_s/ot_s81_vm_x43_s_tt.lib": "1b78404752d67d6334eb172533a60743fefddacf5262448100ac4ab45ba649fa",
+    "physical/ref_tile/ot_s81_vm_x43_s_w1026_1015_f4/views/ot_s81_vm_x43_s/insertion.json": "c73390f1fd639951dd7c396d6d63eab1f50ed22e9a38a11833ebcb0fc36b4c9e"
+   },
+   "route_tt_ps": 69.6,
+   "route_ff_ps": 19.0,
+   "drc": 0
+  },
+  {
+   "cell": "ot_s81_vm_x34_t",
+   "view": "physical/ref_tile/ot_s81_vm_x34_t_w1026_1015_f4/views/ot_s81_vm_x34_t",
+   "lib_cell": "ot_s81_vm_x34_t",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 202.6,
+   "spread_ps": 31.0,
+   "outputs": 1028,
+   "inputs": 3086,
+   "launch_ps": 193.7,
+   "launch_pin": "o_d[376]",
+   "capture_ps": 205.1,
+   "capture_pin": "b0[24]",
+   "launch_over": 0,
+   "capture_over": 12,
+   "comb_pins": 0,
+   "comb_first": [],
+   "pass": false,
+   "fail_why": "capture 205.1 > 190 (12 pins)",
+   "job": "ot_s81_vm_x34_t_w1026_1015_f4-f4-5b4b102fa",
+   "view_commit": "49537238fe4005a9893f8569a8b31aa01e2c8baa",
+   "input_sha256": {
+    "physical/ref_tile/ot_s81_vm_x34_t_w1026_1015_f4/views/ot_s81_vm_x34_t/ot_s81_vm_x34_t_tt.lib": "f3011e3a8b67045ade5a6c974758699954ecf8570d591a80e2a659b9c5bf0c67",
+    "physical/ref_tile/ot_s81_vm_x34_t_w1026_1015_f4/views/ot_s81_vm_x34_t/insertion.json": "f9f415333104340f67ca0f163f3083029f6d22ca25a9b780ceec0af89985a4d3"
+   },
+   "route_tt_ps": 252.33,
+   "route_ff_ps": 17.53,
+   "drc": 0
+  },
+  {
+   "cell": "ot_s81_vm_x34_s",
+   "view": "physical/ref_tile/ot_s81_vm_x34_s_w514_1015_f4/views/ot_s81_vm_x34_s",
+   "lib_cell": "ot_s81_vm_x34_s",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 183.0,
+   "spread_ps": 22.5,
+   "outputs": 1549,
+   "inputs": 516,
+   "launch_ps": 211.2,
+   "launch_pin": "b1[122]",
+   "capture_ps": 171.9,
+   "capture_pin": "s_d[136]",
+   "launch_over": 0,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "pass": true,
+   "fail_why": "",
+   "job": "ot_s81_vm_x34_s_w514_1015_f4-f4-5b4b102fa",
+   "view_commit": "ace54ede3f079f7fb0d7c61ba7fb803d252e586a",
+   "input_sha256": {
+    "physical/ref_tile/ot_s81_vm_x34_s_w514_1015_f4/views/ot_s81_vm_x34_s/ot_s81_vm_x34_s_tt.lib": "165fc79bea7b8885c8e9af9b80a1383e689055f251d317130b0a64ea364bd01e",
+    "physical/ref_tile/ot_s81_vm_x34_s_w514_1015_f4/views/ot_s81_vm_x34_s/insertion.json": "d494010db739c8522669c8d6aa0ad8c01f0fa3fd1e49e5edda84a51716bcc7b7"
+   },
+   "route_tt_ps": 286.64,
+   "route_ff_ps": 21.84,
+   "drc": 0
+  },
+  {
+   "cell": "ot_s81_vm_x34_s",
+   "view": "physical/ref_tile/ot_s81_vm_x34_s_w560_1015_f4/views/ot_s81_vm_x34_s",
+   "lib_cell": "ot_s81_vm_x34_s",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 183.5,
+   "spread_ps": 18.6,
+   "outputs": 1687,
+   "inputs": 562,
+   "launch_ps": 205.2,
+   "launch_pin": "b0[226]",
+   "capture_ps": 167.5,
+   "capture_pin": "s_d[75]",
+   "launch_over": 0,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "pass": true,
+   "fail_why": "",
+   "job": "ot_s81_vm_x34_s_w560_1015_f4-f4-5b4b102fa",
+   "view_commit": "adb8b9aed7a1448b1824e0126e4845f71ff3e9b7",
+   "input_sha256": {
+    "physical/ref_tile/ot_s81_vm_x34_s_w560_1015_f4/views/ot_s81_vm_x34_s/ot_s81_vm_x34_s_tt.lib": "7b98c410369dad0636342d6875a2dfc86209e913e83caebbaaca34571293e62e",
+    "physical/ref_tile/ot_s81_vm_x34_s_w560_1015_f4/views/ot_s81_vm_x34_s/insertion.json": "ed527b9ceedc9e193d432ac6c4ce31ca0f44f10673d22e59a51094fdb749ae6d"
+   },
+   "route_tt_ps": 311.61,
+   "route_ff_ps": 22.29,
+   "drc": 0
+  },
+  {
+   "cell": "ot_s81_vm_x34_t",
+   "view": "physical/ref_tile/ot_s81_vm_x34_t_w560_1015_f4/views/ot_s81_vm_x34_t",
+   "lib_cell": "ot_s81_vm_x34_t",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 175.3,
+   "spread_ps": 20.2,
+   "outputs": 562,
+   "inputs": 1688,
+   "launch_ps": 181.6,
+   "launch_pin": "o_d[348]",
+   "capture_ps": 202.9,
+   "capture_pin": "b0[338]",
+   "launch_over": 0,
+   "capture_over": 15,
+   "comb_pins": 0,
+   "comb_first": [],
+   "pass": false,
+   "fail_why": "capture 202.9 > 190 (15 pins)",
+   "job": "ot_s81_vm_x34_t_w560_1015_f4-f4-5b4b102fa",
+   "view_commit": "af0e2118e39410d382e5e22e194b0969c9156174",
+   "input_sha256": {
+    "physical/ref_tile/ot_s81_vm_x34_t_w560_1015_f4/views/ot_s81_vm_x34_t/ot_s81_vm_x34_t_tt.lib": "280aeedcb4027de92bc92ea02870aadfc1ebb6c5247613b191bdff5b075a72f4",
+    "physical/ref_tile/ot_s81_vm_x34_t_w560_1015_f4/views/ot_s81_vm_x34_t/insertion.json": "6e972d6bfc9560539e13a2e901ce7b3100dbc866989ec3abb63e613820accd35"
+   },
+   "route_tt_ps": 283.6,
+   "route_ff_ps": 22.02,
+   "drc": 0
+  },
+  {
+   "cell": "ot_s81_vm_x43_t",
+   "view": "physical/ref_tile/ot_s81_vm_x43_t_w511_1015_f4/views/ot_s81_vm_x43_t",
+   "lib_cell": "ot_s81_vm_x43_t",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 182.2,
+   "spread_ps": 19.7,
+   "outputs": 1541,
+   "inputs": 513,
+   "launch_ps": 199.8,
+   "launch_pin": "b0[318]",
+   "capture_ps": 172.1,
+   "capture_pin": "s_d[252]",
+   "launch_over": 0,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "pass": true,
+   "fail_why": "",
+   "job": "ot_s81_vm_x43_t_w511_1015_f4-f4-5b4b102fa",
+   "view_commit": "57210913edc3e0ee182770093a7d7aac259e73e0",
+   "input_sha256": {
+    "physical/ref_tile/ot_s81_vm_x43_t_w511_1015_f4/views/ot_s81_vm_x43_t/ot_s81_vm_x43_t_tt.lib": "354cc7a47aeb0876ac5b3dde25a6b104ab77db5a0ffc85d10a95fa4b4d589cae",
+    "physical/ref_tile/ot_s81_vm_x43_t_w511_1015_f4/views/ot_s81_vm_x43_t/insertion.json": "66fd19cf5c7e24d8d0dfed77f61f2055009d4efcbbf663a148e8c0d3ef7ef436"
+   },
+   "route_tt_ps": 293.67,
+   "route_ff_ps": 12.75,
+   "drc": 0
+  }
+ ]
+}
