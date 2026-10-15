@@ -11,14 +11,20 @@ module qfd_static_ch546 (
  input wire r_slot,input wire [5:0] r_addr,input wire r_version,
  output reg o_valid,output reg [545:0] o_data,
  output reg w_fault,r_fault);
+ wire w_rst_n,r_rst_n;
+ // One reset capture point per domain. The compiler starts its calendar
+ // after the fixed two-edge deassertion guard in both domains; reset does
+ // not fan from a die pin across the whole publication checker.
+ ot_reset_sync u_wreset(.clk(wck),.async_rst_n(rst_n),.sync_rst_n(w_rst_n));
+ ot_reset_sync u_rreset(.clk(rck),.async_rst_n(rst_n),.sync_rst_n(r_rst_n));
  reg wp,rp;reg [5:0] wa,ra;reg wv,rv;
  reg [545:0] wd,rd_stage;
  reg [63:0] published, seen;
  (* async_reg="true" *) reg [63:0] pub_meta,pub_sync,seen_meta,seen_sync;
  reg [2:0] read_pipe;
  wire [545:0] memory_data;
- always @(posedge wck or negedge rst_n) begin
-  if(!rst_n) begin wp<=0;w_fault<=0;published<=0;seen<=0;wv<=0;end
+ always @(posedge wck or negedge w_rst_n) begin
+  if(!w_rst_n) begin wp<=0;w_fault<=0;published<=0;seen<=0;wv<=0;end
   else begin
    wp<=w_slot;wv<=w_version;
    if(wp) begin published[wa]<=wv;seen[wa]<=1;end
@@ -26,8 +32,8 @@ module qfd_static_ch546 (
   end
  end
  always @(posedge wck) begin wa<=w_addr;wd<=i_data;end
- always @(posedge rck or negedge rst_n) begin
-  if(!rst_n) begin rp<=0;rv<=0;read_pipe<=0;o_valid<=0;r_fault<=0;pub_meta<=0;pub_sync<=0;seen_meta<=0;seen_sync<=0;end
+ always @(posedge rck or negedge r_rst_n) begin
+  if(!r_rst_n) begin rp<=0;rv<=0;read_pipe<=0;o_valid<=0;r_fault<=0;pub_meta<=0;pub_sync<=0;seen_meta<=0;seen_sync<=0;end
   else begin
    rp<=r_slot;rv<=r_version;read_pipe<={read_pipe[1:0],r_slot};
 `ifdef OT_STATIC_MUT_LATENCY
