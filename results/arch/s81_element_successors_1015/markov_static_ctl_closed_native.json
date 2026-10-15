@@ -1,0 +1,30 @@
+{
+  "cell": "ot_s81_markov_ctl_static",
+  "view": "physical/ref_tile/s81_markov_ctl_static/views/ot_s81_markov_ctl_static",
+  "lib_cell": "ot_s81_markov_ctl_static",
+  "insertion": true,
+  "ref_src": [
+    "insertion.json boundary mean"
+  ],
+  "R_ps": 85.7,
+  "spread_ps": 8.6,
+  "outputs": 580,
+  "inputs": 618,
+  "launch_ps": 230.1,
+  "launch_pin": "out_bits[13]",
+  "capture_ps": 129.4,
+  "capture_pin": "embed_bf16[207]",
+  "launch_over": 5,
+  "capture_over": 0,
+  "comb_pins": 0,
+  "comb_first": [],
+  "pass": false,
+  "fail_why": "launch 230.1 > 220 (5 pins)",
+  "route_job": "s81_markov_ctl_static-st1-b314866a0",
+  "closed_main": "eb2d99c0d",
+  "record": "d2fe7d59f",
+  "source_sha256": {
+    "insertion.json": "522237d0154bdd2f60ddb97dac4909553a01e528b48160ce816924dbd18704d8",
+    "ot_s81_markov_ctl_static_tt.lib": "f7f9acdd4327f1bc68e81dd63bd8f94244f7b62720ba3d84f492ec06145fd7d3"
+  }
+}
