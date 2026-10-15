@@ -1,0 +1,77 @@
+{
+ "scope": "S-DIE r2 road/strip demand side for the SA_2x2_RP owner decision; geometry numbers only, no route claim",
+ "gen19b_actual_paths": {
+  "peak_bits": 48127,
+  "peak_y": 15832.8,
+  "return_tree_bits": 29470,
+  "return_share": 0.612,
+  "by_class": {
+   "return_tree": 29470,
+   "return_out": 0,
+   "x_bcast": 6792,
+   "hub_hb": 96,
+   "ctrl": 10438,
+   "service": 1331
+  },
+  "by_road": {
+   "S14W": 20014,
+   "HUBW": 0,
+   "VCH": 9991,
+   "HUBE": 0,
+   "S14E": 18122
+  },
+  "return_tree_own_peak_bits": 31010,
+  "return_tree_own_peak_width_um_at060": 2450.2
+ },
+ "capacity": {
+  "tracks_per_um": 21.09375,
+  "util": 0.6,
+  "S14W_plus_S14E_um": 1019.6,
+  "S14_only_bits": 12904,
+  "S14_plus_432um_hub_road_bits": 18372,
+  "note": "432-um hub road = Codex HC-fold study (cut 0.643 at RP demand)"
+ },
+ "rp_model": {
+  "peak_bits": 23572,
+  "need_cut_bits_for_432_road": 5200,
+  "need_cut_pct": 22.1,
+  "need_cut_bits_for_S14_only": 10668
+ },
+ "return_tdm": {
+  "lane_bits_now": 70,
+  "payload": 68,
+  "k2": {
+   "lane_bits": 36,
+   "return_bits_saved_frac": 0.486,
+   "rp_peak_after": 16561,
+   "cut_at_432_road": 0.541
+  },
+  "k4": {
+   "lane_bits": 19,
+   "return_bits_saved_frac": 0.729,
+   "rp_peak_after": 13056,
+   "cut_at_432_road": 0.426,
+   "cut_S14_only": 0.607
+  },
+  "assumption": "RP-model return share taken = GEN19b actual-path share (0.612); serialize at trunk entry / deserialize at hr (2 added fixed stages each way), node sums on full words",
+  "cycle_cost": "OWED: per-root leaf emission calendar (S-FUNC) through tools/s81/static_return_calendar.py tree (S-NET): k:1 TDM costs 0 cycles if trunk lane duty <= 1/k, else (k*duty-1)*words per phase"
+ },
+ "e_column": {
+  "parts_um": {
+   "hc_t": 9849.6,
+   "corr": 799.2,
+   "hc_s": 9324.7
+  },
+  "height_um": 19973.5,
+  "hub_height_um": 21823.0,
+  "vm_640_h_um": 4903.2,
+  "gap_um": 3053.7,
+  "norm_nt_strips_um": 427.68,
+  "norm_nt810_rows_um": 427.68,
+  "return_columns_um": 285.12,
+  "v25_yshift_would_add_um": 570.24,
+  "all_norm_plus_return_um": 1140.48,
+  "gap_if_all_removed_um": 1913.2,
+  "fold_condition": "HC towers fold to 2 columns only if VCH carries no road: E column -> ~10386 um, fits beside nothing else; needs return/broadcast demand <= S14+432 road capacity"
+ }
+}

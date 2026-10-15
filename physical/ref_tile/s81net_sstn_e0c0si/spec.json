@@ -78,7 +78,7 @@
     "name": "sstn_noreset_mutant",
     "cmd": "bash tools/s81_static_net/bench_sstn_master.sh mut_noreset dsfd_sstn_e0c0si rtl/dsrom_sys/s81_static_net/gen/dsfd_sstn_e0c0si.sv {RUN}/sstn_mut",
     "expect": "fail",
-    "fail_regex": "SSTN_REG",
+    "fail_regex": "GATE MUTANT .*REJECTED",
     "threads": 1,
     "peak_ram_gb": 2
    }

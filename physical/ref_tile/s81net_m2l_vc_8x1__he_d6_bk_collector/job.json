@@ -1,5 +1,5 @@
 {
- "name": "s81net_m2l_vc_8x1__he_d6_bk_collector-n2-COMMIT",
+ "name": "s81net_m2l_vc_8x1__he_d6_bk_collector-n2-926be9f0b",
  "block": "dsfd_m2l_vc_8x1__he_d6_bk_collector",
  "ref_tile": true,
  "owner": "Claude:s81-net",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 8,
  "source": {
   "branch": "claude/el1015-s81-net-static",
-  "commit": "COMMIT",
+  "commit": "926be9f0b",
   "extra_paths": [
    "rtl/dsrom_sys/s81_static_net/gen",
    "physical/s81_die_pins/snet_gen19b",
@@ -42,7 +42,7 @@
     "name": "hend_offset_mutant",
     "cmd": "bash tools/s81_static_net/bench_hend_master.sh mut_offset dsfd_m2l_vc_8x1__he_d6_bk_collector rtl/dsrom_sys/s81_static_net/gen/dsfd_m2l_vc_8x1__he_d6_bk_collector.sv {RUN}/hend_mut",
     "expect": "fail",
-    "fail_regex": "HEND_STATIC",
+    "fail_regex": "GATE MUTANT .*REJECTED",
     "threads": 1,
     "peak_ram_gb": 4
    }
@@ -95,7 +95,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/s81net_m2l_vc_8x1__he_d6_bk_collector/s81net_m2l_vc_8x1__he_d6_bk_collector-n2-COMMIT"
+   "to": "results/rtl/ref_tile/s81net_m2l_vc_8x1__he_d6_bk_collector/s81net_m2l_vc_8x1__he_d6_bk_collector-n2-926be9f0b"
   }
  ],
  "cycles_added": 0,

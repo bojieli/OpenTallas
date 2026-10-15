@@ -1,0 +1,377 @@
+{
+ "schema": "opentallas.qwen.native-join-profile.v1",
+ "name": "native961t_train24_result_banks",
+ "top_module": "qfd_native_compute_join_961t",
+ "nodes": {
+  "su": [
+   "qfd_sp_su64_sfu_glue_entries",
+   "rtl/physical/qfd_sp_su64_sfu_glue_entries.sv",
+   "79cf22d0b"
+  ],
+  "io": [
+   "qfd_collective_static_io_production",
+   "rtl/physical/ot_qfd_collective_static_io_production.sv",
+   "1d480dd9d9cb2b650655fe317c926141d5535fe2"
+  ],
+  "seq": [
+   "qfd_seq_su_gateway",
+   "rtl/qwen_split/qfd_seq_su_gateway.sv",
+   "fee778245"
+  ]
+ },
+ "io_sources_ref": "1d480dd9d9cb2b650655fe317c926141d5535fe2",
+ "parameters": {
+  "io": "#(.PU(20),.PS(339),.LU(53),.LS(376),.RU(5),.RS0(0),.RS1(0),.RS2(5))",
+  "rs0": "#(.BAND(0),.NB(3),.D(2),.MAX_TRAIN(8))",
+  "rs1": "#(.BAND(1),.NB(3),.D(2),.MAX_TRAIN(8))",
+  "rs2": "#(.BAND(2),.NB(3),.D(2),.MAX_TRAIN(8))"
+ },
+ "source_extras": [
+  {
+   "path": "rtl/physical/ot_qfd_sp_su64_static_glue_entries.sv",
+   "ref": "79cf22d0b"
+  },
+  {
+   "path": "rtl/physical/ot_hdc_vstream_static_relay_entries.sv",
+   "ref": "79cf22d0b"
+  },
+  {
+   "path": "rtl/physical/ot_qfd_su_lane_relay.sv",
+   "ref": "79cf22d0b"
+  },
+  {
+   "path": "rtl/physical/ot_qfd_su_lane_relay_native.sv",
+   "ref": "79cf22d0b"
+  },
+  {
+   "path": "rtl/physical/qfd_su_static_copy_entries.sv",
+   "ref": "79cf22d0b"
+  },
+  {
+   "path": "rtl/physical/ot_qfd_su_copy_core.sv",
+   "ref": "79cf22d0b"
+  },
+  {
+   "path": "rtl/physical/ot_qfd_su_align_group4_hold.sv",
+   "ref": "79cf22d0b"
+  },
+  {
+   "path": "rtl/physical/ot_qfd_su_delay_hold.sv",
+   "ref": "79cf22d0b"
+  },
+  {
+   "path": "rtl/qwen_sys/static_schedule_20261014/ot_qfd_seq_su_bi_gateway.sv",
+   "ref": "fee778245"
+  },
+  {
+   "path": "rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_su_gateway.sv",
+   "ref": "fee778245"
+  },
+  {
+   "path": "rtl/qwen_sys/static_schedule_20261014/ot_qwen_a_operand_gateway_v1.sv",
+   "ref": "d8fdf94f1"
+  }
+ ],
+ "physical_status": "All real clock roots exposed independently. Core1.2GHz and FDI1GHz commonPLL/rationalphase requirements unqualified physically; no same-phase ties. Gateway not included. One independently exposed seq.ck_gateway clocks actual nested gateway; arithmetic/data state/edges unchanged. Native physical clock/pins still unqualified.",
+ "clock_requirements": [
+  {
+   "node": "io",
+   "port": "gearbox_core_ck",
+   "bits": 1,
+   "frequency_hz": 1200000000,
+   "physical_phase_binding": null
+  },
+  {
+   "node": "io",
+   "port": "fdi_ck",
+   "bits": 1,
+   "frequency_hz": 1000000000,
+   "physical_phase_binding": null
+  },
+  {
+   "node": "io",
+   "port": "fdi_rx_ck",
+   "bits": 1,
+   "frequency_hz": 1000000000,
+   "physical_phase_binding": null
+  },
+  {
+   "node": "io",
+   "port": "blk_ck",
+   "bits": 2,
+   "frequency_hz": 200000000,
+   "physical_phase_binding": null
+  }
+ ],
+ "rational_clock_requirement": "Core1.2GHz, FDI1GHz, two200MHz block roots from commonPLL; block boundaries follow source-defined 6:1 and5:1 phase/reset contract. Actual PLL/CTS/phase views OPEN.",
+ "added_nodes": {
+  "crom": [
+   "qfd_native_crom8_tp8",
+   "rtl/qwen_split/qfd_native_crom8_tp8.sv",
+   "c0f16c5da"
+  ],
+  "pt0": [
+   "qfd_port_tiles_0",
+   "rtl/qwen_split/qfd_port_tiles.sv",
+   "c0f16c5da"
+  ],
+  "pt0f": [
+   "qfd_port_tiles_0_f1",
+   "rtl/qwen_split/qfd_port_tiles.sv",
+   "c0f16c5da"
+  ],
+  "pt1": [
+   "qfd_port_tiles_1",
+   "rtl/qwen_split/qfd_port_tiles.sv",
+   "c0f16c5da"
+  ],
+  "pt1f": [
+   "qfd_port_tiles_1_f1",
+   "rtl/qwen_split/qfd_port_tiles.sv",
+   "c0f16c5da"
+  ],
+  "pt2": [
+   "qfd_port_tiles_2",
+   "rtl/qwen_split/qfd_port_tiles.sv",
+   "c0f16c5da"
+  ],
+  "pt2f": [
+   "qfd_port_tiles_2_f1",
+   "rtl/qwen_split/qfd_port_tiles.sv",
+   "c0f16c5da"
+  ],
+  "rs0": [
+   "qfd_res_train_static",
+   "rtl/qwen_split/qfd_res_train_static.sv",
+   "b752dd7d4"
+  ],
+  "rs1": [
+   "qfd_res_train_static",
+   "rtl/qwen_split/qfd_res_train_static.sv",
+   "b752dd7d4"
+  ],
+  "rs2": [
+   "qfd_res_train_static",
+   "rtl/qwen_split/qfd_res_train_static.sv",
+   "b752dd7d4"
+  ]
+ },
+ "added_joins": [
+  [
+   "crom_request0",
+   "su.ca0",
+   "crom.ca0"
+  ],
+  [
+   "crom_response0",
+   "crom.cq0",
+   "su.cq0"
+  ],
+  [
+   "crom_request1",
+   "su.ca1",
+   "crom.ca1"
+  ],
+  [
+   "crom_response1",
+   "crom.cq1",
+   "su.cq1"
+  ],
+  [
+   "crom_request2",
+   "su.ca2",
+   "crom.ca2"
+  ],
+  [
+   "crom_response2",
+   "crom.cq2",
+   "su.cq2"
+  ],
+  [
+   "crom_request3",
+   "su.ca3",
+   "crom.ca3"
+  ],
+  [
+   "crom_response3",
+   "crom.cq3",
+   "su.cq3"
+  ],
+  [
+   "crom_request4",
+   "su.ca4",
+   "crom.ca4"
+  ],
+  [
+   "crom_response4",
+   "crom.cq4",
+   "su.cq4"
+  ],
+  [
+   "crom_request5",
+   "su.ca5",
+   "crom.ca5"
+  ],
+  [
+   "crom_response5",
+   "crom.cq5",
+   "su.cq5"
+  ],
+  [
+   "crom_request6",
+   "su.ca6",
+   "crom.ca6"
+  ],
+  [
+   "crom_response6",
+   "crom.cq6",
+   "su.cq6"
+  ],
+  [
+   "crom_request7",
+   "su.ca7",
+   "crom.ca7"
+  ],
+  [
+   "crom_response7",
+   "crom.cq7",
+   "su.cq7"
+  ],
+  [
+   "band0_command",
+   "tt.c0",
+   "pt0.tc"
+  ],
+  [
+   "band0_return",
+   "pt0.tf",
+   "tt.f0"
+  ],
+  [
+   "band0_command_relay",
+   "pt0.tc_e",
+   "pt0f.tc"
+  ],
+  [
+   "band0_tree_relay",
+   "pt0.tye",
+   "pt0f.ty"
+  ],
+  [
+   "band0_result_relay",
+   "pt0f.rq",
+   "pt0.rqe"
+  ],
+  [
+   "band0_argmax_relay",
+   "pt0f.am",
+   "pt0.ame"
+  ],
+  [
+   "band0_word_relay",
+   "pt0f.cw0",
+   "pt0.cf1"
+  ],
+  [
+   "band1_command",
+   "tt.c1",
+   "pt1.tc"
+  ],
+  [
+   "band1_return",
+   "pt1.tf",
+   "tt.f1"
+  ],
+  [
+   "band1_command_relay",
+   "pt1.tc_e",
+   "pt1f.tc"
+  ],
+  [
+   "band1_tree_relay",
+   "pt1.tye",
+   "pt1f.ty"
+  ],
+  [
+   "band1_result_relay",
+   "pt1f.rq",
+   "pt1.rqe"
+  ],
+  [
+   "band1_argmax_relay",
+   "pt1f.am",
+   "pt1.ame"
+  ],
+  [
+   "band1_word_relay",
+   "pt1f.cw1",
+   "pt1.cf1"
+  ],
+  [
+   "band2_command",
+   "tt.c2",
+   "pt2.tc"
+  ],
+  [
+   "band2_return",
+   "pt2.tf",
+   "tt.f2"
+  ],
+  [
+   "band2_command_relay",
+   "pt2.tc_e",
+   "pt2f.tc"
+  ],
+  [
+   "band2_tree_relay",
+   "pt2.tye",
+   "pt2f.ty"
+  ],
+  [
+   "band2_result_relay",
+   "pt2f.rq",
+   "pt2.rqe"
+  ],
+  [
+   "band2_argmax_relay",
+   "pt2f.am",
+   "pt2.ame"
+  ],
+  [
+   "band2_word_relay",
+   "pt2f.cw2",
+   "pt2.cf1"
+  ],
+  [
+   "band0_results",
+   "pt0.rq",
+   "rs0.rq"
+  ],
+  [
+   "band0_vm_results",
+   "rs0.rb",
+   "vm.rb0"
+  ],
+  [
+   "band1_results",
+   "pt1.rq",
+   "rs1.rq"
+  ],
+  [
+   "band1_vm_results",
+   "rs1.rb",
+   "vm.rb1"
+  ],
+  [
+   "band2_results",
+   "pt2.rq",
+   "rs2.rq"
+  ],
+  [
+   "band2_vm_results",
+   "rs2.rb",
+   "vm.rb2"
+  ]
+ ],
+ "added_scope": "Adds the actual mapped constant ROM (8x cbuf_g_tp8 + crom_gr TP8, released masks) on SU ca/cq and the six real TP8 slab masters (qfd_port_tiles_b/_b_f1, 384 mapped scale-ROM macros qslab_b*_h*_g*_c*_b*) on TT c0..2/f0..2. ME-array block words (bw), tree words (ty), result serialisation to VM rb and token start/position remain explicit external inputs. join961 adds three static band result serialisers qfd_res_ser_static (pt_b.rq -> vm.rb_b, tt.mer_b engine enable), replacing the credit-based qfd_sp_res_ser for the static rule. | 961t (Q-ATTN r3 2026-10-15): the three band result serialisers are the Codex fixed train24 banks (qfd_res_train_static, b752dd7d4) chosen by results/arch/qwen_split_compute_1014/res_train_decision_1015/decision.json; slab rq -> rs.rq is the identical 4425-b packing. The compiler train command (train_start/train_count/capture_stride/payload_write per band) and the 24 bank clock entries + control clock per band are explicit external inputs: their production source (ME issue decode in the TT controller calendar) is not yet RTL; tt.mer_b no longer gates capture."
+}

@@ -121,7 +121,11 @@ def main() -> int:
     ap.add_argument('--branch', default='claude/el1015-s81-net-static')
     ap.add_argument('--tag', default='n1')
     ap.add_argument('--gen', action='store_true')
+    ap.add_argument('--size', help='JSON {master: {std_um2}} (synthesized area: gate logs or flop-count estimate): hend / '
+                    'xstg outlines sized to util <= UTIL and face cut <= 0.6, pins spread evenly (tools/ref_tile/'
+                    'spread_face_pins.py: M3/M5 N/S, M4 W/E, clock at face centre), no output hold pads')
     a = ap.parse_args()
+    sizes = json.loads(Path(a.size).read_text()) if a.size else {}
     pin_dir = f'physical/s81_die_pins/snet_{a.case}'
     glue_txt = Path(a.glue).read_text()
     glue_sha = hashlib.sha256(glue_txt.encode()).hexdigest()
@@ -144,12 +148,29 @@ def main() -> int:
             assert 'ot_meso_fifo' not in txt and 'ot_ratio_cdc_fifo' not in txt, f'{mst}: render the glue with --hend-static'
         mac = macs[mst]
         dw, dh = K.snap(mac['w']), K.snap(mac['h'])
+        spread = kd in ('hend', 'xstg') and mst in sizes
+        if spread:
+            # S-NET n3 (verdicts 12:43 FLOORPLAN_MARGIN util 63 %, 12:49 EARLY_FAIL_CONGESTION on the 291-b lane): size
+            # from the measured demand, not the generator slot.  Face cut <= 0.6: N/S pins alternate M3/M5 (0.072 um a
+            # pin) -> 0.12 um a pin; W/E M4 (0.096 um, 2 tracks) -> 0.16 um a pin; util <= 0.55 on the core.
+            cnt = {}
+            for p in mac['pins']:
+                cnt[p['face']] = cnt.get(p['face'], 0) + 1
+            need_w = max(cnt.get('N', 0), cnt.get('S', 0)) * 0.12 + 2 * 4.32
+            need_h = max(cnt.get('W', 0), cnt.get('E', 0)) * 0.16 + 2 * 4.32
+            dw, dh = K.snap(max(dw, need_w)), K.snap(max(dh, need_h))
+            core = sizes[mst]['std_um2'] / 0.55
+            while (dw - 2 * K.MARGIN) * (dh - 2 * K.MARGIN) < core:
+                if dh <= dw:
+                    dh = K.snap(dh + 2.16)
+                else:
+                    dw = K.snap(dw + 2.16)
         sha = hashlib.sha256(txt.encode()).hexdigest()
         (ROOT / RTL_DIR / f'{mst}.sv').write_text('`timescale 1ns/1ps\n' + txt)
         scalar = set(re.findall(r'wire \[0:0\] (\w+)', txt))
         tcl = [f'# {mst}: die generator pin centres ({a.case} pins.lef); outline {dw} x {dh} (slot {mac["w"]} x {mac["h"]} '
                'rounded up to the 2.16-um lattice; N / E pins follow their face)']
-        faces = {}
+        faces, votes = {}, {}
         for p in mac['pins']:
             x, y = p['x'], p['y']
             if p['face'] == 'E':
@@ -160,7 +181,9 @@ def main() -> int:
             pname = re.sub(r'\[0\]$', '', p['pin']) if base in scalar else p['pin']
             tcl.append(f'place_pin -pin_name {{{pname}}} -layer {p["layer"]} -location {{{x:.6f} {y:.6f}}} '
                        '-force_to_die_boundary')
-            faces.setdefault(p['face'], set()).add(base)
+            votes.setdefault(base, []).append(p['face'])
+        for base, fs in votes.items():   # one face per port (a corner pin is nearer the other face): the port's majority
+            faces.setdefault(max(set(fs), key=fs.count), set()).add(base)
         ports = re.findall(r'(?:input|output) wire \[\d+:0\] (\w+)', txt)
         missing = [q for q in ports if q not in {b for v in faces.values() for b in v}]
         assert not missing, (mst, missing)
@@ -176,9 +199,9 @@ def main() -> int:
                 {'name': 'node_exact', 'cmd': f'bash {bench} pass {mst} {rtl} {{RUN}}/node_pass', 'expect': 'pass',
                  'pass_regex': 'NODE_STATIC_GATE PASS', 'threads': 2, 'peak_ram_gb': 4},
                 {'name': 'node_window_mutant', 'cmd': f'bash {bench} mut_window {mst} {rtl} {{RUN}}/node_mw',
-                 'expect': 'fail', 'fail_regex': 'NODE_STATIC', 'threads': 2, 'peak_ram_gb': 4},
+                 'expect': 'fail', 'fail_regex': 'GATE MUTANT .*REJECTED', 'threads': 2, 'peak_ram_gb': 4},
                 {'name': 'node_fault_chain_mutant', 'cmd': f'bash {bench} mut_fault {mst} {rtl} {{RUN}}/node_mf',
-                 'expect': 'fail', 'fail_regex': 'NODE_STATIC', 'threads': 2, 'peak_ram_gb': 4}]
+                 'expect': 'fail', 'fail_regex': 'GATE MUTANT .*REJECTED', 'threads': 2, 'peak_ram_gb': 4}]
             change = (f'S-NET static return node {mst} ({n} die instances): the ot_v41_retn_w17w10 wrapper (D=64 x 2 queues, '
                       'WAIT-timeout forwarding, older-side-first / yield-to-add arbitration) is replaced by ot_s81_retn_static '
                       '(owner static-schedule rule 10-14 18:59): sibling window WIN=2, every output at edge early+WIN+8, no queue/'
@@ -192,7 +215,7 @@ def main() -> int:
                 {'name': 'sstn_exact', 'cmd': f'bash {bench} pass {mst} {rtl} {{RUN}}/sstn_pass', 'expect': 'pass',
                  'pass_regex': 'SSTN_REG_GATE PASS', 'threads': 1, 'peak_ram_gb': 2},
                 {'name': 'sstn_noreset_mutant', 'cmd': f'bash {bench} mut_noreset {mst} {rtl} {{RUN}}/sstn_mut',
-                 'expect': 'fail', 'fail_regex': 'SSTN_REG', 'threads': 1, 'peak_ram_gb': 2}]
+                 'expect': 'fail', 'fail_regex': 'GATE MUTANT .*REJECTED', 'threads': 1, 'peak_ram_gb': 2}]
             change = (f'S-NET {mst} ({n} die instances): the reset-qualified valid is now a column-reset flop at the pin '
                       '(--sstn-reg) instead of flop AND rs behind the output pin (logic after the output register); '
                       + ('the undeclared cc driver removed; ' if mst == 'dsfd_sstn_e0c0' else '') + '0 cycles, same ports')
@@ -201,11 +224,18 @@ def main() -> int:
             sources = [LANE_CROSS, f'{SNET}/ot_s81_static_lane_end.sv', RATIO_SRC, rtl]
             clock, resets = 'ck', ['rs'] + (['rss'] if 'input wire [0:0] rss' in txt else [])
             bench = 'tools/s81_static_net/bench_hend_master.sh'
-            benches = [
+            if re.search(r'_vs[01]_1x1__', mst):   # status lane: start + end pair bench (partner RTL in the same dir)
+                benches = [
+                    {'name': 'status_pair_exact', 'cmd': f'bash tools/s81_static_net/bench_status_master.sh pass {mst} {rtl} {{RUN}}/st_pass',
+                     'expect': 'pass', 'pass_regex': 'STATUS_STATIC_GATE PASS', 'threads': 1, 'peak_ram_gb': 2},
+                    {'name': 'status_delay_mutant', 'cmd': f'bash tools/s81_static_net/bench_status_master.sh mut_offset {mst} {rtl} {{RUN}}/st_mut',
+                     'expect': 'fail', 'fail_regex': 'GATE MUTANT .*REJECTED', 'threads': 1, 'peak_ram_gb': 2}]
+            else:
+                benches = [
                 {'name': 'hend_exact', 'cmd': f'bash {bench} pass {mst} {rtl} {{RUN}}/hend_pass', 'expect': 'pass',
                  'pass_regex': 'HEND_STATIC_GATE PASS', 'threads': 1, 'peak_ram_gb': 4},
                 {'name': 'hend_offset_mutant', 'cmd': f'bash {bench} mut_offset {mst} {rtl} {{RUN}}/hend_mut',
-                 'expect': 'fail', 'fail_regex': 'HEND_STATIC', 'threads': 1, 'peak_ram_gb': 4}]
+                 'expect': 'fail', 'fail_regex': 'GATE MUTANT .*REJECTED', 'threads': 1, 'peak_ram_gb': 4}]
             how = ('ot_s81_static_ratio_cross (fixed source-edge map, compiled bubble phase)' if 'ratio_cross' in txt else
                    'ot_s81_static_lane_end (pin register, marker epoch, fixed offset)' if 'lane_end' in txt else
                    'a same-clock pin pipeline (ck and cks are one die net)')
@@ -225,7 +255,7 @@ def main() -> int:
                 {'name': 'xstg_exact', 'cmd': f'bash {bench} pass {mst} {rtl} {{RUN}}/xstg_pass', 'expect': 'pass',
                  'pass_regex': 'XSTG_STATIC_GATE PASS', 'threads': 1, 'peak_ram_gb': 2},
                 {'name': 'xstg_offset_mutant', 'cmd': f'bash {bench} mut_offset {mst} {rtl} {{RUN}}/xstg_mut',
-                 'expect': 'fail', 'fail_regex': 'XSTG', 'threads': 1, 'peak_ram_gb': 2}]
+                 'expect': 'fail', 'fail_regex': 'GATE MUTANT .*REJECTED', 'threads': 1, 'peak_ram_gb': 2}]
             change = (f'S-NET {mst} ({n} die instances): the d8g1 ot_meso_fifo (trained placement + CREDITS 16) is replaced by '
                       'ot_s81_static_lane_end (cw pin register, epoch from the lane marker, fixed-offset crossing, no credit/'
                       'ready/placement), o = {data, valid & live, live}')
@@ -249,12 +279,26 @@ def main() -> int:
             spec['sdc_extra'] = [f'{HEND_DIR}/{mst}.sdc']
             spec['boundary_tcl'] = [f'{HEND_DIR}/{mst}_boundary.tcl']
             spec['inhold'] = True
-            spec['outhold'] = True
+            spec['outhold'] = not spread
+        if spread:
+            spec['structural_change'] += (f' | n3 sizing: std {sizes[mst]["std_um2"]:.0f} um2 -> util <= 0.55, faces at cut <= 0.6 '
+                                          f'(outline {dw} x {dh} vs generator slot {mac["w"]} x {mac["h"]}); pins spread '
+                                          'evenly per face (spread_face_pins.py, clock at face centre), no output hold pads '
+                                          '(die receivers carry input hold stages)')
+            spec['slot_change_request'] = {'reason': 'S-NET n3: measured std area / pin cut', 'outline': [dw, dh],
+                                           'generator_slot': [mac['w'], mac['h']], 'pins': spec['io_tcl']}
+            if kd == 'xstg':
+                spec['outhold'] = False
         if kd == 'xstg':
             spec['sdc_extra'] = ['physical/s81_static_net/xstg/dsfd_xstg_515.sdc']
             spec['boundary_tcl'] = ['physical/s81_static_net/xstg/dsfd_xstg_515_boundary.tcl']
         p = ROOT / SPEC_DIR / f'{name}.json'
         p.write_text(json.dumps(spec, indent=1) + '\n')
+        if spread:   # explicit even spread on the sized outline (the die adopts this pin file + footprint)
+            r = subprocess.run([sys.executable, str(ROOT / 'tools/ref_tile/spread_face_pins.py'), str(p), str(ROOT / pin_dir / f'{mst}.tcl')],
+                               capture_output=True, text=True, cwd=ROOT)
+            if r.returncode:
+                raise SystemExit(f'{mst}: spread_face_pins: {(r.stdout + r.stderr)[-300:]}')
         print(f'{mst:28s} n={n:<5d} slot {mac["w"]}x{mac["h"]} -> {dw}x{dh}  {name}')
         if a.gen:
             r = subprocess.run([sys.executable, str(ROOT / 'tools/ref_tile/ref_tile.py'), 'gen', str(p)],

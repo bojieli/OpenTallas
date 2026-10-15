@@ -42,14 +42,14 @@
   "hold_margin_ns": 0.03,
   "macro_halo_um": 5.4
  },
- "structural_change": "S-NET dsfd_m2l_raw_512x1__hl_W2 (1 die instance(s)): the ot_meso_fifo (trained placement + CREDITS) / ot_ratio_cdc_fifo (ready + DOWN/WAIT/RUN handshake) crossing is replaced by ot_s81_static_lane_end (pin register, marker epoch, fixed offset), owner static-schedule rule 10-14 18:59; same ports and lane formats, {fault, live} folded as before; RTL = the case glue module rendered by the generator (module sha256 a93b98d2163e5991, glue db43fe8fec3ba6e8); pins at the generator centres (gen19b).",
+ "structural_change": "S-NET dsfd_m2l_raw_512x1__hl_W2 (1 die instance(s)): the ot_meso_fifo (trained placement + CREDITS) / ot_ratio_cdc_fifo (ready + DOWN/WAIT/RUN handshake) crossing is replaced by ot_s81_static_lane_end (pin register, marker epoch, fixed offset), owner static-schedule rule 10-14 18:59; same ports and lane formats, {fault, live} folded as before; RTL = the case glue module rendered by the generator (module sha256 a93b98d2163e5991, glue db43fe8fec3ba6e8); pins at the generator centres (gen19b). | n3 sizing: std 3794 um2 -> util <= 0.55, faces at cut <= 0.6 (outline 129.6 x 131.76 vs generator slot 128.28 x 131.736); pins spread evenly per face (spread_face_pins.py, clock at face centre), no output hold pads (die receivers carry input hold stages)",
  "reroute_reason": {
   "kind": "rtl_change"
  },
  "job": {
   "owner": "Claude:s81-net",
   "branch": "claude/el1015-s81-net-static",
-  "tag": "n2",
+  "tag": "n3",
   "purpose": "S81 S-NET static-schedule redesign: dsfd_m2l_raw_512x1__hl_W2 (1 replicas, hardened once): exact bench + observed failing mutants; recipe 2, M5 cap, generator pins",
   "views_to": "physical/ref_tile/s81net_m2l_raw_512x1__hl_w2/views",
   "record_to": "results/rtl/ref_tile/s81net_m2l_raw_512x1__hl_w2",
@@ -74,7 +74,7 @@
     "name": "hend_offset_mutant",
     "cmd": "bash tools/s81_static_net/bench_hend_master.sh mut_offset dsfd_m2l_raw_512x1__hl_W2 rtl/dsrom_sys/s81_static_net/gen/dsfd_m2l_raw_512x1__hl_W2.sv {RUN}/hend_mut",
     "expect": "fail",
-    "fail_regex": "HEND_STATIC",
+    "fail_regex": "GATE MUTANT .*REJECTED",
     "threads": 1,
     "peak_ram_gb": 4
    }
@@ -87,7 +87,19 @@
   "physical/s81_static_net/hend/dsfd_m2l_raw_512x1__hl_W2_boundary.tcl"
  ],
  "inhold": true,
- "outhold": true,
+ "outhold": false,
+ "slot_change_request": {
+  "reason": "S-NET n3: measured std area / pin cut",
+  "outline": [
+   129.6,
+   131.76
+  ],
+  "generator_slot": [
+   128.28,
+   131.736
+  ],
+  "pins": "physical/s81_die_pins/snet_gen19b/dsfd_m2l_raw_512x1__hl_W2.tcl"
+ },
  "macros": [],
  "children": [],
  "inter": [],

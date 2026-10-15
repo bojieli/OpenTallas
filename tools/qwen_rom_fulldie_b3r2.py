@@ -6374,13 +6374,28 @@ def case_pdn(v, m, work, bump_um, rev='r4'):
                                        'END LIBRARY\n')
     _gate_track_lattice(work / 'elements.lef', m)
     meta = (write_pdn_r5 if rev == 'r5' else write_pdn_r4)(v, m, work / 'pdn.tcl', bump_um)['meta']
+    # Opt-in structural PDN fallback: temporary conservative master OBS only while
+    # generating power metal. Detailed route masters/pins stay untouched.
+    for helper in ('pdn_bbox_obs.py', 'pdn_bbox_obs.tcl'):
+        (work / helper).write_text((Path(__file__).parent / 'qwen_kv_die' / 'chain' / helper).read_text())
     (work / 'run_pdn.tcl').write_text("""# full-die PDN with macro grids on the placed floorplan
 proc mem {tag} { set f [open /proc/self/status]; set s [read $f]; close $f
   regexp {VmRSS:\\s+(\\d+)} $s -> r; puts "OTMEM $tag [expr {$r/1024}] MB [clock seconds]" }
 read_db /work/floorplan.odb
 mem read
 set t0 [clock seconds]
-if {[catch {source /work/pdn.tcl; pdngen; source /work/die_constant_pg_check.tcl} err]} { puts "OT_PDN FAIL $err"; error $err } else {
+set ot_bbox 0
+if {[info exists ::env(OT_PDN_BBOX_OBS)] && $::env(OT_PDN_BBOX_OBS) eq "1"} {
+  source /work/pdn_bbox_obs.tcl
+  ot_pdn_bbox::begin /work
+  set ot_bbox 1
+}
+if {[catch {
+  try {source /work/pdn.tcl; pdngen} finally {
+    if {$ot_bbox} {ot_pdn_bbox::restore}
+  }
+  source /work/die_constant_pg_check.tcl
+} err]} { puts "OT_PDN FAIL $err"; error $err } else {
   set nsw 0; foreach net [[ord::get_db_block] getNets] { foreach sw [$net getSWires] { incr nsw [llength [$sw getWires]] } }
   puts "OT_PDN PASS special_shapes=$nsw" }
 puts "OT_TIME pdn_s=[expr {[clock seconds]-$t0}]"
