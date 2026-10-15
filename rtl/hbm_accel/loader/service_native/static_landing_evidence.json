@@ -1,0 +1,49 @@
+{
+  "scope": "mechanism component; NOT seg_psn/native die qualification",
+  "model": {
+    "schema": "opentallas.hbm.static-landing.v1",
+    "opt_in": true,
+    "pcs": 32,
+    "banks": 2,
+    "sectors_per_bank_per_pc": 64,
+    "sector_bits": 256,
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "macro_count": 32,
+    "macro_area_um2": 3893.852736,
+    "array_area_um2": 124603.287552,
+    "capacity_bytes": 131072,
+    "fill_bytes_per_cycle": 1024,
+    "drain_bytes_per_cycle": 1024,
+    "drain_cycles_per_block": 64,
+    "read_latency_cycles": 1,
+    "read_issue_interval_cycles": 1,
+    "block_boundary_bits": 2,
+    "payload_boundary_bits": 8192,
+    "fill_boundary_bits": 8416,
+    "macs_per_cycle": 0,
+    "valid_state_bits": 4096,
+    "replica_mux": "32 independent 1R1W macros; no payload crossbar",
+    "fanout": "start/bank to 32 macros; PC-local write enables and addresses",
+    "routing_tracks_needed": 8192,
+    "routing_capacity": null,
+    "slot_fit": null,
+    "composed_latency": "one macro read edge; 64 fixed issue slots per block; prefetch latency external",
+    "token_delta_cycles": null,
+    "adopted": false,
+    "qualification": "mechanism only; band ABI, native loader, SM/WB and compiler calendar joins absent"
+  },
+  "source_sha256": {
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_static_landing.sv": "f50a040e66a67f24bfa5d7615f0df1e4001dac049f81d5c1c1efefd02da2c2b8",
+    "rtl/hbm_accel/loader/service_native/tb_hbm_svc_static_landing.sv": "36ab9f0312b4651cc0d86281201b81e1b36a6f075f1fd0178afd7b9b5629f57c",
+    "rtl/hbm_accel/loader/service_native/run_static_landing_bench.sh": "c3addd766b339c92d3edda0da4c997bb5204330db2671c3ad2bb1868c7056053"
+  },
+  "positive_log": "STATIC_LANDING PASS PCs=32 blocks=3 outputs=192 overlap=64 II=1 faults=duplicate,epoch,incomplete\n",
+  "mutant_log": "FATAL: rtl/hbm_accel/loader/service_native/tb_hbm_svc_static_landing.sv:37: payload pc=0 slot=0\n       Time: 2637000 Scope: tb_hbm_svc_static_landing.$ivl_for_loop1\n",
+  "yosys_check": "hierarchy -check; proc; opt_clean; check -assert PASS (real macro blackbox ABI)",
+  "gaps": [
+    "No compiler production prefetch/calendar bound",
+    "No SRAM physical slot/timing/clockroot qualification",
+    "No actual segmented service native/SM/WB replacement",
+    "32PC to 8-bank VM adaptation requires explicit static bandwidth pricing"
+  ]
+}
