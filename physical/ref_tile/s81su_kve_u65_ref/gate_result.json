@@ -1,0 +1,32 @@
+{
+ "schema": "opentallas.ref_tile.gate_result.v1",
+ "kit": "s81su_kve_u65_ref",
+ "verdict": "WARN",
+ "generated": "2026-10-13T19:05:18-0700",
+ "host": "ot-epyc1tb",
+ "cts": true,
+ "commit": "a6ead93e2",
+ "clock": {
+  "max_root_sinks": 6160,
+  "root": "port:ck",
+  "cts": true,
+  "tt_insertion_ps": 180.3,
+  "tt_spread_ps": 15.3,
+  "declared_clock": null,
+  "limits": {
+   "sinks": 15000,
+   "insertion_ps": 300.0,
+   "spread_ps": 80.0
+  },
+  "verdict": "PASS",
+  "text": "6,160 sinks on the largest root <= 15,000; measured TT insertion 180.3 ps, leaf spread 15.3 ps"
+ },
+ "items": [
+  {
+   "severity": "WARN",
+   "check": "textbook.logic_depth",
+   "message": "reg->reg stage u_e.u_vs.line[21]$_DFF_PN0_ -> u_e.u_a.gq.u.genblk1.genblk1.g_keep4.u.u.u_k1.g_r.r[1]$_DFF_P_/D: ~632 ps estimated (15 logic levels) > 600 ps: pipeline / restructure the stage",
+   "fix": "pipeline to ~700 ps a stage: trees, 2-3 rungs for wide compare / mux / arbitration"
+  }
+ ]
+}

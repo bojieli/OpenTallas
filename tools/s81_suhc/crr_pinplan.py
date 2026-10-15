@@ -16,6 +16,7 @@ from pathlib import Path
 
 W = 276.48
 MARGIN = 2.16
+HF = 345.6                # crootr_f v6 height (bottom of the 598.32 slot; see plans())
 NG, NCOL, GS, S_RD, S_RT = 256, 3, 8, 2, 4
 NS = NG // GS
 NP = (NS + NCOL - 1) // NCOL
@@ -126,16 +127,94 @@ def check(pins, H, name):
     return worst
 
 
+LC = NP                    # y slice leaves a column root (ot_s81_hc_cryys, 256 b each)
+SLICE_W = 32.4
+# r10 (2026-10-13, die hop gate against the closed leaf ot_s81_hc_cryys): the N face of crootr_f is the S face of the 11
+# die-placed slice leaves (contract v17 rows sp_hc_s/crooty_c{0,2}/ys0..10, pitch 32.4).  The tile is 276.48 wide, the
+# leaf row 356.4: EIGHT leaves stand over the tile, three beside it.
+#   kit w (C 0, column c0): leaves 0..7 over the tile, 8..10 east of it;  kit e (C 2, column c2): leaves 3..10 over the
+#   tile, 0..2 west of it (v17 puts leaf k of BOTH columns at base + 32.4 k).
+# Slot q (q = 0..7) of the face is x 32.4 q .. 32.4 (q + 1) in the KIT frame (32.4 = 675 M5 tracks = 900 M3 tracks =
+# 6 PG pitches, so a leaf pin position is on-track and stripe-free in the tile frame as it is in the leaf frame).
+#   over-tile leaf in slot q:  p_y[256 k + i] and p_req[k] EXACTLY under the leaf's p_y[i] / p_req pin (same layer, same
+#                              track): a straight abutment, zero die wire.
+#   beside-tile leaf:          the same order on the free tracks between the pins of a slot three pitches away
+#                              (kit w: leaves 8, 9, 10 in slots 5, 6, 7; kit e: leaves 0, 1, 2 in slots 0, 1, 2), i.e.
+#                              ONE uniform 97.2-um jog for the 3 x 257 bits on the die layer over the tiles
+#                              (o 197.3 + 0.76 x 97.2 + s <= 683.3 holds with s up to 412 ps).
+# Die request (one line, el1011-s81die.log): leaf k origin = crootr_f origin + 32.4 (k - K0), K0 = 0 (c0) / 3 (c2).
+PQ_SLOTS = {False: ([3, 4, 5, 6, 7, 8, 9, 10], {0: 0, 1: 1, 2: 2}),      # kit e: over-tile leaves by slot; beside leaf -> slot
+            True: ([0, 1, 2, 3, 4, 5, 6, 7], {8: 5, 9: 6, 10: 7})}        # kit w
+
+
+def cryys_face():
+    """(layer, x) of p_y[i] in the leaf frame, and x of the leaf's p_req pin (M5): the closed leaf's plan"""
+    global W
+    keep, W = W, SLICE_W
+    top = face_plan("N", [bits("y_s", 256)], 300.24, ["M5", "M3"], lo=MARGIN, hi=27.9)
+    ctl = tracks("M5", 28.2, W - MARGIN)
+    W = keep
+    return [(L, x) for _, _, L, x in top], ctl[4 * 3]
+
+
+def crrf_n_plan(m):
+    leaf, prq_x = cryys_face()
+    over, beside = PQ_SLOTS[m]
+    pins, used = [], {"M5": set(), "M3": set()}
+    def put(nm, L, x):
+        x = round(x, 3)
+        assert x not in used[L] and MARGIN <= x <= W - MARGIN, (nm, L, x)
+        used[L].add(x)
+        pins.append(("N", nm, L, x))
+    for q, k in enumerate(over):
+        for i, (L, x) in enumerate(leaf):
+            put(f"p_y[{256 * k + i}]", L, SLICE_W * q + x)
+        put(f"p_req[{k}]", "M5", SLICE_W * q + prq_x)
+    # beside-tile leaves: nearest free, stripe-free track of the same layer
+    free = {L: tracks(L, MARGIN, W - MARGIN) for L in ("M5", "M3")}
+    pitch = {"M5": 0.048, "M3": 0.036}
+    def near(L, want):
+        # prefer a track with both neighbours free within 0.3 um; else any free track (adjacent-track pins are legal:
+        # the leaf plan itself has them at the PG stripes, kit PIN_MIN_TRACKS 1)
+        for reach, clear in ((0.3, (-1, 0, 1)), (3.0, (0,))):
+            best = None
+            for x in free[L]:
+                if abs(x - want) > reach or any(round(x + d * pitch[L], 3) in used[L] for d in clear):
+                    continue
+                if best is None or abs(x - want) < abs(best - want):
+                    best = x
+            if best is not None:
+                return best
+        raise AssertionError((L, want))
+    worst = 0.0
+    for k, q in sorted(beside.items()):
+        for i, (L, x) in enumerate(leaf):
+            want = SLICE_W * q + x + 2 * pitch[L]
+            got = near(L, want)
+            worst = max(worst, abs(got - (SLICE_W * q + x)))
+            put(f"p_y[{256 * k + i}]", L, got)
+        put(f"p_req[{k}]", "M5", near("M5", SLICE_W * q + prq_x + 2 * pitch["M5"]))
+    assert worst < 3.0, worst                      # a beside-tile bit sits within 3 um of the shifted leaf position
+    assert len(pins) == YS + LC
+    crrf_n_plan.worst = round(worst, 3)
+    return pins
+
+
 def plans(m):
     V = ["M5", "M3"]
     fp = lambda *a, **k: face_plan(*a, mirror=m, **k)
     ck = lambda H: [("W" if m else "E", "sk", "M4", round(0.012 + 0.048 * round((H / 2 - 0.78) / 0.048), 3)),
                     ("W" if m else "E", "srs", "M4", round(0.012 + 0.048 * round((H / 2 + 0.78) / 0.048), 3))]
     # the e variant (C = 2): data on W, clock on E; the w variant (C = 0) is its x mirror
-    H = 598.32
-    f = (fp("N", [bits("p_req", 0) + bits("p_y", YS)], H, V)
+    # v6 (B6 s81-elemB 2026-10-14): the tile is the BOTTOM 345.6 um of its 598.32 slot (origin unchanged, S face
+    # unchanged on the chain); the y slices (2,816 b) and p_req (11 b) cross the freed 252.72 um above it as die wires
+    # straight under the y slice leaves (hop o 197.3 + 0.76 L + s: abutted-leaf bits L 252.7, beside-leaf bits L <= 350,
+    # both <= 683.3 with s <= 190).  The x positions of the N pins are the abutment plan's (crrf_n_plan, unchanged), so
+    # every y wire is a straight vertical.  The f face keeps the T_tree overlap: T_tree spans tile-local 187.6 .. 369.0.
+    H = HF
+    f = (crrf_n_plan(m)
          + fp("S", [bits("ch_rst", 0) + bits("ch_fv", FVW) + bits("ch_fd", FDW)], H, V)
-         + fp("W", [bits("f_fv", FVW) + bits("f_fd", FSW)], H, ["M4"], lo=180.0, hi=368.4) + ck(H))
+         + fp("W", [bits("f_fv", FVW) + bits("f_fd", FSW)], H, ["M4"], lo=150.0, hi=H - MARGIN) + ck(H))
     H = 200.88
     srd = bits("s_rv", RVW) + bits("s_rd", RDW)
     k = len(srd) // 2
@@ -149,7 +228,7 @@ def plans(m):
     w = (fp("W", [sw[k:]], H, ["M4"])
          + fp("S", [sw[:k][::-1]], H, V, lo=MARGIN, hi=W / 2)
          + fp("N", [bits("p_flt", 0) + bits("p_w", 4 * WSL)], H, V) + ck(H))
-    return {"crrf": (f, 598.32), "crrr": (r, 200.88), "crrw": (w, 200.88)}
+    return {"crrf": (f, HF), "crrr": (r, 200.88), "crrw": (w, 200.88)}
 
 
 def ctrn_plan():
@@ -259,8 +338,11 @@ def main():
     out = Path(sys.argv[1] if len(sys.argv) > 1 else "physical/s81_hc_pinplan")
     for side, mirror in (("e", False), ("w", True)):
         for nm, (pins, H) in plans(mirror).items():
-            print(nm, side, len(pins), check(pins, H, nm))
-            (out / f"{nm}_{side}.tcl").write_text(emit(pins, H, f"S81 HC {nm}_{side}: full-face, by-bit-count, two-layer pin plan (b/um/layer <= 6)"))
+            print(nm, side, len(pins), check(pins, H, nm), f"beside-leaf pin offset <= {crrf_n_plan.worst} um" if nm == "crrf" else "")
+            title = f"S81 HC {nm}_{side}: full-face, by-bit-count, two-layer pin plan (b/um/layer <= 6)"
+            if nm == "crrf":
+                title += "; N face = the pins of the 11 y slice leaves (8 abutted, 3 on a 97.2-um jog; crrf_n_plan)"
+            (out / f"{nm}_{side}.tcl").write_text(emit(pins, H, title))
 
 
     txt, chk, n = ctrn_plan()
