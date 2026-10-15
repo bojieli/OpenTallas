@@ -150,6 +150,8 @@ export class DieReplay {
     const mapped = this.df.coverage.token_mapped;
     this.flowStatus.textContent = `${this.flowOn ? `${segments.length} segments shown${candidates.length > 600 ? ` / ${candidates.length}; narrow the filter` : ''}${this.showLabels && segments.length > 50 ? ' · first 50 width labels shown; narrow the filter or hover a line' : ''}` : 'Dataflow overlay off'} · ${this.df.coverage.total} source connections · ${this.df.coverage.widths_known} widths known · ${this.df.coverage.rates_known} required rates known · ${mapped} explicit token mappings` +
       (!mapped ? ' · Current/selected operator filtering unavailable: no token-to-connection mapping.' : '') +
+      (this.df.coverage.omitted_broadcast_endpoints ? ` · ${this.df.coverage.omitted_broadcast_endpoints.toLocaleString()} broadcast endpoints omitted by source geometry` : '') +
+      (this.df.coverage.source_scope ? ` · ${this.df.coverage.source_scope}` : '') +
       (this.df.error ? ` · ${this.df.error}` : '');
     events.sort((a, b) => a.critical - b.critical);
     for (const e of events) {
