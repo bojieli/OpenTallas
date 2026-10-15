@@ -1,0 +1,72 @@
+[
+  {
+    "cell": "qkd_static_kv_return_slots",
+    "view": "physical/ref_tile/qkd_static_kv_return_slots_r1/views/qkd_static_kv_return_slots",
+    "lib_cell": "qkd_static_kv_return_slots",
+    "insertion": true,
+    "ref_src": [
+      "insertion.json boundary mean"
+    ],
+    "R_ps": 157.3,
+    "spread_ps": 35.4,
+    "outputs": 291,
+    "inputs": 325,
+    "launch_ps": 268.8,
+    "launch_pin": "actual_data[50]",
+    "capture_ps": 131.6,
+    "capture_pin": "controller_co[236]",
+    "launch_over": 290,
+    "capture_over": 0,
+    "comb_pins": 0,
+    "comb_first": [],
+    "pass": false,
+    "fail_why": "launch 268.8 > 220 (290 pins)",
+    "job": "qkd_static_kv_return_slots_r1-r1-7489b1528",
+    "tool": "native_pin_audit.audit_one TT phi-R per-pin",
+    "source_sha256": {
+      "physical/ref_tile/qkd_static_kv_return_slots_r1/views/qkd_static_kv_return_slots/insertion.json": "54bfd7ea59446a48ca55dbbba1911efc26b0f9356b631547fdecbb02d6375011",
+      "physical/ref_tile/qkd_static_kv_return_slots_r1/views/qkd_static_kv_return_slots/qkd_static_kv_return_slots_tt.lib": "29b799cf1a5e83c850997ef8a4bc2ad88bd40f592b907793f19ac812653eed98"
+    },
+    "loop_status": "CLOSED",
+    "qualification": "TT/FF/DRC closed, native-boundary FAIL",
+    "budgets_ps": {
+      "launch": 220,
+      "capture": 190
+    }
+  },
+  {
+    "cell": "qkd_kv_static_writer_native",
+    "view": "physical/ref_tile/qkd_kv_static_writer_native_r1/views/qkd_kv_static_writer_native",
+    "lib_cell": "qkd_kv_static_writer_native",
+    "insertion": true,
+    "ref_src": [
+      "insertion.json boundary mean"
+    ],
+    "R_ps": 265.0,
+    "spread_ps": 45.1,
+    "outputs": 1284,
+    "inputs": 650,
+    "launch_ps": 199.1,
+    "launch_pin": "es[629]",
+    "capture_ps": 268.0,
+    "capture_pin": "rst_n",
+    "launch_over": 0,
+    "capture_over": 1,
+    "comb_pins": 0,
+    "comb_first": [],
+    "pass": false,
+    "fail_why": "capture 268.0 > 190 (1 pins)",
+    "job": "qkd_kv_static_writer_native_r1-r3-7489b1528",
+    "tool": "native_pin_audit.audit_one TT phi-R per-pin",
+    "source_sha256": {
+      "physical/ref_tile/qkd_kv_static_writer_native_r1/views/qkd_kv_static_writer_native/insertion.json": "a852c407f121b0c1f70ab5682c31a1d089cf884083e95159cb28be519e1b47b4",
+      "physical/ref_tile/qkd_kv_static_writer_native_r1/views/qkd_kv_static_writer_native/qkd_kv_static_writer_native_tt.lib": "a0aa8e193b07db6fe423b11d5c261bdb46351c3bd86d9f2fb721700e19cf8539"
+    },
+    "loop_status": "CLOSED",
+    "qualification": "TT/FF/DRC closed, native-boundary FAIL",
+    "budgets_ps": {
+      "launch": 220,
+      "capture": 190
+    }
+  }
+]
