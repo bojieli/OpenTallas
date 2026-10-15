@@ -11,13 +11,13 @@ def main():
  out=R/'physical/s81_die_pins/v20_functional';out.mkdir(exist_ok=True)
  ports={};x=200.064
  # VM is south of the MIX home; stream all row payloads at its S face.
- for p,n in [('rs_d',3072),('rs_v',6),('rq_v',6),('rq_row',84),('wq_d',1024),('wq_mask',32),('wq_row',28),('wq_v',2)]:
+ for p,n in [('rs_d',2560),('rs_v',5),('rq_v',5),('rq_row',70),('wq_d',512),('wq_mask',16),('wq_row',14),('wq_v',1)]:
   ports[p]=[['S','M5',round(x+.096*i,3),.192] for i in range(n)];x+=.096*n+.96
  y=100.032
  for p,n in [('c_cmd',85),('c_done',9),('c_st',2),('f_inp',1),('ck',1),('rst',1)]:
   ports[p]=[['E','M4',round(y+.096*i,3),.192] for i in range(n)];y+=.096*n+.96
  V.write(out,'dsfd_engram_mix_c',[1152.,864.],ports,'ck','VM-facing S payloads, sequencer-facing E command/root; staged routes required from actual source pins','v20_functional_home',{'adoption':'native clock/reset, child partition and compiled static VM calendar required'})
- mix={'name':'sp_engram_mix','master':'dsfd_engram_mix_c','at_um':[13942.8,22770.0],'outline':{'w':1152.,'h':864.},'clock':'stream_1p2','geometry':'xsp7_screen plan.json.gz actual entire instance set:0overlaps','memory_calendar':{'read_rows_per_cycle':5,'read_port_shape_reserved':6,'write_rows_per_cycle':1,'format':'H/out packedBF16;K/W/V FP32','runtime_backpressure':False,'qualification':'OPEN: fixed source/flight/bank cycles must be compiled'},'pin_file':'physical/s81_die_pins/v20_functional/dsfd_engram_mix_c.tcl','qualification':'RESERVED_REAL_RTL_NOT_ROUTED'}
+ mix={'name':'sp_engram_mix','master':'dsfd_engram_mix_c','at_um':[13942.8,22770.0],'outline':{'w':1152.,'h':864.},'clock':'stream_1p2','geometry':'xsp7_screen plan.json.gz actual entire instance set:0overlaps','memory_calendar':{'read_rows_per_cycle':5,'read_port_shape_reserved':5,'write_rows_per_cycle':1,'format':'H/out packedBF16;K/W/V FP32','runtime_backpressure':False,'qualification':'OPEN: fixed source/flight/bank cycles must be compiled'},'pin_file':'physical/s81_die_pins/v20_functional/dsfd_engram_mix_c.tcl','qualification':'RESERVED_REAL_RTL_NOT_ROUTED'}
  hc=[]
  for band,y in [('south',1857.6),('middle',12238.56),('north',22220.64)]:
   for c in range(2):

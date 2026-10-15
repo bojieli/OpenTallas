@@ -20,7 +20,7 @@
   "geometry": "xsp7_screen plan.json.gz actual entire instance set:0overlaps",
   "memory_calendar": {
    "read_rows_per_cycle": 5,
-   "read_port_shape_reserved": 6,
+   "read_port_shape_reserved": 5,
    "write_rows_per_cycle": 1,
    "format": "H/out packedBF16;K/W/V FP32",
    "runtime_backpressure": false,
