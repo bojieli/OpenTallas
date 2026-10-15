@@ -1,5 +1,5 @@
 {
- "name": "hbm_su_static_bank6_1015-r1-COMMIT",
+ "name": "hbm_su_static_bank6_1015-r1-bd6f144ff",
  "block": "ot_hbm_su_static_pinned_bank",
  "ref_tile": true,
  "owner": "Claude:H-ELEM-B",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 24,
  "source": {
   "branch": "claude/hbm-elemb-su-1015",
-  "commit": "COMMIT"
+  "commit": "bd6f144ff"
  },
  "stages": {
   "bench": [
@@ -96,7 +96,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/arch/hbm_su_f2_static_1014/arithmetic/physical/bank_route/hbm_su_static_bank6_1015-r1-COMMIT"
+   "to": "results/arch/hbm_su_f2_static_1014/arithmetic/physical/bank_route/hbm_su_static_bank6_1015-r1-bd6f144ff"
   }
  ],
  "cycles_added": 0,
