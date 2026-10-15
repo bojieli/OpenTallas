@@ -30,6 +30,10 @@ module ot_s81_pq_core_native (
     input wire [3:0] ck_bc,
 `endif
     input wire rst_n, go,
+`ifdef OT_PQ_CTL_STATIC
+    input wire calendar_v,input wire[71:0] calendar_action,
+    output wire stream_end_v,output wire[1:0] stream_end_tag,
+`endif
     input wire [8:0] i_ph,
     input wire [2:0] i_np,
     input wire [18:0] i_xbase, i_xps, i_obase, i_ops,
@@ -82,7 +86,11 @@ module ot_s81_pq_core_native (
     // RG11 selects exactly twelve count groups in this controller. The
     // group region census is external: each tier/half has 10 or 11 regions,
     // not eleven equal groups and a seven-region tail.
-`ifdef OT_PQ_CTL_FIXED
+`ifdef OT_PQ_CTL_STATIC
+    ot_s81_pq_ctl_static_native u_ctl (
+        .calendar_v(calendar_v),.calendar_action(calendar_action),
+        .stream_end_v(stream_end_v),.stream_end_tag(stream_end_tag),
+`elsif OT_PQ_CTL_FIXED
     ot_s81_pq_ctl_fixed_native u_ctl (
 `else
     ot_s81_pq_ctl_native #(.PHW(9), .SAW(11), .R(128), .VAW(19), .VRD(64), .KMAX(6144),
@@ -99,7 +107,11 @@ module ot_s81_pq_core_native (
         .rom_sa(rom_sa), .rom_sq(rom_sq));
 `ifdef OT_PQ_BENCH_TELEMETRY
     assign read_consumed = {b_consume, q_consume};
-`ifdef OT_PQ_CTL_FIXED
+`ifdef OT_PQ_CTL_STATIC
+    assign read_speculative=2'b0;
+    assign observed_k={1'b0,u_ctl.s_pw[u_ctl.iss_tag][13:1]};
+    assign observed_load_active=x_re;
+`elsif OT_PQ_CTL_FIXED
     assign read_speculative = {u_ctl.u_native.hw[0] && u_ctl.u_native.h_fam && !b_consume,
                               u_ctl.u_native.hw[0] && !u_ctl.u_native.h_fam && !q_consume};
     assign observed_k = u_ctl.u_native.ld_kk;

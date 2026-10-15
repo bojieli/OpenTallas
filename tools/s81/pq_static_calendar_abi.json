@@ -1,0 +1,130 @@
+{
+  "version": 1,
+  "action_bits": 72,
+  "row_bits": 144,
+  "row_layout": {
+    "action": [
+      0,
+      72
+    ],
+    "timestamp": [
+      72,
+      24
+    ],
+    "reserved": [
+      96,
+      48
+    ]
+  },
+  "action_fields": {
+    "accept_tag": {
+      "lsb": 0,
+      "width": 2
+    },
+    "vm_req": {
+      "lsb": 2,
+      "width": 1
+    },
+    "vm_addr": {
+      "lsb": 3,
+      "width": 19
+    },
+    "vm_resp": {
+      "lsb": 22,
+      "width": 1
+    },
+    "resp_k": {
+      "lsb": 23,
+      "width": 14
+    },
+    "resp_par": {
+      "lsb": 37,
+      "width": 1
+    },
+    "resp_fam": {
+      "lsb": 38,
+      "width": 1
+    },
+    "stream_req": {
+      "lsb": 39,
+      "width": 1
+    },
+    "stream_addr": {
+      "lsb": 40,
+      "width": 11
+    },
+    "stream_tag": {
+      "lsb": 51,
+      "width": 2
+    },
+    "stream_pos": {
+      "lsb": 53,
+      "width": 3
+    },
+    "stream_fam": {
+      "lsb": 56,
+      "width": 1
+    },
+    "stream_lastpos": {
+      "lsb": 57,
+      "width": 1
+    },
+    "stream_lastop": {
+      "lsb": 58,
+      "width": 1
+    },
+    "cfg": {
+      "lsb": 59,
+      "width": 1
+    },
+    "cfg_tag": {
+      "lsb": 60,
+      "width": 2
+    },
+    "launch": {
+      "lsb": 62,
+      "width": 1
+    },
+    "launch_tag": {
+      "lsb": 63,
+      "width": 2
+    },
+    "retire_mask": {
+      "lsb": 65,
+      "width": 4
+    },
+    "phase_end": {
+      "lsb": 69,
+      "width": 1
+    },
+    "reserved": {
+      "lsb": 70,
+      "width": 2
+    }
+  },
+  "shape_accept": "f_iss GO is sampled unconditionally, calendar accept_tag must be present on the same edge",
+  "static_status": "t_iss36 = fixed retirement event; t_iss38:37 = retired tag, priority over simultaneous launch; stream-end is separate telemetry",
+  "retire_constraint": "At most one retire bit per edge. Hardware faults on multiple bits but clears every requested slot without rescheduling.",
+  "clock": "1.2GHz streaming domain; actual die phase/entry insertion owed",
+  "sampled_edge_to_registered_pin_edges": {
+    "VM_request": 0,
+    "stream_request_to_consume_pin": 5,
+    "stream_request_to_bc_hr_valid_pin": 8,
+    "cfg_to_bc_hr_cfg_pin": 2,
+    "launch_to_bc_hr_go_pin": 2,
+    "VM_response_to_AQI_metadata_pin": 26,
+    "retire_to_ev_end_pin": 0,
+    "GA_input_sample_to_last_count_available_for_retire": 3
+  },
+  "boundary_note": "Output pins after edge N are consumed by downstream flops at edge N+1; QB_PIPE adds two further edges beyond bc_hr alignment. All delays require matching actual macro/pipeline composition.",
+  "physical_read_program": {
+    "macros": [
+      "ot_rom_4096x72_m8",
+      "ot_rom_4096x72_m8"
+    ],
+    "max_rows": 4096,
+    "reader_owner": "q_native_compute",
+    "reader_in_this_commit": false
+  },
+  "native_end_to_end_qualified": false
+}
