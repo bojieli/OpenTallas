@@ -65,7 +65,10 @@ module ot_qwen_w12_matvec_part_banked_v1 #(
                                           // leaf (v/first/split/w and the ROUNDED x), one kept copy per leaf; +XTX cycles of latency
     parameter integer TX_MUT = 0,
     parameter integer CHILD_CLOCKS = 0,
-    parameter integer ANR = 0            // hardcore-1010 D: lane / tree adders as ot_hdc_fp32_add_lat_nr (0 = unchanged)
+    parameter integer ANR = 0,           // (see above)
+    // ISSUE_LEAF = 1 (NK/NL S1 step 1, r2 2026-10-15; FAST_ISSUE 1 only): the issue loop is ot_qwen_w12_issue_banked_v1
+    //   (verbatim move, exact, 0 cycles); 0 = inline as before
+    parameter integer ISSUE_LEAF = 0            // hardcore-1010 D: lane / tree adders as ot_hdc_fp32_add_lat_nr (0 = unchanged)
 ) (
     input wire [58*514-1:0] bank_q,
     output wire [58*514-1:0] bank_d,
@@ -101,8 +104,8 @@ module ot_qwen_w12_matvec_part_banked_v1 #(
     input  wire              i_rmax,      // per-slot maxima of the results -> word mbase / W, lanes mbase % W + j
     input  wire [AW-1:0]     i_mbase,
     // Matrix weight ROM: G*W BF16 lanes, or G*W signed INT8 codes.
-    output reg               wrom_re,
-    output reg  [AW-1:0]     wrom_addr,
+    output logic             wrom_re,
+    output logic [AW-1:0]    wrom_addr,
     input  wire [G*W*((INT8_WEIGHT != 0 && WCONV == 0) ? 8 : 16)-1:0] wrom_q,
     // One independent scale read per group. Row-word address is the matrix's
     // weight base plus output-row-word offset. Non-INT8 mode ties requests low.
@@ -111,7 +114,7 @@ module ot_qwen_w12_matvec_part_banked_v1 #(
     output reg  [GOUT*AW-1:0] scale_addr,
     input  wire [GOUT*W*16-1:0] scale_q,
     // KV SRAM: one port per group, W lanes (BF16 values in 32-bit words) per word
-    output reg               kv_re,
+    output logic             kv_re,
     output reg  [G*AW-1:0]   kv_addr,
     input  wire [G*W*32-1:0] kv_q,
     // x reads (vector memory, element), one port per group
@@ -191,31 +194,31 @@ module ot_qwen_w12_matvec_part_banked_v1 #(
 
     // -- issue loop -----------------------------------------------------------
     integer gi;
-    reg              active;
+    logic              active;
     assign active_o = active;
-    reg [NW-1:0]     nout_r, tiles_r, k_r;
-    reg              wsrc_r, round_r, oen_r, amax_r, mmode_r, rmax_r;
-    reg [AW-1:0]     mbase_r;
-    reg [AW-1:0]     scale_base_r;
-    reg [3:0]        split_r;
-    reg [AW-1:0]     tstep_r;          // weight step per round: ts, or (G/S)*ts for KV ops
-    reg [AW-1:0]     wcs_r;
-    reg [NW-1:0]     ktot_r;           // KV ops: the whole K (elements past it multiply +0)
-    reg [AW-1:0]     ts_r, ks_r, js_r, xks_r, xjs_r, xcs_r, ots_r, ojs_r;
-    reg [2:0]        jsh_r;
-    reg [NW-1:0]     t, k;
-    reg [$clog2(IL)-1:0] j;
-    reg [AW-1:0]     cur, base_k, base_t, xk, xc, xk_base, oa, ot, ot_step;
-    reg [NW:0]       nb, nb_t, nb_step;    // first row of the current slot / round (port 0)
-    reg [NW:0]       lb, lb_step;          // first lane-vector index of the round (mmode 1)
-    reg              t_last, k_last;
+    logic [NW-1:0]     nout_r, tiles_r, k_r;
+    logic              wsrc_r, round_r, oen_r, amax_r, mmode_r, rmax_r;
+    logic [AW-1:0]     mbase_r;
+    logic [AW-1:0]     scale_base_r;
+    logic [3:0]        split_r;
+    logic [AW-1:0]     tstep_r;          // weight step per round: ts, or (G/S)*ts for KV ops
+    logic [AW-1:0]     wcs_r;
+    logic [NW-1:0]     ktot_r;           // KV ops: the whole K (elements past it multiply +0)
+    logic [AW-1:0]     ts_r, ks_r, js_r, xks_r, xjs_r, xcs_r, ots_r, ojs_r;
+    logic [2:0]        jsh_r;
+    logic [NW-1:0]     t, k;
+    logic [$clog2(IL)-1:0] j;
+    logic [AW-1:0]     cur, base_k, base_t, xk, xc, xk_base, oa, ot, ot_step;
+    logic [NW:0]       nb, nb_t, nb_step;    // first row of the current slot / round (port 0)
+    logic [NW:0]       lb, lb_step;          // first lane-vector index of the round (mmode 1)
+    logic              t_last, k_last;
     wire             j_last = (j == IL - 1);
     //: pruning: an op below the smallest split the pruned tree supports
-    reg              split_fault;
+    logic              split_fault;
     //: KV_PREP > 0: a KV-sourced op waits KV_PREP cycles after its go (ready low) for its per-group KV
     //: offsets, which leave the issue path as a pipelined multiply (see g_kv_addr)
-    reg              pend;
-    reg [3:0]        pcnt;
+    logic              pend;
+    logic [3:0]        pcnt;
 
     assign ready = !active && !pend;
 
@@ -278,7 +281,7 @@ generate if (FAST_ISSUE == 0) begin : g_issue_legacy
             end
         end
     end
-end else begin : g_issue_fast
+end else if (ISSUE_LEAF == 0) begin : g_issue_fast
     //: FAST_ISSUE (1.2 GHz @ SS): the same schedule, cycle for cycle (plus KV_PREP on KV ops).
     //: (1) The per-op products (the round steps ts*(GT/S), ots*(GT/S), (GT/S)*W*IL, (GT/S)*W and the KV
     //:     K-step count ceil(K/S)) are first needed at the first K or round boundary, IL >= 3 cycles after
@@ -417,6 +420,45 @@ end else begin : g_issue_fast
             end
         end
     end
+end else begin : g_issue_leaf
+    //: ISSUE_LEAF: the same issue loop as the hardened control leaf (verbatim move, exact, 0 cycles)
+    ot_qwen_w12_issue_banked_v1 #(.W(W), .G(G), .IL(IL), .AW(AW), .NW(NW), .GT(GT), .SMIN(SMIN), .KV_PREP(KV_PREP),
+        .INT8_WEIGHT(INT8_WEIGHT), .INT8_SCALE_WCS_BASE(INT8_SCALE_WCS_BASE), .TMUT(TMUT)) u_issue (
+        .clk(clk), .rst_n(rst_n), .go(go), .i_nout(i_nout), .i_tiles(i_tiles), .i_k(i_k), .i_wsrc(i_wsrc), .i_round(i_round),
+        .i_mmode(i_mmode), .i_oen(i_oen), .i_amax(i_amax), .i_rmax(i_rmax), .i_wbase(i_wbase), .i_ts(i_ts), .i_ks(i_ks),
+        .i_js(i_js), .i_xbase(i_xbase), .i_xks(i_xks), .i_xjs(i_xjs), .i_xcs(i_xcs), .i_wcs(i_wcs), .i_obase(i_obase),
+        .i_ots(i_ots), .i_ojs(i_ojs), .i_mbase(i_mbase), .i_jsh(i_jsh), .i_split(i_split),
+        .wrom_re(wrom_re), .kv_re(kv_re), .wrom_addr(wrom_addr),
+        .o_active(active),
+        .o_nout_r(nout_r),
+        .o_tiles_r(tiles_r),
+        .o_k_r(k_r),
+        .o_wsrc_r(wsrc_r),
+        .o_round_r(round_r),
+        .o_oen_r(oen_r),
+        .o_amax_r(amax_r),
+        .o_mmode_r(mmode_r),
+        .o_rmax_r(rmax_r),
+        .o_mbase_r(mbase_r),
+        .o_scale_base_r(scale_base_r),
+        .o_split_r(split_r),
+        .o_wcs_r(wcs_r),
+        .o_ktot_r(ktot_r),
+        .o_ts_r(ts_r),
+        .o_ots_r(ots_r),
+        .o_xcs_r(xcs_r),
+        .o_t(t),
+        .o_k(k),
+        .o_j(j),
+        .o_cur(cur),
+        .o_oa(oa),
+        .o_nb(nb),
+        .o_lb(lb),
+        .o_xc(xc),
+        .o_t_last(t_last),
+        .o_k_last(k_last),
+        .o_split_fault(split_fault),
+        .o_pend(pend));
 end endgenerate
     // x reads (group g = GBASE + local: chunk c = g mod S).  With a
     // non-power-of-two GT, the final GT % S groups have no complete K-split

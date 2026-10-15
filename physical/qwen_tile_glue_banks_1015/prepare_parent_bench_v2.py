@@ -8,7 +8,7 @@ out.mkdir(parents=True,exist_ok=False)
 s=json.loads((root/'tools/ref_tile/specs_q_compute_native/qfd_tile_nk_native.json').read_text())['sources']
 remove={'rtl/physical/bb/ot_qwen_tile_rpair_bb.v','rtl/physical/bb/ot_qwen_tile_node_bb.v','rtl/physical/bb/ot_qwen_tile_lsl_fp1_bb.v','physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8_bb.v'}
 s=[p for p in s if p not in remove]
-s+=['rtl/qwen_sys/tile_parent_banked_20261015/'+p for p in ['ot_qwen_w12_matvec_part_banked_v1.sv','ot_qwen_rom_tile_logic_banked_v1.sv','qfd_tile_nk_banked_v2.sv']]
+s+=['rtl/qwen_sys/tile_parent_banked_20261015/'+p for p in ['ot_qwen_w12_issue_banked_v1.sv','ot_qwen_w12_matvec_part_banked_v1.sv','ot_qwen_rom_tile_logic_banked_v1.sv','qfd_tile_nk_banked_v2.sv']]
 s+=['rtl/qwen_sys/tile_glue_banks_20261015/ot_qwen_tx198.sv','rtl/qwen_sys/tile_glue_banks_20261015/qwen_glue_face_masters.sv','rtl/qwen_sys/head_staging_20261015/qkh_packet_masters.sv','rtl/qwen_sys/head_staging_20261015/ot_qkh_packet_stage.sv','rtl/lib/ot_rst_relay.sv','rtl/physical/ot_qwen_tile_rpair.sv','rtl/physical/ot_qwen_tile_node.sv','rtl/physical/ot_qwen_tile_lsl_fp1.sv','physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8.v','rtl/qwen_sys/tile_parent_banked_20261015/qfd_tile_nk_staged_reference.sv','physical/qwen_tile_glue_banks_1015/tb_parent_banked_v2.sv','physical/qwen_tile_glue_banks_1015/tb_parent_banked_allbanks_v2.sv','physical/qwen_tile_glue_banks_1015/tb_parent_banked_boot16_v2.sv','rtl/qwen_sys/tile_glue_banks_20261015/qwen_glue_x1028.sv']
 s=list(dict.fromkeys(s));hashes={}
 for p in s:

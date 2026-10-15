@@ -102,7 +102,8 @@ module ot_qwen_rom_tile_logic_banked_v1 #(
     parameter integer MUL_LAT = 5,        // lane BF16 product latency (ot_qwen_w12_matvec_part MUL_LAT)
     parameter integer TREE_LAT = 3,       // split-tree pair adder latency (ot_qwen_w12_matvec_part TREE_LAT)
     parameter integer TX_MUT = 0,
-    parameter integer CHILD_CLOCKS = 0
+    parameter integer CHILD_CLOCKS = 0,
+    parameter integer ISSUE_LEAF = 1   // NK/NL S1 step 1 (r2 10-15): u_me issue loop as ot_qwen_w12_issue_banked_v1 (exact, 0 cycles)
 ) (
     input wire [58*514-1:0] bank_q,
     output wire [58*514-1:0] bank_d,
@@ -234,7 +235,7 @@ assign xl_i=bank_q[10280 +: 128];
     end endgenerate
     ot_qwen_w12_matvec_part_banked_v1 #(.TX_MUT(TX_MUT),.W(W), .G(TG), .IL(IL), .AW(AW), .NW(NW), .INT8_WEIGHT(1), .INT8_SCALE_WCS_BASE(1),
         .CHILD_CLOCKS(CHILD_CLOCKS), .PART(1), .GT(GT), .GBASE_PORT(1), .SMIN(SMIN), .NX(0), .MEM_EXTRA(ME_EXTRA), .WCONV(ROM_PIPE), .LRST(LRST), .TMUT(TMUT), .ANR(ANR), .HIER(HIER), .HIER_HARD(HIER_HARD), .LRR(LRR), .XTX(XTX),
-        .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT), .FAST_ISSUE(FAST_ISSUE), .KV_PREP(KV_PREP), .MUL_LAT(MUL_LAT)) u_me (
+        .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT), .FAST_ISSUE(FAST_ISSUE), .KV_PREP(KV_PREP), .MUL_LAT(MUL_LAT), .ISSUE_LEAF(ISSUE_LEAF)) u_me (
         .bank_q(bank_q),.bank_d(bank_d_me),.rst_child_n(rst_child_n),
         .ck_lsl(ck_lsl),
         .clk(clk), .rst_n(rst_n), .go(go_i), .ready(), .idle(),
