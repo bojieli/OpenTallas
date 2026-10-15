@@ -1,0 +1,29 @@
+{
+  "status": "PASS_ACTUAL_MAPPED_SU_PARENT_ELAB_NOT_EXECUTED_LAYER",
+  "host": "ot-epyc4",
+  "unit": "oth-ubuntu-1797183-1792060711",
+  "memory_GB": 16,
+  "threads": 2,
+  "exit_code": 0,
+  "source_sha256": {
+    "tools/qwen_split/elaborate_static_su_parent.sh": "8951f47b65592105320afa6cc608a17f93ed64a8e1a9bdc9d9497b0d616a4895",
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v": "862e21e63d6805e46226cb8ca27b731a7a6c778783e4c44f123ca30950ffde83",
+    "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+    "rtl/hdc/ot_hdc_dyn_ttiles.sv": "574b918154da9bc8e1fde75f8c9d3bfd10374c5e1979c26588d5c00f133c5f93",
+    "rtl/hdc/ot_hdc_qwen_int8_embed_decode.sv": "2eb902b1979247bb1d6c7d7589955965669b3377ef81b542681a56d17fbca86c",
+    "rtl/qwen_sys/missing_masters_20261007/ot_qfd_spine_masters.sv": "f7c420676f57d6b377b89cd52da7d78f9332e2a7d762dca039565076c5a49dfa",
+    "rtl/qwen_sys/missing_masters_20261007/ot_qfd_split_exact.sv": "0fe1d499dad8a137f237b66077e499e40a50ec8e259ea04c77e7eae3fe248207",
+    "rtl/qwen_sys/redesign_qwen/ot_qfd_seq_su_bi.sv": "963d40aa92acec288337ad011750933e7df7d032bfd1095fed933b2529601529",
+    "rtl/qwen_split/qfd_seq_su_collective_calendar.sv": "46fe0b5bc621fe32f1353fc49849ad3efae84f758bcf3f5defdaccbfa513c170",
+    "rtl/rom/ot_coll_cmd_issue.sv": "22e08d8e69f7b449fffda8880cd6c0458d59e99403bdebc0b0b8a450da267a11",
+    "rtl/qwen_split/qfd_seq_su_static.sv": "47a85c1ad213437a73a3c0436d149975bfc292812910d08d76a86b967cecf672",
+    "rtl/qwen_sys/program_receiver_20261014/qkd_program_commit.sv": "26a396b1826998c681fe23090d0dab22b5a6df9334b10fd4b47fbd967e3eb291",
+    "rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_su_static.sv": "ff68725d44e125c666863bfa6a1cacfe1eb075eb086a542198a63975a5431d77",
+    "rtl/qwen_sys/static_schedule_20261014/ot_qfd_seq_su_bi_static.sv": "f8c409895d094a8deb288375147533132c2d264852a89768ed630a3bd8a64a6a",
+    "rtl/qwen_sys/static_schedule_20261014/ot_qwen_a_operand_gateway_v1.sv": "a794f1f47a2f273e32397062e87b71da7bbd2edc0a36b23451c40b15786e0239",
+    "rtl/qwen_sys/static_schedule_20261014/ot_qwen_tp_seq_calendar.sv": "780e3c3ba7a0f82792f1da0747067f13a45883537fd415fa7a7bb51ad2d265c8",
+    "rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue.sv": "0d533e9a09514840fac0628053fd1aaa501bccbffeaf8913afb6a936d1d994b1",
+    "rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_pw.sv": "400fe076fb13a12a414cd15d95982704ecf5d77b61a8f2e2c3d7fd5ae8518659",
+    "rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv": "61467355ebbc7de8c617645a5566dd0b92be0af5fae01536f4d1b9a26dd79db8"
+  }
+}

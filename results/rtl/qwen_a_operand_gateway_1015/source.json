@@ -1,0 +1,58 @@
+{
+  "status": "PASS_COMPONENT_RTL_EQUIVALENCE_NOT_PHYSICAL_RELEASE",
+  "reference_commit": "02bbde74ca864c57e283fac6f02c8ce33769a2e9",
+  "reference_inline_sha256": "0a272e8ad5fbe58f05807a8b9ac5dae282e75a2bec71a815aa1794150e129dff",
+  "state_bits": 466,
+  "logical_cycle_delta": 0,
+  "tests": [
+    {
+      "case": "fullshape",
+      "status": "PASS",
+      "exit_code": 0
+    },
+    {
+      "case": "legacy_address",
+      "status": "PASS",
+      "exit_code": 0
+    },
+    {
+      "case": "plain_vm",
+      "status": "PASS",
+      "exit_code": 0
+    },
+    {
+      "case": "token_truncation_mutant",
+      "status": "REJECTED_GATEWAY_MISMATCH",
+      "exit_code": 1
+    },
+    {
+      "case": "vm_gate_mutant",
+      "status": "REJECTED_GATEWAY_MISMATCH",
+      "exit_code": 1
+    },
+    {
+      "case": "lane_capture_bypass_mutant",
+      "status": "REJECTED_GATEWAY_MISMATCH",
+      "exit_code": 1
+    },
+    {
+      "case": "scale_capture_bypass_mutant",
+      "status": "REJECTED_GATEWAY_MISMATCH",
+      "exit_code": 1
+    },
+    {
+      "case": "fault_drop_mutant",
+      "status": "REJECTED_GATEWAY_MISMATCH",
+      "exit_code": 1
+    }
+  ],
+  "source_sha256": {
+    "rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_su_static.sv": "ff68725d44e125c666863bfa6a1cacfe1eb075eb086a542198a63975a5431d77",
+    "rtl/qwen_sys/static_schedule_20261014/ot_qwen_a_operand_gateway_v1.sv": "a794f1f47a2f273e32397062e87b71da7bbd2edc0a36b23451c40b15786e0239",
+    "rtl/test/qwen_split/tb_qwen_a_gateway_equivalence.sv": "d8c7c965f416f0eb719d7de9ef3f27de0ae4b4da07974bc50d1df6e68164f5d6",
+    "rtl/hdc/ot_hdc_qwen_int8_embed_decode.sv": "2eb902b1979247bb1d6c7d7589955965669b3377ef81b542681a56d17fbca86c",
+    "tools/qwen_host/check_a_operand_gateway.py": "0c1d99d2498d42487e69b851a153a87dd4063f15eab8557161cb862c4a012aa9",
+    "tools/uarch_model.py": "73971f0e40db74178df37948b2309f047a4883d49b17baed140c4d047427ee04",
+    "results/arch/qwen_a_operand_gateway_1015/partition_model.json": "a16478ffb40561ddd5ffb3bbf7e15697bb03751706a99dc6158b5608133c06ea"
+  }
+}

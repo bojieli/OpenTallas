@@ -1,0 +1,39 @@
+{
+  "status": "SOURCE_PARTITION_MODEL_NOT_PHYSICAL_QUALIFICATION",
+  "original_source_sha256": "27bf02049fee338352c78e1dc534e2ea0e8639d0f383a2265cab13015b271475",
+  "single_gateway": {
+    "register_bits": 466,
+    "formula": "active1+scale_pending1+scale_hold16+select64+lane_index64x6",
+    "decoders": 64,
+    "mux_bits": 2048,
+    "new_clock_entries": 1,
+    "new_state_bits": 0,
+    "SRAM_bits": 0,
+    "logical_data_edge_delta": 0
+  },
+  "eight_octets": {
+    "register_bits": 592,
+    "delta_bits": 126,
+    "formula": "8*(active1+scale_pending1+scale_hold16+select8+lane_index8x6)",
+    "new_clock_entries": 8,
+    "decoders": 64,
+    "mux_bits": 2048,
+    "code_broadcast_bits_per_octet": 512,
+    "scale_bits_per_octet": 16,
+    "token_epoch_owner": "single unchanged provider; no replicated row memory"
+  },
+  "boundaries": {
+    "SU_A_request_bits": 1600,
+    "VM_A_response_bits": 2048,
+    "embedding_code_bits": 512,
+    "embedding_scale_bits": 16,
+    "control_bits": "start_idle1+start_tokenNW+captured_tokenNW+su_go1+a_src1",
+    "fault_bits": 64
+  },
+  "physical": {
+    "outline": null,
+    "local_homes": null,
+    "route_ages": null,
+    "qualification": "REFUSE_MISSING_PHYSICAL_PROFILE"
+  }
+}
