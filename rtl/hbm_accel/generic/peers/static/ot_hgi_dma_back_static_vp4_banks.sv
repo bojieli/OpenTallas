@@ -189,7 +189,13 @@ module ot_hgi_dma_back_static_vp4_controller #(
     end
     reg [18:0] c_vend;reg [40:0] c_hend;
     reg [40:0] c_vprod,c_hprod; reg [14:0] c_nchunk; reg [7:0] c_rchunk; reg [17:0] c_total; reg c_static_ok;
-    reg [31:0] next_issue,next_drain,next_drain_pre,fill_at,end_at;
+    // Canonical absolute calendar: every execution equality compares the
+    // captured cycle_q with a target one earlier than the external cycle.
+    // Precompute offsets in the EXISTING C descriptor stage, parallel to
+    // aperture checks: 129 declared state bits, no new descriptor/data edge.
+    reg [31:0] c_issue_pre,c_drain_pre,c_drain_pp,c_end_pre;
+    reg c_gap_ok;
+    reg [31:0] next_issue_pre,next_drain_pre,next_drain_pp,fill_pre,end_pre;
     reg [7:0] rq_v;reg [15:0] rq_payload[0:7];
     reg cv,cb;reg [15:0] ce;reg [226:0] cm;reg [31:0] ci,cd;
     reg [31:0] first_issue,first_drain;
@@ -247,8 +253,8 @@ module ot_hgi_dma_back_static_vp4_controller #(
     reg [31:0] pending_sectors;
     reg [31:0] ack_base_q;
     wire observed_pending_zero=pending_sectors==32'(wa_q);
-    wire issue_slot=busy&&!cv&&issue_index<chunks&&cycle==next_issue;
-    wire drain_slot=busy&&!cv&&drain_index<chunks&&cycle==next_drain;
+    wire issue_slot=busy&&!cv&&issue_index<chunks&&cycle_q==next_issue_pre;
+    wire drain_slot=busy&&!cv&&drain_index<chunks&&cycle_q==next_drain_pre;
     reg [7:0] issue_mask;
     reg [15:0] issue_sec;
     always @* begin
@@ -268,6 +274,10 @@ module ot_hgi_dma_back_static_vp4_controller #(
     always @(posedge clk) ack_base_q<=pending_sectors-32'(wa_q);
     always @(posedge clk) begin
         cm<=b_mv;ci<=b_ci;cd<=b_cd;cb<=b_cb;ce<=b_ce;
+        c_issue_pre<=b_ci-32'd1;
+        c_drain_pre<=b_cd-32'd1;c_drain_pp<=b_cd-32'd2;
+        c_end_pre<=b_cd+32'(b_nchunk);
+        c_gap_ok<=($signed(b_cd-b_ci)>=10);
         c_vprod<=b_vprod;c_hprod<=b_hprod;c_nchunk<=b_nchunk;c_rchunk<=b_rchunk;c_total<=b_total;
         c_static_ok<=b_static_ok&&b_mv[44:22]==0&&b_vprod[40:17]==0;
         c_vend<=b_vbase_end+19'(b_vprod[16:0]);
@@ -298,9 +308,9 @@ module ot_hgi_dma_back_static_vp4_controller #(
                             bank_read_en<=(8'd1<<row_sectors[2:0])-1'b1;
                         else bank_read_en<=8'hff;
                     end
-                end else if(cycle==next_drain_pre)bank_read_en<=drain_mask;
+                end else if(cycle_q==next_drain_pp)bank_read_en<=drain_mask;
             end
-            wb_fill_start<=busy&&cycle==fill_at;
+            wb_fill_start<=busy&&cycle_q==fill_pre;
             if(b_v&&(busy||cv))mv_fault<=1;
             for(integer t=1;t<8;t=t+1)expect_mask[t]<=expect_mask[t-1];
             expect_mask[0]<=issue_slot?issue_mask:8'd0;
@@ -312,7 +322,7 @@ module ot_hgi_dma_back_static_vp4_controller #(
             read_mask_q<=drain_slot?drain_mask:8'd0;
             output_mask_q<=read_mask_q;
             if(issue_slot)begin
-                issue_index<=issue_index+1'b1;next_issue<=next_issue+1;
+                issue_index<=issue_index+1'b1;next_issue_pre<=inc32(next_issue_pre);
                 if(column==row_chunks-1)begin
                     column<=0;row_vm<=row_vm+17'(vm_stride);chunk_vm<=row_vm+17'(vm_stride);
                     row_hbm<=row_hbm+37'(hbm_stride);chunk_hbm<=row_hbm+37'(hbm_stride);
@@ -320,14 +330,14 @@ module ot_hgi_dma_back_static_vp4_controller #(
                 if(MUT==2&&issue_index+1==chunks)begin mv_src<=1;src_sent<=1;end
             end
             if(drain_slot)begin
-                drain_index<=drain_index+1'b1;next_drain<=inc32(next_drain);next_drain_pre<=inc32(next_drain_pre);
+                drain_index<=drain_index+1'b1;next_drain_pre<=inc32(next_drain_pre);next_drain_pp<=inc32(next_drain_pp);
                 if(drain_column==row_chunks-1)begin
                     drain_column<=0;drain_row_hbm<=drain_row_hbm+37'(hbm_stride);
                     drain_chunk_hbm<=drain_row_hbm+37'(hbm_stride);
                 end else begin drain_column<=drain_column+1'b1;drain_chunk_hbm<=drain_chunk_hbm+37'd256;end
                 if(drain_index==0&&!wb_ready)mv_fault<=1;
             end
-            if(busy&&cycle==end_at)busy<=0;
+            if(busy&&cycle_q==end_pre)busy<=0;
             nland=0;for(integer b=0;b<8;b=b+1)nland=nland+int'(rr_valid[b]);
             landed<=landed+20'(nland);
             if(busy&&!src_sent&&nland!=0&&landed+20'(nland)==total_sectors)begin mv_src<=1;src_sent<=1;end
@@ -343,11 +353,11 @@ module ot_hgi_dma_back_static_vp4_controller #(
                     ((cm[44:5]<65536&&vend<=65536)||(cm[44:5]>=65536&&vend<=98304))&&
                     nchunk>0&&nchunk<=128&&
                     hend[40:37]==0&&hend[36:35]==2'(STK)&&{1'b0,hend[34:0]}<=STACK_BYTES&&
-                    $signed(ci-cycle)>=1&&$signed(cd-ci)>=10;
+                    $signed(c_issue_pre-cycle_q)>=1&&c_gap_ok;
                 if(!valid_move)mv_fault<=1;
                 else begin
                     busy<=1;dirty<=1;src_sent<=0;first_issue<=ci;first_drain<=cd;
-                    next_issue<=ci;next_drain<=cd;next_drain_pre<=cd-1;fill_at<=cd+1;end_at<=cd+32'(nchunk)+1;
+                    next_issue_pre<=c_issue_pre;next_drain_pre<=c_drain_pre;next_drain_pp<=c_drain_pp;fill_pre<=cd;end_pre<=c_end_pre;
                     issue_index<=0;drain_index<=0;column<=0;chunks<=8'(nchunk);row_chunks<=8'(rchunk);
                     row_sectors<=18'(nsec);total_sectors<=20'(c_total);landed<=0;
                     row_vm<=cm[21:5];chunk_vm<=cm[21:5];vm_stride<=cm[76:45];
