@@ -31,11 +31,50 @@ set ::ot_ce_explicit_domains 0
 set ::ot_ce_cts_roots {}
 set ::ot_ce_ports {{ck_ctrl} {ck_in_lo} {ck_in_hi} {ck_mem_lo} {ck_mem_hi} {ck_cap_lo} {ck_cap_hi} {ck_out_lo} {ck_out_hi}}
 set ::ot_ce_direct_masters {ot_sram_1r1w_256x256_m2_r2c2}
-set ::ot_ce_direct_entries {{{ot_sram_1r1w_256x256_m2_r2c2} {u_lo} {ck_mem_lo} {clk} {{tt} {ot_sram_1r1w_256x256_m2_r2c2_tt} {ff} {ot_sram_1r1w_256x256_m2_r2c2_ff} {ss} {ot_sram_1r1w_256x256_m2_r2c2_ss}}} {{ot_sram_1r1w_256x256_m2_r2c2} {u_hi} {ck_mem_hi} {clk} {{tt} {ot_sram_1r1w_256x256_m2_r2c2_tt} {ff} {ot_sram_1r1w_256x256_m2_r2c2_ff} {ss} {ot_sram_1r1w_256x256_m2_r2c2_ss}}}}
+set ::ot_ce_direct_entries {{{ot_sram_1r1w_256x256_m2_r2c2} {u_lo} {ck_mem_lo} {clk} {{tt} {{ot_sram_1r1w_256x256_m2_r2c2_tt} {c725d57f52609ac9bcd2f3557fac1d8bb617659329744ac037879f52281cbb00}} {ff} {{ot_sram_1r1w_256x256_m2_r2c2_ff} {a3a974f3e507422e63fb2ed36b88815b3eb21b0715d43c8fcce18aad0b40f7a9}} {ss} {{ot_sram_1r1w_256x256_m2_r2c2_ss} {4b23140d5ad97bb322c9dc2ac5f5dc5c27ecf1f9c87616b4389a6f8b01ac69dc}}}} {{ot_sram_1r1w_256x256_m2_r2c2} {u_hi} {ck_mem_hi} {clk} {{tt} {{ot_sram_1r1w_256x256_m2_r2c2_tt} {c725d57f52609ac9bcd2f3557fac1d8bb617659329744ac037879f52281cbb00}} {ff} {{ot_sram_1r1w_256x256_m2_r2c2_ff} {a3a974f3e507422e63fb2ed36b88815b3eb21b0715d43c8fcce18aad0b40f7a9}} {ss} {{ot_sram_1r1w_256x256_m2_r2c2_ss} {4b23140d5ad97bb322c9dc2ac5f5dc5c27ecf1f9c87616b4389a6f8b01ac69dc}}}}}
+set ::ot_scene_accessor_source_b64 {Ly8gUmVhZC1vbmx5IE9wZW5TVEEgc2NlbmUgYmluZGluZyBjZW5zdXMuIEJ1aWxkIGFnYWluc3QgdGhlIHJ1bm5pbmcgT1JGUyBpbWFnZS4KI2luY2x1ZGUgPHRjbC5oPgojaW5jbHVkZSA8ZXhjZXB0aW9uPgojaW5jbHVkZSA8c3RyaW5nPgojaW5jbHVkZSAic3RhL01pbk1heC5oaCIKI2luY2x1ZGUgInN0YS9TY2VuZS5oaCIKI2luY2x1ZGUgInN0YS9TdGEuaGgiCiNpbmNsdWRlICJzdGEvTmV0d29yay5oaCIKI2luY2x1ZGUgInN0YS9MaWJlcnR5LmhoIgojaW5jbHVkZSAic3RhL1RpbWluZ0FyYy5oaCIKI2luY2x1ZGUgInN0YS9UaW1pbmdSb2xlLmhoIgojaW5jbHVkZSAic3RhL1BvcnREaXJlY3Rpb24uaGgiCgpuYW1lc3BhY2Ugewp2b2lkIGZpZWxkKFRjbF9JbnRlcnAqIGlwLCBUY2xfT2JqKiBkLCBjb25zdCBjaGFyKiBrZXksIGNvbnN0IHN0ZDo6c3RyaW5nJiB2YWx1ZSkgewogIFRjbF9EaWN0T2JqUHV0KGlwLCBkLCBUY2xfTmV3U3RyaW5nT2JqKGtleSwgLTEpLCBUY2xfTmV3U3RyaW5nT2JqKHZhbHVlLmNfc3RyKCksIC0xKSk7Cn0KaW50IGNlbnN1cyhDbGllbnREYXRhLCBUY2xfSW50ZXJwKiBpcCwgaW50IGFyZ2MsIFRjbF9PYmoqIGNvbnN0IGFyZ3ZbXSkgewogIGlmIChhcmdjICE9IDMpIHtUY2xfV3JvbmdOdW1BcmdzKGlwLCAxLCBhcmd2LCAiaW5zdGFuY2UgY2xvY2tfcGluIik7IHJldHVybiBUQ0xfRVJST1I7fQogIHRyeSB7CiAgICBhdXRvKiBzdGEgPSBzdGE6OlN0YTo6c3RhKCk7CiAgICBhdXRvKiBzY2VuZSA9IHN0YS0+Y21kU2NlbmUoKTsKICAgIGlmICghc2NlbmUpIHRocm93IHN0ZDo6cnVudGltZV9lcnJvcigibWlzc2luZyBhY3R1YWwgYWN0aXZlIHNjZW5lIik7CiAgICBhdXRvKiBuZXR3b3JrID0gc3RhLT5uZXR3b3JrKCk7CiAgICBhdXRvKiBpbnN0ID0gbmV0d29yay0+ZmluZEluc3RhbmNlKFRjbF9HZXRTdHJpbmcoYXJndlsxXSkpOwogICAgaWYgKCFpbnN0KSB0aHJvdyBzdGQ6OnJ1bnRpbWVfZXJyb3IoIm1pc3NpbmcgYWN0dWFsIGluc3RhbmNlIik7CiAgICBhdXRvKiBiYXNlID0gbmV0d29yay0+bGliZXJ0eUNlbGwoaW5zdCk7CiAgICBpZiAoIWJhc2UpIHRocm93IHN0ZDo6cnVudGltZV9lcnJvcigibWlzc2luZyBhY3R1YWwgaW5zdGFuY2UgTGliZXJ0eSBjZWxsIik7CiAgICBhdXRvKiByZXN1bHQgPSBUY2xfTmV3RGljdE9iaigpOwogICAgZmllbGQoaXAsIHJlc3VsdCwgInNjZW5lIiwgc2NlbmUtPm5hbWUoKSk7CiAgICBmb3IgKGNvbnN0IGF1dG8qIG1tIDoge3N0YTo6TWluTWF4OjptaW4oKSwgc3RhOjpNaW5NYXg6Om1heCgpfSkgewogICAgICBhdXRvKiBjZWxsID0gYmFzZS0+c2NlbmVDZWxsKHNjZW5lLCBtbSk7CiAgICAgIGlmICghY2VsbCkgdGhyb3cgc3RkOjpydW50aW1lX2Vycm9yKCJtaXNzaW5nIGFjdHVhbCBzY2VuZS1tYXBwZWQgY2VsbCIpOwogICAgICBhdXRvKiBsaWJyYXJ5ID0gY2VsbC0+bGliZXJ0eUxpYnJhcnkoKTsKICAgICAgYXV0byogY2xvY2sgPSBjZWxsLT5maW5kTGliZXJ0eVBvcnQoVGNsX0dldFN0cmluZyhhcmd2WzJdKSk7CiAgICAgIGlmICghY2xvY2sgfHwgIWNsb2NrLT5pc0Nsb2NrKCkgfHwgIWNsb2NrLT5kaXJlY3Rpb24oKS0+aXNJbnB1dCgpKQogICAgICAgIHRocm93IHN0ZDo6cnVudGltZV9lcnJvcigibWlzc2luZyBhY3R1YWwgaW5wdXQgY2xvY2sgcGluIik7CiAgICAgIGlmICghY2VsbC0+aXNNZW1vcnkoKSkgdGhyb3cgc3RkOjpydW50aW1lX2Vycm9yKCJhY3R1YWwgc2NlbmUgY2VsbCBoYXMgbm8gbWVtb3J5IHNlbWFudGljcyIpOwogICAgICBhdXRvKiByb3cgPSBUY2xfTmV3RGljdE9iaigpOwogICAgICBmaWVsZChpcCwgcm93LCAiY2VsbCIsIGNlbGwtPm5hbWUoKSk7CiAgICAgIGZpZWxkKGlwLCByb3csICJsaWJyYXJ5IiwgbGlicmFyeS0+bmFtZSgpKTsKICAgICAgZmllbGQoaXAsIHJvdywgImZpbGVuYW1lIiwgbGlicmFyeS0+ZmlsZW5hbWUoKSk7CiAgICAgIGZpZWxkKGlwLCByb3csICJjbG9ja19waW4iLCBjbG9jay0+bmFtZSgpKTsKICAgICAgLy8gQ2hlY2sgdGhlIHNhbWUgcGVyLXNjZW5lIGFyYyBtYXBwaW5nIHVzZWQgYnkgZGVsYXkgY2FsY3VsYXRpb24sCiAgICAgIC8vIGluY2x1ZGluZyBhbnkgbWlzc2luZy1hcmMgZmFsbGJhY2sgdG8gdGhlIHJlcHJlc2VudGF0aXZlIGNlbGwuCiAgICAgIGF1dG8qIGJhc2VfY2xvY2sgPSBiYXNlLT5maW5kTGliZXJ0eVBvcnQoVGNsX0dldFN0cmluZyhhcmd2WzJdKSk7CiAgICAgIGlmICghYmFzZV9jbG9jayB8fCBiYXNlX2Nsb2NrLT5zY2VuZVBvcnQoc2NlbmUsIG1tKSAhPSBjbG9jaykKICAgICAgICB0aHJvdyBzdGQ6OnJ1bnRpbWVfZXJyb3IoImFjdHVhbCBzY2VuZSBjbG9jay1wb3J0IG1hcHBpbmcgbWlzbWF0Y2giKTsKICAgICAgZm9yIChhdXRvKiBzZXQgOiBiYXNlLT50aW1pbmdBcmNTZXRzKCkpIHsKICAgICAgICBpZiAoc2V0LT5mcm9tKCkgIT0gYmFzZV9jbG9jaykgY29udGludWU7CiAgICAgICAgZm9yIChhdXRvKiBhcmMgOiBzZXQtPmFyY3MoKSkgewogICAgICAgICAgYXV0byogbWFwcGVkID0gYXJjLT5zY2VuZUFyYyhzY2VuZS0+bGliZXJ0eUluZGV4KG1tKSk7CiAgICAgICAgICBpZiAoIW1hcHBlZCB8fCAhbWFwcGVkLT5tb2RlbCgpIHx8ICFtYXBwZWQtPmZyb20oKSB8fCAhbWFwcGVkLT50bygpCiAgICAgICAgICAgICAgfHwgbWFwcGVkLT5mcm9tKCktPmxpYmVydHlDZWxsKCkgIT0gY2VsbAogICAgICAgICAgICAgIHx8IG1hcHBlZC0+dG8oKS0+bGliZXJ0eUNlbGwoKSAhPSBjZWxsCiAgICAgICAgICAgICAgfHwgbWFwcGVkLT5yb2xlKCkgIT0gYXJjLT5yb2xlKCkpCiAgICAgICAgICAgIHRocm93IHN0ZDo6cnVudGltZV9lcnJvcigiYWN0dWFsIHNjZW5lIGFyYyBtYXBwaW5nL3NvdXJjZSBtaXNtYXRjaCIpOwogICAgICAgIH0KICAgICAgfQogICAgICBhdXRvKiBhcmNzID0gVGNsX05ld0xpc3RPYmooMCwgbnVsbHB0cik7CiAgICAgIGJvb2wgc2V0dXAgPSBmYWxzZSwgaG9sZCA9IGZhbHNlLCBjcSA9IGZhbHNlOwogICAgICBmb3IgKGF1dG8qIGFyYyA6IGNlbGwtPnRpbWluZ0FyY1NldHMoKSkgewogICAgICAgIGlmIChhcmMtPmZyb20oKSAhPSBjbG9jaykgY29udGludWU7CiAgICAgICAgY29uc3QgYXV0byogcm9sZSA9IGFyYy0+cm9sZSgpOwogICAgICAgIHNldHVwIHw9IHJvbGUgPT0gc3RhOjpUaW1pbmdSb2xlOjpzZXR1cCgpOwogICAgICAgIGhvbGQgfD0gcm9sZSA9PSBzdGE6OlRpbWluZ1JvbGU6OmhvbGQoKTsKICAgICAgICBjcSB8PSByb2xlID09IHN0YTo6VGltaW5nUm9sZTo6cmVnQ2xrVG9RKCk7CiAgICAgICAgYXV0byogYSA9IFRjbF9OZXdEaWN0T2JqKCk7CiAgICAgICAgZmllbGQoaXAsIGEsICJmcm9tIiwgYXJjLT5mcm9tKCktPm5hbWUoKSk7CiAgICAgICAgZmllbGQoaXAsIGEsICJ0byIsIGFyYy0+dG8oKS0+bmFtZSgpKTsKICAgICAgICBmaWVsZChpcCwgYSwgInJvbGUiLCByb2xlLT50b19zdHJpbmcoKSk7CiAgICAgICAgVGNsX0xpc3RPYmpBcHBlbmRFbGVtZW50KGlwLCBhcmNzLCBhKTsKICAgICAgfQogICAgICBpZiAoIXNldHVwIHx8ICFob2xkIHx8ICFjcSkgdGhyb3cgc3RkOjpydW50aW1lX2Vycm9yKCJhY3R1YWwgc2NlbmUgY2xvY2sgbGFja3Mgc2V0dXAvaG9sZC9jbG9jay10by1RIGFyY3MiKTsKICAgICAgVGNsX0RpY3RPYmpQdXQoaXAsIHJvdywgVGNsX05ld1N0cmluZ09iaigiYXJjcyIsIC0xKSwgYXJjcyk7CiAgICAgIFRjbF9EaWN0T2JqUHV0KGlwLCByZXN1bHQsIFRjbF9OZXdTdHJpbmdPYmoobW0gPT0gc3RhOjpNaW5NYXg6Om1pbigpID8gIm1pbiIgOiAibWF4IiwgLTEpLCByb3cpOwogICAgfQogICAgVGNsX1NldE9ialJlc3VsdChpcCwgcmVzdWx0KTsKICAgIHJldHVybiBUQ0xfT0s7CiAgfSBjYXRjaCAoY29uc3Qgc3RkOjpleGNlcHRpb24mIGVycm9yKSB7CiAgICBUY2xfU2V0T2JqUmVzdWx0KGlwLCBUY2xfTmV3U3RyaW5nT2JqKGVycm9yLndoYXQoKSwgLTEpKTsKICAgIHJldHVybiBUQ0xfRVJST1I7CiAgfQp9Cn0KZXh0ZXJuICJDIiBpbnQgT3RzY2VuZWJpbmRpbmdfSW5pdChUY2xfSW50ZXJwKiBpcCkgewogIFRjbF9DcmVhdGVPYmpDb21tYW5kKGlwLCAib3Rfc3RhX3NjZW5lX2JpbmRpbmciLCBjZW5zdXMsIG51bGxwdHIsIG51bGxwdHIpOwogIHJldHVybiBUY2xfUGtnUHJvdmlkZShpcCwgIm90X3N0YV9zY2VuZV9iaW5kaW5nIiwgIjEuMCIpOwp9Cg==}
+set ::ot_scene_accessor_source_sha256 {ec83a4a1df3ae99c6929f249045605e75465e6b38408622edd349f79a4ca6511}
+
+proc ot_direct_sha256 {filename} {
+  if {![file isfile $filename]} {error "OT_DIRECT_MACRO: missing source file $filename"}
+  set result [exec sha256sum -- $filename]
+  if {![regexp {^([0-9a-f]{64}) } $result -> digest]} {error "OT_DIRECT_MACRO: invalid source digest $filename"}
+  return $digest
+}
+proc ot_direct_load_scene_accessor {} {
+  if {[info exists ::ot_scene_accessor_loaded]} {return}
+  # Compile within the exact running image against its installed headers. A
+  # missing compiler/header/symbol is an admission failure, never a fallback.
+  set channel [file tempfile directory ot_sta_scene_]
+  close $channel; file delete $directory; file mkdir $directory
+  set source [file join $directory sta_scene_binding.cc]
+  set channel [open $source w]; fconfigure $channel -translation binary
+  puts -nonewline $channel [binary decode base64 $::ot_scene_accessor_source_b64]; close $channel
+  if {[ot_direct_sha256 $source] ne $::ot_scene_accessor_source_sha256} {error "OT_DIRECT_MACRO: accessor source digest mismatch"}
+  set executable [file normalize [file readlink /proc/self/exe]]
+  set include [file normalize [file join [file dirname $executable] .. include]]
+  set flags [list -std=c++20 -shared -fPIC -I$include -I/usr/include/tcl]
+  if {![file isfile /usr/include/fmt/core.h] && ![file isfile /usr/local/include/fmt/core.h]} {
+    set bundled /usr/local/include/spdlog/fmt/bundled
+    if {![file isfile $bundled/core.h]} {error "OT_DIRECT_MACRO: matching image fmt headers missing"}
+    file link -symbolic [file join $directory fmt] $bundled
+    lappend flags -I$directory
+  }
+  set module [file join $directory ot_scene_binding.so]
+  if {[catch {exec g++ {*}$flags $source -o $module 2>@1} output]} {
+    error "OT_DIRECT_MACRO: accessor compile failed ($directory): $output"
+  }
+  if {[catch {load $module Otscenebinding} output]} {error "OT_DIRECT_MACRO: accessor ABI/load failed: $output"}
+  set version [lindex [split [exec g++ --version] \n] 0]
+  puts "OT_DIRECT_MACRO ACCESSOR source_sha256=$::ot_scene_accessor_source_sha256 executable_sha256=[ot_direct_sha256 $executable] module_sha256=[ot_direct_sha256 $module] compiler=$version"
+  set ::ot_scene_accessor_loaded 1
+  file delete -force $directory
+}
 
 # Return existing CE row shape. Zero internal OFFSET means Liberty-pin reference;
 # it is not a measured zero SRAM insertion and does not modify any macro arcs.
 proc ot_ce_direct_rows {corner} {
+  if {[llength $::ot_ce_direct_entries]} {ot_direct_load_scene_accessor}
   set rows {}; set cells_seen {}
   foreach entry $::ot_ce_direct_entries {
     lassign $entry master pattern name libpin libraries
@@ -46,11 +85,21 @@ proc ot_ce_direct_rows {corner} {
       error "OT_DIRECT_MACRO: duplicate/wrong actual macro $cellname"
     }
     dict set cells_seen $cellname 1
-    set libs [get_lib_cells -quiet -of_objects $cell]
-    set actual {}
-    foreach lib $libs { lappend actual [get_full_name $lib] }
-    set expected "[dict get $libraries $corner]/$master"
-    if {$expected ni $actual} { error "OT_DIRECT_MACRO: actual corner mismatch: $actual expected $expected" }
+    lassign [dict get $libraries $corner] expected_library expected_sha
+    set expected "$expected_library/$master"
+    if {[catch {ot_sta_scene_binding $cellname $libpin} binding]} {
+      error "OT_DIRECT_MACRO: actual scene binding failed: $binding"
+    }
+    foreach mm {min max} {
+      set actual [dict get $binding $mm]
+      if {[dict get $actual library] ne $expected_library || [dict get $actual cell] ne $master ||
+          [dict get $actual clock_pin] ne $libpin} {
+        error "OT_DIRECT_MACRO: actual corner mismatch: scene=[dict get $binding scene] $mm [dict get $actual library]/[dict get $actual cell] expected $expected"
+      }
+      if {[ot_direct_sha256 [dict get $actual filename]] ne $expected_sha} {
+        error "OT_DIRECT_MACRO: actual scene Liberty source digest mismatch $expected"
+      }
+    }
     set pins {}
     foreach p [get_pins -of_objects $cell] {
       if {[get_property $p lib_pin_name] eq $libpin} { lappend pins $p }
@@ -338,6 +387,9 @@ proc ot_ce_apply {} {
     set dlmax [lindex [lsort -real [dict get $domain_high $domain]] end]
     set vc [get_clocks [dict get $info clock]]
     set budget [dict get $info io_budget_ps]
+    # Optional composition-derived output budget (domain "io_budget": {"out": f}, f >= 0.2): the outside share of the
+    # cycle on this domain's outputs; larger = a TIGHTER launch (flop -> pin) inside the child, never a relaxation.
+    set budget_out [expr {[dict exists $info io_budget_out_ps] ? [dict get $info io_budget_out_ps] : $budget}]
     set inputs {}; set outputs {}
     foreach pattern [dict get $info inputs] {
       foreach p [get_ports -quiet $pattern -filter "direction == input"] {
@@ -359,7 +411,7 @@ proc ot_ce_apply {} {
       set_input_delay [expr {$dlmin-$hki}] -min -clock $vc $inputs
     }
     if {[llength $outputs]} {
-      set_output_delay [expr {$budget-$dlmax+$sk}] -max -clock $vc $outputs
+      set_output_delay [expr {$budget_out-$dlmax+$sk}] -max -clock $vc $outputs
       set_output_delay [expr {-$dlmin-$hk}] -min -clock $vc $outputs
     }
     if {[info exists ::env(OT_IO_INTER)] && $::env(OT_IO_INTER) ne ""} {
@@ -370,7 +422,7 @@ proc ot_ce_apply {} {
             set_input_delay [expr {$budget+$dlmax+150}] -max -clock $vc $p
           }
           if {[dict exists $covered_out $n] && [dict get $covered_out $n] eq $domain} {
-            set_output_delay [expr {$budget-$dlmax+150}] -max -clock $vc $p
+            set_output_delay [expr {$budget_out-$dlmax+150}] -max -clock $vc $p
           }
         }
       }
