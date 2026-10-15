@@ -3,7 +3,7 @@
 // Explicit host installation address map. QDQ F20/F24/F28/F2c/F30;
 // SU serial F34/F38/F3c/F40/F44; SU stream E34/E38/E3c/E40/E44,
 // rewritten to the existing local Fxx ABI. No on-chip execution dispatch.
-module ot_hbm_host_cfg_demux(
+module ot_hbm_host_cfg_demux #(parameter integer MUT=0)(
  input wire clk,rst_n,
  input wire[11:0]s_awaddr,input wire s_awvalid,output wire s_awready,
  input wire[31:0]s_wdata,input wire[3:0]s_wstrb,input wire s_wvalid,output wire s_wready,
@@ -20,7 +20,7 @@ module ot_hbm_host_cfg_demux(
  begin case(a)
   12'hf20,12'hf24,12'hf28,12'hf2c,12'hf30:route=0;
   12'hf34,12'hf38,12'hf3c,12'hf40,12'hf44:route=1;
-  12'he34,12'he38,12'he3c,12'he40,12'he44:route=2;
+  12'he34,12'he38,12'he3c,12'he40,12'he44:route=MUT==1?1:2;
   default:route=3;
  endcase end endfunction
  reg ah,wh,rh,wb,rb;reg[11:0]aa,ra;reg[31:0]wd;reg[3:0]ws;reg[1:0]wt,rt;
