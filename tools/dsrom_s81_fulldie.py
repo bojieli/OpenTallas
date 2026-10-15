@@ -4305,8 +4305,9 @@ def build_r8(variant=None):
         for k_, ms_ in CTRL_C_MASTERS.items():
             if k_ in hub:
                 hub[k_].master = ms_
-        if STATIC_COLL and 'collective' in hub:
-            hub['collective'].master = STATIC_COLL_MASTER
+        if STATIC_COLLECTIVE and 'collective' in hub:
+            assert (ROOT / STATIC_COLLECTIVE_RTL).is_file(), 'static collective RTL not in this source tree (main-first)'
+            hub['collective'].master = STATIC_COLLECTIVE_MASTER
         if 'sseq' in hub:   # s81die-1011/ctrl: per-engine c/d/s pins on the stream clock (kit / program faces cross)
             # F4 (--rtl-bind): a layer1 die has engines 0..7 only (stage programs); its master has no pins for 8..11
             # S-BIND (owner 2026-10-14 18:59, static cycle schedule): --rtl-bind binds the STATIC issuer (calendar-fixed
@@ -4327,6 +4328,15 @@ def build_r8(variant=None):
         for home in CANONICAL_LAYOUT['hcp_homes']:
             xx, yy = home['at_um']; oo = home['outline']
             RSV_RECTS.append((xx, yy, xx + oo['w'], yy + oo['h'], 'canonical_hcp_home'))
+    if MIX4_SLOT:
+        xx, yy, ww, hh = MIX4_SLOT
+        RSV_RECTS.append((xx, yy, xx + ww, yy + hh, 'mix4_home'))
+        variant['mix4_slot'] = dict(at_um=[xx, yy], outline=dict(w=ww, h=hh), master='dsfd_engram_mix4_c',
+                                    status='RESERVATION_SCREEN_NOT_BOUND (cluster footprint from S-FUNC sizing pending)')
+    if STATIC_SEAMS:
+        variant['static_seams'] = dict(vm_collective=[list(b) for b in RTL_HUB_EXTRA_STATIC] + [['collective', 'vm', 2204, 't_vm', 'f_collective']],
+                                       dropped=['vm.t_collective[592]', 'vm.tcs[3]', 'hc_s.y_rdy'], hc_tag=list(STATIC_HC_TAG),
+                                       collective_master=hub['collective'].master if 'collective' in hub else None)
     m['buses'] = []
     buses_r8(m)
     if RTL_HUB_WIDTHS and 'wfc' in hub and hub['wfc'].master in WFC_FIELD_SPLIT:
@@ -4818,23 +4828,22 @@ def buses_r8(m):
             ((('collective', 'host', HOST_CF_BITS, 't_host', 'f_collective'),
               ('host', 'collective', HOST_TC_BITS, 't_collective', 'f_host')) if HOST_SLAB else ()) + \
             (ctrl_adapter_buses(hb) if CTRL_ADAPTERS else ()) + \
-            ((STATIC_COLL_HUB_EXTRA if STATIC_COLL else RTL_HUB_EXTRA) if RTL_HUB_WIDTHS else ()) + \
+            ((RTL_HUB_EXTRA_STATIC if STATIC_SEAMS else RTL_HUB_EXTRA) if RTL_HUB_WIDTHS else ()) + \
+            ((STATIC_HC_TAG,) if STATIC_SEAMS and SUHC_V2 and rtl_has_port(hb['hc_s'].master if 'hc_s' in hb else '', 'y_tag') else ()) + \
             (tuple(b_ for k in range(HC_T_COLS) for b_ in (('hc_s', 'hc_t', HC_T_FWD, f't_tf{k}', f'f_sf{k}'),
                                                             ('hc_t', 'hc_s', HC_T_RET, f't_sr{k}', f'f_tr{k}')))
              if 'hc_t' in hub else ()):
         if SUHC_V2 and ((a_, b_) in (('vm', 'su_s'), ('vm', 'su_n'), ('vm', 'hc_s'), ('hc_n', 'vm'), ('su_s', 'hc_s'),
                                      ('su_n', 'hc_n'), ('hc_s', 'hc_n'), ('hc_n', 'hc_s')) and pa in ('t_su_s', 't_su_n', 't_hc', 't_vm', 't_n', 't_s')):
             continue          # su_hc v2 retired these (the VM row slots / y bus replace them)
-        if RTL_HUB_WIDTHS and not (STATIC_COLL and (a_, b_) == ('collective', 'vm') and pa != 't_vm'):
-            # (static collective: the (collective, vm) width entry is the t_vm row-write bus only, not t_crq)
+        if STATIC_SEAMS and (a_, b_, pa, pb) == ('hc_s', 'collective', 'y_rdy', 'f_hc_yr'):
+            continue          # static schedule: no consumer ready on the HC y bus
+        if RTL_HUB_WIDTHS:
             bits = RTL_HUB_BITS.get((a_, b_), bits)
-        if STATIC_COLL:
-            if (a_, b_, pa) == ('collective', 'vm', 't_vm'):
-                bits = 2204           # static collective: 4 x {tag 8, data 512, mask 16, row 14, v}
-            if (pa, pb) == ('y_rdy', 'f_hc_yr'):
-                continue              # no HC y ready return (fixed-slot y; HC y_rdy stays an unread status output)
-            if {a_, b_} == {'collective', 'wfc'} and bits == 1:
-                continue              # WFC link grants t_lir / t_wfcg: no grant in the static collective
+            if STATIC_SEAMS and (a_, b_) == ('collective', 'vm'):
+                bits = 2204 if pa == 't_vm' else 15     # S-BIND: t_crq keeps its 15 bits (was widened to 2204)
+        if STATIC_COLLECTIVE and {a_, b_} == {'collective', 'wfc'} and bits == 1:
+            continue              # WFC link grants t_lir / t_wfcg: no grant in the static collective
         if m.get('pq_cnt') and (a_, b_, pa, pb) == ('gather', 'capture', 't_capture', 'f_gather'):
             _pq_cnt_buses(m, CH8, cor, bits)
             continue
@@ -4902,7 +4911,7 @@ def buses_r8(m):
     col = coll.name
     bus('refclk', 'top_in', 1, [('TOP', 'refclk'), (col, 'refclk')])
     bus('por_n', 'top_in', 1, [('TOP', 'por_n'), (col, 'por')])
-    if STATIC_COLL:
+    if STATIC_COLLECTIVE:
         bus('rank', 'top_in', 2, [('TOP', 'rank'), (col, 'f_rank')])
     by = {it.name: it for it in m['insts']}
     dom = defaultdict(list)
@@ -4936,7 +4945,7 @@ def buses_r8(m):
                     dom[d_] += [(it.name, p_) for p_ in pl_]
                 for d_, pl_ in ce_['reset'].items():
                     rst[d_] += [(it.name, p_) for p_ in pl_]
-        elif RTL_BIND and it.master == STATIC_COLL_MASTER:
+        elif RTL_BIND and it.master == STATIC_COLLECTIVE_MASTER:
             # static collective leaf clock entries (stream; its PLL / reset controller drives the die nets)
             dom['stream'] += [(it.name, f'{p_}[{i_}:{i_}]') for p_, w_ in STATIC_COLL_CLOCKS for i_ in range(w_)]
         elif RTL_BIND and it.master == PQ_RTL_MASTER:
@@ -5190,18 +5199,25 @@ RTL_HUB_WIDTHS = False          # --rtl-hub-widths (s81die-1011/ctrl, die lead d
 RTL_HUB_BITS = {('gather', 'capture'): 6947, ('capture', 'vm'): 13376, ('collective', 'vm'): 2100}
 RTL_ABUT_GAP = 21.6             # um between the abutting wide pairs (pin flops on both faces; no logic between)
 RTL_HUB_EXTRA = (('vm', 'collective', 592, 't_collective', 'f_vm'), ('vm', 'collective', 3, 'tcs', 'ts'))
+# --static-seams (S-DIE r11 2026-10-15, owner static-cycle rule 10-14 18:59): the VM <-> collective seam of the static
+# masters (rtl/dsrom_sys/s81_ph/vm/dsfd_sp_vm_static.sv: f_collective 2204, f_crq 15, t_crs 513; static collective
+# dsfd_sp_collective_static_c: t_vm 2204, t_crq 15, f_crs 513).  The credit push vm.t_collective[592] and the 'room'
+# back-pressure vm.tcs[3] are dropped; the HC y bus loses its ready (hc_s.y_rdy -> collective.f_hc_yr) and gains the
+# registered row identity collective.t_hc_tag[32] -> hc_s.y_tag (the static HC POST consumer's slot, owner s_func).
+STATIC_SEAMS = False
+RTL_HUB_EXTRA_STATIC = (('collective', 'vm', 15, 't_crq', 'f_crq'), ('vm', 'collective', 513, 't_crs', 'f_crs'))
+STATIC_HC_TAG = ('collective', 'hc_s', 32, 't_hc_tag', 'y_tag')
+STATIC_COLLECTIVE_MASTER = 'dsfd_sp_collective_static_c'
+STATIC_COLLECTIVE_RTL = 'rtl/dsrom_sys/s81_static_collective/dsfd_sp_collective_static_c.sv'
+STATIC_COLLECTIVE = False       # --static-collective: swap the hub collective master (RTL must be on the source tree)
+MIX4_SLOT = None                # --mix4-slot X,Y,W,H: Engram MIX4 home reservation (screen; real master pins pending sizing)
 RTL_BIND = False                # --rtl-bind (s81-die-rtl-bind 2026-10-14)
-# --static-coll (S-BIND 2026-10-15, owner static-cycle rule 2026-10-14T18:59): the collective slot binds the STATIC
-# collective dsfd_sp_collective_static_c (rtl/dsrom_sys/s81_static_collective; no grants / ready / credits): collective
-# t_vm 2,204 -> VM f_collective (4 compiler-addressed row writes), VM f_crq 15 <- t_crq / VM t_crs 513 -> f_crs (fixed-
-# latency source-row service), HC y / yv without the y_rdy return, WFC link data both ways without grants, host 77 / 515
-# (no credit bits), per-leaf clock entries ck_control 5 / ck_lane 8 / ck_hc_lane 16 (stream), and the TP4 rank from a
-# die pad 'rank' (a package strap: every die of a group carries the same netlist).  The legacy VM -> collective
-# t_collective 592 / tcs 3 nets leave the die.  Peers whose RTL still carries a grant / credit port fail the port-bind
-# check until their static successor is bound (no tie, no adapter).
-STATIC_COLL = False
-STATIC_COLL_MASTER = 'dsfd_sp_collective_static_c'
-STATIC_COLL_HUB_EXTRA = (('vm', 'collective', 513, 't_crs', 'f_crs'), ('collective', 'vm', 15, 't_crq', 'f_crq'))
+# S-BIND 2026-10-15: with --static-collective the rest of the static collective's die ABI is bound too: per-leaf clock
+# entries ck_control 5 / ck_lane 8 / ck_hc_lane 16 (stream), the TP4 rank from a die pad 'rank' (package strap: every die
+# of a group carries the same netlist), host channel 515 / 77 (no t_cr / h_crn credit bits), WFC link data both ways
+# without the grants t_lir / t_wfcg.  Peers whose RTL still carries a grant / credit port (dsfd_wfc_stg f_lor,
+# dsfd_host_c 516 / 81) then FAIL the port-bind check until their static successors are bound (no tie, no adapter).
+# --static-coll = --static-seams --static-collective.
 STATIC_COLL_CLOCKS = (('ck_control', 5), ('ck_lane', 8), ('ck_hc_lane', 16))
 # --suhc-static-issue (S-BIND 2026-10-15, owner static-cycle rule): the SU / HC slab endpoints issue on the compiler's
 # command edge (die build define DSFD_SUHC_STATIC_ISSUE: no f_inp port); the VM -> SU / HC t_inp dependency nets (ready-
@@ -5276,6 +5292,22 @@ def rtl_clock_reset_entries(master, manifest='physical/s81_die_rtl/layer1.f'):
             break
     _RTL_CLOCK_CACHE[master] = out
     return out
+
+
+def rtl_has_port(master, port, manifest='physical/s81_die_rtl/layer1.f'):
+    """True when the master's RTL header under the die manifest declares PORT (a die net is only added to a real port)."""
+    if not master:
+        return False
+    sys.path.insert(0, str(ROOT / 'tools'))
+    import die_port_bind as DPB
+    files, defines, _ = DPB.load_manifest(ROOT / manifest)
+    env_def = {d: '1' for d in defines}
+    for f_ in files:
+        if Path(f_).exists() and re.search(r'\bmodule\s+%s\b' % re.escape(master), Path(f_).read_text()):
+            for md in DPB.parse_modules(DPB.preprocess(Path(f_).read_text(), env_def), f_):
+                if md.name == master:
+                    return port in md.ports
+    return False
 
 
 DUAL_CLOCK_MASTERS = ('dsfd_sp_gather_c', 'dsfd_sp_capture_c', 'dsfd_stage_seq_c', 'dsfd_stage_seq_c8',
@@ -8194,7 +8226,9 @@ def _assigned_record(master):
     if not ASSIGNED_PINS_DIR:
         return None
     if master not in _ASSIGNED_PIN_CACHE:
-        path = ROOT / ASSIGNED_PINS_DIR / (master + '.json')
+        # ':'-separated overlay (S-DIE r11): the first directory holding the master's record wins
+        path = next((ROOT / d_ / (master + '.json') for d_ in ASSIGNED_PINS_DIR.split(':')
+                     if (ROOT / d_ / (master + '.json')).exists()), ROOT / ASSIGNED_PINS_DIR.split(':')[-1] / (master + '.json'))
         rec = json.loads(path.read_text()) if path.exists() else None
         if rec:
             assert rec['master'] == master and rec['schema'] == 'opentallas.s81.assigned_pins.v1', path
@@ -9365,10 +9399,6 @@ def die_options(ap):
                     'bound to the masters\' REAL RTL ports -- serial ckv / rsv of the two-clock *_c masters (F3), svc_join '
                     'ck / rst (F8), the layer1 sequencer master dsfd_stage_seq_c8 (engines 0..7, F4).  Changes pins: '
                     'adopt with a regenerated pin set')
-    ap.add_argument('--static-coll', action='store_true', help='S-BIND 2026-10-15 (owner static-cycle rule): bind the '
-                    'static collective dsfd_sp_collective_static_c (no grants / credits; VM 2204 / crq 15 / crs 513; rank pad)')
-    ap.add_argument('--suhc-static-issue', action='store_true', help='S-BIND 2026-10-15: SU / HC endpoints issue on the '
-                    'compiler command edge (manifest define DSFD_SUHC_STATIC_ISSUE); the void VM -> SU / HC t_inp nets leave')
     ap.add_argument('--wfc-priced', action='store_true', help='contract v16: WFC kit die pins of the PRICED kit (RD2 1: '
                     't_srd 31, f_srq 1026; t_ft 4 to the host fault collector)')
     ap.add_argument('--rly-face-reach', type=float, default=0.0, help='s81-die v16: the last column relay of a net takes '
@@ -9379,6 +9409,12 @@ def die_options(ap):
                     'are allocated with non-overlapping pin spans; the 8 t_hc_y slices follow the slices of the one port')
     ap.add_argument('--peer-span-centre', action='store_true', help='s81-die-iter: with --rtl-hub-widths, centre each '
                     'face-to-face wide group on the die span shared with its peers (both ends of an abutting pair line up)')
+    ap.add_argument('--static-coll', action='store_true', help='S-BIND 2026-10-15: = --static-seams --static-collective')
+    ap.add_argument('--suhc-static-issue', action='store_true', help='S-BIND 2026-10-15: SU / HC endpoints issue on the '
+                    'compiler command edge (manifest define DSFD_SUHC_STATIC_ISSUE); the void VM -> SU / HC t_inp nets leave')
+    ap.add_argument('--static-seams', action='store_true', help='S-DIE r11 2026-10-15: static VM<->collective seam (t_vm 2204, t_crq 15, t_crs 513), drop vm.t_collective/tcs credit and hc_s.y_rdy, add collective.t_hc_tag -> hc_s.y_tag')
+    ap.add_argument('--static-collective', action='store_true', help='swap the hub collective to dsfd_sp_collective_static_c (needs its RTL in the tree)')
+    ap.add_argument('--mix4-slot', help='X,Y,W,H um: Engram MIX4 home reservation (screen)')
     ap.add_argument('--rtl-hub-widths', action='store_true', help='s81die-1011 (die lead decision): W hub column gather -> '
                     'capture -> VM (capture directly above gather) and the hub buses at the RTL widths: gather t_capture 6,947 '
                     '(12 root lanes), capture t_vm 13,376, collective t_vm 2,100, VM -> collective f_vm 592 + ts 3')
@@ -9403,6 +9439,14 @@ def apply_options(a):
     CTRL_ROLE = getattr(a, 'ctrl_role', 'layer')
     CTRL_BINDINGS = None
     global CTRL_ADAPTERS, RTL_HUB_WIDTHS
+    global STATIC_SEAMS, STATIC_COLLECTIVE, MIX4_SLOT
+    STATIC_SEAMS = bool(getattr(a, 'static_seams', False) or getattr(a, 'static_coll', False))
+    STATIC_COLLECTIVE = bool(getattr(a, 'static_collective', False) or getattr(a, 'static_coll', False))
+    global SUHC_STATIC_ISSUE
+    SUHC_STATIC_ISSUE = bool(getattr(a, 'suhc_static_issue', False))
+    MIX4_SLOT = tuple(float(v) for v in a.mix4_slot.split(',')) if getattr(a, 'mix4_slot', None) else None
+    if STATIC_COLLECTIVE and not STATIC_SEAMS:
+        raise ValueError('--static-collective needs --static-seams (its ports are the static seam)')
     CTRL_ADAPTERS = bool(getattr(a, 'ctrl_adapters', False))
     RTL_HUB_WIDTHS = bool(getattr(a, 'rtl_hub_widths', False))
     global PEER_SPAN_CENTRE, LANE_PINS
@@ -9490,17 +9534,13 @@ def apply_options(a):
     CFIFO_FALL = bool(getattr(a, 'cfifo_fall_launch', False))
     HEND_VR_NOBP = bool(getattr(a, 'hend_vr_nobp', False))
     WFC_PRICED = bool(getattr(a, 'wfc_priced', False))
-    global STATIC_COLL, SUHC_STATIC_ISSUE
-    STATIC_COLL = bool(getattr(a, 'static_coll', False))
-    SUHC_STATIC_ISSUE = bool(getattr(a, 'suhc_static_issue', False))
-    assert not (STATIC_COLL or SUHC_STATIC_ISSUE) or getattr(a, 'rtl_bind', False), '--static-coll / --suhc-static-issue need --rtl-bind'
     global RTL_BIND, HOST_CF_BITS, HOST_TC_BITS   # HC_T_FWD / HC_T_RET / HC_RTL_WIDTHS declared global above (r6: was a SyntaxError)
     RTL_BIND = bool(getattr(a, 'rtl_bind', False))
     if RTL_BIND:
         # F6: the collective <-> layer-die host channel at dsfd_host_c's RTL widths: collective -> host {t_cr, h_cls 2,
         # h_d 512, h_v} = 516, host -> collective {st 11, h_crn 5, t_v, t_d 64} = 81 (were 514 / 130 placeholders)
         HOST_CF_BITS, HOST_TC_BITS = 516, 81
-        if STATIC_COLL:
+        if STATIC_COLLECTIVE:
             # static collective host channel: t_host 515 {h_cls 2, h_d 512, h_v} (no t_cr credit), f_host 77 {valid,
             # status 11, completion 65} (no h_crn credits)
             HOST_CF_BITS, HOST_TC_BITS = 515, 77

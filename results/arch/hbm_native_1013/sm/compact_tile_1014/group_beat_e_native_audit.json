@@ -1,0 +1,23 @@
+{
+  "cell": "ot_smh_tr_group_beat_e",
+  "view": "physical/ref_tile/smh_tr_group_beat_e_ref/views/ot_smh_tr_group_beat_e",
+  "lib_cell": "ot_smh_tr_group_beat_e",
+  "insertion": true,
+  "ref_src": [
+    "insertion.json boundary mean"
+  ],
+  "R_ps": 181.1,
+  "spread_ps": 24.0,
+  "outputs": 2069,
+  "inputs": 2070,
+  "launch_ps": 182.6,
+  "launch_pin": "last[1413]",
+  "capture_ps": 147.2,
+  "capture_pin": "d[1087]",
+  "launch_over": 0,
+  "capture_over": 0,
+  "comb_pins": 0,
+  "comb_first": [],
+  "pass": true,
+  "fail_why": ""
+}

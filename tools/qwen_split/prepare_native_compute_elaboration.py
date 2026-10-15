@@ -10,7 +10,7 @@ import json
 from pathlib import Path
 import re
 import subprocess
-from qwen_split.native_compute_join import ROOT,NODES
+from qwen_split.native_compute_join import ROOT,profile_config
 
 BASE='96f30a6a0'
 
@@ -19,23 +19,27 @@ def read(ref,path):
 
 
 def main():
-    p=argparse.ArgumentParser();p.add_argument('out',type=Path);a=p.parse_args();a.out.mkdir(parents=True,exist_ok=False)
+    p=argparse.ArgumentParser();p.add_argument('out',type=Path);p.add_argument('--profile',type=Path);p.add_argument('--rtl',default='rtl/qwen_split/qfd_native_compute_join.sv');a=p.parse_args();a.out.mkdir(parents=True,exist_ok=False)
+    profile,specs=profile_config(a.profile)
     paths=[]
     for f in('embedding_stage.f','su_static_math.f'):
         paths += read(BASE,'tools/qwen_split/'+f).decode().splitlines()
-    paths += [v[1]for v in NODES.values()]
+    paths += [v[1]for v in specs.values()]
     paths += ['rtl/qwen_sys/static_schedule_20261014/'+s+'.sv'for s in(
        'ot_qfd_tt_ctlm_static_parent','ot_qfd_native_cmd_route','ot_qwen_tp8_rom_relocate','ot_qfd_tt_ctl_static')]
     paths += ['rtl/hdc/ot_qwen_me_spine_h_w12.sv','rtl/hdc/ot_qwen_w12_matvec.sv','rtl/hdc/ot_qwen_w12_arith.sv']
     paths += ['rtl/qwen_sys/dvm_20261014/'+s+'.sv'for s in('ot_qfd_xpf_dense_pw_loader','ot_qfd_xpf_static_schedule')]
     paths += ['rtl/qwen_split/'+s+'.sv'for s in('qfd_native59_q_export_control','qfd_native59_command_context','qfd_native59_static_service','qfd_native59_record_endpoint','qfd_kvn_static_transport')]
     paths += ['rtl/qwen_sys/redesign_qwen/ot_qfd_su_kv_static_posted.sv','rtl/qwen_sys/vm_nox_20261014/qfd_vm_attention_commit_fence.sv','rtl/qwen_sys/split_20261014/qkd_native_attention_record.sv']
-    text=read('8d92a8870','tools/qwen_coll_tp8_static_links_bench.py').decode()
+    io_ref=profile.get('io_sources_ref','8d92a8870')
+    text=read(io_ref,'tools/qwen_coll_tp8_static_links_bench.py').decode()
     block=text[text.index('SRC = '):text.index('RES = ')]
     io_paths=re.findall(r'"((?:rtl|physical)/[^\"]+\.(?:sv|v))"',block)
     paths += io_paths
-    override={path:ref for top,path,ref in NODES.values()}
-    for path in io_paths:override.setdefault(path,'8d92a8870')
+    override={path:ref for top,path,ref in specs.values()}
+    for extra in profile.get("source_extras",[]):
+        paths.append(extra["path"]);override[extra["path"]]=extra["ref"]
+    for path in io_paths:override.setdefault(path,io_ref)
     # Shared actual math source comes from the selected native compute profile;
     # avoid changing it merely because the IO proof used the same helper name.
     for path in io_paths:
@@ -66,9 +70,9 @@ def main():
         if path.endswith(('.vh','.svh')):
             data=read(BASE,path);target=a.out/path;target.parent.mkdir(parents=True,exist_ok=True);target.write_bytes(data)
             manifest[path]=dict(ref=BASE,sha256=hashlib.sha256(data).hexdigest())
-    rtl='rtl/qwen_split/qfd_native_compute_join.sv';data=(ROOT/rtl).read_bytes();target=a.out/rtl;target.parent.mkdir(parents=True,exist_ok=True);target.write_bytes(data);files.append(rtl)
+    rtl=a.rtl;data=(ROOT/rtl).read_bytes();target=a.out/rtl;target.parent.mkdir(parents=True,exist_ok=True);target.write_bytes(data);files.append(rtl)
     manifest[rtl]=dict(ref='local_committed_join',sha256=hashlib.sha256(data).hexdigest())
     (a.out/'native_join.f').write_text('\n'.join(files)+'\n')
-    (a.out/'source.json').write_text(json.dumps(dict(scope='actual full RTL composite for elaboration only',qualified=False,sources=manifest),indent=2)+'\n')
+    (a.out/'source.json').write_text(json.dumps(dict(scope='actual full RTL composite for elaboration only',qualified=False,profile=profile,sources=manifest),indent=2)+'\n')
     print(json.dumps(dict(files=len(files),source_entries=len(manifest),path=str(a.out))))
 if __name__=='__main__':main()

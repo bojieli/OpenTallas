@@ -1,0 +1,1040 @@
+{
+ "schema": "opentallas.hbm.su_f2_spread.v1",
+ "tool": "tools/hbm_static/su_f2_spread.py",
+ "design": "deepseek",
+ "qualification": false,
+ "kind": "compiler placement + static transport calendar; transport re-executed on RTL by the vehicle",
+ "constants": {
+  "VM_RD": 10,
+  "VM_WR": 7,
+  "LS_WR": 1,
+  "LS_RD": 2,
+  "ARITH": 23,
+  "RED_DEP": 8,
+  "MLAT": 3,
+  "ALAT": 3,
+  "DIV_EXTRA": 16,
+  "S_DEPTH": {
+   "0": 0,
+   "1": 49,
+   "2": 37,
+   "3": 31,
+   "4": 71,
+   "5": 71,
+   "6": 162,
+   "7": 104
+  },
+  "SFU_LANES_PER_QUARTER": 32,
+  "SCALAR_SIDE_LANES": 1
+ },
+ "inputs": {
+  "su_prod.json": "c09ea046040badec47e0459279e9faffc9e22ee8986a287163321367b699109c",
+  "su_rec.mem": "e411062d8970d6572dc75a8251c1f51bd8bf939970915204dd6e764ce77bd818"
+ },
+ "slice_words_used": [
+  14077,
+  12752,
+  12432,
+  11824
+ ],
+ "replicated_words": 964,
+ "cross_quarter_conflict_words": 0,
+ "affine_base_failures": 0,
+ "affine_failures_at": [],
+ "broadcast_written_words": 4,
+ "rotations": [
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  3,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  3,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0
+ ],
+ "invalidated_local_words": 20709,
+ "chains": [
+  {
+   "tags": [
+    "q_norm.ss"
+   ],
+   "priced": 165.0,
+   "first": 0,
+   "end": 98,
+   "edges": 98,
+   "ratio": 0.594
+  },
+  {
+   "tags": [
+    "q_norm.rs"
+   ],
+   "priced": 152.0,
+   "first": 98,
+   "end": 184,
+   "edges": 86,
+   "ratio": 0.566
+  },
+  {
+   "tags": [
+    "q_norm.y"
+   ],
+   "priced": 62.0,
+   "first": 184,
+   "end": 239,
+   "edges": 55,
+   "ratio": 0.887
+  },
+  {
+   "tags": [
+    "kv_norm.ss",
+    "kv_norm.rs",
+    "kv_norm.y",
+    "kv_rope.tail"
+   ],
+   "priced": 423.0,
+   "first": 239,
+   "end": 443,
+   "edges": 204,
+   "ratio": 0.482
+  },
+  {
+   "tags": [
+    "q_rope.tail"
+   ],
+   "priced": 60.0,
+   "first": 443,
+   "end": 487,
+   "edges": 44,
+   "ratio": 0.733
+  },
+  {
+   "tags": [
+    "attend.max",
+    "attend.exp_sum"
+   ],
+   "priced": 372.0,
+   "first": 487,
+   "end": 689,
+   "edges": 202,
+   "ratio": 0.543
+  },
+  {
+   "tags": [
+    "attend.bf16_p"
+   ],
+   "priced": 60.0,
+   "first": 689,
+   "end": 722,
+   "edges": 33,
+   "ratio": 0.55
+  },
+  {
+   "tags": [
+    "attend.den",
+    "attend.norm",
+    "attend.inv_rope.tail"
+   ],
+   "priced": 290.0,
+   "first": 722,
+   "end": 882,
+   "edges": 160,
+   "ratio": 0.552
+  },
+  {
+   "tags": [
+    "attn.res_copy"
+   ],
+   "priced": 99.0,
+   "first": 882,
+   "end": 1005,
+   "edges": 123,
+   "ratio": 1.242
+  },
+  {
+   "tags": [
+    "router_act"
+   ],
+   "priced": 339.0,
+   "first": 1005,
+   "end": 1213,
+   "edges": 208,
+   "ratio": 0.614
+  },
+  {
+   "tags": [
+    "route.scores_bias"
+   ],
+   "priced": 60.0,
+   "first": 1213,
+   "end": 1260,
+   "edges": 47,
+   "ratio": 0.783
+  },
+  {
+   "tags": [
+    "route.gather0",
+    "route.gather1",
+    "route.gather2",
+    "route.gather3"
+   ],
+   "priced": 240.0,
+   "first": 1260,
+   "end": 1295,
+   "edges": 35,
+   "ratio": 0.146
+  },
+  {
+   "tags": [
+    "route.gather4",
+    "route.gather5",
+    "route.total"
+   ],
+   "priced": 235.0,
+   "first": 1295,
+   "end": 1368,
+   "edges": 73,
+   "ratio": 0.311
+  },
+  {
+   "tags": [
+    "route.den"
+   ],
+   "priced": 60.0,
+   "first": 1368,
+   "end": 1400,
+   "edges": 32,
+   "ratio": 0.533
+  },
+  {
+   "tags": [
+    "route.weights"
+   ],
+   "priced": 75.0,
+   "first": 1400,
+   "end": 1449,
+   "edges": 49,
+   "ratio": 0.653
+  },
+  {
+   "tags": [
+    "swiglu"
+   ],
+   "priced": 181.0,
+   "first": 1449,
+   "end": 1566,
+   "edges": 117,
+   "ratio": 0.646
+  },
+  {
+   "tags": [
+    "moe_sum.0"
+   ],
+   "priced": 60.0,
+   "first": 1566,
+   "end": 1610,
+   "edges": 44,
+   "ratio": 0.733
+  },
+  {
+   "tags": [
+    "moe_sum.2"
+   ],
+   "priced": 60.0,
+   "first": 1610,
+   "end": 1654,
+   "edges": 44,
+   "ratio": 0.733
+  },
+  {
+   "tags": [
+    "moe_sum.4",
+    "moe_sum.6"
+   ],
+   "priced": 120.0,
+   "first": 1654,
+   "end": 1722,
+   "edges": 68,
+   "ratio": 0.567
+  },
+  {
+   "tags": [
+    "ffn.res_copy"
+   ],
+   "priced": 99.0,
+   "first": 1722,
+   "end": 1845,
+   "edges": 123,
+   "ratio": 1.242
+  },
+  {
+   "tags": [
+    "pre <- ffn mix pre"
+   ],
+   "priced": 60.0,
+   "first": 1845,
+   "end": 1888,
+   "edges": 43,
+   "ratio": 0.717
+  }
+ ],
+ "records": [
+  {
+   "tag": "q_norm.ss",
+   "priced": 165.0,
+   "issues": 4,
+   "lane_class": "light",
+   "issue_to_local_store": 23,
+   "stage_sectors": 160,
+   "drain_sectors": 1,
+   "reused_words": 0,
+   "elided_drain_words": 0,
+   "adjacent_to_predecessor": false,
+   "first_edge": 0,
+   "end_edge": 98,
+   "own_edges": 98,
+   "edges": 98,
+   "over_price": false,
+   "reduction_tail_model": true
+  },
+  {
+   "tag": "q_norm.rs",
+   "priced": 152.0,
+   "issues": 1,
+   "lane_class": "side",
+   "issue_to_local_store": 76,
+   "stage_sectors": 0,
+   "drain_sectors": 4,
+   "reused_words": 1,
+   "elided_drain_words": 0,
+   "adjacent_to_predecessor": false,
+   "first_edge": 98,
+   "end_edge": 184,
+   "own_edges": 86,
+   "edges": 86,
+   "over_price": false,
+   "reduction_tail_model": false
+  },
+  {
+   "tag": "q_norm.y",
+   "priced": 62.0,
+   "issues": 3,
+   "lane_class": "light",
+   "issue_to_local_store": 23,
+   "stage_sectors": 272,
+   "drain_sectors": 160,
+   "reused_words": 388,
+   "elided_drain_words": 0,
+   "adjacent_to_predecessor": false,
+   "first_edge": 184,
+   "end_edge": 239,
+   "own_edges": 55,
+   "edges": 55,
+   "over_price": false,
+   "reduction_tail_model": false
+  },
+  {
+   "tag": "kv_norm.ss",
+   "priced": 151.0,
+   "issues": 1,
+   "lane_class": "light",
+   "issue_to_local_store": 23,
+   "stage_sectors": 64,
+   "drain_sectors": 1,
+   "reused_words": 0,
+   "elided_drain_words": 0,
+   "adjacent_to_predecessor": false,
+   "first_edge": 239,
+   "end_edge": 315,
+   "own_edges": 76,
+   "edges": 76,
+   "over_price": false,
+   "reduction_tail_model": true
+  },
+  {
+   "tag": "kv_norm.rs",
+   "priced": 152.0,
+   "issues": 1,
+   "lane_class": "side",
+   "issue_to_local_store": 76,
+   "stage_sectors": 0,
+   "drain_sectors": 4,
+   "reused_words": 1,
+   "elided_drain_words": 0,
+   "adjacent_to_predecessor": true,
+   "first_edge": 309,
+   "end_edge": 395,
+   "own_edges": 86,
+   "edges": 80,
+   "over_price": false,
+   "reduction_tail_model": false
+  },
+  {
+   "tag": "kv_norm.y",
+   "priced": 60.0,
+   "issues": 1,
+   "lane_class": "light",
+   "issue_to_local_store": 23,
+   "stage_sectors": 64,
+   "drain_sectors": 56,
+   "reused_words": 516,
+   "elided_drain_words": 64,
+   "adjacent_to_predecessor": true,
+   "first_edge": 241,
+   "end_edge": 420,
+   "own_edges": 179,
+   "edges": 25,
+   "over_price": false,
+   "reduction_tail_model": false
+  },
+  {
+   "tag": "kv_rope.tail",
+   "priced": 60.0,
+   "issues": 1,
+   "lane_class": "light",
+   "issue_to_local_store": 23,
+   "stage_sectors": 8,
+   "drain_sectors": 8,
+   "reused_words": 64,
+   "elided_drain_words": 0,
+   "adjacent_to_predecessor": true,
+   "first_edge": 243,
+   "end_edge": 443,
+   "own_edges": 200,
+   "edges": 23,
+   "over_price": false,
+   "reduction_tail_model": false
+  },
+  {
+   "tag": "q_rope.tail",
+   "priced": 60.0,
+   "issues": 1,
+   "lane_class": "light",
+   "issue_to_local_store": 23,
+   "stage_sectors": 16,
+   "drain_sectors": 8,
+   "reused_words": 0,
+   "elided_drain_words": 0,
+   "adjacent_to_predecessor": false,
+   "first_edge": 443,
+   "end_edge": 487,
+   "own_edges": 44,
+   "edges": 44,
+   "over_price": false,
+   "reduction_tail_model": false
+  },
+  {
+   "tag": "attend.max",
+   "priced": 139.0,
+   "issues": 1,
+   "lane_class": "light",
+   "issue_to_local_store": 23,
+   "stage_sectors": 16,
+   "drain_sectors": 1,
+   "reused_words": 0,
+   "elided_drain_words": 0,
+   "adjacent_to_predecessor": false,
+   "first_edge": 487,
+   "end_edge": 571,
+   "own_edges": 84,
+   "edges": 84,
+   "over_price": false,
+   "reduction_tail_model": true
+  },
+  {
+   "tag": "attend.exp_sum",
+   "priced": 233.0,
+   "issues": 4,
+   "lane_class": "sfu",
+   "issue_to_local_store": 72,
+   "stage_sectors": 0,
+   "drain_sectors": 17,
+   "reused_words": 129,
+   "elided_drain_words": 0,
+   "adjacent_to_predecessor": true,
+   "first_edge": 565,
+   "end_edge": 689,
+   "own_edges": 124,
+   "edges": 118,
+   "over_price": false,
+   "reduction_tail_model": true
+  },
+  {
+   "tag": "attend.bf16_p",
+   "priced": 60.0,
+   "issues": 1,
+   "lane_class": "light",
+   "issue_to_local_store": 23,
+   "stage_sectors": 0,
+   "drain_sectors": 16,
+   "reused_words": 128,
+   "elided_drain_words": 0,
+   "adjacent_to_predecessor": false,
+   "first_edge": 689,
+   "end_edge": 722,
+   "own_edges": 33,
+   "edges": 33,
+   "over_price": false,
+   "reduction_tail_model": false
+  },
+  {
+   "tag": "attend.den",
+   "priced": 154.0,
+   "issues": 1,
+   "lane_class": "sfu",
+   "issue_to_local_store": 72,
+   "stage_sectors": 1,
+   "drain_sectors": 4,
+   "reused_words": 2,
+   "elided_drain_words": 0,
+   "adjacent_to_predecessor": false,
+   "first_edge": 722,
+   "end_edge": 815,
+   "own_edges": 93,
+   "edges": 93,
+   "over_price": false,
+   "reduction_tail_model": false
+  },
+  {
+   "tag": "attend.norm",
+   "priced": 76.0,
+   "issues": 4,
+   "lane_class": "sfu",
+   "issue_to_local_store": 39,
+   "stage_sectors": 64,
+   "drain_sectors": 56,
+   "reused_words": 4,
+   "elided_drain_words": 64,
+   "adjacent_to_predecessor": true,
+   "first_edge": 722,
+   "end_edge": 858,
+   "own_edges": 136,
+   "edges": 43,
+   "over_price": false,
+   "reduction_tail_model": false
+  },
+  {
+   "tag": "attend.inv_rope.tail",
+   "priced": 60.0,
+   "issues": 1,
+   "lane_class": "light",
+   "issue_to_local_store": 23,
+   "stage_sectors": 0,
+   "drain_sectors": 8,
+   "reused_words": 128,
+   "elided_drain_words": 0,
+   "adjacent_to_predecessor": true,
+   "first_edge": 850,
+   "end_edge": 882,
+   "own_edges": 32,
+   "edges": 24,
+   "over_price": false,
+   "reduction_tail_model": false
+  },
+  {
+   "tag": "attn.res_copy",
+   "priced": 99.0,
+   "issues": 40,
+   "lane_class": "light",
+   "issue_to_local_store": 23,
+   "stage_sectors": 2560,
+   "drain_sectors": 2560,
+   "reused_words": 0,
+   "elided_drain_words": 0,
+   "adjacent_to_predecessor": false,
+   "first_edge": 882,
+   "end_edge": 1005,
+   "own_edges": 123,
+   "edges": 123,
+   "over_price": true,
+   "reduction_tail_model": false
+  },
+  {
+   "tag": "router_act",
+   "priced": 339.0,
+   "issues": 4,
+   "lane_class": "side",
+   "issue_to_local_store": 185,
+   "stage_sectors": 1,
+   "drain_sectors": 4,
+   "reused_words": 0,
+   "elided_drain_words": 0,
+   "adjacent_to_predecessor": false,
+   "first_edge": 1005,
+   "end_edge": 1213,
+   "own_edges": 208,
+   "edges": 208,
+   "over_price": false,
+   "reduction_tail_model": false
+  },
+  {
+   "tag": "route.scores_bias",
+   "priced": 60.0,
+   "issues": 1,
+   "lane_class": "light",
+   "issue_to_local_store": 23,
+   "stage_sectors": 96,
+   "drain_sectors": 48,
+   "reused_words": 0,
+   "elided_drain_words": 0,
+   "adjacent_to_predecessor": false,
+   "first_edge": 1213,
+   "end_edge": 1260,
+   "own_edges": 47,
+   "edges": 47,
+   "over_price": false,
+   "reduction_tail_model": false
+  },
+  {
+   "tag": "route.gather0",
+   "priced": 60.0,
+   "issues": 1,
+   "lane_class": "light",
+   "issue_to_local_store": 23,
+   "stage_sectors": 0,
+   "drain_sectors": 1,
+   "reused_words": 1,
+   "elided_drain_words": 0,
+   "adjacent_to_predecessor": false,
+   "first_edge": 1260,
+   "end_edge": 1292,
+   "own_edges": 32,
+   "edges": 32,
+   "over_price": false,
+   "reduction_tail_model": false
+  },
+  {
+   "tag": "route.gather1",
+   "priced": 60.0,
+   "issues": 1,
+   "lane_class": "light",
+   "issue_to_local_store": 23,
+   "stage_sectors": 0,
+   "drain_sectors": 1,
+   "reused_words": 1,
+   "elided_drain_words": 0,
+   "adjacent_to_predecessor": true,
+   "first_edge": 1261,
+   "end_edge": 1293,
+   "own_edges": 32,
+   "edges": 1,
+   "over_price": false,
+   "reduction_tail_model": false
+  },
+  {
+   "tag": "route.gather2",
+   "priced": 60.0,
+   "issues": 1,
+   "lane_class": "light",
+   "issue_to_local_store": 23,
+   "stage_sectors": 0,
+   "drain_sectors": 1,
+   "reused_words": 1,
+   "elided_drain_words": 0,
+   "adjacent_to_predecessor": true,
+   "first_edge": 1262,
+   "end_edge": 1294,
+   "own_edges": 32,
+   "edges": 1,
+   "over_price": false,
+   "reduction_tail_model": false
+  },
+  {
+   "tag": "route.gather3",
+   "priced": 60.0,
+   "issues": 1,
+   "lane_class": "light",
+   "issue_to_local_store": 23,
+   "stage_sectors": 0,
+   "drain_sectors": 1,
+   "reused_words": 1,
+   "elided_drain_words": 0,
+   "adjacent_to_predecessor": true,
+   "first_edge": 1263,
+   "end_edge": 1295,
+   "own_edges": 32,
+   "edges": 1,
+   "over_price": false,
+   "reduction_tail_model": false
+  },
+  {
+   "tag": "route.gather4",
+   "priced": 60.0,
+   "issues": 1,
+   "lane_class": "light",
+   "issue_to_local_store": 23,
+   "stage_sectors": 0,
+   "drain_sectors": 1,
+   "reused_words": 1,
+   "elided_drain_words": 0,
+   "adjacent_to_predecessor": false,
+   "first_edge": 1295,
+   "end_edge": 1327,
+   "own_edges": 32,
+   "edges": 32,
+   "over_price": false,
+   "reduction_tail_model": false
+  },
+  {
+   "tag": "route.gather5",
+   "priced": 60.0,
+   "issues": 1,
+   "lane_class": "light",
+   "issue_to_local_store": 23,
+   "stage_sectors": 0,
+   "drain_sectors": 1,
+   "reused_words": 1,
+   "elided_drain_words": 0,
+   "adjacent_to_predecessor": true,
+   "first_edge": 1296,
+   "end_edge": 1328,
+   "own_edges": 32,
+   "edges": 1,
+   "over_price": false,
+   "reduction_tail_model": false
+  },
+  {
+   "tag": "route.total",
+   "priced": 115.0,
+   "issues": 1,
+   "lane_class": "light",
+   "issue_to_local_store": 23,
+   "stage_sectors": 0,
+   "drain_sectors": 1,
+   "reused_words": 6,
+   "elided_drain_words": 0,
+   "adjacent_to_predecessor": true,
+   "first_edge": 1320,
+   "end_edge": 1368,
+   "own_edges": 48,
+   "edges": 40,
+   "over_price": false,
+   "reduction_tail_model": true
+  },
+  {
+   "tag": "route.den",
+   "priced": 60.0,
+   "issues": 1,
+   "lane_class": "light",
+   "issue_to_local_store": 23,
+   "stage_sectors": 0,
+   "drain_sectors": 1,
+   "reused_words": 1,
+   "elided_drain_words": 0,
+   "adjacent_to_predecessor": false,
+   "first_edge": 1368,
+   "end_edge": 1400,
+   "own_edges": 32,
+   "edges": 32,
+   "over_price": false,
+   "reduction_tail_model": false
+  },
+  {
+   "tag": "route.weights",
+   "priced": 75.0,
+   "issues": 1,
+   "lane_class": "sfu",
+   "issue_to_local_store": 39,
+   "stage_sectors": 0,
+   "drain_sectors": 2,
+   "reused_words": 7,
+   "elided_drain_words": 0,
+   "adjacent_to_predecessor": false,
+   "first_edge": 1400,
+   "end_edge": 1449,
+   "own_edges": 49,
+   "edges": 49,
+   "over_price": false,
+   "reduction_tail_model": false
+  },
+  {
+   "tag": "swiglu",
+   "priced": 181.0,
+   "issues": 4,
+   "lane_class": "sfu",
+   "issue_to_local_store": 94,
+   "stage_sectors": 43,
+   "drain_sectors": 21,
+   "reused_words": 6,
+   "elided_drain_words": 0,
+   "adjacent_to_predecessor": false,
+   "first_edge": 1449,
+   "end_edge": 1566,
+   "own_edges": 117,
+   "edges": 117,
+   "over_price": false,
+   "reduction_tail_model": false
+  },
+  {
+   "tag": "moe_sum.0",
+   "priced": 60.0,
+   "issues": 1,
+   "lane_class": "light",
+   "issue_to_local_store": 23,
+   "stage_sectors": 14,
+   "drain_sectors": 7,
+   "reused_words": 0,
+   "elided_drain_words": 0,
+   "adjacent_to_predecessor": false,
+   "first_edge": 1566,
+   "end_edge": 1610,
+   "own_edges": 44,
+   "edges": 44,
+   "over_price": false,
+   "reduction_tail_model": false
+  },
+  {
+   "tag": "moe_sum.2",
+   "priced": 60.0,
+   "issues": 1,
+   "lane_class": "light",
+   "issue_to_local_store": 23,
+   "stage_sectors": 14,
+   "drain_sectors": 7,
+   "reused_words": 53,
+   "elided_drain_words": 0,
+   "adjacent_to_predecessor": false,
+   "first_edge": 1610,
+   "end_edge": 1654,
+   "own_edges": 44,
+   "edges": 44,
+   "over_price": false,
+   "reduction_tail_model": false
+  },
+  {
+   "tag": "moe_sum.4",
+   "priced": 60.0,
+   "issues": 1,
+   "lane_class": "light",
+   "issue_to_local_store": 23,
+   "stage_sectors": 14,
+   "drain_sectors": 0,
+   "reused_words": 53,
+   "elided_drain_words": 53,
+   "adjacent_to_predecessor": false,
+   "first_edge": 1654,
+   "end_edge": 1689,
+   "own_edges": 35,
+   "edges": 35,
+   "over_price": false,
+   "reduction_tail_model": false
+  },
+  {
+   "tag": "moe_sum.6",
+   "priced": 60.0,
+   "issues": 1,
+   "lane_class": "light",
+   "issue_to_local_store": 23,
+   "stage_sectors": 7,
+   "drain_sectors": 7,
+   "reused_words": 53,
+   "elided_drain_words": 0,
+   "adjacent_to_predecessor": true,
+   "first_edge": 1655,
+   "end_edge": 1722,
+   "own_edges": 67,
+   "edges": 33,
+   "over_price": false,
+   "reduction_tail_model": false
+  },
+  {
+   "tag": "ffn.res_copy",
+   "priced": 99.0,
+   "issues": 40,
+   "lane_class": "light",
+   "issue_to_local_store": 23,
+   "stage_sectors": 2560,
+   "drain_sectors": 2560,
+   "reused_words": 0,
+   "elided_drain_words": 0,
+   "adjacent_to_predecessor": false,
+   "first_edge": 1722,
+   "end_edge": 1845,
+   "own_edges": 123,
+   "edges": 123,
+   "over_price": true,
+   "reduction_tail_model": false
+  },
+  {
+   "tag": "pre <- ffn mix pre",
+   "priced": 60.0,
+   "issues": 1,
+   "lane_class": "light",
+   "issue_to_local_store": 23,
+   "stage_sectors": 1,
+   "drain_sectors": 1,
+   "reused_words": 0,
+   "elided_drain_words": 0,
+   "adjacent_to_predecessor": false,
+   "first_edge": 1845,
+   "end_edge": 1888,
+   "own_edges": 43,
+   "edges": 43,
+   "over_price": false,
+   "reduction_tail_model": false
+  }
+ ],
+ "total": {
+  "priced": 3272.0,
+  "edges": 1888,
+  "ratio": 0.577
+ },
+ "vehicle_transport_windows": {
+  "q_norm.ss#0": [
+   0,
+   98
+  ],
+  "q_norm.rs#1": [
+   177,
+   184
+  ],
+  "q_norm.y#2": [
+   184,
+   239
+  ],
+  "kv_norm.ss#3": [
+   239,
+   315
+  ],
+  "kv_norm.rs#4": [
+   388,
+   395
+  ],
+  "kv_norm.y#5": [
+   241,
+   420
+  ],
+  "kv_rope.tail#6": [
+   243,
+   443
+  ],
+  "q_rope.tail#7": [
+   443,
+   487
+  ],
+  "attend.max#8": [
+   487,
+   571
+  ],
+  "attend.exp_sum#9": [
+   639,
+   689
+  ],
+  "attend.bf16_p#10": [
+   714,
+   722
+  ],
+  "attend.den#11": [
+   722,
+   815
+  ],
+  "attend.norm#12": [
+   722,
+   858
+  ],
+  "attend.inv_rope.tail#13": [
+   875,
+   882
+  ],
+  "attn.res_copy#14": [
+   882,
+   1005
+  ],
+  "router_act#15": [
+   1005,
+   1213
+  ],
+  "route.scores_bias#16": [
+   1213,
+   1260
+  ],
+  "route.gather0#17": [
+   1285,
+   1292
+  ],
+  "route.gather1#18": [
+   1286,
+   1293
+  ],
+  "route.gather2#19": [
+   1287,
+   1294
+  ],
+  "route.gather3#20": [
+   1288,
+   1295
+  ],
+  "route.gather4#21": [
+   1320,
+   1327
+  ],
+  "route.gather5#22": [
+   1321,
+   1328
+  ],
+  "route.total#23": [
+   1361,
+   1368
+  ],
+  "route.den#24": [
+   1393,
+   1400
+  ],
+  "route.weights#25": [
+   1442,
+   1449
+  ],
+  "swiglu#26": [
+   1449,
+   1566
+  ],
+  "moe_sum.0#27": [
+   1566,
+   1610
+  ],
+  "moe_sum.2#28": [
+   1610,
+   1654
+  ],
+  "moe_sum.4#29": [
+   1654,
+   1665
+  ],
+  "moe_sum.6#30": [
+   1655,
+   1722
+  ],
+  "ffn.res_copy#31": [
+   1722,
+   1845
+  ],
+  "pre <- ffn mix pre#32": [
+   1845,
+   1888
+  ]
+ }
+}

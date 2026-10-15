@@ -1,0 +1,20 @@
+{
+  "scope": "ACTUAL_STANDALONE_SCALAR_FEC_TT_LIBRARY_MAP_NO_PHYSICAL_CLAIM",
+  "input_scalar_sha256": "ee637cd3b23f06c6a7c2c65aa64b024fbd333211a2c163506d50be4931303b1c",
+  "parent_receipt_sha256": "82e06883108e84e190e11b2c7e266669477620d4a981734057c8710817d85774",
+  "bit_graph_sha256": "994afbf9b813a631d54df11cc878be7d020a8eb7da4183dee85f78bd1f7f00d5",
+  "mapper_sha256": "4a0eed5ca3ce4c9e0cc1a0248ff1b202688049535c654e215891f4f4f2801506",
+  "libraries_sha256": {
+    "asap7sc7p5t_AO_RVT_TT_nldm_211120.lib": "b1ece108c0a2acd8d01c05cee6daee2834425037b1d9aad625d6f1dd640f1940",
+    "asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib": "a4ceb32e418e1aac8667e28fbd8e9e46baf520180be4db075598a4d7c681a56e",
+    "asap7sc7p5t_OA_RVT_TT_nldm_211120.lib": "6529c6c72465cd133dfbfb03952327ab2774bb6aa4be866d78fd7bc6c58c9f6f",
+    "asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3",
+    "asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib": "fa92e6ab1481810602811b1eea54bc016a341f11fb5188d7512c026599adf038"
+  },
+  "library_image_id": "sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29",
+  "top": "hfd_serdes487_static_correction_window",
+  "clock_target_ps_for_abc": 885,
+  "retiming": false,
+  "native_qualified": false,
+  "physical_qualified": false
+}

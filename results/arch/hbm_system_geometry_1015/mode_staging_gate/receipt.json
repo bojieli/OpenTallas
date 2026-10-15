@@ -1,0 +1,16 @@
+{
+  "physical_qualified": false,
+  "scope": "actual34SRAM mode-specific raw8480 bijection, full320rows*2lanes*4jobs, maskedwrites, sameaddress olddata, realPVlocal decoding and3realguards; not complete compiler/controller join",
+  "source_sha256": {
+    "baseline_staging.sv": "642772e31fd5e48da976ff1840b91f1adac7095a7e7a527fd7212e51f093bc25",
+    "rtl/hdc/v41x/static/ot_hbm_attn_staging_mode_local.sv": "c5792fdc3237a4a0eb0aecbf6734d5f936cfd628d00a25696f7bf17caa135cf9",
+    "rtl/test/hbm_staging_geometry/tb_mode_local.sv": "fa9e4ce931af041d04b7c6a5559fec32c40e46ebe06e7013513ee242db79fe6a",
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v": "25ca11845381ce089cc5f2fbab82a90672d8704fe6c66f4445814b33b4b7d51e"
+  },
+  "baseline_pass": true,
+  "mutants_rejected": {
+    "1": true,
+    "2": true,
+    "3": true
+  }
+}

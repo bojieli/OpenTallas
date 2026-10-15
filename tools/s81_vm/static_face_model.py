@@ -90,6 +90,8 @@ def model(entries: int = 8, cap_pipeline: int = 0, read_pipeline: int = 0) -> di
             current_outer_raw_reset_pin_count=618 if read_pipeline else 546,
             extra_dependency_latency_ns=dict(capture=cap_pipeline/0.9, native_read=read_pipeline/1.2, WFC=3*read_pipeline/0.9),
             read_peak_legal_rows_per_stream_edge=30,
+            return_prepare_mask_pipeline_FF=320,
+            return_prepare_descriptor_age='stage9, one edge before unchanged stage10release; pending returnstorage integration proof',
             price='immutable model prices unchanged; added cycles must compose into actual programme before throughput qualification'),
         'schedule': 'all edge placement fixed by compiler; collision is sticky fault and never a delay',
         'physical_status': 'unqualified: outlines/pins/cuts/CTS/related-clock STA remain required',

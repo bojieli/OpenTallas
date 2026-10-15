@@ -1,0 +1,1619 @@
+{
+  "schema": "opentallas.s81.actual-routed-local-hop-diagnostic.v1",
+  "tool_sha256": "1abf8ae5869e51eeaf0a39d50d442eecdd4459371e2ff86d4ceb5ea2e3b0f544",
+  "status": "REJECT_NATIVE_ADOPTION",
+  "scope": "83712 bank-quarter-bridge endpoint bits in old188 local template; proposed328 retains these microcluster relative pins; real clock-domain-specific TT/FF exported arcs, phase compensated per measured boundary R. Linear .76ps/um TT wire is a construction model, not extracted die STA.",
+  "rule": {
+    "T_ps": 833.333,
+    "setup_unc_ps": 60,
+    "skew_ps": 90,
+    "wire_ps_per_um": 0.76,
+    "hold_reserve_ps": 100,
+    "hold_wire_credit_ps": 0
+  },
+  "stats": {
+    "quarter_to_bank_request": {
+      "bits": 21504,
+      "over500": 0,
+      "max_um": 463.116,
+      "setup_fail_bits": 8096,
+      "min_setup_slack_ps": -109.453,
+      "max_launch_residual_ps": 346.025,
+      "max_capture_residual_ps": 165.546,
+      "launch_over220_bits": 21472,
+      "capture_over190_bits": 0,
+      "min_hold_reserve_no_wire_credit_ps": 144.103
+    },
+    "bank_to_quarter_response": {
+      "bits": 20352,
+      "over500": 0,
+      "max_um": 486.3,
+      "setup_fail_bits": 0,
+      "min_setup_slack_ps": 6.884,
+      "max_launch_residual_ps": 191.703,
+      "max_capture_residual_ps": 124.105,
+      "launch_over220_bits": 0,
+      "capture_over190_bits": 0,
+      "min_hold_reserve_no_wire_credit_ps": 74.269
+    },
+    "bridge_to_quarter_request": {
+      "bits": 21504,
+      "over500": 0,
+      "max_um": 398.832,
+      "setup_fail_bits": 4064,
+      "min_setup_slack_ps": -58.029,
+      "max_launch_residual_ps": 325.846,
+      "max_capture_residual_ps": 139.281,
+      "launch_over220_bits": 21504,
+      "capture_over190_bits": 0,
+      "min_hold_reserve_no_wire_credit_ps": 128.506
+    },
+    "quarter_to_bridge_response": {
+      "bits": 20352,
+      "over500": 0,
+      "max_um": 397.008,
+      "setup_fail_bits": 15184,
+      "min_setup_slack_ps": -108.222,
+      "max_launch_residual_ps": 370.857,
+      "max_capture_residual_ps": 130.568,
+      "launch_over220_bits": 20352,
+      "capture_over190_bits": 0,
+      "min_hold_reserve_no_wire_credit_ps": 142.606
+    }
+  },
+  "missing_arcs": [],
+  "missing_arc_count": 0,
+  "over500": [],
+  "worst_setup": [
+    {
+      "source": "vm_s0_quarter0.o_wd[227]",
+      "target": "vm_s0_bank1.i_wd[99]",
+      "um": 457.74,
+      "launch_ps": 291.112,
+      "capture_ps": 153.792,
+      "setup_slack_ps": -109.453,
+      "source_clock": [
+        "ck_req"
+      ],
+      "target_clock": [
+        "ck"
+      ]
+    },
+    {
+      "source": "vm_s0_quarter1.o_wd[227]",
+      "target": "vm_s0_bank5.i_wd[99]",
+      "um": 457.74,
+      "launch_ps": 291.112,
+      "capture_ps": 153.792,
+      "setup_slack_ps": -109.453,
+      "source_clock": [
+        "ck_req"
+      ],
+      "target_clock": [
+        "ck"
+      ]
+    },
+    {
+      "source": "vm_s0_quarter2.o_wd[227]",
+      "target": "vm_s0_bank9.i_wd[99]",
+      "um": 457.74,
+      "launch_ps": 291.112,
+      "capture_ps": 153.792,
+      "setup_slack_ps": -109.453,
+      "source_clock": [
+        "ck_req"
+      ],
+      "target_clock": [
+        "ck"
+      ]
+    },
+    {
+      "source": "vm_s0_quarter3.o_wd[227]",
+      "target": "vm_s0_bank13.i_wd[99]",
+      "um": 457.74,
+      "launch_ps": 291.112,
+      "capture_ps": 153.792,
+      "setup_slack_ps": -109.453,
+      "source_clock": [
+        "ck_req"
+      ],
+      "target_clock": [
+        "ck"
+      ]
+    },
+    {
+      "source": "vm_s0_quarter4.o_wd[227]",
+      "target": "vm_s0_bank17.i_wd[99]",
+      "um": 457.74,
+      "launch_ps": 291.112,
+      "capture_ps": 153.792,
+      "setup_slack_ps": -109.453,
+      "source_clock": [
+        "ck_req"
+      ],
+      "target_clock": [
+        "ck"
+      ]
+    },
+    {
+      "source": "vm_s0_quarter5.o_wd[227]",
+      "target": "vm_s0_bank21.i_wd[99]",
+      "um": 457.74,
+      "launch_ps": 291.112,
+      "capture_ps": 153.792,
+      "setup_slack_ps": -109.453,
+      "source_clock": [
+        "ck_req"
+      ],
+      "target_clock": [
+        "ck"
+      ]
+    },
+    {
+      "source": "vm_s0_quarter6.o_wd[227]",
+      "target": "vm_s0_bank25.i_wd[99]",
+      "um": 457.74,
+      "launch_ps": 291.112,
+      "capture_ps": 153.792,
+      "setup_slack_ps": -109.453,
+      "source_clock": [
+        "ck_req"
+      ],
+      "target_clock": [
+        "ck"
+      ]
+    },
+    {
+      "source": "vm_s0_quarter7.o_wd[227]",
+      "target": "vm_s0_bank29.i_wd[99]",
+      "um": 457.74,
+      "launch_ps": 291.112,
+      "capture_ps": 153.792,
+      "setup_slack_ps": -109.453,
+      "source_clock": [
+        "ck_req"
+      ],
+      "target_clock": [
+        "ck"
+      ]
+    },
+    {
+      "source": "vm_s1_quarter0.o_wd[227]",
+      "target": "vm_s1_bank1.i_wd[99]",
+      "um": 457.74,
+      "launch_ps": 291.112,
+      "capture_ps": 153.792,
+      "setup_slack_ps": -109.453,
+      "source_clock": [
+        "ck_req"
+      ],
+      "target_clock": [
+        "ck"
+      ]
+    },
+    {
+      "source": "vm_s1_quarter1.o_wd[227]",
+      "target": "vm_s1_bank5.i_wd[99]",
+      "um": 457.74,
+      "launch_ps": 291.112,
+      "capture_ps": 153.792,
+      "setup_slack_ps": -109.453,
+      "source_clock": [
+        "ck_req"
+      ],
+      "target_clock": [
+        "ck"
+      ]
+    },
+    {
+      "source": "vm_s1_quarter2.o_wd[227]",
+      "target": "vm_s1_bank9.i_wd[99]",
+      "um": 457.74,
+      "launch_ps": 291.112,
+      "capture_ps": 153.792,
+      "setup_slack_ps": -109.453,
+      "source_clock": [
+        "ck_req"
+      ],
+      "target_clock": [
+        "ck"
+      ]
+    },
+    {
+      "source": "vm_s1_quarter3.o_wd[227]",
+      "target": "vm_s1_bank13.i_wd[99]",
+      "um": 457.74,
+      "launch_ps": 291.112,
+      "capture_ps": 153.792,
+      "setup_slack_ps": -109.453,
+      "source_clock": [
+        "ck_req"
+      ],
+      "target_clock": [
+        "ck"
+      ]
+    },
+    {
+      "source": "vm_s1_quarter4.o_wd[227]",
+      "target": "vm_s1_bank17.i_wd[99]",
+      "um": 457.74,
+      "launch_ps": 291.112,
+      "capture_ps": 153.792,
+      "setup_slack_ps": -109.453,
+      "source_clock": [
+        "ck_req"
+      ],
+      "target_clock": [
+        "ck"
+      ]
+    },
+    {
+      "source": "vm_s1_quarter5.o_wd[227]",
+      "target": "vm_s1_bank21.i_wd[99]",
+      "um": 457.74,
+      "launch_ps": 291.112,
+      "capture_ps": 153.792,
+      "setup_slack_ps": -109.453,
+      "source_clock": [
+        "ck_req"
+      ],
+      "target_clock": [
+        "ck"
+      ]
+    },
+    {
+      "source": "vm_s1_quarter6.o_wd[227]",
+      "target": "vm_s1_bank25.i_wd[99]",
+      "um": 457.74,
+      "launch_ps": 291.112,
+      "capture_ps": 153.792,
+      "setup_slack_ps": -109.453,
+      "source_clock": [
+        "ck_req"
+      ],
+      "target_clock": [
+        "ck"
+      ]
+    },
+    {
+      "source": "vm_s1_quarter7.o_wd[227]",
+      "target": "vm_s1_bank29.i_wd[99]",
+      "um": 457.74,
+      "launch_ps": 291.112,
+      "capture_ps": 153.792,
+      "setup_slack_ps": -109.453,
+      "source_clock": [
+        "ck_req"
+      ],
+      "target_clock": [
+        "ck"
+      ]
+    },
+    {
+      "source": "vm_s2_quarter0.o_wd[227]",
+      "target": "vm_s2_bank1.i_wd[99]",
+      "um": 457.74,
+      "launch_ps": 291.112,
+      "capture_ps": 153.792,
+      "setup_slack_ps": -109.453,
+      "source_clock": [
+        "ck_req"
+      ],
+      "target_clock": [
+        "ck"
+      ]
+    },
+    {
+      "source": "vm_s2_quarter1.o_wd[227]",
+      "target": "vm_s2_bank5.i_wd[99]",
+      "um": 457.74,
+      "launch_ps": 291.112,
+      "capture_ps": 153.792,
+      "setup_slack_ps": -109.453,
+      "source_clock": [
+        "ck_req"
+      ],
+      "target_clock": [
+        "ck"
+      ]
+    },
+    {
+      "source": "vm_s2_quarter2.o_wd[227]",
+      "target": "vm_s2_bank9.i_wd[99]",
+      "um": 457.74,
+      "launch_ps": 291.112,
+      "capture_ps": 153.792,
+      "setup_slack_ps": -109.453,
+      "source_clock": [
+        "ck_req"
+      ],
+      "target_clock": [
+        "ck"
+      ]
+    },
+    {
+      "source": "vm_s2_quarter3.o_wd[227]",
+      "target": "vm_s2_bank13.i_wd[99]",
+      "um": 457.74,
+      "launch_ps": 291.112,
+      "capture_ps": 153.792,
+      "setup_slack_ps": -109.453,
+      "source_clock": [
+        "ck_req"
+      ],
+      "target_clock": [
+        "ck"
+      ]
+    },
+    {
+      "source": "vm_s2_quarter4.o_wd[227]",
+      "target": "vm_s2_bank17.i_wd[99]",
+      "um": 457.74,
+      "launch_ps": 291.112,
+      "capture_ps": 153.792,
+      "setup_slack_ps": -109.453,
+      "source_clock": [
+        "ck_req"
+      ],
+      "target_clock": [
+        "ck"
+      ]
+    },
+    {
+      "source": "vm_s2_quarter5.o_wd[227]",
+      "target": "vm_s2_bank21.i_wd[99]",
+      "um": 457.74,
+      "launch_ps": 291.112,
+      "capture_ps": 153.792,
+      "setup_slack_ps": -109.453,
+      "source_clock": [
+        "ck_req"
+      ],
+      "target_clock": [
+        "ck"
+      ]
+    },
+    {
+      "source": "vm_s2_quarter6.o_wd[227]",
+      "target": "vm_s2_bank25.i_wd[99]",
+      "um": 457.74,
+      "launch_ps": 291.112,
+      "capture_ps": 153.792,
+      "setup_slack_ps": -109.453,
+      "source_clock": [
+        "ck_req"
+      ],
+      "target_clock": [
+        "ck"
+      ]
+    },
+    {
+      "source": "vm_s2_quarter7.o_wd[227]",
+      "target": "vm_s2_bank29.i_wd[99]",
+      "um": 457.74,
+      "launch_ps": 291.112,
+      "capture_ps": 153.792,
+      "setup_slack_ps": -109.453,
+      "source_clock": [
+        "ck_req"
+      ],
+      "target_clock": [
+        "ck"
+      ]
+    },
+    {
+      "source": "vm_s3_quarter0.o_wd[227]",
+      "target": "vm_s3_bank1.i_wd[99]",
+      "um": 457.74,
+      "launch_ps": 291.112,
+      "capture_ps": 153.792,
+      "setup_slack_ps": -109.453,
+      "source_clock": [
+        "ck_req"
+      ],
+      "target_clock": [
+        "ck"
+      ]
+    },
+    {
+      "source": "vm_s3_quarter1.o_wd[227]",
+      "target": "vm_s3_bank5.i_wd[99]",
+      "um": 457.74,
+      "launch_ps": 291.112,
+      "capture_ps": 153.792,
+      "setup_slack_ps": -109.453,
+      "source_clock": [
+        "ck_req"
+      ],
+      "target_clock": [
+        "ck"
+      ]
+    },
+    {
+      "source": "vm_s3_quarter2.o_wd[227]",
+      "target": "vm_s3_bank9.i_wd[99]",
+      "um": 457.74,
+      "launch_ps": 291.112,
+      "capture_ps": 153.792,
+      "setup_slack_ps": -109.453,
+      "source_clock": [
+        "ck_req"
+      ],
+      "target_clock": [
+        "ck"
+      ]
+    },
+    {
+      "source": "vm_s3_quarter3.o_wd[227]",
+      "target": "vm_s3_bank13.i_wd[99]",
+      "um": 457.74,
+      "launch_ps": 291.112,
+      "capture_ps": 153.792,
+      "setup_slack_ps": -109.453,
+      "source_clock": [
+        "ck_req"
+      ],
+      "target_clock": [
+        "ck"
+      ]
+    },
+    {
+      "source": "vm_s3_quarter4.o_wd[227]",
+      "target": "vm_s3_bank17.i_wd[99]",
+      "um": 457.74,
+      "launch_ps": 291.112,
+      "capture_ps": 153.792,
+      "setup_slack_ps": -109.453,
+      "source_clock": [
+        "ck_req"
+      ],
+      "target_clock": [
+        "ck"
+      ]
+    },
+    {
+      "source": "vm_s3_quarter5.o_wd[227]",
+      "target": "vm_s3_bank21.i_wd[99]",
+      "um": 457.74,
+      "launch_ps": 291.112,
+      "capture_ps": 153.792,
+      "setup_slack_ps": -109.453,
+      "source_clock": [
+        "ck_req"
+      ],
+      "target_clock": [
+        "ck"
+      ]
+    },
+    {
+      "source": "vm_s3_quarter6.o_wd[227]",
+      "target": "vm_s3_bank25.i_wd[99]",
+      "um": 457.74,
+      "launch_ps": 291.112,
+      "capture_ps": 153.792,
+      "setup_slack_ps": -109.453,
+      "source_clock": [
+        "ck_req"
+      ],
+      "target_clock": [
+        "ck"
+      ]
+    },
+    {
+      "source": "vm_s3_quarter7.o_wd[227]",
+      "target": "vm_s3_bank29.i_wd[99]",
+      "um": 457.74,
+      "launch_ps": 291.112,
+      "capture_ps": 153.792,
+      "setup_slack_ps": -109.453,
+      "source_clock": [
+        "ck_req"
+      ],
+      "target_clock": [
+        "ck"
+      ]
+    },
+    {
+      "source": "vm_s0_quarter0.o_cm[6]",
+      "target": "vm_s0_bridge0.i_cm[6]",
+      "um": 396.144,
+      "launch_ps": 366.714,
+      "capture_ps": 123.771,
+      "setup_slack_ps": -108.222,
+      "source_clock": [
+        "ck_rsp"
+      ],
+      "target_clock": [
+        "ck_rsp"
+      ]
+    },
+    {
+      "source": "vm_s0_quarter2.o_cm[6]",
+      "target": "vm_s0_bridge1.i_cm[6]",
+      "um": 396.144,
+      "launch_ps": 366.714,
+      "capture_ps": 123.771,
+      "setup_slack_ps": -108.222,
+      "source_clock": [
+        "ck_rsp"
+      ],
+      "target_clock": [
+        "ck_rsp"
+      ]
+    },
+    {
+      "source": "vm_s0_quarter4.o_cm[6]",
+      "target": "vm_s0_bridge2.i_cm[6]",
+      "um": 396.144,
+      "launch_ps": 366.714,
+      "capture_ps": 123.771,
+      "setup_slack_ps": -108.222,
+      "source_clock": [
+        "ck_rsp"
+      ],
+      "target_clock": [
+        "ck_rsp"
+      ]
+    },
+    {
+      "source": "vm_s0_quarter6.o_cm[6]",
+      "target": "vm_s0_bridge3.i_cm[6]",
+      "um": 396.144,
+      "launch_ps": 366.714,
+      "capture_ps": 123.771,
+      "setup_slack_ps": -108.222,
+      "source_clock": [
+        "ck_rsp"
+      ],
+      "target_clock": [
+        "ck_rsp"
+      ]
+    },
+    {
+      "source": "vm_s1_quarter0.o_cm[6]",
+      "target": "vm_s1_bridge0.i_cm[6]",
+      "um": 396.144,
+      "launch_ps": 366.714,
+      "capture_ps": 123.771,
+      "setup_slack_ps": -108.222,
+      "source_clock": [
+        "ck_rsp"
+      ],
+      "target_clock": [
+        "ck_rsp"
+      ]
+    },
+    {
+      "source": "vm_s1_quarter2.o_cm[6]",
+      "target": "vm_s1_bridge1.i_cm[6]",
+      "um": 396.144,
+      "launch_ps": 366.714,
+      "capture_ps": 123.771,
+      "setup_slack_ps": -108.222,
+      "source_clock": [
+        "ck_rsp"
+      ],
+      "target_clock": [
+        "ck_rsp"
+      ]
+    },
+    {
+      "source": "vm_s1_quarter4.o_cm[6]",
+      "target": "vm_s1_bridge2.i_cm[6]",
+      "um": 396.144,
+      "launch_ps": 366.714,
+      "capture_ps": 123.771,
+      "setup_slack_ps": -108.222,
+      "source_clock": [
+        "ck_rsp"
+      ],
+      "target_clock": [
+        "ck_rsp"
+      ]
+    },
+    {
+      "source": "vm_s1_quarter6.o_cm[6]",
+      "target": "vm_s1_bridge3.i_cm[6]",
+      "um": 396.144,
+      "launch_ps": 366.714,
+      "capture_ps": 123.771,
+      "setup_slack_ps": -108.222,
+      "source_clock": [
+        "ck_rsp"
+      ],
+      "target_clock": [
+        "ck_rsp"
+      ]
+    },
+    {
+      "source": "vm_s2_quarter0.o_cm[6]",
+      "target": "vm_s2_bridge0.i_cm[6]",
+      "um": 396.144,
+      "launch_ps": 366.714,
+      "capture_ps": 123.771,
+      "setup_slack_ps": -108.222,
+      "source_clock": [
+        "ck_rsp"
+      ],
+      "target_clock": [
+        "ck_rsp"
+      ]
+    },
+    {
+      "source": "vm_s2_quarter2.o_cm[6]",
+      "target": "vm_s2_bridge1.i_cm[6]",
+      "um": 396.144,
+      "launch_ps": 366.714,
+      "capture_ps": 123.771,
+      "setup_slack_ps": -108.222,
+      "source_clock": [
+        "ck_rsp"
+      ],
+      "target_clock": [
+        "ck_rsp"
+      ]
+    },
+    {
+      "source": "vm_s2_quarter4.o_cm[6]",
+      "target": "vm_s2_bridge2.i_cm[6]",
+      "um": 396.144,
+      "launch_ps": 366.714,
+      "capture_ps": 123.771,
+      "setup_slack_ps": -108.222,
+      "source_clock": [
+        "ck_rsp"
+      ],
+      "target_clock": [
+        "ck_rsp"
+      ]
+    },
+    {
+      "source": "vm_s2_quarter6.o_cm[6]",
+      "target": "vm_s2_bridge3.i_cm[6]",
+      "um": 396.144,
+      "launch_ps": 366.714,
+      "capture_ps": 123.771,
+      "setup_slack_ps": -108.222,
+      "source_clock": [
+        "ck_rsp"
+      ],
+      "target_clock": [
+        "ck_rsp"
+      ]
+    },
+    {
+      "source": "vm_s3_quarter0.o_cm[6]",
+      "target": "vm_s3_bridge0.i_cm[6]",
+      "um": 396.144,
+      "launch_ps": 366.714,
+      "capture_ps": 123.771,
+      "setup_slack_ps": -108.222,
+      "source_clock": [
+        "ck_rsp"
+      ],
+      "target_clock": [
+        "ck_rsp"
+      ]
+    },
+    {
+      "source": "vm_s3_quarter2.o_cm[6]",
+      "target": "vm_s3_bridge1.i_cm[6]",
+      "um": 396.144,
+      "launch_ps": 366.714,
+      "capture_ps": 123.771,
+      "setup_slack_ps": -108.222,
+      "source_clock": [
+        "ck_rsp"
+      ],
+      "target_clock": [
+        "ck_rsp"
+      ]
+    },
+    {
+      "source": "vm_s3_quarter4.o_cm[6]",
+      "target": "vm_s3_bridge2.i_cm[6]",
+      "um": 396.144,
+      "launch_ps": 366.714,
+      "capture_ps": 123.771,
+      "setup_slack_ps": -108.222,
+      "source_clock": [
+        "ck_rsp"
+      ],
+      "target_clock": [
+        "ck_rsp"
+      ]
+    },
+    {
+      "source": "vm_s3_quarter6.o_cm[6]",
+      "target": "vm_s3_bridge3.i_cm[6]",
+      "um": 396.144,
+      "launch_ps": 366.714,
+      "capture_ps": 123.771,
+      "setup_slack_ps": -108.222,
+      "source_clock": [
+        "ck_rsp"
+      ],
+      "target_clock": [
+        "ck_rsp"
+      ]
+    },
+    {
+      "source": "vm_s0_quarter0.o_wd[217]",
+      "target": "vm_s0_bank1.i_wd[89]",
+      "um": 455.82,
+      "launch_ps": 279.356,
+      "capture_ps": 165.546,
+      "setup_slack_ps": -107.992,
+      "source_clock": [
+        "ck_req"
+      ],
+      "target_clock": [
+        "ck"
+      ]
+    },
+    {
+      "source": "vm_s0_quarter1.o_wd[217]",
+      "target": "vm_s0_bank5.i_wd[89]",
+      "um": 455.82,
+      "launch_ps": 279.356,
+      "capture_ps": 165.546,
+      "setup_slack_ps": -107.992,
+      "source_clock": [
+        "ck_req"
+      ],
+      "target_clock": [
+        "ck"
+      ]
+    },
+    {
+      "source": "vm_s0_quarter2.o_wd[217]",
+      "target": "vm_s0_bank9.i_wd[89]",
+      "um": 455.82,
+      "launch_ps": 279.356,
+      "capture_ps": 165.546,
+      "setup_slack_ps": -107.992,
+      "source_clock": [
+        "ck_req"
+      ],
+      "target_clock": [
+        "ck"
+      ]
+    },
+    {
+      "source": "vm_s0_quarter3.o_wd[217]",
+      "target": "vm_s0_bank13.i_wd[89]",
+      "um": 455.82,
+      "launch_ps": 279.356,
+      "capture_ps": 165.546,
+      "setup_slack_ps": -107.992,
+      "source_clock": [
+        "ck_req"
+      ],
+      "target_clock": [
+        "ck"
+      ]
+    },
+    {
+      "source": "vm_s0_quarter4.o_wd[217]",
+      "target": "vm_s0_bank17.i_wd[89]",
+      "um": 455.82,
+      "launch_ps": 279.356,
+      "capture_ps": 165.546,
+      "setup_slack_ps": -107.992,
+      "source_clock": [
+        "ck_req"
+      ],
+      "target_clock": [
+        "ck"
+      ]
+    },
+    {
+      "source": "vm_s0_quarter5.o_wd[217]",
+      "target": "vm_s0_bank21.i_wd[89]",
+      "um": 455.82,
+      "launch_ps": 279.356,
+      "capture_ps": 165.546,
+      "setup_slack_ps": -107.992,
+      "source_clock": [
+        "ck_req"
+      ],
+      "target_clock": [
+        "ck"
+      ]
+    },
+    {
+      "source": "vm_s0_quarter6.o_wd[217]",
+      "target": "vm_s0_bank25.i_wd[89]",
+      "um": 455.82,
+      "launch_ps": 279.356,
+      "capture_ps": 165.546,
+      "setup_slack_ps": -107.992,
+      "source_clock": [
+        "ck_req"
+      ],
+      "target_clock": [
+        "ck"
+      ]
+    },
+    {
+      "source": "vm_s0_quarter7.o_wd[217]",
+      "target": "vm_s0_bank29.i_wd[89]",
+      "um": 455.82,
+      "launch_ps": 279.356,
+      "capture_ps": 165.546,
+      "setup_slack_ps": -107.992,
+      "source_clock": [
+        "ck_req"
+      ],
+      "target_clock": [
+        "ck"
+      ]
+    },
+    {
+      "source": "vm_s1_quarter0.o_wd[217]",
+      "target": "vm_s1_bank1.i_wd[89]",
+      "um": 455.82,
+      "launch_ps": 279.356,
+      "capture_ps": 165.546,
+      "setup_slack_ps": -107.992,
+      "source_clock": [
+        "ck_req"
+      ],
+      "target_clock": [
+        "ck"
+      ]
+    },
+    {
+      "source": "vm_s1_quarter1.o_wd[217]",
+      "target": "vm_s1_bank5.i_wd[89]",
+      "um": 455.82,
+      "launch_ps": 279.356,
+      "capture_ps": 165.546,
+      "setup_slack_ps": -107.992,
+      "source_clock": [
+        "ck_req"
+      ],
+      "target_clock": [
+        "ck"
+      ]
+    },
+    {
+      "source": "vm_s1_quarter2.o_wd[217]",
+      "target": "vm_s1_bank9.i_wd[89]",
+      "um": 455.82,
+      "launch_ps": 279.356,
+      "capture_ps": 165.546,
+      "setup_slack_ps": -107.992,
+      "source_clock": [
+        "ck_req"
+      ],
+      "target_clock": [
+        "ck"
+      ]
+    },
+    {
+      "source": "vm_s1_quarter3.o_wd[217]",
+      "target": "vm_s1_bank13.i_wd[89]",
+      "um": 455.82,
+      "launch_ps": 279.356,
+      "capture_ps": 165.546,
+      "setup_slack_ps": -107.992,
+      "source_clock": [
+        "ck_req"
+      ],
+      "target_clock": [
+        "ck"
+      ]
+    },
+    {
+      "source": "vm_s1_quarter4.o_wd[217]",
+      "target": "vm_s1_bank17.i_wd[89]",
+      "um": 455.82,
+      "launch_ps": 279.356,
+      "capture_ps": 165.546,
+      "setup_slack_ps": -107.992,
+      "source_clock": [
+        "ck_req"
+      ],
+      "target_clock": [
+        "ck"
+      ]
+    },
+    {
+      "source": "vm_s1_quarter5.o_wd[217]",
+      "target": "vm_s1_bank21.i_wd[89]",
+      "um": 455.82,
+      "launch_ps": 279.356,
+      "capture_ps": 165.546,
+      "setup_slack_ps": -107.992,
+      "source_clock": [
+        "ck_req"
+      ],
+      "target_clock": [
+        "ck"
+      ]
+    },
+    {
+      "source": "vm_s1_quarter6.o_wd[217]",
+      "target": "vm_s1_bank25.i_wd[89]",
+      "um": 455.82,
+      "launch_ps": 279.356,
+      "capture_ps": 165.546,
+      "setup_slack_ps": -107.992,
+      "source_clock": [
+        "ck_req"
+      ],
+      "target_clock": [
+        "ck"
+      ]
+    },
+    {
+      "source": "vm_s1_quarter7.o_wd[217]",
+      "target": "vm_s1_bank29.i_wd[89]",
+      "um": 455.82,
+      "launch_ps": 279.356,
+      "capture_ps": 165.546,
+      "setup_slack_ps": -107.992,
+      "source_clock": [
+        "ck_req"
+      ],
+      "target_clock": [
+        "ck"
+      ]
+    },
+    {
+      "source": "vm_s2_quarter0.o_wd[217]",
+      "target": "vm_s2_bank1.i_wd[89]",
+      "um": 455.82,
+      "launch_ps": 279.356,
+      "capture_ps": 165.546,
+      "setup_slack_ps": -107.992,
+      "source_clock": [
+        "ck_req"
+      ],
+      "target_clock": [
+        "ck"
+      ]
+    },
+    {
+      "source": "vm_s2_quarter1.o_wd[217]",
+      "target": "vm_s2_bank5.i_wd[89]",
+      "um": 455.82,
+      "launch_ps": 279.356,
+      "capture_ps": 165.546,
+      "setup_slack_ps": -107.992,
+      "source_clock": [
+        "ck_req"
+      ],
+      "target_clock": [
+        "ck"
+      ]
+    },
+    {
+      "source": "vm_s2_quarter2.o_wd[217]",
+      "target": "vm_s2_bank9.i_wd[89]",
+      "um": 455.82,
+      "launch_ps": 279.356,
+      "capture_ps": 165.546,
+      "setup_slack_ps": -107.992,
+      "source_clock": [
+        "ck_req"
+      ],
+      "target_clock": [
+        "ck"
+      ]
+    },
+    {
+      "source": "vm_s2_quarter3.o_wd[217]",
+      "target": "vm_s2_bank13.i_wd[89]",
+      "um": 455.82,
+      "launch_ps": 279.356,
+      "capture_ps": 165.546,
+      "setup_slack_ps": -107.992,
+      "source_clock": [
+        "ck_req"
+      ],
+      "target_clock": [
+        "ck"
+      ]
+    },
+    {
+      "source": "vm_s2_quarter4.o_wd[217]",
+      "target": "vm_s2_bank17.i_wd[89]",
+      "um": 455.82,
+      "launch_ps": 279.356,
+      "capture_ps": 165.546,
+      "setup_slack_ps": -107.992,
+      "source_clock": [
+        "ck_req"
+      ],
+      "target_clock": [
+        "ck"
+      ]
+    },
+    {
+      "source": "vm_s2_quarter5.o_wd[217]",
+      "target": "vm_s2_bank21.i_wd[89]",
+      "um": 455.82,
+      "launch_ps": 279.356,
+      "capture_ps": 165.546,
+      "setup_slack_ps": -107.992,
+      "source_clock": [
+        "ck_req"
+      ],
+      "target_clock": [
+        "ck"
+      ]
+    },
+    {
+      "source": "vm_s2_quarter6.o_wd[217]",
+      "target": "vm_s2_bank25.i_wd[89]",
+      "um": 455.82,
+      "launch_ps": 279.356,
+      "capture_ps": 165.546,
+      "setup_slack_ps": -107.992,
+      "source_clock": [
+        "ck_req"
+      ],
+      "target_clock": [
+        "ck"
+      ]
+    },
+    {
+      "source": "vm_s2_quarter7.o_wd[217]",
+      "target": "vm_s2_bank29.i_wd[89]",
+      "um": 455.82,
+      "launch_ps": 279.356,
+      "capture_ps": 165.546,
+      "setup_slack_ps": -107.992,
+      "source_clock": [
+        "ck_req"
+      ],
+      "target_clock": [
+        "ck"
+      ]
+    },
+    {
+      "source": "vm_s3_quarter0.o_wd[217]",
+      "target": "vm_s3_bank1.i_wd[89]",
+      "um": 455.82,
+      "launch_ps": 279.356,
+      "capture_ps": 165.546,
+      "setup_slack_ps": -107.992,
+      "source_clock": [
+        "ck_req"
+      ],
+      "target_clock": [
+        "ck"
+      ]
+    },
+    {
+      "source": "vm_s3_quarter1.o_wd[217]",
+      "target": "vm_s3_bank5.i_wd[89]",
+      "um": 455.82,
+      "launch_ps": 279.356,
+      "capture_ps": 165.546,
+      "setup_slack_ps": -107.992,
+      "source_clock": [
+        "ck_req"
+      ],
+      "target_clock": [
+        "ck"
+      ]
+    },
+    {
+      "source": "vm_s3_quarter2.o_wd[217]",
+      "target": "vm_s3_bank9.i_wd[89]",
+      "um": 455.82,
+      "launch_ps": 279.356,
+      "capture_ps": 165.546,
+      "setup_slack_ps": -107.992,
+      "source_clock": [
+        "ck_req"
+      ],
+      "target_clock": [
+        "ck"
+      ]
+    },
+    {
+      "source": "vm_s3_quarter3.o_wd[217]",
+      "target": "vm_s3_bank13.i_wd[89]",
+      "um": 455.82,
+      "launch_ps": 279.356,
+      "capture_ps": 165.546,
+      "setup_slack_ps": -107.992,
+      "source_clock": [
+        "ck_req"
+      ],
+      "target_clock": [
+        "ck"
+      ]
+    },
+    {
+      "source": "vm_s3_quarter4.o_wd[217]",
+      "target": "vm_s3_bank17.i_wd[89]",
+      "um": 455.82,
+      "launch_ps": 279.356,
+      "capture_ps": 165.546,
+      "setup_slack_ps": -107.992,
+      "source_clock": [
+        "ck_req"
+      ],
+      "target_clock": [
+        "ck"
+      ]
+    },
+    {
+      "source": "vm_s3_quarter5.o_wd[217]",
+      "target": "vm_s3_bank21.i_wd[89]",
+      "um": 455.82,
+      "launch_ps": 279.356,
+      "capture_ps": 165.546,
+      "setup_slack_ps": -107.992,
+      "source_clock": [
+        "ck_req"
+      ],
+      "target_clock": [
+        "ck"
+      ]
+    },
+    {
+      "source": "vm_s3_quarter6.o_wd[217]",
+      "target": "vm_s3_bank25.i_wd[89]",
+      "um": 455.82,
+      "launch_ps": 279.356,
+      "capture_ps": 165.546,
+      "setup_slack_ps": -107.992,
+      "source_clock": [
+        "ck_req"
+      ],
+      "target_clock": [
+        "ck"
+      ]
+    },
+    {
+      "source": "vm_s3_quarter7.o_wd[217]",
+      "target": "vm_s3_bank29.i_wd[89]",
+      "um": 455.82,
+      "launch_ps": 279.356,
+      "capture_ps": 165.546,
+      "setup_slack_ps": -107.992,
+      "source_clock": [
+        "ck_req"
+      ],
+      "target_clock": [
+        "ck"
+      ]
+    },
+    {
+      "source": "vm_s0_quarter0.o_ca[26]",
+      "target": "vm_s0_bridge0.i_ca[26]",
+      "um": 392.688,
+      "launch_ps": 366.133,
+      "capture_ps": 126.487,
+      "setup_slack_ps": -107.73,
+      "source_clock": [
+        "ck_rsp"
+      ],
+      "target_clock": [
+        "ck_rsp"
+      ]
+    },
+    {
+      "source": "vm_s0_quarter2.o_ca[26]",
+      "target": "vm_s0_bridge1.i_ca[26]",
+      "um": 392.688,
+      "launch_ps": 366.133,
+      "capture_ps": 126.487,
+      "setup_slack_ps": -107.73,
+      "source_clock": [
+        "ck_rsp"
+      ],
+      "target_clock": [
+        "ck_rsp"
+      ]
+    },
+    {
+      "source": "vm_s0_quarter4.o_ca[26]",
+      "target": "vm_s0_bridge2.i_ca[26]",
+      "um": 392.688,
+      "launch_ps": 366.133,
+      "capture_ps": 126.487,
+      "setup_slack_ps": -107.73,
+      "source_clock": [
+        "ck_rsp"
+      ],
+      "target_clock": [
+        "ck_rsp"
+      ]
+    },
+    {
+      "source": "vm_s0_quarter6.o_ca[26]",
+      "target": "vm_s0_bridge3.i_ca[26]",
+      "um": 392.688,
+      "launch_ps": 366.133,
+      "capture_ps": 126.487,
+      "setup_slack_ps": -107.73,
+      "source_clock": [
+        "ck_rsp"
+      ],
+      "target_clock": [
+        "ck_rsp"
+      ]
+    },
+    {
+      "source": "vm_s1_quarter0.o_ca[26]",
+      "target": "vm_s1_bridge0.i_ca[26]",
+      "um": 392.688,
+      "launch_ps": 366.133,
+      "capture_ps": 126.487,
+      "setup_slack_ps": -107.73,
+      "source_clock": [
+        "ck_rsp"
+      ],
+      "target_clock": [
+        "ck_rsp"
+      ]
+    },
+    {
+      "source": "vm_s1_quarter2.o_ca[26]",
+      "target": "vm_s1_bridge1.i_ca[26]",
+      "um": 392.688,
+      "launch_ps": 366.133,
+      "capture_ps": 126.487,
+      "setup_slack_ps": -107.73,
+      "source_clock": [
+        "ck_rsp"
+      ],
+      "target_clock": [
+        "ck_rsp"
+      ]
+    },
+    {
+      "source": "vm_s1_quarter4.o_ca[26]",
+      "target": "vm_s1_bridge2.i_ca[26]",
+      "um": 392.688,
+      "launch_ps": 366.133,
+      "capture_ps": 126.487,
+      "setup_slack_ps": -107.73,
+      "source_clock": [
+        "ck_rsp"
+      ],
+      "target_clock": [
+        "ck_rsp"
+      ]
+    },
+    {
+      "source": "vm_s1_quarter6.o_ca[26]",
+      "target": "vm_s1_bridge3.i_ca[26]",
+      "um": 392.688,
+      "launch_ps": 366.133,
+      "capture_ps": 126.487,
+      "setup_slack_ps": -107.73,
+      "source_clock": [
+        "ck_rsp"
+      ],
+      "target_clock": [
+        "ck_rsp"
+      ]
+    },
+    {
+      "source": "vm_s2_quarter0.o_ca[26]",
+      "target": "vm_s2_bridge0.i_ca[26]",
+      "um": 392.688,
+      "launch_ps": 366.133,
+      "capture_ps": 126.487,
+      "setup_slack_ps": -107.73,
+      "source_clock": [
+        "ck_rsp"
+      ],
+      "target_clock": [
+        "ck_rsp"
+      ]
+    },
+    {
+      "source": "vm_s2_quarter2.o_ca[26]",
+      "target": "vm_s2_bridge1.i_ca[26]",
+      "um": 392.688,
+      "launch_ps": 366.133,
+      "capture_ps": 126.487,
+      "setup_slack_ps": -107.73,
+      "source_clock": [
+        "ck_rsp"
+      ],
+      "target_clock": [
+        "ck_rsp"
+      ]
+    },
+    {
+      "source": "vm_s2_quarter4.o_ca[26]",
+      "target": "vm_s2_bridge2.i_ca[26]",
+      "um": 392.688,
+      "launch_ps": 366.133,
+      "capture_ps": 126.487,
+      "setup_slack_ps": -107.73,
+      "source_clock": [
+        "ck_rsp"
+      ],
+      "target_clock": [
+        "ck_rsp"
+      ]
+    },
+    {
+      "source": "vm_s2_quarter6.o_ca[26]",
+      "target": "vm_s2_bridge3.i_ca[26]",
+      "um": 392.688,
+      "launch_ps": 366.133,
+      "capture_ps": 126.487,
+      "setup_slack_ps": -107.73,
+      "source_clock": [
+        "ck_rsp"
+      ],
+      "target_clock": [
+        "ck_rsp"
+      ]
+    },
+    {
+      "source": "vm_s3_quarter0.o_ca[26]",
+      "target": "vm_s3_bridge0.i_ca[26]",
+      "um": 392.688,
+      "launch_ps": 366.133,
+      "capture_ps": 126.487,
+      "setup_slack_ps": -107.73,
+      "source_clock": [
+        "ck_rsp"
+      ],
+      "target_clock": [
+        "ck_rsp"
+      ]
+    },
+    {
+      "source": "vm_s3_quarter2.o_ca[26]",
+      "target": "vm_s3_bridge1.i_ca[26]",
+      "um": 392.688,
+      "launch_ps": 366.133,
+      "capture_ps": 126.487,
+      "setup_slack_ps": -107.73,
+      "source_clock": [
+        "ck_rsp"
+      ],
+      "target_clock": [
+        "ck_rsp"
+      ]
+    },
+    {
+      "source": "vm_s3_quarter4.o_ca[26]",
+      "target": "vm_s3_bridge2.i_ca[26]",
+      "um": 392.688,
+      "launch_ps": 366.133,
+      "capture_ps": 126.487,
+      "setup_slack_ps": -107.73,
+      "source_clock": [
+        "ck_rsp"
+      ],
+      "target_clock": [
+        "ck_rsp"
+      ]
+    },
+    {
+      "source": "vm_s3_quarter6.o_ca[26]",
+      "target": "vm_s3_bridge3.i_ca[26]",
+      "um": 392.688,
+      "launch_ps": 366.133,
+      "capture_ps": 126.487,
+      "setup_slack_ps": -107.73,
+      "source_clock": [
+        "ck_rsp"
+      ],
+      "target_clock": [
+        "ck_rsp"
+      ]
+    },
+    {
+      "source": "vm_s0_quarter0.o_wd[234]",
+      "target": "vm_s0_bank1.i_wd[106]",
+      "um": 459.084,
+      "launch_ps": 290.45,
+      "capture_ps": 151.097,
+      "setup_slack_ps": -107.118,
+      "source_clock": [
+        "ck_req"
+      ],
+      "target_clock": [
+        "ck"
+      ]
+    },
+    {
+      "source": "vm_s0_quarter1.o_wd[234]",
+      "target": "vm_s0_bank5.i_wd[106]",
+      "um": 459.084,
+      "launch_ps": 290.45,
+      "capture_ps": 151.097,
+      "setup_slack_ps": -107.118,
+      "source_clock": [
+        "ck_req"
+      ],
+      "target_clock": [
+        "ck"
+      ]
+    },
+    {
+      "source": "vm_s0_quarter2.o_wd[234]",
+      "target": "vm_s0_bank9.i_wd[106]",
+      "um": 459.084,
+      "launch_ps": 290.45,
+      "capture_ps": 151.097,
+      "setup_slack_ps": -107.118,
+      "source_clock": [
+        "ck_req"
+      ],
+      "target_clock": [
+        "ck"
+      ]
+    },
+    {
+      "source": "vm_s0_quarter3.o_wd[234]",
+      "target": "vm_s0_bank13.i_wd[106]",
+      "um": 459.084,
+      "launch_ps": 290.45,
+      "capture_ps": 151.097,
+      "setup_slack_ps": -107.118,
+      "source_clock": [
+        "ck_req"
+      ],
+      "target_clock": [
+        "ck"
+      ]
+    }
+  ],
+  "view_provenance": {
+    "dsfd_vm_static_bank128": {
+      "tt": {
+        "lib": "physical/ref_tile/dsfd_vm_static_bank128_m4_v20/views/dsfd_vm_static_bank128/dsfd_vm_static_bank128_tt.lib",
+        "sha256": "75c68d8088af0eacfa23675a1d7907c62c1363af8b08db988a699f11e700559d",
+        "refs": {
+          "ck": {
+            "rise": 222.0,
+            "fall": 238.82207,
+            "min": 187.19716,
+            "max": 232.02545,
+            "src": "insertion.json boundary mean",
+            "bmin": 200.0,
+            "bmax": 226.7,
+            "n": 329
+          }
+        }
+      },
+      "ff": {
+        "lib": "physical/ref_tile/dsfd_vm_static_bank128_m4_v20/views/dsfd_vm_static_bank128/dsfd_vm_static_bank128_ff.lib",
+        "sha256": "7dbf72ac8003f66754fc8cb3c97ce3bb68abe0e26071d99e235fe40cf6419a79",
+        "refs": {
+          "ck": {
+            "rise": 187.5,
+            "fall": 197.12777500000004,
+            "min": 146.2944,
+            "max": 196.49263,
+            "src": "insertion.json boundary mean",
+            "bmin": 166.9,
+            "bmax": 192.6,
+            "n": 329
+          }
+        }
+      }
+    },
+    "dsfd_vm_static_relay128_b4": {
+      "tt": {
+        "lib": "physical/ref_tile/dsfd_vm_static_relay128_b4_native_option/views/dsfd_vm_static_relay128_b4/dsfd_vm_static_relay128_b4_tt.lib",
+        "sha256": "689f07d9229ef0260724ae488d4e6cd0801783da3f9d8f07a110597e67127bcf",
+        "refs": {
+          "ck_req": {
+            "rise": 143.3,
+            "fall": 153.15124500000002,
+            "min": 123.0526,
+            "max": 156.11855,
+            "src": "insertion.json boundary mean",
+            "bmin": 132.8,
+            "bmax": 156.1,
+            "n": 674
+          },
+          "ck_rsp": {
+            "rise": 91.1,
+            "fall": 98.07126499999998,
+            "min": 82.4029,
+            "max": 95.05191,
+            "src": "insertion.json boundary mean",
+            "bmin": 87.5,
+            "bmax": 95.1,
+            "n": 638
+          }
+        }
+      },
+      "ff": {
+        "lib": "physical/ref_tile/dsfd_vm_static_relay128_b4_native_option/views/dsfd_vm_static_relay128_b4/dsfd_vm_static_relay128_b4_ff.lib",
+        "sha256": "e0567a5dc9fb34394cff009c30b10e128c6dd3ad71364dbc8f61251617ecdbf7",
+        "refs": {
+          "ck_req": {
+            "rise": 122.6,
+            "fall": 129.651505,
+            "min": 103.43832,
+            "max": 134.70384,
+            "src": "insertion.json boundary mean",
+            "bmin": 111.5,
+            "bmax": 134.7,
+            "n": 674
+          },
+          "ck_rsp": {
+            "rise": 73.4,
+            "fall": 76.35664000000001,
+            "min": 65.58696,
+            "max": 77.319,
+            "src": "insertion.json boundary mean",
+            "bmin": 69.6,
+            "bmax": 77.3,
+            "n": 638
+          }
+        }
+      }
+    },
+    "dsfd_vm_static_relay128_b8": {
+      "tt": {
+        "lib": "physical/ref_tile/dsfd_vm_static_relay128_b8_native_option/views/dsfd_vm_static_relay128_b8/dsfd_vm_static_relay128_b8_tt.lib",
+        "sha256": "11659f482405ec38a19b20aa998f4c0d2bd269ed07265b185710f8227c31f39c",
+        "refs": {
+          "ck_req": {
+            "rise": 204.4,
+            "fall": 221.43296,
+            "min": 186.21461,
+            "max": 237.29044,
+            "src": "insertion.json boundary mean",
+            "bmin": 195.1,
+            "bmax": 237.3,
+            "n": 1346
+          },
+          "ck_rsp": {
+            "rise": 128.9,
+            "fall": 138.832405,
+            "min": 114.66204,
+            "max": 137.18564,
+            "src": "insertion.json boundary mean",
+            "bmin": 120.9,
+            "bmax": 137.2,
+            "n": 1274
+          }
+        }
+      },
+      "ff": {
+        "lib": "physical/ref_tile/dsfd_vm_static_relay128_b8_native_option/views/dsfd_vm_static_relay128_b8/dsfd_vm_static_relay128_b8_ff.lib",
+        "sha256": "f7d26fa4c7e3898775b60a0fb8e7b456369c657bd83311eb5af5ffa2ccd1dc01",
+        "refs": {
+          "ck_req": {
+            "rise": 170.5,
+            "fall": 181.42386000000002,
+            "min": 154.01689,
+            "max": 199.62392,
+            "src": "insertion.json boundary mean",
+            "bmin": 161.5,
+            "bmax": 199.6,
+            "n": 1346
+          },
+          "ck_rsp": {
+            "rise": 104.9,
+            "fall": 109.64689999999999,
+            "min": 91.68564,
+            "max": 113.3927,
+            "src": "insertion.json boundary mean",
+            "bmin": 96.6,
+            "bmax": 113.4,
+            "n": 1274
+          }
+        }
+      }
+    }
+  },
+  "limits": [
+    "CLOSED leaf route stands; this diagnostic is no reroute authorization",
+    "Classify actual launch residual vs export-source reference before native structural repair",
+    "No global cap/CDC/FSR/return/writeedge geometry, no load/slew sweep or extracted die timing",
+    "FF reserve uses no minimum wire credit; no FF wire estimate invented"
+  ]
+}
