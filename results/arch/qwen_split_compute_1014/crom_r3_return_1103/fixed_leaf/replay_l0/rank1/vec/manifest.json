@@ -1,0 +1,16 @@
+{
+ "trace": "/srv/opentallas-scratch/claude/qfunc-crom-1015/crom_trace/l0.1.txt",
+ "trace_sha256": "d2d86deb2fd6bbbda83d4166d0ec1fe900a61521fe0436d63be22ded3e8ecddb",
+ "rank": 1,
+ "reads": 148,
+ "stages": [
+  0
+ ],
+ "first_edge": 21786,
+ "last_edge": 25412,
+ "min_gap": 1,
+ "active_lane_reads": 9472,
+ "stage_images_sha256": {
+  "/srv/opentallas-scratch/codex/qwen-native-fulltoken-1014/banks/images/layer0/die1/crom.hex": "bbcb28143ffe62f1850ee5a5e05d87650c07271002baba5f520588fcd514a164"
+ }
+}

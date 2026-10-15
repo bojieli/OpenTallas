@@ -1,0 +1,5 @@
+PASS crom8_abi_replay reads=148 edges=3632 exact_E5 R3_CBUF+CROM+actual_return3
+- rtl/test/qwen_split/tb_crom8_r3_abi_replay.sv:87: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 8us; walltime 0.677 s; speed 11.957 us/s
+- Verilator: cpu 0.677 s on 1 threads; allocated 14 MB

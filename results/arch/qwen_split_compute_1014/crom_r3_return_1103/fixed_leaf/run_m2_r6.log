@@ -1,0 +1,14 @@
+MISMATCH read=0 edge=21786 stage=0 lane=0 addr=4096 got=000000003fd70000 exp=000000003fa60000
+MISMATCH read=0 edge=21786 stage=0 lane=1 addr=4097 got=000000003fd80000 exp=000000003f990000
+MISMATCH read=0 edge=21786 stage=0 lane=2 addr=4098 got=000000003ff90000 exp=000000003fea0000
+MISMATCH read=0 edge=21786 stage=0 lane=3 addr=4099 got=000000003fef0000 exp=000000003fde0000
+MISMATCH read=0 edge=21786 stage=0 lane=4 addr=4100 got=000000003f900000 exp=000000003fd20000
+MISMATCH read=0 edge=21786 stage=0 lane=5 addr=4101 got=000000003fe80000 exp=000000003fdd0000
+MISMATCH read=0 edge=21786 stage=0 lane=7 addr=4103 got=000000003fd80000 exp=000000003fdc0000
+MISMATCH read=0 edge=21786 stage=0 lane=8 addr=4104 got=000000003ff30000 exp=000000003ff20000
+MISMATCH read=0 edge=21786 stage=0 lane=9 addr=4105 got=000000003fe20000 exp=000000003fe30000
+FAIL crom8_abi_replay errors=8629 residency=0 reads=148
+- rtl/test/qwen_split/tb_crom8_r3_abi_replay.sv:87: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 8us; walltime 0.751 s; speed 10.792 us/s
+- Verilator: cpu 0.750 s on 1 threads; allocated 14 MB

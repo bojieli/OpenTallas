@@ -1,0 +1,10 @@
+rtl/test/qwen_split/tb_crom8_r3_abi_replay.sv
+rtl/qwen_split/qfd_native_crom8_r3_tp8.sv
+rtl/physical/ot_qfd_su_cbuf_native_l0_p13_l12_r3.sv
+rtl/physical/ot_qfd_crom_lbuf_ready_epoch.sv
+rtl/qwen_sys/redesign_qwen/ot_qfd_crom_lbuf.sv
+rtl/qwen_sys/system_20261008/ot_qfd_crom.sv
+rtl/hdc/ot_hdc_delay.sv
+rtl/lib/ot_rst_relay.sv
+physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8.v
+physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v
