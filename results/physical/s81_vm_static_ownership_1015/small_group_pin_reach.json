@@ -1,0 +1,32 @@
+{
+  "status": "NEEDS_CLOCK_TIMING_AND_MISSING_ENDPOINT_PROOF",
+  "scope": "exact assigned R0 bank/relay bit geometry only; clock/PG and unknown endpoint pins excluded",
+  "stats": {
+    "quarter_to_bank_request": {
+      "bits": 21504,
+      "over500": 0,
+      "max_um": 463.116
+    },
+    "bank_to_quarter_response": {
+      "bits": 20352,
+      "over500": 0,
+      "max_um": 486.3
+    },
+    "bridge_to_quarter_request": {
+      "bits": 21504,
+      "over500": 0,
+      "max_um": 398.832
+    },
+    "quarter_to_bridge_response": {
+      "bits": 20352,
+      "over500": 0,
+      "max_um": 397.008
+    }
+  },
+  "worst": [],
+  "requirements": [
+    "change actual relay face assignment/grouping/orientation or add explicit pin-registered stages and recompile ages",
+    "actual quarter/bridge native CTS and boundary phi-R timing",
+    "FSR/scatter/return/53writer/capture actual pins/cuts before wholeVM claim"
+  ]
+}

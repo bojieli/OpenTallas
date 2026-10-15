@@ -1,6 +1,12 @@
 `timescale 1ns/1ps
+`ifndef SFU_IO_ROWS
+`define SFU_IO_ROWS 800
+`endif
+`ifndef SFU_SCALAR_EDGE
+`define SFU_SCALAR_EDGE 192
+`endif
 module tb_hgi_sfu_qswiglu_scheduled;
- localparam LWB=15,WORDS=3072,NINST=368,CHUNK=222,PCLO=223;
+ localparam LWB=15,WORDS=3072,NINST=368,CHUNK=222,PCLO=223,IO_ROWS=`SFU_IO_ROWS;
  reg clk=0;always #0.416667 clk=~clk;
  reg rst_n=0;
  reg [1741:0] controls[0:NINST-1];
@@ -9,7 +15,7 @@ reg io_cfg_we=0,io_start_v=0;
  reg [1:0] io_cfg_stripe=0;
  reg [10:0] io_cfg_addr=0;
  reg [255:0] io_cfg_data=0;
- reg [470:0] io_rows[0:799];
+ reg [470:0] io_rows[0:IO_ROWS-1];
  wire io_done;
  reg init=0;
  reg [11:0] init_sector=0;
@@ -47,7 +53,7 @@ reg io_cfg_we=0,io_start_v=0;
  .cfg_we(cfg_we),.cfg_stripe(cfg_stripe),.cfg_addr(cfg_addr),.cfg_data(cfg_data),
  .start_base(11'd0),.start_limit(12'(NINST)),.start_loops(16'd1),
  .io_cfg_we(io_cfg_we),.io_cfg_stripe(io_cfg_stripe),.io_cfg_addr(io_cfg_addr),.io_cfg_data(io_cfg_data),
- .io_start_v(io_start_v),.io_start_base(11'd0),.io_start_limit(12'd800),.io_start_loops(16'd1),.io_done(io_done),
+ .io_start_v(io_start_v),.io_start_base(11'd0),.io_start_limit(12'(IO_ROWS)),.io_start_loops(16'd1),.io_done(io_done),
  .local_rq(rq),.local_rr(rr),.local_wq(wq),.local_w_done(done),
  .vi_q(512'd0),.side_y(512'd0),.fault(fault));
  ot_hbm_vm_lg_static_tap #(.READ_RETURN(14),.WRITE_RETURN(11)) mid(.clk(clk),.rst_n(rst_n),.local_rq(readback?136'd0:rq),.far_rq(136'd0),
@@ -96,11 +102,11 @@ reg io_cfg_we=0,io_start_v=0;
    @(negedge clk);
   end
   cfg_we=0;repeat(3)@(negedge clk);
-  for(integer p=0;p<800;p++)for(integer st=0;st<3;st++)begin
+  for(integer p=0;p<IO_ROWS;p++)for(integer st=0;st<3;st++)begin
    reg [470:0] row;
    row=io_rows[p];
    // Actual IO calendar mutant: suppress the real scalar VM prefetch request.
-   if($test$plusargs("MUT_IO") && p==192)row[7:0]=0;
+   if($test$plusargs("MUT_IO") && p==`SFU_SCALAR_EDGE)row[7:0]=0;
    io_cfg_we=1;io_cfg_addr=11'(p);io_cfg_stripe=2'(st);
    io_cfg_data=256'(row>>(222*st));
    if(st==2)io_cfg_data=(io_cfg_data&((256'd1<<27)-1))|(256'hc7a1<<240)|(256'(p)<<223);
@@ -110,7 +116,7 @@ reg io_cfg_we=0,io_start_v=0;
   io_cfg_we=0;repeat(3)@(negedge clk);
   io_start_v=1;@(negedge clk);io_start_v=0;
   // One actual hardware start; no runtime status polling or per-lane driving.
-  repeat(810)begin
+  repeat(IO_ROWS+10)begin
    @(negedge clk);if(fault||t0f||t1f||bs!=0)$fatal(1,"SCHEDULED_ENGINE_FAULT");
   end
   readback=1;
@@ -121,7 +127,7 @@ reg io_cfg_we=0,io_start_v=0;
   pf_v=0;repeat(14)@(negedge clk);
   if(fault||t0f||t1f||bs!=0)$fatal(1,"VM_QSWIGLU_FINAL_FAULT");
   if(observed!=WORDS)$fatal(1,"VM_QSWIGLU_COUNT got=%0d",observed);
-  $display("PASS canonical Qswiglu actual exp/div/multiply/BF16 16 C12 lanes 80 operand SRAMs 16 programme SRAMs 24 protected VM SRAMs 6 IOprogramme SRAMs actualtap14 real scalar-route capture words=%0d exact_VM_committed_words=%0d one_start=1 actual_IO_rows=800 actual_arithmetic_rows=368 no_manual_prefetch_drain=1 golden=actualcanonicalhgiMachine",WORDS,observed);
+  $display("PASS canonical Qswiglu actual exp/div/multiply/BF16 16 C12 lanes 80 operand SRAMs 16 programme SRAMs 24 protected VM SRAMs 6 IOprogramme SRAMs actualtap14 real scalar-route capture words=%0d exact_VM_committed_words=%0d one_start=1 actual_IO_rows=%0d actual_arithmetic_rows=368 no_manual_prefetch_drain=1 golden=actualcanonicalhgiMachine",WORDS,observed,IO_ROWS);
   $finish;
  end
 endmodule

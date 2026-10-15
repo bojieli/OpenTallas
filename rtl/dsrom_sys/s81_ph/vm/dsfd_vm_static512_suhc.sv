@@ -5,8 +5,8 @@
 // Per-slice valids and commit observations remain separate: this parent does
 // not hide a late physical slice by pretending that a logical row is complete.
 module dsfd_vm_static512_suhc(
- input wire [3:0] ck_rscatter,ck_wscatter,ck_return,
- input wire [127:0] ck_bank,input wire rst_n,
+ input wire [3:0] ck_rscatter,ck_return,input wire [15:0] ck_wscatter,
+ input wire [127:0] ck_wcapture,ck_bank,input wire rst_n,
  input wire [47:0] ck_relay_req,ck_relay_rsp,
  input wire [17:0] native_rq_v,input wire [251:0] native_rq_row,input wire [89:0] native_rq_slot,
  input wire [2:0] native_rq_group,input wire [11:0] aux_rq_v,input wire [167:0] aux_rq_row,
@@ -28,7 +28,7 @@ module dsfd_vm_static512_suhc(
    assign wd[128*q+:128]=wq_data[512*q+128*s+:128];
    assign wm[4*q+:4]=wq_mask[16*q+4*s+:4];
   end
-  dsfd_vm_static_slice128_suhc u_slice(.ck_rscatter(ck_rscatter[s]),.ck_wscatter(ck_wscatter[s]),
+  dsfd_vm_static_slice128_suhc u_slice(.ck_rscatter(ck_rscatter[s]),.ck_wcapture(ck_wcapture[32*s+:32]),.ck_wscatter(ck_wscatter[4*s+:4]),
    .ck_bank(ck_bank[32*s+:32]),.rst_n(rst_n),.ck_relay_req(ck_relay_req[12*s+:12]),.ck_relay_rsp(ck_relay_rsp[12*s+:12]),.native_rq_v(native_rq_v),.native_rq_row(native_rq_row),.native_rq_slot(native_rq_slot),
    .native_rq_group(native_rq_group),.aux_rq_v(aux_rq_v),.aux_rq_row(aux_rq_row),
    .wq_v(wq_v),.wq_row(wq_row),.wq_mask(wm),.wq_data(wd),.wq_tag(wq_tag),

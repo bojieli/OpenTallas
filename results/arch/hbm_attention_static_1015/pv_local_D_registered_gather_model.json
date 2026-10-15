@@ -1,0 +1,42 @@
+{
+  "schema": "opentallas.hbm_attn.pv_D_registered_gather_model.v1",
+  "qualification": false,
+  "extra_pipeline_edges": 2,
+  "VM_commit_edges_per_record": 128,
+  "leaf": "ot_hbm_attn_pv_group_gather_registered",
+  "leaf_count": 4,
+  "FF_per_leaf": {
+    "input_data": 4096,
+    "input_flags": 128,
+    "input_select": 3,
+    "output_data": 512,
+    "output_flags": 16,
+    "valid_pipeline": 2
+  },
+  "FF_per_leaf_total": 4757,
+  "source_root_before": 6688,
+  "source_root_after": 11445,
+  "global_extra_FF": 34,
+  "pin_bits": {
+    "clk": 1,
+    "rst_n": 1,
+    "capture_v": 1,
+    "tile_data": 4096,
+    "tile_flags": 128,
+    "block_select": 3,
+    "bankpair_data": 512,
+    "bankpair_flags": 16,
+    "output_v": 1
+  },
+  "clock_scope": "4757FF includes BOTH valid flops. Fourphase-matched roots; CTS/buffers and all pin/cut/route timing unqualified.",
+  "calendar": "Compiler shifts every original request/expectedcommit/retire andconsumer first-use by2edges. Immutablewholeoperationprice mustinclude thisdelay;128commits unchanged.",
+  "audit": {
+    "request_bijection": true
+  },
+  "remaining": [
+    "Actualfullshape/current7b2 registeredpipeline proof",
+    "Exactmappedleaf andwholeoverhead",
+    "Perfacepitch/PG/cuts andnativephysicalroute",
+    "Compiledglobalcalendar/immutablethroughput"
+  ]
+}

@@ -1,0 +1,147 @@
+ot-run: ot-epyc1tb     admits   339 GB (avail 566, growth 103, headroom 64, waiters 0/0 GB) load 39/128 running 16 disk 678 GB 
+ot-run: ot-epyc4       admits   564 GB (avail 790, growth 91, headroom 48, waiters 0/0 GB) load 43/128 running 23 disk 488 GB 
+ot-run: ot-pve1        skipped: load hold: load1 > 1.5 x cores
+ot-run: ot-agidock128  skipped: load hold: load1 > 1.5 x cores
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-1634008-1792057987 after 0 s
+BUILD FAIL mdrain
+BUILD FAIL mstride
+BUILD FAIL mslot
+BUILD FAIL mmix
+BUILD FAIL mlane
+%Error: Cannot find file containing module: 'results/core/dsfd_vm_static_suhc_return_map.sv'
+%Error: Cannot find file containing module: 'results/core/dsfd_vm_static_scatter_lane.sv'
+%Error: Cannot find file containing module: 'results/core/dsfd_vm_static_scatter.sv'
+%Error: Cannot find file containing module: 'results/core/dsfd_vm_static_bank128.sv'
+%Error: Cannot find file containing module: 'results/core/dsfd_vm_static_relay128.sv'
+%Error: Cannot find file containing module: 'results/core/dsfd_vm_static_relay128_b8.sv'
+%Error: Cannot find file containing module: 'results/core/dsfd_vm_static_relay128_b4.sv'
+%Error: Cannot find file containing module: 'results/core/dsfd_vm_static_slice128_suhc.sv'
+%Error: Cannot find file containing module: 'results/core/dsfd_vm_static_return.sv'
+%Error: Cannot find file containing module: 'results/core/dsfd_vm_static512_suhc.sv'
+%Error: Cannot find file containing module: 'results/core/ot_sram_1r1w_512x128_m4_r2c2.v'
+%Error: Cannot find file containing module: 'results/core/dsfd_vm_static_wdispatch128.sv'
+%Error: Cannot find file containing module: 'results/core/dsfd_vm_static_wstage128.sv'
+%Error: Cannot find file containing module: 'results/core/dsfd_vm_static_wsched.sv'
+%Error: Cannot find file containing module: 'results/core/dsfd_vm_static_rsched.sv'
+%Error: Cannot find file containing module: 'results/core/dsfd_vm_static_landing.sv'
+%Error: Cannot find file containing module: 'results/core/dsfd_vm_seq_static.sv'
+%Error: Cannot find file containing module: 'results/core/dsfd_vm_static_core.sv'
+%Error: Cannot find file containing module: 'results/core/tb_dsfd_vm_static_core.sv'
+%Error: Exiting due to 20 error(s)
+BUILD FAIL base
+%Error: Cannot find file containing module: 'results/core/dsfd_vm_static_suhc_return_map.sv'
+%Error: Cannot find file containing module: 'results/core/dsfd_vm_static_scatter_lane.sv'
+%Error: Cannot find file containing module: 'results/core/dsfd_vm_static_scatter.sv'
+%Error: Cannot find file containing module: 'results/core/dsfd_vm_static_bank128.sv'
+%Error: Cannot find file containing module: 'results/core/dsfd_vm_static_relay128.sv'
+%Error: Cannot find file containing module: 'results/core/dsfd_vm_static_relay128_b8.sv'
+%Error: Cannot find file containing module: 'results/core/dsfd_vm_static_relay128_b4.sv'
+%Error: Cannot find file containing module: 'results/core/dsfd_vm_static_slice128_suhc.sv'
+%Error: Cannot find file containing module: 'results/core/dsfd_vm_static_return.sv'
+%Error: Cannot find file containing module: 'results/core/dsfd_vm_static512_suhc.sv'
+%Error: Cannot find file containing module: 'results/core/ot_sram_1r1w_512x128_m4_r2c2.v'
+%Error: Cannot find file containing module: 'results/core/dsfd_vm_static_wdispatch128.sv'
+%Error: Cannot find file containing module: 'results/core/dsfd_vm_static_wstage128.sv'
+%Error: Cannot find file containing module: 'results/core/dsfd_vm_static_wsched.sv'
+%Error: Cannot find file containing module: 'results/core/dsfd_vm_static_rsched.sv'
+%Error: Cannot find file containing module: 'results/core/dsfd_vm_static_landing.sv'
+%Error: Cannot find file containing module: 'results/core/dsfd_vm_seq_static.sv'
+%Error: Cannot find file containing module: 'results/core/dsfd_vm_static_core.sv'
+%Error: Cannot find file containing module: 'results/core/tb_dsfd_vm_static_core.sv'
+%Error: Exiting due to 20 error(s)
+%Error: Cannot find file containing module: 'results/core/dsfd_vm_static_suhc_return_map.sv'
+%Error: Cannot find file containing module: 'results/core/dsfd_vm_static_scatter_lane.sv'
+%Error: Cannot find file containing module: 'results/core/dsfd_vm_static_scatter.sv'
+%Error: Cannot find file containing module: 'results/core/dsfd_vm_static_bank128.sv'
+%Error: Cannot find file containing module: 'results/core/dsfd_vm_static_relay128.sv'
+%Error: Cannot find file containing module: 'results/core/dsfd_vm_static_relay128_b8.sv'
+%Error: Cannot find file containing module: 'results/core/dsfd_vm_static_relay128_b4.sv'
+%Error: Cannot find file containing module: 'results/core/dsfd_vm_static_slice128_suhc.sv'
+%Error: Cannot find file containing module: 'results/core/dsfd_vm_static_return.sv'
+%Error: Cannot find file containing module: 'results/core/dsfd_vm_static512_suhc.sv'
+%Error: Cannot find file containing module: 'results/core/ot_sram_1r1w_512x128_m4_r2c2.v'
+%Error: Cannot find file containing module: 'results/core/dsfd_vm_static_wdispatch128.sv'
+%Error: Cannot find file containing module: 'results/core/dsfd_vm_static_wstage128.sv'
+%Error: Cannot find file containing module: 'results/core/dsfd_vm_static_wsched.sv'
+%Error: Cannot find file containing module: 'results/core/dsfd_vm_static_rsched.sv'
+%Error: Cannot find file containing module: 'results/core/dsfd_vm_static_landing.sv'
+%Error: Cannot find file containing module: 'results/core/dsfd_vm_seq_static.sv'
+%Error: Cannot find file containing module: 'results/core/dsfd_vm_static_core.sv'
+%Error: Cannot find file containing module: 'results/core/tb_dsfd_vm_static_core.sv'
+%Error: Exiting due to 20 error(s)
+%Error: Cannot find file containing module: 'results/core/dsfd_vm_static_suhc_return_map.sv'
+%Error: Cannot find file containing module: 'results/core/dsfd_vm_static_scatter_lane.sv'
+%Error: Cannot find file containing module: 'results/core/dsfd_vm_static_scatter.sv'
+%Error: Cannot find file containing module: 'results/core/dsfd_vm_static_bank128.sv'
+%Error: Cannot find file containing module: 'results/core/dsfd_vm_static_relay128.sv'
+%Error: Cannot find file containing module: 'results/core/dsfd_vm_static_relay128_b8.sv'
+%Error: Cannot find file containing module: 'results/core/dsfd_vm_static_relay128_b4.sv'
+%Error: Cannot find file containing module: 'results/core/dsfd_vm_static_slice128_suhc.sv'
+%Error: Cannot find file containing module: 'results/core/dsfd_vm_static_return.sv'
+%Error: Cannot find file containing module: 'results/core/dsfd_vm_static512_suhc.sv'
+%Error: Cannot find file containing module: 'results/core/ot_sram_1r1w_512x128_m4_r2c2.v'
+%Error: Cannot find file containing module: 'results/core/dsfd_vm_static_wdispatch128.sv'
+%Error: Cannot find file containing module: 'results/core/dsfd_vm_static_wstage128.sv'
+%Error: Cannot find file containing module: 'results/core/dsfd_vm_static_wsched.sv'
+%Error: Cannot find file containing module: 'results/core/dsfd_vm_static_rsched.sv'
+%Error: Cannot find file containing module: 'results/core/dsfd_vm_static_landing.sv'
+%Error: Cannot find file containing module: 'results/core/dsfd_vm_seq_static.sv'
+%Error: Cannot find file containing module: 'results/core/dsfd_vm_static_core.sv'
+%Error: Cannot find file containing module: 'results/core/tb_dsfd_vm_static_core.sv'
+%Error: Exiting due to 20 error(s)
+%Error: Cannot find file containing module: 'results/core/dsfd_vm_static_suhc_return_map.sv'
+%Error: Cannot find file containing module: 'results/core/dsfd_vm_static_scatter_lane.sv'
+%Error: Cannot find file containing module: 'results/core/dsfd_vm_static_scatter.sv'
+%Error: Cannot find file containing module: 'results/core/dsfd_vm_static_bank128.sv'
+%Error: Cannot find file containing module: 'results/core/dsfd_vm_static_relay128.sv'
+%Error: Cannot find file containing module: 'results/core/dsfd_vm_static_relay128_b8.sv'
+%Error: Cannot find file containing module: 'results/core/dsfd_vm_static_relay128_b4.sv'
+%Error: Cannot find file containing module: 'results/core/dsfd_vm_static_slice128_suhc.sv'
+%Error: Cannot find file containing module: 'results/core/dsfd_vm_static_return.sv'
+%Error: Cannot find file containing module: 'results/core/dsfd_vm_static512_suhc.sv'
+%Error: Cannot find file containing module: 'results/core/ot_sram_1r1w_512x128_m4_r2c2.v'
+%Error: Cannot find file containing module: 'results/core/dsfd_vm_static_wdispatch128.sv'
+%Error: Cannot find file containing module: 'results/core/dsfd_vm_static_wstage128.sv'
+%Error: Cannot find file containing module: 'results/core/dsfd_vm_static_wsched.sv'
+%Error: Cannot find file containing module: 'results/core/dsfd_vm_static_rsched.sv'
+%Error: Cannot find file containing module: 'results/core/dsfd_vm_static_landing.sv'
+%Error: Cannot find file containing module: 'results/core/dsfd_vm_seq_static.sv'
+%Error: Cannot find file containing module: 'results/core/dsfd_vm_static_core.sv'
+%Error: Cannot find file containing module: 'results/core/tb_dsfd_vm_static_core.sv'
+%Error: Exiting due to 20 error(s)
+%Error: Cannot find file containing module: 'results/core/dsfd_vm_static_suhc_return_map.sv'
+%Error: Cannot find file containing module: 'results/core/dsfd_vm_static_scatter_lane.sv'
+%Error: Cannot find file containing module: 'results/core/dsfd_vm_static_scatter.sv'
+%Error: Cannot find file containing module: 'results/core/dsfd_vm_static_bank128.sv'
+%Error: Cannot find file containing module: 'results/core/dsfd_vm_static_relay128.sv'
+%Error: Cannot find file containing module: 'results/core/dsfd_vm_static_relay128_b8.sv'
+%Error: Cannot find file containing module: 'results/core/dsfd_vm_static_relay128_b4.sv'
+%Error: Cannot find file containing module: 'results/core/dsfd_vm_static_slice128_suhc.sv'
+%Error: Cannot find file containing module: 'results/core/dsfd_vm_static_return.sv'
+%Error: Cannot find file containing module: 'results/core/dsfd_vm_static512_suhc.sv'
+%Error: Cannot find file containing module: 'results/core/ot_sram_1r1w_512x128_m4_r2c2.v'
+%Error: Cannot find file containing module: 'results/core/dsfd_vm_static_wdispatch128.sv'
+%Error: Cannot find file containing module: 'results/core/dsfd_vm_static_wstage128.sv'
+%Error: Cannot find file containing module: 'results/core/dsfd_vm_static_wsched.sv'
+%Error: Cannot find file containing module: 'results/core/dsfd_vm_static_rsched.sv'
+%Error: Cannot find file containing module: 'results/core/dsfd_vm_static_landing.sv'
+%Error: Cannot find file containing module: 'results/core/dsfd_vm_seq_static.sv'
+%Error: Cannot find file containing module: 'results/core/dsfd_vm_static_core.sv'
+%Error: Cannot find file containing module: 'results/core/tb_dsfd_vm_static_core.sv'
+%Error: Exiting due to 20 error(s)
+GATE FAIL base seed 1
+GATE FAIL base seed 2
+GATE FAIL fault witness 1
+GATE FAIL fault witness 2
+GATE FAIL fault witness 3
+GATE FAIL fault witness 4
+GATE FAIL fault witness 5
+GATE FAIL fault witness 6
+GATE FAIL mutant mlane escaped
+GATE FAIL mutant mdrain escaped
+GATE FAIL mutant mslot escaped
+GATE FAIL mutant mstride escaped
+GATE FAIL mutant mmix escaped
+VMCORE_GATE FAIL
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-1634008-1792057987): exit 1

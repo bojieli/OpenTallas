@@ -1,0 +1,224 @@
+{
+  "schema": "opentallas.s81.vm-global-endpoint-census.v1",
+  "status": "ACTUAL_SOURCE_NECESSARY_BOUND_ONLY",
+  "scope": "All ports counted at native pitch, even optimistic full perimeter; no route, timing, face reach or adoption claim",
+  "endpoints": [
+    {
+      "master": "dsfd_vm_static_suhc_fsr",
+      "params": {},
+      "source_sha256": "9b457c76fd5d9af3a3c43789af900948d1a82b7b4234824147026c77baab0896",
+      "ports": {
+        "ck": {
+          "direction": "input",
+          "width": 1
+        },
+        "rst_n": {
+          "direction": "input",
+          "width": 1
+        },
+        "i_v": {
+          "direction": "input",
+          "width": 18
+        },
+        "i_row": {
+          "direction": "input",
+          "width": 252
+        },
+        "i_slot": {
+          "direction": "input",
+          "width": 90
+        },
+        "i_group": {
+          "direction": "input",
+          "width": 3
+        },
+        "i_aux_v": {
+          "direction": "input",
+          "width": 12
+        },
+        "i_aux_row": {
+          "direction": "input",
+          "width": 168
+        },
+        "o_v": {
+          "direction": "output",
+          "width": 32
+        },
+        "o_addr": {
+          "direction": "output",
+          "width": 288
+        },
+        "o_tag": {
+          "direction": "output",
+          "width": 256
+        },
+        "fault": {
+          "direction": "output",
+          "width": 1
+        }
+      },
+      "port_bits": 1122,
+      "provisional_outline_um": [
+        345.6,
+        51.84
+      ],
+      "native_pitch_um": 0.096,
+      "optimistic_all_face_capacity": 8280,
+      "necessary_perimeter_um": 107.712,
+      "perimeter_um": 794.88,
+      "capacity_possible": true,
+      "status": "NEEDS_ACTUAL_FACE_PINS_AND_GLOBAL_REGISTERED_HOPS"
+    },
+    {
+      "master": "dsfd_vm_static_scatter",
+      "params": {},
+      "source_sha256": "fbb1ada30aecb7c33a4f84ec7358806a97863ca5556188cb6475c0232dee7c0f",
+      "ports": {
+        "ck": {
+          "direction": "input",
+          "width": 1
+        },
+        "rst_n": {
+          "direction": "input",
+          "width": 1
+        },
+        "i_v": {
+          "direction": "input",
+          "width": 32
+        },
+        "i_we": {
+          "direction": "input",
+          "width": 32
+        },
+        "i_row": {
+          "direction": "input",
+          "width": 448
+        },
+        "i_mask": {
+          "direction": "input",
+          "width": 128
+        },
+        "i_data": {
+          "direction": "input",
+          "width": 4096
+        },
+        "i_tag": {
+          "direction": "input",
+          "width": 256
+        },
+        "o_v": {
+          "direction": "output",
+          "width": 32
+        },
+        "o_we": {
+          "direction": "output",
+          "width": 32
+        },
+        "o_addr": {
+          "direction": "output",
+          "width": 288
+        },
+        "o_mask": {
+          "direction": "output",
+          "width": 128
+        },
+        "o_data": {
+          "direction": "output",
+          "width": 4096
+        },
+        "o_tag": {
+          "direction": "output",
+          "width": 256
+        },
+        "fault": {
+          "direction": "output",
+          "width": 1
+        }
+      },
+      "port_bits": 9827,
+      "provisional_outline_um": [
+        345.6,
+        103.68
+      ],
+      "native_pitch_um": 0.096,
+      "optimistic_all_face_capacity": 9360,
+      "necessary_perimeter_um": 943.392,
+      "perimeter_um": 898.56,
+      "capacity_possible": false,
+      "status": "REJECT_PROVISIONAL_BOX_EVEN_BEFORE_CLOCK_PG_KEEPOUT"
+    },
+    {
+      "master": "dsfd_vm_static_return",
+      "params": {
+        "NROW": 32
+      },
+      "source_sha256": "5201f61b7992c9c330197c82cf84d6a059c13732fd908a804339f90b456022e2",
+      "ports": {
+        "ck": {
+          "direction": "input",
+          "width": 1
+        },
+        "rst_n": {
+          "direction": "input",
+          "width": 1
+        },
+        "i_v": {
+          "direction": "input",
+          "width": 32
+        },
+        "i_tag": {
+          "direction": "input",
+          "width": 256
+        },
+        "i_data": {
+          "direction": "input",
+          "width": 4096
+        },
+        "release_v": {
+          "direction": "input",
+          "width": 1
+        },
+        "release_group": {
+          "direction": "input",
+          "width": 3
+        },
+        "release_mask": {
+          "direction": "input",
+          "width": 32
+        },
+        "o_v": {
+          "direction": "output",
+          "width": 32
+        },
+        "o_data": {
+          "direction": "output",
+          "width": 4096
+        },
+        "o_group": {
+          "direction": "output",
+          "width": 3
+        },
+        "fault": {
+          "direction": "output",
+          "width": 1
+        }
+      },
+      "port_bits": 8554,
+      "provisional_outline_um": [
+        345.6,
+        207.36
+      ],
+      "native_pitch_um": 0.096,
+      "optimistic_all_face_capacity": 11520,
+      "necessary_perimeter_um": 821.184,
+      "perimeter_um": 1105.92,
+      "capacity_possible": true,
+      "status": "NEEDS_ACTUAL_FACE_PINS_AND_GLOBAL_REGISTERED_HOPS"
+    }
+  ],
+  "next": [
+    "Structurally split or enlarge scatter with actual pin registers and uniform compiler ages",
+    "Assign actual FSR/return faces; route uniform registered global fanout to all four bridge groups",
+    "Place cap/CDC/53writer, native clock roots and power channels before canonical geometry adoption"
+  ]
+}

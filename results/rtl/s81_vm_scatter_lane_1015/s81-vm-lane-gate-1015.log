@@ -1,0 +1,13 @@
+ot-run: ot-epyc1tb     admits   340 GB (avail 566, growth 103, headroom 64, waiters 0/0 GB) load 39/128 running 16 disk 678 GB 
+ot-run: ot-epyc4       admits   564 GB (avail 790, growth 90, headroom 48, waiters 0/0 GB) load 43/128 running 22 disk 488 GB 
+ot-run: ot-pve1        skipped: load hold: load1 > 1.5 x cores
+ot-run: ot-agidock128  skipped: load hold: load1 > 1.5 x cores
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-1633915-1792057985 after 0 s
+TB_VM_SCATTER_LANE PASS mode 0 checks 1003
+TB_VM_SCATTER_LANE PASS mode 1 checks 1003
+TB_VM_SCATTER_LANE PASS mode 2 checks 1003
+TB_VM_SCATTER_LANE FAIL mode 0 checks 1003 bad 860
+TB_VM_SCATTER_LANE FAIL mode 0 checks 1003 bad 1004
+STATIC_SCATTER_LANE_GATE PASS actual4lanes twoedges 3modes 2mutants
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-1633915-1792057985): exit 0
