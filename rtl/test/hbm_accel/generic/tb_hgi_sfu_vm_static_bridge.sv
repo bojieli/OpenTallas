@@ -28,11 +28,11 @@ module tb_hgi_sfu_vm_static_bridge;
  .prefetch_local_addr(pf_addr),.prefetch_scalar(pf_scalar),.prefetch_word(24'd0),.scalar_addr(96'd0),
  .local_rq(rq),.local_rr(bridge_rr),.stage_v(sv),.stage_group(sg),.stage_addr(sa),.stage_data(sd),.stage_mask(sm),
  .scalar_load(sl),.scalar_load_addr(sla),.scalar_data(sld),
- .drain_v(dv),.drain_vm_sector(dsec),.drain_result_v(drv),.drain_data(dd),.local_wq(wq),.local_w_done(done),.fault(fault));
+ .drain_round_bf16(2'd0),.drain_v(dv),.drain_vm_sector(dsec),.drain_result_v(drv),.drain_data(dd),.local_wq(wq),.local_w_done(done),.fault(fault));
  ot_hgi_sfu_static_operand_store store(.clk(clk),.rst_n(rst_n),.scalar_load(sl),.scalar_enable(4'd0),.scalar_addr(sla),.scalar_data(sld),
  .rd_re(rd_re),.rd_addr(rd_addr),.rd_src(128'd0),.rd_q(rd_q),.vm_we(vm_we),.vm_waddr(vm_addr),.vm_wdata(vm_data),
  .stage_v(sv),.stage_group(sg),.stage_addr(sa),.stage_mask(sm),.stage_data(sd),
- .drain_v(dv),.drain_addr(da),.drain_data(dd),.drain_result_v(drv),.fault(sfault));
+ .drain_round_bf16(2'd0),.drain_v(dv),.drain_addr(da),.drain_data(dd),.drain_result_v(drv),.fault(sfault));
  ot_hbm_vm_lg_static_tap #(.READ_RETURN(14),.WRITE_RETURN(11)) mid(.clk(clk),.rst_n(rst_n),.local_rq(rq),.far_rq(136'd0),
  .local_wq(wq),.far_wq(2248'd0),.local_read(pf_v),.local_write({wq[2247],wq[1966],wq[1685],wq[1404],wq[1123],wq[842],wq[561],wq[280]}),
  .near_rq(nrq1),.near_wq(nwq1),.near_rr(frr0),.near_w_done(fdone0),.local_rr(rr),.local_w_done(done),.fault(t1f));

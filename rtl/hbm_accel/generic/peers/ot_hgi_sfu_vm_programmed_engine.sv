@@ -29,7 +29,7 @@ module ot_hgi_sfu_vm_programmed_engine #(
  input wire [2055:0] local_rr,
  output wire [2247:0] local_wq,
  input wire [7:0] local_w_done,
- input wire [1:0] drain_v,
+ input wire [1:0] drain_v,drain_round_bf16,
  input wire [2*LWB-1:0] drain_addr,
  input wire [31:0] drain_vm_sector,
  output wire [15:0] vi_re,
@@ -57,7 +57,7 @@ module ot_hgi_sfu_vm_programmed_engine #(
  .local_rq(local_rq),.local_rr(local_rr),.local_wq(local_wq),.local_w_done(local_w_done),
  .stage_v(stage_v),.stage_group(stage_group),.stage_addr(stage_addr),.stage_mask(stage_mask),.stage_data(stage_data),
  .scalar_load(scalar_load),.scalar_load_addr(scalar_load_addr),.scalar_data(scalar_data),
- .drain_v(drain_v),.drain_vm_sector(drain_vm_sector),.drain_result_v(drain_result_v),.drain_data(drain_data),.fault(bridge_fault));
+ .drain_v(drain_v),.drain_round_bf16(drain_round_bf16),.drain_vm_sector(drain_vm_sector),.drain_result_v(drain_result_v),.drain_data(drain_data),.fault(bridge_fault));
  ot_hgi_sfu_programmed_engine #(.PAGE_AW(PAGE_AW),.LWB(LWB)) u_engine(
  .clk(clk),.rst_n(rst_n),.clk_lane(clk_lane),.clk_map(clk_map),.rst_lane_n(rst_lane_n),.rst_map_n(rst_map_n),
  .cfg_we(cfg_we),.cfg_stripe(cfg_stripe),.cfg_addr(cfg_addr),.cfg_data(cfg_data),

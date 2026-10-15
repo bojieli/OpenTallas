@@ -26,7 +26,7 @@ module ot_hgi_sfu_vm_static_bridge #(
  output reg [3:0] scalar_load,
  output wire [95:0] scalar_load_addr,
  output reg [127:0] scalar_data,
- input wire [1:0] drain_v,
+ input wire [1:0] drain_v,drain_round_bf16,
  input wire [31:0] drain_vm_sector,
  input wire [1:0] drain_result_v,
  input wire [511:0] drain_data,
@@ -56,6 +56,15 @@ module ot_hgi_sfu_vm_static_bridge #(
    scalar_data[32*stage_group[2*b+:2]+:32]=local_rr[257*b+32*word_sel[3*b+:3]+:32];
   end
  end
+ function automatic [255:0] round_sector(input [255:0] data,input do_round);
+  reg [31:0] word,rounded;
+  for(integer w=0;w<8;w=w+1)begin
+   word=data[32*w+:32];
+   rounded=word+32'h00007fff+{31'd0,word[16]};
+   round_sector[32*w+:32]=do_round?{rounded[31:16],16'd0}:word;
+  end
+ endfunction
+ reg [1:0] drain_round_q;
  reg [31:0] drain_sector_q;
  reg [1:0] drain_expected;
  reg [7:0] write_expected[0:WRITE_RETURN+1];
@@ -69,11 +78,11 @@ module ot_hgi_sfu_vm_static_bridge #(
   end
  end
  always @(posedge clk)begin
-  drain_sector_q<=drain_vm_sector;
+  drain_sector_q<=drain_vm_sector;drain_round_q<=drain_round_bf16;
   local_wq<=0;
   for(integer s=0;s<2;s=s+1)if(drain_expected[s])
    local_wq[281*drain_sector_q[16*s+:3]+:281]<=
-    {1'b1,drain_sector_q[16*s+:16],drain_data[256*s+:256],8'hff};
+    {1'b1,drain_sector_q[16*s+:16],round_sector(drain_data[256*s+:256],drain_round_q[s]),8'hff};
  end
  always @(posedge clk or negedge rst_n)begin
   if(!rst_n)begin
