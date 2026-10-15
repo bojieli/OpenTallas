@@ -1733,10 +1733,6 @@ def _wrap(v, m, G, peers):
             if model.get('native_graph_bind'):
                 from qwen_split.native_graph_bind import install_masters as install_native_graph
                 install_native_graph(M, model, Master, v.pin_rects)
-            if model.get('static_link_bind'):
-                from qwen_split.static_link_bind import install_masters as install_static_link
-                from qwen_split.direct_up4 import partition_master as _pm
-                install_static_link(M, model, Master, _pm)
             for mst_ in M.values():
                 mst_.order[:] = list(dict.fromkeys(mst_.order))
 

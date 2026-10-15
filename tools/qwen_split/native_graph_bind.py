@@ -240,28 +240,8 @@ def install_masters(M, model, Master, pin_rects):
                 peers.setdefault((i, p), []).extend(others)
     from qwen_split.direct_up4 import partition_master
     for k in ('seq', 'su', 'native', 'embed'):
-        assign_pins(M, model, Master, by[INST[k]], MASTER[k][0], MASTER[k][1], peers, partition_master)
-        M.pop('qfd_seq_su', None)
-    _vm_alias(M, model, by, pin_rects, partition_master)
-    rec['assigned_pins'] = {k: MASTER[k][0] for k in ('seq', 'su', 'native', 'embed')}
-
-
-def peer_map(model):
-    by = {i.name: i for i in model['insts']}
-    peers = {}
-    for b, c, n, es in model['buses']:
-        if c in ('clock_trunk', 'reset'):
-            continue
-        for i, p in es:
-            others = [by[x] for x, _ in es if x != i]
-            if others:
-                peers.setdefault((i, p), []).extend(others)
-    return peers
-
-
-def assign_pins(M, model, Master, inst, mst, src, peers, partition_master):
-    """Top-down pins of one NEW unclosed parent from its RTL port list, each port on the face toward its peers."""
-    if True:
+        inst = by[INST[k]]
+        mst, src = MASTER[k]
         rp = rtl_ports(ROOT / src, mst)
         q = Master(mst, inst.w, inst.h, 7, f'actual source ABI ({src}); NEW assigned unclosed parent')
         aliases = model.get('port_join', {}).get(mst, {})
@@ -335,10 +315,8 @@ def assign_pins(M, model, Master, inst, mst, src, peers, partition_master):
             q.ports[real] = ('pins', rp[real][0], f, L_, zs, 1)
         if aliases:
             partition_master(q, aliases, rects)
+        M.pop('qfd_seq_su', None)
         M[mst] = q
-
-
-def _vm_alias(M, model, by, pin_rects, partition_master):
     # the VM keeps its own pin plan; the join's slices of its ports become fragments of those real pins
     vm_m = by['sp_vector_memory'].master
     al = model.get('port_join', {}).get(vm_m, {})
@@ -347,3 +325,4 @@ def _vm_alias(M, model, by, pin_rects, partition_master):
         q = M[vm_m]
         rects = list(pin_rects(q, 1, {p: sp[1] for p, sp in q.ports.items()}))
         partition_master(q, al, rects)
+    rec['assigned_pins'] = {k: MASTER[k][0] for k in ('seq', 'su', 'native', 'embed')}
