@@ -1,8 +1,17 @@
 `timescale 1ns/1ps
 // External fixture -> real SU preload -> MIX4 -> real VM128SRAM -> SU readback.
 // All reference arrays below are testbench stimuli/scoreboards; none drive a DUT response.
-module tb_s81_engram_mix4_native_vm #(parameter MUT=0, WRITE_COMMIT_LAT=11, EXPECTED_CYCLES=865);
+module tb_s81_engram_mix4_native_vm #(parameter MUT=0, WRITE_COMMIT_LAT=11);
  localparam READ_PIPE=4, RL=16, MAXC=40000;
+ // VM latency convention (S-ELEM-C 10-15, 7beb fault at cy961 = 'lost descriptor reply': dtag[VM_LAT+1] arrived one
+ // edge before the registered return). RL counts from the edge that SAMPLES the request pin to the edge after which the
+ // return is valid; the MIX4 VM_LAT counts from the edge that LAUNCHES the request pin, so VM_LAT = RL + 1.
+ localparam integer MIX_VM_LAT=RL+1;
+ // Calendar: the component bench measures 810 cycles / writes 639..798 at VM_LAT 1; each of the three VM round trips
+ // (descriptor, REDUCE, ADD) adds VM_LAT-1 edges, completion waits WRITE_COMMIT_LAT-1 more. Checked exactly.
+ localparam integer XTRA=3*(MIX_VM_LAT-1), EXPECTED_CYCLES=810+XTRA+(WRITE_COMMIT_LAT-1), FIRST_W=639+XTRA+1, LAST_W=798+XTRA+1;
+ // (+1 on the write span only: this bench stamps a write with the blocking-incremented sampling edge cy, the component
+ // bench with its pre-increment cyc; start/done are both read on a negedge, so the cycle count needs no offset.)
  reg ck=0; always #0.4167 ck=~ck;
  reg rss=0; reg [84:0] c_cmd=0; wire [8:0] c_done; wire [1:0] c_st; wire t_inp_su,t_inp_hc;
  reg [84:0] mix_cmd=0; wire [8:0] mix_done; wire [1:0] mix_st;
@@ -53,7 +62,7 @@ module tb_s81_engram_mix4_native_vm #(parameter MUT=0, WRITE_COMMIT_LAT=11, EXPE
         .l_v(l_v), .l_d(l_d), .cp_v(16'd0), .cp_row(224'd0), .cp_m(256'd0), .cp_d(8192'd0), .cl_t(clt), .cl_v(clv), .cl_row(clr), .cl_m(clm), .cl_d(cld), .wf_v(1'b0), .wf_row(14'd0), .wf_d(512'd0), .x_al(3'd0), .x_hdr(9'd0), .edge_f(3'd0), .vm_fault(vm_fault));
 
 
- dsfd_engram_mix4_c #(.MUT(MUT),.HLAYOUT(1),.VM_LAT(RL),.WRITE_COMMIT_LAT(WRITE_COMMIT_LAT),.RS(5)) mix(
+ dsfd_engram_mix4_c #(.MUT(MUT),.HLAYOUT(1),.VM_LAT(MIX_VM_LAT),.WRITE_COMMIT_LAT(WRITE_COMMIT_LAT),.RS(5)) mix(
   {149{ck}},rss,mix_cmd,mix_done,mix_st,1'b1,mx_rqv,mx_rq,mx_rsv,mx_rs,mx_wqv,mx_wq,mx_wqm,mx_wqd);
  reg [63:0] cfg[0:0]; reg [1023:0] hm[0:639],km[0:639],wm[0:639],vm[0:159],ym[0:639];
  reg [511:0] image[0:16383], expected_y[0:639]; reg used[0:16383];
@@ -166,9 +175,8 @@ module tb_s81_engram_mix4_native_vm #(parameter MUT=0, WRITE_COMMIT_LAT=11, EXPE
   wait(mix_st[1]);@(negedge ck);#0.01;start=cy;mix_cmd={1'b1,84'd0};mix_cmd[6:0]=53;mix_cmd[7+:14]=64;
   @(negedge ck);#0.01;mix_cmd=0;wait(mix_done[8]);@(negedge ck);#0.01;elapsed=cy-start;
   if(mix_done[7:0]!=53||writes!=640||reads!=4161||answers!=20480)$fatal(1,"completion/count mismatch writes=%0d reads=%0d answers=%0d",writes,reads,answers);
-  // Compiler calendar hypothesis: 810 + descriptor/REDUCE/ADD 3*(16-1) + (11-1) = 865.
   // Fail explicitly on a timing-convention disagreement; never infer or retime the price.
-  if(elapsed!=EXPECTED_CYCLES || first_w-start!=684 || last_w-start!=843 || last_w-first_w!=159)
+  if(elapsed!=EXPECTED_CYCLES || first_w-start!=FIRST_W || last_w-start!=LAST_W || last_w-first_w!=159)
    $fatal(1,"fixed calendar mismatch cycles=%0d expected=%0d write_span=%0d..%0d",elapsed,EXPECTED_CYCLES,first_w-start,last_w-start);
   repeat(32)@(negedge ck);
   if(commits!=4*(3521+640)||rawcommits!=4*(3521+640))$fatal(1,"final commit count");
