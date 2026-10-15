@@ -1,0 +1,20 @@
+{
+  "schema": "opentallas.structural-repair.v1",
+  "cause": "Actual exported 15.12um-wide V263/V256 M5 PG stripes span only36percent; child_lint fails despite TT/FF/DRC passing.",
+  "fix": "M5 PG pitch5.4->2.7um, supported generator option. Move actual Sclk x5.388->4.968um avoiding newstripe5.352; all bit/reset pins retained.",
+  "outline_um": [
+    15.12,
+    64.8
+  ],
+  "local_area_um2": 979.776,
+  "local_area_change_um2": 0,
+  "data_edges": 1,
+  "data_edges_added": 0,
+  "reset_release_edges": 3,
+  "performance_cost": "same fixed edge/rate; no new operational cycles; final composition throughput remains unmeasured",
+  "acceptance": "OPEN: fresh exactCTS gate then fullroute/nativeboundary/child_lint; no thresholds waived",
+  "original_jobs": [
+    "qkh_packet_v263-bp2-d9b18b7c3",
+    "qkh_packet_v256-bp2-d9b18b7c3"
+  ]
+}

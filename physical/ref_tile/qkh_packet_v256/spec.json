@@ -18,13 +18,13 @@
  },
  "pins": {
   "W": [
-   "d"
+   "d",
+   "clk"
   ],
   "E": [
    "q"
   ],
   "S": [
-   "clk",
    "rst_n"
   ]
  },
@@ -49,13 +49,14 @@
    "h": "M4",
    "v": "M5"
   },
+  "m5_pg_pitch": 2.7,
   "macro_halo_um": 5.4
  },
- "structural_change": "Actual Q519 split into263b metadata+lowerQ and256b upperQ banks at SAMEfixededge, eachrealownclockroot. LiteralspreadM4/M5pins+PGavoidance frozen beforeCTS. H519failedrecipe2posthookarea755.7>core653.2; bitbanking preservesallQbits/throughput, no density or timing waiver.",
+ "structural_change": "Actual Q519 split into263b metadata+lowerQ and256b upperQ banks at SAMEfixededge, eachrealownclockroot. LiteralspreadM4/M5pins+PGavoidance frozen beforeCTS. H519failedrecipe2posthookarea755.7>core653.2; bitbanking preservesallQbits/throughput, no density or timing waiver. Actual bp2 export failed child_lint PG spread36percent: double M5 stripe density to2.7um pitch, moving clk pin5.388to4.968um away from newstripe5.352; all data pins/outline/RTL/data edges unchanged. PG2 actualroutes failed DRT-0255 at S-M5clk access. Moveclk to W-M4(.096,1.308), belowfirstdata5.436 andbelowPG; all d/q/rst remain unchanged. Coordinatescheckedon.012+.048k tracks. Expected PG span53.6percent must be measured in exported actual LEF; no waiver.",
  "job": {
   "owner": "Codex:q_compute_elem_head_stage",
   "branch": "codex/q-compute-native-parents-1014",
-  "tag": "bp1",
+  "tag": "pg3",
   "purpose": "Native actual packet staging for classified ECTL/head die timing failure",
   "extra_paths": [
    "physical/qwen_head_staging_1015",

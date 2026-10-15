@@ -52,6 +52,7 @@ module ot_coll_tp8_static #(
     input  wire              clk,
     input  wire [3:0]        clk_pfold,     // CCLK 1: package-fold slice clock entries (same edge as clk)
     input  wire [3:0]        clk_xfold,     // CCLK 1: cross-fold slice clock entries
+    input wire [8:0] clk_mem, // CCLK1: P0/P1,S0..S4,R0/R1 direct macro entries
     input  wire              rst_n,
     input  wire [1:0]        pkg_s,
     input  wire              die_ps,
@@ -155,7 +156,7 @@ module ot_coll_tp8_static #(
     assign up_valid = upv_q;
     assign up_rec   = uprec_q;
     wire [PW-1:0] pr_rd;
-    ot_coll_static_ring #(.OFF(LU + 2)) u_pring (.clk(clk), .rs_n(rs_p), .wd(ir_q), .rd(pr_rd));
+    ot_coll_static_ring #(.OFF(LU + 2)) u_pring (.clk(clk), .mem_ck(CCLK ? {clk_mem[1:0],clk_mem[1:0]} : {4{clk}}), .rs_n(rs_p), .wd(ir_q), .rd(pr_rd));
     // schedule token A -> B (LU + 2 edges): {v, mode, last, parity}
     localparam integer DAB = LU + 2;
     reg [4*DAB-1:0] tab;
@@ -245,7 +246,7 @@ module ot_coll_tp8_static #(
     wire [SEW-1:0] s_rd;
     genvar gm;
     generate for (gm = 0; gm < SEW / 128; gm = gm + 1) begin : g_sring
-        ot_sram_1r1w_512x128_m4_r2c2 u_m (.clk(clk), .r_ce_in(1'b1), .r_addr_in(cc - 9'(LS + 1)),
+        ot_sram_1r1w_512x128_m4_r2c2 u_m (.clk(CCLK ? clk_mem[2+gm] : clk), .r_ce_in(1'b1), .r_addr_in(cc - 9'(LS + 1)),
             .rd_out(s_rd[gm*128 +: 128]), .w_ce_in(1'b1), .w_addr_in(cc), .wd_in(s_wd[gm*128 +: 128]),
             .w_mask_in({128{1'b1}}), .rr_en(2'b0), .rr_addr(14'b0), .cr_en(2'b0), .cr_sel(14'b0));
     end endgenerate
@@ -325,7 +326,7 @@ module ot_coll_tp8_static #(
 `else
     localparam integer ROFF = LU + 2;
 `endif
-    ot_coll_static_ring #(.OFF(ROFF)) u_rring (.clk(clk), .rs_n(rs_r), .wd({{(PW-RW){1'b0}}, xe_q, te_l, xr_q}), .rd(rr_rd));
+    ot_coll_static_ring #(.OFF(ROFF)) u_rring (.clk(clk), .mem_ck(CCLK ? {clk_mem[8:7],clk_mem[8:7]} : {4{clk}}), .rs_n(rs_r), .wd({{(PW-RW){1'b0}}, xe_q, te_l, xr_q}), .rd(rr_rd));
     // token E -> F (LU + 2 edges): {v, own, last}
     localparam integer DEF = LU + 2;
     reg [3*DEF-1:0] tef;
@@ -371,6 +372,7 @@ endmodule
 // select is registered with the macro's registered read.
 module ot_coll_static_ring #(parameter integer OFF = 20) (
     input  wire         clk,
+    input wire [3:0] mem_ck,
     input  wire         rs_n,
     input  wire [545:0] wd,
     output wire [545:0] rd
@@ -384,7 +386,7 @@ module ot_coll_static_ring #(parameter integer OFF = 20) (
     wire [546*B-1:0] rdb;
     genvar b;
     generate for (b = 0; b < B; b = b + 1) begin : g_b
-        ot_sram_1r1w_32x546_m1 u_m (.clk(clk), .r_ce_in(1'b1), .r_addr_in(ra[4:0]), .rd_out(rdb[b*546 +: 546]),
+        ot_sram_1r1w_32x546_m1 u_m (.clk(mem_ck[b]), .r_ce_in(1'b1), .r_addr_in(ra[4:0]), .rd_out(rdb[b*546 +: 546]),
             .w_ce_in((B == 1) ? 1'b1 : (wa[AW-1:5] == b)), .w_addr_in(wa[4:0]), .wd_in(wd), .w_mask_in({546{1'b1}}));
     end endgenerate
     generate if (B == 1) begin : g_one
