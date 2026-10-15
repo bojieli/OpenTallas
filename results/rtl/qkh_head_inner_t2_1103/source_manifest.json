@@ -1,0 +1,24 @@
+{
+  "scope": "Component87-child inner+externalT1/S1 versus existing staged head; same phase leaf clocks only; no physical timing/parent qualification",
+  "files_sha256": {
+    "rtl/test/qwen_split/tb_qkh_head_inner_t2.sv": "2212c9dca9a28f02f3e99f9777c390b89c2eb0cf2960ceaaae233d9ad4cc27c5",
+    "rtl/qwen_sys/split_20261014/ot_qkh_head_native_r4_s2.sv": "89dc90b81afd9cefd600c85b0ebfbca83ddc4489601fbf139f9686a854c43177",
+    "rtl/qwen_sys/split_20261014/qkh_head_stages.sv": "fc99193d8427b0e5abf4c4af7fa89b4851474bb24957f24a03d5f235f551143b",
+    "rtl/qwen_sys/split_20261014/ot_qkh_head_native_r4.sv": "d78b8d9905aa93bbf364880dd53d35d4d2538f01640fa3ede096aa1ea3aa4421",
+    "rtl/qwen_sys/split_20261014/ot_qkh_head_native_r3.sv": "ba98603800741f246c45a86e2f9ab0f3b6a29b05cbca72dd0720b456d2ff11ed",
+    "rtl/qwen_sys/split_20261014/ot_qkh_head_native.sv": "70a431f04f9260f0354d7db127745149d55305951e96c5cd667ff01fb711b7bf",
+    "rtl/hdc/nearhbm/ot_qwen_nearhbm_head_hs.sv": "bf404eba5181b25abd165133247a700a701dd1dc92afb6aae3b33d17abe8df41",
+    "rtl/hdc/nearhbm/ot_qkh_subtiles.sv": "22db707f26a61ad7cad2f32c1155dc8b371d6a0552d4fec9f1b6ca7d085362f8",
+    "rtl/hdc/nearhbm/ot_qwen_nearhbm_prod.sv": "8dc05c472144984e9b0498caba8bc8d3f98270e4cd540bcd5e197f01be775eb8",
+    "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+    "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+    "rtl/hdc/ot_hdc_fp32_add_lat_nr.sv": "e9f1a1efa70de86bb09b532290d5b802f585f1ad90e6e12ec89a4e0b189b3ea5",
+    "rtl/hdc/ot_hdc_fp32_mul_lat.sv": "ddc4c3bfb4f22788534148049bf381d469053ff5b54c6197548636a3f4aac8e3",
+    "rtl/hdc/ot_hdc_fp32_mul_pipe.sv": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204",
+    "rtl/hdc/ot_hdc_fastfp.sv": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643",
+    "rtl/hdc/ot_hdc_prefix.sv": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+    "rtl/hdc/ot_hdc_fp32_add_lat.sv": "f5e88cfcd8ce4809826eccf77fa8b83bc1ef14b430964dcf01cef70f70577b30",
+    "rtl/test/qwen_split/run_qkh_head_inner_t2.sh": "8a19fd4ba5617bbeb4e20fcd7b8f5901fd23a9379be268a1008b58cd457a9b53",
+    "tools/qwen_kv_die/head_inner_t2.py": "e05e4164e8bdd9a9cbe5040409366dcbb1f73704e70d6082a3a57bf00d7bae36"
+  }
+}
