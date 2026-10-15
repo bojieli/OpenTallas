@@ -289,6 +289,7 @@ endmodule
 //   line is the OR of the two tiles' answers).  q_bad: an enabled element was not written in this epoch.
 // --------------------------------------------------------------------------------------------------------------------
 module ot_qfd_xs_leaf #(
+    parameter integer EXTERNAL_WD_CAPTURE = 0, // opt-in: WD already captured by actual external512b masters
     parameter integer FILL_PIPE = 0,     // opt-in: separate input/output fill registers (+1 edge per leaf hop)
     parameter integer BANK_PIPE = 0,     // opt-in: four local32-entry banks, registered before final4:1 (+1 read edge)
     parameter integer NCH = 4,           // leaves in a chain
@@ -351,12 +352,17 @@ module ot_qfd_xs_leaf #(
     reg [5:0]    woff;
     reg [63:0]   wm;
     reg [1023:0] wd;
+    generate if(EXTERNAL_WD_CAPTURE==0)begin:g_internal_wd_capture
+        always @(posedge clk) wd<=w_d;
+    end else begin:g_external_wd_capture
+        always @* wd=w_d;
+    end endgenerate
     reg [NCH*2*CTW-1:0] wctl;
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin wv <= 1'b0; cv <= 1'b0; end
         else begin wv <= w_v; cv <= c_v; end
     always @(posedge clk) begin
-        wep <= w_ep; woff <= w_off; wm <= w_m; wd <= w_d; wctl <= w_ctl; cep <= c_ep;
+        wep <= w_ep; woff <= w_off; wm <= w_m; wctl <= w_ctl; cep <= c_ep;
     end
     generate if(FILL_PIPE==0)begin : g_fill_one_edge
     assign wo_v = wv; assign wo_ep = wep; assign wo_off = woff; assign wo_m = wm; assign wo_d = wd;
