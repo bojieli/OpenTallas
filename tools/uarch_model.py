@@ -16574,3 +16574,33 @@ def s81_static_collective_control_rom_model(cycles=2400):
     """Actual three-macro immutable control page; contextual price remains open."""
     from s81_static_collective.control_rom_model import price
     return price(cycles, ROOT)
+def hbm_idx_static_score_engine_model():
+    """Exact four-key engine: static launches and returns replace output FIFO."""
+    return dict(schema='opentallas.hbm-idx-static-score-engine.v1',
+        heads=32, keys_per_edge=4, block_dots_per_edge=4*32*4,
+        scalar_products_per_edge=4*32*128,
+        replicas=dict(engines_per_scorer=4,scorers_per_die=4,hslices_per_engine=128),
+        latency_edges=dict(chunk=106,tail=16,pin=1,launch_to_return=123),
+        communication_bits_per_edge=dict(key=2176,query=568,result=72),
+        clock_roots=dict(hslice=128,chunk=4,tail=1,control=1),
+        buffering='none: fixed launch/return slots; retained keep pipeline424bits',
+        arithmetic='unchanged golden32head/fourblock order, BF16 head products and FP32 tree',
+        area='arithmetic census unchanged; remove credit/outputFIFO; physical successor UNQUALIFIED',
+        compiler='query settle and all leaf reset readiness validated as faults, never wait/gate launch',
+        price='INDEX immutable price unchanged; II1 engine necessary but not wholeparent qualification')
+
+
+def hbm_idx_static_selector_model():
+    """Fixed four-nibble score radix, original lower-index tie order."""
+    return dict(schema='opentallas.hbm-idx-static-selector.v1',
+        Q=4,W=16,K=512,production_keys=10928,production_lines=171,
+        memory=dict(macros=12,shape='256x256 1R1W; three perquarter; final compact in-place',bits_per_line=592),
+        clocks=dict(control=1,quarter=4,memory=12),
+        per_edge_bits=dict(ingress=4*592,read=4*592,write=4*592,output=4*592),
+        histogram_bits=4*16*14,compact_buffer_bits=4*32*37,
+        fixed_work=dict(ingest=171,radix_reads=4*171,radix_choose=4*16,compact_reads=171,output=32),
+        latency='1122 active cycles plus fixed SRAM and phase-drain edges; compiler must price composed score pipeline',
+        arithmetic='BF16 ordered16bit keys; four prefix-conditioned nibble histograms, global threshold; lower-ID ties by quarter/lane ordered scan',
+        routing='four quarterhist/compact roots and separate registered macro roots; cut/slot UNASSIGNED',
+        schedule='compiler opcode+address slots only; no request queues, credits, readiness or data-dependent scan length',
+        qualification='OPEN exact fullshape golden/mutants, physical closure and native productionrate')
