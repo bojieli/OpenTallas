@@ -16452,3 +16452,14 @@ def hbm_idx_keypack_static_model():
         placement='fixed2736localkeys/stack, source128MiBstride, base18.5GiB,fence19GiB; formatversion separatefromlegacy128Brow',
         slot='UNASSIGNED quantizer/pack/storeproducer actualroots andnewphysicalview required',
         qualification='OPEN actualSM+SU KRproducer→pack→HBMcommit→service→scorer join and physical/cost')
+
+
+def hbm_idx_keystore_static_model():
+    """68B packed key to actual four reserved32B write slots with byte masks."""
+    return dict(schema='opentallas.hbm-idx-keystore-static.v1',
+        bytes_per_key=68,reserved_sector_slots=4,sector_bytes=32,
+        issue_II=1,keys_per_edge=.25,hold_bits=544+37,
+        mapping='unchanged keyaddress+unaligned byteoffset; up4sectorsmask preserves neighbours',
+        root_count=1,latency='capture key then compiler store0..3 atfixededges; each outputpin +1edge',
+        phy='actual store controller/staging boundary join OPEN; onlyPHYqueueallowedtohold',
+        qualification='OPEN real byte-mask memory composition, producer/PHY join, physical and cost')
