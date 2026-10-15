@@ -115,6 +115,14 @@ class CompileTest(unittest.TestCase):
         with self.assertRaises(KeyError):
             schedule_jobs(self.program,self.binding)
 
+    def test_native_ingress_resource_preserved(self):
+        self.contract['ingress_capacities']={'capture/write':1,'ctrl_p3/read':1}
+        self.binding['jobs']['field']['accesses'][0]['ingress_resource']='capture/write'
+        self.binding['jobs']['su']['accesses'][0]['ingress_resource']='ctrl_p3/read'
+        result=self.run_compile()
+        self.assertTrue(result['dispatch_eligible'], result)
+        self.assertEqual(result['schedule']['events'][0]['ingress_resource'],'capture/write')
+
     def test_all_59_actual_programs_require_native_binding(self):
         sources=sorted((ROOT/'results/rtl/s81_ctrl_20261008/programs').glob('S[0-9][0-9][0-9].json'))
         self.assertEqual(len(sources),59)
