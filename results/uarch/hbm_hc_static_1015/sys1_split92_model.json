@@ -62,11 +62,12 @@
   "routing_tracks_capacity": "OPEN actual pin/reach/cut grant; no prior500x1020slot timinggrant",
   "area_fit": "OPEN nativeCTS/hardenedmaster dimensions+census required",
   "qualification": {
-    "functional": true,
+    "functional": false,
     "physical": false,
     "native_whole_kernel": false,
     "leaf_functional": true,
-    "functional_scope": "actual80SRAM+32MAC P6/P8 full24row+tail equal-phase component only"
+    "functional_scope": "actual80SRAM+32MAC P6/P8 full24row+tail equal-phase component only",
+    "provider_diagnostic_only": true
   },
   "clock_phases": "all roots synchronous, independent physical insertion/reach SS/FF proofrequired; functionalbench equalphase only",
   "leaf_source": "473756fb3",
@@ -92,5 +93,7 @@
     "nominal8": 1473,
     "early6": 1133,
     "early8": 1453
-  }
+  },
+  "memory_provider_amendment": "results/rtl/hbm_hc_static_1015/memory_provider_scope_amendment.json",
+  "mapped_memory_qualified": false
 }

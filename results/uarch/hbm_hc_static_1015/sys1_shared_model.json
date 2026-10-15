@@ -41,7 +41,7 @@
   "single_user_latency": "candidate SYS1 raw accumulation is53edges later than flat SYS0 (86 vs33 leaf tap), calendar must move; exact scalar readiness and row period pending actual proof",
   "canonical_whole_kernel_allocator": "h_vm owner; P1 frozen MDESC, P6/P8 component-only",
   "physical_qualified": false,
-  "functional_qualified": true,
+  "functional_qualified": false,
   "engine_root_lower_bound_with_Sinkhorn": 44,
   "physical_boundary_bits": {
     "per_bank_weight_local_to_MACs": 1024,
@@ -176,5 +176,7 @@
   },
   "functional_scope": "synthetic fullshape P6/P8 24row actual80SRAM\u219232LG8\u2192tail equal-phase proof only",
   "functional_receipt": "results/rtl/hbm_hc_static_1015/sys1_shared_766/receipt.json",
-  "SYS_LAT_verified": 86
+  "SYS_LAT_verified": 86,
+  "memory_provider_amendment": "results/rtl/hbm_hc_static_1015/memory_provider_scope_amendment.json",
+  "mapped_memory_qualified": false
 }

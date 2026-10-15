@@ -1,0 +1,23 @@
+{
+  "status": "DIAGNOSTIC_ONLY_PROVIDER_LIMITATION",
+  "affected_receipt_commits": [
+    "dbd10f399",
+    "b7147ee9d",
+    "38e3091a7",
+    "d8ab42dac",
+    "3d3f96b5a",
+    "1847dfec7"
+  ],
+  "provider": "rtl/model/hbm_pc40_native_sim_20261003/ot_sram_1r1w_128x256_m1_r2c2_sim.sv",
+  "provider_sha256": "af5e2377cfbf5bd0ac524f58bb6597cb853eed7f41e097e419354eb931728762",
+  "limitation": "64 HC weight instances use ideal reg[255:0]mem[0:127] provider, ignoring w_mask_in and redundancy; not generated/mapped macro semantics. Previous actual80SRAM/fullmapped descriptions are withdrawn.16 residual macros remain generated implementations. Arithmetic passes remain source-bound provider diagnostics only.",
+  "original_receipts_logs_caches": "preserved unchanged",
+  "mapped_memory_qualified": false,
+  "whole_kernel_qualified": false,
+  "successor_provider": {
+    "ref": "473756fb3",
+    "path": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v",
+    "sha256": "dba769863f502de28853a78ac30544a406c7cb66fd3249019ef9fa5a5b73e36e"
+  },
+  "required_successor": "generated128 macro source + warmed masked-poison write positive and mask-enable mutant through real SYS1 arithmetic; independent leaf SRAM semantics proof"
+}
