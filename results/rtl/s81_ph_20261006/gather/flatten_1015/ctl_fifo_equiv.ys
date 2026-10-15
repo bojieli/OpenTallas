@@ -1,0 +1,12 @@
+read_verilog -sv fifo_old.sv
+read_verilog -sv fifo_new.sv
+read_verilog -sv wrap.sv
+hierarchy -check
+proc; flatten gold; flatten gate; opt_clean
+memory -nomap; memory_map; opt -fast
+async2sync
+equiv_make gold gate eq
+hierarchy -top eq
+equiv_simple -seq 5
+equiv_induct -seq 5
+equiv_status -assert

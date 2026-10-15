@@ -1,0 +1,10 @@
+ot-run: ot-epyc1tb     admits   118 GB (avail 344, growth 129, headroom 64, waiters 0/0 GB) load 99/128 running 20 disk 541 GB 
+ot-run: ot-epyc4       admits   429 GB (avail 655, growth 128, headroom 48, waiters 0/0 GB) load 83/128 running 26 disk 411 GB 
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-3672779-1792074265 after 1 s
+case qwen_ar_256w kind=pos latu=53 lats=376 phi=0 xu=0 xs=0 mutant=OT_TP8S_MUT_RANK FAIL (expected FAIL) mismatches=1328 extra=0 out_err=0 cmd_bad=0 coll_fault=00000000 issuer_fault=00000000 die_fault=00000000 words_out=2048 meas_lu=53 meas_ls=376 pr_overlap=0 compiled_span=795
+case qwen_layer_2x256w kind=pos latu=53 lats=376 phi=0 xu=0 xs=0 mutant=OT_TP8S_MUT_RANK FAIL (expected FAIL) mismatches=2704 extra=0 out_err=0 cmd_bad=0 coll_fault=00000000 issuer_fault=00000000 die_fault=00000000 words_out=4096 meas_lu=53 meas_ls=376 pr_overlap=0 compiled_span=1533
+case qwen_argmax_1w kind=pos latu=53 lats=376 phi=0 xu=0 xs=0 mutant=OT_TP8S_MUT_RANK PASS (expected FAIL) mismatches=0 extra=0 out_err=0 cmd_bad=0 coll_fault=00000000 issuer_fault=00000000 die_fault=00000000 words_out=64 meas_lu=53 meas_ls=376 pr_overlap=0 compiled_span=444
+case qwen_layer_2x256w_argmax kind=pos latu=53 lats=376 phi=0 xu=0 xs=0 mutant=OT_TP8S_MUT_RANK FAIL (expected FAIL) mismatches=2704 extra=0 out_err=0 cmd_bad=0 coll_fault=00000000 issuer_fault=00000000 die_fault=00000000 words_out=4160 meas_lu=53 meas_ls=376 pr_overlap=0 compiled_span=1541
+COLL_TP8SL FAIL failed=qwen_argmax_1w
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-3672779-1792074265): exit 1
