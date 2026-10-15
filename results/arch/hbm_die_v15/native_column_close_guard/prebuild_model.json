@@ -1,0 +1,19 @@
+{
+  "status": "PREBUILD_CORRECTNESS_REPAIR_NOT_QUALIFIED",
+  "source_sha256": "36ab8140f3a9f14d4098729f79f5091f1e67156409997dc2d6276387a23315c8",
+  "shape": {
+    "controllers_per_stack": 32,
+    "stacks": 4,
+    "state_FF_delta": 0,
+    "SRAM_delta": 0,
+    "clock_root_delta": 0,
+    "column_mask_bits_per_PC": 32,
+    "worst_extra_bitwise_AND_sites_per_PC": 96
+  },
+  "behavior": "Block queued and streaming RD/WR to bank targeted by pending/issued PRE or REFPB, all banks for PREALL or REFAB. Existing old-open and tRCD tests retained; other banks continue. No changes to row/refresh policy or timing constants. Added combinational column guard may add issue stalls; exact latency must be measured.",
+  "throughput_limits_HBM_cycles": {
+    "640": 84.7,
+    "2048": 134.2
+  },
+  "physical": "Mapped FF/root and combinational path measurement pending; source construction is not CTS/physical admission."
+}
