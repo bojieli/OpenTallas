@@ -40,7 +40,7 @@ def port_widths(spec, root):
     widths = {}
     def find_top(n):
         if isinstance(n, dict):
-            if n.get("type") == "MODULE" and n.get("origName") == spec["top"]:
+            if n.get("type") == "MODULE" and spec["top"] in (n.get("origName"), n.get("name")):   # origName mangles "__" (___05F)
                 for st in n.get("stmtsp", []):
                     if st.get("type") == "VAR" and st.get("direction") in ("INPUT", "OUTPUT", "INOUT"):
                         dt = types.get(st.get("dtypep"), {})

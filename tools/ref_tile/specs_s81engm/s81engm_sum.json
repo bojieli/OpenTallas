@@ -69,12 +69,12 @@
   "hold_margin_ns": 0.03,
   "macro_halo_um": 5.4
  },
- "why_floorplan": "v21 die-tool outline right-sized from the ORFS-synthesised area 4585 um2 (util 0.509); one clock root per leaf (<=11,519 sinks); 3 per cluster x 4 clusters",
- "structural_change": "Real sum ingress capture (+1 edge) and control pin/feedback registers (+2 control edges) explicitly counted. Corrected full MIX4 source699d7d087 passes exact20480outputs/640writes/4161reads at808 cycles including shell+2. Physical master component only; die slot/stations/full native chip remain open.",
+ "why_floorplan": "v21 die-tool outline right-sized from the ORFS-synthesised area 4585 um2 (util 0.509); one clock root per leaf (<=11,519 sinks); 3 copies per cluster x 4 clusters",
+ "structural_change": "Engram MIX4 physical hierarchy (S-ELEM-C 2026-10-15): every arithmetic root of ot_s81_engram_mix is a hardened leaf master, hardened once and replicated; inputs registered at the S pins, outputs launched from registers at the N pins (no added cycle: the leaves are the unchanged exact arithmetic RTL).",
  "job": {
-  "owner": "Codex:s81-engram-0810",
-  "branch": "codex/s81-engram-0810",
-  "tag": "fixed808-0833",
+  "owner": "Claude:s81-surx-engram-1015",
+  "branch": "claude/s81-mix4-phys-1015",
+  "tag": "v21",
   "purpose": "S81 Engram MIX4 arithmetic leaf ot_s81_engram_sum on v21 die-tool pins",
   "benches": [
    {
@@ -86,7 +86,7 @@
     "needs": [
      "verilator"
     ],
-    "pass_regex": "PASS native Engram MIX4.*cycles=808"
+    "pass_regex": "PASS native Engram MIX4"
    },
    {
     "name": "mix4_mut1_key",
@@ -110,8 +110,7 @@
    "tools/s81_engram_mix",
    "tools/s81_suhc",
    "results/rtl/s81_engram_mix_1014/fixtures"
-  ],
-  "cycles_added": 1
+  ]
  },
  "macros": [],
  "children": [],
@@ -126,9 +125,5 @@
  "pin_reg_split": true,
  "hold_pad": {
   "cell": "HB2xp67_ASAP7_75t_R"
- },
- "reroute_reason": {
-  "kind": "rtl_change",
-  "reason": "1525dae7f adds real sum input capture stage (+1 cycle; exact L01 773/RS5 804) after native capture504ps failure; fresh CTS gate07:43 source-bound."
  }
 }

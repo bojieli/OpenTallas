@@ -1,0 +1,52 @@
+{
+ "schema": "opentallas.native_component.proof.v1",
+ "source": {
+  "prefix_candidate": "711e1aa4f",
+  "rtl": "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp4_banks.sv",
+  "sha256": "c4194e222416e1875c4ab54291bd859b2bf53bd82aaf4e4ab8ba057bc3a8d5e1"
+ },
+ "production": {
+  "main_and_mirror": true,
+  "vm_banks": 32,
+  "real_sram_macros": 128,
+  "exact_sectors_each": 2561,
+  "command_to_fence_cycles": 173,
+  "descriptor_latency": 4,
+  "compiled_pre_command_advance": 2,
+  "absolute_data_and_fence_edges": "unchanged"
+ },
+ "control_lockstep": {
+  "valid_cases": 20,
+  "invalid_cases": 11,
+  "checks": 1885,
+  "beat_comparisons": 6790
+ },
+ "semantic_mutants": [
+  "wrong drain stride cycle687 write mismatch",
+  "truncated descriptor cycle1891 control mismatch",
+  "wrong landing address cycle23 write mismatch"
+ ],
+ "arithmetic": {
+  "actual_dut_random_corner_checks": 32896,
+  "lost_subtract_carry_errors": 32896,
+  "formal": "Yosys0.9 SAT -verify -prove ok 1: SUCCESS for every 96-bit input triple; source-extracted pure function versus 32-bit a+b-c",
+  "formal_cpu_seconds": 0.43
+ },
+ "integration": {
+  "status": "OPEN candidate only, current production die still binds old DMA back",
+  "unqualified": [
+   "actual nine-root parent physical pin/PG/reach fit",
+   "related clock phase composition",
+   "full compiler DESC_LAT4 producer adoption",
+   "final TT/FF/DRC and native export"
+  ]
+ },
+ "untouched_existing_dependencies_match_main": [
+  "cursor",
+  "tb_dma_back_static",
+  "b2_swap_disp_static",
+  "b2_swap_grp_static",
+  "ot_vms_bank_static",
+  "three actual SRAM macro models"
+ ]
+}

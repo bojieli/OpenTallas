@@ -42,5 +42,36 @@ class ClusterGrant(unittest.TestCase):
  def test_tiles_still_refuse_m9(self):
   self.grant();self.s.update(kind='tile',layer_cap='M9')
   with self.assertRaises(RT.SpecError):RT.tile_cap(self.s,None)
+ def test_m6_is_stricter_without_moving_cluster_pg_or_strap(self):
+  self.s.update(signal_max_layer='M6',children=[],pg_layer='M7')
+  lc=RT.layer_contract(self.s,None)
+  self.assertEqual(lc['rlayers'],('M2','M6'))
+  self.assertEqual(lc['pg_layer'],'M7');self.assertEqual(lc['strap_layer'],'M8')
+  self.assertEqual(lc['signal_max_layer'],'M6')
+ def test_slot_ceiling_inherited_and_cannot_be_widened(self):
+  self.s.pop('signal_max_layer')
+  self.assertEqual(RT.cluster_signal_cap(self.s,dict(signal_max_layer='M6')),('M6',None))
+  self.s['signal_max_layer']='M7'
+  with self.assertRaises(RT.SpecError):RT.cluster_signal_cap(self.s,dict(signal_max_layer='M6'))
+ def test_m6_cannot_change_pg_or_allow_lower_unproven_layers(self):
+  self.s.update(signal_max_layer='M6',children=[],pg_layer='M6')
+  with self.assertRaises(RT.SpecError):RT.layer_contract(self.s,None)
+  self.s['signal_max_layer']='M5'
+  with self.assertRaises(RT.SpecError):RT.cluster_signal_cap(self.s)
+ def test_m6_requires_actual_net_type_audit_in_route_and_export(self):
+  s=RT.load_spec(str(Path(__file__).parent/'examples/nhb_pbst_ref.json'))
+  s.update(kind='cluster',children=[],pg_layer='M7',signal_max_layer='M6')
+  hooks=RT.gen_hooks(s,'kit')
+  self.assertIn('ot_ref_audit_signal_layers M6 M7',hooks['post_drt.tcl'])
+  self.assertIn('tools/ref_tile/signal_layer_audit.tcl',RT.referenced_paths(s,'kit'))
+  kit=self.root/'kit';kit.mkdir()
+  (kit/'floorplan.json').write_text(json.dumps(dict(top='actual_cluster',layer_contract=RT.layer_contract(s,None))))
+  with patch('subprocess.run') as run:
+   run.return_value.returncode=0
+   RT.export(str(self.root/'absent_route'),'kit',str(self.root/'out'),[])
+   cmd=run.call_args_list[0].args[0]
+  self.assertEqual(cmd[cmd.index('--signal-max-layer')+1],'M6')
+  self.assertEqual(cmd[cmd.index('--pg-max-layer')+1],'M7')
+  self.assertIn('--signal-audit-tcl',cmd)
 
 if __name__=='__main__':unittest.main()

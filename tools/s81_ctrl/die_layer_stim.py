@@ -285,8 +285,6 @@ def main():
                     'their chain members are aliased to the job, the SU ops with no job kind move to the behavioural port '
                     f'{SUX_PORT} (su.x) at program duration')
     ap.add_argument('--mix-snap', type=Path, help='real MIX4 operands; collapse eng.* onto one actual master command')
-    ap.add_argument('--mix-vm-banked', action='store_true', help='use descriptor payload bit18 and native VM-compatible bank-striped operand storage')
-    ap.add_argument('--mix-pin-to-pin', type=int, default=810, help='exact measured command-pin to done-pin cycles for the selected MIX4/VM composition (810 is ideal-VM component only)')
     ap.add_argument('--program-layer', default=None, help='take the stage program of this backbone layer (e.g. L0) '
                     'for --layer (its op ids renamed): a DSpark stage row (M<st>R<i>, tools/s81_ftok/mtp_golden.py) runs '
                     'on the sliding layer\'s program (window attention + MoE, the same op graph), its own chain and SU '
@@ -379,36 +377,23 @@ def main():
         assert np.array_equal(HG.u32(es['out']).reshape(-1), HG.u32(ch['h']).reshape(-1)), 'MIX oracle != HC input'
         # The producer boundary supplies K/W/V operands, never MIX result rows.
         # H is supplied only by the existing package landing producer.
-        if a.mix_vm_banked:
-            sys.path.insert(0, str(ROOT/'tools/s81_engram_mix'))
-            import vm_banked_layout as MBL
-            kb, wb, vb, db = MBL.KW_BASE, MBL.KW_BASE, MBL.V_BASE, MBL.DESC_ROW
-            operand_boot = MBL.operand_rows(HG.u32(es['key']),HG.u32(es['wgt']),HG.u32(es['value']),H_BASE)
-            assert not set(operand_boot).intersection(vm_boot), 'MIX operand band overlaps another live boot producer'
-            vm_boot.update(operand_boot)
-            boot_ok.extend(operand_boot)
-            hdesc=H_BASE|MBL.ABI_FLAG
-        else:
-            kb, wb, vb, db = 9000, 10280, 11560, 11880
-            for name, base in [('key', kb), ('wgt', wb), ('value', vb)]:
-                words = HG.u32(es[name]).reshape(-1, 16)
-                for q, row in enumerate(words):
-                    vm_boot[base + q] = HG.pack(row, 32)
-                    boot_ok.append(base + q)
-            hdesc=H_BASE
-        assert db not in vm_boot, 'MIX descriptor overlaps a live producer'
-        vm_boot[db] = HG.pack([hdesc, kb, wb, vb, H_BASE,
+        kb, wb, vb, db = 9000, 10280, 11560, 11880
+        for name, base in [('key', kb), ('wgt', wb), ('value', vb)]:
+            words = HG.u32(es[name]).reshape(-1, 16)
+            for q, row in enumerate(words):
+                vm_boot[base + q] = HG.pack(row, 32)
+                boot_ok.append(base + q)
+        vm_boot[db] = HG.pack([H_BASE, kb, wb, vb, H_BASE,
                               int(HG.u32([es['eps']])[0]), int(HG.u32([es['scale']])[0])], 32)
         boot_ok.append(db)
         sys.path.insert(0, str(ROOT/'tools/s81_static_control'))
         from program import encode_program, issuer_done_row
         # Issuer row semantics (ot_s81_fixed_issue): 'issue' is the age whose edge loads the command
         # register (command pin = issue+1); 'done' is the age whose edge samples the completion pin.
-        # The selected source/VM profile supplies its measured fixed pin-to-pin latency.
-        # Default810 is the native arithmetic endpoint with ideal VM_LAT1; a mapped-VM
-        # composition must pass its own exact calendar and supply that measured value.
-        assert a.mix_pin_to_pin>0
-        MIX_ISSUE, MIX_PIN_TO_PIN = 656, a.mix_pin_to_pin
+        # MIX4's measured command-pin -> done-pin latency is 772 (component gate), so
+        # done = issue + 1 + 772. issue+772 (=1428) misses the completion by one edge: issuer
+        # fault code 8 at stream cycle 2681 (tb_s81_engram_mix4_fixed reproduces it).
+        MIX_ISSUE, MIX_PIN_TO_PIN = 656, 772
         mix_done = issuer_done_row(MIX_ISSUE, MIX_PIN_TO_PIN)
         mc = encode_program([dict(engine=10,arg=db,issue=MIX_ISSUE,done=mix_done,pin_to_pin=MIX_PIN_TO_PIN),
                              dict(engine=15,arg=0,issue=mix_done+4,done=0)],stage=0,phase=3)
@@ -422,8 +407,6 @@ def main():
             actual_vm_scope='ideal row write consumption in this component vehicle',
             physical_clock_phase_qualified=False,full_native_qualified=False),indent=2)+'\n')
         mix_meta = dict(native_qualified=False, master='dsfd_engram_mix4_c', descriptor=db,
-                        storage_abi=('bank-striped-v1-bit18' if a.mix_vm_banked else 'historical-linear-component-only'),
-                        pin_to_pin=MIX_PIN_TO_PIN,
                         operand_sha256=HG.sha(a.mix_snap), golden_output_injection=False,
                         scope='actual arithmetic endpoint; ideal VM and fixture producers remain')
     nodes = {}
