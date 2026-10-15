@@ -1,0 +1,31 @@
+{
+  "status": "PASS actual frozen dispatch decode and golden output mask inventory",
+  "tests": 4,
+  "actual_mutants_rejected": [
+    "golden emitted mask bit flip",
+    "actual first DS R descriptor base bit flip"
+  ],
+  "golden_sector_masks_verified": 8602,
+  "source_sha256": {
+    "tools/hbm_static/su_program_inventory.py": "dbb6fe8489afb1e24a3e57234392ebbc5851fd79e7fcf1b7b305299382cc3f03",
+    "results/arch/hbm_su_f2_static_1014/program_inventory/test_inventory.py": "ada9101d7bae56a4b03ff39f581ea72686283eaed1d3e2d704d549c92d169800",
+    "results/arch/hbm_su_f2_static_1014/program_inventory/qwen.json": "d55948fc9c61b88d498b41cc42459f65d15105a35a6a4519fdba0cff1d062975",
+    "results/arch/hbm_su_f2_static_1014/program_inventory/deepseek.json": "23178cc06d36e0d17125c77facf64337cf67648574495a66bf23fcf38b9ceac2",
+    "results/arch/hbm_su_f2_static_1014/program_inventory/model.json": "e52a9ddef3304ffdcab06e06f4dbcfcc3ec51eaa28cefdf46f4fe367098d68b9",
+    "results/arch/hbm_su_f2_static_1014/program_inventory/inputs/q_s4/su_case.mem": "b6391b2471cf6d6c231481881c340c4d951d3d0e415716beaf225a5e3a80f04d",
+    "results/arch/hbm_su_f2_static_1014/program_inventory/inputs/q_s4/su_sizes.svh": "da24e492ee5b2e10d4796b9c9e6b9d77076334652f51681d4b7c9487522cfe0d",
+    "results/arch/hbm_su_f2_static_1014/program_inventory/inputs/q_s4/su_rec.mem": "116dfa4461b85c0192a5b08efc7e65555bc802b1b397b7865314aaf3caf0a44b",
+    "results/arch/hbm_su_f2_static_1014/program_inventory/inputs/q_s4/su_vme.mem": "58c008a15ac8023d2e95a221630ce0ab7a433937e48b03aa6f2b75bae2b2a6b4",
+    "results/arch/hbm_su_f2_static_1014/program_inventory/inputs/q_s4/su_price.mem": "7fc2b83036686c8b7f1b9ed6dd2e94735ffac049604aab34e99557aeb9ce157c",
+    "results/arch/hbm_su_f2_static_1014/program_inventory/inputs/q_s4/su_vmg.mem": "ddde3b2b2563246703d6b49d1094bc1ebb44b2dc100a2419ac509bba3e53c86d",
+    "results/arch/hbm_su_f2_static_1014/program_inventory/inputs/q_s4/su_prod.json": "549d995b52b22809d00e75620e7e5a9bb728563d2df3e89929a72a1828638cb9",
+    "results/arch/hbm_su_f2_static_1014/program_inventory/inputs/d_s4/su_case.mem": "87fd5d96765f4e6967193eac2b7966f5238fbc8026b01bd8aa302bc7aca996af",
+    "results/arch/hbm_su_f2_static_1014/program_inventory/inputs/d_s4/su_sizes.svh": "5f691cb0388e0815cdb05d5d4a29046d3f2310d87876f4943bf8b5bf935e2df7",
+    "results/arch/hbm_su_f2_static_1014/program_inventory/inputs/d_s4/su_rec.mem": "5628b4647e2ebab80986fac5e72c9413527ebdd40bc0222bc353c764400e1e62",
+    "results/arch/hbm_su_f2_static_1014/program_inventory/inputs/d_s4/su_vme.mem": "cf6e9a6c07dd0f537055c1a28ba9850dda795ab78057a155d50c89a6d6ca329f",
+    "results/arch/hbm_su_f2_static_1014/program_inventory/inputs/d_s4/su_price.mem": "ec9faed40dd6b425eeda3c545dceab55ca80c2bba69276cce450a625a4a50903",
+    "results/arch/hbm_su_f2_static_1014/program_inventory/inputs/d_s4/su_vmg.mem": "67a06b2394158a67c8827f923d6138d4879b972a446daebb9f6bfa367181446e",
+    "results/arch/hbm_su_f2_static_1014/program_inventory/inputs/d_s4/su_prod.json": "9f120ca03266858317b8e5799181243c4d94099bc0d742d8c1faf6c62a6fa39f"
+  },
+  "qualification": "Actual frozen record addresses only. No actual static-cycle calendar or full production-shape/native qualification. Input archive preserves frozen source bytes; original absolute source paths and hashes are retained in each inventory."
+}
