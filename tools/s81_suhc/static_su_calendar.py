@@ -78,7 +78,7 @@ def row_counts(k, count):
     return {
         'QN': (1,80,40), 'KV': (5,32,26), 'QB': (1,64*count,64*count),
         'SW': (1,128*count,64*count), 'SE': (2,16*count,16*count),
-        'SO': (5,512,128), 'GQ': (1,80,0), 'GK': (1,32,0),
+        'SO': (5,512,256), 'GQ': (1,80,0), 'GK': (1,32,0),
         'RA': (1,count,count), 'RB': (1,2*count,count),
         'QR': (5,4*count,4*count), 'RW': (1,count,1),
         'CN': (5,32,48), 'IK': (5,32,8),
