@@ -88,6 +88,8 @@ def main() -> int:
     ap.add_argument('--branch', default='claude/el1015-fill-1015')
     ap.add_argument('--tag', default='f1')
     ap.add_argument('--gen', action='store_true')
+    ap.add_argument('--alt-vlayer', action='store_true', help='N/S-face data pins alternate M3 / M5 by bit index at the '
+                    'generator coordinates (10.4 b/um/layer instead of 20.8 on M5 alone; verdict 10:00 pin_density limit 12)')
     a = ap.parse_args()
     glue_txt = Path(a.glue).read_text()
     glue_sha = hashlib.sha256(glue_txt.encode()).hexdigest()
@@ -131,6 +133,12 @@ def main() -> int:
                 x = dw - (mac['w'] - x)
             if grown == 'h' and p['face'] == 'N':
                 y = dh - (mac['h'] - y)
+            layer = p['layer']
+            bit = re.search(r'\[(\d+)\]$', p['pin'])
+            if a.alt_vlayer and p['face'] in 'NS' and bit and layer == 'M5' and int(bit.group(1)) % 2 and \
+                    re.sub(r'\[\d+\]$', '', p['pin']) not in scalar:
+                layer = 'M3'
+            p = dict(p, layer=layer)
             pname = re.sub(r'\[0\]$', '', p['pin']) if re.sub(r'\[\d+\]$', '', p['pin']) in scalar else p['pin']
             tcl.append(f'place_pin -pin_name {{{pname}}} -layer {p["layer"]} -location {{{x:.6f} {y:.6f}}} -force_to_die_boundary')
             faces.setdefault(p['face'], set()).add(re.sub(r'\[\d+\]$', '', p['pin']))
