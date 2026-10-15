@@ -29,6 +29,7 @@ def compile_stage(rows,descriptors,events,stage,phase,base=0,job_period=None):
     # timestamp+4 leaves two fixed edges beyond that action; next job must
     # leave the reader's four-row/three-edge prefetch plus status capture.
     reprime=events[-1]['timestamp']+4
+    if reprime>=1<<24:raise ValueError('actual reprime counter24 capacity')
     minimum_period=max(reprime+12, next(r['issue']for r in rows if r['engine']==15)+2)
     if job_period is None:job_period=(minimum_period+3)//4*4
     if type(job_period)is not int or job_period<minimum_period or job_period%4:

@@ -29,7 +29,7 @@ for lib in libs:
   q=re.search(r'\barea\s*:\s*([\d.]+)',body)
   if q:areas[name]=float(q[1])
 cells=collections.Counter(c['type']for c in m['cells'].values()if c['type']!='$scopeinfo');unknown={k:v for k,v in cells.items()if k not in areas}
-roots={name:port['bits'][0]for name,port in m['ports'].items()if name in ['ck','ckv']};ff=collections.Counter();unrooted=[]
+roots={name+(f'[{i}]'if len(port['bits'])>1 else''):bit for name,port in m['ports'].items()if name in ['ck','ckv','ck_ingest']for i,bit in enumerate(port['bits'])};ff=collections.Counter();unrooted=[]
 for name,c in m['cells'].items():
  if 'DFF' not in c['type']:continue
  clk=c['connections'].get('CLK',c['connections'].get('CK',[]))

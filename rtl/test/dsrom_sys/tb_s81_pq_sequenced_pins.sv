@@ -14,7 +14,7 @@ module tb_s81_pq_sequenced_pins;
  wire[291:0]hw;wire[84:0]unused_cmd[0:12];
  dsfd_host_c #(.NS(1)) host(.ck(clk),.rst(rst_n),.ckv(ckv),.rsv(rst_n),
   .f_collective(host_in),.t_collective(host_out),.f_lf(4'b0101),.t_sseq_pw(host_pw),
-  .t_pq_pw(host_pq),.t_sseq_plen(plen),.f_sseq_st(seq_status),.f_wfc_ft(4'd0),.hw(hw),.hc(9'd0));
+  .ck_ingest({2{clk}}),.t_pq_pw(host_pq),.t_sseq_plen(plen),.f_sseq_st(seq_status),.f_wfc_ft(4'd0),.hw(hw),.hc(9'd0));
  dsfd_stage_seq_static_c9 #(.NOPS(128),.STAGE(7)) seq(.ck(clk),.rst(rst_n),.ckv(ckv),.rsv(rst_n),
   .f_ks(ks),.t_kd(kit_done),.f_pw(host_pw),.f_plen(plen),.t_st(seq_status),
   .f_pq_pw(host_pq),.t_pq_desc_pw(desc),.calendar_prime(prime),.stage_start(start),

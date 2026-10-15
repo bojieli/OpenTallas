@@ -51,6 +51,7 @@ module dsfd_host_c #(parameter integer NS = 1, KVS = 1, ENG = -1, MUT = 0, PWD =
 `endif
     output reg  [35:0]         t_sseq_pw,
 `ifdef DSFD_HOST_PQ_BOOT
+    input wire [1:0] ck_ingest, // independent native host RX/core roots; same nominal stream frequency
     output reg [35:0] t_pq_pw, // CSR 0x12: same PW36 packing, routed to fixed PQ boot mailbox
 `endif
     output reg  [7:0]          t_sseq_plen,
@@ -90,8 +91,13 @@ module dsfd_host_c #(parameter integer NS = 1, KVS = 1, ENG = -1, MUT = 0, PWD =
     wire ov, owe, ocr, hf, sf; wire [31:0] oa; wire [255:0] od; wire [7:0] ack;
     wire pw_wr, pw_v, pw_ovf, pw_unf, pw_take; wire [PWW-1:0] pw_d;
     reg [1:0] pace;
-    dsfd_host_native #(.ENABLE(1), .FPIPE(2), .ENG_TRIM(1), .APIPE(2)) u_h (.rst_n(rn), .clk_h(ck[0]), .h_v(to_ing), .h_cls(hcl),
-        .h_d(hd), .h_crn(crn), .t_v(t_v), .t_d(t_d), .t_cr(tcr), .clk_i(ck[0]), .ck(ck[0]), .o_v(ov), .o_we(owe), .o_addr(oa),
+    `ifdef DSFD_HOST_PQ_BOOT
+    wire ingest_h_ck=ck_ingest[0],ingest_i_ck=ck_ingest[1];
+`else
+    wire ingest_h_ck=ck[0],ingest_i_ck=ck[0];
+`endif
+    dsfd_host_native #(.ENABLE(1), .FPIPE(2), .ENG_TRIM(1), .APIPE(2)) u_h (.rst_n(rn), .clk_h(ingest_h_ck), .h_v(to_ing), .h_cls(hcl),
+        .h_d(hd), .h_crn(crn), .t_v(t_v), .t_d(t_d), .t_cr(tcr), .clk_i(ingest_i_ck), .ck(ck[0]), .o_v(ov), .o_we(owe), .o_addr(oa),
         .o_d(od), .o_cr(ocr), .i_rv(1'b0), .i_rd(256'd0), .host_ack_n(ack), .fault(hf));
     dsfd_host_sd #(.NS(NS), .KVS(KVS), .ENG(ENG), .MUT(0)) u_sd (.ck(ck), .rst_n(rn), .o_v(ov), .o_we(owe), .o_addr(oa),
         .o_d(od), .o_cr(ocr), .hw(hw), .hc(hc), .host_ack_n(ack), .fault(sf));
