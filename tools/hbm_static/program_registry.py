@@ -20,9 +20,9 @@ def raw_control256(image):
     if contract.get('encoding') != 'raw_control256':
         raise ValueError('Target does not own native raw control256 encoding')
     profile = image.get('native_profile', 'legacy19')
-    if profile not in ('legacy19', 'slot160_21'):
+    if profile not in ('legacy19', 'slot160_21', 'slot160_21_drain5'):
         raise ValueError('Unknown actual control256 hardware profile')
-    if profile == 'slot160_21':
+    if profile in ('slot160_21', 'slot160_21_drain5'):
         contract = dict(contract, native_banks=21, capacity_cycles=2688,
                         descriptor_to_launch_min_edges=1346, native_profile=profile)
     else:
@@ -31,6 +31,8 @@ def raw_control256(image):
     start = {key: int(programme['start'][key]) for key in ('base', 'limit', 'loops')}
     if not (0 <= start['base'] < start['limit'] <= contract['capacity_cycles']):
         raise ValueError('Raw control range exceeds selected actual native-bank capacity')
+    if profile == 'slot160_21_drain5' and (start['base'] != 0 or start['limit'] != 2574):
+        raise ValueError('Whole-operation drain5 profile requires base0 and limit2574')
     if start['base'] % 2 or start['loops'] != 1:
         raise ValueError('Raw control256 requires even cycle base and loops1')
     words = {}
@@ -46,6 +48,8 @@ def raw_control256(image):
     required = set(range(start['base'], (start['limit'] + 1) // 2 * 2))
     if not required <= words.keys():
         raise ValueError('Raw control256 programme lacks a complete executing SRAM pair')
+    if profile == 'slot160_21_drain5' and any(words[pc] for pc in range(2569, 2574)):
+        raise ValueError('Whole-operation drain5 tail must contain five actual zero operations')
     return start, words, contract
 
 

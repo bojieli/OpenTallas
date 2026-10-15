@@ -72,7 +72,7 @@ def build(spec):
         if not (target in range(4) or 16 <= target <= 255):
             raise ValueError('Target is outside the actual direct-VM/extended-engine map')
         if image.get('encoding') in ('raw_control256', 'raw_engram_fetch7x32'):
-            if image.get('native_profile') == 'slot160_21' and spec.get('native_target_profiles', {}).get(str(target)) != 'slot160_21':
+            if image.get('native_profile', 'legacy19') != 'legacy19' and spec.get('native_target_profiles', {}).get(str(target)) != image['native_profile']:
                 raise ValueError('21-bank Engram image requires explicit matching hardware-target profile')
             fragment = raw_fragment(image)
             writes.extend(fragment['axi_writes'])

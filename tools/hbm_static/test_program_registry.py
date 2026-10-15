@@ -18,6 +18,17 @@ def fixture():
 
 
 class RegistryTest(unittest.TestCase):
+    def test_explicit_drain5_profile(self):
+        image = dict(target=120, encoding='raw_control256', native_profile='slot160_21_drain5',
+                     programme=dict(start=dict(base=0, limit=2574, loops=1),
+                       configuration_writes=[dict(addr=pc,data='0') for pc in range(2574)]))
+        self.assertEqual(raw_fragment(image)['launch_guard_core_edges'], 1346)
+        image['programme']['start']['limit'] = 2569
+        with self.assertRaisesRegex(ValueError, 'limit2574'): raw_fragment(image)
+        image['programme']['start']['limit'] = 2574
+        image['programme']['configuration_writes'][2570]['data'] = '1'
+        with self.assertRaisesRegex(ValueError, 'five actual zero'): raw_fragment(image)
+
     def test_collision_and_unallocated(self):
         self.assertEqual(target_contract(56)['owner'], 'COLL bridge49')
         self.assertEqual(target_contract(52)['payload_bits'], 1536)
