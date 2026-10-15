@@ -1,0 +1,6 @@
+FOLDED_LEAF MUTANT REJECTED mutant=2 fault=1 cycle=248
+- /tmp/sm-fold-leaf-eb63f6a15/rtl/test/hbm_accel/sm_attn/tb_hbm_sm_folded_leaf.sv:59: Verilog $finish
+[255000] %Fatal: tb_hbm_sm_folded_leaf.sv:73: Assertion failed in tb_hbm_sm_folded_leaf.unnamedblk2.unnamedblk3.unnamedblk4: FOLDED_LEAF expected16 words got0 col0 row0
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 255ns; walltime 0.008 s; speed 31.128 us/s
+- Verilator: cpu 0.008 s on 1 threads; allocated 9 MB
