@@ -158,8 +158,22 @@
     "branch": "codex/hbm-hard-physical-1015",
     "tag": "r2",
     "purpose": "Structural +2-edge actualregisteredSIDEfaces; native6 originalfailedsharedrawIO domainownership. Characterizebeforefullheadcalendar adoption.",
-    "benches": [],
-    "extra_paths": []
+    "benches": [
+      {
+        "name": "registered_faces_shifted_golden_mutants",
+        "cmd": "OUT={RUN}/native6r2a bash tools/hgi_unit_tput/run_sfu_side_native6r2a.sh",
+        "expect": "pass",
+        "pass_regex": "PASS native6r2a EDGE mutant rejected",
+        "threads": 4,
+        "peak_ram_gb": 8
+      }
+    ],
+    "extra_paths": [
+      "rtl/hdc/v41x/ot_hdc_v41x_vec_side.sv",
+      "rtl/test/hbm_accel/generic/tb_hbm_su_static_side_native6r2a.sv",
+      "results/rtl/hbm_sfu_native6_1015",
+      "tools/hgi_unit_tput/run_sfu_side_native6r2a.sh"
+    ]
   },
   "clock_data_paths": "related_same_frequency",
   "clock_relationship": {
