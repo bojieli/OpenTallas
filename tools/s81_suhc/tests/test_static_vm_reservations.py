@@ -56,6 +56,12 @@ class FixedScheduleTests(unittest.TestCase):
     def test_provisional_latencies_are_incomplete(self):
         self.contract['measured_native_bounds']=False
         self.assertEqual(m.check(self.schedule,self.contract)['status'],'incomplete')
+    def test_missing_producer_done_is_not_qualified(self):
+        self.schedule["jobs"] = self.schedule["jobs"][1:]
+        self.assertIn("missing_producer_done",self.kinds())
+    def test_invalid_capacity_is_rejected(self):
+        self.contract["banks"]=0
+        self.assertIn("invalid_contract",self.kinds())
     def test_issue_only_trace_does_not_prove_reservations(self):
         del self.schedule['events'][1]['service_cycle']
         self.assertIn('missing_reservation',self.kinds())
