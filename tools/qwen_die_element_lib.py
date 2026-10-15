@@ -83,7 +83,7 @@ def stub_dirs(path):
         if m and cur is not None:
             cur[m.group(3)] = [m.group(1), int(m.group(2)) + 1, set()]
             continue
-        m = re.search(r'assign (\w+)\[(\d+):(\d+)\] = r_', ln)
+        m = re.search(r'assign (\w+) ?\[(\d+):(\d+)\] = r_', ln)   # main 10-14: die_top_lint writes 'p [h:l]'
         if m and cur is not None and m.group(1) in cur:
             cur[m.group(1)][2].update(range(int(m.group(3)), int(m.group(2)) + 1))
     return mods
