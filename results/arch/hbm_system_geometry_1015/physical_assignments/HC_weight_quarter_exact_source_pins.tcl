@@ -288,7 +288,7 @@ set hbm_geometry_pin_requests {
   {expected_quarter_id[1] N M5 99.576 194.4}
   {read_v N M5 100.44 194.4}
   {read_slot N M5 101.304 194.4}
-  {read_row[0] N M5 102.168 194.4}
+  {read_row[0] N M5 102.6 194.4}
   {read_row[1] N M5 103.032 194.4}
   {read_row[2] N M5 103.896 194.4}
   {read_row[3] N M5 104.76 194.4}

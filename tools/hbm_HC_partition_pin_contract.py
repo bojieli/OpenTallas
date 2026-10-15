@@ -25,14 +25,28 @@ def generate(name,c):
     k=data_names.index(pin);pitch=.192 if face in ['W','E'] and name!='HC_control_exact_source' else .864
     edge=height if face in ['W','E'] else width
     along=(edge-pitch*(len(data_names)-1))/2+pitch*k
+   if name=='HC_weight_quarter_exact_source' and pin=='read_row[0]':along=102.600
    xy=[0 if face=='W' else width,along] if face in ['W','E'] else [along,0 if face=='S' else height]
    rows.append(dict(port_bit=pin,face=face,layer='M4'if face in ['W','E']else'M5',requested_x_um=round(xy[0],6),requested_y_um=round(xy[1],6)))
+ # Tech-preview check only: actual ODB PG/track audit remains authoritative.
+ preview={}
+ for face in c['faces']:
+  snapped=[]
+  for r in rows:
+   if r['face']!=face:continue
+   value=r['requested_y_um'] if face in ['W','E'] else r['requested_x_um']
+   site=.012+.048*round((value-.012)/.048)
+   assert abs(site-value)<=.024+1e-9,(name,r)
+   snapped.append((site,r['port_bit']))
+  snapped.sort()
+  for a,b in zip(snapped,snapped[1:]):assert b[0]-a[0]>=.096-1e-9,(name,face,a,b)
+  preview[face]={'track_pitch_um':.048,'track_offset_um':.012,'minimum_nearest_site_spacing_um':round(min((b[0]-a[0] for a,b in zip(snapped,snapped[1:])),default=0),6),'actual_ODB_readback_required':True}
  with (OUT/(name+'.tsv')).open('w')as f:
   w=csv.DictWriter(f,fieldnames=list(rows[0]),delimiter='\t');w.writeheader();w.writerows(rows)
  tcl=['# Source-bound REQUESTED pins only. Read actual outline/tracks/PG before placement.',f'# sourceSHA256 {m["source_sha256"]}',f'set hbm_geometry_requested_outline {{{width} {height}}}','set hbm_geometry_requires_actual_outline_track_PG_readback 1','set hbm_geometry_pin_requests {']
  tcl += ['  {'+' '.join(str(r[k])for k in ['port_bit','face','layer','requested_x_um','requested_y_um'])+'}'for r in rows];tcl.append('}')
  (OUT/(name+'_pins.tcl')).write_text('\n'.join(tcl)+'\n')
- d=dict(status='SOURCE_BOUND_INDEPENDENT_PROTOTYPE_SOURCE_PROOF_PASS_PHYSICAL_PENDING',source_commit='473756fb3',source=str(src),source_sha256=m['source_sha256'],master=c['top'],actual_ports=m['ports'],outline_um=c['size'],exact_requested=True,permitted_platform_snap='record actual dimensions and rederive edge pin coordinates; requested pins are not actual coordinates',orientation='R0',face_bits=counts,literal_bits=sum(counts.values()),source_proc_opt_FF=c['FF'],mapped_FF=None,macro_clock_pins=len(c['macros']),source_clock_endpoints=c['FF']+len(c['macros']),roots=1,clock_period_ps=833.333333,macros=c['macros'],minimum_core_macro_channel_um=20,latency=c['latency'],requested_pins=rows,actual_pin_rectangles=None,above_pin_keepout_required=True,cut_limit=.60,adoption_allowed=False,whole_engine_minimum_roots=92,root_count_scope='88bankMAC/memory/control roots +4globals; excludes commonPC/prefetch HBM domain partitions and fullnativejoin',whole_engine_arithmetic_SRAMs=80,whole_engine_composition_qualified=False,remaining=['actual source-specific mappedclock census','exact fixedFF/macro halo/PG/track readback','nativephi-R/spread/slew/setup/hold','actual route DRC0','MACsum exact ETMmax406.491um','globalAP/control/response wiring andcalendar'])
+ d=dict(status='SOURCE_BOUND_INDEPENDENT_PROTOTYPE_SOURCE_PROOF_PASS_PHYSICAL_PENDING',source_commit='473756fb3',source=str(src),source_sha256=m['source_sha256'],master=c['top'],actual_ports=m['ports'],outline_um=c['size'],exact_requested=True,permitted_platform_snap='record actual dimensions and rederive edge pin coordinates; requested pins are not actual coordinates',orientation='R0',face_bits=counts,literal_bits=sum(counts.values()),source_proc_opt_FF=c['FF'],mapped_FF=None,macro_clock_pins=len(c['macros']),source_clock_endpoints=c['FF']+len(c['macros']),roots=1,clock_period_ps=833.333333,macros=c['macros'],minimum_core_macro_channel_um=20,latency=c['latency'],requested_pins=rows,nearest_track_collision_preflight=preview,actual_pin_rectangles=None,above_pin_keepout_required=True,cut_limit=.60,adoption_allowed=False,whole_engine_minimum_roots=92,root_count_scope='88bankMAC/memory/control roots +4globals; excludes commonPC/prefetch HBM domain partitions and fullnativejoin',whole_engine_arithmetic_SRAMs=80,whole_engine_composition_qualified=False,remaining=['actual source-specific mappedclock census','exact fixedFF/macro halo/PG/track readback','nativephi-R/spread/slew/setup/hold','actual route DRC0','MACsum exact ETMmax406.491um','globalAP/control/response wiring andcalendar'])
  (OUT/(name+'.json')).write_text(json.dumps(d,indent=2)+'\n');return name,counts,m['source_sha256']
 if __name__=='__main__':
  for name,c in CONFIG.items():print(generate(name,c))

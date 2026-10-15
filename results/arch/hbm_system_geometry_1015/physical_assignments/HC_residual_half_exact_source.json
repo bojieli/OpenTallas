@@ -3849,6 +3849,26 @@
       "requested_y_um": 121.872
     }
   ],
+  "nearest_track_collision_preflight": {
+    "W": {
+      "track_pitch_um": 0.048,
+      "track_offset_um": 0.012,
+      "minimum_nearest_site_spacing_um": 0.192,
+      "actual_ODB_readback_required": true
+    },
+    "N": {
+      "track_pitch_um": 0.048,
+      "track_offset_um": 0.012,
+      "minimum_nearest_site_spacing_um": 0.432,
+      "actual_ODB_readback_required": true
+    },
+    "E": {
+      "track_pitch_um": 0.048,
+      "track_offset_um": 0.012,
+      "minimum_nearest_site_spacing_um": 0.192,
+      "actual_ODB_readback_required": true
+    }
+  },
   "actual_pin_rectangles": null,
   "above_pin_keepout_required": true,
   "cut_limit": 0.6,
