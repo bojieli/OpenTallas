@@ -5,7 +5,7 @@
 // Compiler owns incoming32-record packet and bank reservations. Serial clients
 // need explicit fixed-ratio ingress, not a credit adapter hidden in this parent.
 module dsfd_vm_static_slice128_suhc(
- input wire ck_rscatter,ck_wscatter,input wire [31:0] ck_bank,input wire rst_n,
+ input wire ck_rscatter,input wire [3:0] ck_wscatter,input wire [31:0] ck_bank,input wire rst_n,
  input wire [11:0] ck_relay_req,ck_relay_rsp,
  input wire [17:0] native_rq_v,input wire [251:0] native_rq_row,input wire [89:0] native_rq_slot,
  input wire [2:0] native_rq_group,input wire [11:0] aux_rq_v,input wire [167:0] aux_rq_row,
@@ -20,9 +20,21 @@ module dsfd_vm_static_slice128_suhc(
  dsfd_vm_static_suhc_fsr u_r(.ck(ck_rscatter),.rst_n(rst_n),.i_v(native_rq_v),.i_row(native_rq_row),
  .i_slot(native_rq_slot),.i_group(native_rq_group),.i_aux_v(aux_rq_v),.i_aux_row(aux_rq_row),
  .o_v(rv),.o_addr(ra),.o_tag(rt),.fault(fault[0]));
- dsfd_vm_static_scatter u_w(.ck(ck_wscatter),.rst_n(rst_n),.i_v(wq_v),.i_we(wq_v),
- .i_row(wq_row),.i_mask(wq_mask),.i_data(wq_data),.i_tag(wq_tag),
- .o_v(wv),.o_we(we),.o_addr(wa),.o_mask(wm),.o_data(wd),.o_tag(wt),.fault(fault[1]));
+ wire [3:0] wfault;
+ assign fault[1]=|wfault;
+ genvar l,k;
+ generate for(l=0;l<4;l=l+1)begin:write_lane
+  wire [7:0] lv,lwe;wire [71:0] la;wire [31:0] lm;wire [1023:0] ld;wire [63:0] lt;
+  dsfd_vm_static_scatter_lane #(.LANE(l)) u_w(.ck(ck_wscatter[l]),.rst_n(rst_n),
+   .i_v(wq_v[8*l+:8]),.i_we(wq_v[8*l+:8]),.i_row(wq_row[112*l+:112]),
+   .i_mask(wq_mask[32*l+:32]),.i_data(wq_data[1024*l+:1024]),.i_tag(wq_tag[64*l+:64]),
+   .o_v(lv),.o_we(lwe),.o_addr(la),.o_mask(lm),.o_data(ld),.o_tag(lt),.fault(wfault[l]));
+  for(k=0;k<8;k=k+1)begin:bank_outputs
+   assign wv[4*k+l]=lv[k];assign we[4*k+l]=lwe[k];
+   assign wa[9*(4*k+l)+:9]=la[9*k+:9];assign wm[4*(4*k+l)+:4]=lm[4*k+:4];
+   assign wd[128*(4*k+l)+:128]=ld[128*k+:128];assign wt[8*(4*k+l)+:8]=lt[8*k+:8];
+  end
+ end endgenerate
  wire [31:0] ar,aw,br,bw,sv,cv,asv,acv;
  wire [287:0] ara,awa,bra,bwa,ca,aca;
  wire [255:0] art,awt,brt,bwt,st,ct,ast,act;

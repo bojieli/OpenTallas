@@ -1,0 +1,661 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2025  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.52 (git sha1 fee39a3284c90249e1d9684cf6944ffbbcbb8f90)
+
+-- Executing script file `/srv/opentallas-scratch/codex-s81-vm-transport-sizing-1015/b4_map1/map.ys' --
+
+1. Executing Verilog-2005 frontend: /srv/opentallas-scratch/codex-s81-vm-transport-sizing-1015/rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_relay128.sv
+Parsing SystemVerilog input from `/srv/opentallas-scratch/codex-s81-vm-transport-sizing-1015/rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_relay128.sv' to AST representation.
+Generating RTLIL representation for module `\dsfd_vm_static_relay128'.
+Successfully finished Verilog frontend.
+
+2. Executing Verilog-2005 frontend: /srv/opentallas-scratch/codex-s81-vm-transport-sizing-1015/rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_relay128_b4.sv
+Parsing SystemVerilog input from `/srv/opentallas-scratch/codex-s81-vm-transport-sizing-1015/rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_relay128_b4.sv' to AST representation.
+Generating RTLIL representation for module `\dsfd_vm_static_relay128_b4'.
+Successfully finished Verilog frontend.
+
+3. Executing Verilog-2005 frontend: /srv/opentallas-scratch/codex-s81-vm-transport-sizing-1015/rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_relay128_b8.sv
+Parsing SystemVerilog input from `/srv/opentallas-scratch/codex-s81-vm-transport-sizing-1015/rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_relay128_b8.sv' to AST representation.
+Generating RTLIL representation for module `\dsfd_vm_static_relay128_b8'.
+Successfully finished Verilog frontend.
+
+4. Executing Verilog-2005 frontend: /srv/opentallas-scratch/codex-s81-vm-transport-sizing-1015/rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_relay128_b16.sv
+Parsing SystemVerilog input from `/srv/opentallas-scratch/codex-s81-vm-transport-sizing-1015/rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_relay128_b16.sv' to AST representation.
+Generating RTLIL representation for module `\dsfd_vm_static_relay128_b16'.
+Successfully finished Verilog frontend.
+
+5. Executing HIERARCHY pass (managing design hierarchy).
+
+5.1. Analyzing design hierarchy..
+Top module:  \dsfd_vm_static_relay128_b4
+Used module:     \dsfd_vm_static_relay128
+Parameter \NBANK = 4
+
+5.2. Executing AST frontend in derive mode using pre-parsed AST for module `\dsfd_vm_static_relay128'.
+Parameter \NBANK = 4
+Generating RTLIL representation for module `$paramod\dsfd_vm_static_relay128\NBANK=s32'00000000000000000000000000000100'.
+
+5.3. Analyzing design hierarchy..
+Top module:  \dsfd_vm_static_relay128_b4
+Used module:     $paramod\dsfd_vm_static_relay128\NBANK=s32'00000000000000000000000000000100
+
+5.4. Analyzing design hierarchy..
+Top module:  \dsfd_vm_static_relay128_b4
+Used module:     $paramod\dsfd_vm_static_relay128\NBANK=s32'00000000000000000000000000000100
+Removing unused module `\dsfd_vm_static_relay128_b16'.
+Removing unused module `\dsfd_vm_static_relay128_b8'.
+Removing unused module `\dsfd_vm_static_relay128'.
+Removed 3 unused modules.
+
+6. Executing SYNTH pass.
+
+6.1. Executing HIERARCHY pass (managing design hierarchy).
+
+6.1.1. Analyzing design hierarchy..
+Top module:  \dsfd_vm_static_relay128_b4
+Used module:     $paramod\dsfd_vm_static_relay128\NBANK=s32'00000000000000000000000000000100
+
+6.1.2. Analyzing design hierarchy..
+Top module:  \dsfd_vm_static_relay128_b4
+Used module:     $paramod\dsfd_vm_static_relay128\NBANK=s32'00000000000000000000000000000100
+Removed 0 unused modules.
+
+6.2. Executing PROC pass (convert processes to netlists).
+
+6.2.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+6.2.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Marked 1 switch rules as full_case in process $proc$/srv/opentallas-scratch/codex-s81-vm-transport-sizing-1015/rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_relay128.sv:28$18 in module $paramod\dsfd_vm_static_relay128\NBANK=s32'00000000000000000000000000000100.
+Marked 1 switch rules as full_case in process $proc$/srv/opentallas-scratch/codex-s81-vm-transport-sizing-1015/rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_relay128.sv:25$15 in module $paramod\dsfd_vm_static_relay128\NBANK=s32'00000000000000000000000000000100.
+Marked 1 switch rules as full_case in process $proc$/srv/opentallas-scratch/codex-s81-vm-transport-sizing-1015/rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_relay128.sv:24$13 in module $paramod\dsfd_vm_static_relay128\NBANK=s32'00000000000000000000000000000100.
+Marked 1 switch rules as full_case in process $proc$/srv/opentallas-scratch/codex-s81-vm-transport-sizing-1015/rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_relay128.sv:23$11 in module $paramod\dsfd_vm_static_relay128\NBANK=s32'00000000000000000000000000000100.
+Removed a total of 0 dead cases.
+
+6.2.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 6 redundant assignments.
+Promoted 11 assignments to connections.
+
+6.2.4. Executing PROC_INIT pass (extract init attributes).
+
+6.2.5. Executing PROC_ARST pass (detect async resets in processes).
+Found async reset \sr [1] in `$paramod\dsfd_vm_static_relay128\NBANK=s32'00000000000000000000000000000100.$proc$/srv/opentallas-scratch/codex-s81-vm-transport-sizing-1015/rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_relay128.sv:28$18'.
+Found async reset \rr [1] in `$paramod\dsfd_vm_static_relay128\NBANK=s32'00000000000000000000000000000100.$proc$/srv/opentallas-scratch/codex-s81-vm-transport-sizing-1015/rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_relay128.sv:25$15'.
+Found async reset \rst_n in `$paramod\dsfd_vm_static_relay128\NBANK=s32'00000000000000000000000000000100.$proc$/srv/opentallas-scratch/codex-s81-vm-transport-sizing-1015/rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_relay128.sv:24$13'.
+Found async reset \rst_n in `$paramod\dsfd_vm_static_relay128\NBANK=s32'00000000000000000000000000000100.$proc$/srv/opentallas-scratch/codex-s81-vm-transport-sizing-1015/rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_relay128.sv:23$11'.
+
+6.2.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+
+6.2.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `$paramod\dsfd_vm_static_relay128\NBANK=s32'00000000000000000000000000000100.$proc$/srv/opentallas-scratch/codex-s81-vm-transport-sizing-1015/rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_relay128.sv:30$20'.
+Creating decoders for process `$paramod\dsfd_vm_static_relay128\NBANK=s32'00000000000000000000000000000100.$proc$/srv/opentallas-scratch/codex-s81-vm-transport-sizing-1015/rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_relay128.sv:28$18'.
+     1/2: $0\o_cv[3:0]
+     2/2: $0\o_sv[3:0]
+Creating decoders for process `$paramod\dsfd_vm_static_relay128\NBANK=s32'00000000000000000000000000000100.$proc$/srv/opentallas-scratch/codex-s81-vm-transport-sizing-1015/rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_relay128.sv:27$17'.
+Creating decoders for process `$paramod\dsfd_vm_static_relay128\NBANK=s32'00000000000000000000000000000100.$proc$/srv/opentallas-scratch/codex-s81-vm-transport-sizing-1015/rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_relay128.sv:25$15'.
+     1/2: $0\o_wv[3:0]
+     2/2: $0\o_rv[3:0]
+Creating decoders for process `$paramod\dsfd_vm_static_relay128\NBANK=s32'00000000000000000000000000000100.$proc$/srv/opentallas-scratch/codex-s81-vm-transport-sizing-1015/rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_relay128.sv:24$13'.
+     1/1: $0\sr[1:0]
+Creating decoders for process `$paramod\dsfd_vm_static_relay128\NBANK=s32'00000000000000000000000000000100.$proc$/srv/opentallas-scratch/codex-s81-vm-transport-sizing-1015/rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_relay128.sv:23$11'.
+     1/1: $0\rr[1:0]
+
+6.2.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+
+6.2.9. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `$paramod\dsfd_vm_static_relay128\NBANK=s32'00000000000000000000000000000100.\o_sd' using process `$paramod\dsfd_vm_static_relay128\NBANK=s32'00000000000000000000000000000100.$proc$/srv/opentallas-scratch/codex-s81-vm-transport-sizing-1015/rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_relay128.sv:30$20'.
+  created $dff cell `$procdff$21' with positive edge clock.
+Creating register for signal `$paramod\dsfd_vm_static_relay128\NBANK=s32'00000000000000000000000000000100.\o_st' using process `$paramod\dsfd_vm_static_relay128\NBANK=s32'00000000000000000000000000000100.$proc$/srv/opentallas-scratch/codex-s81-vm-transport-sizing-1015/rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_relay128.sv:30$20'.
+  created $dff cell `$procdff$22' with positive edge clock.
+Creating register for signal `$paramod\dsfd_vm_static_relay128\NBANK=s32'00000000000000000000000000000100.\o_ct' using process `$paramod\dsfd_vm_static_relay128\NBANK=s32'00000000000000000000000000000100.$proc$/srv/opentallas-scratch/codex-s81-vm-transport-sizing-1015/rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_relay128.sv:30$20'.
+  created $dff cell `$procdff$23' with positive edge clock.
+Creating register for signal `$paramod\dsfd_vm_static_relay128\NBANK=s32'00000000000000000000000000000100.\o_ca' using process `$paramod\dsfd_vm_static_relay128\NBANK=s32'00000000000000000000000000000100.$proc$/srv/opentallas-scratch/codex-s81-vm-transport-sizing-1015/rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_relay128.sv:30$20'.
+  created $dff cell `$procdff$24' with positive edge clock.
+Creating register for signal `$paramod\dsfd_vm_static_relay128\NBANK=s32'00000000000000000000000000000100.\o_cm' using process `$paramod\dsfd_vm_static_relay128\NBANK=s32'00000000000000000000000000000100.$proc$/srv/opentallas-scratch/codex-s81-vm-transport-sizing-1015/rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_relay128.sv:30$20'.
+  created $dff cell `$procdff$25' with positive edge clock.
+Creating register for signal `$paramod\dsfd_vm_static_relay128\NBANK=s32'00000000000000000000000000000100.\o_sv' using process `$paramod\dsfd_vm_static_relay128\NBANK=s32'00000000000000000000000000000100.$proc$/srv/opentallas-scratch/codex-s81-vm-transport-sizing-1015/rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_relay128.sv:28$18'.
+  created $adff cell `$procdff$30' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\dsfd_vm_static_relay128\NBANK=s32'00000000000000000000000000000100.\o_cv' using process `$paramod\dsfd_vm_static_relay128\NBANK=s32'00000000000000000000000000000100.$proc$/srv/opentallas-scratch/codex-s81-vm-transport-sizing-1015/rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_relay128.sv:28$18'.
+  created $adff cell `$procdff$35' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\dsfd_vm_static_relay128\NBANK=s32'00000000000000000000000000000100.\o_ra' using process `$paramod\dsfd_vm_static_relay128\NBANK=s32'00000000000000000000000000000100.$proc$/srv/opentallas-scratch/codex-s81-vm-transport-sizing-1015/rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_relay128.sv:27$17'.
+  created $dff cell `$procdff$36' with positive edge clock.
+Creating register for signal `$paramod\dsfd_vm_static_relay128\NBANK=s32'00000000000000000000000000000100.\o_wa' using process `$paramod\dsfd_vm_static_relay128\NBANK=s32'00000000000000000000000000000100.$proc$/srv/opentallas-scratch/codex-s81-vm-transport-sizing-1015/rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_relay128.sv:27$17'.
+  created $dff cell `$procdff$37' with positive edge clock.
+Creating register for signal `$paramod\dsfd_vm_static_relay128\NBANK=s32'00000000000000000000000000000100.\o_rt' using process `$paramod\dsfd_vm_static_relay128\NBANK=s32'00000000000000000000000000000100.$proc$/srv/opentallas-scratch/codex-s81-vm-transport-sizing-1015/rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_relay128.sv:27$17'.
+  created $dff cell `$procdff$38' with positive edge clock.
+Creating register for signal `$paramod\dsfd_vm_static_relay128\NBANK=s32'00000000000000000000000000000100.\o_wt' using process `$paramod\dsfd_vm_static_relay128\NBANK=s32'00000000000000000000000000000100.$proc$/srv/opentallas-scratch/codex-s81-vm-transport-sizing-1015/rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_relay128.sv:27$17'.
+  created $dff cell `$procdff$39' with positive edge clock.
+Creating register for signal `$paramod\dsfd_vm_static_relay128\NBANK=s32'00000000000000000000000000000100.\o_wm' using process `$paramod\dsfd_vm_static_relay128\NBANK=s32'00000000000000000000000000000100.$proc$/srv/opentallas-scratch/codex-s81-vm-transport-sizing-1015/rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_relay128.sv:27$17'.
+  created $dff cell `$procdff$40' with positive edge clock.
+Creating register for signal `$paramod\dsfd_vm_static_relay128\NBANK=s32'00000000000000000000000000000100.\o_wd' using process `$paramod\dsfd_vm_static_relay128\NBANK=s32'00000000000000000000000000000100.$proc$/srv/opentallas-scratch/codex-s81-vm-transport-sizing-1015/rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_relay128.sv:27$17'.
+  created $dff cell `$procdff$41' with positive edge clock.
+Creating register for signal `$paramod\dsfd_vm_static_relay128\NBANK=s32'00000000000000000000000000000100.\o_rv' using process `$paramod\dsfd_vm_static_relay128\NBANK=s32'00000000000000000000000000000100.$proc$/srv/opentallas-scratch/codex-s81-vm-transport-sizing-1015/rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_relay128.sv:25$15'.
+  created $adff cell `$procdff$46' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\dsfd_vm_static_relay128\NBANK=s32'00000000000000000000000000000100.\o_wv' using process `$paramod\dsfd_vm_static_relay128\NBANK=s32'00000000000000000000000000000100.$proc$/srv/opentallas-scratch/codex-s81-vm-transport-sizing-1015/rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_relay128.sv:25$15'.
+  created $adff cell `$procdff$51' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\dsfd_vm_static_relay128\NBANK=s32'00000000000000000000000000000100.\sr' using process `$paramod\dsfd_vm_static_relay128\NBANK=s32'00000000000000000000000000000100.$proc$/srv/opentallas-scratch/codex-s81-vm-transport-sizing-1015/rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_relay128.sv:24$13'.
+  created $adff cell `$procdff$56' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\dsfd_vm_static_relay128\NBANK=s32'00000000000000000000000000000100.\rr' using process `$paramod\dsfd_vm_static_relay128\NBANK=s32'00000000000000000000000000000100.$proc$/srv/opentallas-scratch/codex-s81-vm-transport-sizing-1015/rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_relay128.sv:23$11'.
+  created $adff cell `$procdff$61' with positive edge clock and positive level reset.
+
+6.2.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+6.2.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Removing empty process `$paramod\dsfd_vm_static_relay128\NBANK=s32'00000000000000000000000000000100.$proc$/srv/opentallas-scratch/codex-s81-vm-transport-sizing-1015/rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_relay128.sv:30$20'.
+Removing empty process `$paramod\dsfd_vm_static_relay128\NBANK=s32'00000000000000000000000000000100.$proc$/srv/opentallas-scratch/codex-s81-vm-transport-sizing-1015/rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_relay128.sv:28$18'.
+Removing empty process `$paramod\dsfd_vm_static_relay128\NBANK=s32'00000000000000000000000000000100.$proc$/srv/opentallas-scratch/codex-s81-vm-transport-sizing-1015/rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_relay128.sv:27$17'.
+Removing empty process `$paramod\dsfd_vm_static_relay128\NBANK=s32'00000000000000000000000000000100.$proc$/srv/opentallas-scratch/codex-s81-vm-transport-sizing-1015/rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_relay128.sv:25$15'.
+Removing empty process `$paramod\dsfd_vm_static_relay128\NBANK=s32'00000000000000000000000000000100.$proc$/srv/opentallas-scratch/codex-s81-vm-transport-sizing-1015/rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_relay128.sv:24$13'.
+Removing empty process `$paramod\dsfd_vm_static_relay128\NBANK=s32'00000000000000000000000000000100.$proc$/srv/opentallas-scratch/codex-s81-vm-transport-sizing-1015/rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_relay128.sv:23$11'.
+Cleaned up 0 empty switches.
+
+6.2.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module dsfd_vm_static_relay128_b4.
+Optimizing module $paramod\dsfd_vm_static_relay128\NBANK=s32'00000000000000000000000000000100.
+<suppressed ~12 debug messages>
+
+6.3. Executing FLATTEN pass (flatten design).
+Deleting now unused module $paramod\dsfd_vm_static_relay128\NBANK=s32'00000000000000000000000000000100.
+<suppressed ~1 debug messages>
+
+6.4. Executing OPT_EXPR pass (perform const folding).
+Optimizing module dsfd_vm_static_relay128_b4.
+
+6.5. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \dsfd_vm_static_relay128_b4..
+Removed 10 unused cells and 33 unused wires.
+<suppressed ~11 debug messages>
+
+6.6. Executing CHECK pass (checking for obvious problems).
+Checking module dsfd_vm_static_relay128_b4...
+Found and reported 0 problems.
+
+6.7. Executing OPT pass (performing simple optimizations).
+
+6.7.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module dsfd_vm_static_relay128_b4.
+
+6.7.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\dsfd_vm_static_relay128_b4'.
+Removed a total of 0 cells.
+
+6.7.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \dsfd_vm_static_relay128_b4..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Removed 0 multiplexer ports.
+
+6.7.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \dsfd_vm_static_relay128_b4.
+Performed a total of 0 changes.
+
+6.7.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\dsfd_vm_static_relay128_b4'.
+Removed a total of 0 cells.
+
+6.7.6. Executing OPT_DFF pass (perform DFF optimizations).
+
+6.7.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \dsfd_vm_static_relay128_b4..
+
+6.7.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module dsfd_vm_static_relay128_b4.
+
+6.7.9. Finished OPT passes. (There is nothing left to do.)
+
+6.8. Executing FSM pass (extract and optimize FSM).
+
+6.8.1. Executing FSM_DETECT pass (finding FSMs in design).
+
+6.8.2. Executing FSM_EXTRACT pass (extracting FSM from design).
+
+6.8.3. Executing FSM_OPT pass (simple optimizations of FSMs).
+
+6.8.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \dsfd_vm_static_relay128_b4..
+
+6.8.5. Executing FSM_OPT pass (simple optimizations of FSMs).
+
+6.8.6. Executing FSM_RECODE pass (re-assigning FSM state encoding).
+
+6.8.7. Executing FSM_INFO pass (dumping all available information on FSM cells).
+
+6.8.8. Executing FSM_MAP pass (mapping FSMs to basic logic).
+
+6.9. Executing OPT pass (performing simple optimizations).
+
+6.9.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module dsfd_vm_static_relay128_b4.
+
+6.9.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\dsfd_vm_static_relay128_b4'.
+Removed a total of 0 cells.
+
+6.9.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \dsfd_vm_static_relay128_b4..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Removed 0 multiplexer ports.
+
+6.9.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \dsfd_vm_static_relay128_b4.
+Performed a total of 0 changes.
+
+6.9.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\dsfd_vm_static_relay128_b4'.
+Removed a total of 0 cells.
+
+6.9.6. Executing OPT_DFF pass (perform DFF optimizations).
+
+6.9.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \dsfd_vm_static_relay128_b4..
+
+6.9.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module dsfd_vm_static_relay128_b4.
+
+6.9.9. Finished OPT passes. (There is nothing left to do.)
+
+6.10. Executing WREDUCE pass (reducing word size of cells).
+
+6.11. Executing PEEPOPT pass (run peephole optimizers).
+
+6.12. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \dsfd_vm_static_relay128_b4..
+
+6.13. Executing ALUMACC pass (create $alu and $macc cells).
+Extracting $alu and $macc cells in module dsfd_vm_static_relay128_b4:
+  created 0 $alu and 0 $macc cells.
+
+6.14. Executing SHARE pass (SAT-based resource sharing).
+
+6.15. Executing OPT pass (performing simple optimizations).
+
+6.15.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module dsfd_vm_static_relay128_b4.
+
+6.15.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\dsfd_vm_static_relay128_b4'.
+Removed a total of 0 cells.
+
+6.15.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \dsfd_vm_static_relay128_b4..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Removed 0 multiplexer ports.
+
+6.15.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \dsfd_vm_static_relay128_b4.
+Performed a total of 0 changes.
+
+6.15.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\dsfd_vm_static_relay128_b4'.
+Removed a total of 0 cells.
+
+6.15.6. Executing OPT_DFF pass (perform DFF optimizations).
+
+6.15.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \dsfd_vm_static_relay128_b4..
+
+6.15.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module dsfd_vm_static_relay128_b4.
+
+6.15.9. Finished OPT passes. (There is nothing left to do.)
+
+6.16. Executing MEMORY pass.
+
+6.16.1. Executing OPT_MEM pass (optimize memories).
+Performed a total of 0 transformations.
+
+6.16.2. Executing OPT_MEM_PRIORITY pass (removing unnecessary memory write priority relations).
+Performed a total of 0 transformations.
+
+6.16.3. Executing OPT_MEM_FEEDBACK pass (finding memory read-to-write feedback paths).
+
+6.16.4. Executing MEMORY_BMUX2ROM pass (converting muxes to ROMs).
+
+6.16.5. Executing MEMORY_DFF pass (merging $dff cells to $memrd).
+
+6.16.6. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \dsfd_vm_static_relay128_b4..
+
+6.16.7. Executing MEMORY_SHARE pass (consolidating $memrd/$memwr cells).
+
+6.16.8. Executing OPT_MEM_WIDEN pass (optimize memories where all ports are wide).
+Performed a total of 0 transformations.
+
+6.16.9. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \dsfd_vm_static_relay128_b4..
+
+6.16.10. Executing MEMORY_COLLECT pass (generating $mem cells).
+
+6.17. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \dsfd_vm_static_relay128_b4..
+
+6.18. Executing OPT pass (performing simple optimizations).
+
+6.18.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module dsfd_vm_static_relay128_b4.
+
+6.18.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\dsfd_vm_static_relay128_b4'.
+Removed a total of 0 cells.
+
+6.18.3. Executing OPT_DFF pass (perform DFF optimizations).
+
+6.18.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \dsfd_vm_static_relay128_b4..
+
+6.18.5. Finished fast OPT passes.
+
+6.19. Executing MEMORY_MAP pass (converting memories to logic and flip-flops).
+
+6.20. Executing OPT pass (performing simple optimizations).
+
+6.20.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module dsfd_vm_static_relay128_b4.
+
+6.20.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\dsfd_vm_static_relay128_b4'.
+Removed a total of 0 cells.
+
+6.20.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \dsfd_vm_static_relay128_b4..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Removed 0 multiplexer ports.
+
+6.20.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \dsfd_vm_static_relay128_b4.
+Performed a total of 0 changes.
+
+6.20.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\dsfd_vm_static_relay128_b4'.
+Removed a total of 0 cells.
+
+6.20.6. Executing OPT_SHARE pass.
+
+6.20.7. Executing OPT_DFF pass (perform DFF optimizations).
+
+6.20.8. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \dsfd_vm_static_relay128_b4..
+
+6.20.9. Executing OPT_EXPR pass (perform const folding).
+Optimizing module dsfd_vm_static_relay128_b4.
+
+6.20.10. Finished OPT passes. (There is nothing left to do.)
+
+6.21. Executing TECHMAP pass (map to technology primitives).
+
+6.21.1. Executing Verilog-2005 frontend: /usr/bin/../share/yosys/techmap.v
+Parsing Verilog input from `/usr/bin/../share/yosys/techmap.v' to AST representation.
+Generating RTLIL representation for module `\_90_simplemap_bool_ops'.
+Generating RTLIL representation for module `\_90_simplemap_reduce_ops'.
+Generating RTLIL representation for module `\_90_simplemap_logic_ops'.
+Generating RTLIL representation for module `\_90_simplemap_compare_ops'.
+Generating RTLIL representation for module `\_90_simplemap_various'.
+Generating RTLIL representation for module `\_90_simplemap_registers'.
+Generating RTLIL representation for module `\_90_shift_ops_shr_shl_sshl_sshr'.
+Generating RTLIL representation for module `\_90_shift_shiftx'.
+Generating RTLIL representation for module `\_90_fa'.
+Generating RTLIL representation for module `\_90_lcu_brent_kung'.
+Generating RTLIL representation for module `\_90_alu'.
+Generating RTLIL representation for module `\_90_macc'.
+Generating RTLIL representation for module `\_90_alumacc'.
+Generating RTLIL representation for module `\$__div_mod_u'.
+Generating RTLIL representation for module `\$__div_mod_trunc'.
+Generating RTLIL representation for module `\_90_div'.
+Generating RTLIL representation for module `\_90_mod'.
+Generating RTLIL representation for module `\$__div_mod_floor'.
+Generating RTLIL representation for module `\_90_divfloor'.
+Generating RTLIL representation for module `\_90_modfloor'.
+Generating RTLIL representation for module `\_90_pow'.
+Generating RTLIL representation for module `\_90_pmux'.
+Generating RTLIL representation for module `\_90_demux'.
+Generating RTLIL representation for module `\_90_lut'.
+Successfully finished Verilog frontend.
+
+6.21.2. Continuing TECHMAP pass.
+Using extmapper simplemap for cells of type $adff.
+Using extmapper simplemap for cells of type $dff.
+No more expansions possible.
+<suppressed ~92 debug messages>
+
+6.22. Executing OPT pass (performing simple optimizations).
+
+6.22.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module dsfd_vm_static_relay128_b4.
+
+6.22.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\dsfd_vm_static_relay128_b4'.
+Removed a total of 0 cells.
+
+6.22.3. Executing OPT_DFF pass (perform DFF optimizations).
+
+6.22.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \dsfd_vm_static_relay128_b4..
+
+6.22.5. Finished fast OPT passes.
+
+6.23. Executing HIERARCHY pass (managing design hierarchy).
+Attribute `top' found on module `dsfd_vm_static_relay128_b4'. Setting top module to dsfd_vm_static_relay128_b4.
+
+6.23.1. Analyzing design hierarchy..
+Top module:  \dsfd_vm_static_relay128_b4
+
+6.23.2. Analyzing design hierarchy..
+Top module:  \dsfd_vm_static_relay128_b4
+Removed 0 unused modules.
+
+6.24. Printing statistics.
+
+=== dsfd_vm_static_relay128_b4 ===
+
+   Number of wires:                 68
+   Number of wire bits:           5242
+   Number of public wires:          68
+   Number of public wire bits:    5242
+   Number of ports:                 33
+   Number of port bits:           2619
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:               1313
+     $_DFF_PN0_                     20
+     $_DFF_P_                     1292
+     $scopeinfo                      1
+
+6.25. Executing CHECK pass (checking for obvious problems).
+Checking module dsfd_vm_static_relay128_b4...
+Found and reported 0 problems.
+
+7. Executing Liberty frontend: /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib
+Imported 42 cell types from liberty file.
+
+8. Executing Liberty frontend: /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib
+Imported 37 cell types from liberty file.
+
+9. Executing Liberty frontend: /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib
+Imported 34 cell types from liberty file.
+
+10. Executing Liberty frontend: /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+Imported 33 cell types from liberty file.
+
+11. Executing Liberty frontend: /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib
+Imported 56 cell types from liberty file.
+
+12. Executing DFFLIBMAP pass (mapping DFF cells to sequential cells from liberty file).
+  cell DFFLQNx1_ASAP7_75t_R (inv, pins=3, area=0.29) is a direct match for cell type $_DFF_N_.
+  cell DFFHQNx1_ASAP7_75t_R (inv, pins=3, area=0.29) is a direct match for cell type $_DFF_P_.
+  cell DFFASRHQNx1_ASAP7_75t_R (inv, pins=5, area=0.38) is a direct match for cell type $_DFFSR_PNN_.
+  final dff cell mappings:
+    \DFFLQNx1_ASAP7_75t_R _DFF_N_ (.CLK( C), .D( D), .QN(~Q));
+    \DFFHQNx1_ASAP7_75t_R _DFF_P_ (.CLK( C), .D( D), .QN(~Q));
+    unmapped dff cell: $_DFF_NN0_
+    unmapped dff cell: $_DFF_NN1_
+    unmapped dff cell: $_DFF_NP0_
+    unmapped dff cell: $_DFF_NP1_
+    unmapped dff cell: $_DFF_PN0_
+    unmapped dff cell: $_DFF_PN1_
+    unmapped dff cell: $_DFF_PP0_
+    unmapped dff cell: $_DFF_PP1_
+    unmapped dff cell: $_DFFE_NN_
+    unmapped dff cell: $_DFFE_NP_
+    unmapped dff cell: $_DFFE_PN_
+    unmapped dff cell: $_DFFE_PP_
+    unmapped dff cell: $_DFFSR_NNN_
+    unmapped dff cell: $_DFFSR_NNP_
+    unmapped dff cell: $_DFFSR_NPN_
+    unmapped dff cell: $_DFFSR_NPP_
+    \DFFASRHQNx1_ASAP7_75t_R _DFFSR_PNN_ (.CLK( C), .D( D), .QN(~Q), .RESETN( S), .SETN( R));
+    unmapped dff cell: $_DFFSR_PNP_
+    unmapped dff cell: $_DFFSR_PPN_
+    unmapped dff cell: $_DFFSR_PPP_
+
+12.1. Executing DFFLEGALIZE pass (convert FFs to types supported by the target).
+<suppressed ~8 debug messages>
+Mapping DFF cells in module `\dsfd_vm_static_relay128_b4':
+  mapped 20 $_DFFSR_PNN_ cells to \DFFASRHQNx1_ASAP7_75t_R cells.
+  mapped 1292 $_DFF_P_ cells to \DFFHQNx1_ASAP7_75t_R cells.
+
+13. Executing ABC pass (technology mapping using ABC).
+
+13.1. Extracting gate netlist of module `\dsfd_vm_static_relay128_b4' to `<abc-temp-dir>/input.blif'..
+Extracted 1312 gates and 2624 wires to a netlist network with 1312 inputs and 1312 outputs.
+
+13.1.1. Executing ABC.
+Running ABC command: "<yosys-exe-dir>/yosys-abc" -s -f <abc-temp-dir>/abc.script 2>&1
+ABC: ABC command line: "source <abc-temp-dir>/abc.script".
+ABC: 
+ABC: + read_blif <abc-temp-dir>/input.blif 
+ABC: + read_lib -w /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib 
+ABC: Parsing finished successfully.  Parsing time =     0.16 sec
+ABC: Library "asap7sc7p5t_AO_RVT_TT_nldm_211120" from "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib" has 42 cells (0 skipped: 0 seq; 0 tri-state; 0 no func; 0 dont_use).  Time =     0.23 sec
+ABC: Memory =   39.04 MB. Time =     0.23 sec
+ABC: Warnings: genlib library reader cannot detect the buffer gate.
+ABC: Some parts of the supergate-based technology mapper may not work correctly.
+ABC: Warnings: genlib library reader cannot detect the invertor gate.
+ABC: Some parts of the supergate-based technology mapper may not work correctly.
+ABC: Warnings: genlib library reader cannot detect the AND2, NAND2, OR2, and NOR2 gate.
+ABC: Some parts of the supergate-based technology mapper may not work correctly.
+ABC: + read_lib -m -w /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib 
+ABC: Parsing finished successfully.  Parsing time =     0.00 sec
+ABC: Library "asap7sc7p5t_INVBUF_RVT_TT_nldm_211120" from "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib" has 37 cells (0 skipped: 0 seq; 0 tri-state; 0 no func; 0 dont_use).  Time =     0.00 sec
+ABC: Memory =    0.59 MB. Time =     0.00 sec
+ABC: Updated library "asap7sc7p5t_AO_RVT_TT_nldm_211120" with additional 37 cells from library "asap7sc7p5t_INVBUF_RVT_TT_nldm_211120".
+ABC: Warnings: genlib library reader cannot detect the AND2, NAND2, OR2, and NOR2 gate.
+ABC: Some parts of the supergate-based technology mapper may not work correctly.
+ABC: + read_lib -m -w /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib 
+ABC: Parsing finished successfully.  Parsing time =     0.09 sec
+ABC: Library "asap7sc7p5t_OA_RVT_TT_nldm_211120" from "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib" has 34 cells (0 skipped: 0 seq; 0 tri-state; 0 no func; 0 dont_use).  Time =     0.14 sec
+ABC: Memory =   35.01 MB. Time =     0.14 sec
+ABC: Updated library "asap7sc7p5t_AO_RVT_TT_nldm_211120__and__asap7sc7p5t_INVBUF_RVT_TT_nldm_211120" with additional 34 cells from library "asap7sc7p5t_OA_RVT_TT_nldm_211120".
+ABC: Warnings: genlib library reader cannot detect the AND2, NAND2, OR2, and NOR2 gate.
+ABC: Some parts of the supergate-based technology mapper may not work correctly.
+ABC: + read_lib -m -w /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib 
+ABC: Parsing finished successfully.  Parsing time =     0.01 sec
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "DFFASRHQNx1_ASAP7_75t_R".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "DFFHQNx1_ASAP7_75t_R".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "DFFHQNx2_ASAP7_75t_R".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "DFFHQNx3_ASAP7_75t_R".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "DFFHQx4_ASAP7_75t_R".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "DFFLQNx1_ASAP7_75t_R".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "DFFLQNx2_ASAP7_75t_R".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "DFFLQNx3_ASAP7_75t_R".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "DFFLQx4_ASAP7_75t_R".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "DHLx1_ASAP7_75t_R".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "DHLx2_ASAP7_75t_R".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "DHLx3_ASAP7_75t_R".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "DLLx1_ASAP7_75t_R".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "DLLx2_ASAP7_75t_R".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "DLLx3_ASAP7_75t_R".
+ABC: Scl_LibertyReadGenlib() skipped cell "ICGx1_ASAP7_75t_R" without logic function.
+ABC: Scl_LibertyReadGenlib() skipped cell "ICGx2_ASAP7_75t_R" without logic function.
+ABC: Scl_LibertyReadGenlib() skipped cell "ICGx2p67DC_ASAP7_75t_R" without logic function.
+ABC: Scl_LibertyReadGenlib() skipped cell "ICGx3_ASAP7_75t_R" without logic function.
+ABC: Scl_LibertyReadGenlib() skipped cell "ICGx4DC_ASAP7_75t_R" without logic function.
+ABC: Scl_LibertyReadGenlib() skipped cell "ICGx4_ASAP7_75t_R" without logic function.
+ABC: Scl_LibertyReadGenlib() skipped cell "ICGx5_ASAP7_75t_R" without logic function.
+ABC: Scl_LibertyReadGenlib() skipped cell "ICGx5p33DC_ASAP7_75t_R" without logic function.
+ABC: Scl_LibertyReadGenlib() skipped cell "ICGx6p67DC_ASAP7_75t_R" without logic function.
+ABC: Scl_LibertyReadGenlib() skipped cell "ICGx8DC_ASAP7_75t_R" without logic function.
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "SDFHx1_ASAP7_75t_R".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "SDFHx2_ASAP7_75t_R".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "SDFHx3_ASAP7_75t_R".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "SDFHx4_ASAP7_75t_R".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "SDFLx1_ASAP7_75t_R".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "SDFLx2_ASAP7_75t_R".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "SDFLx3_ASAP7_75t_R".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "SDFLx4_ASAP7_75t_R".
+ABC: Library "asap7sc7p5t_SEQ_RVT_TT_nldm_220123" from "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib" has 0 cells (33 skipped: 23 seq; 0 tri-state; 10 no func; 0 dont_use).  Time =     0.01 sec
+ABC: Memory =    3.23 MB. Time =     0.01 sec
+ABC: Updated library "asap7sc7p5t_AO_RVT_TT_nldm_211120__and__asap7sc7p5t_INVBUF_RVT_TT_nldm_211120__and__asap7sc7p5t_OA_RVT_TT_nldm_211120" with additional 0 cells from library "asap7sc7p5t_SEQ_RVT_TT_nldm_220123".
+ABC: Warnings: genlib library reader cannot detect the AND2, NAND2, OR2, and NOR2 gate.
+ABC: Some parts of the supergate-based technology mapper may not work correctly.
+ABC: + read_lib -m -w /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib 
+ABC: Parsing finished successfully.  Parsing time =     0.01 sec
+ABC: Library "asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120" from "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib" has 56 cells (0 skipped: 0 seq; 0 tri-state; 0 no func; 0 dont_use).  Time =     0.02 sec
+ABC: Memory =    4.50 MB. Time =     0.02 sec
+ABC: Updated library "asap7sc7p5t_AO_RVT_TT_nldm_211120__and__asap7sc7p5t_INVBUF_RVT_TT_nldm_211120__and__asap7sc7p5t_OA_RVT_TT_nldm_211120__and__asap7sc7p5t_SEQ_RVT_TT_nldm_220123" with additional 56 cells from library "asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120".
+ABC: Warning: Detected 2 multi-output gates (for example, "FAx1_ASAP7_75t_R").
+ABC: + strash 
+ABC: + &get -n 
+ABC: + &fraig -x 
+ABC: + &put 
+ABC: + scorr 
+ABC: Warning: The network is combinational (run "fraig" or "fraig_sweep").
+ABC: + dc2 
+ABC: + dretime 
+ABC: + retime -o -D 833 
+ABC: + strash 
+ABC: + &get -n 
+ABC: + &dch -f 
+ABC: + &nf -D 833 
+ABC: + &put 
+ABC: + write_blif <abc-temp-dir>/output.blif 
+
+13.1.2. Re-integrating ABC results.
+ABC RESULTS:   INVx1_ASAP7_75t_R cells:     1312
+ABC RESULTS:        internal signals:        0
+ABC RESULTS:           input signals:     1312
+ABC RESULTS:          output signals:     1312
+Removing temp directory.
+Removed 0 unused cells and 2624 unused wires.
+
+14. Executing CHECK pass (checking for obvious problems).
+Checking module dsfd_vm_static_relay128_b4...
+Found and reported 0 problems.
+
+15. Printing statistics.
+
+=== dsfd_vm_static_relay128_b4 ===
+
+   Number of wires:               1380
+   Number of wire bits:           6554
+   Number of public wires:          68
+   Number of public wire bits:    5242
+   Number of ports:                 33
+   Number of port bits:           2619
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:               2625
+     $scopeinfo                      1
+     DFFASRHQNx1_ASAP7_75t_R        20
+     DFFHQNx1_ASAP7_75t_R         1292
+     INVx1_ASAP7_75t_R            1312
+
+   Area for cell type $scopeinfo is unknown!
+
+   Chip area for module '\dsfd_vm_static_relay128_b4': 441.715680
+     of which used for sequential elements: 384.328800 (87.01%)
+
+16. Executing JSON backend.
+
+End of script. Logfile hash: dc8b5e8668, CPU: user 0.48s system 0.03s, MEM: 76.46 MB peak
+Yosys 0.52 (git sha1 fee39a3284c90249e1d9684cf6944ffbbcbb8f90)
+Time spent: 53% 1x abc (0 sec), 18% 10x read_liberty (0 sec), ...
