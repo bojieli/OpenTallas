@@ -79,7 +79,7 @@
   "owner": "Codex:S-NORM",
   "branch": "claude/s81-norm-tree-1014",
   "tag": "v3-owned-epoch",
-  "structural_change": "The strip physically owns local-epoch broadcast captures; wrapper has no state. Existing dedicated pin flops and original hold constraints retained.",
+  "structural_change": "Physical leaf owns all local broadcast state; local M3 pin layer aligns input-to-local-output wires, removing668-net horizontal crosscut caused by all-M5 pin collision fallback. Same clocks/reset/epochs/constraints/outline.",
   "no_bench_reason": "bit-exactness is gated on the HC slab composition with dsfd_sp_hc NTREE 1 (tools/s81_suhc/hc_ntree_bench.sh: NG 256 production shape exact PASS + mutant 3 FAIL; tools/s81_suhc/hc_gate.py --ntree 1 NG 256 exact 0/1940 x3 + per-tile mutants); the tile alone has no golden",
   "purpose": "el1014-s81-norm-tree (owner 10-14 ~06:55: NORM tree = PARALLEL default-off variant with NEW master names; replaces the serial-chain HC NORM only when all variant tiles close and the composition is exact): ot_s81_hc_ctfx_nt: the half-octet broadcast source with the NORM-tree lanes (r from the bottom replaces the bus r; the far half injects its octet's 4-bank chunk sum into the south lane)",
   "views_to": "physical/ref_tile/s81hc_ctfxnt_ref/views",
@@ -123,7 +123,7 @@
  "io_tcl": "physical/s81_die_pins/v20_hc_capture/ot_s81_hc_ctfx_nt.tcl",
  "assigned_pins": {
   "file": "physical/s81_die_pins/v20_hc_capture/ot_s81_hc_ctfx_nt.json",
-  "source": "S81 die lead 2495f77a6; actual sink-neighborhood pin assignment",
+  "source": "S81 die lead 6cae93a72; original M5 rectangles kept, local M3 register pins vertically aligned with input captures and clamped to actual CPL reach",
   "layout": "physical/s81_die_pins/v19_ntree/layout.json"
  },
  "slot_change_request": "S81 die lead 2495f77a6 accepted serial/NTREE captured strip 576.72x25.92; enclosing cth751.68, rowshifts12.96"

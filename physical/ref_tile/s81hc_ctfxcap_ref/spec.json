@@ -73,7 +73,7 @@
   "no_bench_reason": "bit-exactness is gated on the HC slab composition bench (tools/s81_suhc/hc_gate.py NG256 HIER=2 m0 PASS + m1 FAIL, NG64 m0 PASS + m3 FAIL) at the kit commit; the tile alone has no golden",
   "views_to": "physical/ref_tile/s81hc_ctfxcap_ref/views",
   "record_to": "results/rtl/ref_tile/s81hc_ctfxcap_ref",
-  "structural_change": "Move CNL_PIN1 wrapper localFV7/FD1128 captures into distinct serial physical master preserving arithmetic/cycles/reset epochs.",
+  "structural_change": "Physical leaf owns all local broadcast state; local M3 pin layer aligns input-to-local-output wires, removing668-net horizontal crosscut caused by all-M5 pin collision fallback. Same clocks/reset/epochs/constraints/outline.",
   "benches": [
    {
     "name": "owned_serial_exact",
@@ -117,7 +117,7 @@
  "io_tcl": "physical/s81_die_pins/v20_hc_capture/ot_s81_hc_ctfx_cap.tcl",
  "assigned_pins": {
   "file": "physical/s81_die_pins/v20_hc_capture/ot_s81_hc_ctfx_cap.json",
-  "source": "S81 die lead 2495f77a6; actual sink-neighborhood pin assignment",
+  "source": "S81 die lead 6cae93a72; original M5 rectangles kept, local M3 register pins vertically aligned with input captures and clamped to actual CPL reach",
   "layout": "physical/s81_die_pins/v20_hc_capture/serial_capture_layout.json"
  },
  "slot_change_request": "S81 die lead 2495f77a6 accepted serial/NTREE captured strip 576.72x25.92; enclosing cth751.68, rowshifts12.96"
