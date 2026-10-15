@@ -127,7 +127,11 @@ module qfd_native_band_tree_tp8 (
  wire up_use1,up_v1;
  ot_qfd_band_upper #(.NL(4),.NB(3),.LNK(0),.DLY(1),.TREE_LAT(7),.TCUT(7),.LG(12),.RPIN(1)) u_upper1 (
  .clk(ck_upper[1]),.rst_n(rst_n),
+`ifdef OT_QFD_NATIVE_TREE_MUT
+ .pw({pw_b2_l1[127:0],pw_b1_l1[127:0],pw_b0_l2[127:0]}),
+`else
  .pw({pw_b2_l1[127:0],pw_b1_l1[127:0],pw_b0_l1[127:0]}),
+`endif
  .pw_v({pw_b2_l1[128],pw_b1_l1[128],pw_b0_l1[128]}),
  .lf({f_up2[1],f_up1[1],f_up0[1]}),
  .sel_e(sel[12:0]),.tv_e(sel[25:13]),.tt_ty(up_ty1),.tt_use(up_use1),.tt_v(up_v1),.fault(uf[1])
