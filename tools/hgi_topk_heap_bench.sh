@@ -6,7 +6,7 @@ VL=$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator; [ -x $VL ] || VL
 M=physical/asap7_memory_macros
 $VL --binary --timing -O2 -Wno-fatal -Wno-WIDTH -Wno-UNUSED -Wno-BLKSEQ -Wno-UNOPTFLAT -Wno-MULTIDRIVEN "$@" \
  --top-module tb_hgi_idx_topk_heap -Mdir $O/obj rtl/hbm_accel/generic_20261009/ot_hgi_idx_topk_heap.sv rtl/hbm_accel/generic_20261009/ot_hgi_idx_topk_heap_dropin.sv \
- rtl/hbm_accel/generic_20261009/ot_hgi_idx_topk_registered.sv rtl/hbm_accel/generic_20261009/ot_hgi_idx_topk_w8_hub.sv rtl/lib/ot_rst_relay.sv \
+ rtl/hbm_accel/generic_20261009/ot_hgi_idx_topk_registered.sv rtl/hbm_accel/generic_20261009/ot_hgi_idx_topk_w8_hub.sv rtl/hbm_accel/generic_20261009/ot_hgi_topk_hub_tile.sv rtl/lib/ot_rst_relay.sv \
  $M/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v $M/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v \
  $M/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v rtl/test/hbm_generic_20261009/tb_hgi_idx_topk_heap.sv \
  -j 8 > $O/build.log 2>&1 || { tail -20 $O/build.log; echo BUILD_FAIL; exit 2; }
