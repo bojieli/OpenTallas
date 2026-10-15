@@ -18,37 +18,37 @@
     "rst_n"
   ],
   "pins": {
-    "N": [
-      "clk",
-      "rst_n"
-    ],
     "W": [
       "b_d",
       "b_v",
-      "live",
-      "cura",
-      "curb",
-      "curc",
-      "curd",
-      "mem_q"
+      "live"
     ],
     "E": [
       "b_q",
       "bv_q",
       "lv_q",
-      "p_q",
       "rst_l"
     ],
-    "S": [
+    "N": [
+      "clk",
+      "rst_n",
+      "cura",
+      "curb",
+      "curc",
+      "curd",
+      "mem_q",
       "o_v",
-      "o_d",
+      "o_d"
+    ],
+    "S": [
+      "p_q",
       "o_vq",
       "o_dq"
     ]
   },
   "outline": {
-    "w": 180,
-    "h": 180
+    "w": 70,
+    "h": 70
   },
   "layer_cap": "M5",
   "recipe": 2,
@@ -56,18 +56,18 @@
     "b_d",
     "b_v",
     "live",
+    "b_q",
+    "bv_q",
+    "lv_q",
+    "rst_l",
     "cura",
     "curb",
     "curc",
     "curd",
     "mem_q",
-    "b_q",
-    "bv_q",
-    "lv_q",
-    "p_q",
-    "rst_l",
     "o_v",
     "o_d",
+    "p_q",
     "o_vq",
     "o_dq"
   ],
@@ -85,8 +85,8 @@
   "job": {
     "owner": "Codex:su-glue-physical-1015",
     "branch": "codex/su-glue-physical-1015",
-    "tag": "v1",
-    "purpose": "Actual c6c44 source-preserving SU relay/alignment state cut; no added edges. Serial0.9GHz domain. Parent offset comb logic remains explicitly unqualified. Standard strict833.333ps leaf characterization retained; no slower-clock SDC override.",
+    "tag": "v2",
+    "purpose": "Actual c6c44 source-preserving SU relay/alignment state cut; no added edges. Serial0.9GHz domain. Parent offset comb logic remains explicitly unqualified. Standard strict833.333ps leaf characterization retained; no slower-clock SDC override. Four-face pin plan sized from actual synthesis1871/1613/587um2; leaf pin-limited area explicitly priced.",
     "cycles_added": 0,
     "benches": [
       {

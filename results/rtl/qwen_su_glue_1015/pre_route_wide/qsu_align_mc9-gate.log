@@ -1,0 +1,13 @@
+GATE INFO layer: tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)
+GATE INFO oflop: E face 10.5 pins/um (vm_eff, crom_m, emb_m): recipe-2 hold stages take 3.52 um behind the face, the pin flops need gap 4.5 um and 6 columns (derived in the flow)
+GATE INFO oflop: W face 10.5 pins/um (vm_q, crom_q, emb_q): recipe-2 hold stages take 2.3 um behind the face, the pin flops need gap 2.9 um and 6 columns (derived in the flow)
+GATE INFO remote: ot-run selected ot-agidock128 for 16 GB; inputs ship there before admission
+GATE INFO source_binding: immutable shipping manifest /tmp/ref_gate_qsu_align_mc9_20261015-024220.source_snapshot.json
+GATE INFO remote: remote log /tmp/ref_gate_qsu_align_mc9_20261015-024220.log; host dir ot-agidock128:/srv/opentallas-scratch/claude/ref_gate/qsu_align_mc9-20261015-024220
+GATE INFO remote: synth + floorplan + PDN OK on ot-agidock128 in 35 s (gate total 61 s)
+GATE WARN util: synthesized std area 1613 um2 + macros 0 in core 31371: util 5%  -> FIX: set "std_area_um2": 1613 and drop 'outline' (gen sizes to util 0.52)
+GATE INFO textbook: WARN ot_qfd_su_align_group4 cells 9,773 flops 4,464 depth 90.0 ps util 0.0517 reach 126.1 um (0.2 s)
+GATE WARN textbook.util_channel: utilisation 5.2% outside 45%-65% (std 1621 + macro 0 um2 in 31371 um2): shrink the outline (long wires / sparse placement)  -> FIX: size the outline to util 0.50-0.55 with >= 20 um macro channels
+GATE INFO clock_rule: root port:clk: 4,464 sinks on the largest root <= 15,000; no measured clock tree (no --cts gate evidence)
+PRE_ROUTE_GATE: WARN (0 fail, 2 warn)
+GATE: qsu_align_mc9/gate_result.json written (exact staged source binding; commit it with the kit)
