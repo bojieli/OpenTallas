@@ -1,0 +1,16 @@
+{
+  "polynomial": "x^10+x^3+1",
+  "generator_sha256": "300bfbb4b33e2413e6d2286a064bf6145d81a4aa436210bb9281f8bc5a15f867",
+  "original_decoder_sha256": "15923b429259c028375c48d617189468528b3089047ecab648208c5c0cbd4d10",
+  "gf_helper_sha256": "0c1d1e94f6a2a360da1f1b23b1cd7847958450c3b642b9978b0c13faead4b855",
+  "original_wrapper_sha256": "98749b360c86041a02ff88c42e048bbee34ea1f4bede7f37a61198f864d601aa",
+  "new_pipeline_edges": 0,
+  "input_bits": 470,
+  "evaluation_bits": 2200,
+  "step_bits": 470,
+  "outputs": {
+    "ot_hbm_kp4_chien55_map.sv": "c044186d314182704e3dcfdd0d7c3018cdf0df5c695103495b22c962e5c170ee",
+    "ot_hbm_kp4_dec_chien_linear.sv": "aacfd559c3cbbd690d7feba90837b623560b20b8dfe425d9051ba87e6bef8ba6",
+    "hfd_serdes487_chien_linear_window.sv": "83d68a75b1e283f7c0dfe9170517ddc7d0e73819d45f25fdf5824df2f5bfc763"
+  }
+}
