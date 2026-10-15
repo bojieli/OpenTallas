@@ -89,12 +89,12 @@ def build(out: Path, lu, ls, xu, xs, phi, define=None, qfd=False, parent=False, 
     step = ("t->clk = 1; t->lck = 1; t->eval(); t->clk = 0; t->lck = 0; t->eval();" if phi == 0 else
             "t->clk = 1; t->eval(); t->lck = 1; t->eval(); t->clk = 0; t->eval(); t->lck = 0; t->eval();")
     if six_five:
-        step="bool ce=(tick%5==0),fe=(tick%6==fphi);t->clk=ce;t->lck=ce;t->fdi_ck=fe;t->eval();t->clk=0;t->lck=0;t->fdi_ck=0;t->eval();tick++;"
+        step="bool ce=(tick%5==0),fe=(tick%6==fphi),be=(tick%30==0);t->clk=ce;t->lck=ce;t->fdi_ck=fe;t->blk_ck=be;t->eval();t->clk=0;t->lck=0;t->fdi_ck=0;t->blk_ck=0;t->eval();tick++;"
     old_h = h.read_text() if h.exists() else None
     h.write_text('#include "Vtb_coll_tp8_static_links.h"\n#include "verilated.h"\n'
                  "#include <cstring>\n#include <cstdlib>\nint main(int argc, char** argv) { Verilated::commandArgs(argc, argv);\n"
                  "  unsigned tick=0;int fphi=0;for(int i=1;i<argc;i++)if(!strncmp(argv[i],\"+FDIPHI=\",8))fphi=atoi(argv[i]+8);\n"
-                 "  auto* t = new Vtb_coll_tp8_static_links; t->clk = 0; t->lck = 0; t->fdi_ck=0; t->eval();\n"
+                 "  auto* t = new Vtb_coll_tp8_static_links; t->clk = 0; t->lck = 0; t->fdi_ck=0; t->blk_ck=0; t->eval();\n"
                  f"  while (!Verilated::gotFinish()) {{ {step} }}\n"
                  "  t->final(); delete t; return 0; }\n")
     cmd = ["verilator", "--cc", "--exe", "--build", "-O2", "-Wno-fatal", "-Wno-WIDTH", "-Wno-UNUSED", "-Wno-BLKSEQ",
@@ -149,7 +149,7 @@ def main():
     a = ap.parse_args()
     if a.six_five:
         a.parent=True;a.shared_ucie=True
-        PU=25
+        PU=20  # r10 200 MHz block-stage gearbox: 19 core edges + registered codec pin
     if a.parent:a.qfd=True
     a.out = a.out.resolve()
     a.out.mkdir(parents=True, exist_ok=True)

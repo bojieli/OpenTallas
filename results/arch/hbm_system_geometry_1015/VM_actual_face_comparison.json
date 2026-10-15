@@ -1,0 +1,445 @@
+{
+  "schema": "opentallas.hbm.vm_system.actual_face_exposure.v1",
+  "input": {
+    "path": "/home/ubuntu/wt/hbm-vm-static-1014/results/arch/hbm_vm_bank_static_1015/native_pin_pg_diagnostic/native_bank_actual_pin_pg.json",
+    "sha256": "1cca154eb2dfe2de38731ad9ca0b2889d73ec76f055ef8d4191ff2967b48c2df"
+  },
+  "bank_outline_um": [
+    393.12,
+    339.12
+  ],
+  "signal_pins_per_bank": 4742,
+  "cases": [
+    {
+      "name": "column8_R0",
+      "banks": [
+        {
+          "bank": 0,
+          "x": 0.0,
+          "y": 0.0,
+          "w": 393.12,
+          "h": 339.12,
+          "orient": "R0"
+        },
+        {
+          "bank": 1,
+          "x": 0.0,
+          "y": 382.32,
+          "w": 393.12,
+          "h": 339.12,
+          "orient": "R0"
+        },
+        {
+          "bank": 2,
+          "x": 0.0,
+          "y": 764.64,
+          "w": 393.12,
+          "h": 339.12,
+          "orient": "R0"
+        },
+        {
+          "bank": 3,
+          "x": 0.0,
+          "y": 1146.96,
+          "w": 393.12,
+          "h": 339.12,
+          "orient": "R0"
+        },
+        {
+          "bank": 4,
+          "x": 0.0,
+          "y": 1529.28,
+          "w": 393.12,
+          "h": 339.12,
+          "orient": "R0"
+        },
+        {
+          "bank": 5,
+          "x": 0.0,
+          "y": 1911.6,
+          "w": 393.12,
+          "h": 339.12,
+          "orient": "R0"
+        },
+        {
+          "bank": 6,
+          "x": 0.0,
+          "y": 2293.92,
+          "w": 393.12,
+          "h": 339.12,
+          "orient": "R0"
+        },
+        {
+          "bank": 7,
+          "x": 0.0,
+          "y": 2676.24,
+          "w": 393.12,
+          "h": 339.12,
+          "orient": "R0"
+        }
+      ],
+      "outline_um": [
+        393.12,
+        3015.36
+      ],
+      "all_actual_signal_face_exposure": {
+        "N": {
+          "total": 9160,
+          "requires_turn": 8015
+        },
+        "S": {
+          "total": 11064,
+          "requires_turn": 9681
+        },
+        "E": {
+          "total": 8856,
+          "requires_turn": 0
+        },
+        "W": {
+          "total": 8856,
+          "requires_turn": 0
+        }
+      },
+      "canonical_NE_ATT_RG3_WG1_face": {
+        "pins": 4448,
+        "requires_turn": 0,
+        "minimum_neighbour_detour_sum_um": 0.0,
+        "max_minimum_neighbour_detour_um": 0.0
+      },
+      "clock_entries_requiring_turn": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "qualified": false
+    },
+    {
+      "name": "two_columns_R0",
+      "banks": [
+        {
+          "bank": 0,
+          "x": 0.0,
+          "y": 0.0,
+          "w": 393.12,
+          "h": 339.12,
+          "orient": "R0"
+        },
+        {
+          "bank": 1,
+          "x": 0.0,
+          "y": 382.32,
+          "w": 393.12,
+          "h": 339.12,
+          "orient": "R0"
+        },
+        {
+          "bank": 2,
+          "x": 0.0,
+          "y": 764.64,
+          "w": 393.12,
+          "h": 339.12,
+          "orient": "R0"
+        },
+        {
+          "bank": 3,
+          "x": 0.0,
+          "y": 1146.96,
+          "w": 393.12,
+          "h": 339.12,
+          "orient": "R0"
+        },
+        {
+          "bank": 4,
+          "x": 436.32,
+          "y": 0.0,
+          "w": 393.12,
+          "h": 339.12,
+          "orient": "R0"
+        },
+        {
+          "bank": 5,
+          "x": 436.32,
+          "y": 382.32,
+          "w": 393.12,
+          "h": 339.12,
+          "orient": "R0"
+        },
+        {
+          "bank": 6,
+          "x": 436.32,
+          "y": 764.64,
+          "w": 393.12,
+          "h": 339.12,
+          "orient": "R0"
+        },
+        {
+          "bank": 7,
+          "x": 436.32,
+          "y": 1146.96,
+          "w": 393.12,
+          "h": 339.12,
+          "orient": "R0"
+        }
+      ],
+      "outline_um": [
+        829.44,
+        1486.08
+      ],
+      "all_actual_signal_face_exposure": {
+        "N": {
+          "total": 9160,
+          "requires_turn": 6870
+        },
+        "S": {
+          "total": 11064,
+          "requires_turn": 8298
+        },
+        "E": {
+          "total": 8856,
+          "requires_turn": 4428
+        },
+        "W": {
+          "total": 8856,
+          "requires_turn": 4428
+        }
+      },
+      "canonical_NE_ATT_RG3_WG1_face": {
+        "pins": 4448,
+        "requires_turn": 2224,
+        "minimum_neighbour_detour_sum_um": 231444.09600000017,
+        "max_minimum_neighbour_detour_um": 188.47200000000004
+      },
+      "clock_entries_requiring_turn": [
+        0,
+        1,
+        2,
+        4,
+        5,
+        6
+      ],
+      "qualified": false
+    },
+    {
+      "name": "two_columns_outward_R0_MY",
+      "banks": [
+        {
+          "bank": 0,
+          "x": 0.0,
+          "y": 0.0,
+          "w": 393.12,
+          "h": 339.12,
+          "orient": "R0"
+        },
+        {
+          "bank": 1,
+          "x": 0.0,
+          "y": 382.32,
+          "w": 393.12,
+          "h": 339.12,
+          "orient": "R0"
+        },
+        {
+          "bank": 2,
+          "x": 0.0,
+          "y": 764.64,
+          "w": 393.12,
+          "h": 339.12,
+          "orient": "R0"
+        },
+        {
+          "bank": 3,
+          "x": 0.0,
+          "y": 1146.96,
+          "w": 393.12,
+          "h": 339.12,
+          "orient": "R0"
+        },
+        {
+          "bank": 4,
+          "x": 436.32,
+          "y": 0.0,
+          "w": 393.12,
+          "h": 339.12,
+          "orient": "MY"
+        },
+        {
+          "bank": 5,
+          "x": 436.32,
+          "y": 382.32,
+          "w": 393.12,
+          "h": 339.12,
+          "orient": "MY"
+        },
+        {
+          "bank": 6,
+          "x": 436.32,
+          "y": 764.64,
+          "w": 393.12,
+          "h": 339.12,
+          "orient": "MY"
+        },
+        {
+          "bank": 7,
+          "x": 436.32,
+          "y": 1146.96,
+          "w": 393.12,
+          "h": 339.12,
+          "orient": "MY"
+        }
+      ],
+      "outline_um": [
+        829.44,
+        1486.08
+      ],
+      "all_actual_signal_face_exposure": {
+        "N": {
+          "total": 9160,
+          "requires_turn": 6870
+        },
+        "S": {
+          "total": 11064,
+          "requires_turn": 8298
+        },
+        "E": {
+          "total": 8856,
+          "requires_turn": 4428
+        },
+        "W": {
+          "total": 8856,
+          "requires_turn": 4428
+        }
+      },
+      "canonical_NE_ATT_RG3_WG1_face": {
+        "pins": 4448,
+        "requires_turn": 0,
+        "minimum_neighbour_detour_sum_um": 0.0,
+        "max_minimum_neighbour_detour_um": 0.0
+      },
+      "clock_entries_requiring_turn": [
+        0,
+        1,
+        2,
+        4,
+        5,
+        6
+      ],
+      "qualified": false
+    },
+    {
+      "name": "four_columns_R0",
+      "banks": [
+        {
+          "bank": 0,
+          "x": 0.0,
+          "y": 0.0,
+          "w": 393.12,
+          "h": 339.12,
+          "orient": "R0"
+        },
+        {
+          "bank": 1,
+          "x": 0.0,
+          "y": 382.32,
+          "w": 393.12,
+          "h": 339.12,
+          "orient": "R0"
+        },
+        {
+          "bank": 2,
+          "x": 436.32,
+          "y": 0.0,
+          "w": 393.12,
+          "h": 339.12,
+          "orient": "R0"
+        },
+        {
+          "bank": 3,
+          "x": 436.32,
+          "y": 382.32,
+          "w": 393.12,
+          "h": 339.12,
+          "orient": "R0"
+        },
+        {
+          "bank": 4,
+          "x": 872.64,
+          "y": 0.0,
+          "w": 393.12,
+          "h": 339.12,
+          "orient": "R0"
+        },
+        {
+          "bank": 5,
+          "x": 872.64,
+          "y": 382.32,
+          "w": 393.12,
+          "h": 339.12,
+          "orient": "R0"
+        },
+        {
+          "bank": 6,
+          "x": 1308.96,
+          "y": 0.0,
+          "w": 393.12,
+          "h": 339.12,
+          "orient": "R0"
+        },
+        {
+          "bank": 7,
+          "x": 1308.96,
+          "y": 382.32,
+          "w": 393.12,
+          "h": 339.12,
+          "orient": "R0"
+        }
+      ],
+      "outline_um": [
+        1702.08,
+        721.44
+      ],
+      "all_actual_signal_face_exposure": {
+        "N": {
+          "total": 9160,
+          "requires_turn": 4580
+        },
+        "S": {
+          "total": 11064,
+          "requires_turn": 5532
+        },
+        "E": {
+          "total": 8856,
+          "requires_turn": 6642
+        },
+        "W": {
+          "total": 8856,
+          "requires_turn": 6642
+        }
+      },
+      "canonical_NE_ATT_RG3_WG1_face": {
+        "pins": 4448,
+        "requires_turn": 3336,
+        "minimum_neighbour_detour_sum_um": 347166.1440000003,
+        "max_minimum_neighbour_detour_um": 188.47200000000004
+      },
+      "clock_entries_requiring_turn": [
+        0,
+        2,
+        4,
+        6
+      ],
+      "qualified": false
+    }
+  ],
+  "limits": [
+    "Actual native bank BTerm rectangles; source and CTS remain unqualified.",
+    "43.2um streets are a comparative reservation, not a bus cut proof.",
+    "R0/MY are H-DIE-admitted candidate orientations; transform all face groups and clock together.",
+    "No outside ATT/SU/IDX/COLL/HBM consumer pins are invented. Face obstruction is not a route failure; a turn/escape corridor may resolve it.",
+    "All signal faces and physical clock entries reported so ATT improvement cannot hide other client effects.",
+    "Final objective requires production transfer activity and real outside endpoints; these cases are not globally ranked."
+  ]
+}

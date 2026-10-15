@@ -1,0 +1,19 @@
+ot-run: ot-epyc1tb     skipped: load hold: load1 > 1.5 x cores
+ot-run: ot-epyc4       skipped: load hold: load1 > 1.5 x cores
+ot-run: ot-pve1        skipped: load hold: load1 > 1.5 x cores
+ot-run: ot-agidock128  admits    34 GB (avail 66, growth 19, headroom 24, waiters 0/0 GB) load 6/64 running 5 disk 21 GB 
+ot-run: -> ot-agidock128
+ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-4016223-1792064136 after 0 s
+TB_VMCAP RESULT mode 0 phases 14 rows full 1735 partial 8 missing 0 bad 0
+TB_VMCAP PASS mode 0
+TB_VMCAP RESULT mode 0 phases 14 rows full 1194 partial 7 missing 0 bad 0
+TB_VMCAP PASS mode 0
+TB_VMCAP PASS mode 1 (fault 1 lanes 00000000000000000080)
+TB_VMCAP PASS mode 2 (fault 1 lanes 00000000000000001800)
+TB_VMCAP PASS mode 3 (fault 1 lanes 00000000000000001400)
+TB_VMCAP PASS mode 4 (fault 1 lanes 00000000000000040000)
+TB_VMCAP PASS mode 5 (fault 1 lanes 00000000000000000000)
+TB_VMCAP RESULT mode 0 phases 14 rows full 1462 partial 3 missing 278 bad 14638
+TB_VMCAP FAIL mode 0
+CAP_PIPE_PRODUCTION_GATE_PASS
+ot-run: RAN on ot-agidock128 (unit oth-ubuntu-4016223-1792064136): exit 0

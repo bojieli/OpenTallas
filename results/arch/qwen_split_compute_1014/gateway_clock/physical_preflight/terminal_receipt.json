@@ -1,0 +1,263 @@
+{
+  "schema": "qwen.gateway.native_cts_diagnostic.v1",
+  "generated": "2026-10-15T04:17:53-0700",
+  "verdict": "FAIL",
+  "scope": "Synthesis/floorplan/CTS placement diagnostic only. No routed/native qualified view.",
+  "source_candidate": "b26eee81c",
+  "exact_content_snapshot": {
+    "start_commit": "93d8502b951f169ffa6b1ef6ae29eacde2727d7c",
+    "identity": "exact_content_snapshot",
+    "archive_sha256": "43da501208f066fcbc338db553b673a804b07b2ba5e535863c23aaae8b085a70",
+    "manifest_sha256": "b2089725da16f444701833808b2e12beab7057e0d99f93a59f51dcf3900e81ad"
+  },
+  "checked_leaf_and_kit_files": [
+    {
+      "path": "physical/ref_tile/qwen_a_gateway_v1/clock.sdc",
+      "kind": "file",
+      "sha256": "e9272a765f8212112adc41aca47e9930f57ee45ae5ff27d6f926965fba65be13",
+      "git_blob": "d166b4322a899fe37ea71c030b9a99280747e8af",
+      "source": "working_tree",
+      "matches_provenance_commit": false
+    },
+    {
+      "path": "physical/ref_tile/qwen_a_gateway_v1/floorplan.json",
+      "kind": "file",
+      "sha256": "a8da179261e7b0c665f7c6effbfe3708b5581bbf309f02edd641b4db61dc831e",
+      "git_blob": "d85939eae1f28df061f24a1a1a57293933af0f57",
+      "source": "working_tree",
+      "matches_provenance_commit": false
+    },
+    {
+      "path": "physical/ref_tile/qwen_a_gateway_v1/job.json",
+      "kind": "file",
+      "sha256": "13ae3ae8051d9ccf467445c8916e6c4221f1175d77671ad2fea4eefa7b53ec9d",
+      "git_blob": "2b95ca2015d24a19544d52cdefa9d5a5da21bbed",
+      "source": "working_tree",
+      "matches_provenance_commit": false
+    },
+    {
+      "path": "physical/ref_tile/qwen_a_gateway_v1/kit.env",
+      "kind": "file",
+      "sha256": "c818161002c3352fe11be049a4120cbcf1fb5afbbbd21588484656539d60a191",
+      "git_blob": "749f431caf01e5d013ac388d5a4957ea90d37160",
+      "source": "working_tree",
+      "matches_provenance_commit": false
+    },
+    {
+      "path": "physical/ref_tile/qwen_a_gateway_v1/pdn.tcl",
+      "kind": "file",
+      "sha256": "0af359b35cfe54205505defda6bf598c4794c964822dd07a3236ea6be7b7e164",
+      "git_blob": "03516dd014956b3d53a0f6a45f0a984af05e50da",
+      "source": "working_tree",
+      "matches_provenance_commit": false
+    },
+    {
+      "path": "physical/ref_tile/qwen_a_gateway_v1/post_cts.tcl",
+      "kind": "file",
+      "sha256": "29b39bbe8e35409d82f878e19c0b596c9b117175b8efc14b249939c1099b0cd8",
+      "git_blob": "9e516a992ea585a2414ea9cf388b1fde18554ca1",
+      "source": "working_tree",
+      "matches_provenance_commit": false
+    },
+    {
+      "path": "physical/ref_tile/qwen_a_gateway_v1/post_drt.tcl",
+      "kind": "file",
+      "sha256": "29c5f064e6199f12cc166bbfc41ffd0f95d9f9c8e604d8788b707bddc06e1a49",
+      "git_blob": "b6664f32f80c867c4533cc844a3f1ca064a8431a",
+      "source": "working_tree",
+      "matches_provenance_commit": false
+    },
+    {
+      "path": "physical/ref_tile/qwen_a_gateway_v1/post_fill.tcl",
+      "kind": "file",
+      "sha256": "29b39bbe8e35409d82f878e19c0b596c9b117175b8efc14b249939c1099b0cd8",
+      "git_blob": "9e516a992ea585a2414ea9cf388b1fde18554ca1",
+      "source": "working_tree",
+      "matches_provenance_commit": false
+    },
+    {
+      "path": "physical/ref_tile/qwen_a_gateway_v1/post_grt.tcl",
+      "kind": "file",
+      "sha256": "29b39bbe8e35409d82f878e19c0b596c9b117175b8efc14b249939c1099b0cd8",
+      "git_blob": "9e516a992ea585a2414ea9cf388b1fde18554ca1",
+      "source": "working_tree",
+      "matches_provenance_commit": false
+    },
+    {
+      "path": "physical/ref_tile/qwen_a_gateway_v1/pre_cts.tcl",
+      "kind": "file",
+      "sha256": "103a4e4c541f0d2e10f10224fb13a2b6a1fbb5977cab7921420f9ceaaefb50fe",
+      "git_blob": "4f824fe4621693e24679982b239064e8f3ae2cc6",
+      "source": "working_tree",
+      "matches_provenance_commit": false
+    },
+    {
+      "path": "physical/ref_tile/qwen_a_gateway_v1/pre_drt.tcl",
+      "kind": "file",
+      "sha256": "121e31c5bfdbe81c5490bc3614957163714fce04f56c62d942b174cd321eacae",
+      "git_blob": "f3194ba91f58ab5a3d66ed4d02acbd00b1781664",
+      "source": "working_tree",
+      "matches_provenance_commit": false
+    },
+    {
+      "path": "physical/ref_tile/qwen_a_gateway_v1/pre_fill.tcl",
+      "kind": "file",
+      "sha256": "121e31c5bfdbe81c5490bc3614957163714fce04f56c62d942b174cd321eacae",
+      "git_blob": "f3194ba91f58ab5a3d66ed4d02acbd00b1781664",
+      "source": "working_tree",
+      "matches_provenance_commit": false
+    },
+    {
+      "path": "physical/ref_tile/qwen_a_gateway_v1/pre_grt.tcl",
+      "kind": "file",
+      "sha256": "7a4a8cb6aef83160c9b8e910ab2c5b5d2d00ccdbd315290c0b54bc0723fdd169",
+      "git_blob": "354b8d19a4f5ca0872f4ac2c9c57e4157592e2a7",
+      "source": "working_tree",
+      "matches_provenance_commit": false
+    },
+    {
+      "path": "physical/ref_tile/qwen_a_gateway_v1/signoff.sdc",
+      "kind": "file",
+      "sha256": "5082e3a64d36edc01d4499f93bd92543de3486ab73307b66ddc5551f112cc4c6",
+      "git_blob": "16c8bd5dde783f6beab036392afab3462f7e3758",
+      "source": "working_tree",
+      "matches_provenance_commit": false
+    },
+    {
+      "path": "physical/ref_tile/qwen_a_gateway_v1/spec.json",
+      "kind": "file",
+      "sha256": "5336a283434a227ac1294343958cffff036e1c3d78a6b9bf0289d88c6d520d76",
+      "git_blob": "a321e29156607cbf3b5dde8c8a7df68cd15096f3",
+      "source": "working_tree",
+      "matches_provenance_commit": false
+    },
+    {
+      "path": "rtl/qwen_sys/static_schedule_20261014/ot_qwen_a_operand_gateway_v1.sv",
+      "kind": "file",
+      "sha256": "a794f1f47a2f273e32397062e87b71da7bbd2edc0a36b23451c40b15786e0239",
+      "git_blob": "57f6926b0851db426690a4f48896de07b2821af9",
+      "source": "working_tree",
+      "matches_provenance_commit": false
+    }
+  ],
+  "all_checked_files_match_current_content": true,
+  "raw_result": {
+    "local_path": "/home/ubuntu/wt/qwen-split-compute-1014/physical/ref_tile/qwen_a_gateway_v1/gate_result.json",
+    "sha256": "0abc314aad87b2f15a5eb74024b9b3e356e357c6f4839dfa6fe82876ada2f498",
+    "bytes": 4897173,
+    "remote_run": "ot-epyc4:/srv/opentallas-scratch/claude/ref_gate/qwen_a_gateway_v1-20261015-035037",
+    "remote_log": "ot-epyc4:/tmp/ref_gate_qwen_a_gateway_v1_20261015-035037.log"
+  },
+  "measurements": {
+    "outline_um": [
+      216,
+      432
+    ],
+    "source_ff": 466,
+    "std_area_um2": 12183,
+    "tt_in_to_out_wns_ps": -1527.5,
+    "tt_hold_wns_ps": 30.4442859810905,
+    "combinational_boundary_bits": 3756,
+    "deep_reg_to_output_bits": 1537,
+    "worst_reported_logic_levels": 32,
+    "unregistered_vm_to_a_reach_um": 556,
+    "tt_clock_max_insertion_ps": 362.4,
+    "tt_clock_spread_ps": 59.5
+  },
+  "gate_clock_report": {
+    "max_root_sinks": 466,
+    "root": "port:clk",
+    "cts": true,
+    "tt_insertion_ps": 362.4,
+    "tt_spread_ps": 59.5,
+    "declared_clock": null,
+    "limits": {
+      "sinks": 15000,
+      "insertion_ps": 300.0,
+      "spread_ps": 80.0
+    },
+    "clock_measurements": [
+      {
+        "source": "clk",
+        "clock": "core_clk",
+        "tt": {
+          "boundary": {
+            "n": 466,
+            "mean": 323.1,
+            "min": 302.9,
+            "max": 362.4
+          },
+          "all": {
+            "n": 466,
+            "mean": 323.1,
+            "min": 302.9,
+            "max": 362.4
+          },
+          "errors": [],
+          "macros": null,
+          "macro_libs": 0
+        }
+      }
+    ],
+    "measured_clock": "core_clk",
+    "verdict": "PASS",
+    "text": "466 sinks on the largest root <= 15,000; measured TT insertion 362.4 ps, leaf spread 59.5 ps"
+  },
+  "gate_items": [
+    {
+      "severity": "WARN",
+      "check": "sources",
+      "message": "13 referenced file(s) do not exist at HEAD: ['physical/ref_tile/qwen_a_gateway_v1/clock.sdc', 'physical/ref_tile/qwen_a_gateway_v1/kit.env', 'physical/ref_tile/qwen_a_gateway_v1/pdn.tcl', 'physical/ref_tile/qwen_a_gateway_v1/post_cts.tcl', 'physical/ref_tile/qwen_a_gateway_v1/post_drt.tcl', 'physical/ref_tile/qwen_a_gateway_v1/post_fill.tcl']",
+      "fix": "commit them / fix the path"
+    },
+    {
+      "severity": "WARN",
+      "check": "util",
+      "message": "synthesized std area 12183 um2 + macros 0 in core 90531: util 13%",
+      "fix": "set \"std_area_um2\": 12183 and drop 'outline' (gen sizes to util 0.52)"
+    },
+    {
+      "severity": "WARN",
+      "check": "textbook.boundary",
+      "message": "3756 output bit(s) combinational from input ports (e.g. embed_code_q[90]->embed_faults[9] 32 lv, embed_code_q[90]->a_q[319] 32 lv, embed_code_q[90]->a_q[318] 32 lv): register the boundary (pin flops / registered outputs)",
+      "fix": "register every boundary: pin flop in, flop out; never an ICG enable from a port"
+    },
+    {
+      "severity": "WARN",
+      "check": "textbook.boundary",
+      "message": "1537 register->output bit(s) > 3 levels (worst embed_lanes[96]$_DFF_P_->a_q[534] 32 lv, embed_lanes[96]$_DFF_P_->a_q[530] 32 lv, embed_lanes[90]$_DFF_P_->a_q[510] 32 lv): register the boundary (pin flops / registered outputs)",
+      "fix": "register every boundary: pin flop in, flop out; never an ICG enable from a port"
+    },
+    {
+      "severity": "FAIL",
+      "check": "textbook.wire_reach",
+      "message": "95152 stage(s) beyond 500 um reach: insert relay flops",
+      "fix": "relay flops every <= 500 um, or move the logic next to its pins/macros"
+    },
+    {
+      "severity": "FAIL",
+      "check": "textbook.wire_reach",
+      "message": "combinational path pin vm_q[2015] -> pin a_q[2015]: up to 556 um with no register (> 500 um)",
+      "fix": "relay flops every <= 500 um, or move the logic next to its pins/macros"
+    },
+    {
+      "severity": "FAIL",
+      "check": "textbook.wire_reach",
+      "message": "combinational path pin vm_q[1984] -> pin a_q[1984]: up to 556 um with no register (> 500 um)",
+      "fix": "relay flops every <= 500 um, or move the logic next to its pins/macros"
+    },
+    {
+      "severity": "FAIL",
+      "check": "textbook.wire_reach",
+      "message": "combinational path pin vm_q[2015] -> pin a_q[2015]: up to 556 um with no register (> 500 um)",
+      "fix": "relay flops every <= 500 um, or move the logic next to its pins/macros"
+    },
+    {
+      "severity": "WARN",
+      "check": "textbook.util_channel",
+      "message": "utilisation 13.5% outside 45%-65% (std 12259 + macro 0 um2 in 90531 um2): shrink the outline (long wires / sparse placement)",
+      "fix": "size the outline to util 0.50-0.55 with >= 20 um macro channels"
+    }
+  ],
+  "next": "Source owner proves unused VM passthrough and compiler alignment before narrowing; evaluate retiming decoder into existing embedding alignment with full SU timing/reset/tag equivalence. No repeated enlarged-outline attempt."
+}

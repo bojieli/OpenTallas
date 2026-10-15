@@ -1,0 +1,11 @@
+ROW MISMATCH tk 51 lane 0 row 0 mask 5555 exp ffff seen 0
+DATA MISMATCH row 0 word 0
+DATA MISMATCH row 0 word 2
+DATA MISMATCH row 0 word 4
+DATA MISMATCH row 0 word 6
+DATA MISMATCH row 0 word 8
+DATA MISMATCH row 0 word 10
+UNEXPECTED FAULT lanes 6318c6318c6318c6318c
+TB_VMCAP RESULT mode 0 phases 14 rows full 1462 partial 3 missing 278 bad 14638
+TB_VMCAP FAIL mode 0
+/srv/opentallas-scratch/codex/cap-pipe-dup-production-1015/tb_dsfd_vm_static_cap.sv:136: $finish called at 847910 (1ps)

@@ -1,0 +1,18 @@
+test_allocation (__main__.CalendarTests) ... ok
+test_capture_declaration (__main__.CalendarTests) ... ok
+test_frame (__main__.CalendarTests) ... ok
+test_generation (__main__.CalendarTests) ... ok
+test_mask (__main__.CalendarTests) ... ok
+test_overlap (__main__.CalendarTests) ... ok
+test_preedge_read (__main__.CalendarTests) ... ok
+test_production_shape (__main__.CalendarTests) ... ok
+test_source (__main__.CalendarTests) ... ok
+test_stage_overwrites_compute (__main__.CalendarTests) ... ok
+test_stale_compute_capture_after_reuse (__main__.CalendarTests) ... ok
+test_stale_stage_capture_at_reuse (__main__.CalendarTests) ... ok
+test_write_collision (__main__.CalendarTests) ... ok
+
+----------------------------------------------------------------------
+Ran 13 tests in 22.571s
+
+OK

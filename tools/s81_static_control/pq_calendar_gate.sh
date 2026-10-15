@@ -13,7 +13,7 @@ for i in range(23):
  t=i if i<12 else i*3
  rows.append(dict(timestamp=t,action=dict(vm_req=1,vm_addr=8192+i*64,stream_req=1,stream_addr=i+(8192 if bits==75 else 0),accept_tag=0)))
 rows.append(dict(timestamp=80,action=dict(phase_end=1)))
-words=compile_events(rows,[dict(engine=0,issue=0,done=100,native_tag=0)],action_bits=bits)
+words=compile_events(rows,[dict(engine=0,issue=0,done=100,pin_to_pin=99,native_tag=0)],action_bits=bits)
 open('expected.hex','w').write(''.join(f'{w:024x}\n'for w in words))
 open('pq_calendar_action.viamap.hex','w').write(viamap([w&((1<<72)-1)for w in words]))
 open('pq_calendar_time.viamap.hex','w').write(viamap([w>>72 for w in words]))

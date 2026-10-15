@@ -1,0 +1,1 @@
+module probe(input clk,clk_collect,clk_encode,clk_codeword,pma_rck,rclk_syndrome,rclk_bm0,rclk_bm1,rclk_bm2,rclk_bm3,rclk_chien,rclk_emit, input rst_n,input d, output q); DFFHQNx1_ASAP7_75t_R u(.CLK(clk),.D(d),.QN(q)); endmodule

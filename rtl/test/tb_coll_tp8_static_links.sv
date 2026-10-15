@@ -35,7 +35,7 @@ module tb_coll_tp8_static_links #(
     parameter integer KC = 4, KW = 2,
     parameter integer RU=0,RS0=0,RS1=0,RS2=0,SHARED=0,SIXFIVE=0,
     parameter integer XU = 0, XS = 0             // extra PHY cycles vs compiled (negative control)
-) (input wire clk, input wire lck,input wire fdi_ck);
+) (input wire clk, input wire lck,input wire fdi_ck,input wire blk_ck);
     localparam integer ND = 8, LANES = 16, FW = 512, TAGW = 32, PW = FW + 2 + TAGW, RW = FW + 2, MAXW = 1 << 16;
     localparam integer FP = 546 + 19 + 32, FR = 514 + 19 + 32;       // codec frames 597 / 565
     reg [FW-1:0] part [0:MAXW-1];
@@ -126,7 +126,7 @@ module tb_coll_tp8_static_links #(
 `else
               .phy_up(5'b11111),.phy_rx_valid(prv),.phy_rx(prpack),.phy_tx_valid(ptv),.phy_tx(ptpack),
 `endif
-              .gearbox_core_ck(clk),.fdi_rx_ck({3{fdi_ck}}),.fdi_ck(fdi_ck),.shared_rx_valid(sharerxv[g]),.shared_rx(sharerx[g*1043+:1043]),.shared_tx_valid(sharetxv[g]),.shared_tx(sharetx[g*1043+:1043]),.shared_fault(shareflt[g]),
+              .gearbox_core_ck(clk),.fdi_rx_ck(fdi_ck),.blk_ck({2{blk_ck}}),.fdi_ck(fdi_ck),.shared_rx_valid(sharerxv[g]),.shared_rx(sharerx[g*1043+:1043]),.shared_tx_valid(sharetxv[g]),.shared_tx(sharetx[g*1043+:1043]),.shared_fault(shareflt[g]),
               .transport_cdc_fault(xflt[g*20+:20]),.transport_abort(cabort[g*5+:5]),.transport_fault_cause(ccause[g*40+:40]));
             // Read-only source observations used by the existing latency meter.
 `ifdef OT_TP8S_PRODUCTION_WRAPPER

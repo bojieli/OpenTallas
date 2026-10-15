@@ -1,0 +1,97 @@
+{
+  "schema": "ot.hbm.host.native_slot_request.v1",
+  "status": "REQUEST_ONLY; pending H-DIE absolute assignment, native pins/phase/boundaries and route",
+  "outline_um": [
+    2924.208,
+    831.6
+  ],
+  "orientation": "R0",
+  "children": [
+    {
+      "instance": "u_endpoint",
+      "master": "hfd_lk_ep",
+      "at_um": [
+        324,
+        0
+      ],
+      "outline_um": [
+        2600,
+        830.52
+      ],
+      "orient": "R0",
+      "faces": {
+        "W": "f_lk1120",
+        "E": "phy974"
+      },
+      "ownership": "existing h_elem_a source/leaf ownership; no modification"
+    },
+    {
+      "instance": "u_packet",
+      "master": "hfd_host_packet_face",
+      "at_um": [
+        0,
+        194.4
+      ],
+      "outline_um": [
+        259.2,
+        432
+      ],
+      "orient": "R0",
+      "faces": {
+        "W": "h787",
+        "E": "packetTX512+valid/ready",
+        "S": "landingRX512+valid/ready"
+      }
+    },
+    {
+      "instance": "u_landing",
+      "master": "ot_hbm_host_landing256",
+      "at_um": [
+        25.92,
+        0
+      ],
+      "outline_um": [
+        233.28,
+        172.8
+      ],
+      "orient": "R0",
+      "faces": {
+        "E": "endpoint545+valid",
+        "N": "head512+valid/ready"
+      },
+      "macros": [
+        {
+          "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2",
+          "at_leaf_um": [
+            30.24,
+            23.76
+          ],
+          "outline_um": [
+            172.824,
+            41.064
+          ],
+          "orient": "R0"
+        },
+        {
+          "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2",
+          "at_leaf_um": [
+            30.24,
+            86.4
+          ],
+          "outline_um": [
+            172.824,
+            41.064
+          ],
+          "orient": "R0"
+        }
+      ]
+    }
+  ],
+  "channels_um": {
+    "endpoint_to_controller_landing": 64.8,
+    "landing_N_to_controller_S": 21.6
+  },
+  "analog_boundary": "Actualdigitalot_pdie_ucie/CRC-replay endpoint; behaviouralPMA513data+TX/RXclock. Analogspace is separate from this digital packing; no oldhostPHYblackboxview adoption.",
+  "clock_contract": "20separate delivered synchronous local link roots plus recoveredPMAclock. Exact actual child pin/root lists inRTL; nativephi-R gates required.",
+  "model_area_mm2": 2.4317713728
+}

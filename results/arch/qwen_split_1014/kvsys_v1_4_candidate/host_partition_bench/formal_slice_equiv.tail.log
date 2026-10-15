@@ -1,0 +1,40 @@
+ success!
+  Trying to prove $equiv for \u_boot.demux_fault:ezsat
+ezsat
+ success!
+  Trying to prove $equiv for \u_boot.base_fault:ezsat
+ezsat
+ success!
+  Trying to prove $equiv for \u_boot.test_done:ezsat
+ezsat
+ success!
+  Trying to prove $equiv for \u_boot.boot_completion_we:ezsat
+ezsat
+ success!
+  Trying to prove $equiv for \u_boot.boot_completion_v:ezsat
+ezsat
+ success!
+  Trying to prove $equiv for \u_boot.normal_completion_we:ezsat
+ezsat
+ success!
+  Trying to prove $equiv for \u_boot.normal_completion_v:ezsat
+ezsat
+ success!
+  Trying to prove $equiv for \u_boot.completion_we:ezsat
+ success!
+  Trying to prove $equiv for \u_boot.completion_v:ezsat
+ success!
+Proved 13195 previously unproven $equiv cells.
+
+17. Executing EQUIV_INDUCT pass.
+No selected unproven $equiv cells found in equiv.
+Proved 0 previously unproven $equiv cells.
+
+18. Executing EQUIV_STATUS pass.
+Found 13195 $equiv cells in equiv:
+  Of those cells 13195 are proven and 0 are unproven.
+  Equivalence successfully proven!
+
+End of script. Logfile hash: 6ea7f2e9a6, time: 6.92s, user: 6.73s, system: 0.07s, MEM: 101.00 MB peak
+Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)
+Time spent: 92% 1x equiv_simple (6 sec), 4% 1x opt_clean (0 sec), ...
