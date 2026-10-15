@@ -91,6 +91,10 @@ class Roadmap:
     if i not in (0,11):self.add((self.sx[i-1],y),(self.sx[i],y))
     if i in (10,11):
      side='W' if i==10 else 'E';sx=G.s14_x(m,side,'xdn')
+     # A coherent field-column move may consume part of the old S14.
+     # Keep the actual global spine outside the moved child strip, with
+     # enough half-width for a real1026-bit vertical service station.
+     if side=='W':sx=max(sx,c['x_um']+G.COL_W8+G.stn_dims([1026],False)[0]/2+.864)
      entry=(sx,y);self.add(entry,(self.sx[i],y));self.entry.setdefault(side,[]).append(entry)
   # Optional coherent column moves may open a real broad service gap.
   # Connect it only through the adjacent actual frame streets, never
@@ -186,7 +190,8 @@ def trunks(G,m,CH,cor,starts,ga,end_spec,hub_block,bus):
  """
  compact_return_relays(G,m,CH)
  road=Roadmap(G,m,cor);allowed=[v for k,v in cor.items() if k.startswith(('cfstreet','rsclane','s14','vch','hcc','svc_access'))]
- m['chain_paths']=[];calendar={}
+ m['chain_paths']=[];calendar={};m['canonical_injectors']={side:dict(inst=starts[side].name,box=list(starts[side].box()),source_ports=['fo','od'])for side in 'WE'}
+ m['canonical_broadcast_trees']={}
  # One real broadcast tree per physical half. Shared road prefixes are
  # registered once; independent per-root chains would replicate the same
  # 566-bit stream until the narrow RSC lane is full (measured cx37 failure).
@@ -214,6 +219,7 @@ def trunks(G,m,CH,cor,starts,ga,end_spec,hub_block,bus):
    if f['half']!=side:continue
    n=road.rootnode[(r,'x')]
    while n is not None:required.add(n);n=parent[n]
+  m['canonical_broadcast_trees'][side]=dict(injector=st.name,prefix=prefix,entry=entry,root_targets={r:road.rootnode[(r,'x')] for r,f in m['frames'].items() if f['half']==side},edges=[dict(node=n,parent=parent[n],chain=f'cx{side}_edge{k}')for k,n in enumerate(sorted(required-{entry},key=lambda n:dist[n]))])
   rootsource=(st.name,'fo','od');tail={};flight={};loc={}
   pre=CH.run(f'cx{side}_spine',[G.LSW+2],prefix,allowed,source,forced=[G._poly_len(prefix)])
   G.chain_nets(CH,f'cx{side}_spine',rootsource,[i for i,_,_ in pre],[G.LSW+2]);tail[entry]=(pre[-1][0].name,'fo0','do0') if pre else rootsource

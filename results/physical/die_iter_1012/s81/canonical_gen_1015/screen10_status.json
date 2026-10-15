@@ -1,0 +1,12 @@
+{
+ "status": "GEN_FAIL",
+ "error": "RuntimeError('chain ixSW: no station spot near s=3075 of 5881 (12718, 3433)')",
+ "traceback": "Traceback (most recent call last):\n  File \"/srv/opentallas-scratch/codex-canonical-gen-1015/src/tools/s81/canonical_screen.py\", line 22, in main\n    m=G.build();G.finalize_r8(m)\n  File \"/srv/opentallas-scratch/codex-canonical-gen-1015/src/tools/dsrom_s81_fulldie.py\", line 568, in build\n    return build_r8(variant)\n  File \"/srv/opentallas-scratch/codex-canonical-gen-1015/src/tools/dsrom_s81_fulldie.py\", line 3656, in build_r8\n    m0 = build_r8(variant)\n  File \"/srv/opentallas-scratch/codex-canonical-gen-1015/src/tools/dsrom_s81_fulldie.py\", line 4306, in build_r8\n    buses_r8(m)\n    ~~~~~~~~^^^\n  File \"/srv/opentallas-scratch/codex-canonical-gen-1015/src/tools/s81/canonical_screen.py\", line 15, in capture\n    return old(m)\n  File \"/srv/opentallas-scratch/codex-canonical-gen-1015/src/tools/dsrom_s81_fulldie.py\", line 4767, in buses_r8\n    _svc_chains(m, CH8, P, cor, end_spec, hub_block)\n    ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/srv/opentallas-scratch/codex-canonical-gen-1015/src/tools/dsrom_s81_fulldie.py\", line 6987, in _svc_chains\n    single(f'{tag}{st}', 512, 'vr', (sv.name, f'{pfx}f', f'{pfx}d'), (px, py), path, he)\n    ~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/srv/opentallas-scratch/codex-canonical-gen-1015/src/tools/dsrom_s81_fulldie.py\", line 6898, in single\n    sts = CH8.run(name, [lw], _dedup(path), allc, src_xy,\n                  force_horiz=bool(narrow_service and not CANONICAL_LAYOUT.get('service_access_corridors')\n                                   and stn_dims([lw],False)[0]>RSC_W-.864))\n  File \"/srv/opentallas-scratch/codex-canonical-gen-1015/src/tools/dsrom_s81_fulldie.py\", line 3521, in run\n    raise RuntimeError(f'chain {name}: no station spot near s={target:.0f} of {L:.0f} ({cx:.0f}, {cy:.0f})')\nRuntimeError: chain ixSW: no station spot near s=3075 of 5881 (12718, 3433)\n",
+ "native_qualified": false,
+ "source_sha256": {
+  "tools/dsrom_s81_fulldie.py": "25a1b65d82c65ff1d73fbabce4d0b0c56a18d6d44aa51118051dfb47c4bec217",
+  "tools/s81/canonical_layout.py": "cc2abd7673349c8492bc4aa7cb56dcf4c3a74b26bda954d0b6d1fb8477a0d1f5",
+  "tools/s81/canonical_screen.py": "230e3db328a1461f588a6a15d82619718381771b67126f2e8881a751f2175b8b"
+ },
+ "capacity_sha256": "2d1fa10aa7e3136a4fece04b2b9b1d094a99391dcd5c7a6726991061ff540995"
+}

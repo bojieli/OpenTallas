@@ -3464,6 +3464,10 @@ class Chains:
     def run(self, name, lanes, path, allowed, src, forced=(), first_prev=None, kind='stn', reach=None, force_horiz=False):
         """Place stations along polyline `path` for a chain of `lanes` (list of data widths).  `forced`: path lengths
         where a station MUST stand (taps / branches).  Returns [(inst, s_along)].  src: (x, y) of the source pin."""
+        path_receipt=None
+        if self.m.get('canonical_layout'):
+            path_receipt=dict(chain=name,lanes=list(lanes),path=list(path),source=src,forced_stops=list(forced),force_horiz=force_horiz,stations=[],status='BUILDING')
+            self.m.setdefault('chain_paths',[]).append(path_receipt)
         L = _poly_len(path)
         stops = sorted(set(round(s, 3) for s in forced if 0 < s <= L + 1e-6))
         out, pos, cur = [], 0.0, src
@@ -3528,10 +3532,12 @@ class Chains:
             self.P.add(it)
             c = (x + w / 2, y + h / 2)
             out.append((it, max(t_, pos + 1.0), _mh(cur, c)))
+            if path_receipt is not None:path_receipt['stations'].append(dict(inst=it.name,master=it.master,box=list(it.box()),center=c,orientation=it.orient))
             cur, pos = c, max(t_, pos + 1.0)
         self.rec.append(dict(chain=name, lanes=list(lanes), stations=len(out), length_um=round(L, 1),
                              max_hop_um=round(max([h_ for _, _, h_ in out] + [_mh(cur, end)]), 1),
                              last_hop_um=round(_mh(cur, end), 1)))
+        if path_receipt is not None:path_receipt['status']='CONSTRUCTED'
         return out
 
 
@@ -6884,7 +6890,7 @@ def _svc_chains(m, CH8, P, cor, end_spec, hub_block):
                     m.setdefault('south_su_bypass_chains', []).append(name)
                 detour.append(b_)
             path = detour
-        narrow_service = CANONICAL_LAYOUT and re.fullmatch(r'[qa][NS][WE]',name)
+        narrow_service = CANONICAL_LAYOUT and re.fullmatch(r'(q|a|ix|co)[NS][WE]',name)
         if narrow_service:
             from s81.canonical_layout import service_path
             endpoint=(sink_end.x+sink_end.w/2,sink_end.y+sink_end.h/2)
