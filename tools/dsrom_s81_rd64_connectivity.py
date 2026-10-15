@@ -36,7 +36,7 @@ def derive(pairs=2417,regions=128,seats=32,region_bounds=None):
         children=next_children
     for r in range(regions):
         assert children[r] is not None
-        roots.append(dict(region=r,input=children[r],source_instance=f'g_r[{r}].u_root',VM_port=r,generated_instance=f'root{r}',removed=False))
+        roots.append(dict(region=r,input=children[r],source_instance=f'g_r[{r}].g_internal.u_root',VM_port=r,generated_instance=f'root{r}',removed=False))
     return dict(schema='dsrom.s81.rd64.exact_inactive_prune.v1',pairs=pairs,regions=regions,region_bounds=bounds,
       reference_return_pair_seats=regions*seats,reference_levels=levels,
       active_leaves=leaves,nodes=nodes,removed_nodes=removed,roots=roots,
