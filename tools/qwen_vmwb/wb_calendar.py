@@ -148,6 +148,56 @@ def conflicts(f, ed, rw):
     return bad
 
 
+def route_binding(profile):
+    """Bind one issuer TE to three explicitly measured physical path ages.
+
+    Ages have a common origin: the TT result-tag output. Missing ages refuse
+    binding. This checks a supplied route model, never qualifies physical timing.
+    """
+    def age(value, name):
+        if type(value) is not int or value < 0:
+            raise ValueError(f"unassigned or invalid route age: {name}")
+        return value
+    issue = age(profile.get("tag_to_issue_edges"), "tag_to_issue_edges")
+    bands = profile.get("bands", [])
+    if len(bands) != NB or {band.get("band") for band in bands} != set(range(NB)):
+        raise ValueError("route profile requires exactly bands 0, 1, 2")
+    bands = sorted(bands, key=lambda band: band["band"])
+    delays, offsets = [], []
+    for band in bands:
+        capture = age(band.get("tag_to_capture_edges"), "tag_to_capture_edges")
+        fanout = age(band.get("train_fanout_edges"), "train_fanout_edges")
+        if capture < 13:
+            raise ValueError("route capture precedes measured 13-edge component path")
+        delays.append(capture - issue - fanout)
+        offsets.append(capture - 13)
+    if len(set(delays)) != 1 or delays[0] < 2:
+        raise ValueError("one TRAIN_EDGES cannot align all three band captures; explicit path padding required")
+    return dict(TRAIN_EDGES=delays[0], band_capture_offsets=offsets,
+                scope="Supplied fixed-edge route model only; physical/source evidence remains external")
+
+
+def routed_calendar(f, c0, profile):
+    binding = route_binding(profile)
+    ed, _, late = calendar(f, c0)
+    offsets = binding["band_capture_offsets"]
+    ed = {key: edge + offsets[key[1]] for key, edge in ed.items()}
+    bad = conflicts(f, ed, rows(f))
+    # Band 2 owns end markers. Matching each band's train-start to its capture
+    # does not suffice: an early end could expose a burst before another band.
+    ns = train(f)["slot_count"]
+    ending = {}
+    for k in range(8 * f["tiles"]):
+        end = ed[(k, NB - 1, ns - 1)]
+        ending[k] = end
+        pending = [key for key in rows(f) if key[0] <= k and ed[key] > end]
+        if pending:
+            bad.append(("end before all prior rows", k, pending))
+    return dict(binding=binding, bank_or_end_conflicts=bad,
+                last_landing_after_go=c0 + max(ending.values()) + 3,
+                capture_after_emission=len(late), ok=not bad and not late)
+
+
 def check_rtl_rows(pc, f, rows_dir):
     p = Path(rows_dir) / f"{pc}.log"
     got = {}
@@ -217,6 +267,7 @@ def main(argv=None):
     ap.add_argument("--pcs", default=str(PCS))
     ap.add_argument("--rows-dir", help="tb_vmwb_rows logs: cross-check the row law against the actual RTL ports")
     ap.add_argument("--out", help="write the calendar/cost JSON here")
+    ap.add_argument("--route-profile", help="actual per-band fixed-edge path ages; missing or inconsistent ages refuse binding")
     a = ap.parse_args(argv)
     dec = json.loads(DECISION.read_text())["link_handoff"]["ops"]
     ops, ok = {}, True
@@ -230,6 +281,9 @@ def main(argv=None):
             same, n = check_rtl_rows(pc, f, a.rows_dir)
             rec["row_law_matches_rtl"] = same
             ok &= same
+        if a.route_profile:
+            rec["route_calendar"] = routed_calendar(f, c0, json.loads(Path(a.route_profile).read_text()))
+            ok &= rec["route_calendar"]["ok"]
         rec["structures"] = {}
         for name, st in STRUCTS.items():
             ed, last, late = calendar(f, c0, **st)

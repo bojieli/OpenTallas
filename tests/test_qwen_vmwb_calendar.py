@@ -52,6 +52,40 @@ class WritebackCalendarTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, "duplicate RTL row"):
                 wc.check_rtl_rows(pc, fields, directory)
 
+    def profile(self, captures, fanout=None):
+        return {"tag_to_issue_edges": 0, "bands": [
+            {"band": b, "tag_to_capture_edges": capture,
+             "train_fanout_edges": (fanout or [0, 0, 0])[b]}
+            for b, capture in enumerate(captures)]}
+
+    def test_route_age_unknown_and_unbalanced_commands_refuse(self):
+        with self.assertRaisesRegex(ValueError, "unassigned"):
+            wc.route_binding({})
+        with self.assertRaisesRegex(ValueError, "one TRAIN_EDGES"):
+            wc.route_binding(self.profile([13, 14, 15]))
+
+    def test_balanced_command_ages_do_not_hide_bank_or_end_conflicts(self):
+        program = self.parse(self.lines)
+        for pc, fields in program.items():
+            # Explicitly matched fanout produces one TE, with every row and
+            # end beat on a legal bank calendar at the new per-band ages.
+            legal = self.profile([13, 14, 15], [0, 1, 2])
+            result = wc.routed_calendar(fields, 0, legal)
+            self.assertTrue(result["ok"], pc)
+            self.assertEqual(result["binding"]["TRAIN_EDGES"], 13)
+            # Commands still align, but band 0 now trails the end-owning band.
+            broken = self.profile([16, 14, 13], [3, 1, 0])
+            result = wc.routed_calendar(fields, 0, broken)
+            self.assertFalse(result["ok"], pc)
+
+    def test_nominal_route_landing_matches_cached_bench_convention(self):
+        program = self.parse(self.lines)
+        for pc, fields in program.items():
+            c0 = self.dec[pc]["capture_cycles_after_go"][0]
+            result = wc.routed_calendar(fields, c0, self.profile([13, 13, 13]))
+            _, last, _ = wc.calendar(fields, c0)
+            self.assertEqual(result["last_landing_after_go"], c0 + last + 3)
+
     def test_current_complete_component_evidence(self):
         with tempfile.TemporaryDirectory() as directory:
             out = Path(directory) / "calendar.json"
