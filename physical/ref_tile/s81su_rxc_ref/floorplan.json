@@ -6,17 +6,17 @@
  "die": [
   0,
   0,
-  388.8,
-  388.8
+  280.8,
+  367.2
  ],
  "core": [
   2.16,
   2.16,
-  386.64,
-  386.64
+  278.64,
+  365.03999999999996
  ],
  "why": "spec outline",
- "std_area_um2": 30000,
+ "std_area_um2": 9000,
  "layer_contract": {
   "children": {},
   "pg_layer": "M5",
@@ -51,7 +51,17 @@
    "o_alive",
    "o_den",
    "o_rdy",
-   "o_rjid"
+   "o_rjid",
+   "xb_v",
+   "xw_st",
+   "xw_v",
+   "xw_last",
+   "xw_cfg",
+   "xb_vi",
+   "xb_wi",
+   "xb_y",
+   "xb_m",
+   "xb_f"
   ],
   "W": [
    "xa_v",
@@ -67,11 +77,7 @@
    "xq_s",
    "xq_vi",
    "xq_y",
-   "xq_f",
-   "xb_v",
-   "xb_vi",
-   "xb_y",
-   "xb_f"
+   "xq_f"
   ]
  },
  "clock_port": "ck",
@@ -80,12 +86,13 @@
   [
    "WARN",
    "util",
-   "utilisation 20% outside 45%-60% (std 30000 + macro 0 in core 147825 um2)",
+   "utilisation 9% outside 45%-60% (std 9000 + macro 0 in core 100329 um2)",
    "resize the outline to util 0.50-0.55 (drop 'outline', set util)"
   ]
  ],
  "referenced": [
-  "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_rxt.sv",
+  "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_rxh.sv",
+  "rtl/dsrom_sys/s81_suhc/ot_s81_su_rw.sv",
   "rtl/dsrom_sys/s81_suhc/ot_s81_su_rx.sv",
   "rtl/hdc/v41x/ot_hdc_v41x_spshort.sv",
   "rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
@@ -98,7 +105,8 @@
   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
   "rtl/hdc/ot_hdc_prefix.sv",
   "rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv",
-  "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_rxh.sv",
+  "rtl/hdc/v41x/ot_dsrom_su_fdiv_f12.sv",
+  "rtl/hdc/v41x/ot_dsrom_su_f12.sv",
   "physical/ref_tile/s81su_rxc_ref/kit.env",
   "physical/ref_tile/s81su_rxc_ref/clock.sdc",
   "physical/ref_tile/s81su_rxc_ref/signoff.sdc",

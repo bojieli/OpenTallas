@@ -3,7 +3,8 @@
  "top": "dsfd_su_t_rxrb",
  "kind": "tile",
  "sources": [
-  "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_rxt.sv",
+  "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_rxh.sv",
+  "rtl/dsrom_sys/s81_suhc/ot_s81_su_rw.sv",
   "rtl/dsrom_sys/s81_suhc/ot_s81_su_rx.sv",
   "rtl/hdc/v41x/ot_hdc_v41x_spshort.sv",
   "rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
@@ -16,7 +17,8 @@
   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
   "rtl/hdc/ot_hdc_prefix.sv",
   "rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv",
-  "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_rxh.sv"
+  "rtl/hdc/v41x/ot_dsrom_su_fdiv_f12.sv",
+  "rtl/hdc/v41x/ot_dsrom_su_f12.sv"
  ],
  "clock_port": "ck",
  "reset_ports": [
@@ -28,11 +30,17 @@
    "ck",
    "rst",
    "i_v",
-   "i_x"
+   "i_x",
+   "w_st",
+   "w_v",
+   "w_last",
+   "w_cfg"
   ],
   "E": [
    "o_v",
+   "o_w",
    "o_y",
+   "o_m",
    "o_f"
   ]
  },
@@ -46,15 +54,15 @@
  "aspect": 1.0,
  "recipe": 2,
  "job": {
-  "benched_by": "s81su_full",
-  "owner": "Claude:s81-elemB6-1014",
-  "branch": "claude/s81-elemB6-su",
-  "tag": "g1",
-  "purpose": "S81 SU rx cluster RB leaf: 16 score+bias adders (ot_dsrom_qadd), operands = rxc xq_x {bias, score}",
+  "benched_by": "s81su_rxh_eq",
+  "owner": "Claude:S-ELEM-C",
+  "branch": "claude/s81-surx-engram-1015",
+  "tag": "g2",
+  "purpose": "S81 SU rx cluster RB + RW leaf: 16 score+bias adders + ot_s81_su_rw (ffn.weights); operands = rxc xq_x",
   "views_to": "physical/ref_tile/s81su_rxrb_ref/views",
   "record_to": "results/rtl/ref_tile/s81su_rxrb_ref"
  },
- "std_area_um2": 20000,
+ "std_area_um2": 11000,
  "params": {},
  "macros": [],
  "children": [],
@@ -70,5 +78,5 @@
  "hold_pad": {
   "cell": "HB2xp67_ASAP7_75t_R"
  },
- "structural_change": "B6 s81-elemB 10-14: the 16 RB adders leave the rx control leaf (rxc 17,301 sinks / CTS 491 ps refused by the clock rule) as their own leaf; inputs/outputs registered at the pins; +3 cycles on RB (108 -> 111 vs price 117.6)"
+ "structural_change": "S-ELEM-C 10-15 g2: RW (kind 11, added to the flat tile after the v1 cluster; missing from v1) joins the RB leaf on the same registered operand word; g1 RB-only gate 8,234 sinks CTS 282.9/70.5 r2r +117"
 }

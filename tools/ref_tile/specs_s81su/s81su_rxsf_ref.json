@@ -1,0 +1,78 @@
+{
+ "name": "s81su_rxsf_ref",
+ "top": "dsfd_su_t_rxsf",
+ "kind": "tile",
+ "sources": [
+  "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_rxh.sv",
+  "rtl/dsrom_sys/s81_suhc/ot_s81_su_rw.sv",
+  "rtl/dsrom_sys/s81_suhc/ot_s81_su_rx.sv",
+  "rtl/hdc/v41x/ot_hdc_v41x_spshort.sv",
+  "rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/hdc/ot_hdc_sfu.sv",
+  "rtl/hdc/v41x/ot_dsrom_su_norm.sv",
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/hdc/ot_hdc_fp32_f12.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv",
+  "rtl/hdc/v41x/ot_dsrom_su_fdiv_f12.sv",
+  "rtl/hdc/v41x/ot_dsrom_su_f12.sv"
+ ],
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst"
+ ],
+ "util": 0.6,
+ "pins": {
+  "E": [
+   "ck",
+   "rst",
+   "i_v",
+   "i_x"
+  ],
+  "W": [
+   "o_v",
+   "o_u",
+   "o_u2",
+   "o_mx",
+   "o_f"
+  ]
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 16,
+  "peak_ram_gb": 64,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "aspect": 1.0,
+ "recipe": 2,
+ "job": {
+  "benched_by": "s81su_rxh_eq",
+  "owner": "Claude:S-ELEM-C",
+  "branch": "claude/s81-surx-engram-1015",
+  "tag": "g1",
+  "purpose": "S81 SU rx cluster RA lane FRONT leaf (1 lane: exp, t/(t+2), u^2, max(x,0) to T_U2), x16 in the cluster",
+  "views_to": "physical/ref_tile/s81su_rxsf_ref/views",
+  "record_to": "results/rtl/ref_tile/s81su_rxsf_ref"
+ },
+ "std_area_um2": 11000,
+ "params": {},
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "structural_change": "S-ELEM-C 10-15: rxra (4 softplus_s lanes) gate = 80,137 sinks on one root, CTS 532 ps (clock rule FAIL); one lane alone ~20k flops -> each lane split at u/u^2 into a front and a back leaf (~10k sinks each), +2 cycles on RA (seam out/in flops)"
+}
