@@ -1,0 +1,68 @@
+{
+  "native_profile": "slot160_21_ordered_drain5",
+  "compiler_source_commit": "456c80b6c",
+  "issuer_source_commit": "79037c152",
+  "issuer_source_sha256": "25dcd51a52b5ff57aac1804725844f707db9d953a1e4895eaf3c3af4a3659bcc",
+  "issuer_binary_sha256": "c0e1844b1a527e33363f2d4b3ec709ae6f49b7cc6019cefdd110eb26736ddddc",
+  "issuer_RTL_and_binary_reused": true,
+  "source_image_pins": "inputs.json containsall18rawSHA256+packedSHA256 and exactraw\u2194packedwordroundtripidentities",
+  "semantics": "distinctordered160local-slotprogramme,notoldunordered2569/2574profile; chronologicalendpointsequencecorrectness ownedcompiler/networkgate",
+  "shape": {
+    "native64x512_macros": 21,
+    "capture512leaves": 21,
+    "clock_roots": 43,
+    "initialized_raw256frames": 2688,
+    "native512words": 1344,
+    "base": 0,
+    "exclusive_limit": 2091,
+    "loops": 1,
+    "host_descriptor_gap_edges": 1346
+  },
+  "native_measured": {
+    "actual_images": 18,
+    "layers": [
+      1,
+      14
+    ],
+    "eachfirst_run_controls": 2091,
+    "eachbase640_replay_controls": 1451,
+    "total_exact_controls": 63756,
+    "exact_bits": 16321536,
+    "firstcontrol_after_rawlaunchcapture": 6,
+    "delivery": "continuousonecontrolperedge",
+    "done": "assertedexactlywithlastcontrolindex2090",
+    "drain_zero_indices": [
+      2086,
+      2087,
+      2088,
+      2089,
+      2090
+    ],
+    "drain_zero_controls_checked_includingreplays": 180,
+    "unused_zero_controls": 597
+  },
+  "done_edge_mapping": {
+    "raw_launch_capture": 399,
+    "first_control_FF": 405,
+    "last_control_anddone_FF": 2495,
+    "calculation": "399+6+(2091-1); derivedfrommeasuredfirstphase/continuouscontrolcount/nativeexactlastdoneassert",
+    "decoder_last_FF_model": 2494,
+    "decoder_model_measurement_scope": "providedbystatic_ring,not independently measured byissuer gate"
+  },
+  "terminal": {
+    "unit": "oth-ubuntu-3992286-1792063509",
+    "host": "ot-agidock128",
+    "exit": 0,
+    "admitted_memory_GB": 4,
+    "mode": "existingfrozen21banknativebinary,reusedwithoutrebuild/networkduplicate"
+  },
+  "original_protocol_fault_qualification": {
+    "reuse": true,
+    "scenario_count": 17,
+    "source": "results/arch/hcoll_control256_slot160_1015/receipt.json/native fault-1..17 logs",
+    "reason": "same790RTL,same21bankbinary/capacity/configABI; onlyactualcontrolimages+descriptorlimit changed; no new fault rerun claimed"
+  },
+  "prior_evidence": "all19bank/2569/2574profile receipts preserved; unorderednative networksequencefault0x100 isnotwaived",
+  "network_status": "orderednetworkRXstartupmissing0x004 diagnosis ownedstatic_ring; thisissuerpassdoesnotresolveoroverrideit",
+  "qualification": "nativeissuer storage/delivery/finitecompletion component only; no native9node network/FEC/CDC/arithmetic/WKV/physical/productionrate claim"
+}
