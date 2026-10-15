@@ -1024,7 +1024,9 @@ def lef_text(mst, k, wmap):
     # in from M8.  A hardened parent must keep the same chimney free.
     holes = {}
     for nm, layer, (a, b, c_, d) in pins:
-        if a > 0.5 and b > 0.5 and c_ < mst.w - 0.5 and d < mst.h - 0.5:
+        vert = layer in ('M1', 'M3', 'M5', 'M7', 'M9')
+        edge_ok = (b < 0.5 or d > mst.h - 0.5) if vert else (a < 0.5 or c_ > mst.w - 0.5)
+        if not edge_ok:     # its own preferred direction does not reach the nearest outline edge
             lv = int(layer[1:])
             for i in range(lv, mst.obs_top + 1):
                 holes.setdefault(i, []).append((a - 0.3, b - 0.3, c_ + 0.3, d + 0.3))
