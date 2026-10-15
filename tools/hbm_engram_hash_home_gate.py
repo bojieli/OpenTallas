@@ -11,7 +11,7 @@ import hdc_v41_engram_shipped as S
 ROOT=Path(__file__).resolve().parents[1]
 
 
-def run(out):
+def run(out,clock_roots=False):
     out=Path(out);out.mkdir(parents=True,exist_ok=True)
     t=S.shipped_tables();rng=random.Random(20261015);hist=[];cases=[]
     for i in range(64):
@@ -56,20 +56,26 @@ for(age=1;age<=36;age=age+1) begin
 end
 tick;if(fault || request_valid || done)$fatal(1,"bad drain edge");''')
     lines.append('$display("PASS actual hash to home descriptors=%0d tokens=64 exact ages13..36",checks);$finish;end endmodule')
-    tb=out/'tb.sv';tb.write_text('\n'.join(lines))
+    tb=out/'tb.sv';testbench='\n'.join(lines)
+    if clock_roots:
+        testbench=testbench.replace('ot_hbm_engram_hash_home_native #','ot_hbm_engram_hash_home_clock_roots #').replace('dut(.*);',"dut(.clk_columns({{5{clk}},(`MUT_CLOCK?1'b0:clk)}),.*);")
+    tb.write_text(testbench)
     sources=[ROOT/'rtl/hdc/v41/ot_hdc_engram_tables_shipped_pkg.sv',ROOT/'rtl/hdc/v41/ot_hdc_engram_hash_shipped.sv',ROOT/'rtl/hbm_accel/engram_static_20261015/ot_hbm_engram_home_dispatch.sv',ROOT/'rtl/hbm_accel/engram_static_20261015/ot_hbm_engram_hash_home_native.sv']
+    if clock_roots:
+        sources[1]=ROOT/'rtl/dsrom_sys/engram/clock_partition_1015/ot_s81_engram_hash_clock_roots.sv'
+        sources[-1]=ROOT/'rtl/hbm_accel/engram_static_20261015/ot_hbm_engram_hash_home_clock_roots.sv'
     runs=[]
-    for name,mutant in [('baseline',0),('rank_mutant',1)]:
+    for name,mutant,mut_clock in ([('baseline',0,0),('rank_mutant',1,0),('missing_column_clock',0,1)] if clock_roots else [('baseline',0,0),('rank_mutant',1,0)]):
         exe=out/name
-        cp=subprocess.run(['iverilog','-g2012',f'-DMUTANT_RANK={mutant}','-s','tb','-o',str(exe),*[str(p) for p in sources],str(tb)],text=True,capture_output=True)
+        cp=subprocess.run(['iverilog','-g2012',f'-DMUTANT_RANK={mutant}',f'-DMUT_CLOCK={mut_clock}','-s','tb','-o',str(exe),*[str(p) for p in sources],str(tb)],text=True,capture_output=True)
         (out/f'{name}.build.log').write_text(cp.stdout+cp.stderr)
         assert cp.returncode==0,cp.stdout+cp.stderr
         rp=subprocess.run(['vvp',str(exe)],text=True,capture_output=True)
         (out/f'{name}.run.log').write_text(rp.stdout+rp.stderr)
-        assert (rp.returncode==0)==(mutant==0),rp.stdout+rp.stderr
+        assert (rp.returncode==0)==(mutant==0 and mut_clock==0),rp.stdout+rp.stderr
         runs.append(dict(name=name,returncode=rp.returncode,stdout=rp.stdout.strip()))
     receipt=dict(schema='opentallas.hbm.engram.native_hash_home.v1',status='pass',tokens=64,actual_descriptors=3072,
-        calendar=dict(first_request_age=13,last_request_done_age=36,assumed_clock='common functional clock only; physical delivery unproved'),
+        six_column_clock_roots=clock_roots,calendar=dict(first_request_age=13,last_request_done_age=36,assumed_clock='common functional clock only; physical delivery unproved'),
         actual_rtl=runs,native_full_layer_qualified=False,physical_qualified=False,
         boundaries='Compressed CID boundary and HBM request descriptors. Raw-token mapped producer, actual DMA/read returns, collectives and decode consumer not joined.',
         source_sha256={str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest() for p in sources+[Path(__file__)]})
@@ -77,5 +83,5 @@ tick;if(fault || request_valid || done)$fatal(1,"bad drain edge");''')
 
 if __name__=='__main__':
     import argparse
-    ap=argparse.ArgumentParser();ap.add_argument('--out',required=True);args=ap.parse_args()
-    print(json.dumps(run(args.out),indent=2))
+    ap=argparse.ArgumentParser();ap.add_argument('--out',required=True);ap.add_argument('--clock-roots',action='store_true');args=ap.parse_args()
+    print(json.dumps(run(args.out,args.clock_roots),indent=2))
