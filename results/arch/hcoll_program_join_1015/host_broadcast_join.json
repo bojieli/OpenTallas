@@ -1,0 +1,32 @@
+{
+  "producer": "ot_vms_calendar_host_static",
+  "producer_owned_by": "h_vm",
+  "producer_source_relative": "rtl/hbm_accel/generic/vm/static/ot_vms_calendar_host_static.sv",
+  "producer_sha256": "d64f4d37cede73a6fed44e59c7cd83b6cee8c21d6ea22d4828905f96c92a05c6",
+  "mapping": {
+    "ext_cfg_v": "cfg_v",
+    "ext_target": "cfg_target",
+    "ext_cfg_addr": "cfg_addr",
+    "ext_cfg_data": "cfg_data",
+    "ext_desc_v": "desc_v",
+    "ext_base": "desc_base",
+    "ext_limit": "desc_limit",
+    "ext_loops": "desc_loops",
+    "ext_launch_v": "launch_v"
+  },
+  "broadcast_bits": 320,
+  "consumers": [
+    "ot_hfd_coll_q3_static_host_v3",
+    "ot_hfd_coll_q2_static_host_v3"
+  ],
+  "lcp_timing": {
+    "anchor": "producer LCP71 FF Q appears after edgeP",
+    "overlay_samples_lcp": "P+1",
+    "ext_launch_output": "P+1",
+    "target_captures_launch": "P+2",
+    "native_issuer_samples_start": "P+4",
+    "native_first_uop": "P+7",
+    "native_first_instruction_consumer": "P+8"
+  },
+  "qualification": "typed source join and analytical timing; actual LCP overlay+quad numerical integration not part of local rawtarget mechanism bench"
+}

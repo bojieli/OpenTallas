@@ -1,0 +1,34 @@
+*SPEF "IEEE 1481-1998"
+*DESIGN "probe"
+*DATE "2026-10-15"
+*VENDOR "OpenTallas"
+*PROGRAM "direct-macro-fixture"
+*VERSION "1"
+*DESIGN_FLOW "PIN_CAP NONE"
+*DIVIDER /
+*DELIMITER :
+*BUS_DELIMITER [ ]
+*T_UNIT 1 PS
+*C_UNIT 1 FF
+*R_UNIT 1 OHM
+*L_UNIT 1 HENRY
+*D_NET ca 10
+*CONN
+*P ca I
+*I u_0:clk I
+*CAP
+1 ca 5
+2 u_0:clk 5
+*RES
+1 ca u_0:clk 1000
+*END
+*D_NET cb 10
+*CONN
+*P cb I
+*I u_1:clk I
+*CAP
+1 cb 5
+2 u_1:clk 5
+*RES
+1 cb u_1:clk 2000
+*END

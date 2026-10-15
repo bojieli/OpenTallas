@@ -494,6 +494,9 @@ module tb_hgi_coll_p2p;
         end else if (tcase == "grm") begin            // GROUP_REDUCE_MCAST on a G >= 4 fabric, several groups (s 4 / 2):
             // the endpoint's owner fraction pf / s <= PFMAX / NC = 64 flits bounds n at 1,024 s (s 4: 4,096; s 2: 2,048)
             addrec(4, 4096, 0, 1, 4); addrec(4, 2048, 0, 0, 2); addrec(0, 1024 * G, 0, 1, 0);
+        end else if (tcase == "grm8") begin           // HISTORICAL diagnostic: G8 n5,120. Immutable DS price is G96 n1,024; this is not that price gate:
+            // REC 0 issue->done = the isolated record latency; SEQ / 4 = the back-to-back record interval (price 1,325.9 cyc/record)
+            addrec(4, 5120, 0, 1, 8); addrec(4, 5120, 0, 0, 8); addrec(4, 5120, 0, 1, 8); addrec(4, 5120, 0, 0, 8);
         end else if (tcase == "ds") begin             // DS TP96: the layer's sliced FP32 gathers + group-of-8 reduce-multicast
             // the layer's 13 FP32 gathers in tag order (tb_hgi_coll_pipe: qa 1,280, kvraw 512, y 5,120, gsc 384,
             // expert intermediates 7 x 2,304, yf 5,120, 2,304); priced (token_path_20261009 hbm_gen_ds) 3,991.2 cycles

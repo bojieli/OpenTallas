@@ -1,0 +1,91 @@
+{
+  "status": "NATIVE_COMPONENT_PASS_NOT_DIE_QUALIFICATION",
+  "scope": "actual COLL writer -> eight actual native VM banks/24 SRAM macros -> actual protocol leaf -> actual qslots",
+  "source_sha256": {
+    "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q_static.sv": "43c4a6baf9e40d9d67043dd044e0848ba6c59433ecdd02788084a3c270704607",
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_vmwrite.sv": "ec2cc4de9173c2bc059fbc23aa9d0136e89ab0952ff22cdd8cdda6d98b54897c",
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_qslots.sv": "4fc382d585026bc8fc23464ea90b9d5b86ad7bbec34acef0dccc65e3eb9d88f3",
+    "rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_native_vm.sv": "9a01ce1a49e4c606dd3733117423ae3cc6157d9f20572718d2cda11a84443549",
+    "rtl/hbm_accel/generic/collective/p2p/run_native_vm_bench.sh": "445ad755d3aea5bdd7c79536787981240907e86cc34ac6cfb10c8e1d61d20129",
+    "rtl/hbm_accel/generic/collective/p2p/native_vm_sources.json": "35bd4eed366eff560b9945be8126fee0d12009371c93709e5eabe7eba44a8c1e"
+  },
+  "native_inputs": {
+    "bank_revision": "0334452c",
+    "bank_git_blob": "aab60c35b8950342622d92c2711caa93abe481fb",
+    "sha256": {
+      "ot_vms_bank_static.sv": "7828d619da2fd2462cf0253b78c074dad1171e6ca77799bfc21f22987ed72237",
+      "ot_sram_1r1w_1024x256_m2_r2c2.v": "6530a2ef457f260a942e067b556ff55d75f931350af5807cfd6b05cd5e1ff380"
+    }
+  },
+  "shapes": [
+    {
+      "RG": 5,
+      "WG": 1,
+      "COLL_read_group": 3,
+      "COLL_write_owner": 1,
+      "sid": 0
+    },
+    {
+      "RG": 7,
+      "WG": 3,
+      "COLL_read_group": 5,
+      "COLL_write_owner": 3,
+      "sid": 2
+    }
+  ],
+  "per_shape": {
+    "banks": 8,
+    "actual_SRAM_macros": 24,
+    "sector_commits": 152,
+    "assembled_512bit_reads": 18,
+    "checked_cycles": 107,
+    "derived_from_exact_checked_masks_full_bank_commit_cycles": 15,
+    "peak_actual_sector_commits_per_cycle": 8,
+    "peak_actual_data_bits_per_cycle": 2048
+  },
+  "latency_edges": {
+    "writer_capture_to_low_commit": 5,
+    "writer_capture_to_high_commit": 6,
+    "parent_request_launch_to_raw_VM_capture": 8,
+    "parent_request_launch_to_qslots_capture": 10,
+    "parent_request_launch_to_SU_delivery": 12
+  },
+  "coverage": [
+    "16 consecutive full four-RGX inputs",
+    "simultaneous five-lane RGX/TKW burst",
+    "masked TKW overwrite after native initialization",
+    "main and local mirror SRAM paths",
+    "reversed bank-pair selection",
+    "bank7 to bank0 carry into next row",
+    "six consecutive VM read-issue cycles",
+    "actual kq_done compared at each prescribed commit edge",
+    "complete eight-bank response availability checked at raw input face"
+  ],
+  "mutants": {
+    "1": "write data wire corrupted before actual SRAM ECC/storage; independent read scoreboard rejects",
+    "2": "missing compiler bank write reservation; actual bank faults",
+    "3": "actual native return connected from wrong read group; availability check faults",
+    "4": "actual assembled low/high words crossed; exact data scoreboard rejects"
+  },
+  "execution": {
+    "tool": "ot-run",
+    "host": "ot-epyc1tb",
+    "unit": "oth-ubuntu-402929-1792048836",
+    "exit": 0
+  },
+  "final_q2_elaboration": {
+    "tool": "Verilator5.050 --lint-only --hierarchical",
+    "unit": "oth-ubuntu-402928-1792048836",
+    "exit": 0,
+    "warnings": 0,
+    "peak_allocated_MB": 151.676
+  },
+  "limitations": [
+    "declared micro-op and writer stimuli are component boundary inputs; no actual normative record entry compiler in this bench",
+    "does not replace or qualify the separate full eight-parent collective program bench",
+    "single native slice per production shape, not four mirror copies",
+    "physical slot, timing, area, CTS and production token-rate qualification remain open",
+    "no full SRAM-depth coverage claim",
+    "full final q3 elaboration remains unproven by this receipt"
+  ]
+}
