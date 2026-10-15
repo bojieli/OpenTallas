@@ -1452,6 +1452,12 @@ def die_master_params(m):
     ch = m.get('ctrl_host')
     if ch and ch.get('master') in used:
         out[ch['master']] = dict(NS=ch['ns'], _source='die stacks %s' % ','.join(ch['stacks']))
+    if 'dsfd_sp_hc_c' in used and 'dsfd_sp_hc_t' in used:
+        # S-BIND 2026-10-15: with the chain tails in their own die master the head is the production hierarchical slab
+        # split at the TAIL_SPLIT 1 seam (t_tf / f_tr); the default TAIL_SPLIT 0 builds the whole chain inside the head and
+        # drives t_tf 0, leaving dsfd_sp_hc_t dead hardware
+        out['dsfd_sp_hc_c'] = dict(HIER=1, HALF=1, CSPLIT=1, TAIL_SPLIT=1,
+                                   _source='hc_t in the die: production hierarchical HC split at the TAIL_SPLIT 1 seam')
     if 'ot_s81_cfg7_seq' in used and q_pq():
         # TA-10: the PQ q element's loader handshake (ef / go_tag) is the PQ 1 loader (tb_ot_s81_cfg7_seq.sv PQ 1)
         out['ot_s81_cfg7_seq'] = dict(PQ=1, _source='q element %s carries go_tag / sh_free / bank_free' % real_lef(Q_LEF)['name'])
@@ -4288,6 +4294,8 @@ def build_r8(variant=None):
         for k_, ms_ in CTRL_C_MASTERS.items():
             if k_ in hub:
                 hub[k_].master = ms_
+        if STATIC_COLL and 'collective' in hub:
+            hub['collective'].master = STATIC_COLL_MASTER
         if 'sseq' in hub:   # s81die-1011/ctrl: per-engine c/d/s pins on the stream clock (kit / program faces cross)
             # F4 (--rtl-bind): a layer1 die has engines 0..7 only (stage programs); its master has no pins for 8..11
             # S-BIND (owner 2026-10-14 18:59, static cycle schedule): --rtl-bind binds the STATIC issuer (calendar-fixed
@@ -4799,7 +4807,7 @@ def buses_r8(m):
             ((('collective', 'host', HOST_CF_BITS, 't_host', 'f_collective'),
               ('host', 'collective', HOST_TC_BITS, 't_collective', 'f_host')) if HOST_SLAB else ()) + \
             (ctrl_adapter_buses(hb) if CTRL_ADAPTERS else ()) + \
-            (RTL_HUB_EXTRA if RTL_HUB_WIDTHS else ()) + \
+            ((STATIC_COLL_HUB_EXTRA if STATIC_COLL else RTL_HUB_EXTRA) if RTL_HUB_WIDTHS else ()) + \
             (tuple(b_ for k in range(HC_T_COLS) for b_ in (('hc_s', 'hc_t', HC_T_FWD, f't_tf{k}', f'f_sf{k}'),
                                                             ('hc_t', 'hc_s', HC_T_RET, f't_sr{k}', f'f_tr{k}')))
              if 'hc_t' in hub else ()):
@@ -4808,6 +4816,13 @@ def buses_r8(m):
             continue          # su_hc v2 retired these (the VM row slots / y bus replace them)
         if RTL_HUB_WIDTHS:
             bits = RTL_HUB_BITS.get((a_, b_), bits)
+        if STATIC_COLL:
+            if (a_, b_, pa) == ('collective', 'vm', 't_vm'):
+                bits = 2204           # static collective: 4 x {tag 8, data 512, mask 16, row 14, v}
+            if (pa, pb) == ('y_rdy', 'f_hc_yr'):
+                continue              # no HC y ready return (fixed-slot y; HC y_rdy stays an unread status output)
+            if {a_, b_} == {'collective', 'wfc'} and bits == 1:
+                continue              # WFC link grants t_lir / t_wfcg: no grant in the static collective
         if m.get('pq_cnt') and (a_, b_, pa, pb) == ('gather', 'capture', 't_capture', 'f_gather'):
             _pq_cnt_buses(m, CH8, cor, bits)
             continue
@@ -4875,6 +4890,8 @@ def buses_r8(m):
     col = coll.name
     bus('refclk', 'top_in', 1, [('TOP', 'refclk'), (col, 'refclk')])
     bus('por_n', 'top_in', 1, [('TOP', 'por_n'), (col, 'por')])
+    if STATIC_COLL:
+        bus('rank', 'top_in', 2, [('TOP', 'rank'), (col, 'f_rank')])
     by = {it.name: it for it in m['insts']}
     dom = defaultdict(list)
     rst = defaultdict(list)
@@ -4895,9 +4912,21 @@ def buses_r8(m):
         elif it.kind == 'pqcnt':          # --pq-cnt count leaves: PQ stream clock, RTL ports clk / rst_n
             dom['stream'].append((it.name, 'clk')); rst['stream'].append((it.name, 'rst_n'))
         elif RTL_BIND and it.master == 'dsfd_sp_vm':
-            # VM memory side is serial; compact sequencer and client slots use stream cks/rss.
-            dom['serial'].append((it.name, 'ck')); rst['serial'].append((it.name, 'rst'))
-            dom['stream'].append((it.name, 'cks')); rst['stream'].append((it.name, 'rss'))
+            ce_ = rtl_clock_reset_entries('dsfd_sp_vm')
+            if ce_ is None:
+                # VM memory side is serial; compact sequencer and client slots use stream cks/rss.
+                dom['serial'].append((it.name, 'ck')); rst['serial'].append((it.name, 'rst'))
+                dom['stream'].append((it.name, 'cks')); rst['stream'].append((it.name, 'rss'))
+            else:
+                # S-BIND 2026-10-15: the static VM's per-category leaf clock / reset entries (one source: the master's
+                # RTL header under the die manifest); domain by suffix (_t stream 1.2 GHz, _s serial 0.9 GHz)
+                for d_, pl_ in ce_['clock'].items():
+                    dom[d_] += [(it.name, p_) for p_ in pl_]
+                for d_, pl_ in ce_['reset'].items():
+                    rst[d_] += [(it.name, p_) for p_ in pl_]
+        elif RTL_BIND and it.master == STATIC_COLL_MASTER:
+            # static collective leaf clock entries (stream; its PLL / reset controller drives the die nets)
+            dom['stream'] += [(it.name, f'{p_}[{i_}:{i_}]') for p_, w_ in STATIC_COLL_CLOCKS for i_ in range(w_)]
         elif RTL_BIND and it.master == PQ_RTL_MASTER:
             # s81-die-rtl-bind r3: the PQ cluster's per-child clock entries (stream; the die delivers phi - R at each pin)
             dom['stream'] += [(it.name, p_) for p_ in pq_rtl_clock_ports()]
@@ -5150,6 +5179,22 @@ RTL_HUB_BITS = {('gather', 'capture'): 6947, ('capture', 'vm'): 13376, ('collect
 RTL_ABUT_GAP = 21.6             # um between the abutting wide pairs (pin flops on both faces; no logic between)
 RTL_HUB_EXTRA = (('vm', 'collective', 592, 't_collective', 'f_vm'), ('vm', 'collective', 3, 'tcs', 'ts'))
 RTL_BIND = False                # --rtl-bind (s81-die-rtl-bind 2026-10-14)
+# --static-coll (S-BIND 2026-10-15, owner static-cycle rule 2026-10-14T18:59): the collective slot binds the STATIC
+# collective dsfd_sp_collective_static_c (rtl/dsrom_sys/s81_static_collective; no grants / ready / credits): collective
+# t_vm 2,204 -> VM f_collective (4 compiler-addressed row writes), VM f_crq 15 <- t_crq / VM t_crs 513 -> f_crs (fixed-
+# latency source-row service), HC y / yv without the y_rdy return, WFC link data both ways without grants, host 77 / 515
+# (no credit bits), per-leaf clock entries ck_control 5 / ck_lane 8 / ck_hc_lane 16 (stream), and the TP4 rank from a
+# die pad 'rank' (a package strap: every die of a group carries the same netlist).  The legacy VM -> collective
+# t_collective 592 / tcs 3 nets leave the die.  Peers whose RTL still carries a grant / credit port fail the port-bind
+# check until their static successor is bound (no tie, no adapter).
+STATIC_COLL = False
+STATIC_COLL_MASTER = 'dsfd_sp_collective_static_c'
+STATIC_COLL_HUB_EXTRA = (('vm', 'collective', 513, 't_crs', 'f_crs'), ('collective', 'vm', 15, 't_crq', 'f_crq'))
+STATIC_COLL_CLOCKS = (('ck_control', 5), ('ck_lane', 8), ('ck_hc_lane', 16))
+# --suhc-static-issue (S-BIND 2026-10-15, owner static-cycle rule): the SU / HC slab endpoints issue on the compiler's
+# command edge (die build define DSFD_SUHC_STATIC_ISSUE: no f_inp port); the VM -> SU / HC t_inp dependency nets (ready-
+# driven issue, VOID under the static rule) leave the die
+SUHC_STATIC_ISSUE = False
 PQ_RTL_MASTER = 'dsfd_sp_pq_n'  # --rtl-bind PQ slot: rtl/dsrom_sys/s81_die_bind/dsfd_sp_pq_n.sv (native core cluster + ROM / lane leaves)
 
 
@@ -5164,6 +5209,61 @@ def pq_rtl_clock_ports(manifest='physical/s81_die_rtl/layer1.f'):
     if 'OT_PQ_IX_PHYS_SPLIT' in defs:
         vec.append(('ck_ix_read', 32 if 'OT_PQ_IX_BANK_SPLIT' in defs else 16))
     return ['ck_ctl', 'ck_qb', 'ck_fault', 'ck_lane'] + [f'{n}[{i}:{i}]' for n, w in vec for i in range(w)]
+
+
+_RTL_CLOCK_CACHE = {}
+
+
+def rtl_clock_reset_entries(master, manifest='physical/s81_die_rtl/layer1.f'):
+    """S-BIND 2026-10-15: the leaf clock / reset entry ports of a die master read from its RTL header under the die
+    manifest (files + defines; one source of truth with tools/die_port_bind.py), bit-sliced.  Returns None when the
+    master has a scalar 'ck' port (legacy two-port form) or is absent from the manifest.  Classes: input ports named
+    ck_* / cks (clock) and rss / rss_* / rst_* (reset); domain by suffix: '_t' / cks / rss = stream, '_s' = serial."""
+    if master in _RTL_CLOCK_CACHE:
+        return _RTL_CLOCK_CACHE[master]
+    sys.path.insert(0, str(ROOT / 'tools'))
+    import die_port_bind as DPB
+    files, defines, _ = DPB.load_manifest(ROOT / manifest)
+    env_def = {d: '1' for d in defines}
+    out = None
+    for f_ in files:
+        if not Path(f_).exists():
+            continue
+        txt = Path(f_).read_text()
+        if not re.search(r'\bmodule\s+%s\b' % re.escape(master), txt):
+            continue
+        for md in DPB.parse_modules(DPB.preprocess(txt, env_def), f_):
+            if md.name != master:
+                continue
+            if 'ck' in md.ports:
+                out = None
+                break
+            env = {}
+            for k_, v_ in md.params.items():
+                try:
+                    env[k_] = DPB.ev(v_, env)
+                except Exception:
+                    pass
+            out = dict(clock=defaultdict(list), reset=defaultdict(list))
+            for pn in md.order:
+                d_, rng = md.ports[pn]
+                if d_ != 'input':
+                    continue
+                cls_ = 'clock' if (pn == 'cks' or pn.startswith('ck_')) else \
+                    'reset' if (pn == 'rss' or pn.startswith(('rss_', 'rst_'))) else None
+                if cls_ is None:
+                    continue
+                dom_ = 'serial' if pn.endswith('_s') else 'stream' if (pn.endswith('_t') or pn in ('cks', 'rss')) else None
+                assert dom_, ('rtl_clock_reset_entries: no domain suffix', master, pn)
+                w_ = 1
+                for hi_, lo_ in rng:
+                    w_ *= abs(DPB.ev(hi_, env) - DPB.ev(lo_, env)) + 1
+                out[cls_][dom_] += [pn] if (w_ == 1 and not rng) else [f'{pn}[{i_}:{i_}]' for i_ in range(w_)]
+            break
+        if out is not None:
+            break
+    _RTL_CLOCK_CACHE[master] = out
+    return out
 
 
 DUAL_CLOCK_MASTERS = ('dsfd_sp_gather_c', 'dsfd_sp_capture_c', 'dsfd_stage_seq_c', 'dsfd_stage_seq_c8',
@@ -5191,10 +5291,10 @@ def ctrl_adapter_buses(hb):
                     (slab_, 'sseq', 2, 'c_st', f's{k}')]
     if 'gather' in hb and hb['gather'].master == 'dsfd_sp_gather_c':
         out += [('capture', 'gather', 12, 't_cd', 'f_cd'), ('gather', 'vm', 11, 't_xgo', 'f_xgo')]
-    if 'hc_s' in hb and hb['hc_s'].master == 'dsfd_sp_hc_c':
+    if 'hc_s' in hb and hb['hc_s'].master == 'dsfd_sp_hc_c' and not SUHC_STATIC_ISSUE:
         # HC dependency net (dsfd_sp_hc inp): the VM's row-completion event for the HC head descriptor's operands
         out += [('vm', 'hc_s', 1, 't_inp_hc', 'f_inp')]
-    if 'su_s' in hb and hb['su_s'].master == 'dsfd_sp_su_c':     # SU dependency net (dsfd_sp_su inp), same rule
+    if 'su_s' in hb and hb['su_s'].master == 'dsfd_sp_su_c' and not SUHC_STATIC_ISSUE:     # SU dependency net (dsfd_sp_su inp), same rule
         out += [('vm', 'su_s', 1, 't_inp_su', 'f_inp')]
     return tuple(out)
 
@@ -9253,6 +9353,10 @@ def die_options(ap):
                     'bound to the masters\' REAL RTL ports -- serial ckv / rsv of the two-clock *_c masters (F3), svc_join '
                     'ck / rst (F8), the layer1 sequencer master dsfd_stage_seq_c8 (engines 0..7, F4).  Changes pins: '
                     'adopt with a regenerated pin set')
+    ap.add_argument('--static-coll', action='store_true', help='S-BIND 2026-10-15 (owner static-cycle rule): bind the '
+                    'static collective dsfd_sp_collective_static_c (no grants / credits; VM 2204 / crq 15 / crs 513; rank pad)')
+    ap.add_argument('--suhc-static-issue', action='store_true', help='S-BIND 2026-10-15: SU / HC endpoints issue on the '
+                    'compiler command edge (manifest define DSFD_SUHC_STATIC_ISSUE); the void VM -> SU / HC t_inp nets leave')
     ap.add_argument('--wfc-priced', action='store_true', help='contract v16: WFC kit die pins of the PRICED kit (RD2 1: '
                     't_srd 31, f_srq 1026; t_ft 4 to the host fault collector)')
     ap.add_argument('--rly-face-reach', type=float, default=0.0, help='s81-die v16: the last column relay of a net takes '
@@ -9374,12 +9478,20 @@ def apply_options(a):
     CFIFO_FALL = bool(getattr(a, 'cfifo_fall_launch', False))
     HEND_VR_NOBP = bool(getattr(a, 'hend_vr_nobp', False))
     WFC_PRICED = bool(getattr(a, 'wfc_priced', False))
+    global STATIC_COLL, SUHC_STATIC_ISSUE
+    STATIC_COLL = bool(getattr(a, 'static_coll', False))
+    SUHC_STATIC_ISSUE = bool(getattr(a, 'suhc_static_issue', False))
+    assert not (STATIC_COLL or SUHC_STATIC_ISSUE) or getattr(a, 'rtl_bind', False), '--static-coll / --suhc-static-issue need --rtl-bind'
     global RTL_BIND, HOST_CF_BITS, HOST_TC_BITS   # HC_T_FWD / HC_T_RET / HC_RTL_WIDTHS declared global above (r6: was a SyntaxError)
     RTL_BIND = bool(getattr(a, 'rtl_bind', False))
     if RTL_BIND:
         # F6: the collective <-> layer-die host channel at dsfd_host_c's RTL widths: collective -> host {t_cr, h_cls 2,
         # h_d 512, h_v} = 516, host -> collective {st 11, h_crn 5, t_v, t_d 64} = 81 (were 514 / 130 placeholders)
         HOST_CF_BITS, HOST_TC_BITS = 516, 81
+        if STATIC_COLL:
+            # static collective host channel: t_host 515 {h_cls 2, h_d 512, h_v} (no t_cr credit), f_host 77 {valid,
+            # status 11, completion 65} (no h_crn credits)
+            HOST_CF_BITS, HOST_TC_BITS = 515, 77
         # F9: one implementation (die lead r5 4f0307291): --rtl-bind implies --hc-rtl-widths = hc_rtl_widths() of the
         # production HC (3,056 / 2,164 per column, hc_t reset in band) with the fwd / ret runs moved apart
         HC_RTL_WIDTHS = True
