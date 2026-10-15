@@ -27,12 +27,14 @@ for ph in 137 637;do for jit in 0 8 16;do for seed in 1 2 3;do
  grep -q '^PASS 0az' "$out/prod_p${ph}_j${jit}_s${seed}.log" && test "$(cat "$out/prod_p${ph}_j${jit}_s${seed}.exit")" = 0 || { echo "PROD FAIL p$ph j$jit s$seed";fails=1; }
 done;done;done
 must_fail(){ local name=$1 pat=$2;test "$(cat "$out/$name.exit")" != 0 && grep -q "$pat" "$out/$name.log" || { echo "MUTANT ESCAPED $name";fails=1; }; }
-run prod m2_late +jit=16 +faultmode=2;must_fail m2_late OBSERVED_HOLD
-run prod m3_historical +jit=16 +faultmode=3;must_fail m3_historical 'FAIL'
-run prod m5_early +jit=0 +faultmode=5;must_fail m5_early OBSERVED_FAIL
+# late block = sector 303, the LAST sector of block 37 (reads count the HOST static read first)
+run prod m2_late +jit=16 +faultmode=2 +late=304;must_fail m2_late OBSERVED_HOLD
+run prod m3_historical +jit=16 +faultmode=3;must_fail m3_historical OBSERVED_FAIL
+run prod m5_early +jit=0 +faultmode=5 +late=1;must_fail m5_early OBSERVED_FAIL
 run prod m6_silent +jit=16 +faultmode=6;must_fail m6_silent OBSERVED_FAIL
-for t in fm1 fm2 fm3;do run $t "$t" +jit=16 +seed=2;must_fail "$t" 'FAIL';done
+run fm1 fm1 +jit=16 +seed=2;must_fail fm1 OBSERVED_FAIL
+for t in fm2 fm3;do run $t "$t" +jit=16 +faultmode=2 +late=304;must_fail "$t" OBSERVED_FAIL;done
 run ce0 ce0 +jit=16 +seed=2;must_fail ce0 OBSERVED_FAIL
 find "$src" -name '*.sv' -print0 | sort -z | xargs -0 sha256sum > "$out/source.sha256"
 grep -h '^MEASURE' "$out"/*.log > "$out/measure.txt" || true
-test $fails = 0 && echo "PASS 0az elastic boundary: 18 production runs, 8 failing cases observed"
+test $fails = 0 && echo "PASS 0az elastic boundary: 18 production runs, 8 failing cases observed (1 hold + 7 fail)"

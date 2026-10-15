@@ -30,7 +30,8 @@ module tb_kv_hbm_elastic_boundary;
  wire return_valid,return_hfault,return_cfault;wire[9:0] return_sector;
  wire[15:0] return_epoch;wire[5:0] return_layer;wire[255:0] return_data;
  integer core_edge=0,returned_count=0,publish_ordinal=0;
- integer core_fault_seen=0;
+ integer core_fault_seen=0,front_ordinal=0,front_bad=0;
+ wire expect_fail=(mode==2||mode==3||mode==5||mode==6||CTRL_ELASTIC==0||FRONT_MUT!=0);
  reg model_put=0;reg model_arr[0:CYCLES+400];reg go_arr[0:CYCLES+400];reg blk_go=0;
  wire[293:0] f_co;wire[15:0] f_epoch;wire f_put,f_freed,f_hold,f_ovf,f_gofault;wire[15:0] f_stall;wire[$clog2(NBLK*BLK):0] f_occ;
  qkd_kv_hbm_elastic_front #(.NBLK(NBLK),.BLK(BLK),.STRIDE(1),.MUT(FRONT_MUT)) u_front(.pll_hbm(ck),.hrst(rst[1]),
@@ -63,12 +64,14 @@ module tb_kv_hbm_elastic_boundary;
   core_edge++;
   #0.001;
   if(rst[1]&&return_valid)begin
-   if(return_epoch!=7||return_layer!=3||return_data!==data(67,return_sector))
-    $fatal(1,"actual controller dual-clock return metadata/data");
+   if(return_epoch!=7||return_layer!=3||return_data!==data(67,return_sector))begin
+    if(expect_fail)core_fault_seen=1;
+    else $fatal(1,"actual controller dual-clock return metadata/data");
+   end
    returned_count++;
   end
   if(rst[1]&&(return_hfault||return_cfault))begin
-   if(mode==2)core_fault_seen=1;
+   if(expect_fail)core_fault_seen=1;
    else begin $display("FAIL dual-clock slot fault at core%0d",core_edge);$fatal(1);end
   end
  end
@@ -219,7 +222,13 @@ module tb_kv_hbm_elastic_boundary;
     end
     @(negedge ck);
     if(phase==1)begin
-     if(f_put)putcount++;
+     if(f_put)begin
+      // Front output = the block-released stream: exact sector order and data, independent of the ring/core.
+      automatic integer o=front_ordinal-256;
+      automatic integer es_=front_ordinal<256?front_ordinal:512+((o&8)<<4)+((o>>4)<<3)+(o&7);
+      if({f_co[11:9],f_co[7:1]}!=es_||f_co[281:26]!==data(67,es_)||f_epoch!=7)front_bad++;
+      front_ordinal++;putcount++;
+     end
      if(mode!=2&&mode!=3&&f_put!==model_arr[t])bad($sformatf("release not compile-time determined t%0d model%0b actual%0b",t,model_arr[t],f_put));
      model_put=model_arr[t];
      if(f_ovf||f_gofault)bad($sformatf("front overflow%0b go%0b t%0d",f_ovf,f_gofault,t));
@@ -231,14 +240,25 @@ module tb_kv_hbm_elastic_boundary;
   end
   $display("MEASURE jit%0d godly%0d blk%0d nblk%0d maxocc%0d stall%0d go%0d freed%0d put%0d first_go%0d ctrlfault%0d corefault%0d errors%0d",
    JIT,GO_DLY,BLK,NBLK,maxocc,f_stall,blocks_go,blocks_freed,putcount,first_go,ctrl_fault_seen,core_fault_seen,errors);
+  $display("FRONT ordinal%0d bad%0d",front_ordinal,front_bad);
+  if(FRONT_MUT!=0)begin
+   if(front_bad==0&&!core_fault_seen&&errors==0)begin $display("MUTANT_ESCAPED front MUT%0d mode%0d",FRONT_MUT,mode);$fatal(1);end
+   $display("OBSERVED_FAIL front MUT%0d mode%0d frontbad%0d corefault%0d errors%0d",FRONT_MUT,mode,front_bad,core_fault_seen,errors);$fatal(1);
+  end
   if(mode==5||mode==6||CTRL_ELASTIC==0)begin
-   if(!ctrl_fault_seen)$fatal(1,"FAIL controller accepted an out-of-window PHY return");
+   if(!ctrl_fault_seen)begin $display("MUTANT_ESCAPED controller accepted an out-of-window PHY return");$fatal(1);end
    $display("OBSERVED_FAIL controller PHY window mode%0d elastic%0d",mode,CTRL_ELASTIC);$fatal(1);
   end
-  if(mode==2)begin
-   if(f_stall==0||putcount!=512||blocks_freed!=512/BLK)$fatal(1,"FAIL late block not held/emitted stall%0d put%0d",f_stall,putcount);
-   $display("OBSERVED_HOLD late block held %0d edges, 512 sectors emitted in order, corefault%0d (sequencer block pause required)",f_stall,core_fault_seen);$fatal(1);
+  if(mode==3)begin
+   if(!core_fault_seen)begin $display("MUTANT_ESCAPED historical fixed-calendar ring under variable PHY");$fatal(1);end
+   $display("OBSERVED_FAIL historical fixed-calendar ring faults under variable PHY latency");$fatal(1);
   end
+  if(mode==2)begin
+   if(f_stall==0||putcount!=512||front_bad!=0||blocks_freed!=512/BLK||ctrl_fault_seen)begin
+    $display("MUTANT_ESCAPED late block not held/emitted exactly stall%0d put%0d frontbad%0d",f_stall,putcount,front_bad);$fatal(1);end
+   $display("OBSERVED_HOLD late block held %0d edges, 512 sectors emitted exact in order, corefault%0d (sequencer block pause required)",f_stall,core_fault_seen);$fatal(1);
+  end
+  if(front_bad)begin $display("FAIL front output bad%0d",front_bad);$fatal(1);end
   if(returned_count!=512)$fatal(1,"FAIL dual-clock return count%0d",returned_count);
   if(f_stall!=0||blocks_go!=512/BLK||blocks_freed!=512/BLK||putcount!=512)$fatal(1,"FAIL production stall%0d go%0d freed%0d put%0d",f_stall,blocks_go,blocks_freed,putcount);
   if(errors)begin $display("FAIL elastic KV boundary errors%0d mode%0d",errors,mode);$fatal(1);end
