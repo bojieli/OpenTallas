@@ -1,0 +1,303 @@
+{
+  "schema": "opentallas.s81.static-hc-producer-profile.v1",
+  "collective_image_abi": "opentallas.s81.collective-fixed-edge-rom.v2",
+  "control_bits": 468,
+  "rom_bits": 564,
+  "image_sha256": "5bb7abad4493ce4705b0b883220ba5dab2f1f808ccbb1eadc949a5df21c91855",
+  "producer_ports": {
+    "data": "t_hc_y[8191:0]",
+    "valid": "t_hc_yv",
+    "tag": "t_hc_tag[31:0]"
+  },
+  "clocks": "zero-flight common-epoch component; actual phi-R and interleaf delivery require a priced profile",
+  "command_to_row_identity": "explicit cmd84/transport_tag32 mapping preserved below",
+  "event_convention": "ROM row e -> controller output visible e+1 -> assembler output visible e+2 -> downstream synchronous sample e+3",
+  "jobs": [
+    {
+      "command_index": 0,
+      "command_external_sample_edge": 0,
+      "command84_hex": "800000000000000801605",
+      "completion_tag8": 133,
+      "transport_tag32": 291,
+      "records_per_rank": 44,
+      "mode": "gather",
+      "consumer": "gather_vm",
+      "hc_row_count": 0
+    },
+    {
+      "command_index": 1,
+      "command_external_sample_edge": 320,
+      "command84_hex": "80000000000000000a006",
+      "completion_tag8": 134,
+      "transport_tag32": 1110,
+      "records_per_rank": 320,
+      "mode": "reduce",
+      "consumer": "reduce_vm_hc",
+      "hc_row_count": 20
+    }
+  ],
+  "rows": [
+    {
+      "command_index": 1,
+      "command84_hex": "80000000000000000a006",
+      "transport_tag32": 1110,
+      "row_ordinal": 0,
+      "image_control_edge": 511,
+      "producer_visible_after_edge": 513,
+      "consumer_sample_edge_zero_flight": 514,
+      "payload_bits": 8192,
+      "fp32_per_row": 256,
+      "tag_meaning": "exact compiled transport_tag32; no cmd84 packing"
+    },
+    {
+      "command_index": 1,
+      "command84_hex": "80000000000000000a006",
+      "transport_tag32": 1110,
+      "row_ordinal": 1,
+      "image_control_edge": 595,
+      "producer_visible_after_edge": 597,
+      "consumer_sample_edge_zero_flight": 598,
+      "payload_bits": 8192,
+      "fp32_per_row": 256,
+      "tag_meaning": "exact compiled transport_tag32; no cmd84 packing"
+    },
+    {
+      "command_index": 1,
+      "command84_hex": "80000000000000000a006",
+      "transport_tag32": 1110,
+      "row_ordinal": 2,
+      "image_control_edge": 679,
+      "producer_visible_after_edge": 681,
+      "consumer_sample_edge_zero_flight": 682,
+      "payload_bits": 8192,
+      "fp32_per_row": 256,
+      "tag_meaning": "exact compiled transport_tag32; no cmd84 packing"
+    },
+    {
+      "command_index": 1,
+      "command84_hex": "80000000000000000a006",
+      "transport_tag32": 1110,
+      "row_ordinal": 3,
+      "image_control_edge": 767,
+      "producer_visible_after_edge": 769,
+      "consumer_sample_edge_zero_flight": 770,
+      "payload_bits": 8192,
+      "fp32_per_row": 256,
+      "tag_meaning": "exact compiled transport_tag32; no cmd84 packing"
+    },
+    {
+      "command_index": 1,
+      "command84_hex": "80000000000000000a006",
+      "transport_tag32": 1110,
+      "row_ordinal": 4,
+      "image_control_edge": 851,
+      "producer_visible_after_edge": 853,
+      "consumer_sample_edge_zero_flight": 854,
+      "payload_bits": 8192,
+      "fp32_per_row": 256,
+      "tag_meaning": "exact compiled transport_tag32; no cmd84 packing"
+    },
+    {
+      "command_index": 1,
+      "command84_hex": "80000000000000000a006",
+      "transport_tag32": 1110,
+      "row_ordinal": 5,
+      "image_control_edge": 935,
+      "producer_visible_after_edge": 937,
+      "consumer_sample_edge_zero_flight": 938,
+      "payload_bits": 8192,
+      "fp32_per_row": 256,
+      "tag_meaning": "exact compiled transport_tag32; no cmd84 packing"
+    },
+    {
+      "command_index": 1,
+      "command84_hex": "80000000000000000a006",
+      "transport_tag32": 1110,
+      "row_ordinal": 6,
+      "image_control_edge": 1023,
+      "producer_visible_after_edge": 1025,
+      "consumer_sample_edge_zero_flight": 1026,
+      "payload_bits": 8192,
+      "fp32_per_row": 256,
+      "tag_meaning": "exact compiled transport_tag32; no cmd84 packing"
+    },
+    {
+      "command_index": 1,
+      "command84_hex": "80000000000000000a006",
+      "transport_tag32": 1110,
+      "row_ordinal": 7,
+      "image_control_edge": 1107,
+      "producer_visible_after_edge": 1109,
+      "consumer_sample_edge_zero_flight": 1110,
+      "payload_bits": 8192,
+      "fp32_per_row": 256,
+      "tag_meaning": "exact compiled transport_tag32; no cmd84 packing"
+    },
+    {
+      "command_index": 1,
+      "command84_hex": "80000000000000000a006",
+      "transport_tag32": 1110,
+      "row_ordinal": 8,
+      "image_control_edge": 1191,
+      "producer_visible_after_edge": 1193,
+      "consumer_sample_edge_zero_flight": 1194,
+      "payload_bits": 8192,
+      "fp32_per_row": 256,
+      "tag_meaning": "exact compiled transport_tag32; no cmd84 packing"
+    },
+    {
+      "command_index": 1,
+      "command84_hex": "80000000000000000a006",
+      "transport_tag32": 1110,
+      "row_ordinal": 9,
+      "image_control_edge": 1279,
+      "producer_visible_after_edge": 1281,
+      "consumer_sample_edge_zero_flight": 1282,
+      "payload_bits": 8192,
+      "fp32_per_row": 256,
+      "tag_meaning": "exact compiled transport_tag32; no cmd84 packing"
+    },
+    {
+      "command_index": 1,
+      "command84_hex": "80000000000000000a006",
+      "transport_tag32": 1110,
+      "row_ordinal": 10,
+      "image_control_edge": 1363,
+      "producer_visible_after_edge": 1365,
+      "consumer_sample_edge_zero_flight": 1366,
+      "payload_bits": 8192,
+      "fp32_per_row": 256,
+      "tag_meaning": "exact compiled transport_tag32; no cmd84 packing"
+    },
+    {
+      "command_index": 1,
+      "command84_hex": "80000000000000000a006",
+      "transport_tag32": 1110,
+      "row_ordinal": 11,
+      "image_control_edge": 1447,
+      "producer_visible_after_edge": 1449,
+      "consumer_sample_edge_zero_flight": 1450,
+      "payload_bits": 8192,
+      "fp32_per_row": 256,
+      "tag_meaning": "exact compiled transport_tag32; no cmd84 packing"
+    },
+    {
+      "command_index": 1,
+      "command84_hex": "80000000000000000a006",
+      "transport_tag32": 1110,
+      "row_ordinal": 12,
+      "image_control_edge": 1535,
+      "producer_visible_after_edge": 1537,
+      "consumer_sample_edge_zero_flight": 1538,
+      "payload_bits": 8192,
+      "fp32_per_row": 256,
+      "tag_meaning": "exact compiled transport_tag32; no cmd84 packing"
+    },
+    {
+      "command_index": 1,
+      "command84_hex": "80000000000000000a006",
+      "transport_tag32": 1110,
+      "row_ordinal": 13,
+      "image_control_edge": 1619,
+      "producer_visible_after_edge": 1621,
+      "consumer_sample_edge_zero_flight": 1622,
+      "payload_bits": 8192,
+      "fp32_per_row": 256,
+      "tag_meaning": "exact compiled transport_tag32; no cmd84 packing"
+    },
+    {
+      "command_index": 1,
+      "command84_hex": "80000000000000000a006",
+      "transport_tag32": 1110,
+      "row_ordinal": 14,
+      "image_control_edge": 1703,
+      "producer_visible_after_edge": 1705,
+      "consumer_sample_edge_zero_flight": 1706,
+      "payload_bits": 8192,
+      "fp32_per_row": 256,
+      "tag_meaning": "exact compiled transport_tag32; no cmd84 packing"
+    },
+    {
+      "command_index": 1,
+      "command84_hex": "80000000000000000a006",
+      "transport_tag32": 1110,
+      "row_ordinal": 15,
+      "image_control_edge": 1791,
+      "producer_visible_after_edge": 1793,
+      "consumer_sample_edge_zero_flight": 1794,
+      "payload_bits": 8192,
+      "fp32_per_row": 256,
+      "tag_meaning": "exact compiled transport_tag32; no cmd84 packing"
+    },
+    {
+      "command_index": 1,
+      "command84_hex": "80000000000000000a006",
+      "transport_tag32": 1110,
+      "row_ordinal": 16,
+      "image_control_edge": 1875,
+      "producer_visible_after_edge": 1877,
+      "consumer_sample_edge_zero_flight": 1878,
+      "payload_bits": 8192,
+      "fp32_per_row": 256,
+      "tag_meaning": "exact compiled transport_tag32; no cmd84 packing"
+    },
+    {
+      "command_index": 1,
+      "command84_hex": "80000000000000000a006",
+      "transport_tag32": 1110,
+      "row_ordinal": 17,
+      "image_control_edge": 1959,
+      "producer_visible_after_edge": 1961,
+      "consumer_sample_edge_zero_flight": 1962,
+      "payload_bits": 8192,
+      "fp32_per_row": 256,
+      "tag_meaning": "exact compiled transport_tag32; no cmd84 packing"
+    },
+    {
+      "command_index": 1,
+      "command84_hex": "80000000000000000a006",
+      "transport_tag32": 1110,
+      "row_ordinal": 18,
+      "image_control_edge": 2047,
+      "producer_visible_after_edge": 2049,
+      "consumer_sample_edge_zero_flight": 2050,
+      "payload_bits": 8192,
+      "fp32_per_row": 256,
+      "tag_meaning": "exact compiled transport_tag32; no cmd84 packing"
+    },
+    {
+      "command_index": 1,
+      "command84_hex": "80000000000000000a006",
+      "transport_tag32": 1110,
+      "row_ordinal": 19,
+      "image_control_edge": 2131,
+      "producer_visible_after_edge": 2133,
+      "consumer_sample_edge_zero_flight": 2134,
+      "payload_bits": 8192,
+      "fp32_per_row": 256,
+      "tag_meaning": "exact compiled transport_tag32; no cmd84 packing"
+    }
+  ],
+  "latencies": {
+    "control_rom_synchronous_read_edges": 1,
+    "control_rom_idle_prefetch_edges": 1,
+    "controller_command_register_edges": 1,
+    "controller_output_register_edges": 1,
+    "vm_request_to_issue_edges": 14,
+    "issue_to_gather_edges": 11,
+    "gather_to_vm_source_edges": 1,
+    "hc_reduce_to_write_edges": 18,
+    "hc_final_write_to_earliest_emit_edges": 1,
+    "done_rom_to_c_done_edges": 1
+  },
+  "source_evidence": [
+    {
+      "path": "rtl/dsrom_sys/s81_static_collective/s81_static_collective_slab.sv",
+      "sha256": "c310f4a6984d7a017fa9d22ffc0af47f71845911106bf3ed4b6ce3526173e7b0"
+    }
+  ],
+  "native_source_binding": "COMPONENT: external source fixtures, rank0 actual128SRAM VM; not production FIELD",
+  "canonical_production": false,
+  "native_execution": false,
+  "qualification": "compiled producer-consumer identity and edges only; actual canonical sources, receiver and physical bindings remain required"
+}
