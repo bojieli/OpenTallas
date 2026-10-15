@@ -1,0 +1,5 @@
+REPLAY frame0 reads64 writes64 response_plus_copy16 complete_after_start82
+REPLAY frame1 reads64 writes64 response_plus_copy16 complete_after_start82
+REPLAY frame2 reads64 writes64 response_plus_copy16 complete_after_start82
+PASS raw4096words x3 exact replay no FP computation, fault1
+/srv/opentallas-scratch/codex/qwen-su-static-copy-1014/rtl/test/qwen_split/tb_qfd_su_static_copy.sv:62: $finish called at 530000 (1ps)

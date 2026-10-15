@@ -1,0 +1,8 @@
+ot-run: ot-epyc1tb     admits   510 GB (avail 736, growth 107, headroom 64, waiters 0/0 GB) load 96/128 running 19 disk 833 GB 
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/codex/dvm4-poscut
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/codex/dvm4-poscut
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/codex/dvm4-poscut
+ot-run: -> ot-epyc1tb
+ot-heavy: admitted on ot-epyc1tb as oth-ubuntu-1929037-1792032856 after 0 s
+PASS xdvm_prod NCOL=48 NH=8 tiles=768 GT=3072 SMIN=7 SMAX=11 NXL=512 HB=3 DX=10 XOFF=3 XVMR=12 ops=14 cycles=2276 element_checks=4177920 dvm_minus_ref_edges=1
+ot-run: RAN on ot-epyc1tb (unit oth-ubuntu-1929037-1792032856): exit 0
