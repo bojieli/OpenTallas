@@ -1,0 +1,3 @@
+MAPPED4_SLICE_INSTALL PASS actual_WR=1836 real_ACK=1836 actual_RD=1836 exact_sectors=1836 actual_records=432 offset=1907460
+MAPPED4_SLICE_NATIVE PASS mode=1 offset=1907460 sectors=1836 exact_payloads=1836 fixed_edges=540 native_RD=1836 RL23
+rtl/hbm_accel/loader/service_native/tb_hbm_svc_mapped4_slice_install.sv:124: $finish called at 2001250199 (1fs)

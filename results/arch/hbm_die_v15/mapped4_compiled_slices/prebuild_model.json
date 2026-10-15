@@ -1,0 +1,64 @@
+{
+  "status": "PREBUILD_FIXED_CALENDAR_SUCCESSOR_NOT_QUALIFIED",
+  "source_commit": "96e8170fb",
+  "ports_added": {
+    "start_ordinal": 11,
+    "start_count": 12,
+    "start_release": 1
+  },
+  "resident_storage": "Same 32 real landing SRAMs, double buffer, PHY CDC and owner.",
+  "FF_delta": 13,
+  "operation": "Fixed compiled segments retain resident bank until final release. No runtime on-chip credit or ready. Bounds and epoch checked.",
+  "WKV_schedule": {
+    "resident_sectors": 1836,
+    "resident_records": 432,
+    "segments": [
+      {
+        "ordinal": 0,
+        "count": 272,
+        "release": false
+      },
+      {
+        "ordinal": 272,
+        "count": 272,
+        "release": false
+      },
+      {
+        "ordinal": 544,
+        "count": 272,
+        "release": false
+      },
+      {
+        "ordinal": 816,
+        "count": 272,
+        "release": false
+      },
+      {
+        "ordinal": 1088,
+        "count": 272,
+        "release": false
+      },
+      {
+        "ordinal": 1360,
+        "count": 272,
+        "release": false
+      },
+      {
+        "ordinal": 1632,
+        "count": 204,
+        "release": true
+      }
+    ],
+    "full_segment_edges": 80,
+    "last_segment_edges": 60,
+    "consumer_candidate_edges": 600,
+    "consumer_qualified": false
+  },
+  "clock": "Unchanged stream833.333ps/HBM1024ps.",
+  "required_tests": [
+    "Seven segments without reload",
+    "Exact ordinal, data, segment last and final release",
+    "Invalid range, zero count, epoch, concurrent start",
+    "Actual 432 records through seven real cache fills; cold prefetch remains priced separately"
+  ]
+}
