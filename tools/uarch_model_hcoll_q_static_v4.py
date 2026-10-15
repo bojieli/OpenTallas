@@ -5,8 +5,9 @@ import json
 
 def model(npt=3,solo=True):
  m=v3_model(npt,solo)
+ m['unverified']=[v.replace('V2','V4') for v in m['unverified']]
  m.update(source_version='hcoll.quadrant.v4',link_module='ot_hgi_coll_static_link_capture',
-  link_read_to_pin_edges=6,link_receive_edges=2,sequence_metadata_lead_edges=1,
+  link_read_to_pin_edges=6,link_receive_edges=2,link_write_to_native_SRAM_edges=4,sequence_metadata_lead_edges=1,
   link_controller_measured_FFs=4421,link_store_measured_FFs=[597,597,597,567],
   host_clock_entries=109 if solo else 69,
   endpoint_clock_entries=5,

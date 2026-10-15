@@ -426,6 +426,7 @@
     "rx_pin_to_qslot_capture_edges": 3,
     "sequence_metadata_lead_edges": 1,
     "clock_entries_per_endpoint": 5,
-    "calendar_compatibility": "V3 TX5/RX1 calendars require explicit recompilation; bit field positions unchanged"
+    "calendar_compatibility": "V3 TX5/RX1 calendars require explicit recompilation; bit field positions unchanged",
+    "reservation_write_to_native_SRAM_edges": 4
   }
 }

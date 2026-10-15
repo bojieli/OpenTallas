@@ -1,0 +1,177 @@
+{
+  "schema": "hcoll.v4.native_host_reduce.receipt.v1",
+  "generated_utc": "2026-10-15T09:15:17.795527+00:00",
+  "source_feature_commit": "5b157ff46",
+  "parent_dependency_commits": [
+    "581ee44e1",
+    "96a3c3c18",
+    "ac1919319",
+    "054830631"
+  ],
+  "job": {
+    "host": "ot-epyc1tb",
+    "unit": "oth-ubuntu-727372-1792055610",
+    "terminal": "RAN exit0",
+    "requested_mem_GiB": 8,
+    "threads": 1
+  },
+  "source_sha256": {
+    "rtl/hbm_accel/generic/collective/p2p/run_q_static_host_v4_reduce_bench.sh": "f4c7160fe71a3f1cc606b42d60692f7c329cd9696fd1aa86ab1800c5abb6c68c",
+    "rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_q_static_host_v4_reduce.sv": "062dea582c837647c0db4320377ded2a7a42730db80248f27f5d38234d024c10",
+    "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q2_static_host_v4.sv": "1679774ca864b14fd39c33b8e7568e454253ed398131f5ebcf845b894a7dc5fb",
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_program_target.sv": "a59c8375139d8e033d0b312d917c6f9e7db9156f9987ce4984c89914140086ac",
+    "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q_static_v4.sv": "6cef562b51a4050a09f73d93a7497c6980138e58363de6aa450e66ecd519fd9b",
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_issuer.sv": "bcc5a2ca21788b0a312266a5a4b8533b652081c16695897bc8f9152b52362f42",
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_qslots.sv": "4fc382d585026bc8fc23464ea90b9d5b86ad7bbec34acef0dccc65e3eb9d88f3",
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static.sv": "c827fb8dc971baca5e155b88a3381eab218999b127e3a4b9f419f3f28e77d514",
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_reduce_static.sv": "208ece87fe5d2beb545dcfa11ad50836a98d704bfc0b3afef06ddac940d4f5db",
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_vmwrite.sv": "ec2cc4de9173c2bc059fbc23aa9d0136e89ab0952ff22cdd8cdda6d98b54897c",
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_link_capture.sv": "f50bc60bfb5d3da810fc50007154aa9ceb90f86e60c757031c0bb7293c855c76",
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_capture_ctl.sv": "6a419f79c71a5d4d556411ba392262c79dd112bcf0863af4cd8fc0c4eacf8cb8",
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_pinreg_ctl.sv": "d24045a84d64fdd69ab9f15ad9ccc3f8d6b5ccad712da8df51ac2d67db001326",
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_pinreg_store.sv": "d5e879e1e76a0b5f4145279c55a53154401b5b3e3a47aa16b33f82612933937a",
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_seq_ctl.sv": "21a88e901f304638f66eaf743dfa4ef8555670db66bbe44ba2c489983b719c89",
+    "rtl/qwen_sys/split_20261014/ot_qkvd_d2d_llr.sv": "df23697e8d58e67ae3209eac9162d1393bed3a510a6e090149c2694bea9eacd8",
+    "rtl/qwen_sys/split_20261014/ot_qwen_crc_parallel.sv": "5af1eb77614de845771413c279de8858017a1e8220407e847d501537b110f43a",
+    "rtl/hdc/ot_hdc_fp32_add_lat.sv": "f5e88cfcd8ce4809826eccf77fa8b83bc1ef14b430964dcf01cef70f70577b30",
+    "rtl/hdc/ot_hdc_prefix.sv": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+    "rtl/hdc/ot_hdc_fastfp.sv": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643",
+    "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v": "d4533939f695944bebd6a63a086e3771846bc0c379af52720de8974fee504145"
+  },
+  "model": {
+    "q3": {
+      "status": "UNQUALIFIED_PREBUILD_ANALYTIC",
+      "physical_frame_bits": 612,
+      "sources": 11,
+      "sinks": 16,
+      "logical_clock_roots": 108,
+      "new_operator_clock_roots": {
+        "reduce": 33,
+        "argmax": 1
+      },
+      "qslots_capture_root_registers": 6007,
+      "qslots_output_root_registers": 14824,
+      "protocol_leaf_declared_bound": 7385,
+      "measured_qslots_output_root_registers": 14824,
+      "sequence_word_to_reservation_edges": 1,
+      "source_faces": "separate registered reduction and ARGMAX outputs; no producer mux",
+      "link_sequence": "16 protected bits, extended overflow fault at65536, actual64slot SRAM reuse",
+      "area_estimate": "sum measured native leaf/macro areas; currently unknown",
+      "unverified": [
+        "actual synthesis clock-root count",
+        "physical slot area/pins",
+        "die timing",
+        "normative program compiler join",
+        "full native V4 operation programs"
+      ],
+      "source_version": "hcoll.quadrant.v4",
+      "link_module": "ot_hgi_coll_static_link_capture",
+      "link_read_to_pin_edges": 6,
+      "link_receive_edges": 2,
+      "sequence_metadata_lead_edges": 1,
+      "link_controller_measured_FFs": 4421,
+      "link_store_measured_FFs": [
+        597,
+        597,
+        597,
+        567
+      ],
+      "issuer_feedback_bits": 9,
+      "production_status": "candidate actual logical composition; no inherited V3 link calendar or physical qualification",
+      "link_write_to_native_SRAM_edges": 4,
+      "host_clock_entries": 109,
+      "endpoint_clock_entries": 5,
+      "compiler_contract": "Endpoint reservation input E: TX publication E+6. RX pins sampled E: publication E+2; qslots captures E+3. Every external endpoint input is captured before guard forks. Sequence arithmetic prepared one edge before reservation."
+    },
+    "q2": {
+      "status": "UNQUALIFIED_PREBUILD_ANALYTIC",
+      "physical_frame_bits": 612,
+      "sources": 10,
+      "sinks": 15,
+      "logical_clock_roots": 68,
+      "new_operator_clock_roots": {
+        "reduce": 33,
+        "argmax": 0
+      },
+      "qslots_capture_root_registers": 5461,
+      "qslots_output_root_registers": 13727,
+      "protocol_leaf_declared_bound": 7326,
+      "measured_qslots_output_root_registers": 13727,
+      "sequence_word_to_reservation_edges": 1,
+      "source_faces": "separate registered reduction and ARGMAX outputs; no producer mux",
+      "link_sequence": "16 protected bits, extended overflow fault at65536, actual64slot SRAM reuse",
+      "area_estimate": "sum measured native leaf/macro areas; currently unknown",
+      "unverified": [
+        "actual synthesis clock-root count",
+        "physical slot area/pins",
+        "die timing",
+        "normative program compiler join",
+        "full native V4 operation programs"
+      ],
+      "source_version": "hcoll.quadrant.v4",
+      "link_module": "ot_hgi_coll_static_link_capture",
+      "link_read_to_pin_edges": 6,
+      "link_receive_edges": 2,
+      "sequence_metadata_lead_edges": 1,
+      "link_controller_measured_FFs": 4421,
+      "link_store_measured_FFs": [
+        597,
+        597,
+        597,
+        567
+      ],
+      "issuer_feedback_bits": 9,
+      "production_status": "candidate actual logical composition; no inherited V3 link calendar or physical qualification",
+      "link_write_to_native_SRAM_edges": 4,
+      "host_clock_entries": 69,
+      "endpoint_clock_entries": 5,
+      "compiler_contract": "Endpoint reservation input E: TX publication E+6. RX pins sampled E: publication E+2; qslots captures E+3. Every external endpoint input is captured before guard forks. Sequence arithmetic prepared one edge before reservation."
+    }
+  },
+  "binding_audit": {
+    "status": "PASS",
+    "allowed_delta": [
+      "versioned names",
+      "all-input-capture TX6/RX2 child"
+    ],
+    "source_sha256": {
+      "ot_hfd_coll_q_static_v4.sv": "6cef562b51a4050a09f73d93a7497c6980138e58363de6aa450e66ecd519fd9b",
+      "ot_hfd_coll_q2_static_host_v4.sv": "1679774ca864b14fd39c33b8e7568e454253ed398131f5ebcf845b894a7dc5fb",
+      "ot_hfd_coll_q3_static_host_v4.sv": "cd72c6d27d6a25662c793eb312ce54579d2dfae481536cfe4101cc8769ccc1dc",
+      "ot_hgi_coll_static_link_capture.sv": "f50bc60bfb5d3da810fc50007154aa9ceb90f86e60c757031c0bb7293c855c76",
+      "ot_hgi_coll_static_capture_ctl.sv": "6a419f79c71a5d4d556411ba392262c79dd112bcf0863af4cd8fc0c4eacf8cb8",
+      "ot_hgi_coll_static_pinreg_ctl.sv": "d24045a84d64fdd69ab9f15ad9ccc3f8d6b5ccad712da8df51ac2d67db001326",
+      "ot_hgi_coll_static_pinreg_store.sv": "d5e879e1e76a0b5f4145279c55a53154401b5b3e3a47aa16b33f82612933937a",
+      "ot_hgi_coll_static_seq_ctl.sv": "21a88e901f304638f66eaf743dfa4ef8555670db66bbe44ba2c489983b719c89",
+      "ot_hgi_coll_static_program_target.sv": "a59c8375139d8e033d0b312d917c6f9e7db9156f9987ce4984c89914140086ac"
+    },
+    "scope": "Complete normalized parent/host delta, unchanged ISA positions, actual endpoint capture wiring; runtime/physical qualifications separate"
+  },
+  "positive": {
+    "lanes": 16,
+    "arithmetic": "native FP32 sum, lane-wise exact golden",
+    "host_target": 53,
+    "host_program_rows": 36,
+    "output_after_hostlaunch_edges": 36,
+    "halt_after_hostlaunch_edges": 40,
+    "source_boundary": "declared SU INJLAT12 fixed-cycle input vectors",
+    "native_children": "actual HOST program target, issuer three SRAMs, q2 parent, qslots, 33-root reduce,17-root ring,2x5-root capture links and8 endpoint SRAMs",
+    "link_traffic": "idle; TX6/RX2 traffic qualified separately by endpoint owner"
+  },
+  "mutants": {
+    "wrong_qslots_source": "rejected native reduce metadata",
+    "shift_add_issue_one_edge": "rejected sticky parent fault at cycle24"
+  },
+  "scope": "Selected native q2 HOST+reduction composition with unchanged production parameters. No q3/TKM execution, FEC/PHY, physical clock/timing or full programme/throughput qualification.",
+  "preserved_versions": [
+    "V1",
+    "V2",
+    "V3"
+  ],
+  "open": [
+    "actual V4 traffic programme/calendar and full operation joins",
+    "native INDEX512 to actual TKM consumer execution via publisher existing objects",
+    "SU delivery O-base semantics",
+    "logical full endpoint/FEC/CDC programme binding and physical TT/FF/clock/pin closure"
+  ]
+}
