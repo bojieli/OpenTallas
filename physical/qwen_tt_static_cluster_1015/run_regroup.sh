@@ -4,6 +4,8 @@
 #   r14: the seam pair indices are chosen from measured seam activity (m0 SEAM_* report) and the bench
 #   refuses a vacuous pass (REGROUP_UNSENSITIZED) when either pair never differs.
 set -e
+# --converge-limit 5000: the directed PW programme phase (tasks with zero-delay blocking input updates) exceeds
+# Verilator 5.032 default active-region iteration limit 100; it is a scheduler iteration bound, not a semantic change.
 MUT=${1:-0}; N=${2:-100000}; CA=${3:-0}; CB=${4:-1}; RA=${5:-0}; RB=${6:-1}; MINP=${MIN_PAIR:-100}
 P=physical/qwen_tt_static_cluster_1015
 NEW=rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_static_parent.sv
@@ -26,6 +28,6 @@ case $MUT in
 esac
 SR=$(sed 's#_bb\.v#.v#g' $P/srcs.txt)
 O=${RG_OBJ:-/tmp/rg_obj_${MUT}_$$}
-verilator --binary --timing -j 8 -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -DNCYC=$N -DCMD_A=$CA -DCMD_B=$CB -DRET_A=$RA -DRET_B=$RB -DMIN_PAIR=$MINP -DRUNS=${RUNS:-8} --top-module tb_tt_static_regroup -Mdir $O \
+verilator --binary --timing --converge-limit 5000 -j 8 -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -DNCYC=$N -DCMD_A=$CA -DCMD_B=$CB -DRET_A=$RA -DRET_B=$RB -DMIN_PAIR=$MINP -DRUNS=${RUNS:-8} --top-module tb_tt_static_regroup -Mdir $O \
   $SR rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_static_hr.sv $NEW $P/ot_qfd_tt_ctlm_static_parent_ref.sv $P/tb_tt_static_regroup.sv > $O.build.log 2>&1 || { tail -20 $O.build.log; exit 2; }
 $O/Vtb_tt_static_regroup +PROGRAM=results/arch/qwen_tp8_native_dispatch_1014/token_source_plan/head_program_rank7.hex
