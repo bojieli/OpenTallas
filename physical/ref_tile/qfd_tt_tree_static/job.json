@@ -1,5 +1,5 @@
 {
- "name": "qfd_tt_tree_static-t3-d4758cc60",
+ "name": "qfd_tt_tree_static-t4-COMMIT",
  "block": "qfd_tt_ctlm_tree_static",
  "ref_tile": true,
  "owner": "Claude:q15_compute_elem",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 16,
  "source": {
   "branch": "claude/q15-tt-static",
-  "commit": "d4758cc6035641f4ac03ace005d48961ba3b01de",
+  "commit": "COMMIT",
   "extra_paths": [
    "physical/qwen_tt_static_cluster_1015",
    "results/arch/qwen_tp8_native_dispatch_1014/token_source_plan",
@@ -111,7 +111,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qfd_tt_tree_static/qfd_tt_tree_static-t3-d4758cc60"
+   "to": "results/rtl/ref_tile/qfd_tt_tree_static/qfd_tt_tree_static-t4-COMMIT"
   }
  ],
  "cycles_added": 0,
