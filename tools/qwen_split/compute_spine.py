@@ -588,6 +588,10 @@ def place(v, m, G):
     _link_words(m, rec)
     if os.environ.get('OT_SPLIT_TREE_VF', '1') != '0':
         _tree_widths(m, rec)
+    # actual source join (tt / seq / su / vm / native59 / io / embed) replaces the historical spine words
+    if 'native_static_io_bind' in m and os.environ.get('OT_SPLIT_NATIVE_GRAPH', '1') != '0':
+        from qwen_split.native_graph_bind import apply as native_graph_apply
+        rec['native_graph_bind'] = native_graph_apply(m)
     if os.environ.get('OT_SPLIT_DUMP'):
         ins = [dict(n=i.name, m=i.master, x=i.x, y=i.y, w=i.w, h=i.h, o=i.orient) for i in m['insts']]
         bus = [dict(b=b_, c=c_, n=n_, e=[list(x) for x in e_]) for b_, c_, n_, e_ in m.get('buses', [])]
