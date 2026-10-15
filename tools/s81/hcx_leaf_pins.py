@@ -14,6 +14,6 @@ def main():
  pp['o_d']=[['S','M5',400.032+.096*i,.192] for i in range(32)]
  pp['o_v']=[['S','M5',403.2,.192]];pp['fault']=[['S','M5',404.16,.192]]
  pp['clk']=[['W','M4',4.032,.192]];pp['rst_n']=[['W','M4',4.992,.192]]
- V.write(out,'ot_s81_hcx_projection_leaf',[864.,1152.],pp,'clk','N fixed80-beat X staging multicast corridor; S gathered FP32 projection result; W clock/reset', 'v20_native_hcp',{'clock_entries':{'serial':['clk']},'adoption':'OPEN: clock/native/reset, exact static flight and each band cut proof, middle relay relocation required','source':'tools/s81/hcx_leaf_pins.py'})
+ V.write(out,'ot_s81_hcx_projection_leaf',[864.,1296.],pp,'clk','N fixed80-beat X staging multicast corridor; S gathered FP32 projection result; W clock/reset', 'v20_native_hcp',{'clock_entries':{'serial':['clk']},'adoption':'OPEN: clock/native/reset, exact static flight and each band cut proof, middle relay relocation required','source':'tools/s81/hcx_leaf_pins.py'})
  print('HCX_NATIVE_PIN_ASSIGN4096stage+controls,32result,serialroot')
 if __name__=='__main__':main()
