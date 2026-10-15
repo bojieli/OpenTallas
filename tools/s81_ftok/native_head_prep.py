@@ -78,7 +78,7 @@ def run(a):
         raise ValueError('unsupported schedule')
     obj=(Path(a.build_work).resolve() if a.build_work else w)/f'obj_m{a.mut}'; obj.mkdir(exist_ok=True)
     exe=obj/'Vtb_s81_head_prep'
-    sources=[ROOT/s for s in HG.FP['rtl']+HG.RTL+[TB]]
+    sources=[ROOT/s for s in HG.FP['rtl']+HG.RTL+[TB,'tools/s81_ftok/head_prep.vlt']]
     # Immutable source manifest is checked before reusing a binary.
     manifest={str(p.relative_to(ROOT)):sha(p) for p in sources}
     manifest['mut']=a.mut
@@ -86,7 +86,7 @@ def run(a):
     if exe.exists() and (not mf.exists() or json.loads(mf.read_text()) != manifest):
         raise ValueError('source changed: use a fresh work/build directory')
     if not exe.exists():
-        cmd=[HG.VERILATOR,'--binary','--timing','-O2','-Wno-fatal','-Wno-WIDTH',
+        cmd=[HG.VERILATOR,'--binary','--timing','--hierarchical','--hierarchical-threads','4','-O2','-Wno-fatal','-Wno-WIDTH',
              '--top-module','tb_s81_head_prep','-Mdir',str(obj),'-j','16',
              '--unroll-count','4','-fno-dfg','-GNG=256',f'-GMUT={a.mut}',
              '-GHIER=1','-GHALF=1','-GCSPLIT=1','-GTAIL_SPLIT=2',

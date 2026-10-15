@@ -51,6 +51,8 @@ def main():
     ap.add_argument("--mtp")
     ap.add_argument("--out")
     ap.add_argument("--row", type=int, default=0)
+    ap.add_argument("--native-embedding-dir", type=Path, help="actual static embedding bank gate handoffs")
+    ap.add_argument("--main-token-file", type=Path, help="actual native head token output, one hex vocabulary id")
     ap.add_argument("--native-prep", type=Path, help="actual RTL head preparation output directory (xf.npy and source provenance)")
     a = ap.parse_args()
     import hdc_golden_v41 as V
@@ -81,6 +83,18 @@ def main():
         assert same(xf, zh["xf"]), "head xf from the RTL rows != shard xf"
         print("HEAD_GLUE PASS: L39 hop output == h_out; hc_pre + norm == xf (the head bench's input)")
     elif a.step == "mtp0":
+        if a.native_embedding_dir is not None:
+            if a.main_token_file is None:
+                ap.error("native MTP0 requires --main-token-file from the native head output")
+            words = a.main_token_file.read_text().split()
+            assert len(words) == 1, "head token dump must contain exactly one word"
+            token = int(words[0], 16)
+            assert 0 <= token < 129280, "head token out of range"
+            from s81_embedding.publish import publish_mtp0
+            publish_mtp0(a.native_embedding_dir, Path(a.out), Path(a.mtp), [token] + [128799] * 4)
+            print("MTP0_NATIVE_HANDOFF PASS: actual RTL head token -> static RTL embedding -> actual HIDDEN packets")
+            return
+        print("HISTORICAL_REFERENCE_GLUE: embedding expansion supplied by Python; not native qualification")
         ck = LC.Checkpoint(); m, _ = LC.build_model(ck, engram=False)
         ids = [21946] + [m.noise_id] * (m.dspark_block - 1)
         for i, t in enumerate(ids):

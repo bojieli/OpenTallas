@@ -1,0 +1,15 @@
+`verilator_config
+// Preserve actual physical HC leaves and real FP arithmetic; compile repeated
+// instances once. No behavioural replacements or arithmetic substitutions.
+hier_block -module "ot_s81_hc_ctnl_l0"
+hier_block -module "ot_s81_hc_ctnl_l1"
+hier_block -module "ot_s81_hc_ctnl_l2"
+hier_block -module "ot_s81_hc_ctnl_l3"
+hier_block -module "ot_s81_hc_ctpl"
+hier_block -module "ot_s81_hc_ctfn"
+hier_block -module "ot_s81_hc_ctfx"
+hier_block -module "ot_s81_hc_ctfs"
+hier_block -module "ot_hdc_fp32_add_f12"
+hier_block -module "ot_hdc_fp32_mul_f12"
+hier_block -module "ot_hdc_fp32_add_fast"
+hier_block -module "ot_hdc_fp32_mul_fast"
