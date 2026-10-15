@@ -96,7 +96,9 @@
     "shared_client_ownership_mux_component_qualified": true,
     "shared_client_ownership_mux": "ot_hbm_native_client_mux: 3 clients, original17-bit tags and beats, atomic len1..4 read ownership, true posted WR ACK routing; no bank/REF state",
     "shared_client_timing_reservation": "Actual engram_reservation input masks other admissions; entry requires owner_idle32, which accounts for every accepted read beat/true WR completion and held request. Illegal entry/release faults. Actual fixed whole-kernel control and universal inherited bank/REF timing remain unbound.",
-    "reservation_guard_component_qualified": true
+    "reservation_guard_component_qualified": true,
+    "rank_local_programme_hash_control_distribution_qualified": false,
+    "rank_control_scope": "Current mechanism fixture drives8 actual home clients from one source-owned hash/programme. True per-rank programme/hash replicas or actual priced descriptor/start transport must replace cross-rank fixture wires before whole-operation qualification."
   },
   "source_read": {
     "input": [
@@ -188,7 +190,11 @@
       "clk_columns[4]": 3021,
       "clk_columns[5]": 3021
     },
-    "reservation_guard_FF_on_hbm_clk": 2
+    "reservation_guard_FF_on_hbm_clk": 2,
+    "common_owned_controller_clock_endpoints_per_PC": 13650,
+    "common_plus_mux_inventory_endpoints_per_PC": 13883,
+    "common_census_source_commit": "fcea51da7; owned5377 zero-hardware-delta normalizationa7b86347d",
+    "common_plus_mux_joint_mapping_qualified": false
   },
   "qualification": {
     "exact_released_numerical_memory_histories": true,
@@ -202,7 +208,7 @@
     "physical": false,
     "actual_programme_to_L14_guarded_Kport_memory": true,
     "actual_programme_to_three_client_owned_memory": true,
-    "actual_reserved_seven_root_hash_memory_join": false
+    "actual_reserved_seven_root_hash_memory_join": true
   },
   "source_sha256": {
     "rtl/hbm_accel/engram_static_20261015/ot_hbm_engram_fetch_program.sv": "b6492ec5c60a92098ce5448e41da1ef86b77295fc67bb4c05ebd5e17c7715031",
