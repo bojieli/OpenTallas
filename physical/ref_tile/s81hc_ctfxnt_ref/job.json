@@ -1,5 +1,5 @@
 {
- "name": "s81hc_ctfxnt_ref-v3-owned-epoch-COMMIT",
+ "name": "s81hc_ctfxnt_ref-v3-owned-epoch-631a20a94",
  "block": "ot_s81_hc_ctfx_nt",
  "ref_tile": true,
  "owner": "Codex:S-NORM",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 24,
  "source": {
   "branch": "claude/s81-norm-tree-1014",
-  "commit": "COMMIT"
+  "commit": "631a20a94"
  },
  "stages": {
   "bench": [
@@ -93,7 +93,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/s81hc_ctfxnt_ref/s81hc_ctfxnt_ref-v3-owned-epoch-COMMIT"
+   "to": "results/rtl/ref_tile/s81hc_ctfxnt_ref/s81hc_ctfxnt_ref-v3-owned-epoch-631a20a94"
   }
  ],
  "cycles_added": 0,
