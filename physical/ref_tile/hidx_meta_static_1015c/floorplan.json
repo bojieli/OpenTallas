@@ -1,0 +1,79 @@
+{
+ "schema": "opentallas.ref_tile.floorplan.v1",
+ "name": "hidx_meta_static_1015c",
+ "top": "hidx_meta_w25_d123_r0",
+ "kind": "tile",
+ "die": [
+  0,
+  0,
+  60.48,
+  60.48
+ ],
+ "core": [
+  2.16,
+  2.16,
+  58.31999999999999,
+  58.31999999999999
+ ],
+ "why": "spec outline (exact: the closed view's sub-slot)",
+ "std_area_um2": 1550,
+ "layer_contract": {
+  "children": {},
+  "pg_layer": "M5",
+  "rlayers": [
+   "M2",
+   "M5"
+  ],
+  "strap_layer": "M6",
+  "layer_cap": "M5",
+  "cap_basis": "contract"
+ },
+ "pins": {
+  "N": [
+   "clk",
+   "rst_n",
+   "d"
+  ],
+  "S": [
+   "q"
+  ]
+ },
+ "clock_port": "clk",
+ "blocks": [],
+ "findings": [],
+ "referenced": [
+  "rtl/hbm_accel/index/hidx_meta_w25_d123_r0.sv",
+  "rtl/hdc/ot_hdc_delay_rf.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "physical/ref_tile/hidx_meta_static_1015c/kit.env",
+  "physical/ref_tile/hidx_meta_static_1015c/clock.sdc",
+  "physical/ref_tile/hidx_meta_static_1015c/signoff.sdc",
+  "physical/ref_tile/hidx_meta_static_1015c/pdn.tcl",
+  "physical/ref_tile/hidx_meta_static_1015c/pre_cts.tcl",
+  "physical/ref_tile/hidx_meta_static_1015c/post_cts.tcl",
+  "physical/ref_tile/hidx_meta_static_1015c/post_grt.tcl",
+  "physical/ref_tile/hidx_meta_static_1015c/pre_drt.tcl",
+  "physical/ref_tile/hidx_meta_static_1015c/pre_fill.tcl",
+  "physical/ref_tile/hidx_meta_static_1015c/post_fill.tcl",
+  "physical/ref_tile/hidx_meta_static_1015c/pre_grt.tcl",
+  "physical/ref_tile/hidx_meta_static_1015c/post_drt.tcl",
+  "tools/ref_tile/ref_route.sh",
+  "physical/qwen_die_masters/io_ref_skew.sdc",
+  "physical/qwen_die_masters/io_plain.sdc",
+  "physical/qwen_die_masters/repair_budget.tcl",
+  "physical/qwen_die_masters/pre_cts_skew.tcl",
+  "physical/qwen_die_masters/pre_ref_skew.tcl",
+  "physical/qwen_die_masters/post_plain.tcl",
+  "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
+  "physical/common_flow/grt_macro_top_layer.tcl",
+  "physical/qwen_die_masters/io_flop_at_pins.tcl",
+  "physical/qwen_die_masters/out_flop_release.tcl",
+  "physical/dsrom_window_source/leaf_iohold.tcl",
+  "physical/dsrom_window_source/leaf_inhold_release.tcl",
+  "physical/dsrom_window_source/leaf_inhold.tcl",
+  "physical/dsrom_window_source/leaf_inhold_release.tcl",
+  "physical/ref_tile/hidx_meta_static_1015c/pre_gpl.tcl",
+  "physical/ref_tile/hidx_meta_static_1015c/pre_dpl.tcl",
+  "physical/common_flow/pin_reg_split.tcl"
+ ]
+}

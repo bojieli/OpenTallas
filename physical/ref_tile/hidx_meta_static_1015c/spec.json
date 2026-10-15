@@ -1,0 +1,89 @@
+{
+ "name": "hidx_meta_static_1015c",
+ "top": "hidx_meta_w25_d123_r0",
+ "kind": "tile",
+ "clock_port": "clk",
+ "reset_ports": [],
+ "outline": {
+  "w": 60.48,
+  "h": 60.48,
+  "exact": true
+ },
+ "sources": [
+  "rtl/hbm_accel/index/hidx_meta_w25_d123_r0.sv",
+  "rtl/hdc/ot_hdc_delay_rf.sv",
+  "rtl/hdc/ot_hdc_delay.sv"
+ ],
+ "params": {},
+ "macros": [],
+ "pins": {
+  "N": [
+   "clk",
+   "rst_n",
+   "d"
+  ],
+  "S": [
+   "q"
+  ]
+ },
+ "layer_cap": "M5",
+ "recipe": 2,
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 4,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "slot_change_request": "H-IDX Claude 2026-10-15 12:55: structural successor of 1015b (verdict NEEDS_RTL TT+356.68/FF-6.28, hold ECO 2,211 cells still FF-2.14 on 3,100 zero-logic flop->flop endpoints). Register-file delay (ot_hdc_delay_rf) adds ~517 um2 of write-enable/read-mux logic -> grow 51.84 -> 60.48 square (+0.0024 mm2/tile, 16 tiles +0.039 mm2) for ~49% synth util. Same faces/layers/pins (M5 N clk/rst_n/d, S q). H-DIE canonical typed grant to follow.",
+ "job": {
+  "owner": "Claude:H-IDX",
+  "branch": "claude/hidx-meta-rf-1015",
+  "tag": "meta3",
+  "purpose": "Exact native 16x scorer.ge[e].md metadata delay W25 D123 RESET0, register-file structure (hold-structural successor of 1015b). +0 cycles.",
+  "extra_paths": [
+   "rtl/test/hbm_idx_static"
+  ],
+  "benches": [
+   {
+    "name": "meta_exact_and_mutants",
+    "cmd": "bash rtl/test/hbm_idx_static/run_meta_delay.sh {RUN}/meta_gate",
+    "expect": "pass",
+    "pass_regex": "IDX_META_DELAY GATE PASS",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog",
+     "vvp"
+    ]
+   },
+   {
+    "name": "meta_latency_mutant",
+    "cmd": "iverilog -g2012 -s tb_idx_meta_delay -Ptb_idx_meta_delay.MUT=1 -o {RUN}/m1.vvp rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_delay_rf.sv rtl/hbm_accel/index/hidx_meta_w25_d123_r0.sv rtl/test/hbm_idx_static/tb_idx_meta_delay.sv && vvp {RUN}/m1.vvp",
+    "expect": "fail",
+    "fail_regex": "metadata exact delay mismatch",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog",
+     "vvp"
+    ]
+   }
+  ]
+ },
+ "std_area_um2": 1550,
+ "structural_change": "Replace the 3,075-flop shift line (every stage a zero-logic hold hop) by pin-in reg -> 121-row circular buffer (write-enable mux, N:1 read mux) -> pin-out reg, cycle-exact (D123, data unreset, wptr unreset self-converging); only 25 data flops toggle per edge. Exact bench 678 checks 0 errors, D122 mutant 678 errors, RESET mutant 250 errors; +0 cycles.",
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ }
+}
