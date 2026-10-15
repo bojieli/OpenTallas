@@ -1,7 +1,7 @@
 {
   "qkd_host_root_integrated": {
     "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_root_integrated.sv",
-    "sha256": "0a3c3a4c67e31b9e1b80ef296d473007c9108c0f54db8f6796647a629973196e",
+    "sha256": "7cb792883c9961bf71a764e375aebef8fa6a8213b86d6cc93f7eba459ec6e44f",
     "ports": [
       {
         "name": "ck_phy",
@@ -1071,29 +1071,58 @@
         "width": 10
       },
       {
-        "name": "program_installed_valid",
+        "name": "ck_records",
         "direction": "input",
+        "width": 1,
+        "period_fs": 833334,
+        "clock_entries": [
+          "ck_records"
+        ]
+      },
+      {
+        "name": "record_send_kind",
+        "direction": "input",
+        "width": 2
+      },
+      {
+        "name": "record_witness_slot",
+        "direction": "input",
+        "width": 1
+      },
+      {
+        "name": "record_rx_v",
+        "direction": "input",
+        "width": 1
+      },
+      {
+        "name": "record_rx",
+        "direction": "input",
+        "width": 548
+      },
+      {
+        "name": "record_tx_v",
+        "direction": "output",
+        "width": 1
+      },
+      {
+        "name": "record_tx_observed_v",
+        "direction": "output",
+        "width": 1
+      },
+      {
+        "name": "record_tx",
+        "direction": "output",
+        "width": 548
+      },
+      {
+        "name": "record_fault",
+        "direction": "output",
         "width": 1
       },
       {
         "name": "execution_active",
         "direction": "input",
         "width": 1
-      },
-      {
-        "name": "program_commit_v",
-        "direction": "input",
-        "width": 1
-      },
-      {
-        "name": "program_commit_epoch",
-        "direction": "input",
-        "width": 16
-      },
-      {
-        "name": "program_commit_digest",
-        "direction": "input",
-        "width": 64
       },
       {
         "name": "program_ready",
@@ -1462,11 +1491,11 @@
         "width": 1
       }
     ],
-    "clock_entry_count": 564
+    "clock_entry_count": 565
   },
   "qkd_host_rank_integrated": {
     "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_rank_integrated.sv",
-    "sha256": "65000d7cb410a066a2037def02c51187ab35892e35f796da3382e72cc4c839bd",
+    "sha256": "ee2e001bfc87891effbea8ab48d1625601f6c10d45bf7b12b787c4c4fbf63738",
     "ports": [
       {
         "name": "ck_phy",
@@ -2651,29 +2680,58 @@
         "width": 10
       },
       {
-        "name": "program_installed_valid",
+        "name": "ck_records",
         "direction": "input",
+        "width": 1,
+        "period_fs": 833334,
+        "clock_entries": [
+          "ck_records"
+        ]
+      },
+      {
+        "name": "record_send_kind",
+        "direction": "input",
+        "width": 2
+      },
+      {
+        "name": "record_witness_slot",
+        "direction": "input",
+        "width": 1
+      },
+      {
+        "name": "record_rx_v",
+        "direction": "input",
+        "width": 1
+      },
+      {
+        "name": "record_rx",
+        "direction": "input",
+        "width": 548
+      },
+      {
+        "name": "record_tx_v",
+        "direction": "output",
+        "width": 1
+      },
+      {
+        "name": "record_tx_observed_v",
+        "direction": "output",
+        "width": 1
+      },
+      {
+        "name": "record_tx",
+        "direction": "output",
+        "width": 548
+      },
+      {
+        "name": "record_fault",
+        "direction": "output",
         "width": 1
       },
       {
         "name": "execution_active",
         "direction": "input",
         "width": 1
-      },
-      {
-        "name": "program_commit_v",
-        "direction": "input",
-        "width": 1
-      },
-      {
-        "name": "program_commit_epoch",
-        "direction": "input",
-        "width": 16
-      },
-      {
-        "name": "program_commit_digest",
-        "direction": "input",
-        "width": 64
       },
       {
         "name": "program_ready",
@@ -2896,7 +2954,7 @@
         "width": 1
       }
     ],
-    "clock_entry_count": 560
+    "clock_entry_count": 561
   },
   "qkd_host_tp8_coordinator": {
     "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_tp8_coordinator.sv",

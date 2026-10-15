@@ -104,11 +104,16 @@ module qkd_host_rank_integrated #(
  input wire crom_fault,
  input wire[92:0] local_tk,
  input wire[9:0] local_kst,
- input wire program_installed_valid,
+ // Compiler-assigned native link record face; no fabricated commit inputs.
+ input wire ck_records,
+ input wire[1:0] record_send_kind,
+ input wire record_witness_slot,record_rx_v,
+ input wire[547:0] record_rx,
+ output wire record_tx_v,record_tx_observed_v,
+ output wire[547:0] record_tx,
+ output wire record_fault,
  input wire execution_active,
- input wire program_commit_v,
- input wire[15:0] program_commit_epoch,
- input wire[63:0] program_commit_digest,
+
  output wire program_ready,
  output wire[15:0] program_epoch,
  output wire[63:0] program_digest,
@@ -151,6 +156,20 @@ module qkd_host_rank_integrated #(
  input wire native_admit_ready,native_links_drained,native_link_reset_seen,native_retrained,
  output wire peer_protocol_fault
 );
+ wire program_installed_valid,program_commit_v,installed_fusedcap;
+ wire[15:0]program_commit_epoch,program_begin_epoch;wire[63:0]program_commit_digest;
+ qkd_host_record_port u_records(.ck(ck_records),.rst_n(host_rst_n),.send_kind(record_send_kind),
+ .request_v(native_request_v),.request_tag(native_request_tag),.request_gen(native_request_gen),
+ .request_token(native_request_token),.request_position(native_request_pos),
+ .token_epoch_valid(token_epoch_valid),.token_epoch(token_epoch),
+ .begin_v(program_begin_v),.begin_epoch(program_begin_epoch),.expected_pw(program_expected_pw),.expected_dw(program_expected_dw),
+ .auth_v(program_auth_v),.auth_epoch(program_auth_epoch),.auth_digest(program_auth_digest),
+ .program_ready(program_ready),.program_epoch(program_epoch),.program_digest(program_digest),
+ .authorized_footer_valid(program_authorized_footer_v),.authorized_footer(program_authorized_footer64),
+ .witness_slot(record_witness_slot),.rx_v(record_rx_v),.rx_record(record_rx),
+ .commit_v(program_commit_v),.installed_valid(program_installed_valid),.installed_fusedcap(installed_fusedcap),
+ .commit_epoch(program_commit_epoch),.commit_digest(program_commit_digest),
+ .tx_v(record_tx_v),.tx_observed_v(record_tx_observed_v),.tx_record(record_tx),.fault(record_fault));
  wire peer_reset_request;
  wire native_recovery_clear;
  wire peer_tx_valid;
@@ -346,7 +365,7 @@ module qkd_host_rank_integrated #(
  .phy_tx_flit(phy_tx_flit),
  .link_up(link_up),
  .transport_fault(transport_fault),
- .physical_fault(physical_fault|(8'(peer_protocol_fault)<<die_id)),
+ .physical_fault(physical_fault| (8'(record_fault)<<die_id) |(8'(peer_protocol_fault)<<die_id)),
  .crom_fault(crom_fault),
  .local_tk(local_tk),
  .local_kst(local_kst),
@@ -359,7 +378,7 @@ module qkd_host_rank_integrated #(
  .program_epoch(program_epoch),
  .program_digest(program_digest),
  .program_authorized_footer_v(program_authorized_footer_v),.program_authorized_footer64(program_authorized_footer64),
- .program_begin_v(program_begin_v),
+ .program_begin_epoch(program_begin_epoch),.program_begin_v(program_begin_v),
  .program_auth_v(program_auth_v),
  .program_expected_pw(program_expected_pw),
  .program_expected_dw(program_expected_dw),

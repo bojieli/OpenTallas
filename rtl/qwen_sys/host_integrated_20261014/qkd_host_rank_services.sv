@@ -60,7 +60,7 @@ module qkd_host_rank_services #(
  input wire program_installed_valid,input wire execution_active,program_commit_v,input wire[15:0]program_commit_epoch,input wire[63:0]program_commit_digest,
  output wire program_ready,output wire[15:0]program_epoch,output wire[63:0]program_digest,
  output wire program_authorized_footer_v,output wire[63:0]program_authorized_footer64,
- output wire program_begin_v,program_auth_v,output wire[10:0]program_expected_pw,output wire[3:0]program_expected_dw,output wire[15:0]program_auth_epoch,output wire[63:0]program_auth_digest,
+ output wire[15:0]program_begin_epoch,output wire program_begin_v,program_auth_v,output wire[10:0]program_expected_pw,output wire[3:0]program_expected_dw,output wire[15:0]program_auth_epoch,output wire[63:0]program_auth_digest,
  output wire[181:0]hc,output wire[7:0]seen,output wire irq,
  output wire host_rst_n,link_rst_n,hbm_rst_n,boot_go,die_rst_n,sys_ready,
  output wire[31:0]fault_src,output wire source_cr,available,
@@ -92,7 +92,7 @@ module qkd_host_rank_services #(
  wire ingress_fault,program_fault;wire begin_image,word_v,word_desc,seal,auth_v;
  wire[15:0]image_epoch,auth_epoch;wire[10:0]pw_count;wire[3:0]dw_count;
  wire[9:0]word_addr;wire[63:0]word_data,auth_digest;wire replay_done;
- assign program_begin_v=begin_image;assign program_auth_v=auth_v;assign program_expected_pw=pw_count;assign program_expected_dw=dw_count;assign program_auth_epoch=auth_epoch;assign program_auth_digest=auth_digest;
+ assign program_begin_epoch=image_epoch;assign program_begin_v=begin_image;assign program_auth_v=auth_v;assign program_expected_pw=pw_count;assign program_expected_dw=dw_count;assign program_auth_epoch=auth_epoch;assign program_auth_digest=auth_digest;
  reg committed,commit_fault;
  always @(posedge ck_program_loader or negedge host_rst_n)begin
   if(!host_rst_n)begin committed<=0;commit_fault<=0;end
