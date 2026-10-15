@@ -1,0 +1,8 @@
+ot-run: ot-epyc1tb     admits   448 GB (avail 675, growth 96, headroom 64, waiters 0/0 GB) load 121/128 running 22 disk 879 GB 
+ot-run: ot-epyc4       admits   331 GB (avail 567, growth 188, headroom 48, waiters 0/0 GB) load 149/128 running 25 disk 713 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/codex/qcoll-1834
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/codex/qcoll-1834
+ot-run: -> ot-epyc1tb
+ot-heavy: admitted on ot-epyc1tb as oth-ubuntu-3782959-1792028552 after 0 s
+PASS native_coll_port messages=3000 words=17000 cycles=17319 rank3 exact posted everybeat; data everybit0and1 pair_mismatch=0
+ot-run: RAN on ot-epyc1tb (unit oth-ubuntu-3782959-1792028552): exit 0

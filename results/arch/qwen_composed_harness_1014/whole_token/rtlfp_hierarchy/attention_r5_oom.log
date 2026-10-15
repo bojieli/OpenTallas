@@ -1,0 +1,150 @@
+make: Entering directory '/srv/opentallas-scratch/claude/qwen-wholetoken-1014/lv6_hier/attn_rtlfp_r5/obj'
+make[1]: Entering directory '/srv/opentallas-scratch/codex/native-service-f46073090'
+/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator -f /srv/opentallas-scratch/claude/qwen-wholetoken-1014/lv6_hier/attn_rtlfp_r5/obj/Vot_hdc_fp32_add_lat_8__hierMkArgs.f
+make[1]: Entering directory '/srv/opentallas-scratch/codex/native-service-f46073090'
+/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator -f /srv/opentallas-scratch/claude/qwen-wholetoken-1014/lv6_hier/attn_rtlfp_r5/obj/Vot_hdc_fp32_add_lat_8__hierMkArgs.f
+make[1]: Entering directory '/srv/opentallas-scratch/codex/native-service-f46073090'
+/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator -f /srv/opentallas-scratch/claude/qwen-wholetoken-1014/lv6_hier/attn_rtlfp_r5/obj/Vot_hdc_fp32_mul_lat_f__hierMkArgs.f
+make[1]: Entering directory '/srv/opentallas-scratch/codex/native-service-f46073090'
+/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator -f /srv/opentallas-scratch/claude/qwen-wholetoken-1014/lv6_hier/attn_rtlfp_r5/obj/Vot_hdc_fp32_mul_lat_f__hierMkArgs.f
+make[1]: Entering directory '/srv/opentallas-scratch/codex/native-service-f46073090'
+/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator -f /srv/opentallas-scratch/claude/qwen-wholetoken-1014/lv6_hier/attn_rtlfp_r5/obj/Vot_hdc_fp32_mul_lat_3__hierMkArgs.f
+make[1]: Entering directory '/srv/opentallas-scratch/codex/native-service-f46073090'
+/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator -f /srv/opentallas-scratch/claude/qwen-wholetoken-1014/lv6_hier/attn_rtlfp_r5/obj/Vot_hdc_fp32_mul_lat_3__hierMkArgs.f
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 4.248 MB sources in 91 modules, into 0.565 MB in 6 C++ files needing 0.002 MB
+- Verilator: Walltime 0.315 s (elab=0.078, cvt=0.152, bld=0.000); cpu 0.294 s on 1 threads; allocated 58.379 MB
+make[1]: Leaving directory '/srv/opentallas-scratch/codex/native-service-f46073090'
+make -f Vot_hdc_fp32_mul_lat_f.mk -C Vot_hdc_fp32_mul_lat_f VM_PREFIX=Vot_hdc_fp32_mul_lat_f
+make[1]: Entering directory '/srv/opentallas-scratch/claude/qwen-wholetoken-1014/lv6_hier/attn_rtlfp_r5/obj/Vot_hdc_fp32_mul_lat_f'
+python3 /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/bin/verilator_includer -DVL_INCLUDE_OPT=include Vot_hdc_fp32_mul_lat_f.cpp Vot_hdc_fp32_mul_lat_f___024root__0.cpp Vot_hdc_fp32_mul_lat_f__ConstPool__0__Slow.cpp Vot_hdc_fp32_mul_lat_f___024root__Slow.cpp Vot_hdc_fp32_mul_lat_f___024root__0__Slow.cpp Vot_hdc_fp32_mul_lat_f__Syms__Slow.cpp > Vot_hdc_fp32_mul_lat_f__ALL.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -fPIC -O2 -fPIC   -c -o ot_hdc_fp32_mul_lat_f.o ot_hdc_fp32_mul_lat_f.cpp
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 4.248 MB sources in 91 modules, into 0.565 MB in 6 C++ files needing 0.002 MB
+- Verilator: Walltime 0.369 s (elab=0.076, cvt=0.174, bld=0.000); cpu 0.289 s on 1 threads; allocated 58.379 MB
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -fPIC -O2 -fPIC   -c -o Vot_hdc_fp32_mul_lat_f__ALL.o Vot_hdc_fp32_mul_lat_f__ALL.cpp
+make[1]: Leaving directory '/srv/opentallas-scratch/codex/native-service-f46073090'
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 4.248 MB sources in 91 modules, into 0.573 MB in 6 C++ files needing 0.002 MB
+- Verilator: Walltime 0.464 s (elab=0.165, cvt=0.157, bld=0.000); cpu 0.324 s on 1 threads; allocated 58.379 MB
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 4.248 MB sources in 91 modules, into 0.573 MB in 6 C++ files needing 0.002 MB
+- Verilator: Walltime 0.431 s (elab=0.106, cvt=0.204, bld=0.000); cpu 0.363 s on 1 threads; allocated 58.383 MB
+make[1]: Leaving directory '/srv/opentallas-scratch/codex/native-service-f46073090'
+make[1]: Leaving directory '/srv/opentallas-scratch/codex/native-service-f46073090'
+make -f Vot_hdc_fp32_mul_lat_3.mk -C Vot_hdc_fp32_mul_lat_3 VM_PREFIX=Vot_hdc_fp32_mul_lat_3
+make[1]: Entering directory '/srv/opentallas-scratch/claude/qwen-wholetoken-1014/lv6_hier/attn_rtlfp_r5/obj/Vot_hdc_fp32_mul_lat_3'
+python3 /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/bin/verilator_includer -DVL_INCLUDE_OPT=include Vot_hdc_fp32_mul_lat_3.cpp Vot_hdc_fp32_mul_lat_3___024root__0.cpp Vot_hdc_fp32_mul_lat_3__ConstPool__0__Slow.cpp Vot_hdc_fp32_mul_lat_3___024root__Slow.cpp Vot_hdc_fp32_mul_lat_3___024root__0__Slow.cpp Vot_hdc_fp32_mul_lat_3__Syms__Slow.cpp > Vot_hdc_fp32_mul_lat_3__ALL.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -fPIC -O2 -fPIC   -c -o ot_hdc_fp32_mul_lat_3.o ot_hdc_fp32_mul_lat_3.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -fPIC -O2 -fPIC   -c -o Vot_hdc_fp32_mul_lat_3__ALL.o Vot_hdc_fp32_mul_lat_3__ALL.cpp
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 4.248 MB sources in 91 modules, into 0.529 MB in 8 C++ files needing 0.001 MB
+- Verilator: Walltime 0.530 s (elab=0.225, cvt=0.170, bld=0.000); cpu 0.309 s on 1 threads; allocated 58.383 MB
+make[1]: Leaving directory '/srv/opentallas-scratch/codex/native-service-f46073090'
+make -f Vot_hdc_fp32_add_lat_8.mk -C Vot_hdc_fp32_add_lat_8 VM_PREFIX=Vot_hdc_fp32_add_lat_8
+make[1]: Entering directory '/srv/opentallas-scratch/claude/qwen-wholetoken-1014/lv6_hier/attn_rtlfp_r5/obj/Vot_hdc_fp32_add_lat_8'
+python3 /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/bin/verilator_includer -DVL_INCLUDE_OPT=include Vot_hdc_fp32_add_lat_8.cpp Vot_hdc_fp32_add_lat_8___024root__0.cpp Vot_hdc_fp32_add_lat_8_ot_hdc_ksadd_k__0.cpp Vot_hdc_fp32_add_lat_8___024root__Slow.cpp Vot_hdc_fp32_add_lat_8___024root__0__Slow.cpp Vot_hdc_fp32_add_lat_8_ot_hdc_ksadd_k__Slow.cpp Vot_hdc_fp32_add_lat_8_ot_hdc_ksadd_k__0__Slow.cpp Vot_hdc_fp32_add_lat_8__Syms__Slow.cpp > Vot_hdc_fp32_add_lat_8__ALL.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -fPIC -O2 -fPIC   -c -o ot_hdc_fp32_add_lat_8.o ot_hdc_fp32_add_lat_8.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -fPIC -O2 -fPIC   -c -o Vot_hdc_fp32_add_lat_8__ALL.o Vot_hdc_fp32_add_lat_8__ALL.cpp
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 4.248 MB sources in 91 modules, into 0.529 MB in 8 C++ files needing 0.001 MB
+- Verilator: Walltime 0.612 s (elab=0.128, cvt=0.335, bld=0.000); cpu 0.364 s on 1 threads; allocated 58.391 MB
+make[1]: Leaving directory '/srv/opentallas-scratch/codex/native-service-f46073090'
+make[1]: Entering directory '/srv/opentallas-scratch/codex/native-service-f46073090'
+/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator -f /srv/opentallas-scratch/claude/qwen-wholetoken-1014/lv6_hier/attn_rtlfp_r5/obj/Vot_qwen_nearhbm_attn_stack_h_a__hierMkArgs.f
+make[1]: Entering directory '/srv/opentallas-scratch/codex/native-service-f46073090'
+/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator -f /srv/opentallas-scratch/claude/qwen-wholetoken-1014/lv6_hier/attn_rtlfp_r5/obj/Vot_qwen_nearhbm_attn_stack_h_d__hierMkArgs.f
+make[1]: Entering directory '/srv/opentallas-scratch/codex/native-service-f46073090'
+/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator -f /srv/opentallas-scratch/claude/qwen-wholetoken-1014/lv6_hier/attn_rtlfp_r5/obj/Vot_qwen_nearhbm_attn_stack_h_3__hierMkArgs.f
+make[1]: Entering directory '/srv/opentallas-scratch/codex/native-service-f46073090'
+/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator -f /srv/opentallas-scratch/claude/qwen-wholetoken-1014/lv6_hier/attn_rtlfp_r5/obj/Vot_qwen_tp8_pv256_slice__hierMkArgs.f
+make[1]: Entering directory '/srv/opentallas-scratch/codex/native-service-f46073090'
+/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator -f /srv/opentallas-scratch/claude/qwen-wholetoken-1014/lv6_hier/attn_rtlfp_r5/obj/Vot_qwen_nearhbm_attn_stack_h_c__hierMkArgs.f
+rm libot_hdc_fp32_mul_lat_f.verilator_deplist.tmp
+make[1]: Leaving directory '/srv/opentallas-scratch/claude/qwen-wholetoken-1014/lv6_hier/attn_rtlfp_r5/obj/Vot_hdc_fp32_mul_lat_f'
+make[1]: Entering directory '/srv/opentallas-scratch/codex/native-service-f46073090'
+/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator -f /srv/opentallas-scratch/claude/qwen-wholetoken-1014/lv6_hier/attn_rtlfp_r5/obj/Vot_qwen_nearhbm_attn_stack_h_a__hierMkArgs.f
+rm libot_hdc_fp32_mul_lat_3.verilator_deplist.tmp
+make[1]: Leaving directory '/srv/opentallas-scratch/claude/qwen-wholetoken-1014/lv6_hier/attn_rtlfp_r5/obj/Vot_hdc_fp32_mul_lat_3'
+make[1]: Entering directory '/srv/opentallas-scratch/codex/native-service-f46073090'
+/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator -f /srv/opentallas-scratch/claude/qwen-wholetoken-1014/lv6_hier/attn_rtlfp_r5/obj/Vot_qwen_nearhbm_attn_stack_h_d__hierMkArgs.f
+rm libot_hdc_fp32_add_lat_8.verilator_deplist.tmp
+make[1]: Leaving directory '/srv/opentallas-scratch/claude/qwen-wholetoken-1014/lv6_hier/attn_rtlfp_r5/obj/Vot_hdc_fp32_add_lat_8'
+make[1]: Entering directory '/srv/opentallas-scratch/codex/native-service-f46073090'
+/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator -f /srv/opentallas-scratch/claude/qwen-wholetoken-1014/lv6_hier/attn_rtlfp_r5/obj/Vot_qwen_nearhbm_attn_stack_h_3__hierMkArgs.f
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 4.367 MB sources in 92 modules, into 8.649 MB in 19 C++ files needing 0.006 MB
+- Verilator: Walltime 3.589 s (elab=0.136, cvt=3.201, bld=0.000); cpu 3.333 s on 1 threads; allocated 221.828 MB
+make[1]: Leaving directory '/srv/opentallas-scratch/codex/native-service-f46073090'
+make[1]: Entering directory '/srv/opentallas-scratch/codex/native-service-f46073090'
+/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator -f /srv/opentallas-scratch/claude/qwen-wholetoken-1014/lv6_hier/attn_rtlfp_r5/obj/Vot_qwen_tp8_pv256_slice__hierMkArgs.f
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 0.000 MB sources in 0 modules, into 0.000 MB in 0 C++ files needing 0.000 MB
+- Verilator: Walltime 0.004 s (elab=0.000, cvt=0.000, bld=0.000); cpu 0.001 s on 1 threads; allocated 31.004 MB
+make[1]: Leaving directory '/srv/opentallas-scratch/codex/native-service-f46073090'
+make[1]: Entering directory '/srv/opentallas-scratch/codex/native-service-f46073090'
+/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator -f /srv/opentallas-scratch/claude/qwen-wholetoken-1014/lv6_hier/attn_rtlfp_r5/obj/Vot_qwen_nearhbm_attn_stack_h_c__hierMkArgs.f
+%Warning-WIDTHCONCAT: rtl/hdc/nearhbm/ot_qwen_nearhbm_attn_stack_h.sv:1599:57: Replication of more that --replication-limit 8192 is suspect: 16384
+                                                                             : ... note: In instance 'ot_qwen_nearhbm_attn_stack_h.u_pv'
+ 1599 |                         root <= carry_v ? carry : {LN*32{1'b0}};
+      |                                                         ^
+                      ... For warning description see https://verilator.org/warn/WIDTHCONCAT?v=5.050
+                      ... Use "/* verilator lint_off WIDTHCONCAT */" and lint_on around source to disable this message.
+%Warning-WIDTHCONCAT: rtl/hdc/nearhbm/ot_qwen_nearhbm_attn_stack_h.sv:1599:57: Replication of more that --replication-limit 8192 is suspect: 16384
+                                                                             : ... note: In instance 'ot_qwen_nearhbm_attn_stack_h.u_pv'
+ 1599 |                         root <= carry_v ? carry : {LN*32{1'b0}};
+      |                                                         ^
+                      ... For warning description see https://verilator.org/warn/WIDTHCONCAT?v=5.050
+                      ... Use "/* verilator lint_off WIDTHCONCAT */" and lint_on around source to disable this message.
+%Warning-WIDTHCONCAT: rtl/hdc/nearhbm/ot_qwen_nearhbm_attn_stack_h.sv:1599:57: Replication of more that --replication-limit 8192 is suspect: 16384
+                                                                             : ... note: In instance 'ot_qwen_nearhbm_attn_stack_h.u_pv'
+ 1599 |                         root <= carry_v ? carry : {LN*32{1'b0}};
+      |                                                         ^
+                      ... For warning description see https://verilator.org/warn/WIDTHCONCAT?v=5.050
+                      ... Use "/* verilator lint_off WIDTHCONCAT */" and lint_on around source to disable this message.
+%Warning-WIDTHCONCAT: rtl/hdc/nearhbm/ot_qwen_nearhbm_attn_stack_h.sv:1599:57: Replication of more that --replication-limit 8192 is suspect: 16384
+                                                                             : ... note: In instance 'ot_qwen_nearhbm_attn_stack_h.u_pv'
+ 1599 |                         root <= carry_v ? carry : {LN*32{1'b0}};
+      |                                                         ^
+                      ... For warning description see https://verilator.org/warn/WIDTHCONCAT?v=5.050
+                      ... Use "/* verilator lint_off WIDTHCONCAT */" and lint_on around source to disable this message.
+%Warning-WIDTHCONCAT: rtl/hdc/nearhbm/ot_qwen_nearhbm_attn_stack_h.sv:1599:57: Replication of more that --replication-limit 8192 is suspect: 16384
+                                                                             : ... note: In instance 'ot_qwen_nearhbm_attn_stack_h.u_pv'
+ 1599 |                         root <= carry_v ? carry : {LN*32{1'b0}};
+      |                                                         ^
+                      ... For warning description see https://verilator.org/warn/WIDTHCONCAT?v=5.050
+                      ... Use "/* verilator lint_off WIDTHCONCAT */" and lint_on around source to disable this message.
+%Warning-WIDTHCONCAT: rtl/hdc/nearhbm/ot_qwen_nearhbm_attn_stack_h.sv:1599:57: Replication of more that --replication-limit 8192 is suspect: 16384
+                                                                             : ... note: In instance 'ot_qwen_nearhbm_attn_stack_h.u_pv'
+ 1599 |                         root <= carry_v ? carry : {LN*32{1'b0}};
+      |                                                         ^
+                      ... For warning description see https://verilator.org/warn/WIDTHCONCAT?v=5.050
+                      ... Use "/* verilator lint_off WIDTHCONCAT */" and lint_on around source to disable this message.
+%Warning-WIDTHCONCAT: rtl/hdc/nearhbm/ot_qwen_nearhbm_attn_stack_h.sv:1599:57: Replication of more that --replication-limit 8192 is suspect: 16384
+                                                                             : ... note: In instance 'ot_qwen_nearhbm_attn_stack_h.u_pv'
+ 1599 |                         root <= carry_v ? carry : {LN*32{1'b0}};
+      |                                                         ^
+                      ... For warning description see https://verilator.org/warn/WIDTHCONCAT?v=5.050
+                      ... Use "/* verilator lint_off WIDTHCONCAT */" and lint_on around source to disable this message.
+%Warning-WIDTHCONCAT: rtl/hdc/nearhbm/ot_qwen_nearhbm_attn_stack_h.sv:1599:57: Replication of more that --replication-limit 8192 is suspect: 16384
+                                                                             : ... note: In instance 'ot_qwen_nearhbm_attn_stack_h.u_pv'
+ 1599 |                         root <= carry_v ? carry : {LN*32{1'b0}};
+      |                                                         ^
+                      ... For warning description see https://verilator.org/warn/WIDTHCONCAT?v=5.050
+                      ... Use "/* verilator lint_off WIDTHCONCAT */" and lint_on around source to disable this message.
+make: *** [Vot_qwen_tp8_attention_service_hier.mk:72: Vot_qwen_nearhbm_attn_stack_h_d/Vot_qwen_nearhbm_attn_stack_h_d.mk] Terminated
+make: *** [Vot_qwen_tp8_attention_service_hier.mk:78: Vot_qwen_nearhbm_attn_stack_h_3/Vot_qwen_nearhbm_attn_stack_h_3.mk] Terminated
+make: *** [Vot_qwen_tp8_attention_service_hier.mk:90: Vot_qwen_nearhbm_attn_stack_h_c/Vot_qwen_nearhbm_attn_stack_h_c.mk] Terminated
+make: *** [Vot_qwen_tp8_attention_service_hier.mk:72: Vot_qwen_nearhbm_attn_stack_h_d/ot_qwen_nearhbm_attn_stack_h_d.sv] Terminated
+make: *** [Vot_qwen_tp8_attention_service_hier.mk:90: Vot_qwen_nearhbm_attn_stack_h_c/ot_qwen_nearhbm_attn_stack_h_c.sv] Terminated
+make[1]: *** [/srv/opentallas-scratch/claude/qwen-wholetoken-1014/lv6_hier/attn_rtlfp_r5/obj/Vot_qwen_tp8_attention_service_hier.mk:57: hier_launch_verilator] Terminated
+make[1]: *** [/srv/opentallas-scratch/claude/qwen-wholetoken-1014/lv6_hier/attn_rtlfp_r5/obj/Vot_qwen_tp8_attention_service_hier.mk:57: hier_launch_verilator] Terminated
+make[1]: *** [/srv/opentallas-scratch/claude/qwen-wholetoken-1014/lv6_hier/attn_rtlfp_r5/obj/Vot_qwen_tp8_attention_service_hier.mk:57: hier_launch_verilator] Terminated
+make: *** [Vot_qwen_tp8_attention_service_hier.mk:66: Vot_qwen_nearhbm_attn_stack_h_a/ot_qwen_nearhbm_attn_stack_h_a.sv] Terminated
+make[1]: *** [/srv/opentallas-scratch/claude/qwen-wholetoken-1014/lv6_hier/attn_rtlfp_r5/obj/Vot_qwen_tp8_attention_service_hier.mk:57: hier_launch_verilator] Terminated
+make: *** [Vot_qwen_tp8_attention_service_hier.mk:78: Vot_qwen_nearhbm_attn_stack_h_3/ot_qwen_nearhbm_attn_stack_h_3.sv] Terminated
+make[1]: *** [/srv/opentallas-scratch/claude/qwen-wholetoken-1014/lv6_hier/attn_rtlfp_r5/obj/Vot_qwen_tp8_attention_service_hier.mk:57: hier_launch_verilator] Terminated
+make[1]: *** [/srv/opentallas-scratch/claude/qwen-wholetoken-1014/lv6_hier/attn_rtlfp_r5/obj/Vot_qwen_tp8_attention_service_hier.mk:57: hier_launch_verilator] Terminated
+make[1]: *** [/srv/opentallas-scratch/claude/qwen-wholetoken-1014/lv6_hier/attn_rtlfp_r5/obj/Vot_qwen_tp8_attention_service_hier.mk:57: hier_launch_verilator] Terminated
+make: *** [Vot_qwen_tp8_attention_service_hier.mk:66: Vot_qwen_nearhbm_attn_stack_h_a/Vot_qwen_nearhbm_attn_stack_h_a.mk] Terminated
+make[1]: *** [/srv/opentallas-scratch/claude/qwen-wholetoken-1014/lv6_hier/attn_rtlfp_r5/obj/Vot_qwen_tp8_attention_service_hier.mk:57: hier_launch_verilator] Terminated

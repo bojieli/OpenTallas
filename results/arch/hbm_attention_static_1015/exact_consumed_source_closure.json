@@ -1,0 +1,467 @@
+{
+  "schema": "opentallas.hbm_attn.exact_consumed_source_closure.v1",
+  "main_comparison": "4bb5ee22d",
+  "qualification": false,
+  "note": "Only runner-consumed source files. Earlier receipts include additional packaging files that are not dependencies. D has no QP/QK/groupedKV/transpose dependency.",
+  "profiles": {
+    "D_component": {
+      "source_commit": "655f63e8d",
+      "receipt": "results/arch/hbm_attention_static_1015/pv_local_D_component_gate/receipt.json",
+      "passed": true,
+      "full_native_qualified": false,
+      "physical_qualified": false,
+      "files": [
+        {
+          "path": "rtl/hdc/v41x/static/ot_hbm_attn_pv_serializer_local.sv",
+          "sha256": "1acef905baf503c6488107b4465c393a519245a809718c4b9039cf37ec789918",
+          "already_exact_in_main": false,
+          "main_sha256": null,
+          "source_dependency": "655f63e8d"
+        },
+        {
+          "path": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.v",
+          "sha256": "9024999f58109d0031ef989d101f5a537dabaf185e6348d32305aec58af8aafa",
+          "already_exact_in_main": true,
+          "main_sha256": "9024999f58109d0031ef989d101f5a537dabaf185e6348d32305aec58af8aafa",
+          "source_dependency": "655f63e8d"
+        },
+        {
+          "path": "rtl/test/hbm_accel/generic/tb_hbm_attn_pv_serializer_local.sv",
+          "sha256": "a11e4fef5dc55e06537e5d9ae0ffca32c8c213a299b1897b6b1169004b0d053d",
+          "already_exact_in_main": false,
+          "main_sha256": null,
+          "source_dependency": "655f63e8d"
+        },
+        {
+          "path": "tools/hbm_static_attention/run_pv_serializer_local.sh",
+          "sha256": "77d8e1e476bc7c780d6c5dae051833d564fbc766586743b5dd42e8f87a6ad8b3",
+          "already_exact_in_main": false,
+          "main_sha256": null,
+          "source_dependency": "655f63e8d"
+        }
+      ]
+    },
+    "D_currentbank_NE": {
+      "source_commit": "0501df200",
+      "receipt": "results/arch/hbm_attention_static_1015/pv_local_D_current7b2_NE_gate/receipt.json",
+      "passed": true,
+      "full_native_qualified": false,
+      "physical_qualified": false,
+      "files": [
+        {
+          "path": "rtl/hdc/v41x/static/ot_hbm_attn_pv_serializer_local.sv",
+          "sha256": "1acef905baf503c6488107b4465c393a519245a809718c4b9039cf37ec789918",
+          "already_exact_in_main": false,
+          "main_sha256": null,
+          "source_dependency": "0501df200"
+        },
+        {
+          "path": "rtl/hdc/v41x/static/ot_hbm_attn_pv_native_output_local.sv",
+          "sha256": "61c52943e45b2ef3ddfe374e4b2a4300608861c4ba52ab7ff98f0d1c92c6d987",
+          "already_exact_in_main": false,
+          "main_sha256": null,
+          "source_dependency": "0501df200"
+        },
+        {
+          "path": "rtl/hbm_accel/generic/vm/static/ot_vms_bank_static.sv",
+          "sha256": "7b2e2fbafead30cbabc427303bb339da070645637af9d1a69f0dbdaa0a88ee53",
+          "already_exact_in_main": true,
+          "main_sha256": "7b2e2fbafead30cbabc427303bb339da070645637af9d1a69f0dbdaa0a88ee53",
+          "source_dependency": "9b6420df2 current7b2"
+        },
+        {
+          "path": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.v",
+          "sha256": "9024999f58109d0031ef989d101f5a537dabaf185e6348d32305aec58af8aafa",
+          "already_exact_in_main": true,
+          "main_sha256": "9024999f58109d0031ef989d101f5a537dabaf185e6348d32305aec58af8aafa",
+          "source_dependency": "0501df200"
+        },
+        {
+          "path": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v",
+          "sha256": "6530a2ef457f260a942e067b556ff55d75f931350af5807cfd6b05cd5e1ff380",
+          "already_exact_in_main": true,
+          "main_sha256": "6530a2ef457f260a942e067b556ff55d75f931350af5807cfd6b05cd5e1ff380",
+          "source_dependency": "0501df200"
+        },
+        {
+          "path": "rtl/test/hbm_accel/generic/tb_hbm_attn_pv_native_output_local.sv",
+          "sha256": "dd579fbc9070b175a614332d0c85c2a1b5beaceca18110ac70fc52fd5982cfcc",
+          "already_exact_in_main": false,
+          "main_sha256": null,
+          "source_dependency": "0501df200"
+        },
+        {
+          "path": "tools/hbm_static_attention/run_pv_native_output_local.sh",
+          "sha256": "55ea1af26b28aae148b0a57b5524df6ee1efabe33e6d6a0eb93dfeff4cfcd323",
+          "already_exact_in_main": false,
+          "main_sha256": null,
+          "source_dependency": "0501df200"
+        }
+      ]
+    },
+    "QK_currentbank_NE": {
+      "source_commit": "2ea934e58",
+      "receipt": "results/arch/hbm_attention_static_1015/qk_native_current7b2_NE_gate/receipt.json",
+      "passed": true,
+      "full_native_qualified": false,
+      "physical_qualified": false,
+      "files": [
+        {
+          "path": "rtl/hdc/v41x/static/ot_hbm_attn_qk_score_serializer.sv",
+          "sha256": "c004ae248dd91039526294c76937a0b8ec7ba0192d481c71f499f20e0d695db9",
+          "already_exact_in_main": false,
+          "main_sha256": null,
+          "source_dependency": "2ea934e58"
+        },
+        {
+          "path": "rtl/hdc/v41x/static/ot_hbm_attn_qk_native_output.sv",
+          "sha256": "59dcfbc2c34502f81641dd291e48c88a31396e444a373160a2e60f1e085798a4",
+          "already_exact_in_main": false,
+          "main_sha256": null,
+          "source_dependency": "2ea934e58"
+        },
+        {
+          "path": "rtl/hbm_accel/generic/vm/static/ot_vms_bank_static.sv",
+          "sha256": "7b2e2fbafead30cbabc427303bb339da070645637af9d1a69f0dbdaa0a88ee53",
+          "already_exact_in_main": true,
+          "main_sha256": "7b2e2fbafead30cbabc427303bb339da070645637af9d1a69f0dbdaa0a88ee53",
+          "source_dependency": "9b6420df2 current7b2"
+        },
+        {
+          "path": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.v",
+          "sha256": "9024999f58109d0031ef989d101f5a537dabaf185e6348d32305aec58af8aafa",
+          "already_exact_in_main": true,
+          "main_sha256": "9024999f58109d0031ef989d101f5a537dabaf185e6348d32305aec58af8aafa",
+          "source_dependency": "2ea934e58"
+        },
+        {
+          "path": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v",
+          "sha256": "6530a2ef457f260a942e067b556ff55d75f931350af5807cfd6b05cd5e1ff380",
+          "already_exact_in_main": true,
+          "main_sha256": "6530a2ef457f260a942e067b556ff55d75f931350af5807cfd6b05cd5e1ff380",
+          "source_dependency": "2ea934e58"
+        },
+        {
+          "path": "rtl/test/hbm_accel/generic/tb_hbm_attn_qk_native_output.sv",
+          "sha256": "ee5112658c3a902a2dbda471652e33c7e2b19af2253449b5296bff14b5f37d29",
+          "already_exact_in_main": false,
+          "main_sha256": null,
+          "source_dependency": "2ea934e58"
+        },
+        {
+          "path": "tools/hbm_static_attention/run_qk_native_output.sh",
+          "sha256": "2ab7a85753eb36ae92347e7d55ab5decfec427259bbf30a91ceb947cc210d5e1",
+          "already_exact_in_main": false,
+          "main_sha256": null,
+          "source_dependency": "2ea934e58"
+        }
+      ]
+    },
+    "QP_host_currentbank_NE": {
+      "source_commit": "57066e704",
+      "receipt": "results/arch/hbm_attention_static_1015/current7b2_NE_SID3_QP_gate/receipt.json",
+      "passed": true,
+      "full_native_qualified": false,
+      "physical_qualified": false,
+      "files": [
+        {
+          "path": "rtl/hdc/v41x/static/ot_hbm_attn_physical_host_program_front.sv",
+          "sha256": "9ea6dd1c194020cf48f28adabc77f34aeed925ace70144cdc2082910856183e1",
+          "already_exact_in_main": false,
+          "main_sha256": null,
+          "source_dependency": "57066e704"
+        },
+        {
+          "path": "rtl/hdc/v41x/static/ot_hbm_attn_physical_program_query_front.sv",
+          "sha256": "7822e7f02feff15bc1ba9bd1971bfa6fa3c837f141c3f1d6f7a6f09f1eab3b02",
+          "already_exact_in_main": false,
+          "main_sha256": null,
+          "source_dependency": "57066e704"
+        },
+        {
+          "path": "rtl/hdc/v41x/static/ot_hbm_attn_physical_program_consumer.sv",
+          "sha256": "8c691b8ead73cc99eb2a38ba4d2c72df5c5869067fd42fe903efbe94adc0d575",
+          "already_exact_in_main": false,
+          "main_sha256": null,
+          "source_dependency": "57066e704"
+        },
+        {
+          "path": "rtl/hdc/v41x/static/ot_hbm_attn_physical_event_program.sv",
+          "sha256": "fc4e58ad68f495b5274e7d9298b5722bda92df9522b426600ce534d41a8b278d",
+          "already_exact_in_main": false,
+          "main_sha256": null,
+          "source_dependency": "57066e704"
+        },
+        {
+          "path": "rtl/hdc/v41x/static/ot_hbm_attn_query_prefetch.sv",
+          "sha256": "501f5710c8660141e2c0d9661870e1fb9bbcba5b299b2ed6dfc196ec500ac646",
+          "already_exact_in_main": false,
+          "main_sha256": null,
+          "source_dependency": "57066e704"
+        },
+        {
+          "path": "rtl/hdc/v41x/static/ot_hbm_attn_p_prefetch.sv",
+          "sha256": "897cd6a1e32dbd2810c1c0a3690633dfb445f72492a604b1a16370e05586619c",
+          "already_exact_in_main": false,
+          "main_sha256": null,
+          "source_dependency": "57066e704"
+        },
+        {
+          "path": "rtl/hbm_accel/generic/vm/static/ot_vms_bank_static.sv",
+          "sha256": "7b2e2fbafead30cbabc427303bb339da070645637af9d1a69f0dbdaa0a88ee53",
+          "already_exact_in_main": true,
+          "main_sha256": "7b2e2fbafead30cbabc427303bb339da070645637af9d1a69f0dbdaa0a88ee53",
+          "source_dependency": "9b6420df2 current7b2"
+        },
+        {
+          "path": "rtl/hbm_accel/generic/vm/static/ot_vms_calendar_host_static.sv",
+          "sha256": "d64f4d37cede73a6fed44e59c7cd83b6cee8c21d6ea22d4828905f96c92a05c6",
+          "already_exact_in_main": true,
+          "main_sha256": "d64f4d37cede73a6fed44e59c7cd83b6cee8c21d6ea22d4828905f96c92a05c6",
+          "source_dependency": "57066e704"
+        },
+        {
+          "path": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv",
+          "sha256": "0c31136198128d00d69f24795e53c38764e790a5db4cad1ebd261ab0f2b67e3d",
+          "already_exact_in_main": true,
+          "main_sha256": "0c31136198128d00d69f24795e53c38764e790a5db4cad1ebd261ab0f2b67e3d",
+          "source_dependency": "57066e704"
+        },
+        {
+          "path": "rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv",
+          "sha256": "2a3f380c413bef2676087338d00d18cf869562e9bb611fc93c13251f3fb3f197",
+          "already_exact_in_main": true,
+          "main_sha256": "2a3f380c413bef2676087338d00d18cf869562e9bb611fc93c13251f3fb3f197",
+          "source_dependency": "57066e704"
+        },
+        {
+          "path": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_static.sv",
+          "sha256": "54e65855af142d95248e7d14df42fabdc404f9d1316446c0f21253c1829a4e70",
+          "already_exact_in_main": true,
+          "main_sha256": "54e65855af142d95248e7d14df42fabdc404f9d1316446c0f21253c1829a4e70",
+          "source_dependency": "57066e704"
+        },
+        {
+          "path": "rtl/hbm_accel/generic/loader/ot_hgi_loader_cp.sv",
+          "sha256": "b685e7bcf989682639044d1bccd9dce58b6aac5622eb322d677e4400285b8618",
+          "already_exact_in_main": true,
+          "main_sha256": "b685e7bcf989682639044d1bccd9dce58b6aac5622eb322d677e4400285b8618",
+          "source_dependency": "57066e704"
+        },
+        {
+          "path": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.v",
+          "sha256": "9024999f58109d0031ef989d101f5a537dabaf185e6348d32305aec58af8aafa",
+          "already_exact_in_main": true,
+          "main_sha256": "9024999f58109d0031ef989d101f5a537dabaf185e6348d32305aec58af8aafa",
+          "source_dependency": "57066e704"
+        },
+        {
+          "path": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v",
+          "sha256": "6530a2ef457f260a942e067b556ff55d75f931350af5807cfd6b05cd5e1ff380",
+          "already_exact_in_main": true,
+          "main_sha256": "6530a2ef457f260a942e067b556ff55d75f931350af5807cfd6b05cd5e1ff380",
+          "source_dependency": "57066e704"
+        },
+        {
+          "path": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v",
+          "sha256": "dba769863f502de28853a78ac30544a406c7cb66fd3249019ef9fa5a5b73e36e",
+          "already_exact_in_main": true,
+          "main_sha256": "dba769863f502de28853a78ac30544a406c7cb66fd3249019ef9fa5a5b73e36e",
+          "source_dependency": "57066e704"
+        },
+        {
+          "path": "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v",
+          "sha256": "312006d550f75c240846e561301d908e38fe45707bb7fcbf38d9b78ff019bf2d",
+          "already_exact_in_main": true,
+          "main_sha256": "312006d550f75c240846e561301d908e38fe45707bb7fcbf38d9b78ff019bf2d",
+          "source_dependency": "57066e704"
+        },
+        {
+          "path": "rtl/test/hbm_accel/generic/tb_hbm_attn_QP_host_front.sv",
+          "sha256": "87281efb8dd9f491b30937ec1a923dbe74cb0b23e1c523751a04908574386165",
+          "already_exact_in_main": false,
+          "main_sha256": null,
+          "source_dependency": "57066e704"
+        },
+        {
+          "path": "tools/hbm_static_attention/run_QP_host_front.sh",
+          "sha256": "8fefd50b070fe10e732ed922e2a8ea4890f16976c146e73e9b60dbe5d191dd68",
+          "already_exact_in_main": false,
+          "main_sha256": null,
+          "source_dependency": "57066e704"
+        },
+        {
+          "path": "tools/hbm_static_attention/prepare_QP_front.py",
+          "sha256": "be8b4adeecc6fb8b4111de1f3bf1c13401b133369f36f728191d4c965f89bcf0",
+          "already_exact_in_main": false,
+          "main_sha256": null,
+          "source_dependency": "57066e704"
+        },
+        {
+          "path": "tools/hbm_static_attention/physical_calendar.py",
+          "sha256": "dc67467a497fd3c88889da0a339086314ee984500f59c5544782956ebfdc6f2a",
+          "already_exact_in_main": false,
+          "main_sha256": null,
+          "source_dependency": "57066e704"
+        }
+      ]
+    },
+    "D_registered_component": {
+      "source_commit": "adf0ef9d5",
+      "proof_commit": "f7561ce17",
+      "receipt": "results/arch/hbm_attention_static_1015/pv_local_D_registered_gate/receipt.json",
+      "passed": true,
+      "full_native_qualified": false,
+      "physical_qualified": false,
+      "extra_pipeline_edges": 2,
+      "VM_commits_per_record": 128,
+      "files": [
+        {
+          "path": "rtl/hdc/v41x/static/ot_hbm_attn_pv_serializer_local.sv",
+          "sha256": "1acef905baf503c6488107b4465c393a519245a809718c4b9039cf37ec789918",
+          "source_dependency": "adf0ef9d5"
+        },
+        {
+          "path": "rtl/hdc/v41x/static/ot_hbm_attn_pv_group_gather_registered.sv",
+          "sha256": "400f4613930d48b856637f6ff36648d62603069df8e032cc9f1317280bf78f0a",
+          "source_dependency": "adf0ef9d5"
+        },
+        {
+          "path": "rtl/hdc/v41x/static/ot_hbm_attn_pv_serializer_local_registered.sv",
+          "sha256": "10295539b55b33a8c70745faab64f9a6861bace16dc6a844824662a584a8290f",
+          "source_dependency": "adf0ef9d5"
+        },
+        {
+          "path": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.v",
+          "sha256": "9024999f58109d0031ef989d101f5a537dabaf185e6348d32305aec58af8aafa",
+          "source_dependency": "adf0ef9d5"
+        },
+        {
+          "path": "rtl/test/hbm_accel/generic/tb_hbm_attn_pv_serializer_local_registered.sv",
+          "sha256": "139f8c2a9d293e1affd36236fd6ed9796dce6adc8de63d132a23c6dd6d20ee2d",
+          "source_dependency": "adf0ef9d5"
+        },
+        {
+          "path": "tools/hbm_static_attention/run_pv_serializer_local_registered.sh",
+          "sha256": "5b0bf04613831e01eefbb4ce850c205503fc4313cf9bfd7844ab432b2ef649f6",
+          "source_dependency": "adf0ef9d5"
+        }
+      ]
+    },
+    "D_registered_currentbank_NE": {
+      "source_commit": "adf0ef9d5",
+      "proof_commit": "f7561ce17",
+      "receipt": "results/arch/hbm_attention_static_1015/pv_local_D_registered_gate/receipt.json",
+      "passed": true,
+      "full_native_qualified": false,
+      "physical_qualified": false,
+      "extra_pipeline_edges": 2,
+      "VM_commits_per_record": 128,
+      "files": [
+        {
+          "path": "rtl/hdc/v41x/static/ot_hbm_attn_pv_serializer_local.sv",
+          "sha256": "1acef905baf503c6488107b4465c393a519245a809718c4b9039cf37ec789918",
+          "source_dependency": "adf0ef9d5"
+        },
+        {
+          "path": "rtl/hdc/v41x/static/ot_hbm_attn_pv_group_gather_registered.sv",
+          "sha256": "400f4613930d48b856637f6ff36648d62603069df8e032cc9f1317280bf78f0a",
+          "source_dependency": "adf0ef9d5"
+        },
+        {
+          "path": "rtl/hdc/v41x/static/ot_hbm_attn_pv_serializer_local_registered.sv",
+          "sha256": "10295539b55b33a8c70745faab64f9a6861bace16dc6a844824662a584a8290f",
+          "source_dependency": "adf0ef9d5"
+        },
+        {
+          "path": "rtl/hdc/v41x/static/ot_hbm_attn_pv_native_output_local_registered.sv",
+          "sha256": "448295dc7b884b5cc068d77fe85f58c917644601e973f867e0eae4b9aab1a025",
+          "source_dependency": "adf0ef9d5"
+        },
+        {
+          "path": "rtl/hbm_accel/generic/vm/static/ot_vms_bank_static.sv",
+          "sha256": "7b2e2fbafead30cbabc427303bb339da070645637af9d1a69f0dbdaa0a88ee53",
+          "source_dependency": "9b6420df2 current7b2"
+        },
+        {
+          "path": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.v",
+          "sha256": "9024999f58109d0031ef989d101f5a537dabaf185e6348d32305aec58af8aafa",
+          "source_dependency": "adf0ef9d5"
+        },
+        {
+          "path": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v",
+          "sha256": "6530a2ef457f260a942e067b556ff55d75f931350af5807cfd6b05cd5e1ff380",
+          "source_dependency": "adf0ef9d5"
+        },
+        {
+          "path": "rtl/test/hbm_accel/generic/tb_hbm_attn_pv_native_output_local_registered.sv",
+          "sha256": "1cd81797e7608e81c161d6af3424b9d81f602bdad3c7e33e476e898115cc004f",
+          "source_dependency": "adf0ef9d5"
+        },
+        {
+          "path": "tools/hbm_static_attention/run_pv_native_output_local_registered.sh",
+          "sha256": "0946d991eec8ce89401e945c516cf1a3d6b54ce4a59ea823f11f4c5523a32004",
+          "source_dependency": "adf0ef9d5"
+        }
+      ]
+    },
+    "D_registered_native_overlap": {
+      "source_commit": "adf0ef9d5",
+      "proof_commit": "f7561ce17",
+      "receipt": "results/arch/hbm_attention_static_1015/pv_local_D_registered_overlap_gate/receipt.json",
+      "passed": true,
+      "full_native_qualified": false,
+      "physical_qualified": false,
+      "extra_pipeline_edges": 2,
+      "VM_commits_per_record": 128,
+      "files": [
+        {
+          "path": "rtl/hdc/v41x/static/ot_hbm_attn_pv_serializer_local.sv",
+          "sha256": "1acef905baf503c6488107b4465c393a519245a809718c4b9039cf37ec789918",
+          "source_dependency": "adf0ef9d5"
+        },
+        {
+          "path": "rtl/hdc/v41x/static/ot_hbm_attn_pv_group_gather_registered.sv",
+          "sha256": "400f4613930d48b856637f6ff36648d62603069df8e032cc9f1317280bf78f0a",
+          "source_dependency": "adf0ef9d5"
+        },
+        {
+          "path": "rtl/hdc/v41x/static/ot_hbm_attn_pv_serializer_local_registered.sv",
+          "sha256": "10295539b55b33a8c70745faab64f9a6861bace16dc6a844824662a584a8290f",
+          "source_dependency": "adf0ef9d5"
+        },
+        {
+          "path": "rtl/hdc/v41x/static/ot_hbm_attn_pv_native_output_local_registered.sv",
+          "sha256": "448295dc7b884b5cc068d77fe85f58c917644601e973f867e0eae4b9aab1a025",
+          "source_dependency": "adf0ef9d5"
+        },
+        {
+          "path": "rtl/hbm_accel/generic/vm/static/ot_vms_bank_static.sv",
+          "sha256": "7b2e2fbafead30cbabc427303bb339da070645637af9d1a69f0dbdaa0a88ee53",
+          "source_dependency": "9b6420df2 current7b2"
+        },
+        {
+          "path": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.v",
+          "sha256": "9024999f58109d0031ef989d101f5a537dabaf185e6348d32305aec58af8aafa",
+          "source_dependency": "adf0ef9d5"
+        },
+        {
+          "path": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v",
+          "sha256": "6530a2ef457f260a942e067b556ff55d75f931350af5807cfd6b05cd5e1ff380",
+          "source_dependency": "adf0ef9d5"
+        },
+        {
+          "path": "rtl/test/hbm_accel/generic/tb_hbm_attn_pv_native_output_local_registered_overlap.sv",
+          "sha256": "2b27a27f2b2f8076cbb75837e78d4f35f03f46c7e263a0834c88d89102c9022f",
+          "source_dependency": "f7561ce17"
+        },
+        {
+          "path": "tools/hbm_static_attention/run_pv_native_output_local_registered_overlap.sh",
+          "sha256": "fe9de0fefae3b2821d842d03885b72e4396b967695429774de0ccd60027f1d21",
+          "source_dependency": "f7561ce17"
+        }
+      ]
+    }
+  },
+  "registered_D_minimal_dependency": "Source localtileleaf655f63e8d +registered gather/parent/nativeadapter/TB/runners adf0ef9d5 +nativeoverlapTB/runner f7561ce17; current7b2 VMbank and actual macros. NoQP/QK/groupedstaging/transpose orzero-stagegroupmuxmodule dependency."
+}

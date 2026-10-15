@@ -1,0 +1,9 @@
+ot-run: ot-epyc1tb     admits   296 GB (avail 528, growth 176, headroom 64, waiters 0/0 GB) load 62/128 running 16 disk 700 GB 
+ot-run: ot-epyc4       admits   580 GB (avail 807, growth 154, headroom 48, waiters 0/0 GB) load 44/128 running 19 disk 507 GB 
+ot-run: ot-pve1        admits   155 GB (avail 202, growth 6, headroom 32, waiters 0/0 GB) load 37/28 running 2 disk 1310 GB 
+ot-run: ot-agidock128  admits    56 GB (avail 82, growth 4, headroom 24, waiters 0/0 GB) load 5/64 running 2 disk 42 GB 
+ot-run: -> ot-agidock128
+ot-heavy: waiting for memory on vm-xry57mhfyn: need 32 GB, admissible 9 GB: available 81 GB, growth charged 52 GB, young 48 GB, headroom 24 GB, real floor 25 GB
+ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-3781201-1792053927 after 141 s
+SPVM_TARGET PASS wfcpair
+ot-run: RAN on ot-agidock128 (unit oth-ubuntu-3781201-1792053927): exit 0

@@ -1,0 +1,731 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 8 thread(s).
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_db /work/results/asap7/opentallas_ot_s81_hc_ctfx_cap_asap7_ref_s81hc_ctfxcap_ref_v1_owned_epoch_631a20a94/base/3_place.odb
+read_sdc -mode ss /work/results/asap7/opentallas_ot_s81_hc_ctfx_cap_asap7_ref_s81hc_ctfxcap_ref_v1_owned_epoch_631a20a94/base/3_place.sdc
+read_sdc -mode ff /work/results/asap7/opentallas_ot_s81_hc_ctfx_cap_asap7_ref_s81hc_ctfxcap_ref_v1_owned_epoch_631a20a94/base/3_place.sdc
+OT_HOLD_MM: scenes WC (mode ss) / BC (mode ff) from /work/results/asap7/opentallas_ot_s81_hc_ctfx_cap_asap7_ref_s81hc_ctfxcap_ref_v1_owned_epoch_631a20a94/base/3_place.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+source /work/hooks/pre_cts_ot_cts_fix.tcl
+clock_tree_synthesis -sink_clustering_enable -repair_clock_nets -delay_buffer_derate 0.75
+OT_CG_PUSHDOWN total gates=0 clones=0 K=48 MIN=64
+OT_MACRO_CTS skipped: 0 clocked macro(s)
+[INFO CTS-0050] Root buffer is BUFx24_ASAP7_75t_R.
+[INFO CTS-0051] Sink buffer is BUFx24_ASAP7_75t_R.
+[INFO CTS-0052] The following clock buffers will be used for CTS:
+                    BUFx24_ASAP7_75t_R
+[INFO CTS-0049] Characterization buffer is BUFx24_ASAP7_75t_R.
+[INFO CTS-0007] Net "clk" found for clock "core_clk".
+[INFO CTS-0010]  Clock net "clk" has 3406 sinks.
+[INFO CTS-0008] TritonCTS found 1 clock nets.
+[INFO CTS-0097] Characterization used 1 buffer(s) types.
+[INFO CTS-0201] 0 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net clk.
+[INFO CTS-0028]  Total number of sinks: 3406.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 32 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0204] A clustering solution was found from clustering size of 32 and max clustering diameter of 4.
+[INFO CTS-0205] Better solution may be possible if either -sink_clustering_size, -sink_clustering_max_diameter, or both options are omitted to enable automatic clustering.
+[INFO CTS-0019]  Total number of sinks after clustering: 107.
+[INFO CTS-0024]  Normalized sink region: [(168.999, 1.9125), (253.258, 11.4125)].
+[INFO CTS-0025]     Width:  84.2591.
+[INFO CTS-0026]     Height: 9.5000.
+ Level 1
+    Direction: Horizontal
+    Sinks per sub-region: 54
+    Sub-region size: 42.1295 X 9.5000
+[INFO CTS-0034]     Segment length (rounded): 22.
+ Level 2
+    Direction: Vertical
+    Sinks per sub-region: 27
+    Sub-region size: 42.1295 X 4.7500
+[INFO CTS-0034]     Segment length (rounded): 2.
+ Level 3
+    Direction: Horizontal
+    Sinks per sub-region: 14
+    Sub-region size: 21.0648 X 4.7500
+[INFO CTS-0034]     Segment length (rounded): 10.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (162.640 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 107.
+[INFO CTS-0018]     Created 120 clock buffers.
+[INFO CTS-0012]     Minimum number of buffers in the clock path: 4.
+[INFO CTS-0013]     Maximum number of buffers in the clock path: 4.
+[INFO CTS-0015]     Created 120 clock nets.
+[INFO CTS-0016]     Fanout distribution for the current clock = 11:2, 13:4, 15:1, 17:1, 18:1, 30:1, 31:1, 32:104..
+[INFO CTS-0017]     Max level of the clock tree: 3.
+[INFO CTS-0098] Clock net "clk"
+[INFO CTS-0099]  Sinks 3415
+[INFO CTS-0100]  Leaf buffers 107
+[INFO CTS-0101]  Average sink wire length 343.60 um
+[INFO CTS-0102]  Path depth 3 - 4
+[INFO CTS-0207]  Dummy loads inserted 9
+[INFO RSZ-0047] Found 1 long wires.
+[INFO RSZ-0048] Inserted 1 buffers in 1 nets.
+[INFO CTS-0500] Runtime: 1.45s
+QDM PINFLOP reference: 2278 input pin flops, median arrival 245.903458 (range 241.049789 .. 253.601440)
+QDM reference pin fv[4]$_DFF_PN0_/CLK clock arrival max 245.903458 min 195.608185 skew 90 hold 50
+OT_IO_INTER 0 inputs 0 outputs at 150 ps
+QDM boundary referenced to the propagated tree
+OT_LINK_BUDGET clock core_clk T 770.000 L 242.0 (230.4..253.6 clock_latency) skew 150 link 114 -> S 223.0 R 223.0; in max 487.0 out max 487.0
+OT_LINK_BUDGET ports in:core_clk 1135 out:core_clk 2270 async_pins_excluded 42
+estimate_parasitics -placement
+detailed_placement
+[INFO DPL-0006] Core area: 12363.84 um^2
+[INFO DPL-0007] Movable instances area: 1447.68 um^2
+[INFO DPL-0008] Fixed instances area within core: 30.97 um^2
+[INFO DPL-0009] Utilization: 12.0%
+[INFO DPL-0005] Diamond search max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+[INFO DPL-1102] Legalizing using negotiation legalizer.
+[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically 
+	Automatic search window extension enabled.
+	Search window extendable up to the max displacement cap of +/-500 sites, +/-100 rows near walls.
+[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.
+[INFO DPL-0392] Negotiation cell height distribution (1 unique row-count(s)):
+[INFO DPL-0393]   height 1 row(s): 11425 cells
+          |      Total |  Illegal |  Illegal
+Iteration | Violations |    Cells |    Sites
+---------------------------------------------
+        0 |       3848 |       414 |      3434
+        1 |       3674 |       386 |      3288
+        2 |       3703 |       314 |      3389
+        3 |       3564 |       314 |      3250
+        4 |       3357 |       293 |      3064
+        5 |       3309 |       309 |      3000
+        6 |       3336 |       283 |      3020
+        7 |       3375 |       300 |      3063
+        8 |       3251 |       313 |      2938
+        9 |       3369 |       293 |      3061
+       10 |       2900 |       302 |      2598
+       20 |       1808 |       182 |      1581
+       30 |        776 |        82 |       694
+       40 |        389 |        35 |       354
+       50 |         99 |         9 |        90
+       60 |         22 |         4 |        18
+       65 |          0 |         0 |         0
+Negotiation phase 1 converged at iteration 65.
+[INFO DPL-0500] Runtime: 1.60s
+Placement Analysis
+---------------------------------
+total displacement       4865.8 u
+average displacement        0.4 u
+max displacement            7.6 u
+original HPWL           65287.8 u
+legalized HPWL          67990.9 u
+delta HPWL                    4 %
+
+estimate_parasitics -placement
+OT_CLK_PROTECT dont_touch clock nets=122 clock buffers=121
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+OT_HOLD_MM: ff mode reads /src/physical/ref_tile/s81hc_ctfxcap_ref/signoff.sdc
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+QDM PINFLOP reference: 2278 input pin flops, median arrival 205.563 (range 201.3218 .. 214.4326)
+QDM reference pin fdx[1123]$_DFF_P_/CLK clock arrival max 205.563 min 196.1664 skew 90 hold 50
+OT_IO_INTER 0 inputs 0 outputs at 150 ps
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+OT_HOLD_MM: ff mode reads /src/.ot_mm/ff_ioref_last.sdc (loop default, appended last)
+OT_IOREF multi-scene session: arrivals of scene BC
+OT_IOREF clock-port clk (core_clk): data input delays dropped
+[WARNING STA-1010] No common period was found between clocks ot_lb_v_core_clk and core_clk.
+[WARNING STA-1010] No common period was found between clocks ot_lb_v_core_clk and core_clk.
+OT_IOREF_EDGE core_clk boundary 3406 negedge 0 noarc 0 inverted 0
+OT_IOREF ot_lb_v_core_clk core_clk mean 206.8 min 201.3 max 214.4 n 3406 boundary
+OT_IOREF_PF core_clk input pin flops 2278 mean 206.8
+OT_IOREF_PF 0 input delays re-referenced (ports 0)
+[WARNING STA-1010] No common period was found between clocks ot_lb_v_core_clk and core_clk.
+OT_HOLD_MM sync: SS setup ws 100.76 / FF hold ws -24.30 ps
+repair_timing -setup_margin 0 -hold_margin 30 -repair_tns 100 -max_buffer_percent 100 -verbose -setup
+[INFO RSZ-0100] Repair move sequence: UnbufferMove SizeUpMove SwapPinsMove BufferMove CloneMove SplitLoadMove 
+[INFO RSZ-0098] No setup violations found
+[INFO RSZ-0505] Runtime: 0.09s
+[WARNING STA-1010] No common period was found between clocks ot_lb_v_core_clk and core_clk.
+OT_HM_GUARD: margin 30 kept: 5643 endpoints in margin, ~13467 buffers, +8.7 util pts (projected +8.7 util points > 8)
+[WARNING STA-1010] No common period was found between clocks ot_lb_v_core_clk and core_clk.
+[WARNING STA-1010] No common period was found between clocks ot_lb_v_core_clk and core_clk.
+OT_HOLD_GUARD start: hold ws -24.30 tns -46958.3 viol 4463 (margin 30, chunk 1000 it)
+repair_timing -setup_margin 0 -hold_margin 30 -repair_tns 100 -max_buffer_percent 100 -verbose -hold -max_iterations 1000
+[INFO RSZ-0046] Found 5643 endpoints with hold violations.
+Iteration | Resized | Buffers | Cloned Gates |   Area   |   WNS   |   TNS   | Endpoint
+--------------------------------------------------------------------------------------
+        0 |       0 |       0 |            0 |    +0.0% | -24.299 | -46958.289 | fdx[220]
+       10 |       0 |      27 |            0 |    +0.1% | -23.186 | -46744.809 | fdx[18]
+       20 |       0 |      57 |            0 |    +0.3% | -22.866 | -46514.500 | fdx[1014]
+       30 |       0 |      87 |            0 |    +0.4% | -22.496 | -46287.754 | fdx[847]
+       40 |       0 |     117 |            0 |    +0.6% | -22.335 | -46063.570 | fdx[248]
+       50 |       0 |     147 |            0 |    +0.7% | -22.160 | -45840.926 | fdx_local[892]
+       60 |       0 |     177 |            0 |    +0.9% | -22.013 | -45620.020 | fdx_local[678]
+       70 |       0 |     207 |            0 |    +1.0% | -21.873 | -45400.613 | fdx_local[885]
+       80 |       0 |     237 |            0 |    +1.2% | -21.764 | -45182.316 | fdx[880]
+       90 |       0 |     267 |            0 |    +1.3% | -21.602 | -44965.344 | fdx[448]
+      100 |       0 |     297 |            0 |    +1.5% | -21.493 | -44749.738 | fdx_local[214]
+      110 |       0 |     327 |            0 |    +1.6% | -21.409 | -44535.117 | fdx_local[343]
+      120 |       0 |     357 |            0 |    +1.8% | -21.318 | -44321.332 | fdx[194]
+      130 |       0 |     387 |            0 |    +1.9% | -21.246 | -44108.469 | fdx_local[1126]
+      140 |       0 |     417 |            0 |    +2.1% | -21.165 | -43896.465 | fdx[1056]
+      150 |       0 |     447 |            0 |    +2.2% | -21.100 | -43685.152 | fdx[250]
+      160 |       0 |     477 |            0 |    +2.4% | -21.035 | -43474.598 | fdx[232]
+      170 |       0 |     507 |            0 |    +2.5% | -20.962 | -43264.555 | fdx[283]
+      180 |       0 |     537 |            0 |    +2.6% | -20.867 | -43055.289 | fdx[858]
+      190 |       0 |     567 |            0 |    +2.8% | -20.790 | -42846.977 | fdx[282]
+      200 |       0 |     597 |            0 |    +2.9% | -20.731 | -42639.379 | fdx_local[251]
+      210 |       0 |     627 |            0 |    +3.1% | -20.690 | -42432.289 | fdx[668]
+      220 |       0 |     657 |            0 |    +3.2% | -20.614 | -42225.789 | fdx[857]
+      230 |       0 |     687 |            0 |    +3.4% | -20.580 | -42019.789 | fdx[406]
+      240 |       0 |     717 |            0 |    +3.5% | -20.516 | -41814.297 | fdx_local[1099]
+      250 |       0 |     747 |            0 |    +3.7% | -20.460 | -41609.328 | fdx_local[1107]
+      260 |       0 |     777 |            0 |    +3.8% | -20.408 | -41404.809 | fdx[581]
+      270 |       0 |     807 |            0 |    +4.0% | -20.358 | -41200.883 | fdx[1093]
+      280 |       0 |     837 |            0 |    +4.1% | -20.286 | -40997.586 | fdx[211]
+      290 |       0 |     867 |            0 |    +4.3% | -20.167 | -40795.270 | fdx[852]
+      300 |       0 |     897 |            0 |    +4.4% | -20.095 | -40593.809 | fdx[536]
+      310 |       0 |     927 |            0 |    +4.6% | -20.040 | -40393.184 | fdx_local[846]
+      320 |       0 |     957 |            0 |    +4.7% | -19.965 | -40192.980 | fdx_local[1060]
+      330 |       0 |     987 |            0 |    +4.9% | -19.929 | -39993.512 | fdx_local[716]
+      340 |       0 |    1017 |            0 |    +5.0% | -19.866 | -39794.598 | fdx_local[0]
+      350 |       0 |    1047 |            0 |    +5.2% | -19.804 | -39596.211 | fdx_local[215]
+      360 |       0 |    1077 |            0 |    +5.3% | -19.738 | -39398.426 | fdx_local[321]
+      370 |       0 |    1107 |            0 |    +5.5% | -19.688 | -39201.266 | fdx_local[717]
+      380 |       0 |    1137 |            0 |    +5.6% | -19.649 | -39004.609 | fdx[1069]
+      390 |       0 |    1167 |            0 |    +5.8% | -19.578 | -38808.340 | fdx[66]
+      400 |       0 |    1197 |            0 |    +5.9% | -19.538 | -38612.738 | fdx[1095]
+      410 |       0 |    1227 |            0 |    +6.0% | -19.492 | -38417.602 | fdx_local[823]
+      420 |       0 |    1257 |            0 |    +6.2% | -19.438 | -38222.902 | fdx_local[879]
+      430 |       0 |    1287 |            0 |    +6.3% | -19.383 | -38028.789 | fdx_local[101]
+      440 |       0 |    1317 |            0 |    +6.5% | -19.322 | -37835.266 | fdx[132]
+      450 |       0 |    1347 |            0 |    +6.6% | -19.270 | -37642.254 | fdx_local[541]
+      460 |       0 |    1377 |            0 |    +6.8% | -19.220 | -37449.770 | fdx[1108]
+      470 |       0 |    1407 |            0 |    +6.9% | -19.167 | -37257.836 | fdx_local[852]
+      480 |       0 |    1437 |            0 |    +7.1% | -19.143 | -37066.273 | fdx[515]
+      490 |       0 |    1467 |            0 |    +7.2% | -19.076 | -36875.152 | fdx_local[174]
+      500 |       0 |    1497 |            0 |    +7.4% | -19.020 | -36684.656 | fdx[140]
+      510 |       0 |    1527 |            0 |    +7.5% | -18.985 | -36494.633 | fdx[695]
+      520 |       0 |    1557 |            0 |    +7.7% | -18.949 | -36304.938 | fdx[973]
+      530 |       0 |    1587 |            0 |    +7.8% | -18.920 | -36115.605 | fdx_local[1006]
+      540 |       0 |    1617 |            0 |    +8.0% | -18.865 | -35926.664 | fdx[699]
+      550 |       0 |    1647 |            0 |    +8.1% | -18.838 | -35738.117 | fdx[616]
+      560 |       0 |    1677 |            0 |    +8.3% | -18.803 | -35549.887 | fdx[584]
+      570 |       0 |    1707 |            0 |    +8.4% | -18.751 | -35362.145 | fdx_local[712]
+      580 |       0 |    1737 |            0 |    +8.6% | -18.706 | -35174.777 | fdx_local[692]
+      590 |       0 |    1767 |            0 |    +8.7% | -18.665 | -34987.883 | fdx[904]
+      600 |       0 |    1797 |            0 |    +8.9% | -18.607 | -34801.438 | fdx_local[812]
+      610 |       0 |    1827 |            0 |    +9.0% | -18.553 | -34615.582 | fdx_local[928]
+      620 |       0 |    1857 |            0 |    +9.2% | -18.511 | -34430.262 | fdx[482]
+      630 |       0 |    1887 |            0 |    +9.3% | -18.468 | -34245.328 | fdx_local[906]
+      640 |       0 |    1917 |            0 |    +9.5% | -18.417 | -34060.883 | fdx[3]
+      650 |       0 |    1947 |            0 |    +9.6% | -18.361 | -33876.922 | fdx[1102]
+      660 |       0 |    1977 |            0 |    +9.7% | -18.311 | -33693.473 | fdx_local[596]
+      670 |       0 |    2007 |            0 |    +9.9% | -18.256 | -33510.637 | fdx[457]
+      680 |       0 |    2037 |            0 |   +10.0% | -18.195 | -33328.348 | fdx[322]
+      690 |       0 |    2067 |            0 |   +10.2% | -18.154 | -33146.621 | fdx[272]
+      700 |       0 |    2097 |            0 |   +10.3% | -18.111 | -32965.355 | fdx_local[448]
+      710 |       0 |    2127 |            0 |   +10.5% | -18.058 | -32784.457 | fdx[21]
+      720 |       0 |    2157 |            0 |   +10.6% | -18.022 | -32604.113 | fdx[764]
+      730 |       0 |    2187 |            0 |   +10.8% | -17.972 | -32424.143 | fdx_local[998]
+      740 |       0 |    2217 |            0 |   +10.9% | -17.942 | -32244.604 | fdx_local[450]
+      750 |       0 |    2247 |            0 |   +11.1% | -17.911 | -32065.270 | fdx_local[979]
+      760 |       0 |    2277 |            0 |   +11.2% | -17.875 | -31886.260 | fdx_local[760]
+      770 |       0 |    2307 |            0 |   +11.4% | -17.835 | -31707.695 | fdx[933]
+      780 |       0 |    2337 |            0 |   +11.5% | -17.774 | -31529.609 | fdx[689]
+      790 |       0 |    2367 |            0 |   +11.7% | -17.743 | -31351.973 | fdx_local[100]
+      800 |       0 |    2397 |            0 |   +11.8% | -17.704 | -31174.693 | fdx[952]
+      810 |       0 |    2427 |            0 |   +12.0% | -17.676 | -30997.740 | fdx_local[489]
+      820 |       0 |    2457 |            0 |   +12.1% | -17.612 | -30821.379 | fdx[418]
+      830 |       0 |    2487 |            0 |   +12.3% | -17.588 | -30645.371 | fdx[956]
+      840 |       0 |    2517 |            0 |   +12.4% | -17.549 | -30469.615 | fdx_local[63]
+      850 |       0 |    2547 |            0 |   +12.6% | -17.517 | -30294.264 | fdx[187]
+      860 |       0 |    2577 |            0 |   +12.7% | -17.481 | -30119.260 | fdx_local[680]
+      870 |       0 |    2607 |            0 |   +12.9% | -17.429 | -29944.676 | fdx_local[697]
+      880 |       0 |    2637 |            0 |   +13.0% | -17.384 | -29770.629 | fdx_local[213]
+      890 |       0 |    2667 |            0 |   +13.1% | -17.353 | -29596.896 | fdx_local[910]
+      900 |       0 |    2697 |            0 |   +13.3% | -17.323 | -29423.520 | fdx[59]
+      910 |       0 |    2727 |            0 |   +13.4% | -17.279 | -29250.484 | fdx_local[74]
+      920 |       0 |    2757 |            0 |   +13.6% | -17.257 | -29077.795 | fdx_local[487]
+      930 |       0 |    2787 |            0 |   +13.7% | -17.219 | -28905.352 | fdx_local[460]
+      940 |       0 |    2817 |            0 |   +13.9% | -17.158 | -28733.396 | fdx_local[240]
+      950 |       0 |    2847 |            0 |   +14.0% | -17.129 | -28561.949 | fdx_local[333]
+      960 |       0 |    2877 |            0 |   +14.2% | -17.092 | -28390.824 | fdx[200]
+      970 |       0 |    2907 |            0 |   +14.3% | -17.034 | -28220.162 | fdx[229]
+      980 |       0 |    2937 |            0 |   +14.5% | -17.013 | -28049.889 | fdx[1077]
+      990 |       0 |    2967 |            0 |   +14.6% | -16.975 | -27879.932 | fdx_local[683]
+     1000 |       0 |    2997 |            0 |   +14.8% | -16.928 | -27710.363 | fdx_local[484]
+     1010 |       0 |    3027 |            0 |   +14.9% | -16.886 | -27541.311 | fdx[534]
+     1020 |       0 |    3057 |            0 |   +15.1% | -16.864 | -27372.533 | fdx[60]
+     1030 |       0 |    3087 |            0 |   +15.2% | -16.793 | -27204.232 | fdx[14]
+     1040 |       0 |    3117 |            0 |   +15.4% | -16.744 | -27036.543 | fdx_local[329]
+     1050 |       0 |    3147 |            0 |   +15.5% | -16.708 | -26869.295 | fdx[308]
+     1060 |       0 |    3177 |            0 |   +15.7% | -16.664 | -26702.479 | fdx_local[666]
+     1070 |       0 |    3207 |            0 |   +15.8% | -16.622 | -26536.059 | fdx[284]
+     1080 |       0 |    3237 |            0 |   +16.0% | -16.588 | -26369.979 | fdx[537]
+     1090 |       0 |    3267 |            0 |   +16.1% | -16.534 | -26204.406 | fdx[798]
+     1100 |       0 |    3297 |            0 |   +16.3% | -16.493 | -26039.154 | fdx[751]
+     1110 |       0 |    3327 |            0 |   +16.4% | -16.446 | -25874.471 | fdx_local[160]
+     1120 |       0 |    3357 |            0 |   +16.6% | -16.399 | -25710.201 | fdx[56]
+     1130 |       0 |    3387 |            0 |   +16.7% | -16.357 | -25546.338 | fdx_local[438]
+     1140 |       0 |    3417 |            0 |   +16.8% | -16.331 | -25382.863 | fdx[271]
+     1150 |       0 |    3447 |            0 |   +17.0% | -16.281 | -25219.785 | fdx_local[1055]
+     1160 |       0 |    3477 |            0 |   +17.1% | -16.241 | -25057.154 | fdx_local[1058]
+     1170 |       0 |    3507 |            0 |   +17.3% | -16.218 | -24894.840 | fdx_local[34]
+     1180 |       0 |    3537 |            0 |   +17.4% | -16.151 | -24732.943 | fdx_local[108]
+     1190 |       0 |    3567 |            0 |   +17.6% | -16.112 | -24571.656 | fdx_local[706]
+     1200 |       0 |    3597 |            0 |   +17.7% | -16.072 | -24410.727 | fdx[929]
+     1210 |       0 |    3627 |            0 |   +17.9% | -16.025 | -24250.250 | fdx_local[718]
+     1220 |       0 |    3657 |            0 |   +18.0% | -15.997 | -24090.160 | fdx_local[809]
+     1230 |       0 |    3687 |            0 |   +18.2% | -15.964 | -23930.342 | fdx[777]
+     1240 |       0 |    3717 |            0 |   +18.3% | -15.923 | -23770.938 | fdx_local[941]
+     1250 |       0 |    3747 |            0 |   +18.5% | -15.882 | -23611.904 | fdx_local[71]
+     1260 |       0 |    3777 |            0 |   +18.6% | -15.840 | -23453.318 | fdx_local[573]
+     1270 |       0 |    3807 |            0 |   +18.8% | -15.757 | -23295.352 | fdx_local[581]
+     1280 |       0 |    3836 |            0 |   +18.9% | -15.715 | -23124.508 | fdx[614]
+     1290 |       0 |    3866 |            0 |   +19.1% | -15.650 | -22967.602 | fdx_local[675]
+     1300 |       0 |    3896 |            0 |   +19.2% | -15.618 | -22811.244 | fdx_local[269]
+     1310 |       0 |    3926 |            0 |   +19.4% | -15.576 | -22655.205 | fdx[1064]
+     1320 |       0 |    3956 |            0 |   +19.5% | -15.541 | -22499.604 | fdx[936]
+     1330 |       0 |    3986 |            0 |   +19.7% | -15.476 | -22344.459 | fdx[209]
+     1340 |       0 |    4016 |            0 |   +19.8% | -15.430 | -22189.881 | fdx[408]
+     1350 |       0 |    4046 |            0 |   +19.9% | -15.373 | -22035.869 | fdx_local[433]
+     1360 |       0 |    4075 |            0 |   +20.1% | -15.301 | -21877.277 | fdx[68]
+     1370 |       0 |    4105 |            0 |   +20.2% | -15.254 | -21724.490 | fdx[172]
+     1380 |       0 |    4135 |            0 |   +20.4% | -15.208 | -21572.186 | fdx_local[136]
+     1390 |       0 |    4165 |            0 |   +20.5% | -15.143 | -21420.439 | fdx[287]
+     1400 |       0 |    4195 |            0 |   +20.7% | -15.082 | -21269.264 | fdx_local[356]
+     1410 |       0 |    4225 |            0 |   +20.8% | -15.039 | -21118.688 | fdx_local[262]
+     1420 |       0 |    4254 |            0 |   +21.0% | -14.990 | -20955.463 | fdx[487]
+     1430 |       0 |    4284 |            0 |   +21.1% | -14.941 | -20805.734 | fdx[163]
+     1440 |       0 |    4314 |            0 |   +21.3% | -14.903 | -20656.549 | fdx_local[127]
+     1450 |       0 |    4344 |            0 |   +21.4% | -14.856 | -20507.725 | fdx_local[1015]
+     1460 |       0 |    4374 |            0 |   +21.6% | -14.814 | -20359.412 | fdx_local[978]
+     1470 |       0 |    4404 |            0 |   +21.7% | -14.720 | -20211.662 | fdx_local[130]
+     1480 |       0 |    4434 |            0 |   +21.9% | -14.688 | -20064.609 | fdx[562]
+     1490 |       0 |    4464 |            0 |   +22.0% | -14.638 | -19917.936 | fdx_local[898]
+     1500 |       0 |    4494 |            0 |   +22.2% | -14.605 | -19771.730 | fdx_local[139]
+     1510 |       0 |    4524 |            0 |   +22.3% | -14.535 | -19626.014 | fdx[869]
+     1520 |       0 |    4554 |            0 |   +22.5% | -14.501 | -19480.768 | fdx_local[134]
+     1530 |       0 |    4584 |            0 |   +22.6% | -14.440 | -19336.049 | fdx[197]
+     1540 |       0 |    4614 |            0 |   +22.7% | -14.387 | -19191.855 | fdx[446]
+     1550 |       0 |    4643 |            0 |   +22.9% | -14.337 | -19035.709 | fdx[826]
+     1560 |       0 |    4673 |            0 |   +23.0% | -14.293 | -18892.564 | fdx_local[366]
+     1570 |       0 |    4703 |            0 |   +23.2% | -14.209 | -18749.957 | fdx[650]
+     1580 |       0 |    4732 |            0 |   +23.3% | -14.178 | -18594.207 | fdx_local[854]
+     1590 |       0 |    4762 |            0 |   +23.5% | -14.132 | -18452.639 | fdx[1081]
+     1600 |       0 |    4792 |            0 |   +23.6% | -14.102 | -18311.365 | fdx_local[548]
+     1610 |       0 |    4822 |            0 |   +23.8% | -14.034 | -18170.727 | fdx[309]
+     1620 |       0 |    4852 |            0 |   +23.9% | -13.995 | -18030.580 | fdx[153]
+     1630 |       0 |    4881 |            0 |   +24.1% | -13.938 | -17878.322 | fdx[127]
+     1640 |       0 |    4911 |            0 |   +24.2% | -13.877 | -17739.229 | fdx_local[137]
+     1650 |       0 |    4941 |            0 |   +24.4% | -13.849 | -17600.557 | fdx[93]
+     1660 |       0 |    4970 |            0 |   +24.5% | -13.803 | -17476.129 | fdx[186]
+     1670 |       0 |    5000 |            0 |   +24.7% | -13.768 | -17338.262 | fdx[183]
+     1680 |       0 |    5030 |            0 |   +24.8% | -13.744 | -17200.709 | fdx_local[498]
+     1690 |       0 |    5059 |            0 |   +24.9% | -13.683 | -17059.771 | fdx[312]
+     1700 |       0 |    5088 |            0 |   +25.1% | -13.624 | -16909.520 | fdx_local[44]
+     1710 |       0 |    5117 |            0 |   +25.2% | -13.560 | -16787.088 | fdx[714]
+     1720 |       0 |    5147 |            0 |   +25.4% | -13.509 | -16651.668 | ot_prs_00692_ff/D
+     1730 |       0 |    5176 |            0 |   +25.5% | -13.462 | -16514.941 | fdx[299]
+     1740 |       0 |    5205 |            0 |   +25.7% | -13.380 | -16394.084 | fdx[887]
+     1750 |       0 |    5235 |            0 |   +25.8% | -13.311 | -16260.538 | fdx[487]$_DFF_P_/D
+     1760 |       0 |    5264 |            0 |   +26.0% | -13.241 | -16120.033 | fdx_local[359]
+     1770 |       0 |    5294 |            0 |   +26.1% | -13.179 | -15987.850 | fdx[103]
+     1780 |       0 |    5321 |            0 |   +26.2% | -13.128 | -15829.264 | fdx[92]
+     1790 |       0 |    5351 |            0 |   +26.4% | -13.076 | -15698.254 | fdx_local[231]
+     1800 |       0 |    5379 |            0 |   +26.5% | -13.036 | -15569.290 | fdx_local[408]
+     1810 |       0 |    5408 |            0 |   +26.7% | -12.973 | -15427.538 | fdx_local[567]
+     1820 |       0 |    5437 |            0 |   +26.8% | -12.909 | -15286.212 | fdx_local[22]
+     1830 |       0 |    5466 |            0 |   +26.9% | -12.845 | -15151.750 | fdx[170]
+     1840 |       0 |    5496 |            0 |   +27.1% | -12.787 | -15023.545 | fdx[333]
+     1850 |       0 |    5526 |            0 |   +27.2% | -12.739 | -14895.819 | fdx_local[588]
+     1860 |       0 |    5555 |            0 |   +27.4% | -12.707 | -14766.834 | ot_prs_00710_ff/D
+     1870 |       0 |    5583 |            0 |   +27.5% | -12.643 | -14616.732 | fdx[677]
+     1880 |       0 |    5613 |            0 |   +27.7% | -12.571 | -14490.619 | fdx[240]
+     1890 |       0 |    5641 |            0 |   +27.8% | -12.521 | -14375.893 | fdx[632]
+     1900 |       0 |    5669 |            0 |   +27.9% | -12.474 | -14263.359 | fdx[493]$_DFF_P_/D
+     1910 |       0 |    5696 |            0 |   +28.1% | -12.393 | -14113.930 | fdx_local[976]
+     1920 |       0 |    5723 |            0 |   +28.2% | -12.321 | -13978.896 | fdx[91]
+     1930 |       0 |    5751 |            0 |   +28.4% | -12.261 | -13855.975 | fdx[121]
+     1940 |       0 |    5780 |            0 |   +28.5% | -12.131 | -13746.105 | fdx[40]
+     1950 |       0 |    5808 |            0 |   +28.6% | -12.073 | -13613.623 | fdx[639]
+     1960 |       0 |    5836 |            0 |   +28.8% | -12.027 | -13487.459 | fdx[422]
+     1970 |       0 |    5863 |            0 |   +28.9% | -11.968 | -13360.607 | fdx_local[353]
+     1980 |       0 |    5891 |            0 |   +29.0% | -11.907 | -13221.291 | fdx[924]
+     1990 |       0 |    5919 |            0 |   +29.2% | -11.820 | -13102.558 | fdx[189]
+     2000 |       0 |    5948 |            0 |   +29.3% | -11.752 | -12996.449 | fdx_local[768]
+     2010 |       0 |    5974 |            0 |   +29.5% | -11.679 | -12881.461 | fdx[555]
+     2020 |       0 |    6001 |            0 |   +29.6% | -11.617 | -12767.187 | fdx[656]
+     2030 |       0 |    6028 |            0 |   +29.7% | -11.571 | -12628.181 | fdx[664]
+     2040 |       0 |    6054 |            0 |   +29.8% | -11.505 | -12476.662 | fdx_local[1043]
+     2050 |       0 |    6079 |            0 |   +30.0% | -11.448 | -12351.237 | fdx[438]$_DFF_P_/D
+     2060 |       0 |    6105 |            0 |   +30.1% | -11.403 | -12244.713 | fdx_local[263]
+     2070 |       0 |    6131 |            0 |   +30.2% | -11.336 | -12091.352 | fdx_local[783]
+     2080 |       0 |    6158 |            0 |   +30.4% | -11.279 | -11974.988 | fdx_local[1094]
+     2090 |       0 |    6184 |            0 |   +30.5% | -11.207 | -11841.190 | fdx[546]$_DFF_P_/D
+     2100 |       0 |    6212 |            0 |   +30.6% | -11.149 | -11732.520 | ot_prs_00748_ff/D
+     2110 |       0 |    6237 |            0 |   +30.7% | -11.068 | -11590.204 | fdx_local[1030]
+     2120 |       0 |    6264 |            0 |   +30.9% | -11.013 | -11481.851 | fdx[1019]
+     2130 |       0 |    6290 |            0 |   +31.0% | -10.935 | -11362.597 | fdx_local[19]
+     2140 |       0 |    6313 |            0 |   +31.1% | -10.884 | -11219.131 | fdx[671]
+     2150 |       0 |    6339 |            0 |   +31.3% | -10.835 | -11114.860 | fdx[1028]
+     2160 |       0 |    6365 |            0 |   +31.4% | -10.777 | -10993.657 | fdx[482]$_DFF_P_/D
+     2170 |       0 |    6388 |            0 |   +31.5% | -10.730 | -10868.922 | fdx[1030]
+     2180 |       0 |    6415 |            0 |   +31.6% | -10.673 | -10762.771 | fdx[567]
+     2190 |       0 |    6443 |            0 |   +31.8% | -10.604 | -10656.675 | fdx_local[340]
+     2200 |       0 |    6467 |            0 |   +31.9% | -10.561 | -10502.690 | fdx[615]$_DFF_P_/D
+     2210 |       0 |    6489 |            0 |   +32.0% | -10.509 | -10377.728 | fdx_local[1032]
+     2220 |       0 |    6516 |            0 |   +32.1% | -10.455 | -10271.362 | fdx[597]
+     2230 |       0 |    6543 |            0 |   +32.3% | -10.385 | -10171.481 | fdx_local[125]
+     2240 |       0 |    6568 |            0 |   +32.4% | -10.315 | -10062.147 | fdx[436]$_DFF_P_/D
+     2250 |       0 |    6590 |            0 |   +32.5% | -10.221 | -9932.291 | fdx_local[238]
+     2260 |       0 |    6616 |            0 |   +32.6% | -10.151 | -9805.993 | fdx_local[771]
+     2270 |       0 |    6642 |            0 |   +32.7% | -10.085 | -9686.765 | fdx[489]
+     2280 |       0 |    6668 |            0 |   +32.9% | -10.040 | -9563.224 | fdx[179]
+     2290 |       0 |    6696 |            0 |   +33.0% |  -9.973 | -9446.822 | fdx[1029]
+     2300 |       0 |    6720 |            0 |   +33.1% |  -9.931 | -9320.071 | fdx[565]$_DFF_P_/D
+     2310 |       0 |    6743 |            0 |   +33.2% |  -9.853 | -9190.863 | fdx[252]
+     2320 |       0 |    6769 |            0 |   +33.4% |  -9.805 | -9102.456 | fdx_local[477]$_DFF_P_/D
+     2330 |       0 |    6792 |            0 |   +33.5% |  -9.726 | -9026.441 | fdx[108]
+     2340 |       0 |    6817 |            0 |   +33.6% |  -9.655 | -8916.773 | fdx[339]$_DFF_P_/D
+     2350 |       0 |    6840 |            0 |   +33.7% |  -9.615 | -8813.188 | fdx[261]
+     2360 |       0 |    6865 |            0 |   +33.8% |  -9.574 | -8708.503 | ot_prs_00351_ff/D
+     2370 |       0 |    6889 |            0 |   +34.0% |  -9.512 | -8590.511 | ot_prs_00196_ff/D
+     2380 |       0 |    6911 |            0 |   +34.1% |  -9.442 | -8503.812 | fdx[511]$_DFF_P_/D
+     2390 |       0 |    6935 |            0 |   +34.2% |  -9.390 | -8394.556 | fdx[559]$_DFF_P_/D
+     2400 |       0 |    6959 |            0 |   +34.3% |  -9.363 | -8250.341 | ot_prs_00708_ff/D
+     2410 |       0 |    6981 |            0 |   +34.4% |  -9.322 | -8114.873 | ot_prs_00539_ff/D
+     2420 |       0 |    7004 |            0 |   +34.5% |  -9.284 | -8010.192 | fdx[345]$_DFF_P_/D
+     2430 |       0 |    7028 |            0 |   +34.6% |  -9.254 | -7873.195 | ot_prs_00356_ff/D
+     2440 |       0 |    7049 |            0 |   +34.8% |  -9.226 | -7751.806 | fdx[346]$_DFF_P_/D
+     2450 |       0 |    7073 |            0 |   +34.9% |  -9.203 | -7619.262 | ot_prs_00215_ff/D
+     2460 |       0 |    7097 |            0 |   +35.0% |  -9.137 | -7539.176 | fdx[188]$_DFF_P_/D
+     2470 |       0 |    7118 |            0 |   +35.1% |  -9.078 | -7438.837 | fdx_local[335]
+     2480 |       0 |    7142 |            0 |   +35.2% |  -9.022 | -7330.822 | fdx[509]$_DFF_P_/D
+     2490 |       0 |    7163 |            0 |   +35.3% |  -8.987 | -7211.242 | ot_prs_00888_ff/D
+     2500 |       0 |    7185 |            0 |   +35.4% |  -8.956 | -7122.697 | fdx[1049]$_DFF_P_/D
+     2510 |       0 |    7207 |            0 |   +35.5% |  -8.895 | -7018.375 | ot_prs_00908_ff/D
+     2520 |       0 |    7226 |            0 |   +35.6% |  -8.861 | -6951.789 | fdx_local[926]
+     2530 |       0 |    7249 |            0 |   +35.7% |  -8.812 | -6850.484 | ot_prs_00902_ff/D
+     2540 |       0 |    7269 |            0 |   +35.8% |  -8.767 | -6731.987 | fdx_local[544]$_DFF_P_/D
+     2550 |       0 |    7291 |            0 |   +35.9% |  -8.722 | -6617.229 | ot_prs_00909_ff/D
+     2560 |       0 |    7313 |            0 |   +36.1% |  -8.680 | -6510.041 | fdx_local[635]$_DFF_P_/D
+     2570 |       0 |    7334 |            0 |   +36.2% |  -8.636 | -6434.309 | fdx[665]$_DFF_P_/D
+     2580 |       0 |    7356 |            0 |   +36.3% |  -8.592 | -6359.483 | ot_prs_00939_ff/D
+     2590 |       0 |    7379 |            0 |   +36.4% |  -8.532 | -6256.377 | fdx_local[456]
+     2600 |       0 |    7403 |            0 |   +36.5% |  -8.481 | -6158.103 | ot_prs_00892_ff/D
+     2610 |       0 |    7423 |            0 |   +36.6% |  -8.425 | -6093.909 | fdx[1054]$_DFF_P_/D
+     2620 |       0 |    7444 |            0 |   +36.7% |  -8.382 | -6018.237 | fdx[359]$_DFF_P_/D
+     2630 |       0 |    7466 |            0 |   +36.8% |  -8.344 | -5915.314 | ot_prs_00630_ff/D
+     2640 |       0 |    7488 |            0 |   +36.9% |  -8.304 | -5834.333 | fdx[1029]$_DFF_P_/D
+     2650 |       0 |    7509 |            0 |   +37.0% |  -8.248 | -5752.825 | fdx[312]$_DFF_P_/D
+     2660 |       0 |    7530 |            0 |   +37.1% |  -8.218 | -5657.938 | ot_prs_00642_ff/D
+     2670 |       0 |    7551 |            0 |   +37.2% |  -8.163 | -5579.431 | fdx_local[563]$_DFF_P_/D
+     2680 |       0 |    7570 |            0 |   +37.3% |  -8.109 | -5499.716 | fdx[332]$_DFF_P_/D
+     2690 |       0 |    7592 |            0 |   +37.4% |  -8.044 | -5422.163 | fdx[770]
+     2700 |       0 |    7613 |            0 |   +37.5% |  -7.978 | -5380.274 | fdx_local[1036]
+     2710 |       0 |    7637 |            0 |   +37.7% |  -7.938 | -5316.865 | fdx[444]$_DFF_P_/D
+     2720 |       0 |    7659 |            0 |   +37.8% |  -7.868 | -5223.041 | ot_prs_00922_ff/D
+     2730 |       0 |    7680 |            0 |   +37.9% |  -7.797 | -5154.182 | fdx[559]
+     2740 |       0 |    7702 |            0 |   +38.0% |  -7.741 | -5081.095 | fdx[754]
+     2750 |       0 |    7725 |            0 |   +38.1% |  -7.678 | -4980.454 | ot_prs_00717_ff/D
+     2760 |       0 |    7745 |            0 |   +38.2% |  -7.611 | -4914.163 | ot_prs_00554_ff/D
+     2770 |       0 |    7766 |            0 |   +38.3% |  -7.537 | -4820.935 | fdx[376]$_DFF_P_/D
+     2780 |       0 |    7787 |            0 |   +38.4% |  -7.466 | -4756.080 | fdx[317]$_DFF_P_/D
+     2790 |       0 |    7808 |            0 |   +38.5% |  -7.399 | -4658.919 | fdx[426]$_DFF_P_/D
+     2800 |       0 |    7830 |            0 |   +38.6% |  -7.294 | -4586.346 | ot_prs_00931_ff/D
+     2810 |       0 |    7851 |            0 |   +38.7% |  -7.207 | -4518.781 | fdx[351]$_DFF_P_/D
+     2820 |       0 |    7871 |            0 |   +38.8% |  -7.124 | -4432.730 | ot_prs_00762_ff/D
+     2830 |       0 |    7892 |            0 |   +38.9% |  -7.090 | -4379.481 | fdx[299]$_DFF_P_/D
+     2840 |       0 |    7913 |            0 |   +39.0% |  -7.029 | -4334.312 | ot_prs_01063_ff/D
+     2850 |       0 |    7934 |            0 |   +39.1% |  -6.981 | -4279.515 | fdx[361]$_DFF_P_/D
+     2860 |       0 |    7955 |            0 |   +39.2% |  -6.907 | -4216.259 | fdx[58]$_DFF_P_/D
+     2870 |       0 |    7975 |            0 |   +39.3% |  -6.872 | -4137.848 | ot_prs_00914_ff/D
+     2880 |       0 |    7997 |            0 |   +39.4% |  -6.839 | -4047.779 | ot_prs_00298_ff/D
+     2890 |       0 |    8018 |            0 |   +39.5% |  -6.776 | -3961.581 | fdx[551]
+     2900 |       0 |    8037 |            0 |   +39.6% |  -6.698 | -3898.353 | fdx[90]$_DFF_P_/D
+     2910 |       0 |    8058 |            0 |   +39.7% |  -6.631 | -3829.693 | ot_prs_00793_ff/D
+     2920 |       0 |    8078 |            0 |   +39.8% |  -6.521 | -3746.664 | fdx[375]$_DFF_P_/D
+     2930 |       0 |    8098 |            0 |   +39.9% |  -6.476 | -3678.187 | ot_prs_00122_ff/D
+     2940 |       0 |    8118 |            0 |   +40.0% |  -6.405 | -3641.443 | fdx[331]$_DFF_P_/D
+     2950 |       0 |    8137 |            0 |   +40.1% |  -6.325 | -3546.321 | fdx[102]$_DFF_P_/D
+     2960 |       0 |    8157 |            0 |   +40.2% |  -6.264 | -3491.633 | fdx_local[506]$_DFF_P_/D
+     2970 |       0 |    8176 |            0 |   +40.3% |  -6.230 | -3431.918 | fdx[340]$_DFF_P_/D
+     2980 |       0 |    8193 |            0 |   +40.4% |  -6.120 | -3381.998 | ot_prs_01054_ff/D
+     2990 |       0 |    8213 |            0 |   +40.5% |  -6.063 | -3333.767 | ot_prs_01014_ff/D
+     3000 |       0 |    8232 |            0 |   +40.6% |  -6.011 | -3310.618 | fdx_local[467]$_DFF_P_/D
+     3010 |       0 |    8250 |            0 |   +40.7% |  -5.964 | -3262.385 | ot_prs_00904_ff/D
+     3020 |       0 |    8269 |            0 |   +40.8% |  -5.903 | -3203.294 | ot_prs_00816_ff/D
+     3030 |       0 |    8287 |            0 |   +40.9% |  -5.830 | -3175.605 | fdx[108]$_DFF_P_/D
+     3040 |       0 |    8306 |            0 |   +41.0% |  -5.765 | -3135.359 | fdx[213]$_DFF_P_/D
+     3050 |       0 |    8324 |            0 |   +41.0% |  -5.700 | -3084.785 | fdx[230]$_DFF_P_/D
+     3060 |       0 |    8342 |            0 |   +41.1% |  -5.646 | -3022.657 | fdx_local[778]
+     3070 |       0 |    8361 |            0 |   +41.2% |  -5.595 | -2992.685 | fdx[87]$_DFF_P_/D
+     3080 |       0 |    8380 |            0 |   +41.3% |  -5.543 | -2943.515 | fdx[506]$_DFF_P_/D
+     3090 |       0 |    8398 |            0 |   +41.4% |  -5.467 | -2901.111 | fdx[602]$_DFF_P_/D
+     3100 |       0 |    8414 |            0 |   +41.5% |  -5.391 | -2873.938 | fdx[84]$_DFF_P_/D
+     3110 |       0 |    8432 |            0 |   +41.6% |  -5.322 | -2820.516 | fdx[80]$_DFF_P_/D
+     3120 |       0 |    8450 |            0 |   +41.7% |  -5.255 | -2765.154 | fdx[776]
+     3130 |       0 |    8470 |            0 |   +41.8% |  -5.183 | -2722.341 | ot_prs_01049_ff/D
+     3140 |       0 |    8488 |            0 |   +41.8% |  -5.111 | -2678.583 | ot_prs_01090_ff/D
+     3150 |       0 |    8507 |            0 |   +41.9% |  -5.034 | -2623.102 | fdx[46]$_DFF_P_/D
+     3160 |       0 |    8525 |            0 |   +42.0% |  -4.968 | -2564.020 | ot_prs_00935_ff/D
+     3170 |       0 |    8543 |            0 |   +42.1% |  -4.933 | -2496.983 | fdx[82]$_DFF_P_/D
+     3180 |       0 |    8561 |            0 |   +42.2% |  -4.878 | -2481.324 | ot_prs_00124_ff/D
+     3190 |       0 |    8580 |            0 |   +42.3% |  -4.803 | -2443.241 | fdx[414]$_DFF_P_/D
+     3200 |       0 |    8598 |            0 |   +42.4% |  -4.762 | -2397.294 | ot_prs_00142_ff/D
+     3210 |       0 |    8614 |            0 |   +42.5% |  -4.706 | -2357.372 | fdx_local[786]$_DFF_P_/D
+     3220 |       0 |    8631 |            0 |   +42.6% |  -4.643 | -2314.639 | fdx[245]$_DFF_P_/D
+     3230 |       0 |    8648 |            0 |   +42.6% |  -4.599 | -2278.129 | fdx[33]$_DFF_P_/D
+     3240 |       0 |    8668 |            0 |   +42.7% |  -4.533 | -2226.385 | ot_prs_01067_ff/D
+     3250 |       0 |    8684 |            0 |   +42.8% |  -4.483 | -2189.027 | fdx[757]$_DFF_P_/D
+     3260 |       0 |    8704 |            0 |   +42.9% |  -4.442 | -2133.644 | fdx[236]$_DFF_P_/D
+     3270 |       0 |    8720 |            0 |   +43.0% |  -4.406 | -2097.447 | fdx[32]$_DFF_P_/D
+     3280 |       0 |    8740 |            0 |   +43.1% |  -4.359 | -2036.577 | ot_prs_00300_ff/D
+     3290 |       0 |    8758 |            0 |   +43.2% |  -4.344 | -1985.414 | fdx[921]$_DFF_P_/D
+     3300 |       0 |    8774 |            0 |   +43.3% |  -4.309 | -1948.912 | ot_prs_01080_ff/D
+     3310 |       0 |    8790 |            0 |   +43.3% |  -4.287 | -1921.836 | fdx[211]$_DFF_P_/D
+     3320 |       0 |    8808 |            0 |   +43.4% |  -4.234 | -1876.049 | ot_prs_00658_ff/D
+     3330 |       0 |    8826 |            0 |   +43.5% |  -4.182 | -1819.273 | ot_prs_01070_ff/D
+     3340 |       0 |    8843 |            0 |   +43.6% |  -4.133 | -1784.821 | ot_prs_00674_ff/D
+     3350 |       0 |    8860 |            0 |   +43.7% |  -4.098 | -1748.943 | fdx[204]$_DFF_P_/D
+     3360 |       0 |    8876 |            0 |   +43.8% |  -4.062 | -1705.923 | fdx[363]$_DFF_P_/D
+     3370 |       0 |    8894 |            0 |   +43.8% |  -4.028 | -1659.284 | fdx[1087]$_DFF_P_/D
+     3380 |       0 |    8911 |            0 |   +43.9% |  -3.981 | -1634.083 | fdx[89]$_DFF_P_/D
+     3390 |       0 |    8927 |            0 |   +44.0% |  -3.910 | -1601.284 | fdx[693]$_DFF_P_/D
+     3400 |       0 |    8943 |            0 |   +44.1% |  -3.887 | -1572.052 | ot_prs_00811_ff/D
+     3410 |       0 |    8958 |            0 |   +44.2% |  -3.864 | -1546.989 | ot_prs_00427_ff/D
+     3420 |       0 |    8975 |            0 |   +44.2% |  -3.800 | -1509.932 | fdx_local[1005]$_DFF_P_/D
+     3430 |       0 |    8992 |            0 |   +44.3% |  -3.725 | -1474.156 | fdx[287]$_DFF_P_/D
+     3440 |       0 |    9009 |            0 |   +44.4% |  -3.703 | -1456.671 | fdx[62]$_DFF_P_/D
+     3450 |       0 |    9026 |            0 |   +44.5% |  -3.652 | -1421.491 | ot_prs_00523_ff/D
+     3460 |       0 |    9041 |            0 |   +44.6% |  -3.622 | -1401.722 | ot_prs_00132_ff/D
+     3470 |       0 |    9056 |            0 |   +44.6% |  -3.589 | -1388.341 | fdx[766]$_DFF_P_/D
+     3480 |       0 |    9073 |            0 |   +44.7% |  -3.570 | -1369.044 | fdx[691]$_DFF_P_/D
+     3490 |       0 |    9091 |            0 |   +44.8% |  -3.539 | -1340.606 | fdx[261]$_DFF_P_/D
+     3500 |       0 |    9106 |            0 |   +44.9% |  -3.513 | -1314.458 | ot_prs_00089_ff/D
+     3510 |       0 |    9122 |            0 |   +45.0% |  -3.476 | -1295.662 | ot_prs_00194_ff/D
+     3520 |       0 |    9138 |            0 |   +45.1% |  -3.446 | -1269.485 | fdx[713]$_DFF_P_/D
+     3530 |       0 |    9153 |            0 |   +45.1% |  -3.422 | -1248.018 | ot_prs_00192_ff/D
+     3540 |       0 |    9169 |            0 |   +45.2% |  -3.393 | -1216.902 | ot_prs_00691_ff/D
+     3550 |       0 |    9185 |            0 |   +45.3% |  -3.361 | -1186.174 | ot_prs_00824_ff/D
+     3560 |       0 |    9202 |            0 |   +45.4% |  -3.336 | -1153.247 | ot_prs_00082_ff/D
+     3570 |       0 |    9219 |            0 |   +45.5% |  -3.295 | -1128.778 | fdx[906]$_DFF_P_/D
+     3580 |       0 |    9236 |            0 |   +45.5% |  -3.278 | -1097.372 | ot_prs_00836_ff/D
+     3590 |       0 |    9249 |            0 |   +45.6% |  -3.255 | -1088.158 | fdx[18]$_DFF_P_/D
+     3600 |       0 |    9265 |            0 |   +45.7% |  -3.202 | -1063.574 | ot_prs_00338_ff/D
+     3610 |       0 |    9283 |            0 |   +45.8% |  -3.162 | -1030.271 | ot_prs_00325_ff/D
+     3620 |       0 |    9300 |            0 |   +45.9% |  -3.129 | -1006.409 | ot_prs_00588_ff/D
+     3630 |       0 |    9316 |            0 |   +45.9% |  -3.107 | -982.670 | fdx_local[787]$_DFF_P_/D
+     3640 |       0 |    9335 |            0 |   +46.0% |  -3.080 | -958.333 | fdx[400]$_DFF_P_/D
+     3650 |       0 |    9352 |            0 |   +46.1% |  -3.051 | -934.296 | fdx[246]$_DFF_P_/D
+     3660 |       0 |    9370 |            0 |   +46.2% |  -3.032 | -913.079 | ot_prs_00839_ff/D
+     3670 |       0 |    9387 |            0 |   +46.3% |  -3.006 | -883.786 | fdx_local[770]$_DFF_P_/D
+     3680 |       0 |    9403 |            0 |   +46.4% |  -2.967 | -854.279 | ot_prs_00602_ff/D
+     3690 |       0 |    9417 |            0 |   +46.4% |  -2.945 | -838.543 | fdx[709]$_DFF_P_/D
+     3700 |       0 |    9430 |            0 |   +46.5% |  -2.893 | -827.286 | ot_prs_01001_ff/D
+     3710 |       0 |    9447 |            0 |   +46.6% |  -2.862 | -804.305 | fdx[216]$_DFF_P_/D
+     3720 |       0 |    9464 |            0 |   +46.7% |  -2.833 | -786.825 | ot_prs_00259_ff/D
+     3730 |       0 |    9483 |            0 |   +46.8% |  -2.791 | -747.166 | fdx[697]$_DFF_P_/D
+     3740 |       0 |    9496 |            0 |   +46.8% |  -2.772 | -732.829 | ot_prs_00614_ff/D
+     3750 |       0 |    9514 |            0 |   +46.9% |  -2.721 | -707.091 | fdx[718]$_DFF_P_/D
+     3760 |       0 |    9527 |            0 |   +47.0% |  -2.692 | -700.115 | ot_prs_00663_ff/D
+     3770 |       0 |    9545 |            0 |   +47.1% |  -2.644 | -684.776 | ot_prs_00518_ff/D
+     3780 |       0 |    9560 |            0 |   +47.1% |  -2.603 | -669.898 | ot_prs_00238_ff/D
+     3790 |       0 |    9572 |            0 |   +47.2% |  -2.602 | -667.191 | ot_prs_00258_ff/D
+     3800 |       0 |    9588 |            0 |   +47.3% |  -2.589 | -644.480 | fdx[276]$_DFF_P_/D
+     3810 |       0 |    9603 |            0 |   +47.3% |  -2.555 | -623.106 | fdx[598]$_DFF_P_/D
+     3820 |       0 |    9621 |            0 |   +47.4% |  -2.518 | -603.591 | fdx_local[347]$_DFF_P_/D
+     3830 |       0 |    9639 |            0 |   +47.5% |  -2.499 | -577.270 | fdx[26]$_DFF_P_/D
+     3840 |       0 |    9652 |            0 |   +47.6% |  -2.478 | -564.779 | fdx[269]$_DFF_P_/D
+     3850 |       0 |    9671 |            0 |   +47.7% |  -2.449 | -528.887 | fdx[533]$_DFF_P_/D
+     3860 |       0 |    9686 |            0 |   +47.8% |  -2.429 | -512.732 | fdx[234]$_DFF_P_/D
+     3870 |       0 |    9702 |            0 |   +47.8% |  -2.396 | -494.621 | ot_prs_00113_ff/D
+     3880 |       0 |    9716 |            0 |   +47.9% |  -2.364 | -482.829 | fdx_local[816]$_DFF_P_/D
+     3890 |       0 |    9732 |            0 |   +48.0% |  -2.343 | -471.467 | ot_prs_00127_ff/D
+     3900 |       0 |    9747 |            0 |   +48.1% |  -2.315 | -458.357 | ot_prs_00092_ff/D
+     3910 |       0 |    9762 |            0 |   +48.1% |  -2.293 | -446.326 | ot_prs_01029_ff/D
+     3920 |       0 |    9778 |            0 |   +48.2% |  -2.275 | -431.901 | fdx_local[435]$_DFF_P_/D
+     3930 |       0 |    9795 |            0 |   +48.3% |  -2.236 | -416.067 | ot_prs_01009_ff/D
+     3940 |       0 |    9809 |            0 |   +48.4% |  -2.227 | -408.547 | ot_prs_00534_ff/D
+     3950 |       0 |    9825 |            0 |   +48.4% |  -2.208 | -392.936 | ot_prs_00994_ff/D
+     3960 |       0 |    9843 |            0 |   +48.5% |  -2.189 | -373.187 | fdx[712]$_DFF_P_/D
+     3970 |       0 |    9860 |            0 |   +48.6% |  -2.165 | -348.284 | fdx_local[79]$_DFF_P_/D
+     3980 |       0 |    9875 |            0 |   +48.7% |  -2.140 | -334.001 | fdx[521]$_DFF_P_/D
+     3990 |       0 |    9889 |            0 |   +48.8% |  -2.111 | -322.988 | ot_prs_00520_ff/D
+     4000 |       0 |    9905 |            0 |   +48.8% |  -2.083 | -303.983 | ot_prs_00662_ff/D
+     4010 |       0 |    9918 |            0 |   +48.9% |  -2.058 | -296.075 | ot_prs_00074_ff/D
+     4020 |       0 |    9934 |            0 |   +49.0% |  -2.000 | -285.040 | ot_prs_00239_ff/D
+     4030 |       0 |    9948 |            0 |   +49.0% |  -1.985 | -274.624 | fdx_local[605]$_DFF_P_/D
+     4040 |       0 |    9966 |            0 |   +49.1% |  -1.949 | -262.571 | fdx[215]$_DFF_P_/D
+     4050 |       0 |    9981 |            0 |   +49.2% |  -1.918 | -248.840 | fdx[707]$_DFF_P_/D
+     4060 |       0 |    9999 |            0 |   +49.3% |  -1.897 | -228.439 | ot_prs_00312_ff/D
+     4070 |       0 |   10015 |            0 |   +49.4% |  -1.854 | -213.983 | ot_prs_00690_ff/D
+     4080 |       0 |   10028 |            0 |   +49.4% |  -1.827 | -208.687 | ot_prs_01132_ff/D
+     4090 |       0 |   10042 |            0 |   +49.5% |  -1.775 | -197.555 | fdx[871]$_DFF_P_/D
+     4100 |       0 |   10058 |            0 |   +49.6% |  -1.728 | -186.377 | fdx[925]$_DFF_P_/D
+     4110 |       0 |   10072 |            0 |   +49.7% |  -1.683 | -177.588 | fdx_local[444]$_DFF_P_/D
+     4120 |       0 |   10088 |            0 |   +49.7% |  -1.657 | -164.708 | fdx[926]$_DFF_P_/D
+     4130 |       0 |   10103 |            0 |   +49.8% |  -1.630 | -155.964 | ot_prs_00669_ff/D
+     4140 |       0 |   10118 |            0 |   +49.9% |  -1.602 | -147.308 | ot_prs_00831_ff/D
+     4150 |       0 |   10135 |            0 |   +50.0% |  -1.534 | -129.826 | fdx_local[911]$_DFF_P_/D
+     4160 |       0 |   10147 |            0 |   +50.0% |  -1.503 | -126.761 | ot_prs_01018_ff/D
+     4170 |       0 |   10158 |            0 |   +50.1% |  -1.493 | -124.001 | fdx[531]$_DFF_P_/D
+     4180 |       0 |   10173 |            0 |   +50.2% |  -1.450 | -112.540 | fdx_local[397]$_DFF_P_/D
+     4190 |       0 |   10190 |            0 |   +50.2% |  -1.375 | -96.237 | fdx[1075]$_DFF_P_/D
+     4200 |       0 |   10202 |            0 |   +50.3% |  -1.355 | -91.665 | fdx_local[1015]$_DFF_P_/D
+     4210 |       0 |   10218 |            0 |   +50.4% |  -1.323 | -81.624 | fdx_local[796]$_DFF_P_/D
+     4220 |       0 |   10233 |            0 |   +50.5% |  -1.264 | -75.204 | ot_prs_00595_ff/D
+     4230 |       0 |   10244 |            0 |   +50.5% |  -1.238 | -72.741 | fdx[392]$_DFF_P_/D
+     4240 |       0 |   10258 |            0 |   +50.6% |  -1.198 | -67.835 | fdx[726]$_DFF_P_/D
+     4250 |       0 |   10273 |            0 |   +50.6% |  -1.150 | -60.575 | ot_prs_00689_ff/D
+     4260 |       0 |   10290 |            0 |   +50.7% |  -1.133 | -51.608 | ot_prs_00980_ff/D
+     4270 |       0 |   10301 |            0 |   +50.8% |  -1.083 | -50.476 | fdx[519]$_DFF_P_/D
+     4280 |       0 |   10315 |            0 |   +50.9% |  -0.996 | -46.380 | fdx[882]$_DFF_P_/D
+     4290 |       0 |   10330 |            0 |   +50.9% |  -0.970 | -41.216 | fdx_local[273]$_DFF_P_/D
+     4300 |       0 |   10347 |            0 |   +51.0% |  -0.935 | -35.093 | fdx[1084]$_DFF_P_/D
+     4310 |       0 |   10361 |            0 |   +51.1% |  -0.901 | -32.046 | fdx_local[152]$_DFF_P_/D
+     4320 |       0 |   10374 |            0 |   +51.1% |  -0.850 | -29.394 | fdx[681]$_DFF_P_/D
+     4330 |       0 |   10389 |            0 |   +51.2% |  -0.820 | -26.875 | fdx[729]$_DFF_P_/D
+     4340 |       0 |   10403 |            0 |   +51.3% |  -0.783 | -23.009 | fdx_local[792]$_DFF_P_/D
+     4350 |       0 |   10417 |            0 |   +51.4% |  -0.704 | -20.048 | fdx[395]$_DFF_P_/D
+     4360 |       0 |   10433 |            0 |   +51.4% |  -0.659 | -16.807 | fdx[730]$_DFF_P_/D
+     4370 |       0 |   10448 |            0 |   +51.5% |  -0.614 | -13.549 | ot_prs_00688_ff/D
+     4380 |       0 |   10464 |            0 |   +51.6% |  -0.505 |  -9.057 | fdx_local[988]$_DFF_P_/D
+     4390 |       0 |   10477 |            0 |   +51.7% |  -0.443 |  -8.068 | fdx_local[1082]$_DFF_P_/D
+     4400 |       0 |   10491 |            0 |   +51.7% |  -0.367 |  -6.001 | ot_prs_00444_ff/D
+     4410 |       0 |   10506 |            0 |   +51.8% |  -0.324 |  -4.423 | fdx_local[218]$_DFF_P_/D
+     4420 |       0 |   10522 |            0 |   +51.9% |  -0.252 |  -2.614 | fdx_local[715]$_DFF_P_/D
+     4430 |       0 |   10536 |            0 |   +51.9% |  -0.208 |  -1.627 | fdx_local[829]$_DFF_P_/D
+     4440 |       0 |   10550 |            0 |   +52.0% |  -0.122 |  -1.074 | ot_prs_00333_ff/D
+     4450 |       0 |   10566 |            0 |   +52.1% |  -0.069 |  -0.376 | fdx_local[1019]$_DFF_P_/D
+     4460 |       0 |   10583 |            0 |   +52.2% |  -0.006 |  -0.006 | fdx_local[1080]$_DFF_P_/D
+     4470 |       0 |   10596 |            0 |   +52.2% |   0.041 |   0.000 | fdx_local[258]$_DFF_P_/D
+     4480 |       0 |   10610 |            0 |   +52.3% |   0.138 |   0.000 | fdx_local[385]$_DFF_P_/D
+     4490 |       0 |   10627 |            0 |   +52.4% |   0.190 |   0.000 | ot_prs_00820_ff/D
+     4500 |       0 |   10642 |            0 |   +52.5% |   0.225 |   0.000 | fdx_local[870]$_DFF_P_/D
+     4510 |       0 |   10659 |            0 |   +52.6% |   0.314 |   0.000 | fdx[389]$_DFF_P_/D
+     4520 |       0 |   10676 |            0 |   +52.6% |   0.404 |   0.000 | fdx_local[529]$_DFF_P_/D
+     4530 |       0 |   10691 |            0 |   +52.7% |   0.514 |   0.000 | fdx_local[707]$_DFF_P_/D
+     4540 |       0 |   10711 |            0 |   +52.8% |   0.613 |   0.000 | fdx_local[966]$_DFF_P_/D
+     4550 |       0 |   10726 |            0 |   +52.9% |   0.691 |   0.000 | fdx_local[722]$_DFF_P_/D
+     4560 |       0 |   10745 |            0 |   +53.0% |   0.760 |   0.000 | fdx_local[305]$_DFF_P_/D
+     4570 |       0 |   10761 |            0 |   +53.1% |   0.851 |   0.000 | fdx_local[377]$_DFF_P_/D
+     4580 |       0 |   10778 |            0 |   +53.1% |   0.894 |   0.000 | fdx_local[274]$_DFF_P_/D
+     4590 |       0 |   10798 |            0 |   +53.2% |   0.966 |   0.000 | fdx_local[1048]$_DFF_P_/D
+     4600 |       0 |   10817 |            0 |   +53.3% |   1.042 |   0.000 | fdx_local[46]$_DFF_P_/D
+     4610 |       0 |   10835 |            0 |   +53.4% |   1.097 |   0.000 | fdx_local[794]$_DFF_P_/D
+     4620 |       0 |   10853 |            0 |   +53.5% |   1.179 |   0.000 | fdx_local[1064]$_DFF_P_/D
+     4630 |       0 |   10872 |            0 |   +53.6% |   1.253 |   0.000 | fdx_local[247]$_DFF_P_/D
+     4640 |       0 |   10892 |            0 |   +53.7% |   1.342 |   0.000 | fdx_local[814]$_DFF_P_/D
+     4650 |       0 |   10910 |            0 |   +53.8% |   1.390 |   0.000 | fdx[401]$_DFF_P_/D
+     4660 |       0 |   10930 |            0 |   +53.9% |   1.469 |   0.000 | fdx_local[720]$_DFF_P_/D
+     4670 |       0 |   10949 |            0 |   +54.0% |   1.540 |   0.000 | fdx_local[313]$_DFF_P_/D
+     4680 |       0 |   10968 |            0 |   +54.1% |   1.639 |   0.000 | fdx_local[335]$_DFF_P_/D
+     4690 |       0 |   10988 |            0 |   +54.2% |   1.687 |   0.000 | fdx_local[433]$_DFF_P_/D
+     4700 |       0 |   11008 |            0 |   +54.3% |   1.745 |   0.000 | fdx_local[804]$_DFF_P_/D
+     4710 |       0 |   11028 |            0 |   +54.4% |   1.823 |   0.000 | fdx_local[858]$_DFF_P_/D
+     4720 |       0 |   11048 |            0 |   +54.5% |   1.884 |   0.000 | fdx_local[409]$_DFF_P_/D
+     4730 |       0 |   11067 |            0 |   +54.6% |   1.916 |   0.000 | fdx_local[453]$_DFF_P_/D
+     4740 |       0 |   11087 |            0 |   +54.7% |   1.981 |   0.000 | fdx_local[538]$_DFF_P_/D
+     4750 |       0 |   11106 |            0 |   +54.8% |   2.023 |   0.000 | fdx_local[283]$_DFF_P_/D
+     4760 |       0 |   11126 |            0 |   +54.9% |   2.096 |   0.000 | fdx_local[565]$_DFF_P_/D
+     4770 |       0 |   11145 |            0 |   +54.9% |   2.163 |   0.000 | fdx_local[133]$_DFF_P_/D
+     4780 |       0 |   11164 |            0 |   +55.0% |   2.237 |   0.000 | fdx_local[1113]$_DFF_P_/D
+     4790 |       0 |   11184 |            0 |   +55.1% |   2.287 |   0.000 | fdx_local[289]$_DFF_P_/D
+     4800 |       0 |   11203 |            0 |   +55.2% |   2.332 |   0.000 | fdx_local[1107]$_DFF_P_/D
+     4810 |       0 |   11222 |            0 |   +55.3% |   2.357 |   0.000 | fdx_local[1066]$_DFF_P_/D
+     4820 |       0 |   11242 |            0 |   +55.4% |   2.422 |   0.000 | fdx_local[53]$_DFF_P_/D
+     4830 |       0 |   11261 |            0 |   +55.5% |   2.466 |   0.000 | fdx_local[269]$_DFF_P_/D
+     4840 |       0 |   11279 |            0 |   +55.6% |   2.545 |   0.000 | fdx_local[43]$_DFF_P_/D
+     4850 |       0 |   11299 |            0 |   +55.7% |   2.616 |   0.000 | fdx_local[407]$_DFF_P_/D
+     4860 |       0 |   11318 |            0 |   +55.8% |   2.654 |   0.000 | fdx_local[697]$_DFF_P_/D
+     4870 |       0 |   11338 |            0 |   +55.9% |   2.694 |   0.000 | fdx_local[476]$_DFF_P_/D
+     4880 |       0 |   11357 |            0 |   +56.0% |   2.721 |   0.000 | fdx_local[84]$_DFF_P_/D
+     4890 |       0 |   11377 |            0 |   +56.1% |   2.768 |   0.000 | fdx_local[246]$_DFF_P_/D
+     4900 |       0 |   11397 |            0 |   +56.2% |   2.817 |   0.000 | fdx_local[1018]$_DFF_P_/D
+     4910 |       0 |   11416 |            0 |   +56.3% |   2.857 |   0.000 | fdx_local[689]$_DFF_P_/D
+    final |       0 |   11428 |            0 |   +56.3% |   2.884 |   0.000 | fdx_local[92]$_DFF_P_/D
+--------------------------------------------------------------------------------------
+[WARNING RSZ-0064] Unable to repair all hold checks within margin.
+[INFO RSZ-0032] Inserted 11428 hold buffers.
+[ERROR RSZ-0060] Max buffer count reached.
+[WARNING STA-1010] No common period was found between clocks ot_lb_v_core_clk and core_clk.
+OT_HOLD_MM after repair: SS setup ws 67.30 / FF hold ws 2.88 ps
+OT_HOLD_MM: repair hit the buffer cap (RSZ-0060); continuing on the repaired design, sign-off decides
+detailed_placement
+[INFO DPL-0006] Core area: 12363.84 um^2
+[INFO DPL-0007] Movable instances area: 2280.78 um^2
+[INFO DPL-0008] Fixed instances area within core: 30.97 um^2
+[INFO DPL-0009] Utilization: 18.7%
+[INFO DPL-0005] Diamond search max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+[INFO DPL-1102] Legalizing using negotiation legalizer.
+[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically 
+	Automatic search window extension enabled.
+	Search window extendable up to the max displacement cap of +/-500 sites, +/-100 rows near walls.
+[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.
+[INFO DPL-0392] Negotiation cell height distribution (1 unique row-count(s)):
+[INFO DPL-0393]   height 1 row(s): 22853 cells
+          |      Total |  Illegal |  Illegal
+Iteration | Violations |    Cells |    Sites
+---------------------------------------------
+        0 |      81175 |     13505 |     66263
+        1 |      96430 |     10708 |     58005
+        2 |      79225 |     11097 |     60134
+        3 |      71706 |     11256 |     57282
+        4 |      64138 |     10990 |     51565
+        5 |      58217 |     10553 |     46180
+        6 |      51629 |      9909 |     40864
+        7 |      47837 |      9708 |     37418
+        8 |      42326 |      9006 |     32741
+        9 |      38225 |      8480 |     29313
+       10 |      34279 |      8021 |     26126
+       20 |      12595 |      3658 |      8928
+       30 |       6171 |      1905 |      4248
+       40 |       3454 |      1030 |      2415
+       50 |       1827 |       561 |      1257
+       60 |       1266 |       336 |       930
+       70 |        761 |       213 |       548
+       80 |        482 |       112 |       370
+       90 |        156 |        50 |       106
+      100 |        143 |        43 |       100
+      110 |        121 |        31 |        90
+      120 |         45 |        17 |        28
+      130 |         35 |        15 |        20
+      140 |          9 |         3 |         6
+      144 |          0 |         0 |         0
+Negotiation phase 1 converged at iteration 144.
+[INFO DPL-0500] Runtime: 38.50s
+Placement Analysis
+---------------------------------
+total displacement      56338.2 u
+average displacement        2.5 u
+max displacement           12.6 u
+original HPWL           70730.6 u
+legalized HPWL         105360.8 u
+delta HPWL                   49 %
+
+Took 38 seconds: detailed_placement
+estimate_parasitics -placement
+Report metrics stage 4, cts final...
+[WARNING STA-1010] No common period was found between clocks ot_lb_v_core_clk and core_clk.
+[WARNING STA-1010] No common period was found between clocks ot_lb_v_core_clk and core_clk.
+[WARNING STA-1010] No common period was found between clocks ot_lb_v_core_clk and core_clk.
+
+==========================================================================
+cts final report_design_area
+--------------------------------------------------------------------------
+Design area 2312 um^2 19% utilization.
+source /work/hooks/post_cts_post_cts.tcl
+write_db /work/results/asap7/opentallas_ot_s81_hc_ctfx_cap_asap7_ref_s81hc_ctfxcap_ref_v1_owned_epoch_631a20a94/base/4_1_cts.odb
+write_sdc -no_timestamp /work/results/asap7/opentallas_ot_s81_hc_ctfx_cap_asap7_ref_s81hc_ctfxcap_ref_v1_owned_epoch_631a20a94/base/4_cts.sdc
+Elapsed time: 1:37.72[h:]min:sec. CPU time: user 103.33 sys 2.67 (108%). Peak memory: 602192KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+4_1_cts                   .odb           97            588 9e44dfc91a82c6c378e4

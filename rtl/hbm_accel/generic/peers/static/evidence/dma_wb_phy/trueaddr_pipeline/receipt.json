@@ -1,0 +1,99 @@
+{
+  "scope": "actual full32VMbank DMA STORE h20480words+PRE8 through WB SRAM/CDC and actual mutable HBM model, MAIN and MIRROR",
+  "functional": "PASS",
+  "throughput": "FAIL: cold423 >272; warm207 <=272; no price/calendar change",
+  "immutable_price_cycles": 248,
+  "gate_limit_cycles": 272,
+  "campaigns": [
+    {
+      "mode": "MAIN",
+      "fence_stream_cycles": 423,
+      "first_phy_hbm_edge": [
+        166,
+        166,
+        166,
+        166
+      ],
+      "last_issue_hbm_edge": [
+        400,
+        193,
+        193,
+        200
+      ],
+      "last_true_ack_hbm_edge": [
+        411,
+        392,
+        392,
+        392
+      ]
+    },
+    {
+      "mode": "MIRROR",
+      "fence_stream_cycles": 207,
+      "first_phy_hbm_edge": [
+        783,
+        783,
+        783,
+        783
+      ],
+      "last_issue_hbm_edge": [
+        841,
+        810,
+        810,
+        816
+      ],
+      "last_true_ack_hbm_edge": [
+        852,
+        832,
+        832,
+        832
+      ]
+    }
+  ],
+  "coverage_per_campaign": {
+    "actualVMbanks": 32,
+    "VMmacros": 96,
+    "landingmacros": 32,
+    "WBmacros": 128,
+    "mutableHBMstacks": 4,
+    "sectors": 2561,
+    "truePHYpostedACKs": 2561,
+    "exactHBMarrayReadChecks": 2561,
+    "source_overwritten_after_posted_retire": true
+  },
+  "prematureACK_mutant": "PASS negative: fence before actual HBM drain ACK",
+  "native_addresses": {
+    "h_local_sector": "0x28800000+2*q",
+    "PRE_local_sector": "0x28800a00",
+    "stack": "global sector high2",
+    "K_BASE": "0x28800000",
+    "K_MEM_sectors": 65536,
+    "VMmain_word": "0 perquadrant compact legal allocation; PRE8192",
+    "VMmirror_word": "65536+5120*q; PRE65536+20480; wholeh replicated identically onallquadrants"
+  },
+  "clocks": {
+    "stream_ps": 833.333,
+    "hbm_ps": 1024,
+    "hbm_phase_ps": 173,
+    "FIFO_roots": "four samefrequency/samephase functional inputs; physical partition unqualified"
+  },
+  "ot_run": {
+    "host": "ot-agidock128",
+    "unit": "oth-ubuntu-3779788-1792053824",
+    "PID": 3779788,
+    "terminal": true,
+    "exit": 0,
+    "memGB": 4,
+    "threads": 4,
+    "path": "/tmp/hbm-dma-wb-phy-pipeline-trueaddr-run2"
+  },
+  "source_pins": "input_sha256.json; service pipeline abf5662f frozen, engine09eec4bec andPHYwindowedb94b0ce",
+  "limitations": [
+    "globalDATAWIN/Engramallocator unqualified: no range moved, no13SM/rank0globalallocation proof",
+    "slot0 only; MAIN cold and MIRROR warm are different model histories, not independent statistical samples",
+    "exactphysical cuts/CTS/route/area unqualified",
+    "functional exit0 does not override throughputFAIL"
+  ],
+  "history": "history/compact_address is earlier frozenWB diagnostic1425/661 with compactaddresses; not productionaddress evidence",
+  "failed_attempt": "run1 stopped on bench oldcompact address checker at firstwd; fixedtwoexpected constants inrun2; RTL unchanged"
+}

@@ -1,0 +1,926 @@
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 3_3_place_gp global_place
+Running global_place.tcl, stage 3_3_place_gp
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_db /work/results/asap7/opentallas_ot_qkvd_llr_replay_leaf_asap7_ref_gate/base/3_2_place_iop.odb
+read_sdc /work/results/asap7/opentallas_ot_qkvd_llr_replay_leaf_asap7_ref_gate/base/2_floorplan.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+source /work/hooks/pre_global_place_pre_gpl.tcl
+OT_PRS: 137 output pins already on a dedicated flop, 0 pins split onto a cloned flop (0 cells added, 0 load-less cells removed), 0 outputs not flop-driven
+INHOLD: 0 input hold cells (HB2xp67_ASAP7_75t_R; 0 strong pads by OT_HOLD_PAD_STRONG_RE, dont_touch; driver 'BUFx4f_ASAP7_75t_R', 0 FIRM for GPL), 151 inputs skipped (clock / reset / multi-sink / non-DFF)
+OUTHOLD: 137 output hold stages (BUF + HB2xp67_ASAP7_75t_R + BUF FIRM at the pin, 0 with the strong pad by OT_HOLD_PAD_STRONG_RE, hold cell dont_touch), 0 outputs skipped (not flop-driven)
+OT_IOFLOP fixed 137 output-port and 0 input-port flops at their pins (151 ports not single-flop)
+[INFO RSZ-0026] Removed 4496 buffers.
+Perform port buffering...
+[INFO RSZ-0027] Inserted 150 BUFx2_ASAP7_75t_R input buffers.
+[INFO RSZ-0028] Inserted 137 BUFx2_ASAP7_75t_R output buffers.
+global_placement -density 0.52 -pad_left 0 -pad_right 0 -routability_driven -timing_driven -force_center_initial_place -min_phi_coef 0.95 -max_phi_coef 1.05
+[INFO GPL-0001] ---- Initialize GPL Main Data Structures
+[INFO GPL-0002] DBU: 1000
+[INFO GPL-0003] SiteSize: (  0.054  0.270 ) um
+[INFO GPL-0004] CoreBBox: (  2.160  2.160 ) ( 170.640 170.640 ) um
+[INFO GPL-0016] Core area:                   28385.510 um^2
+[INFO GPL-0036] Movable instances area:       5307.003 um^2
+[INFO GPL-0037] Total instances area:         5564.719 um^2
+[INFO GPL-0035] Pin density area adjust:       845.075 um^2
+[INFO GPL-0032] ---- Initialize Region: Top-level
+[INFO GPL-0006] Number of instances:             38327
+[INFO GPL-0007] Movable instances:               34653
+[INFO GPL-0008] Fixed instances:                  3674
+[INFO GPL-0009] Dummy instances:                     0
+[INFO GPL-0010] Number of nets:                  35352
+[INFO GPL-0011] Number of pins:                 130233
+[INFO GPL-0012] Die BBox:       (  0.000  0.000 ) ( 172.800 172.800 ) um
+[INFO GPL-0013] Placement BBox: (  2.160  2.160 ) ( 170.640 170.640 ) um
+[INFO GPL-0014] Region name: top-level.
+[INFO GPL-0015] Region area:                 28385.510 um^2
+[INFO GPL-0017] Fixed instances area:          257.716 um^2
+[INFO GPL-0018] Movable instances area:       6152.078 um^2
+[INFO GPL-0019] Utilization:                    21.872 %
+[INFO GPL-0020] Standard cells area:          6152.078 um^2
+[INFO GPL-0021] Large instances area:            0.000 um^2
+[INFO GPL-0005] ---- Execute Conjugate Gradient Initial Placement.
+[INFO GPL-0051] Source of initial instance position counters:
+	Odb location = 0	Core center = 34653	Region center = 0
+[InitialPlace]  Iter: 1 conjugate gradient residual: 0.00154202 HPWL: 97904050
+[InitialPlace]  Iter: 2 conjugate gradient residual: 0.00001029 HPWL: 53404225
+[InitialPlace]  Iter: 3 conjugate gradient residual: 0.00000442 HPWL: 53348515
+[InitialPlace]  Iter: 4 conjugate gradient residual: 0.00001014 HPWL: 53412122
+[InitialPlace]  Iter: 5 conjugate gradient residual: 0.00000708 HPWL: 53408187
+[INFO GPL-0033] ---- Initialize Nesterov Region: Top-level
+[INFO GPL-0023] Placement target density:       0.5200
+[INFO GPL-0024] Movable insts average area:      0.178 um^2
+[INFO GPL-0025] Ideal bin area:                  0.341 um^2
+[INFO GPL-0026] Ideal bin count:                 83142
+[INFO GPL-0027] Total bin area:              28385.510 um^2
+[INFO GPL-0028] Bin count (X, Y):         256 ,    256
+[INFO GPL-0029] Bin size (W * H):       0.658 *  0.658 um
+[INFO GPL-0030] Number of bins:                  65536
+[INFO GPL-0084] ---- Execute Nesterov Global Placement.
+[INFO GPL-0031] HPWL: Half-Perimeter Wirelength
+Iteration | Overflow |     HPWL (um) |  HPWL(%) |   Penalty | Group
+---------------------------------------------------------------
+        0 |   0.9930 |  2.803786e+04 |   +0.00% |  4.89e-15 |      
+       10 |   0.9864 |  3.187178e+04 |  +13.67% |  7.97e-15 |      
+       20 |   0.9858 |  3.223433e+04 |   +1.14% |  1.30e-14 |      
+       30 |   0.9856 |  3.274112e+04 |   +1.57% |  2.11e-14 |      
+       40 |   0.9856 |  3.289627e+04 |   +0.47% |  3.44e-14 |      
+       50 |   0.9855 |  3.290098e+04 |   +0.01% |  5.61e-14 |      
+       60 |   0.9854 |  3.288516e+04 |   -0.05% |  9.14e-14 |      
+       70 |   0.9854 |  3.284508e+04 |   -0.12% |  1.49e-13 |      
+       80 |   0.9853 |  3.278155e+04 |   -0.19% |  2.42e-13 |      
+       90 |   0.9852 |  3.271921e+04 |   -0.19% |  3.95e-13 |      
+      100 |   0.9851 |  3.267028e+04 |   -0.15% |  6.43e-13 |      
+      110 |   0.9849 |  3.264450e+04 |   -0.08% |  1.05e-12 |      
+      120 |   0.9848 |  3.265511e+04 |   +0.03% |  1.71e-12 |      
+      130 |   0.9845 |  3.271431e+04 |   +0.18% |  2.78e-12 |      
+      140 |   0.9840 |  3.283413e+04 |   +0.37% |  4.53e-12 |      
+      150 |   0.9833 |  3.312199e+04 |   +0.88% |  7.38e-12 |      
+      160 |   0.9826 |  3.373291e+04 |   +1.84% |  1.20e-11 |      
+      170 |   0.9810 |  3.479111e+04 |   +3.14% |  1.96e-11 |      
+      180 |   0.9780 |  3.637290e+04 |   +4.55% |  3.19e-11 |      
+      190 |   0.9737 |  3.857978e+04 |   +6.07% |  5.19e-11 |      
+      200 |   0.9680 |  4.150038e+04 |   +7.57% |  8.45e-11 |      
+      210 |   0.9606 |  4.538176e+04 |   +9.35% |  1.38e-10 |      
+      220 |   0.9501 |  5.081756e+04 |  +11.98% |  2.24e-10 |      
+      230 |   0.9366 |  5.858830e+04 |  +15.29% |  3.65e-10 |      
+      240 |   0.9184 |  6.942805e+04 |  +18.50% |  5.93e-10 |      
+      250 |   0.8954 |  7.766385e+04 |  +11.86% |  9.65e-10 |      
+      260 |   0.8670 |  7.987512e+04 |   +2.85% |  1.57e-09 |      
+      270 |   0.8316 |  8.104642e+04 |   +1.47% |  2.56e-09 |      
+      280 |   0.7875 |  9.615776e+04 |  +18.65% |  4.16e-09 |      
+      290 |   0.7376 |  1.057824e+05 |  +10.01% |  6.77e-09 |      
+      300 |   0.6966 |  1.081638e+05 |   +2.25% |  1.10e-08 |      
+      310 |   0.6436 |  1.253663e+05 |  +15.90% |  1.79e-08 |      
+[INFO GPL-0100] Timing-driven iteration 1/2, virtual: false.
+[INFO GPL-0101]    Iter: 314, overflow: 0.635, keep resizer changes at: 1, HPWL: 122847946
+Iteration |   Area    | Resized | Buffers | Nets repaired | Remaining
+---------------------------------------------------------------------
+        0 |     +0.0% |       0 |       0 |             0 |     35352
+    final |     +5.8% |     428 |    2231 |           377 |         0
+---------------------------------------------------------------------
+[INFO RSZ-0034] Found 510 slew violations.
+[INFO RSZ-0035] Found 354 fanout violations.
+[INFO RSZ-0039] Resized 428 instances.
+[INFO RSZ-0038] Inserted 2231 buffers in 377 nets.
+   Iter   |    Area   | Removed | Inserted |   Pins
+          |           | Buffers | Buffers  | Remaining
+-------------------------------------------------------
+        0 |     +0.0% |       0 |        0 |     34790
+     3400 |     +0.2% |       0 |       91 |     31390
+     6800 |     +0.3% |       0 |      120 |     27990
+    10200 |     +0.7% |      53 |      352 |     24590
+    13600 |     +1.0% |     215 |      727 |     21190
+    17000 |     +1.1% |     321 |      962 |     17790
+    20400 |     +1.5% |    1190 |     2229 |     14390
+    23800 |     +1.5% |    1190 |     2233 |     10990
+    27200 |     +3.5% |    1867 |     4140 |      7590
+    30600 |     +3.5% |    1867 |     4140 |      4190
+    34000 |     +3.5% |    1867 |     4140 |       790
+    final |     +3.7% |    2231 |     4625 |         0
+-------------------------------------------------------
+[INFO GPL-0106] Timing-driven: worst slack -4.708456e-11
+[INFO GPL-0107] Timing-driven: repair_design delta area: 529.089 um^2 (+8.60%)
+[INFO GPL-0108] Timing-driven: repair_design, gpl delta gcells: 4625 (+13.35%)
+[INFO GPL-0109] Timing-driven: repair_design, gcells created: 6856, deleted: 2231
+[INFO GPL-0110] Timing-driven: new target density: 0.5388102
+[INFO GPL-0038] Routability snapshot saved at iter = 316
+      315 |   0.5749 |  2.343574e+05 |          |           |      
+Iteration | Overflow |     HPWL (um) |  HPWL(%) |   Penalty | Group
+---------------------------------------------------------------
+      320 |   0.5233 |  2.367021e+05 |  +88.81% |  2.88e-08 |      
+      330 |   0.5600 |  2.229406e+05 |   -5.81% |  4.69e-08 |      
+      340 |   0.5580 |  2.154681e+05 |   -3.35% |  7.65e-08 |      
+      350 |   0.4887 |  2.103841e+05 |   -2.36% |  1.25e-07 |      
+      360 |   0.4102 |  2.285037e+05 |   +8.61% |  2.02e-07 |      
+      370 |   0.3473 |  2.473140e+05 |   +8.23% |  3.29e-07 |      
+      380 |   0.3399 |  2.364842e+05 |   -4.38% |  4.85e-07 |      
+      390 |   0.3222 |  2.305993e+05 |   -2.49% |  7.14e-07 |      
+[INFO GPL-0040] Routability iteration: 1
+[WARNING GRT-0281] Net ck has a large fanout of 9050 terminals.
+[INFO GPL-0041] Total routing overflow: 0.0000
+[INFO GPL-0042] Number of overflowed tiles: 0 (0.00%)
+[INFO GPL-0043] Average top 0.5% routing congestion: 0.8108
+[INFO GPL-0044] Average top 1.0% routing congestion: 0.7815
+[INFO GPL-0045] Average top 2.0% routing congestion: 0.7491
+[INFO GPL-0046] Average top 5.0% routing congestion: 0.7017
+[INFO GPL-0047] Routability iteration weighted routing congestion: 0.7961
+[INFO GPL-0050] Weighted routing congestion is lower than target routing congestion(1.0100), end routability optimization.
+[INFO GPL-0090] Routability finished. Target routing congestion achieved succesfully.
+Iteration | Overflow |     HPWL (um) |  HPWL(%) |   Penalty | Group
+---------------------------------------------------------------
+      400 |   0.2939 |  2.377675e+05 |   +3.11% |  1.05e-06 |      
+      410 |   0.2770 |  2.328741e+05 |   -2.06% |  1.55e-06 |      
+      420 |   0.2525 |  2.327415e+05 |   -0.06% |  2.28e-06 |      
+      430 |   0.2328 |  2.313171e+05 |   -0.61% |  3.36e-06 |      
+      440 |   0.2069 |  2.313122e+05 |   -0.00% |  4.95e-06 |      
+[INFO GPL-0100] Timing-driven iteration 2/2, virtual: false.
+[INFO GPL-0101]    Iter: 448, overflow: 0.192, keep resizer changes at: 1, HPWL: 230958437
+Iteration |   Area    | Resized | Buffers | Nets repaired | Remaining
+---------------------------------------------------------------------
+        0 |     +0.0% |       0 |       0 |             0 |     39977
+    final |     +0.1% |       1 |      14 |             8 |         0
+---------------------------------------------------------------------
+[INFO RSZ-0034] Found 8 slew violations.
+[INFO RSZ-0039] Resized 1 instances.
+[INFO RSZ-0038] Inserted 14 buffers in 8 nets.
+   Iter   |    Area   | Removed | Inserted |   Pins
+          |           | Buffers | Buffers  | Remaining
+-------------------------------------------------------
+        0 |     +0.0% |       0 |        0 |     34790
+     3400 |     -0.1% |      91 |       66 |     31390
+     6800 |     -0.0% |     120 |      101 |     27990
+    10200 |     -0.1% |     215 |      159 |     24590
+    13600 |     -0.5% |     590 |      336 |     21190
+    17000 |     -0.8% |     825 |      449 |     17790
+    20400 |     -1.4% |    2103 |     1424 |     14390
+    23800 |     -1.4% |    2107 |     1427 |     10990
+    27200 |     -1.2% |    4015 |     3366 |      7590
+    30600 |     -1.2% |    4015 |     3366 |      4190
+    34000 |     -1.2% |    4015 |     3366 |       790
+    final |     -1.2% |    4502 |     3837 |         0
+-------------------------------------------------------
+[INFO GPL-0106] Timing-driven: worst slack -3.6313785e-11
+[INFO GPL-0107] Timing-driven: repair_design delta area: -70.932 um^2 (-1.06%)
+[INFO GPL-0108] Timing-driven: repair_design, gpl delta gcells: -651 (-1.66%)
+[INFO GPL-0109] Timing-driven: repair_design, gcells created: 3851, deleted: 4502
+[INFO GPL-0110] Timing-driven: new target density: 0.5362884
+Iteration | Overflow |     HPWL (um) |  HPWL(%) |   Penalty | Group
+---------------------------------------------------------------
+      450 |   0.1967 |  2.349625e+05 |   +1.58% |  7.29e-06 |      
+      460 |   0.1877 |  2.314532e+05 |   -1.49% |  1.07e-05 |      
+      470 |   0.1637 |  2.283799e+05 |   -1.33% |  1.58e-05 |      
+      480 |   0.1412 |  2.254475e+05 |   -1.28% |  2.33e-05 |      
+      490 |   0.1220 |  2.232763e+05 |   -0.96% |  3.43e-05 |      
+      500 |   0.1042 |  2.222122e+05 |   -0.48% |  5.06e-05 |      
+      504 |   0.0987 |  2.219505e+05 |          |  6.14e-05 |      
+---------------------------------------------------------------
+[INFO GPL-1001] Global placement finished at iteration 504
+[INFO GPL-1017] Routability mode iteration count: 81
+[INFO GPL-1005] Routability final weighted congestion: 0.7901
+[INFO GPL-1002] Placed Cell Area             6610.2359
+[INFO GPL-1003] Available Free Area         28127.7943
+[INFO GPL-1004] Minimum Feasible Density        0.2200 (cell_area / free_area)
+[INFO GPL-1006]   Suggested Target Densities:
+[INFO GPL-1007]     - For 90% usage of free space: 0.2611
+[INFO GPL-1008]     - For 80% usage of free space: 0.2938
+[INFO GPL-1009]     - For 50% usage of free space: 0.4700
+[INFO GPL-1011] Original area (um^2): 6152.08
+[INFO GPL-1012] Total routability artificial inflation: 0.00 (+0.00%)
+[INFO GPL-1013] Total timing-driven delta area: 458.16 (+7.45%)
+[INFO GPL-1014] Final placement area: 6610.24 (+7.45%)
+Took 83 seconds: global_placement -density 0.52 -pad_left 0 -pad_right 0 -routability_driven -timing_driven -force_center_initial_place -min_phi_coef 0.95 -max_phi_coef 1.05
+estimate_parasitics -placement
+Report metrics stage 3, global place...
+
+==========================================================================
+global place report_design_area
+--------------------------------------------------------------------------
+Design area 5940 um^2 21% utilization.
+write_db /work/results/asap7/opentallas_ot_qkvd_llr_replay_leaf_asap7_ref_gate/base/3_3_place_gp.odb
+Elapsed time: 1:58.17[h:]min:sec. CPU time: user 252.74 sys 18.08 (229%). Peak memory: 1036220KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+3_3_place_gp              .odb          118           1011 7e5d42e9735b049aefe1
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 3_4_place_resized resize
+Running resize.tcl, stage 3_4_place_resized
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_db /work/results/asap7/opentallas_ot_qkvd_llr_replay_leaf_asap7_ref_gate/base/3_3_place_gp.odb
+read_sdc /work/results/asap7/opentallas_ot_qkvd_llr_replay_leaf_asap7_ref_gate/base/2_floorplan.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+estimate_parasitics -placement
+Perform buffer insertion and gate resizing...
+repair_design -verbose -slew_margin 30
+Iteration |   Area    | Resized | Buffers | Nets repaired | Remaining
+---------------------------------------------------------------------
+        0 |     +0.0% |       0 |       0 |             0 |     39326
+     1000 |     +0.0% |       0 |       0 |             0 |     38326
+     2000 |     +0.0% |       0 |       0 |             0 |     37326
+     3000 |     +0.0% |       0 |       0 |             0 |     36326
+     4000 |     +0.0% |       0 |       0 |             0 |     35326
+     5000 |     +0.0% |       0 |       0 |             0 |     34326
+     6000 |     +0.0% |       0 |       0 |             0 |     33326
+     7000 |     +0.0% |       0 |       0 |             0 |     32326
+     8000 |     +0.0% |       0 |       0 |             0 |     31326
+     9000 |     +0.0% |       0 |       0 |             0 |     30326
+    10000 |     +0.0% |       0 |       0 |             0 |     29326
+    11000 |     +0.0% |       0 |       0 |             0 |     28326
+    12000 |     +0.0% |       0 |       1 |             1 |     27326
+    13000 |     +0.0% |       0 |       1 |             1 |     26326
+    14000 |     +0.0% |       0 |       1 |             1 |     25326
+    15000 |     +0.0% |       0 |       1 |             1 |     24326
+    16000 |     +0.0% |       0 |       1 |             1 |     23326
+    17000 |     +0.0% |       0 |       1 |             1 |     22326
+    18000 |     +0.0% |       0 |       1 |             1 |     21326
+    19000 |     +0.0% |       0 |       1 |             1 |     20326
+    20000 |     +0.0% |       0 |       6 |             5 |     19326
+    21000 |     +0.0% |       0 |       6 |             5 |     18326
+    22000 |     +0.0% |       0 |       6 |             5 |     17326
+    23000 |     +0.0% |       0 |       6 |             5 |     16326
+    24000 |     +0.0% |       0 |       6 |             5 |     15326
+    25000 |     +0.0% |       0 |       6 |             5 |     14326
+    26000 |     +0.0% |       0 |       8 |             7 |     13326
+    27000 |     +0.1% |       2 |      14 |            10 |     12326
+    28000 |     +0.1% |       2 |      18 |            13 |     11326
+    29000 |     +0.2% |      24 |      49 |            29 |     10326
+    30000 |     +0.2% |      27 |      55 |            32 |      9326
+    31000 |     +0.2% |      27 |      55 |            32 |      8326
+    32000 |     +0.2% |      27 |      55 |            32 |      7326
+    33000 |     +0.2% |      27 |      55 |            32 |      6326
+    34000 |     +0.2% |      27 |      55 |            32 |      5326
+    35000 |     +0.2% |      27 |      55 |            32 |      4326
+    36000 |     +0.2% |      27 |      55 |            32 |      3326
+    37000 |     +0.2% |      27 |      55 |            32 |      2326
+    38000 |     +0.2% |      27 |      55 |            32 |      1326
+    39000 |     +0.2% |      32 |      63 |            37 |       326
+    final |     +0.3% |      33 |      67 |            44 |         0
+---------------------------------------------------------------------
+[INFO RSZ-0034] Found 75 slew violations.
+[INFO RSZ-0039] Resized 33 instances.
+[INFO RSZ-0038] Inserted 67 buffers in 44 nets.
+[INFO RSZ-0504] Runtime: 8.28s
+Took 8 seconds: repair_design -verbose -slew_margin 30
+Floating nets: 
+Report metrics stage 3, resizer...
+
+==========================================================================
+resizer report_design_area
+--------------------------------------------------------------------------
+Design area 5955 um^2 21% utilization.
+Instance count before 42301, after 42368
+Pin count before 137893, after 138027
+write_db /work/results/asap7/opentallas_ot_qkvd_llr_replay_leaf_asap7_ref_gate/base/3_4_place_resized.odb
+Elapsed time: 0:59.55[h:]min:sec. CPU time: user 74.38 sys 6.06 (135%). Peak memory: 563172KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+3_4_place_resized         .odb           59            549 1de6777dd0c4bde5f37d
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 3_5_place_dp detail_place
+Running detail_place.tcl, stage 3_5_place_dp
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_db /work/results/asap7/opentallas_ot_qkvd_llr_replay_leaf_asap7_ref_gate/base/3_4_place_resized.odb
+read_sdc /work/results/asap7/opentallas_ot_qkvd_llr_replay_leaf_asap7_ref_gate/base/2_floorplan.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+source /work/hooks/pre_detail_place_pre_dpl.tcl
+INHOLD released 411 FIRM hold cells / drivers for DPL
+OT_OFLOP released 137 output-port flops for DPL
+detailed_placement
+[INFO DPL-0006] Core area: 28385.51 um^2
+[INFO DPL-0007] Movable instances area: 5863.90 um^2
+[INFO DPL-0008] Fixed instances area within core: 91.15 um^2
+[INFO DPL-0009] Utilization: 21.0%
+[INFO DPL-0005] Diamond search max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+[INFO DPL-1102] Legalizing using negotiation legalizer.
+[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically 
+	Automatic search window extension enabled.
+	Search window extendable up to the max displacement cap of +/-500 sites, +/-100 rows near walls.
+[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.
+[INFO DPL-0392] Negotiation cell height distribution (1 unique row-count(s)):
+[INFO DPL-0393]   height 1 row(s): 42368 cells
+          |      Total |  Illegal |  Illegal
+Iteration | Violations |    Cells |    Sites
+---------------------------------------------
+        0 |        350 |        96 |       251
+        1 |         60 |        10 |        50
+        2 |          0 |         0 |         0
+Negotiation phase 1 converged at iteration 2.
+[INFO DPL-0500] Runtime: 0.87s
+Placement Analysis
+---------------------------------
+total displacement      11502.8 u
+average displacement        0.3 u
+max displacement            1.8 u
+original HPWL          223442.5 u
+legalized HPWL         233100.5 u
+delta HPWL                    4 %
+
+improve_placement -max_displacement "5 1"
+Detailed placement improvement.
+[INFO DPL-0401] Setting random seed to 1.
+[INFO DPL-0402] Setting maximum displacement 5 1 to 1350 270 units.
+[INFO DPL-0320] Collected 3414 fixed cells.
+[INFO DPL-0318] Collected 39242 single height cells.
+[INFO DPL-0321] Collected 0 wide cells.
+[INFO DPL-0322] Image (2160, 2160) - (170640, 170640)
+[INFO DPL-0310] Assigned 39242 cells into segments.  Movement in X-direction is 0.000000, movement in Y-direction is 0.000000.
+[INFO DPL-0313] Found 0 cells in wrong regions.
+[INFO DPL-0315] Found 0 row alignment problems.
+[INFO DPL-0314] Found 0 site alignment problems.
+[INFO DPL-0311] Found 0 overlaps between adjacent cells.
+[INFO DPL-0312] Found 0 edge spacing violations and 0 padding violations.
+[INFO DPL-0303] Running algorithm for independent set matching.
+[INFO DPL-0300] Set matching objective is wirelength.
+[INFO DPL-0301] Pass   1 of matching; objective is 2.327912e+08.
+[INFO DPL-0302] End of matching; objective is 2.327450e+08, improvement is 0.02 percent.
+[INFO DPL-0303] Running algorithm for global swaps.
+[INFO DPL-0306] Pass   1 of global swaps; hpwl is 2.306169e+08.
+[INFO DPL-0307] End of global swaps; objective is 2.306169e+08, improvement is 0.91 percent.
+[INFO DPL-0303] Running algorithm for vertical swaps.
+[INFO DPL-0308] Pass   1 of vertical swaps; hpwl is 2.298566e+08.
+[INFO DPL-0309] End of vertical swaps; objective is 2.298566e+08, improvement is 0.33 percent.
+[INFO DPL-0303] Running algorithm for reordering.
+[INFO DPL-0304] Pass   1 of reordering; objective is 2.297372e+08.
+[INFO DPL-0305] End of reordering; objective is 2.297372e+08, improvement is 0.05 percent.
+[INFO DPL-0303] Running algorithm for random improvement.
+[INFO DPL-0324] Random improver is using random generator.
+[INFO DPL-0325] Random improver is using hpwl objective.
+[INFO DPL-0326] Random improver cost string is (a).
+[INFO DPL-0332] End of pass, Generator random called 784840 times.
+[INFO DPL-0335] Generator random, Cumulative attempts 784840, swaps 61472, moves 284980 since last reset.
+[INFO DPL-0333] End of pass, Objective hpwl, Initial cost 2.294627e+08, Scratch cost 2.280505e+08, Incremental cost 2.280505e+08, Mismatch? N
+[INFO DPL-0338] End of pass, Total cost is 2.280505e+08.
+[INFO DPL-0327] Pass   1 of random improver; improvement in cost is 0.62 percent.
+[INFO DPL-0328] End of random improver; improvement is 0.615459 percent.
+[INFO DPL-0380] Cell flipping.
+[INFO DPL-0382] Changed 0 cell orientations for row compatibility.
+[INFO DPL-0383] Performed 10505 cell flips.
+[INFO DPL-0384] End of flipping; objective is 2.256108e+08, improvement is 1.19 percent.
+[INFO DPL-0313] Found 0 cells in wrong regions.
+[INFO DPL-0315] Found 0 row alignment problems.
+[INFO DPL-0314] Found 0 site alignment problems.
+[INFO DPL-0311] Found 0 overlaps between adjacent cells.
+[INFO DPL-0312] Found 0 edge spacing violations and 0 padding violations.
+Detailed Improvement Results
+------------------------------------------
+Original HPWL           233100.5 u (  110576.9,   122523.6)
+Final HPWL              225647.2 u (  108019.9,   117627.2)
+Delta HPWL                  -3.2 % (      -2.3,       -4.0)
+
+Took 12 seconds: improve_placement -max_displacement "5 1"
+optimize_mirroring
+[INFO DPL-0020] Mirrored 8695 instances
+[INFO DPL-0021] HPWL before          225647.2 u
+[INFO DPL-0022] HPWL after           225547.0 u
+[INFO DPL-0023] HPWL delta               -0.0 %
+[INFO FLW-0012] Placement violations .
+estimate_parasitics -placement
+Report metrics stage 3, detailed place...
+
+==========================================================================
+detailed place report_design_area
+--------------------------------------------------------------------------
+Design area 5955 um^2 21% utilization.
+write_db /work/results/asap7/opentallas_ot_qkvd_llr_replay_leaf_asap7_ref_gate/base/3_5_place_dp.odb
+write_sdc -no_timestamp /work/results/asap7/opentallas_ot_qkvd_llr_replay_leaf_asap7_ref_gate/base/3_place.sdc
+Elapsed time: 1:08.29[h:]min:sec. CPU time: user 81.82 sys 5.83 (128%). Peak memory: 774496KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+3_5_place_dp              .odb           68            756 7767f982bdf18bcfe6f7
+cp /work/results/asap7/opentallas_ot_qkvd_llr_replay_leaf_asap7_ref_gate/base/3_5_place_dp.odb /work/results/asap7/opentallas_ot_qkvd_llr_replay_leaf_asap7_ref_gate/base/3_place.odb
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 4_1_cts cts
+Running cts.tcl, stage 4_1_cts
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_db /work/results/asap7/opentallas_ot_qkvd_llr_replay_leaf_asap7_ref_gate/base/3_place.odb
+read_sdc /work/results/asap7/opentallas_ot_qkvd_llr_replay_leaf_asap7_ref_gate/base/3_place.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+source /work/hooks/pre_cts_pre_cts.tcl
+clock_tree_synthesis -sink_clustering_enable -repair_clock_nets -delay_buffer_derate 0.75
+OT_MACRO_CTS skipped: 0 clocked macro(s)
+[INFO CTS-0050] Root buffer is BUFx24_ASAP7_75t_R.
+[INFO CTS-0051] Sink buffer is BUFx24_ASAP7_75t_R.
+[INFO CTS-0052] The following clock buffers will be used for CTS:
+                    BUFx24_ASAP7_75t_R
+[INFO CTS-0049] Characterization buffer is BUFx24_ASAP7_75t_R.
+[INFO CTS-0007] Net "ck" found for clock "core_clk".
+[INFO CTS-0010]  Clock net "ck" has 9049 sinks.
+[INFO CTS-0008] TritonCTS found 1 clock nets.
+[INFO CTS-0097] Characterization used 1 buffer(s) types.
+[INFO CTS-0201] 0 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net ck.
+[INFO CTS-0028]  Total number of sinks: 9049.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 32 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0204] A clustering solution was found from clustering size of 32 and max clustering diameter of 21.
+[INFO CTS-0205] Better solution may be possible if either -sink_clustering_size, -sink_clustering_max_diameter, or both options are omitted to enable automatic clustering.
+[INFO CTS-0019]  Total number of sinks after clustering: 448.
+[INFO CTS-0024]  Normalized sink region: [(2.96074, 27.4545), (78.1012, 124.85)].
+[INFO CTS-0025]     Width:  75.1405.
+[INFO CTS-0026]     Height: 97.3954.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 224
+    Sub-region size: 75.1405 X 48.6977
+[INFO CTS-0034]     Segment length (rounded): 24.
+ Level 2
+    Direction: Horizontal
+    Sinks per sub-region: 112
+    Sub-region size: 37.5703 X 48.6977
+[INFO CTS-0034]     Segment length (rounded): 18.
+ Level 3
+    Direction: Vertical
+    Sinks per sub-region: 56
+    Sub-region size: 37.5703 X 24.3489
+[INFO CTS-0034]     Segment length (rounded): 12.
+ Level 4
+    Direction: Horizontal
+    Sinks per sub-region: 28
+    Sub-region size: 18.7851 X 24.3489
+[INFO CTS-0034]     Segment length (rounded): 10.
+ Level 5
+    Direction: Vertical
+    Sinks per sub-region: 14
+    Sub-region size: 18.7851 X 12.1744
+[INFO CTS-0034]     Segment length (rounded): 6.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (162.640 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 448.
+[INFO CTS-0018]     Created 493 clock buffers.
+[INFO CTS-0012]     Minimum number of buffers in the clock path: 5.
+[INFO CTS-0013]     Maximum number of buffers in the clock path: 5.
+[INFO CTS-0015]     Created 493 clock nets.
+[INFO CTS-0016]     Fanout distribution for the current clock = 7:1, 8:2, 9:1, 10:1, 11:3, 12:2, 13:6, 14:4, 15:6, 16:11, 17:8, 18:39, 19:71, 20:129, 21:112, 22:57, 23:23, 24:4..
+[INFO CTS-0017]     Max level of the clock tree: 5.
+[INFO CTS-0098] Clock net "ck"
+[INFO CTS-0099]  Sinks 9466
+[INFO CTS-0100]  Leaf buffers 448
+[INFO CTS-0101]  Average sink wire length 231.29 um
+[INFO CTS-0102]  Path depth 4 - 5
+[INFO CTS-0207]  Dummy loads inserted 417
+[INFO CTS-0500] Runtime: 6.46s
+QDM PINFLOP reference: 144 input pin flops, median arrival 213.175064 (range 210.960693 .. 215.227631)
+QDM reference pin dq[104]$_DFF_P_/CLK clock arrival max 213.175064 min 165.635391 skew 90 hold 50
+OT_IO_INTER 0 inputs 0 outputs at 150 ps
+QDM boundary referenced to the propagated tree
+Took 12 seconds: clock_tree_synthesis -sink_clustering_enable -repair_clock_nets -delay_buffer_derate 0.75
+estimate_parasitics -placement
+detailed_placement
+[INFO DPL-0006] Core area: 28385.51 um^2
+[INFO DPL-0007] Movable instances area: 6131.98 um^2
+[INFO DPL-0008] Fixed instances area within core: 91.15 um^2
+[INFO DPL-0009] Utilization: 21.9%
+[INFO DPL-0005] Diamond search max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+[INFO DPL-1102] Legalizing using negotiation legalizer.
+[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically 
+	Automatic search window extension enabled.
+	Search window extendable up to the max displacement cap of +/-500 sites, +/-100 rows near walls.
+[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.
+[INFO DPL-0392] Negotiation cell height distribution (1 unique row-count(s)):
+[INFO DPL-0393]   height 1 row(s): 43278 cells
+          |      Total |  Illegal |  Illegal
+Iteration | Violations |    Cells |    Sites
+---------------------------------------------
+        0 |          0 |         0 |         0
+Negotiation phase 1 converged at iteration 0.
+[INFO DPL-0500] Runtime: 0.61s
+Placement Analysis
+---------------------------------
+total displacement       9272.7 u
+average displacement        0.2 u
+max displacement            2.2 u
+original HPWL          232438.0 u
+legalized HPWL         235824.4 u
+delta HPWL                    1 %
+
+estimate_parasitics -placement
+repair_timing -setup_margin 0 -hold_margin 10 -repair_tns 100 -max_buffer_percent 100 -verbose -setup
+[INFO RSZ-0100] Repair move sequence: UnbufferMove SizeUpMove SwapPinsMove BufferMove CloneMove SplitLoadMove 
+[INFO RSZ-0094] Found 137 endpoints with setup violations.
+[INFO RSZ-0099] Repairing 137 out of 137 (100.00%) violating endpoints...
+   Iter   | Removed | Resized | Inserted | Cloned |  Pin  |   Area   |    WNS   |   StTNS    |   EnTNS    |  Viol  |  Worst  
+          | Buffers |  Gates  | Buffers  |  Gates | Swaps |          |          |            |            | Endpts | St/EnPt 
+------------------------------------------------------------------------------------------------------------------------------
+       0* |       0 |       0 |        0 |      0 |     0 |    +0.0% | -231.419 |    -1252.4 |   -19627.5 |    137 | dout\[107\]$_DFF_P_/D
+      10* |       0 |       9 |        0 |      0 |     0 |    +0.0% | -174.711 |    -1027.6 |   -17646.8 |    137 | dout\[19\]$_DFF_P_/D
+      20* |       0 |      19 |        0 |      0 |     0 |    +0.0% | -157.761 |     -917.7 |   -15437.8 |    137 | dout\[123\]$_DFF_P_/D
+      30* |       0 |      26 |        1 |      0 |     2 |    +0.0% | -148.316 |     -877.8 |   -14937.5 |    137 | dout\[38\]$_DFF_P_/D
+      40* |       0 |      35 |        1 |      0 |     3 |    +0.0% | -141.021 |     -836.1 |   -14698.1 |    137 | dout\[19\]$_DFF_P_/D
+      50* |       0 |      42 |        2 |      0 |     5 |    +0.0% | -135.279 |     -795.6 |   -14013.0 |    137 | dout\[19\]$_DFF_P_/D
+      60* |       0 |      48 |        5 |      0 |     7 |    +0.0% | -132.629 |     -780.5 |   -13928.0 |    137 | dout\[107\]$_DFF_P_/D
+      70* |       0 |      52 |       10 |      0 |     9 |    +0.0% | -128.506 |     -756.0 |   -13826.1 |    137 | dout\[115\]$_DFF_P_/D
+      80* |       1 |      56 |       12 |      0 |    12 |    +0.0% | -125.133 |     -740.3 |   -13612.1 |    137 | dout\[19\]$_DFF_P_/D
+      90* |       1 |      65 |       12 |      0 |    13 |    +0.1% | -122.577 |     -720.7 |   -13316.5 |    137 | dout\[19\]$_DFF_P_/D
+     100* |       1 |      73 |       13 |      0 |    14 |    +0.1% | -120.344 |     -710.5 |   -13259.3 |    137 | dout\[19\]$_DFF_P_/D
+     110* |       2 |      79 |       16 |      0 |    15 |    +0.1% | -118.546 |     -690.9 |   -13299.4 |    137 | dout\[38\]$_DFF_P_/D
+     120* |       2 |      88 |       16 |      0 |    16 |    +0.1% | -118.846 |     -690.1 |   -13453.2 |    137 | dout\[38\]$_DFF_P_/D
+     130* |       3 |      93 |       18 |      0 |    19 |    +0.1% | -115.201 |     -672.3 |   -12692.1 |    137 | dout\[38\]$_DFF_P_/D
+     140* |       3 |      99 |       20 |      0 |    21 |    +0.1% | -113.303 |     -665.4 |   -12598.9 |    137 | dout\[107\]$_DFF_P_/D
+     150* |       4 |     105 |       20 |      0 |    24 |    +0.1% | -111.099 |     -657.1 |   -12564.8 |    137 | dout\[95\]$_DFF_P_/D
+     160* |       4 |     113 |       20 |      0 |    26 |    +0.1% | -107.676 |     -644.2 |   -12477.2 |    137 | dout\[35\]$_DFF_P_/D
+     170* |       4 |     114 |       23 |      0 |    32 |    +0.1% | -108.488 |     -632.7 |   -12524.2 |    137 | dout\[35\]$_DFF_P_/D
+     180* |       4 |     119 |       27 |      0 |    35 |    +0.1% | -108.874 |     -629.3 |   -12481.4 |    137 | dout\[47\]$_DFF_P_/D
+     190* |       4 |     123 |       31 |      1 |    37 |    +0.1% | -105.936 |     -624.2 |   -12450.8 |    137 | dout\[30\]$_DFF_P_/D
+     200* |       4 |     128 |       34 |      1 |    40 |    +0.1% | -105.189 |     -616.2 |   -12385.4 |    137 | dout\[75\]$_DFF_P_/D
+     210* |       4 |     135 |       35 |      1 |    42 |    +0.1% | -103.687 |     -611.9 |   -12341.3 |    137 | dout\[107\]$_DFF_P_/D
+     220* |       4 |     143 |       37 |      1 |    42 |    +0.2% | -102.813 |     -608.3 |   -12272.9 |    137 | dout\[33\]$_DFF_P_/D
+     230* |       5 |     146 |       38 |      1 |    47 |    +0.1% | -101.983 |     -603.7 |   -12238.7 |    137 | dout\[95\]$_DFF_P_/D
+     240* |       6 |     153 |       38 |      2 |    48 |    +0.2% | -110.171 |     -613.8 |   -12314.5 |    137 | dout\[61\]$_DFF_P_/D
+     250* |       7 |     158 |       40 |      2 |    51 |    +0.2% | -104.634 |     -609.3 |   -12069.1 |    137 | dout\[15\]$_DFF_P_/D
+     260* |       8 |     164 |       42 |      2 |    52 |    +0.2% | -100.640 |     -597.7 |   -12043.7 |    137 | dout\[7\]$_DFF_P_/D
+     270* |      10 |     170 |       44 |      2 |    53 |    +0.2% | -100.271 |     -594.8 |   -11976.4 |    137 | dout\[33\]$_DFF_P_/D
+     280* |      12 |     173 |       44 |      3 |    57 |    +0.2% | -104.287 |     -601.1 |   -11980.1 |    137 | dout\[30\]$_DFF_P_/D
+     290* |      13 |     179 |       45 |      4 |    58 |    +0.2% |  -99.180 |     -588.8 |   -11915.5 |    137 | dout\[6\]$_DFF_P_/D
+     300* |      13 |     183 |       52 |      5 |    61 |    +0.2% |  -99.078 |     -586.9 |   -11869.2 |    137 | dout\[9\]$_DFF_P_/D
+     310* |      13 |     190 |       52 |      5 |    64 |    +0.2% |  -98.030 |     -582.9 |   -11824.7 |    137 | dout\[22\]$_DFF_P_/D
+     320* |      14 |     196 |       54 |      5 |    66 |    +0.2% |  -98.669 |     -584.0 |   -11766.7 |    137 | dout\[134\]$_DFF_P_/D
+     330* |      14 |     204 |       56 |      5 |    67 |    +0.2% |  -97.088 |     -580.3 |   -11758.5 |    137 | dout\[9\]$_DFF_P_/D
+     340* |      16 |     207 |       59 |      6 |    69 |    +0.2% |  -96.861 |     -578.6 |   -11802.6 |    137 | dout\[134\]$_DFF_P_/D
+     350* |      17 |     211 |       64 |      6 |    71 |    +0.2% |  -96.796 |     -576.5 |   -11796.7 |    137 | dout\[42\]$_DFF_P_/D
+     360* |      17 |     217 |       67 |      7 |    72 |    +0.2% |  -98.181 |     -577.4 |   -11777.6 |    137 | dout\[126\]$_DFF_P_/D
+     370* |      17 |     225 |       67 |      8 |    73 |    +0.3% |  -99.662 |     -580.2 |   -11775.9 |    137 | dout\[106\]$_DFF_P_/D
+     380* |      17 |     229 |       69 |      9 |    76 |    +0.3% |  -95.323 |     -569.5 |   -11712.4 |    137 | dout\[107\]$_DFF_P_/D
+     390* |      17 |     237 |       70 |      9 |    77 |    +0.3% |  -95.103 |     -567.5 |   -11702.5 |    137 | dout\[42\]$_DFF_P_/D
+     400* |      17 |     243 |       75 |      9 |    78 |    +0.3% |  -94.941 |     -566.1 |   -11559.8 |    137 | dout\[27\]$_DFF_P_/D
+     410* |      17 |     250 |       77 |      9 |    80 |    +0.3% |  -94.432 |     -562.2 |   -11529.6 |    137 | dout\[41\]$_DFF_P_/D
+     420* |      17 |     256 |       79 |      9 |    82 |    +0.3% |  -93.765 |     -559.9 |   -11486.6 |    137 | dout\[122\]$_DFF_P_/D
+     430* |      18 |     260 |       83 |      9 |    85 |    +0.3% |  -93.583 |     -557.7 |   -11419.7 |    137 | dout\[6\]$_DFF_P_/D
+     440* |      18 |     264 |       85 |     10 |    88 |    +0.3% |  -98.221 |     -556.4 |   -11511.1 |    137 | dout\[32\]$_DFF_P_/D
+     450* |      19 |     267 |       88 |     10 |    91 |    +0.3% |  -94.914 |     -553.8 |   -11491.1 |    137 | dout\[32\]$_DFF_P_/D
+     460* |      21 |     273 |       88 |     11 |    92 |    +0.3% |  -97.619 |     -555.3 |   -11614.0 |    137 | dout\[38\]$_DFF_P_/D
+     470* |      23 |     277 |       95 |     11 |    93 |    +0.3% |  -92.282 |     -548.3 |   -11399.7 |    137 | dout\[50\]$_DFF_P_/D
+     480* |      23 |     285 |       95 |     11 |    95 |    +0.3% |  -92.285 |     -548.6 |   -11352.9 |    137 | dout\[6\]$_DFF_P_/D
+     490* |      24 |     291 |       98 |     11 |    96 |    +0.4% |  -91.903 |     -546.4 |   -11358.4 |    137 | dout\[67\]$_DFF_P_/D
+     500* |      24 |     297 |      101 |     11 |    99 |    +0.4% |  -91.562 |     -544.8 |   -11341.7 |    137 | dout\[104\]$_DFF_P_/D
+     510* |      25 |     304 |      103 |     11 |   100 |    +0.4% |  -91.498 |     -544.4 |   -11301.2 |    137 | dout\[19\]$_DFF_P_/D
+     520* |      27 |     309 |      107 |     11 |   101 |    +0.4% |  -91.036 |     -542.6 |   -11256.4 |    137 | dout\[35\]$_DFF_P_/D
+     530* |      28 |     314 |      110 |     11 |   103 |    +0.4% |  -91.274 |     -540.7 |   -11211.5 |    137 | dout\[108\]$_DFF_P_/D
+     540* |      28 |     319 |      111 |     11 |   107 |    +0.4% |  -89.986 |     -536.9 |   -11167.5 |    137 | dout\[98\]$_DFF_P_/D
+     550* |      29 |     326 |      111 |     11 |   109 |    +0.4% |  -89.392 |     -534.0 |   -11092.5 |    137 | dout\[38\]$_DFF_P_/D
+     552* |      29 |     327 |      111 |     11 |   109 |    +0.4% |  -89.229 |     -533.5 |   -11089.2 |    137 | dout\[47\]$_DFF_P_/D
+     560* |      29 |     331 |      116 |     11 |   109 |    +0.4% |  -89.859 |     -534.1 |   -11088.7 |    137 | dout\[47\]$_DFF_P_/D
+     570* |      29 |     338 |      117 |     11 |   111 |    +0.4% |  -99.759 |     -542.4 |   -11406.9 |    137 | dout\[62\]$_DFF_P_/D
+     580* |      29 |     341 |      122 |     11 |   113 |    +0.4% | -111.471 |     -564.4 |   -11454.2 |    137 | dout\[38\]$_DFF_P_/D
+     590* |      29 |     345 |      128 |     11 |   115 |    +0.4% | -111.393 |     -569.7 |   -11627.1 |    137 | dout\[38\]$_DFF_P_/D
+     598* |      29 |     330 |      115 |     11 |   109 |    +0.4% |  -89.229 |     -533.5 |   -11086.7 |    137 | dout\[47\]$_DFF_P_/D
+     600* |      29 |     331 |      115 |     11 |   109 |    +0.4% |  -89.229 |     -533.5 |   -11080.2 |    137 | dout\[47\]$_DFF_P_/D
+     607* |      29 |     331 |      115 |     11 |   109 |    +0.4% |  -89.229 |     -533.5 |   -11080.2 |    137 | dout\[47\]$_DFF_P_/D
+     610* |      29 |     333 |      115 |     11 |   109 |    +0.4% |  -89.229 |     -533.5 |   -11078.5 |    137 | dout\[47\]$_DFF_P_/D
+     620* |      30 |     340 |      117 |     11 |   110 |    +0.4% |  -89.763 |     -534.0 |   -11045.0 |    137 | dout\[47\]$_DFF_P_/D
+     630* |      30 |     347 |      120 |     11 |   111 |    +0.4% |  -89.763 |     -534.0 |   -11048.5 |    137 | dout\[47\]$_DFF_P_/D
+     640* |      30 |     353 |      133 |     11 |   111 |    +0.4% |  -89.763 |     -534.0 |   -11034.7 |    137 | dout\[47\]$_DFF_P_/D
+     650* |      30 |     361 |      135 |     11 |   111 |    +0.5% |  -92.694 |     -540.7 |   -11078.1 |    137 | dout\[47\]$_DFF_P_/D
+     660* |      31 |     369 |      138 |     11 |   111 |    +0.5% |  -92.694 |     -541.1 |   -11049.8 |    137 | dout\[47\]$_DFF_P_/D
+     663* |      29 |     335 |      115 |     11 |   110 |    +0.4% |  -89.211 |     -533.4 |   -11074.4 |    137 | dout\[50\]$_DFF_P_/D
+     670* |      29 |     341 |      115 |     11 |   110 |    +0.4% |  -89.763 |     -533.9 |   -11061.9 |    137 | dout\[47\]$_DFF_P_/D
+     680* |      29 |     347 |      119 |     11 |   111 |    +0.4% |  -89.299 |     -533.5 |   -10987.3 |    137 | dout\[47\]$_DFF_P_/D
+     690* |      30 |     354 |      120 |     11 |   112 |    +0.4% |  -99.233 |     -539.7 |   -11291.1 |    137 | dout\[62\]$_DFF_P_/D
+     700* |      30 |     362 |      120 |     11 |   114 |    +0.4% |  -99.233 |     -545.6 |   -11315.3 |    137 | dout\[62\]$_DFF_P_/D
+     710* |      31 |     366 |      125 |     11 |   116 |    +0.4% |  -99.233 |     -544.3 |   -11304.1 |    137 | dout\[62\]$_DFF_P_/D
+     716* |      29 |     337 |      115 |     11 |   110 |    +0.4% |  -89.211 |     -533.4 |   -11073.2 |    137 | dout\[50\]$_DFF_P_/D
+     720* |      29 |     339 |      115 |     11 |   111 |    +0.4% |  -95.706 |     -555.1 |   -11078.2 |    137 | dout\[38\]$_DFF_P_/D
+     730* |      31 |     342 |      121 |     11 |   113 |    +0.4% |  -89.824 |     -534.0 |   -11051.7 |    137 | dout\[58\]$_DFF_P_/D
+     740* |      31 |     345 |      126 |     11 |   115 |    +0.4% |  -99.662 |     -544.9 |   -11541.8 |    137 | dout\[102\]$_DFF_P_/D
+     744* |      29 |     339 |      115 |     11 |   110 |    +0.4% |  -89.211 |     -533.4 |   -11070.4 |    137 | dout\[50\]$_DFF_P_/D
+     750* |      29 |     342 |      118 |     11 |   110 |    +0.4% |  -89.211 |     -533.4 |   -11067.9 |    137 | dout\[50\]$_DFF_P_/D
+     760* |      29 |     350 |      121 |     11 |   111 |    +0.4% |  -89.211 |     -533.3 |   -11037.1 |    137 | dout\[50\]$_DFF_P_/D
+     770* |      30 |     356 |      122 |     11 |   113 |    +0.4% |  -89.211 |     -533.3 |   -11035.2 |    137 | dout\[50\]$_DFF_P_/D
+     780* |      30 |     363 |      123 |     11 |   115 |    +0.4% |  -89.168 |     -533.2 |   -10993.7 |    137 | dout\[58\]$_DFF_P_/D
+     790* |      30 |     367 |      129 |     12 |   116 |    +0.5% |  -89.097 |     -532.9 |   -11001.9 |    137 | dout\[83\]$_DFF_P_/D
+     800* |      30 |     373 |      130 |     14 |   117 |    +0.5% |  -89.097 |     -532.9 |   -11039.0 |    137 | dout\[83\]$_DFF_P_/D
+     804* |      31 |     374 |      132 |     14 |   118 |    +0.5% |  -89.097 |     -532.9 |   -11021.2 |    137 | dout\[83\]$_DFF_P_/D
+     810* |      31 |     377 |      132 |     14 |   120 |    +0.5% |  -91.202 |     -536.3 |   -11018.8 |    137 | dout\[67\]$_DFF_P_/D
+     820* |      31 |     384 |      133 |     14 |   122 |    +0.5% |  -91.202 |     -537.6 |   -11031.5 |    137 | dout\[67\]$_DFF_P_/D
+     830* |      31 |     389 |      136 |     15 |   123 |    +0.5% |  -90.128 |     -535.5 |   -11062.5 |    137 | dout\[117\]$_DFF_P_/D
+     834* |      31 |     376 |      132 |     14 |   120 |    +0.5% |  -89.097 |     -532.9 |   -11015.7 |    137 | dout\[83\]$_DFF_P_/D
+     840* |      31 |     380 |      132 |     14 |   121 |    +0.5% |  -90.097 |     -534.2 |   -11007.5 |    137 | dout\[47\]$_DFF_P_/D
+     850* |      32 |     386 |      136 |     14 |   123 |    +0.5% |  -89.903 |     -535.4 |   -11030.8 |    137 | dout\[129\]$_DFF_P_/D
+     860* |      32 |     388 |      141 |     15 |   125 |    +0.5% | -106.801 |     -596.6 |   -12201.7 |    137 | dout\[115\]$_DFF_P_/D
+     870* |      32 |     394 |      144 |     15 |   126 |    +0.5% | -103.818 |     -586.9 |   -12054.9 |    137 | dout\[50\]$_DFF_P_/D
+     880* |      32 |     402 |      146 |     15 |   126 |    +0.5% | -103.818 |     -586.1 |   -12086.8 |    137 | dout\[50\]$_DFF_P_/D
+     886* |      31 |     376 |      132 |     14 |   121 |    +0.5% |  -89.097 |     -532.9 |   -11013.4 |    137 | dout\[83\]$_DFF_P_/D
+     890* |      31 |     378 |      132 |     14 |   122 |    +0.5% |  -90.200 |     -535.6 |   -11013.7 |    137 | dout\[83\]$_DFF_P_/D
+     891* |      31 |     376 |      132 |     14 |   121 |    +0.5% |  -89.097 |     -532.9 |   -11013.4 |    137 | dout\[83\]$_DFF_P_/D
+     900* |      31 |     383 |      132 |     14 |   122 |    +0.5% |  -90.319 |     -535.3 |   -11002.2 |    137 | dout\[83\]$_DFF_P_/D
+     910* |      31 |     391 |      132 |     14 |   124 |    +0.5% |  -90.957 |     -536.6 |   -10995.3 |    137 | dout\[83\]$_DFF_P_/D
+     920* |      32 |     397 |      133 |     14 |   126 |    +0.5% |  -90.387 |     -533.2 |   -11015.1 |    137 | dout\[47\]$_DFF_P_/D
+     930* |      32 |     404 |      134 |     14 |   128 |    +0.5% |  -90.941 |     -533.8 |   -10995.4 |    137 | dout\[47\]$_DFF_P_/D
+     940* |      32 |     411 |      135 |     15 |   129 |    +0.5% |  -94.194 |     -539.5 |   -11035.6 |    137 | dout\[108\]$_DFF_P_/D
+     948* |      31 |     381 |      132 |     14 |   122 |    +0.5% |  -89.097 |     -532.9 |   -11001.5 |    137 | dout\[83\]$_DFF_P_/D
+     950* |      31 |     382 |      132 |     14 |   122 |    +0.5% |  -89.097 |     -532.9 |   -10996.0 |    137 | dout\[83\]$_DFF_P_/D
+     960* |      31 |     388 |      132 |     14 |   126 |    +0.5% |  -90.378 |     -534.5 |   -10956.2 |    137 | dout\[47\]$_DFF_P_/D
+     970* |      31 |     398 |      132 |     14 |   126 |    +0.5% |  -92.539 |     -537.5 |   -10976.7 |    137 | dout\[47\]$_DFF_P_/D
+     976* |      31 |     383 |      132 |     14 |   122 |    +0.5% |  -89.097 |     -532.9 |   -10992.5 |    137 | dout\[83\]$_DFF_P_/D
+     980* |      32 |     385 |      132 |     14 |   122 |    +0.5% |  -89.097 |     -531.0 |   -10949.1 |    137 | dout\[83\]$_DFF_P_/D
+     990* |      32 |     390 |      133 |     15 |   125 |    +0.5% |  -90.387 |     -532.8 |   -11001.8 |    137 | dout\[47\]$_DFF_P_/D
+    1000* |      32 |     396 |      135 |     15 |   127 |    +0.5% |  -90.387 |     -533.9 |   -11004.1 |    137 | dout\[47\]$_DFF_P_/D
+    1008* |      32 |     385 |      133 |     14 |   122 |    +0.5% |  -88.779 |     -529.8 |   -10975.2 |    137 | dout\[47\]$_DFF_P_/D
+    1010* |      32 |     386 |      133 |     14 |   122 |    +0.5% |  -89.333 |     -530.4 |   -10957.2 |    137 | dout\[47\]$_DFF_P_/D
+    1020* |      32 |     394 |      133 |     14 |   124 |    +0.5% |  -90.941 |     -533.3 |   -10967.8 |    137 | dout\[47\]$_DFF_P_/D
+    1027* |      32 |     385 |      133 |     14 |   122 |    +0.5% |  -88.779 |     -529.8 |   -10975.2 |    137 | dout\[47\]$_DFF_P_/D
+    1030* |      32 |     385 |      133 |     14 |   124 |    +0.5% |  -89.982 |     -532.8 |   -10976.8 |    137 | dout\[115\]$_DFF_P_/D
+    1040* |      32 |     389 |      138 |     15 |   125 |    +0.5% | -115.436 |     -582.6 |   -11365.8 |    137 | dout\[98\]$_DFF_P_/D
+    1050* |      32 |     396 |      143 |     15 |   125 |    +0.5% | -106.082 |     -573.9 |   -11661.0 |    137 | dout\[98\]$_DFF_P_/D
+    1060* |      32 |     403 |      143 |     15 |   128 |    +0.5% | -109.963 |     -574.1 |   -11822.4 |    137 | dout\[98\]$_DFF_P_/D
+    1070* |      32 |     411 |      144 |     15 |   129 |    +0.5% | -109.963 |     -573.6 |   -11763.8 |    137 | dout\[98\]$_DFF_P_/D
+    1071* |      32 |     385 |      133 |     14 |   122 |    +0.5% |  -88.779 |     -529.8 |   -10975.2 |    137 | dout\[47\]$_DFF_P_/D
+    1080* |      32 |     385 |      138 |     15 |   124 |    +0.5% | -115.436 |     -584.3 |   -11505.6 |    137 | dout\[98\]$_DFF_P_/D
+    1084* |      32 |     385 |      133 |     14 |   123 |    +0.5% |  -88.779 |     -529.8 |   -10974.2 |    137 | dout\[47\]$_DFF_P_/D
+    1090* |      32 |     388 |      133 |     14 |   125 |    +0.5% |  -90.387 |     -532.8 |   -11001.3 |    137 | dout\[47\]$_DFF_P_/D
+    1100* |      32 |     394 |      138 |     14 |   127 |    +0.5% |  -90.387 |     -532.8 |   -10980.3 |    137 | dout\[47\]$_DFF_P_/D
+    1110* |      32 |     399 |      138 |     15 |   131 |    +0.5% |  -90.387 |     -533.9 |   -11001.5 |    137 | dout\[47\]$_DFF_P_/D
+    1110* |      32 |     386 |      133 |     14 |   124 |    +0.5% |  -88.779 |     -529.8 |   -10970.5 |    137 | dout\[47\]$_DFF_P_/D
+    1120* |      32 |     395 |      133 |     14 |   124 |    +0.5% |  -88.779 |     -529.0 |   -10959.4 |    137 | dout\[47\]$_DFF_P_/D
+    1130* |      33 |     401 |      138 |     14 |   125 |    +0.5% |  -90.378 |     -528.3 |   -10892.3 |    137 | dout\[47\]$_DFF_P_/D
+    1140* |      33 |     408 |      139 |     14 |   127 |    +0.5% |  -90.378 |     -528.3 |   -10899.6 |    137 | dout\[47\]$_DFF_P_/D
+    1150* |      34 |     416 |      139 |     14 |   128 |    +0.5% |  -90.378 |     -527.9 |   -10900.9 |    137 | dout\[47\]$_DFF_P_/D
+    1160* |      34 |     420 |      144 |     15 |   128 |    +0.5% | -105.263 |     -590.5 |   -12227.8 |    137 | dout\[50\]$_DFF_P_/D
+    1170* |      34 |     429 |      145 |     15 |   128 |    +0.5% | -107.750 |     -590.6 |   -12039.8 |    137 | dout\[95\]$_DFF_P_/D
+    1171* |      32 |     396 |      133 |     14 |   124 |    +0.5% |  -88.779 |     -529.0 |   -10959.3 |    137 | dout\[47\]$_DFF_P_/D
+    1180* |      33 |     400 |      134 |     14 |   126 |    +0.5% |  -88.779 |     -529.0 |   -10944.8 |    137 | dout\[47\]$_DFF_P_/D
+    1190* |      33 |     409 |      137 |     14 |   126 |    +0.5% |  -90.932 |     -528.9 |   -10881.9 |    137 | dout\[47\]$_DFF_P_/D
+    1200* |      33 |     411 |      143 |     16 |   126 |    +0.5% | -116.174 |     -580.4 |   -11503.5 |    137 | dout\[98\]$_DFF_P_/D
+    1200* |      33 |     404 |      137 |     14 |   126 |    +0.5% |  -88.779 |     -529.0 |   -10935.1 |    137 | dout\[47\]$_DFF_P_/D
+    1210* |      33 |     408 |      139 |     15 |   128 |    +0.5% |  -90.441 |     -530.8 |   -10959.7 |    137 | dout\[38\]$_DFF_P_/D
+    1219* |      33 |     406 |      138 |     14 |   127 |    +0.5% |  -88.774 |     -524.9 |   -10937.5 |    137 | dout\[47\]$_DFF_P_/D
+    1220* |      33 |     406 |      138 |     14 |   127 |    +0.5% |  -88.774 |     -524.9 |   -10937.5 |    137 | dout\[47\]$_DFF_P_/D
+    1230* |      33 |     410 |      140 |     14 |   131 |    +0.5% |  -88.742 |     -524.9 |   -10931.2 |    137 | dout\[19\]$_DFF_P_/D
+    1235* |      33 |     412 |      141 |     15 |   131 |    +0.5% |  -88.742 |     -524.9 |   -10932.0 |    137 | dout\[19\]$_DFF_P_/D
+    1236* |      33 |     412 |      141 |     15 |   131 |    +0.5% |  -88.742 |     -524.9 |   -10932.0 |    137 | dout\[19\]$_DFF_P_/D
+    1240* |      33 |     414 |      141 |     15 |   132 |    +0.5% |  -88.742 |     -524.9 |   -10933.7 |    137 | dout\[19\]$_DFF_P_/D
+    1250* |      33 |     417 |      144 |     17 |   134 |    +0.5% | -105.723 |     -574.9 |   -12177.7 |    137 | dout\[38\]$_DFF_P_/D
+    1260* |      33 |     424 |      145 |     18 |   135 |    +0.5% | -104.474 |     -564.3 |   -11853.9 |    137 | dout\[67\]$_DFF_P_/D
+    1270* |      33 |     430 |      148 |     18 |   136 |    +0.5% |  -98.411 |     -543.1 |   -11475.5 |    137 | dout\[108\]$_DFF_P_/D
+    1280* |      33 |     438 |      150 |     18 |   136 |    +0.6% | -102.012 |     -549.3 |   -11596.6 |    137 | dout\[108\]$_DFF_P_/D
+    1290* |      33 |     445 |      153 |     18 |   138 |    +0.6% | -103.958 |     -551.2 |   -11583.7 |    137 | dout\[108\]$_DFF_P_/D
+    1292* |      33 |     416 |      142 |     15 |   134 |    +0.5% |  -88.742 |     -524.9 |   -10926.5 |    137 | dout\[19\]$_DFF_P_/D
+    1300* |      33 |     419 |      146 |     15 |   136 |    +0.5% |  -90.312 |     -527.7 |   -10877.3 |    137 | dout\[47\]$_DFF_P_/D
+    1310* |      33 |     423 |      152 |     16 |   136 |    +0.5% | -106.082 |     -572.2 |   -11586.9 |    137 | dout\[98\]$_DFF_P_/D
+    1320* |      33 |     430 |      153 |     16 |   138 |    +0.5% | -109.963 |     -574.8 |   -11711.1 |    137 | dout\[98\]$_DFF_P_/D
+    1330* |      34 |     436 |      155 |     16 |   140 |    +0.6% | -109.963 |     -574.1 |   -11718.2 |    137 | dout\[98\]$_DFF_P_/D
+    1340* |      35 |     443 |      159 |     16 |   140 |    +0.6% | -109.963 |     -573.7 |   -11688.4 |    137 | dout\[98\]$_DFF_P_/D
+    1348* |      33 |     417 |      146 |     15 |   136 |    +0.5% |  -88.742 |     -524.9 |   -10908.8 |    137 | dout\[19\]$_DFF_P_/D
+    1350* |      33 |     417 |      146 |     15 |   137 |    +0.5% |  -88.742 |     -524.9 |   -10907.8 |    137 | dout\[19\]$_DFF_P_/D
+    1360* |      33 |     419 |      153 |     16 |   138 |    +0.5% | -104.370 |     -568.7 |   -11944.7 |    137 | dout\[35\]$_DFF_P_/D
+    1370* |      33 |     425 |      156 |     16 |   139 |    +0.5% | -109.963 |     -574.3 |   -11697.1 |    137 | dout\[98\]$_DFF_P_/D
+    1374* |      33 |     417 |      146 |     15 |   137 |    +0.5% |  -88.742 |     -524.9 |   -10907.8 |    137 | dout\[19\]$_DFF_P_/D
+    1380* |      34 |     420 |      146 |     15 |   138 |    +0.5% |  -89.903 |     -529.1 |   -10941.3 |    137 | dout\[129\]$_DFF_P_/D
+    1390* |      34 |     422 |      152 |     16 |   140 |    +0.5% | -115.436 |     -581.0 |   -11413.6 |    137 | dout\[98\]$_DFF_P_/D
+    1400* |      34 |     429 |      152 |     17 |   142 |    +0.5% | -115.436 |     -581.3 |   -11413.4 |    137 | dout\[98\]$_DFF_P_/D
+    1400* |      33 |     417 |      146 |     15 |   138 |    +0.5% |  -88.742 |     -524.9 |   -10905.9 |    137 | dout\[19\]$_DFF_P_/D
+    1410* |      33 |     418 |      153 |     16 |   140 |    +0.5% | -115.436 |     -581.9 |   -11414.0 |    137 | dout\[98\]$_DFF_P_/D
+    1420* |      33 |     423 |      157 |     16 |   141 |    +0.5% | -105.406 |     -570.6 |   -11761.9 |    137 | dout\[98\]$_DFF_P_/D
+    1430* |      33 |     431 |      158 |     16 |   142 |    +0.6% | -109.963 |     -574.3 |   -11685.0 |    137 | dout\[98\]$_DFF_P_/D
+    1431* |      33 |     417 |      148 |     15 |   140 |    +0.5% |  -88.742 |     -524.9 |   -10900.1 |    137 | dout\[19\]$_DFF_P_/D
+    1440* |      33 |     422 |      151 |     15 |   142 |    +0.5% |  -89.296 |     -525.4 |   -10885.8 |    137 | dout\[19\]$_DFF_P_/D
+    1450* |      34 |     426 |      155 |     15 |   143 |    +0.5% |  -95.707 |     -533.7 |   -11252.1 |    137 | dout\[131\]$_DFF_P_/D
+    1452* |      33 |     417 |      148 |     15 |   141 |    +0.5% |  -88.742 |     -524.9 |   -10897.9 |    137 | dout\[19\]$_DFF_P_/D
+    1460* |      33 |     420 |      149 |     15 |   144 |    +0.5% |  -90.248 |     -527.6 |   -10854.0 |    137 | dout\[47\]$_DFF_P_/D
+    1470* |      33 |     426 |      153 |     15 |   146 |    +0.5% |  -93.181 |     -533.5 |   -10878.2 |    137 | dout\[47\]$_DFF_P_/D
+    1480* |      33 |     433 |      157 |     15 |   146 |    +0.6% |  -93.181 |     -533.5 |   -10895.4 |    137 | dout\[47\]$_DFF_P_/D
+    1490* |      33 |     437 |      162 |     15 |   150 |    +0.6% |  -93.181 |     -533.5 |   -10895.2 |    137 | dout\[47\]$_DFF_P_/D
+    1496* |      33 |     418 |      148 |     15 |   143 |    +0.5% |  -88.680 |     -524.8 |   -10895.4 |    137 | dout\[19\]$_DFF_P_/D
+    1500* |      33 |     419 |      149 |     15 |   144 |    +0.5% |  -88.680 |     -524.8 |   -10899.5 |    137 | dout\[19\]$_DFF_P_/D
+    1510* |      33 |     424 |      153 |     16 |   145 |    +0.5% |  -88.680 |     -524.8 |   -10894.1 |    137 | dout\[19\]$_DFF_P_/D
+    1520* |      33 |     430 |      155 |     17 |   146 |    +0.6% |  -90.261 |     -529.3 |   -10891.0 |    137 | dout\[47\]$_DFF_P_/D
+    1530* |      33 |     435 |      159 |     18 |   148 |    +0.6% |  -92.513 |     -536.8 |   -10882.3 |    137 | dout\[38\]$_DFF_P_/D
+    1539* |      33 |     425 |      153 |     16 |   145 |    +0.5% |  -88.680 |     -524.8 |   -10883.5 |    137 | dout\[19\]$_DFF_P_/D
+    1540* |      33 |     425 |      153 |     16 |   145 |    +0.5% |  -88.680 |     -524.8 |   -10883.5 |    137 | dout\[19\]$_DFF_P_/D
+    1550* |      33 |     429 |      156 |     17 |   147 |    +0.6% | -107.093 |     -571.6 |   -11968.1 |    137 | dout\[38\]$_DFF_P_/D
+    1560* |      33 |     434 |      161 |     17 |   147 |    +0.6% | -100.096 |     -540.6 |   -11454.6 |    137 | dout\[86\]$_DFF_P_/D
+    1570* |      34 |     443 |      161 |     17 |   147 |    +0.6% |  -97.449 |     -539.8 |   -11440.5 |    137 | dout\[52\]$_DFF_P_/D
+    1577* |      33 |     426 |      153 |     16 |   146 |    +0.5% |  -88.680 |     -524.8 |   -10883.4 |    137 | dout\[19\]$_DFF_P_/D
+    1580* |      33 |     426 |      154 |     16 |   147 |    +0.5% |  -88.680 |     -524.8 |   -10880.4 |    137 | dout\[19\]$_DFF_P_/D
+    1590* |      33 |     434 |      155 |     16 |   148 |    +0.6% |  -90.261 |     -527.6 |   -10905.7 |    137 | dout\[47\]$_DFF_P_/D
+    1600* |      33 |     439 |      157 |     17 |   150 |    +0.6% |  -90.441 |     -533.0 |   -10908.3 |    137 | dout\[38\]$_DFF_P_/D
+    1600* |      33 |     428 |      154 |     16 |   147 |    +0.5% |  -88.680 |     -524.8 |   -10882.1 |    137 | dout\[19\]$_DFF_P_/D
+    1610* |      33 |     436 |      154 |     16 |   148 |    +0.6% |  -88.680 |     -524.8 |   -10872.7 |    137 | dout\[19\]$_DFF_P_/D
+    1620* |      34 |     442 |      155 |     16 |   150 |    +0.6% |  -89.234 |     -524.1 |   -10855.1 |    137 | dout\[19\]$_DFF_P_/D
+    1630* |      34 |     448 |      159 |     16 |   151 |    +0.6% |  -89.234 |     -524.1 |   -10847.4 |    137 | dout\[19\]$_DFF_P_/D
+    1640* |      34 |     455 |      162 |     16 |   152 |    +0.6% |  -89.234 |     -524.1 |   -10846.3 |    137 | dout\[19\]$_DFF_P_/D
+    1649* |      34 |     441 |      154 |     16 |   149 |    +0.6% |  -88.680 |     -524.8 |   -10875.4 |    137 | dout\[19\]$_DFF_P_/D
+    1650* |      34 |     441 |      154 |     16 |   149 |    +0.6% |  -88.680 |     -524.8 |   -10875.4 |    137 | dout\[19\]$_DFF_P_/D
+    1660* |      34 |     444 |      160 |     17 |   149 |    +0.6% | -115.436 |     -578.1 |   -11359.6 |    137 | dout\[98\]$_DFF_P_/D
+    1670* |      35 |     449 |      162 |     17 |   151 |    +0.6% | -109.963 |     -572.1 |   -11707.6 |    137 | dout\[98\]$_DFF_P_/D
+    1676* |      34 |     441 |      154 |     16 |   149 |    +0.6% |  -88.680 |     -524.8 |   -10875.4 |    137 | dout\[19\]$_DFF_P_/D
+    1680* |      34 |     442 |      154 |     16 |   151 |    +0.6% |  -88.680 |     -524.8 |   -10860.1 |    137 | dout\[19\]$_DFF_P_/D
+    1690* |      35 |     446 |      157 |     17 |   153 |    +0.6% | -115.436 |     -598.1 |   -11418.6 |    137 | dout\[98\]$_DFF_P_/D
+    1700* |      35 |     449 |      166 |     17 |   153 |    +0.6% | -115.436 |     -578.1 |   -11355.2 |    137 | dout\[98\]$_DFF_P_/D
+    1700* |      34 |     445 |      157 |     16 |   152 |    +0.6% |  -88.680 |     -524.8 |   -10856.4 |    137 | dout\[19\]$_DFF_P_/D
+    1700* |      34 |     445 |      157 |     16 |   152 |    +0.6% |  -88.680 |     -524.8 |   -10856.4 |    137 | dout\[19\]$_DFF_P_/D
+    1700+ |      34 |     445 |      157 |     16 |   152 |    +0.6% |  -88.680 |     -524.8 |   -10856.4 |    137 | dout\[19\]$_DFF_P_/D
+    1701+ |      34 |     445 |      157 |     16 |   152 |    +0.6% |  -88.680 |     -524.8 |   -10856.4 |    137 | dout\[19\]$_DFF_P_/D
+    1702+ |      34 |     445 |      157 |     16 |   152 |    +0.6% |  -88.680 |     -524.8 |   -10856.4 |    137 | dout\[19\]$_DFF_P_/D
+    1705+ |      34 |     446 |      157 |     16 |   153 |    +0.6% |  -88.680 |     -524.8 |   -10850.9 |    137 | dout\[19\]$_DFF_P_/D
+    1707+ |      34 |     447 |      157 |     16 |   153 |    +0.6% |  -88.680 |     -524.7 |   -10848.0 |    137 | dout\[19\]$_DFF_P_/D
+    1708+ |      34 |     447 |      157 |     16 |   153 |    +0.6% |  -88.680 |     -524.7 |   -10848.0 |    137 | dout\[19\]$_DFF_P_/D
+    1710+ |      34 |     448 |      157 |     16 |   153 |    +0.6% |  -88.680 |     -524.3 |   -10839.9 |    137 | dout\[19\]$_DFF_P_/D
+    1716+ |      34 |     449 |      157 |     16 |   158 |    +0.6% |  -88.680 |     -524.3 |   -10830.2 |    137 | dout\[19\]$_DFF_P_/D
+    1717+ |      34 |     449 |      157 |     16 |   158 |    +0.6% |  -88.680 |     -524.3 |   -10830.2 |    137 | dout\[19\]$_DFF_P_/D
+    1718+ |      34 |     449 |      157 |     16 |   158 |    +0.6% |  -88.680 |     -524.3 |   -10830.2 |    137 | dout\[19\]$_DFF_P_/D
+    1719+ |      34 |     449 |      157 |     16 |   158 |    +0.6% |  -88.680 |     -524.3 |   -10830.2 |    137 | dout\[19\]$_DFF_P_/D
+    1720+ |      34 |     449 |      157 |     16 |   158 |    +0.6% |  -88.680 |     -524.3 |   -10830.2 |    137 | dout\[19\]$_DFF_P_/D
+    1720+ |      34 |     449 |      157 |     16 |   158 |    +0.6% |  -88.680 |     -524.3 |   -10830.2 |    137 | dout\[19\]$_DFF_P_/D
+    1730+ |      34 |     455 |      157 |     16 |   161 |    +0.6% |  -88.680 |     -524.3 |   -10810.5 |    137 | dout\[19\]$_DFF_P_/D
+    1730+ |      34 |     455 |      157 |     16 |   161 |    +0.6% |  -88.680 |     -524.3 |   -10810.5 |    137 | dout\[19\]$_DFF_P_/D
+    1731+ |      34 |     455 |      157 |     16 |   161 |    +0.6% |  -88.680 |     -524.3 |   -10810.5 |    137 | dout\[19\]$_DFF_P_/D
+    1740+ |      34 |     459 |      157 |     16 |   165 |    +0.6% |  -88.680 |     -524.3 |   -10802.4 |    137 | dout\[19\]$_DFF_P_/D
+    1740+ |      34 |     459 |      157 |     16 |   165 |    +0.6% |  -88.680 |     -524.3 |   -10802.4 |    137 | dout\[19\]$_DFF_P_/D
+    1743+ |      34 |     460 |      157 |     16 |   166 |    +0.6% |  -88.680 |     -524.3 |   -10797.6 |    137 | dout\[19\]$_DFF_P_/D
+    1748+ |      34 |     462 |      157 |     16 |   168 |    +0.6% |  -88.680 |     -524.3 |   -10771.3 |    137 | dout\[19\]$_DFF_P_/D
+    1749+ |      34 |     462 |      157 |     16 |   168 |    +0.6% |  -88.680 |     -524.3 |   -10771.3 |    137 | dout\[19\]$_DFF_P_/D
+    1750+ |      34 |     462 |      157 |     16 |   168 |    +0.6% |  -88.680 |     -524.3 |   -10771.3 |    137 | dout\[19\]$_DFF_P_/D
+    1751+ |      34 |     462 |      157 |     16 |   169 |    +0.6% |  -88.680 |     -524.3 |   -10770.7 |    137 | dout\[19\]$_DFF_P_/D
+    1755+ |      34 |     465 |      157 |     16 |   169 |    +0.6% |  -88.680 |     -524.3 |   -10757.3 |    137 | dout\[19\]$_DFF_P_/D
+    1756+ |      34 |     465 |      157 |     16 |   169 |    +0.6% |  -88.680 |     -524.3 |   -10757.3 |    137 | dout\[19\]$_DFF_P_/D
+    1760+ |      34 |     466 |      157 |     16 |   171 |    +0.6% |  -88.680 |     -524.3 |   -10754.0 |    137 | dout\[19\]$_DFF_P_/D
+    1760+ |      34 |     466 |      157 |     16 |   171 |    +0.6% |  -88.680 |     -524.3 |   -10754.0 |    137 | dout\[19\]$_DFF_P_/D
+    1761+ |      34 |     466 |      157 |     16 |   171 |    +0.6% |  -88.680 |     -524.3 |   -10754.0 |    137 | dout\[19\]$_DFF_P_/D
+    1765+ |      34 |     468 |      157 |     16 |   172 |    +0.6% |  -88.680 |     -524.3 |   -10742.5 |    137 | dout\[19\]$_DFF_P_/D
+    1768+ |      34 |     470 |      157 |     16 |   172 |    +0.6% |  -88.680 |     -524.3 |   -10740.1 |    137 | dout\[19\]$_DFF_P_/D
+    1770+ |      34 |     470 |      157 |     16 |   173 |    +0.6% |  -88.680 |     -524.3 |   -10740.1 |    137 | dout\[19\]$_DFF_P_/D
+    1772+ |      34 |     472 |      157 |     16 |   173 |    +0.6% |  -88.680 |     -524.3 |   -10732.6 |    137 | dout\[19\]$_DFF_P_/D
+    1773+ |      34 |     472 |      157 |     16 |   173 |    +0.6% |  -88.680 |     -524.3 |   -10732.6 |    137 | dout\[19\]$_DFF_P_/D
+    1774+ |      34 |     472 |      157 |     16 |   173 |    +0.6% |  -88.680 |     -524.3 |   -10732.6 |    137 | dout\[19\]$_DFF_P_/D
+    1780+ |      34 |     475 |      157 |     16 |   175 |    +0.6% |  -88.680 |     -524.3 |   -10719.8 |    137 | dout\[19\]$_DFF_P_/D
+    1780+ |      34 |     475 |      157 |     16 |   175 |    +0.6% |  -88.680 |     -524.3 |   -10719.8 |    137 | dout\[19\]$_DFF_P_/D
+    1781+ |      34 |     475 |      157 |     16 |   175 |    +0.6% |  -88.680 |     -524.3 |   -10719.8 |    137 | dout\[19\]$_DFF_P_/D
+    1782+ |      34 |     475 |      157 |     16 |   175 |    +0.6% |  -88.680 |     -524.3 |   -10719.8 |    137 | dout\[19\]$_DFF_P_/D
+    1783+ |      34 |     475 |      157 |     16 |   175 |    +0.6% |  -88.680 |     -524.3 |   -10719.8 |    137 | dout\[19\]$_DFF_P_/D
+    1788+ |      34 |     478 |      157 |     16 |   176 |    +0.6% |  -88.680 |     -524.3 |   -10716.6 |    137 | dout\[19\]$_DFF_P_/D
+    1790+ |      34 |     479 |      157 |     16 |   176 |    +0.6% |  -88.680 |     -524.3 |   -10715.2 |    137 | dout\[19\]$_DFF_P_/D
+    1793+ |      34 |     481 |      157 |     16 |   177 |    +0.6% |  -88.680 |     -524.3 |   -10706.1 |    137 | dout\[19\]$_DFF_P_/D
+    1800+ |      34 |     485 |      157 |     16 |   179 |    +0.6% |  -88.680 |     -524.3 |   -10687.7 |    137 | dout\[19\]$_DFF_P_/D
+    1802+ |      34 |     486 |      157 |     16 |   179 |    +0.6% |  -88.680 |     -524.3 |   -10682.8 |    137 | dout\[19\]$_DFF_P_/D
+    1806+ |      34 |     487 |      157 |     16 |   181 |    +0.6% |  -88.680 |     -524.3 |   -10665.2 |    137 | dout\[19\]$_DFF_P_/D
+    1808+ |      34 |     488 |      157 |     16 |   181 |    +0.6% |  -88.680 |     -524.3 |   -10658.0 |    137 | dout\[19\]$_DFF_P_/D
+    1809+ |      34 |     488 |      157 |     16 |   181 |    +0.6% |  -88.680 |     -524.3 |   -10658.0 |    137 | dout\[19\]$_DFF_P_/D
+    1810+ |      34 |     488 |      157 |     16 |   181 |    +0.6% |  -88.680 |     -524.3 |   -10658.0 |    137 | dout\[19\]$_DFF_P_/D
+    1815+ |      34 |     491 |      157 |     16 |   183 |    +0.6% |  -88.680 |     -524.3 |   -10645.0 |    137 | dout\[19\]$_DFF_P_/D
+    1820+ |      34 |     493 |      157 |     16 |   185 |    +0.6% |  -88.680 |     -524.3 |   -10619.0 |    137 | dout\[19\]$_DFF_P_/D
+    1820+ |      34 |     493 |      157 |     16 |   185 |    +0.6% |  -88.680 |     -524.3 |   -10619.0 |    137 | dout\[19\]$_DFF_P_/D
+    1821+ |      34 |     493 |      157 |     16 |   185 |    +0.6% |  -88.680 |     -524.3 |   -10619.0 |    137 | dout\[19\]$_DFF_P_/D
+    1824+ |      34 |     494 |      157 |     16 |   186 |    +0.6% |  -88.680 |     -524.3 |   -10617.3 |    137 | dout\[19\]$_DFF_P_/D
+    1825+ |      34 |     494 |      157 |     16 |   186 |    +0.6% |  -88.680 |     -524.3 |   -10617.3 |    137 | dout\[19\]$_DFF_P_/D
+    1826+ |      34 |     494 |      157 |     16 |   186 |    +0.6% |  -88.680 |     -524.3 |   -10617.3 |    137 | dout\[19\]$_DFF_P_/D
+    1829+ |      34 |     496 |      157 |     16 |   186 |    +0.6% |  -88.680 |     -524.3 |   -10599.0 |    137 | dout\[19\]$_DFF_P_/D
+    1830+ |      34 |     496 |      157 |     16 |   186 |    +0.6% |  -88.680 |     -524.3 |   -10599.0 |    137 | dout\[19\]$_DFF_P_/D
+    1832+ |      34 |     497 |      157 |     16 |   187 |    +0.6% |  -88.680 |     -524.3 |   -10595.8 |    137 | dout\[19\]$_DFF_P_/D
+    1833+ |      34 |     497 |      157 |     16 |   187 |    +0.6% |  -88.680 |     -524.3 |   -10595.8 |    137 | dout\[19\]$_DFF_P_/D
+    1835+ |      34 |     497 |      157 |     16 |   188 |    +0.6% |  -88.680 |     -524.3 |   -10594.2 |    137 | dout\[19\]$_DFF_P_/D
+    1840+ |      34 |     499 |      157 |     16 |   190 |    +0.6% |  -88.680 |     -524.3 |   -10591.1 |    137 | dout\[19\]$_DFF_P_/D
+    1840+ |      34 |     499 |      157 |     16 |   190 |    +0.6% |  -88.680 |     -524.3 |   -10591.1 |    137 | dout\[19\]$_DFF_P_/D
+    1845+ |      34 |     503 |      157 |     16 |   190 |    +0.6% |  -88.680 |     -524.3 |   -10587.8 |    137 | dout\[19\]$_DFF_P_/D
+    1846+ |      34 |     503 |      157 |     16 |   190 |    +0.6% |  -88.680 |     -524.3 |   -10587.8 |    137 | dout\[19\]$_DFF_P_/D
+    1849+ |      34 |     504 |      157 |     16 |   191 |    +0.6% |  -88.680 |     -524.3 |   -10577.8 |    137 | dout\[19\]$_DFF_P_/D
+    1850+ |      34 |     504 |      157 |     16 |   191 |    +0.6% |  -88.680 |     -524.3 |   -10577.8 |    137 | dout\[19\]$_DFF_P_/D
+    1852+ |      34 |     505 |      157 |     16 |   192 |    +0.6% |  -88.680 |     -524.3 |   -10570.7 |    137 | dout\[19\]$_DFF_P_/D
+    1853+ |      34 |     505 |      157 |     16 |   192 |    +0.6% |  -88.680 |     -524.3 |   -10570.7 |    137 | dout\[19\]$_DFF_P_/D
+    1859+ |      34 |     510 |      157 |     16 |   192 |    +0.6% |  -88.680 |     -524.3 |   -10547.1 |    137 | dout\[19\]$_DFF_P_/D
+    1860+ |      34 |     510 |      157 |     16 |   192 |    +0.6% |  -88.680 |     -524.3 |   -10547.1 |    137 | dout\[19\]$_DFF_P_/D
+    1866+ |      34 |     514 |      157 |     16 |   194 |    +0.6% |  -88.680 |     -524.3 |   -10531.9 |    137 | dout\[19\]$_DFF_P_/D
+    1870+ |      34 |     516 |      157 |     16 |   195 |    +0.6% |  -88.680 |     -524.3 |   -10528.2 |    137 | dout\[19\]$_DFF_P_/D
+    1875+ |      34 |     519 |      157 |     16 |   197 |    +0.6% |  -88.680 |     -524.3 |   -10524.0 |    137 | dout\[19\]$_DFF_P_/D
+    1876+ |      34 |     519 |      157 |     16 |   197 |    +0.6% |  -88.680 |     -524.3 |   -10524.0 |    137 | dout\[19\]$_DFF_P_/D
+    1880+ |      34 |     522 |      157 |     16 |   197 |    +0.6% |  -88.680 |     -524.3 |   -10506.8 |    137 | dout\[19\]$_DFF_P_/D
+    1881+ |      34 |     523 |      157 |     16 |   197 |    +0.6% |  -88.680 |     -524.3 |   -10504.2 |    137 | dout\[19\]$_DFF_P_/D
+    1884+ |      34 |     525 |      157 |     16 |   197 |    +0.6% |  -88.680 |     -524.3 |   -10494.8 |    137 | dout\[19\]$_DFF_P_/D
+    1887+ |      34 |     526 |      157 |     16 |   198 |    +0.6% |  -88.680 |     -524.3 |   -10490.2 |    137 | dout\[19\]$_DFF_P_/D
+    1889+ |      34 |     527 |      157 |     16 |   198 |    +0.6% |  -88.680 |     -524.3 |   -10477.9 |    137 | dout\[19\]$_DFF_P_/D
+    1890+ |      34 |     527 |      157 |     16 |   198 |    +0.6% |  -88.680 |     -524.3 |   -10477.9 |    137 | dout\[19\]$_DFF_P_/D
+    1891+ |      34 |     528 |      157 |     16 |   198 |    +0.6% |  -88.680 |     -524.3 |   -10476.5 |    137 | dout\[19\]$_DFF_P_/D
+    1893+ |      34 |     528 |      157 |     16 |   199 |    +0.6% |  -88.680 |     -524.3 |   -10474.5 |    137 | dout\[19\]$_DFF_P_/D
+    1895+ |      34 |     528 |      157 |     16 |   200 |    +0.6% |  -88.680 |     -524.3 |   -10474.2 |    137 | dout\[19\]$_DFF_P_/D
+    1896+ |      34 |     528 |      157 |     16 |   200 |    +0.6% |  -88.680 |     -524.3 |   -10474.2 |    137 | dout\[19\]$_DFF_P_/D
+    1900+ |      34 |     531 |      157 |     16 |   200 |    +0.6% |  -88.680 |     -524.3 |   -10468.4 |    137 | dout\[19\]$_DFF_P_/D
+    final |      34 |     531 |      157 |     16 |   200 |    +0.6% |  -88.680 |     -524.3 |   -10468.4 |    137 | dout\[19\]$_DFF_P_/D
+------------------------------------------------------------------------------------------------------------------------------
+[INFO RSZ-0059] Removed 34 buffers.
+[INFO RSZ-0040] Inserted 157 buffers.
+[INFO RSZ-0051] Resized 531 instances: 531 up, 0 up match, 0 down, 0 VT
+[INFO RSZ-0043] Swapped pins on 200 instances.
+[INFO RSZ-0049] Cloned 16 instances.
+[WARNING RSZ-0062] Unable to repair all setup violations.
+[INFO RSZ-0505] Runtime: 206.74s
+Took 207 seconds: repair_timing -setup_margin 0 -hold_margin 10 -repair_tns 100 -max_buffer_percent 100 -verbose -setup
+OT_HOLD_GUARD start: hold ws -30.52 tns -1400.5 viol 105 (margin 10, chunk 1000 it)
+repair_timing -setup_margin 0 -hold_margin 10 -repair_tns 100 -max_buffer_percent 100 -verbose -hold -max_iterations 1000
+[INFO RSZ-0046] Found 141 endpoints with hold violations.
+Iteration | Resized | Buffers | Cloned Gates |   Area   |   WNS   |   TNS   | Endpoint
+--------------------------------------------------------------------------------------
+        0 |       0 |       0 |            0 |    +0.0% | -30.524 | -1400.529 | dq[55]$_DFF_P_/D
+       10 |       0 |      18 |            0 |    +0.0% | -23.271 | -1154.288 | dq[37]$_DFF_P_/D
+       20 |       0 |      37 |            0 |    +0.0% | -18.710 | -952.133 | dq[47]$_DFF_P_/D
+       30 |       0 |      56 |            0 |    +0.1% | -17.411 | -771.694 | dq[1]$_DFF_P_/D
+       40 |       0 |      72 |            0 |    +0.1% | -15.985 | -604.194 | dq[5]$_DFF_P_/D
+       50 |       0 |      91 |            0 |    +0.1% | -14.891 | -450.792 | dq[128]$_DFF_P_/D
+       60 |       0 |     108 |            0 |    +0.1% | -12.738 | -306.290 | dq[0]$_DFF_P_/D
+       70 |       0 |     128 |            0 |    +0.1% |  -9.353 | -190.324 | dq[6]$_DFF_P_/D
+       80 |       0 |     148 |            0 |    +0.2% |  -7.207 | -108.063 | dq[133]$_DFF_P_/D
+       90 |       0 |     163 |            0 |    +0.2% |  -4.696 | -43.955 | dq[65]$_DFF_P_/D
+      100 |       0 |     173 |            0 |    +0.2% |  -1.930 |  -6.258 | dq[107]$_DFF_P_/D
+      110 |       0 |     183 |            0 |    +0.2% |   2.330 |   0.000 | dq[80]$_DFF_P_/D
+      120 |       0 |     193 |            0 |    +0.2% |   5.754 |   0.000 | dq[125]$_DFF_P_/D
+      130 |       0 |     202 |            0 |    +0.2% |   7.286 |   0.000 | dq[124]$_DFF_P_/D
+      140 |       0 |     211 |            0 |    +0.2% |   9.508 |   0.000 | dq[119]$_DFF_P_/D
+    final |       0 |     213 |            0 |    +0.2% |  10.288 |   0.000 | dq[111]$_DFF_P_/D
+--------------------------------------------------------------------------------------
+[INFO RSZ-0032] Inserted 213 hold buffers.
+[INFO RSZ-0506] Runtime: 1.84s
+OT_HOLD_GUARD chunk 1: hold ws 10.29 (+40.81) tns 0.0 (+100.0%) viol 0, 2 s
+detailed_placement
+[INFO DPL-0006] Core area: 28385.51 um^2
+[INFO DPL-0007] Movable instances area: 6186.59 um^2
+[INFO DPL-0008] Fixed instances area within core: 91.15 um^2
+[INFO DPL-0009] Utilization: 22.1%
+[INFO DPL-0005] Diamond search max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+[INFO DPL-1102] Legalizing using negotiation legalizer.
+[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically 
+	Automatic search window extension enabled.
+	Search window extendable up to the max displacement cap of +/-500 sites, +/-100 rows near walls.
+[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.
+[INFO DPL-0392] Negotiation cell height distribution (1 unique row-count(s)):
+[INFO DPL-0393]   height 1 row(s): 43630 cells
+          |      Total |  Illegal |  Illegal
+Iteration | Violations |    Cells |    Sites
+---------------------------------------------
+        0 |          6 |         2 |         4
+        1 |          0 |         0 |         0
+Negotiation phase 1 converged at iteration 1.
+[INFO DPL-0500] Runtime: 0.61s
+Placement Analysis
+---------------------------------
+total displacement        207.2 u
+average displacement        0.0 u
+max displacement            1.6 u
+original HPWL          239155.3 u
+legalized HPWL         239245.4 u
+delta HPWL                    0 %
+
+estimate_parasitics -placement
+Report metrics stage 4, cts final...
+
+==========================================================================
+cts final report_design_area
+--------------------------------------------------------------------------
+Design area 6278 um^2 22% utilization.
+source /work/hooks/post_cts_post_cts.tcl
+write_db /work/results/asap7/opentallas_ot_qkvd_llr_replay_leaf_asap7_ref_gate/base/4_1_cts.odb
+write_sdc -no_timestamp /work/results/asap7/opentallas_ot_qkvd_llr_replay_leaf_asap7_ref_gate/base/4_cts.sdc
+Elapsed time: 4:40.18[h:]min:sec. CPU time: user 930.37 sys 83.22 (361%). Peak memory: 929784KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+4_1_cts                   .odb          280            907 e7bf4aa55abd4531a860
+cp /work/results/asap7/opentallas_ot_qkvd_llr_replay_leaf_asap7_ref_gate/base/4_1_cts.odb /work/results/asap7/opentallas_ot_qkvd_llr_replay_leaf_asap7_ref_gate/base/4_cts.odb

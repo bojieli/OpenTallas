@@ -1,0 +1,79 @@
+{
+ "source_inventory": "results/rtl/s81_engram_mix_1014/leaf_inventory.json from real Engram owner tree",
+ "inventory_sha256": "91ca97e8ceef7af36191469406a36d4985d6ad9982e73e111f153119ff2bbae2",
+ "masters": [
+  {
+   "master": "ot_s81_engram_mul4",
+   "outline_um": [
+    181.44,
+    129.6
+   ],
+   "port_bits": 774,
+   "params": {
+    "LM": "5",
+    "MUT": "0"
+   }
+  },
+  {
+   "master": "ot_s81_engram_chunk8",
+   "outline_um": [
+    181.44,
+    129.6
+   ],
+   "port_bits": 293,
+   "params": {
+    "LA": "4"
+   }
+  },
+  {
+   "master": "ot_s81_engram_add8",
+   "outline_um": [
+    181.44,
+    129.6
+   ],
+   "port_bits": 810,
+   "params": {
+    "LM": "5",
+    "LA": "4"
+   }
+  },
+  {
+   "master": "ot_s81_engram_norm",
+   "outline_um": [
+    181.44,
+    129.6
+   ],
+   "port_bits": 101,
+   "params": {
+    "LM": "5",
+    "LA": "4"
+   }
+  },
+  {
+   "master": "ot_s81_engram_signed_sqrt",
+   "outline_um": [
+    181.44,
+    129.6
+   ],
+   "port_bits": 69,
+   "params": {
+    "LM": "5",
+    "LA": "4"
+   }
+  },
+  {
+   "master": "ot_s81_engram_sigmoid",
+   "outline_um": [
+    181.44,
+    129.6
+   ],
+   "port_bits": 69,
+   "params": {
+    "LM": "5",
+    "LA": "4"
+   }
+  }
+ ],
+ "parent_status": "OPEN layout/control fanout/33roots/globalVM+staticflight; scalar tree and control master pins require actual neighbor plan",
+ "qualification": "native leaf assignment only, no generic-leaf equivalence or current whole-MIX fit claim"
+}

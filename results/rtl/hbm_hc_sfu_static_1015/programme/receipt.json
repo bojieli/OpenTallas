@@ -1,0 +1,29 @@
+{
+  "gate": "PASS",
+  "source_sha256": {
+    "rtl/hbm_accel/generic/peers/ot_hgi_sfu_calendar_static.sv": "f9ec7be2c678094a5923fff6b341ba59a2ddf0892b9085502a70cf5bfee5acfd",
+    "rtl/test/hbm_accel/generic/tb_hgi_sfu_calendar_static.sv": "3870f029916d0e04dee5cd59732dd7c06b4130b7d61f86eaeb0f6dbc7ac949d6"
+  },
+  "native_qualified": false,
+  "physical_qualified": false,
+  "layer_calendar_qualified": false,
+  "source_commit": "049404283",
+  "dependency_commit": "3d7520a5f",
+  "dependency_sha256": "2a3f380c413bef2676087338d00d18cf869562e9bb611fc93c13251f3fb3f197",
+  "real_SRAMs": 8,
+  "protected_widths": [
+    223,
+    223,
+    223,
+    223,
+    223,
+    223,
+    223,
+    181
+  ],
+  "actual_controls": 624,
+  "control_width": 1742,
+  "mutant": "actual stripe3 PC identity corrupted at row5; FAIL",
+  "fullbatch_capacity": "4x7168 sigmoid1968 rows exceeds programme1024; not qualified",
+  "arithmetic_join": false
+}

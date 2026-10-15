@@ -14,8 +14,7 @@ mkdir -p "$src/$(dirname "$p")";git -C "$root" show "df5c31ed0:$p" > "$src/$p"
 for p in rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_calendar.sv rtl/test/qwen_static_kv/tb_static_return_controller_calendar.sv;do
  mkdir -p "$src/$(dirname "$p")";cp "$root/$p" "$src/$p"
 done
-mapfile -d '' sources < <("$out/obj/Vtb_static_return_controller_calendar" +phase=137 +report_calendar > "$out/compiled_return_calendar.log" 2>&1
-find "$src" -name '*.sv' -print0)
+mapfile -d '' sources < <(find "$src" -name '*.sv' -print0)
 verilator --binary --timing -Wno-fatal -j "${JOBS:-4}" --top-module tb_static_return_controller_calendar --Mdir "$out/obj" "${sources[@]}" > "$out/build.log" 2>&1
 for phase in 137 637;do
  for mode in 0 1 2 3 4 5 6 7 8;do

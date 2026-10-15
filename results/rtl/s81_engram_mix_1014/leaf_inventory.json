@@ -1,0 +1,584 @@
+{
+  "ot_s81_engram_endpoint_ctl": {
+    "parameters": {
+      "MUT": "0",
+      "VM_LAT": "1",
+      "WRITE_COMMIT_LAT": "1",
+      "ISSUE_PERIOD": "1"
+    },
+    "ports": {
+      "ck": {
+        "direction": "input",
+        "bits": 1
+      },
+      "rst": {
+        "direction": "input",
+        "bits": 1
+      },
+      "c_cmd": {
+        "direction": "input",
+        "bits": 85
+      },
+      "c_done": {
+        "direction": "output",
+        "bits": 9
+      },
+      "c_st": {
+        "direction": "output",
+        "bits": 2
+      },
+      "f_inp": {
+        "direction": "input",
+        "bits": 1
+      },
+      "rq_v": {
+        "direction": "output",
+        "bits": 5
+      },
+      "rq_row": {
+        "direction": "output",
+        "bits": 70
+      },
+      "rs_v": {
+        "direction": "input",
+        "bits": 5
+      },
+      "rs_d": {
+        "direction": "input",
+        "bits": 2560
+      },
+      "wq_v": {
+        "direction": "output",
+        "bits": 1
+      },
+      "wq_row": {
+        "direction": "output",
+        "bits": 14
+      },
+      "wq_mask": {
+        "direction": "output",
+        "bits": 16
+      },
+      "wq_d": {
+        "direction": "output",
+        "bits": 512
+      },
+      "go": {
+        "direction": "output",
+        "bits": 1
+      },
+      "iv": {
+        "direction": "output",
+        "bits": 1
+      },
+      "phase": {
+        "direction": "output",
+        "bits": 1
+      },
+      "copy": {
+        "direction": "output",
+        "bits": 2
+      },
+      "h": {
+        "direction": "output",
+        "bits": 1024
+      },
+      "kv": {
+        "direction": "output",
+        "bits": 1024
+      },
+      "w": {
+        "direction": "output",
+        "bits": 1024
+      },
+      "eps": {
+        "direction": "output",
+        "bits": 32
+      },
+      "scale": {
+        "direction": "output",
+        "bits": 32
+      },
+      "gv": {
+        "direction": "input",
+        "bits": 1
+      },
+      "ov": {
+        "direction": "input",
+        "bits": 1
+      },
+      "mf": {
+        "direction": "input",
+        "bits": 1
+      },
+      "oc": {
+        "direction": "input",
+        "bits": 2
+      },
+      "result": {
+        "direction": "input",
+        "bits": 1024
+      }
+    },
+    "total_pin_bits": 7452
+  },
+  "ot_s81_engram_mix_control": {
+    "parameters": {
+      "N": "32",
+      "D": "5120",
+      "LM": "5",
+      "LA": "4",
+      "MUT": "0"
+    },
+    "ports": {
+      "clk": {
+        "direction": "input",
+        "bits": 1
+      },
+      "arst_n": {
+        "direction": "input",
+        "bits": 1
+      },
+      "go": {
+        "direction": "input",
+        "bits": 1
+      },
+      "phase": {
+        "direction": "input",
+        "bits": 1
+      },
+      "in_v": {
+        "direction": "input",
+        "bits": 1
+      },
+      "copy": {
+        "direction": "input",
+        "bits": 2
+      },
+      "scale": {
+        "direction": "input",
+        "bits": 32
+      },
+      "gate_v": {
+        "direction": "output",
+        "bits": 1
+      },
+      "gate_copy": {
+        "direction": "output",
+        "bits": 2
+      },
+      "gate": {
+        "direction": "output",
+        "bits": 32
+      },
+      "hh": {
+        "direction": "output",
+        "bits": 32
+      },
+      "kk": {
+        "direction": "output",
+        "bits": 32
+      },
+      "dd": {
+        "direction": "output",
+        "bits": 32
+      },
+      "fault": {
+        "direction": "output",
+        "bits": 1
+      },
+      "g_v": {
+        "direction": "output",
+        "bits": 1
+      },
+      "a_gate": {
+        "direction": "output",
+        "bits": 32
+      },
+      "g_x": {
+        "direction": "output",
+        "bits": 32
+      },
+      "mvalid": {
+        "direction": "input",
+        "bits": 8
+      },
+      "mfault": {
+        "direction": "input",
+        "bits": 8
+      },
+      "avalid": {
+        "direction": "input",
+        "bits": 4
+      },
+      "af": {
+        "direction": "input",
+        "bits": 4
+      },
+      "add_copy": {
+        "direction": "input",
+        "bits": 8
+      },
+      "nv": {
+        "direction": "input",
+        "bits": 2
+      },
+      "nf": {
+        "direction": "input",
+        "bits": 2
+      },
+      "norm_rstd": {
+        "direction": "input",
+        "bits": 64
+      },
+      "eg_valid": {
+        "direction": "input",
+        "bits": 1
+      },
+      "g_fault": {
+        "direction": "input",
+        "bits": 2
+      },
+      "gy": {
+        "direction": "input",
+        "bits": 32
+      },
+      "rv": {
+        "direction": "input",
+        "bits": 3
+      },
+      "rf": {
+        "direction": "input",
+        "bits": 3
+      },
+      "rhh": {
+        "direction": "input",
+        "bits": 32
+      },
+      "rkk": {
+        "direction": "input",
+        "bits": 32
+      },
+      "rdd": {
+        "direction": "input",
+        "bits": 32
+      }
+    },
+    "total_pin_bits": 473
+  },
+  "ot_s81_engram_mul4": {
+    "parameters": {
+      "LM": "5",
+      "MUT": "0"
+    },
+    "ports": {
+      "clk": {
+        "direction": "input",
+        "bits": 1
+      },
+      "arst_n": {
+        "direction": "input",
+        "bits": 1
+      },
+      "v": {
+        "direction": "input",
+        "bits": 1
+      },
+      "phase": {
+        "direction": "input",
+        "bits": 1
+      },
+      "h": {
+        "direction": "input",
+        "bits": 128
+      },
+      "k": {
+        "direction": "input",
+        "bits": 128
+      },
+      "w": {
+        "direction": "input",
+        "bits": 128
+      },
+      "vo": {
+        "direction": "output",
+        "bits": 1
+      },
+      "hh": {
+        "direction": "output",
+        "bits": 128
+      },
+      "kk": {
+        "direction": "output",
+        "bits": 128
+      },
+      "dot": {
+        "direction": "output",
+        "bits": 128
+      },
+      "fault": {
+        "direction": "output",
+        "bits": 1
+      }
+    },
+    "total_pin_bits": 774
+  },
+  "ot_s81_engram_chunk8": {
+    "parameters": {
+      "LA": "4"
+    },
+    "ports": {
+      "clk": {
+        "direction": "input",
+        "bits": 1
+      },
+      "arst_n": {
+        "direction": "input",
+        "bits": 1
+      },
+      "v": {
+        "direction": "input",
+        "bits": 1
+      },
+      "x": {
+        "direction": "input",
+        "bits": 256
+      },
+      "vo": {
+        "direction": "output",
+        "bits": 1
+      },
+      "sum": {
+        "direction": "output",
+        "bits": 32
+      },
+      "fault": {
+        "direction": "output",
+        "bits": 1
+      }
+    },
+    "total_pin_bits": 293
+  },
+  "ot_s81_engram_add8": {
+    "parameters": {
+      "LM": "5",
+      "LA": "4"
+    },
+    "ports": {
+      "clk": {
+        "direction": "input",
+        "bits": 1
+      },
+      "arst_n": {
+        "direction": "input",
+        "bits": 1
+      },
+      "v": {
+        "direction": "input",
+        "bits": 1
+      },
+      "phase": {
+        "direction": "input",
+        "bits": 1
+      },
+      "h": {
+        "direction": "input",
+        "bits": 256
+      },
+      "value": {
+        "direction": "input",
+        "bits": 256
+      },
+      "gate": {
+        "direction": "input",
+        "bits": 32
+      },
+      "copy": {
+        "direction": "input",
+        "bits": 2
+      },
+      "vo": {
+        "direction": "output",
+        "bits": 1
+      },
+      "y": {
+        "direction": "output",
+        "bits": 256
+      },
+      "fault": {
+        "direction": "output",
+        "bits": 1
+      },
+      "copy_out": {
+        "direction": "output",
+        "bits": 2
+      }
+    },
+    "total_pin_bits": 810
+  },
+  "ot_s81_engram_norm": {
+    "parameters": {
+      "LM": "5",
+      "LA": "4"
+    },
+    "ports": {
+      "clk": {
+        "direction": "input",
+        "bits": 1
+      },
+      "arst_n": {
+        "direction": "input",
+        "bits": 1
+      },
+      "v": {
+        "direction": "input",
+        "bits": 1
+      },
+      "sum": {
+        "direction": "input",
+        "bits": 32
+      },
+      "eps": {
+        "direction": "input",
+        "bits": 32
+      },
+      "vo": {
+        "direction": "output",
+        "bits": 1
+      },
+      "rstd": {
+        "direction": "output",
+        "bits": 32
+      },
+      "fault": {
+        "direction": "output",
+        "bits": 1
+      }
+    },
+    "total_pin_bits": 101
+  },
+  "ot_s81_engram_signed_sqrt": {
+    "parameters": {
+      "LM": "5",
+      "LA": "4"
+    },
+    "ports": {
+      "clk": {
+        "direction": "input",
+        "bits": 1
+      },
+      "arst_n": {
+        "direction": "input",
+        "bits": 1
+      },
+      "v": {
+        "direction": "input",
+        "bits": 1
+      },
+      "x": {
+        "direction": "input",
+        "bits": 32
+      },
+      "vo": {
+        "direction": "output",
+        "bits": 1
+      },
+      "y": {
+        "direction": "output",
+        "bits": 32
+      },
+      "fault": {
+        "direction": "output",
+        "bits": 1
+      }
+    },
+    "total_pin_bits": 69
+  },
+  "ot_s81_engram_sigmoid": {
+    "parameters": {
+      "LM": "5",
+      "LA": "4"
+    },
+    "ports": {
+      "clk": {
+        "direction": "input",
+        "bits": 1
+      },
+      "arst_n": {
+        "direction": "input",
+        "bits": 1
+      },
+      "v": {
+        "direction": "input",
+        "bits": 1
+      },
+      "x": {
+        "direction": "input",
+        "bits": 32
+      },
+      "vo": {
+        "direction": "output",
+        "bits": 1
+      },
+      "y": {
+        "direction": "output",
+        "bits": 32
+      },
+      "fault": {
+        "direction": "output",
+        "bits": 1
+      }
+    },
+    "total_pin_bits": 69
+  },
+  "ot_s81_engram_sum": {
+    "parameters": {
+      "N": "32",
+      "D": "5120",
+      "LA": "4"
+    },
+    "ports": {
+      "clk": {
+        "direction": "input",
+        "bits": 1
+      },
+      "arst_n": {
+        "direction": "input",
+        "bits": 1
+      },
+      "go": {
+        "direction": "input",
+        "bits": 1
+      },
+      "v": {
+        "direction": "input",
+        "bits": 1
+      },
+      "vo": {
+        "direction": "output",
+        "bits": 1
+      },
+      "y": {
+        "direction": "output",
+        "bits": 32
+      },
+      "fault": {
+        "direction": "output",
+        "bits": 1
+      },
+      "chunks": {
+        "direction": "input",
+        "bits": 128
+      },
+      "chunk_fault": {
+        "direction": "input",
+        "bits": 4
+      },
+      "chunk_valid": {
+        "direction": "input",
+        "bits": 4
+      }
+    },
+    "total_pin_bits": 174
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "schema": "ot.qwen.historical.collective.clockmaster.v1",
+  "status": "HISTORICAL_DIAGNOSTIC_ONLY",
+  "reason": "OwnerHANDOFF0ahrequirescompilerreserved normalcycleexecutionwithoutcredits/backpressure; theselegacymastersproveclockport refactorRTL equivalenceonly",
+  "source": "f460c4915",
+  "child_clocks": 17,
+  "unit_cases_passed": 9,
+  "AR256": 971,
+  "two_AR256": 1681,
+  "argmax": 402,
+  "board_latency": 339,
+  "mutant": "OT_TP8_MUT_STRAP detected5cases",
+  "open": "Actualfixedschedulecollectiveandwhole-token qualification"
+}

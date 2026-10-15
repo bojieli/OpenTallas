@@ -1,0 +1,37 @@
+{
+  "status": "PASS",
+  "contract": "sampled command edge E -> c_done after E+6; prior source produced E+5",
+  "stimulus_note": "legacy isolated bench drives after edge; next rising edge samples; drive-index expectation now DLAT+1",
+  "jobs_per_seed": 100,
+  "seeds": [
+    1,
+    2,
+    3
+  ],
+  "fault_witnesses": 6,
+  "mutants": [
+    "SLICE",
+    "RANGE",
+    "DLAT",
+    "HASH"
+  ],
+  "logs": [
+    "mut_SLICE.log",
+    "fault_m2.log",
+    "base_s1.log",
+    "fault_m5.log",
+    "base_s3.log",
+    "fault_m1.log",
+    "mut_RANGE.log",
+    "base_s2.log",
+    "mut_HASH.log",
+    "fault_m6.log",
+    "fault_m4.log",
+    "mut_DLAT.log",
+    "fault_m3.log"
+  ],
+  "source_sha256": {
+    "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_seq_static.sv": "de3f8c011bdf9e9eeb4bcdbd80e5eac3c2888c156c5cba38c428da77081a19af",
+    "rtl/dsrom_sys/s81_ph/test/tb_dsfd_vm_seq_static.sv": "69f02b0dce99df7c5d4111fbfefe53b349133fde3c9a5310a9a46ec155a98540"
+  }
+}

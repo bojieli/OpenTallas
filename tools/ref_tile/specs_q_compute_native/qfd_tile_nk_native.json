@@ -1,0 +1,360 @@
+{
+  "name": "qfd_tile_nk_native",
+  "top": "qfd_tile_nk",
+  "kind": "cluster",
+  "clock": "hybrid_entries",
+  "clock_port": "ck",
+  "clock_ports": [
+    "ck",
+    "ck_rp3",
+    "ck_rp4",
+    "ck_rp0",
+    "ck_rp1",
+    "ck_rp2",
+    "ck_node",
+    "ck_lsl0",
+    "ck_lsl4",
+    "ck_lsl1",
+    "ck_lsl5",
+    "ck_lsl2",
+    "ck_lsl6",
+    "ck_lsl3",
+    "ck_lsl7"
+  ],
+  "clock_cts_roots": [
+    "ck"
+  ],
+  "required_hybrid_roots": {
+    "standard_cell_cts": [
+      "ck"
+    ],
+    "hard_child_entry": {
+      "ck_rp3": "u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[3].g_hd.u_rp/clk",
+      "ck_rp4": "u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[4].g_hd.u_rp/clk",
+      "ck_rp0": "u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[0].g_hd.u_rp/clk",
+      "ck_rp1": "u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[1].g_hd.u_rp/clk",
+      "ck_rp2": "u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[2].g_hd.u_rp/clk",
+      "ck_node": "u_tile.u_tile.u_logic.genblk4.g_ndh.u_node/clk",
+      "ck_lsl0": "u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.u_lh/clk",
+      "ck_lsl4": "u_tile.u_tile.u_logic.u_me.g_hier.g_sl[4].g_hd.u_lh/clk",
+      "ck_lsl1": "u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.u_lh/clk",
+      "ck_lsl5": "u_tile.u_tile.u_logic.u_me.g_hier.g_sl[5].g_hd.u_lh/clk",
+      "ck_lsl2": "u_tile.u_tile.u_logic.u_me.g_hier.g_sl[2].g_hd.u_lh/clk",
+      "ck_lsl6": "u_tile.u_tile.u_logic.u_me.g_hier.g_sl[6].g_hd.u_lh/clk",
+      "ck_lsl3": "u_tile.u_tile.u_logic.u_me.g_hier.g_sl[3].g_hd.u_lh/clk",
+      "ck_lsl7": "u_tile.u_tile.u_logic.u_me.g_hier.g_sl[7].g_hd.u_lh/clk"
+    }
+  },
+  "sources": [
+    "rtl/physical/ot_qwen_rom_tile_die.sv",
+    "rtl/hdc/kv/ot_qwen_kv_land_merge.sv",
+    "rtl/hdc/ot_hdc_fpu.sv",
+    "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+    "rtl/hdc/ot_hdc_fastfp.sv",
+    "rtl/hdc/ot_hdc_delay.sv",
+    "rtl/hdc/ot_hdc_sfu.sv",
+    "rtl/hdc/ot_hdc_matvec.sv",
+    "rtl/hdc/ot_qwen_me_array_w12.sv",
+    "rtl/hdc/ot_qwen_rom_tile_w12.sv",
+    "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+    "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+    "rtl/hdc/ot_hdc_prefix.sv",
+    "rtl/hdc/ot_qwen_w12_matvec.sv",
+    "rtl/hdc/ot_qwen_w12_arith.sv",
+    "rtl/proto/ot_fp32_add_rne_pipe.sv",
+    "rtl/hdc/ot_hdc_fp32_add_lat_nr.sv",
+    "rtl/physical/ot_qwen_rom_tile_nk.sv",
+    "physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8_bb.v",
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v",
+    "rtl/physical/bb/ot_qwen_tile_rpair_bb.v",
+    "rtl/physical/bb/ot_qwen_tile_node_bb.v",
+    "rtl/physical/bb/ot_qwen_tile_lsl_fp1_bb.v",
+    "rtl/physical/qfd_tile_nk_slot.sv"
+  ],
+  "defines": [
+    "OT_QWEN_LSL_FP1"
+  ],
+  "params": {},
+  "children": [
+    {
+      "view": "physical/ref_tile/ot_qwen_tile_rpair/views/ot_qwen_tile_rpair",
+      "count": 1,
+      "inst": "u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[3].g_hd.u_rp",
+      "at": [
+        22.464,
+        23.76
+      ],
+      "orient": "R0"
+    },
+    {
+      "view": "physical/ref_tile/ot_qwen_tile_rpair/views/ot_qwen_tile_rpair",
+      "count": 1,
+      "inst": "u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[4].g_hd.u_rp",
+      "at": [
+        22.464,
+        174.96
+      ],
+      "orient": "R0"
+    },
+    {
+      "view": "physical/ref_tile/ot_qwen_tile_rpair/views/ot_qwen_tile_rpair",
+      "count": 1,
+      "inst": "u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[0].g_hd.u_rp",
+      "at": [
+        22.464,
+        982.824
+      ],
+      "orient": "MX"
+    },
+    {
+      "view": "physical/ref_tile/ot_qwen_tile_rpair/views/ot_qwen_tile_rpair",
+      "count": 1,
+      "inst": "u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[1].g_hd.u_rp",
+      "at": [
+        22.464,
+        1134.024
+      ],
+      "orient": "MX"
+    },
+    {
+      "view": "physical/ref_tile/ot_qwen_tile_rpair/views/ot_qwen_tile_rpair",
+      "count": 1,
+      "inst": "u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[2].g_hd.u_rp",
+      "at": [
+        22.464,
+        1285.224
+      ],
+      "orient": "MX"
+    },
+    {
+      "view": "physical/ref_tile/ot_qwen_tile_node/views/ot_qwen_tile_node",
+      "count": 1,
+      "inst": "u_tile.u_tile.u_logic.genblk4.g_ndh.u_node",
+      "at": [
+        22.464,
+        345.6
+      ],
+      "orient": "R0"
+    },
+    {
+      "view": "physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1",
+      "count": 1,
+      "inst": "u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.u_lh",
+      "at": [
+        103.68,
+        328.32
+      ],
+      "orient": "MY"
+    },
+    {
+      "view": "physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1",
+      "count": 1,
+      "inst": "u_tile.u_tile.u_logic.u_me.g_hier.g_sl[4].g_hd.u_lh",
+      "at": [
+        233.28,
+        328.32
+      ],
+      "orient": "R0"
+    },
+    {
+      "view": "physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1",
+      "count": 1,
+      "inst": "u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.u_lh",
+      "at": [
+        103.68,
+        492.48
+      ],
+      "orient": "MY"
+    },
+    {
+      "view": "physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1",
+      "count": 1,
+      "inst": "u_tile.u_tile.u_logic.u_me.g_hier.g_sl[5].g_hd.u_lh",
+      "at": [
+        233.28,
+        492.48
+      ],
+      "orient": "R0"
+    },
+    {
+      "view": "physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1",
+      "count": 1,
+      "inst": "u_tile.u_tile.u_logic.u_me.g_hier.g_sl[2].g_hd.u_lh",
+      "at": [
+        103.68,
+        656.64
+      ],
+      "orient": "MY"
+    },
+    {
+      "view": "physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1",
+      "count": 1,
+      "inst": "u_tile.u_tile.u_logic.u_me.g_hier.g_sl[6].g_hd.u_lh",
+      "at": [
+        233.28,
+        656.64
+      ],
+      "orient": "R0"
+    },
+    {
+      "view": "physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1",
+      "count": 1,
+      "inst": "u_tile.u_tile.u_logic.u_me.g_hier.g_sl[3].g_hd.u_lh",
+      "at": [
+        103.68,
+        820.8
+      ],
+      "orient": "MY"
+    },
+    {
+      "view": "physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1",
+      "count": 1,
+      "inst": "u_tile.u_tile.u_logic.u_me.g_hier.g_sl[7].g_hd.u_lh",
+      "at": [
+        233.28,
+        820.8
+      ],
+      "orient": "R0"
+    }
+  ],
+  "macros": [],
+  "outline": {
+    "w": 449.28,
+    "h": 1442.88
+  },
+  "pins": {
+    "W": [
+      "n_a",
+      "n_b",
+      "n_y",
+      "t_out",
+      "ck_rp0",
+      "ck_rp1",
+      "ck_rp2",
+      "ck_rp3",
+      "ck_rp4",
+      "ck_node",
+      "ck_lsl0",
+      "ck_lsl1",
+      "ck_lsl2",
+      "ck_lsl3"
+    ],
+    "E": [
+      "tie_lo",
+      "tie_hi",
+      "tile_id",
+      "rst_n",
+      "tap",
+      "ck_lsl4",
+      "ck_lsl5",
+      "ck_lsl6",
+      "ck_lsl7"
+    ],
+    "N": [
+      "ck"
+    ]
+  },
+  "pin_ranges": {
+    "n_a": [
+      612.78,
+      662.028
+    ],
+    "n_b": [
+      668.7959999999999,
+      718.044
+    ],
+    "n_y": [
+      724.812,
+      774.0600000000001
+    ],
+    "t_out": [
+      780.78,
+      830.028
+    ],
+    "tap": [
+      697.068,
+      745.74
+    ],
+    "rst_n": [
+      689.4359999999999,
+      689.4359999999999
+    ],
+    "tile_id": [
+      684.684,
+      686.124
+    ],
+    "tie_hi": [
+      683.4359999999999,
+      683.4359999999999
+    ],
+    "tie_lo": [
+      681.42,
+      681.42
+    ],
+    "ck": [
+      224.65200000000002,
+      224.65200000000002
+    ]
+  },
+  "io_tcl": "physical/ref_tile/qfd_tile_nk_native/assigned_pins.tcl",
+  "reset_ports": [
+    "rst_n"
+  ],
+  "child_lattice_um": 0.216,
+  "layer_cap": "M7",
+  "recipe": 2,
+  "keep_pin_regs": true,
+  "pin_reg_split": true,
+  "inhold": true,
+  "outhold": true,
+  "io_flop_at_pins": {
+    "cols": 8
+  },
+  "route": {
+    "pd": 0.5,
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "hold_margin_ns": 0.03,
+    "macro_halo_um": 5.4
+  },
+  "refglob": "*",
+  "inter": [],
+  "structural_change": "Actual production GT3072 die-name parent, registered faces, independent clock entry for each CLOSED rpair/LSL/node; native LSL reset/fault pins; no hidden global child clock. Compiler reset and fault visibility add one child edge.",
+  "job": {
+    "owner": "Codex:q_compute_elem",
+    "branch": "codex/q-compute-native-parents-1014",
+    "tag": "n1",
+    "purpose": "Source-exact native tile parent with real hardened production children",
+    "benches_from": "tools/ref_tile/specs_qtile_r5/qfd_tile_nk_r5_benches.json",
+    "extra_paths": [
+      "rtl/test/tb_qfd_tile_nk_slot.sv",
+      "rtl/test/tb_qfd_tile_nl_slot.sv"
+    ],
+    "views_to": "physical/ref_tile/qfd_tile_nk_native/views",
+    "record_to": "results/rtl/ref_tile/qfd_tile_nk_native",
+    "benches": [
+      {
+        "name": "native_face_exact",
+        "cmd": "mkdir -p {RUN}/bench && iverilog -g2012  -s tb_qfd_tile_nk_slot -o {RUN}/bench/qfd_tile_nk_exact rtl/test/tb_qfd_tile_nk_slot.sv rtl/physical/qfd_tile_nk_slot.sv rtl/physical/ot_qwen_rom_tile_nk.sv && vvp {RUN}/bench/qfd_tile_nk_exact",
+        "expect": "pass",
+        "threads": 1,
+        "peak_ram_gb": 1,
+        "needs": [
+          "iverilog"
+        ],
+        "pass_regex": "^PASS qfd_tile_nk_slot checks=4000"
+      },
+      {
+        "name": "native_face_mutant",
+        "cmd": "mkdir -p {RUN}/bench && iverilog -g2012 -DOT_QFD_TILE_NK_MUT -s tb_qfd_tile_nk_slot -o {RUN}/bench/qfd_tile_nk_mutant rtl/test/tb_qfd_tile_nk_slot.sv rtl/physical/qfd_tile_nk_slot.sv rtl/physical/ot_qwen_rom_tile_nk.sv && vvp {RUN}/bench/qfd_tile_nk_mutant",
+        "expect": "fail",
+        "threads": 1,
+        "peak_ram_gb": 1,
+        "needs": [
+          "iverilog"
+        ],
+        "fail_regex": "^FAIL qfd_tile_nk_slot checks=4000"
+      }
+    ]
+  }
+}

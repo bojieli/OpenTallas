@@ -1,0 +1,21 @@
+{
+ "source": "efdcc9fd5",
+ "base": "f8d643faf",
+ "recipe": "structural_no-relay_compute_DP_seam",
+ "case_source": "f8d643faf",
+ "case_unit": "oth-ubuntu-4125380-1792034894",
+ "case": {
+  "instances": 1630,
+  "overlaps": 0,
+  "outside": 0,
+  "assertion": "PASS",
+  "pin_access": "FAIL DRT0305 ordinary POWER one_ not routable",
+  "process_exit": 0
+ },
+ "pin_source": "efdcc9fd5",
+ "pin_unit": "oth-ubuntu-4156609-1792035532",
+ "native_qualification": "OPEN; static endpoint graph/clock R/actual route missing; prere lay geometry is not timing or throughput",
+ "band_pin_source": "3e9067b5e",
+ "band_pin_unit": "oth-ubuntu-4163675-1792035696",
+ "band_pin_validation": "26actualports,reset1,b0/lnk6,17roots,M4/M5<=M6cap,2trackdensity; allfacesdisjoint"
+}

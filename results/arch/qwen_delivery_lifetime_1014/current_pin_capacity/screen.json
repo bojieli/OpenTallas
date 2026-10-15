@@ -1,0 +1,1595 @@
+{
+  "schema": "opentallas.current-native-delivery-PG-pin-capacity-screen.v1",
+  "qualified": false,
+  "assigned": false,
+  "adopted": false,
+  "source_inputs": [
+    {
+      "commit": "6cc764460",
+      "path": "results/arch/qwen_tp8_1012/vm_band_die_root_candidate_input_codex.json",
+      "sha256": "c1895601ac4afe6bdaee1fe874f7a6e2c2a057ad00aa8bce5aa693a9120cc424"
+    },
+    {
+      "commit": "6cc764460",
+      "path": "results/arch/qwen_tp8_1012/vm_cluster_layer_grant_1013.json",
+      "sha256": "436a02eb1250587711c955780cf4b5711c563de4d2d839909da042bd9e99d751"
+    }
+  ],
+  "field_sources": {
+    "tile_query_and_dispatch": "b646b9303 bound_and_interface.json, semanticquery210 +togglecreditfault3, dispatch428",
+    "full_provenance": "5b9e9859d actualROW512/full247meta, selected128/full247meta; nativeXselect/fullfieldbinding pending"
+  },
+  "fields": {
+    "selected_fill_payload_plus_event": 375,
+    "actual_tile_query_semantic": 210,
+    "actual_tile_query_with_toggle_credit_fault": 213,
+    "held_dispatch_common": 428,
+    "provider_full512_plus_event": 759
+  },
+  "PG": {
+    "width_um": 0.48,
+    "pitch_um": 9.091,
+    "pitch_semantics": "same-net pitch forEACH VDD/VSS",
+    "combined_track_fraction": 0.105598944,
+    "usable_track_fraction": 0.894401056,
+    "net_center_phases_um": {
+      "VSS": 0.0,
+      "VDD": 4.545
+    },
+    "global_offset_basis": "MeasuredactualODBcentercoordinates; VSSfirstinterior9.091, VDDfirstinterior4.545; originalstarts_withdescriptionaloneisnotphaseevidence",
+    "core_origin_um": [
+      0.0,
+      0.0
+    ],
+    "core_origin_evidence": {
+      "source": "results/arch/qwen_tp8_1013/pg_stripe_audit_1013/core_receipt.log",
+      "sha256": "54a95124846e3898f55530db91b8fb2261c37b8f5b836e6843b2abdf11fc3544",
+      "scope": "Read-only actual ODB block.getCoreArea: dbu1000 core0,0,31785696,25870320; die area identical.",
+      "ot_unit": "oth-ubuntu-383661-1791950481",
+      "exit": 0
+    }
+  },
+  "screen_assumptions": {
+    "signal_grid_pitch_um": 0.08,
+    "signal_center_min_spacing_um": 0.16,
+    "edge_guard_um": 1.6,
+    "pin_half_width_um": 0.02,
+    "PG_extra_clearance_um": 0.04,
+    "grid_phase_um": 0,
+    "grid_qualification": "provisional signalgrid phase; actualPG phases/coreorigin measured"
+  },
+  "slots": [
+    {
+      "slot": "xroot_candidate_0",
+      "geometry": {
+        "x": 13294.8,
+        "y": 16988.4,
+        "w": 129.6,
+        "h": 41.04
+      },
+      "existing_bbox_conflicts": [
+        {
+          "n": "rly_tt_c2_11",
+          "m": "qfd_rly_343_EN_53x30",
+          "x": 13327.2,
+          "y": 17020.8,
+          "w": 52.68,
+          "h": 30.215999999999998
+        },
+        {
+          "n": "rstt_rst_field_7098",
+          "m": "qfd_rst_rep_p8",
+          "x": 13307.328,
+          "y": 17025.12,
+          "w": 5.184,
+          "h": 2.16
+        }
+      ],
+      "N_M9_available_guarded_centers": 697,
+      "WE_M8_available_guarded_centers": 206,
+      "scenarios": {
+        "selected_fill375_plus_query210_with10center_gap_M9": {
+          "required_positions": 595,
+          "raw_PG_capacity_pass": true
+        },
+        "selected_fill375_plus_query213_with10center_gap_M9": {
+          "required_positions": 598,
+          "raw_PG_capacity_pass": true
+        },
+        "selected_fill375_plus_query210_plus_dispatch428_with20center_gaps_M9": {
+          "required_positions": 1033,
+          "raw_PG_capacity_pass": false
+        },
+        "provider759_alone_M9": {
+          "required_positions": 759,
+          "raw_PG_capacity_pass": false
+        },
+        "selected_fill375_alone_side_M8": {
+          "required_positions": 375,
+          "raw_PG_capacity_pass": false
+        },
+        "query210_alone_side_M8": {
+          "required_positions": 210,
+          "raw_PG_capacity_pass": false
+        }
+      }
+    },
+    {
+      "slot": "xroot_candidate_1",
+      "geometry": {
+        "x": 13446.0,
+        "y": 16988.4,
+        "w": 129.6,
+        "h": 41.04
+      },
+      "existing_bbox_conflicts": [
+        {
+          "n": "rly_tt_c2_10",
+          "m": "qfd_rly_343_EW_53x30",
+          "x": 13564.8,
+          "y": 16977.6,
+          "w": 52.68,
+          "h": 30.215999999999998
+        },
+        {
+          "n": "rly_tt_f2_12",
+          "m": "qfd_rly_107_WE_53x30",
+          "x": 13436.496,
+          "y": 16990.56,
+          "w": 52.68,
+          "h": 30.215999999999998
+        }
+      ],
+      "N_M9_available_guarded_centers": 695,
+      "WE_M8_available_guarded_centers": 206,
+      "scenarios": {
+        "selected_fill375_plus_query210_with10center_gap_M9": {
+          "required_positions": 595,
+          "raw_PG_capacity_pass": true
+        },
+        "selected_fill375_plus_query213_with10center_gap_M9": {
+          "required_positions": 598,
+          "raw_PG_capacity_pass": true
+        },
+        "selected_fill375_plus_query210_plus_dispatch428_with20center_gaps_M9": {
+          "required_positions": 1033,
+          "raw_PG_capacity_pass": false
+        },
+        "provider759_alone_M9": {
+          "required_positions": 759,
+          "raw_PG_capacity_pass": false
+        },
+        "selected_fill375_alone_side_M8": {
+          "required_positions": 375,
+          "raw_PG_capacity_pass": false
+        },
+        "query210_alone_side_M8": {
+          "required_positions": 210,
+          "raw_PG_capacity_pass": false
+        }
+      }
+    },
+    {
+      "slot": "xroot_candidate_2",
+      "geometry": {
+        "x": 13597.199999999999,
+        "y": 16988.4,
+        "w": 129.6,
+        "h": 41.04
+      },
+      "existing_bbox_conflicts": [
+        {
+          "n": "rly_tt_c2_10",
+          "m": "qfd_rly_343_EW_53x30",
+          "x": 13564.8,
+          "y": 16977.6,
+          "w": 52.68,
+          "h": 30.215999999999998
+        },
+        {
+          "n": "rly_tt_lc2_9",
+          "m": "qfd_rly_28_EW_53x30",
+          "x": 13716.0,
+          "y": 16977.6,
+          "w": 52.68,
+          "h": 30.215999999999998
+        },
+        {
+          "n": "rly_pword_2_34",
+          "m": "qfd_rly_513_WE_53x60",
+          "x": 13629.6,
+          "y": 16977.6,
+          "w": 52.68,
+          "h": 60.455999999999996
+        }
+      ],
+      "N_M9_available_guarded_centers": 695,
+      "WE_M8_available_guarded_centers": 206,
+      "scenarios": {
+        "selected_fill375_plus_query210_with10center_gap_M9": {
+          "required_positions": 595,
+          "raw_PG_capacity_pass": true
+        },
+        "selected_fill375_plus_query213_with10center_gap_M9": {
+          "required_positions": 598,
+          "raw_PG_capacity_pass": true
+        },
+        "selected_fill375_plus_query210_plus_dispatch428_with20center_gaps_M9": {
+          "required_positions": 1033,
+          "raw_PG_capacity_pass": false
+        },
+        "provider759_alone_M9": {
+          "required_positions": 759,
+          "raw_PG_capacity_pass": false
+        },
+        "selected_fill375_alone_side_M8": {
+          "required_positions": 375,
+          "raw_PG_capacity_pass": false
+        },
+        "query210_alone_side_M8": {
+          "required_positions": 210,
+          "raw_PG_capacity_pass": false
+        }
+      }
+    },
+    {
+      "slot": "xroot_candidate_3",
+      "geometry": {
+        "x": 13748.4,
+        "y": 16988.4,
+        "w": 129.6,
+        "h": 41.04
+      },
+      "existing_bbox_conflicts": [
+        {
+          "n": "rly_tt_f2_13",
+          "m": "qfd_rly_107_WE_53x30",
+          "x": 13860.288,
+          "y": 16990.56,
+          "w": 52.68,
+          "h": 30.215999999999998
+        },
+        {
+          "n": "rly_tt_lc2_9",
+          "m": "qfd_rly_28_EW_53x30",
+          "x": 13716.0,
+          "y": 16977.6,
+          "w": 52.68,
+          "h": 30.215999999999998
+        },
+        {
+          "n": "rly_kvn_WN_16",
+          "m": "qfd_rly_1048_EW_54x60",
+          "x": 13780.8,
+          "y": 16977.6,
+          "w": 54.408,
+          "h": 60.455999999999996
+        }
+      ],
+      "N_M9_available_guarded_centers": 696,
+      "WE_M8_available_guarded_centers": 206,
+      "scenarios": {
+        "selected_fill375_plus_query210_with10center_gap_M9": {
+          "required_positions": 595,
+          "raw_PG_capacity_pass": true
+        },
+        "selected_fill375_plus_query213_with10center_gap_M9": {
+          "required_positions": 598,
+          "raw_PG_capacity_pass": true
+        },
+        "selected_fill375_plus_query210_plus_dispatch428_with20center_gaps_M9": {
+          "required_positions": 1033,
+          "raw_PG_capacity_pass": false
+        },
+        "provider759_alone_M9": {
+          "required_positions": 759,
+          "raw_PG_capacity_pass": false
+        },
+        "selected_fill375_alone_side_M8": {
+          "required_positions": 375,
+          "raw_PG_capacity_pass": false
+        },
+        "query210_alone_side_M8": {
+          "required_positions": 210,
+          "raw_PG_capacity_pass": false
+        }
+      }
+    },
+    {
+      "slot": "xroot_candidate_4",
+      "geometry": {
+        "x": 13899.599999999999,
+        "y": 16988.4,
+        "w": 129.6,
+        "h": 41.04
+      },
+      "existing_bbox_conflicts": [
+        {
+          "n": "rly_tt_c2_9",
+          "m": "qfd_rly_343_SW_53x30",
+          "x": 13975.2,
+          "y": 16977.6,
+          "w": 52.68,
+          "h": 30.215999999999998
+        },
+        {
+          "n": "rly_tt_f2_13",
+          "m": "qfd_rly_107_WE_53x30",
+          "x": 13860.288,
+          "y": 16990.56,
+          "w": 52.68,
+          "h": 30.215999999999998
+        }
+      ],
+      "N_M9_available_guarded_centers": 695,
+      "WE_M8_available_guarded_centers": 206,
+      "scenarios": {
+        "selected_fill375_plus_query210_with10center_gap_M9": {
+          "required_positions": 595,
+          "raw_PG_capacity_pass": true
+        },
+        "selected_fill375_plus_query213_with10center_gap_M9": {
+          "required_positions": 598,
+          "raw_PG_capacity_pass": true
+        },
+        "selected_fill375_plus_query210_plus_dispatch428_with20center_gaps_M9": {
+          "required_positions": 1033,
+          "raw_PG_capacity_pass": false
+        },
+        "provider759_alone_M9": {
+          "required_positions": 759,
+          "raw_PG_capacity_pass": false
+        },
+        "selected_fill375_alone_side_M8": {
+          "required_positions": 375,
+          "raw_PG_capacity_pass": false
+        },
+        "query210_alone_side_M8": {
+          "required_positions": 210,
+          "raw_PG_capacity_pass": false
+        }
+      }
+    },
+    {
+      "slot": "xroot_candidate_5",
+      "geometry": {
+        "x": 14050.8,
+        "y": 16988.4,
+        "w": 129.6,
+        "h": 41.04
+      },
+      "existing_bbox_conflicts": [
+        {
+          "n": "rly_pword_2_35",
+          "m": "qfd_rly_513_WE_53x60",
+          "x": 14040.0,
+          "y": 16977.6,
+          "w": 52.68,
+          "h": 60.455999999999996
+        }
+      ],
+      "N_M9_available_guarded_centers": 695,
+      "WE_M8_available_guarded_centers": 206,
+      "scenarios": {
+        "selected_fill375_plus_query210_with10center_gap_M9": {
+          "required_positions": 595,
+          "raw_PG_capacity_pass": true
+        },
+        "selected_fill375_plus_query213_with10center_gap_M9": {
+          "required_positions": 598,
+          "raw_PG_capacity_pass": true
+        },
+        "selected_fill375_plus_query210_plus_dispatch428_with20center_gaps_M9": {
+          "required_positions": 1033,
+          "raw_PG_capacity_pass": false
+        },
+        "provider759_alone_M9": {
+          "required_positions": 759,
+          "raw_PG_capacity_pass": false
+        },
+        "selected_fill375_alone_side_M8": {
+          "required_positions": 375,
+          "raw_PG_capacity_pass": false
+        },
+        "query210_alone_side_M8": {
+          "required_positions": 210,
+          "raw_PG_capacity_pass": false
+        }
+      }
+    },
+    {
+      "slot": "xroot_candidate_6",
+      "geometry": {
+        "x": 14202.0,
+        "y": 16988.4,
+        "w": 129.6,
+        "h": 41.04
+      },
+      "existing_bbox_conflicts": [
+        {
+          "n": "rly_tt_f2_14",
+          "m": "qfd_rly_107_WS_53x30",
+          "x": 14284.512,
+          "y": 16990.56,
+          "w": 52.68,
+          "h": 30.215999999999998
+        },
+        {
+          "n": "rly_rc_0_0",
+          "m": "qfd_rly_1_WE_53x30",
+          "x": 14229.216,
+          "y": 17018.64,
+          "w": 52.68,
+          "h": 30.215999999999998
+        },
+        {
+          "n": "rly_rk_0_29",
+          "m": "qfd_rly_1_EW_53x30",
+          "x": 14224.464,
+          "y": 16984.08,
+          "w": 52.68,
+          "h": 30.215999999999998
+        }
+      ],
+      "N_M9_available_guarded_centers": 695,
+      "WE_M8_available_guarded_centers": 206,
+      "scenarios": {
+        "selected_fill375_plus_query210_with10center_gap_M9": {
+          "required_positions": 595,
+          "raw_PG_capacity_pass": true
+        },
+        "selected_fill375_plus_query213_with10center_gap_M9": {
+          "required_positions": 598,
+          "raw_PG_capacity_pass": true
+        },
+        "selected_fill375_plus_query210_plus_dispatch428_with20center_gaps_M9": {
+          "required_positions": 1033,
+          "raw_PG_capacity_pass": false
+        },
+        "provider759_alone_M9": {
+          "required_positions": 759,
+          "raw_PG_capacity_pass": false
+        },
+        "selected_fill375_alone_side_M8": {
+          "required_positions": 375,
+          "raw_PG_capacity_pass": false
+        },
+        "query210_alone_side_M8": {
+          "required_positions": 210,
+          "raw_PG_capacity_pass": false
+        }
+      }
+    },
+    {
+      "slot": "xroot_candidate_7",
+      "geometry": {
+        "x": 14353.199999999999,
+        "y": 16988.4,
+        "w": 129.6,
+        "h": 41.04
+      },
+      "existing_bbox_conflicts": [
+        {
+          "n": "rly_rs_0_29",
+          "m": "qfd_rly_551_SW_53x60",
+          "x": 14421.024,
+          "y": 16990.56,
+          "w": 52.68,
+          "h": 60.455999999999996
+        }
+      ],
+      "N_M9_available_guarded_centers": 697,
+      "WE_M8_available_guarded_centers": 206,
+      "scenarios": {
+        "selected_fill375_plus_query210_with10center_gap_M9": {
+          "required_positions": 595,
+          "raw_PG_capacity_pass": true
+        },
+        "selected_fill375_plus_query213_with10center_gap_M9": {
+          "required_positions": 598,
+          "raw_PG_capacity_pass": true
+        },
+        "selected_fill375_plus_query210_plus_dispatch428_with20center_gaps_M9": {
+          "required_positions": 1033,
+          "raw_PG_capacity_pass": false
+        },
+        "provider759_alone_M9": {
+          "required_positions": 759,
+          "raw_PG_capacity_pass": false
+        },
+        "selected_fill375_alone_side_M8": {
+          "required_positions": 375,
+          "raw_PG_capacity_pass": false
+        },
+        "query210_alone_side_M8": {
+          "required_positions": 210,
+          "raw_PG_capacity_pass": false
+        }
+      }
+    },
+    {
+      "slot": "xroot_candidate_8",
+      "geometry": {
+        "x": 14504.4,
+        "y": 16988.4,
+        "w": 129.6,
+        "h": 41.04
+      },
+      "existing_bbox_conflicts": [
+        {
+          "n": "rly_rc_0_1",
+          "m": "qfd_rly_1_WS_53x30",
+          "x": 14621.472,
+          "y": 16994.88,
+          "w": 52.68,
+          "h": 30.215999999999998
+        }
+      ],
+      "N_M9_available_guarded_centers": 695,
+      "WE_M8_available_guarded_centers": 206,
+      "scenarios": {
+        "selected_fill375_plus_query210_with10center_gap_M9": {
+          "required_positions": 595,
+          "raw_PG_capacity_pass": true
+        },
+        "selected_fill375_plus_query213_with10center_gap_M9": {
+          "required_positions": 598,
+          "raw_PG_capacity_pass": true
+        },
+        "selected_fill375_plus_query210_plus_dispatch428_with20center_gaps_M9": {
+          "required_positions": 1033,
+          "raw_PG_capacity_pass": false
+        },
+        "provider759_alone_M9": {
+          "required_positions": 759,
+          "raw_PG_capacity_pass": false
+        },
+        "selected_fill375_alone_side_M8": {
+          "required_positions": 375,
+          "raw_PG_capacity_pass": false
+        },
+        "query210_alone_side_M8": {
+          "required_positions": 210,
+          "raw_PG_capacity_pass": false
+        }
+      }
+    },
+    {
+      "slot": "xroot_candidate_9",
+      "geometry": {
+        "x": 14655.599999999999,
+        "y": 16988.4,
+        "w": 129.6,
+        "h": 41.04
+      },
+      "existing_bbox_conflicts": [
+        {
+          "n": "rly_rc_0_1",
+          "m": "qfd_rly_1_WS_53x30",
+          "x": 14621.472,
+          "y": 16994.88,
+          "w": 52.68,
+          "h": 30.215999999999998
+        }
+      ],
+      "N_M9_available_guarded_centers": 694,
+      "WE_M8_available_guarded_centers": 206,
+      "scenarios": {
+        "selected_fill375_plus_query210_with10center_gap_M9": {
+          "required_positions": 595,
+          "raw_PG_capacity_pass": true
+        },
+        "selected_fill375_plus_query213_with10center_gap_M9": {
+          "required_positions": 598,
+          "raw_PG_capacity_pass": true
+        },
+        "selected_fill375_plus_query210_plus_dispatch428_with20center_gaps_M9": {
+          "required_positions": 1033,
+          "raw_PG_capacity_pass": false
+        },
+        "provider759_alone_M9": {
+          "required_positions": 759,
+          "raw_PG_capacity_pass": false
+        },
+        "selected_fill375_alone_side_M8": {
+          "required_positions": 375,
+          "raw_PG_capacity_pass": false
+        },
+        "query210_alone_side_M8": {
+          "required_positions": 210,
+          "raw_PG_capacity_pass": false
+        }
+      }
+    },
+    {
+      "slot": "xroot_candidate_10",
+      "geometry": {
+        "x": 14806.8,
+        "y": 16988.4,
+        "w": 129.6,
+        "h": 41.04
+      },
+      "existing_bbox_conflicts": [],
+      "N_M9_available_guarded_centers": 695,
+      "WE_M8_available_guarded_centers": 206,
+      "scenarios": {
+        "selected_fill375_plus_query210_with10center_gap_M9": {
+          "required_positions": 595,
+          "raw_PG_capacity_pass": true
+        },
+        "selected_fill375_plus_query213_with10center_gap_M9": {
+          "required_positions": 598,
+          "raw_PG_capacity_pass": true
+        },
+        "selected_fill375_plus_query210_plus_dispatch428_with20center_gaps_M9": {
+          "required_positions": 1033,
+          "raw_PG_capacity_pass": false
+        },
+        "provider759_alone_M9": {
+          "required_positions": 759,
+          "raw_PG_capacity_pass": false
+        },
+        "selected_fill375_alone_side_M8": {
+          "required_positions": 375,
+          "raw_PG_capacity_pass": false
+        },
+        "query210_alone_side_M8": {
+          "required_positions": 210,
+          "raw_PG_capacity_pass": false
+        }
+      }
+    },
+    {
+      "slot": "xroot_candidate_11",
+      "geometry": {
+        "x": 14958.0,
+        "y": 16988.4,
+        "w": 129.6,
+        "h": 41.04
+      },
+      "existing_bbox_conflicts": [],
+      "N_M9_available_guarded_centers": 699,
+      "WE_M8_available_guarded_centers": 206,
+      "scenarios": {
+        "selected_fill375_plus_query210_with10center_gap_M9": {
+          "required_positions": 595,
+          "raw_PG_capacity_pass": true
+        },
+        "selected_fill375_plus_query213_with10center_gap_M9": {
+          "required_positions": 598,
+          "raw_PG_capacity_pass": true
+        },
+        "selected_fill375_plus_query210_plus_dispatch428_with20center_gaps_M9": {
+          "required_positions": 1033,
+          "raw_PG_capacity_pass": false
+        },
+        "provider759_alone_M9": {
+          "required_positions": 759,
+          "raw_PG_capacity_pass": false
+        },
+        "selected_fill375_alone_side_M8": {
+          "required_positions": 375,
+          "raw_PG_capacity_pass": false
+        },
+        "query210_alone_side_M8": {
+          "required_positions": 210,
+          "raw_PG_capacity_pass": false
+        }
+      }
+    },
+    {
+      "slot": "xroot_candidate_12",
+      "geometry": {
+        "x": 15109.199999999999,
+        "y": 16988.4,
+        "w": 129.6,
+        "h": 41.04
+      },
+      "existing_bbox_conflicts": [
+        {
+          "n": "rly_tt_mx_5",
+          "m": "qfd_rly_553_SN_53x60",
+          "x": 15209.856,
+          "y": 16979.76,
+          "w": 52.68,
+          "h": 60.455999999999996
+        }
+      ],
+      "N_M9_available_guarded_centers": 694,
+      "WE_M8_available_guarded_centers": 206,
+      "scenarios": {
+        "selected_fill375_plus_query210_with10center_gap_M9": {
+          "required_positions": 595,
+          "raw_PG_capacity_pass": true
+        },
+        "selected_fill375_plus_query213_with10center_gap_M9": {
+          "required_positions": 598,
+          "raw_PG_capacity_pass": true
+        },
+        "selected_fill375_plus_query210_plus_dispatch428_with20center_gaps_M9": {
+          "required_positions": 1033,
+          "raw_PG_capacity_pass": false
+        },
+        "provider759_alone_M9": {
+          "required_positions": 759,
+          "raw_PG_capacity_pass": false
+        },
+        "selected_fill375_alone_side_M8": {
+          "required_positions": 375,
+          "raw_PG_capacity_pass": false
+        },
+        "query210_alone_side_M8": {
+          "required_positions": 210,
+          "raw_PG_capacity_pass": false
+        }
+      }
+    },
+    {
+      "slot": "xroot_candidate_13",
+      "geometry": {
+        "x": 15260.4,
+        "y": 16988.4,
+        "w": 129.6,
+        "h": 41.04
+      },
+      "existing_bbox_conflicts": [
+        {
+          "n": "rly_tt_mx_5",
+          "m": "qfd_rly_553_SN_53x60",
+          "x": 15209.856,
+          "y": 16979.76,
+          "w": 52.68,
+          "h": 60.455999999999996
+        },
+        {
+          "n": "rly_o4_me_en_5",
+          "m": "qfd_rly_8_EW_53x30",
+          "x": 15350.256,
+          "y": 17018.64,
+          "w": 52.68,
+          "h": 30.215999999999998
+        },
+        {
+          "n": "rly_tt_ib_5",
+          "m": "qfd_rly_380_EW_53x30",
+          "x": 15290.208,
+          "y": 17018.64,
+          "w": 52.68,
+          "h": 30.215999999999998
+        }
+      ],
+      "N_M9_available_guarded_centers": 695,
+      "WE_M8_available_guarded_centers": 206,
+      "scenarios": {
+        "selected_fill375_plus_query210_with10center_gap_M9": {
+          "required_positions": 595,
+          "raw_PG_capacity_pass": true
+        },
+        "selected_fill375_plus_query213_with10center_gap_M9": {
+          "required_positions": 598,
+          "raw_PG_capacity_pass": true
+        },
+        "selected_fill375_plus_query210_plus_dispatch428_with20center_gaps_M9": {
+          "required_positions": 1033,
+          "raw_PG_capacity_pass": false
+        },
+        "provider759_alone_M9": {
+          "required_positions": 759,
+          "raw_PG_capacity_pass": false
+        },
+        "selected_fill375_alone_side_M8": {
+          "required_positions": 375,
+          "raw_PG_capacity_pass": false
+        },
+        "query210_alone_side_M8": {
+          "required_positions": 210,
+          "raw_PG_capacity_pass": false
+        }
+      }
+    },
+    {
+      "slot": "xroot_candidate_14",
+      "geometry": {
+        "x": 15411.599999999999,
+        "y": 16988.4,
+        "w": 129.6,
+        "h": 41.04
+      },
+      "existing_bbox_conflicts": [],
+      "N_M9_available_guarded_centers": 694,
+      "WE_M8_available_guarded_centers": 206,
+      "scenarios": {
+        "selected_fill375_plus_query210_with10center_gap_M9": {
+          "required_positions": 595,
+          "raw_PG_capacity_pass": true
+        },
+        "selected_fill375_plus_query213_with10center_gap_M9": {
+          "required_positions": 598,
+          "raw_PG_capacity_pass": true
+        },
+        "selected_fill375_plus_query210_plus_dispatch428_with20center_gaps_M9": {
+          "required_positions": 1033,
+          "raw_PG_capacity_pass": false
+        },
+        "provider759_alone_M9": {
+          "required_positions": 759,
+          "raw_PG_capacity_pass": false
+        },
+        "selected_fill375_alone_side_M8": {
+          "required_positions": 375,
+          "raw_PG_capacity_pass": false
+        },
+        "query210_alone_side_M8": {
+          "required_positions": 210,
+          "raw_PG_capacity_pass": false
+        }
+      }
+    },
+    {
+      "slot": "xroot_candidate_15",
+      "geometry": {
+        "x": 15562.8,
+        "y": 16988.4,
+        "w": 129.6,
+        "h": 41.04
+      },
+      "existing_bbox_conflicts": [
+        {
+          "n": "rly_tt_land_0",
+          "m": "qfd_rly_16_WS_53x30",
+          "x": 15541.2,
+          "y": 16971.12,
+          "w": 52.68,
+          "h": 30.215999999999998
+        },
+        {
+          "n": "rly_o4_meok_0",
+          "m": "qfd_rly_1_WS_53x30",
+          "x": 15572.304,
+          "y": 17003.52,
+          "w": 52.68,
+          "h": 30.215999999999998
+        }
+      ],
+      "N_M9_available_guarded_centers": 698,
+      "WE_M8_available_guarded_centers": 206,
+      "scenarios": {
+        "selected_fill375_plus_query210_with10center_gap_M9": {
+          "required_positions": 595,
+          "raw_PG_capacity_pass": true
+        },
+        "selected_fill375_plus_query213_with10center_gap_M9": {
+          "required_positions": 598,
+          "raw_PG_capacity_pass": true
+        },
+        "selected_fill375_plus_query210_plus_dispatch428_with20center_gaps_M9": {
+          "required_positions": 1033,
+          "raw_PG_capacity_pass": false
+        },
+        "provider759_alone_M9": {
+          "required_positions": 759,
+          "raw_PG_capacity_pass": false
+        },
+        "selected_fill375_alone_side_M8": {
+          "required_positions": 375,
+          "raw_PG_capacity_pass": false
+        },
+        "query210_alone_side_M8": {
+          "required_positions": 210,
+          "raw_PG_capacity_pass": false
+        }
+      }
+    },
+    {
+      "slot": "xroot_candidate_16",
+      "geometry": {
+        "x": 15714.0,
+        "y": 16988.4,
+        "w": 129.6,
+        "h": 41.04
+      },
+      "existing_bbox_conflicts": [],
+      "N_M9_available_guarded_centers": 695,
+      "WE_M8_available_guarded_centers": 206,
+      "scenarios": {
+        "selected_fill375_plus_query210_with10center_gap_M9": {
+          "required_positions": 595,
+          "raw_PG_capacity_pass": true
+        },
+        "selected_fill375_plus_query213_with10center_gap_M9": {
+          "required_positions": 598,
+          "raw_PG_capacity_pass": true
+        },
+        "selected_fill375_plus_query210_plus_dispatch428_with20center_gaps_M9": {
+          "required_positions": 1033,
+          "raw_PG_capacity_pass": false
+        },
+        "provider759_alone_M9": {
+          "required_positions": 759,
+          "raw_PG_capacity_pass": false
+        },
+        "selected_fill375_alone_side_M8": {
+          "required_positions": 375,
+          "raw_PG_capacity_pass": false
+        },
+        "query210_alone_side_M8": {
+          "required_positions": 210,
+          "raw_PG_capacity_pass": false
+        }
+      }
+    },
+    {
+      "slot": "xroot_candidate_17",
+      "geometry": {
+        "x": 15865.199999999999,
+        "y": 16988.4,
+        "w": 129.6,
+        "h": 41.04
+      },
+      "existing_bbox_conflicts": [],
+      "N_M9_available_guarded_centers": 694,
+      "WE_M8_available_guarded_centers": 206,
+      "scenarios": {
+        "selected_fill375_plus_query210_with10center_gap_M9": {
+          "required_positions": 595,
+          "raw_PG_capacity_pass": true
+        },
+        "selected_fill375_plus_query213_with10center_gap_M9": {
+          "required_positions": 598,
+          "raw_PG_capacity_pass": true
+        },
+        "selected_fill375_plus_query210_plus_dispatch428_with20center_gaps_M9": {
+          "required_positions": 1033,
+          "raw_PG_capacity_pass": false
+        },
+        "provider759_alone_M9": {
+          "required_positions": 759,
+          "raw_PG_capacity_pass": false
+        },
+        "selected_fill375_alone_side_M8": {
+          "required_positions": 375,
+          "raw_PG_capacity_pass": false
+        },
+        "query210_alone_side_M8": {
+          "required_positions": 210,
+          "raw_PG_capacity_pass": false
+        }
+      }
+    },
+    {
+      "slot": "xroot_candidate_18",
+      "geometry": {
+        "x": 16016.4,
+        "y": 16988.4,
+        "w": 129.6,
+        "h": 41.04
+      },
+      "existing_bbox_conflicts": [],
+      "N_M9_available_guarded_centers": 695,
+      "WE_M8_available_guarded_centers": 206,
+      "scenarios": {
+        "selected_fill375_plus_query210_with10center_gap_M9": {
+          "required_positions": 595,
+          "raw_PG_capacity_pass": true
+        },
+        "selected_fill375_plus_query213_with10center_gap_M9": {
+          "required_positions": 598,
+          "raw_PG_capacity_pass": true
+        },
+        "selected_fill375_plus_query210_plus_dispatch428_with20center_gaps_M9": {
+          "required_positions": 1033,
+          "raw_PG_capacity_pass": false
+        },
+        "provider759_alone_M9": {
+          "required_positions": 759,
+          "raw_PG_capacity_pass": false
+        },
+        "selected_fill375_alone_side_M8": {
+          "required_positions": 375,
+          "raw_PG_capacity_pass": false
+        },
+        "query210_alone_side_M8": {
+          "required_positions": 210,
+          "raw_PG_capacity_pass": false
+        }
+      }
+    },
+    {
+      "slot": "xroot_candidate_19",
+      "geometry": {
+        "x": 16167.599999999999,
+        "y": 16988.4,
+        "w": 129.6,
+        "h": 41.04
+      },
+      "existing_bbox_conflicts": [],
+      "N_M9_available_guarded_centers": 697,
+      "WE_M8_available_guarded_centers": 206,
+      "scenarios": {
+        "selected_fill375_plus_query210_with10center_gap_M9": {
+          "required_positions": 595,
+          "raw_PG_capacity_pass": true
+        },
+        "selected_fill375_plus_query213_with10center_gap_M9": {
+          "required_positions": 598,
+          "raw_PG_capacity_pass": true
+        },
+        "selected_fill375_plus_query210_plus_dispatch428_with20center_gaps_M9": {
+          "required_positions": 1033,
+          "raw_PG_capacity_pass": false
+        },
+        "provider759_alone_M9": {
+          "required_positions": 759,
+          "raw_PG_capacity_pass": false
+        },
+        "selected_fill375_alone_side_M8": {
+          "required_positions": 375,
+          "raw_PG_capacity_pass": false
+        },
+        "query210_alone_side_M8": {
+          "required_positions": 210,
+          "raw_PG_capacity_pass": false
+        }
+      }
+    },
+    {
+      "slot": "xroot_candidate_20",
+      "geometry": {
+        "x": 16318.8,
+        "y": 16988.4,
+        "w": 129.6,
+        "h": 41.04
+      },
+      "existing_bbox_conflicts": [],
+      "N_M9_available_guarded_centers": 695,
+      "WE_M8_available_guarded_centers": 206,
+      "scenarios": {
+        "selected_fill375_plus_query210_with10center_gap_M9": {
+          "required_positions": 595,
+          "raw_PG_capacity_pass": true
+        },
+        "selected_fill375_plus_query213_with10center_gap_M9": {
+          "required_positions": 598,
+          "raw_PG_capacity_pass": true
+        },
+        "selected_fill375_plus_query210_plus_dispatch428_with20center_gaps_M9": {
+          "required_positions": 1033,
+          "raw_PG_capacity_pass": false
+        },
+        "provider759_alone_M9": {
+          "required_positions": 759,
+          "raw_PG_capacity_pass": false
+        },
+        "selected_fill375_alone_side_M8": {
+          "required_positions": 375,
+          "raw_PG_capacity_pass": false
+        },
+        "query210_alone_side_M8": {
+          "required_positions": 210,
+          "raw_PG_capacity_pass": false
+        }
+      }
+    },
+    {
+      "slot": "xroot_candidate_21",
+      "geometry": {
+        "x": 16470.0,
+        "y": 16988.4,
+        "w": 129.6,
+        "h": 41.04
+      },
+      "existing_bbox_conflicts": [],
+      "N_M9_available_guarded_centers": 696,
+      "WE_M8_available_guarded_centers": 206,
+      "scenarios": {
+        "selected_fill375_plus_query210_with10center_gap_M9": {
+          "required_positions": 595,
+          "raw_PG_capacity_pass": true
+        },
+        "selected_fill375_plus_query213_with10center_gap_M9": {
+          "required_positions": 598,
+          "raw_PG_capacity_pass": true
+        },
+        "selected_fill375_plus_query210_plus_dispatch428_with20center_gaps_M9": {
+          "required_positions": 1033,
+          "raw_PG_capacity_pass": false
+        },
+        "provider759_alone_M9": {
+          "required_positions": 759,
+          "raw_PG_capacity_pass": false
+        },
+        "selected_fill375_alone_side_M8": {
+          "required_positions": 375,
+          "raw_PG_capacity_pass": false
+        },
+        "query210_alone_side_M8": {
+          "required_positions": 210,
+          "raw_PG_capacity_pass": false
+        }
+      }
+    },
+    {
+      "slot": "xroot_candidate_22",
+      "geometry": {
+        "x": 16621.2,
+        "y": 16988.4,
+        "w": 129.6,
+        "h": 41.04
+      },
+      "existing_bbox_conflicts": [],
+      "N_M9_available_guarded_centers": 696,
+      "WE_M8_available_guarded_centers": 206,
+      "scenarios": {
+        "selected_fill375_plus_query210_with10center_gap_M9": {
+          "required_positions": 595,
+          "raw_PG_capacity_pass": true
+        },
+        "selected_fill375_plus_query213_with10center_gap_M9": {
+          "required_positions": 598,
+          "raw_PG_capacity_pass": true
+        },
+        "selected_fill375_plus_query210_plus_dispatch428_with20center_gaps_M9": {
+          "required_positions": 1033,
+          "raw_PG_capacity_pass": false
+        },
+        "provider759_alone_M9": {
+          "required_positions": 759,
+          "raw_PG_capacity_pass": false
+        },
+        "selected_fill375_alone_side_M8": {
+          "required_positions": 375,
+          "raw_PG_capacity_pass": false
+        },
+        "query210_alone_side_M8": {
+          "required_positions": 210,
+          "raw_PG_capacity_pass": false
+        }
+      }
+    },
+    {
+      "slot": "xroot_candidate_23",
+      "geometry": {
+        "x": 16772.399999999998,
+        "y": 16988.4,
+        "w": 129.6,
+        "h": 41.04
+      },
+      "existing_bbox_conflicts": [
+        {
+          "n": "rly_attn_ret_8",
+          "m": "qfd_rly_521_SE_53x60",
+          "x": 16868.304,
+          "y": 16990.56,
+          "w": 52.68,
+          "h": 60.455999999999996
+        }
+      ],
+      "N_M9_available_guarded_centers": 695,
+      "WE_M8_available_guarded_centers": 206,
+      "scenarios": {
+        "selected_fill375_plus_query210_with10center_gap_M9": {
+          "required_positions": 595,
+          "raw_PG_capacity_pass": true
+        },
+        "selected_fill375_plus_query213_with10center_gap_M9": {
+          "required_positions": 598,
+          "raw_PG_capacity_pass": true
+        },
+        "selected_fill375_plus_query210_plus_dispatch428_with20center_gaps_M9": {
+          "required_positions": 1033,
+          "raw_PG_capacity_pass": false
+        },
+        "provider759_alone_M9": {
+          "required_positions": 759,
+          "raw_PG_capacity_pass": false
+        },
+        "selected_fill375_alone_side_M8": {
+          "required_positions": 375,
+          "raw_PG_capacity_pass": false
+        },
+        "query210_alone_side_M8": {
+          "required_positions": 210,
+          "raw_PG_capacity_pass": false
+        }
+      }
+    },
+    {
+      "slot": "xroot_candidate_24",
+      "geometry": {
+        "x": 16923.6,
+        "y": 16988.4,
+        "w": 129.6,
+        "h": 41.04
+      },
+      "existing_bbox_conflicts": [],
+      "N_M9_available_guarded_centers": 695,
+      "WE_M8_available_guarded_centers": 206,
+      "scenarios": {
+        "selected_fill375_plus_query210_with10center_gap_M9": {
+          "required_positions": 595,
+          "raw_PG_capacity_pass": true
+        },
+        "selected_fill375_plus_query213_with10center_gap_M9": {
+          "required_positions": 598,
+          "raw_PG_capacity_pass": true
+        },
+        "selected_fill375_plus_query210_plus_dispatch428_with20center_gaps_M9": {
+          "required_positions": 1033,
+          "raw_PG_capacity_pass": false
+        },
+        "provider759_alone_M9": {
+          "required_positions": 759,
+          "raw_PG_capacity_pass": false
+        },
+        "selected_fill375_alone_side_M8": {
+          "required_positions": 375,
+          "raw_PG_capacity_pass": false
+        },
+        "query210_alone_side_M8": {
+          "required_positions": 210,
+          "raw_PG_capacity_pass": false
+        }
+      }
+    },
+    {
+      "slot": "xroot_candidate_25",
+      "geometry": {
+        "x": 17074.8,
+        "y": 16988.4,
+        "w": 129.6,
+        "h": 41.04
+      },
+      "existing_bbox_conflicts": [],
+      "N_M9_available_guarded_centers": 695,
+      "WE_M8_available_guarded_centers": 206,
+      "scenarios": {
+        "selected_fill375_plus_query210_with10center_gap_M9": {
+          "required_positions": 595,
+          "raw_PG_capacity_pass": true
+        },
+        "selected_fill375_plus_query213_with10center_gap_M9": {
+          "required_positions": 598,
+          "raw_PG_capacity_pass": true
+        },
+        "selected_fill375_plus_query210_plus_dispatch428_with20center_gaps_M9": {
+          "required_positions": 1033,
+          "raw_PG_capacity_pass": false
+        },
+        "provider759_alone_M9": {
+          "required_positions": 759,
+          "raw_PG_capacity_pass": false
+        },
+        "selected_fill375_alone_side_M8": {
+          "required_positions": 375,
+          "raw_PG_capacity_pass": false
+        },
+        "query210_alone_side_M8": {
+          "required_positions": 210,
+          "raw_PG_capacity_pass": false
+        }
+      }
+    },
+    {
+      "slot": "xroot_candidate_26",
+      "geometry": {
+        "x": 17226.0,
+        "y": 16988.4,
+        "w": 129.6,
+        "h": 41.04
+      },
+      "existing_bbox_conflicts": [
+        {
+          "n": "rly_attn_ret_9",
+          "m": "qfd_rly_521_WE_53x60",
+          "x": 17269.632,
+          "y": 16986.24,
+          "w": 52.68,
+          "h": 60.455999999999996
+        },
+        {
+          "n": "rly_aq_WN_10",
+          "m": "qfd_rly_540_WE_53x60",
+          "x": 17330.544,
+          "y": 16975.44,
+          "w": 52.68,
+          "h": 60.455999999999996
+        }
+      ],
+      "N_M9_available_guarded_centers": 698,
+      "WE_M8_available_guarded_centers": 206,
+      "scenarios": {
+        "selected_fill375_plus_query210_with10center_gap_M9": {
+          "required_positions": 595,
+          "raw_PG_capacity_pass": true
+        },
+        "selected_fill375_plus_query213_with10center_gap_M9": {
+          "required_positions": 598,
+          "raw_PG_capacity_pass": true
+        },
+        "selected_fill375_plus_query210_plus_dispatch428_with20center_gaps_M9": {
+          "required_positions": 1033,
+          "raw_PG_capacity_pass": false
+        },
+        "provider759_alone_M9": {
+          "required_positions": 759,
+          "raw_PG_capacity_pass": false
+        },
+        "selected_fill375_alone_side_M8": {
+          "required_positions": 375,
+          "raw_PG_capacity_pass": false
+        },
+        "query210_alone_side_M8": {
+          "required_positions": 210,
+          "raw_PG_capacity_pass": false
+        }
+      }
+    },
+    {
+      "slot": "xroot_candidate_27",
+      "geometry": {
+        "x": 17377.2,
+        "y": 16988.4,
+        "w": 129.6,
+        "h": 41.04
+      },
+      "existing_bbox_conflicts": [
+        {
+          "n": "rly_aq_WN_10",
+          "m": "qfd_rly_540_WE_53x60",
+          "x": 17330.544,
+          "y": 16975.44,
+          "w": 52.68,
+          "h": 60.455999999999996
+        }
+      ],
+      "N_M9_available_guarded_centers": 696,
+      "WE_M8_available_guarded_centers": 206,
+      "scenarios": {
+        "selected_fill375_plus_query210_with10center_gap_M9": {
+          "required_positions": 595,
+          "raw_PG_capacity_pass": true
+        },
+        "selected_fill375_plus_query213_with10center_gap_M9": {
+          "required_positions": 598,
+          "raw_PG_capacity_pass": true
+        },
+        "selected_fill375_plus_query210_plus_dispatch428_with20center_gaps_M9": {
+          "required_positions": 1033,
+          "raw_PG_capacity_pass": false
+        },
+        "provider759_alone_M9": {
+          "required_positions": 759,
+          "raw_PG_capacity_pass": false
+        },
+        "selected_fill375_alone_side_M8": {
+          "required_positions": 375,
+          "raw_PG_capacity_pass": false
+        },
+        "query210_alone_side_M8": {
+          "required_positions": 210,
+          "raw_PG_capacity_pass": false
+        }
+      }
+    },
+    {
+      "slot": "xroot_candidate_28",
+      "geometry": {
+        "x": 17528.399999999998,
+        "y": 16988.4,
+        "w": 129.6,
+        "h": 41.04
+      },
+      "existing_bbox_conflicts": [
+        {
+          "n": "rly_aq_WN_11",
+          "m": "qfd_rly_540_WE_53x60",
+          "x": 17633.376,
+          "y": 16975.44,
+          "w": 52.68,
+          "h": 60.455999999999996
+        }
+      ],
+      "N_M9_available_guarded_centers": 695,
+      "WE_M8_available_guarded_centers": 206,
+      "scenarios": {
+        "selected_fill375_plus_query210_with10center_gap_M9": {
+          "required_positions": 595,
+          "raw_PG_capacity_pass": true
+        },
+        "selected_fill375_plus_query213_with10center_gap_M9": {
+          "required_positions": 598,
+          "raw_PG_capacity_pass": true
+        },
+        "selected_fill375_plus_query210_plus_dispatch428_with20center_gaps_M9": {
+          "required_positions": 1033,
+          "raw_PG_capacity_pass": false
+        },
+        "provider759_alone_M9": {
+          "required_positions": 759,
+          "raw_PG_capacity_pass": false
+        },
+        "selected_fill375_alone_side_M8": {
+          "required_positions": 375,
+          "raw_PG_capacity_pass": false
+        },
+        "query210_alone_side_M8": {
+          "required_positions": 210,
+          "raw_PG_capacity_pass": false
+        }
+      }
+    },
+    {
+      "slot": "xroot_candidate_29",
+      "geometry": {
+        "x": 17679.6,
+        "y": 16988.4,
+        "w": 129.6,
+        "h": 41.04
+      },
+      "existing_bbox_conflicts": [
+        {
+          "n": "rly_attn_ret_10",
+          "m": "qfd_rly_521_WE_53x60",
+          "x": 17690.832,
+          "y": 16986.24,
+          "w": 52.68,
+          "h": 60.455999999999996
+        },
+        {
+          "n": "rly_aq_WN_11",
+          "m": "qfd_rly_540_WE_53x60",
+          "x": 17633.376,
+          "y": 16975.44,
+          "w": 52.68,
+          "h": 60.455999999999996
+        }
+      ],
+      "N_M9_available_guarded_centers": 695,
+      "WE_M8_available_guarded_centers": 206,
+      "scenarios": {
+        "selected_fill375_plus_query210_with10center_gap_M9": {
+          "required_positions": 595,
+          "raw_PG_capacity_pass": true
+        },
+        "selected_fill375_plus_query213_with10center_gap_M9": {
+          "required_positions": 598,
+          "raw_PG_capacity_pass": true
+        },
+        "selected_fill375_plus_query210_plus_dispatch428_with20center_gaps_M9": {
+          "required_positions": 1033,
+          "raw_PG_capacity_pass": false
+        },
+        "provider759_alone_M9": {
+          "required_positions": 759,
+          "raw_PG_capacity_pass": false
+        },
+        "selected_fill375_alone_side_M8": {
+          "required_positions": 375,
+          "raw_PG_capacity_pass": false
+        },
+        "query210_alone_side_M8": {
+          "required_positions": 210,
+          "raw_PG_capacity_pass": false
+        }
+      }
+    },
+    {
+      "slot": "xroot_candidate_30",
+      "geometry": {
+        "x": 17830.8,
+        "y": 16988.4,
+        "w": 129.6,
+        "h": 41.04
+      },
+      "existing_bbox_conflicts": [],
+      "N_M9_available_guarded_centers": 699,
+      "WE_M8_available_guarded_centers": 206,
+      "scenarios": {
+        "selected_fill375_plus_query210_with10center_gap_M9": {
+          "required_positions": 595,
+          "raw_PG_capacity_pass": true
+        },
+        "selected_fill375_plus_query213_with10center_gap_M9": {
+          "required_positions": 598,
+          "raw_PG_capacity_pass": true
+        },
+        "selected_fill375_plus_query210_plus_dispatch428_with20center_gaps_M9": {
+          "required_positions": 1033,
+          "raw_PG_capacity_pass": false
+        },
+        "provider759_alone_M9": {
+          "required_positions": 759,
+          "raw_PG_capacity_pass": false
+        },
+        "selected_fill375_alone_side_M8": {
+          "required_positions": 375,
+          "raw_PG_capacity_pass": false
+        },
+        "query210_alone_side_M8": {
+          "required_positions": 210,
+          "raw_PG_capacity_pass": false
+        }
+      }
+    },
+    {
+      "slot": "xroot_candidate_31",
+      "geometry": {
+        "x": 17982.0,
+        "y": 16988.4,
+        "w": 129.6,
+        "h": 41.04
+      },
+      "existing_bbox_conflicts": [
+        {
+          "n": "rly_aq_WN_12",
+          "m": "qfd_rly_540_WE_53x60",
+          "x": 18010.944,
+          "y": 16975.44,
+          "w": 52.68,
+          "h": 60.455999999999996
+        }
+      ],
+      "N_M9_available_guarded_centers": 695,
+      "WE_M8_available_guarded_centers": 206,
+      "scenarios": {
+        "selected_fill375_plus_query210_with10center_gap_M9": {
+          "required_positions": 595,
+          "raw_PG_capacity_pass": true
+        },
+        "selected_fill375_plus_query213_with10center_gap_M9": {
+          "required_positions": 598,
+          "raw_PG_capacity_pass": true
+        },
+        "selected_fill375_plus_query210_plus_dispatch428_with20center_gaps_M9": {
+          "required_positions": 1033,
+          "raw_PG_capacity_pass": false
+        },
+        "provider759_alone_M9": {
+          "required_positions": 759,
+          "raw_PG_capacity_pass": false
+        },
+        "selected_fill375_alone_side_M8": {
+          "required_positions": 375,
+          "raw_PG_capacity_pass": false
+        },
+        "query210_alone_side_M8": {
+          "required_positions": 210,
+          "raw_PG_capacity_pass": false
+        }
+      }
+    }
+  ],
+  "summary": {
+    "slots": 32,
+    "M9_center_range": [
+      694,
+      699
+    ],
+    "M8_side_center_range": [
+      206,
+      206
+    ],
+    "scenario_pass_counts": {
+      "selected_fill375_plus_query210_with10center_gap_M9": 32,
+      "selected_fill375_plus_query213_with10center_gap_M9": 32,
+      "selected_fill375_plus_query210_plus_dispatch428_with20center_gaps_M9": 0,
+      "provider759_alone_M9": 0,
+      "selected_fill375_alone_side_M8": 0,
+      "query210_alone_side_M8": 0
+    },
+    "slots_with_existing_bbox_conflict": 19
+  },
+  "limits": [
+    "Payload fields only; ACK/valid/reset/clock/admission overhead not all counted.",
+    "Raw PG center availability does not prove wire capacity,0.60cut,registered endpoints,pairreach,hold/setup,localOBS or technology pin rules.",
+    "M7 instruction or M6 metadata split is unqualified until actual PG/OBS/grid and native ABI bindings exist.",
+    "No dictionary149 compression/reconstruction, source/token/mode lifetime or same-face multiplexing is assumed.",
+    "Candidate frozen8e043 geometry remains unassigned and has existing collision reports; no replacement slots adopted."
+  ],
+  "center_details": {
+    "path": "center_details.json.gz",
+    "sha256": "2f45a6e52e69a9055cc8ef20f3c359e968e7f02455c4665ba41bdbeae79fbf74",
+    "raw_sha256": "5a8a54ee29372b3dc0c92c2f13487d628032d0fcb70361239a3c5f52c02f191c",
+    "scope": "provisional scenario centers, not assigned pins"
+  }
+}

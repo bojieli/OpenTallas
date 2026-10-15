@@ -1,0 +1,23 @@
+{
+  "cell": "ot_hgi_coll_pring_state",
+  "view": "physical/ref_tile/hgi_coll_ring_state_r1/views/ot_hgi_coll_pring_state",
+  "lib_cell": "ot_hgi_coll_pring_state",
+  "insertion": true,
+  "ref_src": [
+    "insertion.json boundary mean"
+  ],
+  "R_ps": 151.0,
+  "spread_ps": 18.8,
+  "outputs": 1536,
+  "inputs": 1034,
+  "launch_ps": 195.9,
+  "launch_pin": "c3[197]",
+  "capture_ps": 183.9,
+  "capture_pin": "carry_wr1[2]",
+  "launch_over": 0,
+  "capture_over": 0,
+  "comb_pins": 0,
+  "comb_first": [],
+  "pass": true,
+  "fail_why": ""
+}

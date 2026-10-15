@@ -1,0 +1,279 @@
+Oct 14 18:46:06 regular-crane kernel: docker0: port 17(veth8e0c8ff) entered blocking state
+Oct 14 18:46:06 regular-crane kernel: docker0: port 17(veth8e0c8ff) entered disabled state
+Oct 14 18:46:06 regular-crane kernel: veth8e0c8ff: entered allmulticast mode
+Oct 14 18:46:06 regular-crane kernel: veth8e0c8ff: entered promiscuous mode
+Oct 14 18:46:06 regular-crane kernel: eth0: renamed from veth896c954
+Oct 14 18:46:06 regular-crane kernel: docker0: port 17(veth8e0c8ff) entered blocking state
+Oct 14 18:46:06 regular-crane kernel: docker0: port 17(veth8e0c8ff) entered forwarding state
+Oct 14 18:46:07 regular-crane kernel: verilator_bin invoked oom-killer: gfp_mask=0xcc0(GFP_KERNEL), order=0, oom_score_adj=0
+Oct 14 18:46:07 regular-crane kernel: CPU: 107 UID: 1000 PID: 413382 Comm: verilator_bin Not tainted 7.0.0-38-generic #38-Ubuntu PREEMPT(lazy) 
+Oct 14 18:46:07 regular-crane kernel: Hardware name: Supermicro AS -1116CS-TN/H14SHM, BIOS 2.0 03/23/2026
+Oct 14 18:46:07 regular-crane kernel: Call Trace:
+Oct 14 18:46:07 regular-crane kernel:  <TASK>
+Oct 14 18:46:07 regular-crane kernel:  show_stack+0x49/0x60
+Oct 14 18:46:07 regular-crane kernel:  dump_stack_lvl+0x5f/0x90
+Oct 14 18:46:07 regular-crane kernel:  dump_stack+0x10/0x18
+Oct 14 18:46:07 regular-crane kernel:  dump_header+0x48/0x1c7
+Oct 14 18:46:07 regular-crane kernel:  oom_kill_process.cold+0x8/0xac
+Oct 14 18:46:07 regular-crane kernel:  out_of_memory+0xff/0x2b0
+Oct 14 18:46:07 regular-crane kernel:  mem_cgroup_out_of_memory+0xc8/0xe0
+Oct 14 18:46:07 regular-crane kernel:  try_charge_memcg+0x3c3/0x620
+Oct 14 18:46:07 regular-crane kernel:  charge_memcg+0x34/0x80
+Oct 14 18:46:07 regular-crane kernel:  __mem_cgroup_charge+0x2f/0xa0
+Oct 14 18:46:07 regular-crane kernel:  alloc_anon_folio+0x20c/0x4b0
+Oct 14 18:46:07 regular-crane kernel:  do_anonymous_page+0x14a/0x4d0
+Oct 14 18:46:07 regular-crane kernel:  ? __pte_offset_map+0x1c/0x130
+Oct 14 18:46:07 regular-crane kernel:  handle_pte_fault+0x1cb/0x1f0
+Oct 14 18:46:07 regular-crane kernel:  __handle_mm_fault+0x493/0x720
+Oct 14 18:46:07 regular-crane kernel:  handle_mm_fault+0xee/0x2e0
+Oct 14 18:46:07 regular-crane kernel:  do_user_addr_fault+0x2ee/0x830
+Oct 14 18:46:07 regular-crane kernel:  exc_page_fault+0x83/0x1e0
+Oct 14 18:46:07 regular-crane kernel:  asm_exc_page_fault+0x27/0x30
+Oct 14 18:46:07 regular-crane kernel: RIP: 0033:0x5a0b567afffc
+Oct 14 18:46:07 regular-crane kernel: Code: 31 db 4d 63 8c 86 7c 0a 00 00 48 c1 e1 0d 49 01 c8 4a 8d 04 09 49 39 c0 72 1e 0f 1f 40 00 48 89 ca 48 89 c1 4c 01 c8 83 c6 01 <48> 89 17 48 89 d7 49 39 c0 73 e9 48 63 de 31 c0 48 c7 02 00 00 00
+Oct 14 18:46:07 regular-crane kernel: RSP: 002b:00007fff708036e0 EFLAGS: 00010206
+Oct 14 18:46:07 regular-crane kernel: RAX: 00005a1965a9d180 RBX: 0000000000000000 RCX: 00005a1965a9d100
+Oct 14 18:46:07 regular-crane kernel: RDX: 00005a1965a9d080 RSI: 0000000000000022 RDI: 00005a1965a9d000
+Oct 14 18:46:07 regular-crane kernel: RBP: 00005a0b56cf57e0 R08: 00005a1965a9e000 R09: 0000000000000080
+Oct 14 18:46:07 regular-crane kernel: R10: 0000000000000080 R11: 0000000000000206 R12: 00005a193eaa7d40
+Oct 14 18:46:07 regular-crane kernel: R13: 00005a0b56b6fbc0 R14: 00005a0b56d18d20 R15: 00007fff708037b8
+Oct 14 18:46:07 regular-crane kernel:  </TASK>
+Oct 14 18:46:07 regular-crane kernel: memory: usage 234881024kB, limit 234881024kB, failcnt 47
+Oct 14 18:46:07 regular-crane kernel: swap: usage 0kB, limit 0kB, failcnt 0
+Oct 14 18:46:07 regular-crane kernel: Memory cgroup stats for /user.slice/user-1000.slice/user@1000.service/app.slice/oth-ubuntu-412154-1792028623.scope:
+Oct 14 18:46:07 regular-crane kernel: anon 240044937216
+Oct 14 18:46:07 regular-crane kernel: file 0
+Oct 14 18:46:07 regular-crane kernel: kernel 473231360
+Oct 14 18:46:07 regular-crane kernel: kernel_stack 786432
+Oct 14 18:46:07 regular-crane kernel: pagetables 471384064
+Oct 14 18:46:07 regular-crane kernel: sec_pagetables 0
+Oct 14 18:46:07 regular-crane kernel: percpu 35360
+Oct 14 18:46:07 regular-crane kernel: sock 0
+Oct 14 18:46:07 regular-crane kernel: vmalloc 0
+Oct 14 18:46:07 regular-crane kernel: shmem 0
+Oct 14 18:46:07 regular-crane kernel: zswap 0
+Oct 14 18:46:07 regular-crane kernel: zswapped 0
+Oct 14 18:46:07 regular-crane kernel: file_mapped 0
+Oct 14 18:46:07 regular-crane kernel: file_dirty 0
+Oct 14 18:46:07 regular-crane kernel: file_writeback 0
+Oct 14 18:46:07 regular-crane kernel: swapcached 0
+Oct 14 18:46:07 regular-crane kernel: anon_thp 0
+Oct 14 18:46:07 regular-crane kernel: file_thp 0
+Oct 14 18:46:07 regular-crane kernel: shmem_thp 0
+Oct 14 18:46:07 regular-crane kernel: inactive_anon 240042758144
+Oct 14 18:46:07 regular-crane kernel: active_anon 2158592
+Oct 14 18:46:07 regular-crane kernel: inactive_file 0
+Oct 14 18:46:07 regular-crane kernel: active_file 0
+Oct 14 18:46:07 regular-crane kernel: unevictable 0
+Oct 14 18:46:07 regular-crane kernel: slab_reclaimable 13560
+Oct 14 18:46:07 regular-crane kernel: slab_unreclaimable 1009488
+Oct 14 18:46:07 regular-crane kernel: slab 1023048
+Oct 14 18:46:07 regular-crane kernel: hugetlb 0
+Oct 14 18:46:07 regular-crane kernel: workingset_refault_anon 0
+Oct 14 18:46:07 regular-crane kernel: workingset_refault_file 0
+Oct 14 18:46:07 regular-crane kernel: workingset_activate_anon 0
+Oct 14 18:46:07 regular-crane kernel: workingset_activate_file 0
+Oct 14 18:46:07 regular-crane kernel: workingset_restore_anon 0
+Oct 14 18:46:07 regular-crane kernel: workingset_restore_file 0
+Oct 14 18:46:07 regular-crane kernel: workingset_nodereclaim 0
+Oct 14 18:46:07 regular-crane kernel: pgdemote_kswapd 0
+Oct 14 18:46:07 regular-crane kernel: pgdemote_direct 0
+Oct 14 18:46:07 regular-crane kernel: pgdemote_khugepaged 0
+Oct 14 18:46:07 regular-crane kernel: pgdemote_proactive 0
+Oct 14 18:46:07 regular-crane kernel: pgpromote_success 0
+Oct 14 18:46:07 regular-crane kernel: pgscan 1
+Oct 14 18:46:07 regular-crane kernel: pgsteal 1
+Oct 14 18:46:07 regular-crane kernel: pswpin 0
+Oct 14 18:46:07 regular-crane kernel: pswpout 0
+Oct 14 18:46:07 regular-crane kernel: pgscan_kswapd 0
+Oct 14 18:46:07 regular-crane kernel: pgscan_direct 1
+Oct 14 18:46:07 regular-crane kernel: pgscan_khugepaged 0
+Oct 14 18:46:07 regular-crane kernel: pgscan_proactive 0
+Oct 14 18:46:07 regular-crane kernel: pgsteal_kswapd 0
+Oct 14 18:46:07 regular-crane kernel: pgsteal_direct 1
+Oct 14 18:46:07 regular-crane kernel: pgsteal_khugepaged 0
+Oct 14 18:46:07 regular-crane kernel: pgsteal_proactive 0
+Oct 14 18:46:07 regular-crane kernel: pgfault 58642830
+Oct 14 18:46:07 regular-crane kernel: pgmajfault 0
+Oct 14 18:46:07 regular-crane kernel: pgrefill 0
+Oct 14 18:46:07 regular-crane kernel: pgactivate 0
+Oct 14 18:46:07 regular-crane kernel: pgdeactivate 0
+Oct 14 18:46:07 regular-crane kernel: pglazyfree 0
+Oct 14 18:46:07 regular-crane kernel: pglazyfreed 0
+Oct 14 18:46:07 regular-crane kernel: swpin_zero 0
+Oct 14 18:46:07 regular-crane kernel: swpout_zero 0
+Oct 14 18:46:07 regular-crane kernel: zswpin 0
+Oct 14 18:46:07 regular-crane kernel: zswpout 0
+Oct 14 18:46:07 regular-crane kernel: zswpwb 0
+Oct 14 18:46:07 regular-crane kernel: thp_fault_alloc 0
+Oct 14 18:46:07 regular-crane kernel: thp_collapse_alloc 0
+Oct 14 18:46:07 regular-crane kernel: thp_swpout 0
+Oct 14 18:46:07 regular-crane kernel: thp_swpout_fallback 0
+Oct 14 18:46:07 regular-crane kernel: numa_pages_migrated 0
+Oct 14 18:46:07 regular-crane kernel: numa_pte_updates 0
+Oct 14 18:46:07 regular-crane kernel: numa_hint_faults 0
+Oct 14 18:46:07 regular-crane kernel: Memory cgroup min protection 0kB -- low protection 0kB
+Oct 14 18:46:07 regular-crane kernel: Tasks state (memory values in pages):
+Oct 14 18:46:07 regular-crane kernel: [  pid  ]   uid  tgid total_vm      rss rss_anon rss_file rss_shmem pgtables_bytes swapents oom_score_adj name
+Oct 14 18:46:07 regular-crane kernel: [ 412154]  1000 412154     2115     1097      207      890         0    57344        0             0 bash
+Oct 14 18:46:07 regular-crane kernel: [ 412950]  1000 412950     1986      526       79      447         0    49152        0             0 bash
+Oct 14 18:46:07 regular-crane kernel: [ 412951]  1000 412951     1986      542       79      463         0    49152        0             0 bash
+Oct 14 18:46:07 regular-crane kernel: [ 412952]  1000 412952     1986      542       79      463         0    49152        0             0 bash
+Oct 14 18:46:07 regular-crane kernel: [ 412953]  1000 412953     1986      542       79      463         0    49152        0             0 bash
+Oct 14 18:46:07 regular-crane kernel: [ 412954]  1000 412954     1986      578       83      495         0    49152        0             0 bash
+Oct 14 18:46:07 regular-crane kernel: [ 412955]  1000 412955     1986      578       83      495         0    49152        0             0 bash
+Oct 14 18:46:07 regular-crane kernel: [ 412956]  1000 412956     1986      578       83      495         0    49152        0             0 bash
+Oct 14 18:46:07 regular-crane kernel: [ 412957]  1000 412957     1986      578       83      495         0    49152        0             0 bash
+Oct 14 18:46:07 regular-crane kernel: [ 412958]  1000 412958     4688     3436     1800     1636         0    77824        0             0 perl
+Oct 14 18:46:07 regular-crane kernel: [ 412959]  1000 412959     4682     3440     1799     1641         0    77824        0             0 perl
+Oct 14 18:46:07 regular-crane kernel: [ 412960]  1000 412960     4670     3429     1798     1631         0    77824        0             0 perl
+Oct 14 18:46:07 regular-crane kernel: [ 412961]  1000 412961     4664     3429     1798     1631         0    77824        0             0 perl
+Oct 14 18:46:07 regular-crane kernel: [ 413223]  1000 413223 14673707 14651797 14648276     3521         0 117608448        0             0 verilator_bin
+Oct 14 18:46:07 regular-crane kernel: [ 413224]  1000 413224 14676011 14650179 14646700     3479         0 117600256        0             0 verilator_bin
+Oct 14 18:46:07 regular-crane kernel: [ 413226]  1000 413226 14675755 14651121 14647611     3510         0 117604352        0             0 verilator_bin
+Oct 14 18:46:07 regular-crane kernel: [ 413382]  1000 413382 14676013 14657908 14654455     3453         0 117669888        0             0 verilator_bin
+Oct 14 18:46:07 regular-crane kernel: oom-kill:constraint=CONSTRAINT_MEMCG,nodemask=(null),cpuset=user.slice,mems_allowed=0,oom_memcg=/user.slice/user-1000.slice/user@1000.service/app.slice/oth-ubuntu-412154-1792028623.scope,task_memcg=/user.slice/user-1000.slice/user@1000.service/app.slice/oth-ubuntu-412154-1792028623.scope,task=verilator_bin,pid=413382,uid=1000
+Oct 14 18:46:07 regular-crane kernel: Memory cgroup out of memory: Killed process 413382 (verilator_bin) total-vm:58704052kB, anon-rss:58617820kB, file-rss:13812kB, shmem-rss:0kB, UID:1000 pgtables:114912kB oom_score_adj:0
+Oct 14 18:46:07 regular-crane kernel: verilator_bin invoked oom-killer: gfp_mask=0xcc0(GFP_KERNEL), order=0, oom_score_adj=0
+Oct 14 18:46:07 regular-crane kernel: CPU: 55 UID: 1000 PID: 413226 Comm: verilator_bin Not tainted 7.0.0-38-generic #38-Ubuntu PREEMPT(lazy) 
+Oct 14 18:46:07 regular-crane kernel: Hardware name: Supermicro AS -1116CS-TN/H14SHM, BIOS 2.0 03/23/2026
+Oct 14 18:46:07 regular-crane kernel: Call Trace:
+Oct 14 18:46:07 regular-crane kernel:  <TASK>
+Oct 14 18:46:07 regular-crane kernel:  show_stack+0x49/0x60
+Oct 14 18:46:07 regular-crane kernel:  dump_stack_lvl+0x5f/0x90
+Oct 14 18:46:07 regular-crane kernel:  dump_stack+0x10/0x18
+Oct 14 18:46:07 regular-crane kernel:  dump_header+0x48/0x1c7
+Oct 14 18:46:07 regular-crane kernel:  oom_kill_process.cold+0x8/0xac
+Oct 14 18:46:07 regular-crane kernel:  out_of_memory+0xff/0x2b0
+Oct 14 18:46:07 regular-crane kernel:  mem_cgroup_out_of_memory+0xc8/0xe0
+Oct 14 18:46:07 regular-crane kernel:  try_charge_memcg+0x3c3/0x620
+Oct 14 18:46:07 regular-crane kernel:  charge_memcg+0x34/0x80
+Oct 14 18:46:07 regular-crane kernel:  __mem_cgroup_charge+0x2f/0xa0
+Oct 14 18:46:07 regular-crane kernel:  alloc_anon_folio+0x20c/0x4b0
+Oct 14 18:46:07 regular-crane kernel:  ? place_entity+0xad/0x170
+Oct 14 18:46:07 regular-crane kernel:  do_anonymous_page+0x14a/0x4d0
+Oct 14 18:46:07 regular-crane kernel:  ? __pte_offset_map+0x1c/0x130
+Oct 14 18:46:07 regular-crane kernel:  handle_pte_fault+0x1cb/0x1f0
+Oct 14 18:46:07 regular-crane kernel:  __handle_mm_fault+0x493/0x720
+Oct 14 18:46:07 regular-crane kernel:  handle_mm_fault+0xee/0x2e0
+Oct 14 18:46:07 regular-crane kernel:  do_user_addr_fault+0x2ee/0x830
+Oct 14 18:46:07 regular-crane kernel:  exc_page_fault+0x83/0x1e0
+Oct 14 18:46:07 regular-crane kernel:  asm_exc_page_fault+0x27/0x30
+Oct 14 18:46:07 regular-crane kernel: RIP: 0033:0x56111b09ca96
+Oct 14 18:46:07 regular-crane kernel: Code: 49 c7 47 48 00 00 00 00 49 c7 47 58 00 00 00 00 41 c6 47 60 00 66 41 89 47 70 4c 89 7c 24 48 49 3b 74 24 20 0f 84 22 03 00 00 <4c> 89 3e 48 83 c6 08 49 89 74 24 18 e8 79 95 fa ff 48 8d 8c 24 c0
+Oct 14 18:46:07 regular-crane kernel: RSP: 002b:00007ffcccb3a4b0 EFLAGS: 00010287
+Oct 14 18:46:07 regular-crane kernel: RAX: 0000000000000001 RBX: 000056118974be00 RCX: 0000000000000008
+Oct 14 18:46:07 regular-crane kernel: RDX: 0000000000000007 RSI: 0000561f453c5000 RDI: 000000000000000f
+Oct 14 18:46:07 regular-crane kernel: RBP: 0000561177ddf500 R08: 000056114aa58040 R09: 0000561189755c00
+Oct 14 18:46:07 regular-crane kernel: R10: 0000000000000080 R11: 0000561f00817f80 R12: 00007ffcccb3b660
+Oct 14 18:46:07 regular-crane kernel: R13: 00007ffcccb3a7a0 R14: 00007ffcccb3a7c0 R15: 0000561189755c00
+Oct 14 18:46:07 regular-crane kernel:  </TASK>
+Oct 14 18:46:07 regular-crane kernel: memory: usage 234881024kB, limit 234881024kB, failcnt 109
+Oct 14 18:46:07 regular-crane kernel: swap: usage 0kB, limit 0kB, failcnt 0
+Oct 14 18:46:07 regular-crane kernel: Memory cgroup stats for /user.slice/user-1000.slice/user@1000.service/app.slice/oth-ubuntu-412154-1792028623.scope:
+Oct 14 18:46:07 regular-crane kernel: anon 240044937216
+Oct 14 18:46:07 regular-crane kernel: file 0
+Oct 14 18:46:07 regular-crane kernel: kernel 473231360
+Oct 14 18:46:07 regular-crane kernel: kernel_stack 786432
+Oct 14 18:46:07 regular-crane kernel: pagetables 471384064
+Oct 14 18:46:07 regular-crane kernel: sec_pagetables 0
+Oct 14 18:46:07 regular-crane kernel: percpu 35360
+Oct 14 18:46:07 regular-crane kernel: sock 0
+Oct 14 18:46:07 regular-crane kernel: vmalloc 0
+Oct 14 18:46:07 regular-crane kernel: shmem 0
+Oct 14 18:46:07 regular-crane kernel: zswap 0
+Oct 14 18:46:07 regular-crane kernel: zswapped 0
+Oct 14 18:46:07 regular-crane kernel: file_mapped 0
+Oct 14 18:46:07 regular-crane kernel: file_dirty 0
+Oct 14 18:46:07 regular-crane kernel: file_writeback 0
+Oct 14 18:46:07 regular-crane kernel: swapcached 0
+Oct 14 18:46:07 regular-crane kernel: anon_thp 0
+Oct 14 18:46:07 regular-crane kernel: file_thp 0
+Oct 14 18:46:07 regular-crane kernel: shmem_thp 0
+Oct 14 18:46:07 regular-crane kernel: inactive_anon 240042758144
+Oct 14 18:46:07 regular-crane kernel: active_anon 2158592
+Oct 14 18:46:07 regular-crane kernel: inactive_file 0
+Oct 14 18:46:07 regular-crane kernel: active_file 0
+Oct 14 18:46:07 regular-crane kernel: unevictable 0
+Oct 14 18:46:07 regular-crane kernel: slab_reclaimable 13560
+Oct 14 18:46:07 regular-crane kernel: slab_unreclaimable 1009488
+Oct 14 18:46:07 regular-crane kernel: slab 1023048
+Oct 14 18:46:07 regular-crane kernel: hugetlb 0
+Oct 14 18:46:07 regular-crane kernel: workingset_refault_anon 0
+Oct 14 18:46:07 regular-crane kernel: workingset_refault_file 0
+Oct 14 18:46:07 regular-crane kernel: workingset_activate_anon 0
+Oct 14 18:46:07 regular-crane kernel: workingset_activate_file 0
+Oct 14 18:46:07 regular-crane kernel: workingset_restore_anon 0
+Oct 14 18:46:07 regular-crane kernel: workingset_restore_file 0
+Oct 14 18:46:07 regular-crane kernel: workingset_nodereclaim 0
+Oct 14 18:46:07 regular-crane kernel: pgdemote_kswapd 0
+Oct 14 18:46:07 regular-crane kernel: pgdemote_direct 0
+Oct 14 18:46:07 regular-crane kernel: pgdemote_khugepaged 0
+Oct 14 18:46:07 regular-crane kernel: pgdemote_proactive 0
+Oct 14 18:46:07 regular-crane kernel: pgpromote_success 0
+Oct 14 18:46:07 regular-crane kernel: pgscan 1
+Oct 14 18:46:07 regular-crane kernel: pgsteal 1
+Oct 14 18:46:07 regular-crane kernel: pswpin 0
+Oct 14 18:46:07 regular-crane kernel: pswpout 0
+Oct 14 18:46:07 regular-crane kernel: pgscan_kswapd 0
+Oct 14 18:46:07 regular-crane kernel: pgscan_direct 1
+Oct 14 18:46:07 regular-crane kernel: pgscan_khugepaged 0
+Oct 14 18:46:07 regular-crane kernel: pgscan_proactive 0
+Oct 14 18:46:07 regular-crane kernel: pgsteal_kswapd 0
+Oct 14 18:46:07 regular-crane kernel: pgsteal_direct 1
+Oct 14 18:46:07 regular-crane kernel: pgsteal_khugepaged 0
+Oct 14 18:46:07 regular-crane kernel: pgsteal_proactive 0
+Oct 14 18:46:07 regular-crane kernel: pgfault 58642830
+Oct 14 18:46:07 regular-crane kernel: pgmajfault 0
+Oct 14 18:46:07 regular-crane kernel: pgrefill 0
+Oct 14 18:46:07 regular-crane kernel: pgactivate 0
+Oct 14 18:46:07 regular-crane kernel: pgdeactivate 0
+Oct 14 18:46:07 regular-crane kernel: pglazyfree 0
+Oct 14 18:46:07 regular-crane kernel: pglazyfreed 0
+Oct 14 18:46:07 regular-crane kernel: swpin_zero 0
+Oct 14 18:46:07 regular-crane kernel: swpout_zero 0
+Oct 14 18:46:07 regular-crane kernel: zswpin 0
+Oct 14 18:46:07 regular-crane kernel: zswpout 0
+Oct 14 18:46:07 regular-crane kernel: zswpwb 0
+Oct 14 18:46:07 regular-crane kernel: thp_fault_alloc 0
+Oct 14 18:46:07 regular-crane kernel: thp_collapse_alloc 0
+Oct 14 18:46:07 regular-crane kernel: thp_swpout 0
+Oct 14 18:46:07 regular-crane kernel: thp_swpout_fallback 0
+Oct 14 18:46:07 regular-crane kernel: numa_pages_migrated 0
+Oct 14 18:46:07 regular-crane kernel: numa_pte_updates 0
+Oct 14 18:46:07 regular-crane kernel: numa_hint_faults 0
+Oct 14 18:46:07 regular-crane kernel: Memory cgroup min protection 0kB -- low protection 0kB
+Oct 14 18:46:07 regular-crane kernel: Tasks state (memory values in pages):
+Oct 14 18:46:07 regular-crane kernel: [  pid  ]   uid  tgid total_vm      rss rss_anon rss_file rss_shmem pgtables_bytes swapents oom_score_adj name
+Oct 14 18:46:07 regular-crane kernel: [ 412154]  1000 412154     2115     1097      207      890         0    57344        0             0 bash
+Oct 14 18:46:07 regular-crane kernel: [ 412950]  1000 412950     1986      526       79      447         0    49152        0             0 bash
+Oct 14 18:46:07 regular-crane kernel: [ 412951]  1000 412951     1986      542       79      463         0    49152        0             0 bash
+Oct 14 18:46:07 regular-crane kernel: [ 412952]  1000 412952     1986      542       79      463         0    49152        0             0 bash
+Oct 14 18:46:07 regular-crane kernel: [ 412953]  1000 412953     1986      542       79      463         0    49152        0             0 bash
+Oct 14 18:46:07 regular-crane kernel: [ 412954]  1000 412954     1986      578       83      495         0    49152        0             0 bash
+Oct 14 18:46:07 regular-crane kernel: [ 412955]  1000 412955     1986      578       83      495         0    49152        0             0 bash
+Oct 14 18:46:07 regular-crane kernel: [ 412956]  1000 412956     1986      578       83      495         0    49152        0             0 bash
+Oct 14 18:46:07 regular-crane kernel: [ 412957]  1000 412957     1986      578       83      495         0    49152        0             0 bash
+Oct 14 18:46:07 regular-crane kernel: [ 412958]  1000 412958     4688     3436     1800     1636         0    77824        0             0 perl
+Oct 14 18:46:07 regular-crane kernel: [ 412959]  1000 412959     4682     3440     1799     1641         0    77824        0             0 perl
+Oct 14 18:46:07 regular-crane kernel: [ 412960]  1000 412960     4670     3429     1798     1631         0    77824        0             0 perl
+Oct 14 18:46:07 regular-crane kernel: [ 412961]  1000 412961     4664     3429     1798     1631         0    77824        0             0 perl
+Oct 14 18:46:07 regular-crane kernel: [ 413223]  1000 413223 14673707 14651797 14648276     3521         0 117608448        0             0 verilator_bin
+Oct 14 18:46:07 regular-crane kernel: [ 413224]  1000 413224 14676011 14650179 14646700     3479         0 117600256        0             0 verilator_bin
+Oct 14 18:46:07 regular-crane kernel: [ 413226]  1000 413226 14675755 14651121 14647611     3510         0 117604352        0             0 verilator_bin
+Oct 14 18:46:07 regular-crane kernel: oom-kill:constraint=CONSTRAINT_MEMCG,nodemask=(null),cpuset=user.slice,mems_allowed=0,oom_memcg=/user.slice/user-1000.slice/user@1000.service/app.slice/oth-ubuntu-412154-1792028623.scope,task_memcg=/user.slice/user-1000.slice/user@1000.service/app.slice/oth-ubuntu-412154-1792028623.scope,task=verilator_bin,pid=413223,uid=1000
+Oct 14 18:46:07 regular-crane kernel: Memory cgroup out of memory: Killed process 413223 (verilator_bin) total-vm:58694828kB, anon-rss:58593104kB, file-rss:14084kB, shmem-rss:0kB, UID:1000 pgtables:114852kB oom_score_adj:0
+Oct 14 18:46:10 regular-crane kernel: veth896c954: renamed from eth0
+Oct 14 18:46:10 regular-crane kernel: docker0: port 17(veth8e0c8ff) entered disabled state
+Oct 14 18:46:11 regular-crane kernel: docker0: port 17(veth8e0c8ff) entered disabled state
+Oct 14 18:46:11 regular-crane kernel: veth8e0c8ff (unregistering): left allmulticast mode
+Oct 14 18:46:11 regular-crane kernel: veth8e0c8ff (unregistering): left promiscuous mode
+Oct 14 18:46:11 regular-crane kernel: docker0: port 17(veth8e0c8ff) entered disabled state
+Oct 14 18:46:11 regular-crane kernel: docker0: port 17(veth08da865) entered blocking state
+Oct 14 18:46:11 regular-crane kernel: docker0: port 17(veth08da865) entered disabled state
+Oct 14 18:46:11 regular-crane kernel: veth08da865: entered allmulticast mode
+Oct 14 18:46:11 regular-crane kernel: veth08da865: entered promiscuous mode
+Oct 14 18:46:11 regular-crane kernel: eth0: renamed from veth86cda32
+Oct 14 18:46:11 regular-crane kernel: docker0: port 17(veth08da865) entered blocking state
+Oct 14 18:46:11 regular-crane kernel: docker0: port 17(veth08da865) entered forwarding state
+Oct 14 18:46:13 regular-crane kernel: oom_reaper: reaped process 413382 (verilator_bin), now anon-rss:0kB, file-rss:0kB, shmem-rss:0kB

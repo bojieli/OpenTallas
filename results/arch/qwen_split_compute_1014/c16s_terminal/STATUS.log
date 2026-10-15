@@ -1,0 +1,13 @@
+2026-10-14 22:08:23 PDT port-bind (no stubs): DIE_PORT_BIND FAIL masters=32 instances=1630 unbound_masters=3 stub_masters=0 ambiguous_masters=0 port_not_in_rtl=76 width_mismatch=5 input_unconnected=389 input_tied=7 unparsed_connections=0 undriven_net_bits=7813 multi_driven_net_bits=1 top_assigns=0 params_not_in_rtl=0 strap_ports=11 rc=1
+2026-10-14 22:08:23 PDT qwen-split compute chain c16s (src 675166521); real views: 2 masters / 16 of 1630 instances
+2026-10-14 22:08:23 PDT chain start die=r22k src=675166521 from=case
+2026-10-14 22:12:18 PDT real case: OT_LEGAL instances=1630 overlaps=0 outside=0 OT_ASSERT PASS OT_PA FAIL DRT-0305 
+2026-10-14 23:03:28 PDT PDN PASS OT_PGCHECK VDD FAIL PSM-0069 OT_PGCHECK VSS FAIL PSM-0069 
+2026-10-15 01:18:40 PDT full-die GRT exit=0 overflow=0 ([INFO GRT-0018] Total wirelength: 1432556784 um)
+2026-10-15 01:18:40 PDT STA tt clock: /srv/opentallas-scratch/claude/qwen-split-compute/c16s/chain/libs/clocks.tcl
+2026-10-15 01:19:19 PDT STA tt: 
+2026-10-15 01:19:19 PDT STA ff clock: /srv/opentallas-scratch/claude/qwen-split-compute/c16s/chain/libs/clocks.tcl
+2026-10-15 01:19:59 PDT STA ff: 
+2026-10-15 01:19:59 PDT STA ss clock: /srv/opentallas-scratch/claude/qwen-split-compute/c16s/chain/libs/clocks.tcl
+2026-10-15 01:20:37 PDT STA ss: 
+2026-10-15 01:20:37 PDT chain done

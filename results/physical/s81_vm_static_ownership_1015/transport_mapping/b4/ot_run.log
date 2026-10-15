@@ -1,0 +1,170 @@
+ot-run: ot-epyc1tb     admits   422 GB (avail 648, growth 75, headroom 64, waiters 0/0 GB) load 56/128 running 15 disk 692 GB 
+ot-run: ot-epyc4       admits   491 GB (avail 717, growth 119, headroom 48, waiters 0/0 GB) load 54/128 running 24 disk 508 GB 
+ot-run: ot-pve1        admits   154 GB (avail 201, growth 6, headroom 32, waiters 0/0 GB) load 35/28 running 2 disk 1310 GB 
+ot-run: ot-agidock128  admits    46 GB (avail 78, growth 18, headroom 24, waiters 0/0 GB) load 6/64 running 5 disk 42 GB 
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-1472285-1792054933 after 0 s
+{
+  "status": "MAPPED_AREA_ONLY",
+  "source_commit": "cd1242953",
+  "top": "dsfd_vm_static_relay128_b4",
+  "abc_target_ps": 833,
+  "cell_area_um2": 441.71568,
+  "cell_count": 2624,
+  "mapped_FF_cells": 1312,
+  "unknown_cells": {},
+  "ports": {
+    "ck_req": {
+      "direction": "input",
+      "bits": 1
+    },
+    "ck_rsp": {
+      "direction": "input",
+      "bits": 1
+    },
+    "rst_n": {
+      "direction": "input",
+      "bits": 1
+    },
+    "i_rv": {
+      "direction": "input",
+      "bits": 4
+    },
+    "i_wv": {
+      "direction": "input",
+      "bits": 4
+    },
+    "i_ra": {
+      "direction": "input",
+      "bits": 36
+    },
+    "i_wa": {
+      "direction": "input",
+      "bits": 36
+    },
+    "i_rt": {
+      "direction": "input",
+      "bits": 32
+    },
+    "i_wt": {
+      "direction": "input",
+      "bits": 32
+    },
+    "i_wm": {
+      "direction": "input",
+      "bits": 16
+    },
+    "i_wd": {
+      "direction": "input",
+      "bits": 512
+    },
+    "o_rv": {
+      "direction": "output",
+      "bits": 4
+    },
+    "o_wv": {
+      "direction": "output",
+      "bits": 4
+    },
+    "o_ra": {
+      "direction": "output",
+      "bits": 36
+    },
+    "o_wa": {
+      "direction": "output",
+      "bits": 36
+    },
+    "o_rt": {
+      "direction": "output",
+      "bits": 32
+    },
+    "o_wt": {
+      "direction": "output",
+      "bits": 32
+    },
+    "o_wm": {
+      "direction": "output",
+      "bits": 16
+    },
+    "o_wd": {
+      "direction": "output",
+      "bits": 512
+    },
+    "i_sv": {
+      "direction": "input",
+      "bits": 4
+    },
+    "i_cv": {
+      "direction": "input",
+      "bits": 4
+    },
+    "i_sd": {
+      "direction": "input",
+      "bits": 512
+    },
+    "i_st": {
+      "direction": "input",
+      "bits": 32
+    },
+    "i_ct": {
+      "direction": "input",
+      "bits": 32
+    },
+    "i_ca": {
+      "direction": "input",
+      "bits": 36
+    },
+    "i_cm": {
+      "direction": "input",
+      "bits": 16
+    },
+    "o_sv": {
+      "direction": "output",
+      "bits": 4
+    },
+    "o_cv": {
+      "direction": "output",
+      "bits": 4
+    },
+    "o_sd": {
+      "direction": "output",
+      "bits": 512
+    },
+    "o_st": {
+      "direction": "output",
+      "bits": 32
+    },
+    "o_ct": {
+      "direction": "output",
+      "bits": 32
+    },
+    "o_ca": {
+      "direction": "output",
+      "bits": 36
+    },
+    "o_cm": {
+      "direction": "output",
+      "bits": 16
+    }
+  },
+  "candidate_outline_um": [
+    129.6,
+    129.6
+  ],
+  "outline_area_um2": 16796.16,
+  "raw_utilization": 0.026298611111111113,
+  "core_inset_um": 2.16,
+  "inset_core_area_um2": 15695.0784,
+  "inset_core_utilization": 0.0281435790725327,
+  "parent_fit_proven": false,
+  "timing_proven": false,
+  "pin_assignment_proven": false,
+  "clock_root_limit": 15000,
+  "adoption_requires": [
+    "exact assigned per-bit pins and pin-capacity check",
+    "CTS insertion/spread and native TT setup/FF hold/DRC",
+    "parent connectivity-aware placement with actual bank face pins",
+    "production static-schedule composition visibility and throughput"
+  ]
+}
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-1472285-1792054933): exit 0

@@ -766,12 +766,24 @@
  "root_ribbon_candidate": {
   "source_payload_bits": 4096,
   "per_root_bits": 149,
+  "root_metadata_status": "Proposed bound only; production96-bit x_addr key and collision-free epoch encoding pending native proof",
+  "legacy_issue_fields": {
+   "xl": 128,
+   "ib": 379,
+   "ib_go": 1,
+   "total_data_bits": 508,
+   "source": "tools/qwen_rom_fulldie_b3r2.py:894; die lead band_plan ABI"
+  },
+  "common_instruction_fields": {
+   "ib": 379,
+   "ib_go": 1
+  },
   "source_pins": 4768,
-  "common_instruction_bits": 379,
-  "source_cut_bits": 5147,
+  "common_instruction_bits": 380,
+  "source_cut_bits": 5148,
   "fork_payload_bits": 8192,
   "fork_bits_with_metadata": 9536,
-  "fork_cut_bits_if_common_instruction_once": 9915,
+  "fork_cut_bits_if_common_instruction_once": 9916,
   "VM_width_um": 4838.4,
   "VM_S_y_um": 17051.04,
   "clk_rx_top_y_um": 16966.776,
@@ -785,44 +797,77 @@
   "cut_limit": 0.6,
   "options": {
    "M8_only_single_wire_080": {
-    "required_height_um": 767.2919268501116,
+    "required_height_um": 767.4410024139061,
     "admissible_bits_in_gap": 565.2435439799947
    },
    "M8_historical_derate075": {
-    "required_height_um": 915.0222222222222,
+    "required_height_um": 915.2,
     "admissible_bits_in_gap": 473.9849999999956
    },
    "M8_effective_spacing_096": {
-    "required_height_um": 920.7503122201339,
+    "required_height_um": 920.9292028966872,
     "admissible_bits_in_gap": 471.0362866499956
    },
    "M8_two_tracks_160": {
-    "required_height_um": 1534.5838537002232,
+    "required_height_um": 1534.8820048278121,
     "admissible_bits_in_gap": 282.62177198999734
    },
    "open_M6_M8": {
-    "required_height_um": 374.61995307970614,
+    "required_height_um": 374.6927372166946,
     "admissible_bits_in_gap": 1157.724793979989
    },
    "open_M4_M6_M8": {
-    "required_height_um": 257.4883034049664,
+    "required_height_um": 257.53833027564934,
     "admissible_bits_in_gap": 1684.3747939799841
    }
   },
   "local_root_example": {
-   "root149_plus_common379_bits": 528,
-   "M8_singlewire_util": 0.5604663748467551,
+   "root149_plus_common380_bits": 529,
+   "M8_singlewire_util": 0.5615278641930558,
    "note": "Idealized one-root-local segment only. No upstream segment may collect many roots; select/credits/reset/clock omitted."
   },
+  "prior_omitted_ib_go_scenario": {
+   "common_instruction_bits": 379,
+   "source_cut_bits": 5147,
+   "local_root_bits": 528,
+   "fork_cut_bits_if_common_instruction_once": 9915,
+   "why_superseded": "sel_v in the proposed root metadata does not replace independent compute issue ib_go",
+   "options": {
+    "M8_only_single_wire_080": {
+     "required_height_um": 767.2919268501116,
+     "admissible_bits_in_gap": 565.2435439799947
+    },
+    "M8_historical_derate075": {
+     "required_height_um": 915.0222222222222,
+     "admissible_bits_in_gap": 473.9849999999956
+    },
+    "M8_effective_spacing_096": {
+     "required_height_um": 920.7503122201339,
+     "admissible_bits_in_gap": 471.0362866499956
+    },
+    "M8_two_tracks_160": {
+     "required_height_um": 1534.5838537002232,
+     "admissible_bits_in_gap": 282.62177198999734
+    },
+    "open_M6_M8": {
+     "required_height_um": 374.61995307970614,
+     "admissible_bits_in_gap": 1157.724793979989
+    },
+    "open_M4_M6_M8": {
+     "required_height_um": 257.4883034049664,
+     "admissible_bits_in_gap": 1684.3747939799841
+    }
+   }
+  },
   "face_spacing_um": 0.096,
-  "source_plus_instruction_face_length_um": 494.112,
-  "source_plus_instruction_fraction_S_face": 0.10212301587301588,
+  "source_plus_instruction_face_length_um": 494.208,
+  "source_plus_instruction_fraction_S_face": 0.10214285714285716,
   "constraints": [
    "VM blocks M1-M9 over its entire rectangle: no layer option permits VM transit",
    "M4/M6 options exist only in actual open channels; tile capM7 leaves M8H/M9V over tile where LEFOBS permits",
    "M9 is vertical; do not count it as another horizontal ribbon layer",
    "Sface pin capacity is different from horizontal channel capacity",
-   "32spatially local root sources/forks can avoid aggregate5147 choke point only with explicit sourceplacement and all percut/window checks",
+   "32spatially local root sources/forks can avoid aggregate5148 choke point only with explicit sourceplacement and all percut/window checks",
    "native X selectors/epoch freshness/credit latency and production loss require full qualification"
   ],
   "note": "Candidate arithmetic only. .096 is two-track M4 pin spacing; M8 nominal wire pitch is.080, and literal two M8 tracks require.160. Historical~767um figure uses.080 single-wire pitch, not.096."

@@ -1,0 +1,47 @@
+{
+  "schema": "opentallas.qwen-central-vm-native-bank.v1",
+  "opt_in_default": false,
+  "parameters": {
+    "DEPTH": 174,
+    "LAW": 8
+  },
+  "replicas": 64,
+  "macs_per_cycle": 0,
+  "memory_macros_per_bank": 2,
+  "memory_read_bytes_per_cycle": 64,
+  "memory_write_bytes_per_cycle": 64,
+  "mask_bits": 16,
+  "input_bits_per_cycle": 546,
+  "output_bits_per_cycle": 512,
+  "internal_boundary_bits": [
+    546,
+    512,
+    512
+  ],
+  "hard_register_leaves": [
+    547,
+    512,
+    512
+  ],
+  "raw_macro_clock_entries": 2,
+  "clock_roots_per_bank": 5,
+  "root_increase_per_bank": 4,
+  "fixed_edges": 4,
+  "added_fixed_edges": 0,
+  "token_latency_change_edges": 0,
+  "input_leaf_outline_um": [
+    43.2,
+    69.12
+  ],
+  "input_leaf_area_um2": 2985.9840000000004,
+  "input_face_tracks": 547,
+  "estimated_face_tracks": 1215.0000000000002,
+  "estimated_face_cut_ratio": 0.45020576131687234,
+  "mux_demux_cost": "existing16word write mask replicated32bits, no new data mux",
+  "original_clock_failure": "TT boundary293.9..430.9ps, spread137ps, reference319.3ps",
+  "placement": "input at SRAM write/read faces, capture at SRAM readout, output beside return relay",
+  "capture_output_views": "reuse actual512-bit delay1 leaf only after source/native audit",
+  "parent_own_flops": 0,
+  "memory_contents": "same actual two256x256 SRAMs; no behavioral replacement",
+  "qualification": "sizing/proposal; fullbank exact+mutant, leaf/native clocks/routes and parent composition open"
+}

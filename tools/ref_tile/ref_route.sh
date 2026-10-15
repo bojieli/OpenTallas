@@ -28,6 +28,14 @@ hook() {
 }
 S=(); for f in $SRCS; do S+=(--source $f); done
 M=(); for m in "${MACROS[@]}"; do M+=(--macro $m); done
+# ASAP7 fastroute.tcl routes clocks on MIN_CLK_ROUTING_LAYER (M4)..MAX_ROUTING_LAYER, and OpenROAD needs
+# min < max (ODB-0137 at floorplan otherwise). A kit with a signal cap below M5 carries its own two-layer
+# CLOCK_RLAYERS (ref_tile.clock_rlayers); kits capped at M5+ leave the platform default alone.
+CR=()
+if [ -n "${CLOCK_RLAYERS:-}" ]; then
+  read -r OT_CLK_LO OT_CLK_HI <<< "$CLOCK_RLAYERS"
+  CR=(--orfs-var "MIN_CLK_ROUTING_LAYER=$OT_CLK_LO" --orfs-var "MAX_CLK_ROUTING_LAYER=$OT_CLK_HI")
+fi
 SO=(); [ -n "$STOP" ] && SO=(--pnr-stop-after $STOP)
 # synthesis cap: unlimited for a route; the gate's floorplan smoke passes SYNTH_TIMEOUT (a SHARE stall fails in minutes)
 STO=${SYNTH_TIMEOUT:-unlimited}
@@ -37,7 +45,7 @@ echo "$(date -Is) start $NAME kit=$K src=$(cat SOURCE_COMMIT 2>/dev/null) stop=$
 python3 tools/run_abi3_physical.py --view asap7 --top $TOP "${S[@]}" "${PARAMS[@]}" \
   --die-area 0 0 $FW $FH --core-area 2.16 2.16 $(python3 -c "print(round($FW-2.16,3), round($FH-2.16,3))") \
   "${PINS[@]}" $([ "${PINEX:-1}" = 1 ] && echo --pin-regions-exhaustive) "${EXTRA[@]}" \
-  --routing-layers $RLAYERS --clock-port $CLKPORT --clock-period-ns ${ROUTE_PERIOD_NS:-0.770} --clock-uncertainty-ns 0.06 \
+  --routing-layers $RLAYERS "${CR[@]}" --clock-port $CLKPORT --clock-period-ns ${ROUTE_PERIOD_NS:-0.770} --clock-uncertainty-ns 0.06 \
   --clock-uncertainty-hold-ns 0.025 --orfs-corner ${CORNER:-WC} --hold-corners ${CORNER:-WC},BC --io-delay-fraction 0.2 --stages pnr \
   --place-density ${PD:-0.55} --hold-margin-ns ${HM:-0.010} --synth-timeout-seconds $STO --flow-timeout-seconds unlimited \
   --orfs-var NUM_CORES=${NC:-8} --orfs-var SDC_FILE=$KIT/clock.sdc --orfs-var QDM_SDC_DIR=$D \

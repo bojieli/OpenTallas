@@ -1,0 +1,46 @@
+{
+  "schema": "opentallas.qwen.collective.shared_phy_capacity.v1",
+  "selected_view": "physical/qwen_missing_phy/tp8_1013/ot_qfd_ucie_x64_phy/",
+  "selected_master": "ot_qfd_ucie_x64_phy",
+  "physical_bits": 1043,
+  "source_sha256": {
+    "physical/qwen_missing_phy/tp8_1013/ot_qfd_ucie_x64_phy/ot_qfd_ucie_x64_phy_bb.v": "21f613f164d8d19b980328e87a2d9895d8452c83d132fea107f6299e3f534be1",
+    "physical/qwen_missing_phy/tp8_1013/ot_qfd_ucie_x64_phy/ot_qfd_ucie_x64_phy.json": "041c21b1f1c3a9f54d83060e29ea2183ea7c4a9ee35fdf5d8aedfa1be627d285",
+    "physical/qwen_missing_phy/tp8_1013/ot_qfd_ucie_x64_phy/ot_qfd_ucie_x64_phy.lef": "1fcc313e1c0b74de491710e0da235edd683823db1590c26f44489f620264d34a",
+    "physical/qwen_missing_phy/tp8_1013/ot_qfd_ucie_x64_phy/ot_qfd_ucie_x64_phy_tt.lib": "083e34158c1b8a6f65727075994fb51e3a803f2326a3ec0322529498b37655f9",
+    "physical/qwen_missing_phy/tp8_1013/ot_qfd_ucie_x64_phy/ot_qfd_ucie_x64_phy_ff.lib": "63c838f2e1ffc3b9a12ba5d93cc91a84cb33618df18f7f48419268779ffaa012",
+    "physical/qwen_missing_phy/tp8_1013/ot_qfd_ucie_x64_phy/ot_qfd_ucie_x64_phy_ss.lib": "573ef75c13dcfe88606ad235a57aa8ad336a7e364e2e6a37005c5a4a6a60a5e8",
+    "physical/qwen_missing_phy/tp8_1013/ot_qfd_ucie_x64_phy/ot_qfd_ucie_x64_phy_model.sv": "e14e655ed48b14e596823a6298a91cf4f94b7c81edf843b64b25e1b97060c010"
+  },
+  "logical_frames": {
+    "P": 597,
+    "R": 565
+  },
+  "simultaneous_frame_bits": 1162,
+  "shared_boundary": "one entire originalCRCframe in lowbits; Ppad446/Rpad478; RXtypefromcompiledcalendar",
+  "calendar_reservations": "P=c+3+cadence*w; reduceR=output-LU-2; union acrossbothdie ownershipparities reserved againstsingleport",
+  "clock": "candidate same link phase as realcodec; actual selectedview metadata1GHz/4FDIcycles; inheritedPU14corecycle conversion is OPEN, no physical timing qualification",
+  "registered_boundary": "codec output frame registers ->combinational staticslotmux ->selectedhardPHY input timing; mux reaches require actualnativegate",
+  "normal_schedule": "compiledslots; observedvalid is fault-only; no runtimearbiter/ready",
+  "physical_qualified": false,
+  "licensed_capacity_proven": false,
+  "candidate_cycles": {
+    "AR256": 783,
+    "two_AR256": 1515,
+    "two_AR256_argmax": 1523
+  },
+  "bench_scope": "single selected-width1043 frame per CORE edge with common mesochronous PHYclock; NOT actual1GHzFDI conversion",
+  "actual_binding_status": "computeowner confirms noCURRENTsource-boundio_ucie\u2192hardPHYbinding; oldenvelope historical",
+  "required_successor": "actual6CORE:5FDIfixedslot gearbox with independent clock roots and compiler-paid ages",
+  "default_mode": "SHARED_UCIE=0 retains diagnosticdualframepath; candidate activatedexplicitly SHARED_UCIE=1",
+  "old_calendar_negative": "sameRTL unsafe unreserved1039-cycle2AR rejected112mismatches/all8diefaults; measured68P/Roverlapcycles beforeabort",
+  "positive_first_phase": "4production+6unitPASS,0overlap; exactcycles783/1515/438/1523",
+  "bench": "8production(twoPHI)+6unitPASS; unsafecalendarFAIL112mismatch+all8fault, RXtypemutantFAIL1024mismatch+all8fault; allRTL/helperSHAverified",
+  "source_sha256_candidate": {
+    "rtl/physical/ot_qfd_ucie_static_share.sv": "fd8d3b0c901a6810674ad209036977903a138c67d9dfe96137bbdd509fec027b",
+    "rtl/physical/ot_qfd_collective_static_io.sv": "aa5c4f37295dbc55fc72cc6cf2892f3791bc6fa2214e3b728a55aa0a32169bc2",
+    "rtl/physical/ot_qfd_coll_static_face.sv": "09ac11db5f0810a6e5c0de9a33df7aaf655fbb75ce742d3120881ccef61819c4",
+    "tools/qwen_coll_tp8_static_bench.py": "792ebb71e298265f206b9f09d403aaa216dd210b41e5ac0c2f8ae8e4fd45d84f"
+  },
+  "oversized_message": "single message self-overlap rejected immediately by compiler; splitrequired, no delaysearch can fix self-conflict"
+}

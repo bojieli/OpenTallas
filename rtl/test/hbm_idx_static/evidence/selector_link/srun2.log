@@ -1,0 +1,5 @@
+IDX_SELECTOR_LINK_STATIC MUT2 frame0 records512 errors64 fault0 edges963 firstemit833 thresholdc0d6 selected01fc07e020c080
+IDX_SELECTOR_LINK_STATIC MUT2 frame1 records512 errors128 fault0 edges963 firstemit833 thresholdbf80 selected00000000000200
+IDX_SELECTOR_LINK_STATIC MUT2 frame2 records512 errors192 fault0 edges963 firstemit833 thresholdc098 selected000000002bc151
+FATAL: rtl/test/hbm_idx_static/tb_selector_link_static.sv:83: fullshape exact selector mismatch
+       Time: 28930000  Scope: tb_selector_link_static

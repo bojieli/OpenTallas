@@ -71,18 +71,43 @@
   "pd": 0.5,
   "threads": 8,
   "peak_ram_gb": 48,
-  "hold_margin_ns": 0.01
+  "hold_margin_ns": 0.01,
+  "macro_halo_um": 5.4
  },
  "aspect": 1.0,
  "job": {
-  "benches_from": "tools/s81_suhc/hc_gate_benches.json",
-  "owner": "Claude:s81-suhc-hier-1011",
-  "branch": "claude/s81-suhc-hier-1011-hc-mp",
-  "tag": "v1",
-  "purpose": "s81-suhc-hier-1011 comb HIER2 (CSPLIT=1 slab: HALF=1 RLY=2 RF=4 DW=6, the configuration of ctileh + crootr/crooty/cpin; full ctile retired 07:42 as textbook class 1, 1067 um single root): ot_s81_hc_cntree at the HIER2 parameters; reference tile flow",
+  "owner": "Codex:S-NORM",
+  "branch": "claude/s81-norm-tree-1014",
+  "tag": "v2-native-capture",
+  "purpose": "Repair measured native capture defects on unchanged routed cntreeh2 arithmetic and exact frozen CLOSED interface.",
   "no_bench_reason": "bit-exactness is gated on the wires-only wrapper ot_s81_hc_comb in the slab bench (tools/s81_suhc/hc_gate.py NG64 HIER=2 (and 1) m0 PASS + m1/m3 FAIL, NG256 HIER=1 m0 PASS; el1011-s81-suhc-hier-1011.log [hc-split]); the tile alone has no golden",
   "views_to": "physical/ref_tile/s81hc_cntreeh2_ref/views",
-  "record_to": "results/rtl/ref_tile/s81hc_cntreeh2_ref"
+  "record_to": "results/rtl/ref_tile/s81hc_cntreeh2_ref",
+  "structural_change": "Keep/split boundary registers, anchor captures behind one configured HB1 input pad. Exact1344 CLOSED signal pin rectangles and181.44square outline frozen; legacyM6 and original SDC budgets preserved.",
+  "benches": [
+   {
+    "name": "cntree_exact_pipe1",
+    "cmd": "bash tools/s81_suhc/hc_tree_bench.sh {RUN}/bench/tree_exact 1",
+    "expect": "pass",
+    "pass_regex": "^RUN ng256_dpi_m0_a0_hier3tail_cp1_cs6_ls1_pipe40_nt67_probe pass$",
+    "threads": 16,
+    "peak_ram_gb": 40,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "cntree_ss_mut_pipe1",
+    "cmd": "bash tools/s81_suhc/hc_tree_bench.sh {RUN}/bench/tree_mut 1 ot_s81_hc_cntree",
+    "expect": "fail",
+    "fail_regex": "^RUN ng256_dpi_m0_a0_hier3tail_cp1_cs6_ls1_pipe40_nt67_probe_tm-ot_s81_hc_cntree fail$",
+    "threads": 16,
+    "peak_ram_gb": 40,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ]
  },
  "params": {
   "HALF": 1,
@@ -91,5 +116,30 @@
   "DW": 6
  },
  "children": [],
- "inter": []
+ "inter": [],
+ "outline": {
+  "w": 181.44,
+  "h": 181.44
+ },
+ "recipe": 2,
+ "inhold": true,
+ "outhold": false,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB1xp67_ASAP7_75t_R"
+ },
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": false
+ },
+ "io_tcl": "physical/ref_tile/s81hc_cntreeh2_ref/frozen_closed_pins.tcl",
+ "reroute_reason": {
+  "kind": "pin_register",
+  "source": "results/rtl/s81_layer_tput_1013/norm_tree_1014/native_closure_1014/cntree_inherited_native_defect.json",
+  "cell": "ot_s81_hc_cntree",
+  "launch_ps": 140.0,
+  "capture_ps": 221.46561,
+  "fix": "Existing c_ex443/445/446 capture cost221.466/203.048/212.660ps exceeds190 at phi-R. Keep capture registers, anchor all data D pins behind one HB1 pad, retain exact accepted pin rectangles, legacyM6, outline, RTL/params and IO timing budgets."
+ }
 }

@@ -51,6 +51,8 @@ def model() -> dict:
       vm_sram_observation_from_source_pin_cycles=10,
       issue_to_vm_source_pin_cycles=5, issue_to_vm_observation_cycles=15,
       peer_links_per_die=3, local_loop='component bench only',
+      existing_diagnostic_link_rates_bits_per_cycle=dict(package=3864,board=157.58),
+      bandwidth_adoption_gate='New2beat512 framing atspacing4 requires256PHYbits/cycle, abovehistorical157.58 boardbudget; actualPHYwidth/calendar must be reconciled, no native speed credit',
       physical_status='UNQUALIFIED: static successor requires accepted DSCOLL slot/pins, actual lane/PHY width and measured pipeline',
       physical_constraints='Preserve closed masters; no reroute until real RTL change + die-owned window',
       latency_composition='commit=source_issue+4+uniform declared PHY flight; unequal flight requires real RTL alignment stages',
@@ -88,3 +90,71 @@ def vm_events(slots: tuple[Slot, ...], *, identity: int,
                                observation_edge=s.commit+11+drain, sequence=s.seq, rank=r,
                                bank_drain_delay=drain))
     return result
+
+def fmt1_calendar(layer: int, start: int, *, kind: str = 'a') -> tuple[Slot, ...]:
+    """Existing FMT1 protocol:3-in4 gearbox, board beat every4stream cycles.
+
+    128physical bits/cycle < historical157.58boardbudget. Fixed source cadence
+    4,4,8; measured component latency11. Realflight/epoch remain unqualified.
+    """
+    if start < 0: raise ValueError('start')
+    count=6 if kind=='router' else shape(layer)
+    return tuple(Slot(j,start+16*(j//3)+4*(j%3),start+16*(j//3)+4*(j%3)+11,
+                      tuple(landing(layer,j,r,kind) for r in range(4)),j==count-1)
+                 for j in range(count))
+
+def fmt1_cycle_controls(slots: tuple[Slot, ...]) -> tuple[int, ...]:
+    """Compile every beat/phase/frame reservation, including empty PHY slots.
+
+    Bits[7:0]={txbeat,txphase2,txframe,rxbeat,rxphase2,rxframe}.
+    Clock epoch,4cycle beat period and zero external flight match componentRTL.
+    """
+    if not slots or slots[0].issue % 16: raise ValueError('FMT1 phase epoch')
+    start=slots[0].issue;count=len(slots)
+    if [s.issue-start for s in slots] != [16*(j//3)+4*(j%3) for j in range(count)]:
+        raise ValueError('unsupported FMT1 source calendar')
+    end=start+((count+2)//3)*16+24
+    controls=[]
+    for c in range(end):
+        tx=c>=3 and (c-3)%4==0;tp=((c-3)//4)%4
+        tj=3*((c-start-3)//16)+tp
+        tf=tx and c>=start+3 and tp!=3 and 0<=tj<count
+        rx=c>=4 and (c-4)%4==0;rp=((c-4)//4)%4
+        rj=3*((c-start-4)//16)+rp-1
+        rf=rx and c>=start+4 and rp!=0 and 0<=rj<count
+        controls.append((int(tx)<<7)|(tp<<5)|(int(tf)<<4)|(int(rx)<<3)|(rp<<1)|int(rf))
+    return tuple(controls)
+
+def fmt1_model() -> dict:
+    """Exact normal-mode transport inventory, separate from historical 2-beat model.
+
+    Compiler calendars are required; no generic physical flight or die-clock
+    compensation can be inferred from the zero-flight component measurement.
+    """
+    return dict(scope='FMT1 component; actual die and full collective qualification pending',
+        ranks=4, payload_bits=512, engine_record_bits=547,
+        forward_frame_bits=595, gearbox_slot_bits=596, phy_beat_bits=512,
+        forward_bits_per_phy_beat=456, reverse_bits_per_phy_beat=53,
+        records_per_group=3, phy_beats_per_group=4, stream_cycles_per_phy_beat=4,
+        source_cadence_cycles=[4,4,8], physical_bits_per_cycle_per_lane=128,
+        useful_payload_bits_per_cycle_per_lane=96,
+        gathered_bits_per_cycle_per_die=384,
+        board_budget_bits_per_cycle_per_lane=157.58,
+        peer_lane_count=3, remaining_physical_lanes=5,
+        peer_mapping='compiler/die must explicitly bind peer ranks to W/E lane slots',
+        endpoint_issue_to_gather_edges=11, gather_to_vm_source_edges=1,
+        vm_write_sources=[44,45,46,47], vm_write_record_bits=551,
+        vm_write_pin_bits=2204, vm_read_request_bits=15, vm_read_response_bits=513,
+        vm_read_pin_latency_edges=12, vm_request_register_edges=1,
+        endpoint_samples_return_on_following_edge=True,
+        core_leaf_clock_bits=8380, lane_leaf_clock_bits=[4547,4547,4548],
+        vm_service_output_leaf_clock_bits=2228,
+        leaf_clock_rule='each hardened leaf has its own clock root, not one combined root',
+        old_two_beat_model='historical prototype only; calendar()/model() do not describe FMT1',
+        normal_mode_ready=False, normal_mode_credits=False,
+        exceptional_mode='CRC fault is sticky; explicit retry/recovery not implemented',
+        unqualified=['actual source FIELD/capture allocation and full production calendar',
+          'SRAM physical source visibility and read latency composition in die epoch',
+          'HC exact all-reduce and HC output assembly',
+          'WFC/host static pass-through and physical eight-lane mapping',
+          'accepted die slot, TT/FF/DRC0, pin reach, phi-R clocks, reset and PHY flight'])

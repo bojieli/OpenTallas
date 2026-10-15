@@ -1,0 +1,20 @@
+ot-run: ot-epyc1tb     admits   324 GB (avail 551, growth 142, headroom 64, waiters 0/0 GB) load 255/128 running 31 disk 867 GB 
+ot-run: ot-epyc4       admits    64 GB (avail 402, growth 290, headroom 48, waiters 0/0 GB) load 200/128 running 28 disk 700 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/codex/qcoll-1834
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/codex/qcoll-1834
+ot-run: -> ot-epyc4
+ot-heavy: request 48G is charged 22G (class 'qwen_coll_tp#_bench.py' measured peak 13.9G, n=10+0 proved); the cap stays 48G
+ot-heavy: admitted on regular-crane as oth-ubuntu-2339052-1792029253 after 0 s
+case reduce_8w lats=40 mutant=OT_TP8_MUT_STRAP FAIL mismatches=1880 out_err=0 fault=00000000 code=0000000000000000000000000000000000000000 words_out=4096 cycles=803
+case reduce_8w_gaps_skew lats=40 mutant=OT_TP8_MUT_STRAP FAIL mismatches=1862 out_err=0 fault=00000000 code=0000000000000000000000000000000000000000 words_out=4096 cycles=957
+case mixed_gather_gaps_skew lats=40 mutant=OT_TP8_MUT_STRAP FAIL mismatches=9818 out_err=0 fault=00000000 code=0000000000000000000000000000000000000000 words_out=19776 cycles=3400
+case argmax_gather_1w_gaps_skew lats=40 mutant=OT_TP8_MUT_STRAP FAIL mismatches=2048 out_err=0 fault=00000000 code=0000000000000000000000000000000000000000 words_out=4096 cycles=762
+case reduce_2w lats=40 mutant=OT_TP8_MUT_STRAP FAIL mismatches=240 out_err=0 fault=00000000 code=0000000000000000000000000000000000000000 words_out=512 cycles=249
+case fault_nan lats=40 mutant=OT_TP8_MUT_STRAP PASS mismatches=0 out_err=8 fault=11111111 code=0100000001010000000101000010010100000001 words_out=256 cycles=188
+case fault_inf lats=40 mutant=OT_TP8_MUT_STRAP PASS mismatches=0 out_err=8 fault=11111111 code=0100000001010000000101000010010100000001 words_out=256 cycles=188
+/srv/opentallas-scratch/codex/qcoll-1834/tools/hdc_golden.py:97: RuntimeWarning: overflow encountered in add
+  return z(np.asarray(a, dtype=F) + np.asarray(b, dtype=F))
+case fault_overflow lats=40 mutant=OT_TP8_MUT_STRAP PASS mismatches=0 out_err=8 fault=11111111 code=0100001001010000100101000010010100001001 words_out=256 cycles=188
+case fault_tag_mismatch lats=40 mutant=OT_TP8_MUT_STRAP PASS mismatches=112 out_err=0 fault=11111111 code=0001000010000100001010010100100001000010 words_out=256 cycles=188
+COLL_TP8 FAIL mutant=OT_TP8_MUT_STRAP failed=reduce_8w,reduce_8w_gaps_skew,mixed_gather_gaps_skew,argmax_gather_1w_gaps_skew,reduce_2w
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-2339052-1792029253): exit 1

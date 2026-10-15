@@ -1,0 +1,383 @@
+{
+  "schema": "ot.qwen.collective.clock_entries.v1",
+  "parent_clock": "clk",
+  "children": [
+    {
+      "clock_port": "clk_colr0",
+      "instance_pattern": "*g_col?0?*u_wc",
+      "view": "physical/ref_tile/coll_tp8_colr3/views/ot_coll_tp8_col_tile_r3",
+      "provisional_at": [
+        43.2,
+        43.2
+      ],
+      "orientation": "MY",
+      "R_by_corner": {
+        "tt": 288.3,
+        "ff": 236.9,
+        "ss": 373.3
+      },
+      "spread_by_corner": {
+        "tt": 61.4,
+        "ff": 56.6,
+        "ss": 68.5
+      },
+      "qualified_native": true,
+      "geometry_status": "OLD_UNSAFE_DRAFT; relocated faces and parent relays still required"
+    },
+    {
+      "clock_port": "clk_pfold0",
+      "instance_pattern": "*g_pf?0?*u_fs",
+      "view": "physical/ref_tile/coll_fold_slice_rt/views/ot_coll_fold_slice",
+      "provisional_at": [
+        330.48,
+        71.28
+      ],
+      "orientation": "R0",
+      "R_by_corner": {
+        "tt": 200.4,
+        "ff": 163.3,
+        "ss": 263.1
+      },
+      "spread_by_corner": {
+        "tt": 24.7,
+        "ff": 22.2,
+        "ss": 29.5
+      },
+      "qualified_native": true,
+      "geometry_status": "OLD_UNSAFE_DRAFT; relocated faces and parent relays still required"
+    },
+    {
+      "clock_port": "clk_ecol0",
+      "instance_pattern": "*u_eng*g_c?0?*u_ct",
+      "view": "physical/ref_tile/coll_col_d64/views/ot_coll_col_tile_d64",
+      "provisional_at": [
+        555.12,
+        64.80000000000001
+      ],
+      "orientation": "R0",
+      "R_by_corner": {
+        "tt": 227.5,
+        "ff": 189.2,
+        "ss": 292.5
+      },
+      "spread_by_corner": {
+        "tt": 66.8,
+        "ff": 64.2,
+        "ss": 70.4
+      },
+      "qualified_native": false,
+      "geometry_status": "OLD_UNSAFE_DRAFT; relocated faces and parent relays still required"
+    },
+    {
+      "clock_port": "clk_efold0",
+      "instance_pattern": "*u_eng*g_sl?0?*u_fs",
+      "view": "physical/ref_tile/coll_fold_slice_rt/views/ot_coll_fold_slice",
+      "provisional_at": [
+        792.72,
+        71.28
+      ],
+      "orientation": "R0",
+      "R_by_corner": {
+        "tt": 200.4,
+        "ff": 163.3,
+        "ss": 263.1
+      },
+      "spread_by_corner": {
+        "tt": 24.7,
+        "ff": 22.2,
+        "ss": 29.5
+      },
+      "qualified_native": true,
+      "geometry_status": "OLD_UNSAFE_DRAFT; relocated faces and parent relays still required"
+    },
+    {
+      "clock_port": "clk_colr1",
+      "instance_pattern": "*g_col?1?*u_wc",
+      "view": "physical/ref_tile/coll_tp8_colr3/views/ot_coll_tp8_col_tile_r3",
+      "provisional_at": [
+        43.2,
+        324.0
+      ],
+      "orientation": "MY",
+      "R_by_corner": {
+        "tt": 288.3,
+        "ff": 236.9,
+        "ss": 373.3
+      },
+      "spread_by_corner": {
+        "tt": 61.4,
+        "ff": 56.6,
+        "ss": 68.5
+      },
+      "qualified_native": true,
+      "geometry_status": "OLD_UNSAFE_DRAFT; relocated faces and parent relays still required"
+    },
+    {
+      "clock_port": "clk_pfold1",
+      "instance_pattern": "*g_pf?1?*u_fs",
+      "view": "physical/ref_tile/coll_fold_slice_rt/views/ot_coll_fold_slice",
+      "provisional_at": [
+        330.48,
+        352.08
+      ],
+      "orientation": "R0",
+      "R_by_corner": {
+        "tt": 200.4,
+        "ff": 163.3,
+        "ss": 263.1
+      },
+      "spread_by_corner": {
+        "tt": 24.7,
+        "ff": 22.2,
+        "ss": 29.5
+      },
+      "qualified_native": true,
+      "geometry_status": "OLD_UNSAFE_DRAFT; relocated faces and parent relays still required"
+    },
+    {
+      "clock_port": "clk_ecol1",
+      "instance_pattern": "*u_eng*g_c?1?*u_ct",
+      "view": "physical/ref_tile/coll_col_d64/views/ot_coll_col_tile_d64",
+      "provisional_at": [
+        555.12,
+        345.6
+      ],
+      "orientation": "R0",
+      "R_by_corner": {
+        "tt": 227.5,
+        "ff": 189.2,
+        "ss": 292.5
+      },
+      "spread_by_corner": {
+        "tt": 66.8,
+        "ff": 64.2,
+        "ss": 70.4
+      },
+      "qualified_native": false,
+      "geometry_status": "OLD_UNSAFE_DRAFT; relocated faces and parent relays still required"
+    },
+    {
+      "clock_port": "clk_efold1",
+      "instance_pattern": "*u_eng*g_sl?1?*u_fs",
+      "view": "physical/ref_tile/coll_fold_slice_rt/views/ot_coll_fold_slice",
+      "provisional_at": [
+        792.72,
+        352.08
+      ],
+      "orientation": "R0",
+      "R_by_corner": {
+        "tt": 200.4,
+        "ff": 163.3,
+        "ss": 263.1
+      },
+      "spread_by_corner": {
+        "tt": 24.7,
+        "ff": 22.2,
+        "ss": 29.5
+      },
+      "qualified_native": true,
+      "geometry_status": "OLD_UNSAFE_DRAFT; relocated faces and parent relays still required"
+    },
+    {
+      "clock_port": "clk_colr2",
+      "instance_pattern": "*g_col?2?*u_wc",
+      "view": "physical/ref_tile/coll_tp8_colr3/views/ot_coll_tp8_col_tile_r3",
+      "provisional_at": [
+        43.2,
+        604.8000000000001
+      ],
+      "orientation": "MY",
+      "R_by_corner": {
+        "tt": 288.3,
+        "ff": 236.9,
+        "ss": 373.3
+      },
+      "spread_by_corner": {
+        "tt": 61.4,
+        "ff": 56.6,
+        "ss": 68.5
+      },
+      "qualified_native": true,
+      "geometry_status": "OLD_UNSAFE_DRAFT; relocated faces and parent relays still required"
+    },
+    {
+      "clock_port": "clk_pfold2",
+      "instance_pattern": "*g_pf?2?*u_fs",
+      "view": "physical/ref_tile/coll_fold_slice_rt/views/ot_coll_fold_slice",
+      "provisional_at": [
+        330.48,
+        632.8800000000001
+      ],
+      "orientation": "R0",
+      "R_by_corner": {
+        "tt": 200.4,
+        "ff": 163.3,
+        "ss": 263.1
+      },
+      "spread_by_corner": {
+        "tt": 24.7,
+        "ff": 22.2,
+        "ss": 29.5
+      },
+      "qualified_native": true,
+      "geometry_status": "OLD_UNSAFE_DRAFT; relocated faces and parent relays still required"
+    },
+    {
+      "clock_port": "clk_ecol2",
+      "instance_pattern": "*u_eng*g_c?2?*u_ct",
+      "view": "physical/ref_tile/coll_col_d64/views/ot_coll_col_tile_d64",
+      "provisional_at": [
+        555.12,
+        626.4000000000001
+      ],
+      "orientation": "R0",
+      "R_by_corner": {
+        "tt": 227.5,
+        "ff": 189.2,
+        "ss": 292.5
+      },
+      "spread_by_corner": {
+        "tt": 66.8,
+        "ff": 64.2,
+        "ss": 70.4
+      },
+      "qualified_native": false,
+      "geometry_status": "OLD_UNSAFE_DRAFT; relocated faces and parent relays still required"
+    },
+    {
+      "clock_port": "clk_efold2",
+      "instance_pattern": "*u_eng*g_sl?2?*u_fs",
+      "view": "physical/ref_tile/coll_fold_slice_rt/views/ot_coll_fold_slice",
+      "provisional_at": [
+        792.72,
+        632.8800000000001
+      ],
+      "orientation": "R0",
+      "R_by_corner": {
+        "tt": 200.4,
+        "ff": 163.3,
+        "ss": 263.1
+      },
+      "spread_by_corner": {
+        "tt": 24.7,
+        "ff": 22.2,
+        "ss": 29.5
+      },
+      "qualified_native": true,
+      "geometry_status": "OLD_UNSAFE_DRAFT; relocated faces and parent relays still required"
+    },
+    {
+      "clock_port": "clk_colr3",
+      "instance_pattern": "*g_col?3?*u_wc",
+      "view": "physical/ref_tile/coll_tp8_colr3/views/ot_coll_tp8_col_tile_r3",
+      "provisional_at": [
+        43.2,
+        885.6000000000001
+      ],
+      "orientation": "MY",
+      "R_by_corner": {
+        "tt": 288.3,
+        "ff": 236.9,
+        "ss": 373.3
+      },
+      "spread_by_corner": {
+        "tt": 61.4,
+        "ff": 56.6,
+        "ss": 68.5
+      },
+      "qualified_native": true,
+      "geometry_status": "OLD_UNSAFE_DRAFT; relocated faces and parent relays still required"
+    },
+    {
+      "clock_port": "clk_pfold3",
+      "instance_pattern": "*g_pf?3?*u_fs",
+      "view": "physical/ref_tile/coll_fold_slice_rt/views/ot_coll_fold_slice",
+      "provisional_at": [
+        330.48,
+        913.6800000000002
+      ],
+      "orientation": "R0",
+      "R_by_corner": {
+        "tt": 200.4,
+        "ff": 163.3,
+        "ss": 263.1
+      },
+      "spread_by_corner": {
+        "tt": 24.7,
+        "ff": 22.2,
+        "ss": 29.5
+      },
+      "qualified_native": true,
+      "geometry_status": "OLD_UNSAFE_DRAFT; relocated faces and parent relays still required"
+    },
+    {
+      "clock_port": "clk_ecol3",
+      "instance_pattern": "*u_eng*g_c?3?*u_ct",
+      "view": "physical/ref_tile/coll_col_d64/views/ot_coll_col_tile_d64",
+      "provisional_at": [
+        555.12,
+        907.2000000000002
+      ],
+      "orientation": "R0",
+      "R_by_corner": {
+        "tt": 227.5,
+        "ff": 189.2,
+        "ss": 292.5
+      },
+      "spread_by_corner": {
+        "tt": 66.8,
+        "ff": 64.2,
+        "ss": 70.4
+      },
+      "qualified_native": false,
+      "geometry_status": "OLD_UNSAFE_DRAFT; relocated faces and parent relays still required"
+    },
+    {
+      "clock_port": "clk_efold3",
+      "instance_pattern": "*u_eng*g_sl?3?*u_fs",
+      "view": "physical/ref_tile/coll_fold_slice_rt/views/ot_coll_fold_slice",
+      "provisional_at": [
+        792.72,
+        913.6800000000002
+      ],
+      "orientation": "R0",
+      "R_by_corner": {
+        "tt": 200.4,
+        "ff": 163.3,
+        "ss": 263.1
+      },
+      "spread_by_corner": {
+        "tt": 24.7,
+        "ff": 22.2,
+        "ss": 29.5
+      },
+      "qualified_native": true,
+      "geometry_status": "OLD_UNSAFE_DRAFT; relocated faces and parent relays still required"
+    },
+    {
+      "clock_port": "clk_ecol4",
+      "instance_pattern": "*u_eng*g_c?4?*u_ct",
+      "view": "physical/ref_tile/coll_col_d64/views/ot_coll_col_tile_d64",
+      "provisional_at": [
+        555.12,
+        1188.0
+      ],
+      "orientation": "R0",
+      "R_by_corner": {
+        "tt": 227.5,
+        "ff": 189.2,
+        "ss": 292.5
+      },
+      "spread_by_corner": {
+        "tt": 66.8,
+        "ff": 64.2,
+        "ss": 70.4
+      },
+      "qualified_native": false,
+      "geometry_status": "OLD_UNSAFE_DRAFT; relocated faces and parent relays still required"
+    }
+  ],
+  "clock_rule": "die delivers each childclock phi-R; parent clock clocks parent control only",
+  "placement_status": "Not accepted: olddraft has18400long endpoints. No die closure claims until floorplanrelay replan and d64native closure.",
+  "source": "rtl/physical/ot_qfd_io_collective.sv"
+}

@@ -1,0 +1,54 @@
+{
+  "schema": "opentallas.hbm.native-readgroup-expansion.v1",
+  "authorization": "Root approved actual dedicated COLL+IDX groups, no physical R-port replication",
+  "per_quadrant_added": {
+    "read_request_bits": 272,
+    "read_response_bits": 4112,
+    "output_payload_register_bits": 4096,
+    "request_pin_register_bits": 272
+  },
+  "physical_read_ports_per_bank": 1,
+  "bank_read_mux_inputs": {
+    "SW_SE": 6,
+    "NW_NE": 8
+  },
+  "group_ids": {
+    "SW_SE": {
+      "LG": 0,
+      "DMA_BACK": 1,
+      "SM_XLOAD": 2,
+      "COLL": 3,
+      "IDX": 4,
+      "PACKET_SLOT": 5
+    },
+    "NW": {
+      "LG": 0,
+      "DMA_BACK": 1,
+      "SM_XLOAD": 2,
+      "CP": 3,
+      "QUANT": 4,
+      "COLL": 5,
+      "IDX": 6,
+      "PACKET_SLOT": 7
+    },
+    "NE": {
+      "LG": 0,
+      "DMA_BACK": 1,
+      "SM_XLOAD": 2,
+      "ATTENTION": 3,
+      "HC_ENGINE": 4,
+      "COLL": 5,
+      "IDX": 6,
+      "PACKET_SLOT": 7
+    }
+  },
+  "calendar_bits_delta": {
+    "SW": 8,
+    "SE": 8,
+    "NW": 0,
+    "NE": 0
+  },
+  "clock_cost": "two new257b registered response payloads perbank plus34request pinbits; actual CTS/root count must be measured, not inherited",
+  "pin_cut_cost": "Additional4384signalbits/quadrant requires real 4-face spreading, track cut/reach and native pin proofs; no existing slot fit claim",
+  "qualification": "Largest7RG actualsource functional gate then physical leaf closure required; historic bank closedviews not aliased"
+}

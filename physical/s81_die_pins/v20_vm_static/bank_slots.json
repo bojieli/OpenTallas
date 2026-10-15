@@ -1,0 +1,1836 @@
+{
+ "schema": "opentallas.s81.vm-static-bank-grant.v1",
+ "request": "777d025e8 wide_return_alternative, physical/s81_die_rtl/slot_change_requests/vm_static_v3.json",
+ "parent": "sp_vm existing1541.784x3952.776 die reservation",
+ "native_banks": [
+  {
+   "instance": "bank_s0_b0",
+   "master": "dsfd_vm_static_bank128",
+   "at_vm_um": [
+    64.8,
+    108.0
+   ],
+   "outline_um": [
+    216.0,
+    47.52
+   ],
+   "clock_entry": "ck_bank[0]",
+   "domain": "stream_1p2"
+  },
+  {
+   "instance": "bank_s0_b1",
+   "master": "dsfd_vm_static_bank128",
+   "at_vm_um": [
+    64.8,
+    157.68
+   ],
+   "outline_um": [
+    216.0,
+    47.52
+   ],
+   "clock_entry": "ck_bank[1]",
+   "domain": "stream_1p2"
+  },
+  {
+   "instance": "bank_s0_b2",
+   "master": "dsfd_vm_static_bank128",
+   "at_vm_um": [
+    64.8,
+    207.36
+   ],
+   "outline_um": [
+    216.0,
+    47.52
+   ],
+   "clock_entry": "ck_bank[2]",
+   "domain": "stream_1p2"
+  },
+  {
+   "instance": "bank_s0_b3",
+   "master": "dsfd_vm_static_bank128",
+   "at_vm_um": [
+    64.8,
+    257.03999999999996
+   ],
+   "outline_um": [
+    216.0,
+    47.52
+   ],
+   "clock_entry": "ck_bank[3]",
+   "domain": "stream_1p2"
+  },
+  {
+   "instance": "bank_s0_b4",
+   "master": "dsfd_vm_static_bank128",
+   "at_vm_um": [
+    64.8,
+    306.72
+   ],
+   "outline_um": [
+    216.0,
+    47.52
+   ],
+   "clock_entry": "ck_bank[4]",
+   "domain": "stream_1p2"
+  },
+  {
+   "instance": "bank_s0_b5",
+   "master": "dsfd_vm_static_bank128",
+   "at_vm_um": [
+    64.8,
+    356.4
+   ],
+   "outline_um": [
+    216.0,
+    47.52
+   ],
+   "clock_entry": "ck_bank[5]",
+   "domain": "stream_1p2"
+  },
+  {
+   "instance": "bank_s0_b6",
+   "master": "dsfd_vm_static_bank128",
+   "at_vm_um": [
+    64.8,
+    406.08
+   ],
+   "outline_um": [
+    216.0,
+    47.52
+   ],
+   "clock_entry": "ck_bank[6]",
+   "domain": "stream_1p2"
+  },
+  {
+   "instance": "bank_s0_b7",
+   "master": "dsfd_vm_static_bank128",
+   "at_vm_um": [
+    64.8,
+    455.76
+   ],
+   "outline_um": [
+    216.0,
+    47.52
+   ],
+   "clock_entry": "ck_bank[7]",
+   "domain": "stream_1p2"
+  },
+  {
+   "instance": "bank_s0_b8",
+   "master": "dsfd_vm_static_bank128",
+   "at_vm_um": [
+    64.8,
+    505.44
+   ],
+   "outline_um": [
+    216.0,
+    47.52
+   ],
+   "clock_entry": "ck_bank[8]",
+   "domain": "stream_1p2"
+  },
+  {
+   "instance": "bank_s0_b9",
+   "master": "dsfd_vm_static_bank128",
+   "at_vm_um": [
+    64.8,
+    555.12
+   ],
+   "outline_um": [
+    216.0,
+    47.52
+   ],
+   "clock_entry": "ck_bank[9]",
+   "domain": "stream_1p2"
+  },
+  {
+   "instance": "bank_s0_b10",
+   "master": "dsfd_vm_static_bank128",
+   "at_vm_um": [
+    64.8,
+    604.8
+   ],
+   "outline_um": [
+    216.0,
+    47.52
+   ],
+   "clock_entry": "ck_bank[10]",
+   "domain": "stream_1p2"
+  },
+  {
+   "instance": "bank_s0_b11",
+   "master": "dsfd_vm_static_bank128",
+   "at_vm_um": [
+    64.8,
+    654.48
+   ],
+   "outline_um": [
+    216.0,
+    47.52
+   ],
+   "clock_entry": "ck_bank[11]",
+   "domain": "stream_1p2"
+  },
+  {
+   "instance": "bank_s0_b12",
+   "master": "dsfd_vm_static_bank128",
+   "at_vm_um": [
+    64.8,
+    704.16
+   ],
+   "outline_um": [
+    216.0,
+    47.52
+   ],
+   "clock_entry": "ck_bank[12]",
+   "domain": "stream_1p2"
+  },
+  {
+   "instance": "bank_s0_b13",
+   "master": "dsfd_vm_static_bank128",
+   "at_vm_um": [
+    64.8,
+    753.84
+   ],
+   "outline_um": [
+    216.0,
+    47.52
+   ],
+   "clock_entry": "ck_bank[13]",
+   "domain": "stream_1p2"
+  },
+  {
+   "instance": "bank_s0_b14",
+   "master": "dsfd_vm_static_bank128",
+   "at_vm_um": [
+    64.8,
+    803.52
+   ],
+   "outline_um": [
+    216.0,
+    47.52
+   ],
+   "clock_entry": "ck_bank[14]",
+   "domain": "stream_1p2"
+  },
+  {
+   "instance": "bank_s0_b15",
+   "master": "dsfd_vm_static_bank128",
+   "at_vm_um": [
+    64.8,
+    853.2
+   ],
+   "outline_um": [
+    216.0,
+    47.52
+   ],
+   "clock_entry": "ck_bank[15]",
+   "domain": "stream_1p2"
+  },
+  {
+   "instance": "bank_s0_b16",
+   "master": "dsfd_vm_static_bank128",
+   "at_vm_um": [
+    64.8,
+    1272.24
+   ],
+   "outline_um": [
+    216.0,
+    47.52
+   ],
+   "clock_entry": "ck_bank[16]",
+   "domain": "stream_1p2"
+  },
+  {
+   "instance": "bank_s0_b17",
+   "master": "dsfd_vm_static_bank128",
+   "at_vm_um": [
+    64.8,
+    1321.92
+   ],
+   "outline_um": [
+    216.0,
+    47.52
+   ],
+   "clock_entry": "ck_bank[17]",
+   "domain": "stream_1p2"
+  },
+  {
+   "instance": "bank_s0_b18",
+   "master": "dsfd_vm_static_bank128",
+   "at_vm_um": [
+    64.8,
+    1371.6
+   ],
+   "outline_um": [
+    216.0,
+    47.52
+   ],
+   "clock_entry": "ck_bank[18]",
+   "domain": "stream_1p2"
+  },
+  {
+   "instance": "bank_s0_b19",
+   "master": "dsfd_vm_static_bank128",
+   "at_vm_um": [
+    64.8,
+    1421.28
+   ],
+   "outline_um": [
+    216.0,
+    47.52
+   ],
+   "clock_entry": "ck_bank[19]",
+   "domain": "stream_1p2"
+  },
+  {
+   "instance": "bank_s0_b20",
+   "master": "dsfd_vm_static_bank128",
+   "at_vm_um": [
+    64.8,
+    1470.96
+   ],
+   "outline_um": [
+    216.0,
+    47.52
+   ],
+   "clock_entry": "ck_bank[20]",
+   "domain": "stream_1p2"
+  },
+  {
+   "instance": "bank_s0_b21",
+   "master": "dsfd_vm_static_bank128",
+   "at_vm_um": [
+    64.8,
+    1520.64
+   ],
+   "outline_um": [
+    216.0,
+    47.52
+   ],
+   "clock_entry": "ck_bank[21]",
+   "domain": "stream_1p2"
+  },
+  {
+   "instance": "bank_s0_b22",
+   "master": "dsfd_vm_static_bank128",
+   "at_vm_um": [
+    64.8,
+    1570.32
+   ],
+   "outline_um": [
+    216.0,
+    47.52
+   ],
+   "clock_entry": "ck_bank[22]",
+   "domain": "stream_1p2"
+  },
+  {
+   "instance": "bank_s0_b23",
+   "master": "dsfd_vm_static_bank128",
+   "at_vm_um": [
+    64.8,
+    1620.0
+   ],
+   "outline_um": [
+    216.0,
+    47.52
+   ],
+   "clock_entry": "ck_bank[23]",
+   "domain": "stream_1p2"
+  },
+  {
+   "instance": "bank_s0_b24",
+   "master": "dsfd_vm_static_bank128",
+   "at_vm_um": [
+    64.8,
+    1669.68
+   ],
+   "outline_um": [
+    216.0,
+    47.52
+   ],
+   "clock_entry": "ck_bank[24]",
+   "domain": "stream_1p2"
+  },
+  {
+   "instance": "bank_s0_b25",
+   "master": "dsfd_vm_static_bank128",
+   "at_vm_um": [
+    64.8,
+    1719.3600000000001
+   ],
+   "outline_um": [
+    216.0,
+    47.52
+   ],
+   "clock_entry": "ck_bank[25]",
+   "domain": "stream_1p2"
+  },
+  {
+   "instance": "bank_s0_b26",
+   "master": "dsfd_vm_static_bank128",
+   "at_vm_um": [
+    64.8,
+    1769.04
+   ],
+   "outline_um": [
+    216.0,
+    47.52
+   ],
+   "clock_entry": "ck_bank[26]",
+   "domain": "stream_1p2"
+  },
+  {
+   "instance": "bank_s0_b27",
+   "master": "dsfd_vm_static_bank128",
+   "at_vm_um": [
+    64.8,
+    1818.72
+   ],
+   "outline_um": [
+    216.0,
+    47.52
+   ],
+   "clock_entry": "ck_bank[27]",
+   "domain": "stream_1p2"
+  },
+  {
+   "instance": "bank_s0_b28",
+   "master": "dsfd_vm_static_bank128",
+   "at_vm_um": [
+    64.8,
+    1868.4
+   ],
+   "outline_um": [
+    216.0,
+    47.52
+   ],
+   "clock_entry": "ck_bank[28]",
+   "domain": "stream_1p2"
+  },
+  {
+   "instance": "bank_s0_b29",
+   "master": "dsfd_vm_static_bank128",
+   "at_vm_um": [
+    64.8,
+    1918.08
+   ],
+   "outline_um": [
+    216.0,
+    47.52
+   ],
+   "clock_entry": "ck_bank[29]",
+   "domain": "stream_1p2"
+  },
+  {
+   "instance": "bank_s0_b30",
+   "master": "dsfd_vm_static_bank128",
+   "at_vm_um": [
+    64.8,
+    1967.76
+   ],
+   "outline_um": [
+    216.0,
+    47.52
+   ],
+   "clock_entry": "ck_bank[30]",
+   "domain": "stream_1p2"
+  },
+  {
+   "instance": "bank_s0_b31",
+   "master": "dsfd_vm_static_bank128",
+   "at_vm_um": [
+    64.8,
+    2017.44
+   ],
+   "outline_um": [
+    216.0,
+    47.52
+   ],
+   "clock_entry": "ck_bank[31]",
+   "domain": "stream_1p2"
+  },
+  {
+   "instance": "bank_s1_b0",
+   "master": "dsfd_vm_static_bank128",
+   "at_vm_um": [
+    453.6,
+    108.0
+   ],
+   "outline_um": [
+    216.0,
+    47.52
+   ],
+   "clock_entry": "ck_bank[32]",
+   "domain": "stream_1p2"
+  },
+  {
+   "instance": "bank_s1_b1",
+   "master": "dsfd_vm_static_bank128",
+   "at_vm_um": [
+    453.6,
+    157.68
+   ],
+   "outline_um": [
+    216.0,
+    47.52
+   ],
+   "clock_entry": "ck_bank[33]",
+   "domain": "stream_1p2"
+  },
+  {
+   "instance": "bank_s1_b2",
+   "master": "dsfd_vm_static_bank128",
+   "at_vm_um": [
+    453.6,
+    207.36
+   ],
+   "outline_um": [
+    216.0,
+    47.52
+   ],
+   "clock_entry": "ck_bank[34]",
+   "domain": "stream_1p2"
+  },
+  {
+   "instance": "bank_s1_b3",
+   "master": "dsfd_vm_static_bank128",
+   "at_vm_um": [
+    453.6,
+    257.03999999999996
+   ],
+   "outline_um": [
+    216.0,
+    47.52
+   ],
+   "clock_entry": "ck_bank[35]",
+   "domain": "stream_1p2"
+  },
+  {
+   "instance": "bank_s1_b4",
+   "master": "dsfd_vm_static_bank128",
+   "at_vm_um": [
+    453.6,
+    306.72
+   ],
+   "outline_um": [
+    216.0,
+    47.52
+   ],
+   "clock_entry": "ck_bank[36]",
+   "domain": "stream_1p2"
+  },
+  {
+   "instance": "bank_s1_b5",
+   "master": "dsfd_vm_static_bank128",
+   "at_vm_um": [
+    453.6,
+    356.4
+   ],
+   "outline_um": [
+    216.0,
+    47.52
+   ],
+   "clock_entry": "ck_bank[37]",
+   "domain": "stream_1p2"
+  },
+  {
+   "instance": "bank_s1_b6",
+   "master": "dsfd_vm_static_bank128",
+   "at_vm_um": [
+    453.6,
+    406.08
+   ],
+   "outline_um": [
+    216.0,
+    47.52
+   ],
+   "clock_entry": "ck_bank[38]",
+   "domain": "stream_1p2"
+  },
+  {
+   "instance": "bank_s1_b7",
+   "master": "dsfd_vm_static_bank128",
+   "at_vm_um": [
+    453.6,
+    455.76
+   ],
+   "outline_um": [
+    216.0,
+    47.52
+   ],
+   "clock_entry": "ck_bank[39]",
+   "domain": "stream_1p2"
+  },
+  {
+   "instance": "bank_s1_b8",
+   "master": "dsfd_vm_static_bank128",
+   "at_vm_um": [
+    453.6,
+    505.44
+   ],
+   "outline_um": [
+    216.0,
+    47.52
+   ],
+   "clock_entry": "ck_bank[40]",
+   "domain": "stream_1p2"
+  },
+  {
+   "instance": "bank_s1_b9",
+   "master": "dsfd_vm_static_bank128",
+   "at_vm_um": [
+    453.6,
+    555.12
+   ],
+   "outline_um": [
+    216.0,
+    47.52
+   ],
+   "clock_entry": "ck_bank[41]",
+   "domain": "stream_1p2"
+  },
+  {
+   "instance": "bank_s1_b10",
+   "master": "dsfd_vm_static_bank128",
+   "at_vm_um": [
+    453.6,
+    604.8
+   ],
+   "outline_um": [
+    216.0,
+    47.52
+   ],
+   "clock_entry": "ck_bank[42]",
+   "domain": "stream_1p2"
+  },
+  {
+   "instance": "bank_s1_b11",
+   "master": "dsfd_vm_static_bank128",
+   "at_vm_um": [
+    453.6,
+    654.48
+   ],
+   "outline_um": [
+    216.0,
+    47.52
+   ],
+   "clock_entry": "ck_bank[43]",
+   "domain": "stream_1p2"
+  },
+  {
+   "instance": "bank_s1_b12",
+   "master": "dsfd_vm_static_bank128",
+   "at_vm_um": [
+    453.6,
+    704.16
+   ],
+   "outline_um": [
+    216.0,
+    47.52
+   ],
+   "clock_entry": "ck_bank[44]",
+   "domain": "stream_1p2"
+  },
+  {
+   "instance": "bank_s1_b13",
+   "master": "dsfd_vm_static_bank128",
+   "at_vm_um": [
+    453.6,
+    753.84
+   ],
+   "outline_um": [
+    216.0,
+    47.52
+   ],
+   "clock_entry": "ck_bank[45]",
+   "domain": "stream_1p2"
+  },
+  {
+   "instance": "bank_s1_b14",
+   "master": "dsfd_vm_static_bank128",
+   "at_vm_um": [
+    453.6,
+    803.52
+   ],
+   "outline_um": [
+    216.0,
+    47.52
+   ],
+   "clock_entry": "ck_bank[46]",
+   "domain": "stream_1p2"
+  },
+  {
+   "instance": "bank_s1_b15",
+   "master": "dsfd_vm_static_bank128",
+   "at_vm_um": [
+    453.6,
+    853.2
+   ],
+   "outline_um": [
+    216.0,
+    47.52
+   ],
+   "clock_entry": "ck_bank[47]",
+   "domain": "stream_1p2"
+  },
+  {
+   "instance": "bank_s1_b16",
+   "master": "dsfd_vm_static_bank128",
+   "at_vm_um": [
+    453.6,
+    1272.24
+   ],
+   "outline_um": [
+    216.0,
+    47.52
+   ],
+   "clock_entry": "ck_bank[48]",
+   "domain": "stream_1p2"
+  },
+  {
+   "instance": "bank_s1_b17",
+   "master": "dsfd_vm_static_bank128",
+   "at_vm_um": [
+    453.6,
+    1321.92
+   ],
+   "outline_um": [
+    216.0,
+    47.52
+   ],
+   "clock_entry": "ck_bank[49]",
+   "domain": "stream_1p2"
+  },
+  {
+   "instance": "bank_s1_b18",
+   "master": "dsfd_vm_static_bank128",
+   "at_vm_um": [
+    453.6,
+    1371.6
+   ],
+   "outline_um": [
+    216.0,
+    47.52
+   ],
+   "clock_entry": "ck_bank[50]",
+   "domain": "stream_1p2"
+  },
+  {
+   "instance": "bank_s1_b19",
+   "master": "dsfd_vm_static_bank128",
+   "at_vm_um": [
+    453.6,
+    1421.28
+   ],
+   "outline_um": [
+    216.0,
+    47.52
+   ],
+   "clock_entry": "ck_bank[51]",
+   "domain": "stream_1p2"
+  },
+  {
+   "instance": "bank_s1_b20",
+   "master": "dsfd_vm_static_bank128",
+   "at_vm_um": [
+    453.6,
+    1470.96
+   ],
+   "outline_um": [
+    216.0,
+    47.52
+   ],
+   "clock_entry": "ck_bank[52]",
+   "domain": "stream_1p2"
+  },
+  {
+   "instance": "bank_s1_b21",
+   "master": "dsfd_vm_static_bank128",
+   "at_vm_um": [
+    453.6,
+    1520.64
+   ],
+   "outline_um": [
+    216.0,
+    47.52
+   ],
+   "clock_entry": "ck_bank[53]",
+   "domain": "stream_1p2"
+  },
+  {
+   "instance": "bank_s1_b22",
+   "master": "dsfd_vm_static_bank128",
+   "at_vm_um": [
+    453.6,
+    1570.32
+   ],
+   "outline_um": [
+    216.0,
+    47.52
+   ],
+   "clock_entry": "ck_bank[54]",
+   "domain": "stream_1p2"
+  },
+  {
+   "instance": "bank_s1_b23",
+   "master": "dsfd_vm_static_bank128",
+   "at_vm_um": [
+    453.6,
+    1620.0
+   ],
+   "outline_um": [
+    216.0,
+    47.52
+   ],
+   "clock_entry": "ck_bank[55]",
+   "domain": "stream_1p2"
+  },
+  {
+   "instance": "bank_s1_b24",
+   "master": "dsfd_vm_static_bank128",
+   "at_vm_um": [
+    453.6,
+    1669.68
+   ],
+   "outline_um": [
+    216.0,
+    47.52
+   ],
+   "clock_entry": "ck_bank[56]",
+   "domain": "stream_1p2"
+  },
+  {
+   "instance": "bank_s1_b25",
+   "master": "dsfd_vm_static_bank128",
+   "at_vm_um": [
+    453.6,
+    1719.3600000000001
+   ],
+   "outline_um": [
+    216.0,
+    47.52
+   ],
+   "clock_entry": "ck_bank[57]",
+   "domain": "stream_1p2"
+  },
+  {
+   "instance": "bank_s1_b26",
+   "master": "dsfd_vm_static_bank128",
+   "at_vm_um": [
+    453.6,
+    1769.04
+   ],
+   "outline_um": [
+    216.0,
+    47.52
+   ],
+   "clock_entry": "ck_bank[58]",
+   "domain": "stream_1p2"
+  },
+  {
+   "instance": "bank_s1_b27",
+   "master": "dsfd_vm_static_bank128",
+   "at_vm_um": [
+    453.6,
+    1818.72
+   ],
+   "outline_um": [
+    216.0,
+    47.52
+   ],
+   "clock_entry": "ck_bank[59]",
+   "domain": "stream_1p2"
+  },
+  {
+   "instance": "bank_s1_b28",
+   "master": "dsfd_vm_static_bank128",
+   "at_vm_um": [
+    453.6,
+    1868.4
+   ],
+   "outline_um": [
+    216.0,
+    47.52
+   ],
+   "clock_entry": "ck_bank[60]",
+   "domain": "stream_1p2"
+  },
+  {
+   "instance": "bank_s1_b29",
+   "master": "dsfd_vm_static_bank128",
+   "at_vm_um": [
+    453.6,
+    1918.08
+   ],
+   "outline_um": [
+    216.0,
+    47.52
+   ],
+   "clock_entry": "ck_bank[61]",
+   "domain": "stream_1p2"
+  },
+  {
+   "instance": "bank_s1_b30",
+   "master": "dsfd_vm_static_bank128",
+   "at_vm_um": [
+    453.6,
+    1967.76
+   ],
+   "outline_um": [
+    216.0,
+    47.52
+   ],
+   "clock_entry": "ck_bank[62]",
+   "domain": "stream_1p2"
+  },
+  {
+   "instance": "bank_s1_b31",
+   "master": "dsfd_vm_static_bank128",
+   "at_vm_um": [
+    453.6,
+    2017.44
+   ],
+   "outline_um": [
+    216.0,
+    47.52
+   ],
+   "clock_entry": "ck_bank[63]",
+   "domain": "stream_1p2"
+  },
+  {
+   "instance": "bank_s2_b0",
+   "master": "dsfd_vm_static_bank128",
+   "at_vm_um": [
+    842.4,
+    108.0
+   ],
+   "outline_um": [
+    216.0,
+    47.52
+   ],
+   "clock_entry": "ck_bank[64]",
+   "domain": "stream_1p2"
+  },
+  {
+   "instance": "bank_s2_b1",
+   "master": "dsfd_vm_static_bank128",
+   "at_vm_um": [
+    842.4,
+    157.68
+   ],
+   "outline_um": [
+    216.0,
+    47.52
+   ],
+   "clock_entry": "ck_bank[65]",
+   "domain": "stream_1p2"
+  },
+  {
+   "instance": "bank_s2_b2",
+   "master": "dsfd_vm_static_bank128",
+   "at_vm_um": [
+    842.4,
+    207.36
+   ],
+   "outline_um": [
+    216.0,
+    47.52
+   ],
+   "clock_entry": "ck_bank[66]",
+   "domain": "stream_1p2"
+  },
+  {
+   "instance": "bank_s2_b3",
+   "master": "dsfd_vm_static_bank128",
+   "at_vm_um": [
+    842.4,
+    257.03999999999996
+   ],
+   "outline_um": [
+    216.0,
+    47.52
+   ],
+   "clock_entry": "ck_bank[67]",
+   "domain": "stream_1p2"
+  },
+  {
+   "instance": "bank_s2_b4",
+   "master": "dsfd_vm_static_bank128",
+   "at_vm_um": [
+    842.4,
+    306.72
+   ],
+   "outline_um": [
+    216.0,
+    47.52
+   ],
+   "clock_entry": "ck_bank[68]",
+   "domain": "stream_1p2"
+  },
+  {
+   "instance": "bank_s2_b5",
+   "master": "dsfd_vm_static_bank128",
+   "at_vm_um": [
+    842.4,
+    356.4
+   ],
+   "outline_um": [
+    216.0,
+    47.52
+   ],
+   "clock_entry": "ck_bank[69]",
+   "domain": "stream_1p2"
+  },
+  {
+   "instance": "bank_s2_b6",
+   "master": "dsfd_vm_static_bank128",
+   "at_vm_um": [
+    842.4,
+    406.08
+   ],
+   "outline_um": [
+    216.0,
+    47.52
+   ],
+   "clock_entry": "ck_bank[70]",
+   "domain": "stream_1p2"
+  },
+  {
+   "instance": "bank_s2_b7",
+   "master": "dsfd_vm_static_bank128",
+   "at_vm_um": [
+    842.4,
+    455.76
+   ],
+   "outline_um": [
+    216.0,
+    47.52
+   ],
+   "clock_entry": "ck_bank[71]",
+   "domain": "stream_1p2"
+  },
+  {
+   "instance": "bank_s2_b8",
+   "master": "dsfd_vm_static_bank128",
+   "at_vm_um": [
+    842.4,
+    505.44
+   ],
+   "outline_um": [
+    216.0,
+    47.52
+   ],
+   "clock_entry": "ck_bank[72]",
+   "domain": "stream_1p2"
+  },
+  {
+   "instance": "bank_s2_b9",
+   "master": "dsfd_vm_static_bank128",
+   "at_vm_um": [
+    842.4,
+    555.12
+   ],
+   "outline_um": [
+    216.0,
+    47.52
+   ],
+   "clock_entry": "ck_bank[73]",
+   "domain": "stream_1p2"
+  },
+  {
+   "instance": "bank_s2_b10",
+   "master": "dsfd_vm_static_bank128",
+   "at_vm_um": [
+    842.4,
+    604.8
+   ],
+   "outline_um": [
+    216.0,
+    47.52
+   ],
+   "clock_entry": "ck_bank[74]",
+   "domain": "stream_1p2"
+  },
+  {
+   "instance": "bank_s2_b11",
+   "master": "dsfd_vm_static_bank128",
+   "at_vm_um": [
+    842.4,
+    654.48
+   ],
+   "outline_um": [
+    216.0,
+    47.52
+   ],
+   "clock_entry": "ck_bank[75]",
+   "domain": "stream_1p2"
+  },
+  {
+   "instance": "bank_s2_b12",
+   "master": "dsfd_vm_static_bank128",
+   "at_vm_um": [
+    842.4,
+    704.16
+   ],
+   "outline_um": [
+    216.0,
+    47.52
+   ],
+   "clock_entry": "ck_bank[76]",
+   "domain": "stream_1p2"
+  },
+  {
+   "instance": "bank_s2_b13",
+   "master": "dsfd_vm_static_bank128",
+   "at_vm_um": [
+    842.4,
+    753.84
+   ],
+   "outline_um": [
+    216.0,
+    47.52
+   ],
+   "clock_entry": "ck_bank[77]",
+   "domain": "stream_1p2"
+  },
+  {
+   "instance": "bank_s2_b14",
+   "master": "dsfd_vm_static_bank128",
+   "at_vm_um": [
+    842.4,
+    803.52
+   ],
+   "outline_um": [
+    216.0,
+    47.52
+   ],
+   "clock_entry": "ck_bank[78]",
+   "domain": "stream_1p2"
+  },
+  {
+   "instance": "bank_s2_b15",
+   "master": "dsfd_vm_static_bank128",
+   "at_vm_um": [
+    842.4,
+    853.2
+   ],
+   "outline_um": [
+    216.0,
+    47.52
+   ],
+   "clock_entry": "ck_bank[79]",
+   "domain": "stream_1p2"
+  },
+  {
+   "instance": "bank_s2_b16",
+   "master": "dsfd_vm_static_bank128",
+   "at_vm_um": [
+    842.4,
+    1272.24
+   ],
+   "outline_um": [
+    216.0,
+    47.52
+   ],
+   "clock_entry": "ck_bank[80]",
+   "domain": "stream_1p2"
+  },
+  {
+   "instance": "bank_s2_b17",
+   "master": "dsfd_vm_static_bank128",
+   "at_vm_um": [
+    842.4,
+    1321.92
+   ],
+   "outline_um": [
+    216.0,
+    47.52
+   ],
+   "clock_entry": "ck_bank[81]",
+   "domain": "stream_1p2"
+  },
+  {
+   "instance": "bank_s2_b18",
+   "master": "dsfd_vm_static_bank128",
+   "at_vm_um": [
+    842.4,
+    1371.6
+   ],
+   "outline_um": [
+    216.0,
+    47.52
+   ],
+   "clock_entry": "ck_bank[82]",
+   "domain": "stream_1p2"
+  },
+  {
+   "instance": "bank_s2_b19",
+   "master": "dsfd_vm_static_bank128",
+   "at_vm_um": [
+    842.4,
+    1421.28
+   ],
+   "outline_um": [
+    216.0,
+    47.52
+   ],
+   "clock_entry": "ck_bank[83]",
+   "domain": "stream_1p2"
+  },
+  {
+   "instance": "bank_s2_b20",
+   "master": "dsfd_vm_static_bank128",
+   "at_vm_um": [
+    842.4,
+    1470.96
+   ],
+   "outline_um": [
+    216.0,
+    47.52
+   ],
+   "clock_entry": "ck_bank[84]",
+   "domain": "stream_1p2"
+  },
+  {
+   "instance": "bank_s2_b21",
+   "master": "dsfd_vm_static_bank128",
+   "at_vm_um": [
+    842.4,
+    1520.64
+   ],
+   "outline_um": [
+    216.0,
+    47.52
+   ],
+   "clock_entry": "ck_bank[85]",
+   "domain": "stream_1p2"
+  },
+  {
+   "instance": "bank_s2_b22",
+   "master": "dsfd_vm_static_bank128",
+   "at_vm_um": [
+    842.4,
+    1570.32
+   ],
+   "outline_um": [
+    216.0,
+    47.52
+   ],
+   "clock_entry": "ck_bank[86]",
+   "domain": "stream_1p2"
+  },
+  {
+   "instance": "bank_s2_b23",
+   "master": "dsfd_vm_static_bank128",
+   "at_vm_um": [
+    842.4,
+    1620.0
+   ],
+   "outline_um": [
+    216.0,
+    47.52
+   ],
+   "clock_entry": "ck_bank[87]",
+   "domain": "stream_1p2"
+  },
+  {
+   "instance": "bank_s2_b24",
+   "master": "dsfd_vm_static_bank128",
+   "at_vm_um": [
+    842.4,
+    1669.68
+   ],
+   "outline_um": [
+    216.0,
+    47.52
+   ],
+   "clock_entry": "ck_bank[88]",
+   "domain": "stream_1p2"
+  },
+  {
+   "instance": "bank_s2_b25",
+   "master": "dsfd_vm_static_bank128",
+   "at_vm_um": [
+    842.4,
+    1719.3600000000001
+   ],
+   "outline_um": [
+    216.0,
+    47.52
+   ],
+   "clock_entry": "ck_bank[89]",
+   "domain": "stream_1p2"
+  },
+  {
+   "instance": "bank_s2_b26",
+   "master": "dsfd_vm_static_bank128",
+   "at_vm_um": [
+    842.4,
+    1769.04
+   ],
+   "outline_um": [
+    216.0,
+    47.52
+   ],
+   "clock_entry": "ck_bank[90]",
+   "domain": "stream_1p2"
+  },
+  {
+   "instance": "bank_s2_b27",
+   "master": "dsfd_vm_static_bank128",
+   "at_vm_um": [
+    842.4,
+    1818.72
+   ],
+   "outline_um": [
+    216.0,
+    47.52
+   ],
+   "clock_entry": "ck_bank[91]",
+   "domain": "stream_1p2"
+  },
+  {
+   "instance": "bank_s2_b28",
+   "master": "dsfd_vm_static_bank128",
+   "at_vm_um": [
+    842.4,
+    1868.4
+   ],
+   "outline_um": [
+    216.0,
+    47.52
+   ],
+   "clock_entry": "ck_bank[92]",
+   "domain": "stream_1p2"
+  },
+  {
+   "instance": "bank_s2_b29",
+   "master": "dsfd_vm_static_bank128",
+   "at_vm_um": [
+    842.4,
+    1918.08
+   ],
+   "outline_um": [
+    216.0,
+    47.52
+   ],
+   "clock_entry": "ck_bank[93]",
+   "domain": "stream_1p2"
+  },
+  {
+   "instance": "bank_s2_b30",
+   "master": "dsfd_vm_static_bank128",
+   "at_vm_um": [
+    842.4,
+    1967.76
+   ],
+   "outline_um": [
+    216.0,
+    47.52
+   ],
+   "clock_entry": "ck_bank[94]",
+   "domain": "stream_1p2"
+  },
+  {
+   "instance": "bank_s2_b31",
+   "master": "dsfd_vm_static_bank128",
+   "at_vm_um": [
+    842.4,
+    2017.44
+   ],
+   "outline_um": [
+    216.0,
+    47.52
+   ],
+   "clock_entry": "ck_bank[95]",
+   "domain": "stream_1p2"
+  },
+  {
+   "instance": "bank_s3_b0",
+   "master": "dsfd_vm_static_bank128",
+   "at_vm_um": [
+    1231.2,
+    108.0
+   ],
+   "outline_um": [
+    216.0,
+    47.52
+   ],
+   "clock_entry": "ck_bank[96]",
+   "domain": "stream_1p2"
+  },
+  {
+   "instance": "bank_s3_b1",
+   "master": "dsfd_vm_static_bank128",
+   "at_vm_um": [
+    1231.2,
+    157.68
+   ],
+   "outline_um": [
+    216.0,
+    47.52
+   ],
+   "clock_entry": "ck_bank[97]",
+   "domain": "stream_1p2"
+  },
+  {
+   "instance": "bank_s3_b2",
+   "master": "dsfd_vm_static_bank128",
+   "at_vm_um": [
+    1231.2,
+    207.36
+   ],
+   "outline_um": [
+    216.0,
+    47.52
+   ],
+   "clock_entry": "ck_bank[98]",
+   "domain": "stream_1p2"
+  },
+  {
+   "instance": "bank_s3_b3",
+   "master": "dsfd_vm_static_bank128",
+   "at_vm_um": [
+    1231.2,
+    257.03999999999996
+   ],
+   "outline_um": [
+    216.0,
+    47.52
+   ],
+   "clock_entry": "ck_bank[99]",
+   "domain": "stream_1p2"
+  },
+  {
+   "instance": "bank_s3_b4",
+   "master": "dsfd_vm_static_bank128",
+   "at_vm_um": [
+    1231.2,
+    306.72
+   ],
+   "outline_um": [
+    216.0,
+    47.52
+   ],
+   "clock_entry": "ck_bank[100]",
+   "domain": "stream_1p2"
+  },
+  {
+   "instance": "bank_s3_b5",
+   "master": "dsfd_vm_static_bank128",
+   "at_vm_um": [
+    1231.2,
+    356.4
+   ],
+   "outline_um": [
+    216.0,
+    47.52
+   ],
+   "clock_entry": "ck_bank[101]",
+   "domain": "stream_1p2"
+  },
+  {
+   "instance": "bank_s3_b6",
+   "master": "dsfd_vm_static_bank128",
+   "at_vm_um": [
+    1231.2,
+    406.08
+   ],
+   "outline_um": [
+    216.0,
+    47.52
+   ],
+   "clock_entry": "ck_bank[102]",
+   "domain": "stream_1p2"
+  },
+  {
+   "instance": "bank_s3_b7",
+   "master": "dsfd_vm_static_bank128",
+   "at_vm_um": [
+    1231.2,
+    455.76
+   ],
+   "outline_um": [
+    216.0,
+    47.52
+   ],
+   "clock_entry": "ck_bank[103]",
+   "domain": "stream_1p2"
+  },
+  {
+   "instance": "bank_s3_b8",
+   "master": "dsfd_vm_static_bank128",
+   "at_vm_um": [
+    1231.2,
+    505.44
+   ],
+   "outline_um": [
+    216.0,
+    47.52
+   ],
+   "clock_entry": "ck_bank[104]",
+   "domain": "stream_1p2"
+  },
+  {
+   "instance": "bank_s3_b9",
+   "master": "dsfd_vm_static_bank128",
+   "at_vm_um": [
+    1231.2,
+    555.12
+   ],
+   "outline_um": [
+    216.0,
+    47.52
+   ],
+   "clock_entry": "ck_bank[105]",
+   "domain": "stream_1p2"
+  },
+  {
+   "instance": "bank_s3_b10",
+   "master": "dsfd_vm_static_bank128",
+   "at_vm_um": [
+    1231.2,
+    604.8
+   ],
+   "outline_um": [
+    216.0,
+    47.52
+   ],
+   "clock_entry": "ck_bank[106]",
+   "domain": "stream_1p2"
+  },
+  {
+   "instance": "bank_s3_b11",
+   "master": "dsfd_vm_static_bank128",
+   "at_vm_um": [
+    1231.2,
+    654.48
+   ],
+   "outline_um": [
+    216.0,
+    47.52
+   ],
+   "clock_entry": "ck_bank[107]",
+   "domain": "stream_1p2"
+  },
+  {
+   "instance": "bank_s3_b12",
+   "master": "dsfd_vm_static_bank128",
+   "at_vm_um": [
+    1231.2,
+    704.16
+   ],
+   "outline_um": [
+    216.0,
+    47.52
+   ],
+   "clock_entry": "ck_bank[108]",
+   "domain": "stream_1p2"
+  },
+  {
+   "instance": "bank_s3_b13",
+   "master": "dsfd_vm_static_bank128",
+   "at_vm_um": [
+    1231.2,
+    753.84
+   ],
+   "outline_um": [
+    216.0,
+    47.52
+   ],
+   "clock_entry": "ck_bank[109]",
+   "domain": "stream_1p2"
+  },
+  {
+   "instance": "bank_s3_b14",
+   "master": "dsfd_vm_static_bank128",
+   "at_vm_um": [
+    1231.2,
+    803.52
+   ],
+   "outline_um": [
+    216.0,
+    47.52
+   ],
+   "clock_entry": "ck_bank[110]",
+   "domain": "stream_1p2"
+  },
+  {
+   "instance": "bank_s3_b15",
+   "master": "dsfd_vm_static_bank128",
+   "at_vm_um": [
+    1231.2,
+    853.2
+   ],
+   "outline_um": [
+    216.0,
+    47.52
+   ],
+   "clock_entry": "ck_bank[111]",
+   "domain": "stream_1p2"
+  },
+  {
+   "instance": "bank_s3_b16",
+   "master": "dsfd_vm_static_bank128",
+   "at_vm_um": [
+    1231.2,
+    1272.24
+   ],
+   "outline_um": [
+    216.0,
+    47.52
+   ],
+   "clock_entry": "ck_bank[112]",
+   "domain": "stream_1p2"
+  },
+  {
+   "instance": "bank_s3_b17",
+   "master": "dsfd_vm_static_bank128",
+   "at_vm_um": [
+    1231.2,
+    1321.92
+   ],
+   "outline_um": [
+    216.0,
+    47.52
+   ],
+   "clock_entry": "ck_bank[113]",
+   "domain": "stream_1p2"
+  },
+  {
+   "instance": "bank_s3_b18",
+   "master": "dsfd_vm_static_bank128",
+   "at_vm_um": [
+    1231.2,
+    1371.6
+   ],
+   "outline_um": [
+    216.0,
+    47.52
+   ],
+   "clock_entry": "ck_bank[114]",
+   "domain": "stream_1p2"
+  },
+  {
+   "instance": "bank_s3_b19",
+   "master": "dsfd_vm_static_bank128",
+   "at_vm_um": [
+    1231.2,
+    1421.28
+   ],
+   "outline_um": [
+    216.0,
+    47.52
+   ],
+   "clock_entry": "ck_bank[115]",
+   "domain": "stream_1p2"
+  },
+  {
+   "instance": "bank_s3_b20",
+   "master": "dsfd_vm_static_bank128",
+   "at_vm_um": [
+    1231.2,
+    1470.96
+   ],
+   "outline_um": [
+    216.0,
+    47.52
+   ],
+   "clock_entry": "ck_bank[116]",
+   "domain": "stream_1p2"
+  },
+  {
+   "instance": "bank_s3_b21",
+   "master": "dsfd_vm_static_bank128",
+   "at_vm_um": [
+    1231.2,
+    1520.64
+   ],
+   "outline_um": [
+    216.0,
+    47.52
+   ],
+   "clock_entry": "ck_bank[117]",
+   "domain": "stream_1p2"
+  },
+  {
+   "instance": "bank_s3_b22",
+   "master": "dsfd_vm_static_bank128",
+   "at_vm_um": [
+    1231.2,
+    1570.32
+   ],
+   "outline_um": [
+    216.0,
+    47.52
+   ],
+   "clock_entry": "ck_bank[118]",
+   "domain": "stream_1p2"
+  },
+  {
+   "instance": "bank_s3_b23",
+   "master": "dsfd_vm_static_bank128",
+   "at_vm_um": [
+    1231.2,
+    1620.0
+   ],
+   "outline_um": [
+    216.0,
+    47.52
+   ],
+   "clock_entry": "ck_bank[119]",
+   "domain": "stream_1p2"
+  },
+  {
+   "instance": "bank_s3_b24",
+   "master": "dsfd_vm_static_bank128",
+   "at_vm_um": [
+    1231.2,
+    1669.68
+   ],
+   "outline_um": [
+    216.0,
+    47.52
+   ],
+   "clock_entry": "ck_bank[120]",
+   "domain": "stream_1p2"
+  },
+  {
+   "instance": "bank_s3_b25",
+   "master": "dsfd_vm_static_bank128",
+   "at_vm_um": [
+    1231.2,
+    1719.3600000000001
+   ],
+   "outline_um": [
+    216.0,
+    47.52
+   ],
+   "clock_entry": "ck_bank[121]",
+   "domain": "stream_1p2"
+  },
+  {
+   "instance": "bank_s3_b26",
+   "master": "dsfd_vm_static_bank128",
+   "at_vm_um": [
+    1231.2,
+    1769.04
+   ],
+   "outline_um": [
+    216.0,
+    47.52
+   ],
+   "clock_entry": "ck_bank[122]",
+   "domain": "stream_1p2"
+  },
+  {
+   "instance": "bank_s3_b27",
+   "master": "dsfd_vm_static_bank128",
+   "at_vm_um": [
+    1231.2,
+    1818.72
+   ],
+   "outline_um": [
+    216.0,
+    47.52
+   ],
+   "clock_entry": "ck_bank[123]",
+   "domain": "stream_1p2"
+  },
+  {
+   "instance": "bank_s3_b28",
+   "master": "dsfd_vm_static_bank128",
+   "at_vm_um": [
+    1231.2,
+    1868.4
+   ],
+   "outline_um": [
+    216.0,
+    47.52
+   ],
+   "clock_entry": "ck_bank[124]",
+   "domain": "stream_1p2"
+  },
+  {
+   "instance": "bank_s3_b29",
+   "master": "dsfd_vm_static_bank128",
+   "at_vm_um": [
+    1231.2,
+    1918.08
+   ],
+   "outline_um": [
+    216.0,
+    47.52
+   ],
+   "clock_entry": "ck_bank[125]",
+   "domain": "stream_1p2"
+  },
+  {
+   "instance": "bank_s3_b30",
+   "master": "dsfd_vm_static_bank128",
+   "at_vm_um": [
+    1231.2,
+    1967.76
+   ],
+   "outline_um": [
+    216.0,
+    47.52
+   ],
+   "clock_entry": "ck_bank[126]",
+   "domain": "stream_1p2"
+  },
+  {
+   "instance": "bank_s3_b31",
+   "master": "dsfd_vm_static_bank128",
+   "at_vm_um": [
+    1231.2,
+    2017.44
+   ],
+   "outline_um": [
+    216.0,
+    47.52
+   ],
+   "clock_entry": "ck_bank[127]",
+   "domain": "stream_1p2"
+  }
+ ],
+ "selected_geometry": {
+  "bank_outline_um": [
+   216.0,
+   47.52
+  ],
+  "pitch_y_um": 49.68,
+  "central_transport": {
+   "write_scatter": [
+    0,
+    902.88,
+    345.6,
+    103.68
+   ],
+   "read_scatter": [
+    0,
+    1008.72,
+    345.6,
+    51.84
+   ],
+   "return32": [
+    0,
+    1062.72,
+    345.6,
+    207.36
+   ]
+  },
+  "transport_status": "coordinates selected; pins, relays, cuts and actual same-latency path audit pending"
+ },
+ "bank_layer_cap": "M4, parentM5+ freed; do not reroute accepted legacybanks",
+ "native_transport_obligations": [
+  "exact static scatter and multiple return-group packing",
+  "real NROW32 return supports aggregate32rows/edge; complete native port allocation and bank release proof required",
+  "fixed3:4 serial client crossings and actual write visibility",
+  "fullrealfield address translation, gain/rowlayout and actual tensor ordering",
+  "signal cuts<=0.60, reach, phi-R, reset, GRT0+TT/FF+DRC0"
+ ],
+ "qualification": "DIAGNOSTIC47.52_BANK_GEOMETRY_ONLY: production20um macro margin fails; no native adoption/waiver. Standard successor grant physical/s81_die_pins/v20_vm_static_standard"
+}

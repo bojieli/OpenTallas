@@ -2,7 +2,8 @@
 // UNQUALIFIED capture256 candidate; no baseline source/view adoption.
 // Wires-only complete host-control/packet/prompt composition. Genuine TP8
 // tk/kst/boot status comes from addressed original CTRL transport, never ties.
-// pr143 producer must reserve available credit per PW/DW pulse edge. All
+// pr143 replays locally on fixed cycles; the HC broadcast station carries
+// START only. Every physical rank receives its own authorized class8 image. All
 // simultaneous rawhc pulses consume one credit; source_cr follows seven copies.
 module qkd_host_control_packet_capture_localprogram #(parameter T_LINK=200000,T_HBM=200000,WDOG=1<<22,HC_MUT=0,PROMPT_MUT=0,PROMPT_BIND_LATENCY=4,ENABLE_SERVICE=0,ENABLE_TOKEN=0,TOKEN_MUT=0)(
  input wire ck_host,ck_csr,ck_rst,ck_ctl,ck_prompt,

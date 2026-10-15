@@ -1,0 +1,1308 @@
+{
+ "schema": "opentallas.qwen-tp8.relay-data-run.v1",
+ "recipe": "tp8b+split_compute",
+ "split_compute": {
+  "spine_x": [
+   12556.512,
+   19856.88
+  ],
+  "spine_w": 7300.368,
+  "die": [
+   32413.392,
+   25937.28
+  ],
+  "slots": {
+   "sp_band_lanes_0": [
+    12794.112,
+    4423.68,
+    777.576,
+    1131.816
+   ],
+   "sp_port_tiles_0": [
+    12664.512,
+    5559.84,
+    1036.776,
+    2462.376
+   ],
+   "sp_res_ser_0": [
+    12794.112,
+    8026.56,
+    777.576,
+    518.376
+   ],
+   "sp_port_tiles_0_f1": [
+    18712.08,
+    5253.12,
+    1036.776,
+    2462.376
+   ],
+   "sp_band_lanes_1": [
+    12794.112,
+    9612.0,
+    777.576,
+    1131.816
+   ],
+   "sp_port_tiles_1": [
+    12664.512,
+    10748.16,
+    1036.776,
+    2462.376
+   ],
+   "sp_res_ser_1": [
+    12794.112,
+    13214.88,
+    777.576,
+    518.376
+   ],
+   "sp_port_tiles_1_f1": [
+    18712.08,
+    11270.88,
+    1036.776,
+    2462.376
+   ],
+   "sp_band_lanes_2": [
+    12794.112,
+    19355.76,
+    777.576,
+    1131.816
+   ],
+   "sp_port_tiles_2": [
+    12664.512,
+    20491.92,
+    1036.776,
+    2462.376
+   ],
+   "sp_res_ser_2": [
+    12794.112,
+    22958.64,
+    777.576,
+    518.376
+   ],
+   "sp_port_tiles_2_f1": [
+    18712.08,
+    20185.2,
+    1036.776,
+    2462.376
+   ],
+   "ucie_kv": [
+    15817.68,
+    25138.08,
+    777.6,
+    777.6
+   ],
+   "d2d_rom": [
+    15817.68,
+    24615.36,
+    777.576,
+    518.376
+   ],
+   "rs_bump": [
+    15755.04,
+    25120.8,
+    53.976,
+    32.376
+   ],
+   "ckb_rom": [
+    15765.84,
+    25166.16,
+    43.176,
+    43.176
+   ],
+   "sp_su64_sfu": [
+    13938.48,
+    14165.28,
+    3239.976,
+    3671.976
+   ],
+   "sp_vector_memory": [
+    13852.08,
+    11962.08,
+    4708.776,
+    2203.176
+   ],
+   "crom_g_0": [
+    17264.88,
+    17282.16,
+    194.376,
+    550.776
+   ],
+   "crom_g_1": [
+    17463.168,
+    17282.16,
+    194.376,
+    550.776
+   ],
+   "crom_g_2": [
+    17264.88,
+    16727.04,
+    194.376,
+    550.776
+   ],
+   "crom_g_3": [
+    17463.168,
+    16727.04,
+    194.376,
+    550.776
+   ],
+   "crom_g_4": [
+    17264.88,
+    16171.92,
+    194.376,
+    550.776
+   ],
+   "crom_g_5": [
+    17463.168,
+    16171.92,
+    194.376,
+    550.776
+   ],
+   "crom_g_6": [
+    17264.88,
+    15616.8,
+    194.376,
+    550.776
+   ],
+   "crom_g_7": [
+    17463.168,
+    15616.8,
+    194.376,
+    550.776
+   ],
+   "cbuf_g_0": [
+    17264.88,
+    15374.88,
+    194.376,
+    215.976
+   ],
+   "cbuf_g_1": [
+    17463.168,
+    15374.88,
+    194.376,
+    215.976
+   ],
+   "cbuf_g_2": [
+    17264.88,
+    15154.56,
+    194.376,
+    215.976
+   ],
+   "cbuf_g_3": [
+    17463.168,
+    15154.56,
+    194.376,
+    215.976
+   ],
+   "cbuf_g_4": [
+    17264.88,
+    14934.24,
+    194.376,
+    215.976
+   ],
+   "cbuf_g_5": [
+    17463.168,
+    14934.24,
+    194.376,
+    215.976
+   ],
+   "cbuf_g_6": [
+    17264.88,
+    14713.92,
+    194.376,
+    215.976
+   ],
+   "cbuf_g_7": [
+    17463.168,
+    14713.92,
+    194.376,
+    215.976
+   ],
+   "seq_su": [
+    17264.88,
+    14173.92,
+    518.376,
+    518.376
+   ],
+   "tt_ctlm": [
+    17848.08,
+    14597.28,
+    777.576,
+    1814.376
+   ],
+   "tt_up4_0": [
+    17848.08,
+    16498.08,
+    345.576,
+    388.776
+   ],
+   "xs_tap": [
+    17869.248,
+    14165.28,
+    345.576,
+    345.576
+   ],
+   "clk_rx": [
+    16000.416,
+    11463.12,
+    412.536,
+    412.536
+   ],
+   "rstseq_rom": [
+    16416.864,
+    11463.12,
+    53.976,
+    53.976
+   ]
+  },
+  "band_centroid_y": [
+   6484.6,
+   13951.4,
+   21418.3
+  ],
+  "e_area": [
+   13787.712,
+   4837.968
+  ],
+  "slab_cols": {
+   "W": 12664.512,
+   "E": 18712.08
+  },
+  "link_orient": "MX",
+  "stack": {
+   "mode": "seam",
+   "head_y": 13951.428,
+   "su_vm_gap": 0.024
+  },
+  "dvm_termini": 98,
+  "dvm": {
+   "xcol": 48,
+   "xcst": 768,
+   "tap": [
+    17869.248,
+    14165.28,
+    345.576,
+    345.576
+   ],
+   "xcol_wh": [
+    64.8,
+    1313.28
+   ],
+   "corridor_bits": 516,
+   "head_bits": 1568,
+   "roots": [
+    "head_23",
+    "head_23_rdy",
+    "head_24",
+    "head_24_rdy"
+   ],
+   "straps": {
+    "sidx": "station index from the head outward",
+    "tids": "16 x 16-b reference tile ids of the column, N stations 0..7 then S 8..15",
+    "tile_id": "16 * block + morton(c % 4, r % 4) (ref_tile_id)"
+   }
+  },
+  "outside_spine": [],
+  "child_clocks": {
+   "qfd_tt_up4": [
+    "ck_pin",
+    "ck_l0",
+    "ck_l1",
+    "ck_l2",
+    "ck_l3"
+   ],
+   "qfd_xcol_e": [
+    "ck0",
+    "ck1",
+    "ck2",
+    "ck3",
+    "ck4",
+    "ck5",
+    "ck6",
+    "ck7",
+    "ck8"
+   ],
+   "qfd_xcol_w": [
+    "ck0",
+    "ck1",
+    "ck2",
+    "ck3",
+    "ck4",
+    "ck5",
+    "ck6",
+    "ck7",
+    "ck8"
+   ]
+  },
+  "link_words": {
+   "bits": {
+    "x3": 524,
+    "attn_ret": 520,
+    "d2d_fdi": 1169,
+    "o4_kvd": 44,
+    "rs_0": 551,
+    "rs_1": 551,
+    "rs_2": 551,
+    "tt_c0": 341,
+    "tt_c1": 341,
+    "tt_c2": 341,
+    "tt_f0": 104,
+    "tt_f1": 104,
+    "tt_f2": 104,
+    "tt_lc0": 26,
+    "tt_lc1": 26,
+    "tt_lc2": 26,
+    "o4_su_iss": 482,
+    "o4_su_st": 108
+   },
+   "credits": [
+    "x3_cr",
+    "ar_cr"
+   ],
+   "rtl": "rtl/qwen_split/qfd_link_slots.sv"
+  },
+  "tree_widths": {
+   "leg_a": 514,
+   "leg_b": 514,
+   "bword": 514,
+   "buses": {
+    "a": 720,
+    "b": 720,
+    "bword": 48
+   }
+  }
+ },
+ "die": {
+  "w": 32413.392,
+  "h": 25937.28,
+  "mm2": 840.715,
+  "budget_mm2": 858,
+  "margin_mm2": 17.285
+ },
+ "build_s": 4,
+ "relays": {
+  "pitch_um": null,
+  "max_um": null,
+  "relays": null,
+  "masters": null,
+  "classes": null,
+  "clock_nets_missing": null,
+  "repaired": null,
+  "unrepaired": null,
+  "cut_over": null,
+  "off_plan": null,
+  "rip_up": null,
+  "gap_tier": null,
+  "wall_avoid": null,
+  "retry": null,
+  "jog_fix": null,
+  "pair_check": null,
+  "relay_flop_bits": null,
+  "relay_area_mm2": null,
+  "reach_um": null,
+  "max_pin_to_pin_um": null,
+  "over_reach": null
+ },
+ "tp8b_kv": {
+  "kept_relays": null,
+  "torn_chains": null,
+  "pin_moves": null
+ },
+ "stage_of": null,
+ "masters": [],
+ "cuts": {
+  "tool": "results/arch/qwen_tp8_1012/cuts.py",
+  "cap_mode": "v3",
+  "cluster_plan": "M6",
+  "rule": "bits / usable tracks <= 0.60",
+  "worst": 0.842,
+  "fine_top": [
+   {
+    "ax": "x",
+    "pos": 23000.0,
+    "win": [
+     780.0,
+     1040.0
+    ],
+    "bits": 2053.0,
+    "usable": 2438.0,
+    "util": 0.842,
+    "fam": {
+     "io": 2053.0
+    }
+   },
+   {
+    "ax": "x",
+    "pos": 22600.0,
+    "win": [
+     780.0,
+     1040.0
+    ],
+    "bits": 2053.0,
+    "usable": 2438.0,
+    "util": 0.842,
+    "fam": {
+     "io": 2053.0
+    }
+   },
+   {
+    "ax": "x",
+    "pos": 22200.0,
+    "win": [
+     780.0,
+     1040.0
+    ],
+    "bits": 2053.0,
+    "usable": 2438.0,
+    "util": 0.842,
+    "fam": {
+     "io": 2053.0
+    }
+   },
+   {
+    "ax": "x",
+    "pos": 21800.0,
+    "win": [
+     780.0,
+     1040.0
+    ],
+    "bits": 2053.0,
+    "usable": 2438.0,
+    "util": 0.842,
+    "fam": {
+     "io": 2053.0
+    }
+   },
+   {
+    "ax": "x",
+    "pos": 21400.0,
+    "win": [
+     780.0,
+     1040.0
+    ],
+    "bits": 2053.0,
+    "usable": 2438.0,
+    "util": 0.842,
+    "fam": {
+     "io": 2053.0
+    }
+   },
+   {
+    "ax": "x",
+    "pos": 21000.0,
+    "win": [
+     780.0,
+     1040.0
+    ],
+    "bits": 2053.0,
+    "usable": 2438.0,
+    "util": 0.842,
+    "fam": {
+     "io": 2053.0
+    }
+   },
+   {
+    "ax": "x",
+    "pos": 20600.0,
+    "win": [
+     780.0,
+     1040.0
+    ],
+    "bits": 2053.0,
+    "usable": 2438.0,
+    "util": 0.842,
+    "fam": {
+     "io": 2053.0
+    }
+   },
+   {
+    "ax": "x",
+    "pos": 20200.0,
+    "win": [
+     780.0,
+     1040.0
+    ],
+    "bits": 2053.0,
+    "usable": 2438.0,
+    "util": 0.842,
+    "fam": {
+     "io": 2053.0
+    }
+   },
+   {
+    "ax": "x",
+    "pos": 19800.0,
+    "win": [
+     780.0,
+     1040.0
+    ],
+    "bits": 2053.0,
+    "usable": 2438.0,
+    "util": 0.842,
+    "fam": {
+     "io": 2053.0
+    }
+   },
+   {
+    "ax": "x",
+    "pos": 19400.0,
+    "win": [
+     780.0,
+     1040.0
+    ],
+    "bits": 2053.0,
+    "usable": 2438.0,
+    "util": 0.842,
+    "fam": {
+     "io": 2053.0
+    }
+   },
+   {
+    "ax": "x",
+    "pos": 19000.0,
+    "win": [
+     780.0,
+     1040.0
+    ],
+    "bits": 2053.0,
+    "usable": 2438.0,
+    "util": 0.842,
+    "fam": {
+     "io": 2053.0
+    }
+   },
+   {
+    "ax": "x",
+    "pos": 18600.0,
+    "win": [
+     780.0,
+     1040.0
+    ],
+    "bits": 2053.0,
+    "usable": 2438.0,
+    "util": 0.842,
+    "fam": {
+     "io": 2053.0
+    }
+   },
+   {
+    "ax": "x",
+    "pos": 18200.0,
+    "win": [
+     780.0,
+     1040.0
+    ],
+    "bits": 2053.0,
+    "usable": 2438.0,
+    "util": 0.842,
+    "fam": {
+     "io": 2053.0
+    }
+   },
+   {
+    "ax": "x",
+    "pos": 17800.0,
+    "win": [
+     780.0,
+     1040.0
+    ],
+    "bits": 2053.0,
+    "usable": 2438.0,
+    "util": 0.842,
+    "fam": {
+     "io": 2053.0
+    }
+   },
+   {
+    "ax": "x",
+    "pos": 17400.0,
+    "win": [
+     780.0,
+     1040.0
+    ],
+    "bits": 2053.0,
+    "usable": 2438.0,
+    "util": 0.842,
+    "fam": {
+     "io": 2053.0
+    }
+   },
+   {
+    "ax": "x",
+    "pos": 17000.0,
+    "win": [
+     780.0,
+     1040.0
+    ],
+    "bits": 2053.0,
+    "usable": 2438.0,
+    "util": 0.842,
+    "fam": {
+     "io": 2053.0
+    }
+   },
+   {
+    "ax": "x",
+    "pos": 12450.0,
+    "win": [
+     780.0,
+     1040.0
+    ],
+    "bits": 2053.0,
+    "usable": 2438.0,
+    "util": 0.842,
+    "fam": {
+     "io": 2053.0
+    }
+   },
+   {
+    "ax": "x",
+    "pos": 12050.0,
+    "win": [
+     780.0,
+     1040.0
+    ],
+    "bits": 2053.0,
+    "usable": 2438.0,
+    "util": 0.842,
+    "fam": {
+     "io": 2053.0
+    }
+   },
+   {
+    "ax": "x",
+    "pos": 11650.0,
+    "win": [
+     780.0,
+     1040.0
+    ],
+    "bits": 2053.0,
+    "usable": 2438.0,
+    "util": 0.842,
+    "fam": {
+     "io": 2053.0
+    }
+   },
+   {
+    "ax": "x",
+    "pos": 11250.0,
+    "win": [
+     780.0,
+     1040.0
+    ],
+    "bits": 2053.0,
+    "usable": 2438.0,
+    "util": 0.842,
+    "fam": {
+     "io": 2053.0
+    }
+   },
+   {
+    "ax": "x",
+    "pos": 10850.0,
+    "win": [
+     780.0,
+     1040.0
+    ],
+    "bits": 2053.0,
+    "usable": 2438.0,
+    "util": 0.842,
+    "fam": {
+     "io": 2053.0
+    }
+   },
+   {
+    "ax": "x",
+    "pos": 10450.0,
+    "win": [
+     780.0,
+     1040.0
+    ],
+    "bits": 2053.0,
+    "usable": 2438.0,
+    "util": 0.842,
+    "fam": {
+     "io": 2053.0
+    }
+   },
+   {
+    "ax": "x",
+    "pos": 10050.0,
+    "win": [
+     780.0,
+     1040.0
+    ],
+    "bits": 2053.0,
+    "usable": 2438.0,
+    "util": 0.842,
+    "fam": {
+     "io": 2053.0
+    }
+   },
+   {
+    "ax": "y",
+    "pos": 16050.0,
+    "win": [
+     17420.0,
+     17680.0
+    ],
+    "bits": 4725.0,
+    "usable": 5759.0,
+    "util": 0.82,
+    "fam": {
+     "tree_spine": 2566.0,
+     "crom": 2157.0,
+     "reset": 2.0
+    }
+   },
+   {
+    "ax": "y",
+    "pos": 15350.0,
+    "win": [
+     17160.0,
+     17420.0
+    ],
+    "bits": 5218.0,
+    "usable": 6385.0,
+    "util": 0.817,
+    "fam": {
+     "crom": 2874.0,
+     "tree_spine": 2052.0,
+     "sequencer": 287.0,
+     "reset": 5.0
+    }
+   },
+   {
+    "ax": "x",
+    "pos": 16200.0,
+    "win": [
+     12220.0,
+     12480.0
+    ],
+    "bits": 4107.0,
+    "usable": 5484.0,
+    "util": 0.749,
+    "fam": {
+     "tree_spine": 4102.0,
+     "reset": 3.0,
+     "spine_local": 2.0
+    }
+   },
+   {
+    "ax": "x",
+    "pos": 15900.0,
+    "win": [
+     780.0,
+     1040.0
+    ],
+    "bits": 4106.0,
+    "usable": 5484.0,
+    "util": 0.749,
+    "fam": {
+     "io": 4106.0
+    }
+   },
+   {
+    "ax": "x",
+    "pos": 15500.0,
+    "win": [
+     780.0,
+     1040.0
+    ],
+    "bits": 4106.0,
+    "usable": 5484.0,
+    "util": 0.749,
+    "fam": {
+     "io": 4106.0
+    }
+   },
+   {
+    "ax": "x",
+    "pos": 15100.0,
+    "win": [
+     780.0,
+     1040.0
+    ],
+    "bits": 4106.0,
+    "usable": 5484.0,
+    "util": 0.749,
+    "fam": {
+     "io": 4106.0
+    }
+   },
+   {
+    "ax": "x",
+    "pos": 14700.0,
+    "win": [
+     780.0,
+     1040.0
+    ],
+    "bits": 4106.0,
+    "usable": 5484.0,
+    "util": 0.749,
+    "fam": {
+     "io": 4106.0
+    }
+   },
+   {
+    "ax": "x",
+    "pos": 14300.0,
+    "win": [
+     780.0,
+     1040.0
+    ],
+    "bits": 4106.0,
+    "usable": 5484.0,
+    "util": 0.749,
+    "fam": {
+     "io": 4106.0
+    }
+   },
+   {
+    "ax": "x",
+    "pos": 13900.0,
+    "win": [
+     780.0,
+     1040.0
+    ],
+    "bits": 4106.0,
+    "usable": 5484.0,
+    "util": 0.749,
+    "fam": {
+     "io": 4106.0
+    }
+   },
+   {
+    "ax": "x",
+    "pos": 13500.0,
+    "win": [
+     780.0,
+     1040.0
+    ],
+    "bits": 4106.0,
+    "usable": 5484.0,
+    "util": 0.749,
+    "fam": {
+     "io": 4106.0
+    }
+   },
+   {
+    "ax": "x",
+    "pos": 13100.0,
+    "win": [
+     780.0,
+     1040.0
+    ],
+    "bits": 4106.0,
+    "usable": 5484.0,
+    "util": 0.749,
+    "fam": {
+     "io": 4106.0
+    }
+   },
+   {
+    "ax": "x",
+    "pos": 16950.0,
+    "win": [
+     14040.0,
+     14300.0
+    ],
+    "bits": 4067.0,
+    "usable": 5485.0,
+    "util": 0.742,
+    "fam": {
+     "tree_spine": 2497.0,
+     "head_chain": 1570.0
+    }
+   },
+   {
+    "ax": "y",
+    "pos": 13500.0,
+    "win": [
+     12220.0,
+     12480.0
+    ],
+    "bits": 1553.0,
+    "usable": 2438.0,
+    "util": 0.637,
+    "fam": {
+     "tree_spine": 1542.0,
+     "reset": 11.0
+    }
+   },
+   {
+    "ax": "x",
+    "pos": 17350.0,
+    "win": [
+     15080.0,
+     15340.0
+    ],
+    "bits": 3489.0,
+    "usable": 5530.0,
+    "util": 0.631,
+    "fam": {
+     "tree_spine": 2052.0,
+     "crom": 1436.0,
+     "reset": 1.0
+    }
+   },
+   {
+    "ax": "y",
+    "pos": 14900.0,
+    "win": [
+     17160.0,
+     17420.0
+    ],
+    "bits": 3854.0,
+    "usable": 6385.0,
+    "util": 0.604,
+    "fam": {
+     "tree_spine": 2052.0,
+     "crom": 1436.0,
+     "sequencer": 357.0,
+     "reset": 9.0
+    }
+   },
+   {
+    "ax": "x",
+    "pos": 17700.0,
+    "win": [
+     14300.0,
+     14560.0
+    ],
+    "bits": 3061.0,
+    "usable": 5484.0,
+    "util": 0.558,
+    "fam": {
+     "spine_local": 2139.0,
+     "tree_spine": 916.0,
+     "reset": 6.0
+    }
+   },
+   {
+    "ax": "x",
+    "pos": 11950.0,
+    "win": [
+     13780.0,
+     14040.0
+    ],
+    "bits": 3129.0,
+    "usable": 5935.0,
+    "util": 0.527,
+    "fam": {
+     "head_chain": 1570.0,
+     "tree_spine": 1542.0,
+     "reset": 17.0
+    }
+   }
+  ]
+ },
+ "relay_token_cost": {
+  "schema": "opentallas.qwen-rom-relay-token-cost.v1",
+  "stages_r21": {
+   "bd": 33,
+   "tree": 4,
+   "tws": 2,
+   "ord": 1,
+   "link": 0
+  },
+  "stages_rtl": {
+   "bd": 41,
+   "tree": 20,
+   "tws": 38,
+   "ord": 7,
+   "link": 46
+  },
+  "bd_worst_tile": {
+   "col": 0,
+   "row": 0,
+   "head_stages": 24,
+   "head_roots": {
+    "head_23": 1,
+    "head_24": 1
+   }
+  },
+  "me_ops_per_ar_token": 217,
+  "me_ops_source": "217 = results/rtl/qwen_rom_die_r17_20261005/relays_r21/relay_token_cost.json (latency() unavailable: ModuleNotFoundError)",
+  "delta_per_me_op": -66,
+  "delta_link_per_traversal": -46,
+  "cycles_per_ar_token": -17634,
+  "basis": "one register boundary per die hop (element ports registered); r21 relays add hops; the measured token RTL carries the base stages (k_AR0 wire_stages bd / nws x 4 levels / tws / ord, r2 link)"
+ },
+ "reset": {
+  "reset_tree": null,
+  "reset_named_nets": 8,
+  "reset_named_over_500": [
+   [
+    54426.5,
+    "rst_field",
+    "reset",
+    1585
+   ],
+   [
+    23535.0,
+    "rst_spine",
+    "reset",
+    27
+   ],
+   [
+    23249.9,
+    "rst_io",
+    "reset",
+    5
+   ],
+   [
+    14297.9,
+    "rst_fwd_s",
+    "reset",
+    2
+   ],
+   [
+    5435.6,
+    "rst_seq_ctlm",
+    "reset",
+    2
+   ],
+   [
+    4077.3,
+    "rst_seq",
+    "reset",
+    2
+   ]
+  ],
+  "reset_named_worst": [
+   [
+    54426.5,
+    "rst_field",
+    "reset",
+    1585
+   ],
+   [
+    23535.0,
+    "rst_spine",
+    "reset",
+    27
+   ],
+   [
+    23249.9,
+    "rst_io",
+    "reset",
+    5
+   ],
+   [
+    14297.9,
+    "rst_fwd_s",
+    "reset",
+    2
+   ],
+   [
+    5435.6,
+    "rst_seq_ctlm",
+    "reset",
+    2
+   ],
+   [
+    4077.3,
+    "rst_seq",
+    "reset",
+    2
+   ],
+   [
+    290.6,
+    "rst_d2d",
+    "spine_local",
+    3
+   ],
+   [
+    68.2,
+    "rst_fwd",
+    "reset",
+    2
+   ]
+  ]
+ },
+ "instances": 1630,
+ "inline_pads": null,
+ "tp8_tree_pads": null,
+ "tp8b_v5": {
+  "views": {
+   "qkd_rstseq": {
+    "view": "physical/ref_tile/qkd_rstseq/views/qkd_rstseq",
+    "ports_on_view_pins": 7,
+    "ports_kept_generated": [
+     "rsi"
+    ]
+   },
+   "qkd_ctrl_pc": "outline differs: frame 247.512 x 377.976, view 246.24 x 172.8: generated pins kept",
+   "qkd_ctrl_kc": "outline differs: frame 247.512 x 45.336, view 64.8 x 43.2: generated pins kept",
+   "qkd_ectl_a": {
+    "view": "physical/ref_tile/qkd_ectl_a/views/qkd_ectl_a",
+    "ports_on_view_pins": 10,
+    "ports_kept_generated": []
+   },
+   "qkd_ectl_b": {
+    "view": "physical/ref_tile/qkd_ectl_b/views/qkd_ectl_b",
+    "ports_on_view_pins": 12,
+    "ports_kept_generated": []
+   },
+   "qkd_ectl_c": {
+    "view": "physical/ref_tile/qkd_ectl_c/views/qkd_ectl_c",
+    "ports_on_view_pins": 17,
+    "ports_kept_generated": []
+   },
+   "qfd_su_cbuf_g": {
+    "view": "physical/ref_tile/qfd_su_cbuf_g_m5/views/ot_qfd_su_cbuf_g",
+    "ports_on_view_pins": 10,
+    "ports_kept_generated": []
+   },
+   "qfd_crom_g": {
+    "view": "physical/ref_tile/qfd_crom_g_m5/views/ot_qfd_crom_gr",
+    "ports_on_view_pins": 6,
+    "ports_kept_generated": []
+   }
+  },
+  "pin_align": {
+   "aligned": {
+    "ot_qkvd_ucie_x64_phy.fdi": "qfd_d2d_rom.fdi",
+    "qfd_io_collective.sd": "qfd_io_xfifo.o_seq_coll",
+    "qfd_io_collective.sr": "qfd_io_xfifo.o_serdes_rx",
+    "qfd_io_collective.sr1": "qfd_io_xfifo.o_serdes_rx1",
+    "qfd_io_collective.sr2": "qfd_io_xfifo.o_serdes_rx2",
+    "qfd_io_collective.ur": "qfd_io_xfifo.o_ucie_rx",
+    "qfd_io_ucie.c": "qfd_io_xfifo.o_ucie_tx",
+    "qfd_io_ucie.r_r": "qfd_io_xfifo.i_ucie_rx_r",
+    "qfd_io_xfifo.i_coll_seq": "qfd_io_collective.cs",
+    "qfd_io_xfifo.i_serdes_tx": "qfd_io_collective.s",
+    "qfd_io_xfifo.i_serdes_tx1": "qfd_io_collective.s1",
+    "qfd_io_xfifo.i_serdes_tx2": "qfd_io_collective.s2",
+    "qfd_io_xfifo.i_ucie_rx": "qfd_io_ucie.r",
+    "qfd_io_xfifo.i_ucie_tx": "qfd_io_collective.u",
+    "qfd_io_xfifo.o_ucie_tx_r": "qfd_io_ucie.c_r",
+    "qfd_port_tiles_0.rq": "qfd_sp_res_ser.i",
+    "qfd_port_tiles_0.tw": "qfd_sp_band_lanes.tw",
+    "qfd_port_tiles_0.ty": "qfd_sp_band_lanes.ty",
+    "qfd_port_tiles_1.rq": "qfd_sp_res_ser.i",
+    "qfd_port_tiles_1.tw": "qfd_sp_band_lanes.tw",
+    "qfd_port_tiles_1.ty": "qfd_sp_band_lanes.ty",
+    "qfd_port_tiles_2.rq": "qfd_sp_res_ser.i",
+    "qfd_port_tiles_2.tw": "qfd_sp_band_lanes.tw",
+    "qfd_port_tiles_2.ty": "qfd_sp_band_lanes.ty",
+    "qfd_sp_vector_memory.svr": "qfd_seq_su.vrd",
+    "qfd_sp_vector_memory.svw": "qfd_seq_su.vwr",
+    "qfd_xcol_e.n_d": "qfd_xcst_n.b_d",
+    "qfd_xcol_e.n_r": "qfd_xcst_n.b_r",
+    "qfd_xcol_w.n_d": "qfd_xcst_n.b_d",
+    "qfd_xcol_w.n_r": "qfd_xcst_n.b_r",
+    "qfd_xcst_n.tap_d": "qfd_tile_nk.tap",
+    "qfd_xcst_s.tap_d": "qfd_tile_nk.tap"
+   },
+   "skipped": {
+    "qfd_io_xfifo.lf3": "qfd_io_ucie.fault is not on the face toward qfd_io_xfifo",
+    "qfd_seq_su.cbc6": "qfd_su_cbuf_g.ctl is not on the face toward qfd_seq_su",
+    "qfd_seq_su.cbc7": "qfd_su_cbuf_g.ctl is not on the face toward qfd_seq_su",
+    "qfd_seq_su.cbr6": "qfd_su_cbuf_g.rdy is not on the face toward qfd_seq_su",
+    "qfd_seq_su.cbr7": "qfd_su_cbuf_g.rdy is not on the face toward qfd_seq_su",
+    "qfd_seq_su.vrq": "qfd_sp_vector_memory.svq is not on the face toward qfd_seq_su",
+    "qfd_sp_su64_sfu.vq": "qfd_sp_vector_memory.sq pins run past the qfd_sp_su64_sfu face (4327.40..4622.27 of 3239.98)",
+    "qfd_sp_vector_memory.sa": "qfd_sp_su64_sfu.va is not on the face toward qfd_sp_vector_memory",
+    "qfd_xs_tap.aw": "qfd_sp_vector_memory.xaw is not on the face toward qfd_xs_tap"
+   },
+   "both_closed": {}
+  },
+  "pin_align_die": {
+   "astk_height": {},
+   "kvwq_leaf_reseated": 0,
+   "leaf_dx": 38.016,
+   "leaf_gap": 8.64
+  },
+  "io": {
+   "host": null,
+   "pairs": [
+    [
+     "qfd_io_xfifo",
+     "o_ucie_tx",
+     1024
+    ],
+    [
+     "qfd_io_ucie",
+     "c",
+     1024
+    ],
+    [
+     "qfd_io_xfifo",
+     "o_serdes_tx",
+     1024
+    ],
+    [
+     "qfd_io_serdes",
+     "c",
+     1024
+    ],
+    [
+     "qfd_io_ucie",
+     "r",
+     1024
+    ],
+    [
+     "qfd_io_xfifo",
+     "i_ucie_rx",
+     1024
+    ],
+    [
+     "qfd_io_serdes",
+     "r",
+     1024
+    ],
+    [
+     "qfd_io_xfifo",
+     "i_serdes_rx",
+     1024
+    ],
+    [
+     "qfd_io_xfifo",
+     "o_serdes_tx1",
+     1024
+    ],
+    [
+     "qfd_io_xfifo",
+     "i_serdes_rx1",
+     1024
+    ],
+    [
+     "qfd_io_xfifo",
+     "o_serdes_tx2",
+     1024
+    ],
+    [
+     "qfd_io_xfifo",
+     "i_serdes_rx2",
+     1024
+    ]
+   ]
+  },
+  "torn_kv_chains": [],
+  "torn_kv_chains_over_reach": null,
+  "n_overlaps": 0
+ },
+ "pin_align": {
+  "verdict": "PASS",
+  "bundles": 3711,
+  "by_verdict": {
+   "OK": 3588,
+   "WARN": 123
+  },
+  "by_kind": {
+   "straight": 2530,
+   "uturn": 66,
+   "area": 1105,
+   "corner": 10
+  },
+  "jog_over_warn": {
+   "bundles": 57,
+   "bits": 18074
+  },
+  "order_not_preserved": {
+   "bundles": 16,
+   "bits": 5752
+  },
+  "line": "OT_PIN_ALIGN PASS bundles 3711 bits 1527218: FAIL 0 (jog spills past the channel) WARN 123 (jog > 20 um: 57 bundles / 18074 bits, max 12061.2 um; order not preserved: 16 bundles; u-turn 66); bits without pin 73"
+ }
+}

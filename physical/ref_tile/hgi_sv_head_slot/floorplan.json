@@ -92,6 +92,7 @@
  "blocks": [],
  "findings": [],
  "referenced": [
+  "rtl/lib/ot_rst_relay.sv",
   "rtl/hbm_accel/generic/peers/ot_hgi_sv_unit.sv",
   "rtl/hbm_accel/generic/adapters/ot_hgi_su_record.sv",
   "physical/ref_tile/hgi_sv_head_slot/kit.env",
@@ -122,6 +123,7 @@
   "physical/dsrom_window_source/leaf_inhold.tcl",
   "physical/dsrom_window_source/leaf_inhold_release.tcl",
   "physical/ref_tile/hgi_sv_head_slot/pre_gpl.tcl",
-  "physical/ref_tile/hgi_sv_head_slot/pre_dpl.tcl"
+  "physical/ref_tile/hgi_sv_head_slot/pre_dpl.tcl",
+  "physical/common_flow/pin_reg_split.tcl"
  ]
 }

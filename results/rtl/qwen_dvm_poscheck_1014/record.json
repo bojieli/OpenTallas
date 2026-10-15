@@ -1,0 +1,9 @@
+{
+  "status": "FULL_PRODUCTION_FUNCTIONAL_PASS_PHYSICAL_SETUP_UNQUALIFIED",
+  "change": "Native per-row/element position-overflow integrity bits registered before sticky fault reduction. Exactly one extra observer edge; no read/data/GO timing change. Generic path unchanged.",
+  "positive": "PASS64tiles4actualops114688operandchecks;nativeaffine/static,NW18",
+  "full768": "PASS4177920operandchecks,14ops,2276cycles,delta1",
+  "physical_gate": "Current CTS TT-1.448ps/FFhold+24.399ps,boundary50.7ps. No physical closure claim.",
+  "source_snapshot": "ot-epyc1tb:/srv/opentallas-scratch/codex/dvm4-poscut",
+  "physical_phi_R_modeled": false
+}

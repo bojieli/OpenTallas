@@ -1,0 +1,54 @@
+{
+  "schema": "opentallas.qwen-tp8.native-TT-head-clock-receipt.v1",
+  "source_commit": "5f46813ea",
+  "source_path": "physical/ref_tile/qfd_tt_ctlm_head/views/qfd_tt_ctlm_head/insertion.json",
+  "source_sha256": "66427c59f8a3a9314ef36015c867eb177549217e27af3330fdd6214e7782639c",
+  "clock_pin": "clk",
+  "clock_name": "core_clk",
+  "basis": "Actual SPEF/6_final.odb; 6_final.sdc create_clock -name core_clk [get_ports {clk}]",
+  "boundary": {
+    "tt": {
+      "mean": 536.4,
+      "min": 503.8,
+      "max": 558.1
+    },
+    "ff": {
+      "mean": 428.4,
+      "min": 406.7,
+      "max": 454.2
+    },
+    "ss": {
+      "mean": 716.1,
+      "min": 662.9,
+      "max": 747.5
+    }
+  },
+  "all_sink_means": {
+    "tt": 529.6,
+    "ff": 422.4,
+    "ss": 708.4
+  },
+  "actual_TT_all_spread_ps": 82.2,
+  "actual_TT_boundary_spread_ps": 54.3,
+  "actual_root_sinks": 4610,
+  "TT_setup_ps": 25.69,
+  "FF_hold_ps": 2.86,
+  "SS_sensitivity_ps": -369.77,
+  "DRC": 0,
+  "parent_outline_candidate_um": [
+    648,
+    280.8
+  ],
+  "parent_adopted": false,
+  "die_assigned_pins": false,
+  "qualification": "CLOSED TT/FF record; SS sensitivity negative and allspread82.2 explicitly unresolved. No full3corner/nativeparent qualification.",
+  "delivery": "Use actual routed boundarymeans for per-corner phi-R; earlier411.6 CTS reference superseded. Deep rule setup210/hold100 to all related endpoints; choose earlier tap with actual TT536.4/max558.1.",
+  "working_reference_variant": "ARG2 immutable5f46813ea, not current shared mainpath",
+  "shared_path_overwrite": {
+    "new_record_commit": "d38d602c6",
+    "variant": "ARG1",
+    "path": "physical/ref_tile/qfd_tt_ctlm_head/views/qfd_tt_ctlm_head/insertion.json",
+    "sha256": "492d8bd684904e09862c16e1d18e5adf16a0b0f76a5bd2836d89fbd8d3f46fe5",
+    "note": "Current shared path replaced by ARG1. Every LEF/Liberty/insertion/SDC record used together must be pinned to one variant; do not combine ARG1 bytes with ARG2 R536.4 receipt. No new variantadoption made by thisreceipt."
+  }
+}

@@ -1,0 +1,22 @@
+{
+ "schema": "opentallas.s81.engram_mix_recovery.v1",
+ "native_qualified": false,
+ "scope": "Exact recovered former-owner WIP; historical component receipts preserved without whole-program/physical qualification",
+ "source_snapshot": {
+  "rtl/dsrom_sys/engram/mix/dsfd_engram_mix_c.sv": "866a6e65d64c9fd25c0f1f9b4d6a431a586d05c65a6f9409983769d7beb75672",
+  "rtl/dsrom_sys/engram/mix/ot_s81_engram_dispatch.sv": "3391c891d61fc770edf865f4e66b4d0354b6709630c1b8d400fce57c1b5e8ed1",
+  "rtl/dsrom_sys/engram/mix/ot_s81_engram_mix.sv": "7e2e89f78d62acf8529228973edf5cee2a91da9c9881ce852e89d6b9ee5e9810",
+  "rtl/dsrom_sys/engram/mix/tb_s81_engram_dispatch.sv": "3f9f39c1f3408dfe2c9369225f6bb2cd9597705ba0598051a9bd152edb80207b",
+  "rtl/dsrom_sys/engram/mix/tb_s81_engram_mix.sv": "6513945db91be0971c4da1e6b8c3d08a7ffa558584ab004047274cb2ff285d96",
+  "rtl/dsrom_sys/engram/mix/tb_s81_engram_mix_c.sv": "862ae9d3411a9a65bfdf52eec90143b5c8c16430f2edfcb0e20443a1b016450b",
+  "tools/s81_engram_mix/area.py": "f29ca18ed9029a8a03b889529cbff835213550f06ebd151a68c1415bba47b8e8",
+  "tools/s81_engram_mix/census.py": "6bb7ad9ed1754f280fadd1270e19dbcc585e31354fb7893de36b6cdf793f7970",
+  "tools/s81_engram_mix/dispatch_gate.py": "bac48913807dd8631d6d1044449f1249a438efdb6ae2cd17ec3a77229a61993a",
+  "tools/s81_engram_mix/gate.py": "4a7c7631ec92fe108b60932fb58098e227eb2ac42df60079e1eec93a0de85188"
+ },
+ "historical_source_pin_mismatches": [
+  "rtl/dsrom_sys/engram/mix/ot_s81_engram_mix.sv"
+ ],
+ "known_gap": "Four copies execute sequentially in2982cycles versus871.2priced; new four-cluster static profile and actual VM producer/consumer layout still required",
+ "gate_note": "Recovered gate.py defaults to DPI; historical native logs/source receipts require reconstruction of exact compiler invocation before reuse as native qualification"
+}

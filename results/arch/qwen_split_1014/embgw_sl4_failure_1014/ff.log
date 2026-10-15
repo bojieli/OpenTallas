@@ -1,0 +1,452 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9184, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9217, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9250, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9283, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9316, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9349, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9382, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10518, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10551, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10584, timing group from output port.
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+QDM PINFLOP reference: 2303 input pin flops, median arrival 214.593094 (range 189.279266 .. 265.187744)
+QDM reference pin u_body.lrw_p[3][316]$_DFF_P_/CLK clock arrival max 214.593094 min 201.945404 skew 90 hold 50
+OT_IO_INTER 0 inputs 0 outputs at 150 ps
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+OT_CORNER ff
+OT_WS -4.0505931941936524e-11
+OT_TNS -3.890775701620441e-9
+Startpoint: rst_n (input port clocked by core_clk)
+Endpoint: u_body.rs0$_DFF_PN0_
+          (removal check against rising-edge clock core_clk)
+Path Group: asynchronous
+Path Type: min
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock network delay (propagated)
+ 201.95  201.95 ^ input external delay
+   0.00  201.95 ^ rst_n (in)
+  40.38  242.32 ^ hold13614/Y (BUFx2_ASAP7_75t_R)
+  34.57  276.89 ^ input281/Y (BUFx2_ASAP7_75t_R)
+   1.64  278.53 ^ u_body.rs0$_DFF_PN0_/RESETN (DFFASRHQNx1_ASAP7_75t_R)
+         278.53   data arrival time
+
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock source latency
+   0.00    0.00 ^ ck (in)
+  40.05   40.05 ^ clkbuf_0_ck/Y (BUFx24_ASAP7_75t_R)
+  23.57   63.62 ^ clkbuf_1_0_0_ck/Y (BUFx24_ASAP7_75t_R)
+  29.69   93.30 ^ clkbuf_2_0_0_ck/Y (BUFx24_ASAP7_75t_R)
+  28.11  121.41 ^ clkbuf_3_1_0_ck/Y (BUFx24_ASAP7_75t_R)
+  32.19  153.60 ^ clkbuf_5_7_0_ck/Y (BUFx24_ASAP7_75t_R)
+  22.78  176.38 ^ clkbuf_6_15__f_ck/Y (BUFx24_ASAP7_75t_R)
+  41.66  218.04 ^ clkbuf_leaf_742_ck/Y (BUFx24_ASAP7_75t_R)
+   2.24  220.28 ^ u_body.rs0$_DFF_PN0_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+  25.00  245.28   clock uncertainty
+   0.00  245.28   clock reconvergence pessimism
+  23.68  268.96   library removal time
+         268.96   data required time
+---------------------------------------------------------
+         268.96   data required time
+        -278.53   data arrival time
+---------------------------------------------------------
+           9.57   slack (MET)
+
+
+Startpoint: u_body.lt_d_r[171]$_DFFE_PP_
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: u_body.lt_d[171]$_DFF_P_
+          (rising edge-triggered flip-flop clocked by core_clk)
+Path Group: core_clk
+Path Type: min
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock source latency
+   0.00    0.00 ^ ck (in)
+  38.30   38.30 ^ clkbuf_0_ck/Y (BUFx24_ASAP7_75t_R)
+  23.54   61.84 ^ clkbuf_1_1_0_ck/Y (BUFx24_ASAP7_75t_R)
+  26.24   88.08 ^ clkbuf_2_2_0_ck/Y (BUFx24_ASAP7_75t_R)
+  22.58  110.66 ^ clkbuf_3_4_0_ck/Y (BUFx24_ASAP7_75t_R)
+  25.11  135.77 ^ clkbuf_5_16_0_ck/Y (BUFx24_ASAP7_75t_R)
+  23.17  158.94 ^ clkbuf_6_32__f_ck/Y (BUFx24_ASAP7_75t_R)
+  26.35  185.29 ^ clkbuf_leaf_91_ck/Y (BUFx24_ASAP7_75t_R)
+   2.15  187.44 ^ u_body.lt_d_r[171]$_DFFE_PP_/CLK (DFFHQNx1_ASAP7_75t_R)
+  35.45  222.89 ^ u_body.lt_d_r[171]$_DFFE_PP_/QN (DFFHQNx1_ASAP7_75t_R)
+  23.16  246.05 v _074193_/Y (INVx1_ASAP7_75t_R)
+   9.49  255.54 v u_body.lt_d[171]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)
+         255.54   data arrival time
+
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock source latency
+   0.00    0.00 ^ ck (in)
+  40.05   40.05 ^ clkbuf_0_ck/Y (BUFx24_ASAP7_75t_R)
+  23.57   63.62 ^ clkbuf_1_0_0_ck/Y (BUFx24_ASAP7_75t_R)
+  29.69   93.30 ^ clkbuf_2_0_0_ck/Y (BUFx24_ASAP7_75t_R)
+  28.62  121.93 ^ clkbuf_3_0_0_ck/Y (BUFx24_ASAP7_75t_R)
+  28.54  150.47 ^ clkbuf_5_0_0_ck/Y (BUFx24_ASAP7_75t_R)
+  25.01  175.48 ^ clkbuf_6_0__f_ck/Y (BUFx24_ASAP7_75t_R)
+  88.64  264.12 ^ clkbuf_leaf_6_ck/Y (BUFx24_ASAP7_75t_R)
+   0.43  264.55 ^ u_body.lt_d[171]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+  25.00  289.55   clock uncertainty
+  -1.74  287.80   clock reconvergence pessimism
+   8.24  296.04   library hold time
+         296.04   data required time
+---------------------------------------------------------
+         296.04   data required time
+        -255.54   data arrival time
+---------------------------------------------------------
+         -40.51   slack (VIOLATED)
+
+
+OT_VIOL_D_PINS 336
+OT_WS_REG_D -40.505932
+OT_WS_OUT 9.282214
+OT_WS_R2R -40.505932
+OT_WS_I2R -25.316582
+OT_PATH u_body.lt_d_r[171]$_DFFE_PP_/QN u_body.lt_d[171]$_DFF_P_/D -40.505932
+OT_PATH u_body.lt_d_r[188]$_DFFE_PP_/QN u_body.lt_d[188]$_DFF_P_/D -39.690113
+OT_PATH u_body.lt_d_r[183]$_DFFE_PP_/QN u_body.lt_d[183]$_DFF_P_/D -38.707676
+OT_PATH u_body.lt_d_r[195]$_DFFE_PP_/QN u_body.lt_d[195]$_DFF_P_/D -38.163971
+OT_PATH u_body.lt_d_r[164]$_DFFE_PP_/QN u_body.lt_d[164]$_DFF_P_/D -37.959248
+OT_PATH u_body.lt_d_r[194]$_DFFE_PP_/QN u_body.lt_d[194]$_DFF_P_/D -37.620407
+OT_PATH u_body.lt_d_r[165]$_DFFE_PP_/QN u_body.lt_d[165]$_DFF_P_/D -37.566448
+OT_PATH u_body.lt_d_r[239]$_DFFE_PP_/QN u_body.lt_d[239]$_DFF_P_/D -36.785103
+OT_PATH u_body.lt_d_r[159]$_DFFE_PP_/QN u_body.lt_d[159]$_DFF_P_/D -36.735363
+OT_PATH u_body.lt_d_r[189]$_DFFE_PP_/QN u_body.lt_d[189]$_DFF_P_/D -35.293434
+OT_PATH u_body.lt_d_r[123]$_DFFE_PP_/QN u_body.lt_d[123]$_DFF_P_/D -34.318798
+OT_PATH u_body.lt_d_r[187]$_DFFE_PP_/QN u_body.lt_d[187]$_DFF_P_/D -31.894848
+OT_PATH u_body.lt_d_r[129]$_DFFE_PP_/QN u_body.lt_d[129]$_DFF_P_/D -31.335684
+OT_PATH u_body.lt_d_r[93]$_DFFE_PP_/QN u_body.lt_d[93]$_DFF_P_/D -31.246866
+OT_PATH u_body.lt_d_r[176]$_DFFE_PP_/QN u_body.lt_d[176]$_DFF_P_/D -31.237486
+OT_PATH u_body.lt_d_r[153]$_DFFE_PP_/QN u_body.lt_d[153]$_DFF_P_/D -31.177532
+OT_PATH u_body.lt_d_r[140]$_DFFE_PP_/QN u_body.lt_d[140]$_DFF_P_/D -30.221909
+OT_PATH u_body.lt_d_r[142]$_DFFE_PP_/QN u_body.lt_d[142]$_DFF_P_/D -29.432596
+OT_PATH u_body.lt_d_r[130]$_DFFE_PP_/QN u_body.lt_d[130]$_DFF_P_/D -28.872183
+OT_PATH u_body.lt_d_r[146]$_DFFE_PP_/QN u_body.lt_d[146]$_DFF_P_/D -28.854862
+OT_PATH u_body.lt_d_r[141]$_DFFE_PP_/QN u_body.lt_d[141]$_DFF_P_/D -28.661907
+OT_PATH u_body.lt_d_r[98]$_DFFE_PP_/QN u_body.lt_d[98]$_DFF_P_/D -28.357817
+OT_PATH u_body.lt_d_r[17]$_DFFE_PP_/QN u_body.lt_d[17]$_DFF_P_/D -27.724184
+OT_PATH u_body.lt_d_r[181]$_DFFE_PP_/QN u_body.lt_d[181]$_DFF_P_/D -27.673086
+OT_PATH u_body.lt_d_r[125]$_DFFE_PP_/QN u_body.lt_d[125]$_DFF_P_/D -27.501640
+OT_PATH u_body.lt_d_r[152]$_DFFE_PP_/QN u_body.lt_d[152]$_DFF_P_/D -27.499031
+OT_PATH u_body.lt_d_r[100]$_DFFE_PP_/QN u_body.lt_d[100]$_DFF_P_/D -27.433445
+OT_PATH u_body.lt_d_r[172]$_DFFE_PP_/QN u_body.lt_d[172]$_DFF_P_/D -27.002928
+OT_PATH u_body.lt_d_r[94]$_DFFE_PP_/QN u_body.lt_d[94]$_DFF_P_/D -26.372599
+OT_PATH u_body.lt_d_r[76]$_DFFE_PP_/QN u_body.lt_d[76]$_DFF_P_/D -26.043446
+OT_PATH emr_WS[47] u_body.lrw_p[0][46]$_DFF_P_/D -25.316582
+OT_PATH emr_WS[36] u_body.lrw_p[0][35]$_DFF_P_/D -25.247416
+OT_PATH u_body.lt_d_r[108]$_DFFE_PP_/QN u_body.lt_d[108]$_DFF_P_/D -25.039276
+OT_PATH u_body.lt_d_r[121]$_DFFE_PP_/QN u_body.lt_d[121]$_DFF_P_/D -24.615337
+OT_PATH u_body.lt_d_r[19]$_DFFE_PP_/QN u_body.lt_d[19]$_DFF_P_/D -24.440144
+OT_PATH u_body.lt_d_r[177]$_DFFE_PP_/QN u_body.lt_d[177]$_DFF_P_/D -24.436369
+OT_PATH u_body.lt_d_r[137]$_DFFE_PP_/QN u_body.lt_d[137]$_DFF_P_/D -24.351521
+OT_PATH u_body.lt_d_r[114]$_DFFE_PP_/QN u_body.lt_d[114]$_DFF_P_/D -24.277636
+OT_PATH u_body.lt_d_r[120]$_DFFE_PP_/QN u_body.lt_d[120]$_DFF_P_/D -24.190012
+OT_PATH u_body.lt_d_r[50]$_DFFE_PP_/QN u_body.lt_d[50]$_DFF_P_/D -24.121483
+OT_PATH u_body.lt_d_r[163]$_DFFE_PP_/QN u_body.lt_d[163]$_DFF_P_/D -23.687885
+OT_PATH u_body.lt_d_r[104]$_DFFE_PP_/QN u_body.lt_d[104]$_DFF_P_/D -23.263031
+OT_PATH u_body.lt_d_r[118]$_DFFE_PP_/QN u_body.lt_d[118]$_DFF_P_/D -23.232000
+OT_PATH u_body.lt_d_r[136]$_DFFE_PP_/QN u_body.lt_d[136]$_DFF_P_/D -23.215958
+OT_PATH u_body.lt_d_r[92]$_DFFE_PP_/QN u_body.lt_d[92]$_DFF_P_/D -22.796375
+OT_PATH u_body.lt_d_r[124]$_DFFE_PP_/QN u_body.lt_d[124]$_DFF_P_/D -22.719826
+OT_PATH u_body.lt_d_r[182]$_DFFE_PP_/QN u_body.lt_d[182]$_DFF_P_/D -22.282732
+OT_PATH u_body.lt_d_r[173]$_DFFE_PP_/QN u_body.lt_d[173]$_DFF_P_/D -22.203545
+OT_PATH u_body.lt_d_r[179]$_DFFE_PP_/QN u_body.lt_d[179]$_DFF_P_/D -21.841028
+OT_PATH u_body.lt_d_r[200]$_DFFE_PP_/QN u_body.lt_d[200]$_DFF_P_/D -21.617708
+OT_PATH u_body.lt_d_r[168]$_DFFE_PP_/QN u_body.lt_d[168]$_DFF_P_/D -21.419811
+OT_PATH u_body.lt_d_r[63]$_DFFE_PP_/QN u_body.lt_d[63]$_DFF_P_/D -21.364521
+OT_PATH u_body.lt_d_r[33]$_DFFE_PP_/QN u_body.lt_d[33]$_DFF_P_/D -21.247282
+OT_PATH u_body.lt_d_r[160]$_DFFE_PP_/QN u_body.lt_d[160]$_DFF_P_/D -21.220110
+OT_PATH u_body.lt_d_r[81]$_DFFE_PP_/QN u_body.lt_d[81]$_DFF_P_/D -20.982132
+OT_PATH u_body.lt_d_r[148]$_DFFE_PP_/QN u_body.lt_d[148]$_DFF_P_/D -20.796753
+OT_PATH u_body.lt_d_r[186]$_DFFE_PP_/QN u_body.lt_d[186]$_DFF_P_/D -20.714930
+OT_PATH u_body.lt_d_r[119]$_DFFE_PP_/QN u_body.lt_d[119]$_DFF_P_/D -20.713043
+OT_PATH u_body.lt_d_r[134]$_DFFE_PP_/QN u_body.lt_d[134]$_DFF_P_/D -20.599855
+OT_PATH u_body.lt_d_r[158]$_DFFE_PP_/QN u_body.lt_d[158]$_DFF_P_/D -20.389746
+OT_PATH u_body.lt_d_r[155]$_DFFE_PP_/QN u_body.lt_d[155]$_DFF_P_/D -20.152796
+OT_PATH u_body.lt_d_r[175]$_DFFE_PP_/QN u_body.lt_d[175]$_DFF_P_/D -20.077023
+OT_PATH emr_WS[27] u_body.lrw_p[0][26]$_DFF_P_/D -19.888592
+OT_PATH u_body.lt_d_r[40]$_DFFE_PP_/QN u_body.lt_d[40]$_DFF_P_/D -19.881264
+OT_PATH u_body.lt_d_r[103]$_DFFE_PP_/QN u_body.lt_d[103]$_DFF_P_/D -19.856533
+OT_PATH u_body.lt_d_r[166]$_DFFE_PP_/QN u_body.lt_d[166]$_DFF_P_/D -19.392544
+OT_PATH u_body.lt_d_r[144]$_DFFE_PP_/QN u_body.lt_d[144]$_DFF_P_/D -19.304113
+OT_PATH u_body.lt_d_r[99]$_DFFE_PP_/QN u_body.lt_d[99]$_DFF_P_/D -19.292568
+OT_PATH u_body.lt_d_r[52]$_DFFE_PP_/QN u_body.lt_d[52]$_DFF_P_/D -19.253544
+OT_PATH u_body.lt_d_r[191]$_DFFE_PP_/QN u_body.lt_d[191]$_DFF_P_/D -19.208607
+OT_PATH u_body.lt_d_r[185]$_DFFE_PP_/QN u_body.lt_d[185]$_DFF_P_/D -19.048513
+OT_PATH u_body.lt_d_r[80]$_DFFE_PP_/QN u_body.lt_d[80]$_DFF_P_/D -18.942043
+OT_PATH u_body.lt_d_r[70]$_DFFE_PP_/QN u_body.lt_d[70]$_DFF_P_/D -18.846203
+OT_PATH u_body.lt_d_r[135]$_DFFE_PP_/QN u_body.lt_d[135]$_DFF_P_/D -18.737844
+OT_PATH u_body.lt_d_r[97]$_DFFE_PP_/QN u_body.lt_d[97]$_DFF_P_/D -18.674673
+OT_PATH u_body.lt_d_r[149]$_DFFE_PP_/QN u_body.lt_d[149]$_DFF_P_/D -18.585466
+OT_PATH u_body.lt_d_r[74]$_DFFE_PP_/QN u_body.lt_d[74]$_DFF_P_/D -18.554241
+OT_PATH u_body.lt_d_r[233]$_DFFE_PP_/QN u_body.lt_d[233]$_DFF_P_/D -18.191393
+OT_PATH u_body.lt_d_r[127]$_DFFE_PP_/QN u_body.lt_d[127]$_DFF_P_/D -18.150343
+OT_PATH u_body.lt_d_r[154]$_DFFE_PP_/QN u_body.lt_d[154]$_DFF_P_/D -18.149593
+OT_PATH u_body.lt_d_r[161]$_DFFE_PP_/QN u_body.lt_d[161]$_DFF_P_/D -18.043734
+OT_PATH u_body.lt_d_r[112]$_DFFE_PP_/QN u_body.lt_d[112]$_DFF_P_/D -17.871899
+OT_PATH u_body.lt_d_r[133]$_DFFE_PP_/QN u_body.lt_d[133]$_DFF_P_/D -17.576080
+OT_PATH emr_WS[8] u_body.lrw_p[0][7]$_DFF_P_/D -17.323669
+OT_PATH u_body.lt_d_r[157]$_DFFE_PP_/QN u_body.lt_d[157]$_DFF_P_/D -17.034651
+OT_PATH u_body.lt_d_r[111]$_DFFE_PP_/QN u_body.lt_d[111]$_DFF_P_/D -16.978029
+OT_PATH u_body.lt_d_r[138]$_DFFE_PP_/QN u_body.lt_d[138]$_DFF_P_/D -16.926210
+OT_PATH u_body.lt_d_r[197]$_DFFE_PP_/QN u_body.lt_d[197]$_DFF_P_/D -16.895264
+OT_PATH u_body.lt_d_r[102]$_DFFE_PP_/QN u_body.lt_d[102]$_DFF_P_/D -16.839224
+OT_PATH u_body.lt_d_r[174]$_DFFE_PP_/QN u_body.lt_d[174]$_DFF_P_/D -16.712105
+OT_PATH u_body.lt_d_r[150]$_DFFE_PP_/QN u_body.lt_d[150]$_DFF_P_/D -16.617680
+OT_PATH u_body.lt_d_r[126]$_DFFE_PP_/QN u_body.lt_d[126]$_DFF_P_/D -16.347839
+OT_PATH u_body.lt_d_r[167]$_DFFE_PP_/QN u_body.lt_d[167]$_DFF_P_/D -16.225187
+OT_PATH u_body.lt_d_r[203]$_DFFE_PP_/QN u_body.lt_d[203]$_DFF_P_/D -16.207453
+OT_PATH u_body.lt_d_r[169]$_DFFE_PP_/QN u_body.lt_d[169]$_DFF_P_/D -15.905722
+OT_PATH u_body.lt_d_r[90]$_DFFE_PP_/QN u_body.lt_d[90]$_DFF_P_/D -15.876189
+OT_PATH u_body.lt_d_r[49]$_DFFE_PP_/QN u_body.lt_d[49]$_DFF_P_/D -15.841023
+OT_PATH u_body.lt_d_r[170]$_DFFE_PP_/QN u_body.lt_d[170]$_DFF_P_/D -15.697388
+OT_PATH u_body.lt_d_r[162]$_DFFE_PP_/QN u_body.lt_d[162]$_DFF_P_/D -15.409757
+OT_PATH emr_WS[20] u_body.lrw_p[0][19]$_DFF_P_/D -15.375340
+OT_PATH u_body.lt_d_r[65]$_DFFE_PP_/QN u_body.lt_d[65]$_DFF_P_/D -15.076107
+OT_PATH u_body.lt_d_r[86]$_DFFE_PP_/QN u_body.lt_d[86]$_DFF_P_/D -15.029533
+OT_PATH u_body.lt_d_r[106]$_DFFE_PP_/QN u_body.lt_d[106]$_DFF_P_/D -14.995616
+OT_PATH u_body.lt_d_r[83]$_DFFE_PP_/QN u_body.lt_d[83]$_DFF_P_/D -14.992702
+OT_PATH u_body.lt_d_r[61]$_DFFE_PP_/QN u_body.lt_d[61]$_DFF_P_/D -14.975937
+OT_PATH u_body.lt_d_r[54]$_DFFE_PP_/QN u_body.lt_d[54]$_DFF_P_/D -14.907991
+OT_PATH emr_WS[12] u_body.lrw_p[0][11]$_DFF_P_/D -14.539731
+OT_PATH u_body.lt_d_r[55]$_DFFE_PP_/QN u_body.lt_d[55]$_DFF_P_/D -14.123757
+OT_PATH u_body.lt_d_r[11]$_DFFE_PP_/QN u_body.lt_d[11]$_DFF_P_/D -14.112489
+OT_PATH u_body.lt_d_r[88]$_DFFE_PP_/QN u_body.lt_d[88]$_DFF_P_/D -13.803708
+OT_PATH emr_WS[15] u_body.lrw_p[0][14]$_DFF_P_/D -13.724411
+OT_PATH u_body.lt_d_r[107]$_DFFE_PP_/QN u_body.lt_d[107]$_DFF_P_/D -13.451157
+OT_PATH u_body.lt_d_r[53]$_DFFE_PP_/QN u_body.lt_d[53]$_DFF_P_/D -13.406137
+OT_PATH emr_WS[19] u_body.lrw_p[0][18]$_DFF_P_/D -13.374745
+OT_PATH u_body.lt_d_r[73]$_DFFE_PP_/QN u_body.lt_d[73]$_DFF_P_/D -13.131080
+OT_PATH emr_WS[32] u_body.lrw_p[0][31]$_DFF_P_/D -13.058415
+OT_PATH u_body.lt_d_r[132]$_DFFE_PP_/QN u_body.lt_d[132]$_DFF_P_/D -13.038986
+OT_PATH u_body.lt_d_r[84]$_DFFE_PP_/QN u_body.lt_d[84]$_DFF_P_/D -12.882278
+OT_PATH u_body.lt_d_r[156]$_DFFE_PP_/QN u_body.lt_d[156]$_DFF_P_/D -12.869067
+OT_PATH emr_WS[25] u_body.lrw_p[0][24]$_DFF_P_/D -12.488427
+OT_PATH u_body.lt_d_r[59]$_DFFE_PP_/QN u_body.lt_d[59]$_DFF_P_/D -12.476270
+OT_PATH emr_WS[45] u_body.lrw_p[0][44]$_DFF_P_/D -12.461976
+OT_PATH u_body.lt_d_r[85]$_DFFE_PP_/QN u_body.lt_d[85]$_DFF_P_/D -12.453760
+OT_PATH u_body.lt_d_r[32]$_DFFE_PP_/QN u_body.lt_d[32]$_DFF_P_/D -12.410823
+OT_PATH emr_WS[38] u_body.lrw_p[0][37]$_DFF_P_/D -12.267687
+OT_PATH u_body.lt_d_r[105]$_DFFE_PP_/QN u_body.lt_d[105]$_DFF_P_/D -12.212481
+OT_PATH u_body.lt_d_r[78]$_DFFE_PP_/QN u_body.lt_d[78]$_DFF_P_/D -11.968427
+OT_PATH u_body.lt_d_r[6]$_DFFE_PP_/QN u_body.lt_d[6]$_DFF_P_/D -11.951357
+OT_PATH u_body.lt_d_r[246]$_DFFE_PP_/QN u_body.lt_d[246]$_DFF_P_/D -11.658424
+OT_PATH emr_WS[37] u_body.lrw_p[0][36]$_DFF_P_/D -11.640605
+OT_PATH u_body.lt_d_r[113]$_DFFE_PP_/QN u_body.lt_d[113]$_DFF_P_/D -11.601608
+OT_PATH emr_WS[10] u_body.lrw_p[0][9]$_DFF_P_/D -11.536161
+OT_PATH emr_WS[23] u_body.lrw_p[0][22]$_DFF_P_/D -11.453255
+OT_PATH u_body.lt_d_r[115]$_DFFE_PP_/QN u_body.lt_d[115]$_DFF_P_/D -11.357110
+OT_PATH emr_WS[0] u_body.lrv_p[0]$_DFF_PN0_/D -11.338347
+OT_PATH u_body.lt_d_r[62]$_DFFE_PP_/QN u_body.lt_d[62]$_DFF_P_/D -11.157742
+OT_PATH u_body.lt_d_r[145]$_DFFE_PP_/QN u_body.lt_d[145]$_DFF_P_/D -11.118412
+OT_PATH u_body.lt_d_r[35]$_DFFE_PP_/QN u_body.lt_d[35]$_DFF_P_/D -11.111389
+OT_PATH emr_WS[16] u_body.lrw_p[0][15]$_DFF_P_/D -10.976442
+OT_PATH emr_WS[33] u_body.lrw_p[0][32]$_DFF_P_/D -10.832918
+OT_PATH emr_WS[11] u_body.lrw_p[0][10]$_DFF_P_/D -10.798279
+OT_PATH emr_WS[77] u_body.lrw_p[0][76]$_DFF_P_/D -10.656726
+OT_PATH u_body.lt_d_r[147]$_DFFE_PP_/QN u_body.lt_d[147]$_DFF_P_/D -10.583950
+OT_PATH u_body.lt_d_r[30]$_DFFE_PP_/QN u_body.lt_d[30]$_DFF_P_/D -10.540791
+OT_PATH u_body.lt_d_r[139]$_DFFE_PP_/QN u_body.lt_d[139]$_DFF_P_/D -10.475148
+OT_PATH u_body.lt_d_r[151]$_DFFE_PP_/QN u_body.lt_d[151]$_DFF_P_/D -10.201451
+OT_PATH emr_WS[76] u_body.lrw_p[0][75]$_DFF_P_/D -10.193873
+OT_PATH u_body.lt_d_r[77]$_DFFE_PP_/QN u_body.lt_d[77]$_DFF_P_/D -10.186879
+OT_PATH u_body.lt_d_r[82]$_DFFE_PP_/QN u_body.lt_d[82]$_DFF_P_/D -10.114882
+OT_PATH emr_WS[116] u_body.lrw_p[0][115]$_DFF_P_/D -10.093093
+OT_PATH emr_WS[2] u_body.lrw_p[0][1]$_DFF_P_/D -9.979046
+OT_PATH u_body.lt_d_r[143]$_DFFE_PP_/QN u_body.lt_d[143]$_DFF_P_/D -9.966971
+OT_PATH u_body.lt_d_r[27]$_DFFE_PP_/QN u_body.lt_d[27]$_DFF_P_/D -9.952622
+OT_PATH emr_WS[108] u_body.lrw_p[0][107]$_DFF_P_/D -9.944296
+OT_PATH emr_WS[17] u_body.lrw_p[0][16]$_DFF_P_/D -9.937690
+OT_PATH u_body.lt_d_r[44]$_DFFE_PP_/QN u_body.lt_d[44]$_DFF_P_/D -9.875379
+OT_PATH emr_WS[92] u_body.lrw_p[0][91]$_DFF_P_/D -9.865248
+OT_PATH emr_WS[95] u_body.lrw_p[0][94]$_DFF_P_/D -9.817675
+OT_PATH emr_WS[13] u_body.lrw_p[0][12]$_DFF_P_/D -9.797441
+OT_PATH u_body.lt_d_r[41]$_DFFE_PP_/QN u_body.lt_d[41]$_DFF_P_/D -9.752754
+OT_PATH emr_WS[9] u_body.lrw_p[0][8]$_DFF_P_/D -9.538565
+OT_PATH emr_WS[30] u_body.lrw_p[0][29]$_DFF_P_/D -9.434259
+OT_PATH u_body.lt_d_r[46]$_DFFE_PP_/QN u_body.lt_d[46]$_DFF_P_/D -9.394679
+OT_PATH emr_WS[41] u_body.lrw_p[0][40]$_DFF_P_/D -9.391404
+OT_PATH u_body.lt_d_r[131]$_DFFE_PP_/QN u_body.lt_d[131]$_DFF_P_/D -9.193757
+OT_PATH emr_WS[1] u_body.lrw_p[0][0]$_DFF_P_/D -9.191175
+OT_PATH emr_WS[40] u_body.lrw_p[0][39]$_DFF_P_/D -9.032636
+OT_PATH emr_WS[4] u_body.lrw_p[0][3]$_DFF_P_/D -8.723855
+OT_PATH emr_WS[44] u_body.lrw_p[0][43]$_DFF_P_/D -8.687023
+OT_PATH emr_WS[73] u_body.lrw_p[0][72]$_DFF_P_/D -8.685330
+OT_PATH u_body.lt_d_r[96]$_DFFE_PP_/QN u_body.lt_d[96]$_DFF_P_/D -8.677587
+OT_PATH emr_WS[118] u_body.lrw_p[0][117]$_DFF_P_/D -8.670287
+OT_PATH u_body.lt_d_r[128]$_DFFE_PP_/QN u_body.lt_d[128]$_DFF_P_/D -8.633538
+OT_PATH u_body.lt_d_r[251]$_DFFE_PP_/QN u_body.lt_d[251]$_DFF_P_/D -8.612805
+OT_PATH u_body.lt_d_r[37]$_DFFE_PP_/QN u_body.lt_d[37]$_DFF_P_/D -8.598428
+OT_PATH emr_WS[5] u_body.lrw_p[0][4]$_DFF_P_/D -8.584688
+OT_PATH emr_WS[3] u_body.lrw_p[0][2]$_DFF_P_/D -8.565315
+OT_PATH u_body.lt_d_r[48]$_DFFE_PP_/QN u_body.lt_d[48]$_DFF_P_/D -8.555934
+OT_PATH emr_WS[111] u_body.lrw_p[0][110]$_DFF_P_/D -8.488793
+OT_PATH emr_WS[56] u_body.lrw_p[0][55]$_DFF_P_/D -8.415074
+OT_PATH emr_WS[24] u_body.lrw_p[0][23]$_DFF_P_/D -8.208795
+OT_PATH emr_WS[123] u_body.lrw_p[0][122]$_DFF_P_/D -8.124418
+OT_PATH emr_WS[107] u_body.lrw_p[0][106]$_DFF_P_/D -8.105822
+OT_PATH emr_WS[7] u_body.lrw_p[0][6]$_DFF_P_/D -8.099910
+OT_PATH emr_WS[104] u_body.lrw_p[0][103]$_DFF_P_/D -8.041096
+OT_PATH u_body.lt_d_r[79]$_DFFE_PP_/QN u_body.lt_d[79]$_DFF_P_/D -7.935791
+OT_PATH emr_WS[31] u_body.lrw_p[0][30]$_DFF_P_/D -7.927409
+OT_PATH emr_WS[114] u_body.lrw_p[0][113]$_DFF_P_/D -7.849499
+OT_PATH emr_WS[26] u_body.lrw_p[0][25]$_DFF_P_/D -7.798512
+OT_PATH u_body.lt_d_r[101]$_DFFE_PP_/QN u_body.lt_d[101]$_DFF_P_/D -7.740058
+OT_PATH emr_WS[49] u_body.lrw_p[0][48]$_DFF_P_/D -7.688128
+OT_PATH emr_WS[14] u_body.lrw_p[0][13]$_DFF_P_/D -7.666978
+OT_PATH emr_WS[126] u_body.lrw_p[0][125]$_DFF_P_/D -7.583462
+OT_PATH emr_WS[34] u_body.lrw_p[0][33]$_DFF_P_/D -7.493839
+OT_PATH u_body.lt_d_r[109]$_DFFE_PP_/QN u_body.lt_d[109]$_DFF_P_/D -7.491702
+OT_PATH u_body.lt_d_r[66]$_DFFE_PP_/QN u_body.lt_d[66]$_DFF_P_/D -7.456813
+OT_PATH emr_WS[117] u_body.lrw_p[0][116]$_DFF_P_/D -7.437773
+OT_PATH emr_WS[145] u_body.lrw_p[0][144]$_DFF_P_/D -7.325224
+OT_PATH emr_WS[134] u_body.lrw_p[0][133]$_DFF_P_/D -7.279177
+OT_PATH emr_WS[137] u_body.lrw_p[0][136]$_DFF_P_/D -7.260081
+OT_PATH emr_WS[106] u_body.lrw_p[0][105]$_DFF_P_/D -7.221113
+OT_PATH emr_WS[22] u_body.lrw_p[0][21]$_DFF_P_/D -7.213813
+OT_PATH emr_WS[21] u_body.lrw_p[0][20]$_DFF_P_/D -7.118195
+OT_PATH u_body.lt_d_r[68]$_DFFE_PP_/QN u_body.lt_d[68]$_DFF_P_/D -7.030848
+OT_PATH emr_WS[100] u_body.lrw_p[0][99]$_DFF_P_/D -7.001288
+OT_PATH emr_WS[105] u_body.lrw_p[0][104]$_DFF_P_/D -6.985440
+OT_PATH emr_WS[110] u_body.lrw_p[0][109]$_DFF_P_/D -6.958989
+OT_PATH emr_WS[144] u_body.lrw_p[0][143]$_DFF_P_/D -6.856765
+OT_PATH u_body.lt_d_r[42]$_DFFE_PP_/QN u_body.lt_d[42]$_DFF_P_/D -6.798340
+OT_PATH u_body.lt_d_r[12]$_DFFE_PP_/QN u_body.lt_d[12]$_DFF_P_/D -6.769002
+OT_PATH u_body.lt_d_r[4]$_DFFE_PP_/QN u_body.lt_d[4]$_DFF_P_/D -6.730783
+OT_PATH emr_WS[50] u_body.lrw_p[0][49]$_DFF_P_/D -6.719070
+OT_PATH emr_WS[6] u_body.lrw_p[0][5]$_DFF_P_/D -6.673939
+OT_PATH emr_WS[119] u_body.lrw_p[0][118]$_DFF_P_/D -6.640744
+OT_PATH emr_WS[127] u_body.lrw_p[0][126]$_DFF_P_/D -6.627143
+OT_PATH emr_WS[29] u_body.lrw_p[0][28]$_DFF_P_/D -6.608075
+OT_PATH emr_WS[18] u_body.lrw_p[0][17]$_DFF_P_/D -6.469242
+OT_PATH emr_WS[149] u_body.lrw_p[0][148]$_DFF_P_/D -6.466938
+OT_PATH u_body.lt_d_r[95]$_DFFE_PP_/QN u_body.lt_d[95]$_DFF_P_/D -6.419671
+OT_PATH emr_WS[109] u_body.lrw_p[0][108]$_DFF_P_/D -6.256995
+OT_PATH u_body.lt_d_r[117]$_DFFE_PP_/QN u_body.lt_d[117]$_DFF_P_/D -6.133982
+OT_PATH emr_WS[138] u_body.lrw_p[0][137]$_DFF_P_/D -6.049494
+OT_PATH u_body.lt_d_r[67]$_DFFE_PP_/QN u_body.lt_d[67]$_DFF_P_/D -5.994205
+OT_PATH emr_WS[112] u_body.lrw_p[0][111]$_DFF_P_/D -5.917017
+OT_PATH u_body.lt_d_r[110]$_DFFE_PP_/QN u_body.lt_d[110]$_DFF_P_/D -5.912243
+OT_PATH emr_WS[28] u_body.lrw_p[0][27]$_DFF_P_/D -5.841300
+OT_PATH emr_WS[97] u_body.lrw_p[0][96]$_DFF_P_/D -5.776962
+OT_PATH emr_WS[143] u_body.lrw_p[0][142]$_DFF_P_/D -5.695305
+OT_PATH emr_WS[131] u_body.lrw_p[0][130]$_DFF_P_/D -5.688339
+OT_PATH emr_WS[54] u_body.lrw_p[0][53]$_DFF_P_/D -5.676903
+OT_PATH u_body.lt_d_r[274]$_DFFE_PP_/QN u_body.lt_d[274]$_DFF_P_/D -5.603629
+OT_PATH u_body.lt_d_r[60]$_DFFE_PP_/QN u_body.lt_d[60]$_DFF_P_/D -5.566575
+OT_PATH u_body.lt_d_r[29]$_DFFE_PP_/QN u_body.lt_d[29]$_DFF_P_/D -5.558748
+OT_PATH u_body.lt_d_r[252]$_DFFE_PP_/QN u_body.lt_d[252]$_DFF_P_/D -5.531936
+OT_PATH emr_WS[152] u_body.lrw_p[0][151]$_DFF_P_/D -5.476258
+OT_PATH u_body.lt_d_r[91]$_DFFE_PP_/QN u_body.lt_d[91]$_DFF_P_/D -5.411227
+OT_PATH emr_WS[51] u_body.lrw_p[0][50]$_DFF_P_/D -5.403067
+OT_PATH emr_WS[120] u_body.lrw_p[0][119]$_DFF_P_/D -5.217049
+OT_PATH u_body.lt_d_r[10]$_DFFE_PP_/QN u_body.lt_d[10]$_DFF_P_/D -5.151019
+OT_PATH emr_WS[124] u_body.lrw_p[0][123]$_DFF_P_/D -5.100698
+OT_PATH emr_WS[35] u_body.lrw_p[0][34]$_DFF_P_/D -5.069556
+OT_PATH emr_WS[136] u_body.lrw_p[0][135]$_DFF_P_/D -5.031864
+OT_PATH emr_WS[52] u_body.lrw_p[0][51]$_DFF_P_/D -4.985845
+OT_PATH u_body.lt_d_r[51]$_DFFE_PP_/QN u_body.lt_d[51]$_DFF_P_/D -4.918427
+OT_PATH emr_WS[53] u_body.lrw_p[0][52]$_DFF_P_/D -4.893336
+OT_PATH u_body.lt_d_r[249]$_DFFE_PP_/QN u_body.lt_d[249]$_DFF_P_/D -4.890283
+OT_PATH emr_WS[142] u_body.lrw_p[0][141]$_DFF_P_/D -4.852868
+OT_PATH emr_WS[129] u_body.lrw_p[0][128]$_DFF_P_/D -4.793527
+OT_PATH emr_WS[146] u_body.lrw_p[0][145]$_DFF_P_/D -4.768103
+OT_PATH emr_WS[155] u_body.lrw_p[0][154]$_DFF_P_/D -4.697021
+OT_PATH emr_WS[42] u_body.lrw_p[0][41]$_DFF_P_/D -4.655387
+OT_PATH u_body.lt_d_r[944]$_DFFE_PP_/QN u_body.lt_d[944]$_DFF_P_/D -4.641676
+OT_PATH emr_WS[132] u_body.lrw_p[0][131]$_DFF_P_/D -4.474837
+OT_PATH u_body.lt_d_r[242]$_DFFE_PP_/QN u_body.lt_d[242]$_DFF_P_/D -4.417799
+OT_PATH emr_WS[148] u_body.lrw_p[0][147]$_DFF_P_/D -4.361816
+OT_PATH emr_WS[48] u_body.lrw_p[0][47]$_DFF_P_/D -4.341833
+OT_PATH u_body.lt_d_r[25]$_DFFE_PP_/QN u_body.lt_d[25]$_DFF_P_/D -4.315132
+OT_PATH emr_WS[135] u_body.lrw_p[0][134]$_DFF_P_/D -4.218320
+OT_PATH emr_WS[43] u_body.lrw_p[0][42]$_DFF_P_/D -4.214934
+OT_PATH emr_WS[125] u_body.lrw_p[0][124]$_DFF_P_/D -4.114015
+OT_PATH u_body.lt_d_r[36]$_DFFE_PP_/QN u_body.lt_d[36]$_DFF_P_/D -4.079071
+OT_PATH u_body.lrw_p[0][99]$_DFF_P_/QN u_body.rf[3][99]$_DFFE_PP_/D -4.031636
+OT_PATH emr_WS[122] u_body.lrw_p[0][121]$_DFF_P_/D -4.008460
+OT_PATH u_body.lt_d_r[38]$_DFFE_PP_/QN u_body.lt_d[38]$_DFF_P_/D -4.001272
+OT_PATH emr_WS[59] u_body.lrw_p[0][58]$_DFF_P_/D -3.923806
+OT_PATH emr_WS[101] u_body.lrw_p[0][100]$_DFF_P_/D -3.831963
+OT_PATH emr_WS[46] u_body.lrw_p[0][45]$_DFF_P_/D -3.825412
+OT_PATH emr_WS[139] u_body.lrw_p[0][138]$_DFF_P_/D -3.762934
+OT_PATH emr_WS[113] u_body.lrw_p[0][112]$_DFF_P_/D -3.743395
+OT_PATH u_body.lt_d_r[211]$_DFFE_PP_/QN u_body.lt_d[211]$_DFF_P_/D -3.729850
+OT_PATH emr_WS[130] u_body.lrw_p[0][129]$_DFF_P_/D -3.680667
+OT_PATH emr_WS[147] u_body.lrw_p[0][146]$_DFF_P_/D -3.324979
+OT_PATH emr_WS[60] u_body.lrw_p[0][59]$_DFF_P_/D -3.238687
+OT_PATH emr_WS[133] u_body.lrw_p[0][132]$_DFF_P_/D -3.235939
+OT_PATH emr_WS[151] u_body.lrw_p[0][150]$_DFF_P_/D -3.200773
+OT_PATH u_body.lt_d_r[72]$_DFFE_PP_/QN u_body.lt_d[72]$_DFF_P_/D -3.111289
+OT_PATH u_body.lt_d_r[1080]$_DFFE_PP_/QN u_body.lt_d[1080]$_DFF_P_/D -3.092138
+OT_PATH u_body.lt_d_r[57]$_DFFE_PP_/QN u_body.lt_d[57]$_DFF_P_/D -3.079842
+OT_PATH u_body.lt_d_r[18]$_DFFE_PP_/QN u_body.lt_d[18]$_DFF_P_/D -2.989414
+OT_PATH emr_WS[55] u_body.lrw_p[0][54]$_DFF_P_/D -2.964989
+OT_PATH u_body.lt_d_r[277]$_DFFE_PP_/QN u_body.lt_d[277]$_DFF_P_/D -2.912393
+OT_PATH u_body.lt_d_r[898]$_DFFE_PP_/QN u_body.lt_d[898]$_DFF_P_/D -2.892103
+OT_PATH emr_WS[140] u_body.lrw_p[0][139]$_DFF_P_/D -2.808365
+OT_PATH u_body.lt_v_r[3]$_DFF_PN0_/QN u_body.lt_v[3]$_DFF_PN0_/D -2.796097
+OT_PATH emr_WS[128] u_body.lrw_p[0][127]$_DFF_P_/D -2.770617
+OT_PATH emr_WS[65] u_body.lrw_p[0][64]$_DFF_P_/D -2.698897
+OT_PATH emr_WS[61] u_body.lrw_p[0][60]$_DFF_P_/D -2.682576
+OT_PATH emr_WS[74] u_body.lrw_p[0][73]$_DFF_P_/D -2.571110
+OT_PATH emr_WS[68] u_body.lrw_p[0][67]$_DFF_P_/D -2.530032
+OT_PATH emr_WS[115] u_body.lrw_p[0][114]$_DFF_P_/D -2.484124
+OT_PATH emr_WS[75] u_body.lrw_p[0][74]$_DFF_P_/D -2.375877
+OT_PATH emr_WS[156] u_body.lrw_p[0][155]$_DFF_P_/D -2.296052
+OT_PATH emr_WS[83] u_body.lrw_p[0][82]$_DFF_P_/D -2.212564
+OT_PATH emr_WS[66] u_body.lrw_p[0][65]$_DFF_P_/D -2.164491
+OT_PATH u_body.lrw_p[0][79]$_DFF_P_/QN u_body.rf[3][79]$_DFFE_PP_/D -2.111811
+OT_PATH emr_WS[69] u_body.lrw_p[0][68]$_DFF_P_/D -1.793954
+OT_PATH emr_WS[67] u_body.lrw_p[0][66]$_DFF_P_/D -1.766642
+OT_PATH emr_WS[82] u_body.lrw_p[0][81]$_DFF_P_/D -1.710049
+OT_PATH emr_WS[162] u_body.lrw_p[0][161]$_DFF_P_/D -1.684736
+OT_PATH emr_WS[154] u_body.lrw_p[0][153]$_DFF_P_/D -1.575545
+OT_PATH emr_WS[70] u_body.lrw_p[0][69]$_DFF_P_/D -1.495498
+OT_PATH u_body.lt_d_r[945]$_DFFE_PP_/QN u_body.lt_d[945]$_DFF_P_/D -1.482758
+OT_PATH emr_WS[90] u_body.lrw_p[0][89]$_DFF_P_/D -1.431466
+OT_PATH u_body.lt_d_r[215]$_DFFE_PP_/QN u_body.lt_d[215]$_DFF_P_/D -1.413397
+OT_PATH u_body.lt_d_r[884]$_DFFE_PP_/QN u_body.lt_d[884]$_DFF_P_/D -1.291162
+OT_PATH emr_WS[63] u_body.lrw_p[0][62]$_DFF_P_/D -1.222383
+OT_PATH u_body.lt_d_r[956]$_DFFE_PP_/QN u_body.lt_d[956]$_DFF_P_/D -1.100092
+OT_PATH emr_WS[93] u_body.lrw_p[0][92]$_DFF_P_/D -1.080025
+OT_PATH emr_WS[169] u_body.lrw_p[0][168]$_DFF_P_/D -1.062039
+OT_PATH u_body.lt_d_r[71]$_DFFE_PP_/QN u_body.lt_d[71]$_DFF_P_/D -1.028982
+OT_PATH u_body.lt_d_r[240]$_DFFE_PP_/QN u_body.lt_d[240]$_DFF_P_/D -1.016298
+OT_PATH emr_WS[172] u_body.lrw_p[0][171]$_DFF_P_/D -1.005002
+OT_PATH emr_WS[64] u_body.lrw_p[0][63]$_DFF_P_/D -0.993067
+OT_PATH emr_WS[39] u_body.lrw_p[0][38]$_DFF_P_/D -0.986017
+OT_PATH u_body.lt_d_r[1015]$_DFFE_PP_/QN u_body.lt_d[1015]$_DFF_P_/D -0.978911
+OT_PATH u_body.lt_d_r[47]$_DFFE_PP_/QN u_body.lt_d[47]$_DFF_P_/D -0.965866
+OT_PATH emr_WS[85] u_body.lrw_p[0][84]$_DFF_P_/D -0.918321
+OT_PATH emr_WS[58] u_body.lrw_p[0][57]$_DFF_P_/D -0.891398
+OT_PATH emr_WS[158] u_body.lrw_p[0][157]$_DFF_P_/D -0.885153
+OT_PATH emr_WS[79] u_body.lrw_p[0][78]$_DFF_P_/D -0.766026
+OT_PATH emr_WS[94] u_body.lrw_p[0][93]$_DFF_P_/D -0.724337
+OT_PATH emr_WS[84] u_body.lrw_p[0][83]$_DFF_P_/D -0.675071
+OT_PATH emr_WS[150] u_body.lrw_p[0][149]$_DFF_P_/D -0.641320
+OT_PATH u_body.lt_d_r[21]$_DFFE_PP_/QN u_body.lt_d[21]$_DFF_P_/D -0.611400
+OT_PATH u_body.lt_d_r[0]$_DFFE_PP_/QN u_body.lt_d[0]$_DFF_P_/D -0.527162
+OT_PATH u_body.lt_d_r[879]$_DFFE_PP_/QN u_body.lt_d[879]$_DFF_P_/D -0.481226
+OT_PATH u_body.lt_d_r[978]$_DFFE_PP_/QN u_body.lt_d[978]$_DFF_P_/D -0.446865
+OT_PATH u_body.lrw_p[0][75]$_DFF_P_/QN u_body.rf[3][75]$_DFFE_PP_/D -0.423633
+OT_PATH u_body.lt_d_r[64]$_DFFE_PP_/QN u_body.lt_d[64]$_DFF_P_/D -0.347666
+OT_PATH u_body.lt_d_r[1079]$_DFFE_PP_/QN u_body.lt_d[1079]$_DFF_P_/D -0.255851
+OT_PATH u_body.lt_d_r[463]$_DFFE_PP_/QN u_body.lt_d[463]$_DFF_P_/D -0.221434
+OT_PATH emr_WS[98] u_body.lrw_p[0][97]$_DFF_P_/D -0.101724
+OT_PATH u_body.u_gw.eq_d[386]$_SDFFCE_PP0P_/QN u_body.eq_d[386]$_DFF_P_/D -0.092176
+OT_PATH u_body.lt_d_r[1086]$_DFFE_PP_/QN u_body.lt_d[1086]$_DFF_P_/D -0.092176
+OT_PATH u_body.lt_d_r[963]$_DFFE_PP_/QN u_body.lt_d[963]$_DFF_P_/D -0.075523
+OT_PATH emr_WS[178] u_body.lrw_p[0][177]$_DFF_P_/D -0.002609

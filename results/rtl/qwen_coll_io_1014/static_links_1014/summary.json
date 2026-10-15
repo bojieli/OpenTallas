@@ -1,0 +1,216 @@
+{
+ "schema": "ot.qwen.coll.static_links.v1",
+ "source_commit": "2aba3f5b4",
+ "one_source_set": true,
+ "mechanism": "compiler PW program -> ot_coll_cmd_issue (ot_qwen_fixed_issue core) -> ot_coll_tp8_static tokens -> ot_coll_static_linkcal -> real qfd_io_xfifo_static / qfd_io_ucie_static / qfd_io_serdes_static x3; only the PHY frame pipes are modelled; no credits/ready/backpressure",
+ "latency": {
+  "formula": "L_min = KC 4 + KW 2 + 17 + PHY + 2R",
+  "LU": 37,
+  "LS_R0": 362,
+  "LS_die_default": 376,
+  "measured": "meas_lu 37 / meas_ls 362 (376 at LS 376) in every positive run; L-1 (36 / 361) FAILS with CDC publication faults on all 8 dies"
+ },
+ "production": {
+  "AR256_span": 749,
+  "AR256_span_LS376": 763,
+  "two_AR256": 1005,
+  "argmax": 414,
+  "price_AR256": 1121,
+  "ratio_AR256_LS376": 0.681
+ },
+ "phy_capacity_note": "UCIe P and R frames overlap 240 cycles in 2xAR256 (184-188 at LS 376): the licensed UCIe bandwidth must carry both subchannels at once or the compiler must separate them",
+ "drop_note": "a missing producer word faults the producing die twice (collective [2] + CDC w_fault); the peer does not see it because the static CDC publishes the compiled slot unconditionally",
+ "runs": {
+  "kit_static_exact_qfd": {
+   "latu": 37,
+   "lats": 376,
+   "phi": null,
+   "mutant": null,
+   "expect_fail": null,
+   "cases": {
+    "qwen_ar_256w": true,
+    "qwen_layer_2x256w": true,
+    "qwen_argmax_1w": true,
+    "qwen_layer_2x256w_argmax": true
+   }
+  },
+  "kit_static_mut_rank": {
+   "latu": 37,
+   "lats": 376,
+   "phi": null,
+   "mutant": "OT_TP8S_MUT_RANK",
+   "expect_fail": null,
+   "cases": {
+    "qwen_ar_256w": false,
+    "qwen_layer_2x256w": false,
+    "qwen_argmax_1w": true,
+    "qwen_layer_2x256w_argmax": false
+   }
+  },
+  "kit_static_unit_qfd": {
+   "latu": 37,
+   "lats": 376,
+   "phi": null,
+   "mutant": null,
+   "expect_fail": null,
+   "cases": {
+    "reduce_8w_x16": true,
+    "reduce_1w_x9_odd": true,
+    "reduce_3w_x8_odd": true,
+    "gather_1w_x6": true,
+    "gather_4w_x4": true,
+    "mixed_8w_x24": true,
+    "fault_nan": true,
+    "fault_inf": true,
+    "fault_overflow": true,
+    "fault_tag": true,
+    "fault_drop_word": true,
+    "fault_late_producer": true,
+    "fault_unreserved_schedule": true
+   }
+  },
+  "neg_rank": {
+   "latu": 37,
+   "lats": 362,
+   "phi": 0,
+   "mutant": "OT_TP8S_MUT_RANK",
+   "expect_fail": true,
+   "cases": {
+    "mixed_8w_x7": false
+   }
+  },
+  "neg_rx_early": {
+   "latu": 37,
+   "lats": 362,
+   "phi": 0,
+   "mutant": "OT_LCAL_MUT_RX_EARLY",
+   "expect_fail": true,
+   "cases": {
+    "mixed_8w_x7": false
+   }
+  },
+  "neg_tight_ls": {
+   "latu": 37,
+   "lats": 361,
+   "phi": 0,
+   "mutant": null,
+   "expect_fail": true,
+   "cases": {
+    "mixed_8w_x7": false
+   }
+  },
+  "neg_tight_lu": {
+   "latu": 36,
+   "lats": 362,
+   "phi": 0,
+   "mutant": null,
+   "expect_fail": true,
+   "cases": {
+    "mixed_8w_x7": false
+   }
+  },
+  "neg_xs": {
+   "latu": 37,
+   "lats": 362,
+   "phi": 0,
+   "mutant": null,
+   "expect_fail": false,
+   "cases": {
+    "phy_longer_than_compiled": true
+   }
+  },
+  "neg_xu": {
+   "latu": 37,
+   "lats": 362,
+   "phi": 0,
+   "mutant": null,
+   "expect_fail": false,
+   "cases": {
+    "phy_longer_than_compiled": true
+   }
+  },
+  "prod_phi0": {
+   "latu": 37,
+   "lats": 362,
+   "phi": 0,
+   "mutant": null,
+   "expect_fail": false,
+   "cases": {
+    "qwen_ar_256w": true,
+    "qwen_layer_2x256w": true,
+    "qwen_argmax_1w": true,
+    "qwen_layer_2x256w_argmax": true
+   }
+  },
+  "prod_phi1": {
+   "latu": 37,
+   "lats": 362,
+   "phi": 1,
+   "mutant": null,
+   "expect_fail": false,
+   "cases": {
+    "qwen_ar_256w": true,
+    "qwen_layer_2x256w": true,
+    "qwen_argmax_1w": true,
+    "qwen_layer_2x256w_argmax": true
+   }
+  },
+  "prod_qfd_ls376": {
+   "latu": 37,
+   "lats": 376,
+   "phi": 0,
+   "mutant": null,
+   "expect_fail": false,
+   "cases": {
+    "qwen_ar_256w": true,
+    "qwen_layer_2x256w": true,
+    "qwen_argmax_1w": true,
+    "qwen_layer_2x256w_argmax": true
+   }
+  },
+  "prod_qfd_phi0": {
+   "latu": 37,
+   "lats": 362,
+   "phi": 0,
+   "mutant": null,
+   "expect_fail": false,
+   "cases": {
+    "qwen_ar_256w": true,
+    "qwen_layer_2x256w": true,
+    "qwen_argmax_1w": true,
+    "qwen_layer_2x256w_argmax": true
+   }
+  },
+  "unit_phi0": {
+   "latu": 37,
+   "lats": 362,
+   "phi": 0,
+   "mutant": null,
+   "expect_fail": false,
+   "cases": {
+    "reduce_8w_x7": true,
+    "reduce_1w_x7_odd": true,
+    "gather_4w_x4": true,
+    "mixed_8w_x7": true,
+    "fault_drop_word": true,
+    "fault_serdes_crc": true
+   }
+  },
+  "unit_phi1": {
+   "latu": 37,
+   "lats": 362,
+   "phi": 1,
+   "mutant": null,
+   "expect_fail": false,
+   "cases": {
+    "reduce_8w_x7": true,
+    "reduce_1w_x7_odd": true,
+    "gather_4w_x4": true,
+    "mixed_8w_x7": true,
+    "fault_drop_word": true,
+    "fault_serdes_crc": true
+   }
+  }
+ },
+ "qualification": "COMPONENT COMPOSITION of on-chip RTL with modelled PHYs; native physical, relays (R>0 not simulated), die composition, compiler integration in qfd_seq_su NOT qualified"
+}

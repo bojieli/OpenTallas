@@ -1,0 +1,2 @@
+SU_STATIC_STORE PASS quarters=4 banks=512 actual_SRAMs=3072 words_per_replica=262144 checks=1579008 six_independent_read_rows_per_bank coherence prewrite_semantics
+tb_hbm_su_static_data_store.sv:49: $finish called at 10266000 (1ps)

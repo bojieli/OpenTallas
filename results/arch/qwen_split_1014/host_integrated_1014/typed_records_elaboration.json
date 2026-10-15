@@ -1,0 +1,27 @@
+{
+  "source_commit": "179d156fd",
+  "scope": "enabled actual HOST root parent source lint only; not native fulltoken/physical/phase qualification",
+  "tool": "Verilator5.050",
+  "unit": "oth-ubuntu-935764-1792046126",
+  "host": "ot-epyc4",
+  "exit": 0,
+  "log_sha256": "8eba87beff49dfb96d35b4bd7b81e54344f4b525c73f19cf7f16535b85b12a39",
+  "root_ports": 155,
+  "root_clock_entries": 565,
+  "peer_ports": 152,
+  "peer_clock_entries": 561,
+  "system_tool_failure": {
+    "tool": "Verilator5.032",
+    "unit": "oth-ubuntu-933289-1792046093",
+    "exit": 1,
+    "reason": "Internal Error V3Delayed.cpp:937 Multiple Write refs on LHS of NBA in unchanged qkd_host_native_engine hw_word",
+    "log_sha256": "57c1784da83d64312df3687456191126a216418aeb3541b714c898dec36fc0b4"
+  },
+  "open": [
+    "actual fullstage link calendar/producer and PHY/relay phase profile",
+    "normal HOST and class9 boardflight/drain source",
+    "complete128PC native numerical boot/result/POST/IRQ oracle",
+    "full static conversion of remaining historical on-chip HOST control paths",
+    "native physical clock/reset/pin/TT/FF/DRC/price"
+  ]
+}

@@ -1,0 +1,6 @@
+ot-run: ot-epyc4       admits   154 GB (avail 476, growth 274, headroom 48, waiters 0/0 GB) load 108/128 running 30 disk 659 GB 
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-2787726-1792032714 after 0 s
+STATIC_UCIE_FAIL checks2048 errors1900 abort_cycles1032 causesA80/80 causesB04/04 MUT5
+/srv/opentallas-scratch/codex/qcoll-1834/rtl/test/tb_qfd_ucie_static.sv:166: $finish called at 11110000 (1ps)
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-2787726-1792032714): exit 1

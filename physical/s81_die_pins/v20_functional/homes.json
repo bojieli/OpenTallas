@@ -1,0 +1,257 @@
+{
+ "schema": "opentallas.s81.functional_homes.v1",
+ "scope": "one TP4 layer die owns6of24coefficients, both attn/ffn for all40main+3MTP sets resident. All6 projection leaves required. Geometry source v19c xsp7 full instance plan. No synthetic ETM/stub permitted.",
+ "engine_ports": {
+  "engram_lookup_mix": 10,
+  "hc_projection": 11
+ },
+ "engram_mix": {
+  "name": "sp_engram_mix",
+  "master": "dsfd_engram_mix_c",
+  "at_um": [
+   13942.8,
+   22770.0
+  ],
+  "outline": {
+   "w": 1152.0,
+   "h": 864.0
+  },
+  "clock": "stream_1p2",
+  "geometry": "xsp7_screen plan.json.gz actual entire instance set:0overlaps",
+  "memory_calendar": {
+   "read_rows_per_cycle": 5,
+   "read_port_shape_reserved": 5,
+   "write_rows_per_cycle": 1,
+   "format": "H/out packedBF16;K/W/V FP32",
+   "runtime_backpressure": false,
+   "qualification": "OPEN: fixed source/flight/bank cycles must be compiled"
+  },
+  "pin_file": "physical/s81_die_pins/v20_functional/dsfd_engram_mix_c.tcl",
+  "qualification": "RESERVED_REAL_RTL_NOT_ROUTED"
+ },
+ "hc_projection": [
+  {
+   "name": "sp_hcx_south0",
+   "master": "ot_s81_hcx_projection_leaf",
+   "at_um": [
+    17334.0,
+    1857.6
+   ],
+   "outline": {
+    "w": 1728.0,
+    "h": 864.0
+   },
+   "clock": "serial_0p9",
+   "geometry": "xsp7_screen full56444-instance rectangle audit:0overlaps; six new homes pairwise disjoint and clear of MIX/embedding/controller reservations",
+   "ROM": {
+    "macro": "ot_rom_4096x266_m8",
+    "count": 64,
+    "pages": 2,
+    "resident_sets": 43,
+    "used_linear_rows": 6880,
+    "used_payload_bits_per_word": 256,
+    "phase_rows": "80attn+80ffn per resident layer; cmd_layer[5:0] selects0..42",
+    "physical_area_mm2": 0.49049266,
+    "weight_payload_bits": 56360960,
+    "physical_payload_bits": 67108864
+   },
+   "MAC": {
+    "count": 256,
+    "cell_area_estimate_mm2": 0.299210496,
+    "logic_utilization_target": 0.55
+   },
+   "X_stage": {
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "count": 16
+   },
+   "qualification": "RESERVATION only:1.493mm2 vs1.0968mm2 macro+MAC lower bound; synthesis/CTS/pins/relay cuts/staticcalendar/native gates still owed"
+  },
+  {
+   "name": "sp_hcx_south1",
+   "master": "ot_s81_hcx_projection_leaf",
+   "at_um": [
+    19200.0,
+    1857.6
+   ],
+   "outline": {
+    "w": 1728.0,
+    "h": 864.0
+   },
+   "clock": "serial_0p9",
+   "geometry": "xsp7_screen full56444-instance rectangle audit:0overlaps; six new homes pairwise disjoint and clear of MIX/embedding/controller reservations",
+   "ROM": {
+    "macro": "ot_rom_4096x266_m8",
+    "count": 64,
+    "pages": 2,
+    "resident_sets": 43,
+    "used_linear_rows": 6880,
+    "used_payload_bits_per_word": 256,
+    "phase_rows": "80attn+80ffn per resident layer; cmd_layer[5:0] selects0..42",
+    "physical_area_mm2": 0.49049266,
+    "weight_payload_bits": 56360960,
+    "physical_payload_bits": 67108864
+   },
+   "MAC": {
+    "count": 256,
+    "cell_area_estimate_mm2": 0.299210496,
+    "logic_utilization_target": 0.55
+   },
+   "X_stage": {
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "count": 16
+   },
+   "qualification": "RESERVATION only:1.493mm2 vs1.0968mm2 macro+MAC lower bound; synthesis/CTS/pins/relay cuts/staticcalendar/native gates still owed"
+  },
+  {
+   "name": "sp_hcx_north0",
+   "master": "ot_s81_hcx_projection_leaf",
+   "at_um": [
+    17334.0,
+    22307.04
+   ],
+   "outline": {
+    "w": 1728.0,
+    "h": 864.0
+   },
+   "clock": "serial_0p9",
+   "geometry": "xsp7_screen full56444-instance rectangle audit:0overlaps; six new homes pairwise disjoint and clear of MIX/embedding/controller reservations",
+   "ROM": {
+    "macro": "ot_rom_4096x266_m8",
+    "count": 64,
+    "pages": 2,
+    "resident_sets": 43,
+    "used_linear_rows": 6880,
+    "used_payload_bits_per_word": 256,
+    "phase_rows": "80attn+80ffn per resident layer; cmd_layer[5:0] selects0..42",
+    "physical_area_mm2": 0.49049266,
+    "weight_payload_bits": 56360960,
+    "physical_payload_bits": 67108864
+   },
+   "MAC": {
+    "count": 256,
+    "cell_area_estimate_mm2": 0.299210496,
+    "logic_utilization_target": 0.55
+   },
+   "X_stage": {
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "count": 16
+   },
+   "qualification": "RESERVATION only:1.493mm2 vs1.0968mm2 macro+MAC lower bound; synthesis/CTS/pins/relay cuts/staticcalendar/native gates still owed"
+  },
+  {
+   "name": "sp_hcx_north1",
+   "master": "ot_s81_hcx_projection_leaf",
+   "at_um": [
+    19200.0,
+    22770.0
+   ],
+   "outline": {
+    "w": 1728.0,
+    "h": 864.0
+   },
+   "clock": "serial_0p9",
+   "geometry": "xsp7_screen full56444-instance rectangle audit:0overlaps; six new homes pairwise disjoint and clear of MIX/embedding/controller reservations",
+   "ROM": {
+    "macro": "ot_rom_4096x266_m8",
+    "count": 64,
+    "pages": 2,
+    "resident_sets": 43,
+    "used_linear_rows": 6880,
+    "used_payload_bits_per_word": 256,
+    "phase_rows": "80attn+80ffn per resident layer; cmd_layer[5:0] selects0..42",
+    "physical_area_mm2": 0.49049266,
+    "weight_payload_bits": 56360960,
+    "physical_payload_bits": 67108864
+   },
+   "MAC": {
+    "count": 256,
+    "cell_area_estimate_mm2": 0.299210496,
+    "logic_utilization_target": 0.55
+   },
+   "X_stage": {
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "count": 16
+   },
+   "qualification": "RESERVATION only:1.493mm2 vs1.0968mm2 macro+MAC lower bound; synthesis/CTS/pins/relay cuts/staticcalendar/native gates still owed"
+  },
+  {
+   "name": "sp_hcx_west0",
+   "master": "ot_s81_hcx_projection_leaf",
+   "at_um": [
+    9504.0,
+    22770.0
+   ],
+   "outline": {
+    "w": 1728.0,
+    "h": 864.0
+   },
+   "clock": "serial_0p9",
+   "geometry": "xsp7_screen full56444-instance rectangle audit:0overlaps; six new homes pairwise disjoint and clear of MIX/embedding/controller reservations",
+   "ROM": {
+    "macro": "ot_rom_4096x266_m8",
+    "count": 64,
+    "pages": 2,
+    "resident_sets": 43,
+    "used_linear_rows": 6880,
+    "used_payload_bits_per_word": 256,
+    "phase_rows": "80attn+80ffn per resident layer; cmd_layer[5:0] selects0..42",
+    "physical_area_mm2": 0.49049266,
+    "weight_payload_bits": 56360960,
+    "physical_payload_bits": 67108864
+   },
+   "MAC": {
+    "count": 256,
+    "cell_area_estimate_mm2": 0.299210496,
+    "logic_utilization_target": 0.55
+   },
+   "X_stage": {
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "count": 16
+   },
+   "qualification": "RESERVATION only:1.493mm2 vs1.0968mm2 macro+MAC lower bound; synthesis/CTS/pins/relay cuts/staticcalendar/native gates still owed"
+  },
+  {
+   "name": "sp_hcx_west1",
+   "master": "ot_s81_hcx_projection_leaf",
+   "at_um": [
+    11384.064,
+    22770.0
+   ],
+   "outline": {
+    "w": 1728.0,
+    "h": 864.0
+   },
+   "clock": "serial_0p9",
+   "geometry": "xsp7_screen full56444-instance rectangle audit:0overlaps; six new homes pairwise disjoint and clear of MIX/embedding/controller reservations",
+   "ROM": {
+    "macro": "ot_rom_4096x266_m8",
+    "count": 64,
+    "pages": 2,
+    "resident_sets": 43,
+    "used_linear_rows": 6880,
+    "used_payload_bits_per_word": 256,
+    "phase_rows": "80attn+80ffn per resident layer; cmd_layer[5:0] selects0..42",
+    "physical_area_mm2": 0.49049266,
+    "weight_payload_bits": 56360960,
+    "physical_payload_bits": 67108864
+   },
+   "MAC": {
+    "count": 256,
+    "cell_area_estimate_mm2": 0.299210496,
+    "logic_utilization_target": 0.55
+   },
+   "X_stage": {
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "count": 16
+   },
+   "qualification": "RESERVATION only:1.493mm2 vs1.0968mm2 macro+MAC lower bound; synthesis/CTS/pins/relay cuts/staticcalendar/native gates still owed"
+  }
+ ],
+ "HC_memory_calendar": {
+  "native_prefetch": "8VMrows/cycle80cycles perleaf,4096bit/cycle packedBF16 stagedbroadcast6ways",
+  "steady_compute": "80dot tasks perbank, canonical8bank csum, 6outputsparallel",
+  "runtime_credit_backpressure": false,
+  "qualification": "OPEN fullactualcompiledphase/link/SRAMpipeline latency and bandwidth proof"
+ },
+ "native_clock_rule": "independent hardened roots phi-R_i; <=15k or measured<=300ps/80ps; no parent hidden state"
+}

@@ -1,0 +1,41 @@
+{
+  "schema": "opentallas.actual-hbm-block-roundtrip.v1",
+  "status": "SOURCE_CORRECTNESS_PASS_THROUGHPUT_UNQUALIFIED",
+  "source_sha256": {
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_block_cdc.sv": "9571d70cbc5a127d5bfea05a11805009bdc8bf544f2d6031c53fb5b63cb90dca",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_block_cdc.sv": "f32e3574435d9598361ec6c22404ba3ad7ac267d4f58867b52454fc360dd49fc",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_phy_mux.sv": "86fa1f19baadad3168cb43aeea8a308e378c3abcfb8056b20a7a766a09d64745",
+    "rtl/hbm_accel/loader/service_native/tb_hbm_svc_block_roundtrip.sv": "e66fd74101eb21330ac7e2b7dbba7318609c5c7e84bccbef767e1a7e65abcdb4",
+    "rtl/hbm_accel/loader/service_native/run_block_roundtrip_bench.sh": "e4d04226d3c6f6b3ae0891471d7bfe9bc7ae3a5ac6dad2081729090401c0f439",
+    "rtl/chip/ot_chip_v41x_hbm3e_phy.sv": "257547b1b904af203a2b0d70e5414d8b49de7c5c941a1966325d7ed1172afd36",
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_hbm.sv": "c757ae39d767291db3fd37565ce6c5ff6eec9ed119cc97ee06432f301d87ecf4",
+    "rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv": "6b92d2ef1e24a526bd8f674d9aa696f61d4430b802155f35575d68efa439502b",
+    "rtl/lib/ot_async_fifo.sv": "e091268202e1c6bcc18c8eb83304730c5a29bc10e0a6c52a4dcfc19c177e882e",
+    "rtl/lib/ot_reset_sync.sv": "489e493c19aa1260853031fee35c14ea3394ae62ff6853cf7ea407cb8fb78bbd",
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": "d9801653d16576f40306c1fb1d01928e88e7371a3897b616e31d3e3df917cb2d",
+    "rtl/hdc/kv/ot_hdc_hbm_model.sv": "d19116e6485266aef997ae52c82a46421267f5de9bb6d0b380d7348b30ffd57d"
+  },
+  "fleet_handle": "ot-agidock128:oth-ubuntu-3282522-1792048430 exit0",
+  "source_snapshot": "/home/ubuntu/hbm-roundtrip-20261015-source",
+  "physical_sram_macros": 64,
+  "actual_phy": "ot_chip_v41x_hbm3e_phy.K_MEM32768/CLK_PS1024; Kclock forwarding39966f5c5",
+  "preload": false,
+  "cycles": {
+    "fixed_input_stream_cycles": 80,
+    "fixed_output_stream_cycles": 80,
+    "raw_stream_edges": 31428,
+    "raw_hbm_edges": 25570
+  },
+  "clock_periods_ps": {
+    "stream": 833.3333333333334,
+    "hbm": 1024
+  },
+  "positive_log": "BLOCK_ROUNDTRIP PASS actualPHY=1 preload=0 SRAMs=64 sectors=640 writes=640 realACKs=640 reads=640 fixedInputCycles=80 fixedOutputCycles=80 streamEdges=31428 hbmEdges=25570\n- rtl/hbm_accel/loader/service_native/tb_hbm_svc_block_roundtrip.sv:115: Verilog $finish\n- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01\n- Verilator: $finish at 26us; walltime 0.491 s; speed 53.259 us/s\n- Verilator: cpu 0.492 s on 1 threads; alloced 507 MB\n",
+  "mutant_log": "[26117907000] %Fatal: tb_hbm_svc_block_roundtrip.sv:90: Assertion failed in tb_hbm_svc_block_roundtrip.unnamedblk2: actual HBM roundtrip data sector4099\n%Error: rtl/hbm_accel/loader/service_native/tb_hbm_svc_block_roundtrip.sv:90: Verilog $stop\nAborting...\n",
+  "mutant": "actual landing SRAM row read address XOR1; actual HBM roundtrip data assertion rejects",
+  "remaining": [
+    "Serialized prefetch does not meet immutable actual PHY baseline77/122 HBMcycles",
+    "Actual production DMA programmes, SM83 programmes, loader descriptors and physical bands still require integration",
+    "No native timing/CDC/clock physical qualification"
+  ]
+}

@@ -26,6 +26,7 @@ SRC = C.SOURCES + [E / "dsfd_engram_sink.sv", E / "ot_dsrom_engram_prefetch_h.sv
                    E / "tiles/ot_engc_pbank.sv", E / "tiles/ot_engc_t_ws.sv", E / "tiles/ot_engc_t_win.sv", E / "tiles/ot_engc_t_io.sv",
                    E / "dsfd_engram_c.sv"]
 TB = ROOT / "rtl/test/tb_dsfd_engram_c.sv"
+HL_EXTRA = [ROOT / "rtl/dsrom_sys/s81_glue/ot_s81_rly.sv", ROOT / "rtl/dsrom_sys/s81_glue/dsfd_rly_masters.sv"]
 EXTRA_VL = []
 STRESS = dict(LAT=60, JIT=400, STALL=30, GAP=30, REORD=1, BUB=10, CDEL=300, AGLAT=20, AGJIT=60)
 BASE = [("ideal_hbm_200ns", dict(LAT=240), None), ("stressed", STRESS, 500),
@@ -54,7 +55,9 @@ def main():
     ap.add_argument("--neg", choices=[n for n, _ in NEG])
     ap.add_argument("--top", default="dsfd_engram_c_rso", choices=["dsfd_engram_c_rso", "dsfd_engram_c_hl"],
                     help="with --rso-candidate: the parent under test (dsfd_engram_c_hl = hardened-leaf form, no parent flop)")
-    ap.add_argument("--leaf-mut", choices=["OT_ENGC_HL_MUT_RR", "OT_ENGC_HL_MUT_RR64", "OT_ENGC_HL_MUT_CTL"],
+    ap.add_argument("--dut-exit", action="store_true",
+                    help="with --leaf-mut: report as the bench of the mutant DUT (ENGRAM_C_GATE FAIL + exit 1 when the mutant is caught; closure-loop expect=fail bench)")
+    ap.add_argument("--leaf-mut", choices=["OT_ENGC_HL_MUT_RR", "OT_ENGC_HL_MUT_RRW", "OT_ENGC_HL_MUT_RR64", "OT_ENGC_HL_MUT_CTL", "OT_ENGC_HL_MUT_CTLS"],
                     help="with --top dsfd_engram_c_hl: build the leaf negative control; exit 0 only when it FAILS the exact bench")
     a = ap.parse_args()
     if a.return_skew_negative and not a.rso_candidate:
@@ -63,6 +66,7 @@ def main():
     if a.rso_candidate:
         import re
         SRC = SRC + sorted(p for p in (E / "rso_candidate").glob("*.sv") if not p.name.startswith("tb_"))
+        SRC = SRC + HL_EXTRA  # dsfd_engram_c_hl: the ctl_x -> ctl_s ACK crosses one closed die relay (dsfd_rly_1_EW)
         original_tb = TB.read_text()
         TB = a.out.resolve() / "tb_dsfd_engram_c_rso.sv"
         TB.write_text(re.sub(r"\bdsfd_engram_c\b", a.top, original_tb))
@@ -82,6 +86,9 @@ def main():
         rec = C.run_mode(build(a.out / "obj_leaf_mut", {}), a.out, t, ev, wins, "leaf_mut", STRESS, 200)
         caught = not rec.get("pass")
         print("ENGRAM_C_LEAF_MUT", a.leaf_mut, "FAIL as required" if caught else "MISSED", "element_mismatches", rec.get("element_mismatches"))
+        if a.dut_exit:
+            print("ENGRAM_C_GATE", "FAIL" if caught else "PASS", "(leaf mutant DUT", a.leaf_mut + ")")
+            return 1 if caught else 0
         return 0 if caught else 1
     if a.neg:      # negative-control bench: exit 1 when the mutant FAILS the bench (as required), 0 when missed
         g = dict(NEG)[a.neg]

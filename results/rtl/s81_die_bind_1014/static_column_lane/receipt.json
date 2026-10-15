@@ -1,0 +1,25 @@
+{
+  "schema": "opentallas.s81.static_column_lane.v1",
+  "die_adopted": false,
+  "native_qualified": false,
+  "mechanism": "Actual dsfd_pq_lx static encoder -> fixed epoch crossing -> shared packed register stations -> exact BF1068 decode and legacy q/control ports",
+  "width_bits": 1101,
+  "throughput_words_per_edge": 1,
+  "latency": "encoder1 source edge + crossing4 destination edges + STAGES destination edges",
+  "station_m5_3track_data_span_um": 158.54399999999998,
+  "minimum_source_ring_ff_bits": 8808,
+  "bench": "eight production-width 2000-edge runs, six fixed phases, 0/2/3 shared station depths; encoder payload/cross offset/decoder payload mutants rejected",
+  "sources": {
+    "rtl/dsrom_sys/s81_die_bind/dsfd_sp_pq_n.sv": "dda2821fa599e5e13486d05e4bd29f51c64926da1807560693ea25ed0d2da744",
+    "rtl/dsrom_sys/s81_die_bind/ot_s81_static_lane_cross.sv": "598c0e50de64c61822063ca2c2046be046ea697bfb5d98fb5a86ea7e3c634bca",
+    "rtl/dsrom_sys/s81_die_bind/ot_s81_static_column_lane.sv": "2f9a9900269686e2e2e80a4a4afeef508478e36777f92f21ab6045e9169cfc8a",
+    "rtl/dsrom_sys/s81_die_bind/test/tb_static_column_lane.sv": "952399becc2ae08138227f9e8aac8c59aa844965671fd4146a37e39a95f91477",
+    "tools/s81/static_column_lane_gate.sh": "5f15b67c40175b631f704be92493111b57c46c07cfea7f38c52a407b45b59c51"
+  },
+  "remaining": [
+    "actual die reset epoch mapping",
+    "generator placement and packed lane binding",
+    "native physical views",
+    "emitted netlist connectivity check"
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "gate": "RUNNING",
+  "native_xf_chained": true,
+  "full_native_token_qualified": false,
+  "scope": "actual HC arithmetic to actual mapped ROM head; original HC input/VM boundary and die physical mapping remain unqualified",
+  "directory": "/srv/opentallas-scratch/codex/s81-native-head-field-1014",
+  "actual_hc_input": "/srv/opentallas-scratch/codex/s81-native-head-glue-1014/input_coarse256/xf.npy",
+  "prior_component_input_bytes_equal_actual_hc": true,
+  "fresh_runs": true,
+  "host": "ot-epyc1tb",
+  "ranks": [
+    {
+      "rank": 0,
+      "session": 46260,
+      "unit": "oth-ubuntu-216705-1792045971"
+    },
+    {
+      "rank": 1,
+      "session": 37195,
+      "unit": "oth-ubuntu-216722-1792045971"
+    },
+    {
+      "rank": 2,
+      "session": 35600,
+      "unit": "oth-ubuntu-216712-1792045971"
+    },
+    {
+      "rank": 3,
+      "session": 1221,
+      "unit": "oth-ubuntu-216698-1792045971"
+    }
+  ],
+  "mutant": "actual first-ROM-weight sign flip, 128-row group",
+  "checker_rejects_component_only_input": true
+}

@@ -1,0 +1,91 @@
+{
+  "schema": "opentallas.qwen.ucie.six_five_calendar.v1",
+  "core_clock_ps": 833.3333333333334,
+  "FDI_clock_ps": 1000,
+  "ratio_CORE_to_FDI": [
+    6,
+    5
+  ],
+  "FDI_phase_assumption": "related PLL roots; firstpostreset edges withinonecoreperiod; native insertion/RC mustprove selectedphase",
+  "physical_boundary_bits": 1043,
+  "six_core_slot_bits": 3588,
+  "FDI_beats_per_period": 4,
+  "FDI_period_cycles": 5,
+  "FDI_padding_last_beat_bits": 584,
+  "licensed_abstract_latency_FDI_cycles": 4,
+  "captured_input_to_core_output_edges": 24,
+  "registered_codec_launch_to_core_receiver_pin_edges": 25,
+  "candidate_PU": 25,
+  "candidate_LU": 58,
+  "LS": 376,
+  "relays": [
+    5,
+    0,
+    0,
+    5
+  ],
+  "payload_flop_storage_bits": 19581,
+  "physical_qualified": false,
+  "parent_proof": "TERMINAL PASSactualproductionwrapper24production6FDIphases+6unit+unsafe-calendarnegative",
+  "cases": [
+    {
+      "modes": [
+        0
+      ],
+      "words": [
+        256
+      ],
+      "commands": [
+        46
+      ],
+      "compiled_span": 805
+    },
+    {
+      "modes": [
+        0,
+        0
+      ],
+      "words": [
+        256,
+        256
+      ],
+      "commands": [
+        46,
+        789
+      ],
+      "compiled_span": 1548
+    },
+    {
+      "modes": [
+        1
+      ],
+      "words": [
+        1
+      ],
+      "commands": [
+        46
+      ],
+      "compiled_span": 449
+    },
+    {
+      "modes": [
+        0,
+        0,
+        1
+      ],
+      "words": [
+        256,
+        256,
+        1
+      ],
+      "commands": [
+        46,
+        789,
+        1153
+      ],
+      "compiled_span": 1556
+    }
+  ],
+  "clock_roots": 108,
+  "evidence": "results/rtl/qwen_coll_io_1014/production_six_five_1015"
+}

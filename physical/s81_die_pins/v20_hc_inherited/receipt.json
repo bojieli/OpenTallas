@@ -1,0 +1,36 @@
+{
+ "scope": "same-epoch native successors for actual inherited pin defects; immutable CLOSED rectangles adopted",
+ "masters": [
+  {
+   "master": "ot_s81_hc_ctfn",
+   "outline_um": [
+    576.72,
+    25.92
+   ],
+   "signal_bits": 5857,
+   "predecessor_LEF": "physical/ref_tile/s81hc_ctfn_ref/views/ot_s81_hc_ctfn/ot_s81_hc_ctfn.lef",
+   "sha256": "be9d8e5639cd1697ebac01a1780468c60d72aa92d5a3d2af311c7de93852390a"
+  },
+  {
+   "master": "ot_s81_hc_ctnl_l2",
+   "outline_um": [
+    142.56,
+    99.36
+   ],
+   "signal_bits": 1523,
+   "predecessor_LEF": "physical/ref_tile/s81hc_ctnl_l2_ref/views/ot_s81_hc_ctnl_l2/ot_s81_hc_ctnl_l2.lef",
+   "sha256": "cb5b55bffaa0c15e22c28ed41bb63e2f9a69ee2f63bac3dfe2e0410372b789e3"
+  },
+  {
+   "master": "ot_s81_hc_ctnl_l3",
+   "outline_um": [
+    142.56,
+    99.36
+   ],
+   "signal_bits": 1395,
+   "predecessor_LEF": "physical/ref_tile/s81hc_ctnl_l3_ref/views/ot_s81_hc_ctnl_l3/ot_s81_hc_ctnl_l3.lef",
+   "sha256": "d045b2830e30a36b1a031158e9c8314ccbad241895eeaa9bc5b0f8572d6a385a"
+  }
+ ],
+ "permission": "same outlines/signal pins only; actual source timing/clock/reset closure owed"
+}

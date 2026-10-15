@@ -1,0 +1,87 @@
+{
+  "name": "qkd_kv_static_writer_native_r1",
+  "top": "qkd_kv_static_writer_native",
+  "kind": "tile",
+  "sources": [
+    "rtl/physical/ot_qkd_kv_static_writer_native.sv",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_static_writer.sv"
+  ],
+  "params": {},
+  "clock_port": "ck",
+  "reset_ports": [
+    "rst_n"
+  ],
+  "outline": {
+    "w": 172.8,
+    "h": 302.4,
+    "exact": true
+  },
+  "pins": {
+    "W": [
+      "es",
+      "dest_pc",
+      "dest_stack",
+      "identity",
+      "generation",
+      "expected_valid",
+      "expected_pc",
+      "expected_stack",
+      "expected_identity",
+      "expected_generation",
+      "expected_address",
+      "fault",
+      "fault_code"
+    ],
+    "E": [
+      "word_valid",
+      "word_tag",
+      "word_data",
+      "word_identity",
+      "word_generation",
+      "compiled_word_slot",
+      "compiled_word_index",
+      "compiled_identity",
+      "compiled_generation"
+    ],
+    "S": [
+      "ck",
+      "rst_n"
+    ]
+  },
+  "io_tcl": "physical/qwen_kv_die_native_static_pins/qkd_kv_static_writer_native.tcl",
+  "route": {
+    "pd": 0.52,
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "pin_balance": {
+      "group_max": 1
+    }
+  },
+  "slot_change_request": "Q-KVSYS-DIE official fresh static_io slot 172.8x302.4 2026-10-14 23:38; writer attention-side landing, W output / E input / S ck rst. Independent new master; old wctl retired. 4 writer rooms collide with no nonrelay frames; actual static transport/relay regeneration remains open.",
+  "job": {
+    "owner": "Codex:Q-COLL-KV-leaves",
+    "branch": "codex/qcoll-kv-native-1014",
+    "tag": "r1",
+    "purpose": "Actual fixed-slot KV writer 649 functional inputs / 1360 outputs, exact fresh slot/pins from KV die lead. No credit or ACK scheduling. Full-sector intent retained and validated by source-bound wrapper face/semantic assertions.",
+    "benches": [
+      {
+        "name": "writer_native_shape",
+        "cmd": "bash tools/qwen_static_kv/run_native_writer_gate.sh {RUN}/bench/native",
+        "expect": "pass",
+        "pass_regex": "^PASS all36stages/all8192positions",
+        "threads": 1,
+        "peak_ram_gb": 2,
+        "needs": [
+          "iverilog"
+        ]
+      }
+    ],
+    "extra_paths": [
+      "rtl/test/qwen_static_kv",
+      "tools/qwen_static_kv",
+      "physical/qwen_kv_die_native_static_pins"
+    ],
+    "views_to": "physical/ref_tile/qkd_kv_static_writer_native_r1/views",
+    "record_to": "results/rtl/ref_tile/qkd_kv_static_writer_native_r1"
+  }
+}

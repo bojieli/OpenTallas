@@ -43,6 +43,7 @@
 // ot_hgi_coll_decode) + backend issue 1; completion 1.
 module ot_hgi_coll_qrec #(
     parameter integer QSOLO = 0,           // the quadrant that runs ARGMAX / TOPK / ROW_GATHER whole
+    parameter integer SOLO_CAP = 1,        // 0: this master never runs the whole ops (the NPT-2 die master: its strap is 1..3)
     parameter integer MUT_Q = 0,           // mutant: wrong quadrant quarter
     parameter integer MUT_PF = 0,          // mutant: pf from A.n without the /16 flit conversion
     parameter integer MUT_DONE = 0,        // mutant: retire on issue instead of on endpoint completion
@@ -246,8 +247,8 @@ module ot_hgi_coll_qrec #(
     // reductions: units of 16 flits, remainder in quarter 3
     wire [15:0] r_pf  = n_a_q[19:4];
     wire [11:0] r_u   = r_pf[15:4];
-    wire [15:0] r_lo  = {2'(14'(r_u * q0) >> 2), 4'd0};
-    wire [15:0] r_hi  = (qid_q == 2'd3) ? r_pf : {2'(14'(r_u * q1) >> 2), 4'd0};
+    wire [15:0] r_lo  = {12'(14'(r_u * q0) >> 2), 4'd0};
+    wire [15:0] r_hi  = (qid_q == 2'd3) ? r_pf : {12'(14'(r_u * q1) >> 2), 4'd0};
     wire [15:0] r_pfq = r_hi - r_lo;
     // whole-row gathers: flits [floor(q pf / 4), floor((q + 1) pf / 4))
     wire [15:0] w_pf  = a_rowwords[15:0];
@@ -259,7 +260,7 @@ module ot_hgi_coll_qrec #(
     wire [15:0] s_l0  = dv_q[15:0], s_l1 = dv_q[15:0] + ((dv_r != 21'd0) ? 16'd1 : 16'd0);
     wire [15:0] s_m0  = sub_lo(s_l0, q1) - sub_lo(s_l0, q0), s_m1 = sub_lo(s_l1, q1) - sub_lo(s_l1, q0);
     wire [15:0] s_max = (s_m1 > s_m0) ? s_m1 : s_m0;
-    wire        solo  = (qid_q == 2'(QSOLO));
+    wire        solo  = (SOLO_CAP != 0) && (qid_q == 2'(QSOLO));
     reg  [15:0] g_acc, g_dlt;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin

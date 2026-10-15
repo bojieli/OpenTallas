@@ -1,0 +1,50 @@
+{
+ "schema": "opentallas.qwen-split.compute-straps.v1",
+ "note": "Contract STRAP inputs of the compute die: constants by contract (identity / configuration), tied by the die. Every other constant on an input is a defect the port-bind reports (INPUT_TIED), e.g. chain-terminus ready ties and the lockstep tile's tap_r (requests to the DVM builder: variants without those inputs). qfd_sp_band_lanes.tt is the RTL-contract strap-gated input of bands 1/2 (b0 = 0: the band ignores it; only band 0 receives the tree-top word).",
+ "straps": [
+  [
+   "qfd_tile_nk",
+   "tile_id"
+  ],
+  [
+   "qfd_xcst_n",
+   "sidx"
+  ],
+  [
+   "qfd_xcst_s",
+   "sidx"
+  ],
+  [
+   "qfd_xcol_e",
+   "tids"
+  ],
+  [
+   "qfd_xcol_w",
+   "tids"
+  ],
+  [
+   "qfd_su_cbuf_g",
+   "grp"
+  ],
+  [
+   "qfd_su_cbuf_g",
+   "f_lat"
+  ],
+  [
+   "qfd_crom_g",
+   "crom_lb"
+  ],
+  [
+   "qfd_sp_band_lanes",
+   "b0"
+  ],
+  [
+   "qfd_sp_band_lanes",
+   "lnk"
+  ],
+  [
+   "qfd_sp_band_lanes",
+   "tt"
+  ]
+ ]
+}

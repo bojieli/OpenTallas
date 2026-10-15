@@ -1,0 +1,76 @@
+{
+ "schema": "opentallas.hier_contract.child_lint.v1",
+ "lef": "/srv/opentallas/claude/closure-loop/qkd_land_grp_epoch-ep3-ec785bd6f/record/views/qkd_land_grp_epoch/qkd_land_grp_epoch.lef",
+ "verdict": "PASS",
+ "fails": [],
+ "warns": [
+  "(f) face-pin access: 3202 of 3215 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. gw0[0] M4 (85.165,4.032), gw0[100] M4 (85.165,4.032), gw0[101] M4 (85.165,4.032))"
+ ],
+ "summary": "qkd_land_grp_epoch 86.4 x 302.4: PG M5 VDD 16 stripes (94% spread, 100% cov) / VSS 16 stripes (94% spread, 100% cov); strap M6; face pins 3215 blocked-above 0 blocked-same 0; clock ck insertion 296 ps; pockets M5 0 (closed)",
+ "info": {
+  "cell": "qkd_land_grp_epoch",
+  "W": 86.4,
+  "H": 302.4,
+  "pg": {
+   "nets": {
+    "VDD": {
+     "top_layer": "M5",
+     "stripes": 16,
+     "dir": "V",
+     "spread": 0.937,
+     "coverage": 1.0,
+     "shapes_on_top": 16
+    },
+    "VSS": {
+     "top_layer": "M5",
+     "stripes": 16,
+     "dir": "V",
+     "spread": 0.938,
+     "coverage": 1.0,
+     "shapes_on_top": 16
+    }
+   },
+   "top_layer": "M5",
+   "ok": true,
+   "why": []
+  },
+  "pg_layer": "M5",
+  "strap_layer": "M6",
+  "cap": null,
+  "face": {
+   "face_pins": 3215,
+   "blocked_above": 0,
+   "covered_below": 96,
+   "examples": [],
+   "blocked_same": 0,
+   "same_examples": [],
+   "band_same": 3202,
+   "band_examples": [
+    "gw0[0] M4 (85.165,4.032)",
+    "gw0[100] M4 (85.165,4.032)",
+    "gw0[101] M4 (85.165,4.032)",
+    "gw0[102] M4 (85.165,4.032)",
+    "gw0[103] M4 (85.165,4.032)",
+    "gw0[104] M4 (85.165,4.032)"
+   ]
+  },
+  "clock_insertion": {
+   "ck": {
+    "max_ps": 296.03,
+    "min_ps": 232.44
+   }
+  },
+  "pockets": {
+   "layer": "M5",
+   "d_um": 1.536,
+   "marker": {
+    "layer": "M5",
+    "d_um": 1.536,
+    "added": 2762
+   },
+   "count": 0,
+   "area_um2": 0,
+   "examples": []
+  }
+ }
+}

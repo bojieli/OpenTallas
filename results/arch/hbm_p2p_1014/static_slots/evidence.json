@@ -1,0 +1,76 @@
+{
+  "status": "COMPONENT VERIFIED; full operation/controller/physical qualification incomplete",
+  "rtl_commit": "23a06eb9a",
+  "new_fault_timing_bench_commit": "46b839361",
+  "final_rtl_sha256": {
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_qslots.sv": "4fc382d585026bc8fc23464ea90b9d5b86ad7bbec34acef0dccc65e3eb9d88f3"
+  },
+  "qslots": {
+    "actual_quadrants": 4,
+    "NPT": [
+      3,
+      2,
+      2,
+      2
+    ],
+    "rank_count_stress": 96,
+    "PF": 384,
+    "bits_per_flit": 545,
+    "bit_exact_sink_checks": 562237,
+    "compiled_calendar_sink_checks": 73728,
+    "source_capture_to_pin_edges": 2,
+    "normal_elastic_entries": 0,
+    "overflow": "zero FIFO entries; compile-time source/sink ownership checks and runtime reservation checks",
+    "mutants": [
+      "wrong source selection rejected by bit-exact payload",
+      "missing pin capture rejected by bit-exact payload"
+    ],
+    "schedule_faults": [
+      "missing source reservation",
+      "out of range source selector",
+      "source consumed without prior capture"
+    ],
+    "terminal_handle": "ot-epyc4 oth-ubuntu-951722-1792046318 exit0",
+    "fault_timing_receipt": "ot-epyc4 oth-ubuntu-964498-1792046512 exit0",
+    "fault_timing_logs": "fault_timing_final"
+  },
+  "compiler": {
+    "word_bits_npt3": 90,
+    "word_bits_npt2": 84,
+    "conflicts_rejected": [
+      "two sources own sink",
+      "two payloads own source",
+      "out of range source",
+      "out of range sink",
+      "negative cycle"
+    ],
+    "scope": "transport backend, not full collective algorithm or production instruction issuer"
+  },
+  "ring": "results/arch/hbm_p2p_1014/static_ring_pin_1014/evidence.json",
+  "vmwrite": {
+    "suite": "vmwrite_suite.log",
+    "checks": "77cycles, production widths, masks, mirror/main SID, consecutive fourline and five-lane bursts, collision/ingress faults and unchanged timing; data/checker mutants rejected"
+  },
+  "link": {
+    "suite": "static_link_suite.log",
+    "shared_source": "4c66b6a95",
+    "expected_receives": 256,
+    "retry_status": "exceptional abort request only; real recovery unimplemented",
+    "terminal_receipt": "local exec29550 terminal exit0; nine-case script with HEAD source-blob verification, logs complete"
+  },
+  "historical": {
+    "pre_pin_diagnostic": "earlier transport variants; superseded by pin_capture_final",
+    "historical_g8": "credit RTL G8 n5120 is not immutable DS G96 n1024 price qualification",
+    "static_link_changed_script_terminal.log": "all nine DUT cases ran but wrapper terminal exit2 from editing active shell script; rerun pinned script required, no qualification from this terminal result"
+  },
+  "pending": [
+    "native collective issuer/calendar from actual layer producer timing",
+    "actual G96 subgroup8 n1024 complete arithmetic +SU/VM/TKM composition",
+    "HBM block staging boundary ready",
+    "CRC exceptional drain/replay/restart",
+    "shared source-pin/reset/root join",
+    "assigned actual leaf outlines/pins, TT/FF closure and IO reach",
+    "immutable production operation price; no repricing"
+  ],
+  "validation": "git diff --check and Python compile pass; no mapped physical gate was run"
+}

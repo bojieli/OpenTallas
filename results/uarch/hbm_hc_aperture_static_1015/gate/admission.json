@@ -1,0 +1,8 @@
+{
+  "runner": "ot-run --mem 2 --threads 1 --dir /var/tmp/hbm-hc-aperture-static-1015 -- bash inputs/run_aperture_static.sh gate inputs",
+  "host": "ot-agidock128",
+  "unit": "oth-ubuntu-2810662-1792046970",
+  "result": "RAN exit 0",
+  "frozen_dependency_origin": "/home/ubuntu/wt/hbm-die-feas-1014/rtl/hbm_accel/loader/service_native/{ot_hbm_svc_static_vm_delivery.sv,ot_hbm_svc_static_landing.sv}",
+  "physical_claim": "none; actual source/macros and fixed-cycle behaviour only"
+}

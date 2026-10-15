@@ -1,0 +1,89 @@
+{
+ "schema": "opentallas.s81su.compactgates.v1",
+ "source": "a6ead93e2",
+ "status": "preCTS gates finished; kve u65/control and swe control GRT finished; remaining GRT processes still live. No route authorized or submitted for swe/qne/kve; die lead prioritizes slab wings and native placements first. Gate PASS by sink-count alone is not die pair qualification; qne_u65 measured all-sink spread138.2ps requires physical review before adoption.",
+ "gates": {
+  "s81su_swe_u65_ref": {
+   "schema": "opentallas.ref_tile.gate_result.v1",
+   "kit": "s81su_swe_u65_ref",
+   "verdict": "PASS",
+   "generated": "2026-10-13T19:22:10-0700",
+   "host": "ot-epyc1tb",
+   "cts": true,
+   "commit": "a6ead93e2",
+   "clock": {
+    "max_root_sinks": 13937,
+    "root": "port:ck",
+    "cts": true,
+    "tt_insertion_ps": 766.2,
+    "tt_spread_ps": 24.9,
+    "declared_clock": "spine",
+    "limits": {
+     "sinks": 15000,
+     "insertion_ps": 300.0,
+     "spread_ps": 80.0
+    },
+    "verdict": "PASS",
+    "text": "13,937 sinks on the largest root <= 15,000; measured TT insertion 766.2 ps, leaf spread 24.9 ps"
+   },
+   "items": []
+  },
+  "s81su_qne_u65_ref": {
+   "schema": "opentallas.ref_tile.gate_result.v1",
+   "kit": "s81su_qne_u65_ref",
+   "verdict": "PASS",
+   "generated": "2026-10-13T19:13:03-0700",
+   "host": "ot-epyc1tb",
+   "cts": true,
+   "commit": "a6ead93e2",
+   "clock": {
+    "max_root_sinks": 10063,
+    "root": "port:ck",
+    "cts": true,
+    "tt_insertion_ps": 399.9,
+    "tt_spread_ps": 138.2,
+    "declared_clock": null,
+    "limits": {
+     "sinks": 15000,
+     "insertion_ps": 300.0,
+     "spread_ps": 80.0
+    },
+    "verdict": "PASS",
+    "text": "10,063 sinks on the largest root <= 15,000; measured TT insertion 399.9 ps, leaf spread 138.2 ps"
+   },
+   "items": []
+  },
+  "s81su_kve_u65_ref": {
+   "schema": "opentallas.ref_tile.gate_result.v1",
+   "kit": "s81su_kve_u65_ref",
+   "verdict": "WARN",
+   "generated": "2026-10-13T19:05:18-0700",
+   "host": "ot-epyc1tb",
+   "cts": true,
+   "commit": "a6ead93e2",
+   "clock": {
+    "max_root_sinks": 6160,
+    "root": "port:ck",
+    "cts": true,
+    "tt_insertion_ps": 180.3,
+    "tt_spread_ps": 15.3,
+    "declared_clock": null,
+    "limits": {
+     "sinks": 15000,
+     "insertion_ps": 300.0,
+     "spread_ps": 80.0
+    },
+    "verdict": "PASS",
+    "text": "6,160 sinks on the largest root <= 15,000; measured TT insertion 180.3 ps, leaf spread 15.3 ps"
+   },
+   "items": [
+    {
+     "severity": "WARN",
+     "check": "textbook.logic_depth",
+     "message": "reg->reg stage u_e.u_vs.line[21]$_DFF_PN0_ -> u_e.u_a.gq.u.genblk1.genblk1.g_keep4.u.u.u_k1.g_r.r[1]$_DFF_P_/D: ~632 ps estimated (15 logic levels) > 600 ps: pipeline / restructure the stage",
+     "fix": "pipeline to ~700 ps a stage: trees, 2-3 rungs for wide compare / mux / arbitration"
+    }
+   ]
+  }
+ }
+}

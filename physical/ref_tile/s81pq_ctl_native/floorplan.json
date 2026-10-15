@@ -35,6 +35,7 @@
    "aq_vin",
    "aqi_o",
    "ba_v_o",
+   "ba_wv_o",
    "ba_blk_o",
    "hw_o",
    "h_hi_o",
@@ -139,6 +140,7 @@
   "physical/dsrom_window_source/leaf_inhold.tcl",
   "physical/dsrom_window_source/leaf_inhold_release.tcl",
   "physical/ref_tile/s81pq_ctl_native/pre_gpl.tcl",
-  "physical/ref_tile/s81pq_ctl_native/pre_dpl.tcl"
+  "physical/ref_tile/s81pq_ctl_native/pre_dpl.tcl",
+  "physical/common_flow/pin_reg_split.tcl"
  ]
 }

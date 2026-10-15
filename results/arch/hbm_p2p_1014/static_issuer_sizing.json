@@ -1,0 +1,41 @@
+{
+  "status": "component measured PASS; physical and integrated throughput unqualified",
+  "instruction_bits": 1536,
+  "program_rows": 64,
+  "native_macros": {
+    "name": "ot_sram_1r1w_64x512_m1_r2c2",
+    "count": 3,
+    "bits_each": 32768
+  },
+  "sustained_instructions_per_cycle": 1,
+  "instruction_read_bytes_per_cycle": 192,
+  "instruction_boundary_bits_per_cycle": 1536,
+  "config_bits": 37,
+  "metadata_flops": 4096,
+  "loop_counter_flops": 2048,
+  "config_assembler_flops": 512,
+  "metadata_and_valid_control_root_estimate_bits": 7500,
+  "separate_memory_leaf_roots": 3,
+  "memory_leaf_registered_output_bits_each": 512,
+  "first_instruction_cycles_after_start": 3,
+  "SRAM_request_to_registered_output_cycles": 2,
+  "normal_execution": "metadata next-PC computed before native SRAM request; fixed counted loops, continuous one issue per cycle, no ready/credits/data-dependent branches",
+  "floorplan": "three actual macro leaves and one control root; measured root count, pin placement, clock compensation, assigned leaf slots and TT/FF required before physical qualification",
+  "composition": "issuer for actual quadrant collective datapaths, budget one microop per cycle; no token-rate claim until joined and measured",
+  "measured_control_root_register_bits": 7639,
+  "measurement": "static_issuer_1014/root_register_bits.json",
+  "production_component_bench": {
+    "loop_repeat_count": 2048,
+    "program_rows": 64,
+    "native_SRAM_banks": 3,
+    "microop_bits": 1536,
+    "instructions_per_start": 65592,
+    "starts": 2,
+    "total_instructions": 131184,
+    "first_uop_after_start": 3,
+    "last_uop_and_done_after_start": 65594,
+    "sustained_instructions_per_cycle": 1,
+    "allowed_ratio_to_budget": 1.1,
+    "measured_ratio_to_budget": 1.0
+  }
+}

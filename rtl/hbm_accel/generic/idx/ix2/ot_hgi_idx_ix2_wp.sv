@@ -59,7 +59,10 @@ module ot_hgi_idx_ix2_wp #(
     // the prior pin arrival and prior ACK into the pending count; current d_v
     // only reaches the registered ACK through OR/AND, never an input adder.
     wire [2:0] dc_available = dc_pending + 3'(dv_q) - 3'(d_cr);
-    wire dc_ack = (dc_available != 3'd0 || d_v) && dqn < 5'd10;
+    // r7 (native audit of CLOSED r6: capture 218.6 ps > 190 on d_v, the only input that reached a register through
+    // logic): the ACK now consumes the pin flop dv_q only (dc_available already counts it), so every input is a pure
+    // pin capture.  Credit return of a beat after an idle link is one edge later; streaming acks stay one a cycle.
+    wire dc_ack = dc_available != 3'd0 && dqn < 5'd10;
     wire [299:0] tqh = tq[tqr];
     // Cache the D FIFO head: isolate its sixteen-way read mux from the
     // packers' word-placement stage. Direct landing bypass supplies a new

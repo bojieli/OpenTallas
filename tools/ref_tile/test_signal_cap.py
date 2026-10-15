@@ -2,6 +2,7 @@
 import copy
 import importlib.util
 import json
+import os
 from pathlib import Path
 import subprocess
 import sys
@@ -36,7 +37,12 @@ class SignalCap(unittest.TestCase):
             G.check_kit(gate, kit, None)
             self.assertFalse(any(x["check"] == "layer" and x["severity"] == "FAIL" for x in gate.items))
             path = kit / "kit.env"
-            path.write_text(path.read_text().replace("RLAYERS='M2 M4'", "RLAYERS='M2 M5'"))
+            original = path.read_text()
+            path.write_text(original.replace("CLOCK_RLAYERS='M3 M4'", "CLOCK_RLAYERS='M4 M4'"))
+            gate = G.Gate()
+            G.check_kit(gate, kit, None)
+            self.assertTrue(any(x["check"] == "layer" and x["severity"] == "FAIL" for x in gate.items))
+            path.write_text(original.replace("RLAYERS='M2 M4'", "RLAYERS='M2 M5'"))
             gate = G.Gate()
             G.check_kit(gate, kit, None)
             self.assertTrue(any(x["check"] == "layer" and x["severity"] == "FAIL" for x in gate.items))
@@ -52,8 +58,34 @@ class SignalCap(unittest.TestCase):
         self.assertEqual(RT.pin_layers(s, lc), ("M4", "M3"))
         env = RT.gen_env(s, "kit", 220.32, 75.6, lc, [])
         self.assertIn("RLAYERS='M2 M4'", env)
+        self.assertIn("CLOCK_RLAYERS='M3 M4'", env)
+        legacy = tile()
+        self.assertNotIn("CLOCK_RLAYERS", RT.gen_env(legacy, "kit", 220.32, 75.6, base, []))
         self.assertIn("-layers {M4 M5}", RT.gen_pdn(s, lc))
         self.assertIn("signal_layer_audit.tcl", RT.gen_hooks(s, "kit")["post_drt.tcl"])
+
+    def test_route_and_gate_stop_forward_exact_clock_limits(self):
+        # Execute the actual shared route shell with only the heavy driver stubbed.
+        # This is also the path used by pre_route_gate's floorplan/CTS stops.
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+            (root / "tools").mkdir()
+            (root / "tools/run_abi3_physical.py").write_text(
+                "import json, os, sys\nopen(os.environ['CAPTURE'], 'w').write(json.dumps(sys.argv[1:]))\n")
+            kit = root / "kit.env"
+            base = "TOP=t\nSRCS=''\nPARAMS=()\nPINS=()\nEXTRA=()\nMACROS=()\nFW=100\nFH=100\nKIT=/src/kit\nCLKPORT=ck\nPIN_H=M4\nPIN_V=M3\nREFGLOB='*'\nINTER=none\n"
+            for cap in ("M4", "M5"):
+                kit.write_text(base + f"RLAYERS='M2 {cap}'\n" +
+                               ("CLOCK_RLAYERS='M3 M4'\n" if cap == "M4" else ""))
+                capture = root / "args.json"
+                env = dict(os.environ, SRC=str(root), CAPTURE=str(capture))
+                subprocess.run(["bash", str(HERE / "ref_route.sh"), str(kit), "smoke", str(root / "out"), "floorplan"],
+                               env=env, check=True, capture_output=True)
+                args = json.loads(capture.read_text())
+                self.assertIn("floorplan", args)
+                for name in ("MIN_CLK_ROUTING_LAYER", "MAX_CLK_ROUTING_LAYER"):
+                    self.assertEqual([a for a in args if a.startswith(name + "=")],
+                                     [{"MIN_CLK_ROUTING_LAYER": "MIN_CLK_ROUTING_LAYER=M3", "MAX_CLK_ROUTING_LAYER": "MAX_CLK_ROUTING_LAYER=M4"}[name]] if cap == "M4" else [])
 
     def test_no_looser_cap_or_high_signal_pin(self):
         for cap in ("M6", "M7", "M1", "invalid"):

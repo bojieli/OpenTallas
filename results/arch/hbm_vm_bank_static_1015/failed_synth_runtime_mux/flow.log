@@ -1,0 +1,36 @@
+OT_ORFS_CORNER_OVERRIDE=TC: corner WC reads the TT liberties (std cells + macro _tt.lib)
+FAILED: FlowError: ORFS synthesis failed with exit 2:
+5731a"}
+mkdir -p /work/results/asap7/opentallas_hfd_vms_bank_static_rg7wg3_asap7_ref_gate/base/
+echo 833.333 > /work/results/asap7/opentallas_hfd_vms_bank_static_rg7wg3_asap7_ref_gate/base/clock_period.txt
+/OpenROAD-flow-scripts/flow/scripts/synth.sh /OpenROAD-flow-scripts/flow/scripts/synth_canonicalize.tcl /work/logs/asap7/opentallas_hfd_vms_bank_static_rg7wg3_asap7_ref_gate/base/1_1_yosys_canonicalize.log
+Using ABC speed script.
+Extracting clock period from SDC file: /work/results/asap7/opentallas_hfd_vms_bank_static_rg7wg3_asap7_ref_gate/base/clock_period.txt
+Setting clock period to 833.333
+1. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+2. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+3. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+4. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+5. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+6. Executing Liberty frontend: /src/physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_tt.lib
+7. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+8. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+9. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+10. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+11. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+12. Executing Liberty frontend: /src/physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_tt.lib
+13. Executing Verilog-2005 frontend: /src/rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_static_rg7wg3.sv
+14. Executing Verilog-2005 frontend: /src/rtl/hbm_accel/generic/vm/static/ot_vms_bank_static.sv
+15. Executing Verilog-2005 frontend: /src/physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v
+16. Executing Verilog-2005 frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/yoSys/cells_clkgate_R.v
+17. Executing HIERARCHY pass (managing design hierarchy).
+18. Executing AST frontend in derive mode using pre-parsed AST for module `\hfd_vms_bank_static_rg7wg3'.
+18.1. Analyzing design hierarchy..
+18.2. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_vms_bank_static'.
+/src/rtl/hbm_accel/generic/vm/static/ot_vms_bank_static.sv:153: ERROR: Static cast with non constant expression!
+
+Elapsed time: 0:00.78[h:]min:sec. CPU time: user 0.76 sys 0.03 (99%). Peak memory: 82168KB.
+make[1]: *** [Makefile:305: do-yosys-canonicalize] Error 1
+make: *** [Makefile:308: /work/results/asap7/opentallas_hfd_vms_bank_static_rg7wg3_asap7_ref_gate/base/1_1_yosys_canonicalize.rtlil] Error 2
+
+partial record written to /srv/opentallas-scratch/claude/ref_gate/vms_bank_static_rg7wg3_1015-20261015-000736/routes/gate/physical.json

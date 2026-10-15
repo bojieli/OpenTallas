@@ -1,0 +1,33 @@
+{
+  "cell": "ot_s81_hc_cntree",
+  "view": "physical/ref_tile/s81hc_cntreeh2_ref/views/ot_s81_hc_cntree",
+  "lib_cell": "ot_s81_hc_cntree",
+  "insertion": true,
+  "ref_src": [
+    "insertion.json boundary mean"
+  ],
+  "R_ps": 226.1,
+  "spread_ps": 23.1,
+  "outputs": 34,
+  "inputs": 1309,
+  "launch_ps": 140.0,
+  "launch_pin": "ss[24]",
+  "capture_ps": 221.5,
+  "capture_pin": "c_ex[443]",
+  "launch_over": 0,
+  "capture_over": 3,
+  "comb_pins": 0,
+  "comb_first": [],
+  "pass": false,
+  "fail_why": "capture 221.5 > 190 (3 pins)",
+  "bad_capture_pins": {
+    "c_ex[446]": 212.66042,
+    "c_ex[445]": 203.04804,
+    "c_ex[443]": 221.46561
+  },
+  "hashes": {
+    "physical/ref_tile/s81hc_cntreeh2_ref/views/ot_s81_hc_cntree/ot_s81_hc_cntree_tt.lib": "7ef97b8608764cb617200e3826663e16170470f07c66327d1fd5200042d77f5b",
+    "physical/ref_tile/s81hc_cntreeh2_ref/views/ot_s81_hc_cntree/insertion.json": "4b92b72ebbb15d3a444165e75c2488c3352557d55071f980b967adeef1426490",
+    "physical/ref_tile/s81hc_cntreeh2_ref/views/ot_s81_hc_cntree/ot_s81_hc_cntree.lef": "7308e4844bd840da0e4db4c5313b0754173aface336dbf4e295de2b639a37e8f"
+  }
+}

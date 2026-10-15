@@ -1,0 +1,37 @@
+{
+  "module": "ot_vms_bank_static",
+  "params": {
+    "RG": 2,
+    "WG": 2,
+    "MUT": 0
+  },
+  "read_owner": {
+    "valid": "rslot_v",
+    "selector": "rslot",
+    "width": "max(1,clog2(RG+1))",
+    "wide": "0..RG-1",
+    "packet": "RG"
+  },
+  "write_owner": {
+    "valid": "wslot_v",
+    "selector": "wslot",
+    "width": "max(1,clog2(WG+5))",
+    "wide": "0..WG-1",
+    "coll": "WG",
+    "cw_ring": "WG+1",
+    "packet": "WG+2",
+    "ccw_ring": "WG+3",
+    "dma": "WG+4"
+  },
+  "ports": "Historical B2 payload ports and *_done; every *_cr removed",
+  "timing": {
+    "input_pin": 0,
+    "owner_select": 1,
+    "macro_pin": 2,
+    "macro_commit": 3,
+    "capture": 4,
+    "syndrome": 5,
+    "response": 6,
+    "mirror_egress": 1
+  }
+}

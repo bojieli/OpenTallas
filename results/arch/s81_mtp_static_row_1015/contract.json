@@ -1,0 +1,94 @@
+{
+  "schema": "opentallas.s81.mtp_static_row_contract.v1",
+  "status": "component measured; physical and full MTP program unqualified",
+  "shape": {
+    "vocab": 129280,
+    "K": 256,
+    "rows_per_A": 32,
+    "A_per_bundle": 4
+  },
+  "source": {
+    "W32": "c286957fa",
+    "row_pair": "af109f3e3",
+    "mapped_E": "f0f9ded25",
+    "fixed_K256": "d3685b9ba",
+    "actual_head_public_stream": "c1c96db07"
+  },
+  "head": {
+    "parameters": {
+      "CUT": 511,
+      "SPLIT9": 1,
+      "IOREG": 1,
+      "SAFE": 1,
+      "BST": 2
+    },
+    "pin_launch_from_go": {
+      "A0_A1_A2": "472 + 256*k",
+      "A3": "474 + 256*k",
+      "k": [
+        0,
+        31
+      ]
+    },
+    "receiver_capture_edge_offset": 1,
+    "ready_or_credit": false
+  },
+  "row": {
+    "request": "compiler request captured with actual head_valid/logit/row/token/identity; availability checks fault only",
+    "lookup_pin_launch": [
+      6,
+      21
+    ],
+    "lookup_receiver_capture": [
+      7,
+      22
+    ],
+    "kernel_start": 6,
+    "joined_pin_launch": 183,
+    "minimum_component_II": 184,
+    "production_head_II": 256,
+    "identity_bits": 60,
+    "identity_semantics": "compiler epoch shared with E preload; candidate row travels separately",
+    "normal_stalls": 0
+  },
+  "W32": {
+    "actual_mask_ROMs": 2,
+    "macro": "ot_rom_4096x274_m8",
+    "logical_words": 512,
+    "BF16_bytes_per_row": 512,
+    "source_sha256": "acc31f7d13234708cfca192b90a669b346a8e7d0b01e1f43ad5d3a2852b405cb",
+    "generic_census": {
+      "flops": 1905,
+      "logic": 316,
+      "hard_macros": 2,
+      "port_bits": 441,
+      "input_bits": 85,
+      "output_bits": 356
+    },
+    "area_mm2": null,
+    "pin_budget_measured": false
+  },
+  "E_cache": {
+    "required_for_actual_head": true,
+    "reason": "A3 row launch is two cycles after A0-2; a shared 16-beat lookup cannot be re-requested two cycles later",
+    "placement": "one local cache per existing A32 Markov slot",
+    "real_data_FF": 4096,
+    "banks": 16,
+    "bank_bits": 256,
+    "normal_arbitration": false,
+    "producer": "actual mapped full-vocabulary E lookup preloaded once per token before row windows",
+    "source_sha256": "2f6cfd05b5373287b4bdc73b18c5166ce1909cc3382b61169dfdfa872bc443b8",
+    "measured": true,
+    "gate": "results/rtl/s81_mtp_static_row_1015/cache/record.json",
+    "scope": "all32rows exact fullK actualmappedE/W+actualheadlogits; ROMviaflip and metadata mutants fail"
+  },
+  "remaining": [
+    "direct actual public head-port wiring on all four A phases",
+    "all vocabulary groups and recursive actual draft token chain",
+    "static carried argmax and acceptance/rollback program plus full program calendar",
+    "physical W/cache/pair master mapping and boundary/root budget with actual clocks",
+    "exact native VM/field/head/Markov/acceptance full production source composition",
+    "immutable production throughput and whole-token loss measurement"
+  ],
+  "full_native_token_qualified": false
+}

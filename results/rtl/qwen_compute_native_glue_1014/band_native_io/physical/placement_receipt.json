@@ -1,0 +1,162 @@
+{
+  "source_assigned_pins_commit": "e145a3a9f",
+  "outline": [
+    0,
+    0,
+    881.28,
+    1131.84
+  ],
+  "actual_child_lattice_um": 2.16,
+  "children": [
+    {
+      "inst": "g_lane[0].u_lane",
+      "x": 25.92,
+      "y": 25.92,
+      "w": 259.2,
+      "h": 151.2,
+      "orient": "R0",
+      "offtrack": 0
+    },
+    {
+      "inst": "g_lane[1].u_lane",
+      "x": 311.04,
+      "y": 25.92,
+      "w": 259.2,
+      "h": 151.2,
+      "orient": "R0",
+      "offtrack": 0
+    },
+    {
+      "inst": "g_lane[2].u_lane",
+      "x": 596.16,
+      "y": 25.92,
+      "w": 259.2,
+      "h": 151.2,
+      "orient": "R0",
+      "offtrack": 0
+    },
+    {
+      "inst": "g_lane[3].u_lane",
+      "x": 25.92,
+      "y": 203.04,
+      "w": 259.2,
+      "h": 151.2,
+      "orient": "R0",
+      "offtrack": 0
+    },
+    {
+      "inst": "g_lane[4].u_lane",
+      "x": 311.04,
+      "y": 203.04,
+      "w": 259.2,
+      "h": 151.2,
+      "orient": "R0",
+      "offtrack": 0
+    },
+    {
+      "inst": "g_lane[5].u_lane",
+      "x": 596.16,
+      "y": 203.04,
+      "w": 259.2,
+      "h": 151.2,
+      "orient": "R0",
+      "offtrack": 0
+    },
+    {
+      "inst": "g_lane[6].u_lane",
+      "x": 25.92,
+      "y": 380.16,
+      "w": 259.2,
+      "h": 151.2,
+      "orient": "R0",
+      "offtrack": 0
+    },
+    {
+      "inst": "g_lane[7].u_lane",
+      "x": 311.04,
+      "y": 380.16,
+      "w": 259.2,
+      "h": 151.2,
+      "orient": "R0",
+      "offtrack": 0
+    },
+    {
+      "inst": "g_lane[8].u_lane",
+      "x": 596.16,
+      "y": 380.16,
+      "w": 259.2,
+      "h": 151.2,
+      "orient": "R0",
+      "offtrack": 0
+    },
+    {
+      "inst": "g_lane[9].u_lane",
+      "x": 25.92,
+      "y": 557.28,
+      "w": 259.2,
+      "h": 151.2,
+      "orient": "R0",
+      "offtrack": 0
+    },
+    {
+      "inst": "g_lane[10].u_lane",
+      "x": 311.04,
+      "y": 557.28,
+      "w": 259.2,
+      "h": 151.2,
+      "orient": "R0",
+      "offtrack": 0
+    },
+    {
+      "inst": "g_lane[11].u_lane",
+      "x": 596.16,
+      "y": 557.28,
+      "w": 259.2,
+      "h": 151.2,
+      "orient": "R0",
+      "offtrack": 0
+    },
+    {
+      "inst": "g_lane[12].u_lane",
+      "x": 25.92,
+      "y": 734.4,
+      "w": 259.2,
+      "h": 151.2,
+      "orient": "R0",
+      "offtrack": 0
+    },
+    {
+      "inst": "g_lane[13].u_lane",
+      "x": 311.04,
+      "y": 734.4,
+      "w": 259.2,
+      "h": 151.2,
+      "orient": "R0",
+      "offtrack": 0
+    },
+    {
+      "inst": "g_lane[14].u_lane",
+      "x": 596.16,
+      "y": 734.4,
+      "w": 259.2,
+      "h": 151.2,
+      "orient": "R0",
+      "offtrack": 0
+    },
+    {
+      "inst": "g_lane[15].u_lane",
+      "x": 25.92,
+      "y": 911.52,
+      "w": 259.2,
+      "h": 151.2,
+      "orient": "R0",
+      "offtrack": 0
+    }
+  ],
+  "finding": "Default43.2lattice snapped3cols intoabutmentand15.1umEedge; explicitactual2.16origins give25.92channels withallrealLEFpinlayersofftrack0. Common43.2grid warningsretained; actualparentrouting/PGnativephase stillpending.",
+  "closed_leaf_native": {
+    "launch_ps": 169.6,
+    "capture_ps": 132.8,
+    "R_ps": 481.5
+  }
+}

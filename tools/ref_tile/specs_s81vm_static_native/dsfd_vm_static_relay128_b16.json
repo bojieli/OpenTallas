@@ -1,0 +1,153 @@
+{
+  "name": "dsfd_vm_static_relay128_b16_native_option",
+  "top": "dsfd_vm_static_relay128_b16",
+  "kind": "tile",
+  "sources": [
+    "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_relay128.sv",
+    "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_relay128_b16.sv"
+  ],
+  "clock_port": "ck_req",
+  "reset_ports": [
+    "rst_n"
+  ],
+  "outline": {
+    "w": 345.6,
+    "h": 345.6,
+    "exact": true
+  },
+  "pins": {
+    "N": [
+      "i_rv",
+      "i_wv",
+      "i_ra",
+      "i_wa",
+      "i_rt",
+      "i_wt",
+      "i_wm",
+      "i_wd"
+    ],
+    "S": [
+      "o_rv",
+      "o_wv",
+      "o_ra",
+      "o_wa",
+      "o_rt",
+      "o_wt",
+      "o_wm",
+      "o_wd"
+    ],
+    "E": [
+      "o_sv",
+      "o_cv",
+      "o_sd",
+      "o_st",
+      "o_ct",
+      "o_ca",
+      "o_cm"
+    ],
+    "W": [
+      "ck_req",
+      "ck_rsp",
+      "rst_n",
+      "i_sv",
+      "i_cv",
+      "i_sd",
+      "i_st",
+      "i_ct",
+      "i_ca",
+      "i_cm"
+    ]
+  },
+  "macros": [],
+  "io_tcl": "physical/s81_die_pins/v20_vm_static_transport_options/dsfd_vm_static_relay128_b16.tcl",
+  "route": {
+    "pd": 0.4,
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "hold_margin_ns": 0.03
+  },
+  "recipe": 2,
+  "structural_change": "actual pin-count-sized static duplex relay, no credits or demand-driven state; generous area for <=75%nativefacecapacity; two real independentlyhardened roots",
+  "slot_change_request": {
+    "contract": "S81 staticVM local-group option",
+    "version": "0509f4986",
+    "why": "prior b8/b16 template faces overflow1.49x/1.85x; real per-bit pins require172.8/345.6square"
+  },
+  "job": {
+    "owner": "Codex:S_VM physical",
+    "branch": "claude/s81-vm-r9-1014",
+    "tag": "native_option",
+    "extra_paths": [
+      "rtl/dsrom_sys/s81_ph/vm",
+      "tools/s81_vm",
+      "tools/s81_vm_transport_sizing",
+      "physical/s81_die_pins/v20_vm_static_transport_options"
+    ],
+    "purpose": "UNSUBMITTED native dualclock TILE gate; multiple_cts_roots schema under sharedflow implementation; eachdomain actualCTS/phi-R; no timing relaxation",
+    "benched_by": "s81_vm_static_master_1015"
+  },
+  "clock": "multiple_cts_roots",
+  "clock_ports": [
+    "ck_req",
+    "ck_rsp"
+  ],
+  "clock_entry_domains": {
+    "core": {
+      "ratio": [
+        1,
+        1
+      ],
+      "ports": [
+        "ck_req"
+      ],
+      "inputs": [
+        "i_rv",
+        "i_wv",
+        "i_ra",
+        "i_wa",
+        "i_rt",
+        "i_wt",
+        "i_wm",
+        "i_wd",
+        "rst_n"
+      ],
+      "outputs": [
+        "o_rv",
+        "o_wv",
+        "o_ra",
+        "o_wa",
+        "o_rt",
+        "o_wt",
+        "o_wm",
+        "o_wd"
+      ]
+    },
+    "response": {
+      "ratio": [
+        1,
+        1
+      ],
+      "ports": [
+        "ck_rsp"
+      ],
+      "inputs": [
+        "i_sv",
+        "i_cv",
+        "i_sd",
+        "i_st",
+        "i_ct",
+        "i_ca",
+        "i_cm"
+      ],
+      "outputs": [
+        "o_sv",
+        "o_cv",
+        "o_sd",
+        "o_st",
+        "o_ct",
+        "o_ca",
+        "o_cm"
+      ]
+    }
+  }
+}

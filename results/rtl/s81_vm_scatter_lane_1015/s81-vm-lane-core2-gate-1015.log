@@ -1,0 +1,8 @@
+ot-run: ot-epyc1tb     admits   354 GB (avail 580, growth 115, headroom 64, waiters 0/0 GB) load 40/128 running 18 disk 677 GB 
+ot-run: ot-epyc4       admits   565 GB (avail 791, growth 96, headroom 48, waiters 0/0 GB) load 42/128 running 24 disk 487 GB 
+ot-run: ot-pve1        skipped: load hold: load1 > 1.5 x cores
+ot-run: ot-agidock128  skipped: load hold: load1 > 1.5 x cores
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-1642518-1792058118 after 0 s
+Terminated                 /usr/local/bin/ot-heavy --mem 24 --tag otrun-ubuntu-699517-58118366 -- bash -lc 'cd /srv/opentallas-scratch/codex-s81-vm-lane-scatter-1015 && mkdir -p flat_core2 && cp rtl/dsrom_sys/s81_ph/vm/*.sv rtl/dsrom_sys/s81_ph/test/*.sv ot_sram_1r1w_512x128_m4_r2c2.v flat_core2/ && bash tools/s81_vm/static_core_gate.sh "$PWD/flat_core2" "$PWD/results/core2" 1000'
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-1642518-1792058118): exit 143

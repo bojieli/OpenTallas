@@ -1,0 +1,40 @@
+{
+ "schema": "opentallas.qwen-dvm-native-proof.v1",
+ "status": "FUNCTIONAL_PRODUCTION_SHAPE_PASS_PHYSICAL_GATES_PENDING_NOT_NATIVE_TOKEN_QUALIFICATION",
+ "source_commit": "c549942dd (RTL identical at route/gate commit 9d15ba086)",
+ "executed_source": "executed_source.sha256 (same bytes on ot-epyc1tb:/srv/opentallas-scratch/claude/dvm5/src)",
+ "changes": [
+  "619c60641 head leaf-write enable/d: three equality compares on W, W+1, W-1 precomputed in descriptor stage C (no 19-bit subtract after the beat register); no edge change",
+  "5aa6323a3 every DVM die master without ready ports (owner static-schedule rule); qfd_xcst_n/s and qfd_xcol_e/w expose tie_hi/tie_lo for straps (compute contract v1.2)",
+  "4b3061168 the column instantiates its head by die name (qfd_xhead_e / qfd_xhead_w)",
+  "c549942dd pooled read-position overflow integrity checked once per descriptor (stage D) and raised when the go consumes the epoch; read positions/timing unchanged"
+ ],
+ "native_core_bench": {
+  "bench": "tb_qfd_xdvm_prod NATIVE_AFFINE=1 STATIC_SCHEDULE=1 NW=18 (real central x spine reference)",
+  "small64_layer": "PASS 4 ops 114,688 element checks, delta +1 edge (core_pos0.log)",
+  "small64_layer_plus_6_random": "PASS 10 ops 159,744 element checks (core_pos.log)",
+  "full768": "PASS NCOL 48 / 768 tiles / 14 ops / 2,276 cycles / 4,177,920 element checks, dvm_minus_ref_edges 1 (full_pos.log)",
+  "observed_mutants": {
+   "HEAD_MUT 7 (W+1 window match dropped)": "FAIL x_fault (core_m7.log)",
+   "HEAD_MUT 4 (stale epoch)": "FAIL x_fault (core_m4.log)",
+   "HEAD_MUT 3 (wrong station)": "FAIL operand mismatches (core_m3.log)",
+   "LEAF_MUT 2 (swapped tile)": "FAIL operand mismatches (core_l2.log)"
+  },
+  "pre_c549_also_observed": "HEAD_MUT 8 (W-1) and 9 (W) FAIL x_fault on 619c60641; full768 HEAD_MUT 7 FAIL"
+ },
+ "native_wrapper_composition": {
+  "bench": "tools/qwen_tp8/vm_replay_xcol_bench.sh: actual qfd_xs_tap + qfd_xcol_e (qfd_xhead_e + 8 leaves) + real NOX VM (39 observers) + SU static copy, fixed 4-chunk head calendar, initial fill + 3 overlapped H replays",
+  "positive_std_sram": "PASS 16,384 raw words, 12,800 BF16 operands (x_pos0.log)",
+  "positive_macro_sram": "PASS macros=1 (x_pos1.log)",
+  "observed_mutants": {
+   "TAP_MUT 1 (no rounding, through the die wrapper)": "FAIL operand mismatches (x_tap1.log)",
+   "HEAD_MUT 3 (wrong station, through qfd_xcol_e)": "FAIL operand mismatches (x_head3.log)"
+  }
+ },
+ "cost": "x read latency unchanged (DX 10, +1 edge over XVMR 12): ledger row VM.XREAD DVM proposed at 1.028 % (qD_dvm_r3x12, +72 cycles a layer)",
+ "limits": [
+  "Physical phi-R relays / hop stages of the column and tap are not in these benches.",
+  "The composition bench drives xpf/go/ib from a fixed calendar (not the native tt_ctlm producer) and the initial VM live-in through the SVW fixture.",
+  "Component / composition evidence only: no full native token or layer qualification."
+ ]
+}

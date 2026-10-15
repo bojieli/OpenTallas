@@ -1,0 +1,130 @@
+{
+  "name": "qfd_tile_lsl_fp1",
+  "top": "ot_qwen_tile_lsl_fp1",
+  "kind": "tile",
+  "sources": [
+    "rtl/physical/ot_qwen_tile_lsl_fp1.sv",
+    "rtl/hdc/ot_qwen_w12_matvec.sv",
+    "rtl/hdc/ot_hdc_matvec.sv",
+    "rtl/hdc/ot_hdc_fpu.sv",
+    "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+    "rtl/hdc/ot_hdc_fastfp.sv",
+    "rtl/hdc/ot_hdc_delay.sv",
+    "rtl/hdc/ot_hdc_sfu.sv",
+    "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+    "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+    "rtl/hdc/ot_hdc_prefix.sv",
+    "rtl/hdc/ot_qwen_w12_arith.sv",
+    "rtl/proto/ot_fp32_add_rne_pipe.sv",
+    "rtl/hdc/ot_hdc_fp32_add_lat_nr.sv"
+  ],
+  "clock_port": "clk",
+  "reset_ports": [
+    "rst_n"
+  ],
+  "outline": {
+    "w": 99.792,
+    "h": 140.4,
+    "exact": true
+  },
+  "pins": {
+    "E": [
+      "clk",
+      "rst_n",
+      "v_d",
+      "first_d",
+      "split_d",
+      "w_d",
+      "x_d",
+      "t_out",
+      "lfault",
+      "tfault"
+    ]
+  },
+  "io_tcl": "physical/ref_tile/qfd_tile_lsl_fp1/assigned_pins.tcl",
+  "layer_cap": "M6",
+  "layer_cap_grant": "Q-COMPUTE-DIE: exact legacy M4/M6 face and signal-cap inheritance only for fault-register successor of named native-failing LSL leaf; no data repin or cap increase",
+  "inter": "",
+  "refglob": "*s3_*",
+  "inhold": false,
+  "outhold": false,
+  "io_flop_at_pins": {
+    "cols": 4
+  },
+  "assigned_pin_source": {
+    "file": "results/arch/qwen_split_compute_1014/lsl_fault_successor/ot_qwen_tile_lsl_fp1.json",
+    "sha256": "b2a153c23ca35eab30d42dcec259f283c94e07fca90846341c2b591560543b8d",
+    "owner": "q_compute_die",
+    "commit": "23dca4512"
+  },
+  "slot_change_request": "Exact inherited native-failing LSL slot, die approved23dca4512. Same outline and every pin rectangle; +1fault-only edge, unchanged arithmetic/data timing.",
+  "route": {
+    "pd": 0.5,
+    "period_ps": 770,
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "hold_margin_ns": 0.03,
+    "pin_h": "M4 M6",
+    "pin_v": "M5"
+  },
+  "job": {
+    "owner": "Codex:qwen_lsl_fault_pin",
+    "branch": "codex/q-lsl-fault-pin-1014",
+    "tag": "p1",
+    "purpose": "Registered native fault-pin successor; nine real same-clock output flops. Original mathematical body bb84 and all data pins/order unchanged; only fault visibility adds1edge. Fresh physical CTS/native/TTFFDRC required; original CLOSED view preserved.",
+    "cycles_added": 0,
+    "extra_paths": [
+      "physical/qwen_die_masters/cfg",
+      "rtl/test/qwen_split",
+      "tools/qwen_split",
+      "results/arch/qwen_split_compute_1014/lsl_fault_successor"
+    ],
+    "benches": [
+      {
+        "name": "lsl_fault_pin_exact",
+        "cmd": "bash tools/qwen_split/run_lsl_fault_pin_gate.sh {RUN}/bench/positive 0",
+        "expect": "pass",
+        "pass_regex": "^PASS lane fault-pin",
+        "threads": 1,
+        "peak_ram_gb": 4,
+        "needs": [
+          "iverilog"
+        ]
+      },
+      {
+        "name": "lsl_fault_pin_bypass",
+        "cmd": "bash tools/qwen_split/run_lsl_fault_pin_gate.sh {RUN}/bench/bypass 1",
+        "expect": "fail",
+        "fail_regex": "fault pin latency mismatch",
+        "threads": 1,
+        "peak_ram_gb": 4,
+        "needs": [
+          "iverilog"
+        ]
+      },
+      {
+        "name": "lsl_fault_pin_lost",
+        "cmd": "bash tools/qwen_split/run_lsl_fault_pin_gate.sh {RUN}/bench/lost 2",
+        "expect": "fail",
+        "fail_regex": "fault pin latency mismatch",
+        "threads": 1,
+        "peak_ram_gb": 4,
+        "needs": [
+          "iverilog"
+        ]
+      }
+    ],
+    "views_to": "physical/ref_tile/qfd_tile_lsl_fp1/views",
+    "record_to": "results/rtl/ref_tile/qfd_tile_lsl_fp1"
+  },
+  "reroute_reason": {
+    "kind": "rtl_change",
+    "why": "Native failing combinational lfault/tfault ORs now capture in real boundary flops, unchanged arithmetic. New master preserves canonical CLOSED legacy."
+  },
+  "pin_access": {
+    "frac": 0,
+    "above_only": true,
+    "faces": "E"
+  },
+  "legacy_pin_access_reason": "Exact legacy lsl6 OT_PK_FRAC=0 full pin-depth above-only E keepout; half-pin defaults cannot preserve inherited multi-PORT stubs access. GRT/DRT-only change from initial CTS smoke, no RTL/clock/pin coordinate changes."
+}

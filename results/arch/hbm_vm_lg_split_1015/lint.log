@@ -1,0 +1,17 @@
+%Warning-UNUSEDSIGNAL: rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv:33:16: Bits of signal are not used: 'rq_d'[16]
+                                                                                        : ... note: In instance 'ot_hbm_vm_lg_static_split.g_bank[7].leaf'
+   33 |     reg [16:0] rq_d;
+      |                ^~~~
+                       ... For warning description see https://verilator.org/warn/UNUSEDSIGNAL?v=5.050
+                       ... Use "/* verilator lint_off UNUSEDSIGNAL */" and lint_on around source to disable this message.
+%Warning-UNUSEDSIGNAL: rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv:34:17: Bits of signal are not used: 'wq_d'[280]
+                                                                                        : ... note: In instance 'ot_hbm_vm_lg_static_split.g_bank[7].leaf'
+   34 |     reg [280:0] wq_d;
+      |                 ^~~~
+%Warning-UNUSEDSIGNAL: rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv:36:22: Bits of signal are not used: 'return_d'[256]
+                                                                                        : ... note: In instance 'ot_hbm_vm_lg_static_split.g_bank[7].leaf'
+   36 |     reg [256:0] rr_d,return_d;
+      |                      ^~~~~~~~
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 0.059 MB sources in 3 modules, into 0.197 MB in 6 C++ files needing 0.000 MB
+- Verilator: Walltime 0.044 s (elab=0.002, cvt=0.034, bld=0.000); cpu 0.044 s on 1 threads; allocated 38.152 MB

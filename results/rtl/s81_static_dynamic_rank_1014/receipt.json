@@ -1,0 +1,146 @@
+{
+  "status": "DYNAMIC_RANK_COMPONENT_PASS",
+  "production_qualified": false,
+  "scope": "One dynamic RTL implementation, four simultaneous ranks with runtime rotating boot straps and actual XOR physical mapping; synthetic payload source only",
+  "clock_contract": "Independent clk_core and three clk_lane leaf inputs; common stream epoch required and physically unqualified",
+  "rank_configuration": "First reset-released edge captures rank; subsequent change is sticky fault; first source must follow boot edge",
+  "lane_mapping": "physical lane g0..2 peer = registered_rank XOR (g+1)",
+  "measured_issue_to_gather_edges": 11,
+  "gather_metadata": "tag32 seq16 last registered with vm_we/vm_rows/vm_data",
+  "cases": [
+    {
+      "layer": 0,
+      "kind": "a",
+      "records": 28,
+      "rotation": 0,
+      "log": "results/rtl/s81_static_dynamic_rank_1014/a_28_rot0.log"
+    },
+    {
+      "layer": 0,
+      "kind": "a",
+      "records": 28,
+      "rotation": 1,
+      "log": "results/rtl/s81_static_dynamic_rank_1014/a_28_rot1.log"
+    },
+    {
+      "layer": 0,
+      "kind": "a",
+      "records": 28,
+      "rotation": 2,
+      "log": "results/rtl/s81_static_dynamic_rank_1014/a_28_rot2.log"
+    },
+    {
+      "layer": 0,
+      "kind": "a",
+      "records": 28,
+      "rotation": 3,
+      "log": "results/rtl/s81_static_dynamic_rank_1014/a_28_rot3.log"
+    },
+    {
+      "layer": 20,
+      "kind": "a",
+      "records": 36,
+      "rotation": 0,
+      "log": "results/rtl/s81_static_dynamic_rank_1014/a_36_rot0.log"
+    },
+    {
+      "layer": 20,
+      "kind": "a",
+      "records": 36,
+      "rotation": 1,
+      "log": "results/rtl/s81_static_dynamic_rank_1014/a_36_rot1.log"
+    },
+    {
+      "layer": 20,
+      "kind": "a",
+      "records": 36,
+      "rotation": 2,
+      "log": "results/rtl/s81_static_dynamic_rank_1014/a_36_rot2.log"
+    },
+    {
+      "layer": 20,
+      "kind": "a",
+      "records": 36,
+      "rotation": 3,
+      "log": "results/rtl/s81_static_dynamic_rank_1014/a_36_rot3.log"
+    },
+    {
+      "layer": 2,
+      "kind": "a",
+      "records": 44,
+      "rotation": 0,
+      "log": "results/rtl/s81_static_dynamic_rank_1014/a_44_rot0.log"
+    },
+    {
+      "layer": 2,
+      "kind": "a",
+      "records": 44,
+      "rotation": 1,
+      "log": "results/rtl/s81_static_dynamic_rank_1014/a_44_rot1.log"
+    },
+    {
+      "layer": 2,
+      "kind": "a",
+      "records": 44,
+      "rotation": 2,
+      "log": "results/rtl/s81_static_dynamic_rank_1014/a_44_rot2.log"
+    },
+    {
+      "layer": 2,
+      "kind": "a",
+      "records": 44,
+      "rotation": 3,
+      "log": "results/rtl/s81_static_dynamic_rank_1014/a_44_rot3.log"
+    },
+    {
+      "layer": 0,
+      "kind": "router",
+      "records": 6,
+      "rotation": 0,
+      "log": "results/rtl/s81_static_dynamic_rank_1014/router_6_rot0.log"
+    },
+    {
+      "layer": 0,
+      "kind": "router",
+      "records": 6,
+      "rotation": 1,
+      "log": "results/rtl/s81_static_dynamic_rank_1014/router_6_rot1.log"
+    },
+    {
+      "layer": 0,
+      "kind": "router",
+      "records": 6,
+      "rotation": 2,
+      "log": "results/rtl/s81_static_dynamic_rank_1014/router_6_rot2.log"
+    },
+    {
+      "layer": 0,
+      "kind": "router",
+      "records": 6,
+      "rotation": 3,
+      "log": "results/rtl/s81_static_dynamic_rank_1014/router_6_rot3.log"
+    }
+  ],
+  "source_sha256": {
+    "rtl/link/ot_link_crc32.sv": "2ce3961b122aec70a8a509e4f5638904363d72f6bc90db93e5ff1a35b71e4c97",
+    "rtl/dsrom_sys/s81_static_collective/s81_static_fmt1_gearbox.sv": "42d3c37f9db7a4ae1a6fcb03d42313ced946fcc9760e4d96538308e0f592b5e2",
+    "rtl/dsrom_sys/s81_static_collective/s81_static_tp4_vm_producer.sv": "d057a98110f00a48ef8a1607d340914577c7cd4f52d5db4c07ddf924a2b635e1",
+    "rtl/dsrom_sys/s81_static_collective/s81_static_tp4_endpoint_dynamic.sv": "68e72e06542d8b140bd3f1b15b9d069e0d90f97f5dedb0936e09207666e8ec58",
+    "rtl/dsrom_sys/s81_static_collective/s81_static_fmt1_codec_dynamic.sv": "0a876ede4169e7d8a08d24a2abc84dc6b01f419cf6fe310aca5477225a653348",
+    "rtl/dsrom_sys/s81_static_collective/s81_static_fmt1_lane_dynamic.sv": "d12dc2b28e4401461c1d52eec59742f99f33b9ca9d937ebe78d58d17e989b0c1",
+    "rtl/dsrom_sys/s81_static_collective/s81_static_fmt1_core_dynamic.sv": "e0a1f6bbb2ead12198c873fb924a16e7c8e6bdcaeb2d957fb19c48889f7e0527",
+    "rtl/dsrom_sys/s81_static_collective/s81_static_fmt1_rank_dynamic_clocked.sv": "9e8edec2bac1c4adf14c51b7cf9d5131a2222654cf5697cdfd6464eb22b51e33",
+    "rtl/dsrom_sys/s81_static_collective/s81_static_fmt1_rank_dynamic.sv": "fff67a9b33fb9bf5120067a80686d80645e7a144be1109b1987b3d64dd7ebbbe",
+    "rtl/dsrom_sys/s81_static_collective/tb_s81_static_fmt1_dynamic.sv": "550084559b2914350d620080fd8497bc9770d61b77aae2b84e62025a229e1788",
+    "rtl/dsrom_sys/s81_static_collective/s81_static_fmt1_vm_rank_dynamic.sv": "91bda30525fd301a0f796e9aef449b60136320819b693e18fc53748f4020fee0",
+    "tools/s81_static_collective/check_dynamic.py": "4a5cbf79ee1d0a6e23ab8b402246d935ff2f6040b56c4b0182b496823864baff"
+  },
+  "boot_configuration_guard": "Actual attempted source issue on first boot-capture edge asserts fault before sampling edge; no source operation admitted before rank capture",
+  "mutation": "Actual lane codec peer prefix uses rank XOR g, observed gather fault; boot strap change separately detected",
+  "blockers": [
+    "actual native VM source image",
+    "runtime rank die strap wiring",
+    "accepted dynamic controller/core/lane physical slots and pins",
+    "TT/FF/DRC0 and native clock/reset qualification"
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "schema": "opentallas.hbm.native-calendar-issuer.v1",
+  "source_sha256": {
+    "rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv": "2a3f380c413bef2676087338d00d18cf869562e9bb611fc93c13251f3fb3f197",
+    "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_static.sv": "389cf753f13b7f0f64f94329feaa5304eac269d67211302eadfeb77e9516b797",
+    "rtl/hbm_accel/generic/vm/static/tb_vms_calendar_static.sv": "8797ed5a60353b3757136359bc4c62260dafad83515f5c8e29c9a7c024371867",
+    "tools/hbm_vm_static_calendar.py": "de5bb9ebac2d595762813bccba921293dc3f3cddd29ec69f9b8bae9de36a8eee"
+  },
+  "admission": {
+    "host": "ot-agidock128",
+    "unit": "oth-ubuntu-2874660-1792047158",
+    "exit": 0,
+    "memory_gb": 1,
+    "threads": 1
+  },
+  "actual_programme_sram": "ot_sram_1r1w_1024x256_m2_r2c2",
+  "positive": "1536 consecutive emitted calendar words,512 loopwraps,startup4edges,ordinal identity,invalidprogrammefault withoutlate replay",
+  "mutants": [
+    "wrongwrapPC fails emitted word3",
+    "missingloopedge fails emitted edge3"
+  ],
+  "native_lint": [
+    {
+      "top": "SW",
+      "returncode": 0,
+      "required_native_lint": []
+    },
+    {
+      "top": "SE",
+      "returncode": 0,
+      "required_native_lint": []
+    },
+    {
+      "top": "NW",
+      "returncode": 0,
+      "required_native_lint": []
+    },
+    {
+      "top": "NE",
+      "returncode": 0,
+      "required_native_lint": []
+    }
+  ],
+  "scope": "Four exact native control headers including all VM slots plus3 sharedlane-tap8bank request selectors; no runtime credit/ready/data-dependent branches. Actual loader/CP config+launch join and engine-composed layer calendar remain required.",
+  "model_correction": "Before RTL model omitted input pin rung and sharedlane tap selectors; final native pipeline adds one start edge and48controlbits/quadrant, stilloneactual256bprogrammeSRAM."
+}

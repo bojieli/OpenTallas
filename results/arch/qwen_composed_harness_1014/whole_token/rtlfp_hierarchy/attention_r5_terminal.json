@@ -1,0 +1,9 @@
+{
+  "observed_ot_run_exit": 143,
+  "systemd_result": "oom-kill",
+  "scope": "oth-ubuntu-133525-1792028543.scope",
+  "measured_peak": "200G",
+  "structural_difference_from_prior_attempt": "Actual stack_h and pv256_slice hierarchy generated; parallel4stack compilation exceeded total cap",
+  "next": "r6_serial JOBS1 cap200GB session31941 scopeoth-ubuntu-1530831-1792028973",
+  "failed_scratch_deleted": true
+}

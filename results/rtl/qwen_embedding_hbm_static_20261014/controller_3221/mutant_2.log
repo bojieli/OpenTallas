@@ -1,0 +1,5 @@
+TRACE t=300 issue=1 pending=0 slot=0 er=0 token=0 stack=0 pc=0 valid=1
+TRACE t=387 issue=0 pending=1 slot=0 er=1 token=0 stack=0 pc=0 valid=1
+[324000000] %Fatal: tb_static_embed_controller.sv:124: Assertion failed in tb_static_embed_controller: embedding endpoint missed compiled slot t=387
+%Error: rtl/qwen_sys/static_embedding_20261014/test/tb_static_embed_controller.sv:124: Verilog $stop
+Aborting...

@@ -1,0 +1,26 @@
+{
+  "schema": "opentallas.qwen.static_embedding_return_chain.v1",
+  "scope": "full32PC return station RTL component, no native geometry/timing/full128PC composition claim",
+  "record_payload_bits": 298,
+  "retained_occupancy_bits": 1,
+  "sampled_edges_per_hop": 2,
+  "pc_count": 32,
+  "root_reserved_slots": [
+    100,
+    131
+  ],
+  "root_consecutive_words": 32,
+  "no_runtime_priority_or_readiness": true,
+  "negative_controls": [
+    "local transfer shifted:FAIL",
+    "missing producer capture:FAIL",
+    "retained record overwrite:FAIL",
+    "payload bit corruption:FAIL"
+  ],
+  "source_sha256": {
+    "rtl/qwen_sys/static_embedding_20261014/qkd_embedding_static_return_hop.sv": "c6031bb92dce5c170894b53f4933ff151f5b35c8b5c3fb880a10733c5425916c",
+    "rtl/qwen_sys/static_embedding_20261014/test/tb_static_embed_return_chain.sv": "63de7aaeb75584aa25d52f8e661f6d52e4797b46458fd6867a6d54942a299e34"
+  },
+  "physical_qualified": false,
+  "native_token_qualified": false
+}

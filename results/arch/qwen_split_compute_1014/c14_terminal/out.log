@@ -1,0 +1,15 @@
+C14 STRUCTURAL DIAGNOSTIC; not native/static production qualification
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch/claude/qwen-split-compute/c14/src/tools/qwen_tp8/relay_data_run.py", line 16, in <module>
+    v, m = D.load_qwen()[:2]
+           ~~~~~~~~~~~^^
+  File "/srv/opentallas-scratch/claude/qwen-split-compute/c14/src/tools/die_top_lint.py", line 236, in load_qwen
+    v, m = B.selected(True, cdc=B._cdc_arg(cdc), **r)
+           ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/srv/opentallas-scratch/claude/qwen-split-compute/c14/src/tools/qwen_rom_fulldie_b3r2.py", line 1105, in selected
+    _relays(v, m, relay_pitch)
+    ~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "/srv/opentallas-scratch/claude/qwen-split-compute/c14/src/tools/qwen_rom_fulldie_b3r2.py", line 3554, in _relays
+    raise ValueError(f"relay occupancy: {pl['bid']} frame {fk} overlaps a surviving frame before inline pads")
+ValueError: relay occupancy: tree_35_3_0a frame 1 overlaps a surviving frame before inline pads
+rc=1

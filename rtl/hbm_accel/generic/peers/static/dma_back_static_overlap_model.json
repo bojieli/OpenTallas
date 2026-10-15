@@ -1,0 +1,39 @@
+{
+  "schema": "opentallas.hbm.dma-back-static-overlap-sizing.v1",
+  "stage": "BEFORE_OVERLAP_RTL",
+  "created": "2026-10-15T00:04:22.263639",
+  "base": "dma_back_static_model.json",
+  "rationale": "A compiler reservation owns every landing address. Chunk i is committed at issue_at+i+9; reading it at issue_at+i+10 is safe while later chunks are written. Complete-block wait is unnecessary and adds80cycles on the production critical path.",
+  "macs_per_cycle": 0,
+  "memory_bytes_per_cycle": {
+    "vm_read": 256,
+    "landing_write": 256,
+    "landing_read": 256,
+    "wb_write": 256
+  },
+  "replicas": 4,
+  "macros_per_replica": 8,
+  "area_added": 0,
+  "boundary_bits_added": 0,
+  "routing_tracks_added": 0,
+  "mux_fanout_delta": "none; same fixed calendar/index generator and macro ports",
+  "fixed_schedule": {
+    "rq_to_landing_commit": 9,
+    "rq_to_landing_read": 10,
+    "rq_to_wd_output": 12,
+    "last_source_retire_offset": 88,
+    "h_last_wd_offset": 91,
+    "pre_command_offset": 94,
+    "pre_issue_offset": 100,
+    "pre_drain_offset": 111,
+    "pre_wd_offset": 113
+  },
+  "outstanding_source_retire": "unchanged lastactualSRAMcommit, never issue",
+  "wb_ready": "single whole-buffer reservation check at issue+10, never per-lane/per-cycle flow",
+  "expected_production_cycles": 173,
+  "prior_measured_cycles": 253,
+  "immutable_price_cycles": 248,
+  "gate_limit_cycles": 272,
+  "physical_qualification": "pending; concurrent1R1W is native macro contract, no new memory ports",
+  "qualification": "Re-run real32bank/96VMmacro+32landingmacro production main/mirror, exact timeline and source/destination mutants; retain original253cycle evidence"
+}

@@ -1,0 +1,782 @@
+
+-- Running command `read_verilog -sv rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv; hierarchy -top ot_hgi_qdq_static; proc; opt; write_json transport_final.json; stat' --
+
+1. Executing Verilog-2005 frontend: rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv
+Parsing SystemVerilog input from `rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hgi_qdq_static'.
+Warning: Replacing memory \dst with list of registers. See rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:98
+Warning: Replacing memory \hp with list of registers. See rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:92
+Warning: Replacing memory \dp with list of registers. See rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:92
+Warning: Replacing memory \sp with list of registers. See rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:92
+Successfully finished Verilog frontend.
+
+2. Executing HIERARCHY pass (managing design hierarchy).
+
+2.1. Analyzing design hierarchy..
+Top module:  \ot_hgi_qdq_static
+
+2.2. Analyzing design hierarchy..
+Top module:  \ot_hgi_qdq_static
+Removed 0 unused modules.
+
+3. Executing PROC pass (convert processes to netlists).
+
+3.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 1 empty switch in `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:0$679'.
+Removing empty process `ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:0$679'.
+Cleaned up 1 empty switch.
+
+3.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Marked 1 switch rules as full_case in process $proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:85$643 in module ot_hgi_qdq_static.
+Marked 1 switch rules as full_case in process $proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:52$120 in module ot_hgi_qdq_static.
+Marked 12 switch rules as full_case in process $proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:46$65 in module ot_hgi_qdq_static.
+Removed a total of 0 dead cases.
+
+3.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 26 redundant assignments.
+Promoted 151 assignments to connections.
+
+3.4. Executing PROC_INIT pass (extract init attributes).
+
+3.5. Executing PROC_ARST pass (detect async resets in processes).
+Found async reset \rst_n in `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:85$643'.
+Found async reset \rst_n in `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:52$120'.
+
+3.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+<suppressed ~14 debug messages>
+
+3.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:91$651'.
+Creating decoders for process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:88$649'.
+Creating decoders for process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:85$643'.
+     1/18: $1$fordecl_block$11.k[31:0]$648
+     2/18: $7\wq[2247:2247]
+     3/18: $7\rq[135:135]
+     4/18: $6\wq[1966:1966]
+     5/18: $6\rq[118:118]
+     6/18: $5\wq[1685:1685]
+     7/18: $5\rq[101:101]
+     8/18: $4\wq[1404:1404]
+     9/18: $4\rq[84:84]
+    10/18: $3\wq[1123:1123]
+    11/18: $3\rq[67:67]
+    12/18: $2\wq[842:842]
+    13/18: $2\rq[50:50]
+    14/18: $1\wq[561:561]
+    15/18: $1\rq[33:33]
+    16/18: $0\wq[280:280]
+    17/18: $0\rq[16:16]
+    18/18: $1$fordecl_block$9.k[31:0]$647
+Creating decoders for process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:72$145'.
+Creating decoders for process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:52$120'.
+     1/11: $0\record_done[0:0]
+     2/11: $0\beat_done[0:0]
+     3/11: $0\lastp[3:0]
+     4/11: $0\donep[3:0]
+     5/11: $0\gl[0:0]
+     6/11: $0\gv[0:0]
+     7/11: $0\dl[24:0]
+     8/11: $0\dv[24:0]
+     9/11: $0\lp[7:0]
+    10/11: $0\vp[7:0]
+    11/11: $0\fault[0:0]
+Creating decoders for process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:46$65'.
+     1/16: $8\bad[0:0]
+     2/16: $7\bad[0:0]
+     3/16: $6\bad[0:0]
+     4/16: $5\bad[0:0]
+     5/16: $4\bad[0:0]
+     6/16: $3\bad[0:0]
+     7/16: $2\bad[0:0]
+     8/16: $1\bad[0:0]
+     9/16: $4\expected[7:0]
+    10/16: $1$bitselwrite$pos$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:48$24[31:0]$102
+    11/16: $3\expected[7:0]
+    12/16: $1$bitselwrite$pos$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:48$23[31:0]$92
+    13/16: $2\expected[7:0]
+    14/16: $1$bitselwrite$pos$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:48$22[31:0]$82
+    15/16: $1\expected[7:0]
+    16/16: $1$bitselwrite$pos$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:48$21[31:0]$72
+
+3.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+No latch inferred for signal `\ot_hgi_qdq_static.\rq_next' from process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:72$145'.
+No latch inferred for signal `\ot_hgi_qdq_static.\wq_next' from process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:72$145'.
+No latch inferred for signal `\ot_hgi_qdq_static.$fordecl_block$5.k' from process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:72$145'.
+No latch inferred for signal `\ot_hgi_qdq_static.$fordecl_block$5.$for_loop$6[0].pack_ports.rs' from process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:72$145'.
+No latch inferred for signal `\ot_hgi_qdq_static.$fordecl_block$5.$for_loop$6[0].pack_ports.ws' from process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:72$145'.
+No latch inferred for signal `\ot_hgi_qdq_static.$fordecl_block$5.$for_loop$6[0].pack_ports.rb' from process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:72$145'.
+No latch inferred for signal `\ot_hgi_qdq_static.$fordecl_block$5.$for_loop$6[0].pack_ports.wb' from process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:72$145'.
+No latch inferred for signal `\ot_hgi_qdq_static.$bitselwrite$pos$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:78$25' from process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:72$145'.
+No latch inferred for signal `\ot_hgi_qdq_static.$bitselwrite$pos$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:79$26' from process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:72$145'.
+No latch inferred for signal `\ot_hgi_qdq_static.$fordecl_block$5.$for_loop$6[0].pack_ports.$fordecl_block$7.t' from process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:72$145'.
+No latch inferred for signal `\ot_hgi_qdq_static.$bitselwrite$pos$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:81$27' from process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:72$145'.
+No latch inferred for signal `\ot_hgi_qdq_static.$bitselwrite$pos$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:81$28' from process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:72$145'.
+No latch inferred for signal `\ot_hgi_qdq_static.$bitselwrite$pos$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:81$29' from process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:72$145'.
+No latch inferred for signal `\ot_hgi_qdq_static.$bitselwrite$pos$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:81$30' from process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:72$145'.
+No latch inferred for signal `\ot_hgi_qdq_static.$bitselwrite$pos$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:81$31' from process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:72$145'.
+No latch inferred for signal `\ot_hgi_qdq_static.$bitselwrite$pos$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:81$32' from process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:72$145'.
+No latch inferred for signal `\ot_hgi_qdq_static.$bitselwrite$pos$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:81$33' from process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:72$145'.
+No latch inferred for signal `\ot_hgi_qdq_static.$bitselwrite$pos$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:81$34' from process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:72$145'.
+No latch inferred for signal `\ot_hgi_qdq_static.$fordecl_block$5.$for_loop$6[1].pack_ports.rs' from process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:72$145'.
+No latch inferred for signal `\ot_hgi_qdq_static.$fordecl_block$5.$for_loop$6[1].pack_ports.ws' from process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:72$145'.
+No latch inferred for signal `\ot_hgi_qdq_static.$fordecl_block$5.$for_loop$6[1].pack_ports.rb' from process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:72$145'.
+No latch inferred for signal `\ot_hgi_qdq_static.$fordecl_block$5.$for_loop$6[1].pack_ports.wb' from process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:72$145'.
+No latch inferred for signal `\ot_hgi_qdq_static.$bitselwrite$pos$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:78$35' from process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:72$145'.
+No latch inferred for signal `\ot_hgi_qdq_static.$bitselwrite$pos$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:79$36' from process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:72$145'.
+No latch inferred for signal `\ot_hgi_qdq_static.$fordecl_block$5.$for_loop$6[1].pack_ports.$fordecl_block$7.t' from process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:72$145'.
+No latch inferred for signal `\ot_hgi_qdq_static.$bitselwrite$pos$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:81$37' from process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:72$145'.
+No latch inferred for signal `\ot_hgi_qdq_static.$bitselwrite$pos$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:81$38' from process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:72$145'.
+No latch inferred for signal `\ot_hgi_qdq_static.$bitselwrite$pos$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:81$39' from process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:72$145'.
+No latch inferred for signal `\ot_hgi_qdq_static.$bitselwrite$pos$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:81$40' from process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:72$145'.
+No latch inferred for signal `\ot_hgi_qdq_static.$bitselwrite$pos$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:81$41' from process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:72$145'.
+No latch inferred for signal `\ot_hgi_qdq_static.$bitselwrite$pos$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:81$42' from process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:72$145'.
+No latch inferred for signal `\ot_hgi_qdq_static.$bitselwrite$pos$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:81$43' from process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:72$145'.
+No latch inferred for signal `\ot_hgi_qdq_static.$bitselwrite$pos$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:81$44' from process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:72$145'.
+No latch inferred for signal `\ot_hgi_qdq_static.$fordecl_block$5.$for_loop$6[2].pack_ports.rs' from process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:72$145'.
+No latch inferred for signal `\ot_hgi_qdq_static.$fordecl_block$5.$for_loop$6[2].pack_ports.ws' from process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:72$145'.
+No latch inferred for signal `\ot_hgi_qdq_static.$fordecl_block$5.$for_loop$6[2].pack_ports.rb' from process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:72$145'.
+No latch inferred for signal `\ot_hgi_qdq_static.$fordecl_block$5.$for_loop$6[2].pack_ports.wb' from process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:72$145'.
+No latch inferred for signal `\ot_hgi_qdq_static.$bitselwrite$pos$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:78$45' from process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:72$145'.
+No latch inferred for signal `\ot_hgi_qdq_static.$bitselwrite$pos$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:79$46' from process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:72$145'.
+No latch inferred for signal `\ot_hgi_qdq_static.$fordecl_block$5.$for_loop$6[2].pack_ports.$fordecl_block$7.t' from process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:72$145'.
+No latch inferred for signal `\ot_hgi_qdq_static.$bitselwrite$pos$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:81$47' from process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:72$145'.
+No latch inferred for signal `\ot_hgi_qdq_static.$bitselwrite$pos$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:81$48' from process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:72$145'.
+No latch inferred for signal `\ot_hgi_qdq_static.$bitselwrite$pos$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:81$49' from process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:72$145'.
+No latch inferred for signal `\ot_hgi_qdq_static.$bitselwrite$pos$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:81$50' from process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:72$145'.
+No latch inferred for signal `\ot_hgi_qdq_static.$bitselwrite$pos$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:81$51' from process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:72$145'.
+No latch inferred for signal `\ot_hgi_qdq_static.$bitselwrite$pos$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:81$52' from process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:72$145'.
+No latch inferred for signal `\ot_hgi_qdq_static.$bitselwrite$pos$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:81$53' from process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:72$145'.
+No latch inferred for signal `\ot_hgi_qdq_static.$bitselwrite$pos$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:81$54' from process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:72$145'.
+No latch inferred for signal `\ot_hgi_qdq_static.$fordecl_block$5.$for_loop$6[3].pack_ports.rs' from process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:72$145'.
+No latch inferred for signal `\ot_hgi_qdq_static.$fordecl_block$5.$for_loop$6[3].pack_ports.ws' from process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:72$145'.
+No latch inferred for signal `\ot_hgi_qdq_static.$fordecl_block$5.$for_loop$6[3].pack_ports.rb' from process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:72$145'.
+No latch inferred for signal `\ot_hgi_qdq_static.$fordecl_block$5.$for_loop$6[3].pack_ports.wb' from process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:72$145'.
+No latch inferred for signal `\ot_hgi_qdq_static.$bitselwrite$pos$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:78$55' from process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:72$145'.
+No latch inferred for signal `\ot_hgi_qdq_static.$bitselwrite$pos$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:79$56' from process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:72$145'.
+No latch inferred for signal `\ot_hgi_qdq_static.$fordecl_block$5.$for_loop$6[3].pack_ports.$fordecl_block$7.t' from process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:72$145'.
+No latch inferred for signal `\ot_hgi_qdq_static.$bitselwrite$pos$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:81$57' from process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:72$145'.
+No latch inferred for signal `\ot_hgi_qdq_static.$bitselwrite$pos$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:81$58' from process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:72$145'.
+No latch inferred for signal `\ot_hgi_qdq_static.$bitselwrite$pos$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:81$59' from process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:72$145'.
+No latch inferred for signal `\ot_hgi_qdq_static.$bitselwrite$pos$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:81$60' from process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:72$145'.
+No latch inferred for signal `\ot_hgi_qdq_static.$bitselwrite$pos$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:81$61' from process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:72$145'.
+No latch inferred for signal `\ot_hgi_qdq_static.$bitselwrite$pos$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:81$62' from process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:72$145'.
+No latch inferred for signal `\ot_hgi_qdq_static.$bitselwrite$pos$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:81$63' from process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:72$145'.
+No latch inferred for signal `\ot_hgi_qdq_static.$bitselwrite$pos$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:81$64' from process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:72$145'.
+No latch inferred for signal `\ot_hgi_qdq_static.\expected' from process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:46$65'.
+No latch inferred for signal `\ot_hgi_qdq_static.\bad' from process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:46$65'.
+No latch inferred for signal `\ot_hgi_qdq_static.$fordecl_block$1.t' from process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:46$65'.
+No latch inferred for signal `\ot_hgi_qdq_static.$bitselwrite$pos$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:48$21' from process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:46$65'.
+No latch inferred for signal `\ot_hgi_qdq_static.$bitselwrite$pos$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:48$22' from process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:46$65'.
+No latch inferred for signal `\ot_hgi_qdq_static.$bitselwrite$pos$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:48$23' from process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:46$65'.
+No latch inferred for signal `\ot_hgi_qdq_static.$bitselwrite$pos$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:48$24' from process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:46$65'.
+No latch inferred for signal `\ot_hgi_qdq_static.$fordecl_block$3.t' from process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:46$65'.
+
+3.9. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `\ot_hgi_qdq_static.\gd' using process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:91$651'.
+  created $dff cell `$procdff$732' with positive edge clock.
+Creating register for signal `\ot_hgi_qdq_static.\gh' using process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:91$651'.
+  created $dff cell `$procdff$733' with positive edge clock.
+Creating register for signal `\ot_hgi_qdq_static.\gx' using process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:91$651'.
+  created $dff cell `$procdff$734' with positive edge clock.
+Creating register for signal `\ot_hgi_qdq_static.$fordecl_block$15.k' using process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:91$651'.
+  created $dff cell `$procdff$735' with positive edge clock.
+Creating register for signal `\ot_hgi_qdq_static.$fordecl_block$17.k' using process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:91$651'.
+  created $dff cell `$procdff$736' with positive edge clock.
+Creating register for signal `\ot_hgi_qdq_static.$fordecl_block$19.k' using process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:91$651'.
+  created $dff cell `$procdff$737' with positive edge clock.
+Creating register for signal `\ot_hgi_qdq_static.\sp[0]' using process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:91$651'.
+  created $dff cell `$procdff$738' with positive edge clock.
+Creating register for signal `\ot_hgi_qdq_static.\sp[1]' using process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:91$651'.
+  created $dff cell `$procdff$739' with positive edge clock.
+Creating register for signal `\ot_hgi_qdq_static.\sp[2]' using process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:91$651'.
+  created $dff cell `$procdff$740' with positive edge clock.
+Creating register for signal `\ot_hgi_qdq_static.\sp[3]' using process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:91$651'.
+  created $dff cell `$procdff$741' with positive edge clock.
+Creating register for signal `\ot_hgi_qdq_static.\sp[4]' using process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:91$651'.
+  created $dff cell `$procdff$742' with positive edge clock.
+Creating register for signal `\ot_hgi_qdq_static.\sp[5]' using process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:91$651'.
+  created $dff cell `$procdff$743' with positive edge clock.
+Creating register for signal `\ot_hgi_qdq_static.\sp[6]' using process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:91$651'.
+  created $dff cell `$procdff$744' with positive edge clock.
+Creating register for signal `\ot_hgi_qdq_static.\sp[7]' using process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:91$651'.
+  created $dff cell `$procdff$745' with positive edge clock.
+Creating register for signal `\ot_hgi_qdq_static.\dp[0]' using process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:91$651'.
+  created $dff cell `$procdff$746' with positive edge clock.
+Creating register for signal `\ot_hgi_qdq_static.\dp[1]' using process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:91$651'.
+  created $dff cell `$procdff$747' with positive edge clock.
+Creating register for signal `\ot_hgi_qdq_static.\dp[2]' using process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:91$651'.
+  created $dff cell `$procdff$748' with positive edge clock.
+Creating register for signal `\ot_hgi_qdq_static.\dp[3]' using process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:91$651'.
+  created $dff cell `$procdff$749' with positive edge clock.
+Creating register for signal `\ot_hgi_qdq_static.\dp[4]' using process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:91$651'.
+  created $dff cell `$procdff$750' with positive edge clock.
+Creating register for signal `\ot_hgi_qdq_static.\dp[5]' using process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:91$651'.
+  created $dff cell `$procdff$751' with positive edge clock.
+Creating register for signal `\ot_hgi_qdq_static.\dp[6]' using process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:91$651'.
+  created $dff cell `$procdff$752' with positive edge clock.
+Creating register for signal `\ot_hgi_qdq_static.\dp[7]' using process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:91$651'.
+  created $dff cell `$procdff$753' with positive edge clock.
+Creating register for signal `\ot_hgi_qdq_static.\hp[0]' using process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:91$651'.
+  created $dff cell `$procdff$754' with positive edge clock.
+Creating register for signal `\ot_hgi_qdq_static.\hp[1]' using process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:91$651'.
+  created $dff cell `$procdff$755' with positive edge clock.
+Creating register for signal `\ot_hgi_qdq_static.\hp[2]' using process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:91$651'.
+  created $dff cell `$procdff$756' with positive edge clock.
+Creating register for signal `\ot_hgi_qdq_static.\hp[3]' using process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:91$651'.
+  created $dff cell `$procdff$757' with positive edge clock.
+Creating register for signal `\ot_hgi_qdq_static.\hp[4]' using process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:91$651'.
+  created $dff cell `$procdff$758' with positive edge clock.
+Creating register for signal `\ot_hgi_qdq_static.\hp[5]' using process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:91$651'.
+  created $dff cell `$procdff$759' with positive edge clock.
+Creating register for signal `\ot_hgi_qdq_static.\hp[6]' using process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:91$651'.
+  created $dff cell `$procdff$760' with positive edge clock.
+Creating register for signal `\ot_hgi_qdq_static.\hp[7]' using process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:91$651'.
+  created $dff cell `$procdff$761' with positive edge clock.
+Creating register for signal `\ot_hgi_qdq_static.\dst[0]' using process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:91$651'.
+  created $dff cell `$procdff$762' with positive edge clock.
+Creating register for signal `\ot_hgi_qdq_static.\dst[1]' using process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:91$651'.
+  created $dff cell `$procdff$763' with positive edge clock.
+Creating register for signal `\ot_hgi_qdq_static.\dst[2]' using process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:91$651'.
+  created $dff cell `$procdff$764' with positive edge clock.
+Creating register for signal `\ot_hgi_qdq_static.\dst[3]' using process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:91$651'.
+  created $dff cell `$procdff$765' with positive edge clock.
+Creating register for signal `\ot_hgi_qdq_static.\dst[4]' using process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:91$651'.
+  created $dff cell `$procdff$766' with positive edge clock.
+Creating register for signal `\ot_hgi_qdq_static.\dst[5]' using process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:91$651'.
+  created $dff cell `$procdff$767' with positive edge clock.
+Creating register for signal `\ot_hgi_qdq_static.\dst[6]' using process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:91$651'.
+  created $dff cell `$procdff$768' with positive edge clock.
+Creating register for signal `\ot_hgi_qdq_static.\dst[7]' using process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:91$651'.
+  created $dff cell `$procdff$769' with positive edge clock.
+Creating register for signal `\ot_hgi_qdq_static.\dst[8]' using process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:91$651'.
+  created $dff cell `$procdff$770' with positive edge clock.
+Creating register for signal `\ot_hgi_qdq_static.\dst[9]' using process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:91$651'.
+  created $dff cell `$procdff$771' with positive edge clock.
+Creating register for signal `\ot_hgi_qdq_static.\dst[10]' using process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:91$651'.
+  created $dff cell `$procdff$772' with positive edge clock.
+Creating register for signal `\ot_hgi_qdq_static.\dst[11]' using process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:91$651'.
+  created $dff cell `$procdff$773' with positive edge clock.
+Creating register for signal `\ot_hgi_qdq_static.\dst[12]' using process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:91$651'.
+  created $dff cell `$procdff$774' with positive edge clock.
+Creating register for signal `\ot_hgi_qdq_static.\dst[13]' using process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:91$651'.
+  created $dff cell `$procdff$775' with positive edge clock.
+Creating register for signal `\ot_hgi_qdq_static.\dst[14]' using process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:91$651'.
+  created $dff cell `$procdff$776' with positive edge clock.
+Creating register for signal `\ot_hgi_qdq_static.\dst[15]' using process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:91$651'.
+  created $dff cell `$procdff$777' with positive edge clock.
+Creating register for signal `\ot_hgi_qdq_static.\dst[16]' using process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:91$651'.
+  created $dff cell `$procdff$778' with positive edge clock.
+Creating register for signal `\ot_hgi_qdq_static.\dst[17]' using process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:91$651'.
+  created $dff cell `$procdff$779' with positive edge clock.
+Creating register for signal `\ot_hgi_qdq_static.\dst[18]' using process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:91$651'.
+  created $dff cell `$procdff$780' with positive edge clock.
+Creating register for signal `\ot_hgi_qdq_static.\dst[19]' using process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:91$651'.
+  created $dff cell `$procdff$781' with positive edge clock.
+Creating register for signal `\ot_hgi_qdq_static.\dst[20]' using process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:91$651'.
+  created $dff cell `$procdff$782' with positive edge clock.
+Creating register for signal `\ot_hgi_qdq_static.\dst[21]' using process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:91$651'.
+  created $dff cell `$procdff$783' with positive edge clock.
+Creating register for signal `\ot_hgi_qdq_static.\dst[22]' using process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:91$651'.
+  created $dff cell `$procdff$784' with positive edge clock.
+Creating register for signal `\ot_hgi_qdq_static.\dst[23]' using process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:91$651'.
+  created $dff cell `$procdff$785' with positive edge clock.
+Creating register for signal `\ot_hgi_qdq_static.\dst[24]' using process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:91$651'.
+  created $dff cell `$procdff$786' with positive edge clock.
+Creating register for signal `\ot_hgi_qdq_static.\rq [15:0]' using process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:88$649'.
+  created $dff cell `$procdff$787' with positive edge clock.
+Creating register for signal `\ot_hgi_qdq_static.\rq [32:17]' using process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:88$649'.
+  created $dff cell `$procdff$788' with positive edge clock.
+Creating register for signal `\ot_hgi_qdq_static.\rq [49:34]' using process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:88$649'.
+  created $dff cell `$procdff$789' with positive edge clock.
+Creating register for signal `\ot_hgi_qdq_static.\rq [66:51]' using process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:88$649'.
+  created $dff cell `$procdff$790' with positive edge clock.
+Creating register for signal `\ot_hgi_qdq_static.\rq [83:68]' using process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:88$649'.
+  created $dff cell `$procdff$791' with positive edge clock.
+Creating register for signal `\ot_hgi_qdq_static.\rq [100:85]' using process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:88$649'.
+  created $dff cell `$procdff$792' with positive edge clock.
+Creating register for signal `\ot_hgi_qdq_static.\rq [117:102]' using process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:88$649'.
+  created $dff cell `$procdff$793' with positive edge clock.
+Creating register for signal `\ot_hgi_qdq_static.\rq [134:119]' using process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:88$649'.
+  created $dff cell `$procdff$794' with positive edge clock.
+Creating register for signal `\ot_hgi_qdq_static.\wq [279:0]' using process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:88$649'.
+  created $dff cell `$procdff$795' with positive edge clock.
+Creating register for signal `\ot_hgi_qdq_static.\wq [560:281]' using process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:88$649'.
+  created $dff cell `$procdff$796' with positive edge clock.
+Creating register for signal `\ot_hgi_qdq_static.\wq [841:562]' using process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:88$649'.
+  created $dff cell `$procdff$797' with positive edge clock.
+Creating register for signal `\ot_hgi_qdq_static.\wq [1122:843]' using process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:88$649'.
+  created $dff cell `$procdff$798' with positive edge clock.
+Creating register for signal `\ot_hgi_qdq_static.\wq [1403:1124]' using process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:88$649'.
+  created $dff cell `$procdff$799' with positive edge clock.
+Creating register for signal `\ot_hgi_qdq_static.\wq [1684:1405]' using process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:88$649'.
+  created $dff cell `$procdff$800' with positive edge clock.
+Creating register for signal `\ot_hgi_qdq_static.\wq [1965:1686]' using process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:88$649'.
+  created $dff cell `$procdff$801' with positive edge clock.
+Creating register for signal `\ot_hgi_qdq_static.\wq [2246:1967]' using process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:88$649'.
+  created $dff cell `$procdff$802' with positive edge clock.
+Creating register for signal `\ot_hgi_qdq_static.$fordecl_block$13.k' using process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:88$649'.
+  created $dff cell `$procdff$803' with positive edge clock.
+Creating register for signal `\ot_hgi_qdq_static.\rq [16]' using process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:85$643'.
+  created $adff cell `$procdff$808' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_qdq_static.\rq [33]' using process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:85$643'.
+  created $adff cell `$procdff$813' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_qdq_static.\rq [50]' using process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:85$643'.
+  created $adff cell `$procdff$818' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_qdq_static.\rq [67]' using process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:85$643'.
+  created $adff cell `$procdff$823' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_qdq_static.\rq [84]' using process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:85$643'.
+  created $adff cell `$procdff$828' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_qdq_static.\rq [101]' using process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:85$643'.
+  created $adff cell `$procdff$833' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_qdq_static.\rq [118]' using process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:85$643'.
+  created $adff cell `$procdff$838' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_qdq_static.\rq [135]' using process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:85$643'.
+  created $adff cell `$procdff$843' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_qdq_static.\wq [280]' using process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:85$643'.
+  created $adff cell `$procdff$848' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_qdq_static.\wq [561]' using process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:85$643'.
+  created $adff cell `$procdff$853' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_qdq_static.\wq [842]' using process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:85$643'.
+  created $adff cell `$procdff$858' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_qdq_static.\wq [1123]' using process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:85$643'.
+  created $adff cell `$procdff$863' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_qdq_static.\wq [1404]' using process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:85$643'.
+  created $adff cell `$procdff$868' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_qdq_static.\wq [1685]' using process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:85$643'.
+  created $adff cell `$procdff$873' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_qdq_static.\wq [1966]' using process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:85$643'.
+  created $adff cell `$procdff$878' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_qdq_static.\wq [2247]' using process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:85$643'.
+  created $adff cell `$procdff$883' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_qdq_static.$fordecl_block$9.k' using process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:85$643'.
+  created $adff cell `$procdff$888' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_qdq_static.$fordecl_block$11.k' using process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:85$643'.
+  created $dff cell `$procdff$895' with positive edge clock.
+Creating register for signal `\ot_hgi_qdq_static.\beat_done' using process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:52$120'.
+  created $adff cell `$procdff$900' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_qdq_static.\record_done' using process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:52$120'.
+  created $adff cell `$procdff$905' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_qdq_static.\fault' using process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:52$120'.
+  created $adff cell `$procdff$910' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_qdq_static.\vp' using process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:52$120'.
+  created $adff cell `$procdff$915' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_qdq_static.\lp' using process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:52$120'.
+  created $adff cell `$procdff$920' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_qdq_static.\gv' using process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:52$120'.
+  created $adff cell `$procdff$925' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_qdq_static.\gl' using process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:52$120'.
+  created $adff cell `$procdff$930' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_qdq_static.\dv' using process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:52$120'.
+  created $adff cell `$procdff$935' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_qdq_static.\dl' using process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:52$120'.
+  created $adff cell `$procdff$940' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_qdq_static.\donep' using process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:52$120'.
+  created $adff cell `$procdff$945' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_qdq_static.\lastp' using process `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:52$120'.
+  created $adff cell `$procdff$950' with positive edge clock and positive level reset.
+
+3.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+3.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Removing empty process `ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:91$651'.
+Removing empty process `ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:88$649'.
+Removing empty process `ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:85$643'.
+Removing empty process `ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:72$145'.
+Found and cleaned up 2 empty switches in `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:52$120'.
+Removing empty process `ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:52$120'.
+Found and cleaned up 12 empty switches in `\ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:46$65'.
+Removing empty process `ot_hgi_qdq_static.$proc$rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv:46$65'.
+Cleaned up 14 empty switches.
+
+3.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_hgi_qdq_static.
+<suppressed ~82 debug messages>
+
+4. Executing OPT pass (performing simple optimizations).
+
+4.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_hgi_qdq_static.
+<suppressed ~52 debug messages>
+
+4.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_hgi_qdq_static'.
+<suppressed ~417 debug messages>
+Removed a total of 139 cells.
+
+4.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_hgi_qdq_static..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+    dead port 1/2 on $mux $procmux$730.
+    dead port 2/2 on $mux $procmux$730.
+    dead port 1/2 on $mux $procmux$724.
+    dead port 2/2 on $mux $procmux$724.
+    dead port 1/2 on $mux $procmux$718.
+    dead port 2/2 on $mux $procmux$718.
+    dead port 1/2 on $mux $procmux$712.
+    dead port 2/2 on $mux $procmux$712.
+Removed 8 multiplexer ports.
+<suppressed ~7 debug messages>
+
+4.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_hgi_qdq_static.
+Performed a total of 0 changes.
+
+4.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_hgi_qdq_static'.
+Removed a total of 0 cells.
+
+4.6. Executing OPT_DFF pass (perform DFF optimizations).
+Adding EN signal on $procdff$910 ($adff) from module ot_hgi_qdq_static (D = $procmux$682_Y, Q = \fault).
+Adding EN signal on $procdff$895 ($dff) from module ot_hgi_qdq_static (D = 8, Q = $fordecl_block$11.k).
+Handling D = Q on $procdff$888 ($adff) from module ot_hgi_qdq_static (removing D path).
+Setting constant 0-bit at position 0 on $procdff$888 ($dlatch) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 1 on $procdff$888 ($dlatch) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 2 on $procdff$888 ($dlatch) from module ot_hgi_qdq_static.
+Setting constant 1-bit at position 3 on $procdff$888 ($dlatch) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 4 on $procdff$888 ($dlatch) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 5 on $procdff$888 ($dlatch) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 6 on $procdff$888 ($dlatch) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 7 on $procdff$888 ($dlatch) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 8 on $procdff$888 ($dlatch) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 9 on $procdff$888 ($dlatch) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 10 on $procdff$888 ($dlatch) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 11 on $procdff$888 ($dlatch) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 12 on $procdff$888 ($dlatch) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 13 on $procdff$888 ($dlatch) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 14 on $procdff$888 ($dlatch) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 15 on $procdff$888 ($dlatch) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 16 on $procdff$888 ($dlatch) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 17 on $procdff$888 ($dlatch) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 18 on $procdff$888 ($dlatch) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 19 on $procdff$888 ($dlatch) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 20 on $procdff$888 ($dlatch) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 21 on $procdff$888 ($dlatch) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 22 on $procdff$888 ($dlatch) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 23 on $procdff$888 ($dlatch) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 24 on $procdff$888 ($dlatch) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 25 on $procdff$888 ($dlatch) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 26 on $procdff$888 ($dlatch) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 27 on $procdff$888 ($dlatch) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 28 on $procdff$888 ($dlatch) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 29 on $procdff$888 ($dlatch) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 30 on $procdff$888 ($dlatch) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 31 on $procdff$888 ($dlatch) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 0 on $auto$ff.cc:266:slice$954 ($dffe) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 1 on $auto$ff.cc:266:slice$954 ($dffe) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 2 on $auto$ff.cc:266:slice$954 ($dffe) from module ot_hgi_qdq_static.
+Setting constant 1-bit at position 3 on $auto$ff.cc:266:slice$954 ($dffe) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 4 on $auto$ff.cc:266:slice$954 ($dffe) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 5 on $auto$ff.cc:266:slice$954 ($dffe) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 6 on $auto$ff.cc:266:slice$954 ($dffe) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 7 on $auto$ff.cc:266:slice$954 ($dffe) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 8 on $auto$ff.cc:266:slice$954 ($dffe) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 9 on $auto$ff.cc:266:slice$954 ($dffe) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 10 on $auto$ff.cc:266:slice$954 ($dffe) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 11 on $auto$ff.cc:266:slice$954 ($dffe) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 12 on $auto$ff.cc:266:slice$954 ($dffe) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 13 on $auto$ff.cc:266:slice$954 ($dffe) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 14 on $auto$ff.cc:266:slice$954 ($dffe) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 15 on $auto$ff.cc:266:slice$954 ($dffe) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 16 on $auto$ff.cc:266:slice$954 ($dffe) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 17 on $auto$ff.cc:266:slice$954 ($dffe) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 18 on $auto$ff.cc:266:slice$954 ($dffe) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 19 on $auto$ff.cc:266:slice$954 ($dffe) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 20 on $auto$ff.cc:266:slice$954 ($dffe) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 21 on $auto$ff.cc:266:slice$954 ($dffe) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 22 on $auto$ff.cc:266:slice$954 ($dffe) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 23 on $auto$ff.cc:266:slice$954 ($dffe) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 24 on $auto$ff.cc:266:slice$954 ($dffe) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 25 on $auto$ff.cc:266:slice$954 ($dffe) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 26 on $auto$ff.cc:266:slice$954 ($dffe) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 27 on $auto$ff.cc:266:slice$954 ($dffe) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 28 on $auto$ff.cc:266:slice$954 ($dffe) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 29 on $auto$ff.cc:266:slice$954 ($dffe) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 30 on $auto$ff.cc:266:slice$954 ($dffe) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 31 on $auto$ff.cc:266:slice$954 ($dffe) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 0 on $procdff$803 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 1 on $procdff$803 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 2 on $procdff$803 ($dff) from module ot_hgi_qdq_static.
+Setting constant 1-bit at position 3 on $procdff$803 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 4 on $procdff$803 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 5 on $procdff$803 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 6 on $procdff$803 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 7 on $procdff$803 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 8 on $procdff$803 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 9 on $procdff$803 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 10 on $procdff$803 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 11 on $procdff$803 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 12 on $procdff$803 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 13 on $procdff$803 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 14 on $procdff$803 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 15 on $procdff$803 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 16 on $procdff$803 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 17 on $procdff$803 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 18 on $procdff$803 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 19 on $procdff$803 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 20 on $procdff$803 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 21 on $procdff$803 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 22 on $procdff$803 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 23 on $procdff$803 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 24 on $procdff$803 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 25 on $procdff$803 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 26 on $procdff$803 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 27 on $procdff$803 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 28 on $procdff$803 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 29 on $procdff$803 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 30 on $procdff$803 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 31 on $procdff$803 ($dff) from module ot_hgi_qdq_static.
+Setting constant 1-bit at position 0 on $procdff$737 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 1 on $procdff$737 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 2 on $procdff$737 ($dff) from module ot_hgi_qdq_static.
+Setting constant 1-bit at position 3 on $procdff$737 ($dff) from module ot_hgi_qdq_static.
+Setting constant 1-bit at position 4 on $procdff$737 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 5 on $procdff$737 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 6 on $procdff$737 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 7 on $procdff$737 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 8 on $procdff$737 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 9 on $procdff$737 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 10 on $procdff$737 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 11 on $procdff$737 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 12 on $procdff$737 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 13 on $procdff$737 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 14 on $procdff$737 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 15 on $procdff$737 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 16 on $procdff$737 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 17 on $procdff$737 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 18 on $procdff$737 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 19 on $procdff$737 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 20 on $procdff$737 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 21 on $procdff$737 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 22 on $procdff$737 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 23 on $procdff$737 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 24 on $procdff$737 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 25 on $procdff$737 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 26 on $procdff$737 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 27 on $procdff$737 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 28 on $procdff$737 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 29 on $procdff$737 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 30 on $procdff$737 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 31 on $procdff$737 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 0 on $procdff$736 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 1 on $procdff$736 ($dff) from module ot_hgi_qdq_static.
+Setting constant 1-bit at position 2 on $procdff$736 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 3 on $procdff$736 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 4 on $procdff$736 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 5 on $procdff$736 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 6 on $procdff$736 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 7 on $procdff$736 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 8 on $procdff$736 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 9 on $procdff$736 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 10 on $procdff$736 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 11 on $procdff$736 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 12 on $procdff$736 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 13 on $procdff$736 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 14 on $procdff$736 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 15 on $procdff$736 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 16 on $procdff$736 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 17 on $procdff$736 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 18 on $procdff$736 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 19 on $procdff$736 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 20 on $procdff$736 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 21 on $procdff$736 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 22 on $procdff$736 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 23 on $procdff$736 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 24 on $procdff$736 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 25 on $procdff$736 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 26 on $procdff$736 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 27 on $procdff$736 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 28 on $procdff$736 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 29 on $procdff$736 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 30 on $procdff$736 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 31 on $procdff$736 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 0 on $procdff$733 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 1 on $procdff$733 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 2 on $procdff$733 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 3 on $procdff$733 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 4 on $procdff$733 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 5 on $procdff$733 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 6 on $procdff$733 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 7 on $procdff$733 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 8 on $procdff$733 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 9 on $procdff$733 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 10 on $procdff$733 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 11 on $procdff$733 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 12 on $procdff$733 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 13 on $procdff$733 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 14 on $procdff$733 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 15 on $procdff$733 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 16 on $procdff$733 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 17 on $procdff$733 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 18 on $procdff$733 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 19 on $procdff$733 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 20 on $procdff$733 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 21 on $procdff$733 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 22 on $procdff$733 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 23 on $procdff$733 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 24 on $procdff$733 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 25 on $procdff$733 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 26 on $procdff$733 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 27 on $procdff$733 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 28 on $procdff$733 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 29 on $procdff$733 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 30 on $procdff$733 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 31 on $procdff$733 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 32 on $procdff$733 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 33 on $procdff$733 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 34 on $procdff$733 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 35 on $procdff$733 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 36 on $procdff$733 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 37 on $procdff$733 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 38 on $procdff$733 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 39 on $procdff$733 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 40 on $procdff$733 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 41 on $procdff$733 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 42 on $procdff$733 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 43 on $procdff$733 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 44 on $procdff$733 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 45 on $procdff$733 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 46 on $procdff$733 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 47 on $procdff$733 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 48 on $procdff$733 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 49 on $procdff$733 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 50 on $procdff$733 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 51 on $procdff$733 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 52 on $procdff$733 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 53 on $procdff$733 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 54 on $procdff$733 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 55 on $procdff$733 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 56 on $procdff$733 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 57 on $procdff$733 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 58 on $procdff$733 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 59 on $procdff$733 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 60 on $procdff$733 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 61 on $procdff$733 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 62 on $procdff$733 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 63 on $procdff$733 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 72 on $procdff$733 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 73 on $procdff$733 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 74 on $procdff$733 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 75 on $procdff$733 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 76 on $procdff$733 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 77 on $procdff$733 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 78 on $procdff$733 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 79 on $procdff$733 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 80 on $procdff$733 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 81 on $procdff$733 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 82 on $procdff$733 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 83 on $procdff$733 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 84 on $procdff$733 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 85 on $procdff$733 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 86 on $procdff$733 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 87 on $procdff$733 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 88 on $procdff$733 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 89 on $procdff$733 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 90 on $procdff$733 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 91 on $procdff$733 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 92 on $procdff$733 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 93 on $procdff$733 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 94 on $procdff$733 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 95 on $procdff$733 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 96 on $procdff$733 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 97 on $procdff$733 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 98 on $procdff$733 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 99 on $procdff$733 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 100 on $procdff$733 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 101 on $procdff$733 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 102 on $procdff$733 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 103 on $procdff$733 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 104 on $procdff$733 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 105 on $procdff$733 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 106 on $procdff$733 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 107 on $procdff$733 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 108 on $procdff$733 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 109 on $procdff$733 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 110 on $procdff$733 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 111 on $procdff$733 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 112 on $procdff$733 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 113 on $procdff$733 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 114 on $procdff$733 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 115 on $procdff$733 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 116 on $procdff$733 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 117 on $procdff$733 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 124 on $procdff$733 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 125 on $procdff$733 ($dff) from module ot_hgi_qdq_static.
+Setting constant 1-bit at position 126 on $procdff$733 ($dff) from module ot_hgi_qdq_static.
+Setting constant 0-bit at position 127 on $procdff$733 ($dff) from module ot_hgi_qdq_static.
+
+4.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_hgi_qdq_static..
+Removed 8 unused cells and 537 unused wires.
+<suppressed ~61 debug messages>
+
+4.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_hgi_qdq_static.
+<suppressed ~1 debug messages>
+
+4.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+4.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_hgi_qdq_static..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~6 debug messages>
+
+4.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_hgi_qdq_static.
+Performed a total of 0 changes.
+
+4.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_hgi_qdq_static'.
+Removed a total of 0 cells.
+
+4.13. Executing OPT_DFF pass (perform DFF optimizations).
+
+4.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_hgi_qdq_static..
+
+4.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_hgi_qdq_static.
+
+4.16. Finished OPT passes. (There is nothing left to do.)
+
+5. Executing JSON backend.
+
+6. Printing statistics.
+
+=== ot_hgi_qdq_static ===
+
+   Number of wires:                433
+   Number of wire bits:         409401
+   Number of public wires:          82
+   Number of public wire bits:    9413
+   Number of ports:                 14
+   Number of port bits:           4493
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                448
+     $add                           45
+     $adff                          26
+     $adffe                          1
+     $and                           41
+     $dff                           68
+     $eq                             4
+     $logic_and                      4
+     $logic_not                      1
+     $logic_or                       7
+     $mul                           12
+     $mux                           14
+     $ne                            11
+     $neg                           44
+     $not                           41
+     $or                            41
+     $reduce_bool                    1
+     $shift                         82
+     $shiftx                         4
+     ot_hgi_qw_dec3                  1
+

@@ -1,0 +1,306 @@
+
+18. Printing statistics.
+
+=== $paramod$085326a0bb6786672d8e186716b3f21cae8e6e86\ot_hdc_w11_cut ===
+
+   Number of wires:                  5
+   Number of wire bits:            308
+   Number of public wires:           5
+   Number of public wire bits:     308
+   Number of ports:                  4
+   Number of port bits:            206
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                102
+     $_DFF_PN0_                    102
+
+=== $paramod$22d35e22ad0281300fad6d8e8d2b627f53791d75\ot_hdc_w11_cut ===
+
+   Number of wires:                  5
+   Number of wire bits:            326
+   Number of public wires:           5
+   Number of public wire bits:     326
+   Number of ports:                  4
+   Number of port bits:            218
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                108
+     $_DFF_PN0_                    108
+
+=== $paramod$61fa6860c39b0b9ad99f5a7ad479e653b979405b\ot_hdc_w11_cut ===
+
+   Number of wires:                  5
+   Number of wire bits:            362
+   Number of public wires:           5
+   Number of public wire bits:     362
+   Number of ports:                  4
+   Number of port bits:            242
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                120
+     $_DFF_PN0_                    120
+
+=== $paramod$891815eee8e20f5a6421193d1f1383b565dade69\ot_hdc_w11_cut ===
+
+   Number of wires:                  5
+   Number of wire bits:            215
+   Number of public wires:           5
+   Number of public wire bits:     215
+   Number of ports:                  4
+   Number of port bits:            144
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                 71
+     $_DFF_PN0_                     71
+
+=== $paramod$9c390f92ed9d2dd0e95833422b8a7f6b869eeef0\ot_coll_tp8_static ===
+
+   Number of wires:                431
+   Number of wire bits:          34991
+   Number of public wires:         170
+   Number of public wire bits:   27071
+   Number of ports:                 34
+   Number of port bits:           6540
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:              20304
+     $_AND_                        112
+     $_DFFE_PN0P_                  104
+     $_DFFE_PP_                   1024
+     $_DFF_PN0_                   1215
+     $_DFF_P_                     5878
+     $_MUX_                      10856
+     $_NOT_                         56
+     $_OR_                         290
+     $_SDFF_PN0_                     1
+     $_SDFF_PP0_                   371
+     $_SDFF_PP1_                   144
+     $_XOR_                        234
+     $paramod\ot_coll_static_ring\OFF=s32'00000000000000000000000000011110      2
+     ot_coll_fold_slice              8
+     ot_coll_rst_leaf                4
+     ot_sram_1r1w_512x128_m4_r2c2      5
+
+=== $paramod\ot_coll_static_ring\OFF=s32'00000000000000000000000000011110 ===
+
+   Number of wires:                 13
+   Number of wire bits:           1672
+   Number of public wires:           7
+   Number of public wire bits:    1650
+   Number of ports:                  4
+   Number of port bits:           1094
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                 24
+     $_AND_                          7
+     $_DFF_PN0_                      5
+     $_NOT_                          2
+     $_OR_                           1
+     $_XOR_                          8
+     ot_sram_1r1w_32x546_m1          1
+
+=== $paramod\ot_hdc_fp32_add_lat\LAT=s32'00000000000000000000000000000111 ===
+
+   Number of wires:                352
+   Number of wire bits:           3849
+   Number of public wires:         124
+   Number of public wire bits:    1885
+   Number of ports:                  8
+   Number of port bits:            102
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:               1880
+     $_AND_                        115
+     $_DFF_PN0_                     37
+     $_DFF_P_                      168
+     $_MUX_                       1024
+     $_NOT_                        187
+     $_OR_                         316
+     $_XOR_                         20
+     $paramod$085326a0bb6786672d8e186716b3f21cae8e6e86\ot_hdc_w11_cut      1
+     $paramod$22d35e22ad0281300fad6d8e8d2b627f53791d75\ot_hdc_w11_cut      1
+     $paramod$61fa6860c39b0b9ad99f5a7ad479e653b979405b\ot_hdc_w11_cut      1
+     $paramod$891815eee8e20f5a6421193d1f1383b565dade69\ot_hdc_w11_cut      1
+     $paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000      4
+     $paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000011000      1
+     $paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000011100      2
+     $paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000011111      1
+     ot_hdc_lzc32                    1
+
+=== $paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000 ===
+
+   Number of wires:                 36
+   Number of wire bits:            137
+   Number of public wires:          15
+   Number of public wire bits:     116
+   Number of ports:                  5
+   Number of port bits:             26
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                 79
+     $_AND_                         42
+     $_OR_                          21
+     $_XOR_                         16
+
+=== $paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000011000 ===
+
+   Number of wires:                111
+   Number of wire bits:            468
+   Number of public wires:          17
+   Number of public wire bits:     374
+   Number of ports:                  5
+   Number of port bits:             74
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                330
+     $_AND_                        188
+     $_OR_                          94
+     $_XOR_                         48
+
+=== $paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000011100 ===
+
+   Number of wires:                131
+   Number of wire bits:            548
+   Number of public wires:          17
+   Number of public wire bits:     434
+   Number of ports:                  5
+   Number of port bits:             86
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                398
+     $_AND_                        228
+     $_OR_                         114
+     $_XOR_                         56
+
+=== $paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000011111 ===
+
+   Number of wires:                146
+   Number of wire bits:            608
+   Number of public wires:          17
+   Number of public wire bits:     479
+   Number of ports:                  5
+   Number of port bits:             95
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                449
+     $_AND_                        258
+     $_OR_                         129
+     $_XOR_                         62
+
+=== ot_coll_fold_slice ===
+
+   Number of wires:                 43
+   Number of wire bits:           5471
+   Number of public wires:          35
+   Number of public wire bits:    5451
+   Number of ports:                  7
+   Number of port bits:            645
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:               3381
+     $_DFF_PN0_                     17
+     $_DFF_P_                     3328
+     $_OR_                          23
+     $paramod\ot_hdc_fp32_add_lat\LAT=s32'00000000000000000000000000000111     12
+     ot_coll_rst_leaf                1
+
+=== ot_coll_rst_leaf ===
+
+   Number of wires:                  4
+   Number of wire bits:              5
+   Number of public wires:           4
+   Number of public wire bits:       5
+   Number of ports:                  3
+   Number of port bits:              3
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                  2
+     $_DFF_PN0_                      2
+
+=== ot_hdc_lzc32 ===
+
+   Number of wires:                 68
+   Number of wire bits:            511
+   Number of public wires:           8
+   Number of public wire bits:     331
+   Number of ports:                  2
+   Number of port bits:             38
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                 94
+     $_MUX_                         31
+     $_NOT_                         32
+     $_OR_                          31
+
+=== qfd_io_collective_static ===
+
+   Number of wires:                 40
+   Number of wire bits:           6540
+   Number of public wires:          40
+   Number of public wire bits:    6540
+   Number of ports:                 40
+   Number of port bits:           6540
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                  1
+     $paramod$9c390f92ed9d2dd0e95833422b8a7f6b869eeef0\ot_coll_tp8_static      1
+
+=== design hierarchy ===
+
+   qfd_io_collective_static          1
+     $paramod$9c390f92ed9d2dd0e95833422b8a7f6b869eeef0\ot_coll_tp8_static      1
+       $paramod\ot_coll_static_ring\OFF=s32'00000000000000000000000000011110      2
+       ot_coll_fold_slice            8
+         $paramod\ot_hdc_fp32_add_lat\LAT=s32'00000000000000000000000000000111     12
+           $paramod$085326a0bb6786672d8e186716b3f21cae8e6e86\ot_hdc_w11_cut      1
+           $paramod$22d35e22ad0281300fad6d8e8d2b627f53791d75\ot_hdc_w11_cut      1
+           $paramod$61fa6860c39b0b9ad99f5a7ad479e653b979405b\ot_hdc_w11_cut      1
+           $paramod$891815eee8e20f5a6421193d1f1383b565dade69\ot_hdc_w11_cut      1
+           $paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000      4
+           $paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000011000      1
+           $paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000011100      2
+           $paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000011111      1
+           ot_hdc_lzc32              1
+         ot_coll_rst_leaf            1
+       ot_coll_rst_leaf              4
+
+   Number of wires:             106777
+   Number of wire bits:         884639
+   Number of public wires:       27432
+   Number of public wire bits:  619331
+   Number of ports:               6510
+   Number of port bits:         154384
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:             455594
+     $_AND_                     113886
+     $_DFFE_PN0P_                  104
+     $_DFFE_PP_                   1024
+     $_DFF_PN0_                  43433
+     $_DFF_P_                    48630
+     $_MUX_                     112136
+     $_NOT_                      21084
+     $_OR_                       85148
+     $_SDFF_PN0_                     1
+     $_SDFF_PP0_                   371
+     $_SDFF_PP1_                   144
+     $_XOR_                      29626
+     ot_sram_1r1w_32x546_m1          2
+     ot_sram_1r1w_512x128_m4_r2c2      5
+

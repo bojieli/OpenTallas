@@ -82,9 +82,9 @@
  },
  "slot_change_request": "q13-cdcw 2026-10-13 (el1011-qwen-tp8.log SLOT_CHANGE_REQUEST): qwen_rom_tp8 v3 slot cell qkd_cdc_wleaf (cdc_*_*, 128) -- (1) outline 183.72 x 183.72 (the old qfd_cdc_eco_h1 LEF, off the 2.16 um floorplan grid) -> 183.6 x 183.6 (2.16-grid tile inside the slot, same origin); (2) the contract pins are the die generator's aggregated buses; the view carries the real RTL ports on the SAME faces and layers: co[282:0] W/M4 = {l_v, l_sec, l_row, l_data, l_pop}, hi[293:0] N/M5 = {h_lv, h_lsec, h_lrow, h_ldata, h_hand, h_wcon, h_av, h_atag}, ho[318:0] E/M4 = {h_cred, h_wv, h_wsec, h_cv, h_csec, h_cdata, h_ctag, h_fault}, wi[289:0] S/M5 = {w_v, w_sec, w_data, w_tag}, wr[10:0] S/M5 = {w_room, wd_v, wd_tag}, cf S/M5 = c_fault; clock entry ck N/M5 = port clk; hclk, c_arst_n, h_arst_n W/M4; pin offsets from the new LEF; r2: (3) LD 32 leaves the 183.6 x 183.6 slot under-utilised (std ~12k um2, util ~0.36 < 0.45): the outline is the contract slot and is NOT shrunk; (4) interface latency: h_cv / h_c* arrive one HCLK edge later than the old qfd_cdc_eco_h1 view (h_wcon pin flop): the die composition / transport context must take the completion entry on h_cv (it does: h_cv qualifies h_c*), and the landing depth contract is controller CRED <= 32",
  "job": {
-  "owner": "Codex:Q-KVSYS-ELEM",
+  "owner": "Claude:Q-KVSYS-ELEM",
   "branch": "claude/qwen-kvsys-el-r3-1014",
-  "tag": "hp1",
+  "tag": "hp2",
   "purpose": "Native input-pin capture successor for authorized CDC h_hand hand-off +1 edge; same die port widths/slot.",
   "benches": [
    {
@@ -94,8 +94,7 @@
     "threads": 1,
     "peak_ram_gb": 4,
     "needs": [
-     "iverilog",
-     "vvp"
+     "iverilog"
     ],
     "pass_regex": "^PASS qkd_cdc_wleaf"
    },
@@ -106,8 +105,7 @@
     "threads": 1,
     "peak_ram_gb": 4,
     "needs": [
-     "iverilog",
-     "vvp"
+     "iverilog"
     ],
     "fail_regex": "^FAIL qkd_cdc_wleaf NEG=4"
    },
@@ -135,10 +133,14 @@
   ]
  },
  "recipe": 2,
- "structural_change": "landing depth 64 -> 32, h_wcon registered at its pin with per-group kept one-hot selects, M5 slot cell wrapper. r2 (the r1 kit was refused by the clock rule: hclk root 19,280 sinks, measured TT insertion 442.7 ps): (1) landing storage 64 x 281 -> 32 x 281 flops (LD = the controller's credit count CRED 32; every RD holds a credit and credits return from the synchronised read pointer that the full flag uses, so occupancy <= 32; contract: controller CRED <= 32): hclk root ~10.4k sinks; (2) WPIPE 1: h_wcon registered at its pin (completion path h_cv / h_csec / h_cdata / h_ctag one HCLK edge later: h_cv two edges after h_wcon), one kept pin-flop copy and one kept one-hot entry select per storage column group (wc_bin[0] drove 4,629 loads, port h_wcon 584); (3) h_hand (same-edge hand-off, cycle kept) is the select of one final 2:1 mux: hand-off pointer kept as +0/+1/+2 registers (was a 7-level input cone). No logic between a Gray register and its synchroniser. np1: recipe-2 pin defaults (native audit launch 382.8 on 515 outputs). hp1: h_hand is a dedicated HCLK input pin flop; internal hand-off head advances one edge later. Native exact equivalence20000/17094 edges PASS, omitted-delay mutant FAIL16168 edges; controller PC13 HOFF3 exact at production 3072 landings/28 writes, same4685hclk vs legacy. Die lead authorized +1 hand-off cycle 17:17, same pins and 183.6-square slot.",
+ "structural_change": "hp2: native capture fix of h_wcon (hp1 view S+R 234.3 ps, 1 pin; h_hand fixed by hp1): WCE=1 makes the single h_wcon pin flop drive the column-group completion enables instead of per-group kept copies of the raw pin; cycle-identical (exact equivalence 20000 clk / 17094 hclk edges PASS, NEG1/2/4 FAIL). Same pins, slot 183.6. landing depth 64 -> 32, h_wcon registered at its pin with per-group kept one-hot selects, M5 slot cell wrapper. r2 (the r1 kit was refused by the clock rule: hclk root 19,280 sinks, measured TT insertion 442.7 ps): (1) landing storage 64 x 281 -> 32 x 281 flops (LD = the controller's credit count CRED 32; every RD holds a credit and credits return from the synchronised read pointer that the full flag uses, so occupancy <= 32; contract: controller CRED <= 32): hclk root ~10.4k sinks; (2) WPIPE 1: h_wcon registered at its pin (completion path h_cv / h_csec / h_cdata / h_ctag one HCLK edge later: h_cv two edges after h_wcon), one kept pin-flop copy and one kept one-hot entry select per storage column group (wc_bin[0] drove 4,629 loads, port h_wcon 584); (3) h_hand (same-edge hand-off, cycle kept) is the select of one final 2:1 mux: hand-off pointer kept as +0/+1/+2 registers (was a 7-level input cone). No logic between a Gray register and its synchroniser. np1: recipe-2 pin defaults (native audit launch 382.8 on 515 outputs). hp1: h_hand is a dedicated HCLK input pin flop; internal hand-off head advances one edge later. Native exact equivalence20000/17094 edges PASS, omitted-delay mutant FAIL16168 edges; controller PC13 HOFF3 exact at production 3072 landings/28 writes, same4685hclk vs legacy. Die lead authorized +1 hand-off cycle 17:17, same pins and 183.6-square slot.",
  "reroute_reason": {
-  "kind": "rtl_change",
-  "why": "dedicated h_hand pin capture; lead-authorized +1 hand-off edge, controller production exact/cost measured"
+  "kind": "pin_register",
+  "source": "results/arch/qwen_split_1014/landing_epoch_1014/native-audit-ectlA-ep1-ectlC-dr2-cdc-hp1.json",
+  "cell": "qkd_cdc_wleaf_hpin",
+  "capture_ps": 234.3,
+  "launch_ps": 192.9,
+  "fix": "RTL WCE=1: h_wcon lands on ONE pin flop (hwc_q) that also drives the column-group completion enables (were per-group kept copies of the raw pin spread over the tile); logically and cycle-identical, exact equivalence 20000/17094 edges PASS, NEG 1/2/4 FAIL."
  },
  "children": [],
  "inter": [],

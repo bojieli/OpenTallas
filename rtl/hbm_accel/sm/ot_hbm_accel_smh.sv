@@ -2223,13 +2223,21 @@ module ot_hbm_accel_smh_tile #(
     wire [NBEAT-1:0] ohl1_n, ohl1_s;
     wire [RPT*RBW-1:0] rpm;
     wire [RBW-1:0] rl1_n, rl1_s;
+`ifdef OT_SMH_COMPACT_PT
+    ot_hbm_smh_compact_pt_w
+`else
     ot_hbm_accel_smh_pt_w
+`endif
 `ifndef SYNTHESIS
         #(.TAGW(TAGW), .NBEAT(NBEAT))
 `endif
         u_ptw (.clk(clk), .rst_a(r_ptw), .rin(rin), .bin(bin), .rpm(rpm), .bm(bm), .rl1_n(rl1_n),
         .bk1_n(bk1_n), .ohl1_n(ohl1_n), .rl1_s(rl1_s), .bk1_s(bk1_s), .ohl1_s(ohl1_s));
+`ifdef OT_SMH_COMPACT_PT
+    ot_hbm_smh_compact_pt_e
+`else
     ot_hbm_accel_smh_pt_e
+`endif
 `ifndef SYNTHESIS
         #(.TAGW(TAGW), .NBEAT(NBEAT))
 `endif

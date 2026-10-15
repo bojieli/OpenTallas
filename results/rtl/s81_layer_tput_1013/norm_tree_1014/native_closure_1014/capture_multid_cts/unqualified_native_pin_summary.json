@@ -1,0 +1,54 @@
+[
+  {
+    "cell": "ot_s81_hc_ctfx_cap",
+    "view": "/srv/opentallas-scratch/claude/ref_gate/s81hc_ctfxcap_ref-20261014-195426/native_diag",
+    "lib_cell": "ot_s81_hc_ctfx_cap",
+    "insertion": true,
+    "ref_src": [
+      "insertion.json boundary mean"
+    ],
+    "R_ps": 250.8,
+    "spread_ps": 99.4,
+    "outputs": 2270,
+    "inputs": 1136,
+    "launch_ps": 181.7,
+    "launch_pin": "fdx[1116]",
+    "capture_ps": 179.1,
+    "capture_pin": "rst_in",
+    "launch_over": 0,
+    "capture_over": 0,
+    "comb_pins": 0,
+    "comb_first": [],
+    "fail_why": "",
+    "qualification_status": "UNQUALIFIED_PLACEMENT_ONLY",
+    "native_pin_metrics_pass_only": true,
+    "qualified": false,
+    "remaining_blockers": "clock spread >80ps; routed TT/FF/DRC/native seam qualification still required"
+  },
+  {
+    "cell": "ot_s81_hc_ctfx_nt",
+    "view": "/srv/opentallas-scratch/claude/ref_gate/s81hc_ctfxnt_ref-20261014-195426/native_diag",
+    "lib_cell": "ot_s81_hc_ctfx_nt",
+    "insertion": true,
+    "ref_src": [
+      "insertion.json boundary mean"
+    ],
+    "R_ps": 263.4,
+    "spread_ps": 83.4,
+    "outputs": 2578,
+    "inputs": 1577,
+    "launch_ps": 224.5,
+    "launch_pin": "ul_out[15]",
+    "capture_ps": 187.2,
+    "capture_pin": "cs_n[19]",
+    "launch_over": 1,
+    "capture_over": 0,
+    "comb_pins": 0,
+    "comb_first": [],
+    "fail_why": "launch 224.5 > 220 (1 pins)",
+    "qualification_status": "UNQUALIFIED_PLACEMENT_ONLY",
+    "native_pin_metrics_pass_only": false,
+    "qualified": false,
+    "remaining_blockers": "clock spread >80ps; routed TT/FF/DRC/native seam qualification still required"
+  }
+]

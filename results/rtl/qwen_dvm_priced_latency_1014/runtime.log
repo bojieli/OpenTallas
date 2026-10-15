@@ -1,0 +1,158 @@
+images loaded in 5.9 s
+models constructed and preloaded in 22.4 s (tiles/die=1536, kv_ideal=0, pos=8191 token=24)
+OPTRACE stage=L0 cyc=0 prog_a=0 base=0 me_busy=0 c_beats=0 r_beats=0 stall_kv=0 stall_drain=0 stall_bridge=0 stall_retire=0 stall_mem=0
+progress tick=0 cyc=1 pc_base=0/0 me_busy=1/1 kv_ok=0 drained=1 wall=1s passes=3
+OPTRACE stage=L0 cyc=15 prog_a=1 base=0 me_busy=14 c_beats=0 r_beats=0 stall_kv=0 stall_drain=0 stall_bridge=0 stall_retire=0 stall_mem=0
+OPTRACE stage=L0 cyc=16 prog_a=2 base=0 me_busy=15 c_beats=0 r_beats=0 stall_kv=0 stall_drain=0 stall_bridge=0 stall_retire=0 stall_mem=0
+OPTRACE stage=L0 cyc=17 prog_a=3 base=0 me_busy=16 c_beats=0 r_beats=0 stall_kv=0 stall_drain=0 stall_bridge=0 stall_retire=0 stall_mem=0
+OPTRACE stage=L0 cyc=18 prog_a=4 base=0 me_busy=17 c_beats=0 r_beats=0 stall_kv=0 stall_drain=0 stall_bridge=0 stall_retire=0 stall_mem=0
+OPTRACE stage=L0 cyc=19 prog_a=5 base=0 me_busy=18 c_beats=0 r_beats=0 stall_kv=0 stall_drain=0 stall_bridge=0 stall_retire=0 stall_mem=0
+OPTRACE stage=L0 cyc=46 prog_a=6 base=0 me_busy=45 c_beats=0 r_beats=0 stall_kv=0 stall_drain=0 stall_bridge=0 stall_retire=0 stall_mem=0
+OPTRACE stage=L0 cyc=200 prog_a=7 base=0 me_busy=199 c_beats=0 r_beats=0 stall_kv=0 stall_drain=0 stall_bridge=68 stall_retire=0 stall_mem=0
+OPTRACE stage=L0 cyc=478 prog_a=8 base=0 me_busy=475 c_beats=0 r_beats=0 stall_kv=0 stall_drain=0 stall_bridge=70 stall_retire=0 stall_mem=0
+OPTRACE stage=L0 cyc=533 prog_a=9 base=0 me_busy=475 c_beats=0 r_beats=0 stall_kv=0 stall_drain=0 stall_bridge=106 stall_retire=0 stall_mem=0
+OPTRACE stage=L0 cyc=670 prog_a=10 base=0 me_busy=475 c_beats=0 r_beats=0 stall_kv=0 stall_drain=0 stall_bridge=174 stall_retire=0 stall_mem=0
+OPTRACE stage=L0 cyc=759 prog_a=11 base=0 me_busy=475 c_beats=0 r_beats=0 stall_kv=0 stall_drain=0 stall_bridge=176 stall_retire=0 stall_mem=0
+OPTRACE stage=L0 cyc=830 prog_a=12 base=0 me_busy=475 c_beats=0 r_beats=0 stall_kv=0 stall_drain=0 stall_bridge=212 stall_retire=0 stall_mem=0
+OPTRACE stage=L0 cyc=889 prog_a=13 base=0 me_busy=475 c_beats=0 r_beats=0 stall_kv=0 stall_drain=0 stall_bridge=248 stall_retire=0 stall_mem=0
+OPTRACE stage=L0 cyc=942 prog_a=14 base=0 me_busy=475 c_beats=0 r_beats=0 stall_kv=0 stall_drain=0 stall_bridge=284 stall_retire=0 stall_mem=0
+OPTRACE stage=L0 cyc=1001 prog_a=15 base=0 me_busy=476 c_beats=0 r_beats=0 stall_kv=1 stall_drain=0 stall_bridge=320 stall_retire=0 stall_mem=0
+OPTRACE stage=L0 cyc=1386 prog_a=16 base=0 me_busy=861 c_beats=0 r_beats=0 stall_kv=384 stall_drain=0 stall_bridge=320 stall_retire=0 stall_mem=0
+OPTRACE stage=L0 cyc=1842 prog_a=17 base=0 me_busy=1316 c_beats=0 r_beats=0 stall_kv=385 stall_drain=0 stall_bridge=320 stall_retire=0 stall_mem=0
+OPTRACE stage=L0 cyc=2965 prog_a=18 base=0 me_busy=2439 c_beats=0 r_beats=0 stall_kv=385 stall_drain=0 stall_bridge=321 stall_retire=0 stall_mem=0
+OPTRACE stage=L0 cyc=3032 prog_a=19 base=0 me_busy=2506 c_beats=0 r_beats=0 stall_kv=385 stall_drain=0 stall_bridge=386 stall_retire=0 stall_mem=0
+OPTRACE stage=L0 cyc=3461 prog_a=20 base=0 me_busy=2934 c_beats=0 r_beats=0 stall_kv=385 stall_drain=0 stall_bridge=388 stall_retire=0 stall_mem=0
+OPTRACE stage=L0 cyc=3527 prog_a=21 base=0 me_busy=3000 c_beats=0 r_beats=0 stall_kv=385 stall_drain=0 stall_bridge=388 stall_retire=0 stall_mem=0
+progress tick=4096 cyc=4097 pc_base=0/0 me_busy=3414/3414 kv_ok=1 drained=1 wall=3706s passes=12192
+OPTRACE stage=L0 cyc=4586 prog_a=39 base=18 me_busy=3414 c_beats=256 r_beats=256 stall_kv=385 stall_drain=0 stall_bridge=388 stall_retire=0 stall_mem=0
+OPTRACE stage=L0 cyc=4589 prog_a=18 base=18 me_busy=3414 c_beats=256 r_beats=256 stall_kv=385 stall_drain=0 stall_bridge=388 stall_retire=0 stall_mem=0
+OPTRACE stage=L0 cyc=4590 prog_a=19 base=18 me_busy=3414 c_beats=256 r_beats=256 stall_kv=385 stall_drain=0 stall_bridge=388 stall_retire=0 stall_mem=0
+OPTRACE stage=L0 cyc=4591 prog_a=20 base=18 me_busy=3414 c_beats=256 r_beats=256 stall_kv=385 stall_drain=0 stall_bridge=388 stall_retire=0 stall_mem=0
+OPTRACE stage=L0 cyc=4592 prog_a=21 base=18 me_busy=3414 c_beats=256 r_beats=256 stall_kv=385 stall_drain=0 stall_bridge=388 stall_retire=0 stall_mem=0
+OPTRACE stage=L0 cyc=4593 prog_a=22 base=18 me_busy=3414 c_beats=256 r_beats=256 stall_kv=385 stall_drain=0 stall_bridge=388 stall_retire=0 stall_mem=0
+OPTRACE stage=L0 cyc=4594 prog_a=23 base=18 me_busy=3414 c_beats=256 r_beats=256 stall_kv=385 stall_drain=0 stall_bridge=388 stall_retire=0 stall_mem=0
+OPTRACE stage=L0 cyc=4709 prog_a=24 base=18 me_busy=3415 c_beats=256 r_beats=256 stall_kv=385 stall_drain=0 stall_bridge=424 stall_retire=0 stall_mem=0
+OPTRACE stage=L0 cyc=4823 prog_a=25 base=18 me_busy=3529 c_beats=256 r_beats=256 stall_kv=385 stall_drain=0 stall_bridge=425 stall_retire=0 stall_mem=0
+OPTRACE stage=L0 cyc=4890 prog_a=26 base=18 me_busy=3596 c_beats=256 r_beats=256 stall_kv=385 stall_drain=0 stall_bridge=490 stall_retire=0 stall_mem=0
+OPTRACE stage=L0 cyc=5447 prog_a=27 base=18 me_busy=4151 c_beats=256 r_beats=256 stall_kv=385 stall_drain=0 stall_bridge=492 stall_retire=0 stall_mem=0
+OPTRACE stage=L0 cyc=5594 prog_a=28 base=18 me_busy=4152 c_beats=256 r_beats=256 stall_kv=385 stall_drain=0 stall_bridge=494 stall_retire=0 stall_mem=0
+OPTRACE stage=L0 cyc=5772 prog_a=29 base=18 me_busy=4330 c_beats=256 r_beats=256 stall_kv=385 stall_drain=0 stall_bridge=494 stall_retire=0 stall_mem=0
+OPTRACE stage=L0 cyc=6927 prog_a=37 base=26 me_busy=4840 c_beats=512 r_beats=512 stall_kv=385 stall_drain=0 stall_bridge=494 stall_retire=0 stall_mem=0
+OPTRACE stage=L0 cyc=6930 prog_a=26 base=26 me_busy=4840 c_beats=512 r_beats=512 stall_kv=385 stall_drain=0 stall_bridge=494 stall_retire=0 stall_mem=0
+OPTRACE stage=L0 cyc=6931 prog_a=27 base=26 me_busy=4840 c_beats=512 r_beats=512 stall_kv=385 stall_drain=0 stall_bridge=494 stall_retire=0 stall_mem=0
+OPTRACE stage=L0 cyc=6932 prog_a=28 base=26 me_busy=4840 c_beats=512 r_beats=512 stall_kv=385 stall_drain=0 stall_bridge=494 stall_retire=0 stall_mem=0
+OPTRACE stage=L0 cyc=6933 prog_a=29 base=26 me_busy=4840 c_beats=512 r_beats=512 stall_kv=385 stall_drain=0 stall_bridge=494 stall_retire=0 stall_mem=0
+OPTRACE stage=L0 cyc=6934 prog_a=30 base=26 me_busy=4840 c_beats=512 r_beats=512 stall_kv=385 stall_drain=0 stall_bridge=494 stall_retire=0 stall_mem=0
+OPTRACE stage=L0 cyc=6935 prog_a=31 base=26 me_busy=4840 c_beats=512 r_beats=512 stall_kv=385 stall_drain=0 stall_bridge=494 stall_retire=0 stall_mem=0
+OPTRACE stage=L0 cyc=7050 prog_a=32 base=26 me_busy=4840 c_beats=512 r_beats=512 stall_kv=385 stall_drain=0 stall_bridge=530 stall_retire=0 stall_mem=0
+STAGE L0 done cycles=7224 start_cyc=7 end_cyc=7231 me_busy=4840/4840 next_token=0/0 next_val=00000000/00000000 seq_fault=0 core_fault=0 coll_fault=0 wall=5121s
+MEMSTAT L0 die0 fill_cycles=1312 fill_sectors=262144 wr_sectors=136 rsp_tile_stall=30268 kvok_low_with_desc=383 drain_low=0 wr_lat_max=68 stall_kv=385 stall_drain=0 stall_bridge=530 stall_retire=0 stall_mem=0 tile_edges=5587 fill_exposed=1362
+MEMSTAT L0 die1 fill_cycles=1312 fill_sectors=262144 wr_sectors=136 rsp_tile_stall=30268 kvok_low_with_desc=383 drain_low=0 wr_lat_max=68 stall_kv=385 stall_drain=0 stall_bridge=530 stall_retire=0 stall_mem=0 tile_edges=5587 fill_exposed=1362
+MEMSTAT L0 die2 fill_cycles=1312 fill_sectors=262144 wr_sectors=136 rsp_tile_stall=30268 kvok_low_with_desc=383 drain_low=0 wr_lat_max=68 stall_kv=385 stall_drain=0 stall_bridge=530 stall_retire=0 stall_mem=0 tile_edges=5587 fill_exposed=1362
+MEMSTAT L0 die3 fill_cycles=1312 fill_sectors=262144 wr_sectors=136 rsp_tile_stall=30268 kvok_low_with_desc=383 drain_low=0 wr_lat_max=68 stall_kv=385 stall_drain=0 stall_bridge=530 stall_retire=0 stall_mem=0 tile_edges=5587 fill_exposed=1362
+stage L1 loaded (layer 1): code_words=1056 scale_words=50112 crom_words=541953 preload 5.3 s
+OPTRACE stage=L1 cyc=7235 prog_a=6 base=0 me_busy=4840 c_beats=512 r_beats=512 stall_kv=385 stall_drain=0 stall_bridge=530 stall_retire=0 stall_mem=0
+OPTRACE stage=L1 cyc=7238 prog_a=0 base=0 me_busy=4840 c_beats=512 r_beats=512 stall_kv=385 stall_drain=0 stall_bridge=530 stall_retire=0 stall_mem=0
+OPTRACE stage=L1 cyc=7239 prog_a=1 base=0 me_busy=4840 c_beats=512 r_beats=512 stall_kv=385 stall_drain=0 stall_bridge=530 stall_retire=0 stall_mem=0
+OPTRACE stage=L1 cyc=7240 prog_a=2 base=0 me_busy=4840 c_beats=512 r_beats=512 stall_kv=385 stall_drain=0 stall_bridge=530 stall_retire=0 stall_mem=0
+OPTRACE stage=L1 cyc=7241 prog_a=3 base=0 me_busy=4840 c_beats=512 r_beats=512 stall_kv=385 stall_drain=0 stall_bridge=530 stall_retire=0 stall_mem=0
+OPTRACE stage=L1 cyc=7242 prog_a=4 base=0 me_busy=4840 c_beats=512 r_beats=512 stall_kv=385 stall_drain=0 stall_bridge=530 stall_retire=0 stall_mem=0
+OPTRACE stage=L1 cyc=7243 prog_a=5 base=0 me_busy=4841 c_beats=512 r_beats=512 stall_kv=385 stall_drain=0 stall_bridge=530 stall_retire=0 stall_mem=0
+OPTRACE stage=L1 cyc=7244 prog_a=6 base=0 me_busy=4842 c_beats=512 r_beats=512 stall_kv=385 stall_drain=0 stall_bridge=530 stall_retire=0 stall_mem=0
+OPTRACE stage=L1 cyc=7424 prog_a=7 base=0 me_busy=5022 c_beats=512 r_beats=512 stall_kv=385 stall_drain=0 stall_bridge=598 stall_retire=0 stall_mem=0
+OPTRACE stage=L1 cyc=7676 prog_a=8 base=0 me_busy=5272 c_beats=512 r_beats=512 stall_kv=385 stall_drain=0 stall_bridge=600 stall_retire=0 stall_mem=0
+OPTRACE stage=L1 cyc=7731 prog_a=9 base=0 me_busy=5272 c_beats=512 r_beats=512 stall_kv=385 stall_drain=0 stall_bridge=636 stall_retire=0 stall_mem=0
+OPTRACE stage=L1 cyc=7868 prog_a=10 base=0 me_busy=5272 c_beats=512 r_beats=512 stall_kv=385 stall_drain=0 stall_bridge=704 stall_retire=0 stall_mem=0
+OPTRACE stage=L1 cyc=7957 prog_a=11 base=0 me_busy=5272 c_beats=512 r_beats=512 stall_kv=385 stall_drain=0 stall_bridge=706 stall_retire=0 stall_mem=0
+OPTRACE stage=L1 cyc=8028 prog_a=12 base=0 me_busy=5272 c_beats=512 r_beats=512 stall_kv=385 stall_drain=0 stall_bridge=742 stall_retire=0 stall_mem=0
+OPTRACE stage=L1 cyc=8087 prog_a=13 base=0 me_busy=5272 c_beats=512 r_beats=512 stall_kv=385 stall_drain=0 stall_bridge=778 stall_retire=0 stall_mem=0
+OPTRACE stage=L1 cyc=8140 prog_a=14 base=0 me_busy=5272 c_beats=512 r_beats=512 stall_kv=385 stall_drain=0 stall_bridge=814 stall_retire=0 stall_mem=0
+progress tick=8192 cyc=8193 pc_base=0/0 me_busy=5272/5272 kv_ok=1 drained=1 wall=5524s passes=23353
+OPTRACE stage=L1 cyc=8199 prog_a=15 base=0 me_busy=5273 c_beats=512 r_beats=512 stall_kv=386 stall_drain=0 stall_bridge=850 stall_retire=0 stall_mem=0
+OPTRACE stage=L1 cyc=8255 prog_a=16 base=0 me_busy=5329 c_beats=512 r_beats=512 stall_kv=399 stall_drain=0 stall_bridge=850 stall_retire=0 stall_mem=0
+OPTRACE stage=L1 cyc=8711 prog_a=17 base=0 me_busy=5784 c_beats=512 r_beats=512 stall_kv=400 stall_drain=0 stall_bridge=850 stall_retire=0 stall_mem=0
+OPTRACE stage=L1 cyc=9834 prog_a=18 base=0 me_busy=6907 c_beats=512 r_beats=512 stall_kv=400 stall_drain=0 stall_bridge=851 stall_retire=0 stall_mem=0
+OPTRACE stage=L1 cyc=9901 prog_a=19 base=0 me_busy=6974 c_beats=512 r_beats=512 stall_kv=400 stall_drain=0 stall_bridge=916 stall_retire=0 stall_mem=0
+OPTRACE stage=L1 cyc=10330 prog_a=20 base=0 me_busy=7402 c_beats=512 r_beats=512 stall_kv=400 stall_drain=0 stall_bridge=918 stall_retire=0 stall_mem=0
+OPTRACE stage=L1 cyc=10396 prog_a=21 base=0 me_busy=7468 c_beats=512 r_beats=512 stall_kv=400 stall_drain=0 stall_bridge=918 stall_retire=0 stall_mem=0
+OPTRACE stage=L1 cyc=11455 prog_a=39 base=18 me_busy=7882 c_beats=768 r_beats=768 stall_kv=400 stall_drain=0 stall_bridge=918 stall_retire=0 stall_mem=0
+OPTRACE stage=L1 cyc=11458 prog_a=18 base=18 me_busy=7882 c_beats=768 r_beats=768 stall_kv=400 stall_drain=0 stall_bridge=918 stall_retire=0 stall_mem=0
+OPTRACE stage=L1 cyc=11459 prog_a=19 base=18 me_busy=7882 c_beats=768 r_beats=768 stall_kv=400 stall_drain=0 stall_bridge=918 stall_retire=0 stall_mem=0
+OPTRACE stage=L1 cyc=11460 prog_a=20 base=18 me_busy=7882 c_beats=768 r_beats=768 stall_kv=400 stall_drain=0 stall_bridge=918 stall_retire=0 stall_mem=0
+OPTRACE stage=L1 cyc=11461 prog_a=21 base=18 me_busy=7882 c_beats=768 r_beats=768 stall_kv=400 stall_drain=0 stall_bridge=918 stall_retire=0 stall_mem=0
+OPTRACE stage=L1 cyc=11462 prog_a=22 base=18 me_busy=7882 c_beats=768 r_beats=768 stall_kv=400 stall_drain=0 stall_bridge=918 stall_retire=0 stall_mem=0
+OPTRACE stage=L1 cyc=11463 prog_a=23 base=18 me_busy=7882 c_beats=768 r_beats=768 stall_kv=400 stall_drain=0 stall_bridge=918 stall_retire=0 stall_mem=0
+OPTRACE stage=L1 cyc=11578 prog_a=24 base=18 me_busy=7883 c_beats=768 r_beats=768 stall_kv=400 stall_drain=0 stall_bridge=954 stall_retire=0 stall_mem=0
+OPTRACE stage=L1 cyc=11692 prog_a=25 base=18 me_busy=7997 c_beats=768 r_beats=768 stall_kv=400 stall_drain=0 stall_bridge=955 stall_retire=0 stall_mem=0
+OPTRACE stage=L1 cyc=11759 prog_a=26 base=18 me_busy=8064 c_beats=768 r_beats=768 stall_kv=400 stall_drain=0 stall_bridge=1020 stall_retire=0 stall_mem=0
+progress tick=12288 cyc=12289 pc_base=18/18 me_busy=8594/8594 kv_ok=0 drained=1 wall=7792s passes=35457
+OPTRACE stage=L1 cyc=12316 prog_a=27 base=18 me_busy=8619 c_beats=768 r_beats=768 stall_kv=400 stall_drain=0 stall_bridge=1022 stall_retire=0 stall_mem=0
+OPTRACE stage=L1 cyc=12463 prog_a=28 base=18 me_busy=8620 c_beats=768 r_beats=768 stall_kv=400 stall_drain=0 stall_bridge=1024 stall_retire=0 stall_mem=0
+OPTRACE stage=L1 cyc=12641 prog_a=29 base=18 me_busy=8798 c_beats=768 r_beats=768 stall_kv=400 stall_drain=0 stall_bridge=1024 stall_retire=0 stall_mem=0
+OPTRACE stage=L1 cyc=13796 prog_a=37 base=26 me_busy=9308 c_beats=1024 r_beats=1024 stall_kv=400 stall_drain=0 stall_bridge=1024 stall_retire=0 stall_mem=0
+OPTRACE stage=L1 cyc=13799 prog_a=26 base=26 me_busy=9308 c_beats=1024 r_beats=1024 stall_kv=400 stall_drain=0 stall_bridge=1024 stall_retire=0 stall_mem=0
+OPTRACE stage=L1 cyc=13800 prog_a=27 base=26 me_busy=9308 c_beats=1024 r_beats=1024 stall_kv=400 stall_drain=0 stall_bridge=1024 stall_retire=0 stall_mem=0
+OPTRACE stage=L1 cyc=13801 prog_a=28 base=26 me_busy=9308 c_beats=1024 r_beats=1024 stall_kv=400 stall_drain=0 stall_bridge=1024 stall_retire=0 stall_mem=0
+OPTRACE stage=L1 cyc=13802 prog_a=29 base=26 me_busy=9308 c_beats=1024 r_beats=1024 stall_kv=400 stall_drain=0 stall_bridge=1024 stall_retire=0 stall_mem=0
+OPTRACE stage=L1 cyc=13803 prog_a=30 base=26 me_busy=9308 c_beats=1024 r_beats=1024 stall_kv=400 stall_drain=0 stall_bridge=1024 stall_retire=0 stall_mem=0
+OPTRACE stage=L1 cyc=13804 prog_a=31 base=26 me_busy=9308 c_beats=1024 r_beats=1024 stall_kv=400 stall_drain=0 stall_bridge=1024 stall_retire=0 stall_mem=0
+OPTRACE stage=L1 cyc=13919 prog_a=32 base=26 me_busy=9308 c_beats=1024 r_beats=1024 stall_kv=400 stall_drain=0 stall_bridge=1060 stall_retire=0 stall_mem=0
+STAGE L1 done cycles=6868 start_cyc=7232 end_cyc=14100 me_busy=4468/4468 next_token=0/0 next_val=00000000/00000000 seq_fault=0 core_fault=0 coll_fault=0 wall=8324s
+MEMSTAT L1 die0 fill_cycles=1459 fill_sectors=131072 wr_sectors=136 rsp_tile_stall=8102 kvok_low_with_desc=0 drain_low=0 wr_lat_max=74 stall_kv=15 stall_drain=0 stall_bridge=530 stall_retire=0 stall_mem=0 tile_edges=10286 fill_exposed=0
+MEMSTAT L1 die1 fill_cycles=1459 fill_sectors=131072 wr_sectors=136 rsp_tile_stall=8102 kvok_low_with_desc=0 drain_low=0 wr_lat_max=74 stall_kv=15 stall_drain=0 stall_bridge=530 stall_retire=0 stall_mem=0 tile_edges=10286 fill_exposed=0
+MEMSTAT L1 die2 fill_cycles=1459 fill_sectors=131072 wr_sectors=136 rsp_tile_stall=8102 kvok_low_with_desc=0 drain_low=0 wr_lat_max=74 stall_kv=15 stall_drain=0 stall_bridge=530 stall_retire=0 stall_mem=0 tile_edges=10286 fill_exposed=0
+MEMSTAT L1 die3 fill_cycles=1459 fill_sectors=131072 wr_sectors=136 rsp_tile_stall=8102 kvok_low_with_desc=0 drain_low=0 wr_lat_max=74 stall_kv=15 stall_drain=0 stall_bridge=530 stall_retire=0 stall_mem=0 tile_edges=10286 fill_exposed=0
+stage L2 loaded (layer 2): code_words=1056 scale_words=50112 crom_words=541953 preload 5.5 s
+OPTRACE stage=L2 cyc=14104 prog_a=6 base=0 me_busy=9308 c_beats=1024 r_beats=1024 stall_kv=400 stall_drain=0 stall_bridge=1060 stall_retire=0 stall_mem=0
+OPTRACE stage=L2 cyc=14107 prog_a=0 base=0 me_busy=9308 c_beats=1024 r_beats=1024 stall_kv=400 stall_drain=0 stall_bridge=1060 stall_retire=0 stall_mem=0
+OPTRACE stage=L2 cyc=14108 prog_a=1 base=0 me_busy=9308 c_beats=1024 r_beats=1024 stall_kv=400 stall_drain=0 stall_bridge=1060 stall_retire=0 stall_mem=0
+OPTRACE stage=L2 cyc=14109 prog_a=2 base=0 me_busy=9308 c_beats=1024 r_beats=1024 stall_kv=400 stall_drain=0 stall_bridge=1060 stall_retire=0 stall_mem=0
+OPTRACE stage=L2 cyc=14110 prog_a=3 base=0 me_busy=9308 c_beats=1024 r_beats=1024 stall_kv=400 stall_drain=0 stall_bridge=1060 stall_retire=0 stall_mem=0
+OPTRACE stage=L2 cyc=14111 prog_a=4 base=0 me_busy=9308 c_beats=1024 r_beats=1024 stall_kv=400 stall_drain=0 stall_bridge=1060 stall_retire=0 stall_mem=0
+OPTRACE stage=L2 cyc=14112 prog_a=5 base=0 me_busy=9309 c_beats=1024 r_beats=1024 stall_kv=400 stall_drain=0 stall_bridge=1060 stall_retire=0 stall_mem=0
+OPTRACE stage=L2 cyc=14113 prog_a=6 base=0 me_busy=9310 c_beats=1024 r_beats=1024 stall_kv=400 stall_drain=0 stall_bridge=1060 stall_retire=0 stall_mem=0
+OPTRACE stage=L2 cyc=14293 prog_a=7 base=0 me_busy=9490 c_beats=1024 r_beats=1024 stall_kv=400 stall_drain=0 stall_bridge=1128 stall_retire=0 stall_mem=0
+OPTRACE stage=L2 cyc=14545 prog_a=8 base=0 me_busy=9740 c_beats=1024 r_beats=1024 stall_kv=400 stall_drain=0 stall_bridge=1130 stall_retire=0 stall_mem=0
+OPTRACE stage=L2 cyc=14600 prog_a=9 base=0 me_busy=9740 c_beats=1024 r_beats=1024 stall_kv=400 stall_drain=0 stall_bridge=1166 stall_retire=0 stall_mem=0
+OPTRACE stage=L2 cyc=14737 prog_a=10 base=0 me_busy=9740 c_beats=1024 r_beats=1024 stall_kv=400 stall_drain=0 stall_bridge=1234 stall_retire=0 stall_mem=0
+OPTRACE stage=L2 cyc=14826 prog_a=11 base=0 me_busy=9740 c_beats=1024 r_beats=1024 stall_kv=400 stall_drain=0 stall_bridge=1236 stall_retire=0 stall_mem=0
+OPTRACE stage=L2 cyc=14897 prog_a=12 base=0 me_busy=9740 c_beats=1024 r_beats=1024 stall_kv=400 stall_drain=0 stall_bridge=1272 stall_retire=0 stall_mem=0
+OPTRACE stage=L2 cyc=14956 prog_a=13 base=0 me_busy=9740 c_beats=1024 r_beats=1024 stall_kv=400 stall_drain=0 stall_bridge=1308 stall_retire=0 stall_mem=0
+OPTRACE stage=L2 cyc=15009 prog_a=14 base=0 me_busy=9740 c_beats=1024 r_beats=1024 stall_kv=400 stall_drain=0 stall_bridge=1344 stall_retire=0 stall_mem=0
+OPTRACE stage=L2 cyc=15068 prog_a=15 base=0 me_busy=9741 c_beats=1024 r_beats=1024 stall_kv=401 stall_drain=0 stall_bridge=1380 stall_retire=0 stall_mem=0
+OPTRACE stage=L2 cyc=15124 prog_a=16 base=0 me_busy=9797 c_beats=1024 r_beats=1024 stall_kv=414 stall_drain=0 stall_bridge=1380 stall_retire=0 stall_mem=0
+OPTRACE stage=L2 cyc=15580 prog_a=17 base=0 me_busy=10252 c_beats=1024 r_beats=1024 stall_kv=415 stall_drain=0 stall_bridge=1380 stall_retire=0 stall_mem=0
+progress tick=16384 cyc=16385 pc_base=0/0 me_busy=11057/11057 kv_ok=1 drained=1 wall=9390s passes=46786
+OPTRACE stage=L2 cyc=16703 prog_a=18 base=0 me_busy=11375 c_beats=1024 r_beats=1024 stall_kv=415 stall_drain=0 stall_bridge=1381 stall_retire=0 stall_mem=0
+OPTRACE stage=L2 cyc=16770 prog_a=19 base=0 me_busy=11442 c_beats=1024 r_beats=1024 stall_kv=415 stall_drain=0 stall_bridge=1446 stall_retire=0 stall_mem=0
+OPTRACE stage=L2 cyc=17199 prog_a=20 base=0 me_busy=11870 c_beats=1024 r_beats=1024 stall_kv=415 stall_drain=0 stall_bridge=1448 stall_retire=0 stall_mem=0
+OPTRACE stage=L2 cyc=17265 prog_a=21 base=0 me_busy=11936 c_beats=1024 r_beats=1024 stall_kv=415 stall_drain=0 stall_bridge=1448 stall_retire=0 stall_mem=0
+OPTRACE stage=L2 cyc=18324 prog_a=39 base=18 me_busy=12350 c_beats=1280 r_beats=1280 stall_kv=415 stall_drain=0 stall_bridge=1448 stall_retire=0 stall_mem=0
+OPTRACE stage=L2 cyc=18327 prog_a=18 base=18 me_busy=12350 c_beats=1280 r_beats=1280 stall_kv=415 stall_drain=0 stall_bridge=1448 stall_retire=0 stall_mem=0
+OPTRACE stage=L2 cyc=18328 prog_a=19 base=18 me_busy=12350 c_beats=1280 r_beats=1280 stall_kv=415 stall_drain=0 stall_bridge=1448 stall_retire=0 stall_mem=0
+OPTRACE stage=L2 cyc=18329 prog_a=20 base=18 me_busy=12350 c_beats=1280 r_beats=1280 stall_kv=415 stall_drain=0 stall_bridge=1448 stall_retire=0 stall_mem=0
+OPTRACE stage=L2 cyc=18330 prog_a=21 base=18 me_busy=12350 c_beats=1280 r_beats=1280 stall_kv=415 stall_drain=0 stall_bridge=1448 stall_retire=0 stall_mem=0
+OPTRACE stage=L2 cyc=18331 prog_a=22 base=18 me_busy=12350 c_beats=1280 r_beats=1280 stall_kv=415 stall_drain=0 stall_bridge=1448 stall_retire=0 stall_mem=0
+OPTRACE stage=L2 cyc=18332 prog_a=23 base=18 me_busy=12350 c_beats=1280 r_beats=1280 stall_kv=415 stall_drain=0 stall_bridge=1448 stall_retire=0 stall_mem=0
+OPTRACE stage=L2 cyc=18447 prog_a=24 base=18 me_busy=12351 c_beats=1280 r_beats=1280 stall_kv=415 stall_drain=0 stall_bridge=1484 stall_retire=0 stall_mem=0
+OPTRACE stage=L2 cyc=18561 prog_a=25 base=18 me_busy=12465 c_beats=1280 r_beats=1280 stall_kv=415 stall_drain=0 stall_bridge=1485 stall_retire=0 stall_mem=0
+OPTRACE stage=L2 cyc=18628 prog_a=26 base=18 me_busy=12532 c_beats=1280 r_beats=1280 stall_kv=415 stall_drain=0 stall_bridge=1550 stall_retire=0 stall_mem=0
+OPTRACE stage=L2 cyc=19185 prog_a=27 base=18 me_busy=13087 c_beats=1280 r_beats=1280 stall_kv=415 stall_drain=0 stall_bridge=1552 stall_retire=0 stall_mem=0
+OPTRACE stage=L2 cyc=19332 prog_a=28 base=18 me_busy=13088 c_beats=1280 r_beats=1280 stall_kv=415 stall_drain=0 stall_bridge=1554 stall_retire=0 stall_mem=0
+OPTRACE stage=L2 cyc=19510 prog_a=29 base=18 me_busy=13266 c_beats=1280 r_beats=1280 stall_kv=415 stall_drain=0 stall_bridge=1554 stall_retire=0 stall_mem=0
+progress tick=20480 cyc=20481 pc_base=18/18 me_busy=13776/13776 kv_ok=0 drained=1 wall=10724s passes=58768
+OPTRACE stage=L2 cyc=20665 prog_a=37 base=26 me_busy=13776 c_beats=1536 r_beats=1536 stall_kv=415 stall_drain=0 stall_bridge=1554 stall_retire=0 stall_mem=0
+OPTRACE stage=L2 cyc=20668 prog_a=26 base=26 me_busy=13776 c_beats=1536 r_beats=1536 stall_kv=415 stall_drain=0 stall_bridge=1554 stall_retire=0 stall_mem=0
+OPTRACE stage=L2 cyc=20669 prog_a=27 base=26 me_busy=13776 c_beats=1536 r_beats=1536 stall_kv=415 stall_drain=0 stall_bridge=1554 stall_retire=0 stall_mem=0
+OPTRACE stage=L2 cyc=20670 prog_a=28 base=26 me_busy=13776 c_beats=1536 r_beats=1536 stall_kv=415 stall_drain=0 stall_bridge=1554 stall_retire=0 stall_mem=0
+OPTRACE stage=L2 cyc=20671 prog_a=29 base=26 me_busy=13776 c_beats=1536 r_beats=1536 stall_kv=415 stall_drain=0 stall_bridge=1554 stall_retire=0 stall_mem=0
+OPTRACE stage=L2 cyc=20672 prog_a=30 base=26 me_busy=13776 c_beats=1536 r_beats=1536 stall_kv=415 stall_drain=0 stall_bridge=1554 stall_retire=0 stall_mem=0
+OPTRACE stage=L2 cyc=20673 prog_a=31 base=26 me_busy=13776 c_beats=1536 r_beats=1536 stall_kv=415 stall_drain=0 stall_bridge=1554 stall_retire=0 stall_mem=0
+OPTRACE stage=L2 cyc=20788 prog_a=32 base=26 me_busy=13776 c_beats=1536 r_beats=1536 stall_kv=415 stall_drain=0 stall_bridge=1590 stall_retire=0 stall_mem=0
+STAGE L2 done cycles=6868 start_cyc=14101 end_cyc=20969 me_busy=4468/4468 next_token=0/0 next_val=00000000/00000000 seq_fault=0 core_fault=0 coll_fault=0 wall=10748s
+MEMSTAT L2 die0 fill_cycles=1309 fill_sectors=131072 wr_sectors=136 rsp_tile_stall=15047 kvok_low_with_desc=0 drain_low=0 wr_lat_max=75 stall_kv=15 stall_drain=0 stall_bridge=530 stall_retire=0 stall_mem=0 tile_edges=14985 fill_exposed=0
+MEMSTAT L2 die1 fill_cycles=1309 fill_sectors=131072 wr_sectors=136 rsp_tile_stall=15047 kvok_low_with_desc=0 drain_low=0 wr_lat_max=75 stall_kv=15 stall_drain=0 stall_bridge=530 stall_retire=0 stall_mem=0 tile_edges=14985 fill_exposed=0
+MEMSTAT L2 die2 fill_cycles=1309 fill_sectors=131072 wr_sectors=136 rsp_tile_stall=15047 kvok_low_with_desc=0 drain_low=0 wr_lat_max=75 stall_kv=15 stall_drain=0 stall_bridge=530 stall_retire=0 stall_mem=0 tile_edges=14985 fill_exposed=0
+MEMSTAT L2 die3 fill_cycles=1309 fill_sectors=131072 wr_sectors=136 rsp_tile_stall=15047 kvok_low_with_desc=0 drain_low=0 wr_lat_max=75 stall_kv=15 stall_drain=0 stall_bridge=530 stall_retire=0 stall_mem=0 tile_edges=14985 fill_exposed=0
+WRITEBACK drained=1 after 0 cycles past the last stage
+QWEN_ROM_STREAM4_PLAIN_AR_FULLTOKEN DONE stages=3 cycles=20969 edges=20969 settle_max=2 wall_s=10748.0 RSS_KiB=14477356 threads=24 kv_ideal=0 early_go=1 posted_wb=1

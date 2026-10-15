@@ -47,6 +47,37 @@
    "orient": "MX"
   }
  ],
+ "closed_probability_leaf": {
+  "LEF": "physical/ref_tile/s81_svc_probability_native_ref/views/ot_s81_svc_probability_frame/ot_s81_svc_probability_frame.lef",
+  "sha256": "e00b5faa29f7a8c9db57bd13a99f66297244b17262c45c51f7b70aac7f53a621",
+  "adoption": "actual CLOSED native probability2 boundary; all1030 payloadcentres/layers agree with assignment",
+  "side_centres_um": {
+   "clk": [
+    "W",
+    "M4",
+    0.042,
+    4.044
+   ],
+   "rst_n": [
+    "W",
+    "M4",
+    0.042,
+    5.004
+   ],
+   "fault": [
+    "E",
+    "M4",
+    129.558,
+    43.212
+   ]
+  }
+ },
+ "job_successor": {
+  "target": "payload-correct RTL successor using explicit legacy v20 q/q_o rectangles with scalar ck/rst",
+  "legacy_target": "physical/s81_ph_views/closed/dsfd_svcio_job/dsfd_svcio_job.lef",
+  "different_predecessor": "physical/ref_tile/s81_svciojob_ref/views/dsfd_svcio_job has different scalar CLOSED q/q_o geometry and is not bound by equivalence",
+  "qualification": "source/native gate/route required for payload successor"
+ },
  "direct_pair_geometry": [
   {
    "bus": "pack.q_o->job.q",

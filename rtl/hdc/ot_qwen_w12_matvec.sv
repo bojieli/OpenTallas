@@ -878,7 +878,15 @@ end endgenerate
                 end else begin : g_ntx
                     assign tx_q = tx_d;
                 end
-                ot_qwen_tile_lsl u_lh (.clk(CHILD_CLOCKS ? ck_lsl[g] : clk), .rst_n(rst_l), .v_d(tx_q[XW-1]), .first_d(tx_q[XW-2]), .split_d(tx_q[XW-3 -: 4]),
+                // Native physical parent binds the reset/fault-pin-registered successor.
+                // Arithmetic and data edge count are unchanged; the compiler releases
+                // reset one child edge later and observes faults one edge later.
+`ifdef OT_QWEN_LSL_FP1
+                ot_qwen_tile_lsl_fp1
+`else
+                ot_qwen_tile_lsl
+`endif
+                u_lh (.clk(CHILD_CLOCKS ? ck_lsl[g] : clk), .rst_n(rst_l), .v_d(tx_q[XW-1]), .first_d(tx_q[XW-2]), .split_d(tx_q[XW-3 -: 4]),
                     .w_d(tx_q[G*32 +: G*HIER*32]), .x_d(tx_q[G*32-1:0]), .t_out(top[HIER*32*g +: HIER*32]), .lfault(lf), .tfault(stf[g]));
             end else begin : g_sf
             ot_qwen_w12_lane_slice #(.G(G), .NPL(HIER), .IL(IL), .MUL_LAT(MUL_LAT), .ACC_LAT(ACC_LAT),

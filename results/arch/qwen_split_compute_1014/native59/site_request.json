@@ -1,0 +1,33 @@
+{
+ "schema": "opentallas.qwen.native59-site-request.v1",
+ "master": "qfd_native59_compute_service",
+ "source_commit": "970b75b99",
+ "candidate_die_bbox_um": [
+  17668.8,
+  11357.28,
+  777.6,
+  518.4
+ ],
+ "geometry_source": "C15band_final/rom_tp8b.json no-relay1630instances",
+ "geometry_check": "No overlap with any existing1630rectangles; inside unchanged compute spine",
+ "clock_entry_flops": {
+  "ck_context": 58,
+  "ck_service": 2013,
+  "ck_format": 6605,
+  "ck_record": 1074,
+  "ck_qtag": 239,
+  "ck_x3": 1728
+ },
+ "total_flop_bits": 11717,
+ "mapped_area_um2": null,
+ "physical_fit": "OPEN; rectangle reservation is not mapped area or route qualification",
+ "clock_contract": "All actual roots independently measured/delivered phi-R in declared core1.2GHz family; no common-phase substitution",
+ "pending_source_protocol": [
+  "ActualHOSTkind12epoch/capability/tag/generation548payload codec producer/sink",
+  "RealregisteredSU63bitissue monitor replaces phantom482bitbranch",
+  "RealregisteredQepoch/start producers fromactualacceptedcontext/nativeGO",
+  "NativeVMroundtrip profile includes actual forward/return/phase beyond internal8; failunsetproductionprofile"
+ ],
+ "link_contract": "Typed548payload record endpoint is local; actual physical548/583CRC-FDI codec stays at Nlink/PHY face with all relay edges compiled",
+ "adoption_status": "Candidate only; no new instance/body adopted before final source ABI, area/clock/native gate"
+}

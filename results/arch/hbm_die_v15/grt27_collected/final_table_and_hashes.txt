@@ -1,0 +1,20 @@
+255322f2184409ad28eff83ff02fdceaaba4ee96210934c1aedd9043b7e8fac6  /srv/opentallas-scratch/claude/hbmdie-v13/grt27_p2/grt.log
+62598c6868e2f84508afaebb863f12afd340593357a466fa5e42eb0ce42ecf96  /srv/opentallas-scratch/claude/hbmdie-v13/grt27_p2/grt_congestion.rpt
+47702651763bcc08922da2f4aac5922f20184d5c71bd7acffcd26b5538b12463  /srv/opentallas-scratch/claude/hbmdie-v13/grt27_p2/gcell_usage.txt
+[INFO GRT-0096] Final congestion report:
+Layer         Resource        Demand        Usage (%)    Max H / Max V / Total Congestion
+---------------------------------------------------------------------------------------
+M1                   0             0            0.00%             0 /  0 /  0
+M2                   0             0            0.00%             0 /  0 /  0
+M3                   0             0            0.00%             0 /  0 /  0
+M4            27641657       5621886           20.34%             3 /  0 / 807
+M5            27614776       4933434           17.87%             0 /  5 / 2424
+M6            40682571       5488828           13.49%             9 /  1 / 33013
+M7            40719310       3483111            8.55%             0 /  5 / 2506
+M8            41399378       1095158            2.65%             5 /  0 / 9754
+M9            41384950        613104            1.48%             0 /  3 / 2619
+---------------------------------------------------------------------------------------
+Total        219442642       21235521            9.68%            17 / 14 / 51123
+
+[INFO GRT-0018] Total wirelength: 211429144 um
+[INFO GRT-0014] Routed nets: 521664

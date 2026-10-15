@@ -1,0 +1,28 @@
+{
+  "collected_at": "2026-10-15T01:44:00.132433+00:00",
+  "p2p_source": "ed00a5ad0",
+  "rgx_lane_source": "eb2b7be61",
+  "scope": "G2 DS gather exactness and carry rounds; SPMD96 gather shape; four failing mutants; RGX receiver lane extraction exact+mutants",
+  "physical_qualification": false,
+  "topk": "f42cd2d31 flat builds OOM120GB and224GB (4x~58.6GB at second kill); 50f708fe5 hierarchical real PT64 tile build running96GB",
+  "remaining": [
+    "G4/G8 real-die builds live",
+    "TOPK production run/mutants",
+    "partitioned ring and VMport native launch/clock closure",
+    "physical pin assignments and leaves"
+  ],
+  "reduction_quarter_fix": "51944700b G4 grm PASS3572 vscentral3635, Qwen PASS5368 vs5704, noimage/count differences; carry128 exact",
+  "real_sw_composition": {
+    "source": "e465568d8",
+    "positive": "768 flits, 2442 readbacks, 18707 write cycles; all4 SIDs and mirror masks",
+    "mutant": "early-credit drained while packet commit outstanding -> FAIL",
+    "performance_qualified": false
+  },
+  "split_ring": {
+    "source": "bcc5db931",
+    "positive": "1024 FP words exact, serial/tree, RLY8, 539 cycles",
+    "mutants": "carry and order FAIL",
+    "roots": "8 tag payload +8 native FP lanes + parent queues/control",
+    "physical_qualification": false
+  }
+}

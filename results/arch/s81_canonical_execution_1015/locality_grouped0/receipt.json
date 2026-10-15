@@ -1,0 +1,39 @@
+{
+  "schema": "opentallas.s81.source-locality-grouped-proof.v1",
+  "candidate_only": true,
+  "native_qualified": false,
+  "assignment_admission": {
+    "host": "ot-epyc4",
+    "unit": "oth-ubuntu-2133572-1792064438",
+    "exit_code": 0,
+    "memory_gb": 2,
+    "threads": 1
+  },
+  "independent_audit_admission": {
+    "host": "ot-epyc4",
+    "unit": "oth-ubuntu-2138273-1792064490",
+    "exit_code": 0
+  },
+  "mechanism_tests_local": 12,
+  "actual_candidate_mutants_rejected": 4,
+  "source_private_colocation_groups": 448,
+  "grouped_source_SU_operations": 2010,
+  "source_SU_rank_candidate_homes": 10616,
+  "candidate_SU_stage_count": 42,
+  "objective_initial": 2530,
+  "objective_final": 2391,
+  "raw_unconstrained_objective": 2282,
+  "objective_units": "equal-weight symbolic interstage dependency boundaries; not wire/bandwidth/time",
+  "physical_instance_bound": false,
+  "native_kernel_equivalence_bound": false,
+  "source_sha256": {
+    "demand-r5.json.gz": "fec91ca041e8b1640292ca06163def706c0d0dab8c5d524ba9e8f611dd925d0f",
+    "/srv/opentallas-scratch/codex-canonical-bind-1015/field_homes2/source_field_operation_homes.jsonl.gz": "19178ee120f3ee8f474ca0eff2115cc3a152e57b648640ee36e901c0a89eb293"
+  },
+  "tool_sources": {
+    "tools/s81_compile_schedule/source_locality_assignment.py": "1cf0bff4403fe562617a7c3f5b023894186f9f5fcd1c8eb9a3b8a14210a399d9",
+    "tools/s81_compile_schedule/test_source_locality_assignment.py": "50a151cfeea6235416dd00cccccf2cd8c517691f6525356c566a71f4fb9bbc8d",
+    "tools/s81_compile_schedule/verify_locality_candidate.py": "8c290f84377dbd810bcdd587986b8512f7f8d6e25e47207f7af1b45ad03af735"
+  },
+  "candidate_sha256": "8b0689c751e1834b5b6dcad9e447020e19cef46269cad335b36a092ce39c6a0d"
+}

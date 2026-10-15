@@ -1,0 +1,28 @@
+ot-run: ot-epyc1tb     admits   483 GB (avail 709, growth 64, headroom 64, waiters 0/0 GB) load 92/128 running 14 disk 765 GB 
+ot-run: ot-epyc4       admits   322 GB (avail 549, growth 162, headroom 48, waiters 0/0 GB) load 121/128 running 31 disk 553 GB 
+ot-run: ot-pve1        skipped: load hold: load1 > 1.5 x cores
+ot-run: ot-agidock128  skipped: load hold: load1 > 1.5 x cores
+ot-run: -> ot-epyc1tb
+ot-heavy: admitted on ot-epyc1tb as oth-ubuntu-3751154-1792040244 after 0 s
+FAIL cyc=181 tile 0 element 0 ref be458000 (operand be46) dvm 3ed30000
+FAIL cyc=181 tile 0 element 1 ref 3fce5caf (operand 3fce) dvm c0d00000
+FAIL cyc=181 tile 0 element 2 ref beff1601 (operand beff) dvm 3e0a0000
+FAIL cyc=181 tile 0 element 3 ref 400191f5 (operand 4002) dvm 40240000
+FAIL cyc=181 tile 1 element 0 ref c06bc674 (operand c06c) dvm bee60000
+FAIL cyc=181 tile 1 element 1 ref 407a8000 (operand 407a) dvm bf7e0000
+FAIL cyc=181 tile 1 element 2 ref be6b8000 (operand be6c) dvm 3ed00000
+FAIL cyc=181 tile 1 element 3 ref c0d16bed (operand c0d1) dvm 3e890000
+FAIL cyc=181 tile 2 element 0 ref 3ed29dc9 (operand 3ed3) dvm 3ebe0000
+FAIL cyc=181 tile 2 element 1 ref c0cfc05d (operand c0d0) dvm 40870000
+FAIL cyc=181 tile 2 element 2 ref 3e09f460 (operand 3e0a) dvm bef00000
+FAIL cyc=181 tile 2 element 3 ref 40243b9e (operand 4024) dvm be860000
+FAIL cyc=181 tile 3 element 0 ref bee60b96 (operand bee6) dvm bef90000
+FAIL cyc=181 tile 3 element 1 ref bf7dfa95 (operand bf7e) dvm be940000
+FAIL cyc=181 tile 3 element 2 ref 3ed04448 (operand 3ed0) dvm 40310000
+FAIL cyc=181 tile 3 element 3 ref 3e88f06f (operand 3e89) dvm 40140000
+FAIL cyc=181 tile 4 element 0 ref be67c907 (operand be68) dvm be960000
+FAIL cyc=181 tile 4 element 1 ref be866635 (operand be86) dvm 3ee30000
+FAIL cyc=181 tile 4 element 2 ref 40b8aea9 (operand 40b9) dvm bfd30000
+FAIL cyc=181 tile 4 element 3 ref be7044b9 (operand be70) dvm c0060000
+FAIL errors=159592 checks=159744
+ot-run: RAN on ot-epyc1tb (unit oth-ubuntu-3751154-1792040244): exit 0

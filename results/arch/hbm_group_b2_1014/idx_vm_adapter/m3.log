@@ -1,0 +1,15 @@
+ERR lease released with 26 local reads / credits outstanding
+ERR lease released with 16 local reads / credits outstanding
+ERR lease released with 19 local reads / credits outstanding
+ERR lease released with 14 local reads / credits outstanding
+ERR lease released with 5 local reads / credits outstanding
+ERR lease released with 14 local reads / credits outstanding
+ERR lease released with 3 local reads / credits outstanding
+ERR lease released with 5 local reads / credits outstanding
+ERR lease released with 5 local reads / credits outstanding
+IDX_VM_ADAPTER mode 0 reads 12000 (local 8976 mirror 1537 remote 1487) cycles 13257 (0.113 reads/lane/cycle) lease grants 10 releases 10
+IDX_VM_ADAPTER FAIL errors=10
+- rtl/hbm_accel/index/tb_hbm_idx_vm_adapter.sv:125: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 11us; walltime 0.032 s; speed 343.496 us/s
+- Verilator: cpu 0.017 s on 1 threads; allocated 6 MB
