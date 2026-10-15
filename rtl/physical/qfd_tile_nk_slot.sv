@@ -71,15 +71,25 @@ module qfd_tile_nk #(
     input  wire [513:0]  n_b,
     output wire [513:0]  n_y
 );
+    // One kept native-face register per input bit; reset only controls
+    // metadata. The child clocks remain independent compensated entries.
+    (* keep *) reg [507:0] tap_q;
+    (* keep *) reg [15:0] tile_id_q;
+    (* keep *) reg reset_q;
+    always @(posedge ck) begin
+        tap_q <= tap; tile_id_q <= tile_id; reset_q <= rst_n;
+    end
+    (* keep *) reg [513:0] n_a_q,n_b_q;
+    always @(posedge ck) begin n_a_q<=n_a;n_b_q<=n_b;end
     localparam integer IBW = 3 * NW + 13 * 24 + 13;               // 379
     initial if (1 + IBW + 128 != 508) $fatal(1, "qfd_tile_nk: tap must be {xl 128, ib %0d, go 1} = 508 b", IBW);
 `ifdef OT_QFD_TILE_NK_MUT
-    wire           go = tap[507];
+    wire           go = tap_q[507];
 `else
-    wire           go = tap[0];
+    wire           go = tap_q[0];
 `endif
-    wire [IBW-1:0] ib = tap[IBW:1];
-    wire [127:0]   xl = tap[507 -: 128];
+    wire [IBW-1:0] ib = tap_q[IBW:1];
+    wire [127:0]   xl = tap_q[507 -: 128];
     wire [511:0]   to, ny;
     wire           tv, nvy, tf;
     ot_qwen_rom_tile_nk #(.CHILD_CLOCKS(1), .NW(NW), .GT(GT), .SMIN(SMIN), .CODE_BANKS(CODE_BANKS), .KV_VB(KV_VB), .KV_NH(KV_NH),
@@ -90,20 +100,30 @@ module qfd_tile_nk #(
         .ck_rpair({ck_rp4,ck_rp3,ck_rp2,ck_rp1,ck_rp0}),
         .ck_lsl({ck_lsl7,ck_lsl6,ck_lsl5,ck_lsl4,ck_lsl3,ck_lsl2,ck_lsl1,ck_lsl0}),
         .ck_node(ck_node),
-        .clk(ck), .rst_n(rst_n), .tile_id(tile_id), .ib_go(go), .ib(ib), .xl(xl), .t_out(to), .t_vout(tv),
-        .n_a(n_a[511:0]), .n_b(n_b[511:0]), .n_va(n_a[512]), .n_y(ny), .n_vy(nvy), .fault(tf));
-    assign t_out = {tf, tv, to};
+        .clk(ck), .rst_n(reset_q), .tile_id(tile_id_q), .ib_go(go), .ib(ib), .xl(xl), .t_out(to), .t_vout(tv),
+        .n_a(n_a_q[511:0]), .n_b(n_b_q[511:0]), .n_va(n_a_q[512]), .n_y(ny), .n_vy(nvy), .fault(tf));
+    (* keep *) reg [513:0] t_out_q;
+    always @(posedge ck) begin
+        t_out_q[511:0]<=to;
+        t_out_q[513:512]<=reset_q ? {tf,tv} : 2'd0;
+    end
+    assign t_out=t_out_q;
     // tree fault: the legs' faults ORed up one register per node (the reference fab_fault = OR of every tile fault,
     // registered at the top), plus a sticky leg-alignment fault
     (* keep *) reg fy_q;
     reg mis_q;
-    always @(posedge ck or negedge rst_n)
-        if (!rst_n) begin fy_q <= 1'b0; mis_q <= 1'b0; end
+    always @(posedge ck)
+        if (!reset_q) begin fy_q <= 1'b0; mis_q <= 1'b0; end
         else begin
-            mis_q <= mis_q | (n_a[512] ^ n_b[512]);
-            fy_q  <= n_a[513] | n_b[513] | mis_q;
+            mis_q <= mis_q | (n_a_q[512] ^ n_b_q[512]);
+            fy_q  <= n_a_q[513] | n_b_q[513] | mis_q;
         end
-    assign n_y = {fy_q, nvy, ny};
+    (* keep *) reg [513:0] n_y_q;
+    always @(posedge ck) begin
+        n_y_q[511:0]<=ny;
+        n_y_q[513:512]<=reset_q ? {fy_q,nvy} : 2'd0;
+    end
+    assign n_y=n_y_q;
 endmodule
 
 // q14 r9 (2026-10-14): qfd_tile_nl = the NODE-LESS compute tile (die lead 17:19 port-bind table: the 48 block-last tiles,
@@ -162,15 +182,23 @@ module qfd_tile_nl #(
     input  wire [507:0]  tap,
     output wire [513:0]  t_out
 );
+    // One kept native-face register per input bit; reset only controls
+    // metadata. The child clocks remain independent compensated entries.
+    (* keep *) reg [507:0] tap_q;
+    (* keep *) reg [15:0] tile_id_q;
+    (* keep *) reg reset_q;
+    always @(posedge ck) begin
+        tap_q <= tap; tile_id_q <= tile_id; reset_q <= rst_n;
+    end
     localparam integer IBW = 3 * NW + 13 * 24 + 13;               // 379
     initial if (1 + IBW + 128 != 508) $fatal(1, "qfd_tile_nl: tap must be {xl 128, ib %0d, go 1} = 508 b", IBW);
 `ifdef OT_QFD_TILE_NL_MUT
-    wire           go = tap[507];
+    wire           go = tap_q[507];
 `else
-    wire           go = tap[0];
+    wire           go = tap_q[0];
 `endif
-    wire [IBW-1:0] ib = tap[IBW:1];
-    wire [127:0]   xl = tap[507 -: 128];
+    wire [IBW-1:0] ib = tap_q[IBW:1];
+    wire [127:0]   xl = tap_q[507 -: 128];
     wire [511:0]   to;
     wire           tv, tf;
     ot_qwen_rom_tile_nk #(.CHILD_CLOCKS(1), .NW(NW), .GT(GT), .SMIN(SMIN), .CODE_BANKS(CODE_BANKS), .KV_VB(KV_VB), .KV_NH(KV_NH),
@@ -181,7 +209,12 @@ module qfd_tile_nl #(
         .ck_rpair({ck_rp4,ck_rp3,ck_rp2,ck_rp1,ck_rp0}),
         .ck_lsl({ck_lsl7,ck_lsl6,ck_lsl5,ck_lsl4,ck_lsl3,ck_lsl2,ck_lsl1,ck_lsl0}),
         .ck_node(ck),
-        .clk(ck), .rst_n(rst_n), .tile_id(tile_id), .ib_go(go), .ib(ib), .xl(xl), .t_out(to), .t_vout(tv),
+        .clk(ck), .rst_n(reset_q), .tile_id(tile_id_q), .ib_go(go), .ib(ib), .xl(xl), .t_out(to), .t_vout(tv),
         .n_a(512'd0), .n_b(512'd0), .n_va(1'b0), .n_y(), .n_vy(), .fault(tf));   // NODE 0: n_* not read / not driven
-    assign t_out = {tf, tv, to};
+    (* keep *) reg [513:0] t_out_q;
+    always @(posedge ck) begin
+        t_out_q[511:0]<=to;
+        t_out_q[513:512]<=reset_q ? {tf,tv} : 2'd0;
+    end
+    assign t_out=t_out_q;
 endmodule

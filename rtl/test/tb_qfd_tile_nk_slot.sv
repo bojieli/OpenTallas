@@ -31,16 +31,33 @@ module tb_qfd_tile_nk_slot;
     wire [513:0] to, ny;
     qfd_tile_nk dut (.ck(ck), .ck_rp0(ck), .ck_rp1(ck), .ck_rp2(ck), .ck_rp3(ck), .ck_rp4(ck), .ck_lsl0(ck), .ck_lsl1(ck), .ck_lsl2(ck), .ck_lsl3(ck), .ck_lsl4(ck), .ck_lsl5(ck), .ck_lsl6(ck), .ck_lsl7(ck), .ck_node(ck), .rst_n(rst_n), .tile_id(tid), .tap(tap), .t_out(to), .n_a(a), .n_b(b), .n_y(ny));
     integer i, bad = 0, checks = 0, faults = 0, mism = 0;
-    reg pf = 0, fy = 0, mis = 0, nfy, nmis;
+    reg pf = 0, fy = 0, mis = 0;
+    reg [507:0] tap_history=0;
+    reg [15:0] tid_history=0;
+    reg [513:0] a_history=0,b_history=0;
+    reg reset_history=0;
+    reg [511:0] expected_to,expected_ny;
+    reg expected_tv,expected_nv,expected_tf,expected_nf;
     initial begin
         repeat (3) @(negedge ck);
         rst_n = 1;
         for (i = 0; i < 4000; i = i + 1) begin
             @(posedge ck);
-            // registered model: tile fault_q, tree fault fy_q, sticky leg mismatch mis_q
-            nmis = mis | (a[512] ^ b[512]);
-            nfy = a[513] | b[513] | mis;
-            pf = (^tap[379:1]) ^ (^tid); fy = nfy; mis = nmis;
+            // Independent edge model: native input capture, body fault/tree
+            // state, then native output launch. Arithmetic field values use
+            // the previous captured inputs, never the just-driven pins.
+            expected_to=a_history[511:0] ^ {4{tap_history[507:380]}};
+            expected_ny=a_history[511:0]+b_history[511:0];
+            expected_tv=reset_history & tap_history[0];
+            expected_nv=reset_history & a_history[512];
+            expected_tf=reset_history & pf;
+            expected_nf=reset_history & fy;
+            if(reset_history) begin
+                pf=(^tap_history[379:1]) ^ (^tid_history);
+                fy=a_history[513] | b_history[513] | mis;
+                mis=mis | (a_history[512]^b_history[512]);
+            end else begin pf=0;fy=0;mis=0;end
+            tap_history=tap;tid_history=tid;a_history=a;b_history=b;reset_history=rst_n;
             @(negedge ck);
             tap = {$random, $random, $random, $random, $random, $random, $random, $random, $random, $random, $random,
                    $random, $random, $random, $random, $random};
@@ -54,12 +71,12 @@ module tb_qfd_tile_nk_slot;
             else begin a[513] = (i % 97) == 0; b[513] = 1'b0; b[512] = a[512]; end
             #0.01;
             checks = checks + 1;
-            if (to[511:0] !== (a[511:0] ^ {4{tap[507:380]}})) bad = bad + 1;   // data + xl field
-            if (to[512] !== tap[0]) bad = bad + 1;                               // valid = go
-            if (to[513] !== pf) bad = bad + 1;                                   // tile fault (flop-launched)
-            if (ny[511:0] !== a[511:0] + b[511:0]) bad = bad + 1;                // node data
-            if (ny[512] !== a[512]) bad = bad + 1;                               // node valid from leg a
-            if (ny[513] !== fy) bad = bad + 1;                                   // tree fault
+            if (to[511:0] !== expected_to) bad = bad + 1;   // data + xl field
+            if (to[512] !== expected_tv) bad = bad + 1;                               // valid = go
+            if (to[513] !== expected_tf) bad = bad + 1;                                   // tile fault (flop-launched)
+            if (ny[511:0] !== expected_ny) bad = bad + 1;                // node data
+            if (ny[512] !== expected_nv) bad = bad + 1;                               // node valid from leg a
+            if (ny[513] !== expected_nf) bad = bad + 1;                                   // tree fault
             faults = faults + ny[513];
             mism = mism + (a[512] ^ b[512]);
         end
