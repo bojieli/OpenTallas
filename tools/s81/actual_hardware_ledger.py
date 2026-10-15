@@ -36,7 +36,15 @@ def audit(requirements, manifest, die=None, bind_record=None, shape=None):
         emitted.update(m for m,_,_,_ in bind.parse_die(die)[3] if m!='__assign__')
     reasons=[]
     if not die or not die.exists(): reasons.append('missing_emitted_canonical_die')
-    shape_data=json.loads(shape.read_text()) if shape and shape.exists() else {}
+    shape_record=json.loads(shape.read_text()) if shape and shape.exists() else {}
+    shape_data=shape_record.get('observed',{})
+    if not (shape_record.get('schema')=='opentallas.s81.observed-shape.v1' and shape_record.get('status')=='OBSERVED_SOURCE_AND_CONSTRUCTION_SHAPE' and die and die.exists() and shape_record.get('die_sha256')==sha(die)):
+        reasons.append('canonical_shape_observation_missing_invalid_or_not_die_pinned')
+    for role in ('die','plan','stage_map','sequencer_source'):
+        ev=shape_record.get('evidence',{}).get(role,{})
+        ep=Path(ev.get('path','__missing__'))
+        if not ep.is_file() or sha(ep)!=ev.get('sha256'):
+            reasons.append('canonical_shape_evidence_missing_or_stale:'+role)
     for k,v in req['canonical'].items():
         if shape_data.get(k)!=v:reasons.append('canonical_'+k+'_unproven')
     # A gate record must hash the exact generated netlist; a generic PASS is weak evidence.
