@@ -268,3 +268,16 @@ raw-macro clusters are supported as well. The direct-macro probe checks all
 three corners, source/corner mutants, unchanged real clock-to-Q timing and the
 complete generated entry SDC. Its nonzero-RC SPEF is a test fixture, not routed
 layout qualification.
+
+A leaf that actually transfers registered data between these roots must opt in
+separately with `"clock_data_paths":"related_same_frequency"` and
+`"clock_relationship":{"kind":"same_pll_fixed_phase","ratio":[1,1],"phase_ps":0}`.
+The independent profile remains the default and refuses such transfers. The
+related profile permits transfers only between registers owned by the declared
+roots; direct input capture and output launch still obey each port's domain.
+Every detected domain pair must retain finite actual max and min STA paths.
+The normal clock-pair setup/hold uncertainty and measured phi−R compensation
+remain in force. A false-path mutant is rejected because its required crossing
+has no timed path. The declaration expresses the leaf's required clock contract;
+production integration must prove that actual parent clock delivery supplies it.
+It is not a CDC waiver or evidence that the PLL/clock distribution is closed.
