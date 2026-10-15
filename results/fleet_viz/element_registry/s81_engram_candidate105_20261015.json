@@ -1,0 +1,63 @@
+{
+ "schema_version": 1,
+ "records": [
+  {
+   "element": "ot_s81_engram_rly_candidate105",
+   "target": "DeepSeek ROM",
+   "owner": "Codex:s81-engram-0810",
+   "recorded_at": "2026-10-15T15:39:42.918715+00:00",
+   "description": "Candidate105-bit up/dn Engram relay ABI: componentPASS only; productionmain old64-bit gate/status ABI is different and NOT covered.",
+   "source": {
+    "commit": "772decf15a93dd9fc2dbfa64cbe224abf44653d3",
+    "paths": [
+     "rtl/dsrom_sys/engram/mix/ot_s81_engram_mix.sv",
+     "tools/s81_engram_mix/relay_gate.py"
+    ]
+   },
+   "variant_identity": {
+    "module": "ot_s81_engram_rly",
+    "abi": "candidate105_up69_dn36",
+    "master_module_sha256": "f9c219b7d08c35c8edcc18a020d2e426f1c8373b52ef3ebe78744a5e93d062a3",
+    "replicas_share_master": true,
+    "production_main_compatible": false
+   },
+   "implementation": {
+    "status": "Actual candidate105 RTL implemented; root coordinator has not adopted candidate parent/home"
+   },
+   "exactness": {
+    "positive": {
+     "status": "PASS4096vectors/860160checks/exactoneedge/4resets/all105bits",
+     "evidence": [
+      "results/rtl/s81_engram_relay_0822/m0_run.log"
+     ]
+    },
+    "negative": {
+     "status": "ActualDUT data-XOR and added-edge mutants both FAIL oracle",
+     "evidence": [
+      "results/rtl/s81_engram_relay_0822/m1_run.log",
+      "results/rtl/s81_engram_relay_0822/m2_run.log"
+     ]
+    }
+   },
+   "physical": {
+    "status": "CLOSED candidate105 component TT344.85ps FF28.33ps DRC0; independentnativePASS O173.1ps S121.6ps R60.7ps spread4.3ps zero combinationalpins",
+    "job": "s81engm_rly-component-0822-772decf15",
+    "record": "6416be4d7",
+    "evidence": [
+     "results/rtl/s81_engram_relay_0822/native_audit.json"
+    ]
+   },
+   "integration": {
+    "status": "OPEN source-consistent105parent adoption, realhomes/pins/clock/staticseams; main64ABI NOT qualified",
+    "evidence": [
+     "results/rtl/s81_engram_relay_0822/module_equivalence.json"
+    ]
+   },
+   "dependencies": [
+    "coherent candidate105 parent/source adoption",
+    "actual home/trunk/station placement and clocks",
+    "full native layer/token compilation and timing"
+   ]
+  }
+ ]
+}
