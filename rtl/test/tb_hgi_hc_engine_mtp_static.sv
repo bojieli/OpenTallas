@@ -18,6 +18,10 @@ module tb_hgi_hc_engine_mtp_static(input wire clk,sink_clk);
     wire [4:0] ri;
     wire [2:0] rp,tp;
     wire mutate=$test$plusargs("MUTANT");
+    wire early=$test$plusargs("EARLY");
+    wire [15:0] ssbase=early?160:180;
+    wire [15:0] rowbase=early?264:284;
+    wire [15:0] period=(early?280:300)+160*(npos-1);
     wire [9:0] xword=10'(mutate?(((fill/80)^1)*80+fill%80):fill);
     initial begin
         if($value$plusargs("NPOS=%d",npos))begin end
@@ -41,7 +45,7 @@ module tb_hgi_hc_engine_mtp_static(input wire clk,sink_clk);
         if(state==1)for(integer l=0;l<32;l=l+1)for(integer b=0;b<8;b=b+1)
             xwave[l*256+b*32+:32]={xm[(b*640+fill)*W+l],16'd0};
         if(state==3)for(integer p=0;p<8;p=p+1)
-            if(p<npos&&(age==180+160*p||age==284+160*p))raw_read=1;
+            if(p<npos&&(age==ssbase+160*p||age==rowbase+160*p))raw_read=1;
     end
     ot_hgi_hc_engine_mtp_static dut(.clk(clk),.sink_clk(sink_clk),.rst_n(rst_n),
         .clear(cycle==4),.weight_ap(ap),.x_wave_v(state==1),.x_wave_word(xword),.x_wave(xwave),
@@ -63,12 +67,12 @@ module tb_hgi_hc_engine_mtp_static(input wire clk,sink_clk);
             age<=age+1;
             if(rv)begin
                 seen<=seen+1;
-                if(age!=289+160*rp||ri!=row||rp>=npos)$fatal(1,"MTP result identity/time row%0d pos%0d age%0d",row,rp,age);
+                if(age!=rowbase+5+160*rp||ri!=row||rp>=npos)$fatal(1,"MTP result identity/time row%0d pos%0d age%0d",row,rp,age);
                 if(rd!==expm[rp*24+row])begin
                     errors=errors+1;if(errors<9)$display("MTP_ROW_MISMATCH row%0d pos%0d got=%08x exp=%08x",row,rp,rd,expm[rp*24+row]);
                 end
             end
-            if(age==299+160*(npos-1))begin
+            if(age==period-1)begin
                 if(seen!=(row+1)*npos)$fatal(1,"missing MTP row results");
                 age<=0;
                 if(row==23)begin state<=5;pc<=0;sinkslot<=((cycle+1+198+6)/7)*7;end
@@ -88,7 +92,7 @@ module tb_hgi_hc_engine_mtp_static(input wire clk,sink_clk);
                 if(tailseen!=pc+1)$fatal(1,"missing MTP tail");
                 age<=0;
                 if(pc==npos-1)begin
-                    $display("HC_MTP_DONE npos=%0d rows=%0d tail=%0d errors=%0d rowperiod=%0d cycles=%0d",npos,seen,tailseen,errors,300+160*(npos-1),cycle);
+                    $display("HC_MTP_DONE npos=%0d rows=%0d tail=%0d errors=%0d rowperiod=%0d cycles=%0d",npos,seen,tailseen,errors,period,cycle);
                     if(errors)$fatal(1,"MTP exact mismatch");
                     $finish;
                 end

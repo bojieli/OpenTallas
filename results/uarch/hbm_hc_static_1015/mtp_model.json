@@ -1,0 +1,79 @@
+{
+  "source": "PMAX8 successor faa293303/3216ea878",
+  "status": "analytical candidate, actual6/8position gates pending",
+  "shape": {
+    "K": 20480,
+    "rows": 24,
+    "npos": [
+      6,
+      8
+    ],
+    "MAC_per_issue_cycle": 256
+  },
+  "memories": {
+    "weights": {
+      "count": 64,
+      "geometry": "128x256",
+      "capacity_bytes": 262144
+    },
+    "residuals": {
+      "count": 16,
+      "geometry": "1024x256",
+      "capacity_bytes": 524288,
+      "payload_bytes_8positions": 327680
+    },
+    "programme": {
+      "count": 2,
+      "geometry": "1024x256",
+      "capacity_bytes": 65536,
+      "payload_bits": 51,
+      "PC_bits": 11
+    },
+    "total_macro_bytes": 851968
+  },
+  "ports_bytes_per_cycle": {
+    "weight_read": 1024,
+    "residual_read": 512,
+    "weight_fill": 256,
+    "residual_landing_external_FP32": 1024
+  },
+  "calendar": {
+    "row_issue_cycles": {
+      "6": 960,
+      "8": 1280
+    },
+    "nominal_raw_ss_first": 180,
+    "nominal_raw_row_first": 284,
+    "nominal_result_first": 289,
+    "nominal_period": {
+      "6": 1100,
+      "8": 1420
+    },
+    "early_candidate_raw_ss_first": 160,
+    "early_candidate_raw_row_first": 264,
+    "early_candidate_result_first": 269,
+    "early_candidate_period": {
+      "6": 1080,
+      "8": 1400
+    },
+    "position_stride_cycles": 160,
+    "weight_refill_cycles": 320,
+    "residual_staging_cycles": {
+      "6": 480,
+      "8": 640
+    }
+  },
+  "physical": {
+    "clock_roots": "UNMEASURED static successor",
+    "area_outline_slot_fit": "UNMEASURED; no physical launch",
+    "routing_boundary_bits": {
+      "ap": 2224,
+      "x_wave": 8192,
+      "weight_reads": 8192,
+      "residual_reads": 4096
+    },
+    "tracks_capacity": "UNMEASURED; bank-local partition and assigned pins required"
+  },
+  "immutable_model_price_comparison": "PENDING actual gate and current top-level dataflow price; no repricing or acceptance",
+  "full_native_qualified": false
+}

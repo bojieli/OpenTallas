@@ -51,7 +51,7 @@ def main():
     receipt={'scope':'actual PMAX8 SRAM projection to tail with prefetch overlap; no physical/native wholechip qualification',
         'source_sha256':{f:hashlib.sha256((ROOT/f).read_bytes()).hexdigest() for f in pins},
         'fixture_sha256':{p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in run.glob('*.mem')},
-        'K':20480,'positions':[6,8],'projection_rows':24,'tail_words_per_position':24,'sink_clock_divisor':7,'row_result_ages':[289+160*p for p in range(8)],'row_periods':{'6':1100,'8':1420}}
+        'K':20480,'positions':[6,8],'projection_rows':24,'tail_words_per_position':24,'sink_clock_divisor':7,'nominal_row_result_ages':[289+160*p for p in range(8)],'nominal_row_periods':{'6':1100,'8':1420},'early_row_result_ages':[269+160*p for p in range(8)],'early_row_periods':{'6':1080,'8':1400}}
     (run/'source.json').write_text(json.dumps(receipt,indent=2)+'\n')
     with (run/'build.log').open('w') as log:
         subprocess.run(['verilator','--cc','--exe','--build','-j','4','-O1','-Wno-fatal','-Wno-WIDTH','-Wno-TIMESCALEMOD',
@@ -64,8 +64,8 @@ def main():
         p=subprocess.run([str(exe),*args],cwd=run,stdout=subprocess.PIPE,stderr=subprocess.STDOUT,text=True)
         (run/f'{name}.log').write_text(p.stdout)
         return name,p
-    cases=[('exact6',['+NPOS=6']),('exact8',['+NPOS=8']),('mutant8',['+NPOS=8','+MUTANT'])]
-    with ThreadPoolExecutor(max_workers=3) as pool:
+    cases=[('exact6',['+NPOS=6']),('exact8',['+NPOS=8']),('exact_early6',['+NPOS=6','+EARLY']),('exact_early8',['+NPOS=8','+EARLY']),('mutant8',['+NPOS=8','+EARLY','+MUTANT'])]
+    with ThreadPoolExecutor(max_workers=5) as pool:
         verdicts=list(pool.map(simulate,cases))
     for name,p in verdicts:
         print(name,p.returncode,p.stdout[-1800:],flush=True)
