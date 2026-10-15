@@ -1,0 +1,24 @@
+{
+  "source_commits": "7340dfc03/ec9f324a7",
+  "unit": "EPYC4/1892329",
+  "keys": 32,
+  "errors": 0,
+  "canonical_source": "PREquantKR128FP32,actualFP4E8M0pipeline,notrequantizedIK",
+  "physical_bytes": 68,
+  "local_keys": [
+    2720,
+    2751
+  ],
+  "stack_boundary_crossed": true,
+  "source_index": 2,
+  "negative": [
+    "KRblockzero mismatch1",
+    "duplicateblock missingkey+fault",
+    "sourcebit wrongaddress1"
+  ],
+  "qualification": "componentonly; actualSM/SU KRproducer andHBMstore/service join OPEN",
+  "sha256": {
+    "rtl/hbm_accel/index/ot_hbm_idx_keypack_static.sv": "82b99f5cb15fac1470a5ef94b99779f75847cf4d2d098a1115b023f72968a191",
+    "rtl/test/hbm_idx_static/tb_keypack_static.sv": "047ec86d42fd769431ca760d5d85efe7c97cad9f0b3cbd93d71bd60b2ed671fc"
+  }
+}
