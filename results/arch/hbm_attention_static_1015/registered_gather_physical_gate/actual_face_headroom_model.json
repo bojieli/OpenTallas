@@ -1,0 +1,37 @@
+{
+  "scope": "Actual IO ODB readback; conservative uniform track packing model inferred from actual technology pitch and one actual track phase per face, not routing/cut-through qualification",
+  "actual_pg_shapes": 184,
+  "margin_um": 5.4,
+  "pin_width_um": 0.024,
+  "spacing_um": 0.072,
+  "candidate_pitch_um": 0.096,
+  "faces": {
+    "W": {
+      "actual_pins": 2112,
+      "layer": "M4",
+      "legal_separated_candidate_slots": 4579,
+      "utilization": 0.4612360777462328,
+      "headroom_limit": 0.6,
+      "pass": true,
+      "minimum_actual_pin_separation_um": 0.19199999999995043
+    },
+    "E": {
+      "actual_pins": 2641,
+      "layer": "M4",
+      "legal_separated_candidate_slots": 4579,
+      "utilization": 0.5767634854771784,
+      "headroom_limit": 0.6,
+      "pass": true,
+      "minimum_actual_pin_separation_um": 0.1439999999999486
+    },
+    "N": {
+      "actual_pins": 6,
+      "layer": "M5",
+      "legal_separated_candidate_slots": 4695,
+      "utilization": 0.0012779552715654952,
+      "headroom_limit": 0.6,
+      "pass": true,
+      "minimum_actual_pin_separation_um": 81.50399999999996
+    }
+  }
+}

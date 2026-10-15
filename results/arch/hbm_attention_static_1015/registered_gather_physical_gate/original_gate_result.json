@@ -1,0 +1,131 @@
+{
+ "verdict": "FAIL",
+ "items": [
+  {
+   "severity": "INFO",
+   "check": "layer",
+   "message": "tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "oflop",
+   "message": "E face 10.5 pins/um (bankpair_data, bankpair_flags, output_v): recipe-2 hold stages take 3.52 um behind the face, the pin flops need gap 4.5 um and 6 columns (kit OT_OFLOP_GAP=4.5)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "oflop",
+   "message": "W face 10.5 pins/um (tile_data, tile_flags): recipe-2 hold stages take 2.3 um behind the face, the pin flops need gap 2.9 um and 6 columns (kit OT_OFLOP_GAP=4.5)",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "rtl",
+   "message": "runtime_partselect: 2 runtime-indexed part-select(s), 528 bits (1 >= 64 b; e.g. ot_hbm_attn_pv_group_gather_registered: data_q[int'(select_q)*512+:512] (512 b)): each is a wide $shift/$shiftx; yosys SHARE pairs them (hours). Fix: decoded constant-index slices (one-hot compare + AND-OR per destination), or a real memory",
+   "fix": "decoded constant-index slices; the --remote synthesis smoke decides (a SHARE stall FAILs there)"
+  },
+  {
+   "severity": "WARN",
+   "check": "sources",
+   "message": "4 referenced file(s) do not exist: ['physical/common_flow/cg_pushdown.tcl', 'physical/common_flow/clk_net_protect.tcl', 'physical/common_flow/link_budget_consistent.sdc', 'physical/common_flow/link_budget_hook.tcl']",
+   "fix": "commit them / fix the path"
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "ot-run selected ot-epyc4 for 24 GB; inputs ship there before admission",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "source_binding",
+   "message": "immutable shipping manifest /tmp/ref_gate_hbm_att_registered_gather_1015_20261015-034231.source_snapshot.json",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "remote log /tmp/ref_gate_hbm_att_registered_gather_1015_20261015-034231.log; host dir ot-epyc4:/srv/opentallas-scratch/claude/ref_gate/hbm_att_registered_gather_1015-20261015-034231",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "synth + floorplan + PDN OK on ot-epyc4 in 30 s (gate total 625 s)",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "util",
+   "message": "synthesized std area 2972 um2 + macros 0 in core 221111: util 1%",
+   "fix": "set \"std_area_um2\": 2972 and drop 'outline' (gen sizes to util 0.52)"
+  },
+  {
+   "severity": "INFO",
+   "check": "textbook",
+   "message": "REFUSE ot_hbm_attn_pv_group_gather_registered cells 21,844 flops 4,757 depth 171.7 ps util 0.0134 reach 367.8 um (0.4 s)",
+   "fix": ""
+  },
+  {
+   "severity": "FAIL",
+   "check": "textbook.high_fanout",
+   "message": "port capture_v: 8,455 loads (1 flops, e.g. valid_q$_DFF_PN0_) > 256: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast",
+   "fix": "no reset on datapath registers; replicate enables / selects / pointer bits per region (<= ~256 loads)"
+  },
+  {
+   "severity": "FAIL",
+   "check": "textbook.high_fanout",
+   "message": "net select_q[0]$_DFFE_PP_/QN (DFFHQNx1_ASAP7_75t_R): 4,225 loads (0 flops, e.g. None) > 3,000: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast",
+   "fix": "no reset on datapath registers; replicate enables / selects / pointer bits per region (<= ~256 loads)"
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.util_channel",
+   "message": "utilisation 1.3% outside 45%-65% (std 2972 + macro 0 um2 in 221111 um2): shrink the outline (long wires / sparse placement)",
+   "fix": "size the outline to util 0.50-0.55 with >= 20 um macro channels"
+  },
+  {
+   "severity": "INFO",
+   "check": "cts_calibration",
+   "message": "ss insertion all 451.1..550.0 ps (spread 98.9), boundary mean 467.4; tt insertion all 351.8..440.9 ps (spread 89.1), boundary mean 366.9; ff insertion all 289.7..370.8 ps (spread 81.1), boundary mean 304.0; macro_clk flag False",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "density",
+   "message": "effective global-placement target density 0.500 vs spec PD 0.50",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "constraints signoff /src/physical/ref_tile/hbm_att_registered_gather_1015/signoff.sdc (TT placement RC; diagnostic)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "in->reg       301 paths, worst slack -36.7 ps (e.g. data_q[3689]$_DFFE_PP_/D)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "reg->reg        1 paths, worst slack -25.4 ps (e.g. ot_prs_00138_ff/D)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "setup WNS -3.6698200034379624e-11 hold WNS 5.5818683009078995e-12",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "clock_rule",
+   "message": "root port:clk: 4,757 sinks on the largest root <= 15,000; measured TT insertion 440.9 ps, leaf spread 89.1 ps",
+   "fix": ""
+  }
+ ]
+}

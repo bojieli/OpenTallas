@@ -1,0 +1,24 @@
+{
+  "scope": "Conservative realPG M4 escape-cut across3um faceband; availableontrack packing model includesactualPDN via shapes, .024um M4spacing and.024pinwidth, .096pitch,5.4margin. Notrouterproof.",
+  "W": {
+    "actual_M4_via_shapes": 3306,
+    "legal_separated_slots": 3256,
+    "pins": 2112,
+    "utilization": 0.6486486486486487,
+    "limit": 0.6,
+    "pass": false
+  },
+  "E": {
+    "actual_M4_via_shapes": 0,
+    "legal_separated_slots": 4579,
+    "pins": 2641,
+    "utilization": 0.5767634854771784,
+    "limit": 0.6,
+    "pass": true
+  },
+  "verdict": "FAIL proposed450.36height Wescape-cutheadroom; topPGportpinrectangleclearancedoesnotqualifyfullaccess",
+  "candidate_fixes": [
+    "ExplicitPGfirstcolumnsetbackoutside3umescape-bandwithactualPDNpowerchecks",
+    "Largermeasuredoutlineheight~500umthenrecomputefrozenactualPGgrid/nativeclock"
+  ]
+}

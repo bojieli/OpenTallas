@@ -1,0 +1,20 @@
+{
+  "scope": "Golden rawPV external component boundary, actualMachine-derivedEB + actualcanonicalstoredKV randomrecipe20261015; NOT actualPV RTL producer ornativeallocation qualification",
+  "H": 16,
+  "D": 512,
+  "T": [
+    128,
+    640
+  ],
+  "precision": "canonical chunk8 FP32 golden_dot over unchangedBF16 EB and exactstoredFP8/FP4dequantization",
+  "input_sha256": {
+    "EB640.hex": "edfbd4e27ea5b71c00200d44d91a85c2780e2745f6946e22535bcf369b622941",
+    "EB128.hex": "6f28bf0a019c2c9e143a641c0ed5c7abba124a2ff2dbc3b7bf461627b4da04b3"
+  },
+  "output_sha256": {
+    "SINK640.hex": "146de0e524f577951dbe12a9db9f6a24cf276a6560b8b37a1aa0cbc5811776a0",
+    "PV128.hex": "efbdd5cc7cb361d92c1f0584ac5233534fb7a4348808f2919560357bb1710d25",
+    "SINK128.hex": "146de0e524f577951dbe12a9db9f6a24cf276a6560b8b37a1aa0cbc5811776a0",
+    "PV640.hex": "6ff81cb6f1c6a5e70f1cf3d1dee90dc28c6b98098c6180ebbb5149b579628176"
+  }
+}
