@@ -1,0 +1,11 @@
+read_verilog -sv /srv/opentallas-scratch/codex/ATT-PV-D-synth/physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_bb.v /srv/opentallas-scratch/codex/ATT-PV-D-synth/rtl/hdc/v41x/static/ot_hbm_attn_pv_serializer_local.sv
+hierarchy -check -top ot_hbm_attn_pv_serializer_local
+synth -top ot_hbm_attn_pv_serializer_local -flatten -run coarse
+tee -o /srv/opentallas-scratch/codex/ATT-PV-D-synth/D_out/coarse_stat.json stat -json
+synth -top ot_hbm_attn_pv_serializer_local -flatten -run fine:check
+dfflibmap -liberty /srv/opentallas-scratch/codex/ATT-PV-D-synth/D_out/combined.lib
+abc -liberty /srv/opentallas-scratch/codex/ATT-PV-D-synth/D_out/combined.lib
+clean
+stat -liberty /srv/opentallas-scratch/codex/ATT-PV-D-synth/D_out/combined.lib
+write_json /srv/opentallas-scratch/codex/ATT-PV-D-synth/D_out/mapped.json
+write_verilog -noattr /srv/opentallas-scratch/codex/ATT-PV-D-synth/D_out/mapped.v

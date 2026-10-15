@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Pinned ASAP7 TT logic/macro inventory; excludes CTS, placement and wires."""
-import argparse,hashlib,json,subprocess
+import argparse,hashlib,json,subprocess,re
 from collections import Counter,defaultdict
 from pathlib import Path
 p=argparse.ArgumentParser();p.add_argument('--profile',choices=['baseline','D'],required=True);p.add_argument('--out',type=Path,required=True);a=p.parse_args()
@@ -24,7 +24,7 @@ y=out/'synth.ys';y.write_text('\n'.join([
  'tee -o '+str(out/'coarse_stat.json')+' stat -json',
  'synth -top '+top+' -flatten -run fine:check',
  'dfflibmap -liberty '+str(lib),'abc -liberty '+str(lib),
- 'clean','stat -liberty '+str(lib),
+ 'clean','read_liberty -lib '+str(lib),'stat -liberty '+str(lib),
  'write_json '+str(out/'mapped.json'),'write_verilog -noattr '+str(out/'mapped.v')])+'\n')
 with (out/'synth.log').open('w') as log:
  cp=subprocess.run([str(Path.home()/'.local/opentallas-tools/yosys-0.68/bin/yosys'),'-s',str(y)],stdout=log,stderr=subprocess.STDOUT)
@@ -43,6 +43,8 @@ if cp.returncode==0:
     for bit in bits:
      if isinstance(bit,int):clock[bit]+=1
  rec['cell_types']=dict(count);rec['macro_count']=macro_count
+ text=(out/'synth.log').read_text();area=re.findall(r'Chip area for module.*?: ([0-9.]+)',text)
+ rec['mapped_standardcell_area_um2']=float(area[-1]) if area else None
  rec['mapped_clock_endpoints']={name:[dict(bit=b,sinks=clock[b]) for b in port['bits']] for name,port in m['ports'].items() if name in ('clk','bank_clk')}
  rec['highest_input_fanout']=dict(fan.most_common(20))
  assert macro_count==(2048 if a.profile=='D' else 128)
