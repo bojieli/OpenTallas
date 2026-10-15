@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1320" height="680" viewBox="0 0 1320 680"><defs><marker id="a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10z" fill="#406f91"/></marker></defs><rect width="100%" height="100%" fill="white"/>
+<text x="25" y="27" font-size="18">SU lane-facing options from actual recipe dimensions and source pin faces</text>
+<text x="25" y="49" font-size="12">One source lane cohort at identical scale; eight belong to each octet. Face markers are illustrative directions, not actual pin coordinates.</text>
+<text x="35" y="86" font-size="14">A: retain all current recipe orientations</text>
+<rect x="155.96" y="327.73" width="193.54" height="145.15" fill="#a6bdcf" stroke="#546271"/><text x="159.96" y="344.72800000000007" font-size="11">head</text><text x="159.96" y="359.72800000000007" font-size="9">172.8 × 129.6 µm</text>
+<rect x="35.00" y="134.19" width="145.15" height="169.34" fill="#d9b787" stroke="#546271"/><text x="39.0" y="151.19200000000004" font-size="11">exp</text><text x="39.0" y="166.19200000000004" font-size="9">129.6 × 151.2 µm</text>
+<rect x="204.34" y="134.19" width="145.15" height="169.34" fill="#d9b787" stroke="#546271"/><text x="208.344" y="151.19200000000004" font-size="11">rsqrt</text><text x="208.344" y="166.19200000000004" font-size="9">129.6 × 151.2 µm</text>
+<rect x="373.69" y="158.38" width="120.96" height="145.15" fill="#e4c599" stroke="#546271"/><text x="377.688" y="175.38400000000001" font-size="11">reciprocal R0</text><text x="377.688" y="190.38400000000001" font-size="9">108 × 129.6 µm</text>
+<rect x="35.00" y="393.05" width="79.83" height="79.83" fill="#d7d7d7" stroke="#546271"/><text x="39.0" y="410.0464" font-size="11">relay*</text><text x="39.0" y="425.0464" font-size="9">71.28 × 71.28 µm</text>
+<circle cx="252.73" cy="327.73" r="4" fill="#675a9d"/><text x="258.73" y="321.73" font-size="10">SFU N</text>
+<circle cx="107.58" cy="303.54" r="4" fill="#675a9d"/><text x="113.58" y="297.54" font-size="10">S</text>
+<circle cx="276.92" cy="303.54" r="4" fill="#675a9d"/><text x="282.92" y="297.54" font-size="10">S</text>
+<circle cx="434.17" cy="158.38" r="4" fill="#c78034"/><text x="440.17" y="152.38" font-size="10">N</text>
+<path d="M252.72800000000004,327.72800000000007 L107.57600000000001,303.53600000000006" stroke="#406f91" stroke-width="2" fill="none" marker-start="url(#a)" marker-end="url(#a)"/>
+<path d="M252.72800000000004,327.72800000000007 L276.92,303.53600000000006" stroke="#406f91" stroke-width="2" fill="none" marker-start="url(#a)" marker-end="url(#a)"/>
+<path d="M252.72800000000004,327.72800000000007 L434.168,158.384" stroke="#406f91" stroke-width="2" fill="none" marker-start="url(#a)" marker-end="url(#a)"/>
+<circle cx="252.73" cy="472.88" r="4" fill="#287e94"/><text x="258.73" y="466.88" font-size="10">VM/CROM S</text>
+<circle cx="155.96" cy="394.48" r="4" fill="#c16f35"/><text x="161.96" y="388.48" font-size="10">control W</text>
+<text x="35" y="495" font-size="11">Head N: exp/rcp/rsq request + return ports in source pin plan.</text><text x="35" y="514" font-size="11">Head S: memory operands/addresses; put corresponding bank/align faces here.</text>
+<text x="685" y="86" font-size="14">B: reciprocal MX candidate to face head N</text>
+<rect x="805.96" y="327.73" width="193.54" height="145.15" fill="#a6bdcf" stroke="#546271"/><text x="809.96" y="344.72800000000007" font-size="11">head</text><text x="809.96" y="359.72800000000007" font-size="9">172.8 × 129.6 µm</text>
+<rect x="685.00" y="134.19" width="145.15" height="169.34" fill="#d9b787" stroke="#546271"/><text x="689.0" y="151.19200000000004" font-size="11">exp</text><text x="689.0" y="166.19200000000004" font-size="9">129.6 × 151.2 µm</text>
+<rect x="854.34" y="134.19" width="145.15" height="169.34" fill="#d9b787" stroke="#546271"/><text x="858.344" y="151.19200000000004" font-size="11">rsqrt</text><text x="858.344" y="166.19200000000004" font-size="9">129.6 × 151.2 µm</text>
+<rect x="1023.69" y="158.38" width="120.96" height="145.15" fill="#e4c599" stroke="#546271"/><text x="1027.688" y="175.38400000000001" font-size="11">reciprocal MX?</text><text x="1027.688" y="190.38400000000001" font-size="9">108 × 129.6 µm</text>
+<rect x="685.00" y="393.05" width="79.83" height="79.83" fill="#d7d7d7" stroke="#546271"/><text x="689.0" y="410.0464" font-size="11">relay*</text><text x="689.0" y="425.0464" font-size="9">71.28 × 71.28 µm</text>
+<circle cx="902.73" cy="327.73" r="4" fill="#675a9d"/><text x="908.73" y="321.73" font-size="10">SFU N</text>
+<circle cx="757.58" cy="303.54" r="4" fill="#675a9d"/><text x="763.58" y="297.54" font-size="10">S</text>
+<circle cx="926.92" cy="303.54" r="4" fill="#675a9d"/><text x="932.92" y="297.54" font-size="10">S</text>
+<circle cx="1084.17" cy="303.54" r="4" fill="#c78034"/><text x="1090.17" y="297.54" font-size="10">S?</text>
+<path d="M902.7280000000001,327.72800000000007 L757.576,303.53600000000006" stroke="#406f91" stroke-width="2" fill="none" marker-start="url(#a)" marker-end="url(#a)"/>
+<path d="M902.7280000000001,327.72800000000007 L926.9200000000001,303.53600000000006" stroke="#406f91" stroke-width="2" fill="none" marker-start="url(#a)" marker-end="url(#a)"/>
+<path d="M902.7280000000001,327.72800000000007 L1084.1680000000001,303.53600000000006" stroke="#406f91" stroke-width="2" fill="none" marker-start="url(#a)" marker-end="url(#a)"/>
+<circle cx="902.73" cy="472.88" r="4" fill="#287e94"/><text x="908.73" y="466.88" font-size="10">VM/CROM S</text>
+<circle cx="805.96" cy="394.48" r="4" fill="#c16f35"/><text x="811.96" y="388.48" font-size="10">control W</text>
+<text x="685" y="495" font-size="11">Head N: exp/rcp/rsq request + return ports in source pin plan.</text><text x="685" y="514" font-size="11">Head S: memory operands/addresses; put corresponding bank/align faces here.</text>
+<rect x="25" y="540" width="1270" height="105" fill="#e0e0e0" stroke="#888"/>
+<text x="40" y="562" font-size="12">Gates: source-equivalent physical views, legal orientation, actual pin XY/PG, clock transform/phi−R, activity and extracted route.</text>
+<text x="40" y="583" font-size="11">Reciprocal recipe has N data pins; MX would face them south. No legal-orientation or native timing admission is inferred.</text>
+<text x="40" y="604" font-size="11">* Relay 71.28 µm recipe is a component, not a proven input/output return placement. Octet may require separate source-preserving stage homes/roots.</text>
+<text x="40" y="625" font-size="11">Alignment / VM / copy / residual base homes remain unassigned. No full-SU fit, global floorplan or added pipeline performance claim.</text>
+<text x="25" y="667" font-size="10">Recipe source hashes in actual_su_coverage.json; original source ABI c6c44c12c. Separate 347-root copy successor requires current integration.</text></svg>

@@ -1,0 +1,47 @@
+digraph proposal {
+ graph [rankdir=TB,bgcolor="white",labelloc=t,label="Structural adjacency proposal from actual dataflow — no physical homes or timing qualification",fontsize=16];
+ node [shape=box,style="rounded,filled",fillcolor="#e8f1f5",fontname="Arial"];
+ seq [label="Shared programme / epoch / schedule
+existing state retained"];
+ emb [label="One actual retained code/scale provider
+no extra row SRAM for gateway extraction"];
+ vm [label="VM striped row-bank / commit faces
+16 banks per operand; address-dependent ownership"];
+ rowrouter [label="Existing coarse/fine rotation + 64-lane selection
+3×2048 output FF; source/physical partition open",fillcolor="#dedede"];
+ subgraph cluster_octet { label="Repeat 8× with existing lane/reduction identities";color="#b7cdd8";
+  ag [label="Extract existing local A gateway
+request mask / decode / return selection
+actual source state and ages required",fillcolor="#f8d8ad"];
+  align [label="2 × existing 4-lane alignment leaves"];
+  lanes [label="8 lane cohorts
+head / exp / rcp / rsq / relay"];
+  red [label="Existing 8-lane regional reducer
+no arithmetic reorder"];
+  ag -> align [label="256b selected A / octet; activity unknown"];
+  align -> lanes [label="local operand/constant returns"];
+  lanes -> red [label="local reduction inputs"];
+ }
+ fmt [label="Actual KV/VM formatter + ownership
+near producer/commit faces"];
+ coll [label="Local collective read/landing storage
+near actual digital transport face"];
+ kv [label="KV/system HBM/head groups
+compiler-paced acquisition / visibility"];
+ phy [label="P/R shared1043 + separate SerDes faces
+real codecs / FIFO / gearboxes / clocks"];
+ seq -> lanes [label="existing instruction / metadata distribution"];
+ seq -> ag [label="existing control/epoch state only"];
+ emb -> ag [label="512b code + 16b scale; shared code / local decode"];
+ ag -> vm [label="200b A mask/address per octet"];
+ vm -> rowrouter [label="actual selected rows / phases; address-dependent"];
+ rowrouter -> ag [label="256b selected A / octet; no fixed bank owner"];
+ rowrouter -> align [label="512b selected B/C / octet"];
+ lanes -> fmt [label="456b KV writes / octet; 3648b total"];
+ vm -> fmt [label="524b Q + 975b commit + status"];
+ fmt -> vm [label="actual committed write/epoch"];
+ fmt -> kv [label="long external path justified by actual transfer ownership"];
+ seq -> coll [label="compiled command / payload source ownership"];
+ vm -> coll [style=dashed,label="evaluate local read/copy dispatch; preserve source calendar"];
+ coll -> phy [label="actual five-face reserved slots;1043b shared PHY"];
+}

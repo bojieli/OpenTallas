@@ -1,0 +1,48 @@
+digraph actual {
+graph [rankdir=LR, bgcolor="white", label="Current actual Qwen producer→consumer graph: topology, not a physical floorplan
+956 source roots; 64 simple + 5 IO return assembly joins; 87 functional inputs unbound. Activity, real routes and cuts unmeasured.", labelloc=t, fontsize=16];
+node [shape=box,style="rounded,filled",fillcolor="#e9f0f5",fontname="Arial",fontsize=11];
+edge [fontname="Arial",fontsize=9,color="#526374"];
+tt [label="TT controller / ME issue"];
+seq [label="Sequencer + existing A gateway"];
+su [label="SU: eight source octets; 347 roots"];
+vm [label="VM: actual bank/commit hierarchy; 488 roots"];
+native [label="Native formatter / service / ownership"];
+embed [label="Retained embedding code + scale"];
+io [label="Collective + five faces + actual gearbox; 108 roots"];
+su -> tt [label="copy_active 1b",color="#526374"];
+tt -> su [label="copy_command 56b",color="#526374"];
+seq -> tt [label="su_image_ready 1b\nsu_issue_observer 16b\nsu_status 57b\nme_start 49b",color="#526374"];
+tt -> seq [label="me_status 92b",color="#526374"];
+seq -> su [label="su_command 482b\nsu_a_value 2048b\nsu_vm_a_request 64b\nsu_vm_a_address 1536b",color="#c86925"];
+su -> seq [label="su_result_status 108b\nsu_accepted 24b\nsu_a_request 64b\nsu_a_address 1536b",color="#c86925"];
+su -> vm [label="su_vm_request 2367b",color="#526374"];
+vm -> su [label="su_vm_values 6144b",color="#526374"];
+vm -> seq [label="su_vm_a_values 2048b\nseq_vm_value 512b\nseq_vm_read_valid 1b",color="#c86925"];
+tt -> vm [label="me_vm_write 553b\nme_vm_enable 1b",color="#526374"];
+vm -> tt [label="me_land_count 16b\nme_memory_ready 1b",color="#526374"];
+seq -> vm [label="seq_vm_read 21b\nseq_vm_write 533b",color="#526374"];
+tt -> native [label="native_native_cmd 380b\nnative_native_tok 18b\nnative_native_pos 18b\nnative_layer_context_v 1b\nnative_command_stage 6b",color="#526374"];
+native -> tt [label="native_return 95b",color="#526374"];
+su -> native [label="native_native_issue 63b\nnative_kv_we 64b\nnative_kv_waddr 1536b\nnative_kv_wdata 2048b",color="#526374"];
+native -> vm [label="native_vm_write 520b\nnative_q_epoch 1b\nnative_q_start 1b",color="#526374"];
+vm -> native [label="vm_native_q_committed 1b\nvm_native_q 524b\nvm_native_write_commit_v 39b\nvm_native_write_commit_line 312b\nvm_native_write_commit_mask 624b\nvm_native_fault 1b",color="#526374"];
+seq -> embed [label="embed_code_re 1b\nembed_code_addr 24b\nembed_scale_re 1b\nembed_scale_addr 18b\nembed_start 1b\nembed_token 18b",color="#526374"];
+embed -> seq [label="embed_code_q 512b\nembed_scale_q 16b",color="#526374"];
+embed -> su [label="embed_fault 1b",color="#526374"];
+seq -> io [label="coll_payload 512b\ncoll_last 1b\ncoll_mode 1b\ncoll_tag 32b\ncoll_valid 1b\ncoll_cmd_v 1b\ncoll_cmd_mode 1b\ncoll_cmd_words 16b\ncoll_cmd_tag 32b",color="#526374"];
+io -> seq [label="coll_cmd_observed_free 1b\ncoll_return_out_valid 1b\ncoll_return_out_err 1b\ncoll_return_out_rank 3b\ncoll_return_out_last 1b\ncoll_return_out_data 512b",color="#526374"];
+kv [label="KV/system die + actual HBM
+583b boundary / visibility ages open",fillcolor="#fff2dc"];
+fields [label="ME ROM fields / DVM / BAND trees
+actual cohort and source binding required",fillcolor="#fff2dc"];
+phy [label="Licensed collective PHY1043 + SerDes
+shared capacity / clock gearbox open",fillcolor="#fff2dc"];
+crom [label="Real constant/cache SRAM groups
+64 external interface ports",fillcolor="#fff2dc"];
+native -> kv [style=dashed,label="actual transport/calendar joins open"];
+tt -> fields [style=dashed,label="real commands / broadcasts / returned reductions"];
+fields -> vm [style=dashed,label="actual ME values and memory dependencies"];
+crom -> su [style=dashed,label="real per-octet constant memory; no ideal source"];
+io -> phy [style=dashed,label="5 faces, shared1043 mux / fixed gearbox; not KV583"];
+}
