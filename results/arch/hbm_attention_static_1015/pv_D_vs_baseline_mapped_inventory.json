@@ -1,0 +1,40 @@
+{
+  "qualification": false,
+  "baseline128": {
+    "logic_um2": 35131.20984,
+    "macros": 128,
+    "macro_um2": 136802.85696,
+    "mapped_clock_sinks": [
+      17081
+    ]
+  },
+  "D0_flat": {
+    "logic_um2": 31942.5201,
+    "macros": 2048,
+    "macro_um2": 2188845.71136,
+    "mapped_clock_sinks": [
+      53,
+      6688,
+      6688,
+      6688,
+      6688
+    ]
+  },
+  "D_registered_hardleaf_inventory": {
+    "tile_count": 32,
+    "tile_logic_um2": 1018.79208,
+    "tile_macros": 64,
+    "tile_clock_sinks": 836,
+    "gather_count": 4,
+    "gather_logic_um2": 2487.59586,
+    "gather_clock_sinks": 4757,
+    "logic_leaf_sum_um2": 42551.73,
+    "global_control_and_native_adapter": "additionalactuallogic;leafsum isnotwholeplacedarea",
+    "macro_um2": 2188845.71136,
+    "nominal_bankroot_endpoints": 11445,
+    "extraedges": 2
+  },
+  "macro_increment_D_vs_baseline_um2": 2052042.8543999998,
+  "zero_stage_flat_logic_delta_um2": -3188.6897400000016,
+  "limitations": "Flatlogic comparison doesnotpricerealregisteredphysicalpin envelopes/CTS/buffers/wires/cuts; dontpromote sourcearea tophysicaladoption"
+}
