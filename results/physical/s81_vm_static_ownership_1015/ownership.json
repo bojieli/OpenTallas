@@ -197,14 +197,19 @@
   "structural_slot_option": {
     "artifact": "physical/s81_die_pins/v20_vm_static_local_groups/layout_option.json",
     "new_outline_um": [
-      1728,
-      5702.4
+      2073.6,
+      6825.6
     ],
-    "area_growth_mm2": 3.7594204076159983,
+    "area_growth_mm2": 8.059237367616,
     "necessary_hop_screen_over500": 0,
-    "necessary_hop_max_um": 464.4,
+    "necessary_hop_max_um": 442.8,
     "production_floorplan_checks": [],
     "status": "NOT_ADOPTED; actual per-bit pins/phi-R/cuts/capture/staging fit/real views pending",
-    "next_owner": "S-VM physical with S-DIE canonical placement; no unchanged route retry"
+    "next_owner": "S-VM physical with S-DIE canonical placement; no unchanged route retry",
+    "relay_pin_options": "physical/s81_die_pins/v20_vm_static_transport_options/receipt.json",
+    "actual_pin_bits": [
+      5235,
+      10467
+    ]
   }
 }
