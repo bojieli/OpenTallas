@@ -14,7 +14,7 @@ def main():
   export(m,'field_before_trunks',False)
   return old(m)
  def export(m,name,complete):
-  record=dict(scope='COMPLETE_GENERATOR' if complete else 'PARTIAL_GENERATOR_NOT_RELEASE',die=list(G.DIE),insts=[[i.name,i.master,i.x,i.y,i.w,i.h,i.orient,i.kind,i.region] for i in m['insts']],buses=m.get('buses',[]),frames=m['frames'],regions=m['regions'],unbound_supplemental_reservations=m.get('canonical_layout',{}).get('hcp_homes',[]),calendar=m.get('canonical_calendar'),variant=m['variant'])
+  record=dict(scope='COMPLETE_GENERATOR' if complete else 'PARTIAL_GENERATOR_NOT_RELEASE',die=list(G.DIE),insts=[[i.name,i.master,i.x,i.y,i.w,i.h,i.orient,i.kind,i.region] for i in m['insts']],buses=m.get('buses',[]),frames=m['frames'],regions=m['regions'],port_aliases=G.real_ports(),unbound_supplemental_reservations=m.get('canonical_layout',{}).get('hcp_homes',[]),calendar=m.get('canonical_calendar'),variant=m['variant'])
   with gzip.open(w/(name+'.json.gz'),'wt') as f:json.dump(record,f,default=list)
   (w/(name+'_legality.json')).write_text(json.dumps(G.legality(m),indent=1))
  G.buses_r8=capture

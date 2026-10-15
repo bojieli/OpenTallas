@@ -1,0 +1,48 @@
+{
+ "dsfd_sp_gather_c": [
+  "t_capture",
+  "rW2",
+  "rW3",
+  "rW4",
+  "rW5",
+  "rE0",
+  "rE1",
+  "rE2",
+  "rE3",
+  "rE4",
+  "rE5",
+  "f_cd",
+  "t_xgo",
+  "c_cmd",
+  "c_done",
+  "c_st",
+  "f_vm",
+  "ck_l",
+  "ck",
+  "ckv",
+  "rst",
+  "rsv",
+  "ck_r",
+  "ck_q"
+ ],
+ "dsfd_sp_vm": [
+  "f_capture"
+ ],
+ "dsfd_sp_capture_c": [
+  "f_gather",
+  "rst",
+  "rsv",
+  "t_cd",
+  "t_vm",
+  "ck_c",
+  "ck_g",
+  "ck_ka",
+  "ck_kb",
+  "ck_sb",
+  "ck_sn",
+  "ck_x",
+  "ckv_d",
+  "ckv_r",
+  "ckv_x"
+ ]
+}

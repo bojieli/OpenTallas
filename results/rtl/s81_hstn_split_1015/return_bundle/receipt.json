@@ -1,0 +1,24 @@
+{
+ "status": "PASS",
+ "scope": "Actual glue_rtl six independent70-bit forwarded lanes, two actual primitive stages, six equal-frequency phase offsets. Edge/identity proof only; physical clock phase, CTS and pin timing remain unqualified.",
+ "mutant": "Lane3 input reads lane2 instead of its own source; all real primitives and clocks preserved.",
+ "runs": [
+  {
+   "kind": "exact",
+   "exit": 0,
+   "expected_result_observed": true,
+   "generated_sha256": "23ec839002f202dd0fd5dd7bfa468fc75d967b25714ad1aac0aa15e27027cf07"
+  },
+  {
+   "kind": "lane3_wrong_source",
+   "exit": 1,
+   "expected_result_observed": true,
+   "generated_sha256": "cb4b31e90d44729c4e927bd08bbeb3cbb5497d36c959fd6b47d8f765efcf52d7"
+  }
+ ],
+ "source_sha256": {
+  "tools/s81_hstn_split/return_bundle_gate.py": "7d0190445214baab8fc781e5e5145c92d7cd91a141cb3b36f3986dcd6d0aee08",
+  "tools/dsrom_s81_fulldie.py": "3dec891e05b8b9dbe6ecb80db82abe9a403a42df8316d7c728c3b144e2c9da74",
+  "rtl/common/ot_fwd_link_stage.sv": "dcd1ec4292f5d9061b14a5ce79f50f8c1f939dae3ac9e21e4acf5970a009d49a"
+ }
+}
