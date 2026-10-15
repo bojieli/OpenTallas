@@ -2,7 +2,7 @@
 module tb_hgi_coll_static_vmwrite;
     parameter integer MUT=0;
     reg clk=0; always #5 clk=~clk;
-    reg rst_n=0;
+    reg rst_n=0; reg [1:0] sid=0;
     reg [3:0] rv=0;
     reg [159:0] ra=0;
     reg [2047:0] rd=0;
@@ -14,7 +14,7 @@ module tb_hgi_coll_static_vmwrite;
     wire [2247:0] kq;
     wire [4:0] done;
     wire fault;
-    ot_hgi_coll_static_vmwrite #(.MUT(MUT)) dut(.clk(clk),.rst_n(rst_n),.sid(2'b00),
+    ot_hgi_coll_static_vmwrite #(.MUT(MUT)) dut(.clk(clk),.rst_n(rst_n),.sid(sid),
         .rgx_v(rv),.rgx_addr(ra),.rgx_data(rd),.rgx_vm(1'b1),.tkw_v(tv),.tkw_d(td),
         .ingress_slot(islot),.slot_valid(slots),.slot_owner(owners),.kq(kq),.launch_done(done),.fault(fault));
     reg [4:0] pv=0, ppv=0;
@@ -38,6 +38,9 @@ module tb_hgi_coll_static_vmwrite;
                 // TKW uses first bank1; the full five-lane burst is isolated.
                 sec=16'((seq*16)+(lane==4 ? 1 : 2*lane));
                 if(mode==2) sec=16'(seq*16);
+                if(mode==7) sec=16'd1;
+                if(mode==4) sec=sec | 16'h2000;
+                if(mode==5) sec=sec | 16'h8000;
                 aa[lane*40 +:40]=40'(sec)<<3;
                 for(word=0;word<16;word=word+1) dd[lane*512+word*32 +:32]=32'(seq*65536+lane*256+word);
             end
@@ -55,6 +58,7 @@ module tb_hgi_coll_static_vmwrite;
             end
             if(mode==1) slots=slots ^ 8'b1;
             if(mode==3) islot=valid ^ 5'b1;
+            if(mode==6) islot=valid | 5'b1;
             @(posedge clk); #1;
             // Only valid payload has meaning. Check every emitted sector bit.
             for(bank=0;bank<8;bank=bank+1) begin
@@ -86,6 +90,17 @@ module tb_hgi_coll_static_vmwrite;
         reset();tick(5'b00011,0,2);tick(0,1,0);if(!fault) $fatal(1,"same bank conflict undetected");
         reset();tick(1,0,0);tick(0,1,0);tick(1,2,0);tick(0,3,0);
         if(fault) $fatal(1,"reset failed to clear diagnostic fault");
+        reset();tick(1,0,0);tick(1,1,7);tick(0,2,0);
+        if(!fault) $fatal(1,"high/low bank conflict undetected");
+        // Continue legal transfers under sticky fault: tick checks exact payload
+        // and launch timing at every edge, so the fault cannot shift execution.
+        tick(0,3,0);tick(1,4,0);tick(0,5,0);tick(0,6,0);
+        if(!fault) $fatal(1,"fault failed to remain sticky");
+        reset();tick(1,0,4);if(!fault) $fatal(1,"wrong sid undetected");
+        reset();tick(0,0,6);if(!fault) $fatal(1,"missing reserved ingress undetected");
+        reset();sid=2;tick(1,0,5);tick(0,1,0);tick(0,2,0);
+        if(fault) $fatal(1,"mirror window must use sector sid zero independent of local sid");
+        sid=0;
         $display("STATIC VMWRITE PASS checked=%0d full_bank_cycles=%0d RGX=4x512 TKW=568 low=C+1 high=C+2",checked,full_cycles);
         $finish;
     end

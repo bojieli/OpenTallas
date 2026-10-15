@@ -80,7 +80,7 @@ module ot_hgi_coll_static_vmwrite #(
                 // Existing COLL ABI encodes sector at address[18:3], not >>5.
                 // Preserve that ABI exactly; high bits and low 3 must be zero.
                 if (iv[j] && (ia[j*40 +: 3] != 0 || |ia[j*40+19 +: 21] ||
-                    ia[j*40+16 +: 2] != sid || &ia[j*40+3 +: 13])) fault <= 1;
+                    (ia[j*40+18] ? ia[j*40+16 +: 2] != 0 : ia[j*40+16 +: 2] != sid) || &ia[j*40+3 +: 13])) fault <= 1;
             end
         end
     end
