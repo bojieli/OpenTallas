@@ -1042,6 +1042,7 @@ module ot_qfd_seq_su_bi #(
     parameter integer SMIN = 7, parameter integer SMAX = 11, parameter integer TCUT = 7,
     parameter integer IS = 1, parameter integer OS = 1, parameter integer RT = 4,
     parameter integer RLY = 0, parameter integer CRED = 0,
+    parameter integer VWA = 20, // native VM row address; no implicit base
     // PSRAM = 1 (hardcore-1010 D fallback, 2026-10-10; 0 = unchanged): the 64 x 1,024 program store is two
     // ot_sram_1r1w_64x512_m1_r2c2 macros (64 x 512, bit-masked 64-bit writes) instead of 65,536 flops; the read is
     // issued at the prog_re edge with the unregistered address (12-bit add -> macro address pins), the macro output is
@@ -1114,9 +1115,9 @@ module ot_qfd_seq_su_bi #(
     output wire [1-1:0] coll_busy,
     output wire [1-1:0] kv_write_flush,
     output wire [1-1:0] vm_re,
-    output wire [8-1:0] vm_raddr,
+    output wire [VWA-1:0] vm_raddr,
     output wire [1-1:0] vm_we,
-    output wire [8-1:0] vm_waddr,
+    output wire [VWA-1:0] vm_waddr,
     output wire [512-1:0] vm_wdata,
     output wire [1-1:0] c_valid,
     output wire [512-1:0] c_data,
@@ -1284,12 +1285,12 @@ module ot_qfd_seq_su_bi #(
     ot_hdc_delay #(.W(1), .D(OS), .RESET(1)) u_o_kv_write_flush (.clk(clk), .rst_n(rsv[5]), .d(b_kv_write_flush), .q(kv_write_flush));
     wire [1-1:0] b_vm_re;
     ot_hdc_delay #(.W(1), .D(OS), .RESET(1)) u_o_vm_re (.clk(clk), .rst_n(rsv[6]), .d(b_vm_re), .q(vm_re));
-    wire [8-1:0] b_vm_raddr;
-    ot_hdc_delay #(.W(8), .D(OS)) u_o_vm_raddr (.clk(clk), .rst_n(rsv[6]), .d(b_vm_raddr), .q(vm_raddr));
+    wire [VWA-1:0] b_vm_raddr;
+    ot_hdc_delay #(.W(VWA), .D(OS)) u_o_vm_raddr (.clk(clk), .rst_n(rsv[6]), .d(b_vm_raddr), .q(vm_raddr));
     wire [1-1:0] b_vm_we;
     ot_hdc_delay #(.W(1), .D(OS), .RESET(1)) u_o_vm_we (.clk(clk), .rst_n(rsv[6]), .d(b_vm_we), .q(vm_we));
-    wire [8-1:0] b_vm_waddr;
-    ot_hdc_delay #(.W(8), .D(OS)) u_o_vm_waddr (.clk(clk), .rst_n(rsv[6]), .d(b_vm_waddr), .q(vm_waddr));
+    wire [VWA-1:0] b_vm_waddr;
+    ot_hdc_delay #(.W(VWA), .D(OS)) u_o_vm_waddr (.clk(clk), .rst_n(rsv[6]), .d(b_vm_waddr), .q(vm_waddr));
     wire [512-1:0] b_vm_wdata;
     ot_hdc_delay #(.W(512), .D(OS)) u_o_vm_wdata (.clk(clk), .rst_n(rsv[6]), .d(b_vm_wdata), .q(vm_wdata));
     wire [1-1:0] b_c_valid;
@@ -1667,7 +1668,7 @@ module ot_qfd_seq_su_bi #(
         .token(q_tp_token), .pos(q_tp_pos), .st_rdy(q_cb_st_rdy), .st_rdy_stage(q_cb_st_rdy_stage), .go(sg_go),
         .go_token(sg_token), .go_pos(sg_pos), .cur_stage(sg_stage), .tok_start(sg_tok));
     ot_hdc_delay #(.W(6 + 1 + NW), .D(OS)) u_o_cb (.clk(clk), .rst_n(rsv[6]), .d({sg_stage, sg_tok, q_tp_pos}), .q({cb_stage, cb_tok_start, cb_tpos}));
-    ot_qwen_tp_seq_w12_vrl #(.VRL(IS + OS + 1 + 2 * RLY), .CRED(CRED), .N((TPMUT == 2) ? 4 : D), .NW(NW), .PAW(PAW), .VWA(8), .DAW(6), .FW(512), .TAGW(32),
+    ot_qwen_tp_seq_w12_vrl #(.VRL(IS + OS + 1 + 2 * RLY), .CRED(CRED), .N((TPMUT == 2) ? 4 : D), .NW(NW), .PAW(PAW), .VWA(VWA), .VM_ADDR_EXT(VWA > 8), .DAW(6), .FW(512), .TAGW(32),
         .QWEN_FULLSHAPE(1), .ENABLE_AR256(1), .RMUT(RRG >= 2 ? 1 : 0)) u_seq (
         .clk(clk), .rst_n(rsv[0]), .rst_nw(rsv[1]), .start(sg_go), .token(sg_token), .pos(sg_pos), .done(b_s_done),
         .next_token(b_seq_ntok), .next_val(b_seq_nval), .fault(b_s_fault), .coll_busy(b_coll_busy),
@@ -1748,6 +1749,7 @@ module ot_qwen_tp_seq_w12_vrl #(
     parameter integer NW   = 16,
     parameter integer PAW  = 12,
     parameter integer VWA  = 8,
+    parameter integer VM_ADDR_EXT = 0, // [31:20] high row bits; [9:2] low bits
     parameter integer DAW  = 6,
     parameter integer FW   = 512,
     parameter integer TAGW = 32,
@@ -1808,6 +1810,9 @@ module ot_qwen_tp_seq_w12_vrl #(
     reg [DAW-1:0] seg;
     reg [1:0]     kind;
     reg [VWA-1:0] vw;
+    wire [19:0] descriptor_vw = VM_ADDR_EXT ? {desc_q[31:20], desc_q[9:2]} : {12'd0, desc_q[9:2]};
+    wire [8:0] descriptor_nw = (ENABLE_AR256 && desc_q[1:0] == K_AR && desc_q[17:10] == 0) ? 9'd256 : {1'b0, desc_q[17:10]};
+    wire [20:0] descriptor_end = {1'b0, descriptor_vw} + descriptor_nw;
     reg [8:0]     nw;
     reg [NW-1:0]  row0;
 
@@ -1875,12 +1880,16 @@ module ot_qwen_tp_seq_w12_vrl #(
                 end
                 S_DESC: begin desc_re <= 1'b1; desc_addr <= seg; st <= S_DLAT; end
                 S_DLAT: if (!desc_re) begin
-                    kind <= desc_q[1:0]; vw <= desc_q[2 +: 8];
+                    kind <= desc_q[1:0]; vw <= descriptor_vw;
                     nw <= (ENABLE_AR256 != 0 && desc_q[1:0] == K_AR && desc_q[10 +: 8] == 8'd0) ? 9'd256 : {1'b0, desc_q[10 +: 8]};
                     prog_base <= desc_q[32 +: PAW];
                     row0 <= (QWEN_FULLSHAPE != 0) ?
                             ({desc_q[19:18], desc_q[63:48]}) : desc_q[48 +: NW];
-                    st <= S_RUN;
+                    // Reject an invalid range before launching the core or touching memory.
+                    if (VM_ADDR_EXT && desc_q[1:0] == K_AR &&
+                        (descriptor_nw == 0 || descriptor_end > (21'd1 << VWA))) begin
+                        fault <= 1'b1; done <= 1'b1; st <= S_IDLE;
+                    end else st <= S_RUN;
                 end
                 S_RUN: st <= S_CWAIT;              // the core samples core_start on this edge
                 S_CWAIT: if (core_done) begin

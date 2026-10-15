@@ -772,6 +772,15 @@ def emit_seq_su(boundary: bool = False) -> str:
 TP_SEQ = ROOT / "rtl/rom/ot_qwen_tp_seq_w12.sv"
 
 
+def native_vm_descriptor(t: str) -> str:
+    """Native20-bit VM row descriptor extension; legacy layouts remain opt-in."""
+    t = one(t, "    parameter integer VWA  = 8,", "    parameter integer VWA  = 8,\n    parameter integer VM_ADDR_EXT = 0, // [31:20] high row bits; [9:2] low bits")
+    t = one(t, "    reg [8:0]     nw;", "    wire [19:0] descriptor_vw = VM_ADDR_EXT ? {desc_q[31:20], desc_q[9:2]} : {12'd0, desc_q[9:2]};\n    wire [8:0] descriptor_nw = (ENABLE_AR256 && desc_q[1:0] == K_AR && desc_q[17:10] == 0) ? 9'd256 : {1'b0, desc_q[17:10]};\n    wire [20:0] descriptor_end = {1'b0, descriptor_vw} + descriptor_nw;\n    reg [8:0]     nw;")
+    t = one(t, "kind <= desc_q[1:0]; vw <= desc_q[2 +: 8];", "kind <= desc_q[1:0]; vw <= descriptor_vw;")
+    t = one(t, "                    st <= S_RUN;\n                end\n                S_RUN: st <= S_CWAIT;", "                    // Reject an invalid range before launching the core or touching memory.\n                    if (VM_ADDR_EXT && desc_q[1:0] == K_AR &&\n                        (descriptor_nw == 0 || descriptor_end > (21'd1 << VWA))) begin\n                        fault <= 1'b1; done <= 1'b1; st <= S_IDLE;\n                    end else st <= S_RUN;\n                end\n                S_RUN: st <= S_CWAIT;")
+    return t
+
+
 def tp_seq_vrl(cred: bool = False) -> str:
     """ot_qwen_tp_seq_w12_vrl: the TP sequencer with its vector-memory read latency a parameter (VRL edges vre -> vrq;
     the base assumes 1).  Root cause of the masters' token-chain mismatch (qwen-1010/a 10-10): inside a stationed die
@@ -790,6 +799,7 @@ def tp_seq_vrl(cred: bool = False) -> str:
     t = one(t, "(q_n + rd_v) < QD;", "(q_n + rd_n) < QD;")
     t = one(t, "rd_k <= 0; tx_k <= 0; rx_k <= 0; rd_v <= 1'b0;", "rd_k <= 0; tx_k <= 0; rx_k <= 0; rd_p <= {VRL{1'b0}};")
     t = one(t, "            rd_v <= rd_go;", "            rd_p <= (VRL > 1) ? {rd_p, rd_go} : rd_go;")
+    t = native_vm_descriptor(t)
     if not cred:
         return t
     # CRED > 0: the collective port is credit based (ot_rom_oneshot_die_m in_cr): c_ready carries one pulse per freed
@@ -1252,6 +1262,11 @@ def emit_seq_su_bi() -> str:
                "    parameter integer RRG = 0,   // el1011-q-seq: replicated tile reset (rst_regions); 0 = one u_rs copy\n"
                "    parameter integer PCUT = 0,  // el1011-q-seq: exact controller path cuts (ctrl_pcut)\n"
                "    parameter integer OLAG = 0,  // el1011-q-seq: lagged other-unit counter (ctrl_olag)")
+    t = t.replace("parameter integer RLY = 0, parameter integer CRED = 0", "parameter integer RLY = 0, parameter integer CRED = 0,\n    parameter integer VWA = 20")
+    for name in ("vm_raddr", "vm_waddr", "b_vm_raddr", "b_vm_waddr"):
+        t = t.replace("[8-1:0] " + name, "[VWA-1:0] " + name)
+    t = t.replace(".W(8), .D(OS)) u_o_vm_", ".W(VWA), .D(OS)) u_o_vm_")
+    t = t.replace(".VWA(8), .DAW(6)", ".VWA(VWA), .VM_ADDR_EXT(VWA > 8), .DAW(6)")
     return t + "\n" + vrl_rst_split(tp_seq_vrl(cred=True))
 
 
