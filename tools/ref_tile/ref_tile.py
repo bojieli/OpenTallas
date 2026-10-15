@@ -1031,6 +1031,7 @@ def gen_hooks(s: dict, kd: str) -> dict:
     pre_cts += [f"source /src/{f}" for f in s.get("pre_cts_extra", [])]
     multi = s.get("clock") == "multiple_cts_roots"
     if multi:
+        pre_cts[0] = "# ref_tile PRE_CTS: independent related leaf CTS roots; measure each domain boundary after CTS"
         # Every boundary belongs to its actual root. Never apply the legacy
         # single-clock IO shim (including its unrelated tile_id exception).
         pre_cts.append(f"source /src/{QDM}/repair_budget.tcl")
