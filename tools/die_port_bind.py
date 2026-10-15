@@ -327,14 +327,16 @@ def parse_modules(text: str, path: str):
                 order.append(pn)
         else:
             body = seg[i:]
+        # Declaration keywords inside strings must not resolve non-ANSI ports.
+        body_masked = _lexical_mask(body, strings=True)
         # localparams / body parameters (non-ANSI parameter declarations)
-        for pm in re.finditer(r'\b(?:parameter|localparam)\s+(?:integer\s+|int\s+|\[[^\]]*\]\s*)?([^;]+);', body):
-            for item in _split_commas(pm.group(1)):          # a declaration list: localparam A = .., B = .., C = ..;
+        for pm in re.finditer(r'\b(?:parameter|localparam)\s+(?:integer\s+|int\s+|\[[^\]]*\]\s*)?([^;]+);', body_masked):
+            for item in _split_commas(body[pm.start(1):pm.end(1)]):          # a declaration list: localparam A = .., B = .., C = ..;
                 im = re.match(r'\s*(\w+)\s*=\s*(.+)$', item, re.S)
                 if im:
                     params.setdefault(im.group(1), im.group(2).strip())
         # non-ANSI port declarations in the body
-        for pm in re.finditer(r'\b(input|output|inout)\s+(?:wire\s+|reg\s+|logic\s+)?(?:signed\s+)?((?:\[[^\]]+\]\s*)*)([^;]+);', body):
+        for pm in re.finditer(r'\b(input|output|inout)\s+(?:wire\s+|reg\s+|logic\s+)?(?:signed\s+)?((?:\[[^\]]+\]\s*)*)([^;]+);', body_masked):
             for pn in _split_commas(pm.group(3)):
                 pn = pn.strip().split('=')[0].strip()
                 if pn in ports and ports[pn][0] is None:

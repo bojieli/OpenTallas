@@ -54,6 +54,7 @@ endmodule
         for source in [
             'module m(input custom_type unknown); endmodule',
             'module m(ck,unresolved); input ck; endmodule',
+            'module m(unresolved); initial $display("input unresolved;"); endmodule',
             'module m(input ck); endmodule module m(input other); endmodule',
             'module m #(parameter N=(2+3) (input ck); endmodule',
             'module m(input ck); /* unterminated endmodule',
