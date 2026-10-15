@@ -1,0 +1,2953 @@
+{
+ "txl": 6,
+ "phy": 5,
+ "phy_compiled": 7,
+ "pinreg": true,
+ "ofs": 0,
+ "txd": {
+  "C": [
+   3,
+   4,
+   1,
+   4
+  ],
+  "K": [
+   3,
+   4,
+   3,
+   3
+  ]
+ },
+ "entries": {
+  "C_tx": 9,
+  "C_rx": 6,
+  "K_tx": 6,
+  "K_rx": 9
+ },
+ "seg1_base": {
+  "C_tx": 4,
+  "C_rx": 2,
+  "K_tx": 2,
+  "K_rx": 4
+ },
+ "span": 2190,
+ "spans": {
+  "0": 2190,
+  "1": 2684
+ },
+ "messages": [
+  {
+   "seg": 0,
+   "src": "C",
+   "cyc": 375,
+   "tx_port": 0,
+   "rx_port": 0,
+   "kind": 1,
+   "beat": 0,
+   "arrive": 390,
+   "rx_out": 392,
+   "wr": 378
+  },
+  {
+   "seg": 0,
+   "src": "C",
+   "cyc": 376,
+   "tx_port": 0,
+   "rx_port": 0,
+   "kind": 2,
+   "beat": 0,
+   "arrive": 391,
+   "rx_out": 393,
+   "wr": 379
+  },
+  {
+   "seg": 0,
+   "src": "C",
+   "cyc": 377,
+   "tx_port": 0,
+   "rx_port": 0,
+   "kind": 2,
+   "beat": 1,
+   "arrive": 392,
+   "rx_out": 394,
+   "wr": 380
+  },
+  {
+   "seg": 0,
+   "src": "C",
+   "cyc": 378,
+   "tx_port": 0,
+   "rx_port": 0,
+   "kind": 2,
+   "beat": 2,
+   "arrive": 393,
+   "rx_out": 395,
+   "wr": 381
+  },
+  {
+   "seg": 0,
+   "src": "C",
+   "cyc": 379,
+   "tx_port": 0,
+   "rx_port": 0,
+   "kind": 2,
+   "beat": 3,
+   "arrive": 394,
+   "rx_out": 396,
+   "wr": 382
+  },
+  {
+   "seg": 0,
+   "src": "C",
+   "cyc": 380,
+   "tx_port": 0,
+   "rx_port": 0,
+   "kind": 2,
+   "beat": 4,
+   "arrive": 395,
+   "rx_out": 397,
+   "wr": 383
+  },
+  {
+   "seg": 0,
+   "src": "C",
+   "cyc": 381,
+   "tx_port": 0,
+   "rx_port": 0,
+   "kind": 2,
+   "beat": 5,
+   "arrive": 396,
+   "rx_out": 398,
+   "wr": 384
+  },
+  {
+   "seg": 0,
+   "src": "C",
+   "cyc": 382,
+   "tx_port": 0,
+   "rx_port": 0,
+   "kind": 2,
+   "beat": 6,
+   "arrive": 397,
+   "rx_out": 399,
+   "wr": 385
+  },
+  {
+   "seg": 0,
+   "src": "C",
+   "cyc": 383,
+   "tx_port": 0,
+   "rx_port": 0,
+   "kind": 2,
+   "beat": 7,
+   "arrive": 398,
+   "rx_out": 400,
+   "wr": 386
+  },
+  {
+   "seg": 0,
+   "src": "C",
+   "cyc": 384,
+   "tx_port": 0,
+   "rx_port": 0,
+   "kind": 2,
+   "beat": 8,
+   "arrive": 399,
+   "rx_out": 401,
+   "wr": 387
+  },
+  {
+   "seg": 0,
+   "src": "C",
+   "cyc": 385,
+   "tx_port": 0,
+   "rx_port": 0,
+   "kind": 2,
+   "beat": 9,
+   "arrive": 400,
+   "rx_out": 402,
+   "wr": 388
+  },
+  {
+   "seg": 0,
+   "src": "C",
+   "cyc": 386,
+   "tx_port": 0,
+   "rx_port": 0,
+   "kind": 2,
+   "beat": 10,
+   "arrive": 401,
+   "rx_out": 403,
+   "wr": 389
+  },
+  {
+   "seg": 0,
+   "src": "C",
+   "cyc": 387,
+   "tx_port": 0,
+   "rx_port": 0,
+   "kind": 2,
+   "beat": 11,
+   "arrive": 402,
+   "rx_out": 404,
+   "wr": 390
+  },
+  {
+   "seg": 0,
+   "src": "C",
+   "cyc": 388,
+   "tx_port": 0,
+   "rx_port": 0,
+   "kind": 2,
+   "beat": 12,
+   "arrive": 403,
+   "rx_out": 405,
+   "wr": 391
+  },
+  {
+   "seg": 0,
+   "src": "C",
+   "cyc": 389,
+   "tx_port": 0,
+   "rx_port": 0,
+   "kind": 2,
+   "beat": 13,
+   "arrive": 404,
+   "rx_out": 406,
+   "wr": 392
+  },
+  {
+   "seg": 0,
+   "src": "C",
+   "cyc": 390,
+   "tx_port": 0,
+   "rx_port": 0,
+   "kind": 2,
+   "beat": 14,
+   "arrive": 405,
+   "rx_out": 407,
+   "wr": 393
+  },
+  {
+   "seg": 0,
+   "src": "C",
+   "cyc": 391,
+   "tx_port": 0,
+   "rx_port": 0,
+   "kind": 2,
+   "beat": 15,
+   "arrive": 406,
+   "rx_out": 408,
+   "wr": 394
+  },
+  {
+   "seg": 0,
+   "src": "C",
+   "cyc": 392,
+   "tx_port": 0,
+   "rx_port": 0,
+   "kind": 2,
+   "beat": 16,
+   "arrive": 407,
+   "rx_out": 409,
+   "wr": 395
+  },
+  {
+   "seg": 0,
+   "src": "C",
+   "cyc": 393,
+   "tx_port": 0,
+   "rx_port": 0,
+   "kind": 2,
+   "beat": 17,
+   "arrive": 408,
+   "rx_out": 410,
+   "wr": 396
+  },
+  {
+   "seg": 0,
+   "src": "C",
+   "cyc": 394,
+   "tx_port": 0,
+   "rx_port": 0,
+   "kind": 2,
+   "beat": 18,
+   "arrive": 409,
+   "rx_out": 411,
+   "wr": 397
+  },
+  {
+   "seg": 0,
+   "src": "C",
+   "cyc": 395,
+   "tx_port": 0,
+   "rx_port": 0,
+   "kind": 2,
+   "beat": 19,
+   "arrive": 410,
+   "rx_out": 412,
+   "wr": 398
+  },
+  {
+   "seg": 0,
+   "src": "C",
+   "cyc": 396,
+   "tx_port": 0,
+   "rx_port": 0,
+   "kind": 2,
+   "beat": 20,
+   "arrive": 411,
+   "rx_out": 413,
+   "wr": 399
+  },
+  {
+   "seg": 0,
+   "src": "C",
+   "cyc": 397,
+   "tx_port": 0,
+   "rx_port": 0,
+   "kind": 2,
+   "beat": 21,
+   "arrive": 412,
+   "rx_out": 414,
+   "wr": 400
+  },
+  {
+   "seg": 0,
+   "src": "C",
+   "cyc": 398,
+   "tx_port": 0,
+   "rx_port": 0,
+   "kind": 2,
+   "beat": 22,
+   "arrive": 413,
+   "rx_out": 415,
+   "wr": 401
+  },
+  {
+   "seg": 0,
+   "src": "C",
+   "cyc": 399,
+   "tx_port": 0,
+   "rx_port": 0,
+   "kind": 2,
+   "beat": 23,
+   "arrive": 414,
+   "rx_out": 416,
+   "wr": 402
+  },
+  {
+   "seg": 0,
+   "src": "C",
+   "cyc": 400,
+   "tx_port": 0,
+   "rx_port": 0,
+   "kind": 2,
+   "beat": 24,
+   "arrive": 415,
+   "rx_out": 417,
+   "wr": 403
+  },
+  {
+   "seg": 0,
+   "src": "C",
+   "cyc": 401,
+   "tx_port": 0,
+   "rx_port": 0,
+   "kind": 2,
+   "beat": 25,
+   "arrive": 416,
+   "rx_out": 418,
+   "wr": 404
+  },
+  {
+   "seg": 0,
+   "src": "C",
+   "cyc": 402,
+   "tx_port": 0,
+   "rx_port": 0,
+   "kind": 2,
+   "beat": 26,
+   "arrive": 417,
+   "rx_out": 419,
+   "wr": 405
+  },
+  {
+   "seg": 0,
+   "src": "C",
+   "cyc": 403,
+   "tx_port": 0,
+   "rx_port": 0,
+   "kind": 2,
+   "beat": 27,
+   "arrive": 418,
+   "rx_out": 420,
+   "wr": 406
+  },
+  {
+   "seg": 0,
+   "src": "C",
+   "cyc": 404,
+   "tx_port": 0,
+   "rx_port": 0,
+   "kind": 2,
+   "beat": 28,
+   "arrive": 419,
+   "rx_out": 421,
+   "wr": 407
+  },
+  {
+   "seg": 0,
+   "src": "C",
+   "cyc": 405,
+   "tx_port": 0,
+   "rx_port": 0,
+   "kind": 2,
+   "beat": 29,
+   "arrive": 420,
+   "rx_out": 422,
+   "wr": 408
+  },
+  {
+   "seg": 0,
+   "src": "C",
+   "cyc": 406,
+   "tx_port": 0,
+   "rx_port": 0,
+   "kind": 2,
+   "beat": 30,
+   "arrive": 421,
+   "rx_out": 423,
+   "wr": 409
+  },
+  {
+   "seg": 0,
+   "src": "C",
+   "cyc": 407,
+   "tx_port": 0,
+   "rx_port": 0,
+   "kind": 2,
+   "beat": 31,
+   "arrive": 422,
+   "rx_out": 424,
+   "wr": 410
+  },
+  {
+   "seg": 0,
+   "src": "C",
+   "cyc": 408,
+   "tx_port": 3,
+   "rx_port": 3,
+   "kind": 5,
+   "beat": 0,
+   "arrive": 424,
+   "rx_out": 426,
+   "wr": 412
+  },
+  {
+   "seg": 0,
+   "src": "C",
+   "cyc": 409,
+   "tx_port": 3,
+   "rx_port": 3,
+   "kind": 5,
+   "beat": 1,
+   "arrive": 425,
+   "rx_out": 427,
+   "wr": 413
+  },
+  {
+   "seg": 0,
+   "src": "C",
+   "cyc": 410,
+   "tx_port": 3,
+   "rx_port": 3,
+   "kind": 5,
+   "beat": 2,
+   "arrive": 426,
+   "rx_out": 428,
+   "wr": 414
+  },
+  {
+   "seg": 0,
+   "src": "C",
+   "cyc": 411,
+   "tx_port": 3,
+   "rx_port": 3,
+   "kind": 5,
+   "beat": 3,
+   "arrive": 427,
+   "rx_out": 429,
+   "wr": 415
+  },
+  {
+   "seg": 0,
+   "src": "C",
+   "cyc": 415,
+   "tx_port": 2,
+   "rx_port": 2,
+   "kind": 15,
+   "beat": 0,
+   "arrive": 428,
+   "rx_out": 430,
+   "wr": 416
+  },
+  {
+   "seg": 0,
+   "src": "K",
+   "cyc": 2140,
+   "tx_port": 0,
+   "rx_port": 0,
+   "kind": 3,
+   "beat": 0,
+   "arrive": 2155,
+   "rx_out": 2157,
+   "wr": 2143
+  },
+  {
+   "seg": 0,
+   "src": "K",
+   "cyc": 2141,
+   "tx_port": 0,
+   "rx_port": 0,
+   "kind": 3,
+   "beat": 1,
+   "arrive": 2156,
+   "rx_out": 2158,
+   "wr": 2144
+  },
+  {
+   "seg": 0,
+   "src": "K",
+   "cyc": 2142,
+   "tx_port": 0,
+   "rx_port": 0,
+   "kind": 3,
+   "beat": 2,
+   "arrive": 2157,
+   "rx_out": 2159,
+   "wr": 2145
+  },
+  {
+   "seg": 0,
+   "src": "K",
+   "cyc": 2143,
+   "tx_port": 0,
+   "rx_port": 0,
+   "kind": 3,
+   "beat": 3,
+   "arrive": 2158,
+   "rx_out": 2160,
+   "wr": 2146
+  },
+  {
+   "seg": 0,
+   "src": "K",
+   "cyc": 2144,
+   "tx_port": 0,
+   "rx_port": 0,
+   "kind": 3,
+   "beat": 4,
+   "arrive": 2159,
+   "rx_out": 2161,
+   "wr": 2147
+  },
+  {
+   "seg": 0,
+   "src": "K",
+   "cyc": 2145,
+   "tx_port": 0,
+   "rx_port": 0,
+   "kind": 3,
+   "beat": 5,
+   "arrive": 2160,
+   "rx_out": 2162,
+   "wr": 2148
+  },
+  {
+   "seg": 0,
+   "src": "K",
+   "cyc": 2146,
+   "tx_port": 0,
+   "rx_port": 0,
+   "kind": 3,
+   "beat": 6,
+   "arrive": 2161,
+   "rx_out": 2163,
+   "wr": 2149
+  },
+  {
+   "seg": 0,
+   "src": "K",
+   "cyc": 2147,
+   "tx_port": 0,
+   "rx_port": 0,
+   "kind": 3,
+   "beat": 7,
+   "arrive": 2162,
+   "rx_out": 2164,
+   "wr": 2150
+  },
+  {
+   "seg": 0,
+   "src": "K",
+   "cyc": 2148,
+   "tx_port": 0,
+   "rx_port": 0,
+   "kind": 3,
+   "beat": 8,
+   "arrive": 2163,
+   "rx_out": 2165,
+   "wr": 2151
+  },
+  {
+   "seg": 0,
+   "src": "K",
+   "cyc": 2149,
+   "tx_port": 0,
+   "rx_port": 0,
+   "kind": 3,
+   "beat": 9,
+   "arrive": 2164,
+   "rx_out": 2166,
+   "wr": 2152
+  },
+  {
+   "seg": 0,
+   "src": "K",
+   "cyc": 2150,
+   "tx_port": 0,
+   "rx_port": 0,
+   "kind": 3,
+   "beat": 10,
+   "arrive": 2165,
+   "rx_out": 2167,
+   "wr": 2153
+  },
+  {
+   "seg": 0,
+   "src": "K",
+   "cyc": 2151,
+   "tx_port": 0,
+   "rx_port": 0,
+   "kind": 3,
+   "beat": 11,
+   "arrive": 2166,
+   "rx_out": 2168,
+   "wr": 2154
+  },
+  {
+   "seg": 0,
+   "src": "K",
+   "cyc": 2152,
+   "tx_port": 0,
+   "rx_port": 0,
+   "kind": 3,
+   "beat": 12,
+   "arrive": 2167,
+   "rx_out": 2169,
+   "wr": 2155
+  },
+  {
+   "seg": 0,
+   "src": "K",
+   "cyc": 2153,
+   "tx_port": 0,
+   "rx_port": 0,
+   "kind": 3,
+   "beat": 13,
+   "arrive": 2168,
+   "rx_out": 2170,
+   "wr": 2156
+  },
+  {
+   "seg": 0,
+   "src": "K",
+   "cyc": 2154,
+   "tx_port": 0,
+   "rx_port": 0,
+   "kind": 3,
+   "beat": 14,
+   "arrive": 2169,
+   "rx_out": 2171,
+   "wr": 2157
+  },
+  {
+   "seg": 0,
+   "src": "K",
+   "cyc": 2155,
+   "tx_port": 0,
+   "rx_port": 0,
+   "kind": 3,
+   "beat": 15,
+   "arrive": 2170,
+   "rx_out": 2172,
+   "wr": 2158
+  },
+  {
+   "seg": 0,
+   "src": "K",
+   "cyc": 2156,
+   "tx_port": 0,
+   "rx_port": 0,
+   "kind": 3,
+   "beat": 16,
+   "arrive": 2171,
+   "rx_out": 2173,
+   "wr": 2159
+  },
+  {
+   "seg": 0,
+   "src": "K",
+   "cyc": 2157,
+   "tx_port": 0,
+   "rx_port": 0,
+   "kind": 3,
+   "beat": 17,
+   "arrive": 2172,
+   "rx_out": 2174,
+   "wr": 2160
+  },
+  {
+   "seg": 0,
+   "src": "K",
+   "cyc": 2158,
+   "tx_port": 0,
+   "rx_port": 0,
+   "kind": 3,
+   "beat": 18,
+   "arrive": 2173,
+   "rx_out": 2175,
+   "wr": 2161
+  },
+  {
+   "seg": 0,
+   "src": "K",
+   "cyc": 2159,
+   "tx_port": 0,
+   "rx_port": 0,
+   "kind": 3,
+   "beat": 19,
+   "arrive": 2174,
+   "rx_out": 2176,
+   "wr": 2162
+  },
+  {
+   "seg": 0,
+   "src": "K",
+   "cyc": 2160,
+   "tx_port": 0,
+   "rx_port": 0,
+   "kind": 3,
+   "beat": 20,
+   "arrive": 2175,
+   "rx_out": 2177,
+   "wr": 2163
+  },
+  {
+   "seg": 0,
+   "src": "K",
+   "cyc": 2161,
+   "tx_port": 0,
+   "rx_port": 0,
+   "kind": 3,
+   "beat": 21,
+   "arrive": 2176,
+   "rx_out": 2178,
+   "wr": 2164
+  },
+  {
+   "seg": 0,
+   "src": "K",
+   "cyc": 2162,
+   "tx_port": 0,
+   "rx_port": 0,
+   "kind": 3,
+   "beat": 22,
+   "arrive": 2177,
+   "rx_out": 2179,
+   "wr": 2165
+  },
+  {
+   "seg": 0,
+   "src": "K",
+   "cyc": 2163,
+   "tx_port": 0,
+   "rx_port": 0,
+   "kind": 3,
+   "beat": 23,
+   "arrive": 2178,
+   "rx_out": 2180,
+   "wr": 2166
+  },
+  {
+   "seg": 0,
+   "src": "K",
+   "cyc": 2164,
+   "tx_port": 0,
+   "rx_port": 0,
+   "kind": 3,
+   "beat": 24,
+   "arrive": 2179,
+   "rx_out": 2181,
+   "wr": 2167
+  },
+  {
+   "seg": 0,
+   "src": "K",
+   "cyc": 2165,
+   "tx_port": 0,
+   "rx_port": 0,
+   "kind": 3,
+   "beat": 25,
+   "arrive": 2180,
+   "rx_out": 2182,
+   "wr": 2168
+  },
+  {
+   "seg": 0,
+   "src": "K",
+   "cyc": 2166,
+   "tx_port": 0,
+   "rx_port": 0,
+   "kind": 3,
+   "beat": 26,
+   "arrive": 2181,
+   "rx_out": 2183,
+   "wr": 2169
+  },
+  {
+   "seg": 0,
+   "src": "K",
+   "cyc": 2167,
+   "tx_port": 0,
+   "rx_port": 0,
+   "kind": 3,
+   "beat": 27,
+   "arrive": 2182,
+   "rx_out": 2184,
+   "wr": 2170
+  },
+  {
+   "seg": 0,
+   "src": "K",
+   "cyc": 2168,
+   "tx_port": 0,
+   "rx_port": 0,
+   "kind": 3,
+   "beat": 28,
+   "arrive": 2183,
+   "rx_out": 2185,
+   "wr": 2171
+  },
+  {
+   "seg": 0,
+   "src": "K",
+   "cyc": 2169,
+   "tx_port": 0,
+   "rx_port": 0,
+   "kind": 3,
+   "beat": 29,
+   "arrive": 2184,
+   "rx_out": 2186,
+   "wr": 2172
+  },
+  {
+   "seg": 0,
+   "src": "K",
+   "cyc": 2170,
+   "tx_port": 0,
+   "rx_port": 0,
+   "kind": 3,
+   "beat": 30,
+   "arrive": 2185,
+   "rx_out": 2187,
+   "wr": 2173
+  },
+  {
+   "seg": 0,
+   "src": "K",
+   "cyc": 2171,
+   "tx_port": 0,
+   "rx_port": 0,
+   "kind": 3,
+   "beat": 31,
+   "arrive": 2186,
+   "rx_out": 2188,
+   "wr": 2174
+  },
+  {
+   "seg": 0,
+   "src": "K",
+   "cyc": 2173,
+   "tx_port": 0,
+   "rx_port": 0,
+   "kind": 4,
+   "beat": 0,
+   "arrive": 2188,
+   "rx_out": 2190,
+   "wr": 2176
+  },
+  {
+   "seg": 1,
+   "src": "C",
+   "cyc": 2,
+   "tx_port": 2,
+   "rx_port": 2,
+   "kind": 15,
+   "beat": 0,
+   "arrive": 15,
+   "rx_out": 17,
+   "wr": 3
+  },
+  {
+   "seg": 1,
+   "src": "K",
+   "cyc": 192,
+   "tx_port": 2,
+   "rx_port": 2,
+   "kind": 6,
+   "beat": 0,
+   "arrive": 207,
+   "rx_out": 209,
+   "wr": 195
+  },
+  {
+   "seg": 1,
+   "src": "K",
+   "cyc": 193,
+   "tx_port": 2,
+   "rx_port": 2,
+   "kind": 6,
+   "beat": 1,
+   "arrive": 208,
+   "rx_out": 210,
+   "wr": 196
+  },
+  {
+   "seg": 1,
+   "src": "K",
+   "cyc": 194,
+   "tx_port": 2,
+   "rx_port": 2,
+   "kind": 6,
+   "beat": 2,
+   "arrive": 209,
+   "rx_out": 211,
+   "wr": 197
+  },
+  {
+   "seg": 1,
+   "src": "K",
+   "cyc": 195,
+   "tx_port": 2,
+   "rx_port": 2,
+   "kind": 6,
+   "beat": 3,
+   "arrive": 210,
+   "rx_out": 212,
+   "wr": 198
+  },
+  {
+   "seg": 1,
+   "src": "K",
+   "cyc": 196,
+   "tx_port": 2,
+   "rx_port": 2,
+   "kind": 6,
+   "beat": 4,
+   "arrive": 211,
+   "rx_out": 213,
+   "wr": 199
+  },
+  {
+   "seg": 1,
+   "src": "K",
+   "cyc": 197,
+   "tx_port": 2,
+   "rx_port": 2,
+   "kind": 6,
+   "beat": 5,
+   "arrive": 212,
+   "rx_out": 214,
+   "wr": 200
+  },
+  {
+   "seg": 1,
+   "src": "K",
+   "cyc": 198,
+   "tx_port": 2,
+   "rx_port": 2,
+   "kind": 6,
+   "beat": 6,
+   "arrive": 213,
+   "rx_out": 215,
+   "wr": 201
+  },
+  {
+   "seg": 1,
+   "src": "K",
+   "cyc": 199,
+   "tx_port": 2,
+   "rx_port": 2,
+   "kind": 6,
+   "beat": 7,
+   "arrive": 214,
+   "rx_out": 216,
+   "wr": 202
+  },
+  {
+   "seg": 1,
+   "src": "K",
+   "cyc": 200,
+   "tx_port": 2,
+   "rx_port": 2,
+   "kind": 6,
+   "beat": 8,
+   "arrive": 215,
+   "rx_out": 217,
+   "wr": 203
+  },
+  {
+   "seg": 1,
+   "src": "K",
+   "cyc": 201,
+   "tx_port": 2,
+   "rx_port": 2,
+   "kind": 6,
+   "beat": 9,
+   "arrive": 216,
+   "rx_out": 218,
+   "wr": 204
+  },
+  {
+   "seg": 1,
+   "src": "K",
+   "cyc": 202,
+   "tx_port": 2,
+   "rx_port": 2,
+   "kind": 6,
+   "beat": 10,
+   "arrive": 217,
+   "rx_out": 219,
+   "wr": 205
+  },
+  {
+   "seg": 1,
+   "src": "K",
+   "cyc": 203,
+   "tx_port": 2,
+   "rx_port": 2,
+   "kind": 6,
+   "beat": 11,
+   "arrive": 218,
+   "rx_out": 220,
+   "wr": 206
+  },
+  {
+   "seg": 1,
+   "src": "K",
+   "cyc": 204,
+   "tx_port": 2,
+   "rx_port": 2,
+   "kind": 6,
+   "beat": 12,
+   "arrive": 219,
+   "rx_out": 221,
+   "wr": 207
+  },
+  {
+   "seg": 1,
+   "src": "K",
+   "cyc": 205,
+   "tx_port": 2,
+   "rx_port": 2,
+   "kind": 6,
+   "beat": 13,
+   "arrive": 220,
+   "rx_out": 222,
+   "wr": 208
+  },
+  {
+   "seg": 1,
+   "src": "K",
+   "cyc": 206,
+   "tx_port": 2,
+   "rx_port": 2,
+   "kind": 6,
+   "beat": 14,
+   "arrive": 221,
+   "rx_out": 223,
+   "wr": 209
+  },
+  {
+   "seg": 1,
+   "src": "K",
+   "cyc": 207,
+   "tx_port": 2,
+   "rx_port": 2,
+   "kind": 6,
+   "beat": 15,
+   "arrive": 222,
+   "rx_out": 224,
+   "wr": 210
+  },
+  {
+   "seg": 1,
+   "src": "K",
+   "cyc": 208,
+   "tx_port": 2,
+   "rx_port": 2,
+   "kind": 6,
+   "beat": 16,
+   "arrive": 223,
+   "rx_out": 225,
+   "wr": 211
+  },
+  {
+   "seg": 1,
+   "src": "K",
+   "cyc": 209,
+   "tx_port": 2,
+   "rx_port": 2,
+   "kind": 6,
+   "beat": 17,
+   "arrive": 224,
+   "rx_out": 226,
+   "wr": 212
+  },
+  {
+   "seg": 1,
+   "src": "K",
+   "cyc": 210,
+   "tx_port": 2,
+   "rx_port": 2,
+   "kind": 6,
+   "beat": 18,
+   "arrive": 225,
+   "rx_out": 227,
+   "wr": 213
+  },
+  {
+   "seg": 1,
+   "src": "K",
+   "cyc": 211,
+   "tx_port": 2,
+   "rx_port": 2,
+   "kind": 6,
+   "beat": 19,
+   "arrive": 226,
+   "rx_out": 228,
+   "wr": 214
+  },
+  {
+   "seg": 1,
+   "src": "K",
+   "cyc": 212,
+   "tx_port": 2,
+   "rx_port": 2,
+   "kind": 6,
+   "beat": 20,
+   "arrive": 227,
+   "rx_out": 229,
+   "wr": 215
+  },
+  {
+   "seg": 1,
+   "src": "K",
+   "cyc": 213,
+   "tx_port": 2,
+   "rx_port": 2,
+   "kind": 6,
+   "beat": 21,
+   "arrive": 228,
+   "rx_out": 230,
+   "wr": 216
+  },
+  {
+   "seg": 1,
+   "src": "K",
+   "cyc": 214,
+   "tx_port": 2,
+   "rx_port": 2,
+   "kind": 6,
+   "beat": 22,
+   "arrive": 229,
+   "rx_out": 231,
+   "wr": 217
+  },
+  {
+   "seg": 1,
+   "src": "K",
+   "cyc": 215,
+   "tx_port": 2,
+   "rx_port": 2,
+   "kind": 6,
+   "beat": 23,
+   "arrive": 230,
+   "rx_out": 232,
+   "wr": 218
+  },
+  {
+   "seg": 1,
+   "src": "K",
+   "cyc": 216,
+   "tx_port": 2,
+   "rx_port": 2,
+   "kind": 6,
+   "beat": 24,
+   "arrive": 231,
+   "rx_out": 233,
+   "wr": 219
+  },
+  {
+   "seg": 1,
+   "src": "K",
+   "cyc": 217,
+   "tx_port": 2,
+   "rx_port": 2,
+   "kind": 6,
+   "beat": 25,
+   "arrive": 232,
+   "rx_out": 234,
+   "wr": 220
+  },
+  {
+   "seg": 1,
+   "src": "K",
+   "cyc": 218,
+   "tx_port": 2,
+   "rx_port": 2,
+   "kind": 6,
+   "beat": 26,
+   "arrive": 233,
+   "rx_out": 235,
+   "wr": 221
+  },
+  {
+   "seg": 1,
+   "src": "K",
+   "cyc": 219,
+   "tx_port": 2,
+   "rx_port": 2,
+   "kind": 6,
+   "beat": 27,
+   "arrive": 234,
+   "rx_out": 236,
+   "wr": 222
+  },
+  {
+   "seg": 1,
+   "src": "K",
+   "cyc": 220,
+   "tx_port": 2,
+   "rx_port": 2,
+   "kind": 6,
+   "beat": 28,
+   "arrive": 235,
+   "rx_out": 237,
+   "wr": 223
+  },
+  {
+   "seg": 1,
+   "src": "K",
+   "cyc": 221,
+   "tx_port": 2,
+   "rx_port": 2,
+   "kind": 6,
+   "beat": 29,
+   "arrive": 236,
+   "rx_out": 238,
+   "wr": 224
+  },
+  {
+   "seg": 1,
+   "src": "K",
+   "cyc": 222,
+   "tx_port": 2,
+   "rx_port": 2,
+   "kind": 6,
+   "beat": 30,
+   "arrive": 237,
+   "rx_out": 239,
+   "wr": 225
+  },
+  {
+   "seg": 1,
+   "src": "K",
+   "cyc": 223,
+   "tx_port": 2,
+   "rx_port": 2,
+   "kind": 6,
+   "beat": 31,
+   "arrive": 238,
+   "rx_out": 240,
+   "wr": 226
+  },
+  {
+   "seg": 1,
+   "src": "K",
+   "cyc": 224,
+   "tx_port": 2,
+   "rx_port": 2,
+   "kind": 7,
+   "beat": 0,
+   "arrive": 239,
+   "rx_out": 241,
+   "wr": 227
+  },
+  {
+   "seg": 1,
+   "src": "K",
+   "cyc": 225,
+   "tx_port": 2,
+   "rx_port": 2,
+   "kind": 7,
+   "beat": 1,
+   "arrive": 240,
+   "rx_out": 242,
+   "wr": 228
+  },
+  {
+   "seg": 1,
+   "src": "K",
+   "cyc": 226,
+   "tx_port": 2,
+   "rx_port": 2,
+   "kind": 7,
+   "beat": 2,
+   "arrive": 241,
+   "rx_out": 243,
+   "wr": 229
+  },
+  {
+   "seg": 1,
+   "src": "K",
+   "cyc": 227,
+   "tx_port": 2,
+   "rx_port": 2,
+   "kind": 7,
+   "beat": 3,
+   "arrive": 242,
+   "rx_out": 244,
+   "wr": 230
+  },
+  {
+   "seg": 1,
+   "src": "K",
+   "cyc": 228,
+   "tx_port": 2,
+   "rx_port": 2,
+   "kind": 7,
+   "beat": 4,
+   "arrive": 243,
+   "rx_out": 245,
+   "wr": 231
+  },
+  {
+   "seg": 1,
+   "src": "K",
+   "cyc": 229,
+   "tx_port": 2,
+   "rx_port": 2,
+   "kind": 7,
+   "beat": 5,
+   "arrive": 244,
+   "rx_out": 246,
+   "wr": 232
+  },
+  {
+   "seg": 1,
+   "src": "K",
+   "cyc": 230,
+   "tx_port": 2,
+   "rx_port": 2,
+   "kind": 7,
+   "beat": 6,
+   "arrive": 245,
+   "rx_out": 247,
+   "wr": 233
+  },
+  {
+   "seg": 1,
+   "src": "K",
+   "cyc": 231,
+   "tx_port": 2,
+   "rx_port": 2,
+   "kind": 7,
+   "beat": 7,
+   "arrive": 246,
+   "rx_out": 248,
+   "wr": 234
+  },
+  {
+   "seg": 1,
+   "src": "K",
+   "cyc": 232,
+   "tx_port": 2,
+   "rx_port": 2,
+   "kind": 7,
+   "beat": 8,
+   "arrive": 247,
+   "rx_out": 249,
+   "wr": 235
+  },
+  {
+   "seg": 1,
+   "src": "K",
+   "cyc": 233,
+   "tx_port": 2,
+   "rx_port": 2,
+   "kind": 7,
+   "beat": 9,
+   "arrive": 248,
+   "rx_out": 250,
+   "wr": 236
+  },
+  {
+   "seg": 1,
+   "src": "K",
+   "cyc": 234,
+   "tx_port": 2,
+   "rx_port": 2,
+   "kind": 7,
+   "beat": 10,
+   "arrive": 249,
+   "rx_out": 251,
+   "wr": 237
+  },
+  {
+   "seg": 1,
+   "src": "K",
+   "cyc": 235,
+   "tx_port": 2,
+   "rx_port": 2,
+   "kind": 7,
+   "beat": 11,
+   "arrive": 250,
+   "rx_out": 252,
+   "wr": 238
+  },
+  {
+   "seg": 1,
+   "src": "K",
+   "cyc": 236,
+   "tx_port": 2,
+   "rx_port": 2,
+   "kind": 7,
+   "beat": 12,
+   "arrive": 251,
+   "rx_out": 253,
+   "wr": 239
+  },
+  {
+   "seg": 1,
+   "src": "K",
+   "cyc": 237,
+   "tx_port": 2,
+   "rx_port": 2,
+   "kind": 7,
+   "beat": 13,
+   "arrive": 252,
+   "rx_out": 254,
+   "wr": 240
+  },
+  {
+   "seg": 1,
+   "src": "K",
+   "cyc": 238,
+   "tx_port": 2,
+   "rx_port": 2,
+   "kind": 7,
+   "beat": 14,
+   "arrive": 253,
+   "rx_out": 255,
+   "wr": 241
+  },
+  {
+   "seg": 1,
+   "src": "K",
+   "cyc": 239,
+   "tx_port": 2,
+   "rx_port": 2,
+   "kind": 7,
+   "beat": 15,
+   "arrive": 254,
+   "rx_out": 256,
+   "wr": 242
+  },
+  {
+   "seg": 1,
+   "src": "K",
+   "cyc": 240,
+   "tx_port": 2,
+   "rx_port": 2,
+   "kind": 7,
+   "beat": 16,
+   "arrive": 255,
+   "rx_out": 257,
+   "wr": 243
+  },
+  {
+   "seg": 1,
+   "src": "K",
+   "cyc": 241,
+   "tx_port": 2,
+   "rx_port": 2,
+   "kind": 7,
+   "beat": 17,
+   "arrive": 256,
+   "rx_out": 258,
+   "wr": 244
+  },
+  {
+   "seg": 1,
+   "src": "K",
+   "cyc": 242,
+   "tx_port": 2,
+   "rx_port": 2,
+   "kind": 7,
+   "beat": 18,
+   "arrive": 257,
+   "rx_out": 259,
+   "wr": 245
+  },
+  {
+   "seg": 1,
+   "src": "K",
+   "cyc": 243,
+   "tx_port": 2,
+   "rx_port": 2,
+   "kind": 7,
+   "beat": 19,
+   "arrive": 258,
+   "rx_out": 260,
+   "wr": 246
+  },
+  {
+   "seg": 1,
+   "src": "K",
+   "cyc": 244,
+   "tx_port": 2,
+   "rx_port": 2,
+   "kind": 7,
+   "beat": 20,
+   "arrive": 259,
+   "rx_out": 261,
+   "wr": 247
+  },
+  {
+   "seg": 1,
+   "src": "K",
+   "cyc": 245,
+   "tx_port": 2,
+   "rx_port": 2,
+   "kind": 7,
+   "beat": 21,
+   "arrive": 260,
+   "rx_out": 262,
+   "wr": 248
+  },
+  {
+   "seg": 1,
+   "src": "K",
+   "cyc": 246,
+   "tx_port": 2,
+   "rx_port": 2,
+   "kind": 7,
+   "beat": 22,
+   "arrive": 261,
+   "rx_out": 263,
+   "wr": 249
+  },
+  {
+   "seg": 1,
+   "src": "K",
+   "cyc": 247,
+   "tx_port": 2,
+   "rx_port": 2,
+   "kind": 7,
+   "beat": 23,
+   "arrive": 262,
+   "rx_out": 264,
+   "wr": 250
+  },
+  {
+   "seg": 1,
+   "src": "K",
+   "cyc": 248,
+   "tx_port": 2,
+   "rx_port": 2,
+   "kind": 7,
+   "beat": 24,
+   "arrive": 263,
+   "rx_out": 265,
+   "wr": 251
+  },
+  {
+   "seg": 1,
+   "src": "K",
+   "cyc": 249,
+   "tx_port": 2,
+   "rx_port": 2,
+   "kind": 7,
+   "beat": 25,
+   "arrive": 264,
+   "rx_out": 266,
+   "wr": 252
+  },
+  {
+   "seg": 1,
+   "src": "K",
+   "cyc": 250,
+   "tx_port": 2,
+   "rx_port": 2,
+   "kind": 7,
+   "beat": 26,
+   "arrive": 265,
+   "rx_out": 267,
+   "wr": 253
+  },
+  {
+   "seg": 1,
+   "src": "K",
+   "cyc": 251,
+   "tx_port": 2,
+   "rx_port": 2,
+   "kind": 7,
+   "beat": 27,
+   "arrive": 266,
+   "rx_out": 268,
+   "wr": 254
+  },
+  {
+   "seg": 1,
+   "src": "K",
+   "cyc": 252,
+   "tx_port": 2,
+   "rx_port": 2,
+   "kind": 7,
+   "beat": 28,
+   "arrive": 267,
+   "rx_out": 269,
+   "wr": 255
+  },
+  {
+   "seg": 1,
+   "src": "K",
+   "cyc": 253,
+   "tx_port": 2,
+   "rx_port": 2,
+   "kind": 7,
+   "beat": 29,
+   "arrive": 268,
+   "rx_out": 270,
+   "wr": 256
+  },
+  {
+   "seg": 1,
+   "src": "K",
+   "cyc": 254,
+   "tx_port": 2,
+   "rx_port": 2,
+   "kind": 7,
+   "beat": 30,
+   "arrive": 269,
+   "rx_out": 271,
+   "wr": 257
+  },
+  {
+   "seg": 1,
+   "src": "K",
+   "cyc": 255,
+   "tx_port": 2,
+   "rx_port": 2,
+   "kind": 7,
+   "beat": 31,
+   "arrive": 270,
+   "rx_out": 272,
+   "wr": 258
+  },
+  {
+   "seg": 1,
+   "src": "C",
+   "cyc": 647,
+   "tx_port": 0,
+   "rx_port": 0,
+   "kind": 1,
+   "beat": 0,
+   "arrive": 662,
+   "rx_out": 664,
+   "wr": 650
+  },
+  {
+   "seg": 1,
+   "src": "C",
+   "cyc": 648,
+   "tx_port": 0,
+   "rx_port": 0,
+   "kind": 2,
+   "beat": 0,
+   "arrive": 663,
+   "rx_out": 665,
+   "wr": 651
+  },
+  {
+   "seg": 1,
+   "src": "C",
+   "cyc": 649,
+   "tx_port": 0,
+   "rx_port": 0,
+   "kind": 2,
+   "beat": 1,
+   "arrive": 664,
+   "rx_out": 666,
+   "wr": 652
+  },
+  {
+   "seg": 1,
+   "src": "C",
+   "cyc": 650,
+   "tx_port": 0,
+   "rx_port": 0,
+   "kind": 2,
+   "beat": 2,
+   "arrive": 665,
+   "rx_out": 667,
+   "wr": 653
+  },
+  {
+   "seg": 1,
+   "src": "C",
+   "cyc": 651,
+   "tx_port": 0,
+   "rx_port": 0,
+   "kind": 2,
+   "beat": 3,
+   "arrive": 666,
+   "rx_out": 668,
+   "wr": 654
+  },
+  {
+   "seg": 1,
+   "src": "C",
+   "cyc": 652,
+   "tx_port": 0,
+   "rx_port": 0,
+   "kind": 2,
+   "beat": 4,
+   "arrive": 667,
+   "rx_out": 669,
+   "wr": 655
+  },
+  {
+   "seg": 1,
+   "src": "C",
+   "cyc": 653,
+   "tx_port": 0,
+   "rx_port": 0,
+   "kind": 2,
+   "beat": 5,
+   "arrive": 668,
+   "rx_out": 670,
+   "wr": 656
+  },
+  {
+   "seg": 1,
+   "src": "C",
+   "cyc": 654,
+   "tx_port": 0,
+   "rx_port": 0,
+   "kind": 2,
+   "beat": 6,
+   "arrive": 669,
+   "rx_out": 671,
+   "wr": 657
+  },
+  {
+   "seg": 1,
+   "src": "C",
+   "cyc": 655,
+   "tx_port": 0,
+   "rx_port": 0,
+   "kind": 2,
+   "beat": 7,
+   "arrive": 670,
+   "rx_out": 672,
+   "wr": 658
+  },
+  {
+   "seg": 1,
+   "src": "C",
+   "cyc": 656,
+   "tx_port": 0,
+   "rx_port": 0,
+   "kind": 2,
+   "beat": 8,
+   "arrive": 671,
+   "rx_out": 673,
+   "wr": 659
+  },
+  {
+   "seg": 1,
+   "src": "C",
+   "cyc": 657,
+   "tx_port": 0,
+   "rx_port": 0,
+   "kind": 2,
+   "beat": 9,
+   "arrive": 672,
+   "rx_out": 674,
+   "wr": 660
+  },
+  {
+   "seg": 1,
+   "src": "C",
+   "cyc": 658,
+   "tx_port": 0,
+   "rx_port": 0,
+   "kind": 2,
+   "beat": 10,
+   "arrive": 673,
+   "rx_out": 675,
+   "wr": 661
+  },
+  {
+   "seg": 1,
+   "src": "C",
+   "cyc": 659,
+   "tx_port": 0,
+   "rx_port": 0,
+   "kind": 2,
+   "beat": 11,
+   "arrive": 674,
+   "rx_out": 676,
+   "wr": 662
+  },
+  {
+   "seg": 1,
+   "src": "C",
+   "cyc": 660,
+   "tx_port": 0,
+   "rx_port": 0,
+   "kind": 2,
+   "beat": 12,
+   "arrive": 675,
+   "rx_out": 677,
+   "wr": 663
+  },
+  {
+   "seg": 1,
+   "src": "C",
+   "cyc": 661,
+   "tx_port": 0,
+   "rx_port": 0,
+   "kind": 2,
+   "beat": 13,
+   "arrive": 676,
+   "rx_out": 678,
+   "wr": 664
+  },
+  {
+   "seg": 1,
+   "src": "C",
+   "cyc": 662,
+   "tx_port": 0,
+   "rx_port": 0,
+   "kind": 2,
+   "beat": 14,
+   "arrive": 677,
+   "rx_out": 679,
+   "wr": 665
+  },
+  {
+   "seg": 1,
+   "src": "C",
+   "cyc": 663,
+   "tx_port": 0,
+   "rx_port": 0,
+   "kind": 2,
+   "beat": 15,
+   "arrive": 678,
+   "rx_out": 680,
+   "wr": 666
+  },
+  {
+   "seg": 1,
+   "src": "C",
+   "cyc": 664,
+   "tx_port": 0,
+   "rx_port": 0,
+   "kind": 2,
+   "beat": 16,
+   "arrive": 679,
+   "rx_out": 681,
+   "wr": 667
+  },
+  {
+   "seg": 1,
+   "src": "C",
+   "cyc": 665,
+   "tx_port": 0,
+   "rx_port": 0,
+   "kind": 2,
+   "beat": 17,
+   "arrive": 680,
+   "rx_out": 682,
+   "wr": 668
+  },
+  {
+   "seg": 1,
+   "src": "C",
+   "cyc": 666,
+   "tx_port": 0,
+   "rx_port": 0,
+   "kind": 2,
+   "beat": 18,
+   "arrive": 681,
+   "rx_out": 683,
+   "wr": 669
+  },
+  {
+   "seg": 1,
+   "src": "C",
+   "cyc": 667,
+   "tx_port": 0,
+   "rx_port": 0,
+   "kind": 2,
+   "beat": 19,
+   "arrive": 682,
+   "rx_out": 684,
+   "wr": 670
+  },
+  {
+   "seg": 1,
+   "src": "C",
+   "cyc": 668,
+   "tx_port": 0,
+   "rx_port": 0,
+   "kind": 2,
+   "beat": 20,
+   "arrive": 683,
+   "rx_out": 685,
+   "wr": 671
+  },
+  {
+   "seg": 1,
+   "src": "C",
+   "cyc": 669,
+   "tx_port": 0,
+   "rx_port": 0,
+   "kind": 2,
+   "beat": 21,
+   "arrive": 684,
+   "rx_out": 686,
+   "wr": 672
+  },
+  {
+   "seg": 1,
+   "src": "C",
+   "cyc": 670,
+   "tx_port": 0,
+   "rx_port": 0,
+   "kind": 2,
+   "beat": 22,
+   "arrive": 685,
+   "rx_out": 687,
+   "wr": 673
+  },
+  {
+   "seg": 1,
+   "src": "C",
+   "cyc": 671,
+   "tx_port": 0,
+   "rx_port": 0,
+   "kind": 2,
+   "beat": 23,
+   "arrive": 686,
+   "rx_out": 688,
+   "wr": 674
+  },
+  {
+   "seg": 1,
+   "src": "C",
+   "cyc": 672,
+   "tx_port": 0,
+   "rx_port": 0,
+   "kind": 2,
+   "beat": 24,
+   "arrive": 687,
+   "rx_out": 689,
+   "wr": 675
+  },
+  {
+   "seg": 1,
+   "src": "C",
+   "cyc": 673,
+   "tx_port": 0,
+   "rx_port": 0,
+   "kind": 2,
+   "beat": 25,
+   "arrive": 688,
+   "rx_out": 690,
+   "wr": 676
+  },
+  {
+   "seg": 1,
+   "src": "C",
+   "cyc": 674,
+   "tx_port": 0,
+   "rx_port": 0,
+   "kind": 2,
+   "beat": 26,
+   "arrive": 689,
+   "rx_out": 691,
+   "wr": 677
+  },
+  {
+   "seg": 1,
+   "src": "C",
+   "cyc": 675,
+   "tx_port": 0,
+   "rx_port": 0,
+   "kind": 2,
+   "beat": 27,
+   "arrive": 690,
+   "rx_out": 692,
+   "wr": 678
+  },
+  {
+   "seg": 1,
+   "src": "C",
+   "cyc": 676,
+   "tx_port": 0,
+   "rx_port": 0,
+   "kind": 2,
+   "beat": 28,
+   "arrive": 691,
+   "rx_out": 693,
+   "wr": 679
+  },
+  {
+   "seg": 1,
+   "src": "C",
+   "cyc": 677,
+   "tx_port": 0,
+   "rx_port": 0,
+   "kind": 2,
+   "beat": 29,
+   "arrive": 692,
+   "rx_out": 694,
+   "wr": 680
+  },
+  {
+   "seg": 1,
+   "src": "C",
+   "cyc": 678,
+   "tx_port": 0,
+   "rx_port": 0,
+   "kind": 2,
+   "beat": 30,
+   "arrive": 693,
+   "rx_out": 695,
+   "wr": 681
+  },
+  {
+   "seg": 1,
+   "src": "C",
+   "cyc": 679,
+   "tx_port": 0,
+   "rx_port": 0,
+   "kind": 2,
+   "beat": 31,
+   "arrive": 694,
+   "rx_out": 696,
+   "wr": 682
+  },
+  {
+   "seg": 1,
+   "src": "C",
+   "cyc": 680,
+   "tx_port": 3,
+   "rx_port": 3,
+   "kind": 5,
+   "beat": 0,
+   "arrive": 696,
+   "rx_out": 698,
+   "wr": 684
+  },
+  {
+   "seg": 1,
+   "src": "C",
+   "cyc": 681,
+   "tx_port": 3,
+   "rx_port": 3,
+   "kind": 5,
+   "beat": 1,
+   "arrive": 697,
+   "rx_out": 699,
+   "wr": 685
+  },
+  {
+   "seg": 1,
+   "src": "C",
+   "cyc": 682,
+   "tx_port": 3,
+   "rx_port": 3,
+   "kind": 5,
+   "beat": 2,
+   "arrive": 698,
+   "rx_out": 700,
+   "wr": 686
+  },
+  {
+   "seg": 1,
+   "src": "C",
+   "cyc": 683,
+   "tx_port": 3,
+   "rx_port": 3,
+   "kind": 5,
+   "beat": 3,
+   "arrive": 699,
+   "rx_out": 701,
+   "wr": 687
+  },
+  {
+   "seg": 1,
+   "src": "C",
+   "cyc": 687,
+   "tx_port": 2,
+   "rx_port": 2,
+   "kind": 15,
+   "beat": 0,
+   "arrive": 700,
+   "rx_out": 702,
+   "wr": 688
+  },
+  {
+   "seg": 1,
+   "src": "K",
+   "cyc": 2634,
+   "tx_port": 0,
+   "rx_port": 0,
+   "kind": 3,
+   "beat": 0,
+   "arrive": 2649,
+   "rx_out": 2651,
+   "wr": 2637
+  },
+  {
+   "seg": 1,
+   "src": "K",
+   "cyc": 2635,
+   "tx_port": 0,
+   "rx_port": 0,
+   "kind": 3,
+   "beat": 1,
+   "arrive": 2650,
+   "rx_out": 2652,
+   "wr": 2638
+  },
+  {
+   "seg": 1,
+   "src": "K",
+   "cyc": 2636,
+   "tx_port": 0,
+   "rx_port": 0,
+   "kind": 3,
+   "beat": 2,
+   "arrive": 2651,
+   "rx_out": 2653,
+   "wr": 2639
+  },
+  {
+   "seg": 1,
+   "src": "K",
+   "cyc": 2637,
+   "tx_port": 0,
+   "rx_port": 0,
+   "kind": 3,
+   "beat": 3,
+   "arrive": 2652,
+   "rx_out": 2654,
+   "wr": 2640
+  },
+  {
+   "seg": 1,
+   "src": "K",
+   "cyc": 2638,
+   "tx_port": 0,
+   "rx_port": 0,
+   "kind": 3,
+   "beat": 4,
+   "arrive": 2653,
+   "rx_out": 2655,
+   "wr": 2641
+  },
+  {
+   "seg": 1,
+   "src": "K",
+   "cyc": 2639,
+   "tx_port": 0,
+   "rx_port": 0,
+   "kind": 3,
+   "beat": 5,
+   "arrive": 2654,
+   "rx_out": 2656,
+   "wr": 2642
+  },
+  {
+   "seg": 1,
+   "src": "K",
+   "cyc": 2640,
+   "tx_port": 0,
+   "rx_port": 0,
+   "kind": 3,
+   "beat": 6,
+   "arrive": 2655,
+   "rx_out": 2657,
+   "wr": 2643
+  },
+  {
+   "seg": 1,
+   "src": "K",
+   "cyc": 2641,
+   "tx_port": 0,
+   "rx_port": 0,
+   "kind": 3,
+   "beat": 7,
+   "arrive": 2656,
+   "rx_out": 2658,
+   "wr": 2644
+  },
+  {
+   "seg": 1,
+   "src": "K",
+   "cyc": 2642,
+   "tx_port": 0,
+   "rx_port": 0,
+   "kind": 3,
+   "beat": 8,
+   "arrive": 2657,
+   "rx_out": 2659,
+   "wr": 2645
+  },
+  {
+   "seg": 1,
+   "src": "K",
+   "cyc": 2643,
+   "tx_port": 0,
+   "rx_port": 0,
+   "kind": 3,
+   "beat": 9,
+   "arrive": 2658,
+   "rx_out": 2660,
+   "wr": 2646
+  },
+  {
+   "seg": 1,
+   "src": "K",
+   "cyc": 2644,
+   "tx_port": 0,
+   "rx_port": 0,
+   "kind": 3,
+   "beat": 10,
+   "arrive": 2659,
+   "rx_out": 2661,
+   "wr": 2647
+  },
+  {
+   "seg": 1,
+   "src": "K",
+   "cyc": 2645,
+   "tx_port": 0,
+   "rx_port": 0,
+   "kind": 3,
+   "beat": 11,
+   "arrive": 2660,
+   "rx_out": 2662,
+   "wr": 2648
+  },
+  {
+   "seg": 1,
+   "src": "K",
+   "cyc": 2646,
+   "tx_port": 0,
+   "rx_port": 0,
+   "kind": 3,
+   "beat": 12,
+   "arrive": 2661,
+   "rx_out": 2663,
+   "wr": 2649
+  },
+  {
+   "seg": 1,
+   "src": "K",
+   "cyc": 2647,
+   "tx_port": 0,
+   "rx_port": 0,
+   "kind": 3,
+   "beat": 13,
+   "arrive": 2662,
+   "rx_out": 2664,
+   "wr": 2650
+  },
+  {
+   "seg": 1,
+   "src": "K",
+   "cyc": 2648,
+   "tx_port": 0,
+   "rx_port": 0,
+   "kind": 3,
+   "beat": 14,
+   "arrive": 2663,
+   "rx_out": 2665,
+   "wr": 2651
+  },
+  {
+   "seg": 1,
+   "src": "K",
+   "cyc": 2649,
+   "tx_port": 0,
+   "rx_port": 0,
+   "kind": 3,
+   "beat": 15,
+   "arrive": 2664,
+   "rx_out": 2666,
+   "wr": 2652
+  },
+  {
+   "seg": 1,
+   "src": "K",
+   "cyc": 2650,
+   "tx_port": 0,
+   "rx_port": 0,
+   "kind": 3,
+   "beat": 16,
+   "arrive": 2665,
+   "rx_out": 2667,
+   "wr": 2653
+  },
+  {
+   "seg": 1,
+   "src": "K",
+   "cyc": 2651,
+   "tx_port": 0,
+   "rx_port": 0,
+   "kind": 3,
+   "beat": 17,
+   "arrive": 2666,
+   "rx_out": 2668,
+   "wr": 2654
+  },
+  {
+   "seg": 1,
+   "src": "K",
+   "cyc": 2652,
+   "tx_port": 0,
+   "rx_port": 0,
+   "kind": 3,
+   "beat": 18,
+   "arrive": 2667,
+   "rx_out": 2669,
+   "wr": 2655
+  },
+  {
+   "seg": 1,
+   "src": "K",
+   "cyc": 2653,
+   "tx_port": 0,
+   "rx_port": 0,
+   "kind": 3,
+   "beat": 19,
+   "arrive": 2668,
+   "rx_out": 2670,
+   "wr": 2656
+  },
+  {
+   "seg": 1,
+   "src": "K",
+   "cyc": 2654,
+   "tx_port": 0,
+   "rx_port": 0,
+   "kind": 3,
+   "beat": 20,
+   "arrive": 2669,
+   "rx_out": 2671,
+   "wr": 2657
+  },
+  {
+   "seg": 1,
+   "src": "K",
+   "cyc": 2655,
+   "tx_port": 0,
+   "rx_port": 0,
+   "kind": 3,
+   "beat": 21,
+   "arrive": 2670,
+   "rx_out": 2672,
+   "wr": 2658
+  },
+  {
+   "seg": 1,
+   "src": "K",
+   "cyc": 2656,
+   "tx_port": 0,
+   "rx_port": 0,
+   "kind": 3,
+   "beat": 22,
+   "arrive": 2671,
+   "rx_out": 2673,
+   "wr": 2659
+  },
+  {
+   "seg": 1,
+   "src": "K",
+   "cyc": 2657,
+   "tx_port": 0,
+   "rx_port": 0,
+   "kind": 3,
+   "beat": 23,
+   "arrive": 2672,
+   "rx_out": 2674,
+   "wr": 2660
+  },
+  {
+   "seg": 1,
+   "src": "K",
+   "cyc": 2658,
+   "tx_port": 0,
+   "rx_port": 0,
+   "kind": 3,
+   "beat": 24,
+   "arrive": 2673,
+   "rx_out": 2675,
+   "wr": 2661
+  },
+  {
+   "seg": 1,
+   "src": "K",
+   "cyc": 2659,
+   "tx_port": 0,
+   "rx_port": 0,
+   "kind": 3,
+   "beat": 25,
+   "arrive": 2674,
+   "rx_out": 2676,
+   "wr": 2662
+  },
+  {
+   "seg": 1,
+   "src": "K",
+   "cyc": 2660,
+   "tx_port": 0,
+   "rx_port": 0,
+   "kind": 3,
+   "beat": 26,
+   "arrive": 2675,
+   "rx_out": 2677,
+   "wr": 2663
+  },
+  {
+   "seg": 1,
+   "src": "K",
+   "cyc": 2661,
+   "tx_port": 0,
+   "rx_port": 0,
+   "kind": 3,
+   "beat": 27,
+   "arrive": 2676,
+   "rx_out": 2678,
+   "wr": 2664
+  },
+  {
+   "seg": 1,
+   "src": "K",
+   "cyc": 2662,
+   "tx_port": 0,
+   "rx_port": 0,
+   "kind": 3,
+   "beat": 28,
+   "arrive": 2677,
+   "rx_out": 2679,
+   "wr": 2665
+  },
+  {
+   "seg": 1,
+   "src": "K",
+   "cyc": 2663,
+   "tx_port": 0,
+   "rx_port": 0,
+   "kind": 3,
+   "beat": 29,
+   "arrive": 2678,
+   "rx_out": 2680,
+   "wr": 2666
+  },
+  {
+   "seg": 1,
+   "src": "K",
+   "cyc": 2664,
+   "tx_port": 0,
+   "rx_port": 0,
+   "kind": 3,
+   "beat": 30,
+   "arrive": 2679,
+   "rx_out": 2681,
+   "wr": 2667
+  },
+  {
+   "seg": 1,
+   "src": "K",
+   "cyc": 2665,
+   "tx_port": 0,
+   "rx_port": 0,
+   "kind": 3,
+   "beat": 31,
+   "arrive": 2680,
+   "rx_out": 2682,
+   "wr": 2668
+  },
+  {
+   "seg": 1,
+   "src": "K",
+   "cyc": 2667,
+   "tx_port": 0,
+   "rx_port": 0,
+   "kind": 4,
+   "beat": 0,
+   "arrive": 2682,
+   "rx_out": 2684,
+   "wr": 2670
+  }
+ ],
+ "program": {
+  "source": "results/arch/token_path_20261009/qwen_rom.json",
+  "layers": [
+   {
+    "id": "L0",
+    "start": 272,
+    "cycles": 6797
+   },
+   {
+    "id": "L1",
+    "start": 7070,
+    "cycles": 6835
+   },
+   {
+    "id": "L2",
+    "start": 13906,
+    "cycles": 6835
+   },
+   {
+    "id": "L3",
+    "start": 20742,
+    "cycles": 6835
+   },
+   {
+    "id": "L4",
+    "start": 27578,
+    "cycles": 6835
+   },
+   {
+    "id": "L5",
+    "start": 34414,
+    "cycles": 6835
+   },
+   {
+    "id": "L6",
+    "start": 41250,
+    "cycles": 6835
+   },
+   {
+    "id": "L7",
+    "start": 48086,
+    "cycles": 6835
+   },
+   {
+    "id": "L8",
+    "start": 54922,
+    "cycles": 6835
+   },
+   {
+    "id": "L9",
+    "start": 61758,
+    "cycles": 6835
+   },
+   {
+    "id": "L10",
+    "start": 68594,
+    "cycles": 6835
+   },
+   {
+    "id": "L11",
+    "start": 75430,
+    "cycles": 6835
+   },
+   {
+    "id": "L12",
+    "start": 82266,
+    "cycles": 6835
+   },
+   {
+    "id": "L13",
+    "start": 89102,
+    "cycles": 6835
+   },
+   {
+    "id": "L14",
+    "start": 95938,
+    "cycles": 6835
+   },
+   {
+    "id": "L15",
+    "start": 102774,
+    "cycles": 6835
+   },
+   {
+    "id": "L16",
+    "start": 109610,
+    "cycles": 6835
+   },
+   {
+    "id": "L17",
+    "start": 116446,
+    "cycles": 6835
+   },
+   {
+    "id": "L18",
+    "start": 123282,
+    "cycles": 6835
+   },
+   {
+    "id": "L19",
+    "start": 130118,
+    "cycles": 6835
+   },
+   {
+    "id": "L20",
+    "start": 136954,
+    "cycles": 6835
+   },
+   {
+    "id": "L21",
+    "start": 143790,
+    "cycles": 6835
+   },
+   {
+    "id": "L22",
+    "start": 150626,
+    "cycles": 6835
+   },
+   {
+    "id": "L23",
+    "start": 157462,
+    "cycles": 6835
+   },
+   {
+    "id": "L24",
+    "start": 164298,
+    "cycles": 6835
+   },
+   {
+    "id": "L25",
+    "start": 171134,
+    "cycles": 6835
+   },
+   {
+    "id": "L26",
+    "start": 177970,
+    "cycles": 6835
+   },
+   {
+    "id": "L27",
+    "start": 184806,
+    "cycles": 6835
+   },
+   {
+    "id": "L28",
+    "start": 191642,
+    "cycles": 6835
+   },
+   {
+    "id": "L29",
+    "start": 198478,
+    "cycles": 6835
+   },
+   {
+    "id": "L30",
+    "start": 205314,
+    "cycles": 6835
+   },
+   {
+    "id": "L31",
+    "start": 212150,
+    "cycles": 6835
+   },
+   {
+    "id": "L32",
+    "start": 218986,
+    "cycles": 6835
+   },
+   {
+    "id": "L33",
+    "start": 225822,
+    "cycles": 6835
+   },
+   {
+    "id": "L34",
+    "start": 232658,
+    "cycles": 6835
+   },
+   {
+    "id": "L35",
+    "start": 239494,
+    "cycles": 6835
+   }
+  ],
+  "embed": {
+   "start": 0,
+   "cycles": 272
+  },
+  "windows": {
+   "L0": {
+    "rmsnorm1": 15,
+    "qkv": 259,
+    "qknorm_rope": 101,
+    "attn_kv": 2038
+   },
+   "L1_35": {
+    "rmsnorm1": 15,
+    "qkv": 259,
+    "qknorm_rope": 101,
+    "attn_kv": 1816
+   }
+  },
+  "layer": {
+   "q_send": 375,
+   "attn_end": 2191,
+   "result_send": [
+    2140,
+    2173
+   ]
+  },
+  "token_run_L0": {
+   "q_send": 647,
+   "attn_end": 2685,
+   "result_send": [
+    2634,
+    2667
+   ]
+  },
+  "emb_send": [
+   192,
+   255
+  ],
+  "host_relay_stages": {
+   "value": null,
+   "status": "PENDING: KV die lead re-measure after the HOST core moves next to the D2D end (coordinator: the 54-57-stage HOST<->D2D relay figure is a floorplan defect, not a calendar input); compiled with 0"
+  },
+  "hbm_embedding_budget": {
+   "result_at_kv_host": 21,
+   "first_emb_send": 192,
+   "note": "the KV-die embedding provider must hold the staged row (one ready per buffer block at the HBM boundary) by first_emb_send; a late row is a schedule fault, never a stretched timeline"
+  },
+  "cal_busy": {
+   "0": 2188,
+   "1": 2682
+  },
+  "token_frames": {
+   "C": 1369,
+   "K": 1252
+  },
+  "layer_run_span": 2190,
+  "token_run_span": 2684,
+  "cal_starts": [
+   {
+    "seg": 1,
+    "cycle": 0,
+    "run": "token: RESULT + embedding + L0"
+   },
+   {
+    "seg": 0,
+    "cycle": 7070,
+    "layer": "L1"
+   },
+   {
+    "seg": 0,
+    "cycle": 13906,
+    "layer": "L2"
+   },
+   {
+    "seg": 0,
+    "cycle": 20742,
+    "layer": "L3"
+   },
+   {
+    "seg": 0,
+    "cycle": 27578,
+    "layer": "L4"
+   },
+   {
+    "seg": 0,
+    "cycle": 34414,
+    "layer": "L5"
+   },
+   {
+    "seg": 0,
+    "cycle": 41250,
+    "layer": "L6"
+   },
+   {
+    "seg": 0,
+    "cycle": 48086,
+    "layer": "L7"
+   },
+   {
+    "seg": 0,
+    "cycle": 54922,
+    "layer": "L8"
+   },
+   {
+    "seg": 0,
+    "cycle": 61758,
+    "layer": "L9"
+   },
+   {
+    "seg": 0,
+    "cycle": 68594,
+    "layer": "L10"
+   },
+   {
+    "seg": 0,
+    "cycle": 75430,
+    "layer": "L11"
+   },
+   {
+    "seg": 0,
+    "cycle": 82266,
+    "layer": "L12"
+   },
+   {
+    "seg": 0,
+    "cycle": 89102,
+    "layer": "L13"
+   },
+   {
+    "seg": 0,
+    "cycle": 95938,
+    "layer": "L14"
+   },
+   {
+    "seg": 0,
+    "cycle": 102774,
+    "layer": "L15"
+   },
+   {
+    "seg": 0,
+    "cycle": 109610,
+    "layer": "L16"
+   },
+   {
+    "seg": 0,
+    "cycle": 116446,
+    "layer": "L17"
+   },
+   {
+    "seg": 0,
+    "cycle": 123282,
+    "layer": "L18"
+   },
+   {
+    "seg": 0,
+    "cycle": 130118,
+    "layer": "L19"
+   },
+   {
+    "seg": 0,
+    "cycle": 136954,
+    "layer": "L20"
+   },
+   {
+    "seg": 0,
+    "cycle": 143790,
+    "layer": "L21"
+   },
+   {
+    "seg": 0,
+    "cycle": 150626,
+    "layer": "L22"
+   },
+   {
+    "seg": 0,
+    "cycle": 157462,
+    "layer": "L23"
+   },
+   {
+    "seg": 0,
+    "cycle": 164298,
+    "layer": "L24"
+   },
+   {
+    "seg": 0,
+    "cycle": 171134,
+    "layer": "L25"
+   },
+   {
+    "seg": 0,
+    "cycle": 177970,
+    "layer": "L26"
+   },
+   {
+    "seg": 0,
+    "cycle": 184806,
+    "layer": "L27"
+   },
+   {
+    "seg": 0,
+    "cycle": 191642,
+    "layer": "L28"
+   },
+   {
+    "seg": 0,
+    "cycle": 198478,
+    "layer": "L29"
+   },
+   {
+    "seg": 0,
+    "cycle": 205314,
+    "layer": "L30"
+   },
+   {
+    "seg": 0,
+    "cycle": 212150,
+    "layer": "L31"
+   },
+   {
+    "seg": 0,
+    "cycle": 218986,
+    "layer": "L32"
+   },
+   {
+    "seg": 0,
+    "cycle": 225822,
+    "layer": "L33"
+   },
+   {
+    "seg": 0,
+    "cycle": 232658,
+    "layer": "L34"
+   },
+   {
+    "seg": 0,
+    "cycle": 239494,
+    "layer": "L35"
+   }
+  ],
+  "link_occupancy": {
+   "C": 0.00556,
+   "K": 0.00508
+  },
+  "token_cycles_through_L35": 246329
+ }
+}

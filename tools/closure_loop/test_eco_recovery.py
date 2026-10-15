@@ -15,6 +15,13 @@ class RecoveryTests(unittest.TestCase):
         self.tmp = tempfile.TemporaryDirectory()
         self.addCleanup(self.tmp.cleanup)
         self.root = Path(self.tmp.name)
+        # ROOT 2026-10-15: cl.step / save_job in these tests wrote the LIVE job record of the same name
+        # (~/.local/state/closure_loop/jobs/hbglue_cl_8ddc70024.json) whenever the suite ran; every test is confined
+        # to a private state root
+        st = patch.object(cl, 'STATE', self.root / 'state')
+        st.start()
+        self.addCleanup(st.stop)
+        (self.root / 'state' / 'jobs').mkdir(parents=True)
         self.j = dict(name='hbglue_cl_8ddc70024', status='NEEDS_RTL', attempt=1, stage_idx=1,
                       commit_full='8ddc7002479798a1e3d5ce5875a163d672973e75', host='host', run=str(self.root),
                       spec=dict(source=dict(commit='8ddc7002479798a1e3d5ce5875a163d672973e75'),

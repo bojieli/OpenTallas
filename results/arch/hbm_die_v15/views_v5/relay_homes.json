@@ -1,0 +1,458 @@
+{
+ "schema": "opentallas.hbm_v15.relay_homes.v1",
+ "reach_um": 480.0,
+ "laned_links": 524,
+ "crossings_over_reach": 1203,
+ "by_block_kind": {
+  "coll:h": {
+   "crossings": 16,
+   "bits": 5878,
+   "max_um": 963.4,
+   "blocks": [
+    "coll_NE",
+    "coll_NW",
+    "coll_SE",
+    "coll_SW"
+   ],
+   "links": [
+    "vmh_SE>vmb_SE1:VM_HUB crosses coll_SE 963 um (h)",
+    "vmh_NE>vmb_NE4:VM_HUB crosses coll_NE 963 um (h)",
+    "vmh_SW>vmb_SW6:VM_HUB crosses coll_SW 963 um (h)",
+    "vmh_NW>vmb_NW6:VM_HUB crosses coll_NW 963 um (h)",
+    "vmh_NW>vmb_NW7:VM_HUB crosses coll_NW 963 um (h)",
+    "vmh_NE>vmb_NE6:VM_HUB crosses coll_NE 963 um (h)"
+   ],
+   "feedthrough": null
+  },
+  "coll:v": {
+   "crossings": 4,
+   "bits": 1096,
+   "max_um": 721.4,
+   "blocks": [
+    "coll_SW"
+   ],
+   "links": [
+    "vmb_SW0>idx_op:IDX_VM crosses coll_SW 594 um (v)",
+    "vmb_SW1>idx_op:IDX_VM crosses coll_SW 494 um (v)",
+    "vmb_SW2>idx_op:IDX_VM crosses coll_SW 721 um (v)",
+    "vmb_SW5>idx_op:IDX_VM crosses coll_SW 721 um (v)"
+   ],
+   "feedthrough": null
+  },
+  "ep:v": {
+   "crossings": 1,
+   "bits": 1056,
+   "max_um": 515.2,
+   "blocks": [
+    "ep_S2"
+   ],
+   "links": [
+    "ep_S0>lk_S0:EP_SERDES crosses ep_S2 515 um (v)"
+   ],
+   "feedthrough": null
+  },
+  "hc:h": {
+   "crossings": 41,
+   "bits": 20507,
+   "max_um": 560.0,
+   "blocks": [
+    "hc_NE1",
+    "hc_NE2",
+    "hc_NE3",
+    "hc_NW1",
+    "hc_NW2",
+    "hc_NW3",
+    "hc_SE1",
+    "hc_SE2",
+    "hc_SE3",
+    "hc_SW1",
+    "hc_SW2",
+    "hc_SW3",
+    "hc_eng"
+   ],
+   "links": [
+    "vmh_NE>vmh_NW:VM_RING crosses hc_eng 560 um (h)",
+    "vmh_NW>vmh_NE:VM_RING crosses hc_eng 560 um (h)",
+    "vmh_SE>vmb_SE1:VM_HUB crosses hc_SE1 500 um (h)",
+    "vmh_SE>vmb_SE1:VM_HUB crosses hc_SE2 500 um (h)",
+    "vmh_SE>vmb_SE1:VM_HUB crosses hc_SE3 500 um (h)",
+    "vmb_SW1>coll_SW:COLL_VM crosses hc_SW1 500 um (h)"
+   ],
+   "feedthrough": null
+  },
+  "hc:v": {
+   "crossings": 2,
+   "bits": 546,
+   "max_um": 500.0,
+   "blocks": [
+    "hc_NW2",
+    "hc_SW3"
+   ],
+   "links": [
+    "vmb_NW5>sm_NW1:SM_X crosses hc_NW2 500 um (v)",
+    "vmb_SW5>sm_SW3:SM_X crosses hc_SW3 500 um (v)"
+   ],
+   "feedthrough": null
+  },
+  "idx:h": {
+   "crossings": 17,
+   "bits": 21873,
+   "max_um": 3008.9,
+   "blocks": [
+    "idx_s0",
+    "idx_s1",
+    "idx_s2",
+    "idx_sel"
+   ],
+   "links": [
+    "vmh_SE>vmh_SW:VM_RING crosses idx_s0 3009 um (h)",
+    "vmh_NE>vmh_NW:VM_RING crosses idx_s2 3009 um (h)",
+    "vmh_NW>vmh_NE:VM_RING crosses idx_s2 3009 um (h)",
+    "idx_link>coll_SW:IDX_COLL crosses idx_s0 545 um (h)",
+    "idx_link>coll_SW:IDX_COLL crosses idx_sel 1043 um (h)",
+    "hc_SW0>hc_eng:HC_ENG crosses idx_s1 3009 um (h)"
+   ],
+   "feedthrough": null
+  },
+  "idx:v": {
+   "crossings": 15,
+   "bits": 14153,
+   "max_um": 3840.5,
+   "blocks": [
+    "idx_s0",
+    "idx_s1",
+    "idx_s2",
+    "idx_s3"
+   ],
+   "links": [
+    "idx_link>coll_SW:IDX_COLL crosses idx_s1 3840 um (v)",
+    "coll_SW>ep_S0:COLL_EP crosses idx_s0 2832 um (v)",
+    "coll_SW>ep_S1:COLL_EP crosses idx_s0 2832 um (v)",
+    "coll_NW>ep_N1:COLL_EP crosses idx_s2 2186 um (v)",
+    "coll_SW>ep_S2:COLL_EP crosses idx_s0 2832 um (v)",
+    "coll_NE>ep_N2:COLL_EP crosses idx_s2 2186 um (v)"
+   ],
+   "feedthrough": null
+  },
+  "lk:v": {
+   "crossings": 4,
+   "bits": 4896,
+   "max_um": 1735.0,
+   "blocks": [
+    "lk_N2",
+    "lk_S0",
+    "lk_S2",
+    "lk_S4"
+   ],
+   "links": [
+    "coll_SW>ep_S0:COLL_EP crosses lk_S0 1735 um (v)",
+    "coll_SW>ep_S1:COLL_EP crosses lk_S2 1735 um (v)",
+    "coll_NW>ep_N1:COLL_EP crosses lk_N2 1735 um (v)",
+    "coll_SW>ep_S2:COLL_EP crosses lk_S4 1200 um (v)"
+   ],
+   "feedthrough": null
+  },
+  "pc:h": {
+   "crossings": 13,
+   "bits": 7708,
+   "max_um": 1036.8,
+   "blocks": [
+    "pc_NE1",
+    "pc_NE4",
+    "pc_NE5",
+    "pc_NE6",
+    "pc_NE7",
+    "pc_NW1",
+    "pc_NW3",
+    "pc_NW4",
+    "pc_NW7",
+    "pc_SE7",
+    "pc_SW7"
+   ],
+   "links": [
+    "pc_NW4>sm_NW4:SM_HBM crosses pc_NW3 515 um (h)",
+    "pc_NW2>sm_NW2:SM_HBM crosses pc_NW1 501 um (h)",
+    "pc_NW3>sm_NW3:SM_HBM crosses pc_NW4 565 um (h)",
+    "pc_NE2>sm_NE2:SM_HBM crosses pc_NE1 583 um (h)",
+    "pc_NE3>sm_NE3:SM_HBM crosses pc_NE4 483 um (h)",
+    "pc_NE4>vmh_NE:HBM_VM crosses pc_NE5 1037 um (h)"
+   ],
+   "feedthrough": null
+  },
+  "sfu:h": {
+   "crossings": 52,
+   "bits": 17754,
+   "max_um": 500.0,
+   "blocks": [
+    "sfu_NE0",
+    "sfu_NE1",
+    "sfu_NE2",
+    "sfu_NE3",
+    "sfu_NW1",
+    "sfu_NW2",
+    "sfu_NW3",
+    "sfu_SE0",
+    "sfu_SE1",
+    "sfu_SE2",
+    "sfu_SE3",
+    "sfu_SW0",
+    "sfu_SW1",
+    "sfu_SW2",
+    "sfu_SW3"
+   ],
+   "links": [
+    "vmh_NW>vmb_NW0:VM_HUB crosses sfu_NW1 500 um (h)",
+    "vmh_NW>vmb_NW0:VM_HUB crosses sfu_NW2 500 um (h)",
+    "vmh_NW>vmb_NW0:VM_HUB crosses sfu_NW3 500 um (h)",
+    "vmb_NE1>coll_NE:COLL_VM crosses sfu_NE1 500 um (h)",
+    "vmb_NE1>coll_NE:COLL_VM crosses sfu_NE2 500 um (h)",
+    "vmb_NE1>coll_NE:COLL_VM crosses sfu_NE3 500 um (h)"
+   ],
+   "feedthrough": null
+  },
+  "sfu:v": {
+   "crossings": 9,
+   "bits": 2457,
+   "max_um": 800.0,
+   "blocks": [
+    "sfu_NE2",
+    "sfu_NE3",
+    "sfu_NW0",
+    "sfu_NW1",
+    "sfu_NW2",
+    "sfu_SE3",
+    "sfu_SW2",
+    "sfu_SW3"
+   ],
+   "links": [
+    "vmb_NW4>sm_NW7:SM_X crosses sfu_NW2 800 um (v)",
+    "vmb_NE6>sm_NE6:SM_X crosses sfu_NE3 581 um (v)",
+    "vmb_NE4>sm_NE7:SM_X crosses sfu_NE2 581 um (v)",
+    "vmb_SE6>sm_SE6:SM_X crosses sfu_SE3 555 um (v)",
+    "vmb_NW1>sm_NW6:SM_X crosses sfu_NW0 487 um (v)",
+    "vmb_NW3>sm_NW6:SM_X crosses sfu_NW1 487 um (v)"
+   ],
+   "feedthrough": null
+  },
+  "sm:h": {
+   "crossings": 261,
+   "bits": 88595,
+   "max_um": 6609.6,
+   "blocks": [
+    "sm_NE0",
+    "sm_NE1",
+    "sm_NE2",
+    "sm_NE3",
+    "sm_NE4",
+    "sm_NE5",
+    "sm_NE6",
+    "sm_NE7",
+    "sm_NW0",
+    "sm_NW1",
+    "sm_NW2",
+    "sm_NW3",
+    "sm_NW4",
+    "sm_NW5",
+    "sm_NW6",
+    "sm_NW7",
+    "sm_SE0",
+    "sm_SE1",
+    "sm_SE2",
+    "sm_SE3",
+    "sm_SE4",
+    "sm_SE5",
+    "sm_SE6",
+    "sm_SE7",
+    "sm_SW0",
+    "sm_SW1",
+    "sm_SW2",
+    "sm_SW3",
+    "sm_SW4",
+    "sm_SW5",
+    "sm_SW6",
+    "sm_SW7"
+   ],
+   "links": [
+    "hc_SW0>hc_eng:HC_ENG crosses sm_SW6 6110 um (h)",
+    "hc_SW0>hc_eng:HC_ENG crosses sm_SW7 6610 um (h)",
+    "hc_NW0>hc_eng:HC_ENG crosses sm_NW2 6110 um (h)",
+    "hc_NW0>hc_eng:HC_ENG crosses sm_NW3 6610 um (h)",
+    "hc_SE0>hc_eng:HC_ENG crosses sm_SE6 6110 um (h)",
+    "hc_SE0>hc_eng:HC_ENG crosses sm_SE7 6610 um (h)"
+   ],
+   "feedthrough": null
+  },
+  "sm:v": {
+   "crossings": 493,
+   "bits": 207436,
+   "max_um": 1712.1,
+   "blocks": [
+    "sm_NE0",
+    "sm_NE1",
+    "sm_NE2",
+    "sm_NE3",
+    "sm_NE4",
+    "sm_NE5",
+    "sm_NE6",
+    "sm_NE7",
+    "sm_NW0",
+    "sm_NW1",
+    "sm_NW2",
+    "sm_NW3",
+    "sm_NW4",
+    "sm_NW5",
+    "sm_NW6",
+    "sm_NW7",
+    "sm_SE0",
+    "sm_SE1",
+    "sm_SE2",
+    "sm_SE3",
+    "sm_SE4",
+    "sm_SE5",
+    "sm_SE6",
+    "sm_SE7",
+    "sm_SW0",
+    "sm_SW1",
+    "sm_SW2",
+    "sm_SW3",
+    "sm_SW4",
+    "sm_SW5",
+    "sm_SW6",
+    "sm_SW7"
+   ],
+   "links": [
+    "vmh_NW>vmh_SW:VM_RING crosses sm_SW5 1712 um (v)",
+    "vmh_NW>vmh_SW:VM_RING crosses sm_SW7 1712 um (v)",
+    "vmh_NW>vmh_SW:VM_RING crosses sm_NW5 1712 um (v)",
+    "vmh_NW>vmh_SW:VM_RING crosses sm_NW7 1712 um (v)",
+    "vmh_NE>vmh_SE:VM_RING crosses sm_SE5 1712 um (v)",
+    "vmh_NE>vmh_SE:VM_RING crosses sm_SE7 1712 um (v)"
+   ],
+   "feedthrough": null
+  },
+  "su:h": {
+   "crossings": 176,
+   "bits": 67763,
+   "max_um": 1250.0,
+   "blocks": [
+    "su_NE0",
+    "su_NE1",
+    "su_NE2",
+    "su_NE3",
+    "su_NW0",
+    "su_NW1",
+    "su_NW2",
+    "su_NW3",
+    "su_SE0",
+    "su_SE1",
+    "su_SE2",
+    "su_SE3",
+    "su_SW0",
+    "su_SW1",
+    "su_SW2",
+    "su_SW3"
+   ],
+   "links": [
+    "vmh_SW>vmb_SW1:VM_HUB crosses su_SW0 1250 um (h)",
+    "vmh_SW>vmb_SW1:VM_HUB crosses su_SW1 1250 um (h)",
+    "vmh_SW>vmb_SW1:VM_HUB crosses su_SW2 1250 um (h)",
+    "vmh_SW>vmb_SW1:VM_HUB crosses su_SW3 1250 um (h)",
+    "vmh_SE>vmb_SE1:VM_HUB crosses su_SE0 1250 um (h)",
+    "vmh_SE>vmb_SE1:VM_HUB crosses su_SE1 1250 um (h)"
+   ],
+   "feedthrough": null
+  },
+  "su:v": {
+   "crossings": 72,
+   "bits": 32541,
+   "max_um": 1780.0,
+   "blocks": [
+    "su_NE0",
+    "su_NE1",
+    "su_NE2",
+    "su_NE3",
+    "su_NW0",
+    "su_NW1",
+    "su_NW2",
+    "su_NW3",
+    "su_SE0",
+    "su_SE1",
+    "su_SE2",
+    "su_SE3",
+    "su_SW0",
+    "su_SW1",
+    "su_SW2",
+    "su_SW3"
+   ],
+   "links": [
+    "pc_SW6>sm_SW6:SM_HBM crosses su_SW2 1780 um (v)",
+    "pc_SW7>sm_SW7:SM_HBM crosses su_SW3 1780 um (v)",
+    "pc_SE6>sm_SE6:SM_HBM crosses su_SE2 1780 um (v)",
+    "pc_SE7>sm_SE7:SM_HBM crosses su_SE3 1780 um (v)",
+    "pc_NW6>sm_NW6:SM_HBM crosses su_NW2 1780 um (v)",
+    "pc_NW7>sm_NW7:SM_HBM crosses su_NW3 1780 um (v)"
+   ],
+   "feedthrough": "v5 grant: 40 um feedthrough relay column at x = w/2 (vertical through-traffic)"
+  },
+  "vmb:h": {
+   "crossings": 27,
+   "bits": 7843,
+   "max_um": 849.5,
+   "blocks": [
+    "vmb_NE0",
+    "vmb_NE2",
+    "vmb_NE3",
+    "vmb_NE4",
+    "vmb_NE5",
+    "vmb_NW0",
+    "vmb_NW2",
+    "vmb_NW4",
+    "vmb_SE0",
+    "vmb_SE1",
+    "vmb_SE2",
+    "vmb_SE3",
+    "vmb_SE5",
+    "vmb_SE7",
+    "vmb_SW0",
+    "vmb_SW1",
+    "vmb_SW2",
+    "vmb_SW3",
+    "vmb_SW4",
+    "vmb_SW5",
+    "vmb_SW7"
+   ],
+   "links": [
+    "vmh_SW>vmb_SW3:VM_HUB crosses vmb_SW5 813 um (h)",
+    "vmh_SW>vmb_SW3:VM_HUB crosses vmb_SW7 813 um (h)",
+    "vmh_SE>vmb_SE4:VM_HUB crosses vmb_SE7 813 um (h)",
+    "sfu_NE3>sfu_NE0:SFU_CORE crosses vmb_NE0 850 um (h)",
+    "sfu_NE3>sfu_NE0:SFU_CORE crosses vmb_NE2 850 um (h)",
+    "sfu_NE3>sfu_NE0:SFU_CORE crosses vmb_NE4 850 um (h)"
+   ],
+   "feedthrough": null
+  }
+ },
+ "verdict": "1131 crossings need a relay home inside blocks without a feedthrough reservation: ['coll:h', 'coll:v', 'ep:v', 'hc:h', 'hc:v', 'idx:h', 'idx:v', 'lk:v', 'pc:h', 'sfu:h', 'sfu:v', 'sm:h', 'sm:v', 'su:h', 'vmb:h']",
+ "tradeoff": {
+  "lanes2_v5 (cut 0.598)": {
+   "crossings_over_480": 1203,
+   "unhomed": 1131
+  },
+  "homes-aware lanes slack 600": {
+   "crossings": 983,
+   "unhomed": 930,
+   "worst_cut": 0.847
+  },
+  "homes-aware lanes slack 1500": {
+   "crossings": 492,
+   "unhomed": 420,
+   "worst_cut": 1.167
+  },
+  "homes-aware lanes slack 3000 (lanes_channel_only_s3000.json)": {
+   "crossings": 401,
+   "unhomed": 328,
+   "worst_cut": 1.167
+  },
+  "conclusion": "compact660_v5 cannot keep cut <= 0.60 AND relay homes outside blocks by lane choice alone: wide blocks must reserve feedthrough relay channels (SM frames vertical + horizontal, SU slices horizontal row, VM bank pair gap, COLL/IDX scorer rows) -- ~3-4 mm2 inside the 660 die (free ~124 mm2), no growth yet; next: plan v6 with those reservations, re-run pin_cut + relay_homes + planning GRT"
+ }
+}

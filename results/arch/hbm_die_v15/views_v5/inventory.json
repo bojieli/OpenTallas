@@ -1,0 +1,3541 @@
+{
+ "schema": "opentallas.hbm_v15.view_inventory.v1",
+ "plan": "results/arch/hbm_die_v15/compact660_v5/compact.P.json",
+ "contract": "results/arch/hbm_die_v15/source_contract/contract.json",
+ "summary": {
+  "blocks": 195,
+  "by_status": {
+   "REAL": 36,
+   "NO_CONTRACT_INSTANCE": 71,
+   "PARTITION": 76,
+   "INCOMPLETE": 1,
+   "SYNTH": 11
+  },
+  "area_mm2_by_status": {
+   "REAL": 53.3,
+   "NO_CONTRACT_INSTANCE": 376.0,
+   "PARTITION": 98.7,
+   "INCOMPLETE": 0.7,
+   "SYNTH": 6.5
+  },
+  "instances": 83,
+  "instances_by_view": {
+   "SYNTH": 33,
+   "REAL_COMPOSED": 34,
+   "REAL": 9,
+   "RUNNING": 5,
+   "NONE": 2
+  }
+ },
+ "rule": "REAL = closed LEF + TT/FF ETM; SYNTH = current-source mapped netlist + real outline (estimate); no stub, no pin-only shell",
+ "blocks": {
+  "phy_SW": {
+   "kind": "phy",
+   "status": "REAL",
+   "contract_instances": [
+    "phy_SW"
+   ],
+   "owner": "H-DIE",
+   "note": "PHY+controller macro abstract (the allowed modelled hard core)",
+   "area_mm2": 10.006
+  },
+  "pc_SW0": {
+   "kind": "pc",
+   "status": "REAL",
+   "contract_instances": [
+    "svc_SW_s0",
+    "svc_SW_s1",
+    "svc_SW_s2",
+    "svc_SW_s3",
+    "svc_SW_s4",
+    "svc_SW_s5",
+    "svc_SW_s6",
+    "svc_SW_s7"
+   ],
+   "owner": "HBM-V15-HARDEN",
+   "note": "band = wires around closed PCs; flattened to PC leaves in the die case",
+   "area_mm2": 0.414
+  },
+  "pc_SW1": {
+   "kind": "pc",
+   "status": "REAL",
+   "contract_instances": [
+    "svc_SW_s0",
+    "svc_SW_s1",
+    "svc_SW_s2",
+    "svc_SW_s3",
+    "svc_SW_s4",
+    "svc_SW_s5",
+    "svc_SW_s6",
+    "svc_SW_s7"
+   ],
+   "owner": "HBM-V15-HARDEN",
+   "note": "band = wires around closed PCs; flattened to PC leaves in the die case",
+   "area_mm2": 0.414
+  },
+  "pc_SW2": {
+   "kind": "pc",
+   "status": "REAL",
+   "contract_instances": [
+    "svc_SW_s0",
+    "svc_SW_s1",
+    "svc_SW_s2",
+    "svc_SW_s3",
+    "svc_SW_s4",
+    "svc_SW_s5",
+    "svc_SW_s6",
+    "svc_SW_s7"
+   ],
+   "owner": "HBM-V15-HARDEN",
+   "note": "band = wires around closed PCs; flattened to PC leaves in the die case",
+   "area_mm2": 0.414
+  },
+  "pc_SW3": {
+   "kind": "pc",
+   "status": "REAL",
+   "contract_instances": [
+    "svc_SW_s0",
+    "svc_SW_s1",
+    "svc_SW_s2",
+    "svc_SW_s3",
+    "svc_SW_s4",
+    "svc_SW_s5",
+    "svc_SW_s6",
+    "svc_SW_s7"
+   ],
+   "owner": "HBM-V15-HARDEN",
+   "note": "band = wires around closed PCs; flattened to PC leaves in the die case",
+   "area_mm2": 0.414
+  },
+  "pc_SW4": {
+   "kind": "pc",
+   "status": "REAL",
+   "contract_instances": [
+    "svc_SW_s0",
+    "svc_SW_s1",
+    "svc_SW_s2",
+    "svc_SW_s3",
+    "svc_SW_s4",
+    "svc_SW_s5",
+    "svc_SW_s6",
+    "svc_SW_s7"
+   ],
+   "owner": "HBM-V15-HARDEN",
+   "note": "band = wires around closed PCs; flattened to PC leaves in the die case",
+   "area_mm2": 0.414
+  },
+  "pc_SW5": {
+   "kind": "pc",
+   "status": "REAL",
+   "contract_instances": [
+    "svc_SW_s0",
+    "svc_SW_s1",
+    "svc_SW_s2",
+    "svc_SW_s3",
+    "svc_SW_s4",
+    "svc_SW_s5",
+    "svc_SW_s6",
+    "svc_SW_s7"
+   ],
+   "owner": "HBM-V15-HARDEN",
+   "note": "band = wires around closed PCs; flattened to PC leaves in the die case",
+   "area_mm2": 0.414
+  },
+  "pc_SW6": {
+   "kind": "pc",
+   "status": "REAL",
+   "contract_instances": [
+    "svc_SW_s0",
+    "svc_SW_s1",
+    "svc_SW_s2",
+    "svc_SW_s3",
+    "svc_SW_s4",
+    "svc_SW_s5",
+    "svc_SW_s6",
+    "svc_SW_s7"
+   ],
+   "owner": "HBM-V15-HARDEN",
+   "note": "band = wires around closed PCs; flattened to PC leaves in the die case",
+   "area_mm2": 0.414
+  },
+  "pc_SW7": {
+   "kind": "pc",
+   "status": "REAL",
+   "contract_instances": [
+    "svc_SW_s0",
+    "svc_SW_s1",
+    "svc_SW_s2",
+    "svc_SW_s3",
+    "svc_SW_s4",
+    "svc_SW_s5",
+    "svc_SW_s6",
+    "svc_SW_s7"
+   ],
+   "owner": "HBM-V15-HARDEN",
+   "note": "band = wires around closed PCs; flattened to PC leaves in the die case",
+   "area_mm2": 0.414
+  },
+  "sm_SW0": {
+   "kind": "sm",
+   "status": "NO_CONTRACT_INSTANCE",
+   "contract_instances": [],
+   "owner": "H-ELEM-A",
+   "note": "SM compact tile (x-load static + attention on SM) not in the source contract",
+   "area_mm2": 11.316
+  },
+  "sm_SW1": {
+   "kind": "sm",
+   "status": "NO_CONTRACT_INSTANCE",
+   "contract_instances": [],
+   "owner": "H-ELEM-A",
+   "note": "SM compact tile (x-load static + attention on SM) not in the source contract",
+   "area_mm2": 11.316
+  },
+  "sm_SW2": {
+   "kind": "sm",
+   "status": "NO_CONTRACT_INSTANCE",
+   "contract_instances": [],
+   "owner": "H-ELEM-A",
+   "note": "SM compact tile (x-load static + attention on SM) not in the source contract",
+   "area_mm2": 11.316
+  },
+  "sm_SW3": {
+   "kind": "sm",
+   "status": "NO_CONTRACT_INSTANCE",
+   "contract_instances": [],
+   "owner": "H-ELEM-A",
+   "note": "SM compact tile (x-load static + attention on SM) not in the source contract",
+   "area_mm2": 11.316
+  },
+  "sm_SW4": {
+   "kind": "sm",
+   "status": "NO_CONTRACT_INSTANCE",
+   "contract_instances": [],
+   "owner": "H-ELEM-A",
+   "note": "SM compact tile (x-load static + attention on SM) not in the source contract",
+   "area_mm2": 11.316
+  },
+  "sm_SW5": {
+   "kind": "sm",
+   "status": "NO_CONTRACT_INSTANCE",
+   "contract_instances": [],
+   "owner": "H-ELEM-A",
+   "note": "SM compact tile (x-load static + attention on SM) not in the source contract",
+   "area_mm2": 11.316
+  },
+  "sm_SW6": {
+   "kind": "sm",
+   "status": "NO_CONTRACT_INSTANCE",
+   "contract_instances": [],
+   "owner": "H-ELEM-A",
+   "note": "SM compact tile (x-load static + attention on SM) not in the source contract",
+   "area_mm2": 11.316
+  },
+  "sm_SW7": {
+   "kind": "sm",
+   "status": "NO_CONTRACT_INSTANCE",
+   "contract_instances": [],
+   "owner": "H-ELEM-A",
+   "note": "SM compact tile (x-load static + attention on SM) not in the source contract",
+   "area_mm2": 11.316
+  },
+  "hc_SW0": {
+   "kind": "hc",
+   "status": "NO_CONTRACT_INSTANCE",
+   "contract_instances": [],
+   "owner": "HC owner (H-ELEM-B/HC)",
+   "note": "HC rows not in the source contract",
+   "area_mm2": 0.25
+  },
+  "sfu_SW0": {
+   "kind": "sfu",
+   "status": "PARTITION",
+   "contract_instances": [
+    "hb_sfu_SW"
+   ],
+   "owner": "H-ELEM-B",
+   "note": "one engine master vs 4 bank-pair plan boxes: physical 4-leaf split requested",
+   "area_mm2": 0.4
+  },
+  "vmb_SW0": {
+   "kind": "vmb",
+   "status": "PARTITION",
+   "contract_instances": [
+    "hb_vms_SW"
+   ],
+   "owner": "H-ELEM-A (VM banks)",
+   "note": "banks live inside hfd_hgi_vms_static_<q>: hub+8 banks need a sub-layout",
+   "area_mm2": 0.297
+  },
+  "vmb_SW1": {
+   "kind": "vmb",
+   "status": "PARTITION",
+   "contract_instances": [
+    "hb_vms_SW"
+   ],
+   "owner": "H-ELEM-A (VM banks)",
+   "note": "banks live inside hfd_hgi_vms_static_<q>: hub+8 banks need a sub-layout",
+   "area_mm2": 0.297
+  },
+  "su_SW0": {
+   "kind": "su",
+   "status": "PARTITION",
+   "contract_instances": [
+    "hb_su_SW"
+   ],
+   "owner": "H-ELEM-B",
+   "note": "contract SU = VM-port shim only; whole-SU slices RTL pending",
+   "area_mm2": 2.225
+  },
+  "hc_SW1": {
+   "kind": "hc",
+   "status": "NO_CONTRACT_INSTANCE",
+   "contract_instances": [],
+   "owner": "HC owner (H-ELEM-B/HC)",
+   "note": "HC rows not in the source contract",
+   "area_mm2": 0.25
+  },
+  "sfu_SW1": {
+   "kind": "sfu",
+   "status": "PARTITION",
+   "contract_instances": [
+    "hb_sfu_SW"
+   ],
+   "owner": "H-ELEM-B",
+   "note": "one engine master vs 4 bank-pair plan boxes: physical 4-leaf split requested",
+   "area_mm2": 0.4
+  },
+  "vmb_SW2": {
+   "kind": "vmb",
+   "status": "PARTITION",
+   "contract_instances": [
+    "hb_vms_SW"
+   ],
+   "owner": "H-ELEM-A (VM banks)",
+   "note": "banks live inside hfd_hgi_vms_static_<q>: hub+8 banks need a sub-layout",
+   "area_mm2": 0.297
+  },
+  "vmb_SW3": {
+   "kind": "vmb",
+   "status": "PARTITION",
+   "contract_instances": [
+    "hb_vms_SW"
+   ],
+   "owner": "H-ELEM-A (VM banks)",
+   "note": "banks live inside hfd_hgi_vms_static_<q>: hub+8 banks need a sub-layout",
+   "area_mm2": 0.297
+  },
+  "su_SW1": {
+   "kind": "su",
+   "status": "PARTITION",
+   "contract_instances": [
+    "hb_su_SW"
+   ],
+   "owner": "H-ELEM-B",
+   "note": "contract SU = VM-port shim only; whole-SU slices RTL pending",
+   "area_mm2": 2.225
+  },
+  "hc_SW2": {
+   "kind": "hc",
+   "status": "NO_CONTRACT_INSTANCE",
+   "contract_instances": [],
+   "owner": "HC owner (H-ELEM-B/HC)",
+   "note": "HC rows not in the source contract",
+   "area_mm2": 0.25
+  },
+  "sfu_SW2": {
+   "kind": "sfu",
+   "status": "PARTITION",
+   "contract_instances": [
+    "hb_sfu_SW"
+   ],
+   "owner": "H-ELEM-B",
+   "note": "one engine master vs 4 bank-pair plan boxes: physical 4-leaf split requested",
+   "area_mm2": 0.4
+  },
+  "vmb_SW4": {
+   "kind": "vmb",
+   "status": "PARTITION",
+   "contract_instances": [
+    "hb_vms_SW"
+   ],
+   "owner": "H-ELEM-A (VM banks)",
+   "note": "banks live inside hfd_hgi_vms_static_<q>: hub+8 banks need a sub-layout",
+   "area_mm2": 0.297
+  },
+  "vmb_SW5": {
+   "kind": "vmb",
+   "status": "PARTITION",
+   "contract_instances": [
+    "hb_vms_SW"
+   ],
+   "owner": "H-ELEM-A (VM banks)",
+   "note": "banks live inside hfd_hgi_vms_static_<q>: hub+8 banks need a sub-layout",
+   "area_mm2": 0.297
+  },
+  "su_SW2": {
+   "kind": "su",
+   "status": "PARTITION",
+   "contract_instances": [
+    "hb_su_SW"
+   ],
+   "owner": "H-ELEM-B",
+   "note": "contract SU = VM-port shim only; whole-SU slices RTL pending",
+   "area_mm2": 2.225
+  },
+  "hc_SW3": {
+   "kind": "hc",
+   "status": "NO_CONTRACT_INSTANCE",
+   "contract_instances": [],
+   "owner": "HC owner (H-ELEM-B/HC)",
+   "note": "HC rows not in the source contract",
+   "area_mm2": 0.25
+  },
+  "sfu_SW3": {
+   "kind": "sfu",
+   "status": "PARTITION",
+   "contract_instances": [
+    "hb_sfu_SW"
+   ],
+   "owner": "H-ELEM-B",
+   "note": "one engine master vs 4 bank-pair plan boxes: physical 4-leaf split requested",
+   "area_mm2": 0.4
+  },
+  "vmb_SW6": {
+   "kind": "vmb",
+   "status": "PARTITION",
+   "contract_instances": [
+    "hb_vms_SW"
+   ],
+   "owner": "H-ELEM-A (VM banks)",
+   "note": "banks live inside hfd_hgi_vms_static_<q>: hub+8 banks need a sub-layout",
+   "area_mm2": 0.297
+  },
+  "vmb_SW7": {
+   "kind": "vmb",
+   "status": "PARTITION",
+   "contract_instances": [
+    "hb_vms_SW"
+   ],
+   "owner": "H-ELEM-A (VM banks)",
+   "note": "banks live inside hfd_hgi_vms_static_<q>: hub+8 banks need a sub-layout",
+   "area_mm2": 0.297
+  },
+  "su_SW3": {
+   "kind": "su",
+   "status": "PARTITION",
+   "contract_instances": [
+    "hb_su_SW"
+   ],
+   "owner": "H-ELEM-B",
+   "note": "contract SU = VM-port shim only; whole-SU slices RTL pending",
+   "area_mm2": 2.225
+  },
+  "sucore_SW": {
+   "kind": "sucore",
+   "status": "NO_CONTRACT_INSTANCE",
+   "contract_instances": [],
+   "owner": "H-ELEM-B",
+   "note": "whole-SU core RTL pending",
+   "area_mm2": 0.445
+  },
+  "coll_SW": {
+   "kind": "coll",
+   "status": "INCOMPLETE",
+   "contract_instances": [
+    "hb_coll_SW"
+   ],
+   "owner": "H-COLL",
+   "note": "",
+   "area_mm2": 0.695
+  },
+  "dbk_SW": {
+   "kind": "dbk",
+   "status": "SYNTH",
+   "contract_instances": [
+    "hb_dbk_SW"
+   ],
+   "owner": "DMA owner",
+   "note": "",
+   "area_mm2": 0.156
+  },
+  "idx_op": {
+   "kind": "idx",
+   "status": "PARTITION",
+   "contract_instances": [
+    "hb_idx"
+   ],
+   "owner": "H-IDX",
+   "note": "client = 4 scorers (512 CLOSED hslices each) + glue; partition by grants v4",
+   "area_mm2": 0.115
+  },
+  "vmh_SW": {
+   "kind": "vmh",
+   "status": "SYNTH",
+   "contract_instances": [
+    "calendar_SW",
+    "delivery_SW",
+    "hb_vms_SW",
+    "lg_SW_0",
+    "lg_SW_1",
+    "lg_SW_2"
+   ],
+   "owner": "h_vm / H-ELEM-A",
+   "note": "VM hub group",
+   "area_mm2": 0.941
+  },
+  "phy_SE": {
+   "kind": "phy",
+   "status": "REAL",
+   "contract_instances": [
+    "phy_SE"
+   ],
+   "owner": "H-DIE",
+   "note": "PHY+controller macro abstract (the allowed modelled hard core)",
+   "area_mm2": 10.006
+  },
+  "pc_SE0": {
+   "kind": "pc",
+   "status": "REAL",
+   "contract_instances": [
+    "svc_SE_s0",
+    "svc_SE_s1",
+    "svc_SE_s2",
+    "svc_SE_s3",
+    "svc_SE_s4",
+    "svc_SE_s5",
+    "svc_SE_s6",
+    "svc_SE_s7",
+    "svc_SE_s8"
+   ],
+   "owner": "HBM-V15-HARDEN",
+   "note": "band = wires around closed PCs; flattened to PC leaves in the die case",
+   "area_mm2": 0.414
+  },
+  "pc_SE1": {
+   "kind": "pc",
+   "status": "REAL",
+   "contract_instances": [
+    "svc_SE_s0",
+    "svc_SE_s1",
+    "svc_SE_s2",
+    "svc_SE_s3",
+    "svc_SE_s4",
+    "svc_SE_s5",
+    "svc_SE_s6",
+    "svc_SE_s7",
+    "svc_SE_s8"
+   ],
+   "owner": "HBM-V15-HARDEN",
+   "note": "band = wires around closed PCs; flattened to PC leaves in the die case",
+   "area_mm2": 0.414
+  },
+  "pc_SE2": {
+   "kind": "pc",
+   "status": "REAL",
+   "contract_instances": [
+    "svc_SE_s0",
+    "svc_SE_s1",
+    "svc_SE_s2",
+    "svc_SE_s3",
+    "svc_SE_s4",
+    "svc_SE_s5",
+    "svc_SE_s6",
+    "svc_SE_s7",
+    "svc_SE_s8"
+   ],
+   "owner": "HBM-V15-HARDEN",
+   "note": "band = wires around closed PCs; flattened to PC leaves in the die case",
+   "area_mm2": 0.414
+  },
+  "pc_SE3": {
+   "kind": "pc",
+   "status": "REAL",
+   "contract_instances": [
+    "svc_SE_s0",
+    "svc_SE_s1",
+    "svc_SE_s2",
+    "svc_SE_s3",
+    "svc_SE_s4",
+    "svc_SE_s5",
+    "svc_SE_s6",
+    "svc_SE_s7",
+    "svc_SE_s8"
+   ],
+   "owner": "HBM-V15-HARDEN",
+   "note": "band = wires around closed PCs; flattened to PC leaves in the die case",
+   "area_mm2": 0.414
+  },
+  "pc_SE4": {
+   "kind": "pc",
+   "status": "REAL",
+   "contract_instances": [
+    "svc_SE_s0",
+    "svc_SE_s1",
+    "svc_SE_s2",
+    "svc_SE_s3",
+    "svc_SE_s4",
+    "svc_SE_s5",
+    "svc_SE_s6",
+    "svc_SE_s7",
+    "svc_SE_s8"
+   ],
+   "owner": "HBM-V15-HARDEN",
+   "note": "band = wires around closed PCs; flattened to PC leaves in the die case",
+   "area_mm2": 0.414
+  },
+  "pc_SE5": {
+   "kind": "pc",
+   "status": "REAL",
+   "contract_instances": [
+    "svc_SE_s0",
+    "svc_SE_s1",
+    "svc_SE_s2",
+    "svc_SE_s3",
+    "svc_SE_s4",
+    "svc_SE_s5",
+    "svc_SE_s6",
+    "svc_SE_s7",
+    "svc_SE_s8"
+   ],
+   "owner": "HBM-V15-HARDEN",
+   "note": "band = wires around closed PCs; flattened to PC leaves in the die case",
+   "area_mm2": 0.414
+  },
+  "pc_SE6": {
+   "kind": "pc",
+   "status": "REAL",
+   "contract_instances": [
+    "svc_SE_s0",
+    "svc_SE_s1",
+    "svc_SE_s2",
+    "svc_SE_s3",
+    "svc_SE_s4",
+    "svc_SE_s5",
+    "svc_SE_s6",
+    "svc_SE_s7",
+    "svc_SE_s8"
+   ],
+   "owner": "HBM-V15-HARDEN",
+   "note": "band = wires around closed PCs; flattened to PC leaves in the die case",
+   "area_mm2": 0.414
+  },
+  "pc_SE7": {
+   "kind": "pc",
+   "status": "REAL",
+   "contract_instances": [
+    "svc_SE_s0",
+    "svc_SE_s1",
+    "svc_SE_s2",
+    "svc_SE_s3",
+    "svc_SE_s4",
+    "svc_SE_s5",
+    "svc_SE_s6",
+    "svc_SE_s7",
+    "svc_SE_s8"
+   ],
+   "owner": "HBM-V15-HARDEN",
+   "note": "band = wires around closed PCs; flattened to PC leaves in the die case",
+   "area_mm2": 0.414
+  },
+  "sm_SE0": {
+   "kind": "sm",
+   "status": "NO_CONTRACT_INSTANCE",
+   "contract_instances": [],
+   "owner": "H-ELEM-A",
+   "note": "SM compact tile (x-load static + attention on SM) not in the source contract",
+   "area_mm2": 11.316
+  },
+  "sm_SE1": {
+   "kind": "sm",
+   "status": "NO_CONTRACT_INSTANCE",
+   "contract_instances": [],
+   "owner": "H-ELEM-A",
+   "note": "SM compact tile (x-load static + attention on SM) not in the source contract",
+   "area_mm2": 11.316
+  },
+  "sm_SE2": {
+   "kind": "sm",
+   "status": "NO_CONTRACT_INSTANCE",
+   "contract_instances": [],
+   "owner": "H-ELEM-A",
+   "note": "SM compact tile (x-load static + attention on SM) not in the source contract",
+   "area_mm2": 11.316
+  },
+  "sm_SE3": {
+   "kind": "sm",
+   "status": "NO_CONTRACT_INSTANCE",
+   "contract_instances": [],
+   "owner": "H-ELEM-A",
+   "note": "SM compact tile (x-load static + attention on SM) not in the source contract",
+   "area_mm2": 11.316
+  },
+  "sm_SE4": {
+   "kind": "sm",
+   "status": "NO_CONTRACT_INSTANCE",
+   "contract_instances": [],
+   "owner": "H-ELEM-A",
+   "note": "SM compact tile (x-load static + attention on SM) not in the source contract",
+   "area_mm2": 11.316
+  },
+  "sm_SE5": {
+   "kind": "sm",
+   "status": "NO_CONTRACT_INSTANCE",
+   "contract_instances": [],
+   "owner": "H-ELEM-A",
+   "note": "SM compact tile (x-load static + attention on SM) not in the source contract",
+   "area_mm2": 11.316
+  },
+  "sm_SE6": {
+   "kind": "sm",
+   "status": "NO_CONTRACT_INSTANCE",
+   "contract_instances": [],
+   "owner": "H-ELEM-A",
+   "note": "SM compact tile (x-load static + attention on SM) not in the source contract",
+   "area_mm2": 11.316
+  },
+  "sm_SE7": {
+   "kind": "sm",
+   "status": "NO_CONTRACT_INSTANCE",
+   "contract_instances": [],
+   "owner": "H-ELEM-A",
+   "note": "SM compact tile (x-load static + attention on SM) not in the source contract",
+   "area_mm2": 11.316
+  },
+  "hc_SE0": {
+   "kind": "hc",
+   "status": "NO_CONTRACT_INSTANCE",
+   "contract_instances": [],
+   "owner": "HC owner (H-ELEM-B/HC)",
+   "note": "HC rows not in the source contract",
+   "area_mm2": 0.25
+  },
+  "sfu_SE0": {
+   "kind": "sfu",
+   "status": "PARTITION",
+   "contract_instances": [
+    "hb_sfu_SE"
+   ],
+   "owner": "H-ELEM-B",
+   "note": "one engine master vs 4 bank-pair plan boxes: physical 4-leaf split requested",
+   "area_mm2": 0.4
+  },
+  "vmb_SE0": {
+   "kind": "vmb",
+   "status": "PARTITION",
+   "contract_instances": [
+    "hb_vms_SE"
+   ],
+   "owner": "H-ELEM-A (VM banks)",
+   "note": "banks live inside hfd_hgi_vms_static_<q>: hub+8 banks need a sub-layout",
+   "area_mm2": 0.297
+  },
+  "vmb_SE1": {
+   "kind": "vmb",
+   "status": "PARTITION",
+   "contract_instances": [
+    "hb_vms_SE"
+   ],
+   "owner": "H-ELEM-A (VM banks)",
+   "note": "banks live inside hfd_hgi_vms_static_<q>: hub+8 banks need a sub-layout",
+   "area_mm2": 0.297
+  },
+  "su_SE0": {
+   "kind": "su",
+   "status": "PARTITION",
+   "contract_instances": [
+    "hb_su_SE"
+   ],
+   "owner": "H-ELEM-B",
+   "note": "contract SU = VM-port shim only; whole-SU slices RTL pending",
+   "area_mm2": 2.225
+  },
+  "hc_SE1": {
+   "kind": "hc",
+   "status": "NO_CONTRACT_INSTANCE",
+   "contract_instances": [],
+   "owner": "HC owner (H-ELEM-B/HC)",
+   "note": "HC rows not in the source contract",
+   "area_mm2": 0.25
+  },
+  "sfu_SE1": {
+   "kind": "sfu",
+   "status": "PARTITION",
+   "contract_instances": [
+    "hb_sfu_SE"
+   ],
+   "owner": "H-ELEM-B",
+   "note": "one engine master vs 4 bank-pair plan boxes: physical 4-leaf split requested",
+   "area_mm2": 0.4
+  },
+  "vmb_SE2": {
+   "kind": "vmb",
+   "status": "PARTITION",
+   "contract_instances": [
+    "hb_vms_SE"
+   ],
+   "owner": "H-ELEM-A (VM banks)",
+   "note": "banks live inside hfd_hgi_vms_static_<q>: hub+8 banks need a sub-layout",
+   "area_mm2": 0.297
+  },
+  "vmb_SE3": {
+   "kind": "vmb",
+   "status": "PARTITION",
+   "contract_instances": [
+    "hb_vms_SE"
+   ],
+   "owner": "H-ELEM-A (VM banks)",
+   "note": "banks live inside hfd_hgi_vms_static_<q>: hub+8 banks need a sub-layout",
+   "area_mm2": 0.297
+  },
+  "su_SE1": {
+   "kind": "su",
+   "status": "PARTITION",
+   "contract_instances": [
+    "hb_su_SE"
+   ],
+   "owner": "H-ELEM-B",
+   "note": "contract SU = VM-port shim only; whole-SU slices RTL pending",
+   "area_mm2": 2.225
+  },
+  "hc_SE2": {
+   "kind": "hc",
+   "status": "NO_CONTRACT_INSTANCE",
+   "contract_instances": [],
+   "owner": "HC owner (H-ELEM-B/HC)",
+   "note": "HC rows not in the source contract",
+   "area_mm2": 0.25
+  },
+  "sfu_SE2": {
+   "kind": "sfu",
+   "status": "PARTITION",
+   "contract_instances": [
+    "hb_sfu_SE"
+   ],
+   "owner": "H-ELEM-B",
+   "note": "one engine master vs 4 bank-pair plan boxes: physical 4-leaf split requested",
+   "area_mm2": 0.4
+  },
+  "vmb_SE4": {
+   "kind": "vmb",
+   "status": "PARTITION",
+   "contract_instances": [
+    "hb_vms_SE"
+   ],
+   "owner": "H-ELEM-A (VM banks)",
+   "note": "banks live inside hfd_hgi_vms_static_<q>: hub+8 banks need a sub-layout",
+   "area_mm2": 0.297
+  },
+  "vmb_SE5": {
+   "kind": "vmb",
+   "status": "PARTITION",
+   "contract_instances": [
+    "hb_vms_SE"
+   ],
+   "owner": "H-ELEM-A (VM banks)",
+   "note": "banks live inside hfd_hgi_vms_static_<q>: hub+8 banks need a sub-layout",
+   "area_mm2": 0.297
+  },
+  "su_SE2": {
+   "kind": "su",
+   "status": "PARTITION",
+   "contract_instances": [
+    "hb_su_SE"
+   ],
+   "owner": "H-ELEM-B",
+   "note": "contract SU = VM-port shim only; whole-SU slices RTL pending",
+   "area_mm2": 2.225
+  },
+  "hc_SE3": {
+   "kind": "hc",
+   "status": "NO_CONTRACT_INSTANCE",
+   "contract_instances": [],
+   "owner": "HC owner (H-ELEM-B/HC)",
+   "note": "HC rows not in the source contract",
+   "area_mm2": 0.25
+  },
+  "sfu_SE3": {
+   "kind": "sfu",
+   "status": "PARTITION",
+   "contract_instances": [
+    "hb_sfu_SE"
+   ],
+   "owner": "H-ELEM-B",
+   "note": "one engine master vs 4 bank-pair plan boxes: physical 4-leaf split requested",
+   "area_mm2": 0.4
+  },
+  "vmb_SE6": {
+   "kind": "vmb",
+   "status": "PARTITION",
+   "contract_instances": [
+    "hb_vms_SE"
+   ],
+   "owner": "H-ELEM-A (VM banks)",
+   "note": "banks live inside hfd_hgi_vms_static_<q>: hub+8 banks need a sub-layout",
+   "area_mm2": 0.297
+  },
+  "vmb_SE7": {
+   "kind": "vmb",
+   "status": "PARTITION",
+   "contract_instances": [
+    "hb_vms_SE"
+   ],
+   "owner": "H-ELEM-A (VM banks)",
+   "note": "banks live inside hfd_hgi_vms_static_<q>: hub+8 banks need a sub-layout",
+   "area_mm2": 0.297
+  },
+  "su_SE3": {
+   "kind": "su",
+   "status": "PARTITION",
+   "contract_instances": [
+    "hb_su_SE"
+   ],
+   "owner": "H-ELEM-B",
+   "note": "contract SU = VM-port shim only; whole-SU slices RTL pending",
+   "area_mm2": 2.225
+  },
+  "sucore_SE": {
+   "kind": "sucore",
+   "status": "NO_CONTRACT_INSTANCE",
+   "contract_instances": [],
+   "owner": "H-ELEM-B",
+   "note": "whole-SU core RTL pending",
+   "area_mm2": 0.445
+  },
+  "coll_SE": {
+   "kind": "coll",
+   "status": "SYNTH",
+   "contract_instances": [
+    "hb_coll_SE"
+   ],
+   "owner": "H-COLL",
+   "note": "",
+   "area_mm2": 0.695
+  },
+  "dbk_SE": {
+   "kind": "dbk",
+   "status": "SYNTH",
+   "contract_instances": [
+    "hb_dbk_SE"
+   ],
+   "owner": "DMA owner",
+   "note": "",
+   "area_mm2": 0.156
+  },
+  "vmh_SE": {
+   "kind": "vmh",
+   "status": "SYNTH",
+   "contract_instances": [
+    "calendar_SE",
+    "delivery_SE",
+    "hb_vms_SE",
+    "lg_SE_0",
+    "lg_SE_1",
+    "lg_SE_2"
+   ],
+   "owner": "h_vm / H-ELEM-A",
+   "note": "VM hub group",
+   "area_mm2": 0.941
+  },
+  "phy_NW": {
+   "kind": "phy",
+   "status": "REAL",
+   "contract_instances": [
+    "phy_NW"
+   ],
+   "owner": "H-DIE",
+   "note": "PHY+controller macro abstract (the allowed modelled hard core)",
+   "area_mm2": 10.006
+  },
+  "pc_NW0": {
+   "kind": "pc",
+   "status": "REAL",
+   "contract_instances": [
+    "svc_NW_s0",
+    "svc_NW_s1",
+    "svc_NW_s2",
+    "svc_NW_s3",
+    "svc_NW_s4",
+    "svc_NW_s5",
+    "svc_NW_s6",
+    "svc_NW_s7"
+   ],
+   "owner": "HBM-V15-HARDEN",
+   "note": "band = wires around closed PCs; flattened to PC leaves in the die case",
+   "area_mm2": 0.414
+  },
+  "pc_NW1": {
+   "kind": "pc",
+   "status": "REAL",
+   "contract_instances": [
+    "svc_NW_s0",
+    "svc_NW_s1",
+    "svc_NW_s2",
+    "svc_NW_s3",
+    "svc_NW_s4",
+    "svc_NW_s5",
+    "svc_NW_s6",
+    "svc_NW_s7"
+   ],
+   "owner": "HBM-V15-HARDEN",
+   "note": "band = wires around closed PCs; flattened to PC leaves in the die case",
+   "area_mm2": 0.414
+  },
+  "pc_NW2": {
+   "kind": "pc",
+   "status": "REAL",
+   "contract_instances": [
+    "svc_NW_s0",
+    "svc_NW_s1",
+    "svc_NW_s2",
+    "svc_NW_s3",
+    "svc_NW_s4",
+    "svc_NW_s5",
+    "svc_NW_s6",
+    "svc_NW_s7"
+   ],
+   "owner": "HBM-V15-HARDEN",
+   "note": "band = wires around closed PCs; flattened to PC leaves in the die case",
+   "area_mm2": 0.414
+  },
+  "pc_NW3": {
+   "kind": "pc",
+   "status": "REAL",
+   "contract_instances": [
+    "svc_NW_s0",
+    "svc_NW_s1",
+    "svc_NW_s2",
+    "svc_NW_s3",
+    "svc_NW_s4",
+    "svc_NW_s5",
+    "svc_NW_s6",
+    "svc_NW_s7"
+   ],
+   "owner": "HBM-V15-HARDEN",
+   "note": "band = wires around closed PCs; flattened to PC leaves in the die case",
+   "area_mm2": 0.414
+  },
+  "pc_NW4": {
+   "kind": "pc",
+   "status": "REAL",
+   "contract_instances": [
+    "svc_NW_s0",
+    "svc_NW_s1",
+    "svc_NW_s2",
+    "svc_NW_s3",
+    "svc_NW_s4",
+    "svc_NW_s5",
+    "svc_NW_s6",
+    "svc_NW_s7"
+   ],
+   "owner": "HBM-V15-HARDEN",
+   "note": "band = wires around closed PCs; flattened to PC leaves in the die case",
+   "area_mm2": 0.414
+  },
+  "pc_NW5": {
+   "kind": "pc",
+   "status": "REAL",
+   "contract_instances": [
+    "svc_NW_s0",
+    "svc_NW_s1",
+    "svc_NW_s2",
+    "svc_NW_s3",
+    "svc_NW_s4",
+    "svc_NW_s5",
+    "svc_NW_s6",
+    "svc_NW_s7"
+   ],
+   "owner": "HBM-V15-HARDEN",
+   "note": "band = wires around closed PCs; flattened to PC leaves in the die case",
+   "area_mm2": 0.414
+  },
+  "pc_NW6": {
+   "kind": "pc",
+   "status": "REAL",
+   "contract_instances": [
+    "svc_NW_s0",
+    "svc_NW_s1",
+    "svc_NW_s2",
+    "svc_NW_s3",
+    "svc_NW_s4",
+    "svc_NW_s5",
+    "svc_NW_s6",
+    "svc_NW_s7"
+   ],
+   "owner": "HBM-V15-HARDEN",
+   "note": "band = wires around closed PCs; flattened to PC leaves in the die case",
+   "area_mm2": 0.414
+  },
+  "pc_NW7": {
+   "kind": "pc",
+   "status": "REAL",
+   "contract_instances": [
+    "svc_NW_s0",
+    "svc_NW_s1",
+    "svc_NW_s2",
+    "svc_NW_s3",
+    "svc_NW_s4",
+    "svc_NW_s5",
+    "svc_NW_s6",
+    "svc_NW_s7"
+   ],
+   "owner": "HBM-V15-HARDEN",
+   "note": "band = wires around closed PCs; flattened to PC leaves in the die case",
+   "area_mm2": 0.414
+  },
+  "sm_NW0": {
+   "kind": "sm",
+   "status": "NO_CONTRACT_INSTANCE",
+   "contract_instances": [],
+   "owner": "H-ELEM-A",
+   "note": "SM compact tile (x-load static + attention on SM) not in the source contract",
+   "area_mm2": 11.316
+  },
+  "sm_NW1": {
+   "kind": "sm",
+   "status": "NO_CONTRACT_INSTANCE",
+   "contract_instances": [],
+   "owner": "H-ELEM-A",
+   "note": "SM compact tile (x-load static + attention on SM) not in the source contract",
+   "area_mm2": 11.316
+  },
+  "sm_NW2": {
+   "kind": "sm",
+   "status": "NO_CONTRACT_INSTANCE",
+   "contract_instances": [],
+   "owner": "H-ELEM-A",
+   "note": "SM compact tile (x-load static + attention on SM) not in the source contract",
+   "area_mm2": 11.316
+  },
+  "sm_NW3": {
+   "kind": "sm",
+   "status": "NO_CONTRACT_INSTANCE",
+   "contract_instances": [],
+   "owner": "H-ELEM-A",
+   "note": "SM compact tile (x-load static + attention on SM) not in the source contract",
+   "area_mm2": 11.316
+  },
+  "sm_NW4": {
+   "kind": "sm",
+   "status": "NO_CONTRACT_INSTANCE",
+   "contract_instances": [],
+   "owner": "H-ELEM-A",
+   "note": "SM compact tile (x-load static + attention on SM) not in the source contract",
+   "area_mm2": 11.316
+  },
+  "sm_NW5": {
+   "kind": "sm",
+   "status": "NO_CONTRACT_INSTANCE",
+   "contract_instances": [],
+   "owner": "H-ELEM-A",
+   "note": "SM compact tile (x-load static + attention on SM) not in the source contract",
+   "area_mm2": 11.316
+  },
+  "sm_NW6": {
+   "kind": "sm",
+   "status": "NO_CONTRACT_INSTANCE",
+   "contract_instances": [],
+   "owner": "H-ELEM-A",
+   "note": "SM compact tile (x-load static + attention on SM) not in the source contract",
+   "area_mm2": 11.316
+  },
+  "sm_NW7": {
+   "kind": "sm",
+   "status": "NO_CONTRACT_INSTANCE",
+   "contract_instances": [],
+   "owner": "H-ELEM-A",
+   "note": "SM compact tile (x-load static + attention on SM) not in the source contract",
+   "area_mm2": 11.316
+  },
+  "hc_NW0": {
+   "kind": "hc",
+   "status": "NO_CONTRACT_INSTANCE",
+   "contract_instances": [],
+   "owner": "HC owner (H-ELEM-B/HC)",
+   "note": "HC rows not in the source contract",
+   "area_mm2": 0.25
+  },
+  "quant_NW0": {
+   "kind": "quant",
+   "status": "PARTITION",
+   "contract_instances": [
+    "hb_quant_NW"
+   ],
+   "owner": "H-ATTQ",
+   "note": "one host master vs 4 plan boxes",
+   "area_mm2": 0.06
+  },
+  "sfu_NW0": {
+   "kind": "sfu",
+   "status": "PARTITION",
+   "contract_instances": [
+    "hb_sfu_NW"
+   ],
+   "owner": "H-ELEM-B",
+   "note": "one engine master vs 4 bank-pair plan boxes: physical 4-leaf split requested",
+   "area_mm2": 0.4
+  },
+  "vmb_NW0": {
+   "kind": "vmb",
+   "status": "PARTITION",
+   "contract_instances": [
+    "hb_vms_NW"
+   ],
+   "owner": "H-ELEM-A (VM banks)",
+   "note": "banks live inside hfd_hgi_vms_static_<q>: hub+8 banks need a sub-layout",
+   "area_mm2": 0.288
+  },
+  "vmb_NW1": {
+   "kind": "vmb",
+   "status": "PARTITION",
+   "contract_instances": [
+    "hb_vms_NW"
+   ],
+   "owner": "H-ELEM-A (VM banks)",
+   "note": "banks live inside hfd_hgi_vms_static_<q>: hub+8 banks need a sub-layout",
+   "area_mm2": 0.288
+  },
+  "su_NW0": {
+   "kind": "su",
+   "status": "PARTITION",
+   "contract_instances": [
+    "hb_su_NW"
+   ],
+   "owner": "H-ELEM-B",
+   "note": "contract SU = VM-port shim only; whole-SU slices RTL pending",
+   "area_mm2": 2.225
+  },
+  "hc_NW1": {
+   "kind": "hc",
+   "status": "NO_CONTRACT_INSTANCE",
+   "contract_instances": [],
+   "owner": "HC owner (H-ELEM-B/HC)",
+   "note": "HC rows not in the source contract",
+   "area_mm2": 0.25
+  },
+  "quant_NW1": {
+   "kind": "quant",
+   "status": "PARTITION",
+   "contract_instances": [
+    "hb_quant_NW"
+   ],
+   "owner": "H-ATTQ",
+   "note": "one host master vs 4 plan boxes",
+   "area_mm2": 0.06
+  },
+  "sfu_NW1": {
+   "kind": "sfu",
+   "status": "PARTITION",
+   "contract_instances": [
+    "hb_sfu_NW"
+   ],
+   "owner": "H-ELEM-B",
+   "note": "one engine master vs 4 bank-pair plan boxes: physical 4-leaf split requested",
+   "area_mm2": 0.4
+  },
+  "vmb_NW2": {
+   "kind": "vmb",
+   "status": "PARTITION",
+   "contract_instances": [
+    "hb_vms_NW"
+   ],
+   "owner": "H-ELEM-A (VM banks)",
+   "note": "banks live inside hfd_hgi_vms_static_<q>: hub+8 banks need a sub-layout",
+   "area_mm2": 0.288
+  },
+  "vmb_NW3": {
+   "kind": "vmb",
+   "status": "PARTITION",
+   "contract_instances": [
+    "hb_vms_NW"
+   ],
+   "owner": "H-ELEM-A (VM banks)",
+   "note": "banks live inside hfd_hgi_vms_static_<q>: hub+8 banks need a sub-layout",
+   "area_mm2": 0.288
+  },
+  "su_NW1": {
+   "kind": "su",
+   "status": "PARTITION",
+   "contract_instances": [
+    "hb_su_NW"
+   ],
+   "owner": "H-ELEM-B",
+   "note": "contract SU = VM-port shim only; whole-SU slices RTL pending",
+   "area_mm2": 2.225
+  },
+  "hc_NW2": {
+   "kind": "hc",
+   "status": "NO_CONTRACT_INSTANCE",
+   "contract_instances": [],
+   "owner": "HC owner (H-ELEM-B/HC)",
+   "note": "HC rows not in the source contract",
+   "area_mm2": 0.25
+  },
+  "quant_NW2": {
+   "kind": "quant",
+   "status": "PARTITION",
+   "contract_instances": [
+    "hb_quant_NW"
+   ],
+   "owner": "H-ATTQ",
+   "note": "one host master vs 4 plan boxes",
+   "area_mm2": 0.06
+  },
+  "sfu_NW2": {
+   "kind": "sfu",
+   "status": "PARTITION",
+   "contract_instances": [
+    "hb_sfu_NW"
+   ],
+   "owner": "H-ELEM-B",
+   "note": "one engine master vs 4 bank-pair plan boxes: physical 4-leaf split requested",
+   "area_mm2": 0.4
+  },
+  "vmb_NW4": {
+   "kind": "vmb",
+   "status": "PARTITION",
+   "contract_instances": [
+    "hb_vms_NW"
+   ],
+   "owner": "H-ELEM-A (VM banks)",
+   "note": "banks live inside hfd_hgi_vms_static_<q>: hub+8 banks need a sub-layout",
+   "area_mm2": 0.288
+  },
+  "vmb_NW5": {
+   "kind": "vmb",
+   "status": "PARTITION",
+   "contract_instances": [
+    "hb_vms_NW"
+   ],
+   "owner": "H-ELEM-A (VM banks)",
+   "note": "banks live inside hfd_hgi_vms_static_<q>: hub+8 banks need a sub-layout",
+   "area_mm2": 0.288
+  },
+  "su_NW2": {
+   "kind": "su",
+   "status": "PARTITION",
+   "contract_instances": [
+    "hb_su_NW"
+   ],
+   "owner": "H-ELEM-B",
+   "note": "contract SU = VM-port shim only; whole-SU slices RTL pending",
+   "area_mm2": 2.225
+  },
+  "hc_NW3": {
+   "kind": "hc",
+   "status": "NO_CONTRACT_INSTANCE",
+   "contract_instances": [],
+   "owner": "HC owner (H-ELEM-B/HC)",
+   "note": "HC rows not in the source contract",
+   "area_mm2": 0.25
+  },
+  "quant_NW3": {
+   "kind": "quant",
+   "status": "PARTITION",
+   "contract_instances": [
+    "hb_quant_NW"
+   ],
+   "owner": "H-ATTQ",
+   "note": "one host master vs 4 plan boxes",
+   "area_mm2": 0.06
+  },
+  "sfu_NW3": {
+   "kind": "sfu",
+   "status": "PARTITION",
+   "contract_instances": [
+    "hb_sfu_NW"
+   ],
+   "owner": "H-ELEM-B",
+   "note": "one engine master vs 4 bank-pair plan boxes: physical 4-leaf split requested",
+   "area_mm2": 0.4
+  },
+  "vmb_NW6": {
+   "kind": "vmb",
+   "status": "PARTITION",
+   "contract_instances": [
+    "hb_vms_NW"
+   ],
+   "owner": "H-ELEM-A (VM banks)",
+   "note": "banks live inside hfd_hgi_vms_static_<q>: hub+8 banks need a sub-layout",
+   "area_mm2": 0.288
+  },
+  "vmb_NW7": {
+   "kind": "vmb",
+   "status": "PARTITION",
+   "contract_instances": [
+    "hb_vms_NW"
+   ],
+   "owner": "H-ELEM-A (VM banks)",
+   "note": "banks live inside hfd_hgi_vms_static_<q>: hub+8 banks need a sub-layout",
+   "area_mm2": 0.288
+  },
+  "su_NW3": {
+   "kind": "su",
+   "status": "PARTITION",
+   "contract_instances": [
+    "hb_su_NW"
+   ],
+   "owner": "H-ELEM-B",
+   "note": "contract SU = VM-port shim only; whole-SU slices RTL pending",
+   "area_mm2": 2.225
+  },
+  "sucore_NW": {
+   "kind": "sucore",
+   "status": "NO_CONTRACT_INSTANCE",
+   "contract_instances": [],
+   "owner": "H-ELEM-B",
+   "note": "whole-SU core RTL pending",
+   "area_mm2": 0.445
+  },
+  "coll_NW": {
+   "kind": "coll",
+   "status": "SYNTH",
+   "contract_instances": [
+    "hb_coll_NW"
+   ],
+   "owner": "H-COLL",
+   "note": "",
+   "area_mm2": 0.695
+  },
+  "dbk_NW": {
+   "kind": "dbk",
+   "status": "SYNTH",
+   "contract_instances": [
+    "hb_dbk_NW"
+   ],
+   "owner": "DMA owner",
+   "note": "",
+   "area_mm2": 0.156
+  },
+  "vmh_NW": {
+   "kind": "vmh",
+   "status": "SYNTH",
+   "contract_instances": [
+    "calendar_NW",
+    "delivery_NW",
+    "hb_vms_NW",
+    "lg_NW_0",
+    "lg_NW_1",
+    "lg_NW_2"
+   ],
+   "owner": "h_vm / H-ELEM-A",
+   "note": "VM hub group",
+   "area_mm2": 0.941
+  },
+  "phy_NE": {
+   "kind": "phy",
+   "status": "REAL",
+   "contract_instances": [
+    "phy_NE"
+   ],
+   "owner": "H-DIE",
+   "note": "PHY+controller macro abstract (the allowed modelled hard core)",
+   "area_mm2": 10.006
+  },
+  "pc_NE0": {
+   "kind": "pc",
+   "status": "REAL",
+   "contract_instances": [
+    "svc_NE_s0",
+    "svc_NE_s1",
+    "svc_NE_s2",
+    "svc_NE_s3",
+    "svc_NE_s4",
+    "svc_NE_s5",
+    "svc_NE_s6",
+    "svc_NE_s7",
+    "svc_NE_s8"
+   ],
+   "owner": "HBM-V15-HARDEN",
+   "note": "band = wires around closed PCs; flattened to PC leaves in the die case",
+   "area_mm2": 0.414
+  },
+  "pc_NE1": {
+   "kind": "pc",
+   "status": "REAL",
+   "contract_instances": [
+    "svc_NE_s0",
+    "svc_NE_s1",
+    "svc_NE_s2",
+    "svc_NE_s3",
+    "svc_NE_s4",
+    "svc_NE_s5",
+    "svc_NE_s6",
+    "svc_NE_s7",
+    "svc_NE_s8"
+   ],
+   "owner": "HBM-V15-HARDEN",
+   "note": "band = wires around closed PCs; flattened to PC leaves in the die case",
+   "area_mm2": 0.414
+  },
+  "pc_NE2": {
+   "kind": "pc",
+   "status": "REAL",
+   "contract_instances": [
+    "svc_NE_s0",
+    "svc_NE_s1",
+    "svc_NE_s2",
+    "svc_NE_s3",
+    "svc_NE_s4",
+    "svc_NE_s5",
+    "svc_NE_s6",
+    "svc_NE_s7",
+    "svc_NE_s8"
+   ],
+   "owner": "HBM-V15-HARDEN",
+   "note": "band = wires around closed PCs; flattened to PC leaves in the die case",
+   "area_mm2": 0.414
+  },
+  "pc_NE3": {
+   "kind": "pc",
+   "status": "REAL",
+   "contract_instances": [
+    "svc_NE_s0",
+    "svc_NE_s1",
+    "svc_NE_s2",
+    "svc_NE_s3",
+    "svc_NE_s4",
+    "svc_NE_s5",
+    "svc_NE_s6",
+    "svc_NE_s7",
+    "svc_NE_s8"
+   ],
+   "owner": "HBM-V15-HARDEN",
+   "note": "band = wires around closed PCs; flattened to PC leaves in the die case",
+   "area_mm2": 0.414
+  },
+  "pc_NE4": {
+   "kind": "pc",
+   "status": "REAL",
+   "contract_instances": [
+    "svc_NE_s0",
+    "svc_NE_s1",
+    "svc_NE_s2",
+    "svc_NE_s3",
+    "svc_NE_s4",
+    "svc_NE_s5",
+    "svc_NE_s6",
+    "svc_NE_s7",
+    "svc_NE_s8"
+   ],
+   "owner": "HBM-V15-HARDEN",
+   "note": "band = wires around closed PCs; flattened to PC leaves in the die case",
+   "area_mm2": 0.414
+  },
+  "pc_NE5": {
+   "kind": "pc",
+   "status": "REAL",
+   "contract_instances": [
+    "svc_NE_s0",
+    "svc_NE_s1",
+    "svc_NE_s2",
+    "svc_NE_s3",
+    "svc_NE_s4",
+    "svc_NE_s5",
+    "svc_NE_s6",
+    "svc_NE_s7",
+    "svc_NE_s8"
+   ],
+   "owner": "HBM-V15-HARDEN",
+   "note": "band = wires around closed PCs; flattened to PC leaves in the die case",
+   "area_mm2": 0.414
+  },
+  "pc_NE6": {
+   "kind": "pc",
+   "status": "REAL",
+   "contract_instances": [
+    "svc_NE_s0",
+    "svc_NE_s1",
+    "svc_NE_s2",
+    "svc_NE_s3",
+    "svc_NE_s4",
+    "svc_NE_s5",
+    "svc_NE_s6",
+    "svc_NE_s7",
+    "svc_NE_s8"
+   ],
+   "owner": "HBM-V15-HARDEN",
+   "note": "band = wires around closed PCs; flattened to PC leaves in the die case",
+   "area_mm2": 0.414
+  },
+  "pc_NE7": {
+   "kind": "pc",
+   "status": "REAL",
+   "contract_instances": [
+    "svc_NE_s0",
+    "svc_NE_s1",
+    "svc_NE_s2",
+    "svc_NE_s3",
+    "svc_NE_s4",
+    "svc_NE_s5",
+    "svc_NE_s6",
+    "svc_NE_s7",
+    "svc_NE_s8"
+   ],
+   "owner": "HBM-V15-HARDEN",
+   "note": "band = wires around closed PCs; flattened to PC leaves in the die case",
+   "area_mm2": 0.414
+  },
+  "sm_NE0": {
+   "kind": "sm",
+   "status": "NO_CONTRACT_INSTANCE",
+   "contract_instances": [],
+   "owner": "H-ELEM-A",
+   "note": "SM compact tile (x-load static + attention on SM) not in the source contract",
+   "area_mm2": 11.316
+  },
+  "sm_NE1": {
+   "kind": "sm",
+   "status": "NO_CONTRACT_INSTANCE",
+   "contract_instances": [],
+   "owner": "H-ELEM-A",
+   "note": "SM compact tile (x-load static + attention on SM) not in the source contract",
+   "area_mm2": 11.316
+  },
+  "sm_NE2": {
+   "kind": "sm",
+   "status": "NO_CONTRACT_INSTANCE",
+   "contract_instances": [],
+   "owner": "H-ELEM-A",
+   "note": "SM compact tile (x-load static + attention on SM) not in the source contract",
+   "area_mm2": 11.316
+  },
+  "sm_NE3": {
+   "kind": "sm",
+   "status": "NO_CONTRACT_INSTANCE",
+   "contract_instances": [],
+   "owner": "H-ELEM-A",
+   "note": "SM compact tile (x-load static + attention on SM) not in the source contract",
+   "area_mm2": 11.316
+  },
+  "sm_NE4": {
+   "kind": "sm",
+   "status": "NO_CONTRACT_INSTANCE",
+   "contract_instances": [],
+   "owner": "H-ELEM-A",
+   "note": "SM compact tile (x-load static + attention on SM) not in the source contract",
+   "area_mm2": 11.316
+  },
+  "sm_NE5": {
+   "kind": "sm",
+   "status": "NO_CONTRACT_INSTANCE",
+   "contract_instances": [],
+   "owner": "H-ELEM-A",
+   "note": "SM compact tile (x-load static + attention on SM) not in the source contract",
+   "area_mm2": 11.316
+  },
+  "sm_NE6": {
+   "kind": "sm",
+   "status": "NO_CONTRACT_INSTANCE",
+   "contract_instances": [],
+   "owner": "H-ELEM-A",
+   "note": "SM compact tile (x-load static + attention on SM) not in the source contract",
+   "area_mm2": 11.316
+  },
+  "sm_NE7": {
+   "kind": "sm",
+   "status": "NO_CONTRACT_INSTANCE",
+   "contract_instances": [],
+   "owner": "H-ELEM-A",
+   "note": "SM compact tile (x-load static + attention on SM) not in the source contract",
+   "area_mm2": 11.316
+  },
+  "hc_NE0": {
+   "kind": "hc",
+   "status": "NO_CONTRACT_INSTANCE",
+   "contract_instances": [],
+   "owner": "HC owner (H-ELEM-B/HC)",
+   "note": "HC rows not in the source contract",
+   "area_mm2": 0.25
+  },
+  "sfu_NE0": {
+   "kind": "sfu",
+   "status": "PARTITION",
+   "contract_instances": [
+    "hb_sfu_NE"
+   ],
+   "owner": "H-ELEM-B",
+   "note": "one engine master vs 4 bank-pair plan boxes: physical 4-leaf split requested",
+   "area_mm2": 0.4
+  },
+  "vmb_NE0": {
+   "kind": "vmb",
+   "status": "PARTITION",
+   "contract_instances": [
+    "hb_vms_NE"
+   ],
+   "owner": "H-ELEM-A (VM banks)",
+   "note": "banks live inside hfd_hgi_vms_static_<q>: hub+8 banks need a sub-layout",
+   "area_mm2": 0.288
+  },
+  "vmb_NE1": {
+   "kind": "vmb",
+   "status": "PARTITION",
+   "contract_instances": [
+    "hb_vms_NE"
+   ],
+   "owner": "H-ELEM-A (VM banks)",
+   "note": "banks live inside hfd_hgi_vms_static_<q>: hub+8 banks need a sub-layout",
+   "area_mm2": 0.288
+  },
+  "su_NE0": {
+   "kind": "su",
+   "status": "PARTITION",
+   "contract_instances": [
+    "hb_su_NE"
+   ],
+   "owner": "H-ELEM-B",
+   "note": "contract SU = VM-port shim only; whole-SU slices RTL pending",
+   "area_mm2": 2.225
+  },
+  "hc_NE1": {
+   "kind": "hc",
+   "status": "NO_CONTRACT_INSTANCE",
+   "contract_instances": [],
+   "owner": "HC owner (H-ELEM-B/HC)",
+   "note": "HC rows not in the source contract",
+   "area_mm2": 0.25
+  },
+  "sfu_NE1": {
+   "kind": "sfu",
+   "status": "PARTITION",
+   "contract_instances": [
+    "hb_sfu_NE"
+   ],
+   "owner": "H-ELEM-B",
+   "note": "one engine master vs 4 bank-pair plan boxes: physical 4-leaf split requested",
+   "area_mm2": 0.4
+  },
+  "vmb_NE2": {
+   "kind": "vmb",
+   "status": "PARTITION",
+   "contract_instances": [
+    "hb_vms_NE"
+   ],
+   "owner": "H-ELEM-A (VM banks)",
+   "note": "banks live inside hfd_hgi_vms_static_<q>: hub+8 banks need a sub-layout",
+   "area_mm2": 0.288
+  },
+  "vmb_NE3": {
+   "kind": "vmb",
+   "status": "PARTITION",
+   "contract_instances": [
+    "hb_vms_NE"
+   ],
+   "owner": "H-ELEM-A (VM banks)",
+   "note": "banks live inside hfd_hgi_vms_static_<q>: hub+8 banks need a sub-layout",
+   "area_mm2": 0.288
+  },
+  "su_NE1": {
+   "kind": "su",
+   "status": "PARTITION",
+   "contract_instances": [
+    "hb_su_NE"
+   ],
+   "owner": "H-ELEM-B",
+   "note": "contract SU = VM-port shim only; whole-SU slices RTL pending",
+   "area_mm2": 2.225
+  },
+  "hc_NE2": {
+   "kind": "hc",
+   "status": "NO_CONTRACT_INSTANCE",
+   "contract_instances": [],
+   "owner": "HC owner (H-ELEM-B/HC)",
+   "note": "HC rows not in the source contract",
+   "area_mm2": 0.25
+  },
+  "sfu_NE2": {
+   "kind": "sfu",
+   "status": "PARTITION",
+   "contract_instances": [
+    "hb_sfu_NE"
+   ],
+   "owner": "H-ELEM-B",
+   "note": "one engine master vs 4 bank-pair plan boxes: physical 4-leaf split requested",
+   "area_mm2": 0.4
+  },
+  "vmb_NE4": {
+   "kind": "vmb",
+   "status": "PARTITION",
+   "contract_instances": [
+    "hb_vms_NE"
+   ],
+   "owner": "H-ELEM-A (VM banks)",
+   "note": "banks live inside hfd_hgi_vms_static_<q>: hub+8 banks need a sub-layout",
+   "area_mm2": 0.288
+  },
+  "vmb_NE5": {
+   "kind": "vmb",
+   "status": "PARTITION",
+   "contract_instances": [
+    "hb_vms_NE"
+   ],
+   "owner": "H-ELEM-A (VM banks)",
+   "note": "banks live inside hfd_hgi_vms_static_<q>: hub+8 banks need a sub-layout",
+   "area_mm2": 0.288
+  },
+  "su_NE2": {
+   "kind": "su",
+   "status": "PARTITION",
+   "contract_instances": [
+    "hb_su_NE"
+   ],
+   "owner": "H-ELEM-B",
+   "note": "contract SU = VM-port shim only; whole-SU slices RTL pending",
+   "area_mm2": 2.225
+  },
+  "hc_NE3": {
+   "kind": "hc",
+   "status": "NO_CONTRACT_INSTANCE",
+   "contract_instances": [],
+   "owner": "HC owner (H-ELEM-B/HC)",
+   "note": "HC rows not in the source contract",
+   "area_mm2": 0.25
+  },
+  "sfu_NE3": {
+   "kind": "sfu",
+   "status": "PARTITION",
+   "contract_instances": [
+    "hb_sfu_NE"
+   ],
+   "owner": "H-ELEM-B",
+   "note": "one engine master vs 4 bank-pair plan boxes: physical 4-leaf split requested",
+   "area_mm2": 0.4
+  },
+  "vmb_NE6": {
+   "kind": "vmb",
+   "status": "PARTITION",
+   "contract_instances": [
+    "hb_vms_NE"
+   ],
+   "owner": "H-ELEM-A (VM banks)",
+   "note": "banks live inside hfd_hgi_vms_static_<q>: hub+8 banks need a sub-layout",
+   "area_mm2": 0.288
+  },
+  "vmb_NE7": {
+   "kind": "vmb",
+   "status": "PARTITION",
+   "contract_instances": [
+    "hb_vms_NE"
+   ],
+   "owner": "H-ELEM-A (VM banks)",
+   "note": "banks live inside hfd_hgi_vms_static_<q>: hub+8 banks need a sub-layout",
+   "area_mm2": 0.288
+  },
+  "su_NE3": {
+   "kind": "su",
+   "status": "PARTITION",
+   "contract_instances": [
+    "hb_su_NE"
+   ],
+   "owner": "H-ELEM-B",
+   "note": "contract SU = VM-port shim only; whole-SU slices RTL pending",
+   "area_mm2": 2.225
+  },
+  "sucore_NE": {
+   "kind": "sucore",
+   "status": "NO_CONTRACT_INSTANCE",
+   "contract_instances": [],
+   "owner": "H-ELEM-B",
+   "note": "whole-SU core RTL pending",
+   "area_mm2": 0.445
+  },
+  "coll_NE": {
+   "kind": "coll",
+   "status": "SYNTH",
+   "contract_instances": [
+    "hb_coll_NE"
+   ],
+   "owner": "H-COLL",
+   "note": "",
+   "area_mm2": 0.695
+  },
+  "dbk_NE": {
+   "kind": "dbk",
+   "status": "SYNTH",
+   "contract_instances": [
+    "hb_dbk_NE"
+   ],
+   "owner": "DMA owner",
+   "note": "",
+   "area_mm2": 0.156
+  },
+  "vmh_NE": {
+   "kind": "vmh",
+   "status": "SYNTH",
+   "contract_instances": [
+    "calendar_NE",
+    "delivery_NE",
+    "hb_vms_NE",
+    "lg_NE_0",
+    "lg_NE_1",
+    "lg_NE_2"
+   ],
+   "owner": "h_vm / H-ELEM-A",
+   "note": "VM hub group",
+   "area_mm2": 0.941
+  },
+  "hc_eng": {
+   "kind": "hc",
+   "status": "NO_CONTRACT_INSTANCE",
+   "contract_instances": [],
+   "owner": "HC owner (H-ELEM-B/HC)",
+   "note": "HC rows not in the source contract",
+   "area_mm2": 1.0
+  },
+  "lk_S0": {
+   "kind": "lk",
+   "status": "NO_CONTRACT_INSTANCE",
+   "contract_instances": [],
+   "owner": "SerDes owner",
+   "note": "die-to-die link layer not in the source contract",
+   "area_mm2": 0.563
+  },
+  "lk_S1": {
+   "kind": "lk",
+   "status": "NO_CONTRACT_INSTANCE",
+   "contract_instances": [],
+   "owner": "SerDes owner",
+   "note": "die-to-die link layer not in the source contract",
+   "area_mm2": 0.563
+  },
+  "lk_S2": {
+   "kind": "lk",
+   "status": "NO_CONTRACT_INSTANCE",
+   "contract_instances": [],
+   "owner": "SerDes owner",
+   "note": "die-to-die link layer not in the source contract",
+   "area_mm2": 0.563
+  },
+  "lk_S3": {
+   "kind": "lk",
+   "status": "NO_CONTRACT_INSTANCE",
+   "contract_instances": [],
+   "owner": "SerDes owner",
+   "note": "die-to-die link layer not in the source contract",
+   "area_mm2": 0.563
+  },
+  "lk_S4": {
+   "kind": "lk",
+   "status": "NO_CONTRACT_INSTANCE",
+   "contract_instances": [],
+   "owner": "SerDes owner",
+   "note": "die-to-die link layer not in the source contract",
+   "area_mm2": 0.563
+  },
+  "ep_S0": {
+   "kind": "ep",
+   "status": "NO_CONTRACT_INSTANCE",
+   "contract_instances": [],
+   "owner": "SerDes owner",
+   "note": "endpoint not in the source contract",
+   "area_mm2": 0.224
+  },
+  "ep_S1": {
+   "kind": "ep",
+   "status": "NO_CONTRACT_INSTANCE",
+   "contract_instances": [],
+   "owner": "SerDes owner",
+   "note": "endpoint not in the source contract",
+   "area_mm2": 0.224
+  },
+  "ep_S2": {
+   "kind": "ep",
+   "status": "NO_CONTRACT_INSTANCE",
+   "contract_instances": [],
+   "owner": "SerDes owner",
+   "note": "endpoint not in the source contract",
+   "area_mm2": 0.224
+  },
+  "ep_S3": {
+   "kind": "ep",
+   "status": "NO_CONTRACT_INSTANCE",
+   "contract_instances": [],
+   "owner": "SerDes owner",
+   "note": "endpoint not in the source contract",
+   "area_mm2": 0.224
+  },
+  "ep_S4": {
+   "kind": "ep",
+   "status": "NO_CONTRACT_INSTANCE",
+   "contract_instances": [],
+   "owner": "SerDes owner",
+   "note": "endpoint not in the source contract",
+   "area_mm2": 0.224
+  },
+  "lk_N0": {
+   "kind": "lk",
+   "status": "NO_CONTRACT_INSTANCE",
+   "contract_instances": [],
+   "owner": "SerDes owner",
+   "note": "die-to-die link layer not in the source contract",
+   "area_mm2": 0.563
+  },
+  "lk_N1": {
+   "kind": "lk",
+   "status": "NO_CONTRACT_INSTANCE",
+   "contract_instances": [],
+   "owner": "SerDes owner",
+   "note": "die-to-die link layer not in the source contract",
+   "area_mm2": 0.563
+  },
+  "lk_N2": {
+   "kind": "lk",
+   "status": "NO_CONTRACT_INSTANCE",
+   "contract_instances": [],
+   "owner": "SerDes owner",
+   "note": "die-to-die link layer not in the source contract",
+   "area_mm2": 0.563
+  },
+  "lk_N3": {
+   "kind": "lk",
+   "status": "NO_CONTRACT_INSTANCE",
+   "contract_instances": [],
+   "owner": "SerDes owner",
+   "note": "die-to-die link layer not in the source contract",
+   "area_mm2": 0.563
+  },
+  "ep_N0": {
+   "kind": "ep",
+   "status": "NO_CONTRACT_INSTANCE",
+   "contract_instances": [],
+   "owner": "SerDes owner",
+   "note": "endpoint not in the source contract",
+   "area_mm2": 0.224
+  },
+  "ep_N1": {
+   "kind": "ep",
+   "status": "NO_CONTRACT_INSTANCE",
+   "contract_instances": [],
+   "owner": "SerDes owner",
+   "note": "endpoint not in the source contract",
+   "area_mm2": 0.224
+  },
+  "ep_N2": {
+   "kind": "ep",
+   "status": "NO_CONTRACT_INSTANCE",
+   "contract_instances": [],
+   "owner": "SerDes owner",
+   "note": "endpoint not in the source contract",
+   "area_mm2": 0.224
+  },
+  "ep_N3": {
+   "kind": "ep",
+   "status": "NO_CONTRACT_INSTANCE",
+   "contract_instances": [],
+   "owner": "SerDes owner",
+   "note": "endpoint not in the source contract",
+   "area_mm2": 0.224
+  },
+  "idx_s0": {
+   "kind": "idx",
+   "status": "PARTITION",
+   "contract_instances": [
+    "hb_idx"
+   ],
+   "owner": "H-IDX",
+   "note": "client = 4 scorers (512 CLOSED hslices each) + glue; partition by grants v4",
+   "area_mm2": 11.556
+  },
+  "idx_s1": {
+   "kind": "idx",
+   "status": "PARTITION",
+   "contract_instances": [
+    "hb_idx"
+   ],
+   "owner": "H-IDX",
+   "note": "client = 4 scorers (512 CLOSED hslices each) + glue; partition by grants v4",
+   "area_mm2": 11.556
+  },
+  "idx_q": {
+   "kind": "idx",
+   "status": "PARTITION",
+   "contract_instances": [
+    "hb_idx"
+   ],
+   "owner": "H-IDX",
+   "note": "client = 4 scorers (512 CLOSED hslices each) + glue; partition by grants v4",
+   "area_mm2": 0.202
+  },
+  "idx_sel": {
+   "kind": "idx",
+   "status": "PARTITION",
+   "contract_instances": [
+    "hb_idx"
+   ],
+   "owner": "H-IDX",
+   "note": "client = 4 scorers (512 CLOSED hslices each) + glue; partition by grants v4",
+   "area_mm2": 0.37
+  },
+  "idx_link": {
+   "kind": "idx",
+   "status": "PARTITION",
+   "contract_instances": [
+    "hb_idx"
+   ],
+   "owner": "H-IDX",
+   "note": "client = 4 scorers (512 CLOSED hslices each) + glue; partition by grants v4",
+   "area_mm2": 0.237
+  },
+  "idx_s3": {
+   "kind": "idx",
+   "status": "PARTITION",
+   "contract_instances": [
+    "hb_idx"
+   ],
+   "owner": "H-IDX",
+   "note": "client = 4 scorers (512 CLOSED hslices each) + glue; partition by grants v4",
+   "area_mm2": 11.556
+  },
+  "idx_s2": {
+   "kind": "idx",
+   "status": "PARTITION",
+   "contract_instances": [
+    "hb_idx"
+   ],
+   "owner": "H-IDX",
+   "note": "client = 4 scorers (512 CLOSED hslices each) + glue; partition by grants v4",
+   "area_mm2": 11.556
+  }
+ },
+ "instances": {
+  "hb_vms_SW": {
+   "master": "hfd_hgi_vms_static_SW",
+   "view": "SYNTH",
+   "runs": [
+    {
+     "host": "ot-epyc1tb",
+     "run": "vms_SW_m",
+     "state": "NETLIST",
+     "mode": "mapped",
+     "std_area_um2": 41502.7719
+    }
+   ]
+  },
+  "delivery_SW": {
+   "master": "ot_hbm_svc_static_vm_delivery",
+   "view": "SYNTH",
+   "runs": [
+    {
+     "host": "ot-epyc1tb",
+     "run": "delivery",
+     "state": "NETLIST",
+     "mode": "mapped",
+     "std_area_um2": 4133.85282
+    },
+    {
+     "host": "ot-epyc4",
+     "run": "delivery",
+     "state": "NETLIST",
+     "mode": "mapped",
+     "std_area_um2": 4133.85282
+    }
+   ]
+  },
+  "hb_vms_SE": {
+   "master": "hfd_hgi_vms_static_SE",
+   "view": "SYNTH",
+   "runs": [
+    {
+     "host": "ot-epyc1tb",
+     "run": "vms_SE_m",
+     "state": "NETLIST",
+     "mode": "mapped",
+     "std_area_um2": 31449.30786
+    }
+   ]
+  },
+  "delivery_SE": {
+   "master": "ot_hbm_svc_static_vm_delivery",
+   "view": "SYNTH",
+   "runs": [
+    {
+     "host": "ot-epyc1tb",
+     "run": "delivery",
+     "state": "NETLIST",
+     "mode": "mapped",
+     "std_area_um2": 4133.85282
+    },
+    {
+     "host": "ot-epyc4",
+     "run": "delivery",
+     "state": "NETLIST",
+     "mode": "mapped",
+     "std_area_um2": 4133.85282
+    }
+   ]
+  },
+  "hb_vms_NW": {
+   "master": "hfd_hgi_vms_static_NW",
+   "view": "SYNTH",
+   "runs": [
+    {
+     "host": "ot-epyc1tb",
+     "run": "vms_NW_m",
+     "state": "NETLIST",
+     "mode": "mapped",
+     "std_area_um2": 46946.18574
+    }
+   ]
+  },
+  "delivery_NW": {
+   "master": "ot_hbm_svc_static_vm_delivery",
+   "view": "SYNTH",
+   "runs": [
+    {
+     "host": "ot-epyc1tb",
+     "run": "delivery",
+     "state": "NETLIST",
+     "mode": "mapped",
+     "std_area_um2": 4133.85282
+    },
+    {
+     "host": "ot-epyc4",
+     "run": "delivery",
+     "state": "NETLIST",
+     "mode": "mapped",
+     "std_area_um2": 4133.85282
+    }
+   ]
+  },
+  "hb_vms_NE": {
+   "master": "hfd_hgi_vms_static_NE",
+   "view": "SYNTH",
+   "runs": [
+    {
+     "host": "ot-epyc1tb",
+     "run": "vms_NE_m",
+     "state": "NETLIST",
+     "mode": "mapped",
+     "std_area_um2": 35034.39864
+    }
+   ]
+  },
+  "delivery_NE": {
+   "master": "ot_hbm_svc_static_vm_delivery",
+   "view": "SYNTH",
+   "runs": [
+    {
+     "host": "ot-epyc1tb",
+     "run": "delivery",
+     "state": "NETLIST",
+     "mode": "mapped",
+     "std_area_um2": 4133.85282
+    },
+    {
+     "host": "ot-epyc4",
+     "run": "delivery",
+     "state": "NETLIST",
+     "mode": "mapped",
+     "std_area_um2": 4133.85282
+    }
+   ]
+  },
+  "hb_ckgen": {
+   "master": "hfd_ckgen",
+   "view": "SYNTH",
+   "runs": [
+    {
+     "host": "ot-epyc1tb",
+     "run": "ckgen",
+     "state": "NETLIST",
+     "mode": "mapped",
+     "std_area_um2": 3.47004
+    }
+   ]
+  },
+  "svc_SW_s0": {
+   "master": "hfd_svc_v15_SW_s0",
+   "view": "REAL_COMPOSED",
+   "leaves": "ot_hbm_svc_static_pc",
+   "dir": "physical/ref_tile/hv15_svc_pc/views/ot_hbm_svc_static_pc"
+  },
+  "svc_SW_s1": {
+   "master": "hfd_svc_v15_SW_s1",
+   "view": "REAL_COMPOSED",
+   "leaves": "ot_hbm_svc_static_pc",
+   "dir": "physical/ref_tile/hv15_svc_pc/views/ot_hbm_svc_static_pc"
+  },
+  "svc_SW_s2": {
+   "master": "hfd_svc_v15_SW_s2",
+   "view": "REAL_COMPOSED",
+   "leaves": "ot_hbm_svc_static_pc",
+   "dir": "physical/ref_tile/hv15_svc_pc/views/ot_hbm_svc_static_pc"
+  },
+  "svc_SW_s3": {
+   "master": "hfd_svc_v15_SW_s3",
+   "view": "REAL_COMPOSED",
+   "leaves": "ot_hbm_svc_static_pc",
+   "dir": "physical/ref_tile/hv15_svc_pc/views/ot_hbm_svc_static_pc"
+  },
+  "svc_SW_s4": {
+   "master": "hfd_svc_v15_SW_s4",
+   "view": "REAL_COMPOSED",
+   "leaves": "ot_hbm_svc_static_pc",
+   "dir": "physical/ref_tile/hv15_svc_pc/views/ot_hbm_svc_static_pc"
+  },
+  "svc_SW_s5": {
+   "master": "hfd_svc_v15_SW_s5",
+   "view": "REAL_COMPOSED",
+   "leaves": "ot_hbm_svc_static_pc",
+   "dir": "physical/ref_tile/hv15_svc_pc/views/ot_hbm_svc_static_pc"
+  },
+  "svc_SW_s6": {
+   "master": "hfd_svc_v15_SW_s6",
+   "view": "REAL_COMPOSED",
+   "leaves": "ot_hbm_svc_static_pc",
+   "dir": "physical/ref_tile/hv15_svc_pc/views/ot_hbm_svc_static_pc"
+  },
+  "svc_SW_s7": {
+   "master": "hfd_svc_v15_SW_s7",
+   "view": "REAL_COMPOSED",
+   "leaves": "ot_hbm_svc_static_pc",
+   "dir": "physical/ref_tile/hv15_svc_pc/views/ot_hbm_svc_static_pc"
+  },
+  "svc_NW_s0": {
+   "master": "hfd_svc_v15_SW_s0",
+   "view": "REAL_COMPOSED",
+   "leaves": "ot_hbm_svc_static_pc",
+   "dir": "physical/ref_tile/hv15_svc_pc/views/ot_hbm_svc_static_pc"
+  },
+  "svc_NW_s1": {
+   "master": "hfd_svc_v15_SW_s1",
+   "view": "REAL_COMPOSED",
+   "leaves": "ot_hbm_svc_static_pc",
+   "dir": "physical/ref_tile/hv15_svc_pc/views/ot_hbm_svc_static_pc"
+  },
+  "svc_NW_s2": {
+   "master": "hfd_svc_v15_SW_s2",
+   "view": "REAL_COMPOSED",
+   "leaves": "ot_hbm_svc_static_pc",
+   "dir": "physical/ref_tile/hv15_svc_pc/views/ot_hbm_svc_static_pc"
+  },
+  "svc_NW_s3": {
+   "master": "hfd_svc_v15_SW_s3",
+   "view": "REAL_COMPOSED",
+   "leaves": "ot_hbm_svc_static_pc",
+   "dir": "physical/ref_tile/hv15_svc_pc/views/ot_hbm_svc_static_pc"
+  },
+  "svc_NW_s4": {
+   "master": "hfd_svc_v15_SW_s4",
+   "view": "REAL_COMPOSED",
+   "leaves": "ot_hbm_svc_static_pc",
+   "dir": "physical/ref_tile/hv15_svc_pc/views/ot_hbm_svc_static_pc"
+  },
+  "svc_NW_s5": {
+   "master": "hfd_svc_v15_SW_s5",
+   "view": "REAL_COMPOSED",
+   "leaves": "ot_hbm_svc_static_pc",
+   "dir": "physical/ref_tile/hv15_svc_pc/views/ot_hbm_svc_static_pc"
+  },
+  "svc_NW_s6": {
+   "master": "hfd_svc_v15_SW_s6",
+   "view": "REAL_COMPOSED",
+   "leaves": "ot_hbm_svc_static_pc",
+   "dir": "physical/ref_tile/hv15_svc_pc/views/ot_hbm_svc_static_pc"
+  },
+  "svc_NW_s7": {
+   "master": "hfd_svc_v15_SW_s7",
+   "view": "REAL_COMPOSED",
+   "leaves": "ot_hbm_svc_static_pc",
+   "dir": "physical/ref_tile/hv15_svc_pc/views/ot_hbm_svc_static_pc"
+  },
+  "svc_SE_s0": {
+   "master": "hfd_svc_v15_SE_s0",
+   "view": "REAL_COMPOSED",
+   "leaves": "ot_hbm_svc_static_pc",
+   "dir": "physical/ref_tile/hv15_svc_pc/views/ot_hbm_svc_static_pc"
+  },
+  "svc_SE_s1": {
+   "master": "hfd_svc_v15_SE_s1",
+   "view": "REAL_COMPOSED",
+   "leaves": "ot_hbm_svc_static_pc",
+   "dir": "physical/ref_tile/hv15_svc_pc/views/ot_hbm_svc_static_pc"
+  },
+  "svc_SE_s2": {
+   "master": "hfd_svc_v15_SE_s2",
+   "view": "REAL_COMPOSED",
+   "leaves": "ot_hbm_svc_static_pc",
+   "dir": "physical/ref_tile/hv15_svc_pc/views/ot_hbm_svc_static_pc"
+  },
+  "svc_SE_s3": {
+   "master": "hfd_svc_v15_SE_s3",
+   "view": "REAL_COMPOSED",
+   "leaves": "ot_hbm_svc_static_pc",
+   "dir": "physical/ref_tile/hv15_svc_pc/views/ot_hbm_svc_static_pc"
+  },
+  "svc_SE_s4": {
+   "master": "hfd_svc_v15_SE_s4",
+   "view": "REAL_COMPOSED",
+   "leaves": "ot_hbm_svc_static_pc",
+   "dir": "physical/ref_tile/hv15_svc_pc/views/ot_hbm_svc_static_pc"
+  },
+  "svc_SE_s5": {
+   "master": "hfd_svc_v15_SE_s5",
+   "view": "REAL_COMPOSED",
+   "leaves": "ot_hbm_svc_static_pc",
+   "dir": "physical/ref_tile/hv15_svc_pc/views/ot_hbm_svc_static_pc"
+  },
+  "svc_SE_s6": {
+   "master": "hfd_svc_v15_SE_s6",
+   "view": "REAL_COMPOSED",
+   "leaves": "ot_hbm_svc_static_pc",
+   "dir": "physical/ref_tile/hv15_svc_pc/views/ot_hbm_svc_static_pc"
+  },
+  "svc_SE_s7": {
+   "master": "hfd_svc_v15_SE_s7",
+   "view": "REAL_COMPOSED",
+   "leaves": "ot_hbm_svc_static_pc",
+   "dir": "physical/ref_tile/hv15_svc_pc/views/ot_hbm_svc_static_pc"
+  },
+  "svc_SE_s8": {
+   "master": "hfd_svc_v15_SE_s8",
+   "view": "REAL_COMPOSED",
+   "leaves": "ot_hbm_svc_static_pc",
+   "dir": "physical/ref_tile/hv15_svc_pc/views/ot_hbm_svc_static_pc"
+  },
+  "svc_NE_s0": {
+   "master": "hfd_svc_v15_SE_s0",
+   "view": "REAL_COMPOSED",
+   "leaves": "ot_hbm_svc_static_pc",
+   "dir": "physical/ref_tile/hv15_svc_pc/views/ot_hbm_svc_static_pc"
+  },
+  "svc_NE_s1": {
+   "master": "hfd_svc_v15_SE_s1",
+   "view": "REAL_COMPOSED",
+   "leaves": "ot_hbm_svc_static_pc",
+   "dir": "physical/ref_tile/hv15_svc_pc/views/ot_hbm_svc_static_pc"
+  },
+  "svc_NE_s2": {
+   "master": "hfd_svc_v15_SE_s2",
+   "view": "REAL_COMPOSED",
+   "leaves": "ot_hbm_svc_static_pc",
+   "dir": "physical/ref_tile/hv15_svc_pc/views/ot_hbm_svc_static_pc"
+  },
+  "svc_NE_s3": {
+   "master": "hfd_svc_v15_SE_s3",
+   "view": "REAL_COMPOSED",
+   "leaves": "ot_hbm_svc_static_pc",
+   "dir": "physical/ref_tile/hv15_svc_pc/views/ot_hbm_svc_static_pc"
+  },
+  "svc_NE_s4": {
+   "master": "hfd_svc_v15_SE_s4",
+   "view": "REAL_COMPOSED",
+   "leaves": "ot_hbm_svc_static_pc",
+   "dir": "physical/ref_tile/hv15_svc_pc/views/ot_hbm_svc_static_pc"
+  },
+  "svc_NE_s5": {
+   "master": "hfd_svc_v15_SE_s5",
+   "view": "REAL_COMPOSED",
+   "leaves": "ot_hbm_svc_static_pc",
+   "dir": "physical/ref_tile/hv15_svc_pc/views/ot_hbm_svc_static_pc"
+  },
+  "svc_NE_s6": {
+   "master": "hfd_svc_v15_SE_s6",
+   "view": "REAL_COMPOSED",
+   "leaves": "ot_hbm_svc_static_pc",
+   "dir": "physical/ref_tile/hv15_svc_pc/views/ot_hbm_svc_static_pc"
+  },
+  "svc_NE_s7": {
+   "master": "hfd_svc_v15_SE_s7",
+   "view": "REAL_COMPOSED",
+   "leaves": "ot_hbm_svc_static_pc",
+   "dir": "physical/ref_tile/hv15_svc_pc/views/ot_hbm_svc_static_pc"
+  },
+  "svc_NE_s8": {
+   "master": "hfd_svc_v15_SE_s8",
+   "view": "REAL_COMPOSED",
+   "leaves": "ot_hbm_svc_static_pc",
+   "dir": "physical/ref_tile/hv15_svc_pc/views/ot_hbm_svc_static_pc"
+  },
+  "phy_SW": {
+   "master": "ot_hbm3e_phy_v41x_aw30_e8p5",
+   "view": "REAL",
+   "dir": "physical/asap7_memory_macros/ot_hbm3e_phy_v41x_aw30_e8p5"
+  },
+  "phy_SE": {
+   "master": "ot_hbm3e_phy_v41x_aw30_e8p5",
+   "view": "REAL",
+   "dir": "physical/asap7_memory_macros/ot_hbm3e_phy_v41x_aw30_e8p5"
+  },
+  "phy_NW": {
+   "master": "ot_hbm3e_phy_v41x_aw30_e8p5",
+   "view": "REAL",
+   "dir": "physical/asap7_memory_macros/ot_hbm3e_phy_v41x_aw30_e8p5"
+  },
+  "phy_NE": {
+   "master": "ot_hbm3e_phy_v41x_aw30_e8p5",
+   "view": "REAL",
+   "dir": "physical/asap7_memory_macros/ot_hbm3e_phy_v41x_aw30_e8p5"
+  },
+  "calendar_SW": {
+   "master": "hfd_hgi_vm_calendar_SW",
+   "view": "REAL",
+   "dir": "physical/ref_tile/hv15_vm_cal_sw/views/hfd_hgi_vm_calendar_SW"
+  },
+  "lg_SW_0": {
+   "master": "ot_hbm_vm_lg_static_split",
+   "view": "SYNTH",
+   "runs": [
+    {
+     "host": "ot-epyc1tb",
+     "run": "lg_10_7",
+     "state": "NETLIST",
+     "mode": "mapped",
+     "std_area_um2": 4076.99082
+    },
+    {
+     "host": "ot-epyc1tb",
+     "run": "lg_14_11",
+     "state": "NETLIST",
+     "mode": "mapped",
+     "std_area_um2": 4104.09504
+    },
+    {
+     "host": "ot-epyc1tb",
+     "run": "lg_18_15",
+     "state": "NETLIST",
+     "mode": "mapped",
+     "std_area_um2": 4131.11178
+    },
+    {
+     "host": "ot-epyc4",
+     "run": "lg_10_7",
+     "state": "NETLIST",
+     "mode": "mapped",
+     "std_area_um2": 4076.99082
+    },
+    {
+     "host": "ot-epyc4",
+     "run": "lg_14_11",
+     "state": "NETLIST",
+     "mode": "mapped",
+     "std_area_um2": 4104.09504
+    },
+    {
+     "host": "ot-epyc4",
+     "run": "lg_18_15",
+     "state": "NETLIST",
+     "mode": "mapped",
+     "std_area_um2": 4131.11178
+    }
+   ]
+  },
+  "lg_SW_1": {
+   "master": "ot_hbm_vm_lg_static_split",
+   "view": "SYNTH",
+   "runs": [
+    {
+     "host": "ot-epyc1tb",
+     "run": "lg_10_7",
+     "state": "NETLIST",
+     "mode": "mapped",
+     "std_area_um2": 4076.99082
+    },
+    {
+     "host": "ot-epyc1tb",
+     "run": "lg_14_11",
+     "state": "NETLIST",
+     "mode": "mapped",
+     "std_area_um2": 4104.09504
+    },
+    {
+     "host": "ot-epyc1tb",
+     "run": "lg_18_15",
+     "state": "NETLIST",
+     "mode": "mapped",
+     "std_area_um2": 4131.11178
+    },
+    {
+     "host": "ot-epyc4",
+     "run": "lg_10_7",
+     "state": "NETLIST",
+     "mode": "mapped",
+     "std_area_um2": 4076.99082
+    },
+    {
+     "host": "ot-epyc4",
+     "run": "lg_14_11",
+     "state": "NETLIST",
+     "mode": "mapped",
+     "std_area_um2": 4104.09504
+    },
+    {
+     "host": "ot-epyc4",
+     "run": "lg_18_15",
+     "state": "NETLIST",
+     "mode": "mapped",
+     "std_area_um2": 4131.11178
+    }
+   ]
+  },
+  "lg_SW_2": {
+   "master": "ot_hbm_vm_lg_static_split_term",
+   "view": "SYNTH",
+   "runs": [
+    {
+     "host": "ot-epyc1tb",
+     "run": "lg_term_18_15",
+     "state": "NETLIST",
+     "mode": "mapped",
+     "std_area_um2": 3113.39862
+    }
+   ]
+  },
+  "calendar_SE": {
+   "master": "hfd_hgi_vm_calendar_SE",
+   "view": "REAL",
+   "dir": "physical/ref_tile/hv15_vm_cal_se/views/hfd_hgi_vm_calendar_SE"
+  },
+  "lg_SE_0": {
+   "master": "ot_hbm_vm_lg_static_split",
+   "view": "SYNTH",
+   "runs": [
+    {
+     "host": "ot-epyc1tb",
+     "run": "lg_10_7",
+     "state": "NETLIST",
+     "mode": "mapped",
+     "std_area_um2": 4076.99082
+    },
+    {
+     "host": "ot-epyc1tb",
+     "run": "lg_14_11",
+     "state": "NETLIST",
+     "mode": "mapped",
+     "std_area_um2": 4104.09504
+    },
+    {
+     "host": "ot-epyc1tb",
+     "run": "lg_18_15",
+     "state": "NETLIST",
+     "mode": "mapped",
+     "std_area_um2": 4131.11178
+    },
+    {
+     "host": "ot-epyc4",
+     "run": "lg_10_7",
+     "state": "NETLIST",
+     "mode": "mapped",
+     "std_area_um2": 4076.99082
+    },
+    {
+     "host": "ot-epyc4",
+     "run": "lg_14_11",
+     "state": "NETLIST",
+     "mode": "mapped",
+     "std_area_um2": 4104.09504
+    },
+    {
+     "host": "ot-epyc4",
+     "run": "lg_18_15",
+     "state": "NETLIST",
+     "mode": "mapped",
+     "std_area_um2": 4131.11178
+    }
+   ]
+  },
+  "lg_SE_1": {
+   "master": "ot_hbm_vm_lg_static_split",
+   "view": "SYNTH",
+   "runs": [
+    {
+     "host": "ot-epyc1tb",
+     "run": "lg_10_7",
+     "state": "NETLIST",
+     "mode": "mapped",
+     "std_area_um2": 4076.99082
+    },
+    {
+     "host": "ot-epyc1tb",
+     "run": "lg_14_11",
+     "state": "NETLIST",
+     "mode": "mapped",
+     "std_area_um2": 4104.09504
+    },
+    {
+     "host": "ot-epyc1tb",
+     "run": "lg_18_15",
+     "state": "NETLIST",
+     "mode": "mapped",
+     "std_area_um2": 4131.11178
+    },
+    {
+     "host": "ot-epyc4",
+     "run": "lg_10_7",
+     "state": "NETLIST",
+     "mode": "mapped",
+     "std_area_um2": 4076.99082
+    },
+    {
+     "host": "ot-epyc4",
+     "run": "lg_14_11",
+     "state": "NETLIST",
+     "mode": "mapped",
+     "std_area_um2": 4104.09504
+    },
+    {
+     "host": "ot-epyc4",
+     "run": "lg_18_15",
+     "state": "NETLIST",
+     "mode": "mapped",
+     "std_area_um2": 4131.11178
+    }
+   ]
+  },
+  "lg_SE_2": {
+   "master": "ot_hbm_vm_lg_static_split_term",
+   "view": "SYNTH",
+   "runs": [
+    {
+     "host": "ot-epyc1tb",
+     "run": "lg_term_18_15",
+     "state": "NETLIST",
+     "mode": "mapped",
+     "std_area_um2": 3113.39862
+    }
+   ]
+  },
+  "calendar_NW": {
+   "master": "hfd_hgi_vm_calendar_NW",
+   "view": "REAL",
+   "dir": "physical/ref_tile/hv15_vm_cal_nw/views/hfd_hgi_vm_calendar_NW"
+  },
+  "lg_NW_0": {
+   "master": "ot_hbm_vm_lg_static_split",
+   "view": "SYNTH",
+   "runs": [
+    {
+     "host": "ot-epyc1tb",
+     "run": "lg_10_7",
+     "state": "NETLIST",
+     "mode": "mapped",
+     "std_area_um2": 4076.99082
+    },
+    {
+     "host": "ot-epyc1tb",
+     "run": "lg_14_11",
+     "state": "NETLIST",
+     "mode": "mapped",
+     "std_area_um2": 4104.09504
+    },
+    {
+     "host": "ot-epyc1tb",
+     "run": "lg_18_15",
+     "state": "NETLIST",
+     "mode": "mapped",
+     "std_area_um2": 4131.11178
+    },
+    {
+     "host": "ot-epyc4",
+     "run": "lg_10_7",
+     "state": "NETLIST",
+     "mode": "mapped",
+     "std_area_um2": 4076.99082
+    },
+    {
+     "host": "ot-epyc4",
+     "run": "lg_14_11",
+     "state": "NETLIST",
+     "mode": "mapped",
+     "std_area_um2": 4104.09504
+    },
+    {
+     "host": "ot-epyc4",
+     "run": "lg_18_15",
+     "state": "NETLIST",
+     "mode": "mapped",
+     "std_area_um2": 4131.11178
+    }
+   ]
+  },
+  "lg_NW_1": {
+   "master": "ot_hbm_vm_lg_static_split",
+   "view": "SYNTH",
+   "runs": [
+    {
+     "host": "ot-epyc1tb",
+     "run": "lg_10_7",
+     "state": "NETLIST",
+     "mode": "mapped",
+     "std_area_um2": 4076.99082
+    },
+    {
+     "host": "ot-epyc1tb",
+     "run": "lg_14_11",
+     "state": "NETLIST",
+     "mode": "mapped",
+     "std_area_um2": 4104.09504
+    },
+    {
+     "host": "ot-epyc1tb",
+     "run": "lg_18_15",
+     "state": "NETLIST",
+     "mode": "mapped",
+     "std_area_um2": 4131.11178
+    },
+    {
+     "host": "ot-epyc4",
+     "run": "lg_10_7",
+     "state": "NETLIST",
+     "mode": "mapped",
+     "std_area_um2": 4076.99082
+    },
+    {
+     "host": "ot-epyc4",
+     "run": "lg_14_11",
+     "state": "NETLIST",
+     "mode": "mapped",
+     "std_area_um2": 4104.09504
+    },
+    {
+     "host": "ot-epyc4",
+     "run": "lg_18_15",
+     "state": "NETLIST",
+     "mode": "mapped",
+     "std_area_um2": 4131.11178
+    }
+   ]
+  },
+  "lg_NW_2": {
+   "master": "ot_hbm_vm_lg_static_split_term",
+   "view": "SYNTH",
+   "runs": [
+    {
+     "host": "ot-epyc1tb",
+     "run": "lg_term_18_15",
+     "state": "NETLIST",
+     "mode": "mapped",
+     "std_area_um2": 3113.39862
+    }
+   ]
+  },
+  "calendar_NE": {
+   "master": "hfd_hgi_vm_calendar_NE",
+   "view": "REAL",
+   "dir": "physical/ref_tile/hv15_vm_cal_ne/views/hfd_hgi_vm_calendar_NE"
+  },
+  "lg_NE_0": {
+   "master": "ot_hbm_vm_lg_static_split",
+   "view": "SYNTH",
+   "runs": [
+    {
+     "host": "ot-epyc1tb",
+     "run": "lg_10_7",
+     "state": "NETLIST",
+     "mode": "mapped",
+     "std_area_um2": 4076.99082
+    },
+    {
+     "host": "ot-epyc1tb",
+     "run": "lg_14_11",
+     "state": "NETLIST",
+     "mode": "mapped",
+     "std_area_um2": 4104.09504
+    },
+    {
+     "host": "ot-epyc1tb",
+     "run": "lg_18_15",
+     "state": "NETLIST",
+     "mode": "mapped",
+     "std_area_um2": 4131.11178
+    },
+    {
+     "host": "ot-epyc4",
+     "run": "lg_10_7",
+     "state": "NETLIST",
+     "mode": "mapped",
+     "std_area_um2": 4076.99082
+    },
+    {
+     "host": "ot-epyc4",
+     "run": "lg_14_11",
+     "state": "NETLIST",
+     "mode": "mapped",
+     "std_area_um2": 4104.09504
+    },
+    {
+     "host": "ot-epyc4",
+     "run": "lg_18_15",
+     "state": "NETLIST",
+     "mode": "mapped",
+     "std_area_um2": 4131.11178
+    }
+   ]
+  },
+  "lg_NE_1": {
+   "master": "ot_hbm_vm_lg_static_split",
+   "view": "SYNTH",
+   "runs": [
+    {
+     "host": "ot-epyc1tb",
+     "run": "lg_10_7",
+     "state": "NETLIST",
+     "mode": "mapped",
+     "std_area_um2": 4076.99082
+    },
+    {
+     "host": "ot-epyc1tb",
+     "run": "lg_14_11",
+     "state": "NETLIST",
+     "mode": "mapped",
+     "std_area_um2": 4104.09504
+    },
+    {
+     "host": "ot-epyc1tb",
+     "run": "lg_18_15",
+     "state": "NETLIST",
+     "mode": "mapped",
+     "std_area_um2": 4131.11178
+    },
+    {
+     "host": "ot-epyc4",
+     "run": "lg_10_7",
+     "state": "NETLIST",
+     "mode": "mapped",
+     "std_area_um2": 4076.99082
+    },
+    {
+     "host": "ot-epyc4",
+     "run": "lg_14_11",
+     "state": "NETLIST",
+     "mode": "mapped",
+     "std_area_um2": 4104.09504
+    },
+    {
+     "host": "ot-epyc4",
+     "run": "lg_18_15",
+     "state": "NETLIST",
+     "mode": "mapped",
+     "std_area_um2": 4131.11178
+    }
+   ]
+  },
+  "lg_NE_2": {
+   "master": "ot_hbm_vm_lg_static_split_term",
+   "view": "SYNTH",
+   "runs": [
+    {
+     "host": "ot-epyc1tb",
+     "run": "lg_term_18_15",
+     "state": "NETLIST",
+     "mode": "mapped",
+     "std_area_um2": 3113.39862
+    }
+   ]
+  },
+  "vm_status4": {
+   "master": "ot_vms_status4_static",
+   "view": "REAL",
+   "dir": "physical/ref_tile/hv15_vm_status4_margin1/views/ot_vms_status4_static"
+  },
+  "hb_coll_SW": {
+   "master": "ot_hfd_coll_q3_static",
+   "view": "RUNNING",
+   "runs": [
+    {
+     "host": "ot-epyc1tb",
+     "run": "coll_q3",
+     "state": "RUNNING_OR_FAILED",
+     "mode": "mapped",
+     "std_area_um2": 0.0
+    },
+    {
+     "host": "ot-epyc4",
+     "run": "coll_q3",
+     "state": "RUNNING_OR_FAILED",
+     "mode": "mapped",
+     "std_area_um2": 0.0
+    },
+    {
+     "host": "ot-epyc4",
+     "run": "coll_q3_c",
+     "state": "RUNNING_OR_FAILED",
+     "mode": "coarse",
+     "std_area_um2": 0.0
+    }
+   ]
+  },
+  "hb_coll_SE": {
+   "master": "ot_hfd_coll_q2_static",
+   "view": "SYNTH",
+   "runs": [
+    {
+     "host": "ot-epyc1tb",
+     "run": "coll_q2",
+     "state": "NETLIST",
+     "mode": "mapped",
+     "std_area_um2": 38975.82462
+    }
+   ]
+  },
+  "hb_coll_NW": {
+   "master": "ot_hfd_coll_q2_static",
+   "view": "SYNTH",
+   "runs": [
+    {
+     "host": "ot-epyc1tb",
+     "run": "coll_q2",
+     "state": "NETLIST",
+     "mode": "mapped",
+     "std_area_um2": 38975.82462
+    }
+   ]
+  },
+  "hb_coll_NE": {
+   "master": "ot_hfd_coll_q2_static",
+   "view": "SYNTH",
+   "runs": [
+    {
+     "host": "ot-epyc1tb",
+     "run": "coll_q2",
+     "state": "NETLIST",
+     "mode": "mapped",
+     "std_area_um2": 38975.82462
+    }
+   ]
+  },
+  "hb_sfu_SW": {
+   "master": "ot_hgi_sfu_scheduled_engine",
+   "view": "RUNNING",
+   "runs": [
+    {
+     "host": "ot-epyc1tb",
+     "run": "sfu",
+     "state": "RUNNING_OR_FAILED",
+     "mode": "mapped",
+     "std_area_um2": 0.0
+    },
+    {
+     "host": "ot-epyc4",
+     "run": "sfu_c",
+     "state": "RUNNING_OR_FAILED",
+     "mode": "coarse",
+     "std_area_um2": 0.0
+    }
+   ]
+  },
+  "hb_dbk_SW": {
+   "master": "ot_hgi_dma_back_static",
+   "view": "SYNTH",
+   "runs": [
+    {
+     "host": "ot-epyc1tb",
+     "run": "dma_back0",
+     "state": "NETLIST",
+     "mode": "mapped",
+     "std_area_um2": 6404.4837
+    },
+    {
+     "host": "ot-epyc4",
+     "run": "dma_back0",
+     "state": "NETLIST",
+     "mode": "mapped",
+     "std_area_um2": 6404.4837
+    }
+   ]
+  },
+  "hb_su_SW": {
+   "master": "ot_hbm_su_static_vm_ports",
+   "view": "SYNTH",
+   "runs": [
+    {
+     "host": "ot-epyc4",
+     "run": "su_q0n4b",
+     "state": "NETLIST",
+     "mode": "mapped",
+     "std_area_um2": 73.68732
+    }
+   ]
+  },
+  "hb_sfu_SE": {
+   "master": "ot_hgi_sfu_scheduled_engine",
+   "view": "RUNNING",
+   "runs": [
+    {
+     "host": "ot-epyc1tb",
+     "run": "sfu",
+     "state": "RUNNING_OR_FAILED",
+     "mode": "mapped",
+     "std_area_um2": 0.0
+    },
+    {
+     "host": "ot-epyc4",
+     "run": "sfu_c",
+     "state": "RUNNING_OR_FAILED",
+     "mode": "coarse",
+     "std_area_um2": 0.0
+    }
+   ]
+  },
+  "hb_dbk_SE": {
+   "master": "ot_hgi_dma_back_static",
+   "view": "SYNTH",
+   "runs": [
+    {
+     "host": "ot-epyc1tb",
+     "run": "dma_back0",
+     "state": "NETLIST",
+     "mode": "mapped",
+     "std_area_um2": 6404.4837
+    },
+    {
+     "host": "ot-epyc4",
+     "run": "dma_back0",
+     "state": "NETLIST",
+     "mode": "mapped",
+     "std_area_um2": 6404.4837
+    }
+   ]
+  },
+  "hb_su_SE": {
+   "master": "ot_hbm_su_static_vm_ports",
+   "view": "SYNTH",
+   "runs": [
+    {
+     "host": "ot-epyc4",
+     "run": "su_q0n4b",
+     "state": "NETLIST",
+     "mode": "mapped",
+     "std_area_um2": 73.68732
+    }
+   ]
+  },
+  "hb_sfu_NW": {
+   "master": "ot_hgi_sfu_scheduled_engine",
+   "view": "RUNNING",
+   "runs": [
+    {
+     "host": "ot-epyc1tb",
+     "run": "sfu",
+     "state": "RUNNING_OR_FAILED",
+     "mode": "mapped",
+     "std_area_um2": 0.0
+    },
+    {
+     "host": "ot-epyc4",
+     "run": "sfu_c",
+     "state": "RUNNING_OR_FAILED",
+     "mode": "coarse",
+     "std_area_um2": 0.0
+    }
+   ]
+  },
+  "hb_dbk_NW": {
+   "master": "ot_hgi_dma_back_static",
+   "view": "SYNTH",
+   "runs": [
+    {
+     "host": "ot-epyc1tb",
+     "run": "dma_back0",
+     "state": "NETLIST",
+     "mode": "mapped",
+     "std_area_um2": 6404.4837
+    },
+    {
+     "host": "ot-epyc4",
+     "run": "dma_back0",
+     "state": "NETLIST",
+     "mode": "mapped",
+     "std_area_um2": 6404.4837
+    }
+   ]
+  },
+  "hb_su_NW": {
+   "master": "ot_hbm_su_static_vm_ports",
+   "view": "SYNTH",
+   "runs": [
+    {
+     "host": "ot-epyc4",
+     "run": "su_q0n4b",
+     "state": "NETLIST",
+     "mode": "mapped",
+     "std_area_um2": 73.68732
+    }
+   ]
+  },
+  "hb_sfu_NE": {
+   "master": "ot_hgi_sfu_scheduled_engine",
+   "view": "RUNNING",
+   "runs": [
+    {
+     "host": "ot-epyc1tb",
+     "run": "sfu",
+     "state": "RUNNING_OR_FAILED",
+     "mode": "mapped",
+     "std_area_um2": 0.0
+    },
+    {
+     "host": "ot-epyc4",
+     "run": "sfu_c",
+     "state": "RUNNING_OR_FAILED",
+     "mode": "coarse",
+     "std_area_um2": 0.0
+    }
+   ]
+  },
+  "hb_dbk_NE": {
+   "master": "ot_hgi_dma_back_static",
+   "view": "SYNTH",
+   "runs": [
+    {
+     "host": "ot-epyc1tb",
+     "run": "dma_back0",
+     "state": "NETLIST",
+     "mode": "mapped",
+     "std_area_um2": 6404.4837
+    },
+    {
+     "host": "ot-epyc4",
+     "run": "dma_back0",
+     "state": "NETLIST",
+     "mode": "mapped",
+     "std_area_um2": 6404.4837
+    }
+   ]
+  },
+  "hb_su_NE": {
+   "master": "ot_hbm_su_static_vm_ports",
+   "view": "SYNTH",
+   "runs": [
+    {
+     "host": "ot-epyc4",
+     "run": "su_q0n4b",
+     "state": "NETLIST",
+     "mode": "mapped",
+     "std_area_um2": 73.68732
+    }
+   ]
+  },
+  "hb_idx": {
+   "master": "ot_hbm_idx_client_static_sw",
+   "view": "NONE"
+  },
+  "hb_argmax": {
+   "master": "ot_hbm_argmax_static_sw",
+   "view": "NONE"
+  },
+  "hb_quant_NW": {
+   "master": "ot_hgi_qdq_host_static",
+   "view": "SYNTH",
+   "runs": [
+    {
+     "host": "ot-epyc1tb",
+     "run": "quant_nw",
+     "state": "NETLIST",
+     "mode": "mapped",
+     "std_area_um2": 19848.71628
+    }
+   ]
+  }
+ },
+ "descendant_views": {
+  "idx_s0_meta0": {
+   "master": "hidx_meta_w25_d123_r0",
+   "instance": "hb_idx/index/parent/gscore[0]/scorer/ge[0]/md",
+   "parent": "idx_s0",
+   "view": "REAL_CLOSED_DESCENDANT",
+   "reasons": [],
+   "directory": "physical/ref_tile/hidx_meta_static_1015c/views/hidx_meta_w25_d123_r0",
+   "local_origin": {
+    "x": 2376.0,
+    "y": 2894.4,
+    "orient": "R0"
+   },
+   "outline": {
+    "w": 68.04,
+    "h": 68.04
+   },
+   "parent_and_die_qualified": false,
+   "scope": "independent routed descendant; full scorer packing, seams, clock and die timing remain OPEN"
+  },
+  "idx_s0_meta1": {
+   "master": "hidx_meta_w25_d123_r0",
+   "instance": "hb_idx/index/parent/gscore[0]/scorer/ge[1]/md",
+   "parent": "idx_s0",
+   "view": "REAL_CLOSED_DESCENDANT",
+   "reasons": [],
+   "directory": "physical/ref_tile/hidx_meta_static_1015c/views/hidx_meta_w25_d123_r0",
+   "local_origin": {
+    "x": 2592.0,
+    "y": 2894.4,
+    "orient": "R0"
+   },
+   "outline": {
+    "w": 68.04,
+    "h": 68.04
+   },
+   "parent_and_die_qualified": false,
+   "scope": "independent routed descendant; full scorer packing, seams, clock and die timing remain OPEN"
+  },
+  "idx_s0_meta2": {
+   "master": "hidx_meta_w25_d123_r0",
+   "instance": "hb_idx/index/parent/gscore[0]/scorer/ge[2]/md",
+   "parent": "idx_s0",
+   "view": "REAL_CLOSED_DESCENDANT",
+   "reasons": [],
+   "directory": "physical/ref_tile/hidx_meta_static_1015c/views/hidx_meta_w25_d123_r0",
+   "local_origin": {
+    "x": 2808.0,
+    "y": 2894.4,
+    "orient": "R0"
+   },
+   "outline": {
+    "w": 68.04,
+    "h": 68.04
+   },
+   "parent_and_die_qualified": false,
+   "scope": "independent routed descendant; full scorer packing, seams, clock and die timing remain OPEN"
+  },
+  "idx_s0_meta3": {
+   "master": "hidx_meta_w25_d123_r0",
+   "instance": "hb_idx/index/parent/gscore[0]/scorer/ge[3]/md",
+   "parent": "idx_s0",
+   "view": "REAL_CLOSED_DESCENDANT",
+   "reasons": [],
+   "directory": "physical/ref_tile/hidx_meta_static_1015c/views/hidx_meta_w25_d123_r0",
+   "local_origin": {
+    "x": 3024.0,
+    "y": 2894.4,
+    "orient": "R0"
+   },
+   "outline": {
+    "w": 68.04,
+    "h": 68.04
+   },
+   "parent_and_die_qualified": false,
+   "scope": "independent routed descendant; full scorer packing, seams, clock and die timing remain OPEN"
+  },
+  "idx_s1_meta0": {
+   "master": "hidx_meta_w25_d123_r0",
+   "instance": "hb_idx/index/parent/gscore[1]/scorer/ge[0]/md",
+   "parent": "idx_s1",
+   "view": "REAL_CLOSED_DESCENDANT",
+   "reasons": [],
+   "directory": "physical/ref_tile/hidx_meta_static_1015c/views/hidx_meta_w25_d123_r0",
+   "local_origin": {
+    "x": 2376.0,
+    "y": 2894.4,
+    "orient": "R0"
+   },
+   "outline": {
+    "w": 68.04,
+    "h": 68.04
+   },
+   "parent_and_die_qualified": false,
+   "scope": "independent routed descendant; full scorer packing, seams, clock and die timing remain OPEN"
+  },
+  "idx_s1_meta1": {
+   "master": "hidx_meta_w25_d123_r0",
+   "instance": "hb_idx/index/parent/gscore[1]/scorer/ge[1]/md",
+   "parent": "idx_s1",
+   "view": "REAL_CLOSED_DESCENDANT",
+   "reasons": [],
+   "directory": "physical/ref_tile/hidx_meta_static_1015c/views/hidx_meta_w25_d123_r0",
+   "local_origin": {
+    "x": 2592.0,
+    "y": 2894.4,
+    "orient": "R0"
+   },
+   "outline": {
+    "w": 68.04,
+    "h": 68.04
+   },
+   "parent_and_die_qualified": false,
+   "scope": "independent routed descendant; full scorer packing, seams, clock and die timing remain OPEN"
+  },
+  "idx_s1_meta2": {
+   "master": "hidx_meta_w25_d123_r0",
+   "instance": "hb_idx/index/parent/gscore[1]/scorer/ge[2]/md",
+   "parent": "idx_s1",
+   "view": "REAL_CLOSED_DESCENDANT",
+   "reasons": [],
+   "directory": "physical/ref_tile/hidx_meta_static_1015c/views/hidx_meta_w25_d123_r0",
+   "local_origin": {
+    "x": 2808.0,
+    "y": 2894.4,
+    "orient": "R0"
+   },
+   "outline": {
+    "w": 68.04,
+    "h": 68.04
+   },
+   "parent_and_die_qualified": false,
+   "scope": "independent routed descendant; full scorer packing, seams, clock and die timing remain OPEN"
+  },
+  "idx_s1_meta3": {
+   "master": "hidx_meta_w25_d123_r0",
+   "instance": "hb_idx/index/parent/gscore[1]/scorer/ge[3]/md",
+   "parent": "idx_s1",
+   "view": "REAL_CLOSED_DESCENDANT",
+   "reasons": [],
+   "directory": "physical/ref_tile/hidx_meta_static_1015c/views/hidx_meta_w25_d123_r0",
+   "local_origin": {
+    "x": 3024.0,
+    "y": 2894.4,
+    "orient": "R0"
+   },
+   "outline": {
+    "w": 68.04,
+    "h": 68.04
+   },
+   "parent_and_die_qualified": false,
+   "scope": "independent routed descendant; full scorer packing, seams, clock and die timing remain OPEN"
+  },
+  "idx_s2_meta0": {
+   "master": "hidx_meta_w25_d123_r0",
+   "instance": "hb_idx/index/parent/gscore[2]/scorer/ge[0]/md",
+   "parent": "idx_s2",
+   "view": "REAL_CLOSED_DESCENDANT",
+   "reasons": [],
+   "directory": "physical/ref_tile/hidx_meta_static_1015c/views/hidx_meta_w25_d123_r0",
+   "local_origin": {
+    "x": 2376.0,
+    "y": 2894.4,
+    "orient": "R0"
+   },
+   "outline": {
+    "w": 68.04,
+    "h": 68.04
+   },
+   "parent_and_die_qualified": false,
+   "scope": "independent routed descendant; full scorer packing, seams, clock and die timing remain OPEN"
+  },
+  "idx_s2_meta1": {
+   "master": "hidx_meta_w25_d123_r0",
+   "instance": "hb_idx/index/parent/gscore[2]/scorer/ge[1]/md",
+   "parent": "idx_s2",
+   "view": "REAL_CLOSED_DESCENDANT",
+   "reasons": [],
+   "directory": "physical/ref_tile/hidx_meta_static_1015c/views/hidx_meta_w25_d123_r0",
+   "local_origin": {
+    "x": 2592.0,
+    "y": 2894.4,
+    "orient": "R0"
+   },
+   "outline": {
+    "w": 68.04,
+    "h": 68.04
+   },
+   "parent_and_die_qualified": false,
+   "scope": "independent routed descendant; full scorer packing, seams, clock and die timing remain OPEN"
+  },
+  "idx_s2_meta2": {
+   "master": "hidx_meta_w25_d123_r0",
+   "instance": "hb_idx/index/parent/gscore[2]/scorer/ge[2]/md",
+   "parent": "idx_s2",
+   "view": "REAL_CLOSED_DESCENDANT",
+   "reasons": [],
+   "directory": "physical/ref_tile/hidx_meta_static_1015c/views/hidx_meta_w25_d123_r0",
+   "local_origin": {
+    "x": 2808.0,
+    "y": 2894.4,
+    "orient": "R0"
+   },
+   "outline": {
+    "w": 68.04,
+    "h": 68.04
+   },
+   "parent_and_die_qualified": false,
+   "scope": "independent routed descendant; full scorer packing, seams, clock and die timing remain OPEN"
+  },
+  "idx_s2_meta3": {
+   "master": "hidx_meta_w25_d123_r0",
+   "instance": "hb_idx/index/parent/gscore[2]/scorer/ge[3]/md",
+   "parent": "idx_s2",
+   "view": "REAL_CLOSED_DESCENDANT",
+   "reasons": [],
+   "directory": "physical/ref_tile/hidx_meta_static_1015c/views/hidx_meta_w25_d123_r0",
+   "local_origin": {
+    "x": 3024.0,
+    "y": 2894.4,
+    "orient": "R0"
+   },
+   "outline": {
+    "w": 68.04,
+    "h": 68.04
+   },
+   "parent_and_die_qualified": false,
+   "scope": "independent routed descendant; full scorer packing, seams, clock and die timing remain OPEN"
+  },
+  "idx_s3_meta0": {
+   "master": "hidx_meta_w25_d123_r0",
+   "instance": "hb_idx/index/parent/gscore[3]/scorer/ge[0]/md",
+   "parent": "idx_s3",
+   "view": "REAL_CLOSED_DESCENDANT",
+   "reasons": [],
+   "directory": "physical/ref_tile/hidx_meta_static_1015c/views/hidx_meta_w25_d123_r0",
+   "local_origin": {
+    "x": 2376.0,
+    "y": 2894.4,
+    "orient": "R0"
+   },
+   "outline": {
+    "w": 68.04,
+    "h": 68.04
+   },
+   "parent_and_die_qualified": false,
+   "scope": "independent routed descendant; full scorer packing, seams, clock and die timing remain OPEN"
+  },
+  "idx_s3_meta1": {
+   "master": "hidx_meta_w25_d123_r0",
+   "instance": "hb_idx/index/parent/gscore[3]/scorer/ge[1]/md",
+   "parent": "idx_s3",
+   "view": "REAL_CLOSED_DESCENDANT",
+   "reasons": [],
+   "directory": "physical/ref_tile/hidx_meta_static_1015c/views/hidx_meta_w25_d123_r0",
+   "local_origin": {
+    "x": 2592.0,
+    "y": 2894.4,
+    "orient": "R0"
+   },
+   "outline": {
+    "w": 68.04,
+    "h": 68.04
+   },
+   "parent_and_die_qualified": false,
+   "scope": "independent routed descendant; full scorer packing, seams, clock and die timing remain OPEN"
+  },
+  "idx_s3_meta2": {
+   "master": "hidx_meta_w25_d123_r0",
+   "instance": "hb_idx/index/parent/gscore[3]/scorer/ge[2]/md",
+   "parent": "idx_s3",
+   "view": "REAL_CLOSED_DESCENDANT",
+   "reasons": [],
+   "directory": "physical/ref_tile/hidx_meta_static_1015c/views/hidx_meta_w25_d123_r0",
+   "local_origin": {
+    "x": 2808.0,
+    "y": 2894.4,
+    "orient": "R0"
+   },
+   "outline": {
+    "w": 68.04,
+    "h": 68.04
+   },
+   "parent_and_die_qualified": false,
+   "scope": "independent routed descendant; full scorer packing, seams, clock and die timing remain OPEN"
+  },
+  "idx_s3_meta3": {
+   "master": "hidx_meta_w25_d123_r0",
+   "instance": "hb_idx/index/parent/gscore[3]/scorer/ge[3]/md",
+   "parent": "idx_s3",
+   "view": "REAL_CLOSED_DESCENDANT",
+   "reasons": [],
+   "directory": "physical/ref_tile/hidx_meta_static_1015c/views/hidx_meta_w25_d123_r0",
+   "local_origin": {
+    "x": 3024.0,
+    "y": 2894.4,
+    "orient": "R0"
+   },
+   "outline": {
+    "w": 68.04,
+    "h": 68.04
+   },
+   "parent_and_die_qualified": false,
+   "scope": "independent routed descendant; full scorer packing, seams, clock and die timing remain OPEN"
+  }
+ },
+ "descendant_summary": {
+  "REAL_CLOSED_DESCENDANT": 16
+ }
+}

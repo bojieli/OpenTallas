@@ -1,0 +1,1 @@
+PASS HBM_SM_ATTENTION {"shape": "ds128", "native_column": true, "seed": 1015, "mut": null, "T_window": 128, "T_compressed": 0, "pv_run_chunks": 1, "ops": 2, "passed": 2, "wall_s": 104.4, "qk_span_max": 152, "qk_lines_max": 16, "pv_span_max": 178, "pv_lines_max": 32, "verdict": "PASS"}

@@ -16,7 +16,7 @@
   149.04
  ],
  "why": "spec outline",
- "std_area_um2": 369.02,
+ "std_area_um2": null,
  "layer_contract": {
   "children": {},
   "pg_layer": "M5",
@@ -127,14 +127,7 @@
    "offtrack": 0
   }
  ],
- "findings": [
-  [
-   "WARN",
-   "util",
-   "utilisation 44% outside 45%-60% (std 369 + macro 23349 in core 53617 um2)",
-   "resize the outline to util 0.50-0.55 (drop 'outline', set util)"
-  ]
- ],
+ "findings": [],
  "referenced": [
   "rtl/hbm_accel/generic/adapters/static_su/data_store/ot_hbm_su_static_pinned_bank.sv",
   "rtl/hbm_accel/generic/adapters/static_su/data_store/ot_hbm_su_static_data_store.sv",

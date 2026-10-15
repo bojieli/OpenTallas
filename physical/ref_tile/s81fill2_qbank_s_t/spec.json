@@ -1,0 +1,123 @@
+{
+ "name": "s81fill2_qbank_s_t",
+ "top": "dsfd_qbank_S",
+ "kind": "tile",
+ "sources": [
+  "rtl/dsrom_sys/s81_fill2/gen19b/dsfd_qbank_S.sv"
+ ],
+ "params": {},
+ "clock_port": "ck",
+ "reset_ports": [
+  "rs"
+ ],
+ "outline": {
+  "w": 60.48,
+  "h": 25.92,
+  "exact": true
+ },
+ "layer_cap": "M5",
+ "pins": {
+  "N": [
+   "o_cfg",
+   "o_go",
+   "o_x0",
+   "o_x1"
+  ],
+  "S": [
+   "i_cfg",
+   "i_go",
+   "i_x0",
+   "i_x1"
+  ],
+  "W": [
+   "ck",
+   "rs"
+  ]
+ },
+ "io_tcl": "physical/s81_die_pins/fill2_gen19b/dsfd_qbank_S_t.tcl",
+ "recipe": 2,
+ "outhold": false,
+ "route": {
+  "pd": 0.5,
+  "threads": 4,
+  "peak_ram_gb": 8,
+  "pin_h": "M4",
+  "pin_v": "M3 M5",
+  "m5_pg_pitch": 2.7,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "slot_change_request": {
+  "reason": "depth-only growth: 604 relay flops + recipe-2 input hold cells (~0.6 um2/bit at util 0.55) exceed the generator slot core; width and the data-face order kept",
+  "outline": [
+   60.48,
+   25.92
+  ],
+  "generator_slot": [
+   60.456,
+   6.456
+  ]
+ },
+ "structural_change": "First hardening of the S81 die master dsfd_qbank_S (1898 die instances, q-bank relay row S, B candidate 60.48 x 25.92: the A gate (17.28) warned the recipe-2 pin-flop columns of both 604-pin faces need 2 x 8.57 um of a 13-um core (GRT-0116 class); this depth leaves a channel between them); real RTL rtl/dsrom_sys/s81_fill2/gen19b/dsfd_qbank_S.sv (exact lockstep gate rtl/v41die/test/tb_ot_s81_cfg7_seq.sv); 0 cycles; pins = GEN19b construction_pass2 (EPYC4 s81-die-r10/gen19b, pins.lef) order with the shared fixes: even per-face spread (generator packed W-face M4 pins at 0.048 um = 20.8 b/um/layer > 12), clock at face centre, no output hold pads; outline 60.456x6.456 -> 60.48x25.92 (2.16 lattice). Face report {\"N\": {\"pins\": 604, \"pitch_um\": 0.093, \"b_per_um\": 10.75, \"cut\": 0.516, \"alt_M3_M5\": true, \"b_per_um_per_layer\": 5.38}, \"S\": {\"pins\": 604, \"pitch_um\": 0.093, \"b_per_um\": 10.75, \"cut\": 0.516, \"alt_M3_M5\": true, \"b_per_um_per_layer\": 5.38}, \"W\": {\"pins\": 2, \"pitch_um\": 21.6, \"b_per_um\": 0.09, \"cut\": 0.004}}.",
+ "job": {
+  "owner": "Claude:fill-s81-2",
+  "branch": "claude/el1015-fill-s2-1015",
+  "tag": "g1",
+  "purpose": "S81 FILL-S2: die master dsfd_qbank_S (1898 replicas, hardened once): exact lockstep bench + failing mutant; recipe 2, M5 cap, GEN19b pins evenly spread",
+  "views_to": "physical/ref_tile/s81fill2_qbank_s_t/views",
+  "record_to": "results/rtl/ref_tile/s81fill2_qbank_s_t",
+  "extra_paths": [
+   "rtl/dsrom_sys/s81_fill2/gen19b",
+   "tools/s81/fill2_relay_bench.py",
+   "physical/s81_die_pins/fill2_gen19b"
+  ],
+  "benches": [
+   {
+    "name": "relay_exact",
+    "cmd": "python3 tools/s81/fill2_relay_bench.py rtl/dsrom_sys/s81_fill2/gen19b/dsfd_qbank_S.sv dsfd_qbank_S pass {RUN}/bench_pass",
+    "expect": "pass",
+    "pass_regex": "RELAY BENCH PASS pass",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "payload_bit_mutant",
+    "cmd": "python3 tools/s81/fill2_relay_bench.py rtl/dsrom_sys/s81_fill2/gen19b/dsfd_qbank_S.sv dsfd_qbank_S mut_payload {RUN}/bench_mut_payload",
+    "expect": "fail",
+    "fail_regex": "RELAY BENCH FAIL mut_payload",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "no_reset_mutant",
+    "cmd": "python3 tools/s81/fill2_relay_bench.py rtl/dsrom_sys/s81_fill2/gen19b/dsfd_qbank_S.sv dsfd_qbank_S mut_noreset {RUN}/bench_mut_noreset",
+    "expect": "fail",
+    "fail_regex": "RELAY BENCH FAIL mut_noreset",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ]
+ },
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ }
+}

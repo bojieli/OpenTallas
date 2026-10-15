@@ -1,12 +1,15 @@
 {
+ "scope": "component spans measured; first access, dispatch, publish and cross-SM merge modeled",
+ "native_sm_integration_qualified": false,
+ "physical_closure_qualified": false,
  "measured_comp": {
   "640": {
-   "qk": 384,
-   "pv": 380
+   "qk": 288,
+   "pv": 386
   },
   "128": {
-   "qk": 146,
-   "pv": 172
+   "qk": 152,
+   "pv": 178
   }
  },
  "pv_nodes": {
@@ -22,47 +25,88 @@
    "128": 79
   }
  },
+ "throughput_qualified": false,
+ "rate_scope": "conditional computation estimate at component8/11 line cadence; actual32SM PC service and KV4 byte expansion not priced",
+ "kv_layout": {
+  "kv8_row_bytes": 528,
+  "kv4_row_bytes": 288,
+  "measured_lines_busiest": {
+   "qk": 50,
+   "pv": 125
+  },
+  "note": "spans include the line stream at the bench cadence (8 lines / 11 cycles per SM); actual 32-SM PC service cadence not yet qualified"
+ },
  "exposed": {
   "per_record": {
    "128": {
-    "qk": 405,
-    "pv": 574,
+    "qk": 411,
+    "pv": 580,
     "a_price": 147.144
    },
    "640": {
-    "qk": 643,
-    "pv": 802,
+    "qk": 547,
+    "pv": 808,
     "a_price": 339.144
    }
   },
-  "delta_cycles": 30504.5,
-  "token_cycles": 596073.6,
-  "tok_s": 2013.2,
-  "vs_A_price": -0.0512,
-  "vs_A_feasible": -0.0248
+  "delta_cycles": 27108.5,
+  "token_cycles": 592677.6,
+  "tok_s": 2024.7,
+  "vs_A_price": -0.0457,
+  "vs_A_feasible": -0.0192
  },
  "prefetch": {
   "per_record": {
    "128": {
-    "qk": 301,
-    "pv": 470,
+    "qk": 307,
+    "pv": 476,
     "a_price": 147.144
    },
    "640": {
-    "qk": 539,
-    "pv": 698,
+    "qk": 443,
+    "pv": 704,
     "a_price": 339.144
    }
   },
-  "delta_cycles": 22184.5,
-  "token_cycles": 587753.6,
-  "tok_s": 2041.7,
-  "vs_A_price": -0.0377,
-  "vs_A_feasible": -0.011
+  "delta_cycles": 18788.5,
+  "token_cycles": 584357.6,
+  "tok_s": 2053.5,
+  "vs_A_price": -0.0322,
+  "vs_A_feasible": -0.0052
  },
  "extra_kv_writes": {
   "stores_per_token": 240,
   "dma_busy_added": 7200,
-  "critical_path_upper_bound_tok_s": 1989.1
+  "critical_path_upper_bound_tok_s": 2000.4
+ },
+ "qwen": {
+  "measured": {
+   "qk_op": 614,
+   "pv_op": 346
+  },
+  "streams_published_exposed": {
+   "layer": 5438.0,
+   "a_layer": 2640.4,
+   "tok_s": 883.1,
+   "vs_A": -0.0741
+  },
+  "streams_published_prefetch": {
+   "layer": 5022.0,
+   "a_layer": 2640.4,
+   "tok_s": 892.9,
+   "vs_A": -0.0638
+  },
+  "smerge_exposed": {
+   "layer": 4222.0,
+   "a_layer": 2640.4,
+   "tok_s": 912.5,
+   "vs_A": -0.0433
+  },
+  "smerge_prefetch": {
+   "layer": 3806.0,
+   "a_layer": 2640.4,
+   "tok_s": 923.0,
+   "vs_A": -0.0323
+  }
  }
 }

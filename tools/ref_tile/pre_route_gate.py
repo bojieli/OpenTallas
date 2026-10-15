@@ -427,6 +427,26 @@ def stale_multi_root_sdcs(kd: Path) -> list:
     return out
 
 
+
+def stale_native_cts_sdcs(kd: Path, spec: dict) -> list:
+    """Require operational current generated policy, only for native leaf CTS kits.
+
+    These modes prohibit custom SDC hooks. Compare the complete generated SDCs,
+    including stage flags, executable procedure and its invocation: a log marker,
+    commented correction, no-op, or later re-propagation is not sufficient proof.
+    This local/new-submit check never walks accepted jobs or changes frozen SDCs.
+    """
+    if not RT.clock_entry_constraints.native_leaf(spec):
+        return []
+    expected = {
+        "clock.sdc": RT.gen_sdc(spec, float(spec.get("route", {}).get("period_ps", 770))),
+        "clock_entry.sdc": "set ::ot_ce_require_wire 1\n" + RT.clock_entry_constraints.generate(spec, RT.ROOT),
+        "signoff.sdc": RT.gen_signoff(spec, spec.get("refglob", "*"), ",".join(spec.get("inter", [])) or "none_*"),
+    }
+    return [name for name, text in expected.items()
+            if not (kd / name).is_file() or (kd / name).read_bytes() != text.encode()]
+
+
 def check_kit(g: Gate, kd: Path, job: dict | None, commit=None):
     stale = stale_multi_root_sdcs(kd)
     if stale:
@@ -439,6 +459,14 @@ def check_kit(g: Gate, kd: Path, job: dict | None, commit=None):
     except RT.SpecError as ex:
         g.add("FAIL", "spec", str(ex), "fix the tile spec")
         return spec
+    stale_native = stale_native_cts_sdcs(kd, spec)
+    if stale_native:
+        g.add("FAIL", "native_cts_sdc", f"{stale_native} differ from current generated native CTS stage policy "
+              "(4af58769b): declared standard CTS roots must be ideal before CTS, while raw hard-entry roots "
+              "and require-wire/postCTS checks retain actual propagation; a marker alone is insufficient",
+              "rebase on main; run python3 tools/ref_tile/ref_tile.py gen <this kit's spec.json>; "
+              "review unchanged RTL/pins/periods, commit regenerated kit, then run a fresh source-bound --cts gate "
+              "and submit a new normal successor; preserve original accepted/frozen jobs")
     for sev, chk, msg, fix in fresh["findings"]:
         g.add(sev, chk, msg, fix)
     fp = json.loads((kd / "floorplan.json").read_text())
@@ -785,13 +813,25 @@ def remote(g: Gate, kd: Path, spec: dict, host: str, cap: int, mem: int, cts: bo
     data = ship_tar(dirs, overlay_payloads, {f["path"]: f["mode"] for f in route_plan["files"]})
     budget = gate_disk_budget(spec, data, disk)
     auto = host == "auto"
+    threads = int(spec.get("route", {}).get("threads", 8))
     # Probe the actual scratch filesystem, not / (the two can be different).
     # This parent already exists before the per-run directory is uploaded.
-    pick_cmd = ["ot-run", "--mem", str(mem), "--disk", str(budget["pick_gb"]),
+    pick_cmd = ["ot-run", "--mem", str(mem), "--threads", str(threads), "--disk", str(budget["pick_gb"]),
                 "--dir", "/srv/opentallas-scratch", "--pick"]
     if not auto:
         pick_cmd += ["--hosts", host]
-    picked = subprocess.run(pick_cmd, capture_output=True, text=True)
+    admission_wait = False
+    while True:
+        picked = subprocess.run(pick_cmd, capture_output=True, text=True)
+        if picked.returncode != 75:
+            break
+        # The read-only picker cannot start or reserve anything. A CPU load
+        # hold is capacity waiting, not a hardware/source gate failure; retain
+        # this exact archive and retry before uploading to any chosen host.
+        if not admission_wait:
+            g.add("INFO", "admission_wait", "fleet load hold; preserving the exact source archive and waiting for an eligible host")
+        admission_wait = True
+        time.sleep(60)
     if picked.returncode or not picked.stdout.strip():
         g.add("FAIL", "remote", "fleet admission could not choose a host: " + picked.stderr[-500:], "read ot-run --status")
         return
@@ -832,7 +872,7 @@ def remote(g: Gate, kd: Path, spec: dict, host: str, cap: int, mem: int, cts: bo
         return
     # Exactly one ot-heavy reservation, inside ot-run; never nest guards.
     # Recheck after upload, reserving enough for extraction as well as outputs.
-    p = subprocess.run(["ot-run", "--mem", str(mem), "--disk", str(budget["runtime_gb"]), "--hosts", host,
+    p = subprocess.run(["ot-run", "--mem", str(mem), "--threads", str(threads), "--disk", str(budget["runtime_gb"]), "--hosts", host,
                         "--dir", str(Path(R).parent), "--", "bash", script],
                        stdin=subprocess.DEVNULL, capture_output=True)
     out = p.stdout.decode(errors="replace")

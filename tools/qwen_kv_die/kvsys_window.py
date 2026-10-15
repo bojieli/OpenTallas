@@ -159,12 +159,14 @@ def main(argv=None):
     ap.add_argument('--split', action='store_true')
     ap.add_argument('--host-v14', action='store_true', help='kvsys v1.4 geometry (HOST slices, static D2D end)')
     ap.add_argument('--host-north', action='store_true', help='kvsys v1.4.1: HOST root core below the static D2D end')
+    ap.add_argument('--host-trees', action='store_true', help='kvsys v1.4.2: HOST reset / boot relay trees')
     ap.add_argument('--fine', type=float, default=260.0)
     ap.add_argument('--coarse', type=float, default=1040.0)
     ap.add_argument('--bundle-centre', action='store_true', help='the old screen: every bus from one bundle-centre point')
     ap.add_argument('--out', type=Path, required=True)
     a = ap.parse_args(argv)
-    m = K.build(kv_wq_leaves=True, kv_wq_binary=True, kv_wq_leaf_s=True, kv_wq_wide=True, kv_wq_mirror=True, split=a.split, host_v14=a.host_v14, host_north=getattr(a, 'host_north', False) or None)
+    m = K.build(kv_wq_leaves=True, kv_wq_binary=True, kv_wq_leaf_s=True, kv_wq_wide=True, kv_wq_mirror=True, split=a.split, host_v14=a.host_v14, host_north=getattr(a, 'host_north', False) or None,
+                host_trees=getattr(a, 'host_trees', False) or None)
     M = K.masters(m, 1)
     rec = dict(schema='opentallas.qwen_kvsys_window.v1', split=a.split, die_um=[m['die']['w'], m['die']['h']],
                rule='L-routes between drawn pins, 50/50 H-V / V-H; capacity 9.375 tr/um over blocks, 31.5 in channels',

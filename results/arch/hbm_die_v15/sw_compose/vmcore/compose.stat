@@ -1,0 +1,579 @@
+
+17. Printing statistics.
+
+=== hbm_v15_sw_vmcore ===
+
+        +----------Local Count, excluding submodules.
+        | 
+      140 wires
+    72589 wire bits
+      140 public wires
+    72589 public wire bits
+       53 ports
+    27340 port bits
+       10 submodules
+        1   hfd_hgi_vm_calendar_SW__calendar_sw2
+        1   hfd_hgi_vms_static_SW__vms_sw2_c
+        1   ot_hbm_argmax_static__argmax
+        1   ot_hbm_su_static_vm_ports__su_q0n4b
+        1   ot_hbm_svc_static_vm_delivery__delivery
+        1   ot_hbm_vm_lg_static_split__lg_10_7
+        1   ot_hbm_vm_lg_static_split__lg_14_11
+        1   ot_hbm_vm_lg_static_split__lg_18_15
+        1   ot_hgi_dma_back_static__dma_back0
+        1   ot_vms_status4_static__status4
+
+=== ot_hbm_argmax_static__argmax ===
+
+        +----------Local Count, excluding submodules.
+        | 
+    34444 wires
+    85881 wire bits
+    34444 public wires
+    85881 public wire bits
+       22 ports
+     3436 port bits
+    47111 cells
+      267   A2O1A1Ixp33_ASAP7_75t_R
+       39   A2O1A1O1Ixp25_ASAP7_75t_R
+      434   AND2x2_ASAP7_75t_R
+      324   AND3x1_ASAP7_75t_R
+       92   AND4x1_ASAP7_75t_R
+       16   AND5x1_ASAP7_75t_R
+        1   AO211x2_ASAP7_75t_R
+     1886   AO21x1_ASAP7_75t_R
+        1   AO221x1_ASAP7_75t_R
+       73   AO222x2_ASAP7_75t_R
+      108   AO22x1_ASAP7_75t_R
+       28   AO32x1_ASAP7_75t_R
+      252   AOI211xp5_ASAP7_75t_R
+     2263   AOI21xp33_ASAP7_75t_R
+      374   AOI221xp5_ASAP7_75t_R
+        3   AOI222xp33_ASAP7_75t_R
+      771   AOI22xp33_ASAP7_75t_R
+       34   AOI311xp33_ASAP7_75t_R
+      153   AOI31xp33_ASAP7_75t_R
+       28   AOI32xp33_ASAP7_75t_R
+     4675   DFFASRHQNx1_ASAP7_75t_R
+     6713   DFFHQNx1_ASAP7_75t_R
+       48   HB1xp67_ASAP7_75t_R
+     9252   INVx1_ASAP7_75t_R
+      307   MAJIxp5_ASAP7_75t_R
+      118   MAJx2_ASAP7_75t_R
+     3487   NAND2xp33_ASAP7_75t_R
+      272   NAND3xp33_ASAP7_75t_R
+      155   NAND4xp25_ASAP7_75t_R
+      145   NAND5xp2_ASAP7_75t_R
+     4849   NOR2xp33_ASAP7_75t_R
+      518   NOR3xp33_ASAP7_75t_R
+      590   NOR4xp25_ASAP7_75t_R
+      125   NOR5xp2_ASAP7_75t_R
+      551   O2A1O1Ixp33_ASAP7_75t_R
+       51   OA211x2_ASAP7_75t_R
+      182   OA21x2_ASAP7_75t_R
+       28   OA22x2_ASAP7_75t_R
+        2   OA33x2_ASAP7_75t_R
+      301   OAI211xp5_ASAP7_75t_R
+     3991   OAI21xp33_ASAP7_75t_R
+      157   OAI221xp5_ASAP7_75t_R
+        5   OAI222xp33_ASAP7_75t_R
+      552   OAI22xp33_ASAP7_75t_R
+       31   OAI311xp33_ASAP7_75t_R
+       93   OAI31xp33_ASAP7_75t_R
+        9   OAI321xp33_ASAP7_75t_R
+       70   OAI32xp33_ASAP7_75t_R
+        5   OAI33xp33_ASAP7_75t_R
+     1326   OR2x2_ASAP7_75t_R
+       66   OR3x1_ASAP7_75t_R
+       59   OR4x1_ASAP7_75t_R
+       10   OR5x1_ASAP7_75t_R
+      918   XNOR2xp5_ASAP7_75t_R
+      303   XOR2xp5_ASAP7_75t_R
+
+=== ot_hbm_su_static_vm_ports__su_q0n4b ===
+
+        +----------Local Count, excluding submodules.
+        | 
+      481 wires
+    18342 wire bits
+      481 public wires
+    18342 public wire bits
+       11 ports
+     8905 port bits
+      383 cells
+        2   AND2x2_ASAP7_75t_R
+        2   AO221x1_ASAP7_75t_R
+        4   AOI21xp33_ASAP7_75t_R
+        4   AOI31xp33_ASAP7_75t_R
+      160   DFFASRHQNx1_ASAP7_75t_R
+      148   INVx1_ASAP7_75t_R
+       11   NAND2xp33_ASAP7_75t_R
+        5   NAND3xp33_ASAP7_75t_R
+        6   NAND4xp25_ASAP7_75t_R
+        2   NOR2xp33_ASAP7_75t_R
+        5   NOR4xp25_ASAP7_75t_R
+        2   OA21x2_ASAP7_75t_R
+        9   OAI21xp33_ASAP7_75t_R
+        2   OAI22xp33_ASAP7_75t_R
+        3   OAI31xp33_ASAP7_75t_R
+        1   OR2x2_ASAP7_75t_R
+        6   OR4x1_ASAP7_75t_R
+        5   OR5x1_ASAP7_75t_R
+        6   XOR2xp5_ASAP7_75t_R
+
+=== ot_hgi_dma_back_static__dma_back0 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+    43170 wires
+    58342 wire bits
+    43170 public wires
+    58342 public wire bits
+       27 ports
+     4945 port bits
+    50187 cells
+      246   A2O1A1Ixp33_ASAP7_75t_R
+      130   A2O1A1O1Ixp25_ASAP7_75t_R
+      312   AND2x2_ASAP7_75t_R
+      156   AND3x1_ASAP7_75t_R
+       54   AND4x1_ASAP7_75t_R
+       10   AND5x1_ASAP7_75t_R
+     1891   AO21x1_ASAP7_75t_R
+        1   AO221x1_ASAP7_75t_R
+        2   AO222x2_ASAP7_75t_R
+        6   AO22x1_ASAP7_75t_R
+        8   AO32x1_ASAP7_75t_R
+      827   AOI211xp5_ASAP7_75t_R
+     2450   AOI21xp33_ASAP7_75t_R
+       44   AOI221xp5_ASAP7_75t_R
+        8   AOI222xp33_ASAP7_75t_R
+      290   AOI22xp33_ASAP7_75t_R
+       26   AOI311xp33_ASAP7_75t_R
+      196   AOI31xp33_ASAP7_75t_R
+        2   AOI321xp33_ASAP7_75t_R
+       63   AOI32xp33_ASAP7_75t_R
+      251   DFFASRHQNx1_ASAP7_75t_R
+    12281   DFFHQNx1_ASAP7_75t_R
+        3   HB1xp67_ASAP7_75t_R
+     9380   INVx1_ASAP7_75t_R
+      780   MAJIxp5_ASAP7_75t_R
+      288   MAJx2_ASAP7_75t_R
+     3515   NAND2xp33_ASAP7_75t_R
+      208   NAND3xp33_ASAP7_75t_R
+       70   NAND4xp25_ASAP7_75t_R
+       43   NAND5xp2_ASAP7_75t_R
+     4578   NOR2xp33_ASAP7_75t_R
+      531   NOR3xp33_ASAP7_75t_R
+      101   NOR4xp25_ASAP7_75t_R
+       31   NOR5xp2_ASAP7_75t_R
+      694   O2A1O1Ixp33_ASAP7_75t_R
+       41   OA211x2_ASAP7_75t_R
+      130   OA21x2_ASAP7_75t_R
+       43   OA22x2_ASAP7_75t_R
+        1   OA33x2_ASAP7_75t_R
+      163   OAI211xp5_ASAP7_75t_R
+     5334   OAI21xp33_ASAP7_75t_R
+       24   OAI221xp5_ASAP7_75t_R
+      101   OAI22xp33_ASAP7_75t_R
+        7   OAI311xp33_ASAP7_75t_R
+       59   OAI31xp33_ASAP7_75t_R
+        3   OAI321xp33_ASAP7_75t_R
+       10   OAI32xp33_ASAP7_75t_R
+      837   OR2x2_ASAP7_75t_R
+      167   OR3x1_ASAP7_75t_R
+       41   OR4x1_ASAP7_75t_R
+       11   OR5x1_ASAP7_75t_R
+     2361   XNOR2xp5_ASAP7_75t_R
+     1370   XOR2xp5_ASAP7_75t_R
+        8   ot_sram_1r1w_128x256_m1_r2c2
+
+=== ot_vms_status4_static__status4 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+      346 wires
+      556 wire bits
+      346 public wires
+      556 public wire bits
+        4 ports
+       97 port bits
+      409 cells
+        7   A2O1A1Ixp33_ASAP7_75t_R
+        5   A2O1A1O1Ixp25_ASAP7_75t_R
+        9   AND2x2_ASAP7_75t_R
+        3   AND3x1_ASAP7_75t_R
+        2   AO21x1_ASAP7_75t_R
+        1   AOI211xp5_ASAP7_75t_R
+       16   AOI21xp33_ASAP7_75t_R
+        3   AOI311xp33_ASAP7_75t_R
+        3   AOI31xp33_ASAP7_75t_R
+       24   DFFASRHQNx1_ASAP7_75t_R
+      110   DFFHQNx1_ASAP7_75t_R
+       26   INVx1_ASAP7_75t_R
+        4   MAJIxp5_ASAP7_75t_R
+       42   NAND2xp33_ASAP7_75t_R
+        3   NAND4xp25_ASAP7_75t_R
+       40   NOR2xp33_ASAP7_75t_R
+        2   NOR3xp33_ASAP7_75t_R
+        7   O2A1O1Ixp33_ASAP7_75t_R
+        3   OA21x2_ASAP7_75t_R
+        3   OAI211xp5_ASAP7_75t_R
+        4   OAI21xp33_ASAP7_75t_R
+        1   OAI221xp5_ASAP7_75t_R
+        3   OAI311xp33_ASAP7_75t_R
+        2   OAI31xp33_ASAP7_75t_R
+       20   OR2x2_ASAP7_75t_R
+        2   OR3x1_ASAP7_75t_R
+       45   XNOR2xp5_ASAP7_75t_R
+       19   XOR2xp5_ASAP7_75t_R
+
+=== ot_hbm_vm_lg_static_split__lg_18_15 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+    19328 wires
+    57136 wire bits
+    19328 public wires
+    57136 public wire bits
+       17 ports
+    13377 port bits
+    25599 cells
+       16   AND2x2_ASAP7_75t_R
+       32   AOI21xp33_ASAP7_75t_R
+        7   AOI221xp5_ASAP7_75t_R
+        1   AOI22xp33_ASAP7_75t_R
+      384   DFFASRHQNx1_ASAP7_75t_R
+    11200   DFFHQNx1_ASAP7_75t_R
+     9168   INVx1_ASAP7_75t_R
+     2368   NAND2xp33_ASAP7_75t_R
+        8   NAND3xp33_ASAP7_75t_R
+       46   NOR2xp33_ASAP7_75t_R
+     2368   OAI21xp33_ASAP7_75t_R
+        1   OAI22xp33_ASAP7_75t_R
+
+=== ot_hbm_vm_lg_static_split__lg_14_11 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+    19201 wires
+    57009 wire bits
+    19201 public wires
+    57009 public wire bits
+       17 ports
+    13377 port bits
+    25472 cells
+       16   AND2x2_ASAP7_75t_R
+       32   AOI21xp33_ASAP7_75t_R
+        8   AOI221xp5_ASAP7_75t_R
+      320   DFFASRHQNx1_ASAP7_75t_R
+    11200   DFFHQNx1_ASAP7_75t_R
+     9104   INVx1_ASAP7_75t_R
+     2368   NAND2xp33_ASAP7_75t_R
+        8   NAND3xp33_ASAP7_75t_R
+       48   NOR2xp33_ASAP7_75t_R
+     2368   OAI21xp33_ASAP7_75t_R
+
+=== ot_hbm_vm_lg_static_split__lg_10_7 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+    19072 wires
+    56880 wire bits
+    19072 public wires
+    56880 public wire bits
+       17 ports
+    13377 port bits
+    25343 cells
+       16   AND2x2_ASAP7_75t_R
+       32   AOI21xp33_ASAP7_75t_R
+        7   AOI221xp5_ASAP7_75t_R
+        1   AOI22xp33_ASAP7_75t_R
+      256   DFFASRHQNx1_ASAP7_75t_R
+    11200   DFFHQNx1_ASAP7_75t_R
+     9040   INVx1_ASAP7_75t_R
+     2368   NAND2xp33_ASAP7_75t_R
+        8   NAND3xp33_ASAP7_75t_R
+       46   NOR2xp33_ASAP7_75t_R
+     2368   OAI21xp33_ASAP7_75t_R
+        1   OAI22xp33_ASAP7_75t_R
+
+=== hfd_hgi_vm_calendar_SW__calendar_sw2 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+     1611 wires
+     3396 wire bits
+     1611 public wires
+     3396 public wire bits
+       31 ports
+      515 port bits
+     2147 cells
+       10   A2O1A1Ixp33_ASAP7_75t_R
+        2   A2O1A1O1Ixp25_ASAP7_75t_R
+        3   AND2x2_ASAP7_75t_R
+        3   AND3x1_ASAP7_75t_R
+       11   AND4x1_ASAP7_75t_R
+        1   AND5x1_ASAP7_75t_R
+       17   AO21x1_ASAP7_75t_R
+        1   AOI211xp5_ASAP7_75t_R
+       36   AOI21xp33_ASAP7_75t_R
+        4   AOI221xp5_ASAP7_75t_R
+        5   AOI22xp33_ASAP7_75t_R
+        5   AOI31xp33_ASAP7_75t_R
+       90   DFFASRHQNx1_ASAP7_75t_R
+      847   DFFHQNx1_ASAP7_75t_R
+      647   INVx1_ASAP7_75t_R
+        1   MAJIxp5_ASAP7_75t_R
+       48   NAND2xp33_ASAP7_75t_R
+        8   NAND3xp33_ASAP7_75t_R
+       14   NAND4xp25_ASAP7_75t_R
+       13   NAND5xp2_ASAP7_75t_R
+      221   NOR2xp33_ASAP7_75t_R
+       12   NOR3xp33_ASAP7_75t_R
+        6   NOR4xp25_ASAP7_75t_R
+        9   NOR5xp2_ASAP7_75t_R
+        8   O2A1O1Ixp33_ASAP7_75t_R
+        1   OA211x2_ASAP7_75t_R
+        3   OA21x2_ASAP7_75t_R
+        7   OAI211xp5_ASAP7_75t_R
+       24   OAI21xp33_ASAP7_75t_R
+       11   OAI221xp5_ASAP7_75t_R
+       15   OAI22xp33_ASAP7_75t_R
+        8   OAI31xp33_ASAP7_75t_R
+        7   OAI32xp33_ASAP7_75t_R
+        7   OR2x2_ASAP7_75t_R
+        5   OR3x1_ASAP7_75t_R
+        5   OR4x1_ASAP7_75t_R
+        3   OR5x1_ASAP7_75t_R
+       18   XNOR2xp5_ASAP7_75t_R
+       10   XOR2xp5_ASAP7_75t_R
+        1   ot_sram_1r1w_1024x256_m2_r2c2
+
+=== ot_hbm_svc_static_vm_delivery__delivery ===
+
+        +----------Local Count, excluding submodules.
+        | 
+    34678 wires
+    67498 wire bits
+    34678 public wires
+    67498 public wire bits
+       18 ports
+    11266 port bits
+    36778 cells
+      134   A2O1A1Ixp33_ASAP7_75t_R
+       52   A2O1A1O1Ixp25_ASAP7_75t_R
+     2109   AND2x2_ASAP7_75t_R
+      409   AND3x1_ASAP7_75t_R
+      453   AND4x1_ASAP7_75t_R
+        4   AND5x1_ASAP7_75t_R
+        3   AO211x2_ASAP7_75t_R
+     3938   AO21x1_ASAP7_75t_R
+       11   AO221x1_ASAP7_75t_R
+      193   AO22x1_ASAP7_75t_R
+     2234   AOI211xp5_ASAP7_75t_R
+      611   AOI21xp33_ASAP7_75t_R
+       93   AOI221xp5_ASAP7_75t_R
+        2   AOI222xp33_ASAP7_75t_R
+       42   AOI22xp33_ASAP7_75t_R
+       40   AOI311xp33_ASAP7_75t_R
+     2141   AOI31xp33_ASAP7_75t_R
+       12   AOI321xp33_ASAP7_75t_R
+        3   AOI32xp33_ASAP7_75t_R
+     4199   DFFASRHQNx1_ASAP7_75t_R
+        3   HB1xp67_ASAP7_75t_R
+      830   INVx1_ASAP7_75t_R
+     4545   NAND2xp33_ASAP7_75t_R
+      344   NAND3xp33_ASAP7_75t_R
+      387   NAND4xp25_ASAP7_75t_R
+       38   NAND5xp2_ASAP7_75t_R
+     5251   NOR2xp33_ASAP7_75t_R
+     3052   NOR3xp33_ASAP7_75t_R
+     1508   NOR4xp25_ASAP7_75t_R
+      416   NOR5xp2_ASAP7_75t_R
+      107   O2A1O1Ixp33_ASAP7_75t_R
+       63   OA211x2_ASAP7_75t_R
+      101   OA21x2_ASAP7_75t_R
+        2   OA221x2_ASAP7_75t_R
+       89   OA222x2_ASAP7_75t_R
+       42   OA22x2_ASAP7_75t_R
+        5   OA31x2_ASAP7_75t_R
+      219   OAI211xp5_ASAP7_75t_R
+      503   OAI21xp33_ASAP7_75t_R
+      407   OAI221xp5_ASAP7_75t_R
+      174   OAI222xp33_ASAP7_75t_R
+      566   OAI22xp33_ASAP7_75t_R
+       46   OAI311xp33_ASAP7_75t_R
+      206   OAI31xp33_ASAP7_75t_R
+       23   OAI321xp33_ASAP7_75t_R
+       25   OAI32xp33_ASAP7_75t_R
+      106   OR2x2_ASAP7_75t_R
+      165   OR3x1_ASAP7_75t_R
+      457   OR4x1_ASAP7_75t_R
+       41   OR5x1_ASAP7_75t_R
+      273   XNOR2xp5_ASAP7_75t_R
+       69   XOR2xp5_ASAP7_75t_R
+       32   ot_sram_1r1w_128x256_m1_r2c2
+
+=== hfd_hgi_vms_static_SW__vms_sw2_c ===
+
+        +----------Local Count, excluding submodules.
+        | 
+    39695 wires
+  1402514 wire bits
+    18845 public wires
+   797718 public wire bits
+       39 ports
+    28768 port bits
+        2 memories
+     4352 memory bits
+     1289 processes
+    17887 cells
+       18   $add
+      205   $alu
+       13   $and
+     3028   $eq
+       16   $eqx
+      608   $logic_and
+      698   $logic_not
+      578   $logic_or
+       10   $lt
+        4   $macc_v2
+       24   $memrd
+     8536   $mux
+      130   $ne
+       10   $neg
+     2175   $not
+      125   $or
+      190   $reduce_and
+      392   $reduce_or
+      896   $reduce_xor
+       18   $shiftx
+       19   $shl
+       10   $shr
+      160   $xor
+       24   ot_sram_1r1w_1024x256_m2_r2c2
+
+=== design hierarchy ===
+
+        +----------Count including submodules.
+        | 
+   231316 hbm_v15_sw_vmcore
+     2147 hfd_hgi_vm_calendar_SW__calendar_sw2
+    17887 hfd_hgi_vms_static_SW__vms_sw2_c
+    47111 ot_hbm_argmax_static__argmax
+      383 ot_hbm_su_static_vm_ports__su_q0n4b
+    36778 ot_hbm_svc_static_vm_delivery__delivery
+    25343 ot_hbm_vm_lg_static_split__lg_10_7
+    25472 ot_hbm_vm_lg_static_split__lg_14_11
+    25599 ot_hbm_vm_lg_static_split__lg_18_15
+    50187 ot_hgi_dma_back_static__dma_back0
+      409 ot_vms_status4_static__status4
+
+        +----------Count including submodules.
+        | 
+   212166 wires
+  1880143 wire bits
+   191316 public wires
+  1275347 public wire bits
+      256 ports
+   125403 port bits
+        2 memories
+     4352 memory bits
+     1289 processes
+   231316 cells
+       18   $add
+      205   $alu
+       13   $and
+     3028   $eq
+       16   $eqx
+      608   $logic_and
+      698   $logic_not
+      578   $logic_or
+       10   $lt
+        4   $macc_v2
+       24   $memrd
+     8536   $mux
+      130   $ne
+       10   $neg
+     2175   $not
+      125   $or
+      190   $reduce_and
+      392   $reduce_or
+      896   $reduce_xor
+       18   $shiftx
+       19   $shl
+       10   $shr
+      160   $xor
+      664   A2O1A1Ixp33_ASAP7_75t_R
+      228   A2O1A1O1Ixp25_ASAP7_75t_R
+     2917   AND2x2_ASAP7_75t_R
+      895   AND3x1_ASAP7_75t_R
+      610   AND4x1_ASAP7_75t_R
+       31   AND5x1_ASAP7_75t_R
+        4   AO211x2_ASAP7_75t_R
+     7734   AO21x1_ASAP7_75t_R
+       15   AO221x1_ASAP7_75t_R
+       75   AO222x2_ASAP7_75t_R
+      307   AO22x1_ASAP7_75t_R
+       36   AO32x1_ASAP7_75t_R
+     3315   AOI211xp5_ASAP7_75t_R
+     5476   AOI21xp33_ASAP7_75t_R
+      537   AOI221xp5_ASAP7_75t_R
+       13   AOI222xp33_ASAP7_75t_R
+     1110   AOI22xp33_ASAP7_75t_R
+      103   AOI311xp33_ASAP7_75t_R
+     2502   AOI31xp33_ASAP7_75t_R
+       14   AOI321xp33_ASAP7_75t_R
+       94   AOI32xp33_ASAP7_75t_R
+    10359   DFFASRHQNx1_ASAP7_75t_R
+    53551   DFFHQNx1_ASAP7_75t_R
+       54   HB1xp67_ASAP7_75t_R
+    47595   INVx1_ASAP7_75t_R
+     1092   MAJIxp5_ASAP7_75t_R
+      406   MAJx2_ASAP7_75t_R
+    18752   NAND2xp33_ASAP7_75t_R
+      861   NAND3xp33_ASAP7_75t_R
+      635   NAND4xp25_ASAP7_75t_R
+      239   NAND5xp2_ASAP7_75t_R
+    15081   NOR2xp33_ASAP7_75t_R
+     4115   NOR3xp33_ASAP7_75t_R
+     2210   NOR4xp25_ASAP7_75t_R
+      581   NOR5xp2_ASAP7_75t_R
+     1367   O2A1O1Ixp33_ASAP7_75t_R
+      156   OA211x2_ASAP7_75t_R
+      421   OA21x2_ASAP7_75t_R
+        2   OA221x2_ASAP7_75t_R
+       89   OA222x2_ASAP7_75t_R
+      113   OA22x2_ASAP7_75t_R
+        5   OA31x2_ASAP7_75t_R
+        3   OA33x2_ASAP7_75t_R
+      693   OAI211xp5_ASAP7_75t_R
+    16969   OAI21xp33_ASAP7_75t_R
+      600   OAI221xp5_ASAP7_75t_R
+      179   OAI222xp33_ASAP7_75t_R
+     1238   OAI22xp33_ASAP7_75t_R
+       87   OAI311xp33_ASAP7_75t_R
+      371   OAI31xp33_ASAP7_75t_R
+       35   OAI321xp33_ASAP7_75t_R
+      112   OAI32xp33_ASAP7_75t_R
+        5   OAI33xp33_ASAP7_75t_R
+     2297   OR2x2_ASAP7_75t_R
+      405   OR3x1_ASAP7_75t_R
+      568   OR4x1_ASAP7_75t_R
+       70   OR5x1_ASAP7_75t_R
+     3615   XNOR2xp5_ASAP7_75t_R
+     1777   XOR2xp5_ASAP7_75t_R
+       25   ot_sram_1r1w_1024x256_m2_r2c2
+       40   ot_sram_1r1w_128x256_m1_r2c2
+       10 submodules
+        1   hfd_hgi_vm_calendar_SW__calendar_sw2
+        1   hfd_hgi_vms_static_SW__vms_sw2_c
+        1   ot_hbm_argmax_static__argmax
+        1   ot_hbm_su_static_vm_ports__su_q0n4b
+        1   ot_hbm_svc_static_vm_delivery__delivery
+        1   ot_hbm_vm_lg_static_split__lg_10_7
+        1   ot_hbm_vm_lg_static_split__lg_14_11
+        1   ot_hbm_vm_lg_static_split__lg_18_15
+        1   ot_hgi_dma_back_static__dma_back0
+        1   ot_vms_status4_static__status4
+

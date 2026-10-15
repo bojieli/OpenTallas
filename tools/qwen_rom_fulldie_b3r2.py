@@ -3579,6 +3579,12 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
         for fk, f in enumerate(pl['frames']):
             rr = (f[0], f[1], f[0] + f[2] + v.SHAVE, f[1] + f[3] + v.SHAVE)
             if not free(rr):
+                if _os.environ.get('OT_RELAY_COLLISION_JSON'):
+                    try:
+                        from qwen_split.relay_collision_receipt import receipt, write
+                        write(_os.environ['OT_RELAY_COLLISION_JSON'], receipt(m, plans, idx, fk, v.SHAVE))
+                    except Exception as diagnostic_error:
+                        print(f'relay collision diagnostic failed: {diagnostic_error}', file=sys.stderr)
                 raise ValueError(f"relay occupancy: {pl['bid']} frame {fk} overlaps a surviving frame before inline pads")
             add_rect(rr)
     pad_done = {}
@@ -6352,6 +6358,11 @@ def case_pdn(v, m, work, bump_um, rev='r4'):
     pg_f = PG.F
     if rev == 'r5':
         PG.F = v
+    # split compute C20s: the powered rewrite must emit the SAME pin names as die.v (split bundles and port_join
+    # aliases renamed to the real RTL bits, as case_real does); without it every alias / split master had LEF pins
+    # the netlist never names
+    emit0 = getattr(v, 'EMIT_SPLIT', False)
+    v.EMIT_SPLIT = True
     try:
         for name, mst in M.items():
             wm_ = {q: pw.get((name, q), 0) for q in mst.order}
@@ -6364,17 +6375,33 @@ def case_pdn(v, m, work, bump_um, rev='r4'):
             parts.append(text)
     finally:
         PG.F = pg_f
+        v.EMIT_SPLIT = emit0
     (work / 'elements.lef').write_text('VERSION 5.8 ;\nBUSBITCHARS "[]" ;\nDIVIDERCHAR "/" ;\n' + '\n'.join(parts) +
                                        'END LIBRARY\n')
     _gate_track_lattice(work / 'elements.lef', m)
     meta = (write_pdn_r5 if rev == 'r5' else write_pdn_r4)(v, m, work / 'pdn.tcl', bump_um)['meta']
+    # Opt-in structural PDN fallback: temporary conservative master OBS only while
+    # generating power metal. Detailed route masters/pins stay untouched.
+    for helper in ('pdn_bbox_obs.py', 'pdn_bbox_obs.tcl'):
+        (work / helper).write_text((Path(__file__).parent / 'qwen_kv_die' / 'chain' / helper).read_text())
     (work / 'run_pdn.tcl').write_text("""# full-die PDN with macro grids on the placed floorplan
 proc mem {tag} { set f [open /proc/self/status]; set s [read $f]; close $f
   regexp {VmRSS:\\s+(\\d+)} $s -> r; puts "OTMEM $tag [expr {$r/1024}] MB [clock seconds]" }
 read_db /work/floorplan.odb
 mem read
 set t0 [clock seconds]
-if {[catch {source /work/pdn.tcl; pdngen; source /work/die_constant_pg_check.tcl} err]} { puts "OT_PDN FAIL $err"; error $err } else {
+set ot_bbox 0
+if {[info exists ::env(OT_PDN_BBOX_OBS)] && $::env(OT_PDN_BBOX_OBS) eq "1"} {
+  source /work/pdn_bbox_obs.tcl
+  ot_pdn_bbox::begin /work
+  set ot_bbox 1
+}
+if {[catch {
+  try {source /work/pdn.tcl; pdngen} finally {
+    if {$ot_bbox} {ot_pdn_bbox::restore}
+  }
+  source /work/die_constant_pg_check.tcl
+} err]} { puts "OT_PDN FAIL $err"; error $err } else {
   set nsw 0; foreach net [[ord::get_db_block] getNets] { foreach sw [$net getSWires] { incr nsw [llength [$sw getWires]] } }
   puts "OT_PDN PASS special_shapes=$nsw" }
 puts "OT_TIME pdn_s=[expr {[clock seconds]-$t0}]"

@@ -1,0 +1,22 @@
+{
+ "schema": "opentallas.qwen.kvsys.slice_chain_price.v1",
+ "date": "2026-10-15",
+ "owner": "Q-KVSYS-DIE r9",
+ "question": "HOST-north move (v1.4.1): S-stack HOST slice chains 10-14 -> 64-68 relay stages (v1.4.2 plan: ES 65-69, WS 63-67); N stacks 43-99 -> 10-15. Price in measured layer cycles; re-place if over the ledger.",
+ "chains": {
+  "hchf_<st>": "HOST ingest forward word (291 b): external-host KV/data ingest into the PC stations (elastic host boundary, owner 0bq/0az)",
+  "hchc_<st> / hcha_<st>": "ingest station credits / write acks back to the HOST ingest map (4 credits per PC x 128 PCs)",
+  "hchx_<st>": "ingest station fault",
+  "hsak/hsbd/hsbo/hsbf_<st>": "slice all_ack / boot_done / boot_ok / boot_fault status chains",
+  "hboot (now a relay tree)": "boot_go to the chain heads"
+ },
+ "decode_layer_path": "NONE of these chains is in the per-layer decode schedule: decode KV writes go landing -> slice -> controller on the stack-local es/er words (land_es/ctrl_es, unchanged, 0 chain stages); attention, return and the d2d record/token words do not use the slice chains. The program calendar (tools/qwen_split/d2d_link_calendar.py --profile program, link_static_1015/host_stage_sweep.json) measures layer span 2190 cycles / token through L35 246,329 cycles independent of HOST relay stages.",
+ "measured_layer_cycles_delta": 0,
+ "token_side_effect_of_the_move": "HOST<->D2D 54-57 -> 0 stages: the embedding fetch budget rises from 122 (N=57) to 179 cycles (N=0), a gain, not a cost",
+ "one_time_costs": {
+  "boot": "S-stack slices start boot (hboot tree depth, max 62 edges in v1.4.2) later than the N stacks; boot completion is observed per PC on the status chain (no assumed timing); one-time, < 0.1 us",
+  "ingest_rtt": "worst S-slot ingest credit RTT ~= 2 x 69 + 2 x 2 x 32 + 4 ~= 270 edges -> 4 credits/PC give 4/270 words/edge per PC, 128 PCs give 1.90 words/edge >= the ingest map's 1 word/edge issue: no ingest bandwidth loss with PC-interleaved ingest. The worst stack chain depth fell from 99 (N, v1.4) to 69 (S, v1.4.2)."
+ },
+ "ledger": "no row: measured e2e token loss 0 % (<= 5 % / unit, <= 15 % / design); no re-place needed",
+ "evidence_scope": "calendar measurement + structural path census; the native full-token run of the split design is still owed (all-real-hardware rule) and will carry the chain latencies as fixed compiler constants"
+}

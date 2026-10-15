@@ -1,0 +1,23 @@
+GATE INFO layer: tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)
+GATE INFO oflop: E face 10.5 pins/um (calendar_v, calendar_action, go): recipe-2 hold stages take 2.3 um behind the face, the pin flops need gap 2.9 um and 6 columns (derived in the flow)
+GATE INFO oflop: N face 10.5 pins/um (rom_pq0, rom_pq1, rom_sq): recipe-2 hold stages take 2.3 um behind the face, the pin flops need gap 2.9 um and 21 columns (derived in the flow)
+GATE INFO oflop: S face 10.5 pins/um (clk, rst_n, q_consume): recipe-2 hold stages take 2.3 um behind the face, the pin flops need gap 2.9 um and 21 columns (derived in the flow)
+GATE INFO remote: ot-run selected ot-epyc1tb for 16 GB memory; disk pick 22 GiB, runtime 22 GiB includes 20 GiB work reserve plus snapshot staging
+GATE INFO source_binding: immutable shipping manifest /tmp/ref_gate_s81_pq_ctl_state_calcap_20261015-112336.source_snapshot.json
+GATE INFO remote: remote log /tmp/ref_gate_s81_pq_ctl_state_calcap_20261015-112336.log; host dir ot-epyc1tb:/srv/opentallas-scratch/claude/ref_gate/s81_pq_ctl_state_calcap-20261015-112336
+GATE INFO remote: synth + floorplan + PDN OK on ot-epyc1tb in 32 s (gate total 339 s)
+GATE WARN util: synthesized std area 2514 um2 + macros 0 in core 35104: util 7%  -> FIX: set "std_area_um2": 2514 and drop 'outline' (gen sizes to util 0.52)
+GATE INFO textbook: WARN ot_s81_pq_ctl_state_phw10 cells 20,911 flops 3,341 depth 346.7 ps util 0.059 reach 86.8 um (0.3 s)
+GATE WARN textbook.high_fanout: reset u_state.u_rr.rst_n[0]$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R): 1,805 loads (231 flops, e.g. u_state.a_ph[0]$_DFFE_PN0P_) > 256: register it and replicate per region (rtl/lib/ot_rst_relay.sv: one relay copy per region)  -> FIX: no reset on datapath registers; replicate enables / selects / pointer bits per region (<= ~256 loads)
+GATE WARN textbook.util_channel: utilisation 5.9% outside 45%-65% (std 2070 + macro 0 um2 in 35104 um2): shrink the outline (long wires / sparse placement)  -> FIX: size the outline to util 0.50-0.55 with >= 20 um macro channels
+GATE INFO cts_calibration: ss insertion all 281.0..360.1 ps (spread 79.1), boundary mean 304.8; tt insertion all 209.8..281.9 ps (spread 72.1), boundary mean 231.5; ff insertion all 167.7..235.5 ps (spread 67.8), boundary mean 188.2; macro_clk flag False
+GATE INFO density: effective global-placement target density 0.500 vs spec PD 0.50
+GATE INFO path_classes: constraints signoff /src/physical/ref_tile/s81_pq_ctl_state_calcap/signoff.sdc (TT placement RC; diagnostic)
+GATE INFO path_classes: reg->reg      594 paths, worst slack 225.9 ps (e.g. ot_prs_00016_ff/D)
+GATE INFO path_classes: reg->out        3 paths, worst slack 325.4 ps (e.g. bc_hr_o[27])
+GATE INFO path_classes: in->reg         3 paths, worst slack 383.7 ps (e.g. u_pin_reset.rst_n$_DFF_PN0_/RESETN)
+GATE INFO path_classes: setup WNS 2.2587837156251567e-10 hold WNS 4.529027153310494e-11
+GATE INFO clock_rule: root port:clk: 3,341 sinks on the largest root <= 15,000; measured TT insertion 281.9 ps, leaf spread 72.1 ps
+PRE_ROUTE_GATE: WARN (0 fail, 3 warn)
+GATE: previous result preserved as unqualified evidence: /home/ubuntu/wt/s81-pq-physical-1103/physical/ref_tile/s81_pq_ctl_state_calcap/source_binding_history/2d4135e5de4b6f005ae78bc4b8940861b97d28fa84d442d2d55655d5f4e9a78f.json
+GATE: s81_pq_ctl_state_calcap/gate_result.json written (exact staged source binding; commit it with the kit)

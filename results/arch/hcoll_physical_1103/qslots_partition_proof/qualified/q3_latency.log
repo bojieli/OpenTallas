@@ -1,0 +1,4 @@
+[96000] %Fatal: tb_qslots_partitioned_v1.sv:26: Assertion failed in tb_qslots_partitioned_v1.compare: QSLOTS_PARTITION mismatch NPT=3 cycle=3 payload=1 valid=0 fault=0 kind=0/0
+%Error: tools/hbm_coll_static/tb_qslots_partitioned_v1.sv:26: Verilog $stop
+Aborting...
+tools/hbm_coll_static/run_qslots_partition_gate.sh: line 13: 1193163 Aborted                    (core dumped) "$out/obj/Vtb_qslots_partitioned_v1"
