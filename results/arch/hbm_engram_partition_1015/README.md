@@ -29,4 +29,4 @@ PYTHONPATH=tools python3 tools/hbm_engram_partition_gate.py --out proof
 PYTHONPATH=tools python3 tools/hbm_engram_hash_home_gate.py --out hash_proof
 ```
 
-Actual Yosys 0.52 `proc; opt; memory_map; opt` census (`dispatch_census_receipt.json`, terminal unit `oth-ubuntu-1389084-1792053962`) retains 180 register bits per dispatcher. This is an optimized logical-storage count, excluding the hash and serializer, and does not establish physical area or clock delivery. Both native streams use two such dispatchers.
+Actual Yosys 0.52 `proc; opt; memory_map; opt` census (`dispatch_census_receipt.json`, terminal unit `oth-ubuntu-1389084-1792053962`) retains 150 register bits per dispatcher. This is an optimized logical-storage count, excluding the hash and serializer, and does not establish physical area or clock delivery. Both native streams use two such dispatchers.
