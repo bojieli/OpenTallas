@@ -33,7 +33,13 @@ run() { local n=$1 e=$2 o=$3 c=$4; shift 4
   [ "$r" = "$e" ] && v=OK || v=WRONG; echo "$v $n expect=$e got=$r $cy $why | $c $*" >> "$O/SUMMARY"
 }
 : > "$O/SUMMARY"
-build obj_base & build obj_r20 -GRLY=20 -GTCRD=4 & build obj_crl -GCRL_MUT=1 & build obj_mt1 -GMUT_TKM=1 & wait
+# The production parent is large even with tile hierarchy. Allow concurrency only against a measured job envelope.
+# Each variant is independent; the fleet can still run other streams while these elaborations serialize.
+if [ "${BUILD_JOBS:-1}" -gt 1 ]; then
+  build obj_base & build obj_r20 -GRLY=20 -GTCRD=4 & build obj_crl -GCRL_MUT=1 & build obj_mt1 -GMUT_TKM=1 & wait
+else
+  build obj_base; build obj_r20 -GRLY=20 -GTCRD=4; build obj_crl -GCRL_MUT=1; build obj_mt1 -GMUT_TKM=1
+fi
 if grep -q "BUILD FAIL" "$O/SUMMARY"; then cat "$O/SUMMARY"; echo "QTKM FAIL"; exit 2; fi
 for c in "${cases[@]}"; do run $c PASS obj_base $c & done; wait
 for c in syn_sel syn_cand; do run ${c}_wstall30 PASS obj_base $c +WSTALL=30 +SEED=3 & run ${c}_r20 PASS obj_r20 $c +WSTALL=20 +SEED=4 & done
