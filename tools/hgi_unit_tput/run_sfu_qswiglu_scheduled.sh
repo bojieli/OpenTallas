@@ -49,3 +49,9 @@ mut_rc=$?
 set -e
 if [ "$mut_rc" = 0 ] || ! grep -Eq 'VM_QSWIGLU_WORD|SCHEDULED_ENGINE_FAULT' "$OUT/mutant.log";then cat "$OUT/mutant.log";exit 1;fi
 printf 'PASS independent vector compiler actual actual loaded-programme suppressed-issue mutant rc=%s\n' "$mut_rc"
+set +e
+"$OUT/obj/Vtb_hgi_sfu_qswiglu_scheduled" +MUT_LG_CLOCK > "$OUT/mutant_clock.log" 2>&1
+mut_rc=$?
+set -e
+if [ "$mut_rc" = 0 ] || ! grep -Eq 'VM_QSWIGLU_WORD|SCHEDULED_ENGINE_FAULT' "$OUT/mutant_clock.log";then cat "$OUT/mutant_clock.log";exit 1;fi
+printf 'PASS actual missing LG group root mutant rc=%s\n' "$mut_rc"
