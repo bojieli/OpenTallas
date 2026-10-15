@@ -108,7 +108,16 @@ module ot_s81_pq_ctl_static_native (
  reg[18:0] rows_seen[0:3];
  reg[1:0] iss_tag;
  wire any_v=sv[0]|sv[1]|sv[2]|sv[3];
- assign ready=1'b1;assign idle=!any_v;
+ assign ready=1'b1;
+`ifdef OT_PQ_CTL_CALCAP
+ // CALCAP (native audit 10-15 of the closed INCAP view: idle launch 253 ps): idle is a registered status, +1 edge
+ // (status only, never gates an event: the static END is the calendar retire pulse).
+ reg idle_q;
+ always @(posedge clk or negedge rst_c) if(!rst_c) idle_q<=1'b1; else idle_q<=!any_v;
+ assign idle=idle_q;
+`else
+ assign idle=!any_v;
+`endif
  reg[31:0] cyc;
     genvar gst;
     generate for (gst = 0; gst < 4; gst = gst + 1) begin : g_st
@@ -259,8 +268,18 @@ module ot_s81_pq_ctl_static_native (
  wire[15:0] h_b0=he[EW-73 -:16],h_b1=he[EW-89 -:16];
  wire[35:0] h_hi=he[35:0];
  wire h_lastop=he[EW-66];
+`ifdef OT_PQ_CTL_CALCAP
+ // CALCAP: q/b_consume launch from their own flops, loaded from the r3 stage on the edge that loads he/hv
+ // (same cycle, 0 edges; native audit of the INCAP view: b_consume 264 / q_consume 236 ps > 220 through the AND).
+ reg qc_q,bc_q;
+ always @(posedge clk or negedge rst_c)
+  if(!rst_c) begin qc_q<=1'b0;bc_q<=1'b0; end
+  else begin qc_q<=r3_v&&r3_e[EW-48]&&!r3_e[EW-67];bc_q<=r3_v&&r3_e[EW-48]&&r3_e[EW-67]; end
+ assign q_consume=qc_q;assign b_consume=bc_q;
+`else
  assign q_consume=hv&&hw[0]&&!h_fam;
  assign b_consume=hv&&hw[0]&&h_fam;
+`endif
  assign hw_o=hw;assign h_hi_o=h_hi;assign h_b0_o=h_b0;assign h_b1_o=h_b1;
     reg         p1_xs_v, p1_xb_v, p1_go, p1_gobf, p1_cfg;
     reg [7:0]   p1_p;
