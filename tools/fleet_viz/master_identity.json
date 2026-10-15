@@ -96,6 +96,269 @@
         "tools/qwen_kv_die/kv_strips.py",
         "results/arch/qwen_split_1014/kvsys_v1_3_candidate/port_bind.json"
       ]
+    },
+    {
+      "element": "hfd_svc_v15_SW_s0",
+      "path": "physical/hbm_accel_die_views/svc/v15/rtl/hfd_svc_v15_SW_s0.sv",
+      "module": "hfd_svc_v15_SW_s0",
+      "body_sha256": "0153b8f55dccb1519b35e771f45258b4a265044a0c668a3de510ed6335239ac6",
+      "reason": "Wires-only service-band integration wrapper of existing shared svc PC leaf; PC counts and physical placements remain distinct integration obligations.",
+      "evidence": [
+        "physical/hbm_accel_die_views/svc/v15/rtl/hfd_svc_v15_SW_s0.sv",
+        "results/arch/hbm_die_v15/source_contract_v151/contract.json"
+      ]
+    },
+    {
+      "element": "hfd_svc_v15_SW_s1",
+      "path": "physical/hbm_accel_die_views/svc/v15/rtl/hfd_svc_v15_SW_s1.sv",
+      "module": "hfd_svc_v15_SW_s1",
+      "body_sha256": "4ed40f1c39a68f8840522e4dc3e1833dbcb9e7e3ab358a0a0eda7513758b2512",
+      "reason": "Wires-only service-band integration wrapper of existing shared svc PC leaf; PC counts and physical placements remain distinct integration obligations.",
+      "evidence": [
+        "physical/hbm_accel_die_views/svc/v15/rtl/hfd_svc_v15_SW_s1.sv",
+        "results/arch/hbm_die_v15/source_contract_v151/contract.json"
+      ]
+    },
+    {
+      "element": "hfd_svc_v15_SW_s2",
+      "path": "physical/hbm_accel_die_views/svc/v15/rtl/hfd_svc_v15_SW_s2.sv",
+      "module": "hfd_svc_v15_SW_s2",
+      "body_sha256": "56f51785c1ca596c0074350f02c328e3ad3944f5a5ae85cd1f4bcd324ed072e5",
+      "reason": "Wires-only service-band integration wrapper of existing shared svc PC leaf; PC counts and physical placements remain distinct integration obligations.",
+      "evidence": [
+        "physical/hbm_accel_die_views/svc/v15/rtl/hfd_svc_v15_SW_s2.sv",
+        "results/arch/hbm_die_v15/source_contract_v151/contract.json"
+      ]
+    },
+    {
+      "element": "hfd_svc_v15_SW_s3",
+      "path": "physical/hbm_accel_die_views/svc/v15/rtl/hfd_svc_v15_SW_s3.sv",
+      "module": "hfd_svc_v15_SW_s3",
+      "body_sha256": "50180bd444468db1516eaf6817ff3b6981820e3729e4930360f817a6338f6728",
+      "reason": "Wires-only service-band integration wrapper of existing shared svc PC leaf; PC counts and physical placements remain distinct integration obligations.",
+      "evidence": [
+        "physical/hbm_accel_die_views/svc/v15/rtl/hfd_svc_v15_SW_s3.sv",
+        "results/arch/hbm_die_v15/source_contract_v151/contract.json"
+      ]
+    },
+    {
+      "element": "hfd_svc_v15_SW_s4",
+      "path": "physical/hbm_accel_die_views/svc/v15/rtl/hfd_svc_v15_SW_s4.sv",
+      "module": "hfd_svc_v15_SW_s4",
+      "body_sha256": "51105316ce128bf69673f3604850121a78731a37bcadc401f2ef101a51549035",
+      "reason": "Wires-only service-band integration wrapper of existing shared svc PC leaf; PC counts and physical placements remain distinct integration obligations.",
+      "evidence": [
+        "physical/hbm_accel_die_views/svc/v15/rtl/hfd_svc_v15_SW_s4.sv",
+        "results/arch/hbm_die_v15/source_contract_v151/contract.json"
+      ]
+    },
+    {
+      "element": "hfd_svc_v15_SW_s5",
+      "path": "physical/hbm_accel_die_views/svc/v15/rtl/hfd_svc_v15_SW_s5.sv",
+      "module": "hfd_svc_v15_SW_s5",
+      "body_sha256": "5332f06158a04a264d424857f2f893e9df73770f53e7479a9d82b436414f4262",
+      "reason": "Wires-only service-band integration wrapper of existing shared svc PC leaf; PC counts and physical placements remain distinct integration obligations.",
+      "evidence": [
+        "physical/hbm_accel_die_views/svc/v15/rtl/hfd_svc_v15_SW_s5.sv",
+        "results/arch/hbm_die_v15/source_contract_v151/contract.json"
+      ]
+    },
+    {
+      "element": "hfd_svc_v15_SW_s6",
+      "path": "physical/hbm_accel_die_views/svc/v15/rtl/hfd_svc_v15_SW_s6.sv",
+      "module": "hfd_svc_v15_SW_s6",
+      "body_sha256": "538520ddcd410c95e5f934886c12d4bd6a8fc094ee49340a0f6fa09d87cc71bd",
+      "reason": "Wires-only service-band integration wrapper of existing shared svc PC leaf; PC counts and physical placements remain distinct integration obligations.",
+      "evidence": [
+        "physical/hbm_accel_die_views/svc/v15/rtl/hfd_svc_v15_SW_s6.sv",
+        "results/arch/hbm_die_v15/source_contract_v151/contract.json"
+      ]
+    },
+    {
+      "element": "hfd_svc_v15_SW_s7",
+      "path": "physical/hbm_accel_die_views/svc/v15/rtl/hfd_svc_v15_SW_s7.sv",
+      "module": "hfd_svc_v15_SW_s7",
+      "body_sha256": "09f48305746a8ce8f84f26bf4bf195b5e78f04e3c90b9350c6e9150d4725e49a",
+      "reason": "Wires-only service-band integration wrapper of existing shared svc PC leaf; PC counts and physical placements remain distinct integration obligations.",
+      "evidence": [
+        "physical/hbm_accel_die_views/svc/v15/rtl/hfd_svc_v15_SW_s7.sv",
+        "results/arch/hbm_die_v15/source_contract_v151/contract.json"
+      ]
+    },
+    {
+      "element": "hfd_svc_v15_SE_s0",
+      "path": "physical/hbm_accel_die_views/svc/v15/rtl/hfd_svc_v15_SE_s0.sv",
+      "module": "hfd_svc_v15_SE_s0",
+      "body_sha256": "0153b8f55dccb1519b35e771f45258b4a265044a0c668a3de510ed6335239ac6",
+      "reason": "Wires-only service-band integration wrapper of existing shared svc PC leaf; PC counts and physical placements remain distinct integration obligations.",
+      "evidence": [
+        "physical/hbm_accel_die_views/svc/v15/rtl/hfd_svc_v15_SE_s0.sv",
+        "results/arch/hbm_die_v15/source_contract_v151/contract.json"
+      ]
+    },
+    {
+      "element": "hfd_svc_v15_SE_s1",
+      "path": "physical/hbm_accel_die_views/svc/v15/rtl/hfd_svc_v15_SE_s1.sv",
+      "module": "hfd_svc_v15_SE_s1",
+      "body_sha256": "4ed40f1c39a68f8840522e4dc3e1833dbcb9e7e3ab358a0a0eda7513758b2512",
+      "reason": "Wires-only service-band integration wrapper of existing shared svc PC leaf; PC counts and physical placements remain distinct integration obligations.",
+      "evidence": [
+        "physical/hbm_accel_die_views/svc/v15/rtl/hfd_svc_v15_SE_s1.sv",
+        "results/arch/hbm_die_v15/source_contract_v151/contract.json"
+      ]
+    },
+    {
+      "element": "hfd_svc_v15_SE_s2",
+      "path": "physical/hbm_accel_die_views/svc/v15/rtl/hfd_svc_v15_SE_s2.sv",
+      "module": "hfd_svc_v15_SE_s2",
+      "body_sha256": "56f51785c1ca596c0074350f02c328e3ad3944f5a5ae85cd1f4bcd324ed072e5",
+      "reason": "Wires-only service-band integration wrapper of existing shared svc PC leaf; PC counts and physical placements remain distinct integration obligations.",
+      "evidence": [
+        "physical/hbm_accel_die_views/svc/v15/rtl/hfd_svc_v15_SE_s2.sv",
+        "results/arch/hbm_die_v15/source_contract_v151/contract.json"
+      ]
+    },
+    {
+      "element": "hfd_svc_v15_SE_s3",
+      "path": "physical/hbm_accel_die_views/svc/v15/rtl/hfd_svc_v15_SE_s3.sv",
+      "module": "hfd_svc_v15_SE_s3",
+      "body_sha256": "a9302cb630c7d0a62e69872a399573e6e0f256c9b7167f39302fe883e09d8130",
+      "reason": "Wires-only service-band integration wrapper of existing shared svc PC leaf; PC counts and physical placements remain distinct integration obligations.",
+      "evidence": [
+        "physical/hbm_accel_die_views/svc/v15/rtl/hfd_svc_v15_SE_s3.sv",
+        "results/arch/hbm_die_v15/source_contract_v151/contract.json"
+      ]
+    },
+    {
+      "element": "hfd_svc_v15_SE_s4",
+      "path": "physical/hbm_accel_die_views/svc/v15/rtl/hfd_svc_v15_SE_s4.sv",
+      "module": "hfd_svc_v15_SE_s4",
+      "body_sha256": "63b1c5e71aa71e925165f3fd6bff87062bb25ede8a3fb2f55b7b1c58c96b52db",
+      "reason": "Wires-only service-band integration wrapper of existing shared svc PC leaf; PC counts and physical placements remain distinct integration obligations.",
+      "evidence": [
+        "physical/hbm_accel_die_views/svc/v15/rtl/hfd_svc_v15_SE_s4.sv",
+        "results/arch/hbm_die_v15/source_contract_v151/contract.json"
+      ]
+    },
+    {
+      "element": "hfd_svc_v15_SE_s5",
+      "path": "physical/hbm_accel_die_views/svc/v15/rtl/hfd_svc_v15_SE_s5.sv",
+      "module": "hfd_svc_v15_SE_s5",
+      "body_sha256": "179015643e1218361621bd952437f92625697f1f060c76ea7e4cb1670a1a7258",
+      "reason": "Wires-only service-band integration wrapper of existing shared svc PC leaf; PC counts and physical placements remain distinct integration obligations.",
+      "evidence": [
+        "physical/hbm_accel_die_views/svc/v15/rtl/hfd_svc_v15_SE_s5.sv",
+        "results/arch/hbm_die_v15/source_contract_v151/contract.json"
+      ]
+    },
+    {
+      "element": "hfd_svc_v15_SE_s6",
+      "path": "physical/hbm_accel_die_views/svc/v15/rtl/hfd_svc_v15_SE_s6.sv",
+      "module": "hfd_svc_v15_SE_s6",
+      "body_sha256": "ea7cf091e8db29e6edfbed808b97d7b1de11b787863338dee94e9e0efe301392",
+      "reason": "Wires-only service-band integration wrapper of existing shared svc PC leaf; PC counts and physical placements remain distinct integration obligations.",
+      "evidence": [
+        "physical/hbm_accel_die_views/svc/v15/rtl/hfd_svc_v15_SE_s6.sv",
+        "results/arch/hbm_die_v15/source_contract_v151/contract.json"
+      ]
+    },
+    {
+      "element": "hfd_svc_v15_SE_s7",
+      "path": "physical/hbm_accel_die_views/svc/v15/rtl/hfd_svc_v15_SE_s7.sv",
+      "module": "hfd_svc_v15_SE_s7",
+      "body_sha256": "85f01ecff3b319c75be4bac141e78164b9ae0f79d3cb9272883f80ff1e81db35",
+      "reason": "Wires-only service-band integration wrapper of existing shared svc PC leaf; PC counts and physical placements remain distinct integration obligations.",
+      "evidence": [
+        "physical/hbm_accel_die_views/svc/v15/rtl/hfd_svc_v15_SE_s7.sv",
+        "results/arch/hbm_die_v15/source_contract_v151/contract.json"
+      ]
+    },
+    {
+      "element": "hfd_svc_v15_SE_s8",
+      "path": "physical/hbm_accel_die_views/svc/v15/rtl/hfd_svc_v15_SE_s8.sv",
+      "module": "hfd_svc_v15_SE_s8",
+      "body_sha256": "d49212e62e3ae455ef2ad9cb4185e5e31bacf253997a0734e125303b3a2c6a21",
+      "reason": "Wires-only service-band integration wrapper of existing shared svc PC leaf; PC counts and physical placements remain distinct integration obligations.",
+      "evidence": [
+        "physical/hbm_accel_die_views/svc/v15/rtl/hfd_svc_v15_SE_s8.sv",
+        "results/arch/hbm_die_v15/source_contract_v151/contract.json"
+      ]
+    },
+    {
+      "element": "qkd_rhead",
+      "path": "rtl/qwen_sys/split_20261014/ot_qkh_head_native_r4.sv",
+      "module": "ot_qkh_head_native_r4",
+      "body_sha256": "a903512054b386975064c854122ab15e0ade98dd49cb45228bac48faf2072d75",
+      "reason": "Wires-only native head parent; 86 actual child instances own all state. Q_FP32=1. kv_expand.frames already supplies die placement and per-child physical views; integration/hops/clock delivery remain OPEN.",
+      "evidence": [
+        "tools/qwen_kv_die/kv_die.py",
+        "tools/qwen_kv_die/kv_expand.py"
+      ]
+    },
+    {
+      "element": "qfd_io_xfifo_static",
+      "path": "rtl/physical/ot_qfd_io_xfifo_static.sv",
+      "module": "qfd_io_xfifo_static",
+      "body_sha256": "03dc754484439613e9b6fcf21a856f823e633a0b2f2fc2c9d66dd27cb4f7d82e",
+      "reason": "Wires-only composition of twelve qfd_static_ch546 instances, a separately registered CLOSED distinct master. Only 514/517/546-bit wire slices and zero padding; no own procedural or arithmetic logic. Clock/cut/calendar integration remains OPEN.",
+      "evidence": [
+        "rtl/physical/ot_qfd_io_xfifo_static.sv"
+      ]
+    },
+    {
+      "element": "qkd_ahub",
+      "path": "rtl/hdc/nearhbm/ot_qkd_ahub_core.sv",
+      "module": "ot_qkd_ahub_die",
+      "body_sha256": "2c5f33425ace22c2b56ce3369694741c2314939c34729ab28f820c41cddb5ff7",
+      "reason": "Wires-only parent of qkd_ahub_core, four ot_nhb_zh, reciprocal, four pbst, four pvlg and parameterized ot_qkd_drly children. The drly nonzero stages are REAL child state and must remain in integration/relay closure; no arithmetic/state belongs to this parent. Physical expansion remains OPEN.",
+      "evidence": [
+        "tools/qwen_kv_die/kv_die.py",
+        "rtl/hdc/nearhbm/ot_qkd_ahub_core.sv"
+      ]
+    },
+    {
+      "element": "dsfd_lkck_NE",
+      "path": "/home/ubuntu/artifacts/s81-die-takeover-0757/gen18r_die_glue.sv",
+      "module": "dsfd_lkck_NE",
+      "body_sha256": "4c143a5547ed7fa5603d59c0520405ecc18e6fae8f8b5e629effcfc0683d189b",
+      "reason": "Actual GEN18r generated clock-net pass-through, assign fo=fi only; preserve die clock routing/slew/skew as OPEN integration, no standalone cell view.",
+      "evidence": [
+        "/home/ubuntu/claude-takeover-20261007/takeover-s81-master-identity-0834/proof.json",
+        "/home/ubuntu/artifacts/s81-die-takeover-0757/gen18r_die_glue.sv"
+      ]
+    },
+    {
+      "element": "dsfd_lkck_NW",
+      "path": "/home/ubuntu/artifacts/s81-die-takeover-0757/gen18r_die_glue.sv",
+      "module": "dsfd_lkck_NW",
+      "body_sha256": "4c143a5547ed7fa5603d59c0520405ecc18e6fae8f8b5e629effcfc0683d189b",
+      "reason": "Actual GEN18r generated clock-net pass-through, assign fo=fi only; preserve die clock routing/slew/skew as OPEN integration, no standalone cell view.",
+      "evidence": [
+        "/home/ubuntu/claude-takeover-20261007/takeover-s81-master-identity-0834/proof.json",
+        "/home/ubuntu/artifacts/s81-die-takeover-0757/gen18r_die_glue.sv"
+      ]
+    },
+    {
+      "element": "dsfd_lkck_SE",
+      "path": "/home/ubuntu/artifacts/s81-die-takeover-0757/gen18r_die_glue.sv",
+      "module": "dsfd_lkck_SE",
+      "body_sha256": "4c143a5547ed7fa5603d59c0520405ecc18e6fae8f8b5e629effcfc0683d189b",
+      "reason": "Actual GEN18r generated clock-net pass-through, assign fo=fi only; preserve die clock routing/slew/skew as OPEN integration, no standalone cell view.",
+      "evidence": [
+        "/home/ubuntu/claude-takeover-20261007/takeover-s81-master-identity-0834/proof.json",
+        "/home/ubuntu/artifacts/s81-die-takeover-0757/gen18r_die_glue.sv"
+      ]
+    },
+    {
+      "element": "dsfd_lkck_SW",
+      "path": "/home/ubuntu/artifacts/s81-die-takeover-0757/gen18r_die_glue.sv",
+      "module": "dsfd_lkck_SW",
+      "body_sha256": "4c143a5547ed7fa5603d59c0520405ecc18e6fae8f8b5e629effcfc0683d189b",
+      "reason": "Actual GEN18r generated clock-net pass-through, assign fo=fi only; preserve die clock routing/slew/skew as OPEN integration, no standalone cell view.",
+      "evidence": [
+        "/home/ubuntu/claude-takeover-20261007/takeover-s81-master-identity-0834/proof.json",
+        "/home/ubuntu/artifacts/s81-die-takeover-0757/gen18r_die_glue.sv"
+      ]
     }
   ],
   "replica_groups": [
@@ -115,6 +378,56 @@
           "module": "hfd_hgi_vm_calendar_NE",
           "kit": "physical/ref_tile/hv15_vm_cal_ne"
         }
+      ]
+    },
+    {
+      "canonical": "ot_hgi_coll_pring_static_add_lane",
+      "reason": "Exact LAT8 implementation reuse of existing CLOSED leaf; no new route/job verdict, parent placement/clock/native budgets remain OPEN.",
+      "view_reuse": {
+        "proof": "results/arch/hbm_static_collective_recovery_0821/add_view_reuse.json",
+        "proof_sha256": "564fdebc05413dca5553e5c60be510224e5b987a4949daec47a0c2786f371495",
+        "old_view": "physical/ref_tile/hgi_coll_ring_add_r1/views/ot_hgi_coll_pring_add_lane",
+        "new_view": "physical/ref_tile/hgi_coll_ring_add_r1/views/ot_hgi_coll_pring_static_add_lane"
+      },
+      "members": [
+        {
+          "element": "ot_hgi_coll_pring_add_lane",
+          "path": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring.sv",
+          "module": "ot_hgi_coll_pring_add_lane"
+        },
+        {
+          "element": "ot_hgi_coll_pring_static_add_lane",
+          "path": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static.sv",
+          "module": "ot_hgi_coll_pring_static_add_lane",
+          "local_renames": {
+            "ap": "a_pin",
+            "bp": "b_pin",
+            "vp": "v_pin",
+            "u_add": "u_fp"
+          }
+        }
+      ]
+    }
+  ],
+  "covered_internal_modules": [
+    {
+      "element": "ot_vms_calendar_static",
+      "proof": "tools/fleet_viz/identity_evidence/hbm_calendar_covered_20261015.json",
+      "proof_sha256": "deb6776fd01f68aca31ea2f221ce6c0aefe64be77aef2fd083b572058c0cd37c",
+      "reason": "Current W147/W187/W202 MUT0 uses flattened into actual routed calendar parents; default W146 and future sources unqualified."
+    }
+  ],
+  "contract_mismatches": [
+    {
+      "element": "ot_s81_engram_rly",
+      "path": "rtl/dsrom_sys/engram/mix/ot_s81_engram_mix.sv",
+      "module": "ot_s81_engram_rly",
+      "body_sha256": "0b887503936046eb0c08fe16debe2b3de22099c3f78a43087f3511d3c5f9a50b",
+      "candidate_job": "s81engm_rly-component-0822-772decf15",
+      "warning": "CURRENT CONTRACT UNQUALIFIED: current main gate/st relay is64bits; CLOSED/nativePASS772candidate is105bits(up69/dn36) and is not production64coverage.",
+      "evidence": [
+        "/home/ubuntu/artifacts/s81-engram-relay-0822/module_equivalence.json",
+        "/home/ubuntu/artifacts/s81-engram-relay-0822/native_audit.json"
       ]
     }
   ]
