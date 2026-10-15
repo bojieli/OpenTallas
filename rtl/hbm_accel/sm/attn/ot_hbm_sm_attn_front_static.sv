@@ -69,9 +69,11 @@ module ot_hbm_sm_attn_front_static(
         metadata[130:128]=mode;metadata[131]=h128;
         metadata[132]=command[136];metadata[133]=command[135];
         metadata[134]=command[134];metadata[136:135]=command[133:132];metadata[137]=consume;
+        // r2 in-SM PV stream fold (head dim 128): command[131] fold, [130:128] entry a, [127:125] entry b
+        metadata[138]=attention&&command[131];metadata[141:139]=command[130:128];metadata[144:142]=command[127:125];
     end
     wire [15:0] tag={command[22:11],command[10],command[9:7]};
-    wire [21:0] control={1'b0,(arithmetic_v || (attention&&command[134])),command[24],command[23],1'b1,1'b1,tag};
+    wire [21:0] control={1'b0,(arithmetic_v || (attention&&(command[134]||command[131]))),command[24],command[23],1'b1,1'b1,tag};
     wire [3271:0] a_rows;
     genvar j;
     generate for(j=0;j<4;j=j+1)begin:g_row
@@ -84,7 +86,7 @@ module ot_hbm_sm_attn_front_static(
     always @(posedge clk or negedge rst_n)
         if(!rst_n)schedule_fault<=0;
         else begin
-            if(command!=0 && (command[191:184]!=8'ha2 || |command[131:116] || |command[114:112] || command[111]))schedule_fault<=1;
+            if(command!=0 && (command[191:184]!=8'ha2 || |command[124:116] || |command[114:112] || command[111]))schedule_fault<=1;
             if(!attention && mode==3)schedule_fault<=1;
             if(attention_q && (request[42]!=expected_q[42] || (request[42] && request!=expected_q)))schedule_fault<=1;
             if(!attention && command[25] && converter_busy)schedule_fault<=1;

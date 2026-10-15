@@ -38,15 +38,18 @@ module ot_hbm_sm_attn_leafh #(
     reg [LBS*266-1:0] bw,bx;
     reg [255:0] fw,fx;
     reg [3:0] publish0;
+    reg fold0; reg [2:0] fold0_a, fold0_b;          // r2: in-SM PV stream fold, every leaf at once (no lane shared)
     always @(posedge clk or negedge r_x)
-        if(!r_x)begin bv<=0;fv<=0;publish0<=0;end
+        if(!r_x)begin bv<=0;fv<=0;publish0<=0;fold0<=0;end
         else begin
             bv<=iv_b;fv<=input_arithmetic;
             publish0<={marker&&iw[134],iw[131],iw[136:135]};
+            fold0<=marker&&iw[138];
         end
     always @(posedge clk)begin
         bfirst<=ifirst;blast<=ilast;bfp4<=ifp4;btag<=itag;
         bw<=iw[0+:LBS*266];bx<=ix[0+:LBS*266];
+        fold0_a<=iw[141:139];fold0_b<=iw[144:142];
         ffirst<=ifirst_e;fqlast<=ilast_e&&!input_pv;fplast<=ilast_e&&input_pv;
         frfirst<=iw[132];frlast<=iw[133];ftag<=itag_e;
         fw<=iw[LBS*266+:256];
@@ -81,7 +84,7 @@ module ot_hbm_sm_attn_leafh #(
         .ov(fov),.y(fy),.otag(ft),.pv_v(pv_v),.pv_y(pv_y),.pv_tag(pv_tag),.fault(ffault),
         .pub_start(pc[3]),.pub_slot(selected_slot),.pub_v(ps_v),.pub_data(ps_data),
         .pub_word(ps_word),.pub_out_slot(ps_slot),.pub_tag(ps_tag),
-        .fold_start(1'b0),.fold_a(3'd0),.fold_b(3'd0));
+        .fold_start(fold0),.fold_a(fold0_a),.fold_b(fold0_b));
     wire [11:0] scalar_row=published_h128?{4'd0,ps_slot[1:0],attn_row,ps_word}:{6'd0,attn_row,ps_word};
     reg gv_q,gf_q;
     reg [31:0] gy_q;

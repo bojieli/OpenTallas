@@ -617,6 +617,38 @@
   },
   {
    "design": "r25gq",
+   "unit": "ATT.QK + ATT.PV on the SM engines (owner option B; DS-V4.1 T640/T128 records, canonical KV8 528 B / KV4 288 B rows)",
+   "group": "ATT",
+   "measured": 53472.0,
+   "price": 26363.5,
+   "unit_of_measure": "cycles",
+   "unit_ratio": 2.0283,
+   "e2e_loss_pct": 4.574,
+   "binding_workload": "ds_ar",
+   "per_workload": {
+    "ds_ar": {
+     "model": "measured SM-element-shape component spans (r6, same-source, exact) composed per attention record: fa 259 + busiest-SM span (+ PV publish 64 + SU/COLL merge MODEL); tools/hbm_sm_attention/b_measured_model.py",
+     "base_cycles": 565569.1,
+     "cycles": 592677.6,
+     "added_cycles": 27108.5,
+     "program_records": 80,
+     "e2e_loss_pct": 4.574,
+     "prefetch_variant": {
+      "cycles": 584357.6,
+      "e2e_loss_pct": 3.215
+     }
+    }
+   },
+   "within_unit_limit": true,
+   "evidence": "results/hbm_sm_attention_1015/b_measured_model.json",
+   "evidence_grade": "committed_bench",
+   "date": "2026-10-15",
+   "status": "proposed",
+   "note": "per-token attention cycles at measured spans (QK 547/411, PV 808/580 per T640/T128 record, exposed) vs A price 339.144/147.144 a record (38 T640 + 2 T128 layers); exposed -4.57 % e2e (2,024.7 vs 2,121.8 tok/s), KV-prefetched -3.22 % (2,053.5). Structural: dedicated ATT tiles retired (111.1 mm2 / ~161 W freed). Spans are component-shape (r6 bench_r6_canonical, 12/12 gates); SM-element bench r2 in progress; first access, publish, cross-SM merge MODEL. qwen_ar row pending the r2 Qwen measurement (standard 128-B rows + in-SM fold). NOTE r25gq proposed total is already far over 15 % from SM.MATVEC/IDX rows (owner decision needed independent of this row).",
+   "share_basis": "modelled"
+  },
+  {
+   "design": "r25gq",
    "unit": "FUSED.QDQ_FP8 [bench of record, WIDE]",
    "group": "FUSED.QDQ_FP8",
    "measured": 65.8,
@@ -1088,11 +1120,11 @@
   },
   "r25gq": {
    "accepted_pct": 0,
-   "proposed_pct": 107.972,
-   "accepted_plus_proposed_pct": 107.972,
+   "proposed_pct": 112.546,
+   "accepted_plus_proposed_pct": 112.546,
    "limit_pct": 15.0,
    "accepted_rows": 0,
-   "proposed_rows": 15,
+   "proposed_rows": 17,
    "headroom_pct": 15.0,
    "owner_exception_rows": 0,
    "over_limit_by_owner_exception": false
