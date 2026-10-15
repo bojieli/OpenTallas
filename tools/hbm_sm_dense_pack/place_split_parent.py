@@ -47,5 +47,6 @@ def assign(points,key,face):
  return result
 inp=[dict(bus='bin',bit=f['bit'],Q=f['existing_receiver_Q'])for f in forks]+row_receiver
 out['boundary_inputs']=assign(inp,'Q','W');out['boundary_outputs']=assign(outdrivers,'source','E');out['boundary_input_max_um']=max(x['distance_um']for x in out['boundary_inputs']);out['boundary_output_max_um']=max(x['distance_um']for x in out['boundary_outputs']);assert out['boundary_input_max_um']<500 and out['boundary_output_max_um']<500
+out['native_capture_gate']={'status':'UNPROVEN_LIKELY_FAIL_FOR_INTERIOR_PINREG','limit_ps':190,'maximum_boundary_pin_to_receiver_D_wire_um':out['boundary_input_max_um'],'note':'ReceiverQinside20umgapprovesQ→forkgeometryonly. ParentBPin→receiverDsameedgenativecapturebudgetneedsactual190psmeasurement. No zero-costpinwireorclockwaiver. HardenedPINREGrequiresrealclock/PG/holdoutlineplusseparateparenthopcontract.'}
 out['open'].append('BoundaryM6PORT/M8slots needPG-obstruction/viaescape check; atX0/W tileedgegrosscapacityonly, notfullroutecutcertificate.')
 json.dump(out,open('/home/ubuntu/wt/sm-dense-pack-1015/results/hbm_sm_dense_pack/split18_full_pin_progress.json','w'),indent=2);print('boundary',out['boundary_input_max_um'],out['boundary_output_max_um'])

@@ -243974,5 +243974,11 @@
     }
   ],
   "boundary_input_max_um": 499.99600000000004,
-  "boundary_output_max_um": 38.15600000000006
+  "boundary_output_max_um": 38.15600000000006,
+  "native_capture_gate": {
+    "status": "UNPROVEN_LIKELY_FAIL_FOR_INTERIOR_PINREG",
+    "limit_ps": 190,
+    "maximum_boundary_pin_to_receiver_D_wire_um": 499.99600000000004,
+    "note": "ReceiverQinside20umgapprovesQ\u2192forkgeometryonly. ParentBPin\u2192receiverDsameedgenativecapturebudgetneedsactual190psmeasurement. No zero-costpinwireorclockwaiver. HardenedPINREGrequiresrealclock/PG/holdoutlineplusseparateparenthopcontract."
+  }
 }
