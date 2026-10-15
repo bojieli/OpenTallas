@@ -5,7 +5,7 @@ module profile;
  wire[12:0]cv;wire[1091:0]cd;wire fault;wire[3:0]code;wire[1:0]phase;
  ot_s81_fixed_issue #(.NOPS(2),.STAGE(0),.OP_BASE(2),.ENG_PRESENT(13'h400))dut(
  .clk(clk),.rst_n(rst&&cyc>=1000),.pw_v(pv),.pw_a(pa),.pw_d(pd),.prog_len(8'd2),
- .job_v(cyc==1250),.job_user(10'd0),.job_pos(21'd1000),.job_tok(21'd0),
+ .job_v(cyc==1250),.job_user(10'd0),.job_pos(21'd0),.job_tok(21'd1000),
  .job_rdy(),.busy(),.job_done(),.job_kdone(),.done_slot(),.kit_tok(),.cmd_v(cv),.cmd_d(cd),
  .engine_available(13'h400),.dn_v(13'd0),.dn_tag(104'd0),.fault(fault),.fault_code(code),.st_jobs(),.st_cmds(),.phase(phase));
  initial begin $readmemh("mix_program.mem",m);repeat(5)@(negedge clk);rst=1;

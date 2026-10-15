@@ -62,8 +62,9 @@
     "command_abi": "opentallas.s81.cmd84.v1",
     "pw_abi": "opentallas.s81.fixed-pw36.v1",
     "pin_origin": "one stream clock after sampled job_v",
-    "seal_to_arm_stream_cycles": 129,
-    "qualified": false
+    "seal_to_arm_stream_cycles": 3,
+    "qualified": false,
+    "hardware_nops": 2
   },
   "op_base": 2,
   "reset_stream_cycle": 1000,
@@ -73,5 +74,11 @@
   "real_vm_commit_bound": 1903,
   "actual_vm_scope": "ideal row write consumption in this component vehicle",
   "physical_clock_phase_qualified": false,
-  "full_native_qualified": false
+  "full_native_qualified": false,
+  "source_context": {
+    "user": 0,
+    "pos": 0,
+    "tok": 1000,
+    "token_header_bits": "146:126"
+  }
 }
