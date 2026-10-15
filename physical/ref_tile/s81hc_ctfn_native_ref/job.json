@@ -1,5 +1,5 @@
 {
- "name": "s81hc_ctfn_native_ref-np2-hb4-hm30-COMMIT",
+ "name": "s81hc_ctfn_native_ref-np2-hb4-hm30-432072b5f",
  "block": "ot_s81_hc_ctfn",
  "ref_tile": true,
  "owner": "Claude:S-NORM",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 24,
  "source": {
   "branch": "claude/s81-norm-tree-1014",
-  "commit": "COMMIT"
+  "commit": "432072b5fe6d8996830dbe1c210ed735bf1be11c"
  },
  "stages": {
   "bench": [
@@ -71,7 +71,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/s81hc_ctfn_native_ref/s81hc_ctfn_native_ref-np2-hb4-hm30-COMMIT"
+   "to": "results/rtl/ref_tile/s81hc_ctfn_native_ref/s81hc_ctfn_native_ref-np2-hb4-hm30-432072b5f"
   }
  ],
  "cycles_added": 0,
