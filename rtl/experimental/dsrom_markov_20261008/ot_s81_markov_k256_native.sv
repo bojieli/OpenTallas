@@ -59,11 +59,14 @@ endmodule
 module ot_s81_markov_mul_native (
  input wire clk,rst_n,v,input wire[15:0] a,b,output wire[31:0] y,output wire fault
 );
+ // leaf reset conditioner (pc2): the die reset is asynchronous at the pin, released here after two edges
+ reg[1:0] rs_q;wire rl_n=rs_q[1];
+ always @(posedge clk or negedge rst_n) if(!rst_n) rs_q<=2'b00;else rs_q<={rs_q[0],1'b1};
  reg v_q;
- always @(posedge clk or negedge rst_n) if(!rst_n) v_q<=0;else v_q<=v;
+ always @(posedge clk or negedge rl_n) if(!rl_n) v_q<=0;else v_q<=v;
  reg[15:0] a_q,b_q;
  always @(posedge clk) begin a_q<=a;b_q<=b;end
- ot_s81_markov_mul_native_body u_b (.clk(clk),.rst_n(rst_n),.v(v_q),.a(a_q),.b(b_q),.y(y),.fault(fault));
+ ot_s81_markov_mul_native_body u_b (.clk(clk),.rst_n(rl_n),.v(v_q),.a(a_q),.b(b_q),.y(y),.fault(fault));
 endmodule
 
 module ot_s81_markov_chunk0_native_body (
@@ -86,11 +89,14 @@ module ot_s81_markov_chunk0_native (
  output wire[31:0] y,output wire vout,output wire bad
 );
  // chain head: the running sum enters as +0 inside the leaf (the 'sum' port was tied to 0 by the cluster: NO-STUBS)
+ // leaf reset conditioner (pc2): the die reset is asynchronous at the pin, released here after two edges
+ reg[1:0] rs_q;wire rl_n=rs_q[1];
+ always @(posedge clk or negedge rst_n) if(!rst_n) rs_q<=2'b00;else rs_q<={rs_q[0],1'b1};
  reg v_q;
- always @(posedge clk or negedge rst_n) if(!rst_n) v_q<=0;else v_q<=vin;
+ always @(posedge clk or negedge rl_n) if(!rl_n) v_q<=0;else v_q<=vin;
  reg[31:0] p_q;
  always @(posedge clk) p_q<=p;
- ot_s81_markov_chunk0_native_body u_b (.clk(clk),.rst_n(rst_n),.vin(v_q),.sum(32'b0),.p(p_q),.y(y),.vout(vout),.bad(bad));
+ ot_s81_markov_chunk0_native_body u_b (.clk(clk),.rst_n(rl_n),.vin(v_q),.sum(32'b0),.p(p_q),.y(y),.vout(vout),.bad(bad));
 endmodule
 
 module ot_s81_markov_chunk1_native_body (
@@ -126,11 +132,14 @@ module ot_s81_markov_chunk1_native (
  input wire clk,rst_n,vin,input wire[31:0] sum,p,
  output wire[31:0] y,output wire vout,output wire bad
 );
+ // leaf reset conditioner (pc2): the die reset is asynchronous at the pin, released here after two edges
+ reg[1:0] rs_q;wire rl_n=rs_q[1];
+ always @(posedge clk or negedge rst_n) if(!rst_n) rs_q<=2'b00;else rs_q<={rs_q[0],1'b1};
  reg v_q;
- always @(posedge clk or negedge rst_n) if(!rst_n) v_q<=0;else v_q<=vin;
+ always @(posedge clk or negedge rl_n) if(!rl_n) v_q<=0;else v_q<=vin;
  reg[31:0] s_q,p_q;
  always @(posedge clk) begin s_q<=sum;p_q<=p;end
- ot_s81_markov_chunk1_native_body u_b (.clk(clk),.rst_n(rst_n),.vin(v_q),.sum(s_q),.p(p_q),.y(y),.vout(vout),.bad(bad));
+ ot_s81_markov_chunk1_native_body u_b (.clk(clk),.rst_n(rl_n),.vin(v_q),.sum(s_q),.p(p_q),.y(y),.vout(vout),.bad(bad));
 endmodule
 
 module ot_s81_markov_chunk2_native_body (
@@ -166,11 +175,14 @@ module ot_s81_markov_chunk2_native (
  input wire clk,rst_n,vin,input wire[31:0] sum,p,
  output wire[31:0] y,output wire vout,output wire bad
 );
+ // leaf reset conditioner (pc2): the die reset is asynchronous at the pin, released here after two edges
+ reg[1:0] rs_q;wire rl_n=rs_q[1];
+ always @(posedge clk or negedge rst_n) if(!rst_n) rs_q<=2'b00;else rs_q<={rs_q[0],1'b1};
  reg v_q;
- always @(posedge clk or negedge rst_n) if(!rst_n) v_q<=0;else v_q<=vin;
+ always @(posedge clk or negedge rl_n) if(!rl_n) v_q<=0;else v_q<=vin;
  reg[31:0] s_q,p_q;
  always @(posedge clk) begin s_q<=sum;p_q<=p;end
- ot_s81_markov_chunk2_native_body u_b (.clk(clk),.rst_n(rst_n),.vin(v_q),.sum(s_q),.p(p_q),.y(y),.vout(vout),.bad(bad));
+ ot_s81_markov_chunk2_native_body u_b (.clk(clk),.rst_n(rl_n),.vin(v_q),.sum(s_q),.p(p_q),.y(y),.vout(vout),.bad(bad));
 endmodule
 
 module ot_s81_markov_chunk3_native_body (
@@ -206,11 +218,14 @@ module ot_s81_markov_chunk3_native (
  input wire clk,rst_n,vin,input wire[31:0] sum,p,
  output wire[31:0] y,output wire vout,output wire bad
 );
+ // leaf reset conditioner (pc2): the die reset is asynchronous at the pin, released here after two edges
+ reg[1:0] rs_q;wire rl_n=rs_q[1];
+ always @(posedge clk or negedge rst_n) if(!rst_n) rs_q<=2'b00;else rs_q<={rs_q[0],1'b1};
  reg v_q;
- always @(posedge clk or negedge rst_n) if(!rst_n) v_q<=0;else v_q<=vin;
+ always @(posedge clk or negedge rl_n) if(!rl_n) v_q<=0;else v_q<=vin;
  reg[31:0] s_q,p_q;
  always @(posedge clk) begin s_q<=sum;p_q<=p;end
- ot_s81_markov_chunk3_native_body u_b (.clk(clk),.rst_n(rst_n),.vin(v_q),.sum(s_q),.p(p_q),.y(y),.vout(vout),.bad(bad));
+ ot_s81_markov_chunk3_native_body u_b (.clk(clk),.rst_n(rl_n),.vin(v_q),.sum(s_q),.p(p_q),.y(y),.vout(vout),.bad(bad));
 endmodule
 
 module ot_s81_markov_chunk4_native_body (
@@ -246,11 +261,14 @@ module ot_s81_markov_chunk4_native (
  input wire clk,rst_n,vin,input wire[31:0] sum,p,
  output wire[31:0] y,output wire vout,output wire bad
 );
+ // leaf reset conditioner (pc2): the die reset is asynchronous at the pin, released here after two edges
+ reg[1:0] rs_q;wire rl_n=rs_q[1];
+ always @(posedge clk or negedge rst_n) if(!rst_n) rs_q<=2'b00;else rs_q<={rs_q[0],1'b1};
  reg v_q;
- always @(posedge clk or negedge rst_n) if(!rst_n) v_q<=0;else v_q<=vin;
+ always @(posedge clk or negedge rl_n) if(!rl_n) v_q<=0;else v_q<=vin;
  reg[31:0] s_q,p_q;
  always @(posedge clk) begin s_q<=sum;p_q<=p;end
- ot_s81_markov_chunk4_native_body u_b (.clk(clk),.rst_n(rst_n),.vin(v_q),.sum(s_q),.p(p_q),.y(y),.vout(vout),.bad(bad));
+ ot_s81_markov_chunk4_native_body u_b (.clk(clk),.rst_n(rl_n),.vin(v_q),.sum(s_q),.p(p_q),.y(y),.vout(vout),.bad(bad));
 endmodule
 
 module ot_s81_markov_chunk5_native_body (
@@ -286,11 +304,14 @@ module ot_s81_markov_chunk5_native (
  input wire clk,rst_n,vin,input wire[31:0] sum,p,
  output wire[31:0] y,output wire vout,output wire bad
 );
+ // leaf reset conditioner (pc2): the die reset is asynchronous at the pin, released here after two edges
+ reg[1:0] rs_q;wire rl_n=rs_q[1];
+ always @(posedge clk or negedge rst_n) if(!rst_n) rs_q<=2'b00;else rs_q<={rs_q[0],1'b1};
  reg v_q;
- always @(posedge clk or negedge rst_n) if(!rst_n) v_q<=0;else v_q<=vin;
+ always @(posedge clk or negedge rl_n) if(!rl_n) v_q<=0;else v_q<=vin;
  reg[31:0] s_q,p_q;
  always @(posedge clk) begin s_q<=sum;p_q<=p;end
- ot_s81_markov_chunk5_native_body u_b (.clk(clk),.rst_n(rst_n),.vin(v_q),.sum(s_q),.p(p_q),.y(y),.vout(vout),.bad(bad));
+ ot_s81_markov_chunk5_native_body u_b (.clk(clk),.rst_n(rl_n),.vin(v_q),.sum(s_q),.p(p_q),.y(y),.vout(vout),.bad(bad));
 endmodule
 
 module ot_s81_markov_chunk6_native_body (
@@ -326,11 +347,14 @@ module ot_s81_markov_chunk6_native (
  input wire clk,rst_n,vin,input wire[31:0] sum,p,
  output wire[31:0] y,output wire vout,output wire bad
 );
+ // leaf reset conditioner (pc2): the die reset is asynchronous at the pin, released here after two edges
+ reg[1:0] rs_q;wire rl_n=rs_q[1];
+ always @(posedge clk or negedge rst_n) if(!rst_n) rs_q<=2'b00;else rs_q<={rs_q[0],1'b1};
  reg v_q;
- always @(posedge clk or negedge rst_n) if(!rst_n) v_q<=0;else v_q<=vin;
+ always @(posedge clk or negedge rl_n) if(!rl_n) v_q<=0;else v_q<=vin;
  reg[31:0] s_q,p_q;
  always @(posedge clk) begin s_q<=sum;p_q<=p;end
- ot_s81_markov_chunk6_native_body u_b (.clk(clk),.rst_n(rst_n),.vin(v_q),.sum(s_q),.p(p_q),.y(y),.vout(vout),.bad(bad));
+ ot_s81_markov_chunk6_native_body u_b (.clk(clk),.rst_n(rl_n),.vin(v_q),.sum(s_q),.p(p_q),.y(y),.vout(vout),.bad(bad));
 endmodule
 
 module ot_s81_markov_chunk7_native_body (
@@ -366,11 +390,14 @@ module ot_s81_markov_chunk7_native (
  input wire clk,rst_n,vin,input wire[31:0] sum,p,
  output wire[31:0] y,output wire vout,output wire bad
 );
+ // leaf reset conditioner (pc2): the die reset is asynchronous at the pin, released here after two edges
+ reg[1:0] rs_q;wire rl_n=rs_q[1];
+ always @(posedge clk or negedge rst_n) if(!rst_n) rs_q<=2'b00;else rs_q<={rs_q[0],1'b1};
  reg v_q;
- always @(posedge clk or negedge rst_n) if(!rst_n) v_q<=0;else v_q<=vin;
+ always @(posedge clk or negedge rl_n) if(!rl_n) v_q<=0;else v_q<=vin;
  reg[31:0] s_q,p_q;
  always @(posedge clk) begin s_q<=sum;p_q<=p;end
- ot_s81_markov_chunk7_native_body u_b (.clk(clk),.rst_n(rst_n),.vin(v_q),.sum(s_q),.p(p_q),.y(y),.vout(vout),.bad(bad));
+ ot_s81_markov_chunk7_native_body u_b (.clk(clk),.rst_n(rl_n),.vin(v_q),.sum(s_q),.p(p_q),.y(y),.vout(vout),.bad(bad));
 endmodule
 
 module ot_s81_markov_pair_native_body (
@@ -391,11 +418,14 @@ module ot_s81_markov_pair_native (
  input wire clk,rst_n,vin,input wire[31:0] a,b,
  output wire[31:0] y,output wire vout,output wire bad
 );
+ // leaf reset conditioner (pc2): the die reset is asynchronous at the pin, released here after two edges
+ reg[1:0] rs_q;wire rl_n=rs_q[1];
+ always @(posedge clk or negedge rst_n) if(!rst_n) rs_q<=2'b00;else rs_q<={rs_q[0],1'b1};
  reg v_q;
- always @(posedge clk or negedge rst_n) if(!rst_n) v_q<=0;else v_q<=vin;
+ always @(posedge clk or negedge rl_n) if(!rl_n) v_q<=0;else v_q<=vin;
  reg[31:0] a_q,b_q;
  always @(posedge clk) begin a_q<=a;b_q<=b;end
- ot_s81_markov_pair_native_body u_b (.clk(clk),.rst_n(rst_n),.vin(v_q),.a(a_q),.b(b_q),.y(y),.vout(vout),.bad(bad));
+ ot_s81_markov_pair_native_body u_b (.clk(clk),.rst_n(rl_n),.vin(v_q),.a(a_q),.b(b_q),.y(y),.vout(vout),.bad(bad));
 endmodule
 
 module ot_s81_markov_fold_native_body (
@@ -420,11 +450,14 @@ module ot_s81_markov_fold_native (
  input wire clk,rst_n,vin,input wire[31:0] x,
  output wire[31:0] y,output wire vout,output wire bad
 );
+ // leaf reset conditioner (pc2): the die reset is asynchronous at the pin, released here after two edges
+ reg[1:0] rs_q;wire rl_n=rs_q[1];
+ always @(posedge clk or negedge rst_n) if(!rst_n) rs_q<=2'b00;else rs_q<={rs_q[0],1'b1};
  reg v_q;
- always @(posedge clk or negedge rst_n) if(!rst_n) v_q<=0;else v_q<=vin;
+ always @(posedge clk or negedge rl_n) if(!rl_n) v_q<=0;else v_q<=vin;
  reg[31:0] x_q;
  always @(posedge clk) x_q<=x;
- ot_s81_markov_fold_native_body u_b (.clk(clk),.rst_n(rst_n),.vin(v_q),.x(x_q),.y(y),.vout(vout),.bad(bad));
+ ot_s81_markov_fold_native_body u_b (.clk(clk),.rst_n(rl_n),.vin(v_q),.x(x_q),.y(y),.vout(vout),.bad(bad));
 endmodule
 
 module ot_s81_markov_join_native_body #(parameter integer MUTANT_FOLD=0) (
@@ -437,11 +470,14 @@ module ot_s81_markov_join_native #(parameter integer MUTANT_FOLD=0) (
  input wire clk,rst_n,vin,input wire[31:0] head,x,
  output wire[31:0] y,output wire vout,output wire[1:0] err
 );
+ // leaf reset conditioner (pc2): the die reset is asynchronous at the pin, released here after two edges
+ reg[1:0] rs_q;wire rl_n=rs_q[1];
+ always @(posedge clk or negedge rst_n) if(!rst_n) rs_q<=2'b00;else rs_q<={rs_q[0],1'b1};
  reg v_q;
- always @(posedge clk or negedge rst_n) if(!rst_n) v_q<=0;else v_q<=vin;
+ always @(posedge clk or negedge rl_n) if(!rl_n) v_q<=0;else v_q<=vin;
  reg[31:0] h_q,x_q;
  always @(posedge clk) begin h_q<=head;x_q<=x;end
- ot_s81_markov_join_native_body #(.MUTANT_FOLD(MUTANT_FOLD)) u_b (.clk(clk),.rst_n(rst_n),.vin(v_q),.head(h_q),.x(x_q),.y(y),.vout(vout),.err(err));
+ ot_s81_markov_join_native_body #(.MUTANT_FOLD(MUTANT_FOLD)) u_b (.clk(clk),.rst_n(rl_n),.vin(v_q),.head(h_q),.x(x_q),.y(y),.vout(vout),.err(err));
 endmodule
 
 module ot_s81_markov_k256_native #(parameter integer MUTANT_FOLD=0) (
