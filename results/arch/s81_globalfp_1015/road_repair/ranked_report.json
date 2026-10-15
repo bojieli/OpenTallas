@@ -1,0 +1,104 @@
+{
+ "scope": "NO_BUILDABLE_CANDIDATE_NO_GRT",
+ "ranked": [
+  {
+   "rank": 1,
+   "name": "HC64_row_fold_432",
+   "result": "REJECT current BFx2 cut; geometry-only inside hub with799.2corr; missing control and VM geometry",
+   "next": "NativeHCrow/control contracts, improvepack at>=648road or explicit S14 loadallocation; compiler actualturnstages."
+  },
+  {
+   "rank": 2,
+   "name": "HC64_row_fold_648",
+   "result": "REJECT height; substantially more road margin",
+   "extra_height": 1623.4172717832116,
+   "next": "ActualSU8SM tile-level homes or structurednonuniformHCfold; cannot reshape aggregatewithoutsource."
+  },
+  {
+   "rank": 3,
+   "name": "21_column_field_reflow",
+   "result": "OPEN system alternative; preserves128frames as2x7+19x6; frees1191.456width",
+   "critical": "14short frames currently allow6frames overSW8500um band. Repacking them into2seven-framecolumns requires movingSWPHY/control/service or verifying narrower streets. No legal actual allleaf placement yet.",
+   "graph_short_frames": 14,
+   "short_height": 3289.68,
+   "seven_frame_height_with388p8streets": 25360.559999999998,
+   "alternative_street216_six_long_fromSWtop": 25686.696,
+   "forbidden_inference": "216streets not a source-verified pin/station allocation; cannot call feasible."
+  },
+  {
+   "rank": 4,
+   "name": "Whole_2x2_or_1x4_hub",
+   "result": "PROVEN INFEASIBLE even before full road demand; see audit.json"
+  }
+ ],
+ "verification": [
+  {
+   "road_width": 432.0,
+   "rectangle_overlap_count": 0,
+   "outside_hub_count": 0,
+   "outside_hub": [],
+   "cth_rows": 64,
+   "soft_controls": 6,
+   "max_minimum_added_chain_cycles": 178,
+   "layout_fit": true,
+   "all_incident_cut_pass": false
+  },
+  {
+   "road_width": 648.0,
+   "rectangle_overlap_count": 0,
+   "outside_hub_count": 6,
+   "outside_hub": [
+    "sp_hc_t_c2_row2",
+    "sp_hc_t_c1_row5",
+    "sp_hc_s_c2_row4",
+    "sp_hc_t_c0_row4",
+    "sp_hc_t_c1_row7",
+    "sp_hc_t_c2_row6"
+   ],
+   "cth_rows": 64,
+   "soft_controls": 6,
+   "max_minimum_added_chain_cycles": 143,
+   "layout_fit": false,
+   "all_incident_cut_pass": false
+  }
+ ],
+ "necessary_lower_bounds": {
+  "two_by_two_extra_height": 1540.572,
+  "one_by_four_extra_height_atmost2_main_overlap": 337.38,
+  "two_by_two_min_hub_width_to_allow_any_VM_tower_overlap_with648road": 6417.336,
+  "with21p6halo": 6438.936000000001,
+  "one_by_four_enlarged3column_witness_extra_width": 1481.712
+ },
+ "required_inputs": [
+  "Complete currentVMnative502+inventory childhomes, actual pinfaces/orientations/clocks/cap16/CDC/router/global.",
+  "Actual64HCcth810native row/control metadata +per-stage3chain member mapping +v24pins.",
+  "ActualSU8SM tile footprints/pins andcontrol slice source; no aggregate reshape inference.",
+  "Current GEN all buses andactual polyline stations including BFx2pair538,widegrownstations+M3/M6altfaces,serviceKElinks,clock/reset.",
+  "S14+VCHfullphysicaltrack capacity with CTS/PG/layer grants, actualcrossings andall incident endpoints.",
+  "Production staticcompiler allnewrelay/turnlatencies, buffers and exactcycleaccounting."
+ ],
+ "source_hashes": {
+  "tools/s81/global_fp/road_repair.py": "94ba7c89ef69908b656c4f8581a7cc7ad6934b99f91d39131a32900876fcbe2a",
+  "tools/s81/global_fp/hc_strip_repair.py": "8304dd02031f711b7322a335e48bb3a354e51cfad85e97743f8cb02441aef92c",
+  "tools/s81/global_fp/hc_fold_repair.py": "5914da92baf93b459f00a90151696d94a7ec7dd0d565def3b35f166174a25687"
+ },
+ "notes": [
+  "No jobs launched, no caches/jobs deleted. One-core bounded Python geometry only.",
+  "Historical16seedSA with VM4168.8x3715.2 was discarded as a source-current candidate; preserved screen.json is diagnostic only.",
+  "CurrentnewNORM additional towergrowth only strengthens aggregate impossibility; foldedrows810 use parent latest metadata pending source repair."
+ ],
+ "latest_current_vm_640_update": {
+  "source": "c3fc1a4a2 actualelaboration READ_PIPE4/CAP_PIPE2; /home/ubuntu/wt/s81-vm-geometry-1103/results/physical/s81_vm_geometry_1103/{inventory,packing}.json",
+  "known_hard_leaves": 640,
+  "known_candidate_body": [
+   5529.6,
+   4903.2
+  ],
+  "body_overlap_count": 0,
+  "old_local_vectors_preserved": 468,
+  "added_side_strip_width": 1555.2,
+  "status": "GEOMETRY_OPEN; WFC/XIO fourclock controlregions andcombglue have nohomes; write150geometries source-pin candidate only",
+  "implication": "The5529.6wide developmentbody does not fit5097.6hub, even with noVCH. It is a particular packing, not a proof every possible640leaf packing needs5529.6width. Earlierpartialbody screens remain necessarylowerbound diagnostics only, never currentVMcandidate."
+ },
+ "proof_assumptions": "Whole original SU/HC outlines preserved; four fixed-shape slice bodies kept in named2x2 or1x4 arrangements with21.6slice gaps. Not an impossibility proof for arbitrary native-leaf repacking, HC/SU splitting or moving field groups. Current640leaf body may be repacked;5529.6candidate width is not universal minimum."
+}

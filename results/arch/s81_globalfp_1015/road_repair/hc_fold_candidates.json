@@ -1,0 +1,1857 @@
+{
+ "scope": "HC_ROW_REPARTITION_SCREEN_GEOMETRY_OPEN",
+ "source_rows": "head30/tail34 per parent actualv13membership;head0..9/22..31/42..51,tail10..21/32..41/52..63;NT810 pendingmetadatarepair",
+ "source_vm": "Partial1965.6x9828 body only; incomplete currentinventory",
+ "fatal": [
+  "Control reserves preserve aggregate area only, not source-native control shapes or pin topology",
+  "Rows arbitrarily reordered physically; actual paired3056/2164 buses, registered turns, clocks, TT/FF/DRC and static compiler stage ages unproven",
+  "No all-incident path allocation; baseline tree-only432cut0.584 not qualification",
+  "432 road fails current BF x2 sensitivity5862/(432*21.09375)=0.643293;648 geometry exceeds available height. No candidate adopted."
+ ],
+ "results": [
+  {
+   "road_width": 432.0,
+   "packed_height": 20904.531550634834,
+   "limit_height": 21024.899999999998,
+   "fit": true,
+   "rectangles": {
+    "sp_su_s": [
+     13942.8,
+     1807.9,
+     1889.976,
+     10709.256000000001
+    ],
+    "sp_vm": [
+     15854.376,
+     1807.9,
+     1965.6,
+     9828.0
+    ],
+    "sp_hc_t_c1_row0": [
+     17841.576,
+     1807.9,
+     576.72,
+     810.0
+    ],
+    "sp_hc_s_UNMAPPED_control_reserve2": [
+     17841.576,
+     2639.5,
+     605.512,
+     1480.2497211483824
+    ],
+    "sp_gather": [
+     15854.376,
+     11657.5,
+     1727.976,
+     1045.4160000000002
+    ],
+    "sp_hc_t_c0_row10": [
+     17841.576,
+     4141.349721148383,
+     576.72,
+     810.0
+    ],
+    "sp_hc_s_c0_row1": [
+     17841.576,
+     4972.949721148382,
+     576.72,
+     810.0
+    ],
+    "sp_hc_t_c0_row6": [
+     17841.576,
+     5804.549721148382,
+     576.72,
+     810.0
+    ],
+    "sp_hc_s_c0_row4": [
+     17841.576,
+     6636.149721148382,
+     576.72,
+     810.0
+    ],
+    "sp_hc_s_c1_row2": [
+     17841.576,
+     7467.749721148382,
+     576.72,
+     810.0
+    ],
+    "sp_hc_t_c0_row9": [
+     17841.576,
+     8299.349721148383,
+     576.72,
+     810.0
+    ],
+    "sp_hc_s_c1_row7": [
+     17841.576,
+     9130.949721148383,
+     576.72,
+     810.0
+    ],
+    "sp_hc_t_c0_row2": [
+     17841.576,
+     9962.549721148383,
+     576.72,
+     810.0
+    ],
+    "sp_hc_t_c0_row7": [
+     17841.576,
+     10794.149721148384,
+     576.72,
+     810.0
+    ],
+    "sp_hc_s_c2_row9": [
+     17841.576,
+     11625.749721148384,
+     576.72,
+     810.0
+    ],
+    "sp_hc_t_c0_row11": [
+     17603.951999999997,
+     12457.349721148385,
+     576.72,
+     810.0
+    ],
+    "sp_hc_s_c1_row9": [
+     13942.8,
+     12538.756000000001,
+     576.72,
+     810.0
+    ],
+    "sp_hc_s_c2_row7": [
+     14541.119999999999,
+     12538.756000000001,
+     576.72,
+     810.0
+    ],
+    "sp_hc_s_c1_row6": [
+     15139.439999999999,
+     12538.756000000001,
+     576.72,
+     810.0
+    ],
+    "sp_hc_s_c2_row1": [
+     15737.759999999998,
+     12724.516,
+     576.72,
+     810.0
+    ],
+    "sp_hc_t_c2_row10": [
+     16336.079999999998,
+     12724.516,
+     576.72,
+     810.0
+    ],
+    "sp_hc_t_c2_row5": [
+     16934.399999999998,
+     12724.516,
+     576.72,
+     810.0
+    ],
+    "sp_hc_s_UNMAPPED_control_reserve0": [
+     17532.719999999998,
+     13288.949721148385,
+     605.512,
+     1480.2497211483824
+    ],
+    "sp_hc_s_c1_row0": [
+     13942.8,
+     13370.356000000002,
+     576.72,
+     810.0
+    ],
+    "sp_hc_t_c1_row1": [
+     14541.119999999999,
+     13370.356000000002,
+     576.72,
+     810.0
+    ],
+    "sp_hc_t_c2_row8": [
+     15139.439999999999,
+     13370.356000000002,
+     576.72,
+     810.0
+    ],
+    "sp_hc_t_c2_row3": [
+     15737.759999999998,
+     13556.116,
+     576.72,
+     810.0
+    ],
+    "sp_hc_s_c0_row3": [
+     16336.079999999998,
+     13556.116,
+     576.72,
+     810.0
+    ],
+    "sp_hc_t_c2_row4": [
+     16934.399999999998,
+     13556.116,
+     576.72,
+     810.0
+    ],
+    "sp_hc_t_c2_row6": [
+     13942.8,
+     14201.956000000002,
+     576.72,
+     810.0
+    ],
+    "sp_hc_s_c0_row8": [
+     14541.119999999999,
+     14201.956000000002,
+     576.72,
+     810.0
+    ],
+    "sp_hc_t_c2_row9": [
+     15139.439999999999,
+     14201.956000000002,
+     576.72,
+     810.0
+    ],
+    "sp_pq": [
+     15737.759999999998,
+     14387.716,
+     1728.0,
+     449.256
+    ],
+    "sp_hc_s_UNMAPPED_control_reserve1": [
+     17487.36,
+     14790.799442296768,
+     605.512,
+     1480.2497211483824
+    ],
+    "sp_hc_t_UNMAPPED_control_reserve2": [
+     15737.759999999998,
+     14858.572,
+     605.512,
+     950.5635506348359
+    ],
+    "sp_hc_s_c2_row8": [
+     16364.872,
+     14858.572,
+     576.72,
+     810.0
+    ],
+    "sp_hc_t_c0_row4": [
+     13942.8,
+     15033.556000000002,
+     576.72,
+     810.0
+    ],
+    "embed_expand": [
+     17603.951999999997,
+     11657.5,
+     216.0,
+     216.0
+    ],
+    "hcx_ctl": [
+     17603.951999999997,
+     11895.1,
+     216.0,
+     216.0
+    ],
+    "sp_hc_t_c0_row5": [
+     14541.119999999999,
+     15033.556000000002,
+     576.72,
+     810.0
+    ],
+    "sp_hc_t_c2_row2": [
+     15139.439999999999,
+     15033.556000000002,
+     576.72,
+     810.0
+    ],
+    "sp_hc_t_c1_row6": [
+     16364.872,
+     15690.172,
+     576.72,
+     810.0
+    ],
+    "sp_hc_t_c2_row1": [
+     15737.759999999998,
+     15830.735550634836,
+     576.72,
+     810.0
+    ],
+    "sp_hc_t_c0_row0": [
+     13942.8,
+     15865.156000000003,
+     576.72,
+     810.0
+    ],
+    "sp_wfc": [
+     16336.079999999998,
+     16521.772,
+     1727.976,
+     328.296
+    ],
+    "sp_hc_s_c0_row5": [
+     14541.119999999999,
+     15865.156000000003,
+     576.72,
+     810.0
+    ],
+    "sp_hc_s_c0_row2": [
+     15139.439999999999,
+     15865.156000000003,
+     576.72,
+     810.0
+    ],
+    "sp_hc_s_c1_row8": [
+     15737.759999999998,
+     16662.335550634838,
+     576.72,
+     810.0
+    ],
+    "sp_sseq": [
+     13942.8,
+     16696.756000000005,
+     1727.976,
+     88.536
+    ],
+    "sp_capture": [
+     13942.8,
+     16806.892000000003,
+     1727.976,
+     561.576
+    ],
+    "sp_hc_t_c1_row9": [
+     16336.079999999998,
+     16871.668,
+     576.72,
+     810.0
+    ],
+    "sp_hc_s_c0_row9": [
+     16934.399999999998,
+     16871.668,
+     576.72,
+     810.0
+    ],
+    "sp_hc_s_c2_row3": [
+     17532.719999999998,
+     16871.668,
+     576.72,
+     810.0
+    ],
+    "sp_hc_s_c2_row4": [
+     13942.8,
+     17390.068000000003,
+     576.72,
+     810.0
+    ],
+    "sp_hc_t_c2_row0": [
+     14541.119999999999,
+     17390.068000000003,
+     576.72,
+     810.0
+    ],
+    "sp_hc_t_c2_row11": [
+     15139.439999999999,
+     17390.068000000003,
+     576.72,
+     810.0
+    ],
+    "sp_hc_s_c0_row7": [
+     15737.759999999998,
+     17493.935550634837,
+     576.72,
+     810.0
+    ],
+    "sp_hc_t_c1_row2": [
+     16336.079999999998,
+     17703.268000000004,
+     576.72,
+     810.0
+    ],
+    "engram_dispatch": [
+     18439.896,
+     1807.9,
+     129.6,
+     86.4
+    ],
+    "sp_hc_s_c2_row5": [
+     16934.399999999998,
+     17703.268000000004,
+     576.72,
+     810.0
+    ],
+    "sp_hc_s_c1_row5": [
+     17532.719999999998,
+     17703.268000000004,
+     576.72,
+     810.0
+    ],
+    "sp_hc_t_c2_row7": [
+     13942.8,
+     18221.668000000005,
+     576.72,
+     810.0
+    ],
+    "sp_hc_s_c0_row6": [
+     14541.119999999999,
+     18221.668000000005,
+     576.72,
+     810.0
+    ],
+    "sp_hc_s_c0_row0": [
+     15139.439999999999,
+     18221.668000000005,
+     576.72,
+     810.0
+    ],
+    "sp_hc_t_UNMAPPED_control_reserve1": [
+     15737.759999999998,
+     18534.868000000002,
+     605.512,
+     950.5635506348359
+    ],
+    "sp_hc_t_c1_row7": [
+     16364.872,
+     18534.868000000002,
+     576.72,
+     810.0
+    ],
+    "hcx_gatherpack": [
+     17603.951999999997,
+     12132.7,
+     216.0,
+     216.0
+    ],
+    "sp_hc_t_UNMAPPED_control_reserve0": [
+     16963.192,
+     18534.868000000002,
+     605.512,
+     950.5635506348359
+    ],
+    "sp_hc_t_c1_row8": [
+     17590.304,
+     18534.868000000002,
+     576.72,
+     810.0
+    ],
+    "sp_hc_s_c2_row2": [
+     13942.8,
+     19053.268000000004,
+     576.72,
+     810.0
+    ],
+    "sp_collective": [
+     14541.119999999999,
+     19507.031550634838,
+     1727.976,
+     2721.576
+    ],
+    "sp_hc_t_c0_row3": [
+     16364.872,
+     19366.468,
+     576.72,
+     810.0
+    ],
+    "sp_hc_t_c1_row4": [
+     17590.304,
+     19366.468,
+     576.72,
+     810.0
+    ],
+    "sp_hc_t_c0_row8": [
+     16963.192,
+     19507.031550634838,
+     576.72,
+     810.0
+    ],
+    "sp_hc_s_c2_row6": [
+     13942.8,
+     19884.868000000002,
+     576.72,
+     810.0
+    ],
+    "sp_hc_s_c1_row1": [
+     16290.696,
+     20198.068,
+     576.72,
+     810.0
+    ],
+    "sp_hc_s_c1_row4": [
+     17561.512,
+     20198.068,
+     576.72,
+     810.0
+    ],
+    "sp_hc_t_c1_row3": [
+     16889.016,
+     20338.631550634836,
+     576.72,
+     810.0
+    ],
+    "mix4": [
+     16290.696,
+     21170.231550634835,
+     1613.5,
+     1542.2
+    ],
+    "sp_hc_t_c1_row5": [
+     13942.8,
+     20716.468,
+     576.72,
+     810.0
+    ],
+    "sp_hc_s_c1_row3": [
+     17925.796,
+     21029.667999999998,
+     576.72,
+     810.0
+    ],
+    "sp_hc_t_c0_row1": [
+     13942.8,
+     21548.068,
+     576.72,
+     810.0
+    ],
+    "sp_hc_s_c2_row0": [
+     17925.796,
+     21861.267999999996,
+     576.72,
+     810.0
+    ],
+    "sp_host": [
+     14541.119999999999,
+     22250.207550634837,
+     1727.976,
+     129.576
+    ]
+   },
+   "soft_unmapped_control_reserves": {
+    "sp_hc_s_UNMAPPED_control_reserve0": [
+     605.512,
+     1480.2497211483824
+    ],
+    "sp_hc_s_UNMAPPED_control_reserve1": [
+     605.512,
+     1480.2497211483824
+    ],
+    "sp_hc_s_UNMAPPED_control_reserve2": [
+     605.512,
+     1480.2497211483824
+    ],
+    "sp_hc_t_UNMAPPED_control_reserve0": [
+     605.512,
+     950.5635506348359
+    ],
+    "sp_hc_t_UNMAPPED_control_reserve1": [
+     605.512,
+     950.5635506348359
+    ],
+    "sp_hc_t_UNMAPPED_control_reserve2": [
+     605.512,
+     950.5635506348359
+    ]
+   },
+   "road": [
+    18608.4,
+    1807.9,
+    432.0,
+    21824.1
+   ],
+   "corridor": [
+    13942.8,
+    22734.031550634834,
+    5097.6,
+    799.2
+   ],
+   "chains": [
+    {
+     "parent": "sp_hc_s",
+     "chain": 0,
+     "rows": 10,
+     "hops": [
+      {
+       "distance_um": 16760.854278851624,
+       "minimum_extra_relay_stages": 33
+      },
+      {
+       "distance_um": 12784.342278851622,
+       "minimum_extra_relay_stages": 25
+      },
+      {
+       "distance_um": 4315.680000000002,
+       "minimum_extra_relay_stages": 8
+      },
+      {
+       "distance_um": 9235.46227885162,
+       "minimum_extra_relay_stages": 18
+      },
+      {
+       "distance_um": 11719.462278851623,
+       "minimum_extra_relay_stages": 23
+      },
+      {
+       "distance_um": 1546.5120000000024,
+       "minimum_extra_relay_stages": 3
+      },
+      {
+       "distance_um": 2734.372449365168,
+       "minimum_extra_relay_stages": 5
+      },
+      {
+       "distance_um": 5298.619550634834,
+       "minimum_extra_relay_stages": 10
+      },
+      {
+       "distance_um": 4252.991999999998,
+       "minimum_extra_relay_stages": 8
+      }
+     ],
+     "total_minimum_extra_cycles": 133,
+     "source_stage_indices": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9
+     ]
+    },
+    {
+     "parent": "sp_hc_s",
+     "chain": 1,
+     "rows": 10,
+     "hops": [
+      {
+       "distance_um": 8365.607999999998,
+       "minimum_extra_relay_stages": 16
+      },
+      {
+       "distance_um": 15091.198278851618,
+       "minimum_extra_relay_stages": 30
+      },
+      {
+       "distance_um": 12836.138278851613,
+       "minimum_extra_relay_stages": 25
+      },
+      {
+       "distance_um": 2005.8839999999982,
+       "minimum_extra_relay_stages": 4
+      },
+      {
+       "distance_um": 3333.591999999997,
+       "minimum_extra_relay_stages": 6
+      },
+      {
+       "distance_um": 8367.792000000001,
+       "minimum_extra_relay_stages": 16
+      },
+      {
+       "distance_um": 6919.94227885162,
+       "minimum_extra_relay_stages": 13
+      },
+      {
+       "distance_um": 8825.201829486457,
+       "minimum_extra_relay_stages": 17
+      },
+      {
+       "distance_um": 6728.539550634836,
+       "minimum_extra_relay_stages": 13
+      }
+     ],
+     "total_minimum_extra_cycles": 140,
+     "source_stage_indices": [
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29,
+      30,
+      31
+     ]
+    },
+    {
+     "parent": "sp_hc_s",
+     "chain": 2,
+     "rows": 10,
+     "hops": [
+      {
+       "distance_um": 12134.787999999997,
+       "minimum_extra_relay_stages": 24
+      },
+      {
+       "distance_um": 7313.712000000003,
+       "minimum_extra_relay_stages": 14
+      },
+      {
+       "distance_um": 6581.52,
+       "minimum_extra_relay_stages": 13
+      },
+      {
+       "distance_um": 3881.519999999997,
+       "minimum_extra_relay_stages": 7
+      },
+      {
+       "distance_um": 3488.399999999998,
+       "minimum_extra_relay_stages": 6
+      },
+      {
+       "distance_um": 4363.199999999997,
+       "minimum_extra_relay_stages": 8
+      },
+      {
+       "distance_um": 8754.432,
+       "minimum_extra_relay_stages": 17
+      },
+      {
+       "distance_um": 3333.5679999999993,
+       "minimum_extra_relay_stages": 6
+      },
+      {
+       "distance_um": 5519.5262788516175,
+       "minimum_extra_relay_stages": 11
+      }
+     ],
+     "total_minimum_extra_cycles": 106,
+     "source_stage_indices": [
+      42,
+      43,
+      44,
+      45,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51
+     ]
+    },
+    {
+     "parent": "sp_hc_t",
+     "chain": 0,
+     "rows": 12,
+     "hops": [
+      {
+       "distance_um": 4872.911999999997,
+       "minimum_extra_relay_stages": 9
+      },
+      {
+       "distance_um": 16294.294278851617,
+       "minimum_extra_relay_stages": 32
+      },
+      {
+       "distance_um": 10070.622278851619,
+       "minimum_extra_relay_stages": 20
+      },
+      {
+       "distance_um": 7564.983999999999,
+       "minimum_extra_relay_stages": 15
+      },
+      {
+       "distance_um": 1408.3199999999997,
+       "minimum_extra_relay_stages": 2
+      },
+      {
+       "distance_um": 13339.462278851623,
+       "minimum_extra_relay_stages": 26
+      },
+      {
+       "distance_um": 4179.600000000002,
+       "minimum_extra_relay_stages": 8
+      },
+      {
+       "distance_um": 8781.265829486456,
+       "minimum_extra_relay_stages": 17
+      },
+      {
+       "distance_um": 12896.065829486457,
+       "minimum_extra_relay_stages": 25
+      },
+      {
+       "distance_um": 4968.0,
+       "minimum_extra_relay_stages": 9
+      },
+      {
+       "distance_um": 7743.624000000005,
+       "minimum_extra_relay_stages": 15
+      }
+     ],
+     "total_minimum_extra_cycles": 178,
+     "source_stage_indices": [
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21
+     ]
+    },
+    {
+     "parent": "sp_hc_t",
+     "chain": 1,
+     "rows": 10,
+     "hops": [
+      {
+       "distance_um": 14052.912000000004,
+       "minimum_extra_relay_stages": 28
+      },
+      {
+       "distance_um": 5317.872000000001,
+       "minimum_extra_relay_stages": 10
+      },
+      {
+       "distance_um": 2378.2995506348343,
+       "minimum_extra_relay_stages": 4
+      },
+      {
+       "distance_um": 2483.451550634836,
+       "minimum_extra_relay_stages": 4
+      },
+      {
+       "distance_um": 4187.504000000001,
+       "minimum_extra_relay_stages": 8
+      },
+      {
+       "distance_um": 8258.368,
+       "minimum_extra_relay_stages": 16
+      },
+      {
+       "distance_um": 2034.6960000000036,
+       "minimum_extra_relay_stages": 4
+      },
+      {
+       "distance_um": 2035.4320000000007,
+       "minimum_extra_relay_stages": 4
+      },
+      {
+       "distance_um": 3727.4240000000027,
+       "minimum_extra_relay_stages": 7
+      }
+     ],
+     "total_minimum_extra_cycles": 85,
+     "source_stage_indices": [
+      32,
+      33,
+      34,
+      35,
+      36,
+      37,
+      38,
+      39,
+      40,
+      41
+     ]
+    },
+    {
+     "parent": "sp_hc_t",
+     "chain": 2,
+     "rows": 12,
+     "hops": [
+      {
+       "distance_um": 3565.9724493651665,
+       "minimum_extra_relay_stages": 7
+      },
+      {
+       "distance_um": 2205.499550634833,
+       "minimum_extra_relay_stages": 4
+      },
+      {
+       "distance_um": 2885.760000000002,
+       "minimum_extra_relay_stages": 5
+      },
+      {
+       "distance_um": 2006.6399999999994,
+       "minimum_extra_relay_stages": 4
+      },
+      {
+       "distance_um": 1641.6000000000004,
+       "minimum_extra_relay_stages": 3
+      },
+      {
+       "distance_um": 3659.040000000001,
+       "minimum_extra_relay_stages": 7
+      },
+      {
+       "distance_um": 3209.712000000003,
+       "minimum_extra_relay_stages": 6
+      },
+      {
+       "distance_um": 6857.952000000003,
+       "minimum_extra_relay_stages": 13
+      },
+      {
+       "distance_um": 21.600000000000364,
+       "minimum_extra_relay_stages": 0
+      },
+      {
+       "distance_um": 3484.0800000000017,
+       "minimum_extra_relay_stages": 6
+      },
+      {
+       "distance_um": 5052.192000000003,
+       "minimum_extra_relay_stages": 10
+      }
+     ],
+     "total_minimum_extra_cycles": 65,
+     "source_stage_indices": [
+      52,
+      53,
+      54,
+      55,
+      56,
+      57,
+      58,
+      59,
+      60,
+      61,
+      62,
+      63
+     ]
+    }
+   ],
+   "fit_with1512": false,
+   "free_vertical_margin": 98.7684493651642,
+   "current_BF_x2_tree_cut_sensitivity": 0.6432921810699589,
+   "fatal_cut": true
+  },
+  {
+   "road_width": 648.0,
+   "packed_height": 22626.71727178321,
+   "limit_height": 21024.899999999998,
+   "fit": false,
+   "rectangles": {
+    "sp_su_s": [
+     13942.8,
+     1807.9,
+     1889.976,
+     10709.256000000001
+    ],
+    "sp_vm": [
+     15854.376,
+     1807.9,
+     1965.6,
+     9828.0
+    ],
+    "sp_hc_t_c2_row8": [
+     15854.376,
+     11657.5,
+     576.72,
+     810.0
+    ],
+    "sp_hc_s_c1_row8": [
+     16452.696,
+     11657.5,
+     576.72,
+     810.0
+    ],
+    "sp_hc_t_c2_row3": [
+     17051.016,
+     11657.5,
+     576.72,
+     810.0
+    ],
+    "hcx_ctl": [
+     17841.576,
+     1807.9,
+     216.0,
+     216.0
+    ],
+    "embed_expand": [
+     18079.176,
+     1807.9,
+     216.0,
+     216.0
+    ],
+    "sp_hc_s_c0_row7": [
+     17649.336,
+     11657.5,
+     576.72,
+     810.0
+    ],
+    "sp_hc_t_c0_row5": [
+     15854.376,
+     12489.1,
+     576.72,
+     810.0
+    ],
+    "sp_hc_t_UNMAPPED_control_reserve0": [
+     16452.696,
+     12489.1,
+     605.512,
+     950.5635506348359
+    ],
+    "mix4": [
+     13942.8,
+     12538.756000000001,
+     1613.5,
+     1542.2
+    ],
+    "sp_hc_t_c0_row3": [
+     17079.808,
+     12489.1,
+     576.72,
+     810.0
+    ],
+    "sp_hc_s_UNMAPPED_control_reserve2": [
+     17678.128,
+     12489.1,
+     605.512,
+     1480.2497211483824
+    ],
+    "sp_hc_s_c0_row6": [
+     15577.9,
+     13320.7,
+     576.72,
+     810.0
+    ],
+    "sp_hc_s_c1_row3": [
+     17079.808,
+     13320.7,
+     576.72,
+     810.0
+    ],
+    "sp_hc_s_c2_row2": [
+     16176.22,
+     13461.263550634836,
+     576.72,
+     810.0
+    ],
+    "sp_hc_s_c2_row5": [
+     17678.128,
+     13990.949721148383,
+     576.72,
+     810.0
+    ],
+    "sp_hc_s_c1_row2": [
+     13942.8,
+     14102.556000000002,
+     576.72,
+     810.0
+    ],
+    "sp_hc_t_c2_row10": [
+     14541.119999999999,
+     14102.556000000002,
+     576.72,
+     810.0
+    ],
+    "sp_collective": [
+     15139.439999999999,
+     14292.863550634836,
+     1727.976,
+     2721.576
+    ],
+    "engram_dispatch": [
+     17841.576,
+     2045.5,
+     129.6,
+     86.4
+    ],
+    "sp_hc_s_c1_row1": [
+     16889.016,
+     14152.300000000001,
+     576.72,
+     810.0
+    ],
+    "sp_hc_t_c2_row7": [
+     17487.336,
+     14822.549721148383,
+     576.72,
+     810.0
+    ],
+    "sp_hc_t_c2_row11": [
+     13942.8,
+     14934.156000000003,
+     576.72,
+     810.0
+    ],
+    "sp_hc_t_c0_row8": [
+     14541.119999999999,
+     14934.156000000003,
+     576.72,
+     810.0
+    ],
+    "sp_hc_s_c2_row0": [
+     16889.016,
+     14983.900000000001,
+     576.72,
+     810.0
+    ],
+    "sp_hc_s_c1_row0": [
+     17487.336,
+     15654.149721148384,
+     576.72,
+     810.0
+    ],
+    "sp_hc_t_c0_row11": [
+     13942.8,
+     15765.756000000003,
+     576.72,
+     810.0
+    ],
+    "sp_hc_s_UNMAPPED_control_reserve1": [
+     16889.016,
+     16485.749721148386,
+     605.512,
+     1480.2497211483824
+    ],
+    "sp_hc_t_c1_row1": [
+     14541.119999999999,
+     15765.756000000003,
+     576.72,
+     810.0
+    ],
+    "sp_hc_s_c1_row7": [
+     17516.128,
+     16485.749721148386,
+     576.72,
+     810.0
+    ],
+    "sp_hc_t_c2_row1": [
+     13942.8,
+     16597.356000000003,
+     576.72,
+     810.0
+    ],
+    "sp_hc_s_c2_row3": [
+     14541.119999999999,
+     16597.356000000003,
+     576.72,
+     810.0
+    ],
+    "sp_hc_s_UNMAPPED_control_reserve0": [
+     15139.439999999999,
+     17036.039550634836,
+     605.512,
+     1480.2497211483824
+    ],
+    "sp_hc_t_c2_row4": [
+     15766.552,
+     17036.039550634836,
+     576.72,
+     810.0
+    ],
+    "sp_hc_s_c0_row4": [
+     17516.128,
+     17317.349721148385,
+     576.72,
+     810.0
+    ],
+    "sp_host": [
+     15766.552,
+     17987.599442296767,
+     1727.976,
+     129.576
+    ],
+    "sp_hc_t_c1_row9": [
+     13942.8,
+     17428.956000000006,
+     576.72,
+     810.0
+    ],
+    "sp_hc_t_c2_row5": [
+     14541.119999999999,
+     17428.956000000006,
+     576.72,
+     810.0
+    ],
+    "hcx_gatherpack": [
+     17992.775999999998,
+     2045.5,
+     216.0,
+     216.0
+    ],
+    "sp_hc_s_c0_row5": [
+     15766.552,
+     18138.775442296766,
+     576.72,
+     810.0
+    ],
+    "sp_hc_s_c0_row3": [
+     16364.872,
+     18138.775442296766,
+     576.72,
+     810.0
+    ],
+    "sp_hc_t_c1_row4": [
+     16963.192,
+     18148.949721148387,
+     576.72,
+     810.0
+    ],
+    "sp_hc_s_c2_row8": [
+     17561.512,
+     18148.949721148387,
+     576.72,
+     810.0
+    ],
+    "sp_sseq": [
+     13942.8,
+     18537.88927178322,
+     1727.976,
+     88.536
+    ],
+    "sp_hc_t_c0_row6": [
+     13942.8,
+     18648.02527178322,
+     576.72,
+     810.0
+    ],
+    "sp_hc_t_c0_row1": [
+     14541.119999999999,
+     18648.02527178322,
+     576.72,
+     810.0
+    ],
+    "sp_hc_t_c1_row8": [
+     15139.439999999999,
+     18648.02527178322,
+     576.72,
+     810.0
+    ],
+    "sp_hc_s_c2_row6": [
+     15737.759999999998,
+     18970.37544229677,
+     576.72,
+     810.0
+    ],
+    "sp_hc_s_c1_row6": [
+     16336.079999999998,
+     18970.37544229677,
+     576.72,
+     810.0
+    ],
+    "sp_hc_t_c0_row9": [
+     16934.399999999998,
+     18980.549721148385,
+     576.72,
+     810.0
+    ],
+    "sp_hc_s_c1_row4": [
+     17532.719999999998,
+     18980.549721148385,
+     576.72,
+     810.0
+    ],
+    "sp_hc_t_c0_row2": [
+     13942.8,
+     19479.625271783218,
+     576.72,
+     810.0
+    ],
+    "sp_hc_t_c2_row9": [
+     14541.119999999999,
+     19479.625271783218,
+     576.72,
+     810.0
+    ],
+    "sp_hc_t_c0_row7": [
+     15139.439999999999,
+     19479.625271783218,
+     576.72,
+     810.0
+    ],
+    "sp_hc_s_c0_row2": [
+     15737.759999999998,
+     19801.975442296767,
+     576.72,
+     810.0
+    ],
+    "sp_pq": [
+     16336.079999999998,
+     19812.149721148384,
+     1728.0,
+     449.256
+    ],
+    "sp_hc_t_c2_row0": [
+     16336.079999999998,
+     20283.005721148384,
+     576.72,
+     810.0
+    ],
+    "sp_hc_t_c0_row10": [
+     16934.399999999998,
+     20283.005721148384,
+     576.72,
+     810.0
+    ],
+    "sp_hc_t_c1_row6": [
+     17532.719999999998,
+     20283.005721148384,
+     576.72,
+     810.0
+    ],
+    "sp_hc_s_c1_row9": [
+     13942.8,
+     20311.225271783216,
+     576.72,
+     810.0
+    ],
+    "sp_hc_s_c1_row5": [
+     14541.119999999999,
+     20311.225271783216,
+     576.72,
+     810.0
+    ],
+    "sp_hc_t_c0_row0": [
+     15139.439999999999,
+     20311.225271783216,
+     576.72,
+     810.0
+    ],
+    "sp_hc_t_c1_row3": [
+     15737.759999999998,
+     20633.575442296766,
+     576.72,
+     810.0
+    ],
+    "sp_wfc": [
+     16336.079999999998,
+     21114.605721148382,
+     1727.976,
+     328.296
+    ],
+    "sp_hc_s_c2_row7": [
+     13942.8,
+     21142.825271783215,
+     576.72,
+     810.0
+    ],
+    "sp_hc_s_c2_row9": [
+     14541.119999999999,
+     21142.825271783215,
+     576.72,
+     810.0
+    ],
+    "sp_hc_s_c0_row8": [
+     15139.439999999999,
+     21142.825271783215,
+     576.72,
+     810.0
+    ],
+    "sp_hc_t_UNMAPPED_control_reserve2": [
+     16336.079999999998,
+     21464.50172114838,
+     605.512,
+     950.5635506348359
+    ],
+    "sp_hc_t_c1_row0": [
+     16963.192,
+     21464.50172114838,
+     576.72,
+     810.0
+    ],
+    "sp_gather": [
+     13942.8,
+     21974.425271783213,
+     1727.976,
+     1045.4160000000002
+    ],
+    "sp_hc_t_UNMAPPED_control_reserve1": [
+     17561.512,
+     21464.50172114838,
+     605.512,
+     950.5635506348359
+    ],
+    "sp_hc_t_c1_row2": [
+     15737.759999999998,
+     21465.175442296764,
+     576.72,
+     810.0
+    ],
+    "sp_hc_s_c0_row1": [
+     16963.192,
+     22296.101721148378,
+     576.72,
+     810.0
+    ],
+    "sp_hc_s_c0_row9": [
+     15692.376,
+     22296.775442296763,
+     576.72,
+     810.0
+    ],
+    "sp_hc_s_c2_row1": [
+     16290.696,
+     22436.665271783215,
+     576.72,
+     810.0
+    ],
+    "sp_capture": [
+     13942.8,
+     23041.441271783213,
+     1727.976,
+     561.576
+    ],
+    "sp_hc_s_c0_row0": [
+     17561.512,
+     22436.665271783215,
+     576.72,
+     810.0
+    ],
+    "sp_hc_t_c2_row2": [
+     16889.016,
+     23127.701721148376,
+     576.72,
+     810.0
+    ],
+    "sp_hc_t_c1_row5": [
+     15692.376,
+     23128.37544229676,
+     576.72,
+     810.0
+    ],
+    "sp_hc_s_c2_row4": [
+     16290.696,
+     23268.265271783213,
+     576.72,
+     810.0
+    ],
+    "sp_hc_t_c0_row4": [
+     17487.336,
+     23268.265271783213,
+     576.72,
+     810.0
+    ],
+    "sp_hc_t_c1_row7": [
+     13942.8,
+     23624.617271783212,
+     576.72,
+     810.0
+    ],
+    "sp_hc_t_c2_row6": [
+     14541.119999999999,
+     23624.617271783212,
+     576.72,
+     810.0
+    ]
+   },
+   "soft_unmapped_control_reserves": {
+    "sp_hc_s_UNMAPPED_control_reserve0": [
+     605.512,
+     1480.2497211483824
+    ],
+    "sp_hc_s_UNMAPPED_control_reserve1": [
+     605.512,
+     1480.2497211483824
+    ],
+    "sp_hc_s_UNMAPPED_control_reserve2": [
+     605.512,
+     1480.2497211483824
+    ],
+    "sp_hc_t_UNMAPPED_control_reserve0": [
+     605.512,
+     950.5635506348359
+    ],
+    "sp_hc_t_UNMAPPED_control_reserve1": [
+     605.512,
+     950.5635506348359
+    ],
+    "sp_hc_t_UNMAPPED_control_reserve2": [
+     605.512,
+     950.5635506348359
+    ]
+   },
+   "road": [
+    18392.4,
+    1807.9,
+    648.0,
+    21824.1
+   ],
+   "corridor": [
+    13942.8,
+    24456.21727178321,
+    5097.6,
+    799.2
+   ],
+   "chains": [
+    {
+     "parent": "sp_hc_s",
+     "chain": 0,
+     "rows": 10,
+     "hops": [
+      {
+       "distance_um": 1548.8835506348369,
+       "minimum_extra_relay_stages": 3
+      },
+      {
+       "distance_um": 4529.558278851611,
+       "minimum_extra_relay_stages": 9
+      },
+      {
+       "distance_um": 3100.3120000000017,
+       "minimum_extra_relay_stages": 6
+      },
+      {
+       "distance_um": 2782.681721148383,
+       "minimum_extra_relay_stages": 5
+      },
+      {
+       "distance_um": 1761.0017211483828,
+       "minimum_extra_relay_stages": 3
+      },
+      {
+       "distance_um": 5816.727442296766,
+       "minimum_extra_relay_stages": 11
+      },
+      {
+       "distance_um": 4544.636,
+       "minimum_extra_relay_stages": 9
+      },
+      {
+       "distance_um": 11185.221271783215,
+       "minimum_extra_relay_stages": 22
+      },
+      {
+       "distance_um": 896.8861705135496,
+       "minimum_extra_relay_stages": 1
+      }
+     ],
+     "total_minimum_extra_cycles": 69,
+     "source_stage_indices": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9
+     ]
+    },
+    {
+     "parent": "sp_hc_s",
+     "chain": 1,
+     "rows": 10,
+     "hops": [
+      {
+       "distance_um": 2910.1697211483825,
+       "minimum_extra_relay_stages": 5
+      },
+      {
+       "distance_um": 3805.959999999999,
+       "minimum_extra_relay_stages": 7
+      },
+      {
+       "distance_um": 4728.864000000003,
+       "minimum_extra_relay_stages": 9
+      },
+      {
+       "distance_um": 5302.761721148381,
+       "minimum_extra_relay_stages": 10
+      },
+      {
+       "distance_um": 3512.2755506348294,
+       "minimum_extra_relay_stages": 7
+      },
+      {
+       "distance_um": 3945.8098294864467,
+       "minimum_extra_relay_stages": 7
+      },
+      {
+       "distance_um": 4474.673721148385,
+       "minimum_extra_relay_stages": 8
+      },
+      {
+       "distance_um": 6701.681721148387,
+       "minimum_extra_relay_stages": 13
+      },
+      {
+       "distance_um": 10353.621271783217,
+       "minimum_extra_relay_stages": 20
+      }
+     ],
+     "total_minimum_extra_cycles": 86,
+     "source_stage_indices": [
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29,
+      30,
+      31
+     ]
+    },
+    {
+     "parent": "sp_hc_s",
+     "chain": 2,
+     "rows": 10,
+     "hops": [
+      {
+       "distance_um": 7241.085271783213,
+       "minimum_extra_relay_stages": 14
+      },
+      {
+       "distance_um": 9899.87772114838,
+       "minimum_extra_relay_stages": 19
+      },
+      {
+       "distance_um": 3961.1924493651677,
+       "minimum_extra_relay_stages": 7
+      },
+      {
+       "distance_um": 7610.485271783211,
+       "minimum_extra_relay_stages": 15
+      },
+      {
+       "distance_um": 11474.747550634831,
+       "minimum_extra_relay_stages": 22
+      },
+      {
+       "distance_um": 6109.793721148388,
+       "minimum_extra_relay_stages": 12
+      },
+      {
+       "distance_um": 3157.4098294864452,
+       "minimum_extra_relay_stages": 6
+      },
+      {
+       "distance_um": 7422.5875506348275,
+       "minimum_extra_relay_stages": 14
+      },
+      {
+       "distance_um": 5204.267550634828,
+       "minimum_extra_relay_stages": 10
+      }
+     ],
+     "total_minimum_extra_cycles": 119,
+     "source_stage_indices": [
+      42,
+      43,
+      44,
+      45,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51
+     ]
+    },
+    {
+     "parent": "sp_hc_t",
+     "chain": 0,
+     "rows": 12,
+     "hops": [
+      {
+       "distance_um": 3071.519999999997,
+       "minimum_extra_relay_stages": 6
+      },
+      {
+       "distance_um": 619.9199999999983,
+       "minimum_extra_relay_stages": 1
+      },
+      {
+       "distance_um": 10937.533271783219,
+       "minimum_extra_relay_stages": 21
+      },
+      {
+       "distance_um": 10376.693271783211,
+       "minimum_extra_relay_stages": 20
+      },
+      {
+       "distance_um": 13222.125271783212,
+       "minimum_extra_relay_stages": 26
+      },
+      {
+       "distance_um": 7260.50127178322,
+       "minimum_extra_relay_stages": 14
+      },
+      {
+       "distance_um": 1218.239999999998,
+       "minimum_extra_relay_stages": 2
+      },
+      {
+       "distance_um": 5953.789271783215,
+       "minimum_extra_relay_stages": 11
+      },
+      {
+       "distance_um": 5629.673721148381,
+       "minimum_extra_relay_stages": 11
+      },
+      {
+       "distance_um": 492.4559999999983,
+       "minimum_extra_relay_stages": 0
+      },
+      {
+       "distance_um": 8318.84972114838,
+       "minimum_extra_relay_stages": 16
+      }
+     ],
+     "total_minimum_extra_cycles": 128,
+     "source_stage_indices": [
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21
+     ]
+    },
+    {
+     "parent": "sp_hc_t",
+     "chain": 1,
+     "rows": 10,
+     "hops": [
+      {
+       "distance_um": 8930.817721148376,
+       "minimum_extra_relay_stages": 17
+      },
+      {
+       "distance_um": 6086.059442296762,
+       "minimum_extra_relay_stages": 12
+      },
+      {
+       "distance_um": 1641.5999999999985,
+       "minimum_extra_relay_stages": 3
+      },
+      {
+       "distance_um": 4520.05772114838,
+       "minimum_extra_relay_stages": 9
+      },
+      {
+       "distance_um": 5440.2417211483735,
+       "minimum_extra_relay_stages": 10
+      },
+      {
+       "distance_um": 5495.713721148375,
+       "minimum_extra_relay_stages": 10
+      },
+      {
+       "distance_um": 6121.531550634827,
+       "minimum_extra_relay_stages": 12
+      },
+      {
+       "distance_um": 6983.231999999993,
+       "minimum_extra_relay_stages": 13
+      },
+      {
+       "distance_um": 3225.709271783213,
+       "minimum_extra_relay_stages": 6
+      }
+     ],
+     "total_minimum_extra_cycles": 92,
+     "source_stage_indices": [
+      32,
+      33,
+      34,
+      35,
+      36,
+      37,
+      38,
+      39,
+      40,
+      41
+     ]
+    },
+    {
+     "parent": "sp_hc_t",
+     "chain": 2,
+     "rows": 12,
+     "hops": [
+      {
+       "distance_um": 6888.929721148379,
+       "minimum_extra_relay_stages": 13
+      },
+      {
+       "distance_um": 8666.561721148373,
+       "minimum_extra_relay_stages": 17
+      },
+      {
+       "distance_um": 12442.201721148376,
+       "minimum_extra_relay_stages": 24
+      },
+      {
+       "distance_um": 5853.003550634836,
+       "minimum_extra_relay_stages": 11
+      },
+      {
+       "distance_um": 1642.515550634831,
+       "minimum_extra_relay_stages": 3
+      },
+      {
+       "distance_um": 5385.661271783207,
+       "minimum_extra_relay_stages": 10
+      },
+      {
+       "distance_um": 12558.28355063483,
+       "minimum_extra_relay_stages": 25
+      },
+      {
+       "distance_um": 5608.009721148383,
+       "minimum_extra_relay_stages": 11
+      },
+      {
+       "distance_um": 8325.381271783219,
+       "minimum_extra_relay_stages": 16
+      },
+      {
+       "distance_um": 6187.069271783215,
+       "minimum_extra_relay_stages": 12
+      },
+      {
+       "distance_um": 619.9200000000001,
+       "minimum_extra_relay_stages": 1
+      }
+     ],
+     "total_minimum_extra_cycles": 143,
+     "source_stage_indices": [
+      52,
+      53,
+      54,
+      55,
+      56,
+      57,
+      58,
+      59,
+      60,
+      61,
+      62,
+      63
+     ]
+    }
+   ],
+   "fit_with1512": false,
+   "free_vertical_margin": -1623.4172717832125,
+   "current_BF_x2_tree_cut_sensitivity": 0.4288614540466392,
+   "fatal_cut": false
+  }
+ ],
+ "corridor_cut_lower_bound": {
+  "graph_tree_bits": 9972,
+  "plus14_fclks": 9986,
+  "capacity_at_060": 10114.875,
+  "share_tree_plus_fclks": 0.5923553182812442,
+  "excludes": "All p2p, additional service/status/reset/clock/PG and real route allocation"
+ },
+ "latest_current_vm_640_update": {
+  "source": "c3fc1a4a2 actualelaboration READ_PIPE4/CAP_PIPE2; /home/ubuntu/wt/s81-vm-geometry-1103/results/physical/s81_vm_geometry_1103/{inventory,packing}.json",
+  "known_hard_leaves": 640,
+  "known_candidate_body": [
+   5529.6,
+   4903.2
+  ],
+  "body_overlap_count": 0,
+  "old_local_vectors_preserved": 468,
+  "added_side_strip_width": 1555.2,
+  "status": "GEOMETRY_OPEN; WFC/XIO fourclock controlregions andcombglue have nohomes; write150geometries source-pin candidate only",
+  "implication": "The5529.6wide developmentbody does not fit5097.6hub, even with noVCH. It is a particular packing, not a proof every possible640leaf packing needs5529.6width. Earlierpartialbody screens remain necessarylowerbound diagnostics only, never currentVMcandidate."
+ }
+}

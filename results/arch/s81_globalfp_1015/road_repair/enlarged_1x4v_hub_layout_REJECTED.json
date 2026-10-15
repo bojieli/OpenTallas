@@ -1,0 +1,123 @@
+{
+ "schema": "opentallas.s81.hub_layout.v1",
+ "scope": "REJECTED_ENLARGED_HUB_LOWER_BOUND_WITNESS_NOT_GENERATOR_INPUT",
+ "source": "eb9cfa044 current_system_geometry partial VM body; no complete current VM macro",
+ "blocks": {
+  "sp_su_s": [
+   13942.8,
+   1807.9,
+   1889.976,
+   10709.256000000001
+  ],
+  "sp_hc_s": [
+   13942.8,
+   12538.756000000001,
+   1816.536,
+   9000.696
+  ],
+  "sp_hc_t": [
+   15854.376,
+   1807.9,
+   1816.536,
+   9460.776000000002
+  ],
+  "sp_collective": [
+   15854.376,
+   11290.276000000002,
+   1727.976,
+   2721.576
+  ],
+  "sp_host": [
+   15854.376,
+   15597.252,
+   1727.976,
+   129.576
+  ],
+  "sp_vm": [
+   17692.512,
+   1807.9,
+   1965.6,
+   9828.0
+  ],
+  "sp_wfc": [
+   17692.512,
+   11657.5,
+   1727.976,
+   328.296
+  ],
+  "sp_sseq": [
+   17692.512,
+   12007.396,
+   1727.976,
+   88.536
+  ],
+  "sp_pq": [
+   17692.512,
+   12117.532000000001,
+   1728.0,
+   449.256
+  ],
+  "sp_capture": [
+   17692.512,
+   12588.388,
+   1727.976,
+   561.576
+  ],
+  "sp_gather": [
+   17692.512,
+   13171.564,
+   1727.976,
+   1045.416
+  ]
+ },
+ "mix4": [
+  15854.376,
+  14033.452000000001,
+  1613.5,
+  1542.2
+ ],
+ "corridor": [
+  13942.8,
+  21561.052000000003,
+  6579.312000000002,
+  1512.0
+ ],
+ "vertical_road": [
+  19658.112,
+  1807.9,
+  864.0,
+  21824.1
+ ],
+ "required_hub_x": [
+  13942.8,
+  20522.112
+ ],
+ "extra_width": 1481.7119999999995,
+ "e_stack": {
+  "order": [
+   "sp_wfc",
+   "sp_sseq",
+   "sp_pq",
+   "sp_capture",
+   "sp_gather"
+  ]
+ },
+ "fatal": [
+  "Crosses current S14E and eastern field homes; requires connected system repartition, no naive field translation fits edge.",
+  "VM is partial lower bound and omits cap/CDC/router/global/current missing leaves.",
+  "Tree-only source cut fits864 but all-chain source cut fails; no rerouted incident graph or relay station allocation."
+ ],
+ "latest_current_vm_640_update": {
+  "source": "c3fc1a4a2 actualelaboration READ_PIPE4/CAP_PIPE2; /home/ubuntu/wt/s81-vm-geometry-1103/results/physical/s81_vm_geometry_1103/{inventory,packing}.json",
+  "known_hard_leaves": 640,
+  "known_candidate_body": [
+   5529.6,
+   4903.2
+  ],
+  "body_overlap_count": 0,
+  "old_local_vectors_preserved": 468,
+  "added_side_strip_width": 1555.2,
+  "status": "GEOMETRY_OPEN; WFC/XIO fourclock controlregions andcombglue have nohomes; write150geometries source-pin candidate only",
+  "implication": "The5529.6wide developmentbody does not fit5097.6hub, even with noVCH. It is a particular packing, not a proof every possible640leaf packing needs5529.6width. Earlierpartialbody screens remain necessarylowerbound diagnostics only, never currentVMcandidate."
+ }
+}
