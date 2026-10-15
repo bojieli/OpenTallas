@@ -1,0 +1,46 @@
+{
+ "schema": "opentallas.s81.updated_layer_replay.v1",
+ "native_qualified": false,
+ "scope": "Production-shape hierarchical SU/HC transport and operation composition with DPI arithmetic, ideal VM, random field roots, and numerical fixture producers; not native full-token execution",
+ "compiler": {
+  "version": "Verilator5.032",
+  "unroll_count": 256,
+  "build_wall_seconds": 933.581,
+  "allocated_mb": 19350.734
+ },
+ "source_branch_commits": [
+  "c4908f581",
+  "d67d13758",
+  "0e08eba87",
+  "3042ed2c4"
+ ],
+ "completed": [
+  {
+   "name": "M0R0",
+   "verdict": "PASS",
+   "ops": 55,
+   "su_jobs": 13,
+   "su_rows_exact": 819,
+   "hstore_rows_exact": 640,
+   "T": 133,
+   "request_counts": {
+    "hc_read": 1288,
+    "su_read": 1637,
+    "hc_write": 970,
+    "su_write": 925
+   },
+   "done_boundary": "engine_pin",
+   "write_issues_after_external_done": 0,
+   "native_qualified": false
+  }
+ ],
+ "pending": [
+  "L2"
+ ],
+ "native_missing": [
+  "actual numerical field/SVC/collective/HCX/MIX producers",
+  "real VM macro service and commit events",
+  "production rebased tensors and fixed calendar",
+  "physical clock phases and complete endpoint bindings"
+ ]
+}
