@@ -7,15 +7,15 @@
   0,
   0,
   21.6,
-  166.32
+  259.2
  ],
  "core": [
   2.16,
   2.16,
   19.44,
-  164.16
+  257.03999999999996
  ],
- "why": "spec outline",
+ "why": "spec outline (exact: the closed view's sub-slot)",
  "std_area_um2": null,
  "layer_contract": {
   "children": {},
@@ -67,6 +67,7 @@
   "physical/qwen_die_masters/post_plain.tcl",
   "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
   "physical/common_flow/grt_macro_top_layer.tcl",
+  "physical/ref_tile/qkh_head_tstage/io_pins.tcl",
   "physical/dsrom_window_source/leaf_iohold.tcl",
   "physical/dsrom_window_source/leaf_inhold_release.tcl"
  ]
