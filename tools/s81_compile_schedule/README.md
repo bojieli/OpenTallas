@@ -85,3 +85,22 @@ cycles. The original write visibility deadlines are missing, so these remain
 **diagnostic demand itineraries**. Production rebasing can change conflicts.
 Actual staging RTL, physical paths, and compiled consumer/commit fences must be
 verified before any of these tables become executable native programs.
+
+`canonical_execution_join.py` joins the literal source operation catalogue to
+all 324 canonical stage/rank programmes. It checks template identities, actual
+elaborated engine and SU/VM instances, pinned programmes/contracts, and exact
+source coverage, then invokes the existing native fixed-calendar compiler.
+Fused operations require explicit rounding/order proof; provider homes and
+parent reservations cannot supply native leaf homes. An incomplete join emits
+no partial programmes. Even a complete **local** join cannot enable chip
+execution: global transport/producer-consumer, native RTL replay, physical and
+throughput gates remain separate and mandatory.
+
+The source replay in `results/arch/s81_canonical_execution_1015` verifies an
+expected rejection of the actual screen14/2654-operation catalogue: all324
+rank programmes are missing and its literal SU scopes contain no MTP operations.
+The 10616 rank-operation obligations are 2654 source operations times TP4,
+not 10616 distinct physical elements. The twelve mechanism tests exercise a
+synthetic positive and missing/stale/wrong-home/calendar/fusion mutants. They
+qualify this compiler join mechanism only. The replay does not qualify a single
+native canonical programme or the required MTP continuation.
