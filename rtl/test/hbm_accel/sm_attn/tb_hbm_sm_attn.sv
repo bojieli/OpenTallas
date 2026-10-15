@@ -35,19 +35,23 @@ module tb_hbm_sm_attn;
     // NCOL x columns x 4 sub-rows
     wire [4*NCOL-1:0] ov, pvv, cf; wire [128*NCOL-1:0] y; wire [64*NCOL-1:0] otag, pvt; wire [2048*NCOL-1:0] pvy;
     wire [NCOL-1:0] t_ov, t_f; wire [32*NCOL-1:0] t_y; wire [16*NCOL-1:0] t_tag;
+    // r2 (head dim 128, +FOLD=1): compiler-fixed in-SM stream folds and node publication, common to every leaf
+    reg pub_start = 0, fold_start = 0; reg [2:0] pub_slot = 0, fold_a = 0, fold_b = 0;
+    wire [4*NCOL-1:0] pbv; wire [128*NCOL-1:0] pbd; wire [16*NCOL-1:0] pbw; wire [12*NCOL-1:0] pbs;
     genvar q, cc;
     generate for (cc = 0; cc < NCOL; cc = cc + 1) begin : g_col
         for (q = 0; q < 4; q = q + 1) begin : g_c
             localparam integer I = 4 * cc + q;
             if (NATIVE != 0) begin : g_native
-                ot_hbm_sm_attn_native_col #(.TAGW(16), .LV(LV), .MUT(PVMUT)) u_c (
+                ot_hbm_sm_attn_native_col #(.TAGW(16), .LV(LV), .MUT(PVMUT), .PUBLISH(1)) u_c (
                     .clk(clk), .rst_n(rst_n), .i_v(c_v), .i_first(c_first),
                     .i_qk_last(c_last && !c_tag[15]), .i_pv_last(c_last && c_tag[15]),
                     .i_run_first(c_tag[14]), .i_run_last(c_tag[13]), .i_tag(c_tag),
                     .i_w(c_w[256*q +: 256]), .i_x(c_x[1024*cc + 256*q +: 256]),
                     .ov(ov[I]), .y(y[32*I +: 32]), .otag(otag[16*I +: 16]),
                     .pv_v(pvv[I]), .pv_y(pvy[512*I +: 512]), .pv_tag(pvt[16*I +: 16]), .fault(cf[I]),
-                    .pub_start(1'b0), .pub_slot(3'd0), .pub_v(), .pub_data(), .pub_word(), .pub_out_slot(), .pub_tag());
+                    .pub_start(pub_start), .pub_slot(pub_slot), .pub_v(pbv[I]), .pub_data(pbd[32*I +: 32]), .pub_word(pbw[4*I +: 4]),
+                    .pub_out_slot(pbs[3*I +: 3]), .pub_tag(), .fold_start(fold_start), .fold_a(fold_a), .fold_b(fold_b));
             end else begin : g_flat
             ot_hbm_sm_tcpv_col #(.L(16), .IL(8), .TAGW(16), .ALAT(7), .LV(LV), .MUT(PVMUT)) u_c (.clk(clk), .rst_n(rst_n),
                 .v(c_v), .first(c_first), .last(c_last), .tag(c_tag), .w(c_w[256*q +: 256]), .x(c_x[1024*cc + 256*q +: 256]),
@@ -60,6 +64,7 @@ module tb_hbm_sm_attn;
             .tag(otag[64*cc +: 16]), .ov(t_ov[cc]), .y(t_y[32*cc +: 32]), .otag(t_tag[16*cc +: 16]), .fault(t_f[cc]));
     end endgenerate
     // stimulus + monitor
+    integer fold = 0, npb = 0, last_pb = -1, fold_t0 = -1, ii;
     integer cyc = 0, li = 0, acc = 0, first_in = -1, last_in = -1, last_out = -1, nres = 0, want = 0, k, b, fb = -1, lb = -1, nb = 0, kk, bb;
     always @(posedge clk) cyc <= cyc + 1;
     // line rate: a line may be offered on cycles where the rate accumulator wraps (RN / RD lines per cycle)
@@ -95,6 +100,8 @@ module tb_hbm_sm_attn;
                 nres = nres + 1; last_out = cyc;
             end
         end
+        for (ii = 0; ii < 4 * NCOL; ii = ii + 1)
+            if (pbv[ii]) begin $display("PB %0d %0d %0d %0d %08h", ii / 4, ii % 4, pbs[3*ii +: 3], pbw[4*ii +: 4], pbd[32*ii +: 32]); npb = npb + 1; last_pb = cyc; end
         if (kfault || (|cf) || (|t_f)) begin $display("FAULT kv=%0d col=%b tree=%b", kfault, cf, t_f); $fatal(1, "fault"); end
     end
     initial begin
@@ -105,6 +112,7 @@ module tb_hbm_sm_attn;
         rn = 8; rd = 11; void'($value$plusargs("RN=%d", rn)); void'($value$plusargs("RD=%d", rd));
         $readmemh(lf, lines, 0, nl - 1); $readmemh(xf, xs, 0, nx - 1);
         void'($value$plusargs("WANT=%d", want));
+        void'($value$plusargs("FOLD=%d", fold));
         repeat (4) @(posedge clk); rst_n <= 1;
         repeat (4) @(posedge clk);
         for (b = 0; b < nx; b = b + 1) begin
@@ -114,11 +122,29 @@ module tb_hbm_sm_attn;
         @(posedge clk); cfg_v <= 1;
         @(posedge clk); cfg_v <= 0; started <= 1;
         fork
-            begin wait (nres == want); repeat (4) @(posedge clk); end
+            begin
+                wait (nres == want); repeat (4) @(posedge clk);
+                if (fold != 0) begin
+                    // fixed fold calendar (cycle offsets from F0): level 1 (0,2)@0 (4,6)@2 (1,3)@4 (5,7)@6, level 2 (0,4)@12
+                    // (1,5)@16, publication of entry 0 @22 and entry 1 @38 (word 14 of the first node)
+                    fold_t0 = cyc;
+                    for (ii = 0; ii <= 38; ii = ii + 1) begin
+                        fold_start <= (ii == 0 || ii == 2 || ii == 4 || ii == 6 || ii == 12 || ii == 16);
+                        fold_a <= (ii == 0) ? 3'd0 : (ii == 2) ? 3'd4 : (ii == 4) ? 3'd1 : (ii == 6) ? 3'd5 : (ii == 12) ? 3'd0 : 3'd1;
+                        fold_b <= (ii == 0) ? 3'd2 : (ii == 2) ? 3'd6 : (ii == 4) ? 3'd3 : (ii == 6) ? 3'd7 : (ii == 12) ? 3'd4 : 3'd5;
+                        pub_start <= (ii == 22 || ii == 38);
+                        pub_slot <= (ii == 38) ? 3'd1 : 3'd0;
+                        @(posedge clk);
+                    end
+                    fold_start <= 0; pub_start <= 0;
+                    wait (npb == 4 * NCOL * 32); repeat (4) @(posedge clk);
+                end
+            end
             begin repeat (200000) @(posedge clk); $display("FAULT timeout nres=%0d want=%0d li=%0d", nres, want, li); $fatal(1, "timeout"); end
         join_any
         $display("CYCLES rows=%0d qk=%0d kv4=%0d lines=%0d first_in=%0d last_in=%0d last_out=%0d span=%0d beats=%0d first_beat=%0d last_beat=%0d", rows, qk, kv4,
                  li, first_in, last_in, last_out, last_out - first_in, nb, fb, lb);
+        if (fold != 0) $display("FOLD first_in=%0d fold_t0=%0d last_pb=%0d span=%0d pb=%0d", first_in, fold_t0, last_pb, last_pb - first_in, npb);
         $display("DONE results=%0d", nres);
         $finish;
     end

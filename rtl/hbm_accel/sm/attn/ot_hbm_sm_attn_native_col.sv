@@ -26,7 +26,10 @@ module ot_hbm_sm_attn_native_col #(
     output wire [31:0] pub_data,
     output wire [3:0] pub_word,
     output wire [2:0] pub_out_slot,
-    output wire [TAGW-1:0] pub_tag
+    output wire [TAGW-1:0] pub_tag,
+    input wire fold_start,
+    input wire [2:0] fold_a,
+    input wire [2:0] fold_b
 );
     wire [255:0] s0,s1;
     wire lf0,lf1,qf,mf;
@@ -45,7 +48,8 @@ module ot_hbm_sm_attn_native_col #(
         .i_tag(i_tag),.sum_i({s1,s0}),.event_v(event_v),.event_sum(event_sum),.event_tag(event_tag));
     ot_hbm_sm_pv_merge #(.TAGW(TAGW),.LV(LV),.MUT(MUT),.PUBLISH(PUBLISH)) u_merge(.clk(clk),.rst_n(rst_n),
         .ev(event_v),.sum(event_sum),.tag_d(event_tag),.pv_v(pv_v),.pv_y(pv_y),.pv_tag(pv_tag),.fault(mf),.pub_start(pub_start),.pub_slot(pub_slot),
-        .pub_v(pub_v),.pub_data(pub_data),.pub_word(pub_word),.pub_out_slot(pub_out_slot),.pub_tag(pub_tag));
+        .pub_v(pub_v),.pub_data(pub_data),.pub_word(pub_word),.pub_out_slot(pub_out_slot),.pub_tag(pub_tag),
+        .fold_start(fold_start),.fold_a(fold_a),.fold_b(fold_b));
     assign fault=qf|mf;
 endmodule
 
