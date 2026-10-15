@@ -137,7 +137,9 @@ def main(argv=None):
     for mst, inst, conns in insts:
         by_m[mst].append((inst, conns))
     for mst, lst in sorted(by_m.items()):
-        dp = die_ports(lst[0][1], wires)
+        # representative = the instance with the most bound ports (a chain TAIL may leave its chain outputs unread;
+        # with v1.4.1 HOST-north the N stacks' tail is slot 0 = the first instance in name order)
+        dp = max((die_ports(c_, wires) for _i, c_ in lst), key=len)
         r = dict(n_instances=len(lst), die_ports=len(dp))
         if mst in HARD_PHY:
             r.update(cls='HARD_PHY', note=HARD_PHY[mst])

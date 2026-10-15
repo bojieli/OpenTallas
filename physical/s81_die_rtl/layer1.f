@@ -139,6 +139,12 @@ rtl/dsrom_sys/s81_ph/coll/ot_s81ph_ckbuf.sv
 rtl/dsrom_sys/s81_ph/ot_s81ph_coll_rstc.sv
 rtl/dsrom_sys/s81_ph/ot_s81_pll_bb.sv
 rtl/dsrom_sys/s81_static_collective/s81_static_vm_boundary.sv
+# S-BIND r6 2026-10-15: static host face (completion pulses queued for the compiled host tx slot) and the static layer-die
+# host master dsfd_host_c (+DSFD_HOST_C_STATIC: no t_cr / h_crn credit bits, f_collective 515 / t_collective 77, lane
+# faults f_lf); gates tools/s81_static_collective/run_slab_gate.sh, rtl/dsrom_sys/s81_ingest/test/run_host_c_static_gate.sh
+rtl/dsrom_sys/s81_static_collective/s81_static_host_queue.sv
++define+DSFD_HOST_C_STATIC
+rtl/dsrom_sys/s81_ingest/dsfd_host_c.sv
 
 # S-BIND 2026-10-15 --suhc-static-issue: SU / HC endpoints issue on the compiler command edge (no f_inp die pin)
 +define+DSFD_SUHC_STATIC_ISSUE

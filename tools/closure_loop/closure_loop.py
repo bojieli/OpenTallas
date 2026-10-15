@@ -960,7 +960,7 @@ def _only_serial_bench_failed(j):
     if (j.get("stage_key") != key or j.get("stage_tag") != f"{key}.a1"
             or receipt.get("ok") is not False or receipt.get("track") is not None
             or "rc" not in receipt
-            or j.get("reason") != f"{key} expected {str(receipt.get('expect')).upper()} but rc={receipt['rc']}"):
+            or not _bench_reason_is(j.get("reason"), key, receipt)):
         return False
     launches = [str(e).split(" launched ", 1)[1] for e in events if " launched " in str(e)]
     if not launches or not any(e.startswith(f"{key} (attempt 1) on ") for e in launches):
@@ -970,6 +970,13 @@ def _only_serial_bench_failed(j):
             and not any(re.search(r"\b(?:route|calibrate|signoff|eco)[.-]a?\d|launched (?:route|calibrate|signoff)\b",
                                   str(e)) for e in events))
 
+
+
+def _bench_reason_is(reason, key, receipt):
+    """The bench verdict reason, with or without the bench_why() cause suffix."""
+    base = f"{key} expected {str(receipt.get('expect')).upper()} but rc={receipt['rc']}"
+    reason = str(reason or "")
+    return reason == base or reason.startswith(base + " (")
 
 
 def _bench_cancelled_physical_track(j):
@@ -992,7 +999,7 @@ def _bench_cancelled_physical_track(j):
     failed = []
     for key, receipt in (j.get("benches") or {}).items():
         if (receipt.get("ok") is False and receipt.get("track") == "parallel" and "rc" in receipt
-                and why == f"{key} expected {str(receipt.get('expect')).upper()} but rc={receipt['rc']}"):
+                and _bench_reason_is(why, key, receipt)):
             failed.append(key)
     if len(failed) != 1:
         return False
@@ -3183,6 +3190,11 @@ def launch_stage(j, st, cmd):
         # calibrate runs in parallel: the IO SDC the calibrate stage would have generated is made here from the
         # assumed (or, on a re-route, measured) insertion in calib.env
         cmd = f"( {j['ctrack']['sdc_cmd']} ) || exit 5\n" + cmd
+    if j.get("export_lint_recovery") and st["key"] == "collect":
+        from export_lint_recovery import stage_script
+        before, after = stage_script(j["export_lint_recovery"], j.get("stage_source", j["run"] + "/src"))
+        env += before
+        cmd = f"( {cmd} )\n_ot_export_rc=$?\n{after}exit $_ot_export_rc\n"
     cmd = tt_overlay_fallback(cmd)
     body = f"#!/bin/bash\n# closure-loop {j['name']} stage {st['key']} attempt {j['attempt']}\nset -o pipefail\n{env}{subst(cmd, j)}\n"
     run = j["run"]
@@ -3247,6 +3259,22 @@ def bench_outcome(j, st, rc, ok_extra=True):
     return expected_fail_seen(st, rc, full)
 
 
+def bench_why(j, st, rc, ok_extra=True):
+    """Why a bench with expect PASS was judged not passed, for the verdict reason.  rc=0 alone read as 'expected PASS
+    but rc=0' (5 jobs 2026-10-15: pass_regex not matching the bench's actual verdict line, or a min_count_regex the
+    bench never prints) and was triaged as a flow bug."""
+    if st.get("expect") != "pass" or rc != 0:
+        return ""
+    if not ok_extra:
+        return " (ok check failed)"
+    note = (j.get("bench_work") or {}).get(st["key"], "")
+    if note.startswith("vacuous"):
+        return f" ({note})"
+    if st.get("pass_regex"):
+        return f" (pass_regex {st['pass_regex']!r} not matched in the bench log)"
+    return ""
+
+
 def expected_fail_seen(st, rc, full):
     """expect FAIL (negative control): the log's own verdict decides, regardless of rc -- a mutant bench that prints
     FAIL but exits 0 was read as "expected FAIL but rc=0" (LOOP-GAPS 2026-10-08).  With fail_regex: it must match (a
@@ -3278,8 +3306,19 @@ def bench_work(log, min_count_regex=None):
     return True, f"work: {m[:6]}"
 
 
+# A stage cmd that sends its tool output to its own file ('... > {RUN}/record/route/export.log 2>&1', every ref_tile
+# collect) leaves cl/<tag>.log empty: 14 S81 fill collects went NEEDS_HUMAN 'collect crashed twice (rc=1)' on 2026-10-15
+# with an empty tail and no first error, while export.log held the child_lint FAIL.  Tail those redirect targets too.
+REDIRECT_LOG_RE = re.compile(r"(?<![<>&0-9])>\s*([^\s;&|<>]+)\s+2>&1")
+
+
+def stage_logs(j, st):
+    logs = list(st.get("logs", [])) + [m for m in REDIRECT_LOG_RE.findall(st.get("cmd") or "") if m not in st.get("logs", [])]
+    return [subst(x, j) for x in logs]
+
+
 def stage_tail(j, st, n=40):
-    extra = " ".join(subst(x, j) for x in st.get("logs", []))
+    extra = " ".join(stage_logs(j, st))
     r = ssh(j["host"], f"tail -n {n} {j['run']}/cl/{j['stage_tag']}.log 2>/dev/null; for f in {extra}; do "
                        f"[ -f \"$f\" ] && tail -n {n} \"$f\"; done; true", timeout=60)
     return r.stdout
@@ -3666,6 +3705,8 @@ def publish(j, metrics):
                        checks=j.get("checks", {}), submit_checks=j.get("submit_checks"), calibration=j.get("calibration"), route_overlay_plan=j.get("route_overlay_plan"), cycles_added=spec.get("cycles_added"), status="CLOSED",
                        closed_at=now_iso(), job_spec=spec, io_budget=(j.get("rebudget") or {}).get("rb") or "link_budget_consistent (fixed split)",
                        rebudget=j.get("rebudget"))
+        if j.get("export_lint_recovery"):
+            verdict["export_lint_recovery"] = j["export_lint_recovery"]
         (cwt / rec_dir / "verdict.json").write_text(json.dumps(verdict, indent=1) + "\n")
         git("add", "--sparse", "--", *tos, cwd=cwt)
         staged = sh(["git", "-C", str(cwt), "diff", "--cached", "--name-only"], timeout=120).stdout.split()
@@ -4514,7 +4555,7 @@ def bench_track(j, fleet, stl):
         j["benches"][k] = dict(expect=st["expect"], rc=rc, ok=passed, tail=tail[-600:], track="parallel")
         if not passed:
             stop_main_for_bench(j)
-            finish(j, "NEEDS_RTL", f"{k} expected {st['expect'].upper()} but rc={rc}",
+            finish(j, "NEEDS_RTL", f"{k} expected {st['expect'].upper()} but rc={rc}{bench_why(j, st, rc, ok_extra)}",
                    f"NEEDS_RTL: bench {k} expected {st['expect'].upper()}, got rc={rc} (parallel track; route stopped)\n" +
                    "\n".join(tail.strip().splitlines()[-5:]))
             return False
@@ -5153,7 +5194,7 @@ def step(j, fleet):
             passed = bench_outcome(j, st, rc, ok_extra)
             j["benches"][st["key"]] = dict(expect=st["expect"], rc=rc, ok=passed, tail=tail[-600:])
             if not passed:
-                finish(j, "NEEDS_RTL", f"{st['key']} expected {st['expect'].upper()} but rc={rc}",
+                finish(j, "NEEDS_RTL", f"{st['key']} expected {st['expect'].upper()} but rc={rc}{bench_why(j, st, rc, ok_extra)}",
                        f"NEEDS_RTL: bench {st['key']} expected {st['expect'].upper()}, got rc={rc}\n" +
                        "\n".join(tail.strip().splitlines()[-5:]))
                 return
@@ -6804,6 +6845,17 @@ def closure_on_main(j, ev):
     return j["name"] in ev["files"] or j["name"] in ev["recs"]
 
 
+def collect_crash_after_closed_verdict(j):
+    """ROOT 2026-10-15 (peer review 11:00): a route that finished and was judged CLOSED, then stopped NEEDS_HUMAN in
+    collect / export / record (30 S81 fill routes, collect crashed twice on a child_lint bug; 17 run dirs were released
+    or deleted before the lint fix), is evidence awaiting re-collection (retry --at collect): never deep-released while
+    it stays there.  Cancelling the job or a successful re-collect ends the retention."""
+    if j.get("status") != "NEEDS_HUMAN" or j.get("stage_key") not in ("collect", "export", "record"):
+        return False
+    ev = " ".join(j.get("events") or [])
+    return "route done (rc=0)" in ev and "-> CLOSED" in ev
+
+
 def deep_release_mode(j, closed, ev, now=None):
     """closed | fail | nearmiss | None (keep) for one job (DEEP RELEASE)"""
     if j.get("deep_released") or not j.get("host") or not j.get("run") or j["status"] not in TERMINAL:
@@ -6819,6 +6871,8 @@ def deep_release_mode(j, closed, ev, now=None):
             return "closed" if closure_on_main(j, ev) else None
         return "fail"                                   # revoked closure: a failure on its element
     if j["status"] not in DEEP_RELEASE_FAIL:
+        return None
+    if collect_crash_after_closed_verdict(j):
         return None
     if near_miss(j, closed) or (j.get("near_miss_retained") and j["spec"].get("block") not in closed):
         return "nearmiss"
@@ -8456,6 +8510,28 @@ def cmd_recover_eco_overlays(a):
 
 
 @locked_job_command
+def cmd_recover_export_lint(a):
+    """Attach an explicit main-pinned lint-only recovery, leaving retry to the operator."""
+    import base64
+    from export_lint_recovery import eligible
+    j = load_job(a.name)
+    eligible(j)
+    head = _ovl_head()
+    rel = "tools/hier_contract/child_lint.py"
+    data = subprocess.run(["git", "-C", str(REPO), "show", f"{head}:{rel}"],
+                          capture_output=True, check=True).stdout
+    request = dict(job=j, helper_commit=head, helper_b64=base64.b64encode(data).decode(),
+                   helper_sha256=hashlib.sha256(data).hexdigest(),
+                   guard_b64=base64.b64encode((HERE / "export_lint_recovery.py").read_bytes()).decode())
+    r = ssh(j["host"], "python3 - prepare " + shlex.quote(json.dumps(request)),
+            input=(HERE / "export_lint_recovery.py").read_text(), timeout=120, check=True)
+    j["export_lint_recovery"] = dict(json.loads(r.stdout), requested=now_iso())
+    event(j, f"explicit collect-only lint recovery pinned to main {head}; frozen helpers and route retained")
+    save_job(j)
+    print(json.dumps(j["export_lint_recovery"]))
+
+
+@locked_job_command
 def cmd_restore_cancelled(a):
     """Recover pre-lock cancellation lost to a stale save. Never stop remote work."""
     j = load_job(a.name)
@@ -8512,6 +8588,7 @@ def main():
     ks.add_argument("--orfs")
     rc = sub.add_parser("restore-cancelled"); rc.add_argument("name")
     er = sub.add_parser("recover-eco-overlays"); er.add_argument("name")
+    el = sub.add_parser("recover-export-lint"); el.add_argument("name")
     mg = sub.add_parser("migrate"); mg.add_argument("name"); mg.add_argument("host")
     a = ap.parse_args()
     if a.cmd == "daemon":
@@ -8545,6 +8622,8 @@ def main():
         cmd_hold_stop(a)
     elif a.cmd == "recover-eco-overlays":
         cmd_recover_eco_overlays(a)
+    elif a.cmd == "recover-export-lint":
+        cmd_recover_export_lint(a)
     elif a.cmd == "restore-cancelled":
         cmd_restore_cancelled(a)
     elif a.cmd == "migrate":     # executed by the daemon at its next tick (no race with the job's poller)

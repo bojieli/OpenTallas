@@ -1,0 +1,23 @@
+ot-run: -> ot-agidock128
+ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-95153-1792072882 after 0 s
+cmd 5 fmt 0 P 3 K 84 xb 105 done 1/1 beats 40 span 40
+cmd 6 fmt 0 P 4 K 657 xb 65 done 1/1 beats 112 span 112
+cmd 7 fmt 0 P 7 K 1489 xb 116 done 1/1 beats 264 span 264
+cmd 8 fmt 0 P 7 K 1345 xb 23 done 1/1 beats 264 span 264
+cmd 9 fmt 0 P 3 K 1158 xb 59 done 1/1 beats 120 span 120
+cmd 10 fmt 0 P 2 K 348 xb 90 done 1/1 beats 32 span 32
+cmd 11 fmt 0 P 4 K 1428 xb 78 done 1/1 beats 168 span 168
+cmd 12 fmt 1 P 1 K 18432 xb 42 done 1/1 beats 288 span 572
+cmd 13 fmt 2 P 8 K 1120 xb 22 done 1/1 beats 104 span 230
+cmd 14 fmt 1 P 4 K 576 xb 29 done 1/1 beats 56 span 74
+cmd 15 fmt 2 P 5 K 2240 xb 41 done 1/1 beats 128 span 324
+cmd 16 fmt 1 P 4 K 128 xb 71 done 1/1 beats 56 span 74
+cmd 17 fmt 2 P 1 K 4352 xb 95 done 1/1 beats 48 span 136
+cmd 18 fmt 1 P 1 K 1344 xb 42 done 1/1 beats 32 span 60
+cmd 19 fmt 2 P 5 K 3296 xb 76 done 1/1 beats 128 span 324
+cmd 20 fmt 1 P 4 K 5408 xb 27 done 1/1 beats 336 span 474
+cmd 21 fmt 2 P 1 K 5536 xb 90 done 1/1 beats 48 span 136
+cmd 22 fmt 1 P 8 K 1568 xb 86 done 1/1 beats 208 span 278
+cmd 23 fmt 2 P 1 K 4064 xb 96 done 1/1 beats 32 span 88
+XLOAD_STATIC_LOCK FAIL 1727
+ot-run: RAN on ot-agidock128 (unit oth-ubuntu-95153-1792072882): exit 1

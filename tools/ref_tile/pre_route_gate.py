@@ -408,7 +408,31 @@ def check_sources(g: Gate, job: dict, extra_seeds=(), commit=None):
 
 
 # --------------------------------------------------------------------------------------------- kit checks
+MULTI_ROOT_PROOF = "related crossing lacks actual finite"
+MULTI_ROOT_DEFERRAL = "RELATED_PATH_DEFERRED"
+
+
+def stale_multi_root_sdcs(kd: Path) -> list:
+    """Kit SDCs baked by ref_tile.py before f489fa9d5: they carry the multi-root related-crossing finite-path proof
+    without the multi-mode pre-scene deferral, so under the gate/production OT_HOLD_MM session (read_sdc -mode ss before
+    any scene) find_timing_paths returns nothing and 1_synth/synth_odb dies with 'OT_MULTI_ROOT: related crossing lacks
+    actual finite max STA path' although the same netlist + SDC pass a single-scene replay (TT head h3, xcol_{e,w}_rq,
+    2026-10-15).  The generator is current; only the committed kit bytes are stale."""
+    out = []
+    for f in sorted(kd.glob("*.sdc")):
+        t = f.read_text(errors="replace")
+        # independent-domain leaves never reach the proof (any crossing is refused structurally first)
+        if MULTI_ROOT_PROOF in t and MULTI_ROOT_DEFERRAL not in t and "set ::ot_ce_related_data 1" in t:
+            out.append(f.name)
+    return out
+
+
 def check_kit(g: Gate, kd: Path, job: dict | None, commit=None):
+    stale = stale_multi_root_sdcs(kd)
+    if stale:
+        g.add("FAIL", "kit_sdc", f"{stale} predate the multi-mode pre-scene deferral of the OT_MULTI_ROOT related-crossing "
+              "proof (f489fa9d5): ORFS synth_odb fails 'related crossing lacks actual finite max STA path' under OT_HOLD_MM",
+              "rebase on main and re-run ref_tile.py gen for this kit, commit, then gate")
     spec = RT.load_spec(str(kd / "spec.json"))
     try:
         fresh = RT.gen(str(kd / "spec.json"), spec.get("std_area_um2"), write=False)

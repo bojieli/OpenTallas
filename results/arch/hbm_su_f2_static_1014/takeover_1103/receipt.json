@@ -1,0 +1,268 @@
+{
+  "schema": "opentallas.hbm.su_takeover_evidence.v1",
+  "qualified": false,
+  "source_commit": "02b1e3c90562478e0eacaba212ab10205dc5687a",
+  "recovered_source_commit": "22584e7c5",
+  "source_files": [
+    {
+      "path": "rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_ins.sv",
+      "sha256": "5689f7f3baad5435b2bac95cb31d908600a5434d2768a145fb5fe93276ba8bd2",
+      "current_source_identical": true
+    },
+    {
+      "path": "rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_lane.sv",
+      "sha256": "f8c024bf58bcad379ec3345fb80f4362ce83a11c5537801a64b84437eb1f3557",
+      "current_source_identical": true
+    },
+    {
+      "path": "rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_side.sv",
+      "sha256": "2e6c4f37354ca789ae7178eac57dc6b5c1abdf7a12858812200e10fb93f04a44",
+      "current_source_identical": true
+    },
+    {
+      "path": "rtl/hbm_accel/generic/adapters/static_su/data_store/ot_hbm_su_static_data_store.sv",
+      "sha256": "518a27a172633663682a758f469660faa83853515caeb8f09fa39ed52f12ed15",
+      "current_source_identical": true
+    },
+    {
+      "path": "rtl/hbm_accel/generic/adapters/static_su/data_store/ot_hbm_su_static_pinned_bank.sv",
+      "sha256": "229d8a8b344ae0db15a77705794cffd00f46bdacbd71d1e22ed9650bf60bce62",
+      "current_source_identical": true
+    },
+    {
+      "path": "rtl/hbm_accel/generic/adapters/static_su/register_file/ot_hbm_su_static_rf.sv",
+      "sha256": "9689c5640d72f23d411171e58b17680d1ee6a59e893271c8b0bf121fc98d2ca9",
+      "current_source_identical": true
+    },
+    {
+      "path": "rtl/hbm_accel/generic/adapters/static_su/reduction/ot_hbm_su_reduce_static.sv",
+      "sha256": "ad4d5ff253c2af145fd41f2a880714945df09ac9cbe0e2b086e18b4a07a77b13",
+      "current_source_identical": true
+    },
+    {
+      "path": "rtl/hbm_accel/generic/adapters/static_su/ot_hbm_su_static_vm_ports.sv",
+      "sha256": "00eb5cdc33808a02dbb7a1c9ea272ff6a266521117851ee8ab598581902200ff",
+      "current_source_identical": true
+    },
+    {
+      "path": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
+      "sha256": "9be79e72421c93cdd97f38cfcf8386d00eeee4989fc40ac485cdb42d3560bac1",
+      "current_source_identical": true
+    },
+    {
+      "path": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_qcore.sv",
+      "sha256": "0235961f0e0d060c99d770b359b8245eb829423a2b08af280f1591ea68a7a04a",
+      "current_source_identical": true
+    },
+    {
+      "path": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_quarter.sv",
+      "sha256": "4e252e5cb74cea5f903bb62ba7a7b33f3fc65e14f1dee376b739e1bfa2a00a98",
+      "current_source_identical": true
+    },
+    {
+      "path": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_top.sv",
+      "sha256": "281e6451c6026fdd5c0faec7dffd59220d1de7d280a1e7a063db8c20d70f85eb",
+      "current_source_identical": true
+    },
+    {
+      "path": "rtl/hbm_accel/generic/adapters/static_su/top/tb_hbm_su_static_top.sv",
+      "sha256": "cff5fa4f924acc7773eee0e3b165efc881da53b02389c76c4edee90b7b34b54e",
+      "current_source_identical": true
+    },
+    {
+      "path": "rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv",
+      "sha256": "e494c109a829a081eae4d4f96a0e1e1ee68f08e87f9ac977f3460250ef77db85",
+      "current_source_identical": true
+    },
+    {
+      "path": "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv",
+      "sha256": "804cf233a0e051d0d72fb3cf1a8b11d3e8c65bdbab3d8f664d98c07ae7c8797b",
+      "current_source_identical": true
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_delay.sv",
+      "sha256": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+      "current_source_identical": true
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_fpu.sv",
+      "sha256": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110",
+      "current_source_identical": true
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+      "sha256": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204",
+      "current_source_identical": true
+    },
+    {
+      "path": "rtl/proto/ot_fp32_add_rne_pipe.sv",
+      "sha256": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
+      "current_source_identical": true
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_sfu.sv",
+      "sha256": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923",
+      "current_source_identical": true
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_fastfp.sv",
+      "sha256": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643",
+      "current_source_identical": true
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_fastfp_lat.sv",
+      "sha256": "e09be17358e95ebcfe64c2ecc01090410ec81542e737fc96207244cc134f5cbc",
+      "current_source_identical": true
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+      "sha256": "ddc4c3bfb4f22788534148049bf381d469053ff5b54c6197548636a3f4aac8e3",
+      "current_source_identical": true
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+      "sha256": "f5e88cfcd8ce4809826eccf77fa8b83bc1ef14b430964dcf01cef70f70577b30",
+      "current_source_identical": true
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_prefix.sv",
+      "sha256": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+      "current_source_identical": true
+    },
+    {
+      "path": "rtl/hdc/v41/ot_hdc_fsqrt.sv",
+      "sha256": "9b2a87e62b62bcaf3fc9b901b2dcde63f966d13925126711aa2ebf6b7b1aff8f",
+      "current_source_identical": true
+    },
+    {
+      "path": "rtl/hdc/v41/ot_hdc_fdiv.sv",
+      "sha256": "0b8e4d7d680d7ca77cff139fe8f51b649c56cbc185560af767530895438eac25",
+      "current_source_identical": true
+    },
+    {
+      "path": "rtl/hdc/v41/ot_hdc_softplus.sv",
+      "sha256": "c4b101fccaa9aefd11795d6d16a2a30044f80ee14f21cdea0bac8db53d23ac88",
+      "current_source_identical": true
+    },
+    {
+      "path": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v",
+      "sha256": "dba769863f502de28853a78ac30544a406c7cb66fd3249019ef9fa5a5b73e36e",
+      "current_source_identical": true
+    },
+    {
+      "path": "tools/hbm_static/su_top_compile.py",
+      "sha256": "d615417861609445d71e9dda447e3864edf25fc41f5e113b72da71f8cc37435f",
+      "current_source_identical": true
+    },
+    {
+      "path": "tools/hbm_static/su_arith_compile.py",
+      "sha256": "38aefcc25822364df2a1777c41f577d6a8de00d6541777e552fafca91dba592b",
+      "current_source_identical": true
+    },
+    {
+      "path": "tools/hdc_golden.py",
+      "sha256": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6",
+      "current_source_identical": true
+    },
+    {
+      "path": "tools/hbm_static/su_arith_sfu_compile.py",
+      "sha256": "c63197541054fe3a1364950ae989035ac5c850a59c62fea5850cc16fcd1021ef",
+      "current_source_identical": true
+    },
+    {
+      "path": "tools/hbm_static/su_arith_sfu_run.sh",
+      "sha256": "c548b8419df89015adc52c8d07d969ed44e6033208fafb1f5f3677f91b5f8329",
+      "current_source_identical": true
+    }
+  ],
+  "positive": {
+    "whole_su": "whole_su/m0.log",
+    "scope": "component: ideal external LG return stimulus; native internal SRAM/arithmetic/reducers/RF",
+    "edges": 7111,
+    "lanes": 512,
+    "SRAMs": 3080,
+    "vm_writes": 135184,
+    "scalars": 9
+  },
+  "bench_mutants": [
+    "ADDR",
+    "DATA",
+    "RF",
+    "RED"
+  ],
+  "lat4_arithmetic": {
+    "scope": "arithmetic component full512, actual3072SRAM, 31operations; not compiler production layer",
+    "positive": "lat4_arithmetic/base.log",
+    "outputs": 1015808,
+    "checks": 2031616,
+    "first_output": 36,
+    "II": 1,
+    "mutants": [
+      "ADDR",
+      "DATA",
+      "PHASE"
+    ],
+    "admission_GB": 160,
+    "unit": "oth-ubuntu-2152482-1792069222"
+  },
+  "preserved_live_RTL_mutants": [
+    {
+      "host": "ot-pve1",
+      "pid": 1436636,
+      "mut": 1
+    },
+    {
+      "host": "ot-pve1",
+      "pid": 1436642,
+      "mut": 4
+    }
+  ],
+  "open": [
+    "native programme producer not in recovered top",
+    "LG operand memory is ideal external boundary in whole_su proof",
+    "canonical production DS/Qwen compiler operations not this synthetic arithmetic suite",
+    "LAT4 top composition proof not yet run",
+    "source-current die fit/assigned pins/TTsetup/FFhold/DRC0/native timing"
+  ],
+  "SU_internal_SFU_suite": {
+    "scope": "32 SFU-capable lanes perquarter; total512lanes actual3072SRAM; not dedicated16laneSFU engine",
+    "ops": 8,
+    "outputs": 90112,
+    "checks": 352256,
+    "positive_M3": "sfu32_m3/base.log",
+    "positive_LAT4": "sfu32_lat4/base.log",
+    "mutants_each": [
+      "ADDR",
+      "DATA",
+      "PHASE"
+    ],
+    "M3_issue_to_output": {
+      "exp": 72,
+      "sigmoid_silu": 94,
+      "divide": 39,
+      "light": 23
+    },
+    "LAT4_issue_to_output": {
+      "exp": 84,
+      "sigmoid_silu": 106,
+      "divide": 43,
+      "light": 28
+    },
+    "ledger": "historicalPROPOSED only; no new accepted cost row entered"
+  },
+  "collected_RTL_mutants": [
+    {
+      "MUT": 2,
+      "log": "whole_su/rtl_mut2.log",
+      "errors": 132583,
+      "exit": 1
+    },
+    {
+      "MUT": 8,
+      "log": "whole_su/rtl_mut8.log",
+      "errors": 1,
+      "exit": 1
+    }
+  ],
+  "source_files_scope": "Recovered original component proofs only; clock7 source successor has separate evidence and pending full composed proof."
+}

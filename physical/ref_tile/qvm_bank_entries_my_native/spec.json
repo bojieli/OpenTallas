@@ -3,9 +3,9 @@
   "MUT": 0
  },
  "job": {
-  "owner": "Codex:q_vm_physical",
-  "branch": "codex/q-vm-physical-1015",
-  "tag": "ne1",
+  "owner": "Claude:q15_compute_elem",
+  "branch": "claude/qvm-ne2r-1015",
+  "tag": "ne2r",
   "purpose": "Actual9-entry wire parent over real native-audited data256/control35+2 rawSRAMs; same4edges; actual macro/clock/native route verification, no fullVM adoption.",
   "views_to": "physical/ref_tile/qvm_bank_entries_my_native/views",
   "record_to": "results/rtl/ref_tile/qvm_bank_entries_my_native",
@@ -54,7 +54,7 @@
     ]
    }
   ],
-  "structural_change": "Actual2084bit leg screen found SRAM WD pinsE/RD pinsW cause254negative R0read margins. Mirror both SRAMsMY so WD faces input and RD faces capture; same rawmacro clock entries, source/dataedges/capacity preserved; no unchanged placement retry."
+  "structural_change": "ne2r FLOW-BUG RE-ROUTE (coordinator APPROVED 10:1x 10-15): identical RTL/geometry/clocks/edges to ne2-8e2cd3d55, regenerated on current main. ne2 routed but collect failed on frozen helper defects (meas_resta SS corner selector in TT, fixed 20cc62be8; view_export setup selector in SS, fixed 69410535e); its route was reaped by ot-reaper 09:00:11 so no postroute recovery was possible. The ne2 offline replay TT +140.37 / FF +26.15 was DIAGNOSTIC ONLY, not a closure record. Actual2084bit leg screen found SRAM WD pinsE/RD pinsW cause254negative R0read margins. Mirror both SRAMsMY so WD faces input and RD faces capture; same rawmacro clock entries, source/dataedges/capacity preserved; no unchanged placement retry. Re-generated at main stage-aware PRE_CTS_DEFAULT_SCENE correction b3c6382fa after stale generated SDC refused valid early minFF/maxTT; no RTL/geometry/clock/edge changes."
  },
  "name": "qvm_bank_entries_my_native",
  "top": "qvm_bank_banked_native",

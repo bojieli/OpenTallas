@@ -1,0 +1,6 @@
+MEASURE jit16 godly16 blk8 nblk4 maxocc63 stall0 go64 freed64 put512 first_go357 ctrlfault0 corefault1 errors0
+FRONT ordinal512 bad209
+OBSERVED_FAIL front MUT2 mode2 frontbad209 corefault1 errors0
+[5358000000] %Fatal: tb_kv_hbm_elastic_boundary.sv:250: Assertion failed in tb_kv_hbm_elastic_boundary
+%Error: /srv/opentallas-scratch/claude/qwen-kvsys/kvel-abaf82956/source/rtl/test/qwen_static_kv/tb_kv_hbm_elastic_boundary.sv:250: Verilog $stop
+Aborting...
