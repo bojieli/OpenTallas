@@ -1,5 +1,5 @@
 {
- "name": "qkd_static_kv_return_slots_r1-r1-COMMIT",
+ "name": "qkd_static_kv_return_slots_r1-r1-7489b1528",
  "block": "qkd_static_kv_return_slots",
  "ref_tile": true,
  "owner": "Claude:el1014-qwen-kvsys-elements",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 24,
  "source": {
   "branch": "claude/qwen-kvsys-el-r5-1015",
-  "commit": "COMMIT",
+  "commit": "7489b1528",
   "extra_paths": [
    "rtl/test/qwen_static_kv",
    "tools/qwen_static_kv",
@@ -98,7 +98,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qkd_static_kv_return_slots_r1/qkd_static_kv_return_slots_r1-r1-COMMIT"
+   "to": "results/rtl/ref_tile/qkd_static_kv_return_slots_r1/qkd_static_kv_return_slots_r1-r1-7489b1528"
   }
  ],
  "cycles_added": 0,
