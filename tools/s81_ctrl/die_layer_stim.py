@@ -387,15 +387,15 @@ def main():
                               int(HG.u32([es['eps']])[0]), int(HG.u32([es['scale']])[0])], 32)
         boot_ok.append(db)
         sys.path.insert(0, str(ROOT/'tools/s81_static_control'))
-        from program import encode_program
+        from program import encode_program, issuer_done_row
         # Issuer row semantics (ot_s81_fixed_issue): 'issue' is the age whose edge loads the command
         # register (command pin = issue+1); 'done' is the age whose edge samples the completion pin.
         # MIX4's measured command-pin -> done-pin latency is 772 (component gate), so
         # done = issue + 1 + 772. issue+772 (=1428) misses the completion by one edge: issuer
         # fault code 8 at stream cycle 2681 (tb_s81_engram_mix4_fixed reproduces it).
         MIX_ISSUE, MIX_PIN_TO_PIN = 656, 772
-        mix_done = MIX_ISSUE + 1 + MIX_PIN_TO_PIN
-        mc = encode_program([dict(engine=10,arg=db,issue=MIX_ISSUE,done=mix_done),
+        mix_done = issuer_done_row(MIX_ISSUE, MIX_PIN_TO_PIN)
+        mc = encode_program([dict(engine=10,arg=db,issue=MIX_ISSUE,done=mix_done,pin_to_pin=MIX_PIN_TO_PIN),
                              dict(engine=15,arg=0,issue=mix_done+4,done=0)],stage=0,phase=3)
         mc['hardware_nops']=2
         mc['seal_to_arm_stream_cycles']=3

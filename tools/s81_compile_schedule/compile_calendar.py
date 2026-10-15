@@ -30,6 +30,24 @@ def integer(value, label, low=0):
     return value
 
 
+# Actual ot_s81_fixed_issue row semantics (single source for every engine):
+# 'issue' is the context age whose edge loads the command register, so the
+# command pin rises at issue+1; 'done' is the age whose edge samples the
+# completion pin. A native owner's duration_cycles is its measured
+# command-pin -> done-pin latency (timing_boundary sequencer_cmd_pin_to_done_pin),
+# hence done = issue + 1 + pin_to_pin. done = issue + pin_to_pin misses the
+# completion by one edge (issuer fault 8; MIX4 layer run 10-15, reproduced by
+# tb_s81_engram_mix4_fixed: 1428 FAIL code 8, 1429 PASS, 1430 FAIL code 6).
+ISSUE_TO_CMD_PIN_EDGES = 1
+
+
+def issuer_done_row(issue, pin_to_pin):
+    """Compiled done row of an issuer command with measured pin-to-pin latency."""
+    if type(issue) is not int or issue < 0 or type(pin_to_pin) is not int or pin_to_pin < 1:
+        raise ValueError('integer issue row and measured command-pin -> done-pin latency required')
+    return issue + ISSUE_TO_CMD_PIN_EDGES + pin_to_pin
+
+
 def validate_evidence(evidence, root):
     if not evidence:
         raise ValueError('missing source-pinned native evidence')
@@ -197,8 +215,8 @@ def compile_program(program, binding, contract, root=ROOT):
                 raise ValueError('native engine/endpoint mismatch')
             start = integer(op['start'], 'start')
             duration = integer(job['duration_cycles'], 'duration', 1)
-            if op['end'] != start + duration:
-                raise ValueError('program duration differs from native fixed duration; recompile graph')
+            if op['end'] != issuer_done_row(start, duration):
+                raise ValueError('done row must be issue + 1 + native command-pin -> done-pin latency; recompile graph')
             period = integer(job['phase_period_stream'], 'phase period', 1)
             if start % period != integer(job['start_phase_stream'], 'start phase'):
                 raise ValueError('native template does not match scheduled clock phase')
@@ -304,12 +322,13 @@ def schedule_jobs(program, binding):
         earliest = max([integer(op.get('ext', 0), 'external arrival'), ports.get(op['port'], 0)]
                        + [ends[p] for p in predecessors])
         start = earliest + (phase - earliest) % phase_period
-        op.update(start=start, end=start+duration, dur=duration)
+        # end is the issuer done row; the engine port is occupied until it.
+        op.update(start=start, end=issuer_done_row(start, duration), dur=duration)
         ends[index] = op['end']
         ports[op['port']] = op['end']
     previous = program.get('makespan', max(o['end'] for o in program['ops']))
     result['makespan'] = max(ends.values())
-    result['offline_schedule'] = dict(policy='fixed native duration, single inflight per port, explicit clock phase',
+    result['offline_schedule'] = dict(policy='done = issue + 1 + native pin-to-pin duration, single inflight per port, explicit clock phase',
                                      original_makespan=previous, native_makespan=result['makespan'],
                                      added_cycles=result['makespan']-previous,
                                      performance_accepted=False)
