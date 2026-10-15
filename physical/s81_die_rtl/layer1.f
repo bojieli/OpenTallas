@@ -20,6 +20,9 @@ physical/asap7_memory_macros_v2/ot_rom_4096x72_m8/ot_rom_4096x72_m8.v
 # WFC stage kit: the hardened cluster of the PRICED kit (dsfd_wfc_stg_cl) under the die master name, with the hop
 # endpoint (engine 7)
 +define+DSFD_WFC_STG_CL_DIE
+# STATIC die form (S-VM F7 2026-10-15): no t_lir / f_lor grant pins; static RX / TX message buffers, TX on the
+# compiler's reserved edges (last RX arrival + TX_OFF); gate tools/dsrom_wfc_static_bench.py
++define+DSFD_WFC_STG_STATIC
 rtl/dsrom_sys/mtp/dsfd_wfc_stg_cl.sv
 +libdir+physical/s81_ph_views/mtp/macros
 # BF pair (x512): the CLOSED compact199 views under their die names (tools/s81/gen_bf_die_wrappers.py: die bit i = the
@@ -90,3 +93,61 @@ rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_cap_leaf.sv
 rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_cap.sv
 rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_wfc.sv
 rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_xio.sv
+
+# S-BIND 2026-10-15: remaining static VM s2 source closure (tools/s81_vm/static_master_gate.sh file list)
+rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_fsr_bank8.sv
+rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_fsr_quartets.sv
+rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_read_leaf.sv
+rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_read_quartets.sv
+rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_read_valid.sv
+rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_read_valid_quartets.sv
+rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_read_router.sv
+rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_write_capture128.sv
+rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_scatter_b8_out.sv
+rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_scatter_lane.sv
+rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_relay128_b8.sv
+rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_relay128_b4.sv
+rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_w0.sv
+rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_wcontrol.sv
+rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl_pipe.sv
+
+# S-BIND 2026-10-15 --static-coll: static collective die master dsfd_sp_collective_static_c and its closure
+# (physical/s81_static_collective_proposal_1014/fullslab_module_manifest.json on codex/s81-static-collective-1014 @574f05810;
+# all 25 source hashes verified)
+rtl/dsrom_sys/s81_static_collective/dsfd_sp_collective_static_c.sv
+rtl/dsrom_sys/s81_static_collective/s81_static_collective_slab.sv
+rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller.sv
+rtl/dsrom_sys/s81_static_collective/s81_static_fmt1_rank_dynamic_clocked.sv
+rtl/dsrom_sys/s81_static_collective/s81_static_fmt1_core_dynamic.sv
+rtl/dsrom_sys/s81_static_collective/s81_static_fmt1_lane_dynamic.sv
+rtl/dsrom_sys/s81_static_collective/s81_static_fmt1_codec_dynamic.sv
+rtl/dsrom_sys/s81_static_collective/s81_static_tp4_endpoint_dynamic.sv
+rtl/dsrom_sys/s81_static_collective/s81_static_fmt1_gearbox.sv
+rtl/dsrom_sys/s81_static_collective/s81_static_fmt1_channels_clocked.sv
+rtl/dsrom_sys/s81_static_collective/s81_static_raw_fmt1_lane.sv
+rtl/dsrom_sys/s81_static_collective/s81_static_raw_fmt1_codec.sv
+rtl/dsrom_sys/s81_static_collective/s81_static_raw_vm_rows.sv
+rtl/dsrom_sys/s81_ph/coll/dsfd_coll_static_channels.sv
+rtl/dsrom_sys/s81_static_hc/s81_static_hc_reduce.sv
+rtl/dsrom_sys/s81_static_hc/s81_static_hc_assemble.sv
+rtl/dsrom_sys/s81_ph/ot_s81ph_fp32_add_rne_preexp.sv
+rtl/hdc/ot_hdc_prefix.sv
+rtl/link/ot_link_crc32.sv
+physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8.v
+rtl/dsrom_sys/s81_ph/coll/dsfd_coll_ck.sv
+rtl/dsrom_sys/s81_ph/coll/ot_s81ph_ckbuf.sv
+rtl/dsrom_sys/s81_ph/ot_s81ph_coll_rstc.sv
+rtl/dsrom_sys/s81_ph/ot_s81_pll_bb.sv
+rtl/dsrom_sys/s81_static_collective/s81_static_vm_boundary.sv
+
+# S-BIND 2026-10-15 --suhc-static-issue: SU / HC endpoints issue on the compiler command edge (no f_inp die pin)
++define+DSFD_SUHC_STATIC_ISSUE
+rtl/dsrom_sys/s81_suhc/dsfd_sp_su_c.sv
+rtl/dsrom_sys/s81_suhc/dsfd_sp_hc_c.sv
+rtl/dsrom_sys/s81_suhc/dsfd_sp_hc.sv
+
+# S-BIND 2026-10-15 --bf-x2-static: one packed static x lane word xw/xe[1100:0] {x2 536 | legacy 564 | v} from the PQ
+# lane encoder (dsfd_pq_lx), column entry ot_s81_static_column_ingress (glue dsfd_cfifo), BF xb from the lane
++define+DSFD_PQ_STATIC_X2
+rtl/dsrom_sys/s81_die_bind/ot_s81_static_lane_cross.sv
+rtl/dsrom_sys/s81_die_bind/ot_s81_static_column_ingress.sv

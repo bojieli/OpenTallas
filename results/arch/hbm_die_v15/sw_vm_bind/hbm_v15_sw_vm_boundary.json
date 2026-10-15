@@ -1,5 +1,5 @@
 {
- "keep": "hb_vms_SW|calendar_SW|lg_SW_[012]|hb_sfu_SW|hb_dbk_SW|hb_idx|hb_coll_SW|delivery_SW|vm_status4",
+ "keep": "hb_vms_SW|calendar_SW|lg_SW_[012]|hb_su_SW|hb_sfu_SW|hb_dbk_SW|hb_idx|hb_coll_SW|delivery_SW|vm_status4",
  "instances": [
   "calendar_SW",
   "delivery_SW",
@@ -7,6 +7,7 @@
   "hb_dbk_SW",
   "hb_idx",
   "hb_sfu_SW",
+  "hb_su_SW",
   "hb_vms_SW",
   "lg_SW_0",
   "lg_SW_1",
@@ -174,20 +175,6 @@
    "lo": 0,
    "hi": 16,
    "top_port": "x_calendar_SW__start_loops_0_16"
-  },
-  {
-   "instance": "lg_SW_0",
-   "port": "local_rq",
-   "lo": 0,
-   "hi": 136,
-   "top_port": "x_lg_SW_0__local_rq_0_136"
-  },
-  {
-   "instance": "lg_SW_0",
-   "port": "local_wq",
-   "lo": 0,
-   "hi": 2248,
-   "top_port": "x_lg_SW_0__local_wq_0_2248"
   },
   {
    "instance": "lg_SW_2",
@@ -498,6 +485,20 @@
    "top_port": "x_hb_dbk_SW__wa_0_12"
   },
   {
+   "instance": "hb_su_SW",
+   "port": "su_rq",
+   "lo": 0,
+   "hi": 136,
+   "top_port": "x_hb_su_SW__su_rq_0_136"
+  },
+  {
+   "instance": "hb_su_SW",
+   "port": "su_wq",
+   "lo": 0,
+   "hi": 2248,
+   "top_port": "x_hb_su_SW__su_wq_0_2248"
+  },
+  {
    "instance": "hb_idx",
    "port": "program_we",
    "lo": 0,
@@ -601,6 +602,7 @@
   "hb_coll_SW": "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q_static.sv",
   "hb_sfu_SW": "rtl/hbm_accel/generic/peers/ot_hgi_sfu_scheduled_engine.sv",
   "hb_dbk_SW": "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static.sv",
+  "hb_su_SW": "rtl/hbm_accel/generic/adapters/static_su/ot_hbm_su_static_vm_ports.sv",
   "hb_idx": "rtl/hbm_accel/index/ot_hbm_idx_scheduled_static.sv"
  }
 }

@@ -10,7 +10,22 @@
   "LS_WR": 1,
   "LS_RD": 2,
   "ARITH": 23,
-  "RED_DEP": 8
+  "RED_DEP": 8,
+  "MLAT": 3,
+  "ALAT": 3,
+  "DIV_EXTRA": 16,
+  "S_DEPTH": {
+   "0": 0,
+   "1": 49,
+   "2": 37,
+   "3": 31,
+   "4": 71,
+   "5": 71,
+   "6": 162,
+   "7": 104
+  },
+  "SFU_LANES_PER_QUARTER": 32,
+  "SCALAR_SIDE_LANES": 1
  },
  "inputs": {
   "su_prod.json": "d64fcd8f50e0a9f1165fcfb4568a072905027db883056adfae470ec92f08eb5d",
@@ -70,9 +85,9 @@
    ],
    "priced": 123.0,
    "first": 115,
-   "end": 170,
-   "edges": 55,
-   "ratio": 0.447
+   "end": 188,
+   "edges": 73,
+   "ratio": 0.593
   },
   {
    "tags": [
@@ -81,28 +96,28 @@
     "softmax.bf16_p"
    ],
    "priced": 1013.0,
-   "first": 170,
-   "end": 940,
-   "edges": 770,
-   "ratio": 0.76
+   "first": 188,
+   "end": 1391,
+   "edges": 1203,
+   "ratio": 1.188
   },
   {
    "tags": [
     "pv_normalize"
    ],
    "priced": 78.0,
-   "first": 940,
-   "end": 987,
-   "edges": 47,
-   "ratio": 0.603
+   "first": 1391,
+   "end": 1457,
+   "edges": 66,
+   "ratio": 0.846
   },
   {
    "tags": [
     "row_scale_o+residual"
    ],
    "priced": 67.0,
-   "first": 987,
-   "end": 1062,
+   "first": 1457,
+   "end": 1532,
    "edges": 75,
    "ratio": 1.119
   },
@@ -112,18 +127,18 @@
     "swiglu"
    ],
    "priced": 191.0,
-   "first": 1062,
-   "end": 1165,
-   "edges": 103,
-   "ratio": 0.539
+   "first": 1532,
+   "end": 1720,
+   "edges": 188,
+   "ratio": 0.984
   },
   {
    "tags": [
     "row_scale_down+residual"
    ],
    "priced": 67.0,
-   "first": 1165,
-   "end": 1240,
+   "first": 1720,
+   "end": 1795,
    "edges": 75,
    "ratio": 1.119
   }
@@ -133,6 +148,8 @@
    "tag": "embedding.dequant",
    "priced": 67.0,
    "issues": 8,
+   "lane_class": "light",
+   "issue_to_local_store": 23,
    "stage_sectors": 516,
    "drain_sectors": 512,
    "reused_words": 0,
@@ -149,6 +166,8 @@
    "tag": "row_scale_qkv",
    "priced": 62.0,
    "issues": 3,
+   "lane_class": "light",
+   "issue_to_local_store": 23,
    "stage_sectors": 384,
    "drain_sectors": 192,
    "reused_words": 0,
@@ -165,6 +184,8 @@
    "tag": "rope",
    "priced": 62.0,
    "issues": 3,
+   "lane_class": "light",
+   "issue_to_local_store": 23,
    "stage_sectors": 224,
    "drain_sectors": 160,
    "reused_words": 0,
@@ -181,15 +202,17 @@
    "tag": "round_q",
    "priced": 61.0,
    "issues": 2,
+   "lane_class": "light",
+   "issue_to_local_store": 23,
    "stage_sectors": 0,
    "drain_sectors": 128,
    "reused_words": 1024,
    "elided_drain_words": 0,
    "adjacent_to_predecessor": true,
-   "first_edge": 134,
-   "end_edge": 170,
-   "own_edges": 36,
-   "edges": 4,
+   "first_edge": 153,
+   "end_edge": 188,
+   "own_edges": 35,
+   "edges": 22,
    "over_price": false,
    "reduction_tail_model": false
   },
@@ -197,45 +220,51 @@
    "tag": "softmax.max",
    "priced": 302.0,
    "issues": 128,
+   "lane_class": "light",
+   "issue_to_local_store": 23,
    "stage_sectors": 8192,
    "drain_sectors": 32,
    "reused_words": 0,
    "elided_drain_words": 0,
    "adjacent_to_predecessor": false,
-   "first_edge": 170,
-   "end_edge": 563,
-   "own_edges": 393,
-   "edges": 393,
+   "first_edge": 188,
+   "end_edge": 574,
+   "own_edges": 386,
+   "edges": 386,
    "over_price": true,
    "reduction_tail_model": true
   },
   {
    "tag": "softmax.exp_sum",
    "priced": 524.0,
-   "issues": 128,
+   "issues": 512,
+   "lane_class": "sfu",
+   "issue_to_local_store": 72,
    "stage_sectors": 0,
    "drain_sectors": 8,
    "reused_words": 65568,
    "elided_drain_words": 65536,
    "adjacent_to_predecessor": true,
-   "first_edge": 437,
-   "end_edge": 684,
-   "own_edges": 247,
-   "edges": 121,
-   "over_price": false,
+   "first_edge": 455,
+   "end_edge": 1135,
+   "own_edges": 680,
+   "edges": 561,
+   "over_price": true,
    "reduction_tail_model": true
   },
   {
    "tag": "softmax.bf16_p",
    "priced": 187.0,
    "issues": 128,
+   "lane_class": "light",
+   "issue_to_local_store": 23,
    "stage_sectors": 0,
    "drain_sectors": 8192,
    "reused_words": 65536,
    "elided_drain_words": 0,
    "adjacent_to_predecessor": true,
-   "first_edge": 565,
-   "end_edge": 940,
+   "first_edge": 1016,
+   "end_edge": 1391,
    "own_edges": 375,
    "edges": 256,
    "over_price": true,
@@ -244,16 +273,18 @@
   {
    "tag": "pv_normalize",
    "priced": 78.0,
-   "issues": 2,
+   "issues": 8,
+   "lane_class": "sfu",
+   "issue_to_local_store": 39,
    "stage_sectors": 128,
    "drain_sectors": 128,
    "reused_words": 8,
    "elided_drain_words": 0,
    "adjacent_to_predecessor": false,
-   "first_edge": 940,
-   "end_edge": 987,
-   "own_edges": 47,
-   "edges": 47,
+   "first_edge": 1391,
+   "end_edge": 1457,
+   "own_edges": 66,
+   "edges": 66,
    "over_price": false,
    "reduction_tail_model": false
   },
@@ -261,13 +292,15 @@
    "tag": "row_scale_o+residual",
    "priced": 67.0,
    "issues": 8,
+   "lane_class": "light",
+   "issue_to_local_store": 23,
    "stage_sectors": 1024,
    "drain_sectors": 512,
    "reused_words": 4096,
    "elided_drain_words": 0,
    "adjacent_to_predecessor": false,
-   "first_edge": 987,
-   "end_edge": 1062,
+   "first_edge": 1457,
+   "end_edge": 1532,
    "own_edges": 75,
    "edges": 75,
    "over_price": true,
@@ -277,13 +310,15 @@
    "tag": "row_scale_gu",
    "priced": 71.0,
    "issues": 12,
+   "lane_class": "light",
+   "issue_to_local_store": 23,
    "stage_sectors": 1536,
    "drain_sectors": 768,
    "reused_words": 0,
    "elided_drain_words": 0,
    "adjacent_to_predecessor": false,
-   "first_edge": 1062,
-   "end_edge": 1153,
+   "first_edge": 1532,
+   "end_edge": 1623,
    "own_edges": 91,
    "edges": 91,
    "over_price": true,
@@ -292,16 +327,18 @@
   {
    "tag": "swiglu",
    "priced": 120.0,
-   "issues": 6,
+   "issues": 24,
+   "lane_class": "sfu",
+   "issue_to_local_store": 94,
    "stage_sectors": 4,
    "drain_sectors": 384,
    "reused_words": 6144,
    "elided_drain_words": 0,
    "adjacent_to_predecessor": true,
-   "first_edge": 1110,
-   "end_edge": 1165,
-   "own_edges": 55,
-   "edges": 12,
+   "first_edge": 1580,
+   "end_edge": 1720,
+   "own_edges": 140,
+   "edges": 97,
    "over_price": false,
    "reduction_tail_model": false
   },
@@ -309,13 +346,15 @@
    "tag": "row_scale_down+residual",
    "priced": 67.0,
    "issues": 8,
+   "lane_class": "light",
+   "issue_to_local_store": 23,
    "stage_sectors": 1024,
    "drain_sectors": 512,
    "reused_words": 4096,
    "elided_drain_words": 0,
    "adjacent_to_predecessor": false,
-   "first_edge": 1165,
-   "end_edge": 1240,
+   "first_edge": 1720,
+   "end_edge": 1795,
    "own_edges": 75,
    "edges": 75,
    "over_price": true,
@@ -324,8 +363,8 @@
  ],
  "total": {
   "priced": 1668.0,
-  "edges": 1240,
-  "ratio": 0.743
+  "edges": 1795,
+  "ratio": 1.076
  },
  "vehicle_transport_windows": {
   "embedding.dequant#0": [
@@ -341,40 +380,40 @@
    166
   ],
   "round_q#3": [
-   159,
-   170
+   178,
+   188
   ],
   "softmax.max#4": [
-   170,
-   563
+   188,
+   574
   ],
   "softmax.exp_sum#5": [
-   677,
-   684
+   680,
+   1135
   ],
   "softmax.bf16_p#6": [
-   590,
-   940
+   1041,
+   1391
   ],
   "pv_normalize#7": [
-   940,
-   987
+   1391,
+   1457
   ],
   "row_scale_o+residual#8": [
-   987,
-   1062
+   1457,
+   1532
   ],
   "row_scale_gu#9": [
-   1062,
-   1153
+   1532,
+   1623
   ],
   "swiglu#10": [
-   1110,
-   1165
+   1580,
+   1720
   ],
   "row_scale_down+residual#11": [
-   1165,
-   1240
+   1720,
+   1795
   ]
  }
 }

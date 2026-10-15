@@ -1,0 +1,123 @@
+{
+ "name": "s81pq_qb_align_native",
+ "top": "ot_s81_pq_qb_align_native",
+ "sources": [
+  "rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_qb_pipe_native.sv",
+  "physical/s81_pq_hier/pinned/rtl/ot_rst_relay.sv"
+ ],
+ "outline": {
+  "w": 172.8,
+  "h": 43.2
+ },
+ "pins": {
+  "S": [
+   "bc_hr",
+   "bt_d"
+  ],
+  "N": [
+   "bc_hr_q",
+   "bt_d_q"
+  ],
+  "W": [
+   "clk",
+   "rst_n"
+  ],
+  "E": []
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 16,
+  "peak_ram_gb": 16,
+  "pin_v": "M3 M5",
+  "hold_margin_ns": 0.03
+ },
+ "kind": "tile",
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "layer_cap": "M5",
+ "recipe": 2,
+ "macros": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "structural_change": "10-15 S-ELEM-B: new fixed two-stage alignment leaf (physical_request.json): the unchanged IX data (bt_d 1024) and CTL broadcast (bc_hr 610) are delayed 2 fixed edges to meet the pipelined QB response; core stays wires-only. Own clock entry ck_qb_align (4d2d3b849). Pin-limited (1,634 b per face). | gate p0 (129.6 wide, 12.6 pins/um) GPL-0305 diverged and reset fan-out 1,220 > 256: reset split into 5 relay regions (244 loads each, release unchanged), width 172.8 = the closed BC slice pin density (9.5 pins/um).",
+ "slot_change_request": {
+  "name": "s81pq_qb_align_native-1015",
+  "outline": [
+   172.8,
+   43.2
+  ],
+  "pin_faces": {
+   "S": [
+    "bc_hr",
+    "bt_d"
+   ],
+   "N": [
+    "bc_hr_q",
+    "bt_d_q"
+   ],
+   "W": [
+    "clk",
+    "rst_n"
+   ],
+   "E": []
+  },
+  "reason": "new leaf, no legacy slot"
+ },
+ "job": {
+  "owner": "Claude:s81-elemB-1015",
+  "branch": "codex/s81-field-native-1015",
+  "tag": "p1",
+  "purpose": "S81 PQ QB align leaf (2 fixed stages), canonical +2 QB pipeline",
+  "benches": [
+   {
+    "name": "native_exact",
+    "cmd": "python3 tools/s81/pq_native_core_bench.py --bc-sliced --aq-pin --aq-parity --ix-bank-split --aq-split --qb-pipe --work {RUN}/native_exact --jobs 8",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "PQ_CORE_PIPE PASS",
+    "min_count_regex": "packets=(\\d+)"
+   },
+   {
+    "name": "native_head_mutant",
+    "cmd": "python3 tools/s81/pq_native_core_bench.py --bc-sliced --aq-pin --aq-parity --ix-bank-split --aq-split --qb-pipe --mut QBHEAD --work {RUN}/native_head_mutant --jobs 8",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "PQ_CORE_PIPE FAIL|PQ_NATIVE_CORE FAIL"
+   }
+  ],
+  "views_to": "physical/ref_tile/s81pq_qb_align_native/views",
+  "record_to": "results/rtl/ref_tile/s81pq_qb_align_native",
+  "extra_paths": [
+   "rtl/dsrom_sys",
+   "rtl/test/dsrom_sys",
+   "physical/s81_pq_hier/pinned",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
+   "physical/ref_tile_specs/s81pq_native",
+   "tools/s81",
+   "tools/s81_static_control"
+  ]
+ },
+ "defines": [
+  "OT_PQ_ROM_PORTS"
+ ]
+}

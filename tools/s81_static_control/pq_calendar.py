@@ -51,7 +51,11 @@ def compile_events(events,commands,action_bits=72):
         occupied.add(t)
         if t not in by_time or by_time[t].get('accept_tag',0)!=c['native_tag']:
             raise ValueError('calendar ACCEPT tag must align actual endpoint registeredGO')
-        if c['done']<=c['issue']+2:raise ValueError('PQ observed completion deadline missing')
+        # done = issue + 1 + measured command-pin -> observed-END latency (the
+        # descriptor's observed_end_edges); never issue + latency.
+        lat=c.get('pin_to_pin')
+        if type(lat)is not int or lat<3:raise ValueError('PQ measured command-pin -> done-pin latency required')
+        if c['done']!=c['issue']+1+lat:raise ValueError('PQ done row must equal issue + 1 + pin-to-pin latency')
     return rows
 
 

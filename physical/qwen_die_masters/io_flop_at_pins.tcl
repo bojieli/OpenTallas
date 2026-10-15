@@ -170,6 +170,9 @@ foreach bt [$ot_blk getBTerms] {
   set fn [$ff getName]
   if {[dict exists $ot_seen $fn]} continue
   dict set ot_seen $fn 1
+  # el1013-smh-r14 2026-10-13: a pin flop the kit already fixed at its own station (FIRM before global placement: the SM
+  # tile cluster's strap stage 0 and reset pin flop, placed by its POST_TAPCELL stations) stays there (ODB-0359 otherwise)
+  if {[$ff isFixed]} { if {![info exists ot_kept]} { set ot_kept 0 }; incr ot_kept; continue }
   set bb [$bt getBBox]
   set px [expr {double([$bb xMin] + [$bb xMax]) / 2.0 / $ot_dbu}]
   set py [expr {double([$bb yMin] + [$bb yMax]) / 2.0 / $ot_dbu}]
@@ -406,4 +409,5 @@ set fh [open $::env(RESULTS_DIR)/ot_out_flop_at_pins.txt w]
 foreach n $ot_list { puts $fh $n }
 close $fh
 puts "OT_IOFLOP fixed $ot_n output-port and $ot_ni input-port flops at their pins ($ot_skip ports not single-flop)"
+if {[info exists ot_kept]} { puts "OT_IOFLOP kept $ot_kept pin flops the kit had already fixed at their own stations" }
 if {$ot_n + $ot_ni == 0 && !$ot_allow_none && $ot_verified_hard_faces == 0} { error "OT_IOFLOP: no pin flop found (netlist changed?)" }

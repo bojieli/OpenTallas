@@ -1,0 +1,319 @@
+{
+  "collected_at": "2026-10-15T07:03:39.265939+00:00",
+  "scope": "Authoritative existing daemon results; no obsolete credited parent relaunched. Static native replacement required. All failed evidence preserved.",
+  "jobs": [
+    {
+      "job": "qdq_wr_pay_ref-p13-70f8811db",
+      "state_file_sha256": "0b11c9842029a07f9ac0843871de3942546b0768493668388fbc1ee52947f8e4",
+      "status": "NEEDS_RTL",
+      "reason": "TT -8.97 / FF -4.55 ps / DRC 0 (line TT >= +0 / FF >= +0 / DRC 0); hold ECO missed (rc=9): least-bad pass 1 TT 15.15 / FF 17.35 ps / DRC 1",
+      "source": {
+        "branch": "claude/hbm-qdq-pay-p13-1014",
+        "commit": "70f8811dbf626d9176665999e8173eec957ffb91"
+      },
+      "bench_outcomes": {
+        "bench_lint": {
+          "ok": true,
+          "rc": 0,
+          "tail": "- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050\n- Verilator: Built from 0.151 MB sources in 13 modules, into 0.014 MB in 3 C++ files needing 0.000 MB\n- Verilator: Walltime 0.336 s (elab=0.007, cvt=0.324, bld=0.000); cpu 0.336 s on 1 threads; allocated 46.383 MB\nlint-ok\n"
+        },
+        "bench_payload_sram_exact": {
+          "ok": true,
+          "rc": 0,
+          "tail": "PAY_LAUNCH_TRACE empty_mode=1 beats=1024 grant_delay=41 first=43 last=1066\nPAY_LAUNCH_TRACE empty_mode=1 beats=128 grant_delay=41 first=43 last=170\nPAY_LAUNCH_TRACE empty_mode=1 beats=128 grant_delay=0 first=28 last=155\nPAY_LAUNCH_TRACE empty_mode=1 beats=128 grant_delay=0 first=28 last=155\nPASS QDQ_WR_PAY words=45056 snapshots=352 metadata_wraps=18 counter_wraps=16 reset=1 real_macro=1 array_writes=1148 array_reads=1148 bypassed=256 fault_reset=1\nrtl/test/hbm_accel/generic/tb_hgi_qdq_wr_pay.sv:91: $finish called at 17020000 (1ps)\n"
+        },
+        "bench_payload_bit_mutant": {
+          "ok": true,
+          "rc": 1,
+          "tail": "FATAL: rtl/test/hbm_accel/generic/tb_hgi_qdq_wr_pay.sv:48: PAY word/address mismatch lane3 item0\n       Time: 606000  Scope: tb_hgi_qdq_wr_pay.campaign\n"
+        },
+        "bench_snapshot_count_mutant": {
+          "ok": true,
+          "rc": 1,
+          "tail": "FATAL: rtl/test/hbm_accel/generic/tb_hgi_qdq_wr_pay.sv:55: PAY post-write snapshot mismatch lane0 got0 expected2\n       Time: 636000  Scope: tb_hgi_qdq_wr_pay.campaign\n"
+        },
+        "bench_obligation_rail_mutant": {
+          "ok": true,
+          "rc": 1,
+          "tail": "FATAL: rtl/test/hbm_accel/generic/tb_hgi_qdq_wr_pay.sv:44: unexpected PAY fault\n       Time: 176000  Scope: tb_hgi_qdq_wr_pay.campaign\n"
+        }
+      },
+      "native_qualified": false
+    },
+    {
+      "job": "qw_ovw_ref-s1-8b8bb5549",
+      "state_file_sha256": "fd527dd5b3e7501a55811e318af8682c272b1f1b109dc270c741bb1a7e4f3e3e",
+      "status": "NEEDS_RTL",
+      "reason": "TT -52.19 / FF -20.28 ps / DRC 0 (line TT >= +0 / FF >= +0 / DRC 0)",
+      "source": {
+        "branch": "codex/hbm-quant-sfu-2240",
+        "commit": "8b8bb5549baef932a5502838805a503c293df521",
+        "extra_paths": [
+          "rtl",
+          "compiler",
+          "physical/hbm_accel_die_views",
+          "physical/asap7_memory_macros",
+          "tools/hgi_unit_tput"
+        ]
+      },
+      "bench_outcomes": {
+        "bench_lint": {
+          "ok": true,
+          "rc": 0,
+          "tail": "- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050\n- Verilator: Built from 0.099 MB sources in 5 modules, into 0.010 MB in 3 C++ files needing 0.000 MB\n- Verilator: Walltime 0.009 s (elab=0.002, cvt=0.005, bld=0.000); cpu 0.009 s on 1 threads; allocated 34.379 MB\nlint-ok\n"
+        },
+        "bench_exact": {
+          "ok": true,
+          "rc": 0,
+          "tail": "PASS HGI_QDQ_WIDE_TPUT records=8 words=3328 cycles=184 priced=168\nQDQ_WIDE_CASE PASS m0\n"
+        },
+        "bench_skew_exact": {
+          "ok": true,
+          "rc": 0,
+          "tail": "PASS HGI_QDQ_WIDE_TPUT records=8 words=3328 cycles=222 priced=168\nQDQ_WIDE_CASE PASS sk\n"
+        },
+        "bench_packet_control": {
+          "ok": true,
+          "rc": 0,
+          "tail": "PASS HGI_QDQ_WIDE_TPUT records=8 words=3328 cycles=2319 priced=168\nQDQ_WIDE_CASE PASS w3\n"
+        },
+        "bench_mutant": {
+          "ok": true,
+          "rc": 1,
+          "tail": "[2443584] %Fatal: tb_hgi_quant_wide_tput.sv:42: Assertion failed in tb_hgi_quant_wide_tput: FATAL: record 0 fault (MUT 1)\nQDQ_WIDE_CASE FAIL m1\n"
+        },
+        "bench_mutant_lane": {
+          "ok": true,
+          "rc": 1,
+          "tail": "MISMATCH rec 0 word 0: 3e400000 != be700000\nMISMATCH rec 0 word 1: bd600000 != be800000\nMISMATCH rec 0 word 2: 3e700000 != bea00000\nMISMATCH rec 0 word 3: 3ee00000 != 3ea00000\nMISMATCH rec 0 word 4: 3e400000 != 3e700000\nQDQ_WIDE_CASE FAIL w1\n"
+        },
+        "bench_mutant_retire": {
+          "ok": true,
+          "rc": 1,
+          "tail": "[2458560] %Fatal: tb_hgi_quant_wide_tput.sv:47: Assertion failed in tb_hgi_quant_wide_tput.unnamedblk2: FATAL: premature retirement record 0 lane 0 ack 0 target 2\nQDQ_WIDE_CASE FAIL r2\n"
+        }
+      },
+      "native_qualified": false
+    },
+    {
+      "job": "qw_ovg_ref-s5-625507b68",
+      "state_file_sha256": "b18ff52b6a7c2317493a399bdb12de71953a53f4ac96eb3523a8258212e07a64",
+      "status": "CLOSED",
+      "reason": "CLOSED TT +249.04 / FF +2.86 ps DRC 0; SS sensitivity +71.87 ps | record codex/hbm-ovshared-cts-r2 68f901fe9 (19 files) | AUTO-MERGE CONFLICT (1 files: tools/uarch_model.py)",
+      "source": {
+        "branch": "codex/hbm-ovshared-cts-r2",
+        "commit": "625507b688ede77b2c2b3d997ac584753ae1a059",
+        "extra_paths": [
+          "rtl",
+          "compiler",
+          "physical/hbm_accel_die_views",
+          "physical/asap7_memory_macros",
+          "tools/hgi_unit_tput"
+        ]
+      },
+      "bench_outcomes": {
+        "bench_lint": {
+          "ok": true,
+          "rc": 0,
+          "tail": "- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050\n- Verilator: Built from 0.071 MB sources in 4 modules, into 0.010 MB in 3 C++ files needing 0.000 MB\n- Verilator: Walltime 0.004 s (elab=0.001, cvt=0.002, bld=0.000); cpu 0.004 s on 1 threads; allocated 33.383 MB\nlint-ok\n"
+        },
+        "bench_exact": {
+          "ok": true,
+          "rc": 0,
+          "tail": "PASS HGI_QDQ_WIDE_TPUT records=8 words=3328 cycles=184 priced=168\nQDQ_WIDE_CASE PASS m0\n"
+        },
+        "bench_skew_exact": {
+          "ok": true,
+          "rc": 0,
+          "tail": "PASS HGI_QDQ_WIDE_TPUT records=8 words=3328 cycles=222 priced=168\nQDQ_WIDE_CASE PASS sk\n"
+        },
+        "bench_packet_control": {
+          "ok": true,
+          "rc": 0,
+          "tail": "PASS HGI_QDQ_WIDE_TPUT records=8 words=3328 cycles=2319 priced=168\nQDQ_WIDE_CASE PASS w3\n"
+        },
+        "bench_mutant": {
+          "ok": true,
+          "rc": 1,
+          "tail": "[2443584] %Fatal: tb_hgi_quant_wide_tput.sv:42: Assertion failed in tb_hgi_quant_wide_tput: FATAL: record 0 fault (MUT 1)\nQDQ_WIDE_CASE FAIL m1\n"
+        },
+        "bench_mutant_lane": {
+          "ok": true,
+          "rc": 1,
+          "tail": "MISMATCH rec 0 word 0: 3e400000 != be700000\nMISMATCH rec 0 word 1: bd600000 != be800000\nMISMATCH rec 0 word 2: 3e700000 != bea00000\nMISMATCH rec 0 word 3: 3ee00000 != 3ea00000\nMISMATCH rec 0 word 4: 3e400000 != 3e700000\nQDQ_WIDE_CASE FAIL w1\n"
+        },
+        "bench_mutant_retire": {
+          "ok": true,
+          "rc": 1,
+          "tail": "[2458560] %Fatal: tb_hgi_quant_wide_tput.sv:47: Assertion failed in tb_hgi_quant_wide_tput.unnamedblk2: FATAL: premature retirement record 0 lane 0 ack 0 target 2\nQDQ_WIDE_CASE FAIL r2\n"
+        }
+      },
+      "native_qualified": false
+    },
+    {
+      "job": "qw_ovr_ref-r2-625507b68",
+      "state_file_sha256": "0d9e554851150548a4c19ff9687f8f49575ecb3d168ae5af5cdbbaf23e721b4b",
+      "status": "CLOSED",
+      "reason": "CLOSED TT +65.67 / FF +19.61 ps DRC 0; SS sensitivity -247.51 ps | record codex/hbm-ovshared-cts-r2 71c25d94e (19 files) | AUTO-MERGE CONFLICT (1 files: tools/uarch_model.py)",
+      "source": {
+        "branch": "codex/hbm-ovshared-cts-r2",
+        "commit": "625507b688ede77b2c2b3d997ac584753ae1a059",
+        "extra_paths": [
+          "rtl",
+          "compiler",
+          "physical/hbm_accel_die_views",
+          "physical/asap7_memory_macros",
+          "tools/hgi_unit_tput"
+        ]
+      },
+      "bench_outcomes": {
+        "bench_lint": {
+          "ok": true,
+          "rc": 0,
+          "tail": "- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050\n- Verilator: Built from 0.097 MB sources in 5 modules, into 0.010 MB in 3 C++ files needing 0.000 MB\n- Verilator: Walltime 0.008 s (elab=0.001, cvt=0.004, bld=0.000); cpu 0.008 s on 1 threads; allocated 33.383 MB\nlint-ok\n"
+        },
+        "bench_exact": {
+          "ok": true,
+          "rc": 0,
+          "tail": "PASS HGI_QDQ_WIDE_TPUT records=8 words=3328 cycles=184 priced=168\nQDQ_WIDE_CASE PASS m0\n"
+        },
+        "bench_skew_exact": {
+          "ok": true,
+          "rc": 0,
+          "tail": "PASS HGI_QDQ_WIDE_TPUT records=8 words=3328 cycles=222 priced=168\nQDQ_WIDE_CASE PASS sk\n"
+        },
+        "bench_packet_control": {
+          "ok": true,
+          "rc": 0,
+          "tail": "PASS HGI_QDQ_WIDE_TPUT records=8 words=3328 cycles=2319 priced=168\nQDQ_WIDE_CASE PASS w3\n"
+        },
+        "bench_mutant": {
+          "ok": true,
+          "rc": 1,
+          "tail": "[2443584] %Fatal: tb_hgi_quant_wide_tput.sv:42: Assertion failed in tb_hgi_quant_wide_tput: FATAL: record 0 fault (MUT 1)\nQDQ_WIDE_CASE FAIL m1\n"
+        },
+        "bench_mutant_lane": {
+          "ok": true,
+          "rc": 1,
+          "tail": "MISMATCH rec 0 word 0: 3e400000 != be700000\nMISMATCH rec 0 word 1: bd600000 != be800000\nMISMATCH rec 0 word 2: 3e700000 != bea00000\nMISMATCH rec 0 word 3: 3ee00000 != 3ea00000\nMISMATCH rec 0 word 4: 3e400000 != 3e700000\nQDQ_WIDE_CASE FAIL w1\n"
+        },
+        "bench_mutant_retire": {
+          "ok": true,
+          "rc": 1,
+          "tail": "[2458560] %Fatal: tb_hgi_quant_wide_tput.sv:47: Assertion failed in tb_hgi_quant_wide_tput.unnamedblk2: FATAL: premature retirement record 0 lane 0 ack 0 target 2\nQDQ_WIDE_CASE FAIL r2\n"
+        }
+      },
+      "native_qualified": false
+    },
+    {
+      "job": "qw_ovmeta_ref-r1-625507b68",
+      "state_file_sha256": "399270e198606ffb06e3c54542b50b6798a6c55ead6c948bead507e480118a01",
+      "status": "CLOSED",
+      "reason": "CLOSED TT +286.28 / FF +24.76 ps DRC 0; SS sensitivity +173.28 ps | record codex/hbm-ovshared-cts-r2 0697d5098 (19 files) | AUTO-MERGE CONFLICT (2 files: rtl/hbm_accel/generic/qw/ot_hgi_qdq_fr_mix.sv, tools/uarch_model.py)",
+      "source": {
+        "branch": "codex/hbm-ovshared-cts-r2",
+        "commit": "625507b688ede77b2c2b3d997ac584753ae1a059",
+        "extra_paths": [
+          "rtl",
+          "compiler",
+          "physical/hbm_accel_die_views",
+          "physical/asap7_memory_macros",
+          "tools/hgi_unit_tput"
+        ]
+      },
+      "bench_outcomes": {
+        "bench_lint": {
+          "ok": true,
+          "rc": 0,
+          "tail": "- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050\n- Verilator: Built from 0.052 MB sources in 3 modules, into 0.002 MB in 3 C++ files needing 0.000 MB\n- Verilator: Walltime 0.004 s (elab=0.000, cvt=0.001, bld=0.000); cpu 0.004 s on 1 threads; allocated 33.387 MB\nlint-ok\n"
+        },
+        "bench_exact": {
+          "ok": true,
+          "rc": 0,
+          "tail": "PASS HGI_QDQ_WIDE_TPUT records=8 words=3328 cycles=184 priced=168\nQDQ_WIDE_CASE PASS m0\n"
+        },
+        "bench_skew_exact": {
+          "ok": true,
+          "rc": 0,
+          "tail": "PASS HGI_QDQ_WIDE_TPUT records=8 words=3328 cycles=222 priced=168\nQDQ_WIDE_CASE PASS sk\n"
+        },
+        "bench_packet_control": {
+          "ok": true,
+          "rc": 0,
+          "tail": "PASS HGI_QDQ_WIDE_TPUT records=8 words=3328 cycles=2319 priced=168\nQDQ_WIDE_CASE PASS w3\n"
+        },
+        "bench_mutant": {
+          "ok": true,
+          "rc": 1,
+          "tail": "[2443584] %Fatal: tb_hgi_quant_wide_tput.sv:42: Assertion failed in tb_hgi_quant_wide_tput: FATAL: record 0 fault (MUT 1)\nQDQ_WIDE_CASE FAIL m1\n"
+        },
+        "bench_mutant_lane": {
+          "ok": true,
+          "rc": 1,
+          "tail": "MISMATCH rec 0 word 0: 3e400000 != be700000\nMISMATCH rec 0 word 1: bd600000 != be800000\nMISMATCH rec 0 word 2: 3e700000 != bea00000\nMISMATCH rec 0 word 3: 3ee00000 != 3ea00000\nMISMATCH rec 0 word 4: 3e400000 != 3e700000\nQDQ_WIDE_CASE FAIL w1\n"
+        },
+        "bench_mutant_retire": {
+          "ok": true,
+          "rc": 1,
+          "tail": "[2458560] %Fatal: tb_hgi_quant_wide_tput.sv:47: Assertion failed in tb_hgi_quant_wide_tput.unnamedblk2: FATAL: premature retirement record 0 lane 0 ack 0 target 2\nQDQ_WIDE_CASE FAIL r2\n"
+        }
+      },
+      "native_qualified": false
+    },
+    {
+      "job": "qw_ovrow_ref-r1-1054bbe7f",
+      "state_file_sha256": "b904d557dc5f08dde836d3c34096e2c6183d49f18b4d4c52c163daf26b40914b",
+      "status": "CLOSED",
+      "reason": "CLOSED TT +273.83 / FF +30.44 ps DRC 0; SS sensitivity +167.33 ps | record codex/hbm-ovrow-cts-r1 20cebddc0 (19 files) | AUTO-MERGE CONFLICT (1 files: tools/uarch_model.py)",
+      "source": {
+        "branch": "codex/hbm-ovrow-cts-r1",
+        "commit": "1054bbe7f37810c4bbce2955e35262deb5e2bc9d",
+        "extra_paths": [
+          "rtl",
+          "compiler",
+          "physical/hbm_accel_die_views",
+          "physical/asap7_memory_macros",
+          "tools/hgi_unit_tput"
+        ]
+      },
+      "bench_outcomes": {
+        "bench_lint": {
+          "ok": true,
+          "rc": 0,
+          "tail": "- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050\n- Verilator: Built from 0.052 MB sources in 3 modules, into 0.002 MB in 3 C++ files needing 0.000 MB\n- Verilator: Walltime 0.003 s (elab=0.000, cvt=0.001, bld=0.000); cpu 0.003 s on 1 threads; allocated 33.383 MB\nlint-ok\n"
+        },
+        "bench_exact": {
+          "ok": true,
+          "rc": 0,
+          "tail": "PASS HGI_QDQ_WIDE_TPUT records=8 words=3328 cycles=184 priced=168\nQDQ_WIDE_CASE PASS m0\n"
+        },
+        "bench_skew_exact": {
+          "ok": true,
+          "rc": 0,
+          "tail": "PASS HGI_QDQ_WIDE_TPUT records=8 words=3328 cycles=222 priced=168\nQDQ_WIDE_CASE PASS sk\n"
+        },
+        "bench_packet_control": {
+          "ok": true,
+          "rc": 0,
+          "tail": "PASS HGI_QDQ_WIDE_TPUT records=8 words=3328 cycles=2319 priced=168\nQDQ_WIDE_CASE PASS w3\n"
+        },
+        "bench_mutant": {
+          "ok": true,
+          "rc": 1,
+          "tail": "[2443584] %Fatal: tb_hgi_quant_wide_tput.sv:42: Assertion failed in tb_hgi_quant_wide_tput: FATAL: record 0 fault (MUT 1)\nQDQ_WIDE_CASE FAIL m1\n"
+        },
+        "bench_mutant_lane": {
+          "ok": true,
+          "rc": 1,
+          "tail": "MISMATCH rec 0 word 0: 3e400000 != be700000\nMISMATCH rec 0 word 1: bd600000 != be800000\nMISMATCH rec 0 word 2: 3e700000 != bea00000\nMISMATCH rec 0 word 3: 3ee00000 != 3ea00000\nMISMATCH rec 0 word 4: 3e400000 != 3e700000\nQDQ_WIDE_CASE FAIL w1\n"
+        },
+        "bench_mutant_retire": {
+          "ok": true,
+          "rc": 1,
+          "tail": "[2458560] %Fatal: tb_hgi_quant_wide_tput.sv:47: Assertion failed in tb_hgi_quant_wide_tput.unnamedblk2: FATAL: premature retirement record 0 lane 0 ack 0 target 2\nQDQ_WIDE_CASE FAIL r2\n"
+        }
+      },
+      "native_qualified": false
+    }
+  ]
+}

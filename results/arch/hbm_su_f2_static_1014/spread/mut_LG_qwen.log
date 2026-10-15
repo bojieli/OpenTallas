@@ -11,15 +11,15 @@ ERR read data edge 715 q1 b1 rec 0 got 0000000000000000 exp 49e79972abb01fc1
 RECORD 0 window measured 0..60 = 60 edges, compiler 0..60
 RECORD 1 window measured 60..115 = 55 edges, compiler 60..115
 RECORD 2 window measured 115..166 = 51 edges, compiler 115..166
-RECORD 3 window measured 159..170 = 11 edges, compiler 159..170
-RECORD 4 window measured 170..563 = 393 edges, compiler 170..563
-RECORD 5 window measured 677..684 = 7 edges, compiler 677..684
-RECORD 6 window measured 590..940 = 350 edges, compiler 590..940
-RECORD 7 window measured 940..987 = 47 edges, compiler 940..987
-RECORD 8 window measured 987..1062 = 75 edges, compiler 987..1062
-RECORD 9 window measured 1062..1153 = 91 edges, compiler 1062..1153
-RECORD 10 window measured 1110..1165 = 55 edges, compiler 1110..1165
-RECORD 11 window measured 1165..1240 = 75 edges, compiler 1165..1240
-FATAL: /home/ubuntu/wt/hbm-elemb-spread-1015/rtl/hbm_accel/generic/adapters/static_su/tb_hbm_su_static_spread_vehicle.sv:152: SU_SPREAD_VEHICLE FAIL errors=34812 reads=34812 writes=33308
-       Time: 26500000 Scope: tb_hbm_su_static_spread_vehicle
+RECORD 3 window measured 178..188 = 10 edges, compiler 178..188
+RECORD 4 window measured 188..574 = 386 edges, compiler 188..574
+RECORD 5 window measured 680..1135 = 455 edges, compiler 680..1135
+RECORD 6 window measured 1041..1391 = 350 edges, compiler 1041..1391
+RECORD 7 window measured 1391..1457 = 66 edges, compiler 1391..1457
+RECORD 8 window measured 1457..1532 = 75 edges, compiler 1457..1532
+RECORD 9 window measured 1532..1623 = 91 edges, compiler 1532..1623
+RECORD 10 window measured 1580..1720 = 140 edges, compiler 1580..1720
+RECORD 11 window measured 1720..1795 = 75 edges, compiler 1720..1795
+FATAL: /home/ubuntu/wt/hbm-elemb-sfu-1015/rtl/hbm_accel/generic/adapters/static_su/tb_hbm_su_static_spread_vehicle.sv:162: SU_SPREAD_VEHICLE FAIL errors=34812 reads=34812 writes=33308
+       Time: 32050000 Scope: tb_hbm_su_static_spread_vehicle
 exit=1
