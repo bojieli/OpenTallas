@@ -42,5 +42,26 @@
     "core_phase_ps": 137,
     "hbm_period_ps": 1024
   },
-  "pc_calendar_scope": "PC0 8 released 256bit code-half reads; not full128PC production embedding calendar"
+  "pc_calendar_scope": "PC0 8 released 256bit code-half reads; not full128PC production embedding calendar",
+  "static_return_hop_candidate": {
+    "record_bits": 298,
+    "occupied_bits": 1,
+    "input_capture_edges": 1,
+    "output_edges": 1,
+    "edges_per_hop": 2,
+    "physical_strip_pc_count": 32,
+    "retained_payload_flops_per_hop": 298,
+    "conservative_total_flops_per_hop": 1199,
+    "ports": {
+      "capture_record": 298,
+      "capture_valid": 1,
+      "expected_capture_slot": 1,
+      "transfer_slot": 1,
+      "upstream_word": 299,
+      "output_word": 299,
+      "fault": 1
+    },
+    "geometry": "existing378um PC spacing; die lead evaluating combined station fit/pins, no native closure claim",
+    "calendar": "local compiler injection before through train; no root request roundtrip"
+  }
 }
