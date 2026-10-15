@@ -52,10 +52,10 @@ class RealSourcePinPlan(unittest.TestCase):
         P.apply(M)
         q=M['qfd_tile_nk']
         self.assertEqual(q.ports['ck_lsl0'][2], 'M5')
-        self.assertEqual(q.ports['ck_lsl0'][3], [(103.722,391.308)])
-        self.assertEqual(q.ports['ck_rp0'][3], [(22.506,1082.796)])
-        self.assertEqual(q.ports['ck_rp1'][3], [(22.506,1233.996)])
-        self.assertEqual(q.ports['ck_rp2'][3], [(22.506,1385.196)])
+        self.assertEqual(q.ports['ck_lsl0'][3], [(103.74,391.308)])
+        self.assertEqual(q.ports['ck_rp0'][3], [(22.524,1082.796)])
+        self.assertEqual(q.ports['ck_rp1'][3], [(22.524,1233.996)])
+        self.assertEqual(q.ports['ck_rp2'][3], [(22.524,1385.196)])
 
     def test_dvm_clock_order_is_the_real_rtl_north_then_south_order(self):
         M={n:Master(n,64.8,1434.24,7,'') for n in ('qfd_xcol_e','qfd_xcol_w')}
@@ -63,11 +63,33 @@ class RealSourcePinPlan(unittest.TestCase):
         P.apply_dvm_clocks(M)
         for n in ('qfd_xcol_e','qfd_xcol_w'):
             q=M[n]
-            self.assertEqual(q.ports['ck0'][3],[(.042,754.812)])
-            self.assertEqual(q.ports['ck1'][3],[(.042,950.412)])
-            self.assertEqual(q.ports['ck5'][3],[(.042,483.828)])
-            self.assertEqual(q.ports['ck8'][3],[(.042,75.588)])
+            self.assertEqual(q.ports['ck0'][3],[(.06,754.812)])
+            self.assertEqual(q.ports['ck1'][3],[(.06,950.412)])
+            self.assertEqual(q.ports['ck5'][3],[(.06,483.828)])
+            self.assertEqual(q.ports['ck8'][3],[(.06,75.588)])
         self.assertEqual(M['qfd_xcst_n'].ports['ck'][2:4],('M3',[(52.065,103.637)]))
+
+    def test_every_entry_pin_sits_on_its_layer_track(self):
+        # C18 smoke 2026-10-15: off-track child clock entries left qfd_tile_nk/nl and qfd_xcol_e/w with no
+        # legal placement origin (check_macro_track_alignment); every xy entry must be on a preferred track.
+        M={n:Master(n,449.28,1442.88,7,'') for n in ('qfd_tile_nk','qfd_tile_nl')}
+        M.update({n:Master(n,64.8,1434.24,7,'') for n in ('qfd_xcol_e','qfd_xcol_w')})
+        M['qfd_xcst_n']=Master('qfd_xcst_n',52.68,103.656,3,'')
+        P.apply(M); P.apply_dvm_clocks(M)
+        n=0
+        for q in M.values():
+            for p,s_ in q.ports.items():
+                if s_[0]!='xy':
+                    continue
+                ax,off,pitch=P.TRACK[s_[2]]
+                z=s_[3][0][ax]
+                self.assertAlmostEqual(((z-off)/pitch)%1.0 if ((z-off)/pitch)%1.0<.5 else ((z-off)/pitch)%1.0-1.0,0.0,places=6,msg=(q.name,p,z))
+                n+=1
+        self.assertGreater(n,30)
+
+    def test_off_track_mutant_is_detected(self):
+        self.assertNotEqual(P.on_track('M5',(22.506,1.0))[0],22.506)
+        self.assertEqual(P.on_track('M5',(22.524,1.0))[0],22.524)
 
     def test_historical_overlapping_tree_mutant_is_refused(self):
         M={'qfd_tile_nk':Master('qfd_tile_nk',449.256,1442.856,7,'')}
