@@ -41,10 +41,8 @@ module ot_hgi_qdq_static #(
     wire [511:0] y;
     ot_hgi_qw_dec3 decoder(.clk(clk),.rst_n(rst_n),.v(gv),.header(gh),.x(gx),
         .vo(vo),.y(y),.fault(qfault),.decode_fault(decode_fault));
-    integer i,j,b;
     reg [7:0] expected;
     reg bad;
-    reg [15:0] sec;
     always @* begin
         expected='0;
         for(integer t=0;t<4;t=t+1) if(vp[NP-1]) expected[(sp[NP-1][2:0]+t)&7]=1'b1;
@@ -53,34 +51,42 @@ module ot_hgi_qdq_static #(
     end
     always @(posedge clk or negedge rst_n) begin
         if(!rst_n) begin
-            rq<='0; wq<='0; vp<='0; lp<='0; gv<=0; gl<=0;
+            vp<='0; lp<='0; gv<=0; gl<=0;
             dv<='0; dl<='0; donep<='0; lastp<='0; beat_done<=0; record_done<=0; fault<=0;
         end else begin
             vp<={vp[NP-2:0],cmd_v}; lp<={lp[NP-2:0],cmd_last};
             dv<={dv[DL-2:0],gv}; dl<={dl[DL-2:0],gl};
-            rq<='0;
-            for(j=0;j<4;j=j+1) begin
-                sec=cmd_src+16'(j); b=int'(sec[2:0]);
-                rq[b*17+:17]<={cmd_v,sec};
-            end
             gv<=vp[NP-1]; gl<=lp[NP-1];
             // Validates the fixed expected return cycle, including unexpected idle responses.
             if(bad || decode_fault || (vo && qfault) || vo!=dv[DL-1]) fault<=1;
             if(cmd_v && (!(cmd_op==4 || cmd_op==5 || (cmd_op==6 && cmd_block==16)) ||
                 cmd_src[15:3] != ((cmd_src+16'd3)>>3) ||
                 cmd_dst[15:3] != ((cmd_dst+16'd3)>>3))) fault<=1;
-            wq<='0;
-            for(j=0;j<4;j=j+1) begin
-                sec=dst[DL-1]+16'(j); b=int'(sec[2:0])^(MUT==2?1:0);
-                wq[b*281+:281]<={dv[DL-1],sec,256'd0,8'hff};
-                for(i=0;i<8;i=i+1)
-                    wq[b*281+8+i*32+:32]<={y[(j*8+i)*16+:16],16'd0};
-            end
             donep<={donep[WC-2:0],dv[DL-1]};
             lastp<={lastp[WC-2:0],dv[DL-1]&&dl[DL-1]};
             beat_done<=donep[WC-1]; record_done<=lastp[WC-1];
         end
     end
+    reg [8*17-1:0] rq_next;
+    reg [8*281-1:0] wq_next;
+    always @* begin
+        rq_next='0;wq_next='0;
+        for(integer k=0;k<4;k=k+1) begin : pack_ports
+            reg [15:0] rs,ws;integer rb,wb;
+            rs=cmd_src+16'(k);ws=dst[DL-1]+16'(k);
+            rb=int'(rs[2:0]);wb=int'(ws[2:0])^(MUT==2?1:0);
+            rq_next[rb*17+:17]={cmd_v,rs};
+            wq_next[wb*281+:281]={dv[DL-1],ws,256'd0,8'hff};
+            for(integer t=0;t<8;t=t+1)
+                wq_next[wb*281+8+t*32+:32]={y[(k*8+t)*16+:16],16'd0};
+        end
+    end
+    // Reset only validity; thousands of datapath bits are not reset-tree sinks.
+    always @(posedge clk or negedge rst_n)
+        if(!rst_n) for(integer k=0;k<8;k=k+1) begin rq[k*17+16]<=0;wq[k*281+280]<=0;end
+        else for(integer k=0;k<8;k=k+1) begin rq[k*17+16]<=rq_next[k*17+16];wq[k*281+280]<=wq_next[k*281+280];end
+    always @(posedge clk)
+        for(integer k=0;k<8;k=k+1) begin rq[k*17+:16]<=rq_next[k*17+:16];wq[k*281+:280]<=wq_next[k*281+:280];end
     // No reset on datapath payload. Registers are bounded latency state, not memory substitutes.
     always @(posedge clk) begin
         sp[0]<=cmd_src; dp[0]<=cmd_dst; hp[0]<={cmd_op,cmd_block};

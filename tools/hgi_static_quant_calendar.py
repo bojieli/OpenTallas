@@ -55,6 +55,8 @@ def calendar(vectors: Path, read_station=0, write_station=0):
         measured_wq3_price_historical=184, local_sid=0, bare_bank_response_edges=6,
         read_station_edges_each_way=read_station, write_station_edges=write_station,
         first_command_to_commit_edges=commit_delta, cycles=len(commands)+commit_delta,
+        programme_launch_to_first_engine_command_edges=5,
+        programme_launch_cycles=len(commands)+commit_delta+5,
         throughput_gate_cycles=cost*1.1, conflicts=0,
         qualification='COMPONENT ONLY; native CP/programme SRAM and actual NW station+other-client composition OPEN')
 
@@ -63,12 +65,20 @@ def main():
     ap=argparse.ArgumentParser()
     ap.add_argument('--vectors',type=Path,default=Path('tools/hgi_unit_tput/vectors/qdqvec'))
     ap.add_argument('--out',type=Path,required=True)
+    ap.add_argument('--program-out',type=Path)
     ap.add_argument('--read-station',type=int,default=0)
     ap.add_argument('--write-station',type=int,default=0)
     a=ap.parse_args()
     result=calendar(a.vectors,a.read_station,a.write_station)
     a.out.parent.mkdir(parents=True,exist_ok=True)
     a.out.write_text(json.dumps(result,indent=2)+'\n')
+    if a.program_out:
+        a.program_out.parent.mkdir(parents=True,exist_ok=True)
+        words=[]
+        for pc,c in enumerate(result['commands']):
+            payload=(c['last']<<47)|(c['dst']<<31)|(c['src']<<15)|(c['block']<<7)|(c['op']<<1)|1
+            words.append((0xc7a1<<240)|(pc<<224)|payload)
+        a.program_out.write_text(''.join(f'{w:064x}\n' for w in words))
     print(json.dumps({k:result[k] for k in ['records','beats','words','cycles','immutable_price','conflicts']}))
 
 

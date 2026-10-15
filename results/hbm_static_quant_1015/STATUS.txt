@@ -1,17 +1,36 @@
-STATIC QUANT COMPONENT ONLY. Actual released ot_hgi_qw_dec3 arithmetic and eight
-actual ot_vms_bank_static instances, each instantiating three real mapped SRAM
-macros. Exact immutable qdqvec: 8 records,104 beats,3328 words,416 sectors.
-Measured macro commit142 cycles versus immutable168; historical WQ3 price184.
-All sector writes and all actual SRAM readback words match independent golden.
-Fixed done pulses equal actual bank macro commit pulses. Three mutants killed:
-input sector map, output lane map, unexpected late response (fault, no reschedule).
-No ready/credit/demand queue. Bare bank registered response at input n+6;
-consumer captures n+7. Decoder25 stages means24 post-input edges (26-stage old
-text included an extra input count); initial off-by-one receipt preserved.
+STATIC QUANT NATIVE PROGRAMME COMPONENT ONLY. Actual released ot_hgi_qw_dec3
+arithmetic, eight actual ot_vms_bank_static instances at current NW RG7/WG3,
+Quant RG4/WG2 (zero based), 24 real mapped data SRAM macros, one actual programme
+SRAM using exact VM calendar core3d7520a5f W48. The executable program.hex is
+emitted by tools/hgi_static_quant_calendar.py and loaded through real RTL cfg
+pins; 104 instructions are fetched through real SRAM/capture/issue pipeline.
 
-NOT CLOSED: no transport physical views, parent slot/pins unassigned, station
-edges not yet bound. Proof currently one read/write group per bank; next joins
-actual NW RG4/WG2 among RG5/WG3 and native mapped programme producer. No claim
-of complete programme/full layer or native wholechip qualification.
-Model/calendars retain production 104beat shape and immutable price. Local SID0
-relocation matches historical B2 component vectors, not full multi-SID binding.
+Exact immutable qdqvec: 8 records,104 beats,3328 words,416 sectors. Actual
+programme launch to macro commit147 cycles versus immutable168. Historical
+WQ3 price184 is separately labelled. Bare command stream component142 cycles.
+No credit, ready, demand queue, behavioral onchip memory or computed-result
+substitute. Every sector write and actual SRAM readback matches independent
+golden, every issue ordinal/cycle is exact, fixed done equals actual bank
+commit pulse every cycle. All three mutants killed for expected causes:
+input sector map, output lane map, unexpected late response (fault/no reschedule).
+
+Bare bank registered response n+6, consumer capture n+7. Decoder25 registered
+stages =24 post-input edges. Old text's26 count caused initial metadata error;
+its immutable failure remains failures/dl26_misaligned.log. From command edge0:
+RQ registered0, bank samples1,response7,gather8,decoder input9,decoder output33,
+WQ registered34,bank samples35,actual commit38. 104 commands+38=142 elapsed
+cycles. Mapped programme output4,engine captures5,so launch+147 fullcomponent.
+
+NOT PHYSICALLY CLOSED. No views for transport/programme/control; mixed engine
+logic must split into transport leaf + wires-only decoder parent before physical
+submission. Programme macro174.744x70.470 plus halo; provisional hb_quant parent
+1399.656x648 at14736.384,15958.08 R0 assigned by H-DIE; actual packing/PG/pin/cut
+checks unproven. Actual NW station count not measured; RL/WC and compiler
+reservation parameters remain explicit and must use source-matched measured
+latencies. No old parent alias, physical decoder views not rerouted.
+
+Full native host/global launch target decode and whole-layer programme composition
+remain OPEN. Config/launch ports are explicit, not tied: cfgwe/addr10/data256,
+startv/base10/limit11/loops16. Programme and engine have separate phi-R clock
+entries. No native wholechip/full unit qualification claim. Local SID0 operand
+relocation reproduces historical B2 component scope, not full multi-SID binding.
