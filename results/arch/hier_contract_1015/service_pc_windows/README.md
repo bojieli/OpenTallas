@@ -10,11 +10,13 @@ its unchanged CLOSED PC LEF endpoint, the parent pin and Manhattan distance.
 Same-count Tcl byte equality is asserted before any shared plan is emitted.
 The 34 die instances retain the adopted band homes and mirror orientations.
 
-The row is compact and centered, with 21.6 um gaps. Its y=263.52 leaves
-23.76 um to the north edge. North/south data pins are grouped per PC; the
+The row is compact and centered, with 32.4 um gaps and 172.8 um pitch. Every child origin is on
+the 43.2 um common lattice. Its y=259.2 leaves 28.08 um to the north edge. North/south data pins are grouped per PC; the
 individual clk_pc entries sit above their own child clock pin. All physical
 bits, including each reset fanout endpoint, fit the 500 um rule.
-Worst n1/n2/n3=321.786 um, n4=369.798 um, n5=428.562 um.
+Worst n1/n2/n3=317.466 um, n4=384.918 um, n5=454.482 um.
+Service clocks are the actual 1024 ps HBM domain. Per-PC compensation remains
+open; no generic child insertion or spread is promoted as a native clock view.
 No added data edge or FF; the existing PC logic and LEF remain unchanged.
 
 PG M7 / die straps M8 / parent signals through M6 provide the actual hierarchy
