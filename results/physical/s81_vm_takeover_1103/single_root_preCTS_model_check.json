@@ -1,0 +1,71 @@
+{
+  "model_commit": "4af58769b7524ccb38b15e27023fd4fb8c8bdb14",
+  "result": "ALL_GENERATED_SDC_BYTES_EQUAL",
+  "scope": "Ordinary single-root kits, not multiple/hybrid clock-entry configurations. Generated only into temporary directory; actual kits and frozen gates untouched.",
+  "rows": [
+    {
+      "kit": "dsfd_vm_static_landing_native_1015_r4",
+      "clock_mode": "single",
+      "sdcs": [
+        {
+          "file": "physical/ref_tile/dsfd_vm_static_landing_native_1015_r4/clock.sdc",
+          "equal": true,
+          "sha256": "909e425c264c1fbb48a412008d9fe3d99f4e1a8c9418df3274f972e3df3d5480"
+        },
+        {
+          "file": "physical/ref_tile/dsfd_vm_static_landing_native_1015_r4/signoff.sdc",
+          "equal": true,
+          "sha256": "95da4a526129a3c34230362b2db56a3cbbea4c0ee711dd09e30ce23cfe03e814"
+        }
+      ]
+    },
+    {
+      "kit": "dsfd_vm_seq_tile_native_1015_r3",
+      "clock_mode": "single",
+      "sdcs": [
+        {
+          "file": "physical/ref_tile/dsfd_vm_seq_tile_native_1015_r3/clock.sdc",
+          "equal": true,
+          "sha256": "ba7cc126ebe271890c97b395acc57c21a8f69e22f145098c4fb90796e405d265"
+        },
+        {
+          "file": "physical/ref_tile/dsfd_vm_seq_tile_native_1015_r3/signoff.sdc",
+          "equal": true,
+          "sha256": "b3c52be525536245e51cd7ce3f7772e205e2e16d7ef08b967ecd87571f6cd666"
+        }
+      ]
+    },
+    {
+      "kit": "ot_s81_vm_x34_t_w542_1015_r8",
+      "clock_mode": "single",
+      "sdcs": [
+        {
+          "file": "physical/ref_tile/ot_s81_vm_x34_t_w542_1015_r8/clock.sdc",
+          "equal": true,
+          "sha256": "65c41733b882d66fbc630a965e4a9ddb56f18aeba70f4bc248a477e0832b91af"
+        },
+        {
+          "file": "physical/ref_tile/ot_s81_vm_x34_t_w542_1015_r8/signoff.sdc",
+          "equal": true,
+          "sha256": "d7a84827d1948357f1629fb8e6375240d144022385f69624e64c9d50a89b28ce"
+        }
+      ]
+    },
+    {
+      "kit": "ot_s81_vm_x43_t_w1026_1015_cb2",
+      "clock_mode": "single",
+      "sdcs": [
+        {
+          "file": "physical/ref_tile/ot_s81_vm_x43_t_w1026_1015_cb2/clock.sdc",
+          "equal": true,
+          "sha256": "f7b5668eaa0db676831d586030350358fc165c5aa1d74714ba21b115a21f0987"
+        },
+        {
+          "file": "physical/ref_tile/ot_s81_vm_x43_t_w1026_1015_cb2/signoff.sdc",
+          "equal": true,
+          "sha256": "ba96d711194d20f523af91d6d42cb95725ea4186ce1e4c7bba46d8bf7dc6ce1a"
+        }
+      ]
+    }
+  ]
+}
