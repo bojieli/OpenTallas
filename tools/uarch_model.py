@@ -592,6 +592,36 @@ def hgi_collective_endpoint_model():
     return endpoint_model()
 
 
+def hgi_collective_pinregistered_endpoint_model():
+    """Controller and actual SRAM store faces registered, TX5/RX1."""
+    from uarch_model_hcoll_pinreg import model
+    return model()
+
+
+def hgi_collective_native_transport_model():
+    """Real SRAM/CRC endpoint plus 613/487 registered transport calendar."""
+    from uarch_model_hcoll_native_transport import model
+    return model()
+
+
+def hgi_collective_static_quarter_bridge_model():
+    """Full545 compiler-reserved quarter ring; geometry remains explicit."""
+    from uarch_model_hcoll_quarter_bridge import model
+    return model()
+
+
+def hgi_collective_static_reduction_model():
+    """16 real native FP32 lanes and fixed-calendar collective publication."""
+    from uarch_model_hcoll_reduce_static import model
+    return model()
+
+
+def hgi_collective_static_sequence_link_model():
+    """HBM545 full logical sequence, native SRAM/CRC, fixed TX3/RX1."""
+    from uarch_model_hcoll_static_seq import model
+    return model()
+
+
 def hgi_collective_decode_model():
     """Approved HGI-1 G10/G14 dispatcher sizing, one real endpoint per die."""
     from uarch_model_hgi_collective_decode import model
