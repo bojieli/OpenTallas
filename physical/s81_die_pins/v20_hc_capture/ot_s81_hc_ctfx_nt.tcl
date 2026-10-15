@@ -2269,7 +2269,7 @@ place_pin -pin_name {fv_in[3]} -layer M5 -location {342.204 25.878} -force_to_di
 place_pin -pin_name {fv_in[4]} -layer M5 -location {342.300 25.878} -force_to_die_boundary
 place_pin -pin_name {fv_in[5]} -layer M5 -location {342.396 25.878} -force_to_die_boundary
 place_pin -pin_name {fv_in[6]} -layer M5 -location {342.492 25.878} -force_to_die_boundary
-place_pin -pin_name {rst_in} -layer M4 -location {0.042 6.204} -force_to_die_boundary
+place_pin -pin_name {rst_in} -layer M3 -location {45.036 25.878} -force_to_die_boundary
 place_pin -pin_name {dl_in[0]} -layer M5 -location {40.032 25.878} -force_to_die_boundary
 place_pin -pin_name {dl_in[1]} -layer M5 -location {40.128 25.878} -force_to_die_boundary
 place_pin -pin_name {dl_in[2]} -layer M5 -location {40.224 25.878} -force_to_die_boundary
