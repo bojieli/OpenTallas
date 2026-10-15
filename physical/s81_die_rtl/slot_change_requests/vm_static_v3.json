@@ -1,0 +1,82 @@
+{
+  "schema": "opentallas.s81.vm-static-v3.slot-request.v1",
+  "status": "REQUEST_NOT_ADOPTED",
+  "production_qualified": false,
+  "source": "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_bank128.sv",
+  "bank_mapping": "row[4:0] XOR {row[7:5],2b00}; address=row[13:5]",
+  "memory_capacity_unchanged": {
+    "slices": 4,
+    "banks_per_slice": 32,
+    "rows_per_bank": 512,
+    "bits_per_bank_row": 128,
+    "macros_total": 128
+  },
+  "clock_request": {
+    "frequency_GHz": 1.2,
+    "period_ps": 833.333333,
+    "reason": "new direct real1R1W leaves remove SU/HC CDC and legacy queued-port serialization; old CLOSED0.9GHz views remain unchanged"
+  },
+  "masters": [
+    {
+      "name": "dsfd_vm_static_bank128",
+      "instances": 128,
+      "outline_um": [
+        216,
+        51.84
+      ],
+      "macro": "ot_sram_1r1w_512x128_m4_r2c2",
+      "macro_outline_um": [
+        174.12,
+        29.736
+      ],
+      "core_margin_um": 2.16,
+      "macro_halo_um": 5.4,
+      "register_sinks_upper_bound": 600,
+      "io_owner": "die tools assign final faces/layers/order",
+      "cycles": {
+        "write_commit_after_pin_sample": 1,
+        "registered_read_after_pin_sample": 2
+      },
+      "concurrency": "one read AND one maskedwrite each clock, same-address read returns old word",
+      "new_ports": "i_rv/ra9/rt8; i_wv/wa9/wd128/wm4/wt8; o_rv/rd128/rt8; observed o_commit/ca9/cm4/ct8"
+    },
+    {
+      "name": "dsfd_vm_static_scatter",
+      "DW": 128,
+      "instances": 4,
+      "outline_um_request": [
+        345.6,
+        103.68
+      ],
+      "clock_sinks_estimate": 9830,
+      "rule": "each fixed service edge <=1write perbank; conflict faults rather than delays; input8slots per rowlow2lane",
+      "port_assignment": "pending die tools"
+    },
+    {
+      "name": "dsfd_vm_static_return",
+      "DW": 128,
+      "instances": 4,
+      "outline_um_request": [
+        345.6,
+        103.68
+      ],
+      "clock_sinks_estimate": 6400,
+      "rule": "compiler supplies exactrelease edge andgroupmask; missing rows fault at that edge, no waits; two-group parity buffers",
+      "port_assignment": "pending die tools"
+    }
+  ],
+  "fit_evidence": {
+    "existing_bank_slot": "physical/s81_ph_views/vm_master/composition.json four345.6x500.04 groups percolumn",
+    "proposed32leaf_column_height_um": 1725.8400000000001,
+    "available_bank_height_um": 2000.16,
+    "remaining_for_transport_um": 274.31999999999994,
+    "not_proved": "actual pin hops/cut capacity, clock phi-R, TT/FF/DRC, fixed capture CDC and compiler service schedule still required"
+  },
+  "gates_required": [
+    "full native fieldaddress translation + independentmutant",
+    "exact productionshape SRAM1R1W positive + observedmaskmutant",
+    "native--cts thenTTsetup FFhold DRC0",
+    "actual full-layer compiler read/write calendars including captureHCservicePQ",
+    "reset and clock phi-R nativeview audit"
+  ]
+}
