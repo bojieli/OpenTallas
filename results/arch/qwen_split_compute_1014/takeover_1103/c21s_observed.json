@@ -1,0 +1,71 @@
+{
+  "schema": "opentallas.qwen-compute-c21s-observed.v1",
+  "source_commit": "59fb67ed5",
+  "host": "ot-epyc1tb",
+  "original_directory": "/srv/opentallas-scratch/claude/qwen-split-compute/c21s",
+  "terminal": {
+    "status": "FAIL",
+    "process_exit": 1,
+    "exit_code": 1,
+    "failures": [
+      "process_exit=1",
+      "[ERROR DRT-0073] No access point for io_collective/face_ck[0] (qfd_collective_static_io_production).",
+      "[ERROR DRT-0073] No access point for sp_band_lanes_1/tt[1536] (qfd_sp_band_lanes).",
+      "[ERROR DRT-0073] No access point for sp_band_lanes_2/tt[1536] (qfd_sp_band_lanes).",
+      "[ERROR DRT-0073] No access point for tt_ctlm/mee[0] (qfd_tt_ctlm_static_s).",
+      "[ERROR DRT-0073] No access point for seq_su/cd_d[0] (qfd_seq_su_static).",
+      "[ERROR DRT-0073] No access point for sp_band_lanes_0/tt[1536] (qfd_sp_band_lanes).",
+      "OT_PA FAIL DRT-0073",
+      "Error: run.tcl, 54 DRT-0073",
+      "missing success marker: ^OT_PA DONE$"
+    ],
+    "scope": "physical flow stage only; no native/full-token qualification"
+  },
+  "bound": {
+    "masters": 34,
+    "masters_bound": 8,
+    "instances": 1636,
+    "instances_bound": 793,
+    "no_view": [
+      "ot_qkvd_ucie_x64_phy",
+      "qfd_ckbump",
+      "qfd_clkrx",
+      "qfd_collective_static_io_production",
+      "qfd_d2d_static",
+      "qfd_native59_compute_service",
+      "qfd_port_tiles_0",
+      "qfd_port_tiles_0_f1",
+      "qfd_port_tiles_1",
+      "qfd_port_tiles_1_f1",
+      "qfd_port_tiles_2",
+      "qfd_port_tiles_2_f1",
+      "qfd_rstseq",
+      "qfd_rstsync",
+      "qfd_seq_su_static",
+      "qfd_sigbump",
+      "qfd_sp_band_lanes",
+      "qfd_sp_res_ser",
+      "qfd_sp_su64_sfu",
+      "qfd_sp_vector_memory",
+      "qfd_tile_nk",
+      "qfd_tile_nl",
+      "qfd_tt_ctlm_static_s",
+      "qfd_xcol_e",
+      "qfd_xcol_w",
+      "qkd_embedding_static_core_provider"
+    ]
+  },
+  "sha256": {
+    "die.v": "aacb231b75cb33cf3b0f4cd6e4bc127d52c75f1212724aaeb20a5b333f82bab2",
+    "elements.lef": "717161c332f11a37ef87493b0e93ae9a96caa48d908cad221e16a7b5bbc83e11",
+    "floorplan_placed.def": "51dde84e7f149483351344e12951227d93fd23a83feae54128483f57be079769",
+    "run.log": "b648f3efe531b819a6afa76bc73afe1fe4e7cdc2e910dbd5f83ac2cf50fbc070",
+    "run.log.status.json": "9112339b2d53c17f899a454667aef4f56e160e2ab11791649fe5c59b0e8e8b63"
+  },
+  "stage": "REAL_CASE_PIN_ACCESS_FAIL",
+  "GRT": null,
+  "TT_setup_ps": null,
+  "FF_hold_ps": null,
+  "SS_sensitivity_ps": null,
+  "qualified": false
+}

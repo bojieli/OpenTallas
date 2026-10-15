@@ -1,0 +1,23 @@
+{
+  "schema": "opentallas.qwen-r10-clock-relation-probe.v1",
+  "source_commit": "7c7afba23ec79e865fc9da93b679871885da1d61",
+  "host": "ot-agidock128",
+  "unit": "oth-ubuntu-927883-1792088294",
+  "exit_code": 0,
+  "request_GB": 2,
+  "threads": 1,
+  "physical_design": false,
+  "scope": "OpenSTA clock-generation contract regression only; synthetic cells are not target hardware qualification",
+  "pass_marker": "RELATED_6_5_1_ALL_PATHS_PASS",
+  "related_paths": 6,
+  "setup_example_ps": -141.575363,
+  "expected_negative_path": "Direct core-to-FDI relation remains timed; no asynchronous or multicycle exception",
+  "sha256": {
+    "probe.tcl": "16ca0f959d4dc0d43ae940ded306cb8c4ac3334e6acebf6d03acadfe62b46e32",
+    "probe.lib": "a9b268fbc2c03fca76017098d2bab2ca9a68527472432d99fbdf3840af69f2d5",
+    "probe.v": "581ff3aac60dc23806768b2819daed10724987007943ed8f708156c9da427f25",
+    "probe.lef": "94093d4705bb22703663f15252b7fdbfcecb0ad4923d620ed3d26e9dc09ad237",
+    "clocks.tcl": "55f660d16f619172b4f7e14bee669f16d67de3b985ad552e863d2ae5cea5c4cd",
+    "probe.log": "c019e3ab714c9b3e17e0b71690173e33d9acf334ef3ab529144180dc88e0bea4"
+  }
+}

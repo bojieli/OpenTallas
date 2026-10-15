@@ -1,0 +1,26 @@
+{
+  "schema": "opentallas.qwen-c19-admission-guard.v1",
+  "original_helper": "/srv/opentallas-scratch/claude/qwen-split-compute/c19/continuation_1103/chain_after_build.original.sh",
+  "original_sha256": "a6fa2e33795f35325b64af8443a90c73fad3d965dcf765c0b9aa86b47cb50bc6",
+  "guard_sha256": "a7df76b18ebe2991b8d5f3745008e08fc540f8d3e25b0a24feadf93cbc1df7b4",
+  "outer_old_GB": 64,
+  "PDN_cap_GB": 420,
+  "continuation_request_GB": 440,
+  "design_mutation": false,
+  "generator_preserved": true,
+  "admission_required": true,
+  "automatic_heavy_launch": false,
+  "continuation": [
+    "ot-run",
+    "--mem",
+    "440",
+    "--threads",
+    "12",
+    "--dir",
+    "/srv/opentallas-scratch/claude/qwen-split-compute/c19",
+    "--",
+    "bash",
+    "/srv/opentallas-scratch/claude/qwen-split-compute/c19/continuation_1103/chain_after_build.original.sh",
+    "c19"
+  ]
+}

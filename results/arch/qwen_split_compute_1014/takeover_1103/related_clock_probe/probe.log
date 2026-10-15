@@ -1,0 +1,183 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 1 thread(s).
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /work/probe.lef, created 3 library cells
+OT_COMPENSATED_CLOCK corner=tt bound=3
+RELATED_CLOCK_PATH a0/q -> b0/d max slack=-141.575363
+Startpoint: a0 (rising edge-triggered flip-flop clocked by stream)
+Endpoint: b0 (rising edge-triggered flip-flop clocked by ucie)
+Path Group: ucie
+Path Type: max
+
+      Delay        Time   Description
+-----------------------------------------------------------------
+ 833.333374  833.333374   clock stream (rise edge)
+-100.000000  733.333313   clock source latency
+   0.000000  733.333313 ^ a0/ck (A)
+ 100.630005  833.963318 ^ a0/q (A)
+   0.000000  833.963318 ^ b0/d (B)
+             833.963318   data arrival time
+
+1000.000000 1000.000000   clock ucie (rise edge)
+-100.000000  899.999939   clock source latency
+   0.000000  899.999939 ^ b0/ck (B)
+-150.000000  749.999939   inter-clock uncertainty
+   0.000000  749.999939   clock reconvergence pessimism
+ -57.612000  692.388000   library setup time
+             692.388000   data required time
+-----------------------------------------------------------------
+             692.388000   data required time
+            -833.963318   data arrival time
+-----------------------------------------------------------------
+            -141.575363   slack (VIOLATED)
+
+
+RELATED_CLOCK_PATH a0/q -> b0/d min slack=18.017998
+Startpoint: a0 (rising edge-triggered flip-flop clocked by stream)
+Endpoint: b0 (rising edge-triggered flip-flop clocked by ucie)
+Path Group: ucie
+Path Type: min
+
+      Delay        Time   Description
+-----------------------------------------------------------------
+   0.000000    0.000000   clock stream (rise edge)
+-100.000000 -100.000000   clock source latency
+   0.000000 -100.000000 ^ a0/ck (A)
+ 100.629997    0.629996 ^ a0/q (A)
+   0.000000    0.629996 ^ b0/d (B)
+               0.629996   data arrival time
+
+   0.000000    0.000000   clock ucie (rise edge)
+-100.000000 -100.000000   clock source latency
+   0.000000 -100.000000 ^ b0/ck (B)
+ 100.000000    0.000000   inter-clock uncertainty
+   0.000000    0.000000   clock reconvergence pessimism
+ -17.388000  -17.388000   library hold time
+             -17.388000   data required time
+-----------------------------------------------------------------
+             -17.388000   data required time
+              -0.629996   data arrival time
+-----------------------------------------------------------------
+              18.017998   slack (MET)
+
+
+RELATED_CLOCK_PATH b0/q -> c0/d max slack=691.758057
+Startpoint: b0 (rising edge-triggered flip-flop clocked by ucie)
+Endpoint: c0 (rising edge-triggered flip-flop clocked by coll_blk)
+Path Group: coll_blk
+Path Type: max
+
+      Delay        Time   Description
+-----------------------------------------------------------------
+4000.000000 4000.000000   clock ucie (rise edge)
+-100.000000 3900.000000   clock source latency
+   0.000000 3900.000000 ^ b0/ck (B)
+ 100.630173 4000.630127 ^ b0/q (B)
+   0.000000 4000.630127 ^ c0/d (C)
+            4000.630127   data arrival time
+
+5000.000000 5000.000000   clock coll_blk (rise edge)
+-100.000000 4900.000000   clock source latency
+   0.000000 4900.000000 ^ c0/ck (C)
+-150.000000 4750.000000   inter-clock uncertainty
+   0.000000 4750.000000   clock reconvergence pessimism
+ -57.612000 4692.387695   library setup time
+            4692.387695   data required time
+-----------------------------------------------------------------
+            4692.387695   data required time
+            -4000.630127   data arrival time
+-----------------------------------------------------------------
+             691.758057   slack (MET)
+
+
+RELATED_CLOCK_PATH b0/q -> c0/d min slack=18.017998
+Startpoint: b0 (rising edge-triggered flip-flop clocked by ucie)
+Endpoint: c0 (rising edge-triggered flip-flop clocked by coll_blk)
+Path Group: coll_blk
+Path Type: min
+
+      Delay        Time   Description
+-----------------------------------------------------------------
+   0.000000    0.000000   clock ucie (rise edge)
+-100.000000 -100.000000   clock source latency
+   0.000000 -100.000000 ^ b0/ck (B)
+ 100.629997    0.629996 ^ b0/q (B)
+   0.000000    0.629996 ^ c0/d (C)
+               0.629996   data arrival time
+
+   0.000000    0.000000   clock coll_blk (rise edge)
+-100.000000 -100.000000   clock source latency
+   0.000000 -100.000000 ^ c0/ck (C)
+ 100.000000    0.000000   inter-clock uncertainty
+   0.000000    0.000000   clock reconvergence pessimism
+ -17.388000  -17.388000   library hold time
+             -17.388000   data required time
+-----------------------------------------------------------------
+             -17.388000   data required time
+              -0.629996   data arrival time
+-----------------------------------------------------------------
+              18.017998   slack (MET)
+
+
+RELATED_CLOCK_PATH c0/q -> a0/d max slack=525.091370
+Startpoint: c0 (rising edge-triggered flip-flop clocked by coll_blk)
+Endpoint: a0 (rising edge-triggered flip-flop clocked by stream)
+Path Group: stream
+Path Type: max
+
+      Delay        Time   Description
+-----------------------------------------------------------------
+   0.000000    0.000000   clock coll_blk (rise edge)
+-100.000000 -100.000000   clock source latency
+   0.000000 -100.000000 ^ c0/ck (C)
+ 100.629997    0.629996 ^ c0/q (C)
+   0.000000    0.629996 ^ a0/d (A)
+               0.629996   data arrival time
+
+ 833.333374  833.333374   clock stream (rise edge)
+-100.000000  733.333313   clock source latency
+   0.000000  733.333313 ^ a0/ck (A)
+-150.000000  583.333313   inter-clock uncertainty
+   0.000000  583.333313   clock reconvergence pessimism
+ -57.612000  525.721375   library setup time
+             525.721375   data required time
+-----------------------------------------------------------------
+             525.721375   data required time
+              -0.629996   data arrival time
+-----------------------------------------------------------------
+             525.091370   slack (MET)
+
+
+RELATED_CLOCK_PATH c0/q -> a0/d min slack=18.017998
+Startpoint: c0 (rising edge-triggered flip-flop clocked by coll_blk)
+Endpoint: a0 (rising edge-triggered flip-flop clocked by stream)
+Path Group: stream
+Path Type: min
+
+      Delay        Time   Description
+-----------------------------------------------------------------
+   0.000000    0.000000   clock coll_blk (rise edge)
+-100.000000 -100.000000   clock source latency
+   0.000000 -100.000000 ^ c0/ck (C)
+ 100.629997    0.629996 ^ c0/q (C)
+   0.000000    0.629996 ^ a0/d (A)
+               0.629996   data arrival time
+
+   0.000000    0.000000   clock stream (rise edge)
+-100.000000 -100.000000   clock source latency
+   0.000000 -100.000000 ^ a0/ck (A)
+ 100.000000    0.000000   inter-clock uncertainty
+   0.000000    0.000000   clock reconvergence pessimism
+ -17.388000  -17.388000   library hold time
+             -17.388000   data required time
+-----------------------------------------------------------------
+             -17.388000   data required time
+              -0.629996   data arrival time
+-----------------------------------------------------------------
+              18.017998   slack (MET)
+
+
+RELATED_6_5_1_ALL_PATHS_PASS
