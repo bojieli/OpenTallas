@@ -8551,7 +8551,10 @@ def _lay_fixed(Mx, face, ports, layer, pitch, fixed, gap=0.96, pitch_of=None):
         for r0, r1 in sorted(resv):
             if pos < r1 + gap and pos + w_ > r0 - gap:
                 pos = r1 + gap
-        assert pos + w_ <= L - 2 * p, (Mx.name, face, name, 'no room beside the pinned groups')
+        assert pos + w_ <= L - 2 * p, (Mx.name, face, name, 'no room beside the pinned groups',
+                                       dict(face_um=round(L, 3), demand_um=round(tot + sum(r1 - r0 + gap for r0, r1 in resv), 3),
+                                            pinned=[(n_, fixed[n_]) for n_, _ in ports if n_ in fixed],
+                                            ports=[(n_, b_, pof.get(n_, pitch)) for n_, b_ in ports]))
         placed[name] = (pos + w_ / 2, pof.get(name, pitch))
         pos += w_ + gap
     for name, b in ports:           # port order kept (pin_rects / LEF order)
