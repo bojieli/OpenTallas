@@ -65,7 +65,7 @@ def lef_macros(lef: str) -> dict:
 
 
 def size(master: str, w_bits: int, mac: dict):
-    horiz = master.startswith('dsfd_hstnh_')
+    horiz = master.startswith(('dsfd_hstnh_', 'dsfd_stnh_'))
     w, h = mac['w'], mac['h']
     need = (AREA_BIT * w_bits + AREA_FIX) / UTIL_MAX
     face = (h if horiz else w) - 2 * MARGIN
@@ -95,7 +95,7 @@ def main() -> int:
     lef_txt = gzip.open(a.lef, 'rt').read() if a.lef.endswith('.gz') else Path(a.lef).read_text()
     macs = lef_macros(lef_txt)
     counts = {ln.split()[1]: int(ln.split()[0]) for ln in Path(a.counts).read_text().splitlines() if ln.strip()}
-    want = [m for m in sorted(mods) if re.fullmatch(r'dsfd_hstn[hv]_\d+', m)]
+    want = [m for m in sorted(mods) if re.fullmatch(r'dsfd_hstn[hv]_\d+|dsfd_stn[hv]_\d+x1', m)]
     if a.only:
         sel = set(a.only.split(','))
         want = [m for m in want if m in sel]
@@ -106,12 +106,16 @@ def main() -> int:
     for mst in want:
         txt = mods[mst]
         wb = int(re.search(r'input wire \[(\d+):0\] di', txt).group(1)) + 1
-        assert 'ot_fwd_clk_inv u_ck (.a(ck[0])' in txt, mst      # common-clock form (kept INV, negedge stage)
+        fwd = mst.startswith(('dsfd_stnh_', 'dsfd_stnv_'))
+        if fwd:      # forwarded-clock station: one fi0 -> negedge stage(s), fo0 = the kept forwarding INV of slice 0
+            assert '.fclk_i(fi0[0])' in txt and '.fclk_o(fo0[0])' in txt and 'fi1' not in txt, mst
+        else:
+            assert 'ot_fwd_clk_inv u_ck (.a(ck[0])' in txt, mst      # common-clock form (kept INV, negedge stage)
         mac = macs[mst]
         dw, dh, grown = size(mst, wb, mac)
         sha = hashlib.sha256(txt.encode()).hexdigest()
         (ROOT / RTL_DIR / f'{mst}.sv').write_text(txt)
-        horiz = mst.startswith('dsfd_hstnh_')
+        horiz = mst.startswith(('dsfd_hstnh_', 'dsfd_stnh_'))
         tcl = [f'# {mst}: die generator pin centres ({a.case}, pins.lef); outline {dw} x {dh}'
                + (f' (slot {mac["w"]} x {mac["h"]} grown in depth)' if grown else ' (= generator slot)')]
         faces = {}
@@ -125,15 +129,34 @@ def main() -> int:
             pname = re.sub(r'\[0\]$', '', p['pin']) if re.sub(r'\[\d+\]$', '', p['pin']) in scalar else p['pin']
             tcl.append(f'place_pin -pin_name {{{pname}}} -layer {p["layer"]} -location {{{x:.6f} {y:.6f}}} -force_to_die_boundary')
             faces.setdefault(p['face'], set()).add(re.sub(r'\[\d+\]$', '', p['pin']))
+        # a glue port the case LEF has no pin for (dsfd_stnv_566x1.fn0, the non-inverted forwarded clock tap): placed on
+        # fo0's face 0.192 um beside it and reported to the die lead (the die generator must add the LEF pin)
+        ports = re.findall(r'(?:input|output) wire \[\d+:0\] (\w+)', txt)
+        missing = [q for q in ports if not any(re.sub(r'\[\d+\]$', '', p['pin']) == q for p in mac['pins'])]
+        for q in missing:
+            assert q == 'fn0', (mst, missing)
+            fo = next(p for p in mac['pins'] if p['pin'].startswith('fo0'))
+            x, y = fo['x'], fo['y']
+            if grown == 'h' and fo['face'] == 'N':
+                y = dh - (mac['h'] - y)
+            if fo['face'] in 'NS':
+                x += 0.192
+            else:
+                y += 0.192
+            tcl.append(f'# {q}: NOT in the case pins.lef (die generator owes the pin); placed beside fo0 on face {fo["face"]}')
+            tcl.append(f'place_pin -pin_name {{{q}}} -layer {fo["layer"]} -location {{{x:.6f} {y:.6f}}} -force_to_die_boundary')
+            faces.setdefault(fo['face'], set()).add(q)
         (ROOT / PIN_DIR / f'{mst}.tcl').write_text('\n'.join(tcl) + '\n')
         name = f's81fill_{mst[5:]}'
         layers = sorted({p['layer'] for p in mac['pins']})
         n = counts.get(mst, 0)
-        bench = 'tools/s81_station_native/run_station_gate.sh'
+        bench = 'tools/s81_station_native/run_' + ('fwd_' if fwd else '') + 'station_gate.sh'
+        edge = 'fwd_negedge' if fwd else 'top_posedge'
         spec = {
             'name': name, 'top': mst, 'kind': 'tile',
             'sources': ['rtl/common/ot_fwd_link_stage.sv', f'{RTL_DIR}/{mst}.sv'],
-            'params': {}, 'clock_port': 'ck', 'reset_ports': [],
+            'params': {}, 'clock_port': 'fi0' if fwd else 'ck', 'reset_ports': [],
+            **({'forwarded_clock': True} if fwd else {}),
             'outline': {'w': dw, 'h': dh, 'exact': True},
             'layer_cap': 'M5',
             'pins': {f: sorted(v) for f, v in sorted(faces.items())},
@@ -141,8 +164,12 @@ def main() -> int:
             'recipe': 2,
             'route': {'pd': 0.5, 'threads': 4, 'peak_ram_gb': 8 if wb <= 1100 else 16, 'pin_h': 'M4', 'pin_v': 'M3 M5',
                       'm5_pg_pitch': 2.7},
-            'structural_change': (f'First hardening of the GEN18r generated common-clock station {mst} ({n} die instances): '
-                                  f'one top ck root, kept INV + negedge stage (= top posedge), {wb} b, no reset, 0 cycles; '
+            'structural_change': ((f'First hardening of the GEN18r generated forwarded-clock station {mst} ({n} die instances): '
+                                   f'capture on the falling edge of the forwarded fi0, fo0 = kept forwarding INV, {wb} b, no reset, 0 cycles; ')
+                                  if fwd else
+                                  (f'First hardening of the GEN18r generated common-clock station {mst} ({n} die instances): '
+                                   f'one top ck root, kept INV + negedge stage (= top posedge), {wb} b, no reset, 0 cycles; '))
+                                  + (
                                   f'RTL byte-identical to the case glue (module sha256 {sha[:16]}, glue {glue_sha[:16]}); '
                                   'pins at the generator centres. '
                                   + (f'Slot {mac["w"]} x {mac["h"]} holds {face_area(mac, horiz):.0f} um2 of core vs '
@@ -159,7 +186,7 @@ def main() -> int:
                                 'physical/hbm_accel_die_views/stations/bench'],
                 'benches': [
                     {'name': 'phase_words', 'cmd': f'bash {bench} pass {mst} {wb} {{RUN}}/bench_p', 'expect': 'pass',
-                     'pass_regex': f'STATION PASS 20000 words {wb} bits top_posedge', 'threads': 2, 'peak_ram_gb': 4},
+                     'pass_regex': f'STATION PASS 20000 words {wb} bits {edge}', 'threads': 2, 'peak_ram_gb': 4},
                     {'name': 'wrong_clock_edge_mutant', 'cmd': f'bash {bench} clock_mutant {mst} {wb} {{RUN}}/bench_c',
                      'expect': 'pass', 'pass_regex': 'STATION MUTANT REJECTED clock_mutant', 'threads': 2, 'peak_ram_gb': 4},
                     {'name': 'payload_bit_mutant', 'cmd': f'bash {bench} data_mutant {mst} {wb} {{RUN}}/bench_d',
