@@ -46,7 +46,7 @@ module ot_hbm_idx_topk_link_static #(parameter integer MUT=0)(
   wire re=emit_v&&(b/4==int'(emit_group[0]));
   ot_sram_1r1w_64x512_m1_r2c2 mem(.clk(clk_mem[b]),.r_ce_in(re),.r_addr_in({3'd0,emit_group[3:1]}),.rd_out(rd[b*512+:512]),
    .w_ce_in(we[b]),.w_addr_in(wa[b*6+:6]),.wd_in(wd[b*512+:512]),.w_mask_in({512{1'b1}}),
-   .rr_en(2'd0),.rr_addr(14'd0),.cr_en(2'd0),.cr_sel(16'd0));
+   .rr_en(2'd0),.rr_addr(12'd0),.cr_en(2'd0),.cr_sel(18'd0));
  end
  reg read_v;reg[3:0]read_group;reg[7:0]read_rank;
  always @(posedge clk or negedge rst_n)begin

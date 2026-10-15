@@ -4,6 +4,7 @@ module tb_selector_static;
  reg clk=0;always #5 clk=~clk;
  reg rst_n=0;reg[3:0]op=0;reg[1:0]pass=0;reg[7:0]addr=0;reg[9:0]k=512;
  reg[2367:0]in_line=0;wire[3:0]out_v;wire[2367:0]out_line;wire fault;
+ wire[3:0]selected_v;wire[2367:0]selected_line;
  wire[15:0]threshold_observe;wire[55:0]selected_observe;
  ot_hbm_idx_selector_static #(.MUT(MUT)) dut(.clk_ctl(clk),.clk_q({4{clk}}),.clk_mem({12{clk}}),.*);
  reg[2367:0]lines[0:170];reg gold[0:10943];reg[15:0]scores[0:10943];reg seen[0:10943];
