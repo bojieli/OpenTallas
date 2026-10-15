@@ -99,5 +99,18 @@
     "proof/fec_forney_mutant/run.log": "7d34bae954325fce33de2dab2c2457949880c229943fa8cd8ab86edbbebf6042",
     "proof/fec_positive/run.log": "27b4e59124090ea9dd3d795bf7894977d1ed2437c55a8455313031a679602af9",
     "proof/map_mutant/run.log": "54e1b9a0c614ecee8dee311101b2c842099a14d48eccfcbd5149b902ffedbd48"
-  }
+  },
+  "whole_decoder_synthesis_scope": "GENERIC_FLATTENED_STATE_AND_CHECK_ONLY_NO_LIBRARY_MAP_OR_TIMING",
+  "full_census_receipt": "full_census/receipt.json",
+  "full_census_runner_unit": "oth-ubuntu-1591169-1792057312",
+  "full_census_runner_exit": 0,
+  "full_census_summary": {
+    "total_flop_bits": 86152,
+    "maximum_root_bits": 13790,
+    "all_12_roots_within_15000": true,
+    "yosys_seconds": 683.82,
+    "yosys_peak_MB": 5229.71
+  },
+  "full_candidate_generic_synthesis_check_pass": true,
+  "qualification_boundary": "full_census/qualification_boundary.json"
 }
