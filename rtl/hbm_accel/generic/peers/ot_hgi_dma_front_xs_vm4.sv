@@ -63,10 +63,10 @@ module ot_hgi_dma_front_xs_vm4 #(
     // conv: every slice is a constant (word w of quarter 0): no runtime part-select (src16c; the j argument was
     // always 2'd0 at every call site and is kept only so the call sites stay byte-identical).
     function automatic [255:0] conv(input [255:0] s, input [2:0] f, input [1:0] j);
-        reg [255:0] o; reg [7:0] b; reg [15:0] h;
+        reg [255:0] o; reg [7:0] b; reg [15:0] h; integer w;
         begin
             o = 256'd0;
-            for (int w = 0; w < 8; w = w + 1) begin
+            for (w = 0; w < 8; w = w + 1) begin
                 case (f)
                     3'd1: begin h = (MUT == 1) ? s[(7 - w) * 16 +: 16] : s[w * 16 +: 16]; o[w*32 +: 32] = {h, 16'd0}; end
                     3'd2: begin b = s[w * 8 +: 8]; o[w*32 +: 32] = e4m3_f(b); end
