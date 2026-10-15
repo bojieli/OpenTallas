@@ -20,14 +20,14 @@
   "tags": 8,
   "state_payload_bits_per_stop": 12288,
   "state_formula": "8 tags * (local + accumulator + 4 carry sources) * 256 bits",
-  "routing_policy": "Compiler reserves every receive, transit and injection edge; no runtime arbitration. Physical relays add explicit compiler slots.",
+  "routing_policy": "Compiler reserves every receive, transit, injection, state read and consumer edge; state face outputs are registered. Physical relays add explicit compiler slots.",
   "memory_ports": "one local write, two carry arrival writes, one add writeback; distributed per-tag flop storage",
-  "floorplan": "successor uses existing H-COLL ring stop slots; physical leaves/area/TT setup/FF hold remain unqualified",
+  "floorplan": "Clock-root decomposition only. Footprint, assigned leaf slots, physical pins/phase compensation, TT setup and FF hold remain unqualified.",
   "composition": "SERIAL ((P0+P1)+P2)+P3; TREE (P0+P1)+(P2+P3); fixed schedule bench derives explicit cycle trace; no token rate claim",
   "clock_decomposition": {
-    "control_root_bits_before_mapping": 1477,
+    "control_root_bits_before_mapping": 1493,
     "payload_roots": 8,
-    "payload_bits_per_root": 1536,
+    "payload_bits_per_root": 1664,
     "arithmetic_roots": 8,
     "independent_leaf_modules": [
       "ot_hgi_coll_pring_static_state_lane",
@@ -35,7 +35,11 @@
     ],
     "phase_contract": "all roots are synchronous and phase compensated at common compiler edge; no new latency",
     "arithmetic_bits_per_root": 676,
-    "total_register_bits": 19173,
-    "measurement": "static_ring_split_1014/root_register_bits.json; Yosys proc/memory_map/opt; not CTS or timing qualification"
-  }
+    "total_register_bits": 20213,
+    "measurement": "static_ring_pin_1014/root_register_bits.json; Yosys proc/memory_map/opt; not CTS or timing qualification",
+    "state_storage_bits_per_root": 1536,
+    "state_registered_face_bits_per_root": 128,
+    "state_read_reservation_cycles_before_consumer": 1
+  },
+  "first_TX_or_add_from_accumulator_cycles_after_issue": 10
 }

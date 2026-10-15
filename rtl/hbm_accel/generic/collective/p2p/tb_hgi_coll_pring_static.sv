@@ -7,6 +7,8 @@ module tb_hgi_coll_pring_static;
     reg clk=0,rst_n=0;always #0.5 clk=~clk;
     typedef struct packed {
         bit lp_we;bit[2:0] lp_tag;bit[255:0] lp_data;
+        bit read_add,read_tx,read_rr;bit[2:0] read_add_tag,read_tx_tag,read_rr_tag;
+        bit[1:0] read_add_src;bit read_rhs_acc,read_tx_acc;
         bit add_v;bit[2:0] add_tag;bit[1:0] add_src;bit rhs_acc;
         bit[1:0] inject,fwd;bit[2:0] tx_tag;bit[1:0] dst;bit result,acc;
         bit[1:0] rx;bit[3:0] kind,src;bit[5:0] tag;
@@ -25,6 +27,9 @@ module tb_hgi_coll_pring_static;
         ot_hgi_coll_pring_static #(.SPLIT_CLOCKS(1),.MUT_CARRY(MUT_CARRY),.MUT_TAG(MUT_TAG)) dut(
             .clk(clk),.rst_n(rst_n),.clk_state({8{clk}}),.clk_add({8{clk}}),.qid(2'(q)),.cw_i(co[prevq(q)]),.ccw_i(no[nextq(q)]),.cw_o(co[q]),.ccw_o(no[q]),
             .lp_we(cmd[q].lp_we),.lp_tag(cmd[q].lp_tag),.lp_data(cmd[q].lp_data),
+            .state_read_add(cmd[q].read_add),.state_read_tx(cmd[q].read_tx),.state_read_rr(cmd[q].read_rr),
+            .state_add_tag(cmd[q].read_add_tag),.state_add_src(cmd[q].read_add_src),.state_add_rhs_acc(cmd[q].read_rhs_acc),
+            .state_tx_tag(cmd[q].read_tx_tag),.state_tx_acc(cmd[q].read_tx_acc),.state_rr_tag(cmd[q].read_rr_tag),
             .add_v(cmd[q].add_v),.add_tag(cmd[q].add_tag),.add_src(cmd[q].add_src),.add_rhs_acc(cmd[q].rhs_acc),
             .tx_inject(cmd[q].inject),.tx_forward(cmd[q].fwd),.tx_tag(cmd[q].tx_tag),.tx_dst(cmd[q].dst),
             .tx_result(cmd[q].result),.tx_acc(cmd[q].acc),.rx_slot(cmd[q].rx),.rx_kind(cmd[q].kind),.rx_src(cmd[q].src),.rx_tag(cmd[q].tag),
@@ -64,6 +69,8 @@ module tb_hgi_coll_pring_static;
            prog[source][cyc].acc!=acc))$fatal(1,"compiler shared injection payload collision");
         prog[source][cyc].inject[d]=1;prog[source][cyc].tx_tag=3'(tag);prog[source][cyc].dst=2'(dest);
         prog[source][cyc].result=result;prog[source][cyc].acc=acc;
+        if(prog[source][cyc-1].read_tx)$fatal(1,"compiler TX state read collision");
+        prog[source][cyc-1].read_tx=1;prog[source][cyc-1].read_tx_tag=3'(tag);prog[source][cyc-1].read_tx_acc=acc;
         q=source;t=cyc;hops=result?3:((d==0)?(pos(dest)-pos(source)+4)%4:(pos(source)-pos(dest)+4)%4);
         if(hops==0)$fatal(1,"compiler zero route");
         for(integer h=1;h<=hops;h=h+1)begin
@@ -78,11 +85,14 @@ module tb_hgi_coll_pring_static;
             if(result)expect_result(q,t,tag,round);
         end
         if(result)begin
-            prog[source][cyc].rr=1;prog[source][cyc].rr_tag=3'(tag);expect_result(source,cyc,tag,round);
+            prog[source][cyc].rr=1;prog[source][cyc].rr_tag=3'(tag);
+            prog[source][cyc-1].read_rr=1;prog[source][cyc-1].read_rr_tag=3'(tag);expect_result(source,cyc,tag,round);
         end
     endtask
     task automatic add(input integer q,input integer cyc,input integer tag,input integer source,input bit rhsacc);
         if(prog[q][cyc].add_v)$fatal(1,"compiler adder collision");
+        if(prog[q][cyc-1].read_add)$fatal(1,"compiler ADD state read collision");
+        prog[q][cyc-1].read_add=1;prog[q][cyc-1].read_add_tag=3'(tag);prog[q][cyc-1].read_add_src=2'(source);prog[q][cyc-1].read_rhs_acc=rhsacc;
         prog[q][cyc].add_v=1;prog[q][cyc].add_tag=3'(tag);prog[q][cyc].add_src=2'(source);prog[q][cyc].rhs_acc=rhsacc;
     endtask
     integer scenario=0,checked=0,last_cycle=0;bit saw_fault=0;
@@ -101,15 +111,15 @@ module tb_hgi_coll_pring_static;
                     prog[q][b+tag].lp_we=1;prog[q][b+tag].lp_tag=3'(tag);
                     for(integer l=0;l<8;l=l+1)prog[q][b+tag].lp_data[l*32+:32]=partial(q,tag,l,r);
                 end
-                send(0,1,b+8+tag,tag,0,0,r);a1=b+11+tag;add(1,a1,tag,0,0);s1=a1+LAT+1;
+                send(0,1,b+8+tag,tag,0,0,r);a1=b+12+tag;add(1,a1,tag,0,0);s1=a1+LAT+2;
                 if(r%2)begin
-                    send(2,3,b+8+tag,tag,0,0,r);add(3,b+11+tag,tag,2,0);
-                    send(1,3,s1,tag,0,1,r);a3=s1+3;add(3,a3,tag,1,1);s3=a3+LAT+1;
+                    send(2,3,b+8+tag,tag,0,0,r);add(3,b+12+tag,tag,2,0);
+                    send(1,3,s1,tag,0,1,r);a3=s1+4;add(3,a3,tag,1,1);s3=a3+LAT+2;
                     send(3,3,s3,tag,1,1,r);
                 end else begin
                     q2=MUT_RING_ORDER?3:2;q3=MUT_RING_ORDER?2:3;
-                    send(1,q2,s1,tag,0,1,r);a2=s1+(MUT_RING_ORDER?3:5);add(q2,a2,tag,1,0);s2=a2+LAT+1;
-                    send(q2,q3,s2,tag,0,1,r);a3=s2+3;add(q3,a3,tag,q2,0);s3=a3+LAT+1;
+                    send(1,q2,s1,tag,0,1,r);a2=s1+(MUT_RING_ORDER?4:6);add(q2,a2,tag,1,0);s2=a2+LAT+2;
+                    send(q2,q3,s2,tag,0,1,r);a3=s2+4;add(q3,a3,tag,q2,0);s3=a3+LAT+2;
                     send(q3,q3,s3,tag,1,1,r);
                 end
                 last_cycle=b+80;
@@ -117,14 +127,17 @@ module tb_hgi_coll_pring_static;
         end
         // Faults are compiler reservation violations, detected without stalling.
         case(scenario)
-            1:begin prog[3][22].inject[0]=1;prog[3][22].tx_tag=0;end // CW transit collision
+            1:begin prog[3][24].inject[0]=1;prog[3][24].tx_tag=0;end // CW transit collision
             2:prog[1][10].tag[2:0]=1; // wrong reserved carry tag
             3:prog[1][10].rx[0]=0; // unreserved carry
             4:begin prog[0][1].lp_we=1;prog[0][1].lp_tag=0;end // occupied partial
             5:begin prog[2][9].add_v=1;prog[2][9].add_tag=0;prog[2][9].add_src=1;end // underflow
-            6:prog[2][52].tag[2:0]=1; // wrong reserved RESULT tag (q3 CW -> q2)
+            6:prog[2][54].tag[2:0]=1; // wrong reserved RESULT tag (q3 CW -> q2)
             7:prog[1][10].rx[1]=1; // missing scheduled input
             8:begin prog[0][20].lp_we=1;prog[0][20].lp_tag=0;end // live tag reuse after local send
+            10:prog[1][11].read_add=0; // missing read, fixed add still issues
+            11:prog[1][11].read_add_tag=1; // identity mismatch at fixed add edge
+            12:prog[0][6].read_tx=1; // unconsumed read reservation
             9:send(0,1,8,0,0,0,0); // compiler must reject duplicate TX reservation before execution
             default:begin end
         endcase
