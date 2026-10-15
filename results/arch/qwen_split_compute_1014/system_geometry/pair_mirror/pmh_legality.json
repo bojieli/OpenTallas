@@ -1,0 +1,381 @@
+{
+ "schema": "opentallas.qwen.pmh-legality.v1",
+ "input_sha256": "c6bb77d8e1a3b111999ecfe969449d54550b4c959c4162e8a55709a061b49f05",
+ "source_commit": "f6842ce4a",
+ "baseline": {
+  "bit_um": 1742154039.204,
+  "worst_pair_um": 21281.04,
+  "relay_bit_stages": 2841990,
+  "max_bus_relay_stages": 42
+ },
+ "candidates": [
+  {
+   "name": "PM-H inner 16.464 (as proposed)",
+   "geometry": {
+    "inner_um": 16.464,
+    "gapL_um": 64.776,
+    "gapR_um": 64.776,
+    "kept_rows": [
+     7,
+     8
+    ]
+   },
+   "tree_pin_plan": "current_W_windows",
+   "rectangle_errors": 0,
+   "totals": {
+    "bit_um": 1578637125.924,
+    "worst_pair_um": 21289.272,
+    "relay_bit_stages": 2521350,
+    "max_bus_relay_stages": 42
+   },
+   "delta": {
+    "bit_um": -163516913.3,
+    "pct": -9.386,
+    "relay_bit_stages": -320640
+   },
+   "my_tiles": 336,
+   "my_stations": 336,
+   "my_xcol": 0,
+   "grid": {
+    "qfd_tile_nk|MY|M5": {
+     "on": 336,
+     "off18": 3024,
+     "off6": 1680
+    },
+    "qfd_tile_nk|R0|M5": {
+     "on": 96,
+     "off30": 864,
+     "off42": 480,
+     "off24": 336,
+     "off6": 3024,
+     "off18": 1680
+    },
+    "qfd_xcol_e|R0|M5": {
+     "on": 24792,
+     "off30": 216
+    },
+    "qfd_xcol_w|R0|M5": {
+     "on": 24792,
+     "off30": 216
+    },
+    "qfd_xcst_n|MY|M3": {
+     "off30": 336
+    },
+    "qfd_xcst_n|MY|M5": {
+     "on": 173376
+    },
+    "qfd_xcst_n|R0|M3": {
+     "on": 96,
+     "off24": 336
+    },
+    "qfd_xcst_n|R0|M5": {
+     "on": 49536,
+     "off24": 173376
+    },
+    "qfd_xcst_s|MY|M3": {
+     "off30": 336
+    },
+    "qfd_xcst_s|MY|M5": {
+     "on": 173376
+    },
+    "qfd_xcst_s|R0|M3": {
+     "on": 96,
+     "off24": 336
+    },
+    "qfd_xcst_s|R0|M5": {
+     "on": 49536,
+     "off24": 173376
+    }
+   },
+   "channel": {
+    "pairs": 336,
+    "max_cut": 0.973,
+    "max_horizontal_cut": 0.13,
+    "worst": {
+     "pair": [
+      "t_0_0",
+      "t_1_0"
+     ],
+     "inner_um": 16.464,
+     "buses": [
+      [
+       "tree_0_0_0b",
+       514,
+       111.98400000000004
+      ],
+      [
+       "tree_0_1_0a",
+       514,
+       112.03200000000004
+      ]
+     ],
+     "bits": 1028,
+     "max_vertical_bits": 1028,
+     "at_y": 2705.5,
+     "vertical_tracks": 1057.0,
+     "cut": 0.973,
+     "horizontal_bits": 1028,
+     "horizontal_span_um": 217.248,
+     "horizontal_tracks_m4_m6": 7920.5,
+     "horizontal_cut": 0.13
+    },
+    "cut_hist": {
+     "0.97": 168,
+     "0.49": 168
+    }
+   },
+   "clock_trunk": {
+    "nets": 61,
+    "hpwl_delta_um": 15680.319,
+    "longest_delta_max_um": 469.044,
+    "longest_delta_min_um": -469.044
+   },
+   "reset": {
+    "nets": 1,
+    "hpwl_delta_um": 436.761
+   }
+  },
+  {
+   "name": "PM-H-S snapped (inner 16.440, gapR 64.800, MY station -30 nm)",
+   "geometry": {
+    "inner_um": 16.44,
+    "gapL_um": 64.776,
+    "gapR_um": 64.8,
+    "kept_rows": [
+     7,
+     8
+    ],
+    "my_station_shift_nm": -30,
+    "r0_shift_nm": -24
+   },
+   "tree_pin_plan": "current_W_windows",
+   "rectangle_errors": 0,
+   "totals": {
+    "bit_um": 1578633809.316,
+    "worst_pair_um": 21289.248,
+    "relay_bit_stages": 2521350,
+    "max_bus_relay_stages": 42
+   },
+   "delta": {
+    "bit_um": -163520229.9,
+    "pct": -9.386,
+    "relay_bit_stages": -320640
+   },
+   "my_tiles": 336,
+   "my_stations": 336,
+   "my_xcol": 0,
+   "grid": {
+    "qfd_tile_nk|MY|M5": {
+     "on": 336,
+     "off18": 3024,
+     "off6": 1680
+    },
+    "qfd_tile_nk|R0|M5": {
+     "on": 432,
+     "off30": 3888,
+     "off42": 2160
+    },
+    "qfd_xcol_e|R0|M5": {
+     "on": 24792,
+     "off30": 216
+    },
+    "qfd_xcol_w|R0|M5": {
+     "on": 24792,
+     "off30": 216
+    },
+    "qfd_xcst_n|MY|M3": {
+     "on": 336
+    },
+    "qfd_xcst_n|MY|M5": {
+     "off18": 173376
+    },
+    "qfd_xcst_n|R0|M3": {
+     "on": 432
+    },
+    "qfd_xcst_n|R0|M5": {
+     "on": 222912
+    },
+    "qfd_xcst_s|MY|M3": {
+     "on": 336
+    },
+    "qfd_xcst_s|MY|M5": {
+     "off18": 173376
+    },
+    "qfd_xcst_s|R0|M3": {
+     "on": 432
+    },
+    "qfd_xcst_s|R0|M5": {
+     "on": 222912
+    }
+   },
+   "channel": {
+    "pairs": 336,
+    "max_cut": 0.975,
+    "max_horizontal_cut": 0.13,
+    "worst": {
+     "pair": [
+      "t_0_0",
+      "t_1_0"
+     ],
+     "inner_um": 16.44,
+     "buses": [
+      [
+       "tree_0_0_0b",
+       514,
+       111.98400000000004
+      ],
+      [
+       "tree_0_1_0a",
+       514,
+       112.03200000000004
+      ]
+     ],
+     "bits": 1028,
+     "max_vertical_bits": 1028,
+     "at_y": 2705.5,
+     "vertical_tracks": 1054.0,
+     "cut": 0.975,
+     "horizontal_bits": 1028,
+     "horizontal_span_um": 217.248,
+     "horizontal_tracks_m4_m6": 7920.5,
+     "horizontal_cut": 0.13
+    },
+    "cut_hist": {
+     "0.97": 168,
+     "0.49": 168
+    }
+   },
+   "clock_trunk": {
+    "nets": 61,
+    "hpwl_delta_um": 15681.123,
+    "longest_delta_max_um": 469.044,
+    "longest_delta_min_um": -469.044
+   },
+   "reset": {
+    "nets": 1,
+    "hpwl_delta_um": 436.791
+   }
+  },
+  {
+   "name": "PM-H-S snapped + interleaved tree words",
+   "geometry": {
+    "inner_um": 16.44,
+    "gapL_um": 64.776,
+    "gapR_um": 64.8,
+    "kept_rows": [
+     7,
+     8
+    ],
+    "my_station_shift_nm": -30,
+    "r0_shift_nm": -24
+   },
+   "tree_pin_plan": "interleave",
+   "rectangle_errors": 0,
+   "totals": {
+    "bit_um": 1530676885.604,
+    "worst_pair_um": 21396.26,
+    "relay_bit_stages": 2499248,
+    "max_bus_relay_stages": 42
+   },
+   "delta": {
+    "bit_um": -211477153.6,
+    "pct": -12.139,
+    "relay_bit_stages": -342742
+   },
+   "my_tiles": 336,
+   "my_stations": 336,
+   "my_xcol": 0,
+   "grid": {
+    "qfd_tile_nk|MY|M5": {
+     "on": 336,
+     "off18": 3024,
+     "off6": 1680
+    },
+    "qfd_tile_nk|R0|M5": {
+     "on": 432,
+     "off30": 3888,
+     "off42": 2160
+    },
+    "qfd_xcol_e|R0|M5": {
+     "on": 24792,
+     "off30": 216
+    },
+    "qfd_xcol_w|R0|M5": {
+     "on": 24792,
+     "off30": 216
+    },
+    "qfd_xcst_n|MY|M3": {
+     "on": 336
+    },
+    "qfd_xcst_n|MY|M5": {
+     "off18": 173376
+    },
+    "qfd_xcst_n|R0|M3": {
+     "on": 432
+    },
+    "qfd_xcst_n|R0|M5": {
+     "on": 222912
+    },
+    "qfd_xcst_s|MY|M3": {
+     "on": 336
+    },
+    "qfd_xcst_s|MY|M5": {
+     "off18": 173376
+    },
+    "qfd_xcst_s|R0|M3": {
+     "on": 432
+    },
+    "qfd_xcst_s|R0|M5": {
+     "on": 222912
+    }
+   },
+   "channel": {
+    "pairs": 336,
+    "max_cut": 0.001,
+    "max_horizontal_cut": 0.143,
+    "worst": {
+     "pair": [
+      "t_0_0",
+      "t_1_0"
+     ],
+     "inner_um": 16.44,
+     "buses": [
+      [
+       "tree_0_0_0b",
+       514,
+       0.09600000000000099
+      ],
+      [
+       "tree_0_1_0a",
+       514,
+       0.09600000000000099
+      ]
+     ],
+     "bits": 1028,
+     "max_vertical_bits": 1,
+     "at_y": 2605.0,
+     "vertical_tracks": 1054.0,
+     "cut": 0.001,
+     "horizontal_bits": 1028,
+     "horizontal_span_um": 207.28,
+     "horizontal_tracks_m4_m6": 7557.1,
+     "horizontal_cut": 0.136
+    },
+    "cut_hist": {
+     "0.0": 336
+    }
+   },
+   "clock_trunk": {
+    "nets": 61,
+    "hpwl_delta_um": 15681.123,
+    "longest_delta_max_um": 469.044,
+    "longest_delta_min_um": -469.044
+   },
+   "reset": {
+    "nets": 1,
+    "hpwl_delta_um": 436.791
+   }
+  }
+ ],
+ "qualification": false
+}

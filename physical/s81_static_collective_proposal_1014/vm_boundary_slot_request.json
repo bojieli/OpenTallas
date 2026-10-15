@@ -83,11 +83,22 @@
     "sensitivity": "SS"
   },
   "area_measured": false,
-  "kit_allowed": false,
+  "kit_allowed": true,
   "required_before_kit": [
     "synthesis mapped std area and actual root count",
     "source-bound actual canonical production memory calendar and price",
     "die-owned placement/origin and pin/reach contract"
   ],
-  "qualifies_existing_view": false
+  "qualifies_existing_view": false,
+  "die_grant": {
+    "by": "S-DIE r11 (Claude) 2026-10-15",
+    "record": "physical/s81_die_pins/v20/die_grants_1015.json",
+    "parent_slot": "sp_collective (contract v20/v21: 1727.976 x 2721.6)",
+    "origin_in_parent_um": [
+      1479.6,
+      0.0
+    ],
+    "orient": "R0",
+    "note": "kit hardening allowed so mapped area/roots are measured; origin provisional at the S-face east end (GEO-S C4: collective t_vm window die x15469..15671); area/price/die reach still required before qualification"
+  }
 }

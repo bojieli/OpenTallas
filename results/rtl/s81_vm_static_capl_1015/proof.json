@@ -1,0 +1,51 @@
+{
+  "source_commit": "f9483e59bbc592b64406c58b542b4613d83d9c11",
+  "remote_host": "ot-epyc1tb",
+  "unit": "oth-ubuntu-906664-1792060152",
+  "exit_code": 0,
+  "production_source_hashes_verified_against_commit": true,
+  "cap16": {
+    "exact_seeds": [
+      1,
+      2
+    ],
+    "fault_witnesses": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "word_mutant": "rejected"
+  },
+  "full_master": {
+    "exact_seeds": [
+      1,
+      2
+    ],
+    "fault_witnesses": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8
+    ],
+    "mutants_rejected": [
+      "capword",
+      "wfcpair",
+      "x43phase"
+    ]
+  },
+  "component_equivalence": {
+    "reference": "dfe28f6f8",
+    "cycles": 24000,
+    "variants": [
+      "base",
+      "OT_VM_CAPL_MUT_WORD"
+    ]
+  },
+  "scope": "Semantic and mapped-area qualification only; no physical/native/canonical/calendar/throughput closure claim."
+}

@@ -1,0 +1,2820 @@
+{
+  "schema": "opentallas.qwen.current-system-pin-geometry.v1",
+  "input_sha256": "d365f8200e16beef575831464202de32f53f27bdf6a138fd83d66de52fe24a11",
+  "source_commit": "9579cbd4f",
+  "source_sha256": {
+    "tools/qwen_split/band1_pin_sensitivity.py": "e12382183e981ab9fbebc0670000f7220686544402a87c3d7314802d745d2f12",
+    "tools/qwen_split/check_context_records.py": "e78b0d498c8d9e9851f2e49e5706962f36def483ef002801973aad6f55c4d260",
+    "tools/qwen_split/check_cp_serializer.py": "eddff134368caa10d5e715be385c8430695d77f0c013514706f0b245c297028a",
+    "tools/qwen_split/check_dense_image.py": "42c1d4c8bf2553ebbdbd05a2361733c9c594f644aded034edcb04fd0228eb9d9",
+    "tools/qwen_split/check_static_internal.py": "dcf227e64800cd477fa1ce4d5c693b5a979e23c433564ec09a7327fa68a68ab2",
+    "tools/qwen_split/command_abi.py": "39077543375d0391df0348f4f3cfe1e61d9a23595b4e875de489412074a46146",
+    "tools/qwen_split/compute_spine.py": "539d135e98cd6d2e42b6482b5c1100cddee9f988ec75e582d52de1e6c2e22c31",
+    "tools/qwen_split/contract_tables.py": "34d54445277bdc834d8d5ba15b351375e742c8173d639249fcd774bbda643f87",
+    "tools/qwen_split/die_port_bind.py": "c0130a7245ae8779d1c88cb85cdb8099ae40c7aadedce2ed28be9e18e7f1d42c",
+    "tools/qwen_split/direct_up4.py": "2300d0fa140845120fdeb5efc55e148aaca5b9ab9148b09a9cf78283c8c47dc1",
+    "tools/qwen_split/export_system_geometry.py": "980509e1aed37e33657a8010922e1243fbd7f782712530cc0e8cbab4e2d6ae8d",
+    "tools/qwen_split/gen_relay_rtl.py": "c36d11c78839a21313d278e292a05ac078ae4c64fca170e027d544f41ac349cd",
+    "tools/qwen_split/gen_xdie_array.py": "d540ca45934b148383bb9f267730a48c818ab9f4d8ec32743d340e2da7c5b368",
+    "tools/qwen_split/io_placement.py": "8f94629b35f789a891e07c832a24af69fa1aec058792430f0c0060f8b3771c9a",
+    "tools/qwen_split/pdn_regroup.py": "4ac7fa09be7e997d27f0430a15cbfe7e19cf3eedeff421aac3d3b72099270d23",
+    "tools/qwen_split/placement_repack.py": "bcf18e64068fcf952606635a5a11ad36caaa49aa99eaa5ed7c686c1a85783fef",
+    "tools/qwen_split/slab_frame_plan.py": "76d3a72ee907428ec50a3f2f3f5147f47797da430cc64c0836588f1dab0a2bf6",
+    "tools/qwen_split/source_pin_plan.py": "1982d457cedc834c3230e340c876e14d2a084214858c95e7c2ba9800c1116c72",
+    "tools/qwen_split/static_io_contract.py": "713b44e721c2c0032557a28978d9f31a24e8ecd856f5ee814b2b0b30003858b6",
+    "tools/qwen_split/static_slot.py": "e270083deeb4bb69285ccac49b0c14bc17948dafbc54bba40bfcf1061360f3b2",
+    "tools/qwen_split/static_successor.py": "56690dde876b775f21493c15a030c98a6391490a1986b5962f5f1937dc94b6fd",
+    "tools/qwen_split/test_compute_spine.py": "e59bf9faaaa9f4ba5608fa20695b71d0c6f7fd63afdf7d329130d1dffefef48d",
+    "tools/qwen_split/test_direct_up4.py": "5fcfaf5fd617eb8c4106a70919f828d13ea70d111f57f1ed76882c5ec3be5447",
+    "tools/qwen_split/test_io_placement.py": "68cd7b6c9c12de61d2260f9ce84f117b98fac5d9506e10edc78149932d416cda",
+    "tools/qwen_split/test_native_pg_generation.py": "92fd7896e5b3491df9de7a91c2e5cc7be4d0181a1badd8228d716b33b8373797",
+    "tools/qwen_split/test_placement_repack.py": "1f23ca0197975ed1a3b78ae4aa0968dcec2065aa679bcb998f3f0e9db68fe6e4",
+    "tools/qwen_split/test_source_pin_plan.py": "44ec1757e9c89ab48e1c195166a757ded2b9c9548cc1a57399d93efc5826c264",
+    "tools/qwen_split/test_tree_hosts.py": "36882ae9a07f4743ed10550803e278ed589b880bb7896882ac47545a0545e434",
+    "tools/qwen_split/tree_hosts.py": "0101533ed1fa32f8f1650c5bd531048e24cf14302ccc8c0014158a89b5372ed6",
+    "tools/qwen_split/tree_skew.py": "65115feb1eb8ba88bea73d51e6f66124f60f6b9433bade400d65ca475fc117b7",
+    "tools/qwen_split/verify_static_slot_pins.py": "e3afedadc4b6ac668990902352961abe1dedcb473be9dc7083d85c30d96a6ca7",
+    "tools/qwen_split/vm_observer_homes.py": "23ef1a4df8079159b2f3eaaea014dbb2ac03eb31921b6ccc0eff1c65850a8e87",
+    "tools/qwen_split/xpf_schedule.py": "fcccaf19c027482e8ff655a1da44f0f4a1c62aca090ff392a5b16d1246e8c625"
+  },
+  "coverage": {
+    "instances": 1637,
+    "generated_local_pin_rects": 217669,
+    "total_data_buses": 3333
+  },
+  "candidates": [
+    {
+      "name": "wide27_band1_reference",
+      "description": "Reference: paired collectors west; VM/SU east",
+      "rectangle_errors": [],
+      "changed_instances": [],
+      "resolved_data_buses": 3327,
+      "missing": [
+        {
+          "bus": "o4_upf_l0",
+          "endpoints": [
+            {
+              "instance": "tt_ctlm",
+              "port": "uf_l0",
+              "generated_pins": 0,
+              "bus_bits": 1
+            }
+          ]
+        },
+        {
+          "bus": "o4_upf_l1",
+          "endpoints": [
+            {
+              "instance": "tt_ctlm",
+              "port": "uf_l1",
+              "generated_pins": 0,
+              "bus_bits": 1
+            }
+          ]
+        },
+        {
+          "bus": "o4_upf_l2",
+          "endpoints": [
+            {
+              "instance": "tt_ctlm",
+              "port": "uf_l2",
+              "generated_pins": 0,
+              "bus_bits": 1
+            }
+          ]
+        },
+        {
+          "bus": "o4_upf_l3",
+          "endpoints": [
+            {
+              "instance": "tt_ctlm",
+              "port": "uf_l3",
+              "generated_pins": 0,
+              "bus_bits": 1
+            }
+          ]
+        },
+        {
+          "bus": "xs_pf",
+          "endpoints": [
+            {
+              "instance": "tt_ctlm",
+              "port": "xpf",
+              "generated_pins": 0,
+              "bus_bits": 72
+            }
+          ]
+        },
+        {
+          "bus": "xs_fault",
+          "endpoints": [
+            {
+              "instance": "tt_ctlm",
+              "port": "xflt",
+              "generated_pins": 0,
+              "bus_bits": 1
+            }
+          ]
+        }
+      ],
+      "per_bit_hpwl_sum_um": 1741694410.74,
+      "worst_pin_pair_um": 21281.04,
+      "longest_buses": [
+        {
+          "bus": "bword_46",
+          "family": "tree_spine",
+          "bits": 514,
+          "endpoints": [
+            [
+              "t_47_10",
+              "n_y"
+            ],
+            [
+              "sp_port_tiles_2_f1",
+              "bw14"
+            ]
+          ],
+          "per_bit_hpwl_sum_um": 10938454.56,
+          "max_manhattan_pin_pair_um": 21281.04,
+          "delta_bit_um": 0.0
+        },
+        {
+          "bus": "bword_47",
+          "family": "tree_spine",
+          "bits": 514,
+          "endpoints": [
+            [
+              "t_47_14",
+              "n_y"
+            ],
+            [
+              "sp_port_tiles_2_f1",
+              "bw15"
+            ]
+          ],
+          "per_bit_hpwl_sum_um": 9697872.384,
+          "max_manhattan_pin_pair_um": 18867.456,
+          "delta_bit_um": 0.0
+        },
+        {
+          "bus": "bword_43",
+          "family": "tree_spine",
+          "bits": 514,
+          "endpoints": [
+            [
+              "t_43_15",
+              "n_y"
+            ],
+            [
+              "sp_port_tiles_2_f1",
+              "bw13"
+            ]
+          ],
+          "per_bit_hpwl_sum_um": 9489591.36,
+          "max_manhattan_pin_pair_um": 18462.24,
+          "delta_bit_um": 0.0
+        },
+        {
+          "bus": "bword_44",
+          "family": "tree_spine",
+          "bits": 514,
+          "endpoints": [
+            [
+              "t_47_2",
+              "n_y"
+            ],
+            [
+              "sp_port_tiles_0_f1",
+              "bw15"
+            ]
+          ],
+          "per_bit_hpwl_sum_um": 9084699.168,
+          "max_manhattan_pin_pair_um": 17674.512,
+          "delta_bit_um": 0.0
+        },
+        {
+          "bus": "bword_42",
+          "family": "tree_spine",
+          "bits": 514,
+          "endpoints": [
+            [
+              "t_43_11",
+              "n_y"
+            ],
+            [
+              "sp_port_tiles_2_f1",
+              "bw12"
+            ]
+          ],
+          "per_bit_hpwl_sum_um": 9049048.128,
+          "max_manhattan_pin_pair_um": 17605.152,
+          "delta_bit_um": 0.0
+        },
+        {
+          "bus": "bword_45",
+          "family": "tree_spine",
+          "bits": 514,
+          "endpoints": [
+            [
+              "t_47_6",
+              "n_y"
+            ],
+            [
+              "sp_port_tiles_1_f1",
+              "bw15"
+            ]
+          ],
+          "per_bit_hpwl_sum_um": 8910712.224,
+          "max_manhattan_pin_pair_um": 17336.016,
+          "delta_bit_um": 0.0
+        },
+        {
+          "bus": "bword_41",
+          "family": "tree_spine",
+          "bits": 514,
+          "endpoints": [
+            [
+              "t_43_7",
+              "n_y"
+            ],
+            [
+              "sp_port_tiles_1_f1",
+              "bw14"
+            ]
+          ],
+          "per_bit_hpwl_sum_um": 8626614.144,
+          "max_manhattan_pin_pair_um": 16783.296,
+          "delta_bit_um": 0.0
+        },
+        {
+          "bus": "bword_36",
+          "family": "tree_spine",
+          "bits": 514,
+          "endpoints": [
+            [
+              "t_39_0",
+              "n_y"
+            ],
+            [
+              "sp_port_tiles_0_f1",
+              "bw13"
+            ]
+          ],
+          "per_bit_hpwl_sum_um": 8462964.768,
+          "max_manhattan_pin_pair_um": 16464.912,
+          "delta_bit_um": 0.0
+        },
+        {
+          "bus": "bword_2",
+          "family": "tree_spine",
+          "bits": 514,
+          "endpoints": [
+            [
+              "t_3_9",
+              "n_y"
+            ],
+            [
+              "sp_port_tiles_2",
+              "bw0"
+            ]
+          ],
+          "per_bit_hpwl_sum_um": 8436713.76,
+          "max_manhattan_pin_pair_um": 16413.84,
+          "delta_bit_um": 0.0
+        },
+        {
+          "bus": "bword_38",
+          "family": "tree_spine",
+          "bits": 514,
+          "endpoints": [
+            [
+              "t_39_8",
+              "n_y"
+            ],
+            [
+              "sp_port_tiles_1_f1",
+              "bw13"
+            ]
+          ],
+          "per_bit_hpwl_sum_um": 8342491.392,
+          "max_manhattan_pin_pair_um": 16230.528,
+          "delta_bit_um": 0.0
+        },
+        {
+          "bus": "bword_40",
+          "family": "tree_spine",
+          "bits": 514,
+          "endpoints": [
+            [
+              "t_43_3",
+              "n_y"
+            ],
+            [
+              "sp_port_tiles_0_f1",
+              "bw14"
+            ]
+          ],
+          "per_bit_hpwl_sum_um": 8238030.144,
+          "max_manhattan_pin_pair_um": 16027.296,
+          "delta_bit_um": 0.0
+        },
+        {
+          "bus": "bword_6",
+          "family": "tree_spine",
+          "bits": 514,
+          "endpoints": [
+            [
+              "t_7_8",
+              "n_y"
+            ],
+            [
+              "sp_port_tiles_2",
+              "bw2"
+            ]
+          ],
+          "per_bit_hpwl_sum_um": 8178496.608,
+          "max_manhattan_pin_pair_um": 15911.472,
+          "delta_bit_um": 0.0
+        },
+        {
+          "bus": "bword_34",
+          "family": "tree_spine",
+          "bits": 514,
+          "endpoints": [
+            [
+              "t_35_9",
+              "n_y"
+            ],
+            [
+              "sp_port_tiles_1_f1",
+              "bw11"
+            ]
+          ],
+          "per_bit_hpwl_sum_um": 8084274.24,
+          "max_manhattan_pin_pair_um": 15728.16,
+          "delta_bit_um": 0.0
+        },
+        {
+          "bus": "bword_37",
+          "family": "tree_spine",
+          "bits": 514,
+          "endpoints": [
+            [
+              "t_39_4",
+              "n_y"
+            ],
+            [
+              "sp_port_tiles_1_f1",
+              "bw12"
+            ]
+          ],
+          "per_bit_hpwl_sum_um": 7998539.04,
+          "max_manhattan_pin_pair_um": 15561.36,
+          "delta_bit_um": 0.0
+        },
+        {
+          "bus": "coll_seq_x",
+          "family": "sequencer",
+          "bits": 518,
+          "endpoints": [
+            [
+              "io_xfifo",
+              "o_coll_seq"
+            ],
+            [
+              "seq_su",
+              "cc"
+            ]
+          ],
+          "per_bit_hpwl_sum_um": 7914223.632,
+          "max_manhattan_pin_pair_um": 15278.424,
+          "delta_bit_um": 0.0
+        }
+      ],
+      "greatest_regressions": [
+        {
+          "bus": "cor_0_7",
+          "family": "corridor",
+          "bits": 516,
+          "endpoints": [
+            [
+              "h_0",
+              "s_d"
+            ],
+            [
+              "s_0_7",
+              "a_d"
+            ]
+          ],
+          "per_bit_hpwl_sum_um": 2340.576,
+          "max_manhattan_pin_pair_um": 4.536,
+          "delta_bit_um": 0.0
+        },
+        {
+          "bus": "cor_0_6",
+          "family": "corridor",
+          "bits": 516,
+          "endpoints": [
+            [
+              "s_0_7",
+              "b_d"
+            ],
+            [
+              "s_0_6",
+              "a_d"
+            ]
+          ],
+          "per_bit_hpwl_sum_um": 707857.056,
+          "max_manhattan_pin_pair_um": 1371.816,
+          "delta_bit_um": 0.0
+        },
+        {
+          "bus": "cor_0_5",
+          "family": "corridor",
+          "bits": 516,
+          "endpoints": [
+            [
+              "s_0_6",
+              "b_d"
+            ],
+            [
+              "s_0_5",
+              "a_d"
+            ]
+          ],
+          "per_bit_hpwl_sum_um": 713429.856,
+          "max_manhattan_pin_pair_um": 1382.616,
+          "delta_bit_um": 0.0
+        },
+        {
+          "bus": "cor_0_4",
+          "family": "corridor",
+          "bits": 516,
+          "endpoints": [
+            [
+              "s_0_5",
+              "b_d"
+            ],
+            [
+              "s_0_4",
+              "a_d"
+            ]
+          ],
+          "per_bit_hpwl_sum_um": 713429.856,
+          "max_manhattan_pin_pair_um": 1382.616,
+          "delta_bit_um": 0.0
+        },
+        {
+          "bus": "cor_0_3",
+          "family": "corridor",
+          "bits": 516,
+          "endpoints": [
+            [
+              "s_0_4",
+              "b_d"
+            ],
+            [
+              "s_0_3",
+              "a_d"
+            ]
+          ],
+          "per_bit_hpwl_sum_um": 713429.856,
+          "max_manhattan_pin_pair_um": 1382.616,
+          "delta_bit_um": 0.0
+        },
+        {
+          "bus": "cor_0_2",
+          "family": "corridor",
+          "bits": 516,
+          "endpoints": [
+            [
+              "s_0_3",
+              "b_d"
+            ],
+            [
+              "s_0_2",
+              "a_d"
+            ]
+          ],
+          "per_bit_hpwl_sum_um": 713429.856,
+          "max_manhattan_pin_pair_um": 1382.616,
+          "delta_bit_um": 0.0
+        },
+        {
+          "bus": "cor_0_1",
+          "family": "corridor",
+          "bits": 516,
+          "endpoints": [
+            [
+              "s_0_2",
+              "b_d"
+            ],
+            [
+              "s_0_1",
+              "a_d"
+            ]
+          ],
+          "per_bit_hpwl_sum_um": 713429.856,
+          "max_manhattan_pin_pair_um": 1382.616,
+          "delta_bit_um": 0.0
+        },
+        {
+          "bus": "cor_0_0",
+          "family": "corridor",
+          "bits": 516,
+          "endpoints": [
+            [
+              "s_0_1",
+              "b_d"
+            ],
+            [
+              "s_0_0",
+              "a_d"
+            ]
+          ],
+          "per_bit_hpwl_sum_um": 763585.056,
+          "max_manhattan_pin_pair_um": 1479.816,
+          "delta_bit_um": 0.0
+        },
+        {
+          "bus": "cor_0_8",
+          "family": "corridor",
+          "bits": 516,
+          "endpoints": [
+            [
+              "h_0",
+              "n_d"
+            ],
+            [
+              "s_0_8",
+              "b_d"
+            ]
+          ],
+          "per_bit_hpwl_sum_um": 1226.016,
+          "max_manhattan_pin_pair_um": 2.376,
+          "delta_bit_um": 0.0
+        },
+        {
+          "bus": "cor_0_9",
+          "family": "corridor",
+          "bits": 516,
+          "endpoints": [
+            [
+              "s_0_8",
+              "a_d"
+            ],
+            [
+              "s_0_9",
+              "b_d"
+            ]
+          ],
+          "per_bit_hpwl_sum_um": 688909.536,
+          "max_manhattan_pin_pair_um": 1335.096,
+          "delta_bit_um": 0.0
+        },
+        {
+          "bus": "cor_0_10",
+          "family": "corridor",
+          "bits": 516,
+          "endpoints": [
+            [
+              "s_0_9",
+              "a_d"
+            ],
+            [
+              "s_0_10",
+              "b_d"
+            ]
+          ],
+          "per_bit_hpwl_sum_um": 713429.856,
+          "max_manhattan_pin_pair_um": 1382.616,
+          "delta_bit_um": 0.0
+        },
+        {
+          "bus": "cor_0_11",
+          "family": "corridor",
+          "bits": 516,
+          "endpoints": [
+            [
+              "s_0_10",
+              "a_d"
+            ],
+            [
+              "s_0_11",
+              "b_d"
+            ]
+          ],
+          "per_bit_hpwl_sum_um": 713429.856,
+          "max_manhattan_pin_pair_um": 1382.616,
+          "delta_bit_um": 0.0
+        }
+      ],
+      "greatest_improvements": [
+        {
+          "bus": "cor_0_7",
+          "family": "corridor",
+          "bits": 516,
+          "endpoints": [
+            [
+              "h_0",
+              "s_d"
+            ],
+            [
+              "s_0_7",
+              "a_d"
+            ]
+          ],
+          "per_bit_hpwl_sum_um": 2340.576,
+          "max_manhattan_pin_pair_um": 4.536,
+          "delta_bit_um": 0.0
+        },
+        {
+          "bus": "cor_0_6",
+          "family": "corridor",
+          "bits": 516,
+          "endpoints": [
+            [
+              "s_0_7",
+              "b_d"
+            ],
+            [
+              "s_0_6",
+              "a_d"
+            ]
+          ],
+          "per_bit_hpwl_sum_um": 707857.056,
+          "max_manhattan_pin_pair_um": 1371.816,
+          "delta_bit_um": 0.0
+        },
+        {
+          "bus": "cor_0_5",
+          "family": "corridor",
+          "bits": 516,
+          "endpoints": [
+            [
+              "s_0_6",
+              "b_d"
+            ],
+            [
+              "s_0_5",
+              "a_d"
+            ]
+          ],
+          "per_bit_hpwl_sum_um": 713429.856,
+          "max_manhattan_pin_pair_um": 1382.616,
+          "delta_bit_um": 0.0
+        },
+        {
+          "bus": "cor_0_4",
+          "family": "corridor",
+          "bits": 516,
+          "endpoints": [
+            [
+              "s_0_5",
+              "b_d"
+            ],
+            [
+              "s_0_4",
+              "a_d"
+            ]
+          ],
+          "per_bit_hpwl_sum_um": 713429.856,
+          "max_manhattan_pin_pair_um": 1382.616,
+          "delta_bit_um": 0.0
+        },
+        {
+          "bus": "cor_0_3",
+          "family": "corridor",
+          "bits": 516,
+          "endpoints": [
+            [
+              "s_0_4",
+              "b_d"
+            ],
+            [
+              "s_0_3",
+              "a_d"
+            ]
+          ],
+          "per_bit_hpwl_sum_um": 713429.856,
+          "max_manhattan_pin_pair_um": 1382.616,
+          "delta_bit_um": 0.0
+        },
+        {
+          "bus": "cor_0_2",
+          "family": "corridor",
+          "bits": 516,
+          "endpoints": [
+            [
+              "s_0_3",
+              "b_d"
+            ],
+            [
+              "s_0_2",
+              "a_d"
+            ]
+          ],
+          "per_bit_hpwl_sum_um": 713429.856,
+          "max_manhattan_pin_pair_um": 1382.616,
+          "delta_bit_um": 0.0
+        },
+        {
+          "bus": "cor_0_1",
+          "family": "corridor",
+          "bits": 516,
+          "endpoints": [
+            [
+              "s_0_2",
+              "b_d"
+            ],
+            [
+              "s_0_1",
+              "a_d"
+            ]
+          ],
+          "per_bit_hpwl_sum_um": 713429.856,
+          "max_manhattan_pin_pair_um": 1382.616,
+          "delta_bit_um": 0.0
+        },
+        {
+          "bus": "cor_0_0",
+          "family": "corridor",
+          "bits": 516,
+          "endpoints": [
+            [
+              "s_0_1",
+              "b_d"
+            ],
+            [
+              "s_0_0",
+              "a_d"
+            ]
+          ],
+          "per_bit_hpwl_sum_um": 763585.056,
+          "max_manhattan_pin_pair_um": 1479.816,
+          "delta_bit_um": 0.0
+        },
+        {
+          "bus": "cor_0_8",
+          "family": "corridor",
+          "bits": 516,
+          "endpoints": [
+            [
+              "h_0",
+              "n_d"
+            ],
+            [
+              "s_0_8",
+              "b_d"
+            ]
+          ],
+          "per_bit_hpwl_sum_um": 1226.016,
+          "max_manhattan_pin_pair_um": 2.376,
+          "delta_bit_um": 0.0
+        },
+        {
+          "bus": "cor_0_9",
+          "family": "corridor",
+          "bits": 516,
+          "endpoints": [
+            [
+              "s_0_8",
+              "a_d"
+            ],
+            [
+              "s_0_9",
+              "b_d"
+            ]
+          ],
+          "per_bit_hpwl_sum_um": 688909.536,
+          "max_manhattan_pin_pair_um": 1335.096,
+          "delta_bit_um": 0.0
+        },
+        {
+          "bus": "cor_0_10",
+          "family": "corridor",
+          "bits": 516,
+          "endpoints": [
+            [
+              "s_0_9",
+              "a_d"
+            ],
+            [
+              "s_0_10",
+              "b_d"
+            ]
+          ],
+          "per_bit_hpwl_sum_um": 713429.856,
+          "max_manhattan_pin_pair_um": 1382.616,
+          "delta_bit_um": 0.0
+        },
+        {
+          "bus": "cor_0_11",
+          "family": "corridor",
+          "bits": 516,
+          "endpoints": [
+            [
+              "s_0_10",
+              "a_d"
+            ],
+            [
+              "s_0_11",
+              "b_d"
+            ]
+          ],
+          "per_bit_hpwl_sum_um": 713429.856,
+          "max_manhattan_pin_pair_um": 1382.616,
+          "delta_bit_um": 0.0
+        }
+      ],
+      "qualification": false
+    },
+    {
+      "name": "distributed_east_collectors",
+      "description": "Separate east collectors; paired-slab buses become long",
+      "rectangle_errors": [],
+      "changed_instances": [
+        {
+          "n": "sp_port_tiles_1_f1",
+          "m": "qfd_port_tiles_1_f1",
+          "x": 18809.28,
+          "y": 9499.68,
+          "w": 1036.8,
+          "h": 2462.4,
+          "o": "R0"
+        },
+        {
+          "n": "sp_port_tiles_2_f1",
+          "m": "qfd_port_tiles_2_f1",
+          "x": 18809.28,
+          "y": 20491.92,
+          "w": 1036.8,
+          "h": 2462.4,
+          "o": "R0"
+        },
+        {
+          "n": "sp_port_tiles_0_f1",
+          "m": "qfd_port_tiles_0_f1",
+          "x": 18809.28,
+          "y": 4946.4,
+          "w": 1036.8,
+          "h": 2462.4,
+          "o": "R0"
+        }
+      ],
+      "resolved_data_buses": 3327,
+      "missing": [
+        {
+          "bus": "o4_upf_l0",
+          "endpoints": [
+            {
+              "instance": "tt_ctlm",
+              "port": "uf_l0",
+              "generated_pins": 0,
+              "bus_bits": 1
+            }
+          ]
+        },
+        {
+          "bus": "o4_upf_l1",
+          "endpoints": [
+            {
+              "instance": "tt_ctlm",
+              "port": "uf_l1",
+              "generated_pins": 0,
+              "bus_bits": 1
+            }
+          ]
+        },
+        {
+          "bus": "o4_upf_l2",
+          "endpoints": [
+            {
+              "instance": "tt_ctlm",
+              "port": "uf_l2",
+              "generated_pins": 0,
+              "bus_bits": 1
+            }
+          ]
+        },
+        {
+          "bus": "o4_upf_l3",
+          "endpoints": [
+            {
+              "instance": "tt_ctlm",
+              "port": "uf_l3",
+              "generated_pins": 0,
+              "bus_bits": 1
+            }
+          ]
+        },
+        {
+          "bus": "xs_pf",
+          "endpoints": [
+            {
+              "instance": "tt_ctlm",
+              "port": "xpf",
+              "generated_pins": 0,
+              "bus_bits": 72
+            }
+          ]
+        },
+        {
+          "bus": "xs_fault",
+          "endpoints": [
+            {
+              "instance": "tt_ctlm",
+              "port": "xflt",
+              "generated_pins": 0,
+              "bus_bits": 1
+            }
+          ]
+        }
+      ],
+      "per_bit_hpwl_sum_um": 1786150493.22,
+      "worst_pin_pair_um": 16413.84,
+      "longest_buses": [
+        {
+          "bus": "bword_2",
+          "family": "tree_spine",
+          "bits": 514,
+          "endpoints": [
+            [
+              "t_3_9",
+              "n_y"
+            ],
+            [
+              "sp_port_tiles_2",
+              "bw0"
+            ]
+          ],
+          "per_bit_hpwl_sum_um": 8436713.76,
+          "max_manhattan_pin_pair_um": 16413.84,
+          "delta_bit_um": 0.0
+        },
+        {
+          "bus": "bword_46",
+          "family": "tree_spine",
+          "bits": 514,
+          "endpoints": [
+            [
+              "t_47_10",
+              "n_y"
+            ],
+            [
+              "sp_port_tiles_2_f1",
+              "bw14"
+            ]
+          ],
+          "per_bit_hpwl_sum_um": 8315179.488,
+          "max_manhattan_pin_pair_um": 16177.392,
+          "delta_bit_um": -2623275.072
+        },
+        {
+          "bus": "bword_6",
+          "family": "tree_spine",
+          "bits": 514,
+          "endpoints": [
+            [
+              "t_7_8",
+              "n_y"
+            ],
+            [
+              "sp_port_tiles_2",
+              "bw2"
+            ]
+          ],
+          "per_bit_hpwl_sum_um": 8178496.608,
+          "max_manhattan_pin_pair_um": 15911.472,
+          "delta_bit_um": 0.0
+        },
+        {
+          "bus": "coll_seq_x",
+          "family": "sequencer",
+          "bits": 518,
+          "endpoints": [
+            [
+              "io_xfifo",
+              "o_coll_seq"
+            ],
+            [
+              "seq_su",
+              "cc"
+            ]
+          ],
+          "per_bit_hpwl_sum_um": 7914223.632,
+          "max_manhattan_pin_pair_um": 15278.424,
+          "delta_bit_um": 0.0
+        },
+        {
+          "bus": "seq_coll",
+          "family": "sequencer",
+          "bits": 548,
+          "endpoints": [
+            [
+              "seq_su",
+              "cd"
+            ],
+            [
+              "io_xfifo",
+              "i_seq_coll"
+            ]
+          ],
+          "per_bit_hpwl_sum_um": 8341748.064,
+          "max_manhattan_pin_pair_um": 15222.168,
+          "delta_bit_um": 0.0
+        },
+        {
+          "bus": "bword_10",
+          "family": "tree_spine",
+          "bits": 514,
+          "endpoints": [
+            [
+              "t_11_11",
+              "n_y"
+            ],
+            [
+              "sp_port_tiles_1",
+              "bw3"
+            ]
+          ],
+          "per_bit_hpwl_sum_um": 7549027.536,
+          "max_manhattan_pin_pair_um": 14736.072,
+          "delta_bit_um": 0.0
+        },
+        {
+          "bus": "bword_47",
+          "family": "tree_spine",
+          "bits": 514,
+          "endpoints": [
+            [
+              "t_47_14",
+              "n_y"
+            ],
+            [
+              "sp_port_tiles_2_f1",
+              "bw15"
+            ]
+          ],
+          "per_bit_hpwl_sum_um": 7074597.312,
+          "max_manhattan_pin_pair_um": 13763.808,
+          "delta_bit_um": -2623275.072
+        },
+        {
+          "bus": "bword_43",
+          "family": "tree_spine",
+          "bits": 514,
+          "endpoints": [
+            [
+              "t_43_15",
+              "n_y"
+            ],
+            [
+              "sp_port_tiles_2_f1",
+              "bw13"
+            ]
+          ],
+          "per_bit_hpwl_sum_um": 6866316.288,
+          "max_manhattan_pin_pair_um": 13358.592,
+          "delta_bit_um": -2623275.072
+        },
+        {
+          "bus": "bword_0",
+          "family": "tree_spine",
+          "bits": 514,
+          "endpoints": [
+            [
+              "t_3_1",
+              "n_y"
+            ],
+            [
+              "sp_port_tiles_0",
+              "bw0"
+            ]
+          ],
+          "per_bit_hpwl_sum_um": 6738799.056,
+          "max_manhattan_pin_pair_um": 13159.752,
+          "delta_bit_um": 0.0
+        },
+        {
+          "bus": "bword_45",
+          "family": "tree_spine",
+          "bits": 514,
+          "endpoints": [
+            [
+              "t_47_6",
+              "n_y"
+            ],
+            [
+              "sp_port_tiles_1_f1",
+              "bw15"
+            ]
+          ],
+          "per_bit_hpwl_sum_um": 6613847.712,
+          "max_manhattan_pin_pair_um": 12867.408,
+          "delta_bit_um": -2296864.512
+        },
+        {
+          "bus": "ar_cr",
+          "family": "spine_local",
+          "bits": 1,
+          "endpoints": [
+            [
+              "sp_vector_memory",
+              "ar_cr"
+            ],
+            [
+              "d2d_rom",
+              "ar_cr"
+            ]
+          ],
+          "per_bit_hpwl_sum_um": 12859.632,
+          "max_manhattan_pin_pair_um": 12859.632,
+          "delta_bit_um": 0.0
+        },
+        {
+          "bus": "attn_ret",
+          "family": "spine_local",
+          "bits": 520,
+          "endpoints": [
+            [
+              "d2d_rom",
+              "ar"
+            ],
+            [
+              "sp_vector_memory",
+              "ar"
+            ]
+          ],
+          "per_bit_hpwl_sum_um": 6613152.0,
+          "max_manhattan_pin_pair_um": 12717.6,
+          "delta_bit_um": 0.0
+        },
+        {
+          "bus": "bword_4",
+          "family": "tree_spine",
+          "bits": 514,
+          "endpoints": [
+            [
+              "t_7_0",
+              "n_y"
+            ],
+            [
+              "sp_port_tiles_0",
+              "bw1"
+            ]
+          ],
+          "per_bit_hpwl_sum_um": 6452899.92,
+          "max_manhattan_pin_pair_um": 12603.528,
+          "delta_bit_um": 0.0
+        },
+        {
+          "bus": "bword_44",
+          "family": "tree_spine",
+          "bits": 514,
+          "endpoints": [
+            [
+              "t_47_2",
+              "n_y"
+            ],
+            [
+              "sp_port_tiles_0_f1",
+              "bw15"
+            ]
+          ],
+          "per_bit_hpwl_sum_um": 6461424.096,
+          "max_manhattan_pin_pair_um": 12570.864,
+          "delta_bit_um": -2623275.072
+        },
+        {
+          "bus": "bword_42",
+          "family": "tree_spine",
+          "bits": 514,
+          "endpoints": [
+            [
+              "t_43_11",
+              "n_y"
+            ],
+            [
+              "sp_port_tiles_2_f1",
+              "bw12"
+            ]
+          ],
+          "per_bit_hpwl_sum_um": 6425773.056,
+          "max_manhattan_pin_pair_um": 12501.504,
+          "delta_bit_um": -2623275.072
+        }
+      ],
+      "greatest_regressions": [
+        {
+          "bus": "slab_rq_1",
+          "family": "tree_spine",
+          "bits": 2213,
+          "endpoints": [
+            [
+              "sp_port_tiles_1_f1",
+              "rq"
+            ],
+            [
+              "sp_port_tiles_1",
+              "rqe"
+            ]
+          ],
+          "per_bit_hpwl_sum_um": 12700300.776,
+          "max_manhattan_pin_pair_um": 5951.304,
+          "delta_bit_um": 12455148.048
+        },
+        {
+          "bus": "pfrag_1_port_tiles_1_f1",
+          "family": "tree_spine",
+          "bits": 2050,
+          "endpoints": [
+            [
+              "sp_port_tiles_1_f1",
+              "cw1"
+            ],
+            [
+              "sp_port_tiles_1",
+              "cf1"
+            ]
+          ],
+          "per_bit_hpwl_sum_um": 11752453.2,
+          "max_manhattan_pin_pair_um": 5929.608,
+          "delta_bit_um": 11540931.504
+        },
+        {
+          "bus": "slab_ty_1",
+          "family": "tree_spine",
+          "bits": 2048,
+          "endpoints": [
+            [
+              "sp_port_tiles_1",
+              "tye"
+            ],
+            [
+              "sp_port_tiles_1_f1",
+              "ty"
+            ]
+          ],
+          "per_bit_hpwl_sum_um": 11671879.68,
+          "max_manhattan_pin_pair_um": 5895.672,
+          "delta_bit_um": 11451210.864
+        },
+        {
+          "bus": "slab_rq_0",
+          "family": "tree_spine",
+          "bits": 2213,
+          "endpoints": [
+            [
+              "sp_port_tiles_0_f1",
+              "rq"
+            ],
+            [
+              "sp_port_tiles_0",
+              "rqe"
+            ]
+          ],
+          "per_bit_hpwl_sum_um": 11539525.752,
+          "max_manhattan_pin_pair_um": 5324.76,
+          "delta_bit_um": 11294373.024
+        },
+        {
+          "bus": "slab_rq_2",
+          "family": "tree_spine",
+          "bits": 2213,
+          "endpoints": [
+            [
+              "sp_port_tiles_2_f1",
+              "rq"
+            ],
+            [
+              "sp_port_tiles_2",
+              "rqe"
+            ]
+          ],
+          "per_bit_hpwl_sum_um": 11353433.568,
+          "max_manhattan_pin_pair_um": 5130.336,
+          "delta_bit_um": 11294373.024
+        },
+        {
+          "bus": "pfrag_0_port_tiles_0_f1",
+          "family": "tree_spine",
+          "bits": 2050,
+          "endpoints": [
+            [
+              "sp_port_tiles_0_f1",
+              "cw0"
+            ],
+            [
+              "sp_port_tiles_0",
+              "cf1"
+            ]
+          ],
+          "per_bit_hpwl_sum_um": 10674000.096,
+          "max_manhattan_pin_pair_um": 5315.16,
+          "delta_bit_um": 10462478.4
+        },
+        {
+          "bus": "pfrag_2_port_tiles_2_f1",
+          "family": "tree_spine",
+          "bits": 2050,
+          "endpoints": [
+            [
+              "sp_port_tiles_2_f1",
+              "cw2"
+            ],
+            [
+              "sp_port_tiles_2",
+              "cf1"
+            ]
+          ],
+          "per_bit_hpwl_sum_um": 11372481.6,
+          "max_manhattan_pin_pair_um": 5547.552,
+          "delta_bit_um": 10462478.4
+        },
+        {
+          "bus": "slab_ty_0",
+          "family": "tree_spine",
+          "bits": 2048,
+          "endpoints": [
+            [
+              "sp_port_tiles_0",
+              "tye"
+            ],
+            [
+              "sp_port_tiles_0_f1",
+              "ty"
+            ]
+          ],
+          "per_bit_hpwl_sum_um": 10672939.92,
+          "max_manhattan_pin_pair_um": 5348.712,
+          "delta_bit_um": 10452271.104
+        },
+        {
+          "bus": "slab_ty_2",
+          "family": "tree_spine",
+          "bits": 2048,
+          "endpoints": [
+            [
+              "sp_port_tiles_2",
+              "tye"
+            ],
+            [
+              "sp_port_tiles_2_f1",
+              "ty"
+            ]
+          ],
+          "per_bit_hpwl_sum_um": 11339268.096,
+          "max_manhattan_pin_pair_um": 5536.752,
+          "delta_bit_um": 10452271.104
+        },
+        {
+          "bus": "slab_tc_1",
+          "family": "tree_spine",
+          "bits": 341,
+          "endpoints": [
+            [
+              "sp_port_tiles_1",
+              "tc_e"
+            ],
+            [
+              "sp_port_tiles_1_f1",
+              "tc"
+            ]
+          ],
+          "per_bit_hpwl_sum_um": 2022307.32,
+          "max_manhattan_pin_pair_um": 5963.16,
+          "delta_bit_um": 1956892.608
+        },
+        {
+          "bus": "slab_tc_0",
+          "family": "tree_spine",
+          "bits": 341,
+          "endpoints": [
+            [
+              "sp_port_tiles_0",
+              "tc_e"
+            ],
+            [
+              "sp_port_tiles_0_f1",
+              "tc"
+            ]
+          ],
+          "per_bit_hpwl_sum_um": 1805758.68,
+          "max_manhattan_pin_pair_um": 5328.12,
+          "delta_bit_um": 1740343.968
+        },
+        {
+          "bus": "slab_tc_2",
+          "family": "tree_spine",
+          "bits": 341,
+          "endpoints": [
+            [
+              "sp_port_tiles_2",
+              "tc_e"
+            ],
+            [
+              "sp_port_tiles_2_f1",
+              "tc"
+            ]
+          ],
+          "per_bit_hpwl_sum_um": 1888032.432,
+          "max_manhattan_pin_pair_um": 5536.752,
+          "delta_bit_um": 1740343.968
+        }
+      ],
+      "greatest_improvements": [
+        {
+          "bus": "bword_33",
+          "family": "tree_spine",
+          "bits": 514,
+          "endpoints": [
+            [
+              "t_35_5",
+              "n_y"
+            ],
+            [
+              "sp_port_tiles_1_f1",
+              "bw10"
+            ]
+          ],
+          "per_bit_hpwl_sum_um": 3159422.304,
+          "max_manhattan_pin_pair_um": 6146.736,
+          "delta_bit_um": -2949685.632
+        },
+        {
+          "bus": "bword_37",
+          "family": "tree_spine",
+          "bits": 514,
+          "endpoints": [
+            [
+              "t_39_4",
+              "n_y"
+            ],
+            [
+              "sp_port_tiles_1_f1",
+              "bw12"
+            ]
+          ],
+          "per_bit_hpwl_sum_um": 5048853.408,
+          "max_manhattan_pin_pair_um": 9822.672,
+          "delta_bit_um": -2949685.632
+        },
+        {
+          "bus": "bword_24",
+          "family": "tree_spine",
+          "bits": 514,
+          "endpoints": [
+            [
+              "t_27_3",
+              "n_y"
+            ],
+            [
+              "sp_port_tiles_0_f1",
+              "bw8"
+            ]
+          ],
+          "per_bit_hpwl_sum_um": 1474719.456,
+          "max_manhattan_pin_pair_um": 2869.104,
+          "delta_bit_um": -2623275.072
+        },
+        {
+          "bus": "bword_25",
+          "family": "tree_spine",
+          "bits": 514,
+          "endpoints": [
+            [
+              "t_27_7",
+              "n_y"
+            ],
+            [
+              "sp_port_tiles_0_f1",
+              "bw9"
+            ]
+          ],
+          "per_bit_hpwl_sum_um": 4504219.008,
+          "max_manhattan_pin_pair_um": 8763.072,
+          "delta_bit_um": -2623275.072
+        },
+        {
+          "bus": "bword_27",
+          "family": "tree_spine",
+          "bits": 514,
+          "endpoints": [
+            [
+              "t_27_15",
+              "n_y"
+            ],
+            [
+              "sp_port_tiles_2_f1",
+              "bw8"
+            ]
+          ],
+          "per_bit_hpwl_sum_um": 2700424.416,
+          "max_manhattan_pin_pair_um": 5253.744,
+          "delta_bit_um": -2623275.072
+        },
+        {
+          "bus": "bword_28",
+          "family": "tree_spine",
+          "bits": 514,
+          "endpoints": [
+            [
+              "t_31_2",
+              "n_y"
+            ],
+            [
+              "sp_port_tiles_0_f1",
+              "bw10"
+            ]
+          ],
+          "per_bit_hpwl_sum_um": 2036747.616,
+          "max_manhattan_pin_pair_um": 3962.544,
+          "delta_bit_um": -2623275.072
+        },
+        {
+          "bus": "bword_29",
+          "family": "tree_spine",
+          "bits": 514,
+          "endpoints": [
+            [
+              "t_31_6",
+              "n_y"
+            ],
+            [
+              "sp_port_tiles_0_f1",
+              "bw11"
+            ]
+          ],
+          "per_bit_hpwl_sum_um": 4762436.16,
+          "max_manhattan_pin_pair_um": 9265.44,
+          "delta_bit_um": -2623275.072
+        },
+        {
+          "bus": "bword_31",
+          "family": "tree_spine",
+          "bits": 514,
+          "endpoints": [
+            [
+              "t_31_14",
+              "n_y"
+            ],
+            [
+              "sp_port_tiles_2_f1",
+              "bw9"
+            ]
+          ],
+          "per_bit_hpwl_sum_um": 2934561.696,
+          "max_manhattan_pin_pair_um": 5709.264,
+          "delta_bit_um": -2623275.072
+        },
+        {
+          "bus": "bword_32",
+          "family": "tree_spine",
+          "bits": 514,
+          "endpoints": [
+            [
+              "t_35_1",
+              "n_y"
+            ],
+            [
+              "sp_port_tiles_0_f1",
+              "bw12"
+            ]
+          ],
+          "per_bit_hpwl_sum_um": 3926178.72,
+          "max_manhattan_pin_pair_um": 7638.48,
+          "delta_bit_um": -2623275.072
+        },
+        {
+          "bus": "bword_35",
+          "family": "tree_spine",
+          "bits": 514,
+          "endpoints": [
+            [
+              "t_35_13",
+              "n_y"
+            ],
+            [
+              "sp_port_tiles_2_f1",
+              "bw10"
+            ]
+          ],
+          "per_bit_hpwl_sum_um": 3218659.776,
+          "max_manhattan_pin_pair_um": 6261.984,
+          "delta_bit_um": -2623275.072
+        },
+        {
+          "bus": "bword_36",
+          "family": "tree_spine",
+          "bits": 514,
+          "endpoints": [
+            [
+              "t_39_0",
+              "n_y"
+            ],
+            [
+              "sp_port_tiles_0_f1",
+              "bw13"
+            ]
+          ],
+          "per_bit_hpwl_sum_um": 5839689.696,
+          "max_manhattan_pin_pair_um": 11361.264,
+          "delta_bit_um": -2623275.072
+        },
+        {
+          "bus": "bword_39",
+          "family": "tree_spine",
+          "bits": 514,
+          "endpoints": [
+            [
+              "t_39_12",
+              "n_y"
+            ],
+            [
+              "sp_port_tiles_2_f1",
+              "bw11"
+            ]
+          ],
+          "per_bit_hpwl_sum_um": 4562222.88,
+          "max_manhattan_pin_pair_um": 8875.92,
+          "delta_bit_um": -2623275.072
+        }
+      ],
+      "qualification": false
+    },
+    {
+      "name": "paired_bands_east_vm_su_west",
+      "description": "Swap whole paired-band groups and coherent VM/SU group",
+      "rectangle_errors": [],
+      "changed_instances": [
+        {
+          "n": "sp_vector_memory",
+          "m": "qfd_sp_vector_memory",
+          "x": 12664.511999999999,
+          "y": 11962.08,
+          "w": 4708.776,
+          "h": 2203.176,
+          "o": "R0"
+        },
+        {
+          "n": "sp_su64_sfu",
+          "m": "qfd_sp_su64_sfu",
+          "x": 13528.511999999999,
+          "y": 14165.28,
+          "w": 3239.976,
+          "h": 3671.976,
+          "o": "R0"
+        },
+        {
+          "n": "sp_res_ser_1",
+          "m": "qfd_sp_res_ser",
+          "x": 17632.512,
+          "y": 9612.0,
+          "w": 777.576,
+          "h": 518.376,
+          "o": "MX"
+        },
+        {
+          "n": "sp_band_lanes_1",
+          "m": "qfd_sp_band_lanes",
+          "x": 17580.672,
+          "y": 12601.44,
+          "w": 881.28,
+          "h": 1131.84,
+          "o": "MX"
+        },
+        {
+          "n": "sp_port_tiles_1",
+          "m": "qfd_port_tiles_1",
+          "x": 17502.912,
+          "y": 10134.72,
+          "w": 1036.8,
+          "h": 2462.4,
+          "o": "MX"
+        },
+        {
+          "n": "sp_port_tiles_1_f1",
+          "m": "qfd_port_tiles_1_f1",
+          "x": 18544.032,
+          "y": 10134.72,
+          "w": 1036.8,
+          "h": 2462.4,
+          "o": "R0"
+        },
+        {
+          "n": "sp_res_ser_2",
+          "m": "qfd_sp_res_ser",
+          "x": 17632.512,
+          "y": 22958.64,
+          "w": 777.576,
+          "h": 518.376,
+          "o": "R0"
+        },
+        {
+          "n": "sp_band_lanes_2",
+          "m": "qfd_sp_band_lanes",
+          "x": 17580.672,
+          "y": 19355.76,
+          "w": 881.28,
+          "h": 1131.84,
+          "o": "R0"
+        },
+        {
+          "n": "sp_port_tiles_2",
+          "m": "qfd_port_tiles_2",
+          "x": 17502.912,
+          "y": 20491.92,
+          "w": 1036.8,
+          "h": 2462.4,
+          "o": "R0"
+        },
+        {
+          "n": "sp_port_tiles_2_f1",
+          "m": "qfd_port_tiles_2_f1",
+          "x": 18544.032,
+          "y": 20491.92,
+          "w": 1036.8,
+          "h": 2462.4,
+          "o": "R0"
+        },
+        {
+          "n": "sp_res_ser_0",
+          "m": "qfd_sp_res_ser",
+          "x": 17632.512,
+          "y": 4423.68,
+          "w": 777.576,
+          "h": 518.376,
+          "o": "MX"
+        },
+        {
+          "n": "sp_band_lanes_0",
+          "m": "qfd_sp_band_lanes",
+          "x": 17580.672,
+          "y": 7413.12,
+          "w": 881.28,
+          "h": 1131.84,
+          "o": "MX"
+        },
+        {
+          "n": "sp_port_tiles_0",
+          "m": "qfd_port_tiles_0",
+          "x": 17502.912,
+          "y": 4946.4,
+          "w": 1036.8,
+          "h": 2462.4,
+          "o": "MX"
+        },
+        {
+          "n": "sp_port_tiles_0_f1",
+          "m": "qfd_port_tiles_0_f1",
+          "x": 18544.032,
+          "y": 4946.4,
+          "w": 1036.8,
+          "h": 2462.4,
+          "o": "R0"
+        },
+        {
+          "n": "clk_rx",
+          "m": "qfd_clkrx",
+          "x": 14710.896,
+          "y": 11463.12,
+          "w": 412.536,
+          "h": 412.536,
+          "o": "R0"
+        },
+        {
+          "n": "tt_ctlm",
+          "m": "qfd_tt_ctlm",
+          "x": 12664.511999999999,
+          "y": 15072.48,
+          "w": 777.576,
+          "h": 1814.3760000000002,
+          "o": "R0"
+        },
+        {
+          "n": "seq_su",
+          "m": "qfd_seq_su",
+          "x": 16854.912,
+          "y": 14173.92,
+          "w": 518.376,
+          "h": 518.376,
+          "o": "R0"
+        },
+        {
+          "n": "cbuf_g_0",
+          "m": "qfd_su_cbuf_g",
+          "x": 16854.912,
+          "y": 15374.88,
+          "w": 194.376,
+          "h": 215.976,
+          "o": "MX"
+        },
+        {
+          "n": "cbuf_g_1",
+          "m": "qfd_su_cbuf_g",
+          "x": 17053.2,
+          "y": 15374.88,
+          "w": 194.376,
+          "h": 215.976,
+          "o": "MX"
+        },
+        {
+          "n": "cbuf_g_2",
+          "m": "qfd_su_cbuf_g",
+          "x": 16854.912,
+          "y": 15154.56,
+          "w": 194.376,
+          "h": 215.976,
+          "o": "MX"
+        },
+        {
+          "n": "cbuf_g_3",
+          "m": "qfd_su_cbuf_g",
+          "x": 17053.2,
+          "y": 15154.56,
+          "w": 194.376,
+          "h": 215.976,
+          "o": "MX"
+        },
+        {
+          "n": "cbuf_g_4",
+          "m": "qfd_su_cbuf_g",
+          "x": 16854.912,
+          "y": 14934.24,
+          "w": 194.376,
+          "h": 215.976,
+          "o": "MX"
+        },
+        {
+          "n": "cbuf_g_5",
+          "m": "qfd_su_cbuf_g",
+          "x": 17053.2,
+          "y": 14934.24,
+          "w": 194.376,
+          "h": 215.976,
+          "o": "MX"
+        },
+        {
+          "n": "cbuf_g_6",
+          "m": "qfd_su_cbuf_g",
+          "x": 16854.912,
+          "y": 14713.92,
+          "w": 194.376,
+          "h": 215.976,
+          "o": "MX"
+        },
+        {
+          "n": "cbuf_g_7",
+          "m": "qfd_su_cbuf_g",
+          "x": 17053.2,
+          "y": 14713.92,
+          "w": 194.376,
+          "h": 215.976,
+          "o": "MX"
+        },
+        {
+          "n": "crom_g_0",
+          "m": "qfd_crom_g",
+          "x": 16854.912,
+          "y": 17282.16,
+          "w": 194.376,
+          "h": 550.776,
+          "o": "MX"
+        },
+        {
+          "n": "crom_g_1",
+          "m": "qfd_crom_g",
+          "x": 17053.2,
+          "y": 17282.16,
+          "w": 194.376,
+          "h": 550.776,
+          "o": "MX"
+        },
+        {
+          "n": "crom_g_2",
+          "m": "qfd_crom_g",
+          "x": 16854.912,
+          "y": 16727.04,
+          "w": 194.376,
+          "h": 550.776,
+          "o": "MX"
+        },
+        {
+          "n": "crom_g_3",
+          "m": "qfd_crom_g",
+          "x": 17053.2,
+          "y": 16727.04,
+          "w": 194.376,
+          "h": 550.776,
+          "o": "MX"
+        },
+        {
+          "n": "crom_g_4",
+          "m": "qfd_crom_g",
+          "x": 16854.912,
+          "y": 16171.92,
+          "w": 194.376,
+          "h": 550.776,
+          "o": "MX"
+        },
+        {
+          "n": "crom_g_5",
+          "m": "qfd_crom_g",
+          "x": 17053.2,
+          "y": 16171.92,
+          "w": 194.376,
+          "h": 550.776,
+          "o": "MX"
+        },
+        {
+          "n": "crom_g_6",
+          "m": "qfd_crom_g",
+          "x": 16854.912,
+          "y": 15616.8,
+          "w": 194.376,
+          "h": 550.776,
+          "o": "MX"
+        },
+        {
+          "n": "crom_g_7",
+          "m": "qfd_crom_g",
+          "x": 17053.2,
+          "y": 15616.8,
+          "w": 194.376,
+          "h": 550.776,
+          "o": "MX"
+        },
+        {
+          "n": "rstseq_rom",
+          "m": "qfd_rstseq",
+          "x": 15127.344000000001,
+          "y": 11463.12,
+          "w": 53.976,
+          "h": 53.976,
+          "o": "R0"
+        },
+        {
+          "n": "xs_tap",
+          "m": "qfd_xs_tap",
+          "x": 13226.112,
+          "y": 14165.28,
+          "w": 216.0,
+          "h": 216.0,
+          "o": "R0"
+        },
+        {
+          "n": "tt_up4_leaf0",
+          "m": "ot_qfd_band_upper",
+          "x": 17395.344,
+          "y": 13037.76,
+          "w": 64.8,
+          "h": 205.2,
+          "o": "R0"
+        },
+        {
+          "n": "tt_up4_leaf1",
+          "m": "ot_qfd_band_upper",
+          "x": 17395.344,
+          "y": 13262.4,
+          "w": 64.8,
+          "h": 205.2,
+          "o": "R0"
+        },
+        {
+          "n": "tt_up4_leaf2",
+          "m": "ot_qfd_band_upper",
+          "x": 17395.344,
+          "y": 13487.04,
+          "w": 64.8,
+          "h": 205.2,
+          "o": "R0"
+        },
+        {
+          "n": "tt_up4_leaf3",
+          "m": "ot_qfd_band_upper",
+          "x": 17395.344,
+          "y": 13711.68,
+          "w": 64.8,
+          "h": 205.2,
+          "o": "R0"
+        },
+        {
+          "n": "up4_sel_station",
+          "m": "qfd_rly_26_NE_9x9",
+          "x": 17423.424,
+          "y": 13473.0,
+          "w": 8.64,
+          "h": 8.64,
+          "o": "R0"
+        },
+        {
+          "n": "up4_sel_branch0",
+          "m": "qfd_rly_26_NE_9x9",
+          "x": 17423.424,
+          "y": 13248.36,
+          "w": 8.64,
+          "h": 8.64,
+          "o": "R0"
+        },
+        {
+          "n": "up4_sel_branch1",
+          "m": "qfd_rly_26_NE_9x9",
+          "x": 17423.424,
+          "y": 13697.64,
+          "w": 8.64,
+          "h": 8.64,
+          "o": "R0"
+        }
+      ],
+      "resolved_data_buses": 3327,
+      "missing": [
+        {
+          "bus": "o4_upf_l0",
+          "endpoints": [
+            {
+              "instance": "tt_ctlm",
+              "port": "uf_l0",
+              "generated_pins": 0,
+              "bus_bits": 1
+            }
+          ]
+        },
+        {
+          "bus": "o4_upf_l1",
+          "endpoints": [
+            {
+              "instance": "tt_ctlm",
+              "port": "uf_l1",
+              "generated_pins": 0,
+              "bus_bits": 1
+            }
+          ]
+        },
+        {
+          "bus": "o4_upf_l2",
+          "endpoints": [
+            {
+              "instance": "tt_ctlm",
+              "port": "uf_l2",
+              "generated_pins": 0,
+              "bus_bits": 1
+            }
+          ]
+        },
+        {
+          "bus": "o4_upf_l3",
+          "endpoints": [
+            {
+              "instance": "tt_ctlm",
+              "port": "uf_l3",
+              "generated_pins": 0,
+              "bus_bits": 1
+            }
+          ]
+        },
+        {
+          "bus": "xs_pf",
+          "endpoints": [
+            {
+              "instance": "tt_ctlm",
+              "port": "xpf",
+              "generated_pins": 0,
+              "bus_bits": 72
+            }
+          ]
+        },
+        {
+          "bus": "xs_fault",
+          "endpoints": [
+            {
+              "instance": "tt_ctlm",
+              "port": "xflt",
+              "generated_pins": 0,
+              "bus_bits": 1
+            }
+          ]
+        }
+      ],
+      "per_bit_hpwl_sum_um": 1755427100.772,
+      "worst_pin_pair_um": 21252.24,
+      "longest_buses": [
+        {
+          "bus": "bword_2",
+          "family": "tree_spine",
+          "bits": 514,
+          "endpoints": [
+            [
+              "t_3_9",
+              "n_y"
+            ],
+            [
+              "sp_port_tiles_2",
+              "bw0"
+            ]
+          ],
+          "per_bit_hpwl_sum_um": 10923651.36,
+          "max_manhattan_pin_pair_um": 21252.24,
+          "delta_bit_um": 2486937.6
+        },
+        {
+          "bus": "bword_6",
+          "family": "tree_spine",
+          "bits": 514,
+          "endpoints": [
+            [
+              "t_7_8",
+              "n_y"
+            ],
+            [
+              "sp_port_tiles_2",
+              "bw2"
+            ]
+          ],
+          "per_bit_hpwl_sum_um": 10665434.208,
+          "max_manhattan_pin_pair_um": 20749.872,
+          "delta_bit_um": 2486937.6
+        },
+        {
+          "bus": "bword_10",
+          "family": "tree_spine",
+          "bits": 514,
+          "endpoints": [
+            [
+              "t_11_11",
+              "n_y"
+            ],
+            [
+              "sp_port_tiles_1",
+              "bw3"
+            ]
+          ],
+          "per_bit_hpwl_sum_um": 10035965.136,
+          "max_manhattan_pin_pair_um": 19574.472,
+          "delta_bit_um": 2486937.6
+        },
+        {
+          "bus": "bword_0",
+          "family": "tree_spine",
+          "bits": 514,
+          "endpoints": [
+            [
+              "t_3_1",
+              "n_y"
+            ],
+            [
+              "sp_port_tiles_0",
+              "bw0"
+            ]
+          ],
+          "per_bit_hpwl_sum_um": 9225736.656,
+          "max_manhattan_pin_pair_um": 17998.152,
+          "delta_bit_um": 2486937.6
+        },
+        {
+          "bus": "bword_4",
+          "family": "tree_spine",
+          "bits": 514,
+          "endpoints": [
+            [
+              "t_7_0",
+              "n_y"
+            ],
+            [
+              "sp_port_tiles_0",
+              "bw1"
+            ]
+          ],
+          "per_bit_hpwl_sum_um": 8939837.52,
+          "max_manhattan_pin_pair_um": 17441.928,
+          "delta_bit_um": 2486937.6
+        },
+        {
+          "bus": "bword_1",
+          "family": "tree_spine",
+          "bits": 514,
+          "endpoints": [
+            [
+              "t_3_5",
+              "n_y"
+            ],
+            [
+              "sp_port_tiles_1",
+              "bw0"
+            ]
+          ],
+          "per_bit_hpwl_sum_um": 8837152.656,
+          "max_manhattan_pin_pair_um": 17242.152,
+          "delta_bit_um": 2486937.6
+        },
+        {
+          "bus": "bword_5",
+          "family": "tree_spine",
+          "bits": 514,
+          "endpoints": [
+            [
+              "t_7_4",
+              "n_y"
+            ],
+            [
+              "sp_port_tiles_1",
+              "bw1"
+            ]
+          ],
+          "per_bit_hpwl_sum_um": 8501292.72,
+          "max_manhattan_pin_pair_um": 16588.728,
+          "delta_bit_um": 2486937.6
+        },
+        {
+          "bus": "bword_3",
+          "family": "tree_spine",
+          "bits": 514,
+          "endpoints": [
+            [
+              "t_3_13",
+              "n_y"
+            ],
+            [
+              "sp_port_tiles_2",
+              "bw1"
+            ]
+          ],
+          "per_bit_hpwl_sum_um": 8465900.736,
+          "max_manhattan_pin_pair_um": 16470.624,
+          "delta_bit_um": 2486937.6
+        },
+        {
+          "bus": "bword_46",
+          "family": "tree_spine",
+          "bits": 514,
+          "endpoints": [
+            [
+              "t_47_10",
+              "n_y"
+            ],
+            [
+              "sp_port_tiles_2_f1",
+              "bw14"
+            ]
+          ],
+          "per_bit_hpwl_sum_um": 8451516.96,
+          "max_manhattan_pin_pair_um": 16442.64,
+          "delta_bit_um": -2486937.6
+        },
+        {
+          "bus": "rs_fault_0",
+          "family": "spine_local",
+          "bits": 1,
+          "endpoints": [
+            [
+              "sp_res_ser_0",
+              "fault"
+            ],
+            [
+              "tt_ctlm",
+              "rf0"
+            ]
+          ],
+          "per_bit_hpwl_sum_um": 16229.976,
+          "max_manhattan_pin_pair_um": 16229.976,
+          "delta_bit_um": 4268.808
+        },
+        {
+          "bus": "o4_me_en_rs0",
+          "family": "spine_local",
+          "bits": 1,
+          "endpoints": [
+            [
+              "tt_ctlm",
+              "mer0"
+            ],
+            [
+              "sp_res_ser_0",
+              "me_en"
+            ]
+          ],
+          "per_bit_hpwl_sum_um": 16201.992,
+          "max_manhattan_pin_pair_um": 16201.992,
+          "delta_bit_um": 4272.84
+        },
+        {
+          "bus": "bword_14",
+          "family": "tree_spine",
+          "bits": 514,
+          "endpoints": [
+            [
+              "t_15_10",
+              "n_y"
+            ],
+            [
+              "sp_port_tiles_1",
+              "bw5"
+            ]
+          ],
+          "per_bit_hpwl_sum_um": 8250057.744,
+          "max_manhattan_pin_pair_um": 16099.944,
+          "delta_bit_um": 2486937.6
+        },
+        {
+          "bus": "tt_f0",
+          "family": "tree_spine",
+          "bits": 104,
+          "endpoints": [
+            [
+              "sp_port_tiles_0",
+              "tf"
+            ],
+            [
+              "tt_ctlm",
+              "f0"
+            ]
+          ],
+          "per_bit_hpwl_sum_um": 1602691.584,
+          "max_manhattan_pin_pair_um": 15417.912,
+          "delta_bit_um": 472153.344
+        },
+        {
+          "bus": "ar_cr",
+          "family": "spine_local",
+          "bits": 1,
+          "endpoints": [
+            [
+              "sp_vector_memory",
+              "ar_cr"
+            ],
+            [
+              "d2d_rom",
+              "ar_cr"
+            ]
+          ],
+          "per_bit_hpwl_sum_um": 15231.312,
+          "max_manhattan_pin_pair_um": 15231.312,
+          "delta_bit_um": 2371.68
+        },
+        {
+          "bus": "bword_11",
+          "family": "tree_spine",
+          "bits": 514,
+          "endpoints": [
+            [
+              "t_11_15",
+              "n_y"
+            ],
+            [
+              "sp_port_tiles_2",
+              "bw4"
+            ]
+          ],
+          "per_bit_hpwl_sum_um": 7818260.736,
+          "max_manhattan_pin_pair_um": 15210.624,
+          "delta_bit_um": 2486937.6
+        }
+      ],
+      "greatest_regressions": [
+        {
+          "bus": "head_24",
+          "family": "head_chain",
+          "bits": 1567,
+          "endpoints": [
+            [
+              "xs_tap",
+              "he_d"
+            ],
+            [
+              "h_24",
+              "w_d"
+            ]
+          ],
+          "per_bit_hpwl_sum_um": 11230124.88,
+          "max_manhattan_pin_pair_um": 7166.64,
+          "delta_bit_um": 3716422.56
+        },
+        {
+          "bus": "bword_0",
+          "family": "tree_spine",
+          "bits": 514,
+          "endpoints": [
+            [
+              "t_3_1",
+              "n_y"
+            ],
+            [
+              "sp_port_tiles_0",
+              "bw0"
+            ]
+          ],
+          "per_bit_hpwl_sum_um": 9225736.656,
+          "max_manhattan_pin_pair_um": 17998.152,
+          "delta_bit_um": 2486937.6
+        },
+        {
+          "bus": "bword_1",
+          "family": "tree_spine",
+          "bits": 514,
+          "endpoints": [
+            [
+              "t_3_5",
+              "n_y"
+            ],
+            [
+              "sp_port_tiles_1",
+              "bw0"
+            ]
+          ],
+          "per_bit_hpwl_sum_um": 8837152.656,
+          "max_manhattan_pin_pair_um": 17242.152,
+          "delta_bit_um": 2486937.6
+        },
+        {
+          "bus": "bword_2",
+          "family": "tree_spine",
+          "bits": 514,
+          "endpoints": [
+            [
+              "t_3_9",
+              "n_y"
+            ],
+            [
+              "sp_port_tiles_2",
+              "bw0"
+            ]
+          ],
+          "per_bit_hpwl_sum_um": 10923651.36,
+          "max_manhattan_pin_pair_um": 21252.24,
+          "delta_bit_um": 2486937.6
+        },
+        {
+          "bus": "bword_3",
+          "family": "tree_spine",
+          "bits": 514,
+          "endpoints": [
+            [
+              "t_3_13",
+              "n_y"
+            ],
+            [
+              "sp_port_tiles_2",
+              "bw1"
+            ]
+          ],
+          "per_bit_hpwl_sum_um": 8465900.736,
+          "max_manhattan_pin_pair_um": 16470.624,
+          "delta_bit_um": 2486937.6
+        },
+        {
+          "bus": "bword_4",
+          "family": "tree_spine",
+          "bits": 514,
+          "endpoints": [
+            [
+              "t_7_0",
+              "n_y"
+            ],
+            [
+              "sp_port_tiles_0",
+              "bw1"
+            ]
+          ],
+          "per_bit_hpwl_sum_um": 8939837.52,
+          "max_manhattan_pin_pair_um": 17441.928,
+          "delta_bit_um": 2486937.6
+        },
+        {
+          "bus": "bword_5",
+          "family": "tree_spine",
+          "bits": 514,
+          "endpoints": [
+            [
+              "t_7_4",
+              "n_y"
+            ],
+            [
+              "sp_port_tiles_1",
+              "bw1"
+            ]
+          ],
+          "per_bit_hpwl_sum_um": 8501292.72,
+          "max_manhattan_pin_pair_um": 16588.728,
+          "delta_bit_um": 2486937.6
+        },
+        {
+          "bus": "bword_6",
+          "family": "tree_spine",
+          "bits": 514,
+          "endpoints": [
+            [
+              "t_7_8",
+              "n_y"
+            ],
+            [
+              "sp_port_tiles_2",
+              "bw2"
+            ]
+          ],
+          "per_bit_hpwl_sum_um": 10665434.208,
+          "max_manhattan_pin_pair_um": 20749.872,
+          "delta_bit_um": 2486937.6
+        },
+        {
+          "bus": "bword_7",
+          "family": "tree_spine",
+          "bits": 514,
+          "endpoints": [
+            [
+              "t_7_12",
+              "n_y"
+            ],
+            [
+              "sp_port_tiles_2",
+              "bw3"
+            ]
+          ],
+          "per_bit_hpwl_sum_um": 7635934.656,
+          "max_manhattan_pin_pair_um": 14855.904,
+          "delta_bit_um": 2486937.6
+        },
+        {
+          "bus": "bword_8",
+          "family": "tree_spine",
+          "bits": 514,
+          "endpoints": [
+            [
+              "t_11_3",
+              "n_y"
+            ],
+            [
+              "sp_port_tiles_0",
+              "bw2"
+            ]
+          ],
+          "per_bit_hpwl_sum_um": 6566119.728,
+          "max_manhattan_pin_pair_um": 12823.8,
+          "delta_bit_um": 2486937.6
+        },
+        {
+          "bus": "bword_9",
+          "family": "tree_spine",
+          "bits": 514,
+          "endpoints": [
+            [
+              "t_11_7",
+              "n_y"
+            ],
+            [
+              "sp_port_tiles_1",
+              "bw2"
+            ]
+          ],
+          "per_bit_hpwl_sum_um": 6954703.728,
+          "max_manhattan_pin_pair_um": 13579.8,
+          "delta_bit_um": 2486937.6
+        },
+        {
+          "bus": "bword_10",
+          "family": "tree_spine",
+          "bits": 514,
+          "endpoints": [
+            [
+              "t_11_11",
+              "n_y"
+            ],
+            [
+              "sp_port_tiles_1",
+              "bw3"
+            ]
+          ],
+          "per_bit_hpwl_sum_um": 10035965.136,
+          "max_manhattan_pin_pair_um": 19574.472,
+          "delta_bit_um": 2486937.6
+        }
+      ],
+      "greatest_improvements": [
+        {
+          "bus": "head_23",
+          "family": "head_chain",
+          "bits": 1567,
+          "endpoints": [
+            [
+              "xs_tap",
+              "hw_d"
+            ],
+            [
+              "h_23",
+              "e_d"
+            ]
+          ],
+          "per_bit_hpwl_sum_um": 1874495.544,
+          "max_manhattan_pin_pair_um": 1196.232,
+          "delta_bit_um": -3716422.56
+        },
+        {
+          "bus": "bword_24",
+          "family": "tree_spine",
+          "bits": 514,
+          "endpoints": [
+            [
+              "t_27_3",
+              "n_y"
+            ],
+            [
+              "sp_port_tiles_0_f1",
+              "bw8"
+            ]
+          ],
+          "per_bit_hpwl_sum_um": 1611056.928,
+          "max_manhattan_pin_pair_um": 3134.352,
+          "delta_bit_um": -2486937.6
+        },
+        {
+          "bus": "bword_25",
+          "family": "tree_spine",
+          "bits": 514,
+          "endpoints": [
+            [
+              "t_27_7",
+              "n_y"
+            ],
+            [
+              "sp_port_tiles_0_f1",
+              "bw9"
+            ]
+          ],
+          "per_bit_hpwl_sum_um": 4640556.48,
+          "max_manhattan_pin_pair_um": 9028.32,
+          "delta_bit_um": -2486937.6
+        },
+        {
+          "bus": "bword_26",
+          "family": "tree_spine",
+          "bits": 514,
+          "endpoints": [
+            [
+              "t_27_11",
+              "n_y"
+            ],
+            [
+              "sp_port_tiles_1_f1",
+              "bw8"
+            ]
+          ],
+          "per_bit_hpwl_sum_um": 5055021.408,
+          "max_manhattan_pin_pair_um": 9834.672,
+          "delta_bit_um": -2486937.6
+        },
+        {
+          "bus": "bword_27",
+          "family": "tree_spine",
+          "bits": 514,
+          "endpoints": [
+            [
+              "t_27_15",
+              "n_y"
+            ],
+            [
+              "sp_port_tiles_2_f1",
+              "bw8"
+            ]
+          ],
+          "per_bit_hpwl_sum_um": 2836761.888,
+          "max_manhattan_pin_pair_um": 5518.992,
+          "delta_bit_um": -2486937.6
+        },
+        {
+          "bus": "bword_28",
+          "family": "tree_spine",
+          "bits": 514,
+          "endpoints": [
+            [
+              "t_31_2",
+              "n_y"
+            ],
+            [
+              "sp_port_tiles_0_f1",
+              "bw10"
+            ]
+          ],
+          "per_bit_hpwl_sum_um": 2173085.088,
+          "max_manhattan_pin_pair_um": 4227.792,
+          "delta_bit_um": -2486937.6
+        },
+        {
+          "bus": "bword_29",
+          "family": "tree_spine",
+          "bits": 514,
+          "endpoints": [
+            [
+              "t_31_6",
+              "n_y"
+            ],
+            [
+              "sp_port_tiles_0_f1",
+              "bw11"
+            ]
+          ],
+          "per_bit_hpwl_sum_um": 4898773.632,
+          "max_manhattan_pin_pair_um": 9530.688,
+          "delta_bit_um": -2486937.6
+        },
+        {
+          "bus": "bword_30",
+          "family": "tree_spine",
+          "bits": 514,
+          "endpoints": [
+            [
+              "t_31_10",
+              "n_y"
+            ],
+            [
+              "sp_port_tiles_1_f1",
+              "bw9"
+            ]
+          ],
+          "per_bit_hpwl_sum_um": 5339119.488,
+          "max_manhattan_pin_pair_um": 10387.392,
+          "delta_bit_um": -2486937.6
+        },
+        {
+          "bus": "bword_31",
+          "family": "tree_spine",
+          "bits": 514,
+          "endpoints": [
+            [
+              "t_31_14",
+              "n_y"
+            ],
+            [
+              "sp_port_tiles_2_f1",
+              "bw9"
+            ]
+          ],
+          "per_bit_hpwl_sum_um": 3070899.168,
+          "max_manhattan_pin_pair_um": 5974.512,
+          "delta_bit_um": -2486937.6
+        },
+        {
+          "bus": "bword_32",
+          "family": "tree_spine",
+          "bits": 514,
+          "endpoints": [
+            [
+              "t_35_1",
+              "n_y"
+            ],
+            [
+              "sp_port_tiles_0_f1",
+              "bw12"
+            ]
+          ],
+          "per_bit_hpwl_sum_um": 4062516.192,
+          "max_manhattan_pin_pair_um": 7903.728,
+          "delta_bit_um": -2486937.6
+        },
+        {
+          "bus": "bword_33",
+          "family": "tree_spine",
+          "bits": 514,
+          "endpoints": [
+            [
+              "t_35_5",
+              "n_y"
+            ],
+            [
+              "sp_port_tiles_1_f1",
+              "bw10"
+            ]
+          ],
+          "per_bit_hpwl_sum_um": 3622170.336,
+          "max_manhattan_pin_pair_um": 7047.024,
+          "delta_bit_um": -2486937.6
+        },
+        {
+          "bus": "bword_34",
+          "family": "tree_spine",
+          "bits": 514,
+          "endpoints": [
+            [
+              "t_35_9",
+              "n_y"
+            ],
+            [
+              "sp_port_tiles_1_f1",
+              "bw11"
+            ]
+          ],
+          "per_bit_hpwl_sum_um": 5597336.64,
+          "max_manhattan_pin_pair_um": 10889.76,
+          "delta_bit_um": -2486937.6
+        }
+      ],
+      "qualification": false
+    }
+  ],
+  "qualifications": [
+    "Current generated assignment-pin geometry, not routed physical qualification.",
+    "Per-bit pin-center HPWL supports fanout but is not an allocated physical route.",
+    "Missing ctlm ports are preserved and prohibit full-system qualification.",
+    "Actual master pin/obstruction/halo/orientation admission, clocks phi-R, <=0.60 cuts, relay placement, TT/FF/DRC and static cycles remain open.",
+    "Current model still carries legacy IO topology; native static IO and full KV/system seam binding remain open."
+  ],
+  "qualification": false
+}

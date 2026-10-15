@@ -246,6 +246,15 @@ does not apply the legacy single-clock IO shim. The pre-route gate requires
 actual root separately. `ck_insertion.py --all-clocks --raw-source` and exported
 multi-clock insertion records preserve the physical per-pin references.
 
+A leaf whose roots are the die PLL's related stream (core, P) and serial (4P/3) clocks
+declares `"clock_data_paths":"related_pll_ratio"`, `"clock_relationship":{"kind":"same_pll_fixed_phase","ratio":[4,3],"phase_ps":0}`
+and ratio `[4,3]` on each non-core serial domain (the core domain stays `[1,1]`). Crossings keep ordinary STA at the
+actual related edges: the binding window is one VCO tick, P/3 = 277.8 ps at 833.333 ps (256.7 ps at the 770 ps route
+period), in both directions, less the 60+90 ps inter-entry setup reserve. Measured on the fixture (TT, abutted, no
+logic): DFFHQNx1 flop->flop -35/-55 ps, DFFHQNx3 +2.8/-17.2 ps. A 3:4 crossing with any logic or wire between its
+launch and capture flops therefore cannot close natively; it needs a slower common (epoch) capture root, not a
+relaxed check.
+
 `tests/test_multiple_cts_roots.py` exercises two actual OpenROAD CTS trees,
 differing insertion references, source compensation, generated hooks, and
 wrong-domain/unknown-port/crossing mutants. These are flow fixtures; production

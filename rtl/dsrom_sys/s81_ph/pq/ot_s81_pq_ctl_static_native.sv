@@ -393,6 +393,22 @@ module ot_s81_pq_ctl_static_native (
     end
 
  integer ks;
+`ifdef OT_PQ_CTL_INCAP
+ reg[74:0] dg_act;reg dg_go,dg_calv;reg[3:0] dg_sv,dg_sr,dg_si,dg_cnt_bad;
+ wire[1:0] dg_cfg=dg_act[64:63]
+`ifdef OT_S81_PQ_STATIC_MUT_TAG
+  ^2'd1
+`endif
+  ;
+ integer kd;
+ always @(posedge clk) begin
+  dg_act<=calendar_v?calendar_action:75'd0;dg_go<=go;dg_calv<=calendar_v;
+  for(kd=0;kd<4;kd=kd+1)begin
+   dg_sv[kd]<=sv[kd];dg_sr[kd]<=sr[kd];dg_si[kd]<=si[kd];
+   dg_cnt_bad[kd]<=!sv[kd]||rows_seen[kd]+19'(rc[kd])!=s_tot[kd];
+  end
+ end
+`endif
  always @(posedge clk or negedge rst_c) begin
   if(!rst_c) begin
    fault<=0;cyc<=0;phase_cycles<=0;ev_go<=0;ev_end<=0;ev_tag<=0;stream_end_v<=0;stream_end_tag<=0;
@@ -409,15 +425,29 @@ module ot_s81_pq_ctl_static_native (
    if(hv&&h_lastop)stream_end_tag<=h_tag;
    if(action[65])ev_tag<=launch_tag;
    if(|action[71:68])ev_tag<={action[71]|action[70],action[71]|action[69]};
+`ifndef OT_PQ_CTL_INCAP
    if((action[71:68]&(action[71:68]-4'd1))!=0)fault<=1;
+`endif
    // Faults diagnose violated compiler contracts; they never gate events.
 `ifdef OT_PQ_CTL_INCAP
    if(f_fault_s||(|aqf_s)||(|q2f_s)||x_rv_s!=rq_v_q||(|act_hi_q))fault<=1;
+   // Calendar-contract diagnosis one edge after the event, from the captured calendar word and the
+   // pre-event state snapshots taken at the same edge: same verdicts, no input pin -> logic -> fault path.
+   if((dg_act[71:68]&(dg_act[71:68]-4'd1))!=0)fault<=1;
+   if(dg_go&&dg_sv[dg_act[1:0]])fault<=1;
+   if(dg_go&&!dg_calv)fault<=1;
+   if(|(dg_act[71:68]&dg_cnt_bad))fault<=1;
+   if(dg_act[62]&&(!dg_sv[dg_cfg]||!dg_sr[dg_cfg]))fault<=1;
+   if(dg_act[65]&&(!dg_sv[dg_act[67:66]]||!dg_sr[dg_act[67:66]]||!dg_si[dg_act[67:66]]))fault<=1;
 `else
    if(f_fault||(|aqf)||(|q2f_i)||x_rv!=rq_v||(|action[74:73]))fault<=1;
 `endif
+`ifndef OT_PQ_CTL_INCAP
    if(go&&sv[accept_tag])fault<=1;
+`endif
+`ifndef OT_PQ_CTL_INCAP
    if(go&&!calendar_v)fault<=1;
+`endif
    a_v<=go;a_tag<=accept_tag;a_v2<=a_v;a_tag2<=a_tag;
    if(go)begin sv[accept_tag]<=1;sr[accept_tag]<=0;si[accept_tag]<=0;a_ph<=i_ph;end
    if(a_v2)begin s_pw[a_tag2]<=ph_q0;s_rs[a_tag2]<=ph_q1[15:0];sr[a_tag2]<=1;end
@@ -431,7 +461,9 @@ module ot_s81_pq_ctl_static_native (
     if(action[68+ks])begin
      // Retirement is fixed even on a count mismatch. No runtime drain wait.
      sv[ks]<=0;sr[ks]<=0;si[ks]<=0;rows_seen[ks]<=0;
+`ifndef OT_PQ_CTL_INCAP
      if(!sv[ks]||rows_seen[ks]+19'(rc[ks])!=s_tot[ks])fault<=1;
+`endif
     end
    end
    if(action[72])phase_cycles<=cyc+1'b1;
@@ -439,11 +471,15 @@ module ot_s81_pq_ctl_static_native (
    p1_cfg<=action[62];p1_go<=action[65];
    if(action[62])begin
     p1_ph<=s_ph[config_tag];p1_np<=s_np[config_tag];si[config_tag]<=1;iss_tag<=config_tag;
+`ifndef OT_PQ_CTL_INCAP
     if(!sv[config_tag]||!sr[config_tag])fault<=1;
+`endif
    end
    if(action[65])begin
     p1_gobf<=s_pw[launch_tag][0];p1_tag<=launch_tag;
+`ifndef OT_PQ_CTL_INCAP
     if(!sv[launch_tag]||!sr[launch_tag]||!si[launch_tag])fault<=1;
+`endif
    end
    x_re<=action[2];x_addr<=action[21:3];
    ba_v<=rq_v&&rq_fam;ba_par<=rq_par;ba_k<=rq_k;

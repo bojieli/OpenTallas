@@ -1,0 +1,103 @@
+{
+  "schema": "opentallas.s81.cap16.slot-request.v1",
+  "status": "REQUESTED_NOT_PHYSICALLY_QUALIFIED",
+  "owner": "Codex:S_VM/capleaf",
+  "geometry_owner": "geometry_s81",
+  "source_commit": "001e3b3a810eddcc47a660ab7a00bf62f900a7ec",
+  "top": "dsfd_vm_static_cap_leaf",
+  "params": {
+    "E": 8
+  },
+  "grid": {
+    "origin_um": [
+      15703.2,
+      17729.28
+    ],
+    "leaf_um": [
+      172.8,
+      259.2
+    ],
+    "pitch_um": [
+      194.4,
+      280.8
+    ],
+    "columns": 4,
+    "rows": 4,
+    "channel_um": 21.6,
+    "reservation_um": [
+      756,
+      1101.6
+    ]
+  },
+  "faces": {
+    "N": {
+      "layer": "M5",
+      "ports": {
+        "f_c": 832
+      }
+    },
+    "S": {
+      "layer": "M5",
+      "ports": {
+        "o_v": 1,
+        "o_row": 14,
+        "o_m": 16,
+        "o_d": 512,
+        "flt": 5
+      }
+    },
+    "W": {
+      "layer": "M4",
+      "ports": {
+        "ck": 1,
+        "rn": 1,
+        "gid": 4,
+        "flush": 1
+      }
+    },
+    "E": {
+      "ports": {}
+    }
+  },
+  "clock": {
+    "root": "ck",
+    "domain": "serial_0p9",
+    "mapped_flops": 5702,
+    "mapped_ff_type": "DFFHQNx1_ASAP7_75t_R",
+    "clock_enable_implementation": "data mux, no combinational clock gate/ICG",
+    "parent_delivery": "phi-R from measured insertion.json required; unbound at parent",
+    "gate_signoff_period_ps": 833.333,
+    "basis": "Stronger unchanged common ref_tile signoff; does not waive actual parent3:4 PLL/epoch proof."
+  },
+  "reset": {
+    "port": "rn",
+    "contract": "synchronously released serial reset; fixed pin capture/epoch proof required"
+  },
+  "model": {
+    "std_cell_area_um2": 4161.6423,
+    "gross_area_um2": 44789.76,
+    "core_area_um2": 42942.182400000005,
+    "input_bits_per_serial_cycle": 832,
+    "candidate_element_data_bits_per_cycle": 512,
+    "max_output_rows_per_serial_cycle": 1,
+    "output_data_bits_per_row": 512,
+    "output_control_bits": 36,
+    "source_proof": "results/rtl/s81_vm_static_capl_1015/proof.json",
+    "sizing_receipt": "results/rtl/s81_vm_static_capl_1015/map/receipt.json",
+    "face_pin_pitch_um": 0.096,
+    "N_geometric_occupancy": 0.4622222222222222,
+    "S_geometric_occupancy": 0.30444444444444446,
+    "internal_reach_bound": "not claimed before actual placed/routed paths; body diagonal311.5um is not path evidence",
+    "inter_tile_budget": "launch->wire->capture at phi-R; measured boundary spread<=80ps and propagated min/max paths required; parent wires/cuts remain open"
+  },
+  "qualification": {
+    "semantic": true,
+    "mapped_area": true,
+    "native": false,
+    "CTS": false,
+    "routed_TT_FF_DRC0": false,
+    "parent_calendar_throughput": false
+  },
+  "geometry_contract": "physical/s81_die_pins/v20_vm_cap_generous/slot_request.json",
+  "geometry_commit": "fdca7e391"
+}

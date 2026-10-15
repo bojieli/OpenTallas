@@ -1,7 +1,7 @@
 {
  "schema": "opentallas.s81.assigned_pins.v1",
  "master": "ot_s81_hc_ctfxs_nt",
- "case": "v22_hc_local_split_CANDIDATE",
+ "case": "v22_hc_local_split_GRANTED",
  "outline_um": [
   576.72,
   25.92
@@ -11,8 +11,7 @@
    "clk"
   ]
  },
- "source": "tools: subset of v20_hc_capture/ot_s81_hc_ctfx_nt (S-NORM 10-15 LOCAL_SPLIT): fdx_local/fv_local removed, every other rectangle unchanged; awaiting S-DIE adoption",
- "rule": "die lead r5 10-14: closed predecessor rectangles kept; NORM lanes dl x 40.03-66.43, ul x 70.03-73.10, cs x 80.02-86.06 (M5, N straight above S) common to every cth row",
+ "source": "tools/s81/hc_local_split_pins.py",
  "ports": {
   "clk": {
    "bits": 1,
@@ -18236,5 +18235,6 @@
     ]
    ]
   }
- }
+ },
+ "rule": "S-DIE r11 grant 2026-10-15: the v20_hc_capture ctfx_nt slot and rectangles minus fdx_local/fv_local"
 }

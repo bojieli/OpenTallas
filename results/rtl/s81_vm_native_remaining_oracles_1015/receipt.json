@@ -1,0 +1,194 @@
+[
+  {
+    "type": "q2",
+    "mode": "positive",
+    "rc": 0,
+    "output": "NATIVE_LEAF PASS q2 checks 2560 bad 0\n"
+  },
+  {
+    "type": "q2",
+    "mode": "mutant",
+    "rc": 1,
+    "output": "PAYLOAD cy2 q0 got00000000000f627c exp00000000000f6143\nPAYLOAD cy2 q1 got00000000000f6143 exp00000000000f627c\nPAYLOAD cy2 q2 got00000000000f64ee exp00000000000f63b5\nPAYLOAD cy2 q3 got00000000000f63b5 exp00000000000f64ee\nNATIVE_LEAF FAIL q2 checks 2560 bad 2560\n"
+  },
+  {
+    "type": "q3",
+    "mode": "positive",
+    "rc": 0,
+    "output": "NATIVE_LEAF PASS q3 checks 2560 bad 0\n"
+  },
+  {
+    "type": "q3",
+    "mode": "mutant",
+    "rc": 1,
+    "output": "PAYLOAD cy2 q0 got00000000000f627c exp00000000000f6143\nPAYLOAD cy2 q1 got00000000000f6143 exp00000000000f627c\nPAYLOAD cy2 q2 got00000000000f64ee exp00000000000f63b5\nPAYLOAD cy2 q3 got00000000000f63b5 exp00000000000f64ee\nNATIVE_LEAF FAIL q3 checks 2560 bad 2560\n"
+  },
+  {
+    "type": "q4",
+    "mode": "positive",
+    "rc": 0,
+    "output": "NATIVE_LEAF PASS q4 checks 640 bad 0\n"
+  },
+  {
+    "type": "q4",
+    "mode": "mutant",
+    "rc": 1,
+    "output": "PAYLOAD cy2 q0 got00000000000f64ee exp00000000000f63b5\nPAYLOAD cy2 q1 got00000000000f63b5 exp00000000000f64ee\nPAYLOAD cy3 q0 got00000000001ea5f8 exp00000000001ea731\nPAYLOAD cy3 q1 got00000000001ea4bf exp00000000001ea386\nNATIVE_LEAF FAIL q4 checks 640 bad 640\n"
+  },
+  {
+    "type": "q5",
+    "mode": "positive",
+    "rc": 0,
+    "output": "NATIVE_LEAF PASS q5 checks 2560 bad 0\n"
+  },
+  {
+    "type": "q5",
+    "mode": "mutant",
+    "rc": 1,
+    "output": "PAYLOAD cy2 q0 got00000000000f627c exp00000000000f6143\nPAYLOAD cy2 q1 got00000000000f6143 exp00000000000f627c\nPAYLOAD cy2 q2 got00000000000f64ee exp00000000000f63b5\nPAYLOAD cy2 q3 got00000000000f63b5 exp00000000000f64ee\nNATIVE_LEAF FAIL q5 checks 2560 bad 2560\n"
+  },
+  {
+    "type": "q6",
+    "mode": "positive",
+    "rc": 0,
+    "output": "NATIVE_LEAF PASS q6 checks 1280 bad 0\n"
+  },
+  {
+    "type": "q6",
+    "mode": "mutant",
+    "rc": 1,
+    "output": "PAYLOAD cy2 q0 got00000000000f627c exp00000000000f6143\nPAYLOAD cy2 q1 got00000000000f6143 exp00000000000f627c\nPAYLOAD cy2 q2 got00000000000f64ee exp00000000000f63b5\nPAYLOAD cy2 q3 got00000000000f63b5 exp00000000000f64ee\nNATIVE_LEAF FAIL q6 checks 1280 bad 1280\n"
+  },
+  {
+    "type": "q7",
+    "mode": "positive",
+    "rc": 0,
+    "output": "NATIVE_LEAF PASS q7 checks 1280 bad 0\n"
+  },
+  {
+    "type": "q7",
+    "mode": "mutant",
+    "rc": 1,
+    "output": "PAYLOAD cy2 q0 got00000000000f627c exp00000000000f6143\nPAYLOAD cy2 q1 got00000000000f6143 exp00000000000f627c\nPAYLOAD cy2 q2 got00000000000f64ee exp00000000000f63b5\nPAYLOAD cy2 q3 got00000000000f63b5 exp00000000000f64ee\nNATIVE_LEAF FAIL q7 checks 1280 bad 1280\n"
+  },
+  {
+    "type": "v1",
+    "mode": "positive",
+    "rc": 0,
+    "output": "NATIVE_LEAF PASS v1 checks 3272 bad 0\n"
+  },
+  {
+    "type": "v1",
+    "mode": "mutant",
+    "rc": 1,
+    "output": "VALID cy0 got01 exp00\nVALID cy0 got01 exp00\nVALID cy0 got01 exp00\nVALID cy0 got01 exp00\nNATIVE_LEAF FAIL v1 checks 3272 bad 407\n"
+  },
+  {
+    "type": "v2",
+    "mode": "positive",
+    "rc": 0,
+    "output": "NATIVE_LEAF PASS v2 checks 3272 bad 0\n"
+  },
+  {
+    "type": "v2",
+    "mode": "mutant",
+    "rc": 1,
+    "output": "VALID cy0 got01 exp00\nVALID cy0 got01 exp00\nVALID cy0 got01 exp00\nVALID cy0 got01 exp00\nNATIVE_LEAF FAIL v2 checks 3272 bad 407\n"
+  },
+  {
+    "type": "v3",
+    "mode": "positive",
+    "rc": 0,
+    "output": "NATIVE_LEAF PASS v3 checks 3272 bad 0\n"
+  },
+  {
+    "type": "v3",
+    "mode": "mutant",
+    "rc": 1,
+    "output": "VALID cy0 got01 exp00\nVALID cy0 got01 exp00\nVALID cy0 got01 exp00\nVALID cy0 got01 exp00\nNATIVE_LEAF FAIL v3 checks 3272 bad 407\n"
+  },
+  {
+    "type": "v4",
+    "mode": "positive",
+    "rc": 0,
+    "output": "NATIVE_LEAF PASS v4 checks 818 bad 0\n"
+  },
+  {
+    "type": "v4",
+    "mode": "mutant",
+    "rc": 1,
+    "output": "VALID cy0 got1 exp0\nVALID cy0 got1 exp0\nVALID cy0 got1 exp0\nVALID cy0 got1 exp0\nNATIVE_LEAF FAIL v4 checks 818 bad 407\n"
+  },
+  {
+    "type": "v5",
+    "mode": "positive",
+    "rc": 0,
+    "output": "NATIVE_LEAF PASS v5 checks 2045 bad 0\n"
+  },
+  {
+    "type": "v5",
+    "mode": "mutant",
+    "rc": 1,
+    "output": "VALID cy0 got01 exp00\nVALID cy0 got01 exp00\nVALID cy0 got01 exp00\nVALID cy0 got01 exp00\nNATIVE_LEAF FAIL v5 checks 2045 bad 407\n"
+  },
+  {
+    "type": "v6",
+    "mode": "positive",
+    "rc": 0,
+    "output": "NATIVE_LEAF PASS v6 checks 1636 bad 0\n"
+  },
+  {
+    "type": "v6",
+    "mode": "mutant",
+    "rc": 1,
+    "output": "VALID cy0 got1 exp0\nVALID cy0 got1 exp0\nVALID cy0 got1 exp0\nVALID cy0 got1 exp0\nNATIVE_LEAF FAIL v6 checks 1636 bad 407\n"
+  },
+  {
+    "type": "v7",
+    "mode": "positive",
+    "rc": 0,
+    "output": "NATIVE_LEAF PASS v7 checks 1636 bad 0\n"
+  },
+  {
+    "type": "v7",
+    "mode": "mutant",
+    "rc": 1,
+    "output": "VALID cy0 got1 exp0\nVALID cy0 got1 exp0\nVALID cy0 got1 exp0\nVALID cy0 got1 exp0\nNATIVE_LEAF FAIL v7 checks 1636 bad 407\n"
+  },
+  {
+    "type": "b1",
+    "mode": "positive",
+    "rc": 0,
+    "output": "NATIVE_FSR PASS mode0 banks3334 fault0 bad0\n"
+  },
+  {
+    "type": "b1",
+    "mode": "mutant",
+    "rc": 1,
+    "output": "BANK q0 addr069/069 tag09/08\nBANK q1 addr076/076 tag08/09\nBANK q2 addr083/083 tag0b/0a\nBANK q3 addr090/090 tag0a/0b\nBANK q4 addr09d/09d tag0d/0c\nBANK q5 addr0aa/0aa tag0c/0d\nBANK q6 addr0b7/0b7 tag0f/0e\nNATIVE_FSR FAIL mode0 banks3334 fault0 bad3334\n"
+  },
+  {
+    "type": "b2",
+    "mode": "positive",
+    "rc": 0,
+    "output": "NATIVE_FSR PASS mode0 banks3334 fault0 bad0\n"
+  },
+  {
+    "type": "b2",
+    "mode": "mutant",
+    "rc": 1,
+    "output": "BANK q0 addr0d1/0d1 tag11/10\nBANK q1 addr0de/0de tag10/11\nBANK q2 addr000/000 tag01/00\nBANK q3 addr000/000 tag01/00\nBANK q4 addr0eb/0eb tag15/14\nBANK q5 addr0f8/0f8 tag14/15\nBANK q6 addr105/105 tag17/16\nNATIVE_FSR FAIL mode0 banks3334 fault0 bad3334\n"
+  },
+  {
+    "type": "b3",
+    "mode": "positive",
+    "rc": 0,
+    "output": "NATIVE_FSR PASS mode0 banks3334 fault0 bad0\n"
+  },
+  {
+    "type": "b3",
+    "mode": "mutant",
+    "rc": 1,
+    "output": "BANK q0 addr11f/11f tag19/18\nBANK q1 addr12c/12c tag18/19\nBANK q2 addr139/139 tag1b/1a\nBANK q3 addr146/146 tag1a/1b\nBANK q4 addr153/153 tag1d/1c\nBANK q5 addr160/160 tag1c/1d\nBANK q6 addr16d/16d tag1f/1e\nNATIVE_FSR FAIL mode0 banks3334 fault0 bad3334\n"
+  }
+]
