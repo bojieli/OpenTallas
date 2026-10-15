@@ -16,3 +16,15 @@ def model(block_words=64, ports=3):
 if __name__=='__main__':
  import json
  print(json.dumps(model(),indent=2))
+
+
+def pingpong_model(block_words=64, ports=3):
+ m=model(block_words,ports)
+ m.update(schema='hcoll.offdie_rx.pingpong.v1',capacity_frames_per_port=128,
+   sram_macros_per_port=4,release_slot_to_pin_edges=4,
+   native_RX_sample_edge=5,native_RX_publish_edge=7,
+   overlap='fill bank B while fixed slots drain complete bank A; explicit checked bank IDs',
+   between_block_release_guard_edges=6,
+   steady_no_jitter_edges_per_64frame_block=71,
+   throughput_status='component overlap only; whole G96/FEC/CDC/calendar qualification OPEN')
+ return m
