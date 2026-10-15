@@ -960,6 +960,24 @@
       "status": "Actual SWv2 programme/host/engine/bank component PASS8records128beats4096words512readbacks181vs192+6mutants; SU/DMAglobalepochs and physicalopen",
       "source_commit": "0a2b7d317",
       "source_sha256": "0e12a87cbeafad331a802fcb5f697b694324ace98e7e719ea4662862ecc0bb3c"
+    },
+    "126": {
+      "owner": "SM activation producer",
+      "source_owner": "/root/h_vm",
+      "source": "ot_hbm_sm_activation_host_static",
+      "source_path": "rtl/hbm_accel/generic/peers/static_activation/ot_hbm_sm_activation_host_static.sv",
+      "source_sha256_at_freeze": "8e629cf533e4cd28d4863ccee54b1fd3c3ab60836c908b9941e1ac5626747e96",
+      "encoding": "protected",
+      "PCW": 10,
+      "payload_bits": 44,
+      "vm_profile": "sw_quant_v2",
+      "native_sid": 0,
+      "read_group": 2,
+      "clock_entries": 12,
+      "operation": "P8/K5120/NC8/SUB4/fmt1 FP32->exactAQ12rawFP8codes/exponents->mappedcodeSRAM->originalXWRITE",
+      "capacity_words": 1024,
+      "component_programme_words": 703,
+      "status": "Actual source written, native520beat gate pending; no globalproducer/allocator/32SMbroadcast qualification"
     }
   },
   "map": "F20={PC12 bits19:8,target8 bits7:0}; F24 eight32b pieces; F28={limit13 bits24:12,base12 bits11:0}; F2c loops16; VM F00/F08 retains10/11 addresses",

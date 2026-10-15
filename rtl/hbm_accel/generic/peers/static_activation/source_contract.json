@@ -1,0 +1,180 @@
+{
+  "schema": "opentallas.hbm.sm-activation-source-contract.v1",
+  "master": "ot_hbm_sm_activation_host_static",
+  "ports": [
+    {
+      "name": "clk_program",
+      "direction": "input",
+      "bits": 1
+    },
+    {
+      "name": "clk_control",
+      "direction": "input",
+      "bits": 1
+    },
+    {
+      "name": "",
+      "direction": "input",
+      "bits": 1
+    },
+    {
+      "name": "clk_aq_core",
+      "direction": "input",
+      "bits": 2
+    },
+    {
+      "name": "clk_aq_delay",
+      "direction": "input",
+      "bits": 2
+    },
+    {
+      "name": "clk_aq_encode",
+      "direction": "input",
+      "bits": 2
+    },
+    {
+      "name": "",
+      "direction": "input",
+      "bits": 2
+    },
+    {
+      "name": "clk_code",
+      "direction": "input",
+      "bits": 4
+    },
+    {
+      "name": "input",
+      "direction": "input",
+      "bits": 4
+    },
+    {
+      "name": "cfg_v",
+      "direction": "input",
+      "bits": 1
+    },
+    {
+      "name": "input",
+      "direction": "input",
+      "bits": 1
+    },
+    {
+      "name": "cfg_addr",
+      "direction": "input",
+      "bits": 12
+    },
+    {
+      "name": "",
+      "direction": "input",
+      "bits": 12
+    },
+    {
+      "name": "cfg_data",
+      "direction": "input",
+      "bits": 256
+    },
+    {
+      "name": "input",
+      "direction": "input",
+      "bits": 256
+    },
+    {
+      "name": "desc_base",
+      "direction": "input",
+      "bits": 12
+    },
+    {
+      "name": "input",
+      "direction": "input",
+      "bits": 12
+    },
+    {
+      "name": "desc_loops",
+      "direction": "input",
+      "bits": 16
+    },
+    {
+      "name": "input",
+      "direction": "input",
+      "bits": 16
+    },
+    {
+      "name": "rq",
+      "direction": "output",
+      "bits": 136
+    },
+    {
+      "name": "input",
+      "direction": "output",
+      "bits": 136
+    },
+    {
+      "name": "xw_en",
+      "direction": "output",
+      "bits": 1
+    },
+    {
+      "name": "output",
+      "direction": "output",
+      "bits": 1
+    },
+    {
+      "name": "xw_data",
+      "direction": "output",
+      "bits": 2048
+    },
+    {
+      "name": "",
+      "direction": "output",
+      "bits": 2048
+    },
+    {
+      "name": "xw_last",
+      "direction": "output",
+      "bits": 1
+    },
+    {
+      "name": "busy",
+      "direction": "output",
+      "bits": 1
+    },
+    {
+      "name": "done",
+      "direction": "output",
+      "bits": 1
+    },
+    {
+      "name": "retire_fault",
+      "direction": "output",
+      "bits": 1
+    },
+    {
+      "name": "fault",
+      "direction": "output",
+      "bits": 1
+    },
+    {
+      "name": "configured",
+      "direction": "output",
+      "bits": 1
+    }
+  ],
+  "clocks": {
+    "clk_program": 1,
+    "clk_control": 1,
+    "clk_aq_core": 2,
+    "clk_aq_delay": 2,
+    "clk_aq_encode": 2,
+    "clk_code": 4
+  },
+  "clients": {
+    "rq": "SW SM dedicatedRG2 perbank{v,sector16}",
+    "rr": "SW RG2 actual{v,data256}",
+    "xw": "originalNC8/SUB4SM en/addr7/grp7/data2048, true520beatstream; physical32SMdistributionunqualified"
+  },
+  "source_sha256": {
+    "rtl/hbm_accel/generic/peers/static_activation/ot_hbm_sm_activation_host_static.sv": "8e629cf533e4cd28d4863ccee54b1fd3c3ab60836c908b9941e1ac5626747e96",
+    "rtl/hbm_accel/generic/peers/static_activation/ot_hbm_sm_activation_programmed_static.sv": "ec34c06e91ee8aaf7410059060c1647415abde2cad1baa1ada056a16aa4a99f4",
+    "rtl/hbm_accel/generic/peers/static_activation/ot_hbm_sm_activation_static.sv": "898fa8adb255f6d699837e80d77825df4565a241aef07e9499650769d716483b"
+  },
+  "status": "Written source; actualnativeVM/AQ/programme/SRAM golden/mutants gate pending; decodedhostboundaryinminimumcomponent, actualAXIintegrationseparate"
+}

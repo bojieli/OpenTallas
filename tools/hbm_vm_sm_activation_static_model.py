@@ -22,7 +22,7 @@ def model():
                      quantizer_clock_roots_each=3,nominal_AQ_FF_each=dict(core=2597,delay=11264,encode=6019)),
         storage=dict(code_macros=16,code_macro='ot_sram_1r1w_32x128_m1',code_bits=16*32*128,
                      meaningful_code_buffer_bits=2*2*8*4*256,exponent_FF_bits=2*2*8*4*10,
-                     epoch_FF_bits=2*2*8*4*5,valid_FF_bits=2*2*8*4,
+                     epoch_FF_bits=2*2*8*4*21,valid_FF_bits=2*2*8*4,
                      programme_macros=1,programme_macro='ot_sram_1r1w_1024x256_m2_r2c2',programme_payload_bits=44),
         replicas=dict(component_producer=1,original_XWRITE_destinations=32,
                       broadcast='32SM fanout needs actual fixed-stage registered transport/geometry; component pin stream does not qualify that graph',
