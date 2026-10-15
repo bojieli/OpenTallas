@@ -52,7 +52,7 @@
  "job": {
   "owner": "Codex:el1014-qwen-dvm-build",
   "branch": "claude/qwen-dvm-1014",
-  "tag": "xsm5a",
+  "tag": "xsm5b",
   "purpose": "MY-legal variant of closed qfd_xcst_s (Q-COMPUTE-DIE r6 06:20 PM-H-S request): same RTL body, every N/S pin on M5 (none on M3) so MY has a legal origin (0 mod 48) and R0 stays legal; outline/ranges/hooks unchanged. Qwen TP8 corridor station with the tile's x hold (distributed x slice, owner 08:20 PT 10-14): onward + tap flops as qfd_cst_s, + TDM capture of its own tagged line and the tuple hold register (IL 8, XOFF 3) driving the tile's xl pins. r3: no tap ready (the tile never back-pressures; DIE_BUS_AUDIT row 10).",
   "benches": [
    {
@@ -126,7 +126,7 @@
  "inter": [],
  "recipe": 2,
  "io_flop_at_pins": {
-  "cols": 4,
+  "cols": 8,
   "allow_none": true
  },
  "inhold": true,
@@ -135,5 +135,6 @@
  "pin_reg_split": true,
  "hold_pad": {
   "cell": "HB2xp67_ASAP7_75t_R"
- }
+ },
+ "structural_change": "xsm5a/xnm5a EARLY_FAIL_CONGESTION GRT-0116: overflow 100% in the OUTPUT-face band (s: y 0-5 um, b_d; n: y 95-103.7, a_d), M3 vertical 312 + M5 198 (s), 516 output pins x (pin flop + HB2 out-hold + driver) packed in 4 columns behind the face while every pin now needs an M3->M4->M5 via stack at the face. Fix: output stage spread over 8 columns (twice the depth, same outline; area is free at util 10%)."
 }
