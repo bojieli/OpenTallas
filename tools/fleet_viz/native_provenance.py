@@ -99,6 +99,7 @@ def qualify(reader, spec, token):
     except (KeyError, ValueError, OSError, subprocess.SubprocessError) as exc:
         gate_code = None
         defects.append(error('program->elaboration', 'OPERATION_GATE_UNAVAILABLE:' + str(exc)))
+    diagnostic_programs = 0
     all_ids, physical = set(), spec.get('physical_bindings') or {}
     for item in programs:
         pid = item.get('id')
@@ -118,6 +119,9 @@ def qualify(reader, spec, token):
             if component.get('implementation') in ('rtl', 'macro'):
                 continue
             if component.get('role') == 'expected_observer' and component.get('drives_dut') is False:
+                continue
+            if component.get('role') not in EXTERNAL:
+                defects.append(error('component->elaborated_RTL', 'ONCHIP_COMPONENT_HAS_NO_NATIVE_IMPLEMENTATION', component=name, program=pid))
                 continue
             exception = (spec.get('external_models') or {}).get(name)
             if (component.get('role') not in EXTERNAL or not exception
@@ -151,6 +155,7 @@ def qualify(reader, spec, token):
             reports = doc.get('programs', [])
             if not reports:
                 raise ValueError('operation audit has no emitted program receipts')
+            diagnostic_programs += len(reports)
             for report in reports:
                 pid = str(report.get('stage')) + ':rank' + str(report.get('rank'))
                 for issue in report.get('errors', []):
@@ -219,7 +224,7 @@ def qualify(reader, spec, token):
                 native_qualified=bool(rows and nodes) and not all_errors,
                 historical_scope='NUMERICAL_OR_PRICED_TOKEN_PATH_ONLY',
                 operations=rows, nodes=nodes, defects=defects,
-                summary=dict(programs=len(programs), operations=len(rows), token_nodes=len(nodes),
+                summary=dict(programs=len(programs)+diagnostic_programs, replayable_programs=len(programs), failing_receipt_programs=diagnostic_programs, operations=len(rows), token_nodes=len(nodes),
                              native_operations=sum(r['native_qualified'] for r in rows), defects=len(all_errors), missing_edges=dict(counts)))
 
 
