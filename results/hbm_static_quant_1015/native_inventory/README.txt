@@ -35,3 +35,17 @@ new producers, controllers, bank/station transport or physical integration.
 
 No passing157cycle current-bank component proof was rerun. This is read-only
 source evidence enabling the native integration and allocation owners.
+
+EXACT PAY FOLLOWUP: parent supplied unmerged70f8811dbf626d9176665999e8173eec957ffb91
+rtl/hbm_accel/generic/qw/ot_hgi_qdq_wr_pay.sv. Source audit confirms this exact PAY
+is a credit/grant-gated decoded-result FIFO/write launch/snapshot leaf, not an
+arithmetic operator or generic operand store. OD64 entries of512b is its result
+capacity;45056words is historical bench traffic, not its memory depth. New static
+Quant source does not instantiate this PAY or its FWFT FIFO: decoder outputs go
+to reserved bank write slots and fixed actual commit timing. All observed source
+QDQ classes fit that fixed route, so no enumerated QDQ descriptor intrinsically
+requires this historical PAY. This source retirement does NOT prove actual die
+integration or completed native replacement until residency/global slots/stations/
+physical source are bound. Other FUSED/SU/HC storage remains separately required.
+PAY_dependency.json pins both predecessor and actual successor sources; the prior
+README statement about unidentified PAY applies to the earlier stage only.

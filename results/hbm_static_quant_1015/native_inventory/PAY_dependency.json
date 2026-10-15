@@ -1,0 +1,50 @@
+{
+  "schema": "opentallas.hbm-static-quant-pay-dependency-audit.v1",
+  "historical_PAY": {
+    "commit": "70f8811dbf626d9176665999e8173eec957ffb91",
+    "path": "rtl/hbm_accel/generic/qw/ot_hgi_qdq_wr_pay.sv",
+    "sha256": "c8cccb39932668bc84e47092ca984a34a26aebd087d9fca065ea365c5189b174",
+    "role": "credit/grant-gated decoded-result FIFO and WWQ launch path; snapshots for in-order completion",
+    "source_terms": [
+      "wg_ok",
+      "wwq_cr",
+      "wcr",
+      "w_cr_ok",
+      "w_fire",
+      "ot_qdq_pay_fwft",
+      "snapshot_counts"
+    ],
+    "data_capacity": "OD64 entries of512-bit decoded beats;45056 words denotes historical test traffic, not PAY memory depth",
+    "timing_closure": false,
+    "timing_source": "parent reports p13 TT-8.97ps FF-4.55ps DRC0; ECO positive timing butDRC1, not re-verified by this source audit"
+  },
+  "static_successor": {
+    "commit": "c0860dcc2c97ca3a45bb5d03e3477b962c768898",
+    "source_sha256": {
+      "rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_host_static.sv": "73dc5bb8b3c72ff2e193602251d2cd719a5f691d5bd1faef5e5fd32e8de35bea",
+      "rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv": "67152f9623f8274558ea4e588d4a0f423d1859c063fa62ee832e5731ca5e814d",
+      "rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_record_calendar.sv": "cf56a344c2f1f4e2252167dee0d99abdb3234bfcaceac83cbc6fbd15e3911c1f"
+    },
+    "hierarchy": "host target48 + mapped record programme -> wires-only engine -> fixed transport + unchanged DXL/DBQ/DAQ",
+    "decoded_result_route": "decoder512b output -> fixed output register -> 4 bank writes expanded BF16 to FP32, fixed bankcommit done",
+    "PAY_instantiated": false,
+    "result_FIFO_instantiated": false,
+    "normal_production_ready_credit": false,
+    "service": "32 values/cycle;4 input sectors and4 output sectors/cycle; native compiler reserves bank slots",
+    "admission": "Unexpected read timing/arithmetic/bank-slot faults fail qualification; never divert to historical PAY"
+  },
+  "observed_record_coverage": {
+    "source_inventory": "native_inventory/summary.json",
+    "classes": [
+      "FP8 n512m1",
+      "FP4_E8M0 n128m1",
+      "FP4_E4M3 block16 n512m1"
+    ],
+    "descriptors_needing_private_PAY_in_static_schedule": 0,
+    "shape_unsupported": 0,
+    "dynamic_scalar_longrow_cases_observed": 0,
+    "source_occurrences_including_alternativeprofiles": 546,
+    "actualNWresidency_and_globalcalendar_bound": false
+  },
+  "retirement_conclusion": "Historical PAY physical leaf is not a dependency of proposed static Quant for any enumerated QDQ class. It is superseded in the new source hierarchy, not physically closed. Full native production replacement remains unproven until actual residency/global slots/stations/physical parent are bound. Other FUSED/SU/HC/PAY-named storage is a separate source dependency and must not be conflated with this exact QDQ result FIFO."
+}
