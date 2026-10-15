@@ -19,7 +19,9 @@
 //      for a nak of the expected lseq (sent once, re-sent after NAKT cycles without progress); a good data flit at the
 //      expected lseq is delivered (rx_v) and acknowledged; a duplicate (behind the expected lseq) is dropped.
 // Latency: TX +1 (queue / CRC register), RX +1 (check register) per direction.
-// MUT (bench only): 1 = CRC never checked (a corrupted flit is delivered), 2 = nak ignored (no replay).
+// Replay data is bit-sliced into independently clocked leaves in the native
+// implementation below; prefetch/write-through preserve this latency.
+// MUT (bench only): 1 = CRC never checked, 2 = nak ignored, 3 = replay bank0 bit0 corrupted.
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_qkvd_d2d_llr_ctl #(
     parameter integer FW    = 548,
@@ -34,7 +36,6 @@ module ot_qkvd_d2d_llr_ctl #(
     // adapter side (FDI as the adapter sees it)
     output reg           a_tx_up,
     input  wire          a_tx_v,
-    input  wire [FW-1:0] a_tx_flit,
     output reg           a_rx_v,
     output reg  [FW-1:0] a_rx_flit,
     // PHY side
@@ -45,9 +46,7 @@ module ot_qkvd_d2d_llr_ctl #(
     input  wire [PW-1:0] p_rx_flit,
     output reg           fault,
     output reg  [2:0]    fault_cause,         // {nak timeout storm, queue overflow, ack out of window}
-    output wire q_we,
     output wire [$clog2(QD)-1:0] q_wa, q_ra,
-    output wire [FW-1:0] q_din,
     input wire [FW-1:0] q_dout
 );
     localparam integer QA = $clog2(QD);
@@ -93,13 +92,11 @@ module ot_qkvd_d2d_llr_ctl #(
     wire          r_win  = ((r_next - ap) <= occ);                             // inside [ap, wp]
     wire          g_ack = r_good && r_ackv && r_win;
     wire          g_nak = r_good && r_nak && (MUT != 2) && r_win;
-    assign q_we = a_tx_v;
     assign q_wa = wp[QA-1:0];
     // Prefetch the pointer that control will hold after this edge.
     // Same-edge enqueue/read forwards din in each bank.
     wire [7:0] pref_s = g_nak ? r_next : (send_d ? sp + 1'b1 : sp);
     assign q_ra = pref_s[QA-1:0];
-    assign q_din = a_tx_flit;
     reg [PW-17:0] body;
     always @* begin
         body = {nak_req, ack_s, ack_have, send_d, send_d ? sp : 8'd0, send_d ? q_dout : {FW{1'b0}}};
@@ -157,7 +154,9 @@ module ot_qkvd_llr_replay_leaf #(
     input wire [W-1:0] din,
     output reg [W-1:0] dout
 );
-    reg [W-1:0] q [0:QD-1];
+    // Expand storage before memory_dff: otherwise Yosys retimes the output
+    // flops into six read-address flops, destroying the registered pin face.
+    (* mem2reg *) reg [W-1:0] q [0:QD-1];
     always @(posedge ck) if (we) q[wa] <= din;
     always @(posedge ck)
         dout <= (we && wa == ra ? din : q[ra]) ^
@@ -188,17 +187,15 @@ module ot_qkvd_d2d_llr_split #(
     output wire [2:0] fault_cause
 );
     localparam integer BW = (FW + 3) / 4;
-    wire we;
     wire [$clog2(QD)-1:0] wa, ra;
-    wire [FW-1:0] din;
-    wire [4*BW-1:0] padded_in = {{(4*BW-FW){1'b0}}, din};
+    wire [4*BW-1:0] padded_in = {{(4*BW-FW){1'b0}}, a_tx_flit};
     wire [4*BW-1:0] padded_out;
     ot_qkvd_d2d_llr_ctl #(.FW(FW), .QD(QD), .GUARD(GUARD), .NAKT(NAKT), .MUT(MUT), .PW(PW)) u_ctl (
-        .clk(ck[0]), .rst_n(rst_n), .a_tx_up(a_tx_up), .a_tx_v(a_tx_v), .a_tx_flit(a_tx_flit), .a_rx_v(a_rx_v), .a_rx_flit(a_rx_flit), .p_tx_up(p_tx_up), .p_tx_v(p_tx_v), .p_tx_flit(p_tx_flit), .p_rx_v(p_rx_v), .p_rx_flit(p_rx_flit), .fault(fault), .fault_cause(fault_cause),
-        .q_we(we), .q_wa(wa), .q_ra(ra), .q_din(din), .q_dout(padded_out[FW-1:0]));
+        .clk(ck[0]), .rst_n(rst_n), .a_tx_up(a_tx_up), .a_tx_v(a_tx_v), .a_rx_v(a_rx_v), .a_rx_flit(a_rx_flit), .p_tx_up(p_tx_up), .p_tx_v(p_tx_v), .p_tx_flit(p_tx_flit), .p_rx_v(p_rx_v), .p_rx_flit(p_rx_flit), .fault(fault), .fault_cause(fault_cause),
+        .q_wa(wa), .q_ra(ra), .q_dout(padded_out[FW-1:0]));
     for (genvar b = 0; b < 4; b = b + 1) begin : g_bank
         ot_qkvd_llr_replay_leaf #(.W(BW), .QD(QD), .MUT(MUT == 3 && b == 0)) u_replay (
-            .ck(ck[b+1]), .we(we), .wa(wa), .ra(ra),
+            .ck(ck[b+1]), .we(a_tx_v), .wa(wa), .ra(ra),
             .din(padded_in[b*BW +: BW]), .dout(padded_out[b*BW +: BW]));
     end
 endmodule
