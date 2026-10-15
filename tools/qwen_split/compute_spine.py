@@ -102,7 +102,7 @@ def _link_words(m, rec):
     nb = []
     for b, c, n, e in m['buses']:
         if b == 'rst_spine' or any(i == 'sp_res_ser_0' and p == 'rst_n' for i, p in e) and c == 'reset':
-            e = list(e) + [(x, 'rst_n') for x in bands if (x, 'rst_n') not in e]
+            e = list(e) + [(x, 'rst_n') for x in bands + ['sp_su64_sfu', 'sp_vector_memory'] if (x, 'rst_n') not in e]
         nb.append((b, c, n, e))
     m['buses'] = nb
     ties = m.setdefault('ties', [])
@@ -249,8 +249,15 @@ def _dvm(v, m, put, rec, vm, su, xt, ty=None):
            ('xs_aw', 'spine_local', TAP_AW, [('sp_vector_memory', 'xaw'), ('xs_tap', 'aw')]),
            ('xs_pf', 'sequencer', TAP_PF, [('tt_ctlm', 'xpf'), ('xs_tap', 'xpf')]),
            ('xs_fault', 'spine_local', 1, [('xs_tap', 'fault'), ('tt_ctlm', 'xflt')])]
-    # xcol 'fault' outputs (48): NOT wired (port-bind lists them as unread outputs); die request to the DVM builder: chain
-    # the column fault inward along the head row (fault_i input) so one fault per root reaches the tap
+    # Head words broadcast outward; sticky faults return inward on real RTL
+    # ports, so no column can silently drop a storage/read ownership fault.
+    for side in (heads[:half], list(reversed(heads[half:]))):
+        ties.append((side[0].name, 'fault_i', 1, 0))  # declared outer chain terminus
+        for outer, inner in zip(side, side[1:]):
+            nb.append((f'xfault_{outer.name}', 'head_chain', 1,
+                       [(outer.name, 'fault'), (inner.name, 'fault_i')]))
+    nb += [('xfault_w', 'head_chain', 1, [(heads[half - 1].name, 'fault'), ('xs_tap', 'hw_f')]),
+           ('xfault_e', 'head_chain', 1, [(heads[half].name, 'fault'), ('xs_tap', 'he_f')])]
     m['buses'] = nb
     rec['dvm'] = dict(xcol=len(heads), xcst=sum(1 for i in m['insts'] if i.kind == 'station'), tap=list(rec['slots']['xs_tap']),
                       xcol_wh=list(XCOL_WH), corridor_bits=XCOR_D, head_bits=XHEAD_D, roots=sorted(roots),

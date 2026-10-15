@@ -1129,8 +1129,10 @@ def _wrap(v, m, G, peers):
                 mk_ports(q, {'N': [('n', _CS.XCOR_D)], 'S': [('s', _CS.XCOR_D)], 'W': [('w', _CS.XHEAD_D)],
                              'E': [('e', _CS.XHEAD_D)]})
                 q.ports['rst_n'] = ('pins', 1, 'N', 'M5', [V4.snap(q.w - 2.0)], 1)
-                q.ports['fault'] = ('pins', 1, 'S', 'M5', [V4.snap(q.w - 2.0)], 1)
-                q.order += ['rst_n', 'fault']
+                f_out, f_in = ('E', 'W') if mn.endswith('_w') else ('W', 'E')
+                q.ports['fault'] = ('pins', 1, f_out, 'M4', [V4.snap(2.0)], 1)
+                q.ports['fault_i'] = ('pins', 1, f_in, 'M4', [V4.snap(2.0)], 1)
+                q.order += ['rst_n', 'fault', 'fault_i']
                 M[mn] = q
             it = byi_.get('qfd_xs_tap')
             if it is not None:
@@ -1142,7 +1144,9 @@ def _wrap(v, m, G, peers):
                     q.order[:] = [x for x in q.order if x not in (nm + '_d', nm + '_r')] + [nm]
                 q.ports['fault'] = ('pins', 1, 'E', 'M4', [V4.snap(2.0)], 1)
                 q.ports['rst_n'] = ('pins', 1, 'E', 'M4', [V4.snap(4.0)], 1)
-                q.order += ['fault', 'rst_n']
+                q.ports['hw_f'] = ('pins', 1, 'E', 'M4', [V4.snap(6.0)], 1)
+                q.ports['he_f'] = ('pins', 1, 'E', 'M4', [V4.snap(8.0)], 1)
+                q.order += ['fault', 'rst_n', 'hw_f', 'he_f']
                 M['qfd_xs_tap'] = q
         t = M.get('qfd_tile_nk')
         if t is not None:
