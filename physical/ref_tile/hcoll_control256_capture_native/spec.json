@@ -1,0 +1,85 @@
+{
+ "name": "hcoll_control256_capture_native",
+ "top": "ot_hgi_coll_control256_capture",
+ "kind": "tile",
+ "sources": [
+  "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_control256_program.sv"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [],
+ "outline": {
+  "w": 43.2,
+  "h": 129.6
+ },
+ "pins": {
+  "W": [
+   "data"
+  ],
+  "E": [
+   "pin_data"
+  ],
+  "N": [
+   "clk"
+  ],
+  "S": []
+ },
+ "layer_cap": "M5",
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 16,
+  "period_ps": 833.333333,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "job": {
+  "owner": "Codex:h_collective_physical",
+  "branch": "codex/hcoll-physical-1015",
+  "tag": "native1",
+  "purpose": "Actual source79037c152512FF control256 bank face capture, geometry grant43.2x129.6; no whole21bank parent claim",
+  "extra_paths": [
+   "tools/hbm_coll_static",
+   "rtl/hbm_accel/generic/collective/p2p"
+  ],
+  "benches": [
+   {
+    "name": "capture_exact",
+    "cmd": "bash tools/hbm_coll_static/run_control_capture_gate.sh positive {RUN}/bench/capture_exact",
+    "expect": "pass",
+    "threads": 2,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "capture_data_mutant",
+    "cmd": "bash tools/hbm_coll_static/run_control_capture_gate.sh mutant {RUN}/bench/capture_mutant",
+    "expect": "fail",
+    "threads": 2,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ],
+  "views_to": "physical/ref_tile/hcoll_control256_capture_native/views",
+  "record_to": "results/arch/hcoll_physical_1015/capture"
+ },
+ "params": {},
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "recipe": 2,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ }
+}
