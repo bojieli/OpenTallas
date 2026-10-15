@@ -247,8 +247,8 @@ module ot_hgi_coll_qrec #(
     // reductions: units of 16 flits, remainder in quarter 3
     wire [15:0] r_pf  = n_a_q[19:4];
     wire [11:0] r_u   = r_pf[15:4];
-    wire [15:0] r_lo  = {2'(14'(r_u * q0) >> 2), 4'd0};
-    wire [15:0] r_hi  = (qid_q == 2'd3) ? r_pf : {2'(14'(r_u * q1) >> 2), 4'd0};
+    wire [15:0] r_lo  = {12'(14'(r_u * q0) >> 2), 4'd0};
+    wire [15:0] r_hi  = (qid_q == 2'd3) ? r_pf : {12'(14'(r_u * q1) >> 2), 4'd0};
     wire [15:0] r_pfq = r_hi - r_lo;
     // whole-row gathers: flits [floor(q pf / 4), floor((q + 1) pf / 4))
     wire [15:0] w_pf  = a_rowwords[15:0];
