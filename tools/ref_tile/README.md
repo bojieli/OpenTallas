@@ -186,3 +186,32 @@ See /home/ubuntu/claude-takeover-20261007/ref-flow-1011.log (cases, numbers, job
 For a fleet-selected synthesis or CTS gate, use `--remote auto`. The gate asks `ot-run --pick` for a host with measured headroom, ships the inputs there, then runs through `ot-run --hosts <chosen>` with one resource reservation. An explicit host keeps the existing `ot-heavy` path.
 
 CTS gates measure every external clock from the actual CTS SDC. The measured clock exception uses the insertion and spread of the largest synthesized root's own source port. A secondary root cannot use the primary clock's measurement; an unmatched root has no measured exception.
+
+Opt-in mixed glue and hard-child clocks use `"clock": "hybrid_entries"`.
+Declare every scalar source in `clock_ports`, keep `clock_port` equal to the
+first source, and list only the standard-cell tree sources in
+`clock_cts_roots` (a nonempty proper subset). For example a band with native
+glue and sixteen hard lanes has `clock_cts_roots: ["ck"]` and seventeen
+`clock_ports`: `ck` plus `ck_l0` through `ck_l15`. Existing `entries` keeps its
+wires-only contract.
+
+Each remaining entry must still directly drive exactly one hard-child clock
+pin. Each CTS root must reach only standard-cell register clock pins. CTS gets
+only the declared glue nets; it cannot absorb a child entry. All clocks remain
+related, including explicit `clock_entry_domains` when present. There are no
+asynchronous groups or false paths. The existing pair setup/hold margins apply
+between glue and child clocks too.
+
+At each timing scene the generated constraints measure every propagated glue
+clock sink for tree safety, select the same input-capture/output-launch
+boundary register population as the insertion exporter, and deliver its source
+at phi minus that boundary mean. Roots with no boundary registers explicitly
+report an `all_internal_only` fallback to their own sink population. Hard-child delivery retains measured entry
+wire plus the bound routed child insertion. A shared reference origin keeps
+source latencies nonnegative; it does not replace the distinct physical tree
+measurements. Missing sources/sinks/measurements fail closed. A final glue root
+must have positive measured propagation; above 15,000 sinks it must also meet
+the existing 300 ps insertion and 80 ps spread limits. Child insertion records
+and ETM timing arcs are read without modification. `OT_HYBRID CTS_MEASURE`
+records the actual glue measurements in the run log. Functional microfixtures
+validate this flow mechanism, not a production parent's physical closure.

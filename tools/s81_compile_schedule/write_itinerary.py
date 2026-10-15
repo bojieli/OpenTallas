@@ -24,6 +24,9 @@ def compile_itinerary(requests,contract):
     mapping=dict(banks=32,bank_mapping=contract['bank_mapping'])
     capture_to_drain=contract['capture_to_drain_min_cycles']
     drain_to_commit=contract['drain_to_macro_commit_cycles']
+    source_to_storage=contract.get('source_to_storage_capture_cycles',0)
+    if type(source_to_storage) is not int or source_to_storage<0:
+        raise ValueError('actual source-to-storage pipeline stages required')
     if type(capture_to_drain) is not int or capture_to_drain<1 or type(drain_to_commit) is not int or drain_to_commit<0:
         raise ValueError('exact nonnegative physical pipeline stages required; staging capture precedes drain')
     writes=[dict(e) for e in requests['events'] if e['kind']=='write']
@@ -55,7 +58,7 @@ def compile_itinerary(requests,contract):
     for bank,events in sorted(by_bank.items()):
         next_drain=0;live=[];free=[];allocated=0;peak=0
         for event in sorted(events,key=lambda e:(e['issue_cycle'],e['client'],e['slot'],e['id'])):
-            capture=event['issue_cycle']
+            capture=event['issue_cycle']+source_to_storage
             while live and live[0][0]<=capture:
                 _,slot=heapq.heappop(live);heapq.heappush(free,slot)
             if free:
@@ -69,7 +72,7 @@ def compile_itinerary(requests,contract):
             extra_delay=max(extra_delay,drain-capture-capture_to_drain)
             output=dict(id=event['id'],source_port=dict(client=event['client'],slot=event['slot']),
                         job=event['job'],tag=event['tag'],row=event['row'],mask=event['mask'],bank=bank,
-                        capture_cycle=capture,capture_storage_slot=storage,
+                        source_capture_cycle=event['issue_cycle'],capture_cycle=capture,capture_storage_slot=storage,
                         scatter_issue_cycle=drain,drain_storage_slot=storage,macro_commit_cycle=commit)
             if 'deadline_cycle' in event and not event.get('native_done_deadline_missing',False):
                 output['native_visibility_deadline_cycle']=event['deadline_cycle']
@@ -92,6 +95,7 @@ def compile_itinerary(requests,contract):
     return dict(schema='opentallas.s81.fixed-write-itinerary.v1',status='DEMAND_ITINERARY_ONLY',
                 dispatch_eligible=False,qualified=False,bank_mapping=contract['bank_mapping'],
                 capture_to_drain_min_cycles=capture_to_drain,drain_to_macro_commit_cycles=drain_to_commit,
+                source_to_storage_capture_cycles=source_to_storage,
                 writes=len(rows),write_ids_preserved=sorted(ids)==sorted(r['id'] for r in rows),
                 bank_storage_slots=bank_peaks,total_reserved_storage_slots=sum(bank_peaks.values()),
                 peak_live_storage_rows=peak_total,max_capture_ports_per_bank=capture_peaks,
@@ -118,7 +122,7 @@ def verify_itinerary(requests, itinerary):
         if event is None:
             continue
         expected=dict(client=event['client'],slot=event['slot'])
-        if row['source_port']!=expected or any(row[k]!=event[k] for k in ('row','mask','job','tag')) or row['capture_cycle']!=event['issue_cycle']:
+        if row['source_port']!=expected or any(row[k]!=event[k] for k in ('row','mask','job','tag')) or row['capture_cycle']!=event['issue_cycle']+itinerary.get('source_to_storage_capture_cycles',0):
             errors.append('source_port_or_payload_identity')
         bank=bank_of(row['row'],dict(banks=32,bank_mapping=itinerary['bank_mapping']))
         if bank!=row['bank']:

@@ -1,6 +1,6 @@
 `timescale 1ns/1ps
 module tb_qfd_xpf_static_schedule;
- parameter integer MUT_LATE=0,MUT_ISSUE=0;
+ parameter integer MUT_LATE=0,MUT_ISSUE=0,TEST_FAULT_TIMELINE=0;
  reg clk=0;always #0.5 clk=~clk;
  reg rst_n=0,cv=0,clear=0,seal=0,start=0,stop=0;
  reg [2:0] ci=0;reg [187:0] cd=0;reg [3:0] cnt=2;
@@ -9,7 +9,7 @@ module tb_qfd_xpf_static_schedule;
  ot_qfd_xpf_static_schedule #(.ARM_TRANSPORT_EDGES(13),.MUT_LATE(MUT_LATE)) d
  (.clk(clk),.rst_n(rst_n),.cfg_v(cv),.cfg_index(ci),.cfg_data(cd),.cfg_clear(clear),
  .cfg_seal(seal),.cfg_count(cnt),.start(start),.stop(stop),.stage(6'd0),
- .me_issue(mi),.me_pc(mp),.su_issue(si),.su_pc(sp),.xpf(pf),.fault(fault));
+ .cp_issue(1'b0),.cp_pc(12'd0),.me_issue(mi),.me_pc(mp),.su_issue(si),.su_pc(sp),.xpf(pf),.fault(fault));
  reg [71:0] pipe[0:12];integer j,c,arrived=-100,seen=0;
  always @(posedge clk)begin
   pipe[0]<=pf;for(j=1;j<13;j=j+1)pipe[j]<=pipe[j-1];
@@ -30,10 +30,10 @@ module tb_qfd_xpf_static_schedule;
    if(c==30||c==70)begin
     if(c-arrived<3)$fatal(1,"static producer write lacks completed arm delivery");
    end
-   if(fault)$fatal(1,"static schedule fault cycle %0d",c);
+   if(fault&&!TEST_FAULT_TIMELINE)$fatal(1,"static schedule fault cycle %0d",c);
   end
   si=0;mi=0;stop=1;tick();stop=0;
-  if(fault||seen!=2)$fatal(1,"completion/count fault");
+  if(fault!==(TEST_FAULT_TIMELINE!=0)||seen!=2)$fatal(1,"completion/count fault");
   $display("PASS fixed-cycle arms13-hop transport,2 producers issue without stalls,3-edge first-write separation");$finish;
  end
 endmodule

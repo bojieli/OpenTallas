@@ -1,6 +1,6 @@
 import copy
 import unittest
-from operand_layout import generate, scalar_destination, source_matrices, quantized_block_view, a_projection_gather_landing, LAYOUT
+from operand_layout import generate, scalar_destination, source_matrices, quantized_block_view, a_projection_gather_landing, full_a_projection_gather_landing, router_gather_landing, LAYOUT
 
 
 class ReleasedOperandLayoutTest(unittest.TestCase):
@@ -10,8 +10,8 @@ class ReleasedOperandLayoutTest(unittest.TestCase):
         cls.plan=generate(cls.matrices)
 
     def test_all40layers_actual_matrix_fragments_join_consumer_shapes(self):
-        self.assertEqual(self.plan['source_matrices'],160)
-        self.assertEqual(self.plan['rank_fragments'],640)
+        self.assertEqual(self.plan['source_matrices'],207)
+        self.assertEqual(self.plan['rank_fragments'],828)
         self.assertFalse(self.plan['dispatch_eligible'])
         for join in self.plan['joins']:
             for key in ('destination_first','destination_last'):
@@ -71,6 +71,27 @@ class ReleasedOperandLayoutTest(unittest.TestCase):
         self.assertEqual(q,set(range(4096,4176)))
         self.assertEqual(kv,set(range(4224,4256)))
         self.assertFalse(gather['historical_fixture_timing_usable'])
+
+    def test_full_compressor_transport_has_exact_ratio2_and_ratio1_records(self):
+        for layer,records in [(0,28),(2,44),(8,44),(14,44),(20,36)]:
+            gather=full_a_projection_gather_landing(layer)
+            self.assertEqual(gather['records_per_rank'],records)
+            self.assertEqual(len(gather['records']),4*records)
+            self.assertEqual(len({r['destination_vm_row'] for r in gather['records']}),4*records)
+        self.assertEqual({r['destination_vm_row'] for r in full_a_projection_gather_landing(2)['records'] if r['destination_tensor']=='compressor_kv'},set(range(4816,4848)))
+        self.assertNotIn('compressor_score',{r['destination_tensor'] for r in full_a_projection_gather_landing(20)['records']})
+
+    def test_actual_main_router_gather_and_rw_prefix_layout(self):
+        gather=router_gather_landing()
+        self.assertEqual(gather['records_per_rank'],6)
+        self.assertEqual(gather['arg24'],65542)
+        self.assertEqual({r['destination_vm_row'] for r in gather['records']},set(range(5169,5193)))
+        self.assertEqual(LAYOUT['route_ids']['base_row']+1,LAYOUT['router_all_scores']['base_row'])
+        self.assertEqual(LAYOUT['router_all_scores']['base_row']+24,LAYOUT['router_bias']['base_row'])
+        gate=next(m for m in self.matrices if m['layer']==0 and m['alias']=='gate')
+        for rank in range(4):
+            self.assertEqual(scalar_destination(gate,rank,96*rank)['row'],5008)
+            self.assertEqual(scalar_destination(gate,rank,96*(rank+1)-1)['row'],5013)
 
     def test_missing_actual_fragment_rejected(self):
         with self.assertRaisesRegex(ValueError,'incomplete actual consumer|producer scope|gapped'):

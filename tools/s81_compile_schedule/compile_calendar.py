@@ -41,6 +41,68 @@ def validate_evidence(evidence, root):
             raise ValueError(f'stale native evidence {item["path"]}')
 
 
+def check_persistent_state(program, binding, root):
+    """Validate finite CP context ownership across native store/pool jobs."""
+    errors=[]
+    ops={o['id']:o for o in program['ops']}
+    jobs=binding.get('jobs',{})
+    reservations=binding.get('persistent_buffers',[])
+    required={name for name,job in jobs.items() if job.get('opcode')==14 or name.endswith('.attn.cmp.pool')}
+    covered=set();physical={};seen=set()
+    for state in reservations:
+        try:
+            ident=state['id']
+            if ident in seen: raise ValueError('duplicate persistent reservation')
+            seen.add(ident)
+            if state['cache']!='CP': raise ValueError('unowned persistent cache')
+            instance=state['physical_cache_instance']
+            declared=binding.get('persistent_cache_instances',{}).get(instance)
+            if not declared or declared.get('type')!='CP' or declared.get('physical_groups')!=1:
+                raise ValueError('physical CP instance lacks actual one-group contract')
+            validate_evidence(declared.get('evidence'),root)
+            # The implemented CP cache holds one history group. More users
+            # require distinct actual physical banks, not larger dictionary IDs.
+            if state['physical_bank']!=0: raise ValueError('CP physical bank not implemented')
+            context=integer(state['context_id'],'CP context')
+            if context>=1<<32 or not isinstance(state['context_key'],str) or not state['context_key']:
+                raise ValueError('full CP logical context and uint32 identity required')
+            begin=integer(state['live_from_cycle'],'context live begin')
+            end=integer(state['live_until_cycle'],'context live end')
+            if end<=begin: raise ValueError('invalid CP state lifetime')
+            producer=state['producer_job']
+            if producer not in ops or jobs.get(producer,{}).get('implementation')!='native_rtl':
+                raise ValueError('missing actual native first-slot store/restore producer')
+            commit=integer(state['producer_commit_cycle'],'native state commit')
+            if not ops[producer]['start']<=commit<=ops[producer]['end'] or not begin<=commit<end:
+                raise ValueError('state commit outside native producer/lifetime')
+            # A restore must itself read prior state produced by actual native
+            # execution in retained VM. Golden initialization is never a source.
+            inputs=state['state_input_tensors']
+            if set(inputs)!={'kv','score'}: raise ValueError('CP requires actual prior K and score producers')
+            for tensor_name in inputs.values():
+                tensor=binding.get('tensors',{}).get(tensor_name,{})
+                source=tensor.get('producer')
+                if tensor.get('source')!='native_job' or source not in ops or jobs.get(source,{}).get('implementation')!='native_rtl':
+                    raise ValueError('prior CP state has no native tensor producer')
+            consumers=state['consumer_jobs']
+            if not consumers: raise ValueError('persistent state has no native pool consumer')
+            for consumer in consumers:
+                if consumer not in required or not commit<ops[consumer]['start'] or ops[consumer]['end']>end:
+                    raise ValueError('pool outside fixed committed-state lifetime')
+                covered.add(consumer)
+            validate_evidence(state.get('evidence'),root)
+            key=instance,state['physical_bank']
+            for old_begin,old_end,old_context in physical.setdefault(key,[]):
+                if max(begin,old_begin)<min(end,old_end):
+                    raise ValueError('overlapping open contexts on single physical CP cache')
+            physical[key].append((begin,end,state['context_key']))
+        except (ValueError,KeyError,TypeError,OSError) as exc:
+            errors.append(dict(kind='invalid_persistent_state',reservation=state.get('id'),reason=str(exc)))
+    for consumer in sorted(required-covered):
+        errors.append(dict(kind='missing_native_persistent_state',job=consumer))
+    return errors
+
+
 def compile_program(program, binding, contract, root=ROOT):
     """Atomic lowering; every program op, even a non-VM op, needs a binding.
 
@@ -66,6 +128,7 @@ def compile_program(program, binding, contract, root=ROOT):
     for ident, op in by_id.items():
         if ident not in jobs:
             reject('missing_native_job_binding', job=ident, engine=op['eng'])
+    rejected.extend(check_persistent_state(program,binding,root))
     # Physical addresses are explicit: never adopt su_gate's snapshot allocator.
     valid_tensors = {}
     for name, tensor in tensors.items():
