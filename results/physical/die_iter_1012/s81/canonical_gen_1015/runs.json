@@ -1,13 +1,13 @@
 {
-  "status": "SCREEN10_LIVE_BROAD_SERVICE_GAP_CONSTRUCTION",
-  "source_commit": "0f8e49102",
+  "status": "SCREEN11_LIVE_ALL_SERVICE_STREET_PATHS",
+  "source_commit": "20e23fe66",
   "host": "ot-epyc4",
-  "pid": 1703995,
-  "unit": "oth-ubuntu-1703969-1792059218",
-  "local_systemd_unit": "canonical-gen-1015-screen10.service",
-  "local_log": "/home/ubuntu/canonical-gen-1015-screen10.log",
+  "pid": 1744200,
+  "unit": "oth-ubuntu-1744172-1792059609",
+  "local_systemd_unit": "canonical-gen-1015-screen11.service",
+  "local_log": "/home/ubuntu/canonical-gen-1015-screen11.log",
   "remote_source": "/srv/opentallas-scratch/codex-canonical-gen-1015/src",
-  "output": "/srv/opentallas-scratch/codex-canonical-gen-1015/screen10",
+  "output": "/srv/opentallas-scratch/codex-canonical-gen-1015/screen11",
   "scope": "Actual full2417 typed generator. No native timing or placement success claim while active. All sourcepairIDs2417/BF519 andPHW10 metadata preserved.",
   "first_failure": "Historical slot_geometry required uniform BF_PER_REGION; canonical exactperframe slot inventory now replaces only canonical restriction. Failed screen1 remains immutable.",
   "artifacts_expected": {
@@ -42,7 +42,7 @@
     "local_systemd_unit": "canonical-gen-1015-screen3.service",
     "output": "/srv/opentallas-scratch/codex-canonical-gen-1015/screen3"
   },
-  "updated_utc": "2026-10-15T10:14:36.895637+00:00",
+  "updated_utc": "2026-10-15T10:20:58.629514+00:00",
   "screen7": {
     "status": "GEN_FAIL",
     "exit_code": 1,
@@ -71,11 +71,18 @@
     "error": "All128 broadcast trees and128 root return paths construct; then legacy service qSW no station (11879,3323), fictional symmetric shorestrip crosses actual canonical CFG/ROM boxes."
   },
   "screen10": {
-    "status": "LIVE",
+    "status": "GEN_FAIL",
     "source": "0f8e49102",
     "capacity_sha256": "2d1fa10aa7e3136a4fece04b2b9b1d094a99391dcd5c7a6726991061ff540995",
     "capacity_source": "geometry_s81 6ef8ed3a5",
     "structural_change": "Coherent whole physicalW column10 +146.88um; six immutable roots/realchildren preserved. Actual servicegap155.52um with roadmap edges only in realgap/localstreets. Actual q/a access uses graph; ordinary1026 N/S-face station fits broadgap.",
-    "cut_scope": "q/a/ix/co2568bits isolated diagnostic0.524028, not aggregate actualtraffic/PG/signoff; remains mandatory actual cut gate."
+    "cut_scope": "q/a/ix/co2568bits isolated diagnostic0.524028, not aggregate actualtraffic/PG/signoff; remains mandatory actual cut gate.",
+    "error": "All128 root broadcast paths (two shared trees), all128 root return paths, qSW514 and aSW1026 construct; ixSW fails legacyshorestrip at(12718,3433). Movedactual32969childboxes0overlap/outside."
+  },
+  "screen11": {
+    "status": "LIVE",
+    "source": "20e23fe66",
+    "capacity_sha256": "2d1fa10aa7e3136a4fece04b2b9b1d094a99391dcd5c7a6726991061ff540995",
+    "structural_change": "Allfour q/a/ix/co service paths use actual irregularstreet/gap graph; externalS14spine placed outside movedinnercolumn outline; actual per-chain polylines/stationboxes and broadcasttree injectors/parents exported for system optimizer."
   }
 }
