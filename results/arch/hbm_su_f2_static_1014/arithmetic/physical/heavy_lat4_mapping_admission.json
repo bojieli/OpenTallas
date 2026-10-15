@@ -1,0 +1,34 @@
+{
+  "qualified": false,
+  "purpose": "source-current KIND1/KIND2 area needed before actual PG0/PG1 slot grants; legacy maps are MLAT3 LEAF0 and cannot size accepted LAT4 profile",
+  "profiles": [
+    {
+      "KIND": 1,
+      "LN": 7,
+      "MLAT": 4,
+      "ALAT": 3,
+      "LEAF": 1,
+      "FETCH_EXTRA_EDGES": 2,
+      "replicas": 127
+    },
+    {
+      "KIND": 2,
+      "LN": 7,
+      "MLAT": 4,
+      "ALAT": 3,
+      "LEAF": 1,
+      "FETCH_EXTRA_EDGES": 2,
+      "replicas": 1
+    }
+  ],
+  "period_ps": 1111.111111,
+  "uncertainty_ps": {
+    "setup": 60,
+    "hold": 25
+  },
+  "source_changes": "none to arithmetic or its parameters; mapping variant parser extended to select existing accepted current parameters explicitly",
+  "expected_clock_census": "existing source LAT4 conservative census max12317 sinks,10 live roots forSFU/12 forFULL; actual mapped netlist recount required before report",
+  "memory_admission_gb_per_run": 12,
+  "mapping_scope": "synth only, no PNR/CTS or timing closure claim",
+  "geometry_requirement": "G0/G1 each16 heavy+16LIGHT; G2/G3 each32LIGHT. Q0G0 includes1FULL+15SFU. Whole heavy is127SFU+1FULL. Data_store/programme/multirate bridge area remains separate."
+}
