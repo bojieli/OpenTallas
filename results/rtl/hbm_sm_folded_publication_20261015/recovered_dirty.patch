@@ -1,0 +1,64 @@
+diff --git a/rtl/hbm_accel/sm/attn/ot_hbm_sm_attn_front_static.sv b/rtl/hbm_accel/sm/attn/ot_hbm_sm_attn_front_static.sv
+index abd04af2c..e525ddf44 100644
+--- a/rtl/hbm_accel/sm/attn/ot_hbm_sm_attn_front_static.sv
++++ b/rtl/hbm_accel/sm/attn/ot_hbm_sm_attn_front_static.sv
+@@ -71,6 +71,7 @@ module ot_hbm_sm_attn_front_static(
+         metadata[134]=command[134];metadata[136:135]=command[133:132];metadata[137]=consume;
+         // r2 in-SM PV stream fold (head dim 128): command[131] fold, [130:128] entry a, [127:125] entry b
+         metadata[138]=attention&&command[131];metadata[141:139]=command[130:128];metadata[144:142]=command[127:125];
++        metadata[145]=command[124];                    // folded publication (head dim 128)
+     end
+     wire [15:0] tag={command[22:11],command[10],command[9:7]};
+     wire [21:0] control={1'b0,(arithmetic_v || (attention&&(command[134]||command[131]))),command[24],command[23],1'b1,1'b1,tag};
+@@ -86,7 +87,7 @@ module ot_hbm_sm_attn_front_static(
+     always @(posedge clk or negedge rst_n)
+         if(!rst_n)schedule_fault<=0;
+         else begin
+-            if(command!=0 && (command[191:184]!=8'ha2 || |command[124:116] || |command[114:112] || command[111]))schedule_fault<=1;
++            if(command!=0 && (command[191:184]!=8'ha2 || |command[123:116] || |command[114:112] || command[111]))schedule_fault<=1;
+             if(!attention && mode==3)schedule_fault<=1;
+             if(attention_q && (request[42]!=expected_q[42] || (request[42] && request!=expected_q)))schedule_fault<=1;
+             if(!attention && command[25] && converter_busy)schedule_fault<=1;
+diff --git a/rtl/hbm_accel/sm/attn/ot_hbm_sm_attn_leafh.sv b/rtl/hbm_accel/sm/attn/ot_hbm_sm_attn_leafh.sv
+index 8def38e2c..15f9f1d6a 100644
+--- a/rtl/hbm_accel/sm/attn/ot_hbm_sm_attn_leafh.sv
++++ b/rtl/hbm_accel/sm/attn/ot_hbm_sm_attn_leafh.sv
+@@ -37,13 +37,13 @@ module ot_hbm_sm_attn_leafh #(
+     reg [TAGW-1:0] btag,ftag;
+     reg [LBS*266-1:0] bw,bx;
+     reg [255:0] fw,fx;
+-    reg [3:0] publish0;
++    reg [4:0] publish0;                              // {folded (r2), start, h128, sel[1:0]}
+     reg fold0; reg [2:0] fold0_a, fold0_b;          // r2: in-SM PV stream fold, every leaf at once (no lane shared)
+     always @(posedge clk or negedge r_x)
+         if(!r_x)begin bv<=0;fv<=0;publish0<=0;fold0<=0;end
+         else begin
+             bv<=iv_b;fv<=input_arithmetic;
+-            publish0<={marker&&iw[134],iw[131],iw[136:135]};
++            publish0<={iw[145],marker&&iw[134],iw[131],iw[136:135]};
+             fold0<=marker&&iw[138];
+         end
+     always @(posedge clk)begin
+@@ -66,7 +66,7 @@ module ot_hbm_sm_attn_leafh #(
+         .i_tag(btag),.i_w(bw),.i_x(bx),.ov(bov),.y(by),.otag(bt),.fault(bfault));
+     // Fixed16cycle leaf staggering packs four scalar lanes into the existing
+     // one-word/column gather. The row strap is static and width is unchanged.
+-    reg [3:0] pub_pipe[0:48];
++    reg [4:0] pub_pipe[0:48];
+     integer d;
+     always @(posedge clk or negedge r_x)
+         if(!r_x)for(d=0;d<49;d=d+1)pub_pipe[d]<=0;
+@@ -74,8 +74,11 @@ module ot_hbm_sm_attn_leafh #(
+             pub_pipe[0]<=publish0;
+             for(d=1;d<49;d=d+1)pub_pipe[d]<=pub_pipe[d-1];
+         end
+-    wire [3:0] pc=pub_pipe[{attn_row,4'b0000}];
+-    wire [2:0] selected_slot=pc[2]?{attn_column[0],pc[1:0]}:attn_column;
++    wire [4:0] pc=pub_pipe[{attn_row,4'b0000}];
++    // h128: sel = which of the pair's 4 stream entries (columns 2h, 2h+1 = q head h, column parity = entries 0-3 / 4-7);
++    // FOLDED (r2, after the in-SM stream fold): the folded node, column parity picks its dim half (entry 0 / 1), so one
++    // request publishes the whole 128-dim node of every head
++    wire [2:0] selected_slot=pc[2]?(pc[4]?{2'b00,attn_column[0]}:{attn_column[0],pc[1:0]}):attn_column;
+     reg published_h128;
+     always @(posedge clk)if(pc[3])published_h128<=pc[2];
+     ot_hbm_sm_attn_native_col #(.TAGW(TAGW),.LV(4),.PUBLISH(1)) u_tcc(

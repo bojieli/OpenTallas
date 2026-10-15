@@ -37,16 +37,19 @@ module ot_hbm_sm_attn_leafh #(
     reg [TAGW-1:0] btag,ftag;
     reg [LBS*266-1:0] bw,bx;
     reg [255:0] fw,fx;
-    reg [3:0] publish0;
+    reg [4:0] publish0;                              // {folded (r2), start, h128, sel[1:0]}
+    reg fold0; reg [2:0] fold0_a, fold0_b;          // r2: in-SM PV stream fold, every leaf at once (no lane shared)
     always @(posedge clk or negedge r_x)
-        if(!r_x)begin bv<=0;fv<=0;publish0<=0;end
+        if(!r_x)begin bv<=0;fv<=0;publish0<=0;fold0<=0;end
         else begin
             bv<=iv_b;fv<=input_arithmetic;
-            publish0<={marker&&iw[134],iw[131],iw[136:135]};
+            publish0<={iw[145],marker&&iw[134],iw[131],iw[136:135]};
+            fold0<=marker&&iw[138];
         end
     always @(posedge clk)begin
         bfirst<=ifirst;blast<=ilast;bfp4<=ifp4;btag<=itag;
         bw<=iw[0+:LBS*266];bx<=ix[0+:LBS*266];
+        fold0_a<=iw[141:139];fold0_b<=iw[144:142];
         ffirst<=ifirst_e;fqlast<=ilast_e&&!input_pv;fplast<=ilast_e&&input_pv;
         frfirst<=iw[132];frlast<=iw[133];ftag<=itag_e;
         fw<=iw[LBS*266+:256];
@@ -63,7 +66,7 @@ module ot_hbm_sm_attn_leafh #(
         .i_tag(btag),.i_w(bw),.i_x(bx),.ov(bov),.y(by),.otag(bt),.fault(bfault));
     // Fixed16cycle leaf staggering packs four scalar lanes into the existing
     // one-word/column gather. The row strap is static and width is unchanged.
-    reg [3:0] pub_pipe[0:48];
+    reg [4:0] pub_pipe[0:48];
     integer d;
     always @(posedge clk or negedge r_x)
         if(!r_x)for(d=0;d<49;d=d+1)pub_pipe[d]<=0;
@@ -71,8 +74,11 @@ module ot_hbm_sm_attn_leafh #(
             pub_pipe[0]<=publish0;
             for(d=1;d<49;d=d+1)pub_pipe[d]<=pub_pipe[d-1];
         end
-    wire [3:0] pc=pub_pipe[{attn_row,4'b0000}];
-    wire [2:0] selected_slot=pc[2]?{attn_column[0],pc[1:0]}:attn_column;
+    wire [4:0] pc=pub_pipe[{attn_row,4'b0000}];
+    // h128: sel = which of the pair's 4 stream entries (columns 2h, 2h+1 = q head h, column parity = entries 0-3 / 4-7);
+    // FOLDED (r2, after the in-SM stream fold): the folded node, column parity picks its dim half (entry 0 / 1), so one
+    // request publishes the whole 128-dim node of every head
+    wire [2:0] selected_slot=pc[2]?(pc[4]?{2'b00,attn_column[0]}:{attn_column[0],pc[1:0]}):attn_column;
     reg published_h128;
     always @(posedge clk)if(pc[3])published_h128<=pc[2];
     ot_hbm_sm_attn_native_col #(.TAGW(TAGW),.LV(4),.PUBLISH(1)) u_tcc(
@@ -80,7 +86,8 @@ module ot_hbm_sm_attn_leafh #(
         .i_run_first(frfirst),.i_run_last(frlast),.i_tag(ftag),.i_w(fw),.i_x(fx),
         .ov(fov),.y(fy),.otag(ft),.pv_v(pv_v),.pv_y(pv_y),.pv_tag(pv_tag),.fault(ffault),
         .pub_start(pc[3]),.pub_slot(selected_slot),.pub_v(ps_v),.pub_data(ps_data),
-        .pub_word(ps_word),.pub_out_slot(ps_slot),.pub_tag(ps_tag));
+        .pub_word(ps_word),.pub_out_slot(ps_slot),.pub_tag(ps_tag),
+        .fold_start(fold0),.fold_a(fold0_a),.fold_b(fold0_b));
     wire [11:0] scalar_row=published_h128?{4'd0,ps_slot[1:0],attn_row,ps_word}:{6'd0,attn_row,ps_word};
     reg gv_q,gf_q;
     reg [31:0] gy_q;

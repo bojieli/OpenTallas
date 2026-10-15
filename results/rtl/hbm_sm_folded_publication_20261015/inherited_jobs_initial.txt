@@ -1,0 +1,11 @@
+Thu Oct 15 21:31:40 UTC 2026
+  oth-ubuntu-1628736-1792094236.scope                                                                       loaded    active   running   /usr/bin/python3 tools/hbm_sm_attention/sm_elem_bench.py run --shape ds640 --ops qk_sm0,pv_sm0 --probe --work /srv/opentallas-scratch/claude/smatt-r2/w-elem1 --out /srv/opentallas-scratch/claude/smatt-r2/elem1.json
+  oth-ubuntu-1628737-1792094236.scope                                                                       loaded    active   running   /usr/bin/python3 tools/hbm_sm_attention/sm_attn_bench.py run --shape qwen8192 --native-column --only qk_h0_sm0,pv_h0_sm0_b0,pv_h0_sm0_b4 --work /srv/opentallas-scratch/claude/smatt-r2/w-smoke2 --out /srv/opentallas-scratch/claude/smatt-r2/smoke2.json --jobs 3
+w-elem1
+3
+1792096374.1316513100 /srv/opentallas-scratch/claude/smatt-r2/w-elem1/obj_p1_d0/verilated.o
+1792096362.0112144060 /srv/opentallas-scratch/claude/smatt-r2/w-elem1/obj_p1_d0/verilated_threads.o
+w-smoke2
+18
+1792099851.3019440280 /srv/opentallas-scratch/claude/smatt-r2/w-smoke2/obj_kv0_pv0_c4_n1/Vtb_hbm_sm_attn_vm_classes_Slow_10.o
+1792099631.8821259470 /srv/opentallas-scratch/claude/smatt-r2/w-smoke2/obj_kv0_pv0_c4_n1/Vtb_hbm_sm_attn_vm_classes_Slow_5.o
