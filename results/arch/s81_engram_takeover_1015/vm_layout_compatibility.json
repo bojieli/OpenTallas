@@ -1,0 +1,311 @@
+{
+ "schema": "opentallas.s81.engram.vm-layout-witness.v1",
+ "source_sha256": {
+  "rtl/dsrom_sys/engram/mix/dsfd_engram_mix4_c.sv": "5ea7fd7dbaf08f7ed64a70029649d9d9b94237a4fad877048a6f35d0154a6bd7",
+  "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_rsched.sv": "fd6084abed50a529188f343e1b4064932ae3dfe1d8c31f1597d7871b9e79f0ac",
+  "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static512_suhc.sv": "53f6be069baf2a0a4e6952063354ec308244b7e7b9baa098051537fe898ceb31",
+  "rtl/dsrom_sys/engram/mix/tb_s81_engram_mix4_c.sv": "a63d14f1d499a05f795182aa0f5e056eaed4b6aad0a300ac6b98a2f6940da31f"
+ },
+ "shape": {
+  "copies": 4,
+  "words_per_copy": 5120,
+  "reduction_beats": 160,
+  "add_beats": 160
+ },
+ "current": {
+  "native_join_compatible": false,
+  "max_simultaneous_requests_per_slot": 3,
+  "max_simultaneous_requests_per_bank": 3,
+  "failing_phase_beats": 248,
+  "first_failures": [
+   {
+    "phase": "REDUCE",
+    "beat": 0,
+    "slot_collisions": {
+     "0": [
+      0,
+      1,
+      3
+     ],
+     "5": [
+      4,
+      5,
+      7
+     ],
+     "8": [
+      8,
+      11
+     ],
+     "13": [
+      12,
+      14
+     ],
+     "20": [
+      16,
+      18
+     ],
+     "21": [
+      17,
+      19
+     ]
+    },
+    "bank_collisions": {
+     "0": [
+      0,
+      1,
+      3
+     ],
+     "1": [
+      2,
+      4,
+      5
+     ],
+     "8": [
+      6,
+      8
+     ],
+     "9": [
+      7,
+      9
+     ],
+     "16": [
+      11,
+      13
+     ],
+     "17": [
+      12,
+      14
+     ],
+     "24": [
+      16,
+      18
+     ],
+     "25": [
+      17,
+      19
+     ]
+    }
+   },
+   {
+    "phase": "REDUCE",
+    "beat": 1,
+    "slot_collisions": {
+     "2": [
+      1,
+      3
+     ],
+     "7": [
+      4,
+      7
+     ],
+     "10": [
+      8,
+      10,
+      11
+     ],
+     "15": [
+      12,
+      14,
+      15
+     ],
+     "22": [
+      16,
+      18
+     ],
+     "23": [
+      17,
+      19
+     ]
+    },
+    "bank_collisions": {
+     "2": [
+      1,
+      3
+     ],
+     "3": [
+      2,
+      4
+     ],
+     "10": [
+      6,
+      8
+     ],
+     "11": [
+      7,
+      9
+     ],
+     "18": [
+      11,
+      13
+     ],
+     "19": [
+      12,
+      14
+     ],
+     "26": [
+      16,
+      18
+     ],
+     "27": [
+      17,
+      19
+     ]
+    }
+   },
+   {
+    "phase": "REDUCE",
+    "beat": 2,
+    "slot_collisions": {
+     "0": [
+      0,
+      1,
+      3
+     ],
+     "5": [
+      4,
+      5,
+      7
+     ],
+     "8": [
+      8,
+      11
+     ],
+     "13": [
+      12,
+      14
+     ],
+     "20": [
+      16,
+      18
+     ],
+     "21": [
+      17,
+      19
+     ]
+    },
+    "bank_collisions": {
+     "4": [
+      1,
+      3
+     ],
+     "5": [
+      2,
+      4
+     ],
+     "12": [
+      6,
+      8
+     ],
+     "13": [
+      7,
+      9
+     ],
+     "20": [
+      11,
+      13
+     ],
+     "21": [
+      12,
+      14
+     ],
+     "28": [
+      16,
+      18
+     ],
+     "29": [
+      17,
+      19
+     ]
+    }
+   },
+   {
+    "phase": "REDUCE",
+    "beat": 3,
+    "slot_collisions": {
+     "2": [
+      1,
+      3
+     ],
+     "7": [
+      4,
+      7
+     ],
+     "10": [
+      8,
+      10,
+      11
+     ],
+     "15": [
+      12,
+      14,
+      15
+     ],
+     "22": [
+      16,
+      18
+     ],
+     "23": [
+      17,
+      19
+     ]
+    },
+    "bank_collisions": {
+     "6": [
+      1,
+      3
+     ],
+     "7": [
+      2,
+      4
+     ],
+     "14": [
+      6,
+      8,
+      10
+     ],
+     "15": [
+      7,
+      9,
+      15
+     ],
+     "22": [
+      11,
+      13
+     ],
+     "23": [
+      12,
+      14
+     ],
+     "30": [
+      16,
+      18
+     ],
+     "31": [
+      17,
+      19
+     ]
+    }
+   }
+  ],
+  "stored_rows": 3520,
+  "storage_aliases": 0,
+  "first_aliases": []
+ },
+ "candidate": {
+  "native_join_compatible": true,
+  "max_simultaneous_requests_per_slot": 1,
+  "max_simultaneous_requests_per_bank": 1,
+  "failing_phase_beats": 0,
+  "first_failures": [],
+  "stored_rows": 3520,
+  "storage_aliases": 0,
+  "first_aliases": []
+ },
+ "scope": "Static full-shape address/slot/bank witness only; candidate storage ABI is not implemented or adopted. Existing ideal-VM arithmetic component benches do not qualify native MIX4+128SRAM integration.",
+ "remaining": [
+  "Versioned descriptor and producer/compiler staging map",
+  "RTL row address generation",
+  "Full128SRAM exact numerical and commit/return-slot proof plus actual DUT mutants",
+  "Current parent geometry and source-bound physical closure"
+ ]
+}
