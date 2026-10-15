@@ -25,11 +25,15 @@ FIELDS = [('read_slot',1),('read_row',14),('issue_slot',1),('tag',32),
  ('raw_rx_write_slot',1),('raw_rx_payload_row',14),('raw_rx_meta_row',14),('raw_rx_tag',8),
  ('hc_assemble_slot',1)]
 CONTROL_BITS=sum(w for _,w in FIELDS)
-# control, expected command pulse84, done pulse9, final cycle, validity marker.
-ROM_BITS=CONTROL_BITS+85+9+2
-ABI='opentallas.s81.collective-fixed-edge-rom.v2'
-LATENCIES=dict(control_rom_synchronous_read_edges=1,control_rom_idle_prefetch_edges=1,controller_command_register_edges=1,controller_output_register_edges=1,vm_request_to_issue_edges=14,issue_to_gather_edges=11,
-               gather_to_vm_source_edges=1,hc_reduce_to_write_edges=18,
+# control, expected command pulse84, done pulse9, next-row-final lookahead, final cycle, validity marker.
+# v3: the controller captures the macro output in a register (macro clk->q leaves no room for decode); the macro reads
+# one row ahead, and the lookahead bit L(r)=final(next(r)) names the address of the row after next without macro-q logic.
+ROM_BITS=CONTROL_BITS+85+9+3
+ABI='opentallas.s81.collective-fixed-edge-rom.v3'
+LATENCIES=dict(control_rom_synchronous_read_edges=1,control_rom_idle_prefetch_edges=1,control_rom_output_capture_edges_hidden_by_prefetch=1,control_rom_initialization_extra_edges=1,controller_command_register_edges=1,controller_output_register_edges=1,vm_request_to_issue_edges=14,issue_to_gather_edges=11,
+               gather_to_vm_source_edges=2,hc_reduce_to_write_edges=19,
+               vm_boundary_pin_capture_edges=1,hc_reduce_to_write_control_edges=18,
+               commit_control_to_vm_pin_edges=4,hc_write_control_to_vm_pin_edges=3,
                hc_final_write_to_earliest_emit_edges=1,
                done_rom_to_c_done_edges=1)
 
@@ -64,6 +68,11 @@ def compile_image(request,root):
     cycles=request['cycles']
     if len(cycles)>4096: raise ValueError('actual control ROM has one4096cycle page; larger calendars require real page implementation')
     if not cycles or not cycles[0]['cmd_valid']: raise ValueError('first edge must name start command')
+    # v3 fail-stop: the 85-bit command compare faults one edge after the row it checks, so the start row may emit its
+    # own controls before a mismatching start is refused: no action slot other than a VM read request is admitted
+    # there (value fields such as phases/rows/tags act only under their own slot bit).
+    if any(v for n,v in cycles[0]['controls'].items() if (n.endswith('_slot') or n=='commit_gather') and n!='read_slot'):
+        raise ValueError('start row may carry only read requests (command compare faults one edge later)')
     controls=[]
     for edge,c in enumerate(cycles):
         if c['edge']!=edge: raise ValueError('calendar must be contiguous')
@@ -131,22 +140,23 @@ def compile_image(request,root):
             owner['committed']+=1
             if bool(ctrl['commit_last'])!=(owner['committed']==owner['count']): raise ValueError('gather last/count')
             commits[edge]=owner
-            if ctrl['commit_last']: owner['last_commit']=edge
+            if ctrl['commit_last']: owner['last_commit']=edge+LATENCIES['commit_control_to_vm_pin_edges']
         elif ctrl['commit_gather']: raise ValueError('gather mode flag outside commit slot')
         # Reduce samples gather registers one edge later, then the reduced VM
-        # word is sampled18edges later. Optional HC assembly is a separate use.
+        # write control is sampled18edges later. PINCAP adds one edge to VM
+        # visibility; HC assembly bypasses that boundary and keeps its own slot.
         if ctrl['hc_reduce_slot']:
             owner=commits.get(edge-1)
             if owner is None or owner['mode']!=0: raise ValueError('HC source not a preceding reduce gather')
             hc_inputs[edge]=(cycles[edge-1]['controls']['commit_seq'],cycles[edge-1]['controls']['commit_last'],owner)
         if ctrl['hc_write_slot']:
-            expected=hc_inputs.get(edge-18)
+            expected=hc_inputs.get(edge-LATENCIES['hc_reduce_to_write_control_edges'])
             if expected is None: raise ValueError('HC write has no reducer source')
             seq,last,owner=expected
             if ctrl['hc_expect_seq']!=seq or ctrl['hc_expect_last']!=last:
                 raise ValueError('HC write latency/sequence/last')
             owner['reduced_written']+=1;hc_writes[edge]=(seq,last,owner)
-            if last: owner['last_reduce_write']=edge
+            if last: owner['last_reduce_write']=edge+LATENCIES['hc_write_control_to_vm_pin_edges']
         if ctrl['hc_assemble_slot']:
             if not ctrl['hc_write_slot']: raise ValueError('HC assembly lacks actual reduced-word write')
             owner=hc_writes[edge][2]
@@ -198,23 +208,25 @@ def compile_image(request,root):
             owner=pending[tag]
             boundary={'gather_vm':'last_commit','reduce_vm':'last_reduce_write','reduce_vm_hc':'last_emit'}[owner['consumer']]
             finished=owner[boundary]
-            if finished is None or edge<=finished or owner['committed']!=owner['count']:
+            if finished is None or edge+LATENCIES['done_rom_to_c_done_edges']<=finished or owner['committed']!=owner['count']:
                 raise ValueError('completion precedes actual final scheduled output')
-            if not owner['mode'] and (owner['reduced_written']!=owner['count'] or owner['last_reduce_write']>=edge):
+            if not owner['mode'] and (owner['reduced_written']!=owner['count'] or owner['last_reduce_write']>=edge+LATENCIES['done_rom_to_c_done_edges']):
                 raise ValueError('completion precedes final reduced VM word')
             if assembly_owner is owner: raise ValueError('completion leaves partial HC assembly')
             del pending[tag]
         elif c['done_tag']!=0: raise ValueError('nonzero idle completion tag')
         if type(c['done_tag'])is not int or not 0<=c['done_tag']<256: raise ValueError('done tag')
         cmd=(v<<84)|c['cmd84'];done=(d<<8)|c['done_tag']
+        final=lambda e:int(e==len(cycles)-1)
+        lookahead=final(edge+1 if edge<len(cycles)-1 else 0)
         words.append(control|(cmd<<CONTROL_BITS)|(done<<(CONTROL_BITS+85))|
-                     (int(edge==len(cycles)-1)<<(CONTROL_BITS+94))|(1<<(ROM_BITS-1)))
+                     (lookahead<<(CONTROL_BITS+94))|(final(edge)<<(CONTROL_BITS+95))|(1<<(ROM_BITS-1)))
     if source_queue or pending: raise ValueError('unfinished message/completion')
     if assembly_owner is not None or raw_payload_loaded or raw_meta_loaded: raise ValueError('unfinished finite operand capture')
     for edge,owner in commits.items():
         if owner['mode']==0 and edge+1 not in hc_inputs: raise ValueError('reduce gather lacks HC reservation')
     for edge in hc_inputs:
-        if edge+18 not in hc_writes: raise ValueError('HC reducer result lacks reduced VM write reservation')
+        if edge+LATENCIES['hc_reduce_to_write_control_edges'] not in hc_writes: raise ValueError('HC reducer result lacks reduced VM write reservation')
     return words
 
 def pack_macro_banks(words,path):

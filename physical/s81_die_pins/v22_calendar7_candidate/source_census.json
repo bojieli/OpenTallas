@@ -1,0 +1,89 @@
+{
+  "base_sha256": "ed584619c336e8340155d839eb0f119c115146b32a4fc83b3d3d68b8c5554490",
+  "source": "rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller7.sv",
+  "source_sha256": "082ed2d5c528b6e4fb48936e279c434a20c41e297ad028f847bf0b62657f2d62",
+  "clocks": [
+    "clk",
+    "clk_rom[0]",
+    "clk_rom[1]",
+    "clk_rom[2]",
+    "clk_outputs[0]",
+    "clk_outputs[1]",
+    "clk_outputs[2]"
+  ],
+  "output_groups": [
+    {
+      "clock": "clk_outputs[0]",
+      "bits": 183,
+      "ports": [
+        "read_slot",
+        "read_row",
+        "issue_slot",
+        "tag",
+        "seq",
+        "last",
+        "rankmask",
+        "commit_slot",
+        "commit_tag",
+        "commit_seq",
+        "commit_last",
+        "commit_rankmask",
+        "commit_rows"
+      ]
+    },
+    {
+      "clock": "clk_outputs[1]",
+      "bits": 143,
+      "ports": [
+        "tx_beat_slot",
+        "tx_phase",
+        "tx_frame_slot",
+        "rx_beat_slot",
+        "rx_phase",
+        "rx_frame_slot",
+        "channel_tx_slot",
+        "channel_tx_kind",
+        "channel_tx_seq",
+        "channel_tx_last",
+        "channel_rx_slot",
+        "channel_rx_kind",
+        "channel_rx_seq"
+      ]
+    },
+    {
+      "clock": "clk_outputs[2]",
+      "bits": 142,
+      "ports": [
+        "channel_rx_last",
+        "channel_tx_beat_slot",
+        "channel_tx_frame_slot",
+        "channel_tx_phase",
+        "channel_rx_beat_slot",
+        "channel_rx_frame_slot",
+        "channel_rx_phase",
+        "hc_reduce_slot",
+        "hc_write_slot",
+        "hc_word_index",
+        "hc_expect_seq",
+        "hc_expect_last",
+        "hc_emit_slot",
+        "hc_emit_tag",
+        "commit_gather",
+        "raw_capture_payload_slot",
+        "raw_capture_meta_slot",
+        "raw_rx_write_slot",
+        "raw_rx_payload_row",
+        "raw_rx_meta_row",
+        "raw_rx_tag",
+        "hc_assemble_slot"
+      ]
+    }
+  ],
+  "added_data_edges": 0,
+  "added_data_registers": 0,
+  "reset_relays": 4,
+  "initialization_release_extra_edges": 3,
+  "fault_input_capture_extra_edges": 1,
+  "rom_macros": 3,
+  "qualification": false
+}

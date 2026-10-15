@@ -5,7 +5,7 @@
 // Configuration ROM/memory macro and production placement/phase/image are open
 // qualification gates. Missing ROM fails closed, never fabricates a schedule.
 module s81_static_collective_slab #(
- parameter ROM_FILE="",parameter integer CYCLES=1,parameter integer MUT=0
+ parameter ROM_FILE="",parameter integer CYCLES=1,parameter integer MUT=0,parameter integer VMB_PINCAP=1
 )(
  input wire[4:0]ck_control,input wire[7:0]ck_lane,input wire[15:0]ck_hc_lane,
  input wire rst_n,input wire[1:0]f_rank,
@@ -211,7 +211,8 @@ module s81_static_collective_slab #(
  // Native host ingress omits the historical credit bit. Its wire reservation
  // remains zero; accepting a nonzero bit would silently restore flow control.
  assign t_host=host_rx[514:0];
- s81_static_vm_boundary #(.MUT(MUT)) vm_boundary(
+ // VMB_PINCAP=1: native boundary leaf (write path pin-captured, collective->VM write +1 fixed edge; reads unchanged)
+ s81_static_vm_boundary #(.MUT(MUT),.PINCAP(VMB_PINCAP)) vm_boundary(
  .clk(ck_control[2]),.rst_n(rn_control[2]),.read_slot(read_slot),.read_row(read_row),.t_crq(t_crq),.t_vm(t_vm),
  .commit_gather(commit_gather),.hc_reduce_slot(hc_reduce_slot),.gather_we(gather_we),.gather_rows(gather_rows),.gather_data(gather_data),.gather_tag(gather_tag),
  .hc_write_slot(hc_write_slot),.reduced_valid(reduced_valid),.reduced_error(reduced_error),.reduced_last(reduced_last),.reduced_seq(reduced_seq),
