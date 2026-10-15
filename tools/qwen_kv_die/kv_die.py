@@ -282,7 +282,7 @@ SPLIT_BINDINGS = dict(
 # rtl/qwen_sys/split_20261014/qkd_strips_s.sv), each leaf its own clock entry
 SPLIT_ONLY_BINDINGS = ('qkd_land', 'qkd_land_n', 'qkd_astk', 'qkd_astk_n', 'qkd_embgw', 'qkd_ctrl', 'qkd_ctrl_n')
 SPLIT_PHY = 'qkd_hbm3e_phy_pc'
-SPLIT_BINDINGS.update(qkd_ctrl=KS.ctrl_binding(), qkd_ctrl_n=KS.ctrl_binding())
+SPLIT_BINDINGS.update(qkd_ctrl=KS.ctrl_binding(rev=True), qkd_ctrl_n=KS.ctrl_binding())   # v1.3: S stacks = reversed chains (kc at the S = outer end)
 SPLIT_BINDINGS.update(qkd_land=KS.land_binding(), qkd_land_n=KS.land_binding(), qkd_astk=KS.astk_binding(),
                       qkd_astk_n=KS.astk_binding())
 # v1.2: the embedding gateway binds its CLOSED view's RTL (qkd_embgw sl2): the link words gq / gr and the host words hb / est
