@@ -66,9 +66,9 @@
  "job": {
   "benches_from": "tools/s81_suhc/hc_owned_nt_benches.json",
   "owner": "Claude:S-NORM",
-  "branch": "claude/s81-norm-tree-1014",
-  "tag": "s5-centre",
-  "structural_change": "v24 (S-NORM): s4 straight native launch 232.2 (139 pins) / rst_in capture 257.9 with R 188.4, spread 60.8 from a W-corner clock root; clk at the N-face centre x 286.04 over the 115-um flop window, rst_in at the S-face centre (abuts ctfn.rst_c), rr pinned again. 0 cycles.",
+  "branch": "codex/s81-norm-1103",
+  "tag": "s5-centre810",
+  "structural_change": "v24 (S-NORM): s4 straight native launch 232.2 (139 pins) / rst_in capture 257.9 with R 188.4, spread 60.8 from a W-corner clock root; clk at the N-face centre x 286.04 over the 115-um flop window, rst_in at the S-face centre (abuts ctfn.rst_c), rr pinned again. 0 cycles. Current810 NT candidate (S-DIE1103): reclamp only S fdx_local/fv_local to all8 actual CPL LEF centres at half0N211.68/half1N464.40, sourceFLN412.56. Oldpins139/9080 legs over500/max512.694um; corrected0/max499.782. 685Sbitsmove,max32.112; internalcut82->198/maxlateral50.592. Clock/reset/input pins, outline, RTL and normaledges unchanged. OldCTflgate invalid for newpinbytes; freshproduction HM30/MM gate required. Whole-slab first/last anchors remain open.",
   "no_bench_reason": "bit-exactness is gated on the HC slab composition with dsfd_sp_hc NTREE 1 (tools/s81_suhc/hc_ntree_bench.sh: NG 256 production shape exact PASS + mutant 3 FAIL; tools/s81_suhc/hc_gate.py --ntree 1 NG 256 exact 0/1940 x3 + per-tile mutants); the tile alone has no golden",
   "purpose": "el1014-s81-norm-tree LOCAL_SPLIT: fdx_local relay strip",
   "views_to": "physical/ref_tile/s81hc_ctflnt_ref/views",
@@ -92,7 +92,10 @@
    "cell": "ot_s81_hc_ctfl_nt",
    "launch_ps": 232.2,
    "capture_ps": 257.9,
-   "fix": "v24 (S-NORM): s4 straight native launch 232.2 (139 pins) / rst_in capture 257.9 with R 188.4, spread 60.8 from a W-corner clock root; clk at the N-face centre x 286.04 over the 115-um flop window, rst_in at the S-face centre (abuts ctfn.rst_c), rr pinned again. 0 cycles."
+   "fix": "v24 (S-NORM): s4 straight native launch 232.2 (139 pins) / rst_in capture 257.9 with R 188.4, spread 60.8 from a W-corner clock root; clk at the N-face centre x 286.04 over the 115-um flop window, rst_in at the S-face centre (abuts ctfn.rst_c), rr pinned again. 0 cycles. Current810 NT candidate (S-DIE1103): reclamp only S fdx_local/fv_local to all8 actual CPL LEF centres at half0N211.68/half1N464.40, sourceFLN412.56. Oldpins139/9080 legs over500/max512.694um; corrected0/max499.782. 685Sbitsmove,max32.112; internalcut82->198/maxlateral50.592. Clock/reset/input pins, outline, RTL and normaledges unchanged. OldCTflgate invalid for newpinbytes; freshproduction HM30/MM gate required. Whole-slab first/last anchors remain open.",
+   "evidence": [
+    "results/rtl/s81_layer_tput_1013/norm_tree_1014/native_closure_1014/codex_1103/ctfl_810_repin_audit.json"
+   ]
   }
  },
  "params": {},
