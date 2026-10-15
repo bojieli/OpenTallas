@@ -47,5 +47,13 @@
     "WB and prefetch block controllers being composed",
     "2334 non-PC shared PHY bits and historical native ports remain strict contract gaps",
     "Physical slot/timing/clock qualification absent"
-  ]
+  ],
+  "qualification_status": "REJECTED_FOR_ACTUAL_PHY_ADDRESS_AND_CLOCK_CONTRACT",
+  "authoritative_contradictions": {
+    "source": "rtl/hbm_accel/ingest/ot_hbm_loader_kport_address.sv",
+    "PHY_address": "full local sector30, not PC-local byte30",
+    "PC": "s[6:2]^s[11:7]^s[16:12]",
+    "old_leaf_alignment32": "incorrect for sector interface; legacy bench is artificial byte-address mechanism only",
+    "clock": "HBM1024ps distinct from stream833.333ps; no actual crossing in this historical leaf"
+  }
 }
