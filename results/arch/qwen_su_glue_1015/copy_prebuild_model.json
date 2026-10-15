@@ -1,0 +1,40 @@
+{
+  "schema": "opentallas.qwen-su-copy-split-prebuild.v1",
+  "source_commit": "c6c44c12c",
+  "replicas": 1,
+  "macs_per_cycle": 0,
+  "memory_bytes_per_cycle_added": 0,
+  "input_bits_per_cycle": 2105,
+  "output_bits_per_cycle": 2101,
+  "register_bits_declared": 2572,
+  "ff_qualification": "actual optimized standalone/netlist count pending; residual wholebase metadata15916FF",
+  "clock": {
+    "name": "ck_copy",
+    "actual_sequential_clock_before": "ck",
+    "edges_added": 0,
+    "relationship": "same-frequency/fixedphase asck; actualphi-RandRCmustbeproven"
+  },
+  "root_counts": {
+    "historical_su": 346,
+    "successor_su": 347,
+    "historical_compute": 950,
+    "successor_compute": 951
+  },
+  "routing_tracks_min": 4206,
+  "fanout_mux": "existing cp controls/valid15/address15; copy/arith bypass mux2367 remains actualbase combinational source",
+  "area": "pending standalone synthesis and exactpinfit; no fake view",
+  "floorplan_slot_fit": "unqualified; route candidate sized below from real synthesis",
+  "latency": "same15nativeVMreadpipelineplusoriginaloutputregister, noaddedstage",
+  "qualification": "model before source cut physical build, source-equivalence and actual mutation gates required",
+  "measured_synth": {
+    "flops": 2572,
+    "area_um2": 1396,
+    "outline_um": [
+      133.92,
+      133.92
+    ],
+    "root_sinks": 2572,
+    "qualification": "synthesis/floorplan only; physical STA pending",
+    "pin_fit": "four512bit input/output slices across fourfaces; no added registers"
+  }
+}

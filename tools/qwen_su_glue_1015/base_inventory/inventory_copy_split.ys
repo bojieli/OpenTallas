@@ -1,0 +1,10 @@
+read_verilog -sv tools/qwen_su_glue_1015/base_inventory/ot_hdc_vred_pending_guard.sv tools/qwen_su_glue_1015/base_inventory/leaf_boundaries.sv tools/qwen_su_glue_1015/base_inventory/ot_hdc_delay.sv tools/qwen_su_glue_1015/base_inventory/reset.sv tools/qwen_su_glue_1015/base_inventory/qfd_su_vm_pack.sv tools/qwen_su_glue_1015/base_inventory/copy_core_boundary.sv rtl/physical/ot_hdc_vstream_static_relay_entries.sv rtl/physical/qfd_su_static_copy_entries.sv rtl/physical/qfd_sp_su64_sfu_glue_entries.sv rtl/physical/ot_qfd_sp_su64_static_glue_entries.sv
+hierarchy -top qfd_sp_su64_sfu_glue_entries -chparam EXTERNAL_EMBED 1
+hierarchy -check
+proc
+flatten
+opt
+techmap
+opt
+stat -width
+write_json base_inventory/base_copy_split.json

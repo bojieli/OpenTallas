@@ -1,0 +1,68 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2025  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.52 (git sha1 fee39a3284c90249e1d9684cf6944ffbbcbb8f90)
+
+-- Executing script file `tools/qwen_su_glue_1015/base_inventory/inventory.ys' --
+
+1. Executing Verilog-2005 frontend: tools/qwen_su_glue_1015/base_inventory/qfd_su_static_copy.sv
+Parsing SystemVerilog input from `tools/qwen_su_glue_1015/base_inventory/qfd_su_static_copy.sv' to AST representation.
+Generating RTLIL representation for module `\qfd_su_static_copy'.
+Warning: Replacing memory \addr_pipe with list of registers. See tools/qwen_su_glue_1015/base_inventory/qfd_su_static_copy.sv:57
+Successfully finished Verilog frontend.
+
+2. Executing Verilog-2005 frontend: tools/qwen_su_glue_1015/base_inventory/ot_qfd_sp_su64_static_entries.sv
+Parsing SystemVerilog input from `tools/qwen_su_glue_1015/base_inventory/ot_qfd_sp_su64_static_entries.sv' to AST representation.
+Generating RTLIL representation for module `\ot_qfd_sp_su64_static_entries'.
+Successfully finished Verilog frontend.
+
+3. Executing Verilog-2005 frontend: tools/qwen_su_glue_1015/base_inventory/ot_hdc_vred_pending_guard.sv
+Parsing SystemVerilog input from `tools/qwen_su_glue_1015/base_inventory/ot_hdc_vred_pending_guard.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hdc_vred_pending_guard'.
+Successfully finished Verilog frontend.
+
+4. Executing Verilog-2005 frontend: tools/qwen_su_glue_1015/base_inventory/leaf_boundaries.sv
+Parsing SystemVerilog input from `tools/qwen_su_glue_1015/base_inventory/leaf_boundaries.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hdc_vstream_lane_clock_entries_candidate'.
+Generating RTLIL representation for module `\ot_qfd_su_align_group4'.
+Generating RTLIL representation for module `\qfd_su_vred_entries64'.
+Generating RTLIL representation for module `\ot_qfd_su_lane_relay'.
+Successfully finished Verilog frontend.
+
+5. Executing Verilog-2005 frontend: tools/qwen_su_glue_1015/base_inventory/ot_hdc_delay.sv
+Parsing SystemVerilog input from `tools/qwen_su_glue_1015/base_inventory/ot_hdc_delay.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hdc_delay'.
+Successfully finished Verilog frontend.
+
+6. Executing Verilog-2005 frontend: tools/qwen_su_glue_1015/base_inventory/qfd_sp_su64_sfu.sv
+Parsing SystemVerilog input from `tools/qwen_su_glue_1015/base_inventory/qfd_sp_su64_sfu.sv' to AST representation.
+Generating RTLIL representation for module `\qfd_sp_su64_sfu'.
+Successfully finished Verilog frontend.
+
+7. Executing Verilog-2005 frontend: tools/qwen_su_glue_1015/base_inventory/reset.sv
+Parsing SystemVerilog input from `tools/qwen_su_glue_1015/base_inventory/reset.sv' to AST representation.
+Generating RTLIL representation for module `\ot_qfd_rst_stn'.
+Successfully finished Verilog frontend.
+
+8. Executing Verilog-2005 frontend: tools/qwen_su_glue_1015/base_inventory/qfd_su_vm_pack.sv
+Parsing SystemVerilog input from `tools/qwen_su_glue_1015/base_inventory/qfd_su_vm_pack.sv' to AST representation.
+Generating RTLIL representation for module `\qfd_su_vm_pack'.
+Successfully finished Verilog frontend.
+
+9. Executing Verilog-2005 frontend: rtl/physical/ot_hdc_vstream_static_relay_entries.sv
+Parsing SystemVerilog input from `rtl/physical/ot_hdc_vstream_static_relay_entries.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hdc_vstream_static_relay_entries'.
+Successfully finished Verilog frontend.
+
+10. Executing HIERARCHY pass (managing design hierarchy).
+Parameter \EXTERNAL_EMBED = 1
+
+11. Executing AST frontend in derive mode using pre-parsed AST for module `\qfd_sp_su64_sfu'.
+Parameter \EXTERNAL_EMBED = 1
+Generating RTLIL representation for module `$paramod\qfd_sp_su64_sfu\EXTERNAL_EMBED=32'00000000000000000000000000000001'.
+
+11.1. Analyzing design hierarchy..
+ERROR: Module `\ot_qfd_su_embed_static' referenced in module `\ot_qfd_sp_su64_static_entries' in cell `\g_resident_embedding.u_emb' is not part of the design.

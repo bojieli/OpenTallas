@@ -1,0 +1,1501 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2025  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.52 (git sha1 fee39a3284c90249e1d9684cf6944ffbbcbb8f90)
+
+-- Executing script file `tools/qwen_su_glue_1015/base_inventory/inventory.ys' --
+
+1. Executing Verilog-2005 frontend: tools/qwen_su_glue_1015/base_inventory/qfd_su_static_copy.sv
+Parsing SystemVerilog input from `tools/qwen_su_glue_1015/base_inventory/qfd_su_static_copy.sv' to AST representation.
+Generating RTLIL representation for module `\qfd_su_static_copy'.
+Warning: Replacing memory \addr_pipe with list of registers. See tools/qwen_su_glue_1015/base_inventory/qfd_su_static_copy.sv:57
+Successfully finished Verilog frontend.
+
+2. Executing Verilog-2005 frontend: tools/qwen_su_glue_1015/base_inventory/ot_qfd_sp_su64_static_entries.sv
+Parsing SystemVerilog input from `tools/qwen_su_glue_1015/base_inventory/ot_qfd_sp_su64_static_entries.sv' to AST representation.
+Generating RTLIL representation for module `\ot_qfd_sp_su64_static_entries'.
+Successfully finished Verilog frontend.
+
+3. Executing Verilog-2005 frontend: tools/qwen_su_glue_1015/base_inventory/ot_hdc_vred_pending_guard.sv
+Parsing SystemVerilog input from `tools/qwen_su_glue_1015/base_inventory/ot_hdc_vred_pending_guard.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hdc_vred_pending_guard'.
+Successfully finished Verilog frontend.
+
+4. Executing Verilog-2005 frontend: tools/qwen_su_glue_1015/base_inventory/leaf_boundaries.sv
+Parsing SystemVerilog input from `tools/qwen_su_glue_1015/base_inventory/leaf_boundaries.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hdc_vstream_lane_clock_entries_candidate'.
+Generating RTLIL representation for module `\ot_qfd_su_align_group4'.
+Generating RTLIL representation for module `\qfd_su_vred_entries64'.
+Generating RTLIL representation for module `\ot_qfd_su_lane_relay'.
+Successfully finished Verilog frontend.
+
+5. Executing Verilog-2005 frontend: tools/qwen_su_glue_1015/base_inventory/ot_hdc_delay.sv
+Parsing SystemVerilog input from `tools/qwen_su_glue_1015/base_inventory/ot_hdc_delay.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hdc_delay'.
+Successfully finished Verilog frontend.
+
+6. Executing Verilog-2005 frontend: tools/qwen_su_glue_1015/base_inventory/qfd_sp_su64_sfu.sv
+Parsing SystemVerilog input from `tools/qwen_su_glue_1015/base_inventory/qfd_sp_su64_sfu.sv' to AST representation.
+Generating RTLIL representation for module `\qfd_sp_su64_sfu'.
+Successfully finished Verilog frontend.
+
+7. Executing Verilog-2005 frontend: tools/qwen_su_glue_1015/base_inventory/reset.sv
+Parsing SystemVerilog input from `tools/qwen_su_glue_1015/base_inventory/reset.sv' to AST representation.
+Generating RTLIL representation for module `\ot_qfd_rst_stn'.
+Successfully finished Verilog frontend.
+
+8. Executing Verilog-2005 frontend: tools/qwen_su_glue_1015/base_inventory/qfd_su_vm_pack.sv
+Parsing SystemVerilog input from `tools/qwen_su_glue_1015/base_inventory/qfd_su_vm_pack.sv' to AST representation.
+Generating RTLIL representation for module `\qfd_su_vm_pack'.
+Successfully finished Verilog frontend.
+
+9. Executing Verilog-2005 frontend: rtl/physical/ot_hdc_vstream_static_relay_entries.sv
+Parsing SystemVerilog input from `rtl/physical/ot_hdc_vstream_static_relay_entries.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hdc_vstream_static_relay_entries'.
+Successfully finished Verilog frontend.
+
+10. Executing HIERARCHY pass (managing design hierarchy).
+Parameter \EXTERNAL_EMBED = 1
+
+11. Executing AST frontend in derive mode using pre-parsed AST for module `\qfd_sp_su64_sfu'.
+Parameter \EXTERNAL_EMBED = 1
+Generating RTLIL representation for module `$paramod\qfd_sp_su64_sfu\EXTERNAL_EMBED=32'00000000000000000000000000000001'.
+
+11.1. Analyzing design hierarchy..
+Top module:  \qfd_sp_su64_sfu
+Used module:     \qfd_su_vm_pack
+Used module:     \qfd_su_static_copy
+Used module:     \ot_qfd_sp_su64_static_entries
+Used module:         \ot_hdc_delay
+Used module:         \ot_hdc_vstream_static_relay_entries
+Used module:         \ot_qfd_rst_stn
+Parameter \W = 5120
+Parameter \D = 1
+
+11.2. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hdc_delay'.
+Parameter \W = 5120
+Parameter \D = 1
+Generating RTLIL representation for module `$paramod$b20fe3cf06d983c750c9841a9996ad9460077042\ot_hdc_delay'.
+Parameter \W = 197
+Parameter \D = 1
+Parameter \RESET = 1
+
+11.3. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hdc_delay'.
+Parameter \W = 197
+Parameter \D = 1
+Parameter \RESET = 1
+Generating RTLIL representation for module `$paramod$6042719b97a360d9f200de8c97f85aebb83ef2d5\ot_hdc_delay'.
+Parameter \SW = 64
+Parameter \LV = 7
+Parameter \WR = 16
+Parameter \AW = 24
+Parameter \NW = 18
+Parameter \KV_FP8 = 1
+Parameter \ML = 15
+Parameter \LOFF = 1
+Parameter \LT = 1
+Parameter \RD = 2
+Parameter \RELAY_CUT = 1
+Parameter \RED_ENTRIES = 1
+
+11.4. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hdc_vstream_static_relay_entries'.
+Parameter \SW = 64
+Parameter \LV = 7
+Parameter \WR = 16
+Parameter \AW = 24
+Parameter \NW = 18
+Parameter \KV_FP8 = 1
+Parameter \ML = 15
+Parameter \LOFF = 1
+Parameter \LT = 1
+Parameter \RD = 2
+Parameter \RELAY_CUT = 1
+Parameter \RED_ENTRIES = 1
+Generating RTLIL representation for module `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries'.
+Parameter \W = 2
+Parameter \D = 1
+Parameter \RESET = 1
+
+11.5. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hdc_delay'.
+Parameter \W = 2
+Parameter \D = 1
+Parameter \RESET = 1
+Generating RTLIL representation for module `$paramod$55510c4854d189dea93de2c667c69be7b0dcbfe7\ot_hdc_delay'.
+Parameter \W = 4570
+Parameter \D = 1
+
+11.6. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hdc_delay'.
+Parameter \W = 4570
+Parameter \D = 1
+Generating RTLIL representation for module `$paramod$7e1ed5a968910731e307313bc2e107a170b1f818\ot_hdc_delay'.
+Parameter \D = 1
+
+11.7. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_qfd_rst_stn'.
+Parameter \D = 1
+Generating RTLIL representation for module `$paramod\ot_qfd_rst_stn\D=s32'00000000000000000000000000000001'.
+Parameter \READ_EDGES = 15
+Parameter \DATA_MUT = 0
+
+11.8. Executing AST frontend in derive mode using pre-parsed AST for module `\qfd_su_static_copy'.
+Parameter \READ_EDGES = 15
+Parameter \DATA_MUT = 0
+Generating RTLIL representation for module `$paramod$222be289e2d3524c3a9253f3e8b18ee91b90043a\qfd_su_static_copy'.
+Warning: Replacing memory \addr_pipe with list of registers. See tools/qwen_su_glue_1015/base_inventory/qfd_su_static_copy.sv:57
+Parameter \CRX = 4
+Parameter \VL = 14
+Parameter \LMIN = 15
+Parameter \EXTERNAL_EMBED = 1
+
+11.9. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_qfd_sp_su64_static_entries'.
+Parameter \CRX = 4
+Parameter \VL = 14
+Parameter \LMIN = 15
+Parameter \EXTERNAL_EMBED = 1
+Generating RTLIL representation for module `$paramod$fbcde9cee1e862f476681c255a4c9ccf78a38c62\ot_qfd_sp_su64_static_entries'.
+
+11.10. Analyzing design hierarchy..
+Top module:  \qfd_sp_su64_sfu
+Used module:     \qfd_su_vm_pack
+Used module:     $paramod$222be289e2d3524c3a9253f3e8b18ee91b90043a\qfd_su_static_copy
+Used module:     $paramod$fbcde9cee1e862f476681c255a4c9ccf78a38c62\ot_qfd_sp_su64_static_entries
+Used module:         \ot_hdc_delay
+Used module:         \ot_hdc_vstream_static_relay_entries
+Used module:         \ot_qfd_rst_stn
+Parameter \W = 5120
+Parameter \D = 1
+Found cached RTLIL representation for module `$paramod$b20fe3cf06d983c750c9841a9996ad9460077042\ot_hdc_delay'.
+Parameter \W = 197
+Parameter \D = 1
+Parameter \RESET = 1
+Found cached RTLIL representation for module `$paramod$6042719b97a360d9f200de8c97f85aebb83ef2d5\ot_hdc_delay'.
+Parameter \SW = 64
+Parameter \LV = 7
+Parameter \WR = 16
+Parameter \AW = 24
+Parameter \NW = 18
+Parameter \KV_FP8 = 1
+Parameter \ML = 15
+Parameter \LOFF = 1
+Parameter \LT = 1
+Parameter \RD = 2
+Parameter \RELAY_CUT = 1
+Parameter \RED_ENTRIES = 1
+Found cached RTLIL representation for module `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries'.
+Parameter \W = 2
+Parameter \D = 1
+Parameter \RESET = 1
+Found cached RTLIL representation for module `$paramod$55510c4854d189dea93de2c667c69be7b0dcbfe7\ot_hdc_delay'.
+Parameter \W = 4570
+Parameter \D = 1
+Found cached RTLIL representation for module `$paramod$7e1ed5a968910731e307313bc2e107a170b1f818\ot_hdc_delay'.
+Parameter \D = 1
+Found cached RTLIL representation for module `$paramod\ot_qfd_rst_stn\D=s32'00000000000000000000000000000001'.
+
+11.11. Analyzing design hierarchy..
+Top module:  \qfd_sp_su64_sfu
+Used module:     \qfd_su_vm_pack
+Used module:     $paramod$222be289e2d3524c3a9253f3e8b18ee91b90043a\qfd_su_static_copy
+Used module:     $paramod$fbcde9cee1e862f476681c255a4c9ccf78a38c62\ot_qfd_sp_su64_static_entries
+Used module:         $paramod$b20fe3cf06d983c750c9841a9996ad9460077042\ot_hdc_delay
+Used module:         $paramod$6042719b97a360d9f200de8c97f85aebb83ef2d5\ot_hdc_delay
+Used module:         $paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries
+Used module:             \ot_hdc_vred_pending_guard
+Used module:         $paramod$55510c4854d189dea93de2c667c69be7b0dcbfe7\ot_hdc_delay
+Used module:         $paramod$7e1ed5a968910731e307313bc2e107a170b1f818\ot_hdc_delay
+Used module:         $paramod\ot_qfd_rst_stn\D=s32'00000000000000000000000000000001
+Parameter \CW = 19
+
+11.12. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hdc_vred_pending_guard'.
+Parameter \CW = 19
+Generating RTLIL representation for module `$paramod\ot_hdc_vred_pending_guard\CW=s32'00000000000000000000000000010011'.
+
+11.13. Analyzing design hierarchy..
+Top module:  \qfd_sp_su64_sfu
+Used module:     \qfd_su_vm_pack
+Used module:     $paramod$222be289e2d3524c3a9253f3e8b18ee91b90043a\qfd_su_static_copy
+Used module:     $paramod$fbcde9cee1e862f476681c255a4c9ccf78a38c62\ot_qfd_sp_su64_static_entries
+Used module:         $paramod$b20fe3cf06d983c750c9841a9996ad9460077042\ot_hdc_delay
+Used module:         $paramod$6042719b97a360d9f200de8c97f85aebb83ef2d5\ot_hdc_delay
+Used module:         $paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries
+Used module:             $paramod\ot_hdc_vred_pending_guard\CW=s32'00000000000000000000000000010011
+Used module:         $paramod$55510c4854d189dea93de2c667c69be7b0dcbfe7\ot_hdc_delay
+Used module:         $paramod$7e1ed5a968910731e307313bc2e107a170b1f818\ot_hdc_delay
+Used module:         $paramod\ot_qfd_rst_stn\D=s32'00000000000000000000000000000001
+
+11.14. Analyzing design hierarchy..
+Top module:  \qfd_sp_su64_sfu
+Used module:     \qfd_su_vm_pack
+Used module:     $paramod$222be289e2d3524c3a9253f3e8b18ee91b90043a\qfd_su_static_copy
+Used module:     $paramod$fbcde9cee1e862f476681c255a4c9ccf78a38c62\ot_qfd_sp_su64_static_entries
+Used module:         $paramod$b20fe3cf06d983c750c9841a9996ad9460077042\ot_hdc_delay
+Used module:         $paramod$6042719b97a360d9f200de8c97f85aebb83ef2d5\ot_hdc_delay
+Used module:         $paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries
+Used module:             $paramod\ot_hdc_vred_pending_guard\CW=s32'00000000000000000000000000010011
+Used module:         $paramod$55510c4854d189dea93de2c667c69be7b0dcbfe7\ot_hdc_delay
+Used module:         $paramod$7e1ed5a968910731e307313bc2e107a170b1f818\ot_hdc_delay
+Used module:         $paramod\ot_qfd_rst_stn\D=s32'00000000000000000000000000000001
+Removing unused module `\ot_hdc_vstream_static_relay_entries'.
+Removing unused module `\ot_qfd_rst_stn'.
+Removing unused module `$paramod\qfd_sp_su64_sfu\EXTERNAL_EMBED=32'00000000000000000000000000000001'.
+Removing unused module `\ot_hdc_delay'.
+Removing unused module `\ot_hdc_vred_pending_guard'.
+Removing unused module `\ot_qfd_sp_su64_static_entries'.
+Removing unused module `\qfd_su_static_copy'.
+Removed 7 unused modules.
+
+12. Executing HIERARCHY pass (managing design hierarchy).
+Attribute `top' found on module `qfd_sp_su64_sfu'. Setting top module to qfd_sp_su64_sfu.
+
+12.1. Analyzing design hierarchy..
+Top module:  \qfd_sp_su64_sfu
+Used module:     \qfd_su_vm_pack
+Used module:     $paramod$222be289e2d3524c3a9253f3e8b18ee91b90043a\qfd_su_static_copy
+Used module:     $paramod$fbcde9cee1e862f476681c255a4c9ccf78a38c62\ot_qfd_sp_su64_static_entries
+Used module:         $paramod$b20fe3cf06d983c750c9841a9996ad9460077042\ot_hdc_delay
+Used module:         $paramod$6042719b97a360d9f200de8c97f85aebb83ef2d5\ot_hdc_delay
+Used module:         $paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries
+Used module:             $paramod\ot_hdc_vred_pending_guard\CW=s32'00000000000000000000000000010011
+Used module:         $paramod$55510c4854d189dea93de2c667c69be7b0dcbfe7\ot_hdc_delay
+Used module:         $paramod$7e1ed5a968910731e307313bc2e107a170b1f818\ot_hdc_delay
+Used module:         $paramod\ot_qfd_rst_stn\D=s32'00000000000000000000000000000001
+
+12.2. Analyzing design hierarchy..
+Top module:  \qfd_sp_su64_sfu
+Used module:     \qfd_su_vm_pack
+Used module:     $paramod$222be289e2d3524c3a9253f3e8b18ee91b90043a\qfd_su_static_copy
+Used module:     $paramod$fbcde9cee1e862f476681c255a4c9ccf78a38c62\ot_qfd_sp_su64_static_entries
+Used module:         $paramod$b20fe3cf06d983c750c9841a9996ad9460077042\ot_hdc_delay
+Used module:         $paramod$6042719b97a360d9f200de8c97f85aebb83ef2d5\ot_hdc_delay
+Used module:         $paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries
+Used module:             $paramod\ot_hdc_vred_pending_guard\CW=s32'00000000000000000000000000010011
+Used module:         $paramod$55510c4854d189dea93de2c667c69be7b0dcbfe7\ot_hdc_delay
+Used module:         $paramod$7e1ed5a968910731e307313bc2e107a170b1f818\ot_hdc_delay
+Used module:         $paramod\ot_qfd_rst_stn\D=s32'00000000000000000000000000000001
+Removed 0 unused modules.
+
+13. Executing PROC pass (convert processes to netlists).
+
+13.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 1 empty switch in `\qfd_sp_su64_sfu.$proc$tools/qwen_su_glue_1015/base_inventory/qfd_sp_su64_sfu.sv:0$308'.
+Removing empty process `qfd_sp_su64_sfu.$proc$tools/qwen_su_glue_1015/base_inventory/qfd_sp_su64_sfu.sv:0$308'.
+Found and cleaned up 1 empty switch in `$paramod$fbcde9cee1e862f476681c255a4c9ccf78a38c62\ot_qfd_sp_su64_static_entries.$proc$tools/qwen_su_glue_1015/base_inventory/ot_qfd_sp_su64_static_entries.sv:0$1967'.
+Removing empty process `$paramod$fbcde9cee1e862f476681c255a4c9ccf78a38c62\ot_qfd_sp_su64_static_entries.$proc$tools/qwen_su_glue_1015/base_inventory/ot_qfd_sp_su64_static_entries.sv:0$1967'.
+Found and cleaned up 1 empty switch in `$paramod$222be289e2d3524c3a9253f3e8b18ee91b90043a\qfd_su_static_copy.$proc$tools/qwen_su_glue_1015/base_inventory/qfd_su_static_copy.sv:0$1894'.
+Removing empty process `$paramod$222be289e2d3524c3a9253f3e8b18ee91b90043a\qfd_su_static_copy.$proc$tools/qwen_su_glue_1015/base_inventory/qfd_su_static_copy.sv:0$1894'.
+Cleaned up 3 empty switches.
+
+13.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Marked 1 switch rules as full_case in process $proc$tools/qwen_su_glue_1015/base_inventory/ot_hdc_delay.sv:21$310 in module $paramod$6042719b97a360d9f200de8c97f85aebb83ef2d5\ot_hdc_delay.
+Marked 1 switch rules as full_case in process $proc$tools/qwen_su_glue_1015/base_inventory/qfd_sp_su64_sfu.sv:404$291 in module qfd_sp_su64_sfu.
+Marked 1 switch rules as full_case in process $proc$tools/qwen_su_glue_1015/base_inventory/qfd_sp_su64_sfu.sv:394$289 in module qfd_sp_su64_sfu.
+Marked 1 switch rules as full_case in process $proc$tools/qwen_su_glue_1015/base_inventory/ot_hdc_vred_pending_guard.sv:10$1972 in module $paramod\ot_hdc_vred_pending_guard\CW=s32'00000000000000000000000000010011.
+Marked 1 switch rules as full_case in process $proc$tools/qwen_su_glue_1015/base_inventory/ot_qfd_sp_su64_static_entries.sv:254$1899 in module $paramod$fbcde9cee1e862f476681c255a4c9ccf78a38c62\ot_qfd_sp_su64_static_entries.
+Marked 2 switch rules as full_case in process $proc$tools/qwen_su_glue_1015/base_inventory/qfd_su_static_copy.sv:36$1866 in module $paramod$222be289e2d3524c3a9253f3e8b18ee91b90043a\qfd_su_static_copy.
+Marked 1 switch rules as full_case in process $proc$tools/qwen_su_glue_1015/base_inventory/reset.sv:10$1856 in module $paramod\ot_qfd_rst_stn\D=s32'00000000000000000000000000000001.
+Marked 1 switch rules as full_case in process $proc$tools/qwen_su_glue_1015/base_inventory/ot_hdc_delay.sv:21$1853 in module $paramod$55510c4854d189dea93de2c667c69be7b0dcbfe7\ot_hdc_delay.
+Marked 1 switch rules as full_case in process $proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:199$633 in module $paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.
+Marked 1 switch rules as full_case in process $proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:198$631 in module $paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.
+Marked 1 switch rules as full_case in process $proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:199$628 in module $paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.
+Marked 1 switch rules as full_case in process $proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:198$626 in module $paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.
+Marked 1 switch rules as full_case in process $proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:199$623 in module $paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.
+Marked 1 switch rules as full_case in process $proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:198$621 in module $paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.
+Marked 1 switch rules as full_case in process $proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:199$618 in module $paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.
+Marked 1 switch rules as full_case in process $proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:198$616 in module $paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.
+Marked 1 switch rules as full_case in process $proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:199$613 in module $paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.
+Marked 1 switch rules as full_case in process $proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:198$611 in module $paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.
+Marked 1 switch rules as full_case in process $proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:199$608 in module $paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.
+Marked 1 switch rules as full_case in process $proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:198$606 in module $paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.
+Marked 1 switch rules as full_case in process $proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:199$603 in module $paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.
+Marked 1 switch rules as full_case in process $proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:198$601 in module $paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.
+Marked 1 switch rules as full_case in process $proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:199$598 in module $paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.
+Marked 1 switch rules as full_case in process $proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:198$596 in module $paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.
+Marked 1 switch rules as full_case in process $proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:385$588 in module $paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.
+Marked 1 switch rules as full_case in process $proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:380$584 in module $paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.
+Marked 2 switch rules as full_case in process $proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:360$557 in module $paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.
+Marked 1 switch rules as full_case in process $proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:323$357 in module $paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.
+Marked 2 switch rules as full_case in process $proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:156$327 in module $paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.
+Marked 2 switch rules as full_case in process $proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:144$319 in module $paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.
+Removed a total of 0 dead cases.
+
+13.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 38 redundant assignments.
+Promoted 82 assignments to connections.
+
+13.4. Executing PROC_INIT pass (extract init attributes).
+
+13.5. Executing PROC_ARST pass (detect async resets in processes).
+Found async reset \rst_n in `$paramod$6042719b97a360d9f200de8c97f85aebb83ef2d5\ot_hdc_delay.$proc$tools/qwen_su_glue_1015/base_inventory/ot_hdc_delay.sv:21$310'.
+Found async reset \rst_n in `\qfd_sp_su64_sfu.$proc$tools/qwen_su_glue_1015/base_inventory/qfd_sp_su64_sfu.sv:404$291'.
+Found async reset \rst_n in `\qfd_sp_su64_sfu.$proc$tools/qwen_su_glue_1015/base_inventory/qfd_sp_su64_sfu.sv:394$289'.
+Found async reset \rst_n in `$paramod\ot_hdc_vred_pending_guard\CW=s32'00000000000000000000000000010011.$proc$tools/qwen_su_glue_1015/base_inventory/ot_hdc_vred_pending_guard.sv:10$1972'.
+Found async reset \rs in `$paramod$fbcde9cee1e862f476681c255a4c9ccf78a38c62\ot_qfd_sp_su64_static_entries.$proc$tools/qwen_su_glue_1015/base_inventory/ot_qfd_sp_su64_static_entries.sv:254$1899'.
+Found async reset \rst_n in `$paramod$222be289e2d3524c3a9253f3e8b18ee91b90043a\qfd_su_static_copy.$proc$tools/qwen_su_glue_1015/base_inventory/qfd_su_static_copy.sv:36$1866'.
+Found async reset \rst_n in `$paramod\ot_qfd_rst_stn\D=s32'00000000000000000000000000000001.$proc$tools/qwen_su_glue_1015/base_inventory/reset.sv:10$1856'.
+Found async reset \rst_n in `$paramod$55510c4854d189dea93de2c667c69be7b0dcbfe7\ot_hdc_delay.$proc$tools/qwen_su_glue_1015/base_inventory/ot_hdc_delay.sv:21$1853'.
+Found async reset \g_grp[7].g_on.rg in `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:199$633'.
+Found async reset \rst_n in `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:198$631'.
+Found async reset \g_grp[6].g_on.rg in `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:199$628'.
+Found async reset \rst_n in `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:198$626'.
+Found async reset \g_grp[5].g_on.rg in `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:199$623'.
+Found async reset \rst_n in `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:198$621'.
+Found async reset \g_grp[4].g_on.rg in `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:199$618'.
+Found async reset \rst_n in `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:198$616'.
+Found async reset \g_grp[3].g_on.rg in `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:199$613'.
+Found async reset \rst_n in `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:198$611'.
+Found async reset \g_grp[2].g_on.rg in `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:199$608'.
+Found async reset \rst_n in `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:198$606'.
+Found async reset \g_grp[1].g_on.rg in `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:199$603'.
+Found async reset \rst_n in `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:198$601'.
+Found async reset \g_grp[0].g_on.rg in `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:199$598'.
+Found async reset \rst_n in `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:198$596'.
+Found async reset \rst_c in `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:385$588'.
+Found async reset \rst_c in `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:380$584'.
+Found async reset \rst_c in `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:360$557'.
+Found async reset \rst_c in `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:323$357'.
+Found async reset \rst_c in `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:144$319'.
+
+13.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+<suppressed ~19 debug messages>
+
+13.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `$paramod$6042719b97a360d9f200de8c97f85aebb83ef2d5\ot_hdc_delay.$proc$tools/qwen_su_glue_1015/base_inventory/ot_hdc_delay.sv:21$310'.
+     1/1: $0\genblk1.g_one.line[196:0]
+Creating decoders for process `$paramod$b20fe3cf06d983c750c9841a9996ad9460077042\ot_hdc_delay.$proc$tools/qwen_su_glue_1015/base_inventory/ot_hdc_delay.sv:25$309'.
+Creating decoders for process `\qfd_sp_su64_sfu.$proc$tools/qwen_su_glue_1015/base_inventory/qfd_sp_su64_sfu.sv:404$291'.
+     1/3: $0\embed_epoch[15:0]
+     2/3: $0\embed_epoch_fault[0:0]
+     3/3: $0\embed_epoch_valid[0:0]
+Creating decoders for process `\qfd_sp_su64_sfu.$proc$tools/qwen_su_glue_1015/base_inventory/qfd_sp_su64_sfu.sv:394$289'.
+     1/1: $0\native_issue[62:0]
+Creating decoders for process `$paramod\ot_hdc_vred_pending_guard\CW=s32'00000000000000000000000000010011.$proc$tools/qwen_su_glue_1015/base_inventory/ot_hdc_vred_pending_guard.sv:10$1972'.
+     1/2: $0\pending[18:0]
+     2/2: $0\fault[0:0]
+Creating decoders for process `$paramod$fbcde9cee1e862f476681c255a4c9ccf78a38c62\ot_qfd_sp_su64_static_entries.$proc$tools/qwen_su_glue_1015/base_inventory/ot_qfd_sp_su64_static_entries.sv:254$1899'.
+     1/1: $0\accepted_count[23:0]
+Creating decoders for process `$paramod$fbcde9cee1e862f476681c255a4c9ccf78a38c62\ot_qfd_sp_su64_static_entries.$proc$tools/qwen_su_glue_1015/base_inventory/ot_qfd_sp_su64_static_entries.sv:176$1898'.
+Creating decoders for process `$paramod$fbcde9cee1e862f476681c255a4c9ccf78a38c62\ot_qfd_sp_su64_static_entries.$proc$tools/qwen_su_glue_1015/base_inventory/ot_qfd_sp_su64_static_entries.sv:168$1895'.
+Creating decoders for process `$paramod$222be289e2d3524c3a9253f3e8b18ee91b90043a\qfd_su_static_copy.$proc$tools/qwen_su_glue_1015/base_inventory/qfd_su_static_copy.sv:36$1866'.
+     1/32: $0\wr_last[0:0]
+     2/32: $0\wr_v[0:0]
+     3/32: $1\i[31:0]
+     4/32: $0\last_pipe[14:0]
+     5/32: $0\valid_pipe[14:0]
+     6/32: $0\rd_last[0:0]
+     7/32: $0\rd_v[0:0]
+     8/32: $0\cp_done[0:0]
+     9/32: $0\addr_pipe[14][23:0]
+    10/32: $0\addr_pipe[13][23:0]
+    11/32: $0\addr_pipe[12][23:0]
+    12/32: $0\addr_pipe[11][23:0]
+    13/32: $0\addr_pipe[10][23:0]
+    14/32: $0\addr_pipe[9][23:0]
+    15/32: $0\addr_pipe[8][23:0]
+    16/32: $0\addr_pipe[7][23:0]
+    17/32: $0\addr_pipe[6][23:0]
+    18/32: $0\addr_pipe[5][23:0]
+    19/32: $0\addr_pipe[4][23:0]
+    20/32: $0\addr_pipe[3][23:0]
+    21/32: $0\addr_pipe[2][23:0]
+    22/32: $0\addr_pipe[1][23:0]
+    23/32: $0\addr_pipe[0][23:0]
+    24/32: $0\wr_data[2047:0]
+    25/32: $0\wr_dst[23:0]
+    26/32: $0\rd_dst[23:0]
+    27/32: $0\rd_src[23:0]
+    28/32: $0\dst[23:0]
+    29/32: $0\left[6:0]
+    30/32: $0\issuing[0:0]
+    31/32: $0\fault[0:0]
+    32/32: $0\src[23:0]
+Creating decoders for process `$paramod\ot_qfd_rst_stn\D=s32'00000000000000000000000000000001.$proc$tools/qwen_su_glue_1015/base_inventory/reset.sv:10$1856'.
+     1/1: $0\g_r.r[0:0]
+Creating decoders for process `$paramod$7e1ed5a968910731e307313bc2e107a170b1f818\ot_hdc_delay.$proc$tools/qwen_su_glue_1015/base_inventory/ot_hdc_delay.sv:25$1855'.
+Creating decoders for process `$paramod$55510c4854d189dea93de2c667c69be7b0dcbfe7\ot_hdc_delay.$proc$tools/qwen_su_glue_1015/base_inventory/ot_hdc_delay.sv:21$1853'.
+     1/1: $0\genblk1.g_one.line[1:0]
+Creating decoders for process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:200$635'.
+Creating decoders for process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:199$633'.
+     1/1: $0\g_grp[7].g_on.gv[2:0]
+Creating decoders for process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:198$631'.
+     1/1: $0\g_grp[7].g_on.rg[0:0]
+Creating decoders for process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:200$630'.
+Creating decoders for process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:199$628'.
+     1/1: $0\g_grp[6].g_on.gv[2:0]
+Creating decoders for process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:198$626'.
+     1/1: $0\g_grp[6].g_on.rg[0:0]
+Creating decoders for process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:200$625'.
+Creating decoders for process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:199$623'.
+     1/1: $0\g_grp[5].g_on.gv[2:0]
+Creating decoders for process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:198$621'.
+     1/1: $0\g_grp[5].g_on.rg[0:0]
+Creating decoders for process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:200$620'.
+Creating decoders for process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:199$618'.
+     1/1: $0\g_grp[4].g_on.gv[2:0]
+Creating decoders for process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:198$616'.
+     1/1: $0\g_grp[4].g_on.rg[0:0]
+Creating decoders for process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:200$615'.
+Creating decoders for process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:199$613'.
+     1/1: $0\g_grp[3].g_on.gv[2:0]
+Creating decoders for process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:198$611'.
+     1/1: $0\g_grp[3].g_on.rg[0:0]
+Creating decoders for process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:200$610'.
+Creating decoders for process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:199$608'.
+     1/1: $0\g_grp[2].g_on.gv[2:0]
+Creating decoders for process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:198$606'.
+     1/1: $0\g_grp[2].g_on.rg[0:0]
+Creating decoders for process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:200$605'.
+Creating decoders for process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:199$603'.
+     1/1: $0\g_grp[1].g_on.gv[2:0]
+Creating decoders for process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:198$601'.
+     1/1: $0\g_grp[1].g_on.rg[0:0]
+Creating decoders for process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:200$600'.
+Creating decoders for process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:199$598'.
+     1/1: $0\g_grp[0].g_on.gv[2:0]
+Creating decoders for process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:198$596'.
+     1/1: $0\g_grp[0].g_on.rg[0:0]
+Creating decoders for process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:385$588'.
+     1/2: $0\fault[0:0]
+     2/2: $0\fault_q[0:0]
+Creating decoders for process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:380$584'.
+     1/1: $0\idle[0:0]
+Creating decoders for process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:360$557'.
+     1/8: $0\progress_rows[15:0]
+     2/8: $0\progress[15:0]
+     3/8: $0\r_retire[15:0]
+     4/8: $0\r_emit[15:0]
+     5/8: $0\n_retire[15:0]
+     6/8: $0\n_emit[15:0]
+     7/8: $0\r_mark[15:0]
+     8/8: $0\first_mark[15:0]
+Creating decoders for process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:327$361'.
+Creating decoders for process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:323$357'.
+     1/1: $0\rd_v[0:0]
+Creating decoders for process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:156$327'.
+     1/39: $0\rso[23:0]
+     2/39: $0\dso[23:0]
+     3/39: $0\cso[23:0]
+     4/39: $0\bso[23:0]
+     5/39: $0\aso[23:0]
+     6/39: $0\rowd[23:0]
+     7/39: $0\rowc[23:0]
+     8/39: $0\rowb[23:0]
+     9/39: $0\rowa[23:0]
+    10/39: $0\o_last_r[0:0]
+    11/39: $0\v_last_r[0:0]
+    12/39: $0\nvec_r[17:0]
+    13/39: $0\nin_r[17:0]
+    14/39: $0\nout_r[17:0]
+    15/39: $0\v[17:0]
+    16/39: $0\o[17:0]
+    17/39: $0\curd[23:0]
+    18/39: $0\curc[23:0]
+    19/39: $0\curb[23:0]
+    20/39: $0\cura[23:0]
+    21/39: $0\imm2[31:0]
+    22/39: $0\imm1[31:0]
+    23/39: $0\ad[2:0]
+    24/39: $0\red[1:0]
+    25/39: $0\mb[1:0]
+    26/39: $0\ma[1:0]
+    27/39: $0\redsq[0:0]
+    28/39: $0\md[0:0]
+    29/39: $0\mc[0:0]
+    30/39: $0\csrc[0:0]
+    31/39: $0\bsrc[0:0]
+    32/39: $0\asrc[0:0]
+    33/39: $0\dsi[23:0]
+    34/39: $0\csi[23:0]
+    35/39: $0\bsi[23:0]
+    36/39: $0\asi[23:0]
+    37/39: $0\rrow[23:0]
+    38/39: $0\fin_th[18:0]
+    39/39: $0\dst[1:0]
+Creating decoders for process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:144$319'.
+     1/3: $0\inflight[7:0]
+     2/3: $0\active[0:0]
+     3/3: $0\cls[2:0]
+
+13.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+
+13.9. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `$paramod$6042719b97a360d9f200de8c97f85aebb83ef2d5\ot_hdc_delay.\genblk1.g_one.line' using process `$paramod$6042719b97a360d9f200de8c97f85aebb83ef2d5\ot_hdc_delay.$proc$tools/qwen_su_glue_1015/base_inventory/ot_hdc_delay.sv:21$310'.
+  created $adff cell `$procdff$2245' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$b20fe3cf06d983c750c9841a9996ad9460077042\ot_hdc_delay.\genblk1.g_one.line' using process `$paramod$b20fe3cf06d983c750c9841a9996ad9460077042\ot_hdc_delay.$proc$tools/qwen_su_glue_1015/base_inventory/ot_hdc_delay.sv:25$309'.
+  created $dff cell `$procdff$2246' with positive edge clock.
+Creating register for signal `\qfd_sp_su64_sfu.\embed_epoch_valid' using process `\qfd_sp_su64_sfu.$proc$tools/qwen_su_glue_1015/base_inventory/qfd_sp_su64_sfu.sv:404$291'.
+  created $adff cell `$procdff$2251' with positive edge clock and positive level reset.
+Creating register for signal `\qfd_sp_su64_sfu.\embed_epoch_fault' using process `\qfd_sp_su64_sfu.$proc$tools/qwen_su_glue_1015/base_inventory/qfd_sp_su64_sfu.sv:404$291'.
+  created $adff cell `$procdff$2256' with positive edge clock and positive level reset.
+Creating register for signal `\qfd_sp_su64_sfu.\embed_epoch' using process `\qfd_sp_su64_sfu.$proc$tools/qwen_su_glue_1015/base_inventory/qfd_sp_su64_sfu.sv:404$291'.
+  created $adff cell `$procdff$2261' with positive edge clock and positive level reset.
+Creating register for signal `\qfd_sp_su64_sfu.\native_issue' using process `\qfd_sp_su64_sfu.$proc$tools/qwen_su_glue_1015/base_inventory/qfd_sp_su64_sfu.sv:394$289'.
+  created $adff cell `$procdff$2266' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_hdc_vred_pending_guard\CW=s32'00000000000000000000000000010011.\fault' using process `$paramod\ot_hdc_vred_pending_guard\CW=s32'00000000000000000000000000010011.$proc$tools/qwen_su_glue_1015/base_inventory/ot_hdc_vred_pending_guard.sv:10$1972'.
+  created $adff cell `$procdff$2271' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_hdc_vred_pending_guard\CW=s32'00000000000000000000000000010011.\pending' using process `$paramod\ot_hdc_vred_pending_guard\CW=s32'00000000000000000000000000010011.$proc$tools/qwen_su_glue_1015/base_inventory/ot_hdc_vred_pending_guard.sv:10$1972'.
+  created $adff cell `$procdff$2276' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$fbcde9cee1e862f476681c255a4c9ccf78a38c62\ot_qfd_sp_su64_static_entries.\accepted_count' using process `$paramod$fbcde9cee1e862f476681c255a4c9ccf78a38c62\ot_qfd_sp_su64_static_entries.$proc$tools/qwen_su_glue_1015/base_inventory/ot_qfd_sp_su64_static_entries.sv:254$1899'.
+  created $adff cell `$procdff$2281' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$fbcde9cee1e862f476681c255a4c9ccf78a38c62\ot_qfd_sp_su64_static_entries.\vm_m1' using process `$paramod$fbcde9cee1e862f476681c255a4c9ccf78a38c62\ot_qfd_sp_su64_static_entries.$proc$tools/qwen_su_glue_1015/base_inventory/ot_qfd_sp_su64_static_entries.sv:176$1898'.
+  created $dff cell `$procdff$2282' with positive edge clock.
+Creating register for signal `$paramod$fbcde9cee1e862f476681c255a4c9ccf78a38c62\ot_qfd_sp_su64_static_entries.\emb_sel' using process `$paramod$fbcde9cee1e862f476681c255a4c9ccf78a38c62\ot_qfd_sp_su64_static_entries.$proc$tools/qwen_su_glue_1015/base_inventory/ot_qfd_sp_su64_static_entries.sv:168$1895'.
+  created $dff cell `$procdff$2283' with positive edge clock.
+Creating register for signal `$paramod$222be289e2d3524c3a9253f3e8b18ee91b90043a\qfd_su_static_copy.\src' using process `$paramod$222be289e2d3524c3a9253f3e8b18ee91b90043a\qfd_su_static_copy.$proc$tools/qwen_su_glue_1015/base_inventory/qfd_su_static_copy.sv:36$1866'.
+  created $adff cell `$procdff$2288' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$222be289e2d3524c3a9253f3e8b18ee91b90043a\qfd_su_static_copy.\cp_done' using process `$paramod$222be289e2d3524c3a9253f3e8b18ee91b90043a\qfd_su_static_copy.$proc$tools/qwen_su_glue_1015/base_inventory/qfd_su_static_copy.sv:36$1866'.
+  created $adff cell `$procdff$2293' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$222be289e2d3524c3a9253f3e8b18ee91b90043a\qfd_su_static_copy.\fault' using process `$paramod$222be289e2d3524c3a9253f3e8b18ee91b90043a\qfd_su_static_copy.$proc$tools/qwen_su_glue_1015/base_inventory/qfd_su_static_copy.sv:36$1866'.
+  created $adff cell `$procdff$2298' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$222be289e2d3524c3a9253f3e8b18ee91b90043a\qfd_su_static_copy.\issuing' using process `$paramod$222be289e2d3524c3a9253f3e8b18ee91b90043a\qfd_su_static_copy.$proc$tools/qwen_su_glue_1015/base_inventory/qfd_su_static_copy.sv:36$1866'.
+  created $adff cell `$procdff$2303' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$222be289e2d3524c3a9253f3e8b18ee91b90043a\qfd_su_static_copy.\left' using process `$paramod$222be289e2d3524c3a9253f3e8b18ee91b90043a\qfd_su_static_copy.$proc$tools/qwen_su_glue_1015/base_inventory/qfd_su_static_copy.sv:36$1866'.
+  created $adff cell `$procdff$2308' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$222be289e2d3524c3a9253f3e8b18ee91b90043a\qfd_su_static_copy.\dst' using process `$paramod$222be289e2d3524c3a9253f3e8b18ee91b90043a\qfd_su_static_copy.$proc$tools/qwen_su_glue_1015/base_inventory/qfd_su_static_copy.sv:36$1866'.
+  created $adff cell `$procdff$2313' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$222be289e2d3524c3a9253f3e8b18ee91b90043a\qfd_su_static_copy.\rd_v' using process `$paramod$222be289e2d3524c3a9253f3e8b18ee91b90043a\qfd_su_static_copy.$proc$tools/qwen_su_glue_1015/base_inventory/qfd_su_static_copy.sv:36$1866'.
+  created $adff cell `$procdff$2318' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$222be289e2d3524c3a9253f3e8b18ee91b90043a\qfd_su_static_copy.\rd_last' using process `$paramod$222be289e2d3524c3a9253f3e8b18ee91b90043a\qfd_su_static_copy.$proc$tools/qwen_su_glue_1015/base_inventory/qfd_su_static_copy.sv:36$1866'.
+  created $adff cell `$procdff$2323' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$222be289e2d3524c3a9253f3e8b18ee91b90043a\qfd_su_static_copy.\rd_src' using process `$paramod$222be289e2d3524c3a9253f3e8b18ee91b90043a\qfd_su_static_copy.$proc$tools/qwen_su_glue_1015/base_inventory/qfd_su_static_copy.sv:36$1866'.
+  created $dff cell `$procdff$2330' with positive edge clock.
+Creating register for signal `$paramod$222be289e2d3524c3a9253f3e8b18ee91b90043a\qfd_su_static_copy.\rd_dst' using process `$paramod$222be289e2d3524c3a9253f3e8b18ee91b90043a\qfd_su_static_copy.$proc$tools/qwen_su_glue_1015/base_inventory/qfd_su_static_copy.sv:36$1866'.
+  created $dff cell `$procdff$2337' with positive edge clock.
+Creating register for signal `$paramod$222be289e2d3524c3a9253f3e8b18ee91b90043a\qfd_su_static_copy.\valid_pipe' using process `$paramod$222be289e2d3524c3a9253f3e8b18ee91b90043a\qfd_su_static_copy.$proc$tools/qwen_su_glue_1015/base_inventory/qfd_su_static_copy.sv:36$1866'.
+  created $adff cell `$procdff$2342' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$222be289e2d3524c3a9253f3e8b18ee91b90043a\qfd_su_static_copy.\last_pipe' using process `$paramod$222be289e2d3524c3a9253f3e8b18ee91b90043a\qfd_su_static_copy.$proc$tools/qwen_su_glue_1015/base_inventory/qfd_su_static_copy.sv:36$1866'.
+  created $adff cell `$procdff$2347' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$222be289e2d3524c3a9253f3e8b18ee91b90043a\qfd_su_static_copy.\wr_v' using process `$paramod$222be289e2d3524c3a9253f3e8b18ee91b90043a\qfd_su_static_copy.$proc$tools/qwen_su_glue_1015/base_inventory/qfd_su_static_copy.sv:36$1866'.
+  created $adff cell `$procdff$2352' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$222be289e2d3524c3a9253f3e8b18ee91b90043a\qfd_su_static_copy.\wr_last' using process `$paramod$222be289e2d3524c3a9253f3e8b18ee91b90043a\qfd_su_static_copy.$proc$tools/qwen_su_glue_1015/base_inventory/qfd_su_static_copy.sv:36$1866'.
+  created $adff cell `$procdff$2357' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$222be289e2d3524c3a9253f3e8b18ee91b90043a\qfd_su_static_copy.\wr_dst' using process `$paramod$222be289e2d3524c3a9253f3e8b18ee91b90043a\qfd_su_static_copy.$proc$tools/qwen_su_glue_1015/base_inventory/qfd_su_static_copy.sv:36$1866'.
+  created $dff cell `$procdff$2364' with positive edge clock.
+Creating register for signal `$paramod$222be289e2d3524c3a9253f3e8b18ee91b90043a\qfd_su_static_copy.\wr_data' using process `$paramod$222be289e2d3524c3a9253f3e8b18ee91b90043a\qfd_su_static_copy.$proc$tools/qwen_su_glue_1015/base_inventory/qfd_su_static_copy.sv:36$1866'.
+  created $dff cell `$procdff$2371' with positive edge clock.
+Creating register for signal `$paramod$222be289e2d3524c3a9253f3e8b18ee91b90043a\qfd_su_static_copy.\i' using process `$paramod$222be289e2d3524c3a9253f3e8b18ee91b90043a\qfd_su_static_copy.$proc$tools/qwen_su_glue_1015/base_inventory/qfd_su_static_copy.sv:36$1866'.
+  created $dff cell `$procdff$2378' with positive edge clock.
+Creating register for signal `$paramod$222be289e2d3524c3a9253f3e8b18ee91b90043a\qfd_su_static_copy.\addr_pipe[0]' using process `$paramod$222be289e2d3524c3a9253f3e8b18ee91b90043a\qfd_su_static_copy.$proc$tools/qwen_su_glue_1015/base_inventory/qfd_su_static_copy.sv:36$1866'.
+  created $dff cell `$procdff$2385' with positive edge clock.
+Creating register for signal `$paramod$222be289e2d3524c3a9253f3e8b18ee91b90043a\qfd_su_static_copy.\addr_pipe[1]' using process `$paramod$222be289e2d3524c3a9253f3e8b18ee91b90043a\qfd_su_static_copy.$proc$tools/qwen_su_glue_1015/base_inventory/qfd_su_static_copy.sv:36$1866'.
+  created $dff cell `$procdff$2392' with positive edge clock.
+Creating register for signal `$paramod$222be289e2d3524c3a9253f3e8b18ee91b90043a\qfd_su_static_copy.\addr_pipe[2]' using process `$paramod$222be289e2d3524c3a9253f3e8b18ee91b90043a\qfd_su_static_copy.$proc$tools/qwen_su_glue_1015/base_inventory/qfd_su_static_copy.sv:36$1866'.
+  created $dff cell `$procdff$2399' with positive edge clock.
+Creating register for signal `$paramod$222be289e2d3524c3a9253f3e8b18ee91b90043a\qfd_su_static_copy.\addr_pipe[3]' using process `$paramod$222be289e2d3524c3a9253f3e8b18ee91b90043a\qfd_su_static_copy.$proc$tools/qwen_su_glue_1015/base_inventory/qfd_su_static_copy.sv:36$1866'.
+  created $dff cell `$procdff$2406' with positive edge clock.
+Creating register for signal `$paramod$222be289e2d3524c3a9253f3e8b18ee91b90043a\qfd_su_static_copy.\addr_pipe[4]' using process `$paramod$222be289e2d3524c3a9253f3e8b18ee91b90043a\qfd_su_static_copy.$proc$tools/qwen_su_glue_1015/base_inventory/qfd_su_static_copy.sv:36$1866'.
+  created $dff cell `$procdff$2413' with positive edge clock.
+Creating register for signal `$paramod$222be289e2d3524c3a9253f3e8b18ee91b90043a\qfd_su_static_copy.\addr_pipe[5]' using process `$paramod$222be289e2d3524c3a9253f3e8b18ee91b90043a\qfd_su_static_copy.$proc$tools/qwen_su_glue_1015/base_inventory/qfd_su_static_copy.sv:36$1866'.
+  created $dff cell `$procdff$2420' with positive edge clock.
+Creating register for signal `$paramod$222be289e2d3524c3a9253f3e8b18ee91b90043a\qfd_su_static_copy.\addr_pipe[6]' using process `$paramod$222be289e2d3524c3a9253f3e8b18ee91b90043a\qfd_su_static_copy.$proc$tools/qwen_su_glue_1015/base_inventory/qfd_su_static_copy.sv:36$1866'.
+  created $dff cell `$procdff$2427' with positive edge clock.
+Creating register for signal `$paramod$222be289e2d3524c3a9253f3e8b18ee91b90043a\qfd_su_static_copy.\addr_pipe[7]' using process `$paramod$222be289e2d3524c3a9253f3e8b18ee91b90043a\qfd_su_static_copy.$proc$tools/qwen_su_glue_1015/base_inventory/qfd_su_static_copy.sv:36$1866'.
+  created $dff cell `$procdff$2434' with positive edge clock.
+Creating register for signal `$paramod$222be289e2d3524c3a9253f3e8b18ee91b90043a\qfd_su_static_copy.\addr_pipe[8]' using process `$paramod$222be289e2d3524c3a9253f3e8b18ee91b90043a\qfd_su_static_copy.$proc$tools/qwen_su_glue_1015/base_inventory/qfd_su_static_copy.sv:36$1866'.
+  created $dff cell `$procdff$2441' with positive edge clock.
+Creating register for signal `$paramod$222be289e2d3524c3a9253f3e8b18ee91b90043a\qfd_su_static_copy.\addr_pipe[9]' using process `$paramod$222be289e2d3524c3a9253f3e8b18ee91b90043a\qfd_su_static_copy.$proc$tools/qwen_su_glue_1015/base_inventory/qfd_su_static_copy.sv:36$1866'.
+  created $dff cell `$procdff$2448' with positive edge clock.
+Creating register for signal `$paramod$222be289e2d3524c3a9253f3e8b18ee91b90043a\qfd_su_static_copy.\addr_pipe[10]' using process `$paramod$222be289e2d3524c3a9253f3e8b18ee91b90043a\qfd_su_static_copy.$proc$tools/qwen_su_glue_1015/base_inventory/qfd_su_static_copy.sv:36$1866'.
+  created $dff cell `$procdff$2455' with positive edge clock.
+Creating register for signal `$paramod$222be289e2d3524c3a9253f3e8b18ee91b90043a\qfd_su_static_copy.\addr_pipe[11]' using process `$paramod$222be289e2d3524c3a9253f3e8b18ee91b90043a\qfd_su_static_copy.$proc$tools/qwen_su_glue_1015/base_inventory/qfd_su_static_copy.sv:36$1866'.
+  created $dff cell `$procdff$2462' with positive edge clock.
+Creating register for signal `$paramod$222be289e2d3524c3a9253f3e8b18ee91b90043a\qfd_su_static_copy.\addr_pipe[12]' using process `$paramod$222be289e2d3524c3a9253f3e8b18ee91b90043a\qfd_su_static_copy.$proc$tools/qwen_su_glue_1015/base_inventory/qfd_su_static_copy.sv:36$1866'.
+  created $dff cell `$procdff$2469' with positive edge clock.
+Creating register for signal `$paramod$222be289e2d3524c3a9253f3e8b18ee91b90043a\qfd_su_static_copy.\addr_pipe[13]' using process `$paramod$222be289e2d3524c3a9253f3e8b18ee91b90043a\qfd_su_static_copy.$proc$tools/qwen_su_glue_1015/base_inventory/qfd_su_static_copy.sv:36$1866'.
+  created $dff cell `$procdff$2476' with positive edge clock.
+Creating register for signal `$paramod$222be289e2d3524c3a9253f3e8b18ee91b90043a\qfd_su_static_copy.\addr_pipe[14]' using process `$paramod$222be289e2d3524c3a9253f3e8b18ee91b90043a\qfd_su_static_copy.$proc$tools/qwen_su_glue_1015/base_inventory/qfd_su_static_copy.sv:36$1866'.
+  created $dff cell `$procdff$2483' with positive edge clock.
+Creating register for signal `$paramod\ot_qfd_rst_stn\D=s32'00000000000000000000000000000001.\g_r.r' using process `$paramod\ot_qfd_rst_stn\D=s32'00000000000000000000000000000001.$proc$tools/qwen_su_glue_1015/base_inventory/reset.sv:10$1856'.
+  created $adff cell `$procdff$2488' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$7e1ed5a968910731e307313bc2e107a170b1f818\ot_hdc_delay.\genblk1.g_one.line' using process `$paramod$7e1ed5a968910731e307313bc2e107a170b1f818\ot_hdc_delay.$proc$tools/qwen_su_glue_1015/base_inventory/ot_hdc_delay.sv:25$1855'.
+  created $dff cell `$procdff$2489' with positive edge clock.
+Creating register for signal `$paramod$55510c4854d189dea93de2c667c69be7b0dcbfe7\ot_hdc_delay.\genblk1.g_one.line' using process `$paramod$55510c4854d189dea93de2c667c69be7b0dcbfe7\ot_hdc_delay.$proc$tools/qwen_su_glue_1015/base_inventory/ot_hdc_delay.sv:21$1853'.
+  created $adff cell `$procdff$2494' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.\g_grp[7].g_on.gb' using process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:200$635'.
+  created $dff cell `$procdff$2495' with positive edge clock.
+Creating register for signal `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.\g_grp[7].g_on.gv' using process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:199$633'.
+  created $adff cell `$procdff$2500' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.\g_grp[7].g_on.rg' using process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:198$631'.
+  created $adff cell `$procdff$2505' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.\g_grp[6].g_on.gb' using process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:200$630'.
+  created $dff cell `$procdff$2506' with positive edge clock.
+Creating register for signal `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.\g_grp[6].g_on.gv' using process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:199$628'.
+  created $adff cell `$procdff$2511' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.\g_grp[6].g_on.rg' using process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:198$626'.
+  created $adff cell `$procdff$2516' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.\g_grp[5].g_on.gb' using process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:200$625'.
+  created $dff cell `$procdff$2517' with positive edge clock.
+Creating register for signal `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.\g_grp[5].g_on.gv' using process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:199$623'.
+  created $adff cell `$procdff$2522' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.\g_grp[5].g_on.rg' using process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:198$621'.
+  created $adff cell `$procdff$2527' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.\g_grp[4].g_on.gb' using process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:200$620'.
+  created $dff cell `$procdff$2528' with positive edge clock.
+Creating register for signal `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.\g_grp[4].g_on.gv' using process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:199$618'.
+  created $adff cell `$procdff$2533' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.\g_grp[4].g_on.rg' using process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:198$616'.
+  created $adff cell `$procdff$2538' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.\g_grp[3].g_on.gb' using process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:200$615'.
+  created $dff cell `$procdff$2539' with positive edge clock.
+Creating register for signal `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.\g_grp[3].g_on.gv' using process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:199$613'.
+  created $adff cell `$procdff$2544' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.\g_grp[3].g_on.rg' using process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:198$611'.
+  created $adff cell `$procdff$2549' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.\g_grp[2].g_on.gb' using process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:200$610'.
+  created $dff cell `$procdff$2550' with positive edge clock.
+Creating register for signal `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.\g_grp[2].g_on.gv' using process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:199$608'.
+  created $adff cell `$procdff$2555' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.\g_grp[2].g_on.rg' using process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:198$606'.
+  created $adff cell `$procdff$2560' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.\g_grp[1].g_on.gb' using process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:200$605'.
+  created $dff cell `$procdff$2561' with positive edge clock.
+Creating register for signal `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.\g_grp[1].g_on.gv' using process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:199$603'.
+  created $adff cell `$procdff$2566' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.\g_grp[1].g_on.rg' using process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:198$601'.
+  created $adff cell `$procdff$2571' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.\g_grp[0].g_on.gb' using process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:200$600'.
+  created $dff cell `$procdff$2572' with positive edge clock.
+Creating register for signal `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.\g_grp[0].g_on.gv' using process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:199$598'.
+  created $adff cell `$procdff$2577' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.\g_grp[0].g_on.rg' using process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:198$596'.
+  created $adff cell `$procdff$2582' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.\fault' using process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:385$588'.
+  created $adff cell `$procdff$2587' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.\fault_q' using process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:385$588'.
+  created $adff cell `$procdff$2592' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.\idle' using process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:380$584'.
+  created $adff cell `$procdff$2597' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.\progress' using process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:360$557'.
+  created $adff cell `$procdff$2602' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.\progress_rows' using process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:360$557'.
+  created $adff cell `$procdff$2607' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.\n_emit' using process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:360$557'.
+  created $adff cell `$procdff$2612' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.\n_retire' using process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:360$557'.
+  created $adff cell `$procdff$2617' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.\first_mark' using process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:360$557'.
+  created $adff cell `$procdff$2622' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.\r_emit' using process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:360$557'.
+  created $adff cell `$procdff$2627' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.\r_retire' using process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:360$557'.
+  created $adff cell `$procdff$2632' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.\r_mark' using process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:360$557'.
+  created $adff cell `$procdff$2637' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.\rd_last' using process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:327$361'.
+  created $dff cell `$procdff$2638' with positive edge clock.
+Creating register for signal `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.\rd_mx' using process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:327$361'.
+  created $dff cell `$procdff$2639' with positive edge clock.
+Creating register for signal `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.\rd_sq' using process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:327$361'.
+  created $dff cell `$procdff$2640' with positive edge clock.
+Creating register for signal `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.\rd_addr' using process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:327$361'.
+  created $dff cell `$procdff$2641' with positive edge clock.
+Creating register for signal `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.\rd_x' using process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:327$361'.
+  created $dff cell `$procdff$2642' with positive edge clock.
+Creating register for signal `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.\li' using process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:327$361'.
+  created $dff cell `$procdff$2643' with positive edge clock.
+Creating register for signal `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.\rd_v' using process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:323$357'.
+  created $adff cell `$procdff$2648' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.\dst' using process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:156$327'.
+  created $dff cell `$procdff$2649' with positive edge clock.
+Creating register for signal `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.\fin_th' using process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:156$327'.
+  created $dff cell `$procdff$2650' with positive edge clock.
+Creating register for signal `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.\rrow' using process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:156$327'.
+  created $dff cell `$procdff$2651' with positive edge clock.
+Creating register for signal `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.\asi' using process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:156$327'.
+  created $dff cell `$procdff$2652' with positive edge clock.
+Creating register for signal `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.\bsi' using process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:156$327'.
+  created $dff cell `$procdff$2653' with positive edge clock.
+Creating register for signal `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.\csi' using process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:156$327'.
+  created $dff cell `$procdff$2654' with positive edge clock.
+Creating register for signal `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.\dsi' using process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:156$327'.
+  created $dff cell `$procdff$2655' with positive edge clock.
+Creating register for signal `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.\asrc' using process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:156$327'.
+  created $dff cell `$procdff$2656' with positive edge clock.
+Creating register for signal `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.\bsrc' using process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:156$327'.
+  created $dff cell `$procdff$2657' with positive edge clock.
+Creating register for signal `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.\csrc' using process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:156$327'.
+  created $dff cell `$procdff$2658' with positive edge clock.
+Creating register for signal `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.\mc' using process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:156$327'.
+  created $dff cell `$procdff$2659' with positive edge clock.
+Creating register for signal `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.\md' using process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:156$327'.
+  created $dff cell `$procdff$2660' with positive edge clock.
+Creating register for signal `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.\redsq' using process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:156$327'.
+  created $dff cell `$procdff$2661' with positive edge clock.
+Creating register for signal `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.\ma' using process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:156$327'.
+  created $dff cell `$procdff$2662' with positive edge clock.
+Creating register for signal `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.\mb' using process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:156$327'.
+  created $dff cell `$procdff$2663' with positive edge clock.
+Creating register for signal `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.\red' using process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:156$327'.
+  created $dff cell `$procdff$2664' with positive edge clock.
+Creating register for signal `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.\ad' using process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:156$327'.
+  created $dff cell `$procdff$2665' with positive edge clock.
+Creating register for signal `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.\imm1' using process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:156$327'.
+  created $dff cell `$procdff$2666' with positive edge clock.
+Creating register for signal `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.\imm2' using process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:156$327'.
+  created $dff cell `$procdff$2667' with positive edge clock.
+Creating register for signal `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.\cura' using process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:156$327'.
+  created $dff cell `$procdff$2668' with positive edge clock.
+Creating register for signal `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.\curb' using process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:156$327'.
+  created $dff cell `$procdff$2669' with positive edge clock.
+Creating register for signal `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.\curc' using process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:156$327'.
+  created $dff cell `$procdff$2670' with positive edge clock.
+Creating register for signal `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.\curd' using process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:156$327'.
+  created $dff cell `$procdff$2671' with positive edge clock.
+Creating register for signal `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.\o' using process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:156$327'.
+  created $dff cell `$procdff$2672' with positive edge clock.
+Creating register for signal `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.\v' using process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:156$327'.
+  created $dff cell `$procdff$2673' with positive edge clock.
+Creating register for signal `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.\nout_r' using process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:156$327'.
+  created $dff cell `$procdff$2674' with positive edge clock.
+Creating register for signal `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.\nin_r' using process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:156$327'.
+  created $dff cell `$procdff$2675' with positive edge clock.
+Creating register for signal `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.\nvec_r' using process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:156$327'.
+  created $dff cell `$procdff$2676' with positive edge clock.
+Creating register for signal `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.\v_last_r' using process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:156$327'.
+  created $dff cell `$procdff$2677' with positive edge clock.
+Creating register for signal `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.\o_last_r' using process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:156$327'.
+  created $dff cell `$procdff$2678' with positive edge clock.
+Creating register for signal `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.\rowa' using process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:156$327'.
+  created $dff cell `$procdff$2679' with positive edge clock.
+Creating register for signal `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.\rowb' using process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:156$327'.
+  created $dff cell `$procdff$2680' with positive edge clock.
+Creating register for signal `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.\rowc' using process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:156$327'.
+  created $dff cell `$procdff$2681' with positive edge clock.
+Creating register for signal `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.\rowd' using process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:156$327'.
+  created $dff cell `$procdff$2682' with positive edge clock.
+Creating register for signal `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.\aso' using process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:156$327'.
+  created $dff cell `$procdff$2683' with positive edge clock.
+Creating register for signal `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.\bso' using process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:156$327'.
+  created $dff cell `$procdff$2684' with positive edge clock.
+Creating register for signal `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.\cso' using process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:156$327'.
+  created $dff cell `$procdff$2685' with positive edge clock.
+Creating register for signal `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.\dso' using process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:156$327'.
+  created $dff cell `$procdff$2686' with positive edge clock.
+Creating register for signal `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.\rso' using process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:156$327'.
+  created $dff cell `$procdff$2687' with positive edge clock.
+Creating register for signal `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.\cls' using process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:144$319'.
+  created $adff cell `$procdff$2692' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.\active' using process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:144$319'.
+  created $adff cell `$procdff$2697' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.\inflight' using process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:144$319'.
+  created $adff cell `$procdff$2702' with positive edge clock and positive level reset.
+
+13.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+13.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Removing empty process `$paramod$6042719b97a360d9f200de8c97f85aebb83ef2d5\ot_hdc_delay.$proc$tools/qwen_su_glue_1015/base_inventory/ot_hdc_delay.sv:21$310'.
+Removing empty process `$paramod$b20fe3cf06d983c750c9841a9996ad9460077042\ot_hdc_delay.$proc$tools/qwen_su_glue_1015/base_inventory/ot_hdc_delay.sv:25$309'.
+Found and cleaned up 2 empty switches in `\qfd_sp_su64_sfu.$proc$tools/qwen_su_glue_1015/base_inventory/qfd_sp_su64_sfu.sv:404$291'.
+Removing empty process `qfd_sp_su64_sfu.$proc$tools/qwen_su_glue_1015/base_inventory/qfd_sp_su64_sfu.sv:404$291'.
+Removing empty process `qfd_sp_su64_sfu.$proc$tools/qwen_su_glue_1015/base_inventory/qfd_sp_su64_sfu.sv:394$289'.
+Found and cleaned up 4 empty switches in `$paramod\ot_hdc_vred_pending_guard\CW=s32'00000000000000000000000000010011.$proc$tools/qwen_su_glue_1015/base_inventory/ot_hdc_vred_pending_guard.sv:10$1972'.
+Removing empty process `$paramod\ot_hdc_vred_pending_guard\CW=s32'00000000000000000000000000010011.$proc$tools/qwen_su_glue_1015/base_inventory/ot_hdc_vred_pending_guard.sv:10$1972'.
+Found and cleaned up 1 empty switch in `$paramod$fbcde9cee1e862f476681c255a4c9ccf78a38c62\ot_qfd_sp_su64_static_entries.$proc$tools/qwen_su_glue_1015/base_inventory/ot_qfd_sp_su64_static_entries.sv:254$1899'.
+Removing empty process `$paramod$fbcde9cee1e862f476681c255a4c9ccf78a38c62\ot_qfd_sp_su64_static_entries.$proc$tools/qwen_su_glue_1015/base_inventory/ot_qfd_sp_su64_static_entries.sv:254$1899'.
+Removing empty process `$paramod$fbcde9cee1e862f476681c255a4c9ccf78a38c62\ot_qfd_sp_su64_static_entries.$proc$tools/qwen_su_glue_1015/base_inventory/ot_qfd_sp_su64_static_entries.sv:176$1898'.
+Removing empty process `$paramod$fbcde9cee1e862f476681c255a4c9ccf78a38c62\ot_qfd_sp_su64_static_entries.$proc$tools/qwen_su_glue_1015/base_inventory/ot_qfd_sp_su64_static_entries.sv:168$1895'.
+Found and cleaned up 6 empty switches in `$paramod$222be289e2d3524c3a9253f3e8b18ee91b90043a\qfd_su_static_copy.$proc$tools/qwen_su_glue_1015/base_inventory/qfd_su_static_copy.sv:36$1866'.
+Removing empty process `$paramod$222be289e2d3524c3a9253f3e8b18ee91b90043a\qfd_su_static_copy.$proc$tools/qwen_su_glue_1015/base_inventory/qfd_su_static_copy.sv:36$1866'.
+Removing empty process `$paramod\ot_qfd_rst_stn\D=s32'00000000000000000000000000000001.$proc$tools/qwen_su_glue_1015/base_inventory/reset.sv:10$1856'.
+Removing empty process `$paramod$7e1ed5a968910731e307313bc2e107a170b1f818\ot_hdc_delay.$proc$tools/qwen_su_glue_1015/base_inventory/ot_hdc_delay.sv:25$1855'.
+Removing empty process `$paramod$55510c4854d189dea93de2c667c69be7b0dcbfe7\ot_hdc_delay.$proc$tools/qwen_su_glue_1015/base_inventory/ot_hdc_delay.sv:21$1853'.
+Removing empty process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:200$635'.
+Removing empty process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:199$633'.
+Removing empty process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:198$631'.
+Removing empty process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:200$630'.
+Removing empty process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:199$628'.
+Removing empty process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:198$626'.
+Removing empty process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:200$625'.
+Removing empty process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:199$623'.
+Removing empty process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:198$621'.
+Removing empty process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:200$620'.
+Removing empty process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:199$618'.
+Removing empty process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:198$616'.
+Removing empty process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:200$615'.
+Removing empty process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:199$613'.
+Removing empty process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:198$611'.
+Removing empty process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:200$610'.
+Removing empty process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:199$608'.
+Removing empty process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:198$606'.
+Removing empty process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:200$605'.
+Removing empty process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:199$603'.
+Removing empty process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:198$601'.
+Removing empty process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:200$600'.
+Removing empty process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:199$598'.
+Removing empty process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:198$596'.
+Removing empty process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:385$588'.
+Removing empty process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:380$584'.
+Found and cleaned up 1 empty switch in `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:360$557'.
+Removing empty process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:360$557'.
+Removing empty process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:327$361'.
+Removing empty process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:323$357'.
+Found and cleaned up 3 empty switches in `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:156$327'.
+Removing empty process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:156$327'.
+Found and cleaned up 2 empty switches in `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:144$319'.
+Removing empty process `$paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.$proc$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:144$319'.
+Cleaned up 19 empty switches.
+
+13.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module $paramod$6042719b97a360d9f200de8c97f85aebb83ef2d5\ot_hdc_delay.
+<suppressed ~2 debug messages>
+Optimizing module $paramod$b20fe3cf06d983c750c9841a9996ad9460077042\ot_hdc_delay.
+Optimizing module qfd_sp_su64_sfu.
+<suppressed ~14 debug messages>
+Optimizing module $paramod\ot_hdc_vred_pending_guard\CW=s32'00000000000000000000000000010011.
+<suppressed ~7 debug messages>
+Optimizing module qfd_su_vm_pack.
+Optimizing module $paramod$fbcde9cee1e862f476681c255a4c9ccf78a38c62\ot_qfd_sp_su64_static_entries.
+<suppressed ~2 debug messages>
+Optimizing module $paramod$222be289e2d3524c3a9253f3e8b18ee91b90043a\qfd_su_static_copy.
+<suppressed ~68 debug messages>
+Optimizing module $paramod\ot_qfd_rst_stn\D=s32'00000000000000000000000000000001.
+<suppressed ~2 debug messages>
+Optimizing module $paramod$7e1ed5a968910731e307313bc2e107a170b1f818\ot_hdc_delay.
+Optimizing module $paramod$55510c4854d189dea93de2c667c69be7b0dcbfe7\ot_hdc_delay.
+<suppressed ~2 debug messages>
+Optimizing module $paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.
+<suppressed ~148 debug messages>
+
+14. Executing FLATTEN pass (flatten design).
+Deleting now unused module $paramod$6042719b97a360d9f200de8c97f85aebb83ef2d5\ot_hdc_delay.
+Deleting now unused module $paramod$b20fe3cf06d983c750c9841a9996ad9460077042\ot_hdc_delay.
+Deleting now unused module $paramod\ot_hdc_vred_pending_guard\CW=s32'00000000000000000000000000010011.
+Deleting now unused module qfd_su_vm_pack.
+Deleting now unused module $paramod$fbcde9cee1e862f476681c255a4c9ccf78a38c62\ot_qfd_sp_su64_static_entries.
+Deleting now unused module $paramod$222be289e2d3524c3a9253f3e8b18ee91b90043a\qfd_su_static_copy.
+Deleting now unused module $paramod\ot_qfd_rst_stn\D=s32'00000000000000000000000000000001.
+Deleting now unused module $paramod$7e1ed5a968910731e307313bc2e107a170b1f818\ot_hdc_delay.
+Deleting now unused module $paramod$55510c4854d189dea93de2c667c69be7b0dcbfe7\ot_hdc_delay.
+Deleting now unused module $paramod$f4e1a48172847df5e9036921209669bd2f7bd454\ot_hdc_vstream_static_relay_entries.
+<suppressed ~11 debug messages>
+
+15. Executing OPT pass (performing simple optimizations).
+
+15.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module qfd_sp_su64_sfu.
+<suppressed ~673 debug messages>
+
+15.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\qfd_sp_su64_sfu'.
+<suppressed ~585 debug messages>
+Removed a total of 195 cells.
+
+15.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \qfd_sp_su64_sfu..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+      Replacing known input bits on port A of cell $flatten\u_su.\u_su.$ternary$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:373$569: \u_su.u_su.done_n -> { 1'0 \u_su.u_su.done_n [14:0] }
+      Replacing known input bits on port A of cell $flatten\u_su.\u_su.$ternary$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:374$570: \u_su.u_su.rdone_n -> { 1'0 \u_su.u_su.rdone_n [14:0] }
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~212 debug messages>
+
+15.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \qfd_sp_su64_sfu.
+Performed a total of 0 changes.
+
+15.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\qfd_sp_su64_sfu'.
+<suppressed ~189 debug messages>
+Removed a total of 63 cells.
+
+15.6. Executing OPT_DFF pass (perform DFF optimizations).
+Adding EN signal on $flatten\u_su.\u_su.$procdff$2697 ($adff) from module qfd_sp_su64_sfu (D = $flatten\u_su.\u_su.$procmux$2236_Y, Q = \u_su.u_su.active).
+Adding EN signal on $flatten\u_su.$procdff$2281 ($adff) from module qfd_sp_su64_sfu (D = $flatten\u_su.$add$tools/qwen_su_glue_1015/base_inventory/ot_qfd_sp_su64_static_entries.sv:256$1901_Y, Q = \u_su.accepted_count).
+Adding EN signal on $flatten\u_su.\u_su.$procdff$2622 ($adff) from module qfd_sp_su64_sfu (D = \u_su.u_su.n_emit, Q = \u_su.u_su.first_mark).
+Adding EN signal on $flatten\u_su.\u_su.$procdff$2692 ($adff) from module qfd_sp_su64_sfu (D = \u_su.u_su.i_sfu, Q = \u_su.u_su.cls).
+Adding EN signal on $flatten\u_su.\u_su.\g_red_entries.u_pending.$procdff$2276 ($adff) from module qfd_sp_su64_sfu (D = $flatten\u_su.\u_su.\g_red_entries.u_pending.$procmux$1988_Y, Q = \u_su.u_su.g_red_entries.u_pending.pending).
+Adding EN signal on $flatten\u_su.\u_su.$procdff$2687 ($dff) from module qfd_sp_su64_sfu (D = \u_su.u_su.i_rso, Q = \u_su.u_su.rso).
+Adding EN signal on $flatten\u_su.\u_su.$procdff$2686 ($dff) from module qfd_sp_su64_sfu (D = \u_su.u_su.i_dso, Q = \u_su.u_su.dso).
+Adding EN signal on $flatten\u_su.\u_su.$procdff$2685 ($dff) from module qfd_sp_su64_sfu (D = \u_su.u_su.i_cso, Q = \u_su.u_su.cso).
+Adding EN signal on $flatten\u_copy.$procdff$2483 ($dff) from module qfd_sp_su64_sfu (D = \u_copy.addr_pipe[13], Q = \u_copy.addr_pipe[14]).
+Adding EN signal on $flatten\u_su.\u_su.$procdff$2684 ($dff) from module qfd_sp_su64_sfu (D = \u_su.u_su.i_bso, Q = \u_su.u_su.bso).
+Adding EN signal on $flatten\u_su.\u_su.$procdff$2683 ($dff) from module qfd_sp_su64_sfu (D = \u_su.u_su.i_aso, Q = \u_su.u_su.aso).
+Adding EN signal on $flatten\u_su.\u_su.$procdff$2682 ($dff) from module qfd_sp_su64_sfu (D = $flatten\u_su.\u_su.$procmux$2072_Y, Q = \u_su.u_su.rowd).
+Adding EN signal on $flatten\u_su.\u_su.$procdff$2681 ($dff) from module qfd_sp_su64_sfu (D = $flatten\u_su.\u_su.$procmux$2080_Y, Q = \u_su.u_su.rowc).
+Adding EN signal on $flatten\u_copy.$procdff$2448 ($dff) from module qfd_sp_su64_sfu (D = \u_copy.addr_pipe[8], Q = \u_copy.addr_pipe[9]).
+Adding EN signal on $flatten\u_su.\u_su.$procdff$2680 ($dff) from module qfd_sp_su64_sfu (D = $flatten\u_su.\u_su.$procmux$2088_Y, Q = \u_su.u_su.rowb).
+Adding EN signal on $flatten\u_su.\u_su.$procdff$2679 ($dff) from module qfd_sp_su64_sfu (D = $flatten\u_su.\u_su.$procmux$2096_Y, Q = \u_su.u_su.rowa).
+Adding EN signal on $flatten\u_su.\u_su.$procdff$2678 ($dff) from module qfd_sp_su64_sfu (D = $flatten\u_su.\u_su.$procmux$2104_Y, Q = \u_su.u_su.o_last_r).
+Adding EN signal on $flatten\u_su.\u_su.$procdff$2677 ($dff) from module qfd_sp_su64_sfu (D = $flatten\u_su.\u_su.$procmux$2112_Y, Q = \u_su.u_su.v_last_r).
+Adding EN signal on $flatten\u_su.\u_su.$procdff$2676 ($dff) from module qfd_sp_su64_sfu (D = $flatten\u_su.\u_su.$shr$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:142$318_Y [17:0], Q = \u_su.u_su.nvec_r).
+Adding EN signal on $flatten\u_su.\u_su.$procdff$2675 ($dff) from module qfd_sp_su64_sfu (D = \u_su.u_su.i_nin, Q = \u_su.u_su.nin_r).
+Adding EN signal on $flatten\u_copy.$procdff$2288 ($adff) from module qfd_sp_su64_sfu (D = $flatten\u_copy.$procmux$2037_Y, Q = \u_copy.src).
+Adding EN signal on $flatten\u_su.\u_su.$procdff$2674 ($dff) from module qfd_sp_su64_sfu (D = \u_su.u_su.i_nout, Q = \u_su.u_su.nout_r).
+Adding SRST signal on $flatten\u_su.\u_su.$procdff$2673 ($dff) from module qfd_sp_su64_sfu (D = $flatten\u_su.\u_su.$procmux$2126_Y, Q = \u_su.u_su.v, rval = 18'000000000000000000).
+Adding EN signal on $auto$ff.cc:266:slice$2782 ($sdff) from module qfd_sp_su64_sfu (D = $flatten\u_su.\u_su.$procmux$2124_Y, Q = \u_su.u_su.v).
+Adding EN signal on $flatten\u_copy.$procdff$2455 ($dff) from module qfd_sp_su64_sfu (D = \u_copy.addr_pipe[9], Q = \u_copy.addr_pipe[10]).
+Adding EN signal on $flatten\u_copy.$procdff$2469 ($dff) from module qfd_sp_su64_sfu (D = \u_copy.addr_pipe[11], Q = \u_copy.addr_pipe[12]).
+Adding SRST signal on $flatten\u_su.\u_su.$procdff$2672 ($dff) from module qfd_sp_su64_sfu (D = $flatten\u_su.\u_su.$procmux$2134_Y, Q = \u_su.u_su.o, rval = 18'000000000000000000).
+Adding EN signal on $auto$ff.cc:266:slice$2786 ($sdff) from module qfd_sp_su64_sfu (D = $flatten\u_su.\u_su.$add$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:175$344_Y, Q = \u_su.u_su.o).
+Adding EN signal on $flatten\u_copy.$procdff$2462 ($dff) from module qfd_sp_su64_sfu (D = \u_copy.addr_pipe[10], Q = \u_copy.addr_pipe[11]).
+Adding EN signal on $flatten\u_copy.$procdff$2308 ($adff) from module qfd_sp_su64_sfu (D = $flatten\u_copy.$procmux$2012_Y, Q = \u_copy.left).
+Adding EN signal on $flatten\u_su.\u_su.$procdff$2671 ($dff) from module qfd_sp_su64_sfu (D = $flatten\u_su.\u_su.$procmux$2145_Y, Q = \u_su.u_su.curd).
+Adding EN signal on $flatten\u_copy.$procdff$2313 ($adff) from module qfd_sp_su64_sfu (D = $flatten\u_copy.$procmux$2005_Y, Q = \u_copy.dst).
+Adding EN signal on $flatten\u_su.\u_su.$procdff$2670 ($dff) from module qfd_sp_su64_sfu (D = $flatten\u_su.\u_su.$procmux$2153_Y, Q = \u_su.u_su.curc).
+Adding EN signal on $flatten\u_su.\u_su.$procdff$2669 ($dff) from module qfd_sp_su64_sfu (D = $flatten\u_su.\u_su.$procmux$2161_Y, Q = \u_su.u_su.curb).
+Adding EN signal on $flatten\u_su.\u_su.$procdff$2668 ($dff) from module qfd_sp_su64_sfu (D = $flatten\u_su.\u_su.$procmux$2169_Y, Q = \u_su.u_su.cura).
+Adding EN signal on $flatten\u_copy.$procdff$2330 ($dff) from module qfd_sp_su64_sfu (D = \u_copy.src, Q = \u_copy.rd_src).
+Adding EN signal on $flatten\u_copy.$procdff$2476 ($dff) from module qfd_sp_su64_sfu (D = \u_copy.addr_pipe[12], Q = \u_copy.addr_pipe[13]).
+Adding EN signal on $flatten\u_su.\u_su.$procdff$2667 ($dff) from module qfd_sp_su64_sfu (D = \u_su.u_su.i_imm2, Q = \u_su.u_su.imm2).
+Adding EN signal on $flatten\u_copy.$procdff$2337 ($dff) from module qfd_sp_su64_sfu (D = \u_copy.dst, Q = \u_copy.rd_dst).
+Adding EN signal on $flatten\u_su.\u_su.$procdff$2666 ($dff) from module qfd_sp_su64_sfu (D = \u_su.u_su.i_imm1, Q = \u_su.u_su.imm1).
+Adding EN signal on $flatten\u_su.\u_su.$procdff$2665 ($dff) from module qfd_sp_su64_sfu (D = \u_su.u_su.i_ad, Q = \u_su.u_su.ad).
+Adding EN signal on $flatten\u_copy.$procdff$2427 ($dff) from module qfd_sp_su64_sfu (D = \u_copy.addr_pipe[5], Q = \u_copy.addr_pipe[6]).
+Adding EN signal on $flatten\u_su.\u_su.$procdff$2664 ($dff) from module qfd_sp_su64_sfu (D = \u_su.u_su.i_red, Q = \u_su.u_su.red).
+Adding EN signal on $flatten\u_su.\u_su.$procdff$2663 ($dff) from module qfd_sp_su64_sfu (D = \u_su.u_su.i_mb, Q = \u_su.u_su.mb).
+Adding EN signal on $flatten\u_copy.$procdff$2364 ($dff) from module qfd_sp_su64_sfu (D = \u_copy.addr_pipe[14], Q = \u_copy.wr_dst).
+Adding EN signal on $flatten\u_su.\u_su.$procdff$2662 ($dff) from module qfd_sp_su64_sfu (D = \u_su.u_su.i_ma, Q = \u_su.u_su.ma).
+Adding EN signal on $flatten\u_copy.$procdff$2371 ($dff) from module qfd_sp_su64_sfu (D = $flatten\u_copy.$xor$tools/qwen_su_glue_1015/base_inventory/qfd_su_static_copy.sv:62$1888_Y, Q = \u_copy.wr_data).
+Adding EN signal on $flatten\u_copy.$procdff$2434 ($dff) from module qfd_sp_su64_sfu (D = \u_copy.addr_pipe[6], Q = \u_copy.addr_pipe[7]).
+Adding EN signal on $flatten\u_su.\u_su.$procdff$2661 ($dff) from module qfd_sp_su64_sfu (D = \u_su.u_su.i_redsq, Q = \u_su.u_su.redsq).
+Adding EN signal on $flatten\u_copy.$procdff$2378 ($dff) from module qfd_sp_su64_sfu (D = 15, Q = \u_copy.i).
+Adding EN signal on $flatten\u_su.\u_su.$procdff$2660 ($dff) from module qfd_sp_su64_sfu (D = \u_su.u_su.i_md, Q = \u_su.u_su.md).
+Adding EN signal on $flatten\u_copy.$procdff$2385 ($dff) from module qfd_sp_su64_sfu (D = \u_copy.rd_dst, Q = \u_copy.addr_pipe[0]).
+Adding EN signal on $flatten\u_su.\u_su.$procdff$2659 ($dff) from module qfd_sp_su64_sfu (D = \u_su.u_su.i_mc, Q = \u_su.u_su.mc).
+Adding EN signal on $flatten\u_copy.$procdff$2392 ($dff) from module qfd_sp_su64_sfu (D = \u_copy.addr_pipe[0], Q = \u_copy.addr_pipe[1]).
+Adding EN signal on $flatten\u_su.\u_su.$procdff$2658 ($dff) from module qfd_sp_su64_sfu (D = \u_su.u_su.i_csrc, Q = \u_su.u_su.csrc).
+Adding EN signal on $flatten\u_copy.$procdff$2399 ($dff) from module qfd_sp_su64_sfu (D = \u_copy.addr_pipe[1], Q = \u_copy.addr_pipe[2]).
+Adding EN signal on $flatten\u_copy.$procdff$2441 ($dff) from module qfd_sp_su64_sfu (D = \u_copy.addr_pipe[7], Q = \u_copy.addr_pipe[8]).
+Adding EN signal on $flatten\u_su.\u_su.$procdff$2657 ($dff) from module qfd_sp_su64_sfu (D = \u_su.u_su.i_bsrc, Q = \u_su.u_su.bsrc).
+Adding EN signal on $flatten\u_copy.$procdff$2406 ($dff) from module qfd_sp_su64_sfu (D = \u_copy.addr_pipe[2], Q = \u_copy.addr_pipe[3]).
+Adding EN signal on $flatten\u_su.\u_su.$procdff$2656 ($dff) from module qfd_sp_su64_sfu (D = \u_su.u_su.i_asrc, Q = \u_su.u_su.asrc).
+Adding EN signal on $flatten\u_copy.$procdff$2413 ($dff) from module qfd_sp_su64_sfu (D = \u_copy.addr_pipe[3], Q = \u_copy.addr_pipe[4]).
+Adding EN signal on $flatten\u_su.\u_su.$procdff$2655 ($dff) from module qfd_sp_su64_sfu (D = \u_su.u_su.i_dsi, Q = \u_su.u_su.dsi).
+Adding EN signal on $flatten\u_copy.$procdff$2420 ($dff) from module qfd_sp_su64_sfu (D = \u_copy.addr_pipe[4], Q = \u_copy.addr_pipe[5]).
+Adding EN signal on $flatten\u_su.\u_su.$procdff$2654 ($dff) from module qfd_sp_su64_sfu (D = \u_su.u_su.i_csi, Q = \u_su.u_su.csi).
+Adding EN signal on $flatten\u_su.\u_su.$procdff$2653 ($dff) from module qfd_sp_su64_sfu (D = \u_su.u_su.i_bsi, Q = \u_su.u_su.bsi).
+Adding EN signal on $flatten\u_su.\u_su.$procdff$2652 ($dff) from module qfd_sp_su64_sfu (D = \u_su.u_su.i_asi, Q = \u_su.u_su.asi).
+Adding EN signal on $flatten\u_su.\u_su.$procdff$2651 ($dff) from module qfd_sp_su64_sfu (D = $flatten\u_su.\u_su.$procmux$2225_Y, Q = \u_su.u_su.rrow).
+Adding EN signal on $flatten\u_su.\u_su.$procdff$2650 ($dff) from module qfd_sp_su64_sfu (D = $flatten\u_su.\u_su.$sub$rtl/physical/ot_hdc_vstream_static_relay_entries.sv:160$330_Y, Q = \u_su.u_su.fin_th).
+Adding EN signal on $flatten\u_su.\u_su.$procdff$2649 ($dff) from module qfd_sp_su64_sfu (D = \u_su.u_su.i_dst, Q = \u_su.u_su.dst).
+Adding EN signal on $flatten\u_su.\u_su.$procdff$2637 ($adff) from module qfd_sp_su64_sfu (D = \u_su.u_su.r_emit, Q = \u_su.u_su.r_mark).
+Setting constant 0-bit at position 0 on $flatten\u_su.\u_su.$procdff$2643 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 1 on $flatten\u_su.\u_su.$procdff$2643 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 2 on $flatten\u_su.\u_su.$procdff$2643 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 3 on $flatten\u_su.\u_su.$procdff$2643 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 4 on $flatten\u_su.\u_su.$procdff$2643 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 5 on $flatten\u_su.\u_su.$procdff$2643 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 1-bit at position 6 on $flatten\u_su.\u_su.$procdff$2643 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 7 on $flatten\u_su.\u_su.$procdff$2643 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 8 on $flatten\u_su.\u_su.$procdff$2643 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 9 on $flatten\u_su.\u_su.$procdff$2643 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 10 on $flatten\u_su.\u_su.$procdff$2643 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 11 on $flatten\u_su.\u_su.$procdff$2643 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 12 on $flatten\u_su.\u_su.$procdff$2643 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 13 on $flatten\u_su.\u_su.$procdff$2643 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 14 on $flatten\u_su.\u_su.$procdff$2643 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 15 on $flatten\u_su.\u_su.$procdff$2643 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 16 on $flatten\u_su.\u_su.$procdff$2643 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 17 on $flatten\u_su.\u_su.$procdff$2643 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 18 on $flatten\u_su.\u_su.$procdff$2643 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 19 on $flatten\u_su.\u_su.$procdff$2643 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 20 on $flatten\u_su.\u_su.$procdff$2643 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 21 on $flatten\u_su.\u_su.$procdff$2643 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 22 on $flatten\u_su.\u_su.$procdff$2643 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 23 on $flatten\u_su.\u_su.$procdff$2643 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 24 on $flatten\u_su.\u_su.$procdff$2643 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 25 on $flatten\u_su.\u_su.$procdff$2643 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 26 on $flatten\u_su.\u_su.$procdff$2643 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 27 on $flatten\u_su.\u_su.$procdff$2643 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 28 on $flatten\u_su.\u_su.$procdff$2643 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 29 on $flatten\u_su.\u_su.$procdff$2643 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 30 on $flatten\u_su.\u_su.$procdff$2643 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 31 on $flatten\u_su.\u_su.$procdff$2643 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 1-bit at position 0 on $auto$ff.cc:266:slice$2831 ($dffe) from module qfd_sp_su64_sfu.
+Setting constant 1-bit at position 1 on $auto$ff.cc:266:slice$2831 ($dffe) from module qfd_sp_su64_sfu.
+Setting constant 1-bit at position 2 on $auto$ff.cc:266:slice$2831 ($dffe) from module qfd_sp_su64_sfu.
+Setting constant 1-bit at position 3 on $auto$ff.cc:266:slice$2831 ($dffe) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 4 on $auto$ff.cc:266:slice$2831 ($dffe) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 5 on $auto$ff.cc:266:slice$2831 ($dffe) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 6 on $auto$ff.cc:266:slice$2831 ($dffe) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 7 on $auto$ff.cc:266:slice$2831 ($dffe) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 8 on $auto$ff.cc:266:slice$2831 ($dffe) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 9 on $auto$ff.cc:266:slice$2831 ($dffe) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 10 on $auto$ff.cc:266:slice$2831 ($dffe) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 11 on $auto$ff.cc:266:slice$2831 ($dffe) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 12 on $auto$ff.cc:266:slice$2831 ($dffe) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 13 on $auto$ff.cc:266:slice$2831 ($dffe) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 14 on $auto$ff.cc:266:slice$2831 ($dffe) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 15 on $auto$ff.cc:266:slice$2831 ($dffe) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 16 on $auto$ff.cc:266:slice$2831 ($dffe) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 17 on $auto$ff.cc:266:slice$2831 ($dffe) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 18 on $auto$ff.cc:266:slice$2831 ($dffe) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 19 on $auto$ff.cc:266:slice$2831 ($dffe) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 20 on $auto$ff.cc:266:slice$2831 ($dffe) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 21 on $auto$ff.cc:266:slice$2831 ($dffe) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 22 on $auto$ff.cc:266:slice$2831 ($dffe) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 23 on $auto$ff.cc:266:slice$2831 ($dffe) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 24 on $auto$ff.cc:266:slice$2831 ($dffe) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 25 on $auto$ff.cc:266:slice$2831 ($dffe) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 26 on $auto$ff.cc:266:slice$2831 ($dffe) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 27 on $auto$ff.cc:266:slice$2831 ($dffe) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 28 on $auto$ff.cc:266:slice$2831 ($dffe) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 29 on $auto$ff.cc:266:slice$2831 ($dffe) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 30 on $auto$ff.cc:266:slice$2831 ($dffe) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 31 on $auto$ff.cc:266:slice$2831 ($dffe) from module qfd_sp_su64_sfu.
+
+15.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \qfd_sp_su64_sfu..
+Removed 68 unused cells and 1440 unused wires.
+<suppressed ~334 debug messages>
+
+15.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module qfd_sp_su64_sfu.
+<suppressed ~16 debug messages>
+
+15.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+15.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \qfd_sp_su64_sfu..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~162 debug messages>
+
+15.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \qfd_sp_su64_sfu.
+Performed a total of 0 changes.
+
+15.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\qfd_sp_su64_sfu'.
+<suppressed ~78 debug messages>
+Removed a total of 26 cells.
+
+15.13. Executing OPT_DFF pass (perform DFF optimizations).
+Handling D = Q on $procdff$2256 ($adff) from module qfd_sp_su64_sfu (removing D path).
+Setting constant 0-bit at position 0 on $procdff$2256 ($dlatch) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 0 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 1 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 2 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 3 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 4 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 5 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 6 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 7 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 8 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 9 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 10 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 11 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 12 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 13 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 14 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 15 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 16 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 17 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 18 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 19 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 20 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 21 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 22 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 23 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 24 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 25 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 26 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 27 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 28 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 29 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 30 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 31 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 32 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 33 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 34 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 35 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 36 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 37 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 38 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 39 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 40 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 41 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 42 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 43 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 44 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 45 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 46 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 47 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 48 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 49 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 50 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 51 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 52 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 53 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 54 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 55 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 56 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 57 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 58 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 59 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 60 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 61 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 62 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 63 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 64 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 65 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 66 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 67 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 68 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 69 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 70 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 71 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 72 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 73 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 74 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 75 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 76 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 77 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 78 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 79 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 80 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 81 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 82 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 83 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 84 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 85 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 86 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 87 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 88 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 89 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 90 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 91 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 92 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 93 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 94 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 95 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 96 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 97 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 98 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 99 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 100 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 101 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 102 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 103 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 104 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 105 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 106 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 107 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 108 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 109 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 110 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 111 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 112 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 113 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 114 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 115 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 116 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 117 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 118 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 119 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 120 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 121 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 122 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 123 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 124 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 125 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 126 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 127 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 128 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 129 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 130 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 131 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 132 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 133 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 134 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 135 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 136 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 137 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 138 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 139 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 140 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 141 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 142 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 143 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 144 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 145 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 146 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 147 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 148 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 149 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 150 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 151 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 152 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 153 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 154 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 155 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 156 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 157 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 158 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 159 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 160 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 161 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 162 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 163 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 164 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 165 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 166 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 167 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 168 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 169 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 170 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 171 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 172 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 173 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 174 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 175 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 176 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 177 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 178 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 179 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 180 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 181 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 182 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 183 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 184 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 185 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 186 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 187 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 188 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 189 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 190 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 191 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 192 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 193 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 194 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 195 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 196 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 197 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 198 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 199 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 200 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 201 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 202 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 203 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 204 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 205 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 206 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 207 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 208 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 209 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 210 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 211 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 212 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 213 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 214 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 215 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 216 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 217 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 218 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 219 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 220 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 221 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 222 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 223 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 224 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 225 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 226 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 227 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 228 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 229 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 230 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 231 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 232 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 233 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 234 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 235 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 236 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 237 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 238 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 239 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 240 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 241 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 242 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 243 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 244 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 245 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 246 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 247 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 248 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 249 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 250 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 251 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 252 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 253 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 254 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+Setting constant 0-bit at position 255 on $flatten\u_su.\u_su.$procdff$2517 ($dff) from module qfd_sp_su64_sfu.
+
+15.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \qfd_sp_su64_sfu..
+Removed 0 unused cells and 26 unused wires.
+<suppressed ~1 debug messages>
+
+15.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module qfd_sp_su64_sfu.
+<suppressed ~1 debug messages>
+
+15.16. Rerunning OPT passes. (Maybe there is more to do..)
+
+15.17. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \qfd_sp_su64_sfu..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~162 debug messages>
+
+15.18. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \qfd_sp_su64_sfu.
+Performed a total of 0 changes.
+
+15.19. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\qfd_sp_su64_sfu'.
+Removed a total of 0 cells.
+
+15.20. Executing OPT_DFF pass (perform DFF optimizations).
+
+15.21. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \qfd_sp_su64_sfu..
+Removed 0 unused cells and 1 unused wires.
+<suppressed ~1 debug messages>
+
+15.22. Executing OPT_EXPR pass (perform const folding).
+Optimizing module qfd_sp_su64_sfu.
+
+15.23. Rerunning OPT passes. (Maybe there is more to do..)
+
+15.24. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \qfd_sp_su64_sfu..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~162 debug messages>
+
+15.25. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \qfd_sp_su64_sfu.
+Performed a total of 0 changes.
+
+15.26. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\qfd_sp_su64_sfu'.
+Removed a total of 0 cells.
+
+15.27. Executing OPT_DFF pass (perform DFF optimizations).
+
+15.28. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \qfd_sp_su64_sfu..
+
+15.29. Executing OPT_EXPR pass (perform const folding).
+Optimizing module qfd_sp_su64_sfu.
+
+15.30. Finished OPT passes. (There is nothing left to do.)
+
+16. Printing statistics.
+
+=== qfd_sp_su64_sfu ===
+
+   Number of wires:               4367
+   Number of wire bits:         400760
+   Number of public wires:        3654
+   Number of public wire bits:  379461
+   Number of ports:                392
+   Number of port bits:          26961
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:               1182
+     $add_16                         4
+     $add_18                         2
+     $add_19                         1
+     $add_24                        14
+     $add_25                         2
+     $add_32                       318
+     $add_8                          1
+     $adff_1                        14
+     $adff_15                        2
+     $adff_16                        6
+     $adff_197                       1
+     $adff_2                         1
+     $adff_3                         1
+     $adff_63                        1
+     $adff_8                         1
+     $adffe_1                        1
+     $adffe_16                       2
+     $adffe_19                       1
+     $adffe_24                       3
+     $adffe_3                        1
+     $adffe_7                        1
+     $and_64                         1
+     $dff_1                          3
+     $dff_192                        1
+     $dff_2048                       1
+     $dff_24                         1
+     $dff_244                        1
+     $dff_4570                       1
+     $dff_5120                       1
+     $dff_64                         1
+     $dffe_1                         8
+     $dffe_18                        3
+     $dffe_19                        1
+     $dffe_2                         4
+     $dffe_2048                      1
+     $dffe_24                       36
+     $dffe_3                         1
+     $dffe_32                        2
+     $eq_18                          3
+     $eq_2                           3
+     $eq_3                           1
+     $eq_32                          2
+     $eq_7                           1
+     $gt_25                          2
+     $logic_and_1                   21
+     $logic_not_1                    8
+     $logic_not_19                   1
+     $logic_not_7                    1
+     $logic_not_8                    1
+     $logic_or_1                    15
+     $lt_32                         64
+     $mul_28                         4
+     $mul_29                        12
+     $mul_30                        28
+     $mul_31                        60
+     $mul_32                       124
+     $mux_1                         19
+     $mux_16                         8
+     $mux_18                         1
+     $mux_19                         1
+     $mux_2137                       1
+     $mux_2367                       1
+     $mux_24                        33
+     $mux_32                       129
+     $mux_7                          3
+     $mux_8                          2
+     $ne_2                           1
+     $ne_3                           2
+     $not_64                         1
+     $or_1                           3
+     $pmux_19                        1
+     $reduce_and_19                  1
+     $reduce_and_2                   4
+     $reduce_bool_19                 1
+     $reduce_bool_2                  5
+     $reduce_or_15                   1
+     $reduce_or_6                    1
+     $reduce_or_64                   3
+     $scopeinfo                     11
+     $sdffe_18                       2
+     $sub_16                         2
+     $sub_19                         2
+     $sub_7                          1
+     $sub_8                          1
+     ot_hdc_vstream_lane_clock_entries_candidate     64
+     ot_qfd_su_align_group4         16
+     ot_qfd_su_lane_relay           64
+     qfd_su_vred_entries64           1
+
+17. Executing JSON backend.
+
+Warnings: 1 unique messages, 2 total
+End of script. Logfile hash: 7424d3db73, CPU: user 4.45s system 0.19s, MEM: 187.29 MB peak
+Yosys 0.52 (git sha1 fee39a3284c90249e1d9684cf6944ffbbcbb8f90)
+Time spent: 46% 4x opt_clean (2 sec), 16% 4x opt_dff (0 sec), ...

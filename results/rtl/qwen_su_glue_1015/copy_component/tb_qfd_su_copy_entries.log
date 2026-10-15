@@ -1,0 +1,5 @@
+REPLAY frame0 reads64 writes64 response_plus_copy16 complete_after_start82
+REPLAY frame1 reads64 writes64 response_plus_copy16 complete_after_start82
+REPLAY frame2 reads64 writes64 response_plus_copy16 complete_after_start82
+PASS raw4096words x3 exact replay no FP computation, fault0
+rtl/test/qwen_su_glue_1015/tb_qfd_su_copy_entries.sv:68: $finish called at 530000 (1ps)

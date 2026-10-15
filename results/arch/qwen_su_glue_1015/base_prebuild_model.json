@@ -1,0 +1,29 @@
+{
+  "schema": "opentallas.qwen-su-base-cut-prebuild.v1",
+  "source_commit": "c6c44c12c",
+  "configuration": {
+    "EXTERNAL_EMBED": 1,
+    "CBUF_EDGES": 5,
+    "VL": 14,
+    "ML": 15,
+    "RD": 2,
+    "RTREE": 0
+  },
+  "purpose": "Sizing metadata synthesis only. Preserve every actual base source; exclude80relay/align and265arithmetic/reduction roots through exact child port blackboxes.",
+  "replicas": 1,
+  "macs_per_cycle": 0,
+  "memory_bytes_per_cycle_added": 0,
+  "added_cycles": 0,
+  "ff_upper_bound_for_metadata_admission": 32768,
+  "admission": {
+    "memory_gb": 4,
+    "threads": 1
+  },
+  "boundary_bits_per_cycle": "Exact port and cut counts emitted by Yosys metadata inventory; no physical width claim before then",
+  "routing_tracks": "Await actual residual netlist and pin plan",
+  "area": "No zero-area base assumption; residual actual netlist cells and all256 AW24offsetadders remain charged",
+  "floorplan_slot_fit": "Unqualified. Large residual fanout and routing may require further real source cuts.",
+  "latency": "No added/moved registers; preserve exact existing IS1/OS1/CP15 edges and explicit child clocks",
+  "fanout_mux": "Actual eight broadcast groups,25624-bit offsetadders,64 embedding32-bit muxes,copy/arith2367-bit selector; no substitutes",
+  "qualification": "analytical budget before metadata synthesis; not routed hardware or arithmetic evidence"
+}
