@@ -1,0 +1,75 @@
+{
+  "schema": "opentallas.s81.return_structural_plan.v1",
+  "status": "OPEN_PROPOSAL_not_qualification",
+  "source_sha256": "59dca066e0795298aba65ab0330c9110df7e24f0164117914f9471a2ab8ed9c9",
+  "active_shape": {
+    "NG": 256,
+    "D": 5120,
+    "S_RD": 2,
+    "S_RT": 4,
+    "READ_STAGE": 1,
+    "CHAIN_STEP": 6,
+    "PIPE": 1,
+    "columns": 4,
+    "ctra_outline_um": [
+      576.72,
+      21.6
+    ],
+    "ctrb_outline_um": [
+      576.72,
+      21.6
+    ]
+  },
+  "authoritative_failure": {
+    "evidence_commit": "95916085b",
+    "artifact": "results/rtl/s81_layer_tput_1013/norm_tree_1014/native_closure_1014/final_return_gate",
+    "ctra": {
+      "over190_capture_pins": 2231,
+      "worst_capture_ps": 674.0,
+      "worst_capture": "nflt_n[4]",
+      "TT_setup_ps": -294.8,
+      "reg_path": "tq/farq -> full-width buffer chain -> u.rdm"
+    },
+    "ctrb": {
+      "over190_capture_pins": 2211,
+      "worst_capture_ps": 529.9,
+      "worst_capture": "hrq_n[116]",
+      "TT_setup_ps": -14
+    }
+  },
+  "mechanism": {
+    "return_payload": "ctrs.hrd[s][ll] ORs four banks for lane ll. Physical bank index is vertical; ll is horizontal CTNL column. HRQ source pin x already follows ll via tools/s81/hc_return_pins.py. The output slots are fixed to legacy CTRN pin positions. RTL-wide tq/farq selection fans across all columns; no direct HRQ/fault pin capture exists before merge.",
+    "flags": "nflt/pflt/hnz enter direct combinational reduction into rvm. Simply duplicating tq/farq does not repair the fault capture path.",
+    "current_prohibition": "Do not report a gate WARN or placement-only ETM as native qualification. Do not add transparent per-input flops without matching data/control timing: that changes merge epoch."
+  },
+  "proposed_sequence": [
+    {
+      "step": 1,
+      "implementation": "Keep separate actual registered copies tq_col[0..3], lq_col[0..3], farq_col[0..3] at the same existing input-capture cycle (keep attributes, actual pin binding). Select each return output bit from its lane-column copy; no added cycle.",
+      "exactness": "Bitwise equality with original tq/lq/farq on every cycle; PIPE1 production exact + observed selected-bit/control mutant required."
+    },
+    {
+      "step": 2,
+      "implementation": "Use four narrow hard return engines per CTRA/B. Route each ll bank-OR and corresponding payload insertion locally; export exact logical rdm bit names grouped physically by lane ll. Build an actual successor CTRN with matched grouped rdm input positions; group both sides consistently through the next native transport endpoint.",
+      "per_bit_identity": "HRQ global index 64*S_RT*(4*bank+ll)+64*s+b reduces into hrd[256*s+64*ll+b]. Output payload k may select hrd[k%GT] with GT4. Retain the exact current g0/tq comparison and OR order (bitwise OR is associative) and BF16 insert fields. No arithmetic/rounding change.",
+      "integration": "This is a physical endpoint regrouping, not a new logical bus permutation. All parent wires remain indexed by the original semantic names; exact rebind CSV plus observed mislabeled-bit mutant is mandatory. Do not merely move the crossings to a parent bus."
+    },
+    {
+      "step": 3,
+      "implementation": "If fault flags still exceed native capture after narrow-engine distribution, introduce actual per-column flag capture and an explicit merge leaf. That necessarily adds a flag epoch unless an existing stage can be retimed. Prove an exact retiming of rv/read/output control or explicitly price and reschedule the additional fixed cycle. Do not claim same-epoch capture with a newly inserted input register.",
+      "blocking_decision": "Actual parent source/schedule integration required; no implementation or cost waiver claimed."
+    },
+    {
+      "step": 4,
+      "implementation": "Regenerate all affected real pin plans/LEFs, update actual parent source/clock roots/reset and price any additional cycles/area/cuts before route. TT setup, FF hold and DRC0 plus native launch<=220/capture<=190 and actual per-pin clock references remain mandatory."
+    }
+  ],
+  "required_before_adoption": [
+    "actual canonical2417 HC parent identity and child homes",
+    "real per-column ingress and downstream CTRN peer-bound pin map",
+    "kept same-cycle control replication RTL, exact PIPE1+observable negative controls",
+    "model-priced structural split and any explicit retiming",
+    "new CTS and routedTT/FF/DRC0 views",
+    "source-bound all-incident pin/clock/reset/hop/cut proof"
+  ]
+}
