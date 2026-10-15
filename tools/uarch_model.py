@@ -16307,3 +16307,8 @@ def s81_static_vm_face_model(entries=8):
     """Static capture/WFC/outbound sizing; physical slots remain unqualified."""
     from s81_vm.static_face_model import model
     return model(entries)
+
+
+def s81_static_channels_1014_model():
+    from uarch_model_s81_static_channels import s81_static_channels_1014_model as model
+    return model()
