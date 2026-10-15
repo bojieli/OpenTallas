@@ -36,6 +36,7 @@ module ot_qfd_vm_region_nx #(
     parameter integer NRI = 2,
     parameter integer NRX = 2,
     parameter integer NRS = 1,
+    parameter integer USE_OBSERVER_CLOCKS = 0,
     parameter integer BANK_BASE = 0,
     parameter integer TOTAL_BANKS = 64,
     parameter integer USE_LEAF_CLOCKS = 0,
@@ -43,6 +44,7 @@ module ot_qfd_vm_region_nx #(
 ) (
     input  wire                      clk,
     input  wire [55:0]               leaf_ck,
+    input  wire [7:0]                observer_ck,
     input  wire                      rst_n,
     input  wire [NBK-1:0]            re,
     input  wire [NBK*LAW-1:0]        ra,
@@ -109,25 +111,19 @@ module ot_qfd_vm_region_nx #(
     // A presented write at the region face never marks coverage. Q occupies element 13696..14207, rows856..887.
     wire [511:0] qcm [0:NBK-1];
     generate for (g = 0; g < NBK; g = g + 1) begin : g_qcommit
-        reg rr, ow;
-        reg [LAW-1:0] ol;
-        reg [15:0] om;
-        reg [511:0] cm;
-        wire [31:0] row = ol * TOTAL_BANKS + BANK_BASE + g;
-        always @(posedge lc[4*g+2] or negedge rtg[g])
-            if (!rtg[g]) rr <= 1'b0; else rr <= 1'b1;
-        always @(posedge lc[4*g+2] or negedge rr)
-            if (!rr) ow <= 1'b0; else ow <= g_b[g].m_we;
-        always @(posedge lc[4*g+2]) begin ol <= g_b[g].m_wl; om <= g_b[g].m_wm; end
-        integer ln;
-        always @(posedge lc[4*g+2] or negedge rst_n)
-            if (!rst_n) cm <= 512'd0;
-            else begin
-                cm <= 512'd0;
-                if (ow && row >= 856 && row < 888)
-                    for (ln = 0; ln < 16; ln = ln + 1) cm[16*(row-856)+ln] <= om[ln];
-            end
-        assign qcm[g] = cm;
+      if(BANK_BASE+g>=24 && BANK_BASE+g<56 && TOTAL_BANKS==64)begin : g_qbank
+        // Q rows856..887 occupy copy0 banks24..55 at line13. Exactly32 actual observer roots are needed.
+        wire obs_clk=USE_OBSERVER_CLOCKS ? observer_ck[g] : lc[4*g+2];
+        reg rr,ow;reg [LAW-1:0] ol;reg [15:0] om,cm;
+        always @(posedge obs_clk or negedge rtg[g])if(!rtg[g])rr<=0;else rr<=1;
+        always @(posedge obs_clk or negedge rr)if(!rr)ow<=0;else ow<=g_b[g].m_we;
+        always @(posedge obs_clk)begin ol<=g_b[g].m_wl;om<=g_b[g].m_wm;end
+        always @(posedge obs_clk or negedge rst_n)
+            if(!rst_n)cm<=0;else cm<=(ow && ol==13)?om:16'd0;
+        assign qcm[g]=512'(cm) << (16*(BANK_BASE+g-24));
+      end else begin : g_not_q
+        assign qcm[g]=512'd0;
+      end
     end endgenerate
     reg [511:0] qc;
     integer qi;

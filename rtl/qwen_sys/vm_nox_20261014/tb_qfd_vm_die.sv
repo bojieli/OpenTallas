@@ -10,7 +10,7 @@ reg [532:0] svw=0; reg [20:0] svr=0; reg [519:0] ar=0;
 reg qe=0,qs=0,qcr=0;wire qsr,qd,fault,svq_v;wire [511:0] svq;wire [523:0] q;
 integer beats=0,errors=0,arcredits=0;
 wire acr;
-qfd_sp_vector_memory #(.USE_MACRO(MEM),.USE_LEAF_CLOCKS(1),.OBS_MUT(OBS_MUT)) dut(
+qfd_sp_vector_memory_elastic #(.USE_MACRO(MEM),.USE_LEAF_CLOCKS(1),.OBS_MUT(OBS_MUT)) dut(
 .ck(clk),.rst_n(rst_n),
 .ck_r0_0(clk),
 .ck_r0_1(clk),
