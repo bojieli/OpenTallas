@@ -57,7 +57,7 @@ class ProvenanceTests(unittest.TestCase):
         token = r.add('token.json', self.token)
         files = {name:r.add(name, ('actual '+name).encode(), raw=True) for name in ('lef','tt_lib','ff_lib')}
         hashes = {name:ref['sha256'] for name,ref in files.items()}
-        module = json.loads((f.root/'target.json').read_text())['modules']['engine']
+        module = json.loads((f.root/'target.json').read_text())['modules']['top']
         self.route = dict(master='engine_leaf', status='CLOSED', tt_setup_ps=10, ff_hold_ps=4, drc=0,
                           rtl_sha256=f.manifest['elaboration']['source_sha256'],
                           elaborated_module_sha256=NP.digest(json.dumps(module,sort_keys=True,separators=(',',':')).encode()),
@@ -72,7 +72,9 @@ class ProvenanceTests(unittest.TestCase):
         self.spec = dict(design='fixture',programs=[dict(id='layer0',program=pr,bindings=mr)],operation_gate=gate,
                          program_inventory=r.add('program_inventory.json',dict(programs=[dict(id='layer0',sha256=pr['sha256'])])),
                          token_graph=token,node_operations={'L0.add':['layer0:add']},schedule=schedule,
-                         physical_bindings={'top/e':dict(master='engine_leaf',slot='leaf0',target_commit='a'*40,route=route,files=files,contract=contract,die_bind=db,die_netlist=die,grt=grt,die_sta=sta)})
+                         physical_bindings={'top/e':dict(master='engine_leaf',slot='leaf0',leaf_instance='top',target_commit='a'*40,route=route,files=files,contract=contract,die_bind=db,die_netlist=die,grt=grt,die_sta=sta)})
+        self.spec['physical_bindings']['top/m']=copy.deepcopy(self.spec['physical_bindings']['top/e'])
+        self.spec['physical_bindings']['top']=copy.deepcopy(self.spec['physical_bindings']['top/e'])
 
     def run_gate(self):
         return NP.qualify(self.reader,self.spec,self.token)
@@ -111,6 +113,12 @@ class ProvenanceTests(unittest.TestCase):
         self.spec['physical_bindings'].clear()
         self.spec['category']='closed (TT era)'
         self.assertIn('INSTANCE_HAS_NO_PHYSICAL_BINDING',str(self.run_gate()))
+
+    def test_missing_memory_physical_binding_fails(self):
+        self.spec['physical_bindings'].pop('top/m')
+        x=self.run_gate();self.assertFalse(x['native_qualified'])
+        self.assertIn('TARGET_COMPONENT_HAS_NO_PHYSICAL_BINDING',str(x))
+        self.assertFalse(x['nodes']['L0.add']['native_qualified'])
 
     def test_stale_die_netlist_receipt_fails(self):
         self.reader.data['die.v']=b'module wrong;endmodule'

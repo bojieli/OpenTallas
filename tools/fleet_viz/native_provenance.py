@@ -117,6 +117,12 @@ def qualify(reader, spec, token):
             defects.append(error('program->elaboration', issue, program=pid))
         for name, component in binding.get('components', {}).items():
             if component.get('implementation') in ('rtl', 'macro'):
+                instance = component.get('instance')
+                link = physical.get(instance)
+                if link is None:
+                    defects.append(error('component->routed_leaf', 'TARGET_COMPONENT_HAS_NO_PHYSICAL_BINDING', component=name, instance=instance, program=pid))
+                else:
+                    defects.extend(dict(d, component=name, program=pid) for d in physical_chain(reader, link, binding, instance))
                 continue
             if component.get('role') == 'expected_observer' and component.get('drives_dut') is False:
                 continue
@@ -218,6 +224,15 @@ def qualify(reader, spec, token):
             defects.append(error('operation->static_schedule', 'STATIC_NATIVE_TIMELINE_NOT_PROVEN'))
     except (KeyError, ValueError, OSError, subprocess.SubprocessError) as exc:
         defects.append(error('operation->static_schedule', 'STATIC_SCHEDULE_RECEIPT_MISSING:' + str(exc)))
+    if defects:
+        for row in rows:
+            if row['native_qualified']:
+                row['native_qualified'] = False
+                row['defects'].append(error('target->release', 'TARGET_WIDE_NATIVE_PREREQUISITE_FAIL', target_defects=len(defects)))
+        for node in nodes.values():
+            if node['native_qualified']:
+                node['native_qualified'] = False
+                node['defects'].append(error('target->release', 'TARGET_WIDE_NATIVE_PREREQUISITE_FAIL', target_defects=len(defects)))
     all_errors = defects + [dict(d, operation=r['id']) for r in rows for d in r['defects']] + [dict(d, node=n) for n, r in nodes.items() for d in r['defects'] if d.get('edge') == 'token_node->operation']
     counts = collections.Counter(d['edge'] for d in all_errors)
     return dict(schema='opentallas.native_lifecycle.v1', design=spec.get('design'),
@@ -241,7 +256,10 @@ def physical_chain(reader, link, binding, instance):
         elab = binding.get('elaboration') or {}
         netlist = load(reader, dict(commit=link['target_commit'], path=elab['netlist'], sha256=elab['netlist_sha256']))
         module = netlist['modules'][elab['top']]
-        parts = instance.split('/')
+        leaf_instance = link.get('leaf_instance', instance)
+        if instance != leaf_instance and not instance.startswith(leaf_instance + '/'):
+            raise ValueError('routed leaf does not contain target instance')
+        parts = leaf_instance.split('/')
         if parts[0] != elab['top']:
             raise ValueError('instance outside elaborated top')
         for part in parts[1:]:
