@@ -1,0 +1,75 @@
+{
+  "schema": "opentallas.hbm.vm-static-ring4-packet.v1",
+  "bank_commit": "0334452c354ae46f8ed1671753f98f8579742711",
+  "source_sha256": {
+    "ot_vms_bank_static.sv": "7828d619da2fd2462cf0253b78c074dad1171e6ca77799bfc21f22987ed72237",
+    "ot_vms_rstop_static.sv": "02951e1f3e0d06fa2295c4851a9a26b57d639cfc75263e8adba28c2450e05e2a",
+    "ot_vms_rcl_static.sv": "88f974c7bc36e635774ff2e9edc093f3c3a3963644f5e5141823c1ec07404991",
+    "ot_vms_hub_static.sv": "364b6a3601b5042344513810a4fb6de6f25259c2de7d386d630b62fc807b5cf9",
+    "ot_sram_1r1w_1024x256_m2_r2c2.v": "6530a2ef457f260a942e067b556ff55d75f931350af5807cfd6b05cd5e1ff380",
+    "tb_vms_static_ring4_packet.sv": "0ae5c7786a005400b28682200684a8532695f2831cd3922072851ba491a54a25",
+    "run_vms_static_ring4_packet.sh": "b7099aa28bd7dca389c30edec9044354bab872073e888b1bf40cefcc109e4592"
+  },
+  "command": "ot-run --mem 1 --threads 1 --dir /tmp/hbm-static-ring4-packet-input -- bash run_vms_static_ring4_packet.sh /tmp/hbm-static-ring4-packet-run1",
+  "host": "ot-agidock128",
+  "unit": "oth-ubuntu-2536705-1792046158",
+  "exit": 0,
+  "scope": "Native remote packet issue source hub -> ring PREQ -> target replay controller -> target hub -> actual target SRAM bank -> target hub -> target replay controller -> reverse ring PRSP -> source hub -> original user tag and actual SRAM payload. Four representative bank0 instances, twelve physical SRAM macro functional models, eight stops, four NC1 hubs, four replay controllers.",
+  "physical_sid_order": [
+    0,
+    1,
+    3,
+    2
+  ],
+  "result": "PASS",
+  "coverage": {
+    "source_quadrants": 4,
+    "remote_writes": 4,
+    "remote_reads": 4,
+    "native_replay_issues": 8,
+    "user_response_count": 8,
+    "exact_source_usertags": true,
+    "compiler_seq_slots": "0..3",
+    "cycles": 340,
+    "paths": [
+      "CW2-hop request / CCW2-hop return",
+      "CCW1-hop request / CW1-hop return"
+    ],
+    "all_fault_statuses": 0,
+    "internal_compute_or_memory_substitutions": 0
+  },
+  "compiler_schedule_offsets": {
+    "hops": "h=1 or2",
+    "source_cq": 0,
+    "source_stop_tx_slot": 2,
+    "source_preq_link_out": 3,
+    "first_transit_slot_if_h2": 4,
+    "target_rce": "3+2h",
+    "target_rcl_rx_slot": "4+2h",
+    "native_replay_hq": "5+2h",
+    "target_hub_bank_slot": "6+2h",
+    "target_bank_sample": "8+2h",
+    "target_actual_macro_edge": "11+2h",
+    "target_bank_pr": "14+2h",
+    "target_hub_response_calendar": "15+2h",
+    "target_hub_replay_cr": "16+2h",
+    "target_rcl_ri": "18+2h",
+    "target_stop_prsp_tx_slot": "19+2h",
+    "target_prsp_link_out": "20+2h",
+    "return_transit_slot_if_h2": 25,
+    "source_hub_response_calendar": "21+4h",
+    "source_hub_cr": "22+4h"
+  },
+  "execution_selection": "Every hub bank/direction select, bank read/write owner, replay rx source, stop tx source and hub response calendar is an explicit phase/node table; no valids/ready/data responses choose issue or completion cycles.",
+  "mutant": {
+    "kind": "rcl MUT1 reverses metadata-selected return port",
+    "result": "EXPECTED_FAIL",
+    "cycle": 44,
+    "failure": "native target ring stop fault because response arrived outside reserved return-direction slot"
+  },
+  "peak_rss_kib": {
+    "compile": 19172,
+    "sim": 11156
+  },
+  "limitations": "Representative component composition, NC1 local client plus real replay client and bank0 only. No full eight-bank slice, all-client concurrency or successor physical timing claim."
+}
