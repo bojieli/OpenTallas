@@ -67,3 +67,35 @@ def model(rows=640, *, replicas_per_die=4, frame_rows=250):
                            full_native_service=False, native_token=False,
                            measured_token_loss=None,
                            note='Prefer source-side real BF16 packing if it removes raw FP32 transport cost; never price host rounding as native hardware.'))
+
+
+def completion_model(terminal_frames):
+    """Price actual fixed output-pin calendars, never END-header visibility.
+
+    Each entry carries source, header_cycle, payload_cycles and length. The
+    compiler supplies all slots; this model validates rather than invents them.
+    The physical job tile observes taps one edge behind their accepted pins.
+    """
+    sources=set();ends=[];headers=[]
+    for f in terminal_frames:
+        src=f['source'];header=f['header_cycle'];payload=f['payload_cycles'];n=f['length']
+        if type(src) is not int or not 0<=src<=4 or src in sources:
+            raise ValueError('distinct actual terminal source0..4 required')
+        if type(header) is not int or header<0 or type(n) is not int or n<0 or n>4095:
+            raise ValueError('actual fixed frame length/header cycle required')
+        if len(payload)!=n or any(type(t) is not int for t in payload) or payload!=sorted(set(payload)):
+            raise ValueError('all actual payload slots required, in order')
+        if payload and payload[0]<=header:
+            raise ValueError('payload must follow header')
+        sources.add(src);headers.append(header);ends.append(payload[-1] if payload else header)
+    if not ends: raise ValueError('actual nonempty terminal source set required')
+    return dict(source='rtl/dsrom_sys/s81_ctrl/ot_s81_svc_job.sv',
+                rule='observational done after final valid payload; no issue/ready scheduling',
+                retained_metadata_FF_bits=48, new_memory_ports=0,new_clock_roots=0,
+                fixed_tap_bits_per_cycle=4*26,new_global_pin_bits=0,
+                MACs_per_cycle=0,registered_observation_cycles=1,
+                scheduled_terminal_done_cycle=max(ends)+1,
+                old_early_header_done_cycle=max(headers)+1,
+                previously_missing_visibility_cycles=max(ends)-max(headers),
+                native_token_qualified=False,physical_successor_qualified=False,
+                token_loss=None,token_loss_requires='actual compiled service/calendar composition')

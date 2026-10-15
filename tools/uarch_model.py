@@ -589,6 +589,12 @@ def s81_probability_ingress_model(rows=640, **kwargs):
     return model(rows, **kwargs)
 
 
+def s81_service_completion_model(terminal_frames):
+    """Actual terminal result slots and job observation, no header-based completion."""
+    from s81_probability_ingress_model import completion_model
+    return completion_model(terminal_frames)
+
+
 def hbm_write_merge_contract_model():
     """Per-stack source-owned service completion, registered full-width arbitration."""
     from hbm_write_merge_model import model

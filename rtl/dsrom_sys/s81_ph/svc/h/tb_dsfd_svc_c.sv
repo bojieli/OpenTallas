@@ -154,8 +154,11 @@ module tb_dsfd_svc_c (input wire clk);
     wire [4:0] cflt = {dut.u_x.fo[0], dut.g_q[3].u_q.fo[0], dut.g_q[2].u_q.fo[0], dut.g_q[1].u_q.fo[0], dut.g_q[0].u_q.fo[0]};
     wire fault = hub_fault | jd[1] | (|cflt);
     wire [63:0] fault_code = {57'd0, jd[1], hub_fault, cflt};
-    integer n_done = 0;
-    always @(posedge clk) if (jd[0]) n_done <= n_done + 1;
+    integer n_done = 0, done_early = 0;
+    always @(posedge clk) if (jd[0]) begin
+        n_done <= n_done + 1;
+        if(n_end==0)done_early <= done_early + 1;
+    end
     // ---------------- q frame list (built once) ----------------
     localparam integer QMAX = 8192;
     reg [511:0] qw [0:QMAX-1];
@@ -325,9 +328,13 @@ module tb_dsfd_svc_c (input wire clk);
                 a_left = a0_d[491:480]; a_k = 0; a_endf = a0_d[507];
                 if (a_sub == 1 && a_left != 16) fmt_err = fmt_err + 1;
                 if (a_endf) begin
-                    n_end = n_end + 1; end_cyc = cyc;
                     if (pv_beats != 7) fmt_err = fmt_err + 1;
-                    if (static_inputs != 0 && cyc != expected_end) schedule_errors = schedule_errors + 1;
+                    // END describes the whole frame. Its payload is still
+                    // legal traffic, and job retirement must wait for it.
+                    if(a_left==0) begin
+                        n_end=n_end+1;end_cyc=cyc;
+                        if(static_inputs!=0&&cyc!=expected_end)schedule_errors=schedule_errors+1;
+                    end
                 end
                 if (a_sub == 0) for (j = 0; j < 4; j = j + 1) begin
                     if (a_mask[j]) begin
@@ -366,6 +373,10 @@ module tb_dsfd_svc_c (input wire clk);
                     if (a_k == 16) pv_beats = pv_beats + 1;
                 end
                 a_left = a_left - 1;
+                if(a_left==0&&a_endf) begin
+                    n_end=n_end+1;end_cyc=cyc;
+                    if(static_inputs!=0&&cyc!=expected_end)schedule_errors=schedule_errors+1;
+                end
             end
         end
         // ---- od checker ----
@@ -392,11 +403,12 @@ module tb_dsfd_svc_c (input wire clk);
             host_check();
             $display("SVCC_SCHEDULE static_inputs=%0d pv_cycle=%0d expected_end=%0d errors=%0d",
                      static_inputs, pv_cycle, expected_end, schedule_errors);
+            $display("SVCC_DONE_BOUNDARY early=%0d",done_early);
             $display("SVCC_HOST sent=%0d acks=%0d credits=%0d errors=%0d", h_sent, h_ack, h_cred, h_err);
             $display("SVCC done=%0d die=%0d st=%0d T=%0d window=%0d nsel=%0d held_rows=%0d score_rows=%0d sc_checked=%0d sc_errors=%0d pv_beats=%0d pv_checked=%0d pv_errors=%0d own_rows=%0d rowx=%0d rowx_errors=%0d pairs_in=%0d ends=%0d after_end=%0d fmt_errors=%0d fault=%0d fault_code=%016x cred_err=%0d pc_err=%0d first_q=%0d last_score=%0d end=%0d cycles=%0d timeout=%0d verdict=%s",
                      n_done, DIE, ST, T, wcount, nsel, exp_scores, sc_rows, sc_chk, sc_err, pv_beats, pv_chk, pv_err, exp_own, x_rows, x_err,
                      npair_in, n_end, after_end, fmt_err, fault, fault_code, cred_err, pc_err, first_q_cyc, last_score_cyc, end_cyc, cyc, cyc >= MAXCYC,
-                     (schedule_errors == 0 && n_done == 1 && h_err == 0 && sc_err == 0 && pv_err == 0 && x_err == 0 && fmt_err == 0 && after_end == 0 && n_end == 1 && pv_beats == 8 &&
+                     (schedule_errors == 0 && done_early == 0 && n_done == 1 && h_err == 0 && sc_err == 0 && pv_err == 0 && x_err == 0 && fmt_err == 0 && after_end == 0 && n_end == 1 && pv_beats == 8 &&
                       sc_rows == exp_scores && x_rows == exp_own && !fault && cred_err == 0 && pc_err == 0 && cyc < MAXCYC) ? "PASS" : "FAIL");
             $finish;
         end

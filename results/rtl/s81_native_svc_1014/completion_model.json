@@ -1,0 +1,18 @@
+{
+  "source": "rtl/dsrom_sys/s81_ctrl/ot_s81_svc_job.sv",
+  "rule": "observational done after final valid payload; no issue/ready scheduling",
+  "retained_metadata_FF_bits": 48,
+  "new_memory_ports": 0,
+  "new_clock_roots": 0,
+  "fixed_tap_bits_per_cycle": 104,
+  "new_global_pin_bits": 0,
+  "MACs_per_cycle": 0,
+  "registered_observation_cycles": 1,
+  "scheduled_terminal_done_cycle": 23,
+  "old_early_header_done_cycle": 1,
+  "previously_missing_visibility_cycles": 22,
+  "native_token_qualified": false,
+  "physical_successor_qualified": false,
+  "token_loss": null,
+  "token_loss_requires": "actual compiled service/calendar composition"
+}

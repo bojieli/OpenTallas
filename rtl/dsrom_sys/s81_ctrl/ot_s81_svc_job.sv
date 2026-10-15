@@ -12,11 +12,13 @@
 //     arg[14:7]; otherwise the WHOLE frame is discarded and the sticky fault set (fail closed: never delivered).  The
 //     issue head advances when the job's last q frame has passed.  Same cycle (no register: the q pin flop is the core's).
 //   result side: observes the core's output pins ad (a0 / a1), xd and od (no added cycle); a result frame whose
-//     header has END marks its source done for the job named by its tag; the head job is done (j_dn[0] pulse, in
+//     header has END marks its source done only after the frame's last valid payload beat (or at a zero-length
+//     header); the head job is done (j_dn[0] pulse, in
 //     order) when every source of arg[4:0] (bit i = source i) has sent its END.  An END for a tag that is not pending,
 //     a duplicate END, or an END from a source not in the job's set is a fault.
 //   arg[6:5], arg[23:15] reserved (0); arg[14:7] = 0 or arg[4:0] = 0 is a wrong descriptor (fault).
-// MUT: 1 q frames pass without an armed job (dropped-start check off), 5 early done (done at the job's first END).
+// MUT: 1 q frames pass without an armed job, 5 done at first source,
+// 7 restore early END-header completion instead of actual final payload.
 // ---------------------------------------------------------------------------------------------------------------
 module ot_s81_svc_job #(parameter integer JQ = 8, MUT = 0) (
     input  wire          ck, rs_n,
@@ -50,18 +52,26 @@ module ot_s81_svc_job #(parameter integer JQ = 8, MUT = 0) (
     wire [3:0] ov = {od[1], xd[1], ad[513], ad[0]};
     wire [511:0] o0 = ad[512:1], o1 = ad[1025:514], o2 = xd[513:2], o3 = od[513:2];
     reg  [3:0] oin; reg [11:0] orem [0:3];
+    reg [3:0] pending_end;
+    reg [7:0] pending_tag [0:3];
+    reg [2:0] pending_src [0:3];
+    wire [511:0] ow [0:3];
+    assign ow[0]=o0; assign ow[1]=o1; assign ow[2]=o2; assign ow[3]=o3;
     reg  [3:0] endv; reg [7:0] endt [0:3]; reg [2:0] ends [0:3];
     integer k, m, nend;
     always @* begin
         for (k = 0; k < 4; k = k + 1) begin
             endv[k] = 1'b0; endt[k] = 8'd0; ends[k] = 3'd0;
         end
-        if (ov[0] && !oin[0] && o0[507]) begin endv[0] = 1'b1; endt[0] = o0[502:495]; ends[0] = o0[505:503]; end
-        if (ov[1] && !oin[1] && o1[507]) begin endv[1] = 1'b1; endt[1] = o1[502:495]; ends[1] = o1[505:503]; end
-        if (ov[2] && !oin[2] && o2[507]) begin endv[2] = 1'b1; endt[2] = o2[502:495]; ends[2] = o2[505:503]; end
-        if (ov[3] && !oin[3] && o3[507]) begin endv[3] = 1'b1; endt[3] = o3[502:495]; ends[3] = o3[505:503]; end
+        for (k=0;k<4;k=k+1) if(ov[k]) begin
+            // MUT7 restores the old early-header completion defect.
+            if(!oin[k] && ow[k][507] && (ow[k][491:480]==0 || MUT==7)) begin
+                endv[k]=1'b1;endt[k]=ow[k][502:495];ends[k]=ow[k][505:503];
+            end else if(oin[k] && orem[k]==1 && pending_end[k] && MUT!=7) begin
+                endv[k]=1'b1;endt[k]=pending_tag[k];ends[k]=pending_src[k];
+            end
+        end
     end
-    wire [11:0] olen0 = o0[491:480], olen1 = o1[491:480], olen2 = o2[491:480], olen3 = o3[491:480];
     reg [4:0] sn_n [0:JQ-1]; reg fl_n; reg [AW:0] slot;
     wire [AW-1:0] dpn = dp;
     always @* begin
@@ -83,9 +93,9 @@ module ot_s81_svc_job #(parameter integer JQ = 8, MUT = 0) (
     always @(posedge ck or negedge rs_n)
         if (!rs_n) begin
             wp <= 0; ip <= 0; dp <= 0; n <= 0; ni <= 0; flt <= 1'b0; j_dn <= 2'b00;
-            qin <= 1'b0; qrem <= 0; qpass <= 1'b0; qcnt <= 0; oin <= 4'd0;
+            qin <= 1'b0; qrem <= 0; qpass <= 1'b0; qcnt <= 0; oin <= 4'd0; pending_end<=0;
             for (m = 0; m < JQ; m = m + 1) begin vl[m] <= 1'b0; sn[m] <= 5'd0; end
-            for (k = 0; k < 4; k = k + 1) orem[k] <= 0;
+            for (k = 0; k < 4; k = k + 1) begin orem[k] <= 0;pending_tag[k]<=0;pending_src[k]<=0;end
         end else begin
             // job push
             if (jv) begin
@@ -101,10 +111,16 @@ module ot_s81_svc_job #(parameter integer JQ = 8, MUT = 0) (
                 if (qcnt + 1'b1 == ar[ip][14:7]) begin qcnt <= 0; ip <= ip + 1'b1; end else qcnt <= qcnt + 1'b1;
             end
             // result parsers
-            if (ov[0]) begin if (!oin[0]) begin oin[0] <= (olen0 != 0); orem[0] <= olen0; end else begin orem[0] <= orem[0] - 1'b1; if (orem[0] == 1) oin[0] <= 1'b0; end end
-            if (ov[1]) begin if (!oin[1]) begin oin[1] <= (olen1 != 0); orem[1] <= olen1; end else begin orem[1] <= orem[1] - 1'b1; if (orem[1] == 1) oin[1] <= 1'b0; end end
-            if (ov[2]) begin if (!oin[2]) begin oin[2] <= (olen2 != 0); orem[2] <= olen2; end else begin orem[2] <= orem[2] - 1'b1; if (orem[2] == 1) oin[2] <= 1'b0; end end
-            if (ov[3]) begin if (!oin[3]) begin oin[3] <= (olen3 != 0); orem[3] <= olen3; end else begin orem[3] <= orem[3] - 1'b1; if (orem[3] == 1) oin[3] <= 1'b0; end end
+            for(k=0;k<4;k=k+1) if(ov[k]) begin
+                if(!oin[k]) begin
+                    oin[k]<=ow[k][491:480]!=0;orem[k]<=ow[k][491:480];
+                    pending_end[k]<=ow[k][507];
+                    pending_tag[k]<=ow[k][502:495];pending_src[k]<=ow[k][505:503];
+                end else begin
+                    orem[k]<=orem[k]-1'b1;
+                    if(orem[k]==1)begin oin[k]<=0;pending_end[k]<=0;end
+                end
+            end
             for (m = 0; m < JQ; m = m + 1) sn[m] <= sn_n[m];
             if (fl_n) flt <= 1'b1;
             // in-order done

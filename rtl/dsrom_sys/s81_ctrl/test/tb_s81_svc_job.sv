@@ -8,7 +8,7 @@
 // done arrives at the controller in order with its tag, AFTER the last END of the job on every slab; no slab fault.
 // TBMUT: 1 drop the descriptor of job 3 (dropped start), 2 job 3's descriptor misses source 0 in its END set (wrong
 // descriptor), 3 job 3's descriptor names one q frame too many.  JMUT -> ot_s81_svc_job MUT, JNMUT -> dsfd_svc_join MUT.
-module tb_s81_svc_job #(parameter integer TILE = 0, NS = 2, NJ = 40, TBMUT = 0, JMUT = 0, JNMUT = 0, LEAD = 16, SEED = 1);
+module tb_s81_svc_job #(parameter integer LONG_END = 0, TILE = 0, NS = 2, NJ = 40, TBMUT = 0, JMUT = 0, JNMUT = 0, LEAD = 16, SEED = 1);
     reg clk = 0; always #0.4167 clk = ~clk;
     reg rst = 0; integer cyc = 0;
     always @(posedge clk) begin cyc <= cyc + 1; if (cyc == 5) rst <= 1; end
@@ -26,19 +26,23 @@ module tb_s81_svc_job #(parameter integer TILE = 0, NS = 2, NJ = 40, TBMUT = 0, 
             sd = xs(sd); jm[j] = (sd % 15) + 1; ji[j] = (sd >> 8) % 3 == 0; jnq[j] = 1 + (sd >> 12) % 3; jtag[j] = j % 128;
             for (k = 0; k < 5; k = k + 1) begin sd = xs(sd); jr[j][k] = 1 + sd % 3; jl[j][k] = (sd >> 4) % 12; jst[j][k] = (k < 4) ? ((sd >> 9) % 4 == 0 ? 3 : 0) : ((sd >> 9) % 2 ? 1 : 2); end
         end
+        if(LONG_END)begin
+            jm[0]=1;ji[0]=0;jnq[0]=1;jr[0][0]=1;jl[0][0]=64;jst[0][0]=0;
+        end
     end
     // ---------------- engine 4: issuer -> join -> slabs
     reg [84:0] c_cmd = 0; wire [8:0] c_done; wire [1:0] c_st;
     wire [33*NS-1:0] j_cmd; wire [2*NS-1:0] j_dn;
     dsfd_svc_join #(.NS(NS), .MUT(JNMUT)) u_join (.ck(clk), .rst(rst), .c_cmd(c_cmd), .c_done(c_done), .c_st(c_st), .j_cmd(j_cmd), .j_dn(j_dn));
-    integer issued = 0, done_n = 0, tagerr = 0, dlate = 0; integer t_issue [0:NJ-1]; integer last_end [0:NJ-1];
+    integer issued = 0, done_n = 0, tagerr = 0, dlate = 0; integer t_issue [0:NJ-1]; integer last_end [0:NJ-1]; integer done_at [0:NJ-1];
     reg [23:0] arg;
-    initial for (j = 0; j < NJ; j = j + 1) begin t_issue[j] = -1; last_end[j] = 0; end
+    initial for (j = 0; j < NJ; j = j + 1) begin t_issue[j] = -1; last_end[j] = 0; done_at[j] = -1; end
     always @(posedge clk) begin
         c_cmd <= 0;
         if (c_done[8]) begin
             if (c_done[7:0] !== jtag[done_n]) tagerr = tagerr + 1;
             if (cyc < last_end[done_n]) begin dlate = dlate + 1; $display("EARLY DONE job %0d at %0d < last END %0d", done_n, cyc, last_end[done_n]); end
+            if(done_n<NJ)done_at[done_n]=cyc;
             done_n = done_n + 1;
         end
         if (rst && cyc > 30 && issued < NJ && issued - done_n < 8 && (cyc % 7) == 0) begin
@@ -161,7 +165,7 @@ module tb_s81_svc_job #(parameter integer TILE = 0, NS = 2, NJ = 40, TBMUT = 0, 
                 end
                 sent_acc = a; end
         endfunction
-        reg [3:0] oin = 0; integer orem [0:3]; integer osrc [0:3];
+        reg [3:0] oin = 0; reg [3:0] oend=0; integer orem [0:3]; integer osrc [0:3];
         task automatic chk(input integer st, input [511:0] w);
             integer src, jj, ky; reg [511:0] e;
             begin
@@ -179,7 +183,8 @@ module tb_s81_svc_job #(parameter integer TILE = 0, NS = 2, NJ = 40, TBMUT = 0, 
                             e[511:508] = w[511:508]; e[507] = (sf[ky] == jr[jj][src] - 1); e[506:503] = src; e[502:495] = jtag[jj]; e[494:492] = 0; e[491:480] = jl[jj][src];
                             if (w !== e) begin frames_bad = frames_bad + 1; if (frames_bad < 4) $display("BAD HDR slab %0d src %0d job %0d", gs, src, jj); end
                             else begin frames_ok = frames_ok + 1; if (frames_ok > 300 && frames_ok < 306) $display("OKX st %0d src %0d jj %0d sf %0d jr %0d len %0d ky %0d", st, src, jj, sf[ky], jr[jj][src], w[491:480], ky); end
-                            if (w[507] && cyc > last_end[jj]) last_end[jj] = cyc;
+                            oend[st]=w[507];
+                            if (w[507] && w[491:480]==0 && cyc > last_end[jj]) last_end[jj] = cyc;
                             orem[st] = w[491:480]; oin[st] = (w[491:480] != 0);
                             sw[ky] = 1;
                             if (w[491:480] == 0) begin sw[ky] = 0; sf[ky] = sf[ky] + 1; if (sf[ky] == jr[jj][src]) begin sf[ky] = 0; sj[ky] = sj[ky] + 1; end end
@@ -189,7 +194,7 @@ module tb_s81_svc_job #(parameter integer TILE = 0, NS = 2, NJ = 40, TBMUT = 0, 
                     src = osrc[st]; ky = src * 4 + st; jj = sj[ky];
                     e = hw(sacc[ky] + sw[ky], jj * 8 + sf[ky], gs * 5 + src + 64);
                     if (w !== e) begin frames_bad = frames_bad + 1; if (frames_bad < 4) $display("BAD WORD slab %0d src %0d job %0d", gs, src, jj); end
-                    orem[st] = orem[st] - 1; if (orem[st] == 0) oin[st] = 0;
+                    orem[st] = orem[st] - 1; if (orem[st] == 0) begin oin[st] = 0;if(oend[st]&&cyc>last_end[jj])last_end[jj]=cyc;end
                     if (sw[ky] == jl[jj][src]) begin sw[ky] = 0; sf[ky] = sf[ky] + 1; if (sf[ky] == jr[jj][src]) begin sf[ky] = 0; sj[ky] = sj[ky] + 1; end end
                     else sw[ky] = sw[ky] + 1;
                 end
@@ -216,6 +221,12 @@ module tb_s81_svc_job #(parameter integer TILE = 0, NS = 2, NJ = 40, TBMUT = 0, 
         fl = (c_st[0] === 1'b1);
         idle = (done_n == NJ || fl) ? idle + 1 : 0;
         if (idle > 400 || cyc > 400000) begin
+            // Compare after all output calendars complete. Comparing at an
+            // early done against the last header seen so far misses future
+            // payloads and was the original verification blind spot.
+            for(j=0;j<NJ;j=j+1)if(done_at[j]>=0&&done_at[j]<last_end[j])begin
+                dlate=dlate+1;$display("EARLY_PAYLOAD_DONE job=%0d done=%0d payload=%0d",j,done_at[j],last_end[j]);
+            end
             $display("SVCJOB jobs=%0d issued=%0d dones=%0d tag_errors=%0d early_dones=%0d frames_ok=%0d frames_exp=%0d frames_bad=%0d fault=%0d cycles=%0d",
                      NJ, issued, done_n, tagerr, dlate, frames_ok, frames_exp, frames_bad, fl, cyc);
             if (done_n == NJ && tagerr == 0 && dlate == 0 && frames_ok == frames_exp && frames_bad == 0 && !fl) $display("PASS"); else $display("FAIL");
