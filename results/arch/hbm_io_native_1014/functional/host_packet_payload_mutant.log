@@ -1,0 +1,38 @@
+ot-run: ot-epyc1tb     admits   301 GB (avail 528, growth 54, headroom 64, waiters 0/0 GB) load 46/128 running 16 disk 168 GB 
+ot-run: -> ot-epyc1tb
+ot-heavy: admitted on ot-epyc1tb as oth-ubuntu-3451725-1792036219 after 0 s
+BAD                   BAR write pins iteration0
+BAD                   BAR write pins iteration1
+BAD                   BAR write pins iteration2
+BAD                   BAR write pins iteration3
+BAD                   BAR write pins iteration4
+BAD                   BAR write pins iteration5
+BAD                   BAR write pins iteration6
+BAD                   BAR write pins iteration7
+BAD                   BAR write pins iteration8
+BAD                   BAR write pins iteration9
+BAD                   BAR write pins iteration10
+BAD                   BAR write pins iteration11
+BAD                   BAR write pins iteration12
+BAD                   BAR write pins iteration13
+BAD                   BAR write pins iteration14
+BAD                   BAR write pins iteration15
+BAD                   BAR write pins iteration16
+BAD                   BAR write pins iteration17
+BAD                   BAR write pins iteration18
+BAD                   BAR write pins iteration19
+BAD                   BAR write pins iteration20
+BAD                   BAR write pins iteration21
+BAD                   BAR write pins iteration22
+BAD                   BAR write pins iteration23
+BAD                   BAR write pins iteration24
+BAD                   BAR write pins iteration25
+BAD                   BAR write pins iteration26
+BAD                   BAR write pins iteration27
+BAD                   BAR write pins iteration28
+BAD                   BAR write pins iteration29
+BAD                   BAR write pins iteration30
+BAD                   BAR write pins iteration31
+HBM_HOST_PACKET_FAIL errors32 checks1536 MUT1
+rtl/hbm_accel/io_native_20261014/tb_hbm_host_packet.sv:206: $finish called at 24390000 (1ps)
+ot-run: RAN on ot-epyc1tb (unit oth-ubuntu-3451725-1792036219): exit 1
