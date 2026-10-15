@@ -26,7 +26,7 @@
 // (decode 1 + core 13 + return 1) lands every response on sample index 2 / 3 / 0 of ot_s81_vm_x43 (never 1).
 // Mutant OT_VM_WFC_MUT_PAIR: row1's response is returned in the rq slot (pair swapped): must FAIL.
 // ---------------------------------------------------------------------------------------------------------------
-module dsfd_vm_static_wfc #(parameter integer RLAT = 13) (
+module dsfd_vm_static_wfc #(parameter integer RLAT = 13, parameter integer RESPONSE_PAD = 0) (
     input wire ck_control_s, ck_control_t,
     input wire ck_x34_s, ck_x34_t, ck_x43_s, ck_x43_t,
     input wire rst_control_s, rss_control_t,
@@ -94,9 +94,22 @@ module dsfd_vm_static_wfc #(parameter integer RLAT = 13) (
             if (e_v != ((e0 ? (4'd1 << l0) : 4'd0) | (e1 ? (4'd1 << l1) : 4'd0))) r_bad <= 1'b1;
         end
     end
+    // A +1core return stage needs +3actual stream response registers to preserve
+    // all three legal x43 sample slots. Together this is one 4:3 epoch (+3serial).
+    wire [1025:0] serial_q;
+    generate if (RESPONSE_PAD == 0) begin : no_pad
+        assign serial_q=r_q;
+    end else begin : fixed_pad
+        reg [1025:0] pad [0:RESPONSE_PAD-1]; integer k;
+        always @(posedge ck_control_t) begin
+            if (!tn) for (k=0;k<RESPONSE_PAD;k=k+1) pad[k]<=1026'd0;
+            else begin pad[0]<=r_q; for(k=1;k<RESPONSE_PAD;k=k+1) pad[k]<=pad[k-1]; end
+        end
+        assign serial_q=pad[RESPONSE_PAD-1];
+    end endgenerate
     // ---------------------------------------------------------------- stream -> serial
     wire ov; wire [1025:0] od; wire x43f;
-    ot_s81_vm_x43 #(.W(1026)) u_xo (.t_ck(ck_x43_t), .t_rst_n(rss_x43_t), .s_v(r_q[512] | r_q[1025]), .s_d(r_q),
+    ot_s81_vm_x43 #(.W(1026)) u_xo (.t_ck(ck_x43_t), .t_rst_n(rss_x43_t), .s_v(serial_q[512] | serial_q[1025]), .s_d(serial_q),
         .s_ck(ck_x43_s), .s_rst_n(rst_x43_s), .o_v(ov), .o_d(od), .fault(x43f));
     // serial outputs: grants = serial live, t_err = sticky (registered in the serial domain from stream levels)
     reg [1:0] sq; always @(posedge ck_control_s or negedge rst_control_s) if (!rst_control_s) sq <= 2'b00; else sq <= {sq[0], 1'b1};

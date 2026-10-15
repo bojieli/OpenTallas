@@ -5,9 +5,9 @@
 // Compiler owns incoming32-record packet and bank reservations. Serial clients
 // need explicit fixed-ratio ingress, not a credit adapter hidden in this parent.
 module dsfd_vm_static_slice128_suhc(
- input wire ck_rscatter,input wire [31:0] ck_wcapture,input wire [3:0] ck_wscatter,input wire [31:0] ck_bank,
+ input wire [3:0] ck_rscatter,input wire [31:0] ck_wcapture,input wire [3:0] ck_wscatter,input wire [31:0] ck_bank,
  input wire [11:0] ck_relay_req,ck_relay_rsp,
- input wire rst_rscatter_n,input wire [31:0] rst_wcapture_n,rst_bank_n,
+ input wire [3:0] rst_rscatter_n,input wire [31:0] rst_wcapture_n,rst_bank_n,
  input wire [3:0] rst_wscatter_n,input wire [11:0] rst_relay_n,
  input wire [17:0] native_rq_v,input wire [251:0] native_rq_row,input wire [89:0] native_rq_slot,
  input wire [2:0] native_rq_group,input wire [11:0] aux_rq_v,input wire [167:0] aux_rq_row,
@@ -15,16 +15,16 @@ module dsfd_vm_static_slice128_suhc(
  input wire [4095:0] wq_data,input wire [255:0] wq_tag,
  output wire [31:0] rs_v,output wire [4095:0] rs_data,output wire [255:0] rs_tag,
  output wire [31:0] commit_v,output wire [287:0] commit_addr,
- output wire [127:0] commit_mask,output wire [255:0] commit_tag,output wire [1:0] fault
+ output wire [127:0] commit_mask,output wire [255:0] commit_tag,output wire [4:0] fault
 );
  wire [31:0] rv,wv,we;wire [287:0] ra,wa;wire [255:0] rt,wt;
  wire [127:0] wm;wire [4095:0] wd;
- dsfd_vm_static_suhc_fsr u_r(.ck(ck_rscatter),.rst_n(rst_rscatter_n),.i_v(native_rq_v),.i_row(native_rq_row),
+ dsfd_vm_static_suhc_fsr_split u_r(.ck(ck_rscatter),.rst_n(rst_rscatter_n),.i_v(native_rq_v),.i_row(native_rq_row),
  .i_slot(native_rq_slot),.i_group(native_rq_group),.i_aux_v(aux_rq_v),.i_aux_row(aux_rq_row),
- .o_v(rv),.o_addr(ra),.o_tag(rt),.fault(fault[0]));
+ .o_v(rv),.o_addr(ra),.o_tag(rt),.fault(fault[3:0]));
  wire [31:0] cap_v,cap_we;wire [447:0] cap_row;wire [127:0] cap_mask;
  wire [4095:0] cap_data;wire [255:0] cap_tag;wire [3:0] wfault;
- assign fault[1]=|wfault;
+ assign fault[4]=|wfault;
  genvar l,k;
  generate for(l=0;l<4;l=l+1)begin:write_group
   for(k=0;k<8;k=k+1)begin:capture

@@ -58,7 +58,7 @@ module dsfd_vm_static_xio #(parameter integer RLAT = 13) (
     reg [2:0] go; reg [1:0] gl [0:2];
     always @* begin : p_go integer u;
         for (u = 0; u < 3; u = u + 1) begin
-            go[u] = (u == 0) ? f_crq[0] : (act[u] && tn != 2'd2);
+            go[u] = (u == 0) ? f_crq[0] : (act[u] && tn != 2'(15-RLAT));
             gl[u] = (u == 0) ? f_crq[2:1] : u_row[u][1:0];
         end
     end

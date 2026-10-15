@@ -23,12 +23,13 @@
 // 6 LARM (groups 0 / 5 / 6 here); legacy collective ops 5/7/group7 fault. Done = the seq's fixed DLAT.
 // Every service fault is ORed onto the engine's legacy-fault input (seq flt[10] -> c_st[0]).
 // ---------------------------------------------------------------------------------------------------------------
-module dsfd_vm_static_core (
+module dsfd_vm_static_core #(parameter integer READ_PIPE=0) (
     // cks owns this core's bounded local control registers. Every child root is an explicit
     // independently deliverable clock pin; tying these pins is a TESTBENCH decision only.
     input  wire          cks, rss,
     input  wire          ck_rsched, ck_seq, ck_landing,
-    input  wire [3:0]    ck_mem_fsr, ck_mem_return,
+    input  wire [15:0]   ck_mem_fsr,
+    input  wire [3:0]    ck_mem_return,
     input  wire [127:0]  ck_mem_bank, ck_mem_wcapture,
     input  wire [15:0]   ck_mem_wscatter,
     input  wire [47:0]   ck_mem_relay_req, ck_mem_relay_rsp,
@@ -37,7 +38,8 @@ module dsfd_vm_static_core (
     input  wire [15:0]   ck_write_dispatch,
     input  wire [127:0]  ck_write_stage,
     input  wire          rst_rsched_n, rst_seq_n, rst_landing_n,
-    input  wire [3:0]    rst_mem_fsr_n, rst_mem_return_n,
+    input  wire [15:0]   rst_mem_fsr_n,
+    input  wire [3:0]    rst_mem_return_n,
     input  wire [127:0]  rst_mem_bank_n, rst_mem_wcapture_n,
     input  wire [15:0]   rst_mem_wscatter_n,
     input  wire [47:0]   rst_mem_relay_n,
@@ -45,28 +47,30 @@ module dsfd_vm_static_core (
     input  wire [3:0]    rst_write_payload_n,
     input  wire [15:0]   rst_write_dispatch_n,
     input  wire [127:0]  rst_write_stage_n,
+    input  wire [63:0]   ck_read_data, rst_read_data_n,
+    input  wire [7:0]    ck_read_valid, rst_read_valid_n,
     // sequencer engine 12
     input  wire [84:0]   c_cmd, output wire [8:0] c_done, output wire [1:0] c_st,
     output wire          t_inp_su, t_inp_hc,
     // SU v2 row slots (16 rd + 16 wr)
     input  wire [15:0]   f_su_rqv, input wire [223:0] f_su_rq,
-    output reg  [15:0]   t_su_rsv, output reg [8191:0] t_su_rs,
+    output wire [15:0]   t_su_rsv, output reg [8191:0] t_su_rs,
     input  wire [15:0]   f_su_wqv, input wire [223:0] f_su_wq, input wire [255:0] f_su_wqm, input wire [8191:0] f_su_wqd,
     // HC v2 row slots (2 rd + 8 wr)
     input  wire [1:0]    f_hc_rqv, input wire [27:0] f_hc_rq,
-    output reg  [1:0]    t_hc_rsv, output reg [1023:0] t_hc_rs,
+    output wire [1:0]    t_hc_rsv, output reg [1023:0] t_hc_rs,
     input  wire [7:0]    f_hc_wqv, input wire [111:0] f_hc_wq, input wire [127:0] f_hc_wqm, input wire [4095:0] f_hc_wqd,
     // PQ native x read {x_addr 19, x_re} -> {x_q 2048, x_rv}
     input  wire [19:0]   f_pqx, output reg [2048:0] t_pqx,
     // edge services (dsfd_vm_static_xio / dsfd_vm_static_wfc): aux read ports 4..11 (aux p carries rows with
     // row[1:0] == p mod 4, the FSR lane rule), returns registered at the request pin + 12 like every client
     input  wire [7:0]    x_av, input wire [111:0] x_ar,
-    output reg  [7:0]    x_rv, output reg [4095:0] x_rd,
+    output wire [7:0]    x_rv, output reg [4095:0] x_rd,
     // engine 12 native forward (codes 4..7) to the edge services
     output wire          nf_v, output wire [83:0] nf_d,
     // Engram MIX4 endpoint (dsfd_engram_mix4_c rq/rs/wq): 20 reads an edge (fixed return slots), 4 row writes (sources 28..31)
     input  wire [19:0]   f_mx_rqv, input wire [279:0] f_mx_rq,
-    output reg  [19:0]   t_mx_rsv, output reg [10239:0] t_mx_rs,
+    output wire [19:0]   t_mx_rsv, output reg [10239:0] t_mx_rs,
     input  wire [3:0]    f_mx_wqv, input wire [55:0] f_mx_wq, input wire [63:0] f_mx_wqm, input wire [2047:0] f_mx_wqd,
     // landing rows (stream domain, after the fixed 3:4 transfer): lanes 0/1 scan a0/a1, 2 selector, 3 collector
     input  wire [3:0]    l_v, input wire [2047:0] l_d,
@@ -148,7 +152,7 @@ module dsfd_vm_static_core (
 
     // ---------------------------------------------------------------- native memory
     wire [71:0] nat_v; wire [9215:0] nat_d; wire [127:0] grp_v; wire [16383:0] grp_d; wire [11:0] grp_id;
-    wire [127:0] cm_v; wire [1151:0] cm_a; wire [511:0] cm_m; wire [1023:0] cm_t; wire [15:0] m_flt;
+    wire [127:0] cm_v; wire [1151:0] cm_a; wire [511:0] cm_m; wire [1023:0] cm_t; wire [27:0] m_flt;
     dsfd_vm_static512_suhc u_mem (.ck_rscatter(ck_mem_fsr), .ck_wcapture(ck_mem_wcapture),.ck_wscatter(ck_mem_wscatter), .ck_return(ck_mem_return), .ck_bank(ck_mem_bank),
         .ck_relay_req(ck_mem_relay_req), .ck_relay_rsp(ck_mem_relay_rsp),
         .rst_rscatter_n(rst_mem_fsr_n), .rst_return_n(rst_mem_return_n), .rst_bank_n(rst_mem_bank_n),
@@ -162,7 +166,18 @@ module dsfd_vm_static_core (
         .commit_v(cm_v), .commit_addr(cm_a), .commit_mask(cm_m), .commit_tag(cm_t), .fault(m_flt));
 
     // ---------------------------------------------------------------- die output registers (P+12)
-    reg o_bad;
+    wire o_bad;
+    generate if (READ_PIPE == 0) begin : legacy_read
+        reg [15:0] q_t_su_rsv; assign t_su_rsv=q_t_su_rsv;
+        reg [8191:0] q_t_su_rs; assign t_su_rs=q_t_su_rs;
+        reg [1:0] q_t_hc_rsv; assign t_hc_rsv=q_t_hc_rsv;
+        reg [1023:0] q_t_hc_rs; assign t_hc_rs=q_t_hc_rs;
+        reg [2048:0] q_t_pqx; assign t_pqx=q_t_pqx;
+        reg [7:0] q_x_rv; assign x_rv=q_x_rv;
+        reg [4095:0] q_x_rd; assign x_rd=q_x_rd;
+        reg [19:0] q_t_mx_rsv; assign t_mx_rsv=q_t_mx_rsv;
+        reg [10239:0] q_t_mx_rs; assign t_mx_rs=q_t_mx_rs;
+        reg [0:0] q_o_bad; assign o_bad=q_o_bad;
     always @(posedge ck) begin : p_out integer p, s; reg bad;
         bad = 1'b0;
         for (p = 0; p < 18; p = p + 1)
@@ -171,19 +186,36 @@ module dsfd_vm_static_core (
             for (s = 0; s < 4; s = s + 1) if (aux_exp[p-20] && !grp_v[32*s + p]) bad = 1'b1;
         for (p = 0; p < 20; p = p + 1)
             for (s = 0; s < 4; s = s + 1) if (mx_exp[p] && !grp_v[32*s + mx_sl[5*p +: 5]]) bad = 1'b1;
-        if (!rn) begin t_su_rsv <= 16'd0; t_hc_rsv <= 2'd0; t_pqx[0] <= 1'b0; x_rv <= 8'd0; t_mx_rsv <= 20'd0; o_bad <= 1'b0; end
+        if (!rn) begin q_t_su_rsv <= 16'd0; q_t_hc_rsv <= 2'd0; q_t_pqx[0] <= 1'b0; q_x_rv <= 8'd0; q_t_mx_rsv <= 20'd0; q_o_bad <= 1'b0; end
         else begin
-            t_su_rsv <= nat_v[15:0]; t_hc_rsv <= nat_v[17:16];
-            t_pqx[0] <= aux_exp[0] && grp_v[20] && grp_v[52] && grp_v[84] && grp_v[116];
-            for (p = 0; p < 8; p = p + 1) x_rv[p] <= aux_exp[4+p] && grp_v[24+p] && grp_v[56+p] && grp_v[88+p] && grp_v[120+p];
-            t_mx_rsv <= mx_exp;
-            if (bad) o_bad <= 1'b1;
+            q_t_su_rsv <= nat_v[15:0]; q_t_hc_rsv <= nat_v[17:16];
+            q_t_pqx[0] <= aux_exp[0] && grp_v[20] && grp_v[52] && grp_v[84] && grp_v[116];
+            for (p = 0; p < 8; p = p + 1) q_x_rv[p] <= aux_exp[4+p] && grp_v[24+p] && grp_v[56+p] && grp_v[88+p] && grp_v[120+p];
+            q_t_mx_rsv <= mx_exp;
+            if (bad) q_o_bad <= 1'b1;
         end
-        t_su_rs <= nat_d[8191:0]; t_hc_rs <= nat_d[9215:8192];
-        t_pqx[2048:1] <= grp_d[512*20 +: 2048];
-        for (p = 0; p < 20; p = p + 1) t_mx_rs[512*p +: 512] <= grp_d[512*mx_sl[5*p +: 5] +: 512];
-        x_rd <= grp_d[512*24 +: 4096];
+        q_t_su_rs <= nat_d[8191:0]; q_t_hc_rs <= nat_d[9215:8192];
+        q_t_pqx[2048:1] <= grp_d[512*20 +: 2048];
+        for (p = 0; p < 20; p = p + 1) q_t_mx_rs[512*p +: 512] <= grp_d[512*mx_sl[5*p +: 5] +: 512];
+        q_x_rd <= grp_d[512*24 +: 4096];
     end
+
+    end else begin : bounded_read
+        wire [7:0] read_fault;
+        dsfd_vm_static_read_router u_read (
+            .ck_data(ck_read_data), .ck_valid(ck_read_valid),
+            .rst_data_n(rst_read_data_n), .rst_valid_n(rst_read_valid_n),
+            .slot_data(grp_d), .slot_valid(grp_v), .n_expected(exp_v), .n_slot(rel_s),
+            .aux_expected(aux_exp), .mx_expected(mx_exp), .mx_slot(mx_sl),
+            .n_data({t_hc_rs,t_su_rs}), .n_valid({t_hc_rsv,t_su_rsv}),
+            .pq_data(t_pqx[2048:1]), .pq_valid(t_pqx[0]), .x_data(x_rd), .x_valid(x_rv),
+            .mx_data(t_mx_rs), .mx_valid(t_mx_rsv), .fault(read_fault));
+        // This diagnostic reduction belongs to the existing explicit core-control root.
+        // One additional observation edge; it never gates data or extends a schedule.
+        reg fault_q;
+        always @(posedge ck) if (!rn) fault_q <= 1'b0; else if (|read_fault) fault_q <= 1'b1;
+        assign o_bad=fault_q;
+    end endgenerate
 
     // ---------------------------------------------------------------- engine 12 + static native ops
     wire v_cv; wire [83:0] v_cd; reg v_dv; reg [7:0] v_dt; reg op_bad;
