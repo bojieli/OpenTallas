@@ -12,7 +12,7 @@ module tb_idx_vm_share_static;
  reg [8*281-1:0] wr=0;wire [143:0] status;
  ot_hbm_idx_vm_static face_i(.clk(clk),.rst_n(rst_n),.sid(2'd0),.read_slot(slot_i),.read_tag(tag_i),.vm_rq(rq_i),.vm_rr(rr_i),.result(res_i),.result_tag(rtag_i),.fault(f_i));
  ot_hbm_idx_vm_static face_t(.clk(clk),.rst_n(rst_n),.sid(2'd0),.read_slot(slot_t),.read_tag(tag_t),.vm_rq(rq_t),.vm_rr(rr_t),.result(res_t),.result_tag(rtag_t),.fault(f_t));
- ot_hbm_idx_vm_share_static #(.MUT(MUT)) share(.clk_pair({4{clk}}),.rst_n(rst_n),.index_rq(rq_i),.topk_rq(rq_t),.vm_rq(vm_rq),.vm_rr(vm_rr),.index_rr(rr_i),.topk_rr(rr_t),.fault(f_s));
+ ot_hbm_idx_vm_share_static #(.MUT(MUT)) share(.clk_pair({4{clk}}),.rst_n(rst_n),.index_rq(rq_i),.topk_rq(rq_t),.argmax_rq(136'd0),.vm_rq(vm_rq),.vm_rr(vm_rr),.index_rr(rr_i),.topk_rr(rr_t),.argmax_rr(),.fault(f_s));
  for(genvar b=0;b<8;b=b+1)begin:bank
   wire done,dqd,kqd,xd,x2d;wire [275:0] eg;wire[265:0] pr;
   ot_vms_bank_static #(.RG(1),.WG(1)) mem(.clk(clk),.rst_n(rst_n),.bid(3'(b)),.sid(2'd0),
