@@ -84,7 +84,20 @@ def cmd_golden(a):
                 cx["cand"] = np.load(G / carry["cand_file"])["cand"]
         assert LC.digest(cx["h"], cx["pre"]) == js["input_sha256"]
         # the replay logs linear_q / linear_bf16 / mv (mv is what linear_bf16 calls: its FP32 out is the field's)
-        cap, log, tr = SU._replay(m, L, st, cx, V)
+        # wo_a: the attention replica calls V.matvec_c(wa[g], og[g], V.WO_A_SPLIT) per group (not in SU's log):
+        # log those calls here (cap["attend"]["o"] holds only this die's 16 heads)
+        mvc, woa = V.matvec_c, []
+
+        def matvec_c(w, x, split, *aa, **kw):
+            r = mvc(w, x, split, *aa, **kw)
+            if split is V.WO_A_SPLIT:
+                woa.append((np.asarray(x, F).copy(), np.asarray(r, F).copy()))
+            return r
+        V.matvec_c = matvec_c
+        try:
+            cap, log, tr = SU._replay(m, L, st, cx, V)
+        finally:
+            V.matvec_c = mvc
         checks = dict(h_out=SU.same(cx["h"], z["h_out"]), pre_out=SU.same(cx["pre"], z["pre_out"]))
         names = {id(v): k for k, v in m.w.items() if k.startswith(f"layers.{L}.")}
         rec, seen = {}, {}
@@ -103,18 +116,12 @@ def cmd_golden(a):
                 continue
             seen[key] = 1
             rec[key + "|x"], rec[key + "|out"] = xb, ob
-        # wo_a: the attention replica calls matvec_c per group (not logged): recompute from its o
         at = cap["attend"]
-        wa = m.lw(L, "attn.wo_a.weight").reshape(m.groups, m.o_rank, -1)
-        assert m.o_rank == O_RANK
-        og = np.asarray(at["o"], F).reshape(m.groups, -1)
-        zz = []
-        for g in range(m.groups):
-            r = V.matvec_c(wa[g], og[g], V.WO_A_SPLIT)
-            rec[f"layers.{L}.attn.wo_a.weight#g{g}|matvec_c|x"] = bits(og[g])
+        assert len(woa) == m.groups and m.o_rank == O_RANK, (len(woa), m.groups, m.o_rank)
+        for g, (x, r) in enumerate(woa):
+            rec[f"layers.{L}.attn.wo_a.weight#g{g}|matvec_c|x"] = bits(x)
             rec[f"layers.{L}.attn.wo_a.weight#g{g}|matvec_c|out"] = bits(r)
-            zz.append(r)
-        checks["wo_a_recomputed_z"] = SU.same(V.to_bf16(np.stack(zz).reshape(-1)), at["z"])
+        checks["wo_a_logged_z"] = SU.same(V.to_bf16(np.stack([r for _, r in woa]).reshape(-1)), at["z"])
         np.savez(out / f"fld_L{L:02d}.npz", **rec)
         meta = dict(layer=L, kind=js["kind"], experts=js["experts"], checks=checks,
                     tensors=sorted({k.rsplit("|", 2)[0] for k in rec}), wall_s=round(time.time() - t0, 1))
