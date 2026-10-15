@@ -1,0 +1,97 @@
+{
+ "name": "s81hc_ctfn_native_ref",
+ "top": "ot_s81_hc_ctfn",
+ "kind": "tile",
+ "sources": [
+  "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_cth.sv",
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/hdc/ot_hdc_fp32_f12.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv",
+  "rtl/dsrom_sys/s81_suhc/ot_s81_hc_core.sv",
+  "rtl/dsrom_sys/s81_suhc/dsfd_sp_hc.sv",
+  "rtl/dsrom_sys/s81_ctrl/ot_s81_engine_adapter.sv",
+  "rtl/lib/ot_async_fifo.sv",
+  "rtl/lib/ot_reset_sync.sv",
+  "rtl/lib/ot_skid_buffer.sv",
+  "rtl/hdc/v41x/ot_dsrom_su_hcpost.sv",
+  "rtl/hdc/v41x/ot_dsrom_su_add6.sv",
+  "rtl/hdc/v41x/ot_dsrom_su_norm.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/hdc/ot_hdc_sfu.sv",
+  "rtl/hdc/ot_hdc_fpu.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+  "rtl/proto/ot_fp32_add_rne_pipe.sv",
+  "rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
+  "rtl/hdc/v41/ot_hdc_fsqrt.sv",
+  "rtl/hdc/v41/ot_hdc_fdiv.sv",
+  "rtl/hdc/v41/ot_hdc_softplus.sv",
+  "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv",
+  "rtl/hdc/v41/ot_hdc_actquant.sv",
+  "rtl/hdc/v41x/ot_dsrom_aq12.sv",
+  "rtl/hdc/v41x/ot_dsrom_divc.sv"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [],
+ "outline": {
+  "w": 576.72,
+  "h": 25.92,
+  "exact": true
+ },
+ "std_area_um2": 2469,
+ "why_floorplan": "centre-band forward through stage (fv/fd pin flops + y-shift fdm, 5,856 flops): full slot width for 2,927 N (fd_in) / 2,927 S (fdm) bus pins; 25.92 tall because a 10.8-12.96 um pin-bound strip fails DPL/GPL (rows lost to the pin keepouts)",
+ "macros": [],
+ "pins": {
+  "N": [
+   "fv_in",
+   "fd_in"
+  ],
+  "S": [
+   "fvm",
+   "fdm"
+  ],
+  "W": [
+   "clk",
+   "rst_in",
+   "rst_c"
+  ]
+ },
+ "refglob": "*",
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "hold_margin_ns": 0.01
+ },
+ "job": {
+  "owner": "Codex:s_norm_native_leaves",
+  "branch": "codex-s81-norm-native-leaves-1014",
+  "tag": "np1",
+  "purpose": "Actual native boundary repair of inherited ctfn; strict launch220/capture190/spread80; same RTL arithmetic and reset epoch; immutable published predecessor remains separate",
+  "no_bench_reason": "Source-bound PIPE1 full-shape numerical exact and prior observed within-leaf mutant receipts reused with all source/module SHA checks in results/rtl/s81_layer_tput_1013/norm_tree_1014/native_closure_1014/inherited_boundary/source_reuse.json. Physical mapped reset/clone equivalence and native timing are independent adoption gates; no full-native claim.",
+  "views_to": "physical/ref_tile/s81hc_ctfn_native_ref/views",
+  "record_to": "results/rtl/ref_tile/s81hc_ctfn_native_ref",
+  "hold_merge": "Held physical-only native boundary candidate: source-bound numerical proof is reused separately; actual mapped clone/reset equivalence, immutable rectangles and native timing/CTS must pass before any adoption."
+ },
+ "params": {},
+ "children": [],
+ "inter": [],
+ "recipe": 2,
+ "io_tcl": "physical/s81_die_pins/v20_hc_inherited/ot_s81_hc_ctfn.tcl",
+ "layer_cap": "M5",
+ "reroute_reason": {
+  "kind": "pin_register",
+  "source": "results/rtl/s81_layer_tput_1013/norm_tree_1014/native_closure_1014/inherited_boundary/native_audit.json",
+  "cell": "ot_s81_hc_ctfn",
+  "launch_ps": 296.0,
+  "capture_ps": 378.2,
+  "fix": "Replace unanchored/shared boundary topology with recipe2 dedicated output-flop cloning and pure capture endpoint anchoring, with exact die-assigned original pin positions. No RTL, clock, SDC, reset or edge changes."
+ },
+ "structural_change": "Replace unanchored/shared boundary topology with recipe2 dedicated output-flop cloning and pure capture endpoint anchoring, with exact die-assigned original pin positions. No RTL, clock, SDC, reset or edge changes.",
+ "orfs_vars": {
+  "POST_IO_PLACEMENT_TCL": "tools/s81_suhc/inherited_exact_iop.tcl",
+  "OT_HC_NATIVE_IO_TCL": "/src/physical/s81_die_pins/v20_hc_inherited/ot_s81_hc_ctfn.tcl"
+ }
+}
