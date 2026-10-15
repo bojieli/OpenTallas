@@ -1,0 +1,6 @@
+ATT_FRONT_PROFILE PASS profile3 heads0
+PASS ATT_QP_HOST_PROGRAM_FRONT cold_boot_profiles=1 query_words=0 P_words=10240 event_cycles=339 native_RG=3 native_RG_total=7 real_query_macros=64 actual_P_field_macros=512 fields_checked4 actual_VM_macros=24 actual_programme_macros=6 real_AXI_loaderCP_target=49 actual_NE_programme_selectors=1
+- rtl/test/hbm_accel/generic/tb_hbm_attn_QP_fields_host_front.sv:177: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 355us; walltime 0.436 s; speed 814.692 us/s
+- Verilator: cpu 0.436 s on 1 threads; allocated 10 MB
