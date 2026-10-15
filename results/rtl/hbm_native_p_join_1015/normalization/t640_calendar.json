@@ -1,0 +1,53 @@
+{
+  "rows": 640,
+  "head": 0,
+  "scale_bits": "3d3504f3",
+  "arithmetic_rows": 2499,
+  "io_aux_rows": 2639,
+  "events": {
+    "arithmetic_start": 60,
+    "scaled_last_drain": 209,
+    "max_start": 252,
+    "max_scalar": 939,
+    "mb_prefetch": 954,
+    "exp_start": 974,
+    "raw_e_last_drain": 1217,
+    "eb_last_drain": 1258,
+    "sum_start": 1260,
+    "sum_scalar": 2187,
+    "se_prefetch": 2203,
+    "sink_prefetch": 2204,
+    "den_start": 2225,
+    "den_drain": 2390,
+    "pv_prefetch": 2406,
+    "den_prefetch": 2438,
+    "norm_start": 2458,
+    "norm_drain": 2575
+  },
+  "diagnostic_VM_sectors": {
+    "SC": 0,
+    "scaled_SC": 2048,
+    "E": 4096,
+    "EB": 6000,
+    "MB": 7800,
+    "SE": 7808,
+    "scalar_word": 0,
+    "PV": 2304,
+    "SINK": 7840,
+    "DEN": 7904,
+    "OUT": 4608
+  },
+  "macro_inventory": {
+    "operand": 80,
+    "arithmetic_programme": 32,
+    "io_programme": 12,
+    "aux_programme": 4,
+    "source_scratch": 10,
+    "VM": 24
+  },
+  "extra_scalar_configuration_bits": 228,
+  "head_reconfiguration_setup_not_priced": true,
+  "production_qualified": false,
+  "physical_qualified": false,
+  "native_whole_kernel_qualified": false
+}
