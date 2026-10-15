@@ -14,7 +14,9 @@
 // 4 unsupported LARM7, 5 aux lane collision, 6 WFC range, 7 WFC pair lane,
 // 8 capture alignment. Each requires its named sticky fault AND top-level c_st[0].
 module tb_dsfd_sp_vm_static;
-`ifdef OT_VM_NATIVE_READ_PINREG
+`ifdef OT_VM_NATIVE_READ_L16
+    localparam integer READ_PIPE=4;     // + pin-registered rsched / return lanes (L16)
+`elsif OT_VM_NATIVE_READ_PINREG
     localparam integer READ_PIPE=2;
 `elsif OT_VM_NATIVE_READ
     localparam integer READ_PIPE=1;
@@ -106,7 +108,7 @@ module tb_dsfd_sp_vm_static;
             issue(3'd4, {1'b0, 1'(dest), 14'(base), 5'(n - 1)});
             I = E + 3;
             for (k = 0; k < n; k = k + 1) begin
-                while (I % 4 == (2-READ_PIPE)) I = I + 1;
+                while (I % 4 == ((2-READ_PIPE)%4+4)%4) I = I + 1;
                 d = mem[base + k];
                 if (dest == 0) e_q[x43_serial(I + 15+READ_PIPE)] = {d, 1'b1};
                 else e_g[x43_serial(I + 15+READ_PIPE)] = {d[510:0], 1'b1};

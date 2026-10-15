@@ -72,10 +72,16 @@ def assumed_clock_refs(master, ports, physical_ports=None):
             for p in ports if p in E.CLOCKS}
 
 
-def clock_tcl(doms, leaves, corner):
+def clock_tcl(doms, leaves, corner, periods=None):
     # Each domain has related shallow / earlier-tap clock objects. Separate
     # domains remain asynchronous; no exception is created between levels.
     # Source latency shifts the boundary while propagated ETMs retain insertion.
+    if periods is not None:
+        missing = set(doms) - set(periods)
+        if missing:
+            raise ValueError(f'missing source clock periods: {sorted(missing)}')
+        if any(not math.isfinite(periods[d]) or periods[d] <= 0 for d in doms):
+            raise ValueError('invalid source clock period')
     lines = ['# DOMS ' + ' '.join(sorted(doms)), '# INSERTION_COMPENSATED ' + corner,
              '# OWNER_CLOCK_BUDGET v1', 'set_cmd_units -time ps', 'set ot_clock_bound 0']
     domain_clocks = {}
@@ -93,7 +99,7 @@ def clock_tcl(doms, leaves, corner):
                 lines += [f'set p [get_pins -quiet {{{pin}}}]',
                           f'if {{[llength $p] != 1}} {{ error "clock boundary pin missing or ambiguous: {pin}" }}',
                           'lappend ot_pins [lindex $p 0]']
-            lines.append(f'create_clock -name {name} -period {PERIOD.get(d, 1024.0):.6f} $ot_pins')
+            lines.append(f'create_clock -name {name} -period {(periods[d] if periods is not None else PERIOD.get(d, 1024.0)):.6f} $ot_pins')
             for pin, master, libpin in group:
                 r = leaves[master][corner][libpin]
                 lines += [f'set_clock_latency -source -clock [get_clocks {name}] {-r:.6f} [get_pins {{{pin}}}]',
