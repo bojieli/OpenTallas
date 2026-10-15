@@ -6,13 +6,13 @@
  "die": [
   0,
   0,
-  172.8,
+  164.16,
   54.0
  ],
  "core": [
   2.16,
   2.16,
-  170.64000000000001,
+  162.0,
   51.84
  ],
  "why": "spec outline (exact: the closed view's sub-slot)",
@@ -97,7 +97,7 @@
   "physical/qwen_die_masters/post_plain.tcl",
   "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
   "physical/common_flow/grt_macro_top_layer.tcl",
-  "physical/s81_die_pins/v21_engram_arithmetic/ot_s81_engram_mixq_shcol_spread.tcl",
+  "physical/s81_die_pins/v21_engram_arithmetic/ot_s81_engram_mixq_shcol_spread_w164.tcl",
   "physical/qwen_die_masters/io_flop_at_pins.tcl",
   "physical/qwen_die_masters/out_flop_release.tcl",
   "physical/dsrom_window_source/leaf_inhold.tcl",
