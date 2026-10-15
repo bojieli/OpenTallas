@@ -45,12 +45,7 @@
   "peak_ram_gb": 16,
   "period_ps": 770,
   "hold_margin_ns": 0.03,
-  "macro_halo_um": 5.4,
-  "cts_sink": {
-   "size": 24,
-   "diameter_um": 30,
-   "extra": "-distance_between_buffers 15"
-  }
+  "macro_halo_um": 5.4
  },
  "recipe": 2,
  "io_flop_at_pins": {
@@ -62,9 +57,12 @@
  "keep_pin_regs": true,
  "pin_reg_split": true,
  "hold_pad": {
-  "cell": "HB2xp67_ASAP7_75t_R"
+  "cell": "HB2xp67_ASAP7_75t_R",
+  "strong_ports": "^(i_d23|larm_)",
+  "strong_cell": "HB4xp67_ASAP7_75t_R",
+  "basis": "dsfd_vm_static_landing_native_1015_r2-native2-25d678c8d ot_hold_stall_cts.rpt: I2R 181 endpoints, worst -25.7 ps (i_d23 160 @-25.7, larm_base 14 @-7.9, larm_g 4 @-8.3, larm_v 1 @-15.6); routed FF -8.68"
  },
- "structural_change": "r3 (same RTL/pins/outline as r2, PINREG=1): register-sink clustered clock tree 24 sinks / 30 um / 15 um buffer spacing. r2 routed FF -8.68: CTS-stage hold stall 181 I2R endpoints at -25.7 ps, 160 of them i_d23 pin flops on the E face, farthest from the W-face clock pin; r2 gate leaf insertion 239.6..306.0 ps (66 ps spread) puts those pin flops late against the median pin-flop reference. Clustering cut the same class in the scatter leaves (cb3) from 50-56 to 28-41 ps spread. Zero cycles.",
+ "structural_change": "r3 (same RTL/pins/outline/clock as r2, PINREG=1): the fixed input hold stage on the measured short group is sized up: i_d23 (E face, farthest from the W-face clock pin, latest pin-flop clock arrival) and larm_* get HB4 instead of HB2 (about +30 ps FF delay at the pin), the rest keep HB2. r2 routed FF -8.68 with a CTS-stage hold stall on exactly these 181 I2R endpoints (-25.7). A clustered-CTS variant was gated and REJECTED: TT insertion 393.3 ps > 300 (spread 58.8). Capture budget: pin-flop capture ~130 ps class + ~30 ps < 190. Zero cycles.",
  "slot_change_request": {
   "contract": "S81 VM native control-leaf geometry candidate",
   "version": "f3-1015",
@@ -73,7 +71,7 @@
  "job": {
   "owner": "claude:S-ELEM-A S81 VM owner",
   "branch": "claude/s81-vm-elema-1015",
-  "tag": "cts3",
+  "tag": "inhold3",
   "extra_paths": [
    "tools/s81_vm",
    "rtl/dsrom_sys/s81_ph/vm",
@@ -138,7 +136,7 @@
   "kind": "kit_change",
   "cell": "dsfd_vm_static_landing",
   "source": "loop job dsfd_vm_static_landing_native_1015_r2-native2-25d678c8d (NEEDS_RTL FF -8.68; ot_hold_stall_cts.rpt I2R 181 @ -25.7, i_d23 160)",
-  "fix": "clustered register-sink CTS (24/30/15) to cut leaf spread 66 ps -> ~30 ps; same RTL, pins, outline, one root; no relaxed constraint"
+  "fix": "fixed input hold stage HB2 -> HB4 on the measured short group (i_d23, larm_*), sized to the -25.7 ps CTS-stage deficit; same RTL/pins/outline/root"
  },
  "params": {},
  "children": [],

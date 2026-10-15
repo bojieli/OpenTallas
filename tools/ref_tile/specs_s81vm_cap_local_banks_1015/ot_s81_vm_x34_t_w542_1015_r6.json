@@ -61,14 +61,9 @@
   "peak_ram_gb": 16,
   "period_ps": 770,
   "hold_margin_ns": 0.03,
-  "macro_halo_um": 5.4,
-  "cts_sink": {
-   "size": 24,
-   "diameter_um": 30,
-   "extra": "-distance_between_buffers 15"
-  }
+  "macro_halo_um": 5.4
  },
- "structural_change": "r6 = r5 slot/pins (86.4x345.6, facing bank-bit groups) + BAL=1: the non-capture registers (phase, reset release, mark pin flop, core incl. the 543 o_v/o_d/fault output flops) are clocked through a fourth always-enabled ICGx2, so all four clock subtrees are root->ICG->subtree. r5 routed FF -9.69 on output ports (ff_out; 1,154 endpoints below the hold margin after ECO): the output flops were on the bare root while the input pin flops (the IO reference) sat behind the three capture ICGs. Plus clustered register-sink CTS 24/30/15. Same behaviour (gate always on), zero cycles, zero ports; HB1 out / HB2 in pads and io_budget unchanged.",
+ "structural_change": "r6 = r5 slot/pins (86.4x345.6, facing bank-bit groups) + BAL=1: the core incl. the 543 o_v/o_d/fault output flops is clocked through a fourth ICGx2 enabled by a reset-release register (constant-enable ICG gated first: STA traced no clock through it, rejected), so all four clock subtrees are root->ICG->subtree. r5 routed FF -9.69 on output ports (ff_out; 1,154 endpoints below the hold margin after ECO): the output flops were on the bare root while the input pin flops (the IO reference) sat behind the three capture ICGs. Same behaviour (gate always on), zero cycles, zero ports; HB1 out / HB2 in pads and io_budget unchanged.",
  "slot_change_request": {
   "contract": "S81 capture stream CDC reader local bit groups",
   "version": "r6-local-reader-bal",
@@ -121,7 +116,7 @@
   "kind": "rtl_change",
   "cell": "ot_s81_vm_x34_t",
   "source": "loop job ot_s81_vm_x34_t_w542_1015_r5-localreader5-ef7472050 NEEDS_RTL TT 97.83 / FF -9.69 (results/physical/s81_vm_takeover_0802/x34_t_r5_failure.json: ff_out -9.69, ff_i2r +25.06)",
-  "fix": "balance the output-flop clock subtree with the capture ICG subtrees (always-on ICG, BAL=1) + clustered CTS; not the same pad settings"
+  "fix": "balance the output-flop clock subtree with the capture ICG subtrees (register-enabled 4th ICG, BAL=1); not the same pad settings"
  },
  "io_budget": {
   "in": 0.2,

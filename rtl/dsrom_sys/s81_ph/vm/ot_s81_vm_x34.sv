@@ -146,11 +146,11 @@ endmodule
 // unmuxed into c_k on an ICG-gated clock enabled only at its own fixed read edge (tp == 1 / 2 / 3), bpar[k] with it, the
 // phase marker in a pin flop every edge (as the core always sampled it), and the core runs ONE stream edge later on the
 // captured words (its reset release one edge later).  Every o_v / o_d / fault is NAT=0's one stream edge later.
-// BAL=1 (S81 VM S-ELEM-A 2026-10-15, NAT=1 only): every non-capture register (phase tp, reset release r1, mark pin flop,
-// the whole core incl. the o_v/o_d/fault output flops) is clocked through a fourth, always-enabled ICG of the same cell,
-// so all four clock subtrees have the same structure (root -> ICGx2 -> subtree).  r5 (BAL=0) routed FF -9.69 on the
+// BAL=1 (S81 VM S-ELEM-A 2026-10-15, NAT=1 only): the core incl. the o_v/o_d/fault output flops is clocked through a
+// fourth ICG of the same cell (enable = a reset-release register), so the output flops and the input capture pin flops
+// sit behind the same root -> ICGx2 -> subtree structure.  r5 (BAL=0) routed FF -9.69 on the
 // output ports: the output flops sat on the bare root while the input pin flops (the IO reference) sat behind the
-// capture ICGs, so the outputs launched early against the reference.  Behaviour is identical (gate always enabled);
+// capture ICGs, so the outputs launched early against the reference.  Behaviour is identical after reset (the core's first active edge is unchanged);
 // zero cycles, zero ports.  BAL=0 keeps the closed views' netlist.
 module ot_s81_vm_x34_t #(parameter integer W = 512, parameter integer NAT = 0, parameter integer BAL = 0) (
     input  wire         t_ck, t_rst_n,
@@ -164,22 +164,30 @@ module ot_s81_vm_x34_t #(parameter integer W = 512, parameter integer NAT = 0, p
         ot_s81_vm_x34_tc #(.W(W)) u_c (.t_ck(t_ck), .t_rst_n(t_rst_n), .b0(b0), .b1(b1), .b2(b2), .bpar(bpar),
             .s_mark(s_mark), .o_v(o_v), .o_d(o_d), .fault(fault));
     end else begin : captured
-        wire ck_b;                       // clock of every non-capture register (BAL=1: behind an always-on ICG)
-`ifdef SYNTHESIS
+        // BAL=1: the core (incl. every o_v/o_d/fault output flop) runs on ck_b, a fourth ICG of the capture-ICG type whose
+        // enable is a real register (0 in reset, 1 from the first edge after reset).  The core's first active edge is the
+        // second edge after t_rst_n, exactly as before (r1 still holds it in reset at the first edge).  tp / r1 / en_b /
+        // mk_q stay on t_ck.  (A constant-enable ICG is not traced by the STA: no clock reached its sinks.)
+        reg en_b;
+        always @(posedge t_ck or negedge t_rst_n) if (!t_rst_n) en_b <= 1'b0; else en_b <= 1'b1;
+        wire ck_b;
         if (BAL != 0) begin : bal
-            ICGx2_ASAP7_75t_R u_g3 (.CLK(t_ck), .ENA(1'b1), .SE(1'b0), .GCLK(ck_b));
+`ifdef SYNTHESIS
+            ICGx2_ASAP7_75t_R u_g3 (.CLK(t_ck), .ENA(en_b), .SE(1'b0), .GCLK(ck_b));
+`else
+            reg en_l;
+            always @(t_ck or en_b) if (!t_ck) en_l = en_b;
+            assign ck_b = t_ck & en_l;
+`endif
         end else begin : nobal
             assign ck_b = t_ck;
         end
-`else
-        assign ck_b = t_ck;
-`endif
         reg [1:0] tp;
-        always @(posedge ck_b or negedge t_rst_n) if (!t_rst_n) tp <= 2'd3; else tp <= tp + 2'd1;
+        always @(posedge t_ck or negedge t_rst_n) if (!t_rst_n) tp <= 2'd3; else tp <= tp + 2'd1;
         reg r1;
-        always @(posedge ck_b or negedge t_rst_n) if (!t_rst_n) r1 <= 1'b0; else r1 <= 1'b1;
+        always @(posedge t_ck or negedge t_rst_n) if (!t_rst_n) r1 <= 1'b0; else r1 <= 1'b1;
         reg mk_q;
-        always @(posedge ck_b) mk_q <= s_mark;
+        always @(posedge t_ck) mk_q <= s_mark;
         reg [W+1:0] c0, c1, c2;          // {bpar[k], b_k}
         wire e0 = tp == 2'd1, e1 = tp == 2'd2, e2 = tp == 2'd3;
 `ifdef SYNTHESIS
