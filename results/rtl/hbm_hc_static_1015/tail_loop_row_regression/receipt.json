@@ -1,0 +1,43 @@
+{
+  "scope": "actual two-SRAM per issuer, fixed HC production24-row programmes; arithmetic/physical/throughput not qualified",
+  "source_sha256": {
+    "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_programme_mtp_static.sv": "c1989cccab9eca6492179acedde45f4d95cd579eb7c4b4d1e51e7c16b17e6b1c",
+    "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_programme_mtp_static_div_reference.sv": "5631b65472f5e074d49e2af890942ab3152db056bc23803ce762525193145e53",
+    "rtl/hbm_accel/generic/peers/ot_hgi_sfu_program_stripe_static.sv": "cfc58626830f0e8fe6c66488b7768e48a6e38cc124983d0483ec1221aca6c6ee",
+    "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v": "6530a2ef457f260a942e067b556ff55d75f931350af5807cfd6b05cd5e1ff380",
+    "rtl/test/tb_hgi_hc_row_loop_counter.sv": "77284b386e5d1eede12c0a8294f12e0b2c1b7c076f2a6369f6703e64fcb1267a",
+    "tools/lower_hbm_hc_mtp_static_calendar.py": "b72e686a90cc2fa34f246957c6eff870d0fe742a4ca94bb6e2b86e649e5fc156",
+    "tools/rtl_hgi_hc_row_counter_gate.sh": "17c7b11ec8ff1db9e23af1871c065c71af0a40608a8e448f0966e59fb0319d24"
+  },
+  "reference_commit": "ee0dab7dc",
+  "positive": "PASS",
+  "mutant": "KILLED valid51 row-id mismatch",
+  "production_programmes": {
+    "npos6": 2,
+    "npos8": 2,
+    "rows_per_programme": 24,
+    "periods": [
+      1080,
+      1400
+    ]
+  },
+  "mechanisms": [
+    "All51pins exact each valid output edge",
+    "Actual programme raw/ordinal/active/done/fault identical every checked edge",
+    "First start, earliest back-to-back starts, reset mid-execution and fresh start",
+    "Idle51pins nowzero; old division idleleak explicitly retained in log"
+  ],
+  "logs_sha256": {
+    "compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "mutant.log": "8629fb8a6d9ea4704d346a4aba1e3bbef5830ecc79620be634c1a7d3cf568e2b",
+    "positive.log": "eb73c75c5a24f2a94701d4f211994c1ad7260bc35ef3851a02f262945b8d8bb0"
+  },
+  "all_compiled_hashes_verified": true,
+  "issuer_source_commit": "76522e515",
+  "TAIL_LOOP": 0,
+  "ROW_LOOP": 1,
+  "valid51_equivalent_edges": 120537,
+  "idle51_zero_edges": 2529,
+  "full24row_programmes": 4,
+  "counter_mutant_failure_ordinal": 1401
+}

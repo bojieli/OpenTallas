@@ -1,0 +1,6 @@
+PRESERVED_DIV_IDLE_LEAK cycle=27019 ordinal=25920 raw=0000000000000 oldpins=0000000000120 newpins=0000000000000
+PRESERVED_DIV_IDLE_LEAK cycle=27020 ordinal=25920 raw=0000000000000 oldpins=0000000000120 newpins=0000000000000
+PRESERVED_DIV_IDLE_LEAK cycle=27021 ordinal=25920 raw=0000000000000 oldpins=0000000000120 newpins=0000000000000
+PRESERVED_DIV_IDLE_LEAK cycle=27022 ordinal=25920 raw=0000000000000 oldpins=0000000000120 newpins=0000000000000
+HC_ROW_COUNTER PASS valid51_cycles=120537 full24row_programmes=4 starts=5 idle_zero_cycles=2529 preserved_idle_leaks=26 reset_during_programme=1 back_to_back=1
+rtl/test/tb_hgi_hc_row_loop_counter.sv:80: $finish called at 1230800000 (1ps)
