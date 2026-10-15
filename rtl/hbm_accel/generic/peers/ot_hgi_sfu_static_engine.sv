@@ -4,8 +4,9 @@
 // VM sector arrivals and drains are compiler slots; preload completes BEFORE
 // arithmetic launch. The compiler prices the VM tap's14 edges separately from
 // the local SRAM word-read edge. No combinational14-to1 latency substitution.
-// Index and scalar-side ports remain explicit external services; this top does
-// not claim that a tied value implements either function.
+// Index ports require a separate actual mapped service. The inherited side
+// pins are reserved: KIND1 lanes do not implement scalar-side classes; those
+// opcodes fault and must dispatch through a real full-lane/side engine.
 module ot_hgi_sfu_static_engine #(parameter integer LWB=15)(
  input wire clk,rst_n,
  input wire [15:0] clk_lane,clk_map,rst_lane_n,rst_map_n,
@@ -49,6 +50,8 @@ module ot_hgi_sfu_static_engine #(parameter integer LWB=15)(
   .drain_v(drain_v),.drain_addr(drain_addr),.drain_data(drain_data),.drain_result_v(drain_result_v),.fault(store_fault));
  always @(posedge clk or negedge rst_n)
   if(!rst_n)fault<=0;
-  else if(store_fault || |lane_fault || |lane_coll)fault<=1;
+  else if(store_fault || |lane_fault || |lane_coll ||
+   (compiler_control[77:75]!=0 && compiler_control[77:75]!=1 && compiler_control[77:75]!=4 && compiler_control[77:75]!=5) ||
+   (compiler_control[74:72]!=0 && compiler_control[74:72]!=1 && compiler_control[74:72]!=4 && compiler_control[74:72]!=5))fault<=1;
 endmodule
 `default_nettype wire

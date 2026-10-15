@@ -2,8 +2,9 @@
 `default_nettype none
 // Actual protected programme SRAM -> fixed SFU arithmetic -> mapped SRAM store.
 // No runtime issue/ready loop. Host configuration and VM sector prefetch are
-// explicit setup ports. Index and scalar-side services remain external real
-// interfaces; the compiler must not select them without their actual binding.
+// explicit setup ports. Index reads require an actual external mapped service.
+// Scalar-side opcodes fault in this KIND1 engine and require a real full-lane
+// dispatch; its inherited side pins are reserved, not an implementation.
 module ot_hgi_sfu_programmed_engine #(
  parameter integer PAGE_AW=1, AW=10+PAGE_AW, LWB=15
 )(

@@ -115,5 +115,6 @@
     "full4x7168_sigmoid_image_words": 1968,
     "VM_prefetch_join": false,
     "native_physical_qualification": false
-  }
+  },
+  "scalar_side_contract": "KIND1 hardware does not implement sqrt/rsqrt/softplus/egate; compiler refuses these, engine faults on raw selected opcodes. Requires real KIND2 dispatch, not external-side pin binding."
 }
