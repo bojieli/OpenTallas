@@ -16,6 +16,7 @@ from pathlib import Path
 
 W = 276.48
 MARGIN = 2.16
+HF = 345.6                # crootr_f v6 height (bottom of the 598.32 slot; see plans())
 NG, NCOL, GS, S_RD, S_RT = 256, 3, 8, 2, 4
 NS = NG // GS
 NP = (NS + NCOL - 1) // NCOL
@@ -205,10 +206,15 @@ def plans(m):
     ck = lambda H: [("W" if m else "E", "sk", "M4", round(0.012 + 0.048 * round((H / 2 - 0.78) / 0.048), 3)),
                     ("W" if m else "E", "srs", "M4", round(0.012 + 0.048 * round((H / 2 + 0.78) / 0.048), 3))]
     # the e variant (C = 2): data on W, clock on E; the w variant (C = 0) is its x mirror
-    H = 598.32
+    # v6 (B6 s81-elemB 2026-10-14): the tile is the BOTTOM 345.6 um of its 598.32 slot (origin unchanged, S face
+    # unchanged on the chain); the y slices (2,816 b) and p_req (11 b) cross the freed 252.72 um above it as die wires
+    # straight under the y slice leaves (hop o 197.3 + 0.76 L + s: abutted-leaf bits L 252.7, beside-leaf bits L <= 350,
+    # both <= 683.3 with s <= 190).  The x positions of the N pins are the abutment plan's (crrf_n_plan, unchanged), so
+    # every y wire is a straight vertical.  The f face keeps the T_tree overlap: T_tree spans tile-local 187.6 .. 369.0.
+    H = HF
     f = (crrf_n_plan(m)
          + fp("S", [bits("ch_rst", 0) + bits("ch_fv", FVW) + bits("ch_fd", FDW)], H, V)
-         + fp("W", [bits("f_fv", FVW) + bits("f_fd", FSW)], H, ["M4"], lo=180.0, hi=368.4) + ck(H))
+         + fp("W", [bits("f_fv", FVW) + bits("f_fd", FSW)], H, ["M4"], lo=150.0, hi=H - MARGIN) + ck(H))
     H = 200.88
     srd = bits("s_rv", RVW) + bits("s_rd", RDW)
     k = len(srd) // 2
@@ -222,7 +228,7 @@ def plans(m):
     w = (fp("W", [sw[k:]], H, ["M4"])
          + fp("S", [sw[:k][::-1]], H, V, lo=MARGIN, hi=W / 2)
          + fp("N", [bits("p_flt", 0) + bits("p_w", 4 * WSL)], H, V) + ck(H))
-    return {"crrf": (f, 598.32), "crrr": (r, 200.88), "crrw": (w, 200.88)}
+    return {"crrf": (f, HF), "crrr": (r, 200.88), "crrw": (w, 200.88)}
 
 
 def ctrn_plan():
