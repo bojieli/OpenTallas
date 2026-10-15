@@ -1,0 +1,5 @@
+PASS one-start actual H16 SFU/VM/MAX/MB/EXP/E/SUM/SE/EB/DEN/PV-DIV-RNE T640 H16 EBwords10240 checks19968 programmeStarts16 exactIO42224; rawSC/rawPV/SINK component boundaries; physical and immutable-price qualification false
+- rtl/test/hbm_accel/generic/tb_hbm_p_norm_h16_static.sv:115: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 61us; walltime 520.481 s; speed 117.913 ns/s
+- Verilator: cpu 520.416 s on 1 threads; allocated 79 MB

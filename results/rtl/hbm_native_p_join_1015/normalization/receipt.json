@@ -1,0 +1,80 @@
+{
+  "status": "Actual H16 DEN/PV-DIV-RNE canonical and directed component proofs PASS allshapes",
+  "profiles": [
+    128,
+    640
+  ],
+  "heads": 16,
+  "external_starts_per_profile": 1,
+  "between_head_host_configuration": false,
+  "canonical": "PASS",
+  "directed_actual_DIV_BF16_ties": {
+    "T128": {
+      "even": 16,
+      "odd": 16
+    },
+    "T640": {
+      "even": 16,
+      "odd": 16
+    }
+  },
+  "VM_checks_per_profile": {
+    "T128": 10752,
+    "T640": 19968
+  },
+  "normalized_OUT_words_per_profile": 8192,
+  "actual_DEN_scalar_results_per_profile": 16,
+  "actual_MB_SE_scalar_results_per_profile": 32,
+  "programme_IO_edges": {
+    "T128": 19440,
+    "T640": 42224
+  },
+  "actual_programme_mutants": {
+    "omit_SE": "REJECTED actual SFU fault",
+    "bypass_DIV": "REJECTED VM readback word1 80000000 vs00000000",
+    "disable_RNE": "REJECTED VM readback word2 3f808000 vs3f800000"
+  },
+  "initial_invalid_mutants_excluded": true,
+  "pin_observer": {
+    "T128": "PASS578events0ackerrors",
+    "T640": "pending"
+  },
+  "DUT_initialization_only": [
+    "rawSC",
+    "rawPV",
+    "SINK"
+  ],
+  "actual_internal_chain": [
+    "scaledSC",
+    "REDMAX",
+    "MB masked VM publication",
+    "EXP",
+    "rawE",
+    "golden csum8 SE",
+    "BF16 EB",
+    "DEN=EXP(SINK-MB)+SE",
+    "actual DEN VM commit/readback",
+    "actual DIVB PV/DEN",
+    "BF16 RNE output"
+  ],
+  "external_actual_producer_joins_unbound": [
+    "QK rawSC arithmetic",
+    "PV actual ATT arithmetic",
+    "SINK actual DMA/table source"
+  ],
+  "canonical_VM_bound": false,
+  "native_whole_kernel_qualified": false,
+  "physical_qualified": false,
+  "production_throughput_qualified": false,
+  "source_pin": "ac98f015f",
+  "valid_mutants_pin": "3b274f22e",
+  "sha256": {
+    "canonical/t640_h16.log": "d88499ca40385f03091ce20f47eb62d0ce9647a03667fa32aa6be5b7335e96fe",
+    "canonical/t128_h16.log": "afa37dd1d7e63021fb8ac12e07341251538ab5d91420a1bdac47d286d1719af6",
+    "directed_ties/t640_h16.log": "d851b226ebf4bd6e89dff4a52dd4ee4d8e983d81f2d3b5f800eff24cc4aa1241",
+    "directed_ties/t128_h16.log": "29f695aea47a46338f6016817e6c504142bfddd2b3c9ce8a7347a7ddf12e170f",
+    "mutants/mutant_omit_se.log": "545f3f5d553c5c11e231f26d290ee7490b267f5e83f84cd4408787dc0416417c",
+    "mutants/mutant_bypass_div.log": "68edd13b91d50f5e9f24a5c39be81b23b97b509b82544df2795c64e0dc843541",
+    "mutants/mutant_disable_rne.log": "d6fc1b3ab6e594d774703c01720a263f3190fdfcbc0ea83cf7a40836ad7a7de3"
+  }
+}
