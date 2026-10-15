@@ -1,0 +1,26 @@
+{
+  "status": "NEEDS_HUMAN",
+  "host": "ot-epyc4",
+  "run": "/srv/opentallas-scratch2/claude/closure-loop/s81hc_ctfx_reset_native_ref-rst3cap1-edf914b72",
+  "reason": "route crashed twice (rc=1 ok-check failed;; first error: s81hc_ctfx_reset_native_ref_rst3cap1_edf914b72/flow.log: [ERROR GPL-0305] RePlAce diverged during gradient descent calculation, resulting in an invalid step length (Inf or NaN). This is often caused by numerical instability or high placement density. Consider reducing placement density to potenti [step do-3_3_place_gp]; resource=False)",
+  "job": "s81hc_ctfx_reset_native_ref-rst3cap1-edf914b72",
+  "source": {
+    "branch": "codex/takeover-s81-elements-0757",
+    "commit": "edf914b72",
+    "extra_paths": [
+      "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_cth.sv",
+      "tools/s81_suhc/ctfx_reset_native_proof.py",
+      "physical/s81_die_pins/v22_ctfx_reset_native"
+    ]
+  },
+  "qualification": "UNQUALIFIED: actual full-production placement failed; passing CTS gate is diagnostic",
+  "scope": "Measured gate/route configuration difference: gate HM10/noMM vs production HM30/MM; no relaxed timing or follow-up sweep",
+  "files_sha256": {
+    "gate_config.mk": "5f4091601ca788dcc99629a0d333fb2155329f7dd6f530b21fe14a1e68d7dc24",
+    "production_config.mk": "f1df972b6aced756420e8e07a588717565ef474753426d8b53d29d47126843f9",
+    "positive_bench.txt": "03b37dee93084b38f0742bac40b782fac2fdfc17b8c1c5519e8d2f05aeaba3f7",
+    "route_status.txt": "6cf538bbd0c561c38f5915e6843e42b788cc8c8b36fa3b9bc3dcff2a692d20dd",
+    "mutant_bench.txt": "4bf1b1ba61733d325f8305bd8c203f29cc8b33c2cdb856b424b3bb3189516f5e",
+    "production_gpl.log": "ab6077f7c002dbf414e7032b34f5ec8d69d2aab6a38ff72b3e0602f2afaff66a"
+  }
+}
