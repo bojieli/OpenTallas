@@ -1,0 +1,20 @@
+{
+  "schema": "opentallas.smh.dense-pack.measured-child-view.v1",
+  "recorded": "2026-10-15 Claude H-ELEM-A",
+  "replaces": "ot_smh_tr_group_beat_w (216x216, CLOSED keep1-7ff908809, native FAIL launch 227 / capture 463.1 / spread 82.4)",
+  "west_group": "ot_smh_tr_group_beat_e transit (CLOSED, native PASS 182.6/147.2, 43.2x216, W in M4 / E out M4) + 2 x ot_smh_tr_group_land (north, south)",
+  "land_view": {
+    "cell": "ot_smh_tr_group_land",
+    "job": "smh_tr_group_land_ref-land1-f4dd17bb0",
+    "main_merge": "7939a460d",
+    "view_dir": "physical/ref_tile/smh_tr_group_land_ref/views/ot_smh_tr_group_land",
+    "outline_um": [216, 43.2],
+    "pins": {"d": "S face M5, x = 8.748 + 0.096*i (i=0..2068)", "q": "N face M5, same x", "clk/rst_a": "W face M4 y 21.612 / 22.092"},
+    "closure": {"TT_ps": 288.90, "FF_ps": 19.22, "DRC": 0},
+    "native_audit": {"R_ps": 166.4, "spread_ps": 24.6, "capture_ps": 145.6, "capture_pass": true, "launch_ps": 222.5, "launch_over_220_pins": 5, "launch_median_ps": 191.9, "pass": false},
+    "clock_sinks": 2088,
+    "cycles": "1 edge (unchanged landing contribution)"
+  },
+  "successor": "land2 (f8e80c7a6, outhold dropped to remove the BUF-HB2-BUF output stage from the launch arc); same outline/pins, so geometry may proceed on this footprint",
+  "geometry_inputs_for_split18": "two landing children 216x43.2 with S-face input bus aligned bit-for-bit to the transit W-face fork; parent fork d -> {transit W, land_n S, land_s S} remains <=500 um per bit (dense-pack gate)"
+}
