@@ -1,0 +1,30 @@
+{
+  "scope": "off-chip HBM behavioral model only; native addresses/hash/timing preserved",
+  "result": "PASS",
+  "ot_run": {
+    "host": "ot-epyc4",
+    "unit": "oth-ubuntu-1206055-1792049540",
+    "memory_GB": 4,
+    "threads": 4,
+    "exit": 0
+  },
+  "cases": [
+    "default base0 valid write, true write ACK and readback",
+    "production base0x28800000 valid write, true write ACK and readback",
+    "below window or zero-length, above window, crossing end rejected before model access",
+    "sticky invalid fault even ready0; no alias writes",
+    "all positive/invalid checks repeated with SYNTHESIS defined",
+    "window exceeding30bit native bound fails at time0"
+  ],
+  "source_sha256": {
+    "rtl/chip/ot_chip_v41x_hbm3e_phy.sv": "6cda2575be0adfb73e8ff45893b86689ad7f5a823a4b66f04823d4446841b1cb",
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_hbm.sv": "c757ae39d767291db3fd37565ce6c5ff6eec9ed119cc97ee06432f301d87ecf4",
+    "rtl/hdc/kv/ot_hdc_hbm_model.sv": "d19116e6485266aef997ae52c82a46421267f5de9bb6d0b380d7348b30ffd57d",
+    "rtl/hbm_accel/generic/peers/static/tb_phy_k_window.sv": "77b4d91ba0e19286fd9a37428724c7fa58ca0cb5e76667934f5b9e751504493f",
+    "rtl/hbm_accel/generic/peers/static/run_phy_k_window.sh": "35e13639a4b7b9a2ca599177a67ee388d46ab805b4746e89e71871f465a85091"
+  },
+  "limitations": [
+    "behavioral model regression; no hardware/physical qualification",
+    "underlying model modulo backing array retained; contiguous K_MEM window is alias-free"
+  ]
+}
