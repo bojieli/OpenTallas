@@ -393,7 +393,7 @@ module tb_s81_die_layer;
     reg [34:0] mx_pmem [0:7];
     ot_s81_fixed_issue #(.NOPS(2),.NENG(13),.STAGE(0),.OP_BASE(2),.ENG_PRESENT(13'h400)) mx_issuer(
         .clk(ck),.rst_n(rst && cyc>=1000),.pw_v(mx_pw_v),.pw_a(mx_pw_a),.pw_d(mx_pw_d),.prog_len(8'd2),
-        .job_v(cyc==1250),.job_user(10'd0),.job_pos(21'd1000),.job_tok(21'd0),
+        .job_v(cyc==1250),.job_user(10'd0),.job_pos(21'd0),.job_tok(21'd1000),
         .cmd_v(mx_cv),.cmd_d(mx_cd),.engine_available(mx_av),.dn_v(mx_dv),.dn_tag(mx_dt),
         .fault(mx_is_fault),.fault_code(mx_is_code),.phase(mx_phase),
         .job_rdy(),.busy(),.job_done(),.job_kdone(),.done_slot(),.kit_tok(),.st_jobs(),.st_cmds());
