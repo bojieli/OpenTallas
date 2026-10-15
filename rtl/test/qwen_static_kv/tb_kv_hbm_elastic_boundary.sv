@@ -17,7 +17,9 @@
 module tb_kv_hbm_elastic_boundary;
  parameter integer FRONT_MUT=0, CTRL_ELASTIC=1, NBLK=4, BLK=8;
  localparam CYCLES=2600,RL=23;
- integer JIT=16,GO_DLY=0,seed=1,late_sector=300,maxocc=0,blocks_go=0,blocks_freed=0,putcount=0,first_go=-1;
+ // lateby: edges beyond the compiled window. Outstanding raw reads must stay <= TQD (64): a PHY stall
+ // longer than TQD-CMD-RL needs the RD issuer stopped (block credit), which this static bench does not model.
+ integer lateby=12,JIT=16,GO_DLY=0,seed=1,late_sector=300,maxocc=0,blocks_go=0,blocks_freed=0,putcount=0,first_go=-1;
  integer jit_hist[0:63];
  integer core_phase_ps=137;real CORE_FIRST;
  reg core=0;initial begin void'($value$plusargs("phase=%d",core_phase_ps));
@@ -127,7 +129,7 @@ module tb_kv_hbm_elastic_boundary;
  endtask
  initial begin
   void'($value$plusargs("faultmode=%d",mode));void'($value$plusargs("jit=%d",JIT));void'($value$plusargs("seed=%d",seed));
-  void'($value$plusargs("late=%d",late_sector));
+  void'($value$plusargs("late=%d",late_sector));void'($value$plusargs("lateby=%d",lateby));
   GO_DLY=JIT+1;void'($value$plusargs("godly=%d",GO_DLY));
   void'($urandom(seed));for(integer i=0;i<64;i++)jit_hist[i]=0;
   for(integer phase=0;phase<2;phase++)begin
@@ -167,7 +169,7 @@ module tb_kv_hbm_elastic_boundary;
       automatic integer extra=0,a;
       if(phase==1)begin
        extra=$urandom_range(JIT,0);
-       if(mode==2&&reads==late_sector)extra=JIT+40;
+       if(mode==2&&reads==late_sector)extra=JIT+lateby;
        if(mode==5&&reads==late_sector)extra=-1;
        if(mode==6&&reads==late_sector)extra=600;
       end
