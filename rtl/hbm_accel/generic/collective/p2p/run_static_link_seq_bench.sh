@@ -26,7 +26,7 @@ for p in "${paths[@]}"; do
 done
 for mutant in ${MUTANTS:-0 1 2 3 4 5 6 7 8 9 10 11}; do
   iverilog -g2012 -s tb_hgi_coll_static_link_seq -Ptb_hgi_coll_static_link_seq.MUT="$mutant" -Ptb_hgi_coll_static_link_seq.N="${FRAMES:-1024}" -o "$build/sim" \
-    "${src[@]}" "$here/ot_hgi_coll_static_link_seq.sv" "$here/tb_hgi_coll_static_link_seq.sv"
+    "${src[@]}" "$here/ot_hgi_coll_static_seq_ctl.sv" "$here/ot_hgi_coll_static_link_seq.sv" "$here/tb_hgi_coll_static_link_seq.sv"
   vvp "$build/sim" > "$build/m$mutant.log" 2>&1
   cat "$build/m$mutant.log"
   if [[ "$mutant" == 0 ]]; then
@@ -41,5 +41,5 @@ for mutant in ${MUTANTS:-0 1 2 3 4 5 6 7 8 9 10 11}; do
 done
 
 iverilog -g2012 -s tb_hgi_coll_static_link_seq_overflow -o "$build/overflow" \
- "${src[@]}" "$here/ot_hgi_coll_static_link_seq.sv" "$here/tb_hgi_coll_static_link_seq_overflow.sv"
+ "${src[@]}" "$here/ot_hgi_coll_static_seq_ctl.sv" "$here/ot_hgi_coll_static_link_seq.sv" "$here/tb_hgi_coll_static_link_seq_overflow.sv"
 vvp "$build/overflow"
