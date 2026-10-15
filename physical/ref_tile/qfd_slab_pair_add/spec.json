@@ -54,7 +54,45 @@
   "tag": "pa2",
   "purpose": "port_tiles pair-adder leaf (x4 per word half, 24 per die band set)",
   "extra_paths": [
-   "physical/qwen_port_tiles_1015"
+   "physical/qwen_port_tiles_1015",
+   "rtl/qwen_split",
+   "rtl/hdc",
+   "rtl/physical"
+  ],
+  "benches": [
+   {
+    "name": "equiv_m0",
+    "cmd": "bash physical/qwen_port_tiles_1015/bench.sh equiv {RUN}/bench/equiv_m0 0",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^EQUIV MUT=0 .* PASS$"
+   },
+   {
+    "name": "equiv_m1",
+    "cmd": "bash physical/qwen_port_tiles_1015/bench.sh equiv {RUN}/bench/equiv_m1 1",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^EQUIV MUT=1 .* FAIL$"
+   },
+   {
+    "name": "equiv_m2",
+    "cmd": "bash physical/qwen_port_tiles_1015/bench.sh equiv {RUN}/bench/equiv_m2 2",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^EQUIV MUT=2 .* FAIL$"
+   }
   ]
  },
  "macros": [],

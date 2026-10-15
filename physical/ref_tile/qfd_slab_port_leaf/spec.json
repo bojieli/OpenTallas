@@ -137,7 +137,45 @@
   "purpose": "port_tiles result-port leaf (x4 per result half)",
   "extra_paths": [
    "physical/qwen_port_tiles_1015",
-   "physical/ref_tile/qfd_slab_pg_lanes"
+   "physical/ref_tile/qfd_slab_pg_lanes",
+   "rtl/qwen_split",
+   "rtl/hdc",
+   "rtl/physical"
+  ],
+  "benches": [
+   {
+    "name": "equiv_m0",
+    "cmd": "bash physical/qwen_port_tiles_1015/bench.sh equiv {RUN}/bench/equiv_m0 0",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^EQUIV MUT=0 .* PASS$"
+   },
+   {
+    "name": "equiv_m1",
+    "cmd": "bash physical/qwen_port_tiles_1015/bench.sh equiv {RUN}/bench/equiv_m1 1",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^EQUIV MUT=1 .* FAIL$"
+   },
+   {
+    "name": "equiv_m2",
+    "cmd": "bash physical/qwen_port_tiles_1015/bench.sh equiv {RUN}/bench/equiv_m2 2",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^EQUIV MUT=2 .* FAIL$"
+   }
   ]
  },
  "macros": [],

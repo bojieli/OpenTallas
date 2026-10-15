@@ -51,7 +51,45 @@
   "tag": "rb1",
   "purpose": "port_tiles parent ck-domain face bank (replaces a 15,267-sink parent root)",
   "extra_paths": [
-   "physical/qwen_port_tiles_1015"
+   "physical/qwen_port_tiles_1015",
+   "rtl/qwen_split",
+   "rtl/hdc",
+   "rtl/physical"
+  ],
+  "benches": [
+   {
+    "name": "reg512_m0",
+    "cmd": "bash physical/qwen_port_tiles_1015/bench.sh reg512 {RUN}/bench/reg512_m0 0",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 1,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "^REG512 MUT=0 .* PASS$"
+   },
+   {
+    "name": "reg512_m1",
+    "cmd": "bash physical/qwen_port_tiles_1015/bench.sh reg512 {RUN}/bench/reg512_m1 1",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 1,
+    "needs": [
+     "iverilog"
+    ],
+    "fail_regex": "^REG512 MUT=1 .* FAIL$"
+   },
+   {
+    "name": "reg512_m2",
+    "cmd": "bash physical/qwen_port_tiles_1015/bench.sh reg512 {RUN}/bench/reg512_m2 2",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 1,
+    "needs": [
+     "iverilog"
+    ],
+    "fail_regex": "^REG512 MUT=2 .* FAIL$"
+   }
   ]
  },
  "io_tcl": "physical/ref_tile/qfd_slab_reg512/assigned_pins.tcl",
