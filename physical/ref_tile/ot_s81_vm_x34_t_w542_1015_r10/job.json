@@ -1,5 +1,5 @@
 {
- "name": "ot_s81_vm_x34_t_w542_1015_r10-minstage10-COMMIT",
+ "name": "ot_s81_vm_x34_t_w542_1015_r10-minstage10-69bca9c3e",
  "block": "ot_s81_vm_x34_t",
  "ref_tile": true,
  "owner": "codex:S81 VM1417",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 16,
  "source": {
   "branch": "codex/s81-vm-x34-minstage-1417",
-  "commit": "COMMIT"
+  "commit": "69bca9c3e"
  },
  "stages": {
   "bench": [
@@ -95,7 +95,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/ot_s81_vm_x34_t_w542_1015_r10/ot_s81_vm_x34_t_w542_1015_r10-minstage10-COMMIT"
+   "to": "results/rtl/ref_tile/ot_s81_vm_x34_t_w542_1015_r10/ot_s81_vm_x34_t_w542_1015_r10-minstage10-69bca9c3e"
   }
  ],
  "cycles_added": 0,
