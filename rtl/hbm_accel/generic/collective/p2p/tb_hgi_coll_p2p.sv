@@ -147,6 +147,7 @@ module tb_hgi_coll_p2p;
             // the die masters: SW = ot_hfd_coll_q3 (HOME, QSOLO), SE / NW / NE = ot_hfd_coll_q2 (strap qid)
             if (q == 0) begin : g_m3
                 ot_hfd_coll_q3 #(.INJLAT(INJL), .TKM(TKQ), .MUT_Q(MQ), .MUT_CARRY(MC), .MUT_ORDER(MO)) u_q (.clk(clk), .rst_n(rst_n),
+                    .tkm_clk_core(clk), .tkm_clk_buffer(clk), .tkm_clk_packer(clk), .tkm_clk_lane({4{clk}}), .tkm_clk_tile({32{clk}}),
                     .hgi_rec(p_rec[d][q]), .hgi_recx(554'd0), .hgi_ret(p_ret[d][q]), .hgi_cfg(cfgb), .hgi_vmaddr(), .hgi_inj_addr(p_ia[d][q]),
                     .inj_idx(p_ii[d][q]), .inj_rd(p_ir[d][q]), .inj_d(p_iq[d][q]), .del_valid(p_dv[d][q]), .del_flit(p_df[d][q]),
                     .hgi_del_obase(p_dob[d][q]), .fault(p_flt[d][q]), .stat_credit_stall(),

@@ -17,14 +17,17 @@ module ot_hgi_coll_tkm_seq_lane_core #(
     input wire [84*((KMAX+63)/64)-1:0] chain_tau,
     input wire [((KMAX+63)/64)-1:0] chain_busy,
     input wire [DEL-1:0] lane_d0v,lane_d1v,
-    input wire [DEL-1:0] lane_permit,lane_fault,lane_dv,lane_fe,lane_ldv,
-    input wire [DEL*680-1:0] lane_he,
+    input wire [DEL-1:0] lane_fault,lane_dv,lane_ldv,
+    input wire[2719:0]lane_heads0,lane_heads1,lane_heads2,lane_heads3,
+    input wire[31:0]lane_masks0,lane_masks1,lane_masks2,lane_masks3,
+    input wire[7:0]lane_epoch0,lane_epoch1,lane_epoch2,lane_epoch3,
+    input wire[2:0]lane_hn0,lane_hn1,lane_hn2,lane_hn3,
+    output reg[DEL*8-1:0]lane_take_epochs,
     input wire [DEL*8-1:0] lane_nv_mask,
-    input wire [DEL*8-1:0] lane_hm,lane_dn,lane_occ,
-    input wire [DEL*2-1:0] lane_hn,
-    output wire [DEL*8-1:0] lane_take,
-    output wire [DEL-1:0] lane_pop,
-    output wire lane_live,
+    input wire [DEL*8-1:0] lane_occ,
+    output reg [DEL*8-1:0] lane_take,
+    output reg [DEL-1:0] lane_pop,
+    output reg lane_live,
     output wire [82:0] lane_tau,
     output wire [7:0] lane_g,lane_gb,
     output wire [15:0] lane_pf,
@@ -40,18 +43,25 @@ module ot_hgi_coll_tkm_seq_lane_core #(
     input  wire [39:0]          cfg_obase,      // O: VM word address (16-word aligned)
     input  wire [39:0]          cfg_rbase,      // R: VM word address (16-word aligned)
     input  wire                 cfg_has_r,
-    output reg                  w_v,
-    output reg  [39:0]          w_addr,
-    output reg  [15:0]          w_mask,
-    output reg  [FW-1:0]        w_data,
-    input  wire                 w_rdy,
-    output wire                 busy,
+    output wire buf_w_v,buf_r_v,output wire[9:0]buf_w_addr,buf_r_addr,output wire[339:0]buf_w_data,
+    input wire buf_rd_v,input wire[339:0]buf_rd_data,
+    input wire w_v, pack_empty,
+    input wire[3:0] pack_queued,input wire[9:0] pack_lines,
+    output reg pack_start,pack_cell_v,pack_last,
+    output reg[339:0]pack_cell,output reg[1:0]pack_slot,
+    output wire[12:0]pack_nout,output wire[39:0]pack_obase,pack_rbase,output wire pack_has_r,
+    output reg                  busy,
     output reg                  done,           // one edge: every output line accepted
     output reg                  fault,
     output reg  [31:0]          stat_cycles,    // start -> done
     output reg  [31:0]          stat_ins,       // blocks inserted
     output reg  [31:0]          stat_surv       // survivors taken
 );
+    // Internal counters / busy keep their own state; the ports are separate same-edge copies with no internal
+    // fanout so the flow can place them at their pins (measured R2: 273 reg->out paths, worst stat_surv -622 ps,
+    // were the feedback-loaded counters themselves driving the face).
+    reg [31:0] st_cyc, st_ins, st_surv; reg busy_q;
+
     localparam integer W  = 4;
     localparam integer C  = KMAX / W;
     localparam integer EW = 85;               // {region, valid, okey, ~id, ~q, ~j, nz}
@@ -106,26 +116,84 @@ module ot_hgi_coll_tkm_seq_lane_core #(
     localparam [3:0] P_IDLE = 4'd0, P_INS = 4'd1, P_DRAIN = 4'd2, P_CONV1 = 4'd3, P_CLR2 = 4'd4, P_INS2 = 4'd5,
                      P_DRAIN2 = 4'd6, P_OUT = 4'd7, P_FLUSH = 4'd8, P_CLR0 = 4'd9;
     reg [3:0] ph;
-    assign busy = (ph != P_IDLE);
+
     // ---------------------------------------------------------------- delivery credits + decode + FIFO
     wire [DEL-1:0] rr_dummy;
-    wire [0:0] rr;
-    ot_rst_relay #(.REGIONS(1),.SYNC_STAGES(2),.TREE_STAGES(1))u_rr(.clk(clk),.rst_n_in(rst_n),.rst_n(rr));
-    wire rn=rr[0];
-    wire [DEL-1:0] d2_v=lane_dv,d0_v=lane_d0v,d1_v=lane_d1v;
-    wire [DEL-1:0] fe=lane_fe,ld_v=lane_ldv;
+    wire [2:0] rr;
+    // three relay copies (main control / lane take+epoch / small flight+count state): the measured single relay
+    // output drove 2,686 loads (955 flops); each region now has its own registered copy
+    ot_rst_relay #(.REGIONS(3),.SYNC_STAGES(2),.TREE_STAGES(1))u_rr(.clk(clk),.rst_n_in(rst_n),.rst_n(rr));
+    wire rn=rr[0],rn_l=rr[1],rn_s=rr[2];
+    reg[3:0]pack_queued_pin;reg[9:0]pack_lines_pin;
+    reg pack_empty_pin,pack_tail,w_v_pin;reg[DEL*8-1:0]occ_pin;
+    reg[DEL-1:0]early0_pin,early1_pin,landing_pin,fault_pin;
+    always @(posedge clk)begin pack_queued_pin<=pack_queued;pack_lines_pin<=pack_lines;pack_empty_pin<=pack_empty;
+     w_v_pin<=w_v;occ_pin<=lane_occ;early0_pin<=lane_d0v;early1_pin<=lane_d1v;landing_pin<=lane_ldv;fault_pin<=lane_fault;end
+    always @(posedge clk or negedge rn_s)if(!rn_s)pack_tail<=0;else pack_tail<=pack_cell_v;
+    reg[DEL-1:0]count_v;reg[DEL*8-1:0]count_mask;
+    always @(posedge clk or negedge rn_s)if(!rn_s)count_v<=0;else count_v<=lane_dv;
+    always @(posedge clk)count_mask<=lane_nv_mask;
+    wire [DEL-1:0] d2_v=count_v,d0_v=early0_pin,d1_v=early1_pin;
+    wire [DEL-1:0] ld_v=landing_pin;
     wire [7:0]occ[0:DEL-1];
     wire [679:0]st_e[0:DEL-1][0:2];
     wire [7:0]st_m[0:DEL-1][0:2],dn[0:DEL-1];
     wire [1:0]st_n[0:DEL-1];
-    assign lane_live=ins_live;assign lane_tau=tau;
+    assign lane_tau=tau;
     assign lane_g=g_q;assign lane_gb=gb_q;assign lane_pf=pf_q;
+    wire[10879:0]lane_heads={lane_heads3,lane_heads2,lane_heads1,lane_heads0};
+    wire[127:0]lane_masks={lane_masks3,lane_masks2,lane_masks1,lane_masks0};
+    wire[31:0]lane_epochs={lane_epoch3,lane_epoch2,lane_epoch1,lane_epoch0};
+    wire[11:0]lane_hn={lane_hn3,lane_hn2,lane_hn1,lane_hn0};
+    // Four head mirrors cover the registered command round trip without reusing a stale mask.
+    reg[DEL*2720-1:0]head_pin;reg[DEL*32-1:0]mask_pin;
+    reg[DEL*8-1:0]epoch_pin;reg[DEL*3-1:0]hn_pin;
+    reg[7:0]consume_epoch[0:DEL-1],consume_mask[0:DEL-1];
+    wire ins_live = (ph == P_INS); reg [DEL-1:0] sel_pop;
+    always @(posedge clk)begin head_pin<=lane_heads;mask_pin<=lane_masks;epoch_pin<=lane_epochs;hn_pin<=lane_hn;end
+    // Mirror selection is REGISTERED (structural repair of the measured 23-level consume_epoch -> e1 stage and the
+    // 5,074-load subtract nets): the offset consume_epoch - epoch_pin that the old code subtracted after the edge is
+    // formed before it from the next-state values (consume_epoch + pop, lane_epochs = next epoch_pin, lane_hn =
+    // next hn_pin) and stored one-hot, one private copy per 85-bit element / mask, so the cycle behaviour is
+    // identical (offset_reg(t) == consume_epoch(t) - epoch_pin(t)) and no subtract or shared select fans out.
+    // During reset ins_live is 0 and consume_epoch is 0, so the stored offset is 0 - epoch, as before.
     for(genvar l=0;l<DEL;l=l+1)begin:g_lane_faces
-     assign st_e[l][0]=lane_he[680*l+:680];
+     wire[7:0]d0=consume_epoch[l]-lane_epochs[8*l+:8];
+     wire[7:0]d1=consume_epoch[l]+8'd1-lane_epochs[8*l+:8];
+     wire take_pop=ins_live&&sel_pop[l];
+     wire[3:0]oh0={d0==8'd3,d0==8'd2,d0==8'd1,d0==8'd0},oh1={d1==8'd3,d1==8'd2,d1==8'd1,d1==8'd0};
+     wire hv0=d0<8'(lane_hn[3*l+:3]),hv1=d1<8'(lane_hn[3*l+:3]);
+     (* keep *)reg[3:0]oh_e[0:7];(* keep *)reg[3:0]oh_m;(* keep *)reg hv;
+     always @(posedge clk)begin
+      for(integer i=0;i<8;i=i+1)oh_e[i]<=take_pop?oh1:oh0;
+      oh_m<=take_pop?oh1:oh0;hv<=take_pop?hv1:hv0;
+     end
+     for(genvar i=0;i<8;i=i+1)begin:g_el
+      assign st_e[l][0][85*i+:85]=({85{oh_e[i][0]}}&head_pin[2720*l+85*i+:85])|({85{oh_e[i][1]}}&head_pin[2720*l+680+85*i+:85])
+                                 |({85{oh_e[i][2]}}&head_pin[2720*l+1360+85*i+:85])|({85{oh_e[i][3]}}&head_pin[2720*l+2040+85*i+:85]);
+     end
      assign st_e[l][1]='0;assign st_e[l][2]='0;
-     assign st_m[l][0]=lane_hm[8*l+:8];assign st_m[l][1]='0;assign st_m[l][2]='0;
-     assign dn[l]=lane_dn[8*l+:8];assign occ[l]=lane_occ[8*l+:8];assign st_n[l]=lane_hn[2*l+:2];
-     assign lane_take[8*l+:8]=sel_take[l];assign lane_pop[l]=sel_pop[l];
+     assign st_m[l][0]=({8{oh_m[0]}}&mask_pin[32*l+:8])|({8{oh_m[1]}}&mask_pin[32*l+8+:8])
+                      |({8{oh_m[2]}}&mask_pin[32*l+16+:8])|({8{oh_m[3]}}&mask_pin[32*l+24+:8]);
+     assign st_m[l][1]='0;assign st_m[l][2]='0;
+     assign dn[l]=consume_mask[l];assign occ[l]=occ_pin[8*l+:8];
+     assign st_n[l]=hv?2'd1:2'd0;
+    end
+    always @(posedge clk or negedge rn_l)begin
+     if(!rn_l)begin
+      lane_take<=0;lane_pop<=0;lane_take_epochs<=0;
+      for(integer l=0;l<DEL;l=l+1)begin consume_epoch[l]<=0;consume_mask[l]<=0;end
+     end else begin
+      lane_pop<=ins_live?sel_pop:'0;
+      for(integer l=0;l<DEL;l=l+1)begin
+       lane_take[8*l+:8]<=ins_live?sel_take[l]:8'd0;
+       lane_take_epochs[8*l+:8]<=consume_epoch[l];
+       if(ins_live)begin
+        if(sel_pop[l])begin consume_epoch[l]<=consume_epoch[l]+1'b1;consume_mask[l]<=0;end
+        else consume_mask[l]<=(MUT==5)?8'd0:(consume_mask[l]|sel_take[l]);
+       end
+      end
+     end
     end
     reg start_p; reg [11:0] cfg_n_p; reg [12:0] cfg_k_p, cfg_nout_p; reg [7:0] cfg_g_p, cfg_gbase_p; reg [15:0] cfg_pf_p;
     reg [39:0] cfg_obase_p, cfg_rbase_p; reg cfg_has_r_p;
@@ -189,74 +257,77 @@ module ot_hgi_coll_tkm_seq_lane_core #(
     // the SRAM cell buffer (pass 1 -> pass 2): BD cells of 4 elements, registered write port, captured read
     reg  bw_v; reg [BA-1:0] bw_a; reg [4*EW-1:0] bw_d;
     reg  br_v; reg [BA-1:0] br_a; reg br_q, rd2_v; reg [4*EW-1:0] rd2;
-    wire [511:0] b_q;
-    wire [511:0] bw_w = 512'(bw_d);
-    for (genvar m = 0; m < 2; m = m + 1) begin : g_bm
-        ot_sram_1r1w_1024x256_m2_r2c2 u_b (.clk(clk), .r_ce_in(br_v), .r_addr_in(10'(br_a)), .rd_out(b_q[256*m +: 256]),
-            .w_ce_in(bw_v), .w_addr_in(10'(bw_a)), .wd_in(bw_w[256*m +: 256]), .w_mask_in({256{1'b1}}),
-            .rr_en(2'b0), .rr_addr(18'd0), .cr_en(2'b0), .cr_sel(16'd0));
-    end
+    assign buf_w_v=bw_v;assign buf_w_addr=10'(bw_a);assign buf_w_data=bw_d;
+    assign buf_r_v=br_v;assign buf_r_addr=10'(br_a);
+    reg[3:0]br_flight;
+    always @(posedge clk or negedge rn_s)if(!rn_s)br_flight<=0;else br_flight<={br_flight[2:0],br_v};
+    always @(posedge clk)rd2<=buf_rd_data;
     reg [BA:0] cnv, cap, rdn; reg [12:0] cneed; reg [3:0] qcnt; reg [3:0] wcnt;
-    reg [EW-1:0] lb [0:15]; reg [9:0] lp;               // output line buffer, lines pushed
     integer c, s, a, b, l, i;
-    // ---------------------------------------------------------------- output packer
-    reg [12:0] outn;                           // elements shifted out
-    reg [12:0] wrn;                            // elements written (O lines)
-    reg [8:0]  line;                           // output line index
-    // ---------------------------------------------------------------- main sequential
-    // output step: one 16-element line an edge (the array shifts up 4 cells); O line (+ R line) into a 4-line queue that
-    // the write port drains one line an edge; a step needs room for its lines
-    reg [FW-1:0] lq_d [0:7]; reg [39:0] lq_a [0:7]; reg [15:0] lq_m [0:7]; reg [3:0] lq_n; reg [2:0] lq_h, lq_t;
-    wire lq_pop = (lq_n != 4'd0) && (!w_v || w_rdy);
-    // P_OUT conveyor: a cell (4 elements) an edge while the 8-line queue has room for every line issued and not yet
-    // pushed (registered counts only; the cells reach the packer 2 edges after the decision)
+    assign pack_nout=nout_q;assign pack_obase=ob_q;assign pack_rbase=rb_q;assign pack_has_r=hr_q;
+    // Account for every issued line until the separate packer publishes its count.
+    // The returned queued count can lag safely: line debt includes all pending cells.
     wire [10:0] lines_iss = 11'((cnv + 1 + 3) >> 2);
-    wire [11:0] lq_need = 12'(lq_n) + 12'(lines_iss - 11'(lp)) * (hr_q ? 12'd2 : 12'd1);
+    wire [11:0] lq_need = 12'(pack_queued_pin) + 12'(lines_iss - 11'(pack_lines_pin)) * (hr_q ? 12'd2 : 12'd1);
     wire pgo = (ph == P_OUT) && (13'(cnv) < cneed) && (lq_need <= 12'd8);
     // select (combinational over the registered staging heads)
-    reg [EW-1:0] sel_e [0:3]; reg [2:0] sel_n; reg [7:0] sel_take [0:DEL-1]; reg [DEL-1:0] sel_pop;
+    reg [EW-1:0] sel_e [0:3]; reg [2:0] sel_n; reg [7:0] sel_take [0:DEL-1];
+    function automatic[3:0]pop8(input[7:0]m);
+        reg[1:0]a,b,c,d;reg[2:0]ab,cd;
+        begin a=2'(m[0])+2'(m[1]);b=2'(m[2])+2'(m[3]);c=2'(m[4])+2'(m[5]);d=2'(m[6])+2'(m[7]);
+         ab=3'(a)+3'(b);cd=3'(c)+3'(d);pop8=4'(ab)+4'(cd);end
+    endfunction
     always @* begin : selc
-        integer r_, idx;
-        reg [7:0] hm;
-        r_ = 0;
-        for (s = 0; s < 4; s = s + 1) sel_e[s] = {EW{1'b0}};
-        for (l = 0; l < DEL; l = l + 1) begin
-            sel_take[l] = 8'd0;
-            hm = (st_n[l] != 2'd0) ? (st_m[l][0] & ~dn[l]) : 8'd0;
-            for (i = 0; i < 8; i = i + 1) if (hm[i]) begin
-                if (r_ < 4) begin if (!(MUT == 2 && r_ == 3)) sel_e[r_] = st_e[l][0][EW*i +: EW]; sel_take[l][i] = 1'b1; end
-                r_ = r_ + 1;
-            end
-            sel_pop[l] = (st_n[l] != 2'd0) && ((hm & ~sel_take[l]) == 8'd0);
+        reg[7:0]available[0:DEL-1];reg[3:0]counts[0:DEL-1];reg[5:0]prefix[0:DEL-1];reg[5:0]rank_,total;
+        for(integer l_=0;l_<DEL;l_=l_+1)begin
+         available[l_]=(st_n[l_]!=0)?(st_m[l_][0]&~dn[l_]):8'd0;
+         counts[l_]=pop8(available[l_]);
         end
-        sel_n = (r_ > 4) ? 3'd4 : 3'(r_);
+        // DEL=4 fixed production shape: balanced, independent lane/slot prefixes.
+        prefix[0]=0;prefix[1]=6'(counts[0]);prefix[2]=6'(counts[0])+6'(counts[1]);
+        prefix[3]=(6'(counts[0])+6'(counts[1]))+6'(counts[2]);
+        total=(6'(counts[0])+6'(counts[1]))+(6'(counts[2])+6'(counts[3]));
+        for(integer s_=0;s_<4;s_=s_+1)sel_e[s_]='0;
+        for(integer l_=0;l_<DEL;l_=l_+1)begin
+         sel_take[l_]=0;
+         for(integer i_=0;i_<8;i_=i_+1)begin
+          rank_=prefix[l_]+6'(pop8(available[l_]&8'((9'd1<<i_)-1)));
+          sel_take[l_][i_]=available[l_][i_]&&(rank_<4);
+          for(integer s_=0;s_<4;s_=s_+1)
+           if(available[l_][i_]&&rank_==s_&&!(MUT==2&&s_==3))sel_e[s_]=sel_e[s_]|st_e[l_][0][85*i_+:85];
+         end
+         sel_pop[l_]=(st_n[l_]!=0)&&((available[l_]&~sel_take[l_])==0);
+        end
+        sel_n=(total>4)?3'd4:3'(total);
     end
-    wire ins_live = (ph == P_INS);
     always @(posedge clk or negedge rn) begin
         if (!rn) begin
-            ph <= P_IDLE; fault <= 1'b0; done <= 1'b0; w_v <= 1'b0; w_addr <= 40'd0; w_mask <= 16'd0; w_data <= '0;
-            stat_cycles <= 32'd0; stat_ins <= 32'd0; stat_surv <= 32'd0;
+            begin busy_q <= 0; busy <= 0; end lane_live<=0;ph <= P_IDLE; fault <= 1'b0; done <= 1'b0; pack_start<=0;pack_cell_v<=0;pack_cell<=0;pack_slot<=0;pack_last<=0;
+            begin st_cyc <= 32'd0; stat_cycles <= 32'd0; end begin st_ins <= 32'd0; stat_ins <= 32'd0; end begin st_surv <= 32'd0; stat_surv <= 32'd0; end
             n_q <= 12'd1; k_q <= 13'd1; nel <= 19'd0; g_q <= 8'd1; gb_q <= 8'd0; pf_q <= 16'd1; nout_q <= 13'd1; ob_q <= 40'd0; rb_q <= 40'd0; hr_q <= 1'b0;
             tot_q <= 24'd0; cact_q <= '0; tc_q <= '0; ts_q <= 2'd0; rcv <= 24'd0; tau <= '0;
             start_p<=0;e1_v<=0;e2_v<=0;
-            outn <= 13'd0; wrn <= 13'd0; line <= 9'd0; lq_n <= 4'd0; lq_h <= 3'd0; lq_t <= 3'd0;
             ctl_conv <= 1'b0; ctl_clr <= 1'b0; eb_v <= 1'b0; bw_v <= 1'b0; br_v <= 1'b0; br_q <= 1'b0; rd2_v <= 1'b0;
-            cnv <= '0; cap <= '0; rdn <= '0; cneed <= 13'd0; qcnt <= 4'd0; wcnt <= 4'd0; lp <= 10'd0; tau_t <= '0; tau_l <= '0;
+            cnv <= '0; cap <= '0; rdn <= '0; cneed <= 13'd0; qcnt <= 4'd0; wcnt <= 4'd0; tau_t <= '0; tau_l <= '0;
         end else begin
-            done <= 1'b0;
-            if (busy) stat_cycles <= stat_cycles + 32'd1;
+            done <= 1'b0;pack_start<=0;pack_cell_v<=0;
+            if (busy_q) begin st_cyc <= st_cyc + 32'd1; stat_cycles <= st_cyc + 32'd1; end
             start_p <= start;
             tot_q <= 24'(g_q) * 24'(pf_q);           // from the registered configuration (no input -> logic paths)
             cact_q <= CB'((nout_q + 13'd3) >> 2);
             tc_q <= CB'((nout_q - 13'd1) >> 2); ts_q <= 2'(nout_q - 13'd1);
             tau_t <= TW'((nout_q - 13'd1) / PT); tau_l <= LW'((nout_q - 13'd1) % PT);
             cneed <= (nout_q + 13'd3) >> 2;
-            for(l=0;l<DEL;l=l+1)if(lane_fault[l])fault<=1'b1;
-            if (ph == P_INS) begin : cnt
-                reg [18:0] a_;
-                a_ = nel;
-                for (l = 0; l < DEL; l = l + 1) if (d2_v[l]) for (s = 0; s < 8; s = s + 1) a_ = a_ + 19'(lane_nv_mask[8*l+s]);
-                nel <= a_;
+            for(l=0;l<DEL;l=l+1)if(fault_pin[l])fault<=1'b1;
+            if(ph==P_INS)begin:cnt
+                reg[3:0]n_[0:DEL-1];reg[4:0]pair0,pair1;
+                for(integer l=0;l<DEL;l=l+1)begin
+                    n_[l]=4'(count_mask[8*l])+4'(count_mask[8*l+1])+4'(count_mask[8*l+2])+4'(count_mask[8*l+3])+
+                          4'(count_mask[8*l+4])+4'(count_mask[8*l+5])+4'(count_mask[8*l+6])+4'(count_mask[8*l+7]);
+                    if(!count_v[l])n_[l]=0;
+                end
+                pair0=5'(n_[0])+5'(n_[1]);pair1=5'(n_[2])+5'(n_[3]);
+                nel<=nel+19'(pair0)+19'(pair1);
             end
             if (ph == P_INS) rcv <= rcv + 24'(d2_v[0]) + 24'(d2_v[1]) + 24'(d2_v[2]) + 24'(d2_v[3]);
             if ((rcv + 24'(d2_v[0]) + 24'(d2_v[1]) + 24'(d2_v[2]) + 24'(d2_v[3])) > tot_q && ph == P_INS) fault <= 1'b1;
@@ -266,7 +337,7 @@ module ot_hgi_coll_tkm_seq_lane_core #(
             // (re-insertion: the top cell, tagged region 1 -- the id order)
             e1_v <= (ins_live && (sel_n != 3'd0)) || rd2_v;
             for (s = 0; s < 4; s = s + 1) e1[s] <= rd2_v ? rd2[EW*s +: EW] : sel_e[s];
-            if (ins_live && sel_n != 3'd0) stat_surv <= stat_surv + 32'(sel_n);
+            if (ins_live && sel_n != 3'd0) begin st_surv <= st_surv + 32'(sel_n); stat_surv <= st_surv + 32'(sel_n); end
             e2_v <= e1_v;
             for (s = 0; s < 4; s = s + 1) e2[s] <= e1[s];
             e2_ge[0] <= key2(e1[0]) >= key2(e1[1]); e2_ge[1] <= key2(e1[0]) >= key2(e1[2]); e2_ge[2] <= key2(e1[0]) >= key2(e1[3]);
@@ -282,13 +353,13 @@ module ot_hgi_coll_tkm_seq_lane_core #(
                 for (s = 0; s < 4; s = s + 1)
                     eb[EW*s +: EW] <= tform(((r0 == 2'(s)) ? e2[0] : {EW{1'b0}}) | ((r1 == 2'(s)) ? e2[1] : {EW{1'b0}}) |
                                             ((r2 == 2'(s)) ? e2[2] : {EW{1'b0}}) | ((r3 == 2'(s)) ? e2[3] : {EW{1'b0}}));
-                if (e2_v && (ph == P_INS || ph == P_DRAIN)) stat_ins <= stat_ins + 32'd1;
+                if (e2_v && (ph == P_INS || ph == P_DRAIN)) begin st_ins <= st_ins + 32'd1; stat_ins <= st_ins + 32'd1; end
             end
             // ---- the chain controls (one-edge pulses / levels; the tiles act 2 edges later)
             ctl_clr <= 1'b0; bw_v <= 1'b0;
             ctl_conv <= ((ph == P_CONV1) && (13'(cnv) < cneed)) || pgo;
             if (((ph == P_CONV1) && (13'(cnv) < cneed)) || pgo) cnv <= cnv + 1'b1;
-            qcnt <= (!e1_v && !e2_v && !eb_v && !any_busy && !br_v && !br_q && !rd2_v) ? ((qcnt == 4'd15) ? qcnt : qcnt + 4'd1) : 4'd0;
+            qcnt <= (!e1_v && !e2_v && !eb_v && !any_busy && !br_v && !(|br_flight) && !buf_rd_v && !rd2_v) ? ((qcnt == 4'd15) ? qcnt : qcnt + 4'd1) : 4'd0;
             // pass-1 capture: the top cell leaving the chain -> the buffer, id order tag (region 1), positions >= nout dropped
             if (ph == P_CONV1 && dconv3) begin
                 for (s = 0; s < 4; s = s + 1) begin : c1
@@ -301,52 +372,28 @@ module ot_hgi_coll_tkm_seq_lane_core #(
             // pass-2 feed: buffer cells read one an edge, captured, then into the entry sorter
             br_v <= (ph == P_INS2) && (13'(rdn) < cneed);
             if ((ph == P_INS2) && (13'(rdn) < cneed)) begin br_a <= BA'(rdn); rdn <= rdn + 1'b1; end
-            br_q <= br_v; rd2_v <= br_q; rd2 <= b_q[4*EW-1:0];
-            // ---- output (P_OUT): conveyed cells -> a 16-element line every 4 cells -> O line (+ R line) into the queue
-            begin : pk
-                reg [3:0] n_; reg [2:0] t_; reg [12:0] cnt_; reg [FW-1:0] od_, rd_; reg [15:0] m_; reg [EW-1:0] e_;
-                reg [EW-1:0] lx [0:15];
-                n_ = lq_n; t_ = lq_t;
-                if (lq_pop) begin
-                    w_v <= 1'b1; w_addr <= lq_a[lq_h]; w_mask <= lq_m[lq_h]; w_data <= lq_d[lq_h];
-                    lq_h <= lq_h + 3'd1; n_ = n_ - 4'd1;
-                end else if (w_v && w_rdy) w_v <= 1'b0;
-                if (ph == P_OUT && dconv3) begin
-                    for (i = 0; i < 16; i = i + 1) lx[i] = lb[i];
-                    for (s = 0; s < 4; s = s + 1) begin lx[4 * cap[1:0] + s] = tinv(t_up[0][EW*s +: EW]); lb[4 * cap[1:0] + s] <= tinv(t_up[0][EW*s +: EW]); end
-                    cap <= cap + 1'b1;
-                    if (cap[1:0] == 2'd3 || 13'(cap) + 13'd1 == cneed) begin
-                        cnt_ = ((nout_q - outn) >= 13'd16) ? 13'd16 : (nout_q - outn);
-                        m_ = (cnt_ == 13'd16) ? 16'hFFFF : 16'((17'd1 << cnt_[4:0]) - 17'd1);
-                        for (i = 0; i < 16; i = i + 1) begin
-                            e_ = lx[i];
-                            od_[32*i +: 32] = (13'(i) < cnt_) ? ((MUT == 1) ? e_[50:19] : ~e_[50:19]) : 32'd0;
-                            rd_[32*i +: 32] = (13'(i) < cnt_) ? unkey(e_[82:51], e_[0]) : 32'd0;
-                        end
-                        lq_d[t_] <= od_; lq_a[t_] <= ob_q + {27'd0, line, 4'd0}; lq_m[t_] <= m_; t_ = t_ + 3'd1; n_ = n_ + 4'd1;
-                        if (hr_q) begin lq_d[t_] <= rd_; lq_a[t_] <= rb_q + {27'd0, line, 4'd0}; lq_m[t_] <= m_; t_ = t_ + 3'd1; n_ = n_ + 4'd1; end
-                        line <= line + 9'd1; outn <= outn + cnt_; lp <= lp + 10'd1;
-                        for (i = 0; i < 16; i = i + 1) lb[i] <= {EW{1'b0}};
-                    end
-                end
-                lq_n <= n_; lq_t <= t_;
+            br_q <= br_v; rd2_v <= buf_rd_v;
+            if(ph==P_OUT&&dconv3)begin
+                pack_cell_v<=1;pack_cell<=t_up[0];pack_slot<=cap[1:0];pack_last<=(13'(cap)+13'd1==cneed);
+                cap<=cap+1'b1;
             end
             // ---- phase control
             case (ph)
                 P_IDLE: if (start_p) begin
+                    begin busy_q <= 1; busy <= 1; end
                     n_q <= cfg_n_p; k_q <= cfg_k_p; nel <= 19'd0; g_q <= cfg_g_p; gb_q <= cfg_gbase_p; pf_q <= cfg_pf_p; nout_q <= cfg_nout_p;
                     ob_q <= cfg_obase_p; rb_q <= cfg_rbase_p; hr_q <= cfg_has_r_p;
                     rcv <= 24'd0; tau <= '0;
-                    stat_ins <= 32'd0; stat_surv <= 32'd0; stat_cycles <= 32'd0;
-                    outn <= 13'd0; wrn <= 13'd0; line <= 9'd0; lp <= 10'd0;
+                    begin st_ins <= 32'd0; stat_ins <= 32'd0; end begin st_surv <= 32'd0; stat_surv <= 32'd0; end begin st_cyc <= 32'd0; stat_cycles <= 32'd0; end
+                    pack_start<=1;
                     ctl_clr <= 1'b1; wcnt <= 4'd0;
                     ph <= P_CLR0;
                 end
                 // the chain clears 2 edges after ctl_clr; the tau tree settles 3 more
-                P_CLR0: begin wcnt <= wcnt + 4'd1; tau <= '0; if (wcnt == 4'd7) ph <= P_INS; end
-                P_INS: if (rcv == tot_q && d0_v == '0 && d1_v == '0 && d2_v == '0 && occ[0] == 8'd0 && occ[1] == 8'd0 && occ[2] == 8'd0 && occ[3] == 8'd0 && ld_v == '0 &&
+                P_CLR0: begin wcnt <= wcnt + 4'd1; tau <= '0; if (wcnt == 4'd7)begin ph <= P_INS;lane_live<=1;end end
+                P_INS: if (rcv == tot_q && d0_v == '0 && d1_v == '0 && d2_v == '0 && lane_dv == '0 && occ[0] == 8'd0 && occ[1] == 8'd0 && occ[2] == 8'd0 && occ[3] == 8'd0 && ld_v == '0 &&
                            st_n[0] == 2'd0 && st_n[1] == 2'd0 && st_n[2] == 2'd0 && st_n[3] == 2'd0)
-                    ph <= P_DRAIN;
+                    begin ph <= P_DRAIN;lane_live<=0;end
                 P_DRAIN: if (qcnt >= 4'd4) begin
                     // O.n must be min(k, the group's elements): a record whose O.n disagrees faults (E_RANGE)
                     if (19'(nout_q) != ((19'(k_q) < nel) ? 19'(k_q) : nel)) fault <= 1'b1;
@@ -357,9 +404,9 @@ module ot_hgi_coll_tkm_seq_lane_core #(
                 P_CLR2: begin wcnt <= wcnt + 4'd1; if (wcnt == 4'd4) begin rdn <= '0; ph <= P_INS2; end end
                 P_INS2: if (13'(rdn) == cneed) ph <= P_DRAIN2;
                 P_DRAIN2: if (qcnt >= 4'd4) begin cnv <= '0; cap <= '0; ph <= P_OUT; end
-                P_OUT: if (13'(cap) == cneed && lq_n == 4'd0 && !dconv1 && !dconv2 && !dconv3) ph <= P_FLUSH;
-                P_FLUSH: if (!w_v) begin ph <= P_IDLE; done <= 1'b1; end
-                default: ph <= P_IDLE;
+                P_OUT: if (13'(cap) == cneed && pack_empty_pin && !pack_cell_v && !pack_tail && !dconv1 && !dconv2 && !dconv3) ph <= P_FLUSH;
+                P_FLUSH: if (!w_v_pin) begin ph <= P_IDLE;begin busy_q <= 0; busy <= 0; end done <= 1'b1; end
+                default:begin ph <= P_IDLE;begin busy_q <= 0; busy <= 0; end lane_live<=0;end
             endcase
         end
     end

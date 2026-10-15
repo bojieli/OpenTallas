@@ -11,6 +11,7 @@
 //   ot_hfd_coll_q2  SE (S3-S4), NW (N0-N1), NE (N2-N3) quadrants, NPT 2, strap qid 1 / 2 / 3 (a die strap like the TKM
 //                   tile's tid).  Never HOME, never QSOLO: no hgi_ret, no hgi_recx, no RGX lanes, no TOPK sink.
 module ot_hfd_coll_q3 #(
+    parameter integer TKM_NATIVE = 1,
     parameter integer PR_SPLIT_CLOCKS = 0,
     parameter integer INJLAT = 12,
     parameter integer TKM = 1,
@@ -21,6 +22,9 @@ module ot_hfd_coll_q3 #(
     input  wire              rst_n,
     input  wire [7:0]        pr_clk_state,
     input  wire [7:0]        pr_clk_add,
+    input wire tkm_clk_core, tkm_clk_buffer, tkm_clk_packer,
+    input wire [3:0] tkm_clk_lane,
+    input wire [31:0] tkm_clk_tile,
     input  wire [967:0]      hgi_rec,
     input  wire [553:0]      hgi_recx,
     output wire [2:0]        hgi_ret,
@@ -71,9 +75,9 @@ module ot_hfd_coll_q3 #(
     input  wire [3:0]        rgx_f_cr,
     input  wire              rgx_f_fault
 );
-    ot_hfd_coll_q #(.PR_SPLIT_CLOCKS(PR_SPLIT_CLOCKS), .INJLAT(INJLAT), .NPT(3), .HOME(0), .QSOLO(0), .SOLO_CAP(1), .TKM(TKM), .TKM_KMAX(TKM_KMAX),
+    ot_hfd_coll_q #(.TKM_NATIVE(TKM_NATIVE), .PR_SPLIT_CLOCKS(PR_SPLIT_CLOCKS), .INJLAT(INJLAT), .NPT(3), .HOME(0), .QSOLO(0), .SOLO_CAP(1), .TKM(TKM), .TKM_KMAX(TKM_KMAX),
                     .MUT_Q(MUT_Q), .MUT_CARRY(MUT_CARRY), .MUT_ORDER(MUT_ORDER)) u_q (
-        .clk(clk), .rst_n(rst_n), .pr_clk_state(pr_clk_state), .pr_clk_add(pr_clk_add), .qid(2'd0),
+        .clk(clk), .rst_n(rst_n), .pr_clk_state(pr_clk_state), .pr_clk_add(pr_clk_add), .tkm_clk_core(tkm_clk_core), .tkm_clk_buffer(tkm_clk_buffer), .tkm_clk_packer(tkm_clk_packer), .tkm_clk_lane(tkm_clk_lane), .tkm_clk_tile(tkm_clk_tile), .qid(2'd0),
         .hgi_rec(hgi_rec), .hgi_recx(hgi_recx), .hgi_ret(hgi_ret), .hgi_cfg(hgi_cfg), .hgi_vmaddr(hgi_vmaddr),
         .hgi_inj_addr(hgi_inj_addr), .inj_idx(inj_idx), .inj_rd(inj_rd), .inj_d(inj_d), .del_valid(del_valid),
         .del_flit(del_flit), .hgi_del_obase(hgi_del_obase), .fault(fault), .stat_credit_stall(stat_credit_stall),
@@ -136,7 +140,7 @@ module ot_hfd_coll_q2 #(
 `endif
     ot_hfd_coll_q #(.PR_SPLIT_CLOCKS(PR_SPLIT_CLOCKS), .INJLAT(INJLAT), .NPT(2), .HOME(0), .QSOLO(0), .SOLO_CAP(0), .TKM(0),
                     .MUT_Q(MUT_Q), .MUT_CARRY(MUT_CARRY), .MUT_ORDER(MUT_ORDER)) u_q (
-        .clk(clk), .rst_n(rst_n), .pr_clk_state(pr_clk_state), .pr_clk_add(pr_clk_add), .qid(qid),
+        .clk(clk), .rst_n(rst_n), .pr_clk_state(pr_clk_state), .pr_clk_add(pr_clk_add), .tkm_clk_core(clk), .tkm_clk_buffer(clk), .tkm_clk_packer(clk), .tkm_clk_lane({4{clk}}), .tkm_clk_tile({32{clk}}), .qid(qid),
         .hgi_rec(hgi_rec), .hgi_recx(554'd0), .hgi_ret(), .hgi_cfg(hgi_cfg), .hgi_vmaddr(hgi_vmaddr),
         .hgi_inj_addr(hgi_inj_addr), .inj_idx(inj_idx), .inj_rd(inj_rd), .inj_d(inj_d), .del_valid(del_valid),
         .del_flit(del_flit), .hgi_del_obase(hgi_del_obase), .fault(fault), .stat_credit_stall(stat_credit_stall),

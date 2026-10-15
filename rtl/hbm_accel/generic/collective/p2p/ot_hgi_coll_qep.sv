@@ -21,6 +21,7 @@ module ot_hgi_coll_qep #(
     parameter integer QSOLO = 0,       // quadrant running ARGMAX / TOPK / ROW_GATHER whole
     parameter integer SOLO_CAP = 1,    // 0: never the QSOLO quadrant (ot_hgi_coll_qrec)
     parameter integer MUT_Q = 0,       // bench mutant: wrong quadrant quarter
+    parameter integer TKM_NATIVE = 0,
     parameter integer INJLAT = 0,      // SU inject data latency (edges after inj_rd), ot_hbm_accel_tu_endpoint_qpsg
     parameter integer NOG = 12,       // 12 x 8 = the 96-rank TU fabric (DS TP96: rank = die mod 96)
     parameter integer PFMAX = 512,    // F4 (hgi-e2e): flits per contributor (Qwen all-reduce 256, DS gathers 80 / 144 / 320); was the PSG default 64
@@ -49,6 +50,9 @@ module ot_hgi_coll_qep #(
 ) (
     input  wire               clk,
     input  wire               rst_n,
+    input  wire tkm_clk_core, tkm_clk_buffer, tkm_clk_packer,
+    input  wire [3:0] tkm_clk_lane,
+    input  wire [31:0] tkm_clk_tile,
     input  wire               pclk,
     input  wire               prst_n,
     input  wire [1:0]         qid,         // die strap: quadrant 0 SW, 1 SE, 2 NW, 3 NE
@@ -238,17 +242,35 @@ module ot_hgi_coll_qep #(
     always @(posedge clk or negedge rst_n) if (!rst_n) tkm_inj <= 1'b0; else if (r_go) tkm_inj <= (TKM != 0) && r_tkm; else if (go) tkm_inj <= 1'b0;
     generate if (TKM != 0) begin : g_tkm
         wire tk_done_s;
-`ifdef OT_TKM_CLUSTER_BENCH
-        ot_hgi_coll_tkm_cluster #(.KMAX(TKM_KMAX), .DEL(DEL), .FW(FW), .PWT(PWT), .MUT(MUT_TKM)) u_tkm (.tile_ck0(clk),.tile_ck1(clk),.tile_ck2(clk),.tile_ck3(clk),.tile_ck4(clk),.tile_ck5(clk),.tile_ck6(clk),.tile_ck7(clk),.tile_ck8(clk),.tile_ck9(clk),.tile_ck10(clk),.tile_ck11(clk),.tile_ck12(clk),.tile_ck13(clk),.tile_ck14(clk),.tile_ck15(clk),.tile_ck16(clk),.tile_ck17(clk),.tile_ck18(clk),.tile_ck19(clk),.tile_ck20(clk),.tile_ck21(clk),.tile_ck22(clk),.tile_ck23(clk),.tile_ck24(clk),.tile_ck25(clk),.tile_ck26(clk),.tile_ck27(clk),.tile_ck28(clk),.tile_ck29(clk),.tile_ck30(clk),.tile_ck31(clk),.lane_ck0(clk),.lane_ck1(clk),.lane_ck2(clk),.lane_ck3(clk), .clk(clk), .rst_n(rst_n),
-`else
-        ot_hgi_coll_tkm #(.KMAX(TKM_KMAX), .DEL(DEL), .FW(FW), .PWT(PWT), .MUT(MUT_TKM)) u_tkm (.clk(clk), .rst_n(rst_n),
+        wire [31:0] stat_cycles, stat_ins, stat_surv;
+`ifndef SYNTHESIS
+        wire [3:0] phase_trace;
 `endif
+        if (TKM_NATIVE != 0) begin : g_native
+            ot_hgi_coll_tkm_native #(.KMAX(TKM_KMAX),.DEL(DEL),.FW(FW),.PWT(PWT),.MUT(MUT_TKM)) u_tkm (
+                .tile_clk(tkm_clk_tile), .lane_clk(tkm_clk_lane), .buffer_clk(tkm_clk_buffer), .packer_clk(tkm_clk_packer), .clk(tkm_clk_core), .rst_n(rst_n),
             .start(tk_start), .cfg_n(tk_n), .cfg_k(tk_ko), .cfg_g(tk_g), .cfg_gbase(tk_gb), .cfg_pf(tk_pf), .cfg_nout(tk_no),
             .cfg_obase(tk_ob), .cfg_rbase(tk_rb), .cfg_has_r(tk_hr),
             .del_reserve(tkm_now ? rg_reserve : {DEL{1'b0}}), .del_permit(tk_permit),
             .del_valid(tkm_run ? e_dv : {DEL{1'b0}}), .del_flit(e_df),
             .w_v(tk_w_v), .w_addr(tk_w_addr), .w_mask(tk_w_mask), .w_data(tk_w_data), .w_rdy(tk_w_rdy),
-            .busy(), .done(tk_done_s), .fault(tk_fault), .stat_cycles(), .stat_ins(), .stat_surv());
+            .busy(), .done(tk_done_s), .fault(tk_fault), .stat_cycles(stat_cycles), .stat_ins(stat_ins), .stat_surv(stat_surv));
+`ifndef SYNTHESIS
+            assign phase_trace = u_tkm.ph;
+`endif
+        end else begin : g_legacy
+            ot_hgi_coll_tkm #(.KMAX(TKM_KMAX),.DEL(DEL),.FW(FW),.PWT(PWT),.MUT(MUT_TKM)) u_tkm (
+                .clk(clk), .rst_n(rst_n),
+            .start(tk_start), .cfg_n(tk_n), .cfg_k(tk_ko), .cfg_g(tk_g), .cfg_gbase(tk_gb), .cfg_pf(tk_pf), .cfg_nout(tk_no),
+            .cfg_obase(tk_ob), .cfg_rbase(tk_rb), .cfg_has_r(tk_hr),
+            .del_reserve(tkm_now ? rg_reserve : {DEL{1'b0}}), .del_permit(tk_permit),
+            .del_valid(tkm_run ? e_dv : {DEL{1'b0}}), .del_flit(e_df),
+            .w_v(tk_w_v), .w_addr(tk_w_addr), .w_mask(tk_w_mask), .w_data(tk_w_data), .w_rdy(tk_w_rdy),
+            .busy(), .done(tk_done_s), .fault(tk_fault), .stat_cycles(stat_cycles), .stat_ins(stat_ins), .stat_surv(stat_surv));
+`ifndef SYNTHESIS
+            assign phase_trace = u_tkm.ph;
+`endif
+        end
         // P2P: the record sees the sink's done once its last line write also reached the VM port (credits home)
         reg tk_dp;
         always @(posedge clk or negedge rst_n) if (!rst_n) tk_dp <= 1'b0; else if (tk_done_s && !tk_w_idle) tk_dp <= 1'b1; else if (tk_w_idle) tk_dp <= 1'b0;

@@ -19,7 +19,7 @@ build() { local ob=$O/$1; shift
   ( cd "$R" && $V --binary --timing -j ${JOBS:-8} -O2 ${VFLAGS:-} --x-assign fast --x-initial fast -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD \
     -Wno-MULTIDRIVEN -Wno-WIDTHCONCAT --top-module tb_hgi_coll_qtkm -Mdir "$ob" -Irtl/hbm_accel/generic "$@" \
     --hierarchical $C/p2p/qtkm_hier.vlt $C/p2p/tb_hgi_coll_qtkm.sv $C/p2p/ot_hgi_coll_qep.sv $C/p2p/ot_hbm_accel_tu_endpoint_qpsg.sv $C/p2p/ot_hgi_coll_qrec.sv $C/p2p/ot_hgi_coll_crl.sv $C/p2p/ot_hgi_coll_rgx_wtx.sv \
-    $C/tkm/ot_hgi_coll_tkm.sv rtl/lib/ot_rst_relay.sv $C/rgx/ot_hgi_coll_rgx_src.sv $C/rgx/ot_hgi_coll_rgx_sink.sv $C/rgx/ot_hgi_coll_rgx_snk.sv \
+    $C/tkm/ot_hgi_coll_tkm.sv $C/p2p/ot_hgi_coll_tkm_native.sv $C/tkm/ot_hgi_coll_tkm_seq_split.sv $C/tkm/ot_hgi_coll_tkm_seq_lane_core.sv $C/tkm/ot_hgi_coll_tkm_lane.sv $C/tkm/ot_hgi_coll_tkm_buffer.sv $C/tkm/ot_hgi_coll_tkm_packer.sv rtl/lib/ot_rst_relay.sv $C/rgx/ot_hgi_coll_rgx_src.sv $C/rgx/ot_hgi_coll_rgx_sink.sv $C/rgx/ot_hgi_coll_rgx_snk.sv \
     rtl/hbm_accel/tu/ot_hbm_accel_tu_endpoint_psg.sv rtl/hbm_accel/tu/ot_hcoll_port.sv rtl/hbm_accel/tu/ot_hcoll_sram_prims.sv \
     rtl/hbm_accel/ha2_ar/ot_ha2_prims.sv rtl/link/ot_link_afifo.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_prefix.sv \
     rtl/hdc/ot_hdc_fastfp.sv rtl/model/hbm_pc40_native_sim_20261003/ot_sram_1r1w_128x256_m1_r2c2_sim.sv \

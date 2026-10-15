@@ -19,6 +19,7 @@
 //     across relays): rgx_t_* / rgx_f_* credit-flow die nets (2,213 b out, 5 b back) instead of the 8,961-b W2 client.
 // Every die output leaves a flop (ring, ret, session, status); die inputs are captured by the block's input stations.
 module ot_hfd_coll_q #(
+    parameter integer TKM_NATIVE = 0,
     parameter integer PR_SPLIT_CLOCKS = 0,
     parameter integer NPT = 3,              // links of this quadrant's rail (3 SW, 2 SE / NW / NE)
     parameter integer SWCRED = 32,
@@ -46,6 +47,9 @@ module ot_hfd_coll_q #(
     input  wire                 rst_n,
     input  wire [7:0]           pr_clk_state,
     input  wire [7:0]           pr_clk_add,
+    input wire tkm_clk_core, tkm_clk_buffer, tkm_clk_packer,
+    input wire [3:0] tkm_clk_lane,
+    input wire [31:0] tkm_clk_tile,
     input  wire [1:0]           qid,        // die strap: 0 SW, 1 SE, 2 NW, 3 NE
     // command processor (broadcast record; only HOME's ret is bound)
     input  wire [967:0]         hgi_rec,
@@ -139,9 +143,9 @@ module ot_hfd_coll_q #(
     wire [1:0] rg_hq_v, rg_hq_rdy, rg_hr_v; wire [69:0] rg_hq_addr; wire [15:0] rg_hq_tag, rg_hr_tag;
     wire [DEL-1:0] rg_w_v, rg_w_rdy; wire [DEL*40-1:0] rg_w_addr; wire [DEL*FW-1:0] rg_w_data;
     wire [93:0] rowfmt_o;
-    ot_hgi_coll_qep #(.INJLAT(INJLAT), .QSOLO(QSOLO), .SOLO_CAP(SOLO_CAP), .MUT_Q(MUT_Q), .NPT(NPT), .SWCRED(SWCRED), .RXAW(8), .QAW(7), .TXAW(3), .PIPE(1),
+    ot_hgi_coll_qep #(.TKM_NATIVE(TKM_NATIVE), .INJLAT(INJLAT), .QSOLO(QSOLO), .SOLO_CAP(SOLO_CAP), .MUT_Q(MUT_Q), .NPT(NPT), .SWCRED(SWCRED), .RXAW(8), .QAW(7), .TXAW(3), .PIPE(1),
                       .RGXHW(1), .RFMT(0), .TKM(TKM), .TKM_KMAX(TKM_KMAX), .INJ(INJ), .DEL(DEL), .LANES(LANES)) u_ep (
-        .clk(clk), .rst_n(rst_n), .pclk(clk), .prst_n(rst_n), .qid(qid_q), .rank(8'd0), .pf(16'd0), .go(1'b0),
+        .clk(clk), .rst_n(rst_n), .tkm_clk_core(tkm_clk_core), .tkm_clk_buffer(tkm_clk_buffer), .tkm_clk_packer(tkm_clk_packer), .tkm_clk_lane(tkm_clk_lane), .tkm_clk_tile(tkm_clk_tile), .pclk(clk), .prst_n(rst_n), .qid(qid_q), .rank(8'd0), .pf(16'd0), .go(1'b0),
         .inj_idx(e_inj_idx), .inj_rd(e_inj_rd), .inj_q({{(3*INJ*FW){1'b0}}, inj_d}),
         .ph_tx_v(lk_tx_v), .ph_tx_flit(lk_tx_flit), .sw_cr_ret(lk_sw_cr), .ph_rx_v(lk_rx_v), .ph_rx_flit(lk_rx_flit),
         .rx_credit(lk_rx_credit), .del_valid(del_valid), .del_flit(del_flit), .fault(ep_fault),

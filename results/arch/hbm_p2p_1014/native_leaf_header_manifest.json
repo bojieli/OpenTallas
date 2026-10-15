@@ -1,0 +1,168 @@
+{
+  "status": "pin assignment input; probe gates only, not routed closure",
+  "leaves": [
+    {
+      "name": "hgi_coll_rgx_rx_n2",
+      "top": "ot_hgi_coll_rx_native",
+      "sources": [
+        "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_crl.sv"
+      ],
+      "params": {
+        "W": 552,
+        "CRD": 16
+      },
+      "pins": {
+        "S": [
+          "t_v",
+          "t_d"
+        ],
+        "N": [
+          "out_v",
+          "out_d",
+          "out_rdy",
+          "epoch",
+          "fault"
+        ],
+        "W": [
+          "clk",
+          "rst_n"
+        ]
+      },
+      "kit": "physical/ref_tile/hgi_coll_rgx_rx_n2",
+      "spec": "results/arch/hbm_p2p_1014/hgi_coll_rgx_rx_n2.json"
+    },
+    {
+      "name": "hgi_coll_tkw_rx_n3",
+      "top": "ot_hgi_coll_rx_native",
+      "sources": [
+        "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_crl.sv"
+      ],
+      "params": {
+        "W": 568,
+        "CRD": 8
+      },
+      "pins": {
+        "S": [
+          "t_v",
+          "t_d"
+        ],
+        "N": [
+          "out_v",
+          "out_d",
+          "out_rdy",
+          "epoch",
+          "fault"
+        ],
+        "W": [
+          "clk",
+          "rst_n"
+        ]
+      },
+      "kit": "physical/ref_tile/hgi_coll_tkw_rx_n3",
+      "spec": "results/arch/hbm_p2p_1014/hgi_coll_tkw_rx_n3.json"
+    },
+    {
+      "name": "hgi_coll_ring_state_n2",
+      "top": "ot_hgi_coll_pring_state",
+      "sources": [
+        "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring.sv"
+      ],
+      "params": {},
+      "pins": {
+        "S": [
+          "lp_wr",
+          "tree_wr",
+          "carry_wr0",
+          "carry_wr1",
+          "lp_data",
+          "tree_data"
+        ],
+        "N": [
+          "lp",
+          "tree"
+        ],
+        "E": [
+          "carry_data",
+          "c0"
+        ],
+        "W": [
+          "c1",
+          "c2",
+          "c3",
+          "clk"
+        ]
+      },
+      "kit": "physical/ref_tile/hgi_coll_ring_state_n2",
+      "spec": "results/arch/hbm_p2p_1014/hgi_coll_ring_state_n2.json"
+    },
+    {
+      "name": "hgi_coll_ring_add_n2",
+      "top": "ot_hgi_coll_pring_add_lane",
+      "sources": [
+        "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring.sv",
+        "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+        "rtl/hdc/ot_hdc_prefix.sv",
+        "rtl/hdc/ot_hdc_fastfp.sv"
+      ],
+      "params": {
+        "LAT": 8
+      },
+      "pins": {
+        "S": [
+          "valid_in",
+          "a",
+          "b"
+        ],
+        "N": [
+          "y",
+          "valid_out"
+        ],
+        "W": [
+          "clk",
+          "rst_n"
+        ]
+      },
+      "kit": "physical/ref_tile/hgi_coll_ring_add_n2",
+      "spec": "results/arch/hbm_p2p_1014/hgi_coll_ring_add_n2.json"
+    }
+  ],
+  "topk": {
+    "parent": "ot_hfd_coll_q3",
+    "enable": "TKM=1, TKM_NATIVE=1, TKM_KMAX=2048",
+    "rtl": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_tkm_native.sv",
+    "source_extraction_commit": "59d7ee8b1",
+    "clock_count": 39,
+    "clocks": [
+      {
+        "parent_port": "tkm_clk_tile[31:0]",
+        "child": "u_q.u_ep.g_tkm.g_native.u_tkm.g_t[i].u_t.clk",
+        "count": 32
+      },
+      {
+        "parent_port": "tkm_clk_lane[3:0]",
+        "child": "u_q.u_ep.g_tkm.g_native.u_tkm.u_seq.g_lane[i].u_lane.clk",
+        "count": 4
+      },
+      {
+        "parent_port": "tkm_clk_core",
+        "child": "u_q.u_ep.g_tkm.g_native.u_tkm.u_seq.u_core.clk",
+        "count": 1
+      },
+      {
+        "parent_port": "tkm_clk_buffer",
+        "child": "u_q.u_ep.g_tkm.g_native.u_tkm.u_seq.u_buffer.clk",
+        "count": 1
+      },
+      {
+        "parent_port": "tkm_clk_packer",
+        "child": "u_q.u_ep.g_tkm.g_native.u_tkm.u_seq.g_legacy_output.u_packer.clk",
+        "count": 1
+      }
+    ],
+    "limitations": [
+      "Native extraction K64 Verilator lint PASS (5.13 GB allocated); full K2048 benchmark pending on this integration.",
+      "TOPK broadcast/return physical stations and native output boundary qualification remain required.",
+      "All clock port vectors are separate roots; do not alias buffer/packer to core without measuring child phases."
+    ]
+  }
+}

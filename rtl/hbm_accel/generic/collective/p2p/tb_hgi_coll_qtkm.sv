@@ -15,7 +15,7 @@
 // O / R, retire with done (or with fault when the case expects one: NaN).  Reports go -> done cycles.
 //   +DIR=<case dir>  +WSTALL=<pct>  +SKEW=<max extra cycles>  +SEED=<n>
 module tb_hgi_coll_qtkm;
-    parameter integer TKM_KMAX = 2048;
+    parameter integer TKM_KMAX = 2048, TKM_NATIVE = 1;
     parameter integer MUT_TKM = 0;
     parameter integer RLY = 8, TCRD = 8, CRL_MUT = 0;
     parameter integer LATC = 453, CRED = 137;
@@ -45,8 +45,8 @@ module tb_hgi_coll_qtkm;
     // stages each way by credit flow (ot_hgi_coll_crl_tx in the engine, ot_hgi_coll_crl_rx in ot_hgi_coll_vmport) to the
     // VM write model (valid / ready with +WSTALL back-pressure)
     wire q_v, q_r, q_idle, t_v, f_cr, ctxf, crxf; wire [39:0] q_a; wire [15:0] q_m; wire [FW-1:0] q_d; wire [FW+55:0] t_d, o_d;
-    ot_hgi_coll_qep #(.INJLAT(INJLAT), .QSOLO(0), .SOLO_CAP(1), .PFMAX(512), .TKM(1), .TKM_KMAX(TKM_KMAX), .MUT_TKM(MUT_TKM), .NPT(NPT), .PIPE(1),
-                      .RGXHW(1), .RFMT(0)) u_ce (.clk(clk), .rst_n(rst_n), .pclk(clk), .prst_n(rst_n), .qid(2'd0),
+    ot_hgi_coll_qep #(.TKM_NATIVE(TKM_NATIVE), .INJLAT(INJLAT), .QSOLO(0), .SOLO_CAP(1), .PFMAX(512), .TKM(1), .TKM_KMAX(TKM_KMAX), .MUT_TKM(MUT_TKM), .NPT(NPT), .PIPE(1),
+                      .RGXHW(1), .RFMT(0)) u_ce (.clk(clk), .rst_n(rst_n), .tkm_clk_core(clk), .tkm_clk_buffer(clk), .tkm_clk_packer(clk), .tkm_clk_lane({4{clk}}), .tkm_clk_tile({32{clk}}), .pclk(clk), .prst_n(rst_n), .qid(2'd0),
         .rank(8'd0), .pf(16'd0), .go(1'b0),
         .inj_idx(ii), .inj_rd(ir), .inj_q(injq), .ph_tx_v(txv), .ph_tx_flit(txf), .sw_cr_ret(crr),
         .ph_rx_v(rxv), .ph_rx_flit(rxf), .rx_credit(rxc), .del_valid(dv), .del_flit(dfl), .fault(flt), .stat_credit_stall(cst),
@@ -157,10 +157,10 @@ module tb_hgi_coll_qtkm;
     reg [3:0] ph_q = 0; longint t_first = -1, t_last = -1, nperm0 = 0, t_rec = 0;
     always @(posedge clk) if (rst_n) begin
         if (rec[0]) t_rec = cyc;
-        if (u_ce.g_tkm.u_tkm.ph != ph_q) $display("PHASE %0d at %0d", u_ce.g_tkm.u_tkm.ph, cyc - t_rec);
-        ph_q <= u_ce.g_tkm.u_tkm.ph;
+        if (u_ce.g_tkm.phase_trace != ph_q) $display("PHASE %0d at %0d", u_ce.g_tkm.phase_trace, cyc - t_rec);
+        ph_q <= u_ce.g_tkm.phase_trace;
         if (|u_ce.e_dv) begin if (t_first < 0) t_first = cyc - t_rec; t_last = cyc - t_rec; end
-        if (u_ce.g_tkm.u_tkm.ph == 4'd1 && u_ce.g_tkm.u_tkm.del_permit != 4'hF) nperm0 = nperm0 + 1;
+        if (u_ce.g_tkm.phase_trace == 4'd1 && u_ce.tk_permit != 4'hF) nperm0 = nperm0 + 1;
     end
     // ---------------------------------------------------------------- record construction
     function automatic [255:0] desc(input integer space, input integer fmt, input integer base, input integer n);
@@ -232,7 +232,7 @@ module tb_hgi_coll_qtkm;
                 end
         end
         $display("TKM G=%0d n=%0d M=%0d k=%0d nout=%0d rank=%0d R=%0d CYCLES=%0d SURV=%0d INS=%0d SINK=%0d", G, NL, M, K, NOUT, RANK, HASR,
-                 t1 - t0, u_ce.g_tkm.u_tkm.stat_surv, u_ce.g_tkm.u_tkm.stat_ins, u_ce.g_tkm.u_tkm.stat_cycles);
+                 t1 - t0, u_ce.g_tkm.stat_surv, u_ce.g_tkm.stat_ins, u_ce.g_tkm.stat_cycles);
         $display("TIMELINE first_delivery=%0d last_delivery=%0d sink_credit_blocked_cycles=%0d", t_first, t_last, nperm0);
         if (ctxf || crxf) begin $display("FAIL credit link fault tx %0d rx %0d", ctxf, crxf); errs = errs + 1; end
         if (errs == 0) $display("PASS tb_hgi_coll_tkm %s", dir);
