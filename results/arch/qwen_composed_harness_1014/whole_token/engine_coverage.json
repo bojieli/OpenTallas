@@ -114,5 +114,13 @@
     ],
     "status": "Recovered complete provider family in claude/qwen-wholetoken-1014; 20 fresh component cases and current native59 frontend library PASS. Await coordinator main merge. This source repair does not qualify the die composition.",
     "evidence": "results/arch/qwen_native_qkv_provider_1014/publication_1014/publication.json"
+  },
+  "native_qualified": false,
+  "native_qualification_gate": {
+    "policy": "Only PHY/off-chip models; ALL on-chip engines/controllers/ROM/SRAM/link logic actual target RTL/macros",
+    "required": "tools/qwen_composed_harness/audit_native_plan.py",
+    "current_observed_verdict": "FAIL",
+    "evidence": "native_audit/receipt.json",
+    "historical_arithmetic_verdict_preserved": true
   }
 }
