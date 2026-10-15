@@ -1,0 +1,38 @@
+{
+ "cell": "ot_hgi_dma_back_landing_bank",
+ "view": "ot_hgi_dma_back_landing_bank",
+ "lib_cell": "ot_hgi_dma_back_landing_bank",
+ "insertion": true,
+ "ref_src": [
+  "insertion.json boundary mean"
+ ],
+ "R_ps": 155.0,
+ "spread_ps": 43.9,
+ "outputs": 289,
+ "inputs": 306,
+ "launch_ps": 252.2,
+ "launch_pin": "wd[288]",
+ "capture_ps": 177.2,
+ "capture_pin": "write_slot[0]",
+ "launch_over": 1,
+ "capture_over": 0,
+ "comb_pins": 0,
+ "comb_first": [],
+ "pass": false,
+ "fail_why": "launch 252.1673 > 220 (1 pins)",
+ "job": "hv15_dbk_bank-pfx4-e59a03341",
+ "source": "e59a0334188ed5bf68aa5329c1c27b10fd406669",
+ "generic_route": {
+  "tt_setup_ps": 256.75,
+  "ff_hold_ps": 23.8,
+  "drc": 0,
+  "route_rc": 0,
+  "corner_rc": 0
+ },
+ "qualification": "Generic TT/FF/DRC passes; native launch FAIL at valid output. Not adopted as native bank or parent.",
+ "view_sha256": {
+  "ot_hgi_dma_back_landing_bank.lef": "eb9124bb6d6f6fa43944272703cbf0d78d5f1583c99c9b5123d2b75bd163920f",
+  "ot_hgi_dma_back_landing_bank_tt.lib": "543fd4218c6672c23d4a3e4d3158413d60d0c2d7e420193652f951ed15006572",
+  "insertion.json": "259180be4272fbb63e03df29e627c8b1108c9e30f0036e2d13e31fbac5023d03"
+ }
+}
