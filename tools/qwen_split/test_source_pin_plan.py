@@ -23,6 +23,8 @@ class RealSourcePinPlan(unittest.TestCase):
         self.assertEqual(sum(p.startswith('ck') for p in a['ports']),17)
         for k in range(4):self.assertEqual(a['ports'][f'pw_l{k}']['bits'],129)
         old=json.loads((P.ROOT/'results/arch/qwen_split_compute_1014/c15_preflight/qfd_sp_band_lanes.json').read_text())
+        for p in ('ck','rst_n','b0','lnk'):
+            self.assertEqual(a['ports'][p]['range_um'],old['ports'][p]['range_um'])
         for k in range(16):
             self.assertEqual(a['ports'][f'ck_l{k}']['positions_xy_um'],old['ports'][f'ck_l{k}']['positions_xy_um'])
 
