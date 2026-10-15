@@ -1,0 +1,11 @@
+{
+  "scope": "actual34mappedSRAM grouped packing vs original actual34SRAM and independent flat bench scoreboard; not physical or whole native qualification",
+  "baseline_pass": true,
+  "mutant_rejected": true,
+  "source_sha256": {
+    "baseline_staging.sv": "642772e31fd5e48da976ff1840b91f1adac7095a7e7a527fd7212e51f093bc25",
+    "rtl/hdc/v41x/static/ot_hbm_attn_staging_grouped.sv": "0e6dce24ab17664785bee31a741d25b16ff92a9e96153f2269e9eae376c21da6",
+    "rtl/test/hbm_staging_geometry/tb_grouped.sv": "53d63c324b64eadf60a459a2736e9184ac7d60aa418d969c15030cff2a98593a",
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v": "25ca11845381ce089cc5f2fbab82a90672d8704fe6c66f4445814b33b4b7d51e"
+  }
+}
