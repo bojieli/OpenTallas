@@ -1,0 +1,53 @@
+ot-run: ot-epyc1tb     skipped: load hold: load1 > 1.5 x cores
+ot-run: ot-epyc4       skipped: load hold: load1 > 1.5 x cores
+ot-run: ot-pve1        skipped: load hold: load1 > 1.5 x cores
+ot-run: ot-agidock128  admits    42 GB (avail 83, growth 34, headroom 24, waiters 0/0 GB) load 18/64 running 7 disk 87 GB 
+ot-run: -> ot-agidock128
+ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-2344284-1792045578 after 1 s
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13178, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13211, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13244, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13277, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13310, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13343, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13376, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14772, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14805, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14838, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9184, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9217, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9250, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9283, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9316, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9349, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9382, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10518, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10551, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10584, timing group from output port.
+COUNT ep=10278 regs=10278
+NULLINST c_q[0]$_DFF_P_/CLK cell=c_q[0]$_DFF_P_
+NULLINST c_q[10]$_DFF_P_/CLK cell=c_q[10]$_DFF_P_
+NULLINST c_q[11]$_DFF_P_/CLK cell=c_q[11]$_DFF_P_
+NULLINST c_q[12]$_DFF_P_/CLK cell=c_q[12]$_DFF_P_
+NULLINST c_q[13]$_DFF_P_/CLK cell=c_q[13]$_DFF_P_
+NULLINST c_q[14]$_DFF_P_/CLK cell=c_q[14]$_DFF_P_
+NULLINST c_q[15]$_DFF_P_/CLK cell=c_q[15]$_DFF_P_
+NULLINST c_q[16]$_DFF_P_/CLK cell=c_q[16]$_DFF_P_
+NULLINST c_q[17]$_DFF_P_/CLK cell=c_q[17]$_DFF_P_
+NULLINST c_q[18]$_DFF_P_/CLK cell=c_q[18]$_DFF_P_
+NULLINST c_q[19]$_DFF_P_/CLK cell=c_q[19]$_DFF_P_
+NULLINST c_q[1]$_DFF_P_/CLK cell=c_q[1]$_DFF_P_
+NULLINST c_q[20]$_DFF_P_/CLK cell=c_q[20]$_DFF_P_
+NULLINST c_q[21]$_DFF_P_/CLK cell=c_q[21]$_DFF_P_
+NULLINST c_q[22]$_DFF_P_/CLK cell=c_q[22]$_DFF_P_
+NULLINST c_q[23]$_DFF_P_/CLK cell=c_q[23]$_DFF_P_
+NULLINST c_q[24]$_DFF_P_/CLK cell=c_q[24]$_DFF_P_
+NULLINST c_q[25]$_DFF_P_/CLK cell=c_q[25]$_DFF_P_
+NULLINST c_q[2]$_DFF_P_/CLK cell=c_q[2]$_DFF_P_
+NULLINST c_q[3]$_DFF_P_/CLK cell=c_q[3]$_DFF_P_
+NULLINST c_q[4]$_DFF_P_/CLK cell=c_q[4]$_DFF_P_
+ot-run: RAN on ot-agidock128 (unit oth-ubuntu-2344284-1792045578): exit 0
