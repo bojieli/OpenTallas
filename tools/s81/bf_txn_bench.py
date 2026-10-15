@@ -131,6 +131,11 @@ def main():
     p.add_argument('--params', default='', help="extra shadow parameters, e.g. 'QZE=1,CG=0' (bf-icg 2026-10-08)")
     p.add_argument('--mutant', action='append', default=[], help='extra negative case NAME=DEFINE (must FAIL)')
     p.add_argument('--no-default-mutants', action='store_true', help='run only the --mutant negatives')
+    p.add_argument('--die-pair', action='store_true',
+                   help='recut: the shadow is the DIE composition of the pair (s81-die-rtl-bind 2026-10-14): dsfd_bf_front + '
+                        '2 x dsfd_bf_col (rtl/dsrom_sys/s81_die_bind, the die-name RTL of the closed views) wired by die bit '
+                        'vectors (rtl/dsrom_sys/s81_die_bind/test/bf_die_pair.sv); --params are then ignored (the wrappers '
+                        'carry the closed routes\' parameters)')
     a = p.parse_args()
     prep = a.prep or a.work / 'prep'
     if not (prep / 'prepared.json').exists():
@@ -171,6 +176,18 @@ def main():
     if a.no_default_mutants:
         muts = []
     muts += [(m.split('=')[0], ['+define+' + m.split('=', 1)[1]]) for m in a.mutant]
+    if a.die_pair:
+        assert a.variant == 'recut', '--die-pair is a recut shadow'
+        sh, n_ = re.subn(r'ot_s81_bf_native #\(.*?\) u_shadow \(', 'bf_die_pair #(.INSTANCE(INSTANCE)) u_shadow (', sh, flags=re.S)
+        assert n_ == 1
+        for f_, src_ in (('x_ot_s81_bf_front.sv', 'rtl/s81/ot_s81_bf_front.sv'),
+                         ('x_dsfd_bf_col.sv', 'rtl/dsrom_sys/s81_die_bind/dsfd_bf_col.sv'),
+                         ('x_dsfd_bf_front.sv', 'rtl/dsrom_sys/s81_die_bind/dsfd_bf_front.sv'),
+                         ('x_bf_die_pair.sv', 'rtl/dsrom_sys/s81_die_bind/test/bf_die_pair.sv')):
+            files[f_] = candify((ROOT / src_).read_text(), names)
+            extra.append(f_)
+        muts = [] if a.no_default_mutants else [('mutant_die_swap', ['+define+DSFD_BF_DIE_MUT_SWAP'])]
+        muts += [(m.split('=')[0], ['+define+' + m.split('=', 1)[1]]) for m in a.mutant]
     files[pair] = src.rstrip()[:-len('endmodule')] + sh.replace('@VAR@', a.variant) + '\n'
     try:
         commit = subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True, stderr=subprocess.DEVNULL).strip()

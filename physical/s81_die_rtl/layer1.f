@@ -1,0 +1,54 @@
+# S81 layer1 die RTL manifest (s81-die-rtl-bind 2026-10-14, owner NO STUBS rule): the production RTL of every die master
+# the generator instantiates under its die name, with the build defines the die composes it with.  Files listed here
+# win over any other definition of the same module (tools/die_port_bind.py -f; the flat reference masters of the same
+# name stay for the lockstep benches).  The case glue (stations / relays / end blocks) comes from the generator's
+# netlist mode (die_glue.sv, --rtl-file); hard-macro behavioural models (ROM bit array, PHY PMA) are children of real RTL.
++define+OT_S81PH_COLL_JOB
++define+S81PH_GTH_DIE_CLOCKS
++define+S81PH_GTH_CONTROL_STRIP
+# gather: 32 hardened root leaves + control leaf + 133 CLOSED relay strip, one clock entry per child (ck_l / ck_r)
+rtl/dsrom_sys/s81_ph/ctrl_c/dsfd_sp_gather_c_cl.sv
+# capture: wires-only cluster of CLOSED leaves, one clock entry per child (ck_g / ck_x / ck_c / ck_ka / ck_kb / ck_sb /
+# ck_sn, ckv_x / ckv_d / ckv_r); source of the CLOSED dsfd_capt_x8_dual view (fa0792786)
+rtl/dsrom_sys/s81_ph/ctrl_c/dsfd_sp_capture_c_cl.sv
+# field configuration sequencer (7 cfg ROMs a pair)
+rtl/v41die/ot_s81_cfg7_seq.sv
+# cfg ROM macro model (bit array; the macro is hard IP)
+physical/asap7_memory_macros_v2/ot_rom_4096x72_m8/ot_rom_4096x72_m8.v
+# hard-macro behavioural models (SRAM / ROM bit arrays) instantiated by the RTL (children of real RTL only)
++libdir+physical/asap7_memory_macros_v2
+# WFC stage kit: the hardened cluster of the PRICED kit (dsfd_wfc_stg_cl) under the die master name, with the hop
+# endpoint (engine 7)
++define+DSFD_WFC_STG_CL_DIE
+rtl/dsrom_sys/mtp/dsfd_wfc_stg_cl.sv
++libdir+physical/s81_ph_views/mtp/macros
+# BF pair (x512): the CLOSED compact199 views under their die names (tools/s81/gen_bf_die_wrappers.py: die bit i = the
+# view pin tools/s81/bf_direct_pins.groups names; closed routes' parameters); dsfd_bf_front.xb = the native BF stream
+rtl/dsrom_sys/s81_die_bind/dsfd_bf_col.sv
+rtl/dsrom_sys/s81_die_bind/dsfd_bf_front.sv
+rtl/s81/ot_s81_bf_front.sv
+rtl/v41rom/ot_v41_bf_col.sv
+rtl/v41rom/ot_v41_bf_front_core.sv
+# BF weight ROM macro model (bit array; the macro is hard IP)
+physical/asap7_memory_macros_v2/ot_rom_4096x274_m8/ot_rom_4096x274_m8.v
+# PQ core slot (--rtl-bind master dsfd_sp_pq_n): the production native core cluster + ROM register / x-lane leaves.
+# Core leaf set = these OT_PQ_* defines (tools/dsrom_s81_fulldie.py pq_rtl_clock_ports() reads them: one source).  The
+# PQ's pinned-only modules come from its pinned tree; the repo copies of the shared float modules are supersets whose
+# default parameters are the pinned behaviour (el1011-q-sp: L = 3 = the original adders), so they serve both.
++define+OT_PQ_ROM_PORTS
+rtl/dsrom_sys/s81_die_bind/dsfd_sp_pq_n.sv
+rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_core_native.sv
+rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_ctl_native.sv
+rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_ctl_fixed_native.sv
+rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_ix_sram.sv
+rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_ix_pin_variants.sv
+rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_ix_split_native.sv
+rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_aq_split_native.sv
+rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_qb_sram.sv
+rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_qb_split_native.sv
+rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_qb_one_native.sv
+physical/s81_pq_hier/pinned/rtl/hdc/v41x/ot_dsrom_aq12t.sv
+physical/s81_pq_hier/pinned/rtl/hdc/v41x/ot_dsrom_aq12m.sv
+physical/s81_pq_hier/pinned/rtl/v41die/ot_v41_pqc_tiles.sv
+physical/s81_pq_hier/pinned/physical/dsrom_field_spine/ot_v41_pqc_tile_tops.sv
+physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v

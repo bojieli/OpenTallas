@@ -5,15 +5,26 @@ uses the immutable manifest, never a HEAD observed after the remote run.
 """
 from __future__ import annotations
 
+import ast
 import hashlib
 import io
 import json
+import posixpath
+import re
 import subprocess
 import tarfile
 from pathlib import Path
 
 SCHEMA = "opentallas.ref_tile.source_snapshot.v1"
 EXCLUDED = {"gate_result.json", "source_snapshot.json"}
+CONSUMED_SCHEMA = "opentallas.ref_tile.gate_consumed.v1"
+# working-tree tools the remote gate script runs itself (REMOTE_SH), besides the daemon overlays (SHIP_HELPERS)
+GATE_TOOLS = ("tools/ref_tile/ref_route.sh", "tools/textbook_lint.py", "tools/closure_loop/ck_insertion.py",
+              "tools/ref_tile/path_classes.tcl")
+PY_DIRS = ("tools", "tools/ref_tile", "tools/closure_loop", "tools/w18")
+SCAN = (".tcl", ".sdc", ".sh", ".env", ".mk", ".cfg", ".f")    # flow scripts: every repo path they name is consumed
+HDL = (".v", ".sv", ".svh", ".vh")
+INCLUDE_RE = re.compile(r'^\s*`include\s+"([^"]+)"', re.M)
 
 
 def git_head(repo):
@@ -69,6 +80,98 @@ def snapshot(data, root, start_commit, daemon, daemon_commit, helpers):
             "daemon_start_commit": daemon_commit, "daemon_overlays": sorted(set(helpers) & files.keys()),
             "archive_sha256": hashlib.sha256(data).hexdigest(), "manifest_sha256": canonical_digest(entries),
             "files": entries}
+
+
+def archive_contents(data):
+    """{path: bytes} of the regular files of a gate archive, last member winning as extraction does."""
+    out = {}
+    with tarfile.open(fileobj=io.BytesIO(data), mode="r:gz") as tf:
+        for m in tf:
+            if m.isfile():
+                out[m.name] = tf.extractfile(m).read()
+    return out
+
+
+def _py_imports(path, text, files):
+    try:
+        tree = ast.parse(text)
+    except (SyntaxError, ValueError):
+        names = [(m, 0) for m in re.findall(r"^\s*(?:from|import)\s+([\w.]+)", text, re.M)]
+    else:
+        names = []
+        for node in ast.walk(tree):
+            if isinstance(node, ast.Import):
+                names += [(a.name, 0) for a in node.names]
+            elif isinstance(node, ast.ImportFrom):
+                base = node.module or ""
+                names.append((base, node.level))
+                names += [((base + "." if base else "") + a.name, node.level) for a in node.names]
+    here = posixpath.dirname(path)
+    found = set()
+    for mod, level in names:
+        if not mod:
+            continue
+        rel = mod.replace(".", "/")
+        if level:
+            up = here
+            for _ in range(level - 1):
+                up = posixpath.dirname(up)
+            roots = [up]
+        else:
+            roots = [here, *PY_DIRS]
+        for r in roots:
+            for c in (f"{r}/{rel}.py", f"{r}/{rel}/__init__.py"):
+                if c in files:
+                    found.add(c)
+    return found
+
+
+def consumed_closure(files, seeds, prefixes, path_re):
+    """Every staged path the gate consumes: the seeds (kit files, RTL file list, hooks, SDCs, pin files, gate-run tools
+    and overlays) closed over the repo paths their text names (path_re), Python imports and Verilog `include, plus every
+    staged file under the prefixes (child/macro view directories, the job's extra_paths).  files: {path: bytes} of the
+    staged archive.  Kit JSON is not scanned (its inputs are the seeds: spec sources, floorplan referenced); flow
+    scripts are scanned conservatively (any path they name outside a comment is consumed); a Python tool consumes the
+    modules it imports."""
+    pre = [q.rstrip("/") for q in prefixes if q]
+    out = {p for p in files for q in pre if p == q or p.startswith(q + "/")}
+    # (path, named): named = reached as a seed or named by a flow script, i.e. executed/read by the flow; a module
+    # reached only by import is not scanned for path strings (they are its options, not this gate's inputs)
+    todo = [(q, True) for q in list(seeds) + sorted(out)]
+    scanned = set()
+    while todo:
+        raw, named = todo.pop()
+        p = posixpath.normpath(raw[5:] if raw.startswith("/src/") else raw)
+        if (p, named) in scanned or (p, True) in scanned or p not in files:
+            continue
+        scanned.add((p, named))
+        out.add(p)
+        if not p.endswith(SCAN + HDL + (".py",)):
+            continue
+        text = files[p].decode(errors="replace")
+        if p.endswith(SCAN) or (p.endswith(".py") and named):
+            body = re.sub(r"(?m)^\s*#.*$", "", text)     # comments name paths they do not use
+            todo += [(m.group(1), True) for m in path_re.finditer(body) if "$" not in m.group(1)
+                     and (not p.endswith(".py") or m.group(1).endswith((".tcl", ".sdc", ".sh", ".env")))]
+        if p.endswith(".py"):
+            todo += [(q, False) for q in sorted(_py_imports(p, text, files))]
+        if p.endswith(".f"):
+            todo += [(ln.strip(), True) for ln in text.splitlines()
+                     if ln.strip() and not ln.lstrip().startswith(("-", "/", "#"))]
+        if p.endswith(HDL):
+            for inc in INCLUDE_RE.findall(text):
+                local = posixpath.normpath(posixpath.join(posixpath.dirname(p), inc))
+                todo += [(q, True) for q in ([local] if local in files else
+                                             [f for f in files if f.endswith("/" + inc.lstrip("./"))])]
+    return out
+
+
+def consumed_record(paths, entries, basis):
+    staged = {e["path"] for e in entries}
+    paths = sorted(set(paths) & staged)
+    return {"schema": CONSUMED_SCHEMA, "basis": basis, "count": len(paths), "paths": paths,
+            "sha256": {e["path"]: e["sha256"] for e in entries if e["path"] in set(paths)},
+            "digest": canonical_digest(paths)}
 
 
 def validate(binding, root, daemon, commit=None, route_overlay=True, frozen_recovery=False):
@@ -141,20 +244,40 @@ def validate(binding, root, daemon, commit=None, route_overlay=True, frozen_reco
             continue
         if hashlib.sha256(payload).hexdigest() != e["sha256"]:
             (overlay_diff if e["source"] == "daemon_overlay" else source_diff).append(str(p))
+    def name(files):
+        return ", ".join(files[:6]) + (f" (+{len(files) - 6} more)" if len(files) > 6 else "")
+    unconsumed = []
+    consumed = binding.get("consumed")
+    if consumed is not None:
+        # Precise source binding (r2, 2026-10-14): a gate carrying its consumed-file record is bound only to the files it
+        # actually used (kit, RTL file list closure, hooks, SDCs, pin files, extra_paths, gate-run tools + overlays);
+        # differences elsewhere in the staged snapshot (another job's spec, unrelated RTL) are reported, not refused.
+        if (not isinstance(consumed, dict) or consumed.get("schema") != CONSUMED_SCHEMA
+                or canonical_digest(consumed.get("paths") or []) != consumed.get("digest")):
+            return False, "gate consumed-file record missing or digest mismatch"
+        staged = {e["path"]: e["sha256"] for e in entries}
+        used = set(consumed["paths"])
+        if not used or any(staged.get(q) != h for q, h in (consumed.get("sha256") or {}).items()) or used - staged.keys():
+            return False, "gate consumed-file record disagrees with the staged manifest"
+        unconsumed = sorted(q for q in source_diff + missing if q not in used)
+        source_diff = [q for q in source_diff if q in used]
+        missing = [q for q in missing if q in used]
     if overlay_diff or source_diff or missing:
-        def name(files):
-            return ", ".join(files[:6]) + (f" (+{len(files) - 6} more)" if len(files) > 6 else "")
         parts = ([f"gate-executed daemon overlay changed: {name(overlay_diff)}"] if overlay_diff else []) + \
                 ([f"route source differs from staged snapshot: {name(source_diff)}"] if source_diff else []) + \
                 ([f"staged source missing: {name(missing)}"] if missing else [])
-        return False, "; ".join(parts)
+        return False, "; ".join(parts) + (f" (gate-consumed; {len(unconsumed)} unconsumed difference(s) not counted)"
+                                          if unconsumed else "")
+    notes = [f"{len(unconsumed)} staged file(s) the gate did not consume differ (reported, not refused): {name(unconsumed)}"] \
+        if unconsumed else []
     if route_overlay and not frozen_recovery and binding.get("route_overlay_plan"):
         drift = route_only_drift(binding["route_overlay_plan"], current, entries)
         if drift:
-            return True, "exact staged source and gate-executed overlays match; route-only helper drift (not gate-relevant): " + \
-                ", ".join(drift)
-    return True, ("exact original source and committed executed helpers match; current helpers unchanged"
-                  if frozen_recovery else "exact staged source and daemon overlay match")
+            notes.append("route-only helper drift (not gate-relevant): " + ", ".join(drift))
+    head = ("exact original source and committed executed helpers match; current helpers unchanged" if frozen_recovery
+            else "gate-consumed source and gate-executed overlays match" if consumed is not None
+            else "exact staged source and gate-executed overlays match" if notes else "exact staged source and daemon overlay match")
+    return True, "; ".join([head] + notes)
 
 
 def gate_overlay_paths(binding):

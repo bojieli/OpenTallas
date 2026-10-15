@@ -26,39 +26,51 @@ import kv_die as K   # noqa: E402
 # per-child clock entries and child sub-slots of the wires-only parents (die-assigned, v1.1)
 EXTRA = dict(
     qkd_rhead=dict(
-        rtl='rtl/qwen_sys/split_20261014/ot_qkh_head_native.sv ot_qkh_head_native (Q_FP32 1)',
-        clock_entries={**{'ck_f': 'ck_front', 'ck_k': 'ck_kt', 'ck_s': 'ck_score'},
-                       **{f'ck_i{i}': f'ck_stin[{i}]' for i in range(16)}, **{f'ck_o{i}': f'ck_stout[{i}]' for i in range(16)},
-                       **{f'ck_l{i}': f'ck_lane[{i}]' for i in range(16)}},
-        clock_rule='each entry is delivered at phi - R_child (R = that child view\'s insertion.json boundary mean); '
-                   'the die model holds them as 51 separate CTS sinks on the stack trunk (head r2 d7c8b1909: front, ktree, '
-                   'score, 16 stin, 16 stout, 16 lane8; frames: R 0 until the views exist)',
+        rtl='rtl/qwen_sys/split_20261014/ot_qkh_head_native_r4.sv ot_qkh_head_native_r4 (Q_FP32 1)',
+        clock_entries={**{f'ck_f{q}': f'ck_front[{q}]' for q in range(4)}, 'ck_k': 'ck_kt', 'ck_s': 'ck_score',
+                       **{f'ck_{t}{i}': f'{r}[{i}]' for t, r in zip('itabl', ('ck_stin', 'ck_stk', 'ck_nb1', 'ck_nb2', 'ck_lane'))
+                          for i in range(16)}},
+        clock_rule='each entry is delivered at phi - R_child (R = that child view\'s insertion.json boundary mean); the die '
+                   'model holds them as 86 separate CTS sinks on the stack trunk, W-face M4 pins level with each child '
+                   '(head r4: 4 front quarters, ktree, score, 16 x (stin, stk, nb1, nb2, lane8); frames: R 0 until the '
+                   'views exist)',
         subslots_canonical_R0=dict(
-            note='canonical orientation R0 = control tile BELOW (S face = control face). Heads below their control tile are '
-                 'placed MX by the die (their S face then faces up). A feasible fit, not a mandate: the head team may move '
-                 'children inside the slot but must keep the die pins and the reach rules below',
-            front=dict(xy=[216.0, 16.2], wh=[648.0, 21.6], why='under the control tile t span (x 224.8..673.8 in head coords)'),
-            lanes='16 x ot_qkh_lane8 (lane_b view 129.6 x 129.6) on a 3 x 6 grid: x = 43.2 + 172.8 c, y = 54 + 151.2 r '
-                  '(18 cells; 16 lanes + ktree + score)',
-            ktree=dict(cell='one free cell + its 43.2 column gap (172.8 >= 151.2)', wh=[151.2, 97.2]),
-            score=dict(cell='the other free cell', wh=[43.2, 43.2]),
-            stations='head r2: 16 stin + 16 stout leaves (<= 54 x 43.2) in the 43.2-um column gaps / free cells: stin '
-                     'between the front and its lane, stout between its lane and the E face / ktree'),
-        reach_rules=['die pin -> first register <= 500 um: the ti / e inputs land in the front at the S face, s leaves '
-                     'the score; nb leaves on the E face (astk side)',
-                     'inside the head every register-to-register hop <= 500 um (head r2 stin / stout split does this in '
-                     'the old 734.4 x 855.36 slot; re-plan it in THIS slot with the front on the S = control face, so '
-                     'the ectl -> far-head hop stays <= 500 um: the old slot puts the far head 855+ um from its control '
-                     'tile, a die-level hop no intra-head plan can fix)']),
+            note='the Codex r4 plan (results/arch/qwen_split_1014/head_native_r4_codex_1014/plan.json): 86 children in '
+                 'the 1079.976 x 492.456 outline, no overlaps / outside, worst bound hop 495.7 um; canonical R0 = control '
+                 'tile BELOW (S face); heads below their control tile are placed MX by the die',
+            plan='results/arch/qwen_split_1014/head_native_r4_codex_1014/plan.json'),
+        reach_rules=['die pin -> first register <= 500 um (ti / e into the front quarters at the S face, s from score4, '
+                     'nb from the nb2 leaves on the E face)', 'inside the head every register-to-register hop <= 500 um']),
     qkd_ectl=dict(
-        rtl='rtl/qwen_sys/split_20261014/qkd_ectl3_s.sv qkd_ectl3_s = qkd_ectl_a_tp8 | qkd_ectl_b_tp8 | qkd_ectl_c_tp8 '
-            '(rtl/hdc/nearhbm/ot_qkd_ectl_parts.sv, native HEADS 1 / Q_FP32 1)',
+        rtl='rtl/qwen_sys/split_20261014/qkd_ectl3_direct_s.sv qkd_ectl3_direct_s = qkd_ectl_a/b/c_tp8_direct '
+            '(direct seams, no B feed-through; native HEADS 1 / Q_FP32 1; jobs qkd_ectl_{a,b,c}_tp8_direct-dr1-7de44a889)',
         clock_entries={'ck_a': 'ck[0] (leaf A)', 'ck_b': 'ck[1] (leaf B)', 'ck_c': 'ck[2] (leaf C)'},
         subslots=dict(a=dict(xy=[0.0, 0.0], wh=[254.88, 129.6]), b=dict(xy=[254.88, 0.0], wh=[254.88, 129.6]),
                       c=dict(xy=[509.76, 0.0], wh=[138.24, 129.6])),
-        note='the historical closed A/B/C views are HEADS 2 / Q_FP32 0 builds: native views are owed (Codex 11:05). The t0 / t1 '
+        note='the tp3 closed A/B views FAIL the native audit (feed-through flops capture at one face, launch at the other); '
+             'the direct-seam leaves are routing (dr1). The t0 / t1 '
              'pins (S / N face, M5, 6-track pitch, x 8.5..457.5) are bit-aligned with every head ti; e0/e1 + s0/s1 side by '
              'side at x 470 / 490 (S), e2/e3 + s2/s3 the same on N'),
+    qkd_land=dict(
+        rtl='rtl/qwen_sys/split_20261014/qkd_strips_s.sv qkd_land_strip_s (generated by tools/qwen_kv_die/kv_strips.py)',
+        clock_entries={**{f'ck_p{k}': f'ck_p[{k}] (qkd_land_pc slot {k})' for k in range(32)},
+                       **{f'ck_g{i}': f'ck_g[{i}] (qkd_land_grp {i})' for i in range(8)}, 'ck_e': 'ck_e (qkd_land_emb)',
+                       'ck_r': 'ck_r (strip relay stations: kvn pass + kn / lt chains)'},
+        note='wires-only composition of CLOSED leaves (land_pc / land_grp / land_emb np1, native PASS); slot s = 4 i + q '
+             'hosts physical PC s and logical PC {q, G(i)}, G = 4 5 0 1 2 3 6 7; kn / lt chains 12 9 6 2 | 2 6 9 12 '
+             'stages from the strip middle; physical leaf expansion (die-placed leaves) = next revision'),
+    qkd_astk=dict(
+        rtl='rtl/qwen_sys/split_20261014/qkd_strips_s.sv qkd_astk_strip_s (the benched ot_qkd_astk_strip wiring, TP8 leaves)',
+        clock_entries={'ck_c': 'qkd_astk_ctl_tp8', **{f'ck_z{z}': f'qkd_astk_zn {z}' for z in range(4)},
+                       **{f'ck_v{j}': f'qkd_astk_pv_tp8 {j} (16 r + 8 c + 2 hp + b)' for j in range(64)},
+                       **{f'ck_x{j}': f'qkd_astk_ex {j} (4 e + x)' for j in range(32)},
+                       **{f'ck_e{e}': f'qkd_astk_ep {e}' for e in range(8)}, 'ck_r': 'strip relay stations'},
+        note='frame width 220.3 um vs the leaves\' two 162-um columns (slot change to 324 requested 10-13, open); '
+             'qkd_astk_ep has no closed view (ks2 NEEDS_RTL / ks3 EARLY_FAIL_HOLD)'),
+    qkd_ahub=dict(
+        rtl='rtl/hdc/nearhbm/ot_qkd_ahub_core.sv ot_qkd_ahub_die (core hd2 CLOSED + 13 closed tiles)',
+        clock_entries={'ck_c': 'ck_core', **{f'ck_z{i}': f'ck_zh[{i}]' for i in range(4)}, 'ck_r': 'ck_recip',
+                       **{f'ck_p{i}': f'ck_pbst[{i}]' for i in range(4)}, **{f'ck_v{i}': f'ck_pvlg[{i}]' for i in range(4)}}),
 )
 
 
@@ -91,6 +103,8 @@ def main(argv=None):
     views = json.loads((a.run / 'libs/views.json').read_text())['views']
     clocks = json.loads((a.run / 'libs/clocks.json').read_text())
     # the die clock pins of the generated frames (H.slot only recognises clk / ck names)
+    EXTRA['qkd_land_n'] = EXTRA['qkd_land']
+    EXTRA['qkd_astk_n'] = EXTRA['qkd_astk']
     for n, e in EXTRA.items():
         if n in slots:
             s = slots[n]

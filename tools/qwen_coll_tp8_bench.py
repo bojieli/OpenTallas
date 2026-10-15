@@ -121,12 +121,18 @@ def main():
     ap.add_argument("--leb", type=int, default=0, help="1: ot_coll_link_end on every SerDes port (link-level credits)")
     ap.add_argument("--lc", type=int, default=128, help="link credits = receive buffer words with --leb 1")
     ap.add_argument("--eng", default="", help="depth sweep, WT 0 only: comma list of EDEPTH=,EPR=,EMEMM=,ECT=,QLQD=,QTQD=")
+    ap.add_argument("--strap", action="store_true",
+                    help="WT 3: every die is ONE master (PKG 0 / DIE 0) ranked by the pkg_s / die_ps straps (STRAP 1)")
     ap.add_argument("--mutant-define", default=None)
     ap.add_argument("--only", default=None, help="regex on case names")
     a = ap.parse_args()
     a.out = a.out.resolve()
     if a.wrapper_columns in (2, 3) and not a.eng:
         a.eng = "EDEPTH=64,QLQD=128,QTQD=128"   # the WT 2 / 3 production shape (DEPTH 64 engine leaves, 128-word result queues)
+    if a.strap:
+        if a.wrapper_columns != 3:
+            ap.error("--strap needs --wrapper-columns 3")
+        a.eng = ",".join(x for x in (a.eng, "STRAP=1") if x)
     cases = PRODUCTION_CASES if a.production else UNIT_CASES
     if a.only:
         cases = [c for c in cases if re.search(a.only, c[0])]
