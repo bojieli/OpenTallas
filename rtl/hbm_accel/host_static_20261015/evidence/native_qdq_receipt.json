@@ -1,0 +1,62 @@
+{
+  "schema": "opentallas.hbm.native-host-compact-join-proof.v1",
+  "status": "PASS_COMPONENT",
+  "qualified": false,
+  "source": {
+    "native_join_commit": "8a0ebdf5f",
+    "capacity_fix": "72fd13d18",
+    "strict_phase_replay_bench": "fc2f39423",
+    "runner_core_suppression": "ad1f5a1bf"
+  },
+  "positive": {
+    "host": "ot-agidock128",
+    "unit": "oth-ubuntu-1639954-1792100319",
+    "mem_gb": 4,
+    "threads": 8,
+    "exit": 0,
+    "shape_rows": 1024,
+    "records": 1024,
+    "commands_per_launch": 4096,
+    "launches": 2,
+    "actual_configuration_macro_writes": 1024,
+    "replay_configuration_writes": 0,
+    "gapless": true,
+    "first_command_after_public_launch_edges": 13,
+    "installation_before_launch_edges": 1017144,
+    "negative_protocol_cases": 6
+  },
+  "negative_controls": {
+    "payload_mut1": {
+      "source_commit": "336b71106",
+      "unit": "oth-ubuntu-1613746-1792100124",
+      "result": "FAIL expected first command phase14 expected13"
+    },
+    "bresp_mut3": {
+      "source_commit": "336b71106",
+      "unit": "oth-ubuntu-1620712-1792100184",
+      "result": "FAIL expected BRESP2 got0 atF30"
+    },
+    "counter_wrap": {
+      "source_commit": "336b71106",
+      "result": "FAIL expected actual calendarfault in full1024-row capacity bench"
+    }
+  },
+  "models_allowed": "PMA/offchip external testhost and expected command oracle only; actual internal endpoint/retry/landing SRAM/config/programme RTL instantiated",
+  "actual_clock_contract": "One synchronous family across controller/landing/endpoint/PHY and programme in this proof; same clock node used at separate root ports. No unrelatedphase orCDC qualification.",
+  "boundaries_open": [
+    "Remaining685 external service signals are explicit; this proof exercises host configuration service only",
+    "QDQ arithmetic and VM consumers are outside this programme-producer component",
+    "Heterogeneous targets/schedule/globalepoch and fullhost physical parent remain open",
+    "pin2 routed native launch/capture and local readiness physical gate remain open",
+    "No E2E token throughput or installation frequency/cost ledger acceptance claimed"
+  ],
+  "source_sha256": {
+    "rtl/hbm_accel/host_static_20261015/hfd_host_static_native_qdq_program.sv": "7b21b5f08b89d792fcc92990a789c7b89563df37acb41a860d0c2583f71b8457",
+    "rtl/hbm_accel/host_static_20261015/ot_hbm_host_qdq_installed_target.sv": "9c8ce68756fbc8ecf1de9bb43b33d6dbe4530fe4ef3e1ca88ce72bd0e7385953",
+    "rtl/hbm_accel/host_static_20261015/ot_hbm_host_static_ingress.sv": "0ffcaf501a08d69ffe4af48cad2aa4f2eacd0cebd0dffbd6b4ed3e78c502a0ee",
+    "rtl/hbm_accel/host_static_20261015/ot_hbm_program_block_ready.sv": "251e0911da6d4ccd6f4932100e0e7bd1e630dcd6c65f9a6e66153db67dd0b8a2",
+    "rtl/hbm_accel/host_static_20261015/tb_hbm_host_static_native_qdq.sv": "6d54935dd3e9170f343130e06c731088c1584e3796a4b6504f883d4da6679f7e",
+    "rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_host_static.sv": "f991f2db2a260f42cdb323ef297fbcfc07cd3a9dc9ebbada4bcb939b1d23de2e",
+    "rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_record_calendar.sv": "fd9ae2304ac39b8191e4b93b5110a888e1966ecb6e52c58a86f40c01a88c9b3d"
+  }
+}

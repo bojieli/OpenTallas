@@ -1,0 +1,52 @@
+{
+  "schema": "opentallas.hbm.native-host-compact-source-contract.v1",
+  "scope": "actual native host service through installed COMPACT1 target48 programme command producer; physical parent and all heterogeneous targets remain open",
+  "base_main": "6a85caf5a",
+  "source_candidate": "f368f9891",
+  "modified_existing_master": {
+    "module": "ot_hgi_qdq_native_program_leaf",
+    "source": "rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_host_static.sv",
+    "new_output_ports": {
+      "installed_cfg_we": 1,
+      "installed_cfg_addr": 10
+    },
+    "new_logical_ports": 2,
+    "new_output_bits": 11,
+    "consumer": "ot_hbm_host_qdq_installed_target.u_ready actual downstream SRAM write evidence",
+    "existing_ot_hgi_qdq_host_static": "Monitor outputs may remain intentionally unused in historical parent; current source identity changed and no prior physical view can qualify it",
+    "physical_status": "REQUALIFICATION_REQUIRED"
+  },
+  "ingress_rtl": "New pin2 RTL is required by the source-pinned functional native proof. Its physical kits/views are excluded from this publication; old native L/C FAIL view not adopted.",
+  "new_top": "hfd_host_static_native_qdq_program",
+  "new_top_external_service_bits": 685,
+  "BRESP": "Native host explicit s_bresp[1:0] is wired to actual ingress output; historical h[786:0] packing unchanged",
+  "runtime_contract": {
+    "root_family": "controller/landing/endpoint/PHY/programme synchronous reference with separate physical entries; no unrelatedclock/CDC assertion",
+    "first_command_public_launch_edges": 13,
+    "configuration_output_added_edge": 1,
+    "AXI_input_landing_added_edge": 1,
+    "programme_records": 1024,
+    "runtime_commands": 4096,
+    "installed_replays": 2,
+    "execution_ready_backpressure": false
+  },
+  "required_modified_or_new_paths": [
+    "rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_host_static.sv",
+    "rtl/hbm_accel/host_static_20261015/ot_hbm_host_static_ingress.sv",
+    "rtl/hbm_accel/host_static_20261015/pin2_model.json",
+    "rtl/hbm_accel/host_static_20261015/hfd_host_static_native_qdq_program.sv",
+    "rtl/hbm_accel/host_static_20261015/ot_hbm_host_qdq_installed_target.sv",
+    "rtl/hbm_accel/host_static_20261015/native_qdq_join_model.json",
+    "rtl/hbm_accel/host_static_20261015/tb_hbm_host_static_native_qdq.sv",
+    "rtl/hbm_accel/host_static_20261015/run_native_qdq.sh",
+    "rtl/hbm_accel/host_static_20261015/evidence"
+  ],
+  "main_prerequisites": {
+    "BRESP": "622ee35b2 +1ae798a00 already published",
+    "record_capacity": "72fd13d18 +336b71106 already published",
+    "native_host": "rtl/hbm_accel/io_native_20261014 existing packet, native endpoint/retry and actual landing SRAM",
+    "macros": "actual1024x256 programme +two256x256 landing +endpoint real128x256 replay functional models",
+    "target_collar": "existing ot_static_program_target real target48 PCW10"
+  },
+  "qualification": "PASS functional host/programme component, not wholehost/token or physical"
+}

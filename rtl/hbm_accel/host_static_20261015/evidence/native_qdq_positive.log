@@ -1,0 +1,5 @@
+HBM_HOST_STATIC_NATIVE_QDQ_PASS rows=1024 records=1024 commands=4096 gapless=1 target48_compact1=1 real_UCIe_retry_landing_SRAM=1 BRESP=1 negatives=6 installed_replay=1 first_command_after_launch=13 install_edges=1017144
+- rtl/hbm_accel/host_static_20261015/tb_hbm_host_static_native_qdq.sv:259: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 10ms; walltime 70.722 s; speed 145.750 us/s
+- Verilator: cpu 70.715 s on 1 threads; alloced 507 MB
