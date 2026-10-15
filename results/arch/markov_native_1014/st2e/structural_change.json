@@ -1,0 +1,32 @@
+{
+  "source": "s81_markov_ctl_static-st1-b314866a0 CLOSED routed actual ODB+SPEF",
+  "predecessor_native": {
+    "launch_max_ps": 230.1,
+    "launch_over_pins": 5,
+    "capture_max_ps": 129.4,
+    "spread_ps": 8.6,
+    "R_ps": 85.7
+  },
+  "observed_out13": {
+    "flop_xy_um": [
+      51.624,
+      9.18
+    ],
+    "output_buf_xy_um": [
+      9.882,
+      30.78
+    ],
+    "driver": "INVx1_ASAP7_75t_R",
+    "driver_cap_ff": 13.187,
+    "driver_delay_ps": 51.2985,
+    "following_wire_ps": 18.4959
+  },
+  "root_cause": "Same physical flop is jd capture and out_bits launch; original assignments require south input and north output with 42um lateral offset. Input anchoring wins. The output traverses long wire into hold chain at opposite pin.",
+  "repair": "Place jd and out_bits in interleaved64pin M4 bank at E face x73.44,y12.672..21.744 on0.144pitch; no RTL, cycle or arithmetic leaf changes. Native captured/launch flop can now anchor beside both pins.",
+  "calendar": "start edge0,payloadedges1..16,resultedge177 unchanged; positive+mutant source hashes in static receipts remain valid. Closure loop reruns exact48 and mutant for actual route job.",
+  "scope": "Structural pin/slot change; pending die adoption, routed ETM/native/TT/FF/DRC evidence. No claim of closure.",
+  "source_sha256": {
+    "rtl/experimental/dsrom_markov_20261008/ot_s81_markov_k256_static.sv": "7e5d1e0fd2fecf97fcb568e0ed39c70c1eb336793f2113a0171360100601c3b5",
+    "physical/ref_tile_specs/s81_markov_native/ctl_static_pins.tcl": "9b97ff69e503e62ce27e91b72adbbf76f8da92202385a04cabacd2d06a2d3766"
+  }
+}
