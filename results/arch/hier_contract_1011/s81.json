@@ -155,6 +155,7 @@
   "v18 (2026-10-14): base = v18 geometry trial (SU S growth 686.88 um, VM +609.12, HC comb 840.24); Q element per-mac re-partition; dsfd_rly_283_EW v3 kit; SU region decision; master list + assigned pin files; sign-off TT setup / FF hold / DRC 0 with SS as a sensitivity column (owner 10-07, restated 10-14 06:35).",
   "v19 (2026-10-14 PM): PQ return topology G (frame pq_root row off the layer die; 12 count-only RWB slots in a 43.2-um gather|capture seam); Engram hl / Markov K256 / gather v4 / NORM-variant pin files + subslots; cfifo falling-edge station launch; crootr_f target insertion = measured R; IR gate recipe --pdn-field-cov 0.09; recipe s81_layer1_v19c (c9p).",
   "Codex S-DIE: reserve real Engram MIX and six HCP homes in measured voids; middle relay collisions OPEN; no production adoption without static calendar/native checks.",
+  "Codex S-DIE: reserve real Engram MIX and six HCP homes in measured voids; middle relay collisions OPEN; no production adoption without static calendar/native checks.",
   "Codex S-DIE: reserve real Engram MIX and six HCP homes in measured voids; middle relay collisions OPEN; no production adoption without static calendar/native checks."
  ],
  "slots": [
@@ -1697,7 +1698,7 @@
    "parent": "s81_layer1",
    "outline": {
     "w": 1816.56,
-    "h": 8525.52
+    "h": 8633.52
    },
    "origin": {
     "x": 17312.4,
@@ -1896,7 +1897,7 @@
    "parent": "s81_layer1",
    "outline": {
     "w": 1816.56,
-    "h": 8890.56
+    "h": 9020.16
    },
    "origin": {
     "x": 17312.4,
@@ -13695,7 +13696,7 @@
    "master": "HC projection native leaf (owner defines module)",
    "at_um": [
     17334.0,
-    22220.64
+    22350.24
    ],
    "outline": {
     "w": 864.0,
@@ -13728,7 +13729,7 @@
    "master": "HC projection native leaf (owner defines module)",
    "at_um": [
     18241.2,
-    22220.64
+    22350.24
    ],
    "outline": {
     "w": 864.0,
