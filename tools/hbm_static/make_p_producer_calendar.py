@@ -23,7 +23,7 @@ def packed(fields,layout):
     return word
 
 
-def compile_head(rows,head,sfu_tools,out):
+def compile_head(rows,head,sfu_tools,out,normalize=False):
     sys.path.insert(0,str(sfu_tools))
     from sfu_control_image import encode
     from sfu_vector_calendar import compile_vector
@@ -94,6 +94,46 @@ def compile_head(rows,head,sfu_tools,out):
     exp_offset=exp_start-arith_start
     arithmetic={'cycles':exp_offset+exp_program['cycles'],'rows':scale_program['rows']+
                 [dict(cycle=r['cycle']+exp_offset,fields=r['fields']) for r in exp_program['rows']]}
+    if normalize:
+        # Actual MB/SE published by the producer; only SINK and PV are external.
+        def scalar_fetch(t,sector,group):
+            bank=sector%8
+            put(io,t,prefetch_v=1<<bank,prefetch_scalar=1<<bank,
+                prefetch_sector=sector<<(16*bank),prefetch_group=group<<(2*bank))
+        se_fetch=sum_scalar+16
+        scalar_fetch(se_fetch,7808,2)
+        scalar_fetch(se_fetch+1,7840,0)
+        den_start=se_fetch+22
+        den_program=compile_vector(words=1,bases=(12720,mb_local,12688,0,0),
+             strides=(0,0,0,1,1),ad=3,sfu=1,e1=2,rnd=0)
+        den_drain=den_start+den_program['cycles']+16
+        put(io,den_drain,drain_v=1,drain_addr=0,drain_vm_sector=7904,drain_round_bf16=0)
+        pv_fetch=den_drain+16
+        for beat in range(32):
+            fields=dict(prefetch_v=0,prefetch_sector=0,prefetch_group=0,prefetch_local_addr=0)
+            for part in range(2):
+                sector=2304+2*beat+part;bank=sector%8
+                fields['prefetch_v']|=1<<bank
+                fields['prefetch_sector']|=sector<<(16*bank)
+                fields['prefetch_local_addr']|=(16*beat+8*part)<<(15*bank)
+            put(io,pv_fetch+beat,**fields)
+        den_fetch=pv_fetch+32
+        scalar_fetch(den_fetch,7904,1)
+        norm_start=den_fetch+20
+        norm_program=compile_vector(words=512,bases=(0,12704,0,0,0),
+             strides=(1,0,1,1,1),m1=4,rnd=1)
+        norm_drain=norm_start+norm_program['cycles']+16
+        for beat in range(32):
+            put(io,norm_drain+beat,drain_v=3,drain_addr=(16*beat)|((16*beat+8)<<15),
+                drain_vm_sector=(4608+2*beat)|((4609+2*beat)<<16),drain_round_bf16=0)
+        end=norm_drain+64
+        for start,program in [(den_start,den_program),(norm_start,norm_program)]:
+            offset=start-arith_start
+            arithmetic['rows'] += [dict(cycle=r['cycle']+offset,fields=r['fields']) for r in program['rows']]
+            arithmetic['cycles']=offset+program['cycles']
+        events.update(se_prefetch=se_fetch,sink_prefetch=se_fetch+1,den_start=den_start,
+            den_drain=den_drain,pv_prefetch=pv_fetch,den_prefetch=den_fetch,
+            norm_start=norm_start,norm_drain=norm_drain)
     image=encode(arithmetic)
     if end>4096 or len(image)>4096:raise ValueError('PAGE_AW2 hardware capacity exceeded')
     # Address-tagged B scalar enabled only after real MB prefetch has landed.
@@ -101,14 +141,20 @@ def compile_head(rows,head,sfu_tools,out):
         fields=io.setdefault(t,{})
         fields['scalar_addr']=mb_local<<24
         fields['scalar_enable']=2 if t>=exp_start-2 else 0
+        if normalize and se_fetch<=t<den_fetch:
+            fields['scalar_addr']=12720|(mb_local<<24)|(12688<<48)
+            fields['scalar_enable']=7
+        if normalize and t>=den_fetch:
+            fields['scalar_addr']=12704<<24
+            fields['scalar_enable']=2
     out.mkdir(parents=True,exist_ok=True)
     (out/'arithmetic.hex').write_text(''.join(f'{w:0436x}\n' for w in image))
     (out/'io.hex').write_text(''.join(f'{packed(io[t],IO):0118x}\n' for t in range(end)))
     (out/'aux.hex').write_text(''.join(f'{packed(aux.get(t,{}),AUX):046x}\n' for t in range(end)))
     model={'rows':rows,'head':head,'scale_bits':'3d3504f3','arithmetic_rows':len(image),'io_aux_rows':end,
            'events':{'arithmetic_start':arith_start,'scaled_last_drain':scaled_end,'max_start':max_start,'max_scalar':max_scalar,
-                     'mb_prefetch':mb_fetch,'exp_start':exp_start,'raw_e_last_drain':raw_end,'eb_last_drain':eb_end,'sum_start':sum_start,'sum_scalar':sum_scalar},
-           'diagnostic_VM_sectors':{'SC':sc,'scaled_SC':scaled,'E':eraw,'EB':eb,'MB':mb,'SE':se,'scalar_word':scalar_word},
+                     'mb_prefetch':mb_fetch,'exp_start':exp_start,'raw_e_last_drain':raw_end,'eb_last_drain':eb_end,'sum_start':sum_start,'sum_scalar':sum_scalar,**events},
+           'diagnostic_VM_sectors':{'SC':sc,'scaled_SC':scaled,'E':eraw,'EB':eb,'MB':mb,'SE':se,'scalar_word':scalar_word,**({'PV':2304,'SINK':7840,'DEN':7904,'OUT':4608} if normalize else {})},
            'macro_inventory':{'operand':80,'arithmetic_programme':32,'io_programme':12,'aux_programme':4,'source_scratch':10,'VM':24},
            'extra_scalar_configuration_bits':4*(24+32+1),'head_reconfiguration_setup_not_priced':True,
            'production_qualified':False,'physical_qualified':False,'native_whole_kernel_qualified':False}
@@ -120,4 +166,5 @@ def compile_head(rows,head,sfu_tools,out):
 if __name__=='__main__':
     p=argparse.ArgumentParser();p.add_argument('out',type=Path);p.add_argument('--sfu-tools',type=Path,required=True)
     p.add_argument('--rows',type=int,choices=(128,640),required=True);p.add_argument('--head',type=int,choices=range(16),default=0)
-    a=p.parse_args();print(json.dumps(compile_head(a.rows,a.head,a.sfu_tools,a.out),indent=2))
+    p.add_argument('--normalize',action='store_true')
+    a=p.parse_args();print(json.dumps(compile_head(a.rows,a.head,a.sfu_tools,a.out,a.normalize),indent=2))

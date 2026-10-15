@@ -24,7 +24,7 @@ module ot_hbm_p_h16_loop_static #(parameter integer PAGE_AW=2,AW=10+PAGE_AW)(
  reg[AW:0]frame_row,frame_length;reg[9:0]rows_q;
  reg map_fault;
  wire[15:0]head_offset=rows_q==10'd128 ? (16'(active_head)<<4):((16'(active_head)<<6)+(16'(active_head)<<4));
- wire mb_read=core_rq[16]&&core_rq[15:0]==16'd7800;
+ wire mb_read=core_rq[16]&&(core_rq[15:0]==16'd7800||core_rq[15:0]==16'd7808||core_rq[15:0]==16'd7840);
  wire scalar_write=core_wq[280]&&(core_wq[279:264]==16'd7800||core_wq[279:264]==16'd7808);
  reg[14:0]mb_v,mb_bank;
  reg[2:0]mb_word[0:14];
@@ -37,12 +37,20 @@ module ot_hbm_p_h16_loop_static #(parameter integer PAGE_AW=2,AW=10+PAGE_AW)(
   for(integer b=0;b<8;b=b+1)begin
    if(core_rq[17*b+16]&&core_rq[17*b+:16]<16'd1280)
     local_rq[17*b+:16]=core_rq[17*b+:16]+head_offset;
+   if(core_rq[17*b+16]&&core_rq[17*b+:16]>=16'd2304&&core_rq[17*b+:16]<16'd2368)
+    local_rq[17*b+:16]=core_rq[17*b+:16]+(16'(active_head)<<6);
+   if(core_rq[17*b+16]&&core_rq[17*b+:16]==16'd7904)
+    local_rq[17*b+:16]=16'd7904+(16'(active_head)<<3);
+   if(core_wq[281*b+280]&&core_wq[281*b+264+:16]>=16'd4608&&core_wq[281*b+264+:16]<16'd4672)
+    local_wq[281*b+264+:16]=core_wq[281*b+264+:16]+(16'(active_head)<<6);
+   if(core_wq[281*b+280]&&core_wq[281*b+264+:16]==16'd7904)
+    local_wq[281*b+264+:16]=16'd7904+(16'(active_head)<<3);
    if(core_wq[281*b+280]&&core_wq[281*b+264+:16]>=16'd6000&&core_wq[281*b+264+:16]<16'd6080)
     local_wq[281*b+264+:16]=core_wq[281*b+264+:16]+head_offset;
   end
   if(mb_read)begin
    local_rq=0;
-   local_rq[17*active_head[3]+:17]={1'b1,16'd7800+16'(active_head[3])};
+   local_rq[17*active_head[3]+:17]={1'b1,core_rq[15:0]+16'(active_head[3])};
   end
   if(scalar_write)begin
    local_wq=0;
