@@ -213,7 +213,7 @@ end
         assert not programme and phase_delay>=0
         testbench=testbench.replace('@(negedge core_clk);fetch_start=1;',f'repeat({phase_delay})tick;@(negedge core_clk);fetch_start=1;')
     if grouped:
-        assert local_reads and not programme
+        assert local_reads
         testbench=testbench.replace('ot_hbm_engram_home_fetch_compact_slots #','ot_hbm_engram_home_fetch_grouped #').replace('36*16+2048','36+8192').replace('fixedfetch2624coreedges','fixedfetch8228coreedges')
         # Normative physical service rule: a stalled PC never masks another PC's
         # pending row group. Independent service is required for a finite bound.
@@ -245,6 +245,7 @@ ot_hbm_engram_fetch_program #(.FETCH_EDGES(2624)) fetch_program(
 .token_v(prog_token_v),.token_cid(17'd99091),.token_first(1'b0),.home_done(done),.home_fault(fault),
 .configured(),.init_busy(),.busy(),.done(prog_done),.fault(prog_fault),.epoch_begin(prog_epoch),.hash_v(prog_hash_v),.hash_first(prog_hash_first),.fetch_start(prog_fetch),.hash_cid(prog_hash_cid),.instruction_v(),.instruction(),.instruction_pc());
 """
+        declaration=declaration.replace("17'd99091",f"17'd{binding['compressed_history'][3]}").replace('.FETCH_EDGES(2624)',f'.FETCH_EDGES({8228 if grouped else 2624})')
         testbench=testbench.replace('ot_hbm_engram_hash_home_native hash(',declaration+'ot_hbm_engram_hash_home_native hash(')
         testbench=testbench.replace('.in_valid(in_valid),.in_first(in_first),.in_cid(in_cid)', '.in_valid(in_valid|prog_hash_v),.in_first(prog_hash_v?prog_hash_first:in_first),.in_cid(prog_hash_v?prog_hash_cid:in_cid)')
         testbench=testbench.replace('.epoch_begin(epoch_begin)', '.epoch_begin(epoch_begin|prog_epoch)').replace('.fetch_start(fetch_start)', '.fetch_start(prog_fetch)')

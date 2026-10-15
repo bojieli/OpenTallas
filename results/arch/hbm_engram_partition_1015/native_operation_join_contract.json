@@ -57,7 +57,21 @@
     "global_launch": "actual loader LCP[71] via global C10; all configured targets participate",
     "token": "runtime producer input CID17/valid/first, never programme immediate",
     "four_VM_whole_token_image_available": false,
-    "full_host_bootstrap_qualified": false
+    "full_host_bootstrap_qualified": false,
+    "collective_profiles": {
+      "legacy19": {
+        "capacity": 2432,
+        "guard": 1218
+      },
+      "slot160_21": {
+        "capacity": 2688,
+        "guard": 1346,
+        "banks": 21,
+        "central_source_commit": "13397c897",
+        "actual_CSR_roundtrip": true,
+        "whole_host_kernel": false
+      }
+    }
   },
   "memory": {
     "maximum_released_columns_per_home": 4,
@@ -69,14 +83,16 @@
     "sample_fetch_core_edges": 8228,
     "universally_admitted_fetch_core_edges": null,
     "original_performance_contract_waived": false,
-    "known_common_source_gap": "Original c664/r14 PRE/RD overlap retained in sampled receipts; guarded common repair cbd92c1cc is committed and Engram strict-oracle reproving is in progress.",
+    "known_common_source_gap": "Original c664/r14 PRE/RD defect is repaired by guarded common cbd92c1cc and strict L1/L14 numerical memory reproving passes. Latest shared owner a7b86347d additionally repairs packed completion register ownership; new client-mux integration is in progress.",
     "staging_SRAMs_per_home": 2,
     "staging_macro_bits": 32768,
     "epoch_banks": 1,
     "overlap_rule": "next EPOCH after every prior home COLL read; ping-pong SRAM needed if whole-token throughput requires overlap",
     "maximum_requests_per_PC": 32,
     "maximum_grouped_physical_row_visits_per_PC": 4,
-    "address_bound_receipt": "results/arch/hbm_die_v15/native_column_close_guard/grouped_address_bound.json"
+    "address_bound_receipt": "results/arch/hbm_die_v15/native_column_close_guard/grouped_address_bound.json",
+    "guarded_strict_per_layer_sample_qualified": true,
+    "real_Kport_frontend_exposed": true
   },
   "source_read": {
     "input": [
@@ -141,13 +157,14 @@
   "qualification": {
     "exact_released_numerical_memory_histories": true,
     "actual_programme_to_L1_memory": true,
-    "actual_programme_test_FETCH_EDGES_parameter": 2624,
+    "actual_programme_test_FETCH_EDGES_parameter": 8228,
     "production_programme_default_FETCH_EDGES": 18944,
     "universal_address_REF_phase_calendar": false,
     "full_collective_decode_WKV": false,
     "whole_layer": false,
     "released_throughput": false,
-    "physical": false
+    "physical": false,
+    "actual_programme_to_L14_guarded_Kport_memory": true
   },
   "source_sha256": {
     "rtl/hbm_accel/engram_static_20261015/ot_hbm_engram_fetch_program.sv": "b6492ec5c60a92098ce5448e41da1ef86b77295fc67bb4c05ebd5e17c7715031",
