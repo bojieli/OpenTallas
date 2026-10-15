@@ -1,0 +1,7 @@
+RAW_MACRO_RA_MUTANT_REJECTED
+Traceback (most recent call last):
+  File "/home/ubuntu/wt/hcoll-static-seq-1015/tools/hbm_coll_static/check_pinreg_faces.py", line 47, in <module>
+    checks[n+'.'+port]=ff(c['connections'][port],i,n+'.'+port)
+  File "/home/ubuntu/wt/hcoll-static-seq-1015/tools/hbm_coll_static/check_pinreg_faces.py", line 16, in ff
+    assert (b in ('0','1') if isinstance(b,str) else b in q and q[b]==root),(label,b,'not direct root Q')
+AssertionError: ('g_bank[0].u_store.u_native.u_sram.r_addr_in', 581, 'not direct root Q')
