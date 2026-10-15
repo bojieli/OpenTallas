@@ -102,7 +102,8 @@ module ot_qwen_rom_tile_logic_nl_ctlpart_v1 #(
     parameter integer MUL_LAT = 5,        // lane BF16 product latency (ot_qwen_w12_matvec_part MUL_LAT)
     parameter integer TREE_LAT = 3,       // split-tree pair adder latency (ot_qwen_w12_matvec_part TREE_LAT)
     parameter integer TX_MUT = 0,
-    parameter integer CHILD_CLOCKS = 0
+    parameter integer CHILD_CLOCKS = 0, parameter integer ISSUE_LEAF=1
+, parameter integer CAP_MUT=0
 ) (
     input wire [58*514-1:0] bank_q,
     output wire [58*514-1:0] bank_d,
@@ -225,11 +226,11 @@ assign xl_i=bank_q[10280 +: 128];
     end endgenerate
 initial if(IREG!=1 || TIDR!=1 || FAST_ISSUE!=1 || ISSUE_LEAF!=1) $fatal(1,"control partition requires registered descriptor/strap and FAST_ISSUE leaf");
 wire [1+1+((AW-1)-(0)+1)+1+((NW-1)-(0)+1)+((NW-1)-(0)+1)+((NW-1)-(0)+1)+1+1+1+1+1+1+((AW-1)-(0)+1)+((AW-1)-(0)+1)+((3)-(0)+1)+((AW-1)-(0)+1)+((NW-1)-(0)+1)+((AW-1)-(0)+1)+((AW-1)-(0)+1)+((AW-1)-(0)+1)+((NW-1)-(0)+1)+((NW-1)-(0)+1)+(($clog2(IL)-1)-(0)+1)+((AW-1)-(0)+1)+((AW-1)-(0)+1)+((NW)-(0)+1)+((NW)-(0)+1)+((AW-1)-(0)+1)+1+1+1+1-1:0] ctl_bus;
-ot_qwen_nknl_control_capture_v1 #(.W(W),.G(TG),.IL(IL),.AW(AW),.NW(NW),.GT(GT),.SMIN(SMIN),.KV_PREP(KV_PREP),.INT8_WEIGHT(1),.INT8_SCALE_WCS_BASE(1),.TMUT(TMUT),.IREG(IREG),.TIDR(TIDR)) u_control(
+ot_qwen_nknl_control_capture_v1 #(.W(W),.G(TG),.IL(IL),.AW(AW),.NW(NW),.GT(GT),.SMIN(SMIN),.KV_PREP(KV_PREP),.INT8_WEIGHT(1),.INT8_SCALE_WCS_BASE(1),.TMUT(TMUT),.CAP_MUT(CAP_MUT),.IREG(IREG),.TIDR(TIDR)) u_control(
 .clk(clk_ctl),.rst_n(rst_n),.ib_go(ib_go),.ib(ib),.tile_id(tile_id),.go_i(go_i),.ib_i(ib_i),.tile_id_i(tile_id_i),.ctl_bus(ctl_bus));
     ot_qwen_w12_matvec_ctlpart_v1 #(.TX_MUT(TX_MUT),.W(W), .G(TG), .IL(IL), .AW(AW), .NW(NW), .INT8_WEIGHT(1), .INT8_SCALE_WCS_BASE(1),
         .CHILD_CLOCKS(CHILD_CLOCKS), .PART(1), .GT(GT), .GBASE_PORT(1), .SMIN(SMIN), .NX(0), .MEM_EXTRA(ME_EXTRA), .WCONV(ROM_PIPE), .LRST(LRST), .TMUT(TMUT), .ANR(ANR), .HIER(HIER), .HIER_HARD(HIER_HARD), .LRR(LRR), .XTX(XTX),
-        .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT), .FAST_ISSUE(FAST_ISSUE), .KV_PREP(KV_PREP), .MUL_LAT(MUL_LAT)) u_me (
+        .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT), .FAST_ISSUE(FAST_ISSUE), .KV_PREP(KV_PREP), .MUL_LAT(MUL_LAT),.ISSUE_LEAF(ISSUE_LEAF)) u_me (
         .ctl_bus(ctl_bus),.bank_q(bank_q),.bank_d(bank_d_me),.rst_child_n(rst_child_n),
         .ck_lsl(ck_lsl),
         .clk(clk), .rst_n(rst_n), .go(go_i), .ready(), .idle(),

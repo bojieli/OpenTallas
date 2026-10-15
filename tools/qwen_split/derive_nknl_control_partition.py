@@ -49,6 +49,10 @@ mat=mat.replace(inst[0],'    assign {'+','.join(n for p,n in outputs)+'}=ctl_bus
 for flavor,dirname in [('nk','tile_parent_banked_20261015'),('nl','tile_parent_nl_banked_20261015')]:
  name='ot_qwen_rom_tile_logic_'+('nl_' if flavor=='nl' else '')+'banked_v1'
  r=(root/'rtl/qwen_sys'/dirname/(name+'.sv')).read_text();r=r.replace('module '+name,'module ot_qwen_rom_tile_logic_'+flavor+'_ctlpart_v1',1)
+ if flavor=='nl':
+  r=r.replace('parameter integer CHILD_CLOCKS = 0\n', 'parameter integer CHILD_CLOCKS = 0, parameter integer ISSUE_LEAF=1\n',1)
+  r=r.replace('.MUL_LAT(MUL_LAT)) u_me', '.MUL_LAT(MUL_LAT),.ISSUE_LEAF(ISSUE_LEAF)) u_me',1)
+ r=r.replace(') (', ', parameter integer CAP_MUT=0\n) (',1)
  r=r.replace('    input  wire              clk,','    input wire clk_ctl,\n    input  wire              clk,',1)
  r=r.replace('    reg              go_q;\n    reg  [IBW-1:0]   ib_q;\n','')
  r=r.replace('    wire             go_i  = IREG ? go_q : ib_go;','    wire go_i;')
@@ -56,15 +60,17 @@ for flavor,dirname in [('nk','tile_parent_banked_20261015'),('nl','tile_parent_n
  r=re.sub(r'    always @\(posedge clk or negedge rst_n\) begin\s*if \(!rst_n\) go_q <= 1\'b0;\s*else go_q <= ib_go;\s*end\s*always @\(posedge clk\) begin ib_q <= ib; end','',r,count=1)
  r=re.sub(r'    generate if \(TIDR != 0\) begin : g_tidr.*?    end endgenerate', '',r,count=1,flags=re.S)
  ci='wire ['+cw.replace('G','TG')+'-1:0] ctl_bus;\n'
- ci+='ot_qwen_nknl_control_capture_v1 #(.W(W),.G(TG),.IL(IL),.AW(AW),.NW(NW),.GT(GT),.SMIN(SMIN),.KV_PREP(KV_PREP),.INT8_WEIGHT(1),.INT8_SCALE_WCS_BASE(1),.TMUT(TMUT),.IREG(IREG),.TIDR(TIDR)) u_control(\n.clk(clk_ctl),.rst_n(rst_n),.ib_go(ib_go),.ib(ib),.tile_id(tile_id),.go_i(go_i),.ib_i(ib_i),.tile_id_i(tile_id_i),.ctl_bus(ctl_bus));\n'
+ ci+='ot_qwen_nknl_control_capture_v1 #(.W(W),.G(TG),.IL(IL),.AW(AW),.NW(NW),.GT(GT),.SMIN(SMIN),.KV_PREP(KV_PREP),.INT8_WEIGHT(1),.INT8_SCALE_WCS_BASE(1),.TMUT(TMUT),.CAP_MUT(CAP_MUT),.IREG(IREG),.TIDR(TIDR)) u_control(\n.clk(clk_ctl),.rst_n(rst_n),.ib_go(ib_go),.ib(ib),.tile_id(tile_id),.go_i(go_i),.ib_i(ib_i),.tile_id_i(tile_id_i),.ctl_bus(ctl_bus));\n'
  r=r.replace('    ot_qwen_w12_matvec_part_banked_v1 #(', '''initial if(IREG!=1 || TIDR!=1 || FAST_ISSUE!=1 || ISSUE_LEAF!=1) $fatal(1,"control partition requires registered descriptor/strap and FAST_ISSUE leaf");\n'''+ci+'    ot_qwen_w12_matvec_ctlpart_v1 #(',1)
  r=r.replace('        .bank_q(bank_q),.bank_d(bank_d_me)', '        .ctl_bus(ctl_bus),.bank_q(bank_q),.bank_d(bank_d_me)',1)
  (out/f'ot_qwen_rom_tile_logic_{flavor}_ctlpart_v1.sv').write_text(r)
  for version in ['v1','v2']:
   top=f'qfd_tile_{flavor}_banked_{version}';q=(root/'rtl/qwen_sys'/dirname/(top+'.sv')).read_text()
   q=q.replace('module '+top,'module '+f'qfd_tile_{flavor}_ctlpart_{version}',1)
+  q=q.replace(')(', ', parameter integer CAP_MUT=0\n)(',1)
   q=q.replace(' input wire ck,',' input wire ck_ctl,\n input wire ck,',1)
   q=q.replace(name, f'ot_qwen_rom_tile_logic_{flavor}_ctlpart_v1')
+  q=q.replace('.TX_MUT(MUT)', '.CAP_MUT(CAP_MUT),.TX_MUT(MUT)',1)
   # Original top has the logic's .clk(ck) binding exactly once.
   q=q.replace('.clk(ck),', '.clk_ctl(ck_ctl),.clk(ck),')
   (out/f'qfd_tile_{flavor}_ctlpart_{version}.sv').write_text(q)

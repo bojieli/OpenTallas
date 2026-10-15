@@ -5,6 +5,7 @@ module qfd_tile_nk_ctlpart_v1 #(
  parameter integer ROM_TILE=-1,
 `endif
  parameter integer GT=3072, SMIN=7, MUT=0
+, parameter integer CAP_MUT=0
 )(
  input wire ck_ctl,
  input wire ck, input wire [57:0] ck_bank, input wire [10:0] ck_reset,
@@ -184,7 +185,7 @@ assign n_y=bank_q[20046 +: 514];assign t_out=bank_q[20560 +: 514];
 `ifndef SYNTHESIS
  .ROM_TILE(ROM_TILE),
 `endif
- .TX_MUT(MUT),.NW(18),.GT(GT),.TG(4),.SMIN(SMIN),.CODE_BANKS(5),.KV_LOCAL(0),
+ .CAP_MUT(CAP_MUT),.TX_MUT(MUT),.NW(18),.GT(GT),.TG(4),.SMIN(SMIN),.CODE_BANKS(5),.KV_LOCAL(0),
  .MEM_EXTRA(1),.ACC_LAT(7),.FAST_ISSUE(1),.KV_PREP(4),.MUL_LAT(8),.TREE_LAT(7),
  .ROM_PIPE(1),.ROM_ARELAY(2),.ROM_CAP2(1),.ROM_CAPX(2),.LRST(3),.ARPB(1),.MPR(1),
  .HIER(2),.HIER_HARD(1),.TOREG(1),.TIDR(1),.LRR(1),.RPH(2),.RQR(1),.XTX(2),.ANR(1),.NDH(1),.CHILD_CLOCKS(1)) u_logic(

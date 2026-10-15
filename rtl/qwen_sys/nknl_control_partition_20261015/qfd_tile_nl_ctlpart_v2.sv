@@ -6,6 +6,7 @@ module qfd_tile_nl_ctlpart_v2 #(
  parameter integer ROM_TILE=-1,
 `endif
  parameter integer GT=3072, SMIN=7, MUT=0
+, parameter integer CAP_MUT=0
 )(
  input wire ck_ctl,
  input wire ck, input wire [52:0] ck_bank, input wire [10:0] ck_reset,
