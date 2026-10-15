@@ -1,6 +1,8 @@
 import copy
 import importlib.util
 import sys
+import json
+import shutil
 import tempfile
 import unittest
 from pathlib import Path
@@ -18,8 +20,11 @@ class SelectedProfileTests(unittest.TestCase):
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory()
         self.root = Path(self.tmp.name)
-        for p in VSP.PROFILES[NAME]['receipts'] + VSP.RTL_SOURCES:
-            f = self.root / p; f.parent.mkdir(parents=True, exist_ok=True); f.write_text('pinned ' + p)
+        manifest = json.loads((VSP.ROOT / VSP.MEASURED_MANIFEST).read_text())
+        for path in set(manifest) | set(VSP.PROFILES[NAME]['receipts']) | {VSP.MEASURED_MANIFEST}:
+            target = self.root / path
+            target.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(VSP.ROOT / path, target)
         self.contract = dict(stream_period_ps=833, vm_period_ps=833, stream_phase_ps=0, vm_phase_ps=0,
             banks=32, bank_mapping='xor_row7_5_shift2', bank_queue_capacity=4, bank_ops_per_cycle=1, read_ingress_per_cycle=1, write_ingress_per_cycle=1,
             request_min_ps=0, read_min_ps=0, commit_min_ps=0,
@@ -107,6 +112,32 @@ class SelectedProfileTests(unittest.TestCase):
     def test_stale_source_invalidates_profile(self):
         (self.root / VSP.RTL_SOURCES[0]).write_text('edited')
         self.assertTrue(any(x.startswith('invalid:vm_service_profile_stale') for x in self.kinds()))
+
+    def test_rehashed_unlisted_latency_stage_is_not_a_measurement(self):
+        path = 'rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_return_bank8.sv'
+        self.assertNotIn(path, VSP.RTL_SOURCES)
+        with (self.root / path).open('a') as stream:
+            stream.write('\n// changed return pipeline stage\n')
+        self.contract['vm_service_profile']['evidence'] = VSP.evidence_for(NAME, self.root)
+        self.assertIn('invalid:vm_service_profile_unmeasured_source:' + path, self.kinds())
+
+    def test_rehashed_listed_source_is_not_a_measurement(self):
+        path = VSP.RTL_SOURCES[0]
+        with (self.root / path).open('a') as stream:
+            stream.write('\n// new pipeline, without a new measurement\n')
+        self.contract['vm_service_profile']['evidence'] = VSP.evidence_for(NAME, self.root)
+        self.assertIn('invalid:vm_service_profile_unmeasured_source:' + path, self.kinds())
+
+    def test_rehashed_rewritten_measurement_manifest_rejected(self):
+        path = self.root / VSP.MEASURED_MANIFEST
+        path.write_text('{}')
+        self.contract['vm_service_profile']['evidence'] = VSP.evidence_for(NAME, self.root)
+        self.assertIn('invalid:vm_service_profile_unmeasured_artifact:' + VSP.MEASURED_MANIFEST, self.kinds())
+
+    def test_external_cdc_and_testbench_do_not_redefine_core_ages(self):
+        for path in VSP.OUTSIDE_PROFILE_BOUNDARY:
+            (self.root / path).write_text('// outside profile boundary\n')
+        self.assertEqual(self.run_check()['status'], 'pass')
 
     def test_wrong_tuple_invalidates_profile(self):
         self.contract['vm_service_profile']['rtl_tuple']['WSCATTER_PIPE'] = 0

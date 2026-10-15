@@ -4,6 +4,7 @@ import hashlib
 import json
 from pathlib import Path
 import tempfile
+import shutil
 import unittest
 from compile_calendar import compile_program, schedule_jobs, issuer_done_row, ROOT, PIPELINE_ABI
 import vm_service_profile as VSP
@@ -50,10 +51,11 @@ class CompileTest(unittest.TestCase):
 
     def selected_profile_fixture(self):
         name = 's81_vm_r4_c2_w1'
-        for path in VSP.PROFILES[name]['receipts'] + VSP.RTL_SOURCES:
+        manifest = json.loads((VSP.ROOT / VSP.MEASURED_MANIFEST).read_text())
+        for path in set(manifest) | set(VSP.PROFILES[name]['receipts']) | {VSP.MEASURED_MANIFEST}:
             target = self.root / path
             target.parent.mkdir(parents=True, exist_ok=True)
-            target.write_text('compiler-only pinned fixture ' + path)
+            shutil.copy2(VSP.ROOT / path, target)
         self.contract.update(request_min_ps=0, read_min_ps=0, commit_min_ps=0,
             bank_mapping='xor_row7_5_shift2',
             vm_service_profile=dict(name=name, rtl_tuple=VSP.PROFILES[name]['rtl_tuple'],
