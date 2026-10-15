@@ -13,9 +13,17 @@ FIRST=406;LAUNCH=399;BANKS=19
 def lower(cal):
     if cal.get('local_slot_schedule'):
         raise ValueError('160-slot successor needs its own native packet/assembler lowering; selected120 ABI cannot encode it')
+    return _lower(cal,BANKS,False)
+
+def lower_local_slots(cal):
+    if not cal.get('local_slot_schedule'):
+        raise ValueError('local-slot lower requires the160-reservation typed successor')
+    return _lower(cal,21,True)
+
+def _lower(cal,banks,slots):
     limit=max(x['cycle'] for x in cal['consumer_reads'])-FIRST+1
-    assert limit<=BANKS*128
-    words=[[0]*(BANKS*128) for _ in range(9)]
+    assert limit<=banks*128
+    words=[[0]*(banks*128) for _ in range(9)]
     def put(node,cycle,field,value,offset=0,width=None,merge=False):
         bit,w=FIELDS[field];w=width or w;bit+=offset
         if not 0<=value<1<<w:raise ValueError('fieldoverflow '+field)
@@ -27,7 +35,7 @@ def lower(cal):
             if old and old!=value<<bit:raise ValueError(f'wordconflict {node}/{cycle}/{field}')
             words[node][i]=(words[node][i]&~mask)|(value<<bit)
     for r in cal['requests']:
-        n,c,row,s=r['home'],r['cycle'],r['row'],r['sector']
+        n,c,row,s=r['home'],r['cycle'],r['local_slot'] if slots else r['row'],r['sector']
         put(n,c,'srcread',1);put(n,c,'srcrow',row);put(n,c,'srcsector',s)
         c+=4;put(n,c,'pkt_expect',1)
         if s<8 and s%2==0:put(n,c,'pkt_low',1)
@@ -42,7 +50,7 @@ def lower(cal):
         put(n+1,h['receive']-2,'rx',1);put(n+1,h['receive']-2,'rxseq',h['seq'])
         put(n+1,h['receive']+1,'bridge',5<<41,merge=True)
     for p in cal['packets_calendar']:
-        c=p['consumer_capture'];row,pair,home=p['row'],p['pair'],p['home']
+        c=p['consumer_capture'];row,pair,home=p['local_slot'] if slots else p['row'],p['pair'],p['home']
         put(8,c-3,'capture',1<<3,merge=True);put(8,c-2,'sink',1<<3,merge=True);put(8,c-2,'select',3,12,4)
         put(8,c,'asm_expect',1);put(8,c,'asm_row',row);put(8,c,'asm_pair',pair);put(8,c,'asm_home',cal['home_ranks'][home])
     for r in cal['consumer_reads']:
@@ -50,7 +58,8 @@ def lower(cal):
     assert all(w>>238==0 for code in words for w in code)
     return words,limit
 
-def audit(cal,words):
+def audit(cal,words,local_slots=False):
+    assert bool(cal.get('local_slot_schedule'))==local_slots
     def get(n,c,f,shift=0,width=None):
         bit,w=FIELDS[f];return words[n][c-FIRST]>>(bit+shift)&((1<<(width or w))-1)
     for h in cal['hops']:
@@ -64,7 +73,7 @@ def audit(cal,words):
         assert get(n+1,h['receive']+1,'bridge')>>41&15==5
     for p in cal['packets_calendar']:
         c=p['consumer_capture'];assert get(8,c,'asm_expect')
-        assert get(8,c,'asm_row')==p['row'] and get(8,c,'asm_pair')==p['pair'] and get(8,c,'asm_home')==cal['home_ranks'][p['home']]
+        assert get(8,c,'asm_row')==(p['local_slot'] if local_slots else p['row']) and get(8,c,'asm_pair')==p['pair'] and get(8,c,'asm_home')==cal['home_ranks'][p['home']]
     return dict(status='PASS compiledtypedfieldaudit',hops=len(cal['hops']),packets=len(cal['packets_calendar']),sectors=len(cal['consumer_writes']))
 
 def main():
