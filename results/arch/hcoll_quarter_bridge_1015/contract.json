@@ -92,7 +92,21 @@
     "mutants_rejected": [
       "selection changed",
       "fault detection removed"
-    ]
+    ],
+    "payload_generator": "seeded32bit xorshift, updated per bit; independent545bit flit content"
   },
-  "physical": "No geometry, corridor capacity, mapped area or SS/FF claim; 90,394 modeled flops excludes real wire stations and program issuer."
+  "physical": "No geometry, corridor capacity, mapped area or SS/FF claim; 90,394 modeled flops excludes real wire stations and program issuer.",
+  "absolute_edge_contract": {
+    "from_qslots_source_capture_C_to_PHY_write_capture": {
+      "same_quarter": "C+5",
+      "adjacent": "C+7+relay_count",
+      "opposite": "C+9+relay_count_sum"
+    },
+    "from_endpoint_RX_output_changes_R_to_destination_qslots_capture": {
+      "same_quarter": "R+3",
+      "adjacent": "R+12+relay_count",
+      "opposite": "R+14+relay_count_sum"
+    },
+    "remote_RX_path": "source RX mux -> source qslots -> bridge injection -> ring -> ejection RX mux -> destination qslots; no direct endpointRX to bridge input"
+  }
 }
