@@ -73,6 +73,13 @@ child #(.N(N)) u_child(a,y); endmodule
             self.assertEqual(result['verdict'], 'FAIL', result)
             self.assertTrue(result['errors'])
 
+    def test_analysis_override_cannot_replace_synthesis_recipe(self):
+        job = self.job({'N': 1})
+        job['spec']['rtl_boundary'] = dict(top='top', sources=['top.sv'], params={'N': 2})
+        result = V.compare_variants(self.actual({'N': 2}), job, repo=self.repo)
+        self.assertEqual(result['verdict'], 'FAIL', result)
+        self.assertEqual(result['bound_parameters']['N'], 1)
+
     def test_unresolved_child_cannot_pass(self):
         (self.repo / 'top.sv').write_text('module top(input a,output y); absent u(a,y); endmodule')
         self.git('commit', '-qam', 'unresolved child')
@@ -99,7 +106,7 @@ endmodule
     def test_archived_kit_parameters_and_defines_are_used(self):
         kit = self.repo / 'kit'
         kit.mkdir()
-        (kit / 'kit.env').write_text("SRCS='top.sv'\nPARAMS=(--param N=2)\nEXTRA=(--orfs-var 'VERILOG_DEFINES=-DSYNTHESIS -DGUARDED')\n")
+        (kit / 'kit.env').write_text("TOP=top\nSRCS='top.sv'\nPARAMS=(--param N=2)\nEXTRA=(--orfs-var 'VERILOG_DEFINES=-DSYNTHESIS -DGUARDED')\n")
         self.git('add', 'kit/kit.env')
         self.git('commit', '-qm', 'archived kit')
         self.commit = self.git('rev-parse', 'HEAD')
