@@ -1,0 +1,17 @@
+{
+  "schema": "opentallas.hbm.host-disable124-guard.v1",
+  "result": "PASS",
+  "source_commit": "25c169297",
+  "source_sha256": "a6da24497f0ef4dab6077ed238bb2bcb5a996ee1331a896e8448dc46c1270510",
+  "checks": 10,
+  "scope": "Actual AXI overlay narrowdescriptor transport: target124 exact0/0/0only, othertargets/partialzero rejected,ordinaryengine descriptors preserved; no whole fourVM launch/kernel claim",
+  "positive_unit": "oth-ubuntu-1386507-1792063604 exit0",
+  "negative": "ActualRTLbroadtarget>=16disable exception wronglyaccepts123, samebenchrejects attarget123",
+  "environment_history": "Firstcompile138? failed absent TMPDIR before simulation; scoped task_tmp retry retained failurelog",
+  "files_sha256": {
+    "mutant_compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "mutant_simulation.log": "a5fe7c303c4517edab00994cde01aeace28c9b688b86a855aa1965f5e8deba55",
+    "simulation.log": "52fe26bb8e2403c14379f39c04876bcb2dd9c6790c7cf52d71f1610348797796"
+  }
+}
