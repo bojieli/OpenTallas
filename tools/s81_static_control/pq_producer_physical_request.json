@@ -221,9 +221,20 @@
       ],
       "requested_outline_um": [
         302.4,
-        82.08
+        108
       ],
-      "mapped_area_and_per_root_counts": "pending latest source map"
+      "mapped_area_and_per_root_counts": {
+        "mapped_area_um2": 14982.6996,
+        "mapped_ff_per_clock": {
+          "ck": 12401,
+          "ckv": 378
+        },
+        "cells": 141117,
+        "evidence": "results/rtl/s81_pq_producer_1425/map_c9/result.json"
+      },
+      "typed_grant_commit": "18ea77d79",
+      "typed_grant_directory": "physical/s81_die_pins/pq_producer_c9_h108_1417",
+      "inset_core_utilization": 0.4847995923913043
     },
     "dsfd_host_c": {
       "parameters": {
@@ -310,7 +321,20 @@
         453.6,
         77.76
       ],
-      "mapped_area_and_per_root_counts": "pending split source map"
+      "mapped_area_and_per_root_counts": {
+        "mapped_area_um2": 12702.0231,
+        "mapped_ff_per_clock": {
+          "ck_ingest[1]": 9293,
+          "ck_ingest[0]": 9279,
+          "ck": 4556,
+          "ckv": 118
+        },
+        "cells": 100360,
+        "evidence": "results/rtl/s81_pq_producer_1425/map_host/result.json"
+      },
+      "typed_grant_commit": "18ea77d79",
+      "typed_grant_directory": "physical/s81_die_pins/pq_producer_c9_h108_1417",
+      "inset_core_utilization": 0.3849666819852941
     }
   },
   "logical_bindings": [
