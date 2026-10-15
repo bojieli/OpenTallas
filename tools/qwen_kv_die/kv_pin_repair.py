@@ -46,8 +46,8 @@ def repair(K, m):
                 remaining = abs(bp[0]-out_x)+abs(bp[1]-(y+height/2))
                 if left > cap or remaining >= distance-1:
                     continue
-                if any(min(x+width+4.32,i.x+i.w)-max(x-4.32,i.x) > .001 and
-                       min(y+height+4.32,i.y+i.h)-max(y-4.32,i.y) > .001 for i in m['insts']+m.get('placement_keepouts',[])+staged):
+                if any(min(x+width+(5.4 if i.kind=='reservation'else 4.32),i.x+i.w)-max(x-(5.4 if i.kind=='reservation'else 4.32),i.x) > .001 and
+                       min(y+height+(5.4 if i.kind=='reservation'else 4.32),i.y+i.h)-max(y-(5.4 if i.kind=='reservation'else 4.32),i.y) > .001 for i in m['insts']+m.get('placement_keepouts',[])+staged):
                     continue
                 choices.append((remaining,x,y,left,out_x,orient))
             if not choices:
@@ -68,7 +68,7 @@ def repair(K, m):
                     for i in m['insts']+m.get('placement_keepouts',[])]
                 result=channel_detour.route(initial_ap,bp,obstacles,
                     (m['die']['w'],m['die']['h']),width-K.SHAVE,height-K.SHAVE,
-                    K.GRID/2,K.PIN_REACH-1,
+                    K.GRID/2,K.PIN_REACH-1,gap=5.4,
                     first_reach=299 if a.startswith('wctl_') and bid.startswith('wencoded_') else K.PIN_REACH-1)
                 if result:
                     chain,staged,previous=[],[],(a,pa)

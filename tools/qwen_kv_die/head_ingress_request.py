@@ -8,6 +8,7 @@ generator; every incident edge and native clock/timing budget must be rechecked.
 import argparse, hashlib, itertools, json
 from pathlib import Path
 import head_staged_plan as H
+import head_placement_lattice as L
 ROOT=Path(__file__).resolve().parents[2]
 
 def sources():
@@ -36,24 +37,27 @@ def chunk_source_for_tstage(bit):
     if bit<1559:return 'b',bit-1031
     return 'c',bit-1040
 
-def move_source_bands(insts):
+def move_source_bands(insts,face_gap=59.4):
     """Move connected head/ECTL groups before ANY relay generation."""
     band_changes=[]
     for i in insts:
         old=dict(i);name=i['name']
         if i['master']in('qkd_rhead','qkd_ectl'):
-            parts=name.split('_');e=int(parts[2]);shift=(e%4)*118.8-237.6
-            if i['master']=='qkd_rhead': shift+=118.8 if int(parts[-1])>=2 else 0.
-            else:shift+=59.4
+            parts=name.split('_');e=int(parts[2]);shift=(e%4)*2*face_gap-4*face_gap
+            if i['master']=='qkd_rhead': shift+=2*face_gap if int(parts[-1])>=2 else 0.
+            else:shift+=face_gap
             i['y']=round(i['y']+shift,6)
         elif i['master']in('qkd_astk','qkd_astk_n'):
-            i['y']=round(i['y']-237.6,6);i['h']=round(i['h']+475.2,6)
+            i['y']=round(i['y']-4*face_gap,6);i['h']=round(i['h']+8*face_gap,6)
         if old!=i:band_changes.append(dict(name=name,before=old,after=dict(i)))
     return band_changes
 
 def capture_homes(insts):
     """Exact source-derived homes; proposed pins, never a physical view grant."""
     by={i['name']:i for i in insts};paths=sources();leaves={c:H.lef(p)for c,p in paths.items()}
+    chunk_path=ROOT/'physical/ref_tile/qkh_head_chunk_stage/views/qkh_head_chunk_stage/qkh_head_chunk_stage.lef'
+    chunk_macro=L.lef(str(chunk_path))
+    assert (chunk_macro['W'],chunk_macro['H'])==(129600,21600)
     pins={}
     for i in range(535):
         x=round(13.5+.192*i,6)
@@ -64,20 +68,14 @@ def capture_homes(insts):
     for head in (i for i in insts if i['master']=='qkd_rhead'):
         parts=head['name'].split('_');h=int(parts[-1]);ectl=by['ectl_'+'_'.join(parts[1:-1])]
         efx,efy=H.FLIPS[ectl['orient']]
-        for role,n,x in [('a',512,129.6),('b',528,264.6),('c',535,480.6)]:
+        for role,n,x in [('a',512,129.6),('b',528,264.816),('c',535,480.6)]:
             lower=h<2;tier=1 if h in(1,2)else 2
-            y=-27.*tier-.048 if lower else 129.6+5.448+27.*(tier-1)
+            y=-28.08*tier-.048 if lower else 129.6+5.448+28.08*(tier-1)
             orient=H.ORIENT[(efx,efy!=lower)]if hasattr(H,'ORIENT')else next(o for o,v in H.FLIPS.items()if v==(efx,efy!=lower))
             wx=ectl['x']+(ectl['w']-x-129.6 if efx else x)
             wy=ectl['y']+(ectl['h']-y-21.6 if efy else y)
             oldxy=[wx,wy]
-            fx,fy=H.FLIPS[orient]
-            input_x=129.6-13.5 if fx else 13.5
-            clock_y=21.6-10.812 if fy else 10.812
-            wx=round(.012+.048*round((wx+input_x-.012)/.048)-input_x,6)
-            wy=round(.012+.048*round((wy+clock_y-.012)/.048)-clock_y,6)
-            assert abs((wx+input_x-.012)/.048-round((wx+input_x-.012)/.048))<1e-6
-            assert abs((wy+clock_y-.012)/.048-round((wy+clock_y-.012)/.048))<1e-6
+            (wx,wy),origin_rule=L.snap(chunk_macro,orient,(wx,wy))
             w=dict(um=-1.)
             for bit in range(n):
                 peer=signal(role,bit,h);size,pp=leaves[role]
@@ -91,7 +89,7 @@ def capture_homes(insts):
                 if dist>w['um']:w=dict(um=round(dist,6),producer_pin=peer,capture_pin=f'a[{bit}]')
             box=[wx,wy,129.6,21.6]
             blockers=[i['name']for i in insts if H.overlap(box,[i[k]for k in('x','y','w','h')])]
-            homes.append(dict(name=head['name']+'/u_ingress/u_'+role,master='qkh_head_chunk_stage',parameters=dict(W=535),xy=[wx,wy],size_um=[129.6,21.6],orient=orient,origin_grid_shift_um=[round(wx-oldxy[0],6),round(wy-oldxy[1],6)],pin_track_lattice='M5x/M4y=.012+.048k checked for mirrored placement',producer=ectl['name']+'/'+role,payload_bits=n,explicit_zero_pad_bits=535-n,producer_to_capture=w,existing_frame_blockers=blockers,clock='independent native phi-R; missing new view, must not inherit old insertion',requested=True,adopted=False))
+            homes.append(dict(name=head['name']+'/u_ingress/u_'+role,master='qkh_head_chunk_stage',parameters=dict(W=535),xy=[wx,wy],size_um=[129.6,21.6],orient=orient,origin_grid_shift_um=[round(wx-oldxy[0],6),round(wy-oldxy[1],6)],pin_track_lattice='actual common535 LEF, ASAP7 site54nm/row270nm and preferred track congruence',origin_rule=origin_rule,origin_grid_shift_scope='site/track CRT before allocator; later actual-placement replay required',producer=ectl['name']+'/'+role,payload_bits=n,explicit_zero_pad_bits=535-n,producer_to_capture=w,existing_frame_blockers=blockers,clock='independent native phi-R; missing new view, must not inherit old insertion',requested=True,adopted=False))
             all_worst.append(w['um'])
     assert len(homes)==384
     return paths,pins,homes,all_worst

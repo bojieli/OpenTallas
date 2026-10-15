@@ -59,7 +59,7 @@ class SourceBandsTest(unittest.TestCase):
             buses=[(f'rst_die__{i}','kv_oneway',1,[(a,'b'),(b,'a')])
                    for i,(a,b) in enumerate(zip(names,names[1:]))]
             if clock:buses.append(('clk_core_c','clock_trunk',1,[(n,'ck')for n in names]))
-            return dict(insts=insts,buses=buses,head_source_bands={})
+            return dict(insts=insts,buses=buses,head_source_bands={},placement_keepouts=[])
         valid=design(127)
         head_source_bands.lifecycle(valid,SimpleNamespace(RELAY_FLUSH=128))
         self.assertEqual(valid['head_source_bands']['lifecycle']['depths']['rst_die'],127)

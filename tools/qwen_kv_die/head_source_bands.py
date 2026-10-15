@@ -5,18 +5,19 @@ and cannot be emitted as a die case before all physical/composition gates pass.
 """
 import hashlib
 import json
+import itertools
 from pathlib import Path
 import head_ingress_request as ingress
 
 
-def reserve(m, F):
+def reserve(m, F, face_gap=60.48, n4=False):
     if any(i.master.startswith('qkd_rly') for i in m['insts']):
         raise ValueError('source bands must precede ALL relay/reset allocation')
     if sum(i.master == 'qkd_rhead' for i in m['insts']) != 128:
         raise ValueError('N3 reservation requires actual128-head production shape')
     rows = [dict(name=i.name, master=i.master, x=i.x, y=i.y, w=i.w,
                  h=i.h, orient=i.orient) for i in m['insts']]
-    changes = ingress.move_source_bands(rows)
+    changes = ingress.move_source_bands(rows,face_gap)
     by = {i.name: i for i in m['insts']}
     for row in rows:
         it = by[row['name']]
@@ -26,9 +27,9 @@ def reserve(m, F):
         *h['xy'], *h['size_um'], h['orient'], kind='reservation', region='attn')
         for h in homes]
     # Lane planning must follow the enlarged complete connected groups.
-    m['geo']['grp_y'] = {st: (lo-237.6, hi+237.6)
+    m['geo']['grp_y'] = {st: (lo-4*face_gap, hi+4*face_gap)
                          for st, (lo, hi) in m['geo']['grp_y'].items()}
-    m['head_source_bands'] = dict(adopted=False, qualified=False,
+    m['head_source_bands'] = dict(face_gap_um=face_gap,architecture='N4+M2'if n4 else'N3+M1',adopted=False, qualified=False,
         status='PLAN_ONLY_N3_PHYSICAL_AND_COMPOSITION_GATES_REQUIRED',
         old_relays_reused=0, allocation='all buses and reset trees regenerated after band movement',
         die_outline_change_um=[0, 0], changes=changes, capture_reservations=homes,
@@ -39,6 +40,38 @@ def reserve(m, F):
                  'full8192 ECTL/head exact composition and observed failing mutants',
                  'static compiler extra edge and measured layer/token cost',
                  'fine cuts and real-view die GRT/STA'])
+    if n4:
+        import head_n4_request
+        extra=head_n4_request.homes(rows)
+        m['head_source_bands'].update(extra)
+        for home in extra['gather_reservations']+extra['score_return_reservations']:
+            m['placement_keepouts'].append(F.Inst(home['name'],'N4_RESERVATION',
+                *home['xy'],*home['size_um'],home['orient'],kind='reservation',region='attn'))
+    reservation_clearance(m)
+    import head_placement_lattice as L
+    m['head_source_bands']['site_track_rule_sha256']=L.provenance()
+
+
+def reservation_clearance(m):
+    required=5.4;nearest=float('inf');witness=None;failures=[];outside=[]
+    def check(a,b):
+        nonlocal nearest,witness
+        dx=max(a.x-b.x-b.w,b.x-a.x-a.w,0.)
+        dy=max(a.y-b.y-b.h,b.y-a.y-a.h,0.)
+        gap=max(dx,dy)
+        if gap<nearest:nearest=gap;witness=[a.name,b.name]
+        if gap<required-1e-6:failures.append([a.name,b.name,round(gap,6)])
+    keepouts=m['placement_keepouts']
+    for a in keepouts:
+        if a.x<0 or a.y<0 or a.x+a.w>m['die']['w']or a.y+a.h>m['die']['h']:outside.append(a.name)
+        for b in m['insts']:check(a,b)
+    for a,b in itertools.combinations(keepouts,2):check(a,b)
+    rec=dict(required_um=required,minimum_um=round(nearest,6) if nearest!=float('inf') else None,nearest=witness,
+        failures=len(failures),examples=failures[:10],outside=outside,
+        scope='new reservations use site/track CRT before allocator; body-frame geometry and fresh relays; actual full expanded OpenROAD replay still required')
+    m['head_source_bands']['reservation_clearance']=rec
+    if failures or outside:raise ValueError('head reservations violate actual source clearance: '+str(rec))
+    return rec
 
 
 def write_failure(m, K, out, reason):
@@ -100,6 +133,7 @@ def lifecycle(m, K):
     if missing:raise ValueError('unclocked regenerated reset/forwarding relays: '+str(missing[:5]))
     if max(depths.values(),default=0)>=K.RELAY_FLUSH:
         raise ValueError(f'N3 regenerated reset/forwarding depth{depths} reaches flush{K.RELAY_FLUSH}')
+    reservation_clearance(m)
     m['head_source_bands']['pin_repair']=m.get('pin_repair')
     m['head_source_bands']['replan_stopped']=m.get('geo',{}).get('replan_stopped')
     m['head_source_bands']['lifecycle']=dict(depths=depths,relay_flush=K.RELAY_FLUSH,
@@ -114,7 +148,10 @@ def write_allocation(m, K, out):
         source_sha256={str(p.relative_to(K.ROOT)):hashlib.sha256(p.read_bytes()).hexdigest()
             for p in (Path(__file__),Path(K.__file__),Path(ingress.__file__),
                       K.ROOT/'tools/qwen_kv_die/kv_pin_repair.py',
-                      K.ROOT/'tools/qwen_kv_die/channel_detour.py')},
+                      K.ROOT/'tools/qwen_kv_die/channel_detour.py',
+                      K.ROOT/'tools/qwen_kv_die/head_n4_request.py',
+                      K.ROOT/'tools/qwen_kv_die/head_placement_lattice.py',
+                      K.ROOT/'physical/ref_tile/qkh_head_chunk_stage/views/qkh_head_chunk_stage/qkh_head_chunk_stage.lef')},
         model={key:m[key]for key in ('die','buses','geo','relay_stages','regions','assigned_ports')},
         target_reach=K.pin_reach(m,K.masters(m,1),reach=K.PIN_REACH),
         head_source_bands=m['head_source_bands'])
