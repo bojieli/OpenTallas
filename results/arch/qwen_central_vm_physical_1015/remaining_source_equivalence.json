@@ -1,0 +1,87 @@
+[
+  {
+    "master": "ot_qfd_vm_sctl_t",
+    "closed_ref": "422b0e7ba",
+    "module_identical": true,
+    "selected_sha": "e0fb3ee87b2819c1953e5b7ecb0308bb9fe271cadf9c37fbfbfc06b53698f47b",
+    "closed_sha": "e0fb3ee87b2819c1953e5b7ecb0308bb9fe271cadf9c37fbfbfc06b53698f47b",
+    "physical_parameters": {
+      "LAWS": 10,
+      "NRI": 2,
+      "NRS": 1
+    },
+    "expected_selected_parameters": {
+      "LAWS": 10,
+      "NRI": 2,
+      "NRS": 1
+    },
+    "parameters_identical": true,
+    "kit": "qfd_vm_sctl_t"
+  },
+  {
+    "master": "ot_qfd_vm_su_t",
+    "closed_ref": "b9e44cb62",
+    "module_identical": true,
+    "selected_sha": "12974276cc252c04ff375ecc196b3ffe4f88ecd4154e8f5a7f6709796a7219b5",
+    "closed_sha": "12974276cc252c04ff375ecc196b3ffe4f88ecd4154e8f5a7f6709796a7219b5",
+    "physical_parameters": {
+      "NSB": 1,
+      "DEPTHS": 695,
+      "LAWS": 10,
+      "USE_MACRO": 1
+    },
+    "expected_selected_parameters": {
+      "NSB": 1,
+      "DEPTHS": 695,
+      "LAWS": 10,
+      "USE_MACRO": 1
+    },
+    "parameters_identical": true,
+    "kit": "qfd_vm_su_t"
+  },
+  {
+    "master": "ot_qfd_vm_rr4_t",
+    "closed_ref": "5078addc9",
+    "module_identical": true,
+    "selected_sha": "2d2657b75a30efe9d4e1ac604a06718dafcc60c320bbe8151edfc8b61db3b150",
+    "closed_sha": "2d2657b75a30efe9d4e1ac604a06718dafcc60c320bbe8151edfc8b61db3b150",
+    "physical_parameters": {
+      "NRI": 2,
+      "NRX": 2
+    },
+    "expected_selected_parameters": {
+      "NRI": 2,
+      "NRX": 2
+    },
+    "parameters_identical": true,
+    "kit": "qfd_vm_rr4_t"
+  },
+  {
+    "master": "ot_qfd_vm_rr2_nx",
+    "closed_ref": "b05d68131",
+    "module_identical": true,
+    "selected_sha": "f8264961d33ed0c7380101c4ee9bd78e539aa21e4098ca8f94baf3aad4ea1945",
+    "closed_sha": "f8264961d33ed0c7380101c4ee9bd78e539aa21e4098ca8f94baf3aad4ea1945",
+    "physical_parameters": {
+      "NRI": 2,
+      "NRX": 2
+    },
+    "expected_selected_parameters": {
+      "NRI": 2,
+      "NRX": 2
+    },
+    "parameters_identical": true,
+    "kit": "qfd_vm_rr2_nx"
+  },
+  {
+    "master": "ot_qfd_vm_su1024_t",
+    "closed_ref": "c9b9190ac",
+    "module_identical": true,
+    "selected_sha": "b9736af96e708f0d4639f0a68b363077b144aac56490ef14a97d578e0b4251de",
+    "closed_sha": "b9736af96e708f0d4639f0a68b363077b144aac56490ef14a97d578e0b4251de",
+    "physical_parameters": {},
+    "expected_selected_parameters": {},
+    "parameters_identical": true,
+    "kit": "qfd_vm_su1024_codex"
+  }
+]

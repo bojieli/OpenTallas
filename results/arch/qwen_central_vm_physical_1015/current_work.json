@@ -1,0 +1,28 @@
+{
+  "updated_utc": "2026-10-15T11:07:31.356849+00:00",
+  "owner": "/root/q_vm_physical",
+  "branch": "codex/q-vm-physical-1015",
+  "selected_vm_ref": "96f30a6a0",
+  "candidate_selected_for_physical": "qvm_bank_banked_native 9roots/bank, no newcycles/SRAMs",
+  "live_jobs": [
+    {
+      "name": "qvm_data256_native-np1-0e820215a",
+      "status": "RUNNING route",
+      "host": "ot-epyc1tb",
+      "run": "/srv/opentallas/claude/closure-loop/qvm_data256_native-np1-0e820215a"
+    },
+    {
+      "name": "qvm_bank_ctrl_native-np2-99be1c5dc",
+      "status": "validated then submitted",
+      "failure_repaired": "np1 mixedlayer wm14 pin outside die, M4-only face repair actual CTS TT55.2ps spread1.6"
+    }
+  ],
+  "native_parent_qualified": false,
+  "original_closed_views_preserved": true,
+  "next": [
+    "Collect both actualroutes and full FF/TT/DRC/native pin audits",
+    "Construct real no-flop nine-entry bank parent from twoSRAM+sevenleaf clocks",
+    "Apply same source/physical discipline to failed operand SRAM family",
+    "Partition exact32k declared residual return registers; price binarymux staging ifneeded"
+  ]
+}
