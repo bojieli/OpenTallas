@@ -58,25 +58,41 @@ module dsfd_vm_static_rsched (
         else begin qv <= {hc_v, su_v}; qav <= aux_v; grp <= grp + 3'd1; qmv <= mx_v; end
         qr <= {hc_row, su_row}; qar <= aux_row; qmr <= mx_row;
     end
-    // MIX merge onto the 30 logical ports (fixed function of the compiled slots)
+    // MIX merge onto the 30 logical ports (fixed function of the compiled slots).
+    // Native1 structural repair (measured rsched CTS: reg->out n_row -10.1 ps TT placement at 770; the 20-deep
+    // last-writer-wins chain of runtime-indexed writes sat between the q registers and the die pins): each MIX lane's
+    // target port is decoded in parallel and every port takes a one-hot AND-OR of its lanes.  Identical for every legal
+    // compiled schedule; a collision (two writers on one port, or a writer on an occupied port) is the unchanged sticky
+    // m_bad fault and its row value is then the OR of the writers (a fault, never a production value).  Zero cycles.
     reg [17:0] pv; reg [251:0] pr; reg [11:0] pav; reg [167:0] par; reg [29:0] mo; reg m_bad;
-    always @* begin : p_merge integer i; reg [4:0] s; integer port; reg hc0;
-        pv = qv; pr = qr; pav = qav; par = qar; mo = 30'd0; m_bad = 1'b0; hc0 = 1'b0;
-        for (i = 0; i < 20; i = i + 1) if (qmv[i]) begin
+    reg [4:0] mport [0:19];
+    always @* begin : p_port integer i; reg [4:0] s; reg hc0;
+        hc0 = 1'b0;
+        for (i = 0; i < 20; i = i + 1) begin
             s = qms[5*i +: 5];
-            if (s < 5'd16) port = s;
-            else if (s < 5'd20) begin port = hc0 ? 17 : 16; hc0 = 1'b1; end
-            else port = 18 + (s - 20);
-            if (s[1:0] != qmr[14*i +: 2]) m_bad = 1'b1;              // slot lane = row[1:0] (FSR lane rule)
-            if (port < 18) begin
-                if (pv[port] || mo[port]) m_bad = 1'b1;
-                pv[port] = 1'b1; pr[14*port +: 14] = qmr[14*i +: 14];
-            end else begin
-                if (pav[port-18] || mo[port]) m_bad = 1'b1;
-                pav[port-18] = 1'b1; par[14*(port-18) +: 14] = qmr[14*i +: 14];
-            end
-            mo[port] = 1'b1;
+            if (s < 5'd16) mport[i] = s;
+            else if (s < 5'd20) begin mport[i] = (qmv[i] && hc0) ? 5'd17 : 5'd16; if (qmv[i]) hc0 = 1'b1; end
+            else mport[i] = 5'd18 + (s - 5'd20);
         end
+    end
+    always @* begin : p_merge integer i, port; reg [13:0] row; reg any; reg [29:0] hits;
+        m_bad = 1'b0; mo = 30'd0;
+        for (port = 0; port < 30; port = port + 1) begin
+            any = 1'b0; row = 14'd0; hits[port] = 1'b0;
+            for (i = 0; i < 20; i = i + 1) if (qmv[i] && mport[i] == port[4:0]) begin
+                if (any) m_bad = 1'b1;
+                any = 1'b1; row = row | qmr[14*i +: 14];
+            end
+            mo[port] = any;
+            if (port < 18) begin
+                if (any && qv[port]) m_bad = 1'b1;
+                pv[port] = qv[port] | any; pr[14*port +: 14] = any ? row : qr[14*port +: 14];
+            end else begin
+                if (any && qav[port-18]) m_bad = 1'b1;
+                pav[port-18] = qav[port-18] | any; par[14*(port-18) +: 14] = any ? row : qar[14*(port-18) +: 14];
+            end
+        end
+        for (i = 0; i < 20; i = i + 1) if (qmv[i] && qms[5*i +: 2] != qmr[14*i +: 2]) m_bad = 1'b1;  // slot lane = row[1:0]
     end
 
     reg [89:0] slot;
