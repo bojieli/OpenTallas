@@ -28,7 +28,8 @@
     "note": "128 SRAMs belong actual external VM composition, not internal collective inventory",
     "roots": 29,
     "clock_register_count": 104225,
-    "max_per_root": 8438
+    "max_per_root": 8438,
+    "latest_boundary_extract_source": "22b80d3c9"
   },
   "evidence": {
     "behavior": "results/rtl/s81_static_fullslab_1015/receipt.json",
@@ -54,10 +55,11 @@
     },
     {
       "role": "VM source/return boundary",
-      "master": "native extracted slab VM bridge and raw row buffers",
+      "master": "s81_static_vm_boundary",
       "instances": 1,
       "root": "ck_control[2]",
-      "physical_status": "EXTRACT_REGISTERED_PHYSICAL_LEAF_FIRST"
+      "physical_status": "EXTRACTED_FUNCTIONAL_GATE_PASS_NEW_SLOT_REQUIRED",
+      "leaf_gates": "results/rtl/s81_static_vm_boundary_extract_1015/receipt.json"
     },
     {
       "role": "pass adapter",
