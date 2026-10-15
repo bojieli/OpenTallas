@@ -30,18 +30,18 @@ for l, (x0, y0) in enumerate(LANES):           # MX: the child ck pin (LEF y = t
     clk[f'ck_l{l}'] = (round(x0 + ckx, 4), round(y0 + LH - cky, 4))
 clk['ck'] = (snap(30.0), snap(8.0))           # S-face straps / reset pin flops (rst_n 20.0, b0 25.0, lnk 32.0 on S)
 for s in range(4):                            # ty face quarters x 33.4..426.5, tw 453.4..846.5: entry 10 um inside
-    clk[f'ck_fn[{s}]'] = (snap(33.42 + 98.28 * (s + 0.5)), snap(H - 10.0))
-    clk[f'ck_fn[{4 + s}]'] = (snap(453.42 + 98.28 * (s + 0.5)), snap(H - 10.0))
+    clk[f'ck_fn{s}'] = (snap(33.42 + 98.28 * (s + 0.5)), snap(H - 10.0))
+    clk[f'ck_fn{4 + s}'] = (snap(453.42 + 98.28 * (s + 0.5)), snap(H - 10.0))
 clk['ck_fe0'] = (snap(W - 10.0), snap(435.0))  # pw 325..375, f 400, c 429, f_up 460, pw_l 495..545
 clk['ck_fe1'] = (snap(W - 10.0), snap(750.0))  # tt 676..824
 for r in plan['roots']:
     cx, cy = r['centroid']
     mem = [s['xy'] for s in plan['stations'] if s['root'] == r['root']]
     bx, by = min(mem, key=lambda p: abs(p[0] - cx) + abs(p[1] - cy))
-    clk[f"ck_st[{r['root']}]"] = (snap(bx), snap(by))
+    clk[f"ck_st{r['root']}"] = (snap(bx), snap(by))
 for q in range(4):                            # quarter q4 stage: below lane 4q's f pin (lane bottom after MX)
     x0, y0 = LANES[4 * q]
-    clk[f'ck_fq[{q}]'] = (snap(x0 + fx + 8.0), snap(y0 - 8.0))
+    clk[f'ck_fq{q}'] = (snap(x0 + fx + 8.0), snap(y0 - 8.0))
 clk['ck_fj'] = (snap(W - 14.0), snap(470.0))
 for name, (x, y) in clk.items():
     pins.append(f'place_pin -pin_name {{{name}}} -layer M5 -location {{{x:.4f} {y:.4f}}}')
@@ -122,8 +122,8 @@ puts "OT_BAND_STATIONS released $ot_n station flops"
 # ---- source spec --------------------------------------------------------------------------------------------------
 sp = json.loads(json.dumps(qspec))
 sp['name'] = 'qfd_sp_band_lanes_relay'
-cports = ['ck'] + [f'ck_l{l}' for l in range(16)] + [f'ck_fn[{s}]' for s in range(8)] + ['ck_fe0', 'ck_fe1'] + \
-         [f"ck_st[{r['root']}]" for r in plan['roots']] + [f'ck_fq[{q}]' for q in range(4)] + ['ck_fj']
+cports = ['ck'] + [f'ck_l{l}' for l in range(16)] + [f'ck_fn{s}' for s in range(8)] + ['ck_fe0', 'ck_fe1'] + \
+         [f"ck_st{r['root']}" for r in plan['roots']] + [f'ck_fq{q}' for q in range(4)] + ['ck_fj']
 sp['clock_ports'] = cports
 roots = [c for c in cports if not c.startswith('ck_l')]
 sp['clock_cts_roots'] = roots
@@ -137,7 +137,8 @@ sp.pop('hard_define', None)
 sp['io_tcl'] = 'physical/qwen_band_relay_1015/assigned_pins.tcl'
 sp['pins'] = {f: [p for p in v if p != 'ck'] for f, v in sp['pins'].items()}
 # clock entries are interior M5 points (assigned_pins.tcl); faces only book-keep the base names
-sp['pins']['S'] += ['ck', 'ck_fq']; sp['pins']['N'] += ['ck_fn']; sp['pins']['E'] += ['ck_fe0', 'ck_fe1', 'ck_fj']; sp['pins']['W'] += ['ck_st']
+sp['pins']['S'] += ['ck'] + [f'ck_fq{q}' for q in range(4)]; sp['pins']['N'] += [f'ck_fn{i}' for i in range(8)]
+sp['pins']['E'] += ['ck_fe0', 'ck_fe1', 'ck_fj']; sp['pins']['W'] += [f"ck_st{r['root']}" for r in plan['roots']]
 sp['pin_ranges'] = {k: v for k, v in sp['pin_ranges'].items() if k != 'ck'}
 sp['pin_hook_before_flops'] = ['physical/qwen_band_relay_1015/station_place.tcl']
 sp['orfs_vars'] = {'POST_GLOBAL_PLACE_TCL': 'physical/qwen_band_relay_1015/station_release.tcl',

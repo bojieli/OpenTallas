@@ -140,14 +140,15 @@ module ot_qfd_band_relay_core #(parameter integer MUT=0) (
 endmodule
 
 `ifndef OT_QFD_BAND_RELAY_NOWRAP
-// Die master: scalar clock entry names (the die contract lists scalar ports).
+// Die master: SCALAR clock entry names (the die contract lists scalar ports; gate rl1 measured TritonCTS CTS-0056 on
+// bracketed root nets 'ck_st[36]' passed through -clk_nets, so every entry is a scalar port).
 module qfd_sp_band_lanes (
     input wire ck,
     input wire ck_l0, ck_l1, ck_l2, ck_l3, ck_l4, ck_l5, ck_l6, ck_l7, ck_l8, ck_l9, ck_l10, ck_l11, ck_l12, ck_l13, ck_l14, ck_l15,
-    input wire [7:0] ck_fn,
+    input wire ck_fn0, ck_fn1, ck_fn2, ck_fn3, ck_fn4, ck_fn5, ck_fn6, ck_fn7,
     input wire ck_fe0, ck_fe1,
-    input wire [41:0] ck_st,
-    input wire [3:0] ck_fq,
+    input wire ck_st0, ck_st1, ck_st2, ck_st3, ck_st4, ck_st5, ck_st6, ck_st7, ck_st8, ck_st9, ck_st10, ck_st11, ck_st12, ck_st13, ck_st14, ck_st15, ck_st16, ck_st17, ck_st18, ck_st19, ck_st20, ck_st21, ck_st22, ck_st23, ck_st24, ck_st25, ck_st26, ck_st27, ck_st28, ck_st29, ck_st30, ck_st31, ck_st32, ck_st33, ck_st34, ck_st35, ck_st36, ck_st37, ck_st38, ck_st39, ck_st40, ck_st41,
+    input wire ck_fq0, ck_fq1, ck_fq2, ck_fq3,
     input wire ck_fj,
     input wire rst_n, b0,
     input wire [5:0] lnk,
@@ -162,8 +163,9 @@ module qfd_sp_band_lanes (
 );
     ot_qfd_band_relay_core u_core (.ck(ck),
         .ck_l({ck_l15, ck_l14, ck_l13, ck_l12, ck_l11, ck_l10, ck_l9, ck_l8, ck_l7, ck_l6, ck_l5, ck_l4, ck_l3, ck_l2, ck_l1, ck_l0}),
-        .ck_fn(ck_fn), .ck_fe0(ck_fe0), .ck_fe1(ck_fe1), .ck_st(ck_st),
-        .ck_fq(ck_fq), .ck_fj(ck_fj), .rst_n(rst_n), .b0(b0), .lnk(lnk), .tw(tw), .c(c), .tt(tt), .pw(pw),
+        .ck_fn({ck_fn7, ck_fn6, ck_fn5, ck_fn4, ck_fn3, ck_fn2, ck_fn1, ck_fn0}), .ck_fe0(ck_fe0), .ck_fe1(ck_fe1),
+        .ck_st({ck_st41, ck_st40, ck_st39, ck_st38, ck_st37, ck_st36, ck_st35, ck_st34, ck_st33, ck_st32, ck_st31, ck_st30, ck_st29, ck_st28, ck_st27, ck_st26, ck_st25, ck_st24, ck_st23, ck_st22, ck_st21, ck_st20, ck_st19, ck_st18, ck_st17, ck_st16, ck_st15, ck_st14, ck_st13, ck_st12, ck_st11, ck_st10, ck_st9, ck_st8, ck_st7, ck_st6, ck_st5, ck_st4, ck_st3, ck_st2, ck_st1, ck_st0}),
+        .ck_fq({ck_fq3, ck_fq2, ck_fq1, ck_fq0}), .ck_fj(ck_fj), .rst_n(rst_n), .b0(b0), .lnk(lnk), .tw(tw), .c(c), .tt(tt), .pw(pw),
         .pw_l0(pw_l0), .pw_l1(pw_l1), .pw_l2(pw_l2), .pw_l3(pw_l3), .f_up(f_up), .ty(ty), .f(f));
 endmodule
 `endif

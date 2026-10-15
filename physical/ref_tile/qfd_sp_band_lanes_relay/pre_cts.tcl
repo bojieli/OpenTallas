@@ -1,5 +1,5 @@
 # ref_tile PRE_CTS: io_ref boundary switch after the tree (qwen_die_masters/pre_cts_skew.tcl); clock entries: no tree, one port per child clock pin (sourced FIRST)
-set ::ot_ce_cts_roots {ck ck_fn[0] ck_fn[1] ck_fn[2] ck_fn[3] ck_fn[4] ck_fn[5] ck_fn[6] ck_fn[7] ck_fe0 ck_fe1 ck_st[0] ck_st[1] ck_st[2] ck_st[3] ck_st[4] ck_st[5] ck_st[6] ck_st[7] ck_st[8] ck_st[9] ck_st[10] ck_st[11] ck_st[12] ck_st[13] ck_st[14] ck_st[15] ck_st[16] ck_st[17] ck_st[18] ck_st[19] ck_st[20] ck_st[21] ck_st[22] ck_st[23] ck_st[24] ck_st[25] ck_st[26] ck_st[27] ck_st[28] ck_st[29] ck_st[30] ck_st[31] ck_st[32] ck_st[33] ck_st[34] ck_st[35] ck_st[36] ck_st[37] ck_st[38] ck_st[39] ck_st[40] ck_st[41] ck_fq[0] ck_fq[1] ck_fq[2] ck_fq[3] ck_fj}
+set ::ot_ce_cts_roots {ck ck_fn0 ck_fn1 ck_fn2 ck_fn3 ck_fn4 ck_fn5 ck_fn6 ck_fn7 ck_fe0 ck_fe1 ck_st0 ck_st1 ck_st2 ck_st3 ck_st4 ck_st5 ck_st6 ck_st7 ck_st8 ck_st9 ck_st10 ck_st11 ck_st12 ck_st13 ck_st14 ck_st15 ck_st16 ck_st17 ck_st18 ck_st19 ck_st20 ck_st21 ck_st22 ck_st23 ck_st24 ck_st25 ck_st26 ck_st27 ck_st28 ck_st29 ck_st30 ck_st31 ck_st32 ck_st33 ck_st34 ck_st35 ck_st36 ck_st37 ck_st38 ck_st39 ck_st40 ck_st41 ck_fq0 ck_fq1 ck_fq2 ck_fq3 ck_fj}
 source /src/physical/common_flow/clock_entries.tcl
 source /src/physical/qwen_die_masters/pre_cts_skew.tcl
 rename clock_tree_synthesis ::ot_ref_cts_boundary_orig
