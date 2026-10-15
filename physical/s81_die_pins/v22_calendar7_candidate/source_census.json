@@ -1,7 +1,7 @@
 {
   "base_sha256": "ed584619c336e8340155d839eb0f119c115146b32a4fc83b3d3d68b8c5554490",
   "source": "rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller7.sv",
-  "source_sha256": "8254a83f87ceee4309d20b98ad9693fa1ddea6e3dcd37f61f218c5c770c557bc",
+  "source_sha256": "6dd4bd25f052e0115ee1d26cfadb5716b0ef1899a35402524ae3ef383311211d",
   "clocks": [
     "clk",
     "clk_rom[0]",
@@ -81,6 +81,8 @@
   ],
   "added_data_edges": 0,
   "added_data_registers": 0,
+  "reset_relays": 4,
+  "initialization_release_extra_edges": 3,
   "rom_macros": 3,
   "qualification": false
 }

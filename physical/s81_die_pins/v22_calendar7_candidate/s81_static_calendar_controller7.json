@@ -3813,6 +3813,10 @@
  },
  "qualification": "CANDIDATE top-down IO assignment; exact/mutant proof and actual independent-root native CTS/STA required",
  "clock_delivery": "Each clock phase0 related PLL1:1 delivered at phi-wire-R_i; no inherited insertion defaults",
+ "cost": {
+  "data_edges": 0,
+  "initialization_release_extra_edges": 3
+ },
  "added_clocks": [
   {
    "pin": "clk_rom[0]",
@@ -3853,8 +3857,8 @@
  ],
  "input_sha256": {
   "old_pins": "0dede762ccb39d47ef020178e2bf0e2b8d9c57e2945adc8edcd53f2d0cbc5fd5",
-  "census": "96220f3151174cf402b151d480d89565b9f6181631e323bd59fdd601f3183a71",
-  "rtl": "8254a83f87ceee4309d20b98ad9693fa1ddea6e3dcd37f61f218c5c770c557bc",
+  "census": "5ab10d4f325d5ff5c1fde85ab70777bd26b1f9a8a95b7247b379a88109f4880a",
+  "rtl": "6dd4bd25f052e0115ee1d26cfadb5716b0ef1899a35402524ae3ef383311211d",
   "rom_lef": "f35311e2ad164c3a112aa918b73b510b84b2fdf1414a7d8da591fe71cb662611"
  }
 }
