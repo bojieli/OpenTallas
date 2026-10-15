@@ -27,8 +27,9 @@ module tb_markov_static;
    if(cyc-t0!=latency) $fatal(1,"calendar changed");
    $display("STATIC_ROW n=%0d command_to_done=%0d bits=%h",n,cyc-t0,out);
    @(negedge clk);if(ov) $fatal(1,"held output instead of pulse");
-   repeat(4) @(negedge clk);if(fault) $fatal(1,"fault");
+   if(fault) $fatal(1,"fault");
   end
-  $display("MARKOV_STATIC PASS rows=48 beats=768 command_to_done=%0d",latency);$finish;
+  repeat(4) @(negedge clk);if(fault) $fatal(1,"late fault");
+  $display("MARKOV_STATIC PASS rows=48 beats=768 command_to_done=%0d minimum_II=179",latency);$finish;
  end
 endmodule
