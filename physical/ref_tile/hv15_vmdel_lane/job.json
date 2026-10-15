@@ -1,9 +1,9 @@
 {
- "name": "hv15_vmdel_ctl-hv15-COMMIT",
- "block": "ot_hbm_svc_vmdel_ctl",
+ "name": "hv15_vmdel_lane-hv15-COMMIT",
+ "block": "ot_hbm_svc_vmdel_lane",
  "ref_tile": true,
  "owner": "Claude:HBM-V15-HARDEN",
- "purpose": "structural split of delivery_<q> (monolithic gate: 8,960 fill pins on one face = 124 % of slots, > 600 um clock span, 2,048-bit runtime group mux): 8 identical VM-bank lane leaves + 1 control leaf under a wires-only parent, cycle- and bit-identical (lockstep equivalence + production bench); cost 0 cycles. Leaf: begin/start/aperture/owned/epoch/running state, block_ready/fault aggregation.",
+ "purpose": "structural split of delivery_<q> (monolithic gate: 8,960 fill pins on one face = 124 % of slots, > 600 um clock span, 2,048-bit runtime group mux): 8 identical VM-bank lane leaves + 1 control leaf under a wires-only parent, cycle- and bit-identical (lockstep equivalence + production bench); cost 0 cycles. v2 lane leaf (v1 control leaf refused: in->out -57.9 ps feed-through): PCs b,8+b,16+b,24+b (4 real SRAMs) + dq[b] + replicated control; cross-lane = 3 registered status bits per lane; hardened once, 8 per quadrant.",
  "threads": 8,
  "peak_ram_gb": 24,
  "source": {
@@ -21,7 +21,7 @@
   "bench": [
    {
     "name": "lint",
-    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_hbm_svc_vmdel_ctl u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/hbm_accel/loader/service_native/split/ot_hbm_svc_static_vm_delivery_split.sv && echo lint-ok",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_hbm_svc_vmdel_lane u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/hbm_accel/loader/service_native/split/ot_hbm_svc_static_vm_delivery_split.sv physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v && echo lint-ok",
     "expect": "pass",
     "threads": 1,
     "peak_ram_gb": 4,
@@ -67,7 +67,7 @@
    "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
   },
   "route": {
-   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/hv15_vmdel_ctl/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/hv15_vmdel_ctl/kit.env {LABEL} {RUN}/routes",
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/hv15_vmdel_lane/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/hv15_vmdel_lane/kit.env {LABEL} {RUN}/routes",
    "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
    "logs": [
     "{RUN}/routes/{LABEL}/flow.log"
@@ -76,7 +76,7 @@
    "peak_ram_gb": 24
   },
   "collect": {
-   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/hv15_vmdel_ctl --out {RUN}/record/views/ot_hbm_svc_vmdel_ctl  > {RUN}/record/route/export.log 2>&1"
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/hv15_vmdel_lane --out {RUN}/record/views/ot_hbm_svc_vmdel_lane --macro-view physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2 > {RUN}/record/route/export.log 2>&1"
   }
  },
  "verdict": {
@@ -89,10 +89,12 @@
    }
   ],
   "post_sdc": [
-   "physical/ref_tile/hv15_vmdel_ctl/signoff.sdc",
+   "physical/ref_tile/hv15_vmdel_lane/signoff.sdc",
    "physical/common_flow/link_budget_consistent.sdc"
   ],
-  "macros": []
+  "macros": [
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2"
+  ]
  },
  "hold_eco": {
   "enabled": true,
@@ -106,11 +108,11 @@
  "record": [
   {
    "from": "{RUN}/record/views",
-   "to": "physical/ref_tile/hv15_vmdel_ctl/views"
+   "to": "physical/ref_tile/hv15_vmdel_lane/views"
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/hv15_vmdel_ctl/hv15_vmdel_ctl-hv15-COMMIT"
+   "to": "results/rtl/ref_tile/hv15_vmdel_lane/hv15_vmdel_lane-hv15-COMMIT"
   }
  ],
  "cycles_added": 0,

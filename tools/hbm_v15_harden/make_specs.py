@@ -72,11 +72,9 @@ SPLIT_PURPOSE=('structural split of delivery_<q> (monolithic gate: 8,960 fill pi
  '2,048-bit runtime group mux): 8 identical VM-bank lane leaves + 1 control leaf under a wires-only parent, cycle- and bit-identical '
  '(lockstep equivalence + production bench); cost 0 cycles. %s')
 dsb=lambda: bench('bench_delivery_split.sh',[1,2],r'DELIVERY_SPLIT_BENCH PASS',r'checks=(\d+)',ram=8)
-spec('hv15_vmdel_bank','ot_hbm_svc_vmdel_bank',[spl,SR128+'/ot_sram_1r1w_128x256_m1_r2c2_bb.v'],
+spec('hv15_vmdel_lane','ot_hbm_svc_vmdel_lane',[spl,SR128+'/ot_sram_1r1w_128x256_m1_r2c2_bb.v'],
  dict(S=['fill_v','fill_bank','fill_slot','fill_epoch','fill_data'],N=['dq'],
-      W=['clk','rst_n','bank_id','owned','epochs','issue','rb','rg','rs','clear_bank','begin_bank','landing_fault','dq_v','out_group','sector_hi','full0','full1','pc_fault']),
- [dict(view=SR128,count=4)],dict(w=302.4,h=172.8),SPLIT_PURPOSE%'Leaf: PCs b,8+b,16+b,24+b (4 real SRAMs) + dq[b]; hardened once, 8 per quadrant.',dsb())
-spec('hv15_vmdel_ctl','ot_hbm_svc_vmdel_ctl',[spl],
- dict(W=['clk','rst_n','begin_v','begin_bank','begin_epoch','start','start_bank','start_epoch','start_base_sector','block_ready','busy','fault'],
-      E=['full0','full1','pc_fault','owned','epochs','issue','rb','rg','rs','clear_bank','landing_fault','dq_v','out_group','sector_hi']),
- [],dict(w=43.2,h=43.2),SPLIT_PURPOSE%'Leaf: begin/start/aperture/owned/epoch/running state, block_ready/fault aggregation.',dsb())
+      W=['clk','rst_n','bank_id','begin_v','begin_bank','begin_epoch','start','start_bank','start_epoch','start_base_sector'],
+      E=['full0_all','full1_all','pcbad_all','full0','full1','pcbad','block_ready','busy','fault']),
+ [dict(view=SR128,count=4)],dict(w=302.4,h=172.8),SPLIT_PURPOSE%('v2 lane leaf (v1 control leaf refused: in->out -57.9 ps feed-through): PCs b,8+b,16+b,24+b '
+ '(4 real SRAMs) + dq[b] + replicated control; cross-lane = 3 registered status bits per lane; hardened once, 8 per quadrant.'),dsb())

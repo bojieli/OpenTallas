@@ -1,49 +1,58 @@
 {
- "name": "hv15_vmdel_ctl",
- "top": "ot_hbm_svc_vmdel_ctl",
+ "name": "hv15_vmdel_lane",
+ "top": "ot_hbm_svc_vmdel_lane",
  "kind": "tile",
  "sources": [
-  "rtl/hbm_accel/loader/service_native/split/ot_hbm_svc_static_vm_delivery_split.sv"
+  "rtl/hbm_accel/loader/service_native/split/ot_hbm_svc_static_vm_delivery_split.sv",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v"
  ],
  "clock_port": "clk",
  "reset_ports": [
   "rst_n"
  ],
  "pins": {
+  "S": [
+   "fill_v",
+   "fill_bank",
+   "fill_slot",
+   "fill_epoch",
+   "fill_data"
+  ],
+  "N": [
+   "dq"
+  ],
   "W": [
    "clk",
    "rst_n",
+   "bank_id",
    "begin_v",
    "begin_bank",
    "begin_epoch",
    "start",
    "start_bank",
    "start_epoch",
-   "start_base_sector",
+   "start_base_sector"
+  ],
+  "E": [
+   "full0_all",
+   "full1_all",
+   "pcbad_all",
+   "full0",
+   "full1",
+   "pcbad",
    "block_ready",
    "busy",
    "fault"
-  ],
-  "E": [
-   "full0",
-   "full1",
-   "pc_fault",
-   "owned",
-   "epochs",
-   "issue",
-   "rb",
-   "rg",
-   "rs",
-   "clear_bank",
-   "landing_fault",
-   "dq_v",
-   "out_group",
-   "sector_hi"
   ]
  },
  "layer_cap": "M5",
  "recipe": 2,
- "macros": [],
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 4
+  }
+ ],
  "route": {
   "pd": 0.5,
   "period_ps": 833.333,
@@ -56,7 +65,7 @@
   "owner": "Claude:HBM-V15-HARDEN",
   "branch": "claude/hbm-v15-harden-1015",
   "tag": "hv15",
-  "purpose": "structural split of delivery_<q> (monolithic gate: 8,960 fill pins on one face = 124 % of slots, > 600 um clock span, 2,048-bit runtime group mux): 8 identical VM-bank lane leaves + 1 control leaf under a wires-only parent, cycle- and bit-identical (lockstep equivalence + production bench); cost 0 cycles. Leaf: begin/start/aperture/owned/epoch/running state, block_ready/fault aggregation.",
+  "purpose": "structural split of delivery_<q> (monolithic gate: 8,960 fill pins on one face = 124 % of slots, > 600 um clock span, 2,048-bit runtime group mux): 8 identical VM-bank lane leaves + 1 control leaf under a wires-only parent, cycle- and bit-identical (lockstep equivalence + production bench); cost 0 cycles. v2 lane leaf (v1 control leaf refused: in->out -57.9 ps feed-through): PCs b,8+b,16+b,24+b (4 real SRAMs) + dq[b] + replicated control; cross-lane = 3 registered status bits per lane; hardened once, 8 per quadrant.",
   "extra_paths": [
    "tools/hbm_v15_harden",
    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
@@ -64,7 +73,7 @@
    "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
    "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2"
   ],
-  "record_to": "results/rtl/ref_tile/hv15_vmdel_ctl",
+  "record_to": "results/rtl/ref_tile/hv15_vmdel_lane",
   "benches": [
    {
     "name": "exact",
@@ -101,8 +110,8 @@
   ]
  },
  "outline": {
-  "w": 43.2,
-  "h": 43.2
+  "w": 302.4,
+  "h": 172.8
  },
  "params": {},
  "children": [],
