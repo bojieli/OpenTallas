@@ -1411,7 +1411,10 @@ def write_netlist(m, k, path, top='dsfd_die', skip=()):
         for base, pcs in sliced.items():
             pcs.sort()
             assert all(pcs[i][0] + pcs[i][2] <= pcs[i + 1][0] for i in range(len(pcs) - 1)), (it.name, base, pcs)
-            if any(pcs[i][0] + pcs[i][2] < pcs[i + 1][0] for i in range(len(pcs) - 1)) or pcs[0][0] != 0:
+            rw_ = rtl_port_width(it.master, base) if RTL_BIND else None
+            top_ = pcs[-1][0] + pcs[-1][2]
+            if any(pcs[i][0] + pcs[i][2] < pcs[i + 1][0] for i in range(len(pcs) - 1)) or pcs[0][0] != 0 or \
+                    (rw_ is not None and rw_ > top_):
                 # S-BIND 2026-10-15: a port bound by disjoint slices (e.g. --pq-cnt taps PQ t_cnt[455:452] only): each gap
                 # gets its own net with no other endpoint, so the connection keeps its order and the die port-bind check
                 # sees the gap (an input gap = an UNDRIVEN net, an output gap = an unread net); never a constant
@@ -1422,6 +1425,12 @@ def write_netlist(m, k, path, top='dsfd_die', skip=()):
                         V.append(f'  wire [{o_ - lo_ - 1}:0] {gn_};')
                         full_.append((lo_, gn_, o_ - lo_))
                     full_.append((o_, net_, n_)); lo_ = o_ + n_
+                if rw_ is not None and rw_ > lo_:
+                    # S-BIND r6: the bits above the highest slice up to the RTL port width (t_cnt 458 tapped at
+                    # [455:452] left [457:456] off the connection: WIDTH_MISMATCH 456 vs 458) -- same gap-net rule
+                    gn_ = f'n_gap_{it.name}_{base}_{lo_}'
+                    V.append(f'  wire [{rw_ - lo_ - 1}:0] {gn_};')
+                    full_.append((lo_, gn_, rw_ - lo_))
                 pcs = full_
             parts.append(f'.{base}({{' + ', '.join(net for _, net, _ in reversed(pcs)) + '})')
         for base, bits_ in bus_bits.items():
@@ -5050,6 +5059,10 @@ def buses_r8(m):
             if spec['kind'] == 'l2r':
                 # --rtl-bind + --pq-place: the x-lane start blocks hx_W / hx_E are written by the PQ core (stream), not the VM
                 wd_ = 'stream' if (RTL_BIND and PQ_PLACE and it.name in ('hx_W', 'hx_E')) else 'serial'
+                # S-BIND r6: a forwarded ctrl lane's start is written by its stream-domain source (sequencer c<e> / d /
+                # s, slab c_done / c_st, svc join, host hw, svc hc): it was clocked serial, sampling 1.2 GHz pulses
+                # with the 0.9 GHz clock (no synchroniser; pulses lost)
+                wd_ = m.get('_l2r_wdom', {}).get(it.name, wd_)
                 dom[wd_].append((it.name, 'ck'))
                 rst[wd_].append((it.name, 'rs'))
                 dom['stream'].append((it.name, 'cks'))
@@ -5406,6 +5419,34 @@ def rtl_clock_reset_entries(master, manifest='physical/s81_die_rtl/layer1.f'):
         if out is not None:
             break
     _RTL_CLOCK_CACHE[master] = out
+    return out
+
+
+_RTL_PW_CACHE = {}
+
+
+def rtl_port_width(master, port, manifest='physical/s81_die_rtl/layer1.f'):
+    """S-BIND r6: the width of PORT in the master's RTL header under the die manifest (default parameters), or None"""
+    key = (master, port)
+    if key in _RTL_PW_CACHE:
+        return _RTL_PW_CACHE[key]
+    out = None
+    if master:
+        sys.path.insert(0, str(ROOT / 'tools'))
+        import die_port_bind as DPB
+        files, defines, _ = DPB.load_manifest(ROOT / manifest)
+        env_def = {d: '1' for d in defines}
+        for f_ in files:
+            if Path(f_).exists() and re.search(r'\bmodule\s+%s\b' % re.escape(master), Path(f_).read_text()):
+                for md in DPB.parse_modules(DPB.preprocess(Path(f_).read_text(), env_def), f_):
+                    if md.name == master and port in md.ports:
+                        try:
+                            out = md.width(port, md.env({}))
+                        except Exception:
+                            out = None
+                if out is not None:
+                    break
+    _RTL_PW_CACHE[key] = out
     return out
 
 
@@ -7495,6 +7536,9 @@ def _ctrl_band_lanes(m, CH8, P, cor, end_spec, single, beside_svc, face_pt, stri
             assert w_i == 2 and vbit == 0, (tag, w_i, vbit)
         assert vbit in (0, w_i - 1), (tag, vbit, w_i)
         st_ = start_at(tag, w_i, sa, side, fmt=fmt)
+        # every ctrl-lane source port (sequencer c / d / s faces, slab c_done / c_st, svc join, host hw, svc hc) is on the
+        # stream clock (the sequencer's kit / program faces are its serial side, never a lane source)
+        m.setdefault('_l2r_wdom', {})[st_.name] = 'stream'
         if vbit == 0:
             CH8.bus(f'hs_{tag}_i', 'local', w_i, [(src.name, sport), (st_.name, 'i')])
         else:

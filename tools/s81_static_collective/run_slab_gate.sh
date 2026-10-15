@@ -14,10 +14,15 @@ SRC=("$ROOT/rtl/ot_fp32_rne_pkg.sv" "$ROOT/rtl/hdc/ot_hdc_prefix.sv" "$ROOT/rtl/
  "$S"/s81_static_hc/{s81_static_hc_reduce,s81_static_hc_assemble}.sv
  "$S"/s81_ph/{ot_s81ph_fp32_add_rne_preexp,ot_s81ph_coll_rstc,ot_s81_pll_bb}.sv
  "$S"/s81_ph/coll/{dsfd_coll_static_channels,dsfd_coll_ck,ot_s81ph_ckbuf}.sv
- "$S"/s81_ph/vm/{dsfd_sp_vm_static,dsfd_vm_static_core,dsfd_vm_static512_suhc,dsfd_vm_static_slice128_suhc,dsfd_vm_static_bank128,dsfd_vm_static_relay128,dsfd_vm_static_scatter,dsfd_vm_static_return,dsfd_vm_static_suhc_fsr,dsfd_vm_static_suhc_return_map,dsfd_vm_static_wdispatch128,dsfd_vm_static_wstage128,dsfd_vm_static_wsched,dsfd_vm_static_rsched,dsfd_vm_static_landing,dsfd_vm_static_wfc,dsfd_vm_static_cap,dsfd_vm_static_capl,dsfd_vm_static_xio,dsfd_vm_seq_static,ot_s81_vm_x34,ot_s81_vm_x43,dsfd_vm_static_fsr_quartets,dsfd_vm_static_write_capture128,dsfd_vm_static_scatter_b8_out,dsfd_vm_static_relay128_b8,dsfd_vm_static_relay128_b4,dsfd_vm_static_w0,dsfd_vm_static_wcontrol,dsfd_vm_static_cap_leaf,dsfd_vm_static_fsr_bank8}.sv
  "$ROOT/physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8.v"
  "$ROOT/physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v"
  "$ROOT/tools/s81_static_collective/tb_s81_static_collective_slab.sv")
+# the VM's file closure from its current source (its module set evolves with the VM owners' successors; a hardcoded
+# list went stale: dsfd_vm_seq_tile / dsfd_vm_static_return32_native_lanes)
+mapfile -t VMF < <(cd "$ROOT" && python3 tools/die_port_bind.py none --closure dsfd_sp_vm)
+[ ${#VMF[@]} -gt 10 ] || { echo "SLAB_GATE VM closure failed"; exit 2; }
+SRC=("${SRC[@]:0:${#SRC[@]}-1}" "${VMF[@]}" "${SRC[@]: -1}")
+mapfile -t SRC < <(for f in "${SRC[@]}"; do realpath "$f"; done | awk '!seen[$0]++')
 for f in "${SRC[@]}"; do [ -f "$f" ] || { echo "SLAB_GATE missing $f"; exit 2; }; done
 sha256sum "${SRC[@]}" > sources.sha256
 "$V" --binary --timing -j 16 -Wno-fatal -Wno-lint -Wno-style --top-module tb_s81_static_collective_slab -GMUT="$MUT" --Mdir obj "${SRC[@]}" > build.log 2>&1

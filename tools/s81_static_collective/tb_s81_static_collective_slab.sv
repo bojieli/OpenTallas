@@ -20,7 +20,7 @@ module tb_s81_static_collective_slab;
  reg[15:0]su_rqv=0;reg[223:0]su_rq=0;wire[15:0]su_rsv;wire[8191:0]su_rs;wire[1:0]vm_status;
  // VM clock/reset categories (558adb0f7 / a2a504bd4): t = the collective clock, s = the VM service clock,
  // connected as rtl/dsrom_sys/s81_ph/test/tb_dsfd_sp_vm_static.sv does.
- dsfd_sp_vm vm(.cks(clk),.rss(rst_n),
+ dsfd_sp_vm vm(
   .ck_read_data_t({64{clk}}),.ck_read_valid_t({8{clk}}),.rss_read_data_t({64{rst_n}}),.rss_read_valid_t({8{rst_n}}),
   .ck_core_t(clk),.ck_rsched_t(clk),.ck_seq_t(clk),.ck_landing_t(clk),
   .ck_mem_fsr_t({16{clk}}),.ck_mem_return_t({4{clk}}),.ck_mem_bank_t({128{clk}}),
