@@ -1,0 +1,8 @@
+PREFETCH_CDC_CASE epoch=1 total=640 HBM_reserve_to_ready_cycles=28575 stream_delivery_cycles=80
+PREFETCH_CDC_CASE epoch=2 total=2048 HBM_reserve_to_ready_cycles=90600 stream_delivery_cycles=256
+PREFETCH_CDC_CASE epoch=3 total=5 HBM_reserve_to_ready_cycles=302 stream_delivery_cycles=1
+PASS PREFETCH_CDC actualPHY real32SRAM stream_period_ps=833.333334 hbm_period_ps=1024 PHY_CLK_PS=1024 phase=137.000000 exact_vectors=2693 requests=2693 fixed_cycles=337 request_stalls=1778 response_stalls=0 withheld_response_cycles=4558
+- rtl/hbm_accel/loader/service_native/tb_hbm_svc_prefetch_block_cdc.sv:162: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 123us; walltime 1.475 s; speed 82.915 us/s
+- Verilator: cpu 1.479 s on 1 threads; alloced 506 MB

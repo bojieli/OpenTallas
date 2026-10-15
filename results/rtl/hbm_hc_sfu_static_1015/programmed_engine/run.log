@@ -1,0 +1,5 @@
+PASS SFU static composition 16 actual C12 lanes 80 operand SRAMs 16 programme SRAMs independent Python fullbatch calendar words=28672 exact_checks=28672 preload_edges=1792 compiler_edges=1846 programme_to_consumer=5 drain_edges=1792
+- rtl/test/hbm_accel/generic/tb_hgi_sfu_programmed_engine.sv:65: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 17us; walltime 257.533 s; speed 65.490 ns/s
+- Verilator: cpu 257.507 s on 1 threads; allocated 74 MB

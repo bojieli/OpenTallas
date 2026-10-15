@@ -1,0 +1,24 @@
+{
+ "schema": "opentallas.s81.hc.crrf_pinreg.v1",
+ "source_commit": "a6ead93e2",
+ "host": "ot-epyc1tb",
+ "lockstep": {
+  "C0": "lock_m0.log",
+  "C2": "lock_m0_c2.log",
+  "mismatches": 0,
+  "cycles": 60000,
+  "mutant1_mismatches": 18272,
+  "mutant2_mismatches": 18270
+ },
+ "composition": {
+  "exact": "composition_exact.json",
+  "mutant": "composition_mutant.json",
+  "exact_rows": 1940,
+  "cycles": 6392
+ },
+ "physical": {
+  "flat_cts_tt_spread_ps": 238.4,
+  "closed_control_cts_tt_spread_ps": 59.0,
+  "next": "balanced spine measurement before submit; die spread maximum 80ps"
+ }
+}

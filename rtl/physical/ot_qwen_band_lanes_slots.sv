@@ -18,6 +18,8 @@
 //                       pw[512:0] = {pw_v, pw[511:0]}
 //                       f, b0 (strap), lnk[5:0] (strap), ck, rst_n
 // OT_QFD_BL_MUT (bench only): lane 5's leaf pairs level 9 as (0,2)(1,3) (the band's MUT 1).
+`ifndef OT_QFD_BL_HARD
+// Native parent kit supplies this already-CLOSED leaf as a hard child.
 module qfd_bl_lane (
     input  wire         ck,
     input  wire         rst_n,
@@ -58,6 +60,8 @@ module qfd_bl_lane_mut (
         .tt_ty(tt[95:0]), .tt_use(tt[96]), .tt_v(tt[97]), .pw(pw[31:0]), .pw_v(pw[32]), .ty(ty), .fault(f));
 endmodule
 `endif
+
+`endif // OT_QFD_BL_HARD: keep the actual parent body in both modes
 
 module qfd_sp_band_lanes (
     input  wire          ck,

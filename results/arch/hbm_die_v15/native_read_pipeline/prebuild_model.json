@@ -1,0 +1,54 @@
+{
+  "scope": "pre-build common native READ throughput successor; not implementation or qualification",
+  "baseline_source_sha256": "5f1aee6df4632f9f23c7723b1858f548b9d0f9f54e7def9ac6130ab1af471cda",
+  "physical_bank_refresh_owner_count_per_stack": 32,
+  "read_reservations_per_PC": 32,
+  "read_latency_HBM_edges": 23,
+  "read_tag_beat_bits": 21,
+  "pending_identity_FIFO_bits_per_PC": 672,
+  "response_metadata_FIFO_bits_per_PC": 672,
+  "actual_response_SRAMs_per_PC": 1,
+  "actual_response_SRAM_shape": [
+    128,
+    256
+  ],
+  "active_response_rows": 32,
+  "actual_response_SRAMs_per_stack": 32,
+  "actual_response_SRAMs_four_stacks": 128,
+  "response_SRAM_clock": "existing same-phase pc_clk root for that physical PC",
+  "owner_entry_beat_extra_FF_per_PC": 128,
+  "removed_baseline_read_state_FF_estimate": 276,
+  "estimated_root_FF": 14162,
+  "measured_root_FF_pending": true,
+  "expected_clock_root_count_delta": 0,
+  "new_DRAM_bank_controllers": 0,
+  "K_read_lengths": [
+    1,
+    2,
+    3,
+    4
+  ],
+  "K_write_lengths": [
+    1
+  ],
+  "burst_rule": "All sectors must stay within the same PC low2-sector group; expand exact native sectors and retain original tag and beat 0..len-1. Reject other requests.",
+  "boundedness": "Reserve response capacity when a read enters the native access queue; return reservation only after the corresponding response is accepted. Pending+returned+queued <=32 per PC.",
+  "row_rule": "Retain same physical row; changed row fences all owner queue entries and all response reservations, then actual old-bank PRE drain.",
+  "old_single_read_peak_B_per_stream_edge_4PC": 4.528985507246377,
+  "new_pipeline_peak_B_per_stream_edge_4PC": 104.16666666666667,
+  "immutable_95pct_price_B_per_stream_edge_4PC": 98.95833333333333,
+  "physical_return_latency_changes": false,
+  "SRAM_read_latency_HBM_edges": 1,
+  "response_steady_II_HBM_edges": 1,
+  "bank_command_timing": "Existing actual r14 bank/refresh controller remains sole owner; no replacement scheduler in external model.",
+  "implementation_authorized_after": "canonical23-edge fullDMA gate terminal",
+  "remaining": [
+    "measured FF/root count",
+    "real SRAM and queue guard/mutant benches",
+    "actual native mapped4 checkpoint producer join",
+    "immutable prefetch throughput gates",
+    "protected state admission",
+    "command-only PHY physical view",
+    "SS/FF CTS and physical slot fit"
+  ]
+}

@@ -1,0 +1,45 @@
+{
+  "schema": "opentallas.hbm.engram.native_home_fetch.v1",
+  "status": "pass",
+  "layer": 1,
+  "homes": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ],
+  "rows": 24,
+  "sectors": 216,
+  "core_clock_ps": 833.334,
+  "hbm_clock_ps": 1024,
+  "external_HBM": "physical DRAM row/column command/data only; original releasedtable bytes",
+  "fixed_fetch_core_edges": 18944,
+  "compact_home_calendar": true,
+  "output": "PASS actualhash8homes nativeRWcontrollers CDCtwo-clocks SRAM216sectors descriptors24 checks216 physicalRD216 REFpb33880 fixedfetch18944coreedges\nhome_fetch_L1_compact/tb.sv:161: $finish called at 16112932557 (1fs)",
+  "wall_seconds": 786.176502524002,
+  "source_binding": {
+    "external_hbm_sectors.hex": "ac4d7ba200db8e9f93fef59783ec78aff7eb2205661006e93b582fa75b7ead74",
+    "expected_bf16.hex": "5ce905a3deb3996bf985b2f2252a9ee5c07ff1942e14eeffe9f5e8f72bc9ec7f"
+  },
+  "collective_decode_join": false,
+  "full_layer_qualified": false,
+  "physical_qualified": false,
+  "source_sha256": {
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": "dba769863f502de28853a78ac30544a406c7cb66fd3249019ef9fa5a5b73e36e",
+    "rtl/hdc/v41/ot_hdc_engram_tables_shipped_pkg.sv": "743063fbfc402bda039919cfe0de959980ac5f1fa3999474503dc70060342989",
+    "rtl/hdc/v41/ot_hdc_engram_hash_shipped.sv": "86749dce384ec65ec1ac3dd99e34848161c1ddc8931b69ee3c5688c953fb4a98",
+    "rtl/hdc/v41/ot_hdc_engram_gather.sv": "2edd7582a38629ebd662f68eff7eb88c5f90d88c689157cbbe2acf5d5a2099ed",
+    "rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc.sv": "36ab8140f3a9f14d4098729f79f5091f1e67156409997dc2d6276387a23315c8",
+    "rtl/hbm_accel/service/native_sector_20261015/ot_hbm_native_sector_stack.sv": "6e5644b2d8e2809fcaf2e0e3a50f4e1d1248b30cadb9d7c98138328bdf538ae1",
+    "rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv": "6b92d2ef1e24a526bd8f674d9aa696f61d4430b802155f35575d68efa439502b",
+    "rtl/hbm_accel/ingest/ot_hbm_loader_kport_address.sv": "b6eea0ffce657114439b555d6d4eee5ee6ad7efa4c6d226e94aa8697d539898b",
+    "rtl/hbm_accel/engram_static_20261015/ot_hbm_engram_home_dispatch.sv": "1132b94038342443ba24380f1a1e697ebb8c7aa7c2fea231d2e83a991f8a94f9",
+    "rtl/hbm_accel/engram_static_20261015/ot_hbm_engram_hash_home_native.sv": "23bdc9cc444b51b85bf0b7c353998cc4394cce6a73d843d973e2c98327f68f78",
+    "rtl/hbm_accel/engram_static_20261015/ot_hbm_engram_row_store_decode.sv": "e450c13fee2e85d1c5099f225875af1914075ba7154894c5b50659e46505df2d",
+    "rtl/hbm_accel/engram_static_20261015/ot_hbm_engram_home_fetch_compact.sv": "859efc325c8ae92580d2cadc6e5c1ee294ca32ea537d4ace1cecb00e88dcdf3d"
+  }
+}

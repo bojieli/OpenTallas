@@ -9,6 +9,25 @@ from qwen_split import source_pin_plan as P
 
 
 class RealSourcePinPlan(unittest.TestCase):
+    def test_quarter_band_plan_has_every_real_output_and_same_child_clocks(self):
+        q=Master('qfd_sp_band_lanes',881.28,1131.84,7,'')
+        P.apply_band(q)
+        with tempfile.TemporaryDirectory() as d:
+            result=P.export(q,Path(d))
+            a=json.loads((Path(d)/(q.name+'.json')).read_text())
+        self.assertEqual(result['ports'],31)
+        self.assertEqual(result['overlapping_pin_pairs'],0)
+        self.assertEqual(a['ports']['pw']['bits'],513)
+        self.assertEqual(a['ports']['f']['bits'],1)
+        self.assertEqual(a['ports']['f_up']['bits'],4)
+        self.assertEqual(sum(p.startswith('ck') for p in a['ports']),17)
+        for k in range(4):self.assertEqual(a['ports'][f'pw_l{k}']['bits'],129)
+        old=json.loads((P.ROOT/'results/arch/qwen_split_compute_1014/c15_preflight/qfd_sp_band_lanes.json').read_text())
+        for p in ('ck','rst_n','b0','lnk'):
+            self.assertEqual(a['ports'][p]['range_um'],old['ports'][p]['range_um'])
+        for k in range(16):
+            self.assertEqual(a['ports'][f'ck_l{k}']['positions_xy_um'],old['ports'][f'ck_l{k}']['positions_xy_um'])
+
     def test_all_source_pins_fit_without_overlap(self):
         M = {n:Master(n,449.256,1442.856,7,'') for n in ('qfd_tile_nk','qfd_tile_nl')}
         M.update({f'qfd_port_tiles_{b}{s}':Master(f'qfd_port_tiles_{b}{s}',1036.776,2462.376,7,'') for b in range(3) for s in ('','_f1')})

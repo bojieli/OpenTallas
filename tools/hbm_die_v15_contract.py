@@ -21,10 +21,10 @@ def generate(out):
     abi_path=ROOT/'results/arch/hbm_vm_static_1014/quadrant_abi.json'
     abi=json.loads(abi_path.read_text())
     modules={}; sources={}
-    def module(name,path,top):
+    def module(name,path,top,params=None):
         p=ROOT/path
-        parsed=views.L.parse_module(path,top)['ports']
-        modules[name]=dict(master=top,source=path,ports={k:dict(direction=d,bits=w) for k,(d,w) in parsed.items()})
+        parsed=views.L.parse_module(path,top,params or {})['ports']
+        modules[name]=dict(master=top,source=path,params=params or {},ports={k:dict(direction=d,bits=w) for k,(d,w) in parsed.items()})
         sources[path]=hashlib.sha256(p.read_bytes()).hexdigest()
     for q, rec in abi['quadrants'].items():
         module('hb_vms_'+q,VM_SOURCE,rec['master'])
@@ -44,7 +44,19 @@ def generate(out):
         for q in abi['quadrants']:
             module('phy_'+q,'physical/asap7_memory_macros_v2/ot_hbm3e_phy_v41x_aw30_e8p5/ot_hbm3e_phy_v41x_aw30_e8p5_bb.v',
                    'ot_hbm3e_phy_v41x_aw30_e8p5')
-    edges=[]; connected=set()
+    calendar_source='rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_static.sv'
+    if (ROOT/calendar_source).exists():
+        for q in abi['quadrants']:
+            module('calendar_'+q,calendar_source,'hfd_hgi_vm_calendar_'+q)
+            for stage in range(3):
+                module(f'lg_{q}_{stage}','rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_tap.sv',
+                       'ot_hbm_vm_lg_static_tap',dict(READ_RETURN=10+4*stage,WRITE_RETURN=7+4*stage))
+    status_source='rtl/hbm_accel/generic/vm/static/ot_vms_status4_static.sv'
+    if (ROOT/status_source).exists():module('vm_status4',status_source,'ot_vms_status4_static')
+    coll_source='rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q_static.sv'
+    if (ROOT/coll_source).exists():
+        for q in abi['quadrants']:module('hb_coll_'+q,coll_source,'ot_hfd_coll_q3_static' if q=='SW' else 'ot_hfd_coll_q2_static')
+    edges=[]; connected=set(); parts={}; logical_constants=[]
     def edge(name,src,dst):
         sm,sp=src; dm,dp=dst
         a=modules[sm]['ports'][sp];b=modules[dm]['ports'][dp]
@@ -52,10 +64,61 @@ def generate(out):
         edges.append(dict(name=name,bits=a['bits'],source=list(src),sink=list(dst),
                           clock='stream',ready_or_credit=False))
         connected.update((tuple(src),tuple(dst)))
+    def slice_edge(name,src,dst,width):
+        sm,sp,lo=src;dm,dp,dlo=dst
+        a=modules[sm]['ports'][sp];b=modules[dm]['ports'][dp]
+        assert a['direction']=='output' and b['direction']=='input'
+        assert lo>=0 and lo+width<=a['bits'] and dlo>=0 and dlo+width<=b['bits'],(name,a,b,width)
+        used=parts.setdefault((dm,dp),set())
+        assert not used.intersection(range(dlo,dlo+width)),(name,'multiple drivers')
+        edges.append(dict(name=name,bits=width,source=[sm,sp,lo,lo+width],sink=[dm,dp,dlo,dlo+width],
+                          clock='stream',ready_or_credit=False))
+        for end,low,rec in ((src,lo,a),(dst,dlo,b)):
+            key=tuple(end[:2]);parts.setdefault(key,set()).update(range(low,low+width))
+            if len(parts[key])==rec['bits']:connected.add(key)
+    for q in abi['quadrants']:
+        vm='hb_vms_'+q;cal='calendar_'+q;coll='hb_coll_'+q
+        if cal in modules:
+            for port,rec in modules[cal]['ports'].items():
+                if rec['direction']=='output' and port in modules[vm]['ports']:
+                    edge('calendar_'+q+'_'+port,(cal,port),(vm,port))
+            for stage in range(3):
+                tap=f'lg_{q}_{stage}'
+                for port in ('read','write'):
+                    slice_edge(f'{tap}_{port}_select',(cal,'lg_local_'+port,stage*8),(tap,'local_'+port,0),8)
+                if stage==0:
+                    slice_edge(tap+'_rq',(tap,'near_rq',0),(vm,'rq',0),136)
+                    slice_edge(tap+'_wq',(tap,'near_wq',0),(vm,'wq',0),2248)
+                    slice_edge(tap+'_rr',(vm,'rr',0),(tap,'near_rr',0),2056)
+                    slice_edge(tap+'_w_done',(vm,'wq_done',0),(tap,'near_w_done',0),8)
+                else:
+                    near=f'lg_{q}_{stage-1}'
+                    for suffix in ('rq','wq'):edge(tap+'_'+suffix,(tap,'near_'+suffix),(near,'far_'+suffix))
+                    edge(tap+'_rr',(near,'far_rr'),(tap,'near_rr'))
+                    edge(tap+'_wdone',(near,'far_w_done'),(tap,'near_w_done'))
+                if stage==2:
+                    for port in ('far_rq','far_wq'):
+                        logical_constants.append(dict(sink=[tap,port],bits=modules[tap]['ports'][port]['bits'],
+                            value=0,reason='actual three-tap topology termination; no fourth producer',
+                            physical_tie_cells_qualified=False))
+                        connected.add((tap,port))
+        if 'vm_status4' in modules:
+            # Source ABI sid order SW,SE,NW,NE; do not confuse with ring order.
+            index=('SW','SE','NW','NE').index(q)
+            slice_edge('status_'+q,(vm,'vmstat',0),('vm_status4','quadrant_status',19*index),19)
+        if coll in modules:
+            group=3 if q.startswith('S') else 5
+            assert abi['quadrants'][q]['params']['RG']>group,(q,'COLL native read-group expansion missing')
+            slice_edge('coll_vm_rq_'+q,(coll,'vm_rq',0),(vm,'rq',136*group),136)
+            slice_edge('coll_vm_rr_'+q,(vm,'rr',2056*group),(coll,'vm_rr',0),2056)
+            edge('coll_vm_kq_'+q,(coll,'vm_kq'),(vm,'kq'))
     qs=('SW','SE','NE','NW')
     for i,q in enumerate(qs):
         edge('ring_cw_'+q,('hb_vms_'+q,'cw_out'),('hb_vms_'+qs[(i+1)%4],'cw_in'))
         edge('ring_ccw_'+q,('hb_vms_'+q,'ccw_out'),('hb_vms_'+qs[(i-1)%4],'ccw_in'))
+        if 'hb_coll_'+q in modules:
+            edge('collective_cw_'+q,('hb_coll_'+q,'pr_cw_o'),('hb_coll_'+qs[(i+1)%4],'pr_cw_i'))
+            edge('collective_ccw_'+q,('hb_coll_'+q,'pr_ccw_o'),('hb_coll_'+qs[(i-1)%4],'pr_ccw_i'))
         edge('service_dq_'+q,('delivery_'+q,'dq'),('hb_vms_'+q,'dq'))
     if service:
         for rec in service['instances']:
@@ -105,13 +168,20 @@ def generate(out):
                 owner='actual static COLL parent / VM writer'
             else:
                 owner='actual VM programme SRAM calendar issuer'
-            unresolved.append(dict(instance=name,port=port,**rec,required_owner=owner,status='UNBOUND_FAIL'))
+            missing=sorted(set(range(rec['bits']))-parts.get((name,port),set()))
+            ranges=[]
+            for bit in missing:
+                if ranges and ranges[-1][1]==bit:ranges[-1][1]=bit+1
+                else:ranges.append([bit,bit+1])
+            unresolved.append(dict(instance=name,port=port,**rec,required_owner=owner,
+                bound_bits=rec['bits']-len(missing),unbound_bits=len(missing),
+                unbound_ranges_half_open=ranges,status='UNBOUND_FAIL'))
     out.mkdir(parents=True,exist_ok=True)
     generated=[]
     # Same source-exact widths as the new eight ring edges and four staging
     # edges. A common-clock station is actual flop RTL, never an abstract stub.
     # Physical location, hop count and timing are deliberately NOT inferred.
-    for width in sorted({e['bits'] for e in edges if e['clock']=='stream'}):
+    for width in (2224,2248):
         master=f'hfd_stn_v15_cc{width}'
         def port(direction,bits):
             return dict(direction=direction,bits=bits,dir_segments=[[0,bits,'in' if direction=='input' else 'out']])
@@ -134,7 +204,7 @@ def generate(out):
                 service_qualification_rejections=service['qualification_rejections'] if service else [],
                 abi_sha256=hashlib.sha256(abi_path.read_bytes()).hexdigest(),
                 instances=modules,known_actual_edges=edges,clock_roots=roots,
-                registered_station_masters=generated,unbound_ports=unresolved,
+                registered_station_masters=generated,logical_constant_requests=logical_constants,unbound_ports=unresolved,
                 boundary_gaps=['actual 1.024ns PHY to 0.833333ns stream block CDC absent',
                                'actual mapped PHY address/endian/PC striping proof required',
                                'historical PC leaf rejected for address/clock semantics; actual block CDC replacement required'],
@@ -185,4 +255,4 @@ if __name__=='__main__':
     args=ap.parse_args()
     report=generate(args.out)
     if args.bench:bench(args.out,report)
-    raise SystemExit(0 if args.inventory else bool(report['unbound_count'] or report['boundary_gaps']))
+    raise SystemExit(0 if args.inventory else bool(report['unbound_count'] or report['boundary_gaps'] or report['logical_constant_requests']))

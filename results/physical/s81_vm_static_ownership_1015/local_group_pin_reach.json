@@ -1,0 +1,533 @@
+{
+  "status": "REJECT_FOR_NATIVE_ADOPTION",
+  "scope": "exact assigned R0 bank/relay bit geometry only; clock/PG and unknown endpoint pins excluded",
+  "stats": {
+    "quarter_to_bank_request": {
+      "bits": 21504,
+      "over500": 10808,
+      "max_um": 859.644
+    },
+    "bank_to_quarter_response": {
+      "bits": 20352,
+      "over500": 9716,
+      "max_um": 1034.46
+    },
+    "bridge_to_quarter_request": {
+      "bits": 21504,
+      "over500": 13312,
+      "max_um": 614.4
+    },
+    "quarter_to_bridge_response": {
+      "bits": 20352,
+      "over500": 15264,
+      "max_um": 1097.856
+    }
+  },
+  "worst": [
+    {
+      "source": "vm_s0_quarter3.o_cm[0]",
+      "target": "vm_s0_bridge1.i_cm[32]",
+      "manhattan_um": 1097.856
+    },
+    {
+      "source": "vm_s0_quarter3.o_cm[1]",
+      "target": "vm_s0_bridge1.i_cm[33]",
+      "manhattan_um": 1097.856
+    },
+    {
+      "source": "vm_s0_quarter3.o_cm[2]",
+      "target": "vm_s0_bridge1.i_cm[34]",
+      "manhattan_um": 1097.856
+    },
+    {
+      "source": "vm_s0_quarter3.o_cm[3]",
+      "target": "vm_s0_bridge1.i_cm[35]",
+      "manhattan_um": 1097.856
+    },
+    {
+      "source": "vm_s0_quarter3.o_cm[4]",
+      "target": "vm_s0_bridge1.i_cm[36]",
+      "manhattan_um": 1097.856
+    },
+    {
+      "source": "vm_s0_quarter3.o_cm[5]",
+      "target": "vm_s0_bridge1.i_cm[37]",
+      "manhattan_um": 1097.856
+    },
+    {
+      "source": "vm_s0_quarter3.o_cm[6]",
+      "target": "vm_s0_bridge1.i_cm[38]",
+      "manhattan_um": 1097.856
+    },
+    {
+      "source": "vm_s0_quarter3.o_cm[7]",
+      "target": "vm_s0_bridge1.i_cm[39]",
+      "manhattan_um": 1097.856
+    },
+    {
+      "source": "vm_s0_quarter3.o_cm[8]",
+      "target": "vm_s0_bridge1.i_cm[40]",
+      "manhattan_um": 1097.856
+    },
+    {
+      "source": "vm_s0_quarter3.o_cm[9]",
+      "target": "vm_s0_bridge1.i_cm[41]",
+      "manhattan_um": 1097.856
+    },
+    {
+      "source": "vm_s0_quarter3.o_cm[10]",
+      "target": "vm_s0_bridge1.i_cm[42]",
+      "manhattan_um": 1097.856
+    },
+    {
+      "source": "vm_s0_quarter3.o_cm[11]",
+      "target": "vm_s0_bridge1.i_cm[43]",
+      "manhattan_um": 1097.856
+    },
+    {
+      "source": "vm_s0_quarter3.o_cm[12]",
+      "target": "vm_s0_bridge1.i_cm[44]",
+      "manhattan_um": 1097.856
+    },
+    {
+      "source": "vm_s0_quarter3.o_cm[13]",
+      "target": "vm_s0_bridge1.i_cm[45]",
+      "manhattan_um": 1097.856
+    },
+    {
+      "source": "vm_s0_quarter3.o_cm[14]",
+      "target": "vm_s0_bridge1.i_cm[46]",
+      "manhattan_um": 1097.856
+    },
+    {
+      "source": "vm_s0_quarter3.o_cm[15]",
+      "target": "vm_s0_bridge1.i_cm[47]",
+      "manhattan_um": 1097.856
+    },
+    {
+      "source": "vm_s0_quarter3.o_cm[16]",
+      "target": "vm_s0_bridge1.i_cm[48]",
+      "manhattan_um": 1097.856
+    },
+    {
+      "source": "vm_s0_quarter3.o_cm[17]",
+      "target": "vm_s0_bridge1.i_cm[49]",
+      "manhattan_um": 1097.856
+    },
+    {
+      "source": "vm_s0_quarter3.o_cm[18]",
+      "target": "vm_s0_bridge1.i_cm[50]",
+      "manhattan_um": 1097.856
+    },
+    {
+      "source": "vm_s0_quarter3.o_cm[19]",
+      "target": "vm_s0_bridge1.i_cm[51]",
+      "manhattan_um": 1097.856
+    },
+    {
+      "source": "vm_s0_quarter3.o_cm[20]",
+      "target": "vm_s0_bridge1.i_cm[52]",
+      "manhattan_um": 1097.856
+    },
+    {
+      "source": "vm_s0_quarter3.o_cm[21]",
+      "target": "vm_s0_bridge1.i_cm[53]",
+      "manhattan_um": 1097.856
+    },
+    {
+      "source": "vm_s0_quarter3.o_cm[22]",
+      "target": "vm_s0_bridge1.i_cm[54]",
+      "manhattan_um": 1097.856
+    },
+    {
+      "source": "vm_s0_quarter3.o_cm[23]",
+      "target": "vm_s0_bridge1.i_cm[55]",
+      "manhattan_um": 1097.856
+    },
+    {
+      "source": "vm_s0_quarter3.o_cm[24]",
+      "target": "vm_s0_bridge1.i_cm[56]",
+      "manhattan_um": 1097.856
+    },
+    {
+      "source": "vm_s0_quarter3.o_cm[25]",
+      "target": "vm_s0_bridge1.i_cm[57]",
+      "manhattan_um": 1097.856
+    },
+    {
+      "source": "vm_s0_quarter3.o_cm[26]",
+      "target": "vm_s0_bridge1.i_cm[58]",
+      "manhattan_um": 1097.856
+    },
+    {
+      "source": "vm_s0_quarter3.o_cm[27]",
+      "target": "vm_s0_bridge1.i_cm[59]",
+      "manhattan_um": 1097.856
+    },
+    {
+      "source": "vm_s0_quarter3.o_cm[28]",
+      "target": "vm_s0_bridge1.i_cm[60]",
+      "manhattan_um": 1097.856
+    },
+    {
+      "source": "vm_s0_quarter3.o_cm[29]",
+      "target": "vm_s0_bridge1.i_cm[61]",
+      "manhattan_um": 1097.856
+    },
+    {
+      "source": "vm_s0_quarter3.o_cm[30]",
+      "target": "vm_s0_bridge1.i_cm[62]",
+      "manhattan_um": 1097.856
+    },
+    {
+      "source": "vm_s0_quarter3.o_cm[31]",
+      "target": "vm_s0_bridge1.i_cm[63]",
+      "manhattan_um": 1097.856
+    },
+    {
+      "source": "vm_s1_quarter3.o_cm[0]",
+      "target": "vm_s1_bridge1.i_cm[32]",
+      "manhattan_um": 1097.856
+    },
+    {
+      "source": "vm_s1_quarter3.o_cm[1]",
+      "target": "vm_s1_bridge1.i_cm[33]",
+      "manhattan_um": 1097.856
+    },
+    {
+      "source": "vm_s1_quarter3.o_cm[2]",
+      "target": "vm_s1_bridge1.i_cm[34]",
+      "manhattan_um": 1097.856
+    },
+    {
+      "source": "vm_s1_quarter3.o_cm[3]",
+      "target": "vm_s1_bridge1.i_cm[35]",
+      "manhattan_um": 1097.856
+    },
+    {
+      "source": "vm_s1_quarter3.o_cm[4]",
+      "target": "vm_s1_bridge1.i_cm[36]",
+      "manhattan_um": 1097.856
+    },
+    {
+      "source": "vm_s1_quarter3.o_cm[5]",
+      "target": "vm_s1_bridge1.i_cm[37]",
+      "manhattan_um": 1097.856
+    },
+    {
+      "source": "vm_s1_quarter3.o_cm[6]",
+      "target": "vm_s1_bridge1.i_cm[38]",
+      "manhattan_um": 1097.856
+    },
+    {
+      "source": "vm_s1_quarter3.o_cm[7]",
+      "target": "vm_s1_bridge1.i_cm[39]",
+      "manhattan_um": 1097.856
+    },
+    {
+      "source": "vm_s1_quarter3.o_cm[8]",
+      "target": "vm_s1_bridge1.i_cm[40]",
+      "manhattan_um": 1097.856
+    },
+    {
+      "source": "vm_s1_quarter3.o_cm[9]",
+      "target": "vm_s1_bridge1.i_cm[41]",
+      "manhattan_um": 1097.856
+    },
+    {
+      "source": "vm_s1_quarter3.o_cm[10]",
+      "target": "vm_s1_bridge1.i_cm[42]",
+      "manhattan_um": 1097.856
+    },
+    {
+      "source": "vm_s1_quarter3.o_cm[11]",
+      "target": "vm_s1_bridge1.i_cm[43]",
+      "manhattan_um": 1097.856
+    },
+    {
+      "source": "vm_s1_quarter3.o_cm[12]",
+      "target": "vm_s1_bridge1.i_cm[44]",
+      "manhattan_um": 1097.856
+    },
+    {
+      "source": "vm_s1_quarter3.o_cm[13]",
+      "target": "vm_s1_bridge1.i_cm[45]",
+      "manhattan_um": 1097.856
+    },
+    {
+      "source": "vm_s1_quarter3.o_cm[14]",
+      "target": "vm_s1_bridge1.i_cm[46]",
+      "manhattan_um": 1097.856
+    },
+    {
+      "source": "vm_s1_quarter3.o_cm[15]",
+      "target": "vm_s1_bridge1.i_cm[47]",
+      "manhattan_um": 1097.856
+    },
+    {
+      "source": "vm_s1_quarter3.o_cm[16]",
+      "target": "vm_s1_bridge1.i_cm[48]",
+      "manhattan_um": 1097.856
+    },
+    {
+      "source": "vm_s1_quarter3.o_cm[17]",
+      "target": "vm_s1_bridge1.i_cm[49]",
+      "manhattan_um": 1097.856
+    },
+    {
+      "source": "vm_s1_quarter3.o_cm[18]",
+      "target": "vm_s1_bridge1.i_cm[50]",
+      "manhattan_um": 1097.856
+    },
+    {
+      "source": "vm_s1_quarter3.o_cm[19]",
+      "target": "vm_s1_bridge1.i_cm[51]",
+      "manhattan_um": 1097.856
+    },
+    {
+      "source": "vm_s1_quarter3.o_cm[20]",
+      "target": "vm_s1_bridge1.i_cm[52]",
+      "manhattan_um": 1097.856
+    },
+    {
+      "source": "vm_s1_quarter3.o_cm[21]",
+      "target": "vm_s1_bridge1.i_cm[53]",
+      "manhattan_um": 1097.856
+    },
+    {
+      "source": "vm_s1_quarter3.o_cm[22]",
+      "target": "vm_s1_bridge1.i_cm[54]",
+      "manhattan_um": 1097.856
+    },
+    {
+      "source": "vm_s1_quarter3.o_cm[23]",
+      "target": "vm_s1_bridge1.i_cm[55]",
+      "manhattan_um": 1097.856
+    },
+    {
+      "source": "vm_s1_quarter3.o_cm[24]",
+      "target": "vm_s1_bridge1.i_cm[56]",
+      "manhattan_um": 1097.856
+    },
+    {
+      "source": "vm_s1_quarter3.o_cm[25]",
+      "target": "vm_s1_bridge1.i_cm[57]",
+      "manhattan_um": 1097.856
+    },
+    {
+      "source": "vm_s1_quarter3.o_cm[26]",
+      "target": "vm_s1_bridge1.i_cm[58]",
+      "manhattan_um": 1097.856
+    },
+    {
+      "source": "vm_s1_quarter3.o_cm[27]",
+      "target": "vm_s1_bridge1.i_cm[59]",
+      "manhattan_um": 1097.856
+    },
+    {
+      "source": "vm_s1_quarter3.o_cm[28]",
+      "target": "vm_s1_bridge1.i_cm[60]",
+      "manhattan_um": 1097.856
+    },
+    {
+      "source": "vm_s1_quarter3.o_cm[29]",
+      "target": "vm_s1_bridge1.i_cm[61]",
+      "manhattan_um": 1097.856
+    },
+    {
+      "source": "vm_s1_quarter3.o_cm[30]",
+      "target": "vm_s1_bridge1.i_cm[62]",
+      "manhattan_um": 1097.856
+    },
+    {
+      "source": "vm_s1_quarter3.o_cm[31]",
+      "target": "vm_s1_bridge1.i_cm[63]",
+      "manhattan_um": 1097.856
+    },
+    {
+      "source": "vm_s2_quarter3.o_cm[0]",
+      "target": "vm_s2_bridge1.i_cm[32]",
+      "manhattan_um": 1097.856
+    },
+    {
+      "source": "vm_s2_quarter3.o_cm[1]",
+      "target": "vm_s2_bridge1.i_cm[33]",
+      "manhattan_um": 1097.856
+    },
+    {
+      "source": "vm_s2_quarter3.o_cm[2]",
+      "target": "vm_s2_bridge1.i_cm[34]",
+      "manhattan_um": 1097.856
+    },
+    {
+      "source": "vm_s2_quarter3.o_cm[3]",
+      "target": "vm_s2_bridge1.i_cm[35]",
+      "manhattan_um": 1097.856
+    },
+    {
+      "source": "vm_s2_quarter3.o_cm[4]",
+      "target": "vm_s2_bridge1.i_cm[36]",
+      "manhattan_um": 1097.856
+    },
+    {
+      "source": "vm_s2_quarter3.o_cm[5]",
+      "target": "vm_s2_bridge1.i_cm[37]",
+      "manhattan_um": 1097.856
+    },
+    {
+      "source": "vm_s2_quarter3.o_cm[6]",
+      "target": "vm_s2_bridge1.i_cm[38]",
+      "manhattan_um": 1097.856
+    },
+    {
+      "source": "vm_s2_quarter3.o_cm[7]",
+      "target": "vm_s2_bridge1.i_cm[39]",
+      "manhattan_um": 1097.856
+    },
+    {
+      "source": "vm_s2_quarter3.o_cm[8]",
+      "target": "vm_s2_bridge1.i_cm[40]",
+      "manhattan_um": 1097.856
+    },
+    {
+      "source": "vm_s2_quarter3.o_cm[9]",
+      "target": "vm_s2_bridge1.i_cm[41]",
+      "manhattan_um": 1097.856
+    },
+    {
+      "source": "vm_s2_quarter3.o_cm[10]",
+      "target": "vm_s2_bridge1.i_cm[42]",
+      "manhattan_um": 1097.856
+    },
+    {
+      "source": "vm_s2_quarter3.o_cm[11]",
+      "target": "vm_s2_bridge1.i_cm[43]",
+      "manhattan_um": 1097.856
+    },
+    {
+      "source": "vm_s2_quarter3.o_cm[12]",
+      "target": "vm_s2_bridge1.i_cm[44]",
+      "manhattan_um": 1097.856
+    },
+    {
+      "source": "vm_s2_quarter3.o_cm[13]",
+      "target": "vm_s2_bridge1.i_cm[45]",
+      "manhattan_um": 1097.856
+    },
+    {
+      "source": "vm_s2_quarter3.o_cm[14]",
+      "target": "vm_s2_bridge1.i_cm[46]",
+      "manhattan_um": 1097.856
+    },
+    {
+      "source": "vm_s2_quarter3.o_cm[15]",
+      "target": "vm_s2_bridge1.i_cm[47]",
+      "manhattan_um": 1097.856
+    },
+    {
+      "source": "vm_s2_quarter3.o_cm[16]",
+      "target": "vm_s2_bridge1.i_cm[48]",
+      "manhattan_um": 1097.856
+    },
+    {
+      "source": "vm_s2_quarter3.o_cm[17]",
+      "target": "vm_s2_bridge1.i_cm[49]",
+      "manhattan_um": 1097.856
+    },
+    {
+      "source": "vm_s2_quarter3.o_cm[18]",
+      "target": "vm_s2_bridge1.i_cm[50]",
+      "manhattan_um": 1097.856
+    },
+    {
+      "source": "vm_s2_quarter3.o_cm[19]",
+      "target": "vm_s2_bridge1.i_cm[51]",
+      "manhattan_um": 1097.856
+    },
+    {
+      "source": "vm_s2_quarter3.o_cm[20]",
+      "target": "vm_s2_bridge1.i_cm[52]",
+      "manhattan_um": 1097.856
+    },
+    {
+      "source": "vm_s2_quarter3.o_cm[21]",
+      "target": "vm_s2_bridge1.i_cm[53]",
+      "manhattan_um": 1097.856
+    },
+    {
+      "source": "vm_s2_quarter3.o_cm[22]",
+      "target": "vm_s2_bridge1.i_cm[54]",
+      "manhattan_um": 1097.856
+    },
+    {
+      "source": "vm_s2_quarter3.o_cm[23]",
+      "target": "vm_s2_bridge1.i_cm[55]",
+      "manhattan_um": 1097.856
+    },
+    {
+      "source": "vm_s2_quarter3.o_cm[24]",
+      "target": "vm_s2_bridge1.i_cm[56]",
+      "manhattan_um": 1097.856
+    },
+    {
+      "source": "vm_s2_quarter3.o_cm[25]",
+      "target": "vm_s2_bridge1.i_cm[57]",
+      "manhattan_um": 1097.856
+    },
+    {
+      "source": "vm_s2_quarter3.o_cm[26]",
+      "target": "vm_s2_bridge1.i_cm[58]",
+      "manhattan_um": 1097.856
+    },
+    {
+      "source": "vm_s2_quarter3.o_cm[27]",
+      "target": "vm_s2_bridge1.i_cm[59]",
+      "manhattan_um": 1097.856
+    },
+    {
+      "source": "vm_s2_quarter3.o_cm[28]",
+      "target": "vm_s2_bridge1.i_cm[60]",
+      "manhattan_um": 1097.856
+    },
+    {
+      "source": "vm_s2_quarter3.o_cm[29]",
+      "target": "vm_s2_bridge1.i_cm[61]",
+      "manhattan_um": 1097.856
+    },
+    {
+      "source": "vm_s2_quarter3.o_cm[30]",
+      "target": "vm_s2_bridge1.i_cm[62]",
+      "manhattan_um": 1097.856
+    },
+    {
+      "source": "vm_s2_quarter3.o_cm[31]",
+      "target": "vm_s2_bridge1.i_cm[63]",
+      "manhattan_um": 1097.856
+    },
+    {
+      "source": "vm_s3_quarter3.o_cm[0]",
+      "target": "vm_s3_bridge1.i_cm[32]",
+      "manhattan_um": 1097.856
+    },
+    {
+      "source": "vm_s3_quarter3.o_cm[1]",
+      "target": "vm_s3_bridge1.i_cm[33]",
+      "manhattan_um": 1097.856
+    },
+    {
+      "source": "vm_s3_quarter3.o_cm[2]",
+      "target": "vm_s3_bridge1.i_cm[34]",
+      "manhattan_um": 1097.856
+    },
+    {
+      "source": "vm_s3_quarter3.o_cm[3]",
+      "target": "vm_s3_bridge1.i_cm[35]",
+      "manhattan_um": 1097.856
+    }
+  ],
+  "requirements": [
+    "change actual relay face assignment/grouping/orientation or add explicit pin-registered stages and recompile ages",
+    "actual quarter/bridge native CTS and boundary phi-R timing",
+    "FSR/scatter/return/53writer/capture actual pins/cuts before wholeVM claim"
+  ]
+}

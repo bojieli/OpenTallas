@@ -46,15 +46,27 @@ if [ -s $G/die_grt.spef ] && head -n 30 $G/die_grt.spef | awk '/^\*PORTS$/{p=1;n
   awk 'NR<=30 && /^\*PORTS$/ {next} {print}' $G/die_grt.spef > $G/die_grt.spef.np && mv $G/die_grt.spef.np $G/die_grt.spef
   say "SPEF: empty *PORTS section dropped (STA-1670)"
 fi
-for c in ${OT_CORNERS:-tt ff}; do D=$R/sta_${DIE}_$c; mkdir -p $D/libs
-  [ -s $G/die_grt.spef ] || { say "STA $c: no die_grt.spef (GRT parasitics), not run"; continue; }
+sta_failed=0
+corners=${OT_CORNERS-tt ff}
+[ -n "${corners//[[:space:]]/}" ] || { say "STA FAIL: empty corner list"; exit 1; }
+for c in $corners; do
+  case "$c" in tt|ff|ss) ;; *) say "STA FAIL: unsupported corner $c"; exit 1;; esac
+done
+for c in $corners; do D=$R/sta_${DIE}_$c; mkdir -p $D/libs
+  [ -s $G/die_grt.spef ] || { say "STA $c: no die_grt.spef (GRT parasitics), not run"; sta_failed=1; continue; }
   ln -f $G/ckpt_grt.odb $G/route.guide $G/die_grt.spef $D/
   cp $R/libs/qfd_elements_$c.lib $D/libs/; [ -f $R/libs/qfd_etm_$c.lib ] && cp $R/libs/qfd_etm_$c.lib $R/libs/views.json $D/libs/; for f in $R/libs/qfd_etm_*_$c.lib; do [ -f "$f" ] && cp "$f" $D/libs/; done; [ -f $R/libs/views.json ] && cp $R/libs/views.json $D/libs/; [ -f $R/libs/ot_hbm3e_phy_$c.lib ] && cp $R/libs/ot_hbm3e_phy_$c.lib $D/libs/
   # qwendie-1011: the die's CTS-measured clock arrivals (clock_plan.py record) when the run has one, else ideal
   CP=; [ -s $R/clock/plan.json ] && CP=$R/clock/plan.json
-  python3 $H/sta_tcl.py $DIE $c $D/grt_$c.tcl $CP
+  python3 $H/sta_tcl.py $DIE $c $D/grt_$c.tcl $CP || { say "STA $c Tcl generation FAIL"; sta_failed=1; continue; }
   say "STA $c clock: ${OT_STA_CLOCKS:-${CP:-ideal (no clock plan)}}"
-  $ADMIT $P4 -- $H/dietop_run.sh $D grt_$c.tcl 8 $((P4+60))
+  $ADMIT $P4 -- $H/dietop_run.sh $D grt_$c.tcl 8 $((P4+60)); sta_rc=$?
+  [ "$sta_rc" = 0 ] && sta_rc=$(cat "$D/run.exit" 2>/dev/null || echo 1)
+  if ! python3 "$H/case_status.py" --log "$D/grt_$c.log" --stage "grt_$c.tcl" --process-exit "$sta_rc"; then
+    say "STA $c FAIL process_exit=$sta_rc; see $D/grt_$c.log.status.json"
+    sta_failed=1
+  fi
   say "STA $c: $(grep -E '^(wns|tns|worst slack)' $D/grt_$c.log | tr '\n' ' ')"
 done
+[ "$sta_failed" = 0 ] || { say "chain FAIL: one or more STA corners did not complete"; exit 1; }
 say "chain done"

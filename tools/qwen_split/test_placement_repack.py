@@ -13,6 +13,9 @@ class GeometryGuards(unittest.TestCase):
                 ('sp_res_ser_0',12794.112,8026.56,777.576,518.376),
                 ('sp_port_tiles_0_f1',13705.632,5559.84,1036.776,2462.376),
                 ('sp_band_lanes_1',12742.272,9612,881.28,1131.84),
+                ('sp_port_tiles_1',12664.512,10748.16,1036.8,2462.4),
+                ('sp_port_tiles_1_f1',13705.632,10748.16,1036.8,2462.4),
+                ('sp_res_ser_1',12794.112,13214.88,777.6,518.4),
                 ('sp_band_lanes_2',12742.272,19355.76,881.28,1131.84),
                 ('sp_vector_memory',14828.832,11962.08,4708.776,2203.176),
                 ('tt_up4_0',14828.832,14597.28,345.576,388.776)]
@@ -30,6 +33,8 @@ class GeometryGuards(unittest.TestCase):
         self.assertEqual(old,[(i.name,i.x,i.y,i.orient) for i in model['insts']])
         self.assertIn('tt_up4_0',[i.name for i in model['insts']])
         self.assertEqual(second['candidate_geometry_errors'],[])
+        self.assertTrue(second['band1_mirrored'])
+        self.assertEqual(next(i for i in model['insts'] if i.name=='sp_band_lanes_1').orient,'MX')
         self.assertIs(model['placement_repack'],second)
 
     def test_missing_west_channel_fails_before_application(self):

@@ -1,0 +1,52 @@
+{
+  "canonical_program": "hbm-sim Qwen3-8B TP4 P8191 rank 0 layer 0",
+  "canonical_case": {
+    "tag": "swiglu",
+    "unit": "SFU",
+    "priced": 120.0,
+    "priced_how": "GLU fast path (width 0.5)",
+    "stage_sectors": 769,
+    "drain_sectors": 384,
+    "roles": {
+      "A": [
+        168960,
+        172031,
+        3072
+      ],
+      "B": [
+        172032,
+        175103,
+        3072
+      ],
+      "C": [
+        12672,
+        12672,
+        1
+      ],
+      "O": [
+        175104,
+        178175,
+        3072
+      ]
+    },
+    "vm_in_sectors": 1153,
+    "vm_out_words": 3072,
+    "vm_out_sectors": 384
+  },
+  "source_fixture_sha256": {
+    "su_aux.svh": "beaa27718ea808aab92431ded4e2a05e7d8a7a5f71638900148c5bf39b9738e1",
+    "su_case.mem": "f87b59842ce847da7dcb2fcda0d7c7f41ee6feb558c6f6a0d4e8c6b4ef89e983",
+    "su_vmg.mem": "a9560d1b2ce4a09a7805c6c3b1df72b0adce5e09ab73797b8f82ef60260f9a85",
+    "su_prod.json": "2df3a2af4326de5ce8f8bb3b22b204ce442f5e4667e883e720dfd7b79a7ac410",
+    "su_vmi.mem": "7fd4e2ea4049220a87a4ba739806214ec9839b012193d8f4e2f8c3609e6d14c1",
+    "su_vme.mem": "56c871dc6720ceb3b8c34603ba82b811270520212b485689df8a5923efb3e356",
+    "su_price.mem": "008cbcaffa98dc4b60d86dd78fc79925309765a7f1ada0c11e61cd733f740496",
+    "su_rec.mem": "b2c0d10e2fdedf645529b2e6d4084f944035b429c2924ae2101b417b9a48d2f7",
+    "su_sizes.svh": "e426b80e9f4157bf27e5c655b0dd197c384448959aeb30f0391c26c48cda1ee7"
+  },
+  "mapping": "G->operandA local0,route->real scalar operandB addr12672,U->operandC local0,O->outputlocal0",
+  "arithmetic": "G=min(G,lim);clipU;SILU(G)*U*route;BF16",
+  "programme_rows": 368,
+  "standalone_component": true,
+  "native_qualified": false
+}

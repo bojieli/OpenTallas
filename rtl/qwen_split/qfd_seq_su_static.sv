@@ -36,11 +36,25 @@
 // OT_QFD_SEQ_SU_MUT (bench only): group 7's st_rdy is ignored in the ready AND.
 // =====================================================================================================================
 module qfd_seq_su_static (
+    // Actual external SU operand request -> existing core INT8 decoder -> SU.
+    input wire [63:0] su_va_re,
+    input wire [1535:0] su_va_addr,
+    output wire [2047:0] su_va_q,
+    output wire [63:0] su_vm_va_re,
+    output wire [1535:0] su_vm_va_addr,
+    input wire [2047:0] su_vm_va_q,
+    output wire embed_code_re,
+    output wire [23:0] embed_code_addr,
+    input wire [511:0] embed_code_q,
+    output wire embed_scale_re,
+    output wire [17:0] embed_scale_addr,
+    input wire [15:0] embed_scale_q,
     input wire ck,
     input wire ck_sched,
     output wire [75:0] program_obs,
     output wire [68:0] descriptor_obs,
     output wire cfg_image_ready,
+    output wire [15:0] su_observe,
     input  wire          rsi,
     input  wire [186:0]  dh,
     output wire [55:0]   dc,
@@ -120,7 +134,19 @@ module qfd_seq_su_static (
     wire [2:0]  i_ad, i_sfu;
     wire [31:0] i_imm1, i_imm2;
     ot_qfd_seq_su_bi_static #(.RRG(1), .PCUT(1), .G(3072), .D(D), .PSRAM(1), .HQ2(1), .CRED(0), .RLY(2)) u_seq (
-        .clk(ck),.ck_sched(ck_sched), .rst_n(rsi),.program_obs(program_obs),.descriptor_obs(descriptor_obs),.cfg_image_ready(body_cfg_ready),
+        .su_va_re(su_va_re),
+        .su_va_addr(su_va_addr),
+        .su_va_q(su_va_q),
+        .su_vm_va_re(su_vm_va_re),
+        .su_vm_va_addr(su_vm_va_addr),
+        .su_vm_va_q(su_vm_va_q),
+        .embed_code_re(embed_code_re),
+        .embed_code_addr(embed_code_addr),
+        .embed_code_q(embed_code_q),
+        .embed_scale_re(embed_scale_re),
+        .embed_scale_addr(embed_scale_addr),
+        .embed_scale_q(embed_scale_q),
+        .clk(ck),.ck_sched(ck_sched), .rst_n(rsi),.program_obs(program_obs),.descriptor_obs(descriptor_obs),.cfg_image_ready(body_cfg_ready),.su_observe(su_observe),
         .h_start(dh[42]), .stage_in(dh[41:36]), .tp_token(dh[35:18]), .tp_pos(dh[17:0]), .kv_write_drained(dh[43]),
         .pw_v(dh[118]), .pw_addr(dh[117:108]), .pw_data(dh[107:44]),
         .dw_v(dh[186]), .dw_addr(dh[185:183]), .dw_data(dh[182:119]),
@@ -150,7 +176,10 @@ module qfd_seq_su_static (
     reg rom_fault_q;
     always @(posedge ck or negedge rsi) if (!rsi) rom_fault_q <= 1'b0; else rom_fault_q <= rom_fault | cb_flt_q;
     wire coll_issue_fault,coll_cfg_ready,body_cfg_ready;
-    assign cfg_image_ready=body_cfg_ready&&coll_cfg_ready;
+    // The joint seal is a configuration fact, exported from a source pin FF.
+    // Its loss still revokes the downstream installation; no timeline gates.
+    ot_hdc_delay #(.W(1),.D(1),.RESET(1))u_image_ready_pin
+      (.clk(ck),.rst_n(rsi),.d(body_cfg_ready&&coll_cfg_ready),.q(cfg_image_ready));
     qfd_seq_su_collective_calendar u_coll_calendar(.ck(ck_sched),.rsi(rsi),.dh(dh),
       .cmd_free(coll_cmd_free),.cmd(coll_cmd),.cfg_ready(coll_cfg_ready),.fault(coll_issue_fault));
     assign dc   = {rom_fault_q | coll_issue_fault, kv_write_flush, coll_busy, core_fault, s_fault, s_done, seq_ntok, seq_nval};

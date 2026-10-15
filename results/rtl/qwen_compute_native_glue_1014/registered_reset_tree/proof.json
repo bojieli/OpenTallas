@@ -1,0 +1,15 @@
+{
+  "source": "rtl/qwen_sys/tile_glue_banks_20261015/ot_qwen_native_reset_tree.sv",
+  "sha256": "5182ce4e4f39b142dc4d618d02af483c509e7aac4f2e2cc2cae86c0166e81f95",
+  "checks": 55568,
+  "reset_capture_edges": 3,
+  "initial_asserted_reset_edges": 16,
+  "first_data_capture_after_release": 7,
+  "extra_warmup_over_old_native_unresetface": 6,
+  "operational_edges_added": 0,
+  "reset_tree_masters": 9,
+  "local_allocated_area_um2": 4199.04,
+  "fanout": "root/midQbit drives16D pins insideonechild; everybranchQbitdrivesoneactualchildrstpin; noabstractbroadcast",
+  "tests": "positivePASS,bypassFAIL97,corruptFAIL542,facecomponentregressionPASS21060696",
+  "qualification": "component source only; fullparentpin/timing/compiler integration remainsOPEN"
+}

@@ -39,7 +39,7 @@ def preamble(tcl_text, ss2tt=False):
     out = []
     for ln in tcl_text.splitlines():
         s = ln.strip()
-        if s.startswith('puts ') or s.startswith('report_') or s.startswith('set ') or s.startswith('foreach') or s == 'exit':
+        if s.startswith('puts ') or s.startswith('report_') or s.startswith('foreach') or s == 'exit':
             break
         if s: out.append(s)
     if not any(s.startswith('read_db') for s in out) or not any(s.startswith('read_spef') for s in out):

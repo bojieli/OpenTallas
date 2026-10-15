@@ -12,8 +12,10 @@
 // Q/G return timing retains the existing RLAT13 issue metadata pipeline.
 // Collective write tags pass unchanged to the core write/commit pipeline.
 module dsfd_vm_static_xio #(parameter integer RLAT = 13) (
-    input  wire          cks, rss,              // stream
-    input  wire          ck, rst,               // serial (x43 outputs, qSWs)
+    input wire ck_control_t, ck_control_s,
+    input wire [1:0] ck_x43_t, ck_x43_s, // [0]query, [1]gather
+    input wire rss_control_t, rst_control_s,
+    input wire [1:0] rss_x43_t, rst_x43_s, // per-root active-low epoch resets
     // engine 12 native forward
     input  wire          n_v, input wire [83:0] n_d,
     // aux ports 4..7 to / from dsfd_vm_static_core
@@ -32,12 +34,15 @@ module dsfd_vm_static_xio #(parameter integer RLAT = 13) (
     input  wire [2:0]    qSWs,                 // serial
     output wire          fault
 );
+    // Each CDC half and each control domain owns its actual clock entry.
+    // All roots retain the related3:4 common epoch; measured phi-R delivery
+    // must preserve these logical sample edges. No child root is scalar-tied.
     reg [1:0] rq;
-    always @(posedge cks or negedge rss) if (!rss) rq <= 2'b00; else rq <= {rq[0], 1'b1};
+    always @(posedge ck_control_t or negedge rss_control_t) if (!rss_control_t) rq <= 2'b00; else rq <= {rq[0], 1'b1};
     wire rn = rq[1];
     // epoch sample index of the current edge (same convention as ot_s81_vm_x43: first edge after release = 0)
     reg [1:0] tp;
-    always @(posedge cks or negedge rss) if (!rss) tp <= 2'd3; else tp <= tp + 2'd1;
+    always @(posedge ck_control_t or negedge rss_control_t) if (!rss_control_t) tp <= 2'd3; else tp <= tp + 2'd1;
     wire [1:0] tn = tp + 2'd1;
     reg [2:0] f_iss; reg f3, f9, f10; reg [1:0] f_s;
     wire [7:0] flt = {f_s, f10, f9, f3, f_iss};
@@ -53,7 +58,7 @@ module dsfd_vm_static_xio #(parameter integer RLAT = 13) (
     reg [2:0] go; reg [1:0] gl [0:2];
     always @* begin : p_go integer u;
         for (u = 0; u < 3; u = u + 1) begin
-            go[u] = (u == 0) ? f_crq[0] : (act[u] && tn != 2'd2);
+            go[u] = (u == 0) ? f_crq[0] : (act[u] && tn != 2'(15-RLAT));
             gl[u] = (u == 0) ? f_crq[2:1] : u_row[u][1:0];
         end
     end
@@ -74,7 +79,7 @@ module dsfd_vm_static_xio #(parameter integer RLAT = 13) (
     end
     reg [RLAT-1:0] dC; reg [1:0] dlC [0:RLAT-1];
     reg [RLAT:0] dQ, dG; reg [1:0] dlQ [0:RLAT]; reg [1:0] dlG [0:RLAT];
-    always @(posedge cks) begin : p_iss integer u, k; reg [3:0] av;
+    always @(posedge ck_control_t) begin : p_iss integer u, k; reg [3:0] av;
         if (!rn) begin
             act <= 3'd0; stream_av <= 4'd0; dC <= '0; dQ <= '0; dG <= '0;
             f_iss <= 3'd0;
@@ -116,8 +121,8 @@ module dsfd_vm_static_xio #(parameter integer RLAT = 13) (
     reg q_v; reg [511:0] q_d; reg g_v; reg [510:0] g_d;
     assign t_crs = {dCw, rC};
     reg [2:0] gn; reg [9:0] gph [0:3]; reg [1:0] gw, gr;
-    reg [10:0] xq; always @(posedge cks) xq <= rn ? f_xgo : 11'd0;
-    always @(posedge cks) begin : p_ret reg push, pop;
+    reg [10:0] xq; always @(posedge ck_control_t) xq <= rn ? f_xgo : 11'd0;
+    always @(posedge ck_control_t) begin : p_ret reg push, pop;
         if (!rn) begin
             q_v <= 1'b0; g_v <= 1'b0; gn <= 3'd0; gw <= 2'd0; gr <= 2'd0;
             f3 <= 1'b0; f9 <= 1'b0; f10 <= 1'b0;
@@ -156,19 +161,19 @@ module dsfd_vm_static_xio #(parameter integer RLAT = 13) (
     end
     // ---------------------------------------------------------------- serial-bound streams
     wire qo_v, go_v; wire [511:0] qo_d; wire [510:0] go_d; wire qf, gf;
-    ot_s81_vm_x43 #(.W(512)) u_xq (.t_ck(cks), .t_rst_n(rss), .s_v(q_v), .s_d(q_d), .s_ck(ck), .s_rst_n(rst),
+    ot_s81_vm_x43 #(.W(512)) u_xq (.t_ck(ck_x43_t[0]), .t_rst_n(rss_x43_t[0]), .s_v(q_v), .s_d(q_d), .s_ck(ck_x43_s[0]), .s_rst_n(rst_x43_s[0]),
         .o_v(qo_v), .o_d(qo_d), .fault(qf));
-    ot_s81_vm_x43 #(.W(511)) u_xg (.t_ck(cks), .t_rst_n(rss), .s_v(g_v), .s_d(g_d), .s_ck(ck), .s_rst_n(rst),
+    ot_s81_vm_x43 #(.W(511)) u_xg (.t_ck(ck_x43_t[1]), .t_rst_n(rss_x43_t[1]), .s_v(g_v), .s_d(g_d), .s_ck(ck_x43_s[1]), .s_rst_n(rst_x43_s[1]),
         .o_v(go_v), .o_d(go_d), .fault(gf));
     assign qSW = {qo_d, qo_v};
     assign t_gather = {go_d, go_v};
-    reg [1:0] sq; always @(posedge ck or negedge rst) if (!rst) sq <= 2'b00; else sq <= {sq[0], 1'b1};
+    reg [1:0] sq; always @(posedge ck_control_s or negedge rst_control_s) if (!rst_control_s) sq <= 2'b00; else sq <= {sq[0], 1'b1};
     reg [2:0] qs_q; reg qs_bad;
-    always @(posedge ck) begin
+    always @(posedge ck_control_s) begin
         qs_q <= qSWs;
         if (!sq[1]) qs_bad <= 1'b0; else if (qo_v && !(qs_q[0] && qs_q[1])) qs_bad <= 1'b1;
     end
-    always @(posedge cks) if (!rn) f_s <= 2'd0; else begin if (qs_bad) f_s[0] <= 1'b1; if (qf | gf) f_s[1] <= 1'b1; end
+    always @(posedge ck_control_t) if (!rn) f_s <= 2'd0; else begin if (qs_bad) f_s[0] <= 1'b1; if (qf | gf) f_s[1] <= 1'b1; end
     assign fault = |flt;
 endmodule
 `default_nettype wire

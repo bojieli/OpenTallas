@@ -1,0 +1,91 @@
+{
+  "status": "ANALYTIC_CANDIDATE_UNQUALIFIED",
+  "quarter_ring": [
+    0,
+    1,
+    3,
+    2
+  ],
+  "quarters": [
+    {
+      "qid": 0,
+      "local_ports": 3,
+      "sources": 5,
+      "outputs": 8,
+      "router_clock_roots": 8,
+      "max_router_root_flops": 3287,
+      "rx_select_roots": 3,
+      "rx_select_root_flops": 1644,
+      "total_flops": 31228,
+      "mux_one_bit_2to1_equivalents": 19075
+    },
+    {
+      "qid": 1,
+      "local_ports": 2,
+      "sources": 4,
+      "outputs": 6,
+      "router_clock_roots": 6,
+      "max_router_root_flops": 2739,
+      "rx_select_roots": 2,
+      "rx_select_root_flops": 1644,
+      "total_flops": 19722,
+      "mux_one_bit_2to1_equivalents": 10900
+    },
+    {
+      "qid": 2,
+      "local_ports": 2,
+      "sources": 4,
+      "outputs": 6,
+      "router_clock_roots": 6,
+      "max_router_root_flops": 2739,
+      "rx_select_roots": 2,
+      "rx_select_root_flops": 1644,
+      "total_flops": 19722,
+      "mux_one_bit_2to1_equivalents": 10900
+    },
+    {
+      "qid": 3,
+      "local_ports": 2,
+      "sources": 4,
+      "outputs": 6,
+      "router_clock_roots": 6,
+      "max_router_root_flops": 2739,
+      "rx_select_roots": 2,
+      "rx_select_root_flops": 1644,
+      "total_flops": 19722,
+      "mux_one_bit_2to1_equivalents": 10900
+    }
+  ],
+  "macs_per_cycle": 0,
+  "memory_bytes_per_cycle": 0,
+  "queue_capacity": 0,
+  "payload_bits": 545,
+  "lane_bits_with_valid": 546,
+  "ring_edges": 4,
+  "directions_per_edge": 2,
+  "boundary_bits_per_cycle_per_direction": 546,
+  "data_bytes_per_cycle_per_direction": 68.125,
+  "reserved_slots_per_cycle_per_direction": 1,
+  "total_directed_wire_bits": 4368,
+  "tracks_per_corridor_both_directions": 1092,
+  "minimum_single_layer_width_um": 52.416000000000004,
+  "channel_available_tracks": null,
+  "area_um2": null,
+  "floorplan_fit": null,
+  "rx_mux_to_qslots_added_edge_distance": 2,
+  "router_input_to_next_consumer_edge_distance": 2,
+  "bridge_qslots_source_growth": 0,
+  "bridge_qslots_output_root_growth": 0,
+  "local_source_binding": "existing qslots rail TX outputs",
+  "local_sink_binding": "PHY TX or registered mux replacing existing rail RX input",
+  "endpoint_tx_edges": 5,
+  "composition": "qslots TX -> source router(2) -> relays -> destination router(2) -> endpoint; RX ejection adds RX mux(2) then original qslots",
+  "graph_candidate": "96 ranks circulant +/-1,+/-4,+/-16,+/-24, eight actual ports; compiler evaluates conflicts",
+  "latency_improvement_claim": null,
+  "latency_pending": "full G96 exact graph calendar; baseline bidirectional ring 3436 vs immutable 1325.9",
+  "physical_pending": [
+    "actual hub coordinates and corridors",
+    "relay placement and SS/FF timing",
+    "mapped area, clock insertion, congestion"
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "scope": "digital gearbox 612 and613bit component reproof; new transport wrapper untested/unintegrated",
+  "frames_per_case": 2922,
+  "epochs": 2,
+  "periods_per_epoch": 3,
+  "cases": {
+    "612": {
+      "cycles_per_period": 612,
+      "unit": "oth-ubuntu-3704643-1792050251"
+    },
+    "613": {
+      "cycles_per_period": 613,
+      "unit": "oth-ubuntu-3704644-1792050251"
+    }
+  },
+  "all_positives": "PASS",
+  "all_mutants": "TX bit corruption, RX shift and reservation each FAIL",
+  "source_sha256": {
+    "rtl/hbm_accel/io_static_20261015/ot_hbm_static_gearbox.sv": "3ca4eccbd1c00f04e57adf7b596e35d3fae26ad5c7441d5c256ef3cfbfaef5f0",
+    "rtl/hbm_accel/io_static_20261015/tb_static_gearbox.sv": "97280369c6b8c5c5d74afb53f0b75f10cb30f1cf1d7282ea9a7c95fddafb2d3d",
+    "tools/hbm_io/gearbox_calendar.py": "efc8ff9775470522594121f2a7b4fcda746c5535137398cb05ea1ede1e3fc357",
+    "tools/hbm_io/make_gearbox_vectors.py": "9e64042f391fafbbe1f28cc32473c8d9630e0c9317f851e924f1e2732c120943",
+    "tools/hbm_io/run_gearbox_gate.sh": "ead2aa8a5f45ad7c2b4e0c842c778dfab954dd6bc36b56a69eb82ae927a11a45"
+  },
+  "valid_convention": "613bit={endpoint_valid,612frame}, every gearbox reservation exists even if endpoint publication is idle",
+  "open": [
+    "Actual replay endpoint join including idle and suppressed-valid fault cases",
+    "New wrapper bench",
+    "FEC and recovered clock/epoch join",
+    "Compiled full production calendar/performance",
+    "Physical pins, shift implementation and TT/FF/DRC"
+  ]
+}
