@@ -1,0 +1,70 @@
+{
+  "status": "PREPARED_NOT_RUN",
+  "scope": "G22 owned-row rank3 shape plus G25 P1 gather descriptor, not a canonical wholeprofile or actual HCOLLproducer",
+  "ownership": {
+    "TP": 96,
+    "rows": 24,
+    "rank": 3,
+    "lo": 0,
+    "hi": 1,
+    "formula": "lo=24*rank//96;hi=24*(rank+1)//96;owner(row)=4*row+3",
+    "G25_rank0_row": "NOP"
+  },
+  "ROW_LOOP": 0,
+  "TAIL_LOOP": 0,
+  "npos": 1,
+  "nout": 1,
+  "chosen_row": 0,
+  "SYS_LAT": 86,
+  "SYS_DELTA": 53,
+  "configuration_words": 942,
+  "start_base": 0,
+  "start_limit": 942,
+  "start_loops": 1,
+  "programme_start": 4091,
+  "first_row_consumer": 4096,
+  "raw_SS": 4309,
+  "raw_row": 4413,
+  "expected_owned_result": 4418,
+  "weight_drain": {
+    "first_edge": 2048,
+    "interval_cycles": 640,
+    "valid_beats": 320,
+    "valid_every": 2,
+    "last_macro_commit_expected": 2687,
+    "native_PHY_prefetch": "DECLARED aperture fixture, parent owns actualprefetch join"
+  },
+  "residual_fill": {
+    "first_edge": 16,
+    "waves": 80,
+    "last_input_edge": 95,
+    "extra_input_register_edge": 1,
+    "source": "synthetic BF16-valued fixture"
+  },
+  "gather": {
+    "launch": 4496,
+    "npos": 1,
+    "base_sector": 18136,
+    "stride": 0,
+    "engine_first": 4517,
+    "engine_last": 4540,
+    "phase_end_inclusive": 4540,
+    "payload": "all24 declared post-collective golden mixes from actualVM SRAM; owned row checked independently before landing"
+  },
+  "tail_launch": 4544,
+  "tail": {
+    "launch": 0,
+    "exponentials_ready": 197,
+    "sink_launch": 202,
+    "sink_capture": 491,
+    "result": 492
+  },
+  "sink_divisor": 7,
+  "sink_phase": 0,
+  "clock_roots": 92,
+  "physical_phase": "NOT qualified; equalphase functional roots and divided sink only",
+  "actual_SRAMs": 106,
+  "bench_launch_authorized": false,
+  "canonical_wholeprofile_qualified": false,
+  "physical_qualified": false
+}
