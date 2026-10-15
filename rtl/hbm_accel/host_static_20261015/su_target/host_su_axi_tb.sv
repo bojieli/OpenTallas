@@ -8,7 +8,7 @@ wire awready,wready,bvalid,arready,rvalid;wire[1:0] bresp,rresp;wire[31:0] rdata
 wire block_ready,busy,valid,done,fault;wire[15:0] edge_index;wire[B-1:0] command;
 reg[279:0] config_words[0:W-1];reg[B-1:0] expected_words[0:N-1];string dir;
 integer cycles=0,launch_edge=-1,seen=0,replays=0;reg busy_old=0;
-host_su_axi_install #(.LINE_BITS(B),.EDGES(N),.DICT_ENTRIES(@ENTRIES@),.DICT_BANKS(@BANKS@),.MACROS(M)) dut(
+host_su_axi_install #(.LINE_BITS(B),.EDGES(N),.COLS((B+255)/256),.DICT_ENTRIES(@ENTRIES@),.DICT_BANKS(@BANKS@),.MACROS(M)) dut(
  .clk(clk),.rst_n(rst_n),.clk_macro({M{clk}}),
  .s_awaddr(awaddr),.s_awvalid(awvalid),.s_awready(awready),.s_wdata(wdata),.s_wstrb(wstrb),.s_wvalid(wvalid),.s_wready(wready),
  .s_bresp(bresp),.s_bvalid(bvalid),.s_bready(bready),.s_araddr(araddr),.s_arvalid(arvalid),.s_arready(arready),
