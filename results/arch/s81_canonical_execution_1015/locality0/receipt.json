@@ -4,8 +4,10 @@
   "candidate_only": true,
   "source_assignment_unit": {
     "host": "ot-epyc4",
-    "unit": "oth-ubuntu-2097897-1792064056",
-    "exit_code": 0
+    "unit": "oth-ubuntu-2112112-1792064232",
+    "exit_code": 0,
+    "memory_gb": 2,
+    "threads": 1
   },
   "mechanism_tests": {
     "count": 10,
@@ -242,13 +244,17 @@
     "demand-r5.json.gz": "fec91ca041e8b1640292ca06163def706c0d0dab8c5d524ba9e8f611dd925d0f",
     "/srv/opentallas-scratch/codex-canonical-bind-1015/field_homes2/source_field_operation_homes.jsonl.gz": "19178ee120f3ee8f474ca0eff2115cc3a152e57b648640ee36e901c0a89eb293"
   },
-  "candidate_sha256": "8681554d0cb347bffe8ecff6c5aababf8bc21f01fd8596d53cd2b7755256fc4e",
+  "candidate_sha256": "6b63bb31811591862a097083379761a4d9790ace0cbfc552983613c3922110e3",
   "limitations": [
     "Candidate compiler stage assignments only; physical_instance/programmes/coreepochs are NOT supplied.",
     "Symbolic dependencies conservatively coalesce independent write bursts; actual bit ranges/predicates need native lowering.",
     "Equal edge weights are not actual bit widths/bandwidths/clock or cycle costs.",
+    "Native fusion and equipment replication/capacity constraints are unbound; raw assignments may split existing fused kernels.",
     "No package distance or cross-die latency is inferred from stage numbers.",
-    "Native leaf instantiation, storage/ports/capacity, exact programmes/global calendars and MTP remain mandatory.",
-    "Native fusion/equipment replication/capacity constraints remain unbound; raw assignments may split fused kernels."
-  ]
+    "Native leaf instantiation, storage/ports/capacity, exact programmes/global calendars and MTP remain mandatory."
+  ],
+  "tool_sources": {
+    "tools/s81_compile_schedule/source_locality_assignment.py": "1f4a5e101083aaaab282e4ea2cf7f71753679203c3dae99ddf34b27452c11d8c",
+    "tools/s81_compile_schedule/test_source_locality_assignment.py": "629410b78ff0b9501ad6fdf32abd3586905cc9cacbf80711efaf0a1daa846c88"
+  }
 }
