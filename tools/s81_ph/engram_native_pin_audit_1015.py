@@ -11,6 +11,7 @@ p=argparse.ArgumentParser(description=__doc__)
 p.add_argument('--dump',type=Path,required=True)
 p.add_argument('--original-ports',type=Path,required=True)
 p.add_argument('--out',type=Path,required=True)
+p.add_argument('--seed-clock',action='store_true',help='Audit the separate14-root successor including real ck_seed')
 a=p.parse_args();d=json.loads(a.dump.read_text());old=json.loads(a.original_ports.read_text())
 expected={}
 for value in old['ports'].values():
@@ -20,7 +21,9 @@ for value in old['ports'].values():
 for base,start in [('ck_hash',140.028),('ck_rows',160.044)]:
  for i in range(6):
   x=round(start+.480*i,3);expected[f'{base}[{i}]']=('M5',[round(x-.012,3),215.916,round(x+.012,3),216.0])
-assert len(expected)==674
+if a.seed_clock:expected['ck_seed']=('M5',[148.032,215.916,148.056,216.0])
+expected_count=675 if a.seed_clock else 674
+assert len(expected)==expected_count
 signals={row[0]:row for row in d['bterms'] if row[2] not in ('POWER','GROUND')}
 pg=[(row[0],box[0],box[1]) for row in d['bterms'] if row[2] in ('POWER','GROUND') for box in row[4]]
 missing=sorted(set(expected)-set(signals));unexpected=sorted(set(signals)-set(expected));mismatch=[];overlaps=[]
@@ -37,6 +40,6 @@ for name,(layer,rect) in expected.items():
    overlaps.append(dict(pin=name,power_shape=kind,metal=layer,power_box=box))
 body_matches=len(d.get('die',[]))==4 and all(abs(x-y)<.00051 for x,y in zip(d['die'],[0,0,324,216]))
 power_names=sorted({row[0] for row in d['bterms'] if row[2] in ('POWER','GROUND') and row[4]})
-record=dict(body_matches_grant=body_matches,power_names=power_names,schema='opentallas.s81.engram_native_pin_audit.v1',scope='Actual ODB geometry only; no physical clock/timing/route/production qualification',dump_sha256=hashlib.sha256(a.dump.read_bytes()).hexdigest(),original_ports_sha256=hashlib.sha256(a.original_ports.read_bytes()).hexdigest(),expected_signals=674,actual_signals=len(signals),original_rectangles=662,new_clock_rectangles=12,actual_PG_boxes=len(pg),missing=missing,unexpected=unexpected,rectangle_mismatch=mismatch,same_layer_PG_overlaps=overlaps,passed=not(missing or unexpected or mismatch or overlaps) and body_matches and {'VDD','VSS'}.issubset(power_names))
+record=dict(body_matches_grant=body_matches,power_names=power_names,schema='opentallas.s81.engram_native_pin_audit.v1',scope='Actual ODB geometry only; no physical clock/timing/route/production qualification',dump_sha256=hashlib.sha256(a.dump.read_bytes()).hexdigest(),original_ports_sha256=hashlib.sha256(a.original_ports.read_bytes()).hexdigest(),expected_signals=expected_count,actual_signals=len(signals),original_rectangles=662,new_clock_rectangles=expected_count-662,actual_PG_boxes=len(pg),missing=missing,unexpected=unexpected,rectangle_mismatch=mismatch,same_layer_PG_overlaps=overlaps,passed=not(missing or unexpected or mismatch or overlaps) and body_matches and {'VDD','VSS'}.issubset(power_names))
 a.out.write_text(json.dumps(record,indent=2)+'\n');print(json.dumps({k:record[k] for k in ['passed','expected_signals','actual_signals','actual_PG_boxes']}));print('mismatch',len(mismatch),'PG overlaps',len(overlaps))
 raise SystemExit(0 if record['passed'] else 1)
