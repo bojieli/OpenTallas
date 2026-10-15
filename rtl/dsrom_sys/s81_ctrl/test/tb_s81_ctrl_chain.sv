@@ -20,11 +20,13 @@
 // MUT=1 (SOURCE ignores STOP): must FAIL.
 module tb_s81_ctrl_chain;
     parameter integer MUT = 0;
+    parameter integer STARTUP_TEST = 0, STARTUP_MUT = 0;
     localparam integer NW = 21, NENG = 12, NOPS = 16, OPW = 4, ARGW = 24, SUW = 10;
     localparam integer CMDW = 1 + SUW + 2 * NW + ARGW + OPW, TAGW = 1 + OPW;
     localparam integer XW = 8, VWA = 12, RXB = 0, TXB = 1024, SIDE_TXB = 2048, SIDE_BASE = 3072, SIDE_USH = 4;
     localparam integer MAXU = 4, ND = 3, EOS = 1;
     reg clk = 0, rst_n = 0;
+    wire [ND-1:0] controller_reset_released;
     always #0.4166 clk = ~clk;
     integer cyc = 0;
 
@@ -72,11 +74,24 @@ module tb_s81_ctrl_chain;
         localparam integer SLO = (g == 0) ? 3 : (g == 1) ? 1 : 2;
         localparam [15:0] TM = (g == 0) ? 16'h0004 : 16'h000A;
         wire [OPW:0] plen = np[g];
+        reg [1:0] startup_released = 0;
+        wire startup_ok;
+        ot_s81_startup_barrier #(.N(2), .MUT_EARLY(STARTUP_MUT)) u_startup (
+            .clk(clk), .reset_n(rst_n), .released(startup_released), .ready(startup_ok));
+        initial begin
+            wait (rst_n);
+            repeat (200 + 500*g) @(negedge clk); startup_released[0] = 1;
+            repeat (100) @(negedge clk); startup_released[1] = 1;
+        end
+        always @(negedge clk) if (STARTUP_TEST && rst_n && !(&startup_released)) begin
+            if (u.j_v && u.j_r) $fatal(1, "STARTUP_EARLY die=%0d operation admitted before actual child acknowledgments", g);
+            if (|c_v[g*NENG +: NENG]) $fatal(1, "STARTUP_EARLY die=%0d engine command before child acknowledgments", g);
+        end
         ot_s81_ctrl #(.ROLE(ROLE), .MY_ID(g + 1), .NW(NW), .MAXU(MAXU), .VWA(VWA), .XW(XW), .RXB(RXB), .TXB(TXB),
             .SIDE_TXB(SIDE_TXB), .SIDE_RXB(0), .SIDE_BASE(SIDE_BASE), .SIDE_USH(SIDE_USH), .NOPS(NOPS), .NENG(NENG),
             .QD(8), .SRC_LO(SLO), .SRC_HI(SLO), .TYPE_MASK(TM), .LEN_SIDE_MAX(4), .PMAX(8), .CQ_DEPTH(64), .WDOG(200000),
-            .STUCK(50000), .MUT(MUT)) u (
-            .clk(clk), .rst_n(rst_n), .pw_v(pw_v && pw_sel[g]), .pw_a(pw_a), .pw_d(pw_d), .prog_len(plen),
+            .STUCK(50000), .MUT(MUT), .STARTUP_BARRIER(STARTUP_TEST)) u (
+            .clk(clk), .rst_n(rst_n), .startup_ready(startup_ok), .startup_local_ready(controller_reset_released[g]), .pw_v(pw_v && pw_sel[g]), .pw_a(pw_a), .pw_d(pw_d), .prog_len(plen),
             .cfg_users_static(12'(MAXU)),
             .in_valid(li_v[g]), .in_ready(li_r[g]), .in_data(li_d[g*512 +: 512]), .in_last(li_l[g]),
             .out_valid(o_v[g]), .out_ready(o_r[g]), .out_data(o_d[g*512 +: 512]), .out_last(o_l[g]),
@@ -348,6 +363,9 @@ module tb_s81_ctrl_chain;
         for (id_ = 0; id_ < ND; id_ = id_ + 1) for (ik_ = 0; ik_ < 2; ik_ = ik_ + 1) begin in_rdy[id_][ik_] = -1; jctx_u[id_][ik_] = 0; jctx_p[id_][ik_] = 0; job_reset(id_, ik_); end
         if ($test$plusargs("forge")) forge = 1;
         repeat (5) @(posedge clk); rst_n = 1;
+        // Configuration requires the receiving controller's real reset release;
+        // remote engine acknowledgments still deliberately arrive much later.
+        if (STARTUP_TEST) wait (&controller_reset_released);
         // program load per die
         for (id_ = 0; id_ < ND; id_ = id_ + 1) for (io_ = 0; io_ < np[id_]; io_ = io_ + 1) begin
             @(negedge clk); pw_v = 1; pw_sel = 1 << id_; pw_a = io_; pw_d = {4'(pport[id_][io_]), 24'(parg[id_][io_])};
