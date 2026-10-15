@@ -569,9 +569,9 @@ class H(BaseHTTPRequestHandler):
         super().end_headers()
 
     def safe(self, q):
-        local = self.client_address[0] in ('127.0.0.1', '::1')
-        proxied = any(self.headers.get(k) for k in ('X-Forwarded-For', 'X-Real-IP', 'Forwarded', 'CF-Connecting-IP'))
-        return q.get('safe', ['0'])[0] == '1' or not local or proxied
+        # Owner 2026-10-15: one mode only -- every viewer (localhost or the opentallas.01.me tunnel) gets the full
+        # internal view; the old share-safe redaction for proxied/remote requests and ?safe=1 is retired.
+        return False
 
     def send(self, code, body, ctype, extra=()):
         self.send_response(code); self.send_header('Content-Type', ctype); self.send_header('Content-Length', str(len(body)))
