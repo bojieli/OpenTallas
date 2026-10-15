@@ -14,6 +14,19 @@ def derive(src):
     s=re.sub(r'\b(dsfd_vm_static_read_(?:leaf|valid)) #\(\.G\((\d)\)\)',r'\1 #(.G(\2),.IN_REG(1))',s)
     s=re.sub(r'\bmodule dsfd_vm_static_read_router\(','module dsfd_vm_static_read_router_p(',s)
     s=re.sub(r'^( dsfd_vm_static_read_[qv]\d) ',r'\1_p ',s,flags=re.M)
+    # r2: valid leaves recompute completeness from the memory group's slot-valid bits (stripe pair k = 32k + slot)
+    def sv(g):return (0,8) if g<=1 else (4*g,4)
+    if src=='dsfd_vm_static_read_valid_quartets.sv':
+        for g in range(8):
+            sb,n=sv(g)
+            s=s.replace(f'module dsfd_vm_static_read_v{g}_p(input wire ck,rst_n,\n',f'module dsfd_vm_static_read_v{g}_p(input wire ck,rst_n,\n input wire[{4*n-1}:0] i_slot_valid,\n',1)
+            s=s.replace(f'dsfd_vm_static_read_valid #(.G({g}),.IN_REG(1)) leaf(.ck(ck),.rst_n(rst_n),',f'dsfd_vm_static_read_valid #(.G({g}),.IN_REG(1)) leaf(.ck(ck),.rst_n(rst_n),.i_slot_valid(i_slot_valid),',1)
+    if src=='dsfd_vm_static_read_router.sv':
+        for g in range(8):
+            sb,n=sv(g);bits=','.join(f'slot_valid[{32*k+sb}+:{n}]' for k in (3,2,1,0))
+            a=f' dsfd_vm_static_read_v{g}_p v{g}(.ck(ck_valid[{g}]),.rst_n(rst_valid_n[{g}]),'
+            assert s.count(a)==1,a
+            s=s.replace(a,a+f'.i_slot_valid({{{bits}}}),')
     return HDR.format(src=src)+s
 def main():
     bad=0

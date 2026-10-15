@@ -1,5 +1,6 @@
 `timescale 1ns/1ps
 module tb_hbm_attn_pv_native_output;
+ localparam integer VM_SID=3,VM_BASE=VM_SID*8192;
  reg clk=0;always #2 clk=~clk;reg rst_n=0;
  reg cv=0,ce=0,dv=0,de=0;reg[3:0]cd=0,dh=0;reg[2:0]db=0;reg[15:0]base=0,tag_=0;
  reg[16383:0]data=0;reg[511:0]flags=0;wire[2247:0]wq;
@@ -11,9 +12,9 @@ module tb_hbm_attn_pv_native_output;
  reg rv=0;reg[15:0]rbase=0;wire[2055:0]rr;wire[23:0]wdone;wire[143:0]status;
  genvar b;
  generate for(b=0;b<8;b=b+1)begin:g_bank
-  wire[280:0]word_=wq[b*281+:281] ^ ((mut==1&&b==0)?281'(1<<8):281'd0);
+  wire[280:0]word_=wq[b*281+:281] ^ ((mut==1&&b==0)?281'(1<<8):281'd0) ^ ((mut==4&&b==0)?(281'd1<<277):281'd0);
   wire[7*257-1:0]rall;
-  ot_vms_bank_static #(.RG(7),.WG(3))u(.clk(clk),.rst_n(rst_n),.bid(3'(b)),.sid(2'd0),
+  ot_vms_bank_static #(.RG(7),.WG(3))u(.clk(clk),.rst_n(rst_n),.bid(3'(b)),.sid(2'(VM_SID)),
    // Explicit dedicated fixed RG3/WG1 ownership. Full programme-SRAM/CP binding
    // is a separate gate; selectors here never depend on observedready/response.
    .rslot_v(1'b1),.rslot(3'd3),.wslot_v(1'b1),.wslot(mut==2?3'd2:3'd1),
@@ -59,12 +60,12 @@ module tb_hbm_attn_pv_native_output;
    end
    @(negedge clk);cv=0;repeat(2)@(negedge clk);
    for(h=0;h<16;h=h+1)for(k=0;k<8;k=k+1)begin
-    @(negedge clk);dv=1;de=1'(seq%2);dh=4'(h);db=3'(k);base=16'(seq*2048);tag_=16'(100+seq);
+    @(negedge clk);dv=1;de=1'(seq%2);dh=4'(h);db=3'(k);base=16'(VM_BASE+seq*2048);tag_=16'(100+seq);
    end
    @(negedge clk);dv=0;repeat(8)@(negedge clk);
    if(retired!=seq+1)$fatal(1,"PV_NATIVE missingretire");
    response=0;
-   for(j=0;j<128;j=j+1)begin @(negedge clk);rv=1;rbase=16'(seq*2048+j*8);end
+   for(j=0;j<128;j=j+1)begin @(negedge clk);rv=1;rbase=16'(VM_BASE+seq*2048+j*8);end
    @(negedge clk);rv=0;repeat(10)@(negedge clk);
    if(response!=128)$fatal(1,"PV_NATIVE missingresponse%0d",response);
   end

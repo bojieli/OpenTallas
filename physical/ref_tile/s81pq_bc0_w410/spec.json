@@ -73,8 +73,8 @@
     "needs": [
      "verilator"
     ],
-    "pass_regex": "PQ_NATIVE_CORE PASS",
-    "min_count_regex": "compared=(\\d+)"
+    "pass_regex": "PQ_CORE_PIPE PASS",
+    "min_count_regex": "packets=(\\d+)"
    },
    {
     "name": "native_bc_mutant",
@@ -85,7 +85,7 @@
     "needs": [
      "verilator"
     ],
-    "fail_regex": "PQ_NATIVE_CORE FAIL|mismatch"
+    "fail_regex": "PQ_CORE_PIPE FAIL|PQ_NATIVE_CORE FAIL"
    }
   ],
   "views_to": "physical/ref_tile/s81pq_bc0_w410/views",

@@ -1,0 +1,37 @@
+{
+  "scope": "CTS placementRC nativeETM diagnostic only, notroutedview",
+  "launch_fail": {
+    "command_v": 223.12031000000002,
+    "command[31]": 247.86339000000004,
+    "command[30]": 245.78938,
+    "command[29]": 245.73781000000002,
+    "command[28]": 250.7693,
+    "command[27]": 246.17424,
+    "command[26]": 244.87483000000003,
+    "command[25]": 244.35182000000003,
+    "command[24]": 248.96638000000002,
+    "command[23]": 240.07856000000004,
+    "command[22]": 239.94755000000004,
+    "command[21]": 239.77513,
+    "command[20]": 248.81712,
+    "command[19]": 243.42244,
+    "command[18]": 244.29741,
+    "ordinal[9]": 221.23085000000003,
+    "ordinal[8]": 220.61964,
+    "ordinal[6]": 222.54545000000002,
+    "ordinal[5]": 222.72126000000003,
+    "ordinal[4]": 221.22700000000003,
+    "ordinal[2]": 227.96599000000003,
+    "ordinal[1]": 223.88780000000003
+  },
+  "capture_fail": {},
+  "comb_fail": {},
+  "worst_launch": [
+    250.7693,
+    "command[28]"
+  ],
+  "worst_capture": [
+    132.76776,
+    "cfg_data[226]"
+  ]
+}

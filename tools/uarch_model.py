@@ -133,6 +133,54 @@ def qwen_native_head_packet_stage_model(width=519, copies=1, orientation="H"):
         qualification='prebuild sizing only; real mapped area, native pins, CTS, route and actual global per-bit path ages unqualified')
 
 
+def hbm_static_quant_SW_replica_model():
+    """Actual SID0 datahome candidate, authorized by root before new RTL."""
+    return dict(schema='opentallas.hbm-static-quant-SW-replica.v2',
+        target=125,existing_NW_target=48,SW_VM_SID=0,NW_VM_SID=2,
+        native_SW_read_groups=6,native_SW_write_groups=2,Quant_read_group=5,Quant_write_group=1,
+        physical_bank_service='still one actual read and one write per bank/cycle; added groups are source muxes, not extra SRAM ports',
+        canonical_rank0_token_records=40,words_per_record=512,bytes_per_operand=2048,
+        canonical_rank0_Quant_read_bytes=40*2048,canonical_rank0_Quant_write_bytes=40*2048,
+        avoided_cross_SID_bytes_per_token=40*2*2048,
+        avoided_cross_SID_sectors_per_layer=2*64,
+        avoided_extra_staging_RAM_readwrite_bytes_per_token=40*4*2048,
+        incremental_Quant_programme_macros=1,macro_outline_um=[174.744,70.470],
+        incremental_programme_clock_sinks_profile=1576,incremental_transport_clock_sinks=4285,
+        incremental_decoder_leaves=dict(DXL=[120.96,120.96],DBQ=[120.96,120.96],DAQ=[129.6,129.6]),
+        all_new_clock_roots=['ck_program','ck_transport','ck_dxl','ck_dbq','ck_daq'],
+        proposed_transport_outline_um=[432,324],proposed_programme_outline_um=[216,129.6],
+        total_child_outline_area_mm2=(432*324+216*129.6+2*120.96**2+129.6**2)/1e6,
+        existing_NW_arithmetic_leaves_reused_as_source='replicate source-matched actual decoder leaves; do not reroute accepted leaves',
+        boundary_bits_per_cycle=dict(rq=136,rr=2056,wq=2248,host_programme=319),
+        fixed_RL_baseline=7,fixed_WC_baseline=4,actual_SW_station_ages='UNMEASURED; explicit parameters, no hidden zero-stage assumption',
+        programme='distinct typed target125, actualPC12/PCW10; native timestamped descriptor SRAM, preserving target48',
+        predecessor='actual SU kv_norm all512 commits then kv_rope tail64 overwrite',
+        consumer='actual DMA KVWB_DS reads original O52288..52799 SID0',
+        exact_native_epochs='OPEN: SU arithmetic/reducer/data-store join has no fixed producer timestamp yet',
+        model_claim='incremental datahome resource model only; no full native or physical qualification')
+
+
+def hbm_static_quant_record_model():
+    """Proposed native full-token calendar storage, before record-controller RTL."""
+    return dict(schema='opentallas.hbm-static-quant-record-controller.v1',
+        programme_macros=1, programme_macro='actual1024x256', payload_bits=94,
+        payload_fields=dict(start_cycle=32,beat_count=16,source_sector=16,destination_sector=16,op=6,block=8),
+        max_native_records=1024, max_beats_per_record=65535,
+        scheduling='absolute compile-time issue timestamp, no dynamic wait or credit',
+        arithmetic='unchanged existing static QDQ transport+DXL/DBQ/DAQ',
+        memory_bytes_per_cycle=128, output_bytes_per_cycle=128,
+        boundary_bits_per_cycle=136+2056+2248,
+        new_datapath='active beat counter/address walker plus one prefetched descriptor',
+        max_descriptor_state_bits=3*256+4*32+4*16+128,
+        SRAM_fetch_edges=1, independent_macro_capture_edges=1, validation_edges=1,
+        model_min_beats_per_record=4,
+        prefetch_policy='fetch next record on first active beat; source identity and absolute launch checked',
+        startup_model_edges=8, latency_per_record_added_after_startup=0,
+        throughput='immutable168 fixture price, no repricing; actual model comparison remains required',
+        physical_slot='same programme leaf prototype216x129.6 with actual174.744x70.470macro',
+        production_status='UNPROVEN: actual full token operation timestamps/residency and gate not yet built')
+
+
 def hbm_static_quant_model():
     """Fixed RG4/WG2 native QDQ successor; bare-bank proof before placement."""
     beats = 6*16 + 2*4
@@ -16641,6 +16689,39 @@ def s81_static_vm_face_model(entries=8, cap_pipeline=0, read_pipeline=0):
 def s81_static_channels_1014_model():
     from uarch_model_s81_static_channels import s81_static_channels_1014_model as model
     return model()
+
+
+def hbm_idx_static_vm_model():
+    """Pre-RTL fixed-slot IDX VM face, superseding runtime leases/credits."""
+    return dict(schema='opentallas.hbm-idx-static-vm.v1',
+        macs_per_cycle=0, replicas=1, lanes=8,
+        read_bytes_per_cycle=256, boundary_bits_per_cycle=dict(request=136,response=2056),
+        mux='no arbitration: one compiler-reserved request per bank; own-SID or mirror only',
+        storage=dict(request_pin_bits=136,response_pin_bits=2056,identity_pipeline_bits=8*8*17),
+        latency_edges=dict(request_pin=1,bank=6,response_pin=1,total=8),
+        routing=dict(request_tracks_per_bank=17,response_tracks_per_bank=257,
+                     slot='UNASSIGNED; die owner must assign pins, clock and bank group'),
+        area='register estimate only; no inherited closed view',
+        compiler='reserve read group per bank, reject remote main addresses, reserve capture edge n+8',
+        price='immutable INDEX price unchanged; full engine rate must be measured',
+        qualification='OPEN real-SRAM composition, engine binding, physical and production-rate proof')
+
+
+def hbm_idx_static_query_model():
+    """Query quantisation successor: fixed block and head emit slots."""
+    return dict(schema='opentallas.hbm-idx-static-query.v1',
+        macs_per_cycle=0, input_bytes_per_cycle=128,
+        production=dict(heads=32,blocks_per_head=4,input_beats=128,output_beats=32),
+        boundary_bits=dict(input=1048,output=571),
+        storage_bits=dict(codes=16384,scales=1024,weights=512,seen=128),
+        clock_roots=7, clock_sink_estimate='8-head bank retains4608bits; quant roots distinct',
+        quant_pipeline_edges=13, emit_pin_edges=1,
+        routing='four8-head retained banks, explicit emit selection; physical cuts UNASSIGNED',
+        scheduling='compiler issues every block and head slot; missing/duplicate/early slot faults, no waiting',
+        price='immutable query/INDEX prices unchanged; fixed compiler transport still must be measured',
+        qualification='OPEN real query exactness + mutants, CTS, slot, native parent composition')
+
+
 def hbm_vm_static_calendar_model():
     """Programme-SRAM calendar issue, before source implementation."""
     return dict(schema='opentallas.hbm.static-calendar.v1',macs_per_cycle=0,
@@ -16794,6 +16875,92 @@ def hbm_idx_static_selector_model():
         qualification='OPEN exact fullshape golden/mutants, physical closure and native productionrate')
 
 
+def hbm_idx_static_scorer_model():
+    """One real HBM stack, four four-key engines; metadata owns fixed delays."""
+    return dict(schema='opentallas.hbm-idx-static-scorer.v1',keys_per_edge=16,
+        ingress_bits_per_edge=8792,score_bits_per_edge=610,replicas=4,
+        roots=dict(engine=4,meta=4,tail=4,chunk=16,hslice=512,control=1),
+        metadata_bits_per_root=123*25,
+        mapping='global ID768*(first_ord+2*beat+lane//8)+8*rank+lane%8',
+        buffers='no line/score FIFOs; compiler supplies eight whole2-key lines on reserved beat slots',
+        latency='engine123stage path, metadata123stages; measured fullshape join required',
+        slot='source successor UNASSIGNED; no old scorer physicalview alias',
+        price='immutable INDEX price; selector865cycles includes171scoreingest, overlap must be measured')
+
+
+def hbm_idx_static_vm_query_model():
+    """Real operand producer: two weight sectors and512query sectors to FP4 query."""
+    return dict(schema='opentallas.hbm-idx-static-vm-query.v1',
+        query_bytes=16384,weight_bytes=64,query_blocks=128,
+        active_lanes_per_query_slot=4,query_slot_II=1,read_bytes_per_query_edge=128,
+        storage_bits=dict(weight_pin_registers=512,block_pin_registers=1024),
+        latency_edges=dict(vm_face=8,assembly_pin=1,quant=13,emit_pin=1),
+        port='dedicated IDX read group4SW/SE,6NW/NE; querybase4sector-aligned,weightbase8sector-aligned, own/mirror',
+        reservation='two weight sectors first; compiler leaves fixed8+1edge weight visibility then128query slots',
+        roots='VM face + query assembly + four querybanks + quant and delay + control',
+        qualification='OPEN actual512querysector SRAM provenance, exactquant/negative proof, native parent and physical slot')
+
+
+def hbm_idx_static_topk_link_model():
+    """Fuse exact512 selection into actual native545b collective flits."""
+    return dict(schema='opentallas.hbm-idx-static-topk-link.v1',
+        input=dict(records_per_edge=64,record_bits=37,fixed_edges=171),
+        output=dict(records=512,flits=64,flit_bits=545,lanes=4,II=8,beats=16),
+        staging=dict(real_macros=8,shape='64x512 1R1W',flits_per_bank=64,used_flits_per_bank=8),
+        bytes_per_ingress_edge=64*8,bytes_per_egress_reserved_beat=4*64,
+        encoding='native values8xFP32 low256, IDs8xU32 high256, header{1,dstFF,srcRank8,globalFlit16}',
+        compaction='data-dependent prefix addresses, fixed171ingest slots; no ready,waiting or credit',
+        storage_bits=dict(carry=7*64,input_prefix_max=72*64),
+        ordering='chosen set unchanged; beatmajor/quartermajor/lane order, TKM uses explicit score/ID',
+        latency='finalselector scan fused; fixed flush then16fourflit beats each8edges; physical pipeline OPEN',
+        slot='UNASSIGNED successor SRAM and root footprint; no historical view alias',
+        qualification='OPEN real selector-to-staging-to-TKM source proof, physical timing, composed price')
+
+
+def hbm_idx_static_candidate_model():
+    """L20 blockmax/newest stream, fixed capacity1368 >=1366 local blocks."""
+    return dict(schema='opentallas.hbm-idx-static-candidate.v1',
+        input_scores_per_edge=64,output_blocks_per_edge=8,fixed_scan_edges=171,
+        result_bits_per_edge=8*36,comparators=4*2*7,tree_edges=3,
+        retained_result_capacity=1368,global_TOPK_capacity=2048,
+        semantics='max BF16 per8keys, literalglobalnewest forced+inf, allminusinf lv0; exact IDs',
+        schedule='each score beat has fixed3edge candidate return, no queues or credit',
+        slot='newsource no assignedphysicalroot/cut; downstream actualK2048 collective join OPEN',
+        qualification='OPEN golden max/newest/allmasked/partial mutants, physical and global2048 price')
+
+
+def hbm_idx_static_calendar_model():
+    """Compiler32b microinstructions in one real256x256 SRAM,2048slot capacity."""
+    return dict(schema='opentallas.hbm-idx-static-calendar.v1',
+        program_bits=65536,instruction_bits=32,instruction_capacity=2048,
+        real_macros=1,shape='256x256 1R1W',ports=dict(load_bits=256,issue_bits=32),
+        issue_II=1,roots=2,latency='start→read0 at+1→registered instruction0 at+2',
+        schedule='fixed bounded PC; instruction fields drive actual operand/scorer/selector/link slots; no dataready',
+        qualification='OPEN actual nativeparent timeline and physical placement; no price acceptance')
+
+
+def hbm_idx_keypack_static_model():
+    """Canonical cmp.ik_qdq FP32 KR→physicalFP4/E8M0, no re-quantized IK."""
+    return dict(schema='opentallas.hbm-idx-keypack-static.v1',
+        input='actual pre-quant KR FP32,4blocks32features/key',
+        input_bits_per_edge=1024,output_bits_per_key=544,keys_per_edge=.25,
+        quantum='same exact13edge FP4E8M0 pipeline asnativequery; capturedpackedkey oneedge later',
+        retained_bits=512+32+4,metadata_pipeline_bits=13*(2+14+2),roots=3,
+        byte_format='lower512bits 128E2M1nibbles infeatureorder,upper32bits4UE8M0bytes inblockorder',
+        placement='fixed2736localkeys/stack, source128MiBstride, base18.5GiB,fence19GiB; formatversion separatefromlegacy128Brow',
+        slot='UNASSIGNED quantizer/pack/storeproducer actualroots andnewphysicalview required',
+        qualification='OPEN actualSM+SU KRproducer→pack→HBMcommit→service→scorer join and physical/cost')
+
+
+def hbm_idx_keystore_static_model():
+    """68B packed key to actual four reserved32B write slots with byte masks."""
+    return dict(schema='opentallas.hbm-idx-keystore-static.v1',
+        bytes_per_key=68,reserved_sector_slots=4,sector_bytes=32,
+        issue_II=1,keys_per_edge=.25,hold_bits=544+37,
+        mapping='unchanged keyaddress+unaligned byteoffset; up4sectorsmask preserves neighbours',
+        root_count=1,latency='capture key then compiler store0..3 atfixededges; each outputpin +1edge',
+        phy='actual store controller/staging boundary join OPEN; onlyPHYqueueallowedtohold',
+        qualification='OPEN real byte-mask memory composition, producer/PHY join, physical and cost')
 def s81_static_vm_small_transport_model():
     """Actual small-group VM replica, pin, clock and state sizing; native gates remain open."""
     from s81_vm.static_transport_model import model

@@ -1,0 +1,16 @@
+{
+  "schema": "opentallas.quant.clock_gate_review.v1",
+  "source_commit": "96d91bbdc",
+  "raw_gate_verdict": "PASS",
+  "review_verdict": "FAIL",
+  "clock_insertion_ps": 336.9,
+  "clock_insertion_limit_ps": 300,
+  "clock_spread_ps": 139.9,
+  "clock_spread_limit_ps": 80,
+  "root_sinks": 1522,
+  "raw_manifest": "503fffdc9b4cd139d3227996b9fc5ad658710b4a0b9fe008bc5cba4c0b969ed1",
+  "reason": "raw gate clock verdict checks sink count but reports insertion/spread over own limits; source physicalclock not qualified",
+  "route_admitted": false,
+  "reset_fanout_warning": "removed by actualsourcecollar, not waived",
+  "next": "inspect actualclock distribution before source/placement revision; no duplicate route"
+}

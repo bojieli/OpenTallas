@@ -1,0 +1,18 @@
+{
+  "schema": "opentallas.quant.clock_audit_index.v1",
+  "authoritative_summary": "full_summary.json",
+  "port_clone_mapping": "command_launch_cells.json",
+  "cases": {
+    "baseline_full": "all1584clockpins/1583FF+1macro, original4columns, actual4_cts ODB",
+    "r2_full": "all1589clockpins/1588FF+1macro, R2source+1column, actual4_cts ODB",
+    "baseline_routed": "original4d4ac803c actual6_final ODB/SPEF, FF percommandhold"
+  },
+  "earlier_partial_cases": [
+    "baseline",
+    "r2",
+    "summary.json"
+  ],
+  "earlier_partial_limit": "InitialOpenDBescapedbracket lookup missed1496hierarchicalinstances; preserved as diagnostic only, never totalcensus. fullcases fix exactdoublebackslashescapedODBnames.",
+  "clone_census": "preCTSgate1516\u21921521 +5; postpin_reg_split1583\u21921588 +5;67physicalclonesinboth",
+  "model_no_full_nativeclaim": true
+}
