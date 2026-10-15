@@ -2077,10 +2077,10 @@ def _slice_pins(m, mm, down=False):
     w = {p: sp[1] for p, sp in mm.ports.items()}
     mm.ports.clear()
     mm.order.clear()
-    for p, face, centre in (('ctrl_es', 'W', mm.h / 4), ('ctrl_er', 'W', 3 * mm.h / 4),
-                            ('land_es', 'E', mm.h / 4), ('land_er', 'E', 3 * mm.h / 4)):
+    for p, face, centre in (('ctrl_es', 'W', STRIP_ES_Y - 12.96), ('ctrl_er', 'W', STRIP_ER_Y - 12.96),
+                            ('land_es', 'E', STRIP_ES_Y - 12.96), ('land_er', 'E', STRIP_ER_Y - 12.96)):
         if p in w:
-            mm.face(p, w[p], face, 'M4', round(centre, 3), 10)
+            mm.face(p, w[p], face, 'M4', round(centre, 3), 6)
     south = ['fi', 'co', 'ao', 'fault_o', 'sko', 'sdo', 'soo', 'sfo', 'bgi']
     north = ['fo', 'ci', 'ai', 'fault_i', 'ski', 'sdi', 'soi', 'sfi', 'bgo']
     for face, lst in ((('N', south), ('S', north)) if down else (('S', south), ('N', north))):
@@ -2098,7 +2098,7 @@ def _slice_pins(m, mm, down=False):
                    host_rst_n=('W', -15), hbm_rst_n=('W', 15),
                    ck_boot=('E', -5), ck_boot_test=('E', 5),
                    ctrl_completion_v=('E', -15), ctrl_completion_we=('E', 15),
-                   lpc=('W', 21))
+                   lpc=('W', 0))
     rest = sorted(p for p in w if p not in mm.ports)
     unknown = set(rest) - centres.keys()
     if unknown:

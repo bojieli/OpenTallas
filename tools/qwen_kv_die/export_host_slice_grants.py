@@ -53,7 +53,7 @@ def export(out):
                        'results/arch/qwen_split_1014/host_bind_request_1014/die_wiring.json:ck_station/ck_static',
                        'rtl/test/qwen_split/tb_host_pc_slice_die.sv:same actual clock for all four entries'],
                    boot_clock_note='ck_boot and ck_boot_test are on the actual die core trunk, as in the source parent equivalence; HBM reset naming does not change the clock family.',
-                   local_two_track_cut=dict(NS_M5=0.5,WE_M4=0.2),
+                   local_two_track_cut=dict(NS_M5=0.5,WE_M4=round(1/3,6)),
                    reroute_reason='slot_change: measured 1.0 local pin cut and M8 area clock pins replaced by legal M4/M5 face grants',
                    qualification='PIN_GRANT_ONLY: no leaf closure, native boundary, or whole-die qualification inferred')
         (out/f'{name}.json').write_text(json.dumps(rec,indent=1)+'\n')
