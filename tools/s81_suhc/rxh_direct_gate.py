@@ -49,8 +49,8 @@ module tb_rxh_direct;
    for(integer d=0;d<2;d=d+1)begin n[d]=0;first[d]=-1;last[d]=-1;end
    idx=(job==0)?0:(job==1)?7:56;
    send((job==2)?31:1,idx);tick();iv=0;idx=idx+((job==2)?5:1);
-   issued=cyc+1;
-   for(p=0;p<count;p=p+((job==0)?1:2))begin send((job==0)?1:3,idx);idx=idx+((job==0)?1:2);end
+   issued=cyc+2;
+   for(p=0;p<((job==1)?2*count:count);p=p+((job==0)?1:2))begin send((job==0)?1:3,idx);idx=idx+((job==0)?1:2);end
    tick();iv=0;repeat(260)tick();
    for(integer d=0;d<2;d=d+1)begin
     $display("RXDIRECT job=%0d d=%0d rows=%0d first=%0d last=%0d issue=%0d first_latency=%0d last_latency=%0d",job,d,n[d],first[d],last[d],issued,first[d]-issued,last[d]-issued);
@@ -84,6 +84,7 @@ def main():
  ap=argparse.ArgumentParser();ap.add_argument('--out',type=Path,required=True);ap.add_argument('--mut',type=int,default=0);a=ap.parse_args();out=a.out.resolve();out.mkdir(parents=True,exist_ok=True);prep(out)
  src=list(dict.fromkeys(S.H.FP['rtl']+S.RTL+['rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_rxt.sv','rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_rxh.sv']))
  pins={s:sha(ROOT/s)for s in src};pins['tools/s81_suhc/rxh_direct_gate.py']=sha(__file__)
+ for name in ['tools/hdc_golden_v41.py','tools/hdc_golden.py','tools/s81_suhc/hc_gate.py','tools/s81_suhc/su_gate.py']: pins[name]=sha(ROOT/name)
  obj=out/f'obj_m{a.mut}';cmd=[S.H.VERILATOR,'--binary','--timing','-O1','-Wno-fatal','-Wno-WIDTH','--top-module','tb_rxh_direct','-Mdir',str(obj),'-j','8','--unroll-count','4','-fno-dfg',f'-GXMUT={a.mut}',*[str(ROOT/s)for s in src],str(out/'tb_rxh_direct.sv'),'-CFLAGS','-O1']
  with (out/f'build_m{a.mut}.log').open('w')as f:r=subprocess.run(cmd,stdout=f,stderr=subprocess.STDOUT)
  if r.returncode: raise SystemExit(f'BUILD FAIL {r.returncode}')
