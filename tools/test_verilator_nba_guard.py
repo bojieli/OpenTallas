@@ -64,6 +64,22 @@ module tb;
 endmodule
 '''
 
+# NBA loop whose value does not read the target, with a later read in the same process: Verilator may keep
+# it in place legitimately (reads ordered first); it simulates correctly and must not be flagged.
+NO_CARRY = r'''
+module tb;
+  reg clk=0; integer cyc=0; reg [7:0] src=0; reg [7:0] cflt; reg [31:0] acc; integer i, first=-1;
+  always #5 clk=~clk;
+  always @(posedge clk) begin
+    if (cyc==0) begin cflt <= 0; acc <= 0; end
+    else begin for (i = 0; i < 8; i = i + 1) cflt[i] <= src[i]; acc <= acc + (|cflt); end
+    src <= (cyc==3) ? 8'h10 : 8'h00; cyc <= cyc + 1;
+    if (acc!=0 && first<0) first = cyc;
+    if (cyc==12) begin $display("RESULT %0d", first); $finish; end
+  end
+endmodule
+'''
+
 
 @unittest.skipUnless(REAL.exists(), 'Verilator 5.050 fleet install required')
 class Guard(unittest.TestCase):
@@ -109,6 +125,13 @@ class Guard(unittest.TestCase):
             self.assertGreater(r['loops_checked'], 0)
             self.assertEqual(r['findings'], [])
             self.assertEqual(r['blocking_loops_excluded'], 1)
+
+    def test_value_without_loop_carried_read_is_not_flagged(self):
+        with tempfile.TemporaryDirectory() as d:
+            w = Path(d)
+            self.assertEqual(self.build(w, NO_CARRY, ['--unroll-count', '1']).returncode, 0)
+            self.assertEqual(self.sim(w), 6)  # iverilog reference
+            self.assertEqual(G.scan(str(w / 'obj'))['findings'], [])
 
     def test_front_end_refuses_bad_model_and_passes_good_one(self):
         front = HERE / 'verilator_guarded.py'

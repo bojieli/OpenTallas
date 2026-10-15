@@ -19,8 +19,15 @@
    "instance": "hb_vms_SW",
    "port": "cq",
    "lo": 0,
+   "hi": 1352,
+   "top_port": "x_hb_vms_SW__cq_0_1352"
+  },
+  {
+   "instance": "hb_vms_SW",
+   "port": "cq",
+   "lo": 1690,
    "hi": 2366,
-   "top_port": "x_hb_vms_SW__cq_0_2366"
+   "top_port": "x_hb_vms_SW__cq_1690_2366"
   },
   {
    "instance": "hb_vms_SW",
@@ -588,9 +595,107 @@
    "lo": 0,
    "hi": 35168,
    "top_port": "x_hb_idx__key_lines_0_35168"
+  },
+  {
+   "instance": "hb_idx",
+   "port": "topk_go",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_hb_idx__topk_go_0_1"
+  },
+  {
+   "instance": "hb_idx",
+   "port": "topk_k",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_hb_idx__topk_k_0_4"
+  },
+  {
+   "instance": "hb_idx",
+   "port": "topk_order",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_hb_idx__topk_order_0_1"
+  },
+  {
+   "instance": "hb_idx",
+   "port": "topk_n",
+   "lo": 0,
+   "hi": 20,
+   "top_port": "x_hb_idx__topk_n_0_20"
+  },
+  {
+   "instance": "hb_idx",
+   "port": "topk_m",
+   "lo": 0,
+   "hi": 20,
+   "top_port": "x_hb_idx__topk_m_0_20"
+  },
+  {
+   "instance": "hb_idx",
+   "port": "topk_a_mirror",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_hb_idx__topk_a_mirror_0_1"
+  },
+  {
+   "instance": "hb_idx",
+   "port": "topk_a_base",
+   "lo": 0,
+   "hi": 18,
+   "top_port": "x_hb_idx__topk_a_base_0_18"
+  },
+  {
+   "instance": "hb_idx",
+   "port": "topk_a_str",
+   "lo": 0,
+   "hi": 18,
+   "top_port": "x_hb_idx__topk_a_str_0_18"
+  },
+  {
+   "instance": "hb_idx",
+   "port": "topk_o_mirror",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_hb_idx__topk_o_mirror_0_1"
+  },
+  {
+   "instance": "hb_idx",
+   "port": "topk_o_base",
+   "lo": 0,
+   "hi": 18,
+   "top_port": "x_hb_idx__topk_o_base_0_18"
+  },
+  {
+   "instance": "hb_idx",
+   "port": "topk_o_str",
+   "lo": 0,
+   "hi": 18,
+   "top_port": "x_hb_idx__topk_o_str_0_18"
+  },
+  {
+   "instance": "hb_idx",
+   "port": "topk_has_r",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_hb_idx__topk_has_r_0_1"
+  },
+  {
+   "instance": "hb_idx",
+   "port": "topk_r_base",
+   "lo": 0,
+   "hi": 18,
+   "top_port": "x_hb_idx__topk_r_base_0_18"
+  },
+  {
+   "instance": "hb_idx",
+   "port": "topk_r_str",
+   "lo": 0,
+   "hi": 18,
+   "top_port": "x_hb_idx__topk_r_str_0_18"
   }
  ],
- "boundary_input_bits": 63682,
+ "boundary_input_bits": 63501,
  "sources": {
   "hb_vms_SW": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vms_static.sv",
   "delivery_SW": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_static_vm_delivery.sv",
@@ -603,6 +708,6 @@
   "hb_sfu_SW": "rtl/hbm_accel/generic/peers/ot_hgi_sfu_scheduled_engine.sv",
   "hb_dbk_SW": "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static.sv",
   "hb_su_SW": "rtl/hbm_accel/generic/adapters/static_su/ot_hbm_su_static_vm_ports.sv",
-  "hb_idx": "rtl/hbm_accel/index/ot_hbm_idx_scheduled_static.sv"
+  "hb_idx": "rtl/hbm_accel/index/ot_hbm_idx_client_static.sv"
  }
 }

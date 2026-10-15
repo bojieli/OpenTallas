@@ -1,6 +1,7 @@
 `timescale 1ns/1ps
 // tb_dsfd_vm_static_cap_leaf_pre_equiv (claude S81 VM F2 2026-10-15): the hard capture lane with pin-stage decode
-// (dsfd_vm_static_cap_leaf PIPE=2) against the staged lane it replaces (PIPE=1), cycle-exact: o_v and the sticky
+// (dsfd_vm_static_cap_leaf PIPE=2 = pure pin flops + decode stage) against the staged lane (PIPE=1) delayed by exactly ONE
+// serial edge (the added explicit stage), cycle-exact: o_v and the sticky
 // faults every cycle, header and every masked word of every emitted row.  Stimulus (the staged-merge equivalence
 // generator at the leaf pins): full rows, duplicates, two full entries on a flush, aliases, random invalid / range
 // addresses, sparse partial rows, flushes and a reset every 100 cycles with a new lane id.
@@ -14,22 +15,27 @@ module tb_dsfd_vm_static_cap_leaf_pre_equiv;
   wire [511:0] da,db; wire [4:0] fa,fb;
   dsfd_vm_static_cap_leaf #(.E(8), .PIPE(2)) a(.ck(ck),.rn(rn),.gid(gid),.f_c(f_c),.flush(flush),.o_v(va),.o_row(ra),.o_m(ma),.o_d(da),.flt(fa));
   dsfd_vm_static_cap_leaf #(.E(8), .PIPE(1)) b(.ck(ck),.rn(rn),.gid(gid),.f_c(f_c),.flush(flush),.o_v(vb),.o_row(rb),.o_m(mb),.o_d(db),.flt(fb));
+  // PIPE=1 outputs one serial edge late (the one added PIPE=2 stage)
+  reg pvb; reg [13:0] prb; reg [15:0] pmb; reg [511:0] pdb; reg [4:0] pfb;
+  always @(posedge ck) begin pvb <= vb; prb <= rb; pmb <= mb; pdb <= db; pfb <= fb; end
   integer cyc,k,seed,mode,word,rows=0,words=0,partials=0,bad=0; reg [18:0] addr; reg [31:0] data; reg [4:0] all_faults=0;
   initial begin
     seed=42; if ($value$plusargs("seed=%d",seed)) begin end
     for(cyc=0;cyc<12000;cyc=cyc+1) begin
       @(negedge ck);
-      if ({va,fa} !== {vb,fb}) begin
-        if (bad<5) $display("MISMATCH control cycle=%0d pre=%b/%h staged=%b/%h",cyc,va,fa,vb,fb); bad=bad+1;
+      if (cyc > 2) begin
+      if ({va,fa} !== {pvb,pfb}) begin
+        if (bad<5) $display("MISMATCH control cycle=%0d pre=%b/%h staged+1=%b/%h",cyc,va,fa,pvb,pfb); bad=bad+1;
       end
-      all_faults = all_faults | fb;
-      if (vb) begin
-        rows=rows+1; if(mb!=16'hffff) partials=partials+1;
-        if ({ra,ma} !== {rb,mb}) begin if (bad<5) $display("MISMATCH header cycle=%0d",cyc); bad=bad+1; end
-        for(word=0;word<16;word=word+1) if(mb[word]) begin
+      all_faults = all_faults | pfb;
+      if (pvb) begin
+        rows=rows+1; if(pmb!=16'hffff) partials=partials+1;
+        if ({ra,ma} !== {prb,pmb}) begin if (bad<5) $display("MISMATCH header cycle=%0d",cyc); bad=bad+1; end
+        for(word=0;word<16;word=word+1) if(pmb[word]) begin
           words=words+1;
-          if(da[32*word+:32] !== db[32*word+:32]) begin if (bad<5) $display("MISMATCH payload cycle=%0d word=%0d",cyc,word); bad=bad+1; end
+          if(da[32*word+:32] !== pdb[32*word+:32]) begin if (bad<5) $display("MISMATCH payload cycle=%0d word=%0d",cyc,word); bad=bad+1; end
         end
+      end
       end
       rn=(cyc%100 != 0); if(!rn) gid=(cyc/100)%16;
       flush=(cyc%100==33 || cyc%100==70 || cyc%100==85);
