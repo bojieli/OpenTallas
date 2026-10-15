@@ -25,17 +25,33 @@ module tb_dsfd_vm_static_core;
     reg  [3:0] l_v = 0; reg [2047:0] l_d = 0; reg [2203:0] cvm = 0;
     reg  [19:0] mx_rqv = 0; reg [279:0] mx_rq = 0; wire [19:0] mx_rsv; wire [10239:0] mx_rs;
     reg  [3:0] mx_wqv = 0; reg [55:0] mx_wq = 0; reg [63:0] mx_wqm = 0; reg [2047:0] mx_wqd = 0;
+    // Compatibility stimulus adapter for the core's explicit auxiliary and row-write ports.
+    wire [7:0] xv; wire [4095:0] xd;
+    reg [1:0] crlane [0:12]; integer ci;
+    always @(posedge ck) begin
+        crlane[0] <= crq[2:1];
+        for (ci = 1; ci < 13; ci = ci + 1) crlane[ci] <= crlane[ci-1];
+    end
+    assign crs = {xd[512*crlane[12] +: 512], xv[crlane[12]]};
+    wire [31:0] clt; wire [3:0] clv; wire [55:0] clr; wire [63:0] clm; wire [2047:0] cld;
+    genvar cl;
+    generate for (cl = 0; cl < 4; cl = cl + 1) begin
+        assign clv[cl] = cvm[551*cl];
+        assign clt[8*cl +: 8] = cvm[551*cl+543 +: 8];
+        assign clr[14*cl +: 14] = cvm[551*cl+1 +: 14];
+        assign clm[16*cl +: 16] = cvm[551*cl+15 +: 16];
+        assign cld[512*cl +: 512] = cvm[551*cl+31 +: 512];
+    end endgenerate
     wire vm_fault;
     dsfd_vm_static_core dut (.cks(ck), .rss(rss), .c_cmd(c_cmd), .c_done(c_done), .c_st(c_st), .t_inp_su(t_inp_su),
         .t_inp_hc(t_inp_hc), .f_su_rqv(su_rqv), .f_su_rq(su_rq), .t_su_rsv(su_rsv), .t_su_rs(su_rs), .f_su_wqv(su_wqv),
         .f_su_wq(su_wq), .f_su_wqm(su_wqm), .f_su_wqd(su_wqd), .f_hc_rqv(hc_rqv), .f_hc_rq(hc_rq), .t_hc_rsv(hc_rsv),
-        .t_hc_rs(hc_rs), .f_hc_wqv(hc_wqv), .f_hc_wq(hc_wq), .f_hc_wqm(hc_wqm), .f_hc_wqd(hc_wqd), .f_pqx(pqx), .t_pqx(pq_o), .f_crq(crq), .t_crs(crs),
+        .t_hc_rs(hc_rs), .f_hc_wqv(hc_wqv), .f_hc_wq(hc_wq), .f_hc_wqm(hc_wqm), .f_hc_wqd(hc_wqd), .f_pqx(pqx), .t_pqx(pq_o), .x_av({4'd0, (crq[0] ? (4'b1 << crq[2:1]) : 4'd0)}), .x_ar({56'd0, {4{crq[14:1]}}}), .x_rv(xv), .x_rd(xd), .nf_v(), .nf_d(),
         .f_mx_rqv(mx_rqv), .f_mx_rq(mx_rq), .t_mx_rsv(mx_rsv), .t_mx_rs(mx_rs),
         .f_mx_wqv(mx_wqv), .f_mx_wq(mx_wq), .f_mx_wqm(mx_wqm), .f_mx_wqd(mx_wqd),
-        .l_v(l_v), .l_d(l_d), .f_cvm(cvm), .x_flt(1'b0), .vm_fault(vm_fault));
+        .l_v(l_v), .l_d(l_d), .cp_v(16'd0), .cp_row(224'd0), .cp_m(256'd0), .cp_d(8192'd0), .cl_t(clt), .cl_v(clv), .cl_row(clr), .cl_m(clm), .cl_d(cld), .wf_v(1'b0), .wf_row(14'd0), .wf_d(512'd0), .x_flt(1'b0), .vm_fault(vm_fault));
 
-    localparam integer RL = 12, DL = 5;      // check index (the negedge check sees the previous drive index): drive n -> output
-                                             // register updated RL / DL edges after the pin edge (done = DLAT 6 presented cycles)
+    localparam integer RL = 12, DL = 6;      // Exact elapsed edges from command/read sampling to output.
     integer cy = 0, bad = 0, mode = 0, seed = 1, nreads = 4000, K = -1, commits = 0, reads = 0, rows_checked = 0;
     integer dones = 0, pqreads = 0, cmds = 0, mxreads = 0, mxwrites = 0, fault_seen = 0;
     reg [7:0] ver [0:16383];                 // stimulus version of each row (value function input)

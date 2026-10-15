@@ -106,12 +106,38 @@ def apply_slabs(M):
         q.obs_top = 7
 
 
+def apply_dvm_clocks(M):
+    # Grown DVM column: four MX south leaves, head, four R0 north
+    # leaves. These are actual IO-placement rectangle centers supplied by
+    # Q-DVM, in the RTL ck0=head, ck1..4=north, ck5..8=south order.
+    ys = [754.812,950.412,1086.492,1222.572,1358.652,
+          483.828,347.748,211.668,75.588]
+    for name in ('qfd_xcol_e','qfd_xcol_w'):
+        q = M.get(name)
+        if q is None:
+            continue
+        for k,y in enumerate(ys):
+            p = f'ck{k}'
+            q.ports[p] = ('xy',1,'M5',[(.042,y)],1)
+            if p not in q.order:
+                q.order.append(p)
+    for name in ('qfd_xcst_n','qfd_xcst_s'):
+        q = M.get(name)
+        if q is None:
+            continue
+        for p,xy in (('ck',(52.065,103.637)),('rst_n',(52.353,103.637))):
+            q.ports[p] = ('xy',1,'M3',[xy],1)
+            if p not in q.order:
+                q.order.append(p)
+
+
 def apply(M):
     entries = json.loads((ROOT / 'results/arch/qwen_compute_child_clocks_1014/entries.json').read_text())['masters']
     for name in ('qfd_tile_nk', 'qfd_tile_nl'):
         if name in M:
             apply_tile(M[name], entries)
     apply_slabs(M)
+    apply_dvm_clocks(M)
 
 
 def export(q, out):

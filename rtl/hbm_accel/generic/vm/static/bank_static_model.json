@@ -1,0 +1,59 @@
+{
+  "schema": "opentallas.hbm.vm-bank-static-sizing.v1",
+  "created": "2026-10-14T23:26:16.502773",
+  "stage": "PRE_RTL",
+  "method": "Microarchitecture analytical sizing per tools/uarch_model.py dimensions; replaces historical B2 queue/grant latency with compiler slot",
+  "rg": 2,
+  "wg": 2,
+  "macs_per_cycle": 0,
+  "compute_intensity": 0,
+  "logical_storage_bytes": 65536,
+  "physical_storage_bytes": 98304,
+  "memory_bytes_per_cycle": {
+    "logical_read": 32,
+    "logical_write": 32,
+    "physical_read": 64,
+    "physical_write": 64
+  },
+  "replicas": 32,
+  "macro_count_per_bank": 3,
+  "macro_type": "ot_sram_1r1w_1024x256_m2_r2c2",
+  "macro_area_um2": 36942.62904,
+  "macro_outline_um": [
+    174.744,
+    70.47
+  ],
+  "area_fit": "Same three macro inventory as historical closed B2 bank; removes all lane queues, dynamic arbitration, egress counters; successor physical view unqualified",
+  "mux_cost": "RG+1 address mux for read; WG+5 payload mux for write, selected only by compiler owner",
+  "fanout": "one request selected per physical port; read response data broadcast to RG output payload flops",
+  "boundary_bits_per_cycle": {
+    "read_input": 34,
+    "wide_write_input": 562,
+    "dma": 281,
+    "coll": 281,
+    "ring_input": 552,
+    "packet_input": 285,
+    "read_output": 514,
+    "packet_output": 266,
+    "egress": 276
+  },
+  "routing_tracks_needed": "sum of named boundary bits plus slot and control pins; existing B2 envelope supplies candidate; exact cuts require assigned die slot/pin contract",
+  "routing_capacity": "not yet measured; no physical closure claim",
+  "single_user_latency_cycles": {
+    "input_pin": 0,
+    "owner_select": 1,
+    "macro_pin": 2,
+    "macro_commit": 3,
+    "capture": 4,
+    "syndrome": 5,
+    "response": 6,
+    "mirror_egress": 1
+  },
+  "throughput": {
+    "read_sectors_per_cycle": 1,
+    "write_sectors_per_cycle": 1,
+    "initiation_interval": 1
+  },
+  "schedule": "At most one active reader and writer per bank each cycle; all sources must equal explicit rslot/wslot; no queues, credits, ready or data-dependent selection",
+  "qualification": "component bench then failing owner-select mutant; full compiler composition/physical closure pending"
+}
