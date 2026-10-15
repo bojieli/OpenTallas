@@ -1,0 +1,74 @@
+{
+ "name": "qfd_slab_reg512",
+ "top": "qfd_slab_reg512",
+ "kind": "tile",
+ "sources": [
+  "rtl/qwen_split/qfd_slab_reg512.sv"
+ ],
+ "params": {},
+ "clock_port": "ck",
+ "outline": {
+  "w": 21.6,
+  "h": 75.6
+ },
+ "pins": {
+  "W": [
+   "d",
+   "ck"
+  ],
+  "E": [
+   "q"
+  ]
+ },
+ "inter": [],
+ "refglob": "*",
+ "layer_cap": "M5",
+ "recipe": 2,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "inhold": true,
+ "outhold": true,
+ "io_flop_at_pins": {
+  "cols": 4
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 8,
+  "hold_margin_ns": 0.03,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M5"
+  },
+  "m5_pg_pitch": 2.7,
+  "macro_halo_um": 5.4
+ },
+ "structural_change": "q15 port-tiles: new plain 512-b one-edge bank (no reset; exact for the port_tiles ck pass-through registers), footprint/pin layout of the CLOSED qwen_glue_v514 minus bits 512-513 and rst_n; bench tb_reg512 PASS, bypass/inversion mutants FAIL.",
+ "job": {
+  "owner": "Claude:q15_compute_elem",
+  "branch": "claude/q15-port-tiles",
+  "tag": "rb1",
+  "purpose": "port_tiles parent ck-domain face bank (replaces a 15,267-sink parent root)",
+  "extra_paths": [
+   "physical/qwen_port_tiles_1015"
+  ]
+ },
+ "io_tcl": "physical/ref_tile/qfd_slab_reg512/assigned_pins.tcl",
+ "pin_ranges": {
+  "d": [
+   5.436,
+   70.0
+  ],
+  "q": [
+   5.436,
+   70.0
+  ]
+ },
+ "macros": [],
+ "children": [],
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "reset_ports": []
+}
