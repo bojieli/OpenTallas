@@ -60,9 +60,15 @@ module dsfd_vm_static_wsched #(parameter integer NSRC = 48) (
             .ck(ck_payload[ps]), .rst_n(rst_payload_n[ps]), .i_mask(mi), .i_data(di),
             .o_mask(mo), .o_data(dout), .o_epoch(payload_epoch[3*ps +: 3]));
     end endgenerate
+    // control samples the source pins' bank bits at P beside the header (lane/lv registered at P, used at P+1)
+    wire [8*NSRC-1:0] src_bank;
+    genvar sb;
+    generate for (sb = 0; sb < NSRC; sb = sb + 1) begin : srcbank
+        assign src_bank[8*sb +: 8] = i_row[14*sb +: 8];
+    end endgenerate
     wire [2*NSRC-1:0] lane; wire [NSRC-1:0] lv; wire [2:0] own;
     dsfd_vm_static_wcontrol #(.NSRC(NSRC)) u_control (
-        .ck_control(ck_control), .rst_n(rst_control_n), .pv(pv), .pr(pr), .cap_v(cap_v[95:0]),
+        .ck_control(ck_control), .rst_n(rst_control_n), .src_v(i_v), .src_bank(src_bank), .cap_v(cap_v[95:0]),
         .header_epoch(header_epoch), .payload_epoch(payload_epoch),
         .lane(lane), .lv(lv), .dr_v(dr_v), .dr_s(dr_s), .own(own));
 

@@ -37,6 +37,17 @@ DISP_OUT = {'o_v': 1, 'o_slot': 2, 'o_row': 14, 'o_mask': 4, 'o_data': 128, 'o_t
 
 
 def rename(top, name):
+    if top == 'dsfd_vm_static_wcontrol' and name.startswith(('pv[', 'pr[')):
+        # control now samples the source pins (src_v, row[7:0] bank bits) at P; pr bits 8..13 are no longer pins
+        idx = int(name[3:-1])
+        if name.startswith('pv['):
+            return f'src_v[{idx}]'
+        c, j = divmod(idx, 14)
+        return f'src_bank[{8 * c + j}]' if j < 8 else None
+    return rename_dispatch(top, name)
+
+
+def rename_dispatch(top, name):
     """dispatch profiles split each bus by face: sources 0..26 -> *_n, 27..52 -> *_s; records 0..11 (banks +0..3) -> *_e,
     records 12..23 -> *_w (dsfd_vm_static_wdispatch128_profiles.sv)."""
     if not top.startswith('dsfd_vm_static_wdispatch128_B') or '[' not in name:
@@ -70,7 +81,7 @@ def main():
     for kit, top, cand, sources, leaf, cat, roots in KITS:
         c = json.loads((CAND / (cand + '.json')).read_text())
         w, h = c['outline_um']
-        faces = {f: [rename(top, p['name']) for p in c['pins'] if p['face'] == f] for f in 'NSEW'}
+        faces = {f: [x for x in (rename(top, p['name']) for p in c['pins'] if p['face'] == f) if x] for f in 'NSEW'}
         pins, pitches = [], {}
         for f in 'NSEW':
             if not faces[f]:

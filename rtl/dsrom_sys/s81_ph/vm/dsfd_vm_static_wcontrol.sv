@@ -1,11 +1,17 @@
 `timescale 1ns/1ps
 `default_nettype none
-// Actual 296-flop control leaf. Owns prefix lane logic, fixed drain calendar,
+// Actual control leaf. Owns prefix lane logic, fixed drain calendar,
 // fault observations and reset release on one native clock root. No arbitration,
 // ready, runtime scheduling or stage addition. The parent is wires only.
+// LANE AT THE SOURCE EDGE (claude S81 VM F1, 2026-10-15, structural): the lane function reads the SOURCE pins
+// (src_v, row bits [7:0] = the bank hash inputs) and is registered at edge P, the same edge the W0 header registers
+// pv/pr, so lane/lv leave this leaf from flops and the dispatch samples them at P+1 exactly as before (zero cycles).
+// Measured cause: lane computed combinationally from the header outputs pv/pr made a 34-level in->out path through
+// this leaf (TT -1119 ps at the native IO budget, CTS gate 2026-10-15); now in->reg with a balanced saturating
+// (0,1,2,3+) count tree instead of a 52-deep serial increment chain.
 module dsfd_vm_static_wcontrol #(parameter integer NSRC=53)(
  input wire ck_control,rst_n,
- input wire [NSRC-1:0] pv,input wire [14*NSRC-1:0] pr,
+ input wire [NSRC-1:0] src_v,input wire [8*NSRC-1:0] src_bank,
  input wire [95:0] cap_v,input wire [2:0] header_epoch,input wire [11:0] payload_epoch,
  output reg [2*NSRC-1:0] lane,output reg [NSRC-1:0] lv,
  output reg [31:0] dr_v,output reg [63:0] dr_s,output reg [2:0] own
@@ -19,24 +25,40 @@ module dsfd_vm_static_wcontrol #(parameter integer NSRC=53)(
     wire phase_bad = (header_epoch != control_epoch) ||
         (payload_epoch[2:0] != control_epoch) || (payload_epoch[5:3] != control_epoch) ||
         (payload_epoch[8:6] != control_epoch) || (payload_epoch[11:9] != control_epoch);
-    reg lane_bad;
-    always @* begin : p_lane integer c, d; reg [4:0] bc, bd; reg [5:0] n;
-        lane_bad = 1'b0;
+    // saturating 2-bit add: 3 = "3 or more"
+    function automatic [1:0] sat3(input [1:0] a, input [1:0] b);
+        reg [2:0] t; begin t = a + b; sat3 = t[2] ? 2'd3 : t[1:0]; end
+    endfunction
+    localparam integer NP = 64;                            // tree width >= NSRC
+    reg [NSRC-1:0] lane_v_d; reg [2*NSRC-1:0] lane_d; reg lane_bad_d;
+    always @* begin : p_lane integer c, d, w, k; reg [4:0] bc, bd; reg [1:0] t [0:NP-1]; reg [1:0] n;
+        lane_bad_d = 1'b0;
         for (c = 0; c < NSRC; c = c + 1) begin
-            bc = pr[14*c +: 5] ^ {pr[14*c+5 +: 3], 2'b00};
-            n = 6'd0;
-            for (d = 0; d < c; d = d + 1) begin
-                bd = pr[14*d +: 5] ^ {pr[14*d+5 +: 3], 2'b00};
-                if (pv[d] && bd == bc) n = n + 6'd1;
+            bc = src_bank[8*c +: 5] ^ {src_bank[8*c+5 +: 3], 2'b00};
+            for (d = 0; d < NP; d = d + 1) begin
+                t[d] = 2'd0;
+                if (d < c) begin
+                    bd = src_bank[8*d +: 5] ^ {src_bank[8*d+5 +: 3], 2'b00};
+                    t[d] = {1'b0, src_v[d] && bd == bc};
+                end
             end
+            for (w = NP / 2; w >= 1; w = w / 2)              // balanced tree, log2(NP) levels
+                for (k = 0; k < w; k = k + 1) t[k] = sat3(t[2*k], t[2*k+1]);
+            n = t[0];
 `ifdef OT_VM_WSCHED_MUT_LANE
-            lane[2*c +: 2] = 2'd0;                    // MUTANT: every record on lane 0 (dispatch duplicate)
+            lane_d[2*c +: 2] = 2'd0;                  // MUTANT: every record on lane 0 (dispatch duplicate)
 `else
-            lane[2*c +: 2] = (n > 6'd2) ? 2'd3 : n[1:0];
+            lane_d[2*c +: 2] = n;
 `endif
-            lv[c] = pv[c] && n <= 6'd2;
-            if (pv[c] && n > 6'd2) lane_bad = 1'b1;
+            lane_v_d[c] = src_v[c] && n != 2'd3;
+            if (src_v[c] && n == 2'd3) lane_bad_d = 1'b1;
         end
+    end
+    reg lane_bad;                                          // lane fault of the records registered at P (owned at P+1)
+    always @(posedge ck_control) begin
+        lane <= lane_d;
+        if (!rn) begin lv <= {NSRC{1'b0}}; lane_bad <= 1'b0; end
+        else begin lv <= lane_v_d; lane_bad <= lane_bad_d; end
     end
 
     // ---------------------------------------------------------------- fixed drain rule (from slice 0's captures)
