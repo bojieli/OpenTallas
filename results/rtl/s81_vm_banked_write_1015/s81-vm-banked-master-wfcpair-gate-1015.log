@@ -1,0 +1,8 @@
+ot-run: ot-epyc1tb     admits   525 GB (avail 751, growth 68, headroom 64, waiters 0/0 GB) load 41/128 running 15 disk 669 GB 
+ot-run: ot-epyc4       admits   525 GB (avail 752, growth 104, headroom 48, waiters 0/0 GB) load 36/128 running 21 disk 468 GB 
+ot-run: ot-pve1        skipped: load hold: load1 > 1.5 x cores
+ot-run: ot-agidock128  admits    43 GB (avail 74, growth 14, headroom 24, waiters 0/0 GB) load 8/64 running 9 disk 23 GB 
+ot-run: -> ot-epyc1tb
+ot-heavy: admitted on ot-epyc1tb as oth-ubuntu-859001-1792058946 after 0 s
+SPVM_TARGET PASS wfcpair
+ot-run: RAN on ot-epyc1tb (unit oth-ubuntu-859001-1792058946): exit 0
