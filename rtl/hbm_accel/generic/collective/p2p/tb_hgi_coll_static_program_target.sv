@@ -104,13 +104,21 @@ module tb_hgi_coll_static_program_target;
                 11:begin active=1;send_frame(0,0);end
                 12:begin row_program(0);send_frame(0,0);end
                 13:begin
-                    row_program(0);limit=1;descriptor();@(negedge clk);lv=1;
-                    idle(15);
+                    for(integer r=0;r<64;r=r+1)row_program(r);
+                    limit=1;descriptor();@(negedge clk);lv=1;
+                    idle(8);
+                    if(issuer_fault)$fatal(1,"runtime limit checker confounded by issuer fault");
                 end
                 14:begin send_frame(0,0);descriptor();end
                 15:begin descriptor();send_frame(0,0);lv=1;end
                 16:begin limit=0;descriptor();end
                 17:begin send_frame(0,6);frame[192]=1;end
+                18:begin
+                    for(integer r=0;r<64;r=r+1)row_program(r);
+                    descriptor();@(negedge clk);lv=1;idle(8);
+                    if(!busy)$fatal(1,"expected actual native issuer busy");
+                    send_frame(0,0);
+                end
                 default:$fatal(1,"bad scenario");
             endcase
             idle(8);
