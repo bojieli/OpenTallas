@@ -1,0 +1,292 @@
+{
+  "schema": "opentallas.hbm.engram-fetch-host-fragment.v1",
+  "result": "PASS",
+  "source_programme_sha256": "fd90f5f5261f741c73cbe044c30911e37ed6ef677de9765ee3fd70523c7b4fda",
+  "source_programme": {
+    "target": 124,
+    "encoding": "raw_engram_fetch7x32",
+    "programme": {
+      "start": {
+        "base": 0,
+        "limit": 42,
+        "loops": 1
+      },
+      "configuration_writes": [
+        {
+          "addr": 0,
+          "data": "0000000000000000000000000000000000000000000000000000000200000001"
+        },
+        {
+          "addr": 1,
+          "data": "0000000000000000000000000000000000000000000000000000000000000000"
+        },
+        {
+          "addr": 2,
+          "data": "0000000000000000000000000000000000000000000000000000000000000000"
+        },
+        {
+          "addr": 3,
+          "data": "0000000000000000000000000000000000000000000000000000000000000000"
+        },
+        {
+          "addr": 4,
+          "data": "0000000000000000000000000000000000000000000000000000000000000000"
+        },
+        {
+          "addr": 5,
+          "data": "0000000000000000000000030000000000000000000000000000000000000000"
+        }
+      ]
+    }
+  },
+  "source_commit": "07566446d",
+  "fragment": {
+    "schema": "opentallas.hbm.actual-host-program-fragment.v1",
+    "axi_writes": [
+      {
+        "address": 3872,
+        "data": 124
+      },
+      {
+        "address": 3876,
+        "data": 1
+      },
+      {
+        "address": 3876,
+        "data": 2
+      },
+      {
+        "address": 3876,
+        "data": 0
+      },
+      {
+        "address": 3876,
+        "data": 0
+      },
+      {
+        "address": 3876,
+        "data": 0
+      },
+      {
+        "address": 3876,
+        "data": 0
+      },
+      {
+        "address": 3876,
+        "data": 0
+      },
+      {
+        "address": 3876,
+        "data": 0
+      },
+      {
+        "address": 3872,
+        "data": 380
+      },
+      {
+        "address": 3876,
+        "data": 0
+      },
+      {
+        "address": 3876,
+        "data": 0
+      },
+      {
+        "address": 3876,
+        "data": 0
+      },
+      {
+        "address": 3876,
+        "data": 0
+      },
+      {
+        "address": 3876,
+        "data": 0
+      },
+      {
+        "address": 3876,
+        "data": 0
+      },
+      {
+        "address": 3876,
+        "data": 0
+      },
+      {
+        "address": 3876,
+        "data": 0
+      },
+      {
+        "address": 3872,
+        "data": 636
+      },
+      {
+        "address": 3876,
+        "data": 0
+      },
+      {
+        "address": 3876,
+        "data": 0
+      },
+      {
+        "address": 3876,
+        "data": 0
+      },
+      {
+        "address": 3876,
+        "data": 0
+      },
+      {
+        "address": 3876,
+        "data": 0
+      },
+      {
+        "address": 3876,
+        "data": 0
+      },
+      {
+        "address": 3876,
+        "data": 0
+      },
+      {
+        "address": 3876,
+        "data": 0
+      },
+      {
+        "address": 3872,
+        "data": 892
+      },
+      {
+        "address": 3876,
+        "data": 0
+      },
+      {
+        "address": 3876,
+        "data": 0
+      },
+      {
+        "address": 3876,
+        "data": 0
+      },
+      {
+        "address": 3876,
+        "data": 0
+      },
+      {
+        "address": 3876,
+        "data": 0
+      },
+      {
+        "address": 3876,
+        "data": 0
+      },
+      {
+        "address": 3876,
+        "data": 0
+      },
+      {
+        "address": 3876,
+        "data": 0
+      },
+      {
+        "address": 3872,
+        "data": 1148
+      },
+      {
+        "address": 3876,
+        "data": 0
+      },
+      {
+        "address": 3876,
+        "data": 0
+      },
+      {
+        "address": 3876,
+        "data": 0
+      },
+      {
+        "address": 3876,
+        "data": 0
+      },
+      {
+        "address": 3876,
+        "data": 0
+      },
+      {
+        "address": 3876,
+        "data": 0
+      },
+      {
+        "address": 3876,
+        "data": 0
+      },
+      {
+        "address": 3876,
+        "data": 0
+      },
+      {
+        "address": 3872,
+        "data": 1404
+      },
+      {
+        "address": 3876,
+        "data": 0
+      },
+      {
+        "address": 3876,
+        "data": 0
+      },
+      {
+        "address": 3876,
+        "data": 0
+      },
+      {
+        "address": 3876,
+        "data": 0
+      },
+      {
+        "address": 3876,
+        "data": 0
+      },
+      {
+        "address": 3876,
+        "data": 3
+      },
+      {
+        "address": 3876,
+        "data": 0
+      },
+      {
+        "address": 3876,
+        "data": 0
+      },
+      {
+        "idle_core_edges": 2,
+        "reason": "actual raw programme final-word commit before descriptor"
+      },
+      {
+        "address": 3880,
+        "data": 172032
+      },
+      {
+        "address": 3884,
+        "data": 1
+      }
+    ],
+    "launch_guard_core_edges": 130,
+    "target_manifest": {
+      "target": 124,
+      "encoding": "raw_engram_fetch7x32",
+      "payload_bits": 224,
+      "transport_bits": 256,
+      "words": 6,
+      "start": {
+        "base": 0,
+        "limit": 42,
+        "loops": 1
+      },
+      "source": "ot_hbm_engram_fetch_program",
+      "native_op_pc_bits": 10
+    }
+  },
+  "scope": "Actual42-op source image -> exact hostCSR fragment only; actualAXI/LCP/kernelcomposition remains open"
+}
