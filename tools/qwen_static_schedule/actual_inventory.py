@@ -29,7 +29,7 @@ def requirements(programs):
         out.append(dict(record,unit=unit,shape=shape,required_contracts=need,status='NATIVE_MICROCALENDAR_REQUIRED'))
     return dict(schema='opentallas.qwen-static-program-requirements.v1',
         status='NOT_SCHEDULED',program_sha256=[sha(p) for p in programs],instructions=out,
-        source_sha256={str(Path(ISA.__file__).resolve()):sha(ISA.__file__)},
+        source_sha256={str(Path(ISA.__file__).resolve().relative_to(Path(__file__).resolve().parents[2])):sha(ISA.__file__)},
         claim='Actual encoded PC inventory only; no guessed latencies, runtime traces or modeled memory scheduling.')
 
 
