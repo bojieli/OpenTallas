@@ -3,7 +3,8 @@
   "clock_roots": {
     "ring_state": {
       "count": 8,
-      "payload_sinks_each": 1536
+      "payload_sinks_each": 2600,
+      "structure": "one-hot enables captured per64-bit region; all input payloads pin-captured before storage; two-stage landed flags"
     },
     "ring_add": {
       "count": 8,
@@ -38,7 +39,9 @@
     "measured_write_cycles": 18707,
     "measured_flits": 768,
     "measured_readbacks": 2442,
-    "performance_qualified": false
+    "performance_qualified": false,
+    "child_clock_entries": 13,
+    "coll_receiver_clock_entries": 5
   },
   "physical_qualification": false
 }

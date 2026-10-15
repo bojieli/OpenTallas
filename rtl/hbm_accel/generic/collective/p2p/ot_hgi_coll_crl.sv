@@ -55,10 +55,11 @@ module ot_hgi_coll_crl_rx #(
     reg v_q; reg [W-1:0] d_q;
     reg [W-1:0] fq [0:CRD-1]; reg [AW-1:0] hd, tl; reg [AW:0] n;
     wire pop = out_v && out_rdy;
+    always @(posedge clk) d_q <= t_d;
     always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin v_q <= 1'b0; d_q <= '0; hd <= '0; tl <= '0; n <= '0; f_cr <= 1'b0; fault <= 1'b0; out_v <= 1'b0; end
+        if (!rst_n) begin v_q <= 1'b0; hd <= '0; tl <= '0; n <= '0; f_cr <= 1'b0; fault <= 1'b0; out_v <= 1'b0; end
         else begin
-            v_q <= t_v; d_q <= t_d;
+            v_q <= t_v;
             if (v_q) begin
                 if (n == (AW+1)'(CRD) && !pop) fault <= 1'b1;
                 fq[tl] <= d_q; tl <= (tl == AW'(CRD - 1)) ? '0 : tl + 1'b1;

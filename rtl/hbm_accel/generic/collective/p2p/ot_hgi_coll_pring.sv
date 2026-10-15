@@ -95,20 +95,21 @@ module ot_hgi_coll_pring #(
     assign rc_rdy = !lp_v[rc_tag] && !busy[rc_tag];
     // One payload leaf per tag. Common registered write streams keep the parent's payload root small.
     // A payload crosses one extra register edge; ready bits below prevent a fold before that edge lands.
-    reg lp_wr, tree_wr; reg [2:0] lp_wtag, tree_wtag; reg [255:0] lp_wdata, tree_wdata;
-    reg [1:0] carry_wr; reg [5:0] carry_wtag; reg [3:0] carry_wsrc; reg [511:0] carry_wdata;
-    reg lp_landed [0:NT-1], tree_landed [0:NT-1]; reg carry_landed [0:NT-1][0:3];
+    reg [NT-1:0] lp_wr, tree_wr; reg [255:0] lp_wdata, tree_wdata;
+    reg [NT*4-1:0] carry_wr0, carry_wr1; reg [511:0] carry_wdata;
+    reg lp_staged [0:NT-1], tree_staged [0:NT-1], lp_landed [0:NT-1], tree_landed [0:NT-1];
+    reg carry_staged [0:NT-1][0:3], carry_landed [0:NT-1][0:3];
     always @(posedge clk) begin
         for (integer t = 0; t < NT; t = t + 1) begin
-            lp_landed[t] <= lp_v[t]; tree_landed[t] <= t_v[t];
-            for (integer q = 0; q < 4; q = q + 1) carry_landed[t][q] <= c_v[t][q];
+            lp_staged[t] <= lp_v[t]; tree_staged[t] <= t_v[t]; lp_landed[t] <= lp_staged[t]; tree_landed[t] <= tree_staged[t];
+            for (integer q = 0; q < 4; q = q + 1) begin carry_staged[t][q] <= c_v[t][q]; carry_landed[t][q] <= carry_staged[t][q]; end
         end
     end
     for (genvar t = 0; t < NT; t = t + 1) begin : g_state
         wire leaf_clk = SPLIT_CLOCKS ? clk_state[t] : clk;
-        ot_hgi_coll_pring_state u_state (.clk(leaf_clk), .tid(3'(t)),
-            .lp_wr(lp_wr), .lp_tag(lp_wtag), .lp_data(lp_wdata), .tree_wr(tree_wr), .tree_tag(tree_wtag), .tree_data(tree_wdata),
-            .carry_wr(carry_wr), .carry_tag(carry_wtag), .carry_src(carry_wsrc), .carry_data(carry_wdata),
+        ot_hgi_coll_pring_state u_state (.clk(leaf_clk),
+            .lp_wr(lp_wr[t]), .lp_data(lp_wdata), .tree_wr(tree_wr[t]), .tree_data(tree_wdata),
+            .carry_wr0(carry_wr0[t*4 +: 4]), .carry_wr1(carry_wr1[t*4 +: 4]), .carry_data(carry_wdata),
             .lp(lp_d[t]), .tree(t_d[t]), .c0(c_d[t][0]), .c1(c_d[t][1]), .c2(c_d[t][2]), .c3(c_d[t][3]));
     end
     // serial order: next quadrant after q (golden 0,1,2,3; MUT_ORDER ring order 0,1,3,2)
@@ -151,7 +152,7 @@ module ot_hgi_coll_pring #(
         if (!rst_n) begin
             cw_o <= '0; ccw_o <= '0; rr_v <= 1'b0; fault <= 1'b0; a_iv <= 1'b0;
             h_pop <= '0; h_done <= '0; h_fault <= '0; n_pop <= '0; n_done <= '0; f_sent <= 1'b0;
-            lp_wr <= 0; tree_wr <= 0; carry_wr <= 0;
+            lp_wr <= 0; tree_wr <= 0; carry_wr0 <= 0; carry_wr1 <= 0;
             for (i = 0; i < NT; i = i + 1) begin
                 lp_v[i] <= 1'b0; t_v[i] <= 1'b0; busy[i] <= 1'b0;
                 for (integer s = 0; s < 4; s = s + 1) c_v[i][s] <= 1'b0;
@@ -162,7 +163,7 @@ module ot_hgi_coll_pring #(
             reg [3:0] hp, hd; reg [$clog2(QD):0] qn [0:1]; reg [$clog2(QD)-1:0] qh [0:1], qt [0:1];
             reg lpv [0:NT-1]; reg cv [0:NT-1][0:3]; reg tv [0:NT-1]; reg bz [0:NT-1];
             reg issued; reg [1:0] dir;
-            rr_v <= 1'b0; a_iv <= 1'b0; issued = 1'b0; lp_wr <= 0; tree_wr <= 0; carry_wr <= 0;
+            rr_v <= 1'b0; a_iv <= 1'b0; issued = 1'b0; lp_wr <= 0; tree_wr <= 0; carry_wr0 <= 0; carry_wr1 <= 0;
             hp = '0; hd = '0;
             for (i = 0; i < 2; i = i + 1) begin qn[i] = iq_n[i]; qh[i] = iq_h[i]; qt[i] = iq_t[i]; fo[i] = '0; end
             for (i = 0; i < NT; i = i + 1) begin lpv[i] = lp_v[i]; tv[i] = t_v[i]; bz[i] = busy[i];
@@ -183,18 +184,20 @@ module ot_hgi_coll_pring #(
                     end else begin                                     // CARRY into slot (tag, src)
                         if (cv[`F_TAG(x)][`F_SRC(x)]) fault <= 1'b1;
                         cv[`F_TAG(x)][`F_SRC(x)] = 1'b1;
-                        carry_wr[d] <= 1; carry_wtag[d*3 +: 3] <= `F_TAG(x); carry_wsrc[d*2 +: 2] <= `F_SRC(x); carry_wdata[d*256 +: 256] <= `F_D(x);
+                        if (d == 0) carry_wr0[int'(`F_TAG(x))*4 + int'(`F_SRC(x))] <= 1;
+                        else carry_wr1[int'(`F_TAG(x))*4 + int'(`F_SRC(x))] <= 1;
+                        carry_wdata[d*256 +: 256] <= `F_D(x);
                     end
                 end
             end
             // -- client partial
             if (rc_v) begin
                 if (lpv[rc_tag] || bz[rc_tag]) fault <= 1'b1;
-                lpv[rc_tag] = 1'b1; lp_m[rc_tag] <= rc_mode; lp_wr <= 1; lp_wtag <= rc_tag; lp_wdata <= rc_d; bz[rc_tag] = 1'b1;
+                lpv[rc_tag] = 1'b1; lp_m[rc_tag] <= rc_mode; lp_wr[rc_tag] <= 1; lp_wdata <= rc_d; bz[rc_tag] = 1'b1;
             end
             // -- adder results
             if (ao_v) begin
-                if (ao_s == 2'd2) begin tv[ao_t] = 1'b1; tree_wr <= 1; tree_wtag <= ao_t; tree_wdata <= a_y; end            // q3 TREE: P2 + P3
+                if (ao_s == 2'd2) begin tv[ao_t] = 1'b1; tree_wr[ao_t] <= 1; tree_wdata <= a_y; end            // q3 TREE: P2 + P3
                 else if (ao_s == 2'd1) begin                                              // final: local + broadcast
                     rr_v <= 1'b1; rr_tag <= ao_t; rr_d <= a_y; bz[ao_t] = 1'b0;
                     dir = 2'd0;
@@ -289,32 +292,35 @@ module ot_hgi_coll_pring #(
     `undef F_D
 endmodule
 
-// Harden once, replicate for the eight reduction tags. Payload only: 6*256 = 1536 sinks/root.
-// All outputs are register pins; clock phases are assigned per hard child at phi - R.
+// One tag payload leaf: direct pin capture for every data/control input, then storage.
+// Four kept control copies bound every enable/mux net to one 64-bit region.
 module ot_hgi_coll_pring_state (
     input wire clk,
-    input wire [2:0] tid,
     input wire lp_wr, tree_wr,
-    input wire [2:0] lp_tag, tree_tag,
     input wire [255:0] lp_data, tree_data,
-    input wire [1:0] carry_wr,
-    input wire [5:0] carry_tag,
-    input wire [3:0] carry_src,
+    input wire [3:0] carry_wr0, carry_wr1,
     input wire [511:0] carry_data,
     output reg [255:0] lp, tree, c0, c1, c2, c3
 );
+    reg [255:0] lp_pin, tree_pin; reg [511:0] carry_pin;
+    (* keep = 1, dont_touch = 1 *) reg [9:0] enable_pin [0:3];
     always @(posedge clk) begin
-        if (lp_wr && lp_tag == tid) lp <= lp_data;
-        if (tree_wr && tree_tag == tid) tree <= tree_data;
-        for (integer d = 0; d < 2; d = d + 1) if (carry_wr[d] && carry_tag[d*3 +: 3] == tid) begin
-            case (carry_src[d*2 +: 2])
-                0: c0 <= carry_data[d*256 +: 256]; 1: c1 <= carry_data[d*256 +: 256];
-                2: c2 <= carry_data[d*256 +: 256]; 3: c3 <= carry_data[d*256 +: 256];
-            endcase
+        lp_pin <= lp_data; tree_pin <= tree_data; carry_pin <= carry_data;
+        for (integer r = 0; r < 4; r = r + 1) begin
+            enable_pin[r] <= {carry_wr1,carry_wr0,tree_wr,lp_wr};
+            if (enable_pin[r][0]) lp[r*64 +: 64] <= lp_pin[r*64 +: 64];
+            if (enable_pin[r][1]) tree[r*64 +: 64] <= tree_pin[r*64 +: 64];
+            if (enable_pin[r][2]) c0[r*64 +: 64] <= carry_pin[r*64 +: 64];
+            if (enable_pin[r][3]) c1[r*64 +: 64] <= carry_pin[r*64 +: 64];
+            if (enable_pin[r][4]) c2[r*64 +: 64] <= carry_pin[r*64 +: 64];
+            if (enable_pin[r][5]) c3[r*64 +: 64] <= carry_pin[r*64 +: 64];
+            if (enable_pin[r][6]) c0[r*64 +: 64] <= carry_pin[256+r*64 +: 64];
+            if (enable_pin[r][7]) c1[r*64 +: 64] <= carry_pin[256+r*64 +: 64];
+            if (enable_pin[r][8]) c2[r*64 +: 64] <= carry_pin[256+r*64 +: 64];
+            if (enable_pin[r][9]) c3[r*64 +: 64] <= carry_pin[256+r*64 +: 64];
         end
     end
 endmodule
-
 
 // Pin capture + seven real FP cuts at LAT8, one independent native adder root per lane.
 module ot_hgi_coll_pring_add_lane #(parameter integer LAT = 8) (
