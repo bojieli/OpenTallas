@@ -7,13 +7,13 @@
   0,
   0,
   129.6,
-  1166.4
+  648.0
  ],
  "core": [
   2.16,
   2.16,
   127.44,
-  1164.24
+  645.84
  ],
  "why": "spec outline",
  "std_area_um2": null,
@@ -59,7 +59,7 @@
   [
    "WARN",
    "clock_span",
-   "129.6 x 1166.4 um: one clock root over > 600 um",
+   "129.6 x 648.0 um: one clock root over > 600 um",
    "split into hardened sub-tiles with local roots (kind cluster) or keep the sink count small"
   ]
  ],

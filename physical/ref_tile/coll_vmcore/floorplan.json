@@ -6,14 +6,14 @@
  "die": [
   0,
   0,
-  648.0,
-  486.0
+  324.0,
+  259.2
  ],
  "core": [
   2.16,
   2.16,
-  645.84,
-  483.84
+  321.84,
+  257.03999999999996
  ],
  "why": "spec outline",
  "std_area_um2": null,
@@ -61,14 +61,7 @@
  },
  "clock_port": "clk",
  "blocks": [],
- "findings": [
-  [
-   "WARN",
-   "clock_span",
-   "648.0 x 486.0 um: one clock root over > 600 um",
-   "split into hardened sub-tiles with local roots (kind cluster) or keep the sink count small"
-  ]
- ],
+ "findings": [],
  "referenced": [
   "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_b2_vmport.sv",
   "rtl/hbm_accel/generic/collective/rgx/ot_hgi_coll_rgx_snk.sv",
