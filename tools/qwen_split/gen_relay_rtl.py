@@ -8,6 +8,7 @@ The die generator (qwen_rom_fulldie_b3r2._relays) names one relay master per (wi
                                 a_r out, b_r in, ck                    stage on the returning ready (b_r -> a_r)
   qfd_rlyf_<W>_...              link-clock relays (fck_a / fck_b ...)  emitted when present (forwarded clock)
   qfd_rst_rep*                  reset-tree repeaters                   one register stage of the reset level
+  qfd_clkrx                     pll_fwd in, one output per clock root  the die clock receiver (roots of this build)
 
 Protocol contract the relays implement (recorded, not hidden): every relay stage adds exactly one clock edge to the
 data path and, for a ready pair, one edge to the ready path, so a hop of S relay stages has a ready round trip of 2 S
@@ -21,7 +22,7 @@ The module bodies are behaviour (always blocks), not shells: tools/die_port_bind
 import json, re, sys
 from pathlib import Path
 
-INST = re.compile(r'^\s*(qfd_rly[pf]?_\w+|qfd_rst_rep\w*)\s+(\w+)\s*\((.*)\);\s*$')
+INST = re.compile(r'^\s*(qfd_rly[pf]?_\w+|qfd_rst_rep\w*|qfd_clkrx)\s+(\w+)\s*\((.*)\);\s*$')
 CONN = re.compile(r'\.(\w+)\(([^()]*)\)')
 WIRE = re.compile(r'^\s*wire\s*(?:\[(\d+):(\d+)\])?\s*(\w+)\s*;')
 
@@ -84,6 +85,16 @@ def main(die_v, out_sv):
                   f'    always @(posedge ck or negedge {i_}) if (!{i_}) {o_} <= 1\'b0; else {o_} <= 1\'b1;',
                   'endmodule']
             kinds['reset_repeater'] = kinds.get('reset_repeater', 0) + 1
+        elif mn == 'qfd_clkrx':
+            # the die clock receiver: the forwarded clock (qfd_ckbump pll_ck -> pll_fwd) drives one root per clock region
+            # of this build (pll_root, pll_d2d, pll_r<k>); each root is a clock-tree root that CTS builds from here
+            if 'pll_fwd' not in ports or any(w != 1 for w in ports.values()):
+                raise SystemExit(f'{mn}: unexpected clock receiver ports {ports}')
+            outs = sorted(p for p in ports if p != 'pll_fwd')
+            L += [f'module {mn} (input wire pll_fwd, ' + ', '.join(f'output wire {p}' for p in outs) + ');']
+            L += [f'    assign {p} = pll_fwd;' for p in outs]
+            L += ['endmodule']
+            kinds['clock_receiver_roots'] = len(outs)
         else:
             raise SystemExit(f'{mn}: relay family not handled yet (ports {sorted(ports)}): extend gen_relay_rtl.py')
     Path(out_sv).write_text('\n'.join(L) + '\n')
