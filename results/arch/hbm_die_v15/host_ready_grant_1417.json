@@ -20,10 +20,10 @@
  "slots": [
   {
    "name": "qdq_target48_ready_diagnostic",
-   "cell": "ot_hbm_program_block_ready",
-   "source": "rtl/hbm_accel/host_static_20261015/ot_hbm_program_block_ready.sv",
-   "source_sha256": "251e0911da6d4ccd6f4932100e0e7bd1e630dcd6c65f9a6e66153db67dd0b8a2",
-   "source_prerequisite": "76c625248",
+   "cell": "ot_hbm_program_block_ready_pin",
+   "source": "rtl/hbm_accel/host_static_20261015/ot_hbm_program_block_ready_pin.sv",
+   "source_sha256": "deeddd0bbe152fb20c45b79db4c334e27fca2ea2421b289f230786401f1a907e",
+   "source_prerequisite": "3fdcf3a1f",
    "params": {
     "PCW": 10,
     "TARGET": 48,
@@ -278,10 +278,20 @@
    "layer_rule": "tile",
    "version": 5,
    "grant": "independent_target48_ready_diagnostic_1417",
-   "measured_std_um2": 653.9859,
-   "measured_ff": 1101,
-   "scope": "Independent diagnostic physical tile; exact downstream target write port producer required. Parent home near actual QDQprogramme/11newports remains UNPLACED, allincidenttiming open; no wholehost/die placement claim. Bitmapreset1024fanout andnativeCTS must pass.",
-   "parent_and_die_qualified": false
+   "measured_std_um2": 683.42292,
+   "measured_ff": 1169,
+   "scope": "New physical wrapper actualinputFF/localreset2FF+readyfaultoutputFF; innerrealbitmap retained. Previouscoremaparea notaliased. Exactnewmapping/CTS/nativeTTFFDRC required; parent near QDQprogramme remainsUNPLACED; actualdownstreamwe/address bindrequired.",
+   "parent_and_die_qualified": false,
+   "source_dependencies_sha256": {
+    "rtl/hbm_accel/host_static_20261015/ot_hbm_program_block_ready_pin.sv": "deeddd0bbe152fb20c45b79db4c334e27fca2ea2421b289f230786401f1a907e",
+    "rtl/hbm_accel/host_static_20261015/ot_hbm_program_block_ready.sv": "251e0911da6d4ccd6f4932100e0e7bd1e630dcd6c65f9a6e66153db67dd0b8a2"
+   },
+   "previous_core_only_measured_std_um2": 653.9859,
+   "previous_core_only_measured_ff": 1101,
+   "init_input_cycles_added": 1,
+   "init_ready_fault_output_cycles_added": 1,
+   "measured_cells": 4394,
+   "mapping_receipt": "E1 ot-run unit2719689; source 3fdcf3a1f; no physical qualification"
   }
  ],
  "physical_parent_home_qualified": false
