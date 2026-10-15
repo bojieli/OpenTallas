@@ -1,7 +1,7 @@
 set ::ot_ce_require_wire 1
 # OT_CLOCK_ENTRY_DOMAIN_API_VERSION 1
 # AUTO clock entries: bound insertion.json boundary refs; no ETM arc modification.
-set ::ot_ce_refs [dict create {dsfd_coll_cesx/ck} {tt {123.0 127.3 131.0} ff {98.7 102.8 106.1} ss {166.3 171.0 175.3}} {dsfd_coll_cescn/ck} {tt {377.6 398.5 446.9} ff {300.7 319.4 365.3} ss {508.3 533.0 583.5}} {dsfd_coll_cesl/ck} {tt {107.8 113.7 116.3} ff {81.5 87.0 89.4} ss {154.9 161.7 164.5}} {dsfd_coll_ceso/ck} {tt {91.9 98.2 104.0} ff {72.3 78.9 85.0} ss {126.4 132.6 138.9}} {dsfd_coll_cespn/ck} {tt {140.6 151.7 166.4} ff {113.6 124.9 139.8} ss {186.4 197.6 212.0}}]
+set ::ot_ce_refs [dict create {dsfd_coll_cesx/ck} {tt {123.0 127.3 131.0} ff {98.7 102.8 106.1} ss {166.3 171.0 175.3}} {dsfd_coll_cescn/ck} {tt {403.7 420.9 458.2} ff {323.7 339.1 374.5} ss {537.6 558.0 596.6}} {dsfd_coll_cesl/ck} {tt {107.8 113.7 116.3} ff {81.5 87.0 89.4} ss {154.9 161.7 164.5}} {dsfd_coll_ceso/ck} {tt {91.9 98.2 104.0} ff {72.3 78.9 85.0} ss {126.4 132.6 138.9}} {dsfd_coll_cespn/ck} {tt {140.6 151.7 166.4} ff {113.6 124.9 139.8} ss {186.4 197.6 212.0}}]
 set ::ot_ce_counts [dict create {dsfd_coll_cesx} 3 {dsfd_coll_cescn} 1 {dsfd_coll_cesl} 4 {dsfd_coll_ceso} 1 {dsfd_coll_cespn} 1]
 set ::ot_ce_domains [dict create {core} {clock core_clk io_budget_ps 166.667 inputs {{*}} outputs {{*}}}]
 set ::ot_ce_source_domains [dict create {ck_x1} {core} {ck_x2} {core} {ck_x3} {core} {ck_core} {core} {ck_l0} {core} {ck_l1} {core} {ck_l2} {core} {ck_l3} {core} {ck_o} {core} {ck_pt} {core}]
