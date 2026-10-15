@@ -5,7 +5,7 @@ import json
 from pathlib import Path
 import tempfile
 import unittest
-from compile_calendar import compile_program, ROOT
+from compile_calendar import compile_program, schedule_jobs, ROOT
 
 
 class CompileTest(unittest.TestCase):
@@ -99,6 +99,21 @@ class CompileTest(unittest.TestCase):
         r=self.run_compile(); self.assertFalse(r['dispatch_eligible'])
         self.assertIsNone(r['schedule'])
         self.assertIn('bank_collision',[e['kind'] for e in r['reservations']['violations']])
+
+    def test_offline_schedule_serializes_ports_and_reserves_phase(self):
+        self.program['ops'][1].update(port=0,start=2,end=12,preds=[])
+        self.binding['jobs']['su'].update(phase_period_stream=4,start_phase_stream=3)
+        lowered=schedule_jobs(self.program,self.binding)
+        self.assertEqual(lowered['ops'][1]['start'],11)
+        self.assertEqual(lowered['ops'][1]['end'],21)
+        self.assertFalse(lowered['offline_schedule']['performance_accepted'])
+        self.assertEqual(self.program['ops'][1]['start'],2)
+        self.assertTrue(compile_program(lowered,self.binding,self.contract,self.root)['dispatch_eligible'])
+
+    def test_offline_schedule_cannot_infer_missing_native_duration(self):
+        del self.binding['jobs']['su']['duration_cycles']
+        with self.assertRaises(KeyError):
+            schedule_jobs(self.program,self.binding)
 
     def test_all_59_actual_programs_require_native_binding(self):
         sources=sorted((ROOT/'results/rtl/s81_ctrl_20261008/programs').glob('S[0-9][0-9][0-9].json'))
