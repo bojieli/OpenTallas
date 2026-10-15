@@ -468,7 +468,6 @@ module qfd_tt_ctlm_tree_static #(
 ) (
     input wire  clk,
     input wire  rst_n,
-    input wire  me_mem_ok,
     output wire [XW-1:0] me_acc_o,
     output wire  me_idle_o,
     output wire [15:0] me_prog_o,
@@ -495,19 +494,6 @@ module qfd_tt_ctlm_tree_static #(
     output wire [24-1:0] mx_addr,
     output wire [16-1:0] mx_mask,
     output wire [16*32-1:0] mx_data,
-    input wire  h_start,
-    input wire [18-1:0] token,
-    input wire [18-1:0] pos,
-    input wire [11:0] prog_base,
-    input wire  pw_v,
-    input wire [9:0] pw_addr,
-    input wire [63:0] pw_data,
-    input wire [XW-1:0] x_oacc,
-    input wire  x_oidle,
-    input wire [15:0] x_oprog,
-    input wire [15:0] x_orows,
-    input wire  kv_ok,
-    input wire  kv_write_drained,
     input wire [379:0] cmd,
     output wire [94:0] ret
 );

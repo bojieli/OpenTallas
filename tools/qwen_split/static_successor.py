@@ -71,5 +71,10 @@ s=s[:a]+'''    // Static tree owns no duplicate/shadow instruction controller. E
 '''+s[b:]
 # Header replaces claims of unchanged MEREG gates.
 s='`timescale 1ns/1ps\n// NEW static physical masters; archived closed head/tree remain unchanged.\n// Fixed normal engine cadence; actual decoder/fold state, no shadow controller.\n'+s[s.index('module qfd_tt_ctlm_head_static'):]
+# Shadow-only interface pins have no remaining receiver in the static tree.
+a=s.index('module qfd_tt_ctlm_tree_static');h,b=s[a:].split('\n);',1)
+for n in ['me_mem_ok','h_start','token','pos','prog_base','pw_v','pw_addr','pw_data','x_oacc','x_oidle','x_oprog','x_orows','kv_ok','kv_write_drained']:
+ h=re.sub(r'^\s*input wire[^\n]*\b'+n+r',\n','',h,flags=re.M)
+s=s[:a]+h+'\n);'+b
 (d/'ot_qfd_tt_ctlm_split_static.sv').write_text(s)
 print('wrote static decoder/head/tree successors')

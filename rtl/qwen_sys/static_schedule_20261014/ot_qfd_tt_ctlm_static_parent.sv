@@ -130,7 +130,6 @@ module ot_qfd_tt_ctlm_static_parent (
 
         .clk(ck_tree),
         .rst_n(rst_n),
-        .me_mem_ok(me_mem_ok),
         .me_acc_o(me_acc_o),
         .me_idle_o(me_idle_o),
         .me_prog_o(me_prog_o),
@@ -157,18 +156,5 @@ module ot_qfd_tt_ctlm_static_parent (
         .mx_addr(mx_addr),
         .mx_mask(mx_mask),
         .mx_data(mx_data),
-        .h_start(h_start),
-        .token(token),
-        .pos(pos),
-        .prog_base(prog_base),
-        .pw_v(pw_v),
-        .pw_addr(pw_addr),
-        .pw_data(pw_data),
-        .x_oacc(x_oacc),
-        .x_oidle(x_oidle),
-        .x_oprog(x_oprog),
-        .x_orows(x_orows),
-        .kv_ok(kv_ok),
-        .kv_write_drained(kv_write_drained),
         .cmd(rom_cmd),.ret(rom_ret));
 endmodule
