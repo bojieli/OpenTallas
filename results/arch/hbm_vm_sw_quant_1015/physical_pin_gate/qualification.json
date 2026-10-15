@@ -1,0 +1,124 @@
+{
+  "schema": "opentallas.hbm.swquant-bank-physical-prototype.v1",
+  "source_commit": "cf6817156",
+  "source_bank_sha256": "7b2e2fbafead30cbabc427303bb339da070645637af9d1a69f0dbdaa0a88ee53",
+  "pin_hook_source": "7eb4de7d2",
+  "host": "ot-epyc4",
+  "run": "/srv/opentallas-scratch/claude/ref_gate/vms_bank_static_rg6wg2_swquant_1015-20261015-024859",
+  "flow_verdict": "WARN0flowfail2utilwarn",
+  "native_qualification": "FAIL clockspread/setup/macroclockslew; no route",
+  "mapped_DFF": 5853,
+  "clock_sinks": 5856,
+  "synth_std_area_um2": 2885,
+  "post_place_std_area_um2": 2906,
+  "macro_area_um2": 36952,
+  "core_area_um2": 130170,
+  "utilization": 0.3062,
+  "outline_um": [
+    393.12,
+    339.12
+  ],
+  "clock": {
+    "boundary": {
+      "n": 4216,
+      "mean": 426.3,
+      "min": 389.6,
+      "max": 575.6
+    },
+    "all": {
+      "n": 7667,
+      "mean": 422.3,
+      "min": 382.4,
+      "max": 575.6
+    },
+    "errors": [],
+    "macros": {
+      "n": 3,
+      "nets": 2,
+      "max_per_net": 2,
+      "reg_mean": 422.3,
+      "max_slew": 155.0,
+      "max_late": 19.9,
+      "pins": [
+        {
+          "pin": "bank.u_a/clk",
+          "arr": 410.6,
+          "slew": 63.2,
+          "late": -11.7,
+          "net": "clknet_1_0_0_clk"
+        },
+        {
+          "pin": "bank.u_b/clk",
+          "arr": 404.1,
+          "slew": 46.6,
+          "late": -18.2,
+          "net": "clknet_1_0_0_clk"
+        },
+        {
+          "pin": "bank.u_c/clk",
+          "arr": 442.2,
+          "slew": 155.0,
+          "late": 19.9,
+          "net": "clknet_1_1_0_clk"
+        }
+      ]
+    },
+    "macro_libs": 1
+  },
+  "SS_insertion_ps": [
+    503,
+    729.9
+  ],
+  "SS_spread_ps": 226.9,
+  "FF_insertion_ps": [
+    309.1,
+    478.8
+  ],
+  "FF_spread_ps": 169.7,
+  "TT_setup_WNS_ps": -37.1968011947,
+  "setup_path_example": "bank.ce[4] D",
+  "TT_reset_WNS_ps": 12.3,
+  "FF_hold_WNS_ps": 28.1652201561,
+  "actual_pin_audit": {
+    "scope": "actual signal BTerm PORT rectangles, requested actual ODB routingtrack indices, and both VDD/VSS PG contact projections",
+    "actual_sha256": "7b0ff94060ab8d8205ac0d5703267cdab50f6ae38e1f61c1c901da36bf3292f3",
+    "coordinates_sha256": "9fb1736ccd0e055106f5be3a45a8507db10632530d179142cc7ebbe1ab5cd70d",
+    "outline_um": [
+      0.0,
+      0.0,
+      393.12,
+      339.12
+    ],
+    "scalar_pins": 4186,
+    "PG_contact_shapes": 144,
+    "face_pins": {
+      "N": 863,
+      "S": 1109,
+      "W": 1381,
+      "E": 833
+    },
+    "clock_port": [
+      "clk",
+      "clk",
+      "SIGNAL",
+      "INPUT",
+      [
+        [
+          "M5",
+          [
+            191.28,
+            339.036,
+            191.304,
+            339.12
+          ]
+        ]
+      ]
+    ],
+    "shifted_actual_pins": [],
+    "PG_clearance_violations": [],
+    "signal_pitch_violations": [],
+    "missing_or_multiple_rectangles": [],
+    "pass": true
+  },
+  "next": "Share measured structural onehot decode/clock-repair architecture withstatic_hub; apply toversionedRG6onlyafterfunctionalgate andfrozenrecipe. No unchangedphysicalretry; oldRG7sourcecandidatef691 distinct/notadopted."
+}

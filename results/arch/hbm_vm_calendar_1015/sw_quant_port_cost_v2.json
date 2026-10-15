@@ -26,9 +26,14 @@
     "physical_SRAM_ports": 0,
     "data_SRAM_macros": 0
   },
-  "physical_scope": "NewliteralRG6WG2 prototypephysicalgate required, noinheritedRG7physicalqualification. Existing32banks\u00d73SRAM unchanged; incrementalselectionmux/valid/clockcost mustbemeasured. Target125datapath5roots/.2140204mm2 reportedowner; actualsourcegatepending",
+  "physical_scope": "ActualRG6prototype4186pin IO/PG PASS. FullCTS nativeFAIL TTboundary389.6..575.6ps/spread186, macroC155psslew,setup-37.2psCEfeedback; no route/adoption. SRAMcountunchanged; allphysical/cutconstraints mustclose.",
   "dataflow_evidence": "ds_rank0_program.json L0records14norm/15rope\u219216QDQ\u219217DMA; L1records77..80, nativeSID0; avoids2x64sectorcopies/layer, nofabricatedglobalcycles",
   "read_group": 5,
   "write_group": 1,
-  "target": 125
+  "target": 125,
+  "measured_RG6_WG2_DFF": 5853,
+  "measured_RG7_WG3_DFF_reference": 6409,
+  "additional_port_pair_FF_each_source_estimate": 556,
+  "additional_port_pair_FF_quadrant_source_estimate": 4448,
+  "FF_cost_note": "Includesrequest16+valid1,response256+valid1,writepayload280+valid1,done1 perbank; RG7WG3 versusRG6WG2 measuredDFFdelta556. This doesnotclaimcurrentRG5qualifiedmappedmeasurement."
 }
