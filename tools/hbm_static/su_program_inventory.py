@@ -182,7 +182,7 @@ def inventory(directory):
                     'fixed drain completion and frame-release edges'])
     return dict(status='actual frozen record/address inventory; no static-cycle calendar qualification',
                 program=manifest['program'], source_files={str(directory / f): sha(directory / f) for f in files},
-                N=512, M=128, geometry_qualification='N/M are target datapath parameters; record dimensions are decoded verbatim. Frozen s4 vectors do not prove unscaled production dimensions.',
+                N=512, M=128, geometry_qualification='N/M are target datapath parameters; record dimensions are decoded verbatim. Canonical descriptor comparison is required to establish unscaled program geometry.',
                 record_count=len(records), cases=cases,
                 golden_output_mask_sectors_verified=golden_checks, records=records,
                 inter_record_address_dependencies=dependencies, gather_records=sum(r['gather'] for r in records),
@@ -190,17 +190,108 @@ def inventory(directory):
                 calendar_reason='Exact VM aliases do not determine physical local allocation or actual native capture edges. Inventing latencies would produce another synthetic calendar.')
 
 
+
+def canonical_dispatches(model, ds_program=None):
+    from hgi_sim import records as SR
+    if model == 'qwen':
+        words, recs, _, _ = SB.C.SV.qwen_program()
+        trace, _ = SB.C.qwen_dispatch()
+    else:
+        program = json.loads(ds_program.read_text())
+        words, recs = [], []
+        for entry in program['layers'][0]['records']:
+            payload = bytes.fromhex(entry['hex'])
+            record, _ = SR.decode_one(payload, 0)
+            record.tag = entry['tag']
+            recs.append(record)
+            words += [int.from_bytes(payload[q:q + 16], 'little') for q in range(0, len(payload), 16)]
+        words += SB.C.SV.record(SB.C.SV.header('CTL', 'END'), descs={'A': SB.C.SV.mdesc(space=1, fmt=5, base=(1 << 18) - 16, n=1, m=1)})
+        trace, _ = SB.C.SV.Ref(words, 0, 0, (1 << 20) - 1, 0, 129280, 1 << 20, {}).run()
+    by_pc, pc = {}, 0
+    for record in recs:
+        by_pc[pc] = record
+        pc += SR.rec_bytes(record) // 16
+    answer = {}
+    for dispatch in trace:
+        record = by_pc.get(dispatch['rec'])
+        if record and record.unit in ('SU', 'SFU') and record.tag not in answer:
+            answer[record.tag] = dispatch
+    return answer
+
+
+def compare_canonical(result, model, ds_program=None):
+    canonical = canonical_dispatches(model, ds_program)
+    details = []
+    for record in result['records'][:result['cases'][0]['records']]:
+        expected = canonical.get(record['tag'])
+        if expected is None:
+            details.append(dict(index=record['index'], tag=record['tag'], missing_canonical=True))
+            continue
+        _, _, _, descriptors = decode(SB.pack_rec(expected))
+        differences = []
+        actual = record['original_present_descriptors']
+        for role in set(actual) | set(descriptors):
+            target = dataclasses.asdict(descriptors[role]) if role in descriptors else None
+            present = actual.get(role)
+            if target != present:
+                differences.append(dict(role=role, fields={key: dict(actual=(present or {}).get(key), canonical=(target or {}).get(key))
+                    for key in set(present or {}) | set(target or {}) if (present or {}).get(key) != (target or {}).get(key)}))
+        if record['effective_n'] != expected['n'][0]:
+            differences.append(dict(effective_n=dict(actual=record['effective_n'], canonical=expected['n'][0])))
+        details.append(dict(index=record['index'], tag=record['tag'], differences=differences))
+    return dict(model=model, all_included_record_geometries_match=all(not d.get('missing_canonical') and not d['differences'] for d in details),
+                included_records=details,
+                canonical_SU_SFU_tags_absent_from_included_program=sorted(set(canonical) - {r['tag'] for r in result['records']}),
+                qualification='Descriptor geometry comparison; absent units, numerical program execution and hardware cycle scheduling remain separate')
+
+
+
+def compare_geometry(full, reduced):
+    by_tag = {r['tag']: r for r in reduced['records']}
+    answer = []
+    for record in full['records']:
+        other = by_tag.get(record['tag'])
+        changes = []
+        if other is None:
+            answer.append(dict(tag=record['tag'], absent_from_reduced=True))
+            continue
+        for key in ('effective_n', 'effective_m'):
+            if record[key] != other[key]:
+                changes.append(dict(field=key, full=record[key], reduced=other[key]))
+        for role in set(record['original_present_descriptors']) | set(other['original_present_descriptors']):
+            a = record['original_present_descriptors'].get(role, {})
+            b = other['original_present_descriptors'].get(role, {})
+            for field in set(a) | set(b):
+                if a.get(field) != b.get(field):
+                    changes.append(dict(role=role, field=field, full=a.get(field), reduced=b.get(field)))
+        answer.append(dict(index=record['index'], tag=record['tag'], descriptor_changes=changes))
+    return dict(records=answer, changed_records=sum(bool(r.get('descriptor_changes')) for r in answer),
+                qualification='Exact field differences; no uniform compression or numerical equivalence assumed')
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--vectors', type=Path, required=True)
     parser.add_argument('--out', type=Path, required=True)
+    parser.add_argument('--canonical', choices=('qwen', 'deepseek'))
+    parser.add_argument('--compare-vectors', type=Path)
+    parser.add_argument('--ds-program', type=Path, default=ROOT / 'results/arch/hgi_programs_20261010/inputs/ds_rank0_program.json')
     args = parser.parse_args()
     result = inventory(args.vectors)
+    if args.compare_vectors:
+        reduced = inventory(args.compare_vectors)
+        result['reduced_vector_comparison'] = compare_geometry(result, reduced)
+        result['reduced_vector_source_sha256'] = reduced['source_files']
+    if args.canonical:
+        result['canonical_comparison'] = compare_canonical(result, args.canonical, args.ds_program)
     result['decoder_source_sha256'] = {str(p.relative_to(ROOT)): sha(p) for p in [
         Path(__file__), ROOT / 'tools/hgi_adapters/su_bench.py', ROOT / 'tools/hgi_sim/records.py',
         ROOT / 'tools/hbm_generic_iface.py', ROOT / 'tools/hgi_sim/machine.py',
         ROOT / 'rtl/hbm_accel/generic/adapters/ot_hgi_su_record.sv',
         ROOT / 'tools/hgi_adapters/common.py', ROOT / 'tools/hgi_seq_vectors.py']}
+    if args.canonical:
+        extra = [ROOT / 'tools/hgi_sim/qwen_compiler.py', ROOT / SB.C.SV.G.MODELS['qwen3_8b']['cfg']] if args.canonical == 'qwen' else [args.ds_program]
+        result['canonical_source_sha256'] = {str(p): sha(p) for p in extra}
     args.out.parent.mkdir(parents=True, exist_ok=True)
     args.out.write_text(json.dumps(result, indent=2) + '\n')
     print(json.dumps({k: result[k] for k in ('program', 'record_count', 'gather_records', 'cases', 'golden_output_mask_sectors_verified', 'calendar_emitted')}, indent=2))

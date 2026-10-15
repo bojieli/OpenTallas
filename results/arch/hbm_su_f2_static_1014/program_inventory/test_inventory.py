@@ -22,6 +22,24 @@ class InventoryTests(unittest.TestCase):
                 self.assertEqual(result['golden_output_mask_sectors_verified'], sectors)
                 self.assertFalse(result['calendar_emitted'])
 
+    def test_full_actual_geometry_and_masks(self):
+        for model, vectors, sectors in [('qwen', 'qwen_full', 12725), ('deepseek', 'deepseek_full', 5617)]:
+            with self.subTest(model=model):
+                result = module.inventory(HERE / 'inputs' / vectors)
+                comparison = module.compare_canonical(result, model, ROOT / 'results/arch/hgi_programs_20261010/inputs/ds_rank0_program.json')
+                self.assertTrue(comparison['all_included_record_geometries_match'])
+                self.assertEqual(result['golden_output_mask_sectors_verified'], sectors)
+                expected = ['head_scale', 'swiglu'] if model == 'qwen' else [f'route.gather{i}' for i in range(6)]
+                self.assertEqual(comparison['canonical_SU_SFU_tags_absent_from_included_program'], expected)
+
+    def test_scaled_records_do_not_qualify_as_full(self):
+        for model, vectors in [('qwen', 'q_s4'), ('deepseek', 'd_s4')]:
+            with self.subTest(model=model):
+                result = module.inventory(HERE / 'inputs' / vectors)
+                comparison = module.compare_canonical(result, model, ROOT / 'results/arch/hgi_programs_20261010/inputs/ds_rank0_program.json')
+                self.assertFalse(comparison['all_included_record_geometries_match'])
+                self.assertTrue(any(r.get('differences') for r in comparison['included_records']))
+
     def test_actual_mask_mutant(self):
         with tempfile.TemporaryDirectory() as temp:
             directory = Path(temp) / 'vectors'
