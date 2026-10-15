@@ -27,3 +27,10 @@ for mutant in 0 1 2;do
   fi
   rm "$OUT/m$mutant.vvp"
 done
+
+iverilog -g2012 -s tb_hgi_coll_v2_seqface -o "$OUT/seqface.vvp" \
+ "$p/tb_hgi_coll_v2_seqface.sv" "$p/ot_hfd_coll_q_static_v2.sv"
+vvp "$OUT/seqface.vvp" > "$OUT/seqface.log" 2>&1
+cat "$OUT/seqface.log"
+grep -q '^HCOLL_V2_SEQFACE PASS' "$OUT/seqface.log"
+rm "$OUT/seqface.vvp"
