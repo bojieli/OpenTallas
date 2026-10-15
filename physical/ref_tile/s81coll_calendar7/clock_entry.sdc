@@ -1,0 +1,625 @@
+set ::ot_ce_require_wire 1
+# OT_CLOCK_ENTRY_DOMAIN_API_VERSION 1
+# AUTO clock entries: bound insertion.json boundary refs; no ETM arc modification.
+set ::ot_ce_leaf_roots 1
+set ::ot_ce_related_data 1
+set ::ot_ce_refs [dict create ]
+set ::ot_ce_counts [dict create ]
+set ::ot_ce_domains [dict create {core} {clock core_clk io_budget_ps 166.667 inputs {{rst_n} {c_cmd} {datapath_fault}} outputs {{c_done} {c_st} {busy}}} {rom0} {clock ot_io_rom0 io_budget_ps 166.667 inputs {} outputs {}} {rom1} {clock ot_io_rom1 io_budget_ps 166.667 inputs {} outputs {}} {rom2} {clock ot_io_rom2 io_budget_ps 166.667 inputs {} outputs {}} {outputs0} {clock ot_io_outputs0 io_budget_ps 166.667 inputs {} outputs {{read_slot} {read_row} {issue_slot} {tag} {seq} {last} {rankmask} {commit_slot} {commit_tag} {commit_seq} {commit_last} {commit_rankmask} {commit_rows}}} {outputs1} {clock ot_io_outputs1 io_budget_ps 166.667 inputs {} outputs {{tx_beat_slot} {tx_phase} {tx_frame_slot} {rx_beat_slot} {rx_phase} {rx_frame_slot} {channel_tx_slot} {channel_tx_kind} {channel_tx_seq} {channel_tx_last} {channel_rx_slot} {channel_rx_kind} {channel_rx_seq}}} {outputs2} {clock ot_io_outputs2 io_budget_ps 166.667 inputs {} outputs {{channel_rx_last} {channel_tx_beat_slot} {channel_tx_frame_slot} {channel_tx_phase} {channel_rx_beat_slot} {channel_rx_frame_slot} {channel_rx_phase} {hc_reduce_slot} {hc_write_slot} {hc_word_index} {hc_expect_seq} {hc_expect_last} {hc_emit_slot} {hc_emit_tag} {commit_gather} {raw_capture_payload_slot} {raw_capture_meta_slot} {raw_rx_write_slot} {raw_rx_payload_row} {raw_rx_meta_row} {raw_rx_tag} {hc_assemble_slot}}}]
+set ::ot_ce_source_domains [dict create {clk} {core} {clk_rom[0]} {rom0} {clk_rom[1]} {rom1} {clk_rom[2]} {rom2} {clk_outputs[0]} {outputs0} {clk_outputs[1]} {outputs1} {clk_outputs[2]} {outputs2}]
+set ::ot_ce_explicit_domains 1
+set ::ot_ce_cts_roots {{clk} {clk_outputs[0]} {clk_outputs[1]} {clk_outputs[2]}}
+set ::ot_ce_ports {{clk} {clk_rom[0]} {clk_rom[1]} {clk_rom[2]} {clk_outputs[0]} {clk_outputs[1]} {clk_outputs[2]}}
+set ::ot_ce_direct_masters {ot_rom_4096x266_m8}
+set ::ot_ce_direct_entries {{{ot_rom_4096x266_m8} {*ROM_BANK?0?*u_rom} {clk_rom[0]} {clk} {{tt} {{ot_rom_4096x266_m8_tt} {6e7116ec070820e045a1e57b342a716bcfc35e05be7c4e5b90d82cdaa9ba2021}} {ff} {{ot_rom_4096x266_m8_ff} {d9c7e59c2e13749d2fff34790226704f512bcc767dd89584ebacddbdbbcbe346}} {ss} {{ot_rom_4096x266_m8_ss} {8612ab20df323464bfcdffd197cd2d087a249c2f6f2a2ec92ec8be219cf3d805}}}} {{ot_rom_4096x266_m8} {*ROM_BANK?1?*u_rom} {clk_rom[1]} {clk} {{tt} {{ot_rom_4096x266_m8_tt} {6e7116ec070820e045a1e57b342a716bcfc35e05be7c4e5b90d82cdaa9ba2021}} {ff} {{ot_rom_4096x266_m8_ff} {d9c7e59c2e13749d2fff34790226704f512bcc767dd89584ebacddbdbbcbe346}} {ss} {{ot_rom_4096x266_m8_ss} {8612ab20df323464bfcdffd197cd2d087a249c2f6f2a2ec92ec8be219cf3d805}}}} {{ot_rom_4096x266_m8} {*ROM_BANK?2?*u_rom} {clk_rom[2]} {clk} {{tt} {{ot_rom_4096x266_m8_tt} {6e7116ec070820e045a1e57b342a716bcfc35e05be7c4e5b90d82cdaa9ba2021}} {ff} {{ot_rom_4096x266_m8_ff} {d9c7e59c2e13749d2fff34790226704f512bcc767dd89584ebacddbdbbcbe346}} {ss} {{ot_rom_4096x266_m8_ss} {8612ab20df323464bfcdffd197cd2d087a249c2f6f2a2ec92ec8be219cf3d805}}}}}
+set ::ot_scene_accessor_source_b64 {Ly8gUmVhZC1vbmx5IE9wZW5TVEEgc2NlbmUgYmluZGluZyBjZW5zdXMuIEJ1aWxkIGFnYWluc3QgdGhlIHJ1bm5pbmcgT1JGUyBpbWFnZS4KI2luY2x1ZGUgPHRjbC5oPgojaW5jbHVkZSA8ZXhjZXB0aW9uPgojaW5jbHVkZSA8c3RyaW5nPgojaW5jbHVkZSAic3RhL01pbk1heC5oaCIKI2luY2x1ZGUgInN0YS9TY2VuZS5oaCIKI2luY2x1ZGUgInN0YS9TdGEuaGgiCiNpbmNsdWRlICJzdGEvTmV0d29yay5oaCIKI2luY2x1ZGUgInN0YS9MaWJlcnR5LmhoIgojaW5jbHVkZSAic3RhL1RpbWluZ0FyYy5oaCIKI2luY2x1ZGUgInN0YS9UaW1pbmdSb2xlLmhoIgojaW5jbHVkZSAic3RhL1BvcnREaXJlY3Rpb24uaGgiCgpuYW1lc3BhY2Ugewp2b2lkIGZpZWxkKFRjbF9JbnRlcnAqIGlwLCBUY2xfT2JqKiBkLCBjb25zdCBjaGFyKiBrZXksIGNvbnN0IHN0ZDo6c3RyaW5nJiB2YWx1ZSkgewogIFRjbF9EaWN0T2JqUHV0KGlwLCBkLCBUY2xfTmV3U3RyaW5nT2JqKGtleSwgLTEpLCBUY2xfTmV3U3RyaW5nT2JqKHZhbHVlLmNfc3RyKCksIC0xKSk7Cn0KaW50IGNlbnN1cyhDbGllbnREYXRhLCBUY2xfSW50ZXJwKiBpcCwgaW50IGFyZ2MsIFRjbF9PYmoqIGNvbnN0IGFyZ3ZbXSkgewogIGlmIChhcmdjICE9IDMpIHtUY2xfV3JvbmdOdW1BcmdzKGlwLCAxLCBhcmd2LCAiaW5zdGFuY2UgY2xvY2tfcGluIik7IHJldHVybiBUQ0xfRVJST1I7fQogIHRyeSB7CiAgICBhdXRvKiBzdGEgPSBzdGE6OlN0YTo6c3RhKCk7CiAgICBhdXRvKiBzY2VuZSA9IHN0YS0+Y21kU2NlbmUoKTsKICAgIGlmICghc2NlbmUpIHRocm93IHN0ZDo6cnVudGltZV9lcnJvcigibWlzc2luZyBhY3R1YWwgYWN0aXZlIHNjZW5lIik7CiAgICBhdXRvKiBuZXR3b3JrID0gc3RhLT5uZXR3b3JrKCk7CiAgICBjb25zdCBzdGQ6OnN0cmluZyB3YW50ID0gVGNsX0dldFN0cmluZyhhcmd2WzFdKTsKICAgIGF1dG8qIG5hbWVzID0gc3RhLT5jbWROZXR3b3JrKCk7CiAgICBhdXRvKiBpbnN0ID0gbmFtZXMtPmZpbmRJbnN0YW5jZSh3YW50LmNfc3RyKCkpOwogICAgaWYgKCFpbnN0KSB7CiAgICAgIC8vIFRoZSBjYWxsZXIgcGFzc2VzIGdldF9mdWxsX25hbWUgb2YgdGhlIGNlbGwgaXQgZm91bmQ7IGEgZmxhdHRlbmVkIGVzY2FwZWQgbmFtZQogICAgICAvLyAoZS5nLiB1X2NvbGwuZ19zcmluZ1xbMFxdLnVfbSkgZG9lcyBub3Qgcm91bmQtdHJpcCB0aHJvdWdoIGZpbmRJbnN0YW5jZSdzIHBhdGggcGFyc2VyLgogICAgICAvLyBNYXRjaCB0aGUgc2FtZSBwYXRoTmFtZSBleGFjdGx5IG92ZXIgdGhlIGxlYWYgaW5zdGFuY2VzOyBuZXZlciBhIHBhdHRlcm4sIG5ldmVyIGFtYmlndW91cy4KICAgICAgaW50IGhpdHMgPSAwOwogICAgICBhdXRvKiBpdCA9IG5ldHdvcmstPmxlYWZJbnN0YW5jZUl0ZXJhdG9yKCk7CiAgICAgIHdoaWxlIChpdC0+aGFzTmV4dCgpKSB7CiAgICAgICAgYXV0byogbGVhZiA9IGl0LT5uZXh0KCk7CiAgICAgICAgaWYgKG5hbWVzLT5wYXRoTmFtZShsZWFmKSA9PSB3YW50KSB7IGluc3QgPSBsZWFmOyArK2hpdHM7IH0KICAgICAgfQogICAgICBkZWxldGUgaXQ7CiAgICAgIGlmIChoaXRzID4gMSkgdGhyb3cgc3RkOjpydW50aW1lX2Vycm9yKCJhbWJpZ3VvdXMgYWN0dWFsIGluc3RhbmNlIHBhdGggbmFtZSIpOwogICAgfQogICAgaWYgKCFpbnN0KSB0aHJvdyBzdGQ6OnJ1bnRpbWVfZXJyb3IoIm1pc3NpbmcgYWN0dWFsIGluc3RhbmNlIik7CiAgICBhdXRvKiBiYXNlID0gbmV0d29yay0+bGliZXJ0eUNlbGwoaW5zdCk7CiAgICBpZiAoIWJhc2UpIHRocm93IHN0ZDo6cnVudGltZV9lcnJvcigibWlzc2luZyBhY3R1YWwgaW5zdGFuY2UgTGliZXJ0eSBjZWxsIik7CiAgICBhdXRvKiByZXN1bHQgPSBUY2xfTmV3RGljdE9iaigpOwogICAgZmllbGQoaXAsIHJlc3VsdCwgInNjZW5lIiwgc2NlbmUtPm5hbWUoKSk7CiAgICBmb3IgKGNvbnN0IGF1dG8qIG1tIDoge3N0YTo6TWluTWF4OjptaW4oKSwgc3RhOjpNaW5NYXg6Om1heCgpfSkgewogICAgICBhdXRvKiBjZWxsID0gYmFzZS0+c2NlbmVDZWxsKHNjZW5lLCBtbSk7CiAgICAgIGlmICghY2VsbCkgdGhyb3cgc3RkOjpydW50aW1lX2Vycm9yKCJtaXNzaW5nIGFjdHVhbCBzY2VuZS1tYXBwZWQgY2VsbCIpOwogICAgICBhdXRvKiBsaWJyYXJ5ID0gY2VsbC0+bGliZXJ0eUxpYnJhcnkoKTsKICAgICAgYXV0byogY2xvY2sgPSBjZWxsLT5maW5kTGliZXJ0eVBvcnQoVGNsX0dldFN0cmluZyhhcmd2WzJdKSk7CiAgICAgIGlmICghY2xvY2sgfHwgIWNsb2NrLT5pc0Nsb2NrKCkgfHwgIWNsb2NrLT5kaXJlY3Rpb24oKS0+aXNJbnB1dCgpKQogICAgICAgIHRocm93IHN0ZDo6cnVudGltZV9lcnJvcigibWlzc2luZyBhY3R1YWwgaW5wdXQgY2xvY2sgcGluIik7CiAgICAgIGlmICghY2VsbC0+aXNNZW1vcnkoKSkgdGhyb3cgc3RkOjpydW50aW1lX2Vycm9yKCJhY3R1YWwgc2NlbmUgY2VsbCBoYXMgbm8gbWVtb3J5IHNlbWFudGljcyIpOwogICAgICBhdXRvKiByb3cgPSBUY2xfTmV3RGljdE9iaigpOwogICAgICBmaWVsZChpcCwgcm93LCAiY2VsbCIsIGNlbGwtPm5hbWUoKSk7CiAgICAgIGZpZWxkKGlwLCByb3csICJsaWJyYXJ5IiwgbGlicmFyeS0+bmFtZSgpKTsKICAgICAgZmllbGQoaXAsIHJvdywgImZpbGVuYW1lIiwgbGlicmFyeS0+ZmlsZW5hbWUoKSk7CiAgICAgIGZpZWxkKGlwLCByb3csICJjbG9ja19waW4iLCBjbG9jay0+bmFtZSgpKTsKICAgICAgLy8gQ2hlY2sgdGhlIHNhbWUgcGVyLXNjZW5lIGFyYyBtYXBwaW5nIHVzZWQgYnkgZGVsYXkgY2FsY3VsYXRpb24sCiAgICAgIC8vIGluY2x1ZGluZyBhbnkgbWlzc2luZy1hcmMgZmFsbGJhY2sgdG8gdGhlIHJlcHJlc2VudGF0aXZlIGNlbGwuCiAgICAgIGF1dG8qIGJhc2VfY2xvY2sgPSBiYXNlLT5maW5kTGliZXJ0eVBvcnQoVGNsX0dldFN0cmluZyhhcmd2WzJdKSk7CiAgICAgIGlmICghYmFzZV9jbG9jayB8fCBiYXNlX2Nsb2NrLT5zY2VuZVBvcnQoc2NlbmUsIG1tKSAhPSBjbG9jaykKICAgICAgICB0aHJvdyBzdGQ6OnJ1bnRpbWVfZXJyb3IoImFjdHVhbCBzY2VuZSBjbG9jay1wb3J0IG1hcHBpbmcgbWlzbWF0Y2giKTsKICAgICAgZm9yIChhdXRvKiBzZXQgOiBiYXNlLT50aW1pbmdBcmNTZXRzKCkpIHsKICAgICAgICBpZiAoc2V0LT5mcm9tKCkgIT0gYmFzZV9jbG9jaykgY29udGludWU7CiAgICAgICAgZm9yIChhdXRvKiBhcmMgOiBzZXQtPmFyY3MoKSkgewogICAgICAgICAgYXV0byogbWFwcGVkID0gYXJjLT5zY2VuZUFyYyhzY2VuZS0+bGliZXJ0eUluZGV4KG1tKSk7CiAgICAgICAgICBpZiAoIW1hcHBlZCB8fCAhbWFwcGVkLT5tb2RlbCgpIHx8ICFtYXBwZWQtPmZyb20oKSB8fCAhbWFwcGVkLT50bygpCiAgICAgICAgICAgICAgfHwgbWFwcGVkLT5mcm9tKCktPmxpYmVydHlDZWxsKCkgIT0gY2VsbAogICAgICAgICAgICAgIHx8IG1hcHBlZC0+dG8oKS0+bGliZXJ0eUNlbGwoKSAhPSBjZWxsCiAgICAgICAgICAgICAgfHwgbWFwcGVkLT5yb2xlKCkgIT0gYXJjLT5yb2xlKCkpCiAgICAgICAgICAgIHRocm93IHN0ZDo6cnVudGltZV9lcnJvcigiYWN0dWFsIHNjZW5lIGFyYyBtYXBwaW5nL3NvdXJjZSBtaXNtYXRjaCIpOwogICAgICAgIH0KICAgICAgfQogICAgICBhdXRvKiBhcmNzID0gVGNsX05ld0xpc3RPYmooMCwgbnVsbHB0cik7CiAgICAgIGJvb2wgc2V0dXAgPSBmYWxzZSwgaG9sZCA9IGZhbHNlLCBjcSA9IGZhbHNlOwogICAgICBmb3IgKGF1dG8qIGFyYyA6IGNlbGwtPnRpbWluZ0FyY1NldHMoKSkgewogICAgICAgIGlmIChhcmMtPmZyb20oKSAhPSBjbG9jaykgY29udGludWU7CiAgICAgICAgY29uc3QgYXV0byogcm9sZSA9IGFyYy0+cm9sZSgpOwogICAgICAgIHNldHVwIHw9IHJvbGUgPT0gc3RhOjpUaW1pbmdSb2xlOjpzZXR1cCgpOwogICAgICAgIGhvbGQgfD0gcm9sZSA9PSBzdGE6OlRpbWluZ1JvbGU6OmhvbGQoKTsKICAgICAgICBjcSB8PSByb2xlID09IHN0YTo6VGltaW5nUm9sZTo6cmVnQ2xrVG9RKCk7CiAgICAgICAgYXV0byogYSA9IFRjbF9OZXdEaWN0T2JqKCk7CiAgICAgICAgZmllbGQoaXAsIGEsICJmcm9tIiwgYXJjLT5mcm9tKCktPm5hbWUoKSk7CiAgICAgICAgZmllbGQoaXAsIGEsICJ0byIsIGFyYy0+dG8oKS0+bmFtZSgpKTsKICAgICAgICBmaWVsZChpcCwgYSwgInJvbGUiLCByb2xlLT50b19zdHJpbmcoKSk7CiAgICAgICAgVGNsX0xpc3RPYmpBcHBlbmRFbGVtZW50KGlwLCBhcmNzLCBhKTsKICAgICAgfQogICAgICBpZiAoIXNldHVwIHx8ICFob2xkIHx8ICFjcSkgdGhyb3cgc3RkOjpydW50aW1lX2Vycm9yKCJhY3R1YWwgc2NlbmUgY2xvY2sgbGFja3Mgc2V0dXAvaG9sZC9jbG9jay10by1RIGFyY3MiKTsKICAgICAgVGNsX0RpY3RPYmpQdXQoaXAsIHJvdywgVGNsX05ld1N0cmluZ09iaigiYXJjcyIsIC0xKSwgYXJjcyk7CiAgICAgIFRjbF9EaWN0T2JqUHV0KGlwLCByZXN1bHQsIFRjbF9OZXdTdHJpbmdPYmoobW0gPT0gc3RhOjpNaW5NYXg6Om1pbigpID8gIm1pbiIgOiAibWF4IiwgLTEpLCByb3cpOwogICAgfQogICAgVGNsX1NldE9ialJlc3VsdChpcCwgcmVzdWx0KTsKICAgIHJldHVybiBUQ0xfT0s7CiAgfSBjYXRjaCAoY29uc3Qgc3RkOjpleGNlcHRpb24mIGVycm9yKSB7CiAgICBUY2xfU2V0T2JqUmVzdWx0KGlwLCBUY2xfTmV3U3RyaW5nT2JqKGVycm9yLndoYXQoKSwgLTEpKTsKICAgIHJldHVybiBUQ0xfRVJST1I7CiAgfQp9Cn0KZXh0ZXJuICJDIiBpbnQgT3RzY2VuZWJpbmRpbmdfSW5pdChUY2xfSW50ZXJwKiBpcCkgewogIFRjbF9DcmVhdGVPYmpDb21tYW5kKGlwLCAib3Rfc3RhX3NjZW5lX2JpbmRpbmciLCBjZW5zdXMsIG51bGxwdHIsIG51bGxwdHIpOwogIHJldHVybiBUY2xfUGtnUHJvdmlkZShpcCwgIm90X3N0YV9zY2VuZV9iaW5kaW5nIiwgIjEuMCIpOwp9Cg==}
+set ::ot_scene_accessor_source_sha256 {61aaf3f8c874867d13acbca9ef2f8d861a8217793d5b3605318886f8fd9f5777}
+
+proc ot_direct_sha256 {filename} {
+  if {![file isfile $filename]} {error "OT_DIRECT_MACRO: missing source file $filename"}
+  set result [exec sha256sum -- $filename]
+  if {![regexp {^([0-9a-f]{64}) } $result -> digest]} {error "OT_DIRECT_MACRO: invalid source digest $filename"}
+  return $digest
+}
+proc ot_direct_load_scene_accessor {} {
+  if {[info exists ::ot_scene_accessor_loaded]} {return}
+  # Compile within the exact running image against its installed headers. A
+  # missing compiler/header/symbol is an admission failure, never a fallback.
+  set channel [file tempfile directory ot_sta_scene_]
+  close $channel; file delete $directory; file mkdir $directory
+  set source [file join $directory sta_scene_binding.cc]
+  set channel [open $source w]; fconfigure $channel -translation binary
+  puts -nonewline $channel [binary decode base64 $::ot_scene_accessor_source_b64]; close $channel
+  if {[ot_direct_sha256 $source] ne $::ot_scene_accessor_source_sha256} {error "OT_DIRECT_MACRO: accessor source digest mismatch"}
+  set executable [file normalize [file readlink /proc/self/exe]]
+  set include [file normalize [file join [file dirname $executable] .. include]]
+  set flags [list -std=c++20 -shared -fPIC -I$include -I/usr/include/tcl]
+  if {![file isfile /usr/include/fmt/core.h] && ![file isfile /usr/local/include/fmt/core.h]} {
+    set bundled /usr/local/include/spdlog/fmt/bundled
+    if {![file isfile $bundled/core.h]} {error "OT_DIRECT_MACRO: matching image fmt headers missing"}
+    file link -symbolic [file join $directory fmt] $bundled
+    lappend flags -I$directory
+  }
+  set module [file join $directory ot_scene_binding.so]
+  if {[catch {exec g++ {*}$flags $source -o $module 2>@1} output]} {
+    error "OT_DIRECT_MACRO: accessor compile failed ($directory): $output"
+  }
+  if {[catch {load $module Otscenebinding} output]} {error "OT_DIRECT_MACRO: accessor ABI/load failed: $output"}
+  set version [lindex [split [exec g++ --version] \n] 0]
+  puts "OT_DIRECT_MACRO ACCESSOR source_sha256=$::ot_scene_accessor_source_sha256 executable_sha256=[ot_direct_sha256 $executable] module_sha256=[ot_direct_sha256 $module] compiler=$version"
+  set ::ot_scene_accessor_loaded 1
+  file delete -force $directory
+}
+
+# Return existing CE row shape. Zero internal OFFSET means Liberty-pin reference;
+# it is not a measured zero SRAM insertion and does not modify any macro arcs.
+proc ot_ce_direct_rows {corner} {
+  if {[llength $::ot_ce_direct_entries]} {ot_direct_load_scene_accessor}
+  set rows {}; set cells_seen {}
+  foreach entry $::ot_ce_direct_entries {
+    lassign $entry master pattern name libpin libraries
+    set cells [get_cells -quiet -hierarchical $pattern]
+    if {[llength $cells] != 1} { error "OT_DIRECT_MACRO: instance ownership is not unique: $pattern" }
+    set cell [lindex $cells 0]; set cellname [get_full_name $cell]
+    if {[dict exists $cells_seen $cellname] || [get_property $cell ref_name] ne $master} {
+      error "OT_DIRECT_MACRO: duplicate/wrong actual macro $cellname"
+    }
+    dict set cells_seen $cellname 1
+    lassign [dict get $libraries $corner] expected_library expected_sha
+    set expected "$expected_library/$master"
+    if {[catch {ot_sta_scene_binding $cellname $libpin} binding]} {
+      error "OT_DIRECT_MACRO: actual scene binding failed: $binding"
+    }
+    foreach mm {min max} {
+      set actual [dict get $binding $mm]
+      set want_library $expected_library; set want_sha $expected_sha
+      # The multi-mode route's synthesis SDC read happens before any scene is
+      # defined: the unscened default scene binds the LAST-read corner library
+      # (FF after TT). That read carries no timing claim, so pre-CTS only it is
+      # admitted when it is exactly one DECLARED corner library (digest-checked).
+      # Every defined scene and every post-CTS read stays strict.
+      if {[dict get $binding scene] eq "default" && [info exists ::ot_ref_pre_cts] && $::ot_ref_pre_cts &&
+          [dict get $actual library] ne $expected_library} {
+        dict for {c lib} $libraries {
+          if {[lindex $lib 0] eq [dict get $actual library]} { lassign $lib want_library want_sha }
+        }
+        puts "OT_DIRECT_MACRO PRE_CTS_DEFAULT_SCENE $cellname $mm=$want_library (declared corner library, no timing claim)"
+      }
+      if {[dict get $actual library] ne $want_library || [dict get $actual cell] ne $master ||
+          [dict get $actual clock_pin] ne $libpin} {
+        error "OT_DIRECT_MACRO: actual corner mismatch: scene=[dict get $binding scene] $mm [dict get $actual library]/[dict get $actual cell] expected $expected"
+      }
+      if {[ot_direct_sha256 [dict get $actual filename]] ne $want_sha} {
+        error "OT_DIRECT_MACRO: actual scene Liberty source digest mismatch $want_library/$master"
+      }
+    }
+    set pins {}
+    foreach p [get_pins -of_objects $cell] {
+      if {[get_property $p lib_pin_name] eq $libpin} { lappend pins $p }
+    }
+    if {[llength $pins] != 1} { error "OT_DIRECT_MACRO: missing actual clock pin $cellname/$libpin" }
+    set pin [lindex $pins 0]
+    set net [get_nets -quiet -of_objects $pin]
+    set sources [get_ports -quiet -of_objects $net]
+    set sinks [get_pins -quiet -of_objects $net]
+    if {[llength $sources] != 1 || [get_full_name [lindex $sources 0]] ne $name ||
+        [llength $sinks] != 1 || [get_full_name [lindex $sinks 0]] ne [get_full_name $pin]} {
+      error "OT_DIRECT_MACRO: actual exclusive direct source/pin ownership mismatch $name -> $cellname/$libpin"
+    }
+    set i [lsearch -exact $::ot_ce_ports $name]
+    if {$i < 0 || $name in $::ot_ce_cts_roots} { error "OT_DIRECT_MACRO: undeclared/nonhard source $name" }
+    set clock [get_clocks ot_entry_$i]
+    if {[llength $clock] != 1} { error "OT_DIRECT_MACRO: missing source clock $name" }
+    set wire [ot_ce_clock_wire $pin $clock]
+    if {![ot_ce_finite $wire]} { error "OT_DIRECT_MACRO: nonfinite clock wire $name" }
+    if {[info exists ::ot_ce_require_wire] && $::ot_ce_require_wire && $wire <= 0} {
+      error "OT_DIRECT_MACRO: actual positive propagated source-to-SRAM wire required $name"
+    }
+    set domain [dict get $::ot_ce_source_domains $name]
+    set vc [get_clocks [dict get $::ot_ce_domains $domain clock]]
+    if {abs([get_property $vc period]-[get_property $clock period])>0.001} {
+      error "OT_DIRECT_MACRO: domain/source period mismatch $name"
+    }
+    lappend rows [list [lindex $sources 0] $pin $wire 0 0 0 $clock 0 $domain]
+    puts "OT_DIRECT_MACRO RAW_LIBERTY_PIN $corner $name -> [get_full_name $pin] wire=$wire library=$expected (internal arcs retained)"
+  }
+  return $rows
+}
+
+# Constants are proved from actual OpenDB connectivity and the loaded Liberty
+# output functions. Cell/port names, case analysis and timing-graph constant
+# pruning are never proofs. A cell output is constant when every loaded corner
+# gives its master the same Liberty function and that function is a literal, or a
+# combinational expression whose every variable is an input pin of the same
+# instance on a net with no input port and exactly one driver that is itself
+# constant (TIEHI/TIELO prove themselves through their literal function; a
+# synthesis buffer/inverter or any gate of constants follows). Registers never
+# qualify; unknown or unparsable functions fail closed.
+proc ot_ce_constant_net {net seen remaining} {
+  if {$remaining <= 0 || $net in {"" NULL}} {return 0}
+  foreach port [$net getBTerms] {if {[$port getIoType] ne "OUTPUT"} {return 0}}
+  set drivers {}
+  foreach pin [$net getITerms] {if {[$pin isOutputSignal]} {lappend drivers $pin}}
+  if {[llength $drivers] != 1} {return 0}
+  return [ot_ce_constant_iterm [lindex $drivers 0] $seen $remaining]
+}
+proc ot_ce_constant_iterm {pin seen remaining} {
+  if {$remaining <= 0 || ![$pin isOutputSignal]} {return 0}
+  set inst [$pin getInst];set name "[$inst getName]/[[$pin getMTerm] getName]"
+  if {[dict exists $seen $name]} {return 0}
+  if {[info exists ::ot_ce_const_memo] && [dict exists $::ot_ce_const_memo $name]} {return [dict get $::ot_ce_const_memo $name]}
+  dict set seen $name 1
+  set result [ot_ce_constant_iterm_eval $inst $pin $seen $remaining]
+  dict set ::ot_ce_const_memo $name $result
+  return $result
+}
+proc ot_ce_constant_iterm_eval {inst pin seen remaining} {
+  if {[info exists ::ot_ce_register_cells] && [dict exists $::ot_ce_register_cells [$inst getName]]} {return 0}
+  set master [[$inst getMaster] getName];set output [[$pin getMTerm] getName]
+  set functions {};set matched 0
+  foreach library [get_libs -quiet *] {
+    set cell [$library find_liberty_cell $master]
+    if {$cell in {"" NULL}} continue
+    set lp [$cell find_liberty_port $output]
+    if {$lp in {"" NULL} || [sta::liberty_port_direction $lp] ne "output"} {return 0}
+    dict set functions [string map {" " "" "\t" "" "\n" ""} [$lp function]] 1
+    incr matched
+  }
+  if {!$matched || [dict size $functions] != 1} {return 0}
+  set function [lindex [dict keys $functions] 0]
+  if {$function in {0 1}} {return 1}
+  if {$function eq "" || ![regexp {^[A-Za-z0-9_!'*&+|^()]+$} $function]} {return 0}
+  set inputs [lsort -unique [regexp -all -inline {[A-Za-z_][A-Za-z0-9_]*} $function]]
+  if {![llength $inputs]} {return 0}
+  foreach input $inputs {
+    set in [$inst findITerm $input]
+    if {$in in {"" NULL} || ![$in isInputSignal]} {return 0}
+    if {![ot_ce_constant_net [$in getNet] $seen [expr {$remaining-1}]]} {return 0}
+  }
+  return 1
+}
+# Timing startpoint -> constant proof. An output-port startpoint is followed to
+# its net driver; an input port is never constant.
+proc ot_ce_constant_cone {start} {
+  set block [ord::get_db_block]
+  if {[sta::object_type $start] eq "Port" || ([sta::object_type $start] eq "Pin" && [$start is_top_level_port])} {
+    set port [$block findBTerm [get_full_name $start]]
+    if {$port in {"" NULL} || [$port getIoType] ne "OUTPUT"} {return 0}
+    return [ot_ce_constant_net [$port getNet] {} 64]
+  }
+  if {[sta::object_type $start] ne "Pin"} {return 0}
+  set inst [$block findInst [get_full_name [$start instance]]]
+  if {$inst in {"" NULL}} {return 0}
+  set pin [$inst findITerm [get_property $start lib_pin_name]]
+  if {$pin in {"" NULL}} {return 0}
+  return [ot_ce_constant_iterm $pin {} 64]
+}
+# A multi-root leaf contains independent synchronous datapaths. Domain declarations
+# are checked against the real synthesized timing graph, not trusted as metadata.
+proc ot_ce_leaf_ownership {inputs outputs} {
+  set expected {}
+  dict for {domain info} $::ot_ce_domains {lappend expected [dict get $info clock]}
+  for {set i 0} {$i < [llength $::ot_ce_ports]} {incr i} {lappend expected ot_entry_$i}
+  set actual {}
+  foreach c [all_clocks] {lappend actual [get_full_name $c]}
+  if {[lsort $actual] ne [lsort $expected]} {error "OT_MULTI_ROOT: undeclared clock alias or relationship"}
+  set cells {}; set clocks {}; set crossing_pairs {}; set domain_roots {}
+  foreach root $::ot_ce_ports {
+    set domain [dict get $::ot_ce_source_domains $root]
+    dict set domain_roots $domain $root
+    set clock [get_clocks ot_entry_[lsearch -exact $::ot_ce_ports $root]]
+    foreach pin [all_registers -clock [get_full_name $clock] -clock_pins] {
+      set cell [get_full_name [get_cells -of_objects $pin]]
+      if {[dict exists $cells $cell]} { error "OT_MULTI_ROOT: duplicate clock ownership $cell" }
+      dict set cells $cell $domain
+    }
+  }
+  foreach pin [all_registers -clock_pins] {
+    set cell [get_full_name [get_cells -of_objects $pin]]
+    if {![dict exists $cells $cell]} { error "OT_MULTI_ROOT: unowned register $cell" }
+  }
+  set ::ot_ce_register_cells {}
+  foreach r [all_registers -cells] {dict set ::ot_ce_register_cells [get_full_name $r] 1}
+  set ::ot_ce_const_memo {}
+  # OpenSTA's -data_pins population includes asynchronous clear/preset
+  # controls. Classify these from the actual loaded Liberty sequential arcs,
+  # never from port names or reset_ports. They retain recovery/removal timing;
+  # only ordinary synchronous D/control paths require data-domain ownership.
+  set async_pins {}
+  foreach pin [all_registers -async_pins] {dict set async_pins [get_full_name $pin] 1}
+  foreach pin [all_registers -data_pins] {
+    if {[dict exists $async_pins [get_full_name $pin]]} continue
+    set cell [get_full_name [get_cells -of_objects $pin]]
+    set expected [dict get $cells $cell]
+    foreach start [get_fanin -flat -startpoints_only -to $pin] {
+      set ports [get_ports -quiet [get_full_name $start]]
+      if {[llength $ports]} {
+        set name [get_full_name $start]
+        if {![dict exists $inputs $name] || [dict get $inputs $name] ne $expected} {
+          error "OT_MULTI_ROOT: input $name has wrong domain for $cell"
+        }
+      } else {
+        set source [get_full_name [get_cells -quiet -of_objects $start]]
+        if {![dict exists $cells $source]} {
+          if {[ot_ce_constant_cone $start]} {
+            puts "OT_MULTI_ROOT LIBERTY_CONSTANT [get_full_name $start] -> [get_full_name $pin]"
+            continue
+          }
+          error "OT_MULTI_ROOT: unowned data path $source -> $cell"
+        }
+        set source_domain [dict get $cells $source]
+        if {$source_domain ne $expected} {
+          if {!$::ot_ce_related_data} {error "OT_MULTI_ROOT: cross-domain data path $source -> $cell requires explicit related profile"}
+          dict set crossing_pairs [list $source_domain $expected] 1
+        }
+      }
+    }
+  }
+  dict for {name domain} $outputs {
+    foreach start [get_fanin -flat -startpoints_only -to [get_ports $name]] {
+      # A die-strap tie output (contract v1.2 tie_hi/tie_lo), possibly
+      # synthesis-buffered, has no clock and no data domain to own; it must be
+      # proved constant above. Registers and ports keep their domain checks.
+      if {[sta::object_type $start] eq "Pin" && [$start is_top_level_port]} {
+        if {[ot_ce_constant_cone $start]} {
+          puts "OT_MULTI_ROOT LIBERTY_CONSTANT [get_full_name $start] -> $name"
+          continue
+        }
+        error "OT_MULTI_ROOT: output $name has wrong or unregistered source domain [get_full_name $start]"
+      }
+      set source [get_full_name [get_cells -quiet -of_objects $start]]
+      if {![dict exists $cells $source] && [ot_ce_constant_cone $start]} {
+        puts "OT_MULTI_ROOT LIBERTY_CONSTANT [get_full_name $start] -> $name"
+        continue
+      }
+      if {![dict exists $cells $source] || [dict get $cells $source] ne $domain} {
+        error "OT_MULTI_ROOT: output $name has wrong or unregistered source domain $source"
+      }
+    }
+  }
+  dict for {pair unused} $crossing_pairs {
+    lassign $pair source_domain target_domain
+    set source_root [dict get $domain_roots $source_domain]
+    set target_root [dict get $domain_roots $target_domain]
+    set from [all_registers -clock ot_entry_[lsearch -exact $::ot_ce_ports $source_root] -clock_pins]
+    set to {}
+    foreach pin [all_registers -clock ot_entry_[lsearch -exact $::ot_ce_ports $target_root] -data_pins] {
+      if {![dict exists $async_pins [get_full_name $pin]]} {lappend to $pin}
+    }
+    foreach kind {max min} {
+      set paths [find_timing_paths -from $from -to $to -path_delay $kind -group_path_count 1 -endpoint_path_count 1]
+      if {![llength $paths] && [info exists ::env(OT_HOLD_MM)] && $::env(OT_HOLD_MM) eq "1" &&
+          ![info exists ::ot_mm_active]} {
+        # Multi-mode route/gate (tools/orfs_hold_mm.tcl): this SDC is being read into mode ss BEFORE any scene is
+        # defined, so the unscened default scene has no clocks and no path can be found yet.  The crossing population
+        # above is structural (actual fanin) and unchanged; the finite-path proof runs strictly in every single-scene
+        # read (non-MM stages, corner_sta / sign-off), which carries the timing claim.
+        puts "OT_MULTI_ROOT RELATED_PATH_DEFERRED $source_domain -> $target_domain $kind (multi-mode read before scene definition; strict at sign-off)"
+        continue
+      }
+      if {![llength $paths] || ![ot_ce_finite [get_property [lindex $paths 0] slack]]} {
+        error "OT_MULTI_ROOT: related crossing lacks actual finite $kind STA path $source_domain -> $target_domain"
+      }
+      puts "OT_MULTI_ROOT RELATED_PATH $source_domain -> $target_domain $kind slack=[get_property [lindex $paths 0] slack] (ordinary synchronous timing retained)"
+    }
+  }
+  puts "OT_MULTI_ROOT OWNERSHIP PASS roots=[llength $::ot_ce_cts_roots] registers=[dict size $cells] inputs=[dict size $inputs] outputs=[dict size $outputs] async_control_pins=[dict size $async_pins]"
+}
+
+proc ot_ce_corner {} {
+  if {[info exists ::ot_ioref_scene] && $::ot_ioref_scene eq "BC"} { return ff }
+  if {[info exists ::ot_ce_corner]} { return $::ot_ce_corner }
+  # WC is a scene label, not an actual library corner: option-B overlays WC
+  # with TT. Bind the reference to actual loaded child Liberty objects.
+  set found {}; set clock_cells {}
+  # Physical-only taps/endcaps have no Liberty association. The clock corner
+  # belongs to actual sequential clock sinks, not every physical instance.
+  foreach pin [all_registers -clock_pins] {
+    set cell [get_cells -quiet -of_objects $pin]
+    if {[llength $cell] != 1 || $cell eq "NULL"} {error "OT_MULTI_ROOT: clock sink lacks one actual sequential cell"}
+    dict set clock_cells [get_full_name $cell] $cell
+  }
+  if {![dict size $clock_cells]} {error "OT_MULTI_ROOT: no actual sequential cells for corner inference"}
+  foreach cell [dict values $clock_cells] {
+    set master [get_property $cell ref_name]
+    set libcells [get_lib_cells -quiet -of_objects $cell]
+    if {![llength $libcells] || "NULL" in $libcells} { error "OT_MULTI_ROOT: actual sequential cell $master has no loaded Liberty association" }
+    foreach lc $libcells {
+      set full [get_full_name $lc]
+      if {![regexp -nocase {_(tt|ff|ss)/|_(tt|ff|ss)_} $full -> corner alt]} { error "OT_ENTRIES: unknown actual Liberty corner $full" }
+      if {$corner eq ""} {set corner $alt}
+      dict set found [string tolower $corner] 1
+    }
+  }
+  if {[dict size $found] == 1} { return [lindex [dict keys $found] 0] }
+  # A multi-mode database needs its actual setup corner or BC scene shim.
+  if {[info exists ::env(OT_MM_SETUP_CORNER)]} {
+    switch -nocase -- $::env(OT_MM_SETUP_CORNER) {
+      TC - tt {set corner tt} BC - ff {set corner ff} WC - ss {set corner ss}
+      default { error "OT_ENTRIES: unknown actual setup corner" }
+    }
+    if {[dict exists $found $corner]} { return $corner }
+  }
+  error "OT_ENTRIES: ambiguous actual loaded child corners [dict keys $found]"
+}
+# get_property pin arrival_max_rise is a DATA arrival query. On a clock-only
+# macro pin it returns an infinity sentinel even with a finite propagated clock
+# path. Read the actual rising clock path in the current analysis scene instead.
+proc ot_ce_finite {value} {
+  return [expr {[string is double -strict $value] && ![regexp -nocase {inf|nan} $value]}]
+}
+proc ot_ce_clock_wire {pin clock} {
+  set scene [get_property [sta::cmd_scene] name]
+  set clock_name [get_full_name $clock]
+  set values {}
+  foreach vertex [$pin vertices] {
+    if {$vertex eq "NULL"} continue
+    set paths [$vertex path_iterator rise max]
+    while {[$paths has_next]} {
+      set path [$paths next]
+      # OpenSTA's Path tag identifies scene, rise/max, clock and propagation.
+      # Match the complete fixed fields, never accept another scene's path.
+      set tag [$path tag]
+      if {[lindex $tag 1] ne $scene || [lindex $tag 2] ne "^max" ||
+          [lindex $tag 3] ne $clock_name || [lindex $tag 4] ne "^" ||
+          [string first "(clock prop)" $tag] < 0} continue
+      set arrival [sta::time_sta_ui [$path arrival]]
+      if {![ot_ce_finite $arrival]} {
+        $paths finish
+        error "OT_ENTRIES: nonfinite propagated clock arrival on [get_full_name $pin] scene=$scene clock=$clock_name"
+      }
+      lappend values $arrival
+    }
+    $paths finish
+  }
+  if {[llength $values] != 1} {
+    # Synthesis/floorplan have no extracted entry wire. This is solely a finite
+    # pre-CTS diagnostic reference; routed gates must measure a clock path.
+    if {![llength $values] && [info exists ::ot_ref_pre_cts] && $::ot_ref_pre_cts &&
+        (![info exists ::ot_ce_require_wire] || !$::ot_ce_require_wire)} {
+      puts "OT_ENTRIES PRE_CTS_ZERO_WIRE [get_full_name $pin] scene=$scene"
+      return 0.0
+    }
+    error "OT_ENTRIES: missing unique finite propagated clock arrival on [get_full_name $pin] scene=$scene clock=$clock_name"
+  }
+  return [lindex $values 0]
+}
+# Match ck_insertion.py's exported insertion.json boundary population: input
+# timing endpoints plus output timing launch registers, intersected with this root.
+proc ot_ce_boundary_pins {pins} {
+  set regs {}; set boundary {}
+  foreach pin $pins { dict set regs [regsub {/[^/]+$} [get_full_name $pin] {}] $pin }
+  set inputs [all_inputs -no_clocks]
+  if {[llength $inputs]} {
+    foreach path [find_timing_paths -path_delay max -from $inputs -to [all_registers -data_pins] -group_path_count 200000 -endpoint_path_count 1] {
+      set name [regsub {/[^/]+$} [get_full_name [get_property $path endpoint]] {}]
+      if {[dict exists $regs $name]} { dict set boundary $name [dict get $regs $name] }
+    }
+  }
+  if {[llength [all_outputs]]} {
+    foreach path [find_timing_paths -path_delay max -from [all_registers -clock_pins] -to [all_outputs] -group_path_count 200000 -endpoint_path_count 100000] {
+      set name [regsub {/[^/]+$} [get_full_name [get_property $path startpoint]] {}]
+      if {[dict exists $regs $name]} { dict set boundary $name [dict get $regs $name] }
+    }
+  }
+  return [dict values $boundary]
+}
+proc ot_ce_apply {} {
+  set corner [ot_ce_corner]
+  set clk [get_clocks core_clk]
+  if {[llength $clk] != 1} { error "OT_ENTRIES: core_clk missing" }
+  # Wires-only parents have no CTS tree to set this flag for us.
+  # Ideal clocks silently report zero network arrival despite real entry wires.
+  set_propagated_clock [get_clocks ot_entry_*]
+  set sources {}; set names {}
+  foreach c [get_clocks ot_entry_*] {
+    foreach p [get_property $c sources] { lappend sources $p; lappend names [get_full_name $p] }
+  }
+  if {[lsort $names] ne [lsort $::ot_ce_ports]} { error "OT_ENTRIES: source clock coverage differs from spec" }
+  foreach c [get_clocks ot_entry_*] { set_clock_latency -source 0 $c }
+  sta::worst_slack_cmd max
+  set rows {}; set seen {}; set counts {}
+  foreach cell [get_cells -quiet -hierarchical *] {
+    set master [get_property $cell ref_name]
+    if {![dict exists $::ot_ce_counts $master]} continue
+    dict incr counts $master
+    foreach pin [get_pins -quiet -of_objects $cell] {
+      set key "$master/[get_property $pin lib_pin_name]"
+      if {![dict exists $::ot_ce_refs $key]} continue
+      set ports [get_ports -quiet -of_objects [get_nets -quiet -of_objects $pin]]
+      if {[llength $ports] != 1} { error "OT_ENTRIES: [get_full_name $pin] lacks one direct top clock port" }
+      set port [lindex $ports 0]; set name [get_full_name $port]
+      if {$name ni $::ot_ce_ports || $name in $::ot_ce_cts_roots || [dict exists $seen $name]} { error "OT_ENTRIES: duplicate or undeclared source $name" }
+      dict set seen $name 1
+      set clock [get_clocks ot_entry_[lsearch -exact $::ot_ce_ports $name]]
+      if {[llength $clock] != 1} { error "OT_ENTRIES: $name has no unique related clock" }
+      set wire [ot_ce_clock_wire $pin $clock]
+      if {![ot_ce_finite $wire]} { error "OT_ENTRIES: nonfinite entry wire clock arrival on [get_full_name $pin]" }
+      if {abs($wire) < 1.0e-9 && [info exists ::ot_ce_require_wire] && $::ot_ce_require_wire} {
+        # A zero arrival is admissible only if actual source and child pin are
+        # physically coincident. Missing parasitics/ideal clocks cannot qualify.
+        if {![llength [info commands ord::get_db_block]]} { error "OT_ENTRIES: zero wire lacks physical source/pin proof" }
+        set block [ord::get_db_block]
+        set bt [$block findBTerm $name]
+        set it [$block findITerm [get_full_name $pin]]
+        if {$bt eq "NULL" || $it eq "NULL"} { error "OT_ENTRIES: missing physical source/child clock pin" }
+        set pb [$bt getBBox]; set ib [$it getBBox]
+        set distance [expr {(abs(([$pb xMin]+[$pb xMax])-([$ib xMin]+[$ib xMax])) + abs(([$pb yMin]+[$pb yMax])-([$ib yMin]+[$ib yMax]))) / 2.0 / [$block getDbUnitsPerMicron]}]
+        if {$distance > 0.001} { error "OT_ENTRIES: zero clock wire arrival despite $distance um source/pin separation on $name" }
+        puts "OT_ENTRIES ZERO_WIRE_PROVEN $name [get_full_name $pin] distance=$distance"
+      }
+      lassign [dict get $::ot_ce_refs $key $corner] lo mean hi
+      set clock [get_clocks ot_entry_[lsearch -exact $::ot_ce_ports $name]]
+      if {[llength $clock] != 1} { error "OT_ENTRIES: $name has no unique related clock" }
+      set ttmean [lindex [dict get $::ot_ce_refs $key tt] 1]
+      set domain [dict get $::ot_ce_source_domains $name]
+      set vc [get_clocks [dict get $::ot_ce_domains $domain clock]]
+      if {abs([get_property $vc period]-[get_property $clock period])>0.001} { error "OT_ENTRIES: domain/source period mismatch $name" }
+      lappend rows [list $port $pin $wire $lo $mean $hi $clock $ttmean $domain]
+    }
+  }
+  dict for {m n} $::ot_ce_counts {
+    if {![dict exists $counts $m] || [dict get $counts $m] != $n} { error "OT_ENTRIES: bound child count mismatch $m" }
+  }
+  foreach row [ot_ce_direct_rows $corner] {
+    set name [get_full_name [lindex $row 0]]
+    if {[dict exists $seen $name]} {error "OT_DIRECT_MACRO: duplicate hard-source ownership $name"}
+    dict set seen $name 1
+    lappend rows $row
+  }
+  # Each glue root owns a real CTS tree. Measure every propagated standard-cell
+  # clock sink in the current scene; never substitute a declared/common phase.
+  foreach name $::ot_ce_cts_roots {
+    set clock [get_clocks ot_entry_[lsearch -exact $::ot_ce_ports $name]]
+    set pins [all_registers -clock [get_full_name $clock] -clock_pins]
+    if {![llength $pins]} { error "OT_HYBRID: glue root $name has no actual sequential clock sinks" }
+    set arrivals {}; set measured {}; set total 0.0
+    foreach pin $pins {
+      set cell [get_cells -of_objects $pin]
+      set master [get_property $cell ref_name]
+      if {[dict exists $::ot_ce_counts $master] || $master in $::ot_ce_direct_masters} { error "OT_HYBRID: CTS root $name reaches a hard child" }
+      set arrival [ot_ce_clock_wire $pin $clock]
+      lappend arrivals $arrival
+      dict set measured [get_full_name $pin] $arrival
+      set total [expr {$total + $arrival}]
+    }
+    set arrivals [lsort -real $arrivals]
+    set lo [lindex $arrivals 0]; set hi [lindex $arrivals end]
+    set tree_mean [expr {$total / [llength $arrivals]}]
+    set mean $tree_mean
+    if {[info exists ::ot_ce_require_wire] && $::ot_ce_require_wire && $mean <= 0} {
+      error "OT_HYBRID: glue root $name lacks a positive actual propagated CTS insertion"
+    }
+    if {[llength $arrivals] > 15000 && ($tree_mean > 300 || $hi-$lo > 80)} {
+      error "OT_HYBRID: glue root $name exceeds measured large-root insertion/spread limits"
+    }
+    set boundary [ot_ce_boundary_pins $pins]
+    set scope boundary
+    if {![llength $boundary]} { set boundary $pins; set scope all_internal_only }
+    set arrivals {}; set total 0.0
+    foreach pin $boundary {
+      set arrival [dict get $measured [get_full_name $pin]]
+      lappend arrivals $arrival; set total [expr {$total + $arrival}]
+    }
+    set arrivals [lsort -real $arrivals]
+    set lo [lindex $arrivals 0]; set hi [lindex $arrivals end]
+    set mean [expr {$total / [llength $arrivals]}]
+    if {[llength $pins] > 15000 && $mean > 300} {
+      error "OT_HYBRID: glue root $name exceeds boundary insertion limit"
+    }
+    set domain [dict get $::ot_ce_source_domains $name]
+    lappend rows [list [get_ports $name] [lindex $pins 0] 0 $lo $mean $hi $clock $mean $domain]
+    dict set seen $name 1
+    puts "OT_HYBRID CTS_MEASURE $corner $name sinks=[llength $pins] reference_scope=$scope boundary_sinks=[llength $boundary] min=$lo mean=$mean max=$hi all_mean=$tree_mean"
+  }
+  if {[dict size $seen] != [llength $::ot_ce_ports]} { error "OT_ENTRIES: incomplete actual child/source coverage" }
+  set ref 0
+  foreach row $rows { lassign $row p pin wire lo mean hi; set ref [expr {max($ref, $wire + $mean)}] }
+  set low {}; set high {}; set lowclocks {}; set highclocks {}; set domain_low {}; set domain_high {}
+  foreach row $rows {
+    lassign $row p pin wire lo mean hi clock ttmean domain
+    # Physical source level includes the entry wire, not just the hard
+    # child's internal insertion. Only a TT scene measures the TT wire.
+    # Other physical scenes conservatively reserve the deep pair budget;
+    # they must not guess TT wire delay from FF/SS or an ideal zero arrival.
+    set deep [expr {$ttmean > 300}]
+    set level_basis "zero-wire diagnostic"
+    if {$corner eq "tt"} {
+      set deep [expr {$ttmean + $wire > 300}]
+      set level_basis "TT timing-graph entry arrival + child R (physical proof required for route/signoff)"
+    } elseif {[info exists ::ot_ce_require_wire] && $::ot_ce_require_wire} {
+      set deep 1
+      set level_basis "TT wire level not measured in this scene; conservative210ps setup"
+    }
+    if {$deep} { lappend highclocks $clock } else { lappend lowclocks $clock }
+    puts "OT_ENTRIES LEVEL [get_full_name $p] deep=$deep basis=$level_basis"
+    set latency [expr {$ref - $wire - $mean}]
+    if {![ot_ce_finite $ref] || ![ot_ce_finite $latency]} { error "OT_ENTRIES: nonfinite reference/source latency on [get_full_name $p]" }
+    set_clock_latency -source $latency $clock
+    lappend low [expr {$ref + $lo - $mean}]; lappend high [expr {$ref + $hi - $mean}]
+    dict lappend domain_low $domain [expr {$ref + $lo - $mean}]
+    dict lappend domain_high $domain [expr {$ref + $hi - $mean}]
+    puts "OT_ENTRIES COMP $corner [get_full_name $p] -> [get_full_name $pin] wire=$wire R=$mean latency=$latency phi=$ref"
+  }
+  # Every entry is synchronous and related. Reserve die skew on internal hops;
+  # no asynchronous groups, false paths or ETM insertion add-back.
+  set_clock_uncertainty -setup 150 -from [get_clocks ot_entry_*] -to [get_clocks ot_entry_*]
+  # H1 authoritative pair_check.HOLD_TREE =50ps hold margin+50ps die skew.
+  # Tile-local25ps uncertainty is not the composed pair margin.
+  set_clock_uncertainty -hold 100 -from [get_clocks ot_entry_*] -to [get_clocks ot_entry_*]
+  # Each deep tile has its own earlier trunk tap. The authoritative TREE
+  # pair budget uses150ps die skew when either reference exceeds300ps,
+  # including deep-to-deep pairs (pair_check.SKEW_DEEP).
+  if {[llength $highclocks]} {
+    set_clock_uncertainty -setup 210 -from $highclocks -to [get_clocks ot_entry_*]
+    set_clock_uncertainty -setup 210 -from [get_clocks ot_entry_*] -to $highclocks
+  }
+  # Preserve measured boundary spread: balancing the mean does not erase the
+  # earliest/latest physical boundary arrivals or change ETM setup/hold arcs.
+  set lmin [lindex [lsort -real $low] 0]; set lmax [lindex [lsort -real $high] end]
+  unset_input_delay [all_inputs]; unset_output_delay [all_outputs]
+  set sk [expr {[info exists ::env(OT_IO_SKEW)] ? $::env(OT_IO_SKEW) : 90}]
+  set hk [expr {[info exists ::env(OT_IO_HOLD_SKEW)] ? $::env(OT_IO_HOLD_SKEW) : 50}]
+  set hki [expr {[info exists ::env(OT_IO_IN_HOLD_SKEW)] ? $::env(OT_IO_IN_HOLD_SKEW) : 0}]
+  set covered_in {}; set covered_out {}
+  dict for {domain info} $::ot_ce_domains {
+    if {![dict exists $domain_low $domain]} { error "OT_ENTRIES: domain $domain has no actual child clock pins" }
+    set dlmin [lindex [lsort -real [dict get $domain_low $domain]] 0]
+    set dlmax [lindex [lsort -real [dict get $domain_high $domain]] end]
+    set vc [get_clocks [dict get $info clock]]
+    set budget [dict get $info io_budget_ps]
+    # Optional composition-derived output budget (domain "io_budget": {"out": f}, f >= 0.2): the outside share of the
+    # cycle on this domain's outputs; larger = a TIGHTER launch (flop -> pin) inside the child, never a relaxation.
+    set budget_out [expr {[dict exists $info io_budget_out_ps] ? [dict get $info io_budget_out_ps] : $budget}]
+    set inputs {}; set outputs {}
+    foreach pattern [dict get $info inputs] {
+      set match [get_ports -quiet $pattern -filter "direction == input"]
+      if {$::ot_ce_leaf_roots && ![llength $match]} {set match [get_ports -quiet [format {%s\[*\]} $pattern] -filter "direction == input"]}
+      if {$::ot_ce_leaf_roots && ![llength $match]} {error "OT_MULTI_ROOT: unknown input $pattern"}
+      foreach p $match {
+        set n [get_full_name $p]
+        if {$n in $::ot_ce_ports} continue
+        if {[dict exists $covered_in $n]} { error "OT_ENTRIES: input $n has duplicate IO domains" }
+        dict set covered_in $n $domain; lappend inputs $p
+      }
+    }
+    foreach pattern [dict get $info outputs] {
+      set match [get_ports -quiet $pattern -filter "direction == output"]
+      if {$::ot_ce_leaf_roots && ![llength $match]} {set match [get_ports -quiet [format {%s\[*\]} $pattern] -filter "direction == output"]}
+      if {$::ot_ce_leaf_roots && ![llength $match]} {error "OT_MULTI_ROOT: unknown output $pattern"}
+      foreach p $match {
+        set n [get_full_name $p]
+        if {[dict exists $covered_out $n]} { error "OT_ENTRIES: output $n has duplicate IO domains" }
+        dict set covered_out $n $domain; lappend outputs $p
+      }
+    }
+    if {[llength $inputs]} {
+      set_input_delay [expr {$budget+$dlmax+$sk}] -max -clock $vc $inputs
+      set_input_delay [expr {$dlmin-$hki}] -min -clock $vc $inputs
+    }
+    if {[llength $outputs]} {
+      set_output_delay [expr {$budget_out-$dlmax+$sk}] -max -clock $vc $outputs
+      set_output_delay [expr {-$dlmin-$hk}] -min -clock $vc $outputs
+    }
+    if {[info exists ::env(OT_IO_INTER)] && $::env(OT_IO_INTER) ne ""} {
+      foreach pattern [split $::env(OT_IO_INTER) ","] {
+        foreach p [get_ports -quiet $pattern] {
+          set n [get_full_name $p]
+          if {[dict exists $covered_in $n] && [dict get $covered_in $n] eq $domain} {
+            set_input_delay [expr {$budget+$dlmax+150}] -max -clock $vc $p
+          }
+          if {[dict exists $covered_out $n] && [dict get $covered_out $n] eq $domain} {
+            set_output_delay [expr {$budget_out-$dlmax+150}] -max -clock $vc $p
+          }
+        }
+      }
+    }
+    puts "OT_ENTRIES DOMAIN $domain [get_property $vc period]ps IO[llength $inputs]/[llength $outputs] boundary=$dlmin..$dlmax"
+  }
+  if {[dict size $covered_in] != [llength [all_inputs -no_clocks]] || [dict size $covered_out] != [llength [all_outputs]]} {
+    error "OT_ENTRIES: incomplete actual IO domain coverage (resets must also have a domain)"
+  }
+  if {$::ot_ce_leaf_roots} { ot_ce_leaf_ownership $covered_in $covered_out }
+  puts "OT_ENTRIES COMP DONE $corner [llength $rows] entries phi=$ref boundary=$lmin..$lmax"
+}
+ot_ce_apply
