@@ -23,7 +23,8 @@
 // Quadrant od / a0 links keep the composition's station chains (u_stn_q0/1/2, latency-insensitive, generated with the
 // slab floorplan; not instantiated here).  SVC FRAME PROTOCOL v1.1 unchanged: one result source (id 0) on a0 / od.
 // ---------------------------------------------------------------------------------------------------------------
-module dsfd_svc_c #(parameter integer MUT = 0, parameter integer DIE_ID = 0, parameter integer ST = 0) (
+module dsfd_svc_c #(parameter integer MUT = 0, parameter integer DIE_ID = 0, parameter integer ST = 0,
+                    parameter bit SRAM_MACRO = 0, parameter bit NATIVE_FP32_PV = 0) (
     input  wire [0:0]     ck,
     input  wire [0:0]     rst,
     input  wire [32:0]    j,
@@ -55,11 +56,17 @@ module dsfd_svc_c #(parameter integer MUT = 0, parameter integer DIE_ID = 0, par
     function automatic integer rq_(input integer d); rq_ = (d < 2) ? d : 2; endfunction   // remote-quadrant index (0, 1, 3)
     function automatic integer nri(input integer d); nri = (d == 0) ? NRI0 : (d == 1) ? NRI1 : (d == 2) ? NRI2 : NRI3; endfunction
 
-    wire [514:0] qg; wire [2059:0] q_q;
+    wire [514:0] qg, q_native; wire [2059:0] q_q;
+    wire probability_fault;
+    generate if (NATIVE_FP32_PV) begin : g_native_pv
+        ot_s81_svc_probability_frame u_pv_pack (.clk(ck[0]), .rst_n(rst[0]), .q(q), .q_o(q_native), .fault(probability_fault));
+    end else begin : g_legacy_pv
+        assign q_native = q; assign probability_fault = 1'b0;
+    end endgenerate
     wire [3:0] od_v, od_r, a0_v, a0_r; wire [2047:0] od_d, a0_d; wire a1_v, a1_r, x_v, x_r; wire [511:0] a1_d, x_d;
     wire [1:0] jd_j; wire fault_io;
-    dsfd_svc_hs #(.MUT(MUT)) u_hs (.ck(ck[0]), .rst(rst[0]), .hs(hs), .jd_i(jd_j), .flt_i(fault_io), .jd_o(jd), .flt_o(fault[0]));
-    dsfd_svcio_job #(.MUT(MUT)) u_job (.ck(ck), .rst(rst), .j(j), .jd(jd_j), .q(q), .q_o(qg),
+    dsfd_svc_hs #(.MUT(MUT)) u_hs (.ck(ck[0]), .rst(rst[0]), .hs(hs), .jd_i(jd_j | {probability_fault,1'b0}), .flt_i(fault_io | probability_fault), .jd_o(jd), .flt_o(fault[0]));
+    dsfd_svcio_job #(.MUT(MUT)) u_job (.ck(ck), .rst(rst), .j(j), .jd(jd_j), .q(q_native), .q_o(qg),
         .t_a0({ad[492:481], ad[508:496], ad[0]}), .t_a1({ad[1005:994], ad[1021:1009], ad[513]}),
         .t_x({xd[493:482], xd[509:497], xd[1]}), .t_od({od[493:482], od[509:497], od[1]}));
     ot_s81ph_svc_io_t u_io (.ck(ck[0]), .rst(rst[0]), .q(qg), .od(od), .xd(xd), .ad(ad), .fault(fault_io), .q_q(q_q),
@@ -96,7 +103,7 @@ module dsfd_svc_c #(parameter integer MUT = 0, parameter integer DIE_ID = 0, par
 
     generate for (g = 0; g < 4; g = g + 1) begin : g_q
         // non-home quadrants have 1-bit h_* / unused score ports (tied off inside); quadrant 2 has the full bundles
-        dsfd_svc_quad #(.QID(g), .DIE_ID(DIE_ID), .ST(ST), .NRH0(NRH0), .NRH1(NRH1), .NRH3(NRH3), .NRI(nri(g)), .NRS(NRS),
+        dsfd_svc_quad #(.QID(g), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .NRH0(NRH0), .NRH1(NRH1), .NRH3(NRH3), .NRI(nri(g)), .NRS(NRS),
                         .NG(NG)) u_q (
             .ck(ck), .rst(rst), .q(q_q[515*g +: 515]),
             .od_v(od_v[g]), .od_d(od_d[512*g +: 512]), .od_r(od_r[g]), .a0_v(a0_v[g]), .a0_d(a0_d[512*g +: 512]), .a0_r(a0_r[g]),

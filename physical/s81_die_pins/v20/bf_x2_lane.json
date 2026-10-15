@@ -2726,5 +2726,6 @@
   "from_x0": 266,
   "from_x1": 266,
   "from_x2": 536
- }
+ },
+ "start_control_exception": "Native PQ phase start asserts go and go_bf together (ot_s81_pq_ctl_native.sv). Keep cc on go_bf start; zero q-valid and overlay payload. The zero-go/cfg rule applies to xb_v data beats, not this phase-start control."
 }

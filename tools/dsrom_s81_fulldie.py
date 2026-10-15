@@ -5151,6 +5151,14 @@ def ctrl_adapter_buses(hb):
         out += [('vm', 'hc_s', 1, 't_inp_hc', 'f_inp')]
     if 'su_s' in hb and hb['su_s'].master == 'dsfd_sp_su_c':     # SU dependency net (dsfd_sp_su inp), same rule
         out += [('vm', 'su_s', 1, 't_inp_su', 'f_inp')]
+    if RTL_BIND and SUHC_V2:
+        # Per-slot credit-return pulses, not a delayed combinational ready level. The VM adapter emits
+        # an initial token when online, and returns one token when the ordered request retires.
+        # Request/credit paths are registered; client FIFOs hold requests until a token is available.
+        for client, ports in (('su_s', (('t_su_rqr', 'f_su_rqr', 16), ('t_su_wqr', 'f_su_wqr', 16))),
+                              ('hc_s', (('t_hc_rqr', 'f_hc_rqr', 2), ('t_hc_wqr', 'f_hc_wqr', 8)))):
+            if client in hb:
+                out += [('vm', client, width, vp, cp) for vp, cp, width in ports]
     return tuple(out)
 
 
