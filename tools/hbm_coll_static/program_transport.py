@@ -74,8 +74,25 @@ def encode_program(rows: dict[int, tuple[int, int]], qid: int, base: int, limit:
             frames.append({'target':52+qid, 'address':row*8+segment,
                            'data_hex':f'{word:064x}',
                            'next_frame_gap_edges':55 if segment == 6 else 1})
+    # F24 increments the frame address. Segment7 is reserved, so F20 selects
+    # each next row explicitly instead of silently streaming through address7.
+    csr = []
+    for row in sorted(rows):
+        csr.append({'op':'write32','address_hex':'f20','data_hex':f'{(row*8<<8)|(52+qid):08x}'})
+        for frame in (f for f in frames if f['address']//8 == row):
+            word = int(frame['data_hex'],16)
+            for piece in range(8):
+                csr.append({'op':'write32','address_hex':'f24','data_hex':f'{(word>>(piece*32))&0xffffffff:08x}'})
+        csr.append({'op':'idle_core_edges','edges':55,'anchor':'after acknowledgement of the final F24 write for this row'})
+    csr.extend([
+        {'op':'write32','address_hex':'f28','data_hex':f'{(limit<<12)|base:08x}'},
+        {'op':'write32','address_hex':'f2c','data_hex':'00000001'},
+        {'op':'idle_core_edges','edges':66,'anchor':'after acknowledgement of F2C descriptor write'},
+    ])
     return {'abi':'hcoll-f20-1536-v1', 'descriptor_units':'instructions',
-            'frames':frames, 'descriptor':{'target':52+qid,'base':base,'limit':limit,'loops':1},
+            'frames':frames, 'csr_programming_plan':csr,
+            'global_launch_doorbell':{'address_hex':'c10','data_hex':'00000001','prerequisite':'caller must also configure all VM and engine targets participating in this kernel'},
+            'descriptor':{'target':52+qid,'base':base,'limit':limit,'loops':1},
             'descriptor_to_launch_gap_edges':66,
             'launch':'global launch at least66edges after descriptor capture, after fixed64row validation',
             'runtime_loop_count_source':'native64b metadata, not descriptorloops'}
