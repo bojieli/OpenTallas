@@ -28,7 +28,7 @@ CONTROL_BITS=sum(w for _,w in FIELDS)
 # control, expected command pulse84, done pulse9, final cycle, validity marker.
 ROM_BITS=CONTROL_BITS+85+9+2
 ABI='opentallas.s81.collective-fixed-edge-rom.v2'
-LATENCIES=dict(controller_command_register_edges=1,controller_output_register_edges=1,vm_request_to_issue_edges=14,issue_to_gather_edges=11,
+LATENCIES=dict(control_rom_synchronous_read_edges=1,control_rom_idle_prefetch_edges=1,controller_command_register_edges=1,controller_output_register_edges=1,vm_request_to_issue_edges=14,issue_to_gather_edges=11,
                gather_to_vm_source_edges=1,hc_reduce_to_write_edges=18,
                hc_final_write_to_earliest_emit_edges=1,
                done_rom_to_c_done_edges=1)
@@ -62,6 +62,7 @@ def compile_image(request,root):
     for name in ('native_source_binding','vm_reservations','physical_phase_binding','timing_price_binding'):
         if not request.get(name): raise ValueError('missing '+name)
     cycles=request['cycles']
+    if len(cycles)>4096: raise ValueError('actual control ROM has one4096cycle page; larger calendars require real page implementation')
     if not cycles or not cycles[0]['cmd_valid']: raise ValueError('first edge must name start command')
     controls=[]
     for edge,c in enumerate(cycles):
@@ -216,9 +217,35 @@ def compile_image(request,root):
         if edge+18 not in hc_writes: raise ValueError('HC reducer result lacks reduced VM write reservation')
     return words
 
+def pack_macro_banks(words,path):
+    """Map three266-bit word slices into actual MUX8 via-mask cells.
+
+    Physical model cell for logical wordaddress a/bit b is row=a//8,
+    column=8*b+a%8. All4096words are present; unused rows have marker0.
+    No DUT logical array or data loader replaces these physical macro masks.
+    """
+    if not 1<=len(words)<=4096: raise ValueError('one actual ROMpage only')
+    files=[]
+    for bank in range(3):
+        rows=[0]*512
+        for addr,word in enumerate(words):
+            if type(word)is not int or not 0<=word<1<<ROM_BITS: raise ValueError('ROM word width')
+            value=(word>>(266*bank))&((1<<266)-1)
+            while value:
+                bit=(value&-value).bit_length()-1
+                rows[addr//8]|=1<<(8*bit+addr%8)
+                value&=value-1
+        filename=Path(str(path)+f'.b{bank}.viamap.hex')
+        filename.write_text(''.join(f'{row:0532x}\n'for row in rows))
+        files.append(dict(path=str(filename),sha256=hashlib.sha256(filename.read_bytes()).hexdigest(),bank=bank))
+    return files
+
+
 def emit(request,root,path):
     words=compile_image(request,root)
     path.write_text(''.join(f'{w:0{(ROM_BITS+3)//4}x}\n' for w in words))
+    banks=pack_macro_banks(words,path)
     return dict(abi=ABI,control_bits=CONTROL_BITS,rom_bits=ROM_BITS,cycles=len(words),
                 sha256=hashlib.sha256(path.read_bytes()).hexdigest(),latencies=LATENCIES,
-                integration_ready=False,qualification='controller component only; native production source/phase/price acceptance is separate')
+                macro='ot_rom_4096x266_m8',macro_count=3,macro_depth=4096,macro_bank_files=banks,
+                integration_ready=False,qualification='actual ROM-backed controller component; native production source/phase/price acceptance is separate')
