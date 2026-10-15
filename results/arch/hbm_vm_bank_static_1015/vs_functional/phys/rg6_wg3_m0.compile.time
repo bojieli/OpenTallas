@@ -1,18 +1,18 @@
-	Command being timed: "iverilog -g2012 -s tb_hbm_vm_physical_banks_vs -Ptb_hbm_vm_physical_banks_vs.RG=6 -Ptb_hbm_vm_physical_banks_vs.WG=3 -Ptb_hbm_vm_physical_banks_vs.MUT=0 -o /tmp/claude-1000/vsb/phys/rg6_wg3_m0.vvp /home/ubuntu/wt/hea-r2-main-1015/rtl/hbm_accel/generic/vm/static/physical/tb_hbm_vm_physical_banks_vs.sv /home/ubuntu/wt/hea-r2-main-1015/rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_vs_rg7wg3.sv /home/ubuntu/wt/hea-r2-main-1015/rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_vs_rg5wg1.sv /home/ubuntu/wt/hea-r2-main-1015/rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_vs_rg6wg3.sv /home/ubuntu/wt/hea-r2-main-1015/rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_vs_rg4wg1.sv /tmp/claude-1000/vsb/inputs/ot_vms_bank_static_wdecode_vs.sv /tmp/claude-1000/vsb/inputs/ot_sram_1r1w_1024x256_m2_r2c2.v"
-	User time (seconds): 0.06
-	System time (seconds): 0.00
-	Percent of CPU this job got: 101%
-	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:00.06
+	Command being timed: "iverilog -g2012 -s tb_hbm_vm_physical_banks_vs -Ptb_hbm_vm_physical_banks_vs.RG=6 -Ptb_hbm_vm_physical_banks_vs.WG=3 -Ptb_hbm_vm_physical_banks_vs.MUT=0 -o /tmp/claude-1000/vsb2/phys/rg6_wg3_m0.vvp /home/ubuntu/wt/hea-r2-main-1015/rtl/hbm_accel/generic/vm/static/physical/tb_hbm_vm_physical_banks_vs.sv /home/ubuntu/wt/hea-r2-main-1015/rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_vs_rg7wg3.sv /home/ubuntu/wt/hea-r2-main-1015/rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_vs_rg5wg1.sv /home/ubuntu/wt/hea-r2-main-1015/rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_vs_rg6wg3.sv /home/ubuntu/wt/hea-r2-main-1015/rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_vs_rg4wg1.sv /tmp/claude-1000/vsb2/inputs/ot_vms_bank_static_wdecode_vs.sv /tmp/claude-1000/vsb2/inputs/ot_sram_1r1w_1024x256_m2_r2c2.v"
+	User time (seconds): 0.13
+	System time (seconds): 0.01
+	Percent of CPU this job got: 100%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:00.15
 	Average shared text size (kbytes): 0
 	Average unshared data size (kbytes): 0
 	Average stack size (kbytes): 0
 	Average total size (kbytes): 0
-	Maximum resident set size (kbytes): 22520
+	Maximum resident set size (kbytes): 22512
 	Average resident set size (kbytes): 0
 	Major (requiring I/O) page faults: 0
-	Minor (reclaiming a frame) page faults: 4707
-	Voluntary context switches: 8
-	Involuntary context switches: 1
+	Minor (reclaiming a frame) page faults: 4709
+	Voluntary context switches: 7
+	Involuntary context switches: 2
 	Swaps: 0
 	File system inputs: 0
 	File system outputs: 4640

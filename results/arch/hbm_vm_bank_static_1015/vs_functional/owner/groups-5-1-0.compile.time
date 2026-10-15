@@ -1,18 +1,18 @@
-	Command being timed: "iverilog -g2012 -s tb_hbm_vm_allgroups_wdecode_vs -Ptb_hbm_vm_allgroups_wdecode_vs.RG=5 -Ptb_hbm_vm_allgroups_wdecode_vs.WG=1 -Ptb_hbm_vm_allgroups_wdecode_vs.MUT=0 -o /tmp/claude-1000/vsb/owner/groups-5-1-0.vvp ../ot_vms_bank_static_wdecode_vs.sv ../../../../../../physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v tb_hbm_vm_allgroups_wdecode_vs.sv"
-	User time (seconds): 0.06
-	System time (seconds): 0.00
-	Percent of CPU this job got: 42%
+	Command being timed: "iverilog -g2012 -s tb_hbm_vm_allgroups_wdecode_vs -Ptb_hbm_vm_allgroups_wdecode_vs.RG=5 -Ptb_hbm_vm_allgroups_wdecode_vs.WG=1 -Ptb_hbm_vm_allgroups_wdecode_vs.MUT=0 -o /tmp/claude-1000/vsb2/owner/groups-5-1-0.vvp ../ot_vms_bank_static_wdecode_vs.sv ../../../../../../physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v tb_hbm_vm_allgroups_wdecode_vs.sv"
+	User time (seconds): 0.11
+	System time (seconds): 0.01
+	Percent of CPU this job got: 84%
 	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:00.15
 	Average shared text size (kbytes): 0
 	Average unshared data size (kbytes): 0
 	Average stack size (kbytes): 0
 	Average total size (kbytes): 0
-	Maximum resident set size (kbytes): 20984
+	Maximum resident set size (kbytes): 21248
 	Average resident set size (kbytes): 0
 	Major (requiring I/O) page faults: 0
-	Minor (reclaiming a frame) page faults: 4369
-	Voluntary context switches: 12
-	Involuntary context switches: 3
+	Minor (reclaiming a frame) page faults: 4367
+	Voluntary context switches: 9
+	Involuntary context switches: 23
 	Swaps: 0
 	File system inputs: 0
 	File system outputs: 4104
