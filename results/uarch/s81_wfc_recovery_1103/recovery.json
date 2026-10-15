@@ -1,0 +1,130 @@
+{
+  "schema": "opentallas.s81.wfc_recovery.v1",
+  "status": "COMPONENT_PROOF_PASS_NOT_NATIVE",
+  "recovered_from": "54a2299de76315f42e3b4f10ad475ce40885105c",
+  "source_checkpoint": "cf0a57fd5",
+  "base": "b58a299dba5b13c6a8547e9b52199adedc7a4c09",
+  "scope": "Minimum WFC component with external static VM/core stimulus, not integrated VM or die proof",
+  "shape": {
+    "RXW": 41,
+    "TXW": 46,
+    "MAXU": 866
+  },
+  "macros": [
+    {
+      "master": "ot_sram_1r1w_64x512_m1_r2c2",
+      "count": 2
+    },
+    {
+      "master": "ot_sram_1r1w_128x256_m1_r2c2",
+      "count": 1
+    },
+    {
+      "master": "ot_sram_1r1w_512x64_m4_r2c2",
+      "count": 1
+    }
+  ],
+  "children": [
+    {
+      "instance": "u_t",
+      "master": "dsfd_wfc_ss_t",
+      "clock": "ck"
+    },
+    {
+      "instance": "u_x43t",
+      "master": "dsfd_wfc_ss_x43_t",
+      "clock": "ck"
+    },
+    {
+      "instance": "u_x43s",
+      "master": "dsfd_wfc_ss_x43_s",
+      "clock": "ckv"
+    },
+    {
+      "instance": "u_s",
+      "master": "dsfd_wfc_ss_s",
+      "clock": "ckv"
+    },
+    {
+      "instance": "u_x34s",
+      "master": "dsfd_wfc_ss_x34_s",
+      "clock": "ckv"
+    },
+    {
+      "instance": "u_x34t",
+      "master": "dsfd_wfc_ss_x34_t",
+      "clock": "ck"
+    }
+  ],
+  "abi_fix": "Four distinct fixed-width actual-logic CDC masters; 527-bit write + 528-bit banks; 514-bit return + 515-bit banks. Hard build cannot silently revert to common W512 defaults.",
+  "gaps": [
+    "Main layer1.f selects dsfd_wfc_stg_cl + DSFD_WFC_STG_STATIC adapter, not recovered source; unchanged by this work",
+    "Top exposes two shared clock roots for six children; native per-child clock entry ABI absent",
+    "No current physical kits, native source-bound views or physical home/slot qualification for the six children",
+    "No SS/FF/native pin proof or CTS sink measurements for the recovered source",
+    "Common current VM CDC native variants deliberately untouched; WFC uses recovered direct-bank timing contract",
+    "RLAT17 and START_GAP4 depend on external static VM stimulus and die stations remain unpriced"
+  ],
+  "jobs": {
+    "reference_and_legacy_static": {
+      "host": "ot-agidock128",
+      "path": "/srv/opentallas-scratch/codex/s81-wfc-recovery-1103",
+      "source": "d8d637077",
+      "ongoing_note": "Three reference cases complete and collected; original 45-case historical sweep continues untouched via exec session37708. No result claimed for unfinished remainder."
+    },
+    "priced_and_boundary_static": {
+      "host": "ot-epyc1tb",
+      "path": "/srv/opentallas-scratch/codex/s81-wfc-recovery-1103-v2",
+      "source": "cf0a57fd5"
+    }
+  },
+  "admission": {
+    "selector": "ot-run automatic",
+    "staged_hosts": [
+      "ot-epyc1tb",
+      "ot-epyc4",
+      "ot-pve1",
+      "ot-agidock128"
+    ],
+    "memory_gb": 6,
+    "basis": "Existing WFC bench admission guidance; /usr/bin/time -v measures new actual RSS",
+    "measured_peak_rss_kib": 22804,
+    "measured_wall_seconds": 257.03
+  },
+  "main_adopted": false,
+  "proof": {
+    "static_cases": 46,
+    "positives": 26,
+    "observed_negatives": 20,
+    "reference_cases": [
+      {
+        "case": "equiv_stg_vmnat",
+        "got": "pass",
+        "identical": true,
+        "flits": 1880,
+        "sha256": "b3aeaefac6127bbbfd8d31630c7bb0b0342964cfed38a0336e5d4970d9a3a5f7",
+        "static_source_checkpoint": "d8d637077",
+        "note": "Same hardware source as cf0a57fd5; later bench adds priced shape assertion and USER_BASE default 0"
+      },
+      {
+        "case": "equiv_stg_r1",
+        "got": "pass",
+        "identical": true,
+        "flits": 2820,
+        "sha256": "bd2202bc8d07ba39319ad93ca4a5486a274dbbd59af4992f00d75577a7c93e9d",
+        "static_source_checkpoint": "d8d637077",
+        "note": "Same hardware source as cf0a57fd5; later bench adds priced shape assertion and USER_BASE default 0"
+      },
+      {
+        "case": "equiv_stg_r2_slowvm",
+        "got": "pass",
+        "identical": true,
+        "flits": 2820,
+        "sha256": "d018fc2983216cc0ba0eb881a2257633d264c93c612b6196510ce32c634f8fd9",
+        "static_source_checkpoint": "d8d637077",
+        "note": "Same hardware source as cf0a57fd5; later bench adds priced shape assertion and USER_BASE default 0"
+      }
+    ],
+    "total_cases": 49
+  }
+}

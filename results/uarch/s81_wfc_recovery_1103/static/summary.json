@@ -1,0 +1,605 @@
+{
+ "all_ok": true,
+ "cases": [
+  {
+   "case": "p175",
+   "expect": "pass",
+   "got": "pass",
+   "verdict": "OK",
+   "result": "WFC_SS PASS jobs=40 starts=40 period=175 rx_tx_min=232 rx_tx_max=233 done_tx_min=53 done_tx_max=54 hdr_period=175.03",
+   "params": {
+    "P": 175
+   },
+   "defines": []
+  },
+  {
+   "case": "p176",
+   "expect": "pass",
+   "got": "pass",
+   "verdict": "OK",
+   "result": "WFC_SS PASS jobs=40 starts=40 period=176 rx_tx_min=232 rx_tx_max=232 done_tx_min=53 done_tx_max=53 hdr_period=176.00",
+   "params": {
+    "P": 176
+   },
+   "defines": []
+  },
+  {
+   "case": "p177",
+   "expect": "pass",
+   "got": "pass",
+   "verdict": "OK",
+   "result": "WFC_SS PASS jobs=40 starts=40 period=177 rx_tx_min=232 rx_tx_max=233 done_tx_min=53 done_tx_max=54 hdr_period=177.03",
+   "params": {
+    "P": 177
+   },
+   "defines": []
+  },
+  {
+   "case": "p178",
+   "expect": "pass",
+   "got": "pass",
+   "verdict": "OK",
+   "result": "WFC_SS PASS jobs=40 starts=40 period=178 rx_tx_min=232 rx_tx_max=233 done_tx_min=53 done_tx_max=53 hdr_period=178.03",
+   "params": {
+    "P": 178
+   },
+   "defines": []
+  },
+  {
+   "case": "p201",
+   "expect": "pass",
+   "got": "pass",
+   "verdict": "OK",
+   "result": "WFC_SS PASS jobs=40 starts=40 period=201 rx_tx_min=232 rx_tx_max=233 done_tx_min=53 done_tx_max=54 hdr_period=201.03",
+   "params": {
+    "P": 201
+   },
+   "defines": []
+  },
+  {
+   "case": "p202",
+   "expect": "pass",
+   "got": "pass",
+   "verdict": "OK",
+   "result": "WFC_SS PASS jobs=40 starts=40 period=202 rx_tx_min=232 rx_tx_max=233 done_tx_min=53 done_tx_max=53 hdr_period=202.03",
+   "params": {
+    "P": 202
+   },
+   "defines": []
+  },
+  {
+   "case": "p203",
+   "expect": "pass",
+   "got": "pass",
+   "verdict": "OK",
+   "result": "WFC_SS PASS jobs=40 starts=40 period=203 rx_tx_min=232 rx_tx_max=233 done_tx_min=53 done_tx_max=54 hdr_period=203.03",
+   "params": {
+    "P": 203
+   },
+   "defines": []
+  },
+  {
+   "case": "p204",
+   "expect": "pass",
+   "got": "pass",
+   "verdict": "OK",
+   "result": "WFC_SS PASS jobs=40 starts=40 period=204 rx_tx_min=232 rx_tx_max=232 done_tx_min=53 done_tx_max=53 hdr_period=204.00",
+   "params": {
+    "P": 204
+   },
+   "defines": []
+  },
+  {
+   "case": "txd_m3_p201",
+   "expect": "pass",
+   "got": "pass",
+   "verdict": "OK",
+   "result": "WFC_SS PASS jobs=40 starts=40 period=201 rx_tx_min=229 rx_tx_max=230 done_tx_min=50 done_tx_max=51 hdr_period=201.03",
+   "params": {
+    "P": 201
+   },
+   "defines": [
+    "OT_WFCSS_TXD_ADJ=3"
+   ]
+  },
+  {
+   "case": "txd_m3_p202",
+   "expect": "pass",
+   "got": "pass",
+   "verdict": "OK",
+   "result": "WFC_SS PASS jobs=40 starts=40 period=202 rx_tx_min=229 rx_tx_max=230 done_tx_min=50 done_tx_max=50 hdr_period=202.03",
+   "params": {
+    "P": 202
+   },
+   "defines": [
+    "OT_WFCSS_TXD_ADJ=3"
+   ]
+  },
+  {
+   "case": "txd_m3_p203",
+   "expect": "pass",
+   "got": "pass",
+   "verdict": "OK",
+   "result": "WFC_SS PASS jobs=40 starts=40 period=203 rx_tx_min=229 rx_tx_max=230 done_tx_min=50 done_tx_max=51 hdr_period=203.03",
+   "params": {
+    "P": 203
+   },
+   "defines": [
+    "OT_WFCSS_TXD_ADJ=3"
+   ]
+  },
+  {
+   "case": "txd_m3_p204",
+   "expect": "pass",
+   "got": "pass",
+   "verdict": "OK",
+   "result": "WFC_SS PASS jobs=40 starts=40 period=204 rx_tx_min=229 rx_tx_max=229 done_tx_min=50 done_tx_max=50 hdr_period=204.00",
+   "params": {
+    "P": 204
+   },
+   "defines": [
+    "OT_WFCSS_TXD_ADJ=3"
+   ]
+  },
+  {
+   "case": "neg_swap",
+   "expect": "fail",
+   "got": "fail",
+   "verdict": "OK",
+   "result": "WFC_SS FAIL: outbound word 0 of job 0",
+   "params": {
+    "P": 201
+   },
+   "defines": [
+    "OT_WFCSS_MUT_SWAP"
+   ]
+  },
+  {
+   "case": "neg_txearly",
+   "expect": "fail",
+   "got": "fail",
+   "verdict": "OK",
+   "result": "WFC_SS FAIL: outbound word 33 of job 0",
+   "params": {
+    "P": 201
+   },
+   "defines": [
+    "OT_WFCSS_MUT_TXEARLY"
+   ]
+  },
+  {
+   "case": "neg_ph1",
+   "expect": "fail",
+   "got": "fail",
+   "verdict": "OK",
+   "result": "WFC_SS FAIL: fault t_ft=0001 (proto lnk - vmx) at cycle 36, 0 out",
+   "params": {
+    "P": 201
+   },
+   "defines": [
+    "OT_WFCSS_MUT_PH1"
+   ]
+  },
+  {
+   "case": "neg_upos",
+   "expect": "fail",
+   "got": "fail",
+   "verdict": "OK",
+   "result": "WFC_SS FAIL: fault t_ft=1000 (proto lnk - vmx) at cycle 226, 0 out",
+   "params": {
+    "P": 201
+   },
+   "defines": [
+    "OT_WFCSS_MUT_UPOS"
+   ]
+  },
+  {
+   "case": "neg_gap0",
+   "expect": "fail",
+   "got": "fail",
+   "verdict": "OK",
+   "result": "WFC_SS FAIL: RX word 39 of (p0, t115265) not in the VM at start (write / start order)",
+   "params": {
+    "P": 201
+   },
+   "defines": [
+    "OT_WFCSS_MUT_GAP0"
+   ]
+  },
+  {
+   "case": "neg_rlat",
+   "expect": "fail",
+   "got": "fail",
+   "verdict": "OK",
+   "result": "WFC_SS FAIL: fault t_ft=0001 (proto lnk - vmx) at cycle 231, 0 out",
+   "params": {
+    "P": 201
+   },
+   "defines": [
+    "OT_WFCSS_MUT_RLAT"
+   ]
+  },
+  {
+   "case": "neg_badpos",
+   "expect": "fault",
+   "got": "fault",
+   "verdict": "OK",
+   "result": "WFC_SS FAULT_AS_EXPECTED ft=1000 at job 4",
+   "params": {
+    "P": 201,
+    "BADPOS": 5,
+    "EXPECT_FAULT": 1
+   },
+   "defines": []
+  },
+  {
+   "case": "neg_war_cal",
+   "expect": "fault",
+   "got": "fault",
+   "verdict": "OK",
+   "result": "WFC_SS FAULT_AS_EXPECTED ft=0001 at job 1",
+   "params": {
+    "P": 174,
+    "EXPECT_FAULT": 1
+   },
+   "defines": []
+  },
+  {
+   "case": "neg_run_cal",
+   "expect": "fault",
+   "got": "fault",
+   "verdict": "OK",
+   "result": "WFC_SS FAULT_AS_EXPECTED ft=0001 at job 0",
+   "params": {
+    "P": 150,
+    "EXPECT_FAULT": 1
+   },
+   "defines": []
+  },
+  {
+   "case": "user865",
+   "expect": "pass",
+   "got": "pass",
+   "verdict": "OK",
+   "result": "WFC_SS PASS jobs=40 starts=40 period=201 rx_tx_min=232 rx_tx_max=233 done_tx_min=53 done_tx_max=54 hdr_period=201.03",
+   "params": {
+    "P": 201,
+    "USER_BASE": 865,
+    "NUSR": 1
+   },
+   "defines": []
+  },
+  {
+   "case": "neg_user866",
+   "expect": "fault",
+   "got": "fault",
+   "verdict": "OK",
+   "result": "WFC_SS FAULT_AS_EXPECTED ft=1000 at job 0",
+   "params": {
+    "P": 201,
+    "USER_BASE": 866,
+    "NUSR": 1,
+    "EXPECT_FAULT": 1
+   },
+   "defines": []
+  },
+  {
+   "case": "hard_p175",
+   "expect": "pass",
+   "got": "pass",
+   "verdict": "OK",
+   "result": "WFC_SS PASS jobs=40 starts=40 period=175 rx_tx_min=232 rx_tx_max=233 done_tx_min=53 done_tx_max=54 hdr_period=175.03",
+   "params": {
+    "P": 175
+   },
+   "defines": [
+    "DSFD_WFC_SS_HARD"
+   ]
+  },
+  {
+   "case": "hard_p176",
+   "expect": "pass",
+   "got": "pass",
+   "verdict": "OK",
+   "result": "WFC_SS PASS jobs=40 starts=40 period=176 rx_tx_min=232 rx_tx_max=232 done_tx_min=53 done_tx_max=53 hdr_period=176.00",
+   "params": {
+    "P": 176
+   },
+   "defines": [
+    "DSFD_WFC_SS_HARD"
+   ]
+  },
+  {
+   "case": "hard_p177",
+   "expect": "pass",
+   "got": "pass",
+   "verdict": "OK",
+   "result": "WFC_SS PASS jobs=40 starts=40 period=177 rx_tx_min=232 rx_tx_max=233 done_tx_min=53 done_tx_max=54 hdr_period=177.03",
+   "params": {
+    "P": 177
+   },
+   "defines": [
+    "DSFD_WFC_SS_HARD"
+   ]
+  },
+  {
+   "case": "hard_p178",
+   "expect": "pass",
+   "got": "pass",
+   "verdict": "OK",
+   "result": "WFC_SS PASS jobs=40 starts=40 period=178 rx_tx_min=232 rx_tx_max=233 done_tx_min=53 done_tx_max=53 hdr_period=178.03",
+   "params": {
+    "P": 178
+   },
+   "defines": [
+    "DSFD_WFC_SS_HARD"
+   ]
+  },
+  {
+   "case": "hard_p201",
+   "expect": "pass",
+   "got": "pass",
+   "verdict": "OK",
+   "result": "WFC_SS PASS jobs=40 starts=40 period=201 rx_tx_min=232 rx_tx_max=233 done_tx_min=53 done_tx_max=54 hdr_period=201.03",
+   "params": {
+    "P": 201
+   },
+   "defines": [
+    "DSFD_WFC_SS_HARD"
+   ]
+  },
+  {
+   "case": "hard_p202",
+   "expect": "pass",
+   "got": "pass",
+   "verdict": "OK",
+   "result": "WFC_SS PASS jobs=40 starts=40 period=202 rx_tx_min=232 rx_tx_max=233 done_tx_min=53 done_tx_max=53 hdr_period=202.03",
+   "params": {
+    "P": 202
+   },
+   "defines": [
+    "DSFD_WFC_SS_HARD"
+   ]
+  },
+  {
+   "case": "hard_p203",
+   "expect": "pass",
+   "got": "pass",
+   "verdict": "OK",
+   "result": "WFC_SS PASS jobs=40 starts=40 period=203 rx_tx_min=232 rx_tx_max=233 done_tx_min=53 done_tx_max=54 hdr_period=203.03",
+   "params": {
+    "P": 203
+   },
+   "defines": [
+    "DSFD_WFC_SS_HARD"
+   ]
+  },
+  {
+   "case": "hard_p204",
+   "expect": "pass",
+   "got": "pass",
+   "verdict": "OK",
+   "result": "WFC_SS PASS jobs=40 starts=40 period=204 rx_tx_min=232 rx_tx_max=232 done_tx_min=53 done_tx_max=53 hdr_period=204.00",
+   "params": {
+    "P": 204
+   },
+   "defines": [
+    "DSFD_WFC_SS_HARD"
+   ]
+  },
+  {
+   "case": "hard_txd_m3_p201",
+   "expect": "pass",
+   "got": "pass",
+   "verdict": "OK",
+   "result": "WFC_SS PASS jobs=40 starts=40 period=201 rx_tx_min=229 rx_tx_max=230 done_tx_min=50 done_tx_max=51 hdr_period=201.03",
+   "params": {
+    "P": 201
+   },
+   "defines": [
+    "OT_WFCSS_TXD_ADJ=3",
+    "DSFD_WFC_SS_HARD"
+   ]
+  },
+  {
+   "case": "hard_txd_m3_p202",
+   "expect": "pass",
+   "got": "pass",
+   "verdict": "OK",
+   "result": "WFC_SS PASS jobs=40 starts=40 period=202 rx_tx_min=229 rx_tx_max=230 done_tx_min=50 done_tx_max=50 hdr_period=202.03",
+   "params": {
+    "P": 202
+   },
+   "defines": [
+    "OT_WFCSS_TXD_ADJ=3",
+    "DSFD_WFC_SS_HARD"
+   ]
+  },
+  {
+   "case": "hard_txd_m3_p203",
+   "expect": "pass",
+   "got": "pass",
+   "verdict": "OK",
+   "result": "WFC_SS PASS jobs=40 starts=40 period=203 rx_tx_min=229 rx_tx_max=230 done_tx_min=50 done_tx_max=51 hdr_period=203.03",
+   "params": {
+    "P": 203
+   },
+   "defines": [
+    "OT_WFCSS_TXD_ADJ=3",
+    "DSFD_WFC_SS_HARD"
+   ]
+  },
+  {
+   "case": "hard_txd_m3_p204",
+   "expect": "pass",
+   "got": "pass",
+   "verdict": "OK",
+   "result": "WFC_SS PASS jobs=40 starts=40 period=204 rx_tx_min=229 rx_tx_max=229 done_tx_min=50 done_tx_max=50 hdr_period=204.00",
+   "params": {
+    "P": 204
+   },
+   "defines": [
+    "OT_WFCSS_TXD_ADJ=3",
+    "DSFD_WFC_SS_HARD"
+   ]
+  },
+  {
+   "case": "hard_neg_swap",
+   "expect": "fail",
+   "got": "fail",
+   "verdict": "OK",
+   "result": "WFC_SS FAIL: outbound word 0 of job 0",
+   "params": {
+    "P": 201
+   },
+   "defines": [
+    "OT_WFCSS_MUT_SWAP",
+    "DSFD_WFC_SS_HARD"
+   ]
+  },
+  {
+   "case": "hard_neg_txearly",
+   "expect": "fail",
+   "got": "fail",
+   "verdict": "OK",
+   "result": "WFC_SS FAIL: outbound word 33 of job 0",
+   "params": {
+    "P": 201
+   },
+   "defines": [
+    "OT_WFCSS_MUT_TXEARLY",
+    "DSFD_WFC_SS_HARD"
+   ]
+  },
+  {
+   "case": "hard_neg_ph1",
+   "expect": "fail",
+   "got": "fail",
+   "verdict": "OK",
+   "result": "WFC_SS FAIL: fault t_ft=0001 (proto lnk - vmx) at cycle 36, 0 out",
+   "params": {
+    "P": 201
+   },
+   "defines": [
+    "OT_WFCSS_MUT_PH1",
+    "DSFD_WFC_SS_HARD"
+   ]
+  },
+  {
+   "case": "hard_neg_upos",
+   "expect": "fail",
+   "got": "fail",
+   "verdict": "OK",
+   "result": "WFC_SS FAIL: fault t_ft=1000 (proto lnk - vmx) at cycle 226, 0 out",
+   "params": {
+    "P": 201
+   },
+   "defines": [
+    "OT_WFCSS_MUT_UPOS",
+    "DSFD_WFC_SS_HARD"
+   ]
+  },
+  {
+   "case": "hard_neg_gap0",
+   "expect": "fail",
+   "got": "fail",
+   "verdict": "OK",
+   "result": "WFC_SS FAIL: RX word 39 of (p0, t115265) not in the VM at start (write / start order)",
+   "params": {
+    "P": 201
+   },
+   "defines": [
+    "OT_WFCSS_MUT_GAP0",
+    "DSFD_WFC_SS_HARD"
+   ]
+  },
+  {
+   "case": "hard_neg_rlat",
+   "expect": "fail",
+   "got": "fail",
+   "verdict": "OK",
+   "result": "WFC_SS FAIL: fault t_ft=0001 (proto lnk - vmx) at cycle 231, 0 out",
+   "params": {
+    "P": 201
+   },
+   "defines": [
+    "OT_WFCSS_MUT_RLAT",
+    "DSFD_WFC_SS_HARD"
+   ]
+  },
+  {
+   "case": "hard_neg_badpos",
+   "expect": "fault",
+   "got": "fault",
+   "verdict": "OK",
+   "result": "WFC_SS FAULT_AS_EXPECTED ft=1000 at job 4",
+   "params": {
+    "P": 201,
+    "BADPOS": 5,
+    "EXPECT_FAULT": 1
+   },
+   "defines": [
+    "DSFD_WFC_SS_HARD"
+   ]
+  },
+  {
+   "case": "hard_neg_war_cal",
+   "expect": "fault",
+   "got": "fault",
+   "verdict": "OK",
+   "result": "WFC_SS FAULT_AS_EXPECTED ft=0001 at job 1",
+   "params": {
+    "P": 174,
+    "EXPECT_FAULT": 1
+   },
+   "defines": [
+    "DSFD_WFC_SS_HARD"
+   ]
+  },
+  {
+   "case": "hard_neg_run_cal",
+   "expect": "fault",
+   "got": "fault",
+   "verdict": "OK",
+   "result": "WFC_SS FAULT_AS_EXPECTED ft=0001 at job 0",
+   "params": {
+    "P": 150,
+    "EXPECT_FAULT": 1
+   },
+   "defines": [
+    "DSFD_WFC_SS_HARD"
+   ]
+  },
+  {
+   "case": "hard_user865",
+   "expect": "pass",
+   "got": "pass",
+   "verdict": "OK",
+   "result": "WFC_SS PASS jobs=40 starts=40 period=201 rx_tx_min=232 rx_tx_max=233 done_tx_min=53 done_tx_max=54 hdr_period=201.03",
+   "params": {
+    "P": 201,
+    "USER_BASE": 865,
+    "NUSR": 1
+   },
+   "defines": [
+    "DSFD_WFC_SS_HARD"
+   ]
+  },
+  {
+   "case": "hard_neg_user866",
+   "expect": "fault",
+   "got": "fault",
+   "verdict": "OK",
+   "result": "WFC_SS FAULT_AS_EXPECTED ft=1000 at job 0",
+   "params": {
+    "P": 201,
+    "USER_BASE": 866,
+    "NUSR": 1,
+    "EXPECT_FAULT": 1
+   },
+   "defines": [
+    "DSFD_WFC_SS_HARD"
+   ]
+  }
+ ]
+}
