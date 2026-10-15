@@ -19,5 +19,5 @@ iverilog -g2012 -s tb_hbm_svc_static_vm_delivery -o "$out/vm.vvp" "$mem" "$out/a
 vvp "$out/vm.vvp" > "$out/vm.log" 2>&1 || { cat "$out/vm.log"; exit 1; }
 cat "$out/vm.log"; grep -q 'STATIC_VM_DELIVERY PASS' "$out/vm.log"
 iverilog -g2012 -s tb_hbm_svc_vmdel_split_equiv -Ptb_hbm_svc_vmdel_split_equiv.CYCLES=$cyc -o "$out/eq.vvp" "$mem" $d/ot_hbm_svc_static_landing.sv $d/ot_hbm_svc_static_vm_delivery.sv "$out/split.sv" $d/split/tb_hbm_svc_vmdel_split_equiv.sv
-for s in 11 23; do vvp "$out/eq.vvp" +seed=$s > "$out/eq$s.log" 2>&1 || { tail -3 "$out/eq$s.log"; exit 1; }; tail -1 "$out/eq$s.log"; grep -q 'SPLIT_EQUIV PASS' "$out/eq$s.log"; done
+for s in 11 23; do vvp "$out/eq.vvp" +seed=$s > "$out/eq$s.log" 2>&1 || { tail -3 "$out/eq$s.log"; exit 1; }; cat "$out/eq$s.log"; grep -q 'SPLIT_EQUIV PASS' "$out/eq$s.log"; done
 echo "DELIVERY_SPLIT_BENCH PASS mut=$mut"
