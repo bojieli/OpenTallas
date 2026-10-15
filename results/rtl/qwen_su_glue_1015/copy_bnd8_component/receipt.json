@@ -1,0 +1,35 @@
+{
+  "schema": "opentallas.qwen-su-copy-bnd8-gate.v1",
+  "host": "ot-agidock128",
+  "unit": "oth-ubuntu-3900358-1792059342",
+  "outer_exit": 0,
+  "formal": "actual new function text extracted fromDUT and actual old25bit expression extracted fromDUT; SAT proves all2^31 base/count combinations equivalent",
+  "words": 12288,
+  "replays": 3,
+  "reset_fault_equivalence_cycles": 700,
+  "actual_source_mutants": [
+    "AND->OR highbound formalproofFAIL",
+    "DATA_MUT1fail",
+    "LATENCY_MUT1fail",
+    "posedge->negedgeFAIL"
+  ],
+  "cycles_added": 0,
+  "state_bits_added": 0,
+  "sources": {
+    "rtl/physical/ot_qfd_su_copy_core_bnd8.sv": "fd64b1ba11bb8e0187fcb396eee946b7b6ae24e9d1f473d173a72ba48e7bf00a",
+    "rtl/physical/ot_qfd_su_copy_core.sv": "ccad42b9b2f866964eea4f14f13ba610b8f7988e5fc19a0ce7d695446047768e",
+    "rtl/physical/qfd_su_static_copy_entries.sv": "4e3c0615f6cd3b2ad0c3ea940ff78f72baca749f10a73cc840a11d809d9b8736",
+    "tools/qwen_su_glue_1015/copy_bnd8_gate.sh": "ce223101aa47a82363760b5406063869ffc3c609e3020de8c828dfc0dc2a8190",
+    "rtl/test/qwen_su_glue_1015/tb_qfd_su_copy_entries.sv": "ce34824b52038d5775818318fb4563f14736a6f510fed218d3e5aafed9fb152b",
+    "rtl/test/qwen_su_glue_1015/tb_copy_reset.sv": "734a991fb14c77137180c04680d63ce3dde71200d92e7454a2414461d41f84b1"
+  },
+  "logs": {
+    "formal_actual.log": "b1246f964d93143b34146ed366ef5b6f03c97c6c5e063d50e958fa9dc487198a",
+    "tb_copy_reset.log": "fad9bef6f0e4276d3c99e98c5255dacc465c0cc79821113919b2cc867f6750f5",
+    "latency.log": "c17342b895cc9ee807dc7ca8511f80333a899bc27c70245c3b1d10f14ec29aff",
+    "formal_mut.log": "77a539c6abfcfa1f2b0d3e75d11625213ce6139b2ddddf2643d6d0e9212c439b",
+    "clock.log": "3d7f039b640aa2c2e533e832ddcc1dd3d5abd123ad7f7a45daf5bf84e4c1b76e",
+    "data.log": "9bf69031675118d1f427ccf65aa9539fd6f898ec428ea73a429f2283f64b9fd6",
+    "tb_qfd_su_copy_entries.log": "107b5c10d04cdfa1ccaf9a74649ca1e48b51c10937a5e778b02779cb8e4e0764"
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "schema": "opentallas.qwen-su-cut-route.v1",
+  "host": "ot-epyc4",
+  "remote": "/srv/opentallas-scratch/codex/su-align-hold-route-v1/routes/qsu_align_mc6_hold",
+  "unit": "1683734",
+  "flow_rc": 0,
+  "corner_rc": 0,
+  "setup_tt_ps": 208.51,
+  "setup_ss_sensitivity_ps": 99.55,
+  "hold_ff_ps": 13.96,
+  "drc": 0,
+  "threshold15_pass": false,
+  "threshold0_pass": true,
+  "scope": "actual leaf route only; parent phase/RC, fullclock/fullSU throughput remain unqualified"
+}

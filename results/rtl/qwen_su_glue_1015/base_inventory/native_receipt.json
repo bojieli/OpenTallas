@@ -1,0 +1,41 @@
+{
+  "schema": "opentallas.qwen-su-residual-current.v1",
+  "source_batch": "63d070372",
+  "outer_parent": "96f30a6a0",
+  "inner_parent": "c6c44c12c",
+  "host": "ot-agidock128",
+  "unit": "oth-ubuntu-3894369-1792058995",
+  "outer_exit": 0,
+  "json_sha256": "5ec62a5b50578e5ca09d4cc431805430a3cd22c2fcdc757d15d3d3c0a9241db7",
+  "remote_json": "/srv/opentallas-scratch/codex/su-glue-1015/base_inventory/base_native_current.json",
+  "method": "Yosys hierarchy exact native child blackboxes; proc/flatten/opt/techmap/opt, no area/routing substitution",
+  "sequential_bits": 13305,
+  "ff_types": {
+    "$_DFFE_PP_": 576,
+    "$_DFF_PN0_": 370,
+    "$_DFFE_PN0P_": 79,
+    "$_DFF_P_": 12243,
+    "$_SDFFE_PP0P_": 36,
+    "$_DFF_PN1_": 1
+  },
+  "clock_roots": {
+    "[2]": 13305
+  },
+  "base_clock_port_bits": [
+    2
+  ],
+  "copy_clock_port_bits": [
+    4
+  ],
+  "leaf_instances": {
+    "ot_qfd_su_copy_core": 1,
+    "ot_qfd_su_align_group4": 16,
+    "ot_qfd_su_lane_relay_native": 64,
+    "ot_hdc_vstream_lane_clock_entries_candidate": 64,
+    "qfd_su_vred_entries64": 1
+  },
+  "all_top_ports_bits": 26962,
+  "cell_count": 99648,
+  "scope": "residual base metadata sizing only; child hardware excluded only at actual source module boundaries; no actual base hard view or root wire/clock/area qualification",
+  "caveat": "ordinary optimization may merge identical broadcast groups; physical fanout/replication and route remain required"
+}

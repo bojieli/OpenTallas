@@ -1,0 +1,189 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2025  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.52 (git sha1 fee39a3284c90249e1d9684cf6944ffbbcbb8f90)
+
+-- Running command `read_verilog -sv /srv/opentallas-scratch/codex/su-glue-1015/copy_bnd8_actual_evidence/formal_actual.sv; prep -top copy_bounds_formal; sat -verify -prove equal 1 -show-inputs' --
+
+1. Executing Verilog-2005 frontend: /srv/opentallas-scratch/codex/su-glue-1015/copy_bnd8_actual_evidence/formal_actual.sv
+Parsing SystemVerilog input from `/srv/opentallas-scratch/codex/su-glue-1015/copy_bnd8_actual_evidence/formal_actual.sv' to AST representation.
+Generating RTLIL representation for module `\copy_bounds_formal'.
+Successfully finished Verilog frontend.
+
+2. Executing PREP pass.
+
+2.1. Executing HIERARCHY pass (managing design hierarchy).
+
+2.1.1. Analyzing design hierarchy..
+Top module:  \copy_bounds_formal
+
+2.1.2. Analyzing design hierarchy..
+Top module:  \copy_bounds_formal
+Removed 0 unused modules.
+
+2.2. Executing PROC pass (convert processes to netlists).
+
+2.2.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+2.2.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Removed a total of 0 dead cases.
+
+2.2.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 0 redundant assignments.
+Promoted 5 assignments to connections.
+
+2.2.4. Executing PROC_INIT pass (extract init attributes).
+
+2.2.5. Executing PROC_ARST pass (detect async resets in processes).
+
+2.2.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+
+2.2.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `\copy_bounds_formal.$proc$/srv/opentallas-scratch/codex/su-glue-1015/copy_bnd8_actual_evidence/formal_actual.sv:0$7'.
+
+2.2.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+No latch inferred for signal `\copy_bounds_formal.\bounds_bad$func$/srv/opentallas-scratch/codex/su-glue-1015/copy_bnd8_actual_evidence/formal_actual.sv:10$1.$result' from process `\copy_bounds_formal.$proc$/srv/opentallas-scratch/codex/su-glue-1015/copy_bnd8_actual_evidence/formal_actual.sv:0$7'.
+No latch inferred for signal `\copy_bounds_formal.\bounds_bad$func$/srv/opentallas-scratch/codex/su-glue-1015/copy_bnd8_actual_evidence/formal_actual.sv:10$2.$result' from process `\copy_bounds_formal.$proc$/srv/opentallas-scratch/codex/su-glue-1015/copy_bnd8_actual_evidence/formal_actual.sv:0$7'.
+No latch inferred for signal `\copy_bounds_formal.\bounds_bad$func$/srv/opentallas-scratch/codex/su-glue-1015/copy_bnd8_actual_evidence/formal_actual.sv:10$2.base' from process `\copy_bounds_formal.$proc$/srv/opentallas-scratch/codex/su-glue-1015/copy_bnd8_actual_evidence/formal_actual.sv:0$7'.
+No latch inferred for signal `\copy_bounds_formal.\bounds_bad$func$/srv/opentallas-scratch/codex/su-glue-1015/copy_bnd8_actual_evidence/formal_actual.sv:10$2.count' from process `\copy_bounds_formal.$proc$/srv/opentallas-scratch/codex/su-glue-1015/copy_bnd8_actual_evidence/formal_actual.sv:0$7'.
+No latch inferred for signal `\copy_bounds_formal.\bounds_bad$func$/srv/opentallas-scratch/codex/su-glue-1015/copy_bnd8_actual_evidence/formal_actual.sv:10$2.low_sum' from process `\copy_bounds_formal.$proc$/srv/opentallas-scratch/codex/su-glue-1015/copy_bnd8_actual_evidence/formal_actual.sv:0$7'.
+
+2.2.9. Executing PROC_DFF pass (convert process syncs to FFs).
+
+2.2.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+2.2.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Removing empty process `copy_bounds_formal.$proc$/srv/opentallas-scratch/codex/su-glue-1015/copy_bnd8_actual_evidence/formal_actual.sv:0$7'.
+Cleaned up 0 empty switches.
+
+2.2.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module copy_bounds_formal.
+<suppressed ~1 debug messages>
+
+2.3. Executing FUTURE pass.
+
+2.4. Executing OPT_EXPR pass (perform const folding).
+Optimizing module copy_bounds_formal.
+
+2.5. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \copy_bounds_formal..
+Removed 0 unused cells and 10 unused wires.
+<suppressed ~1 debug messages>
+
+2.6. Executing CHECK pass (checking for obvious problems).
+Checking module copy_bounds_formal...
+Found and reported 0 problems.
+
+2.7. Executing OPT pass (performing simple optimizations).
+
+2.7.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module copy_bounds_formal.
+
+2.7.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\copy_bounds_formal'.
+Removed a total of 0 cells.
+
+2.7.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \copy_bounds_formal..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Removed 0 multiplexer ports.
+
+2.7.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \copy_bounds_formal.
+Performed a total of 0 changes.
+
+2.7.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\copy_bounds_formal'.
+Removed a total of 0 cells.
+
+2.7.6. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \copy_bounds_formal..
+
+2.7.7. Executing OPT_EXPR pass (perform const folding).
+Optimizing module copy_bounds_formal.
+
+2.7.8. Finished OPT passes. (There is nothing left to do.)
+
+2.8. Executing WREDUCE pass (reducing word size of cells).
+Removed top 1 bits (of 25) from port A of cell copy_bounds_formal.$add$/srv/opentallas-scratch/codex/su-glue-1015/copy_bnd8_actual_evidence/formal_actual.sv:9$4 ($add).
+Removed top 12 bits (of 25) from port B of cell copy_bounds_formal.$add$/srv/opentallas-scratch/codex/su-glue-1015/copy_bnd8_actual_evidence/formal_actual.sv:9$4 ($add).
+Removed top 1 bits (of 8) from port A of cell copy_bounds_formal.$add$/srv/opentallas-scratch/codex/su-glue-1015/copy_bnd8_actual_evidence/formal_actual.sv:5$13 ($add).
+Removed top 1 bits (of 8) from port B of cell copy_bounds_formal.$add$/srv/opentallas-scratch/codex/su-glue-1015/copy_bnd8_actual_evidence/formal_actual.sv:5$13 ($add).
+
+2.9. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \copy_bounds_formal..
+
+2.10. Executing MEMORY_COLLECT pass (generating $mem cells).
+
+2.11. Executing OPT pass (performing simple optimizations).
+
+2.11.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module copy_bounds_formal.
+
+2.11.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\copy_bounds_formal'.
+Removed a total of 0 cells.
+
+2.11.3. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \copy_bounds_formal..
+
+2.11.4. Finished fast OPT passes.
+
+2.12. Printing statistics.
+
+=== copy_bounds_formal ===
+
+   Number of wires:                 15
+   Number of wire bits:            111
+   Number of public wires:           8
+   Number of public wire bits:      73
+   Number of ports:                  3
+   Number of port bits:             32
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                 10
+     $add                            2
+     $eq                             1
+     $gt                             1
+     $logic_and                      2
+     $logic_or                       1
+     $reduce_and                     1
+     $reduce_or                      2
+
+2.13. Executing CHECK pass (checking for obvious problems).
+Checking module copy_bounds_formal...
+Found and reported 0 problems.
+
+3. Executing SAT pass (solving SAT problems in the circuit).
+
+Setting up SAT problem:
+Final constraint equation: { } = { }
+Imported 10 cells to SAT database.
+Import proof-constraint: \equal = 1'1
+Final proof equation: \equal = 1'1
+Import show expression: \base
+Import show expression: \count
+
+Solving problem with 547 variables and 1482 clauses..
+SAT proof finished - no model found: SUCCESS!
+
+                  /$$$$$$      /$$$$$$$$     /$$$$$$$    
+                 /$$__  $$    | $$_____/    | $$__  $$   
+                | $$  \ $$    | $$          | $$  \ $$   
+                | $$  | $$    | $$$$$       | $$  | $$   
+                | $$  | $$    | $$__/       | $$  | $$   
+                | $$/$$ $$    | $$          | $$  | $$   
+                |  $$$$$$/ /$$| $$$$$$$$ /$$| $$$$$$$//$$
+                 \____ $$$|__/|________/|__/|_______/|__/
+                       \__/                              
+
+End of script. Logfile hash: b61185b917, CPU: user 0.02s system 0.01s, MEM: 13.16 MB peak
+Yosys 0.52 (git sha1 fee39a3284c90249e1d9684cf6944ffbbcbb8f90)
+Time spent: 26% 5x opt_expr (0 sec), 22% 1x sat (0 sec), ...

@@ -1,0 +1,15 @@
+{
+  "schema": "opentallas.qwen-su-cut-route.v1",
+  "host": "ot-epyc4",
+  "remote": "/srv/opentallas-scratch/codex/su-copy-route-v1/routes/qsu_copy_core",
+  "unit": "1656816",
+  "flow_rc": 0,
+  "corner_rc": 0,
+  "setup_tt_ps": 10.99,
+  "setup_ss_sensitivity_ps": -200.42,
+  "hold_ff_ps": 26.29,
+  "drc": 0,
+  "threshold15_pass": false,
+  "threshold0_pass": true,
+  "scope": "actual leaf route only; parent phase/RC, fullclock/fullSU throughput remain unqualified"
+}

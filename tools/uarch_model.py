@@ -313,6 +313,47 @@ def qwen_su_endpoint_accept_model(os_stages=1):
         qualification="minimum real embedding-prefetch/vstream-control gate, lane arithmetic isolated; full controller integration and physical route gates pending")
 
 
+def qwen_su_actual_glue_partition_model(cbuf_edges=5, align_hold=False):
+    """Actual c6/96f SU state cuts; clock/RC joins remain unqualified.
+
+    Source and gate receipts: results/arch/qwen_su_glue_1015 and
+    results/rtl/qwen_su_glue_1015. Existing registers only; no added edge.
+    """
+    if cbuf_edges not in (5, 8):
+        raise ValueError("source-pinned native CROM response is5 or8 edges")
+    mc = cbuf_edges + 1
+    align_ff = 384 * (15 - 14) + 256 * (15 - mc) + 132 * 15 + 12 * 15 + 384
+    align_area = 2366 if align_hold else (1871 if mc == 6 else 1613)
+    if align_hold and mc != 6:
+        raise ValueError("explicit4848HB4 candidate is measured forMC6 only")
+    return dict(schema="opentallas.qwen-su-actual-glue-partition.v1",
+        source_parent="c6c44c12c", status_parent="96f30a6a0",
+        parameters=dict(SW=64, AW=24, NW=18, WR=16, RD=2, VL=14, ML=15,
+                        MC=mc, RTREE=0, EXTERNAL_EMBED=1),
+        added_cycles=0, macs_per_cycle_added=0, memory_bytes_per_cycle_added=0,
+        historical_clock_roots=346, current_clock_roots=347,
+        clock_entries="existing64 relay+16alignment+base, plus realcopycore entry; arithmetic roots unchanged",
+        relay=dict(replicas=64, register_bits_each=1621, synth_area_um2_each=587,
+                   boundary_bits_per_cycle_each=2124, outline_um=[71.28,71.28],
+                   reset="original parent wire retained; no reset output port in canonical hardleaf"),
+        alignment=dict(replicas=16, register_bits_each=align_ff,
+                       synth_area_um2_each=align_area, boundary_bits_per_cycle_each=1556,
+                       kept_hold_cells_each=4848 if align_hold else 0,
+                       outline_um=[97.2,97.2] if align_hold else [71.28,71.28]),
+        copy=dict(replicas=1, register_bits=2572, synth_area_um2=1396,
+                  boundary_bits_per_cycle=4206, outline_um=[133.92,133.92],
+                  exact_replay_words=12288, response_plus_copy_edges=16,
+                  complete_after_start_edges=82),
+        base=dict(replicas=1, register_bits_metadata_predicted=13305,
+                  offset_adders=256, offset_adder_bits=24,
+                  area_qualification="residual actual base unpriced pending real cut/route; never zero-area"),
+        mux_demux="native hold muxes, copy reservation mux and packaging preserved; no new FIFO/ready/credit",
+        fanout="256 original AW24 offsetadders and eight broadcast groups stay actual parent source",
+        routing_capacity="real fourface M4/M5 pin fits; parent channels/RC/phi-R still required",
+        latency_composition="same existing RD2, ML15, IS1, OS1, copy15+1; separate clock entry adds no sampled edge",
+        qualification="component source/reset/mutation gates and partial leaf routes only; no fullSU/wholelayer credit")
+
+
 def dsrom_engram_lead_model(users=64):
     """Released tokenizer map and lead-window path, priced before implementation."""
     return dict(schema='opentallas.engram-lead-model.v1', opt_in_default=False,

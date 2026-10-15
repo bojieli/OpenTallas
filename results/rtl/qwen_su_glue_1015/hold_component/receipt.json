@@ -15,11 +15,12 @@
     "rtl/physical/ot_qfd_su_delay_hold.sv": "1e6209731ad16bbfad4bb9522df3fb89fea08478b664a8144248f9962b22277b",
     "rtl/physical/ot_qfd_su_align_group4_hold.sv": "59a8728ada3e8210bdd41f5176f47aa7bf016171b73b2164388fc01cb41c12d5",
     "tools/qwen_su_glue_1015/hold_gate.sh": "371b36e388841ddd039a6e19de4338fa567becca1fbb1d6bf8ff34eafb2744ed",
-    "rtl/test/qwen_su_glue_1015/tb_su_glue.sv": "6535372ffcef37c3c95ea96a5e4bf143db0fbb987e4a564da5036fa85960e647"
+    "rtl/test/qwen_su_glue_1015/tb_su_glue.sv": "77042dd9bd909d28a93a62cc0ccd17f994f65f0bf9196d6bb4e3d2f9d3373ca4"
   },
   "log_sha256": {
     "hold9.log": "42ab0443990388a2ef0fbead7e384264169c6ac070b87f87557e3ed3c5e6ec8d",
     "hold6.log": "fbc6b6d1639f5f542173fadf96493d98d715f67583713a3f4c6bd4360f0f3c11",
     "hold_mut.log": "2259948a072960c2defaaa7cb8cf27cde51bac902c8ed350d8a52f7c818406f6"
-  }
+  },
+  "bench_source_revision": "eb122a946"
 }

@@ -1,0 +1,24 @@
+{
+  "schema": "opentallas.qwen-su-copy-guard-prebuild.v1",
+  "reason": "actual copy leafTT+10.99ps cp[52]->dst[21] misses15ps margin",
+  "replicas": 1,
+  "macs_per_cycle": 0,
+  "memory_bytes_per_cycle_added": 0,
+  "register_bits": 2572,
+  "added_state_bits": 0,
+  "added_cycles": 0,
+  "boundary_bits_per_cycle": 4206,
+  "change": "exact address bounds: split base24 into high11, low7 groups of64, and remainder6; add7-bit groups to7-bit beats in8bits. Invalid iff high11allones and carry and nonzero lower/remainder.",
+  "guard_adders": 2,
+  "guard_adder_bits": 8,
+  "high_and_inputs_each": 11,
+  "fanout_mux": "existing two bound flags feed original issuing/state enables; no protocol change",
+  "area": "actual baseline1396um2; faster guard candidate syntharea pending",
+  "outline_um": [
+    133.92,
+    133.92
+  ],
+  "routing": "same four-face512-bit slices; no new pins or tracks",
+  "latency": "all original clockedstate andcopy15+1 schedule retained",
+  "qualification": "requires exhaustive combinational SAT vs original25-bit comparison, full raw/reset/source gates, actual route"
+}
