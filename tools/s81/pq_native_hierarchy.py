@@ -7,7 +7,7 @@ root=Path(__file__).resolve().parents[2]
 sources=[x for x in (root/'physical/s81_pq_hier/pinned').rglob('*.sv') if x.name!='ot_sram_1r1w_128x256_m1_r2c2.sv']
 sources+=list((root/'rtl/dsrom_sys/s81_ph/pq').glob('*.sv'))
 sources+=[root/x for x in ['rtl/dsrom_sys/s81_die_bind/dsfd_sp_pq_n.sv','rtl/dsrom_sys/s81_die_bind/dsfd_sp_pq_produced.sv','rtl/dsrom_sys/s81_static_control/ot_s81_pq_command_endpoint.sv','rtl/dsrom_sys/s81_static_control/ot_s81_pq_calendar_reader.sv','rtl/dsrom_sys/s81_static_control/ot_s81_pq_calendar_rom.sv','physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v','physical/asap7_memory_macros_v2/ot_rom_4096x72_m8/ot_rom_4096x72_m8.v']]
-defines=['OT_PQ_ROM_PORTS','OT_PQ_CTL_STATIC','OT_PQ_QB_PIPE','OT_PQ_QB_PHYS_SPLIT','OT_PQ_AQ_PHYS_SPLIT','OT_PQ_IX_PHYS_SPLIT','OT_PQ_IX_BANK_SPLIT','OT_PQ_BC_SLICED','DSFD_PQ_STATIC_X2','OT_PQ_CTL_STATE_PINS']
+defines=['OT_PQ_ROM_PORTS','OT_PQ_CTL_STATIC','OT_PQ_QB_PIPE','OT_PQ_QB_PHYS_SPLIT','OT_PQ_AQ_PHYS_SPLIT','OT_PQ_IX_PHYS_SPLIT','OT_PQ_IX_BANK_SPLIT','OT_PQ_BC_SLICED','DSFD_PQ_STATIC_X2','OT_PQ_CTL_STATE_PINS','OT_PQ_CTL_INCAP','OT_PQ_AQ_PIN_LAUNCH']
 xml=(a.out/'hierarchy.xml').resolve();tool=os.environ.get('OT_XML_VERILATOR','/usr/bin/verilator')
 cmd=[tool,'--xml-only','--timing','--top-module','dsfd_sp_pq_produced','--xml-output',str(xml),'--Mdir',str((a.out/'obj').resolve()),'-Wno-fatal','-Wno-lint','-Wno-style',*[f'+define+{d}'for d in defines],*[str(x)for x in sources]]
 with(a.out/'elaborate.log').open('w')as log:subprocess.run(cmd,stdout=log,stderr=subprocess.STDOUT,check=True)
