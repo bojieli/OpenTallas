@@ -188,7 +188,7 @@ def main():
         m = RES.search(txt)
         ok = run.returncode == 0 and bool(m) and any(l.strip() == "PASS" for l in txt.splitlines())
         g = m.groups() if m else None
-        span = (prog[-1]["last_out"] - prog[0]["first_slot"] + 1)
+        span = (max(p["last_out"] for p in prog) - prog[0]["first_slot"] + 1)
         print(f"case {name} kind={kind} latu={a.latu} lats={a.lats} xu={a.xu} xs={a.xs} mutant={a.mutant_define or '-'} "
               f"{'PASS' if ok else 'FAIL'} " + (f"mismatches={g[0]} extra={g[1]} out_err={g[2]} fault={g[3]} code={g[4]} "
               f"words_out={g[5]} compiled_span={span}" if g else "no result: " + txt.strip()[-300:]), flush=True)
