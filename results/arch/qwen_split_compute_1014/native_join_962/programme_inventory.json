@@ -1,0 +1,110 @@
+{
+  "schema": "opentallas.qwen.native_programme_source_inventory.v1",
+  "native_qualified": false,
+  "scope": "Source-word inventory only. Historical whole-token audit supplies programme hashes/counts; component and RTL-FP evidence does not establish installed native programmes.",
+  "audit_artifact_sha256": "67854939b1a7790c3fd9ea0015f86f244b741ded7f9003b681483c03b6cf0fd0",
+  "counts": {
+    "embedding": {
+      "programs": 1,
+      "words": 2,
+      "ME": 0,
+      "SU": 1,
+      "END": 1
+    },
+    "decoder": {
+      "programs": 288,
+      "words": 7200,
+      "ME": 1440,
+      "SU": 4896,
+      "END": 864
+    },
+    "head": {
+      "programs": 8,
+      "words": 64,
+      "ME": 32,
+      "SU": 24,
+      "END": 8
+    }
+  },
+  "unique_program_sha256": {
+    "embedding": [
+      "37033bec53b5c33bdd5674d8451d1250ca5275ba6190619d775bebcfde69e8d0"
+    ],
+    "decoder": [
+      "cc5bc8fc17d4068ac9a49e8bf79f34e74350d56d114dd7fe5cde433d2ac82796"
+    ],
+    "head": [
+      "08c4c30c2c41cc3473280e33bf84dba3c0bca9180a21f233aad4682b5558a6a9"
+    ]
+  },
+  "decoder_me": [
+    {
+      "pc": 1,
+      "me_nout": 768,
+      "me_tiles": 1,
+      "me_k": 8,
+      "me_wsrc": 0,
+      "me_round": 1,
+      "me_split": 9
+    },
+    {
+      "pc": 11,
+      "me_nout": 512,
+      "me_tiles": 1,
+      "me_k": 128,
+      "me_wsrc": 1,
+      "me_round": 0,
+      "me_split": 0
+    },
+    {
+      "pc": 12,
+      "me_nout": 4096,
+      "me_tiles": 3,
+      "me_k": 2,
+      "me_wsrc": 0,
+      "me_round": 1,
+      "me_split": 8
+    },
+    {
+      "pc": 16,
+      "me_nout": 3072,
+      "me_tiles": 1,
+      "me_k": 32,
+      "me_wsrc": 0,
+      "me_round": 1,
+      "me_split": 7
+    },
+    {
+      "pc": 20,
+      "me_nout": 4096,
+      "me_tiles": 3,
+      "me_k": 6,
+      "me_wsrc": 0,
+      "me_round": 1,
+      "me_split": 8
+    }
+  ],
+  "serializer_current": {
+    "source": "rtl/qwen_split/qfd_res_ser_static.sv",
+    "capture_spacing": 24,
+    "actual_controller_last_k_j_spacing": 1,
+    "actual_slots_per_train": 8,
+    "production_compatible": false,
+    "source_trains": "me_tiles trains, each IL=8 captures; train stride IL*me_k",
+    "required_evidence": "Actual controller/port composition bench and source-sensitized DUT mutation; structural successor required."
+  },
+  "tx_rnes": {
+    "source_commit": "adb8fc7ae",
+    "new_pipeline_edges": 3,
+    "previous_edges": 2,
+    "source_count_rom_macros_per_rank": 148,
+    "measured_token_delta": null,
+    "cost_status": "UNMEASURED: TX micro-path overlap/drains and all valid/tag alignments require actual programme composition"
+  },
+  "production_images": {
+    "source": "tools/qwen_static_schedule/dense_image.py",
+    "source_sha256": "27cad40bb7ef6ebb1c0800b372c27f21c0e1e5acdd49ad225a6b0592d7c17bdd",
+    "status": "REFUSE_WITHOUT_MEASURED_SEGMENT_PROFILE",
+    "kv_hbm_reservation_producer": "candidate work in progress; not provided by dense image alone"
+  }
+}

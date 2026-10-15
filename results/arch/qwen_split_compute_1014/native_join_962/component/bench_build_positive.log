@@ -1,0 +1,391 @@
+%Warning-PINMISSING: rtl/qwen_sys/missing_masters_20261007/ot_qfd_spine_masters.sv:135:83: Instance has missing pin: 'obs_active'
+  135 |     ot_hdc_vstream #(.SW(SW), .LV(LV), .WR(W), .AW(AW), .NW(NW), .KV_FP8(KV_FP8)) u_su (
+      |                                                                                   ^~~~
+                     rtl/hdc/ot_hdc_vstream.sv:109:30: ... Location of port declaration
+  109 |     output wire              obs_active,
+      |                              ^~~~~~~~~~
+                     ... For warning description see https://verilator.org/warn/PINMISSING?v=5.050
+                     ... Use "/* verilator lint_off PINMISSING */" and lint_on around source to disable this message.
+%Warning-PINMISSING: rtl/qwen_sys/missing_masters_20261007/ot_qfd_spine_masters.sv:135:83: Instance has missing pin: 'obs_inflight'
+  135 |     ot_hdc_vstream #(.SW(SW), .LV(LV), .WR(W), .AW(AW), .NW(NW), .KV_FP8(KV_FP8)) u_su (
+      |                                                                                   ^~~~
+                     rtl/hdc/ot_hdc_vstream.sv:110:30: ... Location of port declaration
+  110 |     output wire [7:0]        obs_inflight
+      |                              ^~~~~~~~~~~~
+%Warning-PINMISSING: rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_xtree.sv:230:124: Instance has missing pin: 'line_data'
+  230 |     ot_qfd_vm_xline_t #(.NRB(NRB), .SMIN(SMIN), .SMAX(SMAX), .BMAX(BMAX), .ND(ND), .DSET(DSET), .MEREG(MEREG), .MUT(LMUT)) u_l (
+      |                                                                                                                            ^~~
+                     rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_xtree.sv:69:40: ... Location of port declaration
+   69 |     output wire [(1<<SMAX)-1:0]        line_data,
+      |                                        ^~~~~~~~~
+%Warning-PINMISSING: rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_tree_top.sv:383:76: Instance has missing pin: 'b_pw'
+  383 |         .SCALE_LAT(SCALE_LAT), .IS(0), .OS(0), .LANDED(LANDED), .MUT(MUT)) u_tt (
+      |                                                                            ^~~~
+                     rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_tree_top.sv:84:31: ... Location of port declaration
+   84 |     input  wire [NB*W*32-1:0] b_pw,
+      |                               ^~~~
+%Warning-PINMISSING: rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_tree_top.sv:383:76: Instance has missing pin: 'b_pv'
+  383 |         .SCALE_LAT(SCALE_LAT), .IS(0), .OS(0), .LANDED(LANDED), .MUT(MUT)) u_tt (
+      |                                                                            ^~~~
+                     rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_tree_top.sv:85:30: ... Location of port declaration
+   85 |     input  wire [NB-1:0]     b_pv,
+      |                              ^~~~
+%Warning-PINMISSING: rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_tree_top.sv:383:76: Instance has missing pin: 'b_lf'
+  383 |         .SCALE_LAT(SCALE_LAT), .IS(0), .OS(0), .LANDED(LANDED), .MUT(MUT)) u_tt (
+      |                                                                            ^~~~
+                     rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_tree_top.sv:86:30: ... Location of port declaration
+   86 |     input  wire [NB-1:0]     b_lf,
+      |                              ^~~~
+%Warning-PINMISSING: rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_tree_top.sv:383:76: Instance has missing pin: 'tt_ty'
+  383 |         .SCALE_LAT(SCALE_LAT), .IS(0), .OS(0), .LANDED(LANDED), .MUT(MUT)) u_tt (
+      |                                                                            ^~~~
+                     rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_tree_top.sv:87:30: ... Location of port declaration
+   87 |     output wire [3*W*32-1:0] tt_ty,
+      |                              ^~~~~
+%Warning-PINMISSING: rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_tree_top.sv:383:76: Instance has missing pin: 'tt_use'
+  383 |         .SCALE_LAT(SCALE_LAT), .IS(0), .OS(0), .LANDED(LANDED), .MUT(MUT)) u_tt (
+      |                                                                            ^~~~
+                     rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_tree_top.sv:88:30: ... Location of port declaration
+   88 |     output wire              tt_use,
+      |                              ^~~~~~
+%Warning-PINMISSING: rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_tree_top.sv:383:76: Instance has missing pin: 'tt_v'
+  383 |         .SCALE_LAT(SCALE_LAT), .IS(0), .OS(0), .LANDED(LANDED), .MUT(MUT)) u_tt (
+      |                                                                            ^~~~
+                     rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_tree_top.sv:89:30: ... Location of port declaration
+   89 |     output wire              tt_v,
+      |                              ^~~~
+%Warning-PINMISSING: rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_tree_top.sv:438:61: Instance has missing pin: 'ck_mul'
+  438 |                 .TREE_LAT(TREE_LAT), .SCALE_LAT(SCALE_LAT)) u_pt (
+      |                                                             ^~~~
+                     rtl/hdc/ot_qwen_me_spine_h_w12.sv:1430:23: ... Location of port declaration
+ 1430 |     input wire [15:0] ck_mul,
+      |                       ^~~~~~
+%Warning-PINMISSING: rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_tree_top.sv:438:61: Instance has missing pin: 'o_ov'
+  438 |                 .TREE_LAT(TREE_LAT), .SCALE_LAT(SCALE_LAT)) u_pt (
+      |                                                             ^~~~
+                     rtl/hdc/ot_qwen_me_spine_h_w12.sv:1442:30: ... Location of port declaration
+ 1442 |     output reg               o_ov,           
+      |                              ^~~~
+%Warning-PINMISSING: rtl/qwen_split/qfd_embedding_stage_static.sv:114:58: Instance has missing pin: 'layer_context_v'
+  114 |     qfd_tt_ctlm_head_static #(.DENSE_IMAGE(1),.PSRAM(1)) u_me_control (
+      |                                                          ^~~~~~~~~~~~
+                     rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_split_static.sv:35:16: ... Location of port declaration
+   35 |     output reg layer_context_v,
+      |                ^~~~~~~~~~~~~~~
+%Warning-PINMISSING: rtl/qwen_split/qfd_embedding_stage_static.sv:114:58: Instance has missing pin: 'native_tok'
+  114 |     qfd_tt_ctlm_head_static #(.DENSE_IMAGE(1),.PSRAM(1)) u_me_control (
+      |                                                          ^~~~~~~~~~~~
+                     rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_split_static.sv:36:23: ... Location of port declaration
+   36 |     output reg [17:0] native_tok,native_pos,
+      |                       ^~~~~~~~~~
+%Warning-PINMISSING: rtl/qwen_split/qfd_embedding_stage_static.sv:114:58: Instance has missing pin: 'native_pos'
+  114 |     qfd_tt_ctlm_head_static #(.DENSE_IMAGE(1),.PSRAM(1)) u_me_control (
+      |                                                          ^~~~~~~~~~~~
+                     rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_split_static.sv:36:34: ... Location of port declaration
+   36 |     output reg [17:0] native_tok,native_pos,
+      |                                  ^~~~~~~~~~
+%Warning-PINMISSING: rtl/qwen_split/qfd_embedding_stage_static.sv:114:58: Instance has missing pin: 'me_clk_en'
+  114 |     qfd_tt_ctlm_head_static #(.DENSE_IMAGE(1),.PSRAM(1)) u_me_control (
+      |                                                          ^~~~~~~~~~~~
+                     rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_split_static.sv:57:18: ... Location of port declaration
+   57 |     output wire  me_clk_en,
+      |                  ^~~~~~~~~
+%Warning-PINMISSING: rtl/qwen_split/qfd_embedding_stage_static.sv:114:58: Instance has missing pin: 'kvd_v'
+  114 |     qfd_tt_ctlm_head_static #(.DENSE_IMAGE(1),.PSRAM(1)) u_me_control (
+      |                                                          ^~~~~~~~~~~~
+                     rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_split_static.sv:59:18: ... Location of port declaration
+   59 |     output wire  kvd_v,
+      |                  ^~~~~
+%Warning-PINMISSING: rtl/qwen_split/qfd_embedding_stage_static.sv:114:58: Instance has missing pin: 'kvd_wbase'
+  114 |     qfd_tt_ctlm_head_static #(.DENSE_IMAGE(1),.PSRAM(1)) u_me_control (
+      |                                                          ^~~~~~~~~~~~
+                     rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_split_static.sv:60:26: ... Location of port declaration
+   60 |     output wire [24-1:0] kvd_wbase,
+      |                          ^~~~~~~~~
+%Warning-PINMISSING: rtl/qwen_split/qfd_embedding_stage_static.sv:114:58: Instance has missing pin: 'kvd_ts'
+  114 |     qfd_tt_ctlm_head_static #(.DENSE_IMAGE(1),.PSRAM(1)) u_me_control (
+      |                                                          ^~~~~~~~~~~~
+                     rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_split_static.sv:61:26: ... Location of port declaration
+   61 |     output wire [24-1:0] kvd_ts,
+      |                          ^~~~~~
+%Warning-PINMISSING: rtl/qwen_split/qfd_embedding_stage_static.sv:114:58: Instance has missing pin: 'kvd_ks'
+  114 |     qfd_tt_ctlm_head_static #(.DENSE_IMAGE(1),.PSRAM(1)) u_me_control (
+      |                                                          ^~~~~~~~~~~~
+                     rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_split_static.sv:62:26: ... Location of port declaration
+   62 |     output wire [24-1:0] kvd_ks,
+      |                          ^~~~~~
+%Warning-PINMISSING: rtl/qwen_split/qfd_embedding_stage_static.sv:114:58: Instance has missing pin: 'kvd_js'
+  114 |     qfd_tt_ctlm_head_static #(.DENSE_IMAGE(1),.PSRAM(1)) u_me_control (
+      |                                                          ^~~~~~~~~~~~
+                     rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_split_static.sv:63:26: ... Location of port declaration
+   63 |     output wire [24-1:0] kvd_js,
+      |                          ^~~~~~
+%Warning-PINMISSING: rtl/qwen_split/qfd_embedding_stage_static.sv:114:58: Instance has missing pin: 'kvd_wcs'
+  114 |     qfd_tt_ctlm_head_static #(.DENSE_IMAGE(1),.PSRAM(1)) u_me_control (
+      |                                                          ^~~~~~~~~~~~
+                     rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_split_static.sv:64:26: ... Location of port declaration
+   64 |     output wire [24-1:0] kvd_wcs,
+      |                          ^~~~~~~
+%Warning-PINMISSING: rtl/qwen_split/qfd_embedding_stage_static.sv:114:58: Instance has missing pin: 'kvd_split'
+  114 |     qfd_tt_ctlm_head_static #(.DENSE_IMAGE(1),.PSRAM(1)) u_me_control (
+      |                                                          ^~~~~~~~~~~~
+                     rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_split_static.sv:65:23: ... Location of port declaration
+   65 |     output wire [3:0] kvd_split,
+      |                       ^~~~~~~~~
+%Warning-PINMISSING: rtl/qwen_split/qfd_embedding_stage_static.sv:114:58: Instance has missing pin: 'kvd_jsh'
+  114 |     qfd_tt_ctlm_head_static #(.DENSE_IMAGE(1),.PSRAM(1)) u_me_control (
+      |                                                          ^~~~~~~~~~~~
+                     rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_split_static.sv:66:23: ... Location of port declaration
+   66 |     output wire [2:0] kvd_jsh,
+      |                       ^~~~~~~
+%Warning-PINMISSING: rtl/qwen_split/qfd_embedding_stage_static.sv:114:58: Instance has missing pin: 'kvd_tiles'
+  114 |     qfd_tt_ctlm_head_static #(.DENSE_IMAGE(1),.PSRAM(1)) u_me_control (
+      |                                                          ^~~~~~~~~~~~
+                     rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_split_static.sv:67:26: ... Location of port declaration
+   67 |     output wire [18-1:0] kvd_tiles,
+      |                          ^~~~~~~~~
+%Warning-PINMISSING: rtl/qwen_split/qfd_embedding_stage_static.sv:114:58: Instance has missing pin: 'kvd_k'
+  114 |     qfd_tt_ctlm_head_static #(.DENSE_IMAGE(1),.PSRAM(1)) u_me_control (
+      |                                                          ^~~~~~~~~~~~
+                     rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_split_static.sv:68:26: ... Location of port declaration
+   68 |     output wire [18-1:0] kvd_k,
+      |                          ^~~~~
+%Warning-PINMISSING: rtl/qwen_split/qfd_embedding_stage_static.sv:114:58: Instance has missing pin: 'kvd_nout'
+  114 |     qfd_tt_ctlm_head_static #(.DENSE_IMAGE(1),.PSRAM(1)) u_me_control (
+      |                                                          ^~~~~~~~~~~~
+                     rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_split_static.sv:69:26: ... Location of port declaration
+   69 |     output wire [18-1:0] kvd_nout,
+      |                          ^~~~~~~~
+%Warning-PINMISSING: rtl/qwen_split/qfd_embedding_stage_static.sv:114:58: Instance has missing pin: 'kvd_kindk'
+  114 |     qfd_tt_ctlm_head_static #(.DENSE_IMAGE(1),.PSRAM(1)) u_me_control (
+      |                                                          ^~~~~~~~~~~~
+                     rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_split_static.sv:70:18: ... Location of port declaration
+   70 |     output wire  kvd_kindk,
+      |                  ^~~~~~~~~
+%Warning-PINMISSING: rtl/qwen_split/qfd_embedding_stage_static.sv:114:58: Instance has missing pin: 'kvd_pos'
+  114 |     qfd_tt_ctlm_head_static #(.DENSE_IMAGE(1),.PSRAM(1)) u_me_control (
+      |                                                          ^~~~~~~~~~~~
+                     rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_split_static.sv:71:26: ... Location of port declaration
+   71 |     output wire [18-1:0] kvd_pos,
+      |                          ^~~~~~~
+%Warning-PINMISSING: rtl/qwen_split/qfd_embedding_stage_static.sv:114:58: Instance has missing pin: 'me_observe'
+  114 |     qfd_tt_ctlm_head_static #(.DENSE_IMAGE(1),.PSRAM(1)) u_me_control (
+      |                                                          ^~~~~~~~~~~~
+                     rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_split_static.sv:73:23: ... Location of port declaration
+   73 |     output reg [15:0] me_observe,
+      |                       ^~~~~~~~~~
+%Warning-PINMISSING: rtl/physical/ot_qfd_tt_ctlm_split.sv:501:192: Instance has missing pin: 'm_fin_o'
+  501 |     qfd_tt_ctlm_head #(.DCU_M(DCU_M), .DUC_M(DUC_M), .XW(XW), .IS(IS), .OS(OS), .PSRAM(PSRAM), .PMUT(PMUT), .HQ2(HQ2), .MEREG(MEREG), .RRG(RRG), .PCUT(PCUT), .G(G), .TPMUT(TPMUT), .AUD(AUD)) u_shadow (
+      |                                                                                                                                                                                                ^~~~~~~~
+                     rtl/physical/ot_qfd_tt_ctlm_split.sv:50:18: ... Location of port declaration
+   50 |     output wire  m_fin_o,
+      |                  ^~~~~~~
+%Warning-PINMISSING: rtl/physical/ot_qfd_tt_ctlm_split.sv:501:192: Instance has missing pin: 'm_fidx_o'
+  501 |     qfd_tt_ctlm_head #(.DCU_M(DCU_M), .DUC_M(DUC_M), .XW(XW), .IS(IS), .OS(OS), .PSRAM(PSRAM), .PMUT(PMUT), .HQ2(HQ2), .MEREG(MEREG), .RRG(RRG), .PCUT(PCUT), .G(G), .TPMUT(TPMUT), .AUD(AUD)) u_shadow (
+      |                                                                                                                                                                                                ^~~~~~~~
+                     rtl/physical/ot_qfd_tt_ctlm_split.sv:51:26: ... Location of port declaration
+   51 |     output wire [18-1:0] m_fidx_o,
+      |                          ^~~~~~~~
+%Warning-PINMISSING: rtl/physical/ot_qfd_tt_ctlm_split.sv:501:192: Instance has missing pin: 'm_fval_o'
+  501 |     qfd_tt_ctlm_head #(.DCU_M(DCU_M), .DUC_M(DUC_M), .XW(XW), .IS(IS), .OS(OS), .PSRAM(PSRAM), .PMUT(PMUT), .HQ2(HQ2), .MEREG(MEREG), .RRG(RRG), .PCUT(PCUT), .G(G), .TPMUT(TPMUT), .AUD(AUD)) u_shadow (
+      |                                                                                                                                                                                                ^~~~~~~~
+                     rtl/physical/ot_qfd_tt_ctlm_split.sv:52:24: ... Location of port declaration
+   52 |     output wire [31:0] m_fval_o,
+      |                        ^~~~~~~~
+%Warning-PINMISSING: rtl/physical/ot_qfd_tt_ctlm_split.sv:501:192: Instance has missing pin: 'c_fault'
+  501 |     qfd_tt_ctlm_head #(.DCU_M(DCU_M), .DUC_M(DUC_M), .XW(XW), .IS(IS), .OS(OS), .PSRAM(PSRAM), .PMUT(PMUT), .HQ2(HQ2), .MEREG(MEREG), .RRG(RRG), .PCUT(PCUT), .G(G), .TPMUT(TPMUT), .AUD(AUD)) u_shadow (
+      |                                                                                                                                                                                                ^~~~~~~~
+                     rtl/physical/ot_qfd_tt_ctlm_split.sv:54:18: ... Location of port declaration
+   54 |     output wire  c_fault,
+      |                  ^~~~~~~
+%Warning-PINMISSING: rtl/physical/ot_qfd_tt_ctlm_split.sv:501:192: Instance has missing pin: 'kvd_v'
+  501 |     qfd_tt_ctlm_head #(.DCU_M(DCU_M), .DUC_M(DUC_M), .XW(XW), .IS(IS), .OS(OS), .PSRAM(PSRAM), .PMUT(PMUT), .HQ2(HQ2), .MEREG(MEREG), .RRG(RRG), .PCUT(PCUT), .G(G), .TPMUT(TPMUT), .AUD(AUD)) u_shadow (
+      |                                                                                                                                                                                                ^~~~~~~~
+                     rtl/physical/ot_qfd_tt_ctlm_split.sv:55:18: ... Location of port declaration
+   55 |     output wire  kvd_v,
+      |                  ^~~~~
+%Warning-PINMISSING: rtl/physical/ot_qfd_tt_ctlm_split.sv:501:192: Instance has missing pin: 'kvd_wbase'
+  501 |     qfd_tt_ctlm_head #(.DCU_M(DCU_M), .DUC_M(DUC_M), .XW(XW), .IS(IS), .OS(OS), .PSRAM(PSRAM), .PMUT(PMUT), .HQ2(HQ2), .MEREG(MEREG), .RRG(RRG), .PCUT(PCUT), .G(G), .TPMUT(TPMUT), .AUD(AUD)) u_shadow (
+      |                                                                                                                                                                                                ^~~~~~~~
+                     rtl/physical/ot_qfd_tt_ctlm_split.sv:56:26: ... Location of port declaration
+   56 |     output wire [24-1:0] kvd_wbase,
+      |                          ^~~~~~~~~
+%Warning-PINMISSING: rtl/physical/ot_qfd_tt_ctlm_split.sv:501:192: Instance has missing pin: 'kvd_ts'
+  501 |     qfd_tt_ctlm_head #(.DCU_M(DCU_M), .DUC_M(DUC_M), .XW(XW), .IS(IS), .OS(OS), .PSRAM(PSRAM), .PMUT(PMUT), .HQ2(HQ2), .MEREG(MEREG), .RRG(RRG), .PCUT(PCUT), .G(G), .TPMUT(TPMUT), .AUD(AUD)) u_shadow (
+      |                                                                                                                                                                                                ^~~~~~~~
+                     rtl/physical/ot_qfd_tt_ctlm_split.sv:57:26: ... Location of port declaration
+   57 |     output wire [24-1:0] kvd_ts,
+      |                          ^~~~~~
+%Warning-PINMISSING: rtl/physical/ot_qfd_tt_ctlm_split.sv:501:192: Instance has missing pin: 'kvd_ks'
+  501 |     qfd_tt_ctlm_head #(.DCU_M(DCU_M), .DUC_M(DUC_M), .XW(XW), .IS(IS), .OS(OS), .PSRAM(PSRAM), .PMUT(PMUT), .HQ2(HQ2), .MEREG(MEREG), .RRG(RRG), .PCUT(PCUT), .G(G), .TPMUT(TPMUT), .AUD(AUD)) u_shadow (
+      |                                                                                                                                                                                                ^~~~~~~~
+                     rtl/physical/ot_qfd_tt_ctlm_split.sv:58:26: ... Location of port declaration
+   58 |     output wire [24-1:0] kvd_ks,
+      |                          ^~~~~~
+%Warning-PINMISSING: rtl/physical/ot_qfd_tt_ctlm_split.sv:501:192: Instance has missing pin: 'kvd_js'
+  501 |     qfd_tt_ctlm_head #(.DCU_M(DCU_M), .DUC_M(DUC_M), .XW(XW), .IS(IS), .OS(OS), .PSRAM(PSRAM), .PMUT(PMUT), .HQ2(HQ2), .MEREG(MEREG), .RRG(RRG), .PCUT(PCUT), .G(G), .TPMUT(TPMUT), .AUD(AUD)) u_shadow (
+      |                                                                                                                                                                                                ^~~~~~~~
+                     rtl/physical/ot_qfd_tt_ctlm_split.sv:59:26: ... Location of port declaration
+   59 |     output wire [24-1:0] kvd_js,
+      |                          ^~~~~~
+%Warning-PINMISSING: rtl/physical/ot_qfd_tt_ctlm_split.sv:501:192: Instance has missing pin: 'kvd_wcs'
+  501 |     qfd_tt_ctlm_head #(.DCU_M(DCU_M), .DUC_M(DUC_M), .XW(XW), .IS(IS), .OS(OS), .PSRAM(PSRAM), .PMUT(PMUT), .HQ2(HQ2), .MEREG(MEREG), .RRG(RRG), .PCUT(PCUT), .G(G), .TPMUT(TPMUT), .AUD(AUD)) u_shadow (
+      |                                                                                                                                                                                                ^~~~~~~~
+                     rtl/physical/ot_qfd_tt_ctlm_split.sv:60:26: ... Location of port declaration
+   60 |     output wire [24-1:0] kvd_wcs,
+      |                          ^~~~~~~
+%Warning-PINMISSING: rtl/physical/ot_qfd_tt_ctlm_split.sv:501:192: Instance has missing pin: 'kvd_split'
+  501 |     qfd_tt_ctlm_head #(.DCU_M(DCU_M), .DUC_M(DUC_M), .XW(XW), .IS(IS), .OS(OS), .PSRAM(PSRAM), .PMUT(PMUT), .HQ2(HQ2), .MEREG(MEREG), .RRG(RRG), .PCUT(PCUT), .G(G), .TPMUT(TPMUT), .AUD(AUD)) u_shadow (
+      |                                                                                                                                                                                                ^~~~~~~~
+                     rtl/physical/ot_qfd_tt_ctlm_split.sv:61:23: ... Location of port declaration
+   61 |     output wire [3:0] kvd_split,
+      |                       ^~~~~~~~~
+%Warning-PINMISSING: rtl/physical/ot_qfd_tt_ctlm_split.sv:501:192: Instance has missing pin: 'kvd_jsh'
+  501 |     qfd_tt_ctlm_head #(.DCU_M(DCU_M), .DUC_M(DUC_M), .XW(XW), .IS(IS), .OS(OS), .PSRAM(PSRAM), .PMUT(PMUT), .HQ2(HQ2), .MEREG(MEREG), .RRG(RRG), .PCUT(PCUT), .G(G), .TPMUT(TPMUT), .AUD(AUD)) u_shadow (
+      |                                                                                                                                                                                                ^~~~~~~~
+                     rtl/physical/ot_qfd_tt_ctlm_split.sv:62:23: ... Location of port declaration
+   62 |     output wire [2:0] kvd_jsh,
+      |                       ^~~~~~~
+%Warning-PINMISSING: rtl/physical/ot_qfd_tt_ctlm_split.sv:501:192: Instance has missing pin: 'kvd_tiles'
+  501 |     qfd_tt_ctlm_head #(.DCU_M(DCU_M), .DUC_M(DUC_M), .XW(XW), .IS(IS), .OS(OS), .PSRAM(PSRAM), .PMUT(PMUT), .HQ2(HQ2), .MEREG(MEREG), .RRG(RRG), .PCUT(PCUT), .G(G), .TPMUT(TPMUT), .AUD(AUD)) u_shadow (
+      |                                                                                                                                                                                                ^~~~~~~~
+                     rtl/physical/ot_qfd_tt_ctlm_split.sv:63:26: ... Location of port declaration
+   63 |     output wire [18-1:0] kvd_tiles,
+      |                          ^~~~~~~~~
+%Warning-PINMISSING: rtl/physical/ot_qfd_tt_ctlm_split.sv:501:192: Instance has missing pin: 'kvd_k'
+  501 |     qfd_tt_ctlm_head #(.DCU_M(DCU_M), .DUC_M(DUC_M), .XW(XW), .IS(IS), .OS(OS), .PSRAM(PSRAM), .PMUT(PMUT), .HQ2(HQ2), .MEREG(MEREG), .RRG(RRG), .PCUT(PCUT), .G(G), .TPMUT(TPMUT), .AUD(AUD)) u_shadow (
+      |                                                                                                                                                                                                ^~~~~~~~
+                     rtl/physical/ot_qfd_tt_ctlm_split.sv:64:26: ... Location of port declaration
+   64 |     output wire [18-1:0] kvd_k,
+      |                          ^~~~~
+%Warning-PINMISSING: rtl/physical/ot_qfd_tt_ctlm_split.sv:501:192: Instance has missing pin: 'kvd_nout'
+  501 |     qfd_tt_ctlm_head #(.DCU_M(DCU_M), .DUC_M(DUC_M), .XW(XW), .IS(IS), .OS(OS), .PSRAM(PSRAM), .PMUT(PMUT), .HQ2(HQ2), .MEREG(MEREG), .RRG(RRG), .PCUT(PCUT), .G(G), .TPMUT(TPMUT), .AUD(AUD)) u_shadow (
+      |                                                                                                                                                                                                ^~~~~~~~
+                     rtl/physical/ot_qfd_tt_ctlm_split.sv:65:26: ... Location of port declaration
+   65 |     output wire [18-1:0] kvd_nout,
+      |                          ^~~~~~~~
+%Warning-PINMISSING: rtl/physical/ot_qfd_tt_ctlm_split.sv:501:192: Instance has missing pin: 'kvd_kindk'
+  501 |     qfd_tt_ctlm_head #(.DCU_M(DCU_M), .DUC_M(DUC_M), .XW(XW), .IS(IS), .OS(OS), .PSRAM(PSRAM), .PMUT(PMUT), .HQ2(HQ2), .MEREG(MEREG), .RRG(RRG), .PCUT(PCUT), .G(G), .TPMUT(TPMUT), .AUD(AUD)) u_shadow (
+      |                                                                                                                                                                                                ^~~~~~~~
+                     rtl/physical/ot_qfd_tt_ctlm_split.sv:66:18: ... Location of port declaration
+   66 |     output wire  kvd_kindk,
+      |                  ^~~~~~~~~
+%Warning-PINMISSING: rtl/physical/ot_qfd_tt_ctlm_split.sv:501:192: Instance has missing pin: 'kvd_pos'
+  501 |     qfd_tt_ctlm_head #(.DCU_M(DCU_M), .DUC_M(DUC_M), .XW(XW), .IS(IS), .OS(OS), .PSRAM(PSRAM), .PMUT(PMUT), .HQ2(HQ2), .MEREG(MEREG), .RRG(RRG), .PCUT(PCUT), .G(G), .TPMUT(TPMUT), .AUD(AUD)) u_shadow (
+      |                                                                                                                                                                                                ^~~~~~~~
+                     rtl/physical/ot_qfd_tt_ctlm_split.sv:67:26: ... Location of port declaration
+   67 |     output wire [18-1:0] kvd_pos,
+      |                          ^~~~~~~
+%Warning-PINMISSING: rtl/hdc/ot_qwen_me_spine_h_w12.sv:137:51: Instance has missing pin: 'x_dv'
+  137 |         .MUL_LAT(MUL_LAT), .SCALE_LAT(SCALE_LAT)) u_ctl (
+      |                                                   ^~~~~
+                     rtl/hdc/ot_qwen_me_spine_h_w12.sv:319:30: ... Location of port declaration
+  319 |     output reg               x_dv,
+      |                              ^~~~
+%Warning-PINMISSING: rtl/hdc/ot_qwen_me_spine_h_w12.sv:137:51: Instance has missing pin: 'x_dc'
+  137 |         .MUL_LAT(MUL_LAT), .SCALE_LAT(SCALE_LAT)) u_ctl (
+      |                                                   ^~~~~
+                     rtl/hdc/ot_qwen_me_spine_h_w12.sv:320:30: ... Location of port declaration
+  320 |     output reg  [AW-1:0]     x_dc,
+      |                              ^~~~
+%Warning-PINMISSING: rtl/hdc/ot_qwen_me_spine_h_w12.sv:137:51: Instance has missing pin: 'x_dcs'
+  137 |         .MUL_LAT(MUL_LAT), .SCALE_LAT(SCALE_LAT)) u_ctl (
+      |                                                   ^~~~~
+                     rtl/hdc/ot_qwen_me_spine_h_w12.sv:321:30: ... Location of port declaration
+  321 |     output reg  [AW-1:0]     x_dcs,
+      |                              ^~~~~
+%Warning-PINMISSING: rtl/hdc/ot_qwen_me_spine_h_w12.sv:137:51: Instance has missing pin: 'x_dsp'
+  137 |         .MUL_LAT(MUL_LAT), .SCALE_LAT(SCALE_LAT)) u_ctl (
+      |                                                   ^~~~~
+                     rtl/hdc/ot_qwen_me_spine_h_w12.sv:322:30: ... Location of port declaration
+  322 |     output wire [3:0]        x_dsp,
+      |                              ^~~~~
+%Warning-PINMISSING: rtl/hdc/ot_qwen_me_spine_h_w12.sv:190:61: Instance has missing pin: 'ck_mul'
+  190 |                 .TREE_LAT(TREE_LAT), .SCALE_LAT(SCALE_LAT)) u_pt (
+      |                                                             ^~~~
+                     rtl/hdc/ot_qwen_me_spine_h_w12.sv:1430:23: ... Location of port declaration
+ 1430 |     input wire [15:0] ck_mul,
+      |                       ^~~~~~
+%Warning-PINMISSING: rtl/hdc/ot_qwen_me_spine_h_w12.sv:190:61: Instance has missing pin: 'o_ov'
+  190 |                 .TREE_LAT(TREE_LAT), .SCALE_LAT(SCALE_LAT)) u_pt (
+      |                                                             ^~~~
+                     rtl/hdc/ot_qwen_me_spine_h_w12.sv:1442:30: ... Location of port declaration
+ 1442 |     output reg               o_ov,           
+      |                              ^~~~
+%Warning-PINMISSING: rtl/hdc/ot_qwen_w12_matvec.sv:152:129: Instance has missing pin: 'ck_lsl'
+  152 |                          .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT), .FAST_ISSUE(FAST_ISSUE), .KV_PREP(KV_PREP), .MUL_LAT(MUL_LAT)) u_p (
+      |                                                                                                                                 ^~~
+                     rtl/hdc/ot_qwen_w12_matvec.sv:240:22: ... Location of port declaration
+  240 |     input wire [7:0] ck_lsl,
+      |                      ^~~~~~
+%Warning-PINMISSING: rtl/qwen_sys/redesign_qwen/ot_qfd_crom_lbuf.sv:463:44: Instance has missing pin: 'st_rdy_stage'
+  463 |     ot_qfd_crom_lbuf #(.SRAM(1), .FLP(11)) u_b (.clk(clk), .rst_n(rst_n), .crom_re(crom_re), .crom_addr(crom_addr),
+      |                                            ^~~
+                     rtl/qwen_sys/redesign_qwen/ot_qfd_crom_lbuf.sv:80:30: ... Location of port declaration
+   80 |     output wire [LW-1:0]     st_rdy_stage,     
+      |                              ^~~~~~~~~~~~
+%Warning-WIDTHTRUNC: rtl/hdc/ot_hdc_fp32_add_lat.sv:70:56: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'DRST' generates 32 bits.
+                                                         : ... note: In instance 'tb_native_band_tree_tp8.dut.u_band2.g_lane[15].u_lane.u_l.g_lane[0].u_lv.g_lvl[3].g_add[0].u_add.g_l.u.g_r.u'
+   70 |     ot_hdc_w11_cut #(.W(WA + 1), .CUT(CUT_A), .VB(DRST ? -1 : WA - 1)) u_ca (.clk(clk), .rst_n(rst_n), .d({a1_swap, a1}), .q(a2_in));
+      |                                                        ^
+                     ... For warning description see https://verilator.org/warn/WIDTHTRUNC?v=5.050
+                     ... Use "/* verilator lint_off WIDTHTRUNC */" and lint_on around source to disable this message.
+%Warning-WIDTHTRUNC: rtl/hdc/ot_hdc_fp32_add_lat.sv:123:52: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'DRST' generates 32 bits.
+                                                          : ... note: In instance 'tb_native_band_tree_tp8.dut.u_band2.g_lane[15].u_lane.u_l.g_lane[0].u_lv.g_lvl[3].g_add[0].u_add.g_l.u.g_r.u'
+  123 |     ot_hdc_w11_cut #(.W(WB), .CUT(CUT_B), .VB(DRST ? -1 : WB - 1)) u_cb (.clk(clk), .rst_n(rst_n),
+      |                                                    ^
+%Warning-WIDTHTRUNC: rtl/hdc/ot_hdc_fp32_add_lat.sv:141:52: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'DRST' generates 32 bits.
+                                                          : ... note: In instance 'tb_native_band_tree_tp8.dut.u_band2.g_lane[15].u_lane.u_l.g_lane[0].u_lv.g_lvl[3].g_add[0].u_add.g_l.u.g_r.u'
+  141 |     ot_hdc_w11_cut #(.W(WD), .CUT(CUT_D), .VB(DRST ? -1 : WD - 1)) u_cd (.clk(clk), .rst_n(rst_n),
+      |                                                    ^
+%Warning-WIDTHTRUNC: rtl/hdc/ot_hdc_fp32_add_lat.sv:180:52: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'DRST' generates 32 bits.
+                                                          : ... note: In instance 'tb_native_band_tree_tp8.dut.u_band2.g_lane[15].u_lane.u_l.g_lane[0].u_lv.g_lvl[3].g_add[0].u_add.g_l.u.g_r.u'
+  180 |     ot_hdc_w11_cut #(.W(WC), .CUT(CUT_C), .VB(DRST ? -1 : WC - 1)) u_cc (.clk(clk), .rst_n(rst_n),
+      |                                                    ^
+%Warning-WIDTHTRUNC: rtl/hdc/ot_hdc_fp32_add_lat_nr.sv:225:14: Logical operator GENIF expects 1 bit on the If, but If's VARREF 'CUT' generates 32 bits.
+                                                             : ... note: In instance 'tb_native_band_tree_tp8.dut.u_band2.g_lane[15].u_lane.u_l.g_lane[0].u_lv.g_lvl[3].g_add[0].u_add.g_l.u.g_nr.u.u_ca'
+  225 |     generate if (CUT) begin : g_r
+      |              ^~
+%Warning-WIDTHTRUNC: rtl/hdc/ot_hdc_fp32_add_lat.sv:225:22: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'CUT' generates 32 bits.
+                                                          : ... note: In instance 'tb_native_band_tree_tp8.dut.u_band2.g_lane[15].u_lane.u_l.g_lane[0].u_lv.g_lvl[3].g_add[0].u_add.g_l.u.g_r.u.u_ca'
+  225 |     generate if (CUT && VB < 0) begin : g_r
+      |                      ^~
+%Warning-WIDTHEXPAND: rtl/qwen_sys/lane_band_20261008/ot_qfd_band_lanes.sv:190:98: Operator ADD expects 32 bits on the RHS, but RHS's VARREF 'xv_q' generates 7 bits.
+                                                                                 : ... note: In instance 'tb_native_band_tree_tp8.dut.u_band2.g_lane[15].u_lane.u_l'
+  190 |         always @(posedge clk or negedge rst_n) if (!rst_n) vx_q <= 1'b0; else vx_q <= vsh[DU - 2 + xv_q];
+      |                                                                                                  ^
+                      ... For warning description see https://verilator.org/warn/WIDTHEXPAND?v=5.050
+                      ... Use "/* verilator lint_off WIDTHEXPAND */" and lint_on around source to disable this message.
+%Warning-WIDTHTRUNC: rtl/test/qwen_split/tb_native_band_tree_tp8.sv:43:10: Logical operator LOGOR expects 1 bit on the LHS, but LHS's VARREF 'errs' generates 32 bits.
+                                                                         : ... note: In instance 'tb_native_band_tree_tp8'
+   43 |  if(errs || checks!=289)$fatal(1,"native tree quarter composition mismatch");
+      |          ^~
+make: Entering directory '/srv/opentallas-scratch/codex/qwen-native-1103/stage/obj_positive'
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -c -o verilated.o /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -c -o verilated_timing.o /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_timing.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -c -o verilated_threads.o /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_threads.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -x c++-header Vtb_native_band_tree_tp8__pch.h -o Vtb_native_band_tree_tp8__pch.h.fast.gch
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -x c++-header Vtb_native_band_tree_tp8__pch.h -o Vtb_native_band_tree_tp8__pch.h.slow.gch
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_native_band_tree_tp8__pch.h.slow -c Vtb_native_band_tree_tp8_vm_classes_Slow_0.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_native_band_tree_tp8__pch.h.slow -c Vtb_native_band_tree_tp8_vm_classes_Slow_1.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_native_band_tree_tp8__pch.h.slow -c Vtb_native_band_tree_tp8_vm_classes_Slow_2.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_native_band_tree_tp8__pch.h.slow -c Vtb_native_band_tree_tp8_vm_classes_Slow_3.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_native_band_tree_tp8__pch.h.slow -c Vtb_native_band_tree_tp8_vm_classes_Slow_4.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_native_band_tree_tp8__pch.h.slow -c Vtb_native_band_tree_tp8_vm_classes_Slow_5.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_native_band_tree_tp8__pch.h.slow -c Vtb_native_band_tree_tp8_vm_classes_Slow_6.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_native_band_tree_tp8__pch.h.slow -c Vtb_native_band_tree_tp8_vm_classes_Slow_7.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_native_band_tree_tp8__pch.h.slow -c Vtb_native_band_tree_tp8__Syms__Slow.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_native_band_tree_tp8__pch.h.fast -c Vtb_native_band_tree_tp8_vm_classes_0.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_native_band_tree_tp8__pch.h.fast -c Vtb_native_band_tree_tp8_vm_classes_1.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_native_band_tree_tp8__pch.h.fast -c Vtb_native_band_tree_tp8_vm_classes_2.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_native_band_tree_tp8__pch.h.fast -c Vtb_native_band_tree_tp8_vm_classes_3.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_native_band_tree_tp8__pch.h.fast -c Vtb_native_band_tree_tp8_vm_classes_4.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_native_band_tree_tp8__pch.h.fast -c Vtb_native_band_tree_tp8_vm_classes_5.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_native_band_tree_tp8__pch.h.fast -c Vtb_native_band_tree_tp8_vm_classes_6.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_native_band_tree_tp8__pch.h.fast -c Vtb_native_band_tree_tp8_vm_classes_7.cpp
+g++    verilated.o verilated_timing.o verilated_threads.o Vtb_native_band_tree_tp8__ALL.a    -pthread -lpthread -latomic   -o Vtb_native_band_tree_tp8
+rm Vtb_native_band_tree_tp8__ALL.verilator_deplist.tmp
+make: Leaving directory '/srv/opentallas-scratch/codex/qwen-native-1103/stage/obj_positive'
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 111.771 MB sources in 303 modules, into 206.282 MB in 177 C++ files needing 0.148 MB
+- Verilator: Walltime 144.027 s (elab=0.876, cvt=67.723, bld=72.372); cpu 74.740 s on 8 threads; allocated 4984.203 MB

@@ -1,0 +1,7 @@
+upper lane mismatch cycle=161
+upper lane mismatch cycle=162
+upper lane mismatch cycle=163
+NATIVE_BAND_TREE checks=289 errors=289
+[4586000] %Fatal: tb_native_band_tree_tp8.sv:43: Assertion failed in tb_native_band_tree_tp8: native tree quarter composition mismatch
+%Error: rtl/test/qwen_split/tb_native_band_tree_tp8.sv:43: Verilog $stop
+Aborting...
