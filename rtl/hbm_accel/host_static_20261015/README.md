@@ -18,7 +18,7 @@ All writes use full four-byte strobes. AW and W may arrive together, address fir
 
 Reading F30 returns bit0 frontend fault, bit1 block-ready, bit2 active, bit3 target fault, bit4 partial word, bit5 transport guard. Other reads return FFFFFFFF. Writing other addresses faults; there is no passthrough into the retired CP.
 
-Configuration-frame and descriptor output guards are four cycles. Launch guard is six cycles, covering the existing target collar and native programme's start/active pipeline. All sources and destinations must use the same defined synchronous clock family; CDC is not implied by these ports.
+Configuration-frame and descriptor output guards are four cycles. Launch guard is seven cycles, covering the existing target collar and native programme's start/active pipeline. Ready outputs and incoming status have dedicated pin flops; an accepted launch locks host write admission until the real active interval completes. This admission lock never gates execution. All sources and destinations must use the same defined synchronous clock family; CDC is not implied by these ports.
 
 ## Genuine local readiness
 
@@ -28,7 +28,7 @@ PCW10 uses1024 control bits and scans up to1024 rows during configuration. These
 
 ## Evidence and remaining integration
 
-The bench writes all1024 rows through this frontend, the actual target48 collar, and `ot_vms_calendar_static` using the repository's native1024x256 SRAM model. Two loops emit2048 exact, consecutive calendar beats with checked ordinals. It checks all three independent AW/W arrival orders, held response stability, and seven protocol failures including launch before installation, partial-frame launch, missing-row readiness, bad strobes, unbound target, unselected data and empty range. The data-bit, premature-launch and loaded-row-bypass mutants must fail. External testbench values are host input stimulus and expected calendar outputs; no expected-answer memory replaces DUT storage.
+The bench writes all1024 rows through this frontend, the actual target48 collar, and `ot_vms_calendar_static` using the repository's native1024x256 SRAM model. Two loops emit2048 exact, consecutive calendar beats with checked ordinals. It checks all three independent AW/W arrival orders, held response stability, new requests asserted during response clear, and seven protocol failures including launch before installation, partial-frame launch, missing-row readiness, bad strobes, unbound target, unselected data and empty range. The data-bit, premature-launch and loaded-row-bypass mutants must fail. External testbench values are host input stimulus and expected calendar outputs; no expected-answer memory replaces DUT storage.
 
 Run from the repository root:
 
