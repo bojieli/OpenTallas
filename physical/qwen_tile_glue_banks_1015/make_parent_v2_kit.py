@@ -13,7 +13,7 @@ TB=(2.16,699.84); YA=(2.16,587.52); LOCAL0=5.292; P=0.096
 sha=lambda p:hashlib.sha256((r/p).read_bytes()).hexdigest()
 lef=(r/XV/'qwen_glue_x1028.lef').read_text()
 def pin_xy(pin):
-    m=re.search(r'PIN '+re.escape(pin)+r'\b(.*?)END '+re.escape(pin),lef,re.S); assert m,pin
+    m=re.search(r'PIN '+re.escape(pin)+r'\s(.*?)END '+re.escape(pin),lef,re.S); assert m,pin
     x0,y0,x1,y1=map(float,re.search(r'RECT\s+([\d.]+)\s+([\d.]+)\s+([\d.]+)\s+([\d.]+)',m.group(1)).groups())
     return (x0+x1)/2,(y0+y1)/2
 for k in (0,1,513):   # the master's frozen W slots must be the plan's
@@ -31,6 +31,8 @@ hr=s['required_hybrid_roots']['hard_child_entry']
 cmap={'ck_bank[37]':('face_ya','clk_i',YA),'ck_bank[38]':('face_tb','clk_i',TB),'ck_bank[39]':('face_ya','clk_o',YA),'ck_bank[40]':('face_tb','clk_o',TB)}
 for port,(inst,pin,o) in cmap.items(): hr[port]=f'{inst}/{pin}'
 s['io_tcl']=f'physical/ref_tile/{name}/assigned_pins.tcl'
+# x1028 has two routed clock pins: declare the (single, same-frequency) entry domain explicitly
+s['clock_entry_domains']={'core':{'ratio':[1,1],'ports':list(s['clock_ports']),'inputs':['*'],'outputs':['*']}}
 # x1028 sits on the core edge with a 2.16 um gap to reset_mid_w: below the 2 um row-cut halo pair there are no rows; the
 # channel hook blocks every gap < 20 um, so the abutment floor is the real 2.16 um gap, not a 20 um exception
 s['abut_plan']=dict(s.get('abut_plan',{}),channel_um=2.16,why='PM-H-S paired face masters 2.16 um from reset_mid_w; every channel < 20 um is hard-blocked (macro_channel_block.tcl)')
@@ -70,4 +72,4 @@ for o,n in [(' n_a 514 face_n_a qwen_glue_v514 d INPUT',' n_a 514 face_ya qwen_g
             (' n_y 514 face_n_y qwen_glue_v514 q OUTPUT',' n_y 514 face_ya qwen_glue_x1028 oq OUTPUT'),(' t_out 514 face_t_out qwen_glue_v514 q OUTPUT',' t_out 514 face_tb qwen_glue_x1028 oq OUTPUT')]:
     assert a.count(o)==1,o; a=a.replace(o,n)
 (G/'hard_face_audit_v2.tcl').write_text(a)
-print(subprocess.run([sys.executable,str(r/'tools/ref_tile/ref_tile.py'),'gen',str(r/f'tools/ref_tile/specs_q_compute_native/{name}.json')],cwd=r,capture_output=True,text=True).stdout[-600:])
+res=subprocess.run([sys.executable,str(r/'tools/ref_tile/ref_tile.py'),'gen',str(r/f'tools/ref_tile/specs_q_compute_native/{name}.json')],cwd=r,capture_output=True,text=True); print(res.stdout[-600:], res.stderr[-1500:]); sys.exit(res.returncode)
