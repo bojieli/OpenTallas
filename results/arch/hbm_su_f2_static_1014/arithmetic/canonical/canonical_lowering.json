@@ -1,0 +1,3328 @@
+{
+  "qualified": false,
+  "records": 45,
+  "supported": 28,
+  "unsupported_reasons": {
+    "native_M128_divider_lane_selection_calendar": 5,
+    "native_SFU_or_scalar_side_control_calendar": 8,
+    "MDESC_indexed_scalar_runtime_address_calendar": 6,
+    "native_SFU128_lane_selection_and_variable_depth_calendar": 1
+  },
+  "rows": [
+    {
+      "supported": true,
+      "empty": false,
+      "words": 1280,
+      "sut": {
+        "a_src": 0,
+        "a_ind": 0,
+        "b_src": 0,
+        "b_half": 0,
+        "c_src": 0,
+        "c_pair": 0,
+        "d_src": 0,
+        "a_rnd": 0,
+        "a_relu": 0,
+        "a_min": 0,
+        "c_clip": 0,
+        "m1": 0,
+        "m2": 0,
+        "qm": 0,
+        "ad": 0,
+        "sfu": 0,
+        "e1": 0,
+        "e2": 0,
+        "rnd": 0,
+        "dst": 0,
+        "red": 1,
+        "red_sq": 1,
+        "red_whole": 0,
+        "red_rnd": 0,
+        "su_vec": 0,
+        "red_tree": 1,
+        "imm1": 0,
+        "imm2": 0,
+        "imm3": 0
+      },
+      "address_checks": 1280,
+      "issue_groups": 4,
+      "needs_reducer": true,
+      "execution_qualified": false,
+      "open": [
+        "actual_3072_SRAM_bank_calendar",
+        "scalar_reducer_external_joins",
+        "native_global_numerical_proof",
+        "production_timing_price"
+      ],
+      "design": "coverage_ds",
+      "record": 0,
+      "case": {
+        "tag": "q_norm.ss",
+        "unit": "SU",
+        "priced": 165.0,
+        "priced_how": "SU model nv 3 + depth 158",
+        "stage_sectors": 160,
+        "drain_sectors": 1,
+        "roles": {
+          "A": [
+            46272,
+            47551,
+            1280
+          ],
+          "R": [
+            49856,
+            49856,
+            1
+          ]
+        },
+        "vm_in_sectors": 161,
+        "vm_out_words": 1,
+        "vm_out_sectors": 1
+      },
+      "raw_sha256": "c1738642ccefb2f65d4817028ab5f3fc58a01cf2d4be57c3034a3e85a076a33d"
+    },
+    {
+      "supported": false,
+      "reasons": [
+        "native_M128_divider_lane_selection_calendar",
+        "native_SFU_or_scalar_side_control_calendar"
+      ],
+      "sut": {
+        "a_src": 0,
+        "a_ind": 0,
+        "b_src": 0,
+        "b_half": 0,
+        "c_src": 0,
+        "c_pair": 0,
+        "d_src": 0,
+        "a_rnd": 0,
+        "a_relu": 0,
+        "a_min": 0,
+        "c_clip": 0,
+        "m1": 5,
+        "m2": 0,
+        "qm": 0,
+        "ad": 4,
+        "sfu": 2,
+        "e1": 0,
+        "e2": 0,
+        "rnd": 0,
+        "dst": 1,
+        "red": 0,
+        "red_sq": 0,
+        "red_whole": 0,
+        "red_rnd": 0,
+        "su_vec": 0,
+        "red_tree": 0,
+        "imm1": 1151336448,
+        "imm2": 507307272,
+        "imm3": 0
+      },
+      "design": "coverage_ds",
+      "record": 1,
+      "case": {
+        "tag": "q_norm.rs",
+        "unit": "SU",
+        "priced": 152.0,
+        "priced_how": "SU model nv 1 + depth 147",
+        "stage_sectors": 1,
+        "drain_sectors": 1,
+        "roles": {
+          "A": [
+            49856,
+            49856,
+            1
+          ],
+          "O": [
+            49920,
+            49920,
+            1
+          ]
+        },
+        "vm_in_sectors": 2,
+        "vm_out_words": 1,
+        "vm_out_sectors": 1
+      },
+      "raw_sha256": "7427ba3dc9aa3147642a9041a53d7ff2f0268fcf82daa08497e51789e34fcade"
+    },
+    {
+      "supported": true,
+      "empty": false,
+      "words": 1280,
+      "sut": {
+        "a_src": 0,
+        "a_ind": 0,
+        "b_src": 0,
+        "b_half": 0,
+        "c_src": 0,
+        "c_pair": 0,
+        "d_src": 0,
+        "a_rnd": 0,
+        "a_relu": 0,
+        "a_min": 0,
+        "c_clip": 0,
+        "m1": 1,
+        "m2": 0,
+        "qm": 0,
+        "ad": 0,
+        "sfu": 0,
+        "e1": 1,
+        "e2": 0,
+        "rnd": 1,
+        "dst": 1,
+        "red": 0,
+        "red_sq": 0,
+        "red_whole": 0,
+        "red_rnd": 0,
+        "su_vec": 0,
+        "red_tree": 0,
+        "imm1": 0,
+        "imm2": 0,
+        "imm3": 0
+      },
+      "address_checks": 5120,
+      "issue_groups": 3,
+      "needs_reducer": false,
+      "execution_qualified": false,
+      "open": [
+        "actual_3072_SRAM_bank_calendar",
+        "scalar_reducer_external_joins",
+        "native_global_numerical_proof",
+        "production_timing_price"
+      ],
+      "design": "coverage_ds",
+      "record": 2,
+      "case": {
+        "tag": "q_norm.y",
+        "unit": "SU",
+        "priced": 62.0,
+        "priced_how": "SU model nv 3 + depth 55",
+        "stage_sectors": 321,
+        "drain_sectors": 160,
+        "roles": {
+          "A": [
+            46272,
+            47551,
+            1280
+          ],
+          "B": [
+            49920,
+            49920,
+            1
+          ],
+          "C": [
+            48064,
+            49343,
+            1280
+          ],
+          "O": [
+            49984,
+            51263,
+            1280
+          ]
+        },
+        "vm_in_sectors": 481,
+        "vm_out_words": 1280,
+        "vm_out_sectors": 160
+      },
+      "raw_sha256": "884facd0159da41c2b6133176a1fc68f5d6cea4a77d5047e02a711d14e6afaf8"
+    },
+    {
+      "supported": true,
+      "empty": false,
+      "words": 512,
+      "sut": {
+        "a_src": 0,
+        "a_ind": 0,
+        "b_src": 0,
+        "b_half": 0,
+        "c_src": 0,
+        "c_pair": 0,
+        "d_src": 0,
+        "a_rnd": 0,
+        "a_relu": 0,
+        "a_min": 0,
+        "c_clip": 0,
+        "m1": 0,
+        "m2": 0,
+        "qm": 0,
+        "ad": 0,
+        "sfu": 0,
+        "e1": 0,
+        "e2": 0,
+        "rnd": 0,
+        "dst": 0,
+        "red": 1,
+        "red_sq": 1,
+        "red_whole": 0,
+        "red_rnd": 0,
+        "su_vec": 0,
+        "red_tree": 1,
+        "imm1": 0,
+        "imm2": 0,
+        "imm3": 0
+      },
+      "address_checks": 512,
+      "issue_groups": 1,
+      "needs_reducer": true,
+      "execution_qualified": false,
+      "open": [
+        "actual_3072_SRAM_bank_calendar",
+        "scalar_reducer_external_joins",
+        "native_global_numerical_proof",
+        "production_timing_price"
+      ],
+      "design": "coverage_ds",
+      "record": 3,
+      "case": {
+        "tag": "kv_norm.ss",
+        "unit": "SU",
+        "priced": 151.0,
+        "priced_how": "SU model nv 1 + depth 146",
+        "stage_sectors": 64,
+        "drain_sectors": 1,
+        "roles": {
+          "A": [
+            47552,
+            48063,
+            512
+          ],
+          "R": [
+            49856,
+            49856,
+            1
+          ]
+        },
+        "vm_in_sectors": 65,
+        "vm_out_words": 1,
+        "vm_out_sectors": 1
+      },
+      "raw_sha256": "59c76eb57179f9e03d0c7571479c7d4fc5d54e30524e3a3fc3c46e2df0da6dd3"
+    },
+    {
+      "supported": false,
+      "reasons": [
+        "native_M128_divider_lane_selection_calendar",
+        "native_SFU_or_scalar_side_control_calendar"
+      ],
+      "sut": {
+        "a_src": 0,
+        "a_ind": 0,
+        "b_src": 0,
+        "b_half": 0,
+        "c_src": 0,
+        "c_pair": 0,
+        "d_src": 0,
+        "a_rnd": 0,
+        "a_relu": 0,
+        "a_min": 0,
+        "c_clip": 0,
+        "m1": 5,
+        "m2": 0,
+        "qm": 0,
+        "ad": 4,
+        "sfu": 2,
+        "e1": 0,
+        "e2": 0,
+        "rnd": 0,
+        "dst": 1,
+        "red": 0,
+        "red_sq": 0,
+        "red_whole": 0,
+        "red_rnd": 0,
+        "su_vec": 0,
+        "red_tree": 0,
+        "imm1": 1140850688,
+        "imm2": 507307272,
+        "imm3": 0
+      },
+      "design": "coverage_ds",
+      "record": 4,
+      "case": {
+        "tag": "kv_norm.rs",
+        "unit": "SU",
+        "priced": 152.0,
+        "priced_how": "SU model nv 1 + depth 147",
+        "stage_sectors": 1,
+        "drain_sectors": 1,
+        "roles": {
+          "A": [
+            49856,
+            49856,
+            1
+          ],
+          "O": [
+            49920,
+            49920,
+            1
+          ]
+        },
+        "vm_in_sectors": 2,
+        "vm_out_words": 1,
+        "vm_out_sectors": 1
+      },
+      "raw_sha256": "44f5da8d0221ccf34e011270e54d80a97a6b2af1ef1f1e0ae547544aafd923af"
+    },
+    {
+      "supported": true,
+      "empty": false,
+      "words": 512,
+      "sut": {
+        "a_src": 0,
+        "a_ind": 0,
+        "b_src": 0,
+        "b_half": 0,
+        "c_src": 0,
+        "c_pair": 0,
+        "d_src": 0,
+        "a_rnd": 0,
+        "a_relu": 0,
+        "a_min": 0,
+        "c_clip": 0,
+        "m1": 1,
+        "m2": 0,
+        "qm": 0,
+        "ad": 0,
+        "sfu": 0,
+        "e1": 1,
+        "e2": 0,
+        "rnd": 1,
+        "dst": 1,
+        "red": 0,
+        "red_sq": 0,
+        "red_whole": 0,
+        "red_rnd": 0,
+        "su_vec": 0,
+        "red_tree": 0,
+        "imm1": 0,
+        "imm2": 0,
+        "imm3": 0
+      },
+      "address_checks": 2048,
+      "issue_groups": 1,
+      "needs_reducer": false,
+      "execution_qualified": false,
+      "open": [
+        "actual_3072_SRAM_bank_calendar",
+        "scalar_reducer_external_joins",
+        "native_global_numerical_proof",
+        "production_timing_price"
+      ],
+      "design": "coverage_ds",
+      "record": 5,
+      "case": {
+        "tag": "kv_norm.y",
+        "unit": "SU",
+        "priced": 60.0,
+        "priced_how": "SU model nv 1 + depth 55",
+        "stage_sectors": 129,
+        "drain_sectors": 64,
+        "roles": {
+          "A": [
+            47552,
+            48063,
+            512
+          ],
+          "B": [
+            49920,
+            49920,
+            1
+          ],
+          "C": [
+            49344,
+            49855,
+            512
+          ],
+          "O": [
+            51776,
+            52287,
+            512
+          ]
+        },
+        "vm_in_sectors": 193,
+        "vm_out_words": 512,
+        "vm_out_sectors": 64
+      },
+      "raw_sha256": "7302e01746998bb94e9527e8a5e90df0a4de4e30522d6c089ab3781e24db0d77"
+    },
+    {
+      "supported": true,
+      "empty": false,
+      "words": 64,
+      "sut": {
+        "a_src": 0,
+        "a_ind": 0,
+        "b_src": 0,
+        "b_half": 1,
+        "c_src": 0,
+        "c_pair": 1,
+        "d_src": 0,
+        "a_rnd": 0,
+        "a_relu": 0,
+        "a_min": 0,
+        "c_clip": 0,
+        "m1": 1,
+        "m2": 0,
+        "qm": 3,
+        "ad": 1,
+        "sfu": 0,
+        "e1": 0,
+        "e2": 0,
+        "rnd": 1,
+        "dst": 1,
+        "red": 0,
+        "red_sq": 0,
+        "red_whole": 0,
+        "red_rnd": 0,
+        "su_vec": 0,
+        "red_tree": 0,
+        "imm1": 0,
+        "imm2": 0,
+        "imm3": 0
+      },
+      "address_checks": 256,
+      "issue_groups": 1,
+      "needs_reducer": false,
+      "execution_qualified": false,
+      "open": [
+        "actual_3072_SRAM_bank_calendar",
+        "scalar_reducer_external_joins",
+        "native_global_numerical_proof",
+        "production_timing_price"
+      ],
+      "design": "coverage_ds",
+      "record": 6,
+      "case": {
+        "tag": "kv_rope.tail",
+        "unit": "SU",
+        "priced": 60.0,
+        "priced_how": "SU model nv 1 + depth 55",
+        "stage_sectors": 16,
+        "drain_sectors": 8,
+        "roles": {
+          "A": [
+            52224,
+            52287,
+            64
+          ],
+          "B": [
+            53312,
+            53343,
+            32
+          ],
+          "D": [
+            53344,
+            53375,
+            32
+          ],
+          "O": [
+            52224,
+            52287,
+            64
+          ]
+        },
+        "vm_in_sectors": 16,
+        "vm_out_words": 64,
+        "vm_out_sectors": 8
+      },
+      "raw_sha256": "d445e223186e9a9abf2119e9ef49522dbb2b843723dd036d3951ad72dd238f8f"
+    },
+    {
+      "supported": true,
+      "empty": false,
+      "words": 64,
+      "sut": {
+        "a_src": 0,
+        "a_ind": 0,
+        "b_src": 0,
+        "b_half": 1,
+        "c_src": 0,
+        "c_pair": 1,
+        "d_src": 0,
+        "a_rnd": 0,
+        "a_relu": 0,
+        "a_min": 0,
+        "c_clip": 0,
+        "m1": 1,
+        "m2": 0,
+        "qm": 3,
+        "ad": 1,
+        "sfu": 0,
+        "e1": 0,
+        "e2": 0,
+        "rnd": 1,
+        "dst": 1,
+        "red": 0,
+        "red_sq": 0,
+        "red_whole": 0,
+        "red_rnd": 0,
+        "su_vec": 0,
+        "red_tree": 0,
+        "imm1": 0,
+        "imm2": 0,
+        "imm3": 0
+      },
+      "address_checks": 256,
+      "issue_groups": 1,
+      "needs_reducer": false,
+      "execution_qualified": false,
+      "open": [
+        "actual_3072_SRAM_bank_calendar",
+        "scalar_reducer_external_joins",
+        "native_global_numerical_proof",
+        "production_timing_price"
+      ],
+      "design": "coverage_ds",
+      "record": 7,
+      "case": {
+        "tag": "q_rope.tail",
+        "unit": "SU",
+        "priced": 60.0,
+        "priced_how": "SU model nv 1 + depth 55",
+        "stage_sectors": 16,
+        "drain_sectors": 8,
+        "roles": {
+          "A": [
+            53824,
+            53887,
+            64
+          ],
+          "B": [
+            53312,
+            53343,
+            32
+          ],
+          "D": [
+            53344,
+            53375,
+            32
+          ],
+          "O": [
+            53824,
+            53887,
+            64
+          ]
+        },
+        "vm_in_sectors": 16,
+        "vm_out_words": 64,
+        "vm_out_sectors": 8
+      },
+      "raw_sha256": "176e7bd2d74bb701eae45385a2d9c485ff8f0c00297a26ba9e184432c175264e"
+    },
+    {
+      "supported": true,
+      "empty": false,
+      "words": 128,
+      "sut": {
+        "a_src": 0,
+        "a_ind": 0,
+        "b_src": 0,
+        "b_half": 0,
+        "c_src": 0,
+        "c_pair": 0,
+        "d_src": 0,
+        "a_rnd": 0,
+        "a_relu": 0,
+        "a_min": 0,
+        "c_clip": 0,
+        "m1": 3,
+        "m2": 0,
+        "qm": 0,
+        "ad": 0,
+        "sfu": 0,
+        "e1": 0,
+        "e2": 0,
+        "rnd": 0,
+        "dst": 0,
+        "red": 2,
+        "red_sq": 0,
+        "red_whole": 1,
+        "red_rnd": 0,
+        "su_vec": 0,
+        "red_tree": 0,
+        "imm1": 1026884851,
+        "imm2": 0,
+        "imm3": 0
+      },
+      "address_checks": 128,
+      "issue_groups": 1,
+      "needs_reducer": true,
+      "execution_qualified": false,
+      "open": [
+        "actual_3072_SRAM_bank_calendar",
+        "scalar_reducer_external_joins",
+        "native_global_numerical_proof",
+        "production_timing_price"
+      ],
+      "design": "coverage_ds",
+      "record": 8,
+      "case": {
+        "tag": "attend.max",
+        "unit": "SU",
+        "priced": 139.0,
+        "priced_how": "SU model nv 1 + depth 134",
+        "stage_sectors": 16,
+        "drain_sectors": 1,
+        "roles": {
+          "A": [
+            53888,
+            54015,
+            128
+          ],
+          "R": [
+            54528,
+            54528,
+            1
+          ]
+        },
+        "vm_in_sectors": 17,
+        "vm_out_words": 1,
+        "vm_out_sectors": 1
+      },
+      "raw_sha256": "c2c09fced91c0f7c568478ec6880f128f47d4fc3229c24278882436f85c9d715"
+    },
+    {
+      "supported": false,
+      "reasons": [
+        "native_SFU_or_scalar_side_control_calendar"
+      ],
+      "sut": {
+        "a_src": 0,
+        "a_ind": 0,
+        "b_src": 0,
+        "b_half": 0,
+        "c_src": 0,
+        "c_pair": 0,
+        "d_src": 0,
+        "a_rnd": 0,
+        "a_relu": 0,
+        "a_min": 0,
+        "c_clip": 0,
+        "m1": 3,
+        "m2": 0,
+        "qm": 0,
+        "ad": 3,
+        "sfu": 1,
+        "e1": 0,
+        "e2": 0,
+        "rnd": 0,
+        "dst": 1,
+        "red": 1,
+        "red_sq": 0,
+        "red_whole": 1,
+        "red_rnd": 0,
+        "su_vec": 0,
+        "red_tree": 0,
+        "imm1": 1026884851,
+        "imm2": 0,
+        "imm3": 0
+      },
+      "design": "coverage_ds",
+      "record": 9,
+      "case": {
+        "tag": "attend.exp_sum",
+        "unit": "SU",
+        "priced": 233.0,
+        "priced_how": "SU model nv 1 + depth 228",
+        "stage_sectors": 17,
+        "drain_sectors": 17,
+        "roles": {
+          "A": [
+            53888,
+            54015,
+            128
+          ],
+          "B": [
+            54528,
+            54528,
+            1
+          ],
+          "O": [
+            54592,
+            54719,
+            128
+          ],
+          "R": [
+            55232,
+            55232,
+            1
+          ]
+        },
+        "vm_in_sectors": 34,
+        "vm_out_words": 129,
+        "vm_out_sectors": 17
+      },
+      "raw_sha256": "b81c34710689fb313b268e31554f360b7c3af3f6bfcebc921cecc0b4dc311b30"
+    },
+    {
+      "supported": true,
+      "empty": false,
+      "words": 128,
+      "sut": {
+        "a_src": 0,
+        "a_ind": 0,
+        "b_src": 0,
+        "b_half": 0,
+        "c_src": 0,
+        "c_pair": 0,
+        "d_src": 0,
+        "a_rnd": 0,
+        "a_relu": 0,
+        "a_min": 0,
+        "c_clip": 0,
+        "m1": 0,
+        "m2": 0,
+        "qm": 0,
+        "ad": 0,
+        "sfu": 0,
+        "e1": 0,
+        "e2": 0,
+        "rnd": 1,
+        "dst": 1,
+        "red": 0,
+        "red_sq": 0,
+        "red_whole": 0,
+        "red_rnd": 0,
+        "su_vec": 0,
+        "red_tree": 0,
+        "imm1": 0,
+        "imm2": 0,
+        "imm3": 0
+      },
+      "address_checks": 256,
+      "issue_groups": 1,
+      "needs_reducer": false,
+      "execution_qualified": false,
+      "open": [
+        "actual_3072_SRAM_bank_calendar",
+        "scalar_reducer_external_joins",
+        "native_global_numerical_proof",
+        "production_timing_price"
+      ],
+      "design": "coverage_ds",
+      "record": 10,
+      "case": {
+        "tag": "attend.bf16_p",
+        "unit": "SU",
+        "priced": 60.0,
+        "priced_how": "SU model nv 1 + depth 55",
+        "stage_sectors": 16,
+        "drain_sectors": 16,
+        "roles": {
+          "A": [
+            54592,
+            54719,
+            128
+          ],
+          "O": [
+            55296,
+            55423,
+            128
+          ]
+        },
+        "vm_in_sectors": 32,
+        "vm_out_words": 128,
+        "vm_out_sectors": 16
+      },
+      "raw_sha256": "955b504ef363c275b21e1575a646ee24a0f699b9a5367bf2218831b5ed756371"
+    },
+    {
+      "supported": false,
+      "reasons": [
+        "native_SFU_or_scalar_side_control_calendar"
+      ],
+      "sut": {
+        "a_src": 0,
+        "a_ind": 0,
+        "b_src": 0,
+        "b_half": 0,
+        "c_src": 0,
+        "c_pair": 0,
+        "d_src": 0,
+        "a_rnd": 0,
+        "a_relu": 0,
+        "a_min": 0,
+        "c_clip": 0,
+        "m1": 0,
+        "m2": 0,
+        "qm": 0,
+        "ad": 3,
+        "sfu": 1,
+        "e1": 2,
+        "e2": 0,
+        "rnd": 0,
+        "dst": 1,
+        "red": 0,
+        "red_sq": 0,
+        "red_whole": 0,
+        "red_rnd": 0,
+        "su_vec": 0,
+        "red_tree": 0,
+        "imm1": 0,
+        "imm2": 0,
+        "imm3": 0
+      },
+      "design": "coverage_ds",
+      "record": 11,
+      "case": {
+        "tag": "attend.den",
+        "unit": "SU",
+        "priced": 154.0,
+        "priced_how": "SU model nv 1 + depth 149",
+        "stage_sectors": 3,
+        "drain_sectors": 1,
+        "roles": {
+          "A": [
+            55936,
+            55936,
+            1
+          ],
+          "B": [
+            54528,
+            54528,
+            1
+          ],
+          "C": [
+            55232,
+            55232,
+            1
+          ],
+          "O": [
+            56064,
+            56064,
+            1
+          ]
+        },
+        "vm_in_sectors": 4,
+        "vm_out_words": 1,
+        "vm_out_sectors": 1
+      },
+      "raw_sha256": "a8d4a01af9309eeebc798ac71b5a1d562404ec7ad8b606168ec19f97656d972e"
+    },
+    {
+      "supported": false,
+      "reasons": [
+        "native_M128_divider_lane_selection_calendar"
+      ],
+      "sut": {
+        "a_src": 0,
+        "a_ind": 0,
+        "b_src": 0,
+        "b_half": 0,
+        "c_src": 0,
+        "c_pair": 0,
+        "d_src": 0,
+        "a_rnd": 0,
+        "a_relu": 0,
+        "a_min": 0,
+        "c_clip": 0,
+        "m1": 4,
+        "m2": 0,
+        "qm": 0,
+        "ad": 0,
+        "sfu": 0,
+        "e1": 0,
+        "e2": 0,
+        "rnd": 1,
+        "dst": 1,
+        "red": 0,
+        "red_sq": 0,
+        "red_whole": 0,
+        "red_rnd": 0,
+        "su_vec": 0,
+        "red_tree": 0,
+        "imm1": 0,
+        "imm2": 0,
+        "imm3": 0
+      },
+      "design": "coverage_ds",
+      "record": 12,
+      "case": {
+        "tag": "attend.norm",
+        "unit": "SU",
+        "priced": 76.0,
+        "priced_how": "SU model nv 2 + depth 70",
+        "stage_sectors": 65,
+        "drain_sectors": 64,
+        "roles": {
+          "A": [
+            56128,
+            56639,
+            512
+          ],
+          "B": [
+            56064,
+            56064,
+            1
+          ],
+          "O": [
+            57152,
+            57663,
+            512
+          ]
+        },
+        "vm_in_sectors": 129,
+        "vm_out_words": 512,
+        "vm_out_sectors": 64
+      },
+      "raw_sha256": "bc10b553e9d57d21c4d93c541261e670253e5a2edd0226c112f5caf8b93bf491"
+    },
+    {
+      "supported": true,
+      "empty": false,
+      "words": 64,
+      "sut": {
+        "a_src": 0,
+        "a_ind": 0,
+        "b_src": 0,
+        "b_half": 1,
+        "c_src": 0,
+        "c_pair": 1,
+        "d_src": 0,
+        "a_rnd": 0,
+        "a_relu": 0,
+        "a_min": 0,
+        "c_clip": 0,
+        "m1": 1,
+        "m2": 0,
+        "qm": 4,
+        "ad": 1,
+        "sfu": 0,
+        "e1": 0,
+        "e2": 0,
+        "rnd": 1,
+        "dst": 1,
+        "red": 0,
+        "red_sq": 0,
+        "red_whole": 0,
+        "red_rnd": 0,
+        "su_vec": 0,
+        "red_tree": 0,
+        "imm1": 0,
+        "imm2": 0,
+        "imm3": 0
+      },
+      "address_checks": 256,
+      "issue_groups": 1,
+      "needs_reducer": false,
+      "execution_qualified": false,
+      "open": [
+        "actual_3072_SRAM_bank_calendar",
+        "scalar_reducer_external_joins",
+        "native_global_numerical_proof",
+        "production_timing_price"
+      ],
+      "design": "coverage_ds",
+      "record": 13,
+      "case": {
+        "tag": "attend.inv_rope.tail",
+        "unit": "SU",
+        "priced": 60.0,
+        "priced_how": "SU model nv 1 + depth 55",
+        "stage_sectors": 16,
+        "drain_sectors": 8,
+        "roles": {
+          "A": [
+            57600,
+            57663,
+            64
+          ],
+          "B": [
+            53312,
+            53343,
+            32
+          ],
+          "D": [
+            53344,
+            53375,
+            32
+          ],
+          "O": [
+            57600,
+            57663,
+            64
+          ]
+        },
+        "vm_in_sectors": 16,
+        "vm_out_words": 64,
+        "vm_out_sectors": 8
+      },
+      "raw_sha256": "8fb064a66e2c73adfa1e1430b624ce254331ecccb5419b008ca6f5aec2146d47"
+    },
+    {
+      "supported": true,
+      "empty": false,
+      "words": 20480,
+      "sut": {
+        "a_src": 0,
+        "a_ind": 0,
+        "b_src": 0,
+        "b_half": 0,
+        "c_src": 0,
+        "c_pair": 0,
+        "d_src": 0,
+        "a_rnd": 0,
+        "a_relu": 0,
+        "a_min": 0,
+        "c_clip": 0,
+        "m1": 0,
+        "m2": 0,
+        "qm": 0,
+        "ad": 0,
+        "sfu": 0,
+        "e1": 0,
+        "e2": 0,
+        "rnd": 0,
+        "dst": 1,
+        "red": 0,
+        "red_sq": 0,
+        "red_whole": 0,
+        "red_rnd": 0,
+        "su_vec": 0,
+        "red_tree": 0,
+        "imm1": 0,
+        "imm2": 0,
+        "imm3": 0
+      },
+      "address_checks": 40960,
+      "issue_groups": 40,
+      "needs_reducer": false,
+      "execution_qualified": false,
+      "open": [
+        "actual_3072_SRAM_bank_calendar",
+        "scalar_reducer_external_joins",
+        "native_global_numerical_proof",
+        "production_timing_price"
+      ],
+      "design": "coverage_ds",
+      "record": 14,
+      "case": {
+        "tag": "attn.res_copy",
+        "unit": "SU",
+        "priced": 99.0,
+        "priced_how": "SU model nv 40 + depth 55",
+        "stage_sectors": 2560,
+        "drain_sectors": 2560,
+        "roles": {
+          "A": [
+            0,
+            20479,
+            20480
+          ],
+          "O": [
+            20480,
+            40959,
+            20480
+          ]
+        },
+        "vm_in_sectors": 5120,
+        "vm_out_words": 20480,
+        "vm_out_sectors": 2560
+      },
+      "raw_sha256": "64f941b7d001caccabc9956ba328cc6e96a1c41d77c5beebc5aeb2acadab4886"
+    },
+    {
+      "supported": false,
+      "reasons": [
+        "native_SFU_or_scalar_side_control_calendar"
+      ],
+      "sut": {
+        "a_src": 0,
+        "a_ind": 0,
+        "b_src": 0,
+        "b_half": 0,
+        "c_src": 0,
+        "c_pair": 0,
+        "d_src": 0,
+        "a_rnd": 0,
+        "a_relu": 0,
+        "a_min": 0,
+        "c_clip": 0,
+        "m1": 0,
+        "m2": 0,
+        "qm": 0,
+        "ad": 0,
+        "sfu": 6,
+        "e1": 0,
+        "e2": 0,
+        "rnd": 0,
+        "dst": 1,
+        "red": 0,
+        "red_sq": 0,
+        "red_whole": 0,
+        "red_rnd": 0,
+        "su_vec": 0,
+        "red_tree": 0,
+        "imm1": 0,
+        "imm2": 0,
+        "imm3": 0
+      },
+      "design": "coverage_ds",
+      "record": 15,
+      "case": {
+        "tag": "router_act",
+        "unit": "SU",
+        "priced": 339.0,
+        "priced_how": "SU model nv 4 + depth 331",
+        "stage_sectors": 1,
+        "drain_sectors": 1,
+        "roles": {
+          "A": [
+            87360,
+            87363,
+            4
+          ],
+          "O": [
+            87360,
+            87363,
+            4
+          ]
+        },
+        "vm_in_sectors": 1,
+        "vm_out_words": 4,
+        "vm_out_sectors": 1
+      },
+      "raw_sha256": "be593e81759a52d800f895e949526db244651bdb756984a67aca88dc000e5d5d"
+    },
+    {
+      "supported": true,
+      "empty": false,
+      "words": 384,
+      "sut": {
+        "a_src": 0,
+        "a_ind": 0,
+        "b_src": 0,
+        "b_half": 0,
+        "c_src": 0,
+        "c_pair": 0,
+        "d_src": 0,
+        "a_rnd": 0,
+        "a_relu": 0,
+        "a_min": 0,
+        "c_clip": 0,
+        "m1": 0,
+        "m2": 0,
+        "qm": 0,
+        "ad": 2,
+        "sfu": 0,
+        "e1": 0,
+        "e2": 0,
+        "rnd": 0,
+        "dst": 1,
+        "red": 0,
+        "red_sq": 0,
+        "red_whole": 0,
+        "red_rnd": 0,
+        "su_vec": 0,
+        "red_tree": 0,
+        "imm1": 0,
+        "imm2": 0,
+        "imm3": 0
+      },
+      "address_checks": 1152,
+      "issue_groups": 1,
+      "needs_reducer": false,
+      "execution_qualified": false,
+      "open": [
+        "actual_3072_SRAM_bank_calendar",
+        "scalar_reducer_external_joins",
+        "native_global_numerical_proof",
+        "production_timing_price"
+      ],
+      "design": "coverage_ds",
+      "record": 16,
+      "case": {
+        "tag": "route.scores_bias",
+        "unit": "SU",
+        "priced": 60.0,
+        "priced_how": "SU model nv 1 + depth 55",
+        "stage_sectors": 96,
+        "drain_sectors": 48,
+        "roles": {
+          "A": [
+            87360,
+            87743,
+            384
+          ],
+          "C": [
+            87744,
+            88127,
+            384
+          ],
+          "O": [
+            88128,
+            88511,
+            384
+          ]
+        },
+        "vm_in_sectors": 144,
+        "vm_out_words": 384,
+        "vm_out_sectors": 48
+      },
+      "raw_sha256": "b32df8cc0e385bf104a275e3d5ff5034213fdd9e04de9688636d9cb1afc5ade5"
+    },
+    {
+      "supported": false,
+      "reasons": [
+        "MDESC_indexed_scalar_runtime_address_calendar"
+      ],
+      "sut": {
+        "a_src": 0,
+        "a_ind": 0,
+        "b_src": 0,
+        "b_half": 0,
+        "c_src": 0,
+        "c_pair": 0,
+        "d_src": 0,
+        "a_rnd": 0,
+        "a_relu": 0,
+        "a_min": 0,
+        "c_clip": 0,
+        "m1": 0,
+        "m2": 0,
+        "qm": 0,
+        "ad": 0,
+        "sfu": 0,
+        "e1": 0,
+        "e2": 0,
+        "rnd": 0,
+        "dst": 1,
+        "red": 0,
+        "red_sq": 0,
+        "red_whole": 0,
+        "red_rnd": 0,
+        "su_vec": 0,
+        "red_tree": 0,
+        "imm1": 0,
+        "imm2": 0,
+        "imm3": 0
+      },
+      "design": "coverage_ds",
+      "record": 17,
+      "case": {
+        "tag": "route.gather0",
+        "unit": "SU",
+        "priced": 60.0,
+        "priced_how": "SU model nv 1 + depth 55",
+        "stage_sectors": 2,
+        "drain_sectors": 1,
+        "roles": {
+          "A": [
+            87360,
+            87360,
+            1
+          ],
+          "O": [
+            88576,
+            88576,
+            1
+          ],
+          "I": [
+            88512,
+            88512,
+            1
+          ]
+        },
+        "vm_in_sectors": 3,
+        "vm_out_words": 1,
+        "vm_out_sectors": 1
+      },
+      "raw_sha256": "6560d23c52b69faf6b8950b4a04f89b27fbdc6ed822e41596ce2c76ff00c7f5b"
+    },
+    {
+      "supported": false,
+      "reasons": [
+        "MDESC_indexed_scalar_runtime_address_calendar"
+      ],
+      "sut": {
+        "a_src": 0,
+        "a_ind": 0,
+        "b_src": 0,
+        "b_half": 0,
+        "c_src": 0,
+        "c_pair": 0,
+        "d_src": 0,
+        "a_rnd": 0,
+        "a_relu": 0,
+        "a_min": 0,
+        "c_clip": 0,
+        "m1": 0,
+        "m2": 0,
+        "qm": 0,
+        "ad": 0,
+        "sfu": 0,
+        "e1": 0,
+        "e2": 0,
+        "rnd": 0,
+        "dst": 1,
+        "red": 0,
+        "red_sq": 0,
+        "red_whole": 0,
+        "red_rnd": 0,
+        "su_vec": 0,
+        "red_tree": 0,
+        "imm1": 0,
+        "imm2": 0,
+        "imm3": 0
+      },
+      "design": "coverage_ds",
+      "record": 18,
+      "case": {
+        "tag": "route.gather1",
+        "unit": "SU",
+        "priced": 60.0,
+        "priced_how": "SU model nv 1 + depth 55",
+        "stage_sectors": 2,
+        "drain_sectors": 1,
+        "roles": {
+          "A": [
+            87361,
+            87361,
+            1
+          ],
+          "O": [
+            88577,
+            88577,
+            1
+          ],
+          "I": [
+            88513,
+            88513,
+            1
+          ]
+        },
+        "vm_in_sectors": 3,
+        "vm_out_words": 1,
+        "vm_out_sectors": 1
+      },
+      "raw_sha256": "66e81167e49f02dce4e7390a0a39f3a8e5a5de6e71999d8f541076fdacb0d9b5"
+    },
+    {
+      "supported": false,
+      "reasons": [
+        "MDESC_indexed_scalar_runtime_address_calendar"
+      ],
+      "sut": {
+        "a_src": 0,
+        "a_ind": 0,
+        "b_src": 0,
+        "b_half": 0,
+        "c_src": 0,
+        "c_pair": 0,
+        "d_src": 0,
+        "a_rnd": 0,
+        "a_relu": 0,
+        "a_min": 0,
+        "c_clip": 0,
+        "m1": 0,
+        "m2": 0,
+        "qm": 0,
+        "ad": 0,
+        "sfu": 0,
+        "e1": 0,
+        "e2": 0,
+        "rnd": 0,
+        "dst": 1,
+        "red": 0,
+        "red_sq": 0,
+        "red_whole": 0,
+        "red_rnd": 0,
+        "su_vec": 0,
+        "red_tree": 0,
+        "imm1": 0,
+        "imm2": 0,
+        "imm3": 0
+      },
+      "design": "coverage_ds",
+      "record": 19,
+      "case": {
+        "tag": "route.gather2",
+        "unit": "SU",
+        "priced": 60.0,
+        "priced_how": "SU model nv 1 + depth 55",
+        "stage_sectors": 2,
+        "drain_sectors": 1,
+        "roles": {
+          "A": [
+            87362,
+            87362,
+            1
+          ],
+          "O": [
+            88578,
+            88578,
+            1
+          ],
+          "I": [
+            88514,
+            88514,
+            1
+          ]
+        },
+        "vm_in_sectors": 3,
+        "vm_out_words": 1,
+        "vm_out_sectors": 1
+      },
+      "raw_sha256": "462258c036475df135ad08286769a92fb5d54f900a1b02252b8efac192d445d2"
+    },
+    {
+      "supported": false,
+      "reasons": [
+        "MDESC_indexed_scalar_runtime_address_calendar"
+      ],
+      "sut": {
+        "a_src": 0,
+        "a_ind": 0,
+        "b_src": 0,
+        "b_half": 0,
+        "c_src": 0,
+        "c_pair": 0,
+        "d_src": 0,
+        "a_rnd": 0,
+        "a_relu": 0,
+        "a_min": 0,
+        "c_clip": 0,
+        "m1": 0,
+        "m2": 0,
+        "qm": 0,
+        "ad": 0,
+        "sfu": 0,
+        "e1": 0,
+        "e2": 0,
+        "rnd": 0,
+        "dst": 1,
+        "red": 0,
+        "red_sq": 0,
+        "red_whole": 0,
+        "red_rnd": 0,
+        "su_vec": 0,
+        "red_tree": 0,
+        "imm1": 0,
+        "imm2": 0,
+        "imm3": 0
+      },
+      "design": "coverage_ds",
+      "record": 20,
+      "case": {
+        "tag": "route.gather3",
+        "unit": "SU",
+        "priced": 60.0,
+        "priced_how": "SU model nv 1 + depth 55",
+        "stage_sectors": 2,
+        "drain_sectors": 1,
+        "roles": {
+          "A": [
+            87363,
+            87363,
+            1
+          ],
+          "O": [
+            88579,
+            88579,
+            1
+          ],
+          "I": [
+            88515,
+            88515,
+            1
+          ]
+        },
+        "vm_in_sectors": 3,
+        "vm_out_words": 1,
+        "vm_out_sectors": 1
+      },
+      "raw_sha256": "21285bf2564092b6daa65f93db6ffecf43047ac508dedc4a1db1f9525f8d38a8"
+    },
+    {
+      "supported": false,
+      "reasons": [
+        "MDESC_indexed_scalar_runtime_address_calendar"
+      ],
+      "sut": {
+        "a_src": 0,
+        "a_ind": 0,
+        "b_src": 0,
+        "b_half": 0,
+        "c_src": 0,
+        "c_pair": 0,
+        "d_src": 0,
+        "a_rnd": 0,
+        "a_relu": 0,
+        "a_min": 0,
+        "c_clip": 0,
+        "m1": 0,
+        "m2": 0,
+        "qm": 0,
+        "ad": 0,
+        "sfu": 0,
+        "e1": 0,
+        "e2": 0,
+        "rnd": 0,
+        "dst": 1,
+        "red": 0,
+        "red_sq": 0,
+        "red_whole": 0,
+        "red_rnd": 0,
+        "su_vec": 0,
+        "red_tree": 0,
+        "imm1": 0,
+        "imm2": 0,
+        "imm3": 0
+      },
+      "design": "coverage_ds",
+      "record": 21,
+      "case": {
+        "tag": "route.gather4",
+        "unit": "SU",
+        "priced": 60.0,
+        "priced_how": "SU model nv 1 + depth 55",
+        "stage_sectors": 2,
+        "drain_sectors": 1,
+        "roles": {
+          "A": [
+            87364,
+            87364,
+            1
+          ],
+          "O": [
+            88580,
+            88580,
+            1
+          ],
+          "I": [
+            88516,
+            88516,
+            1
+          ]
+        },
+        "vm_in_sectors": 3,
+        "vm_out_words": 1,
+        "vm_out_sectors": 1
+      },
+      "raw_sha256": "07d47165809666540687e50cbd150c64f80978fd22b1c3ead0b1a11156fbf8c7"
+    },
+    {
+      "supported": false,
+      "reasons": [
+        "MDESC_indexed_scalar_runtime_address_calendar"
+      ],
+      "sut": {
+        "a_src": 0,
+        "a_ind": 0,
+        "b_src": 0,
+        "b_half": 0,
+        "c_src": 0,
+        "c_pair": 0,
+        "d_src": 0,
+        "a_rnd": 0,
+        "a_relu": 0,
+        "a_min": 0,
+        "c_clip": 0,
+        "m1": 0,
+        "m2": 0,
+        "qm": 0,
+        "ad": 0,
+        "sfu": 0,
+        "e1": 0,
+        "e2": 0,
+        "rnd": 0,
+        "dst": 1,
+        "red": 0,
+        "red_sq": 0,
+        "red_whole": 0,
+        "red_rnd": 0,
+        "su_vec": 0,
+        "red_tree": 0,
+        "imm1": 0,
+        "imm2": 0,
+        "imm3": 0
+      },
+      "design": "coverage_ds",
+      "record": 22,
+      "case": {
+        "tag": "route.gather5",
+        "unit": "SU",
+        "priced": 60.0,
+        "priced_how": "SU model nv 1 + depth 55",
+        "stage_sectors": 2,
+        "drain_sectors": 1,
+        "roles": {
+          "A": [
+            87365,
+            87365,
+            1
+          ],
+          "O": [
+            88581,
+            88581,
+            1
+          ],
+          "I": [
+            88517,
+            88517,
+            1
+          ]
+        },
+        "vm_in_sectors": 3,
+        "vm_out_words": 1,
+        "vm_out_sectors": 1
+      },
+      "raw_sha256": "a0b66b5d3bf704355b74b2072b7360fe761177bb620f0d6874255f0c9deac45c"
+    },
+    {
+      "supported": true,
+      "empty": false,
+      "words": 6,
+      "sut": {
+        "a_src": 0,
+        "a_ind": 0,
+        "b_src": 0,
+        "b_half": 0,
+        "c_src": 0,
+        "c_pair": 0,
+        "d_src": 0,
+        "a_rnd": 0,
+        "a_relu": 0,
+        "a_min": 0,
+        "c_clip": 0,
+        "m1": 0,
+        "m2": 0,
+        "qm": 0,
+        "ad": 0,
+        "sfu": 0,
+        "e1": 0,
+        "e2": 0,
+        "rnd": 0,
+        "dst": 0,
+        "red": 1,
+        "red_sq": 0,
+        "red_whole": 1,
+        "red_rnd": 0,
+        "su_vec": 0,
+        "red_tree": 0,
+        "imm1": 0,
+        "imm2": 0,
+        "imm3": 0
+      },
+      "address_checks": 6,
+      "issue_groups": 1,
+      "needs_reducer": true,
+      "execution_qualified": false,
+      "open": [
+        "actual_3072_SRAM_bank_calendar",
+        "scalar_reducer_external_joins",
+        "native_global_numerical_proof",
+        "production_timing_price"
+      ],
+      "design": "coverage_ds",
+      "record": 23,
+      "case": {
+        "tag": "route.total",
+        "unit": "SU",
+        "priced": 115.0,
+        "priced_how": "SU model nv 1 + depth 110",
+        "stage_sectors": 1,
+        "drain_sectors": 1,
+        "roles": {
+          "A": [
+            88576,
+            88581,
+            6
+          ],
+          "R": [
+            88640,
+            88640,
+            1
+          ]
+        },
+        "vm_in_sectors": 2,
+        "vm_out_words": 1,
+        "vm_out_sectors": 1
+      },
+      "raw_sha256": "854818496f37202eaa56cc2d66b470e01013e710b5b01020466c970ff283db46"
+    },
+    {
+      "supported": true,
+      "empty": false,
+      "words": 1,
+      "sut": {
+        "a_src": 0,
+        "a_ind": 0,
+        "b_src": 0,
+        "b_half": 0,
+        "c_src": 0,
+        "c_pair": 0,
+        "d_src": 0,
+        "a_rnd": 0,
+        "a_relu": 0,
+        "a_min": 0,
+        "c_clip": 0,
+        "m1": 0,
+        "m2": 0,
+        "qm": 0,
+        "ad": 4,
+        "sfu": 0,
+        "e1": 0,
+        "e2": 0,
+        "rnd": 0,
+        "dst": 1,
+        "red": 0,
+        "red_sq": 0,
+        "red_whole": 0,
+        "red_rnd": 0,
+        "su_vec": 0,
+        "red_tree": 0,
+        "imm1": 0,
+        "imm2": 507307272,
+        "imm3": 0
+      },
+      "address_checks": 2,
+      "issue_groups": 1,
+      "needs_reducer": false,
+      "execution_qualified": false,
+      "open": [
+        "actual_3072_SRAM_bank_calendar",
+        "scalar_reducer_external_joins",
+        "native_global_numerical_proof",
+        "production_timing_price"
+      ],
+      "design": "coverage_ds",
+      "record": 24,
+      "case": {
+        "tag": "route.den",
+        "unit": "SU",
+        "priced": 60.0,
+        "priced_how": "SU model nv 1 + depth 55",
+        "stage_sectors": 1,
+        "drain_sectors": 1,
+        "roles": {
+          "A": [
+            88640,
+            88640,
+            1
+          ],
+          "O": [
+            88704,
+            88704,
+            1
+          ]
+        },
+        "vm_in_sectors": 2,
+        "vm_out_words": 1,
+        "vm_out_sectors": 1
+      },
+      "raw_sha256": "eb5f985dea30ce62443f5d427d21820fbdd476b040792da3400df0da44a2e5c5"
+    },
+    {
+      "supported": false,
+      "reasons": [
+        "native_M128_divider_lane_selection_calendar"
+      ],
+      "sut": {
+        "a_src": 0,
+        "a_ind": 0,
+        "b_src": 0,
+        "b_half": 0,
+        "c_src": 0,
+        "c_pair": 0,
+        "d_src": 0,
+        "a_rnd": 0,
+        "a_relu": 0,
+        "a_min": 0,
+        "c_clip": 0,
+        "m1": 4,
+        "m2": 0,
+        "qm": 0,
+        "ad": 0,
+        "sfu": 0,
+        "e1": 3,
+        "e2": 0,
+        "rnd": 0,
+        "dst": 1,
+        "red": 0,
+        "red_sq": 0,
+        "red_whole": 0,
+        "red_rnd": 0,
+        "su_vec": 0,
+        "red_tree": 0,
+        "imm1": 0,
+        "imm2": 1069547520,
+        "imm3": 0
+      },
+      "design": "coverage_ds",
+      "record": 25,
+      "case": {
+        "tag": "route.weights",
+        "unit": "SU",
+        "priced": 75.0,
+        "priced_how": "SU model nv 1 + depth 70",
+        "stage_sectors": 2,
+        "drain_sectors": 1,
+        "roles": {
+          "A": [
+            88576,
+            88581,
+            6
+          ],
+          "B": [
+            88704,
+            88704,
+            1
+          ],
+          "O": [
+            88768,
+            88773,
+            6
+          ]
+        },
+        "vm_in_sectors": 3,
+        "vm_out_words": 6,
+        "vm_out_sectors": 1
+      },
+      "raw_sha256": "38f22952e0fa7d586872ecec42cca1bf240489f756ba99f0fed34bc5d952620e"
+    },
+    {
+      "supported": false,
+      "reasons": [
+        "native_SFU_or_scalar_side_control_calendar"
+      ],
+      "sut": {
+        "a_src": 0,
+        "a_ind": 0,
+        "b_src": 0,
+        "b_half": 0,
+        "c_src": 0,
+        "c_pair": 0,
+        "d_src": 0,
+        "a_rnd": 0,
+        "a_relu": 0,
+        "a_min": 1,
+        "c_clip": 1,
+        "m1": 0,
+        "m2": 0,
+        "qm": 0,
+        "ad": 0,
+        "sfu": 5,
+        "e1": 1,
+        "e2": 1,
+        "rnd": 1,
+        "dst": 1,
+        "red": 0,
+        "red_sq": 0,
+        "red_whole": 0,
+        "red_rnd": 0,
+        "su_vec": 0,
+        "red_tree": 0,
+        "imm1": 0,
+        "imm2": 0,
+        "imm3": 1092616192
+      },
+      "design": "coverage_ds",
+      "record": 26,
+      "case": {
+        "tag": "swiglu",
+        "unit": "SU",
+        "priced": 181.0,
+        "priced_how": "SU model nv 1 + depth 176",
+        "stage_sectors": 43,
+        "drain_sectors": 21,
+        "roles": {
+          "A": [
+            192960,
+            251351,
+            168
+          ],
+          "B": [
+            88768,
+            88774,
+            7
+          ],
+          "C": [
+            195264,
+            253655,
+            168
+          ],
+          "O": [
+            88832,
+            102679,
+            168
+          ]
+        },
+        "vm_in_sectors": 64,
+        "vm_out_words": 168,
+        "vm_out_sectors": 21
+      },
+      "raw_sha256": "9648d1c6b0189325b33ae3d4360caf7a009e9ab7e24cc13b1acf6827bbd109f7"
+    },
+    {
+      "supported": true,
+      "empty": false,
+      "words": 53,
+      "sut": {
+        "a_src": 0,
+        "a_ind": 0,
+        "b_src": 0,
+        "b_half": 0,
+        "c_src": 0,
+        "c_pair": 0,
+        "d_src": 0,
+        "a_rnd": 0,
+        "a_relu": 0,
+        "a_min": 0,
+        "c_clip": 0,
+        "m1": 0,
+        "m2": 0,
+        "qm": 0,
+        "ad": 4,
+        "sfu": 0,
+        "e1": 2,
+        "e2": 0,
+        "rnd": 0,
+        "dst": 1,
+        "red": 0,
+        "red_sq": 0,
+        "red_whole": 0,
+        "red_rnd": 0,
+        "su_vec": 0,
+        "red_tree": 0,
+        "imm1": 0,
+        "imm2": 0,
+        "imm3": 0
+      },
+      "address_checks": 159,
+      "issue_groups": 1,
+      "needs_reducer": false,
+      "execution_qualified": false,
+      "open": [
+        "actual_3072_SRAM_bank_calendar",
+        "scalar_reducer_external_joins",
+        "native_global_numerical_proof",
+        "production_timing_price"
+      ],
+      "design": "coverage_ds",
+      "record": 27,
+      "case": {
+        "tag": "moe_sum.0",
+        "unit": "SU",
+        "priced": 60.0,
+        "priced_how": "SU model nv 1 + depth 55",
+        "stage_sectors": 14,
+        "drain_sectors": 7,
+        "roles": {
+          "A": [
+            197568,
+            197620,
+            53
+          ],
+          "C": [
+            207296,
+            207348,
+            53
+          ],
+          "O": [
+            104960,
+            105012,
+            53
+          ]
+        },
+        "vm_in_sectors": 21,
+        "vm_out_words": 53,
+        "vm_out_sectors": 7
+      },
+      "raw_sha256": "72f076c1e8d38ede9cf43c9e0ad5e3d4e0067db35ca0429789db0d55d15e628d"
+    },
+    {
+      "supported": true,
+      "empty": false,
+      "words": 53,
+      "sut": {
+        "a_src": 0,
+        "a_ind": 0,
+        "b_src": 0,
+        "b_half": 0,
+        "c_src": 0,
+        "c_pair": 0,
+        "d_src": 0,
+        "a_rnd": 0,
+        "a_relu": 0,
+        "a_min": 0,
+        "c_clip": 0,
+        "m1": 0,
+        "m2": 0,
+        "qm": 0,
+        "ad": 5,
+        "sfu": 0,
+        "e1": 2,
+        "e2": 0,
+        "rnd": 0,
+        "dst": 1,
+        "red": 0,
+        "red_sq": 0,
+        "red_whole": 0,
+        "red_rnd": 0,
+        "su_vec": 0,
+        "red_tree": 0,
+        "imm1": 0,
+        "imm2": 0,
+        "imm3": 0
+      },
+      "address_checks": 212,
+      "issue_groups": 1,
+      "needs_reducer": false,
+      "execution_qualified": false,
+      "open": [
+        "actual_3072_SRAM_bank_calendar",
+        "scalar_reducer_external_joins",
+        "native_global_numerical_proof",
+        "production_timing_price"
+      ],
+      "design": "coverage_ds",
+      "record": 28,
+      "case": {
+        "tag": "moe_sum.2",
+        "unit": "SU",
+        "priced": 60.0,
+        "priced_how": "SU model nv 1 + depth 55",
+        "stage_sectors": 21,
+        "drain_sectors": 7,
+        "roles": {
+          "A": [
+            104960,
+            105012,
+            53
+          ],
+          "C": [
+            226752,
+            226804,
+            53
+          ],
+          "D": [
+            217024,
+            217076,
+            53
+          ],
+          "O": [
+            104960,
+            105012,
+            53
+          ]
+        },
+        "vm_in_sectors": 21,
+        "vm_out_words": 53,
+        "vm_out_sectors": 7
+      },
+      "raw_sha256": "7aff94d800b748ee8044c9f7654f722c68f5db84118a17e7a5cf028c5ff510c9"
+    },
+    {
+      "supported": true,
+      "empty": false,
+      "words": 53,
+      "sut": {
+        "a_src": 0,
+        "a_ind": 0,
+        "b_src": 0,
+        "b_half": 0,
+        "c_src": 0,
+        "c_pair": 0,
+        "d_src": 0,
+        "a_rnd": 0,
+        "a_relu": 0,
+        "a_min": 0,
+        "c_clip": 0,
+        "m1": 0,
+        "m2": 0,
+        "qm": 0,
+        "ad": 5,
+        "sfu": 0,
+        "e1": 2,
+        "e2": 0,
+        "rnd": 0,
+        "dst": 1,
+        "red": 0,
+        "red_sq": 0,
+        "red_whole": 0,
+        "red_rnd": 0,
+        "su_vec": 0,
+        "red_tree": 0,
+        "imm1": 0,
+        "imm2": 0,
+        "imm3": 0
+      },
+      "address_checks": 212,
+      "issue_groups": 1,
+      "needs_reducer": false,
+      "execution_qualified": false,
+      "open": [
+        "actual_3072_SRAM_bank_calendar",
+        "scalar_reducer_external_joins",
+        "native_global_numerical_proof",
+        "production_timing_price"
+      ],
+      "design": "coverage_ds",
+      "record": 29,
+      "case": {
+        "tag": "moe_sum.4",
+        "unit": "SU",
+        "priced": 60.0,
+        "priced_how": "SU model nv 1 + depth 55",
+        "stage_sectors": 21,
+        "drain_sectors": 7,
+        "roles": {
+          "A": [
+            104960,
+            105012,
+            53
+          ],
+          "C": [
+            246208,
+            246260,
+            53
+          ],
+          "D": [
+            236480,
+            236532,
+            53
+          ],
+          "O": [
+            104960,
+            105012,
+            53
+          ]
+        },
+        "vm_in_sectors": 21,
+        "vm_out_words": 53,
+        "vm_out_sectors": 7
+      },
+      "raw_sha256": "fade0edf5232369103483fe322ca14dfdc24b99625ad169677b2b224fe843b75"
+    },
+    {
+      "supported": true,
+      "empty": false,
+      "words": 53,
+      "sut": {
+        "a_src": 0,
+        "a_ind": 0,
+        "b_src": 0,
+        "b_half": 0,
+        "c_src": 0,
+        "c_pair": 0,
+        "d_src": 0,
+        "a_rnd": 0,
+        "a_relu": 0,
+        "a_min": 0,
+        "c_clip": 0,
+        "m1": 0,
+        "m2": 0,
+        "qm": 0,
+        "ad": 2,
+        "sfu": 0,
+        "e1": 0,
+        "e2": 0,
+        "rnd": 1,
+        "dst": 1,
+        "red": 0,
+        "red_sq": 0,
+        "red_whole": 0,
+        "red_rnd": 0,
+        "su_vec": 0,
+        "red_tree": 0,
+        "imm1": 0,
+        "imm2": 0,
+        "imm3": 0
+      },
+      "address_checks": 159,
+      "issue_groups": 1,
+      "needs_reducer": false,
+      "execution_qualified": false,
+      "open": [
+        "actual_3072_SRAM_bank_calendar",
+        "scalar_reducer_external_joins",
+        "native_global_numerical_proof",
+        "production_timing_price"
+      ],
+      "design": "coverage_ds",
+      "record": 30,
+      "case": {
+        "tag": "moe_sum.6",
+        "unit": "SU",
+        "priced": 60.0,
+        "priced_how": "SU model nv 1 + depth 55",
+        "stage_sectors": 14,
+        "drain_sectors": 7,
+        "roles": {
+          "A": [
+            104960,
+            105012,
+            53
+          ],
+          "C": [
+            255936,
+            255988,
+            53
+          ],
+          "O": [
+            104960,
+            105012,
+            53
+          ]
+        },
+        "vm_in_sectors": 14,
+        "vm_out_words": 53,
+        "vm_out_sectors": 7
+      },
+      "raw_sha256": "cf076ed113a9af1ad2b37045437ce140a746f8fbaae6d9283a4c7f830ec16df7"
+    },
+    {
+      "supported": true,
+      "empty": false,
+      "words": 20480,
+      "sut": {
+        "a_src": 0,
+        "a_ind": 0,
+        "b_src": 0,
+        "b_half": 0,
+        "c_src": 0,
+        "c_pair": 0,
+        "d_src": 0,
+        "a_rnd": 0,
+        "a_relu": 0,
+        "a_min": 0,
+        "c_clip": 0,
+        "m1": 0,
+        "m2": 0,
+        "qm": 0,
+        "ad": 0,
+        "sfu": 0,
+        "e1": 0,
+        "e2": 0,
+        "rnd": 0,
+        "dst": 1,
+        "red": 0,
+        "red_sq": 0,
+        "red_whole": 0,
+        "red_rnd": 0,
+        "su_vec": 0,
+        "red_tree": 0,
+        "imm1": 0,
+        "imm2": 0,
+        "imm3": 0
+      },
+      "address_checks": 40960,
+      "issue_groups": 40,
+      "needs_reducer": false,
+      "execution_qualified": false,
+      "open": [
+        "actual_3072_SRAM_bank_calendar",
+        "scalar_reducer_external_joins",
+        "native_global_numerical_proof",
+        "production_timing_price"
+      ],
+      "design": "coverage_ds",
+      "record": 31,
+      "case": {
+        "tag": "ffn.res_copy",
+        "unit": "SU",
+        "priced": 99.0,
+        "priced_how": "SU model nv 40 + depth 55",
+        "stage_sectors": 2560,
+        "drain_sectors": 2560,
+        "roles": {
+          "A": [
+            0,
+            20479,
+            20480
+          ],
+          "O": [
+            20480,
+            40959,
+            20480
+          ]
+        },
+        "vm_in_sectors": 5120,
+        "vm_out_words": 20480,
+        "vm_out_sectors": 2560
+      },
+      "raw_sha256": "64f941b7d001caccabc9956ba328cc6e96a1c41d77c5beebc5aeb2acadab4886"
+    },
+    {
+      "supported": true,
+      "empty": false,
+      "words": 4,
+      "sut": {
+        "a_src": 0,
+        "a_ind": 0,
+        "b_src": 0,
+        "b_half": 0,
+        "c_src": 0,
+        "c_pair": 0,
+        "d_src": 0,
+        "a_rnd": 0,
+        "a_relu": 0,
+        "a_min": 0,
+        "c_clip": 0,
+        "m1": 0,
+        "m2": 0,
+        "qm": 0,
+        "ad": 0,
+        "sfu": 0,
+        "e1": 0,
+        "e2": 0,
+        "rnd": 0,
+        "dst": 1,
+        "red": 0,
+        "red_sq": 0,
+        "red_whole": 0,
+        "red_rnd": 0,
+        "su_vec": 0,
+        "red_tree": 0,
+        "imm1": 0,
+        "imm2": 0,
+        "imm3": 0
+      },
+      "address_checks": 8,
+      "issue_groups": 1,
+      "needs_reducer": false,
+      "execution_qualified": false,
+      "open": [
+        "actual_3072_SRAM_bank_calendar",
+        "scalar_reducer_external_joins",
+        "native_global_numerical_proof",
+        "production_timing_price"
+      ],
+      "design": "coverage_ds",
+      "record": 32,
+      "case": {
+        "tag": "pre <- ffn mix pre",
+        "unit": "SU",
+        "priced": 60.0,
+        "priced_how": "SU model nv 1 + depth 55",
+        "stage_sectors": 1,
+        "drain_sectors": 1,
+        "roles": {
+          "A": [
+            41088,
+            41091,
+            4
+          ],
+          "O": [
+            40960,
+            40963,
+            4
+          ]
+        },
+        "vm_in_sectors": 2,
+        "vm_out_words": 4,
+        "vm_out_sectors": 1
+      },
+      "raw_sha256": "cfd1bd62a9102b82001eb33a99b3c9212759cd8a3b7d41899d6972538a17154b"
+    },
+    {
+      "supported": true,
+      "empty": false,
+      "words": 4096,
+      "sut": {
+        "a_src": 0,
+        "a_ind": 0,
+        "b_src": 0,
+        "b_half": 0,
+        "c_src": 0,
+        "c_pair": 0,
+        "d_src": 0,
+        "a_rnd": 0,
+        "a_relu": 0,
+        "a_min": 0,
+        "c_clip": 0,
+        "m1": 1,
+        "m2": 0,
+        "qm": 0,
+        "ad": 0,
+        "sfu": 0,
+        "e1": 0,
+        "e2": 0,
+        "rnd": 0,
+        "dst": 1,
+        "red": 0,
+        "red_sq": 0,
+        "red_whole": 0,
+        "red_rnd": 0,
+        "su_vec": 0,
+        "red_tree": 0,
+        "imm1": 0,
+        "imm2": 0,
+        "imm3": 0
+      },
+      "address_checks": 12288,
+      "issue_groups": 8,
+      "needs_reducer": false,
+      "execution_qualified": false,
+      "open": [
+        "actual_3072_SRAM_bank_calendar",
+        "scalar_reducer_external_joins",
+        "native_global_numerical_proof",
+        "production_timing_price"
+      ],
+      "design": "coverage_qwen",
+      "record": 0,
+      "case": {
+        "tag": "embedding.dequant",
+        "unit": "SU",
+        "priced": 67.0,
+        "priced_how": "SU model nv 8 + depth 55",
+        "stage_sectors": 513,
+        "drain_sectors": 512,
+        "roles": {
+          "A": [
+            0,
+            4095,
+            4096
+          ],
+          "B": [
+            186368,
+            186368,
+            1
+          ],
+          "O": [
+            0,
+            4095,
+            4096
+          ]
+        },
+        "vm_in_sectors": 513,
+        "vm_out_words": 4096,
+        "vm_out_sectors": 512
+      },
+      "raw_sha256": "0c086df09e2b3c5953ea5b3c39f1fa510251f7ae674b08735cc1b4387359e894"
+    },
+    {
+      "supported": true,
+      "empty": false,
+      "words": 1536,
+      "sut": {
+        "a_src": 0,
+        "a_ind": 0,
+        "b_src": 0,
+        "b_half": 0,
+        "c_src": 0,
+        "c_pair": 0,
+        "d_src": 0,
+        "a_rnd": 0,
+        "a_relu": 0,
+        "a_min": 0,
+        "c_clip": 0,
+        "m1": 1,
+        "m2": 0,
+        "qm": 0,
+        "ad": 0,
+        "sfu": 0,
+        "e1": 0,
+        "e2": 0,
+        "rnd": 0,
+        "dst": 1,
+        "red": 0,
+        "red_sq": 0,
+        "red_whole": 0,
+        "red_rnd": 0,
+        "su_vec": 0,
+        "red_tree": 0,
+        "imm1": 0,
+        "imm2": 0,
+        "imm3": 0
+      },
+      "address_checks": 4608,
+      "issue_groups": 3,
+      "needs_reducer": false,
+      "execution_qualified": false,
+      "open": [
+        "actual_3072_SRAM_bank_calendar",
+        "scalar_reducer_external_joins",
+        "native_global_numerical_proof",
+        "production_timing_price"
+      ],
+      "design": "coverage_qwen",
+      "record": 1,
+      "case": {
+        "tag": "row_scale_qkv",
+        "unit": "SU",
+        "priced": 62.0,
+        "priced_how": "SU model nv 3 + depth 55",
+        "stage_sectors": 384,
+        "drain_sectors": 192,
+        "roles": {
+          "A": [
+            8192,
+            9727,
+            1536
+          ],
+          "B": [
+            156672,
+            158207,
+            1536
+          ],
+          "O": [
+            9728,
+            11263,
+            1536
+          ]
+        },
+        "vm_in_sectors": 576,
+        "vm_out_words": 1536,
+        "vm_out_sectors": 192
+      },
+      "raw_sha256": "31915e9e336c726318cea649e018724c543abae6a74dfc404980e38a42965a07"
+    },
+    {
+      "supported": true,
+      "empty": false,
+      "words": 1280,
+      "sut": {
+        "a_src": 0,
+        "a_ind": 0,
+        "b_src": 0,
+        "b_half": 1,
+        "c_src": 0,
+        "c_pair": 1,
+        "d_src": 0,
+        "a_rnd": 0,
+        "a_relu": 0,
+        "a_min": 0,
+        "c_clip": 0,
+        "m1": 1,
+        "m2": 0,
+        "qm": 3,
+        "ad": 1,
+        "sfu": 0,
+        "e1": 0,
+        "e2": 0,
+        "rnd": 0,
+        "dst": 1,
+        "red": 0,
+        "red_sq": 0,
+        "red_whole": 0,
+        "red_rnd": 0,
+        "su_vec": 0,
+        "red_tree": 0,
+        "imm1": 0,
+        "imm2": 0,
+        "imm3": 0
+      },
+      "address_checks": 5120,
+      "issue_groups": 3,
+      "needs_reducer": false,
+      "execution_qualified": false,
+      "open": [
+        "actual_3072_SRAM_bank_calendar",
+        "scalar_reducer_external_joins",
+        "native_global_numerical_proof",
+        "production_timing_price"
+      ],
+      "design": "coverage_qwen",
+      "record": 2,
+      "case": {
+        "tag": "rope",
+        "unit": "SU",
+        "priced": 62.0,
+        "priced_how": "SU model nv 3 + depth 55",
+        "stage_sectors": 176,
+        "drain_sectors": 160,
+        "roles": {
+          "A": [
+            11264,
+            12543,
+            1280
+          ],
+          "B": [
+            12544,
+            12607,
+            64
+          ],
+          "D": [
+            12608,
+            12671,
+            64
+          ],
+          "O": [
+            12800,
+            14079,
+            1280
+          ]
+        },
+        "vm_in_sectors": 336,
+        "vm_out_words": 1280,
+        "vm_out_sectors": 160
+      },
+      "raw_sha256": "bef0989487bb9e04980b1b1b0075ff102d068ff268a3f432e14ae22c78fc50f1"
+    },
+    {
+      "supported": true,
+      "empty": false,
+      "words": 1024,
+      "sut": {
+        "a_src": 0,
+        "a_ind": 0,
+        "b_src": 0,
+        "b_half": 0,
+        "c_src": 0,
+        "c_pair": 0,
+        "d_src": 0,
+        "a_rnd": 0,
+        "a_relu": 0,
+        "a_min": 0,
+        "c_clip": 0,
+        "m1": 0,
+        "m2": 0,
+        "qm": 0,
+        "ad": 0,
+        "sfu": 0,
+        "e1": 0,
+        "e2": 0,
+        "rnd": 1,
+        "dst": 1,
+        "red": 0,
+        "red_sq": 0,
+        "red_whole": 0,
+        "red_rnd": 0,
+        "su_vec": 0,
+        "red_tree": 0,
+        "imm1": 0,
+        "imm2": 0,
+        "imm3": 0
+      },
+      "address_checks": 2048,
+      "issue_groups": 2,
+      "needs_reducer": false,
+      "execution_qualified": false,
+      "open": [
+        "actual_3072_SRAM_bank_calendar",
+        "scalar_reducer_external_joins",
+        "native_global_numerical_proof",
+        "production_timing_price"
+      ],
+      "design": "coverage_qwen",
+      "record": 3,
+      "case": {
+        "tag": "round_q",
+        "unit": "SU",
+        "priced": 61.0,
+        "priced_how": "SU model nv 2 + depth 55",
+        "stage_sectors": 128,
+        "drain_sectors": 128,
+        "roles": {
+          "A": [
+            12800,
+            13823,
+            1024
+          ],
+          "O": [
+            14080,
+            15103,
+            1024
+          ]
+        },
+        "vm_in_sectors": 256,
+        "vm_out_words": 1024,
+        "vm_out_sectors": 128
+      },
+      "raw_sha256": "6b6bb4733220940e5e29032ca3bdfffb1c9194c9da1fcaf109ea8becd3da89e9"
+    },
+    {
+      "supported": true,
+      "empty": false,
+      "words": 65536,
+      "sut": {
+        "a_src": 0,
+        "a_ind": 0,
+        "b_src": 0,
+        "b_half": 0,
+        "c_src": 0,
+        "c_pair": 0,
+        "d_src": 0,
+        "a_rnd": 0,
+        "a_relu": 0,
+        "a_min": 0,
+        "c_clip": 0,
+        "m1": 3,
+        "m2": 0,
+        "qm": 0,
+        "ad": 0,
+        "sfu": 0,
+        "e1": 0,
+        "e2": 0,
+        "rnd": 0,
+        "dst": 0,
+        "red": 2,
+        "red_sq": 0,
+        "red_whole": 0,
+        "red_rnd": 0,
+        "su_vec": 0,
+        "red_tree": 0,
+        "imm1": 1035273459,
+        "imm2": 0,
+        "imm3": 0
+      },
+      "address_checks": 65536,
+      "issue_groups": 128,
+      "needs_reducer": true,
+      "execution_qualified": false,
+      "open": [
+        "actual_3072_SRAM_bank_calendar",
+        "scalar_reducer_external_joins",
+        "native_global_numerical_proof",
+        "production_timing_price"
+      ],
+      "design": "coverage_qwen",
+      "record": 4,
+      "case": {
+        "tag": "softmax.max",
+        "unit": "SU",
+        "priced": 302.0,
+        "priced_how": "SU model nv 128 + depth 170",
+        "stage_sectors": 8192,
+        "drain_sectors": 1,
+        "roles": {
+          "A": [
+            15104,
+            80639,
+            65536
+          ],
+          "R": [
+            146176,
+            146183,
+            8
+          ]
+        },
+        "vm_in_sectors": 8193,
+        "vm_out_words": 8,
+        "vm_out_sectors": 1
+      },
+      "raw_sha256": "7af524af9dd8d8b5499557a861ab302340725e20abab2e4cbf2ce3b774ef249a"
+    },
+    {
+      "supported": false,
+      "reasons": [
+        "native_SFU_or_scalar_side_control_calendar"
+      ],
+      "sut": {
+        "a_src": 0,
+        "a_ind": 0,
+        "b_src": 0,
+        "b_half": 0,
+        "c_src": 0,
+        "c_pair": 0,
+        "d_src": 0,
+        "a_rnd": 0,
+        "a_relu": 0,
+        "a_min": 0,
+        "c_clip": 0,
+        "m1": 3,
+        "m2": 0,
+        "qm": 0,
+        "ad": 3,
+        "sfu": 1,
+        "e1": 0,
+        "e2": 0,
+        "rnd": 0,
+        "dst": 1,
+        "red": 1,
+        "red_sq": 0,
+        "red_whole": 0,
+        "red_rnd": 0,
+        "su_vec": 0,
+        "red_tree": 0,
+        "imm1": 1035273459,
+        "imm2": 0,
+        "imm3": 0
+      },
+      "design": "coverage_qwen",
+      "record": 5,
+      "case": {
+        "tag": "softmax.exp_sum",
+        "unit": "SU",
+        "priced": 524.0,
+        "priced_how": "SU model nv 256 + depth 264",
+        "stage_sectors": 8193,
+        "drain_sectors": 8193,
+        "roles": {
+          "A": [
+            15104,
+            80639,
+            65536
+          ],
+          "B": [
+            146176,
+            146183,
+            8
+          ],
+          "O": [
+            80640,
+            146175,
+            65536
+          ],
+          "R": [
+            146304,
+            146311,
+            8
+          ]
+        },
+        "vm_in_sectors": 16386,
+        "vm_out_words": 65544,
+        "vm_out_sectors": 8193
+      },
+      "raw_sha256": "e501b61aa47b34269d81d1240fe363386327dc09211a55c44dea5e2525e5d6a8"
+    },
+    {
+      "supported": true,
+      "empty": false,
+      "words": 65536,
+      "sut": {
+        "a_src": 0,
+        "a_ind": 0,
+        "b_src": 0,
+        "b_half": 0,
+        "c_src": 0,
+        "c_pair": 0,
+        "d_src": 0,
+        "a_rnd": 0,
+        "a_relu": 0,
+        "a_min": 0,
+        "c_clip": 0,
+        "m1": 0,
+        "m2": 0,
+        "qm": 0,
+        "ad": 0,
+        "sfu": 0,
+        "e1": 0,
+        "e2": 0,
+        "rnd": 1,
+        "dst": 1,
+        "red": 0,
+        "red_sq": 0,
+        "red_whole": 0,
+        "red_rnd": 0,
+        "su_vec": 0,
+        "red_tree": 0,
+        "imm1": 0,
+        "imm2": 0,
+        "imm3": 0
+      },
+      "address_checks": 131072,
+      "issue_groups": 128,
+      "needs_reducer": false,
+      "execution_qualified": false,
+      "open": [
+        "actual_3072_SRAM_bank_calendar",
+        "scalar_reducer_external_joins",
+        "native_global_numerical_proof",
+        "production_timing_price"
+      ],
+      "design": "coverage_qwen",
+      "record": 6,
+      "case": {
+        "tag": "softmax.bf16_p",
+        "unit": "SU",
+        "priced": 187.0,
+        "priced_how": "SU model nv 128 + depth 55",
+        "stage_sectors": 8192,
+        "drain_sectors": 8192,
+        "roles": {
+          "A": [
+            80640,
+            146175,
+            65536
+          ],
+          "O": [
+            80640,
+            146175,
+            65536
+          ]
+        },
+        "vm_in_sectors": 8192,
+        "vm_out_words": 65536,
+        "vm_out_sectors": 8192
+      },
+      "raw_sha256": "6ba39924ad4a82f599a627786f80159292e4c1b6e9421b4ff2a5d8fb522d9c62"
+    },
+    {
+      "supported": false,
+      "reasons": [
+        "native_M128_divider_lane_selection_calendar"
+      ],
+      "sut": {
+        "a_src": 0,
+        "a_ind": 0,
+        "b_src": 0,
+        "b_half": 0,
+        "c_src": 0,
+        "c_pair": 0,
+        "d_src": 0,
+        "a_rnd": 0,
+        "a_relu": 0,
+        "a_min": 0,
+        "c_clip": 0,
+        "m1": 4,
+        "m2": 0,
+        "qm": 0,
+        "ad": 0,
+        "sfu": 0,
+        "e1": 0,
+        "e2": 0,
+        "rnd": 0,
+        "dst": 1,
+        "red": 0,
+        "red_sq": 0,
+        "red_whole": 0,
+        "red_rnd": 0,
+        "su_vec": 0,
+        "red_tree": 0,
+        "imm1": 0,
+        "imm2": 0,
+        "imm3": 0
+      },
+      "design": "coverage_qwen",
+      "record": 7,
+      "case": {
+        "tag": "pv_normalize",
+        "unit": "SU",
+        "priced": 78.0,
+        "priced_how": "SU model nv 4 + depth 70",
+        "stage_sectors": 129,
+        "drain_sectors": 128,
+        "roles": {
+          "A": [
+            146432,
+            147455,
+            1024
+          ],
+          "B": [
+            146304,
+            146311,
+            8
+          ],
+          "O": [
+            147456,
+            148479,
+            1024
+          ]
+        },
+        "vm_in_sectors": 257,
+        "vm_out_words": 1024,
+        "vm_out_sectors": 128
+      },
+      "raw_sha256": "dc68916b8f32ca96e0ec24dde0893568aaf18c4c968e852276b63a626c9e54bf"
+    },
+    {
+      "supported": true,
+      "empty": false,
+      "words": 4096,
+      "sut": {
+        "a_src": 0,
+        "a_ind": 0,
+        "b_src": 0,
+        "b_half": 0,
+        "c_src": 0,
+        "c_pair": 0,
+        "d_src": 0,
+        "a_rnd": 0,
+        "a_relu": 0,
+        "a_min": 0,
+        "c_clip": 0,
+        "m1": 1,
+        "m2": 0,
+        "qm": 0,
+        "ad": 2,
+        "sfu": 0,
+        "e1": 0,
+        "e2": 0,
+        "rnd": 0,
+        "dst": 1,
+        "red": 0,
+        "red_sq": 0,
+        "red_whole": 0,
+        "red_rnd": 0,
+        "su_vec": 0,
+        "red_tree": 0,
+        "imm1": 0,
+        "imm2": 0,
+        "imm3": 0
+      },
+      "address_checks": 16384,
+      "issue_groups": 8,
+      "needs_reducer": false,
+      "execution_qualified": false,
+      "open": [
+        "actual_3072_SRAM_bank_calendar",
+        "scalar_reducer_external_joins",
+        "native_global_numerical_proof",
+        "production_timing_price"
+      ],
+      "design": "coverage_qwen",
+      "record": 8,
+      "case": {
+        "tag": "row_scale_o+residual",
+        "unit": "SU",
+        "priced": 67.0,
+        "priced_how": "SU model nv 8 + depth 55",
+        "stage_sectors": 1536,
+        "drain_sectors": 512,
+        "roles": {
+          "A": [
+            152576,
+            156671,
+            4096
+          ],
+          "B": [
+            156672,
+            160767,
+            4096
+          ],
+          "C": [
+            0,
+            4095,
+            4096
+          ],
+          "O": [
+            0,
+            4095,
+            4096
+          ]
+        },
+        "vm_in_sectors": 1536,
+        "vm_out_words": 4096,
+        "vm_out_sectors": 512
+      },
+      "raw_sha256": "e0b6e5961511f6815c128d00c6ba7fecf8e2e0d84dc158954ecddf551e169e82"
+    },
+    {
+      "supported": true,
+      "empty": false,
+      "words": 6144,
+      "sut": {
+        "a_src": 0,
+        "a_ind": 0,
+        "b_src": 0,
+        "b_half": 0,
+        "c_src": 0,
+        "c_pair": 0,
+        "d_src": 0,
+        "a_rnd": 0,
+        "a_relu": 0,
+        "a_min": 0,
+        "c_clip": 0,
+        "m1": 1,
+        "m2": 0,
+        "qm": 0,
+        "ad": 0,
+        "sfu": 0,
+        "e1": 0,
+        "e2": 0,
+        "rnd": 0,
+        "dst": 1,
+        "red": 0,
+        "red_sq": 0,
+        "red_whole": 0,
+        "red_rnd": 0,
+        "su_vec": 0,
+        "red_tree": 0,
+        "imm1": 0,
+        "imm2": 0,
+        "imm3": 0
+      },
+      "address_checks": 18432,
+      "issue_groups": 12,
+      "needs_reducer": false,
+      "execution_qualified": false,
+      "open": [
+        "actual_3072_SRAM_bank_calendar",
+        "scalar_reducer_external_joins",
+        "native_global_numerical_proof",
+        "production_timing_price"
+      ],
+      "design": "coverage_qwen",
+      "record": 9,
+      "case": {
+        "tag": "row_scale_gu",
+        "unit": "SU",
+        "priced": 71.0,
+        "priced_how": "SU model nv 12 + depth 55",
+        "stage_sectors": 1536,
+        "drain_sectors": 768,
+        "roles": {
+          "A": [
+            162816,
+            168959,
+            6144
+          ],
+          "B": [
+            156672,
+            162815,
+            6144
+          ],
+          "O": [
+            168960,
+            175103,
+            6144
+          ]
+        },
+        "vm_in_sectors": 2304,
+        "vm_out_words": 6144,
+        "vm_out_sectors": 768
+      },
+      "raw_sha256": "d0d5c22c6b63f9f7d2336fb1d8ced346708dc6d896a579c244fef68f8adc6a02"
+    },
+    {
+      "supported": false,
+      "reasons": [
+        "native_SFU128_lane_selection_and_variable_depth_calendar",
+        "native_SFU_or_scalar_side_control_calendar"
+      ],
+      "sut": {
+        "a_src": 0,
+        "a_ind": 0,
+        "b_src": 0,
+        "b_half": 0,
+        "c_src": 0,
+        "c_pair": 0,
+        "d_src": 0,
+        "a_rnd": 0,
+        "a_relu": 0,
+        "a_min": 1,
+        "c_clip": 1,
+        "m1": 0,
+        "m2": 0,
+        "qm": 0,
+        "ad": 0,
+        "sfu": 5,
+        "e1": 1,
+        "e2": 1,
+        "rnd": 1,
+        "dst": 1,
+        "red": 0,
+        "red_sq": 0,
+        "red_whole": 0,
+        "red_rnd": 0,
+        "su_vec": 0,
+        "red_tree": 0,
+        "imm1": 0,
+        "imm2": 0,
+        "imm3": 2139095039
+      },
+      "design": "coverage_qwen",
+      "record": 10,
+      "case": {
+        "tag": "swiglu",
+        "unit": "SFU",
+        "priced": 120.0,
+        "priced_how": "GLU fast path (width 0.5)",
+        "stage_sectors": 769,
+        "drain_sectors": 384,
+        "roles": {
+          "A": [
+            168960,
+            172031,
+            3072
+          ],
+          "B": [
+            172032,
+            175103,
+            3072
+          ],
+          "C": [
+            12672,
+            12672,
+            1
+          ],
+          "O": [
+            175104,
+            178175,
+            3072
+          ]
+        },
+        "vm_in_sectors": 1153,
+        "vm_out_words": 3072,
+        "vm_out_sectors": 384
+      },
+      "raw_sha256": "e462cbc1cb7c4e961e8fd6484464c87d710bf3e62b73ee869d28ff57848a6319"
+    },
+    {
+      "supported": true,
+      "empty": false,
+      "words": 4096,
+      "sut": {
+        "a_src": 0,
+        "a_ind": 0,
+        "b_src": 0,
+        "b_half": 0,
+        "c_src": 0,
+        "c_pair": 0,
+        "d_src": 0,
+        "a_rnd": 0,
+        "a_relu": 0,
+        "a_min": 0,
+        "c_clip": 0,
+        "m1": 1,
+        "m2": 0,
+        "qm": 0,
+        "ad": 2,
+        "sfu": 0,
+        "e1": 0,
+        "e2": 0,
+        "rnd": 0,
+        "dst": 1,
+        "red": 0,
+        "red_sq": 0,
+        "red_whole": 0,
+        "red_rnd": 0,
+        "su_vec": 0,
+        "red_tree": 0,
+        "imm1": 0,
+        "imm2": 0,
+        "imm3": 0
+      },
+      "address_checks": 16384,
+      "issue_groups": 8,
+      "needs_reducer": false,
+      "execution_qualified": false,
+      "open": [
+        "actual_3072_SRAM_bank_calendar",
+        "scalar_reducer_external_joins",
+        "native_global_numerical_proof",
+        "production_timing_price"
+      ],
+      "design": "coverage_qwen",
+      "record": 11,
+      "case": {
+        "tag": "row_scale_down+residual",
+        "unit": "SU",
+        "priced": 67.0,
+        "priced_how": "SU model nv 8 + depth 55",
+        "stage_sectors": 1536,
+        "drain_sectors": 512,
+        "roles": {
+          "A": [
+            182272,
+            186367,
+            4096
+          ],
+          "B": [
+            156672,
+            160767,
+            4096
+          ],
+          "C": [
+            0,
+            4095,
+            4096
+          ],
+          "O": [
+            0,
+            4095,
+            4096
+          ]
+        },
+        "vm_in_sectors": 1536,
+        "vm_out_words": 4096,
+        "vm_out_sectors": 512
+      },
+      "raw_sha256": "2a67af293c47e043daf2358207cf531d4f120d6fd2b1e616f92a39484205ee3e"
+    }
+  ]
+}

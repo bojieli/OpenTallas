@@ -1,0 +1,8 @@
+ot-run: ot-epyc1tb     skipped: load hold: load1 > 1.5 x cores
+ot-run: ot-epyc4       skipped: load hold: load1 > 1.5 x cores
+ot-run: ot-pve1        skipped: load hold: load1 > 1.5 x cores
+ot-run: ot-agidock128  admits    34 GB (avail 66, growth 19, headroom 24, waiters 0/0 GB) load 5/64 running 5 disk 21 GB 
+ot-run: -> ot-agidock128
+ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-4010994-1792064012 after 0 s
+PARALLEL_PIPE_EQUIV_PASS
+ot-run: RAN on ot-agidock128 (unit oth-ubuntu-4010994-1792064012): exit 0

@@ -1,0 +1,5561 @@
+{
+  "status": "actual frozen record/address inventory; no static-cycle calendar qualification",
+  "program": "hbm-sim Qwen3-8B TP4 P8191 rank 0 layer 0",
+  "source_files": {
+    "/tmp/gb6/vec/q_s4/su_rec.mem": "116dfa4461b85c0192a5b08efc7e65555bc802b1b397b7865314aaf3caf0a44b",
+    "/tmp/gb6/vec/q_s4/su_case.mem": "b6391b2471cf6d6c231481881c340c4d951d3d0e415716beaf225a5e3a80f04d",
+    "/tmp/gb6/vec/q_s4/su_price.mem": "7fc2b83036686c8b7f1b9ed6dd2e94735ffac049604aab34e99557aeb9ce157c",
+    "/tmp/gb6/vec/q_s4/su_prod.json": "549d995b52b22809d00e75620e7e5a9bb728563d2df3e89929a72a1828638cb9",
+    "/tmp/gb6/vec/q_s4/su_sizes.svh": "da24e492ee5b2e10d4796b9c9e6b9d77076334652f51681d4b7c9487522cfe0d",
+    "/tmp/gb6/vec/q_s4/su_vmg.mem": "ddde3b2b2563246703d6b49d1094bc1ebb44b2dc100a2419ac509bba3e53c86d",
+    "/tmp/gb6/vec/q_s4/su_vme.mem": "58c008a15ac8023d2e95a221630ce0ab7a433937e48b03aa6f2b75bae2b2a6b4"
+  },
+  "N": 512,
+  "M": 128,
+  "geometry_qualification": "N/M are target datapath parameters; record dimensions are decoded verbatim. Frozen s4 vectors do not prove unscaled production dimensions.",
+  "record_count": 18,
+  "cases": [
+    {
+      "case_id": 0,
+      "first_record": 0,
+      "records": 11,
+      "first_output_sector": 0,
+      "output_sectors": 2530,
+      "output_words": 20228,
+      "summed_model_price": 1548.0
+    },
+    {
+      "case_id": 1,
+      "first_record": 11,
+      "records": 7,
+      "first_output_sector": 2530,
+      "output_sectors": 2643,
+      "output_words": 20835,
+      "summed_model_price": 457.0
+    }
+  ],
+  "golden_output_mask_sectors_verified": 5173,
+  "records": [
+    {
+      "index": 0,
+      "tag": "embedding.dequant",
+      "original_unit": 2,
+      "original_present_descriptors": {
+        "A": {
+          "space": "VM",
+          "fmt": "FP32",
+          "base": 0,
+          "n": 1024,
+          "m": 1,
+          "stride": 0,
+          "istride": 0,
+          "lstride": 0,
+          "dyn_sel": 0,
+          "dyn_mul": 0,
+          "n_sel": 0,
+          "l1stride": 0,
+          "ibcast": 0,
+          "indexed": 0
+        },
+        "B": {
+          "space": "VM",
+          "fmt": "FP32",
+          "base": 186368,
+          "n": 1024,
+          "m": 1,
+          "stride": 0,
+          "istride": 0,
+          "lstride": 0,
+          "dyn_sel": 0,
+          "dyn_mul": 0,
+          "n_sel": 0,
+          "l1stride": 0,
+          "ibcast": 1,
+          "indexed": 0
+        },
+        "O": {
+          "space": "VM",
+          "fmt": "FP32",
+          "base": 0,
+          "n": 1024,
+          "m": 1,
+          "stride": 0,
+          "istride": 0,
+          "lstride": 0,
+          "dyn_sel": 0,
+          "dyn_mul": 0,
+          "n_sel": 0,
+          "l1stride": 0,
+          "ibcast": 0,
+          "indexed": 0
+        }
+      },
+      "effective_n": 1024,
+      "effective_m": 1,
+      "elements": 1024,
+      "sut": {
+        "a_src": 0,
+        "a_ind": 0,
+        "b_src": 0,
+        "b_half": 0,
+        "c_src": 0,
+        "c_pair": 0,
+        "d_src": 0,
+        "a_rnd": 0,
+        "a_relu": 0,
+        "a_min": 0,
+        "c_clip": 0,
+        "m1": 1,
+        "m2": 0,
+        "qm": 0,
+        "ad": 0,
+        "sfu": 0,
+        "e1": 0,
+        "e2": 0,
+        "rnd": 0,
+        "dst": 1,
+        "red": 0,
+        "red_sq": 0,
+        "red_whole": 0,
+        "red_rnd": 0,
+        "su_vec": 0,
+        "red_tree": 0,
+        "imm1": 0,
+        "imm2": 0,
+        "imm3": 0
+      },
+      "model_price": 67.0,
+      "gather": false,
+      "reduction": {
+        "kind": 0,
+        "whole": 0,
+        "tree": 0,
+        "square": 0
+      },
+      "roles": {
+        "A": {
+          "descriptor": {
+            "space": "VM",
+            "fmt": "FP32",
+            "base": 0,
+            "n": 1024,
+            "m": 1,
+            "stride": 0,
+            "istride": 0,
+            "lstride": 0,
+            "dyn_sel": 0,
+            "dyn_mul": 0,
+            "n_sel": 0,
+            "l1stride": 0,
+            "ibcast": 0,
+            "indexed": 0
+          },
+          "used": true,
+          "exact": true,
+          "effective_inner_stride": 1,
+          "inner_broadcast": false,
+          "row_broadcast": false,
+          "half_index": false,
+          "words": 1024,
+          "ranges": [
+            [
+              0,
+              1023
+            ]
+          ],
+          "address_sha256": "c89db7222126863309183fc023c7091fb18392d16a397dac76a96a022cd62cef",
+          "sector_mask_runs": [
+            [
+              0,
+              127,
+              255
+            ]
+          ]
+        },
+        "B": {
+          "descriptor": {
+            "space": "VM",
+            "fmt": "FP32",
+            "base": 186368,
+            "n": 1024,
+            "m": 1,
+            "stride": 0,
+            "istride": 0,
+            "lstride": 0,
+            "dyn_sel": 0,
+            "dyn_mul": 0,
+            "n_sel": 0,
+            "l1stride": 0,
+            "ibcast": 1,
+            "indexed": 0
+          },
+          "used": true,
+          "exact": true,
+          "effective_inner_stride": 0,
+          "inner_broadcast": true,
+          "row_broadcast": false,
+          "half_index": false,
+          "words": 1,
+          "ranges": [
+            [
+              186368,
+              186368
+            ]
+          ],
+          "address_sha256": "b76ee7d17e011d52d061f15272e7da558a3b2f7c98f5bd1e7227c113a1c09266",
+          "sector_mask_runs": [
+            [
+              23296,
+              23296,
+              1
+            ]
+          ]
+        },
+        "O": {
+          "descriptor": {
+            "space": "VM",
+            "fmt": "FP32",
+            "base": 0,
+            "n": 1024,
+            "m": 1,
+            "stride": 0,
+            "istride": 0,
+            "lstride": 0,
+            "dyn_sel": 0,
+            "dyn_mul": 0,
+            "n_sel": 0,
+            "l1stride": 0,
+            "ibcast": 0,
+            "indexed": 0
+          },
+          "used": true,
+          "exact": true,
+          "effective_inner_stride": 1,
+          "inner_broadcast": false,
+          "row_broadcast": false,
+          "half_index": false,
+          "words": 1024,
+          "ranges": [
+            [
+              0,
+              1023
+            ]
+          ],
+          "address_sha256": "c89db7222126863309183fc023c7091fb18392d16a397dac76a96a022cd62cef",
+          "sector_mask_runs": [
+            [
+              0,
+              127,
+              255
+            ]
+          ]
+        }
+      },
+      "exact_role_aliases": [
+        {
+          "roles": [
+            "A",
+            "O"
+          ],
+          "words": 1024,
+          "ranges": [
+            [
+              0,
+              1023
+            ]
+          ]
+        }
+      ],
+      "output": {
+        "words": 1024,
+        "ranges": [
+          [
+            0,
+            1023
+          ]
+        ],
+        "address_sha256": "c89db7222126863309183fc023c7091fb18392d16a397dac76a96a022cd62cef",
+        "sector_mask_runs": [
+          [
+            0,
+            127,
+            255
+          ]
+        ]
+      },
+      "local_capacity": {
+        "frame_words": 65536,
+        "frames": 4,
+        "total_words": 262144,
+        "sector_rounded_span_words_by_role": {
+          "A": 1024,
+          "B": 8,
+          "O": 1024
+        },
+        "sum_separate_role_spans": 2056,
+        "unique_live_vm_words_lower_bound": 1025,
+        "minimum_frames_if_separate_spans": 3,
+        "allocation_fit_proven": false
+      }
+    },
+    {
+      "index": 1,
+      "tag": "row_scale_qkv",
+      "original_unit": 2,
+      "original_present_descriptors": {
+        "A": {
+          "space": "VM",
+          "fmt": "FP32",
+          "base": 8192,
+          "n": 384,
+          "m": 1,
+          "stride": 0,
+          "istride": 0,
+          "lstride": 0,
+          "dyn_sel": 0,
+          "dyn_mul": 0,
+          "n_sel": 0,
+          "l1stride": 0,
+          "ibcast": 0,
+          "indexed": 0
+        },
+        "B": {
+          "space": "VM",
+          "fmt": "FP32",
+          "base": 156672,
+          "n": 384,
+          "m": 1,
+          "stride": 0,
+          "istride": 0,
+          "lstride": 0,
+          "dyn_sel": 0,
+          "dyn_mul": 0,
+          "n_sel": 0,
+          "l1stride": 0,
+          "ibcast": 0,
+          "indexed": 0
+        },
+        "O": {
+          "space": "VM",
+          "fmt": "FP32",
+          "base": 9728,
+          "n": 384,
+          "m": 1,
+          "stride": 0,
+          "istride": 0,
+          "lstride": 0,
+          "dyn_sel": 0,
+          "dyn_mul": 0,
+          "n_sel": 0,
+          "l1stride": 0,
+          "ibcast": 0,
+          "indexed": 0
+        }
+      },
+      "effective_n": 384,
+      "effective_m": 1,
+      "elements": 384,
+      "sut": {
+        "a_src": 0,
+        "a_ind": 0,
+        "b_src": 0,
+        "b_half": 0,
+        "c_src": 0,
+        "c_pair": 0,
+        "d_src": 0,
+        "a_rnd": 0,
+        "a_relu": 0,
+        "a_min": 0,
+        "c_clip": 0,
+        "m1": 1,
+        "m2": 0,
+        "qm": 0,
+        "ad": 0,
+        "sfu": 0,
+        "e1": 0,
+        "e2": 0,
+        "rnd": 0,
+        "dst": 1,
+        "red": 0,
+        "red_sq": 0,
+        "red_whole": 0,
+        "red_rnd": 0,
+        "su_vec": 0,
+        "red_tree": 0,
+        "imm1": 0,
+        "imm2": 0,
+        "imm3": 0
+      },
+      "model_price": 62.0,
+      "gather": false,
+      "reduction": {
+        "kind": 0,
+        "whole": 0,
+        "tree": 0,
+        "square": 0
+      },
+      "roles": {
+        "A": {
+          "descriptor": {
+            "space": "VM",
+            "fmt": "FP32",
+            "base": 8192,
+            "n": 384,
+            "m": 1,
+            "stride": 0,
+            "istride": 0,
+            "lstride": 0,
+            "dyn_sel": 0,
+            "dyn_mul": 0,
+            "n_sel": 0,
+            "l1stride": 0,
+            "ibcast": 0,
+            "indexed": 0
+          },
+          "used": true,
+          "exact": true,
+          "effective_inner_stride": 1,
+          "inner_broadcast": false,
+          "row_broadcast": false,
+          "half_index": false,
+          "words": 384,
+          "ranges": [
+            [
+              8192,
+              8575
+            ]
+          ],
+          "address_sha256": "38520d043623594951ef88319a90d295a5581ea20d6e5b5b27971044718cc337",
+          "sector_mask_runs": [
+            [
+              1024,
+              1071,
+              255
+            ]
+          ]
+        },
+        "B": {
+          "descriptor": {
+            "space": "VM",
+            "fmt": "FP32",
+            "base": 156672,
+            "n": 384,
+            "m": 1,
+            "stride": 0,
+            "istride": 0,
+            "lstride": 0,
+            "dyn_sel": 0,
+            "dyn_mul": 0,
+            "n_sel": 0,
+            "l1stride": 0,
+            "ibcast": 0,
+            "indexed": 0
+          },
+          "used": true,
+          "exact": true,
+          "effective_inner_stride": 1,
+          "inner_broadcast": false,
+          "row_broadcast": false,
+          "half_index": false,
+          "words": 384,
+          "ranges": [
+            [
+              156672,
+              157055
+            ]
+          ],
+          "address_sha256": "94557bf1d6fd540eb61bcd5f569df29ec69b72ecf332b8e49e9bab9ffe0d91d9",
+          "sector_mask_runs": [
+            [
+              19584,
+              19631,
+              255
+            ]
+          ]
+        },
+        "O": {
+          "descriptor": {
+            "space": "VM",
+            "fmt": "FP32",
+            "base": 9728,
+            "n": 384,
+            "m": 1,
+            "stride": 0,
+            "istride": 0,
+            "lstride": 0,
+            "dyn_sel": 0,
+            "dyn_mul": 0,
+            "n_sel": 0,
+            "l1stride": 0,
+            "ibcast": 0,
+            "indexed": 0
+          },
+          "used": true,
+          "exact": true,
+          "effective_inner_stride": 1,
+          "inner_broadcast": false,
+          "row_broadcast": false,
+          "half_index": false,
+          "words": 384,
+          "ranges": [
+            [
+              9728,
+              10111
+            ]
+          ],
+          "address_sha256": "a39c016cf34f9d7befd581429e2d092f4f807dd15caae6f8df62182014d37f27",
+          "sector_mask_runs": [
+            [
+              1216,
+              1263,
+              255
+            ]
+          ]
+        }
+      },
+      "exact_role_aliases": [],
+      "output": {
+        "words": 384,
+        "ranges": [
+          [
+            9728,
+            10111
+          ]
+        ],
+        "address_sha256": "a39c016cf34f9d7befd581429e2d092f4f807dd15caae6f8df62182014d37f27",
+        "sector_mask_runs": [
+          [
+            1216,
+            1263,
+            255
+          ]
+        ]
+      },
+      "local_capacity": {
+        "frame_words": 65536,
+        "frames": 4,
+        "total_words": 262144,
+        "sector_rounded_span_words_by_role": {
+          "A": 384,
+          "B": 384,
+          "O": 384
+        },
+        "sum_separate_role_spans": 1152,
+        "unique_live_vm_words_lower_bound": 1152,
+        "minimum_frames_if_separate_spans": 3,
+        "allocation_fit_proven": false
+      }
+    },
+    {
+      "index": 2,
+      "tag": "rope",
+      "original_unit": 2,
+      "original_present_descriptors": {
+        "A": {
+          "space": "VM",
+          "fmt": "FP32",
+          "base": 11264,
+          "n": 128,
+          "m": 3,
+          "stride": 128,
+          "istride": 0,
+          "lstride": 0,
+          "dyn_sel": 0,
+          "dyn_mul": 0,
+          "n_sel": 0,
+          "l1stride": 0,
+          "ibcast": 0,
+          "indexed": 0
+        },
+        "B": {
+          "space": "VM",
+          "fmt": "FP32",
+          "base": 12544,
+          "n": 64,
+          "m": 3,
+          "stride": 0,
+          "istride": 0,
+          "lstride": 0,
+          "dyn_sel": 0,
+          "dyn_mul": 0,
+          "n_sel": 0,
+          "l1stride": 0,
+          "ibcast": 0,
+          "indexed": 0
+        },
+        "D": {
+          "space": "VM",
+          "fmt": "FP32",
+          "base": 12608,
+          "n": 64,
+          "m": 3,
+          "stride": 0,
+          "istride": 0,
+          "lstride": 0,
+          "dyn_sel": 0,
+          "dyn_mul": 0,
+          "n_sel": 0,
+          "l1stride": 0,
+          "ibcast": 0,
+          "indexed": 0
+        },
+        "O": {
+          "space": "VM",
+          "fmt": "FP32",
+          "base": 12800,
+          "n": 128,
+          "m": 3,
+          "stride": 128,
+          "istride": 0,
+          "lstride": 0,
+          "dyn_sel": 0,
+          "dyn_mul": 0,
+          "n_sel": 0,
+          "l1stride": 0,
+          "ibcast": 0,
+          "indexed": 0
+        }
+      },
+      "effective_n": 128,
+      "effective_m": 3,
+      "elements": 384,
+      "sut": {
+        "a_src": 0,
+        "a_ind": 0,
+        "b_src": 0,
+        "b_half": 1,
+        "c_src": 0,
+        "c_pair": 1,
+        "d_src": 0,
+        "a_rnd": 0,
+        "a_relu": 0,
+        "a_min": 0,
+        "c_clip": 0,
+        "m1": 1,
+        "m2": 0,
+        "qm": 3,
+        "ad": 1,
+        "sfu": 0,
+        "e1": 0,
+        "e2": 0,
+        "rnd": 0,
+        "dst": 1,
+        "red": 0,
+        "red_sq": 0,
+        "red_whole": 0,
+        "red_rnd": 0,
+        "su_vec": 0,
+        "red_tree": 0,
+        "imm1": 0,
+        "imm2": 0,
+        "imm3": 0
+      },
+      "model_price": 62.0,
+      "gather": false,
+      "reduction": {
+        "kind": 0,
+        "whole": 0,
+        "tree": 0,
+        "square": 0
+      },
+      "roles": {
+        "A": {
+          "descriptor": {
+            "space": "VM",
+            "fmt": "FP32",
+            "base": 11264,
+            "n": 128,
+            "m": 3,
+            "stride": 128,
+            "istride": 0,
+            "lstride": 0,
+            "dyn_sel": 0,
+            "dyn_mul": 0,
+            "n_sel": 0,
+            "l1stride": 0,
+            "ibcast": 0,
+            "indexed": 0
+          },
+          "used": true,
+          "exact": true,
+          "effective_inner_stride": 1,
+          "inner_broadcast": false,
+          "row_broadcast": false,
+          "half_index": false,
+          "words": 384,
+          "ranges": [
+            [
+              11264,
+              11647
+            ]
+          ],
+          "address_sha256": "5b06aea2447b8c3d6542a57e59f7d84c7d753ddbc835857a12f44ae9a68fbb19",
+          "sector_mask_runs": [
+            [
+              1408,
+              1455,
+              255
+            ]
+          ]
+        },
+        "B": {
+          "descriptor": {
+            "space": "VM",
+            "fmt": "FP32",
+            "base": 12544,
+            "n": 64,
+            "m": 3,
+            "stride": 0,
+            "istride": 0,
+            "lstride": 0,
+            "dyn_sel": 0,
+            "dyn_mul": 0,
+            "n_sel": 0,
+            "l1stride": 0,
+            "ibcast": 0,
+            "indexed": 0
+          },
+          "used": true,
+          "exact": true,
+          "effective_inner_stride": 1,
+          "inner_broadcast": false,
+          "row_broadcast": true,
+          "half_index": true,
+          "words": 64,
+          "ranges": [
+            [
+              12544,
+              12607
+            ]
+          ],
+          "address_sha256": "87ea2c8df079a5c788b7fb10a1f42d626af15be5a55e9c4d68e68f98cab5db80",
+          "sector_mask_runs": [
+            [
+              1568,
+              1575,
+              255
+            ]
+          ]
+        },
+        "D": {
+          "descriptor": {
+            "space": "VM",
+            "fmt": "FP32",
+            "base": 12608,
+            "n": 64,
+            "m": 3,
+            "stride": 0,
+            "istride": 0,
+            "lstride": 0,
+            "dyn_sel": 0,
+            "dyn_mul": 0,
+            "n_sel": 0,
+            "l1stride": 0,
+            "ibcast": 0,
+            "indexed": 0
+          },
+          "used": true,
+          "exact": true,
+          "effective_inner_stride": 1,
+          "inner_broadcast": false,
+          "row_broadcast": true,
+          "half_index": true,
+          "words": 64,
+          "ranges": [
+            [
+              12608,
+              12671
+            ]
+          ],
+          "address_sha256": "957acaba5e2a1e27d0244c3c69d94a735da6fb8ca48f45e1ff9dd990b08142f5",
+          "sector_mask_runs": [
+            [
+              1576,
+              1583,
+              255
+            ]
+          ]
+        },
+        "O": {
+          "descriptor": {
+            "space": "VM",
+            "fmt": "FP32",
+            "base": 12800,
+            "n": 128,
+            "m": 3,
+            "stride": 128,
+            "istride": 0,
+            "lstride": 0,
+            "dyn_sel": 0,
+            "dyn_mul": 0,
+            "n_sel": 0,
+            "l1stride": 0,
+            "ibcast": 0,
+            "indexed": 0
+          },
+          "used": true,
+          "exact": true,
+          "effective_inner_stride": 1,
+          "inner_broadcast": false,
+          "row_broadcast": false,
+          "half_index": false,
+          "words": 384,
+          "ranges": [
+            [
+              12800,
+              13183
+            ]
+          ],
+          "address_sha256": "9cbdbce04861fb18b0073d68d2d713f60e2e5867d682ecf8feeca23f5ea6c4cb",
+          "sector_mask_runs": [
+            [
+              1600,
+              1647,
+              255
+            ]
+          ]
+        }
+      },
+      "exact_role_aliases": [],
+      "output": {
+        "words": 384,
+        "ranges": [
+          [
+            12800,
+            13183
+          ]
+        ],
+        "address_sha256": "9cbdbce04861fb18b0073d68d2d713f60e2e5867d682ecf8feeca23f5ea6c4cb",
+        "sector_mask_runs": [
+          [
+            1600,
+            1647,
+            255
+          ]
+        ]
+      },
+      "local_capacity": {
+        "frame_words": 65536,
+        "frames": 4,
+        "total_words": 262144,
+        "sector_rounded_span_words_by_role": {
+          "A": 384,
+          "B": 64,
+          "D": 64,
+          "O": 384
+        },
+        "sum_separate_role_spans": 896,
+        "unique_live_vm_words_lower_bound": 896,
+        "minimum_frames_if_separate_spans": 4,
+        "allocation_fit_proven": false
+      }
+    },
+    {
+      "index": 3,
+      "tag": "round_q",
+      "original_unit": 2,
+      "original_present_descriptors": {
+        "A": {
+          "space": "VM",
+          "fmt": "FP32",
+          "base": 12800,
+          "n": 256,
+          "m": 1,
+          "stride": 0,
+          "istride": 0,
+          "lstride": 0,
+          "dyn_sel": 0,
+          "dyn_mul": 0,
+          "n_sel": 0,
+          "l1stride": 0,
+          "ibcast": 0,
+          "indexed": 0
+        },
+        "O": {
+          "space": "VM",
+          "fmt": "FP32",
+          "base": 14080,
+          "n": 256,
+          "m": 1,
+          "stride": 0,
+          "istride": 0,
+          "lstride": 0,
+          "dyn_sel": 0,
+          "dyn_mul": 0,
+          "n_sel": 0,
+          "l1stride": 0,
+          "ibcast": 0,
+          "indexed": 0
+        }
+      },
+      "effective_n": 256,
+      "effective_m": 1,
+      "elements": 256,
+      "sut": {
+        "a_src": 0,
+        "a_ind": 0,
+        "b_src": 0,
+        "b_half": 0,
+        "c_src": 0,
+        "c_pair": 0,
+        "d_src": 0,
+        "a_rnd": 0,
+        "a_relu": 0,
+        "a_min": 0,
+        "c_clip": 0,
+        "m1": 0,
+        "m2": 0,
+        "qm": 0,
+        "ad": 0,
+        "sfu": 0,
+        "e1": 0,
+        "e2": 0,
+        "rnd": 1,
+        "dst": 1,
+        "red": 0,
+        "red_sq": 0,
+        "red_whole": 0,
+        "red_rnd": 0,
+        "su_vec": 0,
+        "red_tree": 0,
+        "imm1": 0,
+        "imm2": 0,
+        "imm3": 0
+      },
+      "model_price": 61.0,
+      "gather": false,
+      "reduction": {
+        "kind": 0,
+        "whole": 0,
+        "tree": 0,
+        "square": 0
+      },
+      "roles": {
+        "A": {
+          "descriptor": {
+            "space": "VM",
+            "fmt": "FP32",
+            "base": 12800,
+            "n": 256,
+            "m": 1,
+            "stride": 0,
+            "istride": 0,
+            "lstride": 0,
+            "dyn_sel": 0,
+            "dyn_mul": 0,
+            "n_sel": 0,
+            "l1stride": 0,
+            "ibcast": 0,
+            "indexed": 0
+          },
+          "used": true,
+          "exact": true,
+          "effective_inner_stride": 1,
+          "inner_broadcast": false,
+          "row_broadcast": false,
+          "half_index": false,
+          "words": 256,
+          "ranges": [
+            [
+              12800,
+              13055
+            ]
+          ],
+          "address_sha256": "78f50b5d81e84e0b6295b26de5de42dc50816e2e4bec78af51b0ea9c97bcc8fa",
+          "sector_mask_runs": [
+            [
+              1600,
+              1631,
+              255
+            ]
+          ]
+        },
+        "O": {
+          "descriptor": {
+            "space": "VM",
+            "fmt": "FP32",
+            "base": 14080,
+            "n": 256,
+            "m": 1,
+            "stride": 0,
+            "istride": 0,
+            "lstride": 0,
+            "dyn_sel": 0,
+            "dyn_mul": 0,
+            "n_sel": 0,
+            "l1stride": 0,
+            "ibcast": 0,
+            "indexed": 0
+          },
+          "used": true,
+          "exact": true,
+          "effective_inner_stride": 1,
+          "inner_broadcast": false,
+          "row_broadcast": false,
+          "half_index": false,
+          "words": 256,
+          "ranges": [
+            [
+              14080,
+              14335
+            ]
+          ],
+          "address_sha256": "ff34df7d3a3b181d572b451f1bd71053b2baa6b965723a42f22e99ef55e9dbc4",
+          "sector_mask_runs": [
+            [
+              1760,
+              1791,
+              255
+            ]
+          ]
+        }
+      },
+      "exact_role_aliases": [],
+      "output": {
+        "words": 256,
+        "ranges": [
+          [
+            14080,
+            14335
+          ]
+        ],
+        "address_sha256": "ff34df7d3a3b181d572b451f1bd71053b2baa6b965723a42f22e99ef55e9dbc4",
+        "sector_mask_runs": [
+          [
+            1760,
+            1791,
+            255
+          ]
+        ]
+      },
+      "local_capacity": {
+        "frame_words": 65536,
+        "frames": 4,
+        "total_words": 262144,
+        "sector_rounded_span_words_by_role": {
+          "A": 256,
+          "O": 256
+        },
+        "sum_separate_role_spans": 512,
+        "unique_live_vm_words_lower_bound": 512,
+        "minimum_frames_if_separate_spans": 2,
+        "allocation_fit_proven": false
+      }
+    },
+    {
+      "index": 4,
+      "tag": "softmax.max",
+      "original_unit": 2,
+      "original_present_descriptors": {
+        "A": {
+          "space": "VM",
+          "fmt": "FP32",
+          "base": 15104,
+          "n": 8192,
+          "m": 2,
+          "stride": 8192,
+          "istride": 0,
+          "lstride": 0,
+          "dyn_sel": 0,
+          "dyn_mul": 0,
+          "n_sel": 2,
+          "l1stride": 0,
+          "ibcast": 0,
+          "indexed": 0
+        },
+        "R": {
+          "space": "VM",
+          "fmt": "FP32",
+          "base": 146176,
+          "n": 1,
+          "m": 2,
+          "stride": 1,
+          "istride": 0,
+          "lstride": 0,
+          "dyn_sel": 0,
+          "dyn_mul": 0,
+          "n_sel": 0,
+          "l1stride": 0,
+          "ibcast": 0,
+          "indexed": 0
+        }
+      },
+      "effective_n": 8192,
+      "effective_m": 2,
+      "elements": 16384,
+      "sut": {
+        "a_src": 0,
+        "a_ind": 0,
+        "b_src": 0,
+        "b_half": 0,
+        "c_src": 0,
+        "c_pair": 0,
+        "d_src": 0,
+        "a_rnd": 0,
+        "a_relu": 0,
+        "a_min": 0,
+        "c_clip": 0,
+        "m1": 3,
+        "m2": 0,
+        "qm": 0,
+        "ad": 0,
+        "sfu": 0,
+        "e1": 0,
+        "e2": 0,
+        "rnd": 0,
+        "dst": 0,
+        "red": 2,
+        "red_sq": 0,
+        "red_whole": 0,
+        "red_rnd": 0,
+        "su_vec": 0,
+        "red_tree": 0,
+        "imm1": 1035273459,
+        "imm2": 0,
+        "imm3": 0
+      },
+      "model_price": 302.0,
+      "gather": false,
+      "reduction": {
+        "kind": 2,
+        "whole": 0,
+        "tree": 0,
+        "square": 0
+      },
+      "roles": {
+        "A": {
+          "descriptor": {
+            "space": "VM",
+            "fmt": "FP32",
+            "base": 15104,
+            "n": 8192,
+            "m": 2,
+            "stride": 8192,
+            "istride": 0,
+            "lstride": 0,
+            "dyn_sel": 0,
+            "dyn_mul": 0,
+            "n_sel": 2,
+            "l1stride": 0,
+            "ibcast": 0,
+            "indexed": 0
+          },
+          "used": true,
+          "exact": true,
+          "effective_inner_stride": 1,
+          "inner_broadcast": false,
+          "row_broadcast": false,
+          "half_index": false,
+          "words": 16384,
+          "ranges": [
+            [
+              15104,
+              31487
+            ]
+          ],
+          "address_sha256": "f47d194517ceb2eeae22ed178a06a6c3c750856105714cd925f91aa038937462",
+          "sector_mask_runs": [
+            [
+              1888,
+              3935,
+              255
+            ]
+          ]
+        },
+        "R": {
+          "descriptor": {
+            "space": "VM",
+            "fmt": "FP32",
+            "base": 146176,
+            "n": 1,
+            "m": 2,
+            "stride": 1,
+            "istride": 0,
+            "lstride": 0,
+            "dyn_sel": 0,
+            "dyn_mul": 0,
+            "n_sel": 0,
+            "l1stride": 0,
+            "ibcast": 0,
+            "indexed": 0
+          },
+          "used": true,
+          "exact": true,
+          "effective_inner_stride": 1,
+          "inner_broadcast": false,
+          "row_broadcast": false,
+          "half_index": false,
+          "words": 2,
+          "ranges": [
+            [
+              146176,
+              146177
+            ]
+          ],
+          "address_sha256": "eb64bb3e1611b1761a28db3ddc44931696cef9564de0a0818940407aa838bdb1",
+          "sector_mask_runs": [
+            [
+              18272,
+              18272,
+              3
+            ]
+          ]
+        }
+      },
+      "exact_role_aliases": [],
+      "output": {
+        "words": 2,
+        "ranges": [
+          [
+            146176,
+            146177
+          ]
+        ],
+        "address_sha256": "eb64bb3e1611b1761a28db3ddc44931696cef9564de0a0818940407aa838bdb1",
+        "sector_mask_runs": [
+          [
+            18272,
+            18272,
+            3
+          ]
+        ]
+      },
+      "local_capacity": {
+        "frame_words": 65536,
+        "frames": 4,
+        "total_words": 262144,
+        "sector_rounded_span_words_by_role": {
+          "A": 16384,
+          "R": 8
+        },
+        "sum_separate_role_spans": 16392,
+        "unique_live_vm_words_lower_bound": 16386,
+        "minimum_frames_if_separate_spans": 2,
+        "allocation_fit_proven": false
+      }
+    },
+    {
+      "index": 5,
+      "tag": "softmax.exp_sum",
+      "original_unit": 2,
+      "original_present_descriptors": {
+        "A": {
+          "space": "VM",
+          "fmt": "FP32",
+          "base": 15104,
+          "n": 8192,
+          "m": 2,
+          "stride": 8192,
+          "istride": 0,
+          "lstride": 0,
+          "dyn_sel": 0,
+          "dyn_mul": 0,
+          "n_sel": 2,
+          "l1stride": 0,
+          "ibcast": 0,
+          "indexed": 0
+        },
+        "B": {
+          "space": "VM",
+          "fmt": "FP32",
+          "base": 146176,
+          "n": 1,
+          "m": 2,
+          "stride": 1,
+          "istride": 0,
+          "lstride": 0,
+          "dyn_sel": 0,
+          "dyn_mul": 0,
+          "n_sel": 0,
+          "l1stride": 0,
+          "ibcast": 1,
+          "indexed": 0
+        },
+        "O": {
+          "space": "VM",
+          "fmt": "FP32",
+          "base": 80640,
+          "n": 8192,
+          "m": 2,
+          "stride": 8192,
+          "istride": 0,
+          "lstride": 0,
+          "dyn_sel": 0,
+          "dyn_mul": 0,
+          "n_sel": 2,
+          "l1stride": 0,
+          "ibcast": 0,
+          "indexed": 0
+        },
+        "R": {
+          "space": "VM",
+          "fmt": "FP32",
+          "base": 146304,
+          "n": 1,
+          "m": 2,
+          "stride": 1,
+          "istride": 0,
+          "lstride": 0,
+          "dyn_sel": 0,
+          "dyn_mul": 0,
+          "n_sel": 0,
+          "l1stride": 0,
+          "ibcast": 0,
+          "indexed": 0
+        }
+      },
+      "effective_n": 8192,
+      "effective_m": 2,
+      "elements": 16384,
+      "sut": {
+        "a_src": 0,
+        "a_ind": 0,
+        "b_src": 0,
+        "b_half": 0,
+        "c_src": 0,
+        "c_pair": 0,
+        "d_src": 0,
+        "a_rnd": 0,
+        "a_relu": 0,
+        "a_min": 0,
+        "c_clip": 0,
+        "m1": 3,
+        "m2": 0,
+        "qm": 0,
+        "ad": 3,
+        "sfu": 1,
+        "e1": 0,
+        "e2": 0,
+        "rnd": 0,
+        "dst": 1,
+        "red": 1,
+        "red_sq": 0,
+        "red_whole": 0,
+        "red_rnd": 0,
+        "su_vec": 0,
+        "red_tree": 0,
+        "imm1": 1035273459,
+        "imm2": 0,
+        "imm3": 0
+      },
+      "model_price": 524.0,
+      "gather": false,
+      "reduction": {
+        "kind": 1,
+        "whole": 0,
+        "tree": 0,
+        "square": 0
+      },
+      "roles": {
+        "A": {
+          "descriptor": {
+            "space": "VM",
+            "fmt": "FP32",
+            "base": 15104,
+            "n": 8192,
+            "m": 2,
+            "stride": 8192,
+            "istride": 0,
+            "lstride": 0,
+            "dyn_sel": 0,
+            "dyn_mul": 0,
+            "n_sel": 2,
+            "l1stride": 0,
+            "ibcast": 0,
+            "indexed": 0
+          },
+          "used": true,
+          "exact": true,
+          "effective_inner_stride": 1,
+          "inner_broadcast": false,
+          "row_broadcast": false,
+          "half_index": false,
+          "words": 16384,
+          "ranges": [
+            [
+              15104,
+              31487
+            ]
+          ],
+          "address_sha256": "f47d194517ceb2eeae22ed178a06a6c3c750856105714cd925f91aa038937462",
+          "sector_mask_runs": [
+            [
+              1888,
+              3935,
+              255
+            ]
+          ]
+        },
+        "B": {
+          "descriptor": {
+            "space": "VM",
+            "fmt": "FP32",
+            "base": 146176,
+            "n": 1,
+            "m": 2,
+            "stride": 1,
+            "istride": 0,
+            "lstride": 0,
+            "dyn_sel": 0,
+            "dyn_mul": 0,
+            "n_sel": 0,
+            "l1stride": 0,
+            "ibcast": 1,
+            "indexed": 0
+          },
+          "used": true,
+          "exact": true,
+          "effective_inner_stride": 0,
+          "inner_broadcast": true,
+          "row_broadcast": false,
+          "half_index": false,
+          "words": 2,
+          "ranges": [
+            [
+              146176,
+              146177
+            ]
+          ],
+          "address_sha256": "eb64bb3e1611b1761a28db3ddc44931696cef9564de0a0818940407aa838bdb1",
+          "sector_mask_runs": [
+            [
+              18272,
+              18272,
+              3
+            ]
+          ]
+        },
+        "O": {
+          "descriptor": {
+            "space": "VM",
+            "fmt": "FP32",
+            "base": 80640,
+            "n": 8192,
+            "m": 2,
+            "stride": 8192,
+            "istride": 0,
+            "lstride": 0,
+            "dyn_sel": 0,
+            "dyn_mul": 0,
+            "n_sel": 2,
+            "l1stride": 0,
+            "ibcast": 0,
+            "indexed": 0
+          },
+          "used": true,
+          "exact": true,
+          "effective_inner_stride": 1,
+          "inner_broadcast": false,
+          "row_broadcast": false,
+          "half_index": false,
+          "words": 16384,
+          "ranges": [
+            [
+              80640,
+              97023
+            ]
+          ],
+          "address_sha256": "bdf759ec9d823582667b9ba593ccfefbb290a7e0081e61aca1e8c68f103df0d7",
+          "sector_mask_runs": [
+            [
+              10080,
+              12127,
+              255
+            ]
+          ]
+        },
+        "R": {
+          "descriptor": {
+            "space": "VM",
+            "fmt": "FP32",
+            "base": 146304,
+            "n": 1,
+            "m": 2,
+            "stride": 1,
+            "istride": 0,
+            "lstride": 0,
+            "dyn_sel": 0,
+            "dyn_mul": 0,
+            "n_sel": 0,
+            "l1stride": 0,
+            "ibcast": 0,
+            "indexed": 0
+          },
+          "used": true,
+          "exact": true,
+          "effective_inner_stride": 1,
+          "inner_broadcast": false,
+          "row_broadcast": false,
+          "half_index": false,
+          "words": 2,
+          "ranges": [
+            [
+              146304,
+              146305
+            ]
+          ],
+          "address_sha256": "be690ff8ad09415dd503936aa23649233cc61bcf909cfb0082a0f47d79c640b5",
+          "sector_mask_runs": [
+            [
+              18288,
+              18288,
+              3
+            ]
+          ]
+        }
+      },
+      "exact_role_aliases": [],
+      "output": {
+        "words": 16386,
+        "ranges": [
+          [
+            80640,
+            97023
+          ],
+          [
+            146304,
+            146305
+          ]
+        ],
+        "address_sha256": "1745cbeb2d0c8952307c263430d994a6fad6ef17ed92e39109d9a18a660417fa",
+        "sector_mask_runs": [
+          [
+            10080,
+            12127,
+            255
+          ],
+          [
+            18288,
+            18288,
+            3
+          ]
+        ]
+      },
+      "local_capacity": {
+        "frame_words": 65536,
+        "frames": 4,
+        "total_words": 262144,
+        "sector_rounded_span_words_by_role": {
+          "A": 16384,
+          "B": 8,
+          "O": 16384,
+          "R": 8
+        },
+        "sum_separate_role_spans": 32784,
+        "unique_live_vm_words_lower_bound": 32772,
+        "minimum_frames_if_separate_spans": 4,
+        "allocation_fit_proven": false
+      }
+    },
+    {
+      "index": 6,
+      "tag": "softmax.bf16_p",
+      "original_unit": 2,
+      "original_present_descriptors": {
+        "A": {
+          "space": "VM",
+          "fmt": "FP32",
+          "base": 80640,
+          "n": 8192,
+          "m": 2,
+          "stride": 8192,
+          "istride": 0,
+          "lstride": 0,
+          "dyn_sel": 0,
+          "dyn_mul": 0,
+          "n_sel": 2,
+          "l1stride": 0,
+          "ibcast": 0,
+          "indexed": 0
+        },
+        "O": {
+          "space": "VM",
+          "fmt": "FP32",
+          "base": 80640,
+          "n": 8192,
+          "m": 2,
+          "stride": 8192,
+          "istride": 0,
+          "lstride": 0,
+          "dyn_sel": 0,
+          "dyn_mul": 0,
+          "n_sel": 2,
+          "l1stride": 0,
+          "ibcast": 0,
+          "indexed": 0
+        }
+      },
+      "effective_n": 8192,
+      "effective_m": 2,
+      "elements": 16384,
+      "sut": {
+        "a_src": 0,
+        "a_ind": 0,
+        "b_src": 0,
+        "b_half": 0,
+        "c_src": 0,
+        "c_pair": 0,
+        "d_src": 0,
+        "a_rnd": 0,
+        "a_relu": 0,
+        "a_min": 0,
+        "c_clip": 0,
+        "m1": 0,
+        "m2": 0,
+        "qm": 0,
+        "ad": 0,
+        "sfu": 0,
+        "e1": 0,
+        "e2": 0,
+        "rnd": 1,
+        "dst": 1,
+        "red": 0,
+        "red_sq": 0,
+        "red_whole": 0,
+        "red_rnd": 0,
+        "su_vec": 0,
+        "red_tree": 0,
+        "imm1": 0,
+        "imm2": 0,
+        "imm3": 0
+      },
+      "model_price": 187.0,
+      "gather": false,
+      "reduction": {
+        "kind": 0,
+        "whole": 0,
+        "tree": 0,
+        "square": 0
+      },
+      "roles": {
+        "A": {
+          "descriptor": {
+            "space": "VM",
+            "fmt": "FP32",
+            "base": 80640,
+            "n": 8192,
+            "m": 2,
+            "stride": 8192,
+            "istride": 0,
+            "lstride": 0,
+            "dyn_sel": 0,
+            "dyn_mul": 0,
+            "n_sel": 2,
+            "l1stride": 0,
+            "ibcast": 0,
+            "indexed": 0
+          },
+          "used": true,
+          "exact": true,
+          "effective_inner_stride": 1,
+          "inner_broadcast": false,
+          "row_broadcast": false,
+          "half_index": false,
+          "words": 16384,
+          "ranges": [
+            [
+              80640,
+              97023
+            ]
+          ],
+          "address_sha256": "bdf759ec9d823582667b9ba593ccfefbb290a7e0081e61aca1e8c68f103df0d7",
+          "sector_mask_runs": [
+            [
+              10080,
+              12127,
+              255
+            ]
+          ]
+        },
+        "O": {
+          "descriptor": {
+            "space": "VM",
+            "fmt": "FP32",
+            "base": 80640,
+            "n": 8192,
+            "m": 2,
+            "stride": 8192,
+            "istride": 0,
+            "lstride": 0,
+            "dyn_sel": 0,
+            "dyn_mul": 0,
+            "n_sel": 2,
+            "l1stride": 0,
+            "ibcast": 0,
+            "indexed": 0
+          },
+          "used": true,
+          "exact": true,
+          "effective_inner_stride": 1,
+          "inner_broadcast": false,
+          "row_broadcast": false,
+          "half_index": false,
+          "words": 16384,
+          "ranges": [
+            [
+              80640,
+              97023
+            ]
+          ],
+          "address_sha256": "bdf759ec9d823582667b9ba593ccfefbb290a7e0081e61aca1e8c68f103df0d7",
+          "sector_mask_runs": [
+            [
+              10080,
+              12127,
+              255
+            ]
+          ]
+        }
+      },
+      "exact_role_aliases": [
+        {
+          "roles": [
+            "A",
+            "O"
+          ],
+          "words": 16384,
+          "ranges": [
+            [
+              80640,
+              97023
+            ]
+          ]
+        }
+      ],
+      "output": {
+        "words": 16384,
+        "ranges": [
+          [
+            80640,
+            97023
+          ]
+        ],
+        "address_sha256": "bdf759ec9d823582667b9ba593ccfefbb290a7e0081e61aca1e8c68f103df0d7",
+        "sector_mask_runs": [
+          [
+            10080,
+            12127,
+            255
+          ]
+        ]
+      },
+      "local_capacity": {
+        "frame_words": 65536,
+        "frames": 4,
+        "total_words": 262144,
+        "sector_rounded_span_words_by_role": {
+          "A": 16384,
+          "O": 16384
+        },
+        "sum_separate_role_spans": 32768,
+        "unique_live_vm_words_lower_bound": 16384,
+        "minimum_frames_if_separate_spans": 2,
+        "allocation_fit_proven": false
+      }
+    },
+    {
+      "index": 7,
+      "tag": "pv_normalize",
+      "original_unit": 2,
+      "original_present_descriptors": {
+        "A": {
+          "space": "VM",
+          "fmt": "FP32",
+          "base": 146432,
+          "n": 128,
+          "m": 2,
+          "stride": 128,
+          "istride": 0,
+          "lstride": 0,
+          "dyn_sel": 0,
+          "dyn_mul": 0,
+          "n_sel": 0,
+          "l1stride": 0,
+          "ibcast": 0,
+          "indexed": 0
+        },
+        "B": {
+          "space": "VM",
+          "fmt": "FP32",
+          "base": 146304,
+          "n": 128,
+          "m": 2,
+          "stride": 1,
+          "istride": 0,
+          "lstride": 0,
+          "dyn_sel": 0,
+          "dyn_mul": 0,
+          "n_sel": 0,
+          "l1stride": 0,
+          "ibcast": 1,
+          "indexed": 0
+        },
+        "O": {
+          "space": "VM",
+          "fmt": "FP32",
+          "base": 147456,
+          "n": 128,
+          "m": 2,
+          "stride": 128,
+          "istride": 0,
+          "lstride": 0,
+          "dyn_sel": 0,
+          "dyn_mul": 0,
+          "n_sel": 0,
+          "l1stride": 0,
+          "ibcast": 0,
+          "indexed": 0
+        }
+      },
+      "effective_n": 128,
+      "effective_m": 2,
+      "elements": 256,
+      "sut": {
+        "a_src": 0,
+        "a_ind": 0,
+        "b_src": 0,
+        "b_half": 0,
+        "c_src": 0,
+        "c_pair": 0,
+        "d_src": 0,
+        "a_rnd": 0,
+        "a_relu": 0,
+        "a_min": 0,
+        "c_clip": 0,
+        "m1": 4,
+        "m2": 0,
+        "qm": 0,
+        "ad": 0,
+        "sfu": 0,
+        "e1": 0,
+        "e2": 0,
+        "rnd": 0,
+        "dst": 1,
+        "red": 0,
+        "red_sq": 0,
+        "red_whole": 0,
+        "red_rnd": 0,
+        "su_vec": 0,
+        "red_tree": 0,
+        "imm1": 0,
+        "imm2": 0,
+        "imm3": 0
+      },
+      "model_price": 78.0,
+      "gather": false,
+      "reduction": {
+        "kind": 0,
+        "whole": 0,
+        "tree": 0,
+        "square": 0
+      },
+      "roles": {
+        "A": {
+          "descriptor": {
+            "space": "VM",
+            "fmt": "FP32",
+            "base": 146432,
+            "n": 128,
+            "m": 2,
+            "stride": 128,
+            "istride": 0,
+            "lstride": 0,
+            "dyn_sel": 0,
+            "dyn_mul": 0,
+            "n_sel": 0,
+            "l1stride": 0,
+            "ibcast": 0,
+            "indexed": 0
+          },
+          "used": true,
+          "exact": true,
+          "effective_inner_stride": 1,
+          "inner_broadcast": false,
+          "row_broadcast": false,
+          "half_index": false,
+          "words": 256,
+          "ranges": [
+            [
+              146432,
+              146687
+            ]
+          ],
+          "address_sha256": "9de7519251279acd1c657119e9291797d07459f3af45f2431cfa0fba83a6730a",
+          "sector_mask_runs": [
+            [
+              18304,
+              18335,
+              255
+            ]
+          ]
+        },
+        "B": {
+          "descriptor": {
+            "space": "VM",
+            "fmt": "FP32",
+            "base": 146304,
+            "n": 128,
+            "m": 2,
+            "stride": 1,
+            "istride": 0,
+            "lstride": 0,
+            "dyn_sel": 0,
+            "dyn_mul": 0,
+            "n_sel": 0,
+            "l1stride": 0,
+            "ibcast": 1,
+            "indexed": 0
+          },
+          "used": true,
+          "exact": true,
+          "effective_inner_stride": 0,
+          "inner_broadcast": true,
+          "row_broadcast": false,
+          "half_index": false,
+          "words": 2,
+          "ranges": [
+            [
+              146304,
+              146305
+            ]
+          ],
+          "address_sha256": "be690ff8ad09415dd503936aa23649233cc61bcf909cfb0082a0f47d79c640b5",
+          "sector_mask_runs": [
+            [
+              18288,
+              18288,
+              3
+            ]
+          ]
+        },
+        "O": {
+          "descriptor": {
+            "space": "VM",
+            "fmt": "FP32",
+            "base": 147456,
+            "n": 128,
+            "m": 2,
+            "stride": 128,
+            "istride": 0,
+            "lstride": 0,
+            "dyn_sel": 0,
+            "dyn_mul": 0,
+            "n_sel": 0,
+            "l1stride": 0,
+            "ibcast": 0,
+            "indexed": 0
+          },
+          "used": true,
+          "exact": true,
+          "effective_inner_stride": 1,
+          "inner_broadcast": false,
+          "row_broadcast": false,
+          "half_index": false,
+          "words": 256,
+          "ranges": [
+            [
+              147456,
+              147711
+            ]
+          ],
+          "address_sha256": "8bbdb691cbadfecf4f0ca4fedf2e2b85b3f11d54d28ac59102bf972f2b22401b",
+          "sector_mask_runs": [
+            [
+              18432,
+              18463,
+              255
+            ]
+          ]
+        }
+      },
+      "exact_role_aliases": [],
+      "output": {
+        "words": 256,
+        "ranges": [
+          [
+            147456,
+            147711
+          ]
+        ],
+        "address_sha256": "8bbdb691cbadfecf4f0ca4fedf2e2b85b3f11d54d28ac59102bf972f2b22401b",
+        "sector_mask_runs": [
+          [
+            18432,
+            18463,
+            255
+          ]
+        ]
+      },
+      "local_capacity": {
+        "frame_words": 65536,
+        "frames": 4,
+        "total_words": 262144,
+        "sector_rounded_span_words_by_role": {
+          "A": 256,
+          "B": 8,
+          "O": 256
+        },
+        "sum_separate_role_spans": 520,
+        "unique_live_vm_words_lower_bound": 514,
+        "minimum_frames_if_separate_spans": 3,
+        "allocation_fit_proven": false
+      }
+    },
+    {
+      "index": 8,
+      "tag": "row_scale_o+residual",
+      "original_unit": 2,
+      "original_present_descriptors": {
+        "A": {
+          "space": "VM",
+          "fmt": "FP32",
+          "base": 152576,
+          "n": 1024,
+          "m": 1,
+          "stride": 0,
+          "istride": 0,
+          "lstride": 0,
+          "dyn_sel": 0,
+          "dyn_mul": 0,
+          "n_sel": 0,
+          "l1stride": 0,
+          "ibcast": 0,
+          "indexed": 0
+        },
+        "B": {
+          "space": "VM",
+          "fmt": "FP32",
+          "base": 156672,
+          "n": 1024,
+          "m": 1,
+          "stride": 0,
+          "istride": 0,
+          "lstride": 0,
+          "dyn_sel": 0,
+          "dyn_mul": 0,
+          "n_sel": 0,
+          "l1stride": 0,
+          "ibcast": 0,
+          "indexed": 0
+        },
+        "C": {
+          "space": "VM",
+          "fmt": "FP32",
+          "base": 0,
+          "n": 1024,
+          "m": 1,
+          "stride": 0,
+          "istride": 0,
+          "lstride": 0,
+          "dyn_sel": 0,
+          "dyn_mul": 0,
+          "n_sel": 0,
+          "l1stride": 0,
+          "ibcast": 0,
+          "indexed": 0
+        },
+        "O": {
+          "space": "VM",
+          "fmt": "FP32",
+          "base": 0,
+          "n": 1024,
+          "m": 1,
+          "stride": 0,
+          "istride": 0,
+          "lstride": 0,
+          "dyn_sel": 0,
+          "dyn_mul": 0,
+          "n_sel": 0,
+          "l1stride": 0,
+          "ibcast": 0,
+          "indexed": 0
+        }
+      },
+      "effective_n": 1024,
+      "effective_m": 1,
+      "elements": 1024,
+      "sut": {
+        "a_src": 0,
+        "a_ind": 0,
+        "b_src": 0,
+        "b_half": 0,
+        "c_src": 0,
+        "c_pair": 0,
+        "d_src": 0,
+        "a_rnd": 0,
+        "a_relu": 0,
+        "a_min": 0,
+        "c_clip": 0,
+        "m1": 1,
+        "m2": 0,
+        "qm": 0,
+        "ad": 2,
+        "sfu": 0,
+        "e1": 0,
+        "e2": 0,
+        "rnd": 0,
+        "dst": 1,
+        "red": 0,
+        "red_sq": 0,
+        "red_whole": 0,
+        "red_rnd": 0,
+        "su_vec": 0,
+        "red_tree": 0,
+        "imm1": 0,
+        "imm2": 0,
+        "imm3": 0
+      },
+      "model_price": 67.0,
+      "gather": false,
+      "reduction": {
+        "kind": 0,
+        "whole": 0,
+        "tree": 0,
+        "square": 0
+      },
+      "roles": {
+        "A": {
+          "descriptor": {
+            "space": "VM",
+            "fmt": "FP32",
+            "base": 152576,
+            "n": 1024,
+            "m": 1,
+            "stride": 0,
+            "istride": 0,
+            "lstride": 0,
+            "dyn_sel": 0,
+            "dyn_mul": 0,
+            "n_sel": 0,
+            "l1stride": 0,
+            "ibcast": 0,
+            "indexed": 0
+          },
+          "used": true,
+          "exact": true,
+          "effective_inner_stride": 1,
+          "inner_broadcast": false,
+          "row_broadcast": false,
+          "half_index": false,
+          "words": 1024,
+          "ranges": [
+            [
+              152576,
+              153599
+            ]
+          ],
+          "address_sha256": "a1c87d3f71b6d4b17eda42fde27684d5b1f8f43d12e4868af3a7f4ac31e5701a",
+          "sector_mask_runs": [
+            [
+              19072,
+              19199,
+              255
+            ]
+          ]
+        },
+        "B": {
+          "descriptor": {
+            "space": "VM",
+            "fmt": "FP32",
+            "base": 156672,
+            "n": 1024,
+            "m": 1,
+            "stride": 0,
+            "istride": 0,
+            "lstride": 0,
+            "dyn_sel": 0,
+            "dyn_mul": 0,
+            "n_sel": 0,
+            "l1stride": 0,
+            "ibcast": 0,
+            "indexed": 0
+          },
+          "used": true,
+          "exact": true,
+          "effective_inner_stride": 1,
+          "inner_broadcast": false,
+          "row_broadcast": false,
+          "half_index": false,
+          "words": 1024,
+          "ranges": [
+            [
+              156672,
+              157695
+            ]
+          ],
+          "address_sha256": "4cb1ba39db6aa2ea3be906a8bbb344f4b4d907124b49ddb15c9258adf0af3dfb",
+          "sector_mask_runs": [
+            [
+              19584,
+              19711,
+              255
+            ]
+          ]
+        },
+        "C": {
+          "descriptor": {
+            "space": "VM",
+            "fmt": "FP32",
+            "base": 0,
+            "n": 1024,
+            "m": 1,
+            "stride": 0,
+            "istride": 0,
+            "lstride": 0,
+            "dyn_sel": 0,
+            "dyn_mul": 0,
+            "n_sel": 0,
+            "l1stride": 0,
+            "ibcast": 0,
+            "indexed": 0
+          },
+          "used": true,
+          "exact": true,
+          "effective_inner_stride": 1,
+          "inner_broadcast": false,
+          "row_broadcast": false,
+          "half_index": false,
+          "words": 1024,
+          "ranges": [
+            [
+              0,
+              1023
+            ]
+          ],
+          "address_sha256": "c89db7222126863309183fc023c7091fb18392d16a397dac76a96a022cd62cef",
+          "sector_mask_runs": [
+            [
+              0,
+              127,
+              255
+            ]
+          ]
+        },
+        "O": {
+          "descriptor": {
+            "space": "VM",
+            "fmt": "FP32",
+            "base": 0,
+            "n": 1024,
+            "m": 1,
+            "stride": 0,
+            "istride": 0,
+            "lstride": 0,
+            "dyn_sel": 0,
+            "dyn_mul": 0,
+            "n_sel": 0,
+            "l1stride": 0,
+            "ibcast": 0,
+            "indexed": 0
+          },
+          "used": true,
+          "exact": true,
+          "effective_inner_stride": 1,
+          "inner_broadcast": false,
+          "row_broadcast": false,
+          "half_index": false,
+          "words": 1024,
+          "ranges": [
+            [
+              0,
+              1023
+            ]
+          ],
+          "address_sha256": "c89db7222126863309183fc023c7091fb18392d16a397dac76a96a022cd62cef",
+          "sector_mask_runs": [
+            [
+              0,
+              127,
+              255
+            ]
+          ]
+        }
+      },
+      "exact_role_aliases": [
+        {
+          "roles": [
+            "C",
+            "O"
+          ],
+          "words": 1024,
+          "ranges": [
+            [
+              0,
+              1023
+            ]
+          ]
+        }
+      ],
+      "output": {
+        "words": 1024,
+        "ranges": [
+          [
+            0,
+            1023
+          ]
+        ],
+        "address_sha256": "c89db7222126863309183fc023c7091fb18392d16a397dac76a96a022cd62cef",
+        "sector_mask_runs": [
+          [
+            0,
+            127,
+            255
+          ]
+        ]
+      },
+      "local_capacity": {
+        "frame_words": 65536,
+        "frames": 4,
+        "total_words": 262144,
+        "sector_rounded_span_words_by_role": {
+          "A": 1024,
+          "B": 1024,
+          "C": 1024,
+          "O": 1024
+        },
+        "sum_separate_role_spans": 4096,
+        "unique_live_vm_words_lower_bound": 3072,
+        "minimum_frames_if_separate_spans": 4,
+        "allocation_fit_proven": false
+      }
+    },
+    {
+      "index": 9,
+      "tag": "row_scale_gu",
+      "original_unit": 2,
+      "original_present_descriptors": {
+        "A": {
+          "space": "VM",
+          "fmt": "FP32",
+          "base": 162816,
+          "n": 1536,
+          "m": 1,
+          "stride": 0,
+          "istride": 0,
+          "lstride": 0,
+          "dyn_sel": 0,
+          "dyn_mul": 0,
+          "n_sel": 0,
+          "l1stride": 0,
+          "ibcast": 0,
+          "indexed": 0
+        },
+        "B": {
+          "space": "VM",
+          "fmt": "FP32",
+          "base": 156672,
+          "n": 1536,
+          "m": 1,
+          "stride": 0,
+          "istride": 0,
+          "lstride": 0,
+          "dyn_sel": 0,
+          "dyn_mul": 0,
+          "n_sel": 0,
+          "l1stride": 0,
+          "ibcast": 0,
+          "indexed": 0
+        },
+        "O": {
+          "space": "VM",
+          "fmt": "FP32",
+          "base": 168960,
+          "n": 1536,
+          "m": 1,
+          "stride": 0,
+          "istride": 0,
+          "lstride": 0,
+          "dyn_sel": 0,
+          "dyn_mul": 0,
+          "n_sel": 0,
+          "l1stride": 0,
+          "ibcast": 0,
+          "indexed": 0
+        }
+      },
+      "effective_n": 1536,
+      "effective_m": 1,
+      "elements": 1536,
+      "sut": {
+        "a_src": 0,
+        "a_ind": 0,
+        "b_src": 0,
+        "b_half": 0,
+        "c_src": 0,
+        "c_pair": 0,
+        "d_src": 0,
+        "a_rnd": 0,
+        "a_relu": 0,
+        "a_min": 0,
+        "c_clip": 0,
+        "m1": 1,
+        "m2": 0,
+        "qm": 0,
+        "ad": 0,
+        "sfu": 0,
+        "e1": 0,
+        "e2": 0,
+        "rnd": 0,
+        "dst": 1,
+        "red": 0,
+        "red_sq": 0,
+        "red_whole": 0,
+        "red_rnd": 0,
+        "su_vec": 0,
+        "red_tree": 0,
+        "imm1": 0,
+        "imm2": 0,
+        "imm3": 0
+      },
+      "model_price": 71.0,
+      "gather": false,
+      "reduction": {
+        "kind": 0,
+        "whole": 0,
+        "tree": 0,
+        "square": 0
+      },
+      "roles": {
+        "A": {
+          "descriptor": {
+            "space": "VM",
+            "fmt": "FP32",
+            "base": 162816,
+            "n": 1536,
+            "m": 1,
+            "stride": 0,
+            "istride": 0,
+            "lstride": 0,
+            "dyn_sel": 0,
+            "dyn_mul": 0,
+            "n_sel": 0,
+            "l1stride": 0,
+            "ibcast": 0,
+            "indexed": 0
+          },
+          "used": true,
+          "exact": true,
+          "effective_inner_stride": 1,
+          "inner_broadcast": false,
+          "row_broadcast": false,
+          "half_index": false,
+          "words": 1536,
+          "ranges": [
+            [
+              162816,
+              164351
+            ]
+          ],
+          "address_sha256": "8e9aa9f608dc768c4c89cd725550418fef06a3cdf3ad40b00cd44d261afa3e57",
+          "sector_mask_runs": [
+            [
+              20352,
+              20543,
+              255
+            ]
+          ]
+        },
+        "B": {
+          "descriptor": {
+            "space": "VM",
+            "fmt": "FP32",
+            "base": 156672,
+            "n": 1536,
+            "m": 1,
+            "stride": 0,
+            "istride": 0,
+            "lstride": 0,
+            "dyn_sel": 0,
+            "dyn_mul": 0,
+            "n_sel": 0,
+            "l1stride": 0,
+            "ibcast": 0,
+            "indexed": 0
+          },
+          "used": true,
+          "exact": true,
+          "effective_inner_stride": 1,
+          "inner_broadcast": false,
+          "row_broadcast": false,
+          "half_index": false,
+          "words": 1536,
+          "ranges": [
+            [
+              156672,
+              158207
+            ]
+          ],
+          "address_sha256": "e5d23f2f399554973e2ff663ceedeba544eee0a6aa9ad511549f43f160ff37cf",
+          "sector_mask_runs": [
+            [
+              19584,
+              19775,
+              255
+            ]
+          ]
+        },
+        "O": {
+          "descriptor": {
+            "space": "VM",
+            "fmt": "FP32",
+            "base": 168960,
+            "n": 1536,
+            "m": 1,
+            "stride": 0,
+            "istride": 0,
+            "lstride": 0,
+            "dyn_sel": 0,
+            "dyn_mul": 0,
+            "n_sel": 0,
+            "l1stride": 0,
+            "ibcast": 0,
+            "indexed": 0
+          },
+          "used": true,
+          "exact": true,
+          "effective_inner_stride": 1,
+          "inner_broadcast": false,
+          "row_broadcast": false,
+          "half_index": false,
+          "words": 1536,
+          "ranges": [
+            [
+              168960,
+              170495
+            ]
+          ],
+          "address_sha256": "f22e508f84f887fc0e9c0dc09fc7435bad504642197357dd8a99ee7112e5f54c",
+          "sector_mask_runs": [
+            [
+              21120,
+              21311,
+              255
+            ]
+          ]
+        }
+      },
+      "exact_role_aliases": [],
+      "output": {
+        "words": 1536,
+        "ranges": [
+          [
+            168960,
+            170495
+          ]
+        ],
+        "address_sha256": "f22e508f84f887fc0e9c0dc09fc7435bad504642197357dd8a99ee7112e5f54c",
+        "sector_mask_runs": [
+          [
+            21120,
+            21311,
+            255
+          ]
+        ]
+      },
+      "local_capacity": {
+        "frame_words": 65536,
+        "frames": 4,
+        "total_words": 262144,
+        "sector_rounded_span_words_by_role": {
+          "A": 1536,
+          "B": 1536,
+          "O": 1536
+        },
+        "sum_separate_role_spans": 4608,
+        "unique_live_vm_words_lower_bound": 4608,
+        "minimum_frames_if_separate_spans": 3,
+        "allocation_fit_proven": false
+      }
+    },
+    {
+      "index": 10,
+      "tag": "row_scale_down+residual",
+      "original_unit": 2,
+      "original_present_descriptors": {
+        "A": {
+          "space": "VM",
+          "fmt": "FP32",
+          "base": 182272,
+          "n": 1024,
+          "m": 1,
+          "stride": 0,
+          "istride": 0,
+          "lstride": 0,
+          "dyn_sel": 0,
+          "dyn_mul": 0,
+          "n_sel": 0,
+          "l1stride": 0,
+          "ibcast": 0,
+          "indexed": 0
+        },
+        "B": {
+          "space": "VM",
+          "fmt": "FP32",
+          "base": 156672,
+          "n": 1024,
+          "m": 1,
+          "stride": 0,
+          "istride": 0,
+          "lstride": 0,
+          "dyn_sel": 0,
+          "dyn_mul": 0,
+          "n_sel": 0,
+          "l1stride": 0,
+          "ibcast": 0,
+          "indexed": 0
+        },
+        "C": {
+          "space": "VM",
+          "fmt": "FP32",
+          "base": 0,
+          "n": 1024,
+          "m": 1,
+          "stride": 0,
+          "istride": 0,
+          "lstride": 0,
+          "dyn_sel": 0,
+          "dyn_mul": 0,
+          "n_sel": 0,
+          "l1stride": 0,
+          "ibcast": 0,
+          "indexed": 0
+        },
+        "O": {
+          "space": "VM",
+          "fmt": "FP32",
+          "base": 0,
+          "n": 1024,
+          "m": 1,
+          "stride": 0,
+          "istride": 0,
+          "lstride": 0,
+          "dyn_sel": 0,
+          "dyn_mul": 0,
+          "n_sel": 0,
+          "l1stride": 0,
+          "ibcast": 0,
+          "indexed": 0
+        }
+      },
+      "effective_n": 1024,
+      "effective_m": 1,
+      "elements": 1024,
+      "sut": {
+        "a_src": 0,
+        "a_ind": 0,
+        "b_src": 0,
+        "b_half": 0,
+        "c_src": 0,
+        "c_pair": 0,
+        "d_src": 0,
+        "a_rnd": 0,
+        "a_relu": 0,
+        "a_min": 0,
+        "c_clip": 0,
+        "m1": 1,
+        "m2": 0,
+        "qm": 0,
+        "ad": 2,
+        "sfu": 0,
+        "e1": 0,
+        "e2": 0,
+        "rnd": 0,
+        "dst": 1,
+        "red": 0,
+        "red_sq": 0,
+        "red_whole": 0,
+        "red_rnd": 0,
+        "su_vec": 0,
+        "red_tree": 0,
+        "imm1": 0,
+        "imm2": 0,
+        "imm3": 0
+      },
+      "model_price": 67.0,
+      "gather": false,
+      "reduction": {
+        "kind": 0,
+        "whole": 0,
+        "tree": 0,
+        "square": 0
+      },
+      "roles": {
+        "A": {
+          "descriptor": {
+            "space": "VM",
+            "fmt": "FP32",
+            "base": 182272,
+            "n": 1024,
+            "m": 1,
+            "stride": 0,
+            "istride": 0,
+            "lstride": 0,
+            "dyn_sel": 0,
+            "dyn_mul": 0,
+            "n_sel": 0,
+            "l1stride": 0,
+            "ibcast": 0,
+            "indexed": 0
+          },
+          "used": true,
+          "exact": true,
+          "effective_inner_stride": 1,
+          "inner_broadcast": false,
+          "row_broadcast": false,
+          "half_index": false,
+          "words": 1024,
+          "ranges": [
+            [
+              182272,
+              183295
+            ]
+          ],
+          "address_sha256": "782d72a26d14c255f08168b9c37657e4772f3d6da4ba528cccf841d9fbea0275",
+          "sector_mask_runs": [
+            [
+              22784,
+              22911,
+              255
+            ]
+          ]
+        },
+        "B": {
+          "descriptor": {
+            "space": "VM",
+            "fmt": "FP32",
+            "base": 156672,
+            "n": 1024,
+            "m": 1,
+            "stride": 0,
+            "istride": 0,
+            "lstride": 0,
+            "dyn_sel": 0,
+            "dyn_mul": 0,
+            "n_sel": 0,
+            "l1stride": 0,
+            "ibcast": 0,
+            "indexed": 0
+          },
+          "used": true,
+          "exact": true,
+          "effective_inner_stride": 1,
+          "inner_broadcast": false,
+          "row_broadcast": false,
+          "half_index": false,
+          "words": 1024,
+          "ranges": [
+            [
+              156672,
+              157695
+            ]
+          ],
+          "address_sha256": "4cb1ba39db6aa2ea3be906a8bbb344f4b4d907124b49ddb15c9258adf0af3dfb",
+          "sector_mask_runs": [
+            [
+              19584,
+              19711,
+              255
+            ]
+          ]
+        },
+        "C": {
+          "descriptor": {
+            "space": "VM",
+            "fmt": "FP32",
+            "base": 0,
+            "n": 1024,
+            "m": 1,
+            "stride": 0,
+            "istride": 0,
+            "lstride": 0,
+            "dyn_sel": 0,
+            "dyn_mul": 0,
+            "n_sel": 0,
+            "l1stride": 0,
+            "ibcast": 0,
+            "indexed": 0
+          },
+          "used": true,
+          "exact": true,
+          "effective_inner_stride": 1,
+          "inner_broadcast": false,
+          "row_broadcast": false,
+          "half_index": false,
+          "words": 1024,
+          "ranges": [
+            [
+              0,
+              1023
+            ]
+          ],
+          "address_sha256": "c89db7222126863309183fc023c7091fb18392d16a397dac76a96a022cd62cef",
+          "sector_mask_runs": [
+            [
+              0,
+              127,
+              255
+            ]
+          ]
+        },
+        "O": {
+          "descriptor": {
+            "space": "VM",
+            "fmt": "FP32",
+            "base": 0,
+            "n": 1024,
+            "m": 1,
+            "stride": 0,
+            "istride": 0,
+            "lstride": 0,
+            "dyn_sel": 0,
+            "dyn_mul": 0,
+            "n_sel": 0,
+            "l1stride": 0,
+            "ibcast": 0,
+            "indexed": 0
+          },
+          "used": true,
+          "exact": true,
+          "effective_inner_stride": 1,
+          "inner_broadcast": false,
+          "row_broadcast": false,
+          "half_index": false,
+          "words": 1024,
+          "ranges": [
+            [
+              0,
+              1023
+            ]
+          ],
+          "address_sha256": "c89db7222126863309183fc023c7091fb18392d16a397dac76a96a022cd62cef",
+          "sector_mask_runs": [
+            [
+              0,
+              127,
+              255
+            ]
+          ]
+        }
+      },
+      "exact_role_aliases": [
+        {
+          "roles": [
+            "C",
+            "O"
+          ],
+          "words": 1024,
+          "ranges": [
+            [
+              0,
+              1023
+            ]
+          ]
+        }
+      ],
+      "output": {
+        "words": 1024,
+        "ranges": [
+          [
+            0,
+            1023
+          ]
+        ],
+        "address_sha256": "c89db7222126863309183fc023c7091fb18392d16a397dac76a96a022cd62cef",
+        "sector_mask_runs": [
+          [
+            0,
+            127,
+            255
+          ]
+        ]
+      },
+      "local_capacity": {
+        "frame_words": 65536,
+        "frames": 4,
+        "total_words": 262144,
+        "sector_rounded_span_words_by_role": {
+          "A": 1024,
+          "B": 1024,
+          "C": 1024,
+          "O": 1024
+        },
+        "sum_separate_role_spans": 4096,
+        "unique_live_vm_words_lower_bound": 3072,
+        "minimum_frames_if_separate_spans": 4,
+        "allocation_fit_proven": false
+      }
+    },
+    {
+      "index": 11,
+      "tag": "sink_unstaged.copy_1x2043_o3",
+      "original_unit": 2,
+      "original_present_descriptors": {
+        "A": {
+          "space": "VM",
+          "fmt": "FP32",
+          "base": 1024,
+          "n": 2043,
+          "m": 1,
+          "stride": 2043,
+          "istride": 1,
+          "lstride": 0,
+          "dyn_sel": 0,
+          "dyn_mul": 0,
+          "n_sel": 0,
+          "l1stride": 0,
+          "ibcast": 0,
+          "indexed": 0
+        },
+        "O": {
+          "space": "VM",
+          "fmt": "FP32",
+          "base": 3331,
+          "n": 2043,
+          "m": 1,
+          "stride": 2043,
+          "istride": 1,
+          "lstride": 0,
+          "dyn_sel": 0,
+          "dyn_mul": 0,
+          "n_sel": 0,
+          "l1stride": 0,
+          "ibcast": 0,
+          "indexed": 0
+        }
+      },
+      "effective_n": 2043,
+      "effective_m": 1,
+      "elements": 2043,
+      "sut": {
+        "a_src": 0,
+        "a_ind": 0,
+        "b_src": 0,
+        "b_half": 0,
+        "c_src": 0,
+        "c_pair": 0,
+        "d_src": 0,
+        "a_rnd": 0,
+        "a_relu": 0,
+        "a_min": 0,
+        "c_clip": 0,
+        "m1": 0,
+        "m2": 0,
+        "qm": 0,
+        "ad": 0,
+        "sfu": 0,
+        "e1": 0,
+        "e2": 0,
+        "rnd": 0,
+        "dst": 1,
+        "red": 0,
+        "red_sq": 0,
+        "red_whole": 0,
+        "red_rnd": 0,
+        "su_vec": 0,
+        "red_tree": 0,
+        "imm1": 0,
+        "imm2": 0,
+        "imm3": 0
+      },
+      "model_price": 63.0,
+      "gather": false,
+      "reduction": {
+        "kind": 0,
+        "whole": 0,
+        "tree": 0,
+        "square": 0
+      },
+      "roles": {
+        "A": {
+          "descriptor": {
+            "space": "VM",
+            "fmt": "FP32",
+            "base": 1024,
+            "n": 2043,
+            "m": 1,
+            "stride": 2043,
+            "istride": 1,
+            "lstride": 0,
+            "dyn_sel": 0,
+            "dyn_mul": 0,
+            "n_sel": 0,
+            "l1stride": 0,
+            "ibcast": 0,
+            "indexed": 0
+          },
+          "used": true,
+          "exact": true,
+          "effective_inner_stride": 1,
+          "inner_broadcast": false,
+          "row_broadcast": false,
+          "half_index": false,
+          "words": 2043,
+          "ranges": [
+            [
+              1024,
+              3066
+            ]
+          ],
+          "address_sha256": "311957e37e63c0fb7fd66fc4b33524f6bb49da24a681a54d989bb976abd9a289",
+          "sector_mask_runs": [
+            [
+              128,
+              382,
+              255
+            ],
+            [
+              383,
+              383,
+              7
+            ]
+          ]
+        },
+        "O": {
+          "descriptor": {
+            "space": "VM",
+            "fmt": "FP32",
+            "base": 3331,
+            "n": 2043,
+            "m": 1,
+            "stride": 2043,
+            "istride": 1,
+            "lstride": 0,
+            "dyn_sel": 0,
+            "dyn_mul": 0,
+            "n_sel": 0,
+            "l1stride": 0,
+            "ibcast": 0,
+            "indexed": 0
+          },
+          "used": true,
+          "exact": true,
+          "effective_inner_stride": 1,
+          "inner_broadcast": false,
+          "row_broadcast": false,
+          "half_index": false,
+          "words": 2043,
+          "ranges": [
+            [
+              3331,
+              5373
+            ]
+          ],
+          "address_sha256": "b0c3141335925f9aa7a254fed6622bced8599ea788ec905c619985e712f6ada0",
+          "sector_mask_runs": [
+            [
+              416,
+              416,
+              248
+            ],
+            [
+              417,
+              670,
+              255
+            ],
+            [
+              671,
+              671,
+              63
+            ]
+          ]
+        }
+      },
+      "exact_role_aliases": [],
+      "output": {
+        "words": 2043,
+        "ranges": [
+          [
+            3331,
+            5373
+          ]
+        ],
+        "address_sha256": "b0c3141335925f9aa7a254fed6622bced8599ea788ec905c619985e712f6ada0",
+        "sector_mask_runs": [
+          [
+            416,
+            416,
+            248
+          ],
+          [
+            417,
+            670,
+            255
+          ],
+          [
+            671,
+            671,
+            63
+          ]
+        ]
+      },
+      "local_capacity": {
+        "frame_words": 65536,
+        "frames": 4,
+        "total_words": 262144,
+        "sector_rounded_span_words_by_role": {
+          "A": 2048,
+          "O": 2048
+        },
+        "sum_separate_role_spans": 4096,
+        "unique_live_vm_words_lower_bound": 4086,
+        "minimum_frames_if_separate_spans": 2,
+        "allocation_fit_proven": false
+      }
+    },
+    {
+      "index": 12,
+      "tag": "sink_unstaged.copy_1x2043_o3_again",
+      "original_unit": 2,
+      "original_present_descriptors": {
+        "A": {
+          "space": "VM",
+          "fmt": "FP32",
+          "base": 5632,
+          "n": 2043,
+          "m": 1,
+          "stride": 2043,
+          "istride": 1,
+          "lstride": 0,
+          "dyn_sel": 0,
+          "dyn_mul": 0,
+          "n_sel": 0,
+          "l1stride": 0,
+          "ibcast": 0,
+          "indexed": 0
+        },
+        "O": {
+          "space": "VM",
+          "fmt": "FP32",
+          "base": 31491,
+          "n": 2043,
+          "m": 1,
+          "stride": 2043,
+          "istride": 1,
+          "lstride": 0,
+          "dyn_sel": 0,
+          "dyn_mul": 0,
+          "n_sel": 0,
+          "l1stride": 0,
+          "ibcast": 0,
+          "indexed": 0
+        }
+      },
+      "effective_n": 2043,
+      "effective_m": 1,
+      "elements": 2043,
+      "sut": {
+        "a_src": 0,
+        "a_ind": 0,
+        "b_src": 0,
+        "b_half": 0,
+        "c_src": 0,
+        "c_pair": 0,
+        "d_src": 0,
+        "a_rnd": 0,
+        "a_relu": 0,
+        "a_min": 0,
+        "c_clip": 0,
+        "m1": 0,
+        "m2": 0,
+        "qm": 0,
+        "ad": 0,
+        "sfu": 0,
+        "e1": 0,
+        "e2": 0,
+        "rnd": 0,
+        "dst": 1,
+        "red": 0,
+        "red_sq": 0,
+        "red_whole": 0,
+        "red_rnd": 0,
+        "su_vec": 0,
+        "red_tree": 0,
+        "imm1": 0,
+        "imm2": 0,
+        "imm3": 0
+      },
+      "model_price": 63.0,
+      "gather": false,
+      "reduction": {
+        "kind": 0,
+        "whole": 0,
+        "tree": 0,
+        "square": 0
+      },
+      "roles": {
+        "A": {
+          "descriptor": {
+            "space": "VM",
+            "fmt": "FP32",
+            "base": 5632,
+            "n": 2043,
+            "m": 1,
+            "stride": 2043,
+            "istride": 1,
+            "lstride": 0,
+            "dyn_sel": 0,
+            "dyn_mul": 0,
+            "n_sel": 0,
+            "l1stride": 0,
+            "ibcast": 0,
+            "indexed": 0
+          },
+          "used": true,
+          "exact": true,
+          "effective_inner_stride": 1,
+          "inner_broadcast": false,
+          "row_broadcast": false,
+          "half_index": false,
+          "words": 2043,
+          "ranges": [
+            [
+              5632,
+              7674
+            ]
+          ],
+          "address_sha256": "096b5d4da198e30768ff7fd66cf12f746230a0edf812e5576e4b070399ccd105",
+          "sector_mask_runs": [
+            [
+              704,
+              958,
+              255
+            ],
+            [
+              959,
+              959,
+              7
+            ]
+          ]
+        },
+        "O": {
+          "descriptor": {
+            "space": "VM",
+            "fmt": "FP32",
+            "base": 31491,
+            "n": 2043,
+            "m": 1,
+            "stride": 2043,
+            "istride": 1,
+            "lstride": 0,
+            "dyn_sel": 0,
+            "dyn_mul": 0,
+            "n_sel": 0,
+            "l1stride": 0,
+            "ibcast": 0,
+            "indexed": 0
+          },
+          "used": true,
+          "exact": true,
+          "effective_inner_stride": 1,
+          "inner_broadcast": false,
+          "row_broadcast": false,
+          "half_index": false,
+          "words": 2043,
+          "ranges": [
+            [
+              31491,
+              33533
+            ]
+          ],
+          "address_sha256": "bbed2eb5086e695cde2175a395e4f111289138a91c2cdd1f7ebb3b62e7ca7e00",
+          "sector_mask_runs": [
+            [
+              3936,
+              3936,
+              248
+            ],
+            [
+              3937,
+              4190,
+              255
+            ],
+            [
+              4191,
+              4191,
+              63
+            ]
+          ]
+        }
+      },
+      "exact_role_aliases": [],
+      "output": {
+        "words": 2043,
+        "ranges": [
+          [
+            31491,
+            33533
+          ]
+        ],
+        "address_sha256": "bbed2eb5086e695cde2175a395e4f111289138a91c2cdd1f7ebb3b62e7ca7e00",
+        "sector_mask_runs": [
+          [
+            3936,
+            3936,
+            248
+          ],
+          [
+            3937,
+            4190,
+            255
+          ],
+          [
+            4191,
+            4191,
+            63
+          ]
+        ]
+      },
+      "local_capacity": {
+        "frame_words": 65536,
+        "frames": 4,
+        "total_words": 262144,
+        "sector_rounded_span_words_by_role": {
+          "A": 2048,
+          "O": 2048
+        },
+        "sum_separate_role_spans": 4096,
+        "unique_live_vm_words_lower_bound": 4086,
+        "minimum_frames_if_separate_spans": 2,
+        "allocation_fit_proven": false
+      }
+    },
+    {
+      "index": 13,
+      "tag": "sink_unstaged.copy_8x1021_o5",
+      "original_unit": 2,
+      "original_present_descriptors": {
+        "A": {
+          "space": "VM",
+          "fmt": "FP32",
+          "base": 33792,
+          "n": 1021,
+          "m": 8,
+          "stride": 1021,
+          "istride": 1,
+          "lstride": 0,
+          "dyn_sel": 0,
+          "dyn_mul": 0,
+          "n_sel": 0,
+          "l1stride": 0,
+          "ibcast": 0,
+          "indexed": 0
+        },
+        "O": {
+          "space": "VM",
+          "fmt": "FP32",
+          "base": 41989,
+          "n": 1021,
+          "m": 8,
+          "stride": 1021,
+          "istride": 1,
+          "lstride": 0,
+          "dyn_sel": 0,
+          "dyn_mul": 0,
+          "n_sel": 0,
+          "l1stride": 0,
+          "ibcast": 0,
+          "indexed": 0
+        }
+      },
+      "effective_n": 1021,
+      "effective_m": 8,
+      "elements": 8168,
+      "sut": {
+        "a_src": 0,
+        "a_ind": 0,
+        "b_src": 0,
+        "b_half": 0,
+        "c_src": 0,
+        "c_pair": 0,
+        "d_src": 0,
+        "a_rnd": 0,
+        "a_relu": 0,
+        "a_min": 0,
+        "c_clip": 0,
+        "m1": 0,
+        "m2": 0,
+        "qm": 0,
+        "ad": 0,
+        "sfu": 0,
+        "e1": 0,
+        "e2": 0,
+        "rnd": 0,
+        "dst": 1,
+        "red": 0,
+        "red_sq": 0,
+        "red_whole": 0,
+        "red_rnd": 0,
+        "su_vec": 0,
+        "red_tree": 0,
+        "imm1": 0,
+        "imm2": 0,
+        "imm3": 0
+      },
+      "model_price": 75.0,
+      "gather": false,
+      "reduction": {
+        "kind": 0,
+        "whole": 0,
+        "tree": 0,
+        "square": 0
+      },
+      "roles": {
+        "A": {
+          "descriptor": {
+            "space": "VM",
+            "fmt": "FP32",
+            "base": 33792,
+            "n": 1021,
+            "m": 8,
+            "stride": 1021,
+            "istride": 1,
+            "lstride": 0,
+            "dyn_sel": 0,
+            "dyn_mul": 0,
+            "n_sel": 0,
+            "l1stride": 0,
+            "ibcast": 0,
+            "indexed": 0
+          },
+          "used": true,
+          "exact": true,
+          "effective_inner_stride": 1,
+          "inner_broadcast": false,
+          "row_broadcast": false,
+          "half_index": false,
+          "words": 8168,
+          "ranges": [
+            [
+              33792,
+              41959
+            ]
+          ],
+          "address_sha256": "d57f47fb7c445cd2645fe88bfe9118130f05312c639f5563e1399f343f783966",
+          "sector_mask_runs": [
+            [
+              4224,
+              5244,
+              255
+            ]
+          ]
+        },
+        "O": {
+          "descriptor": {
+            "space": "VM",
+            "fmt": "FP32",
+            "base": 41989,
+            "n": 1021,
+            "m": 8,
+            "stride": 1021,
+            "istride": 1,
+            "lstride": 0,
+            "dyn_sel": 0,
+            "dyn_mul": 0,
+            "n_sel": 0,
+            "l1stride": 0,
+            "ibcast": 0,
+            "indexed": 0
+          },
+          "used": true,
+          "exact": true,
+          "effective_inner_stride": 1,
+          "inner_broadcast": false,
+          "row_broadcast": false,
+          "half_index": false,
+          "words": 8168,
+          "ranges": [
+            [
+              41989,
+              50156
+            ]
+          ],
+          "address_sha256": "6041d6a645be2ed38c2de5e27761bf4d2c87339074eb4a5a20ce375af8a92735",
+          "sector_mask_runs": [
+            [
+              5248,
+              5248,
+              224
+            ],
+            [
+              5249,
+              6268,
+              255
+            ],
+            [
+              6269,
+              6269,
+              31
+            ]
+          ]
+        }
+      },
+      "exact_role_aliases": [],
+      "output": {
+        "words": 8168,
+        "ranges": [
+          [
+            41989,
+            50156
+          ]
+        ],
+        "address_sha256": "6041d6a645be2ed38c2de5e27761bf4d2c87339074eb4a5a20ce375af8a92735",
+        "sector_mask_runs": [
+          [
+            5248,
+            5248,
+            224
+          ],
+          [
+            5249,
+            6268,
+            255
+          ],
+          [
+            6269,
+            6269,
+            31
+          ]
+        ]
+      },
+      "local_capacity": {
+        "frame_words": 65536,
+        "frames": 4,
+        "total_words": 262144,
+        "sector_rounded_span_words_by_role": {
+          "A": 8168,
+          "O": 8176
+        },
+        "sum_separate_role_spans": 16344,
+        "unique_live_vm_words_lower_bound": 16336,
+        "minimum_frames_if_separate_spans": 2,
+        "allocation_fit_proven": false
+      }
+    },
+    {
+      "index": 14,
+      "tag": "sink_unstaged.copy_8x1021_o5_again",
+      "original_unit": 2,
+      "original_present_descriptors": {
+        "A": {
+          "space": "VM",
+          "fmt": "FP32",
+          "base": 50176,
+          "n": 1021,
+          "m": 8,
+          "stride": 1021,
+          "istride": 1,
+          "lstride": 0,
+          "dyn_sel": 0,
+          "dyn_mul": 0,
+          "n_sel": 0,
+          "l1stride": 0,
+          "ibcast": 0,
+          "indexed": 0
+        },
+        "O": {
+          "space": "VM",
+          "fmt": "FP32",
+          "base": 58373,
+          "n": 1021,
+          "m": 8,
+          "stride": 1021,
+          "istride": 1,
+          "lstride": 0,
+          "dyn_sel": 0,
+          "dyn_mul": 0,
+          "n_sel": 0,
+          "l1stride": 0,
+          "ibcast": 0,
+          "indexed": 0
+        }
+      },
+      "effective_n": 1021,
+      "effective_m": 8,
+      "elements": 8168,
+      "sut": {
+        "a_src": 0,
+        "a_ind": 0,
+        "b_src": 0,
+        "b_half": 0,
+        "c_src": 0,
+        "c_pair": 0,
+        "d_src": 0,
+        "a_rnd": 0,
+        "a_relu": 0,
+        "a_min": 0,
+        "c_clip": 0,
+        "m1": 0,
+        "m2": 0,
+        "qm": 0,
+        "ad": 0,
+        "sfu": 0,
+        "e1": 0,
+        "e2": 0,
+        "rnd": 0,
+        "dst": 1,
+        "red": 0,
+        "red_sq": 0,
+        "red_whole": 0,
+        "red_rnd": 0,
+        "su_vec": 0,
+        "red_tree": 0,
+        "imm1": 0,
+        "imm2": 0,
+        "imm3": 0
+      },
+      "model_price": 75.0,
+      "gather": false,
+      "reduction": {
+        "kind": 0,
+        "whole": 0,
+        "tree": 0,
+        "square": 0
+      },
+      "roles": {
+        "A": {
+          "descriptor": {
+            "space": "VM",
+            "fmt": "FP32",
+            "base": 50176,
+            "n": 1021,
+            "m": 8,
+            "stride": 1021,
+            "istride": 1,
+            "lstride": 0,
+            "dyn_sel": 0,
+            "dyn_mul": 0,
+            "n_sel": 0,
+            "l1stride": 0,
+            "ibcast": 0,
+            "indexed": 0
+          },
+          "used": true,
+          "exact": true,
+          "effective_inner_stride": 1,
+          "inner_broadcast": false,
+          "row_broadcast": false,
+          "half_index": false,
+          "words": 8168,
+          "ranges": [
+            [
+              50176,
+              58343
+            ]
+          ],
+          "address_sha256": "e3e5a997357367c4b1fb801b2bf7f244bb87c4bf0f97afe9d1551df451f33b59",
+          "sector_mask_runs": [
+            [
+              6272,
+              7292,
+              255
+            ]
+          ]
+        },
+        "O": {
+          "descriptor": {
+            "space": "VM",
+            "fmt": "FP32",
+            "base": 58373,
+            "n": 1021,
+            "m": 8,
+            "stride": 1021,
+            "istride": 1,
+            "lstride": 0,
+            "dyn_sel": 0,
+            "dyn_mul": 0,
+            "n_sel": 0,
+            "l1stride": 0,
+            "ibcast": 0,
+            "indexed": 0
+          },
+          "used": true,
+          "exact": true,
+          "effective_inner_stride": 1,
+          "inner_broadcast": false,
+          "row_broadcast": false,
+          "half_index": false,
+          "words": 8168,
+          "ranges": [
+            [
+              58373,
+              66540
+            ]
+          ],
+          "address_sha256": "4940066282cedfdd7a9035e98e8060d3af5f77ce83d3380bd8e8f657cc9dc3b1",
+          "sector_mask_runs": [
+            [
+              7296,
+              7296,
+              224
+            ],
+            [
+              7297,
+              8316,
+              255
+            ],
+            [
+              8317,
+              8317,
+              31
+            ]
+          ]
+        }
+      },
+      "exact_role_aliases": [],
+      "output": {
+        "words": 8168,
+        "ranges": [
+          [
+            58373,
+            66540
+          ]
+        ],
+        "address_sha256": "4940066282cedfdd7a9035e98e8060d3af5f77ce83d3380bd8e8f657cc9dc3b1",
+        "sector_mask_runs": [
+          [
+            7296,
+            7296,
+            224
+          ],
+          [
+            7297,
+            8316,
+            255
+          ],
+          [
+            8317,
+            8317,
+            31
+          ]
+        ]
+      },
+      "local_capacity": {
+        "frame_words": 65536,
+        "frames": 4,
+        "total_words": 262144,
+        "sector_rounded_span_words_by_role": {
+          "A": 8168,
+          "O": 8176
+        },
+        "sum_separate_role_spans": 16344,
+        "unique_live_vm_words_lower_bound": 16336,
+        "minimum_frames_if_separate_spans": 2,
+        "allocation_fit_proven": false
+      }
+    },
+    {
+      "index": 15,
+      "tag": "sink_unstaged.copy_1x1_o4",
+      "original_unit": 2,
+      "original_present_descriptors": {
+        "A": {
+          "space": "VM",
+          "fmt": "FP32",
+          "base": 66560,
+          "n": 1,
+          "m": 1,
+          "stride": 1,
+          "istride": 1,
+          "lstride": 0,
+          "dyn_sel": 0,
+          "dyn_mul": 0,
+          "n_sel": 0,
+          "l1stride": 0,
+          "ibcast": 0,
+          "indexed": 0
+        },
+        "O": {
+          "space": "VM",
+          "fmt": "FP32",
+          "base": 66820,
+          "n": 1,
+          "m": 1,
+          "stride": 1,
+          "istride": 1,
+          "lstride": 0,
+          "dyn_sel": 0,
+          "dyn_mul": 0,
+          "n_sel": 0,
+          "l1stride": 0,
+          "ibcast": 0,
+          "indexed": 0
+        }
+      },
+      "effective_n": 1,
+      "effective_m": 1,
+      "elements": 1,
+      "sut": {
+        "a_src": 0,
+        "a_ind": 0,
+        "b_src": 0,
+        "b_half": 0,
+        "c_src": 0,
+        "c_pair": 0,
+        "d_src": 0,
+        "a_rnd": 0,
+        "a_relu": 0,
+        "a_min": 0,
+        "c_clip": 0,
+        "m1": 0,
+        "m2": 0,
+        "qm": 0,
+        "ad": 0,
+        "sfu": 0,
+        "e1": 0,
+        "e2": 0,
+        "rnd": 0,
+        "dst": 1,
+        "red": 0,
+        "red_sq": 0,
+        "red_whole": 0,
+        "red_rnd": 0,
+        "su_vec": 0,
+        "red_tree": 0,
+        "imm1": 0,
+        "imm2": 0,
+        "imm3": 0
+      },
+      "model_price": 60.0,
+      "gather": false,
+      "reduction": {
+        "kind": 0,
+        "whole": 0,
+        "tree": 0,
+        "square": 0
+      },
+      "roles": {
+        "A": {
+          "descriptor": {
+            "space": "VM",
+            "fmt": "FP32",
+            "base": 66560,
+            "n": 1,
+            "m": 1,
+            "stride": 1,
+            "istride": 1,
+            "lstride": 0,
+            "dyn_sel": 0,
+            "dyn_mul": 0,
+            "n_sel": 0,
+            "l1stride": 0,
+            "ibcast": 0,
+            "indexed": 0
+          },
+          "used": true,
+          "exact": true,
+          "effective_inner_stride": 1,
+          "inner_broadcast": false,
+          "row_broadcast": false,
+          "half_index": false,
+          "words": 1,
+          "ranges": [
+            [
+              66560,
+              66560
+            ]
+          ],
+          "address_sha256": "9b4b62511d11d50d992303df8f8081e51df94ab5117273cd7e4422de9a01e508",
+          "sector_mask_runs": [
+            [
+              8320,
+              8320,
+              1
+            ]
+          ]
+        },
+        "O": {
+          "descriptor": {
+            "space": "VM",
+            "fmt": "FP32",
+            "base": 66820,
+            "n": 1,
+            "m": 1,
+            "stride": 1,
+            "istride": 1,
+            "lstride": 0,
+            "dyn_sel": 0,
+            "dyn_mul": 0,
+            "n_sel": 0,
+            "l1stride": 0,
+            "ibcast": 0,
+            "indexed": 0
+          },
+          "used": true,
+          "exact": true,
+          "effective_inner_stride": 1,
+          "inner_broadcast": false,
+          "row_broadcast": false,
+          "half_index": false,
+          "words": 1,
+          "ranges": [
+            [
+              66820,
+              66820
+            ]
+          ],
+          "address_sha256": "7a300f415824df833d1da5ebc2a4ec02a2de2710e4bef7fec26aa3974ea94d96",
+          "sector_mask_runs": [
+            [
+              8352,
+              8352,
+              16
+            ]
+          ]
+        }
+      },
+      "exact_role_aliases": [],
+      "output": {
+        "words": 1,
+        "ranges": [
+          [
+            66820,
+            66820
+          ]
+        ],
+        "address_sha256": "7a300f415824df833d1da5ebc2a4ec02a2de2710e4bef7fec26aa3974ea94d96",
+        "sector_mask_runs": [
+          [
+            8352,
+            8352,
+            16
+          ]
+        ]
+      },
+      "local_capacity": {
+        "frame_words": 65536,
+        "frames": 4,
+        "total_words": 262144,
+        "sector_rounded_span_words_by_role": {
+          "A": 8,
+          "O": 8
+        },
+        "sum_separate_role_spans": 16,
+        "unique_live_vm_words_lower_bound": 2,
+        "minimum_frames_if_separate_spans": 2,
+        "allocation_fit_proven": false
+      }
+    },
+    {
+      "index": 16,
+      "tag": "sink_unstaged.copy_1x5_o6",
+      "original_unit": 2,
+      "original_present_descriptors": {
+        "A": {
+          "space": "VM",
+          "fmt": "FP32",
+          "base": 67072,
+          "n": 5,
+          "m": 1,
+          "stride": 5,
+          "istride": 1,
+          "lstride": 0,
+          "dyn_sel": 0,
+          "dyn_mul": 0,
+          "n_sel": 0,
+          "l1stride": 0,
+          "ibcast": 0,
+          "indexed": 0
+        },
+        "O": {
+          "space": "VM",
+          "fmt": "FP32",
+          "base": 67334,
+          "n": 5,
+          "m": 1,
+          "stride": 5,
+          "istride": 1,
+          "lstride": 0,
+          "dyn_sel": 0,
+          "dyn_mul": 0,
+          "n_sel": 0,
+          "l1stride": 0,
+          "ibcast": 0,
+          "indexed": 0
+        }
+      },
+      "effective_n": 5,
+      "effective_m": 1,
+      "elements": 5,
+      "sut": {
+        "a_src": 0,
+        "a_ind": 0,
+        "b_src": 0,
+        "b_half": 0,
+        "c_src": 0,
+        "c_pair": 0,
+        "d_src": 0,
+        "a_rnd": 0,
+        "a_relu": 0,
+        "a_min": 0,
+        "c_clip": 0,
+        "m1": 0,
+        "m2": 0,
+        "qm": 0,
+        "ad": 0,
+        "sfu": 0,
+        "e1": 0,
+        "e2": 0,
+        "rnd": 0,
+        "dst": 1,
+        "red": 0,
+        "red_sq": 0,
+        "red_whole": 0,
+        "red_rnd": 0,
+        "su_vec": 0,
+        "red_tree": 0,
+        "imm1": 0,
+        "imm2": 0,
+        "imm3": 0
+      },
+      "model_price": 60.0,
+      "gather": false,
+      "reduction": {
+        "kind": 0,
+        "whole": 0,
+        "tree": 0,
+        "square": 0
+      },
+      "roles": {
+        "A": {
+          "descriptor": {
+            "space": "VM",
+            "fmt": "FP32",
+            "base": 67072,
+            "n": 5,
+            "m": 1,
+            "stride": 5,
+            "istride": 1,
+            "lstride": 0,
+            "dyn_sel": 0,
+            "dyn_mul": 0,
+            "n_sel": 0,
+            "l1stride": 0,
+            "ibcast": 0,
+            "indexed": 0
+          },
+          "used": true,
+          "exact": true,
+          "effective_inner_stride": 1,
+          "inner_broadcast": false,
+          "row_broadcast": false,
+          "half_index": false,
+          "words": 5,
+          "ranges": [
+            [
+              67072,
+              67076
+            ]
+          ],
+          "address_sha256": "822e6d951bd701f9fe0767123f5242617435ce875e7b3ed9493d6bb38a468d60",
+          "sector_mask_runs": [
+            [
+              8384,
+              8384,
+              31
+            ]
+          ]
+        },
+        "O": {
+          "descriptor": {
+            "space": "VM",
+            "fmt": "FP32",
+            "base": 67334,
+            "n": 5,
+            "m": 1,
+            "stride": 5,
+            "istride": 1,
+            "lstride": 0,
+            "dyn_sel": 0,
+            "dyn_mul": 0,
+            "n_sel": 0,
+            "l1stride": 0,
+            "ibcast": 0,
+            "indexed": 0
+          },
+          "used": true,
+          "exact": true,
+          "effective_inner_stride": 1,
+          "inner_broadcast": false,
+          "row_broadcast": false,
+          "half_index": false,
+          "words": 5,
+          "ranges": [
+            [
+              67334,
+              67338
+            ]
+          ],
+          "address_sha256": "1dd8e9757305716eddb4db0fa769bdd0643eb0c511703ac6026bfc8fc519245f",
+          "sector_mask_runs": [
+            [
+              8416,
+              8416,
+              192
+            ],
+            [
+              8417,
+              8417,
+              7
+            ]
+          ]
+        }
+      },
+      "exact_role_aliases": [],
+      "output": {
+        "words": 5,
+        "ranges": [
+          [
+            67334,
+            67338
+          ]
+        ],
+        "address_sha256": "1dd8e9757305716eddb4db0fa769bdd0643eb0c511703ac6026bfc8fc519245f",
+        "sector_mask_runs": [
+          [
+            8416,
+            8416,
+            192
+          ],
+          [
+            8417,
+            8417,
+            7
+          ]
+        ]
+      },
+      "local_capacity": {
+        "frame_words": 65536,
+        "frames": 4,
+        "total_words": 262144,
+        "sector_rounded_span_words_by_role": {
+          "A": 8,
+          "O": 16
+        },
+        "sum_separate_role_spans": 24,
+        "unique_live_vm_words_lower_bound": 10,
+        "minimum_frames_if_separate_spans": 2,
+        "allocation_fit_proven": false
+      }
+    },
+    {
+      "index": 17,
+      "tag": "sink_unstaged.copy_37x11_s19_o3",
+      "original_unit": 2,
+      "original_present_descriptors": {
+        "A": {
+          "space": "VM",
+          "fmt": "FP32",
+          "base": 67584,
+          "n": 11,
+          "m": 37,
+          "stride": 11,
+          "istride": 1,
+          "lstride": 0,
+          "dyn_sel": 0,
+          "dyn_mul": 0,
+          "n_sel": 0,
+          "l1stride": 0,
+          "ibcast": 0,
+          "indexed": 0
+        },
+        "O": {
+          "space": "VM",
+          "fmt": "FP32",
+          "base": 68099,
+          "n": 11,
+          "m": 37,
+          "stride": 19,
+          "istride": 1,
+          "lstride": 0,
+          "dyn_sel": 0,
+          "dyn_mul": 0,
+          "n_sel": 0,
+          "l1stride": 0,
+          "ibcast": 0,
+          "indexed": 0
+        }
+      },
+      "effective_n": 11,
+      "effective_m": 37,
+      "elements": 407,
+      "sut": {
+        "a_src": 0,
+        "a_ind": 0,
+        "b_src": 0,
+        "b_half": 0,
+        "c_src": 0,
+        "c_pair": 0,
+        "d_src": 0,
+        "a_rnd": 0,
+        "a_relu": 0,
+        "a_min": 0,
+        "c_clip": 0,
+        "m1": 0,
+        "m2": 0,
+        "qm": 0,
+        "ad": 0,
+        "sfu": 0,
+        "e1": 0,
+        "e2": 0,
+        "rnd": 0,
+        "dst": 1,
+        "red": 0,
+        "red_sq": 0,
+        "red_whole": 0,
+        "red_rnd": 0,
+        "su_vec": 0,
+        "red_tree": 0,
+        "imm1": 0,
+        "imm2": 0,
+        "imm3": 0
+      },
+      "model_price": 61.0,
+      "gather": false,
+      "reduction": {
+        "kind": 0,
+        "whole": 0,
+        "tree": 0,
+        "square": 0
+      },
+      "roles": {
+        "A": {
+          "descriptor": {
+            "space": "VM",
+            "fmt": "FP32",
+            "base": 67584,
+            "n": 11,
+            "m": 37,
+            "stride": 11,
+            "istride": 1,
+            "lstride": 0,
+            "dyn_sel": 0,
+            "dyn_mul": 0,
+            "n_sel": 0,
+            "l1stride": 0,
+            "ibcast": 0,
+            "indexed": 0
+          },
+          "used": true,
+          "exact": true,
+          "effective_inner_stride": 1,
+          "inner_broadcast": false,
+          "row_broadcast": false,
+          "half_index": false,
+          "words": 407,
+          "ranges": [
+            [
+              67584,
+              67990
+            ]
+          ],
+          "address_sha256": "a45bbb9678cc268cc3a8b598b539a308f2487e124673a1a56e01104dfcd18b75",
+          "sector_mask_runs": [
+            [
+              8448,
+              8497,
+              255
+            ],
+            [
+              8498,
+              8498,
+              127
+            ]
+          ]
+        },
+        "O": {
+          "descriptor": {
+            "space": "VM",
+            "fmt": "FP32",
+            "base": 68099,
+            "n": 11,
+            "m": 37,
+            "stride": 19,
+            "istride": 1,
+            "lstride": 0,
+            "dyn_sel": 0,
+            "dyn_mul": 0,
+            "n_sel": 0,
+            "l1stride": 0,
+            "ibcast": 0,
+            "indexed": 0
+          },
+          "used": true,
+          "exact": true,
+          "effective_inner_stride": 1,
+          "inner_broadcast": false,
+          "row_broadcast": false,
+          "half_index": false,
+          "words": 407,
+          "ranges": [
+            [
+              68099,
+              68109
+            ],
+            [
+              68118,
+              68128
+            ],
+            [
+              68137,
+              68147
+            ],
+            [
+              68156,
+              68166
+            ],
+            [
+              68175,
+              68185
+            ],
+            [
+              68194,
+              68204
+            ],
+            [
+              68213,
+              68223
+            ],
+            [
+              68232,
+              68242
+            ],
+            [
+              68251,
+              68261
+            ],
+            [
+              68270,
+              68280
+            ],
+            [
+              68289,
+              68299
+            ],
+            [
+              68308,
+              68318
+            ],
+            [
+              68327,
+              68337
+            ],
+            [
+              68346,
+              68356
+            ],
+            [
+              68365,
+              68375
+            ],
+            [
+              68384,
+              68394
+            ],
+            [
+              68403,
+              68413
+            ],
+            [
+              68422,
+              68432
+            ],
+            [
+              68441,
+              68451
+            ],
+            [
+              68460,
+              68470
+            ],
+            [
+              68479,
+              68489
+            ],
+            [
+              68498,
+              68508
+            ],
+            [
+              68517,
+              68527
+            ],
+            [
+              68536,
+              68546
+            ],
+            [
+              68555,
+              68565
+            ],
+            [
+              68574,
+              68584
+            ],
+            [
+              68593,
+              68603
+            ],
+            [
+              68612,
+              68622
+            ],
+            [
+              68631,
+              68641
+            ],
+            [
+              68650,
+              68660
+            ],
+            [
+              68669,
+              68679
+            ],
+            [
+              68688,
+              68698
+            ],
+            [
+              68707,
+              68717
+            ],
+            [
+              68726,
+              68736
+            ],
+            [
+              68745,
+              68755
+            ],
+            [
+              68764,
+              68774
+            ],
+            [
+              68783,
+              68793
+            ]
+          ],
+          "address_sha256": "59be61835bfa91c355fc702b7e4f25e5191d5f4cb66748493041b5f85fed7c5a",
+          "sector_mask_runs": [
+            [
+              8512,
+              8512,
+              248
+            ],
+            [
+              8513,
+              8513,
+              63
+            ],
+            [
+              8514,
+              8514,
+              192
+            ],
+            [
+              8515,
+              8515,
+              255
+            ],
+            [
+              8516,
+              8516,
+              1
+            ],
+            [
+              8517,
+              8517,
+              254
+            ],
+            [
+              8518,
+              8518,
+              15
+            ],
+            [
+              8519,
+              8519,
+              240
+            ],
+            [
+              8520,
+              8520,
+              127
+            ],
+            [
+              8521,
+              8521,
+              128
+            ],
+            [
+              8522,
+              8522,
+              255
+            ],
+            [
+              8523,
+              8523,
+              3
+            ],
+            [
+              8524,
+              8524,
+              252
+            ],
+            [
+              8525,
+              8525,
+              31
+            ],
+            [
+              8526,
+              8526,
+              224
+            ],
+            [
+              8527,
+              8527,
+              255
+            ],
+            [
+              8529,
+              8529,
+              255
+            ],
+            [
+              8530,
+              8530,
+              7
+            ],
+            [
+              8531,
+              8531,
+              248
+            ],
+            [
+              8532,
+              8532,
+              63
+            ],
+            [
+              8533,
+              8533,
+              192
+            ],
+            [
+              8534,
+              8534,
+              255
+            ],
+            [
+              8535,
+              8535,
+              1
+            ],
+            [
+              8536,
+              8536,
+              254
+            ],
+            [
+              8537,
+              8537,
+              15
+            ],
+            [
+              8538,
+              8538,
+              240
+            ],
+            [
+              8539,
+              8539,
+              127
+            ],
+            [
+              8540,
+              8540,
+              128
+            ],
+            [
+              8541,
+              8541,
+              255
+            ],
+            [
+              8542,
+              8542,
+              3
+            ],
+            [
+              8543,
+              8543,
+              252
+            ],
+            [
+              8544,
+              8544,
+              31
+            ],
+            [
+              8545,
+              8545,
+              224
+            ],
+            [
+              8546,
+              8546,
+              255
+            ],
+            [
+              8548,
+              8548,
+              255
+            ],
+            [
+              8549,
+              8549,
+              7
+            ],
+            [
+              8550,
+              8550,
+              248
+            ],
+            [
+              8551,
+              8551,
+              63
+            ],
+            [
+              8552,
+              8552,
+              192
+            ],
+            [
+              8553,
+              8553,
+              255
+            ],
+            [
+              8554,
+              8554,
+              1
+            ],
+            [
+              8555,
+              8555,
+              254
+            ],
+            [
+              8556,
+              8556,
+              15
+            ],
+            [
+              8557,
+              8557,
+              240
+            ],
+            [
+              8558,
+              8558,
+              127
+            ],
+            [
+              8559,
+              8559,
+              128
+            ],
+            [
+              8560,
+              8560,
+              255
+            ],
+            [
+              8561,
+              8561,
+              3
+            ],
+            [
+              8562,
+              8562,
+              252
+            ],
+            [
+              8563,
+              8563,
+              31
+            ],
+            [
+              8564,
+              8564,
+              224
+            ],
+            [
+              8565,
+              8565,
+              255
+            ],
+            [
+              8567,
+              8567,
+              255
+            ],
+            [
+              8568,
+              8568,
+              7
+            ],
+            [
+              8569,
+              8569,
+              248
+            ],
+            [
+              8570,
+              8570,
+              63
+            ],
+            [
+              8571,
+              8571,
+              192
+            ],
+            [
+              8572,
+              8572,
+              255
+            ],
+            [
+              8573,
+              8573,
+              1
+            ],
+            [
+              8574,
+              8574,
+              254
+            ],
+            [
+              8575,
+              8575,
+              15
+            ],
+            [
+              8576,
+              8576,
+              240
+            ],
+            [
+              8577,
+              8577,
+              127
+            ],
+            [
+              8578,
+              8578,
+              128
+            ],
+            [
+              8579,
+              8579,
+              255
+            ],
+            [
+              8580,
+              8580,
+              3
+            ],
+            [
+              8581,
+              8581,
+              252
+            ],
+            [
+              8582,
+              8582,
+              31
+            ],
+            [
+              8583,
+              8583,
+              224
+            ],
+            [
+              8584,
+              8584,
+              255
+            ],
+            [
+              8586,
+              8586,
+              255
+            ],
+            [
+              8587,
+              8587,
+              7
+            ],
+            [
+              8588,
+              8588,
+              248
+            ],
+            [
+              8589,
+              8589,
+              63
+            ],
+            [
+              8590,
+              8590,
+              192
+            ],
+            [
+              8591,
+              8591,
+              255
+            ],
+            [
+              8592,
+              8592,
+              1
+            ],
+            [
+              8593,
+              8593,
+              254
+            ],
+            [
+              8594,
+              8594,
+              15
+            ],
+            [
+              8595,
+              8595,
+              240
+            ],
+            [
+              8596,
+              8596,
+              127
+            ],
+            [
+              8597,
+              8597,
+              128
+            ],
+            [
+              8598,
+              8598,
+              255
+            ],
+            [
+              8599,
+              8599,
+              3
+            ]
+          ]
+        }
+      },
+      "exact_role_aliases": [],
+      "output": {
+        "words": 407,
+        "ranges": [
+          [
+            68099,
+            68109
+          ],
+          [
+            68118,
+            68128
+          ],
+          [
+            68137,
+            68147
+          ],
+          [
+            68156,
+            68166
+          ],
+          [
+            68175,
+            68185
+          ],
+          [
+            68194,
+            68204
+          ],
+          [
+            68213,
+            68223
+          ],
+          [
+            68232,
+            68242
+          ],
+          [
+            68251,
+            68261
+          ],
+          [
+            68270,
+            68280
+          ],
+          [
+            68289,
+            68299
+          ],
+          [
+            68308,
+            68318
+          ],
+          [
+            68327,
+            68337
+          ],
+          [
+            68346,
+            68356
+          ],
+          [
+            68365,
+            68375
+          ],
+          [
+            68384,
+            68394
+          ],
+          [
+            68403,
+            68413
+          ],
+          [
+            68422,
+            68432
+          ],
+          [
+            68441,
+            68451
+          ],
+          [
+            68460,
+            68470
+          ],
+          [
+            68479,
+            68489
+          ],
+          [
+            68498,
+            68508
+          ],
+          [
+            68517,
+            68527
+          ],
+          [
+            68536,
+            68546
+          ],
+          [
+            68555,
+            68565
+          ],
+          [
+            68574,
+            68584
+          ],
+          [
+            68593,
+            68603
+          ],
+          [
+            68612,
+            68622
+          ],
+          [
+            68631,
+            68641
+          ],
+          [
+            68650,
+            68660
+          ],
+          [
+            68669,
+            68679
+          ],
+          [
+            68688,
+            68698
+          ],
+          [
+            68707,
+            68717
+          ],
+          [
+            68726,
+            68736
+          ],
+          [
+            68745,
+            68755
+          ],
+          [
+            68764,
+            68774
+          ],
+          [
+            68783,
+            68793
+          ]
+        ],
+        "address_sha256": "59be61835bfa91c355fc702b7e4f25e5191d5f4cb66748493041b5f85fed7c5a",
+        "sector_mask_runs": [
+          [
+            8512,
+            8512,
+            248
+          ],
+          [
+            8513,
+            8513,
+            63
+          ],
+          [
+            8514,
+            8514,
+            192
+          ],
+          [
+            8515,
+            8515,
+            255
+          ],
+          [
+            8516,
+            8516,
+            1
+          ],
+          [
+            8517,
+            8517,
+            254
+          ],
+          [
+            8518,
+            8518,
+            15
+          ],
+          [
+            8519,
+            8519,
+            240
+          ],
+          [
+            8520,
+            8520,
+            127
+          ],
+          [
+            8521,
+            8521,
+            128
+          ],
+          [
+            8522,
+            8522,
+            255
+          ],
+          [
+            8523,
+            8523,
+            3
+          ],
+          [
+            8524,
+            8524,
+            252
+          ],
+          [
+            8525,
+            8525,
+            31
+          ],
+          [
+            8526,
+            8526,
+            224
+          ],
+          [
+            8527,
+            8527,
+            255
+          ],
+          [
+            8529,
+            8529,
+            255
+          ],
+          [
+            8530,
+            8530,
+            7
+          ],
+          [
+            8531,
+            8531,
+            248
+          ],
+          [
+            8532,
+            8532,
+            63
+          ],
+          [
+            8533,
+            8533,
+            192
+          ],
+          [
+            8534,
+            8534,
+            255
+          ],
+          [
+            8535,
+            8535,
+            1
+          ],
+          [
+            8536,
+            8536,
+            254
+          ],
+          [
+            8537,
+            8537,
+            15
+          ],
+          [
+            8538,
+            8538,
+            240
+          ],
+          [
+            8539,
+            8539,
+            127
+          ],
+          [
+            8540,
+            8540,
+            128
+          ],
+          [
+            8541,
+            8541,
+            255
+          ],
+          [
+            8542,
+            8542,
+            3
+          ],
+          [
+            8543,
+            8543,
+            252
+          ],
+          [
+            8544,
+            8544,
+            31
+          ],
+          [
+            8545,
+            8545,
+            224
+          ],
+          [
+            8546,
+            8546,
+            255
+          ],
+          [
+            8548,
+            8548,
+            255
+          ],
+          [
+            8549,
+            8549,
+            7
+          ],
+          [
+            8550,
+            8550,
+            248
+          ],
+          [
+            8551,
+            8551,
+            63
+          ],
+          [
+            8552,
+            8552,
+            192
+          ],
+          [
+            8553,
+            8553,
+            255
+          ],
+          [
+            8554,
+            8554,
+            1
+          ],
+          [
+            8555,
+            8555,
+            254
+          ],
+          [
+            8556,
+            8556,
+            15
+          ],
+          [
+            8557,
+            8557,
+            240
+          ],
+          [
+            8558,
+            8558,
+            127
+          ],
+          [
+            8559,
+            8559,
+            128
+          ],
+          [
+            8560,
+            8560,
+            255
+          ],
+          [
+            8561,
+            8561,
+            3
+          ],
+          [
+            8562,
+            8562,
+            252
+          ],
+          [
+            8563,
+            8563,
+            31
+          ],
+          [
+            8564,
+            8564,
+            224
+          ],
+          [
+            8565,
+            8565,
+            255
+          ],
+          [
+            8567,
+            8567,
+            255
+          ],
+          [
+            8568,
+            8568,
+            7
+          ],
+          [
+            8569,
+            8569,
+            248
+          ],
+          [
+            8570,
+            8570,
+            63
+          ],
+          [
+            8571,
+            8571,
+            192
+          ],
+          [
+            8572,
+            8572,
+            255
+          ],
+          [
+            8573,
+            8573,
+            1
+          ],
+          [
+            8574,
+            8574,
+            254
+          ],
+          [
+            8575,
+            8575,
+            15
+          ],
+          [
+            8576,
+            8576,
+            240
+          ],
+          [
+            8577,
+            8577,
+            127
+          ],
+          [
+            8578,
+            8578,
+            128
+          ],
+          [
+            8579,
+            8579,
+            255
+          ],
+          [
+            8580,
+            8580,
+            3
+          ],
+          [
+            8581,
+            8581,
+            252
+          ],
+          [
+            8582,
+            8582,
+            31
+          ],
+          [
+            8583,
+            8583,
+            224
+          ],
+          [
+            8584,
+            8584,
+            255
+          ],
+          [
+            8586,
+            8586,
+            255
+          ],
+          [
+            8587,
+            8587,
+            7
+          ],
+          [
+            8588,
+            8588,
+            248
+          ],
+          [
+            8589,
+            8589,
+            63
+          ],
+          [
+            8590,
+            8590,
+            192
+          ],
+          [
+            8591,
+            8591,
+            255
+          ],
+          [
+            8592,
+            8592,
+            1
+          ],
+          [
+            8593,
+            8593,
+            254
+          ],
+          [
+            8594,
+            8594,
+            15
+          ],
+          [
+            8595,
+            8595,
+            240
+          ],
+          [
+            8596,
+            8596,
+            127
+          ],
+          [
+            8597,
+            8597,
+            128
+          ],
+          [
+            8598,
+            8598,
+            255
+          ],
+          [
+            8599,
+            8599,
+            3
+          ]
+        ]
+      },
+      "local_capacity": {
+        "frame_words": 65536,
+        "frames": 4,
+        "total_words": 262144,
+        "sector_rounded_span_words_by_role": {
+          "A": 408,
+          "O": 704
+        },
+        "sum_separate_role_spans": 1112,
+        "unique_live_vm_words_lower_bound": 814,
+        "minimum_frames_if_separate_spans": 2,
+        "allocation_fit_proven": false
+      }
+    }
+  ],
+  "inter_record_address_dependencies": [
+    {
+      "producer": 2,
+      "consumer": 3,
+      "words": 256,
+      "ranges": [
+        [
+          12800,
+          13055
+        ]
+      ],
+      "note": "address overlap; intervening writers must be resolved before forwarding"
+    },
+    {
+      "producer": 4,
+      "consumer": 5,
+      "words": 2,
+      "ranges": [
+        [
+          146176,
+          146177
+        ]
+      ],
+      "note": "address overlap; intervening writers must be resolved before forwarding"
+    },
+    {
+      "producer": 5,
+      "consumer": 6,
+      "words": 16384,
+      "ranges": [
+        [
+          80640,
+          97023
+        ]
+      ],
+      "note": "address overlap; intervening writers must be resolved before forwarding"
+    },
+    {
+      "producer": 5,
+      "consumer": 7,
+      "words": 2,
+      "ranges": [
+        [
+          146304,
+          146305
+        ]
+      ],
+      "note": "address overlap; intervening writers must be resolved before forwarding"
+    },
+    {
+      "producer": 0,
+      "consumer": 8,
+      "words": 1024,
+      "ranges": [
+        [
+          0,
+          1023
+        ]
+      ],
+      "note": "address overlap; intervening writers must be resolved before forwarding"
+    },
+    {
+      "producer": 0,
+      "consumer": 10,
+      "words": 1024,
+      "ranges": [
+        [
+          0,
+          1023
+        ]
+      ],
+      "note": "address overlap; intervening writers must be resolved before forwarding"
+    },
+    {
+      "producer": 8,
+      "consumer": 10,
+      "words": 1024,
+      "ranges": [
+        [
+          0,
+          1023
+        ]
+      ],
+      "note": "address overlap; intervening writers must be resolved before forwarding"
+    }
+  ],
+  "gather_records": 0,
+  "missing_calendar_attributes": [
+    "actual datapath issue/commit/capture latencies for each operation",
+    "compiler-selected local frame/bump allocation and source replication mapping",
+    "fixed drain completion and frame-release edges",
+    "fixed native bank port assignment and operand gather/broadcast schedule"
+  ],
+  "calendar_emitted": false,
+  "calendar_reason": "Exact VM aliases do not determine physical local allocation or actual native capture edges. Inventing latencies would produce another synthetic calendar.",
+  "decoder_source_sha256": {
+    "tools/hbm_static/su_program_inventory.py": "dbb6fe8489afb1e24a3e57234392ebbc5851fd79e7fcf1b7b305299382cc3f03",
+    "tools/hgi_adapters/su_bench.py": "8d393af7f3c691ff6bbcb20b297c44aa28bc30cad9b48fe114f6e7d0dece6ae5",
+    "tools/hgi_sim/records.py": "d9df1f9b8c69359c088aab1425bc7837d793d65081fa00b2ae74ce221772169e",
+    "tools/hbm_generic_iface.py": "2721564a014e4e7e4ba0f52e420b70bb98aec312f5cc9a38ddb03843f628b9e3",
+    "tools/hgi_sim/machine.py": "3afa99805a7ca0fdf0a006f84b73802f074646599f5046a23a1a8cd2e7788877",
+    "rtl/hbm_accel/generic/adapters/ot_hgi_su_record.sv": "8e5b9b0401a33d6e6e41548ce4ca3cfa464b8054b81671a869b67f3ef757dfbb",
+    "tools/hgi_adapters/common.py": "6f7e98b6f285c6c55aa33145de010a0e937a2633b4021e841438027c213a8ed4",
+    "tools/hgi_seq_vectors.py": "90eb72e7c648fec8076bc45c8b84efa9a2baed38c9b5f0299d5c89b26737ac33"
+  }
+}

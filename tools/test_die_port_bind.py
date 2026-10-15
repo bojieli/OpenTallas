@@ -79,3 +79,14 @@ class T(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+
+
+def test_ternary_packed_range_width():
+    # qfd_collective_static_io_production relay_ck: the msb:lsb colon is the one outside the conditional
+    import die_port_bind as P
+    assert P._parse_ranges('[((2*(2*RU+RS0+RS1+RS2)>0)?2*(2*RU+RS0+RS1+RS2):1)-1:0]') == [
+        ('((2*(2*RU+RS0+RS1+RS2)>0)?2*(2*RU+RS0+RS1+RS2):1)-1', '0')]
+    src = ('module m #(parameter integer RU=5,RS0=0,RS1=0,RS2=5)(input wire[((2*(2*RU+RS0+RS1+RS2)>0)?'
+           '2*(2*RU+RS0+RS1+RS2):1)-1:0]relay_ck, input wire [7:0] a); endmodule\n')
+    m = P.parse_modules(src, 'x.sv')[0]
+    assert m.width('relay_ck', m.env()) == 30 and m.width('a', m.env()) == 8

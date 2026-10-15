@@ -1,0 +1,23 @@
+{
+  "schema": "opentallas.s81.static_column_ingress.v1",
+  "native_qualified": false,
+  "die_adopted": false,
+  "width": 1101,
+  "one_word_per_cycle": true,
+  "input": "1102 bits = {packed1101, common forwarded reset marker}",
+  "epoch_shift": 1,
+  "reset_contract": "root reset released before forwarded marker; receive reset is two fixed flops of the captured marker, source counter reset uses captured marker; no calibration/training",
+  "latency_from_forwarded_input_pin_capture": "5 clock periods plus fixed destination phase, checked against absolute simulation time for EVERY output",
+  "validation": "8 full-width runs, phase1/4/6/9 x trunk-reset-delay3/17; exact first source epoch and every edge; wrong offset mutant rejected",
+  "source_sha256": {
+    "rtl/dsrom_sys/s81_die_bind/ot_s81_static_lane_cross.sv": "586c49f533b429c9fca1bebde92ce9f31b691b37a22959ba8f49d6ca4abcfe9b",
+    "rtl/dsrom_sys/s81_die_bind/ot_s81_static_column_ingress.sv": "d99c13f8668a7f45bc8f035bec780bb9f4ccdb2114ec961d353bc7954685518c",
+    "rtl/dsrom_sys/s81_die_bind/test/tb_static_column_ingress.sv": "43ff88b58697b7383bb953a930c79e4f3a74a359400a03d276a20c606566fd5e",
+    "tools/s81/static_column_ingress_gate.sh": "245a7c86b54154142828843ed3e13056b01147e99d8e796b37465aef5d72eead"
+  },
+  "remaining": [
+    "actual die generator wiring and physical pin mapping",
+    "new native view qualification",
+    "emitted die port-bind gate"
+  ]
+}

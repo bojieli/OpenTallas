@@ -28,7 +28,6 @@
 // inputs are held idle and its outputs unread, the MIX function is absent from this die revision, not stubbed).
 // ---------------------------------------------------------------------------------------------------------------
 module dsfd_sp_vm #(parameter integer CAP_PIPE=0, parameter integer READ_PIPE=0) (
-    input  wire [0:0]    cks, rss,
     input  wire          ck_core_t, ck_rsched_t, ck_seq_t, ck_landing_t,
     input  wire [15:0]   ck_mem_fsr_t,
     input  wire [3:0]    ck_mem_return_t,
@@ -91,11 +90,7 @@ module dsfd_sp_vm #(parameter integer CAP_PIPE=0, parameter integer READ_PIPE=0)
         .t_ck(ck_landing_x34_t[1]), .t_rst_n(rss_landing_x34_t[1]), .o_v(xc_v), .o_d(xc_d), .fault(x_al[1]));
     ot_s81_vm_x34 #(.W(1026)) u_xsw (.s_ck(ck_landing_x34_s[2]), .s_rst_n(rst_landing_x34_s[2]), .s_v(aSW[0]), .s_d(aSW[1026:1]),
         .t_ck(ck_landing_x34_t[2]), .t_rst_n(rss_landing_x34_t[2]), .o_v(xw_v), .o_d(xw_d), .fault(x_al[2]));
-    reg p_bad;
-    always @(posedge cks[0] or negedge rss[0])
-        if (!rss[0]) p_bad <= 1'b0;
-        else if ((xs_v && !xs_d[512]) || (xc_v && !xc_d[512]) || (xw_v && !xw_d[1024]) ||
-                 (xs_v && xs_d[513]) || (xc_v && xc_d[513]) || (xw_v && xw_d[1025])) p_bad <= 1'b1;
+    // landing header checks and the edge-fault levels are registered in the engine-12 tile (dsfd_vm_seq_tile, ck_seq_t)
     // ---------------------------------------------------------------- edge services
     wire [15:0] cp_v; wire [223:0] cp_row; wire [255:0] cp_m; wire [8191:0] cp_d; wire cap_f;
     dsfd_vm_static_cap #(.CAP_PIPE(CAP_PIPE)) u_cap (
@@ -106,7 +101,7 @@ module dsfd_sp_vm #(parameter integer CAP_PIPE=0, parameter integer READ_PIPE=0)
     wire [7:0] x_rv; wire [4095:0] x_rd; wire [3:0] xa_v; wire [55:0] xa_row; wire xio_f; wire vm_fault;
     wire n_v; wire [83:0] n_d;
     wire [3:0] cl_v; wire [55:0] cl_row; wire [2047:0] cl_d; wire [63:0] cl_m; wire [31:0] cl_t;
-    dsfd_vm_static_wfc #(.RLAT(13+READ_PIPE), .RESPONSE_PAD(3*READ_PIPE)) u_wfc (
+    dsfd_vm_static_wfc #(.RLAT(13+READ_PIPE), .RESPONSE_PAD((4-READ_PIPE%4)%4)) u_wfc (
         .ck_control_s(ck_wfc_control_s), .ck_control_t(ck_wfc_control_t), .ck_x34_s(ck_wfc_x34_s), .ck_x34_t(ck_wfc_x34_t),
         .ck_x43_s(ck_wfc_x43_s), .ck_x43_t(ck_wfc_x43_t), .rst_control_s(rst_wfc_control_s), .rss_control_t(rss_wfc_control_t),
         .rst_x34_s(rst_wfc_x34_s), .rss_x34_t(rss_wfc_x34_t), .rst_x43_s(rst_wfc_x43_s), .rss_x43_t(rss_wfc_x43_t), .f_wfc(f_wfc), .t_wfc(t_wfc),
@@ -119,9 +114,7 @@ module dsfd_sp_vm #(parameter integer CAP_PIPE=0, parameter integer READ_PIPE=0)
         .f_collective(f_collective), .f_crq(f_crq), .t_crs(t_crs),
         .w_v(cl_v), .w_row(cl_row), .w_d(cl_d), .w_m(cl_m), .w_t(cl_t),
         .t_gather(t_gather), .f_xgo(f_xgo), .qSW(qSW), .qSWs(qSWs), .fault(xio_f));
-    // edge faults -> engine 12 legacy-fault input (c_st[0]); serial levels registered once in the stream domain
-    reg e_flt;
-    always @(posedge cks[0] or negedge rss[0]) if (!rss[0]) e_flt <= 1'b0; else if (cap_f | wfc_f | xio_f) e_flt <= 1'b1;
+    // edge faults -> engine 12 legacy-fault input (c_st[0]); serial levels registered once in the stream domain (seq tile)
     dsfd_vm_static_core #(.READ_PIPE(READ_PIPE)) u_core (.cks(ck_core_t), .rss(rss_core_t),
         .rst_rsched_n(rss_rsched_t), .rst_seq_n(rss_seq_t), .rst_landing_n(rss_landing_t),
         .rst_mem_fsr_n(rss_mem_fsr_t), .rst_mem_return_n(rss_mem_return_t), .rst_mem_bank_n(rss_mem_bank_t),
@@ -147,6 +140,7 @@ module dsfd_sp_vm #(parameter integer CAP_PIPE=0, parameter integer READ_PIPE=0)
         .l_v({xc_v, xs_v, xw_v, xw_v}), .l_d({xc_d[511:0], xs_d[511:0], xw_d[1023:512], xw_d[511:0]}),
         .cp_v(cp_v), .cp_row(cp_row), .cp_m(cp_m), .cp_d(cp_d), .cl_v(cl_v), .cl_row(cl_row), .cl_m(cl_m), .cl_d(cl_d), .cl_t(cl_t),
         .wf_v(wf_v), .wf_row(wf_row), .wf_d(wf_d),
-        .x_flt(|x_al | p_bad | e_flt), .vm_fault(vm_fault));
+        .x_al(x_al), .x_hdr({xw_v, xw_d[1025:1024], xc_v, xc_d[513:512], xs_v, xs_d[513:512]}),
+        .edge_f({xio_f, wfc_f, cap_f}), .vm_fault(vm_fault));
 endmodule
 `default_nettype wire

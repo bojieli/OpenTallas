@@ -277,8 +277,31 @@ class Module:
         return 'stub'
 
 
+def _range_colon(x):
+    """Index of the msb:lsb colon of one packed range: the first ':' outside parentheses that does not close a
+    ternary ('[((N>0)?N:1)-1:0]' splits at the last colon, not inside the conditional)."""
+    depth = tern = 0
+    for i, c in enumerate(x):
+        if c in '([{':
+            depth += 1
+        elif c in ')]}':
+            depth -= 1
+        elif depth == 0 and c == '?':
+            tern += 1
+        elif depth == 0 and c == ':':
+            if tern:
+                tern -= 1
+            else:
+                return i
+    return -1
+
+
 def _parse_ranges(s):
-    return [tuple(x.split(':', 1)) if ':' in x else (x, x) for x in re.findall(r'\[([^\]]+)\]', s or '')]
+    out = []
+    for x in re.findall(r'\[((?:[^\[\]]|\[[^\]]*\])+)\]', s or ''):
+        i = _range_colon(x)
+        out.append((x[:i], x[i + 1:]) if i >= 0 else (x, x))
+    return out
 
 
 def parse_modules(text: str, path: str):

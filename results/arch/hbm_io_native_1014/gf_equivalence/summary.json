@@ -1,0 +1,20 @@
+{
+  "schema": "ot.hbm.kp4.linear_equivalence.v1",
+  "source_commit": "8e56a4dbbb47ea668ca2a48b9f73aeae386f3610",
+  "normal": "PASS encoder andALLdecoderoutputs bit-for-bit againstunchangedlegacy RTL EVERY3076edges,0addededges; across8bitsequencewrap",
+  "functional_oracle": "297frames,259exact,37beyondtflagged,0bad,0miscorrected,0nerrbad,16referenceparitiesexact; retainedearlierunconditionaluncorrectable-sequence-oracleFAIL separately",
+  "encoder_parity_RTL_mutant": "FAIL atedge34",
+  "decoder_Forney_RTL_mutant": "FAIL atedge107",
+  "mutant_bench_note": "Mutants ran with earlierbench whose onlydifference is end/uncorrectable sequenceoracle; sameDUTsources, sameedgeequivalencechecker. Bothfatalfail beforethatfinaloracle.",
+  "physical": "Noarea/clock/timing/phase/nativepin qualification claimed. Separate rooted variant has4encoder/8decoder actualclockinputs; its equivalence andactualphysicalgates remain separate.",
+  "source_sha256": {
+    "rtl/dsrom_sys/s81_link/ot_s81_kp4_enc.sv": "788c6cdaa3fcb111a8baf4756c340a97f6880110ef081327a9df326e4e51f224",
+    "rtl/dsrom_sys/s81_link/ot_s81_kp4_dec.sv": "a339db028b9bbf03c1014112e02253faacd02e7bd5b5e1777f0348ddf66070dd",
+    "rtl/dsrom_sys/s81_link/ot_s81_gf1024.svh": "0c1d1e94f6a2a360da1f1b23b1cd7847958450c3b642b9978b0c13faead4b855",
+    "rtl/hbm_accel/io_native_20261014/ot_hbm_kp4_enc_linear.sv": "9a14e45bb48a17ab8cc6fcdf2bcbab28655faa1910ee05ee045f3b651ce86aef",
+    "rtl/hbm_accel/io_native_20261014/ot_hbm_kp4_dec_linear.sv": "13288f324701e0501da308c59261e716ba693603796a0a10de2684e40af28eaf",
+    "rtl/hbm_accel/io_native_20261014/ot_hbm_kp4_encode52_map.sv": "401ecc4c70ebfc04a624faee5540fc625c4c7bddc8a3f4c6bc48ba30d22b81a3",
+    "rtl/hbm_accel/io_native_20261014/ot_hbm_kp4_syndrome55_map.sv": "ade2e0bbf131d65d979f693ea4347c6431f9d7cfb420d9273c04849a57fbc27c",
+    "rtl/hbm_accel/io_native_20261014/tb_hbm_kp4_linear_eq.sv": "6b009a83dcb6db2ae2a549187d6eea5909d513535f018ee9fa76be637044ee11"
+  }
+}

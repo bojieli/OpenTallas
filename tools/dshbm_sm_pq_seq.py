@@ -38,7 +38,8 @@ SRC = [s for s in MS.SRC if s != "rtl/test/tb_hbm_accel_sm_v_seq.sv"] + [
     "rtl/test/tb_hbm_accel_sm_pq_seq.sv"]
 SMH_SRC = ["rtl/hbm_accel/sm/ot_hbm_accel_stack.sv", "rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy_oq4.sv", "rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy_oq5.sv",
            "rtl/hbm_accel/sm/ot_hbm_accel_smh_bd.sv",
-           "rtl/hbm_accel/sm/ot_hbm_accel_int8_line.sv", "rtl/lib/ot_rst_relay.sv", "rtl/lib/ot_hdly.sv", "rtl/hbm_accel/sm/ot_hbm_accel_smh.sv"]   # --smh: the hierarchical element (ot_hbm_accel_smh)
+           "rtl/hbm_accel/sm/ot_hbm_accel_int8_line.sv", "rtl/lib/ot_rst_relay.sv", "rtl/lib/ot_hdly.sv", "rtl/hbm_accel/sm/ot_hbm_accel_smh.sv",
+           "rtl/hbm_accel/sm/ot_hbm_smh_compact_transport.sv"]   # module definitions only; selected by OT_SMH_COMPACT_PT   # --smh: the hierarchical element (ot_hbm_accel_smh)
 XDEPTH = MS.XDEPTH
 NW = 10
 

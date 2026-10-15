@@ -1,0 +1,49 @@
+{
+  "schema": "opentallas.qwen-central-vm-residual-router-sizing.v1",
+  "source_ref": "96f30a6a0",
+  "source": "rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv",
+  "source_sha256": "38d358d1265301f06032f63d0c00a09926c34ac84de4d648d14ad911254c640d",
+  "operands": 3,
+  "SW": 64,
+  "NRBS": 16,
+  "NWR": 5,
+  "NPS": 12,
+  "declared_data_register_bits_per_operand": {
+    "coarse_pos": 6144,
+    "fine_window": 2560,
+    "lane_output": 2048
+  },
+  "declared_data_register_total": 32256,
+  "macs_per_cycle": 0,
+  "memory_bytes_per_cycle": 0,
+  "input_bits_per_cycle_per_operand": 8192,
+  "output_bits_per_cycle_per_operand": 2048,
+  "rows_needed_per_stride1_request_max": 5,
+  "address_dependent": true,
+  "fixed_octet_bank_ownership": false,
+  "existing_fixed_stages": 3,
+  "baseline_mapped_register_census": null,
+  "baseline_physical_leaf_inventory": null,
+  "largest_fine_row_boundary": {
+    "input_data_bits": 4096,
+    "output_data_bits": 512,
+    "mux_fan_in": 8,
+    "select_bits": 3
+  },
+  "candidate": {
+    "kind": "three-level registered binary mux tree per fine row",
+    "bit_slice_width": 128,
+    "fine_output_rows_per_operand": 5,
+    "mux_nodes_per_output_row": 7,
+    "fine_tree_nodes_per_operand": 140,
+    "coarse_nodes_per_operand": 48,
+    "lane_output_nodes_per_operand": 8,
+    "declared_fine_bits_per_operand": 17920,
+    "added_fine_bits_all3operands": 46080,
+    "added_fixed_read_edges": 2,
+    "new_fixed_stages": 5,
+    "compiler_latency_change": "must update descriptor/control/consumer tags and measure actual per-layer token loss; no silent price change",
+    "physical_contract": "each mux leaf two128-bit inputs/one128-bit output with own actual root; all native pin/reach clocks and area pending"
+  },
+  "qualification": "source sizing and structural candidate only; no new router RTL/adoption or production cycle proof"
+}

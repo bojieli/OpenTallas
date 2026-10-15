@@ -6,6 +6,9 @@ R0 samples at P+12, R1 data/valid at P+13, II=1. Global fault-tree age is extern
 OPT_IN = 'VM_READ_ROUTER_L13'
 READ_LATENCY_DEFAULT = 12
 READ_LATENCY_OPT_IN = 13
+# READ_PIPE 2: dsfd_vm_static_read_router_p, every leaf input pin-registered (native capture audit 2026-10-15)
+OPT_IN_PINREG = 'VM_READ_ROUTER_L14'
+READ_LATENCY_OPT_IN_PINREG = 14
 DATA_RESET_PINS = 64
 VALID_RESET_PINS = 8
 DATA_ROOTS = 64
@@ -16,7 +19,9 @@ STRIPE_BITS = 64
 INIT_RESET_EDGES = 3
 GLOBAL_FAULT_TREE_AGE = None
 
-def read_latency(*, opt_in=False):
+def read_latency(*, opt_in=False, pinreg=False):
+    if pinreg:
+        return READ_LATENCY_OPT_IN_PINREG
     return READ_LATENCY_OPT_IN if opt_in else READ_LATENCY_DEFAULT
 
 def require_fault_age(age):

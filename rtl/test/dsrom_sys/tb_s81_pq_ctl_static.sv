@@ -1,5 +1,10 @@
 `timescale 1ns/1ps
 module tb_s81_pq_ctl_static;
+`ifdef OT_PQ_CTL_CALCAP
+ localparam integer IDLE_LAG=1;   // CALCAP: idle is a registered status (+1 edge, never gates events)
+`else
+ localparam integer IDLE_LAG=0;
+`endif
  reg clk=0;always #5 clk=~clk;
  reg rst_n=0,go=0,calendar_v=0,x_rv=0;
  reg[74:0] action=0;
@@ -38,6 +43,12 @@ module tb_s81_pq_ctl_static;
  .hw_o(hw),.h_hi_o(hi),.h_b0_o(b0),.h_b1_o(b1),.mdr_o(mdr),.q2f_i(12'd0),.ga_i(ga),.bc_hr_o(bc),
  .ready(ready),.idle(idle),.x_re(x_re),.x_addr(x_addr),.x_rv(x_rv),.f_fault(1'b0),.fault(fault),.phase_cycles(phase_cycles),
  .ev_go(ev_go),.ev_end(ev_end),.ev_tag(ev_tag),.rom_pa0(pa0),.rom_pa1(pa1),.rom_pq0(pq0b),.rom_pq1(pq1b),.rom_sa(sa),.rom_sq(sqb));
+`ifdef OT_PQ_CTL_INCAP
+ localparam integer INCAP=1;
+`else
+ localparam integer INCAP=0;
+`endif
+ localparam integer DRAIN=INCAP;
  initial begin
   k=$value$plusargs("badvm=%d",badvm);k=$value$plusargs("badcount=%d",badcount);
   for(test=0;test<4;test=test+1)begin
@@ -82,11 +93,13 @@ module tb_s81_pq_ctl_static;
     if(bc[609]!==(c==26)||bc[595]!==(c==62))$fatal(1,"STATIC_CTL FAIL broadcast cfg/go edge c=%0d",c);
     if(c==26&&(bc[608:599]!==ph||bc[598:596]!==np))$fatal(1,"STATIC_CTL FAIL configuration fields c=%0d",c);
     if(aqi[9]!==expected_aqi||(expected_aqi&&aqi!==expected_aqi_data))$fatal(1,"STATIC_CTL FAIL AQ metadata edge c=%0d",c);
-    if(c==lastbeat+43&&!badcount&&dut.rows_seen[tag]!==19'(total))$fatal(1,"STATIC_CTL FAIL measured count drain c=%0d",c);
+    // exact drain edge: ga captured at the pin under OT_PQ_CTL_INCAP is one edge later (+44 vs +43)
+    if(c==lastbeat+42+DRAIN&&!badcount&&dut.rows_seen[tag]===19'(total))$fatal(1,"STATIC_CTL FAIL count drained early c=%0d",c);
+    if(c==lastbeat+43+INCAP&&!badcount&&dut.rows_seen[tag]!==19'(total))$fatal(1,"STATIC_CTL FAIL measured count drain c=%0d",c);
     if(x_re!==action[2] || (x_re&&x_addr!==action[21:3]))$fatal(1,"STATIC_CTL FAIL VM request shifted c=%0d",c);
     if(ev_end!==(c==retire)||(ev_end&&ev_tag!==tag))$fatal(1,"STATIC_CTL FAIL retire event c=%0d",c);
     if(ev_go!==(c==60))$fatal(1,"STATIC_CTL FAIL launch shifted c=%0d",c);
-    if(c>=16 && idle!==(c>=retire))$fatal(1,"STATIC_CTL FAIL retirement moved c=%0d",c);
+    if(c>=16+IDLE_LAG && idle!==(c>=retire+IDLE_LAG))$fatal(1,"STATIC_CTL FAIL retirement moved c=%0d",c);
     for(pos=0;pos<=np;pos=pos+1)begin
      k=c-(170+400*pos+5);
      if(k>=0&&k<192)begin

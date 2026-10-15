@@ -1,0 +1,18 @@
+{
+  "status": "TARGETED_ACTUAL_SEQ_GATEWAY_HIERARCHY_ELAB_PASS",
+  "qualified": false,
+  "unit": "oth-ubuntu-1970921-1792062163",
+  "exit": 0,
+  "scope": "Actual new core/BI/seq nested gateway hierarchy only; cached complete956 proof retained, not a new complete957/full-die qualification.",
+  "clock_roots": 3,
+  "clock_ports": [
+    "ck",
+    "ck_sched",
+    "ck_gateway"
+  ],
+  "source_audit": "source_audit.json",
+  "log_sha256": "d0f1c5e27a54bd74fa71a3dadceaecc0179dc839b853cbb201389d6b3af973d2",
+  "source_manifest_sha256": "d6a19cf8485f516ca4fcaa987eb65480d15e83c5b803a5871729695278aff87f",
+  "logical_data_edges_added": 0,
+  "physical_clock_phase_unassigned": true
+}

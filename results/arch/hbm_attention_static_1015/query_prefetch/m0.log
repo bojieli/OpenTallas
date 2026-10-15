@@ -1,0 +1,5 @@
+PASS ATT_QUERY_PREFETCH heads=32 words=16384 fetch_edges=256 query_macros=64 VM_macros=24 source_FP32_to_BF16=1
+- rtl/test/hbm_accel/generic/tb_hbm_attn_query_prefetch.sv:51: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 1us; walltime 0.007 s; speed 153.159 us/s
+- Verilator: cpu 0.007 s on 1 threads; allocated 8 MB

@@ -1,0 +1,44 @@
+{
+ "input_sha256": "c6bb77d8e1a3b111999ecfe969449d54550b4c959c4162e8a55709a061b49f05",
+ "baseline": {
+  "bd": 56,
+  "bd_at": [
+   47,
+   0
+  ],
+  "bd_side": {
+   "W": 54,
+   "E": 56
+  },
+  "tree": 22,
+  "bword_max": 43
+ },
+ "pm_h": {
+  "bd": 56,
+  "bd_at": [
+   46,
+   0
+  ],
+  "bd_side": {
+   "W": 55,
+   "E": 56
+  },
+  "tree": 21,
+  "bword_max": 43
+ },
+ "schema": "opentallas.qwen.pm-h-cycle-price.v1",
+ "method": "relay_token_cost (tools/qwen_rom_fulldie_b3r2.py) formulas bd/tree/bword on GEO-Q per-bus geometric stages (relays at per_hop_um + 1 register hop), baseline vs pair_mirror.build(keep_rows=(7,8)); tools from codex/geometry-qwen-1015 be0856ede",
+ "delta_per_me_op": {
+  "bd": 0,
+  "tree": -1,
+  "bword": 0
+ },
+ "me_ops_per_ar_token": 217,
+ "delta_cycles_per_ar_token": -217,
+ "notes": [
+  "corridor +1 on even columns (cor_c_6 / cor_c_9) is not exposed: worst bd stays E col 47 (56); W rises 54->55; E col 46 now TIES the worst (0 slack): any further even-column/E corridor stage would be exposed",
+  "tree (longest in-block leaf->root) 22->21: one stage less per ME op",
+  "geometric stage estimate, not the relay allocator; re-price on the C19 build stage_of"
+ ],
+ "qualified": false
+}

@@ -1,0 +1,170 @@
+{
+ "name": "s81pq_qb_headp_native",
+ "top": "ot_s81_pq_qb_headp_native",
+ "sources": [
+  "rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_qb_pipe_native.sv",
+  "physical/s81_pq_hier/pinned/rtl/ot_rst_relay.sv"
+ ],
+ "outline": {
+  "w": 142.56,
+  "h": 95.04
+ },
+ "pins": {
+  "N": [
+   "rd_data"
+  ],
+  "S": [
+   "hq0",
+   "hq1"
+  ],
+  "W": [
+   "clk",
+   "rst_n",
+   "consume",
+   "aqi_d",
+   "h_b0",
+   "h_b1",
+   "hw_sv",
+   "aq_e",
+   "aq_p"
+  ],
+  "E": [
+   "wr0",
+   "wr1",
+   "wq0",
+   "wq1",
+   "i0",
+   "i1",
+   "rq0",
+   "rq1",
+   "he0",
+   "he1",
+   "fault"
+  ]
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 16,
+  "peak_ram_gb": 24,
+  "pin_v": "M3 M5",
+  "hold_margin_ns": 0.03
+ },
+ "kind": "tile",
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "layer_cap": "M5",
+ "recipe": 2,
+ "macros": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "structural_change": "10-15 S-ELEM-B: canonical QB +2 pipeline head (physical_request.json): the 6,144 mutable metadata bits (4 banks x 96 rows x 16 b) move from the bank SRAM leaves into the head beside the registered read index (read address capture + SRAM output register = +2 fixed cycles, already in the canonical ABI); bank writes commit one cycle later under the loader contract. Legacy headw slot 73.44x34.56 cannot hold ~7.3k flops: outline = the bank master width 142.56 (rd_data 1024 b on the N face over the four bank N faces), height from the gate's synthesized area. | gate p1 (142.56x86.4: std 6,618 um2, util 58%) REFUSED: one reset relay drove 8,103 loads (meta enables held in reset) and aq_e/aq_p ports fanned out to 391-418 loads. Fix: metadata flops carry no reset; written[] per bank on its own relay region (5 regions); AQ metadata word + write rows/enables re-captured once per bank (4 copies) and the head-local metadata commits one edge after the bank data (bank outputs unchanged; QB pipe bench PASS, 772 packets, +0.24% vs baseline as before). Height 86.4 -> 95.04 for the ~190 added flops (util ~54%). | gate p2 (util 57%, WARN): i0/i1[2:1] drove ~3,600 read-mux loads (reg->reg +75, reg->out +88 pre-route): per-bank 7-bit read-row register copies on the same edge (0 cycles), i0/i1 pins keep their own flops.",
+ "slot_change_request": {
+  "name": "s81pq_qb_headp_native-1015",
+  "outline": [
+   142.56,
+   95.04
+  ],
+  "pin_faces": {
+   "N": [
+    "rd_data"
+   ],
+   "S": [
+    "hq0",
+    "hq1"
+   ],
+   "W": [
+    "clk",
+    "rst_n",
+    "consume",
+    "aqi_d",
+    "h_b0",
+    "h_b1",
+    "hw_sv",
+    "aq_e",
+    "aq_p"
+   ],
+   "E": [
+    "wr0",
+    "wr1",
+    "wq0",
+    "wq1",
+    "i0",
+    "i1",
+    "rq0",
+    "rq1",
+    "he0",
+    "he1",
+    "fault"
+   ]
+  },
+  "reason": "new head master (metadata in head); legacy 73.44x34.56 slot reuse unproven (physical_request.json slot_requests)"
+ },
+ "job": {
+  "owner": "Claude:s81-elemB-1015",
+  "branch": "codex/s81-field-native-1015",
+  "tag": "p1",
+  "purpose": "S81 PQ QB pipelined head (metadata in head), canonical +2 QB pipeline",
+  "benches": [
+   {
+    "name": "native_exact",
+    "cmd": "python3 tools/s81/pq_native_core_bench.py --bc-sliced --aq-pin --aq-parity --ix-bank-split --aq-split --qb-pipe --work {RUN}/native_exact --jobs 8",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "PQ_CORE_PIPE PASS",
+    "min_count_regex": "packets=(\\d+)"
+   },
+   {
+    "name": "native_head_mutant",
+    "cmd": "python3 tools/s81/pq_native_core_bench.py --bc-sliced --aq-pin --aq-parity --ix-bank-split --aq-split --qb-pipe --mut QBHEAD --work {RUN}/native_head_mutant --jobs 8",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "PQ_CORE_PIPE FAIL|PQ_NATIVE_CORE FAIL"
+   },
+   {
+    "name": "native_wq_mutant",
+    "cmd": "python3 tools/s81/pq_native_core_bench.py --bc-sliced --aq-pin --aq-parity --ix-bank-split --aq-split --qb-pipe --mut QBW --work {RUN}/native_wq_mutant --jobs 8",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "PQ_CORE_PIPE FAIL|PQ_NATIVE_CORE FAIL"
+   }
+  ],
+  "views_to": "physical/ref_tile/s81pq_qb_headp_native/views",
+  "record_to": "results/rtl/ref_tile/s81pq_qb_headp_native",
+  "extra_paths": [
+   "rtl/dsrom_sys",
+   "rtl/test/dsrom_sys",
+   "physical/s81_pq_hier/pinned",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
+   "physical/ref_tile_specs/s81pq_native",
+   "tools/s81",
+   "tools/s81_static_control"
+  ]
+ },
+ "defines": [
+  "OT_PQ_ROM_PORTS"
+ ]
+}

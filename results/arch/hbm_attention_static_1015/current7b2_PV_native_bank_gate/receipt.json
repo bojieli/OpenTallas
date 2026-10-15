@@ -1,0 +1,40 @@
+{
+  "source_commit": "22047a02c",
+  "dependency_commit": "619da76cd",
+  "unit": "oth-ubuntu-1535276-1792056016",
+  "host": "ot-epyc4",
+  "exit_status": 0,
+  "qualification": false,
+  "status": "PASS actual sourcePVserializer/WG1 VMbank commit and RG3readback component; full CP/nativeprogramme/arith binding OPEN",
+  "H": 16,
+  "D": 512,
+  "records": 2,
+  "words_read_back": 16384,
+  "serializer_SRAM_macros": 128,
+  "VM_SRAM_macros": 24,
+  "WG": 1,
+  "RG": 3,
+  "write_commit_edges": 3,
+  "retire": "Coincides with final actualbankcommit, emits success only with clear stickyfault, recordtag checked",
+  "mutants_detected": [
+    "actualwq payload corruption",
+    "wrong physicalbank write-owner"
+  ],
+  "fault_negative": "Actualinput perwordfault retained throughserializer/aggregated sticky; unchangedFP32payload stillcommits/readbacks, faultretire suppresses success. Not an arithmeticNaN/Inf orCPfaultpropagation proof.",
+  "calendar": "Dedicated constant compiletime RG3/WG1 selectors; fullactualprogrammeSRAM ownership joins OPEN",
+  "remaining": [
+    "ExactHG1 arithmetic producer fullrun",
+    "Actualfulltarget49 PS/P/drain programme",
+    "ActualCP/dispatch fault andNaN/Infcases",
+    "Canonicalphysicalregister ages/stations/cellcount",
+    "Whole-systemgeometry/clock/cut/route qualification",
+    "Immutableoverlappedthroughput price"
+  ],
+  "canonical_VM_dependency": "CURRENT source pinned by7b2 fullSHA; previous619/ab58 historicalonly",
+  "VM_dependency": "CURRENT7b2",
+  "VM_bank_sha256": "7b2e2fbafead30cbabc427303bb339da070645637af9d1a69f0dbdaa0a88ee53",
+  "VM_sha256": "7b2e2fbafead30cbabc427303bb339da070645637af9d1a69f0dbdaa0a88ee53",
+  "reproof_reason": "Actualbank source changed ab58\u2192current7b2; reran completeactualcomponent, baseline+allmutants. Producer source unchanged.",
+  "physical_qualified": false,
+  "full_native_qualified": false
+}

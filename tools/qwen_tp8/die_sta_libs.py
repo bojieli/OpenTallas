@@ -58,10 +58,30 @@ def measured_clock_refs(lib_path, insertion_path, corner):
     return result
 
 
-def clock_tcl(doms, leaves, corner):
+def assumed_clock_refs(master, ports, physical_ports=None):
+    """Use the exact generated Liberty/LEF names, including one-bit buses.
+
+    The die Verilog connects .ck(net), but a generated LEF may expose ck[0].
+    E.write_lib deliberately preserves that spelling; clock delivery must too.
+    """
+    if physical_ports is not None:
+        missing=[p for p in ports if p in E.CLOCKS and p not in physical_ports]
+        if missing:
+            raise ValueError(f'{master}: clock inputs missing from generated physical LEF: {missing}')
+    return {(f'{p}[0]' if (master, p) in E.IDX else p): 0.0
+            for p in ports if p in E.CLOCKS}
+
+
+def clock_tcl(doms, leaves, corner, periods=None):
     # Each domain has related shallow / earlier-tap clock objects. Separate
     # domains remain asynchronous; no exception is created between levels.
     # Source latency shifts the boundary while propagated ETMs retain insertion.
+    if periods is not None:
+        missing = set(doms) - set(periods)
+        if missing:
+            raise ValueError(f'missing source clock periods: {sorted(missing)}')
+        if any(not math.isfinite(periods[d]) or periods[d] <= 0 for d in doms):
+            raise ValueError('invalid source clock period')
     lines = ['# DOMS ' + ' '.join(sorted(doms)), '# INSERTION_COMPENSATED ' + corner,
              '# OWNER_CLOCK_BUDGET v1', 'set_cmd_units -time ps', 'set ot_clock_bound 0']
     domain_clocks = {}
@@ -79,7 +99,7 @@ def clock_tcl(doms, leaves, corner):
                 lines += [f'set p [get_pins -quiet {{{pin}}}]',
                           f'if {{[llength $p] != 1}} {{ error "clock boundary pin missing or ambiguous: {pin}" }}',
                           'lappend ot_pins [lindex $p 0]']
-            lines.append(f'create_clock -name {name} -period {PERIOD.get(d, 1024.0):.6f} $ot_pins')
+            lines.append(f'create_clock -name {name} -period {(periods[d] if periods is not None else PERIOD.get(d, 1024.0)):.6f} $ot_pins')
             for pin, master, libpin in group:
                 r = leaves[master][corner][libpin]
                 lines += [f'set_clock_latency -source -clock [get_clocks {name}] {-r:.6f} [get_pins {{{pin}}}]',
@@ -124,6 +144,16 @@ def main():
         vd = vd if vd.is_absolute() else root / vd
         if set(libs) != {'tt', 'ff', 'ss'}:
             raise ValueError(f'{mst}: real view requires actual TT, FF, SS Liberty, got {sorted(libs)}')
+        sheet = vd / f'{mst}.json'
+        if sheet.exists() and str(json.loads(sheet.read_text()).get('schema', '')).startswith(
+                'opentallas.qwen-missing.link-phy-abstract'):
+            # licensed link-PHY hard macro (tools/qwen_missing/link_phy_gen.py): its Liberty IS the boundary model
+            # (registered FDI pins, ASSUMED timing); there is no routed clock tree to measure, as for HARD
+            for c, rel in libs.items():
+                shutil.copy(root / rel, out / f'qfd_etm_{mst}_{c}.lib')
+            views['hard_macro'][mst] = str(r['view'])
+            skip.add(mst)
+            continue
         leaves[mst] = {c: measured_clock_refs(root / libs[c], vd / 'insertion.json', c) for c in ('tt', 'ff', 'ss')}
         for c, rel in libs.items():
             shutil.copy(root / rel, out / f'qfd_etm_{mst}_{c}.lib')
@@ -140,6 +170,7 @@ def main():
     if (case / 'phy_ew.lef').exists():
         for k, q in E.lef_pins(case / 'phy_ew.lef').items():
             lef.setdefault(k, q)
+    all_physical_ports = dict(lef)
     lef = {k: q for k, q in lef.items() if k not in skip}
     stubs = {mst: {p: [d, 0, set()] for p, d in ports.items()} for mst, ports in dirs.items()}
     for corner in ('tt', 'ff', 'ss'):
@@ -173,7 +204,7 @@ def main():
     # Bound views are never assigned zero insertion when evidence is missing.
     for mst, ports in dirs.items():
         if mst not in leaves:
-            leaves[mst] = {c: {p: 0.0 for p in ports if p in E.CLOCKS} for c in ('tt', 'ff', 'ss')}
+            leaves[mst] = {c: assumed_clock_refs(mst, ports, all_physical_ports.get(mst, {})) for c in ('tt', 'ff', 'ss')}
     leaf_doms = {}
     for net in sorted(sinks):
         for inst, mst, port in sink_pins[net]:

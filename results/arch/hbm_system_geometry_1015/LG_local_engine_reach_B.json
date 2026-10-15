@@ -1,0 +1,1233 @@
+{
+ "schema": "opentallas.hbm.geo.lg_local_engine_reach.v1",
+ "limit_um": 500.0,
+ "plan": {
+  "NW": [
+   0,
+   "wq1"
+  ],
+  "NE": [
+   0,
+   "wq1"
+  ],
+  "SW": [
+   0,
+   "wq0"
+  ],
+  "SE": [
+   0,
+   "wq0"
+  ]
+ },
+ "inputs": {
+  "su_lef": "/home/ubuntu/wt/hbm-vm-static-1014/physical/ref_tile/vm_lg_bank_su10_static_1015/views/hfd_vm_lg_su10/hfd_vm_lg_su10.lef",
+  "su_sha": "a573acd435c16a1a4a72bc4374dfaa91154b3f2196a16daf691dbc6f0e23a829",
+  "sfu_lef": "/home/ubuntu/wt/hbm-vm-static-1014/physical/ref_tile/vm_lg_bank_sfu14_static_1015/views/hfd_vm_lg_sfu14/hfd_vm_lg_sfu14.lef",
+  "sfu_sha": "826a7924114e11f1d12acc2110ead9cb80a7d6208446561b592e776848aae0a5",
+  "hc_lef": "/home/ubuntu/wt/hbm-vm-static-1014/physical/ref_tile/vm_lg_bank_hc_static_1015/views/ot_hbm_vm_lg_static_bank/ot_hbm_vm_lg_static_bank.lef",
+  "hc_sha": "d17a8eaf341e68f21359a6dd9eabbfd8a7df0b8126adff45ae76ad1f99aa6c72",
+  "rg7_pins": "/home/ubuntu/wt/hbm-vm-static-1014/results/arch/hbm_vm_bank_static_1015/native_pin_pg_diagnostic/native_bank_actual_pin_pg.json",
+  "rg7_sha": "1cca154eb2dfe2de38731ad9ca0b2889d73ec76f055ef8d4191ff2967b48c2df",
+  "rg5_pins": "results/arch/hbm_system_geometry_1015/vms_bank_rg5wg1_iop_actual_pins.json",
+  "rg5_sha": "bb9d5eaf8929999b387711f9053a0e2d4aaabd7859ed00e8a7a1b0d35f583e7b"
+ },
+ "results": {
+  "compact_SHARED_one_row_PC_UNQUALIFIED": {
+   "SW": {
+    "bank_slot_plan": [
+     "rq0",
+     "rr0",
+     "wq0",
+     "wq_done0"
+    ],
+    "vm_lg_link_bit_um": 873903.7,
+    "vm_lg_link_max_um": 415.9,
+    "chains_abs": [
+     [
+      7031.12,
+      9487.12,
+      7492.928,
+      9638.32
+     ],
+     [
+      7031.12,
+      9895.36,
+      7492.928,
+      10046.56
+     ],
+     [
+      7031.12,
+      10303.6,
+      7492.928,
+      10454.8
+     ],
+     [
+      7031.12,
+      10711.84,
+      7492.928,
+      10863.04
+     ],
+     [
+      7031.12,
+      11120.08,
+      7492.928,
+      11271.28
+     ],
+     [
+      7031.12,
+      11528.32,
+      7492.928,
+      11679.52
+     ],
+     [
+      7031.12,
+      11936.56,
+      7492.928,
+      12087.76
+     ],
+     [
+      7266.56,
+      12429.04,
+      7728.368,
+      12580.24
+     ]
+    ],
+    "engines": {
+     "SU": {
+      "bits": 4464,
+      "single_point_port": [
+       7425.4,
+       10991.6
+      ],
+      "single_port_bit_um": 3883240.7,
+      "single_port_max_um": 1858.4,
+      "min_groups_within_limit": 5,
+      "groups": [
+       [
+        0
+       ],
+       [
+        1,
+        2
+       ],
+       [
+        3,
+        4
+       ],
+       [
+        5,
+        6
+       ],
+       [
+        7
+       ]
+      ]
+     },
+     "SFU": {
+      "bits": 4464,
+      "single_point_port": [
+       7269.7,
+       10991.6
+      ],
+      "single_port_bit_um": 3883240.7,
+      "single_port_max_um": 1858.4,
+      "min_groups_within_limit": 5,
+      "groups": [
+       [
+        0
+       ],
+       [
+        1,
+        2
+       ],
+       [
+        3,
+        4
+       ],
+       [
+        5,
+        6
+       ],
+       [
+        7
+       ]
+      ]
+     },
+     "HC_tap": {
+      "bits": 4464,
+      "single_point_port": [
+       7113.6,
+       10991.6
+      ],
+      "single_port_bit_um": 3883319.0,
+      "single_port_max_um": 1858.6,
+      "min_groups_within_limit": 5,
+      "groups": [
+       [
+        0
+       ],
+       [
+        1,
+        2
+       ],
+       [
+        3,
+        4
+       ],
+       [
+        5,
+        6
+       ],
+       [
+        7
+       ]
+      ]
+     }
+    }
+   },
+   "SE": {
+    "bank_slot_plan": [
+     "rq0",
+     "rr0",
+     "wq0",
+     "wq_done0"
+    ],
+    "vm_lg_link_bit_um": 873903.7,
+    "vm_lg_link_max_um": 415.9,
+    "chains_abs": [
+     [
+      25031.12,
+      9487.12,
+      25492.928,
+      9638.32
+     ],
+     [
+      25031.12,
+      9895.36,
+      25492.928,
+      10046.56
+     ],
+     [
+      25031.12,
+      10303.6,
+      25492.928,
+      10454.8
+     ],
+     [
+      25031.12,
+      10711.84,
+      25492.928,
+      10863.04
+     ],
+     [
+      25031.12,
+      11120.08,
+      25492.928,
+      11271.28
+     ],
+     [
+      25031.12,
+      11528.32,
+      25492.928,
+      11679.52
+     ],
+     [
+      25031.12,
+      11936.56,
+      25492.928,
+      12087.76
+     ],
+     [
+      25266.56,
+      12429.04,
+      25728.368,
+      12580.24
+     ]
+    ],
+    "engines": {
+     "SU": {
+      "bits": 4464,
+      "single_point_port": [
+       25425.4,
+       10991.6
+      ],
+      "single_port_bit_um": 3883240.7,
+      "single_port_max_um": 1858.4,
+      "min_groups_within_limit": 5,
+      "groups": [
+       [
+        0
+       ],
+       [
+        1,
+        2
+       ],
+       [
+        3,
+        4
+       ],
+       [
+        5,
+        6
+       ],
+       [
+        7
+       ]
+      ]
+     },
+     "SFU": {
+      "bits": 4464,
+      "single_point_port": [
+       25269.7,
+       10991.6
+      ],
+      "single_port_bit_um": 3883240.7,
+      "single_port_max_um": 1858.4,
+      "min_groups_within_limit": 5,
+      "groups": [
+       [
+        0
+       ],
+       [
+        1,
+        2
+       ],
+       [
+        3,
+        4
+       ],
+       [
+        5,
+        6
+       ],
+       [
+        7
+       ]
+      ]
+     },
+     "HC_tap": {
+      "bits": 4464,
+      "single_point_port": [
+       25113.6,
+       10991.6
+      ],
+      "single_port_bit_um": 3883319.0,
+      "single_port_max_um": 1858.6,
+      "min_groups_within_limit": 5,
+      "groups": [
+       [
+        0
+       ],
+       [
+        1,
+        2
+       ],
+       [
+        3,
+        4
+       ],
+       [
+        5,
+        6
+       ],
+       [
+        7
+       ]
+      ]
+     }
+    }
+   },
+   "NW": {
+    "bank_slot_plan": [
+     "rq0",
+     "rr0",
+     "wq1",
+     "wq_done1"
+    ],
+    "vm_lg_link_bit_um": 236696.0,
+    "vm_lg_link_max_um": 113.6,
+    "chains_abs": [
+     [
+      7031.12,
+      13541.76,
+      7492.928,
+      13692.96
+     ],
+     [
+      7031.12,
+      13924.08,
+      7492.928,
+      14075.28
+     ],
+     [
+      7031.12,
+      14306.4,
+      7492.928,
+      14457.6
+     ],
+     [
+      7031.12,
+      14688.72,
+      7492.928,
+      14839.92
+     ],
+     [
+      7031.12,
+      15071.04,
+      7492.928,
+      15222.24
+     ],
+     [
+      7031.12,
+      15453.36,
+      7492.928,
+      15604.56
+     ],
+     [
+      7031.12,
+      15835.68,
+      7492.928,
+      15986.88
+     ],
+     [
+      7031.12,
+      16218.0,
+      7492.928,
+      16369.2
+     ]
+    ],
+    "engines": {
+     "SU": {
+      "bits": 4464,
+      "single_point_port": [
+       7421.6,
+       14955.5
+      ],
+      "single_port_bit_um": 3484146.4,
+      "single_port_max_um": 1485.6,
+      "min_groups_within_limit": 4,
+      "groups": [
+       [
+        0,
+        1
+       ],
+       [
+        2,
+        3
+       ],
+       [
+        4,
+        5
+       ],
+       [
+        6,
+        7
+       ]
+      ]
+     },
+     "SFU": {
+      "bits": 4464,
+      "single_point_port": [
+       7265.9,
+       14955.5
+      ],
+      "single_port_bit_um": 3484146.4,
+      "single_port_max_um": 1485.6,
+      "min_groups_within_limit": 4,
+      "groups": [
+       [
+        0,
+        1
+       ],
+       [
+        2,
+        3
+       ],
+       [
+        4,
+        5
+       ],
+       [
+        6,
+        7
+       ]
+      ]
+     },
+     "HC_tap": {
+      "bits": 4464,
+      "single_point_port": [
+       7109.9,
+       14955.5
+      ],
+      "single_port_bit_um": 3484265.1,
+      "single_port_max_um": 1485.3,
+      "min_groups_within_limit": 4,
+      "groups": [
+       [
+        0,
+        1
+       ],
+       [
+        2,
+        3
+       ],
+       [
+        4,
+        5
+       ],
+       [
+        6,
+        7
+       ]
+      ]
+     }
+    }
+   },
+   "NE": {
+    "bank_slot_plan": [
+     "rq0",
+     "rr0",
+     "wq1",
+     "wq_done1"
+    ],
+    "vm_lg_link_bit_um": 236696.0,
+    "vm_lg_link_max_um": 113.6,
+    "chains_abs": [
+     [
+      19531.12,
+      11241.76,
+      19992.928,
+      11392.96
+     ],
+     [
+      19531.12,
+      11624.08,
+      19992.928,
+      11775.28
+     ],
+     [
+      19531.12,
+      12006.4,
+      19992.928,
+      12157.6
+     ],
+     [
+      19531.12,
+      12388.72,
+      19992.928,
+      12539.92
+     ],
+     [
+      19531.12,
+      12771.04,
+      19992.928,
+      12922.24
+     ],
+     [
+      19531.12,
+      13153.36,
+      19992.928,
+      13304.56
+     ],
+     [
+      19531.12,
+      13535.68,
+      19992.928,
+      13686.88
+     ],
+     [
+      19531.12,
+      13918.0,
+      19992.928,
+      14069.2
+     ]
+    ],
+    "engines": {
+     "SU": {
+      "bits": 4464,
+      "single_point_port": [
+       19921.6,
+       12655.5
+      ],
+      "single_port_bit_um": 3484146.4,
+      "single_port_max_um": 1485.6,
+      "min_groups_within_limit": 4,
+      "groups": [
+       [
+        0,
+        1
+       ],
+       [
+        2,
+        3
+       ],
+       [
+        4,
+        5
+       ],
+       [
+        6,
+        7
+       ]
+      ]
+     },
+     "SFU": {
+      "bits": 4464,
+      "single_point_port": [
+       19765.9,
+       12655.5
+      ],
+      "single_port_bit_um": 3484146.4,
+      "single_port_max_um": 1485.6,
+      "min_groups_within_limit": 4,
+      "groups": [
+       [
+        0,
+        1
+       ],
+       [
+        2,
+        3
+       ],
+       [
+        4,
+        5
+       ],
+       [
+        6,
+        7
+       ]
+      ]
+     },
+     "HC_tap": {
+      "bits": 4464,
+      "single_point_port": [
+       19609.9,
+       12655.5
+      ],
+      "single_port_bit_um": 3484265.1,
+      "single_port_max_um": 1485.3,
+      "min_groups_within_limit": 4,
+      "groups": [
+       [
+        0,
+        1
+       ],
+       [
+        2,
+        3
+       ],
+       [
+        4,
+        5
+       ],
+       [
+        6,
+        7
+       ]
+      ]
+     }
+    }
+   }
+  },
+  "D_local_central_NE": {
+   "SW": {
+    "bank_slot_plan": [
+     "rq0",
+     "rr0",
+     "wq0",
+     "wq_done0"
+    ],
+    "vm_lg_link_bit_um": 873903.7,
+    "vm_lg_link_max_um": 415.9,
+    "chains_abs": [
+     [
+      14531.12,
+      9487.12,
+      14992.928,
+      9638.32
+     ],
+     [
+      14531.12,
+      9895.36,
+      14992.928,
+      10046.56
+     ],
+     [
+      14531.12,
+      10303.6,
+      14992.928,
+      10454.8
+     ],
+     [
+      14531.12,
+      10711.84,
+      14992.928,
+      10863.04
+     ],
+     [
+      14531.12,
+      11120.08,
+      14992.928,
+      11271.28
+     ],
+     [
+      14531.12,
+      11528.32,
+      14992.928,
+      11679.52
+     ],
+     [
+      14531.12,
+      11936.56,
+      14992.928,
+      12087.76
+     ],
+     [
+      14766.56,
+      12429.04,
+      15228.368,
+      12580.24
+     ]
+    ],
+    "engines": {
+     "SU": {
+      "bits": 4464,
+      "single_point_port": [
+       14925.4,
+       10991.6
+      ],
+      "single_port_bit_um": 3883240.7,
+      "single_port_max_um": 1858.4,
+      "min_groups_within_limit": 5,
+      "groups": [
+       [
+        0
+       ],
+       [
+        1,
+        2
+       ],
+       [
+        3,
+        4
+       ],
+       [
+        5,
+        6
+       ],
+       [
+        7
+       ]
+      ]
+     },
+     "SFU": {
+      "bits": 4464,
+      "single_point_port": [
+       14769.7,
+       10991.6
+      ],
+      "single_port_bit_um": 3883240.7,
+      "single_port_max_um": 1858.4,
+      "min_groups_within_limit": 5,
+      "groups": [
+       [
+        0
+       ],
+       [
+        1,
+        2
+       ],
+       [
+        3,
+        4
+       ],
+       [
+        5,
+        6
+       ],
+       [
+        7
+       ]
+      ]
+     },
+     "HC_tap": {
+      "bits": 4464,
+      "single_point_port": [
+       14613.6,
+       10991.6
+      ],
+      "single_port_bit_um": 3883319.0,
+      "single_port_max_um": 1858.6,
+      "min_groups_within_limit": 5,
+      "groups": [
+       [
+        0
+       ],
+       [
+        1,
+        2
+       ],
+       [
+        3,
+        4
+       ],
+       [
+        5,
+        6
+       ],
+       [
+        7
+       ]
+      ]
+     }
+    }
+   },
+   "SE": {
+    "bank_slot_plan": [
+     "rq0",
+     "rr0",
+     "wq0",
+     "wq_done0"
+    ],
+    "vm_lg_link_bit_um": 873903.7,
+    "vm_lg_link_max_um": 415.9,
+    "chains_abs": [
+     [
+      25631.12,
+      9487.12,
+      26092.928,
+      9638.32
+     ],
+     [
+      25631.12,
+      9895.36,
+      26092.928,
+      10046.56
+     ],
+     [
+      25631.12,
+      10303.6,
+      26092.928,
+      10454.8
+     ],
+     [
+      25631.12,
+      10711.84,
+      26092.928,
+      10863.04
+     ],
+     [
+      25631.12,
+      11120.08,
+      26092.928,
+      11271.28
+     ],
+     [
+      25631.12,
+      11528.32,
+      26092.928,
+      11679.52
+     ],
+     [
+      25631.12,
+      11936.56,
+      26092.928,
+      12087.76
+     ],
+     [
+      25866.56,
+      12429.04,
+      26328.368,
+      12580.24
+     ]
+    ],
+    "engines": {
+     "SU": {
+      "bits": 4464,
+      "single_point_port": [
+       26025.4,
+       10991.6
+      ],
+      "single_port_bit_um": 3883240.7,
+      "single_port_max_um": 1858.4,
+      "min_groups_within_limit": 5,
+      "groups": [
+       [
+        0
+       ],
+       [
+        1,
+        2
+       ],
+       [
+        3,
+        4
+       ],
+       [
+        5,
+        6
+       ],
+       [
+        7
+       ]
+      ]
+     },
+     "SFU": {
+      "bits": 4464,
+      "single_point_port": [
+       25869.7,
+       10991.6
+      ],
+      "single_port_bit_um": 3883240.7,
+      "single_port_max_um": 1858.4,
+      "min_groups_within_limit": 5,
+      "groups": [
+       [
+        0
+       ],
+       [
+        1,
+        2
+       ],
+       [
+        3,
+        4
+       ],
+       [
+        5,
+        6
+       ],
+       [
+        7
+       ]
+      ]
+     },
+     "HC_tap": {
+      "bits": 4464,
+      "single_point_port": [
+       25713.6,
+       10991.6
+      ],
+      "single_port_bit_um": 3883319.0,
+      "single_port_max_um": 1858.6,
+      "min_groups_within_limit": 5,
+      "groups": [
+       [
+        0
+       ],
+       [
+        1,
+        2
+       ],
+       [
+        3,
+        4
+       ],
+       [
+        5,
+        6
+       ],
+       [
+        7
+       ]
+      ]
+     }
+    }
+   },
+   "NW": {
+    "bank_slot_plan": [
+     "rq0",
+     "rr0",
+     "wq1",
+     "wq_done1"
+    ],
+    "vm_lg_link_bit_um": 236696.0,
+    "vm_lg_link_max_um": 113.6,
+    "chains_abs": [
+     [
+      14531.12,
+      13541.76,
+      14992.928,
+      13692.96
+     ],
+     [
+      14531.12,
+      13924.08,
+      14992.928,
+      14075.28
+     ],
+     [
+      14531.12,
+      14306.4,
+      14992.928,
+      14457.6
+     ],
+     [
+      14531.12,
+      14688.72,
+      14992.928,
+      14839.92
+     ],
+     [
+      14531.12,
+      15071.04,
+      14992.928,
+      15222.24
+     ],
+     [
+      14531.12,
+      15453.36,
+      14992.928,
+      15604.56
+     ],
+     [
+      14531.12,
+      15835.68,
+      14992.928,
+      15986.88
+     ],
+     [
+      14531.12,
+      16218.0,
+      14992.928,
+      16369.2
+     ]
+    ],
+    "engines": {
+     "SU": {
+      "bits": 4464,
+      "single_point_port": [
+       14921.6,
+       14955.5
+      ],
+      "single_port_bit_um": 3484146.4,
+      "single_port_max_um": 1485.6,
+      "min_groups_within_limit": 4,
+      "groups": [
+       [
+        0,
+        1
+       ],
+       [
+        2,
+        3
+       ],
+       [
+        4,
+        5
+       ],
+       [
+        6,
+        7
+       ]
+      ]
+     },
+     "SFU": {
+      "bits": 4464,
+      "single_point_port": [
+       14765.9,
+       14955.5
+      ],
+      "single_port_bit_um": 3484146.4,
+      "single_port_max_um": 1485.6,
+      "min_groups_within_limit": 4,
+      "groups": [
+       [
+        0,
+        1
+       ],
+       [
+        2,
+        3
+       ],
+       [
+        4,
+        5
+       ],
+       [
+        6,
+        7
+       ]
+      ]
+     },
+     "HC_tap": {
+      "bits": 4464,
+      "single_point_port": [
+       14609.9,
+       14955.5
+      ],
+      "single_port_bit_um": 3484265.1,
+      "single_port_max_um": 1485.3,
+      "min_groups_within_limit": 4,
+      "groups": [
+       [
+        0,
+        1
+       ],
+       [
+        2,
+        3
+       ],
+       [
+        4,
+        5
+       ],
+       [
+        6,
+        7
+       ]
+      ]
+     }
+    }
+   },
+   "NE": {
+    "bank_slot_plan": [
+     "rq0",
+     "rr0",
+     "wq1",
+     "wq_done1"
+    ],
+    "vm_lg_link_bit_um": 236696.0,
+    "vm_lg_link_max_um": 113.6,
+    "chains_abs": [
+     [
+      11113.512,
+      10941.76,
+      11575.32,
+      11092.96
+     ],
+     [
+      11113.512,
+      11324.08,
+      11575.32,
+      11475.28
+     ],
+     [
+      22113.512,
+      10941.76,
+      22575.32,
+      11092.96
+     ],
+     [
+      22113.512,
+      11324.08,
+      22575.32,
+      11475.28
+     ],
+     [
+      11113.512,
+      14741.76,
+      11575.32,
+      14892.96
+     ],
+     [
+      11113.512,
+      15124.08,
+      11575.32,
+      15275.28
+     ],
+     [
+      22113.512,
+      14741.76,
+      22575.32,
+      14892.96
+     ],
+     [
+      22113.512,
+      15124.08,
+      22575.32,
+      15275.28
+     ]
+    ],
+    "engines": {
+     "SU": {
+      "bits": 4464,
+      "single_point_port": [
+       17000.9,
+       13108.5
+      ],
+      "single_port_bit_um": 33033600.0,
+      "single_port_max_um": 7735.6,
+      "min_groups_within_limit": 4,
+      "groups": [
+       [
+        0,
+        1
+       ],
+       [
+        4,
+        5
+       ],
+       [
+        2,
+        3
+       ],
+       [
+        6,
+        7
+       ]
+      ]
+     },
+     "SFU": {
+      "bits": 4464,
+      "single_point_port": [
+       16845.1,
+       13108.5
+      ],
+      "single_port_bit_um": 33033600.0,
+      "single_port_max_um": 7735.6,
+      "min_groups_within_limit": 4,
+      "groups": [
+       [
+        0,
+        1
+       ],
+       [
+        4,
+        5
+       ],
+       [
+        2,
+        3
+       ],
+       [
+        6,
+        7
+       ]
+      ]
+     },
+     "HC_tap": {
+      "bits": 4464,
+      "single_point_port": [
+       16689.4,
+       13108.5
+      ],
+      "single_port_bit_um": 33033600.0,
+      "single_port_max_um": 7735.6,
+      "min_groups_within_limit": 4,
+      "groups": [
+       [
+        0,
+        1
+       ],
+       [
+        4,
+        5
+       ],
+       [
+        2,
+        3
+       ],
+       [
+        6,
+        7
+       ]
+      ]
+     }
+    }
+   }
+  }
+ },
+ "scope": "engine ports are idealised points (median); engines have no geometry/source binding in the global graph; LG chains placed greedily bank by bank; no route/timing/PG/cut claim"
+}

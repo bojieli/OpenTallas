@@ -1,0 +1,13 @@
+2026-10-14 22:44:17 PDT chain start die=kv src=34dd94b57 from=pdn
+2026-10-14 22:44:17 PDT NATIVE PORT BIND FAIL (/srv/opentallas-scratch/claude/qwen-kvsys/kvs6s/bind_launch.log): DIAGNOSTIC PATHFINDING ONLY -- NOT A DIE RESULT, NOT RELEASE
+2026-10-14 22:44:17 PDT real case reused
+2026-10-14 22:44:17 PDT real case: OT_LEGAL instances=13410 overlaps=0 outside=0 OT_ASSERT PASS OT_PA FAIL DRT-0305 
+2026-10-14 22:44:17 PDT PDN SKIPPED (OT_PDN=skip): GRT without die straps -- DIAGNOSTIC ONLY
+2026-10-14 23:29:03 PDT full-die GRT exit=0 overflow=0 ([INFO GRT-0018] Total wirelength: 737701627 um)
+2026-10-14 23:29:03 PDT STA tt clock: /srv/opentallas-scratch/claude/qwen-kvsys/kvs6s/libs/clocks_{corner}.tcl
+2026-10-14 23:38:05 PDT STA tt: tns max -98617808.00 wns max -1388.10 worst slack max -1388.10 
+2026-10-14 23:38:05 PDT STA ff clock: /srv/opentallas-scratch/claude/qwen-kvsys/kvs6s/libs/clocks_{corner}.tcl
+2026-10-14 23:45:56 PDT STA ff: tns max -57625972.00 wns max -1211.05 worst slack min -56.74 
+2026-10-14 23:45:56 PDT STA ss clock: /srv/opentallas-scratch/claude/qwen-kvsys/kvs6s/libs/clocks_{corner}.tcl
+2026-10-14 23:53:03 PDT STA ss: tns max -211520112.00 wns max -1709.87 worst slack max -1709.87 
+2026-10-14 23:53:03 PDT chain done

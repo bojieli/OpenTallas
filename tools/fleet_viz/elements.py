@@ -41,6 +41,7 @@ metrics) fetched over ssh in the background and cached in <state>/element_area.j
 """
 import collections, datetime, glob, json, os, pathlib, re, subprocess, threading, time
 import flow_state
+import die_contracts
 
 T0 = datetime.datetime.fromisoformat('2026-10-07T20:45:00-07:00').timestamp()   # option-B (TT) switch
 LIVE = {'QUEUED', 'SYNC', 'READY', 'RUNNING', 'ECO', 'ECO_RESULT', 'ECO_INSTALL', 'SUMMARY', 'MIGRATING'}
@@ -49,7 +50,12 @@ REDESIGN = {'NEEDS_RTL', 'NEEDS_BUDGET', 'FLOORPLAN_MARGIN', 'PREROUTE_MARGIN',
 FAIL = REDESIGN | {'NEEDS_HUMAN', 'INVALID', 'REFUSED'}
 CATS = ['closed (TT era)', 'closed (TT re-verified)', 'closed (earlier)', 'first trial in flight', 'failed, re-running',
         'revoked, re-running', 'revoked (no live job)', 'needs redesign (no live job)', 'flow failure (no live job)',
-        'cancelled only', 'superseded', 'implementation recorded (no physical job)']
+        'cancelled only', 'superseded', 'implementation recorded (no physical job)', 'not started (open)']
+NOT_STARTED = 'not started (open)'   # registry-sync 10-15: a current die-contract element with no physical job yet
+# per-design count buckets (fleet header): every non-superseded category is closed, in flight, failed or not started
+BUCKET = {'first trial in flight': 'in_flight', 'failed, re-running': 'in_flight', 'revoked, re-running': 'in_flight',
+          'revoked (no live job)': 'failed', 'needs redesign (no live job)': 'failed', 'flow failure (no live job)': 'failed',
+          'cancelled only': 'failed', 'implementation recorded (no physical job)': 'not_started', NOT_STARTED: 'not_started'}
 TARGETS = ['Qwen ROM', 'DeepSeek ROM', 'HBM accelerator', 'Other']
 
 # ---------------------------------------------------------------- naming
@@ -267,6 +273,7 @@ class Elements:
         self.revoked_path = pathlib.Path(os.environ.get('FLEET_VIZ_REVOKED', os.path.expanduser(
             '~/claude-takeover-20261007/revoked_closures.json')))
         self.desc = Describer(repo, self.state / 'element_descriptions.json')
+        self.contracts = die_contracts.Contracts(repo, log)   # top-down element list from the current die contracts
         self.area_path = self.state / 'element_area.json'
         try: self.area = json.loads(self.area_path.read_text())
         except Exception: self.area = {}
@@ -529,6 +536,7 @@ class Elements:
             r['throughput'] = tq
             r['gate'] = gate_text(r['category'], tq)
             rows.append(r)
+        dsum, dsrc = self.apply_contracts(rows) if hasattr(self, 'contracts') else ({}, None)
         flow = self.flow.annotate(rows, groups, TARGETS)   # r['flow'] / flow_label / die_used / m5_reroute
         rows.sort(key=lambda r: (TARGETS.index(r['target']), CATS.index(r['category']), r['element']))
         summ = collections.defaultdict(lambda: collections.Counter())
@@ -541,11 +549,118 @@ class Elements:
         return dict(t=time.time(), rows=rows, cats=CATS, targets=TARGETS, flow=flow,
                     summary={t: dict(summ[t]) for t in TARGETS if t in summ},
                     throughput_summary={t: dict(tsum[t]) for t in TARGETS if t in tsum},
+                    designs=dsum, contracts=dsrc,
                     sources=dict(option_b=ob.get('path'), option_b_decided=ob.get('decided'), jobs=len(js),
                                  revoked_jobs=str(self.revoked_path) if rj else None, n_revoked_jobs=len(rj),
                                  registry='results/fleet_viz/element_registry', registry_records=sum(map(len, registry.values())),
                                  registry_errors=registry_errors,
                                  superseded=str(self.superseded_path) if sup else None, n_superseded=len(sup)))
+
+    # ---- top-down: current die contracts (die_contracts.py, results/fleet_viz/die_contracts.json)
+    def apply_contracts(self, rows):
+        """Annotate rows with their die / role / owner stream / native check, add every contract element that has no
+        row as NOT_STARTED, supersede (with the contract as evidence) rows a contract retired and, for designs whose
+        contract is complete, non-closed rows with no live job that no current contract (or contract master's RTL
+        hierarchy) contains.  Returns (per-design summary, contract sources)."""
+        known = {n for r in rows for n in [r['element']] + r['variants']}
+        try:
+            ct = self.contracts.load(known)
+        except Exception as e:
+            self.log('elements: die contracts: %s' % e); return {}, dict(error=str(e)[:300])
+        E, L, R, designs = ct['elements'], ct['rtl_leaves'], ct['retired'], ct['designs']
+        dz = {d['design']: d for d in designs}
+        complete = {d['target'] for d in designs if d.get('complete')}
+        contract_targets = {d['target'] for d in designs}
+        def evid(ds):
+            return dict(contracts=[dict(design=d['design'], revision=d['revision'], doc=d.get('doc'),
+                                        sources=[x['path'] for x in d['sources']]) for d in ds])
+        def native(x):
+            out = [dict(c) for c in x.get('checks', [])[:3]]
+            return out or None
+        def die_rows(x, ds, role=None, parents=None, via=None):
+            return [dict(design=d, label=dz[d]['label'], revision=dz[d]['revision'], role=role or x['roles'].get(d),
+                         parents=sorted(parents if parents is not None else x['parents'].get(d, ())), via=via) for d in ds]
+        by_name = {}
+        for r in rows:
+            for n in [r['element']] + r['variants']: by_name.setdefault(n, r)
+        for r in rows:
+            names = [r['element']] + r['variants']
+            r['dies'] = None; r['owner_stream'] = None; r['native'] = None; r['contract'] = None
+            mem = next(((n, E[n]) for n in names if n in E), None)
+            leaf = next(((n, L[n]) for n in names if n in L), None)
+            if mem:
+                n, x = mem
+                r['dies'] = die_rows(x, x['designs'], via=n if n != r['element'] else None)
+                r['owner_stream'] = die_contracts.Contracts.stream(designs, x['designs'][0], r['element'], x['stream'])
+                r['native'] = native(x)
+                r['contract'] = 'in current contract'
+            elif leaf:
+                n, x = leaf; ds = sorted(x['designs'])
+                r['dies'] = die_rows(x, ds, role='leaf (RTL hierarchy)', parents=x['parents'], via=n if n != r['element'] else None)
+                r['owner_stream'] = die_contracts.Contracts.stream(designs, ds[0], r['element'])
+                r['contract'] = 'in current contract (RTL hierarchy of %s)' % ', '.join(sorted(x['parents'])[:4])
+            if r['dies']:
+                if r['category'] == CATS[11]: r['category'] = NOT_STARTED; r['via'] = r['via'] or 'implementation recorded, no physical job'
+                continue
+            ret = next(((n, R[n]) for n in names if n in R), None)
+            if ret and r['category'] != 'superseded':
+                n, v = ret
+                r['category'] = 'superseded'; r['closed_t'] = None
+                r['superseded'] = dict(by=v.get('by'), reason='retired by the current %s contract: %s' % (v.get('label'), v.get('evidence')),
+                                       source_evidence=evid([dz[v['design']]]))
+                r['supersession_source_evidence_missing'] = False; r['via'] = 'superseded by %s (die contract)' % v.get('by')
+                r['contract'] = 'retired by contract'
+            elif r['target'] in complete and r['category'] != 'superseded':
+                if r['category'].startswith('closed') or r['live']:
+                    r['contract'] = 'not linked to a current contract master (kept: %s)' % ('closed' if r['category'].startswith('closed') else 'live job')
+                else:
+                    ds = [d for d in designs if d['target'] == r['target']]
+                    r['category'] = 'superseded'
+                    r['superseded'] = dict(by='current %s die contracts' % r['target'],
+                                           reason='not in any current die contract (%s) nor in a contract master\'s RTL hierarchy; no live job, not closed'
+                                           % '; '.join('%s %s' % (d['label'], d['revision']) for d in ds), source_evidence=evid(ds))
+                    r['supersession_source_evidence_missing'] = False; r['via'] = 'not in current die contract'
+                    r['contract'] = 'not in current contract'
+            elif r['target'] in contract_targets and r['category'] != 'superseded':
+                r['contract'] = 'not in current contract (contract incomplete: unlisted rows keep their loop state)'
+        added = 0
+        for e, x in E.items():
+            if e in by_name or all(v in ('macro', 'soft') for v in x['roles'].values()): continue
+            d0 = x['designs'][0]
+            kids = [by_name[k] for k, y in E.items() if k in by_name and any(e in y['parents'].get(d, ()) for d in y['designs'])]
+            kids += [by_name[k] for k, y in L.items() if k in by_name and e in y['parents']]
+            nk = len(kids); nc = sum(1 for k in kids if k['category'].startswith('closed'))
+            stream = die_contracts.Contracts.stream(designs, d0, e, x['stream'])
+            rows.append(dict(element=e, target=dz[d0]['target'], variants=[], category=NOT_STARTED,
+                             via=('%d of %d contract leaves closed' % (nc, nk)) if nk else 'no closure-loop job yet',
+                             purpose=self.desc.get(e, [e], []) or ('%s %s of %s' % (dz[d0]['label'], x['roles'].get(d0), ', '.join(x['evidence'][:2]))),
+                             **self.desc.info(e), jobs=0, live=0, failed=0, closed_jobs=0,
+                             best=dict(tt=None, ff=None, ss=None, drc=None, job=None, corner=None, source_commit=None),
+                             area=None, revoked=None, latest=None, closed_t=None, owner=stream or '', owner_orig='',
+                             evidence_history=[], qualification=None, superseded=None, supersession_source_evidence_missing=None,
+                             throughput=None, gate=gate_text(NOT_STARTED, None), _host=None, _base=None,
+                             dies=die_rows(x, x['designs']), owner_stream=stream, native=native(x), contract='in current contract'))
+            added += 1
+        dsum = {}
+        for d in designs:
+            c = collections.Counter()
+            for r in rows:
+                if not r.get('dies') or not any(x['design'] == d['design'] for x in r['dies']): continue
+                if r['category'] == 'superseded': c['superseded'] += 1; continue
+                b = 'closed' if r['category'].startswith('closed') else BUCKET.get(r['category'], 'failed')
+                c[b] += 1
+            c['open'] = c['in_flight'] + c['failed'] + c['not_started']
+            dsum[d['design']] = dict(label=d['label'], target=d['target'], revision=d['revision'], lead=d.get('lead'),
+                                     complete=bool(d.get('complete')), closed=c['closed'], open=c['open'],
+                                     in_flight=c['in_flight'], failed=c['failed'], not_started=c['not_started'],
+                                     superseded=c['superseded'], total=c['closed'] + c['open'], errors=d['errors'])
+        unlinked = {}
+        for t in sorted(contract_targets):
+            c = collections.Counter(r['contract'] or '' for r in rows if r['target'] == t)
+            unlinked[t] = {k: v for k, v in c.items() if k.startswith('not linked') or k.startswith('not in current contract (')}
+        src = dict(config=ct['config'], added_not_started=added, unlinked=unlinked, designs=[dict(design=d['design'], sources=d['sources'], errors=d['errors'],
+                   complete=bool(d.get('complete')), note=d.get('note')) for d in designs])
+        return dsum, src
 
     def element(self, m, g, ob, rest, rj=None):
         rj = rj or {}
@@ -688,7 +803,8 @@ class Elements:
     def snapshot(self, safe=False):
         with self.lock: d = self.data; v = self.ver
         if safe:
-            return dict(t=d['t'], safe=True, cats=CATS, targets=TARGETS, summary=d['summary'], flow=d.get('flow'), v=v)
+            return dict(t=d['t'], safe=True, cats=CATS, targets=TARGETS, summary=d['summary'], flow=d.get('flow'),
+                        designs=d.get('designs'), v=v)
         return dict(d, rows=[public(r) for r in d['rows']], v=v)
 
     # ---- markdown
@@ -703,6 +819,12 @@ class Elements:
             s = d['summary'].get(t)
             if not s: continue
             L.append('| %s | %s | %d |' % (t, ' | '.join(str(s.get(c, '')) for c in CATS), sum(s.values())))
+        if d.get('designs'):
+            L += ['', '## Per die (current contracts, %s)' % die_contracts.CONFIG, '',
+                  '| die | revision | closed | open | in flight | failed | not started | superseded |', '|---|---|---:|---:|---:|---:|---:|---:|']
+            for k, s in d['designs'].items():
+                L.append('| %s | %s | %d | %d | %d | %d | %d | %d |' % (s['label'], _md(s['revision']), s['closed'], s['open'],
+                         s['in_flight'], s['failed'], s['not_started'], s['superseded']))
         for t in TARGETS:
             rs = [r for r in d['rows'] if r['target'] == t]
             if not rs: continue
@@ -732,7 +854,7 @@ def public(r):
 
 def change_key(d):
     """What makes an element snapshot worth recording now (not the per-minute latest-event churn)."""
-    return hash(tuple((r['element'], r['category'], r['live'], r['failed'], r['jobs'], r['best']['job'],
+    return hash(tuple((r['element'], r['category'], r['live'], r['failed'], r['jobs'], r['best']['job'], r.get('contract'),
                        json.dumps(r.get('evidence_history', []), sort_keys=True),
                        (r.get('throughput') or {}).get('status'), (r.get('throughput') or {}).get('ratio')) for r in d['rows']))
 
