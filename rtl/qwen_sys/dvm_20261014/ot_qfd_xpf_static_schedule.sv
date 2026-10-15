@@ -17,6 +17,7 @@ module ot_qfd_xpf_static_schedule #(
  input wire start,stop,input wire [5:0] stage,
  input wire me_issue,input wire [11:0] me_pc,
  input wire su_issue,input wire [11:0] su_pc,
+ input wire cp_issue,input wire [11:0] cp_pc,
  output reg [71:0] xpf,output reg fault,output reg active,output reg [31:0] cycle
 );
  reg [187:0] records[0:N-1];reg [N-1:0] loaded,armed,issued;
@@ -43,7 +44,7 @@ module ot_qfd_xpf_static_schedule #(
     if(active)fault<=1;
     else if(cfg_clear)begin loaded<=0;sealed<=0;count<=0;end
     else if(cfg_v)begin
-     if(sealed||cfg_index>=N||!cfg_data[0]||cfg_data[85:84]==0||cfg_data[85:84]==3)fault<=1;
+     if(sealed||cfg_index>=N||!cfg_data[0]||cfg_data[85:84]==0)fault<=1;
      else begin records[cfg_index]<=cfg_data;loaded[cfg_index]<=1;end
     end else if(!good||sealed)fault<=1;
     else begin sealed<=1;count<=cfg_count;end
@@ -59,18 +60,20 @@ module ot_qfd_xpf_static_schedule #(
      if(cycle>records[i][123:92]&&!armed[i])fault<=1;
      if(cycle==records[i][155:124])begin
       if((records[i][85:84]==1&&(!me_issue||me_pc!=records[i][83:72]))||
-         (records[i][85:84]==2&&(!su_issue||su_pc!=records[i][83:72])))fault<=1;
+         (records[i][85:84]==2&&(!su_issue||su_pc!=records[i][83:72]))||
+         (records[i][85:84]==3&&(!cp_issue||cp_pc!=records[i][83:72])))fault<=1;
       else issued[i]<=1;
      end
      if(cycle==records[i][187:156]&&!armed[i])fault<=1;
     end
    end
    // Any monitored producer PC issued at a different cycle is a defect.
-   if(me_issue||su_issue)begin
+   if(me_issue||su_issue||cp_issue)begin
     if(!active)fault<=1;
     for(i=0;i<N;i=i+1)if(i<count&&records[i][91:86]==stage_r&&
        ((me_issue&&records[i][85:84]==1&&me_pc==records[i][83:72])||
-        (su_issue&&records[i][85:84]==2&&su_pc==records[i][83:72])))begin
+        (su_issue&&records[i][85:84]==2&&su_pc==records[i][83:72])||
+        (cp_issue&&records[i][85:84]==3&&cp_pc==records[i][83:72])))begin
      if(cycle!=records[i][155:124]||issued[i])fault<=1;
     end
    end
@@ -79,7 +82,6 @@ module ot_qfd_xpf_static_schedule #(
     for(i=0;i<N;i=i+1)if(i<count&&records[i][91:86]==stage_r&&(!armed[i]||!issued[i]))fault<=1;
     active<=0;
    end
-   if(fault)xpf[0]<=0;
   end
  end
 endmodule
