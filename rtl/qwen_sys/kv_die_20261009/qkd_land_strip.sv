@@ -152,6 +152,7 @@ module qkd_land_grp #(
     parameter integer DQ  = 32,            // the engine's outstanding-row credit (qkd_ectl DQ)
     parameter integer GC  = 4,
     parameter integer NL  = 36,            // layers a token (the layer after NL - 1 is 0)
+    parameter integer EPOCH = 0,          // requests carry layer parity; legacy frozen masters remain 16-bit
     parameter integer MUT = 0
 ) (
     input  wire          ck,
@@ -166,7 +167,7 @@ module qkd_land_grp #(
     output wire          gc1,
     output wire          gc2,
     output wire          gc3,
-    input  wire [15:0]   rq,
+    input  wire [15+EPOCH:0] rq,
     output wire [1024:0] rs,
     input  wire [20:0]   lt,
     input  wire [1046:0] kn,
@@ -255,10 +256,34 @@ module qkd_land_grp #(
             if (deliver) rr <= rr + 1'b1;
             rn <= rn + {{RA{1'b0}}, h_req_valid} - {{RA{1'b0}}, deliver};
             gc <= {4{take}};
-            if ((all && !agree) || (all && agree && cur && !beyond && late) || (|qovf) || (h_req_valid && rn == (RA+1)'(DQ)))
+            if ((all && !agree) || (all && agree && cur && !beyond && late) || (|qovf) || (h_req_valid && rn == (RA+1)'(DQ)) || epoch_overflow)
                 f_grp <= 1'b1;
             fo <= fi_q | f_grp | m_fault;
         end
+    // Capture every request under the existing DQ credit, but do not let the merge
+    // attribute a future layer's request to the previous context. No response can
+    // return before release, so DQ is also a bound on this added ingress queue.
+    wire [15:0] rq_release;
+    wire epoch_overflow;
+    generate if (EPOCH != 0) begin : g_epoch_wait
+        (* keep *) reg v_pin;
+        (* keep *) reg [15:0] d_pin;
+        always @(posedge ck) d_pin <= rq[16:1];
+        always @(posedge ck or negedge rn_q)
+            if (!rn_q) v_pin <= 1'b0; else v_pin <= rq[0];
+        wire [15:0] head;
+        wire empty, full;
+        wire release_req = !empty && cur_v && !lt[0] && !ls_q &&
+                           (head[15] == L_cur[0] || MUT == 4);
+        ot_qkvd_fifo #(.W(16), .D(DQ)) u_q (.clk(ck), .rst_n(rn_q),
+            .push(v_pin), .din(d_pin), .pop(release_req), .dout(head),
+            .empty(empty), .full(full), .count());
+        assign rq_release = {head[14:0], release_req};
+        assign epoch_overflow = v_pin && full && !release_req;
+    end else begin : g_legacy_request
+        assign rq_release = rq[15:0];
+        assign epoch_overflow = 1'b0;
+    end endgenerate
     // ---- the KV merge slice (requests, fence, kept rows, merged response): unchanged module ---------------------------
     wire [1023:0] h_row = {hw[3][271:16], hw[2][271:16], hw[1][271:16], hw[0][271:16]};
     wire          e_rsp_valid;
@@ -266,7 +291,7 @@ module qkd_land_grp #(
     ot_qkvd_kv_merge #(.HD(128), .E(1), .DQ(DQ), .MUT(MUT == 1 ? 1 : 0)) u_m (
         .clk(ck), .rst_n(rn_q), .lay_start(lt[0]), .lay_T(lt[14:1]), .lay_idx(lt[20:15]),
         .kvw_v(kn[0]), .kvw_vg(kn[2:1]), .kvw_t(kn[16:3]), .kvw_layer(kn[22:17]), .kvw_d(kn[1046:23]),
-        .e_req_valid(rq[0]), .e_req_v(rq[1]), .e_req_g(rq[2]), .e_req_t(rq[15:3]),
+        .e_req_valid(rq_release[0]), .e_req_v(rq_release[1]), .e_req_g(rq_release[2]), .e_req_t(rq_release[15:3]),
         .h_req_valid(h_req_valid), .h_req_v(h_req_v), .h_req_g(h_req_g), .h_req_t(h_req_t),
         .h_rsp_valid(deliver), .h_rsp_data(h_row), .e_rsp_valid(e_rsp_valid), .e_rsp_data(e_rsp_data), .fault(m_fault));
     assign rs = {e_rsp_data, e_rsp_valid};

@@ -9,7 +9,6 @@ set_input_delay 166.667 -clock core_clk [all_inputs -no_clocks]
 set_output_delay 166.667 -clock core_clk [all_outputs]
 set_max_fanout 32 [current_design]
 set_load 80 [all_outputs]
-set_input_transition 150 [all_inputs -no_clocks]
 set_max_transition 260 [current_design]
 # ---- sdc_extra physical/qwen_romio_slots/qfd_coll_xfifo_native.sdc
 # el1013-qwen-small-masters r3b 2026-10-13: the reader's clock (ckd) of the IO-band CDC channel leaf qfd_coll_xfifo_native for the
@@ -25,6 +24,17 @@ set_max_transition 260 [current_design]
 #   propagated ckd tree exactly as io_ref_skew.sdc does for core_clk (median ckd pin flop).
 set ot_xf_T [get_property [get_clocks core_clk] period]
 create_clock -name ckd -period $ot_xf_T [get_ports ckd]
+# Preserve the executed n7 diagnostic source model explicitly after the generic
+# DATA slew is moved after clock declarations. This 150 ps source transition is
+# not a measured die-driver bound; 0/150 ps sensitivity remains qualification work.
+set_input_transition 150 [get_ports ckd]
+# A clock source cannot retain a DATA arrival tag against any other clock.
+# Bare unset_input_delay did not remove the core_clk tag in the retained n7 DB.
+foreach ot_xf_refclk [all_clocks] {
+  unset_input_delay -clock $ot_xf_refclk [get_ports ckd]
+  unset_input_delay -clock $ot_xf_refclk -clock_fall [get_ports ckd]
+}
+unset_input_delay [get_ports ckd]
 set_clock_uncertainty -setup 60 [get_clocks ckd]
 set_clock_uncertainty -hold 25 [get_clocks ckd]
 set ot_xf_prop 0
@@ -80,3 +90,4 @@ if {$ot_xf_prop} {
 }
 # the raw reset: asynchronous assertion, released through the channel's own per-domain synchronisers
 set_false_path -from [get_ports rst_n]
+set_input_transition 150 [all_inputs -no_clocks]

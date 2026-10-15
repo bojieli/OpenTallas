@@ -137,6 +137,17 @@ if {[llength [get_ports -quiet tile_id*]]} { set_false_path -from [get_ports til
 #   propagated ckd tree exactly as io_ref_skew.sdc does for core_clk (median ckd pin flop).
 set ot_xf_T [get_property [get_clocks core_clk] period]
 create_clock -name ckd -period $ot_xf_T [get_ports ckd]
+# Preserve the executed n7 diagnostic source model explicitly after the generic
+# DATA slew is moved after clock declarations. This 150 ps source transition is
+# not a measured die-driver bound; 0/150 ps sensitivity remains qualification work.
+set_input_transition 150 [get_ports ckd]
+# A clock source cannot retain a DATA arrival tag against any other clock.
+# Bare unset_input_delay did not remove the core_clk tag in the retained n7 DB.
+foreach ot_xf_refclk [all_clocks] {
+  unset_input_delay -clock $ot_xf_refclk [get_ports ckd]
+  unset_input_delay -clock $ot_xf_refclk -clock_fall [get_ports ckd]
+}
+unset_input_delay [get_ports ckd]
 set_clock_uncertainty -setup 60 [get_clocks ckd]
 set_clock_uncertainty -hold 25 [get_clocks ckd]
 set ot_xf_prop 0

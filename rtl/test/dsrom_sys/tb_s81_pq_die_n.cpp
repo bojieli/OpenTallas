@@ -40,6 +40,9 @@ static void drive_die(Vdie& m,const Stim& s,uint64_t q0,uint64_t q1,uint64_t q2)
     uint32_t* c=m.f_cnt.data();std::memset(c,0,sizeof(uint32_t)*7);
     for(int i=0;i<6;i++)setb(c,32*i,32,s.ga[i]);
     m.rq0=q0;m.rq1=q1;m.rq2=q2;m.xws=3;m.xes=3;
+#ifdef DSFD_PQ_BF_X2
+    m.x2ws=3;m.x2es=3;
+#endif
 }
 template<class M> void clk(M& m,int v){
     m.ck_ctl=m.ck_qb=m.ck_fault=v;m.ck_aq=v?3:0;m.ck_ix=v?15:0;m.ck_bc=v?(sizeof(m.ck_bc)>1?65535:15):0;
@@ -50,7 +53,8 @@ template<class M> void clk(M& m,int v){
 }
 template<class M> void tick(M& m){clk(m,0);m.eval();clk(m,1);m.eval();}
 // die lane word of a 1,633-b native broadcast
-static void encode(const uint32_t* fb,uint32_t* w){
+static void encode(const uint32_t* fb,uint32_t* w,uint32_t* x2){
+    std::memset(x2,0,sizeof(uint32_t)*17);
     std::memset(w,0,sizeof(uint32_t)*18);
     uint64_t cfg=bits(fb,1632,1),ph=bits(fb,1623,9),np=bits(fb,1620,3),go=bits(fb,1619,1),qv=bits(fb,1615,1),p=bits(fb,1607,8),
              qb=bits(fb,1604,3),sv=bits(fb,1602,2),e0=bits(fb,1336,10),e1=bits(fb,1070,10),qp=bits(fb,1067,3);
@@ -60,10 +64,31 @@ static void encode(const uint32_t* fb,uint32_t* w){
     for(int i=0;i<256;i++)setb(w,284+i,1,bits(fb,1080+i,1));      // x1.q1
     setb(w,540,10,e1);
     setb(w,550,1,go);setb(w,551,1,cfg);setb(w,552,9,ph);setb(w,561,1,0);setb(w,562,3,np);
+#ifdef DSFD_PQ_BF_X2
+    const bool bf=bits(fb,1063,1)||bits(fb,1618,1);
+    if(bf){
+        std::memset(w,0,sizeof(uint32_t)*18);setb(w,0,1,1);setb(x2,536,1,1);
+        setb(w,550,1,go);setb(w,551,1,cfg);setb(w,552,9,ph);setb(w,562,3,np);
+        // BF wrapper's xb bit order is independent of native broadcast bit order.
+        auto xbbit=[&](int i)->uint64_t{
+            if(i==0)return bits(fb,1618,1);
+            if(i<4)return bits(fb,1063+i,1);
+            if(i==4)return bits(fb,1063,1);
+            if(i<8)return bits(fb,1055+i,1);
+            if(i<12)return bits(fb,1048+i,1);
+            if(i<44)return bits(fb,1012+i,1);
+            return bits(fb,i-44,1);
+        };
+        for(int i=0;i<536;i++)setb(x2,i,1,xbbit(i));
+        for(int i=0;i<266;i++){setb(w,1+i,1,xbbit(536+i));setb(w,284+i,1,xbbit(802+i));}
+    }
+#endif
 }
 int main(int argc,char**argv){
     Verilated::commandArgs(argc,argv);
     uint64_t compared=0,lane_words=0,lane_q=0,lane_go=0,lane_cfg=0,reads=0;
+    // BF-beat adjacency of the native broadcast (the serial-BF-lane question): beats, back-to-back pairs, min gap
+    uint64_t bf_beats=0,bf_b2b=0,q_beats=0,q_b2b=0;long bf_mingap=1<<30,q_mingap=1<<30;
     for(int test=0;test<4;test++){
         Vcore r;Vdie d;Stim s;
         int fam=test&1,np=(test>>1),phase=257+test*37;
@@ -82,7 +107,7 @@ int main(int argc,char**argv){
         std::deque<std::pair<int,uint32_t>> pending;
         struct Return{int at,tag,total;};std::deque<Return> returns;
         int issued=0,seen_go=0,last_issue=-100,idles=0;bool finished=false;
-        uint32_t prev_enc[18];bool have_prev=false;
+        uint32_t prev_x2[17]={},prev_enc[18];bool have_prev=false;long last_bf=-1000000,last_q=-1000000;
         for(int c=0;c<30000;c++){
             s.reset=c>=16;s.go=0;s.rv=0;std::memset(s.ga,0,sizeof(s.ga));
             if(c>=32&&issued<4&&r.ready&&c-last_issue>8){s.go=1;s.ph=phase;s.np=np;issued++;last_issue=c;}
@@ -109,7 +134,7 @@ int main(int argc,char**argv){
                     ||(d.t_vm&1)!=r.x_re||((d.t_vm>>1)&0x7ffff)!=r.x_addr
                     ||(d.ra0&1023)!=r.rom_pa0||(d.ra1&1023)!=r.rom_pa1||(d.ra2&2047)!=r.rom_sa||(d.ra0>>10)||(d.ra1>>10)||(d.ra2>>11)
                     ||!d.rc0||!d.rc1||!d.rc2||std::memcmp(r.mdr_o.data(),d.t_cnt.data(),14*4)||bits(r.mdr_o.data(),448,10)!=bits(d.t_cnt.data(),448,10);
-                if(mm){std::printf("PQ_DIE_N FAIL test=%d cycle=%d core-port mismatch\n",test,c);return 1;}
+                if(mm){std::printf("PQ_DIE_N FAIL test=%d cycle=%d core-port mismatch die_status=%llu ref_fault=%d cfg=%llu go=%llu qv=%llu gobf=%llu bv=%llu\n",test,c,(unsigned long long)ti,(int)r.fault,(unsigned long long)bits(r.f_bus.data(),1632,1),(unsigned long long)bits(r.f_bus.data(),1619,1),(unsigned long long)bits(r.f_bus.data(),1615,1),(unsigned long long)bits(r.f_bus.data(),1618,1),(unsigned long long)bits(r.f_bus.data(),1063,1));return 1;}
                 if(have_prev){
                     for(int i=0;i<565;i++){
                         uint64_t e=bits(prev_enc,i,1);
@@ -117,10 +142,17 @@ int main(int argc,char**argv){
                             std::printf("PQ_DIE_N FAIL test=%d cycle=%d lane bit %d expected %llu xw %llu xe %llu\n",test,c,i,(unsigned long long)e,
                                 (unsigned long long)bits(d.xw.data(),i,1),(unsigned long long)bits(d.xe.data(),i,1));return 1;}
                     }
+#ifdef DSFD_PQ_BF_X2
+                    for(int i=0;i<537;i++)if(bits(d.x2w.data(),i,1)!=bits(prev_x2,i,1)||bits(d.x2e.data(),i,1)!=bits(prev_x2,i,1)){
+                        std::printf("PQ_DIE_N FAIL test=%d cycle=%d extension lane bit %d\n",test,c,i);return 1;
+                    }
+#endif
                     if(bits(prev_enc,0,1)){lane_words++;lane_q+=bits(prev_enc,283,1);lane_go+=bits(prev_enc,550,1);lane_cfg+=bits(prev_enc,551,1);}
                 }
-                encode(r.f_bus.data(),prev_enc);have_prev=true;
+                encode(r.f_bus.data(),prev_enc,prev_x2);have_prev=true;
                 if(r.fault){std::printf("PQ_DIE_N FAIL test=%d cycle=%d unexpected fault\n",test,c);return 1;}
+                if(bits(r.f_bus.data(),1063,1)){bf_beats++;if(c-last_bf==1)bf_b2b++;if(last_bf>-1000000&&c-last_bf<bf_mingap)bf_mingap=c-last_bf;last_bf=c;}
+                if(bits(r.f_bus.data(),1615,1)){q_beats++;if(c-last_q==1)q_b2b++;if(last_q>-1000000&&c-last_q<q_mingap)q_mingap=c-last_q;last_q=c;}
                 if(r.x_re){pending.push_back({c+6,r.x_addr});reads++;}
                 if(bits(r.f_bus.data(),1619,1)){seen_go++;int tag=bits(r.f_bus.data(),1616,2);returns.push_back({c+40,tag,32*(np+1)});}
                 if(issued==4&&seen_go==4&&r.idle&&pending.empty()&&returns.empty())idles++;else idles=0;
@@ -131,6 +163,8 @@ int main(int argc,char**argv){
     }
     if(!lane_q||lane_go!=16||!reads){std::printf("PQ_DIE_N FAIL coverage words=%llu q=%llu go=%llu reads=%llu\n",
         (unsigned long long)lane_words,(unsigned long long)lane_q,(unsigned long long)lane_go,(unsigned long long)reads);return 1;}
+    std::printf("BF_BEAT_ADJACENCY bf_beats=%llu back_to_back=%llu min_gap=%ld q_beats=%llu q_back_to_back=%llu q_min_gap=%ld\n",
+        (unsigned long long)bf_beats,(unsigned long long)bf_b2b,bf_mingap,(unsigned long long)q_beats,(unsigned long long)q_b2b,q_mingap);
     std::printf("PQ_DIE_N PASS compared=%llu lane_words=%llu q_beats=%llu gos=%llu cfg=%llu x_reads=%llu\n",(unsigned long long)compared,
         (unsigned long long)lane_words,(unsigned long long)lane_q,(unsigned long long)lane_go,(unsigned long long)lane_cfg,(unsigned long long)reads);
     return 0;

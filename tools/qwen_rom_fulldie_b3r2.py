@@ -3230,6 +3230,12 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
             if idx not in lifted0:
                 for r_ in own:
                     add_rect(r_)
+            else:
+                # Pass-1 frames were lifted before the work list, so another
+                # repaired chain may own their sites now. Do not emit those
+                # stale rectangles on a failed search. The open chain remains
+                # explicitly unrepaired; a later retry can search fresh sites.
+                pl['frames'] = []
             if unbooked:
                 book(booked[idx][0], bits)
             return False
@@ -3446,6 +3452,19 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
                 if y0 >= g['y0'] and y0 + h <= die_top and free((x0, y0, x0 + w, y0 + h)):
                     return x0, y0
         return None
+    # Reconcile the allocator's mutable occupancy with the exact frames that
+    # will be emitted after repair/rip-up/jog/pre-pad trimming. Every inline
+    # arrival pad must see ALL surviving frames, not a stale search grid.
+    # An existing collision is a structural plan failure, never a legal site.
+    grid.clear()
+    for it in m['insts']:
+        add_rect((it.x, it.y, it.x + it.w, it.y + it.h))
+    for idx, pl in sorted(plans.items()):
+        for fk, f in enumerate(pl['frames']):
+            rr = (f[0], f[1], f[0] + f[2] + v.SHAVE, f[1] + f[3] + v.SHAVE)
+            if not free(rr):
+                raise ValueError(f"relay occupancy: {pl['bid']} frame {fk} overlaps a surviving frame before inline pads")
+            add_rect(rr)
     pad_done = {}
     if tpads:
         bidx = {bid: idx for idx, (bid, cl, bits, eps) in buses}

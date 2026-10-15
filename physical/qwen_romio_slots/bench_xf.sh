@@ -6,10 +6,10 @@
 #     ch_neg   the sender ignores credits: must FAIL
 #     ch_mut   OT_XF_MUT (two output data bits swapped in the cell): must FAIL
 set -u
-OUT=$1; CASE=$2; WIDTH=${3:-1024}
+OUT=$1; CASE=$2; WIDTH=${3:-1024}; IBUF=${4:-4}; OCRED=${5:-4}
 R=$(cd "$(dirname "$0")/../.." && pwd)
 mkdir -p "$OUT"
-T=tb_qfd_xf_ch; P="-Ptb_qfd_xf_ch.W=$WIDTH"; D=""
+T=tb_qfd_xf_ch; P="-Ptb_qfd_xf_ch.W=$WIDTH -Ptb_qfd_xf_ch.IBUF=$IBUF -Ptb_qfd_xf_ch.OCRED=$OCRED"; D=""
 case "$CASE" in
   ch) ;;
   ch_fast) P="$P -P$T.HW=1.35 -P$T.HR=1.0" ;;
