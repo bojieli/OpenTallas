@@ -1,0 +1,276 @@
+{
+  "name": "hbm_su_static_bank6_clock7_1015",
+  "top": "ot_hbm_su_static_bank6_clock_physical",
+  "kind": "tile",
+  "sources": [
+    "rtl/hbm_accel/generic/adapters/static_su/data_store/ot_hbm_su_static_pinned_bank.sv",
+    "rtl/hbm_accel/generic/adapters/static_su/data_store/ot_hbm_su_static_data_store.sv",
+    "rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv",
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v",
+    "rtl/hbm_accel/generic/adapters/static_su/data_store/ot_hbm_su_static_bank6_clock_physical.sv"
+  ],
+  "clock_port": "clk",
+  "reset_ports": [
+    "rst_n"
+  ],
+  "pins": {
+    "N": [
+      "clk",
+      "clk_macro0",
+      "clk_macro1",
+      "clk_macro2",
+      "clk_macro3",
+      "clk_macro4",
+      "clk_macro5",
+      "rst_n"
+    ],
+    "W": [
+      "read_v",
+      "read_addr",
+      "write_v",
+      "write_addr",
+      "write_data"
+    ],
+    "E": [
+      "read_data",
+      "read_return"
+    ]
+  },
+  "macros": [
+    {
+      "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+      "count": 1,
+      "inst": "*g_read?0?.u_m",
+      "clock_entry": {
+        "port": "clk_macro0",
+        "pin": "clk",
+        "reference": "raw_liberty_clock_pin"
+      }
+    },
+    {
+      "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+      "count": 1,
+      "inst": "*g_read?1?.u_m",
+      "clock_entry": {
+        "port": "clk_macro1",
+        "pin": "clk",
+        "reference": "raw_liberty_clock_pin"
+      }
+    },
+    {
+      "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+      "count": 1,
+      "inst": "*g_read?2?.u_m",
+      "clock_entry": {
+        "port": "clk_macro2",
+        "pin": "clk",
+        "reference": "raw_liberty_clock_pin"
+      }
+    },
+    {
+      "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+      "count": 1,
+      "inst": "*g_read?3?.u_m",
+      "clock_entry": {
+        "port": "clk_macro3",
+        "pin": "clk",
+        "reference": "raw_liberty_clock_pin"
+      }
+    },
+    {
+      "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+      "count": 1,
+      "inst": "*g_read?4?.u_m",
+      "clock_entry": {
+        "port": "clk_macro4",
+        "pin": "clk",
+        "reference": "raw_liberty_clock_pin"
+      }
+    },
+    {
+      "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+      "count": 1,
+      "inst": "*g_read?5?.u_m",
+      "clock_entry": {
+        "port": "clk_macro5",
+        "pin": "clk",
+        "reference": "raw_liberty_clock_pin"
+      }
+    }
+  ],
+  "outline": {
+    "w": 369.36,
+    "h": 151.2
+  },
+  "layer_cap": "M5",
+  "signal_max_layer": "M5",
+  "pg_layer": "M5",
+  "route": {
+    "pd": 0.5,
+    "threads": 4,
+    "peak_ram_gb": 24,
+    "period_ps": 1111.111111,
+    "pin_h": "M4",
+    "pin_v": "M3 M5",
+    "signoff_period_ps": 1111.111111
+  },
+  "job": {
+    "owner": "Codex:/root/hbm_su_sm_1103/su_physical_inventory",
+    "branch": "codex/hbm-su-physical-1103",
+    "tag": "r2",
+    "purpose": "Candidate structural per-macro clocks: six distinct provider roots plus one boundary-register root. Previous bank r1 CTS insertion316.9ps/spread92.5ps/slew229.8ps, two SRAMs sharing clocknets. Actual one source per macro, no added data edge/retiming. Serial1111.111111ps unchanged. No route/replication qualification before physical slot/pins and TTsetup FFhold DRC0 nativeclock checks. Native CTS attempt1 rejected mixed raw-macro CTS roots; corrected explicit hybrid policy: six actual raw SRAM pin references plus one CTS root, no macro pin on a CTS source. Word-select flops remain on the existing register root.",
+    "views_to": "physical/ref_tile/hbm_su_static_bank6_clock7_1015/views",
+    "record_to": "results/arch/hbm_su_f2_static_1014/arithmetic/physical/bank_clock7",
+    "benches": [
+      {
+        "name": "bank_exact",
+        "cmd": "bash tools/hbm_static/su_bank_run.sh {RUN}/bench/bank",
+        "expect": "pass",
+        "pass_regex": "SU_PINNED_BANK PASS",
+        "min_count_regex": "checks=(\\d+)",
+        "threads": 2,
+        "peak_ram_gb": 4,
+        "needs": [
+          "verilator"
+        ]
+      },
+      {
+        "name": "bank_mutant_coherence",
+        "cmd": "bash tools/hbm_static/su_bank_run.sh {RUN}/bench/bank_mut coherence",
+        "expect": "fail",
+        "fail_regex": "SU_PINNED_BANK FAIL",
+        "threads": 2,
+        "peak_ram_gb": 4,
+        "needs": [
+          "verilator"
+        ]
+      },
+      {
+        "name": "bank_mutant_clock_halt",
+        "cmd": "bash tools/hbm_static/su_bank_run.sh {RUN}/bench/clock_halt clock_halt",
+        "expect": "fail",
+        "fail_regex": "SU_PINNED_BANK FAIL",
+        "threads": 2,
+        "peak_ram_gb": 4,
+        "needs": [
+          "verilator"
+        ]
+      }
+    ]
+  },
+  "recipe": 2,
+  "orfs_vars": {
+    "OT_MEG_DEPTH_UM": "2.4"
+  },
+  "clock": "hybrid_entries",
+  "clock_ports": [
+    "clk",
+    "clk_macro0",
+    "clk_macro1",
+    "clk_macro2",
+    "clk_macro3",
+    "clk_macro4",
+    "clk_macro5"
+  ],
+  "clock_data_paths": "related_same_frequency",
+  "clock_relationship": {
+    "kind": "same_pll_fixed_phase",
+    "ratio": [
+      1,
+      1
+    ],
+    "phase_ps": 0
+  },
+  "clock_entry_domains": {
+    "macro0": {
+      "ports": [
+        "clk_macro0"
+      ],
+      "ratio": [
+        1,
+        1
+      ],
+      "inputs": [],
+      "outputs": []
+    },
+    "macro1": {
+      "ports": [
+        "clk_macro1"
+      ],
+      "ratio": [
+        1,
+        1
+      ],
+      "inputs": [],
+      "outputs": []
+    },
+    "macro2": {
+      "ports": [
+        "clk_macro2"
+      ],
+      "ratio": [
+        1,
+        1
+      ],
+      "inputs": [],
+      "outputs": []
+    },
+    "macro3": {
+      "ports": [
+        "clk_macro3"
+      ],
+      "ratio": [
+        1,
+        1
+      ],
+      "inputs": [],
+      "outputs": []
+    },
+    "macro4": {
+      "ports": [
+        "clk_macro4"
+      ],
+      "ratio": [
+        1,
+        1
+      ],
+      "inputs": [],
+      "outputs": []
+    },
+    "macro5": {
+      "ports": [
+        "clk_macro5"
+      ],
+      "ratio": [
+        1,
+        1
+      ],
+      "inputs": [],
+      "outputs": []
+    },
+    "core": {
+      "ports": [
+        "clk"
+      ],
+      "ratio": [
+        1,
+        1
+      ],
+      "inputs": [
+        "rst_n",
+        "read_v",
+        "read_addr",
+        "write_v",
+        "write_addr",
+        "write_data"
+      ],
+      "outputs": [
+        "read_data",
+        "read_return"
+      ]
+    }
+  },
+  "clock_cts_roots": [
+    "clk"
+  ]
+}
