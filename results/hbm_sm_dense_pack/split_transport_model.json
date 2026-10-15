@@ -1,0 +1,96 @@
+{
+  "schema": "opentallas.smh.actual_westbeat_split_model.v1",
+  "status": "STRUCTURAL_MODEL_PIN_CAPACITY_PASS_PACKED18_GEOMETRY_NOT_ADMITTED",
+  "logical_slices_total": 96,
+  "westbeat_logical_slices": 51,
+  "westbeat_slices_per_physical_child": 17,
+  "source_stages": {
+    "west_transit": 2,
+    "north_landing": 1,
+    "south_landing": 1
+  },
+  "new_physical_groups": 3,
+  "old_physical_groups": 1,
+  "tile_children_after_split": 18,
+  "independent_clock_roots_each_max_sinks": 2070,
+  "masters": [
+    {
+      "kind": "transit2edge",
+      "actualanalogue": "ot_smh_tr_group_beat_e",
+      "outline_um": [
+        43.2,
+        216
+      ],
+      "new_input_fork_port": true,
+      "qualification": "NativePASSanalogue, newwestsourcebinding/placementrequired"
+    },
+    {
+      "kind": "north_landing1edge",
+      "outline_um": [
+        216,
+        43.2
+      ],
+      "ports": {
+        "S": "d[2068:0]M5",
+        "N": "q[2068:0]M5"
+      },
+      "input_pin_pitch_um": 0.096,
+      "pin_span_um": 198.528,
+      "guard_um": 8.736000000000004,
+      "qualification": "NEWsource2edge? Actually1edge2070FFinclusive reset relay; needsactualgate"
+    },
+    {
+      "kind": "south_landing1edge",
+      "outline_um": [
+        216,
+        43.2
+      ],
+      "ports": {
+        "S": "d[2068:0]M5",
+        "N": "q[2068:0]M5"
+      },
+      "pin_span_um": 198.528,
+      "qualification": "NEWoneedge, independentlyretainedcopies"
+    }
+  ],
+  "M5_source_technology": {
+    "path": "results/uarch/topk_finite_track_turn_model_20261002/inputs/tech.lef",
+    "pitch_um": 0.048,
+    "direction": "VERTICAL"
+  },
+  "parent_fork": {
+    "unique_bits": 2069,
+    "sink_child_ports_per_bit": 3,
+    "aggregate_parent_receiver_to_child_connections": 6207,
+    "clock_mask": false,
+    "shared_synth_q1_allowed": false,
+    "required": "ActualparentinputreceiverQ andeach3childD reach<=500; aggregateM6/M8/M7verticalcuts andCTSparentloads mustbemeasured."
+  },
+  "outline_area_old_um2": 46656,
+  "outline_area_new_um2": 27993.600000000002,
+  "saved_outline_um2": 18662.399999999998,
+  "rectangle_search": {
+    "candidate": "split18_rectangle_candidate.json",
+    "width_um": 520,
+    "height_um": 720,
+    "area_um2": 374400,
+    "method": "700000deterministicrandomizedmaxrectpackings, R0only,20umgaps; nopinobjective",
+    "lower_bound_um2": 353938.40640000004,
+    "not_a_global_optimality_proof": true
+  },
+  "actualpin_blockers": [
+    {
+      "net": "beatNlanding->XS.bk1",
+      "bits": 2069,
+      "optimistic_nearest_outline_max_um": 756.4259999999999,
+      "bits_whose_nearestpossible_source_exceeds500um": 2069
+    },
+    {
+      "net": "beatSlanding->XS.bk1",
+      "bits": 2069,
+      "optimistic_nearest_outline_max_um": 515.5459999999999,
+      "bits_whose_nearestpossible_source_exceeds500um": 162
+    }
+  ],
+  "recommendation": "Do notwriteorroute split merelybecause27,994um2sumlooksbetter. Reorder18children withactual2069sourcepinfork/landing constraints first; current374.4kcandidatefailsnorthlanding reach evenunderoptimisticclosestoutline."
+}
