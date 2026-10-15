@@ -3278,8 +3278,19 @@ def bench_work(log, min_count_regex=None):
     return True, f"work: {m[:6]}"
 
 
+# A stage cmd that sends its tool output to its own file ('... > {RUN}/record/route/export.log 2>&1', every ref_tile
+# collect) leaves cl/<tag>.log empty: 14 S81 fill collects went NEEDS_HUMAN 'collect crashed twice (rc=1)' on 2026-10-15
+# with an empty tail and no first error, while export.log held the child_lint FAIL.  Tail those redirect targets too.
+REDIRECT_LOG_RE = re.compile(r"(?<![<>&0-9])>\s*([^\s;&|<>]+)\s+2>&1")
+
+
+def stage_logs(j, st):
+    logs = list(st.get("logs", [])) + [m for m in REDIRECT_LOG_RE.findall(st.get("cmd") or "") if m not in st.get("logs", [])]
+    return [subst(x, j) for x in logs]
+
+
 def stage_tail(j, st, n=40):
-    extra = " ".join(subst(x, j) for x in st.get("logs", []))
+    extra = " ".join(stage_logs(j, st))
     r = ssh(j["host"], f"tail -n {n} {j['run']}/cl/{j['stage_tag']}.log 2>/dev/null; for f in {extra}; do "
                        f"[ -f \"$f\" ] && tail -n {n} \"$f\"; done; true", timeout=60)
     return r.stdout
