@@ -84,3 +84,12 @@ action's top3 bits share the time macro's low3 bits. A legacy72-bit calendar
 cannot be connected to the canonical controller. These component tests do not
 establish canonical2417/BF519 numerical execution, die connectivity, physical
 clock delivery or production throughput.
+
+`dsfd_sp_pq_produced` joins the actual PHW10 descriptor endpoint and 75-bit
+paired-ROM reader to `dsfd_sp_pq_n`. It exposes separate command/calendar
+clock entries, fixed prime/start inputs and normal fault outputs. The added
+`pq_canonical_pins_gate.py --produced` component checks boundary phases511..514
+with the real eight total ROM macros and36 SRAMs, fixed command completion33,
+and rejects a dropped physical calendar CFG cell and source phase-MSB mutant.
+Its zero phase/stream images prove connectivity and pin epochs only; they do
+not implement the canonical model numerical programme.
