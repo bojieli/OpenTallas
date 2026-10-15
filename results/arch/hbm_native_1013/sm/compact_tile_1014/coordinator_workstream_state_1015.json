@@ -1,6 +1,6 @@
 {
   "schema": "opentallas.smh.workstream_state.v1",
-  "collected_at": "2026-10-15T09:15:54.096070+00:00",
+  "collected_at": "2026-10-15T09:20:16.425614+00:00",
   "coordinator": "codex",
   "jobs": [
     {
@@ -123,5 +123,21 @@
     "source_map": "results/arch/hbm_p2p_1014/static_storage_successors_1015.json",
     "selected_V1_V4_PARK_references": 0,
     "logical_storage": "successor-native storage/resultstore joins remain separatelyowned/open"
+  },
+  "native_numerical_join_live": {
+    "owner": "/root/h_elements_a/static_sm_feed",
+    "host": "ot-epyc1tb",
+    "unit": "oth-ubuntu-731050-1792055886",
+    "session": 74470,
+    "admission_GB": 72,
+    "threads": 8,
+    "snapshot": "/var/tmp/smh-native-mapped-1015-v2",
+    "DUT": "actual mapped4PF/PHY32landing+5packedcache+2programmeSRAM\u219283/read34\u2192original productionNC8/SUB4SM",
+    "current_stack": 0,
+    "scope": "SM00..07 first, explicit separateSTACK1sourceparameter build/reuseobjects forSM08..12 afterterminal",
+    "activations": "declaredexternal40addresses\u00d713xwritebeats; actualVMproducerunbound",
+    "format": "actualcheckpointDSfmt1 FP8/E4M3+UE8M0",
+    "verdict": "PENDING; no numerical/performanceclaim",
+    "prior_failure": "v1PHYAPImismatchterminalpreserved; v2usesexact440d2PHY"
   }
 }
