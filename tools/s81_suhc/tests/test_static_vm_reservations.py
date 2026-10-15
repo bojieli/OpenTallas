@@ -167,6 +167,14 @@ class ActualOneReadOneWriteTests(unittest.TestCase):
         self.schedule['dependencies']=[dict(producer='w',consumer='r')]
         self.assertIn('consume_before_commit',self.kinds())
 
+    def test_same_edge_commit_does_not_make_new_word_visible_to_macro_read(self):
+        self.contract.update(stream_period_ps=1,vm_period_ps=1,commit_min_ps=0,read_min_ps=0)
+        self.schedule['events'][0].update(service_cycle=2,commit_cycle=2,deadline_cycle=2)
+        self.schedule['events'][1].update(row=64,read_visibility='before_same_edge_write')
+        self.contract['same_address_policy']='read_before_write'
+        self.schedule['dependencies']=[dict(producer='w',consumer='r')]
+        self.assertIn('consume_before_same_edge_write_visibility',self.kinds())
+
     def test_profile_cannot_inflate_ports(self):
         self.contract['bank_port_capacities']['read']=2
         self.assertIn('invalid_contract',self.kinds())

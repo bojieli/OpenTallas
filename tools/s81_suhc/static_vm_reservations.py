@@ -251,6 +251,10 @@ def check(schedule: dict, contract: dict, source_root: Path | None = None) -> di
             error('dependency_row_mismatch', producer=producer, consumer=consumer)
         if when(c['service_cycle'], 'vm') < when(p['commit_cycle'], 'stream'):
             error('consume_before_commit', producer=producer, consumer=consumer)
+        elif (ports is not None and contract.get('same_address_policy') == 'read_before_write'
+              and when(c['service_cycle'], 'vm') == when(p['commit_cycle'], 'stream')
+              and c['service_cycle'] == p.get('service_cycle') and c['row'] == p['row']):
+            error('consume_before_same_edge_write_visibility', producer=producer, consumer=consumer)
     # Pair/batch consumers require the original mask at one fixed response edge.
     groups = list(schedule.get('groups', []))
     traced_groups = defaultdict(list)
