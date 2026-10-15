@@ -56,14 +56,14 @@ are recorded in the completed-expansion section below.
    Place capture -> syndrome -> four BM units -> Chien -> emit/CDC according to
    actual registered connections, with the TX collect/encode/codeword chain
    beside its own PMA pins. This is the simple comparison, not a demonstrated fit.
-2. **Symbol-owned receive banks:** distribute the 5,440-bit current/original
-   codeword registers into ten phase banks, nine of 55 symbols and one of 49.
-   Match the emit capture banks to these banks, and place the four BM codeword
-   stores beside the corresponding Chien bank faces. Keep the real BM polynomial
-   arithmetic beside syndrome/coefficient interfaces. The new static correction
-   steering enables this topology without adding an arithmetic edge. Actual
-   cross-leaf buses, pin faces, area, clock delivery and legal geometry still
-   need explicit RTL/physical interfaces before it is a hard-leaf inventory.
+2. **Lane-owned receive banks:** group matching Chien-lane k slices across
+   symbols 55*cc+k, owning each lane's Forney/correction cone once. Keep matching
+   Chien current/original, emit ob and four BM codeword slices together, retaining
+   all six actual FEC clock roots. Existing coefficient-step logic remains
+   separate. The concrete five-group option has eleven lanes per group; it is a
+   source topology model, not implemented hard-leaf RTL or a demonstrated fit.
+   Actual coefficient broadcast, output gather, area, clocks and legal geometry
+   remain explicit costs before choosing group size.
 
 Both alternatives preserve current arithmetic, reset semantics and cycles.
 Shared combinational logic must have an explicit owner or priced replication.
@@ -194,3 +194,24 @@ price placement whitespace, clock tree, buffering or routing. The fail-closed
 post-map audit also requires every clock root's FF count to match the cached
 scalar source exactly. Five tests cover area parsing, residual generic gates,
 unknown clocks, changed state inventory and incorrect LEF scaling.
+
+
+## Source-exact lane-group option
+
+`physical_prebuild/lane_partition_option.json` and its generator bind the actual
+static decoder/correction source. Five groups of eleven k lanes cover the seven
+existing codeword copies (four BM bcw plus Chien cw/orig and emit ob): 38,080 FF
+bits, divided as 7,700/7,700/7,700/7,700/7,280. Each group retains six independent
+FEC clocks. The clock flow supports multiple actual roots in a leaf, subject to
+separate CTS/sink/insertion/phi−R budgets and validated 1:1 fixed-phase crossing
+contracts. This support is not delivered-clock qualification or a slot grant.
+
+The actual decoder emitter is **512 payload bits**, not the 544-bit codeword
+capture width. Its exact source is `q_d <= ob[5419 - 512*oc -:512]`, after the
+20-bit header; q_seq separately reads ob[5427:5420]. The topology model enumerates
+all 5,120 payload positions exactly once. Each proposed group can contribute to
+414 output positions (452 for group 3), totaling 2,108 group→q relations across
+all ten beats. 452 q bits source four possible groups over time; 60 source five.
+These source relations and the shared 470-bit coefficient input per group remain
+substantial seams. No bank grouping is treated as free wiring, and no new RTL,
+clock, state, latency or physical closure is claimed by this proposed option.
