@@ -64,5 +64,57 @@
     "cr_en2",
     "cr_sel16"
   ],
-  "limits": "File-level ABI/behavior/view consistency audit only. No placement, powergrid, CTS, or SSFF/DRC qualification, no inherited routedview. Future source still needs actualmacrointegration and contracts."
+  "limits": "File-level ABI/behavior/view consistency audit only. No placement, powergrid, CTS, or SSFF/DRC qualification, no inherited routedview. Future source still needs actualmacrointegration and contracts.",
+  "legacy_v2_behavioral_v2_blackbox_ports_equal": true,
+  "literal_port_table": {
+    "clk": {
+      "direction": "input",
+      "width": 1
+    },
+    "r_ce_in": {
+      "direction": "input",
+      "width": 1
+    },
+    "r_addr_in": {
+      "direction": "input",
+      "width": 7
+    },
+    "rd_out": {
+      "direction": "output",
+      "width": 256
+    },
+    "w_ce_in": {
+      "direction": "input",
+      "width": 1
+    },
+    "w_addr_in": {
+      "direction": "input",
+      "width": 7
+    },
+    "wd_in": {
+      "direction": "input",
+      "width": 256
+    },
+    "w_mask_in": {
+      "direction": "input",
+      "width": 256
+    },
+    "rr_en": {
+      "direction": "input",
+      "width": 2
+    },
+    "rr_addr": {
+      "direction": "input",
+      "width": 14
+    },
+    "cr_en": {
+      "direction": "input",
+      "width": 2
+    },
+    "cr_sel": {
+      "direction": "input",
+      "width": 16
+    }
+  },
+  "logic_pin_bits": 819
 }
