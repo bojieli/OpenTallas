@@ -33,7 +33,7 @@ module tb_hbm_sm_folded_leaf;
  endfunction
  integer checked=0,first_reference=-1,mutant=0;
  string file;
- initial begin
+ initial begin:run_gate
   if(!$value$plusargs("CMD=%s",file))$fatal(1,"need compiler CMD");
   if($value$plusargs("mutant=%d",mutant))begin end
   $readmemh(file,calendar_words);
@@ -56,12 +56,12 @@ module tb_hbm_sm_folded_leaf;
     end
     @(posedge clk);#0.01;
     if(frontfault||schedulefault||gf)begin
-     if(mutant!=0)begin $display("FOLDED_LEAF MUTANT REJECTED mutant=%0d fault=1 cycle=%0d",mutant,c);$finish;end
+     if(mutant!=0)begin $display("FOLDED_LEAF MUTANT REJECTED mutant=%0d fault=1 cycle=%0d",mutant,c);$finish;disable run_gate;end
      $fatal(1,"FOLDED_LEAF fault col%0d row%0d cyc%0d front%0d sched%0d leaf%0d",col,lr,c,frontfault,schedulefault,gf);
     end
     if(gv)begin
      if(gy!==golden(col%2,seen)||gt!==16'((((col%2)*64+lr*16+seen)<<4)|8))begin
-      if(mutant!=0)begin $display("FOLDED_LEAF MUTANT REJECTED mutant=%0d fault=0",mutant);$finish;end
+      if(mutant!=0)begin $display("FOLDED_LEAF MUTANT REJECTED mutant=%0d fault=0",mutant);$finish;disable run_gate;end
       $fatal(1,"FOLDED_LEAF mismatch col%0d row%0d cyc%0d word%0d data%h want%h tag%h",col,lr,c,seen,gy,golden(col%2,seen),gt);
      end
      if(seen==0)first_seen=c;
@@ -71,7 +71,10 @@ module tb_hbm_sm_folded_leaf;
     @(negedge clk);
    end
    if(seen!=16)$fatal(1,"FOLDED_LEAF expected16 words got%0d col%0d row%0d",seen,col,lr);
-   if(first_reference<0)first_reference=first_seen;
+   if(first_reference<0)begin
+    first_reference=first_seen;
+    if(first_reference!=291)$fatal(1,"FOLDED_LEAF command-to-publication must be11edges");
+   end
    if(first_seen!=first_reference+16*lr)$fatal(1,"FOLDED_LEAF stagger mismatch");
   end
   if(mutant!=0)$fatal(1,"FOLDED_LEAF mutant survived");
