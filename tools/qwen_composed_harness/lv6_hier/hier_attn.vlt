@@ -5,6 +5,11 @@
 // the parent small (an FP-unit-level cut alone needed > 120 GB to verilate).
 hier_block -module "ot_qwen_nearhbm_attn_stack_h"
 hier_block -module "ot_qwen_tp8_pv256_slice"
+// The retained four stack archives do not bound the service parent: its hub
+// and 32 final join blocks otherwise elaborate together beyond 200 GiB.
+// Cut real RTL modules without changing their arithmetic or clock latency.
+hier_block -module "ot_qwen_nearhbm_attn_hub_p"
+hier_block -module "ot_qwen_tp8_pv_join16"
 hier_block -module "ot_hdc_fp32_add_lat"
 hier_block -module "ot_hdc_fp32_mul_lat"
 hier_block -module "ot_hdc_fp32_add_fast"
