@@ -1,10 +1,6 @@
 // Fixed wires-only parent, one entry per independently rooted child.
 module ot_qfd_tt_ctlm_split_hard (
 `ifdef OT_QFD_XPF_MONITOR
-    output wire dvm_candidate_v,output wire [11:0] dvm_candidate_pc,
-    output wire [1:0] dvm_candidate_unit,output wire dvm_issue,
-`endif
-`ifdef OT_QFD_XPF_MONITOR
     output wire [379:0] dvm_cmd,
 `endif
     input wire ck_head,
@@ -74,10 +70,6 @@ module ot_qfd_tt_ctlm_split_hard (
     assign dvm_cmd=cmd;
 `endif
     qfd_tt_ctlm_head u_head (
-`ifdef OT_QFD_XPF_MONITOR
-        .dvm_candidate_v(dvm_candidate_v),
-        .dvm_candidate_pc(dvm_candidate_pc),.dvm_candidate_unit(dvm_candidate_unit),.dvm_issue(dvm_issue),
-`endif
 
         .clk(ck_head),
         .rst_n(rst_n),

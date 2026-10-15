@@ -39,6 +39,7 @@ module qfd_seq_su (
 `ifdef OT_QFD_XPF_MONITOR
     output wire dvm_candidate_v,output wire [11:0] dvm_candidate_pc,
     output wire [1:0] dvm_candidate_unit,output wire dvm_issue,
+    output reg [15:0] xobs,
 `endif
     input  wire          ck,
     input  wire          rsi,
@@ -61,6 +62,14 @@ module qfd_seq_su (
     output wire [520:0]  vwr
 );
     localparam integer NW = 18, AW = 24, D = 8;
+`ifdef OT_QFD_XPF_MONITOR
+    // Registered observer face preserves PC identity at the actual issue
+    // edge, before the controller advances it. No production control feeds
+    // back from this diagnostic/compiler-calendar observation.
+    always @(posedge ck or negedge rsi)
+      if(!rsi)xobs<=0;
+      else xobs<={dvm_issue,dvm_candidate_v,dvm_candidate_unit,dvm_candidate_pc};
+`endif
     // ---- constant-buffer readiness merge (8 groups) ----
     wire [9:0] cbr [0:7];
     assign cbr[0] = cbr0; assign cbr[1] = cbr1; assign cbr[2] = cbr2; assign cbr[3] = cbr3;

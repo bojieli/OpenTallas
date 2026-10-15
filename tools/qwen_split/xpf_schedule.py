@@ -161,8 +161,8 @@ def chain_schedule(images, effects):
                 unresolved.append(gap)
         result['unresolved'] = unresolved
         records = [r for r in result['records'] if r['arm_before_pc'] is not None]
-        if len(records) > 8:
-            raise ValueError('producer stage exceeds real eight-entry arm bank; repartition or enlarge with measured cost')
+        if len(records) > 4:
+            raise ValueError('producer stage exceeds production four-entry arm bank; repartition or enlarge with measured cost')
         result['producer_records'] = records
         result['stage'] = index
         stages.append(result)
@@ -232,6 +232,39 @@ def static_cycle_table(stage_schedule, trace, arm_transport_edges):
                 program_sha256=trace['program_sha256'], source_sha256=trace['source_sha256'],
                 stage=stage_schedule['stage'], arm_transport_edges=arm_transport_edges,
                 records=table, policy='fixed compiled cycles; producer schedule is never stalled; mismatch faults')
+
+
+def pw_image(program, table, stop_cycle):
+    """Serialize a compiled fixed-cycle table onto the real existing pw75.
+
+    Rows61..63 hold typed calendars; final12 data slots hold XPF1 metadata; no new unconnected config die input. This
+    changes the image format explicitly and rejects old images using either
+    reserved row. Instruction payload bytes remain identical.
+    """
+    if hashlib.sha256(program).hexdigest() != table['program_sha256']:
+        raise ValueError('program and fixed-cycle table identity differ')
+    words = [int(w,16) for w in program.decode().split()]
+    if len(words) > 61 or not 0 < len(table['records']) <= 4:
+        raise ValueError('instruction image or arm table exceeds real store format')
+    if not 0 <= table['stage'] < 64 or not 0 < stop_cycle < 1 << 32 or \
+       any(max(r['first_write_cycle'],r['issue_cycle'],r['arm_cycle']) >= stop_cycle for r in table['records']):
+        raise ValueError('measured stop cycle does not drain every compiled producer')
+    writes = [dict(address=pc*16+beat,data_hex=f'{(word>>(beat*64))&((1<<64)-1):016x}')
+              for pc,word in enumerate(words) for beat in range(16)]
+    count = len(table['records'])
+    header = (0x58504631 << 32) | (table['stage'] << 6) | (count << 2)
+    writes.append(dict(address=1023,data_hex=f'{header|1:016x}'))
+    for index,record in enumerate(table['records']):
+        value = int(record['cfg_data_hex'],16)
+        writes.extend(dict(address=1004+index*3+beat,data_hex=f'{(value>>(64*beat))&((1<<64)-1):016x}')
+                      for beat in range(3))
+    writes.append(dict(address=1022,data_hex=f'{(0x58504654<<32)|stop_cycle:016x}'))
+    writes.append(dict(address=1023,data_hex=f'{header|2:016x}'))
+    return dict(schema='opentallas.qwen-xpf-pw-image.v1',program_sha256=table['program_sha256'],
+                table_sha256=hashlib.sha256(json.dumps(table,sort_keys=True).encode()).hexdigest(),
+                instruction_words=len(words),stage=table['stage'],stop_cycle=stop_cycle,
+                writes=writes,minimum_h_start_gap_edges=3,
+                transport='existing actual pw75; compile with OT_QFD_XPF_MONITOR')
 
 
 if __name__ == '__main__':

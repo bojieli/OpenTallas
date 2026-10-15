@@ -17,10 +17,10 @@ module ot_qfd_xpf_static_schedule #(
  input wire start,stop,input wire [5:0] stage,
  input wire me_issue,input wire [11:0] me_pc,
  input wire su_issue,input wire [11:0] su_pc,
- output reg [71:0] xpf,output reg fault
+ output reg [71:0] xpf,output reg fault,output reg active,output reg [31:0] cycle
 );
  reg [187:0] records[0:N-1];reg [N-1:0] loaded,armed,issued;
- reg sealed,active;reg [IW:0] count;reg [31:0] cycle;reg [5:0] stage_r;
+ reg sealed;reg [IW:0] count;reg [5:0] stage_r;
  reg good,have_arm;reg [IW-1:0] arm_pick;integer i,j;
  always @* begin
   good=cfg_count!=0&&cfg_count<=N;

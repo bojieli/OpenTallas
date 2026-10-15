@@ -31,10 +31,6 @@ module qfd_tt_ctlm_head #(
                                   //   G 6144 (:496-507 left), 2 = the controller instance at G 6144 (:1224 left)
     parameter integer AUD = 33975     // el1011-q-seq: textbook-audit rebuild (ctlm_aud) bits: 1 no x_addr, 2 SRAM tag delays, 4 kv pin flops, 16 die-input pin flops (not p_am), 32 kept output stations, 64 no engine idle clock gate (power; the ICG enable then = the registered supply word); 8 = SRAM one-short mutant; 128 exact prefix cuts (u_tt PK: KS progress subtract + registered u_ttag read; controller FKS: argmax-merge compare / add); 256 = PK negative control, 512 = FKS negative control; 1024 setup cuts SC (fpapk-4e9afc303 classes a-d, exact, 0 cycles: u_tt pre-scale compare from flops, mx write pre-decoded with a registered slot maximum, scale_addr 2-operand, 32 h_rd copies); negative controls 2048 (no rk forwarding), 4096 (>= for >), 8192 (offset without nbs), 16384 (h_rd copy 0 stuck); 32768 p_am pin register at the ctlm pin (coordinator 10-11: routed p_am -> argmax -58 ps, textbook class 3; the argmax loop +1 cycle: am_* / mx_* / idle one edge later, sequence unchanged), 65536 = its negative control (register without the +1 compensation)
 ) (
-`ifdef OT_QFD_XPF_MONITOR
-    output wire dvm_candidate_v,output wire [11:0] dvm_candidate_pc,
-    output wire [1:0] dvm_candidate_unit,output wire dvm_issue,
-`endif
     input wire  clk,
     input wire  rst_n,
     input wire  h_start,
@@ -73,12 +69,6 @@ module qfd_tt_ctlm_head #(
     input wire [94:0] ret
 );
 
-`ifdef OT_QFD_XPF_MONITOR
-    wire [11:0] dvm_pc_local;
-    // Sideband records address the entire loaded instruction image, not a
-    // segment-relative PC (the real ROM address adds this same base).
-    assign dvm_candidate_pc = q_prog_base + dvm_pc_local;
-`endif
     wire rs;
     ot_qfd_rst_stn #(.D(IS)) u_rs (.clk(clk), .rst_n(rst_n), .rst_q(rs));
     wire kv_ok_c, kvwd_c;   // AUD: pin flops (kv_ok / kv_write_drained announced one edge ahead)
@@ -203,10 +193,6 @@ module qfd_tt_ctlm_head #(
     wire [1-1:0] c_me_fault, u_me_fault;
     wire s_me_ready, s_me_idle; wire [15:0] s_me_progress; wire m_fin; wire [18-1:0] m_fidx; wire [31:0] m_fval;
     ot_qwen_rom_core_ctrl_x_i #(.OWN(1), .XW(XW), .XMUT(0), .XREG(1), .ICUT(1), .PRL(2), .W(16), .G((TPMUT == 2) ? 6144 : G), .DG((TPMUT != 0) ? 6144 : G), .AW(24), .NW(18), .PAW(12), .SU_VEC(1), .SW(64), .LV(7), .KV_FP8(1), .INT8_WEIGHT(1), .INT8_SCALE_WCS_BASE(1), .INT8_EMBED(1), .QWEN_FULLSHAPE(1), .HID(4096), .HALF(64), .HD(128), .EMB_CODE_LANES(64), .EMB_ADDR_BASE(0), .KV_HBM(1), .KV_VEC_WRITE_BRIDGE(1), .ME_STALL(1), .ME_IDLE_GATE(((AUD & 64) != 0) ? 0 : 1), .MEREG(MEREG), .PCUT(PCUT), .FKS(((AUD & 512) != 0) ? 2 : ((AUD & 128) != 0) ? 1 : 0), .HRC(((AUD & 1024) != 0) ? 32 : 0), .HRCM(((AUD & 16384) != 0) ? 1 : 0), .SMIN(7), .SMAX(11), .TCUT(7), .FQ_HEAD((HQ2 >= 2) ? 3 : (HQ2 != 0) ? 2 : 1)) u_ctrl_me (
-`ifdef OT_QFD_XPF_MONITOR
-        .dvm_candidate_v(dvm_candidate_v),
-        .dvm_candidate_pc(dvm_pc_local),.dvm_candidate_unit(dvm_candidate_unit),.dvm_issue(dvm_issue),
-`endif
         .clk(clk),
         .rst_n(rsv[1]),
         .start(q_h_start),
@@ -513,9 +499,6 @@ module qfd_tt_ctlm_tree #(
     ot_qfd_rst_stn #(.D(IS)) u_rs (.clk(clk),.rst_n(rst_n),.rst_q(rs));
     wire local_en, ec;
     qfd_tt_ctlm_head #(.DCU_M(DCU_M), .DUC_M(DUC_M), .XW(XW), .IS(IS), .OS(OS), .PSRAM(PSRAM), .PMUT(PMUT), .HQ2(HQ2), .MEREG(MEREG), .RRG(RRG), .PCUT(PCUT), .G(G), .TPMUT(TPMUT), .AUD(AUD)) u_shadow (
-`ifdef OT_QFD_XPF_MONITOR
-        .dvm_candidate_v(),.dvm_candidate_pc(),.dvm_candidate_unit(),.dvm_issue(),
-`endif
         .clk(clk),
         .rst_n(rst_n),
         .h_start(h_start),
