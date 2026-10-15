@@ -18,6 +18,7 @@ def main():
     ap.add_argument('--root', type=Path, required=True)
     ap.add_argument('--request-commit', required=True)
     ap.add_argument('--out', type=Path, required=True)
+    ap.add_argument('--c9-height', type=float, help='explicit die-owned amendment after actual mapped area')
     args = ap.parse_args()
     path = 'tools/s81_static_control/pq_producer_physical_request.json'
     raw = get(args.root, args.request_commit, path)
@@ -39,6 +40,8 @@ def main():
         faces.update(extra)
         assert set(item['ports']) <= set(faces), set(item['ports']) - set(faces)
         width, height = item['requested_outline_um']
+        if master.endswith('_c9') and args.c9_height is not None:
+            height = args.c9_height
         clock_bases = {re.sub(r'\[\d+\]$', '', x) for x in item['clock_entries'] + item['reset_entries']}
         order = {f: [p for p in spec['pins'].get(f, []) if p in item['ports']] for f in 'NSEW'}
         for port in item['ports']:
@@ -89,6 +92,10 @@ def main():
             clock_entries=item['clock_entries'], reset_entries=item['reset_entries'],
             assigned_sha256=hashlib.sha256((args.out/(master+'.json')).read_bytes()).hexdigest(),
             tcl_sha256=hashlib.sha256((args.out/(master+'.tcl')).read_bytes()).hexdigest())
+    if args.c9_height is not None:
+        summary['c9_amendment'] = dict(height_um=args.c9_height, supersedes='348f1af79 c9 height82.08 only; HOST grant stands',
+            reason='actual source78c460 mapped14958.81756um2 at64.5percent coreutil in82.08 slot;108um height gives~48.5percent beforehold/clockbuffers',
+            mapped_source='78c460fbe', latest_fab8ea_total_ff=12779, parent_fit='OPEN')
     summary['grant'] = 'Independent new leaf outlines/exact pins; no inherited view. Parent/die fit, mapped root proof and native TT/FF/DRC qualification remain separate.'
     (args.out/'grant.json').write_text(json.dumps(summary,indent=2)+'\n')
     print(json.dumps(summary['masters'],indent=2))
