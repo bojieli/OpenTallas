@@ -1,0 +1,1029 @@
+%Warning-PINMISSING: rtl/qwen_sys/host_integrated_20261014/qkd_host_rank_services.sv:132:179: Cell has missing pin: 'begin_v'
+                     rtl/qwen_sys/host_integrated_20261014/qkd_host_control_packet_observed.sv:24:14: ... Location of port declaration
+   24 |  output wire begin_v,output wire[15:0]begin_epoch,output wire begin_cr,begin_available,
+      |              ^~~~~~~
+                     ... For warning description see https://verilator.org/warn/PINMISSING?v=5.032
+                     ... Use "/* verilator lint_off PINMISSING */" and lint_on around source to disable this message.
+%Warning-PINMISSING: rtl/qwen_sys/host_integrated_20261014/qkd_host_rank_services.sv:132:179: Cell has missing pin: 'begin_epoch'
+                     rtl/qwen_sys/host_integrated_20261014/qkd_host_control_packet_observed.sv:24:39: ... Location of port declaration
+   24 |  output wire begin_v,output wire[15:0]begin_epoch,output wire begin_cr,begin_available,
+      |                                       ^~~~~~~~~~~
+%Warning-PINMISSING: rtl/qwen_sys/host_integrated_20261014/qkd_host_rank_services.sv:132:179: Cell has missing pin: 'begin_cr'
+                     rtl/qwen_sys/host_integrated_20261014/qkd_host_control_packet_observed.sv:24:63: ... Location of port declaration
+   24 |  output wire begin_v,output wire[15:0]begin_epoch,output wire begin_cr,begin_available,
+      |                                                               ^~~~~~~~
+%Warning-PINMISSING: rtl/qwen_sys/host_integrated_20261014/qkd_host_rank_services.sv:132:179: Cell has missing pin: 'begin_available'
+                     rtl/qwen_sys/host_integrated_20261014/qkd_host_control_packet_observed.sv:24:72: ... Location of port declaration
+   24 |  output wire begin_v,output wire[15:0]begin_epoch,output wire begin_cr,begin_available,
+      |                                                                        ^~~~~~~~~~~~~~~
+%Warning-PINMISSING: rtl/qwen_sys/host_integrated_20261014/qkd_host_rank_services.sv:132:179: Cell has missing pin: 'epoch_busy'
+                     rtl/qwen_sys/host_integrated_20261014/qkd_host_control_packet_observed.sv:28:26: ... Location of port declaration
+   28 |  output wire begin_fault,epoch_busy,startup_allowed,
+      |                          ^~~~~~~~~~
+%Warning-PINMISSING: rtl/qwen_sys/host_integrated_20261014/qkd_host_rank_services.sv:132:179: Cell has missing pin: 'startup_allowed'
+                     rtl/qwen_sys/host_integrated_20261014/qkd_host_control_packet_observed.sv:28:37: ... Location of port declaration
+   28 |  output wire begin_fault,epoch_busy,startup_allowed,
+      |                                     ^~~~~~~~~~~~~~~
+%Warning-PINMISSING: rtl/qwen_sys/host_integrated_20261014/qkd_host_rank_services.sv:189:25: Cell has missing pin: 'groups'
+  189 |  qkd_host_service_guard u_guard(.ck_guard(ck_guard),.rst_n(host_rst_n),.raw_faults(service_faults),
+      |                         ^~~~~~~
+                     rtl/qwen_sys/host_20261013/qkd_host_service_guard.sv:14:40: ... Location of port declaration
+   14 |  output reg[31:0]status,output reg[3:0]groups,
+      |                                        ^~~~~~
+%Warning-PINMISSING: rtl/qwen_sys/host_20261013/qkd_host_service.sv:63:158: Cell has missing pin: 'begin_v'
+   63 |  qkd_host_control_packet_capture_service #(.ENABLE_SERVICE(ENABLE_SERVICE),.T_LINK(T_LINK),.T_HBM(T_HBM),.WDOG(WDOG),.HC_MUT(HC_MUT),.PROMPT_MUT(PROMPT_MUT))u_control(
+      |                                                                                                                                                              ^~~~~~~~~
+                     rtl/qwen_sys/host_20261013/qkd_host_control_packet_capture_service.sv:23:14: ... Location of port declaration
+   23 |  output wire begin_v,output wire[15:0]begin_epoch,output wire begin_cr,begin_available,
+      |              ^~~~~~~
+%Warning-PINMISSING: rtl/qwen_sys/host_20261013/qkd_host_service.sv:63:158: Cell has missing pin: 'begin_epoch'
+   63 |  qkd_host_control_packet_capture_service #(.ENABLE_SERVICE(ENABLE_SERVICE),.T_LINK(T_LINK),.T_HBM(T_HBM),.WDOG(WDOG),.HC_MUT(HC_MUT),.PROMPT_MUT(PROMPT_MUT))u_control(
+      |                                                                                                                                                              ^~~~~~~~~
+                     rtl/qwen_sys/host_20261013/qkd_host_control_packet_capture_service.sv:23:39: ... Location of port declaration
+   23 |  output wire begin_v,output wire[15:0]begin_epoch,output wire begin_cr,begin_available,
+      |                                       ^~~~~~~~~~~
+%Warning-PINMISSING: rtl/qwen_sys/host_20261013/qkd_host_service.sv:63:158: Cell has missing pin: 'begin_cr'
+   63 |  qkd_host_control_packet_capture_service #(.ENABLE_SERVICE(ENABLE_SERVICE),.T_LINK(T_LINK),.T_HBM(T_HBM),.WDOG(WDOG),.HC_MUT(HC_MUT),.PROMPT_MUT(PROMPT_MUT))u_control(
+      |                                                                                                                                                              ^~~~~~~~~
+                     rtl/qwen_sys/host_20261013/qkd_host_control_packet_capture_service.sv:23:63: ... Location of port declaration
+   23 |  output wire begin_v,output wire[15:0]begin_epoch,output wire begin_cr,begin_available,
+      |                                                               ^~~~~~~~
+%Warning-PINMISSING: rtl/qwen_sys/host_20261013/qkd_host_service.sv:63:158: Cell has missing pin: 'begin_available'
+   63 |  qkd_host_control_packet_capture_service #(.ENABLE_SERVICE(ENABLE_SERVICE),.T_LINK(T_LINK),.T_HBM(T_HBM),.WDOG(WDOG),.HC_MUT(HC_MUT),.PROMPT_MUT(PROMPT_MUT))u_control(
+      |                                                                                                                                                              ^~~~~~~~~
+                     rtl/qwen_sys/host_20261013/qkd_host_control_packet_capture_service.sv:23:72: ... Location of port declaration
+   23 |  output wire begin_v,output wire[15:0]begin_epoch,output wire begin_cr,begin_available,
+      |                                                                        ^~~~~~~~~~~~~~~
+%Warning-PINMISSING: rtl/qwen_sys/host_20261013/qkd_host_service.sv:63:158: Cell has missing pin: 'epoch_busy'
+   63 |  qkd_host_control_packet_capture_service #(.ENABLE_SERVICE(ENABLE_SERVICE),.T_LINK(T_LINK),.T_HBM(T_HBM),.WDOG(WDOG),.HC_MUT(HC_MUT),.PROMPT_MUT(PROMPT_MUT))u_control(
+      |                                                                                                                                                              ^~~~~~~~~
+                     rtl/qwen_sys/host_20261013/qkd_host_control_packet_capture_service.sv:27:26: ... Location of port declaration
+   27 |  output wire begin_fault,epoch_busy,startup_allowed
+      |                          ^~~~~~~~~~
+%Warning-PINMISSING: rtl/qwen_sys/host_20261013/qkd_host_service.sv:63:158: Cell has missing pin: 'startup_allowed'
+   63 |  qkd_host_control_packet_capture_service #(.ENABLE_SERVICE(ENABLE_SERVICE),.T_LINK(T_LINK),.T_HBM(T_HBM),.WDOG(WDOG),.HC_MUT(HC_MUT),.PROMPT_MUT(PROMPT_MUT))u_control(
+      |                                                                                                                                                              ^~~~~~~~~
+                     rtl/qwen_sys/host_20261013/qkd_host_control_packet_capture_service.sv:27:37: ... Location of port declaration
+   27 |  output wire begin_fault,epoch_busy,startup_allowed
+      |                                     ^~~~~~~~~~~~~~~
+%Warning-PINMISSING: rtl/qwen_sys/host_20261013/qkd_host_service.sv:103:25: Cell has missing pin: 'groups'
+  103 |  qkd_host_service_guard u_guard(.ck_guard(ck_guard),.rst_n(host_rst_n),.raw_faults(service_faults),
+      |                         ^~~~~~~
+                     rtl/qwen_sys/host_20261013/qkd_host_service_guard.sv:14:40: ... Location of port declaration
+   14 |  output reg[31:0]status,output reg[3:0]groups,
+      |                                        ^~~~~~
+%Warning-PINMISSING: rtl/qwen_sys/host_20261013/qkd_host_splitboot_service.sv:80:192: Cell has missing pin: 'begin_v'
+   80 |  qkd_host_control_packet_capture_token_service #(.ENABLE_TOKEN(ENABLE_TOKEN),.ENABLE_SERVICE(ENABLE_SERVICE),.T_LINK(T_LINK),.T_HBM(T_HBM),.WDOG(WDOG),.HC_MUT(HC_MUT),.PROMPT_MUT(PROMPT_MUT))u_control(
+      |                                                                                                                                                                                                ^~~~~~~~~
+                     rtl/qwen_sys/host_20261013/qkd_host_control_packet_capture_token_service.sv:23:14: ... Location of port declaration
+   23 |  output wire begin_v,output wire[15:0]begin_epoch,output wire begin_cr,begin_available,
+      |              ^~~~~~~
+%Warning-PINMISSING: rtl/qwen_sys/host_20261013/qkd_host_splitboot_service.sv:80:192: Cell has missing pin: 'begin_epoch'
+   80 |  qkd_host_control_packet_capture_token_service #(.ENABLE_TOKEN(ENABLE_TOKEN),.ENABLE_SERVICE(ENABLE_SERVICE),.T_LINK(T_LINK),.T_HBM(T_HBM),.WDOG(WDOG),.HC_MUT(HC_MUT),.PROMPT_MUT(PROMPT_MUT))u_control(
+      |                                                                                                                                                                                                ^~~~~~~~~
+                     rtl/qwen_sys/host_20261013/qkd_host_control_packet_capture_token_service.sv:23:39: ... Location of port declaration
+   23 |  output wire begin_v,output wire[15:0]begin_epoch,output wire begin_cr,begin_available,
+      |                                       ^~~~~~~~~~~
+%Warning-PINMISSING: rtl/qwen_sys/host_20261013/qkd_host_splitboot_service.sv:80:192: Cell has missing pin: 'begin_cr'
+   80 |  qkd_host_control_packet_capture_token_service #(.ENABLE_TOKEN(ENABLE_TOKEN),.ENABLE_SERVICE(ENABLE_SERVICE),.T_LINK(T_LINK),.T_HBM(T_HBM),.WDOG(WDOG),.HC_MUT(HC_MUT),.PROMPT_MUT(PROMPT_MUT))u_control(
+      |                                                                                                                                                                                                ^~~~~~~~~
+                     rtl/qwen_sys/host_20261013/qkd_host_control_packet_capture_token_service.sv:23:63: ... Location of port declaration
+   23 |  output wire begin_v,output wire[15:0]begin_epoch,output wire begin_cr,begin_available,
+      |                                                               ^~~~~~~~
+%Warning-PINMISSING: rtl/qwen_sys/host_20261013/qkd_host_splitboot_service.sv:80:192: Cell has missing pin: 'begin_available'
+   80 |  qkd_host_control_packet_capture_token_service #(.ENABLE_TOKEN(ENABLE_TOKEN),.ENABLE_SERVICE(ENABLE_SERVICE),.T_LINK(T_LINK),.T_HBM(T_HBM),.WDOG(WDOG),.HC_MUT(HC_MUT),.PROMPT_MUT(PROMPT_MUT))u_control(
+      |                                                                                                                                                                                                ^~~~~~~~~
+                     rtl/qwen_sys/host_20261013/qkd_host_control_packet_capture_token_service.sv:23:72: ... Location of port declaration
+   23 |  output wire begin_v,output wire[15:0]begin_epoch,output wire begin_cr,begin_available,
+      |                                                                        ^~~~~~~~~~~~~~~
+%Warning-PINMISSING: rtl/qwen_sys/host_20261013/qkd_host_splitboot_service.sv:80:192: Cell has missing pin: 'epoch_busy'
+   80 |  qkd_host_control_packet_capture_token_service #(.ENABLE_TOKEN(ENABLE_TOKEN),.ENABLE_SERVICE(ENABLE_SERVICE),.T_LINK(T_LINK),.T_HBM(T_HBM),.WDOG(WDOG),.HC_MUT(HC_MUT),.PROMPT_MUT(PROMPT_MUT))u_control(
+      |                                                                                                                                                                                                ^~~~~~~~~
+                     rtl/qwen_sys/host_20261013/qkd_host_control_packet_capture_token_service.sv:27:26: ... Location of port declaration
+   27 |  output wire begin_fault,epoch_busy,startup_allowed,
+      |                          ^~~~~~~~~~
+%Warning-PINMISSING: rtl/qwen_sys/host_20261013/qkd_host_splitboot_service.sv:80:192: Cell has missing pin: 'startup_allowed'
+   80 |  qkd_host_control_packet_capture_token_service #(.ENABLE_TOKEN(ENABLE_TOKEN),.ENABLE_SERVICE(ENABLE_SERVICE),.T_LINK(T_LINK),.T_HBM(T_HBM),.WDOG(WDOG),.HC_MUT(HC_MUT),.PROMPT_MUT(PROMPT_MUT))u_control(
+      |                                                                                                                                                                                                ^~~~~~~~~
+                     rtl/qwen_sys/host_20261013/qkd_host_control_packet_capture_token_service.sv:27:37: ... Location of port declaration
+   27 |  output wire begin_fault,epoch_busy,startup_allowed,
+      |                                     ^~~~~~~~~~~~~~~
+%Warning-PINMISSING: rtl/qwen_sys/host_20261013/qkd_host_splitboot_service.sv:134:25: Cell has missing pin: 'groups'
+  134 |  qkd_host_service_guard u_guard(.ck_guard(ck_guard),.rst_n(host_rst_n),.raw_faults(service_faults),
+      |                         ^~~~~~~
+                     rtl/qwen_sys/host_20261013/qkd_host_service_guard.sv:14:40: ... Location of port declaration
+   14 |  output reg[31:0]status,output reg[3:0]groups,
+      |                                        ^~~~~~
+%Warning-PINMISSING: rtl/qwen_sys/host_20261013/qkd_host_token_service.sv:77:192: Cell has missing pin: 'begin_v'
+   77 |  qkd_host_control_packet_capture_token_service #(.ENABLE_TOKEN(ENABLE_TOKEN),.ENABLE_SERVICE(ENABLE_SERVICE),.T_LINK(T_LINK),.T_HBM(T_HBM),.WDOG(WDOG),.HC_MUT(HC_MUT),.PROMPT_MUT(PROMPT_MUT))u_control(
+      |                                                                                                                                                                                                ^~~~~~~~~
+                     rtl/qwen_sys/host_20261013/qkd_host_control_packet_capture_token_service.sv:23:14: ... Location of port declaration
+   23 |  output wire begin_v,output wire[15:0]begin_epoch,output wire begin_cr,begin_available,
+      |              ^~~~~~~
+%Warning-PINMISSING: rtl/qwen_sys/host_20261013/qkd_host_token_service.sv:77:192: Cell has missing pin: 'begin_epoch'
+   77 |  qkd_host_control_packet_capture_token_service #(.ENABLE_TOKEN(ENABLE_TOKEN),.ENABLE_SERVICE(ENABLE_SERVICE),.T_LINK(T_LINK),.T_HBM(T_HBM),.WDOG(WDOG),.HC_MUT(HC_MUT),.PROMPT_MUT(PROMPT_MUT))u_control(
+      |                                                                                                                                                                                                ^~~~~~~~~
+                     rtl/qwen_sys/host_20261013/qkd_host_control_packet_capture_token_service.sv:23:39: ... Location of port declaration
+   23 |  output wire begin_v,output wire[15:0]begin_epoch,output wire begin_cr,begin_available,
+      |                                       ^~~~~~~~~~~
+%Warning-PINMISSING: rtl/qwen_sys/host_20261013/qkd_host_token_service.sv:77:192: Cell has missing pin: 'begin_cr'
+   77 |  qkd_host_control_packet_capture_token_service #(.ENABLE_TOKEN(ENABLE_TOKEN),.ENABLE_SERVICE(ENABLE_SERVICE),.T_LINK(T_LINK),.T_HBM(T_HBM),.WDOG(WDOG),.HC_MUT(HC_MUT),.PROMPT_MUT(PROMPT_MUT))u_control(
+      |                                                                                                                                                                                                ^~~~~~~~~
+                     rtl/qwen_sys/host_20261013/qkd_host_control_packet_capture_token_service.sv:23:63: ... Location of port declaration
+   23 |  output wire begin_v,output wire[15:0]begin_epoch,output wire begin_cr,begin_available,
+      |                                                               ^~~~~~~~
+%Warning-PINMISSING: rtl/qwen_sys/host_20261013/qkd_host_token_service.sv:77:192: Cell has missing pin: 'begin_available'
+   77 |  qkd_host_control_packet_capture_token_service #(.ENABLE_TOKEN(ENABLE_TOKEN),.ENABLE_SERVICE(ENABLE_SERVICE),.T_LINK(T_LINK),.T_HBM(T_HBM),.WDOG(WDOG),.HC_MUT(HC_MUT),.PROMPT_MUT(PROMPT_MUT))u_control(
+      |                                                                                                                                                                                                ^~~~~~~~~
+                     rtl/qwen_sys/host_20261013/qkd_host_control_packet_capture_token_service.sv:23:72: ... Location of port declaration
+   23 |  output wire begin_v,output wire[15:0]begin_epoch,output wire begin_cr,begin_available,
+      |                                                                        ^~~~~~~~~~~~~~~
+%Warning-PINMISSING: rtl/qwen_sys/host_20261013/qkd_host_token_service.sv:77:192: Cell has missing pin: 'epoch_busy'
+   77 |  qkd_host_control_packet_capture_token_service #(.ENABLE_TOKEN(ENABLE_TOKEN),.ENABLE_SERVICE(ENABLE_SERVICE),.T_LINK(T_LINK),.T_HBM(T_HBM),.WDOG(WDOG),.HC_MUT(HC_MUT),.PROMPT_MUT(PROMPT_MUT))u_control(
+      |                                                                                                                                                                                                ^~~~~~~~~
+                     rtl/qwen_sys/host_20261013/qkd_host_control_packet_capture_token_service.sv:27:26: ... Location of port declaration
+   27 |  output wire begin_fault,epoch_busy,startup_allowed,
+      |                          ^~~~~~~~~~
+%Warning-PINMISSING: rtl/qwen_sys/host_20261013/qkd_host_token_service.sv:77:192: Cell has missing pin: 'startup_allowed'
+   77 |  qkd_host_control_packet_capture_token_service #(.ENABLE_TOKEN(ENABLE_TOKEN),.ENABLE_SERVICE(ENABLE_SERVICE),.T_LINK(T_LINK),.T_HBM(T_HBM),.WDOG(WDOG),.HC_MUT(HC_MUT),.PROMPT_MUT(PROMPT_MUT))u_control(
+      |                                                                                                                                                                                                ^~~~~~~~~
+                     rtl/qwen_sys/host_20261013/qkd_host_control_packet_capture_token_service.sv:27:37: ... Location of port declaration
+   27 |  output wire begin_fault,epoch_busy,startup_allowed,
+      |                                     ^~~~~~~~~~~~~~~
+%Warning-PINMISSING: rtl/qwen_sys/host_20261013/qkd_host_token_service.sv:125:25: Cell has missing pin: 'groups'
+  125 |  qkd_host_service_guard u_guard(.ck_guard(ck_guard),.rst_n(host_rst_n),.raw_faults(service_faults),
+      |                         ^~~~~~~
+                     rtl/qwen_sys/host_20261013/qkd_host_service_guard.sv:14:40: ... Location of port declaration
+   14 |  output reg[31:0]status,output reg[3:0]groups,
+      |                                        ^~~~~~
+%Warning-WIDTHTRUNC: rtl/qwen_sys/host_20261013/qkd_host_visibility_fence.sv:12:14: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'ENABLE' generates 32 bits.
+                                                                                  : ... note: In instance 'qkd_host_root_integrated.u_rank.u_fence'
+   12 |  generate if(!ENABLE)begin:g_off
+      |              ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/host_integrated_20261014/qkd_host_fullcontrol_observed.sv:152:41: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'MUT_FMT' generates 32 bits.
+                                                                                                  : ... note: In instance 'qkd_host_root_integrated.u_rank.u_control.u_control.u_control'
+%Warning-WIDTHEXPAND: rtl/physical/ot_qfd_prompt_sram_capture.sv:6:55: Operator VAR 'MUT' expects 32 bits on the Initial value, but Initial value's CONST '1'h0' generates 1 bits.
+                                                                     : ... note: In instance 'qkd_host_root_integrated.u_rank.u_control.u_control.u_prompt.u_core'
+    6 | module ot_qfd_prompt_sram_capture #(parameter integer MUT=0)(
+      |                                                       ^~~
+%Warning-WIDTHTRUNC: rtl/qwen_sys/system_20261008/ot_qfd_pkgctl.sv:61:27: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'DONE_REG' generates 32 bits.
+                                                                        : ... note: In instance 'qkd_host_root_integrated.u_rank.u_control.u_control.u_control.u_pkg.u_core.u_pkg'
+   61 |     wire agree = DONE_REG ? agree_q : agree_c;
+      |                           ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/system_20261008/ot_qfd_pkgctl.sv:62:30: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'DONE_REG' generates 32 bits.
+                                                                        : ... note: In instance 'qkd_host_root_integrated.u_rank.u_control.u_control.u_control.u_pkg.u_core.u_pkg'
+   62 |     wire all_done = DONE_REG ? all_done_q : all_done_c;
+      |                              ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/system_20261008/ot_qfd_pkgctl.sv:63:31: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'DONE_REG' generates 32 bits.
+                                                                        : ... note: In instance 'qkd_host_root_integrated.u_rank.u_control.u_control.u_control.u_pkg.u_core.u_pkg'
+   63 |     wire any_fault = DONE_REG ? any_fault_q : any_fault_c;
+      |                               ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/host_20261013/qkd_host_sys_csr_service.sv:119:33: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE_SERVICE' generates 32 bits.
+                                                                                  : ... note: In instance 'qkd_host_root_integrated.u_rank.u_control.u_control.u_control.u_csr.u_core'
+  119 |     wire allocate=ENABLE_SERVICE&&begin_write&&begin_available&&!epoch_busy&&!begin_fault&&!decode_busy&&!decode_request&&!decode_start&&(MUT_EPOCH==1||allocated_epoch!=16'hffff);
+      |                                 ^~
+%Warning-WIDTHTRUNC: rtl/qwen_sys/host_20261013/qkd_host_sys_csr_service.sv:136:38: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE_SERVICE' generates 32 bits.
+                                                                                  : ... note: In instance 'qkd_host_root_integrated.u_rank.u_control.u_control.u_control.u_csr.u_core'
+  136 |       begin_available<=ENABLE_SERVICE&&!epoch_busy&&!decode_busy&&!decode_request&&!decode_start&&!begin_fault&&begin_tx_available&&(MUT_EPOCH==1||allocated_epoch!=16'hffff);
+      |                                      ^~
+%Warning-WIDTHTRUNC: rtl/qwen_sys/host_20261013/qkd_host_sys_csr_service.sv:137:24: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE_SERVICE' generates 32 bits.
+                                                                                  : ... note: In instance 'qkd_host_root_integrated.u_rank.u_control.u_control.u_control.u_csr.u_core'
+  137 |       if(ENABLE_SERVICE&&service_fault)begin_fault<=1;
+      |                        ^~
+%Warning-WIDTHTRUNC: rtl/qwen_sys/host_20261013/qkd_host_sys_csr_service.sv:138:24: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE_SERVICE' generates 32 bits.
+                                                                                  : ... note: In instance 'qkd_host_root_integrated.u_rank.u_control.u_control.u_control.u_csr.u_core'
+  138 |       if(ENABLE_SERVICE&&begin_write)begin
+      |                        ^~
+%Warning-WIDTHTRUNC: rtl/qwen_sys/host_20261013/qkd_host_sys_csr_service.sv:169:43: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'ENABLE_SERVICE' generates 32 bits.
+                                                                                  : ... note: In instance 'qkd_host_root_integrated.u_rank.u_control.u_control.u_control.u_csr.u_core'
+  169 |             10'h028: rmux = ENABLE_SERVICE?{10'b0,begin_fault,broadcast_complete,epoch_busy,begin_available,2'b0,begin_epoch}:32'b0;  
+      |                                           ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/host_20261013/qkd_host_sys_csr_service.sv:170:43: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'ENABLE_SERVICE' generates 32 bits.
+                                                                                  : ... note: In instance 'qkd_host_root_integrated.u_rank.u_control.u_control.u_control.u_csr.u_core'
+  170 |             10'h029: rmux = ENABLE_SERVICE?{15'b0,ingest_permission,pending_ack8,service_ready8}:32'b0;  
+      |                                           ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/host_20261013/qkd_host_sys_csr_service.sv:171:43: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'ENABLE_SERVICE' generates 32 bits.
+                                                                                  : ... note: In instance 'qkd_host_root_integrated.u_rank.u_control.u_control.u_control.u_csr.u_core'
+  171 |             10'h02a: rmux = ENABLE_SERVICE?service_epoch8[31:0]:32'b0;
+      |                                           ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/host_20261013/qkd_host_sys_csr_service.sv:172:43: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'ENABLE_SERVICE' generates 32 bits.
+                                                                                  : ... note: In instance 'qkd_host_root_integrated.u_rank.u_control.u_control.u_control.u_csr.u_core'
+  172 |             10'h02b: rmux = ENABLE_SERVICE?service_epoch8[63:32]:32'b0;
+      |                                           ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/host_20261013/qkd_host_sys_csr_service.sv:173:43: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'ENABLE_SERVICE' generates 32 bits.
+                                                                                  : ... note: In instance 'qkd_host_root_integrated.u_rank.u_control.u_control.u_control.u_csr.u_core'
+  173 |             10'h02c: rmux = ENABLE_SERVICE?service_epoch8[95:64]:32'b0;
+      |                                           ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/host_20261013/qkd_host_sys_csr_service.sv:174:43: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'ENABLE_SERVICE' generates 32 bits.
+                                                                                  : ... note: In instance 'qkd_host_root_integrated.u_rank.u_control.u_control.u_control.u_csr.u_core'
+  174 |             10'h02d: rmux = ENABLE_SERVICE?service_epoch8[127:96]:32'b0;
+      |                                           ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/host_20261013/qkd_host_sys_csr_service.sv:182:74: Operator LT expects 32 bits on the LHS, but LHS's SEL generates 10 bits.
+                                                                                   : ... note: In instance 'qkd_host_root_integrated.u_rank.u_control.u_control.u_control.u_csr.u_core'
+  182 |             default: rmux = (s_araddr[11:2] >= 10'h008 && s_araddr[11:2] < 10'h008 + NCNT)
+      |                                                                          ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/host_20261013/qkd_host_sys_csr_service.sv:182:84: Operator ADD expects 32 bits on the LHS, but LHS's CONST '10'h8' generates 10 bits.
+                                                                                   : ... note: In instance 'qkd_host_root_integrated.u_rank.u_control.u_control.u_control.u_csr.u_core'
+  182 |             default: rmux = (s_araddr[11:2] >= 10'h008 && s_araddr[11:2] < 10'h008 + NCNT)
+      |                                                                                    ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/host_integrated_20261014/ot_host_if_pb2_observed.sv:239:34: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'ev_n' generates 5 bits.
+                                                                                             : ... note: In instance 'qkd_host_root_integrated.u_rank.u_control.u_control.u_control.u_host.u_core'
+  239 |     wire          ev_full = ev_n == EQD;
+      |                                  ^~
+%Warning-WIDTHEXPAND: rtl/qwen_sys/host_integrated_20261014/ot_host_if_pb2_observed.sv:310:66: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'eng_slot' generates 1 bits.
+                                                                                             : ... note: In instance 'qkd_host_root_integrated.u_rank.u_control.u_control.u_control.u_host.u_core'
+  310 |                 rmux = {sl_pos[si], 13'd0, inflight && (eng_slot == si), sl_st[si]};
+      |                                                                  ^~
+%Warning-WIDTHTRUNC: rtl/qwen_sys/host_integrated_20261014/ot_host_if_pb2_observed.sv:310:22: Operator ASSIGN expects 32 bits on the Assign RHS, but Assign RHS's REPLICATE generates 34 bits.
+                                                                                            : ... note: In instance 'qkd_host_root_integrated.u_rank.u_control.u_control.u_control.u_host.u_core'
+  310 |                 rmux = {sl_pos[si], 13'd0, inflight && (eng_slot == si), sl_st[si]};
+      |                      ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/host_integrated_20261014/ot_host_if_pb2_observed.sv:309:32: Operator EQ expects 32 bits on the LHS, but LHS's SEL generates 10 bits.
+                                                                                             : ... note: In instance 'qkd_host_root_integrated.u_rank.u_control.u_control.u_control.u_host.u_core'
+  309 |             if (s_araddr[11:2] == 10'h040 + 2 * si)
+      |                                ^~
+%Warning-WIDTHEXPAND: rtl/qwen_sys/host_integrated_20261014/ot_host_if_pb2_observed.sv:309:43: Operator ADD expects 32 bits on the LHS, but LHS's CONST '10'h40' generates 10 bits.
+                                                                                             : ... note: In instance 'qkd_host_root_integrated.u_rank.u_control.u_control.u_control.u_host.u_core'
+  309 |             if (s_araddr[11:2] == 10'h040 + 2 * si)
+      |                                           ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/host_integrated_20261014/ot_host_if_pb2_observed.sv:312:22: Operator ASSIGN expects 32 bits on the Assign RHS, but Assign RHS's REPLICATE generates 34 bits.
+                                                                                            : ... note: In instance 'qkd_host_root_integrated.u_rank.u_control.u_control.u_control.u_host.u_core'
+  312 |                 rmux = {sl_tag[si], sl_ngen[si]};
+      |                      ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/host_integrated_20261014/ot_host_if_pb2_observed.sv:311:32: Operator EQ expects 32 bits on the LHS, but LHS's SEL generates 10 bits.
+                                                                                             : ... note: In instance 'qkd_host_root_integrated.u_rank.u_control.u_control.u_control.u_host.u_core'
+  311 |             if (s_araddr[11:2] == 10'h041 + 2 * si)
+      |                                ^~
+%Warning-WIDTHEXPAND: rtl/qwen_sys/host_integrated_20261014/ot_host_if_pb2_observed.sv:311:43: Operator ADD expects 32 bits on the LHS, but LHS's CONST '10'h41' generates 10 bits.
+                                                                                             : ... note: In instance 'qkd_host_root_integrated.u_rank.u_control.u_control.u_control.u_host.u_core'
+  311 |             if (s_araddr[11:2] == 10'h041 + 2 * si)
+      |                                           ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/host_integrated_20261014/ot_host_if_pb2_observed.sv:355:43: Operator LTE expects 32 bits on the LHS, but LHS's VARREF 'batch_n' generates 8 bits.
+                                                                                             : ... note: In instance 'qkd_host_root_integrated.u_rank.u_control.u_control.u_control.u_host.u_core'
+  355 |         b_ok = (batch_n != 0) && (batch_n <= NSLOT);
+      |                                           ^~
+%Warning-SELRANGE: rtl/qwen_sys/host_integrated_20261014/ot_host_if_pb2_observed.sv:374:64: Selection index out of range: 65:48 outside 63:0
+                                                                                          : ... note: In instance 'qkd_host_root_integrated.u_rank.u_control.u_control.u_control.u_host.u_core'
+  374 |     wire [NW-1:0] q_max  = (FMT != 0) ? NW'(dsc0[63:48]) : dsc0[48 +: NW];
+      |                                                                ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/host_integrated_20261014/ot_host_if_pb2_observed.sv:377:35: Operator ADD expects 20 bits on the LHS, but LHS's VARREF 'q_plen' generates 18 bits.
+                                                                                             : ... note: In instance 'qkd_host_root_integrated.u_rank.u_control.u_control.u_control.u_host.u_core'
+  377 |     wire [NW+1:0] q_span = q_plen + q_max;
+      |                                   ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/host_integrated_20261014/ot_host_if_pb2_observed.sv:377:35: Operator ADD expects 20 bits on the RHS, but RHS's VARREF 'q_max' generates 18 bits.
+                                                                                             : ... note: In instance 'qkd_host_root_integrated.u_rank.u_control.u_control.u_control.u_host.u_core'
+  377 |     wire [NW+1:0] q_span = q_plen + q_max;
+      |                                   ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/host_integrated_20261014/ot_host_if_pb2_observed.sv:454:55: Operator COND expects 5 bits on the Conditional True, but Conditional True's CONST '1'h1' generates 1 bits.
+                                                                                             : ... note: In instance 'qkd_host_root_integrated.u_rank.u_control.u_control.u_control.u_host.u_core'
+  454 |             ev_n <= ev_n + ((ep_v || (dp_v && dp_ok)) ? 1'b1 : 1'b0) - (ev_pop ? 1'b1 : 1'b0);
+      |                                                       ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/host_integrated_20261014/ot_host_if_pb2_observed.sv:454:55: Operator COND expects 5 bits on the Conditional False, but Conditional False's CONST '1'h0' generates 1 bits.
+                                                                                             : ... note: In instance 'qkd_host_root_integrated.u_rank.u_control.u_control.u_control.u_host.u_core'
+  454 |             ev_n <= ev_n + ((ep_v || (dp_v && dp_ok)) ? 1'b1 : 1'b0) - (ev_pop ? 1'b1 : 1'b0);
+      |                                                       ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/host_integrated_20261014/ot_host_if_pb2_observed.sv:454:80: Operator COND expects 5 bits on the Conditional True, but Conditional True's CONST '1'h1' generates 1 bits.
+                                                                                             : ... note: In instance 'qkd_host_root_integrated.u_rank.u_control.u_control.u_control.u_host.u_core'
+  454 |             ev_n <= ev_n + ((ep_v || (dp_v && dp_ok)) ? 1'b1 : 1'b0) - (ev_pop ? 1'b1 : 1'b0);
+      |                                                                                ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/host_integrated_20261014/ot_host_if_pb2_observed.sv:454:80: Operator COND expects 5 bits on the Conditional False, but Conditional False's CONST '1'h0' generates 1 bits.
+                                                                                             : ... note: In instance 'qkd_host_root_integrated.u_rank.u_control.u_control.u_control.u_host.u_core'
+  454 |             ev_n <= ev_n + ((ep_v || (dp_v && dp_ok)) ? 1'b1 : 1'b0) - (ev_pop ? 1'b1 : 1'b0);
+      |                                                                                ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/host_integrated_20261014/ot_host_if_pb2_observed.sv:468:71: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'ev_n' generates 5 bits.
+                                                                                             : ... note: In instance 'qkd_host_root_integrated.u_rank.u_control.u_control.u_control.u_host.u_core'
+  468 |                     end else if (enable && sq_head != sq_tail && ev_n < EQD - 1) begin
+      |                                                                       ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/host_integrated_20261014/ot_host_if_pb2_observed.sv:494:89: Operator GT expects 32 bits on the LHS, but LHS's VARREF 'q_span' generates 20 bits.
+                                                                                             : ... note: In instance 'qkd_host_root_integrated.u_rank.u_control.u_control.u_control.u_host.u_core'
+  494 |                     else if (q_plen == 0 || q_max == 0 || q_plen > (1 << PLB) || q_span > CTX_MAX + 1)
+      |                                                                                         ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/host_integrated_20261014/ot_host_if_pb2_observed.sv:492:37: Operator GTE expects 32 bits on the LHS, but LHS's VARREF 'q_slot' generates 8 bits.
+                                                                                             : ... note: In instance 'qkd_host_root_integrated.u_rank.u_control.u_control.u_control.u_host.u_core'
+  492 |                     else if (q_slot >= NSLOT || sl_st[q_s] != SL_FREE || (MODE == 1 && b_st != B_IDLE))
+      |                                     ^~
+%Warning-WIDTHEXPAND: rtl/qwen_sys/host_integrated_20261014/ot_host_if_pb2_observed.sv:523:55: Operator ADD expects 66 bits on the LHS, but LHS's VARREF 'dsc1' generates 64 bits.
+                                                                                             : ... note: In instance 'qkd_host_root_integrated.u_rank.u_control.u_control.u_control.u_host.u_core'
+  523 |                         m_araddr <= (FMT != 0) ? dsc1 + 64'({pr_i + 1'b1, 2'b0}) : dsc1 + {47'd0, pr_i + 1'b1, 1'b0};
+      |                                                       ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/host_integrated_20261014/ot_host_if_pb2_observed.sv:523:55: Operator ADD expects 66 bits on the RHS, but RHS's EXTEND generates 64 bits.
+                                                                                             : ... note: In instance 'qkd_host_root_integrated.u_rank.u_control.u_control.u_control.u_host.u_core'
+  523 |                         m_araddr <= (FMT != 0) ? dsc1 + 64'({pr_i + 1'b1, 2'b0}) : dsc1 + {47'd0, pr_i + 1'b1, 1'b0};
+      |                                                       ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/host_integrated_20261014/ot_host_if_pb2_observed.sv:523:89: Operator ADD expects 66 bits on the LHS, but LHS's VARREF 'dsc1' generates 64 bits.
+                                                                                             : ... note: In instance 'qkd_host_root_integrated.u_rank.u_control.u_control.u_control.u_host.u_core'
+  523 |                         m_araddr <= (FMT != 0) ? dsc1 + 64'({pr_i + 1'b1, 2'b0}) : dsc1 + {47'd0, pr_i + 1'b1, 1'b0};
+      |                                                                                         ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/host_integrated_20261014/ot_host_if_pb2_observed.sv:523:34: Operator ASSIGNDLY expects 64 bits on the Assign RHS, but Assign RHS's COND generates 66 bits.
+                                                                                            : ... note: In instance 'qkd_host_root_integrated.u_rank.u_control.u_control.u_control.u_host.u_core'
+  523 |                         m_araddr <= (FMT != 0) ? dsc1 + 64'({pr_i + 1'b1, 2'b0}) : dsc1 + {47'd0, pr_i + 1'b1, 1'b0};
+      |                                  ^~
+%Warning-WIDTHEXPAND: rtl/qwen_sys/host_integrated_20261014/ot_host_if_pb2_observed.sv:582:55: Operator COND expects 32 bits on the Conditional True, but Conditional True's REPLICATE generates 24 bits.
+                                                                                             : ... note: In instance 'qkd_host_root_integrated.u_rank.u_control.u_control.u_control.u_host.u_core'
+  582 |                             kv_base <= (ENG_CTX == 1) ? {AW{1'b0}} : pick * KVW;
+      |                                                       ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/host_integrated_20261014/ot_host_if_pb2_observed.sv:582:37: Operator ASSIGNDLY expects 24 bits on the Assign RHS, but Assign RHS's COND generates 32 bits.
+                                                                                            : ... note: In instance 'qkd_host_root_integrated.u_rank.u_control.u_control.u_control.u_host.u_core'
+  582 |                             kv_base <= (ENG_CTX == 1) ? {AW{1'b0}} : pick * KVW;
+      |                                     ^~
+%Warning-WIDTHEXPAND: rtl/qwen_sys/host_integrated_20261014/ot_host_if_pb2_observed.sv:580:54: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'ev_n' generates 5 bits.
+                                                                                             : ... note: In instance 'qkd_host_root_integrated.u_rank.u_control.u_control.u_control.u_host.u_core'
+  580 |                         if (pick_v && enable && ev_n < EQD - 2) begin
+      |                                                      ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/host_integrated_20261014/ot_host_if_pb2_observed.sv:590:39: Operator ASSIGNDLY expects 8 bits on the Assign RHS, but Assign RHS's VARREF 'PB_READ_PIPE' generates 32 bits.
+                                                                                            : ... note: In instance 'qkd_host_root_integrated.u_rank.u_control.u_control.u_control.u_host.u_core'
+  590 |                         pb_wait_edges <= PB_READ_PIPE;
+      |                                       ^~
+%Warning-WIDTHTRUNC: rtl/qwen_sys/host_integrated_20261014/ot_host_if_pb2_observed.sv:591:47: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'PB_READ_PIPE' generates 32 bits.
+                                                                                            : ... note: In instance 'qkd_host_root_integrated.u_rank.u_control.u_control.u_control.u_host.u_core'
+  591 |                         i_st <= (PB_READ_PIPE && sl_pos[eng_slot] < sl_plen[eng_slot]) ? I_PB_WAIT : I_WAIT;
+      |                                               ^~
+%Warning-WIDTHEXPAND: rtl/physical/ot_qfd_prompt_sram_capture.sv:32:38: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'syn' generates 5 bits.
+                                                                      : ... note: In instance 'qkd_host_root_integrated.u_rank.u_control.u_control.u_prompt.u_core'
+   32 |    for(i=1;i<=23;i=i+1) if(odd && syn==i && MUT==0) c[i-1]=!x[i-1];
+      |                                      ^~
+%Warning-WIDTHTRUNC: rtl/qwen_sys/host_20261013/qkd_host_ctl_service_pins.sv:21:100: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'ENABLE_SERVICE' generates 32 bits.
+                                                                                   : ... note: In instance 'qkd_host_root_integrated.u_rank.u_control.u_control.u_control.u_pkg'
+   21 |  .ready(ready_q&&!pb_q&&role_q==0&&(MUT==1||(!abort_q&&!epoch_fault_q&&service_q&&!(|faults_q)))&&(!ENABLE_SERVICE||(MUT==2)||((&services_q)&&!block_q))),
+      |                                                                                                    ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/host_integrated_20261014/qkd_host_if_pins_observed.sv:251:35: Logical operator LOGOR expects 1 bit on the LHS, but LHS's VARREF 'MUT_DONE_GUARD' generates 32 bits.
+                                                                                              : ... note: In instance 'qkd_host_root_integrated.u_rank.u_control.u_control.u_control.u_host'
+  251 | assign eng_done_i=(MUT_DONE_GUARD || completion_armed) && pin_eng_done;
+      |                                   ^~
+%Warning-WIDTHTRUNC: rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv:47:24: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'STRAPPED' generates 32 bits.
+                                                                                                                : ... note: In instance 'qkd_host_root_integrated.u_rank.u_control.u_packet.u_ctrl'
+   47 |  wire[2:0]role=STRAPPED?did_q:3'(DIE);
+      |                        ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv:62:36: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'ENABLE_SERVICE' generates 32 bits.
+                                                                                                                : ... note: In instance 'qkd_host_root_integrated.u_rank.u_control.u_packet.u_ctrl'
+   62 |  wire peer_service_fresh=MUT==20||(!ENABLE_SERVICE?h[262:247]==0:(h[262:247]==epoch&&lepoch==epoch&&lready&&((!epoch_active&&startup_q)||pending_ack8[role]))&&(MUT==21||!ENABLE_SERVICE||!epoch_active||peer_permit));
+      |                                    ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv:62:170: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'ENABLE_SERVICE' generates 32 bits.
+                                                                                                                 : ... note: In instance 'qkd_host_root_integrated.u_rank.u_control.u_packet.u_ctrl'
+   62 |  wire peer_service_fresh=MUT==20||(!ENABLE_SERVICE?h[262:247]==0:(h[262:247]==epoch&&lepoch==epoch&&lready&&((!epoch_active&&startup_q)||pending_ack8[role]))&&(MUT==21||!ENABLE_SERVICE||!epoch_active||peer_permit));
+      |                                                                                                                                                                          ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv:63:36: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE_TOKEN' generates 32 bits.
+                                                                                                                : ... note: In instance 'qkd_host_root_integrated.u_rank.u_control.u_packet.u_ctrl'
+   63 |  wire peer_token_frame=ENABLE_TOKEN&&role!=0&&src==0&&h[7:0]==8'h22&&h[15:8]==2&&h[86]&&h[246]&&h[511:263]==0&&h[65:61]==0&&h[83:66]<18'd151936;
+      |                                    ^~
+%Warning-WIDTHTRUNC: rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv:69:19: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE_TOKEN' generates 32 bits.
+                                                                                                                : ... note: In instance 'qkd_host_root_integrated.u_rank.u_control.u_packet.u_ctrl'
+   69 |    if(ENABLE_TOKEN&&wrap_vq&&wrap_dq&&wrap_rq&&wrap_tq)reset_abort_seen<=0;
+      |                   ^~
+%Warning-WIDTHTRUNC: rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv:81:23: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE_TOKEN' generates 32 bits.
+                                                                                                                : ... note: In instance 'qkd_host_root_integrated.u_rank.u_control.u_packet.u_ctrl'
+   81 |   else if(ENABLE_TOKEN&&wrap_vq&&wrap_dq&&wrap_rq&&wrap_tq)begin peer_epoch_seen<=0;end
+      |                       ^~
+%Warning-WIDTHTRUNC: rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv:92:62: Logical operator LOGOR expects 1 bit on the LHS, but LHS's VARREF 'ENABLE_SERVICE' generates 32 bits.
+                                                                                                                : ... note: In instance 'qkd_host_root_integrated.u_rank.u_control.u_packet.u_ctrl'
+   92 |  wire[15:0]rs=h[47:32];wire hdr=(h[15:8]==1||((ENABLE_SERVICE||ENABLE_TOKEN)&&h[15:8]==2))&&h[23:19]==0&&target==(8'd1<<role);
+      |                                                              ^~
+%Warning-WIDTHTRUNC: rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv:92:62: Logical operator LOGOR expects 1 bit on the RHS, but RHS's VARREF 'ENABLE_TOKEN' generates 32 bits.
+                                                                                                                : ... note: In instance 'qkd_host_root_integrated.u_rank.u_control.u_packet.u_ctrl'
+   92 |  wire[15:0]rs=h[47:32];wire hdr=(h[15:8]==1||((ENABLE_SERVICE||ENABLE_TOKEN)&&h[15:8]==2))&&h[23:19]==0&&target==(8'd1<<role);
+      |                                                              ^~
+%Warning-WIDTHTRUNC: rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv:95:35: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE_SERVICE' generates 32 bits.
+                                                                                                                : ... note: In instance 'qkd_host_root_integrated.u_rank.u_control.u_packet.u_ctrl'
+   95 |  wire stale_service=ENABLE_SERVICE&&h[7:0]==8'h21&&h[15:8]==2&&role==0&&src!=0&&h[511:170]==0&&(h[169:154]!=epoch||(!epoch_active&&!startup_q));
+      |                                   ^~
+%Warning-WIDTHTRUNC: rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv:97:32: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE_SERVICE' generates 32 bits.
+                                                                                                                : ... note: In instance 'qkd_host_root_integrated.u_rank.u_control.u_packet.u_ctrl'
+   97 |  wire load_begin=ENABLE_SERVICE&&role==0&&!busy&&!begin_busy&&!permit_busy&&cn==0&&!cv&&begin_pending&&!fault;
+      |                                ^~
+%Warning-WIDTHTRUNC: rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv:98:31: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE_TOKEN' generates 32 bits.
+                                                                                                                : ... note: In instance 'qkd_host_root_integrated.u_rank.u_control.u_packet.u_ctrl'
+   98 |  wire load_permit=ENABLE_TOKEN&&ENABLE_SERVICE&&role==0&&!busy&&!begin_busy&&!permit_busy&&!load_begin&&permit_pending&&!fault;
+      |                               ^~
+%Warning-WIDTHTRUNC: rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv:98:31: Logical operator LOGAND expects 1 bit on the RHS, but RHS's VARREF 'ENABLE_SERVICE' generates 32 bits.
+                                                                                                                : ... note: In instance 'qkd_host_root_integrated.u_rank.u_control.u_packet.u_ctrl'
+   98 |  wire load_permit=ENABLE_TOKEN&&ENABLE_SERVICE&&role==0&&!busy&&!begin_busy&&!permit_busy&&!load_begin&&permit_pending&&!fault;
+      |                               ^~
+%Warning-WIDTHTRUNC: rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv:100:105: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE_SERVICE' generates 32 bits.
+                                                                                                                  : ... note: In instance 'qkd_host_root_integrated.u_rank.u_control.u_packet.u_ctrl'
+  100 |  wire status_changed=!sent_once||lt[92:32]!=last_tk[92:32]||lb!=last_boot||lk!=last_kst||(ENABLE_SERVICE&&(lready!=last_ready||lepoch!=last_epoch));
+      |                                                                                                         ^~
+%Warning-WIDTHTRUNC: rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv:112:141: Operator ASSIGNDLY expects 1 bits on the Assign RHS, but Assign RHS's VARREF 'ENABLE_SERVICE' generates 32 bits.
+                                                                                                                  : ... note: In instance 'qkd_host_root_integrated.u_rank.u_control.u_packet.u_ctrl'
+  112 |    begin_pending<=0;begin_busy<=0;epoch_active<=0;permit_pending<=0;permit_busy<=0;permit_sent<=0;peer_permit<=0;begin_cr<=0;begin_available<=ENABLE_SERVICE;
+      |                                                                                                                                             ^~
+%Warning-WIDTHTRUNC: rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv:122:60: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE_TOKEN' generates 32 bits.
+                                                                                                                 : ... note: In instance 'qkd_host_root_integrated.u_rank.u_control.u_packet.u_ctrl'
+  122 |    allocator_fault_q<=token_allocator_fault;if(ENABLE_TOKEN&&allocator_fault_q&&MUT!=17)fault<=1;allocator_sampled<=1;wrap_vq<=token_wrap_fence_valid;wrap_dq<=token_wrap_drained;wrap_rq<=token_wrap_link_reset_seen;wrap_tq<=token_wrap_retraining_done;
+      |                                                            ^~
+%Warning-WIDTHTRUNC: rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv:123:19: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE_TOKEN' generates 32 bits.
+                                                                                                                 : ... note: In instance 'qkd_host_root_integrated.u_rank.u_control.u_packet.u_ctrl'
+  123 |    if(ENABLE_TOKEN&&wrap_vq&&!(wrap_dq&&wrap_rq&&wrap_tq))fault<=1;
+      |                   ^~
+%Warning-WIDTHTRUNC: rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv:124:19: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE_TOKEN' generates 32 bits.
+                                                                                                                 : ... note: In instance 'qkd_host_root_integrated.u_rank.u_control.u_packet.u_ctrl'
+  124 |    if(ENABLE_TOKEN&&wrap_vq&&wrap_dq&&wrap_rq&&wrap_tq)begin
+      |                   ^~
+%Warning-WIDTHTRUNC: rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv:137:35: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE_SERVICE' generates 32 bits.
+                                                                                                                 : ... note: In instance 'qkd_host_root_integrated.u_rank.u_control.u_packet.u_ctrl'
+  137 |    begin_available<=ENABLE_SERVICE&&role==0&&!busy&&cn==0&&!cv&&!(ENABLE_TOKEN&&(abort_seen||abort_q||reset_abort_seen))&&!begin_pending&&!begin_busy&&!permit_pending&&!permit_busy&&(!epoch_active||(&service_ready8));
+      |                                   ^~
+%Warning-WIDTHTRUNC: rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv:137:79: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE_TOKEN' generates 32 bits.
+                                                                                                                 : ... note: In instance 'qkd_host_root_integrated.u_rank.u_control.u_packet.u_ctrl'
+  137 |    begin_available<=ENABLE_SERVICE&&role==0&&!busy&&cn==0&&!cv&&!(ENABLE_TOKEN&&(abort_seen||abort_q||reset_abort_seen))&&!begin_pending&&!begin_busy&&!permit_pending&&!permit_busy&&(!epoch_active||(&service_ready8));
+      |                                                                               ^~
+%Warning-WIDTHTRUNC: rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv:138:37: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE_SERVICE' generates 32 bits.
+                                                                                                                 : ... note: In instance 'qkd_host_root_integrated.u_rank.u_control.u_packet.u_ctrl'
+  138 |    ingest_permission<=ENABLE_SERVICE&&epoch_active&&!fault&&(!ENABLE_TOKEN?(&pending_ack8):(role==0?(&pending_ack8):(pending_ack8[role]&&(peer_permit||MUT==21))));
+      |                                     ^~
+%Warning-WIDTHTRUNC: rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv:138:62: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'ENABLE_TOKEN' generates 32 bits.
+                                                                                                                 : ... note: In instance 'qkd_host_root_integrated.u_rank.u_control.u_packet.u_ctrl'
+  138 |    ingest_permission<=ENABLE_SERVICE&&epoch_active&&!fault&&(!ENABLE_TOKEN?(&pending_ack8):(role==0?(&pending_ack8):(pending_ack8[role]&&(peer_permit||MUT==21))));
+      |                                                              ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv:139:19: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE_TOKEN' generates 32 bits.
+                                                                                                                 : ... note: In instance 'qkd_host_root_integrated.u_rank.u_control.u_packet.u_ctrl'
+  139 |    if(ENABLE_TOKEN&&ENABLE_SERVICE&&role==0&&epoch_active&&(&pending_ack8)&&!permit_sent&&!permit_busy&&!begin_pending&&!begin_busy)permit_pending<=1;
+      |                   ^~
+%Warning-WIDTHTRUNC: rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv:139:19: Logical operator LOGAND expects 1 bit on the RHS, but RHS's VARREF 'ENABLE_SERVICE' generates 32 bits.
+                                                                                                                 : ... note: In instance 'qkd_host_root_integrated.u_rank.u_control.u_packet.u_ctrl'
+  139 |    if(ENABLE_TOKEN&&ENABLE_SERVICE&&role==0&&epoch_active&&(&pending_ack8)&&!permit_sent&&!permit_busy&&!begin_pending&&!begin_busy)permit_pending<=1;
+      |                   ^~
+%Warning-WIDTHTRUNC: rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv:140:21: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE_SERVICE' generates 32 bits.
+                                                                                                                 : ... note: In instance 'qkd_host_root_integrated.u_rank.u_control.u_packet.u_ctrl'
+  140 |    if(ENABLE_SERVICE&&lepoch==epoch)begin
+      |                     ^~
+%Warning-WIDTHTRUNC: rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv:147:10: Logical operator LOGAND expects 1 bit on the RHS, but RHS's VARREF 'ENABLE_SERVICE' generates 32 bits.
+                                                                                                                 : ... note: In instance 'qkd_host_root_integrated.u_rank.u_control.u_packet.u_ctrl'
+  147 |    if(biv&&ENABLE_SERVICE)begin
+      |          ^~
+%Warning-WIDTHTRUNC: rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv:157:17: Logical operator LOGAND expects 1 bit on the RHS, but RHS's VARREF 'STRAPPED' generates 32 bits.
+                                                                                                                 : ... note: In instance 'qkd_host_root_integrated.u_rank.u_control.u_packet.u_ctrl'
+  157 |    if(role_valid&&STRAPPED&&die_capture!=did_q)fault<=1;rv<=rx_v;tc<=tx_cr;cv<=cmd_v;lt<=local_tk;lk<=local_kst;lb<=local_boot;rx_cr<=take;cmd_cr<=0;tx_v<=0;
+      |                 ^~
+%Warning-WIDTHTRUNC: rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv:167:19: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE_TOKEN' generates 32 bits.
+                                                                                                                 : ... note: In instance 'qkd_host_root_integrated.u_rank.u_control.u_packet.u_ctrl'
+  167 |    if(ENABLE_TOKEN&&abort_q)abort_seen<=1;
+      |                   ^~
+%Warning-WIDTHTRUNC: rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv:169:19: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE_TOKEN' generates 32 bits.
+                                                                                                                 : ... note: In instance 'qkd_host_root_integrated.u_rank.u_control.u_packet.u_ctrl'
+  169 |    if(ENABLE_TOKEN&&grant_wait&&request_accepted&&grant_valid_q&&grant_low&&!fault&&(MUT==12||!(abort_seen||abort_q||reset_abort_seen)))begin
+      |                   ^~
+%Warning-WIDTHTRUNC: rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv:178:19: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE_TOKEN' generates 32 bits.
+                                                                                                                 : ... note: In instance 'qkd_host_root_integrated.u_rank.u_control.u_packet.u_ctrl'
+  178 |    if(ENABLE_TOKEN&&(abort_seen||abort_q||reset_abort_seen)&&retained_request&&allocated_vq&&!cancel_consumed)begin
+      |                   ^~
+%Warning-WIDTHTRUNC: rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv:190:19: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE_TOKEN' generates 32 bits.
+                                                                                                                 : ... note: In instance 'qkd_host_root_integrated.u_rank.u_control.u_packet.u_ctrl'
+  190 |    if(ENABLE_TOKEN&&(abort_seen||abort_q||reset_abort_seen)&&busy&&active[38]&&MUT!=12)begin
+      |                   ^~
+%Warning-WIDTHTRUNC: rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv:197:56: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'ENABLE_SERVICE' generates 32 bits.
+                                                                                                                 : ... note: In instance 'qkd_host_root_integrated.u_rank.u_control.u_packet.u_ctrl'
+  197 |     active<=cq[cr];active_service_epoch<=ENABLE_SERVICE?epoch:16'd0;local_emitted<=0;busy<=1;dst<=1;cr<=cr+1'b1;
+      |                                                        ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv:199:20: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE_TOKEN' generates 32 bits.
+                                                                                                                 : ... note: In instance 'qkd_host_root_integrated.u_rank.u_control.u_packet.u_ctrl'
+  199 |     if(ENABLE_TOKEN&&cq[cr][38])begin
+      |                    ^~
+%Warning-WIDTHTRUNC: rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv:225:6: Logical operator IF expects 1 bit on the If, but If's VARREF 'ENABLE_SERVICE' generates 32 bits.
+                                                                                                                : ... note: In instance 'qkd_host_root_integrated.u_rank.u_control.u_packet.u_ctrl'
+  225 |      if(ENABLE_SERVICE)begin
+      |      ^~
+%Warning-WIDTHTRUNC: rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv:222:9: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'ENABLE_SERVICE' generates 32 bits.
+                                                                                                                : ... note: In instance 'qkd_host_root_integrated.u_rank.u_control.u_packet.u_ctrl'
+  222 |      if(!ENABLE_SERVICE||MUT==3||h[169:154]==epoch)begin
+      |         ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv:235:21: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE_TOKEN' generates 32 bits.
+                                                                                                                 : ... note: In instance 'qkd_host_root_integrated.u_rank.u_control.u_packet.u_ctrl'
+  235 |      if(ENABLE_TOKEN&&h[64])begin
+      |                     ^~
+%Warning-WIDTHTRUNC: rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv:248:62: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE_TOKEN' generates 32 bits.
+                                                                                                                 : ... note: In instance 'qkd_host_root_integrated.u_rank.u_control.u_packet.u_ctrl'
+  248 |      else begin hc<=h[229:48];token_epoch_valid<=ENABLE_TOKEN&&h[246];token_epoch<=h[245:230];end
+      |                                                              ^~
+%Warning-WIDTHTRUNC: rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv:247:21: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE_TOKEN' generates 32 bits.
+                                                                                                                 : ... note: In instance 'qkd_host_root_integrated.u_rank.u_control.u_packet.u_ctrl'
+  247 |      if(ENABLE_TOKEN&&h[86]&&((abort_seen||abort_q||reset_abort_seen)||!peer_epoch_fresh||!peer_service_fresh))fault<=1;
+      |                     ^~
+%Warning-WIDTHTRUNC: rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv:244:9: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'ENABLE_TOKEN' generates 32 bits.
+                                                                                                                : ... note: In instance 'qkd_host_root_integrated.u_rank.u_control.u_packet.u_ctrl'
+  244 |       ((!ENABLE_TOKEN&&h[15:8]==1&&h[511:230]==0)||
+      |         ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv:245:21: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE_TOKEN' generates 32 bits.
+                                                                                                                 : ... note: In instance 'qkd_host_root_integrated.u_rank.u_control.u_packet.u_ctrl'
+  245 |        (ENABLE_TOKEN&&((!h[86]&&h[15:8]==1&&h[511:230]==0)||
+      |                     ^~
+%Warning-WIDTHTRUNC: rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv:233:31: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE_SERVICE' generates 32 bits.
+                                                                                                                 : ... note: In instance 'qkd_host_root_integrated.u_rank.u_control.u_packet.u_ctrl'
+  233 |     end else if(ENABLE_SERVICE&&h[7:0]==8'h23&&h[15:8]==2&&role!=0&&src==0&&
+      |                               ^~
+%Warning-WIDTHTRUNC: rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv:234:9: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'ENABLE_TOKEN' generates 32 bits.
+                                                                                                                : ... note: In instance 'qkd_host_root_integrated.u_rank.u_control.u_packet.u_ctrl'
+  234 |       ((!ENABLE_TOKEN&&h[511:64]==0)||(ENABLE_TOKEN&&h[511:65]==0)))begin
+      |         ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv:234:52: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE_TOKEN' generates 32 bits.
+                                                                                                                 : ... note: In instance 'qkd_host_root_integrated.u_rank.u_control.u_packet.u_ctrl'
+  234 |       ((!ENABLE_TOKEN&&h[511:64]==0)||(ENABLE_TOKEN&&h[511:65]==0)))begin
+      |                                                    ^~
+%Warning-WIDTHTRUNC: rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv:221:9: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'ENABLE_SERVICE' generates 32 bits.
+                                                                                                                : ... note: In instance 'qkd_host_root_integrated.u_rank.u_control.u_packet.u_ctrl'
+  221 |       ((!ENABLE_SERVICE&&h[15:8]==1&&h[511:153]==0)||(ENABLE_SERVICE&&h[15:8]==2&&h[511:170]==0)))begin
+      |         ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv:221:69: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE_SERVICE' generates 32 bits.
+                                                                                                                 : ... note: In instance 'qkd_host_root_integrated.u_rank.u_control.u_packet.u_ctrl'
+  221 |       ((!ENABLE_SERVICE&&h[15:8]==1&&h[511:153]==0)||(ENABLE_SERVICE&&h[15:8]==2&&h[511:170]==0)))begin
+      |                                                                     ^~
+%Warning-WIDTHTRUNC: rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv:262:33: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE_TOKEN' generates 32 bits.
+                                                                                                                 : ... note: In instance 'qkd_host_root_integrated.u_rank.u_control.u_packet.u_ctrl'
+  262 |      tx_v<=1;tx_d<=(ENABLE_TOKEN&&active_epoch_valid?512'h0222:512'h0122)|((512'd1<<dst)<<24)|(512'(seq_tx)<<32)|(512'(active)<<48)|
+      |                                 ^~
+%Warning-WIDTHTRUNC: rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv:263:20: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE_TOKEN' generates 32 bits.
+                                                                                                                 : ... note: In instance 'qkd_host_root_integrated.u_rank.u_control.u_packet.u_ctrl'
+  263 |       (ENABLE_TOKEN&&active_epoch_valid?((512'(active_epoch^(MUT==15?16'd1:16'd0))<<230)|(512'd1<<246)|(512'(active_service_epoch)<<247)):512'd0);
+      |                    ^~
+%Warning-WIDTHEXPAND: rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv:263:69: Operator COND expects 512 bits on the Conditional True, but Conditional True's CONST '16'h1' generates 16 bits.
+                                                                                                                  : ... note: In instance 'qkd_host_root_integrated.u_rank.u_control.u_packet.u_ctrl'
+  263 |       (ENABLE_TOKEN&&active_epoch_valid?((512'(active_epoch^(MUT==15?16'd1:16'd0))<<230)|(512'd1<<246)|(512'(active_service_epoch)<<247)):512'd0);
+      |                                                                     ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv:263:69: Operator COND expects 512 bits on the Conditional False, but Conditional False's CONST '16'h0' generates 16 bits.
+                                                                                                                  : ... note: In instance 'qkd_host_root_integrated.u_rank.u_control.u_packet.u_ctrl'
+  263 |       (ENABLE_TOKEN&&active_epoch_valid?((512'(active_epoch^(MUT==15?16'd1:16'd0))<<230)|(512'd1<<246)|(512'(active_service_epoch)<<247)):512'd0);
+      |                                                                     ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv:269:35: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'ENABLE_SERVICE' generates 32 bits.
+                                                                                                                 : ... note: In instance 'qkd_host_root_integrated.u_rank.u_control.u_packet.u_ctrl'
+  269 |      tx_v<=1;tx_d<=(ENABLE_SERVICE?512'h01000221:512'h01000121)|(512'(role)<<16)|(512'(seq_tx)<<32)|(512'(lt)<<48)|(512'(lk)<<141)|(512'(lb)<<151)|(ENABLE_SERVICE?((512'(lready)<<153)|(512'(lepoch)<<154)):512'b0);
+      |                                   ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv:269:163: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'ENABLE_SERVICE' generates 32 bits.
+                                                                                                                  : ... note: In instance 'qkd_host_root_integrated.u_rank.u_control.u_packet.u_ctrl'
+  269 |      tx_v<=1;tx_d<=(ENABLE_SERVICE?512'h01000221:512'h01000121)|(512'(role)<<16)|(512'(seq_tx)<<32)|(512'(lt)<<48)|(512'(lk)<<141)|(512'(lb)<<151)|(ENABLE_SERVICE?((512'(lready)<<153)|(512'(lepoch)<<154)):512'b0);
+      |                                                                                                                                                                   ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv:271:23: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE_SERVICE' generates 32 bits.
+                                                                                                                 : ... note: In instance 'qkd_host_root_integrated.u_rank.u_control.u_packet.u_ctrl'
+  271 |      if(ENABLE_SERVICE&&epoch_active&&lepoch==epoch&&!lready)begin
+      |                       ^~
+%Warning-WIDTHTRUNC: rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv:261:59: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE_TOKEN' generates 32 bits.
+                                                                                                                 : ... note: In instance 'qkd_host_root_integrated.u_rank.u_control.u_packet.u_ctrl'
+  261 |     end else if(role==0&&busy&&!grant_wait&&!(ENABLE_TOKEN&&(abort_seen||abort_q||reset_abort_seen)&&active[38]))begin
+      |                                                           ^~
+%Warning-WIDTHTRUNC: rtl/qwen_sys/host_20261013/qkd_host_rx_class.sv:18:42: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'STRAPPED' generates 32 bits.
+                                                                          : ... note: In instance 'qkd_host_root_integrated.u_rank.u_control.u_packet.u_rx'
+   18 |  wire htake=rv&&header&&cls==0&&!fault&&(!STRAPPED||role==0),ctake=rv&&header&&cls==1&&!fault;
+      |                                          ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/host_20261013/qkd_host_rx_class.sv:33:26: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'STRAPPED' generates 32 bits.
+                                                                          : ... note: In instance 'qkd_host_root_integrated.u_rank.u_control.u_packet.u_rx'
+   33 |     if(!header||(STRAPPED&&cls==0&&role!=0))fault<=1;
+      |                          ^~
+%Warning-WIDTHEXPAND: rtl/physical/ot_qwen_async_fifo_w.sv:123:53: Operator ADD expects 32 bits on the RHS, but RHS's SEL generates 2 bits.
+                                                                 : ... note: In instance 'qkd_host_root_integrated.u_rank.u_bridge.u_done.g_afw.u_af'
+  123 |                 wire [WIDTH-1:0] grow = mem[gg * GS + rd_bc[gs][GA-1:0]];
+      |                                                     ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/codex/q-host-record-parent-179d/rtl/qwen_sys/missing_masters_20261007/ot_qfd_link_adapter.sv:112:41: Operator NEQ expects 32 bits on the LHS, but LHS's VARREF 'sk_res' generates 3 bits.
+                                                                                                                                                 : ... note: In instance 'qkd_host_root_integrated.u_rank.u_adapter.g_slice[7].u_slice.u_body'
+  112 |     wire rd_go = (rb_n != 0) && (sk_res != SKD);
+      |                                         ^~
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/codex/q-host-record-parent-179d/rtl/qwen_sys/missing_masters_20261007/ot_qfd_link_adapter.sv:141:60: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'iwp' generates 2 bits.
+                                                                                                                                                 : ... note: In instance 'qkd_host_root_integrated.u_rank.u_adapter.g_slice[7].u_slice.u_body'
+  141 |                 if (ci_v_g[g]) ib_wp_g[g*IA +: IA] <= (iwp == IBUF - 1) ? 0 : iwp + 1'b1;
+      |                                                            ^~
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/codex/q-host-record-parent-179d/rtl/qwen_sys/missing_masters_20261007/ot_qfd_link_adapter.sv:142:55: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'irp' generates 2 bits.
+                                                                                                                                                 : ... note: In instance 'qkd_host_root_integrated.u_rank.u_adapter.g_slice[7].u_slice.u_body'
+  142 |                 if (send) ib_rp_g[g*IA +: IA] <= (irp == IBUF - 1) ? 0 : irp + 1'b1;
+      |                                                       ^~
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/codex/q-host-record-parent-179d/rtl/qwen_sys/missing_masters_20261007/ot_qfd_link_adapter.sv:143:75: Operator EQ expects 32 bits on the LHS, but LHS's SEL generates 9 bits.
+                                                                                                                                                 : ... note: In instance 'qkd_host_root_integrated.u_rank.u_adapter.g_slice[7].u_slice.u_body'
+  143 |                 if (rx_pay_v) rb_wp_g[g*RA +: RA] <= (rb_wp_g[g*RA +: RA] == RXD - 1) ? 0 : rb_wp_g[g*RA +: RA] + 1'b1;
+      |                                                                           ^~
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/codex/q-host-record-parent-179d/rtl/qwen_sys/missing_masters_20261007/ot_qfd_link_adapter.sv:144:72: Operator EQ expects 32 bits on the LHS, but LHS's SEL generates 9 bits.
+                                                                                                                                                 : ... note: In instance 'qkd_host_root_integrated.u_rank.u_adapter.g_slice[7].u_slice.u_body'
+  144 |                 if (rd_go) rb_rp_g[g*RA +: RA] <= (rb_rp_g[g*RA +: RA] == RXD - 1) ? 0 : rb_rp_g[g*RA +: RA] + 1'b1;
+      |                                                                        ^~
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/codex/q-host-record-parent-179d/rtl/qwen_sys/missing_masters_20261007/ot_qfd_link_adapter.sv:146:61: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'swp' generates 2 bits.
+                                                                                                                                                 : ... note: In instance 'qkd_host_root_integrated.u_rank.u_adapter.g_slice[7].u_slice.u_body'
+  146 |                 if (rd_v1_g[g]) sk_wp_g[g*SA +: SA] <= (swp == SKD - 1) ? 0 : swp + 1'b1;
+      |                                                             ^~
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/codex/q-host-record-parent-179d/rtl/qwen_sys/missing_masters_20261007/ot_qfd_link_adapter.sv:147:87: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'srp' generates 2 bits.
+                                                                                                                                                 : ... note: In instance 'qkd_host_root_integrated.u_rank.u_adapter.g_slice[7].u_slice.u_body'
+  147 |                 if (pop_rb && !(MUT == 2 && g == NG - 1)) sk_rp_g[g*SA +: SA] <= (srp == SKD - 1) ? 0 : srp + 1'b1;
+      |                                                                                       ^~
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/codex/q-host-record-parent-179d/rtl/qwen_sys/missing_masters_20261007/ot_qfd_link_adapter.sv:159:21: Operator ASSIGNDLY expects 11 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                                                                                                                : ... note: In instance 'qkd_host_root_integrated.u_rank.u_adapter.g_slice[7].u_slice.u_body'
+  159 |             tx_cred <= RXD + ((MUT == 1) ? 1 : 0); cr_owed <= 0;
+      |                     ^~
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/codex/q-host-record-parent-179d/rtl/qwen_sys/missing_masters_20261007/ot_qfd_link_adapter.sv:160:31: Operator ASSIGNDLY expects 4 bits on the Assign RHS, but Assign RHS's VARREF 'OCR' generates 32 bits.
+                                                                                                                                                : ... note: In instance 'qkd_host_root_integrated.u_rank.u_adapter.g_slice[7].u_slice.u_body'
+  160 |             rb_n <= 0; o_cred <= OCR; rr_v <= 1'b0;
+      |                               ^~
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/codex/q-host-record-parent-179d/rtl/qwen_sys/missing_masters_20261007/ot_qfd_link_adapter.sv:165:34: Operator COND expects 3 bits on the Conditional True, but Conditional True's CONST '1'h1' generates 1 bits.
+                                                                                                                                                 : ... note: In instance 'qkd_host_root_integrated.u_rank.u_adapter.g_slice[7].u_slice.u_body'
+  165 |             ib_n <= ib_n + (ci_v ? 1'b1 : 1'b0) - (send ? 1'b1 : 1'b0);
+      |                                  ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/codex/q-host-record-parent-179d/rtl/qwen_sys/missing_masters_20261007/ot_qfd_link_adapter.sv:165:34: Operator COND expects 3 bits on the Conditional False, but Conditional False's CONST '1'h0' generates 1 bits.
+                                                                                                                                                 : ... note: In instance 'qkd_host_root_integrated.u_rank.u_adapter.g_slice[7].u_slice.u_body'
+  165 |             ib_n <= ib_n + (ci_v ? 1'b1 : 1'b0) - (send ? 1'b1 : 1'b0);
+      |                                  ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/codex/q-host-record-parent-179d/rtl/qwen_sys/missing_masters_20261007/ot_qfd_link_adapter.sv:165:57: Operator COND expects 3 bits on the Conditional True, but Conditional True's CONST '1'h1' generates 1 bits.
+                                                                                                                                                 : ... note: In instance 'qkd_host_root_integrated.u_rank.u_adapter.g_slice[7].u_slice.u_body'
+  165 |             ib_n <= ib_n + (ci_v ? 1'b1 : 1'b0) - (send ? 1'b1 : 1'b0);
+      |                                                         ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/codex/q-host-record-parent-179d/rtl/qwen_sys/missing_masters_20261007/ot_qfd_link_adapter.sv:165:57: Operator COND expects 3 bits on the Conditional False, but Conditional False's CONST '1'h0' generates 1 bits.
+                                                                                                                                                 : ... note: In instance 'qkd_host_root_integrated.u_rank.u_adapter.g_slice[7].u_slice.u_body'
+  165 |             ib_n <= ib_n + (ci_v ? 1'b1 : 1'b0) - (send ? 1'b1 : 1'b0);
+      |                                                         ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/codex/q-host-record-parent-179d/rtl/qwen_sys/missing_masters_20261007/ot_qfd_link_adapter.sv:166:30: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'ib_n' generates 3 bits.
+                                                                                                                                                 : ... note: In instance 'qkd_host_root_integrated.u_rank.u_adapter.g_slice[7].u_slice.u_body'
+  166 |             if (ci_v && ib_n == IBUF && !send) f_die_ovr <= 1'b1;
+      |                              ^~
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/codex/q-host-record-parent-179d/rtl/qwen_sys/missing_masters_20261007/ot_qfd_link_adapter.sv:171:64: Operator COND expects 10 bits on the Conditional True, but Conditional True's CONST '1'h1' generates 1 bits.
+                                                                                                                                                 : ... note: In instance 'qkd_host_root_integrated.u_rank.u_adapter.g_slice[7].u_slice.u_body'
+  171 |             cr_owed <= (flit ? {CRW{1'b0}} : cr_owed) + (rd_go ? 1'b1 : 1'b0);    
+      |                                                                ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/codex/q-host-record-parent-179d/rtl/qwen_sys/missing_masters_20261007/ot_qfd_link_adapter.sv:171:64: Operator COND expects 10 bits on the Conditional False, but Conditional False's CONST '1'h0' generates 1 bits.
+                                                                                                                                                 : ... note: In instance 'qkd_host_root_integrated.u_rank.u_adapter.g_slice[7].u_slice.u_body'
+  171 |             cr_owed <= (flit ? {CRW{1'b0}} : cr_owed) + (rd_go ? 1'b1 : 1'b0);    
+      |                                                                ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/codex/q-host-record-parent-179d/rtl/qwen_sys/missing_masters_20261007/ot_qfd_link_adapter.sv:172:40: Operator COND expects 11 bits on the Conditional True, but Conditional True's CONST '1'h1' generates 1 bits.
+                                                                                                                                                 : ... note: In instance 'qkd_host_root_integrated.u_rank.u_adapter.g_slice[7].u_slice.u_body'
+  172 |             tx_cred <= tx_cred - (send ? 1'b1 : 1'b0) + (rq_v ? rx_cr : {CRW{1'b0}});
+      |                                        ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/codex/q-host-record-parent-179d/rtl/qwen_sys/missing_masters_20261007/ot_qfd_link_adapter.sv:172:40: Operator COND expects 11 bits on the Conditional False, but Conditional False's CONST '1'h0' generates 1 bits.
+                                                                                                                                                 : ... note: In instance 'qkd_host_root_integrated.u_rank.u_adapter.g_slice[7].u_slice.u_body'
+  172 |             tx_cred <= tx_cred - (send ? 1'b1 : 1'b0) + (rq_v ? rx_cr : {CRW{1'b0}});
+      |                                        ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/codex/q-host-record-parent-179d/rtl/qwen_sys/missing_masters_20261007/ot_qfd_link_adapter.sv:172:63: Operator COND expects 11 bits on the Conditional True, but Conditional True's VARREF 'rx_cr' generates 10 bits.
+                                                                                                                                                 : ... note: In instance 'qkd_host_root_integrated.u_rank.u_adapter.g_slice[7].u_slice.u_body'
+  172 |             tx_cred <= tx_cred - (send ? 1'b1 : 1'b0) + (rq_v ? rx_cr : {CRW{1'b0}});
+      |                                                               ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/codex/q-host-record-parent-179d/rtl/qwen_sys/missing_masters_20261007/ot_qfd_link_adapter.sv:172:63: Operator COND expects 11 bits on the Conditional False, but Conditional False's REPLICATE generates 10 bits.
+                                                                                                                                                 : ... note: In instance 'qkd_host_root_integrated.u_rank.u_adapter.g_slice[7].u_slice.u_body'
+  172 |             tx_cred <= tx_cred - (send ? 1'b1 : 1'b0) + (rq_v ? rx_cr : {CRW{1'b0}});
+      |                                                               ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/codex/q-host-record-parent-179d/rtl/qwen_sys/missing_masters_20261007/ot_qfd_link_adapter.sv:173:33: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'tx_cred' generates 11 bits.
+                                                                                                                                                 : ... note: In instance 'qkd_host_root_integrated.u_rank.u_adapter.g_slice[7].u_slice.u_body'
+  173 |             if (rq_v && tx_cred + rx_cr > RXD + ((MUT == 1) ? 1 : 0)) f_cred <= 1'b1;
+      |                                 ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/codex/q-host-record-parent-179d/rtl/qwen_sys/missing_masters_20261007/ot_qfd_link_adapter.sv:173:33: Operator ADD expects 32 bits on the RHS, but RHS's VARREF 'rx_cr' generates 10 bits.
+                                                                                                                                                 : ... note: In instance 'qkd_host_root_integrated.u_rank.u_adapter.g_slice[7].u_slice.u_body'
+  173 |             if (rq_v && tx_cred + rx_cr > RXD + ((MUT == 1) ? 1 : 0)) f_cred <= 1'b1;
+      |                                 ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/codex/q-host-record-parent-179d/rtl/qwen_sys/missing_masters_20261007/ot_qfd_link_adapter.sv:179:38: Operator COND expects 10 bits on the Conditional True, but Conditional True's CONST '1'h1' generates 1 bits.
+                                                                                                                                                 : ... note: In instance 'qkd_host_root_integrated.u_rank.u_adapter.g_slice[7].u_slice.u_body'
+  179 |             rb_n <= rb_n + (rx_pay_v ? 1'b1 : 1'b0) - (rd_go ? 1'b1 : 1'b0);
+      |                                      ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/codex/q-host-record-parent-179d/rtl/qwen_sys/missing_masters_20261007/ot_qfd_link_adapter.sv:179:38: Operator COND expects 10 bits on the Conditional False, but Conditional False's CONST '1'h0' generates 1 bits.
+                                                                                                                                                 : ... note: In instance 'qkd_host_root_integrated.u_rank.u_adapter.g_slice[7].u_slice.u_body'
+  179 |             rb_n <= rb_n + (rx_pay_v ? 1'b1 : 1'b0) - (rd_go ? 1'b1 : 1'b0);
+      |                                      ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/codex/q-host-record-parent-179d/rtl/qwen_sys/missing_masters_20261007/ot_qfd_link_adapter.sv:179:62: Operator COND expects 10 bits on the Conditional True, but Conditional True's CONST '1'h1' generates 1 bits.
+                                                                                                                                                 : ... note: In instance 'qkd_host_root_integrated.u_rank.u_adapter.g_slice[7].u_slice.u_body'
+  179 |             rb_n <= rb_n + (rx_pay_v ? 1'b1 : 1'b0) - (rd_go ? 1'b1 : 1'b0);
+      |                                                              ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/codex/q-host-record-parent-179d/rtl/qwen_sys/missing_masters_20261007/ot_qfd_link_adapter.sv:179:62: Operator COND expects 10 bits on the Conditional False, but Conditional False's CONST '1'h0' generates 1 bits.
+                                                                                                                                                 : ... note: In instance 'qkd_host_root_integrated.u_rank.u_adapter.g_slice[7].u_slice.u_body'
+  179 |             rb_n <= rb_n + (rx_pay_v ? 1'b1 : 1'b0) - (rd_go ? 1'b1 : 1'b0);
+      |                                                              ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/codex/q-host-record-parent-179d/rtl/qwen_sys/missing_masters_20261007/ot_qfd_link_adapter.sv:180:34: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'rb_n' generates 10 bits.
+                                                                                                                                                 : ... note: In instance 'qkd_host_root_integrated.u_rank.u_adapter.g_slice[7].u_slice.u_body'
+  180 |             if (rx_pay_v && rb_n == RXD && !rd_go) f_link_ovr <= 1'b1;
+      |                                  ^~
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/codex/q-host-record-parent-179d/rtl/qwen_sys/missing_masters_20261007/ot_qfd_link_adapter.sv:184:35: Operator COND expects 3 bits on the Conditional True, but Conditional True's CONST '1'h1' generates 1 bits.
+                                                                                                                                                 : ... note: In instance 'qkd_host_root_integrated.u_rank.u_adapter.g_slice[7].u_slice.u_body'
+  184 |             sk_n <= sk_n + (rd_v1 ? 1'b1 : 1'b0) - (pop_rb ? 1'b1 : 1'b0);
+      |                                   ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/codex/q-host-record-parent-179d/rtl/qwen_sys/missing_masters_20261007/ot_qfd_link_adapter.sv:184:35: Operator COND expects 3 bits on the Conditional False, but Conditional False's CONST '1'h0' generates 1 bits.
+                                                                                                                                                 : ... note: In instance 'qkd_host_root_integrated.u_rank.u_adapter.g_slice[7].u_slice.u_body'
+  184 |             sk_n <= sk_n + (rd_v1 ? 1'b1 : 1'b0) - (pop_rb ? 1'b1 : 1'b0);
+      |                                   ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/codex/q-host-record-parent-179d/rtl/qwen_sys/missing_masters_20261007/ot_qfd_link_adapter.sv:184:60: Operator COND expects 3 bits on the Conditional True, but Conditional True's CONST '1'h1' generates 1 bits.
+                                                                                                                                                 : ... note: In instance 'qkd_host_root_integrated.u_rank.u_adapter.g_slice[7].u_slice.u_body'
+  184 |             sk_n <= sk_n + (rd_v1 ? 1'b1 : 1'b0) - (pop_rb ? 1'b1 : 1'b0);
+      |                                                            ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/codex/q-host-record-parent-179d/rtl/qwen_sys/missing_masters_20261007/ot_qfd_link_adapter.sv:184:60: Operator COND expects 3 bits on the Conditional False, but Conditional False's CONST '1'h0' generates 1 bits.
+                                                                                                                                                 : ... note: In instance 'qkd_host_root_integrated.u_rank.u_adapter.g_slice[7].u_slice.u_body'
+  184 |             sk_n <= sk_n + (rd_v1 ? 1'b1 : 1'b0) - (pop_rb ? 1'b1 : 1'b0);
+      |                                                            ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/codex/q-host-record-parent-179d/rtl/qwen_sys/missing_masters_20261007/ot_qfd_link_adapter.sv:185:39: Operator COND expects 3 bits on the Conditional True, but Conditional True's CONST '1'h1' generates 1 bits.
+                                                                                                                                                 : ... note: In instance 'qkd_host_root_integrated.u_rank.u_adapter.g_slice[7].u_slice.u_body'
+  185 |             sk_res <= sk_res + (rd_go ? 1'b1 : 1'b0) - (pop_rb ? 1'b1 : 1'b0);
+      |                                       ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/codex/q-host-record-parent-179d/rtl/qwen_sys/missing_masters_20261007/ot_qfd_link_adapter.sv:185:39: Operator COND expects 3 bits on the Conditional False, but Conditional False's CONST '1'h0' generates 1 bits.
+                                                                                                                                                 : ... note: In instance 'qkd_host_root_integrated.u_rank.u_adapter.g_slice[7].u_slice.u_body'
+  185 |             sk_res <= sk_res + (rd_go ? 1'b1 : 1'b0) - (pop_rb ? 1'b1 : 1'b0);
+      |                                       ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/codex/q-host-record-parent-179d/rtl/qwen_sys/missing_masters_20261007/ot_qfd_link_adapter.sv:185:64: Operator COND expects 3 bits on the Conditional True, but Conditional True's CONST '1'h1' generates 1 bits.
+                                                                                                                                                 : ... note: In instance 'qkd_host_root_integrated.u_rank.u_adapter.g_slice[7].u_slice.u_body'
+  185 |             sk_res <= sk_res + (rd_go ? 1'b1 : 1'b0) - (pop_rb ? 1'b1 : 1'b0);
+      |                                                                ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/codex/q-host-record-parent-179d/rtl/qwen_sys/missing_masters_20261007/ot_qfd_link_adapter.sv:185:64: Operator COND expects 3 bits on the Conditional False, but Conditional False's CONST '1'h0' generates 1 bits.
+                                                                                                                                                 : ... note: In instance 'qkd_host_root_integrated.u_rank.u_adapter.g_slice[7].u_slice.u_body'
+  185 |             sk_res <= sk_res + (rd_go ? 1'b1 : 1'b0) - (pop_rb ? 1'b1 : 1'b0);
+      |                                                                ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/codex/q-host-record-parent-179d/rtl/qwen_sys/missing_masters_20261007/ot_qfd_link_adapter.sv:188:40: Operator COND expects 4 bits on the Conditional True, but Conditional True's CONST '1'h1' generates 1 bits.
+                                                                                                                                                 : ... note: In instance 'qkd_host_root_integrated.u_rank.u_adapter.g_slice[7].u_slice.u_body'
+  188 |             o_cred <= o_cred - (pop_rb ? 1'b1 : 1'b0) + (r_cr ? 1'b1 : 1'b0);
+      |                                        ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/codex/q-host-record-parent-179d/rtl/qwen_sys/missing_masters_20261007/ot_qfd_link_adapter.sv:188:40: Operator COND expects 4 bits on the Conditional False, but Conditional False's CONST '1'h0' generates 1 bits.
+                                                                                                                                                 : ... note: In instance 'qkd_host_root_integrated.u_rank.u_adapter.g_slice[7].u_slice.u_body'
+  188 |             o_cred <= o_cred - (pop_rb ? 1'b1 : 1'b0) + (r_cr ? 1'b1 : 1'b0);
+      |                                        ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/codex/q-host-record-parent-179d/rtl/qwen_sys/missing_masters_20261007/ot_qfd_link_adapter.sv:188:63: Operator COND expects 4 bits on the Conditional True, but Conditional True's CONST '1'h1' generates 1 bits.
+                                                                                                                                                 : ... note: In instance 'qkd_host_root_integrated.u_rank.u_adapter.g_slice[7].u_slice.u_body'
+  188 |             o_cred <= o_cred - (pop_rb ? 1'b1 : 1'b0) + (r_cr ? 1'b1 : 1'b0);
+      |                                                               ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/codex/q-host-record-parent-179d/rtl/qwen_sys/missing_masters_20261007/ot_qfd_link_adapter.sv:188:63: Operator COND expects 4 bits on the Conditional False, but Conditional False's CONST '1'h0' generates 1 bits.
+                                                                                                                                                 : ... note: In instance 'qkd_host_root_integrated.u_rank.u_adapter.g_slice[7].u_slice.u_body'
+  188 |             o_cred <= o_cred - (pop_rb ? 1'b1 : 1'b0) + (r_cr ? 1'b1 : 1'b0);
+      |                                                               ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/host_20261013/qkd_host_axi_packet.sv:79:44: Operator ASSIGNDLY expects 8 bits on the Assign RHS, but Assign RHS's VARREF 'TX_CRED' generates 32 bits.
+                                                                            : ... note: In instance 'qkd_host_root_integrated.u_rank.u_control.u_packet.u_axi'
+   79 |    rv<=0;tc<=0;wp<=0;rp<=0;count<=0;credits<=TX_CRED;fault<=0;rx_cr<=0;tx_v<=0;tx_d<=0;
+      |                                            ^~
+%Warning-WIDTHEXPAND: rtl/qwen_sys/host_20261013/qkd_host_axi_packet.sv:102:26: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'credits' generates 8 bits.
+                                                                              : ... note: In instance 'qkd_host_root_integrated.u_rank.u_control.u_packet.u_axi'
+  102 |    if(tc)begin if(credits==TX_CRED)fault<=1;else credits<=credits+1'b1;end
+      |                          ^~
+%Warning-WIDTHEXPAND: rtl/qwen_sys/host_20261013/qkd_host_guard_fifo.sv:23:37: Operator ADD expects 32 bits on the RHS, but RHS's SEL generates 3 bits.
+                                                                             : ... note: In instance 'qkd_host_root_integrated.u_rank.u_guard.markers'
+   23 |  for(b=0;b<16;b=b+1)bank[b]<=mem[b*8+rp[2:0]];
+      |                                     ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/host_20261013/qkd_host_guard_fifo.sv:27:27: Bit extraction of array[15:0] requires 4 bit index, not 3 bits.
+                                                                             : ... note: In instance 'qkd_host_root_integrated.u_rank.u_guard.markers'
+   27 |  if(v1)begin half[0]<=bank[sel1[2:0]];half[1]<=bank[8+sel1[2:0]];sel2<=sel1[3];end
+      |                           ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/host_20261013/qkd_host_ingest_map.sv:40:18: Operator NEQ expects 32 bits on the LHS, but LHS's VARREF 'row' generates 19 bits.
+                                                                             : ... note: In instance 'qkd_host_root_integrated.u_rank.u_chain.u_map'
+   40 |   good=good&&(row!=BOOT_SCRATCH_ROW);
+      |                  ^~
+%Warning-WIDTHTRUNC: rtl/qwen_sys/host_20261013/qkd_host_ingest_map.sv:44:60: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'ORDERED' generates 32 bits.
+                                                                            : ... note: In instance 'qkd_host_root_integrated.u_rank.u_chain.u_map'
+   44 |  wire emit=pending&&good&&!fault&&credits[{stack,pc}]!=0&&(!ORDERED||ord_credit!=0);
+      |                                                            ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/host_20261013/qkd_host_ingest_map.sv:67:4: Logical operator IF expects 1 bit on the If, but If's VARREF 'ORDERED' generates 32 bits.
+                                                                           : ... note: In instance 'qkd_host_root_integrated.u_rank.u_chain.u_map'
+   67 |    if(ORDERED)case({ocq,emit})2'b10:begin if(ord_credit==256)fault<=1;else ord_credit<=ord_credit+1'b1;end 2'b01:ord_credit<=ord_credit-1'b1;default:;endcase
+      |    ^~
+%Warning-WIDTHTRUNC: rtl/qwen_sys/host_20261013/qkd_host_native_engine.sv:132:27: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'NATIVE_ROWS' generates 32 bits.
+                                                                                : ... note: In instance 'qkd_host_root_integrated.u_rank.u_qm.u_eng'
+  132 |     initial if(NATIVE_ROWS&&(QPIPE<2||HDMAX!=128||KVHMAX!=2))
+      |                           ^~
+%Warning-WIDTHEXPAND: rtl/qwen_sys/host_20261013/qkd_host_native_engine.sv:144:25: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'dq_n' generates 3 bits.
+                                                                                 : ... note: In instance 'qkd_host_root_integrated.u_rank.u_qm.u_eng'
+  144 |     assign d_rdy = dq_n < DQ;
+      |                         ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/host_20261013/qkd_host_native_engine.sv:155:43: Operator ADD expects 32 bits on the RHS, but RHS's VARREF 'lane' generates 4 bits.
+                                                                                 : ... note: In instance 'qkd_host_root_integrated.u_rank.u_qm.u_eng'
+  155 |         bw_idx = ((slot ? 32'd16 : 32'd0) + lane) * WPL + (word & (WPL - 1));
+      |                                           ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/host_20261013/qkd_host_native_engine.sv:155:65: Operator AND expects 32 bits on the LHS, but LHS's VARREF 'word' generates 16 bits.
+                                                                                 : ... note: In instance 'qkd_host_root_integrated.u_rank.u_qm.u_eng'
+  155 |         bw_idx = ((slot ? 32'd16 : 32'd0) + lane) * WPL + (word & (WPL - 1));
+      |                                                                 ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/host_20261013/qkd_host_native_engine.sv:270:43: Operator ADD expects 32 bits on the LHS, but LHS's REPLICATE generates 16 bits.
+                                                                                 : ... note: In instance 'qkd_host_root_integrated.u_rank.u_qm.u_eng'
+  270 |                 o_by = {qo_s[10:0], 5'd0} + oh * 16;
+      |                                           ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/host_20261013/qkd_host_native_engine.sv:270:22: Operator ASSIGN expects 16 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                                                : ... note: In instance 'qkd_host_root_integrated.u_rank.u_qm.u_eng'
+  270 |                 o_by = {qo_s[10:0], 5'd0} + oh * 16;
+      |                      ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/host_20261013/qkd_host_native_engine.sv:271:21: Operator ASSIGN expects 4 bits on the Assign RHS, but Assign RHS's SHIFTR generates 16 bits.
+                                                                                : ... note: In instance 'qkd_host_root_integrated.u_rank.u_qm.u_eng'
+  271 |                 o_t = o_by >> o_lhd;
+      |                     ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/host_20261013/qkd_host_native_engine.sv:299:27: Operator ADD expects 32 bits on the RHS, but RHS's VARREF 'pr_s' generates 16 bits.
+                                                                                 : ... note: In instance 'qkd_host_root_integrated.u_rank.u_qm.u_eng'
+  299 |     assign r_addr = pr_hb + pr_s;
+      |                           ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/host_20261013/qkd_host_native_engine.sv:372:37: Operator ADD expects 32 bits on the RHS, but RHS's VARREF 'st_sec' generates 5 bits.
+                                                                                 : ... note: In instance 'qkd_host_root_integrated.u_rank.u_qm.u_eng'
+  372 |                     st_wa = u_raddr + st_sec;
+      |                                     ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/host_20261013/qkd_host_native_engine.sv:377:109: Operator ADD expects 32 bits on the RHS, but RHS's VARREF 'st_ph' generates 3 bits.
+                                                                                  : ... note: In instance 'qkd_host_root_integrated.u_rank.u_qm.u_eng'
+  377 |                             st_pop = 6'd32; st_adv = 1'b1; st_wv = u_mine; st_wd = ra_head; st_wa = u_kcode + st_ph;
+      |                                                                                                             ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/host_20261013/qkd_host_native_engine.sv:404:60: Operator ADD expects 32 bits on the RHS, but RHS's VARREF 'qo_s' generates 16 bits.
+                                                                                 : ... note: In instance 'qkd_host_root_integrated.u_rank.u_qm.u_eng'
+  404 |     assign w_addr = qk_wv ? ((QPIPE != 0) ? qp_wa : (qo_hb + qo_s)) : st_wa;
+      |                                                            ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/host_20261013/qkd_host_native_engine.sv:534:51: Operator ADD expects 32 bits on the LHS, but LHS's REPLICATE generates 16 bits.
+                                                                                 : ... note: In instance 'qkd_host_root_integrated.u_rank.u_qm.u_eng'
+  534 |                         r_by = {pt_s[10:0], 5'd0} + bi * 16;
+      |                                                   ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/host_20261013/qkd_host_native_engine.sv:534:30: Operator ASSIGN expects 16 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                                                : ... note: In instance 'qkd_host_root_integrated.u_rank.u_qm.u_eng'
+  534 |                         r_by = {pt_s[10:0], 5'd0} + bi * 16;
+      |                              ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/host_20261013/qkd_host_native_engine.sv:536:32: Operator FUNCREF 'bw_idx' expects 4 bits on the Function Argument, but Function Argument's SHIFTR generates 16 bits.
+                                                                                : ... note: In instance 'qkd_host_root_integrated.u_rank.u_qm.u_eng'
+  536 |                             bv[bw_idx(pr_slot, r_by >> p_lhd, hw_word(pt_g, p_lhd, r_by & ((16'd1 << p_lhd) - 16'd1)))]
+      |                                ^~~~~~
+%Warning-WIDTHEXPAND: rtl/qwen_sys/host_20261013/qkd_host_native_engine.sv:535:45: Operator LT expects 16 bits on the RHS, but RHS's VARREF 'p_tlo' generates 5 bits.
+                                                                                 : ... note: In instance 'qkd_host_root_integrated.u_rank.u_qm.u_eng'
+  535 |                         if ((r_by >> p_lhd) < p_tlo)
+      |                                             ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/host_20261013/qkd_host_native_engine.sv:768:79: Operator SUB expects 16 bits on the LHS, but LHS's VARREF 'o_thi' generates 5 bits.
+                                                                                 : ... note: In instance 'qkd_host_root_integrated.u_rank.u_qm.u_eng'
+  768 |         wire native_last=qo_v&&(qo_g+8'd1>=o_kvh)&&(qo_s[1:0]==3)&&(t0w==o_thi-1'b1);
+      |                                                                               ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/host_20261013/qkd_host_native_engine.sv:824:41: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'NATIVE_ROWS' generates 32 bits.
+                                                                                : ... note: In instance 'qkd_host_root_integrated.u_rank.u_qm.u_eng'
+  824 |                 wire[3:0]rkl=NATIVE_ROWS?rvl:4'd9*(GB-rkw);
+      |                                         ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/host_20261013/qkd_host_native_engine.sv:846:46: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'NATIVE_ROWS' generates 32 bits.
+                                                                                : ... note: In instance 'qkd_host_root_integrated.u_rank.u_qm.u_eng'
+  846 |                 else begin s1_v_r <= q_iss&&(!NATIVE_ROWS||o_lane[t0w[3:0]]); s2_v_r <= s1_v_r; s3_v_r<=s2_v_r; e1_v <= (QMUT==3)?s2_v_r:s3_v_r; fset_r <= i1_v && i1_last; end
+      |                                              ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/host_20261013/qkd_host_native_engine.sv:849:56: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'NATIVE_ROWS' generates 32 bits.
+                                                                                : ... note: In instance 'qkd_host_root_integrated.u_rank.u_qm.u_eng'
+  849 |                 s1_isv <= qo_v; s1_last <= (NATIVE_ROWS?native_last:q_wlast)&&od[7]; s1_tag <= od[15:8]; s1_a <= NATIVE_ROWS?native_addr:qo_hb+qo_s;
+      |                                                        ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/host_20261013/qkd_host_native_engine.sv:849:125: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'NATIVE_ROWS' generates 32 bits.
+                                                                                 : ... note: In instance 'qkd_host_root_integrated.u_rank.u_qm.u_eng'
+  849 |                 s1_isv <= qo_v; s1_last <= (NATIVE_ROWS?native_last:q_wlast)&&od[7]; s1_tag <= od[15:8]; s1_a <= NATIVE_ROWS?native_addr:qo_hb+qo_s;
+      |                                                                                                                             ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/host_20261013/qkd_host_native_engine.sv:849:143: Operator ADD expects 32 bits on the RHS, but RHS's VARREF 'qo_s' generates 16 bits.
+                                                                                  : ... note: In instance 'qkd_host_root_integrated.u_rank.u_qm.u_eng'
+  849 |                 s1_isv <= qo_v; s1_last <= (NATIVE_ROWS?native_last:q_wlast)&&od[7]; s1_tag <= od[15:8]; s1_a <= NATIVE_ROWS?native_addr:qo_hb+qo_s;
+      |                                                                                                                                               ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/host_20261013/qkd_host_native_engine.sv:864:36: Operator ADD expects 32 bits on the RHS, but RHS's VARREF 's3_kw' generates 4 bits.
+                                                                                 : ... note: In instance 'qkd_host_root_integrated.u_rank.u_qm.u_eng'
+  864 |                     kb = 4'd9 * lq + s3_kw;
+      |                                    ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/host_20261013/qkd_host_native_engine.sv:864:24: Operator ASSIGN expects 4 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                                                : ... note: In instance 'qkd_host_root_integrated.u_rank.u_qm.u_eng'
+  864 |                     kb = 4'd9 * lq + s3_kw;
+      |                        ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/host_20261013/qkd_host_native_engine.sv:867:41: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'NATIVE_ROWS' generates 32 bits.
+                                                                                : ... note: In instance 'qkd_host_root_integrated.u_rank.u_qm.u_eng'
+  867 |                 e1_vs0_r <= (NATIVE_ROWS&&!s3_isv)?ck_q[s3_b0]:cv_q[s3_b0]; e1_vs1_r <= (NATIVE_ROWS&&!s3_isv)?ck_q[s3_b1]:cv_q[s3_b1];
+      |                                         ^~
+%Warning-WIDTHTRUNC: rtl/qwen_sys/host_20261013/qkd_host_native_engine.sv:867:101: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'NATIVE_ROWS' generates 32 bits.
+                                                                                 : ... note: In instance 'qkd_host_root_integrated.u_rank.u_qm.u_eng'
+  867 |                 e1_vs0_r <= (NATIVE_ROWS&&!s3_isv)?ck_q[s3_b0]:cv_q[s3_b0]; e1_vs1_r <= (NATIVE_ROWS&&!s3_isv)?ck_q[s3_b1]:cv_q[s3_b1];
+      |                                                                                                     ^~
+%Warning-WIDTHTRUNC: rtl/qwen_sys/host_20261013/qkd_host_native_engine.sv:868:38: Logical operator LOGOR expects 1 bit on the LHS, but LHS's VARREF 'NATIVE_ROWS' generates 32 bits.
+                                                                                : ... note: In instance 'qkd_host_root_integrated.u_rank.u_qm.u_eng'
+  868 |                 e1_isv <= NATIVE_ROWS||s3_isv; e1_last <= s3_last; e1_tag <= s3_tag; e1_a <= s3_a;
+      |                                      ^~
+%Warning-WIDTHEXPAND: rtl/qwen_sys/host_20261013/qkd_host_native_engine.sv:927:40: Operator ADD expects 32 bits on the LHS, but LHS's REPLICATE generates 6 bits.
+                                                                                 : ... note: In instance 'qkd_host_root_integrated.u_rank.u_qm.u_eng'
+  927 |         assign qp_room = ({2'b0, fq_n} + (e1_v ? 5'd1 : 5'd0) + (s1_v ? 5'd1 : 5'd0) + (s2_v ? 5'd1 : 5'd0) + (s3_v ? 5'd1 : 5'd0)) < FQD;
+      |                                        ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/host_20261013/qkd_host_native_engine.sv:927:48: Operator COND expects 32 bits on the Conditional True, but Conditional True's CONST '5'h1' generates 5 bits.
+                                                                                 : ... note: In instance 'qkd_host_root_integrated.u_rank.u_qm.u_eng'
+  927 |         assign qp_room = ({2'b0, fq_n} + (e1_v ? 5'd1 : 5'd0) + (s1_v ? 5'd1 : 5'd0) + (s2_v ? 5'd1 : 5'd0) + (s3_v ? 5'd1 : 5'd0)) < FQD;
+      |                                                ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/host_20261013/qkd_host_native_engine.sv:927:48: Operator COND expects 32 bits on the Conditional False, but Conditional False's CONST '5'h0' generates 5 bits.
+                                                                                 : ... note: In instance 'qkd_host_root_integrated.u_rank.u_qm.u_eng'
+  927 |         assign qp_room = ({2'b0, fq_n} + (e1_v ? 5'd1 : 5'd0) + (s1_v ? 5'd1 : 5'd0) + (s2_v ? 5'd1 : 5'd0) + (s3_v ? 5'd1 : 5'd0)) < FQD;
+      |                                                ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/host_20261013/qkd_host_native_engine.sv:927:71: Operator COND expects 32 bits on the Conditional True, but Conditional True's CONST '5'h1' generates 5 bits.
+                                                                                 : ... note: In instance 'qkd_host_root_integrated.u_rank.u_qm.u_eng'
+  927 |         assign qp_room = ({2'b0, fq_n} + (e1_v ? 5'd1 : 5'd0) + (s1_v ? 5'd1 : 5'd0) + (s2_v ? 5'd1 : 5'd0) + (s3_v ? 5'd1 : 5'd0)) < FQD;
+      |                                                                       ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/host_20261013/qkd_host_native_engine.sv:927:71: Operator COND expects 32 bits on the Conditional False, but Conditional False's CONST '5'h0' generates 5 bits.
+                                                                                 : ... note: In instance 'qkd_host_root_integrated.u_rank.u_qm.u_eng'
+  927 |         assign qp_room = ({2'b0, fq_n} + (e1_v ? 5'd1 : 5'd0) + (s1_v ? 5'd1 : 5'd0) + (s2_v ? 5'd1 : 5'd0) + (s3_v ? 5'd1 : 5'd0)) < FQD;
+      |                                                                       ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/host_20261013/qkd_host_native_engine.sv:927:94: Operator COND expects 32 bits on the Conditional True, but Conditional True's CONST '5'h1' generates 5 bits.
+                                                                                 : ... note: In instance 'qkd_host_root_integrated.u_rank.u_qm.u_eng'
+  927 |         assign qp_room = ({2'b0, fq_n} + (e1_v ? 5'd1 : 5'd0) + (s1_v ? 5'd1 : 5'd0) + (s2_v ? 5'd1 : 5'd0) + (s3_v ? 5'd1 : 5'd0)) < FQD;
+      |                                                                                              ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/host_20261013/qkd_host_native_engine.sv:927:94: Operator COND expects 32 bits on the Conditional False, but Conditional False's CONST '5'h0' generates 5 bits.
+                                                                                 : ... note: In instance 'qkd_host_root_integrated.u_rank.u_qm.u_eng'
+  927 |         assign qp_room = ({2'b0, fq_n} + (e1_v ? 5'd1 : 5'd0) + (s1_v ? 5'd1 : 5'd0) + (s2_v ? 5'd1 : 5'd0) + (s3_v ? 5'd1 : 5'd0)) < FQD;
+      |                                                                                              ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/host_20261013/qkd_host_native_engine.sv:927:117: Operator COND expects 32 bits on the Conditional True, but Conditional True's CONST '5'h1' generates 5 bits.
+                                                                                  : ... note: In instance 'qkd_host_root_integrated.u_rank.u_qm.u_eng'
+  927 |         assign qp_room = ({2'b0, fq_n} + (e1_v ? 5'd1 : 5'd0) + (s1_v ? 5'd1 : 5'd0) + (s2_v ? 5'd1 : 5'd0) + (s3_v ? 5'd1 : 5'd0)) < FQD;
+      |                                                                                                                     ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/host_20261013/qkd_host_native_engine.sv:927:117: Operator COND expects 32 bits on the Conditional False, but Conditional False's CONST '5'h0' generates 5 bits.
+                                                                                  : ... note: In instance 'qkd_host_root_integrated.u_rank.u_qm.u_eng'
+  927 |         assign qp_room = ({2'b0, fq_n} + (e1_v ? 5'd1 : 5'd0) + (s1_v ? 5'd1 : 5'd0) + (s2_v ? 5'd1 : 5'd0) + (s3_v ? 5'd1 : 5'd0)) < FQD;
+      |                                                                                                                     ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/host_20261013/qkd_host_native_engine.sv:934:38: Operator COND expects 4 bits on the Conditional True, but Conditional True's CONST '1'h1' generates 1 bits.
+                                                                                 : ... note: In instance 'qkd_host_root_integrated.u_rank.u_qm.u_eng'
+  934 |                 fq_n <= fq_n + (e1_v ? 1'b1 : 1'b0) - (fq_pop ? 1'b1 : 1'b0);
+      |                                      ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/host_20261013/qkd_host_native_engine.sv:934:38: Operator COND expects 4 bits on the Conditional False, but Conditional False's CONST '1'h0' generates 1 bits.
+                                                                                 : ... note: In instance 'qkd_host_root_integrated.u_rank.u_qm.u_eng'
+  934 |                 fq_n <= fq_n + (e1_v ? 1'b1 : 1'b0) - (fq_pop ? 1'b1 : 1'b0);
+      |                                      ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/host_20261013/qkd_host_native_engine.sv:934:63: Operator COND expects 4 bits on the Conditional True, but Conditional True's CONST '1'h1' generates 1 bits.
+                                                                                 : ... note: In instance 'qkd_host_root_integrated.u_rank.u_qm.u_eng'
+  934 |                 fq_n <= fq_n + (e1_v ? 1'b1 : 1'b0) - (fq_pop ? 1'b1 : 1'b0);
+      |                                                               ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/host_20261013/qkd_host_native_engine.sv:934:63: Operator COND expects 4 bits on the Conditional False, but Conditional False's CONST '1'h0' generates 1 bits.
+                                                                                 : ... note: In instance 'qkd_host_root_integrated.u_rank.u_qm.u_eng'
+  934 |                 fq_n <= fq_n + (e1_v ? 1'b1 : 1'b0) - (fq_pop ? 1'b1 : 1'b0);
+      |                                                               ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/host_20261013/qkd_host_qm_ingress16_service.sv:16:44: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'ENABLE_SERVICE' generates 32 bits.
+                                                                                      : ... note: In instance 'qkd_host_root_integrated.u_rank.u_bridge.u_queue'
+   16 |  wire issue=!fault&&count!=0&&credits!=0&&(!ENABLE_SERVICE||allow_q||MUT==3);
+      |                                            ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/host_20261013/qkd_host_ingest_chain.sv:5:107: Operator ADD expects 6 bits on the RHS, but RHS's SEL generates 1 bits.
+                                                                               : ... note: In instance 'qkd_host_root_integrated.u_rank.u_chain.u_sum'
+    5 |  function automatic[5:0]count32(input[31:0]a);integer k;begin count32=0;for(k=0;k<32;k=k+1)count32=count32+a[k];end endfunction
+      |                                                                                                           ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/host_20261013/qkd_host_commit_order.sv:26:40: Operator ADD expects 32 bits on the RHS, but RHS's SEL generates 3 bits.
+                                                                               : ... note: In instance 'qkd_host_root_integrated.u_rank.u_chain.u_order'
+   26 |   for(integer k=0;k<4;k++)s2[k]<=s1[k*8+sel1[2:0]];
+      |                                        ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/host_integrated_20261014/qkd_host_native_token_endpoint_cancel.sv:47:26: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE_NATIVE' generates 32 bits.
+                                                                                                         : ... note: In instance 'qkd_host_root_integrated.u_rank.u_native'
+   47 |  wire start=ENABLE_NATIVE&&hc_q[38]&&!protocol_fault&&!fault_q;
+      |                          ^~
+%Warning-WIDTHTRUNC: rtl/qwen_sys/host_integrated_20261014/qkd_host_native_token_endpoint_cancel.sv:49:26: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE_NATIVE' generates 32 bits.
+                                                                                                         : ... note: In instance 'qkd_host_root_integrated.u_rank.u_native'
+   49 |  wire issue=ENABLE_NATIVE&&pending&&(credit||MUT==3)&&!protocol_fault&&!fault_q&&!release_pending&&!cancel_release_v;
+      |                          ^~
+%Warning-WIDTHTRUNC: rtl/qwen_sys/host_integrated_20261014/qkd_host_native_token_endpoint_cancel.sv:70:5: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'ENABLE_NATIVE' generates 32 bits.
+                                                                                                        : ... note: In instance 'qkd_host_root_integrated.u_rank.u_native'
+   70 |  if(!ENABLE_NATIVE)begin local_tk<=legacy_q;end
+      |     ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/host_20261013/qkd_host_visibility_fence.sv:25:32: Operator ADD expects 33 bits on the RHS, but RHS's VARREF 'ack_q' generates 8 bits.
+                                                                                   : ... note: In instance 'qkd_host_root_integrated.u_rank.u_fence'
+   25 |   wire[32:0] add={1'b0,commits}+ack_q;
+      |                                ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/host_20261013/qkd_host_native_qm.sv:127:32: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'NATIVE_ROWS' generates 32 bits.
+                                                                            : ... note: In instance 'qkd_host_root_integrated.u_rank.u_qm'
+  127 |     wire bad_native=NATIVE_ROWS&&dq_qkv&&(
+      |                                ^~
+%Warning-WIDTHTRUNC: rtl/qwen_sys/host_20261013/qkd_host_native_qm.sv:259:53: Operator ASSIGNDLY expects 8 bits on the Assign RHS, but Assign RHS's VARREF 'TCRED' generates 32 bits.
+                                                                            : ... note: In instance 'qkd_host_root_integrated.u_rank.u_qm'
+  259 |         if (!rn_h) begin t_v <= 1'b0; t_d <= 0; tcr <= TCRED; tcr_q <= 1'b0; end
+      |                                                     ^~
+%Warning-WIDTHTRUNC: rtl/qwen_sys/host_20261013/qkd_host_native_qm.sv:287:67: Operator ASSIGNDLY expects 8 bits on the Assign RHS, but Assign RHS's VARREF 'OCRED' generates 32 bits.
+                                                                            : ... note: In instance 'qkd_host_root_integrated.u_rank.u_qm'
+  287 |             o_v <= 1'b0; o_we <= 1'b0; o_addr <= 0; o_d <= 0; ocr <= OCRED; ocr_q <= 1'b0; tok <= 0;
+      |                                                                   ^~
+%Warning-WIDTHEXPAND: rtl/qwen_sys/host_20261013/qkd_host_native_qm.sv:292:31: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'tok' generates 14 bits.
+                                                                             : ... note: In instance 'qkd_host_root_integrated.u_rank.u_qm'
+  292 |             else tok <= ((tok + share_c > PCAP * 256) ? PCAP * 256 : tok + share_c) - (ox_pop ? 256 : 0);
+      |                               ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/host_20261013/qkd_host_native_qm.sv:292:31: Operator ADD expects 32 bits on the RHS, but RHS's VARREF 'share_c' generates 9 bits.
+                                                                             : ... note: In instance 'qkd_host_root_integrated.u_rank.u_qm'
+  292 |             else tok <= ((tok + share_c > PCAP * 256) ? PCAP * 256 : tok + share_c) - (ox_pop ? 256 : 0);
+      |                               ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/host_20261013/qkd_host_native_qm.sv:292:74: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'tok' generates 14 bits.
+                                                                             : ... note: In instance 'qkd_host_root_integrated.u_rank.u_qm'
+  292 |             else tok <= ((tok + share_c > PCAP * 256) ? PCAP * 256 : tok + share_c) - (ox_pop ? 256 : 0);
+      |                                                                          ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/host_20261013/qkd_host_native_qm.sv:292:74: Operator ADD expects 32 bits on the RHS, but RHS's VARREF 'share_c' generates 9 bits.
+                                                                             : ... note: In instance 'qkd_host_root_integrated.u_rank.u_qm'
+  292 |             else tok <= ((tok + share_c > PCAP * 256) ? PCAP * 256 : tok + share_c) - (ox_pop ? 256 : 0);
+      |                                                                          ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/host_20261013/qkd_host_native_qm.sv:292:22: Operator ASSIGNDLY expects 14 bits on the Assign RHS, but Assign RHS's SUB generates 32 bits.
+                                                                            : ... note: In instance 'qkd_host_root_integrated.u_rank.u_qm'
+  292 |             else tok <= ((tok + share_c > PCAP * 256) ? PCAP * 256 : tok + share_c) - (ox_pop ? 256 : 0);
+      |                      ^~
+%Warning-WIDTHTRUNC: rtl/qwen_sys/host_integrated_20261014/qkd_host_rank_services.sv:143:93: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'ENABLE_SERVICE' generates 32 bits.
+                                                                                           : ... note: In instance 'qkd_host_root_integrated.u_rank'
+  143 |  .die_id(die_id),.por_n(por_n&&pll_locked),.link_up(link_up),.transport_fault(ENABLE_SERVICE?guarded_transport:transport_fault),.physical_fault(ENABLE_SERVICE?guarded_physical:observed_physical_faults),.crom_fault(crom_fault),.pr(pr),
+      |                                                                                             ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/host_integrated_20261014/qkd_host_rank_services.sv:143:159: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'ENABLE_SERVICE' generates 32 bits.
+                                                                                            : ... note: In instance 'qkd_host_root_integrated.u_rank'
+  143 |  .die_id(die_id),.por_n(por_n&&pll_locked),.link_up(link_up),.transport_fault(ENABLE_SERVICE?guarded_transport:transport_fault),.physical_fault(ENABLE_SERVICE?guarded_physical:observed_physical_faults),.crom_fault(crom_fault),.pr(pr),
+      |                                                                                                                                                               ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/host_integrated_20261014/qkd_host_rank_services.sv:146:26: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'ENABLE_SERVICE' generates 32 bits.
+                                                                                           : ... note: In instance 'qkd_host_root_integrated.u_rank'
+  146 |  .local_tk(ENABLE_SERVICE?guarded_tk:(ENABLE_NATIVE?native_tk:local_tk)),.local_kst(local_kst),.local_boot(local_boot),.hc(hc),.seen(seen),
+      |                          ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/host_integrated_20261014/qkd_host_rank_services.sv:146:52: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'ENABLE_NATIVE' generates 32 bits.
+                                                                                           : ... note: In instance 'qkd_host_root_integrated.u_rank'
+  146 |  .local_tk(ENABLE_SERVICE?guarded_tk:(ENABLE_NATIVE?native_tk:local_tk)),.local_kst(local_kst),.local_boot(local_boot),.hc(hc),.seen(seen),
+      |                                                    ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/host_integrated_20261014/qkd_host_rank_services.sv:194:25: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'ENABLE_NATIVE' generates 32 bits.
+                                                                                           : ... note: In instance 'qkd_host_root_integrated.u_rank'
+  194 |  .local_tk(ENABLE_NATIVE?native_tk:local_tk),.guarded_tk(guarded_tk),.abort(service_abort),.service_ready(service_ready),
+      |                         ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/host_integrated_20261014/qkd_host_rank_services.sv:197:26: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE_NATIVE' generates 32 bits.
+                                                                                           : ... note: In instance 'qkd_host_root_integrated.u_rank'
+  197 |  initial if(ENABLE_NATIVE&&(!ENABLE_SERVICE||!ENABLE_TOKEN))$fatal(1,"native HOST requires transported token identity and real service guard");
+      |                          ^~
+%Warning-WIDTHTRUNC: rtl/qwen_sys/host_integrated_20261014/qkd_host_rank_services.sv:197:29: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'ENABLE_SERVICE' generates 32 bits.
+                                                                                           : ... note: In instance 'qkd_host_root_integrated.u_rank'
+  197 |  initial if(ENABLE_NATIVE&&(!ENABLE_SERVICE||!ENABLE_TOKEN))$fatal(1,"native HOST requires transported token identity and real service guard");
+      |                             ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/host_integrated_20261014/qkd_host_rank_services.sv:197:46: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'ENABLE_TOKEN' generates 32 bits.
+                                                                                           : ... note: In instance 'qkd_host_root_integrated.u_rank'
+  197 |  initial if(ENABLE_NATIVE&&(!ENABLE_SERVICE||!ENABLE_TOKEN))$fatal(1,"native HOST requires transported token identity and real service guard");
+      |                                              ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/host_integrated_20261014/qkd_host_rank_services.sv:198:114: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE_NATIVE' generates 32 bits.
+                                                                                            : ... note: In instance 'qkd_host_root_integrated.u_rank'
+  198 |  assign service_faults={source_fault|dispatch_fault|bootbarrier_fault|marker_consumer_fault|est[1]|(ENABLE_NATIVE&&native_protocol_fault),packet_faults,chain_fault,fence_fault,order_fault,map_fault,qm_fault,bridge_faults,phy_faults,adapter_fault};
+      |                                                                                                                  ^~
+%Warning-CASEINCOMPLETE: rtl/qwen_sys/host_20261013/qkd_host_service_guard.sv:79:2: Case values incompletely covered (example pattern 0x0)
+   79 |  case({dop,dt})2'b10:dc<=dc+1'b1;2'b01:dc<=dc-1'b1;endcase
+      |  ^~~~
+%Warning-CASEINCOMPLETE: rtl/qwen_sys/host_20261013/qkd_host_service_guard.sv:80:2: Case values incompletely covered (example pattern 0x0)
+   80 |  case({bop,mb})2'b10:bc<=bc+1'b1;2'b01:bc<=bc-1'b1;endcase
+      |  ^~~~
+%Warning-CASEINCOMPLETE: rtl/qwen_sys/host_20261013/qkd_host_guard_fifo.sv:31:2: Case values incompletely covered (example pattern 0x0)
+   31 |  case({put,take})2'b10:count<=count+1'b1;2'b01:count<=count-1'b1;endcase
+      |  ^~~~
+%Warning-CASEINCOMPLETE: rtl/qwen_sys/host_20261013/qkd_host_guard_fifo.sv:32:2: Case values incompletely covered (example pattern 0x0)
+   32 |  case({put,fetch})2'b10:unread<=unread+1'b1;2'b01:unread<=unread-1'b1;endcase
+      |  ^~~~
+%Warning-CASEINCOMPLETE: rtl/qwen_sys/host_20261013/qkd_host_guard_fifo.sv:33:2: Case values incompletely covered (example pattern 0x0)
+   33 |  case({take,fetch})2'b10:credits<=credits+1'b1;2'b01:credits<=credits-1'b1;endcase
+      |  ^~~~
+%Warning-CASEINCOMPLETE: rtl/qwen_sys/host_20261013/qkd_host_guard_fifo.sv:34:2: Case values incompletely covered (example pattern 0x0)
+   34 |  case({v3,take})2'b10:fc<=fc+1'b1;2'b01:fc<=fc-1'b1;endcase
+      |  ^~~~
+%Error: Internal Error: rtl/qwen_sys/host_20261013/qkd_host_native_engine.sv:158:84: ../V3Delayed.cpp:937: Multiple Write refs on LHS of NBA
+  158 |     function automatic [15:0] hw_word(input [7:0] g, input [3:0] lhd, input [15:0] d);
+      |                                                                                    ^

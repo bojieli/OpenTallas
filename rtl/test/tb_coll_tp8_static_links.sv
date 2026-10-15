@@ -5,6 +5,11 @@
 `define C_SB(m) cmdv[m][63:32]
 `define C_W(m) cmdv[m][31:16]
 `define C_MODE(m) cmdv[m][0]
+`ifdef OT_TP8S_QFD
+`define C_ISS(m) (`C_CMD(m)-1)
+`else
+`define C_ISS(m) `C_CMD(m)
+`endif
 // ---------------------------------------------------------------------------
 // qwen-coll-io r5 2026-10-14: COMPOSED 8-die bench of the static TP8 collective on the REAL static link RTL.
 // Per die (4 packages x 2 dies, die r = 2 * package + die, every die the same masters ranked by straps):
@@ -248,13 +253,13 @@ module tb_coll_tp8_static_links #(
             integer cm = 0;
             always @(posedge clk) if (rst_n) begin
                 if (icv[g]) begin
-                    if (cm >= NMSG || cyc != `C_CMD(cm) || imode[g] != `C_MODE(cm) || iwords[g*16 +: 16] != `C_W(cm) ||
+                    if (cm >= NMSG || cyc != `C_ISS(cm) || imode[g] != `C_MODE(cm) || iwords[g*16 +: 16] != `C_W(cm) ||
                         itag[g*TAGW +: TAGW] != cm) begin
                         cmd_bad = cmd_bad + 1;
                         if (cmd_bad < 5) $display("CMD die=%0d cyc=%0d msg=%0d", g, cyc, cm);
                     end
                     cm <= cm + 1;
-                end else if (cm < NMSG && cyc == `C_CMD(cm)) begin
+                end else if (cm < NMSG && cyc == `C_ISS(cm)) begin
                     cmd_bad = cmd_bad + 1;
                     if (cmd_bad < 5) $display("CMD_MISSING die=%0d cyc=%0d msg=%0d", g, cyc, cm);
                 end
