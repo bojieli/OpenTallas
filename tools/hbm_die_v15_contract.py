@@ -197,6 +197,21 @@ def generate(out):
     for directory in ('rtl/hbm_accel/generic/vm/static','rtl/hbm_accel/loader/service_native'):
         for dep in sorted((ROOT/directory).glob('*.sv')):
             dependency_hashes[str(dep.relative_to(ROOT))]=hashlib.sha256(dep.read_bytes()).hexdigest()
+    component_contract_path=ROOT/'physical/hbm_accel_die_views/svc/v15/block_boundary_contract.json'
+    component_contract=None
+    if component_contract_path.exists():
+        component_contract=json.loads(component_contract_path.read_text())
+        # This is tested component evidence, not an invented die-level composition.
+        for top,rec in component_contract['modules'].items():
+            actual=views.L.parse_module(rec['source'],top,{})['ports']
+            expected={p:(r['direction'],r['bits']) for p,r in rec['ports'].items()}
+            assert actual==expected,(top,'block component ABI drift')
+            assert hashlib.sha256((ROOT/rec['source']).read_bytes()).hexdigest()==rec['sha256'],(top,'block source drift')
+        component_contract=dict(path=str(component_contract_path.relative_to(ROOT)),
+            sha256=hashlib.sha256(component_contract_path.read_bytes()).hexdigest(),
+            evidence_scope='actual dual-clock sector-mapped components; not instantiated by this die inventory',
+            modules=component_contract['modules'],clocks=component_contract['clocks'],
+            qualified=False,remaining=component_contract['fail_closed_requirements'])
     report=dict(schema='opentallas.hbm.actual-v15-source-contract.v1',status='FAIL_UNBOUND_NATIVE_PORTS',
                 source_sha256=sources,dependency_inventory_sha256=dependency_hashes,
                 dependency_inventory_scope='all static VM/service RTL including benches; not a substitute for hierarchy elaboration',
@@ -205,13 +220,14 @@ def generate(out):
                 abi_sha256=hashlib.sha256(abi_path.read_bytes()).hexdigest(),
                 instances=modules,known_actual_edges=edges,clock_roots=roots,
                 registered_station_masters=generated,logical_constant_requests=logical_constants,unbound_ports=unresolved,
-                boundary_gaps=['actual 1.024ns PHY to 0.833333ns stream block CDC absent',
-                               'actual mapped PHY address/endian/PC striping proof required',
+                tested_boundary_components=component_contract,
+                boundary_gaps=['actual dual-clock components exist; full die band/PHY/client composition is absent',
+                               'actual full production-shape mapped PHY address/endian/PC striping proof required',
                                'historical PC leaf rejected for address/clock semantics; actual block CDC replacement required'],
                 unbound_count=len(unresolved),pin_only_placeholder_count=0,
                 legacy_failures_disposition='77 legacy station failures remain historical; v15 validates actual source ports independently',
                 qualification=dict(native_complete=False,pins=False,station_benches=False,clock_views=False,TT=False,FF=False,DRC=False),
-                required_remaining=['actual client and programme command source joins','actual static COLL combined parent',
+                required_remaining=['actual client and programme command source joins','actual static COLL issuer/programme and PHY joins',
                                     'actual full service/SM/writeback composition','measured compact SM outline and all leaf views',
                                     'pin plans, physical registered stations and exact compiler stage counts','real-view die GRT0/TT/FF/DRC0'])
     (out/'contract.json').write_text(json.dumps(report,indent=1)+'\n')
