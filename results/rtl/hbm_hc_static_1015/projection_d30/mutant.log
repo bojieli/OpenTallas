@@ -1,0 +1,52 @@
+MISMATCH row=0 got=c108875b expected=3c702489
+STATIC_ROW row=0 cycle=345
+MISMATCH row=1 got=c1059a6f expected=3e6d925a
+STATIC_ROW row=1 cycle=345
+MISMATCH row=2 got=c10b13e5 expected=bdff42e3
+STATIC_ROW row=2 cycle=345
+MISMATCH row=3 got=c1070047 expected=3df27d89
+STATIC_ROW row=3 cycle=345
+MISMATCH row=4 got=c109b3aa expected=bd2b526f
+STATIC_ROW row=4 cycle=345
+MISMATCH row=5 got=c10842a1 expected=3d4ee3ab
+STATIC_ROW row=5 cycle=345
+MISMATCH row=6 got=c1065fcd expected=3e35d39d
+STATIC_ROW row=6 cycle=345
+MISMATCH row=7 got=c1070504 expected=3e0323f9
+STATIC_ROW row=7 cycle=345
+MISMATCH row=8 got=c10490ba expected=3e944b62
+STATIC_ROW row=8 cycle=345
+MISMATCH row=9 got=c1074b28 expected=3dd77011
+STATIC_ROW row=9 cycle=345
+MISMATCH row=10 got=c109fbed expected=bd78b5c6
+STATIC_ROW row=10 cycle=345
+MISMATCH row=11 got=c109cdb0 expected=bd1ad546
+STATIC_ROW row=11 cycle=345
+MISMATCH row=12 got=c10aa91b expected=bdc642fb
+STATIC_ROW row=12 cycle=345
+MISMATCH row=13 got=c106f03b expected=3dfee5f5
+STATIC_ROW row=13 cycle=345
+MISMATCH row=14 got=c10616d1 expected=3e42c050
+STATIC_ROW row=14 cycle=345
+MISMATCH row=15 got=c106a0a9 expected=3e0a926d
+STATIC_ROW row=15 cycle=345
+MISMATCH row=16 got=c10b3268 expected=be0a2347
+STATIC_ROW row=16 cycle=345
+MISMATCH row=17 got=c1068c37 expected=3e104539
+STATIC_ROW row=17 cycle=345
+MISMATCH row=18 got=c1081192 expected=3d9f6611
+STATIC_ROW row=18 cycle=345
+MISMATCH row=19 got=c10817ae expected=3d3d4b85
+STATIC_ROW row=19 cycle=345
+MISMATCH row=20 got=c1082bcf expected=3d6b9a3b
+STATIC_ROW row=20 cycle=345
+MISMATCH row=21 got=c10c725e expected=be56dfae
+STATIC_ROW row=21 cycle=345
+MISMATCH row=22 got=c10fa7f4 expected=bed91303
+STATIC_ROW row=22 cycle=345
+MISMATCH row=23 got=c1083eac expected=3d2b155c
+STATIC_ROW row=23 cycle=345
+HC_STATIC_DONE rows=24 K=20480 errors=24 cycles=16508
+[0] %Fatal: tb_hgi_hc_projection_static.sv:96: Assertion failed in TOP.tb_hgi_hc_projection_static: exact arithmetic mismatch
+%Error: /srv/opentallas-scratch/claude/codex-hc-static-d30-1015/rtl/test/tb_hgi_hc_projection_static.sv:96: Verilog $stop
+Aborting...

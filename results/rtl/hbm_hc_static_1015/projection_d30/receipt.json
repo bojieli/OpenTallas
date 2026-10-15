@@ -1,0 +1,30 @@
+{
+  "scope": "actual arithmetic + mapped SRAM production-shape component; not full HC/throughput/physical qualification",
+  "source_sha256": {
+    "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_projection_static.sv": "fee6286cf1ae6e3485608fe66d0ffcb6046f813f9cfdc30d357621cc5defad4f",
+    "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_aperture_static.sv": "7e14e88870dd131e8f558970dc7929175d1a76fd0317bfd24e0a71587d7419ae",
+    "rtl/hdc/v41x/ot_hdc_v41x_hcp.sv": "a719521c87012ec5117e6b92f2089ade75b1a6faf727193543b758cf3ee8989f",
+    "rtl/hdc/ot_hdc_fastfp.sv": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643",
+    "rtl/hdc/v41/ot_hdc_fdiv.sv": "0b8e4d7d680d7ca77cff139fe8f51b649c56cbc185560af767530895438eac25",
+    "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+    "rtl/hdc/ot_hdc_sfu.sv": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923",
+    "rtl/model/hbm_pc40_native_sim_20261003/ot_sram_1r1w_128x256_m1_r2c2_sim.sv": "af5e2377cfbf5bd0ac524f58bb6597cb853eed7f41e097e419354eb931728762",
+    "rtl/test/tb_hgi_hc_projection_static.sv": "72836ffc54d295c040c31f163a157e17d9dbef2fbfa01ef2955195719fdaa55a",
+    "rtl/test/hgi_hc_projection_static_harness.cpp": "c2f7163c0e603c34974bcd38d5dd2acda29cfd3c2cbbfdb0a8edc6d36ea2e10e"
+  },
+  "K": 20480,
+  "rows": 24,
+  "raw_read_slots": [
+    180,
+    340
+  ],
+  "row_command_period_cycles": 681,
+  "exact": {
+    "exit_code": 0,
+    "log_sha256": "a93fb6e4b5477cb5717c28e8ba22aaeed77af2bc586b9fc5f1b5a3f357f13fa6"
+  },
+  "mutant": {
+    "exit_code": -6,
+    "log_sha256": "a5670e53accc5cf7e3a8371379aa3a73b245945389b421d4bb645c7122cfc3d4"
+  }
+}
