@@ -51,6 +51,11 @@ module ot_dsrom_head_elem #(
     output wire [31:0]  o_d,
     output wire         l_v,               // JOIN: logit stream
     output wire [31:0]  l_d,
+    // Existing registered pre-argmax payload: physical downstream consumer ABI.
+    // Exactly one edge after l_v/l_d; no added state or arithmetic.
+    output wire         head_v,
+    output wire [31:0]  head_d,
+    output wire [16:0]  head_row,
     output reg          done,              // JOIN: argmax over the element's rows is final
     output reg  [16:0]  best_row,
     output reg  [31:0]  best_bits,
@@ -245,6 +250,9 @@ module ot_dsrom_head_elem #(
         reg [31:0] k_key, k_bits;
         reg [16:0] k_row, nrow;
         reg [6:0]  cnt;
+        assign head_v = k_v;
+        assign head_d = k_bits;
+        assign head_row = k_row;
         wire [31:0] canon = (l_d == 32'h80000000) ? 32'd0 : l_d;
         always @(posedge clk or negedge rst_n)
             if (!rst_n) begin k_v <= 1'b0; nrow <= 17'd0; end
@@ -294,6 +302,9 @@ module ot_dsrom_head_elem #(
     end else begin : g_nojoin
         assign l_v = 1'b0;
         assign l_d = 32'd0;
+        assign head_v = 1'b0;
+        assign head_d = 32'd0;
+        assign head_row = 17'd0;
         always @(posedge clk or negedge rst_n)
             if (!rst_n) begin fault <= 1'b0; done <= 1'b0; best_row <= 17'd0; best_bits <= 32'd0; best_key <= 32'd0; jerr <= 1'b0; end
             else if (go_e) fault <= 1'b0;

@@ -1,0 +1,23 @@
+{
+  "cell": "ot_smh_tr_group_beat_w",
+  "view": "/home/ubuntu/wt/hbm-smcompact-1014/physical/ref_tile/smh_tr_group_beat_w_ref/views/ot_smh_tr_group_beat_w",
+  "lib_cell": "ot_smh_tr_group_beat_w",
+  "insertion": true,
+  "ref_src": [
+    "insertion.json boundary mean"
+  ],
+  "R_ps": 306.2,
+  "spread_ps": 82.4,
+  "outputs": 6207,
+  "inputs": 2070,
+  "launch_ps": 227.0,
+  "launch_pin": "north[127]",
+  "capture_ps": 463.1,
+  "capture_pin": "d[2023]",
+  "launch_over": 26,
+  "capture_over": 2040,
+  "comb_pins": 0,
+  "comb_first": [],
+  "pass": false,
+  "fail_why": "launch 227.0 > 220 (26 pins); capture 463.1 > 190 (2040 pins)"
+}

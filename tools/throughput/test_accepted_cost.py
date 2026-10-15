@@ -240,3 +240,21 @@ def test_unpriced_serial_job_has_no_ratio_and_is_judged_by_its_loss():
     assert "unit limit" in AC.refusal(led, over)
     led["rows"] += [ok, over]
     assert AC.check(led) == [] and "unpriced" in AC.table(led)
+
+
+def test_annotate_states_the_share_basis_without_touching_numbers(tmp_path):
+    led = AC.empty_ledger()
+    per = {"ar": dict(e2e_loss_pct=0.4)}
+    row = AC.make_row("s81", "SU.X unit", 80.0, 167.0, per, "ev", "committed_bench", "n", group="SU.X")
+    AC.propose(led, row)
+    before = (row["e2e_loss_pct"], row["unit_ratio"], row["status"])
+    assert "| - |" in AC.table(led)                                  # not stated yet
+    r = AC.annotate(led, "s81", "SU.X", "modelled", "QUALIFIER q")   # by group
+    assert r is row and r["share_basis"] == "modelled" and r["note"].endswith("QUALIFIER q")
+    AC.annotate(led, "s81", "SU.X unit", None, "QUALIFIER q")        # appended once
+    assert r["note"].count("QUALIFIER q") == 1 and (r["e2e_loss_pct"], r["unit_ratio"], r["status"]) == before
+    assert "| MODELLED |" in AC.table(led) and AC.check(led) == []
+    r["share_basis"] = "guessed"
+    assert any("share basis" in b for b in AC.check(led))
+    with pytest.raises(AC.LedgerError):
+        AC.annotate(led, "s81", "SU.NONE", "measured")

@@ -52,6 +52,7 @@ module ot_coll_tp8_static #(
     input  wire              clk,
     input  wire [3:0]        clk_pfold,     // CCLK 1: package-fold slice clock entries (same edge as clk)
     input  wire [3:0]        clk_xfold,     // CCLK 1: cross-fold slice clock entries
+    input wire [8:0] clk_mem, // CCLK1: P0/P1,S0..S4,R0/R1 direct macro entries
     input  wire              rst_n,
     input  wire [1:0]        pkg_s,
     input  wire              die_ps,
@@ -94,7 +95,8 @@ module ot_coll_tp8_static #(
     output wire              up_slot,       // P record slot (up_valid = up_slot && the producer word was observed)
     output wire              ur_peer_slot,  // the package peer's R send slot (= my dr arrival LU later)
     output wire [2:0]        sx_peer_slot,  // SerDes port j: package (rank + 1 + j)'s send slot (= my sr arrival LS later)
-    output wire              cmd_free       // a command at this cycle is accepted (issuer fault check only)
+    output wire              cmd_free,      // current internal command cycle (fault check only)
+    output wire              cmd_free_next  // next edge, for registered external command face
 );
     localparam integer NS = FW / 128;
     localparam integer SL = 3 * ADD_LAT + 2;     // ot_coll_fold_slice red_in -> v_out (N 4, SEAM 1)
@@ -147,10 +149,14 @@ module ot_coll_tp8_static #(
     always @(posedge clk or negedge rs_p) if (!rs_p) upc_q <= 1'b0; else upc_q <= ta_v;
     assign up_slot  = upc_q;
     assign cmd_free = can_cmd;
+    // External command pins are captured one edge ahead of the core. Predict
+    // the same deterministic state transition; this signal never gates issue.
+    assign cmd_free_next = (cmd_v && !cmd_bad) ? (cmd_words <= 1) :
+        can_cmd || (rem == 2 && cnt == 0 && !s_mode) || (rem == 1 && cnt == 1);
     assign up_valid = upv_q;
     assign up_rec   = uprec_q;
     wire [PW-1:0] pr_rd;
-    ot_coll_static_ring #(.OFF(LU + 2)) u_pring (.clk(clk), .rs_n(rs_p), .wd(ir_q), .rd(pr_rd));
+    ot_coll_static_ring #(.OFF(LU + 2)) u_pring (.clk(clk), .mem_ck(CCLK ? {clk_mem[1:0],clk_mem[1:0]} : {4{clk}}), .rs_n(rs_p), .wd(ir_q), .rd(pr_rd));
     // schedule token A -> B (LU + 2 edges): {v, mode, last, parity}
     localparam integer DAB = LU + 2;
     reg [4*DAB-1:0] tab;
@@ -220,14 +226,15 @@ module ot_coll_tp8_static #(
     wire [FW-1:0] w_d = w_red ? pf_q : (g_d ? hi_q : lo_q);
     wire w_send = w_red ? (tc_v && tc_o) : (g_run && g_r == PK);
     wire [SEW-1:0] s_wd = {{(SEW-550){1'b0}}, w_v, w_r, w_od, w_mode, w_l, w_t, w_d};
-    reg [2:0] sxv_q; reg [PW-1:0] sxr_q [0:2];                    // one valid + record copy per SerDes face
-    always @(posedge clk or negedge rs_s) if (!rs_s) sxv_q <= 3'b0; else sxv_q <= {3{w_send}};
+    // These are physically distinct face registers. Keep each soft hierarchy
+    // through synthesis so identical data/valid cones cannot be merged across
+    // opposite die faces (the failed s1 gate merged all three copies).
     genvar gj;
-    generate for (gj = 0; gj < 3; gj = gj + 1) begin : g_sxo       // one registered copy per port (own face)
-        always @(posedge clk) sxr_q[gj] <= {w_t, w_mode, w_l, w_d};
-        assign sx_rec[gj*PW +: PW] = sxr_q[gj];
+    generate for (gj = 0; gj < 3; gj = gj + 1) begin : g_sxo
+        (* keep_hierarchy = 1 *) ot_coll_static_sx_reg #(.W(PW),.FACE(gj)) u_face (
+            .clk(clk),.rst_n(rs_s),.dv(w_send),.data({w_t,w_mode,w_l,w_d}),
+            .qv(sx_valid[gj]),.qdata(sx_rec[gj*PW +: PW]));
     end endgenerate
-    assign sx_valid = sxv_q;
     // peer send slots per SerDes port: reduce = the same owned words (equal die-in-package parity); gather = the
     // hold cycle k whose rank field equals the peer package (PK + 1 + j)
     reg [2:0] sxp_q;
@@ -239,7 +246,7 @@ module ot_coll_tp8_static #(
     wire [SEW-1:0] s_rd;
     genvar gm;
     generate for (gm = 0; gm < SEW / 128; gm = gm + 1) begin : g_sring
-        ot_sram_1r1w_512x128_m4_r2c2 u_m (.clk(clk), .r_ce_in(1'b1), .r_addr_in(cc - 9'(LS + 1)),
+        ot_sram_1r1w_512x128_m4_r2c2 u_m (.clk(CCLK ? clk_mem[2+gm] : clk), .r_ce_in(1'b1), .r_addr_in(cc - 9'(LS + 1)),
             .rd_out(s_rd[gm*128 +: 128]), .w_ce_in(1'b1), .w_addr_in(cc), .wd_in(s_wd[gm*128 +: 128]),
             .w_mask_in({128{1'b1}}), .rr_en(2'b0), .rr_addr(14'b0), .cr_en(2'b0), .cr_sel(14'b0));
     end endgenerate
@@ -319,7 +326,7 @@ module ot_coll_tp8_static #(
 `else
     localparam integer ROFF = LU + 2;
 `endif
-    ot_coll_static_ring #(.OFF(ROFF)) u_rring (.clk(clk), .rs_n(rs_r), .wd({{(PW-RW){1'b0}}, xe_q, te_l, xr_q}), .rd(rr_rd));
+    ot_coll_static_ring #(.OFF(ROFF)) u_rring (.clk(clk), .mem_ck(CCLK ? {clk_mem[8:7],clk_mem[8:7]} : {4{clk}}), .rs_n(rs_r), .wd({{(PW-RW){1'b0}}, xe_q, te_l, xr_q}), .rd(rr_rd));
     // token E -> F (LU + 2 edges): {v, own, last}
     localparam integer DEF = LU + 2;
     reg [3*DEF-1:0] tef;
@@ -365,6 +372,7 @@ endmodule
 // select is registered with the macro's registered read.
 module ot_coll_static_ring #(parameter integer OFF = 20) (
     input  wire         clk,
+    input wire [3:0] mem_ck,
     input  wire         rs_n,
     input  wire [545:0] wd,
     output wire [545:0] rd
@@ -378,7 +386,7 @@ module ot_coll_static_ring #(parameter integer OFF = 20) (
     wire [546*B-1:0] rdb;
     genvar b;
     generate for (b = 0; b < B; b = b + 1) begin : g_b
-        ot_sram_1r1w_32x546_m1 u_m (.clk(clk), .r_ce_in(1'b1), .r_addr_in(ra[4:0]), .rd_out(rdb[b*546 +: 546]),
+        ot_sram_1r1w_32x546_m1 u_m (.clk(mem_ck[b]), .r_ce_in(1'b1), .r_addr_in(ra[4:0]), .rd_out(rdb[b*546 +: 546]),
             .w_ce_in((B == 1) ? 1'b1 : (wa[AW-1:5] == b)), .w_addr_in(wa[4:0]), .wd_in(wd), .w_mask_in({546{1'b1}}));
     end endgenerate
     generate if (B == 1) begin : g_one
@@ -395,4 +403,16 @@ module ot_coll_static_ring #(parameter integer OFF = 20) (
         end
         assign rd = rsel;
     end endgenerate
+endmodule
+
+// One existing stage, independently instantiated per physical SerDes face.
+// FACE creates separate parameterized modules; keep_hierarchy prevents global
+// duplicate-register merging. No additional transport cycle is introduced.
+(* keep_hierarchy = 1 *) module ot_coll_static_sx_reg #(
+ parameter integer W=546, FACE=0
+)(input wire clk,rst_n,dv,input wire[W-1:0]data,
+ output reg qv,output reg[W-1:0]qdata);
+ (* keep *)wire[W-1:0]face_data=data;
+ always @(posedge clk)qdata<=face_data;
+ always @(posedge clk or negedge rst_n)if(!rst_n)qv<=0;else qv<=dv;
 endmodule

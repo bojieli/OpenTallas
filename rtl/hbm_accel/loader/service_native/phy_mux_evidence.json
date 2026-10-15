@@ -1,0 +1,36 @@
+{
+  "scope": "Actual source component only; no die or full-token qualification",
+  "model": {
+    "schema": "opentallas.hbm-svc-phy-mux.v1",
+    "pcs": 32,
+    "request_bits_per_pc": 340,
+    "state_bits": 96,
+    "mux_bits_upper_bound": 10880,
+    "arbitration": "round robin only at HBM PHY boundary; held owner until actual acceptance",
+    "read_response": "direct only to prefetch boundary",
+    "write_completion": "direct only to WB boundary",
+    "added_request_latency_cycles": 0,
+    "clock_domain": "hbm1024ps",
+    "macs_per_cycle": 0,
+    "routing_tracks_needed": 10880,
+    "routing_capacity": null,
+    "slot_fit": null,
+    "physical_closed": false,
+    "adopted": false
+  },
+  "source_sha256": {
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_phy_mux.sv": "86fa1f19baadad3168cb43aeea8a308e378c3abcfb8056b20a7a766a09d64745",
+    "rtl/hbm_accel/loader/service_native/tb_hbm_svc_phy_mux.sv": "689cebcdb037302b91cf8a0cbd444b0f0dcb3239c28c482422091ac947f271c3",
+    "rtl/hbm_accel/loader/service_native/run_phy_mux_bench.sh": "f84db4cde2483eb2ce78ab115341cb4e692f10a617029a78245dfce4962f0e7a"
+  },
+  "logs": {
+    "positive.log": "PHY_MUX PASS pcs=32 initial_accepts=64 alternating_accepts=512 held_stall_cases=3\n",
+    "mutant.log": "FATAL: rtl/hbm_accel/loader/service_native/tb_hbm_svc_phy_mux.sv:20: mux ownership pc=0\n       Time: 30228 Scope: tb_hbm_svc_phy_mux.check\n"
+  },
+  "yosys": "hierarchy/proc/check PASS",
+  "remaining": [
+    "Source-pinned compiler calendar and immutable memory price",
+    "Actual whole boundary source composition",
+    "Physical slot/routing/clock qualification"
+  ]
+}

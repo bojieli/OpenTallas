@@ -14,7 +14,7 @@
   "local_exec_session": 8114,
   "directory": "/srv/opentallas-scratch/claude/ref_gate/s81engram_mul4_native_sizing_1015-20261014-234213",
   "source_commit": "a32740ffc",
-  "status_at_observation": "LIVE Yosys ABC mapping",
+  "status_at_observation": "Original controller stopped after terminal floorplan, no CTS; continued same pinned snapshot through durable systemd driver.",
   "observed": "2026-10-14T23:45:34-07:00",
   "admission_mem_gb": 16,
   "outline_um": [
@@ -22,6 +22,62 @@
    129.6
   ],
   "scope": "Real root floorplan/placement/CTS with exact existing native leaf pins; no placement verdict yet.",
-  "instruction": "Collect existing gate; do not duplicate. Local pre_route_gate process runs in /home/ubuntu/wt/mix4-sizing-1015; retain worktree until terminal."
+  "instruction": "Collect existing gate; do not duplicate. Local pre_route_gate process runs in /home/ubuntu/wt/mix4-sizing-1015; retain worktree until terminal.",
+  "original_controller_status": "gone; tool exec handle8114 missing; remoteoriginalscope inactive/dead success",
+  "continuation": {
+   "host": "ot-epyc4",
+   "unit": "oth-ubuntu-1066601-1792047650",
+   "local_systemd_unit": "mix4-cts-continuation-1015-r2.service",
+   "local_systemd_main_pid": 3073280,
+   "log": "/home/ubuntu/mix4-sizing-1015-cts-continuation-r2.log",
+   "status_at_observation": "TERMINAL exit0, CTS+threecornerinsertion+pathclasses completed",
+   "source_manifest_mismatches": 0,
+   "source_manifest_entries_checked": 15219,
+   "stages_reused": "Original full synthesis and floorplan. Continued from IO placement, no prior stage rerun.",
+   "first_continuation": "Unitoth-ubuntu-1062435-1792047631 failed before stageexecution:FRC unbound shellvariable; failurelog /home/ubuntu/mix4-sizing-1015-cts-continuation.log preserved."
+  },
+  "native_orfs_synth_cell_area_um2": 11242.28808,
+  "native_floorplan_cell_area_um2": 10662.90804,
+  "native_floorplan_cell_count": 84870,
+  "native_floorplan_core_outline_um": [
+   177.12,
+   125.28
+  ],
+  "textbook_clock_sinks": 9395,
+  "textbook_reset_fanout": 549,
+  "textbook_reset_fanout_limit": 256,
+  "cts_status": "COMPLETE rc0; placement/CTS evidence only, not route qualification",
+  "postcts_cell_area_um2": 11194.028280000008,
+  "postcts_cell_count": 86985,
+  "tt_insertion_ps": {
+   "min": 232.5,
+   "max": 248.5,
+   "spread": 16.0,
+   "boundary_mean": 243.9
+  },
+  "ss_insertion_ps": {
+   "min": 301.0,
+   "max": 320.3,
+   "spread": 19.3,
+   "boundary_mean": 313.8
+  },
+  "ff_insertion_ps": {
+   "min": 190.2,
+   "max": 205.2,
+   "spread": 15.0,
+   "boundary_mean": 200.9
+  },
+  "tt_preroute_signoff_diagnostic_ps": {
+   "reg_to_reg_worst_setup": 109.7,
+   "setup_wns": 109.74510189498687,
+   "hold_wns": 26.640328831817328
+  },
+  "postcts_dump_unit": "oth-ubuntu-1101743-1792048088",
+  "open": [
+   "Native root resetfanout549>256 needs source-local replication",
+   "Other31arithleafinstances/classes and shell need exact CTS/native views",
+   "Actual fourcopygraph placement/hopcuts and static_VM pinbinding",
+   "TTsetup/FFhold/extractedrouteDRC0 before qualification"
+  ]
  }
 }

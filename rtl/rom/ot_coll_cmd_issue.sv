@@ -33,6 +33,7 @@ module ot_coll_cmd_issue #(
     output wire [15:0]     cmd_words,
     output wire [TAGW-1:0] cmd_tag,
     output wire            active, done,
+    output wire            image_ready,   // sealed configuration fact; never gates issue
     output wire            fault
 );
     localparam integer RAW = (DEPTH > 1) ? $clog2(DEPTH) : 1;
@@ -106,6 +107,7 @@ module ot_coll_cmd_issue #(
         .issue_v(issue_v), .end_v(end_v), .cp_v(cp_v), .cp_index(cp_index), .issue_pc(issue_pc),
         .issue_unit(issue_unit), .active(active), .done(done), .cycle(cycle), .fault(core_fault));
     assign run       = active;
+    assign image_ready = sealed && !cfg_fault;
     assign cmd_v     = issue_v;
     assign cmd_mode  = issue_v ? mde[ip] : 1'b0;
     assign cmd_words = issue_v ? wds[ip] : 16'd0;

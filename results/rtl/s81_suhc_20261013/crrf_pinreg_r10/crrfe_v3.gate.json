@@ -1,0 +1,83 @@
+{
+ "verdict": "WARN",
+ "items": [
+  {
+   "severity": "INFO",
+   "check": "layer",
+   "message": "tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "remote log /tmp/s81suhc-r10/ref_gate_s81hc_crrfe_ref_20261013-190240.log; host dir ot-epyc1tb:/srv/opentallas-scratch/claude/ref_gate/s81hc_crrfe_ref-20261013-190240",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "synth + floorplan + PDN OK on ot-epyc1tb in 38 s (gate total 1064 s)",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "util",
+   "message": "synthesized std area 4087 um2 + macros 0 in core 161663: util 3%",
+   "fix": "set \"std_area_um2\": 4087 and drop 'outline' (gen sizes to util 0.52)"
+  },
+  {
+   "severity": "INFO",
+   "check": "textbook",
+   "message": "WARN ot_s81_hc_crootr_f cells 23,288 flops 11,430 depth 138.4 ps util 0.0253 reach 0.0 um (0.5 s)",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.high_fanout",
+   "message": "net u_rfv.genblk1.g_line.line[23]$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R): 3,841 loads (1 flops, e.g. ch_fv[2]$_DFF_PN0_) > 3,000: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast",
+   "fix": "no reset on datapath registers; replicate enables / selects / pointer bits per region (<= ~256 loads)"
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.util_channel",
+   "message": "utilisation 2.5% outside 45%-65% (std 4089 + macro 0 um2 in 161663 um2): shrink the outline (long wires / sparse placement)",
+   "fix": "size the outline to util 0.50-0.55 with >= 20 um macro channels"
+  },
+  {
+   "severity": "INFO",
+   "check": "cts_calibration",
+   "message": "ss insertion all 502.6..785.3 ps (spread 282.7), boundary mean 548.3; tt insertion all 387.4..625.8 ps (spread 238.4), boundary mean 430.1; ff insertion all 316.6..526.4 ps (spread 209.8), boundary mean 357.1; macro_clk flag False",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "density",
+   "message": "effective global-placement target density 0.450 vs spec PD 0.45",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "reg->out      300 paths, worst slack 94.5 ps (e.g. ch_rst)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "reg->reg       52 paths, worst slack 485.0 ps (e.g. p_req[6]$_DFF_PN0_/RESETN)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "setup WNS 9.452993943170895e-11 hold WNS -1.7871815138903457e-13",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "clock_rule",
+   "message": "root port:sk: 11,430 sinks on the largest root <= 15,000; measured TT insertion 625.8 ps, leaf spread 238.4 ps",
+   "fix": ""
+  }
+ ]
+}

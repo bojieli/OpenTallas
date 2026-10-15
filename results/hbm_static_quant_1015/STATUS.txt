@@ -1,0 +1,60 @@
+STATIC QUANT NATIVE PROGRAMME COMPONENT ONLY. Actual released ot_hgi_qw_dec3
+arithmetic, eight actual ot_vms_bank_static instances at current NW RG7/WG3,
+Quant RG4/WG2 (zero based), 24 real mapped data SRAM macros, one actual programme
+SRAM using exact VM calendar core3d7520a5f W48. The executable program.hex is
+emitted by tools/hgi_static_quant_calendar.py and loaded through real RTL cfg
+pins; 104 instructions are fetched through real SRAM/capture/issue pipeline.
+
+Exact immutable qdqvec: 8 records,104 beats,3328 words,416 sectors. Actual
+programme launch to macro commit147 cycles versus immutable168. Historical
+WQ3 price184 is separately labelled. Bare command stream component142 cycles.
+No credit, ready, demand queue, behavioral onchip memory or computed-result
+substitute. Every sector write and actual SRAM readback matches independent
+golden, every issue ordinal/cycle is exact, fixed done equals actual bank
+commit pulse every cycle. All three mutants killed for expected causes:
+input sector map, output lane map, unexpected late response (fault/no reschedule).
+
+Bare bank registered response n+6, consumer capture n+7. Decoder25 registered
+stages =24 post-input edges. Old text's26 count caused initial metadata error;
+its immutable failure remains failures/dl26_misaligned.log. From command edge0:
+RQ registered0, bank samples1,response7,gather8,decoder input9,decoder output33,
+WQ registered34,bank samples35,actual commit38. 104 commands+38=142 elapsed
+cycles. Mapped programme output4,engine captures5,so launch+147 fullcomponent.
+
+NOT PHYSICALLY CLOSED. No views for transport/programme/control. Native engine
+is now a wires-only parent with a transport leaf and unchanged DXL/DBQ/DAQ. Five
+independent physical clock entries remain explicit. Physical-split exact gate
+retains 147 launch-to-commit cycles and three killed mutants. Geometry prototype
+has zero 5.4-um halo overlaps and actual closed decoder pin hops <=333.132 um;
+this does not prove timing, PG, new pins or source-matched view reuse. Programme macro174.744x70.470 plus halo; provisional hb_quant parent
+1399.656x648 at14736.384,15958.08 R0 assigned by H-DIE; actual packing/PG/pin/cut
+checks unproven. Actual NW station count not measured; RL/WC and compiler
+reservation parameters remain explicit and must use source-matched measured
+latencies. No old parent alias, physical decoder views not rerouted.
+
+Full native host/global launch target decode and whole-layer programme composition
+remain OPEN. Config/launch ports are explicit, not tied: cfgwe/addr10/data256,
+startv/base10/limit11/loops16. Programme, transport and all three decoder children have separate phi-R
+clock entries. No native wholechip/full unit qualification claim. Local SID0 operand
+relocation reproduces historical B2 component scope, not full multi-SID binding.
+
+NATIVE HOST/NW COMPONENT UPDATE: actual AXI F-window overlay + unchanged actual
+loader CP LCP71 + typed target48 PCW10 (PC12 outer ABI) + actual Quant and NW
+programme SRAMs now composed. Actual NW W187 calendar drives all bank read/write
+selectors, not request-derived gates. Four VM programme macros + Quant programme
+macro +24 actual data macros. All104 issues exact at LCP+9+i, actual macro commit
+151 elapsed cycles versus immutable168 / historical184. Five mutants killed:
+input sector permutation, output lane, late response, wrong bank calendar owner,
+and missing host target binding. Programme root1477 FF plus mapped macro;
+transport4285 FF; five explicit roots, all new roots below15k (not CTS closure).
+Native decoded HGI record lowerer emits byte-identical proved programme; unsupported
+residency/dynamic/predicate/partial-overlap/capacity cases fail closed. Historical
+fixture SID0 relocation is explicit; actual full-chip residency allocation remains
+open. Host dependency frozen619da76cd and exact hashes pinned in native_host_gate.
+
+Still OPEN: compact timestamped record controller/resident profiles for the real
+full-token dependency calendar. The gapless component store is not a whole-token
+schedule; padding inter-unit gaps is not viable and compressor-die expansion can
+exceed1024 words (native_record_census contains representative source evidence and
+explicitly marked1040-beat capacity inference). No new physical closure or full
+native token/layer claim follows from this component proof.

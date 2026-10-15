@@ -29,8 +29,8 @@ module ot_s81_hc_cpin #(
     output reg                 y_rdy,
     input  wire [YS1-1:0]      y_s,
     // the outer roots: accept pulse
-    output reg                 yacc_w,
-    output reg                 yacc_e,
+    (* keep = "true" *) output reg yacc_w,
+    (* keep = "true" *) output reg yacc_e,
     // combine tile seam
     output reg                 n_cmd_v,
     output reg  [83:0]         n_cmd_d,
@@ -44,7 +44,7 @@ module ot_s81_hc_cpin #(
     input  wire                n_flt,
     input  wire                n_online,
     input  wire [3:0]          n_fcode,
-    output reg                 n_yacc,
+    (* keep = "true" *) output reg n_yacc,
     output reg  [YS1-1:0]      n_y,
     input  wire                n_ypop
 );
@@ -60,6 +60,8 @@ module ot_s81_hc_cpin #(
     // slab clock
     reg       pop;
     reg [7:0] cnt;
+    // Each identical acceptance pulse has its own physical pin flop. keep=true prevents synthesis from merging
+    // the W/E/S copies; the recipe-2 pin hook places each at its own face, with no added cycle.
     wire      acc = y_v && y_rdy;
     always @(posedge sk or negedge srs)
         if (!srs) begin

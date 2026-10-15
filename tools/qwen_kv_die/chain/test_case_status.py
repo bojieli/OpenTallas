@@ -6,6 +6,7 @@ from pathlib import Path
 import shutil
 import subprocess
 import tempfile
+import sys
 import unittest
 
 HERE=Path(__file__).resolve().parent
@@ -31,6 +32,16 @@ class CaseStatus(unittest.TestCase):
         for bad in [good.replace('OT_PGCHECK VSS PASS\n',''),good+'OT_PGCHECK VDD FAIL disconnected\n']:
             self.assertNotEqual(S.check(bad,'run_pdn.tcl')['exit_code'],0)
         self.assertEqual(S.check('OT_GRT DONE\n','run.tcl',case_kind='b')['exit_code'],0)
+
+    def test_sta_requires_metrics_and_rejects_actual_missing_clock(self):
+        good="tns -13.2\nwns -1.0\nworst slack -1.0\n"
+        self.assertEqual(S.check(good,"grt_tt.tcl")["exit_code"],0)
+        for bad in ["", "OT_TIME step=load s=8.8\n", good+"Error: grt_tt.tcl, 76 clock boundary pin missing or ambiguous: s_2_0/ck\n"]:
+            self.assertNotEqual(S.check(bad,"grt_tt.tcl")["exit_code"],0)
+        self.assertEqual(S.check(good,"grt_ff.tcl",1)["exit_code"],1)
+        for value in ('---','e','nan','inf','-inf','1e999','-1.0 junk'):
+            with self.subTest(value=value):
+                self.assertNotEqual(S.check(good.replace('wns -1.0','wns '+value),"grt_tt.tcl")["exit_code"],0)
 
     def test_shell_preserves_effective_failure_even_after_final_date(self):
         with tempfile.TemporaryDirectory() as d:
@@ -114,9 +125,18 @@ add_pdn_stripe -grid native -layer M5 -width 0.12 -pitch 2.16 -spacing 0.96 -off
 foreach pair {{M1 M2} {M2 M3} {M3 M4} {M4 M5}} {add_pdn_connect -grid native -layers $pair}
 pdngen
 """
+            if pg == 'complete_r4':
+                sys.path.insert(0,str(ROOT/'tools'))
+                import qwen_rom_fulldie_b3r2 as B
+                flow += '\nset_voltage_domain -name CORE -power VDD -ground VSS\n'
+                flow += 'define_pdn_grid -name core -voltage_domains CORE -pins {M9}\n'
+                flow += 'add_pdn_stripe -grid core -layer M8 -width .48 -pitch 4.32 -offset 0\n'
+                flow += 'add_pdn_stripe -grid core -layer M9 -width .48 -pitch 4.32 -offset 0\n'
+                flow += 'add_pdn_connect -grid core -layers {M8 M9}\n'
+                flow += '\n'.join(B.native_stdcell_pg_lines('core'))+'\npdngen\n'
             if pg:
                 flow += '\nsource /src/physical/common_flow/die_constant_pg_check.tcl\n'
-            if pg == 'complete':
+            if pg in ('complete','complete_r4'):
                 flow += 'foreach net {VDD VSS} {check_power_grid -net $net}\n'
             (p/'run.tcl').write_text(flow)
             run=subprocess.run(['docker','run','--rm','-v',f'{p}:/work','-v',f'{ROOT}:/src:ro',
@@ -147,6 +167,13 @@ pdngen
     def test_actual_pin_rail_contacts_and_connected_grid(self):
         rc,log=self.run_case(mapped=True,strict=True,pg='complete')
         self.assertEqual(rc,0,log[-3000:])
+        self.assertIn('OT_CONST PG_CONTACT cells=2 pins=4',log)
+        self.assertIn('All shapes on net VDD are connected',log)
+        self.assertIn('All shapes on net VSS are connected',log)
+
+    def test_actual_die_native_rail_ladder_reaches_core_M9(self):
+        rc,log=self.run_case(mapped=True,strict=True,pg='complete_r4')
+        self.assertEqual(rc,0,log[-5000:])
         self.assertIn('OT_CONST PG_CONTACT cells=2 pins=4',log)
         self.assertIn('All shapes on net VDD are connected',log)
         self.assertIn('All shapes on net VSS are connected',log)

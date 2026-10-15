@@ -75,7 +75,7 @@ if [ -n "${SUSNAP:-}" ]; then
 fi
 if [ -n "${MIXSNAP:-}" ]; then
   [ "$FP" = rtl ] || { echo "MIX4 integration requires FP=rtl"; exit 1; }
-  LIST="$LIST rtl/hdc/v41x/ot_hdc_v41x_vec_side.sv rtl/dsrom_sys/engram/mix/ot_s81_engram_mix.sv rtl/dsrom_sys/engram/mix/dsfd_engram_mix4_c.sv"
+  LIST="$LIST rtl/dsrom_sys/s81_static_control/ot_s81_fixed_issue.sv rtl/hdc/v41x/ot_hdc_v41x_vec_side.sv rtl/dsrom_sys/engram/mix/ot_s81_engram_mix.sv rtl/dsrom_sys/engram/mix/dsfd_engram_mix4_c.sv"
 fi
 # the hierarchical HC slab modules dsfd_sp_hc.sv names since 10-12 (HIER generate; the bench keeps HIER 0): without them the build fails
 FILES=$( (for f in $LIST; do echo $SRC/$f; done; ls $SRC/rtl/dsrom_sys/s81_suhc/hier/*.sv) | awk '!seen[$0]++')

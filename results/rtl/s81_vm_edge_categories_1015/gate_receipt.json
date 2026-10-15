@@ -1,0 +1,190 @@
+{
+  "schema": "opentallas.s81.vm-edge-category-clock-gate.v1",
+  "source_commit": "fe89a1edc",
+  "status": "ACTUAL_CATEGORY_CONNECTIVITY_AND_EXISTING_AGE_COMPONENT_GATES_PASS_NOT_NATIVE_PHYSICAL_QUALIFICATION",
+  "abi": {
+    "dsfd_vm_static_cap": {
+      "source": "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_cap.sv",
+      "source_sha256": "6f339f5654c5675a8bdaebafb26f6bb1876172f28617d6ad8df21112e55c6ba5",
+      "ports": {
+        "ck_control_s": {
+          "width": 1,
+          "direction": "input"
+        },
+        "ck_lane_s": {
+          "width": 16,
+          "direction": "input"
+        },
+        "ck_x34_s": {
+          "width": 16,
+          "direction": "input"
+        },
+        "ck_x34_t": {
+          "width": 16,
+          "direction": "input"
+        },
+        "rst_control_s": {
+          "width": 1,
+          "direction": "input"
+        },
+        "rst_x34_s": {
+          "width": 16,
+          "direction": "input"
+        },
+        "rss_x34_t": {
+          "width": 16,
+          "direction": "input"
+        }
+      },
+      "parameters": {
+        "E": 8,
+        "CAP_PIPE": 0
+      },
+      "physical_status": "ACTUAL_SOURCE_CATEGORY_PORTS_IMPLEMENTED; nativeCTS/IO/rootreset/phaseNOTQUALIFIED"
+    },
+    "dsfd_vm_static_wfc": {
+      "source": "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_wfc.sv",
+      "source_sha256": "b5e92badc78f2b4782e66b26a7688d6db52f215e9e28e5584ba4d6af0d8d3011",
+      "ports": {
+        "ck_control_s": {
+          "width": 1,
+          "direction": "input"
+        },
+        "ck_control_t": {
+          "width": 1,
+          "direction": "input"
+        },
+        "ck_x34_s": {
+          "width": 1,
+          "direction": "input"
+        },
+        "ck_x34_t": {
+          "width": 1,
+          "direction": "input"
+        },
+        "ck_x43_s": {
+          "width": 1,
+          "direction": "input"
+        },
+        "ck_x43_t": {
+          "width": 1,
+          "direction": "input"
+        },
+        "rst_control_s": {
+          "width": 1,
+          "direction": "input"
+        },
+        "rss_control_t": {
+          "width": 1,
+          "direction": "input"
+        },
+        "rst_x34_s": {
+          "width": 1,
+          "direction": "input"
+        },
+        "rss_x34_t": {
+          "width": 1,
+          "direction": "input"
+        },
+        "rst_x43_s": {
+          "width": 1,
+          "direction": "input"
+        },
+        "rss_x43_t": {
+          "width": 1,
+          "direction": "input"
+        }
+      },
+      "parameters": {
+        "RLAT": 13
+      },
+      "physical_status": "ACTUAL_SOURCE_CATEGORY_PORTS_IMPLEMENTED; nativeCTS/IO/rootreset/phaseNOTQUALIFIED"
+    },
+    "dsfd_vm_static_xio": {
+      "source": "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_xio.sv",
+      "source_sha256": "1f343bb470e8a06456c3519587b671c7665cf3535f69c13060387ed97c1e704f",
+      "ports": {
+        "ck_control_t": {
+          "width": 1,
+          "direction": "input"
+        },
+        "ck_control_s": {
+          "width": 1,
+          "direction": "input"
+        },
+        "ck_x43_t": {
+          "width": 2,
+          "direction": "input"
+        },
+        "ck_x43_s": {
+          "width": 2,
+          "direction": "input"
+        },
+        "rss_control_t": {
+          "width": 1,
+          "direction": "input"
+        },
+        "rst_control_s": {
+          "width": 1,
+          "direction": "input"
+        },
+        "rss_x43_t": {
+          "width": 2,
+          "direction": "input"
+        },
+        "rst_x43_s": {
+          "width": 2,
+          "direction": "input"
+        }
+      },
+      "parameters": {
+        "RLAT": 13
+      },
+      "physical_status": "ACTUAL_SOURCE_CATEGORY_PORTS_IMPLEMENTED; nativeCTS/IO/rootreset/phaseNOTQUALIFIED"
+    }
+  },
+  "source_dependency": "Actualleafde6ef76d6 PIPEparameter; CAP_PIPE0 only testedhere, PIPE1ownedbank_fix",
+  "scope": "61actualcategoryclockbits and45rawresetbits tested independentlyatDUTchildpins. Productionmodulebodies identical afterpureclock/resetrenames; capPIPEpassthroughdefaults0.",
+  "ot_run": {
+    "host": "ot-epyc4",
+    "unit": "oth-ubuntu-2043913-1792063201",
+    "memory_gb": 8,
+    "threads": 1,
+    "exit_status": 0
+  },
+  "tests": {
+    "pin_connection": "61clock45resetbits individuallypulsed,allactualconsumerpinsexpectedonly",
+    "negative": "WFCu_xi.t_ck actualsourcecollapsedtocontrolclockcausesEDGE_BIND_FAIL",
+    "capture_default0": {
+      "phases": 14,
+      "full_rows": 1735,
+      "partial_rows": 8,
+      "missing": 0,
+      "bad": 0,
+      "result": "PASS"
+    },
+    "xio": {
+      "independent_tuples_and_tags": 4,
+      "consecutive_reads": 128,
+      "latency_stream_edges": 12,
+      "result": "PASS"
+    },
+    "wfc_and_all_bodies": "Normalizedlexicalbodyproofidenticaltopinnedbaselineafterclock/resetpinnameresolution; WFC functionalage changesNOTincluded."
+  },
+  "remaining_gates": [
+    "S_VMtop/core/wrappermustconnectmandatorycategoryarrayswithoutfallback",
+    "Nativecommon3:4phase/Rinsertionperroot,perbitlaunchcapture,resetregisteredtree/epochlatency",
+    "CAP16rn inputsstillshareparentrq2synchronizedrelease;physicaldistributionexplicitOPEN,noextra2syncagesadded",
+    "ParentreadrouterL13+XIOphaselegalset/WFC3responsepadrealFF/latencyprogrammeownedS_VM; notqualifiedbythisoldagecomponentgate",
+    "FullproductioncapturePIPE1/+1serialcontractandnativephysicalcapsownedbank_fix/S_VM",
+    "NativeCTS/TTFFDRC/PG/IOforactualcategoryleaves andfullcanonicalgeometry/calendar/throughput"
+  ],
+  "artifacts": {
+    "run_bind.log": "19282fa11d496985956cca1dd9b6e2be89410efe999f6e0a7ede7fd0bac3e33e",
+    "input_sha256.txt": "df1642fe209da5a99c10f5ccc0dd914b0c0f883e7b42dfdaa9ccd16da0a7b602",
+    "run_cap.log": "52f602c014a174d1d2cf224d0f7f4b9c9c793525437088d1441219591857cdbf",
+    "run_bind_mut.log": "d574774a0d7a6a776283d0838397c8054856290c04db9f49d066950a55ed0cde",
+    "run_xio.log": "19ea24962ca37b792c6d4c34a874ec02574f52bbeaf52f9ac217531324f259e5",
+    "source_receipt.json": "63ee008b5912c5ee1e6306970269a16e456a0be5068afb6e3ff8615bfddc18f4"
+  }
+}

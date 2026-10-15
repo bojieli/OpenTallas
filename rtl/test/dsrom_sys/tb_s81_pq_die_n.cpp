@@ -45,6 +45,7 @@ static void drive_die(Vdie& m,const Stim& s,uint64_t q0,uint64_t q1,uint64_t q2)
 #endif
 }
 template<class M> void clk(M& m,int v){
+    if constexpr(requires {m.ck_qb_align;}) m.ck_qb_align=v;
     m.ck_ctl=m.ck_qb=m.ck_fault=v;m.ck_aq=v?3:0;m.ck_ix=v?15:0;m.ck_bc=v?(sizeof(m.ck_bc)>1?65535:15):0;
     if constexpr(requires {m.ck_ix_read;}) m.ck_ix_read=v?0xffffffffU:0;
     if constexpr(requires {m.ck_aq_aux;}) m.ck_aq_aux=v?65535:0;

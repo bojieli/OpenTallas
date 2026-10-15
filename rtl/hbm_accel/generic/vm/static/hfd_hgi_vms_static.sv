@@ -17,10 +17,10 @@ module hfd_hgi_vms_static_SW (
     input wire [5:0] hub_ring_client,
     input wire [7:0] rslot_v,
     input wire [7:0] wslot_v,
-    input wire [15:0] rslot,
+    input wire [23:0] rslot,
     input wire [23:0] wslot,
-    input wire [407:0] rq,
-    output wire [6167:0] rr,
+    input wire [679:0] rq,
+    output wire [10279:0] rr,
     input wire [2247:0] wq,
     output wire [7:0] wq_done,
     input wire [2247:0] dq,
@@ -41,7 +41,7 @@ module hfd_hgi_vms_static_SW (
     output wire [18:0] vmstat,
     output wire [2:0] ring_fault
 );
-    ot_vms_slice_static #(.NC(7),.RG(3),.WG(1)) u_slice (
+    ot_vms_slice_static #(.NC(7),.RG(5),.WG(1)) u_slice (
         .clk_bank(clk_bank),
         .clk_hub(clk_hub),
         .clk_ring(clk_ring),
@@ -99,10 +99,10 @@ module hfd_hgi_vms_static_SE (
     input wire [1:0] hub_ring_client,
     input wire [7:0] rslot_v,
     input wire [7:0] wslot_v,
-    input wire [15:0] rslot,
+    input wire [23:0] rslot,
     input wire [23:0] wslot,
-    input wire [407:0] rq,
-    output wire [6167:0] rr,
+    input wire [679:0] rq,
+    output wire [10279:0] rr,
     input wire [2247:0] wq,
     output wire [7:0] wq_done,
     input wire [2247:0] dq,
@@ -124,7 +124,7 @@ module hfd_hgi_vms_static_SE (
     output wire [2:0] ring_fault
 );
     wire [273:0] vacant_cr; // NC=0: no local clients exist.
-    ot_vms_slice_static #(.NC(0),.RG(3),.WG(1)) u_slice (
+    ot_vms_slice_static #(.NC(0),.RG(5),.WG(1)) u_slice (
         .clk_bank(clk_bank),
         .clk_hub(clk_hub),
         .clk_ring(clk_ring),
@@ -186,8 +186,8 @@ module hfd_hgi_vms_static_NW (
     input wire [7:0] wslot_v,
     input wire [23:0] rslot,
     input wire [23:0] wslot,
-    input wire [679:0] rq,
-    output wire [10279:0] rr,
+    input wire [951:0] rq,
+    output wire [14391:0] rr,
     input wire [6743:0] wq,
     output wire [23:0] wq_done,
     input wire [2247:0] dq,
@@ -208,7 +208,7 @@ module hfd_hgi_vms_static_NW (
     output wire [18:0] vmstat,
     output wire [2:0] ring_fault
 );
-    ot_vms_slice_static #(.NC(4),.RG(5),.WG(3)) u_slice (
+    ot_vms_slice_static #(.NC(4),.RG(7),.WG(3)) u_slice (
         .clk_bank(clk_bank),
         .clk_hub(clk_hub),
         .clk_ring(clk_ring),
@@ -268,8 +268,8 @@ module hfd_hgi_vms_static_NE (
     input wire [7:0] wslot_v,
     input wire [23:0] rslot,
     input wire [23:0] wslot,
-    input wire [679:0] rq,
-    output wire [10279:0] rr,
+    input wire [951:0] rq,
+    output wire [14391:0] rr,
     input wire [6743:0] wq,
     output wire [23:0] wq_done,
     input wire [2247:0] dq,
@@ -291,7 +291,7 @@ module hfd_hgi_vms_static_NE (
     output wire [2:0] ring_fault
 );
     wire [273:0] vacant_cr; // NC=0: no local clients exist.
-    ot_vms_slice_static #(.NC(0),.RG(5),.WG(3)) u_slice (
+    ot_vms_slice_static #(.NC(0),.RG(7),.WG(3)) u_slice (
         .clk_bank(clk_bank),
         .clk_hub(clk_hub),
         .clk_ring(clk_ring),

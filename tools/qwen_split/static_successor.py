@@ -43,7 +43,8 @@ p=d/'ot_qwen_rom_core_ctrl_static.sv';p.write_text('`timescale 1ns/1ps\n// Stati
 # Successor head/tree circuits have explicit distinct names. Archived source untouched.
 src2=root/'rtl/physical/ot_qfd_tt_ctlm_split.sv';s=src2.read_text();s=s[:s.index('module ot_qfd_tt_ctlm_split #(')]
 s=s.replace('qfd_tt_ctlm_head','qfd_tt_ctlm_head_static').replace('qfd_tt_ctlm_tree','qfd_tt_ctlm_tree_static').replace('ot_qwen_rom_core_ctrl_x_i','ot_qwen_rom_core_ctrl_static')
-s=s.replace('    input wire  clk,','    input wire clk,\n    input wire ck_sched,\n    input wire cp_active,\n    output reg [55:0] cp,\n    output reg layer_context_v,\n    output reg [17:0] native_tok,native_pos,',1)
+s=s.replace('    parameter integer PSRAM = 1,', '    parameter integer DENSE_IMAGE=1,\n    parameter integer PSRAM = 1,',1)
+s=s.replace('    input wire  clk,','    input wire clk,\n    input wire ck_sched,\n    input wire cp_active,\n    output reg [55:0] cp,\n    output reg layer_context_v,\n    output reg [17:0] native_tok,native_pos,\n    output wire me_image_ready,\n    output reg [75:0] program_obs,',1)
 s=s.replace('        .start(q_h_start),','''        .start(q_h_start),
         .fixed_issue(fixed_issue),.fixed_end(fixed_end),.fixed_unit(fixed_unit),.fixed_fault(schedule_fault|program_load_fault),
         .accepted_start(accepted_start),.candidate_v(candidate_v),.candidate_pc(candidate_pc),.candidate_unit(candidate_unit),
@@ -71,13 +72,13 @@ a=s.index('    wire s_me_ready,');s=s[:a]+'''    wire fixed_issue,fixed_end,sche
       else if(q_pw_v && q_pw_addr==1017) schedule_stage<=q_pw_data[17:12];
     // ck_sched and clk are independently entered, compiler phase-matched roots.
     // Candidate is sampled at the real decoder issue phase; there is no wait.
-    ot_qwen_fixed_issue_pw #(.OWN(1)) u_fixed_issue (
+    ot_qwen_fixed_issue_pw #(.DENSE_IMAGE(DENSE_IMAGE),.OWN(1)) u_fixed_issue (
       .clk(ck_sched),.rst_n(rsv[1]),.pw_v(q_pw_v),.pw_addr(q_pw_addr),.pw_data(q_pw_data),
       .start(q_h_start && q_prog_base==0),.stage(schedule_stage),
       .candidate_v(candidate_v),.candidate_pc(q_prog_base+candidate_pc),.candidate_unit(candidate_unit),
       .available(candidate_available),.end_ok(candidate_end_ok),.cp_available(!cp_active_q),
       .issue_v(fixed_issue),.end_v(fixed_end),.cp_cmd(cp_cmd),.cp_v(cp_v),.issue_pc(fixed_pc),.issue_unit(fixed_unit),
-      .active(schedule_active),.done(),.cycle(),.fault(schedule_fault));
+      .active(schedule_active),.done(),.cycle(),.image_ready(me_image_ready),.fault(schedule_fault));
 '''+s[a:]
 # Remove entire tree private shadow-control circuit and dynamic ICG.
 a=s.index('    wire local_en, ec;');b=s.index('    wire up_fault_c',a)
@@ -91,6 +92,13 @@ s='`timescale 1ns/1ps\n// NEW static physical masters; archived closed head/tree
 s=s.replace('    output wire [379:0] cmd,','    output wire [379:0] cmd,\n    output reg [15:0] me_observe,',1)
 a=s.index('    assign cmd = ')
 s=s[:a]+"    always @(posedge clk or negedge rrv[6])\n      if(!rrv[6])begin me_observe<=0;cp<=0;end\n      else begin me_observe<={fixed_issue||cp_v,candidate_v,fixed_unit,q_prog_base+candidate_pc};cp<=cp_cmd;end\n"+s[a:]
+# Actual macroconsumed-write observation stays local to head, no2062b pin bus.
+s=s.replace('        for (m = 0; m < 2; m = m + 1) begin : g_m', '        wire [1:0] program_raw_ce;wire [11:0] program_raw_row;wire [1023:0]program_raw_data,program_raw_mask;\n        for (m = 0; m < 2; m = m + 1) begin : g_m',1)
+s=s.replace('            ot_sram_1r1w_64x512_m1_r2c2 u_pm', '            assign program_raw_ce[m]=w_ce;assign program_raw_row[6*m+:6]=pw_row2;\n            assign program_raw_data[512*m+:512]={8{pw_d2}};assign program_raw_mask[512*m+:512]=w_mask;\n            ot_sram_1r1w_64x512_m1_r2c2 u_pm',1)
+s=s.replace('.w_ce_in(w_ce), .w_addr_in(pw_row2), .wd_in({8{pw_d2}}), .w_mask_in(w_mask)', '.w_ce_in(program_raw_ce[m]), .w_addr_in(program_raw_row[6*m+:6]), .wd_in(program_raw_data[512*m+:512]), .w_mask_in(program_raw_mask[512*m+:512])',1)
+a=s.index('        if (PMUT != 0) begin : g_pmut')
+s=s[:a]+"        wire observed_v,observed_full;wire [9:0]observed_addr;wire [63:0]observed_data;\n        qkd_program_pw_observer u_program_observer(.macro_ce(program_raw_ce),.macro_row(program_raw_row),.macro_data(program_raw_data),.macro_mask(program_raw_mask),.consumed_v(observed_v),.consumed_addr(observed_addr),.consumed_data(observed_data),.full_word(observed_full));\n        always @(posedge clk or negedge rst_n)\n          if(!rst_n)program_obs<=0;else program_obs<={observed_v,observed_full,observed_addr,observed_data};\n"+s[a:]
+s=s.replace('        reg [1023:0] prog_mem [0:63];', '        reg [9:0]observed_ff_addr;\n        always @(posedge clk)observed_ff_addr<=q_pw_addr;\n        always @(posedge clk or negedge rst_n)\n          if(!rst_n)program_obs<=0;else program_obs<={|pw_row2,((pw_row2&(pw_row2-1))==0)&&((pw_word2&(pw_word2-1))==0),observed_ff_addr,pw_d2};\n        reg [1023:0] prog_mem [0:63];',1)
 # Shadow-only interface pins have no remaining receiver in the static tree.
 a=s.index('module qfd_tt_ctlm_tree_static');h,b=s[a:].split('\n);',1)
 for n in ['me_mem_ok','h_start','token','pos','prog_base','pw_v','pw_addr','pw_data','x_oacc','x_oidle','x_oprog','x_orows','kv_ok','kv_write_drained']:

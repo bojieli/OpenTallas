@@ -13,12 +13,18 @@
 // row[3:0] = G), so the write service's lane rule is met at full rate; any other overlap is a write-service fault.
 // Faults (sticky, OR -> fault): lane faults (range, alignment, alias, duplicate, two rows due), capture status fault
 // (st[3]), x34 epoch / phase assertions.  No ready, credit, queue or timeout.
-// Latency (fixed): element at the f_capture pin, serial edge P -> lane row registered P + 3 (pin, merge, out) -> x34
-// stream output at the fixed epoch slot of that serial edge (+2..4 stream edges, x34 header) -> write source.
+// Exact measured age, P=zero-based physical f_capture PIN SAMPLE edge: legacy lane row at P+1,
+// CAP_PIPE=1 lane row at P+2; x34 samples that row at q=P+2+CAP_PIPE. Its stream output
+// is registered at edge 4*floor(q/3)+2+(q%3). The bench's one-based tk adds1 only for reporting.
+// +1 serial stage moves first stream visibility by [1,1,2] edges over the three phases; II remains1.
 // ---------------------------------------------------------------------------------------------------------------
-module dsfd_vm_static_cap #(parameter integer E = 8) (
-    input  wire            ck, rst,             // serial clock, async low reset (released on the common epoch)
-    input  wire            cks, rss,            // stream clock / reset
+module dsfd_vm_static_cap #(parameter integer E = 8, parameter integer CAP_PIPE = 0) (
+    // Actual source categories. All serial/stream roots share the 3:4 PLL
+    // epoch; each physical entry receives its own measured phi-R delivery.
+    input wire ck_control_s,
+    input wire [15:0] ck_lane_s, ck_x34_s, ck_x34_t,
+    input wire rst_control_s,
+    input wire [15:0] rst_x34_s, rss_x34_t, // per-root active-low epoch resets
     input  wire [13375:0]  f_capture,
     output wire [15:0]     w_v,                 // stream domain, one row write per lane
     output wire [223:0]    w_row,
@@ -27,15 +33,22 @@ module dsfd_vm_static_cap #(parameter integer E = 8) (
     output wire            fault                // serial-domain sticky level (lanes + status) | stream x34 faults
 );
     reg [1:0] rq;
-    always @(posedge ck or negedge rst) if (!rst) rq <= 2'b00; else rq <= {rq[0], 1'b1};
+    always @(posedge ck_control_s or negedge rst_control_s) if (!rst_control_s) rq <= 2'b00; else rq <= {rq[0], 1'b1};
+    // Preserve the existing two-edge synchronized release to the capture
+    // lanes. Its physical registered reset-distribution tree/epoch arrival
+    // remains a native integration gate; replacing rn with raw reset or a
+    // new synchronizer here would change the fixed capture startup age.
     wire rn = rq[1];
+    // CAP_PIPE selects only the source-owned capture implementation; default0
+    // preserves the existing lane age. Selecting1 requires the compiler
+    // programme and leaf owner's fixed +1serial capture contract.
     // Status pin register; each hard lane owns its 832-bit data pin register.
     reg [63:0] status_q;
-    always @(posedge ck) status_q <= rn ? f_capture[13312 +: 64] : 64'd0;
+    always @(posedge ck_control_s) status_q <= rn ? f_capture[13312 +: 64] : 64'd0;
     wire [63:0] st = status_q;
     reg dr_q, armed, s_flt;
     wire flush = st[2] && !dr_q && armed && !st[0];
-    always @(posedge ck)
+    always @(posedge ck_control_s)
         if (!rn) begin dr_q <= 1'b0; armed <= 1'b0; s_flt <= 1'b0; end
         else begin
             dr_q <= st[2];
@@ -47,11 +60,11 @@ module dsfd_vm_static_cap #(parameter integer E = 8) (
     genvar g;
     generate for (g = 0; g < 16; g = g + 1) begin : lane
         wire ov; wire [13:0] orow; wire [15:0] om; wire [511:0] od;
-        dsfd_vm_static_cap_leaf #(.E(E)) u_l (.ck(ck), .rn(rn), .gid(g[3:0]), .f_c(f_capture[832*g +: 832]), .flush(flush),
+        dsfd_vm_static_cap_leaf #(.E(E), .PIPE(CAP_PIPE)) u_l (.ck(ck_lane_s[g]), .rn(rn), .gid(g[3:0]), .f_c(f_capture[832*g +: 832]), .flush(flush),
             .o_v(ov), .o_row(orow), .o_m(om), .o_d(od), .flt(lf[5*g +: 5]));
         wire xv; wire [541:0] xd;
-        ot_s81_vm_x34 #(.W(542)) u_x (.s_ck(ck), .s_rst_n(rst), .s_v(ov), .s_d({od, om, orow}),
-            .t_ck(cks), .t_rst_n(rss), .o_v(xv), .o_d(xd), .fault(xf[g]));
+        ot_s81_vm_x34 #(.W(542)) u_x (.s_ck(ck_x34_s[g]), .s_rst_n(rst_x34_s[g]), .s_v(ov), .s_d({od, om, orow}),
+            .t_ck(ck_x34_t[g]), .t_rst_n(rss_x34_t[g]), .o_v(xv), .o_d(xd), .fault(xf[g]));
         assign w_v[g] = xv;
         assign w_row[14*g +: 14] = xd[13:0];
         assign w_m[16*g +: 16] = xd[29:14];

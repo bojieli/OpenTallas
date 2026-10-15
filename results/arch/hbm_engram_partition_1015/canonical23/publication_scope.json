@@ -1,0 +1,21 @@
+{
+  "qualification": false,
+  "full_native_qualified": false,
+  "physical_qualified": false,
+  "universal_timing_bound_proven": false,
+  "source_scope": "Actual source closure of1682b6045 +0a08c04bf, native read32 c6649bc0b and descriptor-isolated target124be3fcf2d7. Exact12/12 L1 and L14 source hashes,13/13 programme composition hashes match publication tree.",
+  "measured_component": "Actual L1/L14 sampled24row216sector native memory path with23-edge external oracle and fixed2624core-edge fixture; actual42op SRAM issuer composition L1 uses explicit FETCH_EDGES2624 parameter. Production fetch default18944 retained.",
+  "known_controller_defect": {
+    "owner": "h_die/service_native",
+    "source": "rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc.sv",
+    "observed": "Confirmed swizzled PC20 bank12 PRE and RD at118409ps in independent successor trace.",
+    "status": "Focused same-edge column-admission fix being developed. No corrected source verdict yet.",
+    "consequence": "Passing sampled component receipts cannot establish universal REF-phase timing, current DMA price, shared-client admission or production operation qualification."
+  },
+  "remaining": [
+    "Correct and reprove actual common-controller source across adversarial phase/bank/row cases",
+    "Full host/fourVM image integration",
+    "Universal calendar bound and whole-operation throughput",
+    "Physical clock/pin/cut/route qualification"
+  ]
+}

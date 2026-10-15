@@ -149,9 +149,9 @@
     {
       "gap": "hbm_serdes_hostphy",
       "priority": 1,
-      "ownership_evidence": "unconfirmed; q_control_host explicitly excludes HBM source",
+      "ownership_evidence": "H-DIE direct confirmation: root owns actual HOST digital recovery; dedicated SerDes geometry/source join owner still needed; H-DIE owns full197master32SM candidate only",
       "recommended_owner": "h_die endpoint owner",
-      "next_action": "Three actual rootedSerDes487 source/bench files absent; source_plan host slot request is proposal, cannot publish with invented slot.",
+      "next_action": "Three actual rootedSerDes487 source/bench files absent; source_plan host slot request is proposal, cannot publish with invented slot. Actual R0 endpoint2924x831um does not fit old HOST594x16824/SerDes260x1652 footprint; new shape needs repack.",
       "source_comparisons": [
         {
           "commit": "fe3cbf1e8",
@@ -210,7 +210,7 @@
     {
       "gap": "hbm_attention_quant_idx",
       "priority": 0,
-      "ownership_evidence": "h_elements_a excludes; h_hc_sfu excludes; h_elements_b response pending",
+      "ownership_evidence": "H-ELEM-A explicitly excludes IDX/attention/quant; h_hc_sfu excludes quant/attention; H-ELEM-B completed SU census/TOPK handoff without confirmation of current attention/quant work",
       "recommended_owner": "dedicated HBM attention/quant owner if H-ELEM-B cannotcover",
       "next_action": "Old HBM attentionhi/lo fullrepack/VM/quantPAY successors require explicit active ownership beyond SU/TOPK.",
       "source_comparisons": []
@@ -232,5 +232,16 @@
       "source_comparisons": []
     }
   ],
-  "ownership_changes_are_completion": false
+  "ownership_changes_are_completion": false,
+  "followup_as_of": "2026-10-15T07:35:45.069550+00:00",
+  "followup_note": "Original comparisons above are an immutable dated source-orphan snapshot; follow-up ownership does not prove goal completion.",
+  "followup_ownership": {
+    "q_dense": "q_control_host actual current HOST/sequence/dense consumer, source published, outer static sequencer still being repaired",
+    "q_embedding": "gateway/controller dependency closure published2dd60186a; native_embedding current real source/calendar/profile work active",
+    "s81_mtp": "s_mtp explicitly owns first-release native MTP, W/E/K256/cache components published419f74804; complete actual head recursion/accept/reject calendar remains open",
+    "hbm_attention": "h_attention_quant explicitly resumed actual fixed-calendar controller rewrite; static_quant_engine active component source published87e0acece",
+    "hbm_idx": "h_idx actual fixed-pass selector component source published50f6b0b7f; full actual INDEX/VM path qualification remains open",
+    "hbm_hostphy": "root FEC/digital recovery candidate published, actual HOST clock/slot/geometry remains unqualified",
+    "s81_field": "q_native_compute assigned actual released canonical FIELD production composition;1792-pathfinding results do not qualify2417-pair target"
+  }
 }

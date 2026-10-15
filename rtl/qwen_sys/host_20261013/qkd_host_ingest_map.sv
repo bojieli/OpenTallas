@@ -5,7 +5,7 @@
 // Output per stack is {data256,row19,col5,bank5,lpc5,v}291, four initial
 // downstream credits per logical PC. End marker66 is held until real commit count reaches
 // all previously emitted sectors. Host QPIPE is write-only; RMW faults.
-module qkd_host_ingest_map #(parameter integer MUT=0,ORDERED=0)(
+module qkd_host_ingest_map #(parameter integer MUT=0,ORDERED=0,BOOT_SCRATCH_ROW=0)(
  input wire ck,rst_n,
  input wire[289:0]ing,output reg ing_cr,
  output reg[1163:0]out,input wire[127:0]out_cr,
@@ -35,6 +35,9 @@ module qkd_host_ingest_map #(parameter integer MUT=0,ORDERED=0)(
    else begin stack=s[6:5];pc=s[4:0];p=10'd384+10'(s[13:7]);row=19'd24575;end
    bank={p[9:7],p[1:0]};col=p[6:2];
   end
+  // Cold boot checker owns this scratch row on all PCs. Even a future address
+  // map revision must fail closed if a payload aliases its reserved storage.
+  good=good&&(row!=BOOT_SCRATCH_ROW);
   if(MUT==1)bank=bank^5'd1;
  end
  wire mark=pending&&addr==32'hffffffff&&we;

@@ -40,6 +40,16 @@ def main():
     if not field['native_xf_chained'] or field['rows'] != 129280:
         raise ValueError('actual full-row HC-to-field chain required')
     shutil.copyfile(a.expect, a.output/'expect.mem')
+    # The terminal bench compares every logit against an independent checker.
+    # Never use rtl_logits_r*.mem as these expected values.
+    checker_logits = {}
+    for rank in range(4):
+        src = a.expect.parent/f'logits_r{rank}.mem'
+        words = src.read_text().split()
+        if len(words) != 32320 or any(len(x) != 8 for x in words):
+            raise ValueError(f'independent checker logits missing rank {rank}')
+        shutil.copyfile(src, a.output/src.name)
+        checker_logits[src.name] = dict(path=str(src), sha256=sha(src))
     terminal = Path(__file__).with_name('head_stage.py')
     verdicts = []
     for mutant in (0, 1):
@@ -57,6 +67,7 @@ def main():
                    expected_checker=dict(path=str(a.expect), sha256=sha(a.expect),
                                          token=int(expected[0],16), bits=expected[1]),
                    field_provenance_sha256=sha(a.output/'field.provenance.json'),
+                   independent_checker_logits=checker_logits,
                    tools={x.name:sha(x) for x in (Path(__file__), terminal,
                           Path(__file__).with_name('collect_native_head_field.py'))},
                    terminal=verdicts)

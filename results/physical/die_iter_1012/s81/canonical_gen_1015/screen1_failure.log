@@ -1,0 +1,21 @@
+ot-run: ot-epyc1tb     skipped: load hold: load1 > 1.5 x cores
+ot-run: ot-epyc4       admits   555 GB (avail 781, growth 91, headroom 48, waiters 0/0 GB) load 33/128 running 19 disk 532 GB 
+ot-run: ot-pve1        skipped: load hold: load1 > 1.5 x cores
+ot-run: ot-agidock128  skipped: load hold: load1 > 1.5 x cores
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-1258588-1792051098 after 0 s
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch/codex-canonical-gen-1015/src/tools/s81/canonical_screen.py", line 31, in <module>
+    if __name__=='__main__':sys.exit(main())
+                                     ~~~~^^
+  File "/srv/opentallas-scratch/codex-canonical-gen-1015/src/tools/s81/canonical_screen.py", line 9, in main
+    p=argparse.ArgumentParser();p.add_argument('mode');p.add_argument('--k',type=int,default=16);G.die_options(p);opts=p.parse_args(a.args);G.apply_options(opts);assert G.CANONICAL_LAYOUT is not None
+                                                                                                                                            ~~~~~~~~~~~~~~~^^^^^^
+  File "/srv/opentallas-scratch/codex-canonical-gen-1015/src/tools/dsrom_s81_fulldie.py", line 9577, in apply_options
+    slot_geometry()
+    ~~~~~~~~~~~~~^^
+  File "/srv/opentallas-scratch/codex-canonical-gen-1015/src/tools/dsrom_s81_fulldie.py", line 3033, in slot_geometry
+    assert DIE_KIND in LAYER_KINDS and BF_PER_REGION is not None and NV_PAIRS == 0, \
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: mixed q/BF heights need an r8 layer die with explicit --bf-per-region and no NV
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-1258588-1792051098): exit 1

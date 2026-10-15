@@ -1,0 +1,47 @@
+{
+ "gate_dump_sha256": "3c466458b81ac5bed84f279d179b931e6caa81be7b7eff362a7525e41776f693",
+ "source_gate_commit": "fc03a9b01",
+ "geometry_scope": "actual IO placement; CTS timing diagnostic, not routed native qualification",
+ "die": [
+  0.0,
+  0.0,
+  64.8,
+  136.08
+ ],
+ "clock_reset": [
+  [
+   "clk",
+   "clk",
+   "SIGNAL",
+   "INPUT",
+   [
+    [
+     "M4",
+     [
+      0.0,
+      60.48,
+      0.084,
+      60.504
+     ]
+    ]
+   ]
+  ],
+  [
+   "rst_n",
+   "rst_n",
+   "SIGNAL",
+   "INPUT",
+   [
+    [
+     "M4",
+     [
+      0.0,
+      62.496,
+      0.084,
+      62.52
+     ]
+    ]
+   ]
+  ]
+ ]
+}

@@ -1,0 +1,163 @@
+{
+  "schema": "opentallas.hbm-static-quant-physical-prototype.v1",
+  "qualified": false,
+  "parent": {
+    "origin_um": [
+      14736.384,
+      15958.08
+    ],
+    "outline_um": [
+      1399.656,
+      648.0
+    ],
+    "orientation": "R0",
+    "assignment": "H-DIE provisional"
+  },
+  "child_bboxes_um": {
+    "transport": [
+      432.0,
+      162.0,
+      864.0,
+      486.0
+    ],
+    "programme": [
+      162.0,
+      216.0,
+      378.0,
+      345.6
+    ],
+    "dxl": [
+      918.0,
+      324.0,
+      1038.96,
+      444.96
+    ],
+    "dbq": [
+      1051.92,
+      324.0,
+      1172.88,
+      444.96
+    ],
+    "daq": [
+      918.0,
+      180.0,
+      1047.6,
+      309.6
+    ]
+  },
+  "child_halo_um": 5.4,
+  "halo_overlaps": [],
+  "decoder_pin_links": [
+    {
+      "source": "dxl.xs",
+      "target": "dbq.xs",
+      "bits": 1024,
+      "max_manhattan_um": 233.6640000000001,
+      "mean_manhattan_um": 133.96359374999813
+    },
+    {
+      "source": "dxl.xs",
+      "target": "daq.xs",
+      "bits": 1024,
+      "max_manhattan_um": 333.13199999999995,
+      "mean_manhattan_um": 247.65771875000124
+    },
+    {
+      "source": "dxl.xb",
+      "target": "dbq.xb",
+      "bits": 1024,
+      "max_manhattan_um": 79.66799999999989,
+      "mean_manhattan_um": 43.23600781250002
+    },
+    {
+      "source": "dxl.xa",
+      "target": "daq.xa",
+      "bits": 1024,
+      "max_manhattan_um": 105.012,
+      "mean_manhattan_um": 57.1799999999996
+    },
+    {
+      "source": "dbq.byo",
+      "target": "daq.byo",
+      "bits": 512,
+      "max_manhattan_um": 215.4805000000002,
+      "mean_manhattan_um": 166.01196875000008
+    },
+    {
+      "source": "dbq.bvo",
+      "target": "daq.bvo",
+      "bits": 1,
+      "max_manhattan_um": 119.44850000000014,
+      "mean_manhattan_um": 119.44850000000014
+    },
+    {
+      "source": "dbq.bfo",
+      "target": "daq.bfo",
+      "bits": 1,
+      "max_manhattan_um": 119.48050000000018,
+      "mean_manhattan_um": 119.48050000000018
+    }
+  ],
+  "decoder_sources_sha256": {
+    "physical/ref_tile/qw_dxl_ref/views/ot_hgi_qw_dxl/ot_hgi_qw_dxl.lef": "b78e9d8d8a343eb0f2e89ae3021c1683b6d7bc89aed9c01ea98c0f00af56d21e",
+    "physical/ref_tile/qw_dxl_ref/views/ot_hgi_qw_dxl/insertion.json": "281382b3ade02f17b2c1e7d736b2aead45d8356844de5e2d1264c3efe2d51f75",
+    "physical/ref_tile/qw_dbq_ref/views/ot_hgi_qw_dbq/ot_hgi_qw_dbq.lef": "246c6efe88d6900b99f4aa62618f86b4b79d89a6c987670b9eb6844693a7b1ba",
+    "physical/ref_tile/qw_dbq_ref/views/ot_hgi_qw_dbq/insertion.json": "80ef277babb5dae9301e077b26ba135f73500f353197d7347ce7f1b0bef8038a",
+    "physical/ref_tile/qw_daq_ref/views/ot_hgi_qw_daq/ot_hgi_qw_daq.lef": "e91c90b7fbc60151665e539b725b93ba94bf1bc82dd7633d0c25189a5cfb24a2",
+    "physical/ref_tile/qw_daq_ref/views/ot_hgi_qw_daq/insertion.json": "af0c758e09ac277f12790ad7021eb04ddbaa5d6eb0bc5a584e30f8b41d774eb6"
+  },
+  "transport_pins": {
+    "N": "8xrq17+8xrr257=2192",
+    "S": "8xwq281=2248",
+    "E": "dec_x1024+header128+valid1+result512+vo/fault/decode3=1668",
+    "W": "programme48"
+  },
+  "assumed_signal_track_pitch_um": 0.096,
+  "max_track_utilization": 0.6,
+  "transport_cut_N": 0.4871111111111111,
+  "transport_cut_S": 0.49955555555555553,
+  "transport_cut_E": 0.49422222222222223,
+  "programme_macro": {
+    "outline_um": [
+      174.744,
+      70.47
+    ],
+    "local_origin_um": [
+      21.6,
+      21.6
+    ],
+    "halo_um": 5.4
+  },
+  "clock_entries": [
+    "ck_program",
+    "ck_transport",
+    "ck_dxl",
+    "ck_dbq",
+    "ck_daq"
+  ],
+  "closed_clock_delivery": {
+    "dxl": {
+      "TT_R_ps": 184.0,
+      "TT_boundary_spread_ps": 25.599999999999994,
+      "policy": "deliver phi-R at this child clock pin"
+    },
+    "dbq": {
+      "TT_R_ps": 168.7,
+      "TT_boundary_spread_ps": 23.19999999999999,
+      "policy": "deliver phi-R at this child clock pin"
+    },
+    "daq": {
+      "TT_R_ps": 179.9,
+      "TT_boundary_spread_ps": 25.099999999999994,
+      "policy": "deliver phi-R at this child clock pin"
+    }
+  },
+  "outstanding": [
+    "source-matched child ABI/reset/phase/pin-register audit",
+    "new leaf synthesis/CTS/TT/FF/DRC/PG closure",
+    "actual pin assignment and channel-layer capacity",
+    "new programme/transport pins to closed decoder pins timing/reach",
+    "actual NW bank station latency and channels",
+    "host/global launch programme target binding"
+  ]
+}

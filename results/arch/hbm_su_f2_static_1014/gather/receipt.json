@@ -1,0 +1,74 @@
+{
+  "status": "PASS native indexed scalar component with observed mutants",
+  "positive_word_checks": 304,
+  "canonical_routes": 6,
+  "structural_routes": 32,
+  "actual_native_banks": 32,
+  "actual_SRAM_macros": 96,
+  "fixed_cycles_per_transaction": 36,
+  "read_sample_edges": 11,
+  "write_commit_edges": 8,
+  "exits": [
+    0,
+    134,
+    134,
+    134
+  ],
+  "mutants": [
+    "runtime index bitflip",
+    "dependent score address bitflip",
+    "index capture phase shifted"
+  ],
+  "native_bank_source_commit": "0334452",
+  "host": "ot-epyc4",
+  "unit": "oth-ubuntu-1586512-1792056885",
+  "admission_GiB": 8,
+  "threads": 1,
+  "canonical_config": {
+    "index_words": [
+      88512,
+      88513,
+      88514,
+      88515,
+      88516,
+      88517
+    ],
+    "score_base": 87360,
+    "score_limit_exclusive": 87744,
+    "dest_words": [
+      88576,
+      88577,
+      88578,
+      88579,
+      88580,
+      88581
+    ],
+    "dyn_mul": 1,
+    "runtime_fixture_indices": [
+      7,
+      1,
+      383,
+      64,
+      128,
+      3
+    ]
+  },
+  "qualification": "actual32bank96SRAM component. Compiler reserves allRG0/WG0 slots. Static tap registers model read11/write8 only; no actual full tap/crossbar/programme join or physical qualification. Canonical2912/1548 prices remain unqualified.",
+  "source_hashes": {
+    "/home/ubuntu/wt/hbm-group-b6-1014/rtl/hbm_accel/generic/adapters/static_su/gather/ot_hbm_su_indexed_scalar.sv": "ac214b59a72c011531408ae38da9e00e8a188af70ee3bed61801d5e7cb6bbbb0",
+    "/home/ubuntu/wt/hbm-group-b6-1014/rtl/hbm_accel/generic/adapters/static_su/gather/tb_indexed_scalar.sv": "87e2639af9b6c2b562f2c7426f9fba110d2576991a669e4a77f0da0955a1fe1e",
+    "/home/ubuntu/wt/hbm-group-b6-1014/rtl/hbm_accel/generic/adapters/static_su/gather/run.sh": "a49bcc57d54aaddfba4d2cbf1d973fa41428560bbf4c1693db1bc5ac4b11a586",
+    "/home/ubuntu/wt/hbm-vm-static-bank-1014/rtl/hbm_accel/generic/vm/static/ot_vms_bank_static.sv": "7828d619da2fd2462cf0253b78c074dad1171e6ca77799bfc21f22987ed72237",
+    "/home/ubuntu/wt/hbm-group-b6-1014/physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v": "6530a2ef457f260a942e067b556ff55d75f931350af5807cfd6b05cd5e1ff380"
+  },
+  "evidence_sha256": {
+    "run2.exit": "e726b440cc164001999e718b51780d80314709efe06e7857282377be9111127b",
+    "run1.log": "0ac12417617ee56882fb0f8047b55062a70ec71de490f09ea8164a8a4c9044fa",
+    "run0.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "run3.log": "134504303631cee8d0b8d937b195da1cda5ad0065030c8dcd242859abe8d877d",
+    "run3.exit": "e726b440cc164001999e718b51780d80314709efe06e7857282377be9111127b",
+    "run1.exit": "e726b440cc164001999e718b51780d80314709efe06e7857282377be9111127b",
+    "run0.log": "f2ef8ea2a162d919bd5f4e5e5b994e8ec8a8d8df2f8727ef59638512da3c608e",
+    "run2.log": "ef39ac4184de578f4f7775424fc028b7739e43bfb9f610a594380f7a5effec13"
+  }
+}

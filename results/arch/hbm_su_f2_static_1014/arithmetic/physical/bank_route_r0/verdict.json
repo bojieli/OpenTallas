@@ -1,0 +1,12 @@
+{
+  "qualified": false,
+  "terminal": 0,
+  "engineering_verdict": "FAIL",
+  "TT_setup_ps": 178.39,
+  "FF_hold_ps": -0.79,
+  "SS_setup_sensitivity_ps": -100.39,
+  "DRC": 3,
+  "route_source": "/srv/opentallas-scratch/claude/ref_gate/hbm_su_static_bank6_1015-20261015-040716",
+  "cause": "M4 shorts at actual SRAM east pin/OBS edge: bbox inward depth1.331um exceeds existing1.2um M5 edge guard; FF macro/other endpoint hold -0.79ps",
+  "next": "Spec r1: actual2.4um edge-GCell guard; restore intended recipe2 HM30ps rather than pregate10ps; current native1111ps/all222ps IO budget profile. No RTL or functional latency change."
+}

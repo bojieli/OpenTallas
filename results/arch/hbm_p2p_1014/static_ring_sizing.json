@@ -1,0 +1,45 @@
+{
+  "status": "component design budget; NOT production-qualified",
+  "owner_rule": "HANDOFF 0an, 2026-10-14: compiler assigned fixed slots, no on-chip ready/credits",
+  "topology": [
+    0,
+    1,
+    3,
+    2
+  ],
+  "quadrants": 4,
+  "reduction_lanes": 8,
+  "fp32_adds_per_quadrant_cycle": 8,
+  "adder_latency_cycles": 8,
+  "add_writeback_cycles_after_issue": 8,
+  "first_readable_accumulator_cycles_after_issue": 9,
+  "directed_link_bits_per_cycle": 280,
+  "directions_per_stop": 2,
+  "payload_bits_per_flit": 256,
+  "link_cycles_per_hop_without_physical_relays": 2,
+  "tags": 8,
+  "state_payload_bits_per_stop": 12288,
+  "state_formula": "8 tags * (local + accumulator + 4 carry sources) * 256 bits",
+  "routing_policy": "Compiler reserves every receive, transit, injection, state read and consumer edge; state face outputs are registered. Physical relays add explicit compiler slots.",
+  "memory_ports": "one local write, two carry arrival writes, one add writeback; distributed per-tag flop storage",
+  "floorplan": "Clock-root decomposition only. Footprint, assigned leaf slots, physical pins/phase compensation, TT setup and FF hold remain unqualified.",
+  "composition": "SERIAL ((P0+P1)+P2)+P3; TREE (P0+P1)+(P2+P3); fixed schedule bench derives explicit cycle trace; no token rate claim",
+  "clock_decomposition": {
+    "control_root_bits_before_mapping": 1493,
+    "payload_roots": 8,
+    "payload_bits_per_root": 1664,
+    "arithmetic_roots": 8,
+    "independent_leaf_modules": [
+      "ot_hgi_coll_pring_static_state_lane",
+      "ot_hgi_coll_pring_static_add_lane"
+    ],
+    "phase_contract": "all roots are synchronous and phase compensated at common compiler edge; no new latency",
+    "arithmetic_bits_per_root": 676,
+    "total_register_bits": 20213,
+    "measurement": "static_ring_pin_1014/root_register_bits.json; Yosys proc/memory_map/opt; not CTS or timing qualification",
+    "state_storage_bits_per_root": 1536,
+    "state_registered_face_bits_per_root": 128,
+    "state_read_reservation_cycles_before_consumer": 1
+  },
+  "first_TX_or_add_from_accumulator_cycles_after_issue": 10
+}

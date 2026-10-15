@@ -1,0 +1,20 @@
+[
+  {
+    "path": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v",
+    "sha256": "dba769863f502de28853a78ac30544a406c7cb66fd3249019ef9fa5a5b73e36e",
+    "compiled_on": "ot-epyc1tb",
+    "unit": "oth-ubuntu-1408410-1792063965",
+    "compiled_script": "tools/hbm_hc/run_memory_partition.sh",
+    "source_commit": "473756fb3",
+    "source_remote_git_identity": "exact generated macro bytes agree local473blobandremotecompiledpath"
+  },
+  {
+    "path": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v",
+    "sha256": "6530a2ef457f260a942e067b556ff55d75f931350af5807cfd6b05cd5e1ff380",
+    "compiled_on": "ot-epyc1tb",
+    "unit": "oth-ubuntu-1408410-1792063965",
+    "compiled_script": "tools/hbm_hc/run_memory_partition.sh",
+    "source_commit": "473756fb3",
+    "source_remote_git_identity": "exact generated macro bytes agree local473blobandremotecompiledpath"
+  }
+]

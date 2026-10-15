@@ -1,0 +1,9 @@
+ot-run: ot-epyc1tb     admits   299 GB (avail 526, growth 48, headroom 64, waiters 0/0 GB) load 41/128 running 15 disk 67 GB 
+ot-run: -> ot-epyc1tb
+ot-heavy: admitted on ot-epyc1tb as oth-ubuntu-3465786-1792036531 after 0 s
+wrote 16 vectors to out/kp4_linear-0-2/vec.hex
+rtl/hbm_accel/io_native_20261014/run_kp4_linear_eq.sh: line 9: 3471216 Aborted                    (core dumped) "$out/obj/sim" +vec="$out/vec.hex" +verilator+seed+11 > "$out/run.log" 2>&1
+[92000] %Fatal: tb_hbm_kp4_linear_eq.sv:30: Assertion failed in tb_hbm_kp4_linear_eq: HBM_KP4_LINEAR_EQ_FAIL decoder edge107 MUT2
+%Error: rtl/hbm_accel/io_native_20261014/tb_hbm_kp4_linear_eq.sv:30: Verilog $stop
+Aborting...
+ot-run: RAN on ot-epyc1tb (unit oth-ubuntu-3465786-1792036531): exit 134

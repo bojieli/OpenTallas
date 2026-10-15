@@ -720,6 +720,8 @@ def _tp8_io(v, m):
 
     def masters(model, k=1, port_bits=None):
         o = base(model, k, port_bits)
+        if 'qfd_io_collective' not in o:
+            return o        # split compute static IO bind: credit IO masters retired
         C = o['qfd_io_collective']
         for q in range(1, n):
             for p0 in ('s', 'sr'):
@@ -1216,6 +1218,12 @@ def _su_vm_bus(v, m, a_bits=None, q_bits=None):
     def masters(model, k=1, port_bits=None):
         out = base(model, k, port_bits)
         s, q = out['qfd_sp_su64_sfu'], out['qfd_sp_vector_memory']
+        if model.get('native_control_contract'):
+            # Native controller retired the legacy VM request/ready service.
+            # These are unbound abstract pins, not a reusable physical view.
+            for retired in ('xd', 'xr'):
+                q.ports.pop(retired, None)
+                q.order[:] = [p for p in q.order if p != retired]
         for M_, f, mine in ((s, 'S' if north else 'N', ('va', 'vq')), (q, 'N' if north else 'S', ('sa', 'sq'))):
             for pn in mine:                 # the base wrapper's default pin group for the new bus: replaced here
                 if pn in M_.ports:
@@ -1754,7 +1762,9 @@ def _emb_hbm(v, m):
 
 
 # ------------------------------------------------------------------------------------------------ r21 die relays
-RELAY_SKIP = ('clock_trunk', 'reset', 'tap', 'kv_land', 'cdc_core', 'hbm_cdc', 'phy_dfi')
+# coll_fdi (Qwen split compute static IO, 2026-10-15): the collective <-> PHY FDI words; their relay registers are
+# inside the static collective RTL (RU / RS relay_ck roots), a die relay would be an unscheduled stage
+RELAY_SKIP = ('clock_trunk', 'reset', 'tap', 'kv_land', 'cdc_core', 'hbm_cdc', 'phy_dfi', 'coll_fdi')
 # the standard corridor relay frame (52.68 x 30.24, faces at one track: 520 x 0.048 + 4 = 29 um of a 52.68-um face)
 # holds up to 520 b (split compute C7: 514-b tree words {fault, valid, 512}, 516-b DVM corridor word)
 RELAY_STD_BITS = 520
@@ -3539,7 +3549,10 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
             E_[bid] = (eps[0][0], eps[-1][0])
         ipads, irep = _TS.arrival_pads(S_, E_)
         tpads.update(ipads)
-        m['tp8_inline_pads'] = dict(irep, pads=len(ipads), pad_relays=sum(ipads.values()))
+        from qwen_split.direct_up4 import equal_age_pads
+        tpads=equal_age_pads(S_,m.get('relay_equal_groups',{}),tpads)
+        m['tp8_inline_pads'] = dict(irep, pads=len(tpads), pad_relays=sum(tpads.values()),
+                                  equal_age_groups=len(m.get('relay_equal_groups',{})))
     # Reconcile the allocator's mutable occupancy with the exact frames that
     # will be emitted after repair/rip-up/jog/pre-pad trimming. Every inline
     # arrival pad must see ALL surviving frames, not a stale search grid.
@@ -4463,7 +4476,9 @@ def _r18_masters(v, m):
             vm.ports['em'] = ('face', v.IO_BITS, 'N', 'M5', vm.w * 0.2, 2)
         xf = None
         iox = model['io']['xfifo']
-        out['qfd_io_xfifo'] = v.Master('qfd_io_xfifo', iox.w, iox.h, 3, 'IO-band CDC cluster: sequencer -> collective '
+        # split compute static IO bind: io_xfifo retired (its CDC is inside the static collective)
+        xf_live = any(i_ is iox for i_ in model['insts'])
+        out['qfd_io_xfifo'] = None if not xf_live else v.Master('qfd_io_xfifo', iox.w, iox.h, 3, 'IO-band CDC cluster: sequencer -> collective '
                                        'ratio FIFO, collective <-> UCIe / SerDes link-clock async FIFOs')
         # CDC cluster data ports: one pin group per crossing on the face toward its other endpoint; sp_xfifo groups
         # level with the peer's group across the 30 um gap where they fit (r18c i5: M6 1.15 between the SU64 / VM
@@ -4476,7 +4491,9 @@ def _r18_masters(v, m):
                                  ('qfd_io_serdes', 'r', 1350.0)):
             if mst_ in out and port_ in out[mst_].ports and out[mst_].ports[port_][0] == 'face':
                 out[mst_].ports[port_] = out[mst_].ports[port_][:4] + (yc_,) + out[mst_].ports[port_][5:]
-        for X in (iox,):
+        if not xf_live:
+            out.pop('qfd_io_xfifo')
+        for X in ((iox,) if xf_live else ()):
             M = out[X.master]
             want = []
             for bid, cl, nb, eps in model['buses']:
@@ -5486,6 +5503,8 @@ def _io_faces(v):
 
     def masters(model, k=1, port_bits=None):
         out = base(model, k, port_bits)
+        if 'qfd_io_collective' not in out or 'qfd_io_serdes' not in out:
+            return out      # split compute static IO bind: the credit IO masters are retired (native_static_io_bind)
         col, ser = out['qfd_io_collective'], out['qfd_io_serdes']
         kind, w, face, layer, centre, pitch = col.ports['u']
         col.ports['s'] = ('face', col.ports['s'][1], 'E', 'M4', centre + 400.0, 2)
@@ -6034,7 +6053,9 @@ def relay_token_cost(v, m, ar_job='results/rtl/qwen_dspark_system_20261004/ctx8k
     prim, frag = {}, {}
     for bid, b in B.items():
         if bid.startswith('pword_'):
-            prim[b[3][0][0]] = bid
+            source=b[3][0][0]
+            if source not in prim or S(bid)>S(prim[source]):
+                prim[source]=bid
         if bid.startswith('pfrag_'):
             frag[b[3][0][0]] = bid
     tws = 0
@@ -6196,6 +6217,24 @@ def summarize(work):
                 peak_rss_gb=round(int(rss.group(1)) / 2**20, 1) if rss else None, layers=layers, windows=win)
 
 
+def native_stdcell_pg_lines(grid='core'):
+    """Literal row rails and a connected sparse ladder for die-top cells.
+
+    Hardened macro obstructions clip this stdcell grid; macro PG remains on
+    its own qualified interfaces. Literal M1 contact and all upper connects
+    are checked after pdngen, not inferred from global_connect.
+    """
+    lines=[f'add_pdn_stripe -grid {grid} -layer M1 -width .018 -followpins',
+           f'add_pdn_stripe -grid {grid} -layer M2 -width .018 -followpins']
+    for layer,width,pitch,spacing,offset in (
+            ('M3',.09,4.32,2.07,1.08),('M4',.12,4.32,2.04,1.08),
+            ('M5',.12,8.64,4.20,2.16),('M6',.160,8.64,4.160,2.16),
+            ('M7',.160,8.64,4.160,2.16)):
+        lines.append(f'add_pdn_stripe -grid {grid} -layer {layer} -width {width} -pitch {pitch} -spacing {spacing} -offset {offset} -extend_to_boundary')
+    lines += [f'add_pdn_connect -grid {grid} -layers {{M{i} M{i+1}}}' for i in range(1,8)]
+    return lines
+
+
 def write_pdn_r4(v, m, path, bump_um):
     """Connected full-die PDN (r4).  r2 (one M8+M9 macro grid per instance) passed pdngen but failed
     check_power_grid: each macro grid stops inside its instance, the frames abut with a 24 nm gap, so every
@@ -6219,6 +6258,7 @@ def write_pdn_r4(v, m, path, bump_um):
          f'add_pdn_stripe -grid core -layer M8 -width .48 -pitch {cp:.3f} -offset 0',
          f'add_pdn_stripe -grid core -layer M9 -width .48 -pitch {cp:.3f} -offset 0',
          'add_pdn_connect -grid core -layers {M8 M9}']
+    L += native_stdcell_pg_lines('core')
     meta = []
     insts = sorted(m['insts'], key=lambda it: -len(it.name))      # -instances is a pattern: longest name first
     for i, it in enumerate(insts):
@@ -6254,7 +6294,11 @@ def write_pdn_r5(v, m, path, bump_um):
     by two grids."""
     r4 = write_pdn_r4(v, m, path, bump_um)
     cp = r4['core_pitch_um']
-    head = Path(path).read_text().split('\n')[:9]
+    raw_lines = Path(path).read_text().splitlines()
+    # Keep all core commands, including literal stdcell rails/upconnects.
+    # A fixed nine-line prefix silently dropped any new core-PG commands.
+    first_macro = next((j for j,line in enumerate(raw_lines) if line.startswith('define_pdn_grid -macro')), len(raw_lines))
+    head = raw_lines[:first_macro]
     head[0] = '# r5 full-die PDN: r4 grids, anchored instance patterns, one macro grid per stripe phase'
     byname = {it.name: it for it in m['insts']}
     groups = {}

@@ -1,0 +1,5 @@
+PASS actual FEC static-window words=2048 corrected_channel age=102 diagnostic_words=2376
+- rtl/hbm_accel/io_static_20261015/tb_fec_static_window.sv:66: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 2us; walltime 25.482 s; speed 87.516 ns/s
+- Verilator: cpu 25.481 s on 1 threads; alloced 509 MB

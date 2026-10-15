@@ -1,0 +1,48 @@
+PASS actual PW issuer->PQ endpoint mode0 commands252 GO252 done252 END2 fixedGO1 fixedCompletion13 fourtags
+firstfault tick558 issuer0 code0 endpoint1 age0 status0000000002
+PASS actual PW issuer->PQ endpoint mode1 commands252 GO252 done252 END2 fixedGO1 fixedCompletion13 fourtags
+firstfault tick570 issuer0 code0 endpoint1 age12 status0000000003
+PASS actual PW issuer->PQ endpoint mode2 commands252 GO252 done252 END2 fixedGO1 fixedCompletion13 fourtags
+firstfault tick568 issuer0 code0 endpoint1 age10 status0000000003
+PASS actual PW issuer->PQ endpoint mode3 commands252 GO252 done252 END2 fixedGO1 fixedCompletion13 fourtags
+firstfault tick570 issuer0 code0 endpoint1 age12 status0000000003
+PASS actual PW issuer->PQ endpoint mode4 commands252 GO252 done252 END2 fixedGO1 fixedCompletion13 fourtags
+firstfault tick571 issuer0 code0 endpoint1 age13 status0800000003
+FATAL: /home/ubuntu/wt/s81-field-native-1015/rtl/dsrom_sys/s81_static_control/test/tb_s81_pq_command_endpoint.sv:82: fixed completion/tag moved
+       Time: 5706000 Scope: tb_s81_pq_command_endpoint
+PASS actual PW issuer->PQ endpoint mode0 commands252 GO252 done252 END2 fixedGO2 fixedCompletion15 fourtags
+firstfault tick563 issuer0 code0 endpoint1 age0 status0000000002
+PASS actual PW issuer->PQ endpoint mode1 commands252 GO252 done252 END2 fixedGO2 fixedCompletion15 fourtags
+firstfault tick576 issuer0 code0 endpoint1 age13 status0800000003
+PASS actual PW issuer->PQ endpoint mode2 commands252 GO252 done252 END2 fixedGO2 fixedCompletion15 fourtags
+firstfault tick574 issuer0 code0 endpoint1 age11 status0000000003
+PASS actual PW issuer->PQ endpoint mode3 commands252 GO252 done252 END2 fixedGO2 fixedCompletion15 fourtags
+firstfault tick576 issuer0 code0 endpoint1 age13 status0800000003
+PASS actual PW issuer->PQ endpoint mode4 commands252 GO252 done252 END2 fixedGO2 fixedCompletion15 fourtags
+firstfault tick577 issuer0 code0 endpoint1 age14 status0000000003
+FATAL: /home/ubuntu/wt/s81-field-native-1015/rtl/dsrom_sys/s81_static_control/test/tb_s81_pq_command_endpoint.sv:82: fixed completion/tag moved
+       Time: 5766000 Scope: tb_s81_pq_command_endpoint
+PASS actual PW issuer->PQ endpoint mode0 commands252 GO252 done252 END2 fixedGO1 fixedCompletion13 fourtags
+firstfault tick558 issuer0 code0 endpoint1 age0 status0000000002
+PASS actual PW issuer->PQ endpoint mode1 commands252 GO252 done252 END2 fixedGO1 fixedCompletion13 fourtags
+firstfault tick570 issuer0 code0 endpoint1 age12 status0000000003
+PASS actual PW issuer->PQ endpoint mode2 commands252 GO252 done252 END2 fixedGO1 fixedCompletion13 fourtags
+firstfault tick568 issuer0 code0 endpoint1 age10 status0000000003
+PASS actual PW issuer->PQ endpoint mode3 commands252 GO252 done252 END2 fixedGO1 fixedCompletion13 fourtags
+firstfault tick570 issuer0 code0 endpoint1 age12 status0000000003
+PASS actual PW issuer->PQ endpoint mode4 commands252 GO252 done252 END2 fixedGO1 fixedCompletion13 fourtags
+firstfault tick571 issuer0 code0 endpoint1 age13 status0800000003
+FATAL: /home/ubuntu/wt/s81-field-native-1015/rtl/dsrom_sys/s81_static_control/test/tb_s81_pq_command_endpoint.sv:82: fixed completion/tag moved
+       Time: 5706000 Scope: tb_s81_pq_command_endpoint
+PASS actual PW issuer->PQ endpoint mode0 commands252 GO252 done252 END2 fixedGO2 fixedCompletion15 fourtags
+firstfault tick563 issuer0 code0 endpoint1 age0 status0000000002
+PASS actual PW issuer->PQ endpoint mode1 commands252 GO252 done252 END2 fixedGO2 fixedCompletion15 fourtags
+firstfault tick576 issuer0 code0 endpoint1 age13 status0800000003
+PASS actual PW issuer->PQ endpoint mode2 commands252 GO252 done252 END2 fixedGO2 fixedCompletion15 fourtags
+firstfault tick574 issuer0 code0 endpoint1 age11 status0000000003
+PASS actual PW issuer->PQ endpoint mode3 commands252 GO252 done252 END2 fixedGO2 fixedCompletion15 fourtags
+firstfault tick576 issuer0 code0 endpoint1 age13 status0800000003
+PASS actual PW issuer->PQ endpoint mode4 commands252 GO252 done252 END2 fixedGO2 fixedCompletion15 fourtags
+firstfault tick577 issuer0 code0 endpoint1 age14 status0000000003
+FATAL: /home/ubuntu/wt/s81-field-native-1015/rtl/dsrom_sys/s81_static_control/test/tb_s81_pq_command_endpoint.sv:82: fixed completion/tag moved
+       Time: 5766000 Scope: tb_s81_pq_command_endpoint

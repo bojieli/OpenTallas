@@ -2,13 +2,13 @@
  "schema": "opentallas.ref_tile.gate_result.v2",
  "kit": "qfd_xcst_s",
  "verdict": "WARN",
- "generated": "2026-10-14T23:26:56-0700",
+ "generated": "2026-10-14T23:54:06-0700",
  "host": "ot-agidock128",
  "cts": true,
  "commit": null,
  "source_binding": {
   "schema": "opentallas.ref_tile.source_snapshot.v1",
-  "start_commit": "4388644fb91a740771714f60f33f62739e7fe537",
+  "start_commit": "9f83cbc1ca75d409670253f0c401e1f48997cfb8",
   "commit": null,
   "identity": "exact_content_snapshot",
   "daemon_tree": "/home/ubuntu/wt-claude-closure-daemon-1010",
@@ -21,8 +21,8 @@
    "tools/orfs_hold_mm.tcl",
    "tools/textbook_lint.py"
   ],
-  "archive_sha256": "910d13c06bbf455bfab3204873a36ae6fe4a859ff902ae3a8813da41afa4b8db",
-  "manifest_sha256": "7343308832205dc0925c257e7437a68a5e19681f3336d608f65c86b1ad7284bc",
+  "archive_sha256": "feaab51c15e2535998f64818e4fb0f68ac190d430faf440f125329d1b9bc084c",
+  "manifest_sha256": "5cba557169391f2cf12e1889d66466473677e51a150730a304d5095ef2679f49",
   "files": [
    {
     "path": "physical/common_flow/cg_pushdown.tcl",
@@ -17139,8 +17139,8 @@
    {
     "path": "physical/ref_tile/qfd_xcst_s/job.json",
     "kind": "file",
-    "sha256": "7f6722ef1d9bd2f5a54ed16858de1a3e8ccc16dfdb70daaea27d25c6937a9b5a",
-    "git_blob": "a9b8d6f1b063a2cdc56f50f81d6aba0448d5bdcd",
+    "sha256": "f5a591adccc9b5ff777fb8a41090772261d4693c0f185eb620d16d999766e7df",
+    "git_blob": "d2244c7eb458bd1eeba80f009083c825af851a67",
     "source": "working_tree",
     "matches_provenance_commit": false
    },
@@ -17150,7 +17150,7 @@
     "sha256": "4dccb8d59e8dbac38302886f3f94af647578dd74220e71ec5e36eec12b891fc1",
     "git_blob": "7f6c9d372e6ddeaddc6507bf140ca805505801bd",
     "source": "working_tree",
-    "matches_provenance_commit": false
+    "matches_provenance_commit": true
    },
    {
     "path": "physical/ref_tile/qfd_xcst_s/pdn.tcl",
@@ -17251,8 +17251,8 @@
    {
     "path": "physical/ref_tile/qfd_xcst_s/spec.json",
     "kind": "file",
-    "sha256": "322c2e8b29859f0867c363057f2b53af4eca627f02965c0b848886c1f1682f72",
-    "git_blob": "09eb2c520c78ec430018384c0267101804e04eda",
+    "sha256": "7f7bbbbabae92d39bb9c28d96ae288d7fc20ca25f0dbe30b21a29cfab8bdd20a",
+    "git_blob": "df3e775e80ef857bd7642c6e1d1512ef2f369a23",
     "source": "working_tree",
     "matches_provenance_commit": false
    },
@@ -42883,10 +42883,10 @@
    {
     "path": "rtl/qwen_sys/dvm_20261014/ot_qfd_xslice.sv",
     "kind": "file",
-    "sha256": "93ffbdd61112dfcdb3234ebb1952d61e894fecbf8209f9f0fd6bfe77ad4e9957",
-    "git_blob": "4189d6832e8bc4a66bf0db76bc54697f96af425d",
+    "sha256": "8094428beb501dde53ebcf0a61d41b14d081f775f45414a7f400b15fd1109cc9",
+    "git_blob": "6c93b3e990d81b437e590e1600a7191b44394e9d",
     "source": "working_tree",
-    "matches_provenance_commit": true
+    "matches_provenance_commit": false
    },
    {
     "path": "rtl/qwen_sys/dvm_20261014/ot_qfd_xslice_slots.sv",
@@ -120683,7 +120683,7 @@
   ],
   "route_overlay_plan": {
    "schema": "opentallas.closure_loop.helper_overlay_plan.v1",
-   "origin_main": "03637f961ef734f10b59cdd97841a6c98826d0ef",
+   "origin_main": "cec5f41568df1f051324d30ffcf5a877151754b2",
    "content_sha256": "567a16331b2484008d9edf879c76eca8fdca169e287379c494e5d703bde9192e",
    "files": [
     {
@@ -122072,7 +122072,7 @@
     "physical/ref_tile/qfd_xcst_s/pre_gpl.tcl": "868665071710eb4ce5d4af172b346032f605b49500c67093b5f6f3229928b739",
     "physical/ref_tile/qfd_xcst_s/pre_grt.tcl": "7a4a8cb6aef83160c9b8e910ab2c5b5d2d00ccdbd315290c0b54bc0723fdd169",
     "physical/ref_tile/qfd_xcst_s/signoff.sdc": "3f9c14326640bcd6e61dce7a7f4f51f3b63fc7a8f2c72d0a6dc98cf5cc824924",
-    "physical/ref_tile/qfd_xcst_s/spec.json": "322c2e8b29859f0867c363057f2b53af4eca627f02965c0b848886c1f1682f72",
+    "physical/ref_tile/qfd_xcst_s/spec.json": "7f7bbbbabae92d39bb9c28d96ae288d7fc20ca25f0dbe30b21a29cfab8bdd20a",
     "rtl/hdc/hbm/ot_hbm_hc_flat_operand_sram.sv": "bedb9325906a79433ef81a4a201df67b410d8cd0d22f2e740d3d91638cab5fcf",
     "rtl/hdc/hbm/ot_hbm_hc_row_operand_epoch.sv": "d5cf451051814d2f262bc5a214b8a8b548b6495e207566f1767d7a9d6e0027d2",
     "rtl/hdc/hbm/ot_hbm_hc_row_operand_sram.sv": "a18fb067b00fba53b3e2a8078aef91464164d36b7d1aa8486226360f42866758",
@@ -122682,7 +122682,7 @@
     "rtl/qwen_sys/dvm_20261014/ot_qfd_vm_q_export_fixed.sv": "f7c95a54cc6581171e43eb73ad06739f0254fbf7c05e95efa70e642ee8e75c92",
     "rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_pw_loader.sv": "1f056e93a1cc714020ac0e1d0a7074228a319c652038115dc1f81b4a8c7d4d80",
     "rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv": "d82cdb41b8aaeec87f5e2bbe28c5bd7a5229883c1371311e1609b2e1136d1076",
-    "rtl/qwen_sys/dvm_20261014/ot_qfd_xslice.sv": "93ffbdd61112dfcdb3234ebb1952d61e894fecbf8209f9f0fd6bfe77ad4e9957",
+    "rtl/qwen_sys/dvm_20261014/ot_qfd_xslice.sv": "8094428beb501dde53ebcf0a61d41b14d081f775f45414a7f400b15fd1109cc9",
     "rtl/qwen_sys/dvm_20261014/ot_qfd_xslice_slots.sv": "83ac54d13fab89bf8ed9b4f01a3be83a0cae676c101ad67023a8d3bf4ae81954",
     "rtl/qwen_sys/dvm_20261014/ot_qwen_me_array_dvm_w12.sv": "a343280b0d317bd3308b45e6b390cfad9e75f30ebea84abb94f0715419916158",
     "rtl/qwen_sys/dvm_20261014/run_dvm.sh": "d69e8c59e019ceaea486b390207d4f3c470c612847888b84c067e0ccd8706588",
@@ -123018,11 +123018,11 @@
    },
    "digest": "4896378025bf5fd4908223cbdb02c8a9074d48ab83e8df96c3a9cdc7a5674400"
   },
-  "captured": "2026-10-14T23:25:06-0700",
-  "remote_script_sha256": "5aaee28d25319fd9a1203c711745980021430f75b1f3c38f2a1bc40322aa4072",
+  "captured": "2026-10-14T23:52:01-0700",
+  "remote_script_sha256": "a4ce5d5661a6578b726673ca5cba257921b344d66499c1af7fbe5980113cd382",
   "tool_image_requested": "openroad/orfs:latest",
   "remote_host": "ot-agidock128",
-  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/qfd_xcst_s-20261014-232432",
+  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/qfd_xcst_s-20261014-235127",
   "remote_archive_verified": true,
   "runtime_tool_provenance": [
    "GATE_TOOL_IMAGE_ID=sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29 GATE_TOOL_IMAGE_DIGESTS=[\"openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29\"]",
@@ -123033,8 +123033,8 @@
   "max_root_sinks": 1032,
   "root": "port:ck",
   "cts": true,
-  "tt_insertion_ps": 131.0,
-  "tt_spread_ps": 12.9,
+  "tt_insertion_ps": 145.5,
+  "tt_spread_ps": 31.6,
   "declared_clock": null,
   "limits": {
    "sinks": 15000,
@@ -123047,16 +123047,16 @@
     "clock": "core_clk",
     "tt": {
      "boundary": {
-      "n": 1032,
-      "mean": 125.9,
-      "min": 118.1,
-      "max": 131.0
+      "n": 1104,
+      "mean": 131.1,
+      "min": 115.1,
+      "max": 145.5
      },
      "all": {
-      "n": 1096,
-      "mean": 125.6,
-      "min": 118.1,
-      "max": 131.0
+      "n": 1232,
+      "mean": 129.7,
+      "min": 113.9,
+      "max": 145.5
      },
      "errors": [],
      "macros": null,
@@ -123066,25 +123066,19 @@
   ],
   "measured_clock": "core_clk",
   "verdict": "PASS",
-  "text": "1,032 sinks on the largest root <= 15,000; measured TT insertion 131.0 ps, leaf spread 12.9 ps"
+  "text": "1,032 sinks on the largest root <= 15,000; measured TT insertion 145.5 ps, leaf spread 31.6 ps"
  },
  "items": [
   {
    "severity": "WARN",
    "check": "util",
-   "message": "synthesized std area 459 um2 + macros 0 in core 4804: util 10%",
-   "fix": "set \"std_area_um2\": 459 and drop 'outline' (gen sizes to util 0.52)"
-  },
-  {
-   "severity": "WARN",
-   "check": "textbook.boundary",
-   "message": "64 input->register endpoint(s) > 3 levels (worst a_d[509]->u_st.cap[9]$_DFFE_PP_/D 4 lv, a_d[509]->u_st.cap[8]$_DFFE_PP_/D 4 lv, a_d[509]->u_st.cap[7]$_DFFE_PP_/D 4 lv): register the boundary (pin flops / registered outputs)",
-   "fix": "register every boundary: pin flop in, flop out; never an ICG enable from a port"
+   "message": "synthesized std area 465 um2 + macros 0 in core 4804: util 10%",
+   "fix": "set \"std_area_um2\": 465 and drop 'outline' (gen sizes to util 0.52)"
   },
   {
    "severity": "WARN",
    "check": "textbook.util_channel",
-   "message": "utilisation 9.6% outside 45%-65% (std 462 + macro 0 um2 in 4789 um2): shrink the outline (long wires / sparse placement)",
+   "message": "utilisation 9.8% outside 45%-65% (std 468 + macro 0 um2 in 4789 um2): shrink the outline (long wires / sparse placement)",
    "fix": "size the outline to util 0.50-0.55 with >= 20 um macro channels"
   }
  ]

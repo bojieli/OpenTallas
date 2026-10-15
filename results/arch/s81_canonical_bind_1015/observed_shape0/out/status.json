@@ -1,0 +1,71 @@
+{
+  "scope": "COMPLETE_CONSTRUCTION_BEFORE_HOP_SIGNOFF_NOT_NATIVE",
+  "native_qualified": false,
+  "sha256": {
+    "/srv/opentallas-scratch/codex-canonical-bind-1015/input/construction_pass0_die.v": "2aeaa7c14b162670af961a6348af86acb726ed80687139a0f6f3618957196934",
+    "/srv/opentallas-scratch/codex-canonical-bind-1015/input/construction_pass0_plan.json.gz": "049b9b25858e6c973032871bdc4481f23ef479005f120f7783c268858cd9f6e0",
+    "/srv/opentallas-scratch/codex-canonical-bind-1015/input/construction_pass0_die.v.params.json": "d1a354baf045ee90cbf9ab369868672110c7f8dc2f9b626c16b62e67271ee993",
+    "/srv/opentallas-scratch/codex-canonical-bind-1015/input/construction_pass0_die_glue.sv": "011609569934b3cd6d8eb49d4c5a452e861f32dec86bdac33552f3f53a1280ac",
+    "/srv/opentallas-scratch/codex-canonical-bind-1015/input/canonical_source_export.json.gz": "b60f19005d91dec3cd61aa8be4f1b04f735436ca24a71d58db848065baff5866",
+    "/srv/opentallas-scratch/codex-canonical-bind-1015/input/node_bindings.jsonl.gz": "07a9a3ff9a371c4ef3fbe941661105b91da281636674c4045a7b961e81c2b434",
+    "/srv/opentallas-scratch/codex-canonical-bind-1015/observed_shape0/src/physical/s81_die_rtl/layer1.f": "27293f4b64a4231e641e177c47977e7d87651becac22e455a67936b1d9142eec",
+    "/srv/opentallas-scratch/codex-canonical-bind-1015/observed_shape0/src/results/uarch/dsrom_s81_released_binding_20261004/canonical/stage_map.json": "47ea9eb0ba0b404f629a4bc758d28d8ac1fe28dcb31de3e5816517fa1d097815",
+    "/srv/opentallas-scratch/codex-canonical-bind-1015/observed_shape0/src/rtl/v41die/ot_s81_cfg7_seq.sv": "02e3feea909c21a8ba687e495bd1717b2ee96cc8249beaa0980e4880eb77ac42",
+    "/srv/opentallas-scratch/codex-canonical-bind-1015/observed_shape0/src/tools/s81/canonical_observed_shape.py": "01b53ba68e76f9a2d601a6b7756dba4c699363c440041a2186126d8182be0ace",
+    "/srv/opentallas-scratch/codex-canonical-bind-1015/observed_shape0/src/tools/die_port_bind.py": "ebe16ba46ea5c968ae9c0c336578a180a98bbd6996eba5a9dde6ec2f02e06a7a",
+    "/srv/opentallas-scratch/codex-canonical-bind-1015/observed_shape0/src/tools/s81/actual_hardware_ledger.py": "7b90fe82d50900e79472cc3f1e68513dde6fb0580b585956efee716fc0b923c7",
+    "/srv/opentallas-scratch/codex-canonical-bind-1015/observed_shape0/src/physical/s81_die_rtl/required_operations.json": "a89ebe759f58e6900e4fddbc62e36479ce739ab2c41a6fdcab01ae64eb5e0f44"
+  },
+  "gates": {
+    "observed_shape": {
+      "command": [
+        "/usr/bin/python3",
+        "tools/s81/canonical_observed_shape.py",
+        "--die",
+        "/srv/opentallas-scratch/codex-canonical-bind-1015/input/construction_pass0_die.v",
+        "--plan",
+        "/srv/opentallas-scratch/codex-canonical-bind-1015/input/construction_pass0_plan.json.gz",
+        "--stage-map",
+        "/srv/opentallas-scratch/codex-canonical-bind-1015/observed_shape0/src/results/uarch/dsrom_s81_released_binding_20261004/canonical/stage_map.json",
+        "--sequencer-source",
+        "/srv/opentallas-scratch/codex-canonical-bind-1015/observed_shape0/src/rtl/v41die/ot_s81_cfg7_seq.sv",
+        "--params",
+        "/srv/opentallas-scratch/codex-canonical-bind-1015/input/construction_pass0_die.v.params.json",
+        "--out",
+        "/srv/opentallas-scratch/codex-canonical-bind-1015/observed_shape0/out/shape.json"
+      ],
+      "exit_code": 0
+    },
+    "port_bind": {
+      "command": [
+        "/usr/bin/python3",
+        "tools/die_port_bind.py",
+        "/srv/opentallas-scratch/codex-canonical-bind-1015/input/construction_pass0_die.v",
+        "--rtl-file",
+        "/srv/opentallas-scratch/codex-canonical-bind-1015/input/construction_pass0_die_glue.sv",
+        "-f",
+        "/srv/opentallas-scratch/codex-canonical-bind-1015/observed_shape0/src/physical/s81_die_rtl/layer1.f",
+        "--out",
+        "/srv/opentallas-scratch/codex-canonical-bind-1015/observed_shape0/out/port_bind.json"
+      ],
+      "exit_code": 1
+    },
+    "hardware_ledger": {
+      "command": [
+        "/usr/bin/python3",
+        "tools/s81/actual_hardware_ledger.py",
+        "--manifest",
+        "/srv/opentallas-scratch/codex-canonical-bind-1015/observed_shape0/src/physical/s81_die_rtl/layer1.f",
+        "--die",
+        "/srv/opentallas-scratch/codex-canonical-bind-1015/input/construction_pass0_die.v",
+        "--port-bind",
+        "/srv/opentallas-scratch/codex-canonical-bind-1015/observed_shape0/out/port_bind.json",
+        "--shape",
+        "/srv/opentallas-scratch/codex-canonical-bind-1015/observed_shape0/out/shape.json",
+        "--out",
+        "/srv/opentallas-scratch/codex-canonical-bind-1015/observed_shape0/out/hardware_ledger.json"
+      ],
+      "exit_code": 1
+    }
+  }
+}

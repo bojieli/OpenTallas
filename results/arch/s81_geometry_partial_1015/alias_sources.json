@@ -1,0 +1,18 @@
+{
+ "scope": "Real aliases exported from the configured generator, no guessed names or inferred hardware",
+ "alias_sha256": "bdf9f6a8c87acf961b224ecde210b7647bcef501cdc92abe00bc1ceec9827207",
+ "masters": 5,
+ "source_sha256": {
+  "tools/dsrom_s81_fulldie.py": "3dec891e05b8b9dbe6ecb80db82abe9a403a42df8316d7c728c3b144e2c9da74",
+  "tools/s81/canonical_layout.py": "aa950e0df12397ca3b1a621083a9f1a05f0af3de1739434f969707dfc47628e7",
+  "tools/s81/canonical_aliases.py": "97c03f86fd759286440595a242cb18f43fedbb987da7dd7741eb5c0c23d8a992",
+  "physical/s81_die_views/q_elem_qs5f_efs/q_elem.lef.gz": "1dee3342360ceb7f83ee668a00e521a464703b5f4d573341f0f3cc546f8fc098",
+  "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8/ot_rom_4096x72_m8.lef": "894c15540462d7b5e015f7e9df654f6436b483e7744eaa84dcfcfdac01bb9f05",
+  "physical/asap7_memory_macros_v2/ot_hbm3e_phy_v41x_aw30_e8p5/ot_hbm3e_phy_v41x_aw30_e8p5.lef": "b119fdcec16ea432709ffa7fc97c9fbb801c7a703410512008f4b74133254878",
+  "physical/asap7_v41x_pdie_macros_v2/ot_pdie_serdes/ot_pdie_serdes.lef": "aeb0e6cd6283c90678fd857d79b0e44dc6242dec9dc4df638a90501b8f0bd67d",
+  "physical/asap7_v41x_pdie_macros_v2/ot_pdie_ucie/ot_pdie_ucie.lef": "da1804482bff5072298b1cae5499f629f5f8bc88df2077f1715e282260873eb4"
+ },
+ "capacity_sha256": "b7c9c87f9f4b16b600cc3788f1e41feef45d57593307de26a4f8a2af90325c3e",
+ "pair_count": 2417,
+ "bf_pairs": 519
+}

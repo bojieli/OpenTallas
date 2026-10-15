@@ -957,8 +957,11 @@ module ot_qfd_xcst #(
     always @(posedge ck) t_q <= a_d[IBW:0];
     reg [2:0]  sx;
     always @(posedge ck) sx <= sidx;
-    wire [127:0] xl  = a_d[1 + IBW +: 128];
-    wire [7:0]   tag = a_d[1 + IBW + 128 +: 8];
+    // The corridor face is captured by b_q before tag decoding and the
+    // station-select mux.  cap therefore has only register-to-register logic;
+    // the fixed hold deadline is unchanged (the TDM line leads it).
+    wire [127:0] xl  = b_q[1 + IBW +: 128];
+    wire [7:0]   tag = b_q[1 + IBW + 128 +: 8];
     reg  [63:0]  cap;
     (* keep *) reg [63:0] hold;
     reg  [3:0]   cnt;
@@ -969,9 +972,18 @@ module ot_qfd_xcst #(
     end
     always @(posedge ck or negedge rst_n)
         if (!rst_n) begin cnt <= 4'd0; run <= 1'b0; end
-        else if (a_d[0]) begin cnt <= XOFF - 1; run <= 1'b1; end
+        // GO is captured by the existing corridor boundary b_q before it
+        // fans into the run/count logic. Compensate that edge in the initial
+        // countdown; the tuple's fixed hold deadline remains unchanged.
+        else if (b_q[0]) begin cnt <= XOFF - 2; run <= 1'b1; end
         else if (run) cnt <= (cnt == 0) ? IL - 1 : cnt - 1'b1;
-    always @(posedge ck) if (run && cnt == 0) hold <= cap;
+    // Original cap captured the raw face one edge before the hold deadline.
+    // b_q now captures that face; forward its selected line at the same fixed
+    // deadline, or retain cap when this edge belongs to another station.
+    wire tag_a = tag[3] && tag[2:0] == sx;
+    wire tag_b = tag[7] && tag[6:4] == sx;
+    always @(posedge ck) if (run && cnt == 0)
+        hold <= tag_a ? xl[63:0] : tag_b ? xl[127:64] : cap;
     genvar i;
     wire [127:0] xo;
     generate for (i = 0; i < 4; i = i + 1) begin : g_x

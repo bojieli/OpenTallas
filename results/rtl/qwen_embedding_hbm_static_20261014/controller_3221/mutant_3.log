@@ -1,0 +1,4 @@
+TRACE t=300 issue=1 pending=0 slot=0 er=0 token=0 stack=0 pc=0 valid=1
+[319000000] %Fatal: tb_static_embed_controller.sv:87: Assertion failed in tb_static_embed_controller.phy: controller schedule/PHY fault h=311
+%Error: rtl/qwen_sys/static_embedding_20261014/test/tb_static_embed_controller.sv:87: Verilog $stop
+Aborting...

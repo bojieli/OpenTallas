@@ -1,0 +1,96 @@
+{
+ "schema": "opentallas.ref_tile.floorplan.v1",
+ "name": "qfd_ucie_gearbox_r10",
+ "top": "qfd_ucie_six_five",
+ "kind": "tile",
+ "die": [
+  0,
+  0,
+  129.6,
+  216.0
+ ],
+ "core": [
+  2.16,
+  2.16,
+  127.44,
+  213.84
+ ],
+ "why": "spec outline",
+ "std_area_um2": null,
+ "layer_contract": {
+  "children": {},
+  "pg_layer": "M5",
+  "rlayers": [
+   "M2",
+   "M5"
+  ],
+  "strap_layer": "M6",
+  "layer_cap": "M5",
+  "cap_basis": "contract"
+ },
+ "pins": {
+  "W": [
+   "tx_valid",
+   "tx_frame",
+   "rx_valid",
+   "rx_frame",
+   "core_fault"
+  ],
+  "E": [
+   "phy_tx_valid",
+   "phy_tx_frame",
+   "phy_rx_valid",
+   "phy_rx_frame",
+   "fdi_fault"
+  ],
+  "S": [
+   "core_ck",
+   "fdi_ck",
+   "fdi_rx_ck",
+   "blk_tx_ck",
+   "blk_rx_ck",
+   "rst_n"
+  ],
+  "N": []
+ },
+ "clock_port": "core_ck",
+ "clock_ports": [
+  "core_ck",
+  "fdi_ck",
+  "fdi_rx_ck",
+  "blk_tx_ck",
+  "blk_rx_ck"
+ ],
+ "blocks": [],
+ "findings": [],
+ "referenced": [
+  "rtl/physical/ot_qfd_ucie_six_five.sv",
+  "physical/ref_tile/qfd_ucie_gearbox_r10/kit.env",
+  "physical/ref_tile/qfd_ucie_gearbox_r10/clock.sdc",
+  "physical/ref_tile/qfd_ucie_gearbox_r10/signoff.sdc",
+  "physical/ref_tile/qfd_ucie_gearbox_r10/pdn.tcl",
+  "physical/ref_tile/qfd_ucie_gearbox_r10/pre_cts.tcl",
+  "physical/ref_tile/qfd_ucie_gearbox_r10/post_cts.tcl",
+  "physical/ref_tile/qfd_ucie_gearbox_r10/post_grt.tcl",
+  "physical/ref_tile/qfd_ucie_gearbox_r10/pre_drt.tcl",
+  "physical/ref_tile/qfd_ucie_gearbox_r10/pre_fill.tcl",
+  "physical/ref_tile/qfd_ucie_gearbox_r10/post_fill.tcl",
+  "physical/ref_tile/qfd_ucie_gearbox_r10/pre_grt.tcl",
+  "physical/ref_tile/qfd_ucie_gearbox_r10/post_drt.tcl",
+  "tools/ref_tile/ref_route.sh",
+  "physical/qwen_die_masters/io_ref_skew.sdc",
+  "physical/qwen_die_masters/io_plain.sdc",
+  "physical/qwen_die_masters/repair_budget.tcl",
+  "physical/qwen_die_masters/pre_cts_skew.tcl",
+  "physical/qwen_die_masters/pre_ref_skew.tcl",
+  "physical/qwen_die_masters/post_plain.tcl",
+  "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
+  "physical/common_flow/grt_macro_top_layer.tcl",
+  "physical/dsrom_window_source/leaf_iohold.tcl",
+  "physical/dsrom_window_source/leaf_inhold_release.tcl",
+  "physical/dsrom_window_source/leaf_inhold.tcl",
+  "physical/dsrom_window_source/leaf_inhold_release.tcl",
+  "physical/common_flow/clock_entries.tcl",
+  "physical/ref_tile/qfd_ucie_gearbox_r10/clock_entry.sdc"
+ ]
+}

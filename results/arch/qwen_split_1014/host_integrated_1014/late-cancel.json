@@ -1,0 +1,10 @@
+{
+  "positive": {
+    "returncode": 0,
+    "stdout": "PASS collected lifecycle identity/drains/POST/latecancel/participant/wrap/recovery\n/srv/opentallas-scratch/codex/q-host-final-components/tmpzjwn4bhu/tb_qkd_host_lifecycle_collected.sv:135: $finish called at 551000 (1ps)\n"
+  },
+  "late_ack_mutant": {
+    "returncode": 1,
+    "stdout": "FATAL: /srv/opentallas-scratch/codex/q-host-final-components/tmpbdjtngk0/tb_qkd_host_lifecycle_collected.sv:65: late matching cancel stranded during POST\n       Time: 141000  Scope: tb_qkd_host_lifecycle_collected.check\n"
+  }
+}

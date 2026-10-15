@@ -1,0 +1,105 @@
+{
+ "name": "dsfd_vm_static_read_q5_p_native_1015_p1",
+ "top": "dsfd_vm_static_read_q5_p",
+ "kind": "tile",
+ "sources": [
+  "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_read_leaf.sv",
+  "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_read_quartets_p.sv"
+ ],
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 155.52,
+  "h": 237.6,
+  "exact": true
+ },
+ "pins": {
+  "N": [
+   "ck",
+   "rst_n"
+  ],
+  "S": [],
+  "E": [
+   "o_partial_valid",
+   "o_data",
+   "fault"
+  ],
+  "W": [
+   "i_data",
+   "i_valid",
+   "i_expected",
+   "i_sel"
+  ]
+ },
+ "io_tcl": "physical/s81_vm_read_native_1015/dsfd_vm_static_read_q5.tcl",
+ "macros": [],
+ "route": {
+  "pd": 0.4,
+  "threads": 8,
+  "peak_ram_gb": 16,
+  "period_ps": 770,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "recipe": 2,
+ "structural_change": "Native capture audit of the r1 routed views FAILS (S+R>190: q0 316.1/284 pins, q1 320.7, v0 276.4, v2 279.3, v6 225.8): inputs crossed the W->E leaf into the 4:1 select, partial-valid and fault logic. Every functional input is now registered at its pin (leaf IN_REG=1), the select/valid/fault logic runs register-to-register; v leaves pin-register expected/slot and the fault-observed inputs. +1 stream edge per native read (READ_PIPE 2, L14), WFC keeps one 4:3 epoch (pad 3->2). Same pins/outline/833.333 sign-off/770 route.",
+ "slot_change_request": {
+  "contract": "S81 VM native read/FSR geometry candidate",
+  "version": "r1 pins unchanged",
+  "why": "new hard master name (_p) for the READ_PIPE 2 leaf; die geometry reservation required before parent adoption"
+ },
+ "job": {
+  "owner": "Claude:S81 VM F5 read-capture",
+  "branch": "claude/s81-vm-read-pinreg-1015",
+  "tag": "pinreg1",
+  "extra_paths": [
+   "tools/s81_vm",
+   "rtl/dsrom_sys/s81_ph/vm",
+   "rtl/dsrom_sys/s81_ph/test",
+   "physical/s81_vm_read_native_1015"
+  ],
+  "purpose": "READ_PIPE 2 pin-registered read leaf: exact positive oracle at +1 edge + observed mutant, native CTS/pin/reset, one route; parent unqualified.",
+  "benches": [
+   {
+    "name": "q5p_positive",
+    "cmd": "python3 tools/s81_vm/native_read_leaf_gate.py q 5 positive {RUN}/bench/q5p_positive --pinreg",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 1,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "NATIVE_LEAF PASS q5 ",
+    "min_count_regex": "checks (\\d+)"
+   },
+   {
+    "name": "q5p_mutant",
+    "cmd": "python3 tools/s81_vm/native_read_leaf_gate.py q 5 mutant {RUN}/bench/q5p_mutant --pinreg",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 1,
+    "needs": [
+     "iverilog"
+    ],
+    "fail_regex": "NATIVE_LEAF FAIL q5 "
+   }
+  ],
+  "cycles_added": 1
+ },
+ "params": {},
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ }
+}

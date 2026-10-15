@@ -1,0 +1,11 @@
+Oct 15 02:56:18 regular-crane systemd[3813]: Started oth-ubuntu-1644258-1792058178.scope - [systemd-run] /usr/bin/bash -lc "cd /srv/opentallas-scratch/codex/q-native-control-join-1015-current && /usr/bin/time -v verilator --lint-only --timing -DOT_QFD_SEQ_SU_NOWROM -DOT_QFD_VM_NOX -DOT_QFDS_LU=47 -DOT_QFDS_LS=376 -Wno-fatal -Wno-TIMESCALEMOD -Irtl/hdc --top-module qfd_native_compute_join -f native_join.f > lint_profile47.log 2>&1".
+Oct 15 02:59:14 regular-crane kernel: CPU: 44 UID: 1000 PID: 1644294 Comm: verilator_bin Not tainted 7.0.0-38-generic #38-Ubuntu PREEMPT(lazy) 
+Oct 15 02:59:14 regular-crane kernel: memory: usage 25165824kB, limit 25165824kB, failcnt 24
+Oct 15 02:59:14 regular-crane kernel: Memory cgroup stats for /user.slice/user-1000.slice/user@1000.service/app.slice/oth-ubuntu-1644258-1792058178.scope:
+Oct 15 02:59:14 regular-crane kernel: [1644258]  1000 1644258     1986      971       81      890         0    57344        0             0 bash
+Oct 15 02:59:14 regular-crane kernel: [1644294]  1000 1644294  6280867  6279970  6277162     2808         0 50380800        0             0 verilator_bin
+Oct 15 02:59:14 regular-crane kernel: oom-kill:constraint=CONSTRAINT_MEMCG,nodemask=(null),cpuset=user.slice,mems_allowed=0,oom_memcg=/user.slice/user-1000.slice/user@1000.service/app.slice/oth-ubuntu-1644258-1792058178.scope,task_memcg=/user.slice/user-1000.slice/user@1000.service/app.slice/oth-ubuntu-1644258-1792058178.scope,task=verilator_bin,pid=1644294,uid=1000
+Oct 15 02:59:14 regular-crane kernel: Memory cgroup out of memory: Killed process 1644294 (verilator_bin) total-vm:25123468kB, anon-rss:25108648kB, file-rss:11232kB, shmem-rss:0kB, UID:1000 pgtables:49200kB oom_score_adj:0
+Oct 15 02:59:14 regular-crane systemd[3813]: oth-ubuntu-1644258-1792058178.scope: The kernel OOM killer killed some processes in this unit.
+Oct 15 02:59:16 regular-crane systemd[3813]: oth-ubuntu-1644258-1792058178.scope: Failed with result 'oom-kill'.
+Oct 15 02:59:16 regular-crane systemd[3813]: oth-ubuntu-1644258-1792058178.scope: Consumed 2min 57.528s CPU time over 2min 57.546s wall clock time, 24G memory peak.

@@ -1,0 +1,5 @@
+STATIC_ISSUER PASS native_macros=3 rows=64 width=1536 instructions=131184 first=3 interval=1 end=65594 repeats=2048
+- rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_static_issuer.sv:101: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 135us; walltime 0.677 s; speed 199.024 us/s
+- Verilator: cpu 0.677 s on 1 threads; allocated 7 MB

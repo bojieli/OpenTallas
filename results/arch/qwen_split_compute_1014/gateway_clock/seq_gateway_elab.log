@@ -1,0 +1,690 @@
+%Warning-PINMISSING: rtl/qwen_sys/missing_masters_20261007/ot_qfd_spine_masters.sv:135:83: Cell has missing pin: 'obs_active'
+  135 |     ot_hdc_vstream #(.SW(SW), .LV(LV), .WR(W), .AW(AW), .NW(NW), .KV_FP8(KV_FP8)) u_su (
+      |                                                                                   ^~~~
+                     rtl/hdc/ot_hdc_vstream.sv:109:30: ... Location of port declaration
+  109 |     output wire              obs_active,
+      |                              ^~~~~~~~~~
+                     ... For warning description see https://verilator.org/warn/PINMISSING?v=5.032
+                     ... Use "/* verilator lint_off PINMISSING */" and lint_on around source to disable this message.
+%Warning-PINMISSING: rtl/qwen_sys/missing_masters_20261007/ot_qfd_spine_masters.sv:135:83: Cell has missing pin: 'obs_inflight'
+  135 |     ot_hdc_vstream #(.SW(SW), .LV(LV), .WR(W), .AW(AW), .NW(NW), .KV_FP8(KV_FP8)) u_su (
+      |                                                                                   ^~~~
+                     rtl/hdc/ot_hdc_vstream.sv:110:30: ... Location of port declaration
+  110 |     output wire [7:0]        obs_inflight
+      |                              ^~~~~~~~~~~~
+%Warning-PINMISSING: rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_xtree.sv:230:124: Cell has missing pin: 'line_data'
+  230 |     ot_qfd_vm_xline_t #(.NRB(NRB), .SMIN(SMIN), .SMAX(SMAX), .BMAX(BMAX), .ND(ND), .DSET(DSET), .MEREG(MEREG), .MUT(LMUT)) u_l (
+      |                                                                                                                            ^~~
+                     rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_xtree.sv:69:40: ... Location of port declaration
+   69 |     output wire [(1<<SMAX)-1:0]        line_data,
+      |                                        ^~~~~~~~~
+%Warning-PINMISSING: rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_tree_top.sv:383:76: Cell has missing pin: 'b_pw'
+  383 |         .SCALE_LAT(SCALE_LAT), .IS(0), .OS(0), .LANDED(LANDED), .MUT(MUT)) u_tt (
+      |                                                                            ^~~~
+                     rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_tree_top.sv:84:31: ... Location of port declaration
+   84 |     input  wire [NB*W*32-1:0] b_pw,
+      |                               ^~~~
+%Warning-PINMISSING: rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_tree_top.sv:383:76: Cell has missing pin: 'b_pv'
+  383 |         .SCALE_LAT(SCALE_LAT), .IS(0), .OS(0), .LANDED(LANDED), .MUT(MUT)) u_tt (
+      |                                                                            ^~~~
+                     rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_tree_top.sv:85:30: ... Location of port declaration
+   85 |     input  wire [NB-1:0]     b_pv,
+      |                              ^~~~
+%Warning-PINMISSING: rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_tree_top.sv:383:76: Cell has missing pin: 'b_lf'
+  383 |         .SCALE_LAT(SCALE_LAT), .IS(0), .OS(0), .LANDED(LANDED), .MUT(MUT)) u_tt (
+      |                                                                            ^~~~
+                     rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_tree_top.sv:86:30: ... Location of port declaration
+   86 |     input  wire [NB-1:0]     b_lf,
+      |                              ^~~~
+%Warning-PINMISSING: rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_tree_top.sv:383:76: Cell has missing pin: 'tt_ty'
+  383 |         .SCALE_LAT(SCALE_LAT), .IS(0), .OS(0), .LANDED(LANDED), .MUT(MUT)) u_tt (
+      |                                                                            ^~~~
+                     rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_tree_top.sv:87:30: ... Location of port declaration
+   87 |     output wire [3*W*32-1:0] tt_ty,
+      |                              ^~~~~
+%Warning-PINMISSING: rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_tree_top.sv:383:76: Cell has missing pin: 'tt_use'
+  383 |         .SCALE_LAT(SCALE_LAT), .IS(0), .OS(0), .LANDED(LANDED), .MUT(MUT)) u_tt (
+      |                                                                            ^~~~
+                     rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_tree_top.sv:88:30: ... Location of port declaration
+   88 |     output wire              tt_use,
+      |                              ^~~~~~
+%Warning-PINMISSING: rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_tree_top.sv:383:76: Cell has missing pin: 'tt_v'
+  383 |         .SCALE_LAT(SCALE_LAT), .IS(0), .OS(0), .LANDED(LANDED), .MUT(MUT)) u_tt (
+      |                                                                            ^~~~
+                     rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_tree_top.sv:89:30: ... Location of port declaration
+   89 |     output wire              tt_v,
+      |                              ^~~~
+%Warning-PINMISSING: rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_tree_top.sv:438:61: Cell has missing pin: 'ck_mul'
+  438 |                 .TREE_LAT(TREE_LAT), .SCALE_LAT(SCALE_LAT)) u_pt (
+      |                                                             ^~~~
+                     rtl/hdc/ot_qwen_me_spine_h_w12.sv:1430:23: ... Location of port declaration
+ 1430 |     input wire [15:0] ck_mul,
+      |                       ^~~~~~
+%Warning-PINMISSING: rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_tree_top.sv:438:61: Cell has missing pin: 'o_ov'
+  438 |                 .TREE_LAT(TREE_LAT), .SCALE_LAT(SCALE_LAT)) u_pt (
+      |                                                             ^~~~
+                     rtl/hdc/ot_qwen_me_spine_h_w12.sv:1442:30: ... Location of port declaration
+ 1442 |     output reg               o_ov,           
+      |                              ^~~~
+%Warning-PINMISSING: rtl/qwen_split/qfd_embedding_stage_static.sv:114:58: Cell has missing pin: 'layer_context_v'
+  114 |     qfd_tt_ctlm_head_static #(.DENSE_IMAGE(1),.PSRAM(1)) u_me_control (
+      |                                                          ^~~~~~~~~~~~
+                     rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_split_static.sv:35:16: ... Location of port declaration
+   35 |     output reg layer_context_v,
+      |                ^~~~~~~~~~~~~~~
+%Warning-PINMISSING: rtl/qwen_split/qfd_embedding_stage_static.sv:114:58: Cell has missing pin: 'native_tok'
+  114 |     qfd_tt_ctlm_head_static #(.DENSE_IMAGE(1),.PSRAM(1)) u_me_control (
+      |                                                          ^~~~~~~~~~~~
+                     rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_split_static.sv:36:23: ... Location of port declaration
+   36 |     output reg [17:0] native_tok,native_pos,
+      |                       ^~~~~~~~~~
+%Warning-PINMISSING: rtl/qwen_split/qfd_embedding_stage_static.sv:114:58: Cell has missing pin: 'native_pos'
+  114 |     qfd_tt_ctlm_head_static #(.DENSE_IMAGE(1),.PSRAM(1)) u_me_control (
+      |                                                          ^~~~~~~~~~~~
+                     rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_split_static.sv:36:34: ... Location of port declaration
+   36 |     output reg [17:0] native_tok,native_pos,
+      |                                  ^~~~~~~~~~
+%Warning-PINMISSING: rtl/qwen_split/qfd_embedding_stage_static.sv:114:58: Cell has missing pin: 'me_clk_en'
+  114 |     qfd_tt_ctlm_head_static #(.DENSE_IMAGE(1),.PSRAM(1)) u_me_control (
+      |                                                          ^~~~~~~~~~~~
+                     rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_split_static.sv:57:18: ... Location of port declaration
+   57 |     output wire  me_clk_en,
+      |                  ^~~~~~~~~
+%Warning-PINMISSING: rtl/qwen_split/qfd_embedding_stage_static.sv:114:58: Cell has missing pin: 'kvd_v'
+  114 |     qfd_tt_ctlm_head_static #(.DENSE_IMAGE(1),.PSRAM(1)) u_me_control (
+      |                                                          ^~~~~~~~~~~~
+                     rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_split_static.sv:59:18: ... Location of port declaration
+   59 |     output wire  kvd_v,
+      |                  ^~~~~
+%Warning-PINMISSING: rtl/qwen_split/qfd_embedding_stage_static.sv:114:58: Cell has missing pin: 'kvd_wbase'
+  114 |     qfd_tt_ctlm_head_static #(.DENSE_IMAGE(1),.PSRAM(1)) u_me_control (
+      |                                                          ^~~~~~~~~~~~
+                     rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_split_static.sv:60:26: ... Location of port declaration
+   60 |     output wire [24-1:0] kvd_wbase,
+      |                          ^~~~~~~~~
+%Warning-PINMISSING: rtl/qwen_split/qfd_embedding_stage_static.sv:114:58: Cell has missing pin: 'kvd_ts'
+  114 |     qfd_tt_ctlm_head_static #(.DENSE_IMAGE(1),.PSRAM(1)) u_me_control (
+      |                                                          ^~~~~~~~~~~~
+                     rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_split_static.sv:61:26: ... Location of port declaration
+   61 |     output wire [24-1:0] kvd_ts,
+      |                          ^~~~~~
+%Warning-PINMISSING: rtl/qwen_split/qfd_embedding_stage_static.sv:114:58: Cell has missing pin: 'kvd_ks'
+  114 |     qfd_tt_ctlm_head_static #(.DENSE_IMAGE(1),.PSRAM(1)) u_me_control (
+      |                                                          ^~~~~~~~~~~~
+                     rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_split_static.sv:62:26: ... Location of port declaration
+   62 |     output wire [24-1:0] kvd_ks,
+      |                          ^~~~~~
+%Warning-PINMISSING: rtl/qwen_split/qfd_embedding_stage_static.sv:114:58: Cell has missing pin: 'kvd_js'
+  114 |     qfd_tt_ctlm_head_static #(.DENSE_IMAGE(1),.PSRAM(1)) u_me_control (
+      |                                                          ^~~~~~~~~~~~
+                     rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_split_static.sv:63:26: ... Location of port declaration
+   63 |     output wire [24-1:0] kvd_js,
+      |                          ^~~~~~
+%Warning-PINMISSING: rtl/qwen_split/qfd_embedding_stage_static.sv:114:58: Cell has missing pin: 'kvd_wcs'
+  114 |     qfd_tt_ctlm_head_static #(.DENSE_IMAGE(1),.PSRAM(1)) u_me_control (
+      |                                                          ^~~~~~~~~~~~
+                     rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_split_static.sv:64:26: ... Location of port declaration
+   64 |     output wire [24-1:0] kvd_wcs,
+      |                          ^~~~~~~
+%Warning-PINMISSING: rtl/qwen_split/qfd_embedding_stage_static.sv:114:58: Cell has missing pin: 'kvd_split'
+  114 |     qfd_tt_ctlm_head_static #(.DENSE_IMAGE(1),.PSRAM(1)) u_me_control (
+      |                                                          ^~~~~~~~~~~~
+                     rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_split_static.sv:65:23: ... Location of port declaration
+   65 |     output wire [3:0] kvd_split,
+      |                       ^~~~~~~~~
+%Warning-PINMISSING: rtl/qwen_split/qfd_embedding_stage_static.sv:114:58: Cell has missing pin: 'kvd_jsh'
+  114 |     qfd_tt_ctlm_head_static #(.DENSE_IMAGE(1),.PSRAM(1)) u_me_control (
+      |                                                          ^~~~~~~~~~~~
+                     rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_split_static.sv:66:23: ... Location of port declaration
+   66 |     output wire [2:0] kvd_jsh,
+      |                       ^~~~~~~
+%Warning-PINMISSING: rtl/qwen_split/qfd_embedding_stage_static.sv:114:58: Cell has missing pin: 'kvd_tiles'
+  114 |     qfd_tt_ctlm_head_static #(.DENSE_IMAGE(1),.PSRAM(1)) u_me_control (
+      |                                                          ^~~~~~~~~~~~
+                     rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_split_static.sv:67:26: ... Location of port declaration
+   67 |     output wire [18-1:0] kvd_tiles,
+      |                          ^~~~~~~~~
+%Warning-PINMISSING: rtl/qwen_split/qfd_embedding_stage_static.sv:114:58: Cell has missing pin: 'kvd_k'
+  114 |     qfd_tt_ctlm_head_static #(.DENSE_IMAGE(1),.PSRAM(1)) u_me_control (
+      |                                                          ^~~~~~~~~~~~
+                     rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_split_static.sv:68:26: ... Location of port declaration
+   68 |     output wire [18-1:0] kvd_k,
+      |                          ^~~~~
+%Warning-PINMISSING: rtl/qwen_split/qfd_embedding_stage_static.sv:114:58: Cell has missing pin: 'kvd_nout'
+  114 |     qfd_tt_ctlm_head_static #(.DENSE_IMAGE(1),.PSRAM(1)) u_me_control (
+      |                                                          ^~~~~~~~~~~~
+                     rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_split_static.sv:69:26: ... Location of port declaration
+   69 |     output wire [18-1:0] kvd_nout,
+      |                          ^~~~~~~~
+%Warning-PINMISSING: rtl/qwen_split/qfd_embedding_stage_static.sv:114:58: Cell has missing pin: 'kvd_kindk'
+  114 |     qfd_tt_ctlm_head_static #(.DENSE_IMAGE(1),.PSRAM(1)) u_me_control (
+      |                                                          ^~~~~~~~~~~~
+                     rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_split_static.sv:70:18: ... Location of port declaration
+   70 |     output wire  kvd_kindk,
+      |                  ^~~~~~~~~
+%Warning-PINMISSING: rtl/qwen_split/qfd_embedding_stage_static.sv:114:58: Cell has missing pin: 'kvd_pos'
+  114 |     qfd_tt_ctlm_head_static #(.DENSE_IMAGE(1),.PSRAM(1)) u_me_control (
+      |                                                          ^~~~~~~~~~~~
+                     rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_split_static.sv:71:26: ... Location of port declaration
+   71 |     output wire [18-1:0] kvd_pos,
+      |                          ^~~~~~~
+%Warning-PINMISSING: rtl/qwen_split/qfd_embedding_stage_static.sv:114:58: Cell has missing pin: 'me_observe'
+  114 |     qfd_tt_ctlm_head_static #(.DENSE_IMAGE(1),.PSRAM(1)) u_me_control (
+      |                                                          ^~~~~~~~~~~~
+                     rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_split_static.sv:73:23: ... Location of port declaration
+   73 |     output reg [15:0] me_observe,
+      |                       ^~~~~~~~~~
+%Warning-PINMISSING: rtl/physical/ot_qfd_tt_ctlm_split.sv:501:192: Cell has missing pin: 'm_fin_o'
+  501 |     qfd_tt_ctlm_head #(.DCU_M(DCU_M), .DUC_M(DUC_M), .XW(XW), .IS(IS), .OS(OS), .PSRAM(PSRAM), .PMUT(PMUT), .HQ2(HQ2), .MEREG(MEREG), .RRG(RRG), .PCUT(PCUT), .G(G), .TPMUT(TPMUT), .AUD(AUD)) u_shadow (
+      |                                                                                                                                                                                                ^~~~~~~~
+                     rtl/physical/ot_qfd_tt_ctlm_split.sv:50:18: ... Location of port declaration
+   50 |     output wire  m_fin_o,
+      |                  ^~~~~~~
+%Warning-PINMISSING: rtl/physical/ot_qfd_tt_ctlm_split.sv:501:192: Cell has missing pin: 'm_fidx_o'
+  501 |     qfd_tt_ctlm_head #(.DCU_M(DCU_M), .DUC_M(DUC_M), .XW(XW), .IS(IS), .OS(OS), .PSRAM(PSRAM), .PMUT(PMUT), .HQ2(HQ2), .MEREG(MEREG), .RRG(RRG), .PCUT(PCUT), .G(G), .TPMUT(TPMUT), .AUD(AUD)) u_shadow (
+      |                                                                                                                                                                                                ^~~~~~~~
+                     rtl/physical/ot_qfd_tt_ctlm_split.sv:51:26: ... Location of port declaration
+   51 |     output wire [18-1:0] m_fidx_o,
+      |                          ^~~~~~~~
+%Warning-PINMISSING: rtl/physical/ot_qfd_tt_ctlm_split.sv:501:192: Cell has missing pin: 'm_fval_o'
+  501 |     qfd_tt_ctlm_head #(.DCU_M(DCU_M), .DUC_M(DUC_M), .XW(XW), .IS(IS), .OS(OS), .PSRAM(PSRAM), .PMUT(PMUT), .HQ2(HQ2), .MEREG(MEREG), .RRG(RRG), .PCUT(PCUT), .G(G), .TPMUT(TPMUT), .AUD(AUD)) u_shadow (
+      |                                                                                                                                                                                                ^~~~~~~~
+                     rtl/physical/ot_qfd_tt_ctlm_split.sv:52:24: ... Location of port declaration
+   52 |     output wire [31:0] m_fval_o,
+      |                        ^~~~~~~~
+%Warning-PINMISSING: rtl/physical/ot_qfd_tt_ctlm_split.sv:501:192: Cell has missing pin: 'c_fault'
+  501 |     qfd_tt_ctlm_head #(.DCU_M(DCU_M), .DUC_M(DUC_M), .XW(XW), .IS(IS), .OS(OS), .PSRAM(PSRAM), .PMUT(PMUT), .HQ2(HQ2), .MEREG(MEREG), .RRG(RRG), .PCUT(PCUT), .G(G), .TPMUT(TPMUT), .AUD(AUD)) u_shadow (
+      |                                                                                                                                                                                                ^~~~~~~~
+                     rtl/physical/ot_qfd_tt_ctlm_split.sv:54:18: ... Location of port declaration
+   54 |     output wire  c_fault,
+      |                  ^~~~~~~
+%Warning-PINMISSING: rtl/physical/ot_qfd_tt_ctlm_split.sv:501:192: Cell has missing pin: 'kvd_v'
+  501 |     qfd_tt_ctlm_head #(.DCU_M(DCU_M), .DUC_M(DUC_M), .XW(XW), .IS(IS), .OS(OS), .PSRAM(PSRAM), .PMUT(PMUT), .HQ2(HQ2), .MEREG(MEREG), .RRG(RRG), .PCUT(PCUT), .G(G), .TPMUT(TPMUT), .AUD(AUD)) u_shadow (
+      |                                                                                                                                                                                                ^~~~~~~~
+                     rtl/physical/ot_qfd_tt_ctlm_split.sv:55:18: ... Location of port declaration
+   55 |     output wire  kvd_v,
+      |                  ^~~~~
+%Warning-PINMISSING: rtl/physical/ot_qfd_tt_ctlm_split.sv:501:192: Cell has missing pin: 'kvd_wbase'
+  501 |     qfd_tt_ctlm_head #(.DCU_M(DCU_M), .DUC_M(DUC_M), .XW(XW), .IS(IS), .OS(OS), .PSRAM(PSRAM), .PMUT(PMUT), .HQ2(HQ2), .MEREG(MEREG), .RRG(RRG), .PCUT(PCUT), .G(G), .TPMUT(TPMUT), .AUD(AUD)) u_shadow (
+      |                                                                                                                                                                                                ^~~~~~~~
+                     rtl/physical/ot_qfd_tt_ctlm_split.sv:56:26: ... Location of port declaration
+   56 |     output wire [24-1:0] kvd_wbase,
+      |                          ^~~~~~~~~
+%Warning-PINMISSING: rtl/physical/ot_qfd_tt_ctlm_split.sv:501:192: Cell has missing pin: 'kvd_ts'
+  501 |     qfd_tt_ctlm_head #(.DCU_M(DCU_M), .DUC_M(DUC_M), .XW(XW), .IS(IS), .OS(OS), .PSRAM(PSRAM), .PMUT(PMUT), .HQ2(HQ2), .MEREG(MEREG), .RRG(RRG), .PCUT(PCUT), .G(G), .TPMUT(TPMUT), .AUD(AUD)) u_shadow (
+      |                                                                                                                                                                                                ^~~~~~~~
+                     rtl/physical/ot_qfd_tt_ctlm_split.sv:57:26: ... Location of port declaration
+   57 |     output wire [24-1:0] kvd_ts,
+      |                          ^~~~~~
+%Warning-PINMISSING: rtl/physical/ot_qfd_tt_ctlm_split.sv:501:192: Cell has missing pin: 'kvd_ks'
+  501 |     qfd_tt_ctlm_head #(.DCU_M(DCU_M), .DUC_M(DUC_M), .XW(XW), .IS(IS), .OS(OS), .PSRAM(PSRAM), .PMUT(PMUT), .HQ2(HQ2), .MEREG(MEREG), .RRG(RRG), .PCUT(PCUT), .G(G), .TPMUT(TPMUT), .AUD(AUD)) u_shadow (
+      |                                                                                                                                                                                                ^~~~~~~~
+                     rtl/physical/ot_qfd_tt_ctlm_split.sv:58:26: ... Location of port declaration
+   58 |     output wire [24-1:0] kvd_ks,
+      |                          ^~~~~~
+%Warning-PINMISSING: rtl/physical/ot_qfd_tt_ctlm_split.sv:501:192: Cell has missing pin: 'kvd_js'
+  501 |     qfd_tt_ctlm_head #(.DCU_M(DCU_M), .DUC_M(DUC_M), .XW(XW), .IS(IS), .OS(OS), .PSRAM(PSRAM), .PMUT(PMUT), .HQ2(HQ2), .MEREG(MEREG), .RRG(RRG), .PCUT(PCUT), .G(G), .TPMUT(TPMUT), .AUD(AUD)) u_shadow (
+      |                                                                                                                                                                                                ^~~~~~~~
+                     rtl/physical/ot_qfd_tt_ctlm_split.sv:59:26: ... Location of port declaration
+   59 |     output wire [24-1:0] kvd_js,
+      |                          ^~~~~~
+%Warning-PINMISSING: rtl/physical/ot_qfd_tt_ctlm_split.sv:501:192: Cell has missing pin: 'kvd_wcs'
+  501 |     qfd_tt_ctlm_head #(.DCU_M(DCU_M), .DUC_M(DUC_M), .XW(XW), .IS(IS), .OS(OS), .PSRAM(PSRAM), .PMUT(PMUT), .HQ2(HQ2), .MEREG(MEREG), .RRG(RRG), .PCUT(PCUT), .G(G), .TPMUT(TPMUT), .AUD(AUD)) u_shadow (
+      |                                                                                                                                                                                                ^~~~~~~~
+                     rtl/physical/ot_qfd_tt_ctlm_split.sv:60:26: ... Location of port declaration
+   60 |     output wire [24-1:0] kvd_wcs,
+      |                          ^~~~~~~
+%Warning-PINMISSING: rtl/physical/ot_qfd_tt_ctlm_split.sv:501:192: Cell has missing pin: 'kvd_split'
+  501 |     qfd_tt_ctlm_head #(.DCU_M(DCU_M), .DUC_M(DUC_M), .XW(XW), .IS(IS), .OS(OS), .PSRAM(PSRAM), .PMUT(PMUT), .HQ2(HQ2), .MEREG(MEREG), .RRG(RRG), .PCUT(PCUT), .G(G), .TPMUT(TPMUT), .AUD(AUD)) u_shadow (
+      |                                                                                                                                                                                                ^~~~~~~~
+                     rtl/physical/ot_qfd_tt_ctlm_split.sv:61:23: ... Location of port declaration
+   61 |     output wire [3:0] kvd_split,
+      |                       ^~~~~~~~~
+%Warning-PINMISSING: rtl/physical/ot_qfd_tt_ctlm_split.sv:501:192: Cell has missing pin: 'kvd_jsh'
+  501 |     qfd_tt_ctlm_head #(.DCU_M(DCU_M), .DUC_M(DUC_M), .XW(XW), .IS(IS), .OS(OS), .PSRAM(PSRAM), .PMUT(PMUT), .HQ2(HQ2), .MEREG(MEREG), .RRG(RRG), .PCUT(PCUT), .G(G), .TPMUT(TPMUT), .AUD(AUD)) u_shadow (
+      |                                                                                                                                                                                                ^~~~~~~~
+                     rtl/physical/ot_qfd_tt_ctlm_split.sv:62:23: ... Location of port declaration
+   62 |     output wire [2:0] kvd_jsh,
+      |                       ^~~~~~~
+%Warning-PINMISSING: rtl/physical/ot_qfd_tt_ctlm_split.sv:501:192: Cell has missing pin: 'kvd_tiles'
+  501 |     qfd_tt_ctlm_head #(.DCU_M(DCU_M), .DUC_M(DUC_M), .XW(XW), .IS(IS), .OS(OS), .PSRAM(PSRAM), .PMUT(PMUT), .HQ2(HQ2), .MEREG(MEREG), .RRG(RRG), .PCUT(PCUT), .G(G), .TPMUT(TPMUT), .AUD(AUD)) u_shadow (
+      |                                                                                                                                                                                                ^~~~~~~~
+                     rtl/physical/ot_qfd_tt_ctlm_split.sv:63:26: ... Location of port declaration
+   63 |     output wire [18-1:0] kvd_tiles,
+      |                          ^~~~~~~~~
+%Warning-PINMISSING: rtl/physical/ot_qfd_tt_ctlm_split.sv:501:192: Cell has missing pin: 'kvd_k'
+  501 |     qfd_tt_ctlm_head #(.DCU_M(DCU_M), .DUC_M(DUC_M), .XW(XW), .IS(IS), .OS(OS), .PSRAM(PSRAM), .PMUT(PMUT), .HQ2(HQ2), .MEREG(MEREG), .RRG(RRG), .PCUT(PCUT), .G(G), .TPMUT(TPMUT), .AUD(AUD)) u_shadow (
+      |                                                                                                                                                                                                ^~~~~~~~
+                     rtl/physical/ot_qfd_tt_ctlm_split.sv:64:26: ... Location of port declaration
+   64 |     output wire [18-1:0] kvd_k,
+      |                          ^~~~~
+%Warning-PINMISSING: rtl/physical/ot_qfd_tt_ctlm_split.sv:501:192: Cell has missing pin: 'kvd_nout'
+  501 |     qfd_tt_ctlm_head #(.DCU_M(DCU_M), .DUC_M(DUC_M), .XW(XW), .IS(IS), .OS(OS), .PSRAM(PSRAM), .PMUT(PMUT), .HQ2(HQ2), .MEREG(MEREG), .RRG(RRG), .PCUT(PCUT), .G(G), .TPMUT(TPMUT), .AUD(AUD)) u_shadow (
+      |                                                                                                                                                                                                ^~~~~~~~
+                     rtl/physical/ot_qfd_tt_ctlm_split.sv:65:26: ... Location of port declaration
+   65 |     output wire [18-1:0] kvd_nout,
+      |                          ^~~~~~~~
+%Warning-PINMISSING: rtl/physical/ot_qfd_tt_ctlm_split.sv:501:192: Cell has missing pin: 'kvd_kindk'
+  501 |     qfd_tt_ctlm_head #(.DCU_M(DCU_M), .DUC_M(DUC_M), .XW(XW), .IS(IS), .OS(OS), .PSRAM(PSRAM), .PMUT(PMUT), .HQ2(HQ2), .MEREG(MEREG), .RRG(RRG), .PCUT(PCUT), .G(G), .TPMUT(TPMUT), .AUD(AUD)) u_shadow (
+      |                                                                                                                                                                                                ^~~~~~~~
+                     rtl/physical/ot_qfd_tt_ctlm_split.sv:66:18: ... Location of port declaration
+   66 |     output wire  kvd_kindk,
+      |                  ^~~~~~~~~
+%Warning-PINMISSING: rtl/physical/ot_qfd_tt_ctlm_split.sv:501:192: Cell has missing pin: 'kvd_pos'
+  501 |     qfd_tt_ctlm_head #(.DCU_M(DCU_M), .DUC_M(DUC_M), .XW(XW), .IS(IS), .OS(OS), .PSRAM(PSRAM), .PMUT(PMUT), .HQ2(HQ2), .MEREG(MEREG), .RRG(RRG), .PCUT(PCUT), .G(G), .TPMUT(TPMUT), .AUD(AUD)) u_shadow (
+      |                                                                                                                                                                                                ^~~~~~~~
+                     rtl/physical/ot_qfd_tt_ctlm_split.sv:67:26: ... Location of port declaration
+   67 |     output wire [18-1:0] kvd_pos,
+      |                          ^~~~~~~
+%Warning-PINMISSING: rtl/hdc/ot_qwen_me_spine_h_w12.sv:137:51: Cell has missing pin: 'x_dv'
+  137 |         .MUL_LAT(MUL_LAT), .SCALE_LAT(SCALE_LAT)) u_ctl (
+      |                                                   ^~~~~
+                     rtl/hdc/ot_qwen_me_spine_h_w12.sv:319:30: ... Location of port declaration
+  319 |     output reg               x_dv,
+      |                              ^~~~
+%Warning-PINMISSING: rtl/hdc/ot_qwen_me_spine_h_w12.sv:137:51: Cell has missing pin: 'x_dc'
+  137 |         .MUL_LAT(MUL_LAT), .SCALE_LAT(SCALE_LAT)) u_ctl (
+      |                                                   ^~~~~
+                     rtl/hdc/ot_qwen_me_spine_h_w12.sv:320:30: ... Location of port declaration
+  320 |     output reg  [AW-1:0]     x_dc,
+      |                              ^~~~
+%Warning-PINMISSING: rtl/hdc/ot_qwen_me_spine_h_w12.sv:137:51: Cell has missing pin: 'x_dcs'
+  137 |         .MUL_LAT(MUL_LAT), .SCALE_LAT(SCALE_LAT)) u_ctl (
+      |                                                   ^~~~~
+                     rtl/hdc/ot_qwen_me_spine_h_w12.sv:321:30: ... Location of port declaration
+  321 |     output reg  [AW-1:0]     x_dcs,
+      |                              ^~~~~
+%Warning-PINMISSING: rtl/hdc/ot_qwen_me_spine_h_w12.sv:137:51: Cell has missing pin: 'x_dsp'
+  137 |         .MUL_LAT(MUL_LAT), .SCALE_LAT(SCALE_LAT)) u_ctl (
+      |                                                   ^~~~~
+                     rtl/hdc/ot_qwen_me_spine_h_w12.sv:322:30: ... Location of port declaration
+  322 |     output wire [3:0]        x_dsp,
+      |                              ^~~~~
+%Warning-PINMISSING: rtl/hdc/ot_qwen_me_spine_h_w12.sv:190:61: Cell has missing pin: 'ck_mul'
+  190 |                 .TREE_LAT(TREE_LAT), .SCALE_LAT(SCALE_LAT)) u_pt (
+      |                                                             ^~~~
+                     rtl/hdc/ot_qwen_me_spine_h_w12.sv:1430:23: ... Location of port declaration
+ 1430 |     input wire [15:0] ck_mul,
+      |                       ^~~~~~
+%Warning-PINMISSING: rtl/hdc/ot_qwen_me_spine_h_w12.sv:190:61: Cell has missing pin: 'o_ov'
+  190 |                 .TREE_LAT(TREE_LAT), .SCALE_LAT(SCALE_LAT)) u_pt (
+      |                                                             ^~~~
+                     rtl/hdc/ot_qwen_me_spine_h_w12.sv:1442:30: ... Location of port declaration
+ 1442 |     output reg               o_ov,           
+      |                              ^~~~
+%Warning-PINMISSING: rtl/hdc/ot_qwen_w12_matvec.sv:152:129: Cell has missing pin: 'ck_lsl'
+  152 |                          .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT), .FAST_ISSUE(FAST_ISSUE), .KV_PREP(KV_PREP), .MUL_LAT(MUL_LAT)) u_p (
+      |                                                                                                                                 ^~~
+                     rtl/hdc/ot_qwen_w12_matvec.sv:240:22: ... Location of port declaration
+  240 |     input wire [7:0] ck_lsl,
+      |                      ^~~~~~
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue.sv:39:44: Operator EQ expects 32 bits on the LHS, but LHS's SEL generates 2 bits.
+                                                                                        : ... note: In instance 'qfd_seq_su_gateway.u_seq.u_fixed_issue.g_dense.u_store.u_issue'
+   39 |     assign issue_v=scheduled && head[45:44]==OWN;
+      |                                            ^~
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue.sv:47:69: Operator ADD expects 5 bits on the RHS, but RHS's CONST '2'h2' generates 2 bits.
+                                                                                        : ... note: In instance 'qfd_seq_su_gateway.u_seq.u_fixed_issue.g_dense.u_store.u_issue'
+   47 |                      second_read ? {{(ROW_AW-1){1'b0}},1'b1} : index+2'd2;
+      |                                                                     ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue.sv:74:45: Operator NEQ expects 32 bits on the LHS, but LHS's SEL generates 2 bits.
+                                                                                        : ... note: In instance 'qfd_seq_su_gateway.u_seq.u_fixed_issue.g_dense.u_store.u_issue'
+   74 |             if(head[45:44]!=0 && head[45:44]!=OWN && !(OWN==1&&head[45:44]==3)) fault<=1;
+      |                                             ^~
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue.sv:47:69: Operator ADD expects 12 bits on the RHS, but RHS's CONST '2'h2' generates 2 bits.
+                                                                                        : ... note: In instance 'qfd_seq_su_gateway.u_coll_calendar.u_issue.u_core'
+   47 |                      second_read ? {{(ROW_AW-1){1'b0}},1'b1} : index+2'd2;
+      |                                                                     ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv:27:22: Operator GTE expects 32 bits on the LHS, but LHS's VARREF 'pw_addr' generates 10 bits.
+                                                                                                 : ... note: In instance 'qfd_seq_su_gateway.u_seq.u_fixed_issue.g_dense.u_store'
+   27 |  wire own_row=pw_addr>=BASE&&pw_addr<BASE+DEPTH;
+      |                      ^~
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv:27:37: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'pw_addr' generates 10 bits.
+                                                                                                 : ... note: In instance 'qfd_seq_su_gateway.u_seq.u_fixed_issue.g_dense.u_store'
+   27 |  wire own_row=pw_addr>=BASE&&pw_addr<BASE+DEPTH;
+      |                                     ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv:33:64: Operator GT expects 32 bits on the LHS, but LHS's VARREF 'count' generates 6 bits.
+                                                                                                 : ... note: In instance 'qfd_seq_su_gateway.u_seq.u_fixed_issue.g_dense.u_store'
+   33 |            meta_q[27:18]==0||meta_q[27:18]>=61||count==0||count>DEPTH||
+      |                                                                ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv:41:30: Operator SUB expects 32 bits on the LHS, but LHS's VARREF 'count' generates 6 bits.
+                                                                                                 : ... note: In instance 'qfd_seq_su_gateway.u_seq.u_fixed_issue.g_dense.u_store'
+   41 |     if(rows[k][46]!=(k==count-1))seal_bad=1;
+      |                              ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv:56:17: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'read_addr' generates 5 bits.
+                                                                                                 : ... note: In instance 'qfd_seq_su_gateway.u_seq.u_fixed_issue.g_dense.u_store'
+   56 |     if(read_addr<DEPTH&&valid[read_addr])q<=rows[read_addr];else begin q<=0;read_fault<=1;end
+      |                 ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv:64:32: Operator SUB expects 32 bits on the LHS, but LHS's VARREF 'pw_addr' generates 10 bits.
+                                                                                                 : ... note: In instance 'qfd_seq_su_gateway.u_seq.u_fixed_issue.g_dense.u_store'
+   64 |      if(!loading||valid[pw_addr-BASE]||pw_data[63:47]!=0)cfg_fault<=1;
+      |                                ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv:65:18: Operator SUB expects 32 bits on the LHS, but LHS's VARREF 'pw_addr' generates 10 bits.
+                                                                                                 : ... note: In instance 'qfd_seq_su_gateway.u_seq.u_fixed_issue.g_dense.u_store'
+   65 |      rows[pw_addr-BASE]<=pw_data[46:0];valid[pw_addr-BASE]<=1;
+      |                  ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv:65:53: Operator SUB expects 32 bits on the LHS, but LHS's VARREF 'pw_addr' generates 10 bits.
+                                                                                                 : ... note: In instance 'qfd_seq_su_gateway.u_seq.u_fixed_issue.g_dense.u_store'
+   65 |      rows[pw_addr-BASE]<=pw_data[46:0];valid[pw_addr-BASE]<=1;
+      |                                                     ^
+%Warning-WIDTHEXPAND: rtl/hdc/ot_hdc_dyn_ttiles.sv:26:34: Operator SUB expects 32 bits on the RHS, but RHS's VARREF 'split_log2' generates 4 bits.
+                                                        : ... note: In instance 'qfd_seq_su_gateway.u_seq.u_ctrl.g_dtab.g_ds[15].u_t'
+   26 |     wire [4:0] shift_amount=WT+GT-split_log2;
+      |                                  ^
+%Warning-WIDTHTRUNC: rtl/hdc/ot_hdc_dyn_ttiles.sv:26:28: Operator ASSIGNW expects 5 bits on the Assign RHS, but Assign RHS's SUB generates 32 bits.
+                                                       : ... note: In instance 'qfd_seq_su_gateway.u_seq.u_ctrl.g_dtab.g_ds[15].u_t'
+   26 |     wire [4:0] shift_amount=WT+GT-split_log2;
+      |                            ^
+%Warning-WIDTHEXPAND: rtl/hdc/ot_hdc_dyn_ttiles.sv:28:54: Operator GT expects 32 bits on the LHS, but LHS's VARREF 'split_log2' generates 4 bits.
+                                                        : ... note: In instance 'qfd_seq_su_gateway.u_seq.u_ctrl.g_dtab.g_ds[15].u_t'
+   28 |     assign invalid_split=(W != (1<<WT)) || split_log2>GT || split_log2>WT+GT;
+      |                                                      ^
+%Warning-WIDTHEXPAND: rtl/hdc/ot_hdc_dyn_ttiles.sv:28:71: Operator GT expects 32 bits on the LHS, but LHS's VARREF 'split_log2' generates 4 bits.
+                                                        : ... note: In instance 'qfd_seq_su_gateway.u_seq.u_ctrl.g_dtab.g_ds[15].u_t'
+   28 |     assign invalid_split=(W != (1<<WT)) || split_log2>GT || split_log2>WT+GT;
+      |                                                                       ^
+%Warning-WIDTHEXPAND: rtl/hdc/ot_hdc_dyn_ttiles.sv:29:33: Operator COND expects 32 bits on the Conditional True, but Conditional True's REPLICATE generates 18 bits.
+                                                        : ... note: In instance 'qfd_seq_su_gateway.u_seq.u_ctrl.g_dtab.g_ds[15].u_t'
+   29 |     assign rounds=invalid_split ? {NW{1'b0}} : (shifted/ODD)+1'b1;
+      |                                 ^
+%Warning-WIDTHEXPAND: rtl/hdc/ot_hdc_dyn_ttiles.sv:29:56: Operator DIV expects 32 bits on the LHS, but LHS's VARREF 'shifted' generates 18 bits.
+                                                        : ... note: In instance 'qfd_seq_su_gateway.u_seq.u_ctrl.g_dtab.g_ds[15].u_t'
+   29 |     assign rounds=invalid_split ? {NW{1'b0}} : (shifted/ODD)+1'b1;
+      |                                                        ^
+%Warning-WIDTHTRUNC: rtl/hdc/ot_hdc_dyn_ttiles.sv:29:18: Operator ASSIGNW expects 18 bits on the Assign RHS, but Assign RHS's COND generates 32 bits.
+                                                       : ... note: In instance 'qfd_seq_su_gateway.u_seq.u_ctrl.g_dtab.g_ds[15].u_t'
+   29 |     assign rounds=invalid_split ? {NW{1'b0}} : (shifted/ODD)+1'b1;
+      |                  ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/missing_masters_20261007/ot_qfd_spine_masters.sv:38:20: Operator ASSIGNDLY expects 1 bits on the Assign RHS, but Assign RHS's REPLICATE generates 2 bits.
+                                                                                        : ... note: In instance 'qfd_seq_su_gateway.u_seq.u_rs'
+   38 |             else r <= {r, 1'b1};
+      |                    ^~
+%Warning-WIDTHEXPAND: rtl/rom/ot_coll_cmd_issue.sv:53:36: Operator GTE expects 32 bits on the LHS, but LHS's VARREF 'pw_addr' generates 10 bits.
+                                                        : ... note: In instance 'qfd_seq_su_gateway.u_coll_calendar.u_issue'
+   53 |     wire in_rows = pw_v && pw_addr >= BASE && pw_addr < BASE + 2 * DEPTH;
+      |                                    ^~
+%Warning-WIDTHEXPAND: rtl/rom/ot_coll_cmd_issue.sv:53:55: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'pw_addr' generates 10 bits.
+                                                        : ... note: In instance 'qfd_seq_su_gateway.u_coll_calendar.u_issue'
+   53 |     wire in_rows = pw_v && pw_addr >= BASE && pw_addr < BASE + 2 * DEPTH;
+      |                                                       ^
+%Warning-WIDTHEXPAND: rtl/rom/ot_coll_cmd_issue.sv:56:35: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'pw_addr' generates 10 bits.
+                                                        : ... note: In instance 'qfd_seq_su_gateway.u_coll_calendar.u_issue'
+   56 |     wire seal_w = pw_v && pw_addr == BASE + 2 * DEPTH;
+      |                                   ^~
+%Warning-WIDTHEXPAND: rtl/rom/ot_coll_cmd_issue.sv:81:36: Operator GT expects 32 bits on the LHS, but LHS's SEL generates 6 bits.
+                                                        : ... note: In instance 'qfd_seq_su_gateway.u_coll_calendar.u_issue'
+   81 |                     pw_data[37:32] > DEPTH) cfg_fault <= 1'b1;
+      |                                    ^
+%Warning-WIDTHEXPAND: rtl/rom/ot_coll_cmd_issue.sv:88:42: Operator COND expects 32 bits on the Conditional True, but Conditional True's SEL generates 6 bits.
+                                                        : ... note: In instance 'qfd_seq_su_gateway.u_coll_calendar.u_issue'
+   88 |                     if (ck_row < (seal_w ? pw_data[37:32] : count_q) &&
+      |                                          ^
+%Warning-WIDTHEXPAND: rtl/rom/ot_coll_cmd_issue.sv:88:42: Operator COND expects 32 bits on the Conditional False, but Conditional False's VARREF 'count_q' generates 6 bits.
+                                                        : ... note: In instance 'qfd_seq_su_gateway.u_coll_calendar.u_issue'
+   88 |                     if (ck_row < (seal_w ? pw_data[37:32] : count_q) &&
+      |                                          ^
+%Warning-WIDTHEXPAND: rtl/rom/ot_coll_cmd_issue.sv:96:30: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'slot_addr' generates 12 bits.
+                                                        : ... note: In instance 'qfd_seq_su_gateway.u_coll_calendar.u_issue'
+   96 |         slot_q <= (slot_addr < DEPTH && slot_addr < count_q)
+      |                              ^
+%Warning-WIDTHEXPAND: rtl/rom/ot_coll_cmd_issue.sv:96:51: Operator LT expects 12 bits on the RHS, but RHS's VARREF 'count_q' generates 6 bits.
+                                                        : ... note: In instance 'qfd_seq_su_gateway.u_coll_calendar.u_issue'
+   96 |         slot_q <= (slot_addr < DEPTH && slot_addr < count_q)
+      |                                                   ^
+%Warning-WIDTHEXPAND: rtl/rom/ot_coll_cmd_issue.sv:105:31: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'issue_pc' generates 12 bits.
+                                                         : ... note: In instance 'qfd_seq_su_gateway.u_coll_calendar.u_issue'
+  105 |         .candidate_v(issue_pc < DEPTH && loaded[ip]), .candidate_pc(issue_pc), .candidate_unit(issue_unit),
+      |                               ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_tp_seq_calendar.sv:38:18: Operator SUB expects 32 bits on the LHS, but LHS's VARREF 'count_q' generates 2 bits.
+                                                                                            : ... note: In instance 'qfd_seq_su_gateway.u_seq.u_seq'
+   38 |     if(k==count_q-1&&cfg[4*k+3][1:0]==1)bad=1;
+      |                  ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_tp_seq_calendar.sv:41:38: Operator SUB expects 32 bits on the LHS, but LHS's VARREF 'count_q' generates 2 bits.
+                                                                                            : ... note: In instance 'qfd_seq_su_gateway.u_seq.u_seq'
+   41 |     if(cfg[4*k+3][1:0]>2||(k!=count_q-1&&cfg[4*k+3][1:0]!=1))bad=1;
+      |                                      ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_tp_seq_calendar.sv:86:14: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'ri' generates 9 bits.
+                                                                                            : ... note: In instance 'qfd_seq_su_gateway.u_seq.u_seq'
+   86 |    rx_slot=ri<(descriptor[1:0]==1?words:N)&&cycle==next_rx[seg];
+      |              ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_tp_seq_calendar.sv:86:34: Operator COND expects 32 bits on the Conditional True, but Conditional True's VARREF 'words' generates 9 bits.
+                                                                                            : ... note: In instance 'qfd_seq_su_gateway.u_seq.u_seq'
+   86 |    rx_slot=ri<(descriptor[1:0]==1?words:N)&&cycle==next_rx[seg];
+      |                                  ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_tp_seq_calendar.sv:107:65: Operator OR expects 19 bits on the RHS, but RHS's VARREF 'read_slot' generates 1 bits.
+                                                                                             : ... note: In instance 'qfd_seq_su_gateway.u_seq.u_seq'
+  107 |    done<=0;vm_we<=0;core_done_q<=core_done;rd_pipe<=(rd_pipe<<1)|read_slot;
+      |                                                                 ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_tp_seq_calendar.sv:116:88: Operator ADD expects 32 bits on the RHS, but RHS's VARREF 'tx_stride' generates 16 bits.
+                                                                                             : ... note: In instance 'qfd_seq_su_gateway.u_seq.u_seq'
+  116 |     if(read_slot)begin rd_index[seg]<=rd_index[seg]+1'b1;next_read[seg]<=next_read[seg]+tx_stride;end
+      |                                                                                        ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_tp_seq_calendar.sv:118:48: Operator ADD expects 32 bits on the RHS, but RHS's VARREF 'tx_stride' generates 16 bits.
+                                                                                             : ... note: In instance 'qfd_seq_su_gateway.u_seq.u_seq'
+  118 |     if(tx_slot)begin next_tx[seg]<=next_tx[seg]+tx_stride;tx_index[seg]<=tx_index[seg]+1'b1;if(!c_mode)begin q_r<=q_r+1'b1;if(q_count==0)runtime_fault<=1;end end
+      |                                                ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_tp_seq_calendar.sv:119:21: Operator ADD expects 3 bits on the RHS, but RHS's VARREF 'expected_read' generates 1 bits.
+                                                                                             : ... note: In instance 'qfd_seq_su_gateway.u_seq.u_seq'
+  119 |     q_count<=q_count+expected_read-(tx_slot&&!c_mode);
+      |                     ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_tp_seq_calendar.sv:119:35: Operator SUB expects 3 bits on the RHS, but RHS's LOGAND generates 1 bits.
+                                                                                             : ... note: In instance 'qfd_seq_su_gateway.u_seq.u_seq'
+  119 |     q_count<=q_count+expected_read-(tx_slot&&!c_mode);
+      |                                   ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_tp_seq_calendar.sv:124:32: Operator ADD expects 32 bits on the RHS, but RHS's VARREF 'rx_stride' generates 16 bits.
+                                                                                             : ... note: In instance 'qfd_seq_su_gateway.u_seq.u_seq'
+  124 |      next_rx[seg]<=next_rx[seg]+rx_stride;rx_index[seg]<=rx_index[seg]+1'b1;
+      |                                ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_tp_seq_calendar.sv:125:38: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'ri' generates 9 bits.
+                                                                                             : ... note: In instance 'qfd_seq_su_gateway.u_seq.u_seq'
+  125 |      if(!r_valid||r_err||r_last!==(ri==(descriptor[1:0]==1?words:N)-1))runtime_fault<=1;
+      |                                      ^~
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_tp_seq_calendar.sv:125:59: Operator COND expects 32 bits on the Conditional True, but Conditional True's VARREF 'words' generates 9 bits.
+                                                                                             : ... note: In instance 'qfd_seq_su_gateway.u_seq.u_seq'
+  125 |      if(!r_valid||r_err||r_last!==(ri==(descriptor[1:0]==1?words:N)-1))runtime_fault<=1;
+      |                                                           ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_tp_seq_calendar.sv:128:16: Operator NEQ expects 9 bits on the LHS, but LHS's VARREF 'r_rank' generates 3 bits.
+                                                                                             : ... note: In instance 'qfd_seq_su_gateway.u_seq.u_seq'
+  128 |       if(r_rank!=ri)runtime_fault<=1;
+      |                ^~
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_tp_seq_calendar.sv:130:12: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'ri' generates 9 bits.
+                                                                                             : ... note: In instance 'qfd_seq_su_gateway.u_seq.u_seq'
+  130 |       if(ri==N-1)begin
+      |            ^~
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_a_operand_gateway_v1.sv:31:29: Operator SUB expects 32 bits on the LHS, but LHS's SEL generates 24 bits.
+                                                                                                 : ... note: In instance 'qfd_seq_su_gateway.u_seq.u_ctrl.u_a_gateway'
+   31 |          (((a_addr[0 +: AW] - EMB_ADDR_BASE) & (HID - 1)) /
+      |                             ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_a_operand_gateway_v1.sv:33:27: Operator SUB expects 32 bits on the LHS, but LHS's SEL generates 24 bits.
+                                                                                                 : ... note: In instance 'qfd_seq_su_gateway.u_seq.u_ctrl.u_a_gateway'
+   33 |         ((a_addr[0 +: AW] - EMB_ADDR_BASE) >> $clog2(EMB_CODE_LANES));
+      |                           ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/static_schedule_20261014/ot_qwen_a_operand_gateway_v1.sv:29:28: Operator ASSIGNW expects 24 bits on the Assign RHS, but Assign RHS's COND generates 32 bits.
+                                                                                                : ... note: In instance 'qfd_seq_su_gateway.u_seq.u_ctrl.u_a_gateway'
+   29 |     assign embed_code_addr = (QWEN_FULLSHAPE != 0) ?
+      |                            ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_su_gateway.sv:527:37: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'KV_VEC_WRITE_BRIDGE' generates 32 bits.
+                                                                                                     : ... note: In instance 'qfd_seq_su_gateway.u_seq.u_ctrl'
+  527 |                       (su_ready && (!KV_VEC_WRITE_BRIDGE || (su_idle && kv_write_drained)));
+      |                                     ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_su_gateway.sv:535:43: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'KV_VEC_WRITE_BRIDGE' generates 32 bits.
+                                                                                                     : ... note: In instance 'qfd_seq_su_gateway.u_seq.u_ctrl'
+  535 |     wire drained = me_idle && su_idle && (!KV_VEC_WRITE_BRIDGE || kv_write_drained);
+      |                                           ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_su_gateway.sv:553:48: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'KV_VEC_WRITE_BRIDGE' generates 32 bits.
+                                                                                                     : ... note: In instance 'qfd_seq_su_gateway.u_seq.u_ctrl'
+  553 |     wire x_drained = own_idle && o_drained && (!KV_VEC_WRITE_BRIDGE || kv_write_drained);
+      |                                                ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_su_gateway.sv:649:56: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'KV_VEC_WRITE_BRIDGE' generates 32 bits.
+                                                                                                     : ... note: In instance 'qfd_seq_su_gateway.u_seq.u_ctrl'
+  649 |                  (bar ? (own_idle_n && o_drained_n && (!KV_VEC_WRITE_BRIDGE || kd_n)) :
+      |                                                        ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_su_gateway.sv:652:66: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'KV_VEC_WRITE_BRIDGE' generates 32 bits.
+                                                                                                     : ... note: In instance 'qfd_seq_su_gateway.u_seq.u_ctrl'
+  652 |                     ((OWN == 1) ? own_ready_n : (own_ready_n && (!KV_VEC_WRITE_BRIDGE || (own_idle_n && kd_n))));
+      |                                                                  ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_su_gateway.sv:697:38: Operator ADD expects 32 bits on the LHS, but LHS's REPLICATE generates 4 bits.
+                                                                                                      : ... note: In instance 'qfd_seq_su_gateway.u_seq.u_ctrl'
+  697 |                     if ({1'b0, fq_n} + ((FQ_HEAD >= 2) ? hc : (FQ_HEAD != 0) ? {1'b0, hq_v} : 2'd0) + prog_re + pend1 + ((PRL > 1) ? pend2 : 1'b0) < NFQ) begin
+      |                                      ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_su_gateway.sv:697:56: Operator COND expects 32 bits on the Conditional True, but Conditional True's VARREF 'hc' generates 2 bits.
+                                                                                                      : ... note: In instance 'qfd_seq_su_gateway.u_seq.u_ctrl'
+  697 |                     if ({1'b0, fq_n} + ((FQ_HEAD >= 2) ? hc : (FQ_HEAD != 0) ? {1'b0, hq_v} : 2'd0) + prog_re + pend1 + ((PRL > 1) ? pend2 : 1'b0) < NFQ) begin
+      |                                                        ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_su_gateway.sv:697:78: Operator COND expects 32 bits on the Conditional True, but Conditional True's REPLICATE generates 2 bits.
+                                                                                                      : ... note: In instance 'qfd_seq_su_gateway.u_seq.u_ctrl'
+  697 |                     if ({1'b0, fq_n} + ((FQ_HEAD >= 2) ? hc : (FQ_HEAD != 0) ? {1'b0, hq_v} : 2'd0) + prog_re + pend1 + ((PRL > 1) ? pend2 : 1'b0) < NFQ) begin
+      |                                                                              ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_su_gateway.sv:697:78: Operator COND expects 32 bits on the Conditional False, but Conditional False's CONST '2'h0' generates 2 bits.
+                                                                                                      : ... note: In instance 'qfd_seq_su_gateway.u_seq.u_ctrl'
+  697 |                     if ({1'b0, fq_n} + ((FQ_HEAD >= 2) ? hc : (FQ_HEAD != 0) ? {1'b0, hq_v} : 2'd0) + prog_re + pend1 + ((PRL > 1) ? pend2 : 1'b0) < NFQ) begin
+      |                                                                              ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_su_gateway.sv:697:101: Operator ADD expects 32 bits on the RHS, but RHS's VARREF 'prog_re' generates 1 bits.
+                                                                                                       : ... note: In instance 'qfd_seq_su_gateway.u_seq.u_ctrl'
+  697 |                     if ({1'b0, fq_n} + ((FQ_HEAD >= 2) ? hc : (FQ_HEAD != 0) ? {1'b0, hq_v} : 2'd0) + prog_re + pend1 + ((PRL > 1) ? pend2 : 1'b0) < NFQ) begin
+      |                                                                                                     ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_su_gateway.sv:697:111: Operator ADD expects 32 bits on the RHS, but RHS's VARREF 'pend1' generates 1 bits.
+                                                                                                       : ... note: In instance 'qfd_seq_su_gateway.u_seq.u_ctrl'
+  697 |                     if ({1'b0, fq_n} + ((FQ_HEAD >= 2) ? hc : (FQ_HEAD != 0) ? {1'b0, hq_v} : 2'd0) + prog_re + pend1 + ((PRL > 1) ? pend2 : 1'b0) < NFQ) begin
+      |                                                                                                               ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_su_gateway.sv:697:132: Operator COND expects 32 bits on the Conditional True, but Conditional True's VARREF 'pend2' generates 1 bits.
+                                                                                                       : ... note: In instance 'qfd_seq_su_gateway.u_seq.u_ctrl'
+  697 |                     if ({1'b0, fq_n} + ((FQ_HEAD >= 2) ? hc : (FQ_HEAD != 0) ? {1'b0, hq_v} : 2'd0) + prog_re + pend1 + ((PRL > 1) ? pend2 : 1'b0) < NFQ) begin
+      |                                                                                                                                    ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_su_gateway.sv:697:132: Operator COND expects 32 bits on the Conditional False, but Conditional False's CONST '1'h0' generates 1 bits.
+                                                                                                       : ... note: In instance 'qfd_seq_su_gateway.u_seq.u_ctrl'
+  697 |                     if ({1'b0, fq_n} + ((FQ_HEAD >= 2) ? hc : (FQ_HEAD != 0) ? {1'b0, hq_v} : 2'd0) + prog_re + pend1 + ((PRL > 1) ? pend2 : 1'b0) < NFQ) begin
+      |                                                                                                                                    ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_su_gateway.sv:768:16: Operator ASSIGNDLY expects 24 bits on the Assign RHS, but Assign RHS's MUL generates 32 bits.
+                                                                                                     : ... note: In instance 'qfd_seq_su_gateway.u_seq.u_ctrl'
+  768 |         dyn[1] <= tok_r * HID;
+      |                ^~
+%Warning-WIDTHTRUNC: rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_su_gateway.sv:769:16: Operator ASSIGNDLY expects 24 bits on the Assign RHS, but Assign RHS's MUL generates 32 bits.
+                                                                                                     : ... note: In instance 'qfd_seq_su_gateway.u_seq.u_ctrl'
+  769 |         dyn[2] <= pos_r * HALF;
+      |                ^~
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_su_gateway.sv:770:26: Operator SHIFTR expects 32 bits on the LHS, but LHS's VARREF 'pos_r' generates 18 bits.
+                                                                                                      : ... note: In instance 'qfd_seq_su_gateway.u_seq.u_ctrl'
+  770 |         dyn[3] <= (pos_r >> LW) * (HD * W) + (pos_r & (W - 1));
+      |                          ^~
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_su_gateway.sv:770:53: Operator AND expects 32 bits on the LHS, but LHS's VARREF 'pos_r' generates 18 bits.
+                                                                                                      : ... note: In instance 'qfd_seq_su_gateway.u_seq.u_ctrl'
+  770 |         dyn[3] <= (pos_r >> LW) * (HD * W) + (pos_r & (W - 1));
+      |                                                     ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_su_gateway.sv:770:16: Operator ASSIGNDLY expects 24 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                                                                     : ... note: In instance 'qfd_seq_su_gateway.u_seq.u_ctrl'
+  770 |         dyn[3] <= (pos_r >> LW) * (HD * W) + (pos_r & (W - 1));
+      |                ^~
+%Warning-WIDTHTRUNC: rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_su_gateway.sv:771:16: Operator ASSIGNDLY expects 24 bits on the Assign RHS, but Assign RHS's MUL generates 32 bits.
+                                                                                                     : ... note: In instance 'qfd_seq_su_gateway.u_seq.u_ctrl'
+  771 |         dyn[4] <= pos_r * HD;
+      |                ^~
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_su_gateway.sv:772:25: Operator ADD expects 32 or 24 bits on the LHS, but LHS's VARREF 'pos_r' generates 18 bits.
+                                                                                                      : ... note: In instance 'qfd_seq_su_gateway.u_seq.u_ctrl'
+  772 |         dyn[5] <= pos_r + 1;
+      |                         ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_su_gateway.sv:773:16: Operator ASSIGNDLY expects 24 bits on the Assign RHS, but Assign RHS's VARREF 'dyn_tiles_zero' generates 18 bits.
+                                                                                                      : ... note: In instance 'qfd_seq_su_gateway.u_seq.u_ctrl'
+  773 |         dyn[6] <= dyn_tiles_zero;                  
+      |                ^~
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_su_gateway.sv:780:47: Operator ADD expects 24 bits on the LHS, but LHS's SEL generates 16 bits.
+                                                                                                      : ... note: In instance 'qfd_seq_su_gateway.u_seq.u_ctrl'
+  780 |         me_nout <= ir[O_ME_NOUT +: W_ME_NOUT] + dyn[ir[O_ME_D_NOUT +: W_ME_D_NOUT]];
+      |                                               ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_su_gateway.sv:780:17: Operator ASSIGNDLY expects 18 bits on the Assign RHS, but Assign RHS's ADD generates 24 bits.
+                                                                                                     : ... note: In instance 'qfd_seq_su_gateway.u_seq.u_ctrl'
+  780 |         me_nout <= ir[O_ME_NOUT +: W_ME_NOUT] + dyn[ir[O_ME_D_NOUT +: W_ME_D_NOUT]];
+      |                 ^~
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_su_gateway.sv:782:50: Operator ADD expects 24 bits on the LHS, but LHS's SEL generates 16 bits.
+                                                                                                      : ... note: In instance 'qfd_seq_su_gateway.u_seq.u_ctrl'
+  782 |         me_tiles <= ir[O_ME_TILES +: W_ME_TILES] + ((ir[O_ME_D_TILES +: W_ME_D_TILES] == 3'd6) ? dyn_tiles_split
+      |                                                  ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_su_gateway.sv:782:96: Operator COND expects 24 bits on the Conditional True, but Conditional True's VARREF 'dyn_tiles_split' generates 18 bits.
+                                                                                                      : ... note: In instance 'qfd_seq_su_gateway.u_seq.u_ctrl'
+  782 |         me_tiles <= ir[O_ME_TILES +: W_ME_TILES] + ((ir[O_ME_D_TILES +: W_ME_D_TILES] == 3'd6) ? dyn_tiles_split
+      |                                                                                                ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_su_gateway.sv:782:18: Operator ASSIGNDLY expects 18 bits on the Assign RHS, but Assign RHS's ADD generates 24 bits.
+                                                                                                     : ... note: In instance 'qfd_seq_su_gateway.u_seq.u_ctrl'
+  782 |         me_tiles <= ir[O_ME_TILES +: W_ME_TILES] + ((ir[O_ME_D_TILES +: W_ME_D_TILES] == 3'd6) ? dyn_tiles_split
+      |                  ^~
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_su_gateway.sv:784:38: Operator ADD expects 24 bits on the LHS, but LHS's SEL generates 16 bits.
+                                                                                                      : ... note: In instance 'qfd_seq_su_gateway.u_seq.u_ctrl'
+  784 |         me_k <= ir[O_ME_K +: W_ME_K] + dyn[ir[O_ME_D_K +: W_ME_D_K]];
+      |                                      ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_su_gateway.sv:784:14: Operator ASSIGNDLY expects 18 bits on the Assign RHS, but Assign RHS's ADD generates 24 bits.
+                                                                                                     : ... note: In instance 'qfd_seq_su_gateway.u_seq.u_ctrl'
+  784 |         me_k <= ir[O_ME_K +: W_ME_K] + dyn[ir[O_ME_D_K +: W_ME_D_K]];
+      |              ^~
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_su_gateway.sv:788:47: Operator OR expects 18 bits on the LHS, but LHS's SEL generates 16 bits.
+                                                                                                      : ... note: In instance 'qfd_seq_su_gateway.u_seq.u_ctrl'
+  788 |         me_row0 <= ir[O_ME_ROW0 +: W_ME_ROW0] |
+      |                                               ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_su_gateway.sv:801:17: Operator ASSIGNDLY expects 18 bits on the Assign RHS, but Assign RHS's SEL generates 16 bits.
+                                                                                                      : ... note: In instance 'qfd_seq_su_gateway.u_seq.u_ctrl'
+  801 |         su_nout <= ir[O_SU_NOUT +: W_SU_NOUT];
+      |                 ^~
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_su_gateway.sv:802:44: Operator ADD expects 24 bits on the LHS, but LHS's SEL generates 16 bits.
+                                                                                                      : ... note: In instance 'qfd_seq_su_gateway.u_seq.u_ctrl'
+  802 |         su_nin <= ir[O_SU_NIN +: W_SU_NIN] + dyn[ir[O_SU_D_NIN +: W_SU_D_NIN]];
+      |                                            ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_su_gateway.sv:802:16: Operator ASSIGNDLY expects 18 bits on the Assign RHS, but Assign RHS's ADD generates 24 bits.
+                                                                                                     : ... note: In instance 'qfd_seq_su_gateway.u_seq.u_ctrl'
+  802 |         su_nin <= ir[O_SU_NIN +: W_SU_NIN] + dyn[ir[O_SU_D_NIN +: W_SU_D_NIN]];
+      |                ^~
+%Warning-WIDTHCONCAT: rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_su_gateway.sv:888:22: More than a 8k bit replication is probably wrong: 49152
+                                                                                                      : ... note: In instance 'qfd_seq_su_gateway.u_seq.u_ctrl'
+  888 |     assign vx_addr = '0;    
+      |                      ^~
+%Warning-WIDTHCONCAT: rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_su_gateway.sv:891:19: More than a 8k bit replication is probably wrong: 65536
+                                                                                                      : ... note: In instance 'qfd_seq_su_gateway.u_seq.u_ctrl'
+  891 |     assign xl_d = '0;    
+      |                   ^~
+%Warning-WIDTHCONCAT: rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_su_gateway.sv:896:25: More than a 8k bit replication is probably wrong: 12288
+                                                                                                      : ... note: In instance 'qfd_seq_su_gateway.u_seq.u_ctrl'
+  896 |     assign vw_me_data = '0;    
+      |                         ^~
+%Warning-WIDTHTRUNC: rtl/qwen_sys/static_schedule_20261014/ot_qfd_seq_su_bi_gateway.sv:181:24: Operator ASSIGNDLY expects 1 bits on the Assign RHS, but Assign RHS's REPLICATE generates 2 bits.
+                                                                                             : ... note: In instance 'qfd_seq_su_gateway.u_seq'
+  181 |                 else r <= {r, 1'b1};
+      |                        ^~
+%Warning-WIDTHCONCAT: rtl/qwen_sys/static_schedule_20261014/ot_qfd_seq_su_bi_gateway.sv:517:17: More than a 8k bit replication is probably wrong: 786432
+                                                                                              : ... note: In instance 'qfd_seq_su_gateway.u_seq'
+  517 |         .wrom_q('0),
+      |                 ^~
+%Warning-WIDTHCONCAT: rtl/qwen_sys/static_schedule_20261014/ot_qfd_seq_su_bi_gateway.sv:586:15: More than a 8k bit replication is probably wrong: 65536
+                                                                                              : ... note: In instance 'qfd_seq_su_gateway.u_seq'
+  586 |         .vx_q('0),
+      |               ^~
+%Warning-WIDTHCONCAT: rtl/qwen_sys/static_schedule_20261014/ot_qfd_seq_su_bi_gateway.sv:590:16: More than a 8k bit replication is probably wrong: 12288
+                                                                                              : ... note: In instance 'qfd_seq_su_gateway.u_seq'
+  590 |         .t_lvl('0),
+      |                ^~
+%Warning-CMPCONST: rtl/qwen_sys/static_schedule_20261014/ot_qwen_tp_seq_calendar.sv:31:63: Comparison is constant due to limited range
+                                                                                         : ... note: In instance 'qfd_seq_su_gateway.u_seq.u_seq'
+   31 |   bad=!header_seen||!meta_seen||!pad_seen||count_q==0||count_q>3;
+      |                                                               ^
+- V e r i l a t i o n   R e p o r t: Verilator 5.032 2025-01-01 rev (Debian 5.032-1)
+- Verilator: Built from 90.198 MB sources in 265 modules, into 3.070 MB in 8 C++ files needing 0.000 MB
+- Verilator: Walltime 0.600 s (elab=0.156, cvt=0.257, bld=0.000); cpu 0.600 s on 1 threads; alloced 92.012 MB
+	Command being timed: "verilator --lint-only --timing -DOT_QFD_SEQ_SU_NOWROM -DOT_QFD_VM_NOX -DOT_QFDS_LU=58 -DOT_QFDS_LS=376 -Wno-fatal -Wno-TIMESCALEMOD -Irtl/hdc --top-module qfd_seq_su_gateway -f native_join.f"
+	User time (seconds): 0.61
+	System time (seconds): 0.02
+	Percent of CPU this job got: 100%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:00.63
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 99172
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 25528
+	Voluntary context switches: 5
+	Involuntary context switches: 3
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 136
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0

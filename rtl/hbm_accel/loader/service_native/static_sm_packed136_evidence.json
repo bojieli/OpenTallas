@@ -1,0 +1,110 @@
+{
+  "schema": "opentallas.hbm-svc-static-sm-packed136-evidence.v1",
+  "scope": "actual static formatter and five real SRAM row-cache component only",
+  "model": {
+    "schema": "opentallas.hbm-svc-sm-packed136.v1",
+    "default_PACKED136": 0,
+    "reused_bitpacking_source": "rtl/gpu/ot_gpu_payload_assemble.sv",
+    "reused_bitpacking_sha256": "355f01e90ccba32fca58339ea65d0b0bc87b906b7fe9b59d57eb6fc04636baa4",
+    "handshake_state_reused": false,
+    "record_bytes": 136,
+    "weight_bytes": 128,
+    "scale_bytes": 8,
+    "packet_layout": "{valid,tag10,scale64,weights1024}",
+    "sectors_per_four_rows": 17,
+    "fixed_sector_count_per_five_edges": [
+      4,
+      4,
+      4,
+      4,
+      1
+    ],
+    "fixed_row_capture_offsets": [
+      3,
+      4,
+      5,
+      6
+    ],
+    "steady_stream_cycles_per_row": 1.25,
+    "immutable_price_cycles_per_row": 1.374315789,
+    "component_cadence_fits_immutable_price": true,
+    "sector_window_entries": 16,
+    "sector_window_data_FF": 4096,
+    "sector_window_valid_FF": 16,
+    "row_cache_macros": 5,
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "cache_banks": 2,
+    "rows_per_bank": 64,
+    "cache_tag_FF": 1280,
+    "cache_valid_FF": 128,
+    "cache_macro_area_um2": 19469.265,
+    "SRAM_read_rows_per_cycle": 1,
+    "final_padding": "whole packed block only, up to128-byte HBM line; never160-byte per-record padding",
+    "block_sector_counts": {
+      "1": 8,
+      "2": 12,
+      "3": 16,
+      "4": 20,
+      "16": 68,
+      "64": 272
+    },
+    "actual_XOR_four_PC_source_bound": false,
+    "checkpoint_image_bound": false,
+    "full_native_SM83_programme_bound": false,
+    "compiler_calendar_bound": false,
+    "physical_qualified": false,
+    "adopted": false,
+    "faults": "missing/extra fixed sector or row, stale epoch, bad index, duplicate, owned bank, incomplete read"
+  },
+  "source_sha256": {
+    "tools/hbm_svc_static_sm_packed136_model.py": "63884fecb61b4e3aab3915932021eaafa4cc4d5d9a03d2e9256fc3b0957a16ad",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_static_sm_packed136.sv": "05ea0bddc5a9ea27f0e3ca7d3882ee5f61748c43539f1569994f7ebcb85eaa87",
+    "rtl/hbm_accel/loader/service_native/tb_hbm_svc_static_sm_packed136.sv": "47e9a26c2feafab5323ccd779ee939819ea65a28fedbebcbd7ebb488d98cfcdd",
+    "rtl/hbm_accel/loader/service_native/run_static_sm_packed136_bench.sh": "afd0c71361fcb8b3f6f3adba06dc080dd9e9c867016de46223f2216455cc4b14",
+    "rtl/gpu/ot_gpu_payload_assemble.sv": "355f01e90ccba32fca58339ea65d0b0bc87b906b7fe9b59d57eb6fc04636baa4",
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": "d9801653d16576f40306c1fb1d01928e88e7371a3897b616e31d3e3df917cb2d"
+  },
+  "command": "rtl/hbm_accel/loader/service_native/run_static_sm_packed136_bench.sh /tmp/sm-packed136-bench",
+  "results": {
+    "positive.log": "STATIC_SM_PACKED136 PASS exact_reference_rows=190 cache_reads=270 crossbank_cycles=80 packed_source_edges=242 packed_sectors=828 bytes_per_record=136 faults=7\n",
+    "mutant.log": "FATAL: rtl/hbm_accel/loader/service_native/tb_hbm_svc_static_sm_packed136.sv:32: four-phase static gather differs from original assembler\n       Time: 65000 Scope: tb_hbm_svc_static_sm_packed136\n"
+  },
+  "actual_macro_instances": 5,
+  "yosys_hierarchy_proc_check_problems": 0,
+  "verification": {
+    "original_assembler_bitexact_rows": 190,
+    "actual_SRAM_packet_reads": 270,
+    "crossbank_fill_read_cycles": 80,
+    "source_sectors": 828,
+    "source_edges": 242,
+    "source_full_16plus64row_blocks": {
+      "rows": 80,
+      "sectors": 340,
+      "source_edges": 100,
+      "cycles_per_row": 1.25
+    },
+    "tail_row_counts": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      15,
+      17,
+      63
+    ],
+    "fault_cases": 7,
+    "default_mode": "off"
+  },
+  "limitations": [
+    "actual XOR-mapped four-PC byte source unbound",
+    "actual checkpoint image and loader layout unbound",
+    "full production native SM83 programme not proved",
+    "compiler load/read calendar not bound",
+    "new physical area/clock/pin/timing not qualified"
+  ],
+  "committed_component_logs": {
+    "results/arch/hbm_die_v15/sm_packed136/positive.log": "95d8162016ef54b3c684e18c1314899b03e149d0e2c444558a1b64f0bdfb085d",
+    "results/arch/hbm_die_v15/sm_packed136/mutant.log": "4923ee392c029a5c71748c404a02b14e8ae2ea129ec06d3d5df5641a82922a4c"
+  }
+}

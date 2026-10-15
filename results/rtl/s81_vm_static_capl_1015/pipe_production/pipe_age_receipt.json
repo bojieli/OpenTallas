@@ -1,0 +1,27 @@
+{
+  "source": "de6ef76d6",
+  "PIPE": 1,
+  "default_PIPE": 0,
+  "serial_age_delta": 1,
+  "II": 1,
+  "bench_changes": [
+    "dsfd_vm_static_cap #(.E(8)) -> dsfd_vm_static_cap #(.E(8), .CAP_PIPE(1))",
+    "q=p+2 -> q=p+3"
+  ],
+  "x34_first_visibility": "4*floor((P+3)/3)+2+((P+3)%3); existing output checker +1 unchanged",
+  "native_clock_claim": false,
+  "hashes": {
+    "dsfd_vm_static_wfc.sv": "b5e92badc78f2b4782e66b26a7688d6db52f215e9e28e5584ba4d6af0d8d3011",
+    "dsfd_vm_static_capl.sv": "e670e0e56e81aa5ff3557e701ded33702e67fa8c30f1dccb065ae46339c550fe",
+    "tb_dsfd_vm_static_cap.sv": "1e536a95acbe3bbfc2151552e0e08a3af75e3895c7a99e3037616ac2a8278595",
+    "tb_edge_clock_categories.sv": "b5897100048b4dc6dba535991585c65c20a498f0c172f8cd23ef9ae0bdaa1c7e",
+    "ot_s81_vm_x34.sv": "c95f6eb78b68bed81746829e0194ad86accc45f9a70f764ff81bcc1f575e22f3",
+    "dsfd_vm_static_cap.sv": "6f339f5654c5675a8bdaebafb26f6bb1876172f28617d6ad8df21112e55c6ba5",
+    "tb_dsfd_vm_static_xio.sv": "f765fab4bf806ef57104bbc5aace25182bf31c1f9004446e391e04b96dabbb5d",
+    "dsfd_vm_static_cap_leaf.sv": "fd346e147ab5ab2a894e2cd9397f468eff1789a8790d0fcfcec518b27c6d9c47",
+    "dsfd_vm_static_wfc_mut.sv": "0f0bf6d3a5cfde8c0d726cef39c16d5f688d179f110c22664cf80f08ae82d936",
+    "dsfd_vm_static_xio.sv": "1f343bb470e8a06456c3519587b671c7665cf3535f69c13060387ed97c1e704f",
+    "dsfd_vm_static_capl_pipe.sv": "a4ae70b00c234ce086fd99e586736390f49ec7a965fa9312c5133e6a56d6c8e8",
+    "ot_s81_vm_x43.sv": "7056c742b154593afc92dd4a6709454f23e371b432c33614d1572f19adff7253"
+  }
+}

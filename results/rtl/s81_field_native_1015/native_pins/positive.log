@@ -1,0 +1,5 @@
+CANONICAL_PINS PASS phases=511..642 checks=5280 PHW=10 SAW=14 action=75 shape=93 native_ROMs=6 native_SRAMs=36 BCslice0=410
+- /srv/opentallas-scratch/codex/s81-field-canonical-native-v1/src/rtl/test/dsrom_sys/tb_s81_pq_canonical_pins.sv:47: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 74us; walltime 0.115 s; speed 644.317 us/s
+- Verilator: cpu 0.115 s on 1 threads; allocated 9 MB

@@ -1,0 +1,22 @@
+{
+ "scope": "native64tilecorestation GOcapture+fixedcount compensation; actualmacroVM+SUcopy+tapwrapper localreset (wrapper doesnot containxcst)",
+ "status": "FUNCTIONAL_PASS_PHYSICAL_GATE_PENDING",
+ "source_sha256": {
+  "rtl/qwen_sys/dvm_20261014/ot_qfd_xslice.sv": "c042cd7a447be662e4f05f43b6a649eeb26a70dc872fbf5db720617a25e9a85d",
+  "rtl/qwen_sys/dvm_20261014/ot_qfd_xslice_slots.sv": "37ce9d2de4227bb5f072c2452fac1efde921491de34ae84ead0c113da676bbeb"
+ },
+ "proof": {
+  "station": "159744checks/10ops/1710cycles,dvm-reference first-result delta1 unchanged",
+  "tap": "actualmacroVM+3SUreplays+12800operands+16384wordsPASS",
+  "reset": "tap nowonephysicalcaptureedge beforelocalreset; compilerboot +1edge, not priced asdataedge"
+ },
+ "remaining": [
+  "actualroutednativecapture/reset/launch audit",
+  "tap he_d462 launch defect remainsunproven byCTS",
+  "fullproducer/core/ROM stageexecution"
+ ],
+ "jobs": {
+  "core": "EPYC1oth-ubuntu-445320-1792050036",
+  "macroVM": "EPYC1oth-ubuntu-445319-1792050036"
+ }
+}

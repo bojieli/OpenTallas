@@ -1,0 +1,7 @@
+STATIC VMWRITE PASS checked=77 full_bank_cycles=23 RGX=4x512 TKW=568 low=C+1 high=C+2
+FATAL: /home/ubuntu/wt/hbm-p2p-coll-1014/rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_static_vmwrite.sv:66: payload/latency bank 0
+       Time: 66000 Scope: tb_hgi_coll_static_vmwrite.tick
+mutant 1 rejected as required
+FATAL: /home/ubuntu/wt/hbm-p2p-coll-1014/rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_static_vmwrite.sv:88: extra reserved resource undetected
+       Time: 666000 Scope: tb_hgi_coll_static_vmwrite
+mutant 2 rejected as required

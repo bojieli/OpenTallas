@@ -6,8 +6,8 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 DIR = ROOT / 'rtl/hbm_accel/generic/vm/static'
-PARAMS = {'SW': (7, 3, 1, 0), 'SE': (0, 3, 1, 1),
-          'NW': (4, 5, 3, 2), 'NE': (0, 5, 3, 3)}
+PARAMS = {'SW': (7, 5, 1, 0), 'SE': (0, 5, 1, 1),
+          'NW': (4, 7, 3, 2), 'NE': (0, 7, 3, 3)}
 
 
 def render():
@@ -39,12 +39,12 @@ def render():
                'wslot': 'bank-major compiler select: 0..WG-1 wide, WG COLL, WG+1 CW, WG+2 packet, WG+3 CCW, WG+4 DMA',
                'ring_tx_source': 'per direction 0transit/1hub/2mirror/3replay-response/4commit-ack',
                'response_enable,response_seq': 'compiler-reserved response edge/identity; absent ack faults at edge without waiting'},
-           'clients': {'SW': {'read': ['SU/SFU/HC group', 'DMA back', 'SM xload'], 'write': ['SU/SFU/HC group'],
+           'clients': {'SW': {'read': ['SU/SFU/HC group', 'DMA back', 'SM xload', 'COLL', 'IDX'], 'write': ['SU/SFU/HC group'],
                               'records': ['argmax', 'coll', 'dma', 'hc', 'idx', 'sfu', 'su']},
-                       'SE': {'read': ['SU/SFU/HC group', 'DMA back', 'SM xload'], 'write': ['SU/SFU/HC group'], 'records': []},
-                       'NW': {'read': ['SU/SFU/HC group', 'DMA back', 'SM xload', 'CP', 'quant'],
+                       'SE': {'read': ['SU/SFU/HC group', 'DMA back', 'SM xload', 'COLL', 'IDX'], 'write': ['SU/SFU/HC group'], 'records': []},
+                       'NW': {'read': ['SU/SFU/HC group', 'DMA back', 'SM xload', 'CP', 'quant', 'COLL', 'IDX'],
                               'write': ['SU/SFU/HC group', 'CP', 'quant'], 'records': ['cp', 'fmv', 'fused', 'quant']},
-                       'NE': {'read': ['SU/SFU/HC group', 'DMA back', 'SM xload', 'attention', 'HC engine'],
+                       'NE': {'read': ['SU/SFU/HC group', 'DMA back', 'SM xload', 'attention', 'HC engine', 'COLL', 'IDX'],
                               'write': ['SU/SFU/HC group', 'attention', 'HC engine'], 'records': []}},
            'client_status': 'Declared allocation; each real client source migration must be proved separately. SU F2 native path is at owner.',
            'qualification': 'Actual RTL composition; unit gates do not establish physical closure or full native token execution.'}

@@ -10,11 +10,27 @@ module tb_dsrom_1m_head_bundle #(parameter integer IOREG = 0, parameter integer 
     always #0.5 clk = ~clk;
     reg [255:0] xa = '0, xb = '0;
     reg [16:0] row0;
+    wire [3:0] head_v; wire [127:0] head_d; wire [67:0] head_row;
     wire res_v, fault;
     wire [16:0] res_row;
     wire [31:0] res_bits;
     ot_dsrom_head_bundle #(.INSTANCE("h"), .IOREG(IOREG), .SAFE(SAFE), .CUT(CUT), .SPLIT9(SPLIT9)) dut (.clk(clk), .rst_n(rst_n), .go(go), .row0(row0), .xa(xa), .xb(xb),
-        .res_v(res_v), .res_row(res_row), .res_bits(res_bits), .fault(fault));
+        .res_v(res_v), .res_row(res_row), .res_bits(res_bits), .fault(fault),
+        .head_v(head_v), .head_d(head_d), .head_row(head_row));
+    genvar hs;
+    generate for(hs=0;hs<4;hs=hs+1) begin: stream_check
+        reg pv=0; reg [31:0] pd=0; reg [16:0] pr=0; integer n=0;
+        always @(negedge clk) if(rst_n) begin
+            if(head_v[hs] !== pv) $fatal(1,"head pin valid calendar mismatch");
+            if(head_v[hs]) begin
+                if(head_d[32*hs+:32] !== pd || head_row[17*hs+:17] !== pr)
+                    $fatal(1,"head pin row/data mismatch");
+                $display("HEAD %0d %08h %0d",head_row[17*hs+:17],head_d[32*hs+:32],cyc-g0);
+            end
+            pv <= dut.g_a[hs].lv;
+            if(dut.g_a[hs].lv) begin pd<=dut.g_a[hs].ld; pr<=row0+32*hs+n; n<=n+1; end
+        end
+    end endgenerate
     reg [255:0] ma [0:255];
     reg [255:0] mb [0:63];
     reg [8*1024-1:0] dir;

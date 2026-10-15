@@ -1,0 +1,122 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9184, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9217, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9250, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9283, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9316, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9349, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9382, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10518, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10551, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10584, timing group from output port.
+[WARNING STA-0450] virtual clock core_clk can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_response can not be propagated.
+[WARNING STA-0450] virtual clock core_clk can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_response can not be propagated.
+OT_HYBRID CTS_MEASURE ff ck_req sinks=674 reference_scope=boundary boundary_sinks=674 min=111.4731852949225 mean=122.58650866348765 max=134.7038458385935 all_mean=122.58650866348766
+OT_HYBRID CTS_MEASURE ff ck_rsp sinks=638 reference_scope=boundary boundary_sinks=638 min=69.60509974009506 mean=73.4289121906452 max=77.3189987349529 all_mean=73.42891219064518
+OT_ENTRIES LEVEL ck_req deep=1 basis=TT wire level not measured in this scene; conservative210ps setup
+OT_ENTRIES COMP ff ck_req -> u_relay.o_ra[0]$_DFF_P_/CLK wire=0 R=122.58650866348765 latency=0.0 phi=122.58650866348765
+OT_ENTRIES LEVEL ck_rsp deep=1 basis=TT wire level not measured in this scene; conservative210ps setup
+OT_ENTRIES COMP ff ck_rsp -> u_relay.o_ca[0]$_DFF_P_/CLK wire=0 R=73.4289121906452 latency=49.15759647284244 phi=122.58650866348765
+OT_ENTRIES DOMAIN core 833.333008ps IO673/672 boundary=111.4731852949225..134.70384583859354
+OT_ENTRIES DOMAIN response 833.333008ps IO636/636 boundary=118.7626962129375..126.47659520779533
+OT_MULTI_ROOT OWNERSHIP PASS roots=2 registers=1312 inputs=1309 outputs=1308 async_control_pins=40
+OT_ENTRIES COMP DONE ff 2 entries phi=122.58650866348765 boundary=111.4731852949225..134.70384583859354
+[WARNING STA-0450] virtual clock core_clk can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_response can not be propagated.
+OT_IOREF clock-port ck_req (ot_entry_0): data input delays dropped
+OT_IOREF clock-port ck_rsp (ot_entry_1): data input delays dropped
+OT_IOREF_EDGE ot_entry_0 boundary 674 negedge 0 noarc 0 inverted 0
+OT_IOREF_EDGE ot_entry_1 boundary 638 negedge 0 noarc 0 inverted 0
+OT_IOREF keep core_clk (not an insertion-reference clock)
+OT_IOREF keep ot_io_response (not an insertion-reference clock)
+OT_WS max 2.603458282290916e-10 min 1.8744339413956368e-11
+Clock                   Period          Waveform
+----------------------------------------------------
+core_clk                833.33        0.00    416.67
+ot_io_response          833.33        0.00    416.67
+ot_entry_0              833.33        0.00    416.67
+ot_entry_1              833.33        0.00    416.67
+OT_ENDPOINT_MAX o_sd[321]
+Startpoint: u_relay.o_sd[321]$_DFF_P_
+            (rising edge-triggered flip-flop clocked by ot_entry_1)
+Endpoint: o_sd[321] (output port clocked by ot_io_response)
+Path Group: ot_io_response
+Path Type: max
+
+Fanout         Cap        Slew       Delay        Time   Description
+---------------------------------------------------------------------------------------------
+                                  0.000000    0.000000   clock ot_entry_1 (rise edge)
+                                 49.157597   49.157597   clock source latency
+     1    6.862195    0.000000    0.000000   49.157597 ^ ck_rsp (in)
+     2    7.300523    8.750790   20.757521   69.915115 ^ clkbuf_0_ck_rsp/Y (BUFx24_ASAP7_75t_R)
+    10   29.958302   19.692154   22.153543   92.068657 ^ clkbuf_1_1__f_ck_rsp/Y (BUFx24_ASAP7_75t_R)
+    32   19.496780   14.653771   27.159456  119.228111 ^ clkbuf_leaf_0_ck_rsp/Y (BUFx24_ASAP7_75t_R)
+                     16.703674    2.783232  122.011345 ^ u_relay.o_sd[321]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+     1   16.692125  119.210655   69.443436  191.454788 ^ u_relay.o_sd[321]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)
+     1   14.367538  115.835022   86.467125  277.921906 v _2090_/Y (INVx1_ASAP7_75t_R)
+     1    0.669476    8.449856   51.834980  329.756897 v ot_ohdrv_00406_0/Y (BUFx4f_ASAP7_75t_R)
+     1    1.102467   13.444571   25.378727  355.135620 v ot_outhold_00406_1/Y (HB2xp67_ASAP7_75t_R)
+     1    0.759339    4.495448   13.989309  369.124939 v ot_ohdrv_00406_2/Y (BUFx4f_ASAP7_75t_R)
+     1    0.355005    4.376865   11.635082  380.760010 v output430/Y (BUFx2_ASAP7_75t_R)
+                      4.376967    0.025757  380.785767 v o_sd[321] (out)
+                                            380.785767   data arrival time
+
+                      0.000000  833.333008  833.333008   clock ot_io_response (rise edge)
+                                  0.000000  833.333008   clock network delay (ideal)
+                                -60.000000  773.333008   clock uncertainty
+                                  0.000000  773.333008   clock reconvergence pessimism
+                               -130.190399  643.142578   output external delay
+                                            643.142578   data required time
+---------------------------------------------------------------------------------------------
+                                            643.142578   data required time
+                                           -380.785767   data arrival time
+---------------------------------------------------------------------------------------------
+                                            262.356842   slack (MET)
+
+
+OT_ENDPOINT_MIN o_sd[321]
+Startpoint: u_relay.o_sd[321]$_DFF_P_
+            (rising edge-triggered flip-flop clocked by ot_entry_1)
+Endpoint: o_sd[321] (output port clocked by ot_io_response)
+Path Group: ot_io_response
+Path Type: min
+
+Fanout         Cap        Slew       Delay        Time   Description
+---------------------------------------------------------------------------------------------
+                                  0.000000    0.000000   clock ot_entry_1 (rise edge)
+                                 49.157597   49.157597   clock source latency
+     1    6.261315    0.000000    0.000000   49.157597 ^ ck_rsp (in)
+     2    6.098763    8.322148   19.926699   69.084297 ^ clkbuf_0_ck_rsp/Y (BUFx24_ASAP7_75t_R)
+    10   23.949499   16.689957   21.037214   90.121506 ^ clkbuf_1_1__f_ck_rsp/Y (BUFx24_ASAP7_75t_R)
+    32   15.917611   12.806024   25.027460  115.148964 ^ clkbuf_leaf_0_ck_rsp/Y (BUFx24_ASAP7_75t_R)
+                     14.435759    2.288968  117.437935 ^ u_relay.o_sd[321]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+     1   16.519361  105.214241   64.251923  181.689865 v u_relay.o_sd[321]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)
+     1   14.123162  122.214684   93.844185  275.534027 ^ _2090_/Y (INVx1_ASAP7_75t_R)
+     1    0.523157    8.159466   46.125492  321.659546 ^ ot_ohdrv_00406_0/Y (BUFx4f_ASAP7_75t_R)
+     1    0.858091   12.561057   21.860264  343.519806 ^ ot_outhold_00406_1/Y (HB2xp67_ASAP7_75t_R)
+     1    0.631322    4.433851   12.784302  356.304108 ^ ot_ohdrv_00406_2/Y (BUFx4f_ASAP7_75t_R)
+     1    0.355005    4.507473   10.972223  367.276337 ^ output430/Y (BUFx2_ASAP7_75t_R)
+                      4.507574    0.025757  367.302094 ^ o_sd[321] (out)
+                                            367.302094   data arrival time
+
+                      0.000000    0.000000    0.000000   clock ot_io_response (rise edge)
+                                  0.000000    0.000000   clock network delay (ideal)
+                                 25.000000   25.000000   clock uncertainty
+                                  0.000000   25.000000   clock reconvergence pessimism
+                                168.762695  193.762695   output external delay
+                                            193.762695   data required time
+---------------------------------------------------------------------------------------------
+                                            193.762695   data required time
+                                           -367.302094   data arrival time
+---------------------------------------------------------------------------------------------
+                                            173.539383   slack (MET)
+
+
+OT_ENDPOINT_PROBE_DONE

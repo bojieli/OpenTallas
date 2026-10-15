@@ -38,6 +38,14 @@ module tb_qfd_native59_ar520_component;
  // Observe the actual physical face; TAG/address are internal fence state only.
  assign wv=vm_ar[519];assign wb=vm_ar[516:512];assign wdata=vm_ar[511:0];
  assign ww=dut.vm_write_word;assign wt=dut.vm_write_tag;
+ // The external native_ret face must observe the internal service at exactly
+ // one edge, including availability revocation and late faults.
+ reg[94:0]expected_ret;
+ always @(posedge ck)if(rst_n)begin
+  expected_ret=dut.service_ret_raw;
+  #0.001;
+  if(ret!==expected_ret)$fatal(1,"FAIL native_ret registered observation edge");
+ end
  integer ep=0,i,j,l,p,k,h,di,errors=0,kvcount=0,qcount=0,cmdcount=0,writecount=0,epochcount=0,startcount=0;reg[511:0]expected;
  function automatic [7:0] code(input integer k,input integer h,input integer d);
   integer x;begin x=(k*91+h*37+d+ep*17)%254;if(x>=127)x=x+1;code=x;end
@@ -123,7 +131,9 @@ module tb_qfd_native59_ar520_component;
   if(!fault||completed)$fatal(1,"FAIL stale remote metadata or missing SRAM commit qualified local completion");
   $display("PASS selected local native service invalid result or missing SRAM commit faults before completion");$finish;
  end
- if(fault||!completed||ret[93:78]!=32||ret[1:0]!=3||kvcount!=4||qcount!=32||cmdcount!=1||writecount!=32||epochcount!=1||startcount!=1||errors)
+ if(!completed)$fatal(1,"FAIL internal completion slot shifted");
+ step(); // exported status observes completion exactly one service edge later
+ if(fault||ret[93:78]!=32||ret[1:0]!=3||kvcount!=4||qcount!=32||cmdcount!=1||writecount!=32||epochcount!=1||startcount!=1||errors)
   $fatal(1,"FAIL selected local native service fault%0d complete%0d ret%h KV%0d Q%0d CMD%0d writes%0d errors%0d",fault,completed,ret,kvcount,qcount,cmdcount,writecount,errors);
  $display("PASS selected local native service actualSI/KVformatter+QproducerTAG+native548codec+32VMcommit 4KV/32Q/32results no duplicateQ no credits");$finish;
  end

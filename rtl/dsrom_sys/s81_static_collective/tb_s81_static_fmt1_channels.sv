@@ -1,6 +1,6 @@
 `timescale 1ns/1ps
 module tb_s81_static_fmt1_channels;
- parameter MUT=0;
+ parameter MUT=0; parameter CLOCKED=0;
  reg clk=0;always #5 clk=~clk;
  reg rst_n=0;reg[4:0]tx_slot=0,rx_slot=0;reg[9:0]tx_kind=0,rx_kind=0;
  reg vm_tx_last=0,vm_tx_valid=0;reg[2:0]vm_tx_channel=0;reg[551:0]vm_tx_payload=0;
@@ -12,7 +12,12 @@ module tb_s81_static_fmt1_channels;
  reg[9:0]tx_phase=0,rx_phase=0;
  wire[4:0]phy_tx_valid,phy_rx_valid;wire[2559:0]phy_tx_data,phy_rx_data;wire fault;
  assign phy_rx_valid=phy_tx_valid;assign phy_rx_data=phy_tx_data;
+ generate if(CLOCKED)begin:G_CLOCKED
+ wire[4:0]clk_lane={5{clk}};
+ s81_static_fmt1_channels_clocked #(.MUT(MUT)) dut(.*,.clk_adapter(clk));
+ end else begin:G_SINGLE
  s81_static_fmt1_channels #(.MUT(MUT)) dut(.*);
+ end endgenerate
  function automatic[551:0] value(input integer n);
  begin for(integer b=0;b<552;b=b+1)value[b]=((b*3+n*7)%19)<9;end endfunction
  function automatic[31:0] crc(input[562:0]p);
