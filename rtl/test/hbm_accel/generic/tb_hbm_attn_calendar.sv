@@ -11,7 +11,7 @@ module tb_hbm_attn_calendar;
  wire[7:0]pv_c;wire[NT*H*32-1:0]pv_y;wire[NT*H-1:0]pv_f;wire qi,pi;
  reg[159:0]jobs[0:1];reg[8191:0]qm[0:31];reg[ROWW-1:0]kvm[0:767];reg[1023:0]pm[0:191];
  reg[H*33-1:0]scm[0:767];reg[H*33-1:0]pvm[0:1023];reg[6:0]cal[0:255];
- wire slotq=ev[5]^(mut==2&&valid&&phase==20);
+ wire slotq=ev[5]||(mut==2&&valid&&phase==2);
  ot_hdc_v41x_attn_calendar #(.H(H),.D(D),.TD(TD),.NL(NL),.TROWS(640),.SRAM_MACRO(1),.MODES(1))dut(
  .clk(clk),.rst_n(rst_n),.job_v(ev[0]),.job_t(16'(rows|(mode?16384:8192))),.calendar_fault(cf),
  .slot_qk(slotq),.slot_fill(ev[4]),.slot_pv(ev[6]),.q_present(!(mut==1)),.kv_present(1'b1),.p_present(1'b1),
@@ -20,7 +20,7 @@ module tb_hbm_attn_calendar;
  .pv_v(pv_v),.pv_c(pv_c),.pv_y(pv_y),.pv_f(pv_f),.qk_iss(qi),.pv_iss(pi));
  integer k,h,l,dim,cyc=0,t0=0,nsc=0,npv=0,scase=0,pvcase=0,lastout=0;string dir,fn;reg active=0;
  always @*begin
-  q_w=qm[job*H+qn];p_w=pm[(job==0?0:32)+pn];kv_w=0;kv_m=0;
+  q_w=qm[job*H+qn];if(mut==3)q_w[15]=~q_w[15];p_w=pm[(job==0?0:32)+pn];kv_w=0;kv_m=0;
   for(integer ll=0;ll<NL;ll++)if(kn+ll<rows)begin kv_m[ll]=1;kv_w[ll*ROWW+:ROWW]=kvm[(job==0?0:128)+kn+ll];end
  end
  always @(posedge clk)begin
