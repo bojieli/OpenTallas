@@ -6,15 +6,16 @@
   "candidate_selected_for_physical": "qvm_bank_banked_native 9roots/bank, no newcycles/SRAMs",
   "live_jobs": [
     {
-      "name": "qvm_data256_native-np1-0e820215a",
-      "status": "RUNNING route",
-      "host": "ot-epyc1tb",
-      "run": "/srv/opentallas/claude/closure-loop/qvm_data256_native-np1-0e820215a"
+      "name": "qvm_su_bank_ctrl_native-np1-f9e55e7a5",
+      "status": "fresh verified gate validated then submitted",
+      "clock_sinks": 39,
+      "tt_insertion_ps": 55.2,
+      "spread_ps": 0.8
     },
     {
-      "name": "qvm_bank_ctrl_native-np2-99be1c5dc",
-      "status": "validated then submitted",
-      "failure_repaired": "np1 mixedlayer wm14 pin outside die, M4-only face repair actual CTS TT55.2ps spread1.6"
+      "name": "qvm_bank_entries_native",
+      "status": "actual9-entry parent CTS gate live",
+      "session": 8034
     }
   ],
   "native_parent_qualified": false,
@@ -24,5 +25,31 @@
     "Construct real no-flop nine-entry bank parent from twoSRAM+sevenleaf clocks",
     "Apply same source/physical discipline to failed operand SRAM family",
     "Partition exact32k declared residual return registers; price binarymux staging ifneeded"
+  ],
+  "closed_native_masters": [
+    {
+      "name": "qvm_data256_native",
+      "job": "qvm_data256_native-np1-0e820215a",
+      "tt_ps": 317.07,
+      "ff_ps": 27.04,
+      "drc": 0,
+      "launch_ps": 201.6,
+      "capture_ps": 120.0,
+      "reference_ps": 69.3,
+      "spread_ps": 4.7,
+      "reach_um": 476.0
+    },
+    {
+      "name": "qvm_bank_ctrl_native",
+      "job": "qvm_bank_ctrl_native-np2-99be1c5dc",
+      "tt_ps": 345.17,
+      "ff_ps": 28.7,
+      "drc": 0,
+      "launch_ps": 173.3,
+      "capture_ps": 109.1,
+      "reference_ps": 54.8,
+      "spread_ps": 0.9,
+      "reach_um": 527.5
+    }
   ]
 }
