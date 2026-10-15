@@ -1,25 +1,38 @@
 `timescale 1ns/1ps
 // Declared external configuration -> 128 actual SRAM macro models -> fixed controller.
 // The reference word functions are used only for external boot stimuli and comparisons.
-module tb_s81_su_calendar_store_full #(parameter BAD_READY=0);
+module tb_s81_su_calendar_store_full #(parameter BAD_READY=0, PINCTL=0);
  localparam DEPTH=4096, AW=12;
  reg clk=0,rst=0,we=0,commit=0,arm=0,raw_phase=1,raw_arm=0,raw_run=0;
  always #0.4167 clk=~clk;
  reg [31:0] raw_cycle=0;
  reg [AW-1:0] addr=0;reg [3:0] lane=0;reg [63:0] data=0;
+ wire store_running,arm_d,halt_d;wire [31:0] store_cycle,word_cycle;
  wire [1023:0] cw;wire valid,sfault,run,flt,st,done;wire [31:0] cycle;
  wire [15:0] rq;wire [223:0] ra;wire [3:0] kind,code;wire [1:0] gs;
  wire f4;wire [7:0] jid,tag;wire mv;wire [13:0] mr;
  ot_s81_su_calendar_store #(.DEPTH(DEPTH),.AW(AW)) mem(
-  .clk(clk),.rst_n(rst),.arm(raw_phase?raw_arm:arm),.running(raw_phase?raw_run:run),
-  .cycle(raw_phase?raw_cycle:cycle),.boot_we(we),.boot_commit(commit),.boot_addr(addr),
+  .clk(clk),.rst_n(rst),.arm(raw_phase?raw_arm:arm),.running(raw_phase?raw_run:store_running),
+  .cycle(raw_phase?raw_cycle:store_cycle),.boot_we(we),.boot_commit(commit),.boot_addr(addr),
   .boot_lane(lane),.boot_data(data),.calendar_word(cw),.program_valid(valid),.fault(sfault));
+ generate if(PINCTL)begin:g_pin
+  ot_s81_su_calendar_prefetch_p pf(.running(run),.arm_d(arm_d),.halt_d(halt_d),.cycle(cycle),
+   .store_running(store_running),.store_cycle(store_cycle),.word_cycle(word_cycle));
+ ot_s81_su_calendar_ctl_p ctl(.clk(clk),.rst_n(rst),.arm(arm),.calendar_valid(valid),
+  .calendar_cycle(word_cycle),.calendar_word(cw),.cycle(cycle),.rq_v(rq),.rq_row(ra),
+  .rs_v(16'd0),.wq_v(16'd0),.wq_row(224'd0),.wq_mask(256'd0),.dn_st(st),
+  .dn_kind(kind),.dn_gsel(gs),.dn_fp4(f4),.dn_jid(jid),.moe_v(mv),.moe_row(mr),
+  .done(done),.done_tag(tag),.up_fu(1'b0),.up_fo(1'b0),.up_alive(1'b1),
+  .up_den(1'b1),.up_rdy(!(BAD_READY&&run&&cycle==128)),.up_rjid(8'd77),.fault(flt),.fault_code(code),.running(run),.prefetch_arm(arm_d),.prefetch_halt(halt_d));
+ end else begin:g_legacy
+  assign arm_d=0;assign halt_d=0;assign store_running=run;assign store_cycle=cycle;assign word_cycle=cycle;
  ot_s81_su_calendar_ctl ctl(.clk(clk),.rst_n(rst),.arm(arm),.calendar_valid(valid),
   .calendar_cycle(cycle),.calendar_word(cw),.cycle(cycle),.rq_v(rq),.rq_row(ra),
   .rs_v(16'd0),.wq_v(16'd0),.wq_row(224'd0),.wq_mask(256'd0),.dn_st(st),
   .dn_kind(kind),.dn_gsel(gs),.dn_fp4(f4),.dn_jid(jid),.moe_v(mv),.moe_row(mr),
   .done(done),.done_tag(tag),.up_fu(1'b0),.up_fo(1'b0),.up_alive(1'b1),
   .up_den(1'b1),.up_rdy(!(BAD_READY&&run&&cycle==128)),.up_rjid(8'd77),.fault(flt),.fault_code(code),.running(run));
+ end endgenerate
  function automatic [1023:0] raw_word(input integer n);
   reg [1023:0] v;integer j;
   begin
@@ -39,11 +52,12 @@ module tb_s81_su_calendar_store_full #(parameter BAD_READY=0);
    instruction=v;
   end
  endfunction
- integer i,j,seen=0,raw_seen=0,nd=0,cy=0,last_c=-1;
+ integer i,j,seen=0,raw_seen=0,nd=0,cy=0,last_c=-1,arm_cy=-1;
  reg [1023:0] v,expected;
  always @(posedge clk)cy=cy+1;
  always @(negedge clk)if(!raw_phase && rq)begin
   expected=instruction(seen);
+  if(seen==0 && cy!=arm_cy+2+PINCTL)$fatal(1,"startup cycle mismatch cy=%0d arm=%0d pin=%0d",cy,arm_cy,PINCTL);
   if(last_c>=0 && cy!=last_c+1)$fatal(1,"calendar bubble");last_c=cy;
   if(rq!==expected[15:0]||ra!==expected[239:16])$fatal(1,"controller request mismatch word=%0d",seen);
   if({st,kind,gs,f4,jid}!=={expected[752],expected[756:753],expected[758:757],expected[759],expected[767:760]})$fatal(1,"controller announcement mismatch");
@@ -74,10 +88,10 @@ module tb_s81_su_calendar_store_full #(parameter BAD_READY=0);
   // A reset clears validity/control, never supplies SRAM contents.
   rst=0;repeat(3)@(negedge clk);
   if(valid||flt||run||rq)$fatal(1,"reset did not clear control/validity");
-  rst=1;boot(1);raw_phase=0;arm=1;
+  rst=1;boot(1);raw_phase=0;arm_cy=cy;arm=1;
   @(negedge clk);arm=0;
   repeat(DEPTH+4)@(negedge clk);
   if(seen!=DEPTH||nd!=1||sfault||run||cycle!=DEPTH||(BAD_READY?(!flt||code!=8):flt))$fatal(1,"full calendar failure seen=%0d flt=%b code=%0d sfault=%b cycle=%0d",seen,flt,code,sfault,cycle);
-  $display("PASS CALENDAR_FULL128 depth4096 width1024 raw4096 instructions4096 macros128 bubbles0 reset1 done1 bad_ready=%0d fault=%0d code=%0d",BAD_READY,flt,code);$finish;
+  $display("PASS CALENDAR_FULL128 depth4096 width1024 raw4096 instructions4096 macros128 bubbles0 reset1 done1 bad_ready=%0d fault=%0d code=%0d pinctl=%0d startup=%0d",BAD_READY,flt,code,PINCTL,2+PINCTL);$finish;
  end
 endmodule

@@ -1,0 +1,90 @@
+{
+ "schema": "opentallas.slot_change_request.v1",
+ "kind": "new_independent_leaf",
+ "design": "s81",
+ "master": "ot_s81_su_calendar_ctl_p",
+ "parameters": {},
+ "source": "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_calendar_ctl_p.sv",
+ "source_sha256": "bea24fbc84161bcdf051d627fbf58ad78ab2b650e91a1b713fc9049b86ef0766",
+ "requester": "Codex S81SUstaticowner1103",
+ "die_owner": "s81_die_1103",
+ "grant": "Same129.6um envelope requested from S-DIE for pinregistered successor;2additional registered E prefetch pins awaiting explicit source/port confirmation",
+ "outline_um": [
+  129.6,
+  129.6
+ ],
+ "pin_faces": {
+  "N": [
+   "calendar_word[1023:0]"
+  ],
+  "S": [
+   "rq_v",
+   "rq_row",
+   "dn_st",
+   "dn_kind",
+   "dn_gsel",
+   "dn_fp4",
+   "dn_jid",
+   "moe_v",
+   "moe_row",
+   "done",
+   "done_tag"
+  ],
+  "W": [
+   "rs_v",
+   "wq_v",
+   "wq_row",
+   "wq_mask"
+  ],
+  "E": [
+   "calendar_valid",
+   "calendar_cycle",
+   "cycle",
+   "arm",
+   "up_fu",
+   "up_fo",
+   "up_alive",
+   "up_den",
+   "up_rdy",
+   "up_rjid",
+   "fault",
+   "fault_code",
+   "running",
+   "clk",
+   "rst_n",
+   "prefetch_arm",
+   "prefetch_halt"
+  ]
+ },
+ "clock": {
+  "port": "clk",
+  "logical_domain": "serial_sk_900MHz",
+  "provisional_gate_period_ps": 833.333,
+  "insertion_ps": null
+ },
+ "model": {
+  "input_bits_per_edge": 1024,
+  "output_words_per_edge": 1,
+  "face_N_bits": 1024,
+  "face_N_length_um": 129.6,
+  "face_N_capacity_pitch_um": 0.072,
+  "face_N_cut": 0.5688888888888889,
+  "logical_registered_bits": 318,
+  "cycles_added": 1,
+  "logical_registered_bits_estimate": 1907,
+  "input_capture_edges": 1,
+  "startup_edges_added": 1,
+  "observation_stage_edges": 1,
+  "instruction_words_per_edge": 1
+ },
+ "parent_homes_qualified": false,
+ "route_eligible": false,
+ "release_requires": [
+  "Actualassignedpins/kitandsource-boundCTSgate",
+  "Default4096x1024real128SRAMpositiveandactualDUTmutants",
+  "TTsetup/FFhold/DRC0/nativepinlaunch/capture/spread",
+  "Currentparent clock/programme/geometrybinding"
+ ],
+ "reason": "Prototype318FF controller CTS shows8-level observed-write-to-fault input path and16.9ps genericIO slack; capture incoming calendar/status at pins and execute comparator locally. No programme width/capacity/steady-state rate reduction.",
+ "parent_binding": "Production programmed parent not yet adopted; actual prefetched programme/control component proof required, including logical3:4 lowering."
+}
