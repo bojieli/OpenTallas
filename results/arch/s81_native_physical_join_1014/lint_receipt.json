@@ -1,0 +1,27 @@
+{
+  "schema": "opentallas.s81.native-thin-wrapper-lint.v1",
+  "host": "ot-epyc4",
+  "unit": "oth-ubuntu-4047925-1792034230",
+  "exit": 0,
+  "verilator": "5.050",
+  "tops": [
+    "dsfd_su_t_cn8",
+    "dsfd_su_t_cn4",
+    "dsfd_su_t_cnnw",
+    "dsfd_su_t_ikh",
+    "dsfd_su_t_ikr"
+  ],
+  "scope": "five actual thin wrapper elaborations with real arithmetic modules; no DPI",
+  "options": [
+    "--lint-only",
+    "--timing",
+    "-Wno-fatal",
+    "-Wno-WIDTH",
+    "-Werror-PINMISSING",
+    "-Werror-PINCONNECTEMPTY"
+  ],
+  "width_proof": "wrapper_ports.json checks every actual core port width without WIDTH suppression",
+  "remote": "/srv/opentallas-scratch/codex/s81-native-physical-join-1014",
+  "source_helper_revision": "5f2fa2ea2",
+  "physical_qualification": false
+}

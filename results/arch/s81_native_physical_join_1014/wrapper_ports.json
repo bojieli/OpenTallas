@@ -1,0 +1,117 @@
+{
+  "schema": "opentallas.s81.native-leaf-wrappers.v1",
+  "source_revision": "5f2fa2ea2",
+  "source_sha256": {
+    "rtl/dsrom_sys/s81_suhc/hier/dsfd_su_t_cn_ik.sv": "009cea8172459d02d53fef64cda33e1ad9064a1b447d7b521dc4af96a7c6224e",
+    "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_cn_ik.sv": "cea86ba4c2b017a078df0622458491b732c4dcb2bb9ebbdb1eba1dffb2921417",
+    "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_qn.sv": "23d35291efaea6fda0c0acaf58acf3b7c80c7a6bb0bf9f6f3259c2d92d5a2dd1"
+  },
+  "wrappers": [
+    {
+      "top": "dsfd_su_t_cn8",
+      "core": "ot_s81_su_cn_write",
+      "parameters": {
+        "E4M3": 1
+      },
+      "port_bits": {
+        "clk": 1,
+        "rst_in": 1,
+        "i_v": 1,
+        "i_x": 1024,
+        "i_ob": 14,
+        "i_block": 4,
+        "o_v": 1,
+        "o_a": 14,
+        "o_m": 16,
+        "o_d": 512,
+        "o_fault": 1
+      },
+      "verdict": "PASS"
+    },
+    {
+      "top": "dsfd_su_t_cn4",
+      "core": "ot_s81_su_cn_write",
+      "parameters": {
+        "E4M3": 0
+      },
+      "port_bits": {
+        "clk": 1,
+        "rst_in": 1,
+        "i_v": 1,
+        "i_x": 1024,
+        "i_ob": 14,
+        "i_block": 4,
+        "o_v": 1,
+        "o_a": 14,
+        "o_m": 16,
+        "o_d": 512,
+        "o_fault": 1
+      },
+      "verdict": "PASS"
+    },
+    {
+      "top": "dsfd_su_t_cnnw",
+      "core": "ot_s81_su_cn_norm_write",
+      "parameters": {},
+      "port_bits": {
+        "clk": 1,
+        "rst_in": 1,
+        "i_v": 1,
+        "i_x": 512,
+        "i_ob": 14,
+        "i_block": 4,
+        "o_v": 1,
+        "o_a": 14,
+        "o_d": 512
+      },
+      "verdict": "PASS"
+    },
+    {
+      "top": "dsfd_su_t_ikh",
+      "core": "ot_s81_su_qnh",
+      "parameters": {
+        "NE": 8,
+        "LA": 4
+      },
+      "port_bits": {
+        "clk": 1,
+        "rst_in": 1,
+        "i_go": 1,
+        "p_v": 8,
+        "p_p": 8,
+        "p_d": 256,
+        "s_v": 1,
+        "s_p": 1,
+        "s_d": 32,
+        "o_f": 1
+      },
+      "verdict": "PASS"
+    },
+    {
+      "top": "dsfd_su_t_ikr",
+      "core": "ot_s81_su_qnr",
+      "parameters": {
+        "NE": 2,
+        "NV": 1,
+        "D": 128,
+        "LM": 5,
+        "LA": 4
+      },
+      "port_bits": {
+        "clk": 1,
+        "rst_in": 1,
+        "i_go": 1,
+        "i_eps": 32,
+        "p_v": 2,
+        "p_p": 2,
+        "p_d": 64,
+        "p_f": 2,
+        "r_v": 1,
+        "r_d": 32,
+        "o_f": 1
+      },
+      "verdict": "PASS"
+    }
+  ],
+  "qualification_scope": "named port, width, scalar clock/reset, and no added state only"
+}

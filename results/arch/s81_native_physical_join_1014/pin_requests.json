@@ -1,0 +1,147 @@
+{
+  "schema": "opentallas.s81.native-child-pin-requests.v1",
+  "owner": "s_die",
+  "clock_entries": 39,
+  "no_credit_backpressure": true,
+  "requests": [
+    {
+      "master": "dsfd_su_t_cn8",
+      "count": 16,
+      "scalar_clock": "ck",
+      "reset": "rst",
+      "source": "5f2fa2ea2",
+      "port_bits": {
+        "clk": 1,
+        "rst_in": 1,
+        "i_v": 1,
+        "i_x": 1024,
+        "i_ob": 14,
+        "i_block": 4,
+        "o_v": 1,
+        "o_a": 14,
+        "o_m": 16,
+        "o_d": 512,
+        "o_fault": 1
+      },
+      "physical_home": null,
+      "assigned_pins": null,
+      "requested_home": "shared KV engine region, near its immutable producer and existing write spine stop",
+      "interface_style": "pin capture/launch timing budget required; no new stages inferred from wrapper",
+      "status": "REQUESTED_NOT_GRANTED"
+    },
+    {
+      "master": "dsfd_su_t_cn4",
+      "count": 4,
+      "scalar_clock": "ck",
+      "reset": "rst",
+      "source": "5f2fa2ea2",
+      "port_bits": {
+        "clk": 1,
+        "rst_in": 1,
+        "i_v": 1,
+        "i_x": 1024,
+        "i_ob": 14,
+        "i_block": 4,
+        "o_v": 1,
+        "o_a": 14,
+        "o_m": 16,
+        "o_d": 512,
+        "o_fault": 1
+      },
+      "physical_home": null,
+      "assigned_pins": null,
+      "requested_home": "shared KV engine region, near its immutable producer and existing write spine stop",
+      "interface_style": "pin capture/launch timing budget required; no new stages inferred from wrapper",
+      "status": "REQUESTED_NOT_GRANTED"
+    },
+    {
+      "master": "dsfd_su_t_cnnw",
+      "count": 16,
+      "scalar_clock": "ck",
+      "reset": "rst",
+      "source": "5f2fa2ea2",
+      "port_bits": {
+        "clk": 1,
+        "rst_in": 1,
+        "i_v": 1,
+        "i_x": 512,
+        "i_ob": 14,
+        "i_block": 4,
+        "o_v": 1,
+        "o_a": 14,
+        "o_d": 512
+      },
+      "physical_home": null,
+      "assigned_pins": null,
+      "requested_home": "shared KV engine region, near its immutable producer and existing write spine stop",
+      "interface_style": "pin capture/launch timing budget required; no new stages inferred from wrapper",
+      "status": "REQUESTED_NOT_GRANTED"
+    },
+    {
+      "master": "dsfd_su_t_ikh",
+      "count": 2,
+      "scalar_clock": "ck",
+      "reset": "rst",
+      "source": "5f2fa2ea2",
+      "port_bits": {
+        "clk": 1,
+        "rst_in": 1,
+        "i_go": 1,
+        "p_v": 8,
+        "p_p": 8,
+        "p_d": 256,
+        "s_v": 1,
+        "s_p": 1,
+        "s_d": 32,
+        "o_f": 1
+      },
+      "physical_home": null,
+      "assigned_pins": null,
+      "requested_home": "shared KV engine region, near its immutable producer and existing write spine stop",
+      "interface_style": "pin capture/launch timing budget required; no new stages inferred from wrapper",
+      "status": "REQUESTED_NOT_GRANTED"
+    },
+    {
+      "master": "dsfd_su_t_ikr",
+      "count": 1,
+      "scalar_clock": "ck",
+      "reset": "rst",
+      "source": "5f2fa2ea2",
+      "port_bits": {
+        "clk": 1,
+        "rst_in": 1,
+        "i_go": 1,
+        "i_eps": 32,
+        "p_v": 2,
+        "p_p": 2,
+        "p_d": 64,
+        "p_f": 2,
+        "r_v": 1,
+        "r_d": 32,
+        "o_f": 1
+      },
+      "physical_home": null,
+      "assigned_pins": null,
+      "requested_home": "shared KV engine region, near its immutable producer and existing write spine stop",
+      "interface_style": "pin capture/launch timing budget required; no new stages inferred from wrapper",
+      "status": "REQUESTED_NOT_GRANTED"
+    }
+  ],
+  "CP_request": {
+    "source": "ee2f297d2",
+    "parent": "ot_s81_su_cp_h",
+    "controller": 1,
+    "SRAM128x256": 2,
+    "arith_lanes": 4,
+    "bridge": 1,
+    "clock_entries_min": 8,
+    "actual_slot": null,
+    "pins": null
+  },
+  "actual_SU_slot_um": [
+    1889.976,
+    10709.256
+  ],
+  "current_slot_grant": "existing slab only; new native child outlines and physical locations not granted",
+  "routes_launched": false
+}
