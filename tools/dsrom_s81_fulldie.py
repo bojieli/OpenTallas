@@ -4865,9 +4865,8 @@ def buses_r8(m):
         elif _assigned_clock_entries(it):
             for domain_, names_ in _assigned_clock_entries(it).items():
                 dom[domain_] += [(it.name, name_) for name_ in names_]
-            rst['stream'].append((it.name, 'rst'))
-            if 'rsv' in _assigned_record(it.master)['ports']:
-                rst['serial'].append((it.name, 'rsv'))
+            for domain_, names_ in _assigned_reset_entries(it).items():
+                rst[domain_] += [(it.name, name_) for name_ in names_]
         elif it.kind in ('hub', 'band_blk') and it.name != col:
             d_ = 'serial' if it.domain == 'serial_0p9' else 'stream'
             dom[d_].append((it.name, 'ck'))
@@ -7741,6 +7740,24 @@ def _assigned_record(master):
 def _assigned_clock_entries(it):
     rec = _assigned_record(it.master)
     return rec.get('clock_entries', {}) if rec else {}
+
+
+def _assigned_reset_entries(it):
+    """Match reset nets to actual assigned ports, including native dual-root leaves.
+    Legacy assigned records used rst/rsv. Never invent rst on rst_n masters.
+    """
+    rec = _assigned_record(it.master)
+    if not rec:
+        return {}
+    if 'reset_entries' in rec:
+        return rec['reset_entries']
+    default = 'serial' if set(rec.get('clock_entries', {})) == {'serial'} else 'stream'
+    out = {}
+    for port in ('rst', 'rsv', 'rst_n', 'crst_n', 'srst_n', 'rst_in', 'srs'):
+        if port in rec['ports']:
+            domain = 'serial' if port in ('rsv', 'srst_n') else 'stream' if port == 'crst_n' else default
+            out.setdefault(domain, []).append(port)
+    return out
 
 
 def _assigned_physical_pins(Mx, ports):
