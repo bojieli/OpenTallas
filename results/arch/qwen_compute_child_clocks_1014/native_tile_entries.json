@@ -1,0 +1,511 @@
+{
+  "schema": "opentallas.compute.native-tile-entries.v1",
+  "source_commit": "2f1c87b24",
+  "qualification": "ExistingCLOSEDchildpositions andmeasuredper-cornerR; nativeLSLfaultpinsFAILandfp1successorviewpending. No parentnativequalification.",
+  "masters": {
+    "qfd_tile_nk": {
+      "outline": [
+        449.28,
+        1442.88
+      ],
+      "parent_root": "ck",
+      "children": {
+        "ck_rp3": {
+          "child_instance": "u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[3].g_hd.u_rp",
+          "origin": [
+            22.464,
+            23.76
+          ],
+          "view": "physical/ref_tile/ot_qwen_tile_rpair/views/ot_qwen_tile_rpair",
+          "at": [
+            22.506,
+            53.388
+          ],
+          "R_ps": {
+            "tt": 309.1,
+            "ff": 256.8,
+            "ss": 394.7
+          },
+          "reference": "boundary mean, clock delivered at phi-R"
+        },
+        "ck_rp4": {
+          "child_instance": "u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[4].g_hd.u_rp",
+          "origin": [
+            22.464,
+            174.96
+          ],
+          "view": "physical/ref_tile/ot_qwen_tile_rpair/views/ot_qwen_tile_rpair",
+          "at": [
+            22.506,
+            204.588
+          ],
+          "R_ps": {
+            "tt": 309.1,
+            "ff": 256.8,
+            "ss": 394.7
+          },
+          "reference": "boundary mean, clock delivered at phi-R"
+        },
+        "ck_rp0": {
+          "child_instance": "u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[0].g_hd.u_rp",
+          "origin": [
+            22.464,
+            982.824
+          ],
+          "view": "physical/ref_tile/ot_qwen_tile_rpair/views/ot_qwen_tile_rpair",
+          "at": [
+            22.506,
+            1012.452
+          ],
+          "R_ps": {
+            "tt": 309.1,
+            "ff": 256.8,
+            "ss": 394.7
+          },
+          "reference": "boundary mean, clock delivered at phi-R"
+        },
+        "ck_rp1": {
+          "child_instance": "u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[1].g_hd.u_rp",
+          "origin": [
+            22.464,
+            1134.024
+          ],
+          "view": "physical/ref_tile/ot_qwen_tile_rpair/views/ot_qwen_tile_rpair",
+          "at": [
+            22.506,
+            1163.652
+          ],
+          "R_ps": {
+            "tt": 309.1,
+            "ff": 256.8,
+            "ss": 394.7
+          },
+          "reference": "boundary mean, clock delivered at phi-R"
+        },
+        "ck_rp2": {
+          "child_instance": "u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[2].g_hd.u_rp",
+          "origin": [
+            22.464,
+            1285.224
+          ],
+          "view": "physical/ref_tile/ot_qwen_tile_rpair/views/ot_qwen_tile_rpair",
+          "at": [
+            22.506,
+            1314.852
+          ],
+          "R_ps": {
+            "tt": 309.1,
+            "ff": 256.8,
+            "ss": 394.7
+          },
+          "reference": "boundary mean, clock delivered at phi-R"
+        },
+        "ck_node": {
+          "child_instance": "u_tile.u_tile.u_logic.g_ndh.u_node",
+          "origin": [
+            22.464,
+            345.6
+          ],
+          "view": "physical/ref_tile/ot_qwen_tile_node/views/ot_qwen_tile_node",
+          "at": [
+            69.942,
+            549.612
+          ],
+          "R_ps": {
+            "tt": 246.6,
+            "ff": 200.6,
+            "ss": 325.2
+          },
+          "reference": "boundary mean, clock delivered at phi-R"
+        },
+        "ck_lsl0": {
+          "child_instance": "u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.u_lh",
+          "origin": [
+            103.68,
+            328.32
+          ],
+          "view": "physical/qwen_die_masters/hard/ot_qwen_tile_lsl",
+          "at": [
+            203.43,
+            391.308
+          ],
+          "R_ps": {
+            "tt": 169.4,
+            "ff": 137.1,
+            "ss": 225.4
+          },
+          "reference": "actual routed lsl6 keepout ECO read-only clock recovery; delivered phi-R"
+        },
+        "ck_lsl4": {
+          "child_instance": "u_tile.u_tile.u_logic.u_me.g_hier.g_sl[4].g_hd.u_lh",
+          "origin": [
+            233.28,
+            328.32
+          ],
+          "view": "physical/qwen_die_masters/hard/ot_qwen_tile_lsl",
+          "at": [
+            333.03,
+            391.308
+          ],
+          "R_ps": {
+            "tt": 169.4,
+            "ff": 137.1,
+            "ss": 225.4
+          },
+          "reference": "actual routed lsl6 keepout ECO read-only clock recovery; delivered phi-R"
+        },
+        "ck_lsl1": {
+          "child_instance": "u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.u_lh",
+          "origin": [
+            103.68,
+            492.48
+          ],
+          "view": "physical/qwen_die_masters/hard/ot_qwen_tile_lsl",
+          "at": [
+            203.43,
+            555.4680000000001
+          ],
+          "R_ps": {
+            "tt": 169.4,
+            "ff": 137.1,
+            "ss": 225.4
+          },
+          "reference": "actual routed lsl6 keepout ECO read-only clock recovery; delivered phi-R"
+        },
+        "ck_lsl5": {
+          "child_instance": "u_tile.u_tile.u_logic.u_me.g_hier.g_sl[5].g_hd.u_lh",
+          "origin": [
+            233.28,
+            492.48
+          ],
+          "view": "physical/qwen_die_masters/hard/ot_qwen_tile_lsl",
+          "at": [
+            333.03,
+            555.4680000000001
+          ],
+          "R_ps": {
+            "tt": 169.4,
+            "ff": 137.1,
+            "ss": 225.4
+          },
+          "reference": "actual routed lsl6 keepout ECO read-only clock recovery; delivered phi-R"
+        },
+        "ck_lsl2": {
+          "child_instance": "u_tile.u_tile.u_logic.u_me.g_hier.g_sl[2].g_hd.u_lh",
+          "origin": [
+            103.68,
+            656.64
+          ],
+          "view": "physical/qwen_die_masters/hard/ot_qwen_tile_lsl",
+          "at": [
+            203.43,
+            719.6279999999999
+          ],
+          "R_ps": {
+            "tt": 169.4,
+            "ff": 137.1,
+            "ss": 225.4
+          },
+          "reference": "actual routed lsl6 keepout ECO read-only clock recovery; delivered phi-R"
+        },
+        "ck_lsl6": {
+          "child_instance": "u_tile.u_tile.u_logic.u_me.g_hier.g_sl[6].g_hd.u_lh",
+          "origin": [
+            233.28,
+            656.64
+          ],
+          "view": "physical/qwen_die_masters/hard/ot_qwen_tile_lsl",
+          "at": [
+            333.03,
+            719.6279999999999
+          ],
+          "R_ps": {
+            "tt": 169.4,
+            "ff": 137.1,
+            "ss": 225.4
+          },
+          "reference": "actual routed lsl6 keepout ECO read-only clock recovery; delivered phi-R"
+        },
+        "ck_lsl3": {
+          "child_instance": "u_tile.u_tile.u_logic.u_me.g_hier.g_sl[3].g_hd.u_lh",
+          "origin": [
+            103.68,
+            820.8
+          ],
+          "view": "physical/qwen_die_masters/hard/ot_qwen_tile_lsl",
+          "at": [
+            203.43,
+            883.788
+          ],
+          "R_ps": {
+            "tt": 169.4,
+            "ff": 137.1,
+            "ss": 225.4
+          },
+          "reference": "actual routed lsl6 keepout ECO read-only clock recovery; delivered phi-R"
+        },
+        "ck_lsl7": {
+          "child_instance": "u_tile.u_tile.u_logic.u_me.g_hier.g_sl[7].g_hd.u_lh",
+          "origin": [
+            233.28,
+            820.8
+          ],
+          "view": "physical/qwen_die_masters/hard/ot_qwen_tile_lsl",
+          "at": [
+            333.03,
+            883.788
+          ],
+          "R_ps": {
+            "tt": 169.4,
+            "ff": 137.1,
+            "ss": 225.4
+          },
+          "reference": "actual routed lsl6 keepout ECO read-only clock recovery; delivered phi-R"
+        }
+      }
+    },
+    "qfd_tile_nl": {
+      "outline": [
+        449.28,
+        1442.88
+      ],
+      "parent_root": "ck",
+      "children": {
+        "ck_rp3": {
+          "child_instance": "u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[3].g_hd.u_rp",
+          "origin": [
+            22.464,
+            23.76
+          ],
+          "view": "physical/ref_tile/ot_qwen_tile_rpair/views/ot_qwen_tile_rpair",
+          "at": [
+            22.506,
+            53.388
+          ],
+          "R_ps": {
+            "tt": 309.1,
+            "ff": 256.8,
+            "ss": 394.7
+          },
+          "reference": "boundary mean, clock delivered at phi-R"
+        },
+        "ck_rp4": {
+          "child_instance": "u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[4].g_hd.u_rp",
+          "origin": [
+            22.464,
+            174.96
+          ],
+          "view": "physical/ref_tile/ot_qwen_tile_rpair/views/ot_qwen_tile_rpair",
+          "at": [
+            22.506,
+            204.588
+          ],
+          "R_ps": {
+            "tt": 309.1,
+            "ff": 256.8,
+            "ss": 394.7
+          },
+          "reference": "boundary mean, clock delivered at phi-R"
+        },
+        "ck_rp0": {
+          "child_instance": "u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[0].g_hd.u_rp",
+          "origin": [
+            22.464,
+            982.824
+          ],
+          "view": "physical/ref_tile/ot_qwen_tile_rpair/views/ot_qwen_tile_rpair",
+          "at": [
+            22.506,
+            1012.452
+          ],
+          "R_ps": {
+            "tt": 309.1,
+            "ff": 256.8,
+            "ss": 394.7
+          },
+          "reference": "boundary mean, clock delivered at phi-R"
+        },
+        "ck_rp1": {
+          "child_instance": "u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[1].g_hd.u_rp",
+          "origin": [
+            22.464,
+            1134.024
+          ],
+          "view": "physical/ref_tile/ot_qwen_tile_rpair/views/ot_qwen_tile_rpair",
+          "at": [
+            22.506,
+            1163.652
+          ],
+          "R_ps": {
+            "tt": 309.1,
+            "ff": 256.8,
+            "ss": 394.7
+          },
+          "reference": "boundary mean, clock delivered at phi-R"
+        },
+        "ck_rp2": {
+          "child_instance": "u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[2].g_hd.u_rp",
+          "origin": [
+            22.464,
+            1285.224
+          ],
+          "view": "physical/ref_tile/ot_qwen_tile_rpair/views/ot_qwen_tile_rpair",
+          "at": [
+            22.506,
+            1314.852
+          ],
+          "R_ps": {
+            "tt": 309.1,
+            "ff": 256.8,
+            "ss": 394.7
+          },
+          "reference": "boundary mean, clock delivered at phi-R"
+        },
+        "ck_lsl0": {
+          "child_instance": "u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.u_lh",
+          "origin": [
+            103.68,
+            328.32
+          ],
+          "view": "physical/qwen_die_masters/hard/ot_qwen_tile_lsl",
+          "at": [
+            203.43,
+            391.308
+          ],
+          "R_ps": {
+            "tt": 169.4,
+            "ff": 137.1,
+            "ss": 225.4
+          },
+          "reference": "actual routed lsl6 keepout ECO read-only clock recovery; delivered phi-R"
+        },
+        "ck_lsl4": {
+          "child_instance": "u_tile.u_tile.u_logic.u_me.g_hier.g_sl[4].g_hd.u_lh",
+          "origin": [
+            233.28,
+            328.32
+          ],
+          "view": "physical/qwen_die_masters/hard/ot_qwen_tile_lsl",
+          "at": [
+            333.03,
+            391.308
+          ],
+          "R_ps": {
+            "tt": 169.4,
+            "ff": 137.1,
+            "ss": 225.4
+          },
+          "reference": "actual routed lsl6 keepout ECO read-only clock recovery; delivered phi-R"
+        },
+        "ck_lsl1": {
+          "child_instance": "u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.u_lh",
+          "origin": [
+            103.68,
+            492.48
+          ],
+          "view": "physical/qwen_die_masters/hard/ot_qwen_tile_lsl",
+          "at": [
+            203.43,
+            555.4680000000001
+          ],
+          "R_ps": {
+            "tt": 169.4,
+            "ff": 137.1,
+            "ss": 225.4
+          },
+          "reference": "actual routed lsl6 keepout ECO read-only clock recovery; delivered phi-R"
+        },
+        "ck_lsl5": {
+          "child_instance": "u_tile.u_tile.u_logic.u_me.g_hier.g_sl[5].g_hd.u_lh",
+          "origin": [
+            233.28,
+            492.48
+          ],
+          "view": "physical/qwen_die_masters/hard/ot_qwen_tile_lsl",
+          "at": [
+            333.03,
+            555.4680000000001
+          ],
+          "R_ps": {
+            "tt": 169.4,
+            "ff": 137.1,
+            "ss": 225.4
+          },
+          "reference": "actual routed lsl6 keepout ECO read-only clock recovery; delivered phi-R"
+        },
+        "ck_lsl2": {
+          "child_instance": "u_tile.u_tile.u_logic.u_me.g_hier.g_sl[2].g_hd.u_lh",
+          "origin": [
+            103.68,
+            656.64
+          ],
+          "view": "physical/qwen_die_masters/hard/ot_qwen_tile_lsl",
+          "at": [
+            203.43,
+            719.6279999999999
+          ],
+          "R_ps": {
+            "tt": 169.4,
+            "ff": 137.1,
+            "ss": 225.4
+          },
+          "reference": "actual routed lsl6 keepout ECO read-only clock recovery; delivered phi-R"
+        },
+        "ck_lsl6": {
+          "child_instance": "u_tile.u_tile.u_logic.u_me.g_hier.g_sl[6].g_hd.u_lh",
+          "origin": [
+            233.28,
+            656.64
+          ],
+          "view": "physical/qwen_die_masters/hard/ot_qwen_tile_lsl",
+          "at": [
+            333.03,
+            719.6279999999999
+          ],
+          "R_ps": {
+            "tt": 169.4,
+            "ff": 137.1,
+            "ss": 225.4
+          },
+          "reference": "actual routed lsl6 keepout ECO read-only clock recovery; delivered phi-R"
+        },
+        "ck_lsl3": {
+          "child_instance": "u_tile.u_tile.u_logic.u_me.g_hier.g_sl[3].g_hd.u_lh",
+          "origin": [
+            103.68,
+            820.8
+          ],
+          "view": "physical/qwen_die_masters/hard/ot_qwen_tile_lsl",
+          "at": [
+            203.43,
+            883.788
+          ],
+          "R_ps": {
+            "tt": 169.4,
+            "ff": 137.1,
+            "ss": 225.4
+          },
+          "reference": "actual routed lsl6 keepout ECO read-only clock recovery; delivered phi-R"
+        },
+        "ck_lsl7": {
+          "child_instance": "u_tile.u_tile.u_logic.u_me.g_hier.g_sl[7].g_hd.u_lh",
+          "origin": [
+            233.28,
+            820.8
+          ],
+          "view": "physical/qwen_die_masters/hard/ot_qwen_tile_lsl",
+          "at": [
+            333.03,
+            883.788
+          ],
+          "R_ps": {
+            "tt": 169.4,
+            "ff": 137.1,
+            "ss": 225.4
+          },
+          "reference": "actual routed lsl6 keepout ECO read-only clock recovery; delivered phi-R"
+        }
+      }
+    }
+  }
+}
