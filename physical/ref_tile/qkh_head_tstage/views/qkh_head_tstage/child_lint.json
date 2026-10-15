@@ -1,12 +1,12 @@
 {
  "schema": "opentallas.hier_contract.child_lint.v1",
- "lef": "/srv/opentallas-scratch2/claude/closure-loop/qkh_head_tstage-hs2-5ce46f4f0/record/views/qkh_head_tstage/qkh_head_tstage.lef",
+ "lef": "/srv/opentallas-scratch/claude/closure-loop/qkh_head_tstage-hs3-385db199f/record/views/qkh_head_tstage/qkh_head_tstage.lef",
  "verdict": "PASS",
  "fails": [],
  "warns": [
-  "(f) face-pin access: 3150 of 3151 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. e_a[0] M4 (0.060,2.160), e_a[10] M4 (0.060,2.160), e_a[11] M4 (0.060,2.160))"
+  "(f) face-pin access: 3151 of 3151 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. ck M4 (0.060,2.160), e_a[0] M4 (0.060,2.160), e_a[10] M4 (0.060,2.160))"
  ],
- "summary": "qkh_head_tstage 21.6 x 259.2: PG M5 VDD 7 stripes (75% spread, 100% cov) / VSS 7 stripes (75% spread, 100% cov); strap M6; face pins 3151 blocked-above 0 blocked-same 0; clock ck insertion 196 ps; pockets M5 0 (closed)",
+ "summary": "qkh_head_tstage 21.6 x 259.2: PG M5 VDD 7 stripes (75% spread, 100% cov) / VSS 7 stripes (75% spread, 100% cov); strap M6; face pins 3151 blocked-above 0 blocked-same 0; clock ck insertion 171 ps; pockets M5 0 (closed)",
  "info": {
   "cell": "qkh_head_tstage",
   "W": 21.6,
@@ -40,24 +40,24 @@
   "face": {
    "face_pins": 3151,
    "blocked_above": 0,
-   "covered_below": 0,
+   "covered_below": 1,
    "examples": [],
    "blocked_same": 0,
    "same_examples": [],
-   "band_same": 3150,
+   "band_same": 3151,
    "band_examples": [
+    "ck M4 (0.060,2.160)",
     "e_a[0] M4 (0.060,2.160)",
     "e_a[10] M4 (0.060,2.160)",
     "e_a[11] M4 (0.060,2.160)",
     "e_a[12] M4 (0.060,2.160)",
-    "e_a[13] M4 (0.060,2.160)",
-    "e_a[14] M4 (0.060,2.160)"
+    "e_a[13] M4 (0.060,2.160)"
    ]
   },
   "clock_insertion": {
    "ck": {
-    "max_ps": 195.7,
-    "min_ps": 137.01
+    "max_ps": 170.73,
+    "min_ps": 109.84
    }
   },
   "pockets": {
@@ -66,7 +66,7 @@
    "marker": {
     "layer": "M5",
     "d_um": 1.536,
-    "added": 400
+    "added": 353
    },
    "count": 0,
    "area_um2": 0,

@@ -19,6 +19,7 @@ module ot_hbm_su_static_quarter #(
  input wire [1023:0] clk_lane, input wire [511:0] clk_insert, input wire [127:0] rst_lane_n,
  input wire [15:0] clk_bcast, rst_bcast_n,
  input wire [127:0] clk_bank,
+ input wire [767:0] clk_bank_macro, // per-bank six actual macro roots; register roots remain clk_bank
  input wire [63:0] clk_rf,
  input wire [3:0] clk_ctl,                    // one control/datapath root per slice
  input wire clk_core,clk_red,
@@ -46,6 +47,7 @@ module ot_hbm_su_static_quarter #(
    .rst_lane_n({rst_lane_n[64+16*g+:16],rst_lane_n[16*g+:16]}),
    .clk_bcast(clk_bcast[g*4+:4]),.rst_bcast_n(rst_bcast_n[g*4+:4]),
    .clk_bank({clk_bank[64+16*g+:16],clk_bank[16*g+:16]}),
+   .clk_bank_macro({clk_bank_macro[(64+16*g)*6+:96],clk_bank_macro[(16*g)*6+:96]}),
    .clk_ctl(clk_ctl[g]),.clk_side(clk_side),.rst_n(rst_n),.control(control),
    .vmr_cmd(vmr_cmd[(2*g)*30+:60]),.vmw_cmd(vmw_cmd[(2*g)*39+:78]),
    .rf_bword(rf_bword),.rf_bcmd(rf_bcmd),.rf_dsec(rf_dsec),.red_sel(red_sel),.slice_x(slice_x[g*32+:32]),

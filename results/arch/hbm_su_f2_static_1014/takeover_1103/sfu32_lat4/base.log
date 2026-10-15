@@ -1,0 +1,13 @@
+SU_ARITH_SFU OP 0 sfu_only=1 issue_to_output=84 first_output=92 last_output=155
+SU_ARITH_SFU OP 1 sfu_only=1 issue_to_output=84 first_output=92 last_output=155
+SU_ARITH_SFU OP 2 sfu_only=1 issue_to_output=106 first_output=114 last_output=177
+SU_ARITH_SFU OP 3 sfu_only=1 issue_to_output=106 first_output=114 last_output=177
+SU_ARITH_SFU OP 4 sfu_only=1 issue_to_output=106 first_output=114 last_output=177
+SU_ARITH_SFU OP 5 sfu_only=1 issue_to_output=43 first_output=51 last_output=114
+SU_ARITH_SFU OP 6 sfu_only=1 issue_to_output=43 first_output=51 last_output=114
+SU_ARITH_SFU OP 7 sfu_only=0 issue_to_output=28 first_output=36 last_output=99
+SU_ARITH PASS SFU-lane suite lanes=512 SFU_lanes=128 actual_SRAMs=3072 ops=8 outputs=90112 checks=352256 fixed_issue=64 II=1 MLAT=4 ALAT=3 LEAF=1
+- rtl/hbm_accel/generic/adapters/static_su/arithmetic/tb_su_static_arithmetic_sfu.sv:108: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 31us; walltime 370.202 s; speed 83.657 ns/s
+- Verilator: cpu 364.047 s on 1 threads; allocated 1066 MB

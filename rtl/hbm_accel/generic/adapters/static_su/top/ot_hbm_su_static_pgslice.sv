@@ -36,6 +36,7 @@ module ot_hbm_su_static_pgslice #(
  input wire [255:0] clk_lane, input wire [127:0] clk_insert, input wire [31:0] rst_lane_n,
  input wire [3:0] clk_bcast, rst_bcast_n,
  input wire [31:0] clk_bank,
+ input wire [191:0] clk_bank_macro, // six actual SRAM clock entries per pinned bank
  input wire clk_ctl,
  input wire [5:0] clk_side,
  input wire rst_n,
@@ -160,7 +161,7 @@ module ot_hbm_su_static_pgslice #(
    for(p2=0;p2<4;p2=p2+1)if(rv[p2]&&(rd_addr[(n*4+p2)*24+:7]!=7'(L)||rd_addr[(n*4+p2)*24+14+:2]!=2'(QID)))idf=1;
   end
   assign st_id_fault[n]=idf;
-  ot_hbm_su_static_pinned_bank #(.READERS(6),.RB(9)) u_bank(.clk(clk_bank[n]),.rst_n(rst_n),.read_v(rv),.read_addr(ra),
+  ot_hbm_su_static_pinned_bank #(.READERS(6),.RB(9)) u_bank(.clk(clk_bank[n]),.clk_macro(clk_bank_macro[n*6+:6]),.rst_n(rst_n),.read_v(rv),.read_addr(ra),
    .read_data(q),.read_return(),.write_v(lw|fw),.write_addr(fw?fr_row[H]:{la[17:16],la[13:7]}),
    .write_data(fw?fr_dat[H][K*32+:32]:ldat));
  end

@@ -1,0 +1,95 @@
+{
+ "verdict": "FAIL",
+ "reasons": [
+  "reg2reg WNS -3689.3 ps at 833.333 (route-period -3752.6), 5270 endpoints below -750 (> 50); worst g_lane[5].u_add.u_cc.genblk1.g_rv.rd[26]$_DFF_P_/QN -> g_lane[5].u_add.y[31]$_DFF_P_/D"
+ ],
+ "thresholds": {
+  "ws_ps": -750.0,
+  "count": 50,
+  "design_margin_ps": 250.0
+ },
+ "classes": {
+  "reg2reg": {
+   "ws_ps": -3689.3,
+   "raw_ws_ps": -3752.6,
+   "endpoints_le_cap": 7307,
+   "below_gate": 5270,
+   "below_0": 7153,
+   "below_design_margin": 7271,
+   "worst": [
+    {
+     "slack_ps": -3752.6,
+     "start": "g_lane[5].u_add.u_cc.genblk1.g_rv.rd[26]$_DFF_P_/QN",
+     "end": "g_lane[5].u_add.y[31]$_DFF_P_/D",
+     "start_kind": "reg",
+     "end_kind": "reg",
+     "clock": "ot_entry_0"
+    },
+    {
+     "slack_ps": -3725.8,
+     "start": "g_lane[5].u_add.u_cc.genblk1.g_rv.rd[26]$_DFF_P_/QN",
+     "end": "g_lane[5].u_add.y[30]$_DFF_P_/D",
+     "start_kind": "reg",
+     "end_kind": "reg",
+     "clock": "ot_entry_0"
+    },
+    {
+     "slack_ps": -3651.6,
+     "start": "g_lane[13].u_add.u_cc.genblk1.g_rv.rd[0]$_DFF_P_/QN",
+     "end": "g_lane[13].u_add.y[31]$_DFF_P_/D",
+     "start_kind": "reg",
+     "end_kind": "reg",
+     "clock": "ot_entry_0"
+    }
+   ]
+  },
+  "macro": {
+   "ws_ps": null,
+   "raw_ws_ps": null,
+   "endpoints_le_cap": 0,
+   "below_gate": 0,
+   "below_0": 0,
+   "below_design_margin": 0,
+   "worst": []
+  },
+  "io": {
+   "ws_ps": -5432.7,
+   "raw_ws_ps": -5496.0,
+   "endpoints_le_cap": 514,
+   "below_gate": 514,
+   "below_0": 514,
+   "below_design_margin": 514,
+   "worst": [
+    {
+     "slack_ps": -5496.0,
+     "start": "g_lane[5].u_add.y[13]$_DFF_P_/QN",
+     "end": "y[173]",
+     "start_kind": "reg",
+     "end_kind": "port",
+     "clock": "core_clk"
+    },
+    {
+     "slack_ps": -5495.8,
+     "start": "g_lane[5].u_add.y[1]$_DFF_P_/QN",
+     "end": "y[161]",
+     "start_kind": "reg",
+     "end_kind": "port",
+     "clock": "core_clk"
+    },
+    {
+     "slack_ps": -5495.7,
+     "start": "g_lane[5].u_add.y[11]$_DFF_P_/QN",
+     "end": "y[171]",
+     "start_kind": "reg",
+     "end_kind": "port",
+     "clock": "core_clk"
+    }
+   ]
+  }
+ },
+ "period_ps": 769.9999969232318,
+ "truncated": false,
+ "dump_ms": null,
+ "find_ms": 3323,
+ "classify_ms": 228
+}
