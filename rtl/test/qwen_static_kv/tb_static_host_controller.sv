@@ -94,7 +94,7 @@ module tb_static_host_controller;
     end
     if(er[phase][0])begin
      hostreads++;
-     if(er[phase][256:1]!==data(24427,157))bad("host native read data");
+     if(er[phase][258:257]!=0||er[phase][256:1]!==data(24427,157))bad("host native read data");
     end
     if(cv[phase])commits++;
     if(fault[phase]||cf[phase])bad($sformatf("controller sticky fault phase%0d t%0d",phase,t));
