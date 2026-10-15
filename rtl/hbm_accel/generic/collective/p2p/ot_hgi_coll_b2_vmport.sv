@@ -25,7 +25,7 @@ module ot_hgi_coll_b2_vmport #(
     output wire [651:0] xw,
     input wire [1:0] xwa
 );
-    wire [4:0] hv, pop, qfault;
+    wire [4:0] hv, pop, qfault; reg [4:0] pop_cmd;
     wire [199:0] ha; wire [2559:0] hd; wire [79:0] hm;
     wire [4:0] epoch; reg [4:0] issued_epoch;
     wire [4:0] blocked = ~(epoch ^ issued_epoch);
@@ -33,13 +33,13 @@ module ot_hgi_coll_b2_vmport #(
         wire [551:0] h;
         ot_hgi_coll_rx_native #(.W(552), .CRD(CRD)) u_rx (.clk(clk_rx[l]), .rst_n(rst_n),
             .t_v(rgx_t_v[l]), .t_d({rgx_t_addr[l*40 +: 40],rgx_t_data[l*512 +: 512]}),
-            .out_v(hv[l]), .out_d(h), .out_rdy(pop[l]), .epoch(epoch[l]), .fault(qfault[l]));
+            .out_v(hv[l]), .out_d(h), .out_rdy(pop_cmd[l]), .epoch(epoch[l]), .fault(qfault[l]));
         assign ha[l*40 +: 40] = h[551:512]; assign hd[l*512 +: 512] = h[511:0];
         assign hm[l*16 +: 16] = 16'hffff;
     end
     wire [567:0] th;
     ot_hgi_coll_rx_native #(.W(568), .CRD(TCRD)) u_trx (.clk(clk_rx[4]), .rst_n(rst_n), .t_v(tkw_t_v), .t_d(tkw_t_d),
-        .out_v(hv[4]), .out_d(th), .out_rdy(pop[4]), .epoch(epoch[4]), .fault(qfault[4]));
+        .out_v(hv[4]), .out_d(th), .out_rdy(pop_cmd[4]), .epoch(epoch[4]), .fault(qfault[4]));
     assign ha[160 +: 40] = th[567:528]; assign hm[64 +: 16] = th[527:512]; assign hd[2048 +: 512] = th[511:0];
     reg vm_q, vm_run; reg [3:0] rv_q;
     always @(posedge clk or negedge rst_n)
@@ -86,12 +86,12 @@ module ot_hgi_coll_b2_vmport #(
     end
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
-            wq <= 0; cq <= 0; rgx_f_cr <= 0; tkw_f_cr <= 0; fault <= 0; issued_epoch <= '1;
+            wq <= 0; cq <= 0; rgx_f_cr <= 0; tkw_f_cr <= 0; fault <= 0; issued_epoch <= '1; pop_cmd <= 0;
             for (integer b = 0; b < 8; b = b + 1) begin wc[b] <= CW'(WCRD); oh[b] <= 0; ot[b] <= 0; on[b] <= 0; end
             for (integer l = 0; l < 5; l = l + 1) begin pc[l] <= 4; half[l] <= 0; itag[l] <= 0; rtag[l] <= 0; ack_rem[l] <= 0; end
         end else begin
             integer na [0:4];
-            wq <= wnext; cq <= cnext; rgx_f_cr <= 0; tkw_f_cr <= 0;
+            wq <= wnext; cq <= cnext; pop_cmd <= pop; rgx_f_cr <= 0; tkw_f_cr <= 0;
             if ((|qfault) || hf) fault <= 1;
             for (integer l = 0; l < 5; l = l + 1) begin
                 na[l] = ack_rem[l];
