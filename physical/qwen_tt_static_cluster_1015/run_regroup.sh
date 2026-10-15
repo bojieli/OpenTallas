@@ -26,6 +26,6 @@ case $MUT in
 esac
 SR=$(sed 's#_bb\.v#.v#g' $P/srcs.txt)
 O=${RG_OBJ:-/tmp/rg_obj_${MUT}_$$}
-verilator --binary --timing -j 8 -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -DNCYC=$N -DCMD_A=$CA -DCMD_B=$CB -DRET_A=$RA -DRET_B=$RB -DMIN_PAIR=$MINP --top-module tb_tt_static_regroup -Mdir $O \
+verilator --binary --timing -j 8 -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -DNCYC=$N -DCMD_A=$CA -DCMD_B=$CB -DRET_A=$RA -DRET_B=$RB -DMIN_PAIR=$MINP -DRUNS=${RUNS:-8} --top-module tb_tt_static_regroup -Mdir $O \
   $SR rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_static_hr.sv $NEW $P/ot_qfd_tt_ctlm_static_parent_ref.sv $P/tb_tt_static_regroup.sv > $O.build.log 2>&1 || { tail -20 $O.build.log; exit 2; }
-$O/Vtb_tt_static_regroup
+$O/Vtb_tt_static_regroup +PROGRAM=results/arch/qwen_tp8_native_dispatch_1014/token_source_plan/head_program_rank7.hex

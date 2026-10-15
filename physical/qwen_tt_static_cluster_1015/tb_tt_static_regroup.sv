@@ -95,7 +95,33 @@ module tb_tt_static_regroup;
     p_fault = {$urandom};
     fab_fault = {$urandom};
   end endtask
-  initial begin rst_n=0; rnd; repeat(20) @(negedge clk) rnd; rst_n=1;
+  reg [1023:0] prom[0:7]; string ppath; integer pj,pk,pr;
+  localparam [55:0] COPY={7'd64,24'd8192,24'd8192,1'b1};
+  task quiet; begin cp_active=0; native_ret=95'd3; h_start=0; prog_base=0; pw_v=0; pw_addr=0; pw_data=0;
+    x_oacc=24'd3; x_oidle=1; x_oprog=16'hffff; x_orows=16'hffff; kv_ok=1; kv_write_drained=1; me_mem_ok=0;
+    up_fault=0; land_cnt=0; tr_fault=0; p_am=0; p_fault=0; fab_fault=0; end endtask
+  task pw(input [9:0] a, input [63:0] v); begin @(negedge clk); quiet; pw_v=1; pw_addr=a; pw_data=v; @(negedge clk); pw_v=0; end endtask
+  task prog_load; begin
+    for(pj=0;pj<8;pj=pj+1) for(pk=0;pk<16;pk=pk+1) pw(pj*16+pk, prom[pj][64*pk+:64]);
+    pw(1016,{32'h43414c31,32'd600});
+    pw(976,{17'd0,1'b0,2'd1,12'd3,32'd40}); pw(977,{17'd0,1'b0,2'd3,12'd4,32'd60});
+    pw(978,{17'd0,1'b0,2'd1,12'd4,32'd180}); pw(979,{17'd0,1'b0,2'd3,12'd5,32'd200});
+    pw(980,{17'd0,1'b0,2'd1,12'd5,32'd320}); pw(981,{17'd0,1'b0,2'd3,12'd6,32'd340});
+    pw(982,{17'd0,1'b0,2'd1,12'd6,32'd460}); pw(983,{17'd0,1'b1,2'd0,12'd7,32'd600});
+    pw(1019,{8'd0,COPY}); pw(1020,{8'd0,COPY}); pw(1021,{8'd0,COPY});
+    pw(1017,{32'h43414c53,4'd0,10'd8,6'd37,6'd1,6'd8});
+  end endtask
+  task prog_run(input [17:0] tk, input [17:0] ps); begin
+    repeat(5) begin @(negedge clk); quiet; end
+    @(negedge clk); quiet; token=tk; pos=ps; h_start=1; @(negedge clk); quiet; h_start=0;
+    repeat(640) begin @(negedge clk); quiet; cyc=cyc+1; end
+  end endtask
+  initial begin
+    if(!$value$plusargs("PROGRAM=%s",ppath)) $fatal(1,"PROGRAM plusarg required (actual source programme)"); $readmemh(ppath,prom);
+    rst_n=0; quiet; token=1; pos=7; repeat(20) @(negedge clk); rst_n=1;
+    prog_load; for(pr=0;pr<`RUNS;pr=pr+1) prog_run(18'd1+pr, 18'd7+3*pr);
+    $display("PROGRAMME_PHASE_DONE runs=%0d cycles=%0d errs=%0d",`RUNS,cyc,errs);
+    rst_n=0; rnd; repeat(20) @(negedge clk) rnd; rst_n=1;
     repeat(`NCYC) begin @(negedge clk); rnd; cyc=cyc+1; if(cyc%20000==10000) begin rst_n=0; @(negedge clk); rnd; rst_n=1; end end
     seam_report;
     if(errs==0 && (cmd_pair<`MIN_PAIR || ret_pair<`MIN_PAIR)) $display("REGROUP_UNSENSITIZED cmd_pair=%0d ret_pair=%0d min=%0d",cmd_pair,ret_pair,`MIN_PAIR);
