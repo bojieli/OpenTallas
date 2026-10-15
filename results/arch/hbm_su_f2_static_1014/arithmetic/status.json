@@ -18,8 +18,10 @@
     "quarter_images": 4,
     "local_lane_id": "0..127; compilerquarterbases explicit",
     "affine_lowering": "84/104 fixture records including repeatedprofiles; 20 unsupported records explicit",
-    "canonical_profile_counts": "inputs/deepseek_full34 and qwen_full18; notclaimed33/12 canonical",
-    "fixed_issue": "64issues/op,32768words/op,12ops,393216total; no dynamicissue"
+    "canonical_profile_counts": "actual coverage_ds33 + coverage_qwen12 =45 requiredVMcomponentrecords;28lowered,17explicitunsupported",
+    "fixed_issue": "64issues/op,32768words/op,12ops,393216total; no dynamicissue",
+    "canonical_report": "arithmetic/canonical/canonical_lowering.json",
+    "canonical_indexed_policy": "MDESCindexed scalar flags unresolved actualTOPK nativecalendar; never copy pre-resolvedfixturebase as finaladdress"
   },
   "stage_clocks": {
     "entries_per_lane": 8,
@@ -28,7 +30,8 @@
     "insertion_max_register_bits_per_root": 5808,
     "broadcast_roots": 64,
     "broadcast_bits_per_root": 13936,
-    "related": "1:1 phase0; real CTS and registercensus remainpending"
+    "related": "1:1 phase0; real CTS and registercensus remainpending",
+    "sink_census": "PASS actual Yosys all3KINDs <=11532,zero unknownclocks; noCTS"
   },
   "SRAM_contract": {
     "request_sample": "n",
@@ -58,10 +61,10 @@
     },
     {
       "host": "ot-epyc1tb",
-      "unit": "oth-ubuntu-793760-1792057884",
-      "session": 1911,
-      "result": "/tmp/hbm-su-arithmetic-stageclk-1015/census",
-      "status": "live nativeperKINDclockcensus"
+      "unit": "oth-ubuntu-814300-1792058116",
+      "session": 20602,
+      "result": "/tmp/hbm-su-arithmetic-stageclk-1015/census_v2",
+      "status": "terminalPASS nativeclockregistercensus; oldextractorsupersededactualsourceinventorybug"
     }
   ],
   "open": [

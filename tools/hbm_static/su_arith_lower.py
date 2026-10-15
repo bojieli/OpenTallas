@@ -29,6 +29,7 @@ def lower(raw):
     if sut['dst'] not in (0,1):why.append('native_KV_destination_calendar')
     for role,md in desc.items():
         if md.space!='VM':why.append('native_'+md.space+'_'+role+'_source_calendar')
+        if md.indexed:why.append('MDESC_indexed_scalar_runtime_address_calendar')
     if why:return dict(supported=False,reasons=sorted(set(why)),sut=sut),[]
     no,ni=desc['A'].m,dispatch['n'][0]
     if not no or not ni:return dict(supported=True,empty=True,words=0,sut=sut),[]

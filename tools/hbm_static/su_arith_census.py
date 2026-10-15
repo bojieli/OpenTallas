@@ -5,6 +5,7 @@ No ABC/CTS/area claim. Unoptimized live registers give a conservative sink
 count for each real native KIND. Unknown clock cells fail, never disappear.
 """
 import json
+import hashlib
 from pathlib import Path
 import re
 import subprocess
@@ -37,7 +38,8 @@ for kind in range(3):
                 max_sink=max(sinks.values()),all_under_15000=not unknown and max(sinks.values())<=15000)
     records.append(record)
     (job/'census.json').write_text(json.dumps(record,indent=2)+'\n')
-report=dict(qualified=False,method='Yosys proc/flatten/memory_map opt_clean register bits; no ABC/CTS',records=records)
+report=dict(qualified=False,method='Yosys proc/flatten/memory_map opt_clean register bits; no ABC/CTS',records=records,
+            source_sha256={f:hashlib.sha256((root/f).read_bytes()).hexdigest()for f in files})
 (out/'clock_census.json').write_text(json.dumps(report,indent=2)+'\n')
 print(json.dumps(report))
 if not all(r['all_under_15000']for r in records):sys.exit(1)

@@ -17,7 +17,8 @@
     "external_scalar": 1,
     "broadcast_registered_bits_per_root": 13936,
     "insertion_max_flops_per_root": 5808,
-    "lane_sink_census": "stage roots split; actual synthesized count and CTS remain unverified"
+    "lane_sink_census": "ActualYosys proc/flatten/memory_map: all3KINDs <=11532 registerbits/root, zero unknown clocks; no CTS",
+    "max_native_register_sinks_per_root": 11532
   },
   "memory": {
     "read_ports": 2048,
@@ -46,7 +47,8 @@
     "fp32_adder_pipelines": 1024,
     "divider_lanes": 128,
     "exp_lanes": 128,
-    "max_vector_result_words_per_cycle": 512
+    "max_vector_result_words_per_cycle": 512,
+    "register_bits_actual_census": 6517635
   },
   "latency": {
     "normal_extra_fetch_edges": 2,
