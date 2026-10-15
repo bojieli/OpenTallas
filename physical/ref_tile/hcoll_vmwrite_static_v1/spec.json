@@ -1,0 +1,105 @@
+{
+ "name": "hcoll_vmwrite_static_v1",
+ "top": "ot_hgi_coll_static_vmwrite",
+ "kind": "tile",
+ "sources": [
+  "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_vmwrite.sv"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 103.68,
+  "h": 388.8,
+  "exact": true
+ },
+ "pins": {
+  "W": [
+   "rgx_v",
+   "rgx_addr",
+   "rgx_data",
+   "rgx_vm"
+  ],
+  "E": [
+   "kq",
+   "launch_done",
+   "fault"
+  ],
+  "S": [
+   "tkw_v",
+   "tkw_d"
+  ],
+  "N": [
+   "clk",
+   "rst_n",
+   "sid",
+   "ingress_slot",
+   "slot_valid",
+   "slot_owner"
+  ]
+ },
+ "layer_cap": "M5",
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "period_ps": 833.333333,
+  "hold_margin_ns": 0.03,
+  "pin_min_tracks": 2,
+  "pin_group_max": 32,
+  "macro_halo_um": 5.4
+ },
+ "job": {
+  "owner": "Codex:coll_physical",
+  "branch": "codex/hcoll-physical-1103",
+  "tag": "v1",
+  "purpose": "Current V1 u_writer, exact sourceec2cc4de,5085actualports, no addedcycles; canonical typed subslot pending",
+  "extra_paths": [
+   "tools/hbm_coll_static",
+   "rtl/hbm_accel/generic/collective/p2p"
+  ],
+  "benches": [
+   {
+    "name": "vmwrite_exact",
+    "cmd": "bash tools/hbm_coll_static/run_vmwrite_physical_gate.sh 0 {RUN}/bench/vmwrite_exact",
+    "expect": "pass",
+    "threads": 2,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "min_count_regex": "checked=77"
+   },
+   {
+    "name": "vmwrite_payload_mutant",
+    "cmd": "bash tools/hbm_coll_static/run_vmwrite_physical_gate.sh 1 {RUN}/bench/vmwrite_payload_mutant",
+    "expect": "fail",
+    "threads": 2,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ],
+  "views_to": "physical/ref_tile/hcoll_vmwrite_static_v1/views",
+  "record_to": "results/arch/hcoll_physical_1103/vmwrite"
+ },
+ "std_area_um2": 6730.9299,
+ "params": {},
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "recipe": 2,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ }
+}

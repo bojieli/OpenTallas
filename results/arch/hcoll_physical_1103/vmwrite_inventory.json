@@ -1,0 +1,188 @@
+{
+  "top": "ot_hgi_coll_static_vmwrite",
+  "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_vmwrite.sv",
+  "source_sha256": "ec2cc4de9173c2bc059fbc23aa9d0136e89ab0952ff22cdd8cdda6d98b54897c",
+  "actual_parent_source": "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q_static.sv",
+  "actual_parent_instance": "u_writer",
+  "current_contract": "V1 ot_hfd_coll_q3_static/q2_static; no V4 adoption",
+  "child_masters": [],
+  "memories": [],
+  "ports": [
+    {
+      "name": "clk",
+      "direction": "input",
+      "width": 1
+    },
+    {
+      "name": "rst_n",
+      "direction": "input",
+      "width": 1
+    },
+    {
+      "name": "sid",
+      "direction": "input",
+      "width": 2
+    },
+    {
+      "name": "rgx_v",
+      "direction": "input",
+      "width": 4
+    },
+    {
+      "name": "rgx_addr",
+      "direction": "input",
+      "width": 160
+    },
+    {
+      "name": "rgx_data",
+      "direction": "input",
+      "width": 2048
+    },
+    {
+      "name": "rgx_vm",
+      "direction": "input",
+      "width": 1
+    },
+    {
+      "name": "tkw_v",
+      "direction": "input",
+      "width": 1
+    },
+    {
+      "name": "tkw_d",
+      "direction": "input",
+      "width": 568
+    },
+    {
+      "name": "ingress_slot",
+      "direction": "input",
+      "width": 5
+    },
+    {
+      "name": "slot_valid",
+      "direction": "input",
+      "width": 8
+    },
+    {
+      "name": "slot_owner",
+      "direction": "input",
+      "width": 32
+    },
+    {
+      "name": "kq",
+      "direction": "output",
+      "width": 2248
+    },
+    {
+      "name": "launch_done",
+      "direction": "output",
+      "width": 5
+    },
+    {
+      "name": "fault",
+      "direction": "output",
+      "width": 1
+    }
+  ],
+  "scalar_pins": 5085,
+  "input_bits": 2831,
+  "output_bits": 2254,
+  "correctness_receipt": "results/arch/hbm_static_collective_recovery_0821/vmwrite_receipt.json",
+  "added_cycles": 0,
+  "implemented_latency": "ingress C, low launch C+1, high launch C+2, synchronous VM commits C+2/C+3",
+  "proposed_outline_um": [
+    103.68,
+    388.8
+  ],
+  "slot_status": "REQUESTED canonical typed slot103.68x388.8, parent approved capacity method; awaiting canonical file",
+  "physical_status": "OPEN; sizing mapped PASS, canonical grant pending, no CTS/route yet",
+  "scope": "current native component only; no parent fit or closure claim",
+  "candidate_faces": {
+    "W": [
+      "rgx_v",
+      "rgx_addr",
+      "rgx_data",
+      "rgx_vm"
+    ],
+    "E": [
+      "kq",
+      "launch_done",
+      "fault"
+    ],
+    "S": [
+      "tkw_v",
+      "tkw_d"
+    ],
+    "N": [
+      "clk",
+      "rst_n",
+      "sid",
+      "ingress_slot",
+      "slot_valid",
+      "slot_owner"
+    ]
+  },
+  "candidate_pin_fit": {
+    "W": {
+      "pins": 2213,
+      "fits": true,
+      "why": "",
+      "slots": 4035,
+      "groups": 70,
+      "left": [],
+      "facecut_fraction": 0.5464197530864198
+    },
+    "E": {
+      "pins": 2254,
+      "fits": true,
+      "why": "",
+      "slots": 4035,
+      "groups": 71,
+      "left": [],
+      "facecut_fraction": 0.5565432098765433
+    },
+    "S": {
+      "pins": 569,
+      "fits": true,
+      "why": "",
+      "slots": 1065,
+      "groups": 18,
+      "left": [],
+      "facecut_fraction": 0.5268518518518518
+    },
+    "N": {
+      "pins": 49,
+      "fits": true,
+      "why": "",
+      "slots": 1065,
+      "groups": 2,
+      "left": [],
+      "facecut_fraction": 0.045370370370370366
+    }
+  },
+  "local_gate_output": "GATE INFO layer: tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)\nGATE INFO oflop: E face 10.5 pins/um (kq, launch_done, fault): recipe-2 hold stages take 3.52 um behind the face, the pin flops need gap 4.5 um and 6 columns (derived in the flow)\nGATE INFO oflop: S face 10.5 pins/um (tkw_v, tkw_d): recipe-2 hold stages take 2.3 um behind the face, the pin flops need gap 2.9 um and 21 columns (derived in the flow)\nGATE INFO oflop: W face 10.5 pins/um (rgx_v, rgx_addr, rgx_data): recipe-2 hold stages take 2.3 um behind the face, the pin flops need gap 2.9 um and 6 columns (derived in the flow)\nGATE WARN rtl: runtime_partselect: 3 runtime-indexed part-select(s), 5,660 bits (2 >= 64 b; e.g. ot_hgi_coll_static_vmwrite: next_kq[b*281 +: 281] (2810 b write), ot_hgi_coll_static_vmwrite: next_kq[b*281 +: 281] (2810 b)): each is a wide $shift/$shiftx; yosys SHARE pairs them (hours). Fix: decoded constant-index slices (one-hot compare + AND-OR per destination), or a real memory  -> FIX: decoded constant-index slices; the --remote synthesis smoke decides (a SHARE stall FAILs there)\nPRE_ROUTE_GATE: WARN (0 fail, 1 warn)\n",
+  "local_gate_status": "WARN:0FAIL1WARN existing runtime indexed mux; mapped synthesis terminalPASS",
+  "actual_synth_handle": {
+    "host": "ot-agidock128",
+    "unit": "oth-ubuntu-965072-1792089205",
+    "output": "/tmp/hcoll-vmwrite-1103-synth",
+    "mem_gib": 16,
+    "threads": 4
+  },
+  "pre_map_ff_count": {
+    "ordinary": 6248,
+    "resettable": 16
+  },
+  "mapped_synthesis": {
+    "status": "PASS",
+    "exit": 0,
+    "std_area_um2": 6730.9299,
+    "cells": 67928,
+    "flops": 6264,
+    "port_bits": 5085,
+    "netlist_sha256": "a52bd664d426bcf38440bddd689ba8771aa23c0331a5edaaed25852328d9151e",
+    "log_sha256": "66fbe8d536fcabf7b1130839c4103431a782122e3ba0f188d5718ea8bfa233b5",
+    "raw_stat": "vmwrite_sizing/vmwrite.stat",
+    "netlist_remote": "ot-agidock128:/tmp/hcoll-vmwrite-1103-synth/vmwrite.netlist.v"
+  }
+}

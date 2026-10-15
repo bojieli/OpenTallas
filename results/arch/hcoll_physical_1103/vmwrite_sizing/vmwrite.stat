@@ -1,0 +1,78 @@
+
+8. Printing statistics.
+
+=== ot_hgi_coll_static_vmwrite ===
+
+        +----------Local Count, excluding submodules.
+        |        +-Local Area, excluding submodules.
+        |        | 
+    62127        - wires
+    75260        - wire bits
+       31        - public wires
+    13164        - public wire bits
+       15        - ports
+     5085        - port bits
+    67928  6730.93 cells
+     4574  400.134   A2O1A1Ixp33_ASAP7_75t_R
+     1384  181.608   A2O1A1O1Ixp25_ASAP7_75t_R
+      713   62.373   AND2x2_ASAP7_75t_R
+      169   14.784   AND3x1_ASAP7_75t_R
+      348   35.517   AND4x1_ASAP7_75t_R
+       72    8.398   AND5x1_ASAP7_75t_R
+       29    6.765   AO211x2_ASAP7_75t_R
+     2218  194.031   AO21x1_ASAP7_75t_R
+      345   50.301   AO221x1_ASAP7_75t_R
+       10     1.75   AO222x2_ASAP7_75t_R
+       83   10.891   AO22x1_ASAP7_75t_R
+       11    2.566   AO31x2_ASAP7_75t_R
+      186   21.695   AO32x1_ASAP7_75t_R
+       16    2.333   AO33x2_ASAP7_75t_R
+     4233  370.303   AOI211xp5_ASAP7_75t_R
+     5351  390.088   AOI21xp33_ASAP7_75t_R
+      742   75.729   AOI221xp5_ASAP7_75t_R
+       12     1.75   AOI222xp33_ASAP7_75t_R
+      704   61.586   AOI22xp33_ASAP7_75t_R
+      131    13.37   AOI311xp33_ASAP7_75t_R
+      233   20.383   AOI31xp33_ASAP7_75t_R
+        8    0.933   AOI321xp33_ASAP7_75t_R
+      366   37.354   AOI32xp33_ASAP7_75t_R
+       69    8.048   AOI33xp33_ASAP7_75t_R
+       16    6.065   DFFASRHQNx1_ASAP7_75t_R
+     6248 1.82E+03   DFFHQNx1_ASAP7_75t_R
+     5174  226.311   INVx1_ASAP7_75t_R
+     5221  304.489   NAND2xp33_ASAP7_75t_R
+      932   67.943   NAND3xp33_ASAP7_75t_R
+      698   61.061   NAND4xp25_ASAP7_75t_R
+      154   15.717   NAND5xp2_ASAP7_75t_R
+     4494   262.09   NOR2xp33_ASAP7_75t_R
+     1369     99.8   NOR3xp33_ASAP7_75t_R
+      761   66.572   NOR4xp25_ASAP7_75t_R
+      501   51.132   NOR5xp2_ASAP7_75t_R
+     3811  333.386   O2A1O1Ixp33_ASAP7_75t_R
+      997   116.29   OA211x2_ASAP7_75t_R
+      535   54.602   OA21x2_ASAP7_75t_R
+       28    6.532   OA221x2_ASAP7_75t_R
+       22    3.849   OA222x2_ASAP7_75t_R
+      115   16.767   OA22x2_ASAP7_75t_R
+       15    3.281   OA31x2_ASAP7_75t_R
+       29    4.228   OA33x2_ASAP7_75t_R
+     4473  391.298   OAI211xp5_ASAP7_75t_R
+     6215  453.074   OAI21xp33_ASAP7_75t_R
+      776   79.199   OAI221xp5_ASAP7_75t_R
+        4    0.583   OAI222xp33_ASAP7_75t_R
+      884   77.332   OAI22xp33_ASAP7_75t_R
+      139   14.186   OAI311xp33_ASAP7_75t_R
+      338   29.568   OAI31xp33_ASAP7_75t_R
+       64    7.465   OAI321xp33_ASAP7_75t_R
+      377   38.477   OAI32xp33_ASAP7_75t_R
+       94   10.964   OAI33xp33_ASAP7_75t_R
+      761   66.572   OR2x2_ASAP7_75t_R
+      325   28.431   OR3x1_ASAP7_75t_R
+      187   19.085   OR4x1_ASAP7_75t_R
+      106   12.364   OR5x1_ASAP7_75t_R
+       37    4.855   XNOR2xp5_ASAP7_75t_R
+       21    2.756   XOR2xp5_ASAP7_75t_R
+
+   Chip area for module '\ot_hgi_coll_static_vmwrite': 6730.929900
+     of which used for sequential elements: 1827.982080 (27.16%)
+
