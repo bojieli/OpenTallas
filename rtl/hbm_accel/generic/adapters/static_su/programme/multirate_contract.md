@@ -105,3 +105,46 @@ programme planes with native VM; split pgslice serial-FD from stream latency;
 run the whole numerical/store/RF/reduction checks in their declared domains;
 prove reset epoch and compensated clock delivery, then route/TT setup/FF hold/
 DRC0. Until then production calendar and native whole-SU qualification stay OPEN.
+
+## Two-plane native composition source
+
+`su_programme_compile.py` accepts `--line-bits 64` for a standalone stream
+calendar, preserving the default 9688-bit serial command format. Use
+`--param-prefix SERIAL` and `--param-prefix STREAM` so each generated include
+has distinct constants. On the current image these planes allocate 301 and 76
+SRAM macros respectively: 377 total, 12,353,536 payload bits. Provisioning uses
+34,420 serial-clock transactions and 9,493 stream-clock transactions. These
+counts describe provisioning rather than execution throughput.
+
+`su_multirate_native_run.sh OUT prepare` generates both planes and their native
+expected-write calendar. Preparation is the default. The separate `build` and
+`run` modes require fleet admission and the coordinator's release of the previous
+full-SU job/cache; they must use a new staged tree and output directory. The
+runner rejects a cached executable whose RTL or configuration dimensions differ
+from its source receipt.
+
+The new `tb_hbm_su_native_multirate_top` connects both actual SRAM programmers to
+the native top and 32 actual VM banks. A single half-quantum integer lattice
+generates 50 percent duty serial and stream clocks, preserving coincident epochs
+without accumulating independent clock rounding. Each programmer starts four of
+its own edges before E0; bridge reset releases between the preceding clock edges
+and E0. Its ordinary numerical, scalar, lane-write, sector/mask/data, fault and
+response checks execute in their declared domains. Negative runs alter external
+seed data, command addressing, RF reads, reduction commands, the stream calendar,
+or the actual bridge-reset epoch. This source has not yet passed the full native
+composition run.
+
+The endpoint receipt measures the last serial lane write, scalar, bridge read
+return and bridge acknowledgement, and the last stream LG read issue/return and
+write issue/acknowledgement over all ports. Its maximum completion tick includes
+both domains. It reports configuration transactions, programme priming, command
+and calendar lengths, and the 40-serial-edge checker tail separately. Neither
+programme length nor checker tail is reported as measured unit service time;
+throughput and physical qualification remain false until the integrated proof
+and the required physical/price checks are complete.
+
+`multirate_programmes_tb.sv` is a smaller exact two-programmer component bench.
+It checks every command and calendar bit at the common E0-relative consumer
+edges using the actual mapped SRAM models. Mutants corrupt either plane's
+configuration or shift the stream programmer's start by one stream edge. This
+component cannot establish native VM/top arithmetic or physical qualification.
