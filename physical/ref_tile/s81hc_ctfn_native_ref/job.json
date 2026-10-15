@@ -1,5 +1,5 @@
 {
- "name": "s81hc_ctfn_native_ref-np5-straight-ck4-1986dfc96",
+ "name": "s81hc_ctfn_native_ref-np5-straight-ck4-COMMIT",
  "block": "ot_s81_hc_ctfn",
  "ref_tile": true,
  "owner": "Claude:S-NORM",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 24,
  "source": {
   "branch": "claude/s81-norm-tree-1014",
-  "commit": "1986dfc96"
+  "commit": "COMMIT"
  },
  "stages": {
   "bench": [
@@ -71,7 +71,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/s81hc_ctfn_native_ref/s81hc_ctfn_native_ref-np5-straight-ck4-1986dfc96"
+   "to": "results/rtl/ref_tile/s81hc_ctfn_native_ref/s81hc_ctfn_native_ref-np5-straight-ck4-COMMIT"
   }
  ],
  "cycles_added": 0,
@@ -85,10 +85,15 @@
  "hold_merge": "Held physical-only native boundary candidate: source-bound numerical proof is reused separately; actual mapped clone/reset equivalence, immutable rectangles and native timing/CTS must pass before any adoption.",
  "reroute_reason": {
   "kind": "pin_register",
-  "source": "physical/ref_tile/s81hc_ctfn_native_k8_ref record 33349036f native audit launch 249.7 / capture 236.0",
+  "source": "results/rtl/s81_layer_tput_1013/norm_tree_1014/native_closure_1014/v23_straight/ctfn_k8_np4_native_audit.json",
   "cell": "ot_s81_hc_ctfn",
   "launch_ps": 249.7,
   "capture_ps": 236.0,
-  "fix": "v23 straight chain (S-NORM 2026-10-15, 220c62a71): one fd/fv bit order for producer + all consumers - ctfs_nt fdm/fd_out at the same x (relay cut 0; v3 1,974 -> GRT 229,288), ctfn fd_in/fdm at the same x (+128-slot y-shift cut 600), every chain seam vertical <= 416.88 um (v22 728.88). 0 cycles, 0 area, RTL unchanged. No fixed output hold pad, HB1 input pads (native launch/capture), per-cluster clock K=4."
+  "fix": "v23 straight chain (S-NORM 2026-10-15, 220c62a71): one fd/fv bit order for producer + all consumers - ctfs_nt fdm/fd_out at the same x (relay cut 0; v3 1,974 -> GRT 229,288), ctfn fd_in/fdm at the same x (+128-slot y-shift cut 600), every chain seam vertical <= 416.88 um (v22 728.88). 0 cycles, 0 area, RTL unchanged. No fixed output hold pad, HB1 input pads (native launch/capture), per-cluster clock K=4.",
+  "evidence": [
+   "results/rtl/s81_layer_tput_1013/norm_tree_1014/native_closure_1014/v23_straight/ctfn_k8_np4_native_audit.json (record 33349036f, s81hc_ctfn_native_k8_ref-np4-ck8-175e7ac3c: TT +142.40/FF +3.39/DRC0 but native launch 249.7 (718 pins) / capture 236.0 (1,798 pins))",
+   "results/rtl/s81_layer_tput_1013/norm_tree_1014/native_closure_1014/v23_straight/request.json (v23 straight pin candidate, S-DIE request)",
+   "physical/s81_die_pins/v22_hc_local_split/layout.json (S-DIE r11 fdm full-span grant)"
+  ]
  }
 }
