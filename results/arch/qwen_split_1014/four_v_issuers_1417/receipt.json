@@ -1,0 +1,48 @@
+{
+  "schema": "opentallas.four_stack_v_issuer_evidence.v1",
+  "source_commit": "9251d9e4e",
+  "result": "PASS_COMPONENT_ONLY",
+  "contexts": [
+    1,
+    127,
+    128,
+    129,
+    255,
+    256,
+    257,
+    300,
+    511,
+    512,
+    513,
+    8191,
+    8192
+  ],
+  "checked_canonical_rows": 19372,
+  "stacks": 4,
+  "exact_mapping": "t=512*block+128*stack+c, c=0..127",
+  "continuous_no_ready_stalls": true,
+  "mutants": [
+    "late response1edge",
+    "row tag XOR1",
+    "request unavailable fixedslot",
+    "output unavailable fixedslot"
+  ],
+  "arithmetic_scope": "Issuer transport/tag/slot/epoch/first/last and exact external boundary payload; PV arithmetic and full staging join remain separate.",
+  "clock_scope": "Common functional clock, RL5 explicit component boundary. No physical phase/native timing qualification.",
+  "admission": {
+    "host": "ot-agidock128",
+    "unit": "oth-ubuntu-1739925-1792101874",
+    "memory_GB": 4,
+    "threads": 1,
+    "exit": 0
+  },
+  "source_sha256": {
+    "rtl/hdc/nearhbm/ot_qwen_tp8_vrow_stack_static.sv": "4591926831ad9663fb53e934f4ccf6ed2d31722688ede5acf6055da7922fc112",
+    "rtl/test/nearhbm/tb_qwen_tp8_vrow_four_static.sv": "dc23a3f11e1c61821df926b1afe6c70474082fbdbbc559e64678639462e90964"
+  },
+  "production_holds": [
+    "Ordered dual-update PV pair not yet proven",
+    "Actual controller-front-ring-full512-all128 producer join pending",
+    "Actual source programme/clock/cost/physical placement/native gates pending"
+  ]
+}
