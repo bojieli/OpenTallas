@@ -1,0 +1,282 @@
+{
+  "schema": "opentallas.s81.native-field-physical-root.component.v1",
+  "recorded": "2026-10-14T19:37:17.284220-07:00",
+  "source_commit": "2e3b3a3e3",
+  "scope": "L0 rank0 all phases/regions from production1792 binding, real released weights; field+physical-root component only",
+  "full_native_layer": false,
+  "vm": "field vehicle ideal model; fixture operands",
+  "phases": 21,
+  "cases": 2608,
+  "rows": 32928,
+  "mismatches": 0,
+  "scheduled_issue_cycle": 1,
+  "by_format": {
+    "fp8": {
+      "phases": 6,
+      "cases": 768,
+      "rows": 16192
+    },
+    "bf16": {
+      "phases": 3,
+      "cases": 304,
+      "rows": 2144
+    },
+    "fp4": {
+      "phases": 12,
+      "cases": 1536,
+      "rows": 14592
+    }
+  },
+  "rtl_mutant": {
+    "phase": "L0.a_proj.fp8@s0",
+    "region": 0,
+    "rows": 6,
+    "mismatched": 6,
+    "first_mismatch": [
+      [
+        32768,
+        [
+          3176857600
+        ],
+        3180789760
+      ],
+      [
+        32769,
+        [
+          1031077888
+        ],
+        1031208960
+      ],
+      [
+        32770,
+        [
+          3164930048
+        ],
+        3147366400
+      ]
+    ],
+    "pass_": false,
+    "go": 1
+  },
+  "driver": {
+    "schema": "opentallas.s81.native-field-return.driver.v1",
+    "rows": 6,
+    "words_equal_legacy": true,
+    "native_op": [
+      "OP 0 go=1 first_w=416 last_w=421 idle=422 phase_cycles=420 writes=6 fault=0"
+    ],
+    "legacy_op": [
+      "OP 0 go=1 first_w=405 last_w=410 idle=411 phase_cycles=409 writes=6 fault=0"
+    ],
+    "negative_cases": {
+      "empty": {
+        "returncode": 2,
+        "reason": "no_operations",
+        "tail": [
+          "FAIL no_operations"
+        ]
+      },
+      "cycle0": {
+        "returncode": 1,
+        "reason": "scheduled_issue_late",
+        "tail": [
+          "FAIL scheduled_issue_late op=0 compiled=0 current=0"
+        ]
+      },
+      "overlap": {
+        "returncode": 1,
+        "reason": "scheduled_issue_late",
+        "tail": [
+          "FAIL scheduled_issue_late op=1 compiled=2 current=422"
+        ]
+      }
+    },
+    "binary_sha256": {
+      "/srv/opentallas-scratch/codex/s81-native-field/gate/build/tb": "78a6548abaf04fc2a15fc0ccb5fc81071bcd9c87527b0ccac51cf131cf235783",
+      "/srv/opentallas-scratch/claude/s81-ftok/r5/field/build/tb": "51a16ea74cc1f84fd348708c5a513b51fe220399fd839ee03bfd7cfa3ada2d36"
+    }
+  },
+  "input_sha256": {
+    "plan.json": "cc69ba91b9ba9a1b4a5e63479793a4c12a56f8abf25c394673956195090e285d",
+    "x.npz": "2fd106d82b629ad3a47d80d920b05ce5a56805ea664d801769c6d3d3d62eff45"
+  },
+  "binary_sha256": "78a6548abaf04fc2a15fc0ccb5fc81071bcd9c87527b0ccac51cf131cf235783",
+  "build": {
+    "steps": [
+      {
+        "name": "verilate",
+        "seconds": 153.5,
+        "returncode": 0
+      },
+      {
+        "name": "make",
+        "seconds": 257.3,
+        "returncode": 0
+      },
+      {
+        "name": "link",
+        "seconds": 9.8,
+        "returncode": 0
+      }
+    ],
+    "params": [
+      "-GFAST=1",
+      "-GPP=1",
+      "-GBP=0",
+      "-GNP=32",
+      "-GR=1",
+      "-GNBF=5",
+      "-GPHW=2",
+      "-GVAW=16",
+      "-GQELEM=1",
+      "-GQXV=10",
+      "-DS81_NATIVE_GATHER_ROOT"
+    ],
+    "qelem": 10,
+    "tb_sha256": "78a6548abaf04fc2a15fc0ccb5fc81071bcd9c87527b0ccac51cf131cf235783",
+    "simulator": "Verilator 5.050 2026-07-01 rev v5.050"
+  },
+  "notes": [
+    "Physical-root measurement reuses declared input fixtures; no golden partials/results supplied to field-root boundary.",
+    "Compiled nominal RTL precedes unused-fault-tail change; R1 assignment is identical. Final tail change has separate R1/R2/R4 four-state PASS and old-driver failing mutant.",
+    "Full native field/VM/SU/collective allocation and physical lane/CDC schedule remain open."
+  ],
+  "compiled_nominal_source_sha256": {
+    "rtl/v41die/ot_v41_pair_w17w10.sv": "e893f4f8c97888aec88635b85c968a615ac0b40b9f5dd1376c33bed64ff9b920",
+    "rtl/v41die/ot_v41_retn_w17w10.sv": "3a5a01b3ffc0f3e779ddfe01a1eac2a59911aaeadc40824256c024f4d47b0c2f",
+    "rtl/v41die/ot_v41_field_w17w10.sv": "2c43ba57d894b32a9f432dce5d89bc5f84692b822a6bb04496dfc71ea2c77f88",
+    "rtl/v41die/ot_v41_spine_w17w10.sv": "49186a55bdabb511b7d207890b7fe90984fb0640e3a27d0381feb489587aa2cd",
+    "rtl/v41die/ot_v41_fieldtop_w17w10.sv": "4690cc716bdbd53ce5c03cc7724e643bb266f7c829e81680bc492484c215fbb1",
+    "physical/asap7_memory_macros_v2/ot_rom_8192x274_m8/ot_rom_8192x274_m8.v": "aa82c75dd7c1368386cb4ed2bc4e2f7852c4a7d0a8b36a8d363d68afbc3526ba",
+    "physical/asap7_memory_macros_v2/ot_rom_4096x274_m8/ot_rom_4096x274_m8.v": "9e83cdca202aa4e54e8024d91b35f5309ff9fca0961d23b36cd01a4e41c13e3f",
+    "rtl/v41rom/ot_v41_ret.sv": "ef5263c7c3c54b0ff6726833215febd977e7bb043c36017ac0f893c9800091e3",
+    "rtl/v41rom/ot_v41_rom_elem_w10.sv": "24429918ae2c2011163f168d858c2231dba95f899549733cadbf03119138d845",
+    "rtl/v41rom/ot_v41_bterm.sv": "f682643c486d2bd9f2725f780bec982e3495b02ce52450bec07e7e892b05053b",
+    "rtl/v41rom/ot_v41_chain.sv": "36077c08bf24d80e20e6bbf064ea8d0fc20b33e668cf54d24b99575423c11db3",
+    "rtl/v41rom/ot_v41_segtree.sv": "c0a52710641dc04af3648908cc500229d772d695d4b7fe3d067e99ee16b49a17",
+    "rtl/v41rom/ot_v41_bf16_lanes.sv": "6625f65a614e82e0b0eb089ca3cef664ffe0f4218e7df4b76a8a03be14d1a040",
+    "rtl/v41rom/ot_v41_fadd.sv": "9062c07e99f3baedf2b4e6399d5e12e2501be1db2d99bf71a73c2437bf3a5b91",
+    "rtl/v41rom/ot_v41_bmul2.sv": "15015cbd92c76526298c6647561f530499ee678e7bbe656bcc689fa40bb7c1e6",
+    "rtl/v41rom/ot_v41_bterm2_w10.sv": "c0ce5e3c2590bb74682a0217f2b4faf98545ff61fbb7e319796d30b21970a32e",
+    "rtl/v41rom/ot_v41_chain2.sv": "9237e7d809a8f25f9ad943eb9c06f5e7ee51871e3905031bd06187e1e1c2a1b2",
+    "rtl/v41rom/ot_v41_segtree2.sv": "f5ce508d87c80c31f2a22f84cec98d3814230f5dc06cc878a1f2868008f256c3",
+    "rtl/v41rom/ot_v41_bf16_lanes2_rne_prepare.sv": "81e512dd86ba0b58c1ea35ffa20346d4aa691bee8bbb1e87dd49a4183ea1ad48",
+    "rtl/common/ot_prefix.sv": "01de55a0d8c474008eb4446e41e00788d466b5dfb2e2e8d85a0b70ff931f8cfc",
+    "rtl/v41rom/ot_v41_bmul2_rne_prepare.sv": "5cedb6188e1925ad3389fd22e219d35a9b42d04c2bbd9c5101e14d1b0ef1d0de",
+    "rtl/v41rom/ot_v41_chain2u2.sv": "c265da065d16babaa1eb5ad557faefd8b42b57da51e0075dd93b814a09e40020",
+    "rtl/hdc/ot_hdc_fpu.sv": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110",
+    "rtl/hdc/ot_hdc_fp32_mul_pipe.sv": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204",
+    "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+    "rtl/hdc/ot_hdc_cg.sv": "151f926bd2822e0fb2a684930748fbf79feba020f6618f8af543f88eb6bef047",
+    "rtl/proto/ot_fp32_add_rne_pipe.sv": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
+    "rtl/hdc/v41/ot_hdc_actquant.sv": "1db9e512398dd00634865b33c038b43a90df740e7fe9e84f52d905cb38d18be9",
+    "rtl/v41rom/ot_v41_rom_elem_q_qx_w10.sv": "981d0bf9f744887a8bed6c05ab21a6b5ee321699e5a5a9bfdd3a36ee7ae84f54",
+    "rtl/v41rom/ot_v41_rom_elem_qx_w10.sv": "cce28349aa1403737d2bf38a1da7f0c19472040772fdde0f29ff07a8ae10b9db",
+    "rtl/v41rom/ot_v41_rom_elem_q_qxpq_w10.sv": "046c669ab87bfca7339e38e5f6e233129f2c1d3d0d6c2f6a7be853b11298a54f",
+    "rtl/v41rom/ot_v41_rom_elem_qx_pq_w10.sv": "5089c68ea2171f736980d879c484f8165469fb01a7c00315593f7d4f2e22f0f5",
+    "rtl/v41rom/ot_v41_kreg.sv": "e4e16decaed5dc98f811ad0bc3769633a6a6546865194fddab2d9d98beeffeca",
+    "rtl/v41rom/ot_v41_chain3.sv": "4fa02ebdfe2753b5c46516673fb0989c4261e92a8b41f3902d5a6479dd512c35",
+    "rtl/v41rom/ot_v41_chain4.sv": "6481fc8830e6d5d8ce433b9e52472260eeff8ed94f3f609e15b49263b77759f3",
+    "rtl/v41rom/ot_v41_fadd2.sv": "aa07f55d6b16fea496670efed1168f986a4505608b05da092f379d94a18775fb",
+    "rtl/v41rom/ot_v41_bterm3_w10.sv": "5108a707a3d042619a43dd1800e5c49478c48ece028b2f039107ca04730a2266",
+    "rtl/v41rom/ot_v41_bterm4_w10.sv": "a5764f8816a6ef1df3cfc5532d4e936abe71999a1cfc9f5a3f206b9ea7929f28",
+    "rtl/v41rom/ot_v41_bterm5_w10.sv": "25911e00e68af26db3717374baa5672d06c7a898fa27ee0ad38baa4ae99d33f5",
+    "rtl/v41rom/ot_v41_segtree3.sv": "7a7f3eb49ef245225d0b55303791c60bf96665f6978dd03cb06b0a75821cd565",
+    "rtl/v41rom/ot_v41_segtree4.sv": "5a7f7acfc21ed32b7f80bc1d251d822a88e22991ef28574246a48e372e726073",
+    "rtl/v41rom/ot_v41_segtree5.sv": "7b7c4fe4af2a5cab45678789372c1e34a55dfbd2d9bafd2243b3f752ca5a6d74",
+    "rtl/v41rom/ot_v41_segtree6.sv": "fe4b720228ab4730a7c2fef32943980d12b16b57432616b1f333c9e4bd623dfb",
+    "rtl/test/dsrom_sys/tb_dsrom_1m_field.cpp": "9853dfb370e056dab1960e94a20c9384ceb514e663e08e8aacdfc226735d50c5",
+    "tools/dsrom_1m_field.py": "ad44e9bfcb2669b035ff8ec80cd40a4816ee477a8dd67a2d6e4e5b6841a163bb",
+    "rtl/dsrom_sys/s81_ph/ot_s81ph_ret_root_p.sv": "d87d7245f43eb1f62dc48454b0a3fe1645ec97f3ce2b1d5e7217ffdcd28d8558",
+    "rtl/gpu/ot_fp32_add_rne_deep.sv": "8585830592ac155123997be950fe997367227b05cdbeb65ca7d4ec6b5f18d714",
+    "rtl/hdc/ot_hdc_prefix.sv": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587"
+  },
+  "mutant_build": {
+    "steps": [
+      {
+        "name": "verilate",
+        "seconds": 153.8,
+        "returncode": 0
+      },
+      {
+        "name": "make",
+        "seconds": 294.4,
+        "returncode": 0
+      },
+      {
+        "name": "link",
+        "seconds": 8.2,
+        "returncode": 0
+      }
+    ],
+    "params": [
+      "-GFAST=1",
+      "-GPP=1",
+      "-GBP=0",
+      "-GNP=32",
+      "-GR=1",
+      "-GNBF=5",
+      "-GPHW=2",
+      "-GVAW=16",
+      "-GQELEM=1",
+      "-GQXV=10",
+      "-DCH_MUTANT_PD",
+      "-DS81_NATIVE_GATHER_ROOT"
+    ],
+    "qelem": 10,
+    "native_gather_root": true,
+    "source_sha256": {
+      "rtl/v41die/ot_v41_pair_w17w10.sv": "e893f4f8c97888aec88635b85c968a615ac0b40b9f5dd1376c33bed64ff9b920",
+      "rtl/v41die/ot_v41_retn_w17w10.sv": "3a5a01b3ffc0f3e779ddfe01a1eac2a59911aaeadc40824256c024f4d47b0c2f",
+      "rtl/v41die/ot_v41_field_w17w10.sv": "81aae2167ef0117a28fc5b4f1e564ad73447161d139cef52196c59e827ef3752",
+      "rtl/v41die/ot_v41_spine_w17w10.sv": "49186a55bdabb511b7d207890b7fe90984fb0640e3a27d0381feb489587aa2cd",
+      "rtl/v41die/ot_v41_fieldtop_w17w10.sv": "4690cc716bdbd53ce5c03cc7724e643bb266f7c829e81680bc492484c215fbb1",
+      "rtl/dsrom_sys/s81_ph/ot_s81ph_ret_root_p.sv": "d87d7245f43eb1f62dc48454b0a3fe1645ec97f3ce2b1d5e7217ffdcd28d8558",
+      "rtl/gpu/ot_fp32_add_rne_deep.sv": "8585830592ac155123997be950fe997367227b05cdbeb65ca7d4ec6b5f18d714",
+      "rtl/hdc/ot_hdc_prefix.sv": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+      "physical/asap7_memory_macros_v2/ot_rom_8192x274_m8/ot_rom_8192x274_m8.v": "aa82c75dd7c1368386cb4ed2bc4e2f7852c4a7d0a8b36a8d363d68afbc3526ba",
+      "physical/asap7_memory_macros_v2/ot_rom_4096x274_m8/ot_rom_4096x274_m8.v": "9e83cdca202aa4e54e8024d91b35f5309ff9fca0961d23b36cd01a4e41c13e3f",
+      "rtl/v41rom/ot_v41_ret.sv": "ef5263c7c3c54b0ff6726833215febd977e7bb043c36017ac0f893c9800091e3",
+      "rtl/v41rom/ot_v41_rom_elem_w10.sv": "24429918ae2c2011163f168d858c2231dba95f899549733cadbf03119138d845",
+      "rtl/v41rom/ot_v41_bterm.sv": "f682643c486d2bd9f2725f780bec982e3495b02ce52450bec07e7e892b05053b",
+      "rtl/v41rom/ot_v41_chain.sv": "36077c08bf24d80e20e6bbf064ea8d0fc20b33e668cf54d24b99575423c11db3",
+      "rtl/v41rom/ot_v41_segtree.sv": "c0a52710641dc04af3648908cc500229d772d695d4b7fe3d067e99ee16b49a17",
+      "rtl/v41rom/ot_v41_bf16_lanes.sv": "6625f65a614e82e0b0eb089ca3cef664ffe0f4218e7df4b76a8a03be14d1a040",
+      "rtl/v41rom/ot_v41_fadd.sv": "9062c07e99f3baedf2b4e6399d5e12e2501be1db2d99bf71a73c2437bf3a5b91",
+      "rtl/v41rom/ot_v41_bmul2.sv": "15015cbd92c76526298c6647561f530499ee678e7bbe656bcc689fa40bb7c1e6",
+      "rtl/v41rom/ot_v41_bterm2_w10.sv": "c0ce5e3c2590bb74682a0217f2b4faf98545ff61fbb7e319796d30b21970a32e",
+      "rtl/v41rom/ot_v41_chain2.sv": "9237e7d809a8f25f9ad943eb9c06f5e7ee51871e3905031bd06187e1e1c2a1b2",
+      "rtl/v41rom/ot_v41_segtree2.sv": "f5ce508d87c80c31f2a22f84cec98d3814230f5dc06cc878a1f2868008f256c3",
+      "rtl/v41rom/ot_v41_bf16_lanes2_rne_prepare.sv": "81e512dd86ba0b58c1ea35ffa20346d4aa691bee8bbb1e87dd49a4183ea1ad48",
+      "rtl/common/ot_prefix.sv": "01de55a0d8c474008eb4446e41e00788d466b5dfb2e2e8d85a0b70ff931f8cfc",
+      "rtl/v41rom/ot_v41_bmul2_rne_prepare.sv": "5cedb6188e1925ad3389fd22e219d35a9b42d04c2bbd9c5101e14d1b0ef1d0de",
+      "rtl/v41rom/ot_v41_chain2u2.sv": "c265da065d16babaa1eb5ad557faefd8b42b57da51e0075dd93b814a09e40020",
+      "rtl/hdc/ot_hdc_fpu.sv": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110",
+      "rtl/hdc/ot_hdc_fp32_mul_pipe.sv": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204",
+      "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+      "rtl/hdc/ot_hdc_cg.sv": "151f926bd2822e0fb2a684930748fbf79feba020f6618f8af543f88eb6bef047",
+      "rtl/proto/ot_fp32_add_rne_pipe.sv": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
+      "rtl/hdc/v41/ot_hdc_actquant.sv": "1db9e512398dd00634865b33c038b43a90df740e7fe9e84f52d905cb38d18be9",
+      "rtl/v41rom/ot_v41_rom_elem_q_qx_w10.sv": "981d0bf9f744887a8bed6c05ab21a6b5ee321699e5a5a9bfdd3a36ee7ae84f54",
+      "rtl/v41rom/ot_v41_rom_elem_qx_w10.sv": "cce28349aa1403737d2bf38a1da7f0c19472040772fdde0f29ff07a8ae10b9db",
+      "rtl/v41rom/ot_v41_rom_elem_q_qxpq_w10.sv": "046c669ab87bfca7339e38e5f6e233129f2c1d3d0d6c2f6a7be853b11298a54f",
+      "rtl/v41rom/ot_v41_rom_elem_qx_pq_w10.sv": "5089c68ea2171f736980d879c484f8165469fb01a7c00315593f7d4f2e22f0f5",
+      "rtl/v41rom/ot_v41_kreg.sv": "e4e16decaed5dc98f811ad0bc3769633a6a6546865194fddab2d9d98beeffeca",
+      "rtl/v41rom/ot_v41_chain3.sv": "4fa02ebdfe2753b5c46516673fb0989c4261e92a8b41f3902d5a6479dd512c35",
+      "rtl/v41rom/ot_v41_chain4.sv": "6481fc8830e6d5d8ce433b9e52472260eeff8ed94f3f609e15b49263b77759f3",
+      "rtl/v41rom/ot_v41_fadd2.sv": "aa07f55d6b16fea496670efed1168f986a4505608b05da092f379d94a18775fb",
+      "rtl/v41rom/ot_v41_bterm3_w10.sv": "5108a707a3d042619a43dd1800e5c49478c48ece028b2f039107ca04730a2266",
+      "rtl/v41rom/ot_v41_bterm4_w10.sv": "a5764f8816a6ef1df3cfc5532d4e936abe71999a1cfc9f5a3f206b9ea7929f28",
+      "rtl/v41rom/ot_v41_bterm5_w10.sv": "25911e00e68af26db3717374baa5672d06c7a898fa27ee0ad38baa4ae99d33f5",
+      "rtl/v41rom/ot_v41_segtree3.sv": "7a7f3eb49ef245225d0b55303791c60bf96665f6978dd03cb06b0a75821cd565",
+      "rtl/v41rom/ot_v41_segtree4.sv": "5a7f7acfc21ed32b7f80bc1d251d822a88e22991ef28574246a48e372e726073",
+      "rtl/v41rom/ot_v41_segtree5.sv": "7b7c4fe4af2a5cab45678789372c1e34a55dfbd2d9bafd2243b3f752ca5a6d74",
+      "rtl/v41rom/ot_v41_segtree6.sv": "fe4b720228ab4730a7c2fef32943980d12b16b57432616b1f333c9e4bd623dfb",
+      "rtl/test/dsrom_sys/tb_dsrom_1m_field.cpp": "9853dfb370e056dab1960e94a20c9384ceb514e663e08e8aacdfc226735d50c5",
+      "tools/dsrom_1m_field.py": "f394337c79ffab9d38ba4a2f63ce6b161ab52530ad5503ef570d352df5d95636"
+    },
+    "qualification": "field-plus-physical-root component; modeled VM; not native layer",
+    "tb_sha256": "718c62d1918be4e24f5343fff7b1d5281a2e04af8d602e12d15dbb8695091f74",
+    "simulator": "Verilator 5.050 2026-07-01 rev v5.050"
+  }
+}
