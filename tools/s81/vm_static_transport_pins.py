@@ -11,7 +11,7 @@ import v19_pins_1014 as V
 RESPONSE={'sv','cv','sd','st','ct','ca','cm'}
 def main():
  out=R/'physical/s81_die_pins/v20_vm_static_transport_options';out.mkdir(exist_ok=True);reports=[]
- for top,side in [('dsfd_vm_static_relay128_b8',172.8),('dsfd_vm_static_relay128_b16',345.6)]:
+ for top,side in [('dsfd_vm_static_relay128_b4',129.6),('dsfd_vm_static_relay128_b8',172.8),('dsfd_vm_static_relay128_b16',345.6)]:
   p=R/'rtl/dsrom_sys/s81_ph/vm'/(top+'.sv');m=D.parse_modules(p.read_text(),str(p))[0];env=m.env();faces=collections.defaultdict(list)
   for name,(direction,_) in m.ports.items():
    bits=m.width(name,env)
@@ -22,7 +22,9 @@ def main():
    faces[f].append((name,bits))
   pp={};demand={}
   for face,ports in faces.items():
-   n=sum(w for _,w in ports);demand[face]=n;start=.012+math.ceil((side-n*.096)/2/.048)*.048;k=0
+   n=sum(w for _,w in ports);demand[face]=n;start=.012+math.ceil((side-n*.096)/2/.048)*.048
+   if top.endswith('b4') and face in ['W','S']:start-=21.6 # local-bank group assignment, keeps all tracks/spacing
+   k=0
    for name,w in ports:
     pp[name]=[[face,'M5' if face in 'NS' else 'M4',round(start+.096*(k+i),4),.192] for i in range(w)];k+=w
   V.write(out,top,[side,side],pp,'ck_req','REQUEST i_* N -> o_* S; RESPONSE i_* W -> o_* E; native .096um pitch, new unclosed source only','static_transport_sizing_option',{'status':'LOCAL_PIN_OPTION_NOT_ASSIGNED_TO_PARENT','clock_entries':{'stream_request':['ck_req'],'stream_response':['ck_rsp']},'reset_entries':{'stream':['rst_n']},'adoption':'mapped area/CTS and actual parent seam/cut/phi-R required','source_sha256':hashlib.sha256(p.read_bytes()).hexdigest()})

@@ -248,5 +248,15 @@
       "fullVMphysical placement and producer calendar"
     ]
   },
-  "structural_next": "8b4quarters+4b8bridges per32bank slice, same2req/2rsp stages, more actual clock roots/perimeter; reprove actual128SRAMcalendars"
+  "structural_next": "actual188smallgroup source/gatesPASS, exact83,712bank/relaybit reachPASS max486.3; nativeCTS/TTFFDRC and globalendpointdistribution/fullproducer calendar next",
+  "current_actual_source": "cd1242953",
+  "current_required_core_masters": {
+    "dsfd_vm_static_bank128": 128,
+    "dsfd_vm_static_relay128_b4": 32,
+    "dsfd_vm_static_relay128_b8": 16,
+    "dsfd_vm_static_suhc_fsr": 4,
+    "dsfd_vm_static_scatter": 4,
+    "dsfd_vm_static_return_NROW32": 4
+  },
+  "current_native_geometry": "physical/s81_die_pins/v20_vm_static_small_groups/layout_option.json"
 }

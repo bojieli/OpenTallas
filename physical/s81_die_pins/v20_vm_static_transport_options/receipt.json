@@ -2,6 +2,22 @@
   "status": "LOCAL_PER_BIT_PIN_OPTIONS",
   "masters": [
     {
+      "master": "dsfd_vm_static_relay128_b4",
+      "outline_um": [
+        129.6,
+        129.6
+      ],
+      "face_bits": {
+        "W": 639,
+        "N": 672,
+        "S": 672,
+        "E": 636
+      },
+      "face_raw_capacity": 1350,
+      "maximum_face_demand_ratio": 0.49777777777777776,
+      "state": "PIN_BOUNDARY_OPTION_ONLY"
+    },
+    {
       "master": "dsfd_vm_static_relay128_b8",
       "outline_um": [
         172.8,
