@@ -28,6 +28,19 @@ CLEAR = 5.4
 LIMIT = 500.
 
 
+def capacity_cuts():
+    return dict(assumption='Normalized track demand at0.096um/bit and55percent occupancy; necessary layer count only, actual metal directions and obstructions require backend admission.',
+                ectl_to_paired_T1=dict(unique_driver_nets=1559+2*16,
+                                      width_um=1133.976,
+                                      one_layer_fraction=round(1591*.096/1133.976,6)),
+                paired_T1_to_T2=dict(distinct_registered_nets=3150,
+                                    maximum_available_height_um=492.456,
+                                    one_layer_fraction_lower_bound=round(3150*.096/492.456,6),
+                                    eligible_horizontal_layers_required_at55=2),
+                T2_to_either_front_column=dict(unique_driver_nets=1063,height_um=259.2,
+                                              one_layer_fraction=round(1063*.096/259.2,6)))
+
+
 def lef(path):
     text = path.read_text()
     size = tuple(map(float, re.search(r'\bSIZE\s+([\d.]+)\s+BY\s+([\d.]+)', text).groups()))
@@ -374,17 +387,33 @@ def global_stages(insts,repacked,leafs,ectl_leafs,channel_lanes=False):
             phase=(inner['y']+(inner['h']-259.2 if fy else 0))%PITCH
             kwargs=dict(fixed_xs=[xx],y_phase=phase)
         t=solve_site(t_pairs,leafs['tstage'][0],**kwargs)
-        if t['site']:obstacles.append((hname+'/u_t1',[*t['site']['xy'],*t['site']['size_um']]))
+        if t['site']:
+            st=t['site'];st['clock_pin_corners_um']=xf(leafs['tstage'][1]['ck'],st['xy'],st['size_um'],st['orient'])
+            st['clock_insertion_source']='physical/ref_tile/qkh_head_tstage/views/qkh_head_tstage/insertion.json'
+            obstacles.append((hname+'/u_t1',[*st['xy'],*st['size_um']]))
         score_inputs=[('s_a[0]','gf_o'),('s_a[1]','sf_o')]+[(f's_a[{i+2}]',f'sc_o[{i}]')for i in range(32)]
         score_outputs=[('s_b[0]',33),('s_b[1]',32)]+[(f's_b[{i+2}]',i)for i in range(32)]
         def s_pairs(o):
             return [(f'score.{p}->S1.{s}',xf(leafs['sstage'][1][s],size=leafs['sstage'][0],orient=o),points(hname+'/score',leafs['score'],p))for s,p in score_inputs]+[
                 (f'S1.{s}->C.s{h}[{i}]',xf(leafs['sstage'][1][s],size=leafs['sstage'][0],orient=o),points(group+'/c',ectl_leafs['c'],f's{h}[{i}]'))for s,i in score_outputs]
         s=solve_site(s_pairs,leafs['sstage'][0])
-        if s['site']:obstacles.append((hname+'/u_s1',[*s['site']['xy'],*s['site']['size_um']]))
+        if s['site']:
+            ss=s['site'];ss['clock_pin_corners_um']=xf(leafs['sstage'][1]['ck'],ss['xy'],ss['size_um'],ss['orient'])
+            ss['clock_insertion_source']='physical/ref_tile/qkh_head_sstage/views/qkh_head_sstage/insertion.json'
+            obstacles.append((hname+'/u_s1',[*ss['xy'],*ss['size_um']]))
         results.append(dict(head=hname,ectl=group,tstage1=t,sstage1=s))
+    t2sites=[]
+    for n,(box,o)in byname.items():
+        if n.endswith('/u_t2'):
+            t2sites.append(dict(name=n,master='qkh_head_tstage',xy=box[:2],size_um=box[2:],orient=o,
+                                clock_pin_corners_um=xf(leafs['tstage'][1]['ck'],box[:2],box[2:],o),
+                                clock_insertion_source='physical/ref_tile/qkh_head_tstage/views/qkh_head_tstage/insertion.json'))
     return dict(qualified=False,scope='All128 actual87-child head repacks and all32 actualECTLA/B/C leaves; other current die instances retained as conservative solid obstacles. Full pin rectangles and source-exact field permutations, no transparent fanout copies.',
                 placement_origin_pitch_um=PITCH,clearance_um=CLEAR,results=results,
+                witness_coordinate_convention='For movable leaf pins the witness source_corner is that leaf, destination_corner is the fixed peer; logical signal direction is specified in bit label and may be the reverse.',
+                stage2_world_placements=t2sites,
+                clock_counts=dict(head_parent_entries=87,explicit_die_stages_per_head=2,total_for128heads=128*89),
+                latency_cycles=dict(ectl_to_head=2,head_to_ectl=1,layer_added=3),
                 placed_tstage1=sum(bool(r['tstage1']['site'])for r in results),placed_sstage1=sum(bool(r['sstage1']['site'])for r in results),
                 next='If a leaf has zero reach origins, change source/target geometry. If reach origins exist but none free, grant/rehome the connected cluster. Do not admit missing leaf placements.')
 
@@ -493,6 +522,7 @@ def main():
                   qualification_limits=['R0/MX/MY/R180 physical pin track legality still requires real die pin grid replay.',
                                         'Inherited r4 plan contains proposed pins/region bounds for some old leaves; this result only audits added-stage to actual routed front pins.',
                                         'No stage1/score site or128-head die grant is admitted unless the mandatory stage2 domain passes.'])
+    record['cuts']['widen54_necessary_capacity']=capacity_cuts()
     if args.insts:
         insts=json.loads(args.insts.read_text());heads=[i for i in insts if i['master']=='qkd_rhead']
         assert len(heads)==128
@@ -552,6 +582,7 @@ def main():
         else:chosen=repacked_inside;proposal=None
         global_result=global_stages(insts,chosen,{k:lef(paths[k])for k in ('tstage','sstage','score')},ectl_leafs,args.widen54)
         global_result['world_proposal']=proposal
+        global_result['necessary_routing_capacity']=capacity_cuts()if args.widen54 else None
         global_result['die_grant_source']=str(args.insts)
         global_result['die_grant_sha256']=hashlib.sha256(args.insts.read_bytes()).hexdigest()
         global_result['source_sha256']={c:hashlib.sha256(p.read_bytes()).hexdigest()for c,p in ectl_paths.items()}
