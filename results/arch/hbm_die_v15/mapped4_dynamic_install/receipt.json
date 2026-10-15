@@ -1,0 +1,80 @@
+{
+  "status": "ACTUAL_L1_L14_DYNAMIC_CONTROLLER_MAPPED_PRODUCER_FUNCTIONAL_PASS",
+  "unit": "oth-ubuntu-1536800-1792065230",
+  "exit": 0,
+  "resources": {
+    "host": "ot-epyc1tb",
+    "GB": 2,
+    "threads": 1
+  },
+  "native_profile": "beac495172 dynamic fairCA/intent/head/FAST/LEASE/GUARD all1",
+  "real_memory": "Actual32native response+32streamlandingSRAM, actual controller commands to mutable command-onlyRL23externalmemory",
+  "offchip_preload": false,
+  "source_manifest": "input_sha256.json",
+  "images": [
+    {
+      "layer": 1,
+      "offset": 136048,
+      "actual_WR_ACK_RD_each": 1836,
+      "exact_136B_records": 432,
+      "fixed_slices": 7,
+      "install_true_ACK_HBM_cycles": 1184.895359,
+      "reserve_to_resident_HBM_cycles": 494.791469,
+      "reserve_to_resident_stream_edges_equivalent": 607.9997571072,
+      "observed_ACT_min_spacing_HBM_edges": 3,
+      "source_export_receipt_SHA256": "5bc6925531ffc608f35f868a348f2a8b9d5d276185a0b13c754a962062090c27",
+      "canonical_book_SHA256": "980899638942747e8a87131e24f6824346c7027a3b4c20b6c962f967ccc11895",
+      "logs_sha256": {
+        "DROP.log": "38a54f32661d178aa12abfffeaa8bd40b0ef5dae405480cf70f9ecde19f607d5",
+        "EARLYACK.log": "61817cce9b0d1d93c5a3c05dd6218ecf6b6367b60ab2e237d9160ec8008218b5",
+        "EARLY_RELEASE.log": "52cc32425b95134fa6aec254755b71d07b15ef7c52b015bfc345dd140ea82b04",
+        "OUT_OF_RANGE.log": "b38647218c62c3039f2f636cbf471ed8e176ebf45782b935fccc0c172c7798ba",
+        "WRONGADDR.log": "6d40bccb6d3d15b9dc6f5bce7ee53f2b4203a7d11ef4a1147ce39f92e663401f",
+        "WRONG_SLICE.log": "29dbc61de0367a13ef04fc49831fe791ff37961f8dca9c448132b4cf789aa3a4",
+        "ZERO_COUNT.log": "b38647218c62c3039f2f636cbf471ed8e176ebf45782b935fccc0c172c7798ba",
+        "build.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "positive.log": "4d9ef147725186af3bd3d52d74e46359d714338901ec438d08b147d2448310ea"
+      }
+    },
+    {
+      "layer": 14,
+      "offset": 1907460,
+      "actual_WR_ACK_RD_each": 1836,
+      "exact_136B_records": 432,
+      "fixed_slices": 7,
+      "install_true_ACK_HBM_cycles": 564.77842,
+      "reserve_to_resident_HBM_cycles": 683.593477,
+      "reserve_to_resident_stream_edges_equivalent": 839.9996645376,
+      "observed_ACT_min_spacing_HBM_edges": 3,
+      "source_export_receipt_SHA256": "d72d41f6dce1df7cce0599aa8f0ae5f0f447f2dac518d04f7de450168747ecca",
+      "canonical_book_SHA256": "980899638942747e8a87131e24f6824346c7027a3b4c20b6c962f967ccc11895",
+      "logs_sha256": {
+        "DROP.log": "38a54f32661d178aa12abfffeaa8bd40b0ef5dae405480cf70f9ecde19f607d5",
+        "EARLYACK.log": "a54df24ccbcc509c10876b1523b012ee4d73f90df123e4b23304207294a64afb",
+        "EARLY_RELEASE.log": "bf97cd5c08f2f145503665b5da06dbf9de82d5093d0aba964db1280ed8336bd1",
+        "OUT_OF_RANGE.log": "47a3c248f7efe126eb734c236c06f1623b72eb4c1cdabf3f7c0d12e292af83e6",
+        "WRONGADDR.log": "305748cecb178751b1b5ec38dc238ec232be20cf2e751682c6533e2bb01124f4",
+        "WRONG_SLICE.log": "f9c47ce77c11ef187762ed2dc1b4cae38e0ca728bda41961d0f58c9aa6c7fd24",
+        "ZERO_COUNT.log": "47a3c248f7efe126eb734c236c06f1623b72eb4c1cdabf3f7c0d12e292af83e6",
+        "build.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "positive.log": "f493b546745b34f3f1b6ee88d99dab27551f8b136aced2c776069baae99e7500"
+      }
+    }
+  ],
+  "negative_controls": [
+    "wrong slice",
+    "early release",
+    "zero count",
+    "out of range",
+    "wrong physical install address",
+    "dropped sector",
+    "early ACK"
+  ],
+  "leading_prefetch_charged": true,
+  "limits": [
+    "L14 actual row-crossing leading resident cost~840streamedges cannot be silently hidden in nominal831edgeVMschedule",
+    "No actual fiveSRAMcache/83-34programme/nativeSMarithmetic join in this producer proof",
+    "Initial hostinstall and leading prefetch reported separately, no cold cost waiver",
+    "No fullcheckpoint install, whole-token performance, physical CTS or universal REF/client contention admission"
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "status": "PREBUILD_SOURCE_FROZEN_NOT_QUALIFIED",
+  "baseline": "740794adb fixed slice actual producer; replace only native controller with beac495172 dynamic profile",
+  "real_images": [
+    {
+      "layer": 1,
+      "offset": 136048,
+      "sectors": 1836,
+      "records": 432
+    },
+    {
+      "layer": 14,
+      "offset": 1907460,
+      "sectors": 1836,
+      "records": 432
+    }
+  ],
+  "memories": "32 actual response +32 actual landing SRAMs; mutable external command-only RL23 fixture, no preload",
+  "delta": "Only benchmark source controller selection, timing observations and extra existing negative controls; producer/slice source unchanged",
+  "source_cost": "Projected450FF/PC +16 common fair FF/stack, zero additional SRAM, mapping/physical pending",
+  "preconditions": "Source pinned book, export image and actual WR/trueACK before mapped4 fetch; seven fixed112-edge slice starts; no perlane ready",
+  "tests": [
+    "1836 WR/trueACK/RD exact each layer,432 actual136B records",
+    "Wrong address/drop/earlyACK plus four slice/control mutants",
+    "Strict all command timing with actual ACT-spacing observation",
+    "Measure install and reserve-to-resident latency, no free-prefill cost claim"
+  ],
+  "qualification": "Actual producer/controller/mutable memory join only; native SM/5SRAM cache/wholeprogramme/price/physical still separate"
+}

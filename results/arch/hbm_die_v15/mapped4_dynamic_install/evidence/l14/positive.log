@@ -1,0 +1,5 @@
+MAPPED4_DYNAMIC_LATENCY install_true_ACK_HBM=564.778420 reserve_to_resident_HBM=683.593477
+MAPPED4_DYNAMIC_ACT pairs=156 min_gap=3
+MAPPED4_SLICE_INSTALL PASS actual_WR=1836 real_ACK=1836 actual_RD=1836 exact_sectors=1836 actual_records=432 offset=1907460
+MAPPED4_SLICE_NATIVE PASS mode=1 offset=1907460 sectors=1836 exact_payloads=1836 fixed_edges=540 native_RD=1836 RL23
+rtl/hbm_accel/loader/service_native/tb_hbm_svc_mapped4_dynamic_install.sv:137: $finish called at 1955416884 (1fs)
