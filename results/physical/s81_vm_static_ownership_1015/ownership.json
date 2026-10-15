@@ -103,7 +103,13 @@
       "artifact": "physical/s81_die_pins/v20_vm_static_native/layout_candidate.json",
       "status": "CORE_GEOMETRY_PASS",
       "evidence": "164actualcorechildren,128banks;43.2umoriginlattice;20umchannels;0fails0warnings",
-      "limit": "No capture/edge/fullparent fit, actual pins, cuts or views proved"
+      "limit": "CAPACITY WITNESS ONLY: reach screen rejects adoption (131/144 necessary rectangle hops >500um, worst3477.6um); capture/edge/fullparent fit, actual pins, cuts and views also unproved"
+    },
+    {
+      "step": "1b",
+      "status": "REJECT_FOR_ADOPTION",
+      "artifact": "results/physical/s81_vm_static_ownership_1015/core_reach_screen.json",
+      "next": "Connectivity-aware grouping and native bank/quarter/bridge pin placement; request slot growth only against measured joint packing. No added relay stage or compiler timing accepted silently."
     },
     {
       "step": 2,
