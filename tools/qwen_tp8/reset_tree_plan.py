@@ -31,7 +31,7 @@ def load(case):
                 pin = None
     pos = {}
     for ln in open(D / 'place.tcl'):
-        m = re.match(r'ot_mts::place \[\$_blk findInst (\S+)\] ([\d.]+) ([\d.]+) (\S+)', ln)
+        m = re.search(r'findInst (\S+)\]\s+([\d.]+)\s+([\d.]+)\s+(\w+)', ln)
         if m:
             pos[m.group(1)] = (float(m.group(2)), float(m.group(3)), m.group(4))
     txt = (D / 'die.v').read_text()
