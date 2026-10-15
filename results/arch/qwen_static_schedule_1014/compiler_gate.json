@@ -1,0 +1,21 @@
+{
+  "timestamp": "2026-10-15T02:26:37.294061+00:00",
+  "status": "COMPILER_ALGORITHM_PASS_NOT_NATIVE_QUALIFIED",
+  "returncode": 0,
+  "output": "test_actual_production_programs_reject_absent_native_contracts (__main__.StaticCalendar) ... ok\ntest_buffer_and_capacity_mutants (__main__.StaticCalendar) ... ok\ntest_compile_arms_without_trace_and_coverage_mutant (__main__.StaticCalendar) ... ok\ntest_conflict_solved_before_execution (__main__.StaticCalendar) ... ok\ntest_dependency_and_clock (__main__.StaticCalendar) ... ok\ntest_missing_source_producer_word_and_deadline_mutants (__main__.StaticCalendar) ... ok\ntest_multi_clock_phase (__main__.StaticCalendar) ... ok\ntest_real_trace_boundary_and_cycle_mutants (__main__.StaticCalendar) ... ok\n\n----------------------------------------------------------------------\nRan 8 tests in 0.006s\n\nOK\n",
+  "source_sha256": {
+    "tools/qwen_static_schedule/calendar.py": "ada70d3905fa6a45a49b8b9f68d528d8d118d3591367db2bc2bf2c4becaf871f",
+    "tools/qwen_static_schedule/xpf.py": "aa0bd9edfa2275e6b3505205fb259a1d3b8ce16693705bc092b767147c841010",
+    "tools/qwen_static_schedule/actual_inventory.py": "2296df56acc6bb619e48421255bb407fe0865580f99fae4f3cbe63cb67edab9b",
+    "tests/test_qwen_static_calendar.py": "8db24f42e9e0dfcc1789347454d107461a584909c431143d815c837384d69c05"
+  },
+  "actual_pc_count": 27,
+  "open_requirements": [
+    "native per-PC engine microcalendars incl ROM/matvec/SU/attention/collective",
+    "implemented DVM13/15 pipeline and phase/relay join",
+    "replace ready/idle-driven native core instruction issuer",
+    "source-bound native per-cycle port trace matching precompiled calendar",
+    "physical state binding and latency measurement"
+  ],
+  "claim": "Synthetic compiler tests plus actual encoded instruction inventory; no full native issue/operation/runtime or physical claim."
+}

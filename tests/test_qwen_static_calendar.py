@@ -84,6 +84,14 @@ class StaticCalendar(unittest.TestCase):
         result['events'][0]['mask']=0
         with self.assertRaises(ScheduleError):arm_table(result,stage,route,self.root)
 
+    def test_actual_production_programs_reject_absent_native_contracts(self):
+        repo=Path(__file__).resolve().parents[1]
+        programs=[repo/'results/arch/qwen_tp8_native_dispatch_1014/token_source_plan/embedding_program.hex',
+                  repo/'results/arch/qwen_tp8_native_dispatch_1014/actual_fused_layer0/die0/program.hex']
+        self.contract['instructions']=[]
+        with self.assertRaisesRegex(ScheduleError,'incomplete actual instruction coverage'):
+            compile_calendar(programs,self.contract,self.root)
+
     def test_multi_clock_phase(self):
         self.contract['clocks']['slow']=dict(period_fs=20,phase_fs=0)
         self.contract['resources']['vm']['clock']='slow'
