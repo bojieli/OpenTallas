@@ -1,5 +1,5 @@
 {
- "name": "dsfd_gth_rw_v19-g7-COMMIT",
+ "name": "dsfd_gth_rw_v19-g7-2d1996f77",
  "block": "dsfd_gth_rw",
  "ref_tile": true,
  "owner": "Codex:S-GATHER",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 48,
  "source": {
   "branch": "claude/s81-gather-r3-1014",
-  "commit": "COMMIT",
+  "commit": "2d1996f77",
   "extra_paths": [
    "rtl/dsrom_sys/s81_ph",
    "rtl/dsrom_sys/s81_ctrl",
@@ -162,7 +162,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/dsfd_gth_rw/dsfd_gth_rw_v19-g7-COMMIT"
+   "to": "results/rtl/ref_tile/dsfd_gth_rw/dsfd_gth_rw_v19-g7-2d1996f77"
   }
  ],
  "cycles_added": 0,
