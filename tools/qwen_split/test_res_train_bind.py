@@ -68,7 +68,8 @@ def test_apply_rewires_and_preserves_numeric_bit_identity():
     assert rec['issue']['TRAIN_EDGES'] is None
     assert rec['issue']['fault']['status'] == 'OPEN'
     assert rec['mapped_inventory']['status'] == 'stale_architecture'
-    assert m['master_params']['qfd_sp_vector_memory']['PAR_RB'] == 1
+    assert next(i.master for i in m['insts'] if i.name=='sp_vector_memory') == rtb.VM_MASTER
+    assert rec['vm_contract']['source'] == rtb.VM_SOURCE
     pairs = {}
     src_counts = Counter()
     for bus, cls, width, es in m['buses']:
@@ -83,7 +84,11 @@ def test_apply_rewires_and_preserves_numeric_bit_identity():
                         pairs[i,target,b] = real,a
         if bus.startswith('rsi_') and any(i==rtb.ISSUE and p in rtb.COMMAND for i,p in es):
             assert len(es) == 4
-    for target,(real,lo,hi) in rtb.TAPS.items():
+    expected = {'me_go':('ib',0,0), 'me_tiles':('ib',19,36), 'me_ts':('ib',80,103),
+                'me_split':('ib',251,254), 'me_oen':('ib',353,353),
+                'tag_v':('c1',26,26), 'tag_last':('c1',139,139)}
+    assert rtb.TAPS == expected
+    for target,(real,lo,hi) in expected.items():
         for bit in range(hi-lo+1):
             assert pairs[rtb.ISSUE,target,bit] == (real,lo+bit)
     for real,target,n in [('ib','cmd',380),('c1','tag',341)]:
@@ -150,3 +155,23 @@ def test_segmented_command_input_installs_real_pins():
     mats[rtb.ISSUE_MASTER].ports['me_tiles__9_17']=('xy',8,None,None,1)
     with pytest.raises(ValueError):
         rtb.validate_case_masters(mats,m)
+
+
+def test_specialized_vm_abi_and_fixed_parallel_mode():
+    import re
+    original = rtl_ports(rtb.ROOT/'rtl/qwen_sys/vm_nox_20261014/qfd_sp_vector_memory.sv',
+                         'qfd_sp_vector_memory')
+    specialized = rtl_ports(rtb.ROOT/rtb.VM_SOURCE,rtb.VM_MASTER)
+    assert specialized == original
+    text = (rtb.ROOT/rtb.VM_SOURCE).read_text()
+    assert re.search(r'qfd_sp_vector_memory\s*#\(',text)
+    assert '.PAR_RB(1)' in text and '.USE_MACRO(1)' in text and '.USE_LEAF_CLOCKS(1)' in text
+    connections = re.findall(r'\.(\w+)\((\w+)\)',text)
+    named = [(p,v) for p,v in connections if p in original]
+    assert dict(named) == {p:p for p in original}
+    assert len(named) == len(original)
+    m = _model()
+    m['port_join']['qfd_sp_vector_memory']={'rb0__0_550':('rb0',list(range(551)))}
+    rtb.apply(m)
+    assert 'qfd_sp_vector_memory' not in m['port_join']
+    assert m['port_join'][rtb.VM_MASTER]['rb0__0_550'] == ('rb0',list(range(551)))
