@@ -1,0 +1,84 @@
+{
+  "schema": "sm-folded-publication-component-model-v1",
+  "source_base": "085dd7cc9",
+  "scope": "replacement head128 publication control after canonical stream fold; fullSM/HBM/physical qualification remains open",
+  "command_bits": {
+    "fold": 131,
+    "fold_a": "130:128",
+    "fold_b": "127:125",
+    "folded_publication": 124
+  },
+  "metadata_bits": {
+    "fold": 138,
+    "fold_a": "141:139",
+    "fold_b": "144:142",
+    "folded_publication": 145
+  },
+  "resources": {
+    "additional_arithmetic": 0,
+    "additional_memory_macros": 0,
+    "row_transport_bits": 818,
+    "publication_control_extra_flops_per_leaf": 50,
+    "publication_control_extra_flops_32_leaf_SM": 1600,
+    "explanation": "publish0 and 49 pub_pipe registers grow by one bit; these counts describe only the exact dirty publication delta, not prerequisite fold-control or macro cost",
+    "not_a_total_synthesis_area": "1600 counts explicitly widened publication registers only. Metadata bit145 activates existing 818-bit capture/transport logic; its physical implementation, clock activity and fanout cost remain unmeasured. No netlist or total area claim."
+  },
+  "fold_calendar_relative_to_first_command": [
+    [
+      0,
+      0,
+      2
+    ],
+    [
+      2,
+      4,
+      6
+    ],
+    [
+      4,
+      1,
+      3
+    ],
+    [
+      6,
+      5,
+      7
+    ],
+    [
+      12,
+      0,
+      4
+    ],
+    [
+      16,
+      1,
+      5
+    ]
+  ],
+  "static_publication_command_relative": 40,
+  "source_derived_path_edges": {
+    "command_to_front_row": 1,
+    "front_row_to_XS_iw": 5,
+    "leaf_publish0_and_pub_pipe": 2,
+    "merge_publication_macro_read_to_scalar": 2,
+    "leaf_gv_register": 1,
+    "total_command_to_first_leaf_gv": 11,
+    "additional_per_leaf_row": 16,
+    "publication_words_per_leaf": 16
+  },
+  "predicted_from_command280": {
+    "first_scalar_per_leaf_row": [
+      291,
+      307,
+      323,
+      339
+    ],
+    "last_scalar_per_leaf_row": [
+      306,
+      322,
+      338,
+      354
+    ]
+  },
+  "claimed_qualification": "actual one-leaf command-to-publication path gate across all column/row straps only; no overlapping fullSM throughput or physical adoption"
+}
