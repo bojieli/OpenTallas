@@ -9,7 +9,7 @@ export function normalizeDataflow(payload = {}) {
     direction: e.direction || (e.directed === true ? 'forward' : 'unknown'),
     width_bits: number(e.width_bits), required_bps: number(e.required_bps), capacity_bps: number(e.capacity_bps),
     bytes: number(e.bytes), start: number(e.start), end: number(e.end),
-    from: point(e.from), to: point(e.to), source: e.source || payload.provenance || null,
+    from: point(e.from), to: point(e.to), source: typeof e.source === 'string' && payload.provenance ? { kind: e.source, provenance: payload.provenance } : e.source || payload.provenance || null,
     endpoints: (e.endpoints || []).map(p => ({ ...p, point: point(p.point) })),
   }));
   return { ...payload, edges, coverage: { ...payload.coverage, total: edges.length,
