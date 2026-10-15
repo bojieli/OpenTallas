@@ -1,0 +1,477 @@
+{
+ "schema": "opentallas.s81.assigned_pins.v1",
+ "master": "dsfd_sp_hc_c",
+ "case": "norm_capture_margin_UNADOPTED",
+ "outline_um": [
+  1816.536,
+  8914.296
+ ],
+ "instances": 1,
+ "rule": "die-assigned pins (owner 2026-10-13): the tile kit consumes this file (pin_files.py tcl -> spec io_tcl); a pin that cannot be built is ONE request in el1011-s81die.log for the next daily contract revision",
+ "source": "tools/s81_norm_physical/margin_parent_pins.py",
+ "ports": {
+  "c_cmd": {
+   "face": "W",
+   "layer": "M4",
+   "bits": 85,
+   "at": [
+    6233.868,
+    0.048
+   ],
+   "uniform": true,
+   "depth": 0.192,
+   "prior_meets_UNVERIFIED": {
+    "dsfd_hstnh_85.dq": {
+     "um": [
+      4.6,
+      4.6
+     ],
+     "hops": 1
+    }
+   }
+  },
+  "c_done": {
+   "face": "W",
+   "layer": "M4",
+   "bits": 9,
+   "at": [
+    6274.572,
+    0.048
+   ],
+   "uniform": true,
+   "depth": 0.192,
+   "prior_meets_UNVERIFIED": {
+    "dsfd_hstnh_9.di": {
+     "um": [
+      98.9,
+      98.9
+     ],
+     "hops": 1
+    }
+   }
+  },
+  "c_st": {
+   "face": "W",
+   "layer": "M4",
+   "bits": 2,
+   "at": [
+    6300.684,
+    0.048
+   ],
+   "uniform": true,
+   "depth": 0.192,
+   "prior_meets_UNVERIFIED": {
+    "dsfd_hstnh_2.di": {
+     "um": [
+      98.9,
+      98.9
+     ],
+     "hops": 1
+    }
+   }
+  },
+  "ck": {
+   "face": "W",
+   "layer": "M4",
+   "bits": 1,
+   "at": [
+    3904.044,
+    0.0
+   ],
+   "uniform": true,
+   "depth": 0.192,
+   "prior_meets_UNVERIFIED": {
+    "dsfd_sp_collective_c.pll_stream": {
+     "um": [
+      4232.3,
+      4232.3
+     ],
+     "hops": 1
+    }
+   }
+  },
+  "f_inp": {
+   "face": "W",
+   "layer": "M4",
+   "bits": 1,
+   "at": [
+    2429.628,
+    0.0
+   ],
+   "uniform": true,
+   "depth": 0.192,
+   "prior_meets_UNVERIFIED": {
+    "dsfd_hstnh_1.dq": {
+     "um": [
+      32.8,
+      32.8
+     ],
+     "hops": 1
+    }
+   }
+  },
+  "f_tr0": {
+   "face": "S",
+   "layer": "M5",
+   "bits": 1090,
+   "at": [
+    351.852,
+    0.048
+   ],
+   "uniform": true,
+   "depth": 0.192,
+   "prior_meets_UNVERIFIED": {
+    "dsfd_hstnv_1090.dq": {
+     "um": [
+      34.8,
+      34.8
+     ],
+     "hops": 1
+    }
+   }
+  },
+  "f_tr1": {
+   "face": "S",
+   "layer": "M5",
+   "bits": 1090,
+   "at": [
+    971.772,
+    0.048
+   ],
+   "uniform": true,
+   "depth": 0.192,
+   "prior_meets_UNVERIFIED": {
+    "dsfd_hstnv_1090.dq": {
+     "um": [
+      34.8,
+      34.8
+     ],
+     "hops": 1
+    }
+   }
+  },
+  "f_tr2": {
+   "face": "S",
+   "layer": "M5",
+   "bits": 1090,
+   "at": [
+    1591.692,
+    0.048
+   ],
+   "uniform": true,
+   "depth": 0.192,
+   "prior_meets_UNVERIFIED": {
+    "dsfd_hstnv_1090.dq": {
+     "um": [
+      34.8,
+      34.8
+     ],
+     "hops": 1
+    }
+   }
+  },
+  "rq_row": {
+   "face": "W",
+   "layer": "M4",
+   "bits": 28,
+   "at": [
+    1594.428,
+    0.096
+   ],
+   "uniform": true,
+   "depth": 0.192,
+   "prior_meets_UNVERIFIED": {
+    "dsfd_hstnh_28.di": {
+     "um": [
+      31.9,
+      33.2
+     ],
+     "hops": 1
+    }
+   }
+  },
+  "rq_v": {
+   "face": "W",
+   "layer": "M4",
+   "bits": 2,
+   "at": [
+    538.428,
+    0.096
+   ],
+   "uniform": true,
+   "depth": 0.192,
+   "prior_meets_UNVERIFIED": {
+    "dsfd_hstnh_2.di": {
+     "um": [
+      31.6,
+      31.6
+     ],
+     "hops": 1
+    }
+   }
+  },
+  "rs_d": {
+   "face": "W",
+   "layer": "M4",
+   "bits": 1024,
+   "at": [
+    821.628,
+    0.096
+   ],
+   "uniform": true,
+   "depth": 0.192,
+   "prior_meets_UNVERIFIED": {
+    "dsfd_hstnh_1024.dq": {
+     "um": [
+      30.9,
+      56.9
+     ],
+     "hops": 1
+    }
+   }
+  },
+  "rs_v": {
+   "face": "W",
+   "layer": "M4",
+   "bits": 2,
+   "at": [
+    2626.428,
+    0.096
+   ],
+   "uniform": true,
+   "depth": 0.192,
+   "prior_meets_UNVERIFIED": {
+    "dsfd_hstnh_2.dq": {
+     "um": [
+      33.0,
+      33.0
+     ],
+     "hops": 1
+    }
+   }
+  },
+  "rst": {
+   "face": "W",
+   "layer": "M4",
+   "bits": 1,
+   "at": [
+    389.244,
+    0.0
+   ],
+   "uniform": true,
+   "depth": 0.192,
+   "prior_meets_UNVERIFIED": {
+    "dsfd_sp_collective_c.rst_stream": {
+     "um": [
+      7748.0,
+      7748.0
+     ],
+     "hops": 1
+    }
+   }
+  },
+  "t_tf0": {
+   "face": "S",
+   "layer": "M5",
+   "bits": 1264,
+   "at": [
+    167.964,
+    0.048
+   ],
+   "uniform": true,
+   "depth": 0.192,
+   "prior_meets_UNVERIFIED": {
+    "dsfd_hstnv_1264.di": {
+     "um": [
+      99.3,
+      99.3
+     ],
+     "hops": 1
+    }
+   }
+  },
+  "t_tf1": {
+   "face": "S",
+   "layer": "M5",
+   "bits": 1264,
+   "at": [
+    787.884,
+    0.048
+   ],
+   "uniform": true,
+   "depth": 0.192,
+   "prior_meets_UNVERIFIED": {
+    "dsfd_hstnv_1264.di": {
+     "um": [
+      60.4,
+      60.4
+     ],
+     "hops": 1
+    }
+   }
+  },
+  "t_tf2": {
+   "face": "S",
+   "layer": "M5",
+   "bits": 1264,
+   "at": [
+    1407.804,
+    0.048
+   ],
+   "uniform": true,
+   "depth": 0.192,
+   "prior_meets_UNVERIFIED": {
+    "dsfd_hstnv_1264.di": {
+     "um": [
+      99.3,
+      99.3
+     ],
+     "hops": 1
+    }
+   }
+  },
+  "wq_d": {
+   "face": "W",
+   "layer": "M4",
+   "bits": 4096,
+   "at": [
+    2012.028,
+    0.096
+   ],
+   "uniform": true,
+   "depth": 0.192,
+   "prior_meets_UNVERIFIED": {
+    "dsfd_hstnh_4096.di": {
+     "um": [
+      74.1,
+      173.5
+     ],
+     "hops": 1
+    }
+   }
+  },
+  "wq_mask": {
+   "face": "W",
+   "layer": "M4",
+   "bits": 128,
+   "at": [
+    1172.028,
+    0.096
+   ],
+   "uniform": true,
+   "depth": 0.192,
+   "prior_meets_UNVERIFIED": {
+    "dsfd_hstnh_128.di": {
+     "um": [
+      30.9,
+      34.9
+     ],
+     "hops": 1
+    }
+   }
+  },
+  "wq_row": {
+   "face": "W",
+   "layer": "M4",
+   "bits": 112,
+   "at": [
+    2928.828,
+    0.096
+   ],
+   "uniform": true,
+   "depth": 0.192,
+   "prior_meets_UNVERIFIED": {
+    "dsfd_hstnh_112.di": {
+     "um": [
+      30.9,
+      34.5
+     ],
+     "hops": 1
+    }
+   }
+  },
+  "wq_v": {
+   "face": "W",
+   "layer": "M4",
+   "bits": 8,
+   "at": [
+    1901.628,
+    0.096
+   ],
+   "uniform": true,
+   "depth": 0.192,
+   "prior_meets_UNVERIFIED": {
+    "dsfd_hstnh_8.di": {
+     "um": [
+      31.9,
+      32.3
+     ],
+     "hops": 1
+    }
+   }
+  },
+  "y_d": {
+   "face": "W",
+   "layer": "M4",
+   "bits": 8192,
+   "at": [
+    6709.788,
+    0.096
+   ],
+   "uniform": true,
+   "depth": 0.192,
+   "prior_meets_UNVERIFIED": {
+    "dsfd_hstnh_1024.dq": {
+     "um": [
+      30.9,
+      57.0
+     ],
+     "hops": 8
+    }
+   }
+  },
+  "y_rdy": {
+   "face": "W",
+   "layer": "M4",
+   "bits": 1,
+   "at": [
+    7520.988,
+    0.0
+   ],
+   "uniform": true,
+   "depth": 0.192,
+   "prior_meets_UNVERIFIED": {
+    "dsfd_hstnh_1.di": {
+     "um": [
+      33.0,
+      33.0
+     ],
+     "hops": 1
+    }
+   }
+  },
+  "y_v": {
+   "face": "W",
+   "layer": "M4",
+   "bits": 1,
+   "at": [
+    8687.388,
+    0.0
+   ],
+   "uniform": true,
+   "depth": 0.192,
+   "prior_meets_UNVERIFIED": {
+    "dsfd_hstnh_1.dq": {
+     "um": [
+      33.0,
+      33.0
+     ],
+     "hops": 1
+    }
+   }
+  }
+ },
+ "qualification": "UNADOPTED geometry only; station topology, internal native-clock ABI, source/pin/PG/cut/hop and TTFFDRC remain open",
+ "candidate_growth_down_um": 388.8,
+ "base_pin_sha256": "bc5b358d653c72cb11812dd7798bb0f88cd098d2ac3e4c8bed1e1a68eb361b4a"
+}
