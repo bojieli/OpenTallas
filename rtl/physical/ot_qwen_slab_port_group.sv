@@ -527,7 +527,8 @@ module ot_qwen_slab_pg_col #(
     parameter integer SCALE_PAIR = 1,
     // CID_REG (q14 2026-10-14): register the column-id strap at its pin; cid then reaches the bank decode from a pin
     // flop (native capture of the closed col_mga view: cid[0] 197.9 ps > 190).  cid is a static strap: no cycle cost.
-    parameter integer CID_REG = 1
+    parameter integer CID_REG = 1,
+    parameter string ROM_INSTANCE = ""
 ) (
     input  wire          clk,
     input  wire          gre1,
@@ -572,7 +573,21 @@ module ot_qwen_slab_pg_col #(
                 sel5c <= {8{sel4}};
                 cap4 <= rd[255:0];
             end
+            `ifdef SYNTHESIS
             ot_rom_4096x266_m8 u_rom (.clk(clk), .ce_in(ce3), .addr_in(a3), .rd_out(rd));
+`else
+            localparam string MASK_ID=(ROM_INSTANCE=="") ? "" : $sformatf("%s_b%0d",ROM_INSTANCE,b);
+            string image_dir;
+            integer image_fd;
+            initial if(MASK_ID!="") begin
+                if(!$value$plusargs("OT_ROM_DIR=%s",image_dir))
+                    $fatal(1,"missing actual slab ROM mask directory for %s",MASK_ID);
+                image_fd=$fopen({image_dir,"/",MASK_ID,".viamap.hex"},"r");
+                if(!image_fd) $fatal(1,"missing actual slab ROM mask %s",MASK_ID);
+                $fclose(image_fd);
+            end
+            ot_rom_4096x266_m8 #(.INSTANCE(MASK_ID)) u_rom (.clk(clk), .ce_in(ce3), .addr_in(a3), .rd_out(rd));
+`endif
             wire [255:0] selv;
             genvar sk;
             for (sk = 0; sk < 8; sk = sk + 1) begin : g_sel
