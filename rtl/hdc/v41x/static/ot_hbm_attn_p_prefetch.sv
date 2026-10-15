@@ -20,7 +20,7 @@ module ot_hbm_attn_p_prefetch #(
   rq<=0;vp<=0;ep<=0;p_v<=0;fault<=0;bank_q<=0;offset_q<=0;
  end else begin
   rq<=0;vp<={vp[FILL_LAT-2:0],fetch_v};ep<={ep[FILL_LAT-2:0],fetch_epoch};p_v<=read_v;
-  bank_q<=read_row[5:3];offset_q<=read_row[2:0];
+  if(read_v)begin bank_q<=read_row[5:3];offset_q<=read_row[2:0];end
   for(integer b=0;b<8;b=b+1)begin
    rq[b*17+:17]<={fetch_v,16'(fetch_base_sector+b)};
    if(rr[b*257+256]!=vp[FILL_LAT-1])fault<=1;
