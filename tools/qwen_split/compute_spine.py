@@ -331,7 +331,8 @@ def place(v, m, G):
     def put(name, x, y, wh=None):
         i = by[name]
         if wh is not None:
-            i.w, i.h = wh[0] - v.SHAVE, wh[1] - v.SHAVE
+            shave = 0 if name.startswith('sp_band_lanes_') else v.SHAVE
+            i.w, i.h = wh[0] - shave, wh[1] - shave
         i.x, i.y = _snap(v, x, v.GX), _snap(v, y, v.GY)
         rec['slots'][name] = [i.x, i.y, round(i.w, 3), round(i.h, 3)]
         return i
