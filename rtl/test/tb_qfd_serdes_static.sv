@@ -21,9 +21,15 @@ module tb_qfd_serdes_static;
  assign aw=word(0,cyc-8);assign bw=word(1,cyc-8);
  wire corrupt= MUT==1 && atv && atf[FW+5:FW]==6'd7;
  always @(posedge clk)begin
-   avpipe<={avpipe,atv};bvpipe<={bvpipe,btv};
-   afpipe<={afpipe,atf ^ (corrupt ? PW'(1):PW'(0))};
-   bfpipe<={bfpipe,btf};
+   // The digital PHY pipeline has the same explicit reset as its endpoints.
+   // Otherwise the first reset edge captures a pre-NBA X valid and delivers
+   // it339 cycles later after the compiled epoch has already begun.
+   if(!rst_n) begin avpipe<=0;bvpipe<=0;afpipe<=0;bfpipe<=0;end
+   else begin
+    avpipe<={avpipe,atv};bvpipe<={bvpipe,btv};
+    afpipe<={afpipe,atf ^ (corrupt ? PW'(1):PW'(0))};
+    bfpipe<={bfpipe,btf};
+   end
  end
  qfd_io_serdes_static #(.MUT(MUT==3?3:0)) a(
   .ck(clk),.ckb0(clk),.ckb1(clk),.ckb2(clk),.ckb3(clk),.rst_n(rst_n),.epoch_begin(epoch_begin),.epoch(8'h3a),
