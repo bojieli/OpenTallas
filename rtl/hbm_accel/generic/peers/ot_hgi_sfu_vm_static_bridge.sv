@@ -60,7 +60,11 @@ module ot_hgi_sfu_vm_static_bridge #(
   reg [31:0] word,rounded;
   for(integer w=0;w<8;w=w+1)begin
    word=data[32*w+:32];
+`ifdef OT_SFU_VM_BF16_MUTANT
+   rounded=word+32'h00007fff; // true negative: ties with odd high word round the wrong way
+`else
    rounded=word+32'h00007fff+{31'd0,word[16]};
+`endif
    round_sector[32*w+:32]=do_round?{rounded[31:16],16'd0}:word;
   end
  endfunction
