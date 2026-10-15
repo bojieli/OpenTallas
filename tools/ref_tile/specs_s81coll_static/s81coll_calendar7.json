@@ -176,8 +176,7 @@
     "threads": 4,
     "peak_ram_gb": 8,
     "needs": [
-     "iverilog",
-     "vvp"
+     "iverilog"
     ],
     "pass_regex": "PASS calendar7 actual3ROM",
     "min_count_regex": "controls=([0-9]+)"
@@ -189,8 +188,7 @@
     "threads": 4,
     "peak_ram_gb": 8,
     "needs": [
-     "iverilog",
-     "vvp"
+     "iverilog"
     ],
     "pass_regex": "PASS long-page base; lookahead mutant rejected",
     "min_count_regex": "Ran ([0-9]+) tests"
