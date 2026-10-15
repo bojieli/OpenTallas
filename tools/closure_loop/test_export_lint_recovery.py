@@ -30,6 +30,7 @@ class ExportLintRecovery(unittest.TestCase):
                       metrics=dict(drc=0, ss_ps=333.72, ff_ps=29.9, orfs_dir=str(self.base.parents[3])),
                       route_overlay_plan=dict(files=[dict(path='tools/hier_contract/child_lint.py',
                           sha256=E.digest(self.run / 'cl/child_lint.py'))]))
+        (self.run / 'cl/helper_overlay_plan.json').write_text(json.dumps(self.j['route_overlay_plan']))
         data = b'new source-pinned lint'
         self.request = dict(job=self.j, helper_commit='b' * 40, helper_sha256=hashlib.sha256(data).hexdigest(),
                             helper_b64=base64.b64encode(data).decode())
@@ -53,7 +54,8 @@ class ExportLintRecovery(unittest.TestCase):
         rec = E.prepare(self.request)
         manifest = json.loads((Path(rec['directory']) / 'inputs.json').read_text())
         for path in (self.base / '6_final.odb', self.base / '6_final.sdc', self.base / '6_final.spef',
-                     self.run / 'cl/child_lint.py', Path(rec['directory']) / 'child_lint.py'):
+                     self.run / 'cl/child_lint.py', self.run / 'cl/helper_overlay_plan.json',
+                     Path(rec['directory']) / 'child_lint.py'):
             old = path.read_bytes()
             path.write_bytes(old + b'changed')
             with self.assertRaisesRegex(ValueError, 'immutable input changed'):

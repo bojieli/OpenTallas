@@ -42,6 +42,10 @@ def prepare(request):
     if len(base) != 1:
         raise ValueError('expected one physical route base')
     hashes = {}
+    sidecar = run / 'cl/helper_overlay_plan.json'
+    if json.loads(sidecar.read_text()) != j['route_overlay_plan']:
+        raise ValueError('original frozen helper sidecar differs from job plan')
+    hashes[str(sidecar)] = digest(sidecar)
     for ext in ('odb', 'sdc', 'spef'):
         p = base[0] / ('6_final.' + ext)
         if not p.is_file() or not p.stat().st_size:
