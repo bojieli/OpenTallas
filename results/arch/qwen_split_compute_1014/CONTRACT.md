@@ -1,4 +1,4 @@
-# Qwen3-8B TP8 split — COMPUTE die contract v1.2 (2026-10-14 18:48 PT; structural candidate, unqualified)
+# Qwen3-8B TP8 split — COMPUTE die contract v1.3 (2026-10-14 takeover; structural candidate, unqualified)
 
 **Binding owner clarification 2026-10-14 18:59:24 PT:** ROM production is statically cycle scheduled by the compiler.
 No runtime credit counters, readiness-driven issue, demand arbitration, or backpressure may schedule normal execution.
@@ -6,6 +6,19 @@ The compiler reserves compute, memory ports, link slots, finite-buffer occupancy
 implemented latencies and phases. Availability/commit checks fault on a missed reservation; they never reschedule it.
 The credit-based interfaces below are retained as historical/diagnostic evidence until replaced by real static RTL
 and an exact production composition. Arbitrarily stalled safety benches do not qualify production timing or tok/s.
+
+
+Current source-exact pin contracts supersede older slot-interface descriptions below:
+
+| Native component | Assigned geometry / pins | Qualification and source binding |
+|---|---|---|
+| Static CDC twelve-leaf composition | `static_cdc/qfd_io_xfifo_static.json`; each leaf233.28x151.2, 2x6 homes in700.248x1563.816,169 real parent ports,24 independent roots | Actual source `b53541400`/`7494a6c90`; record widths ur/dr514,cq517,others546, explicit RTL zero padding to546 SRAM. Collective/seq/cq/calendar producers and root R/phi remain OPEN; metadata does not turn legacy credit graph into production. |
+| XS tap | `c15_preflight/qfd_xs_tap.json`; exact216 square,13 real ports including ck, hw/he1567, gi380,xpf72 | Actual candidate TT/FF positive and54.7ps boundary spread; fresh exact-file kit required. The reserved345.6 control-stack envelope stays fixed. |
+| Band parent | `c15_preflight/qfd_sp_band_lanes.json`;881.28x1131.84,26 real ports including17 clocks,b0/lnk/reset1 | R0 leaf clocks at actual interior XY, every-second data tracks. Actual parent internal signal/PG capM7; M5 faces do not grant dieM7 through parent. Fresh hybrid parent gate required. |
+| Static Q/KVN mux successor | `static_x3/ot_qfd_x3_mux_native.json`;129.6square,12ports/1577bits | Actual candidate063cb47b7, input-to-X3 two edges. Native gate and physical site remain OPEN; original one-edge golden master preserved. |
+| VM raw consume observers | `vm_rawcommit/observer_homes39.json` and `qfd_vm_qcommit.json`;39 homes banks24..62,488 total roots | Raw cv/line8/mask16 prove actual write coverage; exact data-at-consume and real macro readback require independent proofs/mutant. Fresh raw-ABI kit/source required; old Q-only42sinks/R48ps is not carried forward. |
+
+C15 actual OpenROAD preflight: OT_LEGAL1630/0overlaps/0outside and OT_ASSERTPASS, but OT_PAFAIL DRT0305 on ordinary POWER `one_`. Exit0 does not qualify pin access. Latest no-relay cut0.861 and negative relay cost are diagnostic only; no token price can be derived from a skipped relay plan. C14 full relay source6284141cf remains separately frozen.
 
 Owner decision 06:45 PT 10-14: Qwen is a two-die design (compute/ROM die + KV/system die). This file is the compute
 die's contract of record. Generator: `OT_TP8_SPLIT=compute` mode of the tp8b generator (`tools/die_top_lint.py`,
@@ -30,7 +43,7 @@ element queue is at its top). v1 (07:27) is superseded by this revision.
 - IO band on the S edge: 3 x `qfd_io_serdes`, `qfd_io_collective`, `qfd_io_xfifo`, `qfd_io_ucie` (in-package peer).
 
 ## 2. Spine slot table (7.3 mm wide)
-- W sub-area, per band b at the band's tile centroid, centred on the port column: `qfd_sp_band_lanes` 803.52 x 1,131.84,
+- W sub-area, per band b at the band's tile centroid, centred on the port column: `qfd_sp_band_lanes` 881.28 x 1,131.84,
   `qfd_port_tiles_b` 1,036.8 x 2,462.4, `qfd_sp_res_ser` 777.6 x 518.4. E edge: `qfd_port_tiles_b_f1` 1,036.8 x 2,462.4
   at the band centroid (E-field block words land without crossing the spine; four full-rate TCUT7 words per band half cross as 2050 bits (2048 data + valid + fault)).
 - E sub-area, N -> S: die link (UCIe x64 PHY `ot_qkvd_ucie_x64_phy` 777.6 x 777.6 on the N edge, **MX**; `qfd_d2d_rom`

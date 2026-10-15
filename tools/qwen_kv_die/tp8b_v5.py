@@ -1571,7 +1571,7 @@ def _wrap(v, m, G, peers):
                     sp=band.ports[pn]
                     band.ports[pn]=sp[:-1]+(2,)
                 band.order = list(dict.fromkeys(band.order + ['b0','lnk']))
-                band.obs_top = 6
+                band.obs_top = 7  # actual native cluster signalsM2-M7/PGM7, not a leaf-only M6 draft
 
     v.V5_FINAL_MASTERS = final
 
