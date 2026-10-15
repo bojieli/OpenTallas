@@ -104,7 +104,7 @@
       414.72
     ],
     "grid_covers": "SRAM+halo only; no logic/routing/pins/clock/PDN allowance or slot fit claim",
-    "view_selection_status": "UNASSIGNED: legacy actualbenchview pinned below; V2 differs and geometry must grant future physical view",
+    "view_selection_status": "Geometry directs canonical V2 for FUTURE physical profile; current census uses legacy blackbox only and has no physical qualification",
     "views": [
       {
         "path": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.lef",
@@ -124,7 +124,21 @@
         ],
         "symmetry": "X Y"
       }
-    ]
+    ],
+    "future_canonical_v2": {
+      "size_um": [
+        94.824,
+        41.064
+      ],
+      "prefetch128_area_um2": 498413.150208,
+      "per_stack_4x8_macro_grid_with_5p4um_halo_um": [
+        422.496,
+        414.91200000000003
+      ],
+      "orientation_symmetry": "X Y only, no R90",
+      "directive": "Exact LEF/hash/logic-port audit against legacy functional41.040 required; no inherited physical qualification",
+      "slot_status": "UNASSIGNED: native PC frozen source grant does not automatically grant HC or Engram cohardening"
+    }
   },
   "common_native_controller": {
     "master": "ot_hbm_svc_native_sector_owned_stack",
@@ -142,7 +156,6 @@
   },
   "gaps": [
     "No prefetch slot dimensions/pin faces granted",
-    "No source-exact mapped sink census yet",
     "No CTS/insertion/corner/raw timing receipt",
     "No phi-R or fixed boundary phase proof",
     "No SS/FF or routed DRC qualification"

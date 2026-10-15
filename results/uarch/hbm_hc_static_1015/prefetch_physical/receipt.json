@@ -1,6 +1,6 @@
 {
   "schema": "opentallas.hc.prefetch.physical-census-receipt.v1",
-  "command": "ot-run --mem8 --threads1 --dir /srv/opentallas-scratch/claude/codex-hc-prefetch-physical-1015 -- bash run.sh",
+  "command": "ot-run --mem 8 --threads 1 --dir /srv/opentallas-scratch/claude/codex-hc-prefetch-physical-1015 -- bash run.sh",
   "terminal": "ot-run: RAN on ot-agidock128 (unit oth-ubuntu-3934240-1792061338): exit0",
   "inputs": {
     "cdc.sv": {
