@@ -12,9 +12,11 @@ for p in rtl/qwen_sys/static_kv_20261014/{ot_qkd_static_emb_cdc,qkd_static_kv_wr
   rtl/qwen_sys/kv_die_20261009/ot_qkvd_kcmd_tap.sv rtl/qwen_sys/emb_hbm_20261008/synth/ot_qfd_emb_pcport.sv rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_cdc.sv \
   rtl/qwen_sys/q5_20261009/synth/ot_qfd_kv_landing_ecc.sv rtl/qwen_sys/host_20261013/qkd_host_static_pc.sv rtl/lib/{ot_async_fifo,ot_reset_sync}.sv \
   rtl/test/qwen_static_kv/tb_kv_hbm_elastic_boundary.sv;do
- mkdir -p "$src/$(dirname "$p")";git -C "$root" show "$rev:$p" > "$src/$p"
+ mkdir -p "$src/$(dirname "$p")"
+ # a closure-loop staged snapshot is not a git tree: copy the staged file (its sha256 is recorded below)
+ if git -C "$root" rev-parse --verify -q "$rev" >/dev/null 2>&1;then git -C "$root" show "$rev:$p" > "$src/$p";else cp "$root/$p" "$src/$p";fi
 done
-git -C "$root" rev-parse "$rev" > "$out/source.rev"
+git -C "$root" rev-parse "$rev" > "$out/source.rev" 2>/dev/null || echo "staged-snapshot $root" > "$out/source.rev"
 fi
 [ "${PREP_ONLY:-0}" = 1 ] && exit 0
 mapfile -d '' sources < <(find "$src" -name '*.sv' -print0)
