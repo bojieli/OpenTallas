@@ -1,5 +1,5 @@
 {
- "name": "hgi_coll_rgx_rx_r2-r2-COMMIT",
+ "name": "hgi_coll_rgx_rx_r2-r2-51de2332d",
  "block": "ot_hgi_coll_rx_native",
  "ref_tile": true,
  "owner": "Codex:H-COLL",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 24,
  "source": {
   "branch": "claude/hbm-p2p-coll-1014",
-  "commit": "COMMIT"
+  "commit": "51de2332d"
  },
  "stages": {
   "bench": [
@@ -91,7 +91,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/hgi_coll_rgx_rx_r2/hgi_coll_rgx_rx_r2-r2-COMMIT"
+   "to": "results/rtl/ref_tile/hgi_coll_rgx_rx_r2/hgi_coll_rgx_rx_r2-r2-51de2332d"
   }
  ],
  "cycles_added": 0,
