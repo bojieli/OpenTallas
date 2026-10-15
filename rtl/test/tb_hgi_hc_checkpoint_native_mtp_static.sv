@@ -6,7 +6,7 @@ module tb_hgi_hc_checkpoint_native_mtp_static(input wire clk,sink_clk,hbm_clk);
     localparam R=80,W=32,ROWS=24;
     reg rst_n=0;
     integer npos=8,cycle=0,state=0,fill=0,row=0,age=0,seen=0,errors=0,tailseen=0,sinkslot=0,pc=0;
-    integer imagewords=0,cfgi=0,startedge=0;
+    integer imagewords=0,cfgwords=0,cfgi=0,startedge=0;
     reg [255:0] image[0:2047];
     string imagefile;
     wire cfgwe=(state==6);
@@ -24,9 +24,8 @@ module tb_hgi_hc_checkpoint_native_mtp_static(input wire clk,sink_clk,hbm_clk);
     wire program_done,program_active;
     task loadimage(input integer kind,input integer idx);
         begin
-            if(kind==0)begin imagefile=$sformatf("row_n%0d_r%0d.mem",npos,idx);imagewords=period;end
-            else begin imagefile=$sformatf("tail_p%0d.mem",idx);imagewords=497;end
-            $readmemh(imagefile,image,0,imagewords-1);
+            imagefile=$sformatf("full_n%0d.mem",npos);imagewords=period;cfgwords=period+497;
+            $readmemh(imagefile,image,0,cfgwords-1);
         end
     endtask
     reg [31:0] expm[0:8*24-1],tail_exp[0:8*24-1],bm[0:23],sm[0:2];
@@ -179,7 +178,7 @@ module tb_hgi_hc_checkpoint_native_mtp_static(input wire clk,sink_clk,hbm_clk);
  ot_hgi_hc_native_mtp_static #(.TAIL_LOOP(1)) dut(
   .clk(clk),.sink_clk(sink_clk),.rst_n(rst_n),.hbm_clk(hbm_clk),.hbm_rst_n(rst_n),
   .cfg_we(cfgwe),.cfg_addr(11'(cfgi)),.cfg_data(cfgdata),
-  .start_v(startv),.start_base(11'd0),.start_limit(12'(imagewords)),.start_loops((row<24)?16'd24:16'(npos)),
+  .start_v(startv),.start_base(row<24?11'd0:11'(period)),.start_limit(row<24?12'(period):12'(period+497)),.start_loops((row<24)?16'd24:16'(npos)),
   .reserve_v(reserve_v),.reserve_half(reserve_half),.reserve_row_local_byte(reserve_row_local_byte),
   .reserve_epoch(reserve_epoch),.reserve_ready(reserve_ready),.fetched_ready(fetched_ready),
   .drain_v(drain_v),.drain_half(drain_half),.drain_slot(drain_slot),.drain_epoch(drain_epoch),
@@ -213,7 +212,7 @@ module tb_hgi_hc_checkpoint_native_mtp_static(input wire clk,sink_clk,hbm_clk);
         if(state==4)begin age<=age+1;if(age>4&&fetched_ready==255)begin state<=2;age<=0;fill<=0;end end
         if(state==2)begin age<=age+1;if(age==670)begin loadimage(0,0);state<=6;cfgi<=0;end end
         if(state==6)begin
-            if(cfgi==imagewords-1)begin
+            if(cfgi==cfgwords-1)begin
                 state<=7;
                 // Every first consumer edge is aligned to global sink phase0.
                 startedge<=((cycle+1+10+5+6)/7)*7-5;
@@ -231,7 +230,9 @@ module tb_hgi_hc_checkpoint_native_mtp_static(input wire clk,sink_clk,hbm_clk);
                 if(seen!=(row+1)*npos)$fatal(1,"missing repeated programme row results");
                 if(row==23)begin
                     if(!program_done)$fatal(1,"programme failed final fixed loop boundary");
-                    row<=24;pc<=0;loadimage(1,0);state<=6;cfgi<=0;
+                    row<=24;pc<=0;state<=7;
+                    // Fixed next start, reusing the preinstalled tail range.
+                    startedge<=((cycle+1+10+5+6)/7)*7-5;
                 end else begin
                     if(program_done)$fatal(1,"programme ended before24row loop");
                     row<=row+1;age<=0;
