@@ -1,0 +1,22 @@
+setup_ss -396.12 classes:
+    -396.12 ps  n= 165 lv= 13  u_q.r_v[*]$_DFF_PN0_/QN -> u_q.g_q.g_b[*].u_f.g_esl.g_s[*].b1[*]$_DFFE_PP_/D
+    -394.55 ps  n= 158 lv= 13  u_q.r_v[*]$_DFF_PN0_/QN -> u_q.g_q.g_b[*].u_f.g_esl.g_s[*].b0[*]$_DFFE_PP_/D
+    -366.03 ps  n=  55 lv= 11  u_q.r_v[*]$_DFF_PN0_/QN -> u_q.g_q.g_b[*].u_f.g_tile[*].genblk1.genblk1.g_m2.u_m/wd_in[*]
+    -359.40 ps  n=   1 lv= 12  u_q.r_q[*][*]$_DFF_P_/QN -> u_q.g_q.g_b[*].u_f.g_esl.g_s[*].b1[*]$_DFFE_PP_/D
+    -357.66 ps  n=   3 lv= 12  u_q.r_q[*][*]$_DFF_P_/QN -> u_q.g_q.g_b[*].u_f.g_esl.g_s[*].b0[*]$_DFFE_PP_/D
+    -348.79 ps  n=   2 lv= 12  u_q.r_q[*][*]$_DFF_P_/QN -> u_q.g_q.g_b[*].u_f.g_tile[*].genblk1.genblk1.g_m2.u_m/wd_in[*]
+    -345.45 ps  n=   6 lv= 13  u_q.r_s[*][*]$_DFF_P_/QN -> u_q.g_q.g_b[*].u_f.g_esl.g_s[*].b1[*]$_DFFE_PP_/D
+    -341.08 ps  n=   7 lv= 13  u_q.r_s[*][*]$_DFF_P_/QN -> u_q.g_q.g_b[*].u_f.g_esl.g_s[*].b0[*]$_DFFE_PP_/D
+    -317.89 ps  n=   1 lv= 11  u_q.r_s[*][*]$_DFF_P_/QN -> u_q.g_q.g_b[*].u_f.g_tile[*].genblk1.genblk1.g_m2.u_m/w_ce_in
+    -314.87 ps  n=   2 lv= 10  u_q.r_v[*]$_DFF_PN0_/QN -> u_q.g_q.g_b[*].u_f.g_esl.g_s[*].oc0_c$_DFF_PN0_/D
+hold_ff -17.6 classes:
+     -17.60 ps  n= 400 lv=  5  pd[*] -> u_q.r_d[*][*]$_DFF_P_/D
+      12.32 ps  n=   2 lv=  4  rst_n -> u_q.u_rst.sync_q[*]$_DFF_PN0_/RESETN
+      13.35 ps  n=   2 lv=  4  rst_n -> u_q.u_rst.rst_n[*]$_DFF_PN0_/RESETN
+      28.19 ps  n=  28 lv=  7  u_q.u_rst.rst_n[*]$_DFF_PN0_/QN -> u_q.g_q.g_b[*].u_f.wp[*]$_DFFE_PN0P_/RESETN
+      42.64 ps  n=   4 lv=  4  u_q.u_rst.rst_n[*]$_DFF_PN0_/QN -> u_q.r_v[*]$_DFF_PN0_/RESETN
+      56.88 ps  n=  32 lv=  6  u_q.u_rst.rst_n[*]$_DFF_PN0_/QN -> u_q.g_q.g_b[*].u_f.in_arr[*]$_DFFE_PN0P_/RESETN
+      72.46 ps  n=   4 lv=  6  u_q.u_rst.rst_n[*]$_DFF_PN0_/QN -> u_q.g_q.g_b[*].u_f.oc[*]$_DFF_PN0_/RESETN
+      74.23 ps  n=  72 lv=  7  u_q.u_rst.rst_n[*]$_DFF_PN0_/QN -> u_q.g_q.g_b[*].u_f.g_esl.g_s[*].oh_c$_DFF_PN0_/RESETN
+      74.59 ps  n=  72 lv=  7  u_q.u_rst.rst_n[*]$_DFF_PN0_/QN -> u_q.g_q.g_b[*].u_f.g_esl.g_s[*].inf_c$_DFF_PN0_/RESETN
+      79.52 ps  n=  72 lv=  7  u_q.u_rst.rst_n[*]$_DFF_PN0_/QN -> u_q.g_q.g_b[*].u_f.g_esl.g_s[*].oc0_c$_DFF_PN0_/RESETN

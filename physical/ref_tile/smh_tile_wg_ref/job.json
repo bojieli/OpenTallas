@@ -1,20 +1,20 @@
 {
- "name": "smh_tile_wg_ref-r13-9aed8d967",
+ "name": "smh_tile_wg_ref-r16-cea5b1fa8",
  "block": "ot_hbm_accel_smh_tile_wg",
  "ref_tile": true,
  "owner": "Claude:el1013-smh-r11",
- "purpose": "[smmv-b/smt] ot_hbm_accel_smh_tile_wg: SM tile as ONE ref_tile cluster (owner contract: harden once, step x16; wg = MY mirror) over the 12 closed ref_tile sub-tiles (pt_w p45h, pt_e p40s, xs p45m, bdc p50, tcl p45, tct p45), floorplan re-derived from their LEFs on the 43.2-um lattice (630.72 x 1252.8, landing channels 58-60 um, cut 0.59), clock spine through the tile ICG (symmetric insertion-aware topology), exact abutment pin plan re-applied after place_pins, rst_n pin flop + registered N-S reset tree (16 stations FFs, no reset on the raw clock: RSTEN 0 / RAWRST 0). Five registered regional static-strap stages per leaf (260 DFFs), zero data latency; production NC8 active8 RMAX4096 TAGW16 native-default lockstep exactness plus strap-offset/late32/hold0 mutants must fail.",
+ "purpose": "[smmv-b/smt] ot_hbm_accel_smh_tile_wg: SM tile as ONE ref_tile cluster (owner contract: harden once, step x16; wg = MY mirror) over the 12 closed ref_tile sub-tiles (pt_w p45h, pt_e p40s, xs p45m, bdc p50, tcl p45, tct p45), floorplan re-derived from their LEFs on the 43.2-um lattice (630.72 x 1252.8, landing channels 58-60 um, cut 0.59), clock spine through the tile ICG (symmetric insertion-aware topology), exact abutment pin plan re-applied after place_pins, rst_n pin flop + registered N-S reset tree (16 stations FFs, no reset on the raw clock: RSTEN 0 / RAWRST 0), tile-owned pin registers on rin / bin (OT_SMH_PINREG), g-lane relay and G1 stations. Five registered regional static-strap stages per leaf (260 DFFs), zero data latency; production NC8 active8 RMAX4096 TAGW16 native-default lockstep exactness plus strap-offset/late32/hold0 mutants must fail.",
  "threads": 16,
  "peak_ram_gb": 96,
  "source": {
   "branch": "claude/el1013-smh-r11",
-  "commit": "9aed8d967"
+  "commit": "cea5b1fa8"
  },
  "stages": {
   "bench": [
    {
     "name": "lint",
-    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_hbm_accel_smh_tile_wg u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS -DOT_SMH_CG_ENREG -DOT_SMH_XLK -DOT_FP_DATA_NORST -DOT_SMH_DRST0 -DOT_SMH_RSTRELAY -DOT_SMH_RSTPIN -DOT_SMH_HIER -DOT_SMH_PTW_OHDLY -DOT_SMH_PRODUCTION_SHAPE --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/lib/ot_hdly.sv rtl/hdc/ot_hdc_prefix.sv rtl/v41rom/ot_v41_bterm.sv rtl/v41rom/ot_v41_bterm2.sv rtl/gpu/ot_gpu_fadd.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_fp32_mul_lat.sv rtl/hdc/ot_hdc_fastfp.sv rtl/gpu/ot_gpu_tree.sv rtl/gpu/ot_gpu_issue.sv rtl/gpu/ot_gpu_stack.sv rtl/gpu/ot_gpu_tc_col.sv rtl/gpu/ot_gpu_bd_col.sv rtl/hdc/v41/ot_hdc_blockdot.sv rtl/gpu/ot_gpu_bulk_copy.sv rtl/hdc/ot_hdc_fpu.sv rtl/hdc/ot_hdc_fp32_mul_pipe.sv rtl/proto/ot_fp32_add_rne_pipe.sv rtl/hdc/ot_hdc_sfu.sv rtl/hdc/ot_hdc_delay.sv rtl/hbm_accel/epilogue/ot_hbm_accel_issue.sv rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy.sv rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy_oq4.sv rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy_oq5.sv rtl/hbm_accel/sm/ot_hbm_accel_tc16.sv rtl/hbm_accel/sm/ot_hbm_accel_bd_col.sv rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv rtl/hbm_accel/sm/ot_hbm_accel_issue_pq.sv rtl/hbm_accel/sm/ot_hbm_accel_stack.sv rtl/hbm_accel/sm/ot_hbm_accel_smh_bd.sv rtl/hbm_accel/sm/ot_hbm_accel_smh.sv physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v physical/hbm_accel_macros/ot_sram_1r1w_512x256_m1_r2c2/ot_sram_1r1w_512x256_m1_r2c2_bb.v rtl/lib/ot_rst_relay.sv rtl/hdc/ot_hdc_cg.sv rtl/hbm_accel/cg/ot_cg_tile.sv && echo lint-ok",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_hbm_accel_smh_tile_wg u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS -DOT_SMH_CG_ENREG -DOT_SMH_XLK -DOT_FP_DATA_NORST -DOT_SMH_DRST0 -DOT_SMH_RSTRELAY -DOT_SMH_RSTPIN -DOT_SMH_HIER -DOT_SMH_PTW_OHDLY -DOT_SMH_PINREG -DOT_SMH_XREL -DOT_SMH_PRODUCTION_SHAPE --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/lib/ot_hdly.sv rtl/hdc/ot_hdc_prefix.sv rtl/v41rom/ot_v41_bterm.sv rtl/v41rom/ot_v41_bterm2.sv rtl/gpu/ot_gpu_fadd.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_fp32_mul_lat.sv rtl/hdc/ot_hdc_fastfp.sv rtl/gpu/ot_gpu_tree.sv rtl/gpu/ot_gpu_issue.sv rtl/gpu/ot_gpu_stack.sv rtl/gpu/ot_gpu_tc_col.sv rtl/gpu/ot_gpu_bd_col.sv rtl/hdc/v41/ot_hdc_blockdot.sv rtl/gpu/ot_gpu_bulk_copy.sv rtl/hdc/ot_hdc_fpu.sv rtl/hdc/ot_hdc_fp32_mul_pipe.sv rtl/proto/ot_fp32_add_rne_pipe.sv rtl/hdc/ot_hdc_sfu.sv rtl/hdc/ot_hdc_delay.sv rtl/hbm_accel/epilogue/ot_hbm_accel_issue.sv rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy.sv rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy_oq4.sv rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy_oq5.sv rtl/hbm_accel/sm/ot_hbm_accel_tc16.sv rtl/hbm_accel/sm/ot_hbm_accel_bd_col.sv rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv rtl/hbm_accel/sm/ot_hbm_accel_issue_pq.sv rtl/hbm_accel/sm/ot_hbm_accel_stack.sv rtl/hbm_accel/sm/ot_hbm_accel_smh_bd.sv rtl/hbm_accel/sm/ot_hbm_accel_smh.sv physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v physical/hbm_accel_macros/ot_sram_1r1w_512x256_m1_r2c2/ot_sram_1r1w_512x256_m1_r2c2_bb.v rtl/lib/ot_rst_relay.sv rtl/hdc/ot_hdc_cg.sv rtl/hbm_accel/cg/ot_cg_tile.sv && echo lint-ok",
     "expect": "pass",
     "threads": 1,
     "peak_ram_gb": 4,
@@ -28,7 +28,7 @@
     "pass_regex": "SMT_LOCKSTEP_PASS",
     "threads": 8,
     "peak_ram_gb": 72,
-    "cmd": "W=$(mktemp -d /tmp/smtb.XXXXXX); python3 tools/dshbm_sm_pq_seq.py run --seq stress --nc 8 --active 8 --rmax 4096 --req-credit --smh --cg --define OT_SMH_CG_ENREG --define OT_SMH_XLK --define OT_FP_DATA_NORST --define OT_SMH_DRST0 --define OT_SMH_RSTRELAY --define OT_SMH_RSTPIN --define OT_SMH_HIER --define OT_SMH_PTW_OHDLY --define OT_SMH_PRODUCTION_SHAPE --cg-gap 300 --build-jobs 8 --workdir $W --out {RUN}/b_lockstep_enreg_xlk.json > {RUN}/b_lockstep_enreg_xlk.log 2>&1; rc=$?; cat {RUN}/b_lockstep_enreg_xlk.log | tail -5; grep -h CG_LOCKSTEP $W/*/runtime.log; test $rc -eq 0 && grep -q 'CG_LOCKSTEP mismatches 0 ' $W/*/runtime.log && echo SMT_LOCKSTEP_PASS"
+    "cmd": "W=$(mktemp -d /tmp/smtb.XXXXXX); python3 tools/dshbm_sm_pq_seq.py run --seq stress --nc 8 --active 8 --rmax 4096 --req-credit --smh --cg --define OT_SMH_CG_ENREG --define OT_SMH_XLK --define OT_FP_DATA_NORST --define OT_SMH_DRST0 --define OT_SMH_RSTRELAY --define OT_SMH_RSTPIN --define OT_SMH_HIER --define OT_SMH_PTW_OHDLY --define OT_SMH_PINREG --define OT_SMH_XREL --define OT_SMH_PRODUCTION_SHAPE --cg-gap 300 --build-jobs 8 --workdir $W --out {RUN}/b_lockstep_enreg_xlk.json > {RUN}/b_lockstep_enreg_xlk.log 2>&1; rc=$?; cat {RUN}/b_lockstep_enreg_xlk.log | tail -5; grep -h CG_LOCKSTEP $W/*/runtime.log; test $rc -eq 0 && grep -q 'CG_LOCKSTEP mismatches 0 ' $W/*/runtime.log && echo SMT_LOCKSTEP_PASS"
    },
    {
     "name": "mut_late32",
@@ -36,7 +36,7 @@
     "fail_regex": "CG_LOCKSTEP mismatches [1-9]",
     "threads": 8,
     "peak_ram_gb": 72,
-    "cmd": "W=$(mktemp -d /tmp/smtb.XXXXXX); python3 tools/dshbm_sm_pq_seq.py run --seq stress --nc 8 --active 8 --rmax 4096 --req-credit --smh --cg --define OT_SMH_CG_ENREG --define OT_SMH_XLK --define OT_FP_DATA_NORST --define OT_SMH_DRST0 --define OT_SMH_RSTRELAY --define OT_SMH_RSTPIN --define OT_SMH_HIER --define OT_SMH_PTW_OHDLY --define OT_SMH_PRODUCTION_SHAPE --cg-mut-late --cg-gap 300 --build-jobs 8 --workdir $W --out {RUN}/b_mut_late32.json > {RUN}/b_mut_late32.log 2>&1; rc=$?; cat {RUN}/b_mut_late32.log | tail -5; grep -h CG_LOCKSTEP $W/*/runtime.log; test $rc -eq 0 && ! grep -q 'CG_LOCKSTEP mismatches [1-9]' $W/*/runtime.log"
+    "cmd": "W=$(mktemp -d /tmp/smtb.XXXXXX); python3 tools/dshbm_sm_pq_seq.py run --seq stress --nc 8 --active 8 --rmax 4096 --req-credit --smh --cg --define OT_SMH_CG_ENREG --define OT_SMH_XLK --define OT_FP_DATA_NORST --define OT_SMH_DRST0 --define OT_SMH_RSTRELAY --define OT_SMH_RSTPIN --define OT_SMH_HIER --define OT_SMH_PTW_OHDLY --define OT_SMH_PINREG --define OT_SMH_XREL --define OT_SMH_PRODUCTION_SHAPE --cg-mut-late --cg-gap 300 --build-jobs 8 --workdir $W --out {RUN}/b_mut_late32.json > {RUN}/b_mut_late32.log 2>&1; rc=$?; cat {RUN}/b_mut_late32.log | tail -5; grep -h CG_LOCKSTEP $W/*/runtime.log; test $rc -eq 0 && ! grep -q 'CG_LOCKSTEP mismatches [1-9]' $W/*/runtime.log"
    },
    {
     "name": "mut_hold0",
@@ -44,7 +44,7 @@
     "fail_regex": "CG_LOCKSTEP mismatches [1-9]",
     "threads": 8,
     "peak_ram_gb": 72,
-    "cmd": "W=$(mktemp -d /tmp/smtb.XXXXXX); python3 tools/dshbm_sm_pq_seq.py run --seq stress --nc 8 --active 8 --rmax 4096 --req-credit --smh --cg --define OT_SMH_CG_ENREG --define OT_SMH_XLK --define OT_FP_DATA_NORST --define OT_SMH_DRST0 --define OT_SMH_RSTRELAY --define OT_SMH_RSTPIN --define OT_SMH_HIER --define OT_SMH_PTW_OHDLY --define OT_SMH_PRODUCTION_SHAPE --cg-mut-hold0 --cg-gap 300 --build-jobs 8 --workdir $W --out {RUN}/b_mut_hold0.json > {RUN}/b_mut_hold0.log 2>&1; rc=$?; cat {RUN}/b_mut_hold0.log | tail -5; grep -h CG_LOCKSTEP $W/*/runtime.log; test $rc -eq 0 && ! grep -q 'CG_LOCKSTEP mismatches [1-9]' $W/*/runtime.log"
+    "cmd": "W=$(mktemp -d /tmp/smtb.XXXXXX); python3 tools/dshbm_sm_pq_seq.py run --seq stress --nc 8 --active 8 --rmax 4096 --req-credit --smh --cg --define OT_SMH_CG_ENREG --define OT_SMH_XLK --define OT_FP_DATA_NORST --define OT_SMH_DRST0 --define OT_SMH_RSTRELAY --define OT_SMH_RSTPIN --define OT_SMH_HIER --define OT_SMH_PTW_OHDLY --define OT_SMH_PINREG --define OT_SMH_XREL --define OT_SMH_PRODUCTION_SHAPE --cg-mut-hold0 --cg-gap 300 --build-jobs 8 --workdir $W --out {RUN}/b_mut_hold0.json > {RUN}/b_mut_hold0.log 2>&1; rc=$?; cat {RUN}/b_mut_hold0.log | tail -5; grep -h CG_LOCKSTEP $W/*/runtime.log; test $rc -eq 0 && ! grep -q 'CG_LOCKSTEP mismatches [1-9]' $W/*/runtime.log"
    },
    {
     "name": "mut_strap_region",
@@ -52,7 +52,7 @@
     "fail_regex": "SMT_STRAP_MUTANT_KILLED",
     "threads": 8,
     "peak_ram_gb": 72,
-    "cmd": "W=$(mktemp -d /tmp/smtb.XXXXXX); python3 tools/dshbm_sm_pq_seq.py run --seq stress --nc 8 --active 8 --rmax 4096 --req-credit --smh --cg --define OT_SMH_CG_ENREG --define OT_SMH_XLK --define OT_FP_DATA_NORST --define OT_SMH_DRST0 --define OT_SMH_RSTRELAY --define OT_SMH_RSTPIN --define OT_SMH_HIER --define OT_SMH_PTW_OHDLY --define OT_SMH_PRODUCTION_SHAPE --define OT_SMH_MUT_STRAP_REGION --cg-gap 300 --build-jobs 8 --workdir $W --out {RUN}/b_mut_strap_region.json > {RUN}/b_mut_strap_region.log 2>&1; rc=$?; cat {RUN}/b_mut_strap_region.log | tail -5; grep -h CG_LOCKSTEP $W/*/runtime.log; python3 -c 'import json,sys; x=json.load(open(sys.argv[1])); assert x[\"timeout\"] is None and x[\"mismatching_ops\"] > 0; print(\"SMT_STRAP_MUTANT_KILLED\", x[\"mismatching_ops\"])' {RUN}/b_mut_strap_region.json; test $rc -eq 0"
+    "cmd": "W=$(mktemp -d /tmp/smtb.XXXXXX); python3 tools/dshbm_sm_pq_seq.py run --seq stress --nc 8 --active 8 --rmax 4096 --req-credit --smh --cg --define OT_SMH_CG_ENREG --define OT_SMH_XLK --define OT_FP_DATA_NORST --define OT_SMH_DRST0 --define OT_SMH_RSTRELAY --define OT_SMH_RSTPIN --define OT_SMH_HIER --define OT_SMH_PTW_OHDLY --define OT_SMH_PINREG --define OT_SMH_XREL --define OT_SMH_PRODUCTION_SHAPE --define OT_SMH_MUT_STRAP_REGION --cg-gap 300 --build-jobs 8 --workdir $W --out {RUN}/b_mut_strap_region.json > {RUN}/b_mut_strap_region.log 2>&1; rc=$?; cat {RUN}/b_mut_strap_region.log | tail -5; grep -h CG_LOCKSTEP $W/*/runtime.log; python3 -c 'import json,sys; x=json.load(open(sys.argv[1])); assert x[\"timeout\"] is None and x[\"mismatching_ops\"] > 0; print(\"SMT_STRAP_MUTANT_KILLED\", x[\"mismatching_ops\"])' {RUN}/b_mut_strap_region.json; test $rc -eq 0"
    }
   ],
   "calibrate": {
@@ -110,7 +110,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/smh_tile_wg_ref/smh_tile_wg_ref-r13-9aed8d967"
+   "to": "results/rtl/ref_tile/smh_tile_wg_ref/smh_tile_wg_ref-r16-cea5b1fa8"
   }
  ],
  "cycles_added": 0,
@@ -119,5 +119,5 @@
  "route_corner": "TC",
  "notes": "generated by tools/ref_tile/ref_tile.py",
  "merge_target": null,
- "structural_change": "clock root rebuilt: only the tile ICG and its enable registers are fixed beside the clk pin and they are dont_touch; the ICG enable cone (input buffer of cgi + gates) is movable and legalised (r11/r12: cone cells FIRM yet resizable -> input2099 sized to BUFx12f over FIRM _0956_, DPL-0033 at CTS in both tiles; spine errors if a moved cell is fixed and resizable); wg station plan mirrors about the PLACED centre channel (x 259.2-302.4; reset 271.2, strap 283.0), every station window asserted clear of each child + halo at generation"
+ "structural_change": "registered cluster boundary: OT_SMH_PINREG adds one tile-owned register per rin / bin bit at the tile pins (3,705 flops; +1 cycle per tile hop on the row bundles and the x-write beat, front_s result deskew 5 + PT4 + 1 a hop), fixed at the pins with the gin landing and gout launch registers (io_flop_at_pins); the g-lane relays (pass mid, own-row grd1 / grd2) and the G1 select registers sit at fixed stations (<= 700 um a hop, G1 midway between bdc and tct outputs); two kept HB4 hold cells on the wake pin (r13 FF hold -37.5 ps at cgi -> wq, repair stalled on the fixed root cells).  r13: post-CTS TT -816 ps / 3,906 endpoints in the session budget (S = R = 223 ps): port -> pt_w 3,705 (-419 worst), reg -> gout 99 (-465), gin -> reg 67 (-327).  r15 (r14 --cts gate re-timed at the sign-off reference: the only setup class left was xs o_ix / o_iw -> tcl h1, 630-1,023 um of wire between two hard children, -65 / -103 ps on 112 / 176 endpoints): OT_SMH_XREL = one leaf-owned register on every operand / control bit between the x store and BOTH columns (1,084 + 531 flops a leaf, +1 cycle on both columns and every tile alike), at fixed stations midway (<= ~300 um a hop)  r16 (r15 15b3b4de9 EARLY_FAIL_CONGESTION at 5_1_grt on eg and wg, 69 / 279 markers, all on leaf 1's xb_w / xb_x / iw / ix operand nets round its x store | bdc gap; leaf 0 clean): the 1,084 xb relay registers were placed in instance order inside their 100-um window, so each bit ran sideways twice (x store -> register, register -> bdc pin): 1,104 wires through the worst cut (x 186) of the 30.26-um gap (GRT H capacity 22 a 0.57-um gcell = 1,168 tracks: 0.95; the 58.32-um leaf-0 gap 1,048 / 2,251 = 0.47; smh_xb_cut.py). The registers now sit at the column of the bdc pin they drive (sr_place_cols: Q net = a vertical drop), so only the x store's own pin spread crosses a cut: 505 wires worst (x 135.2) = 0.43 of the leaf-1 gap, 0.22 of leaf 0; the xf registers are filled in tcl pin order.  RTL, pins, outline, cycles and benches unchanged"
 }

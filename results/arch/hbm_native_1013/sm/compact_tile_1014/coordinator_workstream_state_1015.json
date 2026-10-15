@@ -1,0 +1,143 @@
+{
+  "schema": "opentallas.smh.workstream_state.v1",
+  "collected_at": "2026-10-15T09:20:16.425614+00:00",
+  "coordinator": "codex",
+  "jobs": [
+    {
+      "job": "hbm_native_sram_cdc_w256_1014-fullpar1-93c8aa68a",
+      "status": "NEEDS_RTL",
+      "host": "ot-agidock128",
+      "run": "/srv/opentallas-scratch/claude/closure-loop/hbm_native_sram_cdc_w256_1014-fullpar1-93c8aa68a",
+      "stage": "summary",
+      "finished_at": "2026-10-15T00:20:27-07:00",
+      "tt_ps": -114.21,
+      "ff_ps": 15.69,
+      "drc": 0,
+      "ss_sensitivity_ps": -374.6,
+      "events": [
+        "2026-10-15T00:19:25-07:00 verdict at the ROUTED insertion: TT -114.21 / FF +15.69 -> NOT CLOSED",
+        "2026-10-15T00:20:27-07:00 NEEDS_RTL: TT -114.21 / FF 15.69 ps / DRC 0 (line TT >= +0 / FF >= +0 / DRC 0)",
+        "2026-10-15T00:22:29-07:00 auto-react: no recipe; structural fix needed (noted in hbm-phys-1010.log)"
+      ]
+    },
+    {
+      "job": "hbm_native_sram_cdc_w280_1014-fullpar1-93c8aa68a",
+      "status": "NEEDS_RTL",
+      "host": "ot-agidock128",
+      "run": "/srv/opentallas-scratch/claude/closure-loop/hbm_native_sram_cdc_w280_1014-fullpar1-93c8aa68a",
+      "stage": "summary",
+      "finished_at": "2026-10-15T00:18:28-07:00",
+      "tt_ps": -141.48,
+      "ff_ps": 21.08,
+      "drc": 0,
+      "ss_sensitivity_ps": -482.73,
+      "events": [
+        "2026-10-15T00:17:18-07:00 verdict at the ROUTED insertion: TT -141.48 / FF +21.08 -> NOT CLOSED",
+        "2026-10-15T00:18:28-07:00 NEEDS_RTL: TT -141.48 / FF 21.08 ps / DRC 0 (line TT >= +0 / FF >= +0 / DRC 0)",
+        "2026-10-15T00:19:29-07:00 auto-react: block ot_hbm_native_sram_cdc has a live or closed sibling job; no action"
+      ]
+    },
+    {
+      "job": "hgi_coll_park_q1_wg_ref-pstage4-5f0dd8dc1",
+      "status": "CLOSED",
+      "host": "ot-epyc1tb",
+      "run": "/srv/opentallas/claude/closure-loop/hgi_coll_park_q1_wg_ref-pstage4-5f0dd8dc1",
+      "stage": "route",
+      "finished_at": "2026-10-15T01:08:26-07:00",
+      "tt_ps": 30.65,
+      "ff_ps": 3.59,
+      "drc": 0,
+      "ss_sensitivity_ps": null,
+      "events": [
+        "2026-10-15T00:06:34-07:00 bench track: launched bench_park_bankindex_mutant (bench_park_bankindex_mutant.a1b1) beside route",
+        "2026-10-15T00:07:31-07:00 bench track: bench_park_bankindex_mutant FAIL as expected (rc=1) ",
+        "2026-10-15T00:16:29-07:00 TEXTBOOK-LINT route.a1: WARN ot_hgi_coll_park_q1 cells 42,460 flops 9,609 depth 270.1 ps util 0.4402 reach 0.0 um (2.9 s) || INFO clock_roots max_root_sinks=9621 root=port:clk rule=PASS: 9,621 sinks on the largest root <= 15,000; measured TT insertion 563.3 ps, leaf spread 29.4 ps || WARN high_fanout: reset u_q.u_rst.rst_n[0]$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R): 319 loads (319 flops, e.g. u_q.g_q.g_b[0].bpush$_DFF_PN0_) > 256: register it and replicate per region (rtl/lib/ot_rst_relay.sv: one relay copy per region) || WARN util_channel: utilisation 44.0% outside 45%-65% (std 6867 + macro 46699 um2 in 121688 um2): shrink the outline (long wires / sparse placement)"
+      ]
+    },
+    {
+      "job": "smh_tr_group_beat_w_ref-keep1-7ff908809",
+      "status": "CLOSED",
+      "host": "ot-epyc4",
+      "run": "/srv/opentallas-scratch2/claude/closure-loop/smh_tr_group_beat_w_ref-keep1-7ff908809",
+      "stage": "route",
+      "finished_at": "2026-10-15T00:53:29-07:00",
+      "tt_ps": 59.09,
+      "ff_ps": 21.27,
+      "drc": 0,
+      "ss_sensitivity_ps": null,
+      "events": [
+        "2026-10-15T00:19:31-07:00 bench track: bench_group_exact PASS (rc=0) work: [('checks', 4087)]",
+        "2026-10-15T00:19:34-07:00 bench track: launched bench_group_latency_mutant (bench_group_latency_mutant.a1b1) beside route",
+        "2026-10-15T00:20:29-07:00 bench track: bench_group_latency_mutant FAIL as expected (rc=1) "
+      ]
+    }
+  ],
+  "full_32_sm_fit": "UNPROVEN; dense actual-source packing in progress; no count reduction or area-only fit accepted",
+  "group_closed_records": {
+    "row_e": "024b4fe0e",
+    "beat_e": "a5009b725",
+    "row_w": "05ec0d136",
+    "beat_w": "2c5393f85"
+  },
+  "native_group_pin_audit": "row_w/row_e/beat_e PASS; beat_w FAIL launch227/capture463.1ps/spread82.4; source boundary repartition required",
+  "scope": "CDC historical diagnostic components; static native producer/consumer contract remains separate",
+  "actual_static_int8": {
+    "source": "1ce966147",
+    "evidence": "c454d62cd",
+    "status": "componentPASS3723packed7446full1099outputs; actualsignandcalendar mutantsFAIL; defaultoff;notintegrated/physical"
+  },
+  "production_programme_owner": "H-ELEM-A/static_sm_feed resumes actual mapped descriptor + native numerical join;520releasedrecords/13active19idle component source1e7975475; fullreservation/source joins remain open",
+  "dense_packing": {
+    "stage_walk_partial_source": "7c17a3940",
+    "stage_walk_partial_mm2": 9.9612888704,
+    "complete_4x4_before_retimes_source": "7fd711e0a",
+    "complete_4x4_with_external_retimes_source": "3300aa373",
+    "complete_4x4_with_external_retimes_mm2": 11.1634862976,
+    "adoption": "NONE; complete staticfront joint placement and native fullshape fit remain open"
+  },
+  "park_q1_native": "CLOSED f6b4ec71b TT30.65/FF3.59/DRC0; native pop capture192.1ps FAIL versus190; collective owner notified",
+  "full_checkpoint_address_plan": {
+    "path": "/home/ubuntu/wt/hbm-die-feas-1014/results/arch/hbm_die_v15/full_native_checkpoint_plan/book.json",
+    "sha256": "606ab17368228f0826cc279c9a12e9071402cf0dd4e8caae6ba0b38479ed3983",
+    "status": "ALL96_RANK32_SM_SOURCE_ADDRESS_CAPACITY_COLLISION_PASS_INSTALLATION_REQUIRED",
+    "per_SM_capacity_bytes": 268435456,
+    "max_SM_payload_bytes": 179595520,
+    "installed": false,
+    "descriptor_support": "mapped4 base0current; nonzero low30offset extension pendingserviceowner",
+    "component_join": "520recordbootstraprow20738 remains separate safeexistingproof"
+  },
+  "full_sm_geometry_inventory": {
+    "path": "/home/ubuntu/wt/sm-dense-pack-1015/results/hbm_sm_dense_pack/canonical_system_inventory.json",
+    "commits": [
+      "2e44ce50a",
+      "9daffc42c"
+    ],
+    "actual_children_LEFs": 19,
+    "missing_tile_parent_LEFs": 16,
+    "frame_mm2": 11.316163968,
+    "scope": "actualsource inventory; plannedtile group outlines are not nativeclosure"
+  },
+  "park_q1_production_scope": {
+    "decision": "Do not reroute historical unused PARKQ1; preserveCLOSEDrecordandnativeFAIL",
+    "source_map_commit": "bc3a80e94",
+    "source_map": "results/arch/hbm_p2p_1014/static_storage_successors_1015.json",
+    "selected_V1_V4_PARK_references": 0,
+    "logical_storage": "successor-native storage/resultstore joins remain separatelyowned/open"
+  },
+  "native_numerical_join_live": {
+    "owner": "/root/h_elements_a/static_sm_feed",
+    "host": "ot-epyc1tb",
+    "unit": "oth-ubuntu-731050-1792055886",
+    "session": 74470,
+    "admission_GB": 72,
+    "threads": 8,
+    "snapshot": "/var/tmp/smh-native-mapped-1015-v2",
+    "DUT": "actual mapped4PF/PHY32landing+5packedcache+2programmeSRAM\u219283/read34\u2192original productionNC8/SUB4SM",
+    "current_stack": 0,
+    "scope": "SM00..07 first, explicit separateSTACK1sourceparameter build/reuseobjects forSM08..12 afterterminal",
+    "activations": "declaredexternal40addresses\u00d713xwritebeats; actualVMproducerunbound",
+    "format": "actualcheckpointDSfmt1 FP8/E4M3+UE8M0",
+    "verdict": "PENDING; no numerical/performanceclaim",
+    "prior_failure": "v1PHYAPImismatchterminalpreserved; v2usesexact440d2PHY"
+  }
+}
