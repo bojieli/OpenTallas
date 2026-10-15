@@ -249,5 +249,12 @@
    24.0,
    153.0
   ]
+ },
+ "reroute_reason": {
+  "kind": "native_launch",
+  "source": "results/arch/qwen_split_1014/compute_native_audit_1015/qvm_bank_banked_native_ne2r.json",
+  "cell": "qvm_bank_banked_native",
+  "launch_ps": 297.5,
+  "fix": "pin geometry: clock/rst entries at child clock-pin heights, q ranged facing u_out"
  }
 }
