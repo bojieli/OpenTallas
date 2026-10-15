@@ -11,6 +11,7 @@ module ot_hbm_idx_selector_static #(parameter integer MUT=0)(
  input wire [2367:0] in_line,
  output reg [3:0] out_v,output reg [2367:0] out_line,
  output wire [15:0] threshold_observe,
+ output reg [3:0] selected_v,output reg [2367:0] selected_line,
  output wire [55:0] selected_observe,
  output reg fault
 );
@@ -99,10 +100,11 @@ module ot_hbm_idx_selector_static #(parameter integer MUT=0)(
   end
   always @(posedge clk_q[q] or negedge rst_n)begin
    if(!rst_n)begin
-    rv<=0;buf_q<=0;fill<=0;wp<=0;tie_rem<=0;comp_started<=0;selected[q]<=0;qfault[q]<=0;out_v[q]<=0;last_id<=0;
+    rv<=0;buf_q<=0;fill<=0;wp<=0;tie_rem<=0;comp_started<=0;selected[q]<=0;qfault[q]<=0;out_v[q]<=0;selected_v[q]<=0;last_id<=0;
     for(integer b=0;b<64;b=b+1)hist[q][b]<=0;
    end else begin
-    rv<=re;rop<=op;rpass<=pass;raddr<=addr;out_v[q]<=emit;
+    rv<=re;rop<=op;rpass<=pass;raddr<=addr;out_v[q]<=emit;selected_v[q]<=compact;
+    for(integer l=0;l<W;l=l+1)begin selected_line[q*LW+l*EW+:EW]<=raw[l*EW+:EW];selected_line[q*LW+l*EW]<=compact&&mask_choose[l];end
     if(op==1)begin buf_q<=0;fill<=0;wp<=0;tie_rem<=0;comp_started<=0;selected[q]<=0;last_id<=0;end
     if(op==3)for(integer b=0;b<64;b=b+1)hist[q][b]<=0;
     if((rv&&rop==4)||op==2)begin

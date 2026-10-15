@@ -20,15 +20,17 @@
 // The two ports are separate channel groups of the stack model: their DRAM
 // timing is modelled per group, the bandwidth interference between them is NOT
 // modelled (the adopted gates put them on separate model instances too).
-// Capacity: K_MEM sectors on the K port; a request past it raises k_oor (the
-// model itself would wrap the address).
+// Modeled window: [K_BASE,K_BASE+K_MEM) native sectors. Requests outside it
+// raise k_oor and are blocked before the model modulo. Native addresses are
+// preserved for PC hashing and DRAM timing; no unmapped prefix is allocated.
 // Contents: MEM_WORDS 32-byte sectors per group; the bench loads them through
 // the hierarchy (u_k.mem, g_w.u_w.mem), as the gates do.
 // ---------------------------------------------------------------------------
 module ot_chip_v41x_hbm3e_phy #(
     parameter integer NPC       = 32,
     parameter integer K_AW      = 28,          // full-shape packed regions need 30
-    parameter integer K_MEM     = 1 << 18,     // K port sectors
+    parameter integer K_MEM     = 1 << 18,     // sectors in the modeled K-port window
+    parameter [63:0] K_BASE     = 64'd0,       // first full native sector in that window
     parameter integer W_PORT    = 0,
     parameter integer W_AW      = 24,          // full-shape weight-sector address is 30 bits
     parameter integer NPC_W     = 8,
@@ -67,28 +69,37 @@ module ot_chip_v41x_hbm3e_phy #(
     output wire [NPC_W*5-1:0]   wr_beat,
     output wire [NPC_W*256-1:0] wr_data,
     // status
-    output reg                  k_oor,         // sticky: a K request reached past K_MEM (the model would wrap)
+    output reg                  k_oor,         // sticky: an invalid K request was blocked before modulo
     output wire                 w_oor,         // sticky: invalid W request blocked before model modulo
     output wire [63:0]          refreshes,     // K port refresh events
     output wire [31:0]          w_reads        // W port sector reads
 );
+    // A contiguous window of K_MEM sectors has no modulo aliases within it.
+    // The full native address, not its backing-array index, still reaches u_k.
+    localparam [64:0] K_END = {1'b0,K_BASE} + 65'(K_MEM);
+    initial begin
+        if (K_AW < 1 || K_AW > 63 || K_MEM < 1 ||
+            {1'b0,K_BASE} >= (65'd1 << K_AW) || K_END > (65'd1 << K_AW))
+            $fatal(1,"ot_chip_v41x_hbm3e_phy: K window exceeds native address width");
+    end
+    wire [NPC-1:0] k_range_ok,k_model_ready;
+    for (genvar kp = 0; kp < NPC; kp = kp + 1) begin : g_k_window
+        wire [64:0] first_sector = 65'(k_addr[kp*K_AW +: K_AW]);
+        wire [64:0] end_sector = first_sector + 65'(k_len[kp*4 +: 4]);
+        assign k_range_ok[kp] = k_len[kp*4 +: 4] != 0 &&
+            first_sector >= {1'b0,K_BASE} && end_sector <= K_END;
+        assign k_rdy[kp] = k_model_ready[kp] && k_range_ok[kp];
+    end
     ot_hdc_v41x_idx_hbm #(.NPC(NPC), .AW(K_AW), .DW(256), .MEM_WORDS(K_MEM), .TAGW(KTAGW), .LENW(4), .BEATW(4), .CLK_PS(CLK_PS),
                           .QD(64), .REFPB(3), .MEM_MODE(0)) u_k (
-        .clk(clk), .rst_n(rst_n), .req_v(k_v), .req_rdy(k_rdy), .req_addr(k_addr), .req_len(k_len),
+        .clk(clk), .rst_n(rst_n), .req_v(k_v & k_range_ok), .req_rdy(k_model_ready), .req_addr(k_addr), .req_len(k_len),
         .req_tag(k_tag), .req_we(k_we), .req_wdata(k_wdata), .req_wstrb(k_wstrb), .wr_done(k_wr_done),
         .rsp_v(kr_v), .rsp_rdy(kr_rdy), .rsp_tag(kr_tag), .rsp_beat(kr_beat), .rsp_data(kr_data));
-    // capacity check: the model addresses its array modulo K_MEM; a request past it must fault, never wrap
     integer c;
     always @(posedge clk or negedge rst_n)
         if (!rst_n) k_oor <= 1'b0;
         else for (c = 0; c < NPC; c = c + 1)
-            if (k_v[c] && k_rdy[c] && (64'(k_addr[c*K_AW +: K_AW]) + 64'(k_len[c*4 +: 4]) > 64'(K_MEM))) begin
-                k_oor <= 1'b1;
-`ifndef SYNTHESIS
-                $error("ot_chip_v41x_hbm3e_phy: K request sector %0d + %0d past the stack's %0d sectors",
-                       k_addr[c*K_AW +: K_AW], k_len[c*4 +: 4], K_MEM);
-`endif
-            end
+            if (k_v[c] && !k_range_ok[c]) k_oor <= 1'b1;
     reg [63:0] ref_n;
     integer p;
     always @(*) begin

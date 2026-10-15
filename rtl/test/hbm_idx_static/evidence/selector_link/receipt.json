@@ -1,0 +1,27 @@
+{
+  "source": "37339a2e6",
+  "unit": "EPYC1/523278",
+  "actualSRAMs": 20,
+  "frames": 3,
+  "exact_selected_records_each": 512,
+  "fixed_edges_each": 963,
+  "firstTX_each": 833,
+  "TX_beatspacing": 8,
+  "native_flits_each": 64,
+  "native_rank": 3,
+  "gbase": 1,
+  "global_flit_indices": [
+    128,
+    191
+  ],
+  "mutant_errors": [
+    3072,
+    192
+  ],
+  "sha256": {
+    "rtl/hbm_accel/index/ot_hbm_idx_topk_link_static.sv": "acf1b5aaef1b103a2bd540497a6f4890353b4feed7d54e9d8cac503d6eb6ef92",
+    "rtl/hbm_accel/index/ot_hbm_idx_selector_static.sv": "41cf529b5f30e8d6446ac8e7070a3e4b6514a45eacbb65c6bb91512fd9df66b2",
+    "rtl/test/hbm_idx_static/tb_selector_link_static.sv": "744b5c14a5eca836a5d6c46ba3fe42501e61bc2523da198ff827bb94c07e1f4a"
+  },
+  "scope": "actual selector+8macro globalcompactor nativeproducer. nativeTKM join/wholeINDEXrate/physical OPEN"
+}

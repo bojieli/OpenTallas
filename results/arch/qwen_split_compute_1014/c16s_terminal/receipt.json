@@ -1,0 +1,30 @@
+{
+  "schema": "opentallas.qwen.c16s-terminal.v1",
+  "qualified": false,
+  "status": "FAIL",
+  "source_commit": "675166521",
+  "GRT": {
+    "process_exit": 0,
+    "overflow": 0,
+    "scope": "historical unrelayed diagnostic,2realmasters/16of1630instances only"
+  },
+  "STA": {
+    "status": "FLOW_ERROR",
+    "all_corners": "clock boundary pin missing or ambiguous: s_2_0/ck",
+    "TT": null,
+    "FF": null,
+    "SS": null
+  },
+  "other_failures": [
+    "port bind fails",
+    "PA DRT-0305",
+    "VDD/VSS PSM-0069"
+  ],
+  "next_action": "Fresh current source binding and source-correct clock entries required; do not rerun this invalid historical case",
+  "sha256": {
+    "grt_tt.log": "b24775bca532151e2be56583a6ae222dd4821fac47cd683f694510a46d15622c",
+    "STATUS.log": "0c72dcba747e9e255d6d86ca68da60d9f2dd8d6dedd9c9d44e2bfd8b6556eca3",
+    "grt_ss.log": "4e37f6d8d227c2db4471db9bf9a36fc0d443f1c9eb0e623de1cc2f8d6e5481f3",
+    "grt_ff.log": "b48cab60278405db3102ceeb67d0b3881abdf92ab352e6cc90530769e7865773"
+  }
+}

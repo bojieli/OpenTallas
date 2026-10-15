@@ -1,0 +1,207 @@
+{
+ "schema": "opentallas.qwen-registry-successors.v1",
+ "coordinator_source": "/home/ubuntu/claude-takeover-20261007/rom-open-ownership-map-20261015.json",
+ "owner": "/root/q_dvm",
+ "entries": [
+  {
+   "registry_element": "ot_qfd_vm_bay_pad15s0",
+   "source_successor_mapping_verified": true,
+   "required_successors": [
+    "qfd_xs_tap",
+    "qfd_xhead_e",
+    "qfd_xhead_w",
+    "ot_qfd_xs_leaf",
+    "qfd_xcst_n",
+    "qfd_xcst_s"
+   ],
+   "source_evidence": [
+    "rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:8 (NOX selects region_nx)",
+    "rtl/qwen_sys/vm_nox_20261014/ot_qfd_vm_region_nx.sv:9 (removed central x path, preserved banks/SU/row paths)",
+    "selected_nox_hierarchy.json (actual elaborated cells)"
+   ],
+   "mapping_reason": "Old central x plane/pad transport is absent from selected NOX hierarchy; distributed tap/head/leaf/stations provide its read transport",
+   "closure_status": "OPEN_REQUIRED_SUCCESSORS_UNQUALIFIED",
+   "physical_qualification_complete": false,
+   "next_action": "Qualify every actual selected hard-child view and composed parent clock/pin/route profile; no legacy status credit"
+  },
+  {
+   "registry_element": "ot_qfd_vm_bay_pad15s0m",
+   "source_successor_mapping_verified": true,
+   "required_successors": [
+    "qfd_xs_tap",
+    "qfd_xhead_e",
+    "qfd_xhead_w",
+    "ot_qfd_xs_leaf",
+    "qfd_xcst_n",
+    "qfd_xcst_s"
+   ],
+   "source_evidence": [
+    "rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:8 (NOX selects region_nx)",
+    "rtl/qwen_sys/vm_nox_20261014/ot_qfd_vm_region_nx.sv:9 (removed central x path, preserved banks/SU/row paths)",
+    "selected_nox_hierarchy.json (actual elaborated cells)"
+   ],
+   "mapping_reason": "Old central x plane/pad transport is absent from selected NOX hierarchy; distributed tap/head/leaf/stations provide its read transport",
+   "closure_status": "OPEN_REQUIRED_SUCCESSORS_UNQUALIFIED",
+   "physical_qualification_complete": false,
+   "next_action": "Qualify every actual selected hard-child view and composed parent clock/pin/route profile; no legacy status credit"
+  },
+  {
+   "registry_element": "ot_qfd_vm_bay_pad15s0s",
+   "source_successor_mapping_verified": true,
+   "required_successors": [
+    "qfd_xs_tap",
+    "qfd_xhead_e",
+    "qfd_xhead_w",
+    "ot_qfd_xs_leaf",
+    "qfd_xcst_n",
+    "qfd_xcst_s"
+   ],
+   "source_evidence": [
+    "rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:8 (NOX selects region_nx)",
+    "rtl/qwen_sys/vm_nox_20261014/ot_qfd_vm_region_nx.sv:9 (removed central x path, preserved banks/SU/row paths)",
+    "selected_nox_hierarchy.json (actual elaborated cells)"
+   ],
+   "mapping_reason": "Old central x plane/pad transport is absent from selected NOX hierarchy; distributed tap/head/leaf/stations provide its read transport",
+   "closure_status": "OPEN_REQUIRED_SUCCESSORS_UNQUALIFIED",
+   "physical_qualification_complete": false,
+   "next_action": "Qualify every actual selected hard-child view and composed parent clock/pin/route profile; no legacy status credit"
+  },
+  {
+   "registry_element": "ot_qfd_vm_grp",
+   "source_successor_mapping_verified": true,
+   "required_successors": [
+    "ot_qfd_vm_bank_t",
+    "ot_qfd_vm_bctl_nx",
+    "ot_qfd_vm_delay1_t",
+    "ot_qfd_vm_delay2_t",
+    "ot_qfd_vm_rr2_nx",
+    "ot_qfd_vm_rr4_t",
+    "ot_qfd_vm_sctl_t",
+    "ot_qfd_vm_su1024_t",
+    "ot_qfd_vm_su_t",
+    "qfd_vm_qcommit"
+   ],
+   "source_evidence": [
+    "rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:8 (NOX selects region_nx)",
+    "rtl/qwen_sys/vm_nox_20261014/ot_qfd_vm_region_nx.sv:9 (removed central x path, preserved banks/SU/row paths)",
+    "selected_nox_hierarchy.json (actual elaborated cells)"
+   ],
+   "mapping_reason": "Old monolithic bank-group view is replaced by eight real NOX regions made of the listed hard children; no old group cells in selected hierarchy",
+   "closure_status": "OPEN_REQUIRED_SUCCESSORS_UNQUALIFIED",
+   "physical_qualification_complete": false,
+   "next_action": "Qualify every actual selected hard-child view and composed parent clock/pin/route profile; no legacy status credit"
+  },
+  {
+   "registry_element": "qfd_vm_grp",
+   "source_successor_mapping_verified": true,
+   "required_successors": [
+    "ot_qfd_vm_bank_t",
+    "ot_qfd_vm_bctl_nx",
+    "ot_qfd_vm_delay1_t",
+    "ot_qfd_vm_delay2_t",
+    "ot_qfd_vm_rr2_nx",
+    "ot_qfd_vm_rr4_t",
+    "ot_qfd_vm_sctl_t",
+    "ot_qfd_vm_su1024_t",
+    "ot_qfd_vm_su_t",
+    "qfd_vm_qcommit"
+   ],
+   "source_evidence": [
+    "rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:8 (NOX selects region_nx)",
+    "rtl/qwen_sys/vm_nox_20261014/ot_qfd_vm_region_nx.sv:9 (removed central x path, preserved banks/SU/row paths)",
+    "selected_nox_hierarchy.json (actual elaborated cells)"
+   ],
+   "mapping_reason": "Old monolithic bank-group view is replaced by eight real NOX regions made of the listed hard children; no old group cells in selected hierarchy",
+   "closure_status": "OPEN_REQUIRED_SUCCESSORS_UNQUALIFIED",
+   "physical_qualification_complete": false,
+   "next_action": "Qualify every actual selected hard-child view and composed parent clock/pin/route profile; no legacy status credit"
+  },
+  {
+   "registry_element": "qfd_sp_vector_memory",
+   "source_successor_mapping_verified": true,
+   "required_successors": [
+    "qfd_sp_vector_memory"
+   ],
+   "source_evidence": [
+    "rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:8 (NOX selects region_nx)",
+    "rtl/qwen_sys/vm_nox_20261014/ot_qfd_vm_region_nx.sv:9 (removed central x path, preserved banks/SU/row paths)",
+    "selected_nox_hierarchy.json (actual elaborated cells)"
+   ],
+   "mapping_reason": "This exact master remains required; name is not retired",
+   "closure_status": "OPEN_REQUIRED_SUCCESSORS_UNQUALIFIED",
+   "physical_qualification_complete": false,
+   "next_action": "Qualify every actual selected hard-child view and composed parent clock/pin/route profile; no legacy status credit"
+  },
+  {
+   "registry_element": "ot_qfd_xs_leaf",
+   "source_successor_mapping_verified": true,
+   "required_successors": [
+    "ot_qfd_xs_leaf"
+   ],
+   "source_evidence": [
+    "rtl/qwen_sys/dvm_20261014/ot_qfd_xslice_slots.sv (same die-name masters)",
+    "results/rtl/qwen_dvm_native_r6_1015/source.json (actual functional source proof)"
+   ],
+   "mapping_reason": "This exact master remains required; name is not retired",
+   "closure_status": "OPEN_REQUIRED_SUCCESSORS_UNQUALIFIED",
+   "physical_qualification_complete": false,
+   "next_action": "Safer bank/mux partition and registered paths after repeated congestion; preserve xl8 diagnostic route; no geometric-only acceptance"
+  },
+  {
+   "registry_element": "qfd_xhead_e",
+   "source_successor_mapping_verified": true,
+   "required_successors": [
+    "qfd_xhead_e"
+   ],
+   "source_evidence": [
+    "rtl/qwen_sys/dvm_20261014/ot_qfd_xslice_slots.sv (same die-name masters)",
+    "results/rtl/qwen_dvm_native_r6_1015/source.json (actual functional source proof)"
+   ],
+   "mapping_reason": "This exact master remains required; name is not retired",
+   "closure_status": "OPEN_REQUIRED_SUCCESSORS_UNQUALIFIED",
+   "physical_qualification_complete": false,
+   "next_action": "Safer bank/mux partition and registered paths after repeated congestion; preserve xl8 diagnostic route; no geometric-only acceptance"
+  },
+  {
+   "registry_element": "qfd_xhead_w",
+   "source_successor_mapping_verified": true,
+   "required_successors": [
+    "qfd_xhead_w"
+   ],
+   "source_evidence": [
+    "rtl/qwen_sys/dvm_20261014/ot_qfd_xslice_slots.sv (same die-name masters)",
+    "results/rtl/qwen_dvm_native_r6_1015/source.json (actual functional source proof)"
+   ],
+   "mapping_reason": "This exact master remains required; name is not retired",
+   "closure_status": "OPEN_REQUIRED_SUCCESSORS_UNQUALIFIED",
+   "physical_qualification_complete": false,
+   "next_action": "Safer bank/mux partition and registered paths after repeated congestion; preserve xl8 diagnostic route; no geometric-only acceptance"
+  }
+ ],
+ "no_status_override": "Mapping proves selected source identity only. It does not mark any required successor closed or qualified. Legacy registry labels remain historical evidence.",
+ "nox_required_hard_children": [
+  "ot_qfd_vm_bank_t",
+  "ot_qfd_vm_bctl_nx",
+  "ot_qfd_vm_delay1_t",
+  "ot_qfd_vm_delay2_t",
+  "ot_qfd_vm_rr2_nx",
+  "ot_qfd_vm_rr4_t",
+  "ot_qfd_vm_sctl_t",
+  "ot_qfd_vm_su1024_t",
+  "ot_qfd_vm_su_t",
+  "qfd_vm_qcommit"
+ ],
+ "distributed_x_required_masters": [
+  "qfd_xs_tap",
+  "qfd_xhead_e",
+  "qfd_xhead_w",
+  "ot_qfd_xs_leaf",
+  "qfd_xcst_n",
+  "qfd_xcst_s"
+ ],
+ "remaining": [
+  "actual parent and die native timing",
+  "safe leaf/head layout and routing",
+  "full native stage producer/consumer/calendar join and measured cost"
+ ]
+}

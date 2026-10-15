@@ -1,0 +1,20 @@
+{
+  "source_commit": "0c1785f56",
+  "unit": "ot-epyc4/oth-ubuntu-1065187-1792047638",
+  "heads": 32,
+  "blocks": 128,
+  "exact_queries": 32,
+  "mutants": [
+    "block34zero:head8mismatch",
+    "duplicate_lastblock:31heads+fault",
+    "earlyhead31:31heads+fault"
+  ],
+  "invalid_initial_mutant": "query_initial MUT3 emitted already-ready head0; not credited",
+  "reference": "hdc_golden_v41 FP4 E8M0 quantisation",
+  "qualification": "static query component only, no physical/fullINDEX qualification",
+  "sha256": {
+    "rtl/hbm_accel/index/ot_hbm_idx_query_static.sv": "180e722a15ce6755cb3581a5b44fe833bbf5a4eaf24807322356adbee3e6eb75",
+    "rtl/test/hbm_idx_static/tb_query_static.sv": "f9c64fac9738f729d93e0c4fa0b16b056a6927c7b5ed8788d2ccbb9469b973a3",
+    "tools/hbm_idx_static_query_vectors.py": "4c74e619b654e61f5c0ae9c6305bd420a9dbc9063ba57e73c9f393ed23fcd24b"
+  }
+}

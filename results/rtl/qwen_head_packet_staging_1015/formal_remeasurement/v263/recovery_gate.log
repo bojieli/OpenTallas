@@ -1,0 +1,19 @@
+GATE INFO layer: tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)
+GATE INFO source_binding: gate-consumed source and gate-executed overlays match; 2 staged file(s) the gate did not consume differ (reported, not refused): rtl/physical/ot_qfd_su_cbuf_g_tp8_native.sv, tools/ref_tile/specs_q_compute_native/qfd_su_cbuf_g_tp8_native.json
+GATE INFO source_binding: NEW staged remeasurement: all original staged bytes, script and CTS artifacts rehashed; original archive stdout unavailable
+GATE INFO remote: reused verified original netlist, floorplan and CTS state on ot-epyc1tb; only measurement commands executed anew
+GATE WARN util: synthesized std area 140 um2 + macros 0 in core 653: util 21%  -> FIX: set "std_area_um2": 140 and drop 'outline' (gen sizes to util 0.52)
+GATE INFO textbook: WARN qkh_packet_v263 cells 800 flops 268 depth 11.7 ps util 0.2328 reach 7.5 um (0.0 s)
+GATE WARN textbook.util_channel: utilisation 23.3% outside 45%-65% (std 152 + macro 0 um2 in 653 um2): shrink the outline (long wires / sparse placement)  -> FIX: size the outline to util 0.50-0.55 with >= 20 um macro channels
+GATE INFO cts_calibration: ss insertion all 99.6..103.6 ps (spread 4.0), boundary mean 101.8; tt insertion all 72.8..76.3 ps (spread 3.5), boundary mean 74.7; ff insertion all 57.5..60.9 ps (spread 3.4), boundary mean 59.4; macro_clk flag False
+GATE INFO density: effective global-placement target density 0.500 vs spec PD 0.50
+GATE INFO path_classes: constraints signoff /src/physical/ref_tile/qkh_packet_v263/signoff.sdc (TT placement RC; diagnostic)
+GATE INFO path_classes: reg->out      263 paths, worst slack 272.3 ps (e.g. q[232])
+GATE INFO path_classes: in->reg        42 paths, worst slack 409.3 ps (e.g. u_pipe.q[29]$_DFF_PN0_/D)
+GATE INFO path_classes: reg->reg      263 paths, worst slack 570.7 ps (e.g. u_pipe.q[0]$_DFF_PN0_/RESETN)
+GATE INFO path_classes: setup WNS 2.7229818400087424e-10 hold WNS 2.7631542887096572e-11
+GATE INFO clock_rule: root port:clk: 268 sinks on the largest root <= 15,000; measured TT insertion 76.3 ps, leaf spread 3.5 ps
+PRE_ROUTE_GATE: WARN (0 fail, 2 warn)
+GATE: qkh_packet_v263/gate_result.json written (exact staged source binding; commit it with the kit)
+
+STDERR
