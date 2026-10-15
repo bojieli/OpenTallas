@@ -8,7 +8,7 @@ def emit(index=0,weight=0,query=0,head=0,beat=0,op=0,ps=0,addr=0,flush=0,link=0,
  p.append(weight<<31|query<<30|head<<29|beat<<28|index<<20|op<<16|ps<<14|addr<<6|flush<<5|link<<4|group)
 def wait(n):
  for _ in range(n):emit()
-emit(weight=1);wait(16)
+emit(weight=1,op=1);wait(16)
 for q in range(128):emit(query=1,index=q)
 wait(28)
 for h in range(32):emit(head=1,index=h)
