@@ -21,7 +21,7 @@
 // Latency: TX +1 (queue / CRC register), RX +1 (check register) per direction.
 // MUT (bench only): 1 = CRC never checked (a corrupted flit is delivered), 2 = nak ignored (no replay).
 // ---------------------------------------------------------------------------------------------------------------------
-module ot_qkvd_d2d_llr #(
+module ot_qkvd_d2d_llr_ctl #(
     parameter integer FW    = 548,
     parameter integer QD    = 64,
     parameter integer GUARD = 8,
@@ -44,7 +44,11 @@ module ot_qkvd_d2d_llr #(
     input  wire          p_rx_v,
     input  wire [PW-1:0] p_rx_flit,
     output reg           fault,
-    output reg  [2:0]    fault_cause          // {nak timeout storm, queue overflow, ack out of window}
+    output reg  [2:0]    fault_cause,         // {nak timeout storm, queue overflow, ack out of window}
+    output wire q_we,
+    output wire [$clog2(QD)-1:0] q_wa, q_ra,
+    output wire [FW-1:0] q_din,
+    input wire [FW-1:0] q_dout
 );
     localparam integer QA = $clog2(QD);
     function automatic [15:0] crc16(input [PW-17:0] d);
@@ -80,7 +84,7 @@ module ot_qkvd_d2d_llr #(
     wire         r_take = r_good && r_dv && (ahead == 8'd0);
     wire         r_lost = rv && (!r_good || (r_dv && ahead != 8'd0 && ahead < 8'd128));
     // ---------------- TX replay queue ----------------
-    reg  [FW-1:0] q [0:QD-1];
+    // Storage lives in independently clocked bit-slice leaves.
     reg  [7:0]    wp, sp, ap;                            // write (next lseq), send, oldest unacked
     wire [7:0]    occ = wp - ap;
     wire          send_d = p_tx_up && (sp != wp);
@@ -89,10 +93,16 @@ module ot_qkvd_d2d_llr #(
     wire          r_win  = ((r_next - ap) <= occ);                             // inside [ap, wp]
     wire          g_ack = r_good && r_ackv && r_win;
     wire          g_nak = r_good && r_nak && (MUT != 2) && r_win;
-    always @(posedge clk) if (a_tx_v) q[wp[QA-1:0]] <= a_tx_flit;
+    assign q_we = a_tx_v;
+    assign q_wa = wp[QA-1:0];
+    // Prefetch the pointer that control will hold after this edge.
+    // Same-edge enqueue/read forwards din in each bank.
+    wire [7:0] pref_s = g_nak ? r_next : (send_d ? sp + 1'b1 : sp);
+    assign q_ra = pref_s[QA-1:0];
+    assign q_din = a_tx_flit;
     reg [PW-17:0] body;
     always @* begin
-        body = {nak_req, ack_s, ack_have, send_d, send_d ? sp : 8'd0, send_d ? q[sp[QA-1:0]] : {FW{1'b0}}};
+        body = {nak_req, ack_s, ack_have, send_d, send_d ? sp : 8'd0, send_d ? q_dout : {FW{1'b0}}};
     end
     reg f_ack, f_ovr, f_nak;
     always @(posedge clk or negedge rst_n)
@@ -131,4 +141,88 @@ module ot_qkvd_d2d_llr #(
             fault_cause <= {f_nak, f_ovr, f_ack};
             fault <= f_nak | f_ovr | f_ack;
         end
+endmodule
+
+// 64 x 137 = 8,768 storage sinks at the native production shape. No reset
+// touches the payload array: occupancy/sequence control prevents invalid reads.
+// The read output is registered at the leaf pin. Control prefetches its next
+// send pointer and a write-through bypass covers enqueue into an empty queue.
+// This partition still requires native physical timing before qualification.
+module ot_qkvd_llr_replay_leaf #(
+    parameter integer W = 137, QD = 64,
+    parameter integer QA = $clog2(QD), MUT = 0
+) (
+    input wire ck, we,
+    input wire [QA-1:0] wa, ra,
+    input wire [W-1:0] din,
+    output reg [W-1:0] dout
+);
+    reg [W-1:0] q [0:QD-1];
+    always @(posedge ck) if (we) q[wa] <= din;
+    always @(posedge ck)
+        dout <= (we && wa == ra ? din : q[ra]) ^
+            (MUT != 0 ? {{(W-1){1'b0}}, 1'b1} : {W{1'b0}});
+endmodule
+
+// ck[0] is the control entry, ck[1..4] the four storage entries. They belong
+// to one logical domain, delivered independently at phi - each leaf's R.
+// Predicted-address prefetch preserves the normal send pipeline and throughput;
+// retry and full-queue behavior must pass the production link bench.
+module ot_qkvd_d2d_llr_split #(
+    parameter integer FW = 548, QD = 64, GUARD = 8, NAKT = 64,
+    parameter integer MUT = 0, PW = FW + 35
+) (
+    input wire [4:0] ck,
+    input wire rst_n,
+    output wire a_tx_up,
+    input wire a_tx_v,
+    input wire [FW-1:0] a_tx_flit,
+    output wire a_rx_v,
+    output wire [FW-1:0] a_rx_flit,
+    input wire p_tx_up,
+    output wire p_tx_v,
+    output wire [PW-1:0] p_tx_flit,
+    input wire p_rx_v,
+    input wire [PW-1:0] p_rx_flit,
+    output wire fault,
+    output wire [2:0] fault_cause
+);
+    localparam integer BW = (FW + 3) / 4;
+    wire we;
+    wire [$clog2(QD)-1:0] wa, ra;
+    wire [FW-1:0] din;
+    wire [4*BW-1:0] padded_in = {{(4*BW-FW){1'b0}}, din};
+    wire [4*BW-1:0] padded_out;
+    ot_qkvd_d2d_llr_ctl #(.FW(FW), .QD(QD), .GUARD(GUARD), .NAKT(NAKT), .MUT(MUT), .PW(PW)) u_ctl (
+        .clk(ck[0]), .rst_n(rst_n), .a_tx_up(a_tx_up), .a_tx_v(a_tx_v), .a_tx_flit(a_tx_flit), .a_rx_v(a_rx_v), .a_rx_flit(a_rx_flit), .p_tx_up(p_tx_up), .p_tx_v(p_tx_v), .p_tx_flit(p_tx_flit), .p_rx_v(p_rx_v), .p_rx_flit(p_rx_flit), .fault(fault), .fault_cause(fault_cause),
+        .q_we(we), .q_wa(wa), .q_ra(ra), .q_din(din), .q_dout(padded_out[FW-1:0]));
+    for (genvar b = 0; b < 4; b = b + 1) begin : g_bank
+        ot_qkvd_llr_replay_leaf #(.W(BW), .QD(QD), .MUT(MUT == 3 && b == 0)) u_replay (
+            .ck(ck[b+1]), .we(we), .wa(wa), .ra(ra),
+            .din(padded_in[b*BW +: BW]), .dout(padded_out[b*BW +: BW]));
+    end
+endmodule
+
+// Historical single-clock API for existing benches/clients. Native die binding
+// must use the split module's explicit entries, never this compatibility API.
+module ot_qkvd_d2d_llr #(
+    parameter integer FW = 548, QD = 64, GUARD = 8, NAKT = 64,
+    parameter integer MUT = 0, PW = FW + 35
+) (
+    input wire clk, rst_n,
+    output wire a_tx_up,
+    input wire a_tx_v,
+    input wire [FW-1:0] a_tx_flit,
+    output wire a_rx_v,
+    output wire [FW-1:0] a_rx_flit,
+    input wire p_tx_up,
+    output wire p_tx_v,
+    output wire [PW-1:0] p_tx_flit,
+    input wire p_rx_v,
+    input wire [PW-1:0] p_rx_flit,
+    output wire fault,
+    output wire [2:0] fault_cause
+);
+    ot_qkvd_d2d_llr_split #(.FW(FW), .QD(QD), .GUARD(GUARD), .NAKT(NAKT), .MUT(MUT), .PW(PW)) u_split (
+        .ck({5{clk}}), .rst_n(rst_n), .a_tx_up(a_tx_up), .a_tx_v(a_tx_v), .a_tx_flit(a_tx_flit), .a_rx_v(a_rx_v), .a_rx_flit(a_rx_flit), .p_tx_up(p_tx_up), .p_tx_v(p_tx_v), .p_tx_flit(p_tx_flit), .p_rx_v(p_rx_v), .p_rx_flit(p_rx_flit), .fault(fault), .fault_cause(fault_cause));
 endmodule
