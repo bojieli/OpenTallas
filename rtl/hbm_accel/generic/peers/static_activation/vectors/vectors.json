@@ -1,0 +1,28 @@
+{
+  "blocks": 1638,
+  "native_blocks": 1280,
+  "native_shape": [
+    8,
+    5120
+  ],
+  "native_issue_edges_two_roots": 640,
+  "labels": {
+    "native": 1280,
+    "zero": 1,
+    "signed_zero": 1,
+    "power_sweep": 41,
+    "floor_subnormal_max": 7,
+    "exact_RNE_midpoints": 27,
+    "finite_bits": 256,
+    "nonfinite": 24,
+    "padding": 1
+  },
+  "raw_sha256": "8139fc833a6f006d35e7b416c58ce216864c6510dffba907d57bfd828f0acfae",
+  "SeedX_recreated_byte_identical": true,
+  "golden": "actual hdc_golden_v41.quant_fp8 + publicE4M3 table inverse, qdq_fp8 for y; nonfinite onlyfault defined",
+  "source_sha256": {
+    "raw_fp32.hex": "8139fc833a6f006d35e7b416c58ce216864c6510dffba907d57bfd828f0acfae",
+    "hdc_golden.py": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6",
+    "hdc_golden_v41.py": "1bf8f3dd95228cabb0b717ea96d0b2ec903c88d0c85c5834a56c5fc8466373d4"
+  }
+}

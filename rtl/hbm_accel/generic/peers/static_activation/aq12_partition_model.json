@@ -1,0 +1,29 @@
+{
+  "stage": "BEFORE_PARTITIONED_SOURCE",
+  "source_module": "ot_dsrom_aq12",
+  "source_sha256": "2f7ec21829e132dc0be7fb8c7de896e4a50456220498f1dc7ee298a386a98aa1",
+  "new_module": "ot_hbm_sm_aq_static",
+  "change": "existing sequentialstage clockassignment only; no math,validdepth,orRTLstage changes",
+  "clock_phase": "all3roots identicalfrequencyandfunctionalphase; crossrootsetuphold constraintsrequired",
+  "per_AQ_untrimmed_source_FF": {
+    "clk_core": 2597,
+    "clk_delay": 11264,
+    "clk_encode": 6019,
+    "sum": 19880
+  },
+  "F12mul_LAT5_FF": {
+    "W1": 77,
+    "W3": 209,
+    "W5": 181,
+    "W6": 49,
+    "outputs": 35,
+    "total": 551
+  },
+  "root_assignment": {
+    "clk_core": "S0,maxlevels,amax,F12scale,S11,validline,nfdelay",
+    "clk_delay": "u_x D11 W1024 =11264dataFF",
+    "clk_encode": "S12..S17 includingq/e/y/vo/fault"
+  },
+  "production": "twoAQinstances/sixexplicitroots;64FP32words/edge,1280nativeblocks/640edges",
+  "qualification": "sourcebeforemappedcounts; Yunusedmayprune later; no oldphysicalqualificationinherited"
+}
