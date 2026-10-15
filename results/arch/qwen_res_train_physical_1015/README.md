@@ -60,3 +60,5 @@ preserved under `/srv/opentallas-scratch/codex/qwen-train24-fit-1326` on EPYC1;
 only compact receipts are committed. The original failed system-Yosys/ABC probe
 is preserved there as `map.log`; the pinned-container mappings are the accepted
 area measurements. No source RTL or adopted schedule was changed.
+
+Current assigned-pin caveat (2026-10-15 takeover): the capture-strip drawing is a canonical master-N illustration. The corrected inverse-orientation assignment in 5c0aa611a places the actual rq face at master-S for all three train24 bands. Reflect the strip and its emit/merge relationship against the actual assigned rq/rb pins before making any kit; these drawn coordinates are not a physical placement grant. The source/area census remains valid. The parallel-band serializer successor requires its own source-exact area and placement proof.
