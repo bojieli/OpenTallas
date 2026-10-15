@@ -2867,6 +2867,7 @@ LSW = X0B + X1B + CCB               # 564
 # (load sub-ranges of the x0 / x1 nets + the x2 net).  Owner static-cycle rule: no FIFO ready / credit on the lane.
 X2B = 536
 BF_X2_STATIC = False
+BF_X2_PAIR = False              # --bf-x2-pair (S-BIND r6): the packed static x word as two equal-station forwarded lanes
 # --bf-static-prog (S-BIND 2026-10-15): every BF pair runs its compiled programme: front = dsfd_bf_front_static (f_prog 38,
 # io_clk), sequencer = ot_s81_cfg7_seq_bfp (the PQ 0 loader + ot_s81_bf_prog_seq; the phase descriptor rides in the spare
 # rd_out[71:48] columns of rows 0..3 of the phase's cfg block, so BF cfg ROM reads are 72 b).  f_prog travels seq -> front
@@ -9288,7 +9289,15 @@ def glue_rtl(m):
                      '    assign rs = rsync;',
                      f'    reg [1:0] sti; always @(posedge {rk}) sti <= st;',
                      f'    wire [{LSW}:0] xw_; wire xflt;',
-                     f'    ot_s81_static_column_ingress u_x (.f_ck(xf[0]), .i(xd), .ck({rk}), .rst_n(rsync), .o(xw_), .fault(xflt));',
+                     (f'    ot_s81_static_column_ingress u_x (.f_ck(xf[0]), .i(xd), .ck({rk}), .rst_n(rsync), .o(xw_), .fault(xflt));'
+                      if not BF_X2_PAIR else
+                      # --bf-x2-pair: one static ingress per forwarded lane (each captures on its own forwarded clock and
+                      # takes the same fixed epoch shift from its own copy of the source reset marker); equal station
+                      # counts put both halves on the same column edge, and a valid-bit disagreement is a sticky fault
+                      f'    wire [{X0B + X1B + CCB}:0] oa_; wire [{X2B}:0] ob_; wire fa_, fb_;\n'
+                      f'    ot_s81_static_column_ingress #(.W({X0B + X1B + CCB + 1})) u_x (.f_ck(xf[0]), .i(xd), .ck({rk}), .rst_n(rsync), .o(oa_), .fault(fa_));\n'
+                      f'    ot_s81_static_column_ingress #(.W({X2B + 1})) u_x2 (.f_ck(xf2[0]), .i(xd2), .ck({rk}), .rst_n(rsync), .o(ob_), .fault(fb_));\n'
+                      f'    assign xw_ = {{ob_[{X2B}:1], oa_}}; assign xflt = fa_ | fb_ | (oa_[0] ^ ob_[0]);'),
                      '    wire xv = xw_[0];',
                      '    reg [282:0] xa_r; reg [265:0] xb_r; reg [14:0] cc_r; reg [%d:0] x2_r;' % (X2B - 1),
                      f'    always @(posedge {rk}) begin xa_r <= {{xw_[283] & xv, xw_[282:1]}}; xb_r <= xw_[549:284];',
@@ -9369,6 +9378,13 @@ def glue_rtl(m):
                          f'    reg [{pw + 1}:0] od_q; always @(posedge cks[0]) od_q <= {{i_q[{pw}:1], i_q[0] & rsl, rss_}};   // output pin flop',
                          "    reg [2:0] st_q; always @(posedge ck[0]) st_q <= {1'b0, rss_, rsl};",
                          '    assign od = od_q;', '    assign st = st_q;']
+                if BF_X2_PAIR:
+                    # --bf-x2-pair (S-BIND r6): the packed word leaves as TWO forwarded lanes of the same epoch -- oa =
+                    # {legacy 564, v, rst_n} (the historical 566-b lane) and ob = {x2 536, v, rst_n} -- each on its own
+                    # forwarded clock copy, so the x tree is two equal-station chains instead of one 1,102-b chain
+                    lg_ = X0B + X1B + CCB
+                    body[-2:] = [f'    assign fo2 = cks;', f'    assign oa = od_q[{lg_ + 1}:0];',
+                                 f'    assign ob = {{od_q[{pw + 1}:{lg_ + 2}], od_q[1:0]}};', '    assign st = st_q;']
             elif kind == 'l2r':
                 pw = lanes[0]
                 body += [_sync('rsl', 'ck[0]', 'rs[0]'), _sync('rss_', 'cks[0]', 'rss[0]'),
@@ -9785,6 +9801,7 @@ def die_options(ap):
                     'face-to-face wide group on the die span shared with its peers (both ends of an abutting pair line up)')
     ap.add_argument('--bf-static-prog', action='store_true', help='S-BIND 2026-10-15: BF pairs run their compiled '
                     'programme (dsfd_bf_front_static + ot_s81_cfg7_seq_bfp; descriptor in the cfg ROM spare columns)')
+    ap.add_argument('--bf-x2-pair', action='store_true', help='S-BIND r6 (needs --bf-x2-static): the x tree carries the packed word as two equal-station forwarded lanes (566-b legacy + 538-b x2) with one static ingress each at the column')
     ap.add_argument('--stn-wide-square', action='store_true', help='S-BIND r6: >= 1,000-b forwarded stations (the packed static x lane) square at the same area')
     ap.add_argument('--bf-x2-static', action='store_true', help='S-BIND 2026-10-15: packed 1,101-b static x lane '
                     '(legacy 564 + BF x2 536 + valid): static hx pipelines, static column ingress, x2 slot stations, BF xb bound')
@@ -9824,10 +9841,11 @@ def apply_options(a):
     global STATIC_SEAMS, STATIC_COLLECTIVE, MIX4_SLOT
     STATIC_SEAMS = bool(getattr(a, 'static_seams', False) or getattr(a, 'static_coll', False))
     STATIC_COLLECTIVE = bool(getattr(a, 'static_collective', False) or getattr(a, 'static_coll', False))
-    global SUHC_STATIC_ISSUE, BF_X2_STATIC, LSW, BF_STATIC_PROG
+    global SUHC_STATIC_ISSUE, BF_X2_STATIC, LSW, BF_STATIC_PROG, BF_X2_PAIR
     BF_STATIC_PROG = bool(getattr(a, 'bf_static_prog', False))
     SUHC_STATIC_ISSUE = bool(getattr(a, 'suhc_static_issue', False))
     BF_X2_STATIC = bool(getattr(a, 'bf_x2_static', False))
+    BF_X2_PAIR = bool(getattr(a, 'bf_x2_pair', False)) and BF_X2_STATIC
     LSW = X0B + X1B + CCB + (X2B if BF_X2_STATIC else 0)
     MIX4_SLOT = tuple(float(v) for v in a.mix4_slot.split(',')) if getattr(a, 'mix4_slot', None) else None
     global PIN_OVERRIDES
