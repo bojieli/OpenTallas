@@ -159,8 +159,8 @@ module dsfd_engram_mix4_c #(parameter integer MUT=0, VM_LAT=1, WRITE_COMMIT_LAT=
   localparam [1:0] CC=c;wire [223:0] cdesc;
   assign cdesc[13:0]=(HLAYOUT!=0)?desc_line[BC][13:0]+((MUT==2&&c==3)?14'd2:14'(c)):(MUT==2&&c==3)?desc_line[BC][13:0]+14'd320:desc_line[BC][13:0]+14'd160*c;
   assign cdesc[31:14]={desc_line[BC][31:18],CC,desc_line[BC][15:14]};
-  assign cdesc[45:32]=desc_line[BC][45:32]+14'd320*c;assign cdesc[63:46]=desc_line[BC][63:46];
-  assign cdesc[77:64]=desc_line[BC][77:64]+14'd320*c;assign cdesc[127:78]=desc_line[BC][127:78];
+  assign cdesc[45:32]=desc_line[BC][18]?desc_line[BC][45:32]:desc_line[BC][45:32]+14'd320*c;assign cdesc[63:46]=desc_line[BC][63:46];
+  assign cdesc[77:64]=desc_line[BC][18]?desc_line[BC][77:64]:desc_line[BC][77:64]+14'd320*c;assign cdesc[127:78]=desc_line[BC][127:78];
   assign cdesc[141:128]=desc_line[BC][141:128]+((HLAYOUT!=0)?14'(c):14'd160*c);assign cdesc[223:142]=desc_line[BC][223:142];
   ot_s81_engram_vrly #(.D(RS),.WV(5+1),.WD(2560+224)) down(ck[0],rn,
    {l_rsv[5*c+:5],st_line[BC]},{l_rsd[2560*c+:2560],cdesc},{k_rsv,k_start},{k_rsd,k_desc});
@@ -261,6 +261,21 @@ module ot_s81_engram_mixq_shctl #(parameter integer MUT=0, VM_LAT=3, WRITE_COMMI
  assign eps=dsc[160+:32];assign scale=dsc[192+:32];
  wire [13:0] hb=dsc[0+:14],kb=dsc[32+:14],wb=dsc[64+:14],vb=dsc[96+:14],ob=dsc[128+:14];
  wire [13:0] hrow_base=hb;wire [13:0] hstep=(HLAYOUT!=0)?14'd4:14'd1;assign COPY=dsc[17:16];
+ // Storage ABI v1: payload bit18 selects compiler bank stripes; H/output keep the shared HC layout.
+ // K/W share a 160-bankword band. V packs eight beats per bankword, using two of its 32 banks.
+ // Every active lane keeps its VM return slot and has a distinct physical 1R1W bank on every edge.
+ wire banked=dsc[18];
+ function automatic [13:0] striped_row(input [13:0] base,input [8:0] beat,input [4:0] glane,input vstream);
+  reg [13:0] hr;reg [8:0] ba;reg [2:0] hh,bh;reg [4:0] bank_id;
+  begin
+   hr=hrow_base+14'd4*beat;
+   hh=hr[4:2]^hr[7:5];
+   ba=base[13:5]+(vstream?{3'd0,beat[8:3]}:beat);
+   bh=hh+3'd1+(vstream?3'd0:glane[4:2]);
+   bank_id={bh,glane[1:0]};
+   striped_row={ba,bank_id^{ba[2:0],2'b00}};
+  end
+ endfunction
  reg [4:0] expected[0:VM_LAT];integer k;
  always @(posedge ck or negedge rn)if(!rn)begin
   for(k=0;k<=VM_LAT;k=k+1)expected[k]<=0;
@@ -287,14 +302,14 @@ module ot_s81_engram_mixq_shctl #(parameter integer MUT=0, VM_LAT=3, WRITE_COMMI
   // Native capture fix (S-ELEM-C 10-15, shctl audit: start capture 246.4 > 190 ps, start was the load enable of the
   // 224 descriptor flops): in IDLE dsc samples desc every edge, so the enable comes from the local state register and
   // the start pin only steers ns/fault. dsc holds the descriptor present at the start edge exactly as before; 0 cycles.
-  IDLE:begin dsc<=desc;if(start)ns=BEGIN;end
+  IDLE:begin dsc<=desc;if(start)begin ns=BEGIN;if(desc[18]&&((HLAYOUT==0)||desc[45:32]!=desc[77:64]||desc[36:32]!=0||desc[100:96]!=0||desc[1:0]!=desc[17:16]))fault<=1;end end
   BEGIN:begin go<=1;phase<=0;req<=0;received<=0;written<=0;ns=REDUCE;end
   REDUCE:begin
    if(req<160)begin
     rq_v<=5'b11111;rq_row[0+:14]<=hrow_base+hstep*req;
     for(lane=0;lane<2;lane=lane+1)begin
-     rq_row[14*(lane+1)+:14]<=kb+2*req+lane;
-     rq_row[14*(lane+3)+:14]<=wb+2*req+lane;
+     rq_row[14*(lane+1)+:14]<=banked?striped_row(kb,req,5'(5*COPY+lane+1),1'b0):14'(kb+2*req+lane);
+     rq_row[14*(lane+3)+:14]<=banked?striped_row(wb,req,5'(5*COPY+lane+3),1'b0):14'(wb+2*req+lane);
     end
     req<=req+1;
    end
@@ -307,7 +322,7 @@ module ot_s81_engram_mixq_shctl #(parameter integer MUT=0, VM_LAT=3, WRITE_COMMI
   ADD:begin
    if(req<160)begin
     rq_v<=5'b00111;vtag<=1'b1;rq_row[0+:14]<=hrow_base+hstep*req;
-    for(lane=0;lane<2;lane=lane+1)rq_row[14*(lane+1)+:14]<=vb+2*req+lane;
+    for(lane=0;lane<2;lane=lane+1)rq_row[14*(lane+1)+:14]<=banked?striped_row(vb,req,5'(lane+1),1'b1):14'(vb+2*req+lane);
     req<=req+1;
    end
    if(|rvq)begin

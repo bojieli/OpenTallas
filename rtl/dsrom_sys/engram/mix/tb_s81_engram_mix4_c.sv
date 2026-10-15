@@ -6,12 +6,18 @@
 // Checks: exact BF16 output of all four copies, 640 writes, tag, no repeat,
 // no unrequested return, every request answered at exactly the fixed latency,
 // four writes per beat to distinct rows, and the cycle count.
-module tb_s81_engram_mix4_c #(parameter MUT=0, HLAYOUT=1);
+module tb_s81_engram_mix4_c #(parameter MUT=0, HLAYOUT=1, BANKED=0);
  reg clk=0;always #1 clk=~clk;
  reg [63:0] cfg[0:0];reg rst=0;reg [84:0] cmd=0;wire [8:0] done;wire [1:0] st;wire [19:0] rq;wire [279:0] addr;
  reg [19:0] rv=0;reg [10239:0] rd=0;wire [3:0] wv;wire [55:0] wa;wire [63:0] mask;wire [2047:0] wd;
  dsfd_engram_mix4_c #(.MUT(MUT),.HLAYOUT(HLAYOUT)) dut({133{clk}},rst,cmd,done,st,1'b1,rq,addr,rv,rd,wv,wa,mask,wd);
  reg [1023:0] hm[0:639],km[0:639],wm[0:639],vm[0:159],ym[0:639];reg [511:0] mem[0:16383];
+ function automatic [13:0] bankrow(input integer base,b,lane,vs);
+  integer hr,hh,ba,bk;
+  begin hr=256+4*b;hh=((hr>>2)^(hr>>5))&7;ba=(base>>5)+(vs?(b>>3):b);
+   bk=(((hh+1+(vs?0:(lane>>2)))&7)<<2)|(lane&3);
+   bankrow=(ba<<5)|(bk^((ba&7)<<2));end
+ endfunction
  string dir;integer cyc=0,i,j,l,m,bad=0,writes=0,reads=0,start,measured,first_w=-1,last_w=-1;
  always @(posedge clk)begin
   cyc<=cyc+1;rv<=rq;
@@ -35,6 +41,17 @@ module tb_s81_engram_mix4_c #(parameter MUT=0, HLAYOUT=1);
   end
   for(i=0;i<160;i=i+1)begin mem[6144+2*i]=vm[i][0+:512];mem[6145+2*i]=vm[i][512+:512];end
   mem[64]=0;mem[64][0+:32]=256;mem[64][32+:32]=2048;mem[64][64+:32]=4096;mem[64][96+:32]=6144;mem[64][128+:32]=256;mem[64][160+:32]=cfg[0][0+:32];mem[64][192+:32]=cfg[0][32+:32];
+  if(BANKED)begin
+   if(!HLAYOUT)$fatal(1,"bank stripes require shared HC H layout");
+   for(i=0;i<160;i=i+1)begin
+    for(j=0;j<4;j=j+1)for(m=0;m<2;m=m+1)begin
+     mem[bankrow(8192,i,5*j+1+m,0)]=km[160*j+i][512*m+:512];
+     mem[bankrow(8192,i,5*j+3+m,0)]=wm[160*j+i][512*m+:512];
+    end
+    for(m=0;m<2;m=m+1)mem[bankrow(13824,i,1+m,1)]=vm[i][512*m+:512];
+   end
+   mem[64][18]=1;mem[64][32+:32]=8192;mem[64][64+:32]=8192;mem[64][96+:32]=13824;
+  end
   repeat(5)@(negedge clk);rst=1;wait(st[1]);@(negedge clk);
   start=cyc;cmd={1'b1,84'd0};cmd[6:0]=7'd53;cmd[7+:14]=64;
   @(negedge clk);cmd=0;

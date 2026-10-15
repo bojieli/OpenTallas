@@ -1,10 +1,11 @@
 {
  "schema": "opentallas.s81.engram.vm-layout-witness.v1",
  "source_sha256": {
-  "rtl/dsrom_sys/engram/mix/dsfd_engram_mix4_c.sv": "5ea7fd7dbaf08f7ed64a70029649d9d9b94237a4fad877048a6f35d0154a6bd7",
+  "rtl/dsrom_sys/engram/mix/dsfd_engram_mix4_c.sv": "9d08a6643827d22738b4e562b6e055a88816e86545a6c09953230876d5a59289",
+  "tools/s81_engram_mix/vm_banked_layout.py": "92ac3eaf4072bd3c5f540c3af7be5a9b45759d77467a75615df94a25f2089e96",
   "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_rsched.sv": "fd6084abed50a529188f343e1b4064932ae3dfe1d8c31f1597d7871b9e79f0ac",
   "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static512_suhc.sv": "53f6be069baf2a0a4e6952063354ec308244b7e7b9baa098051537fe898ceb31",
-  "rtl/dsrom_sys/engram/mix/tb_s81_engram_mix4_c.sv": "a63d14f1d499a05f795182aa0f5e056eaed4b6aad0a300ac6b98a2f6940da31f"
+  "rtl/dsrom_sys/engram/mix/tb_s81_engram_mix4_c.sv": "9f28e643e3d54deef9017814b2b4655d3ef08cba8a0651665e45b1d9a86e4c64"
  },
  "shape": {
   "copies": 4,
@@ -301,7 +302,7 @@
   "storage_aliases": 0,
   "first_aliases": []
  },
- "scope": "Static full-shape address/slot/bank witness only; candidate storage ABI is not implemented or adopted. Existing ideal-VM arithmetic component benches do not qualify native MIX4+128SRAM integration.",
+ "scope": "Static full-shape address/slot/bank witness only; candidate storage ABI is implemented behind descriptor payload bit18; integrated native qualification remains open. Existing ideal-VM arithmetic component benches do not qualify native MIX4+128SRAM integration.",
  "remaining": [
   "Versioned descriptor and producer/compiler staging map",
   "RTL row address generation",
