@@ -150,3 +150,20 @@ module ot_s81_su_rxt #(
     end
 `endif
 endmodule
+
+// dsfd_su_t_rx (s81-romB3 2026-10-14): the hardened RA / RB / QR tile of dsfd_sp_su_h (RXH 1: at the spine head, stop 0),
+// ot_s81_su_rxt at its production parameters: 5 tapped read slots (QR 5 parameter rows; operand pairs on slots 0 / 1),
+// 16 RA lanes, QR pair (QW 2: two result rows on write slots 0 / 1).
+module dsfd_su_t_rx (
+    input  wire          ck, rst,
+    input  wire          dn_st, input wire [3:0] dn_kind, input wire [7:0] dn_jid, input wire [4:0] dn_v,
+    input  wire [2559:0] dn_d,
+    output wire          o_v, output wire [13:0] o_a, output wire [15:0] o_m, output wire [511:0] o_d,
+    output wire          o_v2, output wire [13:0] o_a2, output wire [511:0] o_d2,
+    output wire          o_fu, o_fo, o_alive, o_den, o_rdy, output wire [7:0] o_rjid
+);
+    ot_s81_su_rxh #(.S_RD(5), .LM(5), .LA(4), .L(4)) u_t (
+        .clk(ck), .rst_in(rst), .dn_st_i(dn_st), .dn_kind_i(dn_kind), .dn_jid_i(dn_jid), .dn_v_i(dn_v), .dn_d_i(dn_d),
+        .o_v(o_v), .o_a(o_a), .o_m(o_m), .o_d(o_d), .o_v2(o_v2), .o_a2(o_a2), .o_d2(o_d2),
+        .o_fu(o_fu), .o_fo(o_fo), .o_alive(o_alive), .o_den(o_den), .o_rdy(o_rdy), .o_rjid(o_rjid));
+endmodule
