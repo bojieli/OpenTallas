@@ -114,10 +114,10 @@ def trunks(G,m,CH,cor,starts,ga,end_spec,hub_block,bus):
   # Entry candidates include return rows; take an actual x-row as tree root.
   xentries=[road.rootnode[(r,'x')] for r,f in m['frames'].items() if f['column_index']==(10 if side=='W' else 11)]
   root=min(xentries,key=lambda n:abs(n[1]-source[1]))
-  rr=next(r for r,f in m['frames'].items() if road.rootnode[(r,'x')]==root)
-  prefix=road.to_root(side,source,rr,'x')
-  # Stop at the S14 entry rather than the inner-column RSC target.
-  entry=next(n for n in entries if n[1]==root[1]);prefix=prefix[:prefix.index(entry)+1] if entry in prefix else G._dedup([source,(entry[0],source[1]),entry])
+  entry=next(n for n in entries if n[1]==root[1])
+  if side=='E':
+   cy=G.corr_y(m,'xdn');prefix=G._dedup([source,(source[0],cy),(entry[0],cy),entry])
+  else:prefix=G._dedup([source,(entry[0],source[1]),entry])
   dist={entry:0};parent={entry:None};q=[(0,entry)]
   while q:
    cost,n=heapq.heappop(q)

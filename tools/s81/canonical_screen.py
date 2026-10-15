@@ -28,10 +28,20 @@ def main():
   if 'm' in live:
    export(live['m'],'canonical_partial',False)
    try:
-    G.finalize_r8(live['m'])
-    texts=G.die_lef_texts(live['m'])
+    # A stopped constructor has incomplete hub buses. Keep exact coordinates
+    # for source-complete masters only, and enumerate excluded masters.
+    G.ALIGN_JOGS=False
+    mm=live['m'];G.finalize_r8(mm);excluded={}
+    for master,ports in mm['pdir'].items():
+     rec=G._assigned_record(master)
+     absent=[] if not rec else [pn for pn,spec in rec['ports'].items() if pn not in ports or ports[pn][1]!=spec['bits']]
+     if absent:excluded[master]=absent
+    subset=dict(mm);subset['insts']=[i for i in mm['insts'] if i.master not in excluded]
+    names={i.name for i in subset['insts']};subset['buses']=[b for b in mm['buses'] if all(e[0] in names for e in b[3])]
+    texts=G.die_lef_texts(subset)
     with gzip.open(w/'partial_exact_pins.lef.gz','wt') as f:f.write('\n'.join(texts))
-    export(live['m'],'canonical_partial_finalized',False)
+    (w/'partial_pin_exclusions.json').write_text(json.dumps(excluded,indent=1))
+    export(subset,'canonical_partial_finalized',False)
    except Exception as secondary:
     (w/'partial_pin_export_failure.txt').write_text(repr(secondary))
   status={'status':'GEN_FAIL','error':repr(ex),'traceback':traceback.format_exc(),'native_qualified':False};traceback.print_exc()
