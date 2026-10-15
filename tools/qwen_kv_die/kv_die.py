@@ -2204,30 +2204,50 @@ def pin_reach(m, M, reach=500.0, skip=('clock_trunk', 'reset', 'constant')):
 
 
 def stack_local_reach(m, M, reach=500.0):
-    """v1.1: the abutted / stack-local buses the relay planner never relays (ectl <-> heads tp / te / ts, heads -> astk nb,
-    astk <-> ectl eq / el): driver pin centre -> every load pin centre (spans are bit-aligned, so the centre distance is the
-    bit distance).  v1 had 192 far-head hops 505-963 um here."""
+    """Measure every assigned bit, including unequal face pitches and mirroring.
+
+    Pin centres describe a bus only when both ends have identical pitch/order.
+    HOST slice face spreading deliberately changes those spans, so using one
+    centre for a wide word would conceal its worst physical bit.
+    """
     by = {i.name: i for i in m['insts']}
-    bad, n, worst = [], 0, 0.0
+    pin_cache = {}
+    def bit_positions(inst, port):
+        it = by[inst]
+        if it.master not in pin_cache:
+            groups = {}
+            for name, layer, rect in F.pin_rects(M[it.master], 1, {}):
+                base = name.split('[')[0]
+                groups.setdefault(base, []).append(((rect[0]+rect[2])/2, (rect[1]+rect[3])/2))
+            pin_cache[it.master] = groups
+        positions = pin_cache[it.master][port.lstrip('*')]
+        return [(it.x + (it.w-x if it.orient in ('MY','R180') else x),
+                 it.y + (it.h-y if it.orient in ('MX','R180') else y)) for x,y in positions]
+    bad, missing, n, checked, worst = [], [], 0, 0, 0.0
     for bid, cl, bits, eps in m['buses']:
         if cl != 'stack_local' or len(eps) < 2:
             continue
-        try:
-            a = pin_xy(by[eps[0][0]], M[by[eps[0][0]].master], eps[0][1].lstrip('*'))
-        except (KeyError, TypeError):
-            continue
-        for inst, port in eps[1:]:
+        for target in eps[1:]:
             try:
-                b = pin_xy(by[inst], M[by[inst].master], port.lstrip('*'))
-            except (KeyError, TypeError):
+                left, right = bit_positions(*eps[0]), bit_positions(*target)
+            except (KeyError, TypeError, ValueError) as error:
+                missing.append(dict(bus=bid,error=str(error)))
+                continue
+            if len(left) != bits or len(right) != bits:
+                missing.append(dict(bus=bid,bits=bits,launch_bits=len(left),capture_bits=len(right)))
                 continue
             n += 1
-            d = abs(a[0] - b[0]) + abs(a[1] - b[1])
-            worst = max(worst, d)
-            if d > reach:
-                bad.append(dict(bus=bid, bits=bits, um=round(d, 1), a=f'{eps[0][0]}.{eps[0][1]}', b=f'{inst}.{port}'))
-    bad.sort(key=lambda r: -r['um'])
-    return dict(hops=n, reach_um=reach, violations=len(bad), max_um=round(worst, 1), worst=bad[:20])
+            distances = [abs(a[0]-b[0])+abs(a[1]-b[1]) for a,b in zip(left,right)]
+            checked += len(distances)
+            distance = max(distances)
+            worst = max(worst,distance)
+            if distance > reach:
+                bit = distances.index(distance)
+                bad.append(dict(bus=bid,bits=bits,bit=bit,um=round(distance,3),
+                    a=f'{eps[0][0]}.{eps[0][1]}[{bit}]', b=f'{target[0]}.{target[1]}[{bit}]'))
+    bad.sort(key=lambda row:-row['um'])
+    return dict(hops=n,bits_checked=checked,reach_um=reach,violations=len(bad),max_um=round(worst,3),
+                worst=bad[:40],unmeasured=len(missing),missing=missing[:20],method='exact generated face rectangles per bit after orientation')
 
 
 _BASE_PORT_WIDTHS = F.port_widths

@@ -48,7 +48,7 @@ OPEN_JOINS = [
     "Join controller completion_v/we to each HOST slice and typed completion_fault to root; reduce actual front/ring/writer/controller faults with domain-safe registered exports.",
     "Provide controller ELASTIC=1 RAW_WD=256 TQD=64 physical master/outline/pin grants; inherited qkd_ctrl_pc physical view is a different source/ABI.",
     "Assign front, held return ring and held writer homes and actual pins; prove every required parent net, reach, native clocks and reset/boot sequence before adoption.",
-    "Price front first-sector +10..26 HBM edges and writer reset minimum 3 core edges in the actual production image; pin source and calendar hashes.",
+    "Price front first-sector +10..26 HBM edges and held writer r4 reset minimum 4 core edges in the actual production image; pin source and calendar hashes.",
 ]
 
 

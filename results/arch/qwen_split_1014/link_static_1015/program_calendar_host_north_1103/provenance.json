@@ -14,10 +14,17 @@
       "rec_rx": 0,
       "lrc": 0
     },
-    "fwd_epoch_stages": 1,
-    "fwd_link_rst_n_stages": 2,
+    "fwd_epoch_stages": 3,
+    "fwd_link_rst_n_stages": 7,
     "serdes_fdi_stages": 56,
-    "serdes_scope": "elastic HOST link to S-edge PHY; excluded from static D2D calendar"
+    "serdes_scope": "elastic HOST link to S-edge PHY; excluded from static D2D calendar",
+    "historical_prose_bump_stages": {
+      "fwd_epoch": 1,
+      "fwd_link_rst_n": 2,
+      "status": "superseded by actual source-generated plan1103"
+    },
+    "actual_generated_plan": "results/arch/qwen_split_1014/kvsys_v1_4_2/plan.json",
+    "bump_scope": "Exceptional recovery wires; actual relay depth must be applied to recovery protocol, not normal data image"
   },
   "calendar_command": "python3 tools/qwen_split/d2d_link_calendar.py --profile program --txl 6 --phy 5 --txd-c 1,2,1,2 --txd-k 1,2,1,1 --host-stages 0 --out results/arch/qwen_split_1014/link_static_1015/program_calendar_host_north_1103",
   "calendar_qualification": "Measured HOST relay latency admitted. Compiler image only: producer integration, native routed SS/FF timing and deterministic PHY qualification remain open.",
