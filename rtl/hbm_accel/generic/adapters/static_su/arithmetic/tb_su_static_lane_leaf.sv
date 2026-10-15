@@ -46,7 +46,7 @@ module tb_su_static_lane_leaf;
  end
  assign ra[4*9+:9]={vi_addr[16+:2],vi_addr[7+:7]}; assign rv[4]=vi_re; assign vi_q=q[4*32+:32];
  assign ra[5*9+:9]=drain_row; assign rv[5]=drain_v;
- ot_hbm_su_static_pinned_bank bank_u(.clk(clk),.rst_n(rst_n),.read_v(rv),.read_addr(ra),.read_data(q),.read_return(),
+ ot_hbm_su_static_pinned_bank bank_u(.clk(clk),.clk_macro({6{clk}}),.rst_n(rst_n),.read_v(rv),.read_addr(ra),.read_data(q),.read_return(),
   .write_v(seed_v||vm_we),.write_addr(seed_v?seed_row:{vm_waddr[17:16],vm_waddr[13:7]}),
   .write_data(seed_v?seed[seed_row*512+LANE]:vm_wdata));
  integer op=0,cycle=0,errors=0,checks=0,outputs=0,count=0;
