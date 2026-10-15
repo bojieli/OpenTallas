@@ -1,0 +1,110 @@
+{
+  "schema": "opentallas.qwen-native-window-feasibility-milestones.v1",
+  "status": "ANALYSIS_NOT_ASSIGNED_CONTRACT",
+  "legacy_receipt": "414d80093",
+  "legacy_geometry_gate": "FAIL",
+  "die_GRT_submitted": false,
+  "targets": [
+    {
+      "window": "ECTL/head registered seams",
+      "legacy_failure": {
+        "pin_fail_records": 192,
+        "all_stack_reach_failures": 315,
+        "unrepaired_paths": 128,
+        "legacy_min_seam_um": 2.352,
+        "max_reach_um": 2182.7
+      },
+      "owners": [
+        "/root/qwen_tp8_attention_native",
+        "/root/qwen_die"
+      ],
+      "required_before_rebuild": [
+        "Native HEADS1/Q_FP32 profile actual leaf census and constructive placements",
+        "Real registered boundary pins and at least required legal channels",
+        "Internal group interfaces preserve paired FP32 conversion and native stream order",
+        "Actual entry clocks and normalized per-pin220/190 screens; no use of legacy headshape or common pinclock phase"
+      ],
+      "qualification": false
+    },
+    {
+      "window": "HBM CDC/controller registered seam",
+      "legacy_failure": {
+        "pin_fail_records": 132,
+        "legacy_gap_um": 0.216,
+        "view_frame_mismatch_PC": true,
+        "view_frame_mismatch_KC": true
+      },
+      "owners": [
+        "/root/qwen_host_integration",
+        "/root/qwen_edge_coverage_2240",
+        "/root/qwen_die"
+      ],
+      "required_before_rebuild": [
+        "Current native controller/PHY/writeACK port inventory and distinct variant master",
+        "Current view outline and real transformed LEF boundary pins",
+        "Registered writeACK and reverse credit delivery without invented commit timers",
+        "Space for actual host stations/arbiters and sufficient local seam channels"
+      ],
+      "qualification": false
+    },
+    {
+      "window": "KVN/spine/corridor shared cut",
+      "legacy_failure": {
+        "y_um": 14150,
+        "x_range_um": [
+          19760,
+          20020
+        ],
+        "bits": 2130,
+        "usable_tracks": 3257,
+        "utilization": 0.654,
+        "limit": 0.6
+      },
+      "diagnostic_lower_bound": {
+        "minimum_usable_tracks": 3550,
+        "additional_tracks": 293,
+        "bits_to_move_at_fixed_capacity_minimum": 176,
+        "note": "Legacy fields only. Moving traffic or reshaping capacity requires actual native source/pin/PG binding; this is not a channel-widening or serialization adoption."
+      },
+      "owners": [
+        "/root/qwen_die"
+      ],
+      "required_before_rebuild": [
+        "Bind current selected375/query213/common428 separately with source directions and physical event transport",
+        "Use actual PG10.5598944 percent density and exact phase/OBS",
+        "Include metadata, node/drain/control/reset/credit traffic; no149dictionary assumption",
+        "Show windows at or below0.60 before die routing"
+      ],
+      "qualification": false
+    },
+    {
+      "window": "VM32 source/root export",
+      "legacy_failure": {
+        "existing_candidate_bbox_conflicted_slots": 19,
+        "candidate_slots": 32,
+        "selected_fill_bits": 375,
+        "query_with_controls_bits": 213,
+        "common_dispatch_bits": 428
+      },
+      "current_screen": "Raw N/M9 selected+query capacity passes32/32; adding commondispatch fails32/32. Side M8 alone cannot carry selected375 orquery210. M7/M6 assignments unqualified.",
+      "owners": [
+        "/root/qwen_die",
+        "/root/qwen_tile"
+      ],
+      "required_before_rebuild": [
+        "Real native producer selection and full247 provenance bound to actual shared HOST token",
+        "Constructive VM regional transport stations and load/control/epoch equalization",
+        "Registered admissible launch/capture faces and full return/ACK replay/drain",
+        "Source-current tile control live registered credit/admission recovery; currentregout minus38.1ps is blocker"
+      ],
+      "qualification": false
+    }
+  ],
+  "next_acceptance_criteria": [
+    "One bounded native representative window has actual source/master/view/clock/reset inventory",
+    "No placeholder frame/pin substitutions or guessed CLOCK/commit certificates",
+    "No reach or pin-reg budget violation and all local cuts <=0.60",
+    "Exact functional composition plus observed failing mutant for changed registered seam",
+    "Only then submit real-view GRT plus TT/FF/SS chain; no area or numeric gate relaxation"
+  ]
+}

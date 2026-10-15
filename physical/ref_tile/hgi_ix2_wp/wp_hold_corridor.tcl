@@ -5,6 +5,10 @@
 # are disjoint.  The pin-flop planner then measures this actual hold strip.
 set ::env(OT_IOHOLD_IN) 1
 set ::env(OT_INHOLD_DRV) BUFx4f_ASAP7_75t_R
+# r6 (Claude group-B5 10-14): the recipe-2 pin pad is HB2 (main 36de4b87f: HB4 on every pin cost ~120 ps); this
+# custom corridor hook never set it, so r5 routed HB4 output stages: native launch 226.9 ps > 220 on 67 wwq pins
+# (DFF -> INV -> BUFx4f -> HB4 67.5 ps -> BUFx4f -> output BUF).  Same chain, same corridor, HB2 pad.
+set ::env(OT_INHOLD_MASTER) HB2xp67_ASAP7_75t_R
 set ::env(OT_OFLOP_HOPS) 8
 set ::env(OT_OFLOP_ALLOW_NONE) 1
 # r4pin (Claude group-B3 10-14): recipe-2 pin_reg_split FIRST (one dedicated launch flop per output pin; native audit

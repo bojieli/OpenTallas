@@ -120,8 +120,11 @@ TILES.update({
     "ot_s81_hc_cntree":   dict(src=_H + "ot_s81_hc_cntree.sv", routed=[_H2], mut=("ss <= nv_[1];", "ss <= nv_[1] ^ 32'h00800000;")),
     "ot_s81_hc_ctfn":     dict(src=_CTH, routed=[{}], mut=("fd <= fd_in;", "fd <= fd_in ^ " + _BIT("FDW", "O_D + 15") + ";")),
     "ot_s81_hc_ctfx":     dict(src=_CTH, routed=[{}], mut=("fdx <= fd_in;", "fdx <= fd_in ^ " + _BIT("FXW", "O_D + 15") + ";")),
+    "ot_s81_hc_ctfx_cap": dict(src=_CTH, routed=[{}], mut=("else fv_local <= fv;", "else fv_local <= 0;")),
     "ot_s81_hc_ctfs":     dict(src=_CTH, routed=[{}], mut=("fd_out <= fdm_d;", "fd_out <= fdm_d ^ " + _BIT("FDW", "O_D + 15") + ";")),
     "ot_s81_hc_ctpl":     dict(src=_CTH, routed=[dict(PIN_STAGE=1)], mut=("x_d <= b_d;", "x_d <= b_d ^ 160'h00800000;")),
+    "ot_s81_hc_ctra": dict(src=_CTH, routed=[dict(CHAIN_STEP=6, READ_STAGE=1)], mut=("assign rq_q_c1 = rq_q;", "assign rq_q_c1 = rq_q ^ " + _BIT("16*S_RT", "5") + ";")),
+    "ot_s81_hc_ctrb": dict(src=_CTH, routed=[dict(CHAIN_STEP=6, READ_STAGE=1)], mut=("assign rdm = rdm_w[RDW-1 -: 512 * SH];", "assign rdm = rdm_w[RDW-1 -: 512 * SH] ^ " + _BIT("512 * SH", "15") + ";")),
     "ot_s81_hc_ctrn":     dict(src=_CTH, routed=[{}], mut=("rd_out <= rd_out_d;", "rd_out <= rd_out_d ^ " + _BIT("RDW", "123") + ";")),
     "ot_s81_hc_crootr_t": dict(src=_CR, routed=[dict(C=0), dict(C=2)], mut=("s_ex <= ex_r;", "s_ex <= ex_r ^ 32'h00800000;")),
     "ot_s81_hc_crootr_f": dict(src=_CR, routed=[dict(C=0), dict(C=2)], mut=(".D(RF)) u_rfd", ".D(RF - 1)) u_rfd")),
@@ -136,12 +139,11 @@ TILES.update({
 # ---- NORM tree variant tiles (el1014-s81-norm-tree, hier/ot_s81_hc_ntree.sv; probed / mutated only with --ntree 1)
 _NT = _H + "ot_s81_hc_ntree.sv"
 TILES.update({
-    "ot_s81_hc_ctfx_nt": dict(src=_NT, routed=[dict(CHAIN_STEP=6)], mut=("o[SW * oct[0] +: SW] = {cs, si[2:0], oct, 1'b1};",
-                                                         "o[SW * oct[0] +: SW] = {cs ^ (128'd1 << 29), si[2:0], oct, 1'b1};")),
+    "ot_s81_hc_ctfx_nt": dict(src=_NT, routed=[dict(CHAIN_STEP=6)], mut=("if (!rst_in) v <= 0; else v <= fv;", "if (!rst_in) v <= 0; else v <= 0;")),
     "ot_s81_hc_ctfs_nt": dict(src=_NT, routed=[{}], mut=("else dl_out <= dl_in;", "else dl_out <= dl_in ^ (275'd1 << 40);")),
     "ot_s81_hc_cncla":   dict(src=_NT, routed=[dict(C=0), dict(C=1), dict(C=2)], mut=("pi <= {5'd0, i_q}; ex <= ex_w;", "pi <= {5'd0, i_q}; ex <= ex_w ^ (1 << 29);")),
     "ot_s81_hc_cnclb":   dict(src=_NT, routed=[dict(C=0), dict(C=1), dict(C=2)], mut=("always @(posedge sk) ex <= ex_w;", "always @(posedge sk) ex <= ex_w ^ (1 << 29);")),
-    "ot_s81_hc_cnrsq":   dict(src=_NT, routed=[{}], mut=("fcq[O_RC + 16 * s +: 16] == 16'd1", "fcq[O_RC + 16 * s +: 16] == 16'd0")),
+    "ot_s81_hc_cnrsq":   dict(src=_NT, routed=[{}], mut=("else ngo <= f_fv[S_RD + 1];", "else ngo <= 1'b0;")),
 })
 TILE_RE = re.compile(r"^HCTILE (\w+) (\S+) ?(.*)$", re.M)
 

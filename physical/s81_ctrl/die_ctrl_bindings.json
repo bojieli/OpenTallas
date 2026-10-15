@@ -7,7 +7,9 @@
  "sequencers": [
   "dsfd_stage_seq",
   "dsfd_stage_seq_c",
-  "dsfd_stage_seq_c8"
+  "dsfd_stage_seq_c8",
+  "dsfd_stage_seq_static_c",
+  "dsfd_stage_seq_static_c8"
  ],
  "engines": {
   "fld": {
@@ -83,7 +85,7 @@
     "dsfd_sp_vm"
    ],
    "port": 12,
-   "note": "Compact VM sequencer engine dsfd_vm_seq: c_cmd/c_done/c_st on stream cks/rss; layer1 uses port12. RTL implementation and exact bench owned by VM stream; die port-bind remains mandatory."
+   "note": "VM sequencer engine 12 of the STATIC issuer (owner 2026-10-14 18:59: no credits/backpressure): c_cmd 85 / c_done 9 (exact compiled done edge, tag {slot,row7}) / c_st 2 {available,fault} on stream cks/rss. RTL + exact bench owned by the VM stream; die port-bind mandatory."
   }
  },
  "role_absent": {

@@ -23,20 +23,21 @@
 // parity's bank (the bank the SU may still be reading).
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_qfd_crom_lbuf #(
+    parameter integer TP = 4,
     parameter integer SW = 64,
     parameter integer AW = 24,
     parameter integer LW = 6,
     parameter integer QK0 = 4096,
-    parameter integer POST0 = 5376,
-    parameter integer QSCALE = 9472,
-    parameter integer ROPE0 = 9473,
-    parameter integer OSC0 = 533761,
-    parameter integer DSC0 = 537857,
-    parameter integer END = 541953,
+    parameter integer POST0 = 4096 + 5120 / TP,
+    parameter integer QSCALE = 8192 + 5120 / TP,
+    parameter integer ROPE0 = 8193 + 5120 / TP,
+    parameter integer OSC0 = 532481 + 5120 / TP,
+    parameter integer DSC0 = 536577 + 5120 / TP,
+    parameter integer END = 540673 + 5120 / TP,
     parameter integer HEAD = 36,
     parameter integer HEAD_N = 4096,
-    parameter integer QKR = 20,
-    parameter integer NWIN = 148,              // narrow rows a stage
+    parameter integer QKR = 80 / TP,
+    parameter integer NWIN = 128 + 80 / TP,              // narrow rows a stage
     parameter integer NHD = 64,                // narrow rows of the HEAD stage
     parameter integer NW = 18,
     parameter integer FLP = 5,                 // far ROM: strobe -> answer edges at this block (ot_qfd_crom 5 + 2 x relays)
@@ -505,6 +506,48 @@ module ot_qfd_su_cbuf_g (
     always @(posedge clk) grp_q <= grp;
     ot_qfd_crom_lbuf #(.SW(8), .SRAM(2), .FLP(11), .PINREG(1), .FLS(1), .FLMAX(31), .FLW(5), .RSTR(1), .MUT(`OT_CBUF_G_MUT)) u_b (
         .clk(clk), .rst_n(rst_n), .crom_re(crom_re), .crom_addr(crom_addr),
+        .crom_stage(crom_stage), .crom_q(crom_q), .stage(stage), .tok_start(tok_start), .tpos(tpos),
+        .lane_base({18'd0, grp_q, 3'd0}), .st_rdy(st_rdy), .st_rdy_stage(st_rdy_stage), .f_re(f_re), .f_addr(f_addr), .f_stage(f_stage), .f_q(f_q),
+        .f_fault(f_fault), .f_lat(f_lat), .fault(fault), .fault_code(fault_code));
+endmodule
+
+// TP8 successor: real emitted constant map,138narrow rows. Requires its own physical view.
+module ot_qfd_su_cbuf_g_tp8 (
+    input  wire              clk,
+    input  wire              rst_n,
+    input  wire [7:0]        crom_re,
+    input  wire [8*24-1:0]   crom_addr,
+    input  wire [5:0]        crom_stage,
+    output wire [8*64-1:0]   crom_q,
+    input  wire [5:0]        stage,
+    input  wire              tok_start,
+    input  wire [17:0]       tpos,
+    input  wire [2:0]        grp,              // strap: lanes 8 grp .. 8 grp + 7
+    output wire              st_rdy,
+    output wire [5:0]        st_rdy_stage,
+    output wire [7:0]        f_re,
+    output wire [8*24-1:0]   f_addr,
+    output wire [5:0]        f_stage,
+    input  wire [8*64-1:0]   f_q,
+    input  wire              f_fault,
+    input  wire [4:0]        f_lat,            // strap: far ROM strobe -> answer edges at the pins (r22k: 11)
+    output wire              fault,
+    output wire [1:0]        fault_code
+);
+`ifndef OT_CBUF_G_MUT
+`define OT_CBUF_G_MUT 0
+`endif
+    reg [2:0] grp_q;                           // strap pin flop
+    always @(posedge clk) grp_q <= grp;
+    // q14 r10 (2026-10-14): reset pin register.  Native pin audit of the CLOSED TP8 view qfd_su_cbuf_g_tp8-tp8-55b451d97
+    // (TT R 365.9): rst_n capture 336.5 ps > 190 -- the port fanned out to the three kept region relay copies (rr_q) and
+    // the synchronizer, spread over the tile.  The port now lands in ONE flop at the pin (async assert, registered
+    // deassert one edge later); the relay resets from it.  Release is 4 clk edges after the rst_n pin (was 3); inputs
+    // are ignored until then (the die holds reset >= 4 edges before traffic; static schedule: reset release +1 edge).
+    (* keep = "true", dont_touch = "true" *) reg rs_q;
+    always @(posedge clk or negedge rst_n) if (!rst_n) rs_q <= 1'b0; else rs_q <= 1'b1;
+    ot_qfd_crom_lbuf #(.TP(8), .SW(8), .SRAM(2), .FLP(11), .PINREG(1), .FLS(1), .FLMAX(31), .FLW(5), .RSTR(1), .MUT(`OT_CBUF_G_MUT)) u_b (
+        .clk(clk), .rst_n(rs_q), .crom_re(crom_re), .crom_addr(crom_addr),
         .crom_stage(crom_stage), .crom_q(crom_q), .stage(stage), .tok_start(tok_start), .tpos(tpos),
         .lane_base({18'd0, grp_q, 3'd0}), .st_rdy(st_rdy), .st_rdy_stage(st_rdy_stage), .f_re(f_re), .f_addr(f_addr), .f_stage(f_stage), .f_q(f_q),
         .f_fault(f_fault), .f_lat(f_lat), .fault(fault), .fault_code(fault_code));

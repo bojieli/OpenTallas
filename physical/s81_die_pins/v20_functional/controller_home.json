@@ -1,0 +1,15 @@
+{
+ "name": "sp_hcx_ctl",
+ "master": "ot_s81_hcx_controller",
+ "at_um": [
+  15362.4,
+  22770.0
+ ],
+ "outline": {
+  "w": 216.0,
+  "h": 216.0
+ },
+ "geometry": "exact xsp7 full instance rectangle0collisions;25um eastofembedding",
+ "pin_file": "physical/s81_die_pins/v20_functional/ot_s81_hcx_controller.tcl",
+ "qualification": "OPEN native two-root controller; parent wires+6 actual projection leaves+controller; no raw payload stub"
+}

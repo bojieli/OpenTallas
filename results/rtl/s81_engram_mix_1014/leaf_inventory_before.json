@@ -1,0 +1,625 @@
+{
+  "ot_s81_engram_endpoint_ctl": {
+    "source": "census33/hierarchical.json before payload bypass",
+    "yosys_module": "$paramod$02388f022ecf87a88f6d78406eb971113e2a974f\\ot_s81_engram_endpoint_ctl",
+    "ports": {
+      "ck": {
+        "direction": "input",
+        "bits": 1
+      },
+      "rst": {
+        "direction": "input",
+        "bits": 1
+      },
+      "c_cmd": {
+        "direction": "input",
+        "bits": 85
+      },
+      "c_done": {
+        "direction": "output",
+        "bits": 9
+      },
+      "c_st": {
+        "direction": "output",
+        "bits": 2
+      },
+      "f_inp": {
+        "direction": "input",
+        "bits": 1
+      },
+      "rq_v": {
+        "direction": "output",
+        "bits": 5
+      },
+      "rq_row": {
+        "direction": "output",
+        "bits": 70
+      },
+      "rs_v": {
+        "direction": "input",
+        "bits": 5
+      },
+      "rs_d": {
+        "direction": "input",
+        "bits": 2560
+      },
+      "wq_v": {
+        "direction": "output",
+        "bits": 1
+      },
+      "wq_row": {
+        "direction": "output",
+        "bits": 14
+      },
+      "wq_mask": {
+        "direction": "output",
+        "bits": 16
+      },
+      "wq_d": {
+        "direction": "output",
+        "bits": 512
+      },
+      "go": {
+        "direction": "output",
+        "bits": 1
+      },
+      "iv": {
+        "direction": "output",
+        "bits": 1
+      },
+      "phase": {
+        "direction": "output",
+        "bits": 1
+      },
+      "copy": {
+        "direction": "output",
+        "bits": 2
+      },
+      "h": {
+        "direction": "output",
+        "bits": 1024
+      },
+      "k": {
+        "direction": "output",
+        "bits": 1024
+      },
+      "w": {
+        "direction": "output",
+        "bits": 1024
+      },
+      "val": {
+        "direction": "output",
+        "bits": 1024
+      },
+      "eps": {
+        "direction": "output",
+        "bits": 32
+      },
+      "scale": {
+        "direction": "output",
+        "bits": 32
+      },
+      "gv": {
+        "direction": "input",
+        "bits": 1
+      },
+      "ov": {
+        "direction": "input",
+        "bits": 1
+      },
+      "mf": {
+        "direction": "input",
+        "bits": 1
+      },
+      "gc": {
+        "direction": "input",
+        "bits": 2
+      },
+      "oc": {
+        "direction": "input",
+        "bits": 2
+      },
+      "gate": {
+        "direction": "input",
+        "bits": 32
+      },
+      "hh": {
+        "direction": "input",
+        "bits": 32
+      },
+      "kk": {
+        "direction": "input",
+        "bits": 32
+      },
+      "dd": {
+        "direction": "input",
+        "bits": 32
+      },
+      "result": {
+        "direction": "input",
+        "bits": 1024
+      }
+    },
+    "total_pin_bits": 8606
+  },
+  "ot_s81_engram_mix_control": {
+    "source": "census33/hierarchical.json before payload bypass",
+    "yosys_module": "$paramod$fb33cee537a36cb43dd350d0ec298f188c1e2a45\\ot_s81_engram_mix_control",
+    "ports": {
+      "clk": {
+        "direction": "input",
+        "bits": 1
+      },
+      "arst_n": {
+        "direction": "input",
+        "bits": 1
+      },
+      "go": {
+        "direction": "input",
+        "bits": 1
+      },
+      "phase": {
+        "direction": "input",
+        "bits": 1
+      },
+      "in_v": {
+        "direction": "input",
+        "bits": 1
+      },
+      "copy": {
+        "direction": "input",
+        "bits": 2
+      },
+      "h": {
+        "direction": "input",
+        "bits": 1024
+      },
+      "key": {
+        "direction": "input",
+        "bits": 1024
+      },
+      "weight": {
+        "direction": "input",
+        "bits": 1024
+      },
+      "value": {
+        "direction": "input",
+        "bits": 1024
+      },
+      "scale": {
+        "direction": "input",
+        "bits": 32
+      },
+      "gate_v": {
+        "direction": "output",
+        "bits": 1
+      },
+      "gate_copy": {
+        "direction": "output",
+        "bits": 2
+      },
+      "gate": {
+        "direction": "output",
+        "bits": 32
+      },
+      "hh": {
+        "direction": "output",
+        "bits": 32
+      },
+      "kk": {
+        "direction": "output",
+        "bits": 32
+      },
+      "dd": {
+        "direction": "output",
+        "bits": 32
+      },
+      "out_v": {
+        "direction": "output",
+        "bits": 1
+      },
+      "out_copy": {
+        "direction": "output",
+        "bits": 2
+      },
+      "out_data": {
+        "direction": "output",
+        "bits": 1024
+      },
+      "fault": {
+        "direction": "output",
+        "bits": 1
+      },
+      "m_v": {
+        "direction": "output",
+        "bits": 1
+      },
+      "a_v": {
+        "direction": "output",
+        "bits": 1
+      },
+      "g_v": {
+        "direction": "output",
+        "bits": 1
+      },
+      "m_h": {
+        "direction": "output",
+        "bits": 1024
+      },
+      "m_k": {
+        "direction": "output",
+        "bits": 1024
+      },
+      "m_w": {
+        "direction": "output",
+        "bits": 1024
+      },
+      "a_h": {
+        "direction": "output",
+        "bits": 1024
+      },
+      "a_value": {
+        "direction": "output",
+        "bits": 1024
+      },
+      "a_gate": {
+        "direction": "output",
+        "bits": 32
+      },
+      "g_x": {
+        "direction": "output",
+        "bits": 32
+      },
+      "mvalid": {
+        "direction": "input",
+        "bits": 8
+      },
+      "mfault": {
+        "direction": "input",
+        "bits": 8
+      },
+      "avalid": {
+        "direction": "input",
+        "bits": 4
+      },
+      "af": {
+        "direction": "input",
+        "bits": 4
+      },
+      "oy": {
+        "direction": "input",
+        "bits": 1024
+      },
+      "nv": {
+        "direction": "input",
+        "bits": 2
+      },
+      "nf": {
+        "direction": "input",
+        "bits": 2
+      },
+      "norm_rstd": {
+        "direction": "input",
+        "bits": 64
+      },
+      "eg_valid": {
+        "direction": "input",
+        "bits": 1
+      },
+      "g_fault": {
+        "direction": "input",
+        "bits": 2
+      },
+      "gy": {
+        "direction": "input",
+        "bits": 32
+      },
+      "rv": {
+        "direction": "input",
+        "bits": 3
+      },
+      "rf": {
+        "direction": "input",
+        "bits": 3
+      },
+      "rhh": {
+        "direction": "input",
+        "bits": 32
+      },
+      "rkk": {
+        "direction": "input",
+        "bits": 32
+      },
+      "rdd": {
+        "direction": "input",
+        "bits": 32
+      }
+    },
+    "total_pin_bits": 11734
+  },
+  "ot_s81_engram_mul4": {
+    "source": "census33/hierarchical.json before payload bypass",
+    "yosys_module": "$paramod$db3af619295cdeb47a6230c11f87ee2c8df7e766\\ot_s81_engram_mul4",
+    "ports": {
+      "clk": {
+        "direction": "input",
+        "bits": 1
+      },
+      "arst_n": {
+        "direction": "input",
+        "bits": 1
+      },
+      "v": {
+        "direction": "input",
+        "bits": 1
+      },
+      "h": {
+        "direction": "input",
+        "bits": 128
+      },
+      "k": {
+        "direction": "input",
+        "bits": 128
+      },
+      "w": {
+        "direction": "input",
+        "bits": 128
+      },
+      "vo": {
+        "direction": "output",
+        "bits": 1
+      },
+      "hh": {
+        "direction": "output",
+        "bits": 128
+      },
+      "kk": {
+        "direction": "output",
+        "bits": 128
+      },
+      "dot": {
+        "direction": "output",
+        "bits": 128
+      },
+      "fault": {
+        "direction": "output",
+        "bits": 1
+      }
+    },
+    "total_pin_bits": 773
+  },
+  "ot_s81_engram_chunk8": {
+    "source": "census33/hierarchical.json before payload bypass",
+    "yosys_module": "$paramod\\ot_s81_engram_chunk8\\LA=s32'00000000000000000000000000000100",
+    "ports": {
+      "clk": {
+        "direction": "input",
+        "bits": 1
+      },
+      "arst_n": {
+        "direction": "input",
+        "bits": 1
+      },
+      "v": {
+        "direction": "input",
+        "bits": 1
+      },
+      "x": {
+        "direction": "input",
+        "bits": 256
+      },
+      "vo": {
+        "direction": "output",
+        "bits": 1
+      },
+      "sum": {
+        "direction": "output",
+        "bits": 32
+      },
+      "fault": {
+        "direction": "output",
+        "bits": 1
+      }
+    },
+    "total_pin_bits": 293
+  },
+  "ot_s81_engram_add8": {
+    "source": "census33/hierarchical.json before payload bypass",
+    "yosys_module": "$paramod$690a3487a2d98f70ea47164cd8fbaaa7c44695eb\\ot_s81_engram_add8",
+    "ports": {
+      "clk": {
+        "direction": "input",
+        "bits": 1
+      },
+      "arst_n": {
+        "direction": "input",
+        "bits": 1
+      },
+      "v": {
+        "direction": "input",
+        "bits": 1
+      },
+      "h": {
+        "direction": "input",
+        "bits": 256
+      },
+      "value": {
+        "direction": "input",
+        "bits": 256
+      },
+      "gate": {
+        "direction": "input",
+        "bits": 32
+      },
+      "vo": {
+        "direction": "output",
+        "bits": 1
+      },
+      "y": {
+        "direction": "output",
+        "bits": 256
+      },
+      "fault": {
+        "direction": "output",
+        "bits": 1
+      }
+    },
+    "total_pin_bits": 805
+  },
+  "ot_s81_engram_norm": {
+    "source": "census33/hierarchical.json before payload bypass",
+    "yosys_module": "$paramod$690a3487a2d98f70ea47164cd8fbaaa7c44695eb\\ot_s81_engram_norm",
+    "ports": {
+      "clk": {
+        "direction": "input",
+        "bits": 1
+      },
+      "arst_n": {
+        "direction": "input",
+        "bits": 1
+      },
+      "v": {
+        "direction": "input",
+        "bits": 1
+      },
+      "sum": {
+        "direction": "input",
+        "bits": 32
+      },
+      "eps": {
+        "direction": "input",
+        "bits": 32
+      },
+      "vo": {
+        "direction": "output",
+        "bits": 1
+      },
+      "rstd": {
+        "direction": "output",
+        "bits": 32
+      },
+      "fault": {
+        "direction": "output",
+        "bits": 1
+      }
+    },
+    "total_pin_bits": 101
+  },
+  "ot_s81_engram_signed_sqrt": {
+    "source": "census33/hierarchical.json before payload bypass",
+    "yosys_module": "$paramod$690a3487a2d98f70ea47164cd8fbaaa7c44695eb\\ot_s81_engram_signed_sqrt",
+    "ports": {
+      "clk": {
+        "direction": "input",
+        "bits": 1
+      },
+      "arst_n": {
+        "direction": "input",
+        "bits": 1
+      },
+      "v": {
+        "direction": "input",
+        "bits": 1
+      },
+      "x": {
+        "direction": "input",
+        "bits": 32
+      },
+      "vo": {
+        "direction": "output",
+        "bits": 1
+      },
+      "y": {
+        "direction": "output",
+        "bits": 32
+      },
+      "fault": {
+        "direction": "output",
+        "bits": 1
+      }
+    },
+    "total_pin_bits": 69
+  },
+  "ot_s81_engram_sigmoid": {
+    "source": "census33/hierarchical.json before payload bypass",
+    "yosys_module": "$paramod$690a3487a2d98f70ea47164cd8fbaaa7c44695eb\\ot_s81_engram_sigmoid",
+    "ports": {
+      "clk": {
+        "direction": "input",
+        "bits": 1
+      },
+      "arst_n": {
+        "direction": "input",
+        "bits": 1
+      },
+      "v": {
+        "direction": "input",
+        "bits": 1
+      },
+      "x": {
+        "direction": "input",
+        "bits": 32
+      },
+      "vo": {
+        "direction": "output",
+        "bits": 1
+      },
+      "y": {
+        "direction": "output",
+        "bits": 32
+      },
+      "fault": {
+        "direction": "output",
+        "bits": 1
+      }
+    },
+    "total_pin_bits": 69
+  },
+  "ot_s81_engram_sum": {
+    "source": "census33/hierarchical.json before payload bypass",
+    "yosys_module": "$paramod$b05acdf800502d8fd07081ab1ce68c35fd19d73e\\ot_s81_engram_sum",
+    "ports": {
+      "clk": {
+        "direction": "input",
+        "bits": 1
+      },
+      "arst_n": {
+        "direction": "input",
+        "bits": 1
+      },
+      "go": {
+        "direction": "input",
+        "bits": 1
+      },
+      "v": {
+        "direction": "input",
+        "bits": 1
+      },
+      "vo": {
+        "direction": "output",
+        "bits": 1
+      },
+      "y": {
+        "direction": "output",
+        "bits": 32
+      },
+      "fault": {
+        "direction": "output",
+        "bits": 1
+      },
+      "chunks": {
+        "direction": "input",
+        "bits": 128
+      },
+      "chunk_fault": {
+        "direction": "input",
+        "bits": 4
+      },
+      "chunk_valid": {
+        "direction": "input",
+        "bits": 4
+      }
+    },
+    "total_pin_bits": 174
+  }
+}

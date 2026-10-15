@@ -313,3 +313,4 @@ place_pin -pin_name {cflt[0]} -layer M4 -location {138.144 103.392} -pin_size {0
 place_pin -pin_name {cflt[1]} -layer M4 -location {138.144 103.488} -pin_size {0.192 0.024} -force_to_die_boundary
 place_pin -pin_name {cflt[2]} -layer M4 -location {138.144 103.584} -pin_size {0.192 0.024} -force_to_die_boundary
 place_pin -pin_name {flt} -layer M4 -location {0.096 60.000} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {ngo} -layer M4 -location {138.144 137.376} -pin_size {0.192 0.024} -force_to_die_boundary

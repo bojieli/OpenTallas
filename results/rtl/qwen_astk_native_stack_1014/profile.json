@@ -1,0 +1,153 @@
+{
+  "status": "MAPPED_STATIC_COMPONENT_PASS_NATIVE_PHYSICAL_PROFILE_OPEN",
+  "source_sha256": {
+    "rtl/qwen_sys/split_20261014/qkd_astk_native_stack_s.sv": "88784b00d16855ba870f9c5b6b65bdad86bf58039bf5bb82ac6640740487a150",
+    "rtl/qwen_sys/split_20261014/qkd_astk_native_er_service.sv": "6625f3b5fe5a69eddf6649ca88af22889464879fb64871e942234397779ea5a1",
+    "rtl/qwen_sys/kv_die_20261009/qkd_astk_leaves.sv": "197468906d50384682c695a399ae755de3a8dc66db32d8f9275382d2f48b1325",
+    "rtl/test/qwen_kv_die/tb_qkd_astk_native_stack.sv": "50c291d5ca0b5f8e40625799acdd81bc72c4a30f9259ee3e23b4a304c3e66d2e",
+    "tools/qwen_kv_die/native_stack_bench.sh": "879bab2d9776c864a70e326eef1da73bd566201e19e496b6ff8eb6a0de8071e5",
+    "tools/qwen_kv_die/native_stack_mutants.sh": "9e2f8331915b74d30e6cefefeeaac48fb5c7b9dcb2692558c4922852e7d52c9a"
+  },
+  "physical_homes": {
+    "commit": "b0cc24a03",
+    "path": "results/arch/qwen_split_1014/kvsys_v1_3_candidate/astk_selected_nonpv_homes.json",
+    "children_per_stack": 45,
+    "roots_per_stack": 46,
+    "head_roots_separate": 86,
+    "open": "EP ks4 route overflow403; static EP and CTL require new physical profile views. Existing home/view candidates are not qualification."
+  },
+  "clock_roots": {
+    "ck_c": "u_ctl",
+    "ck_z[0:3]": "g_zn[z].u_zn",
+    "ck_x[0:31]": "g_ep[e].g_ex[h].u_ex; index=4*e+h",
+    "ck_e[0:7]": "g_ep[e].u_ep",
+    "ck_r": "actual command/return/e-row relay chain and er response metadata; distinct physical root"
+  },
+  "calendar": {
+    "status": "FIXTURE_COMPONENT_STATIC_PASS_FINAL_QK_CALENDAR_OPEN",
+    "fixture": "T8192 stack0, score writes t40..295 all8 engines, AM t360..363, normalized common-clock boundary; not final head/ECTL/native phi-R calendar",
+    "measured_diagnostic_exp_local_ages": [
+      365,
+      375,
+      386,
+      396,
+      407,
+      417,
+      428,
+      438
+    ],
+    "selected_trial": {
+      "EXP_START_AGE": 365,
+      "LMAX_START_AGE": 350,
+      "Z_START_AGE": 900,
+      "Z_STRIDE": 16
+    },
+    "local_exp_formula": "base+9*e+RL*(e+floor(e/2))",
+    "er_latency": 3,
+    "legacy_pv_leaves": 0,
+    "availability_gates": 0
+  },
+  "abi": {
+    "AQ540": "{Q512,qbeat6,qv,layer6,T14,start1}",
+    "AM36": "{M32,hh2,g1,v1}",
+    "AP563": "{legacy_pv_payload520,sideband43}; legacy payload inactive; bit43 legacyPV valid must0",
+    "AP_sideband43": "{data32,any1,k4,hh2,g1,type2,v1}; type0=lmax,1=Z,2=Zdone",
+    "SO425": {
+      "er_valid": 0,
+      "er_addr": [
+        12,
+        1
+      ],
+      "score_valid": 13,
+      "score_addr": [
+        25,
+        14
+      ],
+      "score_data": [
+        153,
+        26
+      ],
+      "lmax": [
+        409,
+        154
+      ],
+      "lmax_any": [
+        411,
+        410
+      ],
+      "legacy_nb_valid": 412,
+      "k_done": 422,
+      "v_done": 423,
+      "fault": 424
+    },
+    "SI634": {
+      "start": 0,
+      "T": [
+        14,
+        1
+      ],
+      "cyc8": [
+        17,
+        15
+      ],
+      "qv": 18,
+      "qbeat": [
+        24,
+        19
+      ],
+      "Q": [
+        536,
+        25
+      ],
+      "EXP_done": [
+        568,
+        537
+      ],
+      "er_data": [
+        632,
+        569
+      ],
+      "legacy_credit": 633
+    },
+    "er_addr11": "{k4,gam4,j3}; selected engine=gam[2:0]; g0 only",
+    "er_response": "rsp_v/rsp_addr/data64 exactly3 memory edges from request under normalized clocks; final phi-R transport must preserve measured contract",
+    "LT21": "{layer6,T14,start1}"
+  },
+  "fault_paths": [
+    "EX arithmetic xe[1] -> EP e_f -> XO[0] return chain -> CTL af",
+    "SO fault424 -> EP XO[0] -> CTL af",
+    "EP schedule/join/SRAM coverage f -> XO[0] -> CTL af",
+    "ZN fault chain -> CTL af",
+    "er mapping/read conflict/visibility and forbidden legacy node input -> af",
+    "EP/EX passthrough lane fo -> af"
+  ],
+  "open": [
+    "Final QK static head/ECTL join calendar and root phases",
+    "Static native hub reciprocal and AM source",
+    "New native PV256/finalizer outside selected stack owned q_native_attention",
+    "No native timing/power/cost claim from normalized-clock component",
+    "Existing ck_r relay RTL and metadata/fault observers require actual physical relay parent footprint and phase proof;45hard-child homes alone do not place parent flops."
+  ],
+  "fault_retention": "Current observed faults OR sticky observer on existing ck_r until rst_n; no dynamic issue gating.",
+  "proof": {
+    "positive": "8192distinct finite score words checked at actual XA after physical score macros; tiny32bit FP32 live-ins all below2^-30 yield expFP32 rounded1, BF16 exact1; 2048 ER3 read words and64 actual FP32 Z outputs128 checked. Normalized clock fixture only.",
+    "old_zero_log": "static_zero.log source648ebf7f5",
+    "distinct_log": "static_retained.log finalretentioncandidate;8192scoreword checks/2048ER3/64Z/4LMAX/noaf",
+    "native_phi_R": "OPEN; no root collapsed in source but fixture shares normalized clocks",
+    "legacy_PV": "All64legacy PV child instances/clock ports absent; newPV256 service external.",
+    "mutants": {
+      "score_address": "mutants/score_address.log FAIL8192 rawscore mismatches; fixedslots preserved",
+      "late_am": "mutants/late_am.log FAIL af1; fixedslots preserved",
+      "real_so_fault": "mutants/real_so_fault.log PASS realSO424pulse retained; fixedslots preserved"
+    },
+    "admitted_jobs": [
+      "oth-ubuntu-3460001-1792036390",
+      "oth-ubuntu-3463901-1792036501"
+    ],
+    "binary_sha256": "c46e849702063fa2219e6ef0675ec6ad5a375075b287d7b550f5be8f953f3432"
+  },
+  "unchanged_module_bodies_vs_1dfea0ac7": {
+    "qkd_astk_ex": "9fe87ab491d9afdfcc0a08eb29ae66adcaf88093c011e9821198c496c036128a",
+    "qkd_astk_zn": "a0745f12186c6671ad4b9f96af02b166ca8a4f60f01df28e2589ffbcfcd7ea85"
+  }
+}

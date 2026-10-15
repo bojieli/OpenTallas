@@ -1,12 +1,12 @@
 {
  "schema": "opentallas.hier_contract.child_lint.v1",
- "lef": "/srv/opentallas/claude/closure-loop/s81_markov_chunk7_native-g2-3c5635d8e/record/views/ot_s81_markov_chunk7_native/ot_s81_markov_chunk7_native.lef",
+ "lef": "/srv/opentallas-scratch2/claude/closure-loop/s81_markov_chunk7_native-pc2-fd21a1202/record/views/ot_s81_markov_chunk7_native/ot_s81_markov_chunk7_native.lef",
  "verdict": "PASS",
  "fails": [],
  "warns": [
-  "(f) face-pin access: 101 of 101 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. bad M3 (9.000,115.853), vout M3 (9.000,115.853), y[0] M3 (9.000,115.853))"
+  "(f) face-pin access: 101 of 101 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. bad M3 (9.000,115.757), vout M3 (9.000,115.757), y[0] M3 (9.000,115.757))"
  ],
- "summary": "ot_s81_markov_chunk7_native 43.2 x 116.64: PG M5 VDD 8 stripes (88% spread, 100% cov) / VSS 8 stripes (88% spread, 100% cov); strap M6; face pins 101 blocked-above 0 blocked-same 0; clock clk insertion 153 ps; pockets M5 0 (closed)",
+ "summary": "ot_s81_markov_chunk7_native 43.2 x 116.64: PG M5 VDD 8 stripes (88% spread, 100% cov) / VSS 8 stripes (88% spread, 100% cov); strap M6; face pins 101 blocked-above 0 blocked-same 0; clock clk insertion 165 ps; pockets M5 0 (closed)",
  "info": {
   "cell": "ot_s81_markov_chunk7_native",
   "W": 43.2,
@@ -40,24 +40,24 @@
   "face": {
    "face_pins": 101,
    "blocked_above": 0,
-   "covered_below": 20,
+   "covered_below": 0,
    "examples": [],
    "blocked_same": 0,
    "same_examples": [],
    "band_same": 101,
    "band_examples": [
-    "bad M3 (9.000,115.853)",
-    "vout M3 (9.000,115.853)",
-    "y[0] M3 (9.000,115.853)",
-    "y[10] M3 (9.000,115.853)",
-    "y[12] M3 (9.000,115.853)",
-    "y[14] M3 (9.000,115.853)"
+    "bad M3 (9.000,115.757)",
+    "vout M3 (9.000,115.757)",
+    "y[0] M3 (9.000,115.757)",
+    "y[10] M3 (9.000,115.757)",
+    "y[12] M3 (9.000,115.757)",
+    "y[14] M3 (9.000,115.757)"
    ]
   },
   "clock_insertion": {
    "clk": {
-    "max_ps": 153.1,
-    "min_ps": 121.37
+    "max_ps": 164.85,
+    "min_ps": 119.34
    }
   },
   "pockets": {
@@ -66,7 +66,7 @@
    "marker": {
     "layer": "M5",
     "d_um": 1.536,
-    "added": 357
+    "added": 510
    },
    "count": 0,
    "area_um2": 0,

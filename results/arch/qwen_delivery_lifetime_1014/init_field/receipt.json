@@ -1,0 +1,97 @@
+{
+  "scope": "DEFAULT_OFF_INITIALIZATION_COMPONENT_NOT_PHYSICAL_OR_GLOBAL_PEER_BINDING",
+  "sources": {
+    "ot_qwen_xdelivery_init_barrier.sv": "b828d7298a774dd8e65dacd00331ea2a2f4814ed5ee02d37bb78f4745e054404",
+    "tb_qwen_xdelivery_init_barrier.sv": "90056e1e91887abdd45560fb1e5531747538e5f2b4285cf04cecaf9339cda17b",
+    "tb_qwen_xdelivery_init_disabled.sv": "a29540070c9416dfb7ed63ed8d8094709002e86cb4e651b6133a9a4526001376",
+    "tb_qwen_xdelivery_init_field.sv": "fe8e8670c4e0d3afa841aa60a926c1c7ebbde3eb7d8f50d12301030adbea0072",
+    "tb_qwen_xdelivery_init_bank.sv": "eb60a9532e9dd41f99fa9402f4b2517ef56b8cdc1525ab318b72f7eee3b09aee",
+    "ot_qwen_xdelivery_lifetime.sv": "26ed989248805d7857850beea48e83dee9945667dda3a8a5d302f6f005e36ffa"
+  },
+  "cases": [
+    {
+      "case": "disabled",
+      "exit": 0,
+      "output": "PASS initialization controller default disabled\n/srv/opentallas-scratch/codex/qwen-init-field-v2-1014/tb_qwen_xdelivery_init_disabled.sv:20: $finish called at 210 (1s)",
+      "source_sha256": "b828d7298a774dd8e65dacd00331ea2a2f4814ed5ee02d37bb78f4745e054404",
+      "testbench_sha256": "a29540070c9416dfb7ed63ed8d8094709002e86cb4e651b6133a9a4526001376"
+    },
+    {
+      "case": "controller",
+      "exit": 0,
+      "output": "PASS initialization controller delays missing/stale receipts, early accept, reset and full matching cohort\n/srv/opentallas-scratch/codex/qwen-init-field-v2-1014/tb_qwen_xdelivery_init_barrier.sv:30: $finish called at 650 (1s)",
+      "source_sha256": "b828d7298a774dd8e65dacd00331ea2a2f4814ed5ee02d37bb78f4745e054404",
+      "testbench_sha256": "90056e1e91887abdd45560fb1e5531747538e5f2b4285cf04cecaf9339cda17b"
+    },
+    {
+      "case": "field_composition",
+      "exit": 0,
+      "output": "PASS actual16x48 initialization composition delayedBEGIN receipts,768componentqueries,resetpartial/stalebank fence; no production seals\n/srv/opentallas-scratch/codex/qwen-init-field-v2-1014/tb_qwen_xdelivery_init_field.sv:57: $finish called at 8450 (1s)",
+      "source_sha256": "b828d7298a774dd8e65dacd00331ea2a2f4814ed5ee02d37bb78f4745e054404",
+      "testbench_sha256": "fe8e8670c4e0d3afa841aa60a926c1c7ebbde3eb7d8f50d12301030adbea0072"
+    },
+    {
+      "case": "field_live_mask_mutant",
+      "exit": 1,
+      "output": "FATAL: /srv/opentallas-scratch/codex/qwen-init-field-v2-1014/field_live_mask_mutant_tb.sv:44: actual bank initialization fault\n       Time: 80  Scope: tb_qwen_xdelivery_init_field",
+      "source_sha256": "b828d7298a774dd8e65dacd00331ea2a2f4814ed5ee02d37bb78f4745e054404",
+      "testbench_sha256": "3848524b5b6c5931b4054cfcf19a55d53c53692a1b1ea01e7496609210a03eb8"
+    },
+    {
+      "case": "actual_bank",
+      "exit": 0,
+      "output": "PASS actual vector-bank initialization receipt, retained identity, ACK, query retirement and collision suppression\n/srv/opentallas-scratch/codex/qwen-init-field-v2-1014/tb_qwen_xdelivery_init_bank.sv:22: $finish called at 180 (1s)",
+      "source_sha256": "b828d7298a774dd8e65dacd00331ea2a2f4814ed5ee02d37bb78f4745e054404",
+      "testbench_sha256": "eb60a9532e9dd41f99fa9402f4b2517ef56b8cdc1525ab318b72f7eee3b09aee"
+    },
+    {
+      "case": "barrier_bypass",
+      "exit": 1,
+      "output": "FATAL: /srv/opentallas-scratch/codex/qwen-init-field-v2-1014/tb_qwen_xdelivery_init_barrier.sv:19: dispatch before bank initialization\n       Time: 60  Scope: tb_qwen_xdelivery_init_barrier",
+      "source_sha256": "6d2a6ec0f0bd15af419d0600ea91b40f01f27a3b4825cedf9c4b52a4dce3b701",
+      "testbench_sha256": "90056e1e91887abdd45560fb1e5531747538e5f2b4285cf04cecaf9339cda17b"
+    },
+    {
+      "case": "context_bypass",
+      "exit": 1,
+      "output": "FATAL: /srv/opentallas-scratch/codex/qwen-init-field-v2-1014/tb_qwen_xdelivery_init_barrier.sv:25: stale initialization context escaped\n       Time: 400  Scope: tb_qwen_xdelivery_init_barrier",
+      "source_sha256": "3b9fb35a36d614ab4df5f2b8b55aa43bec772bd08bad9e81455dc928ca6751ec",
+      "testbench_sha256": "90056e1e91887abdd45560fb1e5531747538e5f2b4285cf04cecaf9339cda17b"
+    },
+    {
+      "case": "version_bypass",
+      "exit": 1,
+      "output": "FATAL: /srv/opentallas-scratch/codex/qwen-init-field-v2-1014/tb_qwen_xdelivery_init_barrier.sv:26: stale initialization version escaped\n       Time: 460  Scope: tb_qwen_xdelivery_init_barrier",
+      "source_sha256": "1633afae9a57da48dcb43d969a6c150cf0262821c4b32e93716ff3a5955a15c7",
+      "testbench_sha256": "90056e1e91887abdd45560fb1e5531747538e5f2b4285cf04cecaf9339cda17b"
+    },
+    {
+      "case": "participant_bypass",
+      "exit": 1,
+      "output": "FATAL: /srv/opentallas-scratch/codex/qwen-init-field-v2-1014/tb_qwen_xdelivery_init_barrier.sv:27: wrong initialization participants escaped\n       Time: 520  Scope: tb_qwen_xdelivery_init_barrier",
+      "source_sha256": "3d8d4ba422f4080095dd719dd497ec70e82ca3e45adb2fe6c8e85b93660391d4",
+      "testbench_sha256": "90056e1e91887abdd45560fb1e5531747538e5f2b4285cf04cecaf9339cda17b"
+    },
+    {
+      "case": "early_receipt",
+      "exit": 1,
+      "output": "FATAL: /srv/opentallas-scratch/codex/qwen-init-field-v2-1014/tb_qwen_xdelivery_init_bank.sv:13: receipt before actual bank BEGIN\n       Time: 20  Scope: tb_qwen_xdelivery_init_bank",
+      "source_sha256": "275134c7c0cf7af97e081cc427fe2d47c117482985ab0d265a1c0804ee2d6731",
+      "testbench_sha256": "eb60a9532e9dd41f99fa9402f4b2517ef56b8cdc1525ab318b72f7eee3b09aee"
+    },
+    {
+      "case": "fault_receipt",
+      "exit": 1,
+      "output": "FATAL: /srv/opentallas-scratch/codex/qwen-init-field-v2-1014/tb_qwen_xdelivery_init_bank.sv:20: receipt certified BEGIN/event collision\n       Time: 170  Scope: tb_qwen_xdelivery_init_bank",
+      "source_sha256": "00954a27865dfcefe642f32c194f198c4526ba3bf2eebf24ac8cc3713b9eb244",
+      "testbench_sha256": "eb60a9532e9dd41f99fa9402f4b2517ef56b8cdc1525ab318b72f7eee3b09aee"
+    },
+    {
+      "case": "receipt_drop",
+      "exit": 1,
+      "output": "FATAL: /srv/opentallas-scratch/codex/qwen-init-field-v2-1014/tb_qwen_xdelivery_init_bank.sv:17: receipt not retained until ACK\n       Time: 40  Scope: tb_qwen_xdelivery_init_bank",
+      "source_sha256": "f67755fa38237dd504e28f2055e7d9b62627ea6564bb33106fc72f2127ea1879",
+      "testbench_sha256": "eb60a9532e9dd41f99fa9402f4b2517ef56b8cdc1525ab318b72f7eee3b09aee"
+    }
+  ]
+}

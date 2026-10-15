@@ -1424,8 +1424,10 @@ module ot_qwen_me_spport_w12 #(
     // ot_qwen_me_spctl_w12 BANDF): position p holds group g(split, p), so the in-range test, row base, lane-vector
     // base and (g * ots) take g instead of p.  Default 0 = base.
     parameter integer BANDF = 0,
-    parameter integer TCUT = 7
+    parameter integer TCUT = 7,
+    parameter integer HARD_MUL = 0
 ) (
+    input wire [15:0] ck_mul,
     input  wire              clk,
     input  wire              rst_n,
     input  wire [15:0]       pt_id,
@@ -1536,7 +1538,22 @@ module ot_qwen_me_spport_w12 #(
     always @(posedge clk) sq <= scale_q;
     wire [NL*32-1:0] res;
     wire [NL-1:0]    sf;
-    generate for (e = 0; e < NL; e = e + 1) begin : g_scale
+    generate if (HARD_MUL != 0) begin:g_hard_mul
+        initial if (W != 16 || NL > 64 || SCALE_LAT != 8)
+            $fatal(1,"hard port needs W16 NL<=64 SCALE_LAT8");
+        for(genvar q=0;q<NL/4;q=q+1) begin:g_mul
+            wire [7:0] err;
+            wire [3:0] vo;
+            wire [3:0] vi = {4{raw_v && raw_last}} & act[4*q +: 4];
+            ot_qwen_slab_pg_lanes u_ln (.clk(ck_mul[q]),.rs0(rst_n),
+                .l_v(vi),.l_ws({4{raw_wsrc}}),.a(raw_res[128*q +: 128]),
+                .s(sq[64*q +: 64]),.y(res[128*q +: 128]),.vo(vo),.err(err));
+            for(genvar k=0;k<4;k=k+1) begin:g_error
+                assign sf[4*q+k] = vo[k] && (err[2*k +: 2] != 0);
+            end
+        end
+    end else begin:g_soft_mul
+    for (e = 0; e < NL; e = e + 1) begin : g_scale
         if (SCALE_LAT == 5) begin : g_fmul
             ot_hdc_fmul u_mul (.clk(clk), .rst_n(rst_n), .v(raw_v && raw_last && act[e]),
                 .a(raw_res[32*e +: 32]), .b({raw_wsrc ? 16'h3F80 : sq[16*e +: 16], 16'd0}),
@@ -1551,6 +1568,7 @@ module ot_qwen_me_spport_w12 #(
                 .y(res[32*e +: 32]), .err(err), .valid_out(vo));
             assign sf[e] = vo && (err != 2'd0);
         end
+    end
     end endgenerate
     always @(posedge clk or negedge rst_n) if (!rst_n) fault <= 1'b0; else fault <= |sf;
     // -- result tag: a + SCALE_LAT, carrying the finished mask, rows and addresses -------------------------------

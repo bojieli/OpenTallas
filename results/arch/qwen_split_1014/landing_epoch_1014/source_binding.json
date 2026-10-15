@@ -18,5 +18,12 @@
     "rtl/qwen_sys/split_20261014/qkd_ectl3_epoch_direct_s.sv": "f9a0bc395dbae113db6a036440d84e154fe937b2f8ae437b068bd3fed95e9188",
     "rtl/test/qwen_split/tb_qkd_land_rd_kd.sv": "714f4e18a4022d11456f72dfd988ec069db435ef2fc9fb8f99e9b005d7e9e8d2",
     "rtl/test/qwen_kv_die/tb_qkd_ectl3.sv": "e3be459927bd0435fdea84fefbe552f2ea124dcfbb67faed58f7189ea77e2e31"
+  },
+  "native_pinfix_source_commit": "c63b3c999",
+  "native_pinfix_gate_input_commit": "e03a7d099",
+  "native_pinfix_sha256": {
+    "rtl/qwen_sys/kv_die_20261009/qkd_land_strip.sv": "5903d38f7aca4ee0ddfd651a0ab0fefd644ccccc7062688bd55e15bd7d8bef07",
+    "rtl/test/qwen_split/tb_qkd_land_rd_kd.sv": "714f4e18a4022d11456f72dfd988ec069db435ef2fc9fb8f99e9b005d7e9e8d2",
+    "rtl/qwen_sys/split_20261014/qkd_land_grp_epoch.sv": "bae083e314c4f6f6c3360e03f72546af0233d6789c2eee98520777d8e18a7f53"
   }
 }
