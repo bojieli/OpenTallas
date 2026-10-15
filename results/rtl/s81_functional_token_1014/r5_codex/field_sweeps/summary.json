@@ -22,9 +22,12 @@
   "ot-epyc1tb",
   "ot-agidock128"
  ],
- "source_sha256": {
+ "checker_source_sha256": {
   "tools/s81_ftok/field_all.py": "b97974296e7da2c562e7d1ea3b8ca7cd9357c055c29df58a65050cec6ff80757",
-  "tools/s81_ftok/field_sweep.py": "62142b92e7a3067736da9653c9097b5dcb70c52cdd6f9a78f9245566940c60bc",
-  "tools/dsrom_1m_field.py": "33c15c2abf0a77fbbc2ad3d21128e0290bf89eb76520431fb2eb5e5962261df7"
- }
+  "tools/s81_ftok/field_sweep.py": "62142b92e7a3067736da9653c9097b5dcb70c52cdd6f9a78f9245566940c60bc"
+ },
+ "run_source_current_remote_sha256": {
+  "tools/dsrom_1m_field.py": "09a20b74ef88736ff0d05340cf787fc50c83c3e526f4fffdb27092eabc07d488"
+ },
+ "source_note": "Checker hashes verified against actual remote source after collection; runner hash is the current remote snapshot, not an inferred local-worktree hash or whole-run RTL provenance receipt."
 }
