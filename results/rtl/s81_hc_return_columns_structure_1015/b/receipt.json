@@ -1,0 +1,22 @@
+{
+  "status": "PASS",
+  "scope": "actual Yosys hierarchy: parent contains exactly four child cells, zero local logic/FF; four distinct clock port bits each reach one actual child; not CTS/physical/completeness",
+  "top": "ot_s81_hc_ctrb_columns",
+  "params": {
+    "READ_STAGE": 1,
+    "CHAIN_STEP": 6
+  },
+  "source_sha256": "f58ce1247a32d0b67af33465930ce4ee14f88e5b3f92ae28b5b781d9f6139f01",
+  "child_cells": [
+    "g_column[0].u",
+    "g_column[1].u",
+    "g_column[2].u",
+    "g_column[3].u"
+  ],
+  "clock_bits": [
+    2,
+    3,
+    4,
+    5
+  ]
+}

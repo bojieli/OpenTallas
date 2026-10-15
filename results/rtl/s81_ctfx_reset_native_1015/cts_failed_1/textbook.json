@@ -1,0 +1,92 @@
+{
+ "cells": 2277,
+ "flops": 1138,
+ "icgs": 0,
+ "macros": 0,
+ "findings": {
+  "util_channel": [
+   "utilisation 7.7% outside 45%-65% (std 383 + macro 0 um2 in 4946 um2): shrink the outline (long wires / sparse placement)"
+  ]
+ },
+ "refuse": {},
+ "metrics": {
+  "core_um": [
+   572.4,
+   8.6
+  ],
+  "clock_roots": [
+   {
+    "root": "port:clk",
+    "ff": 1138,
+    "icg": 0,
+    "macro_pins": 0,
+    "example": "fdx[0]$_DFF_P_"
+   }
+  ],
+  "hier_subblocks": 0,
+  "clock_max_root_sinks": 1138,
+  "clock_max_root": "port:clk",
+  "high_fanout_top": [],
+  "hf_max_port": 0,
+  "hf_max_reset": 0,
+  "hf_max_net": 0,
+  "in_to_out_bits": 0,
+  "in_to_reg_levels": 0,
+  "reg_to_out_levels": 0,
+  "icg_enable_from_port": 0,
+  "depth_ps": 11.7,
+  "depth_path": [
+   "u_rr.rst_n$_DFF_PN0_",
+   "fv[0]$_DFF_PN0_/RESETN"
+  ],
+  "depth_levels": 0,
+  "reach_worst_um": 12.6,
+  "reach_violations": 0,
+  "util": 0.0774
+ },
+ "top": "ot_s81_hc_ctfx_reset_native",
+ "netlist": "/srv/opentallas-scratch/claude/ref_gate/s81hc_ctfx_reset_native_ref-20261015-081522/routes/gate/work/orfs/results/asap7/opentallas_ot_s81_hc_ctfx_reset_native_asap7_ref_gate/base/1_2_yosys.v",
+ "seconds": 0.1,
+ "thresholds": {
+  "clk_sinks_max": 15000,
+  "clk_span_um": 600.0,
+  "clk_span_sinks": 8000,
+  "clk_sinks_refuse": 110000,
+  "hf_report": 256,
+  "hf_max": 3000,
+  "hf_port_refuse": 2048,
+  "hf_reset_refuse": 8000,
+  "hf_refuse": 50000,
+  "bnd_levels": 3,
+  "bnd_in_levels_refuse": 9,
+  "bnd_out_levels_refuse": 3,
+  "bnd_in_to_out_refuse": 1,
+  "bnd_icg_port_refuse": 1,
+  "depth_scale": 1.667,
+  "depth_ps_warn": 600.0,
+  "depth_ps_max": 700.0,
+  "reach_um": 500.0,
+  "reach_min_count": 1,
+  "util_min": 0.45,
+  "util_max": 0.65,
+  "channel_um": 20.0
+ },
+ "clock_rule": {
+  "max_root_sinks": 1138,
+  "root": "port:clk",
+  "ok": true,
+  "text": "1,138 sinks on the largest root <= 15,000; no measured clock tree (no --cts gate evidence)",
+  "enforce": false,
+  "closed_stands": false,
+  "limits": {
+   "sinks": 15000,
+   "insertion_ps": 300.0,
+   "spread_ps": 80.0
+  }
+ },
+ "would_refuse": [],
+ "waived": [],
+ "verdict": "WARN",
+ "refusing_checks": [],
+ "summary": "util_channel: utilisation 7.7% outside 45%-65% (std 383 + macro 0 um2 in 4946 um2): shrink the outline (long wires / sparse placement)"
+}
