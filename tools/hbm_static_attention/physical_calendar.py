@@ -37,6 +37,17 @@ def schedule(T,mode):
  words=[sum(1<<bits[e] for e in events.get(c,[])) for c in range(last+1)]
  return dict(T=T,mode=mode,H=H,D=D,TD=TD,NL=NL,PWORDS=PW,FPL=FPL,FML=8,NBANK=NB,physical_pairs=32,word_count=len(words),words=words,MACs_per_record_per_QK_or_PV=H*D*T,terms_per_beat=16384,expected_issue_beats=T//NL)
 
+def resident_event_frames():
+ """Four exact physical-profile calendars in one actual1024x256 macro."""
+ profiles=[schedule(T,m) for T in (128,640) for m in ('qk','pv')]
+ n=max(p['word_count'] for p in profiles)
+ words=[sum((p['words'][c] if c<len(p['words']) else 0)<<(7*i) for i,p in enumerate(profiles)) for c in range(n)]
+ return profiles,[1|(a<<4)|(w<<14) for a,w in enumerate(words)]
+
+def launch_instruction(profile,epoch=0):
+ profiles,_=resident_event_frames();p=profiles[profile]
+ return 2|(profile<<4)|((p['word_count']-1)<<6)|(p['T']<<16)|((p['mode']=='pv')<<32)|(epoch<<33)
+
 if __name__=='__main__':
  p=argparse.ArgumentParser();p.add_argument('--out',type=Path,required=True);a=p.parse_args();a.out.mkdir(parents=True,exist_ok=True)
  for T in (128,640):
