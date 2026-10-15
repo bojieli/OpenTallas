@@ -11,7 +11,7 @@ for c in old['children']:
  elif '.u_be' in n:
   i=int(n.split('[')[1].split(']')[0]);col,top=xy[i];upper=int(i in [2,3,4,5]);c['x']=10+col*pitchx+upper*(319.68+20);c['y']=10
  else:
-  i=int(n.split('[')[1].split(']')[0]);pidx=int(n.split('g_p[')[1].split(']')[0]);col,top=xy[i];row=top-(1-pidx)
+  i=int(n.split('[')[1].split(']')[0]);pidx=int(n.split('g_p[')[1].split(']')[0]);col,top=xy[i];row=top-pidx
   # p0 north ofp1; physicalcolumn1/0 lowerwestchain turns east, mirroredtemplate.
   c['x']=10+col*pitchx;c['y']=107.76+row*pitchy;c['outline_um']=[tw,th];c['status']='NEW_TILE_HARDENING_REQUIRED'
   if i in [0,1,6,7]:c['orient']='MY'
