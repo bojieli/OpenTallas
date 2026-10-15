@@ -329,7 +329,8 @@
     "SWcapturemask={capture_arg,capture_slot10}; q2capturemask=capture_slot10 andARGsource9mustremain0. Selectorwidth4 staysfixed.",
     "Reduce input from last qslots sink; compiled load_v/add_read validates actual incomingflit. Read/addissue and pubread/pubissue are one edge apart.",
     "ARGmode statically routes four formerTKMsinks toARG; TKMvalid andslot0 inARGmode. ARGout independent qslots source, no reduction/ARG outputdata mux.",
-    "V1 596 source remains frozen for existing native proof; V2 operation/program/physical qualification remains separate."
+    "V1 596 source remains frozen for existing native proof; V2 operation/program/physical qualification remains separate.",
+    "V2 endpoint sequence metadata is registered: emit all wr/rd/rx full-sequence fields one edge before the corresponding reservation bits; extended overflow is retained with metadata and faults on consumption."
   ],
   "reserved_ranges": [
     {
