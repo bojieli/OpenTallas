@@ -1,0 +1,891 @@
+{
+ "cell": "ot_hbm_host_static_ingress",
+ "view": "physical/ref_tile/hbm_host_static_ingress_ref/views/ot_hbm_host_static_ingress",
+ "lib_cell": "ot_hbm_host_static_ingress",
+ "insertion": true,
+ "ref_src": [
+  "insertion.json boundary mean"
+ ],
+ "R_ps": 214.8,
+ "spread_ps": 23.7,
+ "outputs": 359,
+ "inputs": 69,
+ "launch_ps": 248.9,
+ "launch_pin": "cfg_data[167]",
+ "capture_ps": 419.2,
+ "capture_pin": "rst_n",
+ "launch_over": 189,
+ "capture_over": 16,
+ "comb_pins": 0,
+ "comb_first": [],
+ "pass": false,
+ "fail_why": "launch 248.86418 > 220 (189 pins); capture 419.1996 > 190 (16 pins)",
+ "capture_failures": [
+  {
+   "pin": "rst_n",
+   "ps": 419.19960000000003
+  },
+  {
+   "pin": "s_arvalid",
+   "ps": 393.26973
+  },
+  {
+   "pin": "s_awvalid",
+   "ps": 234.08789000000002
+  },
+  {
+   "pin": "s_wvalid",
+   "ps": 233.07087
+  },
+  {
+   "pin": "s_araddr[11]",
+   "ps": 364.69061
+  },
+  {
+   "pin": "s_araddr[10]",
+   "ps": 338.76255000000003
+  },
+  {
+   "pin": "s_araddr[9]",
+   "ps": 339.42191
+  },
+  {
+   "pin": "s_araddr[8]",
+   "ps": 363.64106000000004
+  },
+  {
+   "pin": "s_araddr[7]",
+   "ps": 331.00504
+  },
+  {
+   "pin": "s_araddr[6]",
+   "ps": 339.97364000000005
+  },
+  {
+   "pin": "s_araddr[5]",
+   "ps": 364.80847
+  },
+  {
+   "pin": "s_araddr[4]",
+   "ps": 364.61792
+  },
+  {
+   "pin": "s_araddr[3]",
+   "ps": 337.54203
+  },
+  {
+   "pin": "s_araddr[2]",
+   "ps": 334.03531
+  },
+  {
+   "pin": "s_araddr[1]",
+   "ps": 337.12225
+  },
+  {
+   "pin": "s_araddr[0]",
+   "ps": 334.59805
+  }
+ ],
+ "launch_failures": [
+  {
+   "pin": "cfg_v",
+   "ps": 229.3936
+  },
+  {
+   "pin": "cfg_addr[11]",
+   "ps": 221.45162
+  },
+  {
+   "pin": "cfg_addr[10]",
+   "ps": 224.57653
+  },
+  {
+   "pin": "cfg_addr[5]",
+   "ps": 231.90999
+  },
+  {
+   "pin": "cfg_addr[2]",
+   "ps": 224.52134999999998
+  },
+  {
+   "pin": "cfg_addr[0]",
+   "ps": 228.74401
+  },
+  {
+   "pin": "cfg_data[254]",
+   "ps": 225.54041999999998
+  },
+  {
+   "pin": "cfg_data[251]",
+   "ps": 226.15807
+  },
+  {
+   "pin": "cfg_data[250]",
+   "ps": 220.21488999999997
+  },
+  {
+   "pin": "cfg_data[249]",
+   "ps": 225.50554
+  },
+  {
+   "pin": "cfg_data[248]",
+   "ps": 221.88081999999997
+  },
+  {
+   "pin": "cfg_data[247]",
+   "ps": 224.54476
+  },
+  {
+   "pin": "cfg_data[244]",
+   "ps": 222.72508999999997
+  },
+  {
+   "pin": "cfg_data[243]",
+   "ps": 231.90281999999996
+  },
+  {
+   "pin": "cfg_data[242]",
+   "ps": 220.38027
+  },
+  {
+   "pin": "cfg_data[240]",
+   "ps": 222.23917999999998
+  },
+  {
+   "pin": "cfg_data[236]",
+   "ps": 225.27711999999997
+  },
+  {
+   "pin": "cfg_data[235]",
+   "ps": 225.4355
+  },
+  {
+   "pin": "cfg_data[232]",
+   "ps": 223.73577
+  },
+  {
+   "pin": "cfg_data[231]",
+   "ps": 226.9688
+  },
+  {
+   "pin": "cfg_data[229]",
+   "ps": 234.15357999999998
+  },
+  {
+   "pin": "cfg_data[227]",
+   "ps": 223.11903999999998
+  },
+  {
+   "pin": "cfg_data[223]",
+   "ps": 226.28319
+  },
+  {
+   "pin": "cfg_data[222]",
+   "ps": 223.36381999999998
+  },
+  {
+   "pin": "cfg_data[216]",
+   "ps": 221.98035999999996
+  },
+  {
+   "pin": "cfg_data[212]",
+   "ps": 221.22884
+  },
+  {
+   "pin": "cfg_data[211]",
+   "ps": 223.8225
+  },
+  {
+   "pin": "cfg_data[210]",
+   "ps": 225.88759
+  },
+  {
+   "pin": "cfg_data[209]",
+   "ps": 222.76682999999997
+  },
+  {
+   "pin": "cfg_data[208]",
+   "ps": 222.85676999999998
+  },
+  {
+   "pin": "cfg_data[207]",
+   "ps": 233.70427
+  },
+  {
+   "pin": "cfg_data[205]",
+   "ps": 224.26711
+  },
+  {
+   "pin": "cfg_data[204]",
+   "ps": 223.15913999999998
+  },
+  {
+   "pin": "cfg_data[203]",
+   "ps": 228.34368
+  },
+  {
+   "pin": "cfg_data[202]",
+   "ps": 232.80277999999998
+  },
+  {
+   "pin": "cfg_data[199]",
+   "ps": 223.22838000000002
+  },
+  {
+   "pin": "cfg_data[198]",
+   "ps": 230.81736999999998
+  },
+  {
+   "pin": "cfg_data[197]",
+   "ps": 220.15916999999996
+  },
+  {
+   "pin": "cfg_data[194]",
+   "ps": 221.10231
+  },
+  {
+   "pin": "cfg_data[193]",
+   "ps": 238.05512999999996
+  },
+  {
+   "pin": "cfg_data[190]",
+   "ps": 224.12565999999998
+  },
+  {
+   "pin": "cfg_data[189]",
+   "ps": 222.00227999999998
+  },
+  {
+   "pin": "cfg_data[188]",
+   "ps": 220.19466
+  },
+  {
+   "pin": "cfg_data[186]",
+   "ps": 228.23539999999997
+  },
+  {
+   "pin": "cfg_data[184]",
+   "ps": 223.31554
+  },
+  {
+   "pin": "cfg_data[183]",
+   "ps": 227.84684999999996
+  },
+  {
+   "pin": "cfg_data[182]",
+   "ps": 220.993
+  },
+  {
+   "pin": "cfg_data[181]",
+   "ps": 226.10893999999996
+  },
+  {
+   "pin": "cfg_data[180]",
+   "ps": 234.41602999999998
+  },
+  {
+   "pin": "cfg_data[179]",
+   "ps": 227.50847
+  },
+  {
+   "pin": "cfg_data[178]",
+   "ps": 228.56889999999999
+  },
+  {
+   "pin": "cfg_data[177]",
+   "ps": 223.87003999999996
+  },
+  {
+   "pin": "cfg_data[175]",
+   "ps": 223.83164999999997
+  },
+  {
+   "pin": "cfg_data[174]",
+   "ps": 232.38991
+  },
+  {
+   "pin": "cfg_data[173]",
+   "ps": 222.0924
+  },
+  {
+   "pin": "cfg_data[172]",
+   "ps": 220.89312
+  },
+  {
+   "pin": "cfg_data[170]",
+   "ps": 223.1393
+  },
+  {
+   "pin": "cfg_data[169]",
+   "ps": 233.57331999999997
+  },
+  {
+   "pin": "cfg_data[168]",
+   "ps": 222.26796000000002
+  },
+  {
+   "pin": "cfg_data[167]",
+   "ps": 248.86417999999998
+  },
+  {
+   "pin": "cfg_data[165]",
+   "ps": 239.45857999999998
+  },
+  {
+   "pin": "cfg_data[164]",
+   "ps": 228.71846
+  },
+  {
+   "pin": "cfg_data[163]",
+   "ps": 225.31052999999997
+  },
+  {
+   "pin": "cfg_data[161]",
+   "ps": 233.08006999999998
+  },
+  {
+   "pin": "cfg_data[159]",
+   "ps": 223.81264
+  },
+  {
+   "pin": "cfg_data[157]",
+   "ps": 223.05748
+  },
+  {
+   "pin": "cfg_data[155]",
+   "ps": 225.03837999999996
+  },
+  {
+   "pin": "cfg_data[153]",
+   "ps": 221.06151
+  },
+  {
+   "pin": "cfg_data[152]",
+   "ps": 221.42467
+  },
+  {
+   "pin": "cfg_data[150]",
+   "ps": 226.36129
+  },
+  {
+   "pin": "cfg_data[149]",
+   "ps": 221.80718000000002
+  },
+  {
+   "pin": "cfg_data[147]",
+   "ps": 226.19331999999997
+  },
+  {
+   "pin": "cfg_data[146]",
+   "ps": 223.76454
+  },
+  {
+   "pin": "cfg_data[145]",
+   "ps": 223.82894
+  },
+  {
+   "pin": "cfg_data[144]",
+   "ps": 230.10433
+  },
+  {
+   "pin": "cfg_data[143]",
+   "ps": 230.37523
+  },
+  {
+   "pin": "cfg_data[142]",
+   "ps": 220.69338
+  },
+  {
+   "pin": "cfg_data[141]",
+   "ps": 242.416
+  },
+  {
+   "pin": "cfg_data[139]",
+   "ps": 240.84798
+  },
+  {
+   "pin": "cfg_data[137]",
+   "ps": 222.09172
+  },
+  {
+   "pin": "cfg_data[136]",
+   "ps": 220.21317999999997
+  },
+  {
+   "pin": "cfg_data[135]",
+   "ps": 226.36861
+  },
+  {
+   "pin": "cfg_data[134]",
+   "ps": 229.59843999999998
+  },
+  {
+   "pin": "cfg_data[132]",
+   "ps": 221.64652999999998
+  },
+  {
+   "pin": "cfg_data[128]",
+   "ps": 221.83846
+  },
+  {
+   "pin": "cfg_data[127]",
+   "ps": 231.34312999999997
+  },
+  {
+   "pin": "cfg_data[125]",
+   "ps": 221.4645
+  },
+  {
+   "pin": "cfg_data[124]",
+   "ps": 224.50306999999998
+  },
+  {
+   "pin": "cfg_data[121]",
+   "ps": 221.63216
+  },
+  {
+   "pin": "cfg_data[118]",
+   "ps": 227.65846999999997
+  },
+  {
+   "pin": "cfg_data[117]",
+   "ps": 221.74491999999998
+  },
+  {
+   "pin": "cfg_data[116]",
+   "ps": 221.29325999999998
+  },
+  {
+   "pin": "cfg_data[115]",
+   "ps": 224.80669
+  },
+  {
+   "pin": "cfg_data[112]",
+   "ps": 227.94425999999999
+  },
+  {
+   "pin": "cfg_data[111]",
+   "ps": 229.87014
+  },
+  {
+   "pin": "cfg_data[110]",
+   "ps": 236.42278
+  },
+  {
+   "pin": "cfg_data[109]",
+   "ps": 238.10609999999997
+  },
+  {
+   "pin": "cfg_data[108]",
+   "ps": 221.35825999999997
+  },
+  {
+   "pin": "cfg_data[107]",
+   "ps": 222.36208
+  },
+  {
+   "pin": "cfg_data[106]",
+   "ps": 222.47404999999998
+  },
+  {
+   "pin": "cfg_data[104]",
+   "ps": 225.55739
+  },
+  {
+   "pin": "cfg_data[103]",
+   "ps": 237.17095
+  },
+  {
+   "pin": "cfg_data[102]",
+   "ps": 226.90343000000001
+  },
+  {
+   "pin": "cfg_data[100]",
+   "ps": 238.71659999999997
+  },
+  {
+   "pin": "cfg_data[98]",
+   "ps": 221.51366000000002
+  },
+  {
+   "pin": "cfg_data[95]",
+   "ps": 222.20992
+  },
+  {
+   "pin": "cfg_data[94]",
+   "ps": 223.41789999999997
+  },
+  {
+   "pin": "cfg_data[92]",
+   "ps": 238.44059999999996
+  },
+  {
+   "pin": "cfg_data[90]",
+   "ps": 238.85487999999998
+  },
+  {
+   "pin": "cfg_data[89]",
+   "ps": 222.37367999999998
+  },
+  {
+   "pin": "cfg_data[88]",
+   "ps": 232.35463
+  },
+  {
+   "pin": "cfg_data[87]",
+   "ps": 226.72785999999996
+  },
+  {
+   "pin": "cfg_data[86]",
+   "ps": 232.26259
+  },
+  {
+   "pin": "cfg_data[85]",
+   "ps": 242.13398999999998
+  },
+  {
+   "pin": "cfg_data[84]",
+   "ps": 230.85249999999996
+  },
+  {
+   "pin": "cfg_data[83]",
+   "ps": 238.73008999999996
+  },
+  {
+   "pin": "cfg_data[81]",
+   "ps": 220.60105999999996
+  },
+  {
+   "pin": "cfg_data[80]",
+   "ps": 222.66481
+  },
+  {
+   "pin": "cfg_data[76]",
+   "ps": 223.06858999999997
+  },
+  {
+   "pin": "cfg_data[75]",
+   "ps": 235.74061999999998
+  },
+  {
+   "pin": "cfg_data[71]",
+   "ps": 220.54044999999996
+  },
+  {
+   "pin": "cfg_data[66]",
+   "ps": 233.09828
+  },
+  {
+   "pin": "cfg_data[65]",
+   "ps": 243.41627999999997
+  },
+  {
+   "pin": "cfg_data[64]",
+   "ps": 240.90654
+  },
+  {
+   "pin": "cfg_data[63]",
+   "ps": 237.03080999999997
+  },
+  {
+   "pin": "cfg_data[61]",
+   "ps": 232.48359999999997
+  },
+  {
+   "pin": "cfg_data[60]",
+   "ps": 240.96422
+  },
+  {
+   "pin": "cfg_data[57]",
+   "ps": 230.28685000000002
+  },
+  {
+   "pin": "cfg_data[56]",
+   "ps": 221.83186999999998
+  },
+  {
+   "pin": "cfg_data[54]",
+   "ps": 221.35023999999999
+  },
+  {
+   "pin": "cfg_data[53]",
+   "ps": 224.28337
+  },
+  {
+   "pin": "cfg_data[52]",
+   "ps": 229.06822999999997
+  },
+  {
+   "pin": "cfg_data[51]",
+   "ps": 222.19142
+  },
+  {
+   "pin": "cfg_data[49]",
+   "ps": 238.87111
+  },
+  {
+   "pin": "cfg_data[47]",
+   "ps": 241.35631
+  },
+  {
+   "pin": "cfg_data[45]",
+   "ps": 221.30802999999997
+  },
+  {
+   "pin": "cfg_data[44]",
+   "ps": 232.18318
+  },
+  {
+   "pin": "cfg_data[43]",
+   "ps": 232.3752
+  },
+  {
+   "pin": "cfg_data[41]",
+   "ps": 232.40605
+  },
+  {
+   "pin": "cfg_data[40]",
+   "ps": 222.14396999999997
+  },
+  {
+   "pin": "cfg_data[39]",
+   "ps": 234.73671000000002
+  },
+  {
+   "pin": "cfg_data[38]",
+   "ps": 231.29998
+  },
+  {
+   "pin": "cfg_data[37]",
+   "ps": 234.95716999999996
+  },
+  {
+   "pin": "cfg_data[35]",
+   "ps": 228.04557999999997
+  },
+  {
+   "pin": "cfg_data[34]",
+   "ps": 224.2582
+  },
+  {
+   "pin": "cfg_data[32]",
+   "ps": 235.8553
+  },
+  {
+   "pin": "cfg_data[31]",
+   "ps": 241.07738
+  },
+  {
+   "pin": "cfg_data[28]",
+   "ps": 221.2036
+  },
+  {
+   "pin": "cfg_data[26]",
+   "ps": 220.02263
+  },
+  {
+   "pin": "cfg_data[24]",
+   "ps": 220.27238999999997
+  },
+  {
+   "pin": "cfg_data[23]",
+   "ps": 237.54325999999998
+  },
+  {
+   "pin": "cfg_data[22]",
+   "ps": 227.14708000000002
+  },
+  {
+   "pin": "cfg_data[21]",
+   "ps": 241.84456
+  },
+  {
+   "pin": "cfg_data[20]",
+   "ps": 237.25993999999997
+  },
+  {
+   "pin": "cfg_data[18]",
+   "ps": 229.59343
+  },
+  {
+   "pin": "cfg_data[16]",
+   "ps": 240.20319999999998
+  },
+  {
+   "pin": "cfg_data[15]",
+   "ps": 227.20765999999998
+  },
+  {
+   "pin": "cfg_data[14]",
+   "ps": 235.08986
+  },
+  {
+   "pin": "cfg_data[13]",
+   "ps": 225.34758
+  },
+  {
+   "pin": "cfg_data[11]",
+   "ps": 233.31606
+  },
+  {
+   "pin": "cfg_data[10]",
+   "ps": 225.70223
+  },
+  {
+   "pin": "cfg_data[9]",
+   "ps": 222.17485
+  },
+  {
+   "pin": "cfg_data[8]",
+   "ps": 227.19047999999998
+  },
+  {
+   "pin": "cfg_data[7]",
+   "ps": 229.83132
+  },
+  {
+   "pin": "cfg_data[6]",
+   "ps": 229.50176
+  },
+  {
+   "pin": "cfg_data[2]",
+   "ps": 223.62932
+  },
+  {
+   "pin": "cfg_data[1]",
+   "ps": 235.28722
+  },
+  {
+   "pin": "cfg_data[0]",
+   "ps": 225.19338
+  },
+  {
+   "pin": "cfg_target[6]",
+   "ps": 226.97505
+  },
+  {
+   "pin": "cfg_target[4]",
+   "ps": 224.94169999999997
+  },
+  {
+   "pin": "cfg_target[1]",
+   "ps": 221.78963
+  },
+  {
+   "pin": "desc_base[11]",
+   "ps": 220.34224
+  },
+  {
+   "pin": "desc_base[7]",
+   "ps": 225.08574
+  },
+  {
+   "pin": "desc_base[4]",
+   "ps": 223.46443
+  },
+  {
+   "pin": "desc_base[3]",
+   "ps": 225.1649
+  },
+  {
+   "pin": "desc_base[2]",
+   "ps": 221.23780999999997
+  },
+  {
+   "pin": "desc_base[1]",
+   "ps": 226.97838000000002
+  },
+  {
+   "pin": "desc_base[0]",
+   "ps": 221.03447
+  },
+  {
+   "pin": "desc_limit[12]",
+   "ps": 222.67143999999996
+  },
+  {
+   "pin": "desc_limit[11]",
+   "ps": 222.10661999999996
+  },
+  {
+   "pin": "desc_limit[9]",
+   "ps": 230.76448
+  },
+  {
+   "pin": "desc_limit[4]",
+   "ps": 222.221
+  },
+  {
+   "pin": "desc_limit[3]",
+   "ps": 221.92269
+  },
+  {
+   "pin": "desc_limit[1]",
+   "ps": 223.43095999999997
+  },
+  {
+   "pin": "desc_loops[8]",
+   "ps": 223.43746
+  },
+  {
+   "pin": "desc_loops[6]",
+   "ps": 224.10176
+  },
+  {
+   "pin": "desc_loops[3]",
+   "ps": 223.69731000000002
+  },
+  {
+   "pin": "desc_loops[2]",
+   "ps": 224.44518
+  },
+  {
+   "pin": "desc_loops[1]",
+   "ps": 223.96083
+  }
+ ],
+ "source_sha256": "dd598f908d8bd8248aff70b82e1012217f9c4a4f8e9a910a9435c48a06133e8e",
+ "view_sha256": {
+  "ot_hbm_host_static_ingress.lef": "35d8231779f39f560d4afdc4080ca26d208812411d75a3a35c95cb97ea9e0157",
+  "ot_hbm_host_static_ingress_tt.lib": "f52c5b8104e1260153af1b33fcdefa8a2022c02c7e4d704528dea0eb4585bc1c",
+  "ot_hbm_host_static_ingress_ff.lib": "bd9daf9ba77cf90c717599cadfc19b0e4c145b44cafb02a3e149dd0038cd7ee2",
+  "insertion.json": "8be150f594988c0e0ebeb1974b98ab526d6e7618d911afb1da0db0c0fce747d2"
+ },
+ "scope": "Source-exact CLOSED child; routed timing stands, native parent/die adoption refused by failing boundary gates.",
+ "routed_evidence": {
+  "job": "hbm_host_static_ingress_ref-pinff1-144ac577a",
+  "TT_ps": 103.14,
+  "FF_ps": 20.27,
+  "DRC": 0,
+  "record_commit": "55ae56d3d",
+  "main_merge": "81b2dbfea"
+ },
+ "classified_defects": [
+  {
+   "kind": "launch",
+   "inferred_cause": "post-flop routing/load; all public outputs are FF Q",
+   "pins": 189,
+   "worst_ps": 248.9,
+   "budget_ps": 220
+  },
+  {
+   "kind": "capture_read_decode",
+   "inferred_cause": "ARVALID/ARADDR equality decode/status mux precedes response-data flops in RTL",
+   "pins": 13,
+   "budget_ps": 190
+  },
+  {
+   "kind": "capture_write_handshake",
+   "inferred_cause": "AWVALID/WVALID handshake precedes holding-state flop in RTL",
+   "pins": 2,
+   "budget_ps": 190
+  },
+  {
+   "kind": "reset_recovery",
+   "inferred_cause": "asynchronous rst_n reaches resettable sinks",
+   "pins": 1,
+   "budget_ps": 190
+  }
+ ],
+ "next": "Source owner to build explicit request landing and safe response/payload stage; isolate valid/reset control, preserve real accepted transactions and reprove timing, exact programme and mutants. No unchanged route or SDC relaxation."
+}

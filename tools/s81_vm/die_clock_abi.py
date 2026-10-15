@@ -37,6 +37,7 @@ VIEWS = {
     'ck_mem_wcapture_t': ('dsfd_vm_static_write_capture128(E|W)', 'ck', 'dsfd_vm_direct_capture_e_native|dsfd_vm_direct_capture_w_native'),
     'ck_mem_wscatter_t': ('dsfd_vm_static_scatter_b8_out(B0|B8|B16|B24)', 'ck', 'dsfd_vm_direct_scatter_b0_native|dsfd_vm_direct_scatter_b8_native|dsfd_vm_direct_scatter_b16_native|dsfd_vm_direct_scatter_b24_native'),
     'ck_mem_return_t': ('dsfd_vm_static_return_bank8_l0..l3_p (READ L16; ONE entry per lane: bit 4*slice+lane -> lane, 5,380 FF/root)', 'ck', 'dsfd_vm_static_return_bank8_l0_p_native_1015_l16|dsfd_vm_static_return_bank8_l1_p_native_1015_l16|dsfd_vm_static_return_bank8_l2_p_native_1015_l16|dsfd_vm_static_return_bank8_l3_p_native_1015_l16'),
+    'ck_seq_t': ('dsfd_vm_seq_tile (DLAT7; pin-registered diagnostic faults)', 'ck', 'dsfd_vm_seq_tile_native_1015_r3'),
     'ck_rsched_t': ('dsfd_vm_static_rsched_p (READ L16)', 'ck', 'dsfd_vm_static_rsched_p_native_1015_l16'),
     'ck_cap_control_s': ('dsfd_vm_static_cap_ctl', 'ck', 'dsfd_vm_static_cap_ctl_1015_r1'),
     'ck_cap_lane_s': ('dsfd_vm_static_cap_leaf (CAP_PIPE 2)', 'ck', 'dsfd_vm_static_cap_leaf_1015_r7'),
