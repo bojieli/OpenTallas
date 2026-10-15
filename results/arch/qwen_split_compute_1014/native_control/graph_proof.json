@@ -3,14 +3,16 @@
   "qualified": false,
   "instances": 1637,
   "buses": 3406,
+  "scope": "Generated physical-plan consistency only; does not prove actual whole-die RTL binding or native qualification",
   "geometry_errors": [],
   "nonclock_reset_endpoint_bit_mismatches": [],
-  "source_ports": 53,
-  "geometry_sha256": "655ce7b541f85e97e03177e084afb78a2ac3ce94a5302b892b9bdb13f48ea7e5",
+  "source_ports": 50,
+  "geometry_sha256": "c6bb77d8e1a3b111999ecfe969449d54550b4c959c4162e8a55709a061b49f05",
+  "audit_tool_commit": "f83842635",
   "native_control_contract": {
     "master": "qfd_tt_ctlm_static_s",
     "source": "rtl/qwen_sys/static_schedule_20261014/qfd_tt_ctlm_static_s.sv",
-    "source_sha256": "a853e0fafc343256b8fafdd43e54a42f344b6077e734e988024ab8ac1aaab71c",
+    "source_sha256": "6fd2bbf9d3f4ed0af371f7f34406bb96bbd777db566beaabbca7ac24322f79fe",
     "retired_master": "qfd_tt_ctlm",
     "removed_obsolete_buses": [
       "tt_xd",
@@ -90,18 +92,6 @@
         "direction": "output"
       },
       "mer2": {
-        "bits": 1,
-        "direction": "output"
-      },
-      "mer3": {
-        "bits": 1,
-        "direction": "output"
-      },
-      "mer4": {
-        "bits": 1,
-        "direction": "output"
-      },
-      "mer5": {
         "bits": 1,
         "direction": "output"
       },
@@ -251,9 +241,6 @@
       "control_stores_ready",
       "cp",
       "layer_context_v",
-      "mer3",
-      "mer4",
-      "mer5",
       "native_cmd",
       "native_pos",
       "native_tok",
@@ -265,12 +252,12 @@
     "qualified": false
   },
   "staged_run": {
-    "unit": "oth-ubuntu-1455048-1792054705",
+    "unit": "oth-ubuntu-1481884-1792055030",
     "exit_code": 0,
     "remote": "/srv/opentallas-scratch/codex/q-system-pins-1015/src",
     "kind": "metadata-only OT_RELAY_SKIP",
-    "source": "current57c5ce3da tools/actualstaticcontroller plus exactcurrent sourcepin header/clockmanifest overlay; retained frozen oldphysicalviews remain unqualified"
+    "source": "currentf6842ce4a tools/actualstaticcontroller plus exactcurrent sourcepin header/clockmanifest overlay; retained frozen oldphysicalviews remain unqualified"
   },
   "historical_STA_rootcause": "C16s qfd_xcst_s has no ck physical LEF pin; get_pins ck and ck[0] both absent. Current source fixes real M3 clock location, but no route qualification inherited.",
-  "source_generator_gap": "Existing static_slot.py requires XPF markers absent in its declared physical source input; direct checked-in real static controller SHA used. Source owner notified; no regeneration claim."
+  "source_generator": "Canonical complete source template adoptedf6842ce4a; static_slot.py --check byte-identical SHA6fd2bbf9d3f4ed0af371f7f34406bb96bbd777db566beaabbca7ac24322f79fe"
 }
