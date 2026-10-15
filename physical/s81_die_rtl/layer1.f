@@ -17,13 +17,13 @@ rtl/v41die/ot_s81_cfg7_seq.sv
 physical/asap7_memory_macros_v2/ot_rom_4096x72_m8/ot_rom_4096x72_m8.v
 # hard-macro behavioural models (SRAM / ROM bit arrays) instantiated by the RTL (children of real RTL only)
 +libdir+physical/asap7_memory_macros_v2
-# WFC stage kit: the hardened cluster of the PRICED kit (dsfd_wfc_stg_cl) under the die master name, with the hop
-# endpoint (engine 7)
-+define+DSFD_WFC_STG_CL_DIE
-# STATIC die form (S-VM F7 2026-10-15): no t_lir / f_lor grant pins; static RX / TX message buffers, TX on the
-# compiler's reserved edges (last RX arrival + TX_OFF); gate tools/dsrom_wfc_static_bench.py
-+define+DSFD_WFC_STG_STATIC
-rtl/dsrom_sys/mtp/dsfd_wfc_stg_cl.sv
+# WFC stage kit: the STATIC kit (S-VM F7 static-wfc2 2026-10-15; owner static-cycle rule): no ready / grant / credit on
+# any production path, no t_lir / f_lor; wires-only parent over the stream leaf dsfd_wfc_ss_t and the serial leaf
+# dsfd_wfc_ss_s (hardened, DSFD_WFC_SS_HARD); gate tools/dsrom_wfc_static_bench.py.  Supersedes the grant-form cluster
+# dsfd_wfc_stg_cl (DSFD_WFC_STG_CL_DIE) and the 709efb5f5 buffered wrapper (DSFD_WFC_STG_STATIC).
++define+DSFD_WFC_STG_STATIC_DIE
++define+DSFD_WFC_SS_HARD
+rtl/dsrom_sys/mtp/dsfd_wfc_stg_static.sv
 +libdir+physical/s81_ph_views/mtp/macros
 # BF pair (x512): the CLOSED compact199 views under their die names (tools/s81/gen_bf_die_wrappers.py: die bit i = the
 # view pin tools/s81/bf_direct_pins.groups names; closed routes' parameters); dsfd_bf_front.xb = the native BF stream
