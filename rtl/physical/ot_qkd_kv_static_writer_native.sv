@@ -3,7 +3,7 @@
 // Physical face omits duplicate buses and full-mask/native constants.
 // Native full-sector intent is a semantic property of this master, checked
 // against the underlying source at every physical write in its bench.
-module qkd_kv_static_writer_native #(parameter integer MUT = 0) (
+module qkd_kv_static_writer_native #(parameter integer MUT = 0, parameter integer RESET_PIN_CAPTURE = 1) (
     input wire ck, rst_n,
     input wire word_valid, input wire [10:0] word_tag,
     input wire [511:0] word_data,
@@ -19,11 +19,25 @@ module qkd_kv_static_writer_native #(parameter integer MUT = 0) (
     output wire [28:0] expected_address,
     output wire fault, output wire [7:0] fault_code
 );
+    // r4: one kept async-assert, sync-release pin register owns the external
+    // reset port; the existing regional tree is driven by its local output.
+    // Release is now 4 edges before first compiled word (was 3). No normal
+    // data/control edge changes; asynchronous assertion remains immediate.
+    wire regional_reset_n;
+    generate if (RESET_PIN_CAPTURE != 0) begin : g_reset_pin
+        (* keep = "true", dont_touch = "true" *) reg pin_reset_n;
+        always @(posedge ck or negedge rst_n)
+            if (!rst_n) pin_reset_n <= 1'b0;
+            else pin_reset_n <= 1'b1;
+        assign regional_reset_n = pin_reset_n;
+    end else begin : g_reset_bypass
+        assign regional_reset_n = rst_n;
+    end endgenerate
     // r3: RST_RELAY=1 -> 12 regional reset relays (rst_n port loads only the relay flops);
-    // first word slot >= 3 edges after rst_n release (compiler boot schedule).
+    // first word slot >= 4 edges after rst_n release (compiler boot schedule).
     qkd_kv_static_writer #(.MUT(MUT), .RST_RELAY(1)) u_writer (
         .ck(ck),
-        .rst_n(rst_n),
+        .rst_n(regional_reset_n),
         .word_valid(word_valid),
         .word_tag(word_tag),
         .word_data(word_data),
