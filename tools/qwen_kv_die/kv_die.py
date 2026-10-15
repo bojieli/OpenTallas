@@ -1673,11 +1673,13 @@ def _relays(m):
             for e in tm['members']:
                 nb.append((f'{bid}__m', 'reset', 1, [src_, e]))
                 m['tree_depth'][(tm['root'], e)] = tm['depth']
-            m['tree_depth'][(tm['root'], tm['lead'])] = tm['depth']
             for c_ in tm['children']:
                 tree_meta[c_]['src'] = src_
                 tree_meta[c_]['pdepth'] = tm['depth']
                 order_.append((c_, 'kv_oneway', 1, [src_, tree_meta[c_]['lead']]))
+            if tm['children']:
+                continue          # an inner node's leader is only an aim point: it takes its reset in its own leaf cluster
+            m['tree_depth'][(tm['root'], tm['lead'])] = tm['depth']
         if n == 0:
             nb.append((bid, cl, bits, eps))
             continue
