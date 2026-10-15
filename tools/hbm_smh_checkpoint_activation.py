@@ -10,6 +10,9 @@ ROOT=Path(__file__).resolve().parents[1]
 def build():
  p=ROOT/'results/rtl/hbm_smh_static_feed_1014/checkpoint_wqa_rank0_verified';out=ROOT/'results/rtl/hbm_smh_static_feed_1014/native_activation';out.mkdir(exist_ok=True)
  rng=np.random.default_rng(20261015);X=[(rng.standard_normal(5120)*(.1*(n+1))).astype(np.float32) for n in range(8)]
+ # Raw external FP32 values for the actual VM/quantizer successor. Column-major
+ # order: raw_fp32[n*5120+k], IEEE754 bits; no quantization in this artifact.
+ (out/'raw_fp32.hex').write_text(''.join(f'{int(v):08x}\n' for x in X for v in x.view(np.uint32)))
  xcase=MS.gen_op('v41_fp8',1,5120,8,np.random.default_rng(13),X=X)
  (out/'xw.hex').write_text(''.join(f'{x:06304x}\n' for x in xcase['xw']))
  for sm in range(13):
