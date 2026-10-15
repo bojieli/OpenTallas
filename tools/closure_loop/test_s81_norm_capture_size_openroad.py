@@ -1,30 +1,39 @@
-"""OpenDB fixture: measured dual-D driver sizing preserves state and connections."""
+"""OpenDB fixture: ctfx_nt crossing-driver sizing (rule-based, every fd_in cone) preserves state and connections."""
 from pathlib import Path
 import shutil
 import subprocess
 import pytest
-ROOT=Path(__file__).resolve().parents[2]
+ROOT = Path(__file__).resolve().parents[2]
 
-@pytest.mark.parametrize('cts',[True,False])
-def test_measured_capture_driver(tmp_path,cts):
-    if not shutil.which('openroad'):pytest.skip('OpenROAD required')
-    lef=(ROOT/'tools/closure_loop/testdata/io_flop_at_pins/test.lef').read_text()
-    buf=lef[lef.index('MACRO BUF_TEST'):lef.index('END LIBRARY')]
-    lef=lef.replace('END LIBRARY',buf.replace('BUF_TEST','BUFx2_ASAP7_75t_R')+buf.replace('BUF_TEST','BUFx3_ASAP7_75t_R')+'END LIBRARY')
-    (tmp_path/'cells.lef').write_text(lef)
-    bits=[1004,1018,857,855,853,840,838]
-    script=f'read_lef {tmp_path/"cells.lef"}\n'
-    script+='odb::dbBlock_create [odb::dbChip_create [ord::get_db]] top\nset b [ord::get_db_block]\n'
-    for bit in bits:
-        script+=f'''set h [odb::dbInst_create $b [[ord::get_db] findMaster BUFx2_ASAP7_75t_R] hold_{bit}]
-set n [odb::dbNet_create $b d_{bit}]
-[$h findITerm Y] connect $n
-set f [odb::dbInst_create $b [[ord::get_db] findMaster DFF_TEST] {{fdx[{bit}]$_DFF_P_}}]
-[$f findITerm D] connect $n
-set f [odb::dbInst_create $b [[ord::get_db] findMaster DFF_TEST] clone_{bit}]
-[$f findITerm D] connect $n
+
+def _lef(tmp_path):
+    lef = (ROOT / 'tools/closure_loop/testdata/io_flop_at_pins/test.lef').read_text()
+    buf = lef[lef.index('MACRO BUF_TEST'):lef.index('END LIBRARY')]
+    extra = ''.join(buf.replace('BUF_TEST', m) for m in ('BUFx2_ASAP7_75t_R', 'BUFx4f_ASAP7_75t_R', 'HB1xp67_ASAP7_75t_R'))
+    (tmp_path / 'cells.lef').write_text(lef.replace('END LIBRARY', extra + 'END LIBRARY'))
+
+
+@pytest.mark.parametrize('cts', [True, False])
+def test_crossing_driver_rule(tmp_path, cts):
+    if not shutil.which('openroad'):
+        pytest.skip('OpenROAD required')
+    _lef(tmp_path)
+    s = f'read_lef {tmp_path / "cells.lef"}\n'
+    s += 'odb::dbBlock_create [odb::dbChip_create [ord::get_db]] top\nset b [ord::get_db_block]\n'
+    s += 'proc mk {m n x} { set i [odb::dbInst_create $::b [[ord::get_db] findMaster $m] $n]; $i setLocation [expr {$x*1000}] 0; $i setPlacementStatus PLACED; return $i }\n'
+    # bit 0: pin -> HB -> hold_a (BUFx2) -> {capture at 10 um, clone at 90 um}: crossing wire, must be sized
+    # bit 1: pin -> HB -> hold_b (BUFx2) -> {capture at 10 um, clone at 15 um}: short, must stay BUFx2
+    for bit, far in ((0, 90), (1, 15)):
+        s += f'''set p [odb::dbNet_create $b fd_in_{bit}]
+set bt [odb::dbBTerm_create $p {{fd_in[{bit}]}}]; $bt setIoType INPUT
+set hb [mk HB1xp67_ASAP7_75t_R ot_inhold_{bit} 5]; [$hb findITerm A] connect $p
+set n1 [odb::dbNet_create $b m_{bit}]; [$hb findITerm Y] connect $n1
+set h [mk BUFx2_ASAP7_75t_R hold_{bit} 8]; [$h findITerm A] connect $n1
+set d [odb::dbNet_create $b d_{bit}]; [$h findITerm Y] connect $d
+[[mk DFF_TEST cap_{bit} 10] findITerm D] connect $d
+[[mk DFF_TEST clone_{bit} {far}] findITerm D] connect $d
 '''
-    script+='''set placements 0
+    s += '''set placements 0
 proc detailed_placement {} { incr ::placements }
 proc check_placement {args} {}
 proc estimate_parasitics {args} {}
@@ -32,22 +41,18 @@ proc set_dont_touch {args} {}
 rename get_cells real_get_cells
 proc get_cells {args} { return $args }
 '''
-    if cts:script+='set ::cts_args {}\nproc ::ot_ref_cts_boundary_orig {args} {}\n'
-    hook=ROOT/'physical/ref_tile/s81hc_ctfxnt_ref/capture_driver_size.tcl'
-    script+=f'set rc [catch {{source {hook}}} msg]\n'
     if cts:
-        script+='if {$rc} { error $msg }\n'
-        script+='unset ::cts_args\nrename ::ot_ref_cts_boundary_orig {}\n'
-        script+=f'source {hook}\nif {{$placements != 1}} {{ error "legal placement/idempotence" }}\n'
-    else:script+='if {!$rc || ![string match *outside* $msg]} { error "missing replay guard: $msg" }\n'
-    script+=f'if {{[llength [$b getInsts]] != 21 || [llength [$b getNets]] != 7}} {{ error "state/topology changed" }}\n'
-    for bit in bits:
-        target='BUFx3_ASAP7_75t_R' if cts else 'BUFx2_ASAP7_75t_R'
-        script+=f'''if {{[[[$b findInst hold_{bit}] getMaster] getName] ne "{target}"}} {{ error "wrong size" }}
-if {{[[[$b findInst {{fdx[{bit}]$_DFF_P_}}] findITerm D] getNet] ne [$b findNet d_{bit}]}} {{ error "data changed" }}
-if {{[[[$b findInst clone_{bit}] findITerm D] getNet] ne [$b findNet d_{bit}]}} {{ error "clone changed" }}
-'''
-    script+='puts "NORM_CAPTURE_SIZE_FIXTURE_PASS"\nexit\n'
-    p=tmp_path/'test.tcl';p.write_text(script)
-    r=subprocess.run(['openroad','-exit','-no_init',str(p)],capture_output=True,text=True)
-    assert r.returncode==0 and 'NORM_CAPTURE_SIZE_FIXTURE_PASS' in r.stdout,r.stdout+r.stderr
+        s += 'set ::cts_args {}\nproc ::ot_ref_cts_boundary_orig {args} {}\n'
+    hook = ROOT / 'physical/ref_tile/s81hc_ctfxnt_ref/capture_driver_size.tcl'
+    s += f'source {hook}\n'
+    want0 = 'BUFx4f_ASAP7_75t_R' if cts else 'BUFx2_ASAP7_75t_R'
+    s += f'if {{[[[$b findInst hold_0] getMaster] getName] ne "{want0}"}} {{ error "crossing driver size" }}\n'
+    s += 'if {[[[$b findInst hold_1] getMaster] getName] ne "BUFx2_ASAP7_75t_R"} { error "short net resized" }\n'
+    s += f'if {{$placements != {1 if cts else 0}}} {{ error "legal placement count $placements" }}\n'
+    s += 'if {[llength [$b getInsts]] != 8 || [llength [$b getNets]] != 6} { error "topology changed" }\n'
+    s += 'foreach k {0 1} { foreach f [list cap_$k clone_$k] { if {[[[$b findInst $f] findITerm D] getNet] ne [$b findNet d_$k]} { error "data changed" } } }\n'
+    s += 'puts "NORM_CAPTURE_SIZE_FIXTURE_PASS"\nexit\n'
+    p = tmp_path / 'test.tcl'
+    p.write_text(s)
+    r = subprocess.run(['openroad', '-exit', '-no_init', str(p)], capture_output=True, text=True)
+    assert r.returncode == 0 and 'NORM_CAPTURE_SIZE_FIXTURE_PASS' in r.stdout, r.stdout + r.stderr

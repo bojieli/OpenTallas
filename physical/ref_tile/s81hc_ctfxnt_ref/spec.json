@@ -76,10 +76,10 @@
  },
  "job": {
   "benches_from": "tools/s81_suhc/hc_owned_nt_benches.json",
-  "owner": "Codex:S-NORM",
+  "owner": "Claude:S-NORM",
   "branch": "claude/s81-norm-tree-1014",
-  "tag": "v4-owned-pads",
-  "structural_change": "Complete multi-D configured input pad before all data D fanouts; die-owned reset N M3 pin at45.036um joins actual localclock cluster (old W reset caused longclockreturn). Dedicated existing same-root local clockleaf tap for measured ul_out15 clone, only insideCTS, later replay verifies without mutation. Same arithmetic, cycles, outline, data pin rectangles and IO/clock timing budgets. Static production TID pins moved fromW into the same N45um clock neighborhood to remove measured oct/farq312.8ps return clock branch.",
+  "tag": "v5-ck-split",
+  "structural_change": "Native capture repair: (1) per-cluster clock net split before CTS (lanes vs data rows; one H-tree over both left level-3/4 buffers in the empty gap, leaf nets 70-85 um, TT spread 66 ps); (2) rule-based BUFx2->BUFx4f on fd_in crossing-wire drivers (>20 um nets) after hold repair; (3) local-epoch reset from the pin capture rr (rst_in single load; RTL f47fec8e2). Same arithmetic, cycles, outline, pins, SDC, budgets.",
   "no_bench_reason": "bit-exactness is gated on the HC slab composition with dsfd_sp_hc NTREE 1 (tools/s81_suhc/hc_ntree_bench.sh: NG 256 production shape exact PASS + mutant 3 FAIL; tools/s81_suhc/hc_gate.py --ntree 1 NG 256 exact 0/1940 x3 + per-tile mutants); the tile alone has no golden",
   "purpose": "el1014-s81-norm-tree (owner 10-14 ~06:55: NORM tree = PARALLEL default-off variant with NEW master names; replaces the serial-chain HC NORM only when all variant tiles close and the composition is exact): ot_s81_hc_ctfx_nt: the half-octet broadcast source with the NORM-tree lanes (r from the bottom replaces the bus r; the far half injects its octet's 4-bank chunk sum into the south lane)",
   "views_to": "physical/ref_tile/s81hc_ctfxnt_ref/views",
@@ -99,7 +99,7 @@
   ],
   "reroute_reason": {
    "kind": "rtl_change",
-   "fix": "Move unplaced cth_nt wrapper localFV7/FD1128 capture flops into this physical strip, with die-assigned registered output pins; same cycle/reset semantics."
+   "fix": "local-epoch reset from rr (rst_in single DFF load) + per-cluster clock split + crossing-driver sizing: native capture 211.4 ps (27 pins) on the 22:27 gate"
   }
  },
  "params": {
@@ -131,5 +131,8 @@
   "physical/ref_tile/s81hc_ctfxnt_ref/local_clock_tap.tcl",
   "physical/ref_tile/s81hc_ctfxnt_ref/capture_driver_size.tcl"
  ],
- "native_capture_repair": "Seven measured final BUFx2 dual-D drivers (~16fF) sized toBUFx3 after hold repair, legally placed and preserved. Same arithmetic, latency, pins and timing constraints; finalsource CTS/fullroute required."
+ "native_capture_repair": "(1) clock net split per sink cluster before CTS (clock_split.tcl: NORM lanes x 40-176 / data rows x 178-343, one BUFx24 each; spread 75 -> 19.5 ps on the gate placement); (2) every BUFx2 driving a >20 um net in an fd_in capture cone -> BUFx4f after CTS hold repair (160 fd_in/fdx crossing pairs). Same RTL, pins, clocks, SDC, budgets.",
+ "pre_cts_extra": [
+  "physical/ref_tile/s81hc_ctfxnt_ref/clock_split.tcl"
+ ]
 }
