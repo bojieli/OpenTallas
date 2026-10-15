@@ -1,19 +1,35 @@
 `timescale 1ns/1ps
-// q15 port-tiles (2026-10-15): one level-6 -> level-7 FP32 pair adder of a slab word half, as its own hardened leaf
-// (clock entry ck_pair<p>: 9,778 sinks; previously an inline generate block of qfd_slab_word_half).  Logic, reset
-// and latency are byte-for-byte the former g_pair body: 16 x ot_hdc_fp32_add_lat (LAT ADD_LAT, DRST 0), a local
-// reset capture, the sticky alignment/fault register.  No ready/credit: every edge is sampled (static schedule).
+// q15 port-tiles (2026-10-15): one level-6 -> level-7 FP32 pair of a slab word half as its own hardened leaf, WITH its
+// two root capture banks: the 514-b words of roots a and b are captured at the leaf's input pins on their own clock
+// entries (ck_a / ck_b = the die's ck_bw<2p> / ck_bw<2p+1>, 515 sinks each), then 16 x ot_hdc_fp32_add_lat (LAT
+// ADD_LAT, DRST 0) on ck (= ck_pair<p>, ~9.5k sinks).  Logic, resets and latency are exactly the former
+// qfd_slab_word_half g_root[2p], g_root[2p+1] and g_pair[p] bodies (gate 80ceb739c: a capture-free leaf had 8-level
+// input cones at its pins; the captures now are the pin registers).  Static schedule: every edge is sampled.
 module qfd_slab_pair_add #(
     parameter integer ADD_LAT = 7
 ) (
+    input  wire         ck_a,
+    input  wire         ck_b,
     input  wire         ck,
     input  wire         rst_n,
-    input  wire [513:0] wa,
-    input  wire [513:0] wb,
+    input  wire [513:0] bw_a,
+    input  wire [513:0] bw_b,
     output wire [511:0] y,
     output wire         pv,
     output wire         pf
 );
+    (* keep *) reg [513:0] wa, wb;
+    (* keep *) reg reset_a, reset_b;
+    always @(posedge ck_a) reset_a <= rst_n;
+    always @(posedge ck_a) begin
+        wa[511:0] <= bw_a[511:0];
+        wa[513:512] <= reset_a ? bw_a[513:512] : 2'b0;
+    end
+    always @(posedge ck_b) reset_b <= rst_n;
+    always @(posedge ck_b) begin
+        wb[511:0] <= bw_b[511:0];
+        wb[513:512] <= reset_b ? bw_b[513:512] : 2'b0;
+    end
     (* keep *) reg reset_q;
     always @(posedge ck) reset_q <= rst_n;
     wire valid_in = wa[512] & wb[512];

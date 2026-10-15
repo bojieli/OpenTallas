@@ -20,8 +20,10 @@
  },
  "pins": {
   "W": [
-   "wa",
-   "wb"
+   "bw_a",
+   "ck_a",
+   "bw_b",
+   "ck_b"
   ],
   "E": [
    "y",
@@ -41,13 +43,15 @@
   "peak_ram_gb": 24,
   "hold_margin_ns": 0.03,
   "io_hold_margin_ns": 0.005,
-  "macro_halo_um": 5.4
+  "macro_halo_um": 5.4,
+  "period_ps": 770,
+  "signoff_period_ps": 833.333333
  },
- "structural_change": "q15 port-tiles: new leaf. The four level-6->7 FP32 pair adders of each slab word half (ck_pair0-3, 9,778 sinks each) were inline in qfd_slab_word_half and shared the 2.46 mm port_tiles parent; each is now its own hardened tile on its own die clock entry (structure-only, hierarchy-equivalence bench fc0e16f69).",
+ "structural_change": "q15 port-tiles: new leaf. The four level-6->7 FP32 pair adders of each slab word half (ck_pair0-3, 9,778 sinks each) were inline in qfd_slab_word_half and shared the 2.46 mm port_tiles parent; each is now its own hardened tile holding its two 515-b root capture banks as pin registers on their own entries ck_a/ck_b (=ck_bw<2p>/<2p+1>) and the adders on ck (=ck_pair<p>); pa1 gate (capture-free leaf) showed 800 input cones of 8 levels at the pins (structure-only, hierarchy-equivalence bench fc0e16f69).",
  "job": {
   "owner": "Claude:q15_compute_elem",
   "branch": "claude/q15-port-tiles",
-  "tag": "pa1",
+  "tag": "pa2",
   "purpose": "port_tiles pair-adder leaf (x4 per word half, 24 per die band set)",
   "extra_paths": [
    "physical/qwen_port_tiles_1015"
@@ -66,5 +70,65 @@
  "pin_reg_split": true,
  "hold_pad": {
   "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "clock": "multiple_cts_roots",
+ "clock_ports": [
+  "ck",
+  "ck_a",
+  "ck_b"
+ ],
+ "clock_data_paths": "related_same_frequency",
+ "clock_relationship": {
+  "kind": "same_pll_fixed_phase",
+  "ratio": [
+   1,
+   1
+  ],
+  "phase_ps": 0
+ },
+ "clock_entry_domains": {
+  "core": {
+   "ports": [
+    "ck"
+   ],
+   "ratio": [
+    1,
+    1
+   ],
+   "inputs": [
+    "rst_n"
+   ],
+   "outputs": [
+    "y",
+    "pv",
+    "pf"
+   ]
+  },
+  "root_a": {
+   "ports": [
+    "ck_a"
+   ],
+   "ratio": [
+    1,
+    1
+   ],
+   "inputs": [
+    "bw_a"
+   ],
+   "outputs": []
+  },
+  "root_b": {
+   "ports": [
+    "ck_b"
+   ],
+   "ratio": [
+    1,
+    1
+   ],
+   "inputs": [
+    "bw_b"
+   ],
+   "outputs": []
+  }
  }
 }

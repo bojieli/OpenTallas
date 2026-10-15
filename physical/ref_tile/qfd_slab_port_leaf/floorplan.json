@@ -145,7 +145,6 @@
  "referenced": [
   "rtl/qwen_split/qfd_slab_port_leaf.sv",
   "rtl/hdc/ot_qwen_me_spine_h_w12.sv",
-  "rtl/physical/ot_qwen_slab_port_group.sv",
   "rtl/hdc/ot_qwen_w12_arith.sv",
   "rtl/hdc/ot_qwen_w12_matvec.sv",
   "rtl/hdc/ot_hdc_delay.sv",
@@ -156,7 +155,7 @@
   "rtl/hdc/ot_hdc_fpu.sv",
   "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
   "rtl/hdc/ot_hdc_sfu.sv",
-  "physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8_bb.v",
+  "rtl/physical/bb/ot_qwen_slab_pg_lanes_bb.v",
   "physical/ref_tile/qfd_slab_port_leaf/kit.env",
   "physical/ref_tile/qfd_slab_port_leaf/clock.sdc",
   "physical/ref_tile/qfd_slab_port_leaf/signoff.sdc",

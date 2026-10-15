@@ -30,8 +30,10 @@
  },
  "pins": {
   "W": [
-   "wa",
-   "wb"
+   "bw_a",
+   "ck_a",
+   "bw_b",
+   "ck_b"
   ],
   "E": [
    "y",
@@ -44,6 +46,11 @@
   ]
  },
  "clock_port": "ck",
+ "clock_ports": [
+  "ck",
+  "ck_a",
+  "ck_b"
+ ],
  "blocks": [],
  "findings": [],
  "referenced": [
@@ -55,7 +62,6 @@
   "physical/ref_tile/qfd_slab_pair_add/kit.env",
   "physical/ref_tile/qfd_slab_pair_add/clock.sdc",
   "physical/ref_tile/qfd_slab_pair_add/signoff.sdc",
-  "physical/ref_tile/qfd_slab_pair_add/signoff_ffrepair.sdc",
   "physical/ref_tile/qfd_slab_pair_add/pdn.tcl",
   "physical/ref_tile/qfd_slab_pair_add/pre_cts.tcl",
   "physical/ref_tile/qfd_slab_pair_add/post_cts.tcl",
@@ -82,6 +88,8 @@
   "physical/dsrom_window_source/leaf_inhold_release.tcl",
   "physical/ref_tile/qfd_slab_pair_add/pre_gpl.tcl",
   "physical/ref_tile/qfd_slab_pair_add/pre_dpl.tcl",
-  "physical/common_flow/pin_reg_split.tcl"
+  "physical/common_flow/pin_reg_split.tcl",
+  "physical/common_flow/clock_entries.tcl",
+  "physical/ref_tile/qfd_slab_pair_add/clock_entry.sdc"
  ]
 }

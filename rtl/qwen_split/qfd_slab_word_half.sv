@@ -17,27 +17,17 @@ module qfd_slab_word_half #(
 );
     wire [7:0] bw_ck = {ck_bw7,ck_bw6,ck_bw5,ck_bw4,ck_bw3,ck_bw2,ck_bw1,ck_bw0};
     wire [3:0] pair_ck = {ck_pair3,ck_pair2,ck_pair1,ck_pair0};
-    wire [8*514-1:0] captured;
-    genvar i,p;
-    generate for(i=0;i<8;i=i+1) begin:g_root
-        (* keep *) reg [513:0] q;
-        (* keep *) reg reset_q;
-        always @(posedge bw_ck[i]) reset_q <= rst_n;
-        always @(posedge bw_ck[i]) begin
-            q[511:0] <= bw[514*i +: 512];
-            q[513:512] <= reset_q ? bw[514*i+512 +: 2] : 2'b0;
-        end
-        assign captured[514*i +: 514] = q;
-    end endgenerate
     wire [2047:0] summed;
     wire [3:0] pv,pf;
-    // q15: each pair is the hardened leaf qfd_slab_pair_add on its own clock entry (same logic and latency).
+    genvar p;
+    // q15: pair p = hardened leaf qfd_slab_pair_add holding root captures IA/IB (own entries) + the 16 adders
+    // (ck_pair<p>); same logic and latency as the former inline g_root / g_pair blocks.
     generate for(p=0;p<4;p=p+1) begin:g_pair
         localparam integer IA = MUTANT ? p : 2*p;
         localparam integer IB = MUTANT ? p+4 : 2*p+1;
         qfd_slab_pair_add #(.ADD_LAT(ADD_LAT)) u_pair (
-            .ck(pair_ck[p]), .rst_n(rst_n),
-            .wa(captured[514*IA +: 514]), .wb(captured[514*IB +: 514]),
+            .ck_a(bw_ck[IA]), .ck_b(bw_ck[IB]), .ck(pair_ck[p]), .rst_n(rst_n),
+            .bw_a(bw[514*IA +: 514]), .bw_b(bw[514*IB +: 514]),
             .y(summed[512*p +: 512]), .pv(pv[p]), .pf(pf[p]));
     end endgenerate
     (* keep *) reg [2049:0] output_q;
