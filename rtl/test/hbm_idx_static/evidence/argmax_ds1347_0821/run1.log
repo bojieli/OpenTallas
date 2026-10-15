@@ -1,0 +1,13 @@
+WARNING: rtl/test/hbm_idx_static/tb_argmax_static.sv:80: $readmemh(cal.mem): Not enough words in the file for the requested range [0:16383].
+WARNING: rtl/test/hbm_idx_static/tb_argmax_static.sv:80: $readmemh(stream.mem): Not enough words in the file for the requested range [0:16383].
+WARNING: rtl/test/hbm_idx_static/tb_argmax_static.sv:80: $readmemh(pre.mem): Not enough words in the file for the requested range [0:4095].
+WARNING: rtl/test/hbm_idx_static/tb_argmax_static.sv:80: $readmemh(chk.mem): Not enough words in the file for the requested range [0:1023].
+VM MISMATCH sector 1390 got 000022b63c2438714ec4bf64d1d9cec5ad1a7f13ffb1b7b5d7207abd7f800000 expected 000022b33c2438714ec4bf64d1d9cec5ad1a7f13ffb1b7b5d7207abd7f800000
+VM MISMATCH sector 1395 got 99b0b0f1eb4acff35519f45f131e4f9b1cf5488dd75008bc0000122d6c8dda80 expected 99b0b0f1eb4acff35519f45f131e4f9b1cf5488dd75008bc0000122a6c8dda80
+VM MISMATCH sector 13aa got 54e9b81e2d392c20d6a670a6f1dce1ec00001a744bc8909502708875531129c3 expected 54e9b81e2d392c20d6a670a6f1dce1ec00001a734bc8909502708875531129c3
+VM MISMATCH sector 13ad got 1dc10590d96c339463a8a481ec09935100002337df190e272c30de7258ea28d1 expected 1dc10590d96c339463a8a481ec09935100002332df190e272c30de7258ea28d1
+VM MISMATCH sector 13b9 got dff36c33dfd7a8ff7ec16ba9986008ae8ef15dd5e809d2e1edc9554800001d16 expected dff36c33dfd7a8ff7ec16ba9986008ae8ef15dd5e809d2e1edc9554800001d11
+VM MISMATCH sector 13c5 got 892402e7fba5baed1f112474b22e6bb51a3da1ab59293fd3b0f1c77300000026 expected 892402e7fba5baed1f112474b22e6bb51a3da1ab59293fd3b0f1c77300000021
+ARGMAX_STATIC MUT1 records30 dones28 faults2 sectors_checked44 errors6 schedule_edges2198
+FATAL: rtl/test/hbm_idx_static/tb_argmax_static.sv:126: static ARGMAX on actual SW slice mismatch
+       Time: 26140000  Scope: tb_argmax_static
