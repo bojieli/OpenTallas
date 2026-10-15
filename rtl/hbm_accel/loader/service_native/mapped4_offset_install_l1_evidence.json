@@ -1,0 +1,161 @@
+{
+  "schema": "opentallas.mapped4-offset-actual-checkpoint-install.v1",
+  "status": "PASS_ACTUAL_INSTALL_AND_NATIVE_READBACK",
+  "host": "ot-epyc1tb",
+  "unit": "oth-ubuntu-922227-1792060615",
+  "terminal_exit_code": 0,
+  "memory_GB": 2,
+  "threads": 1,
+  "simulator": "Icarus",
+  "source_sha256": {
+    "rtl/hbm_accel/loader/service_native/tb_hbm_svc_mapped4_offset_install.sv": "d919f9da9b5da797236b82dfca438bf6b73c370bf1f74c98173b39990116b8af",
+    "rtl/hbm_accel/loader/service_native/run_mapped4_offset_install_bench.sh": "e3c62113a7abc557319067aa2ee616e0d390f266106ef7a197b2f219ac7a3286",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_mapped4_offset_owner.sv": "a849e177f358cfcae939ff20881e0664e852a8eb620dc1a36d4d794b5c8f7f3b",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_mapped4_offset_cdc.sv": "5a763978c091e6fa4d89af1fe3983762bf271de7aade126a1ade25fe9b7bf949",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_native_stream_pc_lease.sv": "c16adc653eff8bce34ace00d6b4753b6937e758604b8d809183e14e85ea8be4c",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_native_sector_prefetch_stack.sv": "fc9556d64d5da9b2da90acb838a880f162f8e8aaae2ffd286f913afc14cf316f",
+    "rtl/hbm_accel/loader/service_native/tb_hbm_svc_command_dram_pipeline_fixture.sv": "3bb69a5cd9d058bfd28df57acee4fb24e2a3d4992b4a468dbb638c4e5c8ade8f",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv": "d2f90481dbc9953481195d63630a25a19ff3e64b16dcec87382ad9e33e713b77"
+  },
+  "actual_checkpoint_image_receipt": {
+    "schema": "opentallas.hbm.full-native-streamed-image.v1",
+    "status": "SOURCE_PAYLOAD_EXPORTED_ACTUAL_COMMAND_INSTALL_REQUIRED",
+    "descriptor": {
+      "rank": 0,
+      "sm": 0,
+      "stack": 0,
+      "pcs": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "region_row_base": 16640,
+      "region_row_count": 2048,
+      "packed_sector_offset": 136048,
+      "sectors": 1836,
+      "payload_records": 432,
+      "source_matrix_key": "layers.1.engram.wkv.weight",
+      "source_expert": 0,
+      "source_row_first": 0,
+      "source_row_stride": 32,
+      "source_row_count": 9,
+      "source_k": 6144,
+      "source_format": "fp8",
+      "source_columns": "all source columns",
+      "current_mapped4_base0_only_producer_compatible": false
+    },
+    "checkpoint_revision": "dba1be0a40aa45a94ad051997016db3960a90277",
+    "checkpoint_index_sha256": "74b0686a3d2891980d5e303251b075a3bccae2c2ff650747db2620a649b98fa8",
+    "source_tensor_headers": {
+      "layers.1.engram.wkv.scale": {
+        "dtype": "F8_E8M0",
+        "shape": [
+          800,
+          192
+        ],
+        "data_offsets": [
+          101534996672,
+          101535150272
+        ]
+      },
+      "layers.1.engram.wkv.weight": {
+        "dtype": "F8_E4M3",
+        "shape": [
+          25600,
+          6144
+        ],
+        "data_offsets": [
+          101377710272,
+          101534996672
+        ]
+      }
+    },
+    "actual_source_payload_bytes_read": 82368,
+    "source_row_decode": "exact checkpoint codes/scales; wo_a and BF16 sources follow canonical BF16 conversion; no surrogate weights",
+    "layout": "versioned modulo32 SM rows; canonical GS wave8,t,slot record order; immutable136B record",
+    "records": 432,
+    "sectors": 1836,
+    "logical_payload_sha256": "cbfce92cff28a68e126bf28f36126354b8fd1598bc95e14ae3f7d390dbf5b260",
+    "physical_hex_sha256": "ad9e46a70dce590dd18052a8477252f131d7f538f3ee90ac338649ce479e3e35",
+    "records_file_sha256": "3f1290211d36c347ecf9eb7c350e5a80ed336d9973d8f936bdc05d2f8dc1786b",
+    "book_sha256": "980899638942747e8a87131e24f6824346c7027a3b4c20b6c962f967ccc11895",
+    "residency_sha256": "4f1475584896cac625b66e28ce603a6f2323ef596959fc2ecb82a75a2dad34d8",
+    "independent_canonical_SM_packer_rows_checked": 9,
+    "source_buffer_bound_bytes": 102912,
+    "source_sha256": {
+      "tools/hbm_checkpoint_native_stream.py": "7ad050dcb685efc7791d4c5dbd940e51fbda55d02ddacc34f5afe3c181b7d3fb",
+      "tools/hbm_checkpoint_native_plan.py": "efb890639c7410d989de05ce3fd3fceb2cd3b2d2bf605c4dc5bbcb22d84121cb",
+      "tools/dsrom_checkpoint.py": "1f0ba70f4102aa8fb60e27d4bf4ce0f587fb6c9b1e456b6b35cd7705ba256844",
+      "tools/hgi_e2e/sm_lines.py": "c33abbd965bbc535fa5e0a96e203da3ac5358bfc002c95f1a58e8177878fe096",
+      "tools/hdc_golden_v41.py": "1bf8f3dd95228cabb0b717ea96d0b2ec903c88d0c85c5834a56c5fc8466373d4"
+    },
+    "actual_command_ACK_verified": false,
+    "actual_command_readback_verified": false,
+    "native_programme_qualified": false,
+    "performance_qualified": false,
+    "physical_qualified": false
+  },
+  "actual_records_sha256": "3f1290211d36c347ecf9eb7c350e5a80ed336d9973d8f936bdc05d2f8dc1786b",
+  "actual_physical_sha256": "ad9e46a70dce590dd18052a8477252f131d7f538f3ee90ac338649ce479e3e35",
+  "packed_offset": 136048,
+  "actual_native_WR": 1836,
+  "actual_k_wr_done": 1836,
+  "actual_native_RD": 1836,
+  "exact_landing_sectors": 1836,
+  "reconstructed_actual_records": 432,
+  "record_bytes": 136,
+  "stream_delivery_edges": 540,
+  "offchip_array_preloaded": false,
+  "same_actual_controller_for_install_and_read": true,
+  "strict_fixture_latency_edges": 23,
+  "negatives": {
+    "WRONGADDR": "actual installed sector0 redirected to sector4 address; payload mismatch ordinal0",
+    "DROP": "one installation sector omitted:1835 accepted/ACK, expected1836 timeout",
+    "EARLYACK": "acceptance cannot substitute true ACK; completion coverage assertion rejects"
+  },
+  "logs": {
+    "positive.log": "MAPPED4_OFFSET_INSTALL PASS actual_WR=1836 real_ACK=1836 actual_RD=1836 exact_sectors=1836 actual_records=432 offset=136048\nMAPPED4_OFFSET_NATIVE PASS mode=1 offset=136048 sectors=1836 exact_payloads=1836 fixed_edges=540 native_RD=1836 RL23\nrtl/hbm_accel/loader/service_native/tb_hbm_svc_mapped4_offset_install.sv:109: $finish called at 2205416784 (1fs)\n",
+    "build.log": "",
+    "WRONGADDR.log": "FATAL: rtl/hbm_accel/loader/service_native/tb_hbm_svc_mapped4_offset_install.sv:75: offset exact payload mismatch ordinal=0\n       Time: 1754583631  Scope: tb_hbm_svc_mapped4_offset_install.$ivl_for_loop21\n",
+    "EARLYACK.log": "FATAL: rtl/hbm_accel/loader/service_native/tb_hbm_svc_mapped4_offset_install.sv:99: installation completion coverage\n       Time: 1209583849  Scope: tb_hbm_svc_mapped4_offset_install\n",
+    "DROP.log": "FATAL: rtl/hbm_accel/loader/service_native/tb_hbm_svc_mapped4_offset_install.sv:98: actual installation ACK timeout accepted1835 ACK1835\n       Time: 16687077658  Scope: tb_hbm_svc_mapped4_offset_install\n"
+  },
+  "log_sha256": {
+    "positive.log": "5e47ad3de492f558d59cdff3fab0aa75baae0a6b2a6ae12b1aca57a9a64127d5",
+    "build.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "WRONGADDR.log": "d1886bac353e3205691b0ea95d82578977a2751490405ff297e01485d378426b",
+    "EARLYACK.log": "3c1033831f8628f65c80976d72334010ae245ee8300520a36397b21315b6d11a",
+    "DROP.log": "ce7ee24565042c805db57894dbf2903d90dd3c059f08780099af8c9474c77d0b"
+  },
+  "limitations": [
+    "actual producer/32SRAM landing/source-byte qualification only",
+    "five-macro64row cache not wrapped or used for432rowclaim",
+    "full native83programme/numericalSM gate remains separate",
+    "latency/physical/adoption not qualified"
+  ],
+  "historical_bench_mux_failure": {
+    "unit": "oth-ubuntu-921999-1792060580",
+    "reason": "installer write completions initially broadcast to read-only PF client, corrected bench ownership demux without DUT changes",
+    "terminal_exit": 1
+  },
+  "binding": {
+    "epoch": 51,
+    "bank": 0,
+    "stack": 0,
+    "pcs": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "region_anchor": 16640,
+    "packed_offset": 136048,
+    "canonical_book_sha256": "980899638942747e8a87131e24f6824346c7027a3b4c20b6c962f967ccc11895",
+    "canonical_book_source_commit": "169b2888d",
+    "residency_sha256": "4f1475584896cac625b66e28ce603a6f2323ef596959fc2ecb82a75a2dad34d8",
+    "source_export_receipt_path": "rtl/hbm_accel/loader/service_native/checkpoint_image_receipts/wkv_l1_rank0_sm0_fullsource.json",
+    "source_export_receipt_sha256": "5bc6925531ffc608f35f868a348f2a8b9d5d276185a0b13c754a962062090c27",
+    "actual_image_remote_directory": "ot-epyc1tb:/var/tmp/hbm-native-stream-1015/wkv_l1_rank0_sm0_fullsource"
+  }
+}

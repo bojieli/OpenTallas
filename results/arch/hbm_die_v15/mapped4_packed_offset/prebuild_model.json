@@ -1,0 +1,17 @@
+{
+  "status": "PREBUILD_EXPLICIT_MODE_NOT_QUALIFIED",
+  "default": "PACKED_OFFSET_MODE=0 preserves old bootstrap descriptor and low30zero rule",
+  "mode1_allocation_rows_inclusive": [
+    16640,
+    18687
+  ],
+  "descriptor": "reserve_base[31:30] stack unchanged; low30 aligned4 logicalsectoroffset within allocated4PC region anchored reserve_row_base",
+  "ports_added": 0,
+  "FF_SRAM_clock_root_delta": 0,
+  "producer_mapping": "global_t=(base>>2)+localcursor; physicalrow=anchor+(global_t>>10); bank/col fromglobal_tlow10; eachPC remains declaredlane; nativeburstlow2 XORphysicalrowlow2; logicalcacheordinal unchangedlocalcursor*4+lane",
+  "burst_boundaries": "Head singles untilglobal_t%4==0, alignedlen4 ifremaining>=4, tailsingles. Alignednativebursts never crossphysicalrow1024words.",
+  "bounds": "unique4PCs;total1..2048;base%4=0;rowanchor inrange;offset+total <=(18688-anchor)*4096;stack matchesSTACK; wideoverflow-safe sum",
+  "logic_added_per_PC": "29bitglobaltadder,15bitrowincrementadder,2bitalignmenttest; CDCboundary wideextentadd/compare only. Exactmappedarea/root/SSFF pending.",
+  "latency": "combinational address derivation; no scheduledpipelineedges added, but head/tailburstcount may rise up to6singles/PC versus alignedfullgroups. Must measure actualcontroller/landing production profile; no throughputpass assumed.",
+  "native_controller": "shared guarded/lease family external toloader; no duplicatebankstate owner"
+}

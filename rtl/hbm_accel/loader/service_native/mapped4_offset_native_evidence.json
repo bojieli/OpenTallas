@@ -1,0 +1,87 @@
+{
+  "schema": "opentallas.mapped4-offset-native.v1",
+  "status": "PASS_MECHANISM_ONLY",
+  "host": "ot-epyc1tb",
+  "unit": "oth-ubuntu-920226-1792060467",
+  "exit_code": 0,
+  "simulator": "Icarus",
+  "memory_GB": 2,
+  "threads": 1,
+  "source_sha256": {
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_mapped4_offset_owner.sv": "a849e177f358cfcae939ff20881e0664e852a8eb620dc1a36d4d794b5c8f7f3b",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_mapped4_offset_cdc.sv": "5a763978c091e6fa4d89af1fe3983762bf271de7aade126a1ade25fe9b7bf949",
+    "rtl/hbm_accel/loader/service_native/tb_hbm_svc_mapped4_offset_owner.sv": "8f9555d49a1f145dd2b1c8bfe79828712fcf700c83dea1c37881f923e2e6382c",
+    "rtl/hbm_accel/loader/service_native/tb_hbm_svc_mapped4_offset_native.sv": "8b5fb8cda00955d2ec1879d646831a14853f48624bc20e112618bd24bd7d828d",
+    "rtl/hbm_accel/loader/service_native/run_mapped4_offset_native_bench.sh": "e3bf6141977f8fb48696f555ff8c46a485c72ee591d5b990fc87762b2ce54564",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_native_stream_pc_lease.sv": "c16adc653eff8bce34ace00d6b4753b6937e758604b8d809183e14e85ea8be4c",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_native_sector_prefetch_stack.sv": "fc9556d64d5da9b2da90acb838a880f162f8e8aaae2ffd286f913afc14cf316f",
+    "rtl/hbm_accel/loader/service_native/tb_hbm_svc_command_dram_pipeline_fixture.sv": "3bb69a5cd9d058bfd28df57acee4fb24e2a3d4992b4a468dbb638c4e5c8ade8f"
+  },
+  "logs": {
+    "invalid4.log": "MAPPED4_OFFSET_INVALID PASS case=4\nrtl/hbm_accel/loader/service_native/tb_hbm_svc_mapped4_offset_native.sv:68: $finish called at 24584323 (1fs)\n",
+    "owner1.log": "MAPPED4_OFFSET_OWNER PASS mode=1 requests=54 exact_inverse_beats=177\nrtl/hbm_accel/loader/service_native/tb_hbm_svc_mapped4_offset_owner.sv:37: $finish called at 254466000 (1fs)\n",
+    "offset4092.log": "MAPPED4_OFFSET_NATIVE PASS mode=1 offset=4092 sectors=73 exact_payloads=73 fixed_edges=22 native_RD=73 RL23\nrtl/hbm_accel/loader/service_native/tb_hbm_svc_mapped4_offset_native.sv:73: $finish called at 180417594 (1fs)\n",
+    "invalid2.log": "MAPPED4_OFFSET_INVALID PASS case=2\nrtl/hbm_accel/loader/service_native/tb_hbm_svc_mapped4_offset_native.sv:68: $finish called at 24584323 (1fs)\n",
+    "owner0.log": "MAPPED4_OFFSET_OWNER PASS mode=0 requests=48 exact_inverse_beats=177\nrtl/hbm_accel/loader/service_native/tb_hbm_svc_mapped4_offset_owner.sv:37: $finish called at 248322000 (1fs)\n",
+    "invalid1.log": "MAPPED4_OFFSET_INVALID PASS case=1\nrtl/hbm_accel/loader/service_native/tb_hbm_svc_mapped4_offset_native.sv:68: $finish called at 24584323 (1fs)\n",
+    "bootstrap.log": "MAPPED4_OFFSET_NATIVE PASS mode=0 offset=0 sectors=272 exact_payloads=272 fixed_edges=80 native_RD=272 RL23\nrtl/hbm_accel/loader/service_native/tb_hbm_svc_mapped4_offset_native.sv:73: $finish called at 223750910 (1fs)\n",
+    "invalid3.log": "MAPPED4_OFFSET_INVALID PASS case=3\nrtl/hbm_accel/loader/service_native/tb_hbm_svc_mapped4_offset_native.sv:68: $finish called at 24584323 (1fs)\n",
+    "offset4096.log": "MAPPED4_OFFSET_NATIVE PASS mode=1 offset=4096 sectors=73 exact_payloads=73 fixed_edges=22 native_RD=73 RL23\nrtl/hbm_accel/loader/service_native/tb_hbm_svc_mapped4_offset_native.sv:73: $finish called at 123750950 (1fs)\n",
+    "build1.log": "",
+    "build0.log": "",
+    "offset4.log": "MAPPED4_OFFSET_NATIVE PASS mode=1 offset=4 sectors=73 exact_payloads=73 fixed_edges=22 native_RD=73 RL23\nrtl/hbm_accel/loader/service_native/tb_hbm_svc_mapped4_offset_native.sv:73: $finish called at 123750950 (1fs)\n",
+    "offset12.log": "MAPPED4_OFFSET_NATIVE PASS mode=1 offset=12 sectors=73 exact_payloads=73 fixed_edges=22 native_RD=73 RL23\nrtl/hbm_accel/loader/service_native/tb_hbm_svc_mapped4_offset_native.sv:73: $finish called at 123750950 (1fs)\n"
+  },
+  "log_sha256": {
+    "invalid4.log": "b45e92af12407853d7d76a27e83677dc7671f4ee98363e2c1cf9d3973f0cb634",
+    "owner1.log": "82ea2f3015ee83577376ff343a3d3df983ff11169e942628e309fbec1faeccfb",
+    "offset4092.log": "23c1c97524a53b13b8ef18294dc5690d753de3a2b69c8620e3abf12053dd2045",
+    "invalid2.log": "6205d094f71ad2f46122b8da6aab7523c03ddf95e62a649575c0d8010de42b6d",
+    "owner0.log": "8e2f2d2f493b0c1db5d4cb0fb12f54386a54961ffd563b59a45cbdb9d252d38f",
+    "invalid1.log": "e564a91935685e077ade2e73577240a24e04f4adda22a00ad4fa381489f229ff",
+    "bootstrap.log": "31c08a3896df7a53ad6e83ced19563ed60f8c0d6adac56759eec9bc1cffddec4",
+    "invalid3.log": "741c2c593f7c847e696dda75c82063d6546dc6387fc1b358e431fabfea6ad60f",
+    "offset4096.log": "b22b04ff3d80d53a4840271d1127bd83b938419892215f5dda241a58bb94ef13",
+    "build1.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "build0.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "offset4.log": "0883da9d6da603d42d8b34e4b2e7cdc3a88b0ad73d5d878a47c1f6d5b195eb0b",
+    "offset12.log": "250d8eaa3972b2c70b3a33a0afbea65a4bf1aeb6603cd8a8b2cd014963f37e01"
+  },
+  "owner_modes": [
+    0,
+    1
+  ],
+  "owner_exact_inverse_beats_per_mode": 177,
+  "actual_native_cases": [
+    {
+      "offset": 4,
+      "total": 73,
+      "cross_row": false
+    },
+    {
+      "offset": 12,
+      "total": 73,
+      "cross_row": false
+    },
+    {
+      "offset": 4092,
+      "total": 73,
+      "cross_row": true
+    },
+    {
+      "offset": 4096,
+      "total": 73,
+      "cross_row": false
+    }
+  ],
+  "mode0_actual_bootstrap_sectors": 272,
+  "invalid_cases": [
+    "misaligned offset",
+    "last region row offset4092 total8 overruns by4",
+    "wrong stack",
+    "duplicate PC"
+  ],
+  "invalid_descriptor_faults_without_allocation_or_request": true,
+  "actual_checkpoint_bound": false,
+  "actual_strict_fixture_RL23": true
+}
