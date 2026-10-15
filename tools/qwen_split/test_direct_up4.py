@@ -126,6 +126,20 @@ class DirectUpperWires(unittest.TestCase):
                 p=Path(d)/'mutant.sv';p.write_text(text.replace(before,after))
                 with self.assertRaises(ValueError):U.source_contract(p)
 
+    def test_source_contract_reads_the_requested_repository_root(self):
+        import tempfile
+        with tempfile.TemporaryDirectory() as d:
+            root=Path(d)
+            for rel in (U.SOURCE,U.IMPLEMENTATION_SOURCE,U.IMPLEMENTATION_SPEC):
+                target=root/rel;target.parent.mkdir(parents=True,exist_ok=True)
+                target.write_bytes((U.ROOT/rel).read_bytes())
+            self.assertEqual(U.source_contract(root=root)['source_sha256'],U.source_contract()['source_sha256'])
+            source=root/U.SOURCE
+            source.write_text(source.read_text().replace('.RPIN(1)','.RPIN(0)'))
+            with self.assertRaisesRegex(ValueError,'implementation parameters'):
+                U.source_contract(root=root)
+            self.assertTrue(U.source_contract()['parameter_equality'])
+
     def test_physical_alias_reuses_every_original_numeric_pin(self):
         import hashlib
         class Master:
