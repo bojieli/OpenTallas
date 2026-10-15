@@ -1733,13 +1733,21 @@ def _wrap(v, m, G, peers):
             if model.get('native_graph_bind'):
                 from qwen_split.native_graph_bind import install_masters as install_native_graph
                 install_native_graph(M, model, Master, v.pin_rects)
+            if model.get('static_link_bind'):
+                from qwen_split.static_link_bind import install_masters as install_static_link
+                from qwen_split.direct_up4 import partition_master as _pm
+                install_static_link(M, model, Master, _pm)
+            if model.get('res_train_bind'):
+                from qwen_split.res_train_bind import install_masters as install_res_train
+                from qwen_split.direct_up4 import partition_master as _pm2
+                install_res_train(M, model, Master, _pm2)
             for mst_ in M.values():
                 mst_.order[:] = list(dict.fromkeys(mst_.order))
 
     v.V5_FINAL_MASTERS = final
     # split compute C17: band_lanes may be placed MX (band 0 stack mirrored); its clock pins are the closed native view's
     # real pins set in final(), so the generic mirror clock-pin relocation must not run for it
-    v.MIRROR_CK_FINAL = ('qfd_sp_band_lanes',) if SPLIT_COMPUTE else ()
+    v.MIRROR_CK_FINAL = (('qfd_sp_band_lanes',) + tuple(f'qfd_sp_res_train_{b}' for b in range(3))) if SPLIT_COMPUTE else ()
 
     def port_widths(model, k=1):
         w = base_pw(model, k)
@@ -1771,6 +1779,12 @@ def _wrap(v, m, G, peers):
             for p in dict.fromkeys(q for q in mst.order if q in mine):
                 if mine[p][0] == 'xy':
                     _, n0, layer, poss, _ = mine[p]
+                    exact = getattr(mst, 'assigned_fragment_rects', {}).get(p)
+                    if exact is not None:
+                        if len(exact) != n0:
+                            raise ValueError(f'{mst.name}.{p}: incomplete assigned fragment rectangles')
+                        out.extend((f'{p}[{i}]', L, r) for i, (L, r) in enumerate(exact[:wmap.get(p, n0)]))
+                        continue
                     for i, (x, y) in enumerate(poss[:wmap.get(p, n0)]):
                         # >= the layer's min area (M5 2000 nm2): a 24 x 24 nm interior square had no DRT access
                         # point (C19s DRT-0073 on every interior clock entry); 24 x 96 nm along the preferred direction

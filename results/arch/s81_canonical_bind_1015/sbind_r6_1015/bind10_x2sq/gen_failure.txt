@@ -1,0 +1,3 @@
+FLAGS --static-coll --suhc-static-issue --bf-static-prog --pq-cnt physical/s81_die_pins/v19_merged/pq_count_slots.json --bf-x2-static --stn-wide-square
+RuntimeError(f'chain {name}: no station spot near s={target:.0f} of {L:.0f} ({cx:.0f}, {cy:.0f})')
+RuntimeError: chain cxW_edge27: no station spot near s=675 of 1096 (8635, 18601)

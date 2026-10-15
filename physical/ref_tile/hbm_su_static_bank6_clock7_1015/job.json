@@ -1,0 +1,119 @@
+{
+ "name": "hbm_su_static_bank6_clock7_1015-r3-8703f4b1f",
+ "block": "ot_hbm_su_static_bank6_clock_physical",
+ "ref_tile": true,
+ "owner": "Claude:H-ELEM-B",
+ "purpose": "Candidate structural per-macro clocks: six distinct provider roots plus one boundary-register root. Previous bank r1 CTS insertion316.9ps/spread92.5ps/slew229.8ps, two SRAMs sharing clocknets. Actual one source per macro, no added data edge/retiming. Serial1111.111111ps unchanged. No route/replication qualification before physical slot/pins and TTsetup FFhold DRC0 nativeclock checks. Native CTS attempt1 rejected mixed raw-macro CTS roots; corrected explicit hybrid policy: six actual raw SRAM pin references plus one CTS root, no macro pin on a CTS source. Word-select flops remain on the existing register root. r3 (H-ELEM-B, coordinator 12:24): the r2 CTS measured raw macro clock slew 417.5 ps because all seven clock pins were clustered on the N face; each raw macro clock pin now sits over its own macro column on the face nearest its row (bottom row 0-2 on S, top row 3-5 on N, 20 um ranges at the macro column centres); register root clk + rst_n stay on N. No RTL change.",
+ "threads": 4,
+ "peak_ram_gb": 24,
+ "source": {
+  "branch": "claude/hbm-elemb-su-1015",
+  "commit": "8703f4b1f"
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_hbm_su_static_bank6_clock_physical u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/hbm_accel/generic/adapters/static_su/data_store/ot_hbm_su_static_pinned_bank.sv rtl/hbm_accel/generic/adapters/static_su/data_store/ot_hbm_su_static_data_store.sv rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v rtl/hbm_accel/generic/adapters/static_su/data_store/ot_hbm_su_static_bank6_clock_physical.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "bank_exact",
+    "cmd": "bash tools/hbm_static/su_bank_run.sh {RUN}/bench/bank",
+    "expect": "pass",
+    "pass_regex": "SU_PINNED_BANK PASS",
+    "min_count_regex": "checks=(\\d+)",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "bank_mutant_coherence",
+    "cmd": "bash tools/hbm_static/su_bank_run.sh {RUN}/bench/bank_mut coherence",
+    "expect": "fail",
+    "fail_regex": "SU_PINNED_BANK FAIL",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "bank_mutant_clock_halt",
+    "cmd": "bash tools/hbm_static/su_bank_run.sh {RUN}/bench/clock_halt clock_halt",
+    "expect": "fail",
+    "fail_regex": "SU_PINNED_BANK FAIL",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/hbm_su_static_bank6_clock7_1015/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/hbm_su_static_bank6_clock7_1015/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 4,
+   "peak_ram_gb": 24
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/hbm_su_static_bank6_clock7_1015 --out {RUN}/record/views/ot_hbm_su_static_bank6_clock_physical --macro-view physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2 > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/hbm_su_static_bank6_clock7_1015/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/hbm_su_static_bank6_clock7_1015/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/arch/hbm_su_f2_static_1014/arithmetic/physical/bank_clock7/hbm_su_static_bank6_clock7_1015-r3-8703f4b1f"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null
+}

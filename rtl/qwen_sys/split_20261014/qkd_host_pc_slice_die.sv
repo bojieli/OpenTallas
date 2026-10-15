@@ -25,13 +25,23 @@ module qkd_host_pc_slice_die #(parameter integer MUT=0)(
  input wire[31:0]ski,sdi,soi,sfi,
  output reg[31:0]sko,sdo,soo,sfo
 );
+ // One physical capture before the boot and related boot-test consumers.
+ // Existing bgo chain stays one edge; each PC's boot starts one edge later.
+ (* keep = "true" *) reg bgi_q;
+ always @(posedge ck_boot or negedge hbm_rst_n)
+  if(!hbm_rst_n)bgi_q<=0;else bgi_q<=bgi;
  wire all_ack,boot_done,boot_ok,boot_fault;
  qkd_host_pc_slice u_slice(.ck_station(ck_station),.ck_static(ck_static),.ck_boot(ck_boot),.ck_boot_test(ck_boot_test),
-  .host_rst_n(host_rst_n),.hbm_rst_n(hbm_rst_n),.boot_go(bgi),.lpc(lpc),.fi(fi),.fo(fo),.ci(ci),.co(co),.ai(ai),.ao(ao),
+  .host_rst_n(host_rst_n),.hbm_rst_n(hbm_rst_n),.boot_go((MUT==2)?bgi:bgi_q),.lpc(lpc),.fi(fi),.fo(fo),.ci(ci),.co(co),.ai(ai),.ao(ao),
   .fault_i(fault_i),.fault_o(fault_o),.land_es(land_es),.land_er(land_er),.ctrl_es(ctrl_es),.ctrl_er(ctrl_er),
   .ctrl_completion_v(ctrl_completion_v),.ctrl_completion_we(ctrl_completion_we),
   .all_ack(all_ack),.boot_done(boot_done),.boot_ok(boot_ok),.boot_fault(boot_fault));
- wire[4:0]pos=(MUT==1)?lpc^5'd1:lpc;
+ // The physical strap belongs to ck_station at the input face. Capture it
+ // before its related-clock boot status consumers; lpc is constant per PC.
+ // Boot must allow one station edge for this strap capture before bgi.
+ (* keep = "true" *) reg [4:0] lpc_status;
+ always @(posedge ck_station) lpc_status <= lpc;
+ wire[4:0]pos=(MUT==1)?lpc_status^5'd1:lpc_status;
  wire[31:0]one=32'd1<<pos;
  always @(posedge ck_station or negedge host_rst_n)
   if(!host_rst_n)sko<=0;else sko<=ski|(all_ack?one:32'd0);

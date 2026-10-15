@@ -1,0 +1,47 @@
+{
+  "status": "PASS_COMPONENT_ONLY",
+  "cases": [
+    {
+      "phase_ps": 137,
+      "mutant": 0,
+      "exit_code": 0,
+      "output": "PASS actual return-ring idle phase137 outstanding/consume/reuse/reset\n"
+    },
+    {
+      "phase_ps": 137,
+      "mutant": 1,
+      "exit_code": 1,
+      "output": "FATAL: /home/ubuntu/wt/codex-qwen-kvsys-1103/rtl/test/qwen_static_kv/tb_static_return_idle.sv:26: IDLE outstanding publication lost\n       Time: 35175 Scope: tb_static_return_idle\n"
+    },
+    {
+      "phase_ps": 137,
+      "mutant": 2,
+      "exit_code": 1,
+      "output": "FATAL: /home/ubuntu/wt/codex-qwen-kvsys-1103/rtl/test/qwen_static_kv/tb_static_return_idle.sv:26: IDLE outstanding publication lost\n       Time: 35175 Scope: tb_static_return_idle\n"
+    },
+    {
+      "phase_ps": 637,
+      "mutant": 0,
+      "exit_code": 0,
+      "output": "PASS actual return-ring idle phase637 outstanding/consume/reuse/reset\n"
+    },
+    {
+      "phase_ps": 637,
+      "mutant": 1,
+      "exit_code": 1,
+      "output": "FATAL: /home/ubuntu/wt/codex-qwen-kvsys-1103/rtl/test/qwen_static_kv/tb_static_return_idle.sv:26: IDLE outstanding publication lost\n       Time: 34007 Scope: tb_static_return_idle\n"
+    },
+    {
+      "phase_ps": 637,
+      "mutant": 2,
+      "exit_code": 1,
+      "output": "FATAL: /home/ubuntu/wt/codex-qwen-kvsys-1103/rtl/test/qwen_static_kv/tb_static_return_idle.sv:26: IDLE outstanding publication lost\n       Time: 34007 Scope: tb_static_return_idle\n"
+    }
+  ],
+  "source_sha256": {
+    "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_slots.sv": "58c84c5a4c00eaf641022c3d2417ce9a5a52b17b6f554c2831f2a11b545cc652",
+    "rtl/test/qwen_static_kv/tb_static_return_idle.sv": "6351e86b715d641615b30f709d9f1ce56dba2ef85878904feeba9561e1b1d500",
+    "tools/qwen_static_kv/check_return_idle.py": "2269ee6e10ee8ba45811905938b717c24e416da9d20c06e782c3bcf4dc7c9192"
+  },
+  "boundary": "Two local-domain observations require parent synchronization and upstream quiet; no whole-KV drain or physical adoption claim."
+}

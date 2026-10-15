@@ -1,0 +1,45 @@
+{
+  "status": "COMPONENT_PASS",
+  "scope": "STATIC_FINAL_JOIN_ACTUAL_RTL_ARITHMETIC_ONLY",
+  "actual_sessions": {
+    "build_and_test": 48860,
+    "relink_and_timing_observation": 39689
+  },
+  "actual_units": {
+    "build": "oth-ubuntu-4156595-1792035531",
+    "timing": "oth-ubuntu-4178066-1792036013"
+  },
+  "C_DPI_arithmetic": false,
+  "actual_FP": [
+    "ot_hdc_fp32_add_lat LAT7",
+    "ot_hdc_fp32_mul_lat LAT6"
+  ],
+  "join_roots": 32,
+  "lanes_per_root": 16,
+  "compiled_capture_ages": {
+    "p0": 8,
+    "p1": 20,
+    "reciprocal": 48
+  },
+  "fixed_arithmetic_ages": {
+    "add_issue": 49,
+    "add_capture": 56,
+    "multiply_issue": 57,
+    "multiply_capture": 63,
+    "output_sample": 64
+  },
+  "cases": 12,
+  "exact_output_words": 512,
+  "normal_schedule_depends_on_ready_or_valid": false,
+  "physical_clock_phase_profile_qualified": false,
+  "integrated_Z_reciprocal_qualified": false,
+  "full_native_attention_qualified": false,
+  "whole_token_qualified": false,
+  "inputs": "actual staticPV RTL pair outputs +declared dyadic reciprocal; source-pinned Python reference generates comparison output only",
+  "evidence": "final_captured.json",
+  "source_sha256": {
+    "rtl/hdc/nearhbm/ot_qwen_tp8_pv256_finalize_static.sv": "3cf86ea8f9b2848cd609e2f4c0f155ed2b7ee0803b68c383d2cd7368cb22d7b8",
+    "rtl/test/nearhbm/tb_qwen_tp8_pv256_finalize.cpp": "1b34122533de701d1ba40fa973f8a7bf7b80955483994e967ee4a6b90e46f4b5",
+    "rtl/test/nearhbm/ot_qwen_tp8_pv256_finalize_tb.sv": "74dfc2ea838f22685005a57ad87ca41a67e7c12be6c353d387324a516692da99"
+  }
+}

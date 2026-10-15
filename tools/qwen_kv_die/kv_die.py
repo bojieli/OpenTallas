@@ -33,6 +33,7 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / 'tools'))
 import qwen_rom_fulldie as F     # noqa: E402  (Inst, Master, lattice, phy_pins, pin_rects, write_netlist)
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+import kv_elastic_boundary       # noqa: E402
 import kv_strips as KS           # noqa: E402  (v1.2 strip compositions: land / astk RTL bindings + clock entries)
 
 GX, GY, SHAVE = F.GX, F.GY, F.SHAVE
@@ -2067,34 +2068,44 @@ def _strip_face_pins(mst, mm):
 
 
 def _slice_pins(m, mm, down=False):
-    """v1.4: HOST slice pins.  es / er words level with the strips' es<k> / er<k> (local 378 k + 60 / + 240): controller
-    side on the W face (R0 W stacks; MY puts it on the E side toward the E controller strip), landing side on the E face;
-    the stack chains run N-S through the 32.4-um slot gaps (S face: toward slot k-1 = the root end); clocks / resets /
-    straps are area pins."""
-    by = {i.name: i for i in m['insts']}
-    off = by['hsl_WS_0'].y - by['land_WS'].y
+    """HOST slice v1.4.2: preserve every port, spread buses below 0.60 face cut.
+
+    Clock roots stay separate physical entries, all on the actual per-stack
+    core833.334 trunk.  No area pins above the M5 leaf cap.  The N view reverses
+    only the two chain faces; control/landing faces keep the same coordinates.
+    """
     w = {p: sp[1] for p, sp in mm.ports.items()}
     mm.ports.clear()
     mm.order.clear()
-    lvl = dict(ctrl_es=('W', STRIP_ES_Y), land_es=('E', STRIP_ES_Y), ctrl_er=('W', STRIP_ER_Y), land_er=('E', STRIP_ER_Y))
+    for p, face, centre in (('ctrl_es', 'W', STRIP_ES_Y - 12.96), ('ctrl_er', 'W', STRIP_ER_Y - 12.96),
+                            ('land_es', 'E', STRIP_ES_Y - 12.96), ('land_er', 'E', STRIP_ER_Y - 12.96)):
+        if p in w:
+            mm.face(p, w[p], face, 'M4', round(centre, 3), 6)
     south = ['fi', 'co', 'ao', 'fault_o', 'sko', 'sdo', 'soo', 'sfo', 'bgi']
     north = ['fo', 'ci', 'ai', 'fault_i', 'ski', 'sdi', 'soi', 'sfi', 'bgo']
-    for p, (face, y) in lvl.items():
-        if p in w:
-            mm.face(p, w[p], face, 'M4', round(y - off, 3), 2)
-    for face, lst in ((('N', south), ('S', north)) if down else (('S', south), ('N', north))):    # down: root end = N
+    for face, lst in ((('N', south), ('S', north)) if down else (('S', south), ('N', north))):
         lst = [p for p in lst if p in w]
-        span = [w[p] * 0.048 * 2 for p in lst]
+        # Four M5 tracks per bit = 0.50 local two-track demand, old two-track
+        # packed bands were 1.00.  Keep a two-micron channel between buses.
+        span = [w[p] * F.TRK['M5'][1] * 4 for p in lst]
         pos = (mm.w - sum(span) - 2.0 * (len(lst) - 1)) / 2
-        for p, s_ in zip(lst, span):
-            mm.face(p, w[p], face, 'M5', round(pos + s_ / 2, 3), 2)
-            pos += s_ + 2.0
-    rest = [p for p in w if p not in mm.ports]
-    for j, p in enumerate(sorted(rest)):
-        if w[p] == 1:
-            mm.area(p, 1, round(mm.w / 2 + ((j % 8) - 4) * 3.2, 3), round(mm.h / 2 + (j // 8 - 1) * 3.2, 3), 1)
-        else:
-            mm.face(p, w[p], 'W', 'M4', round(mm.h / 2, 3), 2)          # lpc strap (5 b), mid W face between es / er
+        if pos < 4.0:
+            raise ValueError(f'{mm.name}: slice chain face needs a larger slot')
+        for p, size in zip(lst, span):
+            mm.face(p, w[p], face, 'M5', round(pos + size / 2, 3), 4)
+            pos += size + 2.0
+    centres = dict(ck_station=('W', -5), ck_static=('W', 5),
+                   host_rst_n=('W', -15), hbm_rst_n=('W', 15),
+                   ck_boot=('E', -5), ck_boot_test=('E', 5),
+                   ctrl_completion_v=('E', -15), ctrl_completion_we=('E', 15),
+                   lpc=('W', 0))
+    rest = sorted(p for p in w if p not in mm.ports)
+    unknown = set(rest) - centres.keys()
+    if unknown:
+        raise ValueError(f'{mm.name}: no face grant for slice ports {sorted(unknown)}')
+    for p in rest:
+        face, offset = centres[p]
+        mm.face(p, w[p], face, 'M4', round(mm.h / 2 + offset, 3), 4)
 
 
 def _land_level_pins(m, mm, inst0, face_load, by):
@@ -2192,31 +2203,55 @@ def pin_reach(m, M, reach=500.0, skip=('clock_trunk', 'reset', 'constant')):
     return dict(hops=n, reach_um=reach, violations=len(bad), worst=bad[:40])
 
 
-def stack_local_reach(m, M, reach=500.0):
-    """v1.1: the abutted / stack-local buses the relay planner never relays (ectl <-> heads tp / te / ts, heads -> astk nb,
-    astk <-> ectl eq / el): driver pin centre -> every load pin centre (spans are bit-aligned, so the centre distance is the
-    bit distance).  v1 had 192 far-head hops 505-963 um here."""
+def assigned_pin_reach(m, M, reach=500.0, classes=('stack_local',)):
+    """Measure every assigned bit, including unequal face pitches and mirroring.
+
+    Pin centres describe a bus only when both ends have identical pitch/order.
+    HOST slice face spreading deliberately changes those spans, so using one
+    centre for a wide word would conceal its worst physical bit.
+    """
     by = {i.name: i for i in m['insts']}
-    bad, n, worst = [], 0, 0.0
+    pin_cache = {}
+    def bit_positions(inst, port):
+        it = by[inst]
+        if it.master not in pin_cache:
+            groups = {}
+            for name, layer, rect in F.pin_rects(M[it.master], 1, {}):
+                base = name.split('[')[0]
+                groups.setdefault(base, []).append(((rect[0]+rect[2])/2, (rect[1]+rect[3])/2))
+            pin_cache[it.master] = groups
+        positions = pin_cache[it.master][port.lstrip('*')]
+        return [(it.x + (it.w-x if it.orient in ('MY','R180') else x),
+                 it.y + (it.h-y if it.orient in ('MX','R180') else y)) for x,y in positions]
+    bad, missing, n, checked, worst = [], [], 0, 0, 0.0
     for bid, cl, bits, eps in m['buses']:
-        if cl != 'stack_local' or len(eps) < 2:
+        if (classes is not None and cl not in classes) or cl in ('clock_trunk', 'reset', 'constant') or len(eps) < 2:
             continue
-        try:
-            a = pin_xy(by[eps[0][0]], M[by[eps[0][0]].master], eps[0][1].lstrip('*'))
-        except (KeyError, TypeError):
-            continue
-        for inst, port in eps[1:]:
+        for target in eps[1:]:
             try:
-                b = pin_xy(by[inst], M[by[inst].master], port.lstrip('*'))
-            except (KeyError, TypeError):
+                left, right = bit_positions(*eps[0]), bit_positions(*target)
+            except (KeyError, TypeError, ValueError) as error:
+                missing.append(dict(bus=bid,error=str(error)))
+                continue
+            if len(left) != bits or len(right) != bits:
+                missing.append(dict(bus=bid,bits=bits,launch_bits=len(left),capture_bits=len(right)))
                 continue
             n += 1
-            d = abs(a[0] - b[0]) + abs(a[1] - b[1])
-            worst = max(worst, d)
-            if d > reach:
-                bad.append(dict(bus=bid, bits=bits, um=round(d, 1), a=f'{eps[0][0]}.{eps[0][1]}', b=f'{inst}.{port}'))
-    bad.sort(key=lambda r: -r['um'])
-    return dict(hops=n, reach_um=reach, violations=len(bad), max_um=round(worst, 1), worst=bad[:20])
+            distances = [abs(a[0]-b[0])+abs(a[1]-b[1]) for a,b in zip(left,right)]
+            checked += len(distances)
+            distance = max(distances)
+            worst = max(worst,distance)
+            if distance > reach:
+                bit = distances.index(distance)
+                bad.append(dict(bus=bid,cls=cl,bits=bits,bit=bit,um=round(distance,3),
+                    a=f'{eps[0][0]}.{eps[0][1]}[{bit}]', b=f'{target[0]}.{target[1]}[{bit}]'))
+    bad.sort(key=lambda row:-row['um'])
+    return dict(hops=n,bits_checked=checked,reach_um=reach,violations=len(bad),max_um=round(worst,3),
+                worst=bad[:40],unmeasured=len(missing),missing=missing[:20],method='exact generated face rectangles per bit after orientation')
+
+
+def stack_local_reach(m, M, reach=500.0):
+    return assigned_pin_reach(m, M, reach, classes=('stack_local',))
 
 
 _BASE_PORT_WIDTHS = F.port_widths
@@ -2302,6 +2337,7 @@ def record(m):
                 template=dict(path=str(TPL_PATH.relative_to(ROOT)), sha256=hashlib.sha256(TPL_PATH.read_bytes()).hexdigest()),
                 die_um=[die['w'], die['h']], die_mm2=die['mm2'], instances=len(m['insts']), buses=len(m['buses']),
                 instance_mm2=round(inst_mm2, 3), fill=round(inst_mm2 / die['mm2'], 4),
+                elastic_boundary=kv_elastic_boundary.inventory(ROOT, m, BINDINGS),
                 static_memory_reservation=dict(enabled=m['geo'].get('static_memory_reservation',False),
                     land_width_um=LAND_W, status='PLAN_ONLY_ACTUAL_ADAPTER_BINDING_REQUIRED' if m['geo'].get('static_memory_reservation') else 'LEGACY_LANDING_PROFILE'),
                 native_astk_reservation=dict(enabled=ASTK_W>324, parent_width_um=ASTK_W,
@@ -2376,6 +2412,11 @@ def case(m, work):
     # in superseded_elements.json); the other leaf candidates stay plan-only
     if m['geo'].get('kv_wq_leaves') and not m['geo'].get('kv_wq_mirror'):
         raise ValueError('per-PC leaf candidate is plan-only until encoder/pin/context gates pass')
+    if m['geo'].get('split'):
+        assigned = stack_local_reach(m, masters(m, 1))
+        if assigned['violations'] or assigned['unmeasured']:
+            raise ValueError(f"stack-local exact pin-bit reach failed: {assigned['violations']} overreach, "
+                             f"{assigned['unmeasured']} unmeasured: {assigned['worst'][:3]}")
     saved = F.masters, F.port_widths
     F.masters, F.port_widths = masters, port_widths
     try:

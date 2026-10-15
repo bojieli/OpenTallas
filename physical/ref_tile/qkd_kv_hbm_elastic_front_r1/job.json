@@ -1,13 +1,13 @@
 {
- "name": "qkd_kv_hbm_elastic_front_r1-r1-COMMIT",
+ "name": "qkd_kv_hbm_elastic_front_r1-r3-COMMIT",
  "block": "qkd_kv_hbm_elastic_front",
  "ref_tile": true,
- "owner": "Claude:el1014-qwen-split-kvsys",
+ "owner": "Codex:qwen_elements_1103",
  "purpose": "0az elastic KV-HBM boundary front buffer (pll_hbm domain): corrected KV sectors land at ACTUAL arrival in a 4 x 8 x 297-b block ring; one ready per block; release on the compiled blk_go at fixed edges into the unchanged static return ring; blk_freed block credit toward the RD issuer; hold/stall = explicit exceptional block pause. No per-lane credits.",
  "threads": 8,
  "peak_ram_gb": 24,
  "source": {
-  "branch": "claude/qwen-split-kvsys-1014",
+  "branch": "codex/qwen-elements-1103",
   "commit": "COMMIT",
   "extra_paths": [
    "rtl/test/qwen_static_kv",
@@ -93,7 +93,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qkd_kv_hbm_elastic_front_r1/qkd_kv_hbm_elastic_front_r1-r1-COMMIT"
+   "to": "results/rtl/ref_tile/qkd_kv_hbm_elastic_front_r1/qkd_kv_hbm_elastic_front_r1-r3-COMMIT"
   }
  ],
  "cycles_added": 0,

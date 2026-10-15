@@ -14,13 +14,31 @@ Components of this program may be licensed under more restrictive licenses which
 [WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14772, timing group from output port.
 [WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14805, timing group from output port.
 [WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14838, timing group from output port.
-[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
-[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
-QDM reference pin ot_prs_00028_ff/CLK clock arrival max 243.033340 min 230.864166 skew 90 hold 50
-OT_IO_INTER 0 inputs 0 outputs at 150 ps
-[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
-OT_IOREF clock-port clk (core_clk): data input delays dropped
-OT_IOREF_EDGE core_clk boundary 1487 negedge 0 noarc 0 inverted 0
-OT_IOREF ot_lb_v_core_clk core_clk mean 271.9 min 235.5 max 301.2 n 1487 boundary
-OT_WS max 2.503748319782062e-10 min 3.113878599414477e-11
+[WARNING STA-0450] virtual clock core_clk can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_lane can not be propagated.
+[WARNING STA-0450] virtual clock core_clk can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_lane can not be propagated.
+OT_HYBRID CTS_MEASURE tt clk sinks=1139 reference_scope=boundary boundary_sinks=1139 min=91.79494701070281 mean=104.71292899619871 max=118.98786170610921 all_mean=104.71292899619885
+OT_HYBRID CTS_MEASURE tt clk_l sinks=616 reference_scope=boundary boundary_sinks=348 min=151.49853654390174 mean=176.80090017792426 max=187.1447171381573 all_mean=157.79112917719215
+OT_ENTRIES LEVEL clk deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk -> u_x.fdx[0]$_DFF_P_/CLK wire=0 R=104.71292899619871 latency=72.08797118172555 phi=176.80090017792426
+OT_ENTRIES LEVEL clk_l deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_l -> ot_prs_00016_ff/CLK wire=0 R=176.80090017792426 latency=0.0 phi=176.80090017792426
+OT_ENTRIES DOMAIN core 833.333008ps IO1135/1135 boundary=163.88291819242838..191.07583288783476
+OT_ENTRIES DOMAIN lane 833.333008ps IO445/308 boundary=151.49853654390174..187.1447171381573
+OT_MULTI_ROOT RELATED_PATH core -> lane max slack=432.350647 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH core -> lane min slack=83.835411 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH lane -> core max slack=288.391205 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH lane -> core min slack=72.035713 (ordinary synchronous timing retained)
+OT_MULTI_ROOT OWNERSHIP PASS roots=2 registers=1755 inputs=1580 outputs=1443 async_control_pins=832
+OT_ENTRIES COMP DONE tt 2 entries phi=176.80090017792426 boundary=151.49853654390174..191.07583288783476
+[WARNING STA-0450] virtual clock core_clk can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_lane can not be propagated.
+OT_IOREF clock-port clk (ot_entry_0): data input delays dropped
+OT_IOREF clock-port clk_l (ot_entry_1): data input delays dropped
+OT_IOREF_EDGE ot_entry_0 boundary 1139 negedge 0 noarc 0 inverted 0
+OT_IOREF_EDGE ot_entry_1 boundary 348 negedge 0 noarc 0 inverted 0
+OT_IOREF keep core_clk (not an insertion-reference clock)
+OT_IOREF keep ot_io_lane (not an insertion-reference clock)
+OT_WS max 1.3711881630129596e-10 min 4.555289478958002e-11
 OT_EXPORT_DONE

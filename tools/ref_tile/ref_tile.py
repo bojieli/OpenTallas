@@ -1274,6 +1274,13 @@ def gen_env(s: dict, kd: str, W: float, H: float, lc: dict, blocks: list) -> str
             if not all(re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*", x) for x in mp):
                 raise SpecError("spec: io_flop_at_pins.macro_pins must be plain pin names")
             extra.append(f"--orfs-var OT_MPFLOP_PINS={','.join(mp)}")
+        # "macro_out_pins": ["rd_out", ...] -> OT_MPCAP_PINS: the flop capturing each such hard-child output bit is anchored
+        # beside the pin (S-ELEM-B 2026-10-15, calendar7: ROM clk->q leaves ~80 ps for wire + capture)
+        mo = s["io_flop_at_pins"].get("macro_out_pins") or []
+        if mo:
+            if not isinstance(mo, list) or not all(isinstance(x, str) and re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*", x) for x in mo):
+                raise SpecError("spec: io_flop_at_pins.macro_out_pins must be plain bus base names")
+            extra.append(f"--orfs-var OT_MPCAP_PINS={','.join(mo)}")
     if s.get("outhold"):
         # spec 'outhold' (hc-cpin 2026-10-12): flop-driven outputs get lead BUF -> HB4 -> BUF FIRM at the pin (R2O hold-only
         # miss at the routed IO ref); with 'inhold' the same hook first runs leaf_inhold.tcl (one PRE_GLOBAL_PLACE hook)
