@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.s81.functional_homes.v1",
- "scope": "one TP4 layer die owns6of24coefficients, both attn/ffn resident. All6 projection leaves required. Geometry source v19c xsp7 full instance plan. No synthetic ETM/stub permitted.",
+ "scope": "one TP4 layer die owns6of24coefficients, both attn/ffn for all40main+3MTP sets resident. All6 projection leaves required. Geometry source v19c xsp7 full instance plan. No synthetic ETM/stub permitted.",
  "engine_ports": {
   "engram_lookup_mix": 10,
   "hc_projection": 11
@@ -38,19 +38,22 @@
     1857.6
    ],
    "outline": {
-    "w": 864.0,
-    "h": 1296.0
+    "w": 1728.0,
+    "h": 864.0
    },
    "clock": "serial_0p9",
-   "geometry": "xsp7_screen actual instance set:0overlaps",
+   "geometry": "xsp7_screen full56444-instance rectangle audit:0overlaps; six new homes pairwise disjoint and clear of MIX/embedding/controller reservations",
    "ROM": {
-    "macro": "ot_rom_4096x72_m8",
-    "count": 128,
-    "used_rows_per_macro": 160,
-    "used_payload_bits_per_word": 64,
-    "phase_rows": "80attn+80ffn",
-    "physical_area_mm2": 0.30612307967999997,
-    "weight_payload_bits": 1310720
+    "macro": "ot_rom_4096x266_m8",
+    "count": 64,
+    "pages": 2,
+    "resident_sets": 43,
+    "used_linear_rows": 6880,
+    "used_payload_bits_per_word": 256,
+    "phase_rows": "80attn+80ffn per resident layer; cmd_layer[5:0] selects0..42",
+    "physical_area_mm2": 0.49049266,
+    "weight_payload_bits": 56360960,
+    "physical_payload_bits": 67108864
    },
    "MAC": {
     "count": 256,
@@ -61,29 +64,32 @@
     "macro": "ot_sram_1r1w_128x256_m1_r2c2",
     "count": 16
    },
-   "qualification": "RESERVATION: synthesis/clock/pins/staticcalendar/nativegate owed; middle relocation required"
+   "qualification": "RESERVATION only:1.493mm2 vs1.0968mm2 macro+MAC lower bound; synthesis/CTS/pins/relay cuts/staticcalendar/native gates still owed"
   },
   {
    "name": "sp_hcx_south1",
    "master": "ot_s81_hcx_projection_leaf",
    "at_um": [
-    18241.2,
+    19200.0,
     1857.6
    ],
    "outline": {
-    "w": 864.0,
-    "h": 1296.0
+    "w": 1728.0,
+    "h": 864.0
    },
    "clock": "serial_0p9",
-   "geometry": "xsp7_screen actual instance set:0overlaps",
+   "geometry": "xsp7_screen full56444-instance rectangle audit:0overlaps; six new homes pairwise disjoint and clear of MIX/embedding/controller reservations",
    "ROM": {
-    "macro": "ot_rom_4096x72_m8",
-    "count": 128,
-    "used_rows_per_macro": 160,
-    "used_payload_bits_per_word": 64,
-    "phase_rows": "80attn+80ffn",
-    "physical_area_mm2": 0.30612307967999997,
-    "weight_payload_bits": 1310720
+    "macro": "ot_rom_4096x266_m8",
+    "count": 64,
+    "pages": 2,
+    "resident_sets": 43,
+    "used_linear_rows": 6880,
+    "used_payload_bits_per_word": 256,
+    "phase_rows": "80attn+80ffn per resident layer; cmd_layer[5:0] selects0..42",
+    "physical_area_mm2": 0.49049266,
+    "weight_payload_bits": 56360960,
+    "physical_payload_bits": 67108864
    },
    "MAC": {
     "count": 256,
@@ -94,73 +100,7 @@
     "macro": "ot_sram_1r1w_128x256_m1_r2c2",
     "count": 16
    },
-   "qualification": "RESERVATION: synthesis/clock/pins/staticcalendar/nativegate owed; middle relocation required"
-  },
-  {
-   "name": "sp_hcx_middle0",
-   "master": "ot_s81_hcx_projection_leaf",
-   "at_um": [
-    17334.0,
-    12238.56
-   ],
-   "outline": {
-    "w": 864.0,
-    "h": 1296.0
-   },
-   "clock": "serial_0p9",
-   "geometry": "169 existing station/relay collisions in full middle band: relocation+reach check REQUIRED before submission",
-   "ROM": {
-    "macro": "ot_rom_4096x72_m8",
-    "count": 128,
-    "used_rows_per_macro": 160,
-    "used_payload_bits_per_word": 64,
-    "phase_rows": "80attn+80ffn",
-    "physical_area_mm2": 0.30612307967999997,
-    "weight_payload_bits": 1310720
-   },
-   "MAC": {
-    "count": 256,
-    "cell_area_estimate_mm2": 0.299210496,
-    "logic_utilization_target": 0.55
-   },
-   "X_stage": {
-    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
-    "count": 16
-   },
-   "qualification": "RESERVATION: synthesis/clock/pins/staticcalendar/nativegate owed; middle relocation required"
-  },
-  {
-   "name": "sp_hcx_middle1",
-   "master": "ot_s81_hcx_projection_leaf",
-   "at_um": [
-    18241.2,
-    12238.56
-   ],
-   "outline": {
-    "w": 864.0,
-    "h": 1296.0
-   },
-   "clock": "serial_0p9",
-   "geometry": "169 existing station/relay collisions in full middle band: relocation+reach check REQUIRED before submission",
-   "ROM": {
-    "macro": "ot_rom_4096x72_m8",
-    "count": 128,
-    "used_rows_per_macro": 160,
-    "used_payload_bits_per_word": 64,
-    "phase_rows": "80attn+80ffn",
-    "physical_area_mm2": 0.30612307967999997,
-    "weight_payload_bits": 1310720
-   },
-   "MAC": {
-    "count": 256,
-    "cell_area_estimate_mm2": 0.299210496,
-    "logic_utilization_target": 0.55
-   },
-   "X_stage": {
-    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
-    "count": 16
-   },
-   "qualification": "RESERVATION: synthesis/clock/pins/staticcalendar/nativegate owed; middle relocation required"
+   "qualification": "RESERVATION only:1.493mm2 vs1.0968mm2 macro+MAC lower bound; synthesis/CTS/pins/relay cuts/staticcalendar/native gates still owed"
   },
   {
    "name": "sp_hcx_north0",
@@ -170,19 +110,22 @@
     22307.04
    ],
    "outline": {
-    "w": 864.0,
-    "h": 1296.0
+    "w": 1728.0,
+    "h": 864.0
    },
    "clock": "serial_0p9",
-   "geometry": "xsp7_screen actual instance set:0overlaps",
+   "geometry": "xsp7_screen full56444-instance rectangle audit:0overlaps; six new homes pairwise disjoint and clear of MIX/embedding/controller reservations",
    "ROM": {
-    "macro": "ot_rom_4096x72_m8",
-    "count": 128,
-    "used_rows_per_macro": 160,
-    "used_payload_bits_per_word": 64,
-    "phase_rows": "80attn+80ffn",
-    "physical_area_mm2": 0.30612307967999997,
-    "weight_payload_bits": 1310720
+    "macro": "ot_rom_4096x266_m8",
+    "count": 64,
+    "pages": 2,
+    "resident_sets": 43,
+    "used_linear_rows": 6880,
+    "used_payload_bits_per_word": 256,
+    "phase_rows": "80attn+80ffn per resident layer; cmd_layer[5:0] selects0..42",
+    "physical_area_mm2": 0.49049266,
+    "weight_payload_bits": 56360960,
+    "physical_payload_bits": 67108864
    },
    "MAC": {
     "count": 256,
@@ -193,29 +136,32 @@
     "macro": "ot_sram_1r1w_128x256_m1_r2c2",
     "count": 16
    },
-   "qualification": "RESERVATION: synthesis/clock/pins/staticcalendar/nativegate owed; middle relocation required"
+   "qualification": "RESERVATION only:1.493mm2 vs1.0968mm2 macro+MAC lower bound; synthesis/CTS/pins/relay cuts/staticcalendar/native gates still owed"
   },
   {
    "name": "sp_hcx_north1",
    "master": "ot_s81_hcx_projection_leaf",
    "at_um": [
-    18241.2,
-    22307.04
+    19200.0,
+    22770.0
    ],
    "outline": {
-    "w": 864.0,
-    "h": 1296.0
+    "w": 1728.0,
+    "h": 864.0
    },
    "clock": "serial_0p9",
-   "geometry": "xsp7_screen actual instance set:0overlaps",
+   "geometry": "xsp7_screen full56444-instance rectangle audit:0overlaps; six new homes pairwise disjoint and clear of MIX/embedding/controller reservations",
    "ROM": {
-    "macro": "ot_rom_4096x72_m8",
-    "count": 128,
-    "used_rows_per_macro": 160,
-    "used_payload_bits_per_word": 64,
-    "phase_rows": "80attn+80ffn",
-    "physical_area_mm2": 0.30612307967999997,
-    "weight_payload_bits": 1310720
+    "macro": "ot_rom_4096x266_m8",
+    "count": 64,
+    "pages": 2,
+    "resident_sets": 43,
+    "used_linear_rows": 6880,
+    "used_payload_bits_per_word": 256,
+    "phase_rows": "80attn+80ffn per resident layer; cmd_layer[5:0] selects0..42",
+    "physical_area_mm2": 0.49049266,
+    "weight_payload_bits": 56360960,
+    "physical_payload_bits": 67108864
    },
    "MAC": {
     "count": 256,
@@ -226,7 +172,79 @@
     "macro": "ot_sram_1r1w_128x256_m1_r2c2",
     "count": 16
    },
-   "qualification": "RESERVATION: synthesis/clock/pins/staticcalendar/nativegate owed; middle relocation required"
+   "qualification": "RESERVATION only:1.493mm2 vs1.0968mm2 macro+MAC lower bound; synthesis/CTS/pins/relay cuts/staticcalendar/native gates still owed"
+  },
+  {
+   "name": "sp_hcx_west0",
+   "master": "ot_s81_hcx_projection_leaf",
+   "at_um": [
+    9504.0,
+    22770.0
+   ],
+   "outline": {
+    "w": 1728.0,
+    "h": 864.0
+   },
+   "clock": "serial_0p9",
+   "geometry": "xsp7_screen full56444-instance rectangle audit:0overlaps; six new homes pairwise disjoint and clear of MIX/embedding/controller reservations",
+   "ROM": {
+    "macro": "ot_rom_4096x266_m8",
+    "count": 64,
+    "pages": 2,
+    "resident_sets": 43,
+    "used_linear_rows": 6880,
+    "used_payload_bits_per_word": 256,
+    "phase_rows": "80attn+80ffn per resident layer; cmd_layer[5:0] selects0..42",
+    "physical_area_mm2": 0.49049266,
+    "weight_payload_bits": 56360960,
+    "physical_payload_bits": 67108864
+   },
+   "MAC": {
+    "count": 256,
+    "cell_area_estimate_mm2": 0.299210496,
+    "logic_utilization_target": 0.55
+   },
+   "X_stage": {
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "count": 16
+   },
+   "qualification": "RESERVATION only:1.493mm2 vs1.0968mm2 macro+MAC lower bound; synthesis/CTS/pins/relay cuts/staticcalendar/native gates still owed"
+  },
+  {
+   "name": "sp_hcx_west1",
+   "master": "ot_s81_hcx_projection_leaf",
+   "at_um": [
+    11384.064,
+    22770.0
+   ],
+   "outline": {
+    "w": 1728.0,
+    "h": 864.0
+   },
+   "clock": "serial_0p9",
+   "geometry": "xsp7_screen full56444-instance rectangle audit:0overlaps; six new homes pairwise disjoint and clear of MIX/embedding/controller reservations",
+   "ROM": {
+    "macro": "ot_rom_4096x266_m8",
+    "count": 64,
+    "pages": 2,
+    "resident_sets": 43,
+    "used_linear_rows": 6880,
+    "used_payload_bits_per_word": 256,
+    "phase_rows": "80attn+80ffn per resident layer; cmd_layer[5:0] selects0..42",
+    "physical_area_mm2": 0.49049266,
+    "weight_payload_bits": 56360960,
+    "physical_payload_bits": 67108864
+   },
+   "MAC": {
+    "count": 256,
+    "cell_area_estimate_mm2": 0.299210496,
+    "logic_utilization_target": 0.55
+   },
+   "X_stage": {
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "count": 16
+   },
+   "qualification": "RESERVATION only:1.493mm2 vs1.0968mm2 macro+MAC lower bound; synthesis/CTS/pins/relay cuts/staticcalendar/native gates still owed"
   }
  ],
  "HC_memory_calendar": {

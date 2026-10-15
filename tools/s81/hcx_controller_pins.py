@@ -15,7 +15,7 @@ def main():
  for p,n in [('rq_v',8),('rq_row',112),('rs_v',8)]:
   pp[p]=[['S','M5',round(x+.096*i,3),.192] for i in range(n)];x+=n*.096+.96
  y=80.0
- for p,n in [('stage_begin',1),('stage_v',1),('stage_word',7),('leaf_cmd_v',1),('leaf_ffn',1),('leaf_v',6),('leaf_fault',6),('leaf_d',192),('t_raw_v',1),('t_raw_d',192)]:
+ for p,n in [('stage_begin',1),('stage_v',1),('stage_word',7),('leaf_cmd_v',1),('leaf_ffn',1),('leaf_layer',6),('leaf_v',6),('leaf_fault',6),('leaf_d',192),('t_raw_v',1),('t_raw_d',192)]:
   pp[p]=[['E','M4',round(y+.096*i,3),.192] for i in range(n)];y+=n*.096+.96
  for p,x in [('cck',4.032),('crst_n',4.992),('sk',8.064),('srst_n',9.024)]:pp[p]=[['N','M5',x,.192]]
  V.write(out,'ot_s81_hcx_controller',[216.,216.],pp,'cck','W sequencer, S VM metadata, E projection leaf control/return; direct payload multicast outside this leaf', 'v20_hcp_controller',{'source':'tools/s81/hcx_controller_pins.py','clock_entries':{'stream':['cck'],'serial':['sk']},'reset_entries':{'stream':['crst_n'],'serial':['srst_n']},'adoption':'OPEN measured3:4 CDC/forward/return fixed calendar; FAST_CYC=0 must fault, never inferred qualification'})
