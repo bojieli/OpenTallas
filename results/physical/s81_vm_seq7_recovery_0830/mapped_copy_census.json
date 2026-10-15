@@ -1,0 +1,92 @@
+{
+ "original": {
+  "mapped_json_sha256": "8ad23dec56ed1db18e7257c3575ccf3e99e1f8d35d511901837c41f91c29aa3f",
+  "FF_bits": 8920,
+  "generic_cells": 190982,
+  "clock_root_sinks": {
+   "[2]": 8920
+  },
+  "groups": {
+   "g_open": {
+    "named_bits": 128,
+    "distinct_bits": 8,
+    "max_generic_load_pins": 160
+   },
+   "g_sp": {
+    "named_bits": 128,
+    "distinct_bits": 8,
+    "max_generic_load_pins": 1
+   },
+   "g_lo": {
+    "named_bits": 1536,
+    "distinct_bits": 96,
+    "max_generic_load_pins": 68
+   },
+   "g_hi": {
+    "named_bits": 1920,
+    "distinct_bits": 120,
+    "max_generic_load_pins": 2
+   }
+  }
+ },
+ "keep_only": {
+  "mapped_json_sha256": "b3f80b55702e288ca3799ba4a5049bde0306a00772959ad2ba9639c8b07ab9b6",
+  "FF_bits": 8920,
+  "generic_cells": 190982,
+  "clock_root_sinks": {
+   "[2]": 8920
+  },
+  "groups": {
+   "g_open": {
+    "named_bits": 128,
+    "distinct_bits": 8,
+    "max_generic_load_pins": 160
+   },
+   "g_sp": {
+    "named_bits": 128,
+    "distinct_bits": 8,
+    "max_generic_load_pins": 1
+   },
+   "g_lo": {
+    "named_bits": 1536,
+    "distinct_bits": 96,
+    "max_generic_load_pins": 68
+   },
+   "g_hi": {
+    "named_bits": 1920,
+    "distinct_bits": 120,
+    "max_generic_load_pins": 2
+   }
+  }
+ },
+ "local_enabled": {
+  "mapped_json_sha256": "bae6d6c7b65ae9789a3249d1edc11c40d425626cdfde009a96913140b1a4e155",
+  "FF_bits": 12400,
+  "generic_cells": 199046,
+  "clock_root_sinks": {
+   "[2]": 12400
+  },
+  "groups": {
+   "g_open": {
+    "named_bits": 128,
+    "distinct_bits": 128,
+    "max_generic_load_pins": 16
+   },
+   "g_sp": {
+    "named_bits": 128,
+    "distinct_bits": 128,
+    "max_generic_load_pins": 1
+   },
+   "g_lo": {
+    "named_bits": 1536,
+    "distinct_bits": 1536,
+    "max_generic_load_pins": 8
+   },
+   "g_hi": {
+    "named_bits": 1920,
+    "distinct_bits": 1920,
+    "max_generic_load_pins": 2
+   }
+  }
+ }
+}

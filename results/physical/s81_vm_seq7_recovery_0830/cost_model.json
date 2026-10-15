@@ -1,0 +1,20 @@
+{
+ "command_done_old_stream_edges": 6,
+ "command_done_stream_edges": 7,
+ "command_ii_stream_edges": 1,
+ "extra_command_retirement_ps": 833.3333333333334,
+ "commit_groups": 8,
+ "commit_ports_per_group": 16,
+ "read_groups": 8,
+ "read_ports_per_group": 4,
+ "slots": 8,
+ "source_local_state_copy_bits": 3968,
+ "source_observation_stage_bits": 2272,
+ "measured_unprotected_mapped_ff_bits": 8920,
+ "measured_unprotected_unique_group_state_bits": 232,
+ "required_distinct_mapped_group_state_bits": 3712,
+ "projected_mapped_ff_bits_with_local_enables": 12400,
+ "external_clock_and_port_changes": 0,
+ "whole_token_cost": null,
+ "scope": "Per-instance structural candidate; actual mapping, native timing and issuer calendar remain gates. No accepted-cost ledger row."
+}

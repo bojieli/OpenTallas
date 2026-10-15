@@ -1,0 +1,17 @@
+T_SRQ MISMATCH sk 219 got v11 exp v11
+T_SRQ MISMATCH sk 220 got v11 exp v11
+T_SRQ MISMATCH sk 222 got v11 exp v11
+T_SRQ MISMATCH sk 223 got v11 exp v11
+T_SRQ MISMATCH sk 225 got v11 exp v11
+T_SRQ MISMATCH sk 226 got v11 exp v11
+T_SRQ MISMATCH sk 228 got v11 exp v11
+T_SRQ MISMATCH sk 229 got v11 exp v11
+T_SRQ MISMATCH sk 231 got v11 exp v11
+T_SRQ MISMATCH sk 232 got v11 exp v11
+T_SRQ MISMATCH sk 234 got v11 exp v11
+TB_SPVM RESULT mode 0 records 32 qSW 20 gather 4 wfc_rd 32 su_rd 245 cl_rows 101 dones 5 bad 40
+TB_SPVM FAIL mode 0
+- /tmp/codex-s81-master-seq7-0848/src/tb_dsfd_sp_vm_static.sv:307: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 2us; walltime 11.993 s; speed 168.003 ns/s
+- Verilator: cpu 11.992 s on 1 threads; allocated 55 MB
