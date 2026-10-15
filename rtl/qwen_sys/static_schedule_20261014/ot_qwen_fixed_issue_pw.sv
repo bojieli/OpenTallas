@@ -5,6 +5,7 @@
 // PW1017 CALS {magic32,zero4,program_words10,stage6,su_count6,me_count6} seals it.
 // All storage here is real FF state; physical parent must census/map it.
 module ot_qwen_fixed_issue_pw #(
+ parameter integer DENSE_IMAGE=0,
  parameter integer OWN=1,
  parameter integer DEPTH=(OWN==1)?8:20,
  parameter integer BASE=(OWN==1)?976:984
@@ -15,7 +16,33 @@ module ot_qwen_fixed_issue_pw #(
  input wire candidate_v,input wire[11:0]candidate_pc,input wire[1:0]candidate_unit,
  input wire available,input wire end_ok,input wire cp_available,
  output wire issue_v,output wire end_v,output wire[55:0]cp_cmd,output wire cp_v,output wire[11:0]issue_pc,output wire[1:0]issue_unit,
- output wire active,output wire done,output wire[31:0]cycle,output wire fault
+ output wire active,output wire done,output wire[31:0]cycle,output wire image_ready,output wire fault
+);
+ generate if(DENSE_IMAGE!=0)begin:g_dense
+ ot_qwen_fixed_issue_dense_pw #(.OWN(OWN),.DEPTH(DEPTH),.BASE(BASE))u_store(.*);
+ end else begin:g_stream
+ ot_qwen_fixed_issue_stream_pw #(.OWN(OWN),.DEPTH(DEPTH),.BASE(BASE))u_store(.*);
+ end endgenerate
+endmodule
+
+`timescale 1ns/1ps
+// Actual synthesizable 47-bit calendar storage on the existing PW10x64 face.
+// ME8 records [976..983], SU20 [984..1003], four XPF188 [1004..1015].
+// PW1016 CAL1 begins ME; PW1018 CAL2 begins SU, each with its own stop32.
+// PW1017 CALS {magic32,zero4,program_words10,stage6,su_count6,me_count6} seals it.
+// All storage here is real FF state; physical parent must census/map it.
+module ot_qwen_fixed_issue_stream_pw #(
+ parameter integer OWN=1,
+ parameter integer DEPTH=(OWN==1)?8:20,
+ parameter integer BASE=(OWN==1)?976:984
+)(
+ input wire clk,input wire rst_n,
+ input wire pw_v,input wire [9:0]pw_addr,input wire[63:0]pw_data,
+ input wire start,input wire[5:0]stage,
+ input wire candidate_v,input wire[11:0]candidate_pc,input wire[1:0]candidate_unit,
+ input wire available,input wire end_ok,input wire cp_available,
+ output wire issue_v,output wire end_v,output wire[55:0]cp_cmd,output wire cp_v,output wire[11:0]issue_pc,output wire[1:0]issue_unit,
+ output wire active,output wire done,output wire[31:0]cycle,output wire image_ready,output wire fault
 );
  localparam integer RAW=(DEPTH>1)?$clog2(DEPTH):1;
  reg[46:0]rows[0:DEPTH-1];
@@ -75,5 +102,6 @@ module ot_qwen_fixed_issue_pw #(
  .candidate_v(candidate_v),.candidate_pc(candidate_pc),.candidate_unit(candidate_unit),.available(available),.end_ok(end_ok),.cp_available(cp_available),
  .issue_v(issue_v),.end_v(end_v),.cp_v(cp_v),.cp_index(cp_index),.issue_pc(issue_pc),.issue_unit(issue_unit),.active(active),.done(done),.cycle(cycle),.fault(core_fault));
  assign cp_cmd=OWN==1?{(cp_index<3?cp_rows[cp_index][55:1]:55'd0),cp_v}:56'd0;
+ assign image_ready=sealed&&!cfg_fault&&!read_fault;
  assign fault=cfg_fault||read_fault||core_fault;
 endmodule
