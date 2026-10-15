@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
+ulimit -c 0
 src=$1
 out=$2
 mkdir -p "$out"

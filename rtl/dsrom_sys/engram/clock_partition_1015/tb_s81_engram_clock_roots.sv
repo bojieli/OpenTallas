@@ -18,7 +18,7 @@ module tb_s81_engram_clock_roots;
  .ck(ck),.ck_hash(ck_hash),.ck_rows(ck_rows),.rst_n(rst_n),.cfg_layer(cfg_layer),.cfg_rank(cfg_rank),.win_v(win_v),.win_ids(win_ids),.win_cred(bw),.rel(rel),
  .hq_v(bhv),.hq_atom(bha),.hq_tag(bht),.hq_cred(hq_cred),.hr_v(hr_v),.hr_tag(hr_tag),.hr_idx(hr_idx),.hr_d(hr_d),
  .o_v(bov),.o_col(boc),.o_beat(bob),.o_slot(bos),.o_d(bod),.o_cred(o_cred),.st_v(bsv),.st_slot(bss),.st_bad(bsbad),.fault(bf));
- integer cycles=0,phase,win=0,requests=0,beats=0,statuses=0,mutant=0,i;
+ integer cycles=0,phase,win=0,requests=0,beats=0,statuses=0,poisoned=0,mutant=0,i;
  initial begin if($value$plusargs("MUTANT=%d",mutant)) begin end end
  always @(negedge ck) begin
   cycles=cycles+1; phase=cycles%2048;
@@ -33,16 +33,17 @@ module tb_s81_engram_clock_roots;
   #0.1;
   if(rst_n && cycles>10) begin
    if({aw,ahv,aov,asv,af} !== {bw,bhv,bov,bsv,bf}) $fatal(1,"CLOCK_ROOT_EQ control mismatch cycle%0d mutant%0d",cycles,mutant);
-   if(af || bf) $fatal(1,"CLOCK_ROOT_EQ unexpected fault cycle%0d",cycles);
+   // External random rows intentionally have invalid CRC. Both actual RTL
+   // implementations must report the same poison/fault without changing beats.
    if(ahv) begin requests=requests+1;if({aha,aht} !== {bha,bht})$fatal(1,"CLOCK_ROOT_EQ request mismatch cycle%0d mutant%0d",cycles,mutant);end
    if(aov) begin beats=beats+1;if({aoc,aob,aos,aod} !== {boc,bob,bos,bod})$fatal(1,"CLOCK_ROOT_EQ beat mismatch cycle%0d mutant%0d",cycles,mutant);end
-   if(asv) begin statuses=statuses+1;if({ass,asbad} !== {bss,bsbad})$fatal(1,"CLOCK_ROOT_EQ status mismatch cycle%0d mutant%0d",cycles,mutant);end
+   if(asv) begin statuses=statuses+1;if(asbad)poisoned=poisoned+1;if({ass,asbad} !== {bss,bsbad})$fatal(1,"CLOCK_ROOT_EQ status mismatch cycle%0d mutant%0d",cycles,mutant);end
    if(aw)win=win+1;
   end
   if(cycles==24*2048-1) begin
-   if(win!=24 || requests!=144 || beats!=1152 || statuses!=144)$fatal(1,"CLOCK_ROOT_EQ insufficient actual coverage windows%0d requests%0d beats%0d status%0d",win,requests,beats,statuses);
+   if(win!=24 || requests!=144 || beats!=1152 || statuses!=144 || poisoned!=144)$fatal(1,"CLOCK_ROOT_EQ insufficient actual coverage windows%0d requests%0d beats%0d status%0d",win,requests,beats,statuses);
    if(mutant!=0)$fatal(1,"CLOCK_ROOT_EQ mutant survived");
-   $display("CLOCK_ROOT_EQ PASS windows=%0d requests=%0d beats=%0d status=%0d all8layer_rank_straps roots=13",win,requests,beats,statuses);$finish;
+   $display("CLOCK_ROOT_EQ PASS windows=%0d requests=%0d beats=%0d status=%0d crc_poisoned_rows=%0d all8layer_rank_straps roots=13",win,requests,beats,statuses,poisoned);$finish;
   end
  end
 endmodule
