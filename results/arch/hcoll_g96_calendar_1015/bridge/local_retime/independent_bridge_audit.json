@@ -1,0 +1,13 @@
+{
+  "status": "PASS: independent actual49/30-bit bridge control and full545 identity/edge audit",
+  "checks": {
+    "bridge_command_checks": 229536,
+    "qslot_to_bridge_registered_edges": 57888,
+    "quarter_wire_registered_edges": 75072,
+    "rx_face_command_and_arrival_checks": 75936,
+    "native_endpoint_write_drivers": 43392
+  },
+  "cycles": 1007,
+  "ratio": 0.7594841239912512,
+  "qualification": "Component calendar only; extra program catalog/issuer, physical relay placement and FEC/board contracts remain unqualified"
+}
