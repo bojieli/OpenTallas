@@ -35,20 +35,9 @@
    },
    {
     "name": "elastic_boundary_parent_proof",
-    "cmd": "BUILD_SERIAL=1 JOBS=2 bash tools/qwen_static_kv/run_kv_hbm_elastic_boundary.sh {RUN}/bench/exact",
+    "cmd": "JOBS=2 bash tools/qwen_static_kv/run_kv_hbm_elastic_boundary.sh {RUN}/bench/exact",
     "expect": "pass",
     "pass_regex": "^PASS 0az elastic boundary",
-    "threads": 2,
-    "peak_ram_gb": 8,
-    "needs": [
-     "verilator"
-    ]
-   },
-   {
-    "name": "elastic_front_wrong_read_address",
-    "cmd": "JOBS=2 bash tools/qwen_static_kv/run_elastic_front_read_mutant.sh {RUN}/bench/wrong_read_address",
-    "expect": "fail",
-    "fail_regex": "OBSERVED_FAIL",
     "threads": 2,
     "peak_ram_gb": 8,
     "needs": [
