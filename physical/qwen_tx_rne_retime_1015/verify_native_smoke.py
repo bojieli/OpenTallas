@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 from pathlib import Path
-import json,hashlib
+import json,hashlib,gzip
 root=Path(__file__).resolve().parents[2]
 d=root/'results/rtl/qwen_compute_native_glue_1014/tx_rne207_1015/native_smoke'
 for name,want in json.loads((d/'ARTIFACT_HASHES.json').read_text()).items():
@@ -11,7 +11,7 @@ pins=json.loads((d/'actual_pin_comparison.json').read_text())
 for item,probe in zip(r['masters'],pins):
  name=item['name'];assert item['harness_exit']==0 and not item['cts'] and not item['route']
  assert probe['status']=='PASS'and not probe['missing']and not probe['extra']and not probe['mismatches']
- gate=json.loads((d/(name.rsplit('_',1)[1]+'_gate.json')).read_text())
+ gate=json.loads(gzip.decompress((d/(name.rsplit('_',1)[1]+'_source_bound_gate.json.gz')).read_bytes()))
  assert gate['source_binding']['archive_sha256']==item['source_archive_sha256']
  source=next(x for x in gate['source_binding']['files']if x['path']=='rtl/qwen_sys/tx_rne_retime_20261015/qwen_tx_rne.sv')
  assert source['sha256']==r['rtl_sha256']
