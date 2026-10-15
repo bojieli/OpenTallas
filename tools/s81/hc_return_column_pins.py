@@ -76,7 +76,7 @@ def make(kind, column):
     return ports,bindings,h
 
 
-def neighbor_audit(out):
+def neighbor_audit(out, local_requests=False):
     ln=[V.lef_bits('physical/ref_tile/s81hc_ctnl_l%d_ref/views/ot_s81_hc_ctnl_l%d/ot_s81_hc_ctnl_l%d.lef'%(c,c,c))[1] for c in range(4)]
     rn=V.lef_bits('physical/ref_tile/s81hc_ctrn_ref/views/ot_s81_hc_ctrn/ot_s81_hc_ctrn.lef')[1]
     cp=V.lef_bits('physical/ref_tile/s81hc_ctpl_ref/views/ot_s81_hc_ctpl/ot_s81_hc_ctpl.lef')[1]
@@ -115,24 +115,32 @@ def neighbor_audit(out):
                     else:
                         rp='rd_out';bi=oldbit+(1004 if src=='rdd_in' else 0)
                     pin=rn[rp][bi];edge(port,i,'ctrn.%s[%d]'%(rp,bi),pin[2],H-12.96+pin[3])
-            if kind=='ctra' and c==0:
-                for col in range(4):
-                    suffix='' if col==0 else '_c'+str(col)
+            if kind=='ctra' and (local_requests or c==0):
+                for col in ([c] if local_requests else range(4)):
+                    suffix='' if local_requests or col==0 else '_c'+str(col)
                     for port in ['rq_q','hs_run','hs_c']:
                         for i in range(p[port+suffix]['bits']):
                             pin=ln[col][port][i]
                             for j in range(4):edge(port+suffix,i,'ctnl[%d][%d].%s'%(j,col,port),144.72*col+pin[2],H-rows[j]-heights[col]+pin[3])
             reports.append(dict(kind=kind,column=c,rectangle_lower_bound_over500=[x for x in edges if x['rectangle_lower_bound_um']>500],examined=len(edges),max_um=max(x['length_um'] for x in edges),over500=[x for x in edges if x['length_um']>500],hops=edges))
-    report=dict(scope='ACTUAL_CLOSED_CTNl_CTRn_CTPL_NEIGHBORS_AT_V22_ORIGINS_ONLY',qualification='GEOMETRY_ONLY_NOT_TIMING; global capture/command/reset and peer flag joins still require explicit parent audit',leaves=reports)
+    sources=[ROOT/'physical/ref_tile'/('s81hc_'+k+'_ref')/'views'/('ot_s81_hc_'+k)/('ot_s81_hc_'+k+'.lef') for k in ['ctnl_l0','ctnl_l1','ctnl_l2','ctnl_l3','ctrn','ctpl']]
+    sources += [ROOT/'physical/s81_die_pins/v20_hc_return'/('ot_s81_hc_'+k+'.json') for k in ['ctra','ctrb']]
+    sources += [Path(__file__)]
+    report=dict(input_sha256={str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest() for p in sources},scope='ACTUAL_CLOSED_CTNl_CTRn_CTPL_NEIGHBORS_AT_V22_ORIGINS_ONLY',qualification='GEOMETRY_ONLY_NOT_TIMING; global capture/command/reset and peer flag joins still require explicit parent audit',leaves=reports)
     (out/'neighbor_geometry.json').write_text(json.dumps(report,indent=1)+'\n')
     return [dict(kind=r['kind'],column=r['column'],examined=r['examined'],over500=len(r['over500']),rectangle_lower_bound_over500=len(r['rectangle_lower_bound_over500']),max_um=r['max_um']) for r in reports]
 
 
 def main():
-    ap=argparse.ArgumentParser();ap.add_argument('--rtl',type=Path,required=True);ap.add_argument('--out',type=Path,default=ROOT/'physical/s81_die_pins/v22_hc_return_columns');a=ap.parse_args()
+    ap=argparse.ArgumentParser();ap.add_argument('--request-owner',choices=['column0','local'],default='column0');ap.add_argument('--rtl',type=Path,required=True);ap.add_argument('--out',type=Path,default=ROOT/'physical/s81_die_pins/v22_hc_return_columns');a=ap.parse_args()
     sys.path.insert(0,str(ROOT/'tools'))
     from die_port_bind import parse_modules
     modules={m.name:m for m in parse_modules(a.rtl.read_text(),str(a.rtl))}
+    if a.request_owner=='local':
+        compact=''.join(a.rtl.read_text().split())
+        for c in range(1,4):
+            assert 'g_requests%d'%c in compact
+            for p in ['rq_q','hs_run','hs_c']:assert 'assign%s_c%d=local_%s;'%(p,c,p) in compact
     report=[]
     for kind in ['ctra','ctrb']:
         for c in range(4):
@@ -143,6 +151,6 @@ def main():
             assert actual=={p:len(bits) for p,bits in ports.items()},(master,c,actual)
             path=V.write(out,master,[W,h],ports,'clk','Actual v20 neighbor pin positions with exact COLUMN RTL bit subsets; bounded local face packing. Global broadcast seams still need native audit.','v22_hc_return_columns',dict(clock_entries={'serial':['clk']},params={'COLUMN':c,'S_RD':2,'S_RT':4,'READ_STAGE':1,'CHAIN_STEP':6},source='tools/s81/hc_return_column_pins.py',qualification='PROVISIONAL v22 shape; GEN18r legality/pin_align and exact successor RTL ABI/native timing pending',source_bit_binding=bindings))
             report.append(dict(master=master,column=c,file=str(path.relative_to(a.out)),outline_um=[W,h],pins=sum(map(len,ports.values())),clock='independent serial root delivered at phi-wire-R; actual native R unresolved'))
-    (a.out/'layout.json').write_text(json.dumps(dict(schema='opentallas.s81.return_column_pin_plan.v1',scope='PROVISIONAL_TOP_DOWN_PINS_NOT_CLOSURE',source_rtl_sha256=hashlib.sha256(a.rtl.read_bytes()).hexdigest(),source_port_widths_all8='PASS',leaves=report,remaining=['Exact source ABI comparison after COLUMN0 merge integration','All peer/neighbor pin-to-pin distances and native pair timing','GEN18r legality and pin_align0; cth contains no own registers','All root CTS insertion/spread and native boundary audits']),indent=1)+'\n')
-    print(json.dumps(dict(leaves=report,neighbor_audit=neighbor_audit(a.out))))
+    (a.out/'layout.json').write_text(json.dumps(dict(schema='opentallas.s81.return_column_pin_plan.v1',scope='PROVISIONAL_TOP_DOWN_PINS_NOT_CLOSURE',source_rtl_sha256=hashlib.sha256(a.rtl.read_bytes()).hexdigest(),source_port_widths_all8='PASS',request_owner=a.request_owner,leaves=report,remaining=['Exact source ABI comparison after COLUMN0 merge integration','All peer/neighbor pin-to-pin distances and native pair timing','GEN18r legality and pin_align0; cth contains no own registers','All root CTS insertion/spread and native boundary audits']),indent=1)+'\n')
+    print(json.dumps(dict(leaves=report,neighbor_audit=neighbor_audit(a.out,a.request_owner=='local'))))
 if __name__=='__main__':main()
