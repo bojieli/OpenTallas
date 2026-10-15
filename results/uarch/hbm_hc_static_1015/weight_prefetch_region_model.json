@@ -56,10 +56,11 @@
     "actual_sectors_per_half": 320,
     "physical_sectors_per_stack": 4096,
     "actual_payload_bytes_four_rows_per_stack": 81920,
-    "region_storage_address": "region*512+ordinal; chip=sector[11:10], row=sector[9:3], lane=ordinal[2:0]",
+    "region_storage_address": "logical region={epoch[1:0],half}; SRAM row9={half,epoch[1:0],ordinal[8:3]}; chip={half,epoch[1]}, localaddr={epoch[0],ordinal[8:3]}, lane=ordinal[2:0]",
     "same_macro_read_write_ports": true,
     "shared_serializer_lanes": 4,
-    "row_store_complete_age": 655
+    "row_store_complete_age": 655,
+    "opposite_halves_in_distinct_macros": true
   },
   "ownership": {
     "region_bits_before": 1,
@@ -99,5 +100,6 @@
     "physical owner census/pinreg/clock roots and assigned slot"
   ],
   "hardware_install_ACK": false,
-  "full_native_qualified": false
+  "full_native_qualified": false,
+  "canonical_P1_gap": "Current four-AP640-cycle row cannot meet canonical G25 P1 stride0 ~355-cycle budget; P6/P8 are separate component/MTP profiles. Future P1 dual-half reads require new actual proof; current packing only makes distinct macro read ports structurally possible."
 }
