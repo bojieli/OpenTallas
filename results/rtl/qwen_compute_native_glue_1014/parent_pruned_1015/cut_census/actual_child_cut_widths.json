@@ -1,0 +1,168 @@
+{
+  "rqr_south_1": {
+    "INPUT": 256
+  },
+  "tx7_r0_lo": {
+    "INPUT": 70
+  },
+  "tx6_r0_lo": {
+    "INPUT": 70
+  },
+  "tx5_r0_lo": {
+    "INPUT": 70
+  },
+  "tx4_r0_lo": {
+    "INPUT": 70
+  },
+  "tx3_r0_lo": {
+    "INPUT": 70
+  },
+  "tx2_r0_lo": {
+    "INPUT": 70
+  },
+  "tx1_r0_lo": {
+    "INPUT": 70
+  },
+  "tx0_r0_lo": {
+    "INPUT": 70
+  },
+  "rqr_south_2": {
+    "INPUT": 256
+  },
+  "rqr_south_3": {
+    "INPUT": 256
+  },
+  "s2_word_0": {
+    "INPUT": 512
+  },
+  "s2_word_1": {
+    "INPUT": 512
+  },
+  "node_stage_n_y": {
+    "INPUT": 1
+  },
+  "node_stage_t_out": {
+    "INPUT": 1
+  },
+  "rqr_north_0": {
+    "INPUT": 256
+  },
+  "rqr_north_1": {
+    "INPUT": 256
+  },
+  "rqr_north_2": {
+    "INPUT": 256
+  },
+  "rqr_north_3": {
+    "INPUT": 256
+  },
+  "mq_wrom_0": {
+    "INPUT": 256,
+    "OUTPUT": 256
+  },
+  "mq_wrom_1": {
+    "INPUT": 256,
+    "OUTPUT": 256
+  },
+  "rqr_south_0": {
+    "INPUT": 256
+  },
+  "mq_wrom_2": {
+    "INPUT": 256,
+    "OUTPUT": 256
+  },
+  "mq_wrom_3": {
+    "INPUT": 256,
+    "OUTPUT": 256
+  },
+  "strap": {
+    "OUTPUT": 16
+  },
+  "face_tap": {
+    "OUTPUT": 142
+  },
+  "u_logic.genblk4.g_ndh.u_node": {
+    "INPUT": 2,
+    "OUTPUT": 1
+  },
+  "node_stage_n_a": {
+    "OUTPUT": 2
+  },
+  "node_stage_n_b": {
+    "OUTPUT": 2
+  },
+  "return_south_0": {
+    "OUTPUT": 256
+  },
+  "return_south_1": {
+    "OUTPUT": 256
+  },
+  "return_south_2": {
+    "OUTPUT": 256
+  },
+  "return_south_3": {
+    "OUTPUT": 256
+  },
+  "return_north_0": {
+    "OUTPUT": 256
+  },
+  "return_north_1": {
+    "OUTPUT": 256
+  },
+  "return_north_2": {
+    "OUTPUT": 256
+  },
+  "return_north_3": {
+    "OUTPUT": 256
+  },
+  "s2_x_full": {
+    "OUTPUT": 120
+  },
+  "reset_branch_w_low": {
+    "OUTPUT": 1
+  },
+  "u_logic.g_rom_pipe.g_rph.g_rb\\[4\\].g_hd.u_rp": {
+    "INPUT": 14,
+    "OUTPUT": 1024
+  },
+  "u_logic.g_rom_pipe.g_rph.g_rb\\[3\\].g_hd.u_rp": {
+    "INPUT": 14,
+    "OUTPUT": 1024
+  },
+  "u_logic.g_rom_pipe.g_rph.g_rb\\[2\\].g_hd.u_rp": {
+    "INPUT": 14,
+    "OUTPUT": 1024
+  },
+  "u_logic.g_rom_pipe.g_rph.g_rb\\[1\\].g_hd.u_rp": {
+    "INPUT": 14,
+    "OUTPUT": 1024
+  },
+  "u_logic.g_rom_pipe.g_rph.g_rb\\[0\\].g_hd.u_rp": {
+    "INPUT": 14,
+    "OUTPUT": 1024
+  },
+  "u_logic.u_me.g_hier.g_sl\\[0\\].g_hd.u_lh": {
+    "OUTPUT": 9
+  },
+  "u_logic.u_me.g_hier.g_sl\\[1\\].g_hd.u_lh": {
+    "OUTPUT": 9
+  },
+  "u_logic.u_me.g_hier.g_sl\\[2\\].g_hd.u_lh": {
+    "OUTPUT": 9
+  },
+  "u_logic.u_me.g_hier.g_sl\\[3\\].g_hd.u_lh": {
+    "OUTPUT": 9
+  },
+  "u_logic.u_me.g_hier.g_sl\\[4\\].g_hd.u_lh": {
+    "OUTPUT": 9
+  },
+  "u_logic.u_me.g_hier.g_sl\\[5\\].g_hd.u_lh": {
+    "OUTPUT": 9
+  },
+  "u_logic.u_me.g_hier.g_sl\\[6\\].g_hd.u_lh": {
+    "OUTPUT": 9
+  },
+  "u_logic.u_me.g_hier.g_sl\\[7\\].g_hd.u_lh": {
+    "OUTPUT": 9
+  }
+}
