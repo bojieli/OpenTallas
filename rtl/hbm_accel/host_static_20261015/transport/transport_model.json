@@ -1,0 +1,22 @@
+{
+  "schema": "opentallas.hbm.host-cfg-transport-sizing.v1",
+  "scope": "elastic offdie HOST installation boundary only; no runtime scheduler or execution handshake",
+  "cdc": {
+    "storage": "one49bit request mailbox,34bit response mailbox; independent AW/W/AR holding slots;2FF request andcompletion synchronizers",
+    "clocks": "actual900/1200 orsameclock; functional arbitrary-phase support, physical CDC/reset signoff OPEN",
+    "native_execution_latency_added": 0,
+    "estimated_ff_upper_bound": 300,
+    "area_status": "map after functional proof; no physical reuse"
+  },
+  "demux": {
+    "targets": 3,
+    "addresses": [
+      "QDQ:F20/24/28/2c/30",
+      "SUserial:F34/38/3c/40/44",
+      "SUstream:E34/38/3c/40/44 rewrittenFxx"
+    ],
+    "estimated_ff_upper_bound": 600,
+    "invalid": "SLVERR2, no downstream request"
+  },
+  "cost": "init-only extra mailbox synchronization/handshakes; measure full image installation. No whole-token acceptance or inheritedviews."
+}
