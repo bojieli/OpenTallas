@@ -335,20 +335,30 @@ module ot_hgi_sm_xload_static #(
         wb_buf <= qtl[8]; wb_lane <= {qtl[7:5], qtl[4:2] ^ ((MUT == 3) ? 3'd1 : 3'd0)};
         wd_lo <= qtl[1] ? {qe_lo, qq_lo} : 266'd0; wd_hi <= qtl[0] ? {qe_hi, qq_hi} : 266'd0;
     end
-    // lane store: lw[buffer][parity][p][j]; cleared once a command (start), written by every tpair for all (p < P, j < LA)
-    reg [265:0] lw [0:1][0:1][0:PMAX*8-1];
-    always @(posedge clk) begin
-        if (start_bd) begin
-            for (integer bb = 0; bb < 2; bb = bb + 1) for (integer aa = 0; aa < 2; aa = aa + 1)
-                for (integer ll = 0; ll < PMAX*8; ll = ll + 1) lw[bb][aa][ll] <= 266'd0;
-        end else if (wv_b) begin
-            lw[wb_buf][0][wb_lane] <= wd_lo; lw[wb_buf][1][wb_lane] <= wd_hi;
-        end
-    end
-    // emission: beat ebb of address parity ea of tpair ek (edges ew2 < 2 nb of its window)
+    // lane store: flops (not a RAM: 4 x PMAX x 8 words of 266 b, written one (buffer, p, j) pair an edge, read as a
+    // whole fragment); cleared once a command (start), rewritten by every tpair for all (p < P, j < LA)
     localparam integer NBQ = (PMAX * XC + 2047) / 2048;
     wire bd_em = be_on && ew2 < {3'd0, nb, 1'b0};
     reg bs_v, bs_last, bs_buf, bs_a; reg [6:0] bs_b, bs_addr;
+    wire [NBQ*2048-1:0] frag_ba [0:3];      // fragment of (buffer, parity) = index 2 buffer + parity
+    genvar gbb, gaa, gll;
+    generate for (gbb = 0; gbb < 2; gbb = gbb + 1) begin : g_lb
+        for (gaa = 0; gaa < 2; gaa = gaa + 1) begin : g_la
+            wire [NBQ*2048-1:0] fr;
+            for (gll = 0; gll < PMAX*8; gll = gll + 1) begin : g_lw
+                reg [265:0] w;
+                always @(posedge clk)
+                    if (start_bd) w <= 266'd0;
+                    else if (wv_b && wb_buf == gbb[0] && wb_lane == gll[5:0]) w <= (gaa == 0) ? wd_lo : wd_hi;
+                assign fr[(gll/8)*XC + 266*(gll%8) +: 266] = w;
+                if (gll % 8 == 7) begin : g_gap
+                    localparam integer GE = ((gll / 8) == PMAX - 1) ? NBQ * 2048 : (gll / 8 + 1) * XC;
+                    assign fr[GE - 1 : (gll/8)*XC + 266*8] = '0;
+                end
+            end
+            assign frag_ba[gbb*2 + gaa] = fr;
+        end
+    end endgenerate
     always @(posedge clk or negedge rn) begin
         if (!rn) begin bs_v <= 1'b0; bs_last <= 1'b0; end
         else begin bs_v <= bd_em; bs_last <= bd_em && ek == gtp - 10'd1 && ea && ebb == nb - 7'd1; end
@@ -356,13 +366,7 @@ module ot_hgi_sm_xload_static #(
     always @(posedge clk) begin
         bs_buf <= ek[0]; bs_a <= ea; bs_b <= ebb; bs_addr <= 7'({ek[5:0], ea}) + xb;   // {g mod 16, t} + x slot base
     end
-    // fragment of the selected (buffer, parity): static lane positions, zero elsewhere
-    reg [NBQ*2048-1:0] frag;
-    always @* begin
-        frag = '0;
-        for (integer pq = 0; pq < PMAX; pq = pq + 1) for (integer jq = 0; jq < 8; jq = jq + 1)
-            frag[pq*XC + 266*jq +: 266] = lw[bs_buf][bs_a][pq*8 + jq];
-    end
+    wire [NBQ*2048-1:0] frag = frag_ba[{bs_buf, bs_a}];
     reg bq_v, bq_last; reg [6:0] bq_addr, bq_b; reg [2047:0] bq_d;
     always @(posedge clk or negedge rn) begin
         if (!rn) begin bq_v <= 1'b0; bq_last <= 1'b0; end else begin bq_v <= bs_v; bq_last <= bs_last; end
