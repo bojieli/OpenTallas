@@ -1,0 +1,5 @@
+PASS staticKV128 timing PCs128 K256 V256 sectors65536 period1024ps profilecycles2200 exactProductionReplay noCreditPort
+- rtl/test/qwen_static_kv/tb_static_kv_timing.sv:80: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 5us; walltime 5.009 s; speed 902.719 ns/s
+- Verilator: cpu 5.009 s on 1 threads; allocated 24 MB

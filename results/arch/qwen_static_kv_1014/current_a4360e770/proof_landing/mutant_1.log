@@ -1,0 +1,4 @@
+FAIL staticlanding ctx8192 rows16384 errors0 fault00000001 mode1
+[3769000] %Fatal: tb_static_landing.sv:100: Assertion failed in tb_static_landing
+%Error: rtl/test/qwen_static_kv/tb_static_landing.sv:100: Verilog $stop
+Aborting...

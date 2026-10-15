@@ -1,0 +1,5 @@
+BAD host native read data
+FAIL persistent staticKV host controller errors1 mode4
+[4948000000] %Fatal: tb_static_host_controller.sv:107: Assertion failed in tb_static_host_controller
+%Error: rtl/test/qwen_static_kv/tb_static_host_controller.sv:107: Verilog $stop
+Aborting...

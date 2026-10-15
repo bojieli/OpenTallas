@@ -1,0 +1,16 @@
+BAD controller sticky fault phase1 t402
+BAD controller sticky fault phase1 t403
+BAD controller sticky fault phase1 t404
+BAD controller sticky fault phase1 t405
+BAD KV row phase1 index71 sec71
+BAD controller sticky fault phase1 t406
+BAD KV row phase1 index72 sec72
+BAD controller sticky fault phase1 t407
+BAD KV row phase1 index73 sec73
+BAD controller sticky fault phase1 t408
+BAD KV row phase1 index74 sec74
+BAD controller sticky fault phase1 t409
+FAIL persistent staticKV host controller errors2439 mode3
+[4948000000] %Fatal: tb_static_host_controller.sv:107: Assertion failed in tb_static_host_controller
+%Error: rtl/test/qwen_static_kv/tb_static_host_controller.sv:107: Verilog $stop
+Aborting...

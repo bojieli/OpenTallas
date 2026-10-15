@@ -1,0 +1,14 @@
+BAD replay colmask t97
+BAD replay column p0 t98
+BAD replay column p1 t98
+BAD replay column p2 t98
+BAD replay column p3 t98
+BAD replay column p4 t98
+BAD replay column p5 t98
+BAD replay column p6 t98
+BAD replay column p7 t98
+BAD replay column p8 t98
+FAIL staticKV128 timing errors67073 mode1
+[4522000000] %Fatal: tb_static_kv_timing.sv:79: Assertion failed in tb_static_kv_timing
+%Error: rtl/test/qwen_static_kv/tb_static_kv_timing.sv:79: Verilog $stop
+Aborting...
