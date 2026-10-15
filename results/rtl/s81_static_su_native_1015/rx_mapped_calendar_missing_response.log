@@ -1,0 +1,27 @@
+RX_WRITE cycle=38 row=1024 value=40400000
+RX_WRITE cycle=39 row=1025 value=40400000
+RX_WRITE cycle=40 row=1026 value=40400000
+RX_WRITE cycle=41 row=1027 value=40400000
+RX_WRITE cycle=42 row=1028 value=40400000
+RX_WRITE cycle=44 row=1029 value=40400000
+RX_WRITE cycle=45 row=1030 value=40400000
+RX_WRITE cycle=46 row=1031 value=40400000
+RX_WRITE cycle=47 row=1032 value=40400000
+RX_WRITE cycle=48 row=1033 value=40400000
+RX_WRITE cycle=49 row=1034 value=40400000
+RX_WRITE cycle=50 row=1035 value=40400000
+RX_WRITE cycle=51 row=1036 value=40400000
+RX_WRITE cycle=52 row=1037 value=40400000
+RX_WRITE cycle=53 row=1038 value=40400000
+RX_WRITE cycle=54 row=1039 value=40400000
+RX_WRITE cycle=55 row=1040 value=40400000
+RX_WRITE cycle=56 row=1041 value=40400000
+RX_WRITE cycle=57 row=1042 value=40400000
+RX_WRITE cycle=58 row=1043 value=40400000
+RX_WRITE cycle=59 row=1044 value=40400000
+RX_WRITE cycle=60 row=1045 value=40400000
+RX_WRITE cycle=61 row=1046 value=40400000
+STATIC_RX nw=23 errors=0 done=1 first=38 last=61 fault=1 code=3 cycle=120
+[21870000] %Fatal: tb_s81_su_static_rx.sv:133: Assertion failed in tb_s81_su_static_rx: STATIC_RX FAIL
+%Error: rtl/dsrom_sys/s81_suhc/test/tb_s81_su_static_rx.sv:133: Verilog $stop
+Aborting...

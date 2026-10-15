@@ -1,0 +1,58 @@
+{
+  "schema": "opentallas.hbm.engram.partition.gate.v1",
+  "status": "pass",
+  "compiler": [
+    {
+      "layer": 1,
+      "ranks_checked": 96,
+      "metadata_cases": 9
+    },
+    {
+      "layer": 14,
+      "ranks_checked": 96,
+      "metadata_cases": 9
+    }
+  ],
+  "actual_rtl": [
+    {
+      "name": "baseline",
+      "returncode": 0,
+      "stdout": "PASS descriptors=6576 missing-slot and row-bound faults\nproof_v2/tb.sv:7149: $finish called at 71316000 (1ps)"
+    },
+    {
+      "name": "rank_mutant",
+      "returncode": 1,
+      "stdout": "FATAL: proof_v2/tb.sv:14: descriptor mismatch row0 rank1 expected0 index0 valid1 fault0 local0/0 slot0/0 sid8/0 idx0 done0 addr103079215104\n       Time: 46000  Scope: tb.put"
+    }
+  ],
+  "token_vectors": 274,
+  "descriptors": 6576,
+  "calendar": "start at edge0, 24 row inputs/registered descriptors at edges1..24; done edge24; no ready",
+  "metadata": {
+    "old_words": 144,
+    "new_words": 232,
+    "added_bytes_per_rank": 352,
+    "old_sectors": 18,
+    "new_sectors": 29
+  },
+  "max_home_bytes": 13824600768,
+  "preserved_rows": [
+    384006168,
+    384016682
+  ],
+  "row_bytes": 288,
+  "native_full_layer_qualified": false,
+  "physical_qualified": false,
+  "limitations": [
+    "No actual hash producer hookup",
+    "HBM external request descriptors only: DMA return and ROW_GATHER join open",
+    "Compiler simulator checkpoint callback remains diagnostic, not on-chip hardware",
+    "Full-program static calendar and throughput/route costs unmeasured"
+  ],
+  "source_sha256": {
+    "rtl/hbm_accel/engram_static_20261015/ot_hbm_engram_home_dispatch.sv": "1132b94038342443ba24380f1a1e697ebb8c7aa7c2fea231d2e83a991f8a94f9",
+    "tools/hbm_engram_partition_gate.py": "b8b54220850455e641dfeab268128738f8bc1ea04eae5d42cb126312da43a061",
+    "tools/hbm_engram_partition.py": "c3b25669328800f14949c1b27937bb26758470e7967f9327dd3e033eeb61e2d8",
+    "tools/hgi_sim/ds_native.py": "5ad0bdab07f3b99fad6ad119896a830d9bb2fa33efb678df35c0874854d56e0f"
+  }
+}

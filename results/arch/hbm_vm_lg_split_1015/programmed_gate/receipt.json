@@ -1,0 +1,39 @@
+{
+  "schema": "opentallas.hbm.actual-programme-lg-bank.v1",
+  "source_sha256": {
+    "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv": "31acf6679c2fcd95c2abd3897daae041710f7c7a5f318d9d2e1f8541c8b377a4",
+    "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_split.sv": "7530908d1cccb63586654d293cf5e073995ed2e31b70f8ae89173d0b371e7123",
+    "rtl/hbm_accel/generic/vm/static/ot_vms_bank_static.sv": "7b2e2fbafead30cbabc427303bb339da070645637af9d1a69f0dbdaa0a88ee53",
+    "rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv": "2a3f380c413bef2676087338d00d18cf869562e9bb611fc93c13251f3fb3f197",
+    "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_static.sv": "54e65855af142d95248e7d14df42fabdc404f9d1316446c0f21253c1829a4e70",
+    "rtl/hbm_accel/generic/vm/static/tb_hbm_vm_lg_static_programmed.sv": "e26ae1c68e2ed51583cb83334cb9a9b2505f55ae1fc1e76a77ee70bb1dc6ab69",
+    "results/arch/hbm_vm_lg_split_1015/programme/NE_812.hex": "083cc8a3533cc4e5d61f5ba69ba5014ead31d47d976fda857529ad3729d430ae"
+  },
+  "actual_composition": "One actual native NE W147 programme SRAM supplies independent localread/localwrite24 and real RG7/WG3 bank port calendars, three actual split LG stages24independentleafroots, eight actual VM banks24SRAMs. Source request data generators only supply engine records, never bank/tap selectors.",
+  "positive": {
+    "host": "ot-agidock128",
+    "unit": "oth-ubuntu-3779751-1792053819",
+    "exit": 0,
+    "programme_words": 812,
+    "writes": 3072,
+    "exact_readbacks": 3072,
+    "aggregate_sectors_per_cycle": 8,
+    "read_edges": [
+      10,
+      14,
+      18
+    ],
+    "write_edges": [
+      7,
+      11,
+      15
+    ]
+  },
+  "mutant": {
+    "unit": "oth-ubuntu-3780024-1792053849",
+    "gate_exit": 0,
+    "mutant_exit": "expected nonzero actualbankreadback1242 got0 expected9e3779b9",
+    "mechanism": "wrong local/far write mux, fixed programme unchanged"
+  },
+  "scope_limits": "Actual hostLCP\u2192programme\u2192LG\u2192VM fulljoin not yetrun; this gate uses real programme configuration pins. Actual SU/SFU/HC arithmetic request producers and nativephysicalleafclosure remain separate. Actualbanksource9b6420 preservesindependentrr/egpayloads/CEprefix; no earliergatehashsubstitute."
+}

@@ -1,0 +1,955 @@
+{
+  "source_tree": "e47d9b14de2763eb629bbbf39063f44a58c2bef3",
+  "scope": "Current exported TT ETM boundary-relative audit; TT/FF routed closures are pathfinding, not final SS signoff. Twelve arithmetic pc2 views meet native launch/capture/spread, legacy ctl fails. Whole static Markov composition remains incomplete. No new routing or protocol qualification implied.",
+  "views": [
+    {
+      "cell": "ot_s81_markov_chunk0_native",
+      "view": "physical/ref_tile/s81_markov_chunk0_native/views/ot_s81_markov_chunk0_native",
+      "lib_cell": "ot_s81_markov_chunk0_native",
+      "insertion": true,
+      "ref_src": [
+        "insertion.json boundary mean"
+      ],
+      "R_ps": 86.6,
+      "spread_ps": 2.8,
+      "outputs": 34,
+      "inputs": 34,
+      "launch_ps": 182.7,
+      "launch_pin": "y[10]",
+      "capture_ps": 125.0,
+      "capture_pin": "vin",
+      "launch_over": 0,
+      "capture_over": 0,
+      "comb_pins": 0,
+      "comb_first": [],
+      "pass": true,
+      "fail_why": "",
+      "job": "s81_markov_chunk0_native-pc2-fd21a1202",
+      "status": "CLOSED",
+      "source_commit": "fd21a1202f41086ba1b470972fc5acd136335d20",
+      "metrics": {
+        "setup_corner": "tt",
+        "ss_ps": 336.07,
+        "ff_ps": 29.01,
+        "ss_sensitivity_ps": 241.84,
+        "drc": 0
+      },
+      "bench_results": {
+        "bench_lint": {
+          "expect": "pass",
+          "rc": 0,
+          "ok": true,
+          "tail": "- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050\n- Verilator: Built from 0.236 MB sources in 35 modules, into 0.010 MB in 4 C++ files needing 0.000 MB\n- Verilator: Walltime 0.145 s (elab=0.034, cvt=0.098, bld=0.000); cpu 0.145 s on 1 threads; allocated 45.379 MB\nlint-ok\n",
+          "track": "parallel"
+        },
+        "bench_native_exact_mutant": {
+          "expect": "pass",
+          "rc": 0,
+          "ok": true,
+          "tail": "unk0_mut.sv:50: MARKOV_NATIVE_EPOCH_MISMATCH out_bits\\n       Time: 1830000  Scope: tb_markov_row\\nFATAL: /srv/opentallas/claude/closure-loop/s81_markov_chunk0_native-pc2-fd21a1202/native_proof/chunk0_mut.sv:34: nonexact n=0 got=c1839833 golden=c19248af\\n       Time: 1830000  Scope: tb_markov_row\\n'}\n{'kind': 'fault', 'rc': 0, 'expected': 'pass', 'ok': True, 'stdout': 'PASS faultcases nonfinite head/nonfinite product/overlapping start\\n/srv/opentallas/claude/closure-loop/s81_markov_chunk0_native-pc2-fd21a1202/native_proof/fault.sv:27: $finish called at 7230000 (1ps)\\n'}\nall_native_checks_PASS\n",
+          "track": "parallel"
+        },
+        "bench_native_mutant_dut": {
+          "expect": "fail",
+          "rc": 1,
+          "ok": true,
+          "tail": "MARKOV_NATIVE_DUT FAIL chunk0_mut _dut/chunk0_mut.sv:50: MARKOV_NATIVE_EPOCH_MISMATCH out_bits\n       Time: 1830000  Scope: tb_markov_row\nFATAL: /srv/opentallas/claude/closure-loop/s81_markov_chunk0_native-pc2-fd21a1202/native_dut/chunk0_mut.sv:34: nonexact n=0 got=c1839833 golden=c19248af\n       Time: 1830000  Scope: tb_markov_row\n\n",
+          "track": "parallel"
+        }
+      },
+      "child_lint": {
+        "lef": "/srv/opentallas/claude/closure-loop/s81_markov_chunk0_native-pc2-fd21a1202/record/views/ot_s81_markov_chunk0_native/ot_s81_markov_chunk0_native.lef",
+        "checks": "cf",
+        "fails": [],
+        "summary": "ot_s81_markov_chunk0_native 43.2 x 34.56: PG M5 VDD 8 stripes (88% spread, 100% cov) / VSS 8 stripes (88% spread, 100% cov); strap M6; face pins 69 blocked-above 0 blocked-same 0; pockets M5 0 (closed)",
+        "at": "2026-10-14T23:09:25-07:00"
+      },
+      "view_sha256": {
+        "ot_s81_markov_chunk0_native.lef": "adca0a0ac8ae99229c3979d71ceee38b863b465932066a326867db0b5c15c722",
+        "abstract.json": "8d40e3dde30486120470068b932c315ab3bb1e7aae038ce60c331cc2a787327d",
+        "ot_s81_markov_chunk0_native_ss.lib": "20b10b1030af99d341b034c1c2915a42bdca5bdc277bf59220ca054620c8f673",
+        "ot_s81_markov_chunk0_native_ff.lib": "40e65601a8ae7e18fcb4a9cac95fb04cf92d680a2b8e416fada13ff6145ea6a8",
+        "insertion.json": "c960390f52eabfc64f158156a1d9e77c02bcfcf2d621b1e334289f5fea593f38",
+        "ot_s81_markov_chunk0_native_tt.lib": "61266224a3f0745d06288bdb7128deb223b9a16b4aa0d8746c9498040fd51a29",
+        "child_lint.json": "8ba8f944f973de52589564b3e2c4d2a3b90f709fa48566f72451d5a4bf8f91bb"
+      },
+      "native_budget_pass": true
+    },
+    {
+      "cell": "ot_s81_markov_chunk1_native",
+      "view": "physical/ref_tile/s81_markov_chunk1_native/views/ot_s81_markov_chunk1_native",
+      "lib_cell": "ot_s81_markov_chunk1_native",
+      "insertion": true,
+      "ref_src": [
+        "insertion.json boundary mean"
+      ],
+      "R_ps": 118.7,
+      "spread_ps": 9.0,
+      "outputs": 34,
+      "inputs": 66,
+      "launch_ps": 190.6,
+      "launch_pin": "y[21]",
+      "capture_ps": 134.3,
+      "capture_pin": "p[15]",
+      "launch_over": 0,
+      "capture_over": 0,
+      "comb_pins": 0,
+      "comb_first": [],
+      "pass": true,
+      "fail_why": "",
+      "job": "s81_markov_chunk1_native-pc2-fd21a1202",
+      "status": "CLOSED",
+      "source_commit": "fd21a1202f41086ba1b470972fc5acd136335d20",
+      "metrics": {
+        "setup_corner": "tt",
+        "ss_ps": 237.19,
+        "ff_ps": 25.25,
+        "ss_sensitivity_ps": -39.65,
+        "drc": 0
+      },
+      "bench_results": {
+        "bench_lint": {
+          "expect": "pass",
+          "rc": 0,
+          "ok": true,
+          "tail": "- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050\n- Verilator: Built from 0.236 MB sources in 35 modules, into 0.010 MB in 4 C++ files needing 0.000 MB\n- Verilator: Walltime 0.090 s (elab=0.023, cvt=0.059, bld=0.000); cpu 0.090 s on 1 threads; allocated 45.387 MB\nlint-ok\n",
+          "track": "parallel"
+        },
+        "bench_native_exact_mutant": {
+          "expect": "pass",
+          "rc": 0,
+          "ok": true,
+          "tail": "RKOV_NATIVE_EPOCH_MISMATCH out_bits\\n       Time: 1830000  Scope: tb_markov_row\\nFATAL: /srv/opentallas-scratch2/claude/closure-loop/s81_markov_chunk1_native-pc2-fd21a1202/native_proof/chunk1_mut.sv:34: nonexact n=0 got=c13a9266 golden=c19248af\\n       Time: 1830000  Scope: tb_markov_row\\n'}\n{'kind': 'fault', 'rc': 0, 'expected': 'pass', 'ok': True, 'stdout': 'PASS faultcases nonfinite head/nonfinite product/overlapping start\\n/srv/opentallas-scratch2/claude/closure-loop/s81_markov_chunk1_native-pc2-fd21a1202/native_proof/fault.sv:27: $finish called at 7230000 (1ps)\\n'}\nall_native_checks_PASS\n",
+          "track": "parallel"
+        },
+        "bench_native_mutant_dut": {
+          "expect": "fail",
+          "rc": 1,
+          "ok": true,
+          "tail": "MARKOV_NATIVE_DUT FAIL chunk1_mut k1_mut.sv:50: MARKOV_NATIVE_EPOCH_MISMATCH out_bits\n       Time: 1830000  Scope: tb_markov_row\nFATAL: /srv/opentallas-scratch2/claude/closure-loop/s81_markov_chunk1_native-pc2-fd21a1202/native_dut/chunk1_mut.sv:34: nonexact n=0 got=c13a9266 golden=c19248af\n       Time: 1830000  Scope: tb_markov_row\n\n",
+          "track": "parallel"
+        }
+      },
+      "child_lint": {
+        "lef": "/srv/opentallas-scratch2/claude/closure-loop/s81_markov_chunk1_native-pc2-fd21a1202/record/views/ot_s81_markov_chunk1_native/ot_s81_markov_chunk1_native.lef",
+        "checks": "cf",
+        "fails": [],
+        "summary": "ot_s81_markov_chunk1_native 43.2 x 36.72: PG M5 VDD 8 stripes (88% spread, 100% cov) / VSS 8 stripes (88% spread, 100% cov); strap M6; face pins 101 blocked-above 0 blocked-same 0; pockets M5 0 (closed)",
+        "at": "2026-10-14T23:10:26-07:00"
+      },
+      "view_sha256": {
+        "ot_s81_markov_chunk1_native_ff.lib": "2714f9afbaf82400f2105c680095d8fb5337e7b0b1f5ee392d6cc174a8921b88",
+        "abstract.json": "bab575703ebb30347f2e7208562d42901ea5d44c2cc869d4c7f5856e5b461426",
+        "insertion.json": "a00a56b9e3fbfa9f21eaba38773c568850440ad1118f057c2107bec9cb97f7e1",
+        "ot_s81_markov_chunk1_native_ss.lib": "a335df8aed9c2193c3943226b7670b332b0050c85f01b7cc1c5432bf090bc693",
+        "child_lint.json": "ad879f600201c36dd25b17ccfd41963d1d2f68a3b38d62bbf3a795b696c15403",
+        "ot_s81_markov_chunk1_native_tt.lib": "22f3b55c59ff7b11a3b4ea6b664613c23f88d9d68e57900b29a363b0f0f91589",
+        "ot_s81_markov_chunk1_native.lef": "82babf761d366406bd3b82a3002aa9a368b6fa69a7e3c68e77908f5ae057c7b1"
+      },
+      "native_budget_pass": true
+    },
+    {
+      "cell": "ot_s81_markov_chunk2_native",
+      "view": "physical/ref_tile/s81_markov_chunk2_native/views/ot_s81_markov_chunk2_native",
+      "lib_cell": "ot_s81_markov_chunk2_native",
+      "insertion": true,
+      "ref_src": [
+        "insertion.json boundary mean"
+      ],
+      "R_ps": 108.6,
+      "spread_ps": 14.9,
+      "outputs": 34,
+      "inputs": 66,
+      "launch_ps": 185.3,
+      "launch_pin": "y[10]",
+      "capture_ps": 133.4,
+      "capture_pin": "p[9]",
+      "launch_over": 0,
+      "capture_over": 0,
+      "comb_pins": 0,
+      "comb_first": [],
+      "pass": true,
+      "fail_why": "",
+      "job": "s81_markov_chunk2_native-pc2-fd21a1202",
+      "status": "CLOSED",
+      "source_commit": "fd21a1202f41086ba1b470972fc5acd136335d20",
+      "metrics": {
+        "setup_corner": "tt",
+        "ss_ps": 203.51,
+        "ff_ps": 23.24,
+        "ss_sensitivity_ps": -82.83,
+        "drc": 0
+      },
+      "bench_results": {
+        "bench_lint": {
+          "expect": "pass",
+          "rc": 0,
+          "ok": true,
+          "tail": "- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050\n- Verilator: Built from 0.236 MB sources in 35 modules, into 0.010 MB in 4 C++ files needing 0.000 MB\n- Verilator: Walltime 0.078 s (elab=0.021, cvt=0.049, bld=0.000); cpu 0.078 s on 1 threads; allocated 45.387 MB\nlint-ok\n",
+          "track": "parallel"
+        },
+        "bench_native_exact_mutant": {
+          "expect": "pass",
+          "rc": 0,
+          "ok": true,
+          "tail": "RKOV_NATIVE_EPOCH_MISMATCH out_bits\\n       Time: 1830000  Scope: tb_markov_row\\nFATAL: /srv/opentallas-scratch2/claude/closure-loop/s81_markov_chunk2_native-pc2-fd21a1202/native_proof/chunk2_mut.sv:34: nonexact n=0 got=c15f4dea golden=c19248af\\n       Time: 1830000  Scope: tb_markov_row\\n'}\n{'kind': 'fault', 'rc': 0, 'expected': 'pass', 'ok': True, 'stdout': 'PASS faultcases nonfinite head/nonfinite product/overlapping start\\n/srv/opentallas-scratch2/claude/closure-loop/s81_markov_chunk2_native-pc2-fd21a1202/native_proof/fault.sv:27: $finish called at 7230000 (1ps)\\n'}\nall_native_checks_PASS\n",
+          "track": "parallel"
+        },
+        "bench_native_mutant_dut": {
+          "expect": "fail",
+          "rc": 1,
+          "ok": true,
+          "tail": "MARKOV_NATIVE_DUT FAIL chunk2_mut k2_mut.sv:50: MARKOV_NATIVE_EPOCH_MISMATCH out_bits\n       Time: 1830000  Scope: tb_markov_row\nFATAL: /srv/opentallas-scratch2/claude/closure-loop/s81_markov_chunk2_native-pc2-fd21a1202/native_dut/chunk2_mut.sv:34: nonexact n=0 got=c15f4dea golden=c19248af\n       Time: 1830000  Scope: tb_markov_row\n\n",
+          "track": "parallel"
+        }
+      },
+      "child_lint": {
+        "lef": "/srv/opentallas-scratch2/claude/closure-loop/s81_markov_chunk2_native-pc2-fd21a1202/record/views/ot_s81_markov_chunk2_native/ot_s81_markov_chunk2_native.lef",
+        "checks": "cf",
+        "fails": [],
+        "summary": "ot_s81_markov_chunk2_native 43.2 x 60.48: PG M5 VDD 8 stripes (88% spread, 100% cov) / VSS 8 stripes (88% spread, 100% cov); strap M6; face pins 101 blocked-above 0 blocked-same 0; pockets M5 0 (closed)",
+        "at": "2026-10-14T23:10:24-07:00"
+      },
+      "view_sha256": {
+        "ot_s81_markov_chunk2_native_tt.lib": "c763658a72e72bf5545ed3a2a82078a51b9dd4173a9a511a37befd2a3fb7c6fc",
+        "abstract.json": "3d9f580cb849116a37144a280df2fe9633b97435c2bffbe564896cd75c3a4aca",
+        "ot_s81_markov_chunk2_native_ff.lib": "ad19c161788f8fb07e3239c1d1e57cdead963a31f431e3056c1fe7716d46424a",
+        "insertion.json": "b4e75c0d0563a2d21dc92dc1fd9a9c079ea567845e7276a2dbba6ef62e535322",
+        "ot_s81_markov_chunk2_native_ss.lib": "ccdefc4ceb8adf5ee54254b385b9d200f91b5d6ec0f243bed0c2b196e84ab165",
+        "ot_s81_markov_chunk2_native.lef": "8c1a5fe224761bbce6c6507628ef46c567306f15d213e9cc7db97e3d416ac9ee",
+        "child_lint.json": "b15a0d37423ba9a60e666eeb937e45396b2fd9fd0d12741d171b7f96faec12d6"
+      },
+      "native_budget_pass": true
+    },
+    {
+      "cell": "ot_s81_markov_chunk3_native",
+      "view": "physical/ref_tile/s81_markov_chunk3_native/views/ot_s81_markov_chunk3_native",
+      "lib_cell": "ot_s81_markov_chunk3_native",
+      "insertion": true,
+      "ref_src": [
+        "insertion.json boundary mean"
+      ],
+      "R_ps": 113.6,
+      "spread_ps": 10.2,
+      "outputs": 34,
+      "inputs": 66,
+      "launch_ps": 198.5,
+      "launch_pin": "bad",
+      "capture_ps": 135.2,
+      "capture_pin": "sum[30]",
+      "launch_over": 0,
+      "capture_over": 0,
+      "comb_pins": 0,
+      "comb_first": [],
+      "pass": true,
+      "fail_why": "",
+      "job": "s81_markov_chunk3_native-pc2-fd21a1202",
+      "status": "CLOSED",
+      "source_commit": "fd21a1202f41086ba1b470972fc5acd136335d20",
+      "metrics": {
+        "setup_corner": "tt",
+        "ss_ps": 177.89,
+        "ff_ps": 21.84,
+        "ss_sensitivity_ps": -106.58,
+        "drc": 0
+      },
+      "bench_results": {
+        "bench_lint": {
+          "expect": "pass",
+          "rc": 0,
+          "ok": true,
+          "tail": "- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050\n- Verilator: Built from 0.236 MB sources in 35 modules, into 0.010 MB in 4 C++ files needing 0.000 MB\n- Verilator: Walltime 0.088 s (elab=0.024, cvt=0.056, bld=0.000); cpu 0.088 s on 1 threads; allocated 45.383 MB\nlint-ok\n",
+          "track": "parallel"
+        },
+        "bench_native_exact_mutant": {
+          "expect": "pass",
+          "rc": 0,
+          "ok": true,
+          "tail": "RKOV_NATIVE_EPOCH_MISMATCH out_bits\\n       Time: 1830000  Scope: tb_markov_row\\nFATAL: /srv/opentallas-scratch2/claude/closure-loop/s81_markov_chunk3_native-pc2-fd21a1202/native_proof/chunk3_mut.sv:34: nonexact n=0 got=c191a3ff golden=c19248af\\n       Time: 1830000  Scope: tb_markov_row\\n'}\n{'kind': 'fault', 'rc': 0, 'expected': 'pass', 'ok': True, 'stdout': 'PASS faultcases nonfinite head/nonfinite product/overlapping start\\n/srv/opentallas-scratch2/claude/closure-loop/s81_markov_chunk3_native-pc2-fd21a1202/native_proof/fault.sv:27: $finish called at 7230000 (1ps)\\n'}\nall_native_checks_PASS\n",
+          "track": "parallel"
+        },
+        "bench_native_mutant_dut": {
+          "expect": "fail",
+          "rc": 1,
+          "ok": true,
+          "tail": "MARKOV_NATIVE_DUT FAIL chunk3_mut k3_mut.sv:50: MARKOV_NATIVE_EPOCH_MISMATCH out_bits\n       Time: 1830000  Scope: tb_markov_row\nFATAL: /srv/opentallas-scratch2/claude/closure-loop/s81_markov_chunk3_native-pc2-fd21a1202/native_dut/chunk3_mut.sv:34: nonexact n=0 got=c191a3ff golden=c19248af\n       Time: 1830000  Scope: tb_markov_row\n\n",
+          "track": "parallel"
+        }
+      },
+      "child_lint": {
+        "lef": "/srv/opentallas-scratch2/claude/closure-loop/s81_markov_chunk3_native-pc2-fd21a1202/record/views/ot_s81_markov_chunk3_native/ot_s81_markov_chunk3_native.lef",
+        "checks": "cf",
+        "fails": [],
+        "summary": "ot_s81_markov_chunk3_native 43.2 x 71.28: PG M5 VDD 8 stripes (88% spread, 100% cov) / VSS 8 stripes (88% spread, 100% cov); strap M6; face pins 101 blocked-above 0 blocked-same 0; pockets M5 0 (closed)",
+        "at": "2026-10-14T23:11:33-07:00"
+      },
+      "view_sha256": {
+        "ot_s81_markov_chunk3_native_ff.lib": "4085c3af8d892011cbd19390d631b2d9d615f519ca18ebd776ed8312216dbc1d",
+        "abstract.json": "712c42dd47c660c9bf41f63f51da91771e2ef2a1197f79ed9d8dfaff189be65d",
+        "insertion.json": "1e9b843fa4222a16aad2a0549c3524eaac66f19c77c18f2745e3cd42b66408fb",
+        "ot_s81_markov_chunk3_native_ss.lib": "ff207107dc966dc70b3f950c29a370b4cd6885aeb4b814185a4c02a4b5f1fe1a",
+        "ot_s81_markov_chunk3_native_tt.lib": "9b71a8b1657e64d7aab9a65560e72521250b35bfc8416952e373a638e3ef0a71",
+        "child_lint.json": "ecac4b56c0e1ffb6395c3dffe9235e4aae29d7904aab3549b40f9ed45d7f2f7e",
+        "ot_s81_markov_chunk3_native.lef": "c2c54e6824b214ee46b35035dd74bf4b6a454d579ccb6f234f828a7be54fd290"
+      },
+      "native_budget_pass": true
+    },
+    {
+      "cell": "ot_s81_markov_chunk4_native",
+      "view": "physical/ref_tile/s81_markov_chunk4_native/views/ot_s81_markov_chunk4_native",
+      "lib_cell": "ot_s81_markov_chunk4_native",
+      "insertion": true,
+      "ref_src": [
+        "insertion.json boundary mean"
+      ],
+      "R_ps": 118.7,
+      "spread_ps": 16.0,
+      "outputs": 34,
+      "inputs": 66,
+      "launch_ps": 180.9,
+      "launch_pin": "bad",
+      "capture_ps": 136.7,
+      "capture_pin": "p[2]",
+      "launch_over": 0,
+      "capture_over": 0,
+      "comb_pins": 0,
+      "comb_first": [],
+      "pass": true,
+      "fail_why": "",
+      "job": "s81_markov_chunk4_native-pc2-fd21a1202",
+      "status": "CLOSED",
+      "source_commit": "fd21a1202f41086ba1b470972fc5acd136335d20",
+      "metrics": {
+        "setup_corner": "tt",
+        "ss_ps": 195.35,
+        "ff_ps": 24.16,
+        "ss_sensitivity_ps": -89.39,
+        "drc": 0
+      },
+      "bench_results": {
+        "bench_lint": {
+          "expect": "pass",
+          "rc": 0,
+          "ok": true,
+          "tail": "- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050\n- Verilator: Built from 0.236 MB sources in 35 modules, into 0.010 MB in 4 C++ files needing 0.000 MB\n- Verilator: Walltime 0.093 s (elab=0.026, cvt=0.058, bld=0.000); cpu 0.093 s on 1 threads; allocated 45.391 MB\nlint-ok\n",
+          "track": "parallel"
+        },
+        "bench_native_exact_mutant": {
+          "expect": "pass",
+          "rc": 0,
+          "ok": true,
+          "tail": "RKOV_NATIVE_EPOCH_MISMATCH out_bits\\n       Time: 1830000  Scope: tb_markov_row\\nFATAL: /srv/opentallas-scratch2/claude/closure-loop/s81_markov_chunk4_native-pc2-fd21a1202/native_proof/chunk4_mut.sv:34: nonexact n=0 got=c17e99e3 golden=c19248af\\n       Time: 1830000  Scope: tb_markov_row\\n'}\n{'kind': 'fault', 'rc': 0, 'expected': 'pass', 'ok': True, 'stdout': 'PASS faultcases nonfinite head/nonfinite product/overlapping start\\n/srv/opentallas-scratch2/claude/closure-loop/s81_markov_chunk4_native-pc2-fd21a1202/native_proof/fault.sv:27: $finish called at 7230000 (1ps)\\n'}\nall_native_checks_PASS\n",
+          "track": "parallel"
+        },
+        "bench_native_mutant_dut": {
+          "expect": "fail",
+          "rc": 1,
+          "ok": true,
+          "tail": "MARKOV_NATIVE_DUT FAIL chunk4_mut k4_mut.sv:50: MARKOV_NATIVE_EPOCH_MISMATCH out_bits\n       Time: 1830000  Scope: tb_markov_row\nFATAL: /srv/opentallas-scratch2/claude/closure-loop/s81_markov_chunk4_native-pc2-fd21a1202/native_dut/chunk4_mut.sv:34: nonexact n=0 got=c17e99e3 golden=c19248af\n       Time: 1830000  Scope: tb_markov_row\n\n",
+          "track": "parallel"
+        }
+      },
+      "child_lint": {
+        "lef": "/srv/opentallas-scratch2/claude/closure-loop/s81_markov_chunk4_native-pc2-fd21a1202/record/views/ot_s81_markov_chunk4_native/ot_s81_markov_chunk4_native.lef",
+        "checks": "cf",
+        "fails": [],
+        "summary": "ot_s81_markov_chunk4_native 43.2 x 82.08: PG M5 VDD 8 stripes (88% spread, 100% cov) / VSS 8 stripes (88% spread, 100% cov); strap M6; face pins 101 blocked-above 0 blocked-same 0; pockets M5 0 (closed)",
+        "at": "2026-10-14T23:12:27-07:00"
+      },
+      "view_sha256": {
+        "ot_s81_markov_chunk4_native.lef": "365516e171dcf597bb79055b5859a4619df16a93e26d71f6e65435cf6742b6e3",
+        "ot_s81_markov_chunk4_native_tt.lib": "48aecf6aa6d74360931e7fdca3f4784c1c7d583c09c1696cc1546200c0a81c16",
+        "abstract.json": "a5a78b8cfae6bd33da1bebe7f4fb87d69e7f5692d6f6bd797d269ae35048d954",
+        "insertion.json": "f045492546e8af1a0c2c294525c852dcba0430e596ce51e956247194fc3f875d",
+        "ot_s81_markov_chunk4_native_ss.lib": "797eb90d6ed4ef93b47e5c96571159637c7c7d70a835163fdb79d42369284211",
+        "ot_s81_markov_chunk4_native_ff.lib": "47b9a1e5feb84ccde473ef61df95cd5d20bb218e7424920c7f95439fa40f8013",
+        "child_lint.json": "f008c18546293f2c7ec0e48859e12139ecdbaa99c53dbc86e5eeaf54636612f4"
+      },
+      "native_budget_pass": true
+    },
+    {
+      "cell": "ot_s81_markov_chunk5_native",
+      "view": "physical/ref_tile/s81_markov_chunk5_native/views/ot_s81_markov_chunk5_native",
+      "lib_cell": "ot_s81_markov_chunk5_native",
+      "insertion": true,
+      "ref_src": [
+        "insertion.json boundary mean"
+      ],
+      "R_ps": 137.4,
+      "spread_ps": 7.7,
+      "outputs": 34,
+      "inputs": 66,
+      "launch_ps": 186.6,
+      "launch_pin": "y[2]",
+      "capture_ps": 136.9,
+      "capture_pin": "sum[19]",
+      "launch_over": 0,
+      "capture_over": 0,
+      "comb_pins": 0,
+      "comb_first": [],
+      "pass": true,
+      "fail_why": "",
+      "job": "s81_markov_chunk5_native-pc2-fd21a1202",
+      "status": "CLOSED",
+      "source_commit": "fd21a1202f41086ba1b470972fc5acd136335d20",
+      "metrics": {
+        "setup_corner": "tt",
+        "ss_ps": 204.11,
+        "ff_ps": 18.63,
+        "ss_sensitivity_ps": -83.45,
+        "drc": 0
+      },
+      "bench_results": {
+        "bench_lint": {
+          "expect": "pass",
+          "rc": 0,
+          "ok": true,
+          "tail": "- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050\n- Verilator: Built from 0.236 MB sources in 35 modules, into 0.010 MB in 4 C++ files needing 0.000 MB\n- Verilator: Walltime 0.093 s (elab=0.022, cvt=0.062, bld=0.000); cpu 0.093 s on 1 threads; allocated 46.387 MB\nlint-ok\n",
+          "track": "parallel"
+        },
+        "bench_native_exact_mutant": {
+          "expect": "pass",
+          "rc": 0,
+          "ok": true,
+          "tail": "unk5_mut.sv:50: MARKOV_NATIVE_EPOCH_MISMATCH out_bits\\n       Time: 1830000  Scope: tb_markov_row\\nFATAL: /srv/opentallas/claude/closure-loop/s81_markov_chunk5_native-pc2-fd21a1202/native_proof/chunk5_mut.sv:34: nonexact n=0 got=c18e72b5 golden=c19248af\\n       Time: 1830000  Scope: tb_markov_row\\n'}\n{'kind': 'fault', 'rc': 0, 'expected': 'pass', 'ok': True, 'stdout': 'PASS faultcases nonfinite head/nonfinite product/overlapping start\\n/srv/opentallas/claude/closure-loop/s81_markov_chunk5_native-pc2-fd21a1202/native_proof/fault.sv:27: $finish called at 7230000 (1ps)\\n'}\nall_native_checks_PASS\n",
+          "track": "parallel"
+        },
+        "bench_native_mutant_dut": {
+          "expect": "fail",
+          "rc": 1,
+          "ok": true,
+          "tail": "MARKOV_NATIVE_DUT FAIL chunk5_mut _dut/chunk5_mut.sv:50: MARKOV_NATIVE_EPOCH_MISMATCH out_bits\n       Time: 1830000  Scope: tb_markov_row\nFATAL: /srv/opentallas/claude/closure-loop/s81_markov_chunk5_native-pc2-fd21a1202/native_dut/chunk5_mut.sv:34: nonexact n=0 got=c18e72b5 golden=c19248af\n       Time: 1830000  Scope: tb_markov_row\n\n",
+          "track": "parallel"
+        }
+      },
+      "child_lint": {
+        "lef": "/srv/opentallas/claude/closure-loop/s81_markov_chunk5_native-pc2-fd21a1202/record/views/ot_s81_markov_chunk5_native/ot_s81_markov_chunk5_native.lef",
+        "checks": "cf",
+        "fails": [],
+        "summary": "ot_s81_markov_chunk5_native 43.2 x 92.88: PG M5 VDD 8 stripes (88% spread, 100% cov) / VSS 8 stripes (88% spread, 100% cov); strap M6; face pins 101 blocked-above 0 blocked-same 0; pockets M5 0 (closed)",
+        "at": "2026-10-14T23:12:26-07:00"
+      },
+      "view_sha256": {
+        "ot_s81_markov_chunk5_native_tt.lib": "60112d29be2d19c823bb139a1ff3cece8577c0205761a96d36d5a521fd5a2fb8",
+        "abstract.json": "b98ececa1dc5efdb829cab8ed4c5d769325a1e3d2e1dc79525ddde5583c494f5",
+        "ot_s81_markov_chunk5_native_ss.lib": "906877fd6dc970895d8fc1d7734335f7547fa248c8aa561de721803888451174",
+        "insertion.json": "0627a89bbf60dbe8c5bf2efcef8316923a8534f466e398db01e109e3f8c92c3e",
+        "ot_s81_markov_chunk5_native.lef": "dd16161568d3531366f804b6acba1a4dee8a53541d5a8e2d652aaab3d7135ae1",
+        "ot_s81_markov_chunk5_native_ff.lib": "edf4ed81848be40a66d1871f96f64b1c527611c1aaea8ff45bd682c4b318e929",
+        "child_lint.json": "83a73c856f7640bc2e310e4fa7dc5d2ce6275621c86b00ea9023081eb088f36e"
+      },
+      "native_budget_pass": true
+    },
+    {
+      "cell": "ot_s81_markov_chunk6_native",
+      "view": "physical/ref_tile/s81_markov_chunk6_native/views/ot_s81_markov_chunk6_native",
+      "lib_cell": "ot_s81_markov_chunk6_native",
+      "insertion": true,
+      "ref_src": [
+        "insertion.json boundary mean"
+      ],
+      "R_ps": 133.6,
+      "spread_ps": 6.5,
+      "outputs": 34,
+      "inputs": 66,
+      "launch_ps": 181.0,
+      "launch_pin": "bad",
+      "capture_ps": 132.5,
+      "capture_pin": "sum[15]",
+      "launch_over": 0,
+      "capture_over": 0,
+      "comb_pins": 0,
+      "comb_first": [],
+      "pass": true,
+      "fail_why": "",
+      "job": "s81_markov_chunk6_native-pc2-fd21a1202",
+      "status": "CLOSED",
+      "source_commit": "fd21a1202f41086ba1b470972fc5acd136335d20",
+      "metrics": {
+        "setup_corner": "tt",
+        "ss_ps": 201.9,
+        "ff_ps": 15.41,
+        "ss_sensitivity_ps": -80.97,
+        "drc": 0
+      },
+      "bench_results": {
+        "bench_lint": {
+          "expect": "pass",
+          "rc": 0,
+          "ok": true,
+          "tail": "- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050\n- Verilator: Built from 0.236 MB sources in 35 modules, into 0.010 MB in 4 C++ files needing 0.000 MB\n- Verilator: Walltime 0.082 s (elab=0.021, cvt=0.052, bld=0.000); cpu 0.082 s on 1 threads; allocated 45.391 MB\nlint-ok\n",
+          "track": "parallel"
+        },
+        "bench_native_exact_mutant": {
+          "expect": "pass",
+          "rc": 0,
+          "ok": true,
+          "tail": "RKOV_NATIVE_EPOCH_MISMATCH out_bits\\n       Time: 1830000  Scope: tb_markov_row\\nFATAL: /srv/opentallas-scratch2/claude/closure-loop/s81_markov_chunk6_native-pc2-fd21a1202/native_proof/chunk6_mut.sv:34: nonexact n=0 got=c1732c9d golden=c19248af\\n       Time: 1830000  Scope: tb_markov_row\\n'}\n{'kind': 'fault', 'rc': 0, 'expected': 'pass', 'ok': True, 'stdout': 'PASS faultcases nonfinite head/nonfinite product/overlapping start\\n/srv/opentallas-scratch2/claude/closure-loop/s81_markov_chunk6_native-pc2-fd21a1202/native_proof/fault.sv:27: $finish called at 7230000 (1ps)\\n'}\nall_native_checks_PASS\n",
+          "track": "parallel"
+        },
+        "bench_native_mutant_dut": {
+          "expect": "fail",
+          "rc": 1,
+          "ok": true,
+          "tail": "MARKOV_NATIVE_DUT FAIL chunk6_mut k6_mut.sv:50: MARKOV_NATIVE_EPOCH_MISMATCH out_bits\n       Time: 1830000  Scope: tb_markov_row\nFATAL: /srv/opentallas-scratch2/claude/closure-loop/s81_markov_chunk6_native-pc2-fd21a1202/native_dut/chunk6_mut.sv:34: nonexact n=0 got=c1732c9d golden=c19248af\n       Time: 1830000  Scope: tb_markov_row\n\n",
+          "track": "parallel"
+        }
+      },
+      "child_lint": {
+        "lef": "/srv/opentallas-scratch2/claude/closure-loop/s81_markov_chunk6_native-pc2-fd21a1202/record/views/ot_s81_markov_chunk6_native/ot_s81_markov_chunk6_native.lef",
+        "checks": "cf",
+        "fails": [],
+        "summary": "ot_s81_markov_chunk6_native 43.2 x 105.84: PG M5 VDD 8 stripes (88% spread, 100% cov) / VSS 8 stripes (88% spread, 100% cov); strap M6; face pins 101 blocked-above 0 blocked-same 0; pockets M5 0 (closed)",
+        "at": "2026-10-14T23:14:24-07:00"
+      },
+      "view_sha256": {
+        "abstract.json": "c609de400a55d0b2942fc9b8cee1385c9fc1e19a72069290c7a6ab639f1326da",
+        "ot_s81_markov_chunk6_native_ss.lib": "3abe32bbf6d0dc7a9029334d67c90d7fabd572eeb3ab609d5885a9df64f93ee1",
+        "insertion.json": "e28388a2bf83f9723d8121806c521ab9f9dd7139aab0ceed8c2e6e4c6be8aa89",
+        "ot_s81_markov_chunk6_native_ff.lib": "792d7e07d0a59e1fdd20cc4251f9b4e7bf77388b8a9f4d1e2fdca3f615e3d5d4",
+        "ot_s81_markov_chunk6_native_tt.lib": "3ffa5b56391cfd4f93fb827260aa50ba5a455a23429fce9abb498179ce2cebe1",
+        "child_lint.json": "b51adb65f320e6f3907c61aa206394d06bf4ad679f2e254e5c92a6cf7205716c",
+        "ot_s81_markov_chunk6_native.lef": "93f04a66a108056acbab416b3eba2dac9d9f81f7807255d20a84c3524215556b"
+      },
+      "native_budget_pass": true
+    },
+    {
+      "cell": "ot_s81_markov_chunk7_native",
+      "view": "physical/ref_tile/s81_markov_chunk7_native/views/ot_s81_markov_chunk7_native",
+      "lib_cell": "ot_s81_markov_chunk7_native",
+      "insertion": true,
+      "ref_src": [
+        "insertion.json boundary mean"
+      ],
+      "R_ps": 140.9,
+      "spread_ps": 19.9,
+      "outputs": 34,
+      "inputs": 66,
+      "launch_ps": 194.4,
+      "launch_pin": "y[4]",
+      "capture_ps": 137.6,
+      "capture_pin": "p[4]",
+      "launch_over": 0,
+      "capture_over": 0,
+      "comb_pins": 0,
+      "comb_first": [],
+      "pass": true,
+      "fail_why": "",
+      "job": "s81_markov_chunk7_native-pc2-fd21a1202",
+      "status": "CLOSED",
+      "source_commit": "fd21a1202f41086ba1b470972fc5acd136335d20",
+      "metrics": {
+        "setup_corner": "tt",
+        "ss_ps": 259.54,
+        "ff_ps": 11.75,
+        "ss_sensitivity_ps": -0.46,
+        "drc": 0
+      },
+      "bench_results": {
+        "bench_lint": {
+          "expect": "pass",
+          "rc": 0,
+          "ok": true,
+          "tail": "- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050\n- Verilator: Built from 0.236 MB sources in 35 modules, into 0.010 MB in 4 C++ files needing 0.000 MB\n- Verilator: Walltime 0.083 s (elab=0.020, cvt=0.054, bld=0.000); cpu 0.083 s on 1 threads; allocated 45.387 MB\nlint-ok\n",
+          "track": "parallel"
+        },
+        "bench_native_exact_mutant": {
+          "expect": "pass",
+          "rc": 0,
+          "ok": true,
+          "tail": "RKOV_NATIVE_EPOCH_MISMATCH out_bits\\n       Time: 1830000  Scope: tb_markov_row\\nFATAL: /srv/opentallas-scratch2/claude/closure-loop/s81_markov_chunk7_native-pc2-fd21a1202/native_proof/chunk7_mut.sv:34: nonexact n=0 got=c18fe807 golden=c19248af\\n       Time: 1830000  Scope: tb_markov_row\\n'}\n{'kind': 'fault', 'rc': 0, 'expected': 'pass', 'ok': True, 'stdout': 'PASS faultcases nonfinite head/nonfinite product/overlapping start\\n/srv/opentallas-scratch2/claude/closure-loop/s81_markov_chunk7_native-pc2-fd21a1202/native_proof/fault.sv:27: $finish called at 7230000 (1ps)\\n'}\nall_native_checks_PASS\n",
+          "track": "parallel"
+        },
+        "bench_native_mutant_dut": {
+          "expect": "fail",
+          "rc": 1,
+          "ok": true,
+          "tail": "MARKOV_NATIVE_DUT FAIL chunk7_mut k7_mut.sv:50: MARKOV_NATIVE_EPOCH_MISMATCH out_bits\n       Time: 1830000  Scope: tb_markov_row\nFATAL: /srv/opentallas-scratch2/claude/closure-loop/s81_markov_chunk7_native-pc2-fd21a1202/native_dut/chunk7_mut.sv:34: nonexact n=0 got=c18fe807 golden=c19248af\n       Time: 1830000  Scope: tb_markov_row\n\n",
+          "track": "parallel"
+        }
+      },
+      "child_lint": {
+        "lef": "/srv/opentallas-scratch2/claude/closure-loop/s81_markov_chunk7_native-pc2-fd21a1202/record/views/ot_s81_markov_chunk7_native/ot_s81_markov_chunk7_native.lef",
+        "checks": "cf",
+        "fails": [],
+        "summary": "ot_s81_markov_chunk7_native 43.2 x 116.64: PG M5 VDD 8 stripes (88% spread, 100% cov) / VSS 8 stripes (88% spread, 100% cov); strap M6; face pins 101 blocked-above 0 blocked-same 0; pockets M5 0 (closed)",
+        "at": "2026-10-14T23:15:25-07:00"
+      },
+      "view_sha256": {
+        "abstract.json": "bdcbe161c01d6c4e35e7be019e3c5352d01f40fe1a537cf39dcf7b641ed8a9bf",
+        "ot_s81_markov_chunk7_native_tt.lib": "6504f442272b4a4cb71339bdbff4fc3bfb98bde34d14fd7afe313a9e9ba4ac2b",
+        "ot_s81_markov_chunk7_native.lef": "879afc3a47366647f965ca1c85863a6f052ae65c07c2e7c9803eb3c99c04a55a",
+        "insertion.json": "72b415335a9584d1d828fe2c05fa473c082e37832aa89c208346bfd03f335503",
+        "ot_s81_markov_chunk7_native_ff.lib": "f7fd28ffc99ad930b5a43bb56741d266f5faf4ccaefe155d39630810a679713a",
+        "ot_s81_markov_chunk7_native_ss.lib": "c93e1785d1d3c304c5c2a58b2813058844b910c2e20345944dd1b0a479c3aff2",
+        "child_lint.json": "118c24252af613c18f636b407ad32deb792b2b3978fcc2b32b0503fc058f3336"
+      },
+      "native_budget_pass": true
+    },
+    {
+      "cell": "ot_s81_markov_ctl_native",
+      "view": "physical/ref_tile/s81_markov_ctl_native/views/ot_s81_markov_ctl_native",
+      "lib_cell": "ot_s81_markov_ctl_native",
+      "insertion": true,
+      "ref_src": [
+        "insertion.json boundary mean"
+      ],
+      "R_ps": 91.4,
+      "spread_ps": 10.6,
+      "outputs": 582,
+      "inputs": 620,
+      "launch_ps": 251.8,
+      "launch_pin": "head[31]",
+      "capture_ps": 284.6,
+      "capture_pin": "in_valid",
+      "launch_over": 65,
+      "capture_over": 36,
+      "comb_pins": 0,
+      "comb_first": [],
+      "pass": false,
+      "fail_why": "launch 251.8 > 220 (65 pins); capture 284.6 > 190 (36 pins)",
+      "job": "s81_markov_ctl_native-g1-443f55354",
+      "status": "CLOSED",
+      "source_commit": "443f553548be0eccd35b50c295a0c0020a462ff6",
+      "metrics": {
+        "setup_corner": "tt",
+        "ss_ps": 228.2,
+        "ff_ps": 27.19,
+        "ss_sensitivity_ps": 108.07,
+        "drc": 0
+      },
+      "bench_results": {
+        "bench_lint": {
+          "expect": "pass",
+          "rc": 0,
+          "ok": true,
+          "tail": "- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050\n- Verilator: Built from 0.229 MB sources in 23 modules, into 0.002 MB in 3 C++ files needing 0.000 MB\n- Verilator: Walltime 0.010 s (elab=0.002, cvt=0.001, bld=0.000); cpu 0.010 s on 1 threads; allocated 36.383 MB\nlint-ok\n",
+          "track": "parallel"
+        },
+        "bench_native_exact_mutant": {
+          "expect": "pass",
+          "rc": 0,
+          "ok": true,
+          "tail": "4/native_proof/ctl_mut.sv:29: unexpected input stall\\n       Time: 140000  Scope: tb_markov_row\\nFATAL: /srv/opentallas-scratch2/claude/closure-loop/s81_markov_ctl_native-g1-443f55354/native_proof/ctl_mut.sv:48: MARKOV_NATIVE_EPOCH_MISMATCH in_ready\\n       Time: 140000  Scope: tb_markov_row\\n'}\n{'kind': 'fault', 'rc': 0, 'expected': 'pass', 'ok': True, 'stdout': 'PASS faultcases nonfinite head/nonfinite product/overlapping start\\n/srv/opentallas-scratch2/claude/closure-loop/s81_markov_ctl_native-g1-443f55354/native_proof/fault.sv:27: $finish called at 7230000 (1ps)\\n'}\nall_native_checks_PASS\n",
+          "track": "parallel"
+        },
+        "bench_native_owned_mutant": {
+          "expect": "fail",
+          "rc": 1,
+          "ok": true,
+          "tail": "ltcases nonfinite head/nonfinite product/overlapping start\\n/srv/opentallas-scratch2/claude/closure-loop/s81_markov_ctl_native-g1-443f55354/owned_mutant/fault.sv:27: $finish called at 7230000 (1ps)\\n'}\nall_native_checks_PASS\nFATAL: /srv/opentallas-scratch2/claude/closure-loop/s81_markov_ctl_native-g1-443f55354/owned_mutant/ctl_mut.sv:29: unexpected input stall\n       Time: 140000  Scope: tb_markov_row\nFATAL: /srv/opentallas-scratch2/claude/closure-loop/s81_markov_ctl_native-g1-443f55354/owned_mutant/ctl_mut.sv:48: MARKOV_NATIVE_EPOCH_MISMATCH in_ready\n       Time: 140000  Scope: tb_markov_row\n",
+          "track": "parallel"
+        }
+      },
+      "child_lint": {
+        "lef": "/srv/opentallas-scratch2/claude/closure-loop/s81_markov_ctl_native-g1-443f55354/record/views/ot_s81_markov_ctl_native/ot_s81_markov_ctl_native.lef",
+        "checks": "cf",
+        "fails": [],
+        "summary": "ot_s81_markov_ctl_native 73.44 x 34.56: PG M5 VDD 13 stripes (88% spread, 100% cov) / VSS 13 stripes (88% spread, 100% cov); strap M6; face pins 1203 blocked-above 0 blocked-same 0; pockets M5 0 (closed)",
+        "at": "2026-10-14T04:48:46-07:00"
+      },
+      "view_sha256": {
+        "abstract.json": "9a599808007459a0e69b8c4fd9fbd51fdfa5fe9262f0f56d58711e74a54a4cc7",
+        "insertion.json": "77b75a9e5f05250346d845b2d10a8c58b2a4e5a2a6a830612d7c942bb34f6b12",
+        "ot_s81_markov_ctl_native_ss.lib": "363f54cb30ef844e8f6abe4ed67dd8eca2ebaff42087c3c46298bf2f8cdf36fc",
+        "ot_s81_markov_ctl_native.lef": "b1ef3353a4c8f52c02e082a4867dd175ac77a13d263135d43dba61b09ba5cbb8",
+        "ot_s81_markov_ctl_native_ff.lib": "71d6b9ecb8bd6d929751c766c39841b8f6dfffcccdb1e6612cfba5daa1fd9f17",
+        "ot_s81_markov_ctl_native_tt.lib": "b0ecb254dc5e6b5429a443667c1451cb0ba08f20bbf2ed39d31ce65334d69b32",
+        "child_lint.json": "cc6045f998c1f485f2aff11fc0a4ce84945f566816a37f656a0f445de6f400aa"
+      },
+      "native_budget_pass": false
+    },
+    {
+      "cell": "ot_s81_markov_fold_native",
+      "view": "physical/ref_tile/s81_markov_fold_native/views/ot_s81_markov_fold_native",
+      "lib_cell": "ot_s81_markov_fold_native",
+      "insertion": true,
+      "ref_src": [
+        "insertion.json boundary mean"
+      ],
+      "R_ps": 111.4,
+      "spread_ps": 6.6,
+      "outputs": 34,
+      "inputs": 34,
+      "launch_ps": 181.3,
+      "launch_pin": "y[10]",
+      "capture_ps": 133.6,
+      "capture_pin": "x[0]",
+      "launch_over": 0,
+      "capture_over": 0,
+      "comb_pins": 0,
+      "comb_first": [],
+      "pass": true,
+      "fail_why": "",
+      "job": "s81_markov_fold_native-pc2-fd21a1202",
+      "status": "CLOSED",
+      "source_commit": "fd21a1202f41086ba1b470972fc5acd136335d20",
+      "metrics": {
+        "setup_corner": "tt",
+        "ss_ps": 196.95,
+        "ff_ps": 25.09,
+        "ss_sensitivity_ps": -85.85,
+        "drc": 0
+      },
+      "bench_results": {
+        "bench_lint": {
+          "expect": "pass",
+          "rc": 0,
+          "ok": true,
+          "tail": "- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050\n- Verilator: Built from 0.236 MB sources in 35 modules, into 0.010 MB in 4 C++ files needing 0.000 MB\n- Verilator: Walltime 0.083 s (elab=0.020, cvt=0.055, bld=0.000); cpu 0.083 s on 1 threads; allocated 45.387 MB\nlint-ok\n",
+          "track": "parallel"
+        },
+        "bench_native_exact_mutant": {
+          "expect": "pass",
+          "rc": 0,
+          "ok": true,
+          "tail": "50: MARKOV_NATIVE_EPOCH_MISMATCH out_bits\\n       Time: 1830000  Scope: tb_markov_row\\nFATAL: /srv/opentallas-scratch2/claude/closure-loop/s81_markov_fold_native-pc2-fd21a1202/native_proof/fold_mut.sv:34: nonexact n=0 got=c0730aa5 golden=c19248af\\n       Time: 1830000  Scope: tb_markov_row\\n'}\n{'kind': 'fault', 'rc': 0, 'expected': 'pass', 'ok': True, 'stdout': 'PASS faultcases nonfinite head/nonfinite product/overlapping start\\n/srv/opentallas-scratch2/claude/closure-loop/s81_markov_fold_native-pc2-fd21a1202/native_proof/fault.sv:27: $finish called at 7230000 (1ps)\\n'}\nall_native_checks_PASS\n",
+          "track": "parallel"
+        },
+        "bench_native_mutant_dut": {
+          "expect": "fail",
+          "rc": 1,
+          "ok": true,
+          "tail": "MARKOV_NATIVE_DUT FAIL fold_mut t/fold_mut.sv:50: MARKOV_NATIVE_EPOCH_MISMATCH out_bits\n       Time: 1830000  Scope: tb_markov_row\nFATAL: /srv/opentallas-scratch2/claude/closure-loop/s81_markov_fold_native-pc2-fd21a1202/native_dut/fold_mut.sv:34: nonexact n=0 got=c0730aa5 golden=c19248af\n       Time: 1830000  Scope: tb_markov_row\n\n",
+          "track": "parallel"
+        }
+      },
+      "child_lint": {
+        "lef": "/srv/opentallas-scratch2/claude/closure-loop/s81_markov_fold_native-pc2-fd21a1202/record/views/ot_s81_markov_fold_native/ot_s81_markov_fold_native.lef",
+        "checks": "cf",
+        "fails": [],
+        "summary": "ot_s81_markov_fold_native 43.2 x 34.56: PG M5 VDD 8 stripes (88% spread, 100% cov) / VSS 8 stripes (88% spread, 100% cov); strap M6; face pins 69 blocked-above 0 blocked-same 0; pockets M5 0 (closed)",
+        "at": "2026-10-14T23:11:35-07:00"
+      },
+      "view_sha256": {
+        "abstract.json": "48bb2361a247af3bfc494a8de8f65b4e89393687f6d12820d63640719d39301d",
+        "ot_s81_markov_fold_native_ss.lib": "0516d621cdba79c9c55c179f74c2345f2f60b747f0f25345c74c83871ef1749c",
+        "ot_s81_markov_fold_native_tt.lib": "947124f1cd65c5f082a098165cd6c90fc485805a432bd33b36a12c57867c55cb",
+        "ot_s81_markov_fold_native.lef": "362a57214a023ecfa5deb80aff662e0c2ccc3041da2e812b729bba1cdccffb9b",
+        "insertion.json": "46ac2d6710216b6cf4d2ba5f234b55d64d50ccf9707e051e7edebe00c7b0d78d",
+        "ot_s81_markov_fold_native_ff.lib": "3796cdbc5c7698e42089dac1259c4dc146b81d2b997ea63e7cdc82a8d4962dfb",
+        "child_lint.json": "6b4de045af7b282c2c8bcff7efcd98718cee6663a669fcd07beb180d6278a703"
+      },
+      "native_budget_pass": true
+    },
+    {
+      "cell": "ot_s81_markov_join_native",
+      "view": "physical/ref_tile/s81_markov_join_native/views/ot_s81_markov_join_native",
+      "lib_cell": "ot_s81_markov_join_native",
+      "insertion": true,
+      "ref_src": [
+        "insertion.json boundary mean"
+      ],
+      "R_ps": 109.6,
+      "spread_ps": 9.4,
+      "outputs": 35,
+      "inputs": 66,
+      "launch_ps": 184.5,
+      "launch_pin": "y[20]",
+      "capture_ps": 134.1,
+      "capture_pin": "head[8]",
+      "launch_over": 0,
+      "capture_over": 0,
+      "comb_pins": 0,
+      "comb_first": [],
+      "pass": true,
+      "fail_why": "",
+      "job": "s81_markov_join_native-pc2-fd21a1202",
+      "status": "CLOSED",
+      "source_commit": "fd21a1202f41086ba1b470972fc5acd136335d20",
+      "metrics": {
+        "setup_corner": "tt",
+        "ss_ps": 210.9,
+        "ff_ps": 19.81,
+        "ss_sensitivity_ps": -74.22,
+        "drc": 0
+      },
+      "bench_results": {
+        "bench_lint": {
+          "expect": "pass",
+          "rc": 0,
+          "ok": true,
+          "tail": "- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050\n- Verilator: Built from 0.236 MB sources in 35 modules, into 0.010 MB in 4 C++ files needing 0.000 MB\n- Verilator: Walltime 0.106 s (elab=0.029, cvt=0.065, bld=0.000); cpu 0.106 s on 1 threads; allocated 45.387 MB\nlint-ok\n",
+          "track": "parallel"
+        },
+        "bench_native_exact_mutant": {
+          "expect": "pass",
+          "rc": 0,
+          "ok": true,
+          "tail": "50: MARKOV_NATIVE_EPOCH_MISMATCH out_bits\\n       Time: 1830000  Scope: tb_markov_row\\nFATAL: /srv/opentallas-scratch2/claude/closure-loop/s81_markov_join_native-pc2-fd21a1202/native_proof/join_mut.sv:34: nonexact n=0 got=c198db22 golden=c19248af\\n       Time: 1830000  Scope: tb_markov_row\\n'}\n{'kind': 'fault', 'rc': 0, 'expected': 'pass', 'ok': True, 'stdout': 'PASS faultcases nonfinite head/nonfinite product/overlapping start\\n/srv/opentallas-scratch2/claude/closure-loop/s81_markov_join_native-pc2-fd21a1202/native_proof/fault.sv:27: $finish called at 7230000 (1ps)\\n'}\nall_native_checks_PASS\n",
+          "track": "parallel"
+        },
+        "bench_native_mutant_dut": {
+          "expect": "fail",
+          "rc": 1,
+          "ok": true,
+          "tail": "MARKOV_NATIVE_DUT FAIL join_mut t/join_mut.sv:50: MARKOV_NATIVE_EPOCH_MISMATCH out_bits\n       Time: 1830000  Scope: tb_markov_row\nFATAL: /srv/opentallas-scratch2/claude/closure-loop/s81_markov_join_native-pc2-fd21a1202/native_dut/join_mut.sv:34: nonexact n=0 got=c198db22 golden=c19248af\n       Time: 1830000  Scope: tb_markov_row\n\n",
+          "track": "parallel"
+        }
+      },
+      "child_lint": {
+        "lef": "/srv/opentallas-scratch2/claude/closure-loop/s81_markov_join_native-pc2-fd21a1202/record/views/ot_s81_markov_join_native/ot_s81_markov_join_native.lef",
+        "checks": "cf",
+        "fails": [],
+        "summary": "ot_s81_markov_join_native 43.2 x 34.56: PG M5 VDD 8 stripes (88% spread, 100% cov) / VSS 8 stripes (88% spread, 100% cov); strap M6; face pins 102 blocked-above 0 blocked-same 0; pockets M5 0 (closed)",
+        "at": "2026-10-14T23:11:34-07:00"
+      },
+      "view_sha256": {
+        "ot_s81_markov_join_native.lef": "558190c3709185d50639fe95993aa37d3355edd0b62b734639db3f1b4136d44c",
+        "abstract.json": "e2287b0e565f362b183e08f7009b3208ba387f2e9d0717fe233f6c3a1a4c56ec",
+        "insertion.json": "4de6861932154bdae260fff1c34af14ba5dfde99960f51ce6e4fa8c89b10dbac",
+        "ot_s81_markov_join_native_tt.lib": "54f68c53d1f4a672f11dd13b46a90bc548017f85b0c22d0eb5419cd07b040bd3",
+        "ot_s81_markov_join_native_ff.lib": "a057fb1b84e2df79328039d368fc17d1407f803f95cff8b86b7bb4f6620b30bc",
+        "ot_s81_markov_join_native_ss.lib": "beddb330b80ffea083a003f74c491a55f4147f58b1c2ae5c768a6224cc58586c",
+        "child_lint.json": "1216519bd2d7e4d8c6b7d6edbccad98f55d5cc84254b31da84d3b5ff012a1fcf"
+      },
+      "native_budget_pass": true
+    },
+    {
+      "cell": "ot_s81_markov_mul_native",
+      "view": "physical/ref_tile/s81_markov_mul_native/views/ot_s81_markov_mul_native",
+      "lib_cell": "ot_s81_markov_mul_native",
+      "insertion": true,
+      "ref_src": [
+        "insertion.json boundary mean"
+      ],
+      "R_ps": 79.2,
+      "spread_ps": 2.8,
+      "outputs": 33,
+      "inputs": 34,
+      "launch_ps": 181.3,
+      "launch_pin": "y[9]",
+      "capture_ps": 116.6,
+      "capture_pin": "rst_n",
+      "launch_over": 0,
+      "capture_over": 0,
+      "comb_pins": 0,
+      "comb_first": [],
+      "pass": true,
+      "fail_why": "",
+      "job": "s81_markov_mul_native-pc2-fd21a1202",
+      "status": "CLOSED",
+      "source_commit": "fd21a1202f41086ba1b470972fc5acd136335d20",
+      "metrics": {
+        "setup_corner": "tt",
+        "ss_ps": 246.16,
+        "ff_ps": 28.61,
+        "ss_sensitivity_ps": -25.67,
+        "drc": 0
+      },
+      "bench_results": {
+        "bench_lint": {
+          "expect": "pass",
+          "rc": 0,
+          "ok": true,
+          "tail": "- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050\n- Verilator: Built from 0.236 MB sources in 35 modules, into 0.009 MB in 3 C++ files needing 0.000 MB\n- Verilator: Walltime 0.020 s (elab=0.005, cvt=0.007, bld=0.000); cpu 0.020 s on 1 threads; allocated 37.379 MB\nlint-ok\n",
+          "track": "parallel"
+        },
+        "bench_native_exact_mutant": {
+          "expect": "pass",
+          "rc": 0,
+          "ok": true,
+          "tail": "sv:50: MARKOV_NATIVE_EPOCH_MISMATCH out_bits\\n       Time: 1830000  Scope: tb_markov_row\\nFATAL: /srv/opentallas-scratch2/claude/closure-loop/s81_markov_mul_native-pc2-fd21a1202/native_proof/mul_mut.sv:34: nonexact n=0 got=3f524e6b golden=c19248af\\n       Time: 1830000  Scope: tb_markov_row\\n'}\n{'kind': 'fault', 'rc': 0, 'expected': 'pass', 'ok': True, 'stdout': 'PASS faultcases nonfinite head/nonfinite product/overlapping start\\n/srv/opentallas-scratch2/claude/closure-loop/s81_markov_mul_native-pc2-fd21a1202/native_proof/fault.sv:27: $finish called at 7230000 (1ps)\\n'}\nall_native_checks_PASS\n",
+          "track": "parallel"
+        },
+        "bench_native_mutant_dut": {
+          "expect": "fail",
+          "rc": 1,
+          "ok": true,
+          "tail": "MARKOV_NATIVE_DUT FAIL mul_mut _dut/mul_mut.sv:50: MARKOV_NATIVE_EPOCH_MISMATCH out_bits\n       Time: 1830000  Scope: tb_markov_row\nFATAL: /srv/opentallas-scratch2/claude/closure-loop/s81_markov_mul_native-pc2-fd21a1202/native_dut/mul_mut.sv:34: nonexact n=0 got=3f524e6b golden=c19248af\n       Time: 1830000  Scope: tb_markov_row\n\n",
+          "track": "parallel"
+        }
+      },
+      "child_lint": {
+        "lef": "/srv/opentallas-scratch2/claude/closure-loop/s81_markov_mul_native-pc2-fd21a1202/record/views/ot_s81_markov_mul_native/ot_s81_markov_mul_native.lef",
+        "checks": "cf",
+        "fails": [],
+        "summary": "ot_s81_markov_mul_native 43.2 x 34.56: PG M5 VDD 8 stripes (88% spread, 100% cov) / VSS 8 stripes (88% spread, 100% cov); strap M6; face pins 68 blocked-above 0 blocked-same 0; pockets M5 0 (closed)",
+        "at": "2026-10-14T23:08:30-07:00"
+      },
+      "view_sha256": {
+        "ot_s81_markov_mul_native.lef": "e95df169ad4fc9b73bbb5e70fb37a5c09bd39e1973aff1aed6ed4e18dae33f76",
+        "ot_s81_markov_mul_native_ss.lib": "683a0ececa6291c397055d28426e32a46769b6384d20a1119aae90fbbe6d6b02",
+        "abstract.json": "7f9eaf8bdf9fbdf1594c3bfb4f024ab84f8ef90ec85651f56f1f1b30898f48bc",
+        "ot_s81_markov_mul_native_ff.lib": "ea3e7d88b77503ade10ea1b86a71529c4f06cac76e5b3d657f7d56354568f4d8",
+        "insertion.json": "6c8b3fe2e92acfd8f974bb36c6dc327ace68766c2315a7c3a1e8f8d026252124",
+        "ot_s81_markov_mul_native_tt.lib": "26a57e560e5c10f61b8d07335d2fe444d167312377face49f41bb21eb9e821d9",
+        "child_lint.json": "cb16c8fccc22255e30102c86d136cc01cf5c463c44b631d22159ce43e149ce60"
+      },
+      "native_budget_pass": true
+    },
+    {
+      "cell": "ot_s81_markov_pair_native",
+      "view": "physical/ref_tile/s81_markov_pair_native/views/ot_s81_markov_pair_native",
+      "lib_cell": "ot_s81_markov_pair_native",
+      "insertion": true,
+      "ref_src": [
+        "insertion.json boundary mean"
+      ],
+      "R_ps": 106.5,
+      "spread_ps": 7.7,
+      "outputs": 34,
+      "inputs": 66,
+      "launch_ps": 181.9,
+      "launch_pin": "bad",
+      "capture_ps": 133.1,
+      "capture_pin": "a[25]",
+      "launch_over": 0,
+      "capture_over": 0,
+      "comb_pins": 0,
+      "comb_first": [],
+      "pass": true,
+      "fail_why": "",
+      "job": "s81_markov_pair_native-pc2-fd21a1202",
+      "status": "CLOSED",
+      "source_commit": "fd21a1202f41086ba1b470972fc5acd136335d20",
+      "metrics": {
+        "setup_corner": "tt",
+        "ss_ps": 203.9,
+        "ff_ps": 26.08,
+        "ss_sensitivity_ps": -75.77,
+        "drc": 0
+      },
+      "bench_results": {
+        "bench_lint": {
+          "expect": "pass",
+          "rc": 0,
+          "ok": true,
+          "tail": "- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050\n- Verilator: Built from 0.236 MB sources in 35 modules, into 0.010 MB in 4 C++ files needing 0.000 MB\n- Verilator: Walltime 0.113 s (elab=0.031, cvt=0.073, bld=0.000); cpu 0.113 s on 1 threads; allocated 45.387 MB\nlint-ok\n",
+          "track": "parallel"
+        },
+        "bench_native_exact_mutant": {
+          "expect": "pass",
+          "rc": 0,
+          "ok": true,
+          "tail": "ut.sv:50: MARKOV_NATIVE_EPOCH_MISMATCH out_bits\\n       Time: 1830000  Scope: tb_markov_row\\nFATAL: /srv/opentallas/claude/closure-loop/s81_markov_pair_native-pc2-fd21a1202-bench/native_proof/pair_mut.sv:34: nonexact n=0 got=c105fbe8 golden=c19248af\\n       Time: 1830000  Scope: tb_markov_row\\n'}\n{'kind': 'fault', 'rc': 0, 'expected': 'pass', 'ok': True, 'stdout': 'PASS faultcases nonfinite head/nonfinite product/overlapping start\\n/srv/opentallas/claude/closure-loop/s81_markov_pair_native-pc2-fd21a1202-bench/native_proof/fault.sv:27: $finish called at 7230000 (1ps)\\n'}\nall_native_checks_PASS\n",
+          "track": "parallel"
+        },
+        "bench_native_mutant_dut": {
+          "expect": "fail",
+          "rc": 1,
+          "ok": true,
+          "tail": "MARKOV_NATIVE_DUT FAIL pair_mut _dut/pair_mut.sv:50: MARKOV_NATIVE_EPOCH_MISMATCH out_bits\n       Time: 1830000  Scope: tb_markov_row\nFATAL: /srv/opentallas/claude/closure-loop/s81_markov_pair_native-pc2-fd21a1202-bench/native_dut/pair_mut.sv:34: nonexact n=0 got=c105fbe8 golden=c19248af\n       Time: 1830000  Scope: tb_markov_row\n\n",
+          "track": "parallel"
+        }
+      },
+      "child_lint": {
+        "lef": "/srv/opentallas-scratch/claude/closure-loop/s81_markov_pair_native-pc2-fd21a1202/record/views/ot_s81_markov_pair_native/ot_s81_markov_pair_native.lef",
+        "checks": "cf",
+        "fails": [],
+        "summary": "ot_s81_markov_pair_native 43.2 x 34.56: PG M5 VDD 8 stripes (88% spread, 100% cov) / VSS 8 stripes (88% spread, 100% cov); strap M6; face pins 101 blocked-above 0 blocked-same 0; pockets M5 0 (closed)",
+        "at": "2026-10-14T23:23:23-07:00"
+      },
+      "view_sha256": {
+        "abstract.json": "9acf749b2e57a548fc2d83f44ed62d93fbc94512d863af60e72159ce2a1f8223",
+        "ot_s81_markov_pair_native_ss.lib": "d6f60cfe5edf93a71405f455823e071bd84dd1536ec9c6c43152aea4190cea99",
+        "insertion.json": "a54e469e3af5de86a6b748db9cfac4b73c1deeebfb72ea869ef0d72d568576f0",
+        "ot_s81_markov_pair_native_ff.lib": "da10199a43f07a9dc7fd93aff8cddb6b8c83373edcba19ac2d708df40db933be",
+        "ot_s81_markov_pair_native.lef": "56d35e912cd19793016c2c51eab21a4b2eaaaa185c6d0c264a30483eaafee150",
+        "child_lint.json": "8d516c5055d51f1c0931bfc206725f4684c986f1651d1ca12449f45509a7807a",
+        "ot_s81_markov_pair_native_tt.lib": "2018d50a07e49bac280e148d31f6643cab68e23d00695c6e4984b45a79af6160"
+      },
+      "native_budget_pass": true
+    }
+  ]
+}

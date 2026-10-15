@@ -11,6 +11,9 @@ module ot_hgi_sfu_static_operand_store #(
  parameter integer LWB=15, MUT_XBAR=0
 )(
  input wire clk,rst_n,
+ input wire [3:0] scalar_load,scalar_enable,
+ input wire [95:0] scalar_addr,
+ input wire [127:0] scalar_data,
  input wire [63:0] rd_re,
  input wire [1535:0] rd_addr,
  input wire [127:0] rd_src,
@@ -33,25 +36,54 @@ module ot_hgi_sfu_static_operand_store #(
   ot_sfu_store_requires_actual_supported_SRAM_geometry u_refuse();
  end endgenerate
  wire [4:0] group_fault;
- reg bad_source;
+ reg [23:0] scalar_addr_q[0:3];
+ reg [31:0] scalar_data_q[0:3];
+ reg [3:0] scalar_valid;
+ reg scalar_bad;
+ always @(posedge clk)for(integer g=0;g<4;g=g+1)
+  if(scalar_load[g])begin scalar_addr_q[g]<=scalar_addr[24*g+:24];scalar_data_q[g]<=scalar_data[32*g+:32];end
+ always @(posedge clk or negedge rst_n)
+  if(!rst_n)scalar_valid<=0;else scalar_valid<=scalar_valid|scalar_load;
  always @*begin
-  bad_source=0;
+  scalar_bad=0;
+  for(integer l=0;l<16;l=l+1)for(integer g=0;g<4;g=g+1)
+   if(rd_re[4*l+g] && scalar_enable[g] &&
+    (!scalar_valid[g] || rd_addr[24*(4*l+g)+:24]!=scalar_addr_q[g]))scalar_bad=1;
+ end
+ reg bad_source,bad_range;
+ always @*begin
+  bad_source=0;bad_range=0;
+  for(integer l=0;l<16;l=l+1)begin
+   if(vm_we[l] && |vm_waddr[24*l+LWB+:24-LWB])bad_range=1;
+   for(integer g=0;g<4;g=g+1)
+    if(rd_re[4*l+g] && !scalar_enable[g] && |rd_addr[24*(4*l+g)+LWB+:24-LWB])bad_range=1;
+  end
+  for(integer b=0;b<8;b=b+1)
+   if(stage_v[b] && stage_addr[LWB*b+:LWB]>{LWB{1'b1}}-7)bad_range=1;
+  for(integer b=0;b<2;b=b+1)
+   if(drain_v[b] && drain_addr[LWB*b+:LWB]>{LWB{1'b1}}-7)bad_range=1;
   for(integer l=0;l<16;l=l+1)
    for(integer s=0;s<4;s=s+1)
     if(rd_re[4*l+s] && rd_src[8*l+2*s+:2]!=0)bad_source=1;
  end
  always @(posedge clk or negedge rst_n)
   if(!rst_n)fault<=0;
-  else if(bad_source || |group_fault)fault<=1;
+  else if(bad_source || bad_range || scalar_bad || |group_fault)fault<=1;
  for(genvar g=0;g<4;g=g+1)begin:g_operand
   wire [15:0] req;
   wire [383:0] addr;
   wire [511:0] data;
+  reg [511:0] scalar_read;
+  reg scalar_selected;
+  always @(posedge clk)begin
+   scalar_selected<=scalar_enable[g];
+   for(integer l=0;l<16;l=l+1)if(rd_re[4*l+g] && scalar_enable[g])scalar_read[32*l+:32]<=scalar_data_q[g];
+  end
   wire [7:0] sw;
   for(genvar l=0;l<16;l=l+1)begin:g_lane
-   assign req[l]=rd_re[4*l+g] && rd_src[8*l+2*g+:2]==0;
+   assign req[l]=rd_re[4*l+g] && rd_src[8*l+2*g+:2]==0 && !scalar_enable[g];
    assign addr[24*l+:24]=rd_addr[(4*l+g)*24+:24];
-   assign rd_q[(4*l+g)*32+:32]=data[32*l+:32];
+   assign rd_q[(4*l+g)*32+:32]=scalar_selected?scalar_read[32*l+:32]:data[32*l+:32];
   end
   for(genvar b=0;b<8;b=b+1)begin:g_stage
    assign sw[b]=stage_v[b] && stage_group[2*b+:2]==g;

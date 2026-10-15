@@ -1,0 +1,51 @@
+{
+  "status": "PASS component generator checks; Qwen canonical coverage explicitly FAIL",
+  "checks": [
+    "route.gather0 actualresolvedbase=87360",
+    "route.gather1 actualresolvedbase=87361",
+    "route.gather2 actualresolvedbase=87362",
+    "route.gather3 actualresolvedbase=87363",
+    "route.gather4 actualresolvedbase=87364",
+    "route.gather5 actualresolvedbase=87365",
+    "head_scale actualSTREAMfixture retained, coverageFAIL"
+  ],
+  "DSrequired": 33,
+  "DSemitted": 33,
+  "Qwenrequired": 13,
+  "QwenVMemitted": 12,
+  "Qwenmissing": "head_scale STREAM arithmetic/transport; exact canonical metadata fixture emitted",
+  "remote": {
+    "host": "ot-epyc4",
+    "mem_GiB": 2,
+    "threads": 1,
+    "DSunit": "oth-ubuntu-1564501-1792056675",
+    "Qwenunit": "oth-ubuntu-1563968-1792056657",
+    "DSexit": 0,
+    "Qwenexit": 1
+  },
+  "qualification": "DS index values0..5 are explicit component fixtures; actual TOPK producer unexecuted. Coverage does not qualify native RTL or alter immutable2912/1548 price.",
+  "source_sha256": {
+    "tools/hgi_unitrate/su_prod_vec.py": "769410069f3fa4c62227930b968bbc6f9c59c7573606307b5468e6e13d9e68f5",
+    "results/arch/hbm_su_f2_static_1014/program_inventory/coverage_ds/su_coverage.json": "e43768caabdf966db2285e12de10717c4ee7164ca78d0138e7b60c2699ed011a",
+    "results/arch/hbm_su_f2_static_1014/program_inventory/coverage_ds/su_case.mem": "1a8573df22e907ed47851945e2efdb83fcda8b6c338eb7b3324bf41169adb20e",
+    "results/arch/hbm_su_f2_static_1014/program_inventory/coverage_ds/su_sizes.svh": "90d634acb3384eafefaef06ac5395601701b0353b0245eca7f0d20b63e5f94cc",
+    "results/arch/hbm_su_f2_static_1014/program_inventory/coverage_ds/su_rec.mem": "e411062d8970d6572dc75a8251c1f51bd8bf939970915204dd6e764ce77bd818",
+    "results/arch/hbm_su_f2_static_1014/program_inventory/coverage_ds/su_aux.svh": "beaa27718ea808aab92431ded4e2a05e7d8a7a5f71638900148c5bf39b9738e1",
+    "results/arch/hbm_su_f2_static_1014/program_inventory/coverage_ds/su_vme.mem": "4bff61d7c47ab061035f7bee81a25e6fb8951e210ac5ab738438ef1a08b20143",
+    "results/arch/hbm_su_f2_static_1014/program_inventory/coverage_ds/su_price.mem": "9f78a3fa9a2893e1345d592bf0437217ba856ad653fb14ee082a07607654ac83",
+    "results/arch/hbm_su_f2_static_1014/program_inventory/coverage_ds/su_vmg.mem": "5d3f1d6909ff570981443c45ed627dbf9cb4478479b641282a8613f8c22dfec0",
+    "results/arch/hbm_su_f2_static_1014/program_inventory/coverage_ds/su_prod.json": "8961129417b27c54cd209cb648a763b8c75413aa7772e488ab99e936282252f2",
+    "results/arch/hbm_su_f2_static_1014/program_inventory/coverage_ds/su_vmi.mem": "eadbc9d79c470753005308725d8c681ca375050b83209f730fc2d1d9952ff20a",
+    "results/arch/hbm_su_f2_static_1014/program_inventory/coverage_qwen/su_coverage.json": "670bdedcb3b582dcb1488d39d6834f551ff742b49739fa72db9b662374b5311b",
+    "results/arch/hbm_su_f2_static_1014/program_inventory/coverage_qwen/su_case.mem": "66b505618bdda0b9a9d5b79462fc7f9f4b789639df15dc31dbc889fc85f1a7ea",
+    "results/arch/hbm_su_f2_static_1014/program_inventory/coverage_qwen/su_sizes.svh": "12c9b83261acee1099a37d459efc59dbb9a8ff1c5d564dcae3d50515e1ecc6f1",
+    "results/arch/hbm_su_f2_static_1014/program_inventory/coverage_qwen/su_rec.mem": "3866da4a1d9ce07ebace129252ca1cda8d0df82abc8644f6e3966c4e11297c31",
+    "results/arch/hbm_su_f2_static_1014/program_inventory/coverage_qwen/su_aux.svh": "df213f2984fac46df55805e7b991e881eea53c7cef0ff2598c713c30a371bc1e",
+    "results/arch/hbm_su_f2_static_1014/program_inventory/coverage_qwen/su_vme.mem": "c6d745acb40b11fa5b89812d4dca22fe87e50515492ad271e3ae5916e1e8ab13",
+    "results/arch/hbm_su_f2_static_1014/program_inventory/coverage_qwen/su_price.mem": "06eef965cc359753657bda4cb209a5175b9a8f2d764421ab042e5978a206b950",
+    "results/arch/hbm_su_f2_static_1014/program_inventory/coverage_qwen/su_vmg.mem": "a0bb4533ed3e82985181c6ee5e3e207c3f736baa3ae4a3d7f3bfef5810051923",
+    "results/arch/hbm_su_f2_static_1014/program_inventory/coverage_qwen/fixture_head_scale.json": "e414b10216ce82aed907998cbed411ca80f851ca02be2375668e19a8bc34f70f",
+    "results/arch/hbm_su_f2_static_1014/program_inventory/coverage_qwen/su_prod.json": "d64fcd8f50e0a9f1165fcfb4568a072905027db883056adfae470ec92f08eb5d",
+    "results/arch/hbm_su_f2_static_1014/program_inventory/coverage_qwen/su_vmi.mem": "f83e391539e2a9582f96d7e6a5f70702e05c053fbf0972e05571e64d8bd43849"
+  }
+}

@@ -1,0 +1,80 @@
+{
+ "schema": "opentallas.hier_contract.child_lint.v1",
+ "lef": "/srv/opentallas-scratch/claude/closure-loop/dsfd_vm_be_sl-r6-8abef0fbf/record/views/dsfd_vm_be_sl/dsfd_vm_be_sl.lef",
+ "verdict": "PASS",
+ "fails": [],
+ "warns": [
+  "(f) face-pin access: 4089 of 4094 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. bl_d[0] M3 (39.564,0.012), bl_d[10] M3 (39.564,0.012), bl_d[11] M3 (39.564,0.012))"
+ ],
+ "summary": "dsfd_vm_be_sl 302.4 x 92.88: PG M6 VDD 8 stripes (81% spread, 100% cov) / VSS 9 stripes (93% spread, 100% cov); strap M7; face pins 4094 blocked-above 0 blocked-same 0; clock ck[0] insertion 315 ps; clock cks[0] insertion 313 ps; pockets M6 0 (closed)",
+ "info": {
+  "cell": "dsfd_vm_be_sl",
+  "W": 302.4,
+  "H": 92.88,
+  "pg": {
+   "nets": {
+    "VDD": {
+     "top_layer": "M6",
+     "stripes": 8,
+     "dir": "H",
+     "spread": 0.814,
+     "coverage": 1.0,
+     "shapes_on_top": 8
+    },
+    "VSS": {
+     "top_layer": "M6",
+     "stripes": 9,
+     "dir": "H",
+     "spread": 0.93,
+     "coverage": 1.0,
+     "shapes_on_top": 9
+    }
+   },
+   "top_layer": "M6",
+   "ok": true,
+   "why": []
+  },
+  "pg_layer": "M6",
+  "strap_layer": "M7",
+  "cap": null,
+  "face": {
+   "face_pins": 4094,
+   "blocked_above": 0,
+   "covered_below": 580,
+   "examples": [],
+   "blocked_same": 0,
+   "same_examples": [],
+   "band_same": 4089,
+   "band_examples": [
+    "bl_d[0] M3 (39.564,0.012)",
+    "bl_d[10] M3 (39.564,0.012)",
+    "bl_d[11] M3 (39.564,0.012)",
+    "bl_d[12] M3 (39.564,0.012)",
+    "bl_d[13] M3 (39.564,0.012)",
+    "bl_d[14] M3 (39.564,0.012)"
+   ]
+  },
+  "clock_insertion": {
+   "ck[0]": {
+    "max_ps": 315.28,
+    "min_ps": 254.38
+   },
+   "cks[0]": {
+    "max_ps": 313.15,
+    "min_ps": 260.6
+   }
+  },
+  "pockets": {
+   "layer": "M6",
+   "d_um": 2.048,
+   "marker": {
+    "layer": "M6",
+    "d_um": 2.048,
+    "added": 888
+   },
+   "count": 0,
+   "area_um2": 0,
+   "examples": []
+  }
+ }
+}

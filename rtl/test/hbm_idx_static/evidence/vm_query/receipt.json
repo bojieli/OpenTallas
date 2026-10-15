@@ -1,0 +1,13 @@
+{
+  "unit": "EPYC1/429229",
+  "memory": "24realSRAMs",
+  "sectors_read": 514,
+  "blocks": 128,
+  "quantised_heads": 32,
+  "mutants": "weightbit/querysector/duplicateblock allfail",
+  "scope": "actual SRAM-to-quant operand join only, no fullINDEX/nativephysical qualification",
+  "sha256": {
+    "rtl/hbm_accel/index/ot_hbm_idx_vm_query_static.sv": "0421b7b4c4719baddff5615fd561e6f9fc4dc9fd6397549d663d053a45d883a1",
+    "rtl/test/hbm_idx_static/tb_vm_query_static.sv": "73b5796bdd828dac28a17931b3dc59b99f0ad8d794d1de8a616074d82095bc45"
+  }
+}

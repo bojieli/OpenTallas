@@ -1,0 +1,78 @@
+{
+  "status": "SOURCE_BOUND_FRESH_PHYSICAL_QUALIFICATION_REQUIRED",
+  "source_sha256": {
+    "rtl/qwen_split/qfd_sp_su64_sfu.sv": "9b5e122c09df90b3457426fd1d48ef522ce57cb16542019467facad49cd90493",
+    "rtl/qwen_split/qfd_seq_su_static.sv": "47a85c1ad213437a73a3c0436d149975bfc292812910d08d76a86b967cecf672",
+    "rtl/qwen_sys/static_schedule_20261014/ot_qfd_seq_su_bi_static.sv": "f8c409895d094a8deb288375147533132c2d264852a89768ed630a3bd8a64a6a",
+    "rtl/qwen_sys/static_schedule_20261014/qfd_tt_ctlm_static_s.sv": "6fd2bbf9d3f4ed0af371f7f34406bb96bbd777db566beaabbca7ac24322f79fe",
+    "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688"
+  },
+  "source_register_bits_added": {
+    "SU_issue_observer": 16,
+    "SU_copy_active_pin": 1,
+    "SU_joint_image_ready_pin": 1
+  },
+  "arithmetic_or_payload_edges_added": 0,
+  "endpoints": [
+    {
+      "sink": "qfd_tt_ctlm_static_s.cp_active",
+      "source": "qfd_sp_su64_sfu.cp_active",
+      "width": 1,
+      "source_register_edges": 1,
+      "receiver_capture_edges": 1,
+      "local_copy_status": "raw actual occupancy unchanged"
+    },
+    {
+      "sink": "qfd_tt_ctlm_static_s.su_image_ready",
+      "source": "qfd_seq_su_static.cfg_image_ready",
+      "width": 1,
+      "source_register_edges": 1,
+      "semantic": "all real SU/segment and COLL stores sealed, true configuration fact"
+    },
+    {
+      "sink": "qfd_tt_ctlm_static_s.su_observe",
+      "source": "qfd_seq_su_static.su_observe",
+      "width": 16,
+      "source_register_edges": 1,
+      "receiver_capture_edges": 1,
+      "semantic": "actual fixed issue/candidate flag/unit2/absolute source PC12; same clk/rsv3 as SU GO output"
+    },
+    {
+      "sink": "qfd_tt_ctlm_static_s.native_ret",
+      "source": "qfd_native59_compute_service.native_ret",
+      "width": 95,
+      "owner": "q_native_compute",
+      "source_pin_registration": "OWNER_FOLLOWUP_REQUIRED",
+      "semantic": "real native service completion/status; local ROM-tree return is already internal"
+    }
+  ],
+  "serializer_count": 3,
+  "serializer_enable_outputs": [
+    "mer0",
+    "mer1",
+    "mer2"
+  ],
+  "serializer_fault_inputs": [
+    "rf0",
+    "rf1",
+    "rf2"
+  ],
+  "unresolved": {
+    "kok": "Genuine current-epoch KV visibility producer required; native_ret.ready not silently substituted",
+    "kwd": "Genuine current-epoch KV storage/visibility drain producer required",
+    "fab": "Actual distributed fabric fault aggregation/registered route required",
+    "physical_ages": "Actual C17 route/clock/reset ages still absent; production compiler refuses"
+  },
+  "verification": {
+    "source_pin_audit": "Direct ot_hdc_delay W1 D1 RESET1 outputs; no post-register occupancy/seal logic. Raw copy occupancy remains internal.",
+    "observer": "normal + two actual RTL mutants PASS",
+    "parent_elaboration": {
+      "host": "ot-epyc4",
+      "unit": "oth-ubuntu-1498630-1792055361",
+      "exit_code": 0,
+      "mem_GB": 16,
+      "threads": 2
+    },
+    "scope": "No whole numerical or physical qualification from these ABI checks"
+  }
+}

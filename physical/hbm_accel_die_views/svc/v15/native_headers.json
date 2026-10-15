@@ -1,0 +1,730 @@
+{
+  "schema": "opentallas.hbm-v15-actual-service-headers.v1",
+  "modules": {
+    "ot_hbm_svc_prefetch_burst_cdc": {
+      "source": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_cdc.sv",
+      "sha256": "0d7c1a839621c7c0be2122a9a39900a1d48779e1062c71f798efdffd1168d773",
+      "params": {
+        "OWNER_AW": 5,
+        "RESPONSE_DEPTH": 8
+      },
+      "ports": {
+        "stream_clk": {
+          "direction": "input",
+          "bits": 1
+        },
+        "stream_rst_n": {
+          "direction": "input",
+          "bits": 1
+        },
+        "hbm_clk": {
+          "direction": "input",
+          "bits": 1
+        },
+        "hbm_rst_n": {
+          "direction": "input",
+          "bits": 1
+        },
+        "stream_bank_clk": {
+          "direction": "input",
+          "bits": 4
+        },
+        "hbm_fifo_clk": {
+          "direction": "input",
+          "bits": 8
+        },
+        "hbm_pc_clk": {
+          "direction": "input",
+          "bits": 32
+        },
+        "reserve_v": {
+          "direction": "input",
+          "bits": 1
+        },
+        "reserve_ready": {
+          "direction": "output",
+          "bits": 1
+        },
+        "reserve_base": {
+          "direction": "input",
+          "bits": 32
+        },
+        "reserve_total": {
+          "direction": "input",
+          "bits": 12
+        },
+        "reserve_bank": {
+          "direction": "input",
+          "bits": 1
+        },
+        "reserve_epoch": {
+          "direction": "input",
+          "bits": 16
+        },
+        "block_ready": {
+          "direction": "output",
+          "bits": 2
+        },
+        "block_ready_v": {
+          "direction": "output",
+          "bits": 1
+        },
+        "block_ready_bank": {
+          "direction": "output",
+          "bits": 1
+        },
+        "block_ready_epoch": {
+          "direction": "output",
+          "bits": 16
+        },
+        "start_v": {
+          "direction": "input",
+          "bits": 1
+        },
+        "start_bank": {
+          "direction": "input",
+          "bits": 1
+        },
+        "start_epoch": {
+          "direction": "input",
+          "bits": 16
+        },
+        "out_v": {
+          "direction": "output",
+          "bits": 1
+        },
+        "out_mask": {
+          "direction": "output",
+          "bits": 8
+        },
+        "out_data": {
+          "direction": "output",
+          "bits": 2048
+        },
+        "out_ordinal": {
+          "direction": "output",
+          "bits": 11
+        },
+        "out_bank": {
+          "direction": "output",
+          "bits": 1
+        },
+        "out_epoch": {
+          "direction": "output",
+          "bits": 16
+        },
+        "out_last": {
+          "direction": "output",
+          "bits": 1
+        },
+        "fault": {
+          "direction": "output",
+          "bits": 1
+        },
+        "k_v": {
+          "direction": "output",
+          "bits": 32
+        },
+        "k_rdy": {
+          "direction": "input",
+          "bits": 32
+        },
+        "k_addr": {
+          "direction": "output",
+          "bits": 960
+        },
+        "k_len": {
+          "direction": "output",
+          "bits": 128
+        },
+        "k_tag": {
+          "direction": "output",
+          "bits": 544
+        },
+        "k_we": {
+          "direction": "output",
+          "bits": 32
+        },
+        "k_wdata": {
+          "direction": "output",
+          "bits": 8192
+        },
+        "k_wstrb": {
+          "direction": "output",
+          "bits": 1024
+        },
+        "k_wr_done": {
+          "direction": "input",
+          "bits": 32
+        },
+        "kr_v": {
+          "direction": "input",
+          "bits": 32
+        },
+        "kr_rdy": {
+          "direction": "output",
+          "bits": 32
+        },
+        "kr_tag": {
+          "direction": "input",
+          "bits": 544
+        },
+        "kr_beat": {
+          "direction": "input",
+          "bits": 128
+        },
+        "kr_data": {
+          "direction": "input",
+          "bits": 8192
+        }
+      }
+    },
+    "ot_hbm_svc_prefetch_burst_owner": {
+      "source": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_owner.sv",
+      "sha256": "8e52a6d1897b678d1af735915ccc01b8d9f100922448627dadc2a9b64d71b66e",
+      "params": {
+        "OWNER_AW": 5
+      },
+      "ports": {
+        "clk": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rst_n": {
+          "direction": "input",
+          "bits": 1
+        },
+        "descriptor_v": {
+          "direction": "input",
+          "bits": 1
+        },
+        "descriptor_base": {
+          "direction": "input",
+          "bits": 30
+        },
+        "descriptor_total": {
+          "direction": "input",
+          "bits": 12
+        },
+        "descriptor_bank": {
+          "direction": "input",
+          "bits": 1
+        },
+        "descriptor_epoch": {
+          "direction": "input",
+          "bits": 16
+        },
+        "block_active": {
+          "direction": "input",
+          "bits": 1
+        },
+        "block_base": {
+          "direction": "input",
+          "bits": 30
+        },
+        "block_total": {
+          "direction": "input",
+          "bits": 12
+        },
+        "block_bank": {
+          "direction": "input",
+          "bits": 1
+        },
+        "block_epoch": {
+          "direction": "input",
+          "bits": 16
+        },
+        "stop": {
+          "direction": "input",
+          "bits": 1
+        },
+        "k_ready": {
+          "direction": "input",
+          "bits": 1
+        },
+        "kr_v": {
+          "direction": "input",
+          "bits": 1
+        },
+        "kr_tag": {
+          "direction": "input",
+          "bits": 17
+        },
+        "kr_beat": {
+          "direction": "input",
+          "bits": 4
+        },
+        "response_take": {
+          "direction": "input",
+          "bits": 1
+        },
+        "k_v": {
+          "direction": "output",
+          "bits": 1
+        },
+        "k_addr": {
+          "direction": "output",
+          "bits": 30
+        },
+        "k_len": {
+          "direction": "output",
+          "bits": 4
+        },
+        "k_tag": {
+          "direction": "output",
+          "bits": 17
+        },
+        "response_ok": {
+          "direction": "output",
+          "bits": 1
+        },
+        "response_ordinal": {
+          "direction": "output",
+          "bits": 11
+        },
+        "response_epoch": {
+          "direction": "output",
+          "bits": 16
+        },
+        "response_bank": {
+          "direction": "output",
+          "bits": 1
+        },
+        "fault": {
+          "direction": "output",
+          "bits": 1
+        }
+      }
+    },
+    "ot_hbm_svc_prefetch_burst_bank": {
+      "source": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv",
+      "sha256": "d2f90481dbc9953481195d63630a25a19ff3e64b16dcec87382ad9e33e713b77",
+      "params": {
+        "RESPONSE_DEPTH": 8
+      },
+      "ports": {
+        "hbm_clk": {
+          "direction": "input",
+          "bits": 1
+        },
+        "hbm_rst_n": {
+          "direction": "input",
+          "bits": 1
+        },
+        "stream_clk": {
+          "direction": "input",
+          "bits": 1
+        },
+        "stream_rst_n": {
+          "direction": "input",
+          "bits": 1
+        },
+        "in_v": {
+          "direction": "input",
+          "bits": 1
+        },
+        "in_ready": {
+          "direction": "output",
+          "bits": 1
+        },
+        "in_data": {
+          "direction": "input",
+          "bits": 284
+        },
+        "overflow": {
+          "direction": "output",
+          "bits": 1
+        },
+        "reserve_v": {
+          "direction": "input",
+          "bits": 1
+        },
+        "reserve_bank": {
+          "direction": "input",
+          "bits": 1
+        },
+        "reserve_epoch": {
+          "direction": "input",
+          "bits": 16
+        },
+        "reserve_total": {
+          "direction": "input",
+          "bits": 12
+        },
+        "stop": {
+          "direction": "input",
+          "bits": 1
+        },
+        "complete_v": {
+          "direction": "output",
+          "bits": 1
+        },
+        "complete_bank": {
+          "direction": "output",
+          "bits": 1
+        },
+        "fault": {
+          "direction": "output",
+          "bits": 1
+        },
+        "read_v": {
+          "direction": "input",
+          "bits": 1
+        },
+        "read_bank": {
+          "direction": "input",
+          "bits": 1
+        },
+        "read_row": {
+          "direction": "input",
+          "bits": 6
+        },
+        "read_data": {
+          "direction": "output",
+          "bits": 256
+        }
+      }
+    },
+    "ot_hbm_svc_wb_pipeline_cdc": {
+      "source": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_pipeline_cdc.sv",
+      "sha256": "abf5662f2ff12c7305e01811206877219614d74b8bd870fc2b855deda4fb854c",
+      "params": {},
+      "ports": {
+        "stream_clk": {
+          "direction": "input",
+          "bits": 1
+        },
+        "stream_rst_n": {
+          "direction": "input",
+          "bits": 1
+        },
+        "hbm_clk": {
+          "direction": "input",
+          "bits": 1
+        },
+        "hbm_rst_n": {
+          "direction": "input",
+          "bits": 1
+        },
+        "stream_fifo_clk": {
+          "direction": "input",
+          "bits": 4
+        },
+        "reserve_v": {
+          "direction": "input",
+          "bits": 1
+        },
+        "reserve_ready": {
+          "direction": "output",
+          "bits": 1
+        },
+        "reserve_bank": {
+          "direction": "input",
+          "bits": 1
+        },
+        "reserve_epoch": {
+          "direction": "input",
+          "bits": 16
+        },
+        "reserve_base": {
+          "direction": "input",
+          "bits": 32
+        },
+        "reserve_total": {
+          "direction": "input",
+          "bits": 12
+        },
+        "fill_start": {
+          "direction": "input",
+          "bits": 1
+        },
+        "fill_start_bank": {
+          "direction": "input",
+          "bits": 1
+        },
+        "fill_start_epoch": {
+          "direction": "input",
+          "bits": 16
+        },
+        "wd": {
+          "direction": "input",
+          "bits": 2312
+        },
+        "fill_done": {
+          "direction": "output",
+          "bits": 1
+        },
+        "done_v": {
+          "direction": "output",
+          "bits": 1
+        },
+        "done_bank": {
+          "direction": "output",
+          "bits": 1
+        },
+        "done_epoch": {
+          "direction": "output",
+          "bits": 16
+        },
+        "done_sectors": {
+          "direction": "output",
+          "bits": 12
+        },
+        "bank_owned": {
+          "direction": "output",
+          "bits": 2
+        },
+        "fault": {
+          "direction": "output",
+          "bits": 1
+        },
+        "k_v": {
+          "direction": "output",
+          "bits": 32
+        },
+        "k_rdy": {
+          "direction": "input",
+          "bits": 32
+        },
+        "k_addr": {
+          "direction": "output",
+          "bits": 960
+        },
+        "k_len": {
+          "direction": "output",
+          "bits": 128
+        },
+        "k_tag": {
+          "direction": "output",
+          "bits": 544
+        },
+        "k_we": {
+          "direction": "output",
+          "bits": 32
+        },
+        "k_wdata": {
+          "direction": "output",
+          "bits": 8192
+        },
+        "k_wstrb": {
+          "direction": "output",
+          "bits": 1024
+        },
+        "k_wr_done": {
+          "direction": "input",
+          "bits": 32
+        }
+      }
+    },
+    "ot_hbm_svc_static_sm_packed136": {
+      "source": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_static_sm_packed136.sv",
+      "sha256": "05ea0bddc5a9ea27f0e3ca7d3882ee5f61748c43539f1569994f7ebcb85eaa87",
+      "params": {
+        "PACKED136": 0
+      },
+      "ports": {
+        "clk": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rst_n": {
+          "direction": "input",
+          "bits": 1
+        },
+        "open_v": {
+          "direction": "input",
+          "bits": 1
+        },
+        "open_bank": {
+          "direction": "input",
+          "bits": 1
+        },
+        "open_epoch": {
+          "direction": "input",
+          "bits": 16
+        },
+        "open_count": {
+          "direction": "input",
+          "bits": 7
+        },
+        "open_tag_base": {
+          "direction": "input",
+          "bits": 10
+        },
+        "sector_v": {
+          "direction": "input",
+          "bits": 4
+        },
+        "sector_index": {
+          "direction": "input",
+          "bits": 96
+        },
+        "sector_epoch": {
+          "direction": "input",
+          "bits": 64
+        },
+        "sector_data": {
+          "direction": "input",
+          "bits": 1024
+        },
+        "read_v": {
+          "direction": "input",
+          "bits": 1
+        },
+        "read_bank": {
+          "direction": "input",
+          "bits": 1
+        },
+        "read_epoch": {
+          "direction": "input",
+          "bits": 16
+        },
+        "read_row": {
+          "direction": "input",
+          "bits": 6
+        },
+        "read_tag": {
+          "direction": "input",
+          "bits": 10
+        },
+        "retire_v": {
+          "direction": "input",
+          "bits": 1
+        },
+        "retire_bank": {
+          "direction": "input",
+          "bits": 1
+        },
+        "retire_epoch": {
+          "direction": "input",
+          "bits": 16
+        },
+        "block_ready": {
+          "direction": "output",
+          "bits": 2
+        },
+        "bank_owned": {
+          "direction": "output",
+          "bits": 2
+        },
+        "busy": {
+          "direction": "output",
+          "bits": 1
+        },
+        "fault": {
+          "direction": "output",
+          "bits": 1
+        },
+        "out_packet": {
+          "direction": "output",
+          "bits": 1099
+        }
+      }
+    },
+    "ot_hbm_svc_phy_mux": {
+      "source": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_phy_mux.sv",
+      "sha256": "86fa1f19baadad3168cb43aeea8a308e378c3abcfb8056b20a7a766a09d64745",
+      "params": {},
+      "ports": {
+        "hbm_clk": {
+          "direction": "input",
+          "bits": 1
+        },
+        "hbm_rst_n": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rd_v": {
+          "direction": "input",
+          "bits": 32
+        },
+        "rd_rdy": {
+          "direction": "output",
+          "bits": 32
+        },
+        "rd_addr": {
+          "direction": "input",
+          "bits": 960
+        },
+        "rd_len": {
+          "direction": "input",
+          "bits": 128
+        },
+        "rd_tag": {
+          "direction": "input",
+          "bits": 544
+        },
+        "wb_v": {
+          "direction": "input",
+          "bits": 32
+        },
+        "wb_rdy": {
+          "direction": "output",
+          "bits": 32
+        },
+        "wb_addr": {
+          "direction": "input",
+          "bits": 960
+        },
+        "wb_len": {
+          "direction": "input",
+          "bits": 128
+        },
+        "wb_tag": {
+          "direction": "input",
+          "bits": 544
+        },
+        "wb_data": {
+          "direction": "input",
+          "bits": 8192
+        },
+        "wb_strb": {
+          "direction": "input",
+          "bits": 1024
+        },
+        "k_v": {
+          "direction": "output",
+          "bits": 32
+        },
+        "k_rdy": {
+          "direction": "input",
+          "bits": 32
+        },
+        "k_addr": {
+          "direction": "output",
+          "bits": 960
+        },
+        "k_len": {
+          "direction": "output",
+          "bits": 128
+        },
+        "k_tag": {
+          "direction": "output",
+          "bits": 544
+        },
+        "k_we": {
+          "direction": "output",
+          "bits": 32
+        },
+        "k_wdata": {
+          "direction": "output",
+          "bits": 8192
+        },
+        "k_wstrb": {
+          "direction": "output",
+          "bits": 1024
+        }
+      }
+    }
+  },
+  "domains": {
+    "stream_period_ps": 833.3333333333334,
+    "hbm_period_ps": 1024,
+    "stream_bank_clk": "same frequency/fixed phase as stream control; actual separately routed roots, unqualified",
+    "hbm_fifo_clk": "same frequency/fixed phase as HBM control; actual separately routed roots, unqualified",
+    "hbm_pc_clk": "same frequency/fixed phase as HBM control; one per PC1577FF owner",
+    "stream_fifo_clk": "WB four roots same stream frequency/fixed phase"
+  },
+  "physical_34_band_integration": false,
+  "qualified": false
+}

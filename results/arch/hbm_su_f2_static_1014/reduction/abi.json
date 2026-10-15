@@ -1,0 +1,41 @@
+{
+  "module": "ot_hbm_su_reduce_static",
+  "aw": 10,
+  "logical_scratch_fp32_words": 1024,
+  "physical_macros": "2x ot_sram_1r1w_128x256_m1_r2c2, coherentwrites/independentA-Breadports",
+  "command": {
+    "valid": "cmd_valid",
+    "opcode": "cmd_op[2:0]",
+    "a": "cmd_a[9:0]",
+    "b": "cmd_b[9:0]",
+    "destination": "cmd_dst[9:0]",
+    "operand": "operand_fp32[31:0]",
+    "tag": "cmd_tag[31:0]"
+  },
+  "opcodes": {
+    "0": "LOAD dst=externaloperand",
+    "1": "ADD_EXT dst=scratch[a]+externaloperand LAT6",
+    "2": "ADD_TREE dst=scratch[a]+scratch[b] LAT6",
+    "3": "MAX_EXT dst=max(scratch[a],externaloperand)",
+    "4": "EXPORT scratch[a]withtag",
+    "5": "MAX_TREE dst=max(scratch[a],scratch[b])"
+  },
+  "scalar": {
+    "valid": "scalar_valid",
+    "tag": "scalar_tag[31:0]",
+    "fp32": "scalar_fp32[31:0]",
+    "bf16": "scalar_bf16[15:0] RNE",
+    "head_tags": "2*h MAX_SCALED_SC,2*h+1 SUM_UNROUNDED_E"
+  },
+  "timing": {
+    "command_issue_to_scratch_commit": 7,
+    "command_issue_to_scalar_valid": 7,
+    "sameaddress_dependent_issue_distance": 8,
+    "independent_issue_interval": 1,
+    "read_write_sameedge": "nativeSRAM read seesolddata; compiledRAW distance8"
+  },
+  "source_schedule": "cmd_issue_cycle rowtag MAX_SCALED_SC|SUM_UNROUNDED_E sourcewordindex; actualoperand mustbevalid atcommandissue; sourceSRAM1edge request atissue-1",
+  "compiler": "Program.row(scaled_sc,h,sum_values=unrounded_e); expectedgoldenfile isbenchonly; realproducer mustsupplyexternaloperand pins",
+  "static_rules": "No ready, credits, replay or runtime rescheduling; fixedcompilerliteralcommands. Scalar/operand validity check faults do notstall.",
+  "limitations": "No producer idealization allowed for integration; currentcomponentbench drivesexternalpins fromindependentgoldenvectors. Actualproducerjoin ownedbyh_hc_sfu/native_p_producer_join. Oneinstanceaccepts1operand/cycle, not16SFUlanes; no productionthroughput or physicalclaim."
+}

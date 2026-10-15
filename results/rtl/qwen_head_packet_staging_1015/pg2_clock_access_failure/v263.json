@@ -1,0 +1,27 @@
+{
+  "name": "qkh_packet_v263-pg2-21996d89e",
+  "host": "ot-agidock128",
+  "run": "/srv/opentallas-scratch/claude/closure-loop/qkh_packet_v263-pg2-21996d89e",
+  "status": "NEEDS_HUMAN",
+  "reason": "route crashed twice (rc=1 ok-check failed;; first error: qkh_packet_v263_pg2_21996d89e/flow.log: [ERROR DRT-0255] Maze Route cannot find path of net clk in worker of routeBox ( 3990 0 ) ( 7980 3990 ). [step do-5_2_route]; resource=False)",
+  "crashes": [
+    {
+      "stage": "route",
+      "host": "ot-agidock128",
+      "attempt": 1,
+      "why": "rc=1 ok-check failed;; first error: qkh_packet_v263_pg2_21996d89e/flow.log: [ERROR DRT-0255] Maze Route cannot find path of net clk in worker of routeBox ( 3990 0 ) ( 7980 3990 ). [step do-5_2_route]",
+      "resource": false,
+      "tail": "00%). Peak memory: 309684KB.\nElapsed time: 0:03.90[h:]min:sec. CPU time: user 3.70 sys 0.32 (102%). Peak memory: 339240KB.\nElapsed time: 0:03.28[h:]min:sec. CPU time: user 3.08 sys 0.20 (100%). Peak memory: 306476KB.\nElapsed time: 0:03.34[h:]min:sec. CPU time: user 3.13 sys 0.20 (100%). Peak memory: 306976KB.\nElapsed time: 0:03.29[h:]min:sec. CPU time: user 3.07 sys 0.23 (99%). Peak memory: 309916KB.\nElapsed time: 0:03.25[h:]min:sec. CPU time: user 3.03 sys 0.22 (100%). Peak memory: 307992KB.\nElapsed time: 0:03.43[h:]min:sec. CPU time: user 3.21 sys 0.22 (99%). Peak memory: 307292KB.\nElapsed time: 0:05.49[h:]min:sec. CPU time: user 7.37 sys 0.74 (147%). Peak memory: 441140KB.\nElapsed time: 0:04.47[h:]min:sec. CPU time: user 4.49 sys 0.43 (110%). Peak memory: 338284KB.\nElapsed time: 0:05.38[h:]min:sec. CPU time: user 5.35 sys 0.46 (108%). Peak memory: 325048KB.\nElapsed time: 0:11.64[h:]min:sec. CPU time: user 12.36 sys 1.04 (115%). Peak memory: 363228KB.\nElapsed time: 0:11.04[h:]min:sec. CPU time: user 31.66 sys 1.27 (298%). Peak memory: 474348KB.\nElapsed time: 0:10.43[h:]min:sec. CPU time: user 39.69 sys 0.95 (389%). Peak memory: 875816KB.\nmake[1]: *** [Makefile:589: do-5_2_route] Error 1\nmake: *** [Makefile:589: /work/results/asap7/opentallas_qkh_packet_v263_asap7_ref_qkh_packet_v263_pg2_21996d89e/base/5_2_route.odb] Error 2\n\npartial record written to /srv/opentallas-scratch/claude/closure-loop/qkh_packet_v263-pg2-21996d89e/routes/qkh_packet_v263_pg2_21996d89e/physical.json\n",
+      "first_error": "qkh_packet_v263_pg2_21996d89e/flow.log: [ERROR DRT-0255] Maze Route cannot find path of net clk in worker of routeBox ( 3990 0 ) ( 7980 3990 ). [step do-5_2_route]"
+    },
+    {
+      "stage": "route",
+      "host": "ot-agidock128",
+      "attempt": 2,
+      "why": "rc=1 ok-check failed;; first error: qkh_packet_v263_pg2_21996d89e/flow.log: [ERROR DRT-0255] Maze Route cannot find path of net clk in worker of routeBox ( 3990 0 ) ( 7980 3990 ). [step do-5_2_route]",
+      "resource": false,
+      "tail": "100%). Peak memory: 308876KB.\nElapsed time: 0:03.75[h:]min:sec. CPU time: user 3.55 sys 0.31 (102%). Peak memory: 338504KB.\nElapsed time: 0:03.30[h:]min:sec. CPU time: user 3.09 sys 0.21 (100%). Peak memory: 307048KB.\nElapsed time: 0:03.26[h:]min:sec. CPU time: user 3.04 sys 0.22 (99%). Peak memory: 306416KB.\nElapsed time: 0:03.35[h:]min:sec. CPU time: user 3.13 sys 0.22 (99%). Peak memory: 309376KB.\nElapsed time: 0:03.31[h:]min:sec. CPU time: user 3.10 sys 0.21 (100%). Peak memory: 308036KB.\nElapsed time: 0:03.30[h:]min:sec. CPU time: user 3.11 sys 0.19 (99%). Peak memory: 308272KB.\nElapsed time: 0:05.55[h:]min:sec. CPU time: user 7.58 sys 0.71 (149%). Peak memory: 441752KB.\nElapsed time: 0:04.70[h:]min:sec. CPU time: user 4.72 sys 0.43 (109%). Peak memory: 338484KB.\nElapsed time: 0:05.24[h:]min:sec. CPU time: user 5.23 sys 0.47 (108%). Peak memory: 324996KB.\nElapsed time: 0:11.16[h:]min:sec. CPU time: user 11.78 sys 1.05 (115%). Peak memory: 363484KB.\nElapsed time: 0:11.01[h:]min:sec. CPU time: user 31.46 sys 1.40 (298%). Peak memory: 474360KB.\nElapsed time: 0:10.37[h:]min:sec. CPU time: user 39.01 sys 0.98 (385%). Peak memory: 868136KB.\nmake[1]: *** [Makefile:589: do-5_2_route] Error 1\nmake: *** [Makefile:589: /work/results/asap7/opentallas_qkh_packet_v263_asap7_ref_qkh_packet_v263_pg2_21996d89e/base/5_2_route.odb] Error 2\n\npartial record written to /srv/opentallas-scratch/claude/closure-loop/qkh_packet_v263-pg2-21996d89e/routes/qkh_packet_v263_pg2_21996d89e/physical.json\n",
+      "first_error": "qkh_packet_v263_pg2_21996d89e/flow.log: [ERROR DRT-0255] Maze Route cannot find path of net clk in worker of routeBox ( 3990 0 ) ( 7980 3990 ). [step do-5_2_route]"
+    }
+  ]
+}

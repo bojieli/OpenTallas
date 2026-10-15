@@ -1,0 +1,155 @@
+{
+  "schema": "opentallas.s81.required-hardware.v1",
+  "scope": "Full canonical layer die; source candidates do not substitute for emitted netlist connections or native views.",
+  "canonical": {
+    "field_pairs": 2417,
+    "bf_pairs": 519,
+    "phase_width": 10,
+    "stages": 81,
+    "rank_dies": 324
+  },
+  "operations": [
+    {
+      "operation": "fixed_calendar_issue",
+      "module": "dsfd_stage_seq_static_c8",
+      "source": "rtl/dsrom_sys/s81_static_control/dsfd_stage_seq_static_c8.sv",
+      "owner": "S-COMPILE"
+    },
+    {
+      "operation": "field_pq_command",
+      "module": "ot_s81_pq_command_endpoint",
+      "source": "rtl/dsrom_sys/s81_static_control/ot_s81_pq_command_endpoint.sv",
+      "owner": "S-COMPILE",
+      "required_ports": {
+        "f_iss": 93
+      },
+      "candidate_ref": "aa258dbad"
+    },
+    {
+      "operation": "field_pq_datapath",
+      "module": "dsfd_sp_pq_n",
+      "source": "rtl/dsrom_sys/s81_die_bind/dsfd_sp_pq_n.sv",
+      "owner": "S-ELEM/S-BIND",
+      "required_defines": [
+        "DSFD_PQ_STATIC_X2"
+      ],
+      "required_ports": {
+        "f_iss": 93,
+        "t_iss": 39,
+        "xw": 1101,
+        "xe": 1101
+      },
+      "candidate_ref": "claude/s81-elemB6-pq@b54bde671"
+    },
+    {
+      "operation": "bf_operand_transport",
+      "module": "ot_s81_static_column_ingress",
+      "source": "rtl/dsrom_sys/s81_die_bind/ot_s81_static_column_ingress.sv",
+      "owner": "S-BIND",
+      "required_ports": {
+        "i": 1102,
+        "o": 1101
+      }
+    },
+    {
+      "operation": "bf_static_execution",
+      "module": "dsfd_bf_front_static",
+      "source": "rtl/dsrom_sys/s81_die_bind/dsfd_bf_front_static.sv",
+      "owner": "S-ELEM/BF-static-core",
+      "required_ports": {
+        "f_prog": 38
+      },
+      "static_semantics_evidence": null,
+      "candidate_ref": "fc29b45a3",
+      "scope_note": "Actual recovered source exists; native static master/programme/io_clk adoption and production evidence remain separate."
+    },
+    {
+      "operation": "field_gather",
+      "module": "dsfd_sp_gather_c",
+      "source": "rtl/dsrom_sys/s81_ph/ctrl_c/dsfd_sp_gather_c_cl.sv",
+      "owner": "S-GATHER"
+    },
+    {
+      "operation": "field_capture",
+      "module": "dsfd_sp_capture_c",
+      "source": "rtl/dsrom_sys/s81_ph/ctrl_c/dsfd_sp_capture_c_cl.sv",
+      "owner": "S-VM"
+    },
+    {
+      "operation": "static_collective",
+      "module": "dsfd_sp_collective_static_c",
+      "source": "rtl/dsrom_sys/s81_static_collective/dsfd_sp_collective_static_c.sv",
+      "owner": "S-COLL",
+      "candidate_ref": "codex/s81-static-collective-1014@eca67dfcc",
+      "required_ports": {
+        "t_hc_tag": 32,
+        "t_vm": 2204,
+        "t_crq": 15
+      }
+    },
+    {
+      "operation": "su_executable",
+      "module": "dsfd_sp_su_c",
+      "source": "rtl/dsrom_sys/s81_suhc/dsfd_sp_su_c.sv",
+      "owner": "S-FUNC/S-ELEM",
+      "static_semantics_evidence": null
+    },
+    {
+      "operation": "hc_projection",
+      "module": "dsfd_sp_hc_c",
+      "source": "rtl/dsrom_sys/s81_suhc/dsfd_sp_hc_c.sv",
+      "owner": "S-FUNC/S-ELEM",
+      "static_semantics_evidence": null
+    },
+    {
+      "operation": "hcpost_executable",
+      "module": null,
+      "source": null,
+      "owner": "S-FUNC"
+    },
+    {
+      "operation": "vm_static_service",
+      "module": "dsfd_sp_vm",
+      "source": "rtl/dsrom_sys/s81_ph/vm/dsfd_sp_vm_static.sv",
+      "owner": "S-VM",
+      "required_defines": [
+        "DSFD_SP_VM_MIX4"
+      ],
+      "required_ports": {
+        "f_collective": 2204,
+        "f_crq": 15,
+        "t_crs": 513,
+        "f_mx_rqv": 20,
+        "t_mx_rs": 10240
+      },
+      "native_clock_delivery_evidence": null,
+      "clock_boundary_contract": "results/arch/s81_vm_native_clock_abi_1015/contract.json"
+    },
+    {
+      "operation": "engram_mix4",
+      "module": "dsfd_engram_mix4_c",
+      "source": "rtl/dsrom_sys/engram/mix/dsfd_engram_mix4_c.sv",
+      "owner": "S-FUNC",
+      "required_ports": {
+        "ck": 133,
+        "rq_v": 20,
+        "rq_row": 280,
+        "rs_d": 10240
+      }
+    },
+    {
+      "operation": "engram_lookup",
+      "module": "dsfd_engram_lkp",
+      "source": "rtl/dsrom_sys/engram/dsfd_engram_lkp.sv",
+      "owner": "S-FUNC/S-ELEM",
+      "static_semantics_evidence": null
+    },
+    {
+      "operation": "markov_static",
+      "module": "ot_s81_markov_k256_native",
+      "source": "rtl/experimental/dsrom_markov_20261008/ot_s81_markov_k256_native.sv",
+      "owner": "S-ELEM/S-DIE",
+      "static_semantics_evidence": null
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "unit": "oth-ubuntu-1837806-1792061423",
+  "terminal": "FAIL",
+  "stage": "post-synthesis before floorplan",
+  "mapped_per_root_sinks": [
+    6171,
+    1855,
+    8814,
+    8623,
+    6185,
+    10167
+  ],
+  "synthesis_seconds": 1110.84,
+  "peak_kib": 4866948,
+  "error": "OT_MULTI_ROOT input x[0] wrong domain for u_side.eg_m[0] on ck5; actual sharedrawinput cannotbeassignedsolelyck0",
+  "next_structural_change": "Registeredingress/egress +selectoralignment, sixrelatedphase0roots retained, +75FF/+2SIDEedges. Actualhead/compilercalendar notyetadopted.",
+  "qualification": false
+}

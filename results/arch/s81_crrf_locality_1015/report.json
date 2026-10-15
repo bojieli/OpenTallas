@@ -1,0 +1,76 @@
+{
+ "scope": "LOCAL_PLANNED_PIN_GEOMETRY_ONLY_NOT_ROUTED",
+ "variant": "C0 LC11 RF7 v6 276.48x345.6",
+ "source_sha256": {
+  "tools/s81_suhc/crr_pinplan.py": "3f6c92dea2302549916bc792576002bf36a2f35347a7c9a382a7f0e2701371c6",
+  "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_crootr.sv": "fbd99cf13a7f7c16a575343a3757530d11cb075f8dddfb174c1c223de52743c4",
+  "physical/s81_hc_pinplan/crrf_w.tcl": "a49236fc28daa1ea507415b963e9ba5beb11506a1f12b0f6743647171e4d0c25",
+  "tools/s81/crrf_locality_candidate.py": "e00dd6baf35c5f8e9d742f494783bfe018209dc13997c5c06d8d74de3a9416fa"
+ },
+ "rtl_mapping": "POST p_y[i] -> ydq/yr[i] -> dsel[i] -> ch_fd[104+i]; RF7 unchanged",
+ "before": {
+  "bits": 2816,
+  "opposite_order_bit_pairs": 3669353,
+  "max_horizontal_offset_um": 261.633,
+  "sum_horizontal_bit_um": 369131.21399999864,
+  "total_direct_manhattan_bit_um": 1342340.8139999988
+ },
+ "after": {
+  "bits": 2816,
+  "opposite_order_bit_pairs": 0,
+  "max_horizontal_offset_um": 43.056,
+  "sum_horizontal_bit_um": 51303.665999999845,
+  "total_direct_manhattan_bit_um": 1024513.266
+ },
+ "closed_east_pin_reference": {
+  "bits": 2816,
+  "opposite_order_bit_pairs": 296691,
+  "max_horizontal_offset_um": 81.936,
+  "sum_horizontal_bit_um": 108450.46799999954,
+  "total_direct_manhattan_bit_um": 1081660.0679999997
+ },
+ "pin_track_checks": {
+  "N/M5": [
+   1419,
+   7.86
+  ],
+  "N/M3": [
+   1408,
+   7.81
+  ],
+  "S/M5": [
+   1464,
+   5.41
+  ],
+  "S/M3": [
+   1464,
+   5.41
+  ],
+  "E/M4": [
+   1135,
+   5.87
+  ],
+  "W/M4": [
+   2,
+   0.02
+  ]
+ },
+ "moved_y_pin_names": 2815,
+ "horizontal_bit_um_saved": 317827.5479999988,
+ "unchanged": [
+  "all N input pins and actual y-slice home assignment",
+  "S metadata/control pins",
+  "W/E pins including clocks/reset",
+  "exact set of S physical tracks and dimensions",
+  "RTL and static latency"
+ ],
+ "required_before_adoption": [
+  "Identify actual downstream chain peer and per-bit rebind to these S Y-data pins",
+  "Check all incident fb/FWD and downstream wire paths, aggregate cuts and native pin reach",
+  "CTS/placement/routing TT setup FF hold DRC0 on exact source+pin candidate"
+ ],
+ "unknown": [
+  "Actual canonical expanded HC downstream peer pins are absent from partial global graph",
+  "Internal register positions are not modeled: opposite-order pairs are geometric pressure, not routed crossing counts"
+ ]
+}

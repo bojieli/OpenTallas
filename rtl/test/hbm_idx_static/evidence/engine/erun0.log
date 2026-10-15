@@ -1,0 +1,5 @@
+IDX_ENGINE_STATIC MUT=0 beats=192 refbeats=192 errors=0 cycle=976 PASS
+- rtl/test/hbm_idx_static/tb_idx_engine_static.sv:69: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 976ns; walltime 5.443 s; speed 179.328 ns/s
+- Verilator: cpu 5.442 s on 5 threads; allocated 44 MB

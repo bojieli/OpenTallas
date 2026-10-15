@@ -178,13 +178,13 @@ endmodule
 // Separate physical leaf; core stays wires-only. Two fixed stages align the
 // unchanged IX data and CTL broadcast fields with the pipelined QB response.
 module ot_s81_pq_qb_align_native (
- input wire clk,rst_n,input wire[608:0] bc_hr,input wire[1023:0] bt_d,
- output wire[608:0] bc_hr_q,output wire[1023:0] bt_d_q
+ input wire clk,rst_n,input wire[609:0] bc_hr,input wire[1023:0] bt_d,
+ output wire[609:0] bc_hr_q,output wire[1023:0] bt_d_q
 );
  wire[0:0] rst_l;
  ot_rst_relay #(.REGIONS(1),.SYNC_STAGES(2),.TREE_STAGES(1)) u_rr
  (.clk(clk),.rst_n_in(rst_n),.rst_n(rst_l));
- reg[608:0] hr[0:1];reg[1023:0] bt[0:1];
+ reg[609:0] hr[0:1];reg[1023:0] bt[0:1];
  always @(posedge clk or negedge rst_l[0])
  if(!rst_l[0]) begin hr[0]<=0;hr[1]<=0;end
  else begin hr[0]<=bc_hr;hr[1]<=hr[0];end

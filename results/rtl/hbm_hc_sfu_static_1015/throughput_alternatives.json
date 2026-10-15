@@ -1,0 +1,87 @@
+{
+  "immutable_qswiglu_price": 120,
+  "target_max_10pct": 132,
+  "physical_qualified": false,
+  "baseline": {
+    "IO_rows": 800,
+    "prefetch": [
+      0,
+      192
+    ],
+    "scalar_fetch": 192,
+    "arithmetic_start": 210,
+    "arithmetic_rows": 368,
+    "arithmetic_emit_beats": 192,
+    "arithmetic_load_lead": 8,
+    "arithmetic_drain_horizon": 168,
+    "drain": [
+      587,
+      779
+    ],
+    "fixed_tail_rows": 21,
+    "real_SRAMs": 126,
+    "actual_canonical_words_pass": 3072,
+    "ratio": 6.666666666666667
+  },
+  "overlap_candidate": {
+    "IO_rows": 432,
+    "prefetch": [
+      0,
+      192
+    ],
+    "scalar_fetch": 0,
+    "arithmetic_start": 20,
+    "arithmetic_rows": 368,
+    "drain": [
+      210,
+      402
+    ],
+    "fixed_tail_rows": 30,
+    "real_SRAMs": 126,
+    "added_FF_bits": 0,
+    "new_clock_roots": 0,
+    "new_crossbars": 0,
+    "macro_area_added_um2": 0,
+    "minimum_input_bytes": 24576,
+    "VM_read_bytes_per_edge": 256,
+    "used_prefetch_bytes_per_edge": 128,
+    "output_drain_bytes_per_edge": 64,
+    "actual_exact_gate": "PASS3072 canonical actualVMcommittedwords + actualloadedIOrequestmutantFAIL onintendedcurrent7b2bank",
+    "ratio_if_pass": 3.6,
+    "capacity_2048_protected_words": true,
+    "native_epoch_overlap_proven": false,
+    "historical_receipt": "qswiglu_overlap/receipt.json",
+    "fixed_start_to_observer_window_edges": 442,
+    "upper_bound_window_to_price": 3.683333333333333,
+    "actual_receipt": "qswiglu_overlap_current_bank/receipt.json"
+  },
+  "lower_bounds": {
+    "cold_VM_input_edges_at_full_8sectors": 96,
+    "output_edges_at_full_8sectors": 48,
+    "current_frozen_silu_dependent_arithmetic_edges_min": 134,
+    "replication_only_cannot_meet120": true
+  },
+  "fused_candidate_owner": "/root/h_hc_sfu/sfu_fused_latency",
+  "fused_candidate": {
+    "opt_in": true,
+    "lanes": 256,
+    "mul_latency": 5,
+    "add_latency": 4,
+    "div_latency": 21,
+    "dependent_arithmetic_latency_estimate": 109,
+    "canonical_beats": 12,
+    "arithmetic_window_estimate": 120,
+    "VM_cold_to_cold_120_claim": false,
+    "real_producer_residency_required": true,
+    "timing": "UNMEASURED; SS/FF and clock-root synthesis required",
+    "exactness": "pending real canonical primitive proof"
+  },
+  "full_batch_capacity": {
+    "old_serial_4x7168_IO_estimate": 5500,
+    "actual_host_max_PC_rows": 4096,
+    "overlap_single_contiguous_28672_elementwise_model_rows": 2032,
+    "not_implemented_or_proven": true,
+    "per_position_route_broadcast_must_be_scheduled": true
+  },
+  "clock_policy": "No frequency or uncertainty relaxation. Existing bench uses833ps common clock as functional mechanism only; physical SS/FF unqualified."
+}

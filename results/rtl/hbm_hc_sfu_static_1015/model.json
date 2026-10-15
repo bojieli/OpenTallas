@@ -116,5 +116,34 @@
     "VM_prefetch_join": false,
     "native_physical_qualification": false
   },
-  "scalar_side_contract": "KIND1 hardware does not implement sqrt/rsqrt/softplus/egate; compiler refuses these, engine faults on raw selected opcodes. Requires real KIND2 dispatch, not external-side pin binding."
+  "scalar_side_contract": "KIND1 hardware does not implement sqrt/rsqrt/softplus/egate; compiler refuses these, engine faults on raw selected opcodes. Requires real KIND2 dispatch, not external-side pin binding.",
+  "real_native_IO_programme_candidate": {
+    "module": "ot_hgi_sfu_scheduled_engine",
+    "IO_width": 471,
+    "IO_payloads_default": [
+      222,
+      222,
+      27
+    ],
+    "IO_real1024x256_SRAMs": 6,
+    "memory_target_namespace": "128+4*quadrant+stripe (3planes); reserved withHVM",
+    "Qswiglu_IO_rows": 800,
+    "Qswiglu_arithmetic_rows": 368,
+    "component_real_SRAMs_including_VM24": 126,
+    "one_runtime_start": true,
+    "arith_start_IOedge": 210,
+    "IO_drain_range": [
+      587,
+      779
+    ],
+    "full4x7168_IO_rows_estimate": 5500,
+    "host_PC_capacity_max": 4096,
+    "full4x7168_IO_qualification": false,
+    "fullbatch_next": "must compile proven splitphase programme or obtainactualversionedhostPC13 support; noPCtruncation/no8192claim",
+    "wholekernel_native_qualified": false,
+    "physical_qualified": false,
+    "throughput_qualified": false,
+    "immutable_Qswiglu_price": 120.0,
+    "diagnostic_800cycle_to_price_ratio": 6.666666666666667
+  }
 }

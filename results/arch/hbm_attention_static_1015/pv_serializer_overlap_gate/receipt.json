@@ -1,0 +1,20 @@
+{
+  "source_commit": "3ab501d57",
+  "unit": "oth-ubuntu-629838-1792054034",
+  "host": "ot-epyc1tb",
+  "exit_status": 0,
+  "qualification": false,
+  "status": "PASS real1R1W SRAM twoepoch overlap component",
+  "records": 3,
+  "payload_words": 24576,
+  "flags": 24576,
+  "overlap": "Record1 writes during first16draincycles ofrecord0;record2 reusesepoch0 during first16draincycles ofrecord1. Priorrecord drain continues128edges; no ready/credits.",
+  "real_macros": 128,
+  "flags_FF": 16384,
+  "remaining": [
+    "Wholeactualarith/producer/drain programme",
+    "ActualCP faultpropagation",
+    "Measuredimmutableprice",
+    "Physicalclock/cut/route"
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "source_commit": "8d92a8870",
+  "result": "FAIL_TOOL_CRASH_BEFORE_CTS",
+  "signal": 11,
+  "location": "rsz::Rebuffer::insertAssuredOption; globalplacement timing-driven repair",
+  "elapsed": "31m49.53s",
+  "peak_memory_KB": 1660984,
+  "physical_qualified": false,
+  "old_local_pids_absent": [
+    100517,
+    103241
+  ],
+  "old_remote_pids_absent": [
+    678278,
+    692199
+  ],
+  "remote": "ot-epyc1tb:/srv/opentallas-scratch/claude/ref_gate/qfd_io_collective_s3-20261015-015800",
+  "restart_performed": false
+}
