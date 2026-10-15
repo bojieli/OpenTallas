@@ -1,0 +1,32 @@
+{
+  "verdict": "PASS",
+  "records": [
+    {
+      "tokens": 128,
+      "checked": 64,
+      "wrong_local_first_mismatches": 0,
+      "events": 2240,
+      "finish_cycle": 2689
+    },
+    {
+      "tokens": 640,
+      "checked": 64,
+      "wrong_local_first_mismatches": 0,
+      "events": 5056,
+      "finish_cycle": 6273
+    },
+    {
+      "tokens": 8192,
+      "checked": 64,
+      "wrong_local_first_mismatches": 43,
+      "events": 88960,
+      "finish_cycle": 112897
+    }
+  ],
+  "mutants": [
+    "local_before_quadrant",
+    "resource_collision"
+  ],
+  "native_full_shape": false,
+  "physical_qualification": false
+}
