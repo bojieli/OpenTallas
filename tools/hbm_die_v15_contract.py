@@ -33,6 +33,17 @@ def generate(out):
         assert actual==expected,(q,'source/ABI drift')
         module('delivery_'+q,DELIVERY,'ot_hbm_svc_static_vm_delivery')
     module('hb_ckgen','rtl/hbm_accel/control/hfd_ckgen.sv','hfd_ckgen')
+    service_contract=ROOT/'physical/hbm_accel_die_views/svc/v15/contract.json'
+    service=None
+    if service_contract.exists():
+        service=json.loads(service_contract.read_text())
+        for rec in service['instances']:
+            top=rec['actual_module']
+            module(rec['instance'],'physical/hbm_accel_die_views/svc/v15/rtl/'+top+'.sv',top)
+            assert modules[rec['instance']]['ports']==service['actual_module_port_tables'][top]['ports']
+        for q in abi['quadrants']:
+            module('phy_'+q,'physical/asap7_memory_macros_v2/ot_hbm3e_phy_v41x_aw30_e8p5/ot_hbm3e_phy_v41x_aw30_e8p5_bb.v',
+                   'ot_hbm3e_phy_v41x_aw30_e8p5')
     edges=[]; connected=set()
     def edge(name,src,dst):
         sm,sp=src; dm,dp=dst
@@ -46,6 +57,24 @@ def generate(out):
         edge('ring_cw_'+q,('hb_vms_'+q,'cw_out'),('hb_vms_'+qs[(i+1)%4],'cw_in'))
         edge('ring_ccw_'+q,('hb_vms_'+q,'ccw_out'),('hb_vms_'+qs[(i-1)%4],'ccw_in'))
         edge('service_dq_'+q,('delivery_'+q,'dq'),('hb_vms_'+q,'dq'))
+    if service:
+        for rec in service['instances']:
+            name=rec['instance'];phy='phy_'+rec['quadrant'];pcs=rec['physical_pc_ids']
+            assert pcs==list(range(pcs[0],pcs[-1]+1)),(name,'non-contiguous PC mapping needs explicit bit permutation')
+            for field,width in service['phy']['pc_fields'].items():
+                band=modules[name]['ports'][field];hard=modules[phy]['ports'][field]
+                assert band['bits']==len(pcs)*width and hard['bits']==32*width
+                assert {band['direction'],hard['direction']}=={'input','output'}
+                band_end=[name,field];phy_end=[phy,field,pcs[0]*width,(pcs[-1]+1)*width]
+                src,dst=(band_end,phy_end) if band['direction']=='output' else (phy_end,band_end)
+                edges.append(dict(name=name+'_'+field,bits=len(pcs)*width,source=src,sink=dst,
+                                  clock='hbm',ready_or_credit=field in ('k_rdy','kr_rdy'),
+                                  allowed_exception='actual HBM PHY/controller boundary only'))
+                connected.add((name,field))
+        for q in abi['quadrants']:
+            pcs=[p for rec in service['instances'] if rec['quadrant']==q for p in rec['physical_pc_ids']]
+            assert sorted(pcs)==list(range(32)),(q,'duplicate or missing actual PHY PC')
+            connected.update(('phy_'+q,f) for f in service['phy']['pc_fields'])
     roots=[]
     for name,mod in modules.items():
         if name=='hb_ckgen':continue
@@ -55,6 +84,7 @@ def generate(out):
                 for bit in range(rec['bits']):
                     roots.append(dict(instance=name,port=port,bit=bit,source=['hb_ckgen','pll_stream'],
                                       physical_insertion_reference=None,status='NEEDS_REAL_CTS_VIEW'))
+                    if name.startswith(('svc_','phy_')):roots[-1]['source']=['hb_ckgen','pll_hbm']
                 connected.add((name,port))
             if port=='rst_n':
                 connected.add((name,port))
@@ -69,7 +99,7 @@ def generate(out):
                 owner='actual static client source migration'
             elif port in ('vmstat','bank_status','hub_status','mirror_busy','ring_fault'):
                 owner='actual four-quadrant status aggregate and CP consumer'
-            elif name.startswith('delivery_'):
+            elif name.startswith(('delivery_','svc_','phy_')):
                 owner='actual PHY service band / compiler block command source'
             elif port in ('kq','kq_done'):
                 owner='actual static COLL parent / VM writer'
@@ -81,7 +111,7 @@ def generate(out):
     # Same source-exact widths as the new eight ring edges and four staging
     # edges. A common-clock station is actual flop RTL, never an abstract stub.
     # Physical location, hop count and timing are deliberately NOT inferred.
-    for width in sorted({e['bits'] for e in edges}):
+    for width in sorted({e['bits'] for e in edges if e['clock']=='stream'}):
         master=f'hfd_stn_v15_cc{width}'
         def port(direction,bits):
             return dict(direction=direction,bits=bits,dir_segments=[[0,bits,'in' if direction=='input' else 'out']])
@@ -93,10 +123,21 @@ def generate(out):
         (out/(master+'_ports.json')).write_text(json.dumps(rec,indent=1)+'\n')
         generated.append(dict(master=master,bits=width,role=role,latency_cycles=1,
                               sinks_per_root=width,physical_qualified=False,bench_qualified=False))
+    dependency_hashes={}
+    for directory in ('rtl/hbm_accel/generic/vm/static','rtl/hbm_accel/loader/service_native'):
+        for dep in sorted((ROOT/directory).glob('*.sv')):
+            dependency_hashes[str(dep.relative_to(ROOT))]=hashlib.sha256(dep.read_bytes()).hexdigest()
     report=dict(schema='opentallas.hbm.actual-v15-source-contract.v1',status='FAIL_UNBOUND_NATIVE_PORTS',
-                source_sha256=sources,abi_sha256=hashlib.sha256(abi_path.read_bytes()).hexdigest(),
+                source_sha256=sources,dependency_inventory_sha256=dependency_hashes,
+                dependency_inventory_scope='all static VM/service RTL including benches; not a substitute for hierarchy elaboration',
+                hierarchy_elaboration_required=True,
+                service_qualification_rejections=service['qualification_rejections'] if service else [],
+                abi_sha256=hashlib.sha256(abi_path.read_bytes()).hexdigest(),
                 instances=modules,known_actual_edges=edges,clock_roots=roots,
                 registered_station_masters=generated,unbound_ports=unresolved,
+                boundary_gaps=['actual 1.024ns PHY to 0.833333ns stream block CDC absent',
+                               'actual mapped PHY address/endian/PC striping proof required',
+                               'historical PC leaf rejected for address/clock semantics; actual block CDC replacement required'],
                 unbound_count=len(unresolved),pin_only_placeholder_count=0,
                 legacy_failures_disposition='77 legacy station failures remain historical; v15 validates actual source ports independently',
                 qualification=dict(native_complete=False,pins=False,station_benches=False,clock_views=False,TT=False,FF=False,DRC=False),
@@ -144,4 +185,4 @@ if __name__=='__main__':
     args=ap.parse_args()
     report=generate(args.out)
     if args.bench:bench(args.out,report)
-    raise SystemExit(0 if args.inventory else bool(report['unbound_count']))
+    raise SystemExit(0 if args.inventory else bool(report['unbound_count'] or report['boundary_gaps']))
