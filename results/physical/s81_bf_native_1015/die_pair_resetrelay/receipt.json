@@ -1,0 +1,34 @@
+{
+  "source_commit": "93f91379d977225e1377a65356fc623c77b37d62",
+  "scope": "Actual generated BF front(CPIN1) + die ABI wrappers +2column RTL, component historical numerical-ROM stimulus shim only; not full native mapped-memory/token signoff.",
+  "verdict": "COMPONENT_PASS",
+  "reset_change": "One async reset relay per seam face, synchronous data reset; normal execution delta stays exactly+1edge.",
+  "cases": {
+    "positive": {
+      "returncode": 0,
+      "ok": true,
+      "markers": [
+        "PASS independent-numerical BF=1 rows=456 value_assertions=912 config_assertions=448",
+        "PASS actual-element BF=1 cycles=124422 partials=232 issues=4288 gated=2893 opened=121525 loads=350",
+        "PASS wake-source BF=1 wake_assertions=1990752 root_capture_events=124418",
+        "TXN LAG ns min=6.664 max=15.827 mean=9.923 n=456",
+        "TXN ref=232/224 shadow=232/224 compared=456 fault=0/0 busy=0/0",
+        "TXN MATCH"
+      ]
+    },
+    "seam_slot": {
+      "returncode": 1,
+      "ok": true,
+      "markers": [
+        "[2250000] %Fatal: cand_ot_v41_pair_w17w10.sv:193: Assertion failed in tb_bfcolumn.test.cand_dut: DIFF TXN lane=0 n=0 ref=344d5b5f00400010 shadow=344d487400400010"
+      ]
+    }
+  },
+  "hashes": {
+    "terminal.json": "25f1801caa5dd8e833e814b88f865eaaf9543689d4bef07f27ddb2891afa9251",
+    "positive/run.log": "55be22f0e2823064685940ba41ec74c0e7caf2e96e07d80f431afe2d7c13c544",
+    "positive/ot_s81_bf_seam.sv": "786c8542f81371e3a7a63962ff0ce83136f3c6873641d89c8d49b48ded5d2fc0",
+    "seam_slot/run.log": "61b2128578f9173baee5b95d15b308869fedf27bcc069cca3dea07071a4448a3",
+    "seam_slot/ot_s81_bf_seam.sv": "786c8542f81371e3a7a63962ff0ce83136f3c6873641d89c8d49b48ded5d2fc0"
+  }
+}
