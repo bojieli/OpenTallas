@@ -1,0 +1,322 @@
+{
+ "schema": "opentallas.closure_loop.ck_insertion.v1",
+ "base": "/srv/opentallas/claude/closure-loop/hbm_hc_weight_quarter_static-native2-899befe48/routes/hbm_hc_weight_quarter_static_native2_899befe48/work/orfs/results/asap7/opentallas_ot_hgi_hc_weight_quarter_static_asap7_ref_hbm_hc_weight_quarter_static_native2_899befe48/base",
+ "db": "6_final.odb",
+ "sdc": "6_final.sdc",
+ "clock": "core_clk",
+ "parasitics": "spef",
+ "raw_source": true,
+ "ss": {
+  "boundary": {
+   "n": 548,
+   "mean": 244.3,
+   "min": 217.3,
+   "max": 254.5
+  },
+  "all": {
+   "n": 1061,
+   "mean": 243.6,
+   "min": 217.3,
+   "max": 254.5
+  },
+  "errors": [],
+  "macros": {
+   "n": 2,
+   "nets": 2,
+   "max_per_net": 1,
+   "reg_mean": 243.6,
+   "max_slew": 25.4,
+   "max_late": -26.1,
+   "pins": [
+    {
+     "pin": "slot[0].u_weight/clk",
+     "arr": 217.5,
+     "slew": 25.4,
+     "late": -26.1,
+     "net": "clknet_1_0__leaf_clk"
+    },
+    {
+     "pin": "slot[1].u_weight/clk",
+     "arr": 217.3,
+     "slew": 24.0,
+     "late": -26.3,
+     "net": "clknet_1_1__leaf_clk"
+    }
+   ]
+  },
+  "macro_libs": 1
+ },
+ "tt": {
+  "boundary": {
+   "n": 548,
+   "mean": 186.4,
+   "min": 162.9,
+   "max": 196.0
+  },
+  "all": {
+   "n": 1061,
+   "mean": 185.3,
+   "min": 162.9,
+   "max": 196.0
+  },
+  "errors": [],
+  "macros": {
+   "n": 2,
+   "nets": 2,
+   "max_per_net": 1,
+   "reg_mean": 185.3,
+   "max_slew": 21.1,
+   "max_late": -22.3,
+   "pins": [
+    {
+     "pin": "slot[0].u_weight/clk",
+     "arr": 163.0,
+     "slew": 21.1,
+     "late": -22.3,
+     "net": "clknet_1_0__leaf_clk"
+    },
+    {
+     "pin": "slot[1].u_weight/clk",
+     "arr": 162.9,
+     "slew": 19.7,
+     "late": -22.4,
+     "net": "clknet_1_1__leaf_clk"
+    }
+   ]
+  },
+  "macro_libs": 1
+ },
+ "ff": {
+  "boundary": {
+   "n": 548,
+   "mean": 152.4,
+   "min": 131.0,
+   "max": 160.8
+  },
+  "all": {
+   "n": 1061,
+   "mean": 151.1,
+   "min": 131.0,
+   "max": 160.8
+  },
+  "errors": [],
+  "macros": {
+   "n": 2,
+   "nets": 2,
+   "max_per_net": 1,
+   "reg_mean": 151.1,
+   "max_slew": 19.9,
+   "max_late": -20.0,
+   "pins": [
+    {
+     "pin": "slot[0].u_weight/clk",
+     "arr": 131.1,
+     "slew": 19.9,
+     "late": -20.0,
+     "net": "clknet_1_0__leaf_clk"
+    },
+    {
+     "pin": "slot[1].u_weight/clk",
+     "arr": 131.0,
+     "slew": 18.4,
+     "late": -20.1,
+     "net": "clknet_1_1__leaf_clk"
+    }
+   ]
+  },
+  "macro_libs": 1
+ },
+ "route_corner": null,
+ "macro_clk": {
+  "n": 2,
+  "slew_ps": 120.0,
+  "late_ps": 30.0,
+  "flag": false,
+  "outliers": []
+ },
+ "env": {
+  "CK_SS_MEAN": 244,
+  "CK_SS_ALL_MEAN": 244,
+  "CK_SS_MIN": 217,
+  "CK_SS_ALL_MIN": 217,
+  "CK_SS_MAX": 254,
+  "CK_SS_ALL_MAX": 254,
+  "CK_TT_MEAN": 186,
+  "CK_TT_ALL_MEAN": 185,
+  "CK_TT_MIN": 163,
+  "CK_TT_ALL_MIN": 163,
+  "CK_TT_MAX": 196,
+  "CK_TT_ALL_MAX": 196,
+  "CK_FF_MEAN": 152,
+  "CK_FF_ALL_MEAN": 151,
+  "CK_FF_MIN": 131,
+  "CK_FF_ALL_MIN": 131,
+  "CK_FF_MAX": 161,
+  "CK_FF_ALL_MAX": 161,
+  "CK_ROUTE_REF": "SS"
+ },
+ "lib_clock_pin": "clk",
+ "clock_mapping_basis": "6_final.sdc create_clock -name core_clk [get_ports {clk}]",
+ "clock_measurements": {
+  "clk": {
+   "schema": "opentallas.closure_loop.ck_insertion.v1",
+   "base": "/srv/opentallas/claude/closure-loop/hbm_hc_weight_quarter_static-native2-899befe48/routes/hbm_hc_weight_quarter_static_native2_899befe48/work/orfs/results/asap7/opentallas_ot_hgi_hc_weight_quarter_static_asap7_ref_hbm_hc_weight_quarter_static_native2_899befe48/base",
+   "db": "6_final.odb",
+   "sdc": "6_final.sdc",
+   "clock": "core_clk",
+   "parasitics": "spef",
+   "raw_source": true,
+   "ss": {
+    "boundary": {
+     "n": 548,
+     "mean": 244.3,
+     "min": 217.3,
+     "max": 254.5
+    },
+    "all": {
+     "n": 1061,
+     "mean": 243.6,
+     "min": 217.3,
+     "max": 254.5
+    },
+    "errors": [],
+    "macros": {
+     "n": 2,
+     "nets": 2,
+     "max_per_net": 1,
+     "reg_mean": 243.6,
+     "max_slew": 25.4,
+     "max_late": -26.1,
+     "pins": [
+      {
+       "pin": "slot[0].u_weight/clk",
+       "arr": 217.5,
+       "slew": 25.4,
+       "late": -26.1,
+       "net": "clknet_1_0__leaf_clk"
+      },
+      {
+       "pin": "slot[1].u_weight/clk",
+       "arr": 217.3,
+       "slew": 24.0,
+       "late": -26.3,
+       "net": "clknet_1_1__leaf_clk"
+      }
+     ]
+    },
+    "macro_libs": 1
+   },
+   "tt": {
+    "boundary": {
+     "n": 548,
+     "mean": 186.4,
+     "min": 162.9,
+     "max": 196.0
+    },
+    "all": {
+     "n": 1061,
+     "mean": 185.3,
+     "min": 162.9,
+     "max": 196.0
+    },
+    "errors": [],
+    "macros": {
+     "n": 2,
+     "nets": 2,
+     "max_per_net": 1,
+     "reg_mean": 185.3,
+     "max_slew": 21.1,
+     "max_late": -22.3,
+     "pins": [
+      {
+       "pin": "slot[0].u_weight/clk",
+       "arr": 163.0,
+       "slew": 21.1,
+       "late": -22.3,
+       "net": "clknet_1_0__leaf_clk"
+      },
+      {
+       "pin": "slot[1].u_weight/clk",
+       "arr": 162.9,
+       "slew": 19.7,
+       "late": -22.4,
+       "net": "clknet_1_1__leaf_clk"
+      }
+     ]
+    },
+    "macro_libs": 1
+   },
+   "ff": {
+    "boundary": {
+     "n": 548,
+     "mean": 152.4,
+     "min": 131.0,
+     "max": 160.8
+    },
+    "all": {
+     "n": 1061,
+     "mean": 151.1,
+     "min": 131.0,
+     "max": 160.8
+    },
+    "errors": [],
+    "macros": {
+     "n": 2,
+     "nets": 2,
+     "max_per_net": 1,
+     "reg_mean": 151.1,
+     "max_slew": 19.9,
+     "max_late": -20.0,
+     "pins": [
+      {
+       "pin": "slot[0].u_weight/clk",
+       "arr": 131.1,
+       "slew": 19.9,
+       "late": -20.0,
+       "net": "clknet_1_0__leaf_clk"
+      },
+      {
+       "pin": "slot[1].u_weight/clk",
+       "arr": 131.0,
+       "slew": 18.4,
+       "late": -20.1,
+       "net": "clknet_1_1__leaf_clk"
+      }
+     ]
+    },
+    "macro_libs": 1
+   },
+   "route_corner": null,
+   "macro_clk": {
+    "n": 2,
+    "slew_ps": 120.0,
+    "late_ps": 30.0,
+    "flag": false,
+    "outliers": []
+   },
+   "env": {
+    "CK_SS_MEAN": 244,
+    "CK_SS_ALL_MEAN": 244,
+    "CK_SS_MIN": 217,
+    "CK_SS_ALL_MIN": 217,
+    "CK_SS_MAX": 254,
+    "CK_SS_ALL_MAX": 254,
+    "CK_TT_MEAN": 186,
+    "CK_TT_ALL_MEAN": 185,
+    "CK_TT_MIN": 163,
+    "CK_TT_ALL_MIN": 163,
+    "CK_TT_MAX": 196,
+    "CK_TT_ALL_MAX": 196,
+    "CK_FF_MEAN": 152,
+    "CK_FF_ALL_MEAN": 151,
+    "CK_FF_MIN": 131,
+    "CK_FF_ALL_MIN": 131,
+    "CK_FF_MAX": 161,
+    "CK_FF_ALL_MAX": 161,
+    "CK_ROUTE_REF": "SS"
+   },
+   "lib_clock_pin": "clk",
+   "clock_mapping_basis": "6_final.sdc create_clock -name core_clk [get_ports {clk}]"
+  }
+ }
+}
