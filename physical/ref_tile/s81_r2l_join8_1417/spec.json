@@ -1,0 +1,82 @@
+{
+ "name": "s81_r2l_join8_1417",
+ "top": "ot_s81_r2l_join8",
+ "kind": "tile",
+ "sources": [
+  "rtl/dsrom_sys/s81_static_net/ot_s81_static_ratio_cross.sv",
+  "rtl/dsrom_sys/s81_static_net/ot_s81_r2l_groups64.sv"
+ ],
+ "clock_port": "ck",
+ "reset_ports": [],
+ "outline": {
+  "w": 43.2,
+  "h": 21.6,
+  "exact": true
+ },
+ "pins": {
+  "E": [
+   "valid_i",
+   "live_i",
+   "fault_i"
+  ],
+  "S": [
+   "ck"
+  ],
+  "W": [
+   "valid_o",
+   "live_o",
+   "fault_o"
+  ]
+ },
+ "layer_cap": "M5",
+ "recipe": 2,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": false,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 8,
+  "hold_margin_ns": 0.03,
+  "period_ps": 1111.111,
+  "macro_halo_um": 5.4
+ },
+ "job": {
+  "owner": "Codex:S81-R2L-GROUPS1417",
+  "branch": "codex/s81-r2l-groups-1417",
+  "tag": "g1",
+  "hold_merge": "New source-exact grouped leaf; no parent/die adoption until actual17root delivery, every seam and native physical gates pass.",
+  "extra_paths": [
+   "rtl/dsrom_sys/s81_static_net",
+   "tools/s81_static_net",
+   "physical/s81_r2l_groups_1417"
+  ],
+  "benches": [
+   {
+    "name": "full512_phase_exact_and_actual_mutant",
+    "cmd": "bash tools/s81_static_net/run_r2l_groups64_gate.sh {RUN}/phase_gate",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "R2L_GROUPS_GATE_PASS"
+   }
+  ]
+ },
+ "structural_change": "HCOL/HSEL sourcef8139a4c7 TT-46.69 halfcycle marker fanout4031bankFF. Eight local64b banks +actualstatusjoin preserveeveryoutputedge; eachdata leaf has2actualclockentries; no inheritedflatview. Independent pin/outline proposal only until typedS-DIEgrant.",
+ "io_tcl": "physical/s81_r2l_groups_1417/join8_pins.tcl",
+ "params": {},
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ }
+}
