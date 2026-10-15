@@ -567,13 +567,33 @@ proc ot_ce_leaf_ownership {inputs outputs} {
       }
     }
   }
+  # A cell is a constant source when it is a library TIEHI/TIELO, or a
+  # combinational cell (synthesis output buffer) whose every input is driven
+  # only by constant sources. Registers, ports and unknown drivers are never.
+  set ::ot_mr_regs {}
+  foreach r [all_registers -cells] { dict set ::ot_mr_regs [get_full_name $r] 1 }
+  proc ot_mr_constant {cell depth} {
+    if {[regexp {^TIE(HI|LO)} [get_property $cell ref_name]]} { return 1 }
+    if {$depth <= 0} { return 0 }
+    if {![llength [get_lib_cells -quiet -of_objects $cell]] || [dict exists $::ot_mr_regs [get_full_name $cell]]} { return 0 }
+    set ins [get_pins -quiet -of_objects $cell -filter "direction==input"]
+    if {![llength $ins]} { return 0 }
+    foreach pin $ins {
+      set net [get_nets -quiet -of_objects $pin]
+      if {![llength $net]} { return 0 }
+      set drivers [get_pins -quiet -of_objects $net -filter "direction==output"]
+      if {[llength [get_ports -quiet -of_objects $net]] || [llength $drivers] != 1} { return 0 }
+      if {![ot_mr_constant [get_cells -of_objects $drivers] [expr {$depth - 1}]]} { return 0 }
+    }
+    return 1
+  }
   dict for {name domain} $outputs {
     foreach start [get_fanin -flat -startpoints_only -to [get_ports $name]] {
       set source [get_full_name [get_cells -quiet -of_objects $start]]
       # A die strap tie output (contract v1.2 tie_hi/tie_lo) is a library
       # TIEHI/TIELO constant: it has no clock and no data domain to own.
       set source_cell [get_cells -quiet -of_objects $start]
-      if {[llength $source_cell] == 1 && [regexp {^TIE(HI|LO)} [get_property $source_cell ref_name]]} {
+      if {(![dict exists $cells $source] || [dict get $cells $source] ne $domain) && [llength $source_cell] == 1 && [ot_mr_constant $source_cell 4]} {
         puts "OT_MULTI_ROOT constant output $name <- [get_property $source_cell ref_name] $source"
         continue
       }
