@@ -1,0 +1,10 @@
+ot-run: load hold: every qualifying host has load1 > 1.5 x cores (ot-pve1 45/28); waiting
+ot-run: load hold released after 61 s
+ot-run: ot-epyc1tb     admits   119 GB (avail 414, growth 231, headroom 64, waiters 0/0 GB) load 73/128 running 27 disk 394 GB 
+ot-run: ot-epyc4       admits  -249 GB (avail 232, growth 219, headroom 48, waiters 16/214 GB) load 116/128 running 34 disk 462 GB 
+ot-run: ot-pve1        skipped: load hold: load1 > 1.5 x cores
+ot-run: ot-agidock128  admits   -17 GB (avail 64, growth 55, headroom 24, waiters 1/32 GB) load 22/64 running 13 disk 33 GB 
+ot-run: -> ot-epyc1tb
+ot-heavy: admitted on ot-epyc1tb as oth-ubuntu-1011390-1792088907 after 0 s
+SU_MULTIRATE_GATE_PASS
+ot-run: RAN on ot-epyc1tb (unit oth-ubuntu-1011390-1792088907): exit 0
