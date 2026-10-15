@@ -99,18 +99,17 @@ module qkd_static_kv_landing_pc #(
       end
 endmodule
 
-// One native row group = four separately clocked physical PC landing leaves.
-// Every request and response is pin-registered at the group; no ready port.
-module qkd_static_kv_landing_grp #(
-    parameter integer STACK=0,GROUP=0,MUT=0
-)(
-    input wire ck,input wire [3:0] ck_pc,input wire rst_n,
-    input wire arm,input wire [15:0] epoch,input wire [5:0] layer,
-    input wire [3:0] expected_put,input wire [39:0] expected_sector,
-    input wire [3:0] actual_valid,input wire [39:0] actual_sector,
-    input wire [63:0] actual_epoch,input wire [23:0] actual_layer,input wire [1023:0] actual_data,
+// Pin-registered row-control leaf. PC request/return faces are explicit so the
+// physical parent can insert balanced, compiled relay stages on each quarter.
+module qkd_static_kv_rowctl(
+    input wire ck,rst_n,
     input wire req_valid,input wire [13:0] req_t,input wire req_v,
     input wire [15:0] req_epoch,input wire [5:0] req_layer,
+    output wire [3:0] pc_get,output wire [55:0] pc_get_t,output wire [3:0] pc_get_v,
+    output wire [63:0] pc_get_epoch,output wire [23:0] pc_get_layer,
+    input wire [3:0] pc_valid,input wire [1023:0] pc_data,input wire [55:0] pc_t,
+    input wire [3:0] pc_v,input wire [63:0] pc_epoch,input wire [23:0] pc_layer,
+    input wire [3:0] pc_fault,
     output reg rsp_valid,output reg [1023:0] rsp_data,output reg [13:0] rsp_t,
     output reg rsp_v,output reg [15:0] rsp_epoch,output reg [5:0] rsp_layer,output reg fault
 );
@@ -123,12 +122,52 @@ module qkd_static_kv_landing_grp #(
     (* keep *) reg [5:0] lq;
     always @(posedge ck)begin tq<=req_t;vq<=req_v;eq<=req_epoch;lq<=req_layer;end
     always @(posedge ck or negedge rn)if(!rn)rq<=0;else rq<=req_valid;
-    wire [3:0] ov,pf;
+    assign pc_get={4{rq}};assign pc_get_t={4{tq}};assign pc_get_v={4{vq}};
+    assign pc_get_epoch={4{eq}};assign pc_get_layer={4{lq}};
+    (* keep *) reg [3:0] iv,ivv,ifault;
+    (* keep *) reg [1023:0] idata;
+    (* keep *) reg [55:0] it;
+    (* keep *) reg [63:0] ie;
+    (* keep *) reg [23:0] il;
+    always @(posedge ck)begin
+      idata<=pc_data;it<=pc_t;ivv<=pc_v;ie<=pc_epoch;il<=pc_layer;
+      rsp_data<=idata;rsp_t<=it[13:0];rsp_v<=ivv[0];rsp_epoch<=ie[15:0];rsp_layer<=il[5:0];
+    end
+    always @(posedge ck or negedge rn)
+      if(!rn)begin iv<=0;ifault<=0;rsp_valid<=0;fault<=0;end
+      else begin
+        iv<=pc_valid;ifault<=pc_fault;rsp_valid<=iv[0];
+        if((|ifault)||iv!={4{iv[0]}})fault<=1;
+        if(iv[0]&&((it!={4{it[13:0]}})||(ivv!={4{ivv[0]}})||(ie!={4{ie[15:0]}})||(il!={4{il[5:0]}})))fault<=1;
+      end
+endmodule
+
+// Wires-only composition; each leaf has its own clock entry and physical home.
+// No physical relay latency is claimed here: a routed parent must insert its
+// actual balanced request/return relays and compile their fixed calendar.
+module qkd_static_kv_landing_grp #(
+    parameter integer STACK=0,GROUP=0,MUT=0
+)(
+    input wire ck,input wire [3:0] ck_pc,input wire rst_n,
+    input wire arm,input wire [15:0] epoch,input wire [5:0] layer,
+    input wire [3:0] expected_put,input wire [39:0] expected_sector,
+    input wire [3:0] actual_valid,input wire [39:0] actual_sector,
+    input wire [63:0] actual_epoch,input wire [23:0] actual_layer,input wire [1023:0] actual_data,
+    input wire req_valid,input wire [13:0] req_t,input wire req_v,
+    input wire [15:0] req_epoch,input wire [5:0] req_layer,
+    output wire rsp_valid,output wire [1023:0] rsp_data,output wire [13:0] rsp_t,
+    output wire rsp_v,output wire [15:0] rsp_epoch,output wire [5:0] rsp_layer,output wire fault
+);
+    wire [3:0] get,gv,ov,pf,vv;
+    wire [55:0] gt,ot;
+    wire [63:0] ge,oe;
+    wire [23:0] gl,ol;
     wire [1023:0] od;
-    wire [55:0] ot;
-    wire [3:0] vv;
-    wire [63:0] oe;
-    wire [23:0] ol;
+    qkd_static_kv_rowctl u_rowctl(
+      .ck(ck),.rst_n(rst_n),.req_valid(req_valid),.req_t(req_t),.req_v(req_v),.req_epoch(req_epoch),.req_layer(req_layer),
+      .pc_get(get),.pc_get_t(gt),.pc_get_v(gv),.pc_get_epoch(ge),.pc_get_layer(gl),
+      .pc_valid(ov),.pc_data(od),.pc_t(ot),.pc_v(vv),.pc_epoch(oe),.pc_layer(ol),.pc_fault(pf),
+      .rsp_valid(rsp_valid),.rsp_data(rsp_data),.rsp_t(rsp_t),.rsp_v(rsp_v),.rsp_epoch(rsp_epoch),.rsp_layer(rsp_layer),.fault(fault));
     genvar q;
     generate for(q=0;q<4;q=q+1)begin:g_pc
       qkd_static_kv_landing_pc #(.STACK(STACK),.GROUP(GROUP),.QUARTER(q),.MUT(MUT))u_pc(
@@ -136,16 +175,8 @@ module qkd_static_kv_landing_grp #(
        .expected_put(expected_put[q]),.expected_sector(expected_sector[10*q+:10]),
        .actual_valid(actual_valid[q]),.actual_sector(actual_sector[10*q+:10]),
        .actual_epoch(actual_epoch[16*q+:16]),.actual_layer(actual_layer[6*q+:6]),.actual_data(actual_data[256*q+:256]),
-       .get(rq),.get_t(tq),.get_v(vq),.get_epoch(eq),.get_layer(lq),
+       .get(get[q]),.get_t(gt[14*q+:14]),.get_v(gv[q]),.get_epoch(ge[16*q+:16]),.get_layer(gl[6*q+:6]),
        .out_valid(ov[q]),.out_data(od[256*q+:256]),.out_t(ot[14*q+:14]),
        .out_v(vv[q]),.out_epoch(oe[16*q+:16]),.out_layer(ol[6*q+:6]),.fault(pf[q]));
     end endgenerate
-    always @(posedge ck)begin rsp_data<=od;rsp_t<=ot[13:0];rsp_v<=vv[0];rsp_epoch<=oe[15:0];rsp_layer<=ol[5:0];end
-    always @(posedge ck or negedge rn)
-      if(!rn)begin rsp_valid<=0;fault<=0;end
-      else begin
-        rsp_valid<=ov[0];
-        if((|pf)||ov!={4{ov[0]}})fault<=1;
-        if(ov[0]&&((ot!={4{ot[13:0]}})||(vv!={4{vv[0]}})||(oe!={4{oe[15:0]}})||(ol!={4{ol[5:0]}})))fault<=1;
-      end
 endmodule

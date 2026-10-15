@@ -53,7 +53,7 @@ def model():
                 k_minimum_prefill_rows_due_to_frequency=256*(1-CORE_PS/HBM_PS),
                 landing_depth=128,landing_sram_bits=128*128*256,landing_sram_bytes=128*128*256//8,
                 macro='ot_sram_1r1w_128x256_m1_r2c2',macro_um=[94.824,41.064],
-                historical_pc_slot_um=[86.4,172.8],requested_pc_slot_um=[108,172.8],
+                historical_pc_slot_um=[86.4,172.8],requested_pc_slot_um=[151.2,172.8],minimum_macro_core_channel_um=20,requested_parent_width_um=237.6,
                 group_order=list(GROUP_ORDER),native_qualified=False,
                 remaining=['actual controller refresh/row-command calendar','V ring lifetime admission','fixed-phase core/HBM CDC return timing','actual 32K/4V consumer composition','128 PC native physical views and measured phi-R','unchanged-price full-token schedule/cost'])
 

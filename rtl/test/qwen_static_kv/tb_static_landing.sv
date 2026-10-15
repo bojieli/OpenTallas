@@ -35,26 +35,26 @@ module tb_static_landing;
    .req_valid(rq[g]),.req_t(tt[g]),.req_v(vv[g]),.req_epoch(16'd7),.req_layer(6'd3),
    .rsp_valid(ov[g]),.rsp_data(od[g]),.rsp_t(ot[g]),.rsp_v(outv[g]),.rsp_epoch(oe),.rsp_layer(ol),.fault(ff[g]));
  end endgenerate
- reg [31:0] expv[0:4],expkind[0:4];
- reg [13:0] expt[0:4][0:31];reg [1023:0] expd[0:4][0:31];
+ reg [31:0] expv[0:5],expkind[0:5];
+ reg [13:0] expt[0:5][0:31];reg [1023:0] expd[0:5][0:31];
  always @(posedge ck)begin
   cycles++;
-  if(!rst)for(integer d=0;d<5;d=d+1)expv[d]<=0;
+  if(!rst)for(integer d=0;d<6;d=d+1)expv[d]<=0;
   else begin
    expv[0]<=rq;expkind[0]<=vv;
    for(integer n=0;n<32;n=n+1)begin expt[0][n]<=tt[n];expd[0][n]<=pattern(tt[n],vv[n]);end
-   for(integer d=1;d<5;d=d+1)begin
+   for(integer d=1;d<6;d=d+1)begin
     expv[d]<=expv[d-1];expkind[d]<=expkind[d-1];
     for(integer n=0;n<32;n=n+1)begin expt[d][n]<=expt[d-1][n];expd[d][n]<=expd[d-1][n];end
    end
   end
   #0.001;
   if(rst)begin
-   if(ov!==expv[4])begin if(errors<8)$display("BAD valid c%0d actual%h expected%h",cycles,ov,expv[4]);errors++;end
+   if(ov!==expv[5])begin if(errors<8)$display("BAD valid c%0d actual%h expected%h",cycles,ov,expv[5]);errors++;end
    for(integer n=0;n<32;n=n+1)if(ov[n])begin
     seen++;
-    if(od[n]!==expd[4][n]||ot[n]!==expt[4][n]||outv[n]!==expkind[4][n])begin
-     if(errors<8)$display("BAD row c%0d group%0d t%0d expected%0d",cycles,n,ot[n],expt[4][n]);errors++;
+    if(od[n]!==expd[5][n]||ot[n]!==expt[5][n]||outv[n]!==expkind[5][n])begin
+     if(errors<8)$display("BAD row c%0d group%0d t%0d expected%0d",cycles,n,ot[n],expt[5][n]);errors++;
     end
    end
   end
@@ -98,6 +98,6 @@ module tb_static_landing;
   end
   idle();repeat(10)@(negedge ck);
   if((|ff)||errors||seen!=16384)begin $display("FAIL staticlanding ctx8192 rows%0d errors%0d fault%h mode%0d",seen,errors,ff,faultmode);$fatal(1);end
-  $display("PASS staticlanding ctx8192 groups32 PCs128 rows%0d sectors65536 fixed_latency4 cycles%0d",seen,cycles);$finish;
+  $display("PASS staticlanding ctx8192 groups32 PCs128 rows%0d sectors65536 fixed_latency5 cycles%0d",seen,cycles);$finish;
  end
 endmodule
