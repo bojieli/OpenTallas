@@ -1,0 +1,69 @@
+{
+ "scope": "HISTORICAL_VM_164_BOUNDED_ANNEAL_DIAGNOSTIC_SUPERSEDED_NOT_SOURCE_CURRENT",
+ "region": [
+  13942.8,
+  1807.9,
+  19040.4,
+  23632.0
+ ],
+ "cuts": {
+  "all_chains": {
+   "bits": 19354,
+   "y": 16526.148,
+   "minimum_width_at_060": 1529.204938271605
+  },
+  "broadcast_return_only": {
+   "bits": 5324,
+   "y": 16526.148,
+   "minimum_width_at_060": 420.66172839506174
+  },
+  "source_sha256": "8171058616c4c218c9b352583e0c5afd0393c558cb004c02fd2a1b6a247d49fa",
+  "source": "/home/ubuntu/geometry-s81-gen17/g18c/construction_pass0_plan.json.gz"
+ },
+ "results": [
+  {
+   "road_width": 432.0,
+   "road": [
+    18608.4,
+    1807.9,
+    432.0,
+    21824.1
+   ],
+   "baseline_all_cut": 2.1238957475994513,
+   "baseline_tree_cut": 0.5842524005486968
+  },
+  {
+   "road_width": 648.0,
+   "road": [
+    18392.4,
+    1807.9,
+    648.0,
+    21824.1
+   ],
+   "baseline_all_cut": 1.4159304983996341,
+   "baseline_tree_cut": 0.3895016003657979
+  },
+  {
+   "road_width": 864.0,
+   "road": [
+    18176.4,
+    1807.9,
+    864.0,
+    21824.1
+   ],
+   "baseline_all_cut": 1.0619478737997257,
+   "baseline_tree_cut": 0.2921262002743484
+  },
+  {
+   "road_width": 1080.0,
+   "road": [
+    17960.4,
+    1807.9,
+    1080.0,
+    21824.1
+   ],
+   "baseline_all_cut": 0.8495582990397805,
+   "baseline_tree_cut": 0.23370096021947873
+  }
+ ]
+}

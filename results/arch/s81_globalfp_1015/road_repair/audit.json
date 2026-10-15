@@ -1,0 +1,607 @@
+{
+ "schema": "opentallas.s81.road_repair.audit.v1",
+ "scope": "SCREEN_ONLY_HARD_INFEASIBILITY_NO_GRT",
+ "source_commit": "eb9cfa044920f23a9565d6c5fda43d2d5f217d06",
+ "graph_sha256": "f0ac1171cfaaf2abe008790d05802e4cee2b4ece183ecae5a6557ebdbd0b7693",
+ "vm_geometry_status": "OPEN: partial source body only; current complete parent footprint unavailable",
+ "vm_source": "tools/s81/current_system_geometry.py and results/arch/s81_system_current_1015/report.json @ fdca7e391; VM owner confirms current inventory changed to352memory leaves / partial502memory+write leaves550roots",
+ "new_norm_status": "Parent NORM correction adds further194.4/233.28 beyond v23; actualNT810 metadata and64source rows pending. Existing tower bounds remain conservative lower bounds.",
+ "hc_source": "tools/s81/contract_v23_hc_budget.py (+194.4/+233.28); v24 changes pins, no outline growth",
+ "bounds": {
+  "hub_width": 5097.600000000002,
+  "hub_height": 21824.1,
+  "current_vm_lower_bounds": {
+   "2x2": [
+    3952.8,
+    4903.2
+   ],
+   "1x4v": [
+    1965.6,
+    9828.0
+   ]
+  },
+  "two_by_two": {
+   "minimum_tower_span": 18461.472,
+   "minimum_total_height": 23364.672000000002,
+   "height_deficit": 1540.5720000000038,
+   "reason": "VM cannot overlap any tower in y; three towers cannot overlap each other simultaneously; interval-graph coloring gives tower span >= sum of two shortest heights."
+  },
+  "one_by_four": {
+   "three_smallest_main_widths": [
+    1672.248,
+    1727.976,
+    1727.976
+   ],
+   "three_width_sum": 5128.200000000001,
+   "total_main_height": 44322.96000000001,
+   "capacity_at_two_rectangles": 43648.2,
+   "height_sum_deficit": 674.7600000000093,
+   "minimum_height_increase": 337.38000000000466,
+   "reason": "At most two main rectangles fit at any y. Integrate occupied rectangle count over height. This excludes MIX4, HCX, halos, crossing corridor and missing VM leaves."
+  },
+  "literal1641road": {
+   "remaining_width": 3456.0000000000023,
+   "two_smallest_tower_width": 3633.072,
+   "tower_height_sum": 29170.728000000003
+  }
+ },
+ "cuts": {
+  "all_chains": {
+   "bits": 19354,
+   "y": 16526.148,
+   "minimum_width_at_060": 1529.204938271605,
+   "active_chains": [
+    {
+     "lo": 12547.26,
+     "hi": 18561.948,
+     "bits": 567,
+     "chain": "cxE_spine"
+    },
+    {
+     "lo": 12982.26,
+     "hi": 17109.347999999998,
+     "bits": 71,
+     "chain": "crW0_E0_hub"
+    },
+    {
+     "lo": 13417.26,
+     "hi": 18251.988,
+     "bits": 71,
+     "chain": "crW1_E0_hub"
+    },
+    {
+     "lo": 13852.26,
+     "hi": 18204.468,
+     "bits": 284,
+     "chain": "crW2_E0_hub"
+    },
+    {
+     "lo": 13852.26,
+     "hi": 18230.388,
+     "bits": 142,
+     "chain": "crW2_E1_hub"
+    },
+    {
+     "lo": 12895.26,
+     "hi": 18230.388,
+     "bits": 71,
+     "chain": "crW3_E0_hub"
+    },
+    {
+     "lo": 13330.26,
+     "hi": 18874.068000000003,
+     "bits": 142,
+     "chain": "crW5_E0_hub"
+    },
+    {
+     "lo": 12982.26,
+     "hi": 17275.668,
+     "bits": 284,
+     "chain": "crE0_E0_hub"
+    },
+    {
+     "lo": 12982.26,
+     "hi": 17275.668,
+     "bits": 284,
+     "chain": "crE0_E1_hub"
+    },
+    {
+     "lo": 12982.26,
+     "hi": 17275.668,
+     "bits": 71,
+     "chain": "crE0_E2_hub"
+    },
+    {
+     "lo": 16526.148,
+     "hi": 17490.588,
+     "bits": 71,
+     "chain": "crE1_W0_hub"
+    },
+    {
+     "lo": 13417.26,
+     "hi": 17490.588,
+     "bits": 284,
+     "chain": "crE1_E0_hub"
+    },
+    {
+     "lo": 13417.26,
+     "hi": 17490.588,
+     "bits": 284,
+     "chain": "crE1_E1_hub"
+    },
+    {
+     "lo": 13417.26,
+     "hi": 17490.588,
+     "bits": 142,
+     "chain": "crE1_E2_hub"
+    },
+    {
+     "lo": 13852.26,
+     "hi": 17546.748,
+     "bits": 284,
+     "chain": "crE2_E0_hub"
+    },
+    {
+     "lo": 13852.26,
+     "hi": 17546.748,
+     "bits": 284,
+     "chain": "crE2_E1_hub"
+    },
+    {
+     "lo": 12895.26,
+     "hi": 17741.148,
+     "bits": 284,
+     "chain": "crE3_E0_hub"
+    },
+    {
+     "lo": 12895.26,
+     "hi": 17741.148,
+     "bits": 284,
+     "chain": "crE3_E1_hub"
+    },
+    {
+     "lo": 12895.26,
+     "hi": 17741.148,
+     "bits": 142,
+     "chain": "crE3_E2_hub"
+    },
+    {
+     "lo": 13765.26,
+     "hi": 17957.148,
+     "bits": 284,
+     "chain": "crE4_E0_hub"
+    },
+    {
+     "lo": 13765.26,
+     "hi": 17957.148,
+     "bits": 284,
+     "chain": "crE4_E1_hub"
+    },
+    {
+     "lo": 13765.26,
+     "hi": 17957.148,
+     "bits": 71,
+     "chain": "crE4_E2_hub"
+    },
+    {
+     "lo": 13330.26,
+     "hi": 18081.347999999998,
+     "bits": 284,
+     "chain": "crE5_E0_hub"
+    },
+    {
+     "lo": 13330.26,
+     "hi": 18081.347999999998,
+     "bits": 284,
+     "chain": "crE5_E1_hub"
+    },
+    {
+     "lo": 13330.26,
+     "hi": 18081.347999999998,
+     "bits": 71,
+     "chain": "crE5_E2_hub"
+    },
+    {
+     "lo": 15439.668000000001,
+     "hi": 22540.72,
+     "bits": 515,
+     "chain": "col"
+    },
+    {
+     "lo": 1816.296,
+     "hi": 19303.908,
+     "bits": 87,
+     "chain": "c5_bk_selector"
+    },
+    {
+     "lo": 1816.296,
+     "hi": 19383.828,
+     "bits": 11,
+     "chain": "d5_bk_selector"
+    },
+    {
+     "lo": 1816.296,
+     "hi": 19445.388,
+     "bits": 4,
+     "chain": "s5_bk_selector"
+    },
+    {
+     "lo": 12808.26,
+     "hi": 20948.748000000003,
+     "bits": 513,
+     "chain": "KE0t"
+    },
+    {
+     "lo": 12808.26,
+     "hi": 20948.748000000003,
+     "bits": 513,
+     "chain": "KE0r"
+    },
+    {
+     "lo": 13243.26,
+     "hi": 21038.748000000003,
+     "bits": 513,
+     "chain": "KE1t"
+    },
+    {
+     "lo": 13243.26,
+     "hi": 21038.748000000003,
+     "bits": 513,
+     "chain": "KE1r"
+    },
+    {
+     "lo": 13678.26,
+     "hi": 21128.748000000003,
+     "bits": 513,
+     "chain": "KE2t"
+    },
+    {
+     "lo": 13678.26,
+     "hi": 21128.748000000003,
+     "bits": 513,
+     "chain": "KE2r"
+    },
+    {
+     "lo": 12721.26,
+     "hi": 21218.748000000003,
+     "bits": 513,
+     "chain": "KE3t"
+    },
+    {
+     "lo": 12721.26,
+     "hi": 21218.748000000003,
+     "bits": 513,
+     "chain": "KE3r"
+    },
+    {
+     "lo": 16509.336,
+     "hi": 17126.16,
+     "bits": 513,
+     "chain": "hb_vm_gather"
+    },
+    {
+     "lo": 16509.336,
+     "hi": 19728.960000000003,
+     "bits": 2205,
+     "chain": "hb_collective_vm"
+    },
+    {
+     "lo": 16509.336,
+     "hi": 18344.4,
+     "bits": 21,
+     "chain": "hb_pq_vm"
+    },
+    {
+     "lo": 16509.336,
+     "hi": 18344.4,
+     "bits": 2050,
+     "chain": "hb_vm_pq"
+    },
+    {
+     "lo": 16509.336,
+     "hi": 18966.480000000003,
+     "bits": 561,
+     "chain": "hb_wfc_vm"
+    },
+    {
+     "lo": 16509.336,
+     "hi": 18966.480000000003,
+     "bits": 1030,
+     "chain": "hb_vm_wfc"
+    },
+    {
+     "lo": 12534.936000000002,
+     "hi": 19467.600000000002,
+     "bits": 86,
+     "chain": "hb_sseq_su_s"
+    },
+    {
+     "lo": 12534.936000000002,
+     "hi": 19467.600000000002,
+     "bits": 10,
+     "chain": "hb_su_s_sseq"
+    },
+    {
+     "lo": 12534.936000000002,
+     "hi": 19467.600000000002,
+     "bits": 3,
+     "chain": "hb_su_s_c_st_sseq"
+    },
+    {
+     "lo": 16509.336,
+     "hi": 19467.600000000002,
+     "bits": 86,
+     "chain": "hb_sseq_vm"
+    },
+    {
+     "lo": 16509.336,
+     "hi": 19467.600000000002,
+     "bits": 10,
+     "chain": "hb_vm_sseq"
+    },
+    {
+     "lo": 16509.336,
+     "hi": 19467.600000000002,
+     "bits": 3,
+     "chain": "hb_vm_c_st_sseq"
+    },
+    {
+     "lo": 16509.336,
+     "hi": 17126.16,
+     "bits": 12,
+     "chain": "hb_gather_vm"
+    },
+    {
+     "lo": 16509.336,
+     "hi": 19728.960000000003,
+     "bits": 2205,
+     "chain": "hb_collective_t_crq_vm"
+    },
+    {
+     "lo": 16509.336,
+     "hi": 19728.960000000003,
+     "bits": 514,
+     "chain": "hb_vm_collective"
+    }
+   ]
+  },
+  "broadcast_return_only": {
+   "bits": 5324,
+   "y": 16526.148,
+   "minimum_width_at_060": 420.66172839506174,
+   "active_chains": [
+    {
+     "lo": 12547.26,
+     "hi": 18561.948,
+     "bits": 567,
+     "chain": "cxE_spine"
+    },
+    {
+     "lo": 12982.26,
+     "hi": 17109.347999999998,
+     "bits": 71,
+     "chain": "crW0_E0_hub"
+    },
+    {
+     "lo": 13417.26,
+     "hi": 18251.988,
+     "bits": 71,
+     "chain": "crW1_E0_hub"
+    },
+    {
+     "lo": 13852.26,
+     "hi": 18204.468,
+     "bits": 284,
+     "chain": "crW2_E0_hub"
+    },
+    {
+     "lo": 13852.26,
+     "hi": 18230.388,
+     "bits": 142,
+     "chain": "crW2_E1_hub"
+    },
+    {
+     "lo": 12895.26,
+     "hi": 18230.388,
+     "bits": 71,
+     "chain": "crW3_E0_hub"
+    },
+    {
+     "lo": 13330.26,
+     "hi": 18874.068000000003,
+     "bits": 142,
+     "chain": "crW5_E0_hub"
+    },
+    {
+     "lo": 12982.26,
+     "hi": 17275.668,
+     "bits": 284,
+     "chain": "crE0_E0_hub"
+    },
+    {
+     "lo": 12982.26,
+     "hi": 17275.668,
+     "bits": 284,
+     "chain": "crE0_E1_hub"
+    },
+    {
+     "lo": 12982.26,
+     "hi": 17275.668,
+     "bits": 71,
+     "chain": "crE0_E2_hub"
+    },
+    {
+     "lo": 16526.148,
+     "hi": 17490.588,
+     "bits": 71,
+     "chain": "crE1_W0_hub"
+    },
+    {
+     "lo": 13417.26,
+     "hi": 17490.588,
+     "bits": 284,
+     "chain": "crE1_E0_hub"
+    },
+    {
+     "lo": 13417.26,
+     "hi": 17490.588,
+     "bits": 284,
+     "chain": "crE1_E1_hub"
+    },
+    {
+     "lo": 13417.26,
+     "hi": 17490.588,
+     "bits": 142,
+     "chain": "crE1_E2_hub"
+    },
+    {
+     "lo": 13852.26,
+     "hi": 17546.748,
+     "bits": 284,
+     "chain": "crE2_E0_hub"
+    },
+    {
+     "lo": 13852.26,
+     "hi": 17546.748,
+     "bits": 284,
+     "chain": "crE2_E1_hub"
+    },
+    {
+     "lo": 12895.26,
+     "hi": 17741.148,
+     "bits": 284,
+     "chain": "crE3_E0_hub"
+    },
+    {
+     "lo": 12895.26,
+     "hi": 17741.148,
+     "bits": 284,
+     "chain": "crE3_E1_hub"
+    },
+    {
+     "lo": 12895.26,
+     "hi": 17741.148,
+     "bits": 142,
+     "chain": "crE3_E2_hub"
+    },
+    {
+     "lo": 13765.26,
+     "hi": 17957.148,
+     "bits": 284,
+     "chain": "crE4_E0_hub"
+    },
+    {
+     "lo": 13765.26,
+     "hi": 17957.148,
+     "bits": 284,
+     "chain": "crE4_E1_hub"
+    },
+    {
+     "lo": 13765.26,
+     "hi": 17957.148,
+     "bits": 71,
+     "chain": "crE4_E2_hub"
+    },
+    {
+     "lo": 13330.26,
+     "hi": 18081.347999999998,
+     "bits": 284,
+     "chain": "crE5_E0_hub"
+    },
+    {
+     "lo": 13330.26,
+     "hi": 18081.347999999998,
+     "bits": 284,
+     "chain": "crE5_E1_hub"
+    },
+    {
+     "lo": 13330.26,
+     "hi": 18081.347999999998,
+     "bits": 71,
+     "chain": "crE5_E2_hub"
+    }
+   ]
+  },
+  "source_sha256": "8171058616c4c218c9b352583e0c5afd0393c558cb004c02fd2a1b6a247d49fa",
+  "source": "/home/ubuntu/geometry-s81-gen17/g18c/construction_pass0_plan.json.gz"
+ },
+ "road_width_comparison": [
+  {
+   "width": 432.0,
+   "all_chain_share": 2.1238957475994513,
+   "tree_only_share": 0.5842524005486968
+  },
+  {
+   "width": 648.0,
+   "all_chain_share": 1.4159304983996341,
+   "tree_only_share": 0.3895016003657979
+  },
+  {
+   "width": 864.0,
+   "all_chain_share": 1.0619478737997257,
+   "tree_only_share": 0.2921262002743484
+  },
+  {
+   "width": 1080.0,
+   "all_chain_share": 0.8495582990397805,
+   "tree_only_share": 0.23370096021947873
+  },
+  {
+   "width": 1641.6,
+   "all_chain_share": 0.558919933578803,
+   "tree_only_share": 0.15375063172334127
+  }
+ ],
+ "new_BF_x2": {
+  "extra_E_lane": 538,
+  "coincident_peak_tree_bits": 5862,
+  "minimum_width_at060": 463.1703703703704,
+  "road_width_shares": [
+   {
+    "width": 432.0,
+    "share": 0.6432921810699589
+   },
+   {
+    "width": 648.0,
+    "share": 0.4288614540466393
+   },
+   {
+    "width": 864.0,
+    "share": 0.32164609053497945
+   },
+   {
+    "width": 1080.0,
+    "share": 0.25731687242798357
+   },
+   {
+    "width": 1641.6,
+    "share": 0.1692874160710418
+   }
+  ],
+  "scope": "Sensitivity from main S-BIND bf-x2-pair538lane; exact new source path/coincidence needs GEN"
+ },
+ "witness": {
+  "file": "enlarged_1x4v_hub_layout_REJECTED.json",
+  "extra_width": 1481.7119999999995
+ },
+ "limitations": [
+  "Cuts are exact vertical logical lane counts from GEN18c chain_paths, with one fclk per lane; not current routed tracks or CTS/PG capacity.",
+  "21.09375 bits/um from score.py is a historical effective two-layer estimate, not a new road-specific layer grant.",
+  "5324 tree-only load excludes hub/service chains; cannot qualify a narrowed road without explicit rerouting and all incident graph coverage.",
+  "No source current VM complete outline, no GRT/STA or native qualification."
+ ],
+ "latest_current_vm_640_update": {
+  "source": "c3fc1a4a2 actualelaboration READ_PIPE4/CAP_PIPE2; /home/ubuntu/wt/s81-vm-geometry-1103/results/physical/s81_vm_geometry_1103/{inventory,packing}.json",
+  "known_hard_leaves": 640,
+  "known_candidate_body": [
+   5529.6,
+   4903.2
+  ],
+  "body_overlap_count": 0,
+  "old_local_vectors_preserved": 468,
+  "added_side_strip_width": 1555.2,
+  "status": "GEOMETRY_OPEN; WFC/XIO fourclock controlregions andcombglue have nohomes; write150geometries source-pin candidate only",
+  "implication": "The5529.6wide developmentbody does not fit5097.6hub, even with noVCH. It is a particular packing, not a proof every possible640leaf packing needs5529.6width. Earlierpartialbody screens remain necessarylowerbound diagnostics only, never currentVMcandidate."
+ },
+ "proof_assumptions": "Whole original SU/HC outlines preserved; four fixed-shape slice bodies kept in named2x2 or1x4 arrangements with21.6slice gaps. Not an impossibility proof for arbitrary native-leaf repacking, HC/SU splitting or moving field groups. Current640leaf body may be repacked;5529.6candidate width is not universal minimum."
+}
