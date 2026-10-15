@@ -1678,22 +1678,10 @@
    "build the child on the common lattice"
   ],
   [
-   "FAIL",
-   "macro_edge",
-   "qwen_glue_x1028#0 0.0 um from the W core edge (< 20 um, a pin face)",
-   "move the macro inward / to a face without pins (sliver + pin-access blockage)"
-  ],
-  [
    "WARN",
    "macro_grid",
    "qwen_glue_x1028#0: origin (2.16, 587.52) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
    "build the child on the common lattice"
-  ],
-  [
-   "FAIL",
-   "macro_edge",
-   "qwen_glue_x1028#0 0.0 um from the W core edge (< 20 um, a pin face)",
-   "move the macro inward / to a face without pins (sliver + pin-access blockage)"
   ],
   [
    "WARN",
@@ -1704,7 +1692,7 @@
   [
    "WARN",
    "abut_plan",
-   "PROBE: 167 tile-tile channels in [2.16, 20) um and 10 tile-edge distances >= 2 um admitted by abut_plan (PM-H-S paired face masters 2.16 um from reset_mid_w; every channel < 20 um is hard-blocked (macro_channel_block.tcl))",
+   "PROBE: 167 tile-tile channels in [2.16, 20) um and 12 tile-edge distances >= 0 um admitted by abut_plan (PM-H-S paired face masters 2.16 um from reset_mid_w; every channel < 20 um is hard-blocked (macro_channel_block.tcl))",
    "the route measures the channel; a block that merges obeys the 20-um rule"
   ]
  ],

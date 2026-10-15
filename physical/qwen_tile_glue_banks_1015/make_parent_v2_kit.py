@@ -35,7 +35,7 @@ s['io_tcl']=f'physical/ref_tile/{name}/assigned_pins.tcl'
 s['clock_entry_domains']={'core':{'ratio':[1,1],'ports':list(s['clock_ports']),'inputs':['*'],'outputs':['*']}}
 # x1028 sits on the core edge with a 2.16 um gap to reset_mid_w: below the 2 um row-cut halo pair there are no rows; the
 # channel hook blocks every gap < 20 um, so the abutment floor is the real 2.16 um gap, not a 20 um exception
-s['abut_plan']=dict(s.get('abut_plan',{}),channel_um=2.16,why='PM-H-S paired face masters 2.16 um from reset_mid_w; every channel < 20 um is hard-blocked (macro_channel_block.tcl)')
+s['abut_plan']=dict(s.get('abut_plan',{}),channel_um=2.16,edge_um=0.0,why='PM-H-S paired face masters 2.16 um from reset_mid_w; every channel < 20 um is hard-blocked (macro_channel_block.tcl)')
 s['orfs_vars']['OT_OFLOP_HARD_FACE_AUDIT']='/src/physical/qwen_tile_glue_banks_1015/hard_face_binding_v2.tcl'
 s['job'].update(tag='pm1',owner='Claude:q15_compute_elem',purpose='PM-H-S interleaved W tree faces (coordinator 2026-10-15): paired x1028 face masters, 81 hard children, same 84 roots; bp58c hooks')
 s['job']['benches']=[b for b in s['job'].get('benches',[]) if b['name']!='lint']
