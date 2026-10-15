@@ -278,7 +278,7 @@
  "slot_change_request": {
   "contract": "S81 Engram lookup 13-root candidate",
   "version": "20261015",
-  "why": "Same324x216body/data tangent positions; add12actualclockentries for6hash/6rowbank roots, allactualroots<=8696FF. Die lead pin grant/adoption pending."
+  "why": "Guarded native-CTS grant by S81 die lead MIX4: unchanged324x216body, exact662originalpinrectangles andckW107.964, add12actualN/M5clockpins; actualPG/nativepinandparent13clockwiringremainopen."
  },
  "job": {
   "owner": "Codex:s81_hard_physical",
@@ -313,7 +313,15 @@
     "threads": 1,
     "peak_ram_gb": 2
    }
-  ]
+  ],
+  "slot_change_request": {
+   "contract": "S81 Engram lookup 13-root candidate",
+   "version": "20261015",
+   "why": "Guarded native-CTS grant by S81 die lead MIX4: unchanged324x216body, exact662originalpinrectangles andckW107.964, add12actualN/M5clockpins; actualPG/nativepinandparent13clockwiringremainopen."
+  }
+ },
+ "orfs_vars": {
+  "POST_IO_PLACEMENT_TCL": "physical/s81_die_pins/v21_engram_clock_roots_candidate/restore_native_rectangles.tcl"
  },
  "children": [],
  "inter": [],
