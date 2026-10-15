@@ -1,0 +1,134 @@
+{
+ "name": "qfd_su_cbuf_g_tp8r",
+ "top": "ot_qfd_su_cbuf_g_tp8",
+ "kind": "tile",
+ "sources": [
+  "rtl/qwen_sys/redesign_qwen/ot_qfd_crom_lbuf.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v"
+ ],
+ "params": {},
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "contract": {
+  "file": "results/arch/hier_contract_1012/qwen_rom_tp8.json",
+  "slot": "cbuf_g_0"
+ },
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 3,
+   "orient": "R0"
+  }
+ ],
+ "pins": {
+  "N": [
+   "clk",
+   "rst_n",
+   "crom_re",
+   "crom_addr",
+   "crom_stage",
+   "crom_q"
+  ],
+  "S": [
+   "f_re",
+   "f_addr",
+   "f_stage",
+   "f_q",
+   "f_fault",
+   "stage",
+   "tok_start",
+   "tpos",
+   "grp",
+   "f_lat",
+   "st_rdy",
+   "st_rdy_stage",
+   "fault",
+   "fault_code"
+  ]
+ },
+ "io_flop_at_pins": {
+  "cols": 4
+ },
+ "route": {
+  "pd": 0.45,
+  "threads": 8,
+  "peak_ram_gb": 12,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "pin_balance": {
+   "v": "M5"
+  },
+  "io_hold_margin_ns": 0.005
+ },
+ "job": {
+  "owner": "Codex:Q-COMPUTE-ELEM",
+  "tag": "tp8r",
+  "benches": [
+   {
+    "name": "native_tp8_exact",
+    "cmd": "bash tools/qwen_native_memory/run_cbuf.sh {RUN}/bench/native_tp8 0",
+    "expect": "pass",
+    "pass_regex": "^PASS",
+    "threads": 4,
+    "peak_ram_gb": 12
+   },
+   {
+    "name": "historical_tp4_mutant",
+    "cmd": "bash tools/qwen_native_memory/run_cbuf.sh {RUN}/bench/tp4_mutant 1 && exit 1",
+    "expect": "fail",
+    "fail_regex": "^FAIL",
+    "threads": 4,
+    "peak_ram_gb": 12
+   }
+  ],
+  "purpose": "Actual TP8 constant layout; previous TP4 decode was functionally incompatible despite native timing closure",
+  "extra_paths": [
+   "tools/qwen_native_memory",
+   "rtl/qwen_sys/native_memory_20261014",
+   "rtl/qwen_sys/system_20261008/ot_qfd_crom.sv",
+   "rtl/qwen_sys/redesign_qwen/ot_qfd_crom_lbuf.sv",
+   "physical/asap7_memory_macros/ot_rom_4096x266_m8",
+   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2"
+  ],
+  "branch": "claude/q14-r8-rekit"
+ },
+ "orfs_vars": {
+  "DETAILED_ROUTE_ARGS": "-clean_patches",
+  "OT_MEG_MASTER": "ot_sram_1r1w_128x256_m1_r2c2",
+  "OT_MEG_EXPECT": 3,
+  "OT_MEG_BAND": "2.16",
+  "OT_MEG_EDGES": "EW",
+  "OT_SPINE_PORT": "clk",
+  "OT_SPINE_SYM": "1",
+  "OT_SPINE_TREE_PAD": "1",
+  "OT_SPINE_MACRO_LEAF": "1",
+  "OT_SPINE_SAFE_BALANCE": "1"
+ },
+ "boundary_tcl": [
+  "physical/qwen_coll_cx/macro_edge_m5_guard.tcl"
+ ],
+ "structural_change": "Production TP8 semantic specialization: explicit TP8 masters with QSCALE8832 POST4736 QKR10 and layer stride138; pin/register/clock topology kept from native predecessor. Original TP4 views are not TP8 functional evidence. | r10: rst_n pin register (native capture 336.5 ps on rst_n in CLOSED tp8-55b451d97)",
+ "slot_change_request": "qfd_su_cbuf_g: NO outline change (contract 194.376 x 215.976 kept). Pin delta versus contract v3 wrapper: NEW static strap f_lat[4:0] on S (tie to the die's crom_g strobe->q edges + relays both ways; r22k value 11); grp[2:0] strap on S and rst_n on N (in the RTL, absent from the wrapper pin list); wrapper buses map to real ports fa={f_re,f_addr,f_stage} fq={f_q,f_fault} ctl={stage,tok_start,tpos} rdy={st_rdy,st_rdy_stage,fault,fault_code} sa={crom_re,crom_addr,crom_stage} sq=crom_q ck=clk; pins spread uniformly on M5 along S / N (2-track pitch) instead of the wrapper spans: re-plan the slot pin spans from the exported LEF; reset: release is 4 clk edges after the rst_n pin (pin register + relay), inputs ignored until then; crom_q latency unchanged (5 edges)",
+ "recipe": 2,
+ "children": [],
+ "inter": [],
+ "inhold": true,
+ "outhold": true,
+ "reroute_reason": {
+  "kind": "pin_register",
+  "source": "results/rtl/qwen_r10_pin_audit_1014/su_cbuf_g_tp8_55b451d97.json",
+  "cell": "ot_qfd_su_cbuf_g_tp8",
+  "launch_ps": 183.21,
+  "capture_ps": 336.54,
+  "fix": "RTL reset pin register in ot_qfd_su_cbuf_g_tp8: rst_n lands in one kept flop at the pin (async assert, registered deassert), the in-tile relay (sync + three kept region copies) resets from it; same outline, pins, recipe-2 kit, macro guard and balanced spine"
+ },
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "clock": "spine"
+}

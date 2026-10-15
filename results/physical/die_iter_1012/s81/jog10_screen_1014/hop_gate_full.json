@@ -1,0 +1,287 @@
+{
+ "limit_um": 500.0,
+ "ss_reach_um": 504.0,
+ "pair_check": {
+  "table_masters": 68,
+  "pairs": 125,
+  "hops": {
+   "real": 16926,
+   "half": 20775,
+   "default": 67985,
+   "not_judged": 10025
+  },
+  "bits_over_pair_limit": 0,
+  "candidates_bound_by_direction": [
+   {
+    "src": "ot_v41_rom_elem_q_qxpq_w10.ef",
+    "dst": "ot_s81_cfg7_seq.ef",
+    "limit_um": 341.1
+   },
+   {
+    "src": "ot_v41_rom_elem_q_qxpq_w10.st",
+    "dst": "dsfd_qbank_N.e_st",
+    "limit_um": 341.1
+   },
+   {
+    "src": "ot_v41_rom_elem_q_qxpq_w10.r0",
+    "dst": "dsfd_qbank_N.e_r0",
+    "limit_um": 341.1
+   },
+   {
+    "src": "ot_v41_rom_elem_q_qxpq_w10.r1",
+    "dst": "dsfd_qbank_N.e_r1",
+    "limit_um": 341.1
+   },
+   {
+    "src": "ot_s81_cfg7_seq.go_tag",
+    "dst": "ot_v41_rom_elem_q_qxpq_w10.gt",
+    "limit_um": 456.1
+   },
+   {
+    "src": "dsfd_qbank_S.o_x0",
+    "dst": "ot_v41_rom_elem_q_qxpq_w10.x0",
+    "limit_um": 456.1
+   },
+   {
+    "src": "dsfd_qbank_S.o_x1",
+    "dst": "ot_v41_rom_elem_q_qxpq_w10.x1",
+    "limit_um": 456.1
+   }
+  ],
+  "hold_fail": [
+   {
+    "src": "dsfd_stnv_512x1.do0",
+    "dst": "dsfd_m2l_raw_512x1__hl_W1.di0",
+    "model": "FWD",
+    "hold_ps": -129.1
+   },
+   {
+    "src": "dsfd_stnh_512x1.do0",
+    "dst": "dsfd_m2l_raw_512x1__hl_E0.di0",
+    "model": "FWD",
+    "hold_ps": -123.9
+   },
+   {
+    "src": "dsfd_stnh_512x1.do0",
+    "dst": "dsfd_m2l_raw_512x1__hl_E2.di0",
+    "model": "FWD",
+    "hold_ps": -120.0
+   },
+   {
+    "src": "dsfd_stnv_514x1.do0",
+    "dst": "dsfd_m2l_vr_512x1__hqe_SW.di0",
+    "model": "FWD",
+    "hold_ps": -117.0
+   },
+   {
+    "src": "dsfd_stnv_514x1.do0",
+    "dst": "dsfd_m2l_vr_512x1__hco_SW.di0",
+    "model": "FWD",
+    "hold_ps": -103.4
+   },
+   {
+    "src": "dsfd_stnv_514x1.do0",
+    "dst": "dsfd_m2l_vr_512x1__hix_SW.di0",
+    "model": "FWD",
+    "hold_ps": -103.0
+   },
+   {
+    "src": "dsfd_stnh_514x1.do0",
+    "dst": "dsfd_r2l_vr_512x1__hcol.di0",
+    "model": "FWD",
+    "hold_ps": -74.9
+   },
+   {
+    "src": "dsfd_stnh_514x1.do0",
+    "dst": "dsfd_r2l_vr_512x1__hsel.di0",
+    "model": "FWD",
+    "hold_ps": -73.4
+   }
+  ],
+  "tightest": [
+   [
+    92.9,
+    "hr_E#.o",
+    "g_hr_E#_o_d#_f_hr_E#_o_#_#.di"
+   ],
+   [
+    120.0,
+    "hr_W#.o",
+    "f_hr_W#_o_#.di"
+   ],
+   [
+    120.0,
+    "hr_W#.o",
+    "f_hr_W#_o_st_#.di"
+   ],
+   [
+    199.2,
+    "hr_E#.o",
+    "f_hr_E#_o_#.di"
+   ],
+   [
+    199.2,
+    "hr_E#.o",
+    "f_hr_E#_o_st_#.di"
+   ],
+   [
+    342.1,
+    "hqe_SW.o",
+    "svc_SW.q"
+   ],
+   [
+    343.2,
+    "hco_SW.o",
+    "xsco_SW.i"
+   ],
+   [
+    380.7,
+    "hix_SW.o",
+    "xsix_SW.i"
+   ],
+   [
+    409.3,
+    "y_rt_#_#a_#.o",
+    "n#_#.a"
+   ],
+   [
+    409.3,
+    "y_rt_#_#b_#.o",
+    "n#_#.b"
+   ],
+   [
+    411.5,
+    "y_rt_#_#a_#.o",
+    "n#_#.a"
+   ],
+   [
+    413.5,
+    "y_rr_#_#_#.o",
+    "rg#_#.i"
+   ],
+   [
+    413.5,
+    "y_rt_#_#b_#.o",
+    "n#_#.b"
+   ],
+   [
+    423.9,
+    "y_cc_#_#_#.o",
+    "s#.lc"
+   ],
+   [
+    423.9,
+    "y_cc_#_#_#.o",
+    "t#_#.cci"
+   ],
+   [
+    441.4,
+    "y_es_#_#.o",
+    "t#_#.e1"
+   ],
+   [
+    442.7,
+    "y_es_#_#.o",
+    "t#_#.e0"
+   ],
+   [
+    442.9,
+    "y_so_#_#_#.o",
+    "t#_#.si"
+   ],
+   [
+    444.4,
+    "y_nf_#_#_#.o",
+    "t#_#.nf"
+   ],
+   [
+    456.1,
+    "bs#.o_go",
+    "e#.go"
+   ],
+   [
+    465.4,
+    "ha_SW.o",
+    "g_ha_SW_o_sp_vm_#.di"
+   ],
+   [
+    470.6,
+    "hx_W.st",
+    "sp_pq.xws"
+   ],
+   [
+    472.8,
+    "g_rt_#_#b_y#_y_rt_#_#b_#_#.o",
+    "y_rt_#_#b_#.i"
+   ],
+   [
+    474.1,
+    "y_rt_#_#b_#.o",
+    "g_rt_#_#b_y#_y_rt_#_#b_#_#.i"
+   ],
+   [
+    476.4,
+    "g_rt_#_#a_y#_y_rt_#_#a_#_#.o",
+    "y_rt_#_#a_#.i"
+   ],
+   [
+    476.4,
+    "y_rt_#_#a_#.o",
+    "g_rt_#_#a_y#_y_rt_#_#a_#_#.i"
+   ],
+   [
+    476.7,
+    "hsel.o",
+    "g_hsel_o_sp_vm_#.di"
+   ],
+   [
+    478.5,
+    "y_rt_#_#a_#.o",
+    "y_rt_#_#a_#.i"
+   ],
+   [
+    478.5,
+    "y_rt_#_#b_#.o",
+    "y_rt_#_#b_#.i"
+   ],
+   [
+    479.0,
+    "hcol.o",
+    "g_hcol_o_sp_vm_#.di"
+   ],
+   [
+    480.4,
+    "y_rt_#_#a_#.o",
+    "y_rt_#_#a_#.i"
+   ],
+   [
+    482.4,
+    "y_rt_#_#b_#.o",
+    "y_rt_#_#b_#.i"
+   ],
+   [
+    487.5,
+    "bs#.o_cfg",
+    "e#.cfg"
+   ]
+  ],
+  "rule": "per pair min(limit_um, reach of the two real views); flat limit_um without views (tools/hier_contract/pair_check.py)"
+ },
+ "exempt_classes": [
+  "clock_trunk",
+  "reset",
+  "reset_tree",
+  "clock",
+  "col_clock",
+  "col_reset",
+  "fclk",
+  "top_in"
+ ],
+ "bits_checked": 7005859,
+ "bits_without_pin": 1729719,
+ "bits_over_limit": 0,
+ "bits_over_ss": 0,
+ "max_um": 495.0,
+ "verdict": "FAIL",
+ "classes": []
+}

@@ -1,0 +1,6 @@
+RESULT reads192 cycles3750 bad0 fault0 VM0
+PASS
+- /srv/opentallas-scratch/claude/s81grpA6-codex/src/rtl/dsrom_sys/s81_ph/test/tb_dsfd_vm_clients.sv:103: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 11us; walltime 1.411 s; speed 7.976 us/s
+- Verilator: cpu 1.410 s on 1 threads; allocated 20 MB

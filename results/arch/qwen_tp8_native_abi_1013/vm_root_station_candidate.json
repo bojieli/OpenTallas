@@ -1,0 +1,3229 @@
+{
+  "schema": "opentallas.qwen-tp8.vm-root-spatial-candidate.v1",
+  "qualified": false,
+  "adopted": false,
+  "assigned": false,
+  "source": {
+    "path": "g8/out/rom_tp8b.json",
+    "sha256": "5627b3ffe5e521994683d394ec4ed7c769725d20ee01164e22010d2ffccce921",
+    "generator_commit": "761665623",
+    "note": "Historical g8 geometry screen; not native master inventory"
+  },
+  "wall": {
+    "x": 13284,
+    "y": 17051.04,
+    "w": 4838.4,
+    "h": 2546.64
+  },
+  "slots": [
+    {
+      "n": "xroot_candidate_0",
+      "x": 13294.8,
+      "y": 16988.4,
+      "w": 129.6,
+      "h": 41.04,
+      "existing_conflicts": [
+        {
+          "n": "rly_tt_c2_11",
+          "m": "qfd_rly_343_EN_53x30",
+          "x": 13327.2,
+          "y": 17020.8,
+          "w": 52.68,
+          "h": 30.215999999999998
+        },
+        {
+          "n": "rstt_rst_field_7098",
+          "m": "qfd_rst_rep_p8",
+          "x": 13307.328,
+          "y": 17025.12,
+          "w": 5.184,
+          "h": 2.16
+        }
+      ],
+      "assigned": false,
+      "pin_ranges_candidate": [
+        {
+          "face": "N",
+          "layer": "M9",
+          "name": "response_from_vm",
+          "bits": 233,
+          "first": 6.88,
+          "last": 44.0,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "N",
+          "layer": "M9",
+          "name": "request_to_vm",
+          "bits": 109,
+          "first": 45.6,
+          "last": 62.88,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "N",
+          "layer": "M9",
+          "name": "instruction_to_vm",
+          "bits": 380,
+          "first": 64.48,
+          "last": 125.12,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "W",
+          "layer": "M8",
+          "name": "response_west",
+          "bits": 233,
+          "first": 1.96,
+          "last": 39.08,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "E",
+          "layer": "M8",
+          "name": "response_east",
+          "bits": 233,
+          "first": 1.96,
+          "last": 39.08,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "S",
+          "layer": "M9",
+          "name": "request_from_die",
+          "bits": 109,
+          "first": 6.88,
+          "last": 24.16,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "S",
+          "layer": "M9",
+          "name": "instruction_from_die",
+          "bits": 380,
+          "first": 25.76,
+          "last": 86.4,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        }
+      ]
+    },
+    {
+      "n": "xroot_candidate_1",
+      "x": 13446.0,
+      "y": 16988.4,
+      "w": 129.6,
+      "h": 41.04,
+      "existing_conflicts": [
+        {
+          "n": "rly_tt_c2_10",
+          "m": "qfd_rly_343_EW_53x30",
+          "x": 13564.8,
+          "y": 16977.6,
+          "w": 52.68,
+          "h": 30.215999999999998
+        },
+        {
+          "n": "rly_tt_f2_12",
+          "m": "qfd_rly_107_WE_53x30",
+          "x": 13436.496,
+          "y": 16990.56,
+          "w": 52.68,
+          "h": 30.215999999999998
+        }
+      ],
+      "assigned": false,
+      "pin_ranges_candidate": [
+        {
+          "face": "N",
+          "layer": "M9",
+          "name": "response_from_vm",
+          "bits": 233,
+          "first": 6.88,
+          "last": 44.0,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "N",
+          "layer": "M9",
+          "name": "request_to_vm",
+          "bits": 109,
+          "first": 45.6,
+          "last": 62.88,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "N",
+          "layer": "M9",
+          "name": "instruction_to_vm",
+          "bits": 380,
+          "first": 64.48,
+          "last": 125.12,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "W",
+          "layer": "M8",
+          "name": "response_west",
+          "bits": 233,
+          "first": 1.96,
+          "last": 39.08,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "E",
+          "layer": "M8",
+          "name": "response_east",
+          "bits": 233,
+          "first": 1.96,
+          "last": 39.08,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "S",
+          "layer": "M9",
+          "name": "request_from_die",
+          "bits": 109,
+          "first": 6.88,
+          "last": 24.16,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "S",
+          "layer": "M9",
+          "name": "instruction_from_die",
+          "bits": 380,
+          "first": 25.76,
+          "last": 86.4,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        }
+      ]
+    },
+    {
+      "n": "xroot_candidate_2",
+      "x": 13597.199999999999,
+      "y": 16988.4,
+      "w": 129.6,
+      "h": 41.04,
+      "existing_conflicts": [
+        {
+          "n": "rly_tt_c2_10",
+          "m": "qfd_rly_343_EW_53x30",
+          "x": 13564.8,
+          "y": 16977.6,
+          "w": 52.68,
+          "h": 30.215999999999998
+        },
+        {
+          "n": "rly_tt_lc2_9",
+          "m": "qfd_rly_28_EW_53x30",
+          "x": 13716.0,
+          "y": 16977.6,
+          "w": 52.68,
+          "h": 30.215999999999998
+        },
+        {
+          "n": "rly_pword_2_34",
+          "m": "qfd_rly_513_WE_53x60",
+          "x": 13629.6,
+          "y": 16977.6,
+          "w": 52.68,
+          "h": 60.455999999999996
+        }
+      ],
+      "assigned": false,
+      "pin_ranges_candidate": [
+        {
+          "face": "N",
+          "layer": "M9",
+          "name": "response_from_vm",
+          "bits": 233,
+          "first": 6.88,
+          "last": 44.0,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "N",
+          "layer": "M9",
+          "name": "request_to_vm",
+          "bits": 109,
+          "first": 45.6,
+          "last": 62.88,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "N",
+          "layer": "M9",
+          "name": "instruction_to_vm",
+          "bits": 380,
+          "first": 64.48,
+          "last": 125.12,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "W",
+          "layer": "M8",
+          "name": "response_west",
+          "bits": 233,
+          "first": 1.96,
+          "last": 39.08,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "E",
+          "layer": "M8",
+          "name": "response_east",
+          "bits": 233,
+          "first": 1.96,
+          "last": 39.08,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "S",
+          "layer": "M9",
+          "name": "request_from_die",
+          "bits": 109,
+          "first": 6.88,
+          "last": 24.16,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "S",
+          "layer": "M9",
+          "name": "instruction_from_die",
+          "bits": 380,
+          "first": 25.76,
+          "last": 86.4,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        }
+      ]
+    },
+    {
+      "n": "xroot_candidate_3",
+      "x": 13748.4,
+      "y": 16988.4,
+      "w": 129.6,
+      "h": 41.04,
+      "existing_conflicts": [
+        {
+          "n": "rly_tt_f2_13",
+          "m": "qfd_rly_107_WE_53x30",
+          "x": 13860.288,
+          "y": 16990.56,
+          "w": 52.68,
+          "h": 30.215999999999998
+        },
+        {
+          "n": "rly_tt_lc2_9",
+          "m": "qfd_rly_28_EW_53x30",
+          "x": 13716.0,
+          "y": 16977.6,
+          "w": 52.68,
+          "h": 30.215999999999998
+        },
+        {
+          "n": "rly_kvn_WN_16",
+          "m": "qfd_rly_1048_EW_54x60",
+          "x": 13780.8,
+          "y": 16977.6,
+          "w": 54.408,
+          "h": 60.455999999999996
+        }
+      ],
+      "assigned": false,
+      "pin_ranges_candidate": [
+        {
+          "face": "N",
+          "layer": "M9",
+          "name": "response_from_vm",
+          "bits": 233,
+          "first": 6.88,
+          "last": 44.0,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "N",
+          "layer": "M9",
+          "name": "request_to_vm",
+          "bits": 109,
+          "first": 45.6,
+          "last": 62.88,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "N",
+          "layer": "M9",
+          "name": "instruction_to_vm",
+          "bits": 380,
+          "first": 64.48,
+          "last": 125.12,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "W",
+          "layer": "M8",
+          "name": "response_west",
+          "bits": 233,
+          "first": 1.96,
+          "last": 39.08,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "E",
+          "layer": "M8",
+          "name": "response_east",
+          "bits": 233,
+          "first": 1.96,
+          "last": 39.08,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "S",
+          "layer": "M9",
+          "name": "request_from_die",
+          "bits": 109,
+          "first": 6.88,
+          "last": 24.16,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "S",
+          "layer": "M9",
+          "name": "instruction_from_die",
+          "bits": 380,
+          "first": 25.76,
+          "last": 86.4,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        }
+      ]
+    },
+    {
+      "n": "xroot_candidate_4",
+      "x": 13899.599999999999,
+      "y": 16988.4,
+      "w": 129.6,
+      "h": 41.04,
+      "existing_conflicts": [
+        {
+          "n": "rly_tt_c2_9",
+          "m": "qfd_rly_343_SW_53x30",
+          "x": 13975.2,
+          "y": 16977.6,
+          "w": 52.68,
+          "h": 30.215999999999998
+        },
+        {
+          "n": "rly_tt_f2_13",
+          "m": "qfd_rly_107_WE_53x30",
+          "x": 13860.288,
+          "y": 16990.56,
+          "w": 52.68,
+          "h": 30.215999999999998
+        }
+      ],
+      "assigned": false,
+      "pin_ranges_candidate": [
+        {
+          "face": "N",
+          "layer": "M9",
+          "name": "response_from_vm",
+          "bits": 233,
+          "first": 6.88,
+          "last": 44.0,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "N",
+          "layer": "M9",
+          "name": "request_to_vm",
+          "bits": 109,
+          "first": 45.6,
+          "last": 62.88,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "N",
+          "layer": "M9",
+          "name": "instruction_to_vm",
+          "bits": 380,
+          "first": 64.48,
+          "last": 125.12,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "W",
+          "layer": "M8",
+          "name": "response_west",
+          "bits": 233,
+          "first": 1.96,
+          "last": 39.08,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "E",
+          "layer": "M8",
+          "name": "response_east",
+          "bits": 233,
+          "first": 1.96,
+          "last": 39.08,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "S",
+          "layer": "M9",
+          "name": "request_from_die",
+          "bits": 109,
+          "first": 6.88,
+          "last": 24.16,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "S",
+          "layer": "M9",
+          "name": "instruction_from_die",
+          "bits": 380,
+          "first": 25.76,
+          "last": 86.4,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        }
+      ]
+    },
+    {
+      "n": "xroot_candidate_5",
+      "x": 14050.8,
+      "y": 16988.4,
+      "w": 129.6,
+      "h": 41.04,
+      "existing_conflicts": [
+        {
+          "n": "rly_pword_2_35",
+          "m": "qfd_rly_513_WE_53x60",
+          "x": 14040.0,
+          "y": 16977.6,
+          "w": 52.68,
+          "h": 60.455999999999996
+        }
+      ],
+      "assigned": false,
+      "pin_ranges_candidate": [
+        {
+          "face": "N",
+          "layer": "M9",
+          "name": "response_from_vm",
+          "bits": 233,
+          "first": 6.88,
+          "last": 44.0,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "N",
+          "layer": "M9",
+          "name": "request_to_vm",
+          "bits": 109,
+          "first": 45.6,
+          "last": 62.88,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "N",
+          "layer": "M9",
+          "name": "instruction_to_vm",
+          "bits": 380,
+          "first": 64.48,
+          "last": 125.12,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "W",
+          "layer": "M8",
+          "name": "response_west",
+          "bits": 233,
+          "first": 1.96,
+          "last": 39.08,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "E",
+          "layer": "M8",
+          "name": "response_east",
+          "bits": 233,
+          "first": 1.96,
+          "last": 39.08,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "S",
+          "layer": "M9",
+          "name": "request_from_die",
+          "bits": 109,
+          "first": 6.88,
+          "last": 24.16,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "S",
+          "layer": "M9",
+          "name": "instruction_from_die",
+          "bits": 380,
+          "first": 25.76,
+          "last": 86.4,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        }
+      ]
+    },
+    {
+      "n": "xroot_candidate_6",
+      "x": 14202.0,
+      "y": 16988.4,
+      "w": 129.6,
+      "h": 41.04,
+      "existing_conflicts": [
+        {
+          "n": "rly_tt_f2_14",
+          "m": "qfd_rly_107_WS_53x30",
+          "x": 14284.512,
+          "y": 16990.56,
+          "w": 52.68,
+          "h": 30.215999999999998
+        },
+        {
+          "n": "rly_rc_0_0",
+          "m": "qfd_rly_1_WE_53x30",
+          "x": 14229.216,
+          "y": 17018.64,
+          "w": 52.68,
+          "h": 30.215999999999998
+        },
+        {
+          "n": "rly_rk_0_29",
+          "m": "qfd_rly_1_EW_53x30",
+          "x": 14224.464,
+          "y": 16984.08,
+          "w": 52.68,
+          "h": 30.215999999999998
+        }
+      ],
+      "assigned": false,
+      "pin_ranges_candidate": [
+        {
+          "face": "N",
+          "layer": "M9",
+          "name": "response_from_vm",
+          "bits": 233,
+          "first": 6.88,
+          "last": 44.0,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "N",
+          "layer": "M9",
+          "name": "request_to_vm",
+          "bits": 109,
+          "first": 45.6,
+          "last": 62.88,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "N",
+          "layer": "M9",
+          "name": "instruction_to_vm",
+          "bits": 380,
+          "first": 64.48,
+          "last": 125.12,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "W",
+          "layer": "M8",
+          "name": "response_west",
+          "bits": 233,
+          "first": 1.96,
+          "last": 39.08,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "E",
+          "layer": "M8",
+          "name": "response_east",
+          "bits": 233,
+          "first": 1.96,
+          "last": 39.08,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "S",
+          "layer": "M9",
+          "name": "request_from_die",
+          "bits": 109,
+          "first": 6.88,
+          "last": 24.16,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "S",
+          "layer": "M9",
+          "name": "instruction_from_die",
+          "bits": 380,
+          "first": 25.76,
+          "last": 86.4,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        }
+      ]
+    },
+    {
+      "n": "xroot_candidate_7",
+      "x": 14353.199999999999,
+      "y": 16988.4,
+      "w": 129.6,
+      "h": 41.04,
+      "existing_conflicts": [
+        {
+          "n": "rly_rs_0_29",
+          "m": "qfd_rly_551_SW_53x60",
+          "x": 14421.024,
+          "y": 16990.56,
+          "w": 52.68,
+          "h": 60.455999999999996
+        }
+      ],
+      "assigned": false,
+      "pin_ranges_candidate": [
+        {
+          "face": "N",
+          "layer": "M9",
+          "name": "response_from_vm",
+          "bits": 233,
+          "first": 6.88,
+          "last": 44.0,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "N",
+          "layer": "M9",
+          "name": "request_to_vm",
+          "bits": 109,
+          "first": 45.6,
+          "last": 62.88,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "N",
+          "layer": "M9",
+          "name": "instruction_to_vm",
+          "bits": 380,
+          "first": 64.48,
+          "last": 125.12,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "W",
+          "layer": "M8",
+          "name": "response_west",
+          "bits": 233,
+          "first": 1.96,
+          "last": 39.08,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "E",
+          "layer": "M8",
+          "name": "response_east",
+          "bits": 233,
+          "first": 1.96,
+          "last": 39.08,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "S",
+          "layer": "M9",
+          "name": "request_from_die",
+          "bits": 109,
+          "first": 6.88,
+          "last": 24.16,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "S",
+          "layer": "M9",
+          "name": "instruction_from_die",
+          "bits": 380,
+          "first": 25.76,
+          "last": 86.4,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        }
+      ]
+    },
+    {
+      "n": "xroot_candidate_8",
+      "x": 14504.4,
+      "y": 16988.4,
+      "w": 129.6,
+      "h": 41.04,
+      "existing_conflicts": [
+        {
+          "n": "rly_rc_0_1",
+          "m": "qfd_rly_1_WS_53x30",
+          "x": 14621.472,
+          "y": 16994.88,
+          "w": 52.68,
+          "h": 30.215999999999998
+        }
+      ],
+      "assigned": false,
+      "pin_ranges_candidate": [
+        {
+          "face": "N",
+          "layer": "M9",
+          "name": "response_from_vm",
+          "bits": 233,
+          "first": 6.88,
+          "last": 44.0,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "N",
+          "layer": "M9",
+          "name": "request_to_vm",
+          "bits": 109,
+          "first": 45.6,
+          "last": 62.88,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "N",
+          "layer": "M9",
+          "name": "instruction_to_vm",
+          "bits": 380,
+          "first": 64.48,
+          "last": 125.12,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "W",
+          "layer": "M8",
+          "name": "response_west",
+          "bits": 233,
+          "first": 1.96,
+          "last": 39.08,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "E",
+          "layer": "M8",
+          "name": "response_east",
+          "bits": 233,
+          "first": 1.96,
+          "last": 39.08,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "S",
+          "layer": "M9",
+          "name": "request_from_die",
+          "bits": 109,
+          "first": 6.88,
+          "last": 24.16,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "S",
+          "layer": "M9",
+          "name": "instruction_from_die",
+          "bits": 380,
+          "first": 25.76,
+          "last": 86.4,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        }
+      ]
+    },
+    {
+      "n": "xroot_candidate_9",
+      "x": 14655.599999999999,
+      "y": 16988.4,
+      "w": 129.6,
+      "h": 41.04,
+      "existing_conflicts": [
+        {
+          "n": "rly_rc_0_1",
+          "m": "qfd_rly_1_WS_53x30",
+          "x": 14621.472,
+          "y": 16994.88,
+          "w": 52.68,
+          "h": 30.215999999999998
+        }
+      ],
+      "assigned": false,
+      "pin_ranges_candidate": [
+        {
+          "face": "N",
+          "layer": "M9",
+          "name": "response_from_vm",
+          "bits": 233,
+          "first": 6.88,
+          "last": 44.0,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "N",
+          "layer": "M9",
+          "name": "request_to_vm",
+          "bits": 109,
+          "first": 45.6,
+          "last": 62.88,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "N",
+          "layer": "M9",
+          "name": "instruction_to_vm",
+          "bits": 380,
+          "first": 64.48,
+          "last": 125.12,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "W",
+          "layer": "M8",
+          "name": "response_west",
+          "bits": 233,
+          "first": 1.96,
+          "last": 39.08,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "E",
+          "layer": "M8",
+          "name": "response_east",
+          "bits": 233,
+          "first": 1.96,
+          "last": 39.08,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "S",
+          "layer": "M9",
+          "name": "request_from_die",
+          "bits": 109,
+          "first": 6.88,
+          "last": 24.16,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "S",
+          "layer": "M9",
+          "name": "instruction_from_die",
+          "bits": 380,
+          "first": 25.76,
+          "last": 86.4,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        }
+      ]
+    },
+    {
+      "n": "xroot_candidate_10",
+      "x": 14806.8,
+      "y": 16988.4,
+      "w": 129.6,
+      "h": 41.04,
+      "existing_conflicts": [],
+      "assigned": false,
+      "pin_ranges_candidate": [
+        {
+          "face": "N",
+          "layer": "M9",
+          "name": "response_from_vm",
+          "bits": 233,
+          "first": 6.88,
+          "last": 44.0,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "N",
+          "layer": "M9",
+          "name": "request_to_vm",
+          "bits": 109,
+          "first": 45.6,
+          "last": 62.88,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "N",
+          "layer": "M9",
+          "name": "instruction_to_vm",
+          "bits": 380,
+          "first": 64.48,
+          "last": 125.12,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "W",
+          "layer": "M8",
+          "name": "response_west",
+          "bits": 233,
+          "first": 1.96,
+          "last": 39.08,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "E",
+          "layer": "M8",
+          "name": "response_east",
+          "bits": 233,
+          "first": 1.96,
+          "last": 39.08,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "S",
+          "layer": "M9",
+          "name": "request_from_die",
+          "bits": 109,
+          "first": 6.88,
+          "last": 24.16,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "S",
+          "layer": "M9",
+          "name": "instruction_from_die",
+          "bits": 380,
+          "first": 25.76,
+          "last": 86.4,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        }
+      ]
+    },
+    {
+      "n": "xroot_candidate_11",
+      "x": 14958.0,
+      "y": 16988.4,
+      "w": 129.6,
+      "h": 41.04,
+      "existing_conflicts": [],
+      "assigned": false,
+      "pin_ranges_candidate": [
+        {
+          "face": "N",
+          "layer": "M9",
+          "name": "response_from_vm",
+          "bits": 233,
+          "first": 6.88,
+          "last": 44.0,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "N",
+          "layer": "M9",
+          "name": "request_to_vm",
+          "bits": 109,
+          "first": 45.6,
+          "last": 62.88,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "N",
+          "layer": "M9",
+          "name": "instruction_to_vm",
+          "bits": 380,
+          "first": 64.48,
+          "last": 125.12,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "W",
+          "layer": "M8",
+          "name": "response_west",
+          "bits": 233,
+          "first": 1.96,
+          "last": 39.08,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "E",
+          "layer": "M8",
+          "name": "response_east",
+          "bits": 233,
+          "first": 1.96,
+          "last": 39.08,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "S",
+          "layer": "M9",
+          "name": "request_from_die",
+          "bits": 109,
+          "first": 6.88,
+          "last": 24.16,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "S",
+          "layer": "M9",
+          "name": "instruction_from_die",
+          "bits": 380,
+          "first": 25.76,
+          "last": 86.4,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        }
+      ]
+    },
+    {
+      "n": "xroot_candidate_12",
+      "x": 15109.199999999999,
+      "y": 16988.4,
+      "w": 129.6,
+      "h": 41.04,
+      "existing_conflicts": [
+        {
+          "n": "rly_tt_mx_5",
+          "m": "qfd_rly_553_SN_53x60",
+          "x": 15209.856,
+          "y": 16979.76,
+          "w": 52.68,
+          "h": 60.455999999999996
+        }
+      ],
+      "assigned": false,
+      "pin_ranges_candidate": [
+        {
+          "face": "N",
+          "layer": "M9",
+          "name": "response_from_vm",
+          "bits": 233,
+          "first": 6.88,
+          "last": 44.0,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "N",
+          "layer": "M9",
+          "name": "request_to_vm",
+          "bits": 109,
+          "first": 45.6,
+          "last": 62.88,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "N",
+          "layer": "M9",
+          "name": "instruction_to_vm",
+          "bits": 380,
+          "first": 64.48,
+          "last": 125.12,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "W",
+          "layer": "M8",
+          "name": "response_west",
+          "bits": 233,
+          "first": 1.96,
+          "last": 39.08,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "E",
+          "layer": "M8",
+          "name": "response_east",
+          "bits": 233,
+          "first": 1.96,
+          "last": 39.08,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "S",
+          "layer": "M9",
+          "name": "request_from_die",
+          "bits": 109,
+          "first": 6.88,
+          "last": 24.16,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "S",
+          "layer": "M9",
+          "name": "instruction_from_die",
+          "bits": 380,
+          "first": 25.76,
+          "last": 86.4,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        }
+      ]
+    },
+    {
+      "n": "xroot_candidate_13",
+      "x": 15260.4,
+      "y": 16988.4,
+      "w": 129.6,
+      "h": 41.04,
+      "existing_conflicts": [
+        {
+          "n": "rly_tt_mx_5",
+          "m": "qfd_rly_553_SN_53x60",
+          "x": 15209.856,
+          "y": 16979.76,
+          "w": 52.68,
+          "h": 60.455999999999996
+        },
+        {
+          "n": "rly_o4_me_en_5",
+          "m": "qfd_rly_8_EW_53x30",
+          "x": 15350.256,
+          "y": 17018.64,
+          "w": 52.68,
+          "h": 30.215999999999998
+        },
+        {
+          "n": "rly_tt_ib_5",
+          "m": "qfd_rly_380_EW_53x30",
+          "x": 15290.208,
+          "y": 17018.64,
+          "w": 52.68,
+          "h": 30.215999999999998
+        }
+      ],
+      "assigned": false,
+      "pin_ranges_candidate": [
+        {
+          "face": "N",
+          "layer": "M9",
+          "name": "response_from_vm",
+          "bits": 233,
+          "first": 6.88,
+          "last": 44.0,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "N",
+          "layer": "M9",
+          "name": "request_to_vm",
+          "bits": 109,
+          "first": 45.6,
+          "last": 62.88,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "N",
+          "layer": "M9",
+          "name": "instruction_to_vm",
+          "bits": 380,
+          "first": 64.48,
+          "last": 125.12,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "W",
+          "layer": "M8",
+          "name": "response_west",
+          "bits": 233,
+          "first": 1.96,
+          "last": 39.08,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "E",
+          "layer": "M8",
+          "name": "response_east",
+          "bits": 233,
+          "first": 1.96,
+          "last": 39.08,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "S",
+          "layer": "M9",
+          "name": "request_from_die",
+          "bits": 109,
+          "first": 6.88,
+          "last": 24.16,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "S",
+          "layer": "M9",
+          "name": "instruction_from_die",
+          "bits": 380,
+          "first": 25.76,
+          "last": 86.4,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        }
+      ]
+    },
+    {
+      "n": "xroot_candidate_14",
+      "x": 15411.599999999999,
+      "y": 16988.4,
+      "w": 129.6,
+      "h": 41.04,
+      "existing_conflicts": [],
+      "assigned": false,
+      "pin_ranges_candidate": [
+        {
+          "face": "N",
+          "layer": "M9",
+          "name": "response_from_vm",
+          "bits": 233,
+          "first": 6.88,
+          "last": 44.0,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "N",
+          "layer": "M9",
+          "name": "request_to_vm",
+          "bits": 109,
+          "first": 45.6,
+          "last": 62.88,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "N",
+          "layer": "M9",
+          "name": "instruction_to_vm",
+          "bits": 380,
+          "first": 64.48,
+          "last": 125.12,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "W",
+          "layer": "M8",
+          "name": "response_west",
+          "bits": 233,
+          "first": 1.96,
+          "last": 39.08,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "E",
+          "layer": "M8",
+          "name": "response_east",
+          "bits": 233,
+          "first": 1.96,
+          "last": 39.08,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "S",
+          "layer": "M9",
+          "name": "request_from_die",
+          "bits": 109,
+          "first": 6.88,
+          "last": 24.16,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "S",
+          "layer": "M9",
+          "name": "instruction_from_die",
+          "bits": 380,
+          "first": 25.76,
+          "last": 86.4,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        }
+      ]
+    },
+    {
+      "n": "xroot_candidate_15",
+      "x": 15562.8,
+      "y": 16988.4,
+      "w": 129.6,
+      "h": 41.04,
+      "existing_conflicts": [
+        {
+          "n": "rly_tt_land_0",
+          "m": "qfd_rly_16_WS_53x30",
+          "x": 15541.2,
+          "y": 16971.12,
+          "w": 52.68,
+          "h": 30.215999999999998
+        },
+        {
+          "n": "rly_o4_meok_0",
+          "m": "qfd_rly_1_WS_53x30",
+          "x": 15572.304,
+          "y": 17003.52,
+          "w": 52.68,
+          "h": 30.215999999999998
+        }
+      ],
+      "assigned": false,
+      "pin_ranges_candidate": [
+        {
+          "face": "N",
+          "layer": "M9",
+          "name": "response_from_vm",
+          "bits": 233,
+          "first": 6.88,
+          "last": 44.0,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "N",
+          "layer": "M9",
+          "name": "request_to_vm",
+          "bits": 109,
+          "first": 45.6,
+          "last": 62.88,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "N",
+          "layer": "M9",
+          "name": "instruction_to_vm",
+          "bits": 380,
+          "first": 64.48,
+          "last": 125.12,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "W",
+          "layer": "M8",
+          "name": "response_west",
+          "bits": 233,
+          "first": 1.96,
+          "last": 39.08,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "E",
+          "layer": "M8",
+          "name": "response_east",
+          "bits": 233,
+          "first": 1.96,
+          "last": 39.08,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "S",
+          "layer": "M9",
+          "name": "request_from_die",
+          "bits": 109,
+          "first": 6.88,
+          "last": 24.16,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "S",
+          "layer": "M9",
+          "name": "instruction_from_die",
+          "bits": 380,
+          "first": 25.76,
+          "last": 86.4,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        }
+      ]
+    },
+    {
+      "n": "xroot_candidate_16",
+      "x": 15714.0,
+      "y": 16988.4,
+      "w": 129.6,
+      "h": 41.04,
+      "existing_conflicts": [],
+      "assigned": false,
+      "pin_ranges_candidate": [
+        {
+          "face": "N",
+          "layer": "M9",
+          "name": "response_from_vm",
+          "bits": 233,
+          "first": 6.88,
+          "last": 44.0,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "N",
+          "layer": "M9",
+          "name": "request_to_vm",
+          "bits": 109,
+          "first": 45.6,
+          "last": 62.88,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "N",
+          "layer": "M9",
+          "name": "instruction_to_vm",
+          "bits": 380,
+          "first": 64.48,
+          "last": 125.12,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "W",
+          "layer": "M8",
+          "name": "response_west",
+          "bits": 233,
+          "first": 1.96,
+          "last": 39.08,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "E",
+          "layer": "M8",
+          "name": "response_east",
+          "bits": 233,
+          "first": 1.96,
+          "last": 39.08,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "S",
+          "layer": "M9",
+          "name": "request_from_die",
+          "bits": 109,
+          "first": 6.88,
+          "last": 24.16,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "S",
+          "layer": "M9",
+          "name": "instruction_from_die",
+          "bits": 380,
+          "first": 25.76,
+          "last": 86.4,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        }
+      ]
+    },
+    {
+      "n": "xroot_candidate_17",
+      "x": 15865.199999999999,
+      "y": 16988.4,
+      "w": 129.6,
+      "h": 41.04,
+      "existing_conflicts": [],
+      "assigned": false,
+      "pin_ranges_candidate": [
+        {
+          "face": "N",
+          "layer": "M9",
+          "name": "response_from_vm",
+          "bits": 233,
+          "first": 6.88,
+          "last": 44.0,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "N",
+          "layer": "M9",
+          "name": "request_to_vm",
+          "bits": 109,
+          "first": 45.6,
+          "last": 62.88,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "N",
+          "layer": "M9",
+          "name": "instruction_to_vm",
+          "bits": 380,
+          "first": 64.48,
+          "last": 125.12,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "W",
+          "layer": "M8",
+          "name": "response_west",
+          "bits": 233,
+          "first": 1.96,
+          "last": 39.08,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "E",
+          "layer": "M8",
+          "name": "response_east",
+          "bits": 233,
+          "first": 1.96,
+          "last": 39.08,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "S",
+          "layer": "M9",
+          "name": "request_from_die",
+          "bits": 109,
+          "first": 6.88,
+          "last": 24.16,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "S",
+          "layer": "M9",
+          "name": "instruction_from_die",
+          "bits": 380,
+          "first": 25.76,
+          "last": 86.4,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        }
+      ]
+    },
+    {
+      "n": "xroot_candidate_18",
+      "x": 16016.4,
+      "y": 16988.4,
+      "w": 129.6,
+      "h": 41.04,
+      "existing_conflicts": [],
+      "assigned": false,
+      "pin_ranges_candidate": [
+        {
+          "face": "N",
+          "layer": "M9",
+          "name": "response_from_vm",
+          "bits": 233,
+          "first": 6.88,
+          "last": 44.0,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "N",
+          "layer": "M9",
+          "name": "request_to_vm",
+          "bits": 109,
+          "first": 45.6,
+          "last": 62.88,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "N",
+          "layer": "M9",
+          "name": "instruction_to_vm",
+          "bits": 380,
+          "first": 64.48,
+          "last": 125.12,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "W",
+          "layer": "M8",
+          "name": "response_west",
+          "bits": 233,
+          "first": 1.96,
+          "last": 39.08,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "E",
+          "layer": "M8",
+          "name": "response_east",
+          "bits": 233,
+          "first": 1.96,
+          "last": 39.08,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "S",
+          "layer": "M9",
+          "name": "request_from_die",
+          "bits": 109,
+          "first": 6.88,
+          "last": 24.16,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "S",
+          "layer": "M9",
+          "name": "instruction_from_die",
+          "bits": 380,
+          "first": 25.76,
+          "last": 86.4,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        }
+      ]
+    },
+    {
+      "n": "xroot_candidate_19",
+      "x": 16167.599999999999,
+      "y": 16988.4,
+      "w": 129.6,
+      "h": 41.04,
+      "existing_conflicts": [],
+      "assigned": false,
+      "pin_ranges_candidate": [
+        {
+          "face": "N",
+          "layer": "M9",
+          "name": "response_from_vm",
+          "bits": 233,
+          "first": 6.88,
+          "last": 44.0,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "N",
+          "layer": "M9",
+          "name": "request_to_vm",
+          "bits": 109,
+          "first": 45.6,
+          "last": 62.88,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "N",
+          "layer": "M9",
+          "name": "instruction_to_vm",
+          "bits": 380,
+          "first": 64.48,
+          "last": 125.12,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "W",
+          "layer": "M8",
+          "name": "response_west",
+          "bits": 233,
+          "first": 1.96,
+          "last": 39.08,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "E",
+          "layer": "M8",
+          "name": "response_east",
+          "bits": 233,
+          "first": 1.96,
+          "last": 39.08,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "S",
+          "layer": "M9",
+          "name": "request_from_die",
+          "bits": 109,
+          "first": 6.88,
+          "last": 24.16,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "S",
+          "layer": "M9",
+          "name": "instruction_from_die",
+          "bits": 380,
+          "first": 25.76,
+          "last": 86.4,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        }
+      ]
+    },
+    {
+      "n": "xroot_candidate_20",
+      "x": 16318.8,
+      "y": 16988.4,
+      "w": 129.6,
+      "h": 41.04,
+      "existing_conflicts": [],
+      "assigned": false,
+      "pin_ranges_candidate": [
+        {
+          "face": "N",
+          "layer": "M9",
+          "name": "response_from_vm",
+          "bits": 233,
+          "first": 6.88,
+          "last": 44.0,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "N",
+          "layer": "M9",
+          "name": "request_to_vm",
+          "bits": 109,
+          "first": 45.6,
+          "last": 62.88,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "N",
+          "layer": "M9",
+          "name": "instruction_to_vm",
+          "bits": 380,
+          "first": 64.48,
+          "last": 125.12,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "W",
+          "layer": "M8",
+          "name": "response_west",
+          "bits": 233,
+          "first": 1.96,
+          "last": 39.08,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "E",
+          "layer": "M8",
+          "name": "response_east",
+          "bits": 233,
+          "first": 1.96,
+          "last": 39.08,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "S",
+          "layer": "M9",
+          "name": "request_from_die",
+          "bits": 109,
+          "first": 6.88,
+          "last": 24.16,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "S",
+          "layer": "M9",
+          "name": "instruction_from_die",
+          "bits": 380,
+          "first": 25.76,
+          "last": 86.4,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        }
+      ]
+    },
+    {
+      "n": "xroot_candidate_21",
+      "x": 16470.0,
+      "y": 16988.4,
+      "w": 129.6,
+      "h": 41.04,
+      "existing_conflicts": [],
+      "assigned": false,
+      "pin_ranges_candidate": [
+        {
+          "face": "N",
+          "layer": "M9",
+          "name": "response_from_vm",
+          "bits": 233,
+          "first": 6.88,
+          "last": 44.0,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "N",
+          "layer": "M9",
+          "name": "request_to_vm",
+          "bits": 109,
+          "first": 45.6,
+          "last": 62.88,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "N",
+          "layer": "M9",
+          "name": "instruction_to_vm",
+          "bits": 380,
+          "first": 64.48,
+          "last": 125.12,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "W",
+          "layer": "M8",
+          "name": "response_west",
+          "bits": 233,
+          "first": 1.96,
+          "last": 39.08,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "E",
+          "layer": "M8",
+          "name": "response_east",
+          "bits": 233,
+          "first": 1.96,
+          "last": 39.08,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "S",
+          "layer": "M9",
+          "name": "request_from_die",
+          "bits": 109,
+          "first": 6.88,
+          "last": 24.16,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "S",
+          "layer": "M9",
+          "name": "instruction_from_die",
+          "bits": 380,
+          "first": 25.76,
+          "last": 86.4,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        }
+      ]
+    },
+    {
+      "n": "xroot_candidate_22",
+      "x": 16621.2,
+      "y": 16988.4,
+      "w": 129.6,
+      "h": 41.04,
+      "existing_conflicts": [],
+      "assigned": false,
+      "pin_ranges_candidate": [
+        {
+          "face": "N",
+          "layer": "M9",
+          "name": "response_from_vm",
+          "bits": 233,
+          "first": 6.88,
+          "last": 44.0,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "N",
+          "layer": "M9",
+          "name": "request_to_vm",
+          "bits": 109,
+          "first": 45.6,
+          "last": 62.88,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "N",
+          "layer": "M9",
+          "name": "instruction_to_vm",
+          "bits": 380,
+          "first": 64.48,
+          "last": 125.12,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "W",
+          "layer": "M8",
+          "name": "response_west",
+          "bits": 233,
+          "first": 1.96,
+          "last": 39.08,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "E",
+          "layer": "M8",
+          "name": "response_east",
+          "bits": 233,
+          "first": 1.96,
+          "last": 39.08,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "S",
+          "layer": "M9",
+          "name": "request_from_die",
+          "bits": 109,
+          "first": 6.88,
+          "last": 24.16,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "S",
+          "layer": "M9",
+          "name": "instruction_from_die",
+          "bits": 380,
+          "first": 25.76,
+          "last": 86.4,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        }
+      ]
+    },
+    {
+      "n": "xroot_candidate_23",
+      "x": 16772.399999999998,
+      "y": 16988.4,
+      "w": 129.6,
+      "h": 41.04,
+      "existing_conflicts": [
+        {
+          "n": "rly_attn_ret_8",
+          "m": "qfd_rly_521_SE_53x60",
+          "x": 16868.304,
+          "y": 16990.56,
+          "w": 52.68,
+          "h": 60.455999999999996
+        }
+      ],
+      "assigned": false,
+      "pin_ranges_candidate": [
+        {
+          "face": "N",
+          "layer": "M9",
+          "name": "response_from_vm",
+          "bits": 233,
+          "first": 6.88,
+          "last": 44.0,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "N",
+          "layer": "M9",
+          "name": "request_to_vm",
+          "bits": 109,
+          "first": 45.6,
+          "last": 62.88,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "N",
+          "layer": "M9",
+          "name": "instruction_to_vm",
+          "bits": 380,
+          "first": 64.48,
+          "last": 125.12,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "W",
+          "layer": "M8",
+          "name": "response_west",
+          "bits": 233,
+          "first": 1.96,
+          "last": 39.08,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "E",
+          "layer": "M8",
+          "name": "response_east",
+          "bits": 233,
+          "first": 1.96,
+          "last": 39.08,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "S",
+          "layer": "M9",
+          "name": "request_from_die",
+          "bits": 109,
+          "first": 6.88,
+          "last": 24.16,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "S",
+          "layer": "M9",
+          "name": "instruction_from_die",
+          "bits": 380,
+          "first": 25.76,
+          "last": 86.4,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        }
+      ]
+    },
+    {
+      "n": "xroot_candidate_24",
+      "x": 16923.6,
+      "y": 16988.4,
+      "w": 129.6,
+      "h": 41.04,
+      "existing_conflicts": [],
+      "assigned": false,
+      "pin_ranges_candidate": [
+        {
+          "face": "N",
+          "layer": "M9",
+          "name": "response_from_vm",
+          "bits": 233,
+          "first": 6.88,
+          "last": 44.0,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "N",
+          "layer": "M9",
+          "name": "request_to_vm",
+          "bits": 109,
+          "first": 45.6,
+          "last": 62.88,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "N",
+          "layer": "M9",
+          "name": "instruction_to_vm",
+          "bits": 380,
+          "first": 64.48,
+          "last": 125.12,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "W",
+          "layer": "M8",
+          "name": "response_west",
+          "bits": 233,
+          "first": 1.96,
+          "last": 39.08,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "E",
+          "layer": "M8",
+          "name": "response_east",
+          "bits": 233,
+          "first": 1.96,
+          "last": 39.08,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "S",
+          "layer": "M9",
+          "name": "request_from_die",
+          "bits": 109,
+          "first": 6.88,
+          "last": 24.16,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "S",
+          "layer": "M9",
+          "name": "instruction_from_die",
+          "bits": 380,
+          "first": 25.76,
+          "last": 86.4,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        }
+      ]
+    },
+    {
+      "n": "xroot_candidate_25",
+      "x": 17074.8,
+      "y": 16988.4,
+      "w": 129.6,
+      "h": 41.04,
+      "existing_conflicts": [],
+      "assigned": false,
+      "pin_ranges_candidate": [
+        {
+          "face": "N",
+          "layer": "M9",
+          "name": "response_from_vm",
+          "bits": 233,
+          "first": 6.88,
+          "last": 44.0,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "N",
+          "layer": "M9",
+          "name": "request_to_vm",
+          "bits": 109,
+          "first": 45.6,
+          "last": 62.88,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "N",
+          "layer": "M9",
+          "name": "instruction_to_vm",
+          "bits": 380,
+          "first": 64.48,
+          "last": 125.12,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "W",
+          "layer": "M8",
+          "name": "response_west",
+          "bits": 233,
+          "first": 1.96,
+          "last": 39.08,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "E",
+          "layer": "M8",
+          "name": "response_east",
+          "bits": 233,
+          "first": 1.96,
+          "last": 39.08,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "S",
+          "layer": "M9",
+          "name": "request_from_die",
+          "bits": 109,
+          "first": 6.88,
+          "last": 24.16,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "S",
+          "layer": "M9",
+          "name": "instruction_from_die",
+          "bits": 380,
+          "first": 25.76,
+          "last": 86.4,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        }
+      ]
+    },
+    {
+      "n": "xroot_candidate_26",
+      "x": 17226.0,
+      "y": 16988.4,
+      "w": 129.6,
+      "h": 41.04,
+      "existing_conflicts": [
+        {
+          "n": "rly_attn_ret_9",
+          "m": "qfd_rly_521_WE_53x60",
+          "x": 17269.632,
+          "y": 16986.24,
+          "w": 52.68,
+          "h": 60.455999999999996
+        },
+        {
+          "n": "rly_aq_WN_10",
+          "m": "qfd_rly_540_WE_53x60",
+          "x": 17330.544,
+          "y": 16975.44,
+          "w": 52.68,
+          "h": 60.455999999999996
+        }
+      ],
+      "assigned": false,
+      "pin_ranges_candidate": [
+        {
+          "face": "N",
+          "layer": "M9",
+          "name": "response_from_vm",
+          "bits": 233,
+          "first": 6.88,
+          "last": 44.0,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "N",
+          "layer": "M9",
+          "name": "request_to_vm",
+          "bits": 109,
+          "first": 45.6,
+          "last": 62.88,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "N",
+          "layer": "M9",
+          "name": "instruction_to_vm",
+          "bits": 380,
+          "first": 64.48,
+          "last": 125.12,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "W",
+          "layer": "M8",
+          "name": "response_west",
+          "bits": 233,
+          "first": 1.96,
+          "last": 39.08,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "E",
+          "layer": "M8",
+          "name": "response_east",
+          "bits": 233,
+          "first": 1.96,
+          "last": 39.08,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "S",
+          "layer": "M9",
+          "name": "request_from_die",
+          "bits": 109,
+          "first": 6.88,
+          "last": 24.16,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "S",
+          "layer": "M9",
+          "name": "instruction_from_die",
+          "bits": 380,
+          "first": 25.76,
+          "last": 86.4,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        }
+      ]
+    },
+    {
+      "n": "xroot_candidate_27",
+      "x": 17377.2,
+      "y": 16988.4,
+      "w": 129.6,
+      "h": 41.04,
+      "existing_conflicts": [
+        {
+          "n": "rly_aq_WN_10",
+          "m": "qfd_rly_540_WE_53x60",
+          "x": 17330.544,
+          "y": 16975.44,
+          "w": 52.68,
+          "h": 60.455999999999996
+        }
+      ],
+      "assigned": false,
+      "pin_ranges_candidate": [
+        {
+          "face": "N",
+          "layer": "M9",
+          "name": "response_from_vm",
+          "bits": 233,
+          "first": 6.88,
+          "last": 44.0,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "N",
+          "layer": "M9",
+          "name": "request_to_vm",
+          "bits": 109,
+          "first": 45.6,
+          "last": 62.88,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "N",
+          "layer": "M9",
+          "name": "instruction_to_vm",
+          "bits": 380,
+          "first": 64.48,
+          "last": 125.12,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "W",
+          "layer": "M8",
+          "name": "response_west",
+          "bits": 233,
+          "first": 1.96,
+          "last": 39.08,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "E",
+          "layer": "M8",
+          "name": "response_east",
+          "bits": 233,
+          "first": 1.96,
+          "last": 39.08,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "S",
+          "layer": "M9",
+          "name": "request_from_die",
+          "bits": 109,
+          "first": 6.88,
+          "last": 24.16,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "S",
+          "layer": "M9",
+          "name": "instruction_from_die",
+          "bits": 380,
+          "first": 25.76,
+          "last": 86.4,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        }
+      ]
+    },
+    {
+      "n": "xroot_candidate_28",
+      "x": 17528.399999999998,
+      "y": 16988.4,
+      "w": 129.6,
+      "h": 41.04,
+      "existing_conflicts": [
+        {
+          "n": "rly_aq_WN_11",
+          "m": "qfd_rly_540_WE_53x60",
+          "x": 17633.376,
+          "y": 16975.44,
+          "w": 52.68,
+          "h": 60.455999999999996
+        }
+      ],
+      "assigned": false,
+      "pin_ranges_candidate": [
+        {
+          "face": "N",
+          "layer": "M9",
+          "name": "response_from_vm",
+          "bits": 233,
+          "first": 6.88,
+          "last": 44.0,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "N",
+          "layer": "M9",
+          "name": "request_to_vm",
+          "bits": 109,
+          "first": 45.6,
+          "last": 62.88,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "N",
+          "layer": "M9",
+          "name": "instruction_to_vm",
+          "bits": 380,
+          "first": 64.48,
+          "last": 125.12,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "W",
+          "layer": "M8",
+          "name": "response_west",
+          "bits": 233,
+          "first": 1.96,
+          "last": 39.08,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "E",
+          "layer": "M8",
+          "name": "response_east",
+          "bits": 233,
+          "first": 1.96,
+          "last": 39.08,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "S",
+          "layer": "M9",
+          "name": "request_from_die",
+          "bits": 109,
+          "first": 6.88,
+          "last": 24.16,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "S",
+          "layer": "M9",
+          "name": "instruction_from_die",
+          "bits": 380,
+          "first": 25.76,
+          "last": 86.4,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        }
+      ]
+    },
+    {
+      "n": "xroot_candidate_29",
+      "x": 17679.6,
+      "y": 16988.4,
+      "w": 129.6,
+      "h": 41.04,
+      "existing_conflicts": [
+        {
+          "n": "rly_attn_ret_10",
+          "m": "qfd_rly_521_WE_53x60",
+          "x": 17690.832,
+          "y": 16986.24,
+          "w": 52.68,
+          "h": 60.455999999999996
+        },
+        {
+          "n": "rly_aq_WN_11",
+          "m": "qfd_rly_540_WE_53x60",
+          "x": 17633.376,
+          "y": 16975.44,
+          "w": 52.68,
+          "h": 60.455999999999996
+        }
+      ],
+      "assigned": false,
+      "pin_ranges_candidate": [
+        {
+          "face": "N",
+          "layer": "M9",
+          "name": "response_from_vm",
+          "bits": 233,
+          "first": 6.88,
+          "last": 44.0,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "N",
+          "layer": "M9",
+          "name": "request_to_vm",
+          "bits": 109,
+          "first": 45.6,
+          "last": 62.88,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "N",
+          "layer": "M9",
+          "name": "instruction_to_vm",
+          "bits": 380,
+          "first": 64.48,
+          "last": 125.12,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "W",
+          "layer": "M8",
+          "name": "response_west",
+          "bits": 233,
+          "first": 1.96,
+          "last": 39.08,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "E",
+          "layer": "M8",
+          "name": "response_east",
+          "bits": 233,
+          "first": 1.96,
+          "last": 39.08,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "S",
+          "layer": "M9",
+          "name": "request_from_die",
+          "bits": 109,
+          "first": 6.88,
+          "last": 24.16,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "S",
+          "layer": "M9",
+          "name": "instruction_from_die",
+          "bits": 380,
+          "first": 25.76,
+          "last": 86.4,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        }
+      ]
+    },
+    {
+      "n": "xroot_candidate_30",
+      "x": 17830.8,
+      "y": 16988.4,
+      "w": 129.6,
+      "h": 41.04,
+      "existing_conflicts": [],
+      "assigned": false,
+      "pin_ranges_candidate": [
+        {
+          "face": "N",
+          "layer": "M9",
+          "name": "response_from_vm",
+          "bits": 233,
+          "first": 6.88,
+          "last": 44.0,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "N",
+          "layer": "M9",
+          "name": "request_to_vm",
+          "bits": 109,
+          "first": 45.6,
+          "last": 62.88,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "N",
+          "layer": "M9",
+          "name": "instruction_to_vm",
+          "bits": 380,
+          "first": 64.48,
+          "last": 125.12,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "W",
+          "layer": "M8",
+          "name": "response_west",
+          "bits": 233,
+          "first": 1.96,
+          "last": 39.08,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "E",
+          "layer": "M8",
+          "name": "response_east",
+          "bits": 233,
+          "first": 1.96,
+          "last": 39.08,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "S",
+          "layer": "M9",
+          "name": "request_from_die",
+          "bits": 109,
+          "first": 6.88,
+          "last": 24.16,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "S",
+          "layer": "M9",
+          "name": "instruction_from_die",
+          "bits": 380,
+          "first": 25.76,
+          "last": 86.4,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        }
+      ]
+    },
+    {
+      "n": "xroot_candidate_31",
+      "x": 17982.0,
+      "y": 16988.4,
+      "w": 129.6,
+      "h": 41.04,
+      "existing_conflicts": [
+        {
+          "n": "rly_aq_WN_12",
+          "m": "qfd_rly_540_WE_53x60",
+          "x": 18010.944,
+          "y": 16975.44,
+          "w": 52.68,
+          "h": 60.455999999999996
+        }
+      ],
+      "assigned": false,
+      "pin_ranges_candidate": [
+        {
+          "face": "N",
+          "layer": "M9",
+          "name": "response_from_vm",
+          "bits": 233,
+          "first": 6.88,
+          "last": 44.0,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "N",
+          "layer": "M9",
+          "name": "request_to_vm",
+          "bits": 109,
+          "first": 45.6,
+          "last": 62.88,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "N",
+          "layer": "M9",
+          "name": "instruction_to_vm",
+          "bits": 380,
+          "first": 64.48,
+          "last": 125.12,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "W",
+          "layer": "M8",
+          "name": "response_west",
+          "bits": 233,
+          "first": 1.96,
+          "last": 39.08,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "E",
+          "layer": "M8",
+          "name": "response_east",
+          "bits": 233,
+          "first": 1.96,
+          "last": 39.08,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "S",
+          "layer": "M9",
+          "name": "request_from_die",
+          "bits": 109,
+          "first": 6.88,
+          "last": 24.16,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        },
+        {
+          "face": "S",
+          "layer": "M9",
+          "name": "instruction_from_die",
+          "bits": 380,
+          "first": 25.76,
+          "last": 86.4,
+          "status": "REJECTED_M9_DENSITY_SCENARIO; UNASSIGNED"
+        }
+      ]
+    }
+  ],
+  "unique_conflicts": [
+    {
+      "n": "rly_tt_c2_11",
+      "m": "qfd_rly_343_EN_53x30",
+      "x": 13327.2,
+      "y": 17020.8,
+      "w": 52.68,
+      "h": 30.215999999999998
+    },
+    {
+      "n": "rstt_rst_field_7098",
+      "m": "qfd_rst_rep_p8",
+      "x": 13307.328,
+      "y": 17025.12,
+      "w": 5.184,
+      "h": 2.16
+    },
+    {
+      "n": "rly_tt_c2_10",
+      "m": "qfd_rly_343_EW_53x30",
+      "x": 13564.8,
+      "y": 16977.6,
+      "w": 52.68,
+      "h": 30.215999999999998
+    },
+    {
+      "n": "rly_tt_f2_12",
+      "m": "qfd_rly_107_WE_53x30",
+      "x": 13436.496,
+      "y": 16990.56,
+      "w": 52.68,
+      "h": 30.215999999999998
+    },
+    {
+      "n": "rly_tt_lc2_9",
+      "m": "qfd_rly_28_EW_53x30",
+      "x": 13716.0,
+      "y": 16977.6,
+      "w": 52.68,
+      "h": 30.215999999999998
+    },
+    {
+      "n": "rly_pword_2_34",
+      "m": "qfd_rly_513_WE_53x60",
+      "x": 13629.6,
+      "y": 16977.6,
+      "w": 52.68,
+      "h": 60.455999999999996
+    },
+    {
+      "n": "rly_tt_f2_13",
+      "m": "qfd_rly_107_WE_53x30",
+      "x": 13860.288,
+      "y": 16990.56,
+      "w": 52.68,
+      "h": 30.215999999999998
+    },
+    {
+      "n": "rly_kvn_WN_16",
+      "m": "qfd_rly_1048_EW_54x60",
+      "x": 13780.8,
+      "y": 16977.6,
+      "w": 54.408,
+      "h": 60.455999999999996
+    },
+    {
+      "n": "rly_tt_c2_9",
+      "m": "qfd_rly_343_SW_53x30",
+      "x": 13975.2,
+      "y": 16977.6,
+      "w": 52.68,
+      "h": 30.215999999999998
+    },
+    {
+      "n": "rly_pword_2_35",
+      "m": "qfd_rly_513_WE_53x60",
+      "x": 14040.0,
+      "y": 16977.6,
+      "w": 52.68,
+      "h": 60.455999999999996
+    },
+    {
+      "n": "rly_tt_f2_14",
+      "m": "qfd_rly_107_WS_53x30",
+      "x": 14284.512,
+      "y": 16990.56,
+      "w": 52.68,
+      "h": 30.215999999999998
+    },
+    {
+      "n": "rly_rc_0_0",
+      "m": "qfd_rly_1_WE_53x30",
+      "x": 14229.216,
+      "y": 17018.64,
+      "w": 52.68,
+      "h": 30.215999999999998
+    },
+    {
+      "n": "rly_rk_0_29",
+      "m": "qfd_rly_1_EW_53x30",
+      "x": 14224.464,
+      "y": 16984.08,
+      "w": 52.68,
+      "h": 30.215999999999998
+    },
+    {
+      "n": "rly_rs_0_29",
+      "m": "qfd_rly_551_SW_53x60",
+      "x": 14421.024,
+      "y": 16990.56,
+      "w": 52.68,
+      "h": 60.455999999999996
+    },
+    {
+      "n": "rly_rc_0_1",
+      "m": "qfd_rly_1_WS_53x30",
+      "x": 14621.472,
+      "y": 16994.88,
+      "w": 52.68,
+      "h": 30.215999999999998
+    },
+    {
+      "n": "rly_tt_mx_5",
+      "m": "qfd_rly_553_SN_53x60",
+      "x": 15209.856,
+      "y": 16979.76,
+      "w": 52.68,
+      "h": 60.455999999999996
+    },
+    {
+      "n": "rly_o4_me_en_5",
+      "m": "qfd_rly_8_EW_53x30",
+      "x": 15350.256,
+      "y": 17018.64,
+      "w": 52.68,
+      "h": 30.215999999999998
+    },
+    {
+      "n": "rly_tt_ib_5",
+      "m": "qfd_rly_380_EW_53x30",
+      "x": 15290.208,
+      "y": 17018.64,
+      "w": 52.68,
+      "h": 30.215999999999998
+    },
+    {
+      "n": "rly_tt_land_0",
+      "m": "qfd_rly_16_WS_53x30",
+      "x": 15541.2,
+      "y": 16971.12,
+      "w": 52.68,
+      "h": 30.215999999999998
+    },
+    {
+      "n": "rly_o4_meok_0",
+      "m": "qfd_rly_1_WS_53x30",
+      "x": 15572.304,
+      "y": 17003.52,
+      "w": 52.68,
+      "h": 30.215999999999998
+    },
+    {
+      "n": "rly_attn_ret_8",
+      "m": "qfd_rly_521_SE_53x60",
+      "x": 16868.304,
+      "y": 16990.56,
+      "w": 52.68,
+      "h": 60.455999999999996
+    },
+    {
+      "n": "rly_attn_ret_9",
+      "m": "qfd_rly_521_WE_53x60",
+      "x": 17269.632,
+      "y": 16986.24,
+      "w": 52.68,
+      "h": 60.455999999999996
+    },
+    {
+      "n": "rly_aq_WN_10",
+      "m": "qfd_rly_540_WE_53x60",
+      "x": 17330.544,
+      "y": 16975.44,
+      "w": 52.68,
+      "h": 60.455999999999996
+    },
+    {
+      "n": "rly_aq_WN_11",
+      "m": "qfd_rly_540_WE_53x60",
+      "x": 17633.376,
+      "y": 16975.44,
+      "w": 52.68,
+      "h": 60.455999999999996
+    },
+    {
+      "n": "rly_attn_ret_10",
+      "m": "qfd_rly_521_WE_53x60",
+      "x": 17690.832,
+      "y": 16986.24,
+      "w": 52.68,
+      "h": 60.455999999999996
+    },
+    {
+      "n": "rly_aq_WN_12",
+      "m": "qfd_rly_540_WE_53x60",
+      "x": 18010.944,
+      "y": 16975.44,
+      "w": 52.68,
+      "h": 60.455999999999996
+    }
+  ],
+  "nonrelay_conflicts": [],
+  "conditional_width_scenario": {
+    "response233": "data128+literal_key96+phase8+valid1",
+    "request109": "literal_key96+mask4+phase8+valid1",
+    "common_instruction380": "ib379+ib_go1",
+    "context_version": "UNASSIGNED; full-key alone does not disambiguate back-to-back epochs"
+  },
+  "capacity": {
+    "pg_metal_fraction": 0.105598944,
+    "pg_only_available": 0.894401056,
+    "strip_height84_264": 84.264,
+    "aggregate149_case_bits": 5148,
+    "aggregate149_M8_ribbon_um": 915.2000000000002,
+    "literal233_aggregate_bits": 7836,
+    "canopy_qualified": false,
+    "joint_band_latest_known_cut": 1.062967,
+    "joint_band_cut_excludes": "root gather/export and additional epoch/control equalization"
+  },
+  "required_repairs": [
+    "Replan every listed existing relay before station placement; no mutation of live g9.",
+    "Actual registered source boundary must align to slot N; no raw VM comb export.",
+    "Pin ranges are pitch-count screens only: 0.16um pitch must pass actual oriented LEF/grid/PG legality.",
+    "No current station RTL/census/CTS/hold/setup qualification.",
+    "Actual g8 generated CLK_RX OBS M1-M7 blocks lower-layer/station occupancy but NOT M8/M9; derive actual top-layer escape PG demand and registered branch stages from source-bound LEF/view receipts.",
+    "Separate live load_step from paused core_step; held VM q_v consumed once by fire/token.",
+    "Hold/buffer instruction+GO until core accepts; freezing whole508 station deadlocks fill.",
+    "Bind context/version dictionary or explicitly priced epoch drain; preserve full address key.",
+    "Equalize row/control/X epochs; price actual request/response latency and initial fills.",
+    "Actual entire horizontal canopy remains unplaced; narrow strip does not supply aggregate track capacity.",
+    "Band sources y~18376 to VM S17051 require VM-owned registered vertical transport through existing regions; same-x external entry does not close internal source delivery.",
+    "Source-bound VM6cc764460 data-only intermediate register lowerbounds exceed13remainingbandbays; geometry/registered clocks/ME entries for regional transports must be composed, not inferred from FF totals."
+  ],
+  "pin_screen_status": "REJECTED_BY_ACTUAL_PG; ranges retained as negative evidence only",
+  "actual_PG_screen": {
+    "source": "qwen_vm/band_plan measured phase audit",
+    "M9_VSS_phase_um": 0,
+    "M9_VDD_phase_um": 4.545,
+    "net_pitch_um": 9.091,
+    "stripe_width_um": 0.48,
+    "core_origin": [
+      0,
+      0
+    ],
+    "overlaps_per_first_columns": {
+      "0": 77,
+      "1": 72,
+      "2": 78
+    },
+    "pin_centers_per_column": 722,
+    "note": "Even center-only screen fails; clearances add demand. All original M9 ranges invalid for assignment.",
+    "full_audit": {
+      "branch": "codex/qwen-vm-band",
+      "commit": "6cc764460",
+      "path": "results/arch/qwen_tp8_1012/vm_band_export_capacity_codex.json",
+      "sha256": "fa0019534afb31861b3f3133b84bf9f73ceef33f1f452947f2641f3c373d2e93",
+      "center_conflicts_total": 5747,
+      "N_M9": 2434,
+      "S_M9": 1649,
+      "W_M8": 832,
+      "E_M8": 832,
+      "correction": "Earlier2451N count transcription superseded by exact2434."
+    }
+  },
+  "repair_scenario_not_adopted": {
+    "instruction380": "Separate N/S M7 at actual0.128 two-track pitch if real VM OBS/access permits",
+    "M9": "Keep onlyresponse233+request109=342, allocate PG-aware centers with clearance; actual worker plan pending"
+  },
+  "VM_transport_lower_bound": {
+    "source_data_bits": 4096,
+    "reach_um": 500,
+    "scope": "Optimistic data-only rectangle-to-VM Sface bound; tags/control/pairreach/endpointbuffer FF, obstacles and actualpins excluded",
+    "root_bounds": [
+      {
+        "root": 0,
+        "minimum_bit_distance_sum_um": 448502.064,
+        "max_optimistic_path_um": 5809.734,
+        "min_unbuffered_wire_hops_500": 12,
+        "minimum_intermediate_register_bits_unbalanced": 832,
+        "minimum_intermediate_register_bits_if_same_source_edge_and_equalized_root": 1408
+      },
+      {
+        "root": 1,
+        "minimum_bit_distance_sum_um": 430994.4,
+        "max_optimistic_path_um": 5658.918,
+        "min_unbuffered_wire_hops_500": 12,
+        "minimum_intermediate_register_bits_unbalanced": 796,
+        "minimum_intermediate_register_bits_if_same_source_edge_and_equalized_root": 1408
+      },
+      {
+        "root": 2,
+        "minimum_bit_distance_sum_um": 414713.616,
+        "max_optimistic_path_um": 5508.102,
+        "min_unbuffered_wire_hops_500": 12,
+        "minimum_intermediate_register_bits_unbalanced": 764,
+        "minimum_intermediate_register_bits_if_same_source_edge_and_equalized_root": 1408
+      },
+      {
+        "root": 3,
+        "minimum_bit_distance_sum_um": 399659.712,
+        "max_optimistic_path_um": 5357.286,
+        "min_unbuffered_wire_hops_500": 11,
+        "minimum_intermediate_register_bits_unbalanced": 732,
+        "minimum_intermediate_register_bits_if_same_source_edge_and_equalized_root": 1280
+      },
+      {
+        "root": 4,
+        "minimum_bit_distance_sum_um": 385832.688,
+        "max_optimistic_path_um": 5206.47,
+        "min_unbuffered_wire_hops_500": 11,
+        "minimum_intermediate_register_bits_unbalanced": 704,
+        "minimum_intermediate_register_bits_if_same_source_edge_and_equalized_root": 1280
+      },
+      {
+        "root": 5,
+        "minimum_bit_distance_sum_um": 373232.544,
+        "max_optimistic_path_um": 5055.654,
+        "min_unbuffered_wire_hops_500": 11,
+        "minimum_intermediate_register_bits_unbalanced": 680,
+        "minimum_intermediate_register_bits_if_same_source_edge_and_equalized_root": 1280
+      },
+      {
+        "root": 6,
+        "minimum_bit_distance_sum_um": 361859.28,
+        "max_optimistic_path_um": 4904.838,
+        "min_unbuffered_wire_hops_500": 10,
+        "minimum_intermediate_register_bits_unbalanced": 656,
+        "minimum_intermediate_register_bits_if_same_source_edge_and_equalized_root": 1152
+      },
+      {
+        "root": 7,
+        "minimum_bit_distance_sum_um": 351721.368,
+        "max_optimistic_path_um": 4754.022,
+        "min_unbuffered_wire_hops_500": 10,
+        "minimum_intermediate_register_bits_unbalanced": 636,
+        "minimum_intermediate_register_bits_if_same_source_edge_and_equalized_root": 1152
+      },
+      {
+        "root": 8,
+        "minimum_bit_distance_sum_um": 342810.504,
+        "max_optimistic_path_um": 4603.206,
+        "min_unbuffered_wire_hops_500": 10,
+        "minimum_intermediate_register_bits_unbalanced": 624,
+        "minimum_intermediate_register_bits_if_same_source_edge_and_equalized_root": 1152
+      },
+      {
+        "root": 9,
+        "minimum_bit_distance_sum_um": 335126.52,
+        "max_optimistic_path_um": 4452.39,
+        "min_unbuffered_wire_hops_500": 9,
+        "minimum_intermediate_register_bits_unbalanced": 608,
+        "minimum_intermediate_register_bits_if_same_source_edge_and_equalized_root": 1024
+      },
+      {
+        "root": 10,
+        "minimum_bit_distance_sum_um": 328669.416,
+        "max_optimistic_path_um": 4301.574,
+        "min_unbuffered_wire_hops_500": 9,
+        "minimum_intermediate_register_bits_unbalanced": 596,
+        "minimum_intermediate_register_bits_if_same_source_edge_and_equalized_root": 1024
+      },
+      {
+        "root": 11,
+        "minimum_bit_distance_sum_um": 323439.192,
+        "max_optimistic_path_um": 4150.758,
+        "min_unbuffered_wire_hops_500": 9,
+        "minimum_intermediate_register_bits_unbalanced": 584,
+        "minimum_intermediate_register_bits_if_same_source_edge_and_equalized_root": 1024
+      },
+      {
+        "root": 12,
+        "minimum_bit_distance_sum_um": 319435.848,
+        "max_optimistic_path_um": 3999.942,
+        "min_unbuffered_wire_hops_500": 8,
+        "minimum_intermediate_register_bits_unbalanced": 576,
+        "minimum_intermediate_register_bits_if_same_source_edge_and_equalized_root": 896
+      },
+      {
+        "root": 13,
+        "minimum_bit_distance_sum_um": 316659.384,
+        "max_optimistic_path_um": 3849.126,
+        "min_unbuffered_wire_hops_500": 8,
+        "minimum_intermediate_register_bits_unbalanced": 572,
+        "minimum_intermediate_register_bits_if_same_source_edge_and_equalized_root": 896
+      },
+      {
+        "root": 14,
+        "minimum_bit_distance_sum_um": 315306.408,
+        "max_optimistic_path_um": 3701.382,
+        "min_unbuffered_wire_hops_500": 8,
+        "minimum_intermediate_register_bits_unbalanced": 568,
+        "minimum_intermediate_register_bits_if_same_source_edge_and_equalized_root": 896
+      },
+      {
+        "root": 15,
+        "minimum_bit_distance_sum_um": 315180.312,
+        "max_optimistic_path_um": 3608.802,
+        "min_unbuffered_wire_hops_500": 8,
+        "minimum_intermediate_register_bits_unbalanced": 568,
+        "minimum_intermediate_register_bits_if_same_source_edge_and_equalized_root": 896
+      },
+      {
+        "root": 16,
+        "minimum_bit_distance_sum_um": 316084.488,
+        "max_optimistic_path_um": 3760.386,
+        "min_unbuffered_wire_hops_500": 8,
+        "minimum_intermediate_register_bits_unbalanced": 568,
+        "minimum_intermediate_register_bits_if_same_source_edge_and_equalized_root": 896
+      },
+      {
+        "root": 17,
+        "minimum_bit_distance_sum_um": 318215.544,
+        "max_optimistic_path_um": 3911.97,
+        "min_unbuffered_wire_hops_500": 8,
+        "minimum_intermediate_register_bits_unbalanced": 572,
+        "minimum_intermediate_register_bits_if_same_source_edge_and_equalized_root": 896
+      },
+      {
+        "root": 18,
+        "minimum_bit_distance_sum_um": 321573.48,
+        "max_optimistic_path_um": 4063.554,
+        "min_unbuffered_wire_hops_500": 9,
+        "minimum_intermediate_register_bits_unbalanced": 580,
+        "minimum_intermediate_register_bits_if_same_source_edge_and_equalized_root": 1024
+      },
+      {
+        "root": 19,
+        "minimum_bit_distance_sum_um": 326158.296,
+        "max_optimistic_path_um": 4215.138,
+        "min_unbuffered_wire_hops_500": 9,
+        "minimum_intermediate_register_bits_unbalanced": 586,
+        "minimum_intermediate_register_bits_if_same_source_edge_and_equalized_root": 1024
+      },
+      {
+        "root": 20,
+        "minimum_bit_distance_sum_um": 331969.992,
+        "max_optimistic_path_um": 4366.722,
+        "min_unbuffered_wire_hops_500": 9,
+        "minimum_intermediate_register_bits_unbalanced": 596,
+        "minimum_intermediate_register_bits_if_same_source_edge_and_equalized_root": 1024
+      },
+      {
+        "root": 21,
+        "minimum_bit_distance_sum_um": 339008.568,
+        "max_optimistic_path_um": 4518.306,
+        "min_unbuffered_wire_hops_500": 10,
+        "minimum_intermediate_register_bits_unbalanced": 612,
+        "minimum_intermediate_register_bits_if_same_source_edge_and_equalized_root": 1152
+      },
+      {
+        "root": 22,
+        "minimum_bit_distance_sum_um": 346045.224,
+        "max_optimistic_path_um": 4669.698,
+        "min_unbuffered_wire_hops_500": 10,
+        "minimum_intermediate_register_bits_unbalanced": 628,
+        "minimum_intermediate_register_bits_if_same_source_edge_and_equalized_root": 1152
+      },
+      {
+        "root": 23,
+        "minimum_bit_distance_sum_um": 354308.76,
+        "max_optimistic_path_um": 4802.274,
+        "min_unbuffered_wire_hops_500": 10,
+        "minimum_intermediate_register_bits_unbalanced": 648,
+        "minimum_intermediate_register_bits_if_same_source_edge_and_equalized_root": 1152
+      },
+      {
+        "root": 24,
+        "minimum_bit_distance_sum_um": 365027.976,
+        "max_optimistic_path_um": 4953.858,
+        "min_unbuffered_wire_hops_500": 10,
+        "minimum_intermediate_register_bits_unbalanced": 668,
+        "minimum_intermediate_register_bits_if_same_source_edge_and_equalized_root": 1152
+      },
+      {
+        "root": 25,
+        "minimum_bit_distance_sum_um": 376974.072,
+        "max_optimistic_path_um": 5105.442,
+        "min_unbuffered_wire_hops_500": 11,
+        "minimum_intermediate_register_bits_unbalanced": 692,
+        "minimum_intermediate_register_bits_if_same_source_edge_and_equalized_root": 1280
+      },
+      {
+        "root": 26,
+        "minimum_bit_distance_sum_um": 390147.048,
+        "max_optimistic_path_um": 5257.026,
+        "min_unbuffered_wire_hops_500": 11,
+        "minimum_intermediate_register_bits_unbalanced": 716,
+        "minimum_intermediate_register_bits_if_same_source_edge_and_equalized_root": 1280
+      },
+      {
+        "root": 27,
+        "minimum_bit_distance_sum_um": 404546.904,
+        "max_optimistic_path_um": 5408.61,
+        "min_unbuffered_wire_hops_500": 11,
+        "minimum_intermediate_register_bits_unbalanced": 744,
+        "minimum_intermediate_register_bits_if_same_source_edge_and_equalized_root": 1280
+      },
+      {
+        "root": 28,
+        "minimum_bit_distance_sum_um": 420173.64,
+        "max_optimistic_path_um": 5560.194,
+        "min_unbuffered_wire_hops_500": 12,
+        "minimum_intermediate_register_bits_unbalanced": 776,
+        "minimum_intermediate_register_bits_if_same_source_edge_and_equalized_root": 1408
+      },
+      {
+        "root": 29,
+        "minimum_bit_distance_sum_um": 437027.256,
+        "max_optimistic_path_um": 5711.778,
+        "min_unbuffered_wire_hops_500": 12,
+        "minimum_intermediate_register_bits_unbalanced": 808,
+        "minimum_intermediate_register_bits_if_same_source_edge_and_equalized_root": 1408
+      },
+      {
+        "root": 30,
+        "minimum_bit_distance_sum_um": 455771.304,
+        "max_optimistic_path_um": 5873.73,
+        "min_unbuffered_wire_hops_500": 12,
+        "minimum_intermediate_register_bits_unbalanced": 844,
+        "minimum_intermediate_register_bits_if_same_source_edge_and_equalized_root": 1408
+      },
+      {
+        "root": 31,
+        "minimum_bit_distance_sum_um": 475526.4,
+        "max_optimistic_path_um": 6025.314,
+        "min_unbuffered_wire_hops_500": 13,
+        "minimum_intermediate_register_bits_unbalanced": 888,
+        "minimum_intermediate_register_bits_if_same_source_edge_and_equalized_root": 1536
+      }
+    ],
+    "minimum_data_register_bits_unbalanced": 21422,
+    "minimum_P2_tiles_by_FF_count": 23,
+    "data_register_bits_equalized_per_root_same_launch_edge": 37248,
+    "minimum_P2_tiles_by_equalized_FF_count": 39,
+    "chosen_band_slot_pressure": {
+      "spares": 114,
+      "XPR14_raw_added_band_tile_lower_bound": 69,
+      "control_station_candidate_slots": 32,
+      "remaining_slots": 13,
+      "conclusion": "Chosen69+32 candidate leaves13slots, below even optimistic data-only transportFFcount lowerbound. NewVMownedregionaltransport slots orchangedband/control/equalization contract needed; not a global impossibility proof."
+    }
+  },
+  "layer_scope_correction": {
+    "source": "window_audit actual g8 elements.lef, receipt pending",
+    "VM_wall": "OBS M1-M9",
+    "surrounding_generated_frames": "OBS M1-M7, including CLK_RX/tile/band/slab/tt/SEQ/embgw/PLL",
+    "M8_M9_over_CLK_RX": "Not obstructed by that generated OBS; actual PG/access/capacity remains checked",
+    "M6_metadata_plane": "Unavailable through current M7-capped frames; requires actual master recap/view or explicit channel route, not free canopy capacity"
+  }
+}

@@ -1,0 +1,12 @@
+{
+ "master": "dsfd_vm_static_suhc_fsr",
+ "outline_um": [
+  345.6,
+  51.84
+ ],
+ "placements": "standard layout_candidate.json each vm_sN_read_frontend@(slice+144.72,slice+835.92)",
+ "port_bits": 1182,
+ "source_request": "S_VM final i_aux_slot60 interface",
+ "interface_scope": "18native requests+12programmable auxiliary return-slot requests;32physical bank outputs",
+ "qualification": "not a claim that this fixed18+12 interface alone accepts20concurrentMIXreads; actual scheduler/profile must be implemented and proven"
+}
