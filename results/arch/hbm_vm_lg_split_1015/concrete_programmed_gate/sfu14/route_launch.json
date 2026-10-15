@@ -1,0 +1,51 @@
+{
+  "schema": "opentallas.hbm.lg-variant-native-route-launch.v1",
+  "variant": "sfu14",
+  "source_commit": "f3fa747d8",
+  "gate_verdict": "WARN",
+  "gate_clock": {
+    "max_root_sinks": 1440,
+    "root": "port:clk",
+    "cts": true,
+    "tt_insertion_ps": 251.1,
+    "tt_spread_ps": 65.6,
+    "declared_clock": null,
+    "limits": {
+      "sinks": 15000,
+      "insertion_ps": 300.0,
+      "spread_ps": 80.0
+    },
+    "clock_measurements": [
+      {
+        "source": "clk",
+        "clock": "core_clk",
+        "tt": {
+          "boundary": {
+            "n": 1697,
+            "mean": 203.1,
+            "min": 185.5,
+            "max": 251.1
+          },
+          "all": {
+            "n": 1697,
+            "mean": 203.1,
+            "min": 185.5,
+            "max": 251.1
+          },
+          "errors": [],
+          "macros": null,
+          "macro_libs": 0
+        }
+      }
+    ],
+    "measured_clock": "core_clk",
+    "verdict": "PASS",
+    "text": "1,440 sinks on the largest root <= 15,000; measured TT insertion 251.1 ps, leaf spread 65.6 ps"
+  },
+  "host": "ot-epyc4",
+  "directory": "/srv/opentallas-scratch/codex/lg-sfu14-native-route-1015",
+  "unit": "oth-ubuntu-2139710-1792064600",
+  "local_exec": 52067,
+  "status": "ACTIVEadmitted; revalidatehandle",
+  "scope": "Independentconcretemaster route, existingHC18/15receiptunchanged;96compositionnotqualified"
+}

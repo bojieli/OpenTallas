@@ -1,0 +1,28 @@
+{
+  "schema": "opentallas.hbm.lg-concrete-native-programmed.v1",
+  "result": "PASS",
+  "source_commit": "f3fa747d8",
+  "unit": "oth-ubuntu-1439352-1792064302 terminal0",
+  "actual": {
+    "programme_words": 812,
+    "LG_leaves": 24,
+    "VM_macros": 24,
+    "writes": 3072,
+    "readbacks": 3072
+  },
+  "source": "Actualsplit hierarchy instantiateshfd_vm_lg_su10 andhfd_vm_lg_sfu14; HC18/15originalengine preserved",
+  "latencies": {
+    "read": [
+      10,
+      14,
+      18
+    ],
+    "write": [
+      7,
+      11,
+      15
+    ]
+  },
+  "mutant": "Actualselectedwritepayloadwrongsource killed onreadbackstation0bank0",
+  "scope": "Sourceprogrammed functional composition; no physicalqualification ofnear/middle inheritedfromHCroute"
+}
