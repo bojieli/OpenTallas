@@ -19,7 +19,7 @@ module ot_s81_hcx_hrow_transpose (
  output reg[4095:0]out_d,
  output reg fault
 );
- reg[1023:0]cell[0:3][0:3];
+ reg[1023:0]cbuf[0:3][0:3];
  reg[6:0]nw;               // next expected raw beat
  reg e_act,e_par;reg[1:0]e_k;reg[4:0]e_g;
  function automatic [1023:0] extract(input[4095:0]d,input integer k);
@@ -28,9 +28,9 @@ module ot_s81_hcx_hrow_transpose (
  wire[1:0]j=nw[1:0];wire[4:0]gw=nw[6:2];
  always @(posedge clk)begin
   if(in_v)for(integer k=0;k<4;k=k+1)begin
-   if(!gw[0])cell[j][k]<=extract(in_d,k);else cell[k][j]<=extract(in_d,k);
+   if(!gw[0])cbuf[j][k]<=extract(in_d,k);else cbuf[k][j]<=extract(in_d,k);
   end
-  if(e_act)for(integer q=0;q<4;q=q+1)out_d[1024*q+:1024]<=e_par?cell[e_k][q]:cell[q][e_k];
+  if(e_act)for(integer q=0;q<4;q=q+1)out_d[1024*q+:1024]<=e_par?cbuf[e_k][q]:cbuf[q][e_k];
  end
  always @(posedge clk or negedge rst_n)begin
   if(!rst_n)begin nw<=0;e_act<=0;e_par<=0;e_k<=0;e_g<=0;out_v<=0;out_word<=0;fault<=0;end

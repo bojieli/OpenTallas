@@ -77,6 +77,27 @@ if [ -n "${MIXSNAP:-}" ]; then
   [ "$FP" = rtl ] || { echo "MIX4 integration requires FP=rtl"; exit 1; }
   LIST="$LIST rtl/dsrom_sys/s81_static_control/ot_s81_fixed_issue.sv rtl/hdc/v41x/ot_hdc_v41x_vec_side.sv rtl/dsrom_sys/engram/mix/ot_s81_engram_mix.sv rtl/dsrom_sys/engram/mix/dsfd_engram_mix4_c.sv"
 fi
+# HCXROM (s81-ftok r10): the REAL HC coefficient chain on port 9 (+define+TB_HCX_REAL; STIMX must carry --hcx-real
+# --hcx-issue A,F --hcx-p2p N and XG the measured -GHX_* offsets): HCXROM = a dir holding the 24-row resident fn images
+# (hcx_rank_images.py) and the post parameter images hcx_post_p*.  Modes mut_hcxl (HLAYOUT 0 on h_rows) and mut_hcxp
+# (post MUT_POST) must FAIL.
+if [ -n "${HCXROM:-}" ]; then
+  [ "$FP" = rtl ] || { echo "HCX integration requires FP=rtl"; exit 1; }
+  LIST="$LIST rtl/dsrom_sys/s81_static_control/ot_s81_fixed_issue.sv
+ rtl/hdc/ot_hdc_fastfp_lat.sv rtl/hdc/v41x/ot_hdc_v41x_hcp.sv
+ physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8.v physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8.v
+ physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v
+ physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v
+ physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v
+ rtl/dsrom_sys/s81_hcx/ot_s81_hcx_projection_leaf.sv rtl/dsrom_sys/s81_hcx/ot_s81_hcx_prefetch.sv rtl/dsrom_sys/s81_hcx/ot_s81_hcx_controller.sv
+ rtl/dsrom_sys/s81_hcx/ot_s81_hcx_hrow_transpose.sv rtl/dsrom_sys/s81_hcx/dsfd_sp_hcx_projection.sv rtl/dsrom_sys/s81_hcx/ot_s81_hcx_gatherpack.sv
+ rtl/dsrom_sys/s81_hcx/ot_s81_hcx_chain_seq.sv
+ rtl/hdc/v41/ot_hdc_sk_arith.sv rtl/hdc/v41/ot_hdc_sk_recip_rom.sv rtl/hdc/v41/ot_hdc_sinkhorn.sv rtl/hdc/v41/ot_hdc_sinkhorn_mc.sv
+ rtl/hdc/hbm/ot_hdc_v41x_weight_window.sv rtl/hbm_accel/generic/adapters/ot_hgi_hc_record.sv rtl/hbm_accel/generic/peers/ot_hgi_hc_unit.sv
+ rtl/hbm_accel/generic/vm/ot_hgi_vm_core.sv rtl/hbm_accel/generic/vm/ot_hgi_vm_unit.sv rtl/hbm_accel/generic/vm/ot_hgi_vm_wrd.sv rtl/link/ot_fifo_sram_fwft.sv
+ rtl/dsrom_sys/s81_hcx/ot_s81_hcx_vm_scheduled.sv rtl/dsrom_sys/s81_hcx/ot_s81_hcx_post_native.sv
+ rtl/dsrom_sys/s81_native_head_connect/ot_s81_head_gain_stream.sv rtl/dsrom_sys/s81_hcx/ot_s81_hcx_post_gain_native.sv"
+fi
 # the hierarchical HC slab modules dsfd_sp_hc.sv names since 10-12 (HIER generate; the bench keeps HIER 0): without them the build fails
 FILES=$( (for f in $LIST; do echo $SRC/$f; done; ls $SRC/rtl/dsrom_sys/s81_suhc/hier/*.sv) | awk '!seen[$0]++')
 if [ $FP = dpi ]; then
@@ -89,17 +110,18 @@ SUD=""; [ -n "${SUSNAP:-}" ] && SUD="+define+TB_SU_REAL"
 [ -n "${SUSNAP:-}" ] && for L in $LAYERS; do f=${SUSNAP//%L/$L}; case $L in L*) f=${f//%N/$(printf %02d ${L#L})};; esac; sha256sum $f; done >> $OUT/sources.sha256
 [ -n "$CHAINS" ] && sha256sum $SRC/tools/s81_ctrl/die_layer_chain.py $(for L in $LAYERS; do f=${CHAINS//%L/$L}; [ -f "$f" ] && echo $f; done | sort -u) >> $OUT/sources.sha256
 [ -n "${MIXSNAP:-}" ] && SUD="$SUD +define+TB_MIX4_REAL"
+[ -n "${HCXROM:-}" ] && SUD="$SUD +define+TB_HCX_REAL"
 SPL="+define+OT_S81PH_GBX_FMT1 +define+OT_S81PH_EP_PIPE2 +define+OT_S81PH_COLL_OQPIPE +define+OT_S81PH_COLL_QPIPE +define+OT_S81PH_COLL_SPLIT +define+OT_S81PH_COLL_CR +define+OT_S81PH_LANE_CR +define+OT_S81PH_COLL_PULL +define+OT_S81PH_COLL_TREP"
 HX=""; [ $HCH = 1 ] && HX="+define+TB_HC_HIER -GHIER=1 -GHALF=1 -GCSPLIT=1 -GTAIL_SPLIT=2 -GCNL_PIN=1 -GCHAIN_STEP=6 -GHEAD_ROWS=$([ $NG = 256 ] && echo 10 || echo 2)"
 for m in $MODES; do
-  case $m in base) X="";; nom) X="-GEPER=0";; mut_ep) X="-GMUT=2";; mut_drop) X="-GMUT=4";; mut_hc) X="-GHMUT=1";; mut_coll) X="+define+OT_S81PH_MUT_TREP";; mut_inp) X="-GINP1=1";; mut_pd) X="-GPIPE=1 -GPIPE_PD=0";; mut_hl) X="-GHST=1 -GHLMUT=1";; mut_tx) X="-GHTX=3";; mut_su) X="-GSUMUT=4";; mut_sux) X="-GSUXMUT=3";; mut_rw) X="-GSUXMUT=4";; mut_mix) X="-GMXMUT=2";;
+  case $m in base) X="";; nom) X="-GEPER=0";; mut_ep) X="-GMUT=2";; mut_drop) X="-GMUT=4";; mut_hc) X="-GHMUT=1";; mut_coll) X="+define+OT_S81PH_MUT_TREP";; mut_inp) X="-GINP1=1";; mut_pd) X="-GPIPE=1 -GPIPE_PD=0";; mut_hl) X="-GHST=1 -GHLMUT=1";; mut_tx) X="-GHTX=3";; mut_su) X="-GSUMUT=4";; mut_sux) X="-GSUXMUT=3";; mut_rw) X="-GSUXMUT=4";; mut_mix) X="-GMXMUT=2";; mut_hcxl) X="-GHXMUT=1";; mut_hcxp) X="-GHXMUT=2";;
     seqc) X="+define+TB_SEQC -GTMAX=110000";; mut_seqc) X="+define+TB_SEQC +define+OT_SSEQC_MUT_DROP_START -GTMAX=110000";; esac
   RUNL=$LAYERS; [ $m = base ] || [ $m = nom ] || [ $m = seqc ] || RUNL=$(echo $LAYERS | awk '{print $1}')
   XGM=""; for g in ${XG:-}; do n=${g%%=*}; case " $X " in *" $n="*) ;; *) XGM="$XGM $g";; esac; done
   ( $ADMIT $VL --binary --timing -j $J -Wno-fatal -Wno-lint -Wno-style -Wno-WIDTH -Wno-MULTIDRIVEN -Wno-UNOPTFLAT -Wno-PINMISSING \
       -DOT_S81PH_PLL_MODEL +define+OT_S81PH_COLL_JOB $SPL $SUD -I$S/s81_ctrl --unroll-count 4 -fno-dfg -CFLAGS -O1 \
       --top-module tb_s81_die_layer -GNG=$NG $HX $XGM $X --Mdir $OUT/obj_$m -o sim $FILES > $OUT/build_$m.log 2>&1 \
-    && for L in $RUNL; do TX=""; [ -n "${VM_TRACE:-}" ] && TX="+VM_TRACE=${VM_TRACE}_${m}_${L}.csv"; /usr/bin/time -v $OUT/obj_$m/sim +DIR=$OUT/stim_$L $TX > $OUT/run_${m}_$L.log 2>&1; done ) &
+    && for L in $RUNL; do TX=""; [ -n "${HCXROM:-}" ] && TX="+OT_ROM_DIR=$HCXROM"; [ -n "${VM_TRACE:-}" ] && TX="$TX +VM_TRACE=${VM_TRACE}_${m}_${L}.csv"; /usr/bin/time -v $OUT/obj_$m/sim +DIR=$OUT/stim_$L $TX > $OUT/run_${m}_$L.log 2>&1; done ) &
 done
 wait
 for m in $MODES; do

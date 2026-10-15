@@ -51,7 +51,7 @@ FILES="rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_fpu.sv rtl/hdc/ot_hdc_fp32_mul_pip
 for m in $MODES; do
   case $m in cal) X="-GCAL=1";; base) X="";; canon) X="-GHLAYOUT=0";; mut_layout) X="-GHLAYOUT=0";; mut_post) X="-GMUT_POST=1";; esac
   V=vec_h; [ $m = canon ] && V=vec_c
-  ( cd $SRC && $VL --binary --timing -O3 -CFLAGS -O2 -Wno-fatal -Wno-WIDTH -Wno-UNOPTFLAT -Wno-MULTIDRIVEN -Wno-PINMISSING \
+  ( cd $SRC && $VL --binary --timing -O3 -CFLAGS -O1 -Wno-fatal -Wno-WIDTH -Wno-UNOPTFLAT -Wno-MULTIDRIVEN -Wno-PINMISSING \
       --top-module tb_s81_hcx_chain -GLAYER=$LAYER $GP $X --Mdir $OUT/obj_$m -j ${J:-8} $FILES > $OUT/build_$m.log 2>&1 ) \
    && $OUT/obj_$m/Vtb_s81_hcx_chain +DIR=$OUT/$V +OT_ROM_DIR=$OUT/rom > $OUT/run_$m.log 2>&1 &
 done

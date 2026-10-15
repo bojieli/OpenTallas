@@ -1,4 +1,10 @@
 `timescale 1ns/1ps
+`ifdef TB_MIX4_REAL
+`define TB_FIXED
+`endif
+`ifdef TB_HCX_REAL
+`define TB_FIXED
+`endif
 // ---------------------------------------------------------------------------------------------------------------------
 // tb_s81_die_layer (s81die-1011/ctrl bench, 2026-10-11): ONE DeepSeek-V4.1 layer on the S81 die control plane with
 // REAL slab masters, golden-exact at the LAYER OUTPUT (the next layer's h that HC H_STORE writes to the VM).
@@ -72,6 +78,16 @@ module tb_s81_die_layer;
     // record then counts the layer from the cycle before the first payload flit (layer_adj / xfer_adj).
     parameter integer PIPE = 0, PIPE_PD = 40, HST = 0, HLMUT = 0, HTX = 0, HWM = 8, PGAP = 0;
     parameter integer SUMUT = 0, SUXMUT = 0;
+`ifdef TB_MIX4_REAL
+    localparam MXR = 1;
+`else
+    localparam MXR = 0;
+`endif
+`ifdef TB_HCX_REAL
+    localparam HCXR = 1;
+`else
+    localparam HCXR = 0;
+`endif
 `ifdef TB_SU_REAL
     localparam integer SUR = 1;
 `else
@@ -118,7 +134,8 @@ module tb_s81_die_layer;
     // ---------------- DUT: control plane
     reg pw_v = 0; reg [6:0] pw_a = 0; reg [27:0] pw_d = 0; reg [7:0] plen = 0;
     reg i_v = 0; wire i_r; reg [511:0] i_d = 0; reg i_l = 0;
-    wire [84:0] legacy_mix_c;
+    wire [84:0] legacy_mix_c, legacy_hcx_c;
+    wire [8:0] ctl_d9 = HCXR ? 9'd0 : d[9];   // TB_HCX_REAL: port 9 runs only on the fixed calendar
     wire [84:0] c [0:11]; wire [8:0] d [0:11]; wire [1:0] est [0:11];
 `ifdef TB_SEQC
     // decision A: dsfd_stage_seq_c (kit start / done + program write on the serial clock); the kit (bench) writes the
@@ -128,9 +145,9 @@ module tb_s81_die_layer;
     wire flt = t_st[5], stk = 1'b0; wire [15:0] fvec = {10'd0, t_st}, snap = 16'd0;
     dsfd_stage_seq_c u_ctl (.ckv(ckv), .rsv(rsv), .ck(ck), .rst(rst), .f_ks(f_ks), .t_kd(t_kd), .f_pw(f_pw), .f_plen(plen),
         .t_st(t_st),
-        .c0(c[0]), .c1(c[1]), .c2(c[2]), .c3(c[3]), .c4(c[4]), .c5(c[5]), .c6(c[6]), .c7(c[7]), .c8(c[8]), .c9(c[9]),
+        .c0(c[0]), .c1(c[1]), .c2(c[2]), .c3(c[3]), .c4(c[4]), .c5(c[5]), .c6(c[6]), .c7(c[7]), .c8(c[8]), .c9(legacy_hcx_c),
         .c10(legacy_mix_c), .c11(c[11]),
-        .d0(d[0]), .d1(d[1]), .d2(d[2]), .d3(d[3]), .d4(d[4]), .d5(d[5]), .d6(d[6]), .d7(d[7]), .d8(d[8]), .d9(d[9]),
+        .d0(d[0]), .d1(d[1]), .d2(d[2]), .d3(d[3]), .d4(d[4]), .d5(d[5]), .d6(d[6]), .d7(d[7]), .d8(d[8]), .d9(ctl_d9),
         .d10(d[10]), .d11(d[11]),
         .s0(est[0]), .s1(est[1]), .s2(est[2]), .s3(est[3]), .s4(est[4]), .s5(est[5]), .s6(est[6]), .s7(est[7]),
         .s8(est[8]), .s9(est[9]), .s10(est[10]), .s11(est[11]));
@@ -140,9 +157,9 @@ module tb_s81_die_layer;
     wire vwe; wire [13:0] vwa; wire [511:0] vwd; wire flt, stk; wire [15:0] fvec, snap;
     dsfd_sp_ctrl_e #(.MY_ID(2), .SRC_LO(1), .SRC_HI(1)) u_ctl (.ck(ck), .rs(rst), .pw_v(pw_v), .pw_a(pw_a), .pw_d(pw_d),
         .prog_len(plen), .cfg_users(12'd4), .i_v(i_v), .i_r(i_r), .i_d(i_d), .i_l(i_l),
-        .c0(c[0]), .c1(c[1]), .c2(c[2]), .c3(c[3]), .c4(c[4]), .c5(c[5]), .c6(c[6]), .c7(c[7]), .c8(c[8]), .c9(c[9]),
+        .c0(c[0]), .c1(c[1]), .c2(c[2]), .c3(c[3]), .c4(c[4]), .c5(c[5]), .c6(c[6]), .c7(c[7]), .c8(c[8]), .c9(legacy_hcx_c),
         .c10(legacy_mix_c), .c11(c[11]),
-        .d0(d[0]), .d1(d[1]), .d2(d[2]), .d3(d[3]), .d4(d[4]), .d5(d[5]), .d6(d[6]), .d7(d[7]), .d8(d[8]), .d9(d[9]),
+        .d0(d[0]), .d1(d[1]), .d2(d[2]), .d3(d[3]), .d4(d[4]), .d5(d[5]), .d6(d[6]), .d7(d[7]), .d8(d[8]), .d9(ctl_d9),
         .d10(d[10]), .d11(d[11]),
         .vwe(vwe), .vwa(vwa), .vwd(vwd), .flt(flt), .fvec(fvec), .stk(stk), .snap(snap));
 `endif
@@ -382,12 +399,15 @@ module tb_s81_die_layer;
     reg [511:0] vm [0:16383];
     reg vm_ok [0:16383];
     integer hcnt = 0, gcnt [0:1];
-`ifdef TB_MIX4_REAL
-    localparam MXR = 1;
+`ifdef TB_FIXED
+    // ONE fixed issuer (ot_s81_fixed_issue, OP_BASE 2) for every engine moved onto the compiled calendar:
+    // engine 10 = MIX4 (TB_MIX4_REAL), engine 9 = the HC coefficient chain (TB_HCX_REAL). Program: fixed_program.mem,
+    // {rows, PW words}: fixed_meta.mem (die_layer_stim.py; done = issue + 1 + pin-to-pin for every row).
+    localparam [12:0] FX_PRESENT = (MXR ? 13'h400 : 13'h0) | (HCXR ? 13'h200 : 13'h0);
     wire [12:0] mx_cv; wire [1091:0] mx_cd;
-    wire [12:0] mx_av = {2'b0,est[10][1],10'b0};
-    wire [12:0] mx_dv = {2'b0,d[10][8],10'b0};
-    wire [103:0] mx_dt = {16'b0,d[10][7:0],80'b0};
+    wire [12:0] mx_av = {2'b0, MXR ? est[10][1] : 1'b0, HCXR ? est[9][1] : 1'b0, 9'b0};
+    wire [12:0] mx_dv = {2'b0, MXR ? d[10][8] : 1'b0, HCXR ? d[9][8] : 1'b0, 9'b0};
+    wire [103:0] mx_dt = {16'b0, MXR ? d[10][7:0] : 8'b0, HCXR ? d[9][7:0] : 8'b0, 72'b0};
     // Reset release is a compiler startup edge, driven on the opposite phase;
     // do not derive async reset from an NBA-updated stream counter expression.
     reg mx_rst_n=0;
@@ -397,30 +417,34 @@ module tb_s81_die_layer;
     end
     reg mx_pw_v=0; reg [6:0] mx_pw_a=0; reg [27:0] mx_pw_d=0;
     wire mx_is_fault; wire [3:0] mx_is_code; wire [1:0] mx_phase;
-    reg [34:0] mx_pmem [0:7];
-    ot_s81_fixed_issue #(.NOPS(2),.NENG(13),.STAGE(0),.OP_BASE(2),.ENG_PRESENT(13'h400)) mx_issuer(
-        .clk(ck),.rst_n(mx_rst_n),.pw_v(mx_pw_v),.pw_a(mx_pw_a),.pw_d(mx_pw_d),.prog_len(8'd2),
+    reg [34:0] mx_pmem [0:63]; reg [31:0] fx_meta [0:1];
+    initial begin fx_meta[0]=2; fx_meta[1]=8; end
+    ot_s81_fixed_issue #(.NOPS(8),.NENG(13),.STAGE(0),.OP_BASE(2),.ENG_PRESENT(FX_PRESENT)) mx_issuer(
+        .clk(ck),.rst_n(mx_rst_n),.pw_v(mx_pw_v),.pw_a(mx_pw_a),.pw_d(mx_pw_d),.prog_len(fx_meta[0][7:0]),
         .job_v(cyc==1250),.job_user(10'd0),.job_pos(21'd0),.job_tok(21'd1000),
         .cmd_v(mx_cv),.cmd_d(mx_cd),.engine_available(mx_av),.dn_v(mx_dv),.dn_tag(mx_dt),
         .fault(mx_is_fault),.fault_code(mx_is_code),.phase(mx_phase),
         .job_rdy(),.busy(),.job_done(),.job_kdone(),.done_slot(),.kit_tok(),.st_jobs(),.st_cmds());
-    assign c[10] = {mx_cv[10],mx_cd[840+:84]};
-    initial begin: mix_fixed_boot
+    initial begin: fixed_boot
         wait(dir != "");
-        $readmemh({dir,"/mix_program.mem"},mx_pmem);
+        $readmemh({dir,"/fixed_program.mem"},mx_pmem);
+        $readmemh({dir,"/fixed_meta.mem"},fx_meta);
         while(cyc<1010) @(negedge ck);
-        for(int z=0;z<8;z++) begin
+        for(int z=0;z<fx_meta[1];z++) begin
             mx_pw_v=1; mx_pw_a=mx_pmem[z][34:28]; mx_pw_d=mx_pmem[z][27:0];
             @(negedge ck); mx_pw_v=0; @(negedge ck);
         end
     end
-    always @(posedge ck) if(rst && mx_is_fault) $fatal(1,"MIX_FIXED_ISSUER fault code=%0d cycle=%0d phase=%0d sealed=%0d cfg=%0d",mx_is_code,cyc,mx_phase,mx_issuer.sealed,mx_issuer.cfg_fault);
+    always @(posedge ck) if(rst && mx_is_fault) $fatal(1,"FIXED_ISSUER fault code=%0d cycle=%0d phase=%0d sealed=%0d cfg=%0d",mx_is_code,cyc,mx_phase,mx_issuer.sealed,mx_issuer.cfg_fault);
     initial begin
-        if(JOBS!=1) $fatal(1,"MIX fixed component calendar contains one context; compile all contexts before use");
+        if(JOBS!=1) $fatal(1,"fixed component calendar contains one context; compile all contexts before use");
 `ifdef TB_SEQC
-        $fatal(1,"MIX fixed component calendar requires its declared packet-clock profile");
+        $fatal(1,"fixed component calendar requires its declared packet-clock profile");
 `endif
     end
+`endif
+`ifdef TB_MIX4_REAL
+    assign c[10] = {mx_cv[10],mx_cd[840+:84]};
     wire [19:0] mx_rq_v; wire [279:0] mx_rq_row;
     reg [19:0] mx_rs_v = 0; reg [10239:0] mx_rs_d = 0;
     wire [3:0] mx_wq_v; wire [55:0] mx_wq_row;
@@ -445,8 +469,86 @@ module tb_s81_die_layer;
         if(u_mix4.done) begin endt[cj][u_mix4.jd[6:0]] = cyc; eng_done = 1; end
     end
 `else
-    localparam MXR = 0;
     assign c[10] = legacy_mix_c;
+`endif
+`ifdef TB_HCX_REAL
+    // ---------------- port 9: the HC COEFFICIENT CHAIN on real RTL (no golden coefficient rows anywhere)
+    // ot_s81_hcx_chain_seq (one compiled command per block) -> 4 x dsfd_sp_hcx_projection HLAYOUT 1 (ranks 0..3, 24 rows,
+    // resident fn ROMs, reading the layer's H rows in the HC h_rows layout) -> TP4 raw gather -> ot_s81_hcx_gatherpack ->
+    // ot_s81_hcx_post_gain_native (post) -> coefficient rows C_BASE.. that the HC COEF job reads (f_inp = VM presence).
+    // Offsets = the measured chain (tb_s81_hcx_chain, same clocks and reset edges). DECLARED: bench VM (RL/WL 4), the TP4
+    // raw gather is bench transport (collective glue), ranks 1..3 read die 0's H rows and receive rank 0's command.
+    parameter integer HX_FAST = 0, HX_PROJ_DONE = 1, HX_G_OFF = 1, HX_POST_TOG = 1, HX_POST_SEEN = 1, HX_DONE_OFF = 2, HXMUT = 0;
+    assign c[9] = {mx_cv[9], mx_cd[84*9+:84]};
+    reg hx_srst_n = 0; initial begin while(cyc<1000) @(negedge ck); @(negedge ckv); hx_srst_n = 1; end
+    wire [84:0] hx_pcmd; wire [8:0] hx_pd [0:3]; wire [1:0] hx_pst [0:3];
+    wire hx_gs, hx_gd, hx_gf, hx_ss, hx_sffn, hx_sd, hx_sf; wire [13:0] hx_graw, hx_sraw, hx_scoef; wire [5:0] hx_slayer;
+    ot_s81_hcx_chain_seq #(.PROJ_DONE(HX_PROJ_DONE),.G_OFF(HX_G_OFF),.POST_TOG(HX_POST_TOG),.POST_SEEN(HX_POST_SEEN),
+        .DONE_OFF(HX_DONE_OFF),.RAW_BASE(14'd2624),.COEF_BASE(C_BASE),.COEF_STRIDE(14'd2)) u_hcx (
+        .ck(ck),.rst_n(mx_rst_n),.skv(ckv),.srst_n(hx_srst_n),.c_cmd(c[9]),.c_done(d[9]),.c_st(est[9]),
+        .p_cmd(hx_pcmd),.p_done(hx_pd[0]),.p_st(hx_pst[0]),.g_start(hx_gs),.g_raw_base(hx_graw),.g_done(hx_gd),.g_fault(hx_gf),
+        .s_start(hx_ss),.s_ffn(hx_sffn),.s_layer(hx_slayer),.s_raw_base(hx_sraw),.s_coef_base(hx_scoef),.s_done(hx_sd),.s_fault(hx_sf));
+    wire [7:0] hx_rq [0:3]; wire [111:0] hx_rr [0:3]; reg [7:0] hx_rv [0:3][0:3]; reg [4095:0] hx_rd [0:3][0:3];
+    wire hx_tv [0:3]; wire [191:0] hx_td [0:3];
+    integer hx_reads = 0, hx_writes = 0, hx_errs = 0, hx_cmds = 0, hx_cmd_cyc [0:1];
+    genvar hr;
+    generate for (hr = 0; hr < 4; hr = hr + 1) begin : g_hx
+        dsfd_sp_hcx_projection #(.RANK(hr),.RL(4),.FAST_CYC(HX_FAST),.HLAYOUT(HXMUT == 1 ? 0 : 1)) u_p (
+            .cck(ck),.crst_n(mx_rst_n),.skctl(ckv),.srst_n(hx_srst_n),.sk_leaf({6{ckv}}),.c_cmd(hx_pcmd),.c_done(hx_pd[hr]),
+            .c_st(hx_pst[hr]),.rq_v(hx_rq[hr]),.rq_row(hx_rr[hr]),.rs_v(hx_rv[hr][3]),.rs_d(hx_rd[hr][3]),
+            .t_raw_v(hx_tv[hr]),.t_raw_d(hx_td[hr]));
+        always @(posedge ckv) begin
+            hx_rv[hr][0] <= hx_rq[hr];
+            for (int p8 = 0; p8 < 8; p8++) begin
+                hx_rd[hr][0][512*p8+:512] <= vm[hx_rr[hr][14*p8+:14]];
+                if (hr == 0 && hx_rq[hr][p8]) hx_reads++;
+            end
+            for (int i = 1; i < 4; i++) begin hx_rv[hr][i] <= hx_rv[hr][i-1]; hx_rd[hr][i] <= hx_rd[hr][i-1]; end
+        end
+    end endgenerate
+    reg [191:0] hx_rawq [0:3]; reg hx_rawseen [0:3];
+    initial for (int q = 0; q < 4; q++) hx_rawseen[q] = 0;
+    always @(posedge ckv) for (int q = 0; q < 4; q++) if (hx_tv[q]) begin hx_rawq[q] <= hx_td[q]; hx_rawseen[q] <= 1; end
+    reg hx_iv = 0; reg [1:0] hx_irk = 0; reg [511:0] hx_id = 0; integer hx_gk = 0, hx_gq;
+    always @(posedge ck) begin
+        hx_iv <= 0;
+        if (hx_gs) hx_gk <= 1; else if (hx_gk > 0 && hx_gk < 16) hx_gk <= hx_gk + 1; else hx_gk <= 0;
+        if (hx_gs || hx_gk == 4 || hx_gk == 8 || hx_gk == 12) begin
+            hx_gq = hx_gs ? 0 : hx_gk / 4;
+            if (!hx_rawseen[hx_gq]) begin hx_errs++; $display("ERR HCX raw record of rank %0d absent at its gather slot", hx_gq); end
+            hx_iv <= 1; hx_irk <= 2'(hx_gq); hx_id <= '1; hx_id[191:0] <= hx_rawq[hx_gq]; hx_rawseen[hx_gq] <= 0;
+        end
+    end
+    wire hx_gwv; wire [13:0] hx_gwa; wire [15:0] hx_gwm; wire [511:0] hx_gwd; reg [3:0] hx_gc = 0;
+    reg [13:0] hx_ga [0:3]; reg [511:0] hx_gdp [0:3];
+    ot_s81_hcx_gatherpack u_hxgp (.clk(ck),.rst_n(mx_rst_n),.start(hx_gs),.raw_base_row(hx_graw),.i_v(hx_iv),.i_rank(hx_irk),
+        .i_d(hx_id),.wq_v(hx_gwv),.wq_row(hx_gwa),.wq_mask(hx_gwm),.wq_d(hx_gwd),.wq_commit(hx_gc[3]),.done(hx_gd),.fault(hx_gf));
+    always @(posedge ck) begin
+        hx_gc <= {hx_gc[2:0], hx_gwv}; hx_ga[0] <= hx_gwa; hx_gdp[0] <= hx_gwd;
+        for (int i = 1; i < 4; i++) begin hx_ga[i] <= hx_ga[i-1]; hx_gdp[i] <= hx_gdp[i-1]; end
+        if (hx_gc[3]) begin vm[hx_ga[3]] = hx_gdp[3]; mark(hx_ga[3]); end
+        if (c[9][84]) begin if (hx_cmds < 2) hx_cmd_cyc[hx_cmds] = cyc; hx_cmds++; end
+    end
+    wire hx_srv, hx_swv; wire [13:0] hx_sra, hx_swa; wire [15:0] hx_swm; wire [511:0] hx_swd;
+    reg [3:0] hx_sv = 0, hx_sc = 0; reg [511:0] hx_sdp [0:3]; reg [13:0] hx_sap [0:3]; reg [15:0] hx_smp [0:3]; reg [511:0] hx_swp [0:3];
+    ot_s81_hcx_post_gain_native #(.MUT_POST(HXMUT == 2)) u_hxpost (.clk(ckv),.rst_n(hx_srst_n),.start(hx_ss),.gain_mode(1'b0),
+        .gain_draft(1'b0),.ffn(hx_sffn),.raw_base_row(hx_sraw),.coef_base_row(hx_scoef),.gain_base_row(14'd4096),
+        .layer_idx(hx_slayer),.norm_eps(32'h1e3ce508),.compiled_cycles(16'd540),.done(hx_sd),.rq_v(hx_srv),.rq_row(hx_sra),
+        .rs_v(hx_sv[3]),.rs_d(hx_sdp[3]),.wq_v(hx_swv),.wq_row(hx_swa),.wq_mask(hx_swm),.wq_d(hx_swd),.wq_commit(hx_sc[3]),
+        .fault(hx_sf));
+    always @(posedge ckv) begin
+        hx_sv <= {hx_sv[2:0], hx_srv}; hx_sdp[0] <= vm[hx_sra]; for (int i = 1; i < 4; i++) hx_sdp[i] <= hx_sdp[i-1];
+        hx_sc <= {hx_sc[2:0], hx_swv}; hx_sap[0] <= hx_swa; hx_smp[0] <= hx_swm; hx_swp[0] <= hx_swd;
+        for (int i = 1; i < 4; i++) begin hx_sap[i] <= hx_sap[i-1]; hx_smp[i] <= hx_smp[i-1]; hx_swp[i] <= hx_swp[i-1]; end
+        if (hx_sc[3]) begin
+            for (int w = 0; w < 16; w++) if (hx_smp[3][w]) vm[hx_sap[3]][32*w+:32] = hx_swp[3][32*w+:32];
+            mark(hx_sap[3]); hx_writes++;
+        end
+    end
+    always @(posedge ck) if (rst && est[9][0]) $fatal(1, "HCX chain fault cycle=%0d cfault=%0d post=%0d gather=%0d proj_st=%b ctl_c=%0d ctl_s=%0d",
+        cyc, u_hcx.cfault, hx_sf, hx_gf, hx_pst[0], g_hx[0].u_p.controller.cfault, g_hx[0].u_p.controller.sfault);
+`else
+    assign c[9] = legacy_hcx_c;
 `endif
     reg eng_h = 0, eng_done = 0;         // eng_h: the program has an Engram h write (a port-10 op with wrow >= 0)
     reg clr_req = 0;
@@ -474,8 +576,10 @@ module tb_s81_die_layer;
             hcnt = 0; clr_req = 0; eng_done = 0;
         end
         if (vwe) begin vm[vwa] = vwd; mark(vwa); nwr = nwr + 1; end
+`ifndef TB_HCX_REAL
         if (g_eng[9].g_b.jdone_r && o_wr[g_eng[9].g_b.dop_r] >= 0) begin
             vm[o_wr[g_eng[9].g_b.dop_r]] = coefm[o_wr[g_eng[9].g_b.dop_r]]; mark(o_wr[g_eng[9].g_b.dop_r]); end
+`endif
 `ifndef TB_MIX4_REAL
         if (g_eng[10].g_b.jdone_r && o_wr[g_eng[10].g_b.dop_r] >= 0) begin
             for (i2 = 0; i2 < XW; i2 = i2 + 1) begin
@@ -595,7 +699,7 @@ module tb_s81_die_layer;
     // ---------------- behavioural engines behind real slab endpoints (ports 1, 4..11; 9 = hcx)
     genvar ge;
     generate for (ge = 1; ge < 12; ge = ge + 1) begin : g_eng
-        if (ge != 2 && ge != 3 && !(ge == 1 && SUR) && !(ge == 10 && MXR)) begin : g_b
+        if (ge != 2 && ge != 3 && !(ge == 1 && SUR) && !(ge == 10 && MXR) && !(ge == 9 && HCXR)) begin : g_b
             wire jv, jnew, epf; wire [83:0] jd, jnd;
             reg jdone_r = 1'b0, busy = 1'b0; integer rem = 0; reg [6:0] dop_r = 0;
             ot_s81_slab_ep #(.QD(8), .JQ(2)) u_ep (.c_clk(ck), .c_rst_n(rst), .c_cmd(c[ge]), .c_done(d[ge]), .c_st(est[ge]),
@@ -955,6 +1059,11 @@ module tb_s81_die_layer;
         if (hout_fd != 0) $fclose(hout_fd);
         $display("HIO hin=%0d hin_bad=%0d hout=%0d", hin_n, hin_bad, hout_fd != 0);
         if (hin_bad != 0) errors = errors + 1;
+`ifdef TB_HCX_REAL
+        $display("HCX_REAL commands=%0d at %0d,%0d rank0_h_row_reads=%0d post_vm_writes=%0d raw_gather_errors=%0d golden_coefficient_injection=0 native_layer=0",
+            hx_cmds, hx_cmd_cyc[0], hx_cmd_cyc[1], hx_reads, hx_writes, hx_errs);
+        if (hx_cmds != 2*JOBS || hx_reads != 2*640*JOBS || hx_errs) begin errors++; $display("ERR HCX chain transaction count"); end
+`endif
 `ifdef TB_MIX4_REAL
         $display("MIX4_REAL reads=%0d writes=%0d golden_output_injection=0 native_layer=0", mx_reads, mx_writes);
         if(mx_reads != JOBS*4161 || mx_writes != JOBS*640) begin errors++; $display("ERR MIX4 transaction count"); end
@@ -1019,8 +1128,10 @@ module tb_s81_die_layer;
             if (su_wq_v[z]) $fwrite(vm_trace_fd, "%0.3f,%0d,%0d,su,write,%0d,%0d,%04h,%0d\n", $realtime, cyc, cj, z, su_wq_row[14*z+:14], su_wq_mask[16*z+:16], vm_trace_su_tag);
 `endif
         if (vwe) $fwrite(vm_trace_fd, "%0.3f,%0d,%0d,ctrl,write,0,%0d,ffff,-1\n", $realtime, cyc, cj, vwa);
+`ifndef TB_HCX_REAL
         if (g_eng[9].g_b.jdone_r && o_wr[g_eng[9].g_b.dop_r] >= 0)
             $fwrite(vm_trace_fd, "%0.3f,%0d,%0d,fixture_hcx,write,0,%0d,ffff,-1\n", $realtime, cyc, cj, o_wr[g_eng[9].g_b.dop_r]);
+`endif
     end
     always @(posedge ckv) if (vm_trace_fd && rsv)
         for (integer z = 0; z < NR; z = z + 1) begin
