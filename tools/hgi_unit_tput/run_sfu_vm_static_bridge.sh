@@ -11,3 +11,9 @@ M=physical/asap7_memory_macros
  "$M/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v" > "$OUT/build.log" 2>&1
 "$OUT/obj/Vtb_hgi_sfu_vm_static_bridge" > "$OUT/run.log" 2>&1
 cat "$OUT/run.log"
+set +e
+"$OUT/obj/Vtb_hgi_sfu_vm_static_bridge" +MUT_DROP > "$OUT/mutant.log" 2>&1
+rc=$?
+set -e
+if [ "$rc" = 0 ] || ! grep -q BRIDGE_FAULT "$OUT/mutant.log";then cat "$OUT/mutant.log";exit 1;fi
+printf 'PASS actual tap response suppression mutant rc=%s\n' "$rc"

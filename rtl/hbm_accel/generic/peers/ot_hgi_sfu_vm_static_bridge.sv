@@ -58,7 +58,7 @@ module ot_hgi_sfu_vm_static_bridge #(
  end
  reg [31:0] drain_sector_q;
  reg [1:0] drain_expected;
- reg [7:0] write_expected[0:WRITE_RETURN];
+ reg [7:0] write_expected[0:WRITE_RETURN+1];
  reg [7:0] write_v;
  reg write_collision;
  always @*begin
@@ -78,7 +78,7 @@ module ot_hgi_sfu_vm_static_bridge #(
  always @(posedge clk or negedge rst_n)begin
   if(!rst_n)begin
    fault<=0;drain_expected<=0;
-   for(integer i=0;i<=WRITE_RETURN;i=i+1)write_expected[i]<=0;
+   for(integer i=0;i<=WRITE_RETURN+1;i=i+1)write_expected[i]<=0;
    for(integer i=0;i<=READ_RETURN;i=i+1)meta[i]<=0;
   end else begin
    meta[0]<={prefetch_v,prefetch_group,prefetch_local_addr,prefetch_scalar,prefetch_word,scalar_addr};
@@ -87,11 +87,11 @@ module ot_hgi_sfu_vm_static_bridge #(
    // local_wq emitted after this edge is captured by the tap next edge;
    // committed done arrives WRITE_RETURN after that tap capture.
    write_expected[0]<=write_v;
-   for(integer i=1;i<=WRITE_RETURN;i=i+1)write_expected[i]<=write_expected[i-1];
+   for(integer i=1;i<=WRITE_RETURN+1;i=i+1)write_expected[i]<=write_expected[i-1];
    for(integer b=0;b<8;b=b+1)begin
     if(prefetch_v[b]&&prefetch_sector[16*b+:3]!=b)fault<=1;
     if(expect_v[b]!=local_rr[b*257+256])fault<=1;
-    if(write_expected[WRITE_RETURN][b]!=local_w_done[b])fault<=1;
+    if(write_expected[WRITE_RETURN+1][b]!=local_w_done[b])fault<=1;
    end
    if(drain_result_v!=drain_expected || scalar_collision || write_collision)fault<=1;
   end

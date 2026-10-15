@@ -11,6 +11,7 @@ module tb_hgi_sfu_vm_static_bridge;
  wire [135:0] rq,nrq0,nrq1;
  wire [2247:0] wq,nwq0,nwq1;
  wire [2055:0] rr,brr,frr0;
+ wire [2055:0] bridge_rr=rr & ~($test$plusargs("MUT_DROP")?(2056'd1<<256):2056'd0);
  wire [7:0] done,bdone,fdone0;
  wire [7:0] sv;wire [15:0] sg;wire [119:0] sa;
  wire [2047:0] sd;wire [63:0] sm;
@@ -25,7 +26,7 @@ module tb_hgi_sfu_vm_static_bridge;
  function automatic [31:0] value(input integer a);value=32'h3e000000+32'(a*7);endfunction
  ot_hgi_sfu_vm_static_bridge dut(.clk(clk),.rst_n(rst_n),.prefetch_v(pf_v),.prefetch_sector(pf_sec),.prefetch_group(pf_group),
  .prefetch_local_addr(pf_addr),.prefetch_scalar(pf_scalar),.prefetch_word(24'd0),.scalar_addr(96'd0),
- .local_rq(rq),.local_rr(rr),.stage_v(sv),.stage_group(sg),.stage_addr(sa),.stage_data(sd),.stage_mask(sm),
+ .local_rq(rq),.local_rr(bridge_rr),.stage_v(sv),.stage_group(sg),.stage_addr(sa),.stage_data(sd),.stage_mask(sm),
  .scalar_load(sl),.scalar_load_addr(sla),.scalar_data(sld),
  .drain_v(dv),.drain_vm_sector(dsec),.drain_result_v(drv),.drain_data(dd),.local_wq(wq),.local_w_done(done),.fault(fault));
  ot_hgi_sfu_static_operand_store store(.clk(clk),.rst_n(rst_n),.scalar_load(sl),.scalar_enable(4'd0),.scalar_addr(sla),.scalar_data(sld),
@@ -85,6 +86,28 @@ module tb_hgi_sfu_vm_static_bridge;
    tick();
   end
   dv=0;repeat(18)tick();
+  // Read the actual committed VM words back through the same real tap and
+  // copy them into group0, proving data and addresses beyond ACK observation.
+  for(integer beat=0;beat<16;beat++)begin
+   pf_v=0;
+   for(integer s=0;s<2;s++)begin
+    integer bank_id;
+    bank_id=(1024+beat*2+s)%8;
+    pf_v[bank_id]=1;pf_sec[16*bank_id+:16]=16'(1024+beat*2+s);
+    pf_group[2*bank_id+:2]=0;pf_addr[15*bank_id+:15]=15'(beat*16+s*8);
+   end
+   tick();
+  end
+  pf_v=0;repeat(18)tick();
+  for(integer beat=0;beat<16;beat++)begin
+   rd_re=0;
+   for(integer l=0;l<16;l++)begin rd_re[4*l]=1;rd_addr[24*(4*l)+:24]=24'(beat*16+l);end
+   @(posedge clk);#0.001;
+   for(integer l=0;l<16;l++)begin
+    if(rd_q[32*(4*l)+:32]!==value(beat*16+l))$fatal(1,"BRIDGE_COMMITTED_VM_WORD");checks++;
+   end
+   tick();
+  end
   $display("PASS SFU real VM24SRAM tap14 bridge local80SRAM exact_words=%0d prefetch=8sectors_per_edge drain=2sectors_per_edge commit=11 no_credits=1",checks);$finish;
  end
 endmodule
