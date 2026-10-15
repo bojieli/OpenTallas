@@ -25,7 +25,7 @@ module ot_hbm_su_static_pinned_bank #(
  end
  assign read_return=MUT_RETURN!=0?r_late:r_return;
  ot_hbm_su_static_replicated_bank #(.READERS(READERS),.RB(RB),.MUT_COHERENCE(MUT_COHERENCE))u_data(
-  .clk_macro(clk_macro),.read_v(r_pin),.read_addr(a_pin),.read_data(raw_data),
+  .clk(clk),.clk_macro(clk_macro),.read_v(r_pin),.read_addr(a_pin),.read_data(raw_data),
   .write_v(w_pin),.write_addr(wa_pin),.write_data(wd_pin));
 endmodule
 `default_nettype wire

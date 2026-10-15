@@ -6,7 +6,7 @@ module tb_hbm_su_static_data_store;
  reg[B*R-1:0]rv=0;reg[B*R*9-1:0]ra=0;wire[B*R*32-1:0]rd;
  reg[B-1:0]wv=0;reg[B*9-1:0]wa=0;reg[B*32-1:0]wd=0;
  ot_hbm_su_static_data_store #(.QUARTERS(QUARTERS),.BANKS_PER_QUARTER(BANKS_PER_QUARTER),.MUT_COHERENCE(MUT_COHERENCE))d(
- .clk_macro({B*R{clk}}),.read_v(rv),.read_addr(ra),.read_data(rd),.write_v(wv),.write_addr(wa),.write_data(wd));
+ .clk_bank({B{clk}}),.clk_macro({B*R{clk}}),.read_v(rv),.read_addr(ra),.read_data(rd),.write_v(wv),.write_addr(wa),.write_data(wd));
  integer b,r,c,a,checks=0,errors=0;
  function automatic[31:0]word(input integer row,input integer bank);
  word=32'((row<<10)+bank+1);endfunction
