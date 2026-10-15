@@ -764,7 +764,16 @@
       "kernel_duration_after_fetch_consumer": 18945,
       "replica_scope": "one configured target per physical die; RANK physical strap;96 replicas source owner model",
       "status": "Actual source written; native programme/kernel gate pending",
-      "source_sha256_at_contract": "16b07e4b76b499b21bd414a494e3bfd92143168090468870a7bfed989ff6c127"
+      "source_sha256_at_contract": "16b07e4b76b499b21bd414a494e3bfd92143168090468870a7bfed989ff6c127",
+      "disable_descriptor": {
+        "programme_disabled": true,
+        "base": 0,
+        "limit": 0,
+        "loops": 0,
+        "minimum_descriptor_to_launch_edges": 2,
+        "effect": "clear configured only; preserve SRAM; inactive on unrelated C10"
+      },
+      "inactive_launch": "unconfigured target ignores global C10; source owner implementing/test-pinning change"
     },
     "128": {
       "owner": "SFU IO programme",

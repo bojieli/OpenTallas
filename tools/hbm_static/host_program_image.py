@@ -26,8 +26,20 @@ def raw_fragment(image):
     validators = {'raw_control256': raw_control256, 'raw_engram_fetch7x32': raw_engram_fetch}
     if encoding not in validators:
         raise ValueError('Fragment requires an actual registered raw encoding')
+    target = integer(image['target'])
+    if image['programme'].get('disabled'):
+        contract = target_contract(target)
+        if target != 124 or encoding != 'raw_engram_fetch7x32':
+            raise ValueError('Only actual target124 implements explicit disabled descriptor')
+        if set(image['programme']) != {'disabled'}:
+            raise ValueError('Disabled target124 must not carry active programme fields')
+        return dict(schema='opentallas.hbm.actual-host-program-fragment.v1',
+                    axi_writes=[dict(address=0xf20, data=124), dict(address=0xf28, data=0),
+                                dict(address=0xf2c, data=0)], launch_guard_core_edges=2,
+                    target_manifest=dict(target=124, encoding=encoding, disabled=True,
+                                         source=contract['source']))
     start, words, contract = validators[encoding](image)
-    target, writes = integer(image['target']), []
+    writes = []
     for address, word in sorted(words.items()):
         writes.append(dict(address=0xf20, data=(address << 8) | target))
         for piece in range(8):

@@ -1,7 +1,7 @@
 """Contract tests for actual native target dispatch and raw256 host lowering."""
 import copy
 import unittest
-from host_program_image import build
+from host_program_image import build, raw_fragment
 from program_registry import target_contract
 
 
@@ -77,6 +77,13 @@ class RegistryTest(unittest.TestCase):
             bad_spec = copy.deepcopy(spec)
             bad_spec['images'][-1]['programme']['start'].update(change)
             with self.assertRaises(ValueError): build(bad_spec)
+
+    def test_fetch_disable_fragment_has_no_fake_programme(self):
+        fragment = raw_fragment(dict(target=124, encoding='raw_engram_fetch7x32', programme=dict(disabled=True)))
+        self.assertEqual(fragment['axi_writes'], [dict(address=0xf20, data=124), dict(address=0xf28, data=0), dict(address=0xf2c, data=0)])
+        self.assertEqual(fragment['launch_guard_core_edges'], 2)
+        with self.assertRaises(ValueError):
+            raw_fragment(dict(target=120, encoding='raw_control256', programme=dict(disabled=True)))
 
     def test_old_registered_profile_unchanged(self):
         spec = fixture(); spec['required_targets'].pop(); spec['images'].pop()
