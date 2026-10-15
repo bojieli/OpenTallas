@@ -16,7 +16,12 @@ module ot_hgi_dma_front_xs_vm4 #(
     // edge from ls_q / qsel straight into the output register wl_d (the p_s stage is gone: -1 formatter edge, the root
     // stays < 15k: +4,432 pin flops -1,232 meta -2,224 p_*).  ls is held from the metadata edge until its registered
     // acknowledgment returns, so ls_q one edge later presents the same word.  PREG 0 = source15.
-    parameter integer PREG = 1
+    // PREG 2 (H-ELEM-A 2026-10-14 22:10, src16d --cts gate TT -417.5 ps at bk[0].wl_d[221], 18 levels ~707 ps
+    // ls_q -> 64-way lane/quarter AND-OR -> e4m3 / i8 conversion -> wl_d): keep PREG 1's pin flop and metadata from
+    // ls_q, and put the payload select back into its own register (p_s / p_f / p_s18 / p_v, as source15) so select and
+    // conversion are separate rungs.  Edge count ls -> wl_d = source15's (PREG 1 + 1); ls is read one edge earlier than
+    // source15 read it (ls_q at the select edge = ls one edge before), so the hold requirement is not stronger.
+    parameter integer PREG = 2
 ) (
     input  wire                  clk,
     input  wire [NBS*NIN-1:0]    pick_d,
@@ -101,6 +106,39 @@ module ot_hgi_dma_front_xs_vm4 #(
               end
             end
             p_s<=selected;p_f<=f;p_s18<=sector;p_v<=x_v;
+            w_v<=p_v;w_bad<=p_v&&p_s18>=18'd36864;
+            wl_d<={(MUT==8)?1'b0:(p_s18>=18'd32768&&p_s18<18'd36864),p_s18[14:0],conv(p_s,p_f,2'd0),p_s18>=18'd36864 ? 8'h00 : 8'hff};
+          end
+        end
+    end else if (PREG == 2) begin : g_preg2
+        reg [NIN*277-1:0] ls_q;
+        always @(posedge clk) ls_q <= ls;                      // one pin flop per ls bit, no enable
+        for(genvar b=0;b<NBS;b++)begin:bk
+          reg [NIN*4-1:0] qsel;reg x_v,p_v,w_v,w_bad;
+          reg [255:0] p_s;reg [2:0] p_f;reg [17:0] p_s18;reg [279:0] wl_d;
+          assign wd[b*280+:280]=wl_d;assign v_o[b]=w_v;assign bad_o[b]=w_bad;
+          always @(posedge clk)begin
+            for(integer i=0;i<NIN;i++)for(integer q=0;q<4;q++)
+              qsel[i*4+q]<=pick_d[b*NIN+i]&&(ls_q[i*277+256+:2]==2'(b-q));
+            x_v<=pick_d[b*NIN+:NIN]!='0;
+          end
+          always @(posedge clk)begin:word_select
+            reg [255:0] selected;reg [2:0] f;reg [17:0] sector;
+            selected=0;f=0;sector=0;
+            for(integer i=0;i<NIN;i++)begin
+              if(qsel[i*4+:4]!='0)f=f|ls_q[i*277+274+:3];
+              for(integer q=0;q<4;q++)if(qsel[i*4+q])begin
+                sector=sector|(ls_q[i*277+256+:18]+18'(q));
+                case(ls_q[i*277+274+:3])
+                  3'd1:if(q<2)selected=selected|{128'd0,ls_q[i*277+q*128+:128]};
+                  3'd2,3'd4:selected=selected|{192'd0,ls_q[i*277+q*64+:64]};
+                  default:selected=selected|ls_q[i*277+:256];
+                endcase
+              end
+            end
+            p_s<=selected;p_f<=f;p_s18<=sector;p_v<=x_v;
+          end
+          always @(posedge clk)begin:word_out
             w_v<=p_v;w_bad<=p_v&&p_s18>=18'd36864;
             wl_d<={(MUT==8)?1'b0:(p_s18>=18'd32768&&p_s18<18'd36864),p_s18[14:0],conv(p_s,p_f,2'd0),p_s18>=18'd36864 ? 8'h00 : 8'hff};
           end

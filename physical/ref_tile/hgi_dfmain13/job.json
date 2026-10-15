@@ -1,13 +1,13 @@
 {
- "name": "hgi_dfmain13-src16-COMMIT",
+ "name": "hgi_dfmain13-src16e-COMMIT",
  "block": "ot_hgi_dma_front_main13",
  "ref_tile": true,
- "owner": "Claude:hbm-groupA-1014 (A3)",
+ "owner": "Claude:H-ELEM-A",
  "purpose": "source16 (A3 10-14, after hgi_dfmain13-src15-1a9409837 EARLY_FAIL_SETUP post-CTS TT -410.1 ps / 4,062 endpoints: worst ls_b[2043] port -> 3 x ~100 um wire -> AOI221/OR5/OR4/OR5/OR4 64-way lane x quarter select -> 3 x ~100 um wire -> formatter.bk[3].p_s; gate had in->reg -127.7, 2,452 input cones > 3 levels, native capture far over 190 ps): xs_vm4 PREG=1 puts every ls bit in ONE unconditional pin flop ls_q, reads metadata from ls_q (same edge as the old meta_*), and folds select + conversion into the output register (p_s stage removed: 12,718 + 4,432 - 1,232 - 2,224 = ~13,694 sinks < 15k). Exact native 147 LOAD phase61 16,912 / phase487 16,913 cycles = 1.0790 (source15 17,022 = 1.0860); mirror PASS 20,480 words; BF16 609,364 errors / epoch / first_mask / reservation / mirror_loss mutants FATAL (EPYC4 Verilator 5.050).",
  "threads": 8,
  "peak_ram_gb": 32,
  "source": {
-  "branch": "codex/hbm-front-leaves-1013",
+  "branch": "claude/hbm-groupA-1014",
   "commit": "COMMIT",
   "extra_paths": [
    "rtl/hbm_accel/generic/adapters/native_b2/su_quadrant",
@@ -165,7 +165,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/hgi_dfmain13/hgi_dfmain13-src16-COMMIT"
+   "to": "results/rtl/ref_tile/hgi_dfmain13/hgi_dfmain13-src16e-COMMIT"
   }
  ],
  "cycles_added": 0,
