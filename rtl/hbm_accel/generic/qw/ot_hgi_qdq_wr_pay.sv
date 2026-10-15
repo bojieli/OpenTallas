@@ -296,9 +296,14 @@ module ot_qdq_pay_fwft #(parameter integer DEPTH = 64) (
     wire          wr_arr = push && !bypass;
     wire          rd_arr = !ez && room;
     wire [AW:0]   na_n = na + (wr_arr ? 1'b1 : 1'b0) - (rd_arr ? 1'b1 : 1'b0);
-    ot_sram_1r1w_64x512_m1_r2c2 u_m (.clk(clk), .r_ce_in(rd_arr), .r_addr_in(6'(rp[AW-1:0])), .rd_out(rq),
-        .w_ce_in(wr_arr), .w_addr_in(6'(wp[AW-1:0])), .wd_in(wdata), .w_mask_in({512{1'b1}}),
-        .rr_en(2'b00), .rr_addr(12'd0), .cr_en(2'b00), .cr_sel(18'd0));
+    genvar t;
+    for (t = 0; t < 1; t = t + 1) begin : g_tile                 // same macro instance path as ot_fifo_sram_fwft
+        if (1) begin : g_m0
+            ot_sram_1r1w_64x512_m1_r2c2 u_m (.clk(clk), .r_ce_in(rd_arr), .r_addr_in(6'(rp[AW-1:0])), .rd_out(rq),
+                .w_ce_in(wr_arr), .w_addr_in(6'(wp[AW-1:0])), .wd_in(wdata), .w_mask_in({512{1'b1}}),
+                .rr_en(2'b00), .rr_addr(12'd0), .cr_en(2'b00), .cr_sel(18'd0));
+        end
+    end
     wire [1:0] n_in = (inflight ? 2'd1 : 2'd0) + (bypass ? 2'd1 : 2'd0);
     wire [1:0] oc_nx = oc_after + n_in;
     always @(posedge clk or negedge rst_n) begin
