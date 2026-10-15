@@ -1,5 +1,51 @@
 {
   "source": "rtl/dsrom_sys/s81_ctrl/ot_s81_svc_job.sv",
+  "terminal_frames": [
+    {
+      "source": 0,
+      "header_cycle": 0,
+      "length": 16,
+      "payload_cycles": [
+        2,
+        3,
+        4,
+        6,
+        7,
+        8,
+        10,
+        11,
+        12,
+        14,
+        15,
+        16,
+        18,
+        19,
+        20,
+        22
+      ]
+    },
+    {
+      "source": 1,
+      "header_cycle": 0,
+      "length": 2,
+      "payload_cycles": [
+        1,
+        2
+      ]
+    },
+    {
+      "source": 4,
+      "header_cycle": 0,
+      "length": 5,
+      "payload_cycles": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ]
+    }
+  ],
   "rule": "observational done after final valid payload; no issue/ready scheduling",
   "retained_metadata_FF_bits": 96,
   "new_memory_ports": 0,

@@ -94,6 +94,7 @@ def completion_model(terminal_frames):
         sources.add(src);headers.append(header);ends.append(payload[-1] if payload else header)
     if not ends: raise ValueError('actual nonempty terminal source set required')
     return dict(source='rtl/dsrom_sys/s81_ctrl/ot_s81_svc_job.sv',
+                terminal_frames=terminal_frames,
                 rule='observational done after final valid payload; no issue/ready scheduling',
                 retained_metadata_FF_bits=96, new_memory_ports=0,new_clock_roots=0,
                 fixed_tap_bits_per_cycle=4*26,new_global_pin_bits=0,
