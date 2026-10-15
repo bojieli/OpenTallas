@@ -1,0 +1,26 @@
+{
+  "stage": "PRE_CURRENT_BANK_READ32_BINDING",
+  "hold": "RESOLVED: exactnewguardedstack/commonleaf cbd92c1cc freezesactualCOLUMN_CLOSE_GUARD1; c664 historicalprofilepreservedunqualified",
+  "bank_sha256": "7b2e2fbafead30cbabc427303bb339da070645637af9d1a69f0dbdaa0a88ee53",
+  "read32_baseline_commit": "c6649bc0b superseded_profile_pending",
+  "workload": "unchanged2561STOREMAIN/MIRROR plusnative23edgeverificationRD, earlyACKnegative",
+  "resources": {
+    "VMmacros": 96,
+    "landingmacros": 32,
+    "WBmacros": 128,
+    "native_response_macros": 128,
+    "total": 384,
+    "nativePCcontrollers": 128,
+    "read_response_reservations_per_PC": 32
+  },
+  "actual_read_traffic": "STOREsuccessor keepsfullsequentialnativeRDverification; read32burstdepth/swizzledPF ownedseparatelyservice_native",
+  "budget": {
+    "price": 248,
+    "gate_limit": 272
+  },
+  "reuse": "a31 canonical buildobjects reused; newgateonlycurrent7b2+guardedread32+samecanonicalRL23oracle",
+  "qualification": "oldbank7828/a31 history does notqualifycurrent7b2; newsourcepinnedgateawaitsrealcontrollerfix",
+  "guarded_profile_commit": "cbd92c1cc4e6f2860d09ca96851a33f70df2716d",
+  "guarded_stack_sha256": "a38dae243ea6cb4167b1a75e484c37237819c15624c9fbb09aba6d6933be0992",
+  "guarded_leaf_sha256": "f18b70157a6502526b56227ebba05d252897cce1d09a80cc08f7fc67bb713bde"
+}

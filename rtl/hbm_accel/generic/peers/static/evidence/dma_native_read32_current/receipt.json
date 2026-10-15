@@ -1,0 +1,121 @@
+{
+  "status": "TERMINAL_FUNCTIONAL_PASS_PERFORMANCE_FAIL",
+  "bank_sha256": "7b2e2fbafead30cbabc427303bb339da070645637af9d1a69f0dbdaa0a88ee53",
+  "native_guarded_profile_commit": "cbd92c1cc4e6f2860d09ca96851a33f70df2716d",
+  "guarded_stack_sha256": "a38dae243ea6cb4167b1a75e484c37237819c15624c9fbb09aba6d6933be0992",
+  "native_leaf_sha256": "f18b70157a6502526b56227ebba05d252897cce1d09a80cc08f7fc67bb713bde",
+  "read32_prerequisite": "c6649bc0b; real128responseSRAM macros acrossfourstacks",
+  "WB_frozen": "77c8175b8 /0635dc22",
+  "source_pins": "input_sha256.json lists actualcompiledsources; no lease/descriptor candidates",
+  "actual_resources": {
+    "VMmacros": 96,
+    "landingmacros": 32,
+    "WBmacros": 128,
+    "response_macros": 128,
+    "total": 384,
+    "nativePCcontrollers": 128,
+    "bounded_responses_per_PC": 32
+  },
+  "workload": "sameactualMAIN/MIRROR STORE20480words+PRE8;2561sectors percampaign attrueCOLB0x28800000+2q/PRE0x28800a00; sourceoverwrittenafterpostedretire",
+  "budget": {
+    "immutable_price": 248,
+    "fence_limit": 272,
+    "changed": false
+  },
+  "campaigns": [
+    {
+      "mode": "MAIN",
+      "fence_stream_cycles": 148,
+      "result": "PASS272",
+      "first_native_request_HBM_edge": [
+        105,
+        105,
+        105,
+        105
+      ],
+      "last_native_request_HBM_edge": [
+        184,
+        169,
+        169,
+        169
+      ],
+      "last_actual_WR_ACK_HBM_edge": [
+        187,
+        176,
+        176,
+        176
+      ]
+    },
+    {
+      "mode": "MIRROR",
+      "fence_stream_cycles": 565,
+      "result": "FAIL272",
+      "first_native_request_HBM_edge": [
+        36923,
+        36923,
+        36923,
+        36923
+      ],
+      "last_native_request_HBM_edge": [
+        37240,
+        36987,
+        36987,
+        36987
+      ],
+      "last_actual_WR_ACK_HBM_edge": [
+        37345,
+        37232,
+        37232,
+        37229
+      ]
+    }
+  ],
+  "functional_per_campaign": {
+    "physical_WR": 2561,
+    "true_ACK": 2561,
+    "exactmutablememory_checks": 2561,
+    "actualnative_RD_exact_tag_data": 2561,
+    "strict_command_timing": "PASS",
+    "unconditional_controller_fault_check": "PASS"
+  },
+  "verification": "actualnativeRD aftermeasuredfence;23edgecommandDRAMpipeline response; nextcampaign includesexplicitverificationhistory",
+  "clocks_ps": {
+    "stream": 833.333,
+    "HBM": 1024,
+    "HBMphase": 173
+  },
+  "ot_run": {
+    "host": "ot-epyc4",
+    "unit": "oth-ubuntu-1778989-1792060261",
+    "memGB": 4,
+    "threads": 4,
+    "path": "/tmp/hbm-dma-native-read32-current-run1",
+    "terminal": true,
+    "final_negative_resume_unit": "oth-ubuntu-1789327-1792060564",
+    "final_exit": 1,
+    "exit_reason": "required272cycleperformancegate correctlyfailsbecausewarm565; negativeitselfkilledasrequired"
+  },
+  "measured_positive": {
+    "compile_s": 103.315,
+    "Verilator_allocated_MB": 1840.598,
+    "simulation_s": 40.848,
+    "simulation_allocated_MB": 1046
+  },
+  "qualification": "CurrentbankdigitalSTOREcorrectness passes; fullfenceperformance FAIL. Olda31 bank7828 proofdoesnotqualifycurrent7b2. No repricing/warmphasewaiver.",
+  "limitations": [
+    "twoexplicitinitialstates notallREFphases/sharedW/Ktraffic",
+    "prefetch2048performanceFAIL426.43 vs134.2 remainsseparate",
+    "no physicalclockclosure/stateprotection/globalEngramallocation qualification"
+  ],
+  "recovery": {
+    "initial_unit": "oth-ubuntu-1778989-1792060261",
+    "initial_exit": 2,
+    "cause": "negativecompiler reusedcache hadstalePCH .d dependencyonoldqueuedheader afterinterruptedpartialtransfer; positivecompletepreserved",
+    "action": "clearedonlyobj-1 .d files; resumedMUTANTS1 sameprofile, nopositivererun",
+    "negative_unit": "oth-ubuntu-1789327-1792060564",
+    "negative_output_path": "same /tmp/hbm-dma-native-read32-current-run1",
+    "terminal": true,
+    "resume_exit": 1
+  },
+  "negative": "PASS: premature fillDone-aspostedACK mutant rejected with fence before actual HBM drain ACK"
+}
