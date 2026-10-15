@@ -37,6 +37,24 @@ LATENCIES=dict(control_rom_synchronous_read_edges=1,control_rom_idle_prefetch_ed
                hc_final_write_to_earliest_emit_edges=1,
                done_rom_to_c_done_edges=1)
 
+# The native candidate uses the existing four additional return stages. It is an
+# explicit component profile; production remains L12 until die adoption.
+L16_LATENCIES=dict(LATENCIES, vm_request_to_issue_edges=18)
+def physical_profile(request,root):
+    profile=request.get('vm_profile')
+    if profile is None:
+        expected=LATENCIES
+    else:
+        if profile.get('READ_PIPE')!=4 or profile.get('CAP_PIPE')!=2:
+            raise ValueError('unsupported VM pipeline profile')
+        source=root/'rtl/dsrom_sys/s81_ph/vm/dsfd_sp_vm_static.sv'
+        if profile.get('source_sha256')!=hashlib.sha256(source.read_bytes()).hexdigest():
+            raise ValueError('stale VM profile source')
+        expected=L16_LATENCIES
+    if request['abi']!=ABI or request['latencies']!=expected:
+        raise ValueError('unbound physical latency profile')
+    return expected
+
 def pack_controls(values):
     if set(values)!={n for n,_ in FIELDS}: raise ValueError('every cycle must explicitly name every control field')
     result=0; offset=0
@@ -53,7 +71,8 @@ def command(word):
     return ((word>>83)<<7)|(word&127),arg&65535,(arg>>16)&1
 
 def compile_image(request,root):
-    if request['abi']!=ABI or request['latencies']!=LATENCIES: raise ValueError('unbound physical latency profile')
+    latency=physical_profile(request,root)
+    read_flight=latency['vm_request_to_issue_edges']
     if request['command_abi']!='opentallas.s81.cmd84.v1': raise ValueError('command ABI')
     evidence=request['evidence']
     if not evidence: raise ValueError('missing source evidence')
@@ -93,12 +112,12 @@ def compile_image(request,root):
     for edge,c in enumerate(cycles):
         actual=[kind for kind,field in consumer_fields.items() if c['controls'][field]]
         if actual:
-            if len(actual)!=1 or edge<14 or edge-14 not in reservations:
-                raise ValueError('VM return must have exactly one owner14edges after request')
-            if actual[0]!=reservations[edge-14]['consumer']:
+            if len(actual)!=1 or edge<read_flight or edge-read_flight not in reservations:
+                raise ValueError('VM return must have exactly one owner at profile-bound request flight')
+            if actual[0]!=reservations[edge-read_flight]['consumer']:
                 raise ValueError('VM return owner differs from read reservation')
         if edge in reservations:
-            target=edge+14
+            target=edge+read_flight
             if target>=len(cycles) or not cycles[target]['controls'][consumer_fields[reservations[edge]['consumer']]]:
                 raise ValueError('unconsumed VM source read')
     pending={};words=[];source_queue=[];issues={};commits={};hc_inputs={};hc_writes={}
@@ -140,7 +159,7 @@ def compile_image(request,root):
             owner['committed']+=1
             if bool(ctrl['commit_last'])!=(owner['committed']==owner['count']): raise ValueError('gather last/count')
             commits[edge]=owner
-            if ctrl['commit_last']: owner['last_commit']=edge+LATENCIES['commit_control_to_vm_pin_edges']
+            if ctrl['commit_last']: owner['last_commit']=edge+latency['commit_control_to_vm_pin_edges']
         elif ctrl['commit_gather']: raise ValueError('gather mode flag outside commit slot')
         # Reduce samples gather registers one edge later, then the reduced VM
         # write control is sampled18edges later. PINCAP adds one edge to VM
@@ -150,13 +169,13 @@ def compile_image(request,root):
             if owner is None or owner['mode']!=0: raise ValueError('HC source not a preceding reduce gather')
             hc_inputs[edge]=(cycles[edge-1]['controls']['commit_seq'],cycles[edge-1]['controls']['commit_last'],owner)
         if ctrl['hc_write_slot']:
-            expected=hc_inputs.get(edge-LATENCIES['hc_reduce_to_write_control_edges'])
+            expected=hc_inputs.get(edge-latency['hc_reduce_to_write_control_edges'])
             if expected is None: raise ValueError('HC write has no reducer source')
             seq,last,owner=expected
             if ctrl['hc_expect_seq']!=seq or ctrl['hc_expect_last']!=last:
                 raise ValueError('HC write latency/sequence/last')
             owner['reduced_written']+=1;hc_writes[edge]=(seq,last,owner)
-            if last: owner['last_reduce_write']=edge+LATENCIES['hc_write_control_to_vm_pin_edges']
+            if last: owner['last_reduce_write']=edge+latency['hc_write_control_to_vm_pin_edges']
         if ctrl['hc_assemble_slot']:
             if not ctrl['hc_write_slot']: raise ValueError('HC assembly lacks actual reduced-word write')
             owner=hc_writes[edge][2]
@@ -208,9 +227,9 @@ def compile_image(request,root):
             owner=pending[tag]
             boundary={'gather_vm':'last_commit','reduce_vm':'last_reduce_write','reduce_vm_hc':'last_emit'}[owner['consumer']]
             finished=owner[boundary]
-            if finished is None or edge+LATENCIES['done_rom_to_c_done_edges']<=finished or owner['committed']!=owner['count']:
+            if finished is None or edge+latency['done_rom_to_c_done_edges']<=finished or owner['committed']!=owner['count']:
                 raise ValueError('completion precedes actual final scheduled output')
-            if not owner['mode'] and (owner['reduced_written']!=owner['count'] or owner['last_reduce_write']>=edge+LATENCIES['done_rom_to_c_done_edges']):
+            if not owner['mode'] and (owner['reduced_written']!=owner['count'] or owner['last_reduce_write']>=edge+latency['done_rom_to_c_done_edges']):
                 raise ValueError('completion precedes final reduced VM word')
             if assembly_owner is owner: raise ValueError('completion leaves partial HC assembly')
             del pending[tag]
@@ -226,7 +245,7 @@ def compile_image(request,root):
     for edge,owner in commits.items():
         if owner['mode']==0 and edge+1 not in hc_inputs: raise ValueError('reduce gather lacks HC reservation')
     for edge in hc_inputs:
-        if edge+LATENCIES['hc_reduce_to_write_control_edges'] not in hc_writes: raise ValueError('HC reducer result lacks reduced VM write reservation')
+        if edge+latency['hc_reduce_to_write_control_edges'] not in hc_writes: raise ValueError('HC reducer result lacks reduced VM write reservation')
     return words
 
 def pack_macro_banks(words,path):
@@ -258,6 +277,6 @@ def emit(request,root,path):
     path.write_text(''.join(f'{w:0{(ROM_BITS+3)//4}x}\n' for w in words))
     banks=pack_macro_banks(words,path)
     return dict(abi=ABI,control_bits=CONTROL_BITS,rom_bits=ROM_BITS,cycles=len(words),
-                sha256=hashlib.sha256(path.read_bytes()).hexdigest(),latencies=LATENCIES,
+                sha256=hashlib.sha256(path.read_bytes()).hexdigest(),latencies=request['latencies'],
                 macro='ot_rom_4096x266_m8',macro_count=3,macro_depth=4096,macro_bank_files=banks,
                 integration_ready=False,qualification='actual ROM-backed controller component; native production source/phase/price acceptance is separate')

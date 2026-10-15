@@ -70,6 +70,19 @@ def fixture_page():
     return request
 
 class Check(unittest.TestCase):
+    def test_l16_source_profile_and_stale_l12_calendar(self):
+        r=fixture(raw=True)
+        r['vm_profile']=dict(READ_PIPE=4,CAP_PIPE=2,source_sha256=hashlib.sha256((ROOT/'rtl/dsrom_sys/s81_ph/vm/dsfd_sp_vm_static.sv').read_bytes()).hexdigest())
+        r['latencies']=L16_LATENCIES
+        self.assertEqual(physical_profile(r,ROOT)['vm_request_to_issue_edges'],18)
+        with self.assertRaisesRegex(ValueError,'unconsumed VM source read'):
+            compile_image(r,ROOT)  # the original L12 read edge cannot serve L16
+        bad=copy.deepcopy(r);bad['vm_profile']['source_sha256']='0'*64
+        with self.assertRaisesRegex(ValueError,'stale VM profile source'):compile_image(bad,ROOT)
+        bad=copy.deepcopy(r);bad['vm_profile']['READ_PIPE']=2
+        with self.assertRaisesRegex(ValueError,'unsupported VM pipeline profile'):compile_image(bad,ROOT)
+        bad=copy.deepcopy(r);bad.pop('vm_profile')
+        with self.assertRaisesRegex(ValueError,'unbound physical latency profile'):compile_image(bad,ROOT)
     def test_image_and_rejections(self):
         request=fixture(raw=True);self.assertEqual(len(compile_image(request,ROOT)),30)
         mutations=[lambda r:r['cycles'][0]['controls'].update(tx_beat_slot=1),

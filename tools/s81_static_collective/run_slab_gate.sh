@@ -8,8 +8,9 @@
 set -euo pipefail
 ROOT=$(cd "$(dirname "$0")/../.." && pwd); W=$(mkdir -p "$1" && cd "$1" && pwd); MUT=${2:-0}; PINCAP=${3:-1}; DEFS=(); [ "$MUT" = 3 ] && { DEFS=(+define+OT_S81_COLL_CAL_MUT_ROW); MUT=0; MUTANT=1; }
 V=${OT_VERILATOR:-$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator}
-CALENDAR7=${OT_S81_COLL_CALENDAR7:-0}; CLOCK_MUT=${OT_S81_COLL_CALENDAR_CLOCK_MUT:-0}; PARAMS=()
-cd "$W"; python3 "$ROOT/tools/s81_static_collective/build_slab_fixture.py" --out "$W" > fixture.json
+VM_READ_PIPE=${OT_S81_COLL_VM_READ_PIPE:-0}; CALENDAR7=${OT_S81_COLL_CALENDAR7:-0}; CLOCK_MUT=${OT_S81_COLL_CALENDAR_CLOCK_MUT:-0}; PARAMS=()
+[ "$VM_READ_PIPE" = 0 ] || [ "$CALENDAR7" = 1 ] || { echo "SLAB_GATE VM_PIPE requires explicit calendar7 candidate"; exit 2; }
+cd "$W"; python3 "$ROOT/tools/s81_static_collective/build_slab_fixture.py" --out "$W" --read-pipe "$VM_READ_PIPE" > fixture.json
 S=$ROOT/rtl/dsrom_sys
 SRC=("$ROOT/rtl/ot_fp32_rne_pkg.sv" "$ROOT/rtl/lib/ot_rst_relay.sv" "$ROOT/rtl/hdc/ot_hdc_prefix.sv" "$ROOT/rtl/link/ot_link_crc32.sv"
  "$S"/s81_static_collective/{dsfd_sp_collective_static_c,s81_static_collective_slab,s81_static_calendar_controller,s81_static_fmt1_rank_dynamic_clocked,s81_static_fmt1_rank_dynamic,s81_static_fmt1_core_dynamic,s81_static_fmt1_lane_dynamic,s81_static_fmt1_codec_dynamic,s81_static_tp4_endpoint_dynamic,s81_static_fmt1_gearbox,s81_static_fmt1_channels_clocked,s81_static_raw_fmt1_lane,s81_static_raw_fmt1_codec,s81_static_raw_vm_rows,s81_static_vm_boundary,s81_static_host_queue}.sv
@@ -26,7 +27,7 @@ mapfile -t VMF < <(cd "$ROOT" && python3 tools/die_port_bind.py none --closure d
 SRC=("${SRC[@]:0:${#SRC[@]}-1}" "${VMF[@]}" "${SRC[@]: -1}")
 mapfile -t SRC < <(for f in "${SRC[@]}"; do realpath "$f"; done | awk '!seen[$0]++')
 if [ "$CALENDAR7" = 1 ]; then
- python3 "$ROOT/tools/s81_static_collective/build_slab7.py" --out "$W/calendar7_source"
+ python3 "$ROOT/tools/s81_static_collective/build_slab7.py" --out "$W/calendar7_source" --read-pipe "$VM_READ_PIPE"
  SRC=("${SRC[@]:0:${#SRC[@]}-1}" "$S/s81_static_collective/s81_static_calendar_controller7.sv"
   "$W/calendar7_source/s81_static_collective_slab7.sv" "$W/calendar7_source/dsfd_sp_collective_static_c7.sv"
   "$W/calendar7_source/tb_s81_static_collective_slab.sv")

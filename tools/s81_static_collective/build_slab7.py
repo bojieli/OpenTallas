@@ -15,7 +15,7 @@ def replace_once(text, old, new):
     assert text.count(old) == 1, old
     return text.replace(old, new, 1)
 
-def generate(out):
+def generate(out, read_pipe=0):
     out.mkdir(parents=True, exist_ok=True)
     source = ROOT / 'rtl/dsrom_sys/s81_static_collective'
     paths = {}
@@ -42,12 +42,17 @@ def generate(out):
     text = replace_once(text, ' s81_static_collective_slab #(', ' s81_static_collective_slab7 #(')
     text = replace_once(text, ' .ck_control({5{clk}}),',
                         ' .ck_calendar_rom({3{clk}} & ((CALENDAR_CLOCK_MUT==1 && $time>400000) ? 3\'b110:3\'b111)),\n .ck_calendar_outputs({3{clk}} & ((CALENDAR_CLOCK_MUT==2 && $time>400000) ? 3\'b110:3\'b111)),\n .ck_control({5{clk}}),')
+    if read_pipe==4:
+        text=replace_once(text,' dsfd_sp_vm vm(', ' dsfd_sp_vm #(.READ_PIPE(4),.CAP_PIPE(2)) vm(')
+        text=replace_once(text,'e<498+14','e<498+18')
+        text=replace_once(text,'e>=12&&e<510','e>=16&&e<514')
+        text=replace_once(text,'j=e-12','j=e-16')
     (out / 'tb_s81_static_collective_slab.sv').write_text(text)
     paths[str(tb.relative_to(ROOT))] = hashlib.sha256(tb.read_bytes()).hexdigest()
     (out / 'source_manifest.json').write_text(json.dumps(dict(source_sha256=paths,
         added_delivered_clock_pins=['ck_calendar_rom[0..2]', 'ck_calendar_outputs[0..2]'],
-        normal_edges_added=0, initialization_extra_rom_edges=1,
+        normal_edges_added=0, initialization_extra_rom_edges=1,vm_parameters=dict(READ_PIPE=read_pipe,CAP_PIPE=2 if read_pipe==4 else 0),
         qualification='component candidate; die ABI, phi-R, placement and native route remain open'), indent=2)+'\n')
 
 if __name__ == '__main__':
-    p=argparse.ArgumentParser();p.add_argument('--out',type=Path,required=True);generate(p.parse_args().out)
+    p=argparse.ArgumentParser();p.add_argument('--out',type=Path,required=True);p.add_argument('--read-pipe',type=int,choices=[0,4],default=0);a=p.parse_args();generate(a.out,a.read_pipe)
