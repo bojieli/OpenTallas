@@ -29,13 +29,9 @@
   "source_sha256": {
     "rtl/hbm_accel/io_native_20261014/hfd_host_packet_face.sv": "e80f0fd8bbd181e1a90f926ea8058c51ff36a1b170a4923e60e82197a90b8b52",
     "rtl/hbm_accel/io_native_20261014/hbm_link_bank9_native.sv": "371002eda178023782ca2fd308d7087cb59b23eeda51ea89cb08c7e64078a804",
-    "rtl/hbm_accel/io_native_20261014/ot_hbm_kp4_encode52_map.sv": "401ecc4c70ebfc04a624faee5540fc625c4c7bddc8a3f4c6bc48ba30d22b81a3",
-    "rtl/hbm_accel/io_native_20261014/ot_hbm_kp4_dec_linear.sv": "13288f324701e0501da308c59261e716ba693603796a0a10de2684e40af28eaf",
-    "rtl/hbm_accel/io_native_20261014/ot_hbm_kp4_enc_linear.sv": "9a14e45bb48a17ab8cc6fcdf2bcbab28655faa1910ee05ee045f3b651ce86aef",
     "rtl/hbm_accel/io_native_20261014/ot_hbm_host_landing256.sv": "80aff95681d60189a41e1f74e6837e7476b64da566b6877774e907b8fe5db5e3",
     "rtl/hbm_accel/io_native_20261014/hfd_serdes487.sv": "81b7ea745a960d84d3f50f1610a6cc5bd22aac0b1847319b0ad11a85d152fa32",
     "rtl/hbm_accel/io_native_20261014/hfd_host_native.sv": "776ea943b1f244320ffc177af737f1b7f8e4a44359ef270536f23d3b293778b9",
-    "rtl/hbm_accel/io_native_20261014/ot_hbm_kp4_syndrome55_map.sv": "ade2e0bbf131d65d979f693ea4347c6431f9d7cfb420d9273c04849a57fbc27c",
     "rtl/hbm_accel/io_native_20261014/ot_hbm_host_packet.sv": "fbd67eae2ba2bee4962b29ab178a0850308e1f6f9ffbbf987ba5f6d67329aa41",
     "rtl/hbm_accel/tu/lk_ep_20261010/ot_lkep_sub.sv": "e365663b2030327808912198074ea29338ff9c7677b3c5f8414b45537b16c0c3",
     "rtl/hbm_accel/tu/lk_ep_20261010/ot_lkep_rx_shared.sv": "02dab675b7f240161bc7df04943d7c67850a76f7d27da15ba5789fad2bb2552a",
@@ -54,5 +50,6 @@
     "rtl/dsrom_sys/s81_link/ot_s81_hbm_pcc.sv": "503638aaccfc0af752c6433e48fae06a10b0e7d0ea255739cc71045d76f57974",
     "rtl/dsrom_sys/s81_link/ot_s81_kp4_enc.sv": "788c6cdaa3fcb111a8baf4756c340a97f6880110ef081327a9df326e4e51f224",
     "rtl/dsrom_sys/s81_link/ot_hbm3e_phy_v41x_aw30_e8p5.sv": "9b792f8979d729b8e9bc99a3b820e5d020d26f257429e960a606a49e43f2a2e0"
-  }
+  },
+  "FEC_candidate_scope": "This functional record uses unchangedlegacyKP4 encoder/decoder; opt-inlinear/rooted candidates have separate equivalence records."
 }
