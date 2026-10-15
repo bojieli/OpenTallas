@@ -1,0 +1,171 @@
+{
+  "source_commit": "5b0730d17",
+  "source": "/home/ubuntu/wt/hc-physical-1015/rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_bank_shell_static.sv",
+  "source_sha256": "923e1e8a19ff482a855bb39efcccf9d32f2ee796aa76f97947183bd16095fda3",
+  "mapped_ff": 4843,
+  "macro_clock_pins": 10,
+  "clock_sinks": 4853,
+  "outline_um": [
+    500.04,
+    500.04
+  ],
+  "exact": true,
+  "permitted_platform_snap_um": [
+    501.12,
+    501.12
+  ],
+  "orientation": "R0",
+  "face_bits": {
+    "W": 801,
+    "N": 47,
+    "S": 106,
+    "E": 1539
+  },
+  "face_groups": {
+    "W": "weight_ap and residual writes",
+    "N": "clk/rst_n and descriptor/control inputs",
+    "S": "descriptor/lane outputs",
+    "E": "memory/status outputs"
+  },
+  "macros": [
+    {
+      "kind": "weight_128x256",
+      "origin_um": [
+        23.76,
+        23.76
+      ],
+      "orientation": "MY",
+      "size_um": [
+        94.824,
+        41.04
+      ]
+    },
+    {
+      "kind": "weight_128x256",
+      "origin_um": [
+        23.76,
+        108.0
+      ],
+      "orientation": "MY",
+      "size_um": [
+        94.824,
+        41.04
+      ]
+    },
+    {
+      "kind": "weight_128x256",
+      "origin_um": [
+        23.76,
+        192.23999999999998
+      ],
+      "orientation": "MY",
+      "size_um": [
+        94.824,
+        41.04
+      ]
+    },
+    {
+      "kind": "weight_128x256",
+      "origin_um": [
+        23.76,
+        276.47999999999996
+      ],
+      "orientation": "MY",
+      "size_um": [
+        94.824,
+        41.04
+      ]
+    },
+    {
+      "kind": "weight_128x256",
+      "origin_um": [
+        159.624,
+        23.76
+      ],
+      "orientation": "MY",
+      "size_um": [
+        94.824,
+        41.04
+      ]
+    },
+    {
+      "kind": "weight_128x256",
+      "origin_um": [
+        159.624,
+        108.0
+      ],
+      "orientation": "MY",
+      "size_um": [
+        94.824,
+        41.04
+      ]
+    },
+    {
+      "kind": "weight_128x256",
+      "origin_um": [
+        159.624,
+        192.23999999999998
+      ],
+      "orientation": "MY",
+      "size_um": [
+        94.824,
+        41.04
+      ]
+    },
+    {
+      "kind": "weight_128x256",
+      "origin_um": [
+        159.624,
+        276.47999999999996
+      ],
+      "orientation": "MY",
+      "size_um": [
+        94.824,
+        41.04
+      ]
+    },
+    {
+      "kind": "residual_1024x256",
+      "origin_um": [
+        302.4,
+        43.2
+      ],
+      "orientation": "MY",
+      "size_um": [
+        174.744,
+        70.47
+      ]
+    },
+    {
+      "kind": "residual_1024x256",
+      "origin_um": [
+        302.4,
+        203.04
+      ],
+      "orientation": "MY",
+      "size_um": [
+        174.744,
+        70.47
+      ]
+    }
+  ],
+  "minimum_core_edge_and_macro_channel_um": 20,
+  "whole_bank_composition": "UNASSIGNED: previous 461.465um sum hop fails 406.491um ETM bound",
+  "clock_period_ps": 833.333333,
+  "roots": 1,
+  "notes": [
+    "Actual combined memory and stage-control shell retains 43-root engine lower bound.",
+    "No replication of existing 64 weight SRAMs as extra HCstore inventory.",
+    "MY allowed only by actual SRAM LEF symmetry; parent remains R0."
+  ],
+  "status": "SOURCE_BOUND_INDEPENDENT_PROTOTYPE_ONLY",
+  "qualified": false,
+  "global_placement_qualified": false,
+  "acceptance": [
+    "actual pin/PG access and per-face cuts <=0.60",
+    "actual mapped area and macro channels",
+    "native CTS root count, spread and slew",
+    "TT setup >=0 and FF hold >=0",
+    "actual route DRC/access/reach; no inherited timing grant"
+  ]
+}

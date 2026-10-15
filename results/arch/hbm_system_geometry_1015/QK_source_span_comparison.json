@@ -1,0 +1,120 @@
+{
+  "head_cohort": [
+    {
+      "cohort": 0,
+      "lane": 0,
+      "source_pin_diameter_um": 4235.976000000001,
+      "minimum_any_root_max_reach_um_lower_bound": 2117.9880000000003,
+      "minimum_500um_hops_lower_bound": 5
+    },
+    {
+      "cohort": 0,
+      "lane": 1,
+      "source_pin_diameter_um": 4235.976000000001,
+      "minimum_any_root_max_reach_um_lower_bound": 2117.9880000000003,
+      "minimum_500um_hops_lower_bound": 5
+    },
+    {
+      "cohort": 1,
+      "lane": 0,
+      "source_pin_diameter_um": 4235.976000000001,
+      "minimum_any_root_max_reach_um_lower_bound": 2117.9880000000003,
+      "minimum_500um_hops_lower_bound": 5
+    },
+    {
+      "cohort": 1,
+      "lane": 1,
+      "source_pin_diameter_um": 4235.976000000001,
+      "minimum_any_root_max_reach_um_lower_bound": 2117.9880000000003,
+      "minimum_500um_hops_lower_bound": 5
+    },
+    {
+      "cohort": 2,
+      "lane": 0,
+      "source_pin_diameter_um": 4235.9759999999915,
+      "minimum_any_root_max_reach_um_lower_bound": 2117.9879999999957,
+      "minimum_500um_hops_lower_bound": 5
+    },
+    {
+      "cohort": 2,
+      "lane": 1,
+      "source_pin_diameter_um": 4235.9759999999915,
+      "minimum_any_root_max_reach_um_lower_bound": 2117.9879999999957,
+      "minimum_500um_hops_lower_bound": 5
+    },
+    {
+      "cohort": 3,
+      "lane": 0,
+      "source_pin_diameter_um": 4235.975999999999,
+      "minimum_any_root_max_reach_um_lower_bound": 2117.9879999999994,
+      "minimum_500um_hops_lower_bound": 5
+    },
+    {
+      "cohort": 3,
+      "lane": 1,
+      "source_pin_diameter_um": 4235.975999999999,
+      "minimum_any_root_max_reach_um_lower_bound": 2117.9879999999994,
+      "minimum_500um_hops_lower_bound": 5
+    }
+  ],
+  "feature_D": [
+    {
+      "cohort": 0,
+      "lane": 0,
+      "source_pin_diameter_um": 19524.588000000003,
+      "minimum_any_root_max_reach_um_lower_bound": 9762.294000000002,
+      "minimum_500um_hops_lower_bound": 20
+    },
+    {
+      "cohort": 0,
+      "lane": 1,
+      "source_pin_diameter_um": 19524.588000000003,
+      "minimum_any_root_max_reach_um_lower_bound": 9762.294000000002,
+      "minimum_500um_hops_lower_bound": 20
+    },
+    {
+      "cohort": 1,
+      "lane": 0,
+      "source_pin_diameter_um": 19524.588,
+      "minimum_any_root_max_reach_um_lower_bound": 9762.294,
+      "minimum_500um_hops_lower_bound": 20
+    },
+    {
+      "cohort": 1,
+      "lane": 1,
+      "source_pin_diameter_um": 19524.588,
+      "minimum_any_root_max_reach_um_lower_bound": 9762.294,
+      "minimum_500um_hops_lower_bound": 20
+    },
+    {
+      "cohort": 2,
+      "lane": 0,
+      "source_pin_diameter_um": 19524.588000000003,
+      "minimum_any_root_max_reach_um_lower_bound": 9762.294000000002,
+      "minimum_500um_hops_lower_bound": 20
+    },
+    {
+      "cohort": 2,
+      "lane": 1,
+      "source_pin_diameter_um": 19524.588000000003,
+      "minimum_any_root_max_reach_um_lower_bound": 9762.294000000002,
+      "minimum_500um_hops_lower_bound": 20
+    },
+    {
+      "cohort": 3,
+      "lane": 0,
+      "source_pin_diameter_um": 19524.588,
+      "minimum_any_root_max_reach_um_lower_bound": 9762.294,
+      "minimum_500um_hops_lower_bound": 20
+    },
+    {
+      "cohort": 3,
+      "lane": 1,
+      "source_pin_diameter_um": 19524.588,
+      "minimum_any_root_max_reach_um_lower_bound": 9762.294,
+      "minimum_500um_hops_lower_bound": 20
+    }
+  ],
+  "quad_LEF_sha256": "ac510d59eafc85b5b516f40e21227e532fbe63527e23d772e5ebc357cf6b89f4",
+  "scope": "Source-pin-only diameter, actualreductionnodesunplaced. Conditional500umhoplowerbound excludescelldelay,legalroutes,clock/PG andexistingpipelinebinding."
+}
