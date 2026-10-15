@@ -1,0 +1,81 @@
+{
+  "schema": "opentallas.s81.vm-static.component-receipts.v1",
+  "production_qualified": false,
+  "physical_qualified": false,
+  "full_native_layer_qualified": false,
+  "source_hashes_verified_against_remote_build_inputs": true,
+  "host": "ot-epyc4",
+  "gates": {
+    "native512rel2": {
+      "unit": "oth-ubuntu-3990241-1792033500",
+      "positive_and_observed_mutant_pass": true,
+      "source_sha256": {
+        "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_rscatter.sv": "e4d71dadbb61acbde598950ddb3bdedb41961a345fb5407541309c18f6e89ebe",
+        "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_scatter.sv": "fbb1ada30aecb7c33a4f84ec7358806a97863ca5556188cb6475c0232dee7c0f",
+        "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_bank128.sv": "28b404bc01d8722b2cac8aadf058d48edb4c99d6128f7b8872f971f8dda940d8",
+        "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_relay128.sv": "389a09f45fb0543854f96d4d950fd329cb556c88430c1e5fea82147c56034f1e",
+        "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_slice128_rel2.sv": "f0872362faf41c473b85f13b400d191930928c5b52dfb1972f220e1b05438ad5",
+        "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v": "6f87b48e0860f3645178d2973638322af7867280a6884809be5e2024b2d91828",
+        "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static512_rel2.sv": "b096281e488576735a04f0cd49548d50e1e2e7df9ec1a7f49e73dbe79f620c47",
+        "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_return.sv": "5201f61b7992c9c330197c82cf84d6a059c13732fd908a804339f90b456022e2",
+        "rtl/dsrom_sys/s81_ph/test/tb_dsfd_vm_static512rel2.sv": "6b72994b73a026804042fc63ffd1d5da441da0a91b78ae9a8e0088f868e592fe"
+      },
+      "log_sha256": {
+        "results/rtl/s81_vm_static_1014/native512rel2/run_mutant.log": "7a7bb01616c432e699c6b0a85266372295c6860d9e4b6317d4e003d208a5a7e0",
+        "results/rtl/s81_vm_static_1014/native512rel2/run_base.log": "9cbf11619be383a565367433981b57f6734aa15b1afede5732a55bd81c70bbde"
+      },
+      "command": "static512_gate.sh S O tb_dsfd_vm_static512rel2"
+    },
+    "wstage_macro": {
+      "unit": "oth-ubuntu-4040127-1792034154",
+      "positive_and_observed_mutant_pass": true,
+      "source_sha256": {
+        "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_rscatter.sv": "e4d71dadbb61acbde598950ddb3bdedb41961a345fb5407541309c18f6e89ebe",
+        "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_scatter.sv": "fbb1ada30aecb7c33a4f84ec7358806a97863ca5556188cb6475c0232dee7c0f",
+        "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_bank128.sv": "28b404bc01d8722b2cac8aadf058d48edb4c99d6128f7b8872f971f8dda940d8",
+        "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_relay128.sv": "389a09f45fb0543854f96d4d950fd329cb556c88430c1e5fea82147c56034f1e",
+        "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_slice128_rel2.sv": "f0872362faf41c473b85f13b400d191930928c5b52dfb1972f220e1b05438ad5",
+        "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v": "6f87b48e0860f3645178d2973638322af7867280a6884809be5e2024b2d91828",
+        "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_wstage128.sv": "effa6053cf176b39cc7e237045c8505c4ee8343ea979cd22ef3bc542cd989457",
+        "rtl/dsrom_sys/s81_ph/test/tb_dsfd_vm_static_wstage128.sv": "01d4dec6c6744b21be79efc56ec6e14c002e8794eadf20c4171248a61c8c268c"
+      },
+      "log_sha256": {
+        "results/rtl/s81_vm_static_1014/wstage_macro/run_L2_base.log": "01539a737eca968c7771fe7c7ead839b1ba32fa2971f38ca12604fb827c21c9d",
+        "results/rtl/s81_vm_static_1014/wstage_macro/run_L20_mutant.log": "3a891466663ec1bbc2613db043822d9ffbd48738b1c4bf3a81c1bc123b3c4431",
+        "results/rtl/s81_vm_static_1014/wstage_macro/run_L0_base.log": "6172d968e499fa552422a9bcbe1e72b59414a93f0d84360b1189ac836af8790d",
+        "results/rtl/s81_vm_static_1014/wstage_macro/run_L20_base.log": "7b231866310a925d6611c704dde57361a917205978016fa68610360e948408ae",
+        "results/rtl/s81_vm_static_1014/wstage_macro/run_L14_mutant.log": "f7d77143ac6b27103013205d55c2bc5bd6586c1471011e95443d7af35c42c2eb",
+        "results/rtl/s81_vm_static_1014/wstage_macro/run_L2_mutant.log": "de0a6746b2cc6fb390a85548dd328f6ec50bba3735b3fba95de0a8bac4cea555",
+        "results/rtl/s81_vm_static_1014/wstage_macro/run_L0_mutant.log": "495af53702912f92c89ba46e0af0f94c5129ef00381c2da2cbaf78509bc3d72c",
+        "results/rtl/s81_vm_static_1014/wstage_macro/run_L14_base.log": "1e980522d8100bd449524ca2ed5a9e5a5ec2f557127c1e7d302f67b23196e0d7"
+      },
+      "command": "static_wstage_gate.sh S O (script at0fe744ec8; current script extends optional dispatcher arguments)"
+    },
+    "wdispatch_macro": {
+      "unit": "oth-ubuntu-4059689-1792034388",
+      "positive_and_observed_mutant_pass": true,
+      "source_sha256": {
+        "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_rscatter.sv": "e4d71dadbb61acbde598950ddb3bdedb41961a345fb5407541309c18f6e89ebe",
+        "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_scatter.sv": "fbb1ada30aecb7c33a4f84ec7358806a97863ca5556188cb6475c0232dee7c0f",
+        "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_bank128.sv": "28b404bc01d8722b2cac8aadf058d48edb4c99d6128f7b8872f971f8dda940d8",
+        "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_relay128.sv": "389a09f45fb0543854f96d4d950fd329cb556c88430c1e5fea82147c56034f1e",
+        "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_slice128_rel2.sv": "f0872362faf41c473b85f13b400d191930928c5b52dfb1972f220e1b05438ad5",
+        "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v": "6f87b48e0860f3645178d2973638322af7867280a6884809be5e2024b2d91828",
+        "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_wstage128.sv": "effa6053cf176b39cc7e237045c8505c4ee8343ea979cd22ef3bc542cd989457",
+        "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_wdispatch128.sv": "28bd561ffe0bf79ccd9de80b657f5ac04c1f2678741233eb6f19240c4d82ea81",
+        "rtl/dsrom_sys/s81_ph/test/tb_dsfd_vm_static_wdispatch128.sv": "3513c934cbe4835a4911aec574b56c73712e3abcef2de5d77776297a721a06cd"
+      },
+      "log_sha256": {
+        "results/rtl/s81_vm_static_1014/wdispatch_macro/run_L2_base.log": "d3236e3932b78fa1b6d4768463cf66ee10bb696ac4c0a8574c44cdd0dca00d5f",
+        "results/rtl/s81_vm_static_1014/wdispatch_macro/run_L20_mutant.log": "e4d29ca7a69af52e37bc289376b6ea9a12ce32f2e3cfcb889a5d2a38d2d3023b",
+        "results/rtl/s81_vm_static_1014/wdispatch_macro/run_L0_base.log": "fa1100e7755943a450fccbe784103ca1b466d5aa58b8beeb92a7768654a99a82",
+        "results/rtl/s81_vm_static_1014/wdispatch_macro/run_L20_base.log": "5bf301abe7cc1705ca5130474e3df675e681258ba40835fb942a5c4aea96ff19",
+        "results/rtl/s81_vm_static_1014/wdispatch_macro/run_L14_mutant.log": "50ff91b4e6edec6fd2191e934b5d595c918cc1683b19379f685f2decc3515994",
+        "results/rtl/s81_vm_static_1014/wdispatch_macro/run_L2_mutant.log": "e48e6cb910675c41857b09033fd6e1cedb9c396ace04461f7da5ca464e5e106a",
+        "results/rtl/s81_vm_static_1014/wdispatch_macro/run_L0_mutant.log": "8351882cbbe1d5b0028bc4423bdcc7959b703513745257f60edf60fca30b6566",
+        "results/rtl/s81_vm_static_1014/wdispatch_macro/run_L14_base.log": "dcfef0f3aadf80415e2d3492aed92e3b2cb8d23e637164c83bc8b230e2ddc725"
+      },
+      "command": "static_wstage_gate.sh S O tb_dsfd_vm_static_wdispatch128 OT_VM_WDISPATCH_MUT_SLOT dispatch_inputs"
+    }
+  }
+}

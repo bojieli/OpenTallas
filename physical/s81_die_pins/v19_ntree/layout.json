@@ -7,20 +7,20 @@
   "base": "sub_layouts.ot_s81_hc_cth (v13, 740.88)",
   "outline": [
    576.72,
-   749.52
+   751.68
   ],
-  "change": "ctfx row ot_s81_hc_ctfx_nt 576.72 x 25.92 (was ot_s81_hc_ctfx 12.96): every row below it +12.96; ctfs row ot_s81_hc_ctfs_nt 576.72 x 25.92 (same outline); spare 2.16 -> 0; region 740.88 -> 749.52",
+  "change": "ctfx row ot_s81_hc_ctfx_nt 576.72 x 25.92 (was ot_s81_hc_ctfx 12.96): every row below it +12.96; ctfs row ot_s81_hc_ctfs_nt 576.72 x 25.92 (same outline); spare 2.16 -> 0; region 740.88 -> 749.52; corrected total height751.68 (old2.16spareconsumed)",
   "rows_shift": {
    "ctfx_nt": 365.04,
-   "ctfn": 391.0,
+   "ctfn": 390.96,
    "ctpl[half1]": 416.88,
    "ctnl[j=2]": 535.68,
    "ctnl[j=3]": 630.72,
    "ctfs_nt": 725.76
   },
   "slab_growth_um": {
-   "sp_hc_s (10 rows)": 86.4,
-   "sp_hc_t (12 rows)": 103.68
+   "sp_hc_s (10 rows)": 108.0,
+   "sp_hc_t (12 rows)": 129.6
   },
   "lanes": {
    "dl": [
@@ -52,7 +52,7 @@
    ],
    "cncla_C1": [
     150.12,
-    1159.2,
+    957.96,
     138.24,
     151.2
    ],
@@ -70,7 +70,7 @@
    ],
    "cnclb_C1": [
     288.36,
-    1159.2,
+    957.96,
     138.24,
     151.2
    ],
@@ -82,13 +82,13 @@
    ],
    "cntree (CLOSED h2 view, R0)": [
     197.64,
-    957.6,
+    1130.4,
     181.44,
     181.44
    ],
    "cnrsq": [
     0.0,
-    957.6,
+    1130.4,
     138.24,
     138.24
    ]
@@ -108,7 +108,8 @@
    "C1 ex (512) S face -> cntree S face around the cntree (~20 + 181 + 60 = ~260 um, W or E side)",
    "cntree N ss/ss_v/tflt -> cnrsq E face (~200 um)",
    "far tiles -> collector N inputs and cnrsq N (f_fv/f_fc/f_eps, ul back): parent wiring, <= 500 um to be measured on the HC parent placement (relay only if over)"
-  ]
+  ],
+  "verification": "7ae73171b actual CLOSED TT/FF faces:1332dynamic bits0fail max392.784um,minsetup57.6069/minhold70.3381ps; newngo pending routedview"
  },
  "pin_files": [
   "physical/s81_die_pins/v19_ntree/ot_s81_hc_ctfx_nt.json",
