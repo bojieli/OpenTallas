@@ -305,6 +305,163 @@
           "source_dependency": "57066e704"
         }
       ]
+    },
+    "D_registered_component": {
+      "source_commit": "adf0ef9d5",
+      "proof_commit": "f7561ce17",
+      "receipt": "results/arch/hbm_attention_static_1015/pv_local_D_registered_gate/receipt.json",
+      "passed": true,
+      "full_native_qualified": false,
+      "physical_qualified": false,
+      "extra_pipeline_edges": 2,
+      "VM_commits_per_record": 128,
+      "files": [
+        {
+          "path": "rtl/hdc/v41x/static/ot_hbm_attn_pv_serializer_local.sv",
+          "sha256": "1acef905baf503c6488107b4465c393a519245a809718c4b9039cf37ec789918",
+          "source_dependency": "adf0ef9d5"
+        },
+        {
+          "path": "rtl/hdc/v41x/static/ot_hbm_attn_pv_group_gather_registered.sv",
+          "sha256": "400f4613930d48b856637f6ff36648d62603069df8e032cc9f1317280bf78f0a",
+          "source_dependency": "adf0ef9d5"
+        },
+        {
+          "path": "rtl/hdc/v41x/static/ot_hbm_attn_pv_serializer_local_registered.sv",
+          "sha256": "10295539b55b33a8c70745faab64f9a6861bace16dc6a844824662a584a8290f",
+          "source_dependency": "adf0ef9d5"
+        },
+        {
+          "path": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.v",
+          "sha256": "9024999f58109d0031ef989d101f5a537dabaf185e6348d32305aec58af8aafa",
+          "source_dependency": "adf0ef9d5"
+        },
+        {
+          "path": "rtl/test/hbm_accel/generic/tb_hbm_attn_pv_serializer_local_registered.sv",
+          "sha256": "139f8c2a9d293e1affd36236fd6ed9796dce6adc8de63d132a23c6dd6d20ee2d",
+          "source_dependency": "adf0ef9d5"
+        },
+        {
+          "path": "tools/hbm_static_attention/run_pv_serializer_local_registered.sh",
+          "sha256": "5b0bf04613831e01eefbb4ce850c205503fc4313cf9bfd7844ab432b2ef649f6",
+          "source_dependency": "adf0ef9d5"
+        }
+      ]
+    },
+    "D_registered_currentbank_NE": {
+      "source_commit": "adf0ef9d5",
+      "proof_commit": "f7561ce17",
+      "receipt": "results/arch/hbm_attention_static_1015/pv_local_D_registered_gate/receipt.json",
+      "passed": true,
+      "full_native_qualified": false,
+      "physical_qualified": false,
+      "extra_pipeline_edges": 2,
+      "VM_commits_per_record": 128,
+      "files": [
+        {
+          "path": "rtl/hdc/v41x/static/ot_hbm_attn_pv_serializer_local.sv",
+          "sha256": "1acef905baf503c6488107b4465c393a519245a809718c4b9039cf37ec789918",
+          "source_dependency": "adf0ef9d5"
+        },
+        {
+          "path": "rtl/hdc/v41x/static/ot_hbm_attn_pv_group_gather_registered.sv",
+          "sha256": "400f4613930d48b856637f6ff36648d62603069df8e032cc9f1317280bf78f0a",
+          "source_dependency": "adf0ef9d5"
+        },
+        {
+          "path": "rtl/hdc/v41x/static/ot_hbm_attn_pv_serializer_local_registered.sv",
+          "sha256": "10295539b55b33a8c70745faab64f9a6861bace16dc6a844824662a584a8290f",
+          "source_dependency": "adf0ef9d5"
+        },
+        {
+          "path": "rtl/hdc/v41x/static/ot_hbm_attn_pv_native_output_local_registered.sv",
+          "sha256": "448295dc7b884b5cc068d77fe85f58c917644601e973f867e0eae4b9aab1a025",
+          "source_dependency": "adf0ef9d5"
+        },
+        {
+          "path": "rtl/hbm_accel/generic/vm/static/ot_vms_bank_static.sv",
+          "sha256": "7b2e2fbafead30cbabc427303bb339da070645637af9d1a69f0dbdaa0a88ee53",
+          "source_dependency": "9b6420df2 current7b2"
+        },
+        {
+          "path": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.v",
+          "sha256": "9024999f58109d0031ef989d101f5a537dabaf185e6348d32305aec58af8aafa",
+          "source_dependency": "adf0ef9d5"
+        },
+        {
+          "path": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v",
+          "sha256": "6530a2ef457f260a942e067b556ff55d75f931350af5807cfd6b05cd5e1ff380",
+          "source_dependency": "adf0ef9d5"
+        },
+        {
+          "path": "rtl/test/hbm_accel/generic/tb_hbm_attn_pv_native_output_local_registered.sv",
+          "sha256": "1cd81797e7608e81c161d6af3424b9d81f602bdad3c7e33e476e898115cc004f",
+          "source_dependency": "adf0ef9d5"
+        },
+        {
+          "path": "tools/hbm_static_attention/run_pv_native_output_local_registered.sh",
+          "sha256": "0946d991eec8ce89401e945c516cf1a3d6b54ce4a59ea823f11f4c5523a32004",
+          "source_dependency": "adf0ef9d5"
+        }
+      ]
+    },
+    "D_registered_native_overlap": {
+      "source_commit": "adf0ef9d5",
+      "proof_commit": "f7561ce17",
+      "receipt": "results/arch/hbm_attention_static_1015/pv_local_D_registered_overlap_gate/receipt.json",
+      "passed": true,
+      "full_native_qualified": false,
+      "physical_qualified": false,
+      "extra_pipeline_edges": 2,
+      "VM_commits_per_record": 128,
+      "files": [
+        {
+          "path": "rtl/hdc/v41x/static/ot_hbm_attn_pv_serializer_local.sv",
+          "sha256": "1acef905baf503c6488107b4465c393a519245a809718c4b9039cf37ec789918",
+          "source_dependency": "adf0ef9d5"
+        },
+        {
+          "path": "rtl/hdc/v41x/static/ot_hbm_attn_pv_group_gather_registered.sv",
+          "sha256": "400f4613930d48b856637f6ff36648d62603069df8e032cc9f1317280bf78f0a",
+          "source_dependency": "adf0ef9d5"
+        },
+        {
+          "path": "rtl/hdc/v41x/static/ot_hbm_attn_pv_serializer_local_registered.sv",
+          "sha256": "10295539b55b33a8c70745faab64f9a6861bace16dc6a844824662a584a8290f",
+          "source_dependency": "adf0ef9d5"
+        },
+        {
+          "path": "rtl/hdc/v41x/static/ot_hbm_attn_pv_native_output_local_registered.sv",
+          "sha256": "448295dc7b884b5cc068d77fe85f58c917644601e973f867e0eae4b9aab1a025",
+          "source_dependency": "adf0ef9d5"
+        },
+        {
+          "path": "rtl/hbm_accel/generic/vm/static/ot_vms_bank_static.sv",
+          "sha256": "7b2e2fbafead30cbabc427303bb339da070645637af9d1a69f0dbdaa0a88ee53",
+          "source_dependency": "9b6420df2 current7b2"
+        },
+        {
+          "path": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.v",
+          "sha256": "9024999f58109d0031ef989d101f5a537dabaf185e6348d32305aec58af8aafa",
+          "source_dependency": "adf0ef9d5"
+        },
+        {
+          "path": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v",
+          "sha256": "6530a2ef457f260a942e067b556ff55d75f931350af5807cfd6b05cd5e1ff380",
+          "source_dependency": "adf0ef9d5"
+        },
+        {
+          "path": "rtl/test/hbm_accel/generic/tb_hbm_attn_pv_native_output_local_registered_overlap.sv",
+          "sha256": "2b27a27f2b2f8076cbb75837e78d4f35f03f46c7e263a0834c88d89102c9022f",
+          "source_dependency": "f7561ce17"
+        },
+        {
+          "path": "tools/hbm_static_attention/run_pv_native_output_local_registered_overlap.sh",
+          "sha256": "fe9de0fefae3b2821d842d03885b72e4396b967695429774de0ccd60027f1d21",
+          "source_dependency": "f7561ce17"
+        }
+      ]
     }
-  }
+  },
+  "registered_D_minimal_dependency": "Source localtileleaf655f63e8d +registered gather/parent/nativeadapter/TB/runners adf0ef9d5 +nativeoverlapTB/runner f7561ce17; current7b2 VMbank and actual macros. NoQP/QK/groupedstaging/transpose orzero-stagegroupmuxmodule dependency."
 }
