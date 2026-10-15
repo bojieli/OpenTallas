@@ -1,0 +1,22 @@
+{
+  "scope": "actual Yosys generic scalar netlist, NOT Liberty physical mapping",
+  "source_sha256": "51a1c53ef84e2a948a0479a56a3a71967de94828228c7b576e1a7b3f70879786",
+  "clock_ff_counts": {
+    "clk_input[0]": 67,
+    "clk_input[1]": 1219,
+    "clk_input[2]": 1444,
+    "clk_input[3]": 208,
+    "clk_output[0]": 516,
+    "clk_output[1]": 805,
+    "clk_output[2]": 805,
+    "clk_output[3]": 801
+  },
+  "total_clock_ff": 5865,
+  "unattributed_ff": [],
+  "ff_cell_types": {
+    "$_DFF_P_": 5720,
+    "$_DFF_PN0_": 17,
+    "$_SDFF_PP0_": 128
+  },
+  "total_generic_cells": 8561
+}
