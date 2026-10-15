@@ -1,5 +1,5 @@
 {
- "name": "dsfd_gth_rw_pin_repair_1015-pinrepair1-COMMIT",
+ "name": "dsfd_gth_rw_pin_repair_1015-pinrepair1-e74771a9c",
  "block": "dsfd_gth_rw",
  "ref_tile": true,
  "owner": "Codex:s81_hard_physical",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 48,
  "source": {
   "branch": "codex/s81-hard-physical-1015",
-  "commit": "COMMIT",
+  "commit": "e74771a9c",
   "extra_paths": [
    "rtl/dsrom_sys/s81_ph",
    "rtl/dsrom_sys/s81_ctrl",
@@ -162,7 +162,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/dsfd_gth_rw/dsfd_gth_rw_pin_repair_1015-pinrepair1-COMMIT"
+   "to": "results/rtl/ref_tile/dsfd_gth_rw/dsfd_gth_rw_pin_repair_1015-pinrepair1-e74771a9c"
   }
  ],
  "cycles_added": 0,
