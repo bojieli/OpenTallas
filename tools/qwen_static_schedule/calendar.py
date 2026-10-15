@@ -11,7 +11,10 @@ import argparse
 import hashlib
 import json
 import math
+import sys
 from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+import hdc_isa as ISA
 
 
 class ScheduleError(ValueError):
@@ -45,7 +48,7 @@ def inventory(programs):
             word = int(text, 16)
             if not 0 <= word < 1 << 1024:
                 raise ScheduleError('instruction exceeds actual 1024-bit ISA')
-            result.append(dict(stage=stage, pc=pc, word=f'{word:0256x}',
+            result.append(dict(stage=stage, pc=pc, word=f'{word:0256x}', unit=ISA.decode(word)['unit'],
                                program_sha256=hashlib.sha256(raw).hexdigest()))
     return result
 
@@ -89,6 +92,8 @@ def compile_calendar(programs, contract, root):
         impl = implementations[key]
         if impl['word'].lower().zfill(256) != actual['word']:
             raise ScheduleError(f'encoded instruction mismatch: {key}')
+        if impl['unit'] != actual['unit']:
+            raise ScheduleError(f'native owner differs from actual instruction unit: {key}')
         if not impl.get('rtl_instance') or not impl.get('rtl_module'):
             raise ScheduleError(f'missing native instance/module: {key}')
         clock = clocks[impl['clock']]
