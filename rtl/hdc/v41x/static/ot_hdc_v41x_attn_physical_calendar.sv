@@ -262,6 +262,7 @@ module ot_hdc_v41x_attn_physical_calendar #(
     wire fl_go = slot_fill;
     // q.k issue (ILV: after the fill and the p.v beat of the cycle)
     wire qk_rows_ok = (wptr >= T) || (qk_row + NL <= wptr);
+    wire [NT-1:0] transpose_faults;
     wire qk_admissible = act && !phase_pv && (q_cnt == H) && (qk_row < T) && qk_rows_ok &&
                  !((ILV != 0) && (((NSTAGE == 1) && fl_go) || pv_go));
     wire qk_go=slot_qk;
@@ -269,7 +270,7 @@ module ot_hdc_v41x_attn_physical_calendar #(
     else if((job_v&&(!job_ready||job_rows==0||job_rows>TROWS))||
       (q_v&&(!q_ready||!q_present))||(kv_v&&(!kv_ready||!kv_present))||(p_v&&(!p_ready||!p_present))||
       (slot_qk&&!qk_admissible)||(slot_fill&&!fill_admissible)||(slot_pv&&!pv_go_raw)||
-      (slot_qk&&slot_fill)||(slot_qk&&slot_pv))calendar_fault<=1;
+      (slot_qk&&slot_fill)||(slot_qk&&slot_pv)||(|transpose_faults))calendar_fault<=1;
     wire [BW-1:0] iss_bank = (pl_blk == iss_blk) ? ((pl_word == 0) ? nb_p : pl_bank) : blk_bank[iss_blk % BD];
     assign qk_iss = qk_go;
     assign pv_iss = pv_go;
@@ -562,7 +563,7 @@ module ot_hdc_v41x_attn_physical_calendar #(
                     .sel_i((XD != 0) ? pv_go_d : pv_go), .qk_ib(qk_x),
                     .col(tr_col[gk*TD*18 +: TD*18]), .eib(eib_t));
             end else if (PHYS == 0) begin : g_real
-                ot_hdc_v41x_attn_tr #(.TD(TD), .DPT(DPT), .NL(NL), .XOFF((gk*DPT) % 32), .REPL(REPL)) u_tr (
+                ot_hbm_attn_transpose_regs #(.XOFF((gk*DPT) % 32)) u_tr (
                     .clk(clk), .rst_n(rst_n),
                     .w_en_i((XD != 0) ? fill_wr : (REPL != 0) ? (fl_go && ((NSTAGE == 2) || !qk_go)) : fill_wr),
                     .w_half_i((XD != 0) ? fill_blk_d[0] : (REPL != 0) ? fl_blk[0] : fill_blk_d[0]),
@@ -571,7 +572,7 @@ module ot_hdc_v41x_attn_physical_calendar #(
                     .r_half_i((XD != 0) ? iss_blk_d[0] : (REPL != 0) ? iss_blk[0] : e_iss_blk[0]),
                     .r_c_i((XD != 0) ? iss_c_d : (REPL != 0) ? iss_c : e_iss_c),
                     .sel_i((XD != 0) ? pv_go_d : pv_go), .qk_ib(qk_ib[gk*TD*18 +: TD*18]),
-                    .col(tr_col[gk*TD*18 +: TD*18]), .eib(eib_t));
+                    .col(tr_col[gk*TD*18 +: TD*18]), .eib(eib_t), .fault(transpose_faults[gk]));
             end else begin : g_phs
                 ot_hdc_v41x_attn_tr_phs #(.TD(TD), .DPT(DPT), .NL(NL), .XOFF((gk*DPT) % 32), .REPL(REPL)) u_tr (
                     .clk(clk), .rst_n(rst_n),
