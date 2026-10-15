@@ -96,7 +96,8 @@
     "sha256": "e888897cb90b0196cb2681c681c49f68b05d49951aff11c90e4e7ab5f0207a8d",
     "status": "PASS_NINE_FULL_ROW_PHASE_CASES_AND_THREE_MUTANTS_COMPONENT_ONLY",
     "DUT_and_FIFO_reset_hashes_match_actual_census_inputs": true,
-    "scope": "Component only; no inherited SYS1 numeric, full-native throughput or physical qualification"
+    "scope": "Component only; no inherited SYS1 numeric, full-native throughput or physical qualification",
+    "actual_SRAM_provider_binding": "native320_provider_binding.json"
   },
   "remote_input_script_output_hashes_verified": {
     "region.sv": "2dda0c920f3c295bb27507ef08da28e8ab418864e86cef56a68bbf8b7b9a6f96",
@@ -138,5 +139,6 @@
     "stream_clk": 272,
     "hbm_clk": 578
   },
-  "wrapper_top_has_only_single_actual_helper_cell": true
+  "wrapper_top_has_only_single_actual_helper_cell": true,
+  "provider_scope_notice": "Actual component provider d980 independently matches accepted dba after ONLY line2 generatorcomment token deletion; parent44/92 idealaf5 gates remain diagnostic. Census macro itself is blackboxed, not a SRAM simulation."
 }

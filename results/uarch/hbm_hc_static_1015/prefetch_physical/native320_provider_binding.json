@@ -1,0 +1,41 @@
+{
+  "schema": "opentallas.hc.native320.literal-SRAM-provider-binding.v1",
+  "scope": "Independent literal full-byte audit of actual remote native320 compiledprovider against accepted git model; no filename inference",
+  "actual_compiled_provider": {
+    "host": "ot-epyc4",
+    "path": "/srv/opentallas-scratch/claude/codex-hc-prefetch-resident-1015/frozen/ot_sram_1r1w_128x256_m1_r2c2.v",
+    "sha256": "d9801653d16576f40306c1fb1d01928e88e7371a3897b616e31d3e3df917cb2d",
+    "bytes": 6679,
+    "functional_receipt_commit": "d81e5236e",
+    "functional_receipt_path": "results/rtl/hbm_hc_static_1015/weight_prefetch_resident/receipt.json"
+  },
+  "accepted_git_provider": {
+    "commit": "e98d76186dbcdd4c0220c7985d9b03ed27c4365a",
+    "path": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v",
+    "sha256": "dba769863f502de28853a78ac30544a406c7cb66fd3249019ef9fa5a5b73e36e",
+    "bytes": 6668
+  },
+  "normalization": {
+    "differing_line_numbers": [
+      2
+    ],
+    "operation": "Delete exactly one literal +aligned-v2 token from line2 generator-version COMMENT only; change no other bytes",
+    "actual_line2": "// ot_sram_1r1w_128x256_m1_r2c2: ASAP7 1R1W SRAM 128 x 256, mux 1, 1 bank(s), 2 spare row(s), 2 spare IO column(s); OpenTallas tools/mem_compiler/sram_gen.py v1.0+aligned-v2",
+    "accepted_line2": "// ot_sram_1r1w_128x256_m1_r2c2: ASAP7 1R1W SRAM 128 x 256, mux 1, 1 bank(s), 2 spare row(s), 2 spare IO column(s); OpenTallas tools/mem_compiler/sram_gen.py v1.0",
+    "full_normalized_bytes_equal": true,
+    "normalized_sha256": "dba769863f502de28853a78ac30544a406c7cb66fd3249019ef9fa5a5b73e36e",
+    "all_other_lines_byte_identical": true
+  },
+  "binding_to_own_receipts": {
+    "region_census_run.json": "Functional d81 compiledprovider d980 matches this audited actualremote file; census itself blackboxes macro.lib and does NOT simulate SRAM behavior",
+    "canonical_sram_v2_abi_audit.json": "Preserves both actual d980 and accepted dba hashes; this tighter audit replaces broad comment/whitespace normalization as provider-binding evidence",
+    "region_root_counts.json": "Unchanged: physical source sequential counts use blackboxedSRAM clockpins; provider behavioral substitutions do not confer timing qualification"
+  },
+  "diagnostic_provider_af5_policy": "Parent44/92 nativegates using ideal128sim af5 that ignores masks are DIAGNOSTIC ONLY. This audit does not rehabilitate them, and does not equate that provider with d980/dba. Actual per-bit mask/all128address proof is separately owned by functional parent.",
+  "limitations": [
+    "No standalone SRAM address/mask simulation performed by this audit",
+    "No installation/ACK/fullSYS1 or native-chip qualification",
+    "No physical timing/route qualification"
+  ],
+  "independent_provider_behavior_gate_owner": "/root/h_hc_sfu/hc_static_engine/hc_weight_prefetch"
+}
