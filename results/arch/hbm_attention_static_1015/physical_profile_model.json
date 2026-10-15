@@ -65,5 +65,29 @@
     "full_H16_headgroups": 512,
     "mapping_to_quadrant_half_parents": "pending exact H-DIE instance inventory; no additional physical replication authorized",
     "inflight_6656d5af7": "HG4 functional organization; proves arithmetic/control only"
+  },
+  "functional_native_boundary": {
+    "source": "rtl/hdc/v41x/static/ot_hbm_attention_physical_static_engine.sv",
+    "query_rq_bits": 136,
+    "query_rr_bits": 2056,
+    "KV_payload_bits_per_edge": 8480,
+    "KV_rows_per_edge": 2,
+    "P_payload_bits_per_edge": 1024,
+    "QK_payload_bits_per_edge": 1024,
+    "QK_fault_bits_per_edge": 32,
+    "PV_payload_bits_per_edge": 16384,
+    "PV_fault_bits_per_edge": 512,
+    "PV_dimension_beats_per_H16_D512_record": 16,
+    "VM_write_payload_bits_per_edge": 2048,
+    "PV_VM_commit_edges_min": 128,
+    "QK_VM_commit_edges_min": {
+      "128": 32,
+      "640": 160
+    },
+    "PV_native_layout": "pending canonical output layout from H-VM; actualsource index tile*H+head withdim=tile*16+pv_c",
+    "mapped_cell_count": null,
+    "clock_sink_count": null,
+    "candidate_bbox": null,
+    "qualification": false
   }
 }
