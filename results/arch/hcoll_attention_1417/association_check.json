@@ -5,22 +5,31 @@
       "tokens": 128,
       "checked": 64,
       "wrong_local_first_mismatches": 0,
-      "events": 2240,
-      "finish_cycle": 2689
+      "events": 448,
+      "finish_cycle": 576,
+      "edges_per_batch": 9,
+      "output_words": 512,
+      "scope": "finite-buffer serial component calendar, not end-to-end token throughput"
     },
     {
       "tokens": 640,
       "checked": 64,
       "wrong_local_first_mismatches": 0,
-      "events": 5056,
-      "finish_cycle": 6273
+      "events": 5440,
+      "finish_cycle": 6464,
+      "edges_per_batch": 101,
+      "output_words": 512,
+      "scope": "finite-buffer serial component calendar, not end-to-end token throughput"
     },
     {
       "tokens": 8192,
       "checked": 64,
       "wrong_local_first_mismatches": 43,
-      "events": 88960,
-      "finish_cycle": 112897
+      "events": 89728,
+      "finish_cycle": 113280,
+      "edges_per_batch": 885,
+      "output_words": 1024,
+      "scope": "finite-buffer serial component calendar, not end-to-end token throughput"
     }
   ],
   "mutants": [
