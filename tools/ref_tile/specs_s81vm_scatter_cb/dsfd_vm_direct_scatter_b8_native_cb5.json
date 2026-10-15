@@ -1,0 +1,146 @@
+{
+ "name": "dsfd_vm_direct_scatter_b8_native_cb5",
+ "top": "dsfd_vm_static_scatter_b8_out_B8",
+ "kind": "tile",
+ "sources": [
+  "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_scatter_b8_out.sv",
+  "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_direct_write_native_profiles.sv",
+  "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_write_capture128.sv"
+ ],
+ "clock": "cts",
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 172.8,
+  "h": 86.4,
+  "exact": true
+ },
+ "pins": {
+  "N": [
+   "i_v",
+   "i_we",
+   "i_row",
+   "i_mask",
+   "i_data",
+   "i_tag"
+  ],
+  "S": [
+   "o_v",
+   "o_we",
+   "o_addr",
+   "o_mask",
+   "o_data",
+   "o_tag"
+  ],
+  "E": [],
+  "W": [
+   "ck",
+   "rst_n",
+   "fault"
+  ]
+ },
+ "io_tcl": "physical/s81_die_pins/v20_vm_direct_write/dsfd_vm_static_scatter_b8_out.tcl",
+ "params": {
+  "PIPE": 1
+ },
+ "layer_cap": "M5",
+ "macros": [],
+ "route": {
+  "pd": 0.4,
+  "threads": 4,
+  "peak_ram_gb": 8,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "cts_sink": {
+   "size": 24,
+   "diameter_um": 30,
+   "extra": "-distance_between_buffers 15"
+  }
+ },
+ "recipe": 2,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R",
+  "out_cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "structural_change": "cb5 = cb4 (PIPE=1) with the fixed sender hold stage sized up HB1 -> HB2 on the outputs. cb4 b8 routed FF -14.77 = output ports only (in->reg +36.88, reg->reg +17.91); the same kit closed b0/b16/b24 at FF +4.3..+6.4. Launch headroom measured on the closed cb4/cb4b views: native launch 148.9 ps vs 220 (b24). Same RTL/pins/outline/root.",
+ "slot_change_request": {
+  "contract": "S81 static VM direct q8 native option",
+  "version": "30421c7c5/a60002977/eaca93a88",
+  "why": "Actual assigned pins/registered endpoint geometry; representativeE/B0 only, production parent nativephase/cut/calendar stillopen"
+ },
+ "job": {
+  "owner": "claude:S-ELEM-A S81 VM owner",
+  "branch": "claude/s81-vm-elema-1015",
+  "tag": "hb2o5",
+  "purpose": "Composed-budget native re-close of the direct-write scatter: native pin audit launch<=220/capture<=190 with exact/mutant benches; same RTL/pins/outline/2 stages",
+  "extra_paths": [
+   "physical/s81_die_pins/v20_vm_direct_write",
+   "physical/s81_vm_direct_write_native_1015",
+   "rtl/dsrom_sys/s81_ph/test",
+   "rtl/dsrom_sys/s81_ph/vm",
+   "tools/s81_vm",
+   "tools/s81_vm_direct_write"
+  ],
+  "benches": [
+   {
+    "name": "exact_actual_scatter_b8",
+    "cmd": "python3 tools/s81_vm_direct_write/profile_bench.py --pipe 1 --profile scatter_b8 --out {RUN}/bench/scatter_b8",
+    "expect": "pass",
+    "pass_regex": "PROFILE_WRITE_PASS records 8000",
+    "min_count_regex": "records (\\d+)",
+    "threads": 1,
+    "peak_ram_gb": 1,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "mutant_actual_scatter_b8",
+    "cmd": "python3 tools/s81_vm_direct_write/profile_bench.py --pipe 1 --profile scatter_b8 --mutant --out {RUN}/bench/scatter_b8_mut",
+    "expect": "fail",
+    "fail_regex": "PROFILE_WRITE_FAIL records 8000",
+    "min_count_regex": "records (\\d+)",
+    "threads": 1,
+    "peak_ram_gb": 1,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "mutant_actual_scatter_valid",
+    "cmd": "PIPE=1 bash tools/s81_vm_direct_write/bench.sh {RUN}/bench/scatter_valid scatter valid 2",
+    "expect": "fail",
+    "fail_regex": "TB_VM_DIRECT_SCATTER FAIL mode 2 checks 1003 bad",
+    "min_count_regex": "checks (\\d+)",
+    "threads": 1,
+    "peak_ram_gb": 1,
+    "needs": [
+     "iverilog"
+    ]
+   }
+  ],
+  "cycles_added": 1
+ },
+ "children": [],
+ "inter": [],
+ "io_budget": {
+  "in": 0.55,
+  "out": 0.55
+ },
+ "reroute_reason": {
+  "kind": "rtl_change",
+  "cell": "dsfd_vm_static_scatter_b8_out_B8",
+  "source": "loop job dsfd_vm_direct_scatter_b8_native_cb4-pipe4-72a1e27a1 NEEDS_RTL TT +56.73 / FF -14.77 (worst_output_port -14.77)",
+  "fix": "fixed output hold stage HB1 -> HB2 within the measured 70 ps launch headroom; PIPE=1 RTL differs from closed cb3/nativepin views"
+ }
+}
