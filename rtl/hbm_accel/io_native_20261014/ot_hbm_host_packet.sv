@@ -126,10 +126,10 @@ module ot_hbm_host_packet #(parameter integer MUT=0)(
   if(h_wvalid&&h_wready)begin hb_w<=1;hb_data<=h_wdata;hb_strb<=h_wstrb;h_wready<=0;end
   if(hb_aw&&hb_w&&!hbw)begin hbw<=1;hb_req<=1;end
   if(h_arvalid&&h_arready)begin hbr<=1;hr_req<=1;hr_addr<=h_araddr;h_arready<=0;end
-  if(m_awvalid&&m_awready)begin md_aw<=1;md_addr<=m_awaddr;m_awready<=0;end
-  if(m_wvalid&&m_wready)begin md_w<=1;md_data<=m_wdata;md_strb<=m_wstrb;m_wready<=0;end
+  if(m_awvalid&&m_awready)begin if(m_awlen!==8'd0 || m_awsize!==3'd3)protocol_fault<=1; md_aw<=1;md_addr<=m_awaddr;m_awready<=0;end
+  if(m_wvalid&&m_wready)begin if(m_wlast!==1'b1)protocol_fault<=1; md_w<=1;md_data<=m_wdata;md_strb<=m_wstrb;m_wready<=0;end
   if(md_aw&&md_w&&!mdw)begin mdw<=1;md_req<=1;end
-  if(m_arvalid&&m_arready)begin mdr<=1;mr_req<=1;mr_addr<=m_araddr;m_arready<=0;end
+  if(m_arvalid&&m_arready)begin if(m_arlen!==8'd0 || m_arsize!==3'd3)protocol_fault<=1; mdr<=1;mr_req<=1;mr_addr<=m_araddr;m_arready<=0;end
   if(h_bvalid&&h_bready)begin h_bvalid<=0;hbw<=0;hb_aw<=0;hb_w<=0;end
   if(h_rvalid&&h_rready)begin h_rvalid<=0;hbr<=0;end
   if(m_bvalid&&m_bready)begin m_bvalid<=0;mdw<=0;md_aw<=0;md_w<=0;end
