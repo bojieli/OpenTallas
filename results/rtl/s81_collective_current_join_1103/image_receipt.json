@@ -1,0 +1,47 @@
+{
+  "abi": "opentallas.s81.collective-fixed-edge-rom.v3",
+  "control_bits": 468,
+  "rom_bits": 565,
+  "cycles": 2141,
+  "sha256": "72d87c33dd79ac50b8bd4554fa0121fece7b4201516c1bc7f7f4b25525b5ef39",
+  "latencies": {
+    "control_rom_synchronous_read_edges": 1,
+    "control_rom_idle_prefetch_edges": 1,
+    "control_rom_output_capture_edges_hidden_by_prefetch": 1,
+    "control_rom_initialization_extra_edges": 1,
+    "controller_command_register_edges": 1,
+    "controller_output_register_edges": 1,
+    "vm_request_to_issue_edges": 14,
+    "issue_to_gather_edges": 11,
+    "gather_to_vm_source_edges": 2,
+    "hc_reduce_to_write_edges": 19,
+    "vm_boundary_pin_capture_edges": 1,
+    "hc_reduce_to_write_control_edges": 18,
+    "commit_control_to_vm_pin_edges": 4,
+    "hc_write_control_to_vm_pin_edges": 3,
+    "hc_final_write_to_earliest_emit_edges": 1,
+    "done_rom_to_c_done_edges": 1
+  },
+  "macro": "ot_rom_4096x266_m8",
+  "macro_count": 3,
+  "macro_depth": 4096,
+  "macro_bank_files": [
+    {
+      "path": "/srv/opentallas-scratch/codex/s81-collective-current-1103/base/calendar.mem.b0.viamap.hex",
+      "sha256": "da650d0eb2bc821408b5763cce722c35f9df64caa36e5cbce8facb5e77a6537a",
+      "bank": 0
+    },
+    {
+      "path": "/srv/opentallas-scratch/codex/s81-collective-current-1103/base/calendar.mem.b1.viamap.hex",
+      "sha256": "ddeab25a47800e69c398fa98f3bc8bb74adf4c7232113a3b52fef9009391380a",
+      "bank": 1
+    },
+    {
+      "path": "/srv/opentallas-scratch/codex/s81-collective-current-1103/base/calendar.mem.b2.viamap.hex",
+      "sha256": "9f08e9ef0ef36c6cc040e6764d2a0031f08955f2ae02ad008d671a979607a85c",
+      "bank": 2
+    }
+  ],
+  "integration_ready": false,
+  "qualification": "actual ROM-backed controller component; native production source/phase/price acceptance is separate"
+}
