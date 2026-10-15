@@ -73,10 +73,21 @@ module tb_coll_tp8_static #(
             qfd_io_collective_static u_die (       // the die-name master (LU / LS by +define, = LATU / LATS)
                 .clk(clk), .clk_pfold0(clk), .clk_pfold1(clk), .clk_pfold2(clk), .clk_pfold3(clk),
                 .clk_xfold0(clk), .clk_xfold1(clk), .clk_xfold2(clk), .clk_xfold3(clk),
+                .rst_n(rst_n), .pkg_s(P[1:0]), .die_ps(D[0]),
+                .cmd_v(cmd_v), .cmd_mode(cmd_mode), .cmd_words(cmd_words), .cmd_tag(cmd_tag),
+                .in_valid(iv[g]), .in_data(id[g*FW +: FW]), .in_last(il[g]), .in_mode(im[g]), .in_tag(it[g*TAGW +: TAGW]),
+                .up_valid(upv[g]), .up_rec(uprec[g*PW +: PW]), .dp_valid(dpv[g]), .dp_rec(dprec[g*PW +: PW]),
+                .ur_valid(urv[g]), .ur_rec(urrec[g*RW +: RW]), .dr_valid(drv[g]), .dr_rec(drrec[g*RW +: RW]),
+                .sx0_valid(sxv[g*3]), .sx1_valid(sxv[g*3 + 1]), .sx2_valid(sxv[g*3 + 2]),
+                .sx0_rec(sxrec[(g*3)*PW +: PW]), .sx1_rec(sxrec[(g*3 + 1)*PW +: PW]), .sx2_rec(sxrec[(g*3 + 2)*PW +: PW]),
+                .sr0_valid(srv[g*3]), .sr1_valid(srv[g*3 + 1]), .sr2_valid(srv[g*3 + 2]),
+                .sr0_rec(srrec[(g*3)*PW +: PW]), .sr1_rec(srrec[(g*3 + 1)*PW +: PW]), .sr2_rec(srrec[(g*3 + 2)*PW +: PW]),
+                .out_valid(ov[g]), .out_data(od[g*FW +: FW]), .out_last(ol[g]), .out_rank(orank[g*3 +: 3]),
+                .out_err(oe[g]), .fault(flt[g]), .fault_code(fc[g*5 +: 5]),
+                .up_slot(), .ur_peer_slot(), .sx0_peer_slot(), .sx1_peer_slot(), .sx2_peer_slot(), .cmd_free());
 `else
             ot_coll_tp8_static #(.LU(LATU), .LS(LATS)) u_die (
                 .clk(clk), .clk_pfold({4{clk}}), .clk_xfold({4{clk}}),
-`endif
                 .rst_n(rst_n), .pkg_s(P[1:0]), .die_ps(D[0]),
                 .cmd_v(cmd_v), .cmd_mode(cmd_mode), .cmd_words(cmd_words), .cmd_tag(cmd_tag),
                 .in_valid(iv[g]), .in_data(id[g*FW +: FW]), .in_last(il[g]), .in_mode(im[g]), .in_tag(it[g*TAGW +: TAGW]),
@@ -85,7 +96,9 @@ module tb_coll_tp8_static #(
                 .sx_valid(sxv[g*3 +: 3]), .sx_rec(sxrec[g*3*PW +: 3*PW]), .sr_valid(srv[g*3 +: 3]),
                 .sr_rec(srrec[g*3*PW +: 3*PW]),
                 .out_valid(ov[g]), .out_data(od[g*FW +: FW]), .out_last(ol[g]), .out_rank(orank[g*3 +: 3]),
-                .out_err(oe[g]), .fault(flt[g]), .fault_code(fc[g*5 +: 5]));
+                .out_err(oe[g]), .fault(flt[g]), .fault_code(fc[g*5 +: 5]),
+                .up_slot(), .ur_peer_slot(), .sx_peer_slot(), .cmd_free());
+`endif
             tb_static_delay #(.W(PW), .L(LATU + XU)) u_up (.clk(clk), .cyc(cyc), .v_in(upv[g]), .d_in(uprec[g*PW +: PW]),
                 .v_out(dpv[g ^ 1]), .d_out(dprec[(g ^ 1)*PW +: PW]));
             tb_static_delay #(.W(RW), .L(LATU + XU)) u_ur (.clk(clk), .cyc(cyc), .v_in(urv[g]), .d_in(urrec[g*RW +: RW]),

@@ -88,7 +88,13 @@ module ot_coll_tp8_static #(
     output wire [2:0]        out_rank,
     output wire              out_err,
     output wire              fault,
-    output wire [4:0]        fault_code
+    output wire [4:0]        fault_code,
+    // compiled link calendar (schedule tokens only, never observed valids), each aligned with the cycle its record
+    // register is presented: the IO calendar (ot_coll_static_linkcal) derives every CDC / codec slot from these
+    output wire              up_slot,       // P record slot (up_valid = up_slot && the producer word was observed)
+    output wire              ur_peer_slot,  // the package peer's R send slot (= my dr arrival LU later)
+    output wire [2:0]        sx_peer_slot,  // SerDes port j: package (rank + 1 + j)'s send slot (= my sr arrival LS later)
+    output wire              cmd_free       // a command at this cycle is accepted (issuer fault check only)
 );
     localparam integer NS = FW / 128;
     localparam integer SL = 3 * ADD_LAT + 2;     // ot_coll_fold_slice red_in -> v_out (N 4, SEAM 1)
@@ -137,6 +143,10 @@ module ot_coll_tp8_static #(
     reg upv_q; reg [PW-1:0] uprec_q;
     always @(posedge clk) uprec_q <= ir_q;
     always @(posedge clk or negedge rs_p) if (!rs_p) upv_q <= 1'b0; else upv_q <= ta_v && iv_q;
+    reg upc_q;
+    always @(posedge clk or negedge rs_p) if (!rs_p) upc_q <= 1'b0; else upc_q <= ta_v;
+    assign up_slot  = upc_q;
+    assign cmd_free = can_cmd;
     assign up_valid = upv_q;
     assign up_rec   = uprec_q;
     wire [PW-1:0] pr_rd;
@@ -210,14 +220,22 @@ module ot_coll_tp8_static #(
     wire [FW-1:0] w_d = w_red ? pf_q : (g_d ? hi_q : lo_q);
     wire w_send = w_red ? (tc_v && tc_o) : (g_run && g_r == PK);
     wire [SEW-1:0] s_wd = {{(SEW-550){1'b0}}, w_v, w_r, w_od, w_mode, w_l, w_t, w_d};
-    reg sxv_q; reg [PW-1:0] sxr_q [0:2];
-    always @(posedge clk or negedge rs_s) if (!rs_s) sxv_q <= 1'b0; else sxv_q <= w_send;
+    reg [2:0] sxv_q; reg [PW-1:0] sxr_q [0:2];                    // one valid + record copy per SerDes face
+    always @(posedge clk or negedge rs_s) if (!rs_s) sxv_q <= 3'b0; else sxv_q <= {3{w_send}};
     genvar gj;
     generate for (gj = 0; gj < 3; gj = gj + 1) begin : g_sxo       // one registered copy per port (own face)
         always @(posedge clk) sxr_q[gj] <= {w_t, w_mode, w_l, w_d};
         assign sx_rec[gj*PW +: PW] = sxr_q[gj];
     end endgenerate
-    assign sx_valid = {3{sxv_q}};
+    assign sx_valid = sxv_q;
+    // peer send slots per SerDes port: reduce = the same owned words (equal die-in-package parity); gather = the
+    // hold cycle k whose rank field equals the peer package (PK + 1 + j)
+    reg [2:0] sxp_q;
+    always @(posedge clk or negedge rs_s) if (!rs_s) sxp_q <= 3'b0;
+        else sxp_q <= {w_red ? (tc_v && tc_o) : (g_run && g_r == PK + 2'd3),
+                       w_red ? (tc_v && tc_o) : (g_run && g_r == PK + 2'd2),
+                       w_red ? (tc_v && tc_o) : (g_run && g_r == PK + 2'd1)};
+    assign sx_peer_slot = sxp_q;
     wire [SEW-1:0] s_rd;
     genvar gm;
     generate for (gm = 0; gm < SEW / 128; gm = gm + 1) begin : g_sring
@@ -290,7 +308,10 @@ module ot_coll_tp8_static #(
     reg urv_q; reg [RW-1:0] urr_q;
     always @(posedge clk) urr_q <= {xe_q, te_l, xr_q};
     always @(posedge clk or negedge rs_r) if (!rs_r) urv_q <= 1'b0; else urv_q <= e_own;
+    reg urp_q;
+    always @(posedge clk or negedge rs_r) if (!rs_r) urp_q <= 1'b0; else urp_q <= te_v && !te_o;
     assign ur_valid = urv_q;
+    assign ur_peer_slot = urp_q;
     assign ur_rec   = urr_q;
     wire [PW-1:0] rr_rd;
 `ifdef OT_TP8S_MUT_RLAT
@@ -365,6 +386,13 @@ module ot_coll_static_ring #(parameter integer OFF = 20) (
     end else begin : g_sel
         reg [AW-6:0] rbs;
         always @(posedge clk) rbs <= ra[AW-1:5];
-        assign rd = rdb[rbs*546 +: 546];
+        // decoded bank select (one-hot AND-OR, constant-index slices: no wide runtime part-select)
+        reg [545:0] rsel;
+        integer kb;
+        always @(*) begin
+            rsel = 546'd0;
+            for (kb = 0; kb < B; kb = kb + 1) rsel = rsel | (rdb[kb*546 +: 546] & {546{rbs == kb}});
+        end
+        assign rd = rsel;
     end endgenerate
 endmodule

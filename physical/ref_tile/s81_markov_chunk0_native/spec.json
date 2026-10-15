@@ -20,7 +20,6 @@
  },
  "pins": {
   "S": [
-   "sum",
    "p"
   ],
   "N": [
@@ -53,7 +52,6 @@
   ],
   "pin_faces": {
    "S": [
-    "sum",
     "p"
    ],
    "N": [
@@ -71,9 +69,9 @@
   "reason": "true K25639root physical source partition; diagnostic candidate, native head parent and die allocation OPEN"
  },
  "job": {
-  "owner": "Codex:s81-rom-2250",
-  "branch": "codex/s81-rom-2250",
-  "tag": "g1",
+  "owner": "Claude:s81-elemB6-1014",
+  "branch": "claude/s81-elemB6-1014",
+  "tag": "pc1",
   "purpose": "Original K256PINREG1CUT511SPLIT9 row partitioned to39real clocks, ring skew preserves every original interface epoch; parent wires only. No thresholds relaxed.",
   "benches": [
    {
@@ -86,6 +84,17 @@
      "iverilog"
     ],
     "pass_regex": "all_native_checks_PASS"
+   },
+   {
+    "name": "native_mutant_dut",
+    "cmd": "python3 tools/s81/markov_native_bench.py {RUN}/native_dut chunk0!",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 3,
+    "needs": [
+     "iverilog"
+    ],
+    "fail_regex": "MARKOV_NATIVE_DUT FAIL"
    }
   ],
   "views_to": "physical/ref_tile/s81_markov_chunk0_native/views",
@@ -103,7 +112,7 @@
  "io_tcl": "physical/ref_tile_specs/s81_markov_native/chunk0_pins.tcl",
  "reroute_reason": {
   "kind": "rtl_change",
-  "why": "genuine fixedK256 native source partition replaces unclosed cancelled flat43267sink requirement"
+  "why": "native capture (tools/hier_contract/native_pin_audit.py: CLOSED view capture 278-438 ps vs 190, die hop o + 0.76 L + s fails every v19_markov hop): every input registered at the leaf pin, body one cycle later with one arithmetic cut fewer (fadd CUT 9'b1_1101_1111 = steps 5+6 shared; mul ot_v41_bmul2), leaf latency unchanged: markov_native_bench every-cycle equality vs the unchanged ot_dsrom_markov_row PINREG1 reference PASS + all leaf mutants FAIL; chain-head sum port removed (was tied to 0 by the cluster: NO-STUBS)"
  },
  "params": {},
  "macros": [],
@@ -114,5 +123,10 @@
   "allow_none": true
  },
  "inhold": true,
- "outhold": true
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ }
 }

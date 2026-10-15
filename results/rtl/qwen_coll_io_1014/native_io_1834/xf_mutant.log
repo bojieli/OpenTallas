@@ -1,0 +1,9 @@
+ot-run: ot-epyc1tb     admits   426 GB (avail 653, growth 124, headroom 64, waiters 0/0 GB) load 132/128 running 25 disk 879 GB 
+ot-run: ot-epyc4       admits   354 GB (avail 601, growth 199, headroom 48, waiters 0/0 GB) load 160/128 running 28 disk 711 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/codex/qcoll-1834
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/codex/qcoll-1834
+ot-run: -> ot-epyc1tb
+ot-heavy: admitted on ot-epyc1tb as oth-ubuntu-1086-1792028652 after 1 s
+FAIL qfd_io_xfifo failed=3ff fault=000000
+/srv/opentallas-scratch/codex/qcoll-1834/rtl/test/tb_qfd_io_xfifo.sv:149: $finish called at 7180250 (1ps)
+ot-run: RAN on ot-epyc1tb (unit oth-ubuntu-1086-1792028652): exit 1

@@ -10,6 +10,7 @@ def main():
     args.out.mkdir(parents=True,exist_ok=True)
     candidate=ROOT/'rtl/dsrom_sys/engram/rso_candidate'
     sources=G.SRC+sorted(p for p in candidate.glob('*.sv') if not p.name.startswith('tb_'))
+    sources=sources+G.HL_EXTRA  # dsfd_engram_c_hl ACK relay dsfd_rly_1_EW
     tb=candidate/'tb_engram_rso.sv'
     if args.top!='dsfd_engram_c_rso':
         txt=tb.read_text().replace('dsfd_engram_c_rso dut(',args.top+' dut(')
