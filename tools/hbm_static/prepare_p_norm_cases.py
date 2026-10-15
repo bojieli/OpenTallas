@@ -72,26 +72,16 @@ def main():
     for mutant in ('omit_se','bypass_div','disable_rne'):
         src=a.out/'t640_h16';dst=a.out/f'mutant_{mutant}';shutil.copytree(src,dst,dirs_exist_ok=True)
         # Mutate real arithmetic programme fields by re-encoding literal rows.
-        sys.path.insert(0,str(a.sfu_tools));from sfu_control_image import FIELDS
-        field={'omit_se':'cs_e1','bypass_div':'cm_m1','disable_rne':'co_rnd'}[mutant]
-        shift=0
-        for name,width in FIELDS:
-            if name==field:break
-            shift+=width
-        else:raise ValueError(field)
-        data=[]
+        sys.path.insert(0,str(a.sfu_tools));from sfu_control_image import unpack as control_unpack,pack as control_pack
+        data=[];changed=0
         for word in (dst/'arithmetic.hex').read_text().split():
-            w=int(word,16)
-            # Only this opcode occurs in normalization tail (P co_rnd is0).
-            value=(w>>shift)&((1<<width)-1)
-            if (mutant=='omit_se' and value==2) or (mutant=='bypass_div' and value==4) or (mutant=='disable_rne' and value==1):w&=~(((1<<width)-1)<<shift)
+            w=int(word,16);f=control_unpack(w)
+            if mutant=='omit_se' and f['cs_e1']==2:f['cs_e1']=0
             if mutant=='bypass_div':
-                off=0
-                for n,bits in FIELDS:
-                    if n=='cp_m1':
-                        if (w>>off)&7==4:w&=~(7<<off)
-                        break
-                    off+=bits
-            data.append(w)
+                if f['cm_m1']==4:f['cm_m1']=0
+                if f['cp_m1']==4:f['cp_m1']=0
+            if mutant=='disable_rne' and f['co_rnd']==1:f['co_rnd']=0
+            new=control_pack(f);changed+=new!=w;data.append(new)
+        assert changed>0,(mutant,changed)
         (dst/'arithmetic.hex').write_text(''.join(f'{w:0436x}\n' for w in data))
 if __name__=='__main__':main()
