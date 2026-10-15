@@ -27,6 +27,7 @@ def render():
         for name in names.split(','):
             parsed.append((direction, bounds, name))
     abi = {'schema': 'opentallas.hbm.static-vm-quadrants.v1', 'quadrants': {},
+           'bank_implementation': 'Explicit BANK_FT=1 opt-in to ot_vms_bank_static_wdecode_ft; original module remains distinct. Three-edge initialization reset release; compiler starts >=4 edges after release. No physical closure inherited.',
            'historical_views': 'No closed bank/hub/ring view is aliased to these successors.',
            'clocks': 'Twelve separate physical roots; same compiler edge and phase; no asynchronous crossings.',
            'status': 'vmstat is a real three-edge bank/hub/ring aggregate; four quadrant outputs require a real die aggregator.',
@@ -55,7 +56,7 @@ def render():
            'qualification': 'Actual RTL composition; unit gates do not establish physical closure or full native token execution.'}
     modules = ['`timescale 1ns/1ps', '`default_nettype none']
     for quadrant, (nc, rg, wg, sid) in PARAMS.items():
-        values = dict(NC=nc, RG=rg, WG=wg, CW=max(1, nc.bit_length()),
+        values = dict(NC=nc, RG=rg, WG=wg, BANK_FT=1, CW=max(1, nc.bit_length()),
                       RB=rg.bit_length(), WB=(wg + 4).bit_length())
         ports, wiring, entries = [], [], []
         for direction, bounds, name in parsed:
@@ -76,7 +77,7 @@ def render():
         name = 'hfd_hgi_vms_static_' + quadrant
         modules += [f'module {name} (', ',\n'.join(ports), ');',
                     *( ["    wire [273:0] vacant_cr; // NC=0: no local clients exist."] if nc==0 else []),
-                    f'    ot_vms_slice_static #(.NC({nc}),.RG({rg}),.WG({wg})) u_slice (',
+                    f'    ot_vms_slice_static #(.NC({nc}),.RG({rg}),.WG({wg}),.BANK_FT(1)) u_slice (',
                     '        ' + ',\n        '.join(wiring), '    );', 'endmodule']
         abi['quadrants'][quadrant] = dict(master=name, params=values, sid=sid, ports=entries)
     modules.append('`default_nettype wire')

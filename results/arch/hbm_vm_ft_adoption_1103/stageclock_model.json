@@ -1,0 +1,44 @@
+{
+  "schema": "opentallas.hbm.vm-bank-clock-partition-model.v1",
+  "stage": "PRE_RTL",
+  "source": "ot_vms_bank_static_wdecode_ft c1e17f31d exact source",
+  "cause": "Measured clock insertion694..850ps on4800..6200sinks despite balanced spine and spread29..40ps. Lower spread does not close root insertion.",
+  "proposed_module": "ot_vms_bank_static_wdecode_ft_stageclocks",
+  "roots": [
+    "clk_pin",
+    "clk_s1",
+    "clk_mem",
+    "clk_capture",
+    "clk_return",
+    "clk_status"
+  ],
+  "clocks": "six independent physical entries all833.333ps same compiler edge and phase; zero asynchronous crossings",
+  "state_estimates_worst_RG6_WG3": {
+    "pin": 2408,
+    "S1": 640,
+    "macro_S2": 1218,
+    "capture_ECC": 1000,
+    "return_payload": 1874,
+    "status": 64
+  },
+  "macro_clock_policy": "All three actual SRAM clocks and their immediately preceding S2 control/data use clk_mem; macro output capture uses separately delivered same-phase clk_capture.",
+  "pipeline": "unchanged n+6 read / n+3 commit / n+1 egress; no extra production edge; status accounting edges unchanged from FT",
+  "compute_MACs": 0,
+  "memory_bytes_per_edge": {
+    "logical_read": 32,
+    "logical_write": 32,
+    "physical_read": 64,
+    "physical_write": 64
+  },
+  "boundary_bandwidth": "unchanged exact RG/WG ports; five additional clock pins per bank",
+  "replicas": 32,
+  "total_new_clock_entries": 160,
+  "area": "Same FF/memory datapath; CTS buffer area and die source-tree cost must be measured.",
+  "clock_target": {
+    "max_root_insertion_ps": 300,
+    "max_leaf_spread_ps": 80
+  },
+  "justification": "Largest intended register root about2.4k sinks vs4.8..6.2k; existing1705-sink native LG gives TTmax213.8/spread42.6ps. This is a physical hypothesis, not measured closure.",
+  "adoption": "UNADOPTED candidate; typed clock ABI/home grant and exact functional/mutants plus actual pin/PG/CTS/TT/FF/DRC required",
+  "cuts": "source data pins unchanged; stage placement/channels must be modeled from actual pin plan before any route"
+}

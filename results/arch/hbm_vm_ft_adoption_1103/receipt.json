@@ -1,0 +1,104 @@
+{
+  "schema": "opentallas.hbm.vm-ft-source-adoption.v1",
+  "candidate_source_commit": "c1e17f31d28adae7977bb0d910d334296be188c2",
+  "source_import": "byte-identical immutable FT source and three exact benches; no old source alias",
+  "composition": "ot_vms_slice_static BANK_FT defaults0; actual quadrant wrappers explicitly select BANK_FT1. Original module/behavior remains separate.",
+  "source_sha256": {
+    "rtl/hbm_accel/generic/vm/static/ot_vms_bank_static_wdecode_ft.sv": "1c85d85f92a74549989495a63a2cdd2f18fbe8886ca150a6013f65c9415d0e56",
+    "rtl/hbm_accel/generic/vm/static/ot_vms_slice_static.sv": "43518bcdfc22ad730c7ec92671cf405b58629604a02db6fb5fb13408ba36589e",
+    "rtl/hbm_accel/generic/vm/static/hfd_hgi_vms_static.sv": "0f6dc724f44d4e0b83ff47a1af5f21e1bf12278682089a3d9db39d33ad94aef5"
+  },
+  "clock": "Twelve physical roots per VM slice unchanged. FT native clock insertion unqualified; no view inherited.",
+  "initialization": "FT async assert/three-edge local sync reset release; native calendar startup >=4 edges after launch and configuration. No production stage added.",
+  "unchanged_latency": {
+    "read_edges": 6,
+    "write_commit_edges": 3,
+    "mirror_egress_edges": 1,
+    "II": 1
+  },
+  "host": "ot-agidock128",
+  "unit": "oth-ubuntu-978752-1792089572",
+  "hierarchy": {
+    "SW": "full actual hierarchy elaboration PASS; expected sensitivity-list warnings retained",
+    "SE": "full actual hierarchy elaboration PASS; expected sensitivity-list warnings retained",
+    "NW": "full actual hierarchy elaboration PASS; expected sensitivity-list warnings retained",
+    "NE": "full actual hierarchy elaboration PASS; expected sensitivity-list warnings retained"
+  },
+  "shapes": {
+    "SW": {
+      "RG": 5,
+      "WG": 1,
+      "eightbank_24SRAM": {
+        "DMAwrites": 1024,
+        "wide_reads": 5120,
+        "eachgroup_reads": 1024,
+        "packet_reads": 8
+      },
+      "singlebank_allowners": "PASS static bank exact memory masks main/mirror ECC owner timing: reads=227 writes=236 egress=2 cycles=364 read=n+6 commit=n+3 egress=n+1 II=1",
+      "mutants": [
+        "actual response-group permutation KILLED",
+        "actual write-sector permutation KILLED",
+        "allowner write-sector corruption KILLED",
+        "last-word CE population fault KILLED"
+      ]
+    },
+    "SE": {
+      "RG": 4,
+      "WG": 1,
+      "eightbank_24SRAM": {
+        "DMAwrites": 1024,
+        "wide_reads": 4096,
+        "eachgroup_reads": 1024,
+        "packet_reads": 8
+      },
+      "singlebank_allowners": "PASS static bank exact memory masks main/mirror ECC owner timing: reads=225 writes=236 egress=2 cycles=362 read=n+6 commit=n+3 egress=n+1 II=1",
+      "mutants": [
+        "actual response-group permutation KILLED",
+        "actual write-sector permutation KILLED",
+        "allowner write-sector corruption KILLED",
+        "last-word CE population fault KILLED"
+      ]
+    },
+    "NW": {
+      "RG": 6,
+      "WG": 3,
+      "eightbank_24SRAM": {
+        "DMAwrites": 1024,
+        "wide_reads": 6144,
+        "eachgroup_reads": 1024,
+        "packet_reads": 8
+      },
+      "singlebank_allowners": "PASS static bank exact memory masks main/mirror ECC owner timing: reads=229 writes=244 egress=33 cycles=364 read=n+6 commit=n+3 egress=n+1 II=1",
+      "mutants": [
+        "actual response-group permutation KILLED",
+        "actual write-sector permutation KILLED",
+        "allowner write-sector corruption KILLED",
+        "last-word CE population fault KILLED"
+      ]
+    },
+    "NE": {
+      "RG": 5,
+      "WG": 2,
+      "eightbank_24SRAM": {
+        "DMAwrites": 1024,
+        "wide_reads": 5120,
+        "eachgroup_reads": 1024,
+        "packet_reads": 8
+      },
+      "singlebank_allowners": "PASS static bank exact memory masks main/mirror ECC owner timing: reads=227 writes=240 egress=34 cycles=368 read=n+6 commit=n+3 egress=n+1 II=1",
+      "mutants": [
+        "actual response-group permutation KILLED",
+        "actual write-sector permutation KILLED",
+        "allowner write-sector corruption KILLED",
+        "last-word CE population fault KILLED"
+      ]
+    }
+  },
+  "qualification": {
+    "source_composition": true,
+    "real_SRAM_functional": true,
+    "fixed_schedule": true,
+    "physical": false,
+    "whole_token": false
+  }
+}
