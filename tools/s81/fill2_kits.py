@@ -144,6 +144,15 @@ MASTERS = {
              "of phase p in macro k%7 row 4p+k/7, a/ce one level from flops or cfg_go, 0 cycles, exact lockstep "
              "unchanged), outline from pin density",
         benches=[('lockstep_il7_bf', 'il7_bf', 'pass'), ('bank_select_mutant', 'il7_mut_bank_bf', 'fail')]),
+    "s81fill2_qbank_s_t": dict(
+        master="dsfd_qbank_S", top="dsfd_qbank_S", params={}, sources=["rtl/dsrom_sys/s81_fill2/gen19b/dsfd_qbank_S.sv"],
+        extra=["rtl/dsrom_sys/s81_fill2/gen19b", "tools/s81/fill2_relay_bench.py", PIN_DIR],
+        clock="ck", resets=["rs"], inst=1898, size="grow_depth", bits=604, alt_v=True, min_h=25.92, pin_tag="_t",
+        bench_cmd="python3 tools/s81/fill2_relay_bench.py rtl/dsrom_sys/s81_fill2/gen19b/dsfd_qbank_S.sv dsfd_qbank_S {mode} {RUN}/bench_{mode}",
+        bench_tag="RELAY", bench_mode_in_pass=True,
+        what="q-bank relay row S, B candidate 60.48 x 25.92: the A gate (17.28) warned the recipe-2 pin-flop columns of both "
+             "604-pin faces need 2 x 8.57 um of a 13-um core (GRT-0116 class); this depth leaves a channel between them",
+        benches=[("relay_exact", "pass", "pass"), ("payload_bit_mutant", "mut_payload", "fail"), ("no_reset_mutant", "mut_noreset", "fail")]),
     "s81fill2_cfg7_seq_bf": dict(
         master="ot_s81_cfg7_seq_bf", top="ot_s81_cfg7_seq_bf", params={}, sources=CFG7_SRC, extra=CFG7_EXTRA,
         clock="clk", resets=["rst_n"], inst=519,
@@ -217,7 +226,7 @@ BPU = 10.0             # target pins per um per layer on the busiest face (gate 
 
 def pin_name(name: str, d: dict) -> str:
     """pin file per outline: the master name for its own outline (_pd for the pin-density B outline)"""
-    return d["master"] + ("_pd" if d.get("size") == "density" and not d.get("majority") else "")
+    return d["master"] + ("_pd" if d.get("size") == "density" and not d.get("majority") else "") + d.get("pin_tag", "")
 
 
 def majority(mac: dict) -> dict:
@@ -268,7 +277,7 @@ def main() -> int:
         if d.get('size') == 'grow_depth':
             dw = snap(mac['w'])
             need = d['bits'] * 0.6 / 0.55
-            dh = max(snap(mac['h']), snap(need / (dw - 2 * EDGE) + 2 * EDGE))
+            dh = max(snap(mac['h']), snap(need / (dw - 2 * EDGE) + 2 * EDGE), d.get('min_h', 0))
         elif d.get('size') == 'density':
             dw, dh = density_outline(mac, d['std_um2'], [d['clock']] + d['resets'])
         else:
