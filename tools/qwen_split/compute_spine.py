@@ -24,7 +24,7 @@ import os
 CH = 86.4                       # relay channel between spine slots (two 30-um relay rows + spacing)
 CHE = 108.0                     # C7: spine EDGE channels (beside the tile fields): the E head root's last relay (1,567 b,
                                 # ~80-um frame) must stand within 490 um of xcol_24's W face across tile column 24
-PORT_WH = (1036.8, 2462.4)      # qfd_port_tiles_* slot: 2.553 mm2 >= the measured 2.536 mm2 need (blockers G7)
+PORT_WH = (float(os.environ.get('OT_SPLIT_PORT_W', '1036.8')), 2462.4)      # qfd_port_tiles_* slot: 2.553 mm2 >= the measured 2.536 mm2 need (blockers G7)
 RES_WH = (777.6, 518.4)
 LANES_WH = (777.6, 1131.84)
 SU_WH = (3240.0, 3672.0)        # qfd_sp_su64_sfu: 64-lane component 4.84 mm2 children + reducer + glue (Codex 3434 x 2570 bbox)
@@ -405,7 +405,8 @@ def place(v, m, G):
     if DVM:
         _dvm(v, m, put, rec, vm, su, xt)
     ymid = (io_top + top) / 2
-    ck = put('clk_rx', cx - CLKRX_WH[0] / 2, min(ymid - CLKRX_WH[1] / 2, ct.y - CH - CLKRX_WH[1]))
+    ck_y = vm.y - CH - CLKRX_WH[1] if STACK == 'seam' else min(ymid - CLKRX_WH[1] / 2, ct.y - CH - CLKRX_WH[1])
+    ck = put('clk_rx', cx - CLKRX_WH[0] / 2, ck_y)
     put('rstseq_rom', ck.x + ck.w + 4.32, ck.y)
     # ---- containment: every spine slot inside [x0, x1] x [io_top, top]
     bad = [n for n, (x, y, w, h) in rec['slots'].items() if x < x0 - 1e-3 or x + w > x1 + 1e-3 or y < io_top - 1e-3 or y + h > top + 1e-3]
