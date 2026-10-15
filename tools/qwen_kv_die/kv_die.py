@@ -1499,6 +1499,26 @@ def _relays(m):
             try:
                 hb_ = by['host']
                 path = route_via(a, b, pa, pb, hb_.y - 2 * CHAN, lane_x=hb_.x + hb_.w + CHAN)
+                if HOST_V14.get('trees'):
+                    # v1.4.2: the target is now the SerDes W-face FDI pins; keep the E centre channel all the way down
+                    # (a shortest path from the lane cell turned west into the kvn_WN / krs_WN corridor: window H 1.47):
+                    # host -> E lane cell below the host -> E lane cell above the SerDes -> W-face pins
+                    sb_ = by['serdes_host']
+                    lx_ = hb_.x + hb_.w + CHAN
+
+                    def lane_cell(x_, y_):
+                        wy_ = int(y_ // G)
+                        for dx_ in range(0, 400):
+                            for sgn in (1, -1):
+                                wx_ = int(x_ // G) + sgn * dx_
+                                if 0 <= wx_ < nx and 0 <= wy_ < ny and not owner.get((wx_, wy_)) and (wx_, wy_) not in rocc:
+                                    return (wx_, wy_)
+                        raise ValueError('no lane cell')
+                    w1, w2 = lane_cell(lx_, hb_.y - 2 * CHAN), lane_cell(lx_, sb_.y + sb_.h + 2 * CHAN)
+                    q1 = route_(a, 'fdi_w1', near_pin(ring(by[a]), a, pa), {w1})
+                    q2 = route_('fdi_w1', 'fdi_w2', [w1], {w2})
+                    q3 = route_('fdi_w2', b, [w2], set(near_pin(ring(by[b]), b, pb)))
+                    path = q1 + q2[1:] + q3[1:]
             except ValueError:
                 path = None
         if path is None:
