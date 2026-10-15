@@ -52,12 +52,14 @@
     {
       "operation": "bf_static_execution",
       "module": "dsfd_bf_front_static",
-      "source": null,
+      "source": "rtl/dsrom_sys/s81_die_bind/dsfd_bf_front_static.sv",
       "owner": "S-ELEM/BF-static-core",
       "required_ports": {
         "f_prog": 38
       },
-      "static_semantics_evidence": null
+      "static_semantics_evidence": null,
+      "candidate_ref": "fc29b45a3",
+      "scope_note": "Actual recovered source exists; native static master/programme/io_clk adoption and production evidence remain separate."
     },
     {
       "operation": "field_gather",

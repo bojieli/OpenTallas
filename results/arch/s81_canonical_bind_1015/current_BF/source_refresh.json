@@ -6,5 +6,9 @@
   "strict_ledger_unit": "oth-ubuntu-2113609-1792064266",
   "strict_ledger_exit": 1,
   "strict_requirements": "Original source-pinned required_operations including BFstatic_execution; mainmanifest variant omitted that requirement so retained separately.",
-  "qualified": false
+  "qualified": false,
+  "strict_ledger_initial": "Invalid invocation cwd resolved manifest-relative paths incorrectly; preserved strict_ledger.json is not authoritative hardware absence evidence.",
+  "strict_ledger2": "Correct cwd; legacy requirement had BFstatic source:null, so module not indexed despite real source present.",
+  "strict_ledger3": "Authoritative stronger requirements give exact recovered BFstatic source path; source-present but unselected/emitted/native programme proof still absent.",
+  "strict_ledger3_unit": "see actual ot-run log"
 }
