@@ -127,7 +127,7 @@ module dsfd_vm_static_core (
     wire [71:0] nat_v; wire [9215:0] nat_d; wire [127:0] grp_v; wire [16383:0] grp_d; wire [11:0] grp_id;
     wire [127:0] cm_v; wire [1151:0] cm_a; wire [511:0] cm_m; wire [1023:0] cm_t; wire [15:0] m_flt;
     dsfd_vm_static512_suhc u_mem (.ck_rscatter({4{ck}}), .ck_wscatter({4{ck}}), .ck_return({4{ck}}), .ck_bank({128{ck}}),
-        .rst_n(rss), .ck_relay_req({24{ck}}), .ck_relay_rsp({24{ck}}),
+        .rst_n(rss), .ck_relay_req({48{ck}}), .ck_relay_rsp({48{ck}}),
         .native_rq_v(n_v), .native_rq_row(n_row), .native_rq_slot(n_slot), .native_rq_group(n_group),
         .aux_rq_v(a_v), .aux_rq_row(a_row),
         .wq_v(wq_v), .wq_row(wq_row), .wq_mask(wq_mask), .wq_data(wq_data), .wq_tag(wq_tag),

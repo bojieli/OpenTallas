@@ -29,7 +29,7 @@ module ot_s81_hc_crooty #(
     output wire [4*16-1:0]      wq_mask,
     output wire [4*512-1:0]     wq_d,
     input  wire                 yacc,
-    input  wire                 p_req,
+    input  wire [LC-1:0]        p_req,                    // one copy per y slice leaf (crootr_f pin flops)
     input  wire [4*WSL-1:0]     p_w,
     output wire [YS-1:0]        p_y,
     output wire                 p_flt
@@ -45,7 +45,7 @@ module ot_s81_hc_crooty #(
             .y_s(y_s), .yacc(yacc), .p_req(p_req), .p_y(p_y), .p_flt(p_flt));
     end else begin : g_ym
         ot_s81_hc_crooty_y #(.NG(NG), .NCOL(NCOL), .GS(GS), .S_RD(S_RD), .S_RT(S_RT), .C(C), .YD(YD), .FIFO_SLICE(FIFO_SLICE)) u_y (.sk(sk), .srs(srs),
-            .y_s(y_s), .yacc(yacc), .p_req(p_req), .p_y(p_y), .p_flt(p_flt));
+            .y_s(y_s), .yacc(yacc), .p_req(p_req[0]), .p_y(p_y), .p_flt(p_flt));
     end endgenerate
     ot_s81_hc_crooty_w #(.NG(NG), .NCOL(NCOL), .GS(GS), .S_RD(S_RD), .S_RT(S_RT), .C(C), .YD(YD)) u_w (.sk(sk), .srs(srs),
         .p_w(p_w), .wq_v(wq_v), .wq_row(wq_row), .wq_mask(wq_mask), .wq_d(wq_d));
@@ -214,7 +214,7 @@ module ot_s81_hc_cryys #(
 endmodule
 
 // ---------------------------------------------------------------------------------------------------------------------
-// ot_s81_hc_crooty_yl: the y slice path as LC slice leaves (wires only; same ports as ot_s81_hc_crooty_y).
+// ot_s81_hc_crooty_yl: the y slice path as LC slice leaves (wires only; ports of ot_s81_hc_crooty_y, p_req one bit a leaf).
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_s81_hc_crooty_yl #(
     parameter integer NG = 256, NCOL = 3, GS = 8, C = 0, YD = 16
@@ -223,7 +223,7 @@ module ot_s81_hc_crooty_yl #(
     input  wire                 srs,
     input  wire [YS-1:0]        y_s,
     input  wire                 yacc,
-    input  wire                 p_req,
+    input  wire [LC-1:0]        p_req,                    // leaf f takes p_req[f]
     output wire [YS-1:0]        p_y,
     output wire                 p_flt
 );
@@ -238,10 +238,10 @@ module ot_s81_hc_crooty_yl #(
     generate for (f = 0; f < LC; f = f + 1) begin : g_f
 `ifdef OT_S81_HC_CRYYS_HARD
         if (SW != 256 || YD != 16) begin : g_bad initial $fatal(1, "ot_s81_hc_cryys hard view is W 256 / YD 16"); end
-        ot_s81_hc_cryys u_s (.sk(sk), .srs(srs), .y_s(y_s[f*SW +: SW]), .yacc(yacc), .p_req(p_req),
+        ot_s81_hc_cryys u_s (.sk(sk), .srs(srs), .y_s(y_s[f*SW +: SW]), .yacc(yacc), .p_req(p_req[f]),
             .p_y(p_y[f*SW +: SW]), .p_flt(flt[f]));
 `else
-        ot_s81_hc_cryys #(.W(SW), .YD(YD)) u_s (.sk(sk), .srs(srs), .y_s(y_s[f*SW +: SW]), .yacc(yacc), .p_req(p_req),
+        ot_s81_hc_cryys #(.W(SW), .YD(YD)) u_s (.sk(sk), .srs(srs), .y_s(y_s[f*SW +: SW]), .yacc(yacc), .p_req(p_req[f]),
             .p_y(p_y[f*SW +: SW]), .p_flt(flt[f]));
 `endif
     end endgenerate

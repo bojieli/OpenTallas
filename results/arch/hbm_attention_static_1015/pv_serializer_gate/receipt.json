@@ -1,0 +1,36 @@
+{
+  "source_commit": "660d2dd16",
+  "host": "ot-epyc4",
+  "unit": "oth-ubuntu-1345916-1792053189",
+  "exit_status": 0,
+  "qualification": false,
+  "status": "PASS sourcegeometry PV transpose component; actual native output layout/flags/physical binding pending",
+  "records": 3,
+  "epochs": 2,
+  "actual_H": 16,
+  "actual_D": 512,
+  "payload_words": 24576,
+  "exact_flags": 24576,
+  "drain_beats": 384,
+  "SRAM_master": "ot_sram_1r1w_32x128_m1",
+  "SRAM_count": 128,
+  "status_FF": 16384,
+  "drain_payload_bits_per_edge": 2048,
+  "mutants_detected": [
+    "real payload corruption",
+    "early drain missing actual rows",
+    "exact perword status corruption"
+  ],
+  "source_sha256": {
+    "rtl/hdc/v41x/static/ot_hbm_attn_pv_serializer.sv": "8ce7807fa3449449c14f91484c57ce21e11b10bf0879f0121036f500f91ef437",
+    "rtl/test/hbm_accel/generic/tb_hbm_attn_pv_serializer.sv": "c62c0e587a47f35c3d64ce3e33cb04cae86877fff8e0213a4da028c060121560",
+    "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.v": "9024999f58109d0031ef989d101f5a537dabaf185e6348d32305aec58af8aafa"
+  },
+  "remaining": [
+    "HVM canonical native output layout and sector aperture",
+    "Exact fault propagation into actual VM output protocol",
+    "Actual head/quarter mapping and output programme",
+    "Measured compiler overlap/throughput",
+    "Mapped clock roots/geometry/routing closure"
+  ]
+}

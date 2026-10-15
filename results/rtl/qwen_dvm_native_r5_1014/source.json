@@ -20,5 +20,17 @@
   "negative_errors": 39928,
   "native_wrapper": "in flight",
   "native_tt_producer": "open"
+ },
+ "station_proof_scope": "native_core contains actual 64 tiles and stations; vm_replay_xcol stops at head n/s outputs and does not contain xcst, so wrapper is not a station repair proof",
+ "tt_producer_join": {
+  "source_commit": "5b348f611",
+  "owner": "q_control_host",
+  "paths": [
+   "rtl/qwen_sys/static_schedule_20261014/qfd_tt_ctlm_static_s.sv",
+   "rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_static_parent.sv",
+   "rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_split_static.sv",
+   "rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_dense_pw_loader.sv"
+  ],
+  "status": "source supplied, actual composition OPEN; fullstage event/phase calibration OPEN"
  }
 }

@@ -63,7 +63,7 @@ module ot_coll_lcal_tx #(parameter integer KC = 4, parameter integer KW = 2) (
 endmodule
 
 module ot_coll_lcal_rx #(parameter integer KC = 4, parameter integer KW = 2, parameter integer PHY = 14,
-                         parameter integer L = 40, parameter integer R = 0) (
+                         parameter integer L = 40, parameter integer R = 0, parameter integer PEER_R = R) (
     input  wire clk, lck, rs_c, rs_l,
     input  wire exp,                                        // core: the peer's compiled send slot
     output wire rx_expect_v, output wire [5:0] rx_expect_slot,
@@ -74,7 +74,14 @@ module ot_coll_lcal_rx #(parameter integer KC = 4, parameter integer KW = 2, par
     // exp arrives R late and the CDC read word travels R back, so the read slot is exp + L - 4 - 2R
     initial if (L - 4 - 2 * R < 1) $error("ot_coll_lcal_rx: L - 4 - 2R >= 1");
     wire unused_v;
-    ot_coll_dly1 #(.N(KC + 4 + KW + 4 + PHY)) u_e (.clk(lck), .rs_n(rs_l), .d(exp), .q(rx_expect_v));
+    // exp travelled local R; the peer frame travelled PEER_R before its CDC.
+    // Opposite SerDes ports are paired 0<->2,1<->1; unequal placement ages
+    // must adjust the expected PHY slot rather than invent a same-R path.
+`ifdef OT_LCAL_MUT_PEER_AGE
+    ot_coll_dly1 #(.N(KC + 4 + KW + 4 + PHY)) u_e
+`else
+    ot_coll_dly1 #(.N(KC + 4 + KW + 4 + PHY + PEER_R - R)) u_e
+`endif (.clk(lck), .rs_n(rs_l), .d(exp), .q(rx_expect_v));
     ot_coll_slotcnt u_ec (.clk(lck), .rs_n(rs_l), .en(rx_expect_v), .addr(rx_expect_slot), .version(unused_v));
     ot_coll_dly1 #(.N(2)) u_w (.clk(lck), .rs_n(rs_l), .d(rx_expect_v), .q(w_slot));   // codec: pin capture 1 + RX 1
     ot_coll_slotcnt u_wc (.clk(lck), .rs_n(rs_l), .en(w_slot), .addr(w_addr), .version(w_version));

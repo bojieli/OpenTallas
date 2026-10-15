@@ -1,0 +1,308 @@
+{
+  "name": "qfd_sp_band_lanes_native",
+  "top": "qfd_sp_band_lanes",
+  "kind": "cluster",
+  "clock": "hybrid_entries",
+  "clock_port": "ck",
+  "clock_ports": [
+    "ck",
+    "ck_l0",
+    "ck_l1",
+    "ck_l2",
+    "ck_l3",
+    "ck_l4",
+    "ck_l5",
+    "ck_l6",
+    "ck_l7",
+    "ck_l8",
+    "ck_l9",
+    "ck_l10",
+    "ck_l11",
+    "ck_l12",
+    "ck_l13",
+    "ck_l14",
+    "ck_l15"
+  ],
+  "outline": {
+    "w": 881.28,
+    "h": 1131.84
+  },
+  "children": [
+    {
+      "view": "physical/ref_tile/qfd_bl_lane_rr/views/qfd_bl_lane",
+      "count": 1,
+      "inst": "g_lane[0].u_lane",
+      "at": [
+        25.92,
+        25.92
+      ],
+      "orient": "R0"
+    },
+    {
+      "view": "physical/ref_tile/qfd_bl_lane_rr/views/qfd_bl_lane",
+      "count": 1,
+      "inst": "g_lane[1].u_lane",
+      "at": [
+        311.04,
+        25.92
+      ],
+      "orient": "R0"
+    },
+    {
+      "view": "physical/ref_tile/qfd_bl_lane_rr/views/qfd_bl_lane",
+      "count": 1,
+      "inst": "g_lane[2].u_lane",
+      "at": [
+        596.16,
+        25.92
+      ],
+      "orient": "R0"
+    },
+    {
+      "view": "physical/ref_tile/qfd_bl_lane_rr/views/qfd_bl_lane",
+      "count": 1,
+      "inst": "g_lane[3].u_lane",
+      "at": [
+        25.92,
+        203.04
+      ],
+      "orient": "R0"
+    },
+    {
+      "view": "physical/ref_tile/qfd_bl_lane_rr/views/qfd_bl_lane",
+      "count": 1,
+      "inst": "g_lane[4].u_lane",
+      "at": [
+        311.04,
+        203.04
+      ],
+      "orient": "R0"
+    },
+    {
+      "view": "physical/ref_tile/qfd_bl_lane_rr/views/qfd_bl_lane",
+      "count": 1,
+      "inst": "g_lane[5].u_lane",
+      "at": [
+        596.16,
+        203.04
+      ],
+      "orient": "R0"
+    },
+    {
+      "view": "physical/ref_tile/qfd_bl_lane_rr/views/qfd_bl_lane",
+      "count": 1,
+      "inst": "g_lane[6].u_lane",
+      "at": [
+        25.92,
+        380.16
+      ],
+      "orient": "R0"
+    },
+    {
+      "view": "physical/ref_tile/qfd_bl_lane_rr/views/qfd_bl_lane",
+      "count": 1,
+      "inst": "g_lane[7].u_lane",
+      "at": [
+        311.04,
+        380.16
+      ],
+      "orient": "R0"
+    },
+    {
+      "view": "physical/ref_tile/qfd_bl_lane_rr/views/qfd_bl_lane",
+      "count": 1,
+      "inst": "g_lane[8].u_lane",
+      "at": [
+        596.16,
+        380.16
+      ],
+      "orient": "R0"
+    },
+    {
+      "view": "physical/ref_tile/qfd_bl_lane_rr/views/qfd_bl_lane",
+      "count": 1,
+      "inst": "g_lane[9].u_lane",
+      "at": [
+        25.92,
+        557.28
+      ],
+      "orient": "R0"
+    },
+    {
+      "view": "physical/ref_tile/qfd_bl_lane_rr/views/qfd_bl_lane",
+      "count": 1,
+      "inst": "g_lane[10].u_lane",
+      "at": [
+        311.04,
+        557.28
+      ],
+      "orient": "R0"
+    },
+    {
+      "view": "physical/ref_tile/qfd_bl_lane_rr/views/qfd_bl_lane",
+      "count": 1,
+      "inst": "g_lane[11].u_lane",
+      "at": [
+        596.16,
+        557.28
+      ],
+      "orient": "R0"
+    },
+    {
+      "view": "physical/ref_tile/qfd_bl_lane_rr/views/qfd_bl_lane",
+      "count": 1,
+      "inst": "g_lane[12].u_lane",
+      "at": [
+        25.92,
+        734.4
+      ],
+      "orient": "R0"
+    },
+    {
+      "view": "physical/ref_tile/qfd_bl_lane_rr/views/qfd_bl_lane",
+      "count": 1,
+      "inst": "g_lane[13].u_lane",
+      "at": [
+        311.04,
+        734.4
+      ],
+      "orient": "R0"
+    },
+    {
+      "view": "physical/ref_tile/qfd_bl_lane_rr/views/qfd_bl_lane",
+      "count": 1,
+      "inst": "g_lane[14].u_lane",
+      "at": [
+        596.16,
+        734.4
+      ],
+      "orient": "R0"
+    },
+    {
+      "view": "physical/ref_tile/qfd_bl_lane_rr/views/qfd_bl_lane",
+      "count": 1,
+      "inst": "g_lane[15].u_lane",
+      "at": [
+        25.92,
+        911.52
+      ],
+      "orient": "R0"
+    }
+  ],
+  "required_hybrid_roots": {
+    "standard_cell_cts": [
+      "ck"
+    ],
+    "hard_child_entry": {
+      "ck_l0": "g_lane[0].u_lane/ck",
+      "ck_l1": "g_lane[1].u_lane/ck",
+      "ck_l2": "g_lane[2].u_lane/ck",
+      "ck_l3": "g_lane[3].u_lane/ck",
+      "ck_l4": "g_lane[4].u_lane/ck",
+      "ck_l5": "g_lane[5].u_lane/ck",
+      "ck_l6": "g_lane[6].u_lane/ck",
+      "ck_l7": "g_lane[7].u_lane/ck",
+      "ck_l8": "g_lane[8].u_lane/ck",
+      "ck_l9": "g_lane[9].u_lane/ck",
+      "ck_l10": "g_lane[10].u_lane/ck",
+      "ck_l11": "g_lane[11].u_lane/ck",
+      "ck_l12": "g_lane[12].u_lane/ck",
+      "ck_l13": "g_lane[13].u_lane/ck",
+      "ck_l14": "g_lane[14].u_lane/ck",
+      "ck_l15": "g_lane[15].u_lane/ck"
+    }
+  },
+  "clock_cts_roots": [
+    "ck"
+  ],
+  "sources": [
+    "rtl/physical/ot_qwen_band_lanes_slots.sv"
+  ],
+  "defines": [
+    "OT_QFD_BL_HARD"
+  ],
+  "hard_define": "OT_QFD_BL_HARD",
+  "layer_cap": "M7",
+  "recipe": 2,
+  "reset_ports": [
+    "rst_n"
+  ],
+  "keep_pin_regs": true,
+  "pin_reg_split": true,
+  "inhold": true,
+  "outhold": true,
+  "io_flop_at_pins": {
+    "cols": 8
+  },
+  "route": {
+    "pd": 0.5,
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "hold_margin_ns": 0.03,
+    "macro_halo_um": 8.64
+  },
+  "pins": {
+    "N": [
+      "ck",
+      "rst_n",
+      "b0",
+      "lnk",
+      "c",
+      "f",
+      "ck_l0",
+      "ck_l1",
+      "ck_l2",
+      "ck_l3",
+      "ck_l4",
+      "ck_l5",
+      "ck_l6",
+      "ck_l7",
+      "ck_l8",
+      "ck_l9",
+      "ck_l10",
+      "ck_l11",
+      "ck_l12",
+      "ck_l13",
+      "ck_l14",
+      "ck_l15"
+    ],
+    "S": [
+      "tw"
+    ],
+    "E": [
+      "pw"
+    ],
+    "W": [
+      "ty",
+      "tt"
+    ]
+  },
+  "structural_change": "Actual native band parent:16 CLOSED R0 lanes; registered input/output/reset/fault faces; glueCTSck+16 scalar compensated hardentry roots;881.28wide within1036.8 column with25.92um channels/edges. NL16/NB3 production1537ops188112wordsPASS/wrongLNKFAIL. Adds2TW->PW,4TWroundtripTY,2TT->TY,uppercontrol2edges; priceOPEN.",
+  "reroute_reason": {
+    "kind": "rtl_change",
+    "source": "results/rtl/qwen_compute_native_glue_1014/band_pin_edges.json",
+    "cell": "qfd_sp_band_lanes",
+    "why": "Actualparentregisteredfaces+separatechildclockroots. Legacyflatfourlaneview is not actual16leafparent; CLOSEDleaves reused."
+  },
+  "job": {
+    "owner": "Codex:q_compute_elem",
+    "branch": "codex/q-compute-native-parents-1014",
+    "tag": "hy1",
+    "purpose": "Actual17clock bandnativeparent",
+    "extra_paths": [
+      "rtl/test/qwen_lane_band",
+      "rtl/qwen_sys/lane_band_20261008",
+      "rtl/hdc",
+      "rtl/physical/ot_qwen_tt_up4_cluster.sv",
+      "rtl/physical/ot_qwen_spine_lane.sv",
+      "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
+      "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2"
+    ],
+    "benches": [],
+    "views_to": "physical/ref_tile/qfd_sp_band_lanes_native/views",
+    "record_to": "results/rtl/ref_tile/qfd_sp_band_lanes_native"
+  },
+  "pending_topdown_pins": "SUPERSEDED: final26portdieassignment e145a3a9f is in finalspec; do notgenerate thisdraft.",
+  "child_lattice_um": 2.16,
+  "superseded_by": "tools/ref_tile/specs_q_compute_native/qfd_sp_band_lanes_native.json"
+}

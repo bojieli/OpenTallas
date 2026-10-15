@@ -1,0 +1,101 @@
+{
+ "verdict": "WARN",
+ "items": [
+  {
+   "severity": "INFO",
+   "check": "layer",
+   "message": "tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "ot-run selected ot-epyc4 for 5 GB; inputs ship there before admission",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "source_binding",
+   "message": "immutable shipping manifest /tmp/ref_gate_qkh_packet_h256_20261015-001849.source_snapshot.json",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "remote log /tmp/ref_gate_qkh_packet_h256_20261015-001849.log; host dir ot-epyc4:/srv/opentallas-scratch/claude/ref_gate/qkh_packet_h256-20261015-001849",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "synth + floorplan + PDN OK on ot-epyc4 in 21 s (gate total 97 s)",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "util",
+   "message": "synthesized std area 136 um2 + macros 0 in core 653: util 21%",
+   "fix": "set \"std_area_um2\": 136 and drop 'outline' (gen sizes to util 0.52)"
+  },
+  {
+   "severity": "INFO",
+   "check": "textbook",
+   "message": "WARN ot_qkh_packet_pipe cells 777 flops 260 depth 11.7 ps util 0.226 reach 7.5 um (0.0 s)",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.util_channel",
+   "message": "utilisation 22.6% outside 45%-65% (std 148 + macro 0 um2 in 653 um2): shrink the outline (long wires / sparse placement)",
+   "fix": "size the outline to util 0.50-0.55 with >= 20 um macro channels"
+  },
+  {
+   "severity": "INFO",
+   "check": "cts_calibration",
+   "message": "ss insertion all 99.6..104.5 ps (spread 4.9), boundary mean 102.0; tt insertion all 72.5..77.1 ps (spread 4.6), boundary mean 74.9; ff insertion all 57.0..61.6 ps (spread 4.6), boundary mean 59.6; macro_clk flag False",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "density",
+   "message": "effective global-placement target density 0.500 vs spec PD 0.50",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "constraints signoff /src/physical/ref_tile/qkh_packet_h256/signoff.sdc (TT placement RC; diagnostic)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "reg->out      256 paths, worst slack 266.4 ps (e.g. q[0])",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "in->reg        48 paths, worst slack 404.9 ps (e.g. q[6]$_DFF_PN0_/D)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "reg->reg      256 paths, worst slack 481.9 ps (e.g. q[246]$_DFF_PN0_/RESETN)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "setup WNS 2.664498621740563e-10 hold WNS 2.6816701637066842e-11",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "clock_rule",
+   "message": "root port:clk: 260 sinks on the largest root <= 15,000; measured TT insertion 77.1 ps, leaf spread 4.6 ps",
+   "fix": ""
+  }
+ ]
+}

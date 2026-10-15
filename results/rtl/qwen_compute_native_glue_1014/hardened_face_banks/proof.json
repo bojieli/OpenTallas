@@ -1,0 +1,43 @@
+{
+  "schema": "opentallas.native-glue-redesign.v1",
+  "status": "source_component_pass_geometry_parent_pending",
+  "cause": "NK15037sink long glue root and NL actual rpair->collector/reset->rpair violations; hardening nativeface bank roots is one necessary partition, not full repair",
+  "source_sha256": {
+    "rtl/qwen_sys/tile_glue_banks_20261015/ot_qwen_tile_glue_banks.sv": "ec9779534ccbe53e55c8c30c4e9bbcad7131151c2e64b6e8c5623ab2a817ea35",
+    "physical/qwen_tile_glue_banks_1015/tb.sv": "11712e2478172385b21baeff586bea821c1c06d2f4cf4320d23e435a71835e17",
+    "physical/qwen_tile_glue_banks_1015/bench.sh": "0318091f708cc720caa40ea1a4cd3af8b0beaca902e2ac385a53968d986cfed4"
+  },
+  "actual_check_count": 21060696,
+  "negative_controls": [
+    "bypass_capture",
+    "corrupt_upperbank",
+    "wrong_actual_clock_root"
+  ],
+  "ten_roots_independently_pulsed": true,
+  "masters": [
+    "qkh_packet_v263",
+    "qkh_packet_v256"
+  ],
+  "bank_count": 10,
+  "local_allocated_area_um2": 9797.76,
+  "old_parent_outline_um": [
+    449.28,
+    1442.88
+  ],
+  "new_parent_outline_um": "geometry_candidate_same_outline_unqualified",
+  "operational_data_edges": 1,
+  "operational_edges_added": 0,
+  "reset_release_edges": 3,
+  "first_capture_edge_after_release": 4,
+  "additional_reset_warmup_over_old_unreset_face": 3,
+  "performance": "same one-word-per-edge operational rate; no composed production throughput measurement or cost acceptance",
+  "qualification": "V263/V256 PG2 freshCTS pass and fullroute pending; no parent view, compiler integration, or native parent qualification",
+  "remaining_partitions": [
+    "RQRsouth/north1024b collector",
+    "mq_wrom and s2_w operand captures",
+    "xdelay8x128",
+    "TX8leavesx2stages390b",
+    "local child reset capture",
+    "remaining control root actual sink/insertion/spread and setup"
+  ]
+}

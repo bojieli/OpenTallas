@@ -1,0 +1,12 @@
+{
+  "profile": "d9be99ee9 immutable source proof;151LCP-to-commit104issues3328words416readbacks5mutants",
+  "changed_current_sources": [
+    {
+      "path": "rtl/hbm_accel/generic/vm/static/ot_vms_bank_static.sv",
+      "measured_sha256": "7828d619da2fd2462cf0253b78c074dad1171e6ca77799bfc21f22987ed72237",
+      "current_sha256": "7b2e2fbafead30cbabc427303bb339da070645637af9d1a69f0dbdaa0a88ee53"
+    }
+  ],
+  "full_native_qualification": false,
+  "warning": "Current structural bank successor differs from recorded7828 bank source profile; preserve both identities, reprove whole current join before qualification."
+}

@@ -118,6 +118,7 @@ module tb_s81_die_layer;
     // ---------------- DUT: control plane
     reg pw_v = 0; reg [6:0] pw_a = 0; reg [27:0] pw_d = 0; reg [7:0] plen = 0;
     reg i_v = 0; wire i_r; reg [511:0] i_d = 0; reg i_l = 0;
+    wire [84:0] legacy_mix_c;
     wire [84:0] c [0:11]; wire [8:0] d [0:11]; wire [1:0] est [0:11];
 `ifdef TB_SEQC
     // decision A: dsfd_stage_seq_c (kit start / done + program write on the serial clock); the kit (bench) writes the
@@ -128,7 +129,7 @@ module tb_s81_die_layer;
     dsfd_stage_seq_c u_ctl (.ckv(ckv), .rsv(rsv), .ck(ck), .rst(rst), .f_ks(f_ks), .t_kd(t_kd), .f_pw(f_pw), .f_plen(plen),
         .t_st(t_st),
         .c0(c[0]), .c1(c[1]), .c2(c[2]), .c3(c[3]), .c4(c[4]), .c5(c[5]), .c6(c[6]), .c7(c[7]), .c8(c[8]), .c9(c[9]),
-        .c10(c[10]), .c11(c[11]),
+        .c10(legacy_mix_c), .c11(c[11]),
         .d0(d[0]), .d1(d[1]), .d2(d[2]), .d3(d[3]), .d4(d[4]), .d5(d[5]), .d6(d[6]), .d7(d[7]), .d8(d[8]), .d9(d[9]),
         .d10(d[10]), .d11(d[11]),
         .s0(est[0]), .s1(est[1]), .s2(est[2]), .s3(est[3]), .s4(est[4]), .s5(est[5]), .s6(est[6]), .s7(est[7]),
@@ -140,7 +141,7 @@ module tb_s81_die_layer;
     dsfd_sp_ctrl_e #(.MY_ID(2), .SRC_LO(1), .SRC_HI(1)) u_ctl (.ck(ck), .rs(rst), .pw_v(pw_v), .pw_a(pw_a), .pw_d(pw_d),
         .prog_len(plen), .cfg_users(12'd4), .i_v(i_v), .i_r(i_r), .i_d(i_d), .i_l(i_l),
         .c0(c[0]), .c1(c[1]), .c2(c[2]), .c3(c[3]), .c4(c[4]), .c5(c[5]), .c6(c[6]), .c7(c[7]), .c8(c[8]), .c9(c[9]),
-        .c10(c[10]), .c11(c[11]),
+        .c10(legacy_mix_c), .c11(c[11]),
         .d0(d[0]), .d1(d[1]), .d2(d[2]), .d3(d[3]), .d4(d[4]), .d5(d[5]), .d6(d[6]), .d7(d[7]), .d8(d[8]), .d9(d[9]),
         .d10(d[10]), .d11(d[11]),
         .vwe(vwe), .vwa(vwa), .vwd(vwd), .flt(flt), .fvec(fvec), .stk(stk), .snap(snap));
@@ -383,6 +384,36 @@ module tb_s81_die_layer;
     integer hcnt = 0, gcnt [0:1];
 `ifdef TB_MIX4_REAL
     localparam MXR = 1;
+    wire [12:0] mx_cv; wire [1091:0] mx_cd;
+    wire [12:0] mx_av = {2'b0,est[10][1],10'b0};
+    wire [12:0] mx_dv = {2'b0,d[10][8],10'b0};
+    wire [103:0] mx_dt = {16'b0,d[10][7:0],80'b0};
+    reg mx_pw_v=0; reg [6:0] mx_pw_a=0; reg [27:0] mx_pw_d=0;
+    wire mx_is_fault; wire [3:0] mx_is_code; wire [1:0] mx_phase;
+    reg [34:0] mx_pmem [0:7];
+    ot_s81_fixed_issue #(.NOPS(2),.NENG(13),.STAGE(0),.OP_BASE(2),.ENG_PRESENT(13'h400)) mx_issuer(
+        .clk(ck),.rst_n(rst && cyc>=1000),.pw_v(mx_pw_v),.pw_a(mx_pw_a),.pw_d(mx_pw_d),.prog_len(8'd2),
+        .job_v(cyc==1250),.job_user(10'd0),.job_pos(21'd0),.job_tok(21'd1000),
+        .cmd_v(mx_cv),.cmd_d(mx_cd),.engine_available(mx_av),.dn_v(mx_dv),.dn_tag(mx_dt),
+        .fault(mx_is_fault),.fault_code(mx_is_code),.phase(mx_phase),
+        .job_rdy(),.busy(),.job_done(),.job_kdone(),.done_slot(),.kit_tok(),.st_jobs(),.st_cmds());
+    assign c[10] = {mx_cv[10],mx_cd[840+:84]};
+    initial begin: mix_fixed_boot
+        wait(dir != "");
+        $readmemh({dir,"/mix_program.mem"},mx_pmem);
+        while(cyc<1010) @(negedge ck);
+        for(int z=0;z<8;z++) begin
+            mx_pw_v=1; mx_pw_a=mx_pmem[z][34:28]; mx_pw_d=mx_pmem[z][27:0];
+            @(negedge ck); mx_pw_v=0; @(negedge ck);
+        end
+    end
+    always @(posedge ck) if(rst && mx_is_fault) $fatal(1,"MIX_FIXED_ISSUER fault code=%0d cycle=%0d phase=%0d",mx_is_code,cyc,mx_phase);
+    initial begin
+        if(JOBS!=1) $fatal(1,"MIX fixed component calendar contains one context; compile all contexts before use");
+`ifdef TB_SEQC
+        $fatal(1,"MIX fixed component calendar requires its declared packet-clock profile");
+`endif
+    end
     wire [19:0] mx_rq_v; wire [279:0] mx_rq_row;
     reg [19:0] mx_rs_v = 0; reg [10239:0] mx_rs_d = 0;
     wire [3:0] mx_wq_v; wire [55:0] mx_wq_row;
@@ -408,6 +439,7 @@ module tb_s81_die_layer;
     end
 `else
     localparam MXR = 0;
+    assign c[10] = legacy_mix_c;
 `endif
     reg eng_h = 0, eng_done = 0;         // eng_h: the program has an Engram h write (a port-10 op with wrow >= 0)
     reg clr_req = 0;

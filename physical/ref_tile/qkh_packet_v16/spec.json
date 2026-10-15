@@ -1,0 +1,107 @@
+{
+ "name": "qkh_packet_v16",
+ "top": "qkh_packet_v16",
+ "kind": "tile",
+ "sources": [
+  "rtl/qwen_sys/head_staging_20261015/ot_qkh_packet_stage.sv",
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/qwen_sys/head_staging_20261015/qkh_packet_masters.sv"
+ ],
+ "params": {},
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 21.6,
+  "h": 21.6
+ },
+ "pins": {
+  "W": [
+   "d"
+  ],
+  "E": [
+   "q"
+  ],
+  "S": [
+   "clk",
+   "rst_n"
+  ]
+ },
+ "inter": [],
+ "refglob": "*",
+ "layer_cap": "M5",
+ "recipe": 2,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "inhold": true,
+ "outhold": true,
+ "io_flop_at_pins": {
+  "cols": 4
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 8,
+  "hold_margin_ns": 0.03,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M5"
+  },
+  "macro_halo_um": 5.4
+ },
+ "structural_change": "New actual fixed-cycle ECTL/head and score/ECTL pin stage; actual input capture and output launch flops; no enable/ready/credit. Skinny slot approved by q_kv_die; parent global per-bit wires and composed cycle ages remain separately gated.",
+ "job": {
+  "owner": "Codex:q_compute_elem_head_stage",
+  "branch": "codex/q-compute-native-parents-1014",
+  "tag": "bp1",
+  "purpose": "Native actual packet staging for classified ECTL/head die timing failure",
+  "extra_paths": [
+   "physical/qwen_head_staging_1015",
+   "rtl/test/qwen_head_staging"
+  ],
+  "benches": [
+   {
+    "name": "fixed_packet_0",
+    "cmd": "bash physical/qwen_head_staging_1015/bench.sh {RUN}/bench/packet_0 16 0 qkh_packet_v16",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 1,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "^PASS qkh_packet_stage W=16 checks="
+   },
+   {
+    "name": "fixed_packet_1",
+    "cmd": "bash physical/qwen_head_staging_1015/bench.sh {RUN}/bench/packet_1 16 1 qkh_packet_v16",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 1,
+    "needs": [
+     "iverilog"
+    ],
+    "fail_regex": "^FAIL qkh_packet_stage W=16 checks="
+   },
+   {
+    "name": "fixed_packet_2",
+    "cmd": "bash physical/qwen_head_staging_1015/bench.sh {RUN}/bench/packet_2 16 2 qkh_packet_v16",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 1,
+    "needs": [
+     "iverilog"
+    ],
+    "fail_regex": "^FAIL qkh_packet_stage W=16 checks="
+   }
+  ],
+  "views_to": "physical/ref_tile/qkh_packet_v16/views",
+  "record_to": "results/rtl/ref_tile/qkh_packet_v16"
+ },
+ "macros": [],
+ "children": [],
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ }
+}

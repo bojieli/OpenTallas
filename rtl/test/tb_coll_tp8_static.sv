@@ -78,6 +78,7 @@ module tb_coll_tp8_static #(
             qfd_io_collective_static u_die (       // the die-name master (LU / LS by +define, = LATU / LATS)
                 .clk(clk), .clk_pfold0(clk), .clk_pfold1(clk), .clk_pfold2(clk), .clk_pfold3(clk),
                 .clk_xfold0(clk), .clk_xfold1(clk), .clk_xfold2(clk), .clk_xfold3(clk),
+                .clk_pring0(clk),.clk_pring1(clk),.clk_sring0(clk),.clk_sring1(clk),.clk_sring2(clk),.clk_sring3(clk),.clk_sring4(clk),.clk_rring0(clk),.clk_rring1(clk),
                 .rst_n(rst_n), .pkg_s(P[1:0]), .die_ps(D[0]),
                 .cmd_v(cmd_v), .cmd_mode(cmd_mode), .cmd_words(cmd_words), .cmd_tag(cmd_tag),
                 .in_valid(iv[g]), .in_data(id[g*FW +: FW]), .in_last(il[g]), .in_mode(im[g]), .in_tag(it[g*TAGW +: TAGW]),
@@ -92,7 +93,7 @@ module tb_coll_tp8_static #(
                 .up_slot(), .ur_peer_slot(), .sx0_peer_slot(), .sx1_peer_slot(), .sx2_peer_slot(), .cmd_free());
 `else
             ot_coll_tp8_static #(.LU(LATU), .LS(LATS)) u_die (
-                .clk(clk), .clk_pfold({4{clk}}), .clk_xfold({4{clk}}),
+                .clk_mem({9{clk}}),.clk(clk), .clk_pfold({4{clk}}), .clk_xfold({4{clk}}),
                 .rst_n(rst_n), .pkg_s(P[1:0]), .die_ps(D[0]),
                 .cmd_v(cmd_v), .cmd_mode(cmd_mode), .cmd_words(cmd_words), .cmd_tag(cmd_tag),
                 .in_valid(iv[g]), .in_data(id[g*FW +: FW]), .in_last(il[g]), .in_mode(im[g]), .in_tag(it[g*TAGW +: TAGW]),
