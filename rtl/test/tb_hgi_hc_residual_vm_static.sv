@@ -17,7 +17,7 @@ module tb_hgi_hc_residual_vm_static;
     integer cycle=0,words=0;
     parameter integer MUT=0;
     function automatic [255:0] payload(input integer sector);
-        for(integer j=0;j<8;j=j+1)payload[j*32+:32]=(32'h3f000000|32'((sector*8+j)&16'hffff))&32'hffff0000;
+        for(integer j=0;j<8;j=j+1)payload[j*32+:32]=(32'h3f000000|32'(((sector*8+j)&8'hff)<<16));
     endfunction
     ot_hgi_hc_residual_vm_static #(.MUT_POSITION(MUT)) producer(
         .clk(clk),.rst_n(rst_n),.launch(launch),.npos(4'd8),.base_sector(16'd0),
