@@ -3,9 +3,9 @@ set -euo pipefail
 out=$1;mkdir -p "$out"
 vl=${VERILATOR:-$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator}
 python3 tools/hbm_static_attention/prepare_engine.py --out "$out/vectors" > "$out/prepare.log" 2>&1
-"$vl" --binary --timing -O1 -j 16 -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD \
- --output-split 20000 --output-split-cfuncs 1000 --top-module tb_hbm_attn_calendar --Mdir "$out/obj" -o sim \
- rtl/hdc/v41x/static/ot_hdc_v41x_attn_calendar.sv rtl/hdc/v41x/static/ot_hbm_attn_event_program.sv \
+"$vl" --binary --timing --hierarchical -O1 -j ${JOBS:-4} -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD \
+ --unroll-count 1 --unroll-limit 131072 --output-split 20000 --output-split-cfuncs 1000 --top-module tb_hbm_attn_calendar --Mdir "$out/obj" -o sim \
+ tools/hbm_static_attention/arithmetic_hierarchy.vlt rtl/hdc/v41x/static/ot_hdc_v41x_attn_calendar.sv rtl/hdc/v41x/static/ot_hbm_attn_event_program.sv \
  rtl/hdc/v41x/ot_hdc_v41x_attn.sv rtl/hdc/v41x/ot_hdc_v41x_attn_tile.sv rtl/hdc/v41x/ot_hdc_v41x_attn_staging.sv \
  rtl/hdc/ot_hdc_fastfp.sv physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v \
  rtl/test/hbm_accel/generic/tb_hbm_attn_calendar.sv > "$out/build.log" 2>&1
