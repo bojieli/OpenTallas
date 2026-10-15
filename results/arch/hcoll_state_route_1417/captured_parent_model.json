@@ -12,11 +12,11 @@
  "total_extra_die_ff": 5312,
  "read_lead_edges": 2,
  "old_read_lead_edges": 1,
- "old_optimized_wave_edges": 37,
- "captured_wave_edges": 42,
- "wave_cost_edges": 5,
- "ratio_wave": 1.135135135135135,
- "initiation": "8tags per42edge wave; fixed no flowcontrol",
+ "old_optimized_wave_edges": 40,
+ "captured_wave_edges": 44,
+ "wave_cost_edges": 4,
+ "ratio_wave": 1.1,
+ "initiation": "8tags per44edge wave,16tags/88edge two-wave batch; shared q0 CW forwarding39..46 requires next first TX>=47",
  "timeline_offsets": {
   "LP": 0,
   "readTX0_2": 1,
@@ -38,5 +38,11 @@
   "resultRX1": 41,
   "tag_reuse": 42
  },
- "semantics": "Input captured state commits each payload write one edge later; two-edge read lead preserves read-before-write and availability. Existing parent metadata detects occupied tags/underflow/identity and never masks issue. No current q3/q2 adoption. Wholeprogramme model remains compiler-owner task."
+ "semantics": "Input captured state commits each payload write one edge later; two-edge read lead preserves read-before-write and availability. Existing parent metadata detects occupied tags/underflow/identity and never masks issue. No current q3/q2 adoption. Wholeprogramme model remains compiler-owner task.",
+ "old_tag_lifetime_edges": 37,
+ "captured_tag_lifetime_edges": 42,
+ "tag_latency_cost_edges": 5,
+ "two_wave_last_q1_result_edge": 92,
+ "two_wave_store_complete_edge": 93,
+ "next_local_start_edge": 94
 }

@@ -102,11 +102,11 @@ module tb_hgi_coll_pring_captured_static;
             for(integer c=0;c<NC;c=c+1)begin prog[q][c]='0;expect_v[q][c]=0;end
         end
         // Six full eight-tag waves. All four actual parents run the balanced
-        // golden tree. Last Q1 result is B+41; same tag is reused at B+42.
+        // golden tree. Last Q1 result is B+41; tag lifetime is 42; the shared CW resource requires 44-edge waves.
         for(integer r=0;r<6;r=r+1)begin
             for(integer tag=0;tag<8;tag=tag+1)begin
                 integer b,dest;
-                b=r*42+tag;
+                b=r*44+tag;
                 for(integer q=0;q<4;q=q+1)begin
                     prog[q][b].lp_we=1;prog[q][b].lp_tag=3'(tag);
                     for(integer l=0;l<8;l=l+1)prog[q][b].lp_data[l*32+:32]=partial(q,tag,l,r);
@@ -159,7 +159,7 @@ module tb_hgi_coll_pring_captured_static;
             $display("CAPTURED_RING FAULT PASS scenario=%0d exact timeline=%0d",scenario,last_cycle);
         end else begin
             if(checked!=6*8*4*8)$fatal(1,"coverage missing %0d",checked);
-            $display("CAPTURED_RING PASS quadrants=4 tags=8 rounds=6 lanes_checked=%0d cycles=%0d read_lead=2 wave=42 last_q1_offset=41",checked,last_cycle);
+            $display("CAPTURED_RING PASS quadrants=4 tags=8 rounds=6 lanes_checked=%0d cycles=%0d read_lead=2 wave=44 tag_lifetime=42 last_q1_offset=41",checked,last_cycle);
         end
         $finish;
     end
