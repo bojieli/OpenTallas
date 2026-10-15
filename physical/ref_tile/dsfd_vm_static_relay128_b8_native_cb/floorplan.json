@@ -1,0 +1,116 @@
+{
+ "schema": "opentallas.ref_tile.floorplan.v1",
+ "name": "dsfd_vm_static_relay128_b8_native_cb",
+ "top": "dsfd_vm_static_relay128_b8",
+ "kind": "tile",
+ "die": [
+  0,
+  0,
+  172.8,
+  172.8
+ ],
+ "core": [
+  2.16,
+  2.16,
+  170.64000000000001,
+  170.64000000000001
+ ],
+ "why": "spec outline (exact: the closed view's sub-slot)",
+ "std_area_um2": null,
+ "layer_contract": {
+  "children": {},
+  "pg_layer": "M5",
+  "rlayers": [
+   "M2",
+   "M5"
+  ],
+  "strap_layer": "M6",
+  "layer_cap": "M5",
+  "cap_basis": "contract"
+ },
+ "pins": {
+  "N": [
+   "i_rv",
+   "i_wv",
+   "i_ra",
+   "i_wa",
+   "i_rt",
+   "i_wt",
+   "i_wm",
+   "i_wd"
+  ],
+  "S": [
+   "o_rv",
+   "o_wv",
+   "o_ra",
+   "o_wa",
+   "o_rt",
+   "o_wt",
+   "o_wm",
+   "o_wd"
+  ],
+  "E": [
+   "o_sv",
+   "o_cv",
+   "o_sd",
+   "o_st",
+   "o_ct",
+   "o_ca",
+   "o_cm"
+  ],
+  "W": [
+   "ck_req",
+   "ck_rsp",
+   "rst_n",
+   "i_sv",
+   "i_cv",
+   "i_sd",
+   "i_st",
+   "i_ct",
+   "i_ca",
+   "i_cm"
+  ]
+ },
+ "clock_port": "ck_req",
+ "clock_ports": [
+  "ck_req",
+  "ck_rsp"
+ ],
+ "blocks": [],
+ "findings": [],
+ "referenced": [
+  "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_relay128.sv",
+  "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_relay128_b8.sv",
+  "physical/ref_tile/dsfd_vm_static_relay128_b8_native_cb/kit.env",
+  "physical/ref_tile/dsfd_vm_static_relay128_b8_native_cb/clock.sdc",
+  "physical/ref_tile/dsfd_vm_static_relay128_b8_native_cb/signoff.sdc",
+  "physical/ref_tile/dsfd_vm_static_relay128_b8_native_cb/pdn.tcl",
+  "physical/ref_tile/dsfd_vm_static_relay128_b8_native_cb/pre_cts.tcl",
+  "physical/ref_tile/dsfd_vm_static_relay128_b8_native_cb/post_cts.tcl",
+  "physical/ref_tile/dsfd_vm_static_relay128_b8_native_cb/post_grt.tcl",
+  "physical/ref_tile/dsfd_vm_static_relay128_b8_native_cb/pre_drt.tcl",
+  "physical/ref_tile/dsfd_vm_static_relay128_b8_native_cb/pre_fill.tcl",
+  "physical/ref_tile/dsfd_vm_static_relay128_b8_native_cb/post_fill.tcl",
+  "physical/ref_tile/dsfd_vm_static_relay128_b8_native_cb/pre_grt.tcl",
+  "physical/ref_tile/dsfd_vm_static_relay128_b8_native_cb/post_drt.tcl",
+  "tools/ref_tile/ref_route.sh",
+  "physical/qwen_die_masters/io_ref_skew.sdc",
+  "physical/qwen_die_masters/io_plain.sdc",
+  "physical/qwen_die_masters/repair_budget.tcl",
+  "physical/qwen_die_masters/pre_cts_skew.tcl",
+  "physical/qwen_die_masters/pre_ref_skew.tcl",
+  "physical/qwen_die_masters/post_plain.tcl",
+  "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
+  "physical/common_flow/grt_macro_top_layer.tcl",
+  "physical/s81_die_pins/v20_vm_static_transport_options/dsfd_vm_static_relay128_b8.tcl",
+  "physical/qwen_die_masters/io_flop_at_pins.tcl",
+  "physical/qwen_die_masters/out_flop_release.tcl",
+  "physical/dsrom_window_source/leaf_inhold.tcl",
+  "physical/dsrom_window_source/leaf_inhold_release.tcl",
+  "physical/ref_tile/dsfd_vm_static_relay128_b8_native_cb/pre_gpl.tcl",
+  "physical/ref_tile/dsfd_vm_static_relay128_b8_native_cb/pre_dpl.tcl",
+  "physical/common_flow/pin_reg_split.tcl",
+  "physical/common_flow/clock_entries.tcl",
+  "physical/ref_tile/dsfd_vm_static_relay128_b8_native_cb/clock_entry.sdc"
+ ]
+}

@@ -1,0 +1,965 @@
+{
+  "schema": "opentallas.hbm.forward_flow.design_contract.v1",
+  "physical_qualified": false,
+  "complete": false,
+  "nodes": {
+    "mode34_KV": {
+      "source": "ot_hbm_attn_staging_mode_local.sv opt-in WIP",
+      "macros1024x256": 34,
+      "real_valid_FF": 640,
+      "modes": [
+        "K/QK",
+        "V/PV"
+      ],
+      "epoch_rule": "mode_set beforefirstload; fullyreload separateK/V image eachjob, no reusebit; ILV0/NSTAGE1 only",
+      "geometry": "same32localcode+2narrowglobalmetadata reservations"
+    },
+    "arithmetic_shared": {
+      "actual_quad_master": "ot_attn_tile_m6h1q",
+      "count": 128,
+      "outline_um": [
+        514.89,
+        562.95
+      ],
+      "functional_HG1": 512,
+      "roles": [
+        "QK",
+        "PV"
+      ],
+      "time_shared": true,
+      "duplicated_for_forward_pipeline": false
+    },
+    "SC_score_store": {
+      "macros32x128": 256,
+      "status_FF": 32768,
+      "readflag_FF": 1024,
+      "source": "0e40b8668; componentPASS, wholeQK/nativejoinopen"
+    },
+    "SFU_native": {
+      "source": "c72a3325a",
+      "clock_ports": {
+        "global": 1,
+        "lane": 16,
+        "map": 16
+      },
+      "root_partition_qualified": false,
+      "rate_lanes": 16,
+      "one_head_calendar_edges": {
+        "T128": {
+          "arithmetic": 486,
+          "IO": 795
+        },
+        "T640": {
+          "arithmetic": 1102,
+          "IO": 2219
+        }
+      },
+      "head_programme_reconfiguration_priced": false,
+      "exact_SRAM_inventory": [
+        {
+          "kind": "operand_A/B/C/D/output",
+          "count": 80,
+          "macro": "ot_sram_1r1w_256x256_m2_r2c2",
+          "ports": "oneR/oneW each",
+          "derivation": "5groups*16banks; LWB15-clog2(16)=RB11"
+        },
+        {
+          "kind": "arithmetic_programme",
+          "count": 32,
+          "macro": "ot_sram_1r1w_1024x256_m2_r2c2"
+        },
+        {
+          "kind": "IO_programme",
+          "count": 12,
+          "macro": "ot_sram_1r1w_1024x256_m2_r2c2"
+        },
+        {
+          "kind": "aux_programme",
+          "count": 4,
+          "macro": "ot_sram_1r1w_1024x256_m2_r2c2"
+        },
+        {
+          "kind": "source",
+          "count": 8,
+          "macro": "ot_sram_1r1w_128x256_m1_r2c2"
+        },
+        {
+          "kind": "scratch",
+          "count": 2,
+          "macro": "ot_sram_1r1w_128x256_m1_r2c2"
+        },
+        {
+          "kind": "diagnostic_VM",
+          "count": 24,
+          "macro": "ot_sram_1r1w_1024x256_m2_r2c2",
+          "derivation": "8banks*3protectedData/ECC SRAM"
+        }
+      ],
+      "inventory_warning": "Export includes24diagnosticVM SRAMs already represented bycanonicalVM; do notcounttwice. Operand80 areactual256x256, not1024x256."
+    },
+    "MAX_SUM_reducer": {
+      "source": "c3973bd5a",
+      "source_macros128x256": 8,
+      "scratch_macros128x256": 2,
+      "arithmetic_latency": 6,
+      "reused_sequentially": [
+        "MAX",
+        "SUM"
+      ],
+      "collective_ring_interface_bound": false
+    },
+    "canonical_VM": {
+      "role": "existing fourquarter32bank inventory, notnewdiagnosticVM copies",
+      "diagnostic_P_join_sid": 0,
+      "diagnostic_RG": 3,
+      "diagnostic_WG": 1,
+      "canonical_allocator_bound": false,
+      "boundary": {
+        "RQ": 136,
+        "RR": 2056,
+        "WQ": 2248,
+        "DONE": 8
+      },
+      "one_R_one_W_per_bank_per_edge": true
+    },
+    "LG_path": {
+      "read_return_edges": 14,
+      "store_return_edges": 15,
+      "write_return_edges": 11,
+      "source": "actualnativePdiagnosticjoin; canonicalphysicalhomesnotassigned"
+    },
+    "P_prefetch": {
+      "source": "06207bb2f",
+      "macros32x128": 128,
+      "format": "FP32headmajor VM values exactlyBF16grid; stationaryBF16exp weights, notnormalizedP"
+    },
+    "PV_transpose": {
+      "payload_FF": 589824,
+      "per_tile_FF": 18432,
+      "proposed_roots": 64,
+      "actual_area_and_clock_qualified": false
+    },
+    "D_serializer": {
+      "source": "655f63e8d/307f0a9cc",
+      "macros32x128": 2048,
+      "actual_FF": 24757,
+      "actual_logic_um2": 31942.5201,
+      "clock_endpoints": [
+        6688,
+        6688,
+        6688,
+        6688,
+        53
+      ],
+      "VM_commits_per_record": 128
+    },
+    "registered_gather": {
+      "source": "adf0ef9d5",
+      "count": 4,
+      "FF_per_leaf": 4757,
+      "mapped_logic_um2_per_leaf": 2487.59586,
+      "incremental_edges": 2,
+      "combined_group_root_endpoints": 11445,
+      "physical_pins_per_leaf": 4759,
+      "physical_outline_um": null,
+      "physical_qualified": false
+    },
+    "final_normalization": {
+      "source": "tools/hgi_sim/ds_native.py attend()",
+      "algorithm": [
+        "SINK externalHBM fetch",
+        "AD_NEGB: SINK-MB",
+        "SFU_EXP",
+        "E1_ADDC: exp(SINK-MB)+SE\u2192FP32DEN",
+        "M1_DIVB rnd1: PV/DEN\u2192BF16O_own512/head",
+        "inverseRoPE downstream"
+      ],
+      "native_programme_SID_outputallocation_joined": false,
+      "physical_geometry": null
+    }
+  },
+  "edges": [
+    {
+      "source": "mode34_KV",
+      "destination": "arithmetic_shared",
+      "contract": "K:QKcode256local+metadata9;512HG1; exactKload8480b/edge",
+      "physical_join_qualified": false
+    },
+    {
+      "source": "arithmetic_shared",
+      "destination": "SC_score_store",
+      "contract": "twoQKlanetrees\u21921024b+32flags/edge; headmajorSCstore",
+      "physical_join_qualified": false
+    },
+    {
+      "source": "SC_score_store",
+      "destination": "canonical_VM",
+      "contract": "headmajorSC2048b drain +flags; allocationopen",
+      "physical_join_qualified": false
+    },
+    {
+      "source": "canonical_VM",
+      "destination": "SFU_native",
+      "contract": "rawSC\u2192scale through actualVM/LG/SFU ports",
+      "physical_join_qualified": false
+    },
+    {
+      "source": "SFU_native",
+      "destination": "canonical_VM",
+      "contract": "scaledSC",
+      "physical_join_qualified": false
+    },
+    {
+      "source": "canonical_VM",
+      "destination": "MAX_SUM_reducer",
+      "contract": "MAX8sourceSRAM+2scratch; actualscorehead/tokenresidency",
+      "physical_join_qualified": false
+    },
+    {
+      "source": "MAX_SUM_reducer",
+      "destination": "canonical_VM",
+      "contract": "maskedMBscalar/head",
+      "physical_join_qualified": false
+    },
+    {
+      "source": "canonical_VM",
+      "destination": "SFU_native",
+      "contract": "actualLGscalar14edgefetch MB; EXP(rawSC*scale-MB)",
+      "physical_join_qualified": false
+    },
+    {
+      "source": "SFU_native",
+      "destination": "canonical_VM",
+      "contract": "rawFP32E +RNEBF16encodedEB; no E/Z",
+      "physical_join_qualified": false
+    },
+    {
+      "source": "canonical_VM",
+      "destination": "MAX_SUM_reducer",
+      "contract": "SUMrawE; same10reducerSRAMs reused",
+      "physical_join_qualified": false
+    },
+    {
+      "source": "MAX_SUM_reducer",
+      "destination": "canonical_VM",
+      "contract": "maskedFP32SEscalar/head",
+      "physical_join_qualified": false
+    },
+    {
+      "source": "canonical_VM",
+      "destination": "P_prefetch",
+      "contract": "BF16-gridFP32headmajorEB values; actualprefetchconversion",
+      "physical_join_qualified": false
+    },
+    {
+      "source": "P_prefetch",
+      "destination": "arithmetic_shared",
+      "contract": "Pstationary1024b\u2192all128quadports; T6402.5MiBdelivered",
+      "physical_join_qualified": false
+    },
+    {
+      "source": "mode34_KV",
+      "destination": "PV_transpose",
+      "contract": "Vlocal16dimensions\u00d72lanes; mode-specificFP4awarepacking",
+      "physical_join_qualified": false
+    },
+    {
+      "source": "PV_transpose",
+      "destination": "arithmetic_shared",
+      "contract": "18432FF/tile;576bexpandedoperand/quad",
+      "physical_join_qualified": false
+    },
+    {
+      "source": "arithmetic_shared",
+      "destination": "D_serializer",
+      "contract": "PV16384b+512flags each16beats",
+      "physical_join_qualified": false
+    },
+    {
+      "source": "D_serializer",
+      "destination": "registered_gather",
+      "contract": "fourregional8tilegroups512b+16flagsperinput",
+      "physical_join_qualified": false
+    },
+    {
+      "source": "registered_gather",
+      "destination": "canonical_VM",
+      "contract": "headmajorNE8banks/WG1;128commits +2edges",
+      "physical_join_qualified": false
+    },
+    {
+      "source": "canonical_VM",
+      "destination": "final_normalization",
+      "contract": "FP32PVnumerator andFP32SE+sink; actualconsumerunbound",
+      "physical_join_qualified": false
+    }
+  ],
+  "source_provenance": {
+    "native_P_owner": "/root/h_hc_sfu/native_p_producer_join",
+    "source": "b63651aa6/2c82e3237",
+    "gate": "AGIunit3881884 currentlyLIVE, notPASS atcapture"
+  },
+  "alternatives": {
+    "shared_arithmetic_oriented": "one128quadfieldusedfirstQKthenPV; groupreducer/SFU/Pstores betweenbank/VMboundaries andexplicitPreturn",
+    "dedicated_QK_and_PV": "another128actualquadmasters +37.101737664mm2 ofquads alone; alsoadditionalroots/PG/halos/sourcequalification. No duplicatecompute proposedforfree.",
+    "D_central": "same2585knownboxes withQK/PVshared; missingproducer/reducerlogicexplicit"
+  },
+  "additional_dedicated_arithmetic_macro_area_mm2": 37.101737664000005,
+  "collective_obligations": {
+    "QK_featuretile_reductions": "actual16localtrees insidecomponent; notquarterring",
+    "MAX_SUM": "actualREDMAX+goldencsum8 in2scratchSRAMs; noCOLL global insidecomponent",
+    "PV_feature_merges": "actualcomponentlocal merges, notglobalring",
+    "post_o_own": "Oprojection/COLL downstreamoutsideATT; actualglobalhead-per-dieallocationopen",
+    "cross_rank": "algorithmownership mustbindbeforeaddingrealglobalreductions; neverinsertCOLL merelybecauseedgecrossesplot"
+  },
+  "limits": [
+    "Topologicalstageorder only; no samequad duplicatedfreely forQK andPV.",
+    "ActualsourcePjoin usesdiagnosticSID0; notcanonicalNEATT/SWQuantallocation.",
+    "Existing24diagnosticVMmacros areexcludedfromincrementalSFU/reducerinventory toavoidcountingcanonicalVMtwice.",
+    "16headprogramme serialization andperheadcontrollerreconfiguration notpriced.",
+    "No geometricwinnerorroute/CTS/cut/nativeperformanceclosure."
+  ],
+  "owner_exports": {
+    "ATT": {
+      "path": "/home/ubuntu/wt/hbm-static-attn-quant-1014/results/arch/hbm_attention_static_1015/actual_forward_source_graph.json",
+      "sha256": "62f33b9c97d4bc50ad7d3ba1a4582425c8b1ff5b37c590823f9548b2cc894e3b",
+      "exact_owner_export": {
+        "schema": "opentallas.hbm_attn.actual_forward_source_graph.v1",
+        "qualification": false,
+        "profile": "H16D512 TD32NL2 existing32pairs,shared512HG1",
+        "native_head_mapping": "NativeDSprogrammehead-per-die\u2192physicalH16engineallocationstillopen; H16componentmathdoesnotprovewhole-tokenownership",
+        "nodes": [
+          {
+            "id": "query",
+            "owner": "h_attention_quant",
+            "source": "rtl/hdc/v41x/static/ot_hbm_attn_query_prefetch.sv",
+            "kind": "actual_component",
+            "storage": "64real32x128,2epochs",
+            "format": "unchangedFP32VM\u2192BF16upper16,nonzero low16 faults",
+            "record_words": 8192,
+            "VM_read_edges": 128
+          },
+          {
+            "id": "KV_source",
+            "owner": "h_die/service_native",
+            "kind": "nativeallocation_open",
+            "format": "source544B/row17sectors\u2192packed4240b/row",
+            "phase": "K andV fullreload distinctjobs",
+            "rows": [
+              128,
+              640
+            ]
+          },
+          {
+            "id": "stage",
+            "owner": "geometry_hbm_system+h_attention_quant",
+            "source": "rtl/hdc/v41x/static/ot_hbm_attn_staging_grouped.sv",
+            "kind": "actual34macro_component",
+            "storage": "34real1024x256 once perengine",
+            "current": "grouped265b rawABI,1edge read",
+            "candidate": "same34 mode-specificK/V permutation +640validFF inprogress, no unpricedreuse"
+          },
+          {
+            "id": "shared_tiles",
+            "owner": "h_attention_quant+h_die",
+            "source": "rtl/hdc/v41x/static/ot_hdc_v41x_attn_physical_calendar.sv",
+            "hierarchy": "g_t[gk].g_ts.u_t, ot_hdc_v41x_attn_tile_s HG1",
+            "kind": "ACTUAL_SHARED_QK_PV_ARITHMETIC",
+            "tiles": 32,
+            "HG1_engines": 512,
+            "quads": 128,
+            "H": 16,
+            "D": 512,
+            "TD": 32,
+            "NL": 2,
+            "FPL": 6,
+            "FML": 8,
+            "PWORDS": 2,
+            "phase": "QKonly orPVonly separatejob; samearithinstance/stationarybanks/issueports",
+            "duplication_required_for_dedicated_QK_and_PV": true
+          },
+          {
+            "id": "QK_reduce",
+            "owner": "h_attention_quant+h_die",
+            "source": "rtl/hdc/v41x/static/ot_hdc_v41x_attn_physical_calendar.sv",
+            "hierarchy": "g_ln/gl.g_lh/gh",
+            "kind": "actual_local16featuretile tree",
+            "operation": "D512chunk8 orderedFP32dot",
+            "collective": false,
+            "ports": "sc_v,sc_row16,sc_m2,sc_y1024,sc_f32"
+          },
+          {
+            "id": "SC_store",
+            "owner": "h_attention_quant",
+            "source": "rtl/hdc/v41x/static/ot_hbm_attn_qk_native_output.sv",
+            "kind": "actual_component_current7b2_NE",
+            "storage": "256real32x128,2epochs,32768flagFF+1024readflagFF",
+            "VM_WG": 1,
+            "VM_readback_RG": 3,
+            "VM_edges": [
+              32,
+              160
+            ],
+            "format": "head-majorFP32[16][T] plusaggregatefault;actualarithjoinopen"
+          },
+          {
+            "id": "REDMAX",
+            "owner": "h_elements_b",
+            "kind": "actualreducer_join_inprogress",
+            "operation": "SC*FP32scale0x3d3504f3\u2192wholeT localMAX\u2192MB[16]",
+            "collective": false,
+            "format": "FP32unrounded"
+          },
+          {
+            "id": "SFU_EXP",
+            "owner": "h_hc_sfu",
+            "kind": "actualSFUprogramme_join_inprogress",
+            "operation": "EXP(FP32(SC*scale)-MBhead)",
+            "format": "unroundedFP32E[16][T]",
+            "source": "tools/hgi_sim/ds_native.py:1066-1071"
+          },
+          {
+            "id": "REDSUM",
+            "owner": "h_elements_b",
+            "kind": "actualreducer_join_inprogress",
+            "operation": "exactchunk8 wholeT SUM(E)\u2192SE[16]",
+            "collective": false,
+            "format": "FP32unrounded"
+          },
+          {
+            "id": "EB_publish",
+            "owner": "h_hc_sfu/native_p_producer_join",
+            "kind": "actualrounding_component",
+            "operation": "goldenBF16RNE(E),expandedFP32VM while E remainsunroundedforSUM",
+            "format": "UNNORMALIZEDexp BF16,notE/SE",
+            "aperture": "allocatorauthorityopen"
+          },
+          {
+            "id": "P_prefetch",
+            "owner": "h_attention_quant",
+            "source": "rtl/hdc/v41x/static/ot_hbm_attn_p_prefetch.sv",
+            "kind": "actualcomponent_current7b2_NE",
+            "storage": "128real32x128,2epochs",
+            "VM_RG": 3,
+            "VM_edges": [
+              32,
+              160
+            ],
+            "ports": "Pword4rows\u00d716heads\u00d716b=1024b,eventPWORDS2",
+            "latency": "barebank6,registeredrequest/consumer sourceFILL_LAT8;notSFUsharedLG14tap"
+          },
+          {
+            "id": "PV_transpose",
+            "owner": "h_attention_quant+h_die",
+            "source": "rtl/hdc/v41x/static/ot_hbm_attn_transpose_regs.sv",
+            "kind": "explicitFFcomponent_fulljoinopen",
+            "FF": 589824,
+            "operation": "NL2\u00d716featuretiles ofV readforPV16dim outputs",
+            "clock": "64nominal9216sinkroots;physicalqualificationopen"
+          },
+          {
+            "id": "PV_merge",
+            "owner": "h_attention_quant+h_die",
+            "source": "rtl/hdc/v41x/static/ot_hdc_v41x_attn_physical_calendar.sv",
+            "hierarchy": "g_m",
+            "kind": "actual_localblockmerge",
+            "operation": "unnormalizedEB\u00d7V exactchunk8 T-reduction",
+            "collective": false,
+            "ports": "32tiles\u00d716headsFP32/beat,16dimensionbeats\u2192FP32[16][512]"
+          },
+          {
+            "id": "PV_local_D",
+            "owner": "h_attention_quant+geometry_hbm_system",
+            "source": "rtl/hdc/v41x/static/ot_hbm_attn_pv_serializer_local_registered.sv",
+            "kind": "selecteddevelopment_actualcomponent",
+            "storage": "2048real32x128,2epochs",
+            "status_FF": 16384,
+            "readflags_FF": 8192,
+            "physical_roots": "4tile%4 roots +globalcontrol",
+            "phase": "16captureedges,128headmajorVMwriteedges"
+          },
+          {
+            "id": "PV_gather",
+            "owner": "h_attention_quant+geometry_hbm_system",
+            "source": "rtl/hdc/v41x/static/ot_hbm_attn_pv_group_gather_registered.sv",
+            "kind": "registeredphysical_candidate_notclosed",
+            "count": 4,
+            "leaf_FF": 4757,
+            "TT_logic_area_um2": 2487.59586,
+            "pin_bits": 4759,
+            "added_edges": 2,
+            "root_withlocalPVclock_sinks": 11445,
+            "operation": "8tile512b+16flags inputs\u2192one512b+16flags outputtogroupVMpair"
+          },
+          {
+            "id": "PV_VM",
+            "owner": "h_vm+h_attention_quant",
+            "kind": "actualcurrent7b2_NE_component",
+            "VM_WG": 1,
+            "VM_bank_pairs": "g\u2192{2g,2g+1}",
+            "format": "unchangedFP32head-major[16][512]",
+            "write_edges": 128,
+            "commit_latency": 3,
+            "physical_scatter": "candidate8banks\u21924pairs,notextraVMports"
+          },
+          {
+            "id": "DEN",
+            "owner": "h_hc_sfu+h_elements_b",
+            "kind": "nativejoin_open",
+            "operation": "FP32(EXP(SINKhead-MBhead)+SEhead)",
+            "format": "FP32[16]",
+            "source": "tools/hgi_sim/ds_native.py:1076-1085",
+            "collective": false
+          },
+          {
+            "id": "norm_invRoPE",
+            "owner": "h_hc_sfu+h_elements_b",
+            "kind": "nativejoin_open",
+            "operation": "BF16(PV/DENhead),then64dimpairwiseinverseRoPEtail\u2192o_own",
+            "format": "512expandedBF16FP32words/head",
+            "source": "tools/hgi_sim/ds_native.py:1086-1089"
+          },
+          {
+            "id": "post_attention",
+            "owner": "h_vm+h_die+actualSM/COLLowner",
+            "kind": "nativeglobalheadmapping_open",
+            "operation": "nativeOprojection/ogroupcollective/downstreamactualconsumer;do notinventinsideATTcollective"
+          }
+        ],
+        "edges": [
+          {
+            "source": "query",
+            "destination": "shared_tiles",
+            "contract": "QKphaseBF16query:16KiBuseful/32KiBFP32prefetch;physicalquadbroadcastsourceactivityseparatemodel"
+          },
+          {
+            "source": "KV_source",
+            "destination": "stage",
+            "contract": "Ksource544*Tbytes andVsource544*Tbytes,separatefullreloads"
+          },
+          {
+            "source": "stage",
+            "destination": "shared_tiles",
+            "contract": "QKmodeactualNL2K operands32terms\u00d718b/tile;crossgrouptrafficmustcount"
+          },
+          {
+            "source": "shared_tiles",
+            "destination": "QK_reduce",
+            "contract": "QKphase32tiles\u00d716FP32 partials,2lane16featuretiletrees"
+          },
+          {
+            "source": "QK_reduce",
+            "destination": "SC_store",
+            "contract": "2rows\u00d716FP32+flags/edge;T/2captureedges"
+          },
+          {
+            "source": "SC_store",
+            "destination": "REDMAX",
+            "contract": "H16T FP32score actualVM/consumerjoinopen"
+          },
+          {
+            "source": "SC_store",
+            "destination": "SFU_EXP",
+            "contract": "sameunroundedscore image,exactFP32scale"
+          },
+          {
+            "source": "REDMAX",
+            "destination": "SFU_EXP",
+            "contract": "16FP32MB scalars/headbroadcast"
+          },
+          {
+            "source": "SFU_EXP",
+            "destination": "REDSUM",
+            "contract": "H16T unroundedFP32E"
+          },
+          {
+            "source": "SFU_EXP",
+            "destination": "EB_publish",
+            "contract": "H16T E\u2192BF16RNE storagepass"
+          },
+          {
+            "source": "EB_publish",
+            "destination": "P_prefetch",
+            "contract": "H16T expandedFP32BF16grid words;32/160bareRG3reads"
+          },
+          {
+            "source": "P_prefetch",
+            "destination": "shared_tiles",
+            "contract": "PVphase4row\u00d716headBF16Pwords/edge"
+          },
+          {
+            "source": "stage",
+            "destination": "PV_transpose",
+            "contract": "VphasebothNLrows/group,real544Bsource/stagingnotfromQKscores"
+          },
+          {
+            "source": "PV_transpose",
+            "destination": "shared_tiles",
+            "contract": "PVphase16featurevalues\u00d72lanes transposed576b operands"
+          },
+          {
+            "source": "shared_tiles",
+            "destination": "PV_merge",
+            "contract": "PVphase512FP32partialoutputs/beat"
+          },
+          {
+            "source": "PV_merge",
+            "destination": "PV_local_D",
+            "contract": "H16D512fullFP32:16capturephases\u00d716384b+512flags"
+          },
+          {
+            "source": "PV_local_D",
+            "destination": "PV_gather",
+            "contract": "g tile%4:8\u00d7(512b+16flags) pin-localcapture"
+          },
+          {
+            "source": "PV_gather",
+            "destination": "PV_VM",
+            "contract": "4\u00d7528bregisteredoutput,8x281actualwq,128headmajorrequests+2stageedges"
+          },
+          {
+            "source": "REDMAX",
+            "destination": "DEN",
+            "contract": "16FP32MB"
+          },
+          {
+            "source": "REDSUM",
+            "destination": "DEN",
+            "contract": "16FP32SE"
+          },
+          {
+            "source": "PV_VM",
+            "destination": "norm_invRoPE",
+            "contract": "16\u00d7512FP32PV"
+          },
+          {
+            "source": "DEN",
+            "destination": "norm_invRoPE",
+            "contract": "16FP32DEN broadcast"
+          },
+          {
+            "source": "norm_invRoPE",
+            "destination": "post_attention",
+            "contract": "actualo_own512words/head,nativemappingauthorityopen"
+          }
+        ],
+        "local_reductions": "QKfeaturetree,wholeTMAX/SUM,PVblockmergearelocalinthisH16component;nointerdieCOLLwithinATTinvented",
+        "source_sha256": {
+          "rtl/hdc/v41x/static/ot_hdc_v41x_attn_physical_calendar.sv": "7e5644e811aa1071310e7bf6547d5396ee79340332b17831e1ce4760ef67a8ef",
+          "rtl/hdc/v41x/static/ot_hbm_attention_physical_static_engine.sv": "24961206978e7592720bb6551af763a84e11ebb0cf38750584271cae6092d120",
+          "tools/hgi_sim/ds_native.py": "127598c96f67e21e3de6a176d4749bc30b2a45ba17675c7ee5a1b91ff57558ad"
+        },
+        "activity_model": "results/arch/hbm_attention_static_1015/source_activity_model.json",
+        "open": "Actualfullarith+SC+SU/SFU+EB+PVnativeproducerjoin,globalcalendar/residency,sourcebandwidth,station/clock/pin/cut/route/price"
+      }
+    },
+    "P_producer": {
+      "path": "/home/ubuntu/wt/hbm-native-p-join-1015/results/rtl/hbm_native_p_join_1015/producer_graph.json",
+      "sha256": "9104836a14ccfe424128473322f56b37801df69b3612667a89f1eabea3423eac",
+      "exact_owner_export": {
+        "scope": "Source-connected actual P producer component; diagnostic allocation only; physical/native-whole/production false",
+        "source_commit": "b63651aa6",
+        "runner_commit": "2c82e3237",
+        "source_pack": "/tmp/p-native-producer-src-b636",
+        "source_manifest": "/tmp/p-native-producer-src-b636/source_manifest.json",
+        "remote_build": "ot-agidock128:/tmp/p-native-producer-build-b636",
+        "unit": "oth-ubuntu-3881884-1792058486",
+        "sources": {
+          "SFU": "c72a3325a",
+          "reducer": "c3973bd5a",
+          "VM": "fd7cfb0d72913de1fbf824265ed086bc5350a3a1"
+        },
+        "clock_inputs": {
+          "ports": 33,
+          "names": [
+            "clk",
+            "clk_lane[15:0]",
+            "clk_map[15:0]"
+          ],
+          "current_bench_connection": "all same1.2GHz clock; no unrelated CDC claim",
+          "shared_clk_loads": [
+            "80 operand SRAMs",
+            "32 arithmetic programme SRAMs",
+            "12 IO programme SRAMs",
+            "4 auxiliary programme SRAMs",
+            "10 source/scratch SRAMs",
+            "24 diagnostic VM SRAMs",
+            "scalar registers",
+            "reducer LAT6",
+            "VM taps"
+          ],
+          "physical_clock_partition_qualified": false
+        },
+        "SRAM_inventory": [
+          {
+            "kind": "operand_A/B/C/D/output",
+            "count": 80,
+            "macro": "ot_sram_1r1w_256x256_m2_r2c2",
+            "ports": "oneR/oneW each",
+            "derivation": "5groups*16banks; LWB15-clog2(16)=RB11"
+          },
+          {
+            "kind": "arithmetic_programme",
+            "count": 32,
+            "macro": "ot_sram_1r1w_1024x256_m2_r2c2"
+          },
+          {
+            "kind": "IO_programme",
+            "count": 12,
+            "macro": "ot_sram_1r1w_1024x256_m2_r2c2"
+          },
+          {
+            "kind": "aux_programme",
+            "count": 4,
+            "macro": "ot_sram_1r1w_1024x256_m2_r2c2"
+          },
+          {
+            "kind": "source",
+            "count": 8,
+            "macro": "ot_sram_1r1w_128x256_m1_r2c2"
+          },
+          {
+            "kind": "scratch",
+            "count": 2,
+            "macro": "ot_sram_1r1w_128x256_m1_r2c2"
+          },
+          {
+            "kind": "diagnostic_VM",
+            "count": 24,
+            "macro": "ot_sram_1r1w_1024x256_m2_r2c2",
+            "derivation": "8banks*3protectedData/ECC SRAM"
+          }
+        ],
+        "FF_count": null,
+        "FF_count_reason": "RTL elaboration in progress; actual count not yet measured",
+        "pin_faces": null,
+        "pin_faces_reason": "No physical view/slot assigned for combined producer; source-port graph only",
+        "VM_interface": {
+          "RQ_bits": 136,
+          "RR_bits": 2056,
+          "WQ_bits": 2248,
+          "DONE_bits": 8,
+          "banks": 8,
+          "RQ_lane": "{valid1,sector16}",
+          "RR_lane": "{valid1,payload256}",
+          "WQ_lane": "{valid1,sector16,payload256,wordmask8}",
+          "capacity": "oneR+oneW perbank peredge",
+          "SID": 0,
+          "RG": 3,
+          "WG": 1,
+          "read_slot": 0,
+          "write_slot": 0,
+          "canonical_allocation": false,
+          "tap_read_return": 14,
+          "source_store_consumes_return": 15,
+          "write_update": 11
+        },
+        "nodes": [
+          "actual_SC_VM",
+          "actual_SFU_A_operand_SRAM",
+          "actual_SFU16_M1scale",
+          "actual_scaled_SC_VM",
+          "actual_source_8SRAM",
+          "actual_reducer_2scratch_LAT6",
+          "actual_masked_scalar_publisher",
+          "actual_MB_SE_VM",
+          "actual_SFU_scalar_B_register",
+          "actual_SFU16_scale_sub_EXP",
+          "actual_SFU_output16SRAM",
+          "actual_rawE_VM",
+          "actual_BF16_RNE_drain",
+          "actual_EB_VM"
+        ],
+        "edges": [
+          {
+            "from": "actual_SC_VM",
+            "to": "actual_SFU_A_operand_SRAM",
+            "payload_bits": 512,
+            "active_edges": "T/16",
+            "bytes_per_head": "4*T",
+            "source": "SFU IO programme two sectors/edge"
+          },
+          {
+            "from": "actual_SFU16_M1scale",
+            "to": "actual_SFU_output16SRAM",
+            "payload_bits": 512,
+            "active_edges": "T/16",
+            "rounding": "FP32 scale, co_rnd0"
+          },
+          {
+            "from": "actual_SFU_output16SRAM",
+            "to": "actual_scaled_SC_VM",
+            "payload_bits": 512,
+            "active_edges": "T/16"
+          },
+          {
+            "from": "actual_scaled_SC_VM",
+            "to": "actual_source_8SRAM",
+            "payload_bits": 2048,
+            "active_edges": "T/64"
+          },
+          {
+            "from": "actual_source_8SRAM",
+            "to": "actual_reducer_2scratch_LAT6",
+            "payload_bits": 32,
+            "active_edges": "T MAX + T SUM",
+            "order": "MAX contiguous; SUM offset-major chunks8; golden global padded tree"
+          },
+          {
+            "from": "actual_reducer_2scratch_LAT6",
+            "to": "actual_masked_scalar_publisher",
+            "payload_bits": 32,
+            "tag_bits": 32,
+            "active_edges": 2,
+            "latency": "precommand+1 then actualreducer+7"
+          },
+          {
+            "from": "actual_masked_scalar_publisher",
+            "to": "actual_MB_SE_VM",
+            "payload_bits": 32,
+            "physical_packet_bits": 281,
+            "active_edges": 2,
+            "mask": "oneFP32word; sevenneighbors preserved"
+          },
+          {
+            "from": "actual_MB_SE_VM",
+            "to": "actual_SFU_scalar_B_register",
+            "payload_bits": 32,
+            "physical_read_payload_bits": 256,
+            "active_edges": 1,
+            "address_tag_bits": 24,
+            "fanout": "same scalar to16lanes"
+          },
+          {
+            "from": "actual_SFU16_scale_sub_EXP",
+            "to": "actual_SFU_output16SRAM",
+            "payload_bits": 512,
+            "active_edges": "T/16",
+            "formula": "exp(FP32(SC*0x3d3504f3-MB))",
+            "rounding": "co_rnd0 unroundedE"
+          },
+          {
+            "from": "actual_SFU_output16SRAM",
+            "to": "actual_rawE_VM",
+            "payload_bits": 512,
+            "active_edges": "T/16"
+          },
+          {
+            "from": "actual_rawE_VM",
+            "to": "actual_source_8SRAM",
+            "payload_bits": 2048,
+            "active_edges": "T/64"
+          },
+          {
+            "from": "actual_SFU_output16SRAM",
+            "to": "actual_BF16_RNE_drain",
+            "payload_bits": 512,
+            "active_edges": "T/16"
+          },
+          {
+            "from": "actual_BF16_RNE_drain",
+            "to": "actual_EB_VM",
+            "payload_bits": 512,
+            "active_edges": "T/16",
+            "format": "expandedBF16 FP32 low16zero; unnormalizedP"
+          }
+        ],
+        "external_not_joined": [
+          "actualQK arithmetic/SCserializer upstream",
+          "actualATT Pprefetch/PV downstream",
+          "Vbank placement",
+          "normalization",
+          "canonical global allocator/calendar"
+        ],
+        "per_head_calendars": {
+          "128": {
+            "rows": 128,
+            "head": 0,
+            "scale_bits": "3d3504f3",
+            "arithmetic_rows": 486,
+            "io_aux_rows": 795,
+            "events": {
+              "arithmetic_start": 28,
+              "scaled_last_drain": 113,
+              "max_start": 148,
+              "max_scalar": 323,
+              "mb_prefetch": 338,
+              "exp_start": 358,
+              "raw_e_last_drain": 537,
+              "eb_last_drain": 546,
+              "sum_start": 572,
+              "sum_scalar": 763
+            },
+            "diagnostic_VM_sectors": {
+              "SC": 0,
+              "scaled_SC": 2048,
+              "E": 4096,
+              "EB": 6000,
+              "MB": 7800,
+              "SE": 7808,
+              "scalar_word": 0
+            },
+            "macro_inventory": {
+              "operand": 80,
+              "arithmetic_programme": 32,
+              "io_programme": 12,
+              "aux_programme": 4,
+              "source_scratch": 10,
+              "VM": 24
+            },
+            "extra_scalar_configuration_bits": 228,
+            "head_reconfiguration_setup_not_priced": true,
+            "production_qualified": false,
+            "physical_qualified": false,
+            "native_whole_kernel_qualified": false
+          },
+          "640": {
+            "rows": 640,
+            "head": 0,
+            "scale_bits": "3d3504f3",
+            "arithmetic_rows": 1102,
+            "io_aux_rows": 2219,
+            "events": {
+              "arithmetic_start": 60,
+              "scaled_last_drain": 209,
+              "max_start": 252,
+              "max_scalar": 939,
+              "mb_prefetch": 954,
+              "exp_start": 974,
+              "raw_e_last_drain": 1217,
+              "eb_last_drain": 1258,
+              "sum_start": 1260,
+              "sum_scalar": 2187
+            },
+            "diagnostic_VM_sectors": {
+              "SC": 0,
+              "scaled_SC": 2048,
+              "E": 4096,
+              "EB": 6000,
+              "MB": 7800,
+              "SE": 7808,
+              "scalar_word": 0
+            },
+            "macro_inventory": {
+              "operand": 80,
+              "arithmetic_programme": 32,
+              "io_programme": 12,
+              "aux_programme": 4,
+              "source_scratch": 10,
+              "VM": 24
+            },
+            "extra_scalar_configuration_bits": 228,
+            "head_reconfiguration_setup_not_priced": true,
+            "production_qualified": false,
+            "physical_qualified": false,
+            "native_whole_kernel_qualified": false
+          }
+        },
+        "performance": "Component programme execution only; perhead reconfiguration/setup not priced; no production rate claim",
+        "physical_qualified": false,
+        "production_qualified": false,
+        "native_whole_kernel_qualified": false
+      }
+    }
+  }
+}

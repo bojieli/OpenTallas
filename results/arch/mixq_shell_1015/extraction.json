@@ -1,0 +1,17 @@
+{
+ "parent_abi_identical": true,
+ "shell_sequential_body_identical_after_declaration_moves": true,
+ "arithmetic_source_byte_identical": true,
+ "body_sha256": "0caf5ee5d90e2cc785e54c28e7e18d4738a8983fd19992d4474187d0a68f6c75",
+ "prior_source_commit": "2109deb8729767c6b9740d1dc7b35adb498844d8",
+ "tested_source_commit": "aa021c333d25975e0047fabb308fabb4aed5139d",
+ "scope": "Source extraction audit; independent native production gate and proc/opt census in report.json",
+ "live_jobs": [],
+ "run": {
+  "host": "ot-epyc1tb",
+  "pid": 343325,
+  "book": "oth-ubuntu-343325-1792047970",
+  "local_service": "codex-mixq-shell-1015.service",
+  "status": "terminal: arithmetic gates and census pass; initial collector assertion failed on parameterized cell names; recovered without source edits or rebuilds"
+ }
+}

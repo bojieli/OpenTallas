@@ -1,0 +1,44 @@
+{
+  "scope": "Actual edd4f7e93 native CTS/pin/PG diagnostics; placed TT setup/TT-min hold are not full-route or independent FF hold signoff.",
+  "source_commit": "edd4f7e93",
+  "host": "ot-epyc4",
+  "reader": {
+    "unit": "oth-ubuntu-2214102-1792065173",
+    "sinks": 767,
+    "tt_insertion_max_ps": 119.2,
+    "tt_spread_ps": 16.0,
+    "ff_spread_ps": 16.4,
+    "tt_setup_diagnostic_ps": 102.3611196,
+    "tt_min_hold_diagnostic_ps": 27.6629414,
+    "boundary_warning_count": 0,
+    "ready_for_route": true
+  },
+  "endpoint": {
+    "unit": "oth-ubuntu-2211570-1792065159",
+    "sinks": 8232,
+    "tt_insertion_max_ps": 287.4,
+    "tt_spread_ps": 51.5,
+    "ff_spread_ps": 49.5,
+    "tt_setup_diagnostic_ps": 34.0556472,
+    "tt_min_hold_diagnostic_ps": 26.9392564,
+    "boundary_warning_count": 0,
+    "ready_for_route": true,
+    "remaining_warning": "676load reset requires physical verification"
+  },
+  "ctl": {
+    "unit": "oth-ubuntu-2214381-1792065175",
+    "sinks": 2944,
+    "tt_insertion_max_ps": 309.7,
+    "tt_spread_ps": 93.8,
+    "tt_setup_diagnostic_ps": -237.337261,
+    "tt_min_hold_diagnostic_ps": -12.4505128,
+    "native_qualified": false,
+    "remaining": [
+      "aq_vin still one combinational bypass",
+      "84 deep input paths",
+      "2352load reset",
+      "clock spread93.8>80"
+    ]
+  },
+  "all_release_qualified": false
+}

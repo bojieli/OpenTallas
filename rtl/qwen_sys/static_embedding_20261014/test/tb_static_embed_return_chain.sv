@@ -20,7 +20,7 @@ module tb_static_embed_return_chain;
     endfunction
     integer mode=0,t,p,count=0;
     initial begin
-        void'($value$plusargs("MUT=%d",mode));
+        if($value$plusargs("MUT=%d",mode)) ;
         for(t=0;t<170;t=t+1)begin
             @(negedge ck);
             if(t==2)rn=1;
