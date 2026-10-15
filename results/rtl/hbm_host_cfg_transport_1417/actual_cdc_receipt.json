@@ -1,0 +1,27 @@
+{
+  "schema": "opentallas.host.actual-cdc-install-proof.v1",
+  "scope": "real ot_hbm_su_programme/actual SRAM installation through ot_hbm_host_cfg_cdc; no runtime arbitration; no physical CDC or fullhost claim",
+  "source_snapshot_sha256": {},
+  "serial": {
+    "unit": "oth-ubuntu-2760339-1792101495",
+    "target_mhz": 900,
+    "master_mhz": 1200,
+    "macros": 302,
+    "writes": 34452,
+    "edges": 7116,
+    "replays": 2,
+    "exit": 0
+  },
+  "stream": {
+    "unit": "oth-ubuntu-2770557-1792101569",
+    "target_mhz": 1200,
+    "master_mhz": 1200,
+    "macros": 76,
+    "writes": 9493,
+    "edges": 9489,
+    "replays": 2,
+    "exit": 0
+  },
+  "qualification": "native producer currentmain default INDEX_PACK=1 frozen snapshot62086607c, RF36 unpacked302+76; not packed6",
+  "open": "physical CDC timing/reset/MTBF signoff and die parent joins; runtime global epoch composition"
+}
