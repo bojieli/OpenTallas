@@ -1,0 +1,18 @@
+{
+  "schema": "opentallas.s81.calendar-store-component.v1",
+  "qualified": false,
+  "scope": "two actual64x512 SRAMs + fixed control;64consecutiveedges/no bubbles",
+  "positive_rc": 0,
+  "mutant_rc": 1,
+  "sources": {
+    "rtl/dsrom_sys/s81_suhc/test/tb_s81_su_calendar_store.sv": "a4b0cdbaab7bd3ea98a77d2795d9fe690d3c763c191e535d29901c0e2b7c5960",
+    "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_calendar_store.sv": "5a461f769106ca90365395a1fa2ac7a2dc21854cd8cd62914a7601d8516a103b",
+    "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_calendar_ctl.sv": "5d9be8f3dab17a6e2e69c9e5bb55ffbab9bb220e2cad82abcc80be3bca2db33a",
+    "rtl/hdc/ot_sram_bank.sv": "d2b4494ff2b2bfd91aed19a973a3043cafc849bad9a50bc2318c7a44de7a7f11",
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v": "862e21e63d6805e46226cb8ca27b731a7a6c778783e4c44f123ca30950ffde83"
+  },
+  "logs": {
+    "mutant.log": "a5f63cca5b0248a0b93287bfc3a11e28da36bdcb5287bb708a04722192484473",
+    "positive.log": "2774cf6ad94571916598c3ca54836464bd3325486481550b50dd49aeababa9bb"
+  }
+}

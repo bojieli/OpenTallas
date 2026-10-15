@@ -15,10 +15,10 @@
   "stage_records": 324,
   "unbound_stage_rank_records": 324,
   "source_sha256": {
-    "tools/s81_compile_schedule/full_su_operand_layout.py": "79e119447332c527c196fff7aa8cb8352fdf45023b952d6c0faac538a7fa500e",
+    "tools/s81_compile_schedule/full_su_operand_layout.py": "24093b727c762c0767c3ccd904333807f34259bfd61093a182b5d60061e66e4b",
     "tools/s81_compile_schedule/su_stage_coverage.py": "f2f53aa85b3c6520a04ba5898d343f9396ff7ee0c5ce4a3c993cddb7fb135741",
     "tools/s81_compile_schedule/compile_calendar.py": "30547ed3a748124123a4b600160d466217d04dd8a37df333c74204812b3194be",
-    "tools/s81_suhc/static_su_calendar.py": "d3e22394593d49f2f25c49292fa9c6838dab4ce6d50272beb7f7a04538048952"
+    "tools/s81_suhc/static_su_calendar.py": "0d11e9c9678bd83e0ef73a6da4d291e86e9c8200e453ba096bc66bdd12f2bb0f"
   },
   "source_inputs": {
     "results/uarch/dsrom_s81_released_binding_20261004/canonical/matrix_map.jsonl.gz": "985a9ee7ea26d2a7bb1aebadc5151252836eacf8181e8794b1ef6d7819db0326",
@@ -27,11 +27,11 @@
   },
   "tests": {
     "compiler_suite": 66,
-    "static_SU_calendar_suite": 11
+    "static_SU_calendar_suite": 12
   },
   "generation": {
     "host": "ot-epyc4",
-    "unit": "oth-ubuntu-1690058-1792059015",
+    "unit": "oth-ubuntu-1740349-1792059552",
     "exit_code": 0,
     "memory_gb": 4
   },
@@ -46,5 +46,6 @@
     "all2654 raw SU instructions\u2192exact native fused providers with rounding/order proof",
     "persistent state, MTP continuation, global lifetimes and all other VM clients",
     "actual physical paths, clock phases, commit visibility and end-to-end throughput"
-  ]
+  ],
+  "all_canonical_field_fragments": 46671
 }

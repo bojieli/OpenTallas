@@ -124,14 +124,14 @@ def qb_block(block):
     return dict(code_row=base+within//2,code_lsb=256*(within%2),exponent_row=base+16,
                 exponent_lsb=16*within,scalar_count=32,scalar_begin=32*block)
 
-def source_catalog():
+def source_catalog(*,include_all=False):
     """Streaming metadata extraction avoids retaining all native plan payloads."""
     records=[];count=0
     with gzip.open(MATRIX,'rt') as f:
         for line in f:
             m=json.loads(line);count+=1
             alias=m.get('original_alias') or m['alias']
-            if not (re.match(r'(shared|exp\d+)\.w[123](\.|$)',alias) or alias.startswith('wo_a.group')):continue
+            if not include_all and not (re.match(r'(shared|exp\d+)\.w[123](\.|$)',alias) or alias.startswith('wo_a.group')):continue
             records.append({k:m[k] for k in ('layer','alias','stage','rank_slices','K','rows')})
     if count!=46671:raise ValueError('actual canonical matrix coverage changed')
     # Every possible routed expert remains represented. Verify literal source
@@ -160,7 +160,7 @@ def build():
     if hashlib.sha256(MATRIX.read_bytes()).hexdigest()!=FIRST.MATRIX_SHA:raise ValueError('canonical source SHA')
     stages=json.loads(STAGES.read_text());demand=json.loads(gzip.decompress(DEMAND.read_bytes()))
     if len(stages['PHW_required_by_stage'])!=81 or any(v>10 for v in stages['PHW_required_by_stage']):raise ValueError('canonical81/PHW10')
-    items=layout();check=verify_layout(items);catalog=source_catalog()
+    items=layout();check=verify_layout(items);catalog=source_catalog();all_catalog=source_catalog(include_all=True)
     # Source order and rounding are retained literally; no old a_base/o_base is
     # copied into this physical allocation. HC and control nodes remain visible.
     nodes=[]
@@ -174,8 +174,9 @@ def build():
     return dict(schema='opentallas.s81.full-su-spatial-allocation.v1',qualified=False,
         source_sha256={str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest() for p in (MATRIX,STAGES,DEMAND)},
         physical_layout=items,spatial_check=check,source_field_fragments=catalog,
+        all_canonical_field_fragments=all_catalog,
         source_SU_nodes=nodes,he_crom_provider_homes_only=stages['provider_homes'],
-        stage_execution_coverage=STAGE_COVERAGE.export(stages,catalog,nodes),
+        stage_execution_coverage=STAGE_COVERAGE.export(stages,all_catalog,nodes),
         parameter_bindings=dict(
             GQ=dict(descriptor=12544,actual_gain_rows=list(range(12545,12625))),
             GK=dict(descriptor=12625,actual_gain_rows=list(range(12626,12658))),

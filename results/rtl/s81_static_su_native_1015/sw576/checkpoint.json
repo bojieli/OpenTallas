@@ -1,0 +1,85 @@
+{
+  "schema": "opentallas.s81.static-sw576-checkpoint.v1",
+  "qualified": false,
+  "updated_utc": "2026-10-15T10:20:00.295308+00:00",
+  "status": "actual native576 kernel + static-head parent source connected; native arithmetic gate running",
+  "source_sha256": {
+    "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_sw576_static.sv": "8818a8eda2febbb0186e091acd06ed4b194e08eebef5eef374f85bf9866150f4",
+    "rtl/dsrom_sys/s81_suhc/hier/dsfd_sp_su_static.sv": "5d5c5c6c142fe9507e802d34fc32d59bf2e8c45e18e2a54e436ecd23beac4b5f",
+    "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_calendar_ctl.sv": "5d9be8f3dab17a6e2e69c9e5bb55ffbab9bb220e2cad82abcc80be3bca2db33a",
+    "rtl/dsrom_sys/s81_suhc/test/tb_s81_su_sw576_static.sv": "84433165565dda30b44dccdccb09a4ce4896dd1991a5caea568af4c2b78826c0",
+    "tools/s81_suhc/static_sw576_gate.py": "1551851e3315a0b95cfdbbf3579edfb9b09a083b0e624f17d392f280379131ca"
+  },
+  "physical_clock_entries": {
+    "total": 152,
+    "tap_halves": 2,
+    "SWE": 144,
+    "QBE": 6,
+    "CTS_qualified": false
+  },
+  "actual_shape": {
+    "scalars": 576,
+    "operand_rows": 72,
+    "active_read_slots": 12,
+    "passes": 3,
+    "lane_engines": 144,
+    "lanes_per_engine": 4,
+    "quant_engines": 6,
+    "quant_blocks": 18,
+    "result_rows": 28,
+    "masked_write_events": 36,
+    "parameter_rows": 2
+  },
+  "calendar_fields": {
+    "kind": "805:804",
+    "pass_index": "807:806",
+    "u": 808,
+    "reserved": "1023:809"
+  },
+  "component_storage": {
+    "operand_macros": 12,
+    "result_macros": 28,
+    "arithmetic_delay_macros": "native SWE/AQ SRAM lines additionally included; exact census pending"
+  },
+  "calendar_gate": {
+    "schema": "opentallas.s81.calendar-store-component.v1",
+    "qualified": false,
+    "scope": "two actual64x512 SRAMs + fixed control;64consecutiveedges/no bubbles",
+    "positive_rc": 0,
+    "mutant_rc": 1,
+    "sources": {
+      "rtl/dsrom_sys/s81_suhc/test/tb_s81_su_calendar_store.sv": "a4b0cdbaab7bd3ea98a77d2795d9fe690d3c763c191e535d29901c0e2b7c5960",
+      "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_calendar_store.sv": "5a461f769106ca90365395a1fa2ac7a2dc21854cd8cd62914a7601d8516a103b",
+      "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_calendar_ctl.sv": "5d9be8f3dab17a6e2e69c9e5bb55ffbab9bb220e2cad82abcc80be3bca2db33a",
+      "rtl/hdc/ot_sram_bank.sv": "d2b4494ff2b2bfd91aed19a973a3043cafc849bad9a50bc2318c7a44de7a7f11",
+      "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v": "862e21e63d6805e46226cb8ca27b731a7a6c778783e4c44f123ca30950ffde83"
+    },
+    "logs": {
+      "mutant.log": "a5f63cca5b0248a0b93287bfc3a11e28da36bdcb5287bb708a04722192484473",
+      "positive.log": "2774cf6ad94571916598c3ca54836464bd3325486481550b50dd49aeababa9bb"
+    }
+  },
+  "native_arithmetic_job": {
+    "host": "ot-epyc4",
+    "unit": "oth-ubuntu-1714730-1792059301",
+    "session": 51942,
+    "path": "/srv/opentallas-scratch/claude/s81-static-su-native-1015/sw576-v1",
+    "memory_gb": 160,
+    "threads": 8,
+    "status": "LIVE Verilator frontend; preserve source and job",
+    "source_scope": "Standalone new native576 kernel; parent join not elaborated by this gate"
+  },
+  "mutants": {
+    "phase": 1,
+    "weight": 2,
+    "missing_operand": "MISSING=1",
+    "status": "prepared, not executed; no mutant qualification claim"
+  },
+  "open": [
+    "collect full native576 arithmetic+mappedmemory gate and execute arithmetic mutants",
+    "connect actual FIELD split144 producers and native VM L12/commit/calendar",
+    "prove latest fullparent elaboration and composition; preserved pre-MOE parentlint does not cover latestsource",
+    "canonical81stage SU/VM homes, MTP and literal2654operation providerprogramme joins",
+    "actual perleaf source clock census/physical masters/pins/slots/CTS/TT/FF/DRC and throughput"
+  ]
+}

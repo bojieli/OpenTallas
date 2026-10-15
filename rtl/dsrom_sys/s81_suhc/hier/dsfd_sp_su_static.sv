@@ -4,7 +4,7 @@
 // Full production programs, mapped calendar storage and physical binding are
 // separate integration gates; this source alone does not qualify the full layer.
 module dsfd_sp_su_static #(
-    parameter integer QN_N = 256, KV_N = 512, QB_NB = 32, SW_W = 1024, SM_H = 16, SM_LPH = 16, SM_NVMAX = 40,
+    parameter integer QN_N = 256, KV_N = 512, QB_NB = 32, SW_W = 576, SM_H = 16, SM_LPH = 16, SM_NVMAX = 40,
     parameter integer S_RD = 16, S_WR = 16, LM = 5, LA = 4, OQ = 1024, MUT = 0, AMUT = 0, XMUT = 0,
     // lane-group tiles (production: QN 2 x 128 lanes, KV 2 x 256 lanes, QB 4 x 8 blocks, SW 8 x 128 lanes, SM 8 x 2
     // heads; pin owners 4 x (4 read + 4 write slots); every tile <= ~600 x 600 um)
@@ -25,7 +25,7 @@ module dsfd_sp_su_static #(
     // SW (el1011-s81su-sw, spec v3): one tap + NSWQ act-quant engines (the QB master) on the spine, NSWQ * 2 * 16 / SLPE
     // ... lane engines off the tap (SLPE lanes each, rate-matched: a beat takes >= SLPE spine cycles); ERS equal-depth
     // relay stations tap -> lane engine (and lane faults back), <= 500 um a station over the ~3.2 x 2 mm SW region
-    parameter integer NSWQ = (S_RD / 2 > 2) ? S_RD / 2 : 2,
+    parameter integer NSWQ = 6,
     parameter integer ERS = (S_RD >= 16) ? 5 : 1,
     parameter integer NSM = (SM_H >= 2) ? SM_H / 2 : 1,
     parameter integer NPO = (S_RD >= 16 && S_WR >= 16) ? 4 : 1,
@@ -131,6 +131,12 @@ module dsfd_sp_su_static #(
     wire [13:0]moe_ir,moe_or;
     wire [511:0]moe_od;
     reg moe_availability_fault;
+    wire [1:0] sw_kind,sw_pass;wire sw_u,sw_fault;
+    wire [11:0] sw576_v;wire [167:0] sw576_a;wire [191:0] sw576_m;wire [6143:0] sw576_d;
+    ot_s81_su_sw576_static u_sw576(.ck({152{sk}}),.rst_n(rst_c),
+        .issue_kind(sw_kind),.issue_pass(sw_pass),.issue_u(sw_u),
+        .present(dv[0][11:0]),.data(dd[0][6143:0]),
+        .wv(sw576_v),.wa(sw576_a),.wm(sw576_m),.wd(sw576_d),.fault(sw_fault));
     // Explicit compiler operand pulse; missing operands latch a fault and never
     // defer, cancel, or replay the arithmetic. Slots 0..6 are E0 through E6.
     ot_s81_su_moe_sum_static u_moe(.ck({6{sk}}),.rst_n(rst_c),.i_v(moe_iv),
@@ -145,11 +151,12 @@ module dsfd_sp_su_static #(
         .rq_v(c_rq_v), .rq_row(c_rq_row), .rs_v(rs_v),
         .wq_v(wq_v), .wq_row(wq_row), .wq_mask(wq_mask),
         .dn_st(dst[0]), .dn_kind(dkd[0]), .dn_gsel(dgs[0]),
-        .dn_fp4(df4[0]), .dn_jid(dji[0]), .moe_v(moe_iv), .moe_row(moe_ir), .done(done), .done_tag(done_tag),
-        .up_fu(ufu[0]|moe_fault|moe_availability_fault), .up_fo(ufo[0]), .up_alive(ual[0]),
+        .dn_fp4(df4[0]), .dn_jid(dji[0]), .moe_v(moe_iv), .moe_row(moe_ir), .sw_kind(sw_kind),.sw_pass(sw_pass),.sw_u(sw_u), .done(done), .done_tag(done_tag),
+        .up_fu(ufu[0]|moe_fault|moe_availability_fault|sw_fault), .up_fo(ufo[0]), .up_alive(ual[0]),
         .up_den(ude[0]), .up_rdy(urd[0]), .up_rjid(urj[0]),
         .fault(flt), .fault_code(fcode), .running(online));
     initial begin
+        if (SW_W != 576 || NSWQ != 6) $fatal(1,"canonical native SW576/6quantizers required");
         if (S_RD != 16 || S_WR != 16) $fatal(1, "native calendar ABI is 16 SU slots each way");
     end
     // reset spine head
@@ -363,31 +370,8 @@ module dsfd_sp_su_static #(
             .q({kq_a[14 * kb +: 14], kq_m[16 * kb +: 16], kq_d[512 * kb +: 512]}));
     end endgenerate
 
-    // ------------------------------------------------------------------ SW: lane engines (off the spine, chains)
-    genvar sch, sp;
-    generate for (sch = 0; sch < SNCH; sch = sch + 1) begin : g_swc
-        // chain sch = pass row sch / SEPR, chunk sch % SEPR; engine P of the chain owns that chunk of pass P
-        for (sp = 0; sp < SNPS; sp = sp + 1) begin : g_swe
-            localparam integer E = sch * SNPS + sp;
-            wire gv, uv; wire [32*SLPE-1:0] d; wire [11:0] et; wire [31:0] ew, el;
-            ot_hdc_delay #(.W(2), .D(ERS), .RESET(1)) u_iv (.clk(sk), .rst_n(rst[0]), .d({sw_gv[sp], sw_uv[sp]}), .q({gv, uv}));
-            ot_hdc_delay #(.W(32 * SLPE + 12 + 64), .D(ERS)) u_id (.clk(sk), .rst_n(rst[0]),
-                .d({sw_d[512 * (sch / SEPR) + 32 * SLPE * (sch % SEPR) +: 32 * SLPE], sw_t, sw_w, sw_lim}), .q({d, et, ew, el}));
-            wire civ, cif; wire [16*SLPE-1:0] cid; wire [11:0] cit;
-            if (sp == SNPS - 1) begin : g_tail
-                assign civ = 1'b0; assign cif = 1'b0; assign cid = 0; assign cit = 12'd0;
-            end else begin : g_link
-                assign civ = sc_v[E + 1]; assign cif = sc_f[E + 1]; assign cid = sc_d[16 * SLPE * (E + 1) +: 16 * SLPE];
-                assign cit = sc_t[12 * (E + 1) +: 12];
-            end
-            ot_s81_su_swe #(.LPE(SLPE), .LM(LM), .LA(LA)) u_swe (
-                .clk(sk), .rst_in(rst[0]), .i_gv(gv), .i_uv(uv), .i_d(d), .i_t(et), .i_w(ew), .i_lim(el),
-                .c_iv(civ), .c_id(cid), .c_it(cit), .c_if(cif), .c_ov(sc_v[E]), .c_od(sc_d[16 * SLPE * E +: 16 * SLPE]),
-                .c_ot(sc_t[12 * E +: 12]), .c_of(sc_f[E]));
-        end
-        ot_hdc_delay #(.W(1), .D(ERS), .RESET(1)) u_fr (.clk(sk), .rst_n(rst[0]), .d(sc_f[sch * SNPS]), .q(sw_f[sch]));
-    end endgenerate
-
+    // Canonical SW576 is the actual independent fixed-pulse head kernel.
+    // Historical1024 tap/chain/quantizer instances are removed from this successor.
     // ------------------------------------------------------------------ engine tiles
     // norm rungs: the group partial of tile t (TI 1) to its head (t - 1), the head's rstd back (registered relays)
     wire        xpv [0:NTL]; wire [7:0] xpi [0:NTL]; wire [31:0] xpd [0:NTL];   // tile t's outputs
@@ -641,50 +625,11 @@ module dsfd_sp_su_static #(
             assign e_v = he_v[0];
             assign o_vv = ho_v[0];
             assign den_v = hden_v[0];
-        end else if (TK == 12) begin : g_swt
-            assign o_v = 1'b0; assign o_a = 0; assign o_m = 0; assign o_d = 0;
-            assign xpv[t] = 1'b0; assign xpi[t] = 8'd0; assign xpd[t] = 32'd0; assign xrv[t] = 1'b0; assign xrd[t] = 32'd0;
-            // full configuration (rate-aligned, S_RD == 2 NSWQ): two half-taps, pins registered (one cycle deeper than the
-            // single tap); reduced shapes: the assembling tap
-            if (S_RD == 2 * NSWQ) begin : g_sp
-                ot_s81_su_swtl #(.SW_W(SW_W), .S_RD(S_RD), .NSQ(NSWQ), .NCH(SNCH)) u_swtl (
-                    .clk(sk), .rst_in(rst[t]),
-                    .dn_st_i(dst[t]), .dn_kind_i(dkd[t]), .dn_gsel_i(dgs[t]), .dn_fp4_i(df4[t]), .dn_jid_i(dji[t]),
-                    .dn_v_i(dv[t]), .dn_d_i(dd[t][S_RD*256-1:0]), .i_f(sw_f), .e_d(sw_d[SL*256-1:0]), .e_gv(sw_gv), .e_uv(sw_uv),
-                    .e_t(sw_t), .e_w(sw_w), .e_lim(sw_lim), .e_ob(sw_ob), .o_fu(o_fu), .o_fo(o_fo), .o_alive(o_alive),
-                    .o_den(o_den), .o_rdy(o_rdy), .o_rjid(o_rjid));
-                ot_s81_su_swth #(.S_RD(S_RD)) u_swth (
-                    .clk(sk), .dn_d_i(dd[t][S_RD*512-1:S_RD*256]), .e_d(sw_d[SL*512-1:SL*256]));
-            end else begin : g_as
-                ot_s81_su_swt #(.SW_W(SW_W), .S_RD(S_RD), .NSQ(NSWQ), .NCH(SNCH)) u_swt (
-                    .clk(sk), .rst_in(rst[t]),
-                    .dn_st_i(dst[t]), .dn_kind_i(dkd[t]), .dn_gsel_i(dgs[t]), .dn_fp4_i(df4[t]), .dn_jid_i(dji[t]),
-                    .dn_v_i(dv[t]), .dn_d_i(dd[t]), .i_f(sw_f), .e_d(sw_d), .e_gv(sw_gv), .e_uv(sw_uv), .e_t(sw_t), .e_w(sw_w),
-                    .e_lim(sw_lim), .e_ob(sw_ob), .o_fu(o_fu), .o_fo(o_fo), .o_alive(o_alive), .o_den(o_den), .o_rdy(o_rdy),
-                    .o_rjid(o_rjid));
-            end
-        end else if (TK == 13) begin : g_swq
-            // quant engine TI: lo = the chain heads of pass row 2 TI, hi = row 2 TI + 1 (words {bf16, 16'h0})
-            wire [1023:0] x; wire [13:0] rob;
-            genvar hc, hj;
-            for (hc = 0; hc < 2 * SEPR; hc = hc + 1) begin : g_c
-                for (hj = 0; hj < SLPE; hj = hj + 1) begin : g_j
-                    assign x[32 * (SLPE * hc + hj) +: 32] =
-                        {sc_d[((2 * TI * SEPR + hc) * SNPS) * 16 * SLPE + 16 * hj +: 16], 16'h0000};
-                end
-            end
-            ot_hdc_delay #(.W(14), .D(ERS)) u_ob (.clk(sk), .rst_n(rst[t]), .d(sw_ob), .q(rob));
-            localparam integer PN = TI ^ 1;
-            localparam integer HL = (2 * TI * SEPR) * SNPS, HH = ((2 * TI + 1) * SEPR) * SNPS;
-            wire [3:0] CB = TI;
-            ot_s81_su_qbe #(.QB_NB(SW_W / 32), .NPB(NSWQ)) u_qbe (
-                .clk(sk), .rst_in(rst[t]), .cfg_b(CB),
-                .i_vlo(sc_v[HL]), .i_vhi(sc_v[HH]), .i_lo(x[511:0]), .i_hi(x[1023:512]), .i_tlo(sc_t[12 * HL +: 12]),
-                .i_thi(sc_t[12 * HH +: 12]), .i_ob(rob), .i_f4(1'b0), .nx_i_v(snxv[PN]), .nx_i_q(snxq[PN]), .nx_i_e(snxe[PN]),
-                .nx_o_v(snxv[TI]), .nx_o_q(snxq[TI]), .nx_o_e(snxe[TI]),
-                .o_v(o_v), .o_a(o_a), .o_m(o_m), .o_d(o_d), .o_fu(o_fu), .o_fo(o_fo), .o_alive(o_alive), .o_den(o_den),
-                .o_rdy(o_rdy), .o_rjid(o_rjid));
-            assign xpv[t] = 1'b0; assign xpi[t] = 8'd0; assign xpd[t] = 32'd0; assign xrv[t] = 1'b0; assign xrd[t] = 32'd0;
+        end else if (TK == 12 || TK == 13) begin : g_sw_head_relay
+            // Retain registered transport stops; arithmetic now resides at head.
+            assign o_v=0;assign o_a=0;assign o_m=0;assign o_d=0;
+            assign o_fu=0;assign o_fo=0;assign o_alive=1;assign o_den=1;assign o_rdy=0;assign o_rjid=0;
+            assign xpv[t]=0;assign xpi[t]=0;assign xpd[t]=0;assign xrv[t]=0;assign xrd[t]=0;
         end else if (TK == 14) begin : g_rx
             if (RXH != 0) begin : g_head
                 // spine-head tile: tap = stop 0's down register, write slot merged at stop 0 (rx_*); its own stop
@@ -740,6 +685,8 @@ module dsfd_sp_su_static #(
                 if (s >= W0 && s < W0 + WS && o_v[s - W0]) begin
                     ua_q[14 * s +: 14] <= o_a[14 * (s - W0) +: 14]; um_q[16 * s +: 16] <= o_m[16 * (s - W0) +: 16];
                     ud_q[512 * s +: 512] <= o_d[512 * (s - W0) +: 512];
+                end else if (t == 0 && s < 12 && sw576_v[s]) begin
+                    ua_q[14*s+:14]<=sw576_a[14*s+:14];um_q[16*s+:16]<=sw576_m[16*s+:16];ud_q[512*s+:512]<=sw576_d[512*s+:512];
                 end else if (t == 0 && s == 0 && moe_ov) begin
                     ua_q[13:0] <= moe_or; um_q[15:0] <= 16'hffff; ud_q[511:0] <= moe_od;
                 end else if (t == 0 && s == 0 && rx_v) begin
@@ -754,7 +701,7 @@ module dsfd_sp_su_static #(
         always @(posedge sk or negedge rst[t]) begin
             if (!rst[t]) begin uv_q <= 0; ufu_q <= 0; ufo_q <= 0; ual_q <= 0; ude_q <= 0; urd_q <= 0; urj_q <= 0; end
             else begin
-                for (s = 0; s < S_WR; s = s + 1) uv_q[s] <= uv[t + 1][s] || (s >= W0 && s < W0 + WS && o_v[s - W0]) || (t == 0 && s == 0 && (rx_v || moe_ov)) || (t == 0 && s == 1 && rx_v2);
+                for (s = 0; s < S_WR; s = s + 1) uv_q[s] <= uv[t + 1][s] || (s >= W0 && s < W0 + WS && o_v[s - W0]) || (t == 0 && s == 0 && (rx_v || moe_ov)) || (t == 0 && s == 1 && rx_v2) || (t == 0 && s < 12 && sw576_v[s]);
                 ufu_q <= ufu[t + 1] || o_fu || (t == 0 && rx_fu); ufo_q <= ufo[t + 1] || o_fo || (t == 0 && rx_fo);
                 ual_q <= ual[t + 1] && o_alive && (t != 0 || rx_alive);
                 ude_q <= ude[t + 1] && o_den; urd_q <= urd[t + 1] || o_rdy; urj_q <= o_rdy ? o_rjid : urj[t + 1];

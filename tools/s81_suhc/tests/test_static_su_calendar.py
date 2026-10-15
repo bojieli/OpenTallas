@@ -25,6 +25,10 @@ class CalendarTest(unittest.TestCase):
         self.p=dict(cycles=44,jobs=[self.job])
     def test_softmax_tail_full8192_values_are256_bf16_rows(self):
         self.assertEqual(C.row_counts('SO',1),(5,8192//16,8192//32))
+    def test_SW576_exact_rows_and_one_job_per_native_selected_slot(self):
+        self.assertEqual(C.row_counts('SW',1),(2,72,36))
+        self.assertEqual(C.inventory()['shape']['SW_W'],576)
+        with self.assertRaisesRegex(ValueError,'fixed-shape'):C.row_counts('SW',7)
     def test_moe_opcode_preserves_cp14_persistent_contract(self):
         self.assertEqual(C.OPS['MOE'],15)
         self.assertNotIn('CP',C.OPS)

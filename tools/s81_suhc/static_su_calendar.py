@@ -19,7 +19,7 @@ OPS = dict(QN=0, KV=1, QB=2, SW=3, SE=4, SO=5, GQ=6, GK=7,
            RA=8, RB=9, QR=10, RW=11, CN=12, IK=13, MOE=15)
 SOURCES = {k: [HIER+'dsfd_sp_su_static.sv', HIER+'ot_s81_su_calendar_ctl.sv'] for k in OPS}
 for ks, files in [('QN GQ', ['ot_s81_su_qn.sv']), ('KV GK', ['ot_s81_su_kv.sv','ot_s81_su_qn.sv']),
-                  ('QB', ['ot_s81_su_qb.sv']), ('SW', ['ot_s81_su_sw.sv','ot_s81_su_qb.sv']),
+                  ('QB', ['ot_s81_su_qb.sv']), ('SW', ['ot_s81_su_sw.sv','ot_s81_su_qb.sv','ot_s81_su_sw576_static.sv']),
                   ('SE SO', ['ot_s81_su_sm.sv']), ('RA RB QR RW', ['ot_s81_su_rxt.sv']),
                   ('CN IK', ['ot_s81_su_kv.sv','ot_s81_su_cn_ik.sv']),
                   ('MOE', ['ot_s81_su_moe_sum_static.sv'])]:
@@ -65,7 +65,7 @@ COMMON_SOURCES = ['rtl/hdc/ot_hdc_fastfp.sv',
  'rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_tile.sv',
  'rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_norm_lg.sv']
 COMMON_SOURCES += [
-    HIER+'ot_s81_su_moe_sum_static.sv',
+    HIER+'ot_s81_su_moe_sum_static.sv',HIER+'ot_s81_su_sw576_static.sv',
     'physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v',
     'physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v']
 for paths in SOURCES.values():
@@ -75,11 +75,11 @@ for paths in SOURCES.values():
 def row_counts(k, count):
     """Actual production dimensions, including separately masked exponent writes."""
     if not isinstance(count, int) or count < 1: raise ValueError('positive count required')
-    if k in ('QN','KV','SO','GQ','GK','CN','IK','MOE') and count!=1: raise ValueError('fixed-shape count must be one')
+    if k in ('QN','KV','SO','GQ','GK','CN','IK','MOE','SW') and count!=1: raise ValueError('fixed-shape count must be one')
     if k=='SE' and count>40: raise ValueError('softmax storage NVMAX40 exceeded')
     return {
         'QN': (1,80,40), 'KV': (5,32,26), 'QB': (1,64*count,64*count),
-        'SW': (1,128*count,64*count), 'SE': (2,16*count,16*count),
+        'SW': (2,72*count,36*count), 'SE': (2,16*count,16*count),
         'SO': (5,512,256), 'GQ': (1,80,0), 'GK': (1,32,0),
         'RA': (1,count,count), 'RB': (1,2*count,count),
         'QR': (5,4*count,4*count), 'RW': (1,count,1),
@@ -90,7 +90,7 @@ def digest(p): return hashlib.sha256((ROOT/p).read_bytes()).hexdigest()
 
 def inventory():
     return dict(schema='opentallas.s81.static-su-inventory.v1', qualified=False,
-        shape=dict(QN_N=256,QN_D=1280,KV_N=512,QB_NB=32,SW_W=1024,SM_H=16,SM_LPH=16,S_RD=16,S_WR=16),
+        shape=dict(QN_N=256,QN_D=1280,KV_N=512,QB_NB=32,SW_W=576,SM_H=16,SM_LPH=16,S_RD=16,S_WR=16),
         microarchitecture=dict(input_bytes_per_su_edge=1024,output_bytes_per_su_edge=1024,
             read_request_bits=240,response_bits=8208,write_bits=8688,
             calendar_bits_per_su_edge=1024,calendar_controller_flops_upper_bound=512,
@@ -147,6 +147,14 @@ def compile_program(program):
         put(start,752,1,1); put(start,753,4,OPS[k]); put(start,757,2,job['gain_set'])
         put(start,759,1,int(job['fp4'])); put(start,760,8,job['id'])
         put(end,768,1,1); put(end,769,8,job['tag'])
+        sw=events.get('sw_pulses',[])
+        if k=='SW' and job['count']!=1:raise ValueError('SW576 uses one native job per shared/routed slot')
+        if len(sw)!=(8 if k=='SW' else 0):raise ValueError('incomplete SW576 descriptor/weight/pass pulse coverage')
+        if k=='SW' and [(p['kind'],p.get('pass',0),bool(p.get('u',False))) for p in sw] != [(1,0,False),(2,0,False)]+[(3,p,u) for u in (False,True) for p in range(3)]:
+            raise ValueError('SW576 exact descriptor/weight/G/U pass order required')
+        for pulse in sw:
+            if not start<=pulse['cycle']<=end:raise ValueError('SW576 pulse outside job')
+            put(pulse['cycle'],804,2,pulse['kind']);put(pulse['cycle'],806,2,pulse.get('pass',0));put(pulse['cycle'],808,1,int(pulse.get('u',False)))
         mo=events.get('moe_operands',[])
         if len(mo)!=(80 if k=='MOE' else 0): raise ValueError('incomplete MOE operand pulse coverage')
         for pulse in mo:
