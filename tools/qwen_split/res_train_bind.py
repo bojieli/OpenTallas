@@ -248,6 +248,8 @@ def apply(model):
         raise ValueError('parallel VM alias namespace already present')
     aliases[VM_MASTER] = aliases.pop(old_vm, {})
     vm.master = VM_MASTER
+    if model.get('native_graph_bind'):
+        model['native_graph_bind']['masters']['vm'] = VM_MASTER
     conn = {}
     for bus, c, nb, es in model['buses']:
         for i, p in es:
