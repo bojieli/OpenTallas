@@ -532,7 +532,11 @@ def place(v, m, G):
             parent.w, parent.h = 449.28, 1442.88
         elif parent.master.startswith('qfd_port_tiles_'):
             parent.w, parent.h = PORT_WH
+        elif parent.master=='qfd_sp_band_lanes':
+            parent.w,parent.h=LANES_WH
     _slab_links(m, rec)
+    from qwen_split.direct_up4 import apply as direct_up4
+    rec['direct_up4'] = direct_up4(v, m)
     _child_clocks(m, rec)
     m['tie_self'] = sorted(TIE_SELF)
     rec['tie_self'] = sorted(TIE_SELF)

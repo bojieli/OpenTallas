@@ -1,0 +1,39 @@
+{
+  "status": "unqualified source implementation; no static physical views claimed",
+  "required_shape": {
+    "KMAX": 2048,
+    "tiles": 32,
+    "tile_positions": 64,
+    "ingress_lanes": 4,
+    "pairs_per_cycle": 4,
+    "delivery_period": 8
+  },
+  "reuse": {
+    "tile_rtl": "ot_hgi_coll_tkm_tile",
+    "buffer_rtl": "ot_hgi_coll_tkm_buffer",
+    "buffer_macros": 2,
+    "macro": "ot_sram_1r1w_1024x256_m2_r2c2"
+  },
+  "boundaries": {
+    "ingress_bits": 2180,
+    "chain_down_bits": 340,
+    "chain_up_bits": 340,
+    "output_data_bits": 512,
+    "output_mask_bits": 16,
+    "output_addr_bits": 40
+  },
+  "constraints": [
+    "Build own-root leaf for ingress, control, buffer, output; parent wires only.",
+    "Regenerate static control/output physical views after exact bench plus mutant; dynamic predecessor views historical.",
+    "Retain each of the 32 actual tile clocks and insertion.json phi-R delivery.",
+    "Native source integration must add compiler transport and VM-write relay stages to calendar explicitly.",
+    "No ready/credit/reservation or survivor predicate controls production scheduling.",
+    "Check actual die-assigned pin tracks and 0.60 cut limit before any route; no new outline assumed."
+  ],
+  "open": [
+    "production bench and mutants",
+    "exact source-bound native pin/reset/phi audits",
+    "physical root partition and assigned pin fit",
+    "production measured ratio versus immutable prior price"
+  ]
+}
