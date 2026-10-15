@@ -28,7 +28,7 @@ from qwen_split.source_pin_plan import rtl_ports, snap
 ROOT = Path(__file__).resolve().parents[2]
 MASTER = 'qfd_collective_static_io_production'
 SOURCE = 'rtl/physical/ot_qfd_collective_static_io_production.sv'
-ABI = 'results/arch/qwen_coll_io_1014/shared_ucie_1015/production_boundary.json'
+ABI = 'results/arch/qwen_coll_io_1014/block_stage_r10_1015/production_boundary.json'
 UCIE = 'ot_qfd_ucie_x64_phy'
 UCIE_VIEW = 'physical/qwen_missing_phy/tp8_1013/ot_qfd_ucie_x64_phy'
 SERDES = 'ot_qfd_serdes_112g_x12_phy_s597'
@@ -61,9 +61,7 @@ def _aliases(ports):
 
 def core_clock_pins(ports):
     return (CORE_CLOCKS + [f'face_ck{k}' for k in range(ports['face_ck'][0])] +
-            [f'relay_ck{k}' for k in range(ports['relay_ck'][0])] + ['gearbox_core_ck'] +
-            # QCOLL r10 (f3d6a685d): 200 MHz block-stage roots; timed in the core domain here (833 ps: pessimistic)
-            [f'blk_ck{k}' for k in range(ports['blk_ck'][0] if 'blk_ck' in ports else 0)])
+            [f'relay_ck{k}' for k in range(ports['relay_ck'][0])] + ['gearbox_core_ck'])
 
 
 def fdi_clock_pins(ports):
@@ -140,6 +138,12 @@ def apply(model):
     new += [('clk_coll', 'clock_trunk', 1, [('clk_rx', 'pll_coll')] + [('io_collective', p) for p in core_clock_pins(ports)]),
             ('clk_ucie', 'clock_trunk', 1, [('clk_rx', 'pll_ucie')] + [('io_collective', p) for p in fdi_clock_pins(ports)] +
              [(n, 'clk') for n in ('io_ucie',) + SERDES_INST])]
+    if 'blk_ck' in ports:
+        # These are actual 200 MHz clock inputs, not 1.2 GHz roots with a
+        # pessimistic timing annotation. Their common-PLL implementation and
+        # physical phase delivery remain explicit integration obligations.
+        new.append(('clk_coll_blk', 'clock_trunk', 1, [('clk_rx', 'pll_coll_blk')] +
+                    [('io_collective', f'blk_ck{k}') for k in range(ports['blk_ck'][0])]))
     model['buses'] = [q for q in kept if q[0] not in ('clk_ucie', 'clk_coll')] + new
     split = model.setdefault('port_split', {})
     split[MASTER] = dict(cd=[('in_data', 512), ('in_last', 1), ('in_mode', 1), ('in_tag', 32), ('in_valid', 1)],
