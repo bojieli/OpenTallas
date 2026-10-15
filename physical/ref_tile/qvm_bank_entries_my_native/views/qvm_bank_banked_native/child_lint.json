@@ -1,0 +1,108 @@
+{
+ "schema": "opentallas.hier_contract.child_lint.v1",
+ "lef": "/srv/opentallas-scratch/claude/closure-loop/qvm_bank_entries_my_native-ne2r-d73debae3/record/views/qvm_bank_banked_native/qvm_bank_banked_native.lef",
+ "verdict": "PASS",
+ "fails": [],
+ "warns": [
+  "(f) face-pin access: 1068 of 1068 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. ck_cap_hi M5 (246.480,0.016), ck_cap_lo M5 (246.480,0.016), ck_ctrl M5 (246.480,0.016))"
+ ],
+ "summary": "qvm_bank_banked_native 371.52 x 224.64: PG M7 VDD 34 stripes (96% spread, 100% cov) / VSS 34 stripes (96% spread, 100% cov); strap M8; face pins 1068 blocked-above 0 blocked-same 0; clock ck_cap_hi insertion 24 ps; clock ck_cap_lo insertion 7 ps; clock ck_ctrl insertion 131 ps; clock ck_in_hi insertion 153 ps; clock ck_in_lo insertion 82 ps; clock ck_mem_hi insertion 18 ps; clock ck_mem_lo insertion 3 ps; clock ck_out_hi insertion 30 ps; clock ck_out_lo insertion 13 ps; pockets M7 0 (closed)",
+ "info": {
+  "cell": "qvm_bank_banked_native",
+  "W": 371.52,
+  "H": 224.64,
+  "pg": {
+   "nets": {
+    "VDD": {
+     "top_layer": "M7",
+     "stripes": 34,
+     "dir": "V",
+     "spread": 0.959,
+     "coverage": 1.0,
+     "shapes_on_top": 34
+    },
+    "VSS": {
+     "top_layer": "M7",
+     "stripes": 34,
+     "dir": "V",
+     "spread": 0.959,
+     "coverage": 1.0,
+     "shapes_on_top": 34
+    }
+   },
+   "top_layer": "M7",
+   "ok": true,
+   "why": []
+  },
+  "pg_layer": "M7",
+  "strap_layer": "M8",
+  "cap": null,
+  "face": {
+   "face_pins": 1068,
+   "blocked_above": 0,
+   "covered_below": 0,
+   "examples": [],
+   "blocked_same": 0,
+   "same_examples": [],
+   "band_same": 1068,
+   "band_examples": [
+    "ck_cap_hi M5 (246.480,0.016)",
+    "ck_cap_lo M5 (246.480,0.016)",
+    "ck_ctrl M5 (246.480,0.016)",
+    "ck_in_hi M5 (246.480,0.016)",
+    "ck_in_lo M5 (246.480,0.016)",
+    "ck_mem_hi M5 (246.480,0.016)"
+   ]
+  },
+  "clock_insertion": {
+   "ck_cap_hi": {
+    "max_ps": 24.42,
+    "min_ps": 24.42
+   },
+   "ck_cap_lo": {
+    "max_ps": 6.85,
+    "min_ps": 6.85
+   },
+   "ck_ctrl": {
+    "max_ps": 130.9,
+    "min_ps": 130.9
+   },
+   "ck_in_hi": {
+    "max_ps": 153.35,
+    "min_ps": 153.35
+   },
+   "ck_in_lo": {
+    "max_ps": 81.96,
+    "min_ps": 81.96
+   },
+   "ck_mem_hi": {
+    "max_ps": 17.88,
+    "min_ps": 17.88
+   },
+   "ck_mem_lo": {
+    "max_ps": 3.15,
+    "min_ps": 3.15
+   },
+   "ck_out_hi": {
+    "max_ps": 29.84,
+    "min_ps": 29.84
+   },
+   "ck_out_lo": {
+    "max_ps": 13.21,
+    "min_ps": 13.21
+   }
+  },
+  "pockets": {
+   "layer": "M7",
+   "d_um": 2.048,
+   "marker": {
+    "layer": "M7",
+    "d_um": 2.048,
+    "added": 13
+   },
+   "count": 0,
+   "area_um2": 0,
+   "examples": []
+  }
+ }
+}

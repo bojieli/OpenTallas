@@ -14074,6 +14074,12 @@ def dsrom_wfc_protected_caller_adapter_price():
       provider_source_owner='Copernicus',P_and_R_ready=False,SS_FF_qualified=False,adopted=False)
 
 
+def dsrom_vm_seq_local_observation_model():
+    """Source-priced engine-12 observation localization; no unmeasured token credit."""
+    from s81_vm.static_vm_engine import local_observation_cost
+    return local_observation_cost()
+
+
 def dsrom_protected_vm_model(distributed_cmd=False):
     """Finite protected xa/xb VM; optional registered macro command service."""
     from dsrom_protected_vm import model, distributed_model

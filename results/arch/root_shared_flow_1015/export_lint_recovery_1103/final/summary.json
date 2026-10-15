@@ -1,0 +1,738 @@
+{
+ "scope": "All13 actual original routes: generic TT/FF/DRC CLOSED, raw-precision native ETM/insertion PASS; no reroutes; no die integration claim",
+ "count": 13,
+ "raw_audit_main": "7d1eee68a99616f5d988f350e7472902b47bc7db",
+ "raw_audit_sha256": "deb55cfe73d790fd16fa635a9df474c4f87a41c09dced57530e001705f88b3c9",
+ "pilot": "s81fill_hstnh_112-f1-e5bab3fc7",
+ "pilot_additive_provenance": "Pilot and other records published before runtime metadata followup retain original published evidence; these new per-job manifests add exact recovery provenance without rewriting it.",
+ "rows": [
+  {
+   "job": "s81fill_hstnh_112-f1-e5bab3fc7",
+   "physical": {
+    "ss_ps": 333.72,
+    "ff_ps": 29.9,
+    "drc": 0,
+    "ss_sensitivity_ps": 237.15
+   },
+   "native": {
+    "cell": "dsfd_hstnh_112",
+    "view": "hstnh_112",
+    "lib_cell": "dsfd_hstnh_112",
+    "insertion": true,
+    "ref_src": [
+     "insertion.json boundary mean"
+    ],
+    "R_ps": 67.0,
+    "spread_ps": 2.9,
+    "outputs": 112,
+    "inputs": 112,
+    "launch_ps": 184.2,
+    "launch_pin": "dq[68]",
+    "capture_ps": 120.8,
+    "capture_pin": "di[75]",
+    "launch_over": 0,
+    "capture_over": 0,
+    "comb_pins": 0,
+    "comb_first": [],
+    "pass": true,
+    "fail_why": "",
+    "launch_raw_ps": 184.20378,
+    "capture_raw_ps": 120.78665000000001,
+    "clock_references_raw": {
+     "ck[0]": {
+      "rise": 67.0,
+      "fall": 70.63834499999999,
+      "min": 60.39496,
+      "max": 68.24879,
+      "src": "insertion.json boundary mean",
+      "bmin": 65.3,
+      "bmax": 68.2,
+      "n": 112
+     }
+    },
+    "clock_pass": true
+   },
+   "record_commit": "00680c3c9f7181e61ad46c2f728bd426a65208c2",
+   "recovery": {
+    "directory": "/srv/opentallas/claude/closure-loop/s81fill_hstnh_112-f1-e5bab3fc7/cl/export-lint-recovery",
+    "manifest_sha256": "ad77593a1c2cbb51731da0a35d66875d39c031b772db17f6b505dbeadefd2448",
+    "guard_sha256": "f5409969690eec8fb82f52fd36613e035725733c93625149604946b8edf44f67",
+    "helper_sha256": "01063b5f098f83e7ee59607b27a4622e2d982ea0ede8efac25fc5bbd69d5de86",
+    "helper_commit": "f168a93872d53c5d93723b49b85c02005014f371",
+    "requested": "2026-10-15T11:19:49-07:00"
+   }
+  },
+  {
+   "job": "s81fill_hstnh_6-f1-e5bab3fc7",
+   "physical": {
+    "ss_ps": 350.04,
+    "ff_ps": 32.91,
+    "drc": 0,
+    "ss_sensitivity_ps": 264.24
+   },
+   "native": {
+    "cell": "dsfd_hstnh_6",
+    "view": "hstnh_6",
+    "lib_cell": "dsfd_hstnh_6",
+    "insertion": true,
+    "ref_src": [
+     "insertion.json boundary mean"
+    ],
+    "R_ps": 44.8,
+    "spread_ps": 0.2,
+    "outputs": 6,
+    "inputs": 6,
+    "launch_ps": 168.7,
+    "launch_pin": "dq[4]",
+    "capture_ps": 102.0,
+    "capture_pin": "di[3]",
+    "launch_over": 0,
+    "capture_over": 0,
+    "comb_pins": 0,
+    "comb_first": [],
+    "pass": true,
+    "fail_why": "",
+    "launch_raw_ps": 168.71589999999998,
+    "capture_raw_ps": 102.02954,
+    "clock_references_raw": {
+     "ck[0]": {
+      "rise": 44.8,
+      "fall": 49.96928,
+      "min": 43.63572,
+      "max": 44.87501,
+      "src": "insertion.json boundary mean",
+      "bmin": 44.7,
+      "bmax": 44.9,
+      "n": 6
+     }
+    },
+    "clock_pass": true
+   },
+   "record_commit": "aff3c350bbaee80bf4e691c0487c9a33eb62b305",
+   "recovery": {
+    "directory": "/srv/opentallas/claude/closure-loop/s81fill_hstnh_6-f1-e5bab3fc7/cl/export-lint-recovery",
+    "manifest_sha256": "ad19481d42feff54eca71da9bbf5b16a6d909eb3f2dad9f5393a57fe6875dd28",
+    "guard_sha256": "f5409969690eec8fb82f52fd36613e035725733c93625149604946b8edf44f67",
+    "helper_sha256": "01063b5f098f83e7ee59607b27a4622e2d982ea0ede8efac25fc5bbd69d5de86",
+    "helper_commit": "96967cee695fc14158e28367a0dbae641cd86141",
+    "requested": "2026-10-15T11:24:03-07:00"
+   }
+  },
+  {
+   "job": "s81fill_hstnh_8-f1-e5bab3fc7",
+   "physical": {
+    "ss_ps": 348.08,
+    "ff_ps": 32.58,
+    "drc": 0,
+    "ss_sensitivity_ps": 260.78
+   },
+   "native": {
+    "cell": "dsfd_hstnh_8",
+    "view": "hstnh_8",
+    "lib_cell": "dsfd_hstnh_8",
+    "insertion": true,
+    "ref_src": [
+     "insertion.json boundary mean"
+    ],
+    "R_ps": 45.4,
+    "spread_ps": 0.2,
+    "outputs": 8,
+    "inputs": 8,
+    "launch_ps": 170.9,
+    "launch_pin": "dq[3]",
+    "capture_ps": 103.0,
+    "capture_pin": "di[6]",
+    "launch_over": 0,
+    "capture_over": 0,
+    "comb_pins": 0,
+    "comb_first": [],
+    "pass": true,
+    "fail_why": "",
+    "launch_raw_ps": 170.88551999999999,
+    "capture_raw_ps": 102.98438,
+    "clock_references_raw": {
+     "ck[0]": {
+      "rise": 45.4,
+      "fall": 50.52492499999999,
+      "min": 44.05699,
+      "max": 45.487,
+      "src": "insertion.json boundary mean",
+      "bmin": 45.3,
+      "bmax": 45.5,
+      "n": 8
+     }
+    },
+    "clock_pass": true
+   },
+   "record_commit": "e9665b8be73fee82550ae3f6c222e2c89ead2e3c",
+   "recovery": {
+    "directory": "/srv/opentallas/claude/closure-loop/s81fill_hstnh_8-f1-e5bab3fc7/cl/export-lint-recovery",
+    "manifest_sha256": "39d32663da26b078b603074be2fb2e90285c340dd97ce8e8d40f61813d9a229f",
+    "guard_sha256": "f5409969690eec8fb82f52fd36613e035725733c93625149604946b8edf44f67",
+    "helper_sha256": "01063b5f098f83e7ee59607b27a4622e2d982ea0ede8efac25fc5bbd69d5de86",
+    "helper_commit": "96967cee695fc14158e28367a0dbae641cd86141",
+    "requested": "2026-10-15T11:24:04-07:00"
+   }
+  },
+  {
+   "job": "s81fill_hstnh_85-f1-e5bab3fc7",
+   "physical": {
+    "ss_ps": 339.31,
+    "ff_ps": 29.76,
+    "drc": 0,
+    "ss_sensitivity_ps": 246.43
+   },
+   "native": {
+    "cell": "dsfd_hstnh_85",
+    "view": "hstnh_85",
+    "lib_cell": "dsfd_hstnh_85",
+    "insertion": true,
+    "ref_src": [
+     "insertion.json boundary mean"
+    ],
+    "R_ps": 63.4,
+    "spread_ps": 3.1,
+    "outputs": 85,
+    "inputs": 85,
+    "launch_ps": 177.3,
+    "launch_pin": "dq[57]",
+    "capture_ps": 121.5,
+    "capture_pin": "di[45]",
+    "launch_over": 0,
+    "capture_over": 0,
+    "comb_pins": 0,
+    "comb_first": [],
+    "pass": true,
+    "fail_why": "",
+    "launch_raw_ps": 177.26635,
+    "capture_raw_ps": 121.45589,
+    "clock_references_raw": {
+     "ck[0]": {
+      "rise": 63.4,
+      "fall": 67.37122,
+      "min": 57.53751,
+      "max": 64.86584,
+      "src": "insertion.json boundary mean",
+      "bmin": 61.8,
+      "bmax": 64.9,
+      "n": 85
+     }
+    },
+    "clock_pass": true
+   },
+   "record_commit": "18229a704ead75029700a5cc54178c5945825476",
+   "recovery": {
+    "directory": "/srv/opentallas/claude/closure-loop/s81fill_hstnh_85-f1-e5bab3fc7/cl/export-lint-recovery",
+    "manifest_sha256": "3d8ab3dbe27e229e03daabb0408fd465e12d6bffe28f35c7f5f82e12a339b145",
+    "guard_sha256": "f5409969690eec8fb82f52fd36613e035725733c93625149604946b8edf44f67",
+    "helper_sha256": "01063b5f098f83e7ee59607b27a4622e2d982ea0ede8efac25fc5bbd69d5de86",
+    "helper_commit": "96967cee695fc14158e28367a0dbae641cd86141",
+    "requested": "2026-10-15T11:24:05-07:00"
+   }
+  },
+  {
+   "job": "s81fill_hstnv_11-f1-e5bab3fc7",
+   "physical": {
+    "ss_ps": 348.16,
+    "ff_ps": 27.75,
+    "drc": 0,
+    "ss_sensitivity_ps": 261.18
+   },
+   "native": {
+    "cell": "dsfd_hstnv_11",
+    "view": "hstnv_11",
+    "lib_cell": "dsfd_hstnv_11",
+    "insertion": true,
+    "ref_src": [
+     "insertion.json boundary mean"
+    ],
+    "R_ps": 47.0,
+    "spread_ps": 0.2,
+    "outputs": 11,
+    "inputs": 11,
+    "launch_ps": 170.8,
+    "launch_pin": "dq[0]",
+    "capture_ps": 101.5,
+    "capture_pin": "di[0]",
+    "launch_over": 0,
+    "capture_over": 0,
+    "comb_pins": 0,
+    "comb_first": [],
+    "pass": true,
+    "fail_why": "",
+    "launch_raw_ps": 170.78151,
+    "capture_raw_ps": 101.45456,
+    "clock_references_raw": {
+     "ck[0]": {
+      "rise": 47.0,
+      "fall": 52.00257500000001,
+      "min": 45.28468,
+      "max": 47.0689,
+      "src": "insertion.json boundary mean",
+      "bmin": 46.9,
+      "bmax": 47.1,
+      "n": 11
+     }
+    },
+    "clock_pass": true
+   },
+   "record_commit": "7b26a1167c1a12da2819c8546a9723bc543f6fef",
+   "recovery": {
+    "directory": "/srv/opentallas/claude/closure-loop/s81fill_hstnv_11-f1-e5bab3fc7/cl/export-lint-recovery",
+    "manifest_sha256": "773a5ac46b1e41428548acd5b25c8f28d535be00d5427d6210b7871b983ed462",
+    "guard_sha256": "f5409969690eec8fb82f52fd36613e035725733c93625149604946b8edf44f67",
+    "helper_sha256": "01063b5f098f83e7ee59607b27a4622e2d982ea0ede8efac25fc5bbd69d5de86",
+    "helper_commit": "96967cee695fc14158e28367a0dbae641cd86141",
+    "requested": "2026-10-15T11:24:06-07:00"
+   }
+  },
+  {
+   "job": "s81fill_hstnv_15-f1-e5bab3fc7",
+   "physical": {
+    "ss_ps": 348.19,
+    "ff_ps": 27.94,
+    "drc": 0,
+    "ss_sensitivity_ps": 261.2
+   },
+   "native": {
+    "cell": "dsfd_hstnv_15",
+    "view": "hstnv_15",
+    "lib_cell": "dsfd_hstnv_15",
+    "insertion": true,
+    "ref_src": [
+     "insertion.json boundary mean"
+    ],
+    "R_ps": 48.6,
+    "spread_ps": 0.5,
+    "outputs": 15,
+    "inputs": 15,
+    "launch_ps": 170.2,
+    "launch_pin": "dq[3]",
+    "capture_ps": 101.1,
+    "capture_pin": "di[6]",
+    "launch_over": 0,
+    "capture_over": 0,
+    "comb_pins": 0,
+    "comb_first": [],
+    "pass": true,
+    "fail_why": "",
+    "launch_raw_ps": 170.22339,
+    "capture_raw_ps": 101.08685,
+    "clock_references_raw": {
+     "ck[0]": {
+      "rise": 48.6,
+      "fall": 53.48135500000001,
+      "min": 46.41092,
+      "max": 48.87862,
+      "src": "insertion.json boundary mean",
+      "bmin": 48.4,
+      "bmax": 48.9,
+      "n": 15
+     }
+    },
+    "clock_pass": true
+   },
+   "record_commit": "558243afc02747bafa705f516502be51576f49cb",
+   "recovery": {
+    "directory": "/srv/opentallas/claude/closure-loop/s81fill_hstnv_15-f1-e5bab3fc7/cl/export-lint-recovery",
+    "manifest_sha256": "01a54afb567e22ad2094318cefeec2e701a4274f08903e232796d1f3dd19516b",
+    "guard_sha256": "f5409969690eec8fb82f52fd36613e035725733c93625149604946b8edf44f67",
+    "helper_sha256": "01063b5f098f83e7ee59607b27a4622e2d982ea0ede8efac25fc5bbd69d5de86",
+    "helper_commit": "96967cee695fc14158e28367a0dbae641cd86141",
+    "requested": "2026-10-15T11:24:07-07:00"
+   }
+  },
+  {
+   "job": "s81fill_hstnv_20-f1-e5bab3fc7",
+   "physical": {
+    "ss_ps": 345.27,
+    "ff_ps": 28.6,
+    "drc": 0,
+    "ss_sensitivity_ps": 257.02
+   },
+   "native": {
+    "cell": "dsfd_hstnv_20",
+    "view": "hstnv_20",
+    "lib_cell": "dsfd_hstnv_20",
+    "insertion": true,
+    "ref_src": [
+     "insertion.json boundary mean"
+    ],
+    "R_ps": 50.1,
+    "spread_ps": 0.5,
+    "outputs": 20,
+    "inputs": 20,
+    "launch_ps": 172.8,
+    "launch_pin": "dq[13]",
+    "capture_ps": 101.7,
+    "capture_pin": "di[10]",
+    "launch_over": 0,
+    "capture_over": 0,
+    "comb_pins": 0,
+    "comb_first": [],
+    "pass": true,
+    "fail_why": "",
+    "launch_raw_ps": 172.79394,
+    "capture_raw_ps": 101.73868999999999,
+    "clock_references_raw": {
+     "ck[0]": {
+      "rise": 50.1,
+      "fall": 54.835190000000004,
+      "min": 47.68197,
+      "max": 50.43432,
+      "src": "insertion.json boundary mean",
+      "bmin": 49.9,
+      "bmax": 50.4,
+      "n": 20
+     }
+    },
+    "clock_pass": true
+   },
+   "record_commit": "b6c9ecc287df786bc2231c3eb276148c71508961",
+   "recovery": {
+    "directory": "/srv/opentallas/claude/closure-loop/s81fill_hstnv_20-f1-e5bab3fc7/cl/export-lint-recovery",
+    "manifest_sha256": "1d48f3724b470a6c57f2c1b663a3d9e7058e4463398b1cd2a7b9c1e7001d46e0",
+    "guard_sha256": "f5409969690eec8fb82f52fd36613e035725733c93625149604946b8edf44f67",
+    "helper_sha256": "01063b5f098f83e7ee59607b27a4622e2d982ea0ede8efac25fc5bbd69d5de86",
+    "helper_commit": "96967cee695fc14158e28367a0dbae641cd86141",
+    "requested": "2026-10-15T11:24:08-07:00"
+   }
+  },
+  {
+   "job": "s81fill_hstnv_36-f1-e5bab3fc7",
+   "physical": {
+    "ss_ps": 344.27,
+    "ff_ps": 28.62,
+    "drc": 0,
+    "ss_sensitivity_ps": 253.8
+   },
+   "native": {
+    "cell": "dsfd_hstnv_36",
+    "view": "hstnv_36",
+    "lib_cell": "dsfd_hstnv_36",
+    "insertion": true,
+    "ref_src": [
+     "insertion.json boundary mean"
+    ],
+    "R_ps": 54.1,
+    "spread_ps": 1.1,
+    "outputs": 36,
+    "inputs": 36,
+    "launch_ps": 173.7,
+    "launch_pin": "dq[12]",
+    "capture_ps": 104.3,
+    "capture_pin": "di[21]",
+    "launch_over": 0,
+    "capture_over": 0,
+    "comb_pins": 0,
+    "comb_first": [],
+    "pass": true,
+    "fail_why": "",
+    "launch_raw_ps": 173.7049,
+    "capture_raw_ps": 104.32678,
+    "clock_references_raw": {
+     "ck[0]": {
+      "rise": 54.1,
+      "fall": 58.58121,
+      "min": 50.47481,
+      "max": 54.56935,
+      "src": "insertion.json boundary mean",
+      "bmin": 53.5,
+      "bmax": 54.6,
+      "n": 36
+     }
+    },
+    "clock_pass": true
+   },
+   "record_commit": "d63e2933f893f32a03085593f44bd78bb287290a",
+   "recovery": {
+    "directory": "/srv/opentallas/claude/closure-loop/s81fill_hstnv_36-f1-e5bab3fc7/cl/export-lint-recovery",
+    "manifest_sha256": "2434b6f1a6cb102a54db5d1f054ffc48054a457b507c499add29000f3f8a4555",
+    "guard_sha256": "f5409969690eec8fb82f52fd36613e035725733c93625149604946b8edf44f67",
+    "helper_sha256": "01063b5f098f83e7ee59607b27a4622e2d982ea0ede8efac25fc5bbd69d5de86",
+    "helper_commit": "96967cee695fc14158e28367a0dbae641cd86141",
+    "requested": "2026-10-15T11:24:09-07:00"
+   }
+  },
+  {
+   "job": "s81fill_hstnv_54-f1-e5bab3fc7",
+   "physical": {
+    "ss_ps": 341.77,
+    "ff_ps": 29.75,
+    "drc": 0,
+    "ss_sensitivity_ps": 249.74
+   },
+   "native": {
+    "cell": "dsfd_hstnv_54",
+    "view": "hstnv_54",
+    "lib_cell": "dsfd_hstnv_54",
+    "insertion": true,
+    "ref_src": [
+     "insertion.json boundary mean"
+    ],
+    "R_ps": 59.2,
+    "spread_ps": 3.1,
+    "outputs": 54,
+    "inputs": 54,
+    "launch_ps": 176.0,
+    "launch_pin": "dq[24]",
+    "capture_ps": 118.3,
+    "capture_pin": "di[37]",
+    "launch_over": 0,
+    "capture_over": 0,
+    "comb_pins": 0,
+    "comb_first": [],
+    "pass": true,
+    "fail_why": "",
+    "launch_raw_ps": 176.01252,
+    "capture_raw_ps": 118.27504,
+    "clock_references_raw": {
+     "ck[0]": {
+      "rise": 59.2,
+      "fall": 63.316395000000014,
+      "min": 53.8378,
+      "max": 60.38657,
+      "src": "insertion.json boundary mean",
+      "bmin": 57.3,
+      "bmax": 60.4,
+      "n": 54
+     }
+    },
+    "clock_pass": true
+   },
+   "record_commit": "eb3a95e382346bbe12ca1f060a1e50faf09c0040",
+   "recovery": {
+    "directory": "/srv/opentallas/claude/closure-loop/s81fill_hstnv_54-f1-e5bab3fc7/cl/export-lint-recovery",
+    "manifest_sha256": "1aae926010bd420f24d541db22054c978c2adac66fa6da64b6ffdbe67dee82e9",
+    "guard_sha256": "f5409969690eec8fb82f52fd36613e035725733c93625149604946b8edf44f67",
+    "helper_sha256": "01063b5f098f83e7ee59607b27a4622e2d982ea0ede8efac25fc5bbd69d5de86",
+    "helper_commit": "96967cee695fc14158e28367a0dbae641cd86141",
+    "requested": "2026-10-15T11:24:10-07:00"
+   }
+  },
+  {
+   "job": "s81fill_hstnv_6-f1-e5bab3fc7",
+   "physical": {
+    "ss_ps": 349.8,
+    "ff_ps": 29.02,
+    "drc": 0,
+    "ss_sensitivity_ps": 263.81
+   },
+   "native": {
+    "cell": "dsfd_hstnv_6",
+    "view": "hstnv_6",
+    "lib_cell": "dsfd_hstnv_6",
+    "insertion": true,
+    "ref_src": [
+     "insertion.json boundary mean"
+    ],
+    "R_ps": 44.4,
+    "spread_ps": 0.1,
+    "outputs": 6,
+    "inputs": 6,
+    "launch_ps": 169.3,
+    "launch_pin": "dq[5]",
+    "capture_ps": 101.3,
+    "capture_pin": "di[2]",
+    "launch_over": 0,
+    "capture_over": 0,
+    "comb_pins": 0,
+    "comb_first": [],
+    "pass": true,
+    "fail_why": "",
+    "launch_raw_ps": 169.2635,
+    "capture_raw_ps": 101.31289,
+    "clock_references_raw": {
+     "ck[0]": {
+      "rise": 44.4,
+      "fall": 49.603494999999995,
+      "min": 43.24295,
+      "max": 44.54327,
+      "src": "insertion.json boundary mean",
+      "bmin": 44.4,
+      "bmax": 44.5,
+      "n": 6
+     }
+    },
+    "clock_pass": true
+   },
+   "record_commit": "6438d527072195d592f5b8d5ff5b1f6bc74914ae",
+   "recovery": {
+    "directory": "/srv/opentallas/claude/closure-loop/s81fill_hstnv_6-f1-e5bab3fc7/cl/export-lint-recovery",
+    "manifest_sha256": "a38ade2b87ca8aa5ec6d844cf34eba5c0e037fa86e521e4a0f0612aabfc09bd7",
+    "guard_sha256": "f5409969690eec8fb82f52fd36613e035725733c93625149604946b8edf44f67",
+    "helper_sha256": "01063b5f098f83e7ee59607b27a4622e2d982ea0ede8efac25fc5bbd69d5de86",
+    "helper_commit": "96967cee695fc14158e28367a0dbae641cd86141",
+    "requested": "2026-10-15T11:24:11-07:00"
+   }
+  },
+  {
+   "job": "s81fill_hstnv_8-f1-e5bab3fc7",
+   "physical": {
+    "ss_ps": 347.47,
+    "ff_ps": 28.99,
+    "drc": 0,
+    "ss_sensitivity_ps": 260.32
+   },
+   "native": {
+    "cell": "dsfd_hstnv_8",
+    "view": "hstnv_8",
+    "lib_cell": "dsfd_hstnv_8",
+    "insertion": true,
+    "ref_src": [
+     "insertion.json boundary mean"
+    ],
+    "R_ps": 45.2,
+    "spread_ps": 0.3,
+    "outputs": 8,
+    "inputs": 8,
+    "launch_ps": 171.6,
+    "launch_pin": "dq[3]",
+    "capture_ps": 101.5,
+    "capture_pin": "di[2]",
+    "launch_over": 0,
+    "capture_over": 0,
+    "comb_pins": 0,
+    "comb_first": [],
+    "pass": true,
+    "fail_why": "",
+    "launch_raw_ps": 171.63119,
+    "capture_raw_ps": 101.54227,
+    "clock_references_raw": {
+     "ck[0]": {
+      "rise": 45.2,
+      "fall": 50.33623000000001,
+      "min": 43.81635,
+      "max": 45.37513,
+      "src": "insertion.json boundary mean",
+      "bmin": 45.1,
+      "bmax": 45.4,
+      "n": 8
+     }
+    },
+    "clock_pass": true
+   },
+   "record_commit": "828e15ab09c4e7fb894d49d392dcbf929f09a2ce",
+   "recovery": {
+    "directory": "/srv/opentallas/claude/closure-loop/s81fill_hstnv_8-f1-e5bab3fc7/cl/export-lint-recovery",
+    "manifest_sha256": "a986528b28d3e4df6e53a87cba70e713591d7cfaaea8f28a8edba2e4b401be27",
+    "guard_sha256": "f5409969690eec8fb82f52fd36613e035725733c93625149604946b8edf44f67",
+    "helper_sha256": "01063b5f098f83e7ee59607b27a4622e2d982ea0ede8efac25fc5bbd69d5de86",
+    "helper_commit": "96967cee695fc14158e28367a0dbae641cd86141",
+    "requested": "2026-10-15T11:24:12-07:00"
+   }
+  },
+  {
+   "job": "s81fill_hstnv_85-f1-e5bab3fc7",
+   "physical": {
+    "ss_ps": 330.74,
+    "ff_ps": 29.68,
+    "drc": 0,
+    "ss_sensitivity_ps": 232.8
+   },
+   "native": {
+    "cell": "dsfd_hstnv_85",
+    "view": "hstnv_85",
+    "lib_cell": "dsfd_hstnv_85",
+    "insertion": true,
+    "ref_src": [
+     "insertion.json boundary mean"
+    ],
+    "R_ps": 63.7,
+    "spread_ps": 2.4,
+    "outputs": 85,
+    "inputs": 85,
+    "launch_ps": 185.8,
+    "launch_pin": "dq[55]",
+    "capture_ps": 120.2,
+    "capture_pin": "di[78]",
+    "launch_over": 0,
+    "capture_over": 0,
+    "comb_pins": 0,
+    "comb_first": [],
+    "pass": true,
+    "fail_why": "",
+    "launch_raw_ps": 185.8345,
+    "capture_raw_ps": 120.19515000000001,
+    "clock_references_raw": {
+     "ck[0]": {
+      "rise": 63.7,
+      "fall": 67.6375,
+      "min": 58.14629,
+      "max": 64.99535,
+      "src": "insertion.json boundary mean",
+      "bmin": 62.6,
+      "bmax": 65.0,
+      "n": 85
+     }
+    },
+    "clock_pass": true
+   },
+   "record_commit": "1debb580f9336ae0b1c35431a8f68d3e481bb20d",
+   "recovery": {
+    "directory": "/srv/opentallas-scratch/claude/closure-loop/s81fill_hstnv_85-f1-e5bab3fc7/cl/export-lint-recovery",
+    "manifest_sha256": "1123b4a44c613d60d9dedfdc5bda0b5964cbeb9999129046c56aed04d23581f7",
+    "guard_sha256": "f5409969690eec8fb82f52fd36613e035725733c93625149604946b8edf44f67",
+    "helper_sha256": "01063b5f098f83e7ee59607b27a4622e2d982ea0ede8efac25fc5bbd69d5de86",
+    "helper_commit": "96967cee695fc14158e28367a0dbae641cd86141",
+    "requested": "2026-10-15T11:24:14-07:00"
+   }
+  },
+  {
+   "job": "s81fill_hstnv_9-f1-e5bab3fc7",
+   "physical": {
+    "ss_ps": 349.09,
+    "ff_ps": 27.74,
+    "drc": 0,
+    "ss_sensitivity_ps": 262.61
+   },
+   "native": {
+    "cell": "dsfd_hstnv_9",
+    "view": "hstnv_9",
+    "lib_cell": "dsfd_hstnv_9",
+    "insertion": true,
+    "ref_src": [
+     "insertion.json boundary mean"
+    ],
+    "R_ps": 46.5,
+    "spread_ps": 0.2,
+    "outputs": 9,
+    "inputs": 9,
+    "launch_ps": 169.7,
+    "launch_pin": "dq[2]",
+    "capture_ps": 101.3,
+    "capture_pin": "di[8]",
+    "launch_over": 0,
+    "capture_over": 0,
+    "comb_pins": 0,
+    "comb_first": [],
+    "pass": true,
+    "fail_why": "",
+    "launch_raw_ps": 169.66335,
+    "capture_raw_ps": 101.28939,
+    "clock_references_raw": {
+     "ck[0]": {
+      "rise": 46.5,
+      "fall": 51.56055500000001,
+      "min": 44.85066,
+      "max": 46.59737,
+      "src": "insertion.json boundary mean",
+      "bmin": 46.4,
+      "bmax": 46.6,
+      "n": 9
+     }
+    },
+    "clock_pass": true
+   },
+   "record_commit": "1eef44cdeb02699ee2b8c28a589dcbe1d2d3885b",
+   "recovery": {
+    "directory": "/srv/opentallas/claude/closure-loop/s81fill_hstnv_9-f1-e5bab3fc7/cl/export-lint-recovery",
+    "manifest_sha256": "eb25a4bff9421bbb102803c4c370a7c9211b1453b3bc819900930f3b343f11c6",
+    "guard_sha256": "f5409969690eec8fb82f52fd36613e035725733c93625149604946b8edf44f67",
+    "helper_sha256": "01063b5f098f83e7ee59607b27a4622e2d982ea0ede8efac25fc5bbd69d5de86",
+    "helper_commit": "96967cee695fc14158e28367a0dbae641cd86141",
+    "requested": "2026-10-15T11:24:13-07:00"
+   }
+  }
+ ]
+}

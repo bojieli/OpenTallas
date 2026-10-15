@@ -1,0 +1,19 @@
+SU_ARITH_SFU OP 0 sfu_only=1 issue_to_output=72 first_output=80 last_output=143
+SU_ARITH_SFU OP 1 sfu_only=1 issue_to_output=72 first_output=80 last_output=143
+SU_ARITH_SFU OP 2 sfu_only=1 issue_to_output=94 first_output=102 last_output=165
+SU_ARITH_SFU OP 3 sfu_only=1 issue_to_output=94 first_output=102 last_output=165
+SU_ARITH_SFU OP 4 sfu_only=1 issue_to_output=94 first_output=102 last_output=165
+SU_ARITH_SFU OP 5 sfu_only=1 issue_to_output=39 first_output=47 last_output=110
+SU_ARITH_SFU OP 6 sfu_only=1 issue_to_output=39 first_output=47 last_output=110
+SU_ARITH ERROR op=7 cycle=31 lane=255 word=0 got=bf780000 want=bf800000
+SU_ARITH ERROR op=7 cycle=32 lane=255 word=1 got=bf700000 want=bf780000
+SU_ARITH ERROR op=7 cycle=33 lane=255 word=2 got=bf680000 want=bf700000
+SU_ARITH ERROR op=7 cycle=34 lane=255 word=3 got=bf600000 want=bf680000
+SU_ARITH ERROR op=7 cycle=35 lane=255 word=4 got=bf580000 want=bf600000
+SU_ARITH ERROR op=7 cycle=36 lane=255 word=5 got=bf500000 want=bf580000
+SU_ARITH ERROR op=7 cycle=37 lane=255 word=6 got=bf480000 want=bf500000
+SU_ARITH ERROR op=7 cycle=38 lane=255 word=7 got=bf400000 want=bf480000
+SU_ARITH_SFU OP 7 sfu_only=0 issue_to_output=23 first_output=31 last_output=94
+[30970000] %Fatal: tb_su_static_arithmetic_sfu.sv:107: Assertion failed in tb_su_static_arithmetic_sfu: SU_ARITH FAIL checks=352256 errors=128 outputs=90112
+%Error: rtl/hbm_accel/generic/adapters/static_su/arithmetic/tb_su_static_arithmetic_sfu.sv:107: Verilog $stop
+Aborting...

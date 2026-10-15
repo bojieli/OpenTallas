@@ -80,6 +80,8 @@ def main(argv=None):
     ap.add_argument('--tag', required=True)
     ap.add_argument('--version', required=True)
     ap.add_argument('--source', required=True)
+    ap.add_argument('--host-v14', action='store_true', help='v1.4 geometry (HOST root core + slices)')
+    ap.add_argument('--host-north', action='store_true', help='v1.4.1 geometry (HOST root core below the D2D end)')
     a = ap.parse_args(argv)
     K._set_geometry(True)
     out = ROOT / 'results/arch/qwen_split_1014' / f'kvsys_v{a.tag}'
@@ -155,7 +157,8 @@ def main(argv=None):
     for f, g in (('port_bind.json', 'port_bind.json'), ('window.json', 'window.json'), ('libs/views.json', 'views.json'),
                  ('libs/clocks.json', 'clocks.json')):
         shutil.copy(a.run / f, out / g)
-    m = K.build(kv_wq_mirror=True, split=True)
+    m = K.build(kv_wq_mirror=True, split=True, host_v14=a.host_v14 or a.host_north or None,
+                host_north=a.host_north or None)
     rec = K.record(m)
     M = K.masters(m, 1)
     rec.update(legality=K.check(m), strict_ports=K.strict_ports(M), pin_reach=K.pin_reach(m, M),
