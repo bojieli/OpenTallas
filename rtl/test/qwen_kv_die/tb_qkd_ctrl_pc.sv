@@ -14,7 +14,7 @@
 //       flag; a write posted for a layer whose descriptor has not been sent is HELD until it is.
 // PASS line: "PASS qkd_ctrl_pc ..." ; any mismatch: "FAIL qkd_ctrl_pc ...".  MUT 1..4 = the leaf's bench mutants.
 module tb_qkd_ctrl_pc;
-    parameter integer PCI = 0, MUT = 0, NL = 3, RL = 14;
+    parameter integer PCI = 0, MUT = 0, NL = 3, RL = 14, HAND_PIPE = 0;
 `include "qkd_strip_map.vh"
     localparam integer ROW0 = 64, SROW = 24427, CVL = 2;
     reg hclk = 0, ck = 0;
@@ -178,11 +178,14 @@ module tb_qkd_ctrl_pc;
     longint n_land = 0, n_ack = 0, n_hand = 0, cred_pend = 0;
     reg [31:0] rnd = 32'h1234567;
     wire   o_lv = co[O_co_h_lv], o_hand = co[O_co_h_hand], o_wcon = co[O_co_h_wcon], o_av = co[O_co_h_av];
+    reg hand_pin = 0;
+    always @(posedge hclk) if (!hrst) hand_pin <= 1'b0; else hand_pin <= o_hand;
+    wire hand_cdc = HAND_PIPE != 0 ? hand_pin : o_hand;
     always @(posedge hclk) begin : cdc
-        automatic reg [7:0] whn = wh + 8'(o_hand);
+        automatic reg [7:0] whn = wh + 8'(hand_cdc);
         automatic int give;
         rnd = {rnd[30:0], rnd[31] ^ rnd[21] ^ rnd[1] ^ rnd[0]};
-        if (o_hand) begin
+        if (hand_cdc) begin
             if (wh == ww) bad("h_hand with an empty write queue");
             else begin exp_wr.push_back(wq[wh]); n_hand++; end
         end
