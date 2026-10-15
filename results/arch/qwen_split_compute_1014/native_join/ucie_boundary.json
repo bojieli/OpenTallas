@@ -1,0 +1,86 @@
+{
+  "schema": "opentallas.qwen.current-static-ucie-boundary.v1",
+  "qualified": false,
+  "current_digital_parent": "qfd_collective_static_io",
+  "current_digital_profile": {
+    "LU": 47,
+    "LS": 376,
+    "RU": 5,
+    "RS": [
+      0,
+      0,
+      5
+    ]
+  },
+  "licensed_macro": "ot_qfd_ucie_x64_phy",
+  "source": "physical/qwen_missing_phy/tp8_1013/ot_qfd_ucie_x64_phy/ot_qfd_ucie_x64_phy_bb.v",
+  "footprint": {
+    "area_mm2": 0.6047,
+    "height_um": 777.6,
+    "width_um": 777.6
+  },
+  "fdi": {
+    "clock_ghz": 1.0,
+    "flit_bits": 1043,
+    "latency_fdi_cycles_one_way": 4,
+    "payload_bits": 1024,
+    "rx_buffer_flits": 512
+  },
+  "pins": {
+    "pin_block_y_um": [
+      600.0,
+      700.368
+    ],
+    "pin_edge": "west (adapter-facing)",
+    "pin_layer": "M4",
+    "pin_pitch_um": 0.048,
+    "signal_pins": 2091
+  },
+  "claim_boundary": "a placement / connection / timing abstract of licensed IP: no PHY design, no GDS, no SI or bump-map analysis; footprint and boundary timing ASSUMED as stated",
+  "file_sha256": {
+    "physical/qwen_missing_phy/tp8_1013/ot_qfd_ucie_x64_phy/ot_qfd_ucie_x64_phy.json": "041c21b1f1c3a9f54d83060e29ea2183ea7c4a9ee35fdf5d8aedfa1be627d285",
+    "physical/qwen_missing_phy/tp8_1013/ot_qfd_ucie_x64_phy/ot_qfd_ucie_x64_phy.lef": "1fcc313e1c0b74de491710e0da235edd683823db1590c26f44489f620264d34a",
+    "physical/qwen_missing_phy/tp8_1013/ot_qfd_ucie_x64_phy/ot_qfd_ucie_x64_phy_bb.v": "21f613f164d8d19b980328e87a2d9895d8452c83d132fea107f6299e3f534be1",
+    "physical/qwen_missing_phy/tp8_1013/ot_qfd_ucie_x64_phy/ot_qfd_ucie_x64_phy_ff.lib": "63c838f2e1ffc3b9a12ba5d93cc91a84cb33618df18f7f48419268779ffaa012",
+    "physical/qwen_missing_phy/tp8_1013/ot_qfd_ucie_x64_phy/ot_qfd_ucie_x64_phy_model.sv": "e14e655ed48b14e596823a6298a91cf4f94b7c81edf843b64b25e1b97060c010",
+    "physical/qwen_missing_phy/tp8_1013/ot_qfd_ucie_x64_phy/ot_qfd_ucie_x64_phy_ss.lib": "573ef75c13dcfe88606ad235a57aa8ad336a7e364e2e6a37005c5a4a6a60a5e8",
+    "physical/qwen_missing_phy/tp8_1013/ot_qfd_ucie_x64_phy/ot_qfd_ucie_x64_phy_tt.lib": "083e34158c1b8a6f65727075994fb51e3a803f2326a3ec0322529498b37655f9"
+  },
+  "binding": {
+    "parent_instance": null,
+    "hard_PHY_instance": null,
+    "physical_home": null,
+    "pin_mapping": null,
+    "clock_root": null,
+    "compensated_phase": null,
+    "insertion_R_ps": null,
+    "status": "OPEN: existing qfd_io_ucie combined envelope is historical; no new per-face licensed PHY binding claimed"
+  },
+  "shared_capacity": {
+    "FDI_bits_per_direction": 1043,
+    "P_frame_bits": 597,
+    "R_frame_bits": 565,
+    "simultaneous_frames_bits": 1162,
+    "simultaneous_raw_frames_fit": false,
+    "source_owner": "q_collective actual fixed-slot shared-frame successor in progress",
+    "normal_policy": "compiled P/R transmit selection and receive type, no observed-ready arbitration",
+    "mux_RTL": null,
+    "mux_pin_plan": null
+  },
+  "clock_relation": {
+    "core_period_ps": 833.333333,
+    "FDI_period_ps": 1000,
+    "core_cycles_per_common_window": 6,
+    "FDI_cycles_per_common_window": 5,
+    "actual_static_reservation_calendar": null,
+    "actual_PU_core_edges": null,
+    "rule": "Do not substitute library minimum period for the stated FDI operating rate; do not inherit common-clock bench PU14 as measured package latency"
+  },
+  "required": [
+    "actual shared mux/CDC source and PHI profile proof",
+    "actual P/R concurrent reservation/capacity and static RX type proof",
+    "real per-face digital children/home/pin/clock contracts",
+    "hard PHY-only placement and licensed boundary source evidence",
+    "registered actual pin reaches/cuts and routed TT/FF/DRC0"
+  ]
+}
