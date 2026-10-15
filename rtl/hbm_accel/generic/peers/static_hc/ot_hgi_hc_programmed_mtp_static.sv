@@ -4,7 +4,7 @@
 // launch/read/capture event in the actual PMAX8/80-operand-SRAM engine.
 // Only host programme/configuration and operand/gathered-data staging enter
 // at this boundary. No testbench or reference arithmetic issues DUT events.
-module ot_hgi_hc_programmed_mtp_static(
+module ot_hgi_hc_programmed_mtp_static #(parameter integer ROW_LOOP=0)(
     input wire clk,sink_clk,rst_n,
     input wire cfg_we,input wire [10:0] cfg_addr,input wire [255:0] cfg_data,
     input wire start_v,input wire [10:0] start_base,input wire [11:0] start_limit,input wire [15:0] start_loops,
@@ -21,7 +21,7 @@ module ot_hgi_hc_programmed_mtp_static(
     wire [3:0] npos;
     wire [2:0] tail_position;
     wire [31:0] norm_eps;
-    ot_hgi_hc_programme_mtp_static issuer(
+    ot_hgi_hc_programme_mtp_static #(.ROW_LOOP(ROW_LOOP)) issuer(
         .clk(clk),.rst_n(rst_n),.cfg_we(cfg_we),.cfg_addr(cfg_addr),.cfg_data(cfg_data),
         .start_v(start_v),.start_base(start_base),.start_limit(start_limit),.start_loops(start_loops),
         .clear(clear),.row_launch(row_launch),.row_raw_read(row_raw_read),.row_weight_slot(row_weight_slot),
