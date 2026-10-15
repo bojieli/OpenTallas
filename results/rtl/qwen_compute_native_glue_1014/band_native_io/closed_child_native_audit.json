@@ -1,0 +1,23 @@
+{
+  "cell": "qfd_bl_lane",
+  "view": "physical/ref_tile/qfd_bl_lane_rr/views/qfd_bl_lane",
+  "lib_cell": "qfd_bl_lane",
+  "insertion": true,
+  "ref_src": [
+    "insertion.json boundary mean"
+  ],
+  "R_ps": 481.5,
+  "spread_ps": 52.6,
+  "outputs": 290,
+  "inputs": 369,
+  "launch_ps": 169.6,
+  "launch_pin": "ty[12]",
+  "capture_ps": 132.8,
+  "capture_pin": "lnk[3]",
+  "launch_over": 0,
+  "capture_over": 0,
+  "comb_pins": 0,
+  "comb_first": [],
+  "pass": true,
+  "fail_why": ""
+}
