@@ -72,7 +72,7 @@ module qkd_full128_return_cell #(parameter integer PC=0, STACK=0, DISCOVERY=0, H
     hostreads++;
     if(er[258:257]!=0||er[256:1]!==data(24427,157))bad("host native dual-clock read data");
    end
-   if(cv)commits++;
+   if(cv)begin commits++;if(cw)commit_writes++;else commit_reads++;end
   end
   if(!DISCOVERY&&rst&&(return_hfault||return_cfault))$fatal(1,"actual controller dual-clock slot fault at core%0d",core_edge);
  end
@@ -113,7 +113,7 @@ module qkd_full128_return_cell #(parameter integer PC=0, STACK=0, DISCOVERY=0, H
  reg due[0:CYCLES+RL];reg [287:0] word[0:CYCLES+RL];
  reg wdue[0:CYCLES+8];reg [287:0] wword[0:CYCLES+8];
  integer wsector[0:CYCLES+8];reg [287:0] external_host_storage[0:1023];
- integer errors=0,mode=0,landed,hostreads,hostwrites,commits,reads;
+ integer errors=0,mode=0,landed,hostreads,hostwrites,commits,commit_writes,commit_reads,reads;
  task automatic bad(input string message);
   if(errors<12)$display("BAD pc%0d stack%0d %s",PC,STACK,message);errors++;
  endtask
@@ -143,7 +143,7 @@ module qkd_full128_return_cell #(parameter integer PC=0, STACK=0, DISCOVERY=0, H
    for(integer t=0;t<CYCLES+9;t++)begin wdue[t]=0;wword[t]=0;end
    for(integer b=0;b<32;b++)openrow[b]=0;
    for(integer s=0;s<1024;s++)external_host_storage[s]=0;
-   predicted_count=0;landed=0;hostreads=0;hostwrites=0;commits=0;reads=0;
+   predicted_count=0;landed=0;hostreads=0;hostwrites=0;commits=0;commit_writes=0;commit_reads=0;reads=0;
    repeat(16)@(negedge ck);rst=1;
    for(integer t=0;t<CYCLES;t++)begin
     drive(t);
@@ -197,7 +197,7 @@ module qkd_full128_return_cell #(parameter integer PC=0, STACK=0, DISCOVERY=0, H
      hostreads++;
      if(er[258:257]!=0||er[256:1]!==data(24427,157))bad("host native read data");
     end
-    if(!HOST_DUAL&&cv)commits++;
+    if(!HOST_DUAL&&cv)begin commits++;if(cw)commit_writes++;else commit_reads++;end
     if(fault||cf)bad($sformatf("controller sticky fault phase%0d t%0d",phase,t));
     @(negedge ck);
    end
@@ -207,8 +207,8 @@ module qkd_full128_return_cell #(parameter integer PC=0, STACK=0, DISCOVERY=0, H
     for(integer t=0;t<CYCLES;t++)$fdisplay(fixture_fd,"%b %b %b %b",slots[t],srslots[t],wrslots[t],rawslots[t]);
     $fclose(fixture_fd);
    end
-   if((phase==1&&predicted_count!=512)||landed!=512||hostreads!=1||hostwrites!=1||commits!=2||reads!=513)
-    bad($sformatf("counts phase%0d land%0d hostread%0d write%0d commit%0d rawread%0d",phase,landed,hostreads,hostwrites,commits,reads));
+   if((phase==1&&predicted_count!=512)||landed!=512||hostreads!=1||hostwrites!=1||commits!=2||commit_writes!=1||commit_reads!=1||reads!=513)
+    bad($sformatf("counts phase%0d land%0d hostread%0d write%0d commit%0d wr%0d rd%0d rawread%0d",phase,landed,hostreads,hostwrites,commits,commit_writes,commit_reads,reads));
   end
   if(!DISCOVERY&&returned_count!=512)$fatal(1,"actual controller dual-clock return count%0d",returned_count);
   if(errors)begin $display("FAIL persistent staticKV host controller errors%0d mode%0d",errors,mode);$fatal(1);end
