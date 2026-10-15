@@ -1,0 +1,5 @@
+PASS fullstatic slab actual128SRAM rows=498 fp32_bits_checked=7968 HCrows=20 done=2 WFC=1 host=1
+- /srv/opentallas-scratch/codex/s81coll-pincap-priced-0810/src/tools/s81_static_collective/tb_s81_static_collective_slab.sv:177: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 3us; walltime 1.841 s; speed 1.427 us/s
+- Verilator: cpu 1.840 s on 1 threads; allocated 40 MB

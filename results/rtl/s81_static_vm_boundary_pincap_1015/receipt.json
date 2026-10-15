@@ -1,0 +1,35 @@
+{
+  "source_commit": "6dcba9354",
+  "host": "ot-agidock128",
+  "remote_directory": "/srv/opentallas-scratch/codex/s81coll-pincap-priced-0810",
+  "base": {
+    "unit": "oth-ubuntu-341898-1792077017",
+    "exit": 0,
+    "actual_srams": 128,
+    "rows": 498,
+    "hc_rows": 20,
+    "done": 2,
+    "wfc": 1,
+    "host_channel": 1
+  },
+  "mutant": {
+    "unit": "oth-ubuntu-379376-1792077802",
+    "exit": 1,
+    "mechanism": "Actual VM boundary flips payload bit31 on reduced write",
+    "observed_failure": "reduce VM pins item0 edge433"
+  },
+  "visibility": {
+    "last_gather_t_vm_pin_edge": 307,
+    "old_done_pin_edge": 306,
+    "corrected_done_pin_edge": 308,
+    "change": "No operand/compute/control slots retimed; gather completion waits two additional edges for new boundary pin capture."
+  },
+  "source_sha256": {
+    "tools/s81_static_collective/controller_image.py": "09c13d1b75f7076313866a5418bb73a16a48968cb85ca9a91682fdb0d7ba7947",
+    "tools/s81_static_collective/build_slab_fixture.py": "595d79cd8ea150e0e8b507f06b22c937cf0140e6c8f0bd242e0a4a4cba6004b8",
+    "tools/s81_static_collective/run_slab_gate.sh": "b90125e409469bd719ff32ce3d4a9f455d4afb4276abb860de1093d521015491",
+    "tools/s81_static_collective/tb_s81_static_collective_slab.sv": "c43e36329a03d60c1b15e0c998c4149fe872f21839489e41d515a5243a7b62f5"
+  },
+  "native_full_token_qualified": false,
+  "scope": "Synthetic declared external source stimuli through actual mapped ROM, transport, FP32 arithmetic and128SRAM VM. Proves exact component outputs/readback and done after final t_vm pin. Does not prove full canonical FIELD programme, memory w_ce commit deadlines or earliest next production reader; actual VM service/compiler reservations remain required."
+}
