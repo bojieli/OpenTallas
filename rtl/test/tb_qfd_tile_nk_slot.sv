@@ -6,7 +6,8 @@
 // carry, so a swapped / shifted field fails.  +define+OT_QFD_TILE_NK_MUT (go from the wrong end of the tap) must FAIL.
 module ot_qwen_rom_tile_w12 #(parameter NW=18,GT=6144,SMIN=7,CODE_BANKS=5,KV_VB=131072,KV_NH=2,MEM_EXTRA=1,ACC_LAT=7,
     FAST_ISSUE=1,KV_PREP=4,MUL_LAT=8,TREE_LAT=7,ROM_PIPE=1,ROM_ARELAY=2,ROM_CAP2=1,ROM_CAPX=2,LRST=3,ARPB=1,MPR=1,HIER=2,
-    HIER_HARD=1,TOREG=1,TIDR=1,LRR=1,XTX=2,ANR=1,BAW=12,KV_SLICE=1,RPH=0,RQR=0,NDH=0,BMUT=0,NODE=1) (
+    HIER_HARD=1,TOREG=1,TIDR=1,LRR=1,XTX=2,ANR=1,BAW=12,KV_SLICE=1,RPH=0,RQR=0,NDH=0,BMUT=0,NODE=1,CHILD_CLOCKS=0) (
+    input [CODE_BANKS-1:0] ck_rpair, input [7:0] ck_lsl,input ck_node,
     input clk, rst_n, input [15:0] tile_id, input ib_go, input [3*NW+13*24+13-1:0] ib, input [127:0] xl,
     output [511:0] t_out, output t_vout, input [511:0] n_a, n_b, input n_va, output [511:0] n_y, output n_vy,
     output fault, input kvw_ce, input [6:0] kvw_addr, input [511:0] kvw_data, kvw_mask);
@@ -28,7 +29,7 @@ module tb_qfd_tile_nk_slot;
     reg  [15:0]  tid = 16'h0;
     reg  [513:0] a = 0, b = 0;
     wire [513:0] to, ny;
-    qfd_tile_nk dut (.ck(ck), .rst_n(rst_n), .tile_id(tid), .tap(tap), .t_out(to), .n_a(a), .n_b(b), .n_y(ny));
+    qfd_tile_nk dut (.ck(ck), .ck_rp0(ck), .ck_rp1(ck), .ck_rp2(ck), .ck_rp3(ck), .ck_rp4(ck), .ck_lsl0(ck), .ck_lsl1(ck), .ck_lsl2(ck), .ck_lsl3(ck), .ck_lsl4(ck), .ck_lsl5(ck), .ck_lsl6(ck), .ck_lsl7(ck), .ck_node(ck), .rst_n(rst_n), .tile_id(tid), .tap(tap), .t_out(to), .n_a(a), .n_b(b), .n_y(ny));
     integer i, bad = 0, checks = 0, faults = 0, mism = 0;
     reg pf = 0, fy = 0, mis = 0, nfy, nmis;
     initial begin

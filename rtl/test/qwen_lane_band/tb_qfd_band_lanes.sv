@@ -60,7 +60,7 @@ module tb_qfd_band_lanes;
             // (BL = 2: strap one stage short of the bench's relays -> must FAIL)
             wire [512:0] spw;
             initial if (NL != 16 || NB != 3) begin $display("FAIL qfd_band_lanes BL needs NL 16, NBP 3"); $fatal(1); end
-            qfd_sp_band_lanes u_b (.ck(clk), .rst_n(rst_n), .b0(b == 0), .lnk(6'(BL == 2 ? LNK + 1 : LNK)), .tw(din[b*8*NL*32 +: 8*NL*32]),
+            qfd_sp_band_lanes u_b (.ck(clk), .ck_l0(clk), .ck_l1(clk), .ck_l2(clk), .ck_l3(clk), .ck_l4(clk), .ck_l5(clk), .ck_l6(clk), .ck_l7(clk), .ck_l8(clk), .ck_l9(clk), .ck_l10(clk), .ck_l11(clk), .ck_l12(clk), .ck_l13(clk), .ck_l14(clk), .ck_l15(clk), .rst_n(rst_n), .b0(b == 0), .lnk(6'(BL == 2 ? LNK + 1 : LNK)), .tw(din[b*8*NL*32 +: 8*NL*32]),
                 .c({tv[LG:0], sel[LG:0]}), .tt(b == 0 ? {tv_r2, tu_r, tt_r} : 1538'd0), .pw(spw), .ty(ty[b]), .f(bf[b]));
             assign pw[b*NL*32 +: NL*32] = spw[511:0];
             assign pv[b] = spw[512];

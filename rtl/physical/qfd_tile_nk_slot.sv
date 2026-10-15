@@ -48,6 +48,21 @@ module qfd_tile_nk #(
     parameter integer NDH = 1
 ) (
     input  wire          ck,
+    input wire ck_rp0,
+    input wire ck_rp1,
+    input wire ck_rp2,
+    input wire ck_rp3,
+    input wire ck_rp4,
+    input wire ck_lsl0,
+    input wire ck_lsl1,
+    input wire ck_lsl2,
+    input wire ck_lsl3,
+    input wire ck_lsl4,
+    input wire ck_lsl5,
+    input wire ck_lsl6,
+    input wire ck_lsl7,
+    input wire ck_node,
+
     input  wire          rst_n,
     input  wire [15:0]   tile_id,
     input  wire [507:0]  tap,
@@ -67,11 +82,14 @@ module qfd_tile_nk #(
     wire [127:0]   xl = tap[507 -: 128];
     wire [511:0]   to, ny;
     wire           tv, nvy, tf;
-    ot_qwen_rom_tile_nk #(.NW(NW), .GT(GT), .SMIN(SMIN), .CODE_BANKS(CODE_BANKS), .KV_VB(KV_VB), .KV_NH(KV_NH),
+    ot_qwen_rom_tile_nk #(.CHILD_CLOCKS(1), .NW(NW), .GT(GT), .SMIN(SMIN), .CODE_BANKS(CODE_BANKS), .KV_VB(KV_VB), .KV_NH(KV_NH),
         .MEM_EXTRA(MEM_EXTRA), .ACC_LAT(ACC_LAT), .FAST_ISSUE(FAST_ISSUE), .KV_PREP(KV_PREP), .MUL_LAT(MUL_LAT),
         .TREE_LAT(TREE_LAT), .ROM_PIPE(ROM_PIPE), .ROM_ARELAY(ROM_ARELAY), .ROM_CAP2(ROM_CAP2), .ROM_CAPX(ROM_CAPX),
         .LRST(LRST), .ARPB(ARPB), .MPR(MPR), .HIER(HIER), .HIER_HARD(HIER_HARD), .TOREG(TOREG), .TIDR(TIDR), .LRR(LRR),
         .RPH(RPH), .RQR(RQR), .XTX(XTX), .ANR(ANR), .NDH(NDH)) u_tile (
+        .ck_rpair({ck_rp4,ck_rp3,ck_rp2,ck_rp1,ck_rp0}),
+        .ck_lsl({ck_lsl7,ck_lsl6,ck_lsl5,ck_lsl4,ck_lsl3,ck_lsl2,ck_lsl1,ck_lsl0}),
+        .ck_node(ck_node),
         .clk(ck), .rst_n(rst_n), .tile_id(tile_id), .ib_go(go), .ib(ib), .xl(xl), .t_out(to), .t_vout(tv),
         .n_a(n_a[511:0]), .n_b(n_b[511:0]), .n_va(n_a[512]), .n_y(ny), .n_vy(nvy), .fault(tf));
     assign t_out = {tf, tv, to};
@@ -125,6 +143,20 @@ module qfd_tile_nl #(
     parameter integer NDH = 1
 ) (
     input  wire          ck,
+    input wire ck_rp0,
+    input wire ck_rp1,
+    input wire ck_rp2,
+    input wire ck_rp3,
+    input wire ck_rp4,
+    input wire ck_lsl0,
+    input wire ck_lsl1,
+    input wire ck_lsl2,
+    input wire ck_lsl3,
+    input wire ck_lsl4,
+    input wire ck_lsl5,
+    input wire ck_lsl6,
+    input wire ck_lsl7,
+
     input  wire          rst_n,
     input  wire [15:0]   tile_id,
     input  wire [507:0]  tap,
@@ -141,11 +173,14 @@ module qfd_tile_nl #(
     wire [127:0]   xl = tap[507 -: 128];
     wire [511:0]   to;
     wire           tv, tf;
-    ot_qwen_rom_tile_nk #(.NW(NW), .GT(GT), .SMIN(SMIN), .CODE_BANKS(CODE_BANKS), .KV_VB(KV_VB), .KV_NH(KV_NH),
+    ot_qwen_rom_tile_nk #(.CHILD_CLOCKS(1), .NW(NW), .GT(GT), .SMIN(SMIN), .CODE_BANKS(CODE_BANKS), .KV_VB(KV_VB), .KV_NH(KV_NH),
         .MEM_EXTRA(MEM_EXTRA), .ACC_LAT(ACC_LAT), .FAST_ISSUE(FAST_ISSUE), .KV_PREP(KV_PREP), .MUL_LAT(MUL_LAT),
         .TREE_LAT(TREE_LAT), .ROM_PIPE(ROM_PIPE), .ROM_ARELAY(ROM_ARELAY), .ROM_CAP2(ROM_CAP2), .ROM_CAPX(ROM_CAPX),
         .LRST(LRST), .ARPB(ARPB), .MPR(MPR), .HIER(HIER), .HIER_HARD(HIER_HARD), .TOREG(TOREG), .TIDR(TIDR), .LRR(LRR),
         .RPH(RPH), .RQR(RQR), .XTX(XTX), .ANR(ANR), .NDH(NDH), .NODE(0)) u_tile (
+        .ck_rpair({ck_rp4,ck_rp3,ck_rp2,ck_rp1,ck_rp0}),
+        .ck_lsl({ck_lsl7,ck_lsl6,ck_lsl5,ck_lsl4,ck_lsl3,ck_lsl2,ck_lsl1,ck_lsl0}),
+        .ck_node(ck),
         .clk(ck), .rst_n(rst_n), .tile_id(tile_id), .ib_go(go), .ib(ib), .xl(xl), .t_out(to), .t_vout(tv),
         .n_a(512'd0), .n_b(512'd0), .n_va(1'b0), .n_y(), .n_vy(), .fault(tf));   // NODE 0: n_* not read / not driven
     assign t_out = {tf, tv, to};

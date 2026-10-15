@@ -61,6 +61,23 @@ endmodule
 
 module qfd_sp_band_lanes (
     input  wire          ck,
+    input wire ck_l0,
+    input wire ck_l1,
+    input wire ck_l2,
+    input wire ck_l3,
+    input wire ck_l4,
+    input wire ck_l5,
+    input wire ck_l6,
+    input wire ck_l7,
+    input wire ck_l8,
+    input wire ck_l9,
+    input wire ck_l10,
+    input wire ck_l11,
+    input wire ck_l12,
+    input wire ck_l13,
+    input wire ck_l14,
+    input wire ck_l15,
+
     input  wire          rst_n,
     input  wire          b0,
     input  wire [5:0]    lnk,
@@ -71,6 +88,7 @@ module qfd_sp_band_lanes (
     output wire [4095:0] ty,
     output wire          f
 );
+    wire [15:0] leaf_ck = {ck_l15, ck_l14, ck_l13, ck_l12, ck_l11, ck_l10, ck_l9, ck_l8, ck_l7, ck_l6, ck_l5, ck_l4, ck_l3, ck_l2, ck_l1, ck_l0};
     wire [15:0] lf, lpv;
     genvar l, k;
     generate for (l = 0; l < 16; l = l + 1) begin : g_lane
@@ -89,14 +107,18 @@ module qfd_sp_band_lanes (
         assign lpv[l] = lpw[32];
 `ifdef OT_QFD_BL_MUT
         if (l == 5) begin : g_mut
-            qfd_bl_lane_mut u_lane (.ck(ck), .rst_n(rst_n), .b0(b0), .lnk(lnk), .tw(ltw), .c(c), .tt(ltt), .pw(lpw), .ty(lty), .f(lf[l]));
+            qfd_bl_lane_mut u_lane (.ck(leaf_ck[l]), .rst_n(rst_n), .b0(b0), .lnk(lnk), .tw(ltw), .c(c), .tt(ltt), .pw(lpw), .ty(lty), .f(lf[l]));
         end else begin : g_ok
-            qfd_bl_lane u_lane (.ck(ck), .rst_n(rst_n), .b0(b0), .lnk(lnk), .tw(ltw), .c(c), .tt(ltt), .pw(lpw), .ty(lty), .f(lf[l]));
+            qfd_bl_lane u_lane (.ck(leaf_ck[l]), .rst_n(rst_n), .b0(b0), .lnk(lnk), .tw(ltw), .c(c), .tt(ltt), .pw(lpw), .ty(lty), .f(lf[l]));
         end
 `else
-        qfd_bl_lane u_lane (.ck(ck), .rst_n(rst_n), .b0(b0), .lnk(lnk), .tw(ltw), .c(c), .tt(ltt), .pw(lpw), .ty(lty), .f(lf[l]));
+        qfd_bl_lane u_lane (.ck(leaf_ck[l]), .rst_n(rst_n), .b0(b0), .lnk(lnk), .tw(ltw), .c(c), .tt(ltt), .pw(lpw), .ty(lty), .f(lf[l]));
 `endif
     end endgenerate
     assign pw[512] = lpv[0];        // every lane carries the same valid copy
-    assign f = |lf;
+    (* keep *) reg f_q;
+    always @(posedge ck or negedge rst_n)
+        if (!rst_n) f_q <= 1'b0;
+        else f_q <= |lf | (|(lpv ^ {16{lpv[0]}}));
+    assign f = f_q;
 endmodule
