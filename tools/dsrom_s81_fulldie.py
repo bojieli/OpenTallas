@@ -3461,7 +3461,7 @@ class Chains:
     def bus(self, bid, cls, bits, eps):
         self.B.append((bid, cls, bits, eps))
 
-    def run(self, name, lanes, path, allowed, src, forced=(), first_prev=None, kind='stn', reach=None):
+    def run(self, name, lanes, path, allowed, src, forced=(), first_prev=None, kind='stn', reach=None, force_horiz=False):
         """Place stations along polyline `path` for a chain of `lanes` (list of data widths).  `forced`: path lengths
         where a station MUST stand (taps / branches).  Returns [(inst, s_along)].  src: (x, y) of the source pin."""
         L = _poly_len(path)
@@ -3490,7 +3490,7 @@ class Chains:
                 continue                     # the previous station stands at this stop
             while placed is None and (t_ > pos + 20.0 or must):
                 (cx, cy), d = _poly_at(path, t_)
-                horiz = d in 'EW'
+                horiz = force_horiz or d in 'EW'
                 w, h = stn_dims(lanes, horiz)
                 # --relay-progress: the LAST station of a chain (its target is the chain end) may not slide past the end
                 PL_ = dict(nxt=end, nreach=_mh(cur, end) + 15.0) if RELAY_PROGRESS and L - t_ <= step else {}
@@ -3514,7 +3514,7 @@ class Chains:
             if placed is None:            # widen the search (still within reach of the previous station)
                 t_ = max(pos + 20.0, target - 150.0)
                 (cx, cy), d = _poly_at(path, t_)
-                horiz = d in 'EW'
+                horiz = force_horiz or d in 'EW'
                 w, h = stn_dims(lanes, horiz)
                 placed = self.P.near(cx, cy, w, h, allowed, prev=cur, horiz=horiz, span=300.0, rows=24, reach=reach)
             if placed is None:
@@ -6884,7 +6884,20 @@ def _svc_chains(m, CH8, P, cor, end_spec, hub_block):
                     m.setdefault('south_su_bypass_chains', []).append(name)
                 detour.append(b_)
             path = detour
-        sts = CH8.run(name, [lw], _dedup(path), allc, src_xy)
+        narrow_service = CANONICAL_LAYOUT and re.fullmatch(r'[qa][NS][WE]',name)
+        if narrow_service:
+            from s81.canonical_layout import service_path
+            endpoint=(sink_end.x+sink_end.w/2,sink_end.y+sink_end.h/2)
+            if name[0]=='q':
+                path=service_path(sys.modules[__name__],m,cor,src_xy,endpoint,name[-1])
+            else:
+                path=list(reversed(service_path(sys.modules[__name__],m,cor,endpoint,src_xy,name[-1])))
+        # A wide service record uses its real W/E-face station in an RSC
+        # vertical access lane; its17.256um body fits, its54.84um N/S-face
+        # alternative does not. Actual pin turns/reach remain to be audited.
+        sts = CH8.run(name, [lw], _dedup(path), allc, src_xy,
+                      force_horiz=bool(narrow_service and not CANONICAL_LAYOUT.get('service_access_corridors')
+                                       and stn_dims([lw],False)[0]>RSC_W-.864))
         chain_nets(CH8, name, src, [it for it, _, _ in sts], [lw])
         tail = m['chain_tail'][name]
         CH8.bus(f'{name}_fe', 'fclk', 1, [(tail[0], tail[1]), (sink_end.name, 'fi0')])

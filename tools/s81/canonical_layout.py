@@ -17,6 +17,12 @@ def load(path,root):
   assert f['pairs']==bounds[r:r+2]
   assert sorted(e[0] for e in f['packed_elements'])==list(range(*f['pairs']))
   assert all((e[1]=='BF')==(e[0] in bf) for e in f['packed_elements'])
+ cols=sorted(d['columns'],key=lambda c:c['x_um'])
+ for access in d.get('service_access_corridors',[]):
+  left,right=access['between_columns'];assert right==left+1
+  x0,y0,x1,y1=access['rect_um']
+  assert x0>=cols[left]['x_um']+next(f['outline_um'][0] for f in fs.values() if abs(f['origin_um'][0]-cols[left]['x_um'])<1e-6)-.001
+  assert x1<=cols[right]['x_um']+.001 and x0<x1 and y0<y1
  stagehash=hashlib.sha256(stagepath.read_bytes()).hexdigest()
  assert d['source_pins'][str(stagepath.relative_to(root))]==stagehash
  d.update(path=str(p),sha256=hashlib.sha256(p.read_bytes()).hexdigest(),frames=fs,bf_ids=bf,stage_map_sha256=hashlib.sha256(stagepath.read_bytes()).hexdigest())
@@ -53,6 +59,9 @@ def corridors(G,m,cor):
  for i,c in enumerate(d['columns']):
   x=c['x_um']+G.LANES_W+G.NS_W
   cor[f'rsclane{i}']=(x+.432,c['y0_um']+.432,c['x_um']+G.COL_W8-.432,c['y1_um']-.432)
+ for access in d.get('service_access_corridors',[]):
+  rect=tuple(access['rect_um']);assert len(rect)==4 and rect[0]<rect[2] and rect[1]<rect[3]
+  cor['svc_access_'+access['name']]=rect
  return cor
 
 class Roadmap:
@@ -83,6 +92,17 @@ class Roadmap:
     if i in (10,11):
      side='W' if i==10 else 'E';sx=G.s14_x(m,side,'xdn')
      entry=(sx,y);self.add(entry,(self.sx[i],y));self.entry.setdefault(side,[]).append(entry)
+  # Optional coherent column moves may open a real broad service gap.
+  # Connect it only through the adjacent actual frame streets, never
+  # through a virtual frame reservation or occupied ROM bank.
+  for access in m['canonical_layout'].get('service_access_corridors',[]):
+   x0,y0,x1,y1=access['rect_um'];sx=(x0+x1)/2;nodes=set()
+   for ci in access['between_columns']:
+    for r,kind,yy in streets[ci]:
+     if y0<=yy<=y1:
+      node=(sx,yy);nodes.add(node);self.add(node,self.rootnode[(r,kind)])
+   ordered=sorted(nodes,key=lambda node:node[1])
+   for a,b in zip(ordered,ordered[1:]):self.add(a,b)
  def add(self,a,b):
   self.graph.setdefault(a,{})[b]=abs(a[0]-b[0])+abs(a[1]-b[1]);self.graph.setdefault(b,{})[a]=self.graph[a][b]
  def to_root(self,side,source,r,kind):
@@ -106,6 +126,32 @@ class Roadmap:
   ns=[];n=target
   while n is not None:ns.append(n);n=prev[n]
   ns.reverse();return self.G._dedup(stem+[(ns[0][0],base[1])]+ns)
+
+def service_path(G,m,cor,hub_point,service_point,side):
+ """Reach the real service face via actual irregular streets and S14.
+ No symmetric shoreline strip is presumed empty in a canonical layout.
+ """
+ road=Roadmap(G,m,cor,return_lanes=True)
+ for half in 'WE':
+  entries=sorted(road.entry[half],key=lambda n:n[1])
+  for a,b in zip(entries,entries[1:]):road.add(a,b)
+ rsc_x=set(road.sx.values())
+ for node,edges in road.graph.items():
+  for nxt,length in list(edges.items()):
+   if node[0]==nxt[0] and node[0] in rsc_x:edges[nxt]=2*length
+ px,py=service_point
+ def score(item):
+  r,f=item;x0,y0,x1,y1=f['street']
+  distance=max(x0-px,0,px-x1)+max(y0-py,0,py-y1)
+  return distance,G._mh(road.rootnode[(r,'x')],service_point),r
+ r,f=min(((r,f)for r,f in m['frames'].items() if f['half']==side),key=score)
+ path=road.to_root(side,hub_point,r,'x');end=path[-1]
+ # The last two legs stay within the selected actual service-facing street
+ # except the explicit short access to the service port. Placer and the
+ # independent exact-pin gate judge every physical access stage.
+ path=G._dedup(path+[(px,end[1]),service_point])
+ m.setdefault('canonical_service_paths',[]).append(dict(side=side,street_root=r,path=path,service_access_um=score((r,f))[0],physical_qualified=False))
+ return path
 
 def compact_return_relays(G,m,CH):
  """Pack existing RSC return relays west; retain IDs, ports and all stages.
@@ -139,7 +185,7 @@ def trunks(G,m,CH,cor,starts,ga,end_spec,hub_block,bus):
  x_stages/r_stages become compiler inputs, never an ideal tier flight estimate.
  """
  compact_return_relays(G,m,CH)
- road=Roadmap(G,m,cor);allowed=[v for k,v in cor.items() if k.startswith(('cfstreet','rsclane','s14','vch','hcc'))]
+ road=Roadmap(G,m,cor);allowed=[v for k,v in cor.items() if k.startswith(('cfstreet','rsclane','s14','vch','hcc','svc_access'))]
  m['chain_paths']=[];calendar={}
  # One real broadcast tree per physical half. Shared road prefixes are
  # registered once; independent per-root chains would replicate the same

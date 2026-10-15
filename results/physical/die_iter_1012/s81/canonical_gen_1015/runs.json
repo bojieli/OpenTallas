@@ -1,8 +1,8 @@
 {
-  "status": "SCREEN9_LIVE_CONSTRUCTION_ONLY",
+  "status": "SCREEN9_TERMINAL_FAIL_SERVICE_ACCESS",
   "source_commit": "5a87a8279",
   "host": "ot-epyc4",
-  "pid": 1651898,
+  "pid": null,
   "unit": "oth-ubuntu-1651875-1792058351",
   "local_systemd_unit": "canonical-gen-1015-screen9.service",
   "local_log": "/home/ubuntu/canonical-gen-1015-screen9.log",
@@ -42,7 +42,7 @@
     "local_systemd_unit": "canonical-gen-1015-screen3.service",
     "output": "/srv/opentallas-scratch/codex-canonical-gen-1015/screen3"
   },
-  "updated_utc": "2026-10-15T09:59:48.151401+00:00",
+  "updated_utc": "2026-10-15T10:09:16.532205+00:00",
   "screen7": {
     "status": "GEN_FAIL",
     "exit_code": 1,
@@ -64,9 +64,10 @@
     "error": "FAIL crE4_E0_edge29 at(20726,9142); reached all W and E0..3. Repack658candidates/105moved, no field overlap/outside."
   },
   "screen9": {
-    "status": "LIVE",
+    "status": "GEN_FAIL",
     "source": "5a87a8279",
     "structural_change": "Connect actual S14 entry-to-entry vertical spine edges omitted from return graph; penalize narrow fieldRSC vertical travel2x for route choice only. Physical length/reach/register counts still actual. Retains screen8 fourlane packing.",
-    "scope": "Inherited geometry recipe has final --hop-gate0. Construction success does not qualify exact per-pin reach; source-bound graph audit and all physical gates remain mandatory."
+    "scope": "Inherited geometry recipe has final --hop-gate0. Construction success does not qualify exact per-pin reach; source-bound graph audit and all physical gates remain mandatory.",
+    "error": "All128 broadcast trees and128 root return paths construct; then legacy service qSW no station (11879,3323), fictional symmetric shorestrip crosses actual canonical CFG/ROM boxes."
   }
 }
