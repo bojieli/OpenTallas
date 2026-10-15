@@ -1,6 +1,5 @@
 {
   "baseline_full": {
-    "actual_registers": 1584,
     "groups": {
       "other": {
         "n": 1311,
@@ -85,10 +84,10 @@
       "command[2]": 67.40303,
       "command[4]": 69.2687,
       "command[8]": 69.82753
-    }
+    },
+    "clock_sink_pins_including_one_macro": 1584
   },
   "r2_full": {
-    "actual_registers": 1589,
     "groups": {
       "other": {
         "n": 1312,
@@ -189,10 +188,10 @@
       "command[3]": 54.764416,
       "command[6]": 54.966724,
       "command[11]": 55.019016
-    }
+    },
+    "clock_sink_pins_including_one_macro": 1589
   },
   "baseline_routed": {
-    "actual_registers": 1584,
     "groups": {
       "other": {
         "n": 1311,
@@ -277,6 +276,7 @@
       "command[16]": 63.914375,
       "command[15]": 63.929916,
       "command[8]": 64.328018
-    }
+    },
+    "clock_sink_pins_including_one_macro": 1584
   }
 }
