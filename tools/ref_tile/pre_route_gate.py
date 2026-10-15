@@ -34,6 +34,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
 import os
 import re
 import shlex
@@ -904,6 +905,32 @@ def clock_record(out: str, cts: bool, spec: dict | None = None) -> dict:
     ok, text = TL.clock_rule(rec["max_root_sinks"], rec)
     rec["verdict"] = "PASS" if ok and rec["max_root_sinks"] is not None else ("UNKNOWN" if ok else "REFUSE")
     rec["text"] = text
+    if (spec or {}).get("clock") == "multiple_cts_roots":
+        expected = set(spec["clock_ports"])
+        actual = [d.get("source") for d in domains]
+        issues = []
+        per_root = []
+        if not cts:
+            issues.append("multiple_cts_roots requires actual --cts measurement")
+        if len(actual) != len(set(actual)) or set(actual) != expected:
+            issues.append("actual per-root clock measurement coverage differs from clock_ports")
+        for domain in domains:
+            al = (domain.get("tt") or {}).get("all") or {}
+            try:
+                n = int(al["n"])
+                lo, hi = float(al["min"]), float(al["max"])
+                if n <= 0 or not math.isfinite(lo) or not math.isfinite(hi) or not 0 < lo <= hi:
+                    raise ValueError("invalid actual clock population")
+                measured = {"tt_insertion_ps": hi, "tt_spread_ps": hi - lo}
+                passed, why = TL.clock_rule(n, measured)
+                per_root.append(dict(source=domain.get("source"), sinks=n, **measured, verdict="PASS" if passed else "REFUSE", text=why))
+                if not passed:
+                    issues.append(f"{domain.get('source')}: {why}")
+            except (KeyError, TypeError, ValueError, OverflowError):
+                issues.append(f"{domain.get('source')}: missing finite positive actual TT root census")
+        rec["per_root"] = per_root
+        if issues:
+            rec["verdict"], rec["text"] = "REFUSE", "; ".join(issues)
     return rec
 
 
