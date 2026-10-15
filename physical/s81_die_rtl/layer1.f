@@ -47,6 +47,8 @@ rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_aq_split_native.sv
 rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_qb_sram.sv
 rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_qb_split_native.sv
 rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_qb_one_native.sv
+# PQ count-only return leaves (topology G, --pq-cnt): ot_s81_pq_rwbc15 / rwbc2 in the gather | capture seam
+rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_rwbc.sv
 physical/s81_pq_hier/pinned/rtl/hdc/v41x/ot_dsrom_aq12t.sv
 physical/s81_pq_hier/pinned/rtl/hdc/v41x/ot_dsrom_aq12m.sv
 physical/s81_pq_hier/pinned/rtl/v41die/ot_v41_pqc_tiles.sv
