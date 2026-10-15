@@ -1,0 +1,232 @@
+{
+ "name": "hcoll_ring_state_capture_1417",
+ "top": "ot_hgi_coll_pring_static_state_capture_lane",
+ "kind": "tile",
+ "sources": [
+  "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static.sv",
+  "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static_state_capture.sv"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [],
+ "outline": {
+  "w": 64.8,
+  "h": 64.8,
+  "exact": true
+ },
+ "std_area_um2": 1200,
+ "pins": {
+  "W": [
+   "lp_we",
+   "lp_tag",
+   "lp_data",
+   "acc_we",
+   "acc_tag",
+   "acc_data",
+   "carry_we",
+   "carry0_tag",
+   "carry1_tag",
+   "carry0_src",
+   "carry1_src",
+   "carry0_data",
+   "carry1_data",
+   "read_add",
+   "read_tx",
+   "read_rr",
+   "read_rhs_acc",
+   "read_tx_acc",
+   "add_tag",
+   "tx_tag",
+   "rr_tag",
+   "add_src"
+  ],
+  "E": [
+   "rhs_add",
+   "carry_add",
+   "tx_data",
+   "acc_rr"
+  ],
+  "N": [
+   "clk"
+  ],
+  "S": []
+ },
+ "layer_cap": "M5",
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 16,
+  "period_ps": 833.333333,
+  "hold_margin_ns": 0.03,
+  "pin_min_tracks": 2,
+  "pin_group_max": 32,
+  "macro_halo_um": 5.4
+ },
+ "job": {
+  "owner": "Codex:hcoll_state_route_1417",
+  "branch": "codex/hcoll-state-route-1417",
+  "tag": "capture",
+  "purpose": "Distinct all-input-capture state +164FF/+1edge II1, component-only alternative grant dde510868; parent not adopted",
+  "extra_paths": [
+   "results/arch/hcoll_state_route_1417",
+   "tools/hbm_coll_static",
+   "results/arch/hbm_die_v15/collective_state_pins_1417.json",
+   "results/arch/hbm_die_v15/collective_capture_candidate_grant_1417.json"
+  ],
+  "benches": [
+   {
+    "name": "captured_state_actual_miter",
+    "cmd": "bash tools/hbm_coll_static/run_state_capture_miter.sh 0 {RUN}/bench/capture_exact",
+    "expect": "pass",
+    "min_count_regex": "checks=(32252)",
+    "threads": 2,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "captured_state_source_mutant",
+    "cmd": "bash tools/hbm_coll_static/run_state_capture_miter.sh 1 {RUN}/bench/capture_mutant",
+    "expect": "fail",
+    "fail_regex": "CAPTURE_MITER mismatch",
+    "threads": 2,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ],
+  "views_to": "physical/ref_tile/hcoll_ring_state_capture_1417/views",
+  "record_to": "results/arch/hcoll_state_route_1417/route"
+ },
+ "pin_ranges": {
+  "clk": [
+   32.352,
+   32.448
+  ],
+  "lp_we": [
+   24.528,
+   24.624
+  ],
+  "lp_tag": [
+   24.624,
+   24.912
+  ],
+  "lp_data": [
+   24.912,
+   27.984
+  ],
+  "acc_we": [
+   27.984,
+   28.08
+  ],
+  "acc_tag": [
+   28.08,
+   28.368
+  ],
+  "acc_data": [
+   28.368,
+   31.44
+  ],
+  "carry_we": [
+   31.44,
+   31.632
+  ],
+  "carry0_tag": [
+   31.632,
+   31.92
+  ],
+  "carry1_tag": [
+   31.92,
+   32.208
+  ],
+  "carry0_src": [
+   32.208,
+   32.4
+  ],
+  "carry1_src": [
+   32.4,
+   32.592
+  ],
+  "carry0_data": [
+   32.592,
+   35.664
+  ],
+  "carry1_data": [
+   35.664,
+   38.736
+  ],
+  "read_add": [
+   38.736,
+   38.832
+  ],
+  "read_tx": [
+   38.832,
+   38.928
+  ],
+  "read_rr": [
+   38.928,
+   39.024
+  ],
+  "read_rhs_acc": [
+   39.024,
+   39.12
+  ],
+  "read_tx_acc": [
+   39.12,
+   39.216
+  ],
+  "add_tag": [
+   39.216,
+   39.504
+  ],
+  "tx_tag": [
+   39.504,
+   39.792
+  ],
+  "rr_tag": [
+   39.792,
+   40.08
+  ],
+  "add_src": [
+   40.08,
+   40.272
+  ],
+  "rhs_add": [
+   26.256,
+   29.328
+  ],
+  "carry_add": [
+   29.328,
+   32.4
+  ],
+  "tx_data": [
+   32.4,
+   35.472
+  ],
+  "acc_rr": [
+   35.472,
+   38.544
+  ]
+ },
+ "contract": {
+  "file": "results/arch/hbm_die_v15/collective_capture_candidate_grant_1417.json",
+  "slot": "coll_SW_state0"
+ },
+ "params": {},
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "recipe": 2,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ }
+}
