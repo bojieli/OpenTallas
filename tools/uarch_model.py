@@ -13937,6 +13937,60 @@ def hbm_native_index_sram_join_model():
         token_rate_credit=0, offpackage_FEC='FULL; no light130ns budget; no offpackage link in this local wiring')
 
 
+def hbm_sfu_fused_glu_model(lanes=256, words=3072, mul_latency=5, add_latency=4):
+    """Exact resident-producer candidate, 2026-10-15; not timing/rate credit.
+
+    Frozen exp Horner order and every binary32 rounding point are retained.
+    Area is an explicit conservative reservation, not a mapped measurement.
+    """
+    if lanes < 1 or words < 1 or mul_latency not in (5, 6) or add_latency not in (4, 6):
+        raise ValueError('unsupported fused sizing')
+    exp = 7 * mul_latency + 8 * add_latency + 4
+    latency = 1 + exp + 1 + add_latency + 21 + 2 * mul_latency + 1
+    issues = (words + lanes - 1) // lanes
+    # C12 lane measured standard-cell area from sfu_lane_ring3_rt/spec.json;
+    # candidate has fewer operators, but reserve twice this until mapping.
+    area_per_lane = 2 * 37368
+    sideband = 32 * ((exp + 1 + add_latency) +
+                    (exp + 1 + add_latency + 21) +
+                    (exp + 1 + add_latency + 21 + mul_latency))
+    return dict(schema='opentallas.sfu-fused-glu.v1', default_OFF=True,
+        workload_words=words, immutable_price_cycles=120, lanes=lanes,
+        exact_order='clampG/clipU;exp(-G);RN(exp+1);RN(G/den);RN(SiLU*U);RN(product*route);BF16_RNE',
+        mul_latency=mul_latency, add_latency=add_latency, exp_latency=exp,
+        divider_latency=21, denominator_register=1, arithmetic_latency=latency,
+        issue_edges=issues, resident_arithmetic_cycles=latency+issues-1,
+        nominal_resident_ratio=(latency+issues-1)/120,
+        max_qualified_cycles=132, MACs_per_cycle=0,
+        mul_operators=9*lanes, add_operators=9*lanes, divider_operators=lanes,
+        arithmetic_input_bytes_per_edge=8*lanes+4,
+        arithmetic_output_bytes_per_edge=4*lanes,
+        input_bits_per_edge=64*lanes+32, output_bits_per_edge=32*lanes,
+        local_operand_read_bytes_per_edge=8*lanes,
+        local_output_write_bytes_per_edge=4*lanes,
+        new_arithmetic_SRAMs=0, input_staging_bytes=words*8+4,
+        output_staging_bytes=words*4,
+        VM_sector_bytes=32, VM_max_sectors_per_edge=8,
+        cold_VM_input_edges=(words*8+255)//256,
+        VM_output_edges=(words*4+255)//256,
+        cold_VM_lower_bound_cycles=latency+(words*8+255)//256-1,
+        sideband_FF_lower_bound_per_lane=sideband,
+        FF_reservation_per_lane=40000, total_FF_reservation=40000*lanes,
+        clock_roots_per_lane=4, max_FF_reservation_per_root=10000,
+        clock_roots=4*lanes,
+        mapped_cell_area_um2=None, cell_area_reservation_um2=area_per_lane*lanes,
+        cell_area_source='2x C12 full-lane37368um2 reservation; must replace with actual synthesis',
+        utilization=.55, floorplan_area_reservation_um2=area_per_lane*lanes/.55,
+        floorplan_slot_fit=False, adopted=False,
+        routing_tracks_per_lane_input_output=96,
+        routing_tracks_total=96*lanes+32, routing_capacity=None,
+        replica_fanout='256 independent lane-local U/G payloads; route register copied per leaf; valid and reset segmented by pipeline quarter',
+        clock_ps=833.333, SS_setup_uncertainty_ps=60, FF_hold_uncertainty_ps=25,
+        numerical_qualified=False, throughput_qualified=False, physical_qualified=False,
+        qualification='resident arithmetic only; no cold VM120 claim; no fused FMA or reassociation; LM5/LA4 timing requires physical proof',
+        token_rate_credit=0)
+
+
 def hbm_integrated_sfu_c12_stage_model():
     """Existing protected stage seat + Carson finite framed SFU; before join RTL."""
     return dict(default_OFF=True, replicas=1, MACs_per_cycle=0,
