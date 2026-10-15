@@ -1,3 +1,5 @@
+**Subsequent whole-system source work:** [SYSTEM_GRAPH.md](SYSTEM_GRAPH.md) supersedes any interpretation of these initial macro-only precursors as complete ATT designs. It adds P source memory, 589,824 mandatory transposer FF bits, shared native HBM controllers, actual SM children and explicit physical-interface gaps.
+
 # HBM system geometry: structural work, 2026-10-15
 
 The earlier 54-child ATT figure was a bounded local translation of a historical parent. Its 8.31% result does not establish a good system arrangement. The new scope is the complete HBM accelerator and its actual communicating groups. These artifacts are an initial structural ATT subgroup comparison, not a complete die floorplan or a routing recommendation.

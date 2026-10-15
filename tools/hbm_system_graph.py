@@ -24,6 +24,9 @@ def graph(root):
  abi=get('VM_ABI',BASE/'hbm-vm-static-1014/results/arch/hbm_vm_static_1014/quadrant_abi.json')
  service=get('native_service_bands',BASE/'hbm-die-feas-1014/physical/hbm_accel_die_views/svc/v15/native_bands/contract.json')
  sm=get('actual_SM35_frame',BASE/'sm-dense-pack-1015/results/hbm_sm_dense_pack/complete35.json')
+ sm_detail_path=BASE/'sm-dense-pack-1015/results/hbm_sm_dense_pack/canonical_system_inventory.json'
+ sm_detail=get('SM_actual_child_inventory',sm_detail_path) if sm_detail_path.exists() else None
+ sm_component=get('SM_source_component',Path(sm_detail['source_root'])/sm_detail['source_component']) if sm_detail else None
  eng=get('Engram_8home_candidate',BASE/'hbm-engram-repartition-1015/results/arch/hbm_engram_partition_1015/allocation_manifest.json')
  lg=get('LG_actual_pin_manifest',BASE/'hbm-vm-static-1014/results/arch/hbm_vm_lg_split_1015/pin_manifest.json')
  bridge=get('COLL_bridge_model',BASE/'hcoll-quarter-bridge-1015/results/arch/hcoll_quarter_bridge_1015/model.json')
@@ -55,6 +58,20 @@ def graph(root):
      nodes[n]={'master':leaf['top'],'source_sha256':leaf['sha256'],'ports':{p:{'direction':v[0],'bits':v[1]} for p,v in leaf['ports'].items()},'parent':parent,'logical_bank_or_PC_id':bid,'geometry':None,'clock_roots_declared':1 if role=='owner' else 2,'logic_sinks_per_root':[1577] if role=='owner' else [2294,213],'native_parent_join_proved':False}
      if role=='bank':
       nodes[n+'_SRAM']={'master':'ot_sram_1r1w_128x256_m1_r2c2','parent':n,'geometry':None,'clock_pins':1,'literal_source_instance':'u_payload','native_parent_join_proved':False}
+ # Real command/refresh controllers are SHARED per physical PC, not cloned
+ # per client. Current hard PHY abstract includes a different K-port controller
+ # interface and cannot silently absorb these command-level outputs.
+ queuedroot=BASE/'hbm-die-feas-1014'
+ queuedpath=queuedroot/'rtl/hbm_accel/loader/service_native/ot_hbm_svc_native_sector_queued_stack.sv'
+ countpath=queuedroot/'results/arch/hbm_die_v15/native_queued_controller/structure/receipt.json'
+ if queuedpath.exists() and countpath.exists():
+  queued=get('actual_shared_PC_controller_structure',countpath)
+  for q in ['SW','SE','NW','NE']:
+   n='HBM_shared_controller_'+q;nodes[n]=module(queuedpath,'ot_hbm_svc_native_sector_queued_stack');nodes[n].update(role='shared per-stack32PC controller container',geometry=None,total_actual_FF=queued['total_FF'],clock_roots_declared=33,clock_period_ps=1024,pc_root_frequency_phase_must_match_status_root=True,protected_state_admitted=False)
+   for pc in range(32):nodes[n+f'/pc{pc}']={'role':'one real shared DRAM PC controller + ownerFIFO','parent':n,'geometry':None,'actual_FF_sinks':queued['root_FF_bits'][f'pc_clk[{pc}]'],'ownerFIFO_FF_bits':32*316,'controller_WQ_FF_bits':32*11,'read_reply_FF_bits':273,'clock_roots_declared':1,'clock_period_ps':1024,'actual_R_or_spread':None}
+   nodes['phy_'+q]['native_command_interface_missing']=True;nodes['phy_'+q]['role']='historical PHY+controller K-port abstract; native commandPHY not bound'
+   for p in ['row_v','row_op','row_bank','row_row','col_v','col_we','col_bank','col_col','col_data','col_strb']:gaps.append({'kind':'missing_command_level_PHY_port','controller':n,'controller_port':p,'bits':nodes[n]['ports'][p]['bits'],'historical_PHY':'phy_'+q})
+   gaps.append({'kind':'burst_owner_to_len1_controller_unjoined','controller':n,'native_burst_owner_k_len_max':4,'queued_controller_supported_len':1,'actual_converter_required':True})
  # Revalidate every inherited edge; native band and host ports differ.
  for e in c['known_actual_edges']:
   a,b=e['source'][:2],e['sink'][:2]
@@ -140,8 +157,18 @@ def graph(root):
  else:gaps.append({'kind':'missing_P_gather_source_model','required_macros_candidate':128,'additional_macro_area_mm2':0.13680285696})
  # Preserve real full-SM frame instead of inherited smaller slots.
  for s in range(32):
-  q=['SW','SE','NW','NE'][s//8];nodes[f'SM{s}']={'role':'SM physical frame','quarter':q,'geometry':{'outline_um':sm['frame_outline_um'],'xy_um':None,'orientation':'R0','status':sm['verdict'],'pin_geometry_verified':False},'source_snapshot':'actual_SM35_frame','current_static_front_binding_pending':True,'retained_child_count':len(sm['children']),'master':None}
-  edge(f'SM{s}_VM_xload',['hb_vms_'+q,'rr'],[f'SM{s}','xload_native_port_UNBOUND'],None,'required_native_parent_UNJOINED')
+  q=['SW','SE','NW','NE'][s//8];nodes[f'SM{s}']={'role':'SM physical frame','quarter':q,'geometry':{'outline_um':sm['frame_outline_um'],'xy_um':None,'orientation':'R0','status':sm['verdict'],'pin_geometry_verified':False},'source_snapshot':'actual_SM35_frame','current_static_front_binding_pending':True,'retained_child_count':len(sm['children']),'master':sm_component['logical_module'] if sm_component else None,'ports':{p:{'direction':v['direction'],'bits':v['width']} for p,v in sm_component['boundary_ports'].items()} if sm_component else {}}
+  edge(f'SM{s}_VM_xload',['hb_vms_'+q,'rr'],[f'SM{s}','xw_data'],2048,'required_native_parent_UNJOINED')
+ if sm_detail:
+  for s in range(32):
+   parent=f'SM{s}'
+   for csm in sm_detail['children']:
+    n=parent+'/'+csm['instance']
+    nodes[n]={'master':csm['logical_module'],'parent':parent,'source_commit':csm['source_commit'],'ports':{p:{'direction':v['direction'],'bits':v['width']} for p,v in csm['boundary_ports'].items()},'geometry':{'local_xy_um':csm['xy_um'],'outline_um':[csm['w_um'],csm['h_um']],'orientation':csm['orientation'],'coordinate_frame':parent,'absolute_xy_um':None,'actual_pin_manifest_available':bool(csm.get('actual_pins')),'actual_pin_reference':'SM_actual_child_inventory/children/'+csm['instance'],'actual_LEF_sha256':csm.get('actual_lef_sha256')},'native_complete_qualified':False,'geometry_status':csm['geometry_status'],'clock_roots_declared':len(csm['clock_roots'])}
+   for ce in sm_detail['edges']:
+    ds=[e for e in ce['endpoints'] if e['direction']=='output'];ls=[e for e in ce['endpoints'] if e['direction']=='input']
+    for d in ds:
+     for e in ls:edge(parent+'/'+ce['net'],[parent+'/'+d['instance'],d['port']],[parent+'/'+e['instance'],e['port']],ce['width_bits'],'actual_SM_component_source_candidate',source_lsb=d['lsb'],sink_lsb=e['lsb'],actual_component_pin_distance_max_um=ce['actual_pin_distance_max_um'],actual_component_over500_bits=ce['actual_over500_bit_count'],component_qualification=ce['qualification'])
  # Actual nine SerDes masters and source-defined endpoint groups. The current
  # 544-bit coded coded PMA boundary to 512-pin PHY connection stays an explicit gap.
  capture=get('COLL_capture_group',BASE/'hcoll-static-seq-1015/physical/hcoll_pinreg_ctl_1015/capture_geometry.json')
