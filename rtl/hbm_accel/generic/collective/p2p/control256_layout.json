@@ -1,0 +1,122 @@
+{
+  "schema": "hcoll.engram.control256.v1",
+  "status": "opt-in typed successor; notunchangedG25AHBM",
+  "operation_bits": 256,
+  "meaningful_bits": 238,
+  "reserved_zero": {
+    "lsb": 238,
+    "width": 18
+  },
+  "fields": {
+    "capture_slot": {
+      "lsb": 0,
+      "width": 10
+    },
+    "sink_slot": {
+      "lsb": 10,
+      "width": 16
+    },
+    "sink_select": {
+      "lsb": 26,
+      "width": 64
+    },
+    "link_wr_v": {
+      "lsb": 90,
+      "width": 1
+    },
+    "link_wr_seq": {
+      "lsb": 91,
+      "width": 16
+    },
+    "link_rd_v": {
+      "lsb": 107,
+      "width": 1
+    },
+    "link_rd_seq": {
+      "lsb": 108,
+      "width": 16
+    },
+    "link_rx_expect": {
+      "lsb": 124,
+      "width": 1
+    },
+    "link_rx_seq": {
+      "lsb": 125,
+      "width": 16
+    },
+    "bridge": {
+      "lsb": 141,
+      "width": 49
+    },
+    "source_read": {
+      "lsb": 190,
+      "width": 1
+    },
+    "source_row": {
+      "lsb": 191,
+      "width": 5
+    },
+    "source_sector": {
+      "lsb": 196,
+      "width": 4
+    },
+    "packet_expect": {
+      "lsb": 200,
+      "width": 1
+    },
+    "packet_low": {
+      "lsb": 201,
+      "width": 1
+    },
+    "packet_publish": {
+      "lsb": 202,
+      "width": 1
+    },
+    "packet_row": {
+      "lsb": 203,
+      "width": 5
+    },
+    "packet_pair": {
+      "lsb": 208,
+      "width": 3
+    },
+    "assembler_expect": {
+      "lsb": 211,
+      "width": 1
+    },
+    "assembler_row": {
+      "lsb": 212,
+      "width": 5
+    },
+    "assembler_pair": {
+      "lsb": 217,
+      "width": 3
+    },
+    "assembler_home": {
+      "lsb": 220,
+      "width": 8
+    },
+    "consumer_read": {
+      "lsb": 228,
+      "width": 1
+    },
+    "consumer_row": {
+      "lsb": 229,
+      "width": 5
+    },
+    "consumer_sector": {
+      "lsb": 234,
+      "width": 4
+    }
+  },
+  "host_targets": [
+    120,
+    121,
+    122,
+    123
+  ],
+  "catalogue_ops_per512word": 2,
+  "entrypoint": "globalHOSTC10 emitsrawlaunch; descriptorbaseeven andexclusivecontrolcyclelimit, loops1; allcomplete512wordpairs",
+  "clock_profile": "localrawlaunchCAPTURE\u2192registeredcontrol6edges\u2192consumer7edges; actualLCPoverlayproducerFFQ\u2192consumer9edges analytical",
+  "current_network_scope": "static_ring actualnine-nodeEngram mechanism; canonicaloperation/compiler/WKVconsumer binding separate"
+}
