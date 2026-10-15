@@ -4,8 +4,8 @@ set -euo pipefail
 stage=$(cd "$(dirname "$0")" && pwd)
 out=$1; vec=$2; ctx=$3; mode=$4; calendar=${5:-}
 mkdir -p "$out"
-binary="$stage/b5a/obj/Vtb_qwen_tp8_attention_native_service"
-expected=f7a58155389c6022d34ebe1db685119bd71f59cc4632c66b55484f774492ca99
+binary="$stage/b5b/obj/Vtb_qwen_tp8_attention_native_service"
+expected=a1b4a4dc824fca1ae3a3716dcfd93f7cec501b46b4ad4401edb3017228f7e6d2
 actual=$(sha256sum "$binary"); [[ ${actual%% *} == "$expected" ]]
 args=("+VEC=$vec" "+CTX=$ctx" "+MODE=$mode")
 if [[ -n $calendar ]]; then args+=("+CAL=$calendar"); fi
