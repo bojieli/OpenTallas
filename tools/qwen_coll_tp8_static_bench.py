@@ -78,22 +78,29 @@ def word_events(mode, c, n, lu, ls):
     return slots, b, wr, out, hold
 
 
-def schedule(modes, nwords, lu, ls, start=40, reserve=True):
+def schedule(modes, nwords, lu, ls, start=40, reserve=True, shared_ucie=False):
     """Greedy static scheduler: earliest command cycle per message with no resource collision."""
     used_w, used_o, used_b, used_h = set(), set(), set(), set()
+    used_u = set()
     prog, last_slot = [], start - 1
     for m, mode in enumerate(modes):
         n = nwords[m]
         c = max(start, last_slot)
         while True:
             slots, b, wr, out, hold = word_events(mode, c, n, lu, ls)
+            p_events = {x+2 for x in slots}
+            r_events = {x-lu-2 for x in out} if mode == 0 else set()
+            if shared_ucie and not p_events.isdisjoint(r_events):
+                raise ValueError("message exceeds single-UCIe static capacity; compiler must split it before scheduling")
             if not reserve:
                 break
             if (used_w.isdisjoint(wr) and used_o.isdisjoint(out) and used_h.isdisjoint(b)
-                    and used_b.isdisjoint(hold)):
+                    and used_b.isdisjoint(hold) and (not shared_ucie or
+                    (p_events.isdisjoint(r_events) and used_u.isdisjoint(p_events | r_events)))):
                 break
             c += 1
         used_w.update(wr); used_o.update(out); used_b.update(b); used_h.update(hold)
+        if shared_ucie: used_u.update(p_events | r_events)
         last_slot = slots[-1]
         prog.append(dict(msg=m, mode=mode, words=n, cmd_cycle=c, first_slot=slots[0], first_out=out[0],
                          last_out=out[-1]))

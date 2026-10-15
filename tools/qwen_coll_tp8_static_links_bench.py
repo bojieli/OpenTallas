@@ -38,7 +38,7 @@ SRC = [ROOT / p for p in (
     "rtl/qwen_sys/split_20261014/ot_qwen_crc_parallel.sv", "rtl/qwen_sys/split_20261014/ot_qkvd_d2d_llr.sv",
     "rtl/qwen_sys/split_20261014/ot_qwen_static_slot_link.sv",
     "rtl/physical/ot_qfd_static_transport.sv", "rtl/physical/ot_qfd_io_xfifo_static.sv",
-    "rtl/physical/ot_qfd_io_links_static.sv", "rtl/physical/ot_qfd_coll_static_face.sv", "rtl/physical/ot_qfd_collective_static_io.sv",
+    "rtl/physical/ot_qfd_io_links_static.sv", "rtl/physical/ot_qfd_coll_static_face.sv", "rtl/physical/ot_qfd_ucie_static_share.sv", "rtl/physical/ot_qfd_collective_static_io.sv",
     "rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue.sv",
     "rtl/rom/ot_coll_tp8_static.sv", "rtl/physical/ot_qfd_io_collective_static.sv",
     "rtl/rom/ot_coll_static_linkcal.sv", "rtl/rom/ot_coll_cmd_issue.sv",
@@ -83,7 +83,7 @@ def program_words(prog, nwords, cmd_pin_stages=0):
     return pw
 
 
-def build(out: Path, lu, ls, xu, xs, phi, define=None, qfd=False, parent=False, relays=(0,0,0,0)):
+def build(out: Path, lu, ls, xu, xs, phi, define=None, qfd=False, parent=False, relays=(0,0,0,0), shared=False):
     obj = out / f"obj_u{lu}_s{ls}_xu{xu}_xs{xs}_phi{phi}{'_qfd' if qfd else ''}{('_' + define) if define else ''}"
     h = out / f"harness_phi{phi}.cpp"
     step = ("t->clk = 1; t->lck = 1; t->eval(); t->clk = 0; t->lck = 0; t->eval();" if phi == 0 else
@@ -99,7 +99,7 @@ def build(out: Path, lu, ls, xu, xs, phi, define=None, qfd=False, parent=False, 
            f"-GXS={xs}", "-Mdir", str(obj)] + ([f"+define+{define}"] if define else []) + [str(s) for s in SRC] + \
           [str(h), "-CFLAGS", "-O1", "-j", "16"]
     if parent:
-        cmd += ["+define+OT_TP8S_PARENT"] + [f"-G{p}={v}" for p,v in zip(("RU","RS0","RS1","RS2"),relays)]
+        cmd += [f"-GSHARED={int(shared)}", "+define+OT_TP8S_PARENT"] + [f"-G{p}={v}" for p,v in zip(("RU","RS0","RS1","RS2"),relays)]
     if qfd:
         cmd += ["+define+OT_TP8S_QFD", f"+define+OT_QFDS_LU={lu}", f"+define+OT_QFDS_LS={ls}"]
     r = subprocess.run(cmd, capture_output=True, text=True)
@@ -123,6 +123,8 @@ def main():
     ap.add_argument("--qfd", action="store_true")
     ap.add_argument("--relays",type=int,nargs=4,default=[0,0,0,0],metavar=("U","S0","S1","S2"))
     ap.add_argument("--parent",action="store_true",help="actualproduction collective+fiveface parent")
+    ap.add_argument("--shared-ucie",action="store_true")
+    ap.add_argument("--unsafe-shared-calendar",action="store_true")
     a = ap.parse_args()
     if a.parent:a.qfd=True
     a.out = a.out.resolve()
@@ -134,7 +136,7 @@ def main():
         cases = [("phy_longer_than_compiled", 4, 8, "m", "link", {})]
     if a.expect_fail:
         cases = [c for c in cases if c[4] == "pos"]
-    exe = build(a.out, a.latu, a.lats, a.xu, a.xs, a.phi, a.mutant_define, a.qfd, a.parent, a.relays)
+    exe = build(a.out, a.latu, a.lats, a.xu, a.xs, a.phi, a.mutant_define, a.qfd, a.parent, a.relays, a.shared_ucie)
     bad, records = [], []
     for i, (name, nmsg, words, mk, kind, extra) in enumerate(cases):
         rng = np.random.default_rng(100 + i)
@@ -143,7 +145,7 @@ def main():
         else:
             modes = {"r": [0] * nmsg, "g": [1] * nmsg, "m": [int(x) for x in rng.integers(0, 2, nmsg)]}[mk]
             nw = [words] * nmsg
-        prog = schedule(modes, nw, a.latu, a.lats, start=START + 6)
+        prog = schedule(modes, nw, a.latu, a.lats, start=START + 6, shared_ucie=a.shared_ucie and not a.unsafe_shared_calendar)
         vec = a.out / f"vec_{name}"
         vectors(vec, nw, prog, 1000 + i)
         pw = program_words(prog, nw, cmd_pin_stages=int(a.qfd))
@@ -174,12 +176,14 @@ def main():
             bad.append(name)
     (a.out / "record.json").write_text(json.dumps(dict(
         schema="opentallas.qwen.tp8.collective.static_links.v1", ranks=ND, latu=a.latu, lats=a.lats, kc=KC, kw=KW,
-        phy_ucie=PU, phy_serdes=PS, xu=a.xu, xs=a.xs, phi=a.phi, die_name_master=a.qfd, production_parent=a.parent, relays=a.relays, mutant=a.mutant_define,
+        phy_ucie=PU, phy_serdes=PS, xu=a.xu, xs=a.xs, phi=a.phi, die_name_master=a.qfd, production_parent=a.parent, relays=a.relays, shared_ucie=a.shared_ucie, unsafe_shared_calendar=a.unsafe_shared_calendar, mutant=a.mutant_define,
         expect_fail=a.expect_fail, production=a.production, issuer_depth=DEPTH, stage_start=START, cmd_pin_stages=int(a.qfd),
         modelled="PHY frame pipes only (fixed latency); all on-chip blocks are the real RTL masters",
         mechanism="compiler program -> fixed-issue core -> collective tokens -> IO calendar slots; no credits/ready/"
                   "backpressure; observed validity, CRC and publication are fault-only checks",
         cases=records, source_sha256={str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in SRC},
+        helper_sha256={f:hashlib.sha256((ROOT/f).read_bytes()).hexdigest() for f in
+          ("tools/qwen_coll_tp8_static_links_bench.py","tools/qwen_coll_tp8_static_bench.py","tools/qwen_coll_tp8_bench.py","tools/hdc_golden.py")},
         executable_sha256=hashlib.sha256(exe.read_bytes()).hexdigest(), native_layer_qualified=False,
         physical_qualified=False), indent=2) + "\n")
     if bad:
