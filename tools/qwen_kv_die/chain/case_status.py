@@ -19,6 +19,10 @@ def check(log, stage, process_exit=0, case_kind='a'):
                     r'^OT_PGCHECK VDD PASS$', r'^OT_PGCHECK VSS PASS$']
     elif stage == 'run_pdn.tcl':
         required = [r'^OT_PDN PASS\b', r'^OT_PGCHECK VDD PASS$', r'^OT_PGCHECK VSS PASS$']
+    elif re.fullmatch(r'grt_(tt|ff|ss)\.tcl', stage):
+        # A completed clock/SPEF load is insufficient: require real STA output.
+        required = [r'^tns\s+[-+0-9.eE]+', r'^wns\s+[-+0-9.eE]+',
+                    r'^worst slack\s+[-+0-9.eE]+']
     else:
         required = []
     for pattern in required:

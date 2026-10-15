@@ -33,6 +33,13 @@ class CaseStatus(unittest.TestCase):
             self.assertNotEqual(S.check(bad,'run_pdn.tcl')['exit_code'],0)
         self.assertEqual(S.check('OT_GRT DONE\n','run.tcl',case_kind='b')['exit_code'],0)
 
+    def test_sta_requires_metrics_and_rejects_actual_missing_clock(self):
+        good="tns -13.2\nwns -1.0\nworst slack -1.0\n"
+        self.assertEqual(S.check(good,"grt_tt.tcl")["exit_code"],0)
+        for bad in ["", "OT_TIME step=load s=8.8\n", good+"Error: grt_tt.tcl, 76 clock boundary pin missing or ambiguous: s_2_0/ck\n"]:
+            self.assertNotEqual(S.check(bad,"grt_tt.tcl")["exit_code"],0)
+        self.assertEqual(S.check(good,"grt_ff.tcl",1)["exit_code"],1)
+
     def test_shell_preserves_effective_failure_even_after_final_date(self):
         with tempfile.TemporaryDirectory() as d:
             p=Path(d);(p/'run.log').write_text(GOOD+POWER)
