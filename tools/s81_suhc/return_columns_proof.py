@@ -4,7 +4,7 @@ Runs on ot-run only. Mutants change actual DUT lane binding and fault capture.
 """
 import argparse, hashlib, json, re, subprocess, shutil
 from pathlib import Path
-p=argparse.ArgumentParser();p.add_argument('--out',required=True);p.add_argument('--fold-ctrn',action='store_true');a=p.parse_args()
+p=argparse.ArgumentParser();p.add_argument('--out',required=True);p.add_argument('--fold-ctrn',action='store_true');p.add_argument('--positive-only',action='store_true',help='Regression smoke only; receipt is explicitly not a full gate');a=p.parse_args()
 r=Path(__file__).resolve().parents[2]; out=Path(a.out).resolve();out.mkdir(parents=True,exist_ok=True)
 s=(r/'rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_cth.sv').read_text()
 def module(name):
@@ -55,11 +55,13 @@ for half in ('a','b'):
  lines += ['end','end',f'$display("PASS {half} 2500 cycles exact delayed return and unchanged requests");$finish;end','endmodule']
  (out/f'check_{half}.sv').write_text('\n'.join(lines));tops.append(half)
 results=[]
-for variant in ('positive','bad_lane','drop_fault','missing_column_clock'):
+variants=['positive'] if a.positive_only else ['positive','bad_lane','drop_fault','missing_column_clock']+(['missing_output_stage'] if a.fold_ctrn else [])
+for variant in variants:
  x=dut
  if variant=='bad_lane':x=x.replace('hrq_n[64*SH*(c+4*bank) +:64*SH]', 'hrq_n[64*SH*((c+1)%4+4*bank) +:64*SH]')
  if variant=='missing_column_clock':x=x.replace('.clk(clk_col[c])',".clk(c==2 ? 1'b0 : clk_col[c])")
  if variant=='drop_fault':x=x.replace('flag_fault <= (|nflt_n) | (|nflt_s) | pflt_n | pflt_s;', "flag_fault <= 1'b0;")
+ if variant=='missing_output_stage':x=x.replace('if(FOLD_CTRN)', "if(1'b0)")
  file=out/f'{variant}.sv';file.write_text(x)
  for half in tops if variant!='drop_fault' else ('a',):
   build=out/f'obj_{variant}_{half}';log=out/f'{variant}_{half}.log'
@@ -72,5 +74,5 @@ for variant in ('positive','bad_lane','drop_fault','missing_column_clock'):
   okay=(run.returncode==0)==(variant=='positive')
   results.append(dict(variant=variant,half=half,returncode=run.returncode,expected_verdict=okay,log=str(log)))
   if not okay:raise SystemExit('UNEXPECTED VERDICT '+str(log))
-receipt={'status':'PASS','scope':'component delayed equivalence; not canonical programme or physical closure','cycles_per_positive':2500,'added_return_cycles':1,'folded_ctrn_rly2':a.fold_ctrn,'reference':'legacy A/B plus real CTRn RLY2' if a.fold_ctrn else 'legacy A/B','source_sha256':hashlib.sha256(dut.encode()).hexdigest(),'results':results}
+receipt={'status':'POSITIVE_ONLY_PASS_NOT_GATE' if a.positive_only else 'PASS','scope':'component delayed equivalence; not canonical programme or physical closure','cycles_per_positive':2500,'added_return_cycles':1,'folded_ctrn_rly2':a.fold_ctrn,'reference':'legacy A/B plus real CTRn RLY2' if a.fold_ctrn else 'legacy A/B','source_sha256':hashlib.sha256(dut.encode()).hexdigest(),'results':results}
 (out/'receipt.json').write_text(json.dumps(receipt,indent=2)+'\n');print(json.dumps(receipt))
