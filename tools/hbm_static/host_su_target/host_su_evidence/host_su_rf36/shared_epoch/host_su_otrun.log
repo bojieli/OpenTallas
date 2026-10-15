@@ -1,0 +1,8 @@
+ot-run: ot-epyc1tb     admits   -25 GB (avail 201, growth 155, headroom 64, waiters 4/32 GB) load 87/128 running 17 disk 391 GB 
+ot-run: ot-epyc4       admits    58 GB (avail 330, growth 301, headroom 48, waiters 0/0 GB) load 153/128 running 43 disk 461 GB 
+ot-run: ot-pve1        skipped: load hold: load1 > 1.5 x cores
+ot-run: ot-agidock128  admits    21 GB (avail 64, growth 29, headroom 24, waiters 0/0 GB) load 23/64 running 6 disk 30 GB 
+ot-run: -> ot-agidock128
+ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-1610708-1792100097 after 0 s
+HOST_SU_PAIR_GATE_PASS
+ot-run: RAN on ot-agidock128 (unit oth-ubuntu-1610708-1792100097): exit 0

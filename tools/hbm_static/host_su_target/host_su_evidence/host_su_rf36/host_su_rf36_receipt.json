@@ -1,0 +1,171 @@
+{
+  "schema": "opentallas.host_su.rf36_component.v1",
+  "component_gate": "PASS",
+  "qualified": false,
+  "scope": "actual current RF36 serial/stream programme installation, AXI target boundary and fixed-phase producer pair; no whole-SU arithmetic, host-parent integration or physical qualification",
+  "final_rtl_source_commit": "7a4063794",
+  "current_image_source_commit": "e74a2e646eb8831a0df455b76e4300ee1e617982",
+  "supported_index_pack": 1,
+  "packed_index16": "UNSUPPORTED; preparation refused until validator adapted",
+  "images": {
+    "serial": {
+      "edges": 7116,
+      "line_bits": 9688,
+      "macros": 302,
+      "config_writes": 34452,
+      "source_sha256": "ef51677866608d14c080d0aef73939220f5e18230a566a015d511c0f07daff2a"
+    },
+    "stream": {
+      "edges": 9489,
+      "line_bits": 64,
+      "macros": 76,
+      "config_writes": 9493,
+      "source_sha256": "fcba67807bbf4d3be28ae2f3fcd063b547f09248ef095d22c06fd3bac098363d"
+    }
+  },
+  "gates": {
+    "serial_direct": {
+      "source_commit": "b3527516f",
+      "unit": "oth-ubuntu-1599303-1792099915",
+      "host": "ot-agidock128",
+      "mem_gb": 8,
+      "threads": 4,
+      "exit": 0,
+      "exact_replays": 2,
+      "mutants": [
+        "DATA",
+        "ADDR",
+        "PHASE",
+        "READY"
+      ]
+    },
+    "stream_direct": {
+      "source_commit": "16e044e22",
+      "unit": "oth-ubuntu-1610707-1792100097",
+      "host": "ot-agidock128",
+      "mem_gb": 8,
+      "threads": 4,
+      "exit": 0,
+      "exact_replays": 2,
+      "mutants": [
+        "DATA",
+        "ADDR",
+        "PHASE",
+        "READY"
+      ]
+    },
+    "shared_epoch": {
+      "source_commit": "16e044e22",
+      "unit": "oth-ubuntu-1610708-1792100097",
+      "host": "ot-agidock128",
+      "mem_gb": 8,
+      "threads": 4,
+      "exit": 0,
+      "clocks_mhz": [
+        900,
+        1200
+      ],
+      "macros": 378,
+      "mutant": "one stream edge launch shift fails at sample edge0"
+    },
+    "serial_axi": {
+      "source_commit": "7a4063794",
+      "unit": "oth-ubuntu-1640545-1792100321",
+      "host": "ot-agidock128",
+      "mem_gb": 8,
+      "threads": 4,
+      "exit": 0,
+      "exact_replays": 2
+    },
+    "stream_axi": {
+      "source_commit": "7a4063794",
+      "unit": "oth-ubuntu-1640539-1792100321",
+      "host": "ot-agidock128",
+      "mem_gb": 8,
+      "threads": 4,
+      "exit": 0,
+      "exact_replays": 2
+    }
+  },
+  "tested_refusals": [
+    "missing required index row",
+    "missing required dictionary row",
+    "invalid bank",
+    "out-of-range dictionary index",
+    "configuration while executing",
+    "stale validation on reconfiguration",
+    "launch before validation",
+    "zero length",
+    "unknown AXI address",
+    "partial WSTRB",
+    "reserved selector bits",
+    "validation/launch with incomplete payload"
+  ],
+  "axi_checks": [
+    "AW before W and W before AW",
+    "B response stability under stall",
+    "R data/response stability under stall",
+    "eighth32-bit chunk is first native256-bit write",
+    "SLVERR on invalid operations",
+    "exact first output after local launch+3 and interval1",
+    "two full native replays"
+  ],
+  "physical_scope": {
+    "status": "OPEN",
+    "total_programme_macro_area_sum_mm2": 1.47101609088,
+    "total_loaded_bitmap_ff_bits": 48384,
+    "total_axi_boundary_ff_bits": 774,
+    "serial_clock_root": "bitmap exceeds15000 before native output/controller logic; partition or measured CTS required",
+    "stream_clock_root": "bitmap9728 alone; actual total and CTS unmeasured",
+    "claims_excluded": [
+      "physical phase/skew and CDC",
+      "actual parent host demux/clock crossing",
+      "whole-SU numerical and throughput",
+      "native pin/reset/clock and TT/FF/DRC closure"
+    ]
+  },
+  "preserved_failures": [
+    "r1 stream literal dictionary-array defaults evaluated as38columns",
+    "r2 explicitCOLS still failed; typed localparam arrays fixed r3"
+  ],
+  "live_jobs": [],
+  "final_rtl_hashes": {
+    "rtl/hbm_accel/host_static_20261015/su_target/host_su_target.sv": "3a0cde497073fd9e664e251258a5307f634341b29580bf223d051e95bbf1e0ce",
+    "rtl/hbm_accel/host_static_20261015/su_target/host_su_axi_install.sv": "1a2b9715383e702ba05f1004d406384ab9d0b56f9ed412536feabb7e59142e28",
+    "rtl/hbm_accel/generic/adapters/static_su/programme/ot_hbm_su_programme.sv": "f8c2762960eb0c90ba2c8466cdb42341ead8d4071a22cc535478ef7c05e2d0ef"
+  },
+  "evidence_sha256": {
+    "host_su_stream_inventory.json": "6efb0440db47556bdd3edeaa32dbac25926067ea40d028f147f29a7adf98a9b7",
+    "host_su_phase_inventory.json": "1332ee3b745af9c63a47e57c1b71bbc6d0a93b8f785bf93fbd058699d295a44f",
+    "host_su_serial_inventory.json": "e2d1d3139491580d2b20c1b5093fae9fc5eb5e7fd8120796913132b75904bdb2",
+    "host_su_provenance.json": "7c3617c854a40717e128a6b35e9dc799e188cbbe57268efca4869d94451c7bb1",
+    "serial_direct/host_su_build_ready.log": "08990f54b603f0a8e9737075e90c83f85098bc7530bb29d2f4eb18a8dce1d32c",
+    "serial_direct/host_su_build.log": "005ffd1d66a5c1524f13d5040b863280faa95eadc6b32a8b997448b8f74a981a",
+    "serial_direct/host_su_otrun.log": "d25b58a55bfb9fd7036d61daf2da1b8939449480985261ce4e6f0901aee44ad5",
+    "serial_direct/host_su_mut_PHASE.log": "c6d9832cc1d1a964e6059da7c7908184f8ebebf96db0e3e82b6d0a8233ae5d09",
+    "serial_direct/host_su_mut_ready.log": "42849cf7df863045356559678485d9e93a7e3b68ec46ea2bf732229a218b8654",
+    "serial_direct/host_su_positive.log": "1a0b4619e445121f471fd21b06826f7fa3c68412920f74d42a21c44d7ec6b574",
+    "serial_direct/host_su_mut_ADDR.log": "c6d9832cc1d1a964e6059da7c7908184f8ebebf96db0e3e82b6d0a8233ae5d09",
+    "serial_direct/host_su_mut_DATA.log": "c6d9832cc1d1a964e6059da7c7908184f8ebebf96db0e3e82b6d0a8233ae5d09",
+    "stream_direct/host_su_build_ready.log": "5decbd533433f09594180b3b5ce025f7b878c54611237095ca35b6b85b0ea5ef",
+    "stream_direct/host_su_build.log": "a8b3db0dcf3993334ef073cfc4380418c269d80778037cbd50af386757966c18",
+    "stream_direct/host_su_otrun.log": "2e83faeb448d4f44854bdc92b72ff32d1d23d3646bff51281474a227ea28add0",
+    "stream_direct/host_su_mut_PHASE.log": "cf6a69d175984009e86c4474933a9ff45b65e9820dcb19c428ba3b29eb7fd5c9",
+    "stream_direct/host_su_mut_ready.log": "61b25983f2d36a21f00e3414845b1d07a038a5443e169be7f7db5d707e576f9b",
+    "stream_direct/host_su_positive.log": "14501b20fc7f2dff18bb68f5bd722c5a0ec13056b6c22d1051c34b5c28d44a2e",
+    "stream_direct/host_su_mut_ADDR.log": "5ae42d06de13067ce4786b791763d5ffc62c376dc0caac9afacbc416001c97a5",
+    "stream_direct/host_su_mut_DATA.log": "5ae42d06de13067ce4786b791763d5ffc62c376dc0caac9afacbc416001c97a5",
+    "shared_epoch/host_su_otrun.log": "0175e122f4a11694b25056a52d369742460dddc3eadc55370fe33b604063b146",
+    "shared_epoch/host_su_pair_positive.log": "8633661fc85bbe23b106f26ca64df2b47e78d599d8f2c400dfe61da47b51e565",
+    "shared_epoch/host_su_pair_mut_epoch.log": "39e6122c42eb99e66599ead9e73ff27dc7df994e15551a566e3a49e51ea822e0",
+    "shared_epoch/host_su_pair_build.log": "bab2741abd8c8db485e8fd8675d3ef6f2d215618f65c1f48f2ee91d2f5f60d49",
+    "failures/host_su_stream_r1_array_build.log": "be36f54cbbfb2a6699d023a3126ddd35e293e802b4701d5b8a8b9ea3d13907b3",
+    "failures/host_su_stream_r2_array_build.log": "f5a1baf54e208d5d5b0bebd7b4fd8587ffddca98f3cb258fb8fd4ce6112354df",
+    "stream_axi/host_su_otrun.log": "a54444a990223c8d39b876d62cf30d62e57bcc0c1d60d0b566b1815c039e14f3",
+    "stream_axi/host_su_axi_positive.log": "4d629f3655a5addf1c7b2bb51a38f36665ce359ba47273ad5d0fb11bdce24a02",
+    "stream_axi/host_su_axi_build.log": "f059d94f625d6096aafeb5f2e05e34e81e6e015d9562608f89dad2a6e9f8db5a",
+    "serial_axi/host_su_otrun.log": "4f718f2467ddb8926b5fc5123768a53de1aaf4909b9bc0a66bffc799332aa4ab",
+    "serial_axi/host_su_axi_positive.log": "abe93ad8662a8f089da38a394934b4a135f6f931c295ae98070d1c3a655b74d8",
+    "serial_axi/host_su_axi_build.log": "9ad5073d37695dc56839069b29375d77cf2ab52139e12371f96b67836790466a"
+  }
+}

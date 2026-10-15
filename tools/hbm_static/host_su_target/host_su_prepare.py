@@ -9,6 +9,9 @@ m=importlib.util.module_from_spec(spec);spec.loader.exec_module(m)
 if a.lowerer_root:m.ROOT=a.lowerer_root
 kw={'line_bits':a.line_bits} if a.line_bits!=9688 else {}
 r=m.lower(a.source,a.out,a.extra_mem,a.extra_bits,**kw)
+if r.get('index_pack',1)!=1:raise ValueError('host_su_target supports INDEX_PACK=1 only; packed layout requires a new readiness validator')
+r['source_pins']['tools/hbm_static/su_programme_compile.py']=hashlib.sha256(a.lowerer.read_bytes()).hexdigest()
+(a.out/'manifest.json').write_text(json.dumps(r,indent=2)+'\n')
 entries="'{"+','.join(map(str,r['dictionary_entries']))+"}"
 banks="'{"+','.join(map(str,r['dictionary_banks']))+"}"
 tb=(ROOT/'rtl/hbm_accel/host_static_20261015/su_target/host_su_tb.sv').read_text()
@@ -26,7 +29,7 @@ model=dict(schema='opentallas.host_su_target.model.v1',qualified=False,
  sram_allocated_bits=r['allocated_bits'],loaded_bitmap_ff_bits=r['total_macros']*128,
  config_transactions=r['config_transactions'],validation_scan_edges=r['config_transactions'],
  commit_guard_edges=2,start_to_present_edges=3,start_to_consumer_edges=4,
- steady_command_interval_edges=1,axi_boundary_ff_bits=387,axi_words_per_config=9,axi_min_write_interval_edges=3,
+ steady_command_interval_edges=1,supported_index_pack=1,unsupported_layout_action='refuse compiler/model preparation; packed macro capacity fails native elaboration',axi_boundary_ff_bits=387,axi_words_per_config=9,axi_min_write_interval_edges=3,
  macro_outline_um=[width,height],macro_area_sum_mm2=width*height*r['total_macros']/1e6,
  area='macro outline sum only; control FF/mux, placement whitespace and clocks unmeasured',
  physical_clock_limit=('loaded bitmap alone exceeds 15000 sinks on controller clk; requires partition or measured CTS before physical acceptance' if r['total_macros']*128>15000 else 'loaded bitmap below 15000; actual total sink count and physical CTS unmeasured'),
