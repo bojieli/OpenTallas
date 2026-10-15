@@ -46,7 +46,7 @@ module tb_qfd_serdes_static;
    #5;clk=1;#1;
    if(rst_n)begin
     if(aa||ba)aborts=aborts+1;
-    if(MUT==0 && (aa||ba))begin errors=errors+1;$display("ABORT cycle%0d a%h b%h",cyc,ac,bc);end
+    if(MUT==0 && (aa!==1'b0 || ba!==1'b0 || ac!==7'b0 || bc!==7'b0))begin errors=errors+1;if(errors<10)$display("BAD_FAULT cycle%0d abort%h/%h causes%h/%h",cyc,aa,ba,ac,bc);end
     // These are compiler constants, not observed-output driven expectations.
     if(MUT==0 && (atv!==(cyc>=RS+2&&cyc<RS+2+N)||btv!==(cyc>=RS+2&&cyc<RS+2+N)))errors=errors+1;
     if(cyc>=OUT&&cyc<OUT+N)begin
