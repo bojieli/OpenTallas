@@ -1,0 +1,16 @@
+{
+  "source_commit": "037717db4",
+  "sha256": {
+    "rtl/hdc/kv/qkd_cdc_wleaf.sv": "85b3aa0155a500e7d6c6af34c1984e8ad0b58f945f42d3c8e70d97d91317ccbc",
+    "rtl/hdc/kv/qkd_cdc_wleaf_hpin.sv": "3bb36033cc3f1f525fd01821e17ea9ca2d5ef82e2580c5aedff3f43f567dd6bf",
+    "rtl/test/qwen_blocks/tb_qkd_cdc_wleaf_equiv.sv": "fae263c8cbd77f9e95044b45a1114b0bf1fd4cbb3296f6dc27cea8b4e09aebba",
+    "rtl/test/qwen_kv_die/tb_qkd_ctrl_pc.sv": "ab8b2e4d47becda88f333b5a6c03e450f5fdd346f67db8bbabbab7dac7275efc",
+    "physical/qkd_ctrl_strip/bench.sh": "bb160df3cf0d1a7f9f46271bcc6bdc84f72f538b9d9a78b28a5e70684741dbe8"
+  },
+  "hand_off_added_edges": 1,
+  "controller_HOFF": 3,
+  "controller_measured_hclk_legacy": 4685,
+  "controller_measured_hclk_pinreg": 4685,
+  "accepted_cost": false,
+  "qualification": "fresh physical CTS/native audit/die bind pending"
+}

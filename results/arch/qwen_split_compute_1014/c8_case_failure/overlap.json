@@ -1,0 +1,25 @@
+{
+  "schema": "qwen.compute.case-failure.v1",
+  "source": "e037bd396",
+  "target": {
+    "n": "rly_tree_12_1_4a_9",
+    "m": "qfd_rly_514_SN_53x30",
+    "x": 6738.336,
+    "y": 4179.6,
+    "w": 52.68,
+    "h": 30.215999999999998
+  },
+  "overlaps": [
+    {
+      "n": "rly_tree_4_3_0b_13",
+      "m": "qfd_rly_514_EW_53x30",
+      "x": 6738.336,
+      "y": 4190.4,
+      "w": 52.68,
+      "h": 30.215999999999998
+    }
+  ],
+  "first_error": "Error: run.tcl, 17 ot_mts::place: no legal, non-overlapping origin for rly_tree_12_1_4a_9 (qfd_rly_514_SN_53x30 R0) near (6738.336, 4179.600)",
+  "chain_verdict": "NOT_A_DIE_RESULT",
+  "sta": "NOT_RUN"
+}

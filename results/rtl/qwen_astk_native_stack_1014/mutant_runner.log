@@ -1,0 +1,28 @@
+ot-run: ot-epyc1tb     admits   302 GB (avail 529, growth 42, headroom 64, waiters 0/0 GB) load 40/128 running 14 disk 77 GB 
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/codex/astk-stack-1014
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/codex/astk-stack-1014
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/codex/astk-stack-1014
+ot-run: -> ot-epyc1tb
+ot-heavy: admitted on ot-epyc1tb as oth-ubuntu-3463901-1792036501 after 0 s
+PASS observed_score_address expected=FAIL fixed_slots_preserved
+TRACE Z cycle=913 ctl_age=900
+FAIL mapped_astk errors=8192
+- rtl/test/qwen_kv_die/tb_qkd_astk_native_stack.sv:98: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 7us; walltime 28.846 s; speed 243.845 ns/s
+- Verilator: cpu 28.844 s on 1 threads; allocated 44 MB
+PASS observed_late_am expected=FAIL fixed_slots_preserved
+FAIL counts af=1 lm=4 z=64 done=1 reads=2048 commits=ffff
+FAIL mapped_astk errors=1
+- rtl/test/qwen_kv_die/tb_qkd_astk_native_stack.sv:98: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 7us; walltime 16.874 s; speed 416.857 ns/s
+- Verilator: cpu 16.874 s on 1 threads; allocated 44 MB
+PASS observed_real_so_fault expected=PASS fixed_slots_preserved
+TRACE Z cycle=913 ctl_age=900
+PASS mapped_astk static=1 actual_EP8_EX32_ZN4 roots46 native_er2048 scorewords8192 lmax4 Z64 nolegacyPV
+- rtl/test/qwen_kv_die/tb_qkd_astk_native_stack.sv:98: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 7us; walltime 20.937 s; speed 335.968 ns/s
+- Verilator: cpu 20.936 s on 1 threads; allocated 44 MB
+ot-run: RAN on ot-epyc1tb (unit oth-ubuntu-3463901-1792036501): exit 0

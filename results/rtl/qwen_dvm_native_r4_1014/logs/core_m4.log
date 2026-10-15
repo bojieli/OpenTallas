@@ -1,0 +1,28 @@
+ot-run: ot-epyc1tb     admits   195 GB (avail 421, growth 139, headroom 64, waiters 0/0 GB) load 44/128 running 14 disk 789 GB 
+ot-run: ot-epyc4       admits   237 GB (avail 464, growth 175, headroom 48, waiters 0/0 GB) load 113/128 running 31 disk 553 GB 
+ot-run: ot-pve1        skipped: load hold: load1 > 1.5 x cores
+ot-run: ot-agidock128  skipped: load hold: load1 > 1.5 x cores
+ot-run: -> ot-epyc1tb
+ot-heavy: admitted on ot-epyc1tb as oth-ubuntu-3667869-1792039597 after 0 s
+FAIL cyc=107 x_fault
+FAIL cyc=108 x_fault
+FAIL cyc=109 x_fault
+FAIL cyc=110 x_fault
+FAIL cyc=111 x_fault
+FAIL cyc=112 x_fault
+FAIL cyc=113 x_fault
+FAIL cyc=114 x_fault
+FAIL cyc=115 x_fault
+FAIL cyc=116 x_fault
+FAIL cyc=117 x_fault
+FAIL cyc=118 x_fault
+FAIL cyc=119 x_fault
+FAIL cyc=120 x_fault
+FAIL cyc=121 x_fault
+FAIL cyc=122 x_fault
+FAIL cyc=123 x_fault
+FAIL cyc=124 x_fault
+FAIL cyc=125 x_fault
+FAIL cyc=126 x_fault
+FAIL errors=161260 checks=159744
+ot-run: RAN on ot-epyc1tb (unit oth-ubuntu-3667869-1792039597): exit 0

@@ -65,6 +65,10 @@ module dsfd_sp_pq_n (
     input  wire [203:0]  f_cnt,
     output wire [564:0]  xw, xe,
     input  wire [2:0]    xws, xes
+`ifdef DSFD_PQ_BF_X2
+    ,output wire [536:0] x2w, x2e
+    ,input wire [2:0] x2ws, x2es
+`endif
 );
     wire [9:0]    pa0, pa1;
     wire [10:0]   sa;
@@ -107,7 +111,11 @@ module dsfd_sp_pq_n (
     assign pq0 = rq0; assign pq1 = rq1; assign sq = rq2;
 `endif
     dsfd_pq_lx u_lane (.ck(ck_lane), .rst(rst), .f_bus(f_bus), .f_fault(f_iss[91]), .xws(xws), .xes(xes),
-        .xw(xw), .xe(xe), .f_fault_c(f_fault_c));
+        .xw(xw), .xe(xe), .f_fault_c(f_fault_c)
+`ifdef DSFD_PQ_BF_X2
+        ,.x2w(x2w), .x2e(x2e), .x2ws(x2ws), .x2es(x2es)
+`endif
+    );
 endmodule
 
 // ---------------------------------------------------------------------------------------------------------------------
@@ -130,6 +138,10 @@ module dsfd_pq_lx (
     input  wire [2:0]    xws, xes,
     output reg  [564:0]  xw, xe,
     output reg           f_fault_c
+`ifdef DSFD_PQ_BF_X2
+    ,output reg [536:0] x2w, x2e
+    ,input wire [2:0] x2ws, x2es
+`endif
 );
     wire        cfg = f_bus[1632];
     wire [8:0]  ph  = f_bus[1631:1623];
@@ -151,7 +163,23 @@ module dsfd_pq_lx (
 `endif
     wire [265:0] x1 = {e1, q1};
     wire [14:0]  cc = {np, 1'b0, ph, cfg, go};
-    wire [564:0] w  = {cc, x1, x0, qv | go | cfg};
+`ifdef DSFD_PQ_BF_X2
+    // Authoritative die map: physical/s81_die_pins/v20/bf_x2_lane.json.
+    wire [1067:0] xb = {f_bus[1023:0], f_bus[1055:1024], f_bus[1059:1056],
+                       f_bus[1062:1060], f_bus[1063], f_bus[1066:1064], f_bus[1618]};
+    wire bv = f_bus[1063] | f_bus[1618];
+    wire collision = (f_bus[1063] && (qv || go || cfg)) || (f_bus[1618] && qv);
+    wire [564:0] w = bv ? {cc, xb[1067:802], 17'd0, xb[801:536], 1'b1} : {cc, x1, x0, qv | go | cfg};
+`ifdef DSFD_PQ_X2_MUT_SWAP
+    wire [536:0] w2 = bv ? {1'b1, xb[535:2], xb[0], xb[1]} : 537'd0;
+`else
+    wire [536:0] w2 = bv ? {1'b1, xb[535:0]} : 537'd0;
+`endif
+    reg [2:0] s2w_q, s2e_q;
+    always @(posedge ck) begin x2w <= w2; x2e <= w2; s2w_q <= x2ws; s2e_q <= x2es; end
+`else
+    wire [564:0] w = {cc, x1, x0, qv | go | cfg};
+`endif
     reg  [2:0]   sw_q, se_q;
     reg          ovf;
     reg [1:0]    rs_q;
@@ -162,6 +190,10 @@ module dsfd_pq_lx (
         if (!rs_q[1]) begin ovf <= 1'b0; f_fault_c <= 1'b0; end
         else begin
             if ((xw[0] && !(sw_q[0] && sw_q[1])) || (xe[0] && !(se_q[0] && se_q[1]))) ovf <= 1'b1;
+`ifdef DSFD_PQ_BF_X2
+            if (collision || (x2w[536] && !(s2w_q[0] && s2w_q[1])) ||
+                (x2e[536] && !(s2e_q[0] && s2e_q[1]))) ovf <= 1'b1;
+`endif
             f_fault_c <= f_fault | ovf;
         end
 endmodule

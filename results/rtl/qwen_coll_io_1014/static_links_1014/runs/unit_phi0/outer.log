@@ -1,0 +1,11 @@
+ot-run: ot-epyc4       admits   609 GB (avail 836, growth 86, headroom 48, waiters 0/0 GB) load 144/128 running 19 disk 597 GB 
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-573160-1792042372 after 0 s
+case reduce_8w_x7 kind=pos latu=37 lats=362 phi=0 xu=0 xs=0 mutant=- PASS mismatches=0 extra=0 out_err=0 cmd_bad=0 coll_fault=00000000 issuer_fault=00000000 die_fault=00000000 words_out=448 meas_lu=37 meas_ls=362 pr_overlap=0 compiled_span=549
+case reduce_1w_x7_odd kind=pos latu=37 lats=362 phi=0 xu=0 xs=0 mutant=- PASS mismatches=0 extra=0 out_err=0 cmd_bad=0 coll_fault=00000000 issuer_fault=00000000 die_fault=00000000 words_out=56 meas_lu=37 meas_ls=362 pr_overlap=0 compiled_span=500
+case gather_4w_x4 kind=pos latu=37 lats=362 phi=0 xu=0 xs=0 mutant=- PASS mismatches=0 extra=0 out_err=0 cmd_bad=0 coll_fault=00000000 issuer_fault=00000000 die_fault=00000000 words_out=1024 meas_lu=37 meas_ls=362 pr_overlap=0 compiled_span=534
+case mixed_8w_x7 kind=pos latu=37 lats=362 phi=0 xu=0 xs=0 mutant=- PASS mismatches=0 extra=0 out_err=0 cmd_bad=0 coll_fault=00000000 issuer_fault=00000000 die_fault=00000000 words_out=1792 meas_lu=37 meas_ls=362 pr_overlap=0 compiled_span=804
+case fault_drop_word kind=drop latu=37 lats=362 phi=0 xu=0 xs=0 mutant=- PASS mismatches=0 extra=0 out_err=0 cmd_bad=0 coll_fault=00100000 issuer_fault=00000000 die_fault=00100000 words_out=256 meas_lu=37 meas_ls=362 pr_overlap=0 compiled_span=525
+case fault_serdes_crc kind=corrupt latu=37 lats=362 phi=0 xu=0 xs=0 mutant=- PASS mismatches=0 extra=0 out_err=0 cmd_bad=0 coll_fault=00000000 issuer_fault=00000000 die_fault=00000001 words_out=1600 meas_lu=37 meas_ls=362 pr_overlap=0 compiled_span=693
+COLL_TP8SL PASS cases=6 latu=37 lats=362
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-573160-1792042372): exit 0

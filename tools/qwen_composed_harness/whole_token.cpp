@@ -51,19 +51,30 @@ int main(int argc,char**argv){try{
  fs::path out(a.out);if(fs::exists(out))throw std::runtime_error("output directory must be fresh");fs::create_directories(out);
  auto wall=std::chrono::steady_clock::now();
  auto layers=read_plan(a.plan);
- if(layers.front().number!=0||layers.front().position!=0)throw std::runtime_error("whole token starts at layer0 position0");
+ // Seeded per-layer mode (OT_SEED_X = the oracle's exact layer-input VM X
+ // image): the same actual HOST cohort, collector and per-rank models run one
+ // layer from that state and the layer's X is compared with the oracle's
+ // output state. OT_SEED_HEAD=1 runs the head (and the credited terminal)
+ // from layer 35's oracle output X. No embedding in seeded mode.
+ const char*seed_env=std::getenv("OT_SEED_X");const std::string seed_x=seed_env?seed_env:"";
+ const bool head_first=std::getenv("OT_SEED_HEAD")&&std::string(std::getenv("OT_SEED_HEAD"))=="1";
+ if(head_first&&seed_x.empty())throw std::runtime_error("OT_SEED_HEAD needs OT_SEED_X");
+ if(seed_x.empty()&&(layers.front().number!=0||layers.front().position!=0))throw std::runtime_error("whole token starts at layer0 position0");
+ if(!seed_x.empty()&&layers.size()!=1)throw std::runtime_error("seeded run takes exactly one plan layer");
  VerilatedContext ctx;ctx.threads(1);
  std::cerr<<"rank evaluation "<<(rank_pool().parallel()?"parallel x8":"sequential")<<std::endl;
  HostOwner host;Inputs in;Startup startup;PreTerminal pre;
  EmbeddingOwner embed(ctx,a.embedding_program);
  std::array<std::unique_ptr<Rank>,8> r;
- for(unsigned rank=0;rank<8;rank++)r[rank]=std::make_unique<Rank>(ctx,rank,layers[0],std::string(),true);
+ for(unsigned rank=0;rank<8;rank++)r[rank]=std::make_unique<Rank>(ctx,rank,layers[0],seed_x,seed_x.empty());
+ std::cerr<<"seed "<<(seed_x.empty()?std::string("none (actual embedding)"):seed_x)<<" head_first "<<head_first<<" layer "<<layers[0].number<<std::endl;
  Native59Helpers link(ctx,a.collector);
  SequenceClock clock;
  auto start_fn=[&](HostOwner&h,Inputs&i,uint64_t){startup(h,i);};
  auto drain_fn=[&](const HostOwner&h)->uint8_t{return pre(h,startup);};
+ const bool want_head=layers.size()==36||head_first;
  auto result=run_actual_helper_layers(r,layers,ctx,link,host,in,start_fn,drain_fn,out,
-   layers.size()==36?a.head_image:std::string(),layers.size()==36?a.head_program:std::string(),&embed,a.embedding_bank,&clock);
+   want_head?a.head_image:std::string(),want_head?a.head_program:std::string(),seed_x.empty()?&embed:nullptr,a.embedding_bank,&clock,head_first);
  std::cerr<<"layers executed "<<result.layers<<" head "<<result.head<<" core "<<result.core_edges<<" wall_s "
    <<std::chrono::duration<double>(std::chrono::steady_clock::now()-wall).count()<<"\n";
  if(!result.head){

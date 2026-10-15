@@ -21,7 +21,7 @@
  ],
  "outline": {
   "w": 259.2,
-  "h": 328.32
+  "h": 432.0
  },
  "layer_cap": "M5",
  "recipe": 2,
@@ -32,7 +32,7 @@
    "count": 1,
    "at": [
     41.04,
-    123.12
+    166.32
    ],
    "orient": "R0"
   },
@@ -52,7 +52,7 @@
    "count": 1,
    "at": [
     41.04,
-    224.64
+    311.04
    ],
    "orient": "R0"
   }
@@ -82,52 +82,52 @@
  },
  "pin_ranges": {
   "i_seq_coll": [
-   154,
-   300
+   180,
+   400
   ],
   "o_seq_coll": [
-   154,
-   300
+   180,
+   400
   ],
   "i_seq_coll_v": [
-   302,
-   302.4
+   402,
+   402.4
   ],
   "o_seq_coll_v": [
-   302,
-   302.4
+   402,
+   402.4
   ],
   "i_seq_coll_cr": [
-   304,
-   304.4
+   404,
+   404.4
   ],
   "o_seq_coll_cr": [
-   304,
-   304.4
+   404,
+   404.4
   ],
   "o_coll_seq": [
    8,
-   134
+   150
   ],
   "i_coll_seq": [
    8,
-   134
+   150
   ],
   "o_coll_seq_v": [
-   136,
-   136.4
+   152,
+   152.4
   ],
   "i_coll_seq_v": [
-   136,
-   136.4
+   152,
+   152.4
   ],
   "fault_ckd": [
-   138,
-   138.4
+   154,
+   154.4
   ],
   "fault_ck": [
-   138,
-   138.4
+   154,
+   154.4
   ],
   "ck": [
    78,
@@ -157,7 +157,8 @@
   "OT_MEG_BAND": "2.16",
   "OT_MEG_EDGES": "EW",
   "OT_SPINE_PORT": "ckd",
-  "OT_SPINE_CTS_REST": "1"
+  "OT_SPINE_CTS_REST": "1",
+  "OT_SPINE_PORTS": "ck,ckd"
  },
  "route": {
   "pd": 0.55,
@@ -177,7 +178,7 @@
   },
   "macro_halo_um": 5.4
  },
- "structural_change": "n1 gate REFUSED:CKD20,310flops,17,472ofthese are SQIBUF32x546; ir[1]17475loads. Actuallargest-root CKDTTmax506/spread99(scopedprobe), primaryCK458/spread93. n2 replaces ONLY synchronous SQreceive store with real32x5461R1WSRAM, lookahead head read+same-write bypass, preserving everyexternal valid/credit/data/fault edge; paired oldflopstore/newmacrostore bench verifies. SameCR32/ENG_IB32/LCR32/N8/CQ_AD256, no newcycles,no clock changes,no reprice. Rootcount expected<15000; coreIOreference nowCK-specific u_cq.g_ipr.pd, CKDreference remains domain-specific. 3SRAMs with2.16um M5edgeguards, OBSunchanged. n2 CK boundaryspread101.5ps is a defect; n3 uses explicit CTS sink clusters16/30um to balance the physical tree, unchanged clocks and RTL. n3 actualCK boundary69.7ps passes,CKD119.5ps fails; n4 uses existing balanced-spine on CKD only and existing OT_SPINE_CTS_REST1 for CK, no shared name collision or clock timing changes.",
+ "structural_change": "Balanced separately named spines for CK andCKD; repairs measuredCKboundary169.1ps, unchanged RTL/clocks/geometry. Diagnostic only under staticowner0ah.",
  "reroute_reason": {
   "kind": "param_change",
   "params": {
@@ -192,12 +193,12 @@
    "MEMM": 1
   }
  },
- "slot_change_request": "Native collective-port leaf inside io_xfifo700.248x1563.816: proposed259.2x328.32 near(+423.36,+1190.16) next to10 nativeW546 link leaves. Native pin assignment from die tools pending; current closed TP4port request W sequencer,E engine adapted to native record widths. seq_su CRED32/postedacceptance composition still required; UNQUALIFIED until exact chain proof.",
+ "slot_change_request": "qfd_coll_xfifo_native n13 outline 259.2 x 432 (was 259.2 x 328.32): proposed at (+423.36, +1086.48) inside io_xfifo 700.248 x 1563.816 (x 423-700 is free over the full height; no overlap with the 10 W546 link leaves at x 43-134 / 302-393). Reason: inter-macro E-W crossing capacity (n12 GRT-0116). Pins: same faces (seq W/E, ck/ckd/rst N). Native collective-port leaf inside io_xfifo700.248x1563.816: proposed259.2x328.32 near(+423.36,+1190.16) next to10 nativeW546 link leaves. Native pin assignment from die tools pending; current closed TP4port request W sequencer,E engine adapted to native record widths. seq_su CRED32/postedacceptance composition still required; UNQUALIFIED until exact chain proof.",
  "job": {
-  "owner": "Codex:qwen_small/io",
-  "branch": "claude/el1013-qwen-r3b-io",
-  "tag": "n4",
-  "purpose": "Native TP8 local port credit reservation and posted-return macro leaf; qualifies only with seq_su CRED32 composition",
+  "owner": "Claude:qwen-coll-io-1014",
+  "branch": "claude/qwen-coll-io-1014",
+  "tag": "n14diag",
+  "purpose": "HISTORICAL transport physicalclockreuse probe only. Runtimecredit production architecture is supersededby HANDOFF0ah; no new production routing until staticcompilertransport binds.",
   "extra_paths": [
    "physical/qwen_romio_slots",
    "physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1",
@@ -270,8 +271,13 @@
   "physical/qwen_coll_cx/macro_edge_m5_guard.tcl"
  ],
  "clock": "spine",
+ "pin_reg_split": false,
  "children": [],
  "inter": [],
  "inhold": true,
- "outhold": true
+ "outhold": true,
+ "keep_pin_regs": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ }
 }

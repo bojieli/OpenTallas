@@ -3,15 +3,17 @@
 // ot_qwen_me_array_dvm_w12: the Qwen TP8 matrix-engine array of ot_qwen_me_array_w12 with the DISTRIBUTED x slices
 // (ot_qfd_xslice.sv) in place of the central x network.  Same tiles, tree nodes and spine top; what changes is how a
 // tile's xl pins are driven:
-//   x writes (SU / attention return) -> ot_qfd_xs_tap -> HBF head-row stages -> every column's ot_qfd_xhead (fill)
-//   accepted go / ib                  -> HB  head-row stages -> ot_qfd_xhead -> N / S corridor of NH ot_qfd_xcst stations
+//   x writes (SU / attention return) + the accepted go / ib -> ot_qfd_xs_tap (one pipeline) -> HB head-row stages ->
+//                                         every column's ot_qfd_xhead (fill, then go) -> N / S corridor of NH ot_qfd_xcst stations
 //                                         -> each station's tap -> NH - 1 - s equalising stages -> the tile (lockstep,
 //                                         as the array model's uniform BD)
 // Geometry: NCOL columns x 2*NH rows, tile id = col * 2*NH + row (rows 0 .. NH-1: N corridor, station = row; rows
 // NH .. 2NH-1: S corridor, station = row - NH).  GT = NCOL * 2*NH * TG.
-// BD of this array (go accepted -> the tiles' ib_go, + IREG) = HB + DX + NH + 3; the plain-head equivalent (chead
-// instead of xhead, no x) is HB + NH + 3, so the x path costs DX edges on the instruction broadcast and the central
-// read's XVM is gone.
+// BD of this array (go accepted -> the tiles' ib_go, + IREG) = 3 + HB + DX + NH + 3 (r3: go / ib enter the x tap and
+// share the fill's pipeline, 3 tap stages); the plain-head equivalent (chead instead of xhead, no x) is HB + NH + 3, so
+// the x path costs 3 + DX edges on the instruction broadcast and the central read's XVM is gone.
+// Tile ids (r3): tile (column c, head row r) is tile t = tid(c, r) of the array's tree order (TIDM 1: the die's morton
+// map, compute_spine.ref_tile_id; TIDM 0: c * 2NH + r); the head takes the column's ids as its tids strap.
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_qwen_me_array_dvm_w12 #(
     parameter integer W  = 16,
@@ -28,8 +30,9 @@ module ot_qwen_me_array_dvm_w12 #(
     parameter integer SMAX = 5,
     parameter integer TCUT = 3,
     parameter integer HB = 2,
-    parameter integer HBF = 2,
-    parameter integer DX = 9,
+    parameter integer DX = 10,
+    parameter integer FILL_LEAD = 2,
+    parameter integer TIDM = 1,
     parameter integer XOFF = 3,
     parameter integer NWS = 0,
     parameter integer TWS = 0,
@@ -40,6 +43,8 @@ module ot_qwen_me_array_dvm_w12 #(
     parameter integer FAST_ISSUE = 0,
     parameter integer MUL_LAT = 5,
     parameter integer TREE_LAT = 3,
+    parameter integer NATIVE_AFFINE=0,
+    parameter integer STATIC_SCHEDULE=0,
     parameter integer TAP_MUT = 0,
     parameter integer LEAF_MUT = 0,
     parameter integer HEAD_MUT = 0
@@ -109,7 +114,7 @@ module ot_qwen_me_array_dvm_w12 #(
     localparam integer FW  = DESC + 2 + (AW - 6) + 6 + 64 + 1024;
     localparam integer HW  = 1 + IBW + FW;
     localparam integer CW  = 1 + IBW + 128 + 8;
-    localparam integer BD  = HB + DX + NH + 3;
+    localparam integer BD  = 3 + HB + DX + NH + 3;      // tap (3) + head row + head + corridor + tile
     localparam integer IREG = 1;
     localparam integer NREG = (NWS > 0) ? 1 : 0;
     localparam integer NPG = GT >> SMIN;
@@ -162,7 +167,8 @@ module ot_qwen_me_array_dvm_w12 #(
     wire [NT-1:0]   go_t;
     wire [NT*IBW-1:0] ib_t;
     ot_qfd_xdvm_fabric #(.AW(AW), .NW(NW), .XCW(XCW), .IL(IL), .NCOL(NCOL), .NH(NH), .TG(TG), .SMIN(SMIN), .SMAX(SMAX),
-        .HB(HB), .HBF(HBF), .DX(DX), .XOFF(XOFF), .TAP_MUT(TAP_MUT), .LEAF_MUT(LEAF_MUT), .HEAD_MUT(HEAD_MUT)) u_fab (
+        .HB(HB), .DX(DX), .FILL_LEAD(FILL_LEAD), .TIDM(TIDM), .XOFF(XOFF), .NATIVE_AFFINE(NATIVE_AFFINE),.STATIC_SCHEDULE(STATIC_SCHEDULE),.TAP_MUT(TAP_MUT), .LEAF_MUT(LEAF_MUT),
+        .HEAD_MUT(HEAD_MUT)) u_fab (
         .clk(clk), .rst_n(rst_n), .go_acc(go && ready), .ib(ib),
         .xpf_v(xpf_v), .xpf_xbase(xpf_xbase), .xpf_xcs(xpf_xcs), .xpf_xks(xpf_xks), .xpf_split(xpf_split),
         .xpf_k(xpf_k), .xpf_round(xpf_round), .sw_v(sw_v), .sw_a(sw_a), .sw_m(sw_m), .sw_d(sw_d),
@@ -233,9 +239,12 @@ module ot_qfd_xdvm_fabric #(
     parameter integer SMIN = 3,
     parameter integer SMAX = 5,
     parameter integer HB = 2,
-    parameter integer HBF = 2,
-    parameter integer DX = 9,
+    parameter integer DX = 10,
+    parameter integer FILL_LEAD = 2,
+    parameter integer TIDM = 1,
     parameter integer XOFF = 3,
+    parameter integer NATIVE_AFFINE=0,
+    parameter integer STATIC_SCHEDULE=0,
     parameter integer TAP_MUT = 0,
     parameter integer LEAF_MUT = 0,
     parameter integer HEAD_MUT = 0
@@ -270,28 +279,46 @@ module ot_qfd_xdvm_fabric #(
     localparam integer FW  = DESC + 2 + (AW - 6) + 6 + 64 + 1024;
     localparam integer HW  = 1 + IBW + FW;
     localparam integer CW  = 1 + IBW + 128 + 8;
-    // -- head row: the accepted go + ib, and the fill word ---------------------------------------------------------
-    wire [FW-1:0]  fo;
+    // -- the x tap: writes + the accepted go / ib -> the head-row word (one pipeline), HB head-row stages ------------
+    wire [HW-1:0]  hw0, he0;
     wire           tap_fault;
-    ot_qfd_xs_tap #(.AW(AW), .NW(NW), .XCW(XCW), .MUT(TAP_MUT)) u_tap (.clk(clk), .rst_n(rst_n),
+    wire [NCOL:0]  fch;                         // fault chain, outermost column first (fch[NCOL] = 0: no outer column)
+    ot_qfd_xs_tap #(.AW(AW), .NW(NW), .XCW(XCW),.NATIVE_AFFINE(NATIVE_AFFINE),.STATIC_SCHEDULE(STATIC_SCHEDULE), .MUT(TAP_MUT)) u_tap (.clk(clk), .rst_n(rst_n),
         .xpf_v(xpf_v), .xpf_xbase(xpf_xbase), .xpf_xcs(xpf_xcs), .xpf_xks(xpf_xks), .xpf_split(xpf_split),
         .xpf_k(xpf_k), .xpf_round(xpf_round), .sw_v(sw_v), .sw_a(sw_a), .sw_m(sw_m), .sw_d(sw_d),
-        .aw_v(aw_v), .aw_a(aw_a), .aw_m(aw_m), .aw_d(aw_d), .fo(fo), .fault(tap_fault));
-    wire           hg;
-    wire [IBW-1:0] hib;
-    wire [FW-1:0]  hf;
-    ot_hdc_delay #(.W(1), .D(HB), .RESET(1)) u_hg (.clk(clk), .rst_n(rst_n), .d(go_acc), .q(hg));
-    ot_hdc_delay #(.W(IBW), .D(HB)) u_hib (.clk(clk), .rst_n(rst_n), .d(ib), .q(hib));
-    // fill: valid bits reset, payload not
-    wire [FW-1:0]  fo_v = fo & ({{(FW-DESC-1){1'b0}}, 1'b1, {(DESC-1){1'b0}}, 1'b1});
-    wire [FW-1:0]  hf_v, hf_p;
-    ot_hdc_delay #(.W(FW), .D(HBF), .RESET(1)) u_hfv (.clk(clk), .rst_n(rst_n), .d(fo_v), .q(hf_v));
-    ot_hdc_delay #(.W(FW), .D(HBF)) u_hfp (.clk(clk), .rst_n(rst_n), .d(fo), .q(hf_p));
-    assign hf = (hf_p & ~({{(FW-DESC-1){1'b0}}, 1'b1, {(DESC-1){1'b0}}, 1'b1})) | hf_v;
-    wire [HW-1:0]  hw = {hf, hib, hg};
+        .aw_v(aw_v), .aw_a(aw_a), .aw_m(aw_m), .aw_d(aw_d), .gi({ib, go_acc}), .hw(hw0), .he(he0),
+        .fw_i(fch[0]), .fe_i(1'b0), .fault(tap_fault));
+    // head-row stages: valid bits (go, descriptor valid, data valid) reset, payload not
+    localparam [HW-1:0] VM = ({{(HW-1){1'b0}}, 1'b1}) | ({{(HW-1){1'b0}}, 1'b1} << (1 + IBW)) |
+                             ({{(HW-1){1'b0}}, 1'b1} << (1 + IBW + DESC));
+    wire [HW-1:0]  hv, hp;
+    ot_hdc_delay #(.W(HW), .D(HB), .RESET(1)) u_hv (.clk(clk), .rst_n(rst_n), .d(hw0 & VM), .q(hv));
+    ot_hdc_delay #(.W(HW), .D(HB)) u_hp (.clk(clk), .rst_n(rst_n), .d(hw0), .q(hp));
+    wire [HW-1:0]  hw = (hp & ~VM) | hv;
+    assign fch[NCOL] = 1'b0;
+    // tile id of (column, head row): rows 0 .. NH-1 = N stations outward (die row NH + s), NH .. 2NH-1 = S stations
+    // outward (die row NH - 1 - s); TIDM 1: 16 x block + morton(c mod 4, die row mod 4) (compute_spine.ref_tile_id,
+    // smaller blocks when NCOL or 2NH < 4)
+    function automatic integer tid(input integer c, input integer r);
+        integer dr, bc, br, lbc, lbr, blk, z, p, i;
+        begin
+            if (TIDM == 0) tid = c * 2 * NH + r;
+            else begin
+                dr = (r < NH) ? NH + r : NH - 1 - (r - NH);
+                bc = (NCOL >= 4) ? 4 : NCOL; br = (2 * NH >= 4) ? 4 : 2 * NH;
+                lbc = (bc >= 4) ? 2 : (bc >= 2) ? 1 : 0; lbr = (br >= 4) ? 2 : (br >= 2) ? 1 : 0;
+                blk = (c / bc) * (2 * NH / br) + dr / br;
+                z = 0; p = 0;
+                for (i = 0; i < 2; i = i + 1) begin
+                    if (i < lbc) begin z = z | (((c % bc) >> i) & 1) << p; p = p + 1; end
+                    if (i < lbr) begin z = z | (((dr % br) >> i) & 1) << p; p = p + 1; end
+                end
+                tid = bc * br * blk + z;
+            end
+        end
+    endfunction
 
     // -- columns ---------------------------------------------------------------------------------------------------
-    wire [NCOL-1:0] col_fault;
     genvar c, j, s, h;
     generate for (c = 0; c < NCOL; c = c + 1) begin : g_col
         wire [CW-1:0] cn, cs;
@@ -299,17 +326,22 @@ module ot_qfd_xdvm_fabric #(
         wire [11:0]   lw_off;
         wire [127:0]  lw_m;
         wire [2047:0] lw_d;
-        wire [NH*8-1:0] lw_ctl;
+        wire [NH*18-1:0] lw_ctl;
         wire [NH-1:0] lr_v, lr_t, lr_ep, lq_v, lq_bad;
         wire [NH*28-1:0] lr_p;
         wire [NH*64-1:0] lq;
-        wire [15:0]   tid0 = c * 2 * NH;
+        wire [16*2*NH-1:0] tids;
+        for (j = 0; j < 2 * NH; j = j + 1) begin : g_tid
+            localparam integer TJ = tid(c, j);
+            assign tids[16*j +: 16] = TJ;
+        end
         ot_qfd_xhead #(.AW(AW), .NW(NW), .XCW(XCW), .TG(TG), .IL(IL), .NH(NH), .SMIN(SMIN), .SMAX(SMAX), .DX(DX),
-            .MUT(HEAD_MUT)) u_head (.ck(clk), .rst_n(rst_n), .tid0(tid0), .a_d(hw), .a_r(), .b_d(), .b_r(1'b1),
+            .FILL_LEAD(FILL_LEAD),.NATIVE_AFFINE(NATIVE_AFFINE), .MUT(HEAD_MUT)) u_head (.ck(clk), .rst_n(rst_n), .tids(tids), .fault_i(fch[c+1]),
+            .a_d(hw), .a_r(), .b_d(), .b_r(1'b1),
             .n_d(cn), .n_r(1'b1), .s_d(cs), .s_r(1'b1),
             .lw_v(lw_v), .lw_ep(lw_ep), .lw_off(lw_off), .lw_m(lw_m), .lw_d(lw_d), .lw_ctl(lw_ctl),
             .lc_v(lc_v), .lc_ep(lc_ep), .lr_v(lr_v), .lr_t(lr_t), .lr_ep(lr_ep), .lr_p(lr_p),
-            .lq(lq), .lq_v(lq_v), .lq_bad(lq_bad), .fault(col_fault[c]));
+            .lq(lq), .lq_v(lq_v), .lq_bad(lq_bad), .fault(fch[c]));
         // two write chains (N: leaves 0 .. NH/2-1, S: NH/2 .. NH-1), each leaf one pin-register stage of the chain
         localparam integer NCH = NH / 2;
         for (h = 0; h < 2; h = h + 1) begin : g_ch
@@ -320,9 +352,9 @@ module ot_qfd_xdvm_fabric #(
             wire [5:0]    woff [0:NCH];
             wire [63:0]   wm [0:NCH];
             wire [1023:0] wd [0:NCH];
-            wire [NCH*8-1:0] wc [0:NCH];
+            wire [NCH*18-1:0] wc [0:NCH];
             assign cv[0] = lc_v[h]; assign cep[0] = lc_ep[h]; assign wv[0] = lw_v[h]; assign wep[0] = lw_ep[h];
-            assign woff[0] = lw_off[6*h +: 6]; assign wm[0] = lw_m[64*h +: 64]; assign wd[0] = lw_d[1024*h +: 1024]; assign wc[0] = lw_ctl[h*NCH*8 +: NCH*8];
+            assign woff[0] = lw_off[6*h +: 6]; assign wm[0] = lw_m[64*h +: 64]; assign wd[0] = lw_d[1024*h +: 1024]; assign wc[0] = lw_ctl[h*NCH*18 +: NCH*18];
             for (j = 0; j < NCH; j = j + 1) begin : g_leaf
                 localparam integer LF = h * NCH + j;
                 ot_qfd_xs_leaf #(.NCH(NCH), .MUT(LEAF_MUT)) u_leaf (.clk(clk), .rst_n(rst_n),
@@ -338,10 +370,10 @@ module ot_qfd_xdvm_fabric #(
             wire [CW-1:0] chain [0:NH];
             assign chain[0] = (h == 0) ? cn : cs;
             for (s = 0; s < NH; s = s + 1) begin : g_st
-                localparam integer T = c * 2 * NH + h * NH + s;
+                localparam integer T = tid(c, h * NH + s);
                 wire [IBW+128:0] tap;
                 ot_qfd_xcst #(.AW(AW), .NW(NW), .IL(IL), .XOFF(XOFF)) u_st (.ck(clk), .rst_n(rst_n), .sidx(s[2:0]),
-                    .a_d(chain[s]), .a_r(), .b_d(chain[s+1]), .b_r(1'b1), .tap_d(tap), .tap_r(1'b1));
+                    .a_d(chain[s]), .a_r(), .b_d(chain[s+1]), .b_r(1'b1), .tap_d(tap));
                 // equalise to the corridor's depth (the die's tiles run in lockstep)
                 wire [IBW+128:0] tq;
                 wire             tgq;
@@ -353,6 +385,6 @@ module ot_qfd_xdvm_fabric #(
             end
         end
     end endgenerate
-    assign x_fault = tap_fault | (|col_fault);
+    assign x_fault = tap_fault;                 // the columns' faults reach the tap along the head row's fault chain
 
 endmodule

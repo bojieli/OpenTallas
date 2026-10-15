@@ -20,7 +20,7 @@ headers) or from a non-loopback address are always served share-safe.
 import collections, datetime, json, os, signal, pathlib, re, subprocess, sys, threading, time
 from http.server import ThreadingHTTPServer, BaseHTTPRequestHandler
 from urllib.parse import urlparse, parse_qs
-import recorder, elements, explorer, coverage, landing, elem_shell, layout_service
+import recorder, elements, explorer, coverage, landing, elem_shell, layout_service, native_provenance
 
 HERE = pathlib.Path(__file__).resolve().parent
 CFG = json.loads(pathlib.Path(os.environ.get('FLEET_VIZ_HOSTS', HERE / 'fleet_hosts.json')).read_text())
@@ -446,6 +446,7 @@ TOKEN_PLACEHOLDER = (b'<!doctype html><meta charset="utf-8"><meta name="viewport
                      b'here (tools/fleet_viz/explorer/token/).</p><p><a style="color:#5ee7ff" href="/explorer">&larr; Chip Explorer</a></p>')
 # /explorer/coverage/...: the coverage matrix view (results/arch/coverage_20261008 ledgers, joined with /api/elements)
 COVERAGE_DIR = HERE / 'explorer' / 'coverage'
+NATIVE = native_provenance.NativeLifecycle(os.environ.get('FLEET_VIZ_REPO', '/home/ubuntu/OpenTallas'), TOKEN_DIR, ref=os.environ.get('FLEET_VIZ_NATIVE_REF', 'origin/main'))
 COVERAGE = coverage.Coverage(os.environ.get('FLEET_VIZ_REPO', '/home/ubuntu/OpenTallas'), ELEMENTS, TOKEN_DIR, log=log)
 # /explorer/element/...: per-element post-route pages (page + pages.json from the repo; data/ written by
 # tools/explorer_elem_export.py pack, never committed).  Share-safe requests get the data with raw names stripped.
@@ -455,6 +456,17 @@ _ELEM_CACHE = {}
 
 def elem_redact(o):
     """share-safe element data: no module / instance / pin / port / job / host / record names"""
+    if str(o.get('schema', '')).startswith('opentallas.elem_trace'):   # data/<element>.trace.json (Replay tab)
+        for k in ('job', 'bench', 'bench_why', 'netlist', 'dut_scope', 'source_commit', 'cell_models'): o[k] = ''
+        o['instances'] = []; o['provenance'] = dict(source=(o.get('provenance') or {}).get('source'))
+        for i, ln in enumerate(o.get('lanes') or []): ln['name'] = 'register %d' % (i + 1); ln['file'] = ln['line'] = None
+        for h in o.get('handshakes') or []: h['name'] = h.get('kind', '')
+        for t in o.get('transactions') or []: t[1] = ''
+        for g in o.get('icgs') or []: g['name'] = ''
+        o['ports'] = {}; o['flops'] = [[f[0], ''] for f in o.get('flops') or []]
+        m = o.get('mapping') or {}; m['netlist_not_in_db'] = []; m['db_not_in_netlist'] = []
+        x = o.get('exactness') or {}; x['bench_markers_gate'] = []
+        return o
     if str(o.get('schema', '')).startswith('opentallas.explorer_elem.index'):   # data/index.json (export index)
         for e in (o.get('elements') or {}).values():
             for k in ('job', 'block', 'reference'): e[k] = ''
@@ -592,6 +604,10 @@ class H(BaseHTTPRequestHandler):
             return self.send(200, json.dumps(stamp(dict(v=ver, verdicts=rows), safe), separators=(',', ':')).encode(), 'application/json')
         if u.path == '/api/elements':
             return self.send(200, json.dumps(stamp(ELEMENTS.snapshot(safe), safe), separators=(',', ':')).encode(), 'application/json')
+        if u.path == '/api/native/coverage':
+            if safe: return self.send(403, b'{"safe":true,"error":"native provenance is private"}', 'application/json')
+            o = NATIVE.api(q.get('design', [''])[0])
+            return self.send(200, json.dumps(o, separators=(',', ':')).encode(), 'application/json')
         if u.path in ('/api/coverage', '/api/coverage/version', '/api/coverage/token'):
             if safe: return self.send(403, b'{"safe":true,"error":"coverage is not part of the share-safe view"}', 'application/json')
             if u.path == '/api/coverage/version': o = COVERAGE.version()

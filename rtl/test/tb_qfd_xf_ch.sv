@@ -5,7 +5,7 @@
 // random delays.  NEG = 1: the sender ignores credits -> must FAIL (fault / loss).  OT_XF_MUT: must FAIL (data).
 `timescale 1ns/1ps
 module tb_qfd_xf_ch;
-    parameter integer N = 3000, NEG = 0, W = 1024;
+    parameter integer N = 3000, NEG = 0, W = 1024, IBUF = 4, OCRED = 4;
     parameter real HW = 1.0, HR = 1.35;
     reg wclk = 0, rclk = 0, rst_n = 0;
     always #HW wclk = ~wclk;
@@ -13,12 +13,12 @@ module tb_qfd_xf_ch;
     reg i_v = 0; reg [W-1:0] i_d = 0; reg o_cr = 0;
     wire i_cr, w_fault, o_v, r_fault; wire [W-1:0] o_d;
     wire f_cr, f_wf, f_v, f_rf; wire [W-1:0] f_d;
-    qfd_xf_ch #(.W(W)) u (.wck(wclk), .rck(rclk), .rst_n(rst_n), .i_v(i_v), .i_d(i_d), .i_cr(i_cr), .w_fault(w_fault),
+    qfd_xf_ch #(.W(W), .IBUF(IBUF), .OCRED(OCRED)) u (.wck(wclk), .rck(rclk), .rst_n(rst_n), .i_v(i_v), .i_d(i_d), .i_cr(i_cr), .w_fault(w_fault),
         .o_v(o_v), .o_d(o_d), .o_cr(o_cr), .r_fault(r_fault));
-    ot_qwen_die_cdc_ch #(.W(W), .PIPE(2)) f (.wclk(wclk), .wrst_n(rst_n), .i_v(i_v), .i_d(i_d), .i_cr(f_cr), .w_fault(f_wf),
+    ot_qwen_die_cdc_ch #(.W(W), .IBUF(IBUF), .OCRED(OCRED), .PIPE(2)) f (.wclk(wclk), .wrst_n(rst_n), .i_v(i_v), .i_d(i_d), .i_cr(f_cr), .w_fault(f_wf),
         .rclk(rclk), .rrst_n(rst_n), .o_v(f_v), .o_d(f_d), .o_cr(o_cr), .r_fault(f_rf));
     reg [W-1:0] sent [0:N];
-    integer ns = 0, nr = 0, bad = 0, dw = 0, dr = 0, cw = 0, cr = 0, credits = 4, seed = 3, k;
+    integer ns = 0, nr = 0, bad = 0, dw = 0, dr = 0, cw = 0, cr = 0, credits = IBUF, seed = 3, k;
     reg [W-1:0] seen1 = 0, seen0 = 0;
     initial begin if (!$value$plusargs("SEED=%d", seed)) seed = 3; end
     reg [3:0] crpipe = 0;

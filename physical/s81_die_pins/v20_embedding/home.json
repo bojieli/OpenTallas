@@ -1,0 +1,26 @@
+{
+ "name": "sp_embed_expand",
+ "master": "ot_s81_embed_expand",
+ "at_um": [
+  15120.0,
+  22770.0
+ ],
+ "outline": {
+  "w": 216.0,
+  "h": 216.0
+ },
+ "clock": "stream_1p2",
+ "role": "S000 source/input role; ordinary layer1 c8 excludes engine9 and must not falsely bind it",
+ "engine": 9,
+ "geometry": "xsp7 full instance plan at exact rectangle:0collisions; new MIX ends15094.8 leaving25.2umgap",
+ "memory": {
+  "master": "ot_sram_1r1w_512x128_m4_r2c2",
+  "count": 2,
+  "size_um": [
+   174.096,
+   29.7
+  ]
+ },
+ "pin_file": "physical/s81_die_pins/v20_embedding/ot_s81_embed_expand.tcl",
+ "qualification": "NATIVE_LEAF_RESERVATION; role-specific controller and full-table ROM topology OPEN"
+}
