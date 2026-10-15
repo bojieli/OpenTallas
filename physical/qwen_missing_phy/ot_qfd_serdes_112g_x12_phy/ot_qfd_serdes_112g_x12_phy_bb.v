@@ -7,8 +7,8 @@ module ot_qfd_serdes_112g_x12_phy (
     input wire rst_n,
     output wire tx_up,
     input wire tx_v,
-    input wire [1040:0] tx_flit,
+    input wire [1042:0] tx_flit,
     output wire rx_v,
-    output wire [1040:0] rx_flit
+    output wire [1042:0] rx_flit
 );
 endmodule

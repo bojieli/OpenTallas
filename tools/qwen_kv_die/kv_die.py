@@ -64,7 +64,7 @@ ASTK_W = 220.32                  # stack aggregator (re-cut D) MEASURED: 8 exp q
 LAND_CHAN = 2.4 + 216.0
 LAND_W = 172.8                  # KV landing column: 8 x 32 crossbar, 8 KV merges, emb strip (ASSUMED; r21c qfd_kvc 96.7)
 UCIE = ('ot_qkvd_ucie_x64_phy', 777.6, 777.6)
-SERDES = ('ot_qfd_serdes_112g_x12_phy', 2400.0, 1512.0)
+SERDES = ('ot_qfd_serdes_112g_x12_phy', 2320.056, 1563.57)  # actual native host RXD512 / FDI1043 profile
 FRAMES = dict(qkd_ckbump=(43.2, 43.2), qkd_d2d=(777.6, 518.4), qkd_seq=(777.6, 518.4), qkd_embgw=(388.8, 388.8), qkd_pll=(324.0, 324.0),
               qkd_ahub=(648.0, 648.0), qkd_host=(777.6, 518.4))
 RELAY_PITCH = 430.56
@@ -77,7 +77,7 @@ CHAN = 129.6                    # routing / relay channel beside every column (u
 STACKS = ('WS', 'WN', 'ES', 'EN')
 W = 528
 FDI_UCIE = 1 + 1 + 548 + 1 + 548
-FDI_SERDES = 1 + 1 + 1041 + 1 + 1041
+FDI_SERDES = 1 + 1 + 1043 + 1 + 1043
 # re-cut H control tile <-> aggregator: start, T, cyc8, q beat {valid, beat, 512 b}, exp_done, er_data, node credit
 ENG_IN = 1 + 14 + 3 + 1 + 6 + 512 + 32 + 64 + 1
 # er, sc, lmax, node beat tags {valid, beat, g, gam}, k/v_done, fault (the 4,096-b node data leaves from the head tiles)
