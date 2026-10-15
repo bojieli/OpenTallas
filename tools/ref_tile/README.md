@@ -183,7 +183,9 @@ EARLY_FAIL_*, or a NEEDS_HUMAN route crash) takes a new job only when the spec c
 
 See /home/ubuntu/claude-takeover-20261007/ref-flow-1011.log (cases, numbers, job names).
 
-For a fleet-selected synthesis or CTS gate, use `--remote auto`. The gate asks `ot-run --pick` for a host with measured headroom, ships the inputs there, then runs through `ot-run --hosts <chosen>` with one resource reservation. An explicit host keeps the existing `ot-heavy` path.
+For a fleet-selected synthesis or CTS gate, use `--remote auto`. The gate asks `ot-run --pick` for a host with measured headroom, ships the inputs there, then runs through `ot-run --hosts <chosen>` with one resource reservation. An explicit host uses the same admission checks restricted to that host.
+
+The default work/output disk reserve is 20 GiB. Set a positive finite `gate_disk_gb` in the tile spec, or override it with `--disk GB`. Host selection checks the scratch filesystem and adds the measured compressed snapshot size, its estimated unpacked allocation, and 1 GiB for metadata and rounding. Runtime admission checks again after upload, adding extraction space to the work/output reserve. Both integer GiB thresholds and snapshot sizes are recorded in `source_binding.disk_admission`. These checks do not reserve disk against concurrent jobs; a runtime refusal preserves the uploaded snapshot and does not start synthesis.
 
 CTS gates measure every external clock from the actual CTS SDC. The measured clock exception uses the insertion and spread of the largest synthesized root's own source port. A secondary root cannot use the primary clock's measurement; an unmatched root has no measured exception.
 
