@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # tb_hgi_coll_rgx_wtx: the SW quadrant engine's ROW_GATHER write path across the die net (wtx -> relays -> snkm).
 # usage: run_rgx_wtx_bench.sh <outdir>   positive at RLY 0 / 6 / 20 (CRD 16), and the mutants SNK_MUT 1, SNK_MUT 2, CRD_MUT 1 (must FAIL)
-set -u
+set -uo pipefail
 R=$(cd "$(dirname "$0")/../../../../.." && pwd); O=$(realpath -m "$1"); mkdir -p "$O"
 V=${VERILATOR:-$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator}
 C=rtl/hbm_accel/generic
@@ -18,4 +18,4 @@ run() { # name expect params...
 }
 { run rly0 PASS -GRLY=1; run rly6 PASS -GRLY=6; run rly20 PASS -GRLY=20; run crd4 PASS -GRLY=12 -GCRD=4
   run mut_snk1 FAIL -GSNK_MUT=1; run mut_snk2 FAIL -GSNK_MUT=2; run mut_crd FAIL -GCRD_MUT=1; } | tee "$O/SUMMARY"
-grep -q WRONG "$O/SUMMARY" && { echo "RGX_WTX FAIL"; exit 1; } || echo "RGX_WTX PASS"
+grep -q "WRONG\|BUILD_FAIL" "$O/SUMMARY" && { echo "RGX_WTX FAIL"; exit 1; } || echo "RGX_WTX PASS"

@@ -19,8 +19,9 @@ module tb_hgi_coll_qtkm;
     parameter integer MUT_TKM = 0;
     parameter integer RLY = 8, TCRD = 8, CRL_MUT = 0;
     parameter integer LATC = 453, CRED = 137;
+    parameter integer INJLAT = 12, INJSU = INJLAT;
     localparam integer NMAX = 2048, GMAX = 96;
-    localparam integer LANES = 16, FW = 512, PWT = FW + 33, NPT = 8, INJ = 2, DEL = 4;
+    localparam integer LANES = 16, FW = 512, PWT = FW + 33, NPT = 3, INJ = 2, DEL = 4;
     reg clk = 0, rst_n = 0;
     always #0.4167 clk = ~clk;
     // ---------------------------------------------------------------- case
@@ -36,7 +37,7 @@ module tb_hgi_coll_qtkm;
     // ---------------------------------------------------------------- DUT
     reg  [967:0] rec; reg [553:0] recx; reg [39:0] cfg;
     wire [2:0] ret;
-    wire [INJ*16-1:0] ii; wire [INJ-1:0] ir; reg [4*INJ*FW-1:0] injq;
+    wire [INJ*16-1:0] ii; wire [INJ-1:0] ir; wire [4*INJ*FW-1:0] injq;
     wire [NPT-1:0] txv, rxc; wire [NPT*PWT-1:0] txf; reg [NPT-1:0] crr, rxv; reg [NPT*PWT-1:0] rxf;
     wire [DEL-1:0] dv; wire [DEL*PWT-1:0] dfl; wire flt; wire [31:0] cst; wire [93:0] rfo; wire [79:0] vma;
     wire [INJ*80-1:0] iad; wire tw_v; wire [39:0] tw_a; wire [15:0] tw_m; wire [FW-1:0] tw_d; reg tw_r;
@@ -44,7 +45,7 @@ module tb_hgi_coll_qtkm;
     // stages each way by credit flow (ot_hgi_coll_crl_tx in the engine, ot_hgi_coll_crl_rx in ot_hgi_coll_vmport) to the
     // VM write model (valid / ready with +WSTALL back-pressure)
     wire q_v, q_r, q_idle, t_v, f_cr, ctxf, crxf; wire [39:0] q_a; wire [15:0] q_m; wire [FW-1:0] q_d; wire [FW+55:0] t_d, o_d;
-    ot_hgi_coll_qep #(.QSOLO(0), .SOLO_CAP(1), .PFMAX(512), .TKM(1), .TKM_KMAX(TKM_KMAX), .MUT_TKM(MUT_TKM), .NPT(NPT), .PIPE(1),
+    ot_hgi_coll_qep #(.INJLAT(INJLAT), .QSOLO(0), .SOLO_CAP(1), .PFMAX(512), .TKM(1), .TKM_KMAX(TKM_KMAX), .MUT_TKM(MUT_TKM), .NPT(NPT), .PIPE(1),
                       .RGXHW(1), .RFMT(0)) u_ce (.clk(clk), .rst_n(rst_n), .pclk(clk), .prst_n(rst_n), .qid(2'd0),
         .rank(8'd0), .pf(16'd0), .go(1'b0),
         .inj_idx(ii), .inj_rd(ir), .inj_q(injq), .ph_tx_v(txv), .ph_tx_flit(txf), .sw_cr_ret(crr),
@@ -63,17 +64,30 @@ module tb_hgi_coll_qtkm;
         .f_cr(f_cr), .out_v(tw_v), .out_d(o_d), .out_rdy(tw_r), .fault(crxf));
     assign tw_a = o_d[FW+55 -: 40]; assign tw_m = o_d[FW+15 -: 16]; assign tw_d = o_d[FW-1:0];
     // ---------------------------------------------------------------- inject model (two 8-word halves a flit)
+    reg [4*INJ*FW-1:0] inj_now;
     always @* begin
-        injq = 0;
+        inj_now = 0;
         for (integer i = 0; i < INJ; i = i + 1) if (ir[i]) begin
             integer f, lo, hi; f = int'(ii[16*i +: 16]);
             lo = int'(iad[80*i +: 40]); hi = int'(iad[80*i + 40 +: 40]);
             for (integer j = 0; j < 8; j = j + 1) begin
-                injq[(f % 4) * INJ * FW + i * FW + 32 * j +: 32] = vm[(lo + j) & 262143];
-                injq[(f % 4) * INJ * FW + i * FW + 32 * (8 + j) +: 32] = vm[(hi + j) & 262143];
+                inj_now[(f % 4) * INJ * FW + i * FW + 32 * j +: 32] = vm[(lo + j) & 262143];
+                inj_now[(f % 4) * INJ * FW + i * FW + 32 * (8 + j) +: 32] = vm[(hi + j) & 262143];
             end
         end
     end
+    // Real quadrant shape: the SU responds after the die transport latency, never on the request edge.
+    // INJSU differs from INJLAT only for the response-latency mutant.
+    generate if (INJSU == 0) begin : g_inj0
+        assign injq = inj_now;
+    end else begin : g_inj_lat
+        reg [4*INJ*FW-1:0] inj_pipe [0:INJSU-1];
+        always @(posedge clk) begin
+            inj_pipe[0] <= rst_n ? inj_now : '0;
+            for (integer j = 1; j < INJSU; j = j + 1) inj_pipe[j] <= inj_pipe[j-1];
+        end
+        assign injq = inj_pipe[INJSU-1];
+    end endgenerate
     function automatic [FW-1:0] peer_flit(input integer q, input integer m);
         reg [FW-1:0] d;
         d = '0;
