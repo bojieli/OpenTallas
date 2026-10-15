@@ -55,7 +55,7 @@ def compare(dump,projection):
         old,new=dist(before),dist(after)
         rows.append(dict(bus=b['b'],bits=b['n'],old_pin_span_um=round(old,3),new_pin_span_um=round(new,3),delta_um=round(new-old,3),old_geometric_hops=math.ceil(old/490),new_geometric_hops=math.ceil(new/490)))
     clocks=[]
-    for n in changed:
+    for n in sorted(changed):
         i=before[n]
         for p,r in plans.get(i['m'],{}).items():
             if p.startswith('ck'):
