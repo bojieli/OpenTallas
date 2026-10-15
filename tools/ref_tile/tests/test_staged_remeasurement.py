@@ -24,8 +24,8 @@ class StagedRemeasurement(unittest.TestCase):
         (self.run/'routes/gate/work/orfs/config.mk').write_text('actual physical config')
         canonical=SB.staged_measurement_script(self.script.read_text(),self.run).encode()
         (self.run/'staged_remeasurement.sh').write_bytes(canonical)
-        self.log=b'RECOVERY_STAGED_REMEASUREMENT\nGATE_DONE\n';(self.run/'staged_remeasurement.log').write_bytes(self.log)
-        self.receipt=dict(schema='opentallas.ref_tile.staged_remeasurement.v1',original_archive_stdout='unavailable',
+        self.log=('GATE_TOOL_IMAGE_ID=sha256:'+'a'*64+' GATE_TOOL_IMAGE_DIGESTS=[]\nRECOVERY_STAGED_REMEASUREMENT\nGATE_DONE\n').encode();(self.run/'staged_remeasurement.log').write_bytes(self.log)
+        self.receipt=dict(schema='opentallas.ref_tile.staged_remeasurement.v1',original_archive_stdout='unavailable',tool_image_identity='sha256:'+'a'*64,
             original_script_sha256=self.b['remote_script_sha256'],manifest_sha256=self.b['manifest_sha256'],
             artifacts_sha256=SB.staged_measurement_artifacts(self.run),measurement_script_sha256=hashlib.sha256(canonical).hexdigest(),
             measurement_log_sha256=hashlib.sha256(self.log).hexdigest(),new_measurement_only=True,physical_thresholds='unchanged')
@@ -66,6 +66,20 @@ class StagedRemeasurement(unittest.TestCase):
         with self.assertRaisesRegex(ValueError,'persisted measurement log'):self.recover()
     def test_caller_boolean_is_not_receipt(self):
         self.assertFalse(SB.staged_remeasurement_matches_log(dict(self.b,staged_remeasurement=True),self.log))
+    def test_reported_flow_error_rejected(self):
+        with self.assertRaisesRegex(ValueError,'flow error'):SB.staged_measurement_image(self.log+b'GATE_FLOWERR actual failure\n')
+        self.assertFalse(SB.staged_remeasurement_matches_log(self.recover(),self.log+b'GATE_FLOWERR actual failure\n'))
+    def test_nonzero_flow_status_rejected(self):
+        with self.assertRaisesRegex(ValueError,'nonzero flow status'):SB.staged_measurement_image(self.log+b'GATE_FLOW_RC=2\n')
+    def test_image_identity_required(self):
+        with self.assertRaisesRegex(ValueError,'image identity'):SB.staged_measurement_image(b'GATE_DONE\n')
+    def test_altered_image_receipt_rejected(self):
+        self.receipt['tool_image_identity']='sha256:'+'b'*64
+        (self.run/'staged_remeasurement.json').write_text(json.dumps(self.receipt))
+        with self.assertRaisesRegex(ValueError,'receipt differs'):self.recover()
+    def test_altered_image_log_rejected(self):
+        log=self.log.replace(b'a'*64,b'b'*64)
+        with self.assertRaisesRegex(ValueError,'receipt differs'):SB.recover_staged_remeasurement(self.b,self.run,self.script,log)
     def test_duplicate_run_rejected(self):
         with self.assertRaisesRegex(ValueError,'already has a receipt'):SB.run_staged_remeasurement(self.b,self.run,self.script)
     def test_requested_route_and_overlay_failures_remain(self):
