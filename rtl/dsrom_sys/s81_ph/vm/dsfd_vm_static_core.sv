@@ -100,12 +100,13 @@ module dsfd_vm_static_core #(parameter integer READ_PIPE=0) (
         end
     end endgenerate
     wire [17:0] n_v; wire [251:0] n_row; wire [89:0] n_slot; wire [2:0] n_group; wire [11:0] a_v; wire [167:0] a_row;
-    wire rel_v; wire [2:0] rel_g; wire [31:0] rel_m; wire [17:0] exp_v; wire [89:0] rel_s; wire [11:0] aux_exp;
+    wire rel_v; wire [2:0] rel_g; wire [31:0] rel_m; wire pre_v; wire [2:0] pre_g; wire [31:0] pre_m; wire [17:0] exp_v; wire [89:0] rel_s; wire [11:0] aux_exp;
     wire [419:0] obs_row; wire [19:0] mx_exp; wire [99:0] mx_sl; wire r_flt;
     dsfd_vm_static_rsched u_rs (.ck(ck_rsched), .rst_n(rst_rsched_n), .su_v(f_su_rqv), .su_row(f_su_rq), .hc_v(f_hc_rqv), .hc_row(f_hc_rq),
         .aux_v(aux_v), .aux_row(aux_row), .mx_v(f_mx_rqv), .mx_row(f_mx_rq),
         .mx_expected(mx_exp), .mx_rslot(mx_sl), .sched_fault(r_flt), .n_v(n_v), .n_row(n_row), .n_slot(n_slot), .n_group(n_group), .a_v(a_v), .a_row(a_row),
-        .release_v(rel_v), .release_group(rel_g), .release_mask(rel_m), .expected_v(exp_v), .release_slot(rel_s),
+        .release_v(rel_v), .release_group(rel_g), .release_mask(rel_m), .prepare_v(pre_v), .prepare_group(pre_g), .prepare_mask(pre_m),
+        .expected_v(exp_v), .release_slot(rel_s),
         .aux_expected(aux_exp), .obs_row(obs_row));
     reg pq_bad;
     always @(posedge ck) if (!rn) pq_bad <= 1'b0; else if (f_pqx[0] && (f_pqx[19] || f_pqx[6:1] != 6'd0)) pq_bad <= 1'b1;
@@ -152,7 +153,7 @@ module dsfd_vm_static_core #(parameter integer READ_PIPE=0) (
 
     // ---------------------------------------------------------------- native memory
     wire [71:0] nat_v; wire [9215:0] nat_d; wire [127:0] grp_v; wire [16383:0] grp_d; wire [11:0] grp_id;
-    wire [127:0] cm_v; wire [1151:0] cm_a; wire [511:0] cm_m; wire [1023:0] cm_t; wire [27:0] m_flt;
+    wire [127:0] cm_v; wire [1151:0] cm_a; wire [511:0] cm_m; wire [1023:0] cm_t; wire [39:0] m_flt;
     dsfd_vm_static512_suhc u_mem (.ck_rscatter(ck_mem_fsr), .ck_wcapture(ck_mem_wcapture),.ck_wscatter(ck_mem_wscatter), .ck_return(ck_mem_return), .ck_bank(ck_mem_bank),
         .ck_relay_req(ck_mem_relay_req), .ck_relay_rsp(ck_mem_relay_rsp),
         .rst_rscatter_n(rst_mem_fsr_n), .rst_return_n(rst_mem_return_n), .rst_bank_n(rst_mem_bank_n),
@@ -161,6 +162,7 @@ module dsfd_vm_static_core #(parameter integer READ_PIPE=0) (
         .aux_rq_v(a_v), .aux_rq_row(a_row),
         .wq_v(wq_v), .wq_row(wq_row), .wq_mask(wq_mask), .wq_data(wq_data), .wq_tag(wq_tag),
         .release_v(rel_v), .release_group(rel_g), .release_mask(rel_m),
+        .prepare_v(pre_v), .prepare_group(pre_g), .prepare_mask(pre_m),
         .native_expected_v(exp_v), .native_release_slot(rel_s),
         .native_v(nat_v), .native_data(nat_d), .group_v(grp_v), .group_data(grp_d), .group_id(grp_id),
         .commit_v(cm_v), .commit_addr(cm_a), .commit_mask(cm_m), .commit_tag(cm_t), .fault(m_flt));

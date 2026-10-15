@@ -6,7 +6,7 @@ set -u
 S=$1; O=$2; READS=${3:-4000}; mkdir -p "$O"
 V=$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator
 FILES="dsfd_vm_static_fsr_bank8.sv dsfd_vm_static_fsr_quartets.sv dsfd_vm_static_read_leaf.sv dsfd_vm_static_read_quartets.sv dsfd_vm_static_read_valid.sv dsfd_vm_static_read_valid_quartets.sv dsfd_vm_static_read_router.sv dsfd_vm_static_suhc_fsr.sv dsfd_vm_static_suhc_return_map.sv dsfd_vm_static_write_capture128.sv dsfd_vm_static_scatter_b8_out.sv dsfd_vm_static_scatter_lane.sv dsfd_vm_static_scatter.sv dsfd_vm_static_bank128.sv
- dsfd_vm_static_relay128.sv dsfd_vm_static_relay128_b8.sv dsfd_vm_static_relay128_b4.sv dsfd_vm_static_slice128_suhc.sv dsfd_vm_static_return.sv dsfd_vm_static512_suhc.sv
+ dsfd_vm_static_relay128.sv dsfd_vm_static_relay128_b8.sv dsfd_vm_static_relay128_b4.sv dsfd_vm_static_slice128_suhc.sv dsfd_vm_static_return.sv dsfd_vm_static_return_bank8.sv dsfd_vm_static_return_bank8_profiles.sv dsfd_vm_static_return32_native_lanes.sv dsfd_vm_static512_suhc.sv
  ot_sram_1r1w_512x128_m4_r2c2.v dsfd_vm_static_wdispatch128.sv dsfd_vm_static_wstage128.sv dsfd_vm_static_w0.sv dsfd_vm_static_wcontrol.sv dsfd_vm_static_wsched.sv
  dsfd_vm_static_rsched.sv dsfd_vm_static_landing.sv dsfd_vm_seq_static.sv dsfd_vm_static_core.sv tb_dsfd_vm_static_core.sv"
 F=""; for f in $FILES; do F="$F $S/$f"; done
