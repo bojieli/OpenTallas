@@ -1,0 +1,18 @@
+{
+  "name": "hcoll-pinreg-store141-dec64f320-tc",
+  "status": "READY",
+  "host": "ot-epyc1tb",
+  "run": "/srv/opentallas/claude/closure-loop/hcoll-pinreg-store141-dec64f320-tc",
+  "events": [
+    "2026-10-15T01:10:21-07:00 ingested from /tmp/claude-review-20261003/closure_jobs/hcoll-pinreg-store141-dec64f320-tc.json",
+    "2026-10-15T01:10:23-07:00 submit lint PASS (estimate {'W': 0.01, 'N': 1.41, 'S': 1.54} b/um, limit 12.0); PASS rtl_boundary ot_hgi_coll_static_pinreg_store: registered boundary (in->reg 0, reg->out 0 levels)",
+    "2026-10-15T01:10:23-07:00 macro_grid PASS: macro grid: physical/hcoll_seq612_1015/place.tcl 1 macros on-grid",
+    "2026-10-15T01:10:23-07:00 ref gate PASS: pre-route gate PASS",
+    "2026-10-15T01:10:40-07:00 git-mirror sync dec64f3201df via upstream in 2s + extract 2s; 247 views / 0.4 GB hard-linked from the host view store",
+    "2026-10-15T01:10:45-07:00 source dec64f3201df synced to ot-epyc1tb:/srv/opentallas/claude/closure-loop/hcoll-pinreg-store141-dec64f320-tc/src",
+    "2026-10-15T01:10:48-07:00 launched bench_native_three_laps (attempt 1) on ot-epyc1tb",
+    "2026-10-15T01:11:33-07:00 bench_native_three_laps PASS (rc=0) WARN: pass log has no count line (set min_count_regex)"
+  ],
+  "qualification": "Exact native leaf positive passed; negative, CTS, route and corners remain pending.",
+  "source": "dec64f3201df"
+}
