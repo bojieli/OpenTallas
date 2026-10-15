@@ -1,0 +1,4 @@
+TB_VMCORE RESULT mode 0 cycles 3210 commits 69696 K 12 reads 19745 pq 514 mix_reads 4010 mix_writes 1000 rows_checked 25811 dones 4 cmds 4 bad 0
+TB_VMCORE PASS mode 0
+- /srv/opentallas-scratch/codex/s81-vm-scatter-pipe-1103/out/scatter1/src/tb_dsfd_vm_static_core.sv:338: Verilog $finish
+RAW_READ_FIXED PASS pin_to_macro=7 output_latency=16 actual_ports=103244 expected_ports=103244 compared_cycles=1750 bad=0

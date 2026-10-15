@@ -1,0 +1,98 @@
+import copy
+import importlib.util
+import sys
+import tempfile
+import unittest
+from pathlib import Path
+
+HERE = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(HERE))
+spec = importlib.util.spec_from_file_location('reservations', HERE / 'static_vm_reservations.py')
+m = importlib.util.module_from_spec(spec); spec.loader.exec_module(m)
+import vm_service_profile as VSP  # noqa: E402
+
+NAME = 's81_vm_r4_c2_w1'
+
+
+class SelectedProfileTests(unittest.TestCase):
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        self.root = Path(self.tmp.name)
+        for p in VSP.PROFILES[NAME]['receipts'] + VSP.RTL_SOURCES:
+            f = self.root / p; f.parent.mkdir(parents=True, exist_ok=True); f.write_text('pinned ' + p)
+        self.contract = dict(stream_period_ps=833, vm_period_ps=833, stream_phase_ps=0, vm_phase_ps=0,
+            banks=32, bank_queue_capacity=4, bank_ops_per_cycle=1, read_ingress_per_cycle=1, write_ingress_per_cycle=1,
+            request_min_ps=0, read_min_ps=0, commit_min_ps=0,
+            slot_capacity={'su/write/0': 1, 'su/read/0': 1}, client_capacity={'su': 2},
+            vm_service_profile=dict(name=NAME, rtl_tuple=dict(READ_PIPE=4, CAP_PIPE=2, WSCATTER_PIPE=1),
+                                    evidence=VSP.evidence_for(NAME, self.root)))
+        # write at pin P=0 lane 0: raw w_ce P+10, returned commit P+12; dependent read at Q=4: raw r_ce Q+7=11 > 10
+        self.schedule = dict(trace_complete=True, events=[
+            dict(id='w', kind='write', client='su', slot=0, row=64, tag=0, lane=0, issue_cycle=0, ingress_cycle=1,
+                 bank_enqueue_cycle=1, service_cycle=10, raw_cycle=10, commit_cycle=12, deadline_cycle=12),
+            dict(id='r', kind='read', client='su', slot=0, row=64, tag=1, issue_cycle=4, ingress_cycle=5,
+                 bank_enqueue_cycle=5, service_cycle=11, raw_cycle=11, response_cycle=20, deadline_cycle=20)],
+            jobs=[dict(client='su', tag=0, done_cycle=12), dict(client='su', tag=1, done_cycle=20)],
+            dependencies=[dict(producer='w', consumer='r')])
+
+    def tearDown(self):
+        self.tmp.cleanup()
+
+    def run_check(self):
+        return m.check(self.schedule, self.contract, source_root=self.root)
+
+    def kinds(self):
+        r = self.run_check()
+        return {x['kind'] for x in r['violations']} | ({'invalid:' + f for v in r['violations'] for f in v.get('fields', [])})
+
+    def test_exact_selected_calendar_passes(self):
+        snap = copy.deepcopy(self.schedule)
+        r = self.run_check()
+        self.assertEqual(r['status'], 'pass', r['violations']); self.assertFalse(r['qualified'])
+        self.assertEqual(r['vm_service_profile'], NAME); self.assertEqual(snap, self.schedule)
+
+    def test_raw_read_one_edge_early_rejected(self):
+        # Q = P+3: raw read P+10 on the same edge as the raw write -> old value (read-before-write)
+        self.schedule['events'][1].update(issue_cycle=3, raw_cycle=10, service_cycle=10, response_cycle=19, deadline_cycle=19)
+        self.schedule['jobs'][1]['done_cycle'] = 19
+        self.assertIn('profile_consume_before_raw_write', self.kinds())
+
+    def test_legal_raw_read_before_returned_commit_admitted(self):
+        # Q=P+4 reads at raw P+11, before the returned commit P+12: legal (returned commit is only the done fence)
+        self.assertNotIn('consume_before_commit', self.kinds())
+
+    def test_stale_l15_read_minimum_rejected(self):
+        self.schedule['events'][1].update(response_cycle=19, deadline_cycle=19)
+        self.assertIn('profile_read_return_edge', self.kinds())
+
+    def test_stale_k11_commit_rejected(self):
+        self.schedule['events'][0].update(commit_cycle=11, deadline_cycle=11)
+        self.assertIn('profile_write_returned_commit_edge', self.kinds())
+
+    def test_lane_shifts_write_edges(self):
+        self.schedule['events'][0].update(lane=2)
+        k = self.kinds()
+        self.assertIn('profile_write_raw_edge', k); self.assertIn('profile_write_returned_commit_edge', k)
+
+    def test_missing_lane_rejected(self):
+        del self.schedule['events'][0]['lane']
+        self.assertIn('profile_write_lane_unbound', self.kinds())
+
+    def test_stale_source_invalidates_profile(self):
+        (self.root / VSP.RTL_SOURCES[0]).write_text('edited')
+        self.assertTrue(any(x.startswith('invalid:vm_service_profile_stale') for x in self.kinds()))
+
+    def test_wrong_tuple_invalidates_profile(self):
+        self.contract['vm_service_profile']['rtl_tuple']['WSCATTER_PIPE'] = 0
+        self.assertIn('invalid:vm_service_profile_rtl_tuple_mismatch', self.kinds())
+
+    def test_no_profile_keeps_legacy_minima(self):
+        del self.contract['vm_service_profile']
+        self.contract['measured_native_bounds'] = True
+        r = self.run_check()
+        self.assertNotIn('vm_service_profile', [v['kind'] for v in r['violations']])
+        self.assertIsNone(r['vm_service_profile'])
+
+
+if __name__ == '__main__':
+    unittest.main()
