@@ -35,6 +35,8 @@ def main():
     recs = []
     # production-like MTP rows: VM logits slice (REPL), and the SU STREAM with / without the Markov bias
     recs.append(dict(mode=0, n=2048, am=1, a=4096, imm=2048, o=60000, ois=1, kind=2, prod=True))
+    # DS G25 rank-0 programme shape (ds_rank0_program.json ARGMAX.LOCAL: A STREAM n 1347, O VM n 2): the ledger row
+    recs.append(dict(mode=1, n=1347, am=0, a=0, imm=1347, o=60048, ois=1, kind=2, bias=0, gap=0, prod=True))
     recs.append(dict(mode=1, n=1024, am=0, a=0, imm=1024, o=60016, ois=1, kind=2, bias=0, gap=0, prod=True))
     recs.append(dict(mode=1, n=1024, am=0, a=0, imm=1024, o=60032, ois=3, kind=2, bias=1, gap=0, prod=True))
     for i in range(24):
