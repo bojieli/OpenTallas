@@ -108,8 +108,9 @@ module tb_hgi_hc_programmed_mtp_static(input wire clk,sink_clk);
                 if(tailseen!=pc+1)$fatal(1,"programmed tail missing");
                 if(pc==npos-1)begin
                     $display("HC_PROGRAMMED_MTP_DONE npos=%0d rows=%0d tails=%0d cycles=%0d",npos,seen,tailseen,cycle);$finish;
+                end else begin
+                    pc<=pc+1;loadimage(1,pc+1);state<=6;cfgi<=0;
                 end
-                pc<=pc+1;loadimage(1,pc+1);state<=6;cfgi<=0;
             end
         end
         if(cycle>85000)$fatal(1,"programmed MTP bench watchdog");

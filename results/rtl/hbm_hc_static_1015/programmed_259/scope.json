@@ -1,0 +1,15 @@
+{
+  "positive_npos6": {
+    "exact_projection_words": 144,
+    "exact_tail_words": 144,
+    "cycles_with_programme_reconfig": 59145
+  },
+  "positive_npos8": {
+    "exact_projection_words": 192,
+    "exact_tail_words": 192,
+    "cycles_with_programme_reconfig": 76785
+  },
+  "mutant": "actual programme PC bit corrupt at instruction1024, correctly faults row0 atage1024",
+  "post_finish_warning": "Pinned exact8 bench calls loadimage for position8 after $finish, causing missing-file warning after successful144/192word proof; follow-up bench prevents that unreachable next transaction",
+  "qualification": "actualprogrammeSRAM\u2192HCoperandSRAM\u2192projection\u2192tail component only; externalstaging, notnativefullchip/physical/throughput"
+}
