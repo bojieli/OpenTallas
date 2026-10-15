@@ -23,13 +23,14 @@ module ot_qwen_rom_tile_w12 #(parameter ROM_TILE=-1, NW=18,GT=6144,SMIN=7,CODE_B
 endmodule
 
 module tb_qfd_tile_nk_slot;
+    parameter integer MASK_TILE=-1; // nonnegative mismatched identity must fail before compute
     reg ck = 0, rst_n = 0;
     always #1 ck = ~ck;
     reg  [507:0] tap = 0;
     reg  [15:0]  tid = 16'h0;
     reg  [513:0] a = 0, b = 0;
     wire [513:0] to, ny;
-    qfd_tile_nk dut (.ck(ck), .ck_rp0(ck), .ck_rp1(ck), .ck_rp2(ck), .ck_rp3(ck), .ck_rp4(ck), .ck_lsl0(ck), .ck_lsl1(ck), .ck_lsl2(ck), .ck_lsl3(ck), .ck_lsl4(ck), .ck_lsl5(ck), .ck_lsl6(ck), .ck_lsl7(ck), .ck_node(ck), .rst_n(rst_n), .tile_id(tid), .tap(tap), .t_out(to), .n_a(a), .n_b(b), .n_y(ny));
+    qfd_tile_nk #(.ROM_TILE(MASK_TILE)) dut (.ck(ck), .ck_rp0(ck), .ck_rp1(ck), .ck_rp2(ck), .ck_rp3(ck), .ck_rp4(ck), .ck_lsl0(ck), .ck_lsl1(ck), .ck_lsl2(ck), .ck_lsl3(ck), .ck_lsl4(ck), .ck_lsl5(ck), .ck_lsl6(ck), .ck_lsl7(ck), .ck_node(ck), .rst_n(rst_n), .tile_id(tid), .tap(tap), .t_out(to), .n_a(a), .n_b(b), .n_y(ny));
     integer i, bad = 0, checks = 0, faults = 0, mism = 0;
     reg pf = 0, fy = 0, mis = 0;
     reg [507:0] tap_history=0;

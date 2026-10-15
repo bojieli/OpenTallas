@@ -74,6 +74,12 @@ module qfd_tile_nk #(
     input  wire [513:0]  n_b,
     output wire [513:0]  n_y
 );
+`ifndef SYNTHESIS
+    // Rehosting the tree must preserve both the constant mask identity and
+    // the real static die strap. A wrong binding is a simulation error.
+    always @(posedge ck) if(rst_n && ROM_TILE>=0 && tile_id!==16'(ROM_TILE))
+        $fatal(1,"native tile mask identity differs from real tile_id strap");
+`endif
     // One kept native-face register per input bit; reset only controls
     // metadata. The child clocks remain independent compensated entries.
     (* keep *) reg [507:0] tap_q;
@@ -192,6 +198,12 @@ module qfd_tile_nl #(
     input  wire [507:0]  tap,
     output wire [513:0]  t_out
 );
+`ifndef SYNTHESIS
+    // Rehosting the tree must preserve both the constant mask identity and
+    // the real static die strap. A wrong binding is a simulation error.
+    always @(posedge ck) if(rst_n && ROM_TILE>=0 && tile_id!==16'(ROM_TILE))
+        $fatal(1,"native tile mask identity differs from real tile_id strap");
+`endif
     // One kept native-face register per input bit; reset only controls
     // metadata. The child clocks remain independent compensated entries.
     (* keep *) reg [507:0] tap_q;
