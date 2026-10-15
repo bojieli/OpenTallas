@@ -1,0 +1,274 @@
+{
+ "schema": "opentallas.s81.geometry_candidates_gen17.v1",
+ "scope": "SCREEN_ONLY: exact LEF pin Manhattan on the PRE-HOP construction (partner stations/relays/field/IP fixed); NOT adopted, NOT native, no routing/timing claim; die lead adopts",
+ "inputs": {
+  "gen17": {
+   "where": "ot-epyc4:/srv/opentallas-scratch/claude/s81-die-r10/gen17 (GEN_COMPLETE 06:15 PT; contract v20 s81_v20_hc_up.json sha 57454319)",
+   "construction_pass0_plan": "ea09377acb4d61cabbdb74039b3e9bc817fe10644402a46d6ffb6ab1c769ef9c",
+   "construction_pass0_pins": "34d7ebab473d26cbe4c73e2a49db3f90b2e9e5c9fd7ae80ba6cfcbe7e43a35ba",
+   "canonical_plan": "286a614afe441445b27edfa4ba95dc581555c4f5d80221589eb4cd109636008a",
+   "exact_pins": "799e6dee0bdeb02d13605c1e0ab92953187f359c1bc88a8ca50263bc6157a766"
+  },
+  "gen18c": {
+   "where": "ot-epyc4:/srv/opentallas-scratch/claude/s81-die-r10/gen18c construction_pass0 (v21_gen18 contract, --static-seams --static-collective, hub-south-shift 1537.92)",
+   "construction_pass0_plan": "8171058616c4c218c9b352583e0c5afd0393c558cb004c02fd2a1b6a247d49fa",
+   "construction_pass0_pins": "74ec6d9a072a806df6a5c8b645b3cbd9eaf0518f392d8d8de01165e360b7e2ca"
+  }
+ },
+ "tool_fix": "pack_face (hub_face_repin_search.py, used by die_link_repin_search.py): anchored pins (clock/reset/exempt) are now IMMOVABLE and slices never cross them. The earlier abacus let clusters drag anchors while their pins stayed, so moved slices could land on them (found by the emitter spacing check on hr_* relays: di slices over fi pins). C1 numbers unaffected; screen14 D0 (FAIL 11->5) was optimistic -- the fixed D0 on GEN17 is FAIL 16->12. Test tools/s81/tests/test_repin_pack_face.py (mutant = old global abacus caught).",
+ "not_present_in_gen17_or_gen18c": [
+  "Engram MIX4 home (no instance/bus; GEN18m only reserves a slot)",
+  "VM 328+150 service slots (plan carries one dsfd_sp_vm)",
+  "collective D6 children (one sp_collective hub; GEN18c swaps it to dsfd_sp_collective_static_c)",
+  "6 HCX homes = unbound_supplemental_reservations without buses (sp_hcx_* at y 24624)",
+  "ctrl_SW.st -> svc_SW.hs: st[0] still has no LEF pin"
+ ],
+ "gen17": {
+  "baseline_note": "pre-hop pass0; post-hop canonical numbers are biased (stations already sit at the current pins) and are not used for ranking",
+  "C1_hc": {
+   "file": "gen17_pass0/GB_hc_only.json",
+   "totals": {
+    "edges": 34,
+    "before": {
+     "sum_bit_um": 15726056.472,
+     "over500": 18716.0,
+     "over215": 26100.0,
+     "fail": 4,
+     "max": 792.216
+    },
+    "after": {
+     "sum_bit_um": 5078399.526000001,
+     "over500": 0.0,
+     "over215": 0.0,
+     "fail": 0,
+     "max": 203.304
+    }
+   },
+   "hub_view": {
+    "edges": 237,
+    "before": {
+     "sum_bit_um": 37341661.428000025,
+     "over500": 29423.0,
+     "over215": 47073.0,
+     "fail": 12,
+     "max": 2123.592
+    },
+    "after": {
+     "sum_bit_um": 26694004.48200002,
+     "over500": 10707.0,
+     "over215": 20973.0,
+     "fail": 8,
+     "max": 2123.592
+    }
+   }
+  },
+  "C2_pq": {
+   "file": "gen17_pass0/C2_hub_pq_repack.json",
+   "totals": {
+    "edges": 237,
+    "before": {
+     "sum_bit_um": 37341661.428000025,
+     "over500": 29423.0,
+     "over215": 47073.0,
+     "fail": 12,
+     "max": 2123.592
+    },
+    "after": {
+     "sum_bit_um": 36953363.660000004,
+     "over500": 29423.0,
+     "over215": 45024.0,
+     "fail": 11,
+     "max": 2123.592
+    }
+   }
+  },
+  "D0_all": {
+   "file": "gen17_pass0/D0_all_die_level_reorder.json",
+   "totals": {
+    "edges": 1351,
+    "before": {
+     "sum_bit_um": 67710342.0600001,
+     "over500": 29423.0,
+     "over215": 129433.0,
+     "fail": 16,
+     "max": 2123.592
+    },
+    "after": {
+     "sum_bit_um": 40630423.934999965,
+     "over500": 6046.0,
+     "over215": 38243.0,
+     "fail": 12,
+     "max": 1059.288
+    }
+   },
+   "note": "includes superseded sp_vm (FAIL +1, >215 +3802 bits) and owner-recorded masters -> not deliverable as is"
+  },
+  "D1_cfifo": {
+   "file": "gen17_pass0/D1_cfifo.json",
+   "totals": {
+    "edges": 896,
+    "before": {
+     "sum_bit_um": 25649985.719999984,
+     "over500": 0.0,
+     "over215": 75620.0,
+     "fail": 0,
+     "max": 380.392
+    },
+    "after": {
+     "sum_bit_um": 17158290.743999965,
+     "over500": 0.0,
+     "over215": 9267.0,
+     "fail": 0,
+     "max": 311.6
+    }
+   }
+  },
+  "D2_hend_svc_band": {
+   "file": "gen17_pass0/D2_hend_svc_band.json",
+   "totals": {
+    "edges": 246,
+    "before": {
+     "sum_bit_um": 5495382.144,
+     "over500": 0.0,
+     "over215": 7255.0,
+     "fail": 4,
+     "max": 419.016
+    },
+    "after": {
+     "sum_bit_um": 5312402.685999998,
+     "over500": 0.0,
+     "over215": 6743.0,
+     "fail": 4,
+     "max": 417.144
+    }
+   }
+  },
+  "G1_guarded": {
+   "file": "gen17_pass0/G1_guarded_set.json",
+   "totals": {
+    "edges": 1261,
+    "before": {
+     "sum_bit_um": 48298435.428,
+     "over500": 18716.0,
+     "over215": 112190.0,
+     "fail": 9,
+     "max": 792.216
+    },
+    "after": {
+     "sum_bit_um": 28541068.16599996,
+     "over500": 0.0,
+     "over215": 17141.0,
+     "fail": 4,
+     "max": 474.108
+    }
+   },
+   "note": "remaining 4 FAIL = crE2_E0 hub station -> hr_E2 2.9-um channel (S-DIE GEN17 station defect (a), generator fix)"
+  },
+  "C6": {
+   "file": "c6_chain_guide_cut_gen17_canonical.json",
+   "hotspot": "Y cuts 14040..15860 at x18980..19240: 9290 unique guide bits, share 1.694 (unchanged from screen14; chain guides come from the same canonical layout)",
+   "channel": "sp_hc_s/t east edge x19128.94 to frame_27 west edge x19563.12 = 434.18 um (screen14: 519)",
+   "shares": {
+    "guide_cap_21p09_per_um": {
+     "channel_only": 1.014,
+     "channel_plus_frame27_overtile_window": 0.634,
+     "channel_plus_hc_overcell_148p9um": 0.755,
+     "all_three": 0.522
+    },
+    "full_m4_m5_31p5_per_um": {
+     "channel_only": 0.679,
+     "channel_plus_frame27_window": 0.425
+    }
+   },
+   "verdict": "spreading alone no longer reaches <=0.60 inside the channel; with one frame_27 over-tile window it needs 504 more bits out (move KE3t+KE3r 1024 b -> 0.564) or over-cell tracks above sp_hc_s (HC owner)"
+  },
+  "C7": {
+   "source": "GEN17 canonical pin_align.json (post-hop)",
+   "ret_leaf_len_over_500": "<=12,852 bits / 204 bundles (class upper bound)",
+   "over_600": "ONE class: rt_8_26b relay chain dsfd_rly_63_EW.o -> dsfd_rly_63_WS.i, 18 bundles / 1,134 bits at 733-735 um > relay_tt_reach 600 -> needs a relay move/extra relay, not re-spacing",
+   "other": "KW0r UCIe rx -> stnh_512 811 um (PHY fixed; station placement)"
+  }
+ },
+ "gen18c": {
+  "G1_guarded": {
+   "file": "gen18c_pass0/G1_guarded_set.json",
+   "totals": {
+    "edges": 1258,
+    "before": {
+     "sum_bit_um": 48373098.804000005,
+     "over500": 19745.0,
+     "over215": 111224.0,
+     "fail": 6,
+     "max": 792.216
+    },
+    "after": {
+     "sum_bit_um": 28638689.044999965,
+     "over500": 1029.0,
+     "over215": 15660.0,
+     "fail": 1,
+     "max": 518.076
+    }
+   },
+   "note": "54 masters; remaining FAIL hl_E1_o -> sp_collective.rE1 (collective excluded); remaining >500 = VM->WFC station f_hb_vm_wfc_8 -> sp_wfc 518 um (station placement); 19 edges/1,280 bits newly >215 (cfifo taps 214.8->215.7, hb_pq_vm_d0 201->296, all <500); 0 new FAIL"
+  },
+  "A_unconditional": {
+   "file": "gen18c_pass0/GA_unconditional.json",
+   "totals": {
+    "edges": 1224,
+    "before": {
+     "sum_bit_um": 32606192.724000014,
+     "over500": 1029.0,
+     "over215": 85124.0,
+     "fail": 2,
+     "max": 526.344
+    },
+    "after": {
+     "sum_bit_um": 23519522.374999955,
+     "over500": 1029.0,
+     "over215": 15660.0,
+     "fail": 1,
+     "max": 518.076
+    }
+   },
+   "overlay": "physical/s81_die_pins/v21_geo_s_gen18c (52 masters)"
+  },
+  "C1_HC_conditional": {
+   "file": "gen18c_pass0/GB_hc_conditional.json",
+   "totals": {
+    "edges": 34,
+    "before": {
+     "sum_bit_um": 15766906.080000002,
+     "over500": 18716.0,
+     "over215": 26100.0,
+     "fail": 4,
+     "max": 792.216
+    },
+    "after": {
+     "sum_bit_um": 5119166.67,
+     "over500": 0.0,
+     "over215": 0.0,
+     "fail": 0,
+     "max": 203.304
+    }
+   },
+   "overlay": "physical/s81_die_pins/v21_geo_s_gen18c_hc (dsfd_sp_hc_c, dsfd_sp_hc_t)",
+   "condition": "HC parent owner confirms the tower slice permutation; dsfd_sp_hc_c record carries y_tag[32] (GEN18c --static-seams port set): if S-BIND drops y_tag (no RTL port), delete that one entry"
+  },
+  "separable": "A and HC shift tables are independent (G1 = A u HC exactly, 0 differing entries)",
+  "C4_collective": {
+   "file": "gen18c_pass0/C4_collective_static_face_repack.json",
+   "verdict": "NOT deliverable as a face re-pack: t_vm 2204 b 1061 um FAIL and t_crq 1493 um are blocked by the anchored clock/reset pins; re-pack alone FAIL 2->4. Requirement for the static collective owner: t_vm (and t_crq, 15 b after S-BIND fix) at the S-face east end x15469..15671 with pll_stream/pll_serial/rst_stream moved <=210 um west"
+  },
+  "C5_gather": {
+   "file": "gen18c_pass0/C5_gather_face_repack.json",
+   "verdict": "gather pins are owner-assigned (v21_gather_transverse_candidate); no legal re-pack. c_done 1171 / c_st 1134 / c_cmd 989 um (screen14 931/883/747: worse after the +241.92 N growth). Requirement to the gather owner: c_cmd/c_done/c_st (96 b) on the face toward sp_sseq"
+  },
+  "C3_vm": "unchanged: VM successor pin order to S-VM (old sp_vm not re-pinned)"
+ },
+ "generator_use": {
+  "option": "--assigned-pins-dir physical/s81_die_pins/v21_geo_s_gen18c_hc:physical/s81_die_pins/v21_geo_s_gen18c:physical/s81_die_pins/v21_gather_transverse_candidate:physical/s81_die_pins/v19_merged (drop the _hc dir if C1 is not confirmed)",
+  "format": "opentallas.s81.assigned_pins.v1 per master (every die port of the master, exact coords; clock/reset at their GEN18c positions); disjoint from every record already in the chain",
+  "fail_closed": "records are exact for the GEN18c pass0 port set: if the GEN18 base changes a port set (S-BIND bind5: host_c 515/77, WFC grants, PQ f_cnt) the generator asserts. Regenerate in ~20 s on the new pass0: die_link_repin_search.py --plan P --lef L --reorder --masters <list in EMIT_SUMMARY.json> --out G.json && die_link_repin_emit.py --report G.json --plan P --lef L --existing-dirs <chain> --out-dir <dir>"
+ },
+ "cost": "0 area, 0 cycles at the pin level; partner stations are re-laid by the generator (hop count may change -> judged by the GEN18 hop gate / pin_align, not here)"
+}

@@ -12,6 +12,18 @@ module ot_s81_pq_calendar_reader #(
  output reg[11:0]rom_addr,input wire[71:0]rom_action,rom_time,
  output reg[ACTION_BITS-1:0]action,output reg active,output reg primed,output reg fault
 );
+ // Native reset (S-ELEM-B 10-15): with PINREG the port reset drives only a registered relay (async assert,
+ // release +3 edges, an initialization-only delay); the closed reader view failed native capture on rst_n
+ // (recovery 288 + R 112 = 400 > 190 ps) because the port fanned out to flops directly.
+ wire rst_i;
+ generate if(PINREG!=0)begin:g_rst_relay
+  wire[0:0] rst_r;
+  ot_rst_relay #(.REGIONS(1),.SYNC_STAGES(2),.TREE_STAGES(1)) u_rr(.clk(ck),.rst_n_in(rst_n),.rst_n(rst_r));
+  assign rst_i=rst_r[0];
+ end else begin:g_rst_port
+  assign rst_i=rst_n;
+ end endgenerate
+
  // Actual same-clock capture at every input face. Boot/launch controls and
  // ROM payloads traverse one unconditional fixed edge; no ready/training.
  wire [0:0] prime_pin;
@@ -33,8 +45,8 @@ module ot_s81_pq_calendar_reader #(
   assign rom_action_pin=rom_action_q;
   reg [71:0] rom_time_q;
   assign rom_time_pin=rom_time_q;
-  always @(posedge ck or negedge rst_n)
-   if(!rst_n)begin prime_q<=0;stage_start_q<=0;end
+  always @(posedge ck or negedge rst_i)
+   if(!rst_i)begin prime_q<=0;stage_start_q<=0;end
    else begin prime_q<=prime;stage_start_q<=stage_start;end
   always @(posedge ck)begin
    base_q<=base;
@@ -60,8 +72,8 @@ module ot_s81_pq_calendar_reader #(
  wire fetch=(priming&&fetch_index<nrows&&fetch_index<4)||
             (due&&fetch_index<nrows);
  reg[12:0]read_a;integer k;
- always @(posedge ck or negedge rst_n)begin
-  if(!rst_n)begin
+ always @(posedge ck or negedge rst_i)begin
+  if(!rst_i)begin
    rom_addr<=0;action<=0;active<=0;primed<=0;fault<=0;
    rp<=0;wp<=0;count<=0;nrows<=0;fetch_index<=0;consume_index<=0;
    fetch_valid<=0;priming<=0;base_q<=0;age<=0;last_timestamp<=0;

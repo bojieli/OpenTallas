@@ -14,7 +14,9 @@
 // 4 unsupported LARM7, 5 aux lane collision, 6 WFC range, 7 WFC pair lane,
 // 8 capture alignment. Each requires its named sticky fault AND top-level c_st[0].
 module tb_dsfd_sp_vm_static;
-`ifdef OT_VM_NATIVE_READ
+`ifdef OT_VM_NATIVE_READ_PINREG
+    localparam integer READ_PIPE=2;
+`elsif OT_VM_NATIVE_READ
     localparam integer READ_PIPE=1;
 `else
     localparam integer READ_PIPE=0;
@@ -168,7 +170,8 @@ module tb_dsfd_sp_vm_static;
         if (mode == 5 && tk == 520) begin                                  // two units, same lane, same edge
             stream(0, 1100, 2);
         end
-        if (mode == 5 && tk == 521) stream(1, 1101, 2);
+        // READ_PIPE 2 blocks issue phase 0 instead of 1, which shifts Q's rows one edge: G then starts on Q's lane.
+        if (mode == 5 && tk == 521) stream(1, (READ_PIPE == 2) ? 1100 : 1101, 2);
         // gather go: the bench (gather) pulses xgo for each posted phase, in order, ~60 edges after the post
         if (tk >= 560 && tk < 564) begin xgo = {1'b1, gphase[tk - 560]}; if (mode == 2 && tk == 562) xgo[0] = ~xgo[0]; end
         // R: SU read-back of the collective landing rows (one a stream edge, port 4 + row[1:0])
@@ -210,7 +213,7 @@ module tb_dsfd_sp_vm_static;
             r = 4096 + 2 * (sk - 200);
             fwfc[528] = 1'b1; fwfc[543:529] = 15'(r); fwfc[558:544] = 15'(r + 1); fwfc[559] = 1'b1;
             if (mode == 7 && sk == 210) fwfc[558:544] = 15'(r + 4);
-            e_w[sk + 1 + 15+3*READ_PIPE] = {1'b1, mem[r + 1], 1'b1, mem[r]};
+            e_w[sk + 1 + 15+3*((READ_PIPE+3)/4)] = {1'b1, mem[r + 1], 1'b1, mem[r]};
         end
         if (sk >= 130 && sk < 134) begin
             r = 7000 + sk - 130; sel = {1'b0, 1'b1, rowdata(r, 6), 1'b1}; mem[r] = rowdata(r, 6); memv[r] = 1;

@@ -3,7 +3,7 @@
 Input outlines/face order are explicit geometry candidate choices. Actual layers
 and track offsets are fixed here; adoption requires die geometry approval.
 """
-import pathlib,json,hashlib,re,subprocess,math
+import pathlib,json,hashlib,re,subprocess,math,sys
 ROOT=pathlib.Path(__file__).resolve().parents[2]
 OUT=ROOT/'physical/s81_vm_read_native_1015';OUT.mkdir(parents=True,exist_ok=True)
 SPECS=ROOT/'tools/ref_tile/specs_s81vm_read_native_1015';SPECS.mkdir(parents=True,exist_ok=True)
@@ -14,7 +14,9 @@ fsr_artifact=json.loads((OUT/'fsr_pin_candidates.json').read_text())
 assert hashlib.sha256((ROOT/fsr_artifact['source']).read_bytes()).hexdigest()==fsr_artifact['source_sha256'], 'FSR pin candidate source drift'
 fsr=fsr_artifact['types']
 model={'schema':'s81.native-read-leaves.v1','scope':'Source-bound representatives, no physical/throughput qualification','period_ps':833.333,'route_period_ps':770,'whole_vm512':{'read_data_roots':64,'read_valid_roots':8,'read_data_valid_age':13,'FSR_roots':16,'FSR_pin_to_bank_age':1,'global_fault_age':None},'types':{}}
-for kind,g in [('q',0),('q',1),('v',0),('b',0)]:
+initial={('q',0),('q',1),('v',0),('b',0)}
+selected=[(k,g)for k,num in [('q',8),('v',8),('b',4)]for g in range(num)if(k,g)not in initial]if '--remaining'in sys.argv else sorted(initial)
+for kind,g in selected:
  top=f'dsfd_vm_static_read_{kind}{g}'if kind!='b'else f'dsfd_vm_static_fsr_b{g}'
  choice=(read if kind!='b'else fsr)[top];w,h=choice['outline_um']
  faces={x:[]for x in 'NSEW'};bitpins=[]
@@ -39,7 +41,7 @@ for kind,g in [('q',0),('q',1),('v',0),('b',0)]:
  marker='NATIVE_FSR'if kind=='b'else'NATIVE_LEAF';label='mode0'if kind=='b'else f'{kind}{g}'
  benches=[]
  for mode in ['positive','mutant']:
-  b={'name':f'{kind}{g}_{mode}','cmd':cmd+f' {mode} {{RUN}}/bench/{kind}{g}_{mode}','expect':'pass'if mode=='positive'else'fail','threads':1,'peak_ram_gb':1,'needs':['iverilog','python3']}
+  b={'name':f'{kind}{g}_{mode}','cmd':cmd+f' {mode} {{RUN}}/bench/{kind}{g}_{mode}','expect':'pass'if mode=='positive'else'fail','threads':1,'peak_ram_gb':1,'needs':['iverilog']}
   b['pass_regex'if mode=='positive'else'fail_regex']=f'{marker} '+('PASS'if mode=='positive'else'FAIL')+f' {label} '
   if mode=='positive':b['min_count_regex']=r'banks(\d+)'if kind=='b'else r'checks (\d+)'
   benches.append(b)
@@ -47,4 +49,4 @@ for kind,g in [('q',0),('q',1),('v',0),('b',0)]:
  path=SPECS/f'{top}.json';path.write_text(json.dumps(spec,indent=2)+'\n')
  model['types'][top]={'source_sha256':{f:hashlib.sha256((ROOT/f).read_bytes()).hexdigest()for f in sources},'signal_pins':len(bitpins),'outline_um':[w,h],'pin_face_counts':{f:sum(p['face']==f for p in bitpins)for f in faces},'RTL_FF_before_constant_optimization':choice.get('rtl_ff_before_constant_optimization',choice.get('rtl_ff_before_optimization')),'cycles_added':1 if kind!='b'else 0,'qualification':'UNQUALIFIED_PENDING_NATIVE_CTS_ROUTE_PG_PIN_IO_CLOCK'}
  subprocess.run(['python3',str(ROOT/'tools/ref_tile/ref_tile.py'),'gen',str(path)],cwd=ROOT,check=True)
-(OUT/'model.json').write_text(json.dumps(model,indent=2)+'\n')
+(OUT/('model_remaining.json'if '--remaining'in sys.argv else'model.json')).write_text(json.dumps(model,indent=2)+'\n')

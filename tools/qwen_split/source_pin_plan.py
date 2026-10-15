@@ -5,6 +5,7 @@ source-published physical locations and the phase-minus-insertion contract.
 """
 import json
 import math
+import os
 from pathlib import Path
 import sys
 
@@ -59,9 +60,23 @@ def apply_tile(q, entries):
     q.ports, q.order = {}, []
     # Four 514-bit words need 197.4 um at 96-nm pitch.  Separate real
     # W-face windows replace the four coincident M8 interior groups.
-    for j, p in enumerate(('n_a', 'n_b', 'n_y', 't_out')):
-        if p in ports:
-            q.face(p, ports[p][0], 'W', 'M4', q.h / 2 + (j - 1.5) * 56.0, 2)
+    # Interleaved tree words (GEO-Q PM-H-S, coordinator ADOPT 2026-10-15): t_out[k] / n_b[k] and n_y[k] / n_a[k] one
+    # 0.096 slot apart on the W face, so a mirrored neighbour's t_out[k] lands one track from this tile's n_b[k]
+    # across the 16.44-um inner channel (vertical cut 0.001, horizontal 0.136 vs 0.975 for separate windows).
+    if os.environ.get('OT_SPLIT_TREE_INTERLEAVE', '1') != '0':
+        for (a, b), c in ((('t_out', 'n_b'), q.h / 2 + 5.0 + 49.344), (('n_y', 'n_a'), q.h / 2 - 5.0 - 49.344)):
+            n = 514                                      # tree word; the node-less tile has only t_out / n_y
+            y0 = snap(c - (2 * n - 1) * .096 / 2)
+            for off, p in enumerate((a, b)):
+                if p not in ports:
+                    continue
+                assert ports[p][0] == n, (q.name, p, ports[p][0])
+                q.ports[p] = ('pins', n, 'W', 'M4', [round(y0 + (2 * k + off) * .096, 4) for k in range(n)], 1)
+                q.order.append(p)
+    else:
+        for j, p in enumerate(('n_a', 'n_b', 'n_y', 't_out')):
+            if p in ports:
+                q.face(p, ports[p][0], 'W', 'M4', q.h / 2 + (j - 1.5) * 56.0, 2)
     # Preserve the station-facing registered tap location.  Straps/ties stay
     # beside it, with fixed disjoint ranges on the same E face.
     tap = old.get('tap')

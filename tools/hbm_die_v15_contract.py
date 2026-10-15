@@ -21,6 +21,7 @@ LG_SOURCE = 'rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_split.sv'
 SFU_SOURCE = 'rtl/hbm_accel/generic/peers/ot_hgi_sfu_scheduled_engine.sv'      # LG mid tap 14/11
 DBK_SOURCE = 'rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static.sv'    # direct RG, bank n+1/n+7
 IDX_SOURCE = 'rtl/hbm_accel/index/ot_hbm_idx_scheduled_static.sv'              # direct RG, bank n+1/n+7
+SU_SOURCE = 'rtl/hbm_accel/generic/adapters/static_su/ot_hbm_su_static_vm_ports.sv'  # LG near tap 10/7, 4 bank-pair groups
 SID = ('SW','SE','NW','NE')
 
 
@@ -68,6 +69,7 @@ def generate(out):
     for q in abi['quadrants']:
         module('hb_sfu_'+q,SFU_SOURCE,'ot_hgi_sfu_scheduled_engine',dict(PAGE_AW=1,AW=11,LWB=15))
         module('hb_dbk_'+q,DBK_SOURCE,'ot_hgi_dma_back_static',dict(STK=SID.index(q)))
+        module('hb_su_'+q,SU_SOURCE,'ot_hbm_su_static_vm_ports',dict(QID=SID.index(q),READ_RETURN=10,WRITE_RETURN=7))
     module('hb_idx',IDX_SOURCE,'ot_hbm_idx_scheduled_static')
     edges=[]; connected=set(); parts={}; logical_constants=[]
     def edge(name,src,dst):
@@ -135,14 +137,24 @@ def generate(out):
         edge(sfu+'_wq',(sfu,'local_wq'),(tap,'local_wq'))
         edge(sfu+'_rr',(tap,'local_rr'),(sfu,'local_rr'))
         edge(sfu+'_w_done',(tap,'local_w_done'),(sfu,'local_w_done'))
+        # SU (H-ELEM-B d66ceb2dd): near tap, 4 bank-pair port groups, returns 10/7 asserted.
+        # Tap selects stay owned by the VM calendar (h_vm programme proof 7da6141d7); the SU's
+        # own lg_read/lg_write are equal-by-schedule duplicates and stay OPEN (fault-check only).
+        su='hb_su_'+q;tap0=f'lg_{q}_0'
+        assert modules[tap0]['params']==dict(READ_RETURN=10,WRITE_RETURN=7)
+        assert modules[su]['params']['READ_RETURN']==10 and modules[su]['params']['WRITE_RETURN']==7
+        edge(su+'_rq',(su,'lg_rq'),(tap0,'local_rq'))
+        edge(su+'_wq',(su,'lg_wq'),(tap0,'local_wq'))
+        edge(su+'_rr',(tap0,'local_rr'),(su,'lg_rr'))
+        edge(su+'_w_done',(tap0,'local_w_done'),(su,'lg_w_done'))
         # DMA back: direct read group 'DMA back' at bank n+1/n+7 (source ABI).
         g=reads.index('DMA back');dbk='hb_dbk_'+q
         slice_edge(dbk+'_rq',(dbk,'rq',0),(vm,'rq',136*g),136)
         slice_edge(dbk+'_rr',(vm,'rr',2056*g),(dbk,'rr',0),2056)
         rec=slice_bind.setdefault(q,dict(read_groups={},write_groups={},records={}))
-        rec['read_groups'].update({'0':'lg_%s_0..2 (SU near / SFU hb_sfu_%s mid / HC far)'%(q,q),str(g):dbk})
+        rec['read_groups'].update({'0':'lg_%s_0..2 (SU hb_su_%s near / SFU hb_sfu_%s mid / HC far)'%(q,q,q),str(g):dbk})
         coll_g=reads.index('COLL');rec['read_groups'][str(coll_g)]='hb_coll_'+q
-        rec['write_groups']['0']='lg_%s_0..2 (SU/SFU hb_sfu_%s/HC)'%(q,q)
+        rec['write_groups']['0']='lg_%s_0..2 (SU hb_su_%s/SFU hb_sfu_%s/HC)'%(q,q,q)
     # One INDEX parent (four internal scorers); its VM operand face reads SW (sid 0).
     g=abi['clients']['SW']['read'].index('IDX')
     slice_edge('idx_vm_rq',('hb_idx','vm_rq',0),('hb_vms_SW','rq',136*g),136)
@@ -172,10 +184,14 @@ def generate(out):
     for q in abi['quadrants']:
         need=5 if q in ('SW','SE') else 4
         for stage,eng,owner in ((0,'SU','H-ELEM-B (static SU)'),(1,'SFU','SFU owner'),(2,'HC','HC/hbm_hard_physical owner')):
-            inst={'SFU':'hb_sfu_'+q}.get(eng)
+            inst={'SFU':'hb_sfu_'+q,'SU':'hb_su_'+q}.get(eng)
             engine_rule['engines'][f'{eng}_{q}']=dict(tap=f'lg_{q}_{stage}',instance=inst,owner=owner,
                 required_port_groups=need,physical_port_groups=None,
                 status='OPEN: no pin/leaf plan yet' if inst else 'OPEN: engine not yet bound in contract')
+            if eng=='SU':
+                rec=engine_rule['engines'][f'SU_{q}'];rec['physical_port_groups']=4
+                rec['status']=('SOURCE MET (4 pg_clk groups, d66ceb2dd); pins open' if need==4 else
+                               'OPEN 4 of 5: die lead adds the fifth SW/SE group with H-ELEM-B')
     qs=('SW','SE','NE','NW')
     for i,q in enumerate(qs):
         edge('ring_cw_'+q,('hb_vms_'+q,'cw_out'),('hb_vms_'+qs[(i+1)%4],'cw_in'))
@@ -206,7 +222,7 @@ def generate(out):
     for name,mod in modules.items():
         if name=='hb_ckgen':continue
         for port,rec in mod['ports'].items():
-            if port=='clk' or port.startswith('clk_'):
+            if port=='clk' or port.startswith('clk_') or port.endswith('_clk'):
                 assert rec['direction']=='input'
                 for bit in range(rec['bits']):
                     roots.append(dict(instance=name,port=port,bit=bit,source=['hb_ckgen','pll_stream'],
@@ -222,7 +238,9 @@ def generate(out):
             if name=='hb_ckgen':
                 if port in ('refclk','por_n'):continue # actual declared external bump boundary
                 if port.startswith(('pll_','por_')):continue # other actual die domains; outside this subnet
-            if name.startswith('hb_sfu_'):
+            if name.startswith('hb_su_'):
+                owner='actual static SU arithmetic su_rq/su_wq producer (H-ELEM-B)'
+            elif name.startswith('hb_sfu_'):
                 owner=('actual SFU operand SRAM / SU join' if port.startswith(('vi_','ro_','side_','kv_'))
                        else 'actual SFU programme loader / CP and lane reset tree')
             elif name.startswith('hb_dbk_'):

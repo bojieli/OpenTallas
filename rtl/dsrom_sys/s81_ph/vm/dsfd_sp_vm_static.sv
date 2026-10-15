@@ -101,7 +101,7 @@ module dsfd_sp_vm #(parameter integer CAP_PIPE=0, parameter integer READ_PIPE=0)
     wire [7:0] x_rv; wire [4095:0] x_rd; wire [3:0] xa_v; wire [55:0] xa_row; wire xio_f; wire vm_fault;
     wire n_v; wire [83:0] n_d;
     wire [3:0] cl_v; wire [55:0] cl_row; wire [2047:0] cl_d; wire [63:0] cl_m; wire [31:0] cl_t;
-    dsfd_vm_static_wfc #(.RLAT(13+READ_PIPE), .RESPONSE_PAD(3*READ_PIPE)) u_wfc (
+    dsfd_vm_static_wfc #(.RLAT(13+READ_PIPE), .RESPONSE_PAD((4-READ_PIPE%4)%4)) u_wfc (
         .ck_control_s(ck_wfc_control_s), .ck_control_t(ck_wfc_control_t), .ck_x34_s(ck_wfc_x34_s), .ck_x34_t(ck_wfc_x34_t),
         .ck_x43_s(ck_wfc_x43_s), .ck_x43_t(ck_wfc_x43_t), .rst_control_s(rst_wfc_control_s), .rss_control_t(rss_wfc_control_t),
         .rst_x34_s(rst_wfc_x34_s), .rss_x34_t(rss_wfc_x34_t), .rst_x43_s(rst_wfc_x43_s), .rss_x43_t(rss_wfc_x43_t), .f_wfc(f_wfc), .t_wfc(t_wfc),

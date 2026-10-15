@@ -155,6 +155,52 @@ def _link_words(m, rec):
             ties.append((x, 'tt', 1538, 0))
 
 
+def _pair_mirror_hs(m, keep_rows=(7, 8)):
+    """PM-H-S (GEO-Q 2026-10-15, coordinator ADOPT; results/arch/qwen_split_compute_1014/system_geometry/pair_mirror):
+    each column pair (2k, 2k+1) of each 24-column half becomes [64.776 | even tile MY | 16.440 | odd tile R0 | 64.800]:
+    the even tile's W-face tree words face the odd tile's across the inner channel, each station abuts its own tile's
+    tap face (even: W side, MY, -30 nm so its M3 ck / rst_n sit on the die M3 track).  Head rows 7 / 8 (and the head-row
+    DVM columns) keep the uniform pitch.  Same pitch, area, masters, rows; positions only."""
+    TW, PITCH, GAPL, INNER = 449.28, 522.288, 64.776, 16.44
+    tiles = [i for i in m['insts'] if i.master in ('qfd_tile_nk', 'qfd_tile_nl')]
+    xs = sorted({round(i.x, 4) for i in tiles})
+    if len(xs) != 48:
+        raise ValueError(f'PM-H-S expects 48 tile columns, found {len(xs)}')
+    newx = {}
+    for half in (xs[:24], xs[24:]):
+        for k in range(12):
+            L, R = half[2 * k], half[2 * k + 1]
+            if abs(R - L - PITCH) > 1e-3:
+                raise ValueError(f'PM-H-S: column pair {L}/{R} not at the {PITCH} pitch')
+            ex = round(L + GAPL, 4)
+            ox = round(ex + TW + INNER, 4)
+            newx[L] = (ex, 'MY', 'L')
+            newx[R] = (ox, 'R0', 'R')
+    row = lambda n: int(n.split('_')[2])
+    moved_t = moved_s = 0
+    for i in tiles:
+        if row(i.name) in keep_rows:
+            continue
+        if i.orient != 'R0':
+            raise ValueError(f'PM-H-S expects R0 tiles, {i.name} is {i.orient}')
+        i.x, i.orient, _ = newx[round(i.x, 4)]
+        moved_t += 1
+    colmap = {round(x + TW, 4): x for x in xs}
+    for i in m['insts']:
+        if i.master not in ('qfd_xcst_s', 'qfd_xcst_n') or row(i.name) in keep_rows:
+            continue
+        tx = colmap[round(i.x, 4)]
+        nx, o, side = newx[tx]
+        if side == 'L':
+            i.x, i.orient = round(nx - i.w - 0.030, 4), 'MY'
+        else:
+            i.x = round(nx + TW, 4)
+        moved_s += 1
+    return dict(scheme='PM-H-S', kept_rows=list(keep_rows), inner_um=INNER, gapL_um=GAPL, gapR_um=64.8,
+                my_station_shift_nm=-30, mirrored_tiles=sum(1 for i in tiles if i.orient == 'MY'),
+                moved_tiles=moved_t, moved_stations=moved_s, source='GEO-Q pmh_legality.py (main 48fab3baf)')
+
+
 def _child_clocks(m, rec):
     n_of = {i.name: CHILD_CK[i.master] for i in m['insts'] if i.master in CHILD_CK}
     nb = []
@@ -548,6 +594,8 @@ def place(v, m, G):
             parent.w, parent.h = PORT_WH
         elif parent.master=='qfd_sp_band_lanes':
             parent.w,parent.h=LANES_WH
+    if os.environ.get('OT_SPLIT_PMHS', '1') != '0':
+        rec['pair_mirror'] = _pair_mirror_hs(m)
     _slab_links(m, rec)
     from qwen_split.direct_up4 import apply as direct_up4
     rec['direct_up4'] = direct_up4(v, m)
@@ -570,9 +618,28 @@ def place(v, m, G):
         rec['geoq_orient'] = flips
     m['tie_self'] = sorted(TIE_SELF)
     rec['tie_self'] = sorted(TIE_SELF)
+    # RTL is the truth (owner no-stub rule): the static DVM stations (rtl/qwen_sys/dvm_20261014 qfd_xcst_n/s) have no
+    # tap_r ready input, so the die must not drive one; the qfd_d2d_rom RTL (rtl/qwen_split/qfd_link_slots.sv) has ONE
+    # clock input, so its per-child clock entries wait for the Q-link-replay successor that actually has them.
+    byi_ = {i.name: i.master for i in m['insts']}
+    ties_ = m.setdefault('ties', [])
+    ties_[:] = [t for t in ties_ if not (t[1] == 'tap_r' and byi_.get(t[0]) in ('qfd_xcst_n', 'qfd_xcst_s'))]
+    nb_ = []
+    for b, c, n, e in m['buses']:
+        if c == 'clock_trunk':
+            e = [(i, p) for i, p in e if not (byi_.get(i) == 'qfd_d2d_rom' and p != 'ck')]
+            if any(byi_.get(i) == 'qfd_d2d_rom' for i, _ in e) and ('d2d_rom', 'ck') not in e:
+                e = e + [('d2d_rom', 'ck')]
+        nb_.append((b, c, n, e))
+    m['buses'] = nb_
+    rec['rtl_truth_fixes'] = dict(xcst_tap_r_untied=True, d2d_rom_clocks=['ck'])
     _link_words(m, rec)
     if os.environ.get('OT_SPLIT_TREE_VF', '1') != '0':
         _tree_widths(m, rec)
+    # actual source join (tt / seq / su / vm / native59 / io / embed) replaces the historical spine words
+    if 'native_static_io_bind' in m and os.environ.get('OT_SPLIT_NATIVE_GRAPH', '1') != '0':
+        from qwen_split.native_graph_bind import apply as native_graph_apply
+        rec['native_graph_bind'] = native_graph_apply(m)
     if os.environ.get('OT_SPLIT_DUMP'):
         ins = [dict(n=i.name, m=i.master, x=i.x, y=i.y, w=i.w, h=i.h, o=i.orient) for i in m['insts']]
         bus = [dict(b=b_, c=c_, n=n_, e=[list(x) for x in e_]) for b_, c_, n_, e_ in m.get('buses', [])]
