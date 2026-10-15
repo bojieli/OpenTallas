@@ -8,6 +8,7 @@
 set -euo pipefail
 ROOT=$(cd "$(dirname "$0")/../.." && pwd); W=$(mkdir -p "$1" && cd "$1" && pwd); MUT=${2:-0}; PINCAP=${3:-1}; DEFS=(); [ "$MUT" = 3 ] && { DEFS=(+define+OT_S81_COLL_CAL_MUT_ROW); MUT=0; MUTANT=1; }
 V=${OT_VERILATOR:-$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator}
+CALENDAR7=${OT_S81_COLL_CALENDAR7:-0}; CLOCK_MUT=${OT_S81_COLL_CALENDAR_CLOCK_MUT:-0}; PARAMS=()
 cd "$W"; python3 "$ROOT/tools/s81_static_collective/build_slab_fixture.py" --out "$W" > fixture.json
 S=$ROOT/rtl/dsrom_sys
 SRC=("$ROOT/rtl/ot_fp32_rne_pkg.sv" "$ROOT/rtl/lib/ot_rst_relay.sv" "$ROOT/rtl/hdc/ot_hdc_prefix.sv" "$ROOT/rtl/link/ot_link_crc32.sv"
@@ -24,15 +25,22 @@ mapfile -t VMF < <(cd "$ROOT" && python3 tools/die_port_bind.py none --closure d
 [ ${#VMF[@]} -gt 10 ] || { echo "SLAB_GATE VM closure failed"; exit 2; }
 SRC=("${SRC[@]:0:${#SRC[@]}-1}" "${VMF[@]}" "${SRC[@]: -1}")
 mapfile -t SRC < <(for f in "${SRC[@]}"; do realpath "$f"; done | awk '!seen[$0]++')
+if [ "$CALENDAR7" = 1 ]; then
+ python3 "$ROOT/tools/s81_static_collective/build_slab7.py" --out "$W/calendar7_source"
+ SRC=("${SRC[@]:0:${#SRC[@]}-1}" "$S/s81_static_collective/s81_static_calendar_controller7.sv"
+  "$W/calendar7_source/s81_static_collective_slab7.sv" "$W/calendar7_source/dsfd_sp_collective_static_c7.sv"
+  "$W/calendar7_source/tb_s81_static_collective_slab.sv")
+ PARAMS=(-GCALENDAR_CLOCK_MUT="$CLOCK_MUT")
+fi
 for f in "${SRC[@]}"; do [ -f "$f" ] || { echo "SLAB_GATE missing $f"; exit 2; }; done
 sha256sum "${SRC[@]}" > sources.sha256
-"$V" --binary --timing -j 16 -Wno-fatal -Wno-lint -Wno-style --top-module tb_s81_static_collective_slab -GMUT="$MUT" -GVMB_PINCAP="$PINCAP" "${DEFS[@]}" --Mdir obj "${SRC[@]}" > build.log 2>&1
+"$V" --binary --timing -j 16 -Wno-fatal -Wno-lint -Wno-style --top-module tb_s81_static_collective_slab -GMUT="$MUT" -GVMB_PINCAP="$PINCAP" "${DEFS[@]}" "${PARAMS[@]}" --Mdir obj "${SRC[@]}" > build.log 2>&1
 set +e; ./obj/Vtb_s81_static_collective_slab > run.log 2>&1; rc=$?; set -e
 # Preserve the actual work-count line for closure-loop non-vacuity admission.
 # Verilator appends four report lines after the DUT summary.
 grep -E '^PASS fullstatic slab|^FAIL|Assertion failed' run.log || true
 tail -n 3 run.log
-if [ "$MUT" != 0 ] || [ -n "${MUTANT:-}" ]; then
+if [ "$MUT" != 0 ] || [ -n "${MUTANT:-}" ] || [ "$CLOCK_MUT" != 0 ]; then
   if [ $rc -ne 0 ] || grep -q 'Assertion failed' run.log; then echo "SLAB_GATE MUTANT FAIL (detected)"; exit 1; fi
   echo "SLAB_GATE MUTANT UNDETECTED"; exit 0
 fi
