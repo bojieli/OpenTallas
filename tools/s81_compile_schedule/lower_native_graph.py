@@ -159,6 +159,19 @@ def lower(programs, root=ROOT):
                             required='export actual updated HC private H before FFN projection reads VM')
             jobs[ident]['preds']=sorted(set(jobs[ident]['preds'])|{store})
             inserted.append(store)
+    # Indexer field projection is not query packet preparation. Native QI
+    # performs128-dimensional RoPE/FP4 plus weight scaling before SVC scoring.
+    for ident in list(jobs):
+        layer,tail=layer_tail(ident)
+        if layer and tail=='attn.idx.q':
+            query=f'{layer}.attn.idx.query_prepare'
+            jobs[query]=dict(id=query,source_ids=[],source_stages=jobs[ident]['source_stages'],
+                             preds=[ident,f'{layer}.attn.a_proj'],native_binding=None,
+                             duration_cycles=None,fixed_service_contract=None,dispatch_eligible=False,
+                             required_owner='s_su_missing_ops',proposed_opcode=15,
+                             required='native D128 RoPE64/FP4UE8M0, projected weight scaling, actual SVC type4 frame; no512padding')
+            jobs[f'{layer}.attn.idx.score']['preds']=sorted(set(jobs[f'{layer}.attn.idx.score']['preds'])|{query})
+            inserted.append(query)
     # Prove the fusions retain a DAG rather than relying on original start order.
     ordered,active,seen=[],set(),set()
     def visit(ident):
