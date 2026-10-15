@@ -76,7 +76,7 @@
   "benches": [
    {
     "name": "exact",
-    "cmd": "bash tools/hbm_v15_harden/bench_dma_vp4_ic.sh {RUN}/bench/exact 0",
+    "cmd": "bash tools/hbm_v15_harden/bench_dma_vp4_ic_aux.sh {RUN}/bench/aux && bash tools/hbm_v15_harden/bench_dma_vp4_ic.sh {RUN}/bench/exact 0",
     "expect": "pass",
     "threads": 1,
     "peak_ram_gb": 4,
