@@ -1,128 +1,129 @@
 {
  "schema": "opentallas.closure_loop.ck_insertion.v1",
- "base": "/srv/opentallas/claude/closure-loop/coll_tp8_colr3_a-r3b-607a7b9b1/routes/coll_tp8_colr3_a_r3b_607a7b9b1/work/orfs/results/asap7/opentallas_ot_coll_tp8_col_tile_r3_asap7_ref_coll_tp8_colr3_a_r3b_607a7b9b1/base",
+ "base": "/srv/opentallas-scratch/claude/closure-loop/coll_tp8_colr3_a-r4-e18711936/routes/coll_tp8_colr3_a_r4_e18711936/work/orfs/results/asap7/opentallas_ot_coll_tp8_col_tile_r3_asap7_ref_coll_tp8_colr3_a_r4_e18711936/base",
  "db": "6_final.odb",
  "sdc": "6_final.sdc",
  "clock": "core_clk",
  "parasitics": "spef",
+ "raw_source": true,
  "ss": {
   "boundary": {
-   "n": 2606,
-   "mean": 371.1,
-   "min": 348.6,
-   "max": 408.7
+   "n": 2841,
+   "mean": 373.3,
+   "min": 348.1,
+   "max": 416.6
   },
   "all": {
-   "n": 5707,
-   "mean": 370.5,
-   "min": 318.2,
-   "max": 408.7
+   "n": 6084,
+   "mean": 375.6,
+   "min": 346.1,
+   "max": 432.6
   },
   "errors": [],
   "macros": {
    "n": 14,
    "nets": 8,
    "max_per_net": 2,
-   "reg_mean": 370.5,
-   "max_slew": 36.2,
-   "max_late": -27.4,
+   "reg_mean": 375.6,
+   "max_slew": 38.0,
+   "max_late": -10.3,
    "pins": [
     {
      "pin": "u_c.u_eq.g_mac.g_k[0].u_m/clk",
-     "arr": 334.3,
+     "arr": 362.1,
      "slew": 33.1,
-     "late": -36.2,
+     "late": -13.5,
      "net": "clknet_leaf_0_clk"
     },
     {
      "pin": "u_c.u_lb.g_mac.g_k[0].u_m/clk",
-     "arr": 340.2,
-     "slew": 32.3,
-     "late": -30.3,
+     "arr": 362.7,
+     "slew": 31.7,
+     "late": -12.9,
      "net": "clknet_leaf_6_clk"
     },
     {
      "pin": "u_c.u_lb.g_mac.g_k[1].u_m/clk",
-     "arr": 328.0,
-     "slew": 35.8,
-     "late": -42.5,
+     "arr": 363.7,
+     "slew": 38.0,
+     "late": -11.9,
      "net": "clknet_leaf_5_clk"
     },
     {
      "pin": "u_c.u_lq.g_mac.g_k[0].u_m/clk",
-     "arr": 333.8,
+     "arr": 361.6,
      "slew": 32.5,
-     "late": -36.7,
+     "late": -14.0,
      "net": "clknet_leaf_0_clk"
     },
     {
      "pin": "u_c.u_lq.g_mac.g_k[1].u_m/clk",
-     "arr": 320.5,
-     "slew": 34.1,
-     "late": -50.0,
+     "arr": 350.3,
+     "slew": 35.3,
+     "late": -25.3,
      "net": "clknet_leaf_2_clk"
     },
     {
      "pin": "u_c.u_lq.g_mac.g_k[2].u_m/clk",
-     "arr": 320.3,
-     "slew": 33.7,
-     "late": -50.2,
+     "arr": 348.9,
+     "slew": 33.4,
+     "late": -26.7,
      "net": "clknet_leaf_2_clk"
     },
     {
      "pin": "u_c.u_lq.g_mac.g_k[3].u_m/clk",
-     "arr": 327.6,
+     "arr": 354.4,
      "slew": 24.4,
-     "late": -42.9,
+     "late": -21.2,
      "net": "clknet_leaf_3_clk"
     },
     {
      "pin": "u_c.u_pq.g_mac.g_k[0].u_m/clk",
-     "arr": 326.7,
-     "slew": 33.9,
-     "late": -43.8,
+     "arr": 362.0,
+     "slew": 35.5,
+     "late": -13.6,
      "net": "clknet_leaf_5_clk"
     },
     {
      "pin": "u_c.u_pq.g_mac.g_k[1].u_m/clk",
-     "arr": 318.9,
-     "slew": 35.1,
-     "late": -51.6,
+     "arr": 349.3,
+     "slew": 37.0,
+     "late": -26.3,
      "net": "clknet_leaf_4_clk"
     },
     {
      "pin": "u_c.u_rq.g_mac.g_k[0].u_m/clk",
-     "arr": 342.4,
-     "slew": 35.3,
-     "late": -28.1,
+     "arr": 364.5,
+     "slew": 33.9,
+     "late": -11.1,
      "net": "clknet_leaf_7_clk"
     },
     {
      "pin": "u_c.u_tq.g_mac.g_k[0].u_m/clk",
-     "arr": 323.7,
-     "slew": 25.8,
-     "late": -46.8,
+     "arr": 358.2,
+     "slew": 25.0,
+     "late": -17.4,
      "net": "clknet_leaf_1_clk"
     },
     {
      "pin": "u_c.u_tq.g_mac.g_k[1].u_m/clk",
-     "arr": 318.2,
-     "slew": 34.1,
-     "late": -52.3,
+     "arr": 348.8,
+     "slew": 36.1,
+     "late": -26.8,
      "net": "clknet_leaf_4_clk"
     },
     {
      "pin": "u_c.u_tq.g_mac.g_k[2].u_m/clk",
-     "arr": 343.1,
-     "slew": 36.2,
-     "late": -27.4,
+     "arr": 365.3,
+     "slew": 34.9,
+     "late": -10.3,
      "net": "clknet_leaf_7_clk"
     },
     {
      "pin": "u_c.u_tq.g_mac.g_k[3].u_m/clk",
-     "arr": 340.8,
-     "slew": 33.0,
-     "late": -29.7,
+     "arr": 363.3,
+     "slew": 32.6,
+     "late": -12.3,
      "net": "clknet_leaf_6_clk"
     }
    ]
@@ -131,122 +132,122 @@
  },
  "tt": {
   "boundary": {
-   "n": 2606,
-   "mean": 286.1,
-   "min": 264.3,
-   "max": 322.5
+   "n": 2841,
+   "mean": 288.3,
+   "min": 265.7,
+   "max": 327.1
   },
   "all": {
-   "n": 5707,
-   "mean": 285.2,
-   "min": 238.9,
-   "max": 322.5
+   "n": 6084,
+   "mean": 290.1,
+   "min": 260.8,
+   "max": 342.9
   },
   "errors": [],
   "macros": {
    "n": 14,
    "nets": 8,
    "max_per_net": 2,
-   "reg_mean": 285.2,
-   "max_slew": 30.1,
-   "max_late": -21.7,
+   "reg_mean": 290.1,
+   "max_slew": 31.6,
+   "max_late": -11.8,
    "pins": [
     {
      "pin": "u_c.u_eq.g_mac.g_k[0].u_m/clk",
-     "arr": 255.8,
+     "arr": 275.2,
      "slew": 27.4,
-     "late": -29.4,
+     "late": -14.9,
      "net": "clknet_leaf_0_clk"
     },
     {
      "pin": "u_c.u_lb.g_mac.g_k[0].u_m/clk",
-     "arr": 261.0,
-     "slew": 26.2,
-     "late": -24.2,
+     "arr": 276.0,
+     "slew": 25.7,
+     "late": -14.1,
      "net": "clknet_leaf_6_clk"
     },
     {
      "pin": "u_c.u_lb.g_mac.g_k[1].u_m/clk",
-     "arr": 248.7,
-     "slew": 29.8,
-     "late": -36.5,
+     "arr": 274.6,
+     "slew": 31.6,
+     "late": -15.5,
      "net": "clknet_leaf_5_clk"
     },
     {
      "pin": "u_c.u_lq.g_mac.g_k[0].u_m/clk",
-     "arr": 255.4,
+     "arr": 274.8,
      "slew": 26.6,
-     "late": -29.8,
+     "late": -15.3,
      "net": "clknet_leaf_0_clk"
     },
     {
      "pin": "u_c.u_lq.g_mac.g_k[1].u_m/clk",
-     "arr": 242.2,
-     "slew": 28.4,
-     "late": -43.0,
+     "arr": 263.1,
+     "slew": 29.2,
+     "late": -27.0,
      "net": "clknet_leaf_2_clk"
     },
     {
      "pin": "u_c.u_lq.g_mac.g_k[2].u_m/clk",
-     "arr": 241.9,
-     "slew": 27.9,
-     "late": -43.3,
+     "arr": 261.9,
+     "slew": 26.8,
+     "late": -28.2,
      "net": "clknet_leaf_2_clk"
     },
     {
      "pin": "u_c.u_lq.g_mac.g_k[3].u_m/clk",
-     "arr": 248.8,
-     "slew": 18.6,
-     "late": -36.4,
+     "arr": 267.0,
+     "slew": 18.5,
+     "late": -23.1,
      "net": "clknet_leaf_3_clk"
     },
     {
      "pin": "u_c.u_pq.g_mac.g_k[0].u_m/clk",
-     "arr": 247.5,
-     "slew": 27.4,
-     "late": -37.7,
+     "arr": 273.1,
+     "slew": 28.6,
+     "late": -17.0,
      "net": "clknet_leaf_5_clk"
     },
     {
      "pin": "u_c.u_pq.g_mac.g_k[1].u_m/clk",
-     "arr": 239.5,
-     "slew": 28.9,
-     "late": -45.7,
+     "arr": 261.3,
+     "slew": 30.7,
+     "late": -28.8,
      "net": "clknet_leaf_4_clk"
     },
     {
      "pin": "u_c.u_rq.g_mac.g_k[0].u_m/clk",
-     "arr": 262.9,
-     "slew": 28.8,
-     "late": -22.3,
+     "arr": 277.6,
+     "slew": 27.6,
+     "late": -12.5,
      "net": "clknet_leaf_7_clk"
     },
     {
      "pin": "u_c.u_tq.g_mac.g_k[0].u_m/clk",
-     "arr": 245.1,
-     "slew": 20.1,
-     "late": -40.1,
+     "arr": 270.1,
+     "slew": 18.9,
+     "late": -20.0,
      "net": "clknet_leaf_1_clk"
     },
     {
      "pin": "u_c.u_tq.g_mac.g_k[1].u_m/clk",
-     "arr": 238.9,
-     "slew": 27.6,
-     "late": -46.3,
+     "arr": 260.8,
+     "slew": 29.5,
+     "late": -29.3,
      "net": "clknet_leaf_4_clk"
     },
     {
      "pin": "u_c.u_tq.g_mac.g_k[2].u_m/clk",
-     "arr": 263.5,
-     "slew": 30.1,
-     "late": -21.7,
+     "arr": 278.3,
+     "slew": 28.9,
+     "late": -11.8,
      "net": "clknet_leaf_7_clk"
     },
     {
      "pin": "u_c.u_tq.g_mac.g_k[3].u_m/clk",
-     "arr": 261.6,
-     "slew": 27.2,
-     "late": -23.6,
+     "arr": 276.7,
+     "slew": 26.9,
+     "late": -13.4,
      "net": "clknet_leaf_6_clk"
     }
    ]
@@ -255,122 +256,122 @@
  },
  "ff": {
   "boundary": {
-   "n": 2606,
-   "mean": 234.7,
-   "min": 213.8,
-   "max": 270.4
+   "n": 2841,
+   "mean": 236.9,
+   "min": 215.8,
+   "max": 272.4
   },
   "all": {
-   "n": 5707,
-   "mean": 233.7,
-   "min": 192.0,
-   "max": 270.4
+   "n": 6084,
+   "mean": 238.5,
+   "min": 209.1,
+   "max": 286.9
   },
   "errors": [],
   "macros": {
    "n": 14,
    "nets": 8,
    "max_per_net": 2,
-   "reg_mean": 233.7,
-   "max_slew": 28.1,
-   "max_late": -18.1,
+   "reg_mean": 238.5,
+   "max_slew": 29.7,
+   "max_late": -12.2,
    "pins": [
     {
      "pin": "u_c.u_eq.g_mac.g_k[0].u_m/clk",
-     "arr": 208.7,
+     "arr": 223.4,
      "slew": 25.8,
-     "late": -25.0,
+     "late": -15.1,
      "net": "clknet_leaf_0_clk"
     },
     {
      "pin": "u_c.u_lb.g_mac.g_k[0].u_m/clk",
-     "arr": 213.4,
-     "slew": 24.2,
-     "late": -20.3,
+     "arr": 224.3,
+     "slew": 23.9,
+     "late": -14.2,
      "net": "clknet_leaf_6_clk"
     },
     {
      "pin": "u_c.u_lb.g_mac.g_k[1].u_m/clk",
-     "arr": 201.8,
-     "slew": 28.0,
-     "late": -31.9,
+     "arr": 221.9,
+     "slew": 29.7,
+     "late": -16.6,
      "net": "clknet_leaf_5_clk"
     },
     {
      "pin": "u_c.u_lq.g_mac.g_k[0].u_m/clk",
-     "arr": 208.3,
+     "arr": 222.9,
      "slew": 24.8,
-     "late": -25.4,
+     "late": -15.6,
      "net": "clknet_leaf_0_clk"
     },
     {
      "pin": "u_c.u_lq.g_mac.g_k[1].u_m/clk",
-     "arr": 195.9,
-     "slew": 26.8,
-     "late": -37.8,
+     "arr": 211.8,
+     "slew": 27.3,
+     "late": -26.7,
      "net": "clknet_leaf_2_clk"
     },
     {
      "pin": "u_c.u_lq.g_mac.g_k[2].u_m/clk",
-     "arr": 195.6,
-     "slew": 26.2,
-     "late": -38.1,
+     "arr": 210.6,
+     "slew": 24.5,
+     "late": -27.9,
      "net": "clknet_leaf_2_clk"
     },
     {
      "pin": "u_c.u_lq.g_mac.g_k[3].u_m/clk",
-     "arr": 201.7,
-     "slew": 16.4,
-     "late": -32.0,
+     "arr": 215.1,
+     "slew": 16.2,
+     "late": -23.4,
      "net": "clknet_leaf_3_clk"
     },
     {
      "pin": "u_c.u_pq.g_mac.g_k[0].u_m/clk",
-     "arr": 200.5,
-     "slew": 25.2,
-     "late": -33.2,
+     "arr": 220.3,
+     "slew": 26.2,
+     "late": -18.2,
      "net": "clknet_leaf_5_clk"
     },
     {
      "pin": "u_c.u_pq.g_mac.g_k[1].u_m/clk",
-     "arr": 192.7,
-     "slew": 26.9,
-     "late": -41.0,
+     "arr": 209.7,
+     "slew": 28.8,
+     "late": -28.8,
      "net": "clknet_leaf_4_clk"
     },
     {
      "pin": "u_c.u_rq.g_mac.g_k[0].u_m/clk",
-     "arr": 215.0,
-     "slew": 26.6,
-     "late": -18.7,
+     "arr": 225.6,
+     "slew": 25.5,
+     "late": -12.9,
      "net": "clknet_leaf_7_clk"
     },
     {
      "pin": "u_c.u_tq.g_mac.g_k[0].u_m/clk",
-     "arr": 198.4,
-     "slew": 18.0,
-     "late": -35.3,
+     "arr": 217.7,
+     "slew": 16.5,
+     "late": -20.8,
      "net": "clknet_leaf_1_clk"
     },
     {
      "pin": "u_c.u_tq.g_mac.g_k[1].u_m/clk",
-     "arr": 192.0,
-     "slew": 25.4,
-     "late": -41.7,
+     "arr": 209.1,
+     "slew": 27.5,
+     "late": -29.4,
      "net": "clknet_leaf_4_clk"
     },
     {
      "pin": "u_c.u_tq.g_mac.g_k[2].u_m/clk",
-     "arr": 215.6,
-     "slew": 28.1,
-     "late": -18.1,
+     "arr": 226.3,
+     "slew": 27.1,
+     "late": -12.2,
      "net": "clknet_leaf_7_clk"
     },
     {
      "pin": "u_c.u_tq.g_mac.g_k[3].u_m/clk",
-     "arr": 214.0,
-     "slew": 25.5,
-     "late": -19.7,
+     "arr": 224.9,
+     "slew": 25.3,
+     "late": -13.6,
      "net": "clknet_leaf_6_clk"
     }
    ]
@@ -386,24 +387,24 @@
   "outliers": []
  },
  "env": {
-  "CK_SS_MEAN": 371,
-  "CK_SS_ALL_MEAN": 370,
-  "CK_SS_MIN": 349,
-  "CK_SS_ALL_MIN": 318,
-  "CK_SS_MAX": 409,
-  "CK_SS_ALL_MAX": 409,
-  "CK_TT_MEAN": 286,
-  "CK_TT_ALL_MEAN": 285,
-  "CK_TT_MIN": 264,
-  "CK_TT_ALL_MIN": 239,
-  "CK_TT_MAX": 322,
-  "CK_TT_ALL_MAX": 322,
-  "CK_FF_MEAN": 235,
-  "CK_FF_ALL_MEAN": 234,
-  "CK_FF_MIN": 214,
-  "CK_FF_ALL_MIN": 192,
-  "CK_FF_MAX": 270,
-  "CK_FF_ALL_MAX": 270,
+  "CK_SS_MEAN": 373,
+  "CK_SS_ALL_MEAN": 376,
+  "CK_SS_MIN": 348,
+  "CK_SS_ALL_MIN": 346,
+  "CK_SS_MAX": 417,
+  "CK_SS_ALL_MAX": 433,
+  "CK_TT_MEAN": 288,
+  "CK_TT_ALL_MEAN": 290,
+  "CK_TT_MIN": 266,
+  "CK_TT_ALL_MIN": 261,
+  "CK_TT_MAX": 327,
+  "CK_TT_ALL_MAX": 343,
+  "CK_FF_MEAN": 237,
+  "CK_FF_ALL_MEAN": 238,
+  "CK_FF_MIN": 216,
+  "CK_FF_ALL_MIN": 209,
+  "CK_FF_MAX": 272,
+  "CK_FF_ALL_MAX": 287,
   "CK_ROUTE_REF": "SS"
  },
  "lib_clock_pin": "clk",
@@ -411,129 +412,130 @@
  "clock_measurements": {
   "clk": {
    "schema": "opentallas.closure_loop.ck_insertion.v1",
-   "base": "/srv/opentallas/claude/closure-loop/coll_tp8_colr3_a-r3b-607a7b9b1/routes/coll_tp8_colr3_a_r3b_607a7b9b1/work/orfs/results/asap7/opentallas_ot_coll_tp8_col_tile_r3_asap7_ref_coll_tp8_colr3_a_r3b_607a7b9b1/base",
+   "base": "/srv/opentallas-scratch/claude/closure-loop/coll_tp8_colr3_a-r4-e18711936/routes/coll_tp8_colr3_a_r4_e18711936/work/orfs/results/asap7/opentallas_ot_coll_tp8_col_tile_r3_asap7_ref_coll_tp8_colr3_a_r4_e18711936/base",
    "db": "6_final.odb",
    "sdc": "6_final.sdc",
    "clock": "core_clk",
    "parasitics": "spef",
+   "raw_source": true,
    "ss": {
     "boundary": {
-     "n": 2606,
-     "mean": 371.1,
-     "min": 348.6,
-     "max": 408.7
+     "n": 2841,
+     "mean": 373.3,
+     "min": 348.1,
+     "max": 416.6
     },
     "all": {
-     "n": 5707,
-     "mean": 370.5,
-     "min": 318.2,
-     "max": 408.7
+     "n": 6084,
+     "mean": 375.6,
+     "min": 346.1,
+     "max": 432.6
     },
     "errors": [],
     "macros": {
      "n": 14,
      "nets": 8,
      "max_per_net": 2,
-     "reg_mean": 370.5,
-     "max_slew": 36.2,
-     "max_late": -27.4,
+     "reg_mean": 375.6,
+     "max_slew": 38.0,
+     "max_late": -10.3,
      "pins": [
       {
        "pin": "u_c.u_eq.g_mac.g_k[0].u_m/clk",
-       "arr": 334.3,
+       "arr": 362.1,
        "slew": 33.1,
-       "late": -36.2,
+       "late": -13.5,
        "net": "clknet_leaf_0_clk"
       },
       {
        "pin": "u_c.u_lb.g_mac.g_k[0].u_m/clk",
-       "arr": 340.2,
-       "slew": 32.3,
-       "late": -30.3,
+       "arr": 362.7,
+       "slew": 31.7,
+       "late": -12.9,
        "net": "clknet_leaf_6_clk"
       },
       {
        "pin": "u_c.u_lb.g_mac.g_k[1].u_m/clk",
-       "arr": 328.0,
-       "slew": 35.8,
-       "late": -42.5,
+       "arr": 363.7,
+       "slew": 38.0,
+       "late": -11.9,
        "net": "clknet_leaf_5_clk"
       },
       {
        "pin": "u_c.u_lq.g_mac.g_k[0].u_m/clk",
-       "arr": 333.8,
+       "arr": 361.6,
        "slew": 32.5,
-       "late": -36.7,
+       "late": -14.0,
        "net": "clknet_leaf_0_clk"
       },
       {
        "pin": "u_c.u_lq.g_mac.g_k[1].u_m/clk",
-       "arr": 320.5,
-       "slew": 34.1,
-       "late": -50.0,
+       "arr": 350.3,
+       "slew": 35.3,
+       "late": -25.3,
        "net": "clknet_leaf_2_clk"
       },
       {
        "pin": "u_c.u_lq.g_mac.g_k[2].u_m/clk",
-       "arr": 320.3,
-       "slew": 33.7,
-       "late": -50.2,
+       "arr": 348.9,
+       "slew": 33.4,
+       "late": -26.7,
        "net": "clknet_leaf_2_clk"
       },
       {
        "pin": "u_c.u_lq.g_mac.g_k[3].u_m/clk",
-       "arr": 327.6,
+       "arr": 354.4,
        "slew": 24.4,
-       "late": -42.9,
+       "late": -21.2,
        "net": "clknet_leaf_3_clk"
       },
       {
        "pin": "u_c.u_pq.g_mac.g_k[0].u_m/clk",
-       "arr": 326.7,
-       "slew": 33.9,
-       "late": -43.8,
+       "arr": 362.0,
+       "slew": 35.5,
+       "late": -13.6,
        "net": "clknet_leaf_5_clk"
       },
       {
        "pin": "u_c.u_pq.g_mac.g_k[1].u_m/clk",
-       "arr": 318.9,
-       "slew": 35.1,
-       "late": -51.6,
+       "arr": 349.3,
+       "slew": 37.0,
+       "late": -26.3,
        "net": "clknet_leaf_4_clk"
       },
       {
        "pin": "u_c.u_rq.g_mac.g_k[0].u_m/clk",
-       "arr": 342.4,
-       "slew": 35.3,
-       "late": -28.1,
+       "arr": 364.5,
+       "slew": 33.9,
+       "late": -11.1,
        "net": "clknet_leaf_7_clk"
       },
       {
        "pin": "u_c.u_tq.g_mac.g_k[0].u_m/clk",
-       "arr": 323.7,
-       "slew": 25.8,
-       "late": -46.8,
+       "arr": 358.2,
+       "slew": 25.0,
+       "late": -17.4,
        "net": "clknet_leaf_1_clk"
       },
       {
        "pin": "u_c.u_tq.g_mac.g_k[1].u_m/clk",
-       "arr": 318.2,
-       "slew": 34.1,
-       "late": -52.3,
+       "arr": 348.8,
+       "slew": 36.1,
+       "late": -26.8,
        "net": "clknet_leaf_4_clk"
       },
       {
        "pin": "u_c.u_tq.g_mac.g_k[2].u_m/clk",
-       "arr": 343.1,
-       "slew": 36.2,
-       "late": -27.4,
+       "arr": 365.3,
+       "slew": 34.9,
+       "late": -10.3,
        "net": "clknet_leaf_7_clk"
       },
       {
        "pin": "u_c.u_tq.g_mac.g_k[3].u_m/clk",
-       "arr": 340.8,
-       "slew": 33.0,
-       "late": -29.7,
+       "arr": 363.3,
+       "slew": 32.6,
+       "late": -12.3,
        "net": "clknet_leaf_6_clk"
       }
      ]
@@ -542,122 +544,122 @@
    },
    "tt": {
     "boundary": {
-     "n": 2606,
-     "mean": 286.1,
-     "min": 264.3,
-     "max": 322.5
+     "n": 2841,
+     "mean": 288.3,
+     "min": 265.7,
+     "max": 327.1
     },
     "all": {
-     "n": 5707,
-     "mean": 285.2,
-     "min": 238.9,
-     "max": 322.5
+     "n": 6084,
+     "mean": 290.1,
+     "min": 260.8,
+     "max": 342.9
     },
     "errors": [],
     "macros": {
      "n": 14,
      "nets": 8,
      "max_per_net": 2,
-     "reg_mean": 285.2,
-     "max_slew": 30.1,
-     "max_late": -21.7,
+     "reg_mean": 290.1,
+     "max_slew": 31.6,
+     "max_late": -11.8,
      "pins": [
       {
        "pin": "u_c.u_eq.g_mac.g_k[0].u_m/clk",
-       "arr": 255.8,
+       "arr": 275.2,
        "slew": 27.4,
-       "late": -29.4,
+       "late": -14.9,
        "net": "clknet_leaf_0_clk"
       },
       {
        "pin": "u_c.u_lb.g_mac.g_k[0].u_m/clk",
-       "arr": 261.0,
-       "slew": 26.2,
-       "late": -24.2,
+       "arr": 276.0,
+       "slew": 25.7,
+       "late": -14.1,
        "net": "clknet_leaf_6_clk"
       },
       {
        "pin": "u_c.u_lb.g_mac.g_k[1].u_m/clk",
-       "arr": 248.7,
-       "slew": 29.8,
-       "late": -36.5,
+       "arr": 274.6,
+       "slew": 31.6,
+       "late": -15.5,
        "net": "clknet_leaf_5_clk"
       },
       {
        "pin": "u_c.u_lq.g_mac.g_k[0].u_m/clk",
-       "arr": 255.4,
+       "arr": 274.8,
        "slew": 26.6,
-       "late": -29.8,
+       "late": -15.3,
        "net": "clknet_leaf_0_clk"
       },
       {
        "pin": "u_c.u_lq.g_mac.g_k[1].u_m/clk",
-       "arr": 242.2,
-       "slew": 28.4,
-       "late": -43.0,
+       "arr": 263.1,
+       "slew": 29.2,
+       "late": -27.0,
        "net": "clknet_leaf_2_clk"
       },
       {
        "pin": "u_c.u_lq.g_mac.g_k[2].u_m/clk",
-       "arr": 241.9,
-       "slew": 27.9,
-       "late": -43.3,
+       "arr": 261.9,
+       "slew": 26.8,
+       "late": -28.2,
        "net": "clknet_leaf_2_clk"
       },
       {
        "pin": "u_c.u_lq.g_mac.g_k[3].u_m/clk",
-       "arr": 248.8,
-       "slew": 18.6,
-       "late": -36.4,
+       "arr": 267.0,
+       "slew": 18.5,
+       "late": -23.1,
        "net": "clknet_leaf_3_clk"
       },
       {
        "pin": "u_c.u_pq.g_mac.g_k[0].u_m/clk",
-       "arr": 247.5,
-       "slew": 27.4,
-       "late": -37.7,
+       "arr": 273.1,
+       "slew": 28.6,
+       "late": -17.0,
        "net": "clknet_leaf_5_clk"
       },
       {
        "pin": "u_c.u_pq.g_mac.g_k[1].u_m/clk",
-       "arr": 239.5,
-       "slew": 28.9,
-       "late": -45.7,
+       "arr": 261.3,
+       "slew": 30.7,
+       "late": -28.8,
        "net": "clknet_leaf_4_clk"
       },
       {
        "pin": "u_c.u_rq.g_mac.g_k[0].u_m/clk",
-       "arr": 262.9,
-       "slew": 28.8,
-       "late": -22.3,
+       "arr": 277.6,
+       "slew": 27.6,
+       "late": -12.5,
        "net": "clknet_leaf_7_clk"
       },
       {
        "pin": "u_c.u_tq.g_mac.g_k[0].u_m/clk",
-       "arr": 245.1,
-       "slew": 20.1,
-       "late": -40.1,
+       "arr": 270.1,
+       "slew": 18.9,
+       "late": -20.0,
        "net": "clknet_leaf_1_clk"
       },
       {
        "pin": "u_c.u_tq.g_mac.g_k[1].u_m/clk",
-       "arr": 238.9,
-       "slew": 27.6,
-       "late": -46.3,
+       "arr": 260.8,
+       "slew": 29.5,
+       "late": -29.3,
        "net": "clknet_leaf_4_clk"
       },
       {
        "pin": "u_c.u_tq.g_mac.g_k[2].u_m/clk",
-       "arr": 263.5,
-       "slew": 30.1,
-       "late": -21.7,
+       "arr": 278.3,
+       "slew": 28.9,
+       "late": -11.8,
        "net": "clknet_leaf_7_clk"
       },
       {
        "pin": "u_c.u_tq.g_mac.g_k[3].u_m/clk",
-       "arr": 261.6,
-       "slew": 27.2,
-       "late": -23.6,
+       "arr": 276.7,
+       "slew": 26.9,
+       "late": -13.4,
        "net": "clknet_leaf_6_clk"
       }
      ]
@@ -666,122 +668,122 @@
    },
    "ff": {
     "boundary": {
-     "n": 2606,
-     "mean": 234.7,
-     "min": 213.8,
-     "max": 270.4
+     "n": 2841,
+     "mean": 236.9,
+     "min": 215.8,
+     "max": 272.4
     },
     "all": {
-     "n": 5707,
-     "mean": 233.7,
-     "min": 192.0,
-     "max": 270.4
+     "n": 6084,
+     "mean": 238.5,
+     "min": 209.1,
+     "max": 286.9
     },
     "errors": [],
     "macros": {
      "n": 14,
      "nets": 8,
      "max_per_net": 2,
-     "reg_mean": 233.7,
-     "max_slew": 28.1,
-     "max_late": -18.1,
+     "reg_mean": 238.5,
+     "max_slew": 29.7,
+     "max_late": -12.2,
      "pins": [
       {
        "pin": "u_c.u_eq.g_mac.g_k[0].u_m/clk",
-       "arr": 208.7,
+       "arr": 223.4,
        "slew": 25.8,
-       "late": -25.0,
+       "late": -15.1,
        "net": "clknet_leaf_0_clk"
       },
       {
        "pin": "u_c.u_lb.g_mac.g_k[0].u_m/clk",
-       "arr": 213.4,
-       "slew": 24.2,
-       "late": -20.3,
+       "arr": 224.3,
+       "slew": 23.9,
+       "late": -14.2,
        "net": "clknet_leaf_6_clk"
       },
       {
        "pin": "u_c.u_lb.g_mac.g_k[1].u_m/clk",
-       "arr": 201.8,
-       "slew": 28.0,
-       "late": -31.9,
+       "arr": 221.9,
+       "slew": 29.7,
+       "late": -16.6,
        "net": "clknet_leaf_5_clk"
       },
       {
        "pin": "u_c.u_lq.g_mac.g_k[0].u_m/clk",
-       "arr": 208.3,
+       "arr": 222.9,
        "slew": 24.8,
-       "late": -25.4,
+       "late": -15.6,
        "net": "clknet_leaf_0_clk"
       },
       {
        "pin": "u_c.u_lq.g_mac.g_k[1].u_m/clk",
-       "arr": 195.9,
-       "slew": 26.8,
-       "late": -37.8,
+       "arr": 211.8,
+       "slew": 27.3,
+       "late": -26.7,
        "net": "clknet_leaf_2_clk"
       },
       {
        "pin": "u_c.u_lq.g_mac.g_k[2].u_m/clk",
-       "arr": 195.6,
-       "slew": 26.2,
-       "late": -38.1,
+       "arr": 210.6,
+       "slew": 24.5,
+       "late": -27.9,
        "net": "clknet_leaf_2_clk"
       },
       {
        "pin": "u_c.u_lq.g_mac.g_k[3].u_m/clk",
-       "arr": 201.7,
-       "slew": 16.4,
-       "late": -32.0,
+       "arr": 215.1,
+       "slew": 16.2,
+       "late": -23.4,
        "net": "clknet_leaf_3_clk"
       },
       {
        "pin": "u_c.u_pq.g_mac.g_k[0].u_m/clk",
-       "arr": 200.5,
-       "slew": 25.2,
-       "late": -33.2,
+       "arr": 220.3,
+       "slew": 26.2,
+       "late": -18.2,
        "net": "clknet_leaf_5_clk"
       },
       {
        "pin": "u_c.u_pq.g_mac.g_k[1].u_m/clk",
-       "arr": 192.7,
-       "slew": 26.9,
-       "late": -41.0,
+       "arr": 209.7,
+       "slew": 28.8,
+       "late": -28.8,
        "net": "clknet_leaf_4_clk"
       },
       {
        "pin": "u_c.u_rq.g_mac.g_k[0].u_m/clk",
-       "arr": 215.0,
-       "slew": 26.6,
-       "late": -18.7,
+       "arr": 225.6,
+       "slew": 25.5,
+       "late": -12.9,
        "net": "clknet_leaf_7_clk"
       },
       {
        "pin": "u_c.u_tq.g_mac.g_k[0].u_m/clk",
-       "arr": 198.4,
-       "slew": 18.0,
-       "late": -35.3,
+       "arr": 217.7,
+       "slew": 16.5,
+       "late": -20.8,
        "net": "clknet_leaf_1_clk"
       },
       {
        "pin": "u_c.u_tq.g_mac.g_k[1].u_m/clk",
-       "arr": 192.0,
-       "slew": 25.4,
-       "late": -41.7,
+       "arr": 209.1,
+       "slew": 27.5,
+       "late": -29.4,
        "net": "clknet_leaf_4_clk"
       },
       {
        "pin": "u_c.u_tq.g_mac.g_k[2].u_m/clk",
-       "arr": 215.6,
-       "slew": 28.1,
-       "late": -18.1,
+       "arr": 226.3,
+       "slew": 27.1,
+       "late": -12.2,
        "net": "clknet_leaf_7_clk"
       },
       {
        "pin": "u_c.u_tq.g_mac.g_k[3].u_m/clk",
-       "arr": 214.0,
-       "slew": 25.5,
-       "late": -19.7,
+       "arr": 224.9,
+       "slew": 25.3,
+       "late": -13.6,
        "net": "clknet_leaf_6_clk"
       }
      ]
@@ -797,24 +799,24 @@
     "outliers": []
    },
    "env": {
-    "CK_SS_MEAN": 371,
-    "CK_SS_ALL_MEAN": 370,
-    "CK_SS_MIN": 349,
-    "CK_SS_ALL_MIN": 318,
-    "CK_SS_MAX": 409,
-    "CK_SS_ALL_MAX": 409,
-    "CK_TT_MEAN": 286,
-    "CK_TT_ALL_MEAN": 285,
-    "CK_TT_MIN": 264,
-    "CK_TT_ALL_MIN": 239,
-    "CK_TT_MAX": 322,
-    "CK_TT_ALL_MAX": 322,
-    "CK_FF_MEAN": 235,
-    "CK_FF_ALL_MEAN": 234,
-    "CK_FF_MIN": 214,
-    "CK_FF_ALL_MIN": 192,
-    "CK_FF_MAX": 270,
-    "CK_FF_ALL_MAX": 270,
+    "CK_SS_MEAN": 373,
+    "CK_SS_ALL_MEAN": 376,
+    "CK_SS_MIN": 348,
+    "CK_SS_ALL_MIN": 346,
+    "CK_SS_MAX": 417,
+    "CK_SS_ALL_MAX": 433,
+    "CK_TT_MEAN": 288,
+    "CK_TT_ALL_MEAN": 290,
+    "CK_TT_MIN": 266,
+    "CK_TT_ALL_MIN": 261,
+    "CK_TT_MAX": 327,
+    "CK_TT_ALL_MAX": 343,
+    "CK_FF_MEAN": 237,
+    "CK_FF_ALL_MEAN": 238,
+    "CK_FF_MIN": 216,
+    "CK_FF_ALL_MIN": 209,
+    "CK_FF_MAX": 272,
+    "CK_FF_ALL_MAX": 287,
     "CK_ROUTE_REF": "SS"
    },
    "lib_clock_pin": "clk",
