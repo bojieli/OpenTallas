@@ -818,7 +818,7 @@ def _build(r=R, kv_wq_leaves=False, kv_wq_binary=False, kv_wq_leaf_s=False, kv_w
     add('host', 'qkd_host', xc - tw / 2, MARGIN + SERDES[2] + GY, tw - SHAVE, th - SHAVE, 'R0', 'host', 'io')
     # v1.2 candidate lanes are OFF by default (kvs2 T2 try: window fine H 1.37 -> 1.25, coarse 1.32 -> 1.17 H but 0.80 -> 1.10 V,
     # lx 1 -> 2 stages, one re-plan reach miss): OT_KV_LANES=1 turns them on for the next revision's work
-    m['geo'] = dict(grp_y=grp_y, split=split, lanes=bool(split and __import__('os').environ.get('OT_KV_LANES') in ('1', '2')), stack_pitch=sp, band_shift=band_shift, x_land=x_land, x_grp=x_grp, grp_w=grp_w, centre_w=centre_w, stack_h=stack_h, band_dy=band_dy,
+    m['geo'] = dict(grp_y=grp_y, split=split, lanes=bool(split and __import__('os').environ.get('OT_KV_LANES', '2') in ('1', '2')), stack_pitch=sp, band_shift=band_shift, x_land=x_land, x_grp=x_grp, grp_w=grp_w, centre_w=centre_w, stack_h=stack_h, band_dy=band_dy,
                     ystack=ystack, r=r, kv_wq_leaves=kv_wq_leaves, kv_wq_binary=kv_wq_binary, kv_wq_leaf_s=kv_wq_leaf_s, leaf_shift=leaf_shift, edge_channel=edge_chan, kv_wq_head=kv_wq_head, kv_wq_wide=kv_wq_wide, kv_wq_mirror=kv_wq_mirror)
     if kv_wq_leaves:
         _write_tiles(m, add)
@@ -1253,7 +1253,8 @@ def _kv_lane(m, bid):
     # v1.2: OT_KV_LANES=2 lanes only the sequencer-centred chains (kvn / kc / emf / emr): kvs3L's krq / krs lanes cost up to
     # +18 / +16 relay stages on the engine <-> landing KV rows (relay_depth_changes.json), which are local words
     import os as _os
-    rx_ = r'(kvn|kc|emf|emr)_(WN|EN)(?:_|$)' if _os.environ.get('OT_KV_LANES') == '2' else \
+    # v1.2 DEFAULT (kvs5L vs kvs5: TT relay->relay 0 violators / +14.8 vs 59 / -66.7, no depth change): '2'; '0' = off
+    rx_ = r'(kvn|kc|emf|emr)_(WN|EN)(?:_|$)' if _os.environ.get('OT_KV_LANES', '2') == '2' else \
         r'(kvn|krs|krq|kc|emf|emr|ing)_(WN|EN)(?:_|$)'
     mt = re.match(rx_, bid)
     g = m['geo'].get('grp_y', {})
