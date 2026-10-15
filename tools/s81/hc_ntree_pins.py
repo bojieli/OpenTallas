@@ -132,7 +132,9 @@ for c in (0, 1, 2):
 rsq = dict(f_fv=run('N', 20.016, 7), f_fc=run('N', 20.016 + 7 * P, 104), f_eps=run('N', 20.016 + 111 * P, 64),
            ul=run('N', 20.016 + 175 * P, 99), sk=run('W', 4.032, 1), srs=run('W', 4.128, 1),
            ss_v=run('E', 100.032, 1), ss=run('E', 100.128, 32), tflt=run('E', 103.296, 1), cflt=run('E', 103.392, 3),
-           flt=run('W', 60.0, 1))
+           flt=run('W', 60.0, 1), ngo=run('E', 137.376, 1))
+# Registered epoch start toward the CLOSED tree ngo_i N pin (143.100,181.398).
+# Physical hop in the region frame: (138.198,1094.976) -> (340.740,1138.998) =246.564um.
 check_disjoint('cnrsq', rsq)
 files.append(write('ot_s81_hc_cnrsq', '', [138.24, 138.24], rsq, 'sk', 'die lead r5: W of cntree; ss / tflt / cflt on its E face toward the cntree, flt on W (chain 0 side)'))
 layout = dict(
