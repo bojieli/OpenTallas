@@ -1,0 +1,27 @@
+{
+  "status": "PREBUILD_OPT_IN_NOT_QUALIFIED",
+  "baseline_sources": [
+    "3b307668",
+    "8551efd4"
+  ],
+  "baseline_result": "64087.076893/87.890695 FAIL84.7;2048131.836043/132.649846 PASS134.2",
+  "change": "Replace fixed two-PC parity row slots with real fair registered-request CA arbitration. Retain denied command, prioritize due REFpb/REFab, allow urgent scheduled refresh to replace an unissued nonurgent request. One row command per physical pair/edge, one bankstate owner/PC.",
+  "timing": "Row planner uses next-edge RRDS/noact eligibility (counter<=1) only with no current ACT/REF fire; actual command issue remains tRRDS>=3,tRREFD>=8. Guard2extraedges before dueREF covers bounded arbitration wait. All column/RCD/RP/RAS/WRR/FAW timing and canonical23fixture unchanged.",
+  "FF_delta": {
+    "per_PC": 0,
+    "common_stack_root": 16
+  },
+  "clock_roots_added": 0,
+  "projected_PC_clockpins": 14100,
+  "common_stack_root_pins": 17,
+  "ports": "Internal32registeredrowrequests/32grants,16fairbits; external command and K ABI unchanged. Physical leaf grant/priority seam needs new pin/CTS proof, old physical candidate untouched.",
+  "arbitration_bound": "At most2denials for nonurgent request (normalother grant then single urgentREF); pairedREFphases distinct under actual native PHASE construction. DueREF has highest priority.",
+  "tests_required": [
+    "StrictACT/RRD/REFdeadline checks on all4PFcases",
+    "No duplicate/drop under paired request contention",
+    "Pending request stable unless replaced by dueREF",
+    "Existing2048read identity/stall/debt and SRAM/head/beat mutants",
+    "No CA pair conflict; actualrefreshes remain counted"
+  ],
+  "adoption": "Default DYNAMIC_CA=0; no gate/price/clock relaxation."
+}

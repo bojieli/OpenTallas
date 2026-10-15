@@ -1,0 +1,81 @@
+{
+  "status": "STRICT_FUNCTIONAL_AND_UNCHANGED_COMPONENT_PERFORMANCE_PASS",
+  "unit": "oth-ubuntu-1427307-1792064247",
+  "terminal_exit": 0,
+  "host": "ot-epyc1tb",
+  "resources": {
+    "GB": 2,
+    "threads": 1
+  },
+  "source_manifest": "input_sha256.json",
+  "cases": [
+    {
+      "phase_ps": 137,
+      "sectors": 640,
+      "HBM_cycles": 78.938865,
+      "limit": 84.7,
+      "functional": "PASS",
+      "performance": "PASS"
+    },
+    {
+      "phase_ps": 137,
+      "sectors": 2048,
+      "HBM_cycles": 126.139424,
+      "limit": 134.2,
+      "functional": "PASS",
+      "performance": "PASS"
+    },
+    {
+      "phase_ps": 773,
+      "sectors": 640,
+      "HBM_cycles": 79.752668,
+      "limit": 84.7,
+      "functional": "PASS",
+      "performance": "PASS"
+    },
+    {
+      "phase_ps": 773,
+      "sectors": 2048,
+      "HBM_cycles": 126.953227,
+      "limit": 134.2,
+      "functional": "PASS",
+      "performance": "PASS"
+    }
+  ],
+  "identity_and_backpressure": "2048 exact native RD beats and512 burst4 requests,RL23,32real response SRAMs; stalled response retained, max32reserved",
+  "mutants": [
+    "wrong head payload",
+    "wrong beat identity",
+    "wrong SRAM read row",
+    "two simultaneous paired CA grants"
+  ],
+  "timing_oracle": "Unchanged command-only RL23 fixture; ACT/PRE/REF/RCD/RAS/RP/RTP/WRR/CCDL/RRDS/RRDL/FAW/RREFD/turnaround checks",
+  "real_memory": "32 native response SRAMs +32 stream landing SRAMs in PF composition",
+  "source_defaults": "All new mechanisms default off; explicit opt-in test profile",
+  "physical_cost": "Intent/head adds450FF/PC projected14100clockpins; dynamic adds16fairFF per stack, zero SRAM delta; mapped cost/pin/CTS not qualified",
+  "limits": [
+    "Two measured reset/reserve clock phases, not universal refresh/history bound",
+    "Actual mapped4 checkpoint, HC, Engram and STORE producer joins remain separately pinned to earlier profile",
+    "One physical bank/refresh owner per PC; no shared-client contention admission claimed",
+    "No physical timing, protection, CTS or whole-token qualification"
+  ],
+  "logs_sha256": {
+    "double_CA.log": "208f8fe8537b40fefd7ed516e307a972ba02403ded4080dd62c141cda56bf581",
+    "double_CA_build.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "identity.log": "8127ef52c388fcfb74d621f66fa3e584dce13c3bfe74c927e112bf3bb153e5f4",
+    "identity_build.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "phase_137_case_1.log": "7500fe894bd6ffdfab9eca66344107165f9eeab03ac5be64bbe71c0b1492a0e7",
+    "phase_137_case_2.log": "c72fb155ae07a1d51c4c768bb26453c0e766429fe7f5c725246c57e25318d986",
+    "phase_773_case_1.log": "1749ea4cce03bbe16d5039246f8ad8a275659118390e6b8692c0f2358e2b4818",
+    "phase_773_case_2.log": "4ed8c77030c46934110896ed673d86292a5e79bd9495bc5a44dcf80ee7a19313",
+    "prefetch_build.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stalls.log": "ee452c7c686bfe766a2bef809703f28b4cd186e645d0c8acaf138b8e0ec4f9d7",
+    "wrong_SRAM_row.log": "2e99e02af64d7760f2b633a5396f7c524833bd688d280962f11db445f3ae5fc2",
+    "wrong_SRAM_row_build.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "wrong_beat.log": "9966ec5561fea437418e69eba505374e77608a9465c17450053ed1dab30da965",
+    "wrong_beat_build.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "wrong_head.log": "5bfc623b972f235a02e6f40b7e986c74ab737caf9d2bd57125a34ad6104b6bee",
+    "wrong_head_build.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "arbitration_checks": "16 actual contentions, max observed wait1; held command metadata, pair onehot; strict ACT timing; actual mutation rejects duplicate paired grant"
+}
