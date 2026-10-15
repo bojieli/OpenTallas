@@ -145,6 +145,8 @@ module ot_hfd_coll_q_static #(
  reg [1:0] inj_req_pin;
  reg [31:0] inj_idx_pin;
  reg [159:0] inj_addr_pin;
+ reg [159:0] delivery_obase_pin, rgx_addr_pin;
+ assign hgi_del_obase=delivery_obase_pin;
  reg [7:0] link_epoch[0:NPT-1];
  wire [NPT-1:0] link_rx_v,link_abort;
  wire [NPT*545-1:0] link_rx_data;
@@ -183,6 +185,10 @@ module ot_hfd_coll_q_static #(
      16'(p_inj_meta[j*33+:16]+iteration*p_iter_inj_idx_step)};
   end
   for(integer j=1;j<INJLAT;j=j+1)inj_meta_pipe[j]<=inj_meta_pipe[j-1];
+  for(integer j=0;j<4;j=j+1)begin
+   delivery_obase_pin[j*40+:40]<=p_del_obase[j*40+:40]+40'(iteration*p_iter_del_step);
+   rgx_addr_pin[j*40+:40]<=p_rgx_addr[j*40+:40]+40'(iteration*p_iter_rgx_step);
+  end
   vm_meta_pipe[0]<=p_vm_meta;
   for(integer j=1;j<10;j=j+1)vm_meta_pipe[j]<=vm_meta_pipe[j-1];
   vm_select_pipe[0]<=p_vm_pair_select;
@@ -230,7 +236,8 @@ module ot_hfd_coll_q_static #(
        (p_lk_rx_expect[k] && (40'(p_lk_rx_slot[k*6+:6])+link_slot_offset)>=64))protocol_fault<=1;
    end
    if(rc_v!=r_lp_we || (rc_v && rc_tag!=r_lp_tag))protocol_fault<=1;
-   if(tkm_done!=p_tkm_done_slot)protocol_fault<=1;
+   if(tkm_done!=p_tkm_done_slot || (issue_done && tkm_busy))protocol_fault<=1;
+   if(SOLO==0 && (p_tkm_start || (|dest_v[NPT+8+:4]) || (|p_tkm_del_slot)))protocol_fault<=1;
    if(|inst[1535:1415] || |p_ring[87:58])protocol_fault<=1;
    if(NPT==2 && (p_capture_slot[9] || p_sink_slot[15] || |p_sink_select[63:60] ||
       p_lk_wr_v[2] || p_lk_rd_v[2] || p_lk_rx_expect[2] || p_lk_epoch_begin[2]))protocol_fault<=1;
@@ -271,12 +278,11 @@ module ot_hfd_coll_q_static #(
  for(genvar j=0;j<4;j=j+1)begin:g_delivery
   assign del_valid[j]=dest_v[NPT+j];
   assign del_flit[j*545+:545]=dest_d[(NPT+j)*545+:545];
-  assign hgi_del_obase[j*40+:40]=p_del_obase[j*40+:40]+40'(iteration*p_iter_del_step);
  end
  wire [159:0] rgx_addr;
  wire [2047:0] rgx_data;
  for(genvar j=0;j<4;j=j+1)begin:g_rgx
-  assign rgx_addr[j*40+:40]=p_rgx_addr[j*40+:40]+40'(iteration*p_iter_rgx_step);
+  assign rgx_addr[j*40+:40]=rgx_addr_pin[j*40+:40];
   assign rgx_data[j*512+:512]=dest_d[(NPT+4+j)*545+:512];
  end
  ot_hgi_coll_static_vmwrite u_writer(.clk(clk_vmwrite),.rst_n(rst_n),.sid(qid),
