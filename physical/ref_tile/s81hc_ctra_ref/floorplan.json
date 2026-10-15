@@ -28,7 +28,50 @@
   "layer_cap": "M5",
   "cap_basis": "contract"
  },
- "pins": {},
+ "pins": {
+  "S": [
+   "fv",
+   "fdx",
+   "rv_in",
+   "rd_in",
+   "hrq_s",
+   "yb_s",
+   "nflt_s",
+   "hnz_s",
+   "pflt_s"
+  ],
+  "N": [
+   "rvm",
+   "rdm",
+   "hrq_n",
+   "yb_n",
+   "nflt_n",
+   "hnz_n",
+   "pflt_n",
+   "rq_q",
+   "hs_run",
+   "hs_c",
+   "rq_q_c1",
+   "hs_run_c1",
+   "hs_c_c1",
+   "rq_q_c2",
+   "hs_run_c2",
+   "hs_c_c2",
+   "rq_q_c3",
+   "hs_run_c3",
+   "hs_c_c3",
+   "hov_d",
+   "rst_in"
+  ],
+  "E": [
+   "cs"
+  ],
+  "W": [
+   "clk",
+   "tid",
+   "last"
+  ]
+ },
  "clock_port": "clk",
  "blocks": [],
  "findings": [],

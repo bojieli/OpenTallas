@@ -29,26 +29,26 @@
   "cap_basis": "contract"
  },
  "pins": {
-  "N": [
-   "fv_in",
-   "fd_in",
-   "dl_in",
-   "cs_n",
-   "ul_out"
-  ],
-  "S": [
-   "fv",
-   "fdx",
-   "dl_out",
-   "cs_s",
-   "ul_in",
-   "fv_local",
-   "fdx_local"
-  ],
   "W": [
    "clk",
-   "rst_in",
    "tid"
+  ],
+  "N": [
+   "fd_in",
+   "fv_in",
+   "rst_in",
+   "dl_in",
+   "ul_out",
+   "cs_n"
+  ],
+  "S": [
+   "fdx",
+   "fv",
+   "dl_out",
+   "ul_in",
+   "cs_s",
+   "fv_local",
+   "fdx_local"
   ]
  },
  "clock_port": "clk",

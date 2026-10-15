@@ -41,7 +41,28 @@
  },
  "why_floorplan": "centre-band return slots 2-3 (sequencer/origination/ybuf replicated, takes the rd header + the 128 psb-shift bits): ~2.2k N / 2.5k S pins",
  "macros": [],
- "pins": {},
+ "pins": {
+  "S": [
+   "fv",
+   "fdx",
+   "rv_in",
+   "rdh_in",
+   "rdd_in",
+   "hrq_s",
+   "yb_s"
+  ],
+  "N": [
+   "rdm",
+   "hrq_n",
+   "yb_n",
+   "rst_in"
+  ],
+  "W": [
+   "clk",
+   "tid",
+   "last"
+  ]
+ },
  "refglob": "*",
  "route": {
   "pd": 0.5,

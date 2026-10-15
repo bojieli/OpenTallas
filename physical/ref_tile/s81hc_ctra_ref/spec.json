@@ -41,7 +41,50 @@
  },
  "why_floorplan": "centre-band return slots 0-1: rv/rd pin flops, origination, merge (psb, ybuf, hrq of 16 lanes), sequencer; ~2.5k pins per N/S face (hrq lanes 0-7 on N, 8-15 on S)",
  "macros": [],
- "pins": {},
+ "pins": {
+  "S": [
+   "fv",
+   "fdx",
+   "rv_in",
+   "rd_in",
+   "hrq_s",
+   "yb_s",
+   "nflt_s",
+   "hnz_s",
+   "pflt_s"
+  ],
+  "N": [
+   "rvm",
+   "rdm",
+   "hrq_n",
+   "yb_n",
+   "nflt_n",
+   "hnz_n",
+   "pflt_n",
+   "rq_q",
+   "hs_run",
+   "hs_c",
+   "rq_q_c1",
+   "hs_run_c1",
+   "hs_c_c1",
+   "rq_q_c2",
+   "hs_run_c2",
+   "hs_c_c2",
+   "rq_q_c3",
+   "hs_run_c3",
+   "hs_c_c3",
+   "hov_d",
+   "rst_in"
+  ],
+  "E": [
+   "cs"
+  ],
+  "W": [
+   "clk",
+   "tid",
+   "last"
+  ]
+ },
  "refglob": "*",
  "route": {
   "pd": 0.5,

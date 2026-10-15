@@ -44,26 +44,26 @@
  "why_floorplan": "drop-in for the closed ctfx centre strip (576.72 x 12.96, cth_nt sub-layout row y 365.04): ctfx's 1,135 pin flops + the scale lane pin flop (33) + the partial lane pin flop / merge (275) + a ctq replica; ~1,500 pins per N/S face over the full width | r2 2026-10-14: h 12.96 -> 25.92: at 12.96 (core 8.64 um, 32 rows) the recipe-2 pin flops + pin hold stages of both ~1,500-2,200-pin N/S faces leave no legal rows (CTS gate DPL-0033: 3,462 fixed cells, 7,900 site-alignment / 445 overlap violations at 36.6% overall util); the passing sibling ctfs_nt is 25.92. Slot change requested from the S81 die lead (cth_nt sub-layout).",
  "macros": [],
  "pins": {
-  "N": [
-   "fv_in",
-   "fd_in",
-   "dl_in",
-   "cs_n",
-   "ul_out"
-  ],
-  "S": [
-   "fv",
-   "fdx",
-   "dl_out",
-   "cs_s",
-   "ul_in",
-   "fv_local",
-   "fdx_local"
-  ],
   "W": [
    "clk",
-   "rst_in",
    "tid"
+  ],
+  "N": [
+   "fd_in",
+   "fv_in",
+   "rst_in",
+   "dl_in",
+   "ul_out",
+   "cs_n"
+  ],
+  "S": [
+   "fdx",
+   "fv",
+   "dl_out",
+   "ul_in",
+   "cs_s",
+   "fv_local",
+   "fdx_local"
   ]
  },
  "refglob": "*",
