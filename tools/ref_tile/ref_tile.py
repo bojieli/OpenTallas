@@ -630,9 +630,12 @@ ABUT_UM = 0.1           # two macros this close in one axis (and overlapping in 
 
 def abutted_stack(a: dict, b: dict, gx: float, gy: float) -> bool:
     """two MACROS stacked N-S with no cell row between them (0 <= gap <= ABUT_UM, overlapping in x) and no signal /
-    clock pin of either on the two touching faces (memory arrays with their pins on W / E: a bank of arrays).  Only R0;
-    hard children and side-by-side macros keep the channel rule (their touching faces carry pins / need straps)."""
-    if a["kind"] != "macro" or b["kind"] != "macro" or a.get("orient", "R0") != "R0" or b.get("orient", "R0") != "R0":
+    clock pin of either on the two touching faces (memory arrays with their pins on W / E: a bank of arrays).  R0 / MY
+    keep the LEF's top / bottom faces, MX / R180 swap them (the W / E test is mirror-symmetric); rotated (R90 / R270 ...)
+    macros, hard children and side-by-side macros keep the channel rule (their touching faces carry pins / need straps).
+    MY admitted 2026-10-14 (s81-gather r4): a mirrored bank faces its pins at the logic between two banks."""
+    flip = {"R0": False, "MY": False, "MX": True, "R180": True}
+    if a["kind"] != "macro" or b["kind"] != "macro" or a.get("orient", "R0") not in flip or b.get("orient", "R0") not in flip:
         return False
     if not (-1e-6 <= gy <= ABUT_UM + 1e-6 and gx < -1e-6):
         return False
@@ -641,6 +644,8 @@ def abutted_stack(a: dict, b: dict, gx: float, gy: float) -> bool:
         if blk.get("_tm") is None:
             blk["_tm"] = track_macro(blk["view"])
         tm = blk["_tm"]
+        if flip[blk.get("orient", "R0")]:                       # the LEF face that ends up touching the neighbour
+            edge = "bottom" if edge == "top" else "top"
         for pin in tm["pins"]:
             if pin["use"] not in ("SIGNAL", "CLOCK"):
                 continue
@@ -775,7 +780,7 @@ def floorplan_checks(s: dict, W: float, H: float, blocks: list, std_area: float 
                 continue
             if gap < CHANNEL_UM - 1e-6:
                 out.append(("FAIL", "channel", f"{a['master']}#{a['idx']} / {b['master']}#{b['idx']} channel {gap:.1f} um "
-                            f"(< {CHANNEL_UM:.0f} um)", "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0, no pin on the touching faces: abutted_stack)"))
+                            f"(< {CHANNEL_UM:.0f} um)", "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"))
     if ab is not None and (ab_n["channel"] or ab_n["macro_edge"]):
         out.append(("WARN", "abut_plan", f"PROBE: {ab_n['channel']} tile-tile channels in [{ch_min:g}, {CHANNEL_UM:g}) um and "
                     f"{ab_n['macro_edge']} tile-edge distances >= {edge_min:g} um admitted by abut_plan ({ab['why'][:160]})",

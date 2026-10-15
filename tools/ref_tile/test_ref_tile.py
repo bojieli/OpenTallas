@@ -173,6 +173,17 @@ class Abut(unittest.TestCase):
         h = RT.read_view_lef(self.V)["H"]
         self.assertEqual(self.chan([self.blk(0, 100.0, 100.0), self.blk(1, 100.0, 100.0 + h + 0.024)]), [])
 
+    def test_stack_abutted_mirrored(self):
+        """MY / MX / R180 banks abut like R0 (touching faces carry no signal pin); a rotated macro keeps the rule"""
+        h = RT.read_view_lef(self.V)["H"]
+        for o in ("MY", "MX", "R180"):
+            a, b = self.blk(0, 100.0, 100.0), self.blk(1, 100.0, 100.0 + h + 0.024)
+            a["orient"] = b["orient"] = o
+            self.assertEqual(self.chan([a, b]), [], o)
+        a, b = self.blk(0, 100.0, 100.0), self.blk(1, 100.0, 100.0 + h + 0.024)
+        a["orient"] = b["orient"] = "R90"
+        self.assertEqual(len(self.chan([a, b])), 1)
+
     def test_at_exact_is_not_snapped(self):
         h = RT.read_view_lef(self.V)["H"]
         s = {"kind": "tile", "pins": {"S": ["ck"]}, "children": [],
