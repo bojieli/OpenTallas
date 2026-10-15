@@ -7,18 +7,20 @@ FIELDS={
  'launch':(62,1),'launch_tag':(63,2),'retire_mask':(65,4),'phase_end':(69,1)}
 
 
-def action_word(fields):
+def action_word(fields, action_bits=72):
+    if action_bits not in (72,75):raise ValueError("supported action width72 or75 required")
+    layout={k:(lo+(3 if lo>=51 else 0),14 if k=="stream_addr" else w) for k,(lo,w) in FIELDS.items()} if action_bits==75 else FIELDS
     if not isinstance(fields,dict) or set(fields)-FIELDS.keys():
         raise ValueError('unknown native action field')
     word=0
     for key,value in fields.items():
-        low,width=FIELDS[key]
+        low,width=layout[key]
         if type(value)is not int or not 0<=value<1<<width:raise ValueError('action field bounds: '+key)
         word|=value<<low
     return word
 
 
-def compile_events(events,commands):
+def compile_events(events,commands,action_bits=72):
     """Commands are real emitted issuer rows, not an independently timed GO list.
 
     Issuer rowissue R -> cmdpin R+1 -> endpointGOpin R+2. Calendar timestamp
@@ -31,7 +33,7 @@ def compile_events(events,commands):
     for e in events:
         t=e['timestamp']
         if type(t)is not int or not prev<t<1<<24:raise ValueError('strict increasing timestamp24 required')
-        word=action_word(e['action']);rows.append((t<<72)|word);by_time[t]=e['action'];prev=t
+        word=action_word(e['action'],action_bits=action_bits);rows.append((t<<action_bits)|word);by_time[t]=e['action'];prev=t
         if e['action'].get('phase_end',0):ends.append(t)
     if ends!=[prev]:raise ValueError('exactly one final phase_end required')
     occupied=set()

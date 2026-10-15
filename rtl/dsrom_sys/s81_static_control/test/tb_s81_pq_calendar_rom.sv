@@ -1,10 +1,14 @@
 `timescale 1ns/1ps
 module tb_s81_pq_calendar_rom;
+`ifndef CALENDAR_BITS
+`define CALENDAR_BITS 72
+`endif
+ localparam ACTION_BITS=`CALENDAR_BITS;
  reg ck=0,rst_n=0,prime=0,start=0;always #5 ck=~ck;
- wire[71:0]action;wire active,primed,fault;
- ot_s81_pq_calendar_rom dut(.ck(ck),.rst_n(rst_n),.prime(prime),.stage_start(start),.base(12'd0),.length(13'd24),
+ wire[ACTION_BITS-1:0]action;wire active,primed,fault;
+ ot_s81_pq_calendar_rom #(.ACTION_BITS(ACTION_BITS)) dut(.ck(ck),.rst_n(rst_n),.prime(prime),.stage_start(start),.base(12'd0),.length(13'd24),
  .action(action),.active(active),.primed(primed),.fault(fault));
- reg[95:0]expected[0:23];integer i,age=-1,seen=0,mode=0;
+ reg[ACTION_BITS+23:0]expected[0:23];integer i,age=-1,seen=0,mode=0;
  initial begin
   if($value$plusargs("mode=%d",mode))begin end
   $readmemh("expected.hex",expected);
@@ -23,8 +27,8 @@ module tb_s81_pq_calendar_rom;
   if(age>=0||start)begin
    age=age+1;#1;
    if(mode!=1)begin
-    if(seen<24&&age==expected[seen][95:72]+1)begin
-     if(action!==expected[seen][71:0])$fatal(1,"actual ROM action mismatch edge%0d index%0d",age,seen);seen=seen+1;
+    if(seen<24&&age==expected[seen][ACTION_BITS+23:ACTION_BITS]+1)begin
+     if(action!==expected[seen][ACTION_BITS-1:0])$fatal(1,"actual ROM action mismatch edge%0d index%0d",age,seen);seen=seen+1;
     end else if(action!=0)$fatal(1,"unexpected calendar event edge%0d",age);
    end
   end
