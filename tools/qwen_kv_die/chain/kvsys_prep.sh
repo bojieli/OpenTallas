@@ -43,5 +43,5 @@ fi
   && python3 tools/qwen_kv_die/kv_native_phy.py --case $O/case_kv --libs $O/libs >> $O/native_phy.log
 python3 tools/qwen_kv_die/kvsys_clocks.py --case $O/case_kv --views $O/libs/views.json --out $O/libs > $O/clocks.log
 python3 tools/qwen_kv_die/die_port_bind_kv.py $O/case_kv/die.v --split --relay-rtl $O/case_kv/qkd_kv_relays.sv $EXP --out $O/port_bind.json > $O/port_bind.log
-python3 tools/qwen_kv_die/kvsys_window.py --split --out $O/window.json > $O/window.log
+python3 tools/qwen_kv_die/kvsys_window.py --split $H14 --out $O/window.json > $O/window.log
 echo "prep done: $(cat $O/case_kv/SOURCE_COMMIT) $(tail -1 $O/bind.log | head -c 300)"
