@@ -1,5 +1,5 @@
 {
- "name": "hbm_program_ready_pin_ref-pin1-COMMIT",
+ "name": "hbm_program_ready_pin_ref-pin1-6d0674c2b",
  "block": "ot_hbm_program_block_ready_pin",
  "ref_tile": true,
  "owner": "Codex:/root/hbm_host_join_1417",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 8,
  "source": {
   "branch": "codex/hbm-ready-physical-review-1417",
-  "commit": "COMMIT",
+  "commit": "6d0674c2b38deedb6c03ea8a1438ade90b56b165",
   "extra_paths": [
    "rtl/hbm_accel/host_static_20261015/",
    "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv",
@@ -100,7 +100,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/hbm_program_ready_pin_ref/hbm_program_ready_pin_ref-pin1-COMMIT"
+   "to": "results/rtl/ref_tile/hbm_program_ready_pin_ref/hbm_program_ready_pin_ref-pin1-6d0674c2b"
   }
  ],
  "cycles_added": 0,
