@@ -1,0 +1,210 @@
+{
+  "gate_verdict": "WARN",
+  "source_identity": "exact_content_snapshot",
+  "start_commit": "f22723676528c75a9ddac988b3bab0ea08f4722c",
+  "archive_sha256": "be8ac161349d822716dacfe7cece869ae7ea17afbc9eab0ef7e185830236a02e",
+  "manifest_sha256": "5a47b411535db9bd73e0727ae92c792c929013c878048b9f714125f117bb8824",
+  "clock": {
+    "max_root_sinks": 369,
+    "root": "port:clk_outputs[0]",
+    "cts": true,
+    "tt_insertion_ps": 255.5,
+    "tt_spread_ps": 50.8,
+    "declared_clock": "hybrid_entries",
+    "limits": {
+      "sinks": 15000,
+      "insertion_ps": 300.0,
+      "spread_ps": 80.0
+    },
+    "clock_measurements": [
+      {
+        "source": "clk",
+        "clock": "ot_entry_0",
+        "tt": {
+          "boundary": {
+            "n": 101,
+            "mean": 177.3,
+            "min": 153.1,
+            "max": 206.0
+          },
+          "all": {
+            "n": 227,
+            "mean": 168.3,
+            "min": 147.8,
+            "max": 206.0
+          },
+          "errors": [],
+          "macros": null,
+          "macro_libs": 1
+        }
+      },
+      {
+        "source": "clk_rom[0]",
+        "clock": "ot_entry_1",
+        "tt": {
+          "boundary": null,
+          "all": {
+            "n": 1,
+            "mean": 10.6,
+            "min": 10.6,
+            "max": 10.6
+          },
+          "errors": [],
+          "macros": {
+            "n": 1,
+            "nets": 1,
+            "max_per_net": 1,
+            "reg_mean": 10.6,
+            "max_slew": 33.5,
+            "max_late": -0.0,
+            "pins": [
+              {
+                "pin": "ROM_BANK[0].u_rom/clk",
+                "arr": 10.6,
+                "slew": 33.5,
+                "late": -0.0,
+                "net": "clk_rom[0]"
+              }
+            ]
+          },
+          "macro_libs": 1
+        }
+      },
+      {
+        "source": "clk_rom[1]",
+        "clock": "ot_entry_2",
+        "tt": {
+          "boundary": null,
+          "all": {
+            "n": 1,
+            "mean": 10.6,
+            "min": 10.6,
+            "max": 10.6
+          },
+          "errors": [],
+          "macros": {
+            "n": 1,
+            "nets": 1,
+            "max_per_net": 1,
+            "reg_mean": 10.6,
+            "max_slew": 33.5,
+            "max_late": -0.0,
+            "pins": [
+              {
+                "pin": "ROM_BANK[1].u_rom/clk",
+                "arr": 10.6,
+                "slew": 33.5,
+                "late": -0.0,
+                "net": "clk_rom[1]"
+              }
+            ]
+          },
+          "macro_libs": 1
+        }
+      },
+      {
+        "source": "clk_rom[2]",
+        "clock": "ot_entry_3",
+        "tt": {
+          "boundary": null,
+          "all": {
+            "n": 1,
+            "mean": 10.6,
+            "min": 10.6,
+            "max": 10.6
+          },
+          "errors": [],
+          "macros": {
+            "n": 1,
+            "nets": 1,
+            "max_per_net": 1,
+            "reg_mean": 10.6,
+            "max_slew": 33.5,
+            "max_late": -0.0,
+            "pins": [
+              {
+                "pin": "ROM_BANK[2].u_rom/clk",
+                "arr": 10.6,
+                "slew": 33.5,
+                "late": -0.0,
+                "net": "clk_rom[2]"
+              }
+            ]
+          },
+          "macro_libs": 1
+        }
+      },
+      {
+        "source": "clk_outputs[0]",
+        "clock": "ot_entry_4",
+        "tt": {
+          "boundary": {
+            "n": 186,
+            "mean": 244.0,
+            "min": 209.8,
+            "max": 255.3
+          },
+          "all": {
+            "n": 369,
+            "mean": 230.5,
+            "min": 204.7,
+            "max": 255.5
+          },
+          "errors": [],
+          "macros": null,
+          "macro_libs": 1
+        }
+      },
+      {
+        "source": "clk_outputs[1]",
+        "clock": "ot_entry_5",
+        "tt": {
+          "boundary": {
+            "n": 146,
+            "mean": 202.3,
+            "min": 196.4,
+            "max": 208.3
+          },
+          "all": {
+            "n": 289,
+            "mean": 203.6,
+            "min": 184.3,
+            "max": 220.0
+          },
+          "errors": [],
+          "macros": null,
+          "macro_libs": 1
+        }
+      },
+      {
+        "source": "clk_outputs[2]",
+        "clock": "ot_entry_6",
+        "tt": {
+          "boundary": {
+            "n": 145,
+            "mean": 197.2,
+            "min": 192.2,
+            "max": 200.0
+          },
+          "all": {
+            "n": 287,
+            "mean": 184.1,
+            "min": 164.4,
+            "max": 200.0
+          },
+          "errors": [],
+          "macros": null,
+          "macro_libs": 1
+        }
+      }
+    ],
+    "measured_clock": "ot_entry_4",
+    "verdict": "PASS",
+    "text": "369 sinks on the largest root <= 15,000; measured TT insertion 255.5 ps, leaf spread 50.8 ps"
+  },
+  "signoff_setup_ps": 8.573697307667771,
+  "signoff_hold_ps": 52.721188525950424,
+  "macro_to_reg_setup_ps": 8.6,
+  "native_boundary_qualified": false,
+  "scope": "Placement/CTS and833.333ps TT path-class diagnostic only. Route TT/FF/DRC and native ETM remain mandatory. Negative770ps route-clock path messages are not833.333ps signoff failures."
+}
