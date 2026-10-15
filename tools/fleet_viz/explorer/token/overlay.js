@@ -3,6 +3,7 @@
 // The events are independent of the renderer: a die map that draws its own geometry only needs overlayEvents()
 // and activeAt(); DieReplay is the reference renderer used by the standalone harness.
 import { P, instancesOf, elementsOf, CRIT, h, tip, detail, injectCSS, CSS, fmtCyc , COL, covLevel, covClasses, GAPS } from './core.js';
+import { bundleSegments, spatialOverview, bundleLabel, placeLabel } from '../flow_layout.js';
 import { normalizeDataflow, filterConnections, connectionSegments, connectionLabel, connectionDescription, sourceText } from '../dataflow.js';
 
 /**
@@ -98,6 +99,7 @@ export class DieReplay {
     this.ev = overlayEvents(data, geometry, { group, range });
     this.df = normalizeDataflow(dataflow || {}); this.flowMode = 'all'; this.flowOn = false; this.showLabels = true;
     this.selected = null; this.minimumWidth = 0; this.search = '';
+    this.focusInstance = null; this.zoom = 1; this.pan = [0, 0];
     const instanceMap = new Map(this.G.inst.map(i => [i.name, i]));
     this.segments = this.df.edges.flatMap(edge => connectionSegments(edge, instanceMap).map(segment => ({ ...segment, edge })));
 
@@ -115,7 +117,10 @@ export class DieReplay {
     const width = h('input', { type: 'number', min: 0, value: 0, style: 'width:68px', 'aria-label': 'minimum connection width', onchange: e => { this.minimumWidth = Math.max(0, Number(e.target.value) || 0); this.draw(this.t); } });
     const search = h('input', { type: 'search', placeholder: 'Connection or instance', 'aria-label': 'connection search', oninput: e => { this.search = e.target.value.toLowerCase(); this.draw(this.t); } });
     this.flowStatus = h('div', { class: 'kv', role: 'status' });
-    this.root.append(h('div', { class: 'ctl', style: 'margin-bottom:8px' }, h('label', {}, toggle, ' Dataflow'), mode, h('label', {}, labels, ' Width labels'), h('label', {}, 'Minimum bits ', width), search), this.cv, this.flowStatus,
+    const reset = h('button', { type: 'button', 'aria-label': 'show whole die', onclick: () => { this.focusInstance = null; this.zoom = 1; this.pan = [0, 0]; this.draw(this.t); } }, 'Whole die');
+    const zoom = factor => { this.zoomAt(factor, this.cw / 2, this.ch / 2); };
+    const nav = h('div', { class: 'ctl', style: 'margin:6px 0' }, reset, h('button', { type: 'button', 'aria-label': 'zoom in floorplan', onclick: () => zoom(1.5) }, '+'), h('button', { type: 'button', 'aria-label': 'zoom out floorplan', onclick: () => zoom(1 / 1.5) }, '−'), h('span', {}, 'Click a tile to focus its connections · wheel to zoom · drag to pan'));
+    this.root.append(nav, h('div', { class: 'ctl', style: 'margin-bottom:8px' }, h('label', {}, toggle, ' Dataflow'), mode, h('label', {}, labels, ' Width labels'), h('label', {}, 'Minimum bits ', width), search), this.cv, this.flowStatus,
       h('div', { class: 'kv' }, 'Lines are schematic connections, not routed wires. Arrows require a known source and destination. Width is bits per connection; bandwidth requires clock and activity evidence.'), this.cap);
     el.replaceChildren(this.root);
     this.ctx = this.cv.getContext('2d'); this.ctx.scale(dpr, dpr);
@@ -126,7 +131,27 @@ export class DieReplay {
       const [x, y, w, hh] = this.rect(r);
       b.fillRect(x, y, Math.max(0.6, w), Math.max(0.6, hh));
     }
-    this.cv.addEventListener('mousemove', (e) => this.hover(e));
+    this.cv.style.touchAction = 'none';
+    this.cv.addEventListener('wheel', e => { e.preventDefault(); const p = this.screenPoint(e); this.zoomAt(e.deltaY < 0 ? 1.25 : .8, ...p); }, { passive: false });
+    this.cv.addEventListener('pointerdown', e => { const p = this.screenPoint(e); this.drag = { start: p, last: p, moved: false }; this.cv.setPointerCapture(e.pointerId); });
+    this.cv.addEventListener('pointermove', e => {
+      if (!this.drag) return this.hover(e);
+      const p = this.screenPoint(e), d = this.drag;
+      if (Math.hypot(p[0] - d.start[0], p[1] - d.start[1]) > 4) d.moved = true;
+      if (d.moved) { this.pan[0] += p[0] - d.last[0]; this.pan[1] += p[1] - d.last[1]; this.draw(this.t); }
+      d.last = p;
+    });
+    this.cv.addEventListener('pointerup', e => {
+      if (!this.drag) return;
+      const moved = this.drag.moved; this.drag = null;
+      if (!moved) {
+        tip(null);
+        const [px, py] = this.screenPoint(e), x = (px - this.pan[0]) / this.zoom / this.s, y = this.G.h - (py - this.pan[1]) / this.zoom / this.s;
+        const hit = this.G.inst.filter(i => x >= i.x && x <= i.x + i.w && y >= i.y && y <= i.y + i.h).sort((a, b) => a.w * a.h - b.w * b.h)[0];
+        this.focusInstance = hit?.name || null; if (hit) this.fitConnections(hit); this.draw(this.t);
+      }
+    });
+    this.cv.addEventListener('pointercancel', () => { this.drag = null; });
     this.cv.addEventListener('mouseleave', () => tip(null));
     this.t = clock ? clock.t : this.ev.t0;
     if (clock) this.off = clock.on((t) => this.draw(t));
@@ -134,21 +159,50 @@ export class DieReplay {
   }
   /** true when some operator of class `cls` lights at least one instance of this die */
   classHits(cls) { return this.ev.events.some((e) => e.cls === cls && e.idx.length); }
-  rect(r) { return [r.x * this.s, (this.G.h - r.y - r.h) * this.s, r.w * this.s, r.h * this.s]; }
-  pt([x, y]) { return [x * this.s, (this.G.h - y) * this.s]; }
+  screenPoint(e) { const r = this.cv.getBoundingClientRect(); return [(e.clientX - r.left) / r.width * this.cw, (e.clientY - r.top) / r.height * this.ch]; }
+  zoomAt(factor, x, y) {
+    const z = Math.max(1, Math.min(16, this.zoom * factor)), f = z / this.zoom;
+    this.pan = z === 1 ? [0, 0] : [x - (x - this.pan[0]) * f, y - (y - this.pan[1]) * f]; this.zoom = z; this.draw(this.t);
+  }
+  fitConnections(hit) {
+    const adjacent = this.segments.filter(s => s.edge.src === hit.name || s.edge.dst === hit.name || s.edge.endpoints.some(p => p.instance === hit.name));
+    const points = adjacent.flatMap(s => [s.from, s.to]);
+    if (!points.length) points.push([hit.x, hit.y], [hit.x + hit.w, hit.y + hit.h]);
+    const xs = points.map(p => p[0]), ys = points.map(p => p[1]);
+    const loX = Math.min(...xs), hiX = Math.max(...xs), loY = Math.min(...ys), hiY = Math.max(...ys);
+    this.zoom = Math.max(1, Math.min(12, (this.cw - 60) / Math.max(1, (hiX - loX) * this.s), (this.ch - 60) / Math.max(1, (hiY - loY) * this.s)));
+    this.pan = [this.cw / 2 - (loX + hiX) / 2 * this.s * this.zoom, this.ch / 2 - (this.G.h - (loY + hiY) / 2) * this.s * this.zoom];
+  }
+  rect(r) { const [x, y] = this.pt([r.x, r.y + r.h]); return [x, y, r.w * this.s * this.zoom, r.h * this.s * this.zoom]; }
+  pt([x, y]) { return [x * this.s * this.zoom + this.pan[0], (this.G.h - y) * this.s * this.zoom + this.pan[1]]; }
   draw(t) {
     this.t = t;
     const c = this.ctx;
     c.clearRect(0, 0, this.cw, this.ch);
-    c.drawImage(this.base, 0, 0, this.cw, this.ch);
+    if (this.zoom === 1) c.drawImage(this.base, 0, 0, this.cw, this.ch);
+    else for (const r of this.G.inst) {
+      const [x, y, w, h] = this.rect(r);
+      if (x > this.cw || y > this.ch || x + w < 0 || y + h < 0) continue;
+      c.fillStyle = r.kind === 'waypoint' || /^(w|wh|wv)_/.test(r.name) ? '#141c33' : '#1b2540';
+      c.fillRect(x, y, Math.max(.6, w), Math.max(.6, h));
+    }
     const { events, links } = activeAt(this.ev, t);
+    const flowKey = JSON.stringify([this.flowOn, this.flowMode, this.selected, this.focusInstance, this.minimumWidth, this.search, this.flowMode === 'current' ? events.map(e => e.node) : null]);
+    if (this.flowCache?.key !== flowKey) {
     const visible = new Set(filterConnections(this.flowOn ? this.df.edges : [], { mode: this.flowMode, selected: this.selected, activeNodes: events.map(e => e.node) })
-      .filter(e => (!this.minimumWidth || (e.width_bits !== null && e.width_bits >= this.minimumWidth)) && (!this.search || [e.id, e.label, e.src, e.dst, ...e.endpoints.map(p => p.instance)].join(' ').toLowerCase().includes(this.search))).map(e => e.id));
+      .filter(e => (!this.focusInstance || e.src === this.focusInstance || e.dst === this.focusInstance || e.endpoints.some(p => p.instance === this.focusInstance)) && (!this.minimumWidth || (e.width_bits !== null && e.width_bits >= this.minimumWidth)) && (!this.search || [e.id, e.label, e.src, e.dst, ...e.endpoints.map(p => p.instance)].join(' ').toLowerCase().includes(this.search))).map(e => e.id));
     const candidates = this.flowOn ? this.segments.filter(s => visible.has(s.edge.id)) : [];
-    const segments = candidates.slice(0, 600);
+    this.flowCache = { key: flowKey, visible, bundles: bundleSegments(candidates) };
+    }
+    const { visible, bundles } = this.flowCache;
+    const inView = bundles.filter(s => {
+      const a = this.pt(s.from), b = this.pt(s.to);
+      return Math.max(a[0], b[0]) >= 0 && Math.min(a[0], b[0]) <= this.cw && Math.max(a[1], b[1]) >= 0 && Math.min(a[1], b[1]) <= this.ch;
+    });
+    const segments = spatialOverview(inView, { width: this.G.w, height: this.G.h, limit: this.focusInstance ? 240 : 160 });
     this.drawnSegments = segments;
     const mapped = this.df.coverage.token_mapped;
-    this.flowStatus.textContent = `${this.flowOn ? `${segments.length} segments shown${candidates.length > 600 ? ` / ${candidates.length}; narrow the filter` : ''}${this.showLabels && segments.length > 50 ? ' · first 50 width labels shown; narrow the filter or hover a line' : ''}` : 'Dataflow overlay off'} · ${this.df.coverage.total} source connections · ${this.df.coverage.widths_known} widths known · ${this.df.coverage.rates_known} required rates known · ${mapped} explicit token mappings` +
+    this.flowStatus.textContent = `${this.flowOn ? `${this.focusInstance ? `Focused: ${this.focusInstance} · ` : 'Whole-die overview · '}${segments.length} endpoint bundles shown / ${bundles.length.toLocaleString()} matching · ${visible.size.toLocaleString()} connections${inView.length > segments.length ? ' · spatially sampled; zoom or click a tile for detail' : ''}` : 'Dataflow overlay off'} · ${this.df.coverage.total.toLocaleString()} source connections · ${this.df.coverage.widths_known.toLocaleString()} widths known · ${this.df.coverage.rates_known} required rates known · ${mapped} explicit token mappings` +
       (!mapped ? ' · Current/selected operator filtering unavailable: no token-to-connection mapping.' : '') +
       (this.df.coverage.omitted_broadcast_endpoints ? ` · ${this.df.coverage.omitted_broadcast_endpoints.toLocaleString()} broadcast endpoints omitted by source geometry` : '') +
       (this.df.coverage.source_scope ? ` · ${this.df.coverage.source_scope}` : '') +
@@ -170,20 +224,26 @@ export class DieReplay {
       const f = Math.min(1, Math.max(0, (t - l.t0) / Math.max(1e-9, l.t1 - l.t0)));
       c.fillStyle = '#fff'; c.beginPath(); c.arc(ax + (bx - ax) * f, ay + (by - ay) * f, 3.5, 0, 6.3); c.fill();
     }
-    for (const [index, segment] of segments.entries()) {
+    const occupied = []; let labelsDrawn = 0;
+    for (const segment of segments) {
       const [ax, ay] = this.pt(segment.from), [bx, by] = this.pt(segment.to), e = segment.edge;
-      c.strokeStyle = e.critical ? CRIT : '#efb971'; c.lineWidth = e.critical ? 2 : 1.2;
+      c.strokeStyle = e.critical ? CRIT : this.focusInstance ? '#7de4fc' : '#efb971'; c.lineWidth = e.critical ? 2 : this.focusInstance ? 1.5 : 1; c.globalAlpha = this.focusInstance ? .9 : .55;
       c.setLineDash(segment.directed ? [] : [4, 3]); c.beginPath(); c.moveTo(ax, ay); c.lineTo(bx, by); c.stroke(); c.setLineDash([]);
       if (segment.directed) {
         const angle = Math.atan2(by - ay, bx - ax); c.fillStyle = c.strokeStyle;
         c.beginPath(); c.moveTo(bx, by); c.lineTo(bx - 8 * Math.cos(angle - .4), by - 8 * Math.sin(angle - .4)); c.lineTo(bx - 8 * Math.cos(angle + .4), by - 8 * Math.sin(angle + .4)); c.closePath(); c.fill();
       }
-      if (this.showLabels && index < 50) {
-        const label = connectionLabel(e); c.font = '10px ui-monospace,monospace';
+      c.globalAlpha = 1;
+      if (this.showLabels && labelsDrawn < 18 && Math.hypot(bx - ax, by - ay) > 45) {
+        const label = bundleLabel(segment); c.font = '10px ui-monospace,monospace';
         const x = (ax + bx) / 2, y = (ay + by) / 2, w = c.measureText(label).width;
-        c.fillStyle = '#070a14ee'; c.fillRect(x - w / 2 - 2, y - 10, w + 4, 13); c.fillStyle = '#ffe0a8'; c.fillText(label, x - w / 2, y);
+        const box = { x: x - w / 2 - 3, y: y - 10, w: w + 6, h: 14 };
+        if (placeLabel(box, occupied, this.cw, this.ch)) {
+          c.fillStyle = '#070a14ee'; c.fillRect(box.x, box.y, box.w, box.h); c.fillStyle = '#ffe0a8'; c.fillText(label, x - w / 2, y); labelsDrawn++;
+        }
       }
     }
+    this.labelBoxes = occupied;
     // coverage: outline the instances of gap operators (pink = no hardware on a die, amber = other gaps)
     for (const e of events) {
       if (!e.cov || !e.idx.length) continue;
@@ -227,15 +287,14 @@ export class DieReplay {
   }
   select(id) { this.selected = id; this.draw(this.t); }
   hover(ev) {
-    const r = this.cv.getBoundingClientRect();
-    const x = (ev.clientX - r.left) / r.width * this.cw / this.s, y = this.G.h - (ev.clientY - r.top) / r.height * this.ch / this.s;
-    const px = x * this.s, py = (this.G.h - y) * this.s;
+    const [px, py] = this.screenPoint(ev);
+    const x = (px - this.pan[0]) / this.zoom / this.s, y = this.G.h - (py - this.pan[1]) / this.zoom / this.s;
     const segment = (this.drawnSegments || []).find(s => {
       const a = this.pt(s.from), b = this.pt(s.to), dx = b[0] - a[0], dy = b[1] - a[1], d = dx * dx + dy * dy;
       const t = d ? Math.max(0, Math.min(1, ((px - a[0]) * dx + (py - a[1]) * dy) / d)) : 0;
       return Math.hypot(px - a[0] - t * dx, py - a[1] - t * dy) < 5;
     });
-    if (segment) return tip(h('div', {}, h('b', {}, connectionDescription(segment.edge)),
+    if (segment) return tip(h('div', {}, h('b', {}, bundleLabel(segment)), ...segment.edges.slice(0, 8).map(e => h('div', {}, connectionDescription(e))), ...(segment.edges.length > 8 ? [h('div', {}, `${segment.edges.length - 8} more connections in this bundle; filter to inspect`)] : []),
       h('div', {}, segment.pin_located ? 'Explicit endpoint coordinates; schematic straight connection.' : 'Instance-centre schematic; exact pin locations/routed path unknown.'),
       h('div', {}, `Source: ${sourceText(segment.edge.source)}`)), ev);
     const hit = this.G.inst.find((i) => x >= i.x && x <= i.x + i.w && y >= i.y && y <= i.y + i.h);
