@@ -10,7 +10,7 @@ module tb_s81_engram_mix4_c #(parameter MUT=0, HLAYOUT=1, BANKED=0);
  reg clk=0;always #1 clk=~clk;
  reg [63:0] cfg[0:0];reg rst=0;reg [84:0] cmd=0;wire [8:0] done;wire [1:0] st;wire [19:0] rq;wire [279:0] addr;
  reg [19:0] rv=0;reg [10239:0] rd=0;wire [3:0] wv;wire [55:0] wa;wire [63:0] mask;wire [2047:0] wd;
- dsfd_engram_mix4_c #(.MUT(MUT),.HLAYOUT(HLAYOUT)) dut({133{clk}},rst,cmd,done,st,1'b1,rq,addr,rv,rd,wv,wa,mask,wd);
+ dsfd_engram_mix4_c #(.MUT(MUT),.HLAYOUT(HLAYOUT)) dut({149{clk}},rst,cmd,done,st,1'b1,rq,addr,rv,rd,wv,wa,mask,wd);
  reg [1023:0] hm[0:639],km[0:639],wm[0:639],vm[0:159],ym[0:639];reg [511:0] mem[0:16383];
  function automatic [13:0] bankrow(input integer base,b,lane,vs);
   integer hr,hh,ba,bk;

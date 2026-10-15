@@ -40,7 +40,7 @@
 // RS is the SAME for all four clusters (near clusters pad), so the clusters stay cycle-identical and the shared V
 // return reaches all four on one cycle; the clusters check VM_LAT + 2 + 2 RS exactly (static schedule, no waiting).
 module dsfd_engram_mix4_c #(parameter integer MUT=0, VM_LAT=1, WRITE_COMMIT_LAT=1, BC=2, RS=5, HLAYOUT=1)(
- input wire [132:0] ck,              // ck[0] top; ck[1+33q +: 33] cluster q roots
+ input wire [148:0] ck,              // ck[0] top; ck[1+37q +: 37] cluster q roots
  input wire [0:0] rst,input wire [84:0] c_cmd,
  output wire [8:0] c_done,output wire [1:0] c_st,input wire [0:0] f_inp,
  output reg [19:0] rq_v,output reg [279:0] rq_row,
@@ -165,7 +165,7 @@ module dsfd_engram_mix4_c #(parameter integer MUT=0, VM_LAT=1, WRITE_COMMIT_LAT=
   ot_s81_engram_vrly #(.D(RS),.WV(5+1),.WD(2560+224)) down(ck[0],rn,
    {l_rsv[5*c+:5],st_line[BC]},{l_rsd[2560*c+:2560],cdesc},{k_rsv,k_start},{k_rsd,k_desc});
   ot_s81_engram_mixq #(.MUT(MUT),.VM_LAT(VM_LAT+2+2*RS),.WRITE_COMMIT_LAT(WRITE_COMMIT_LAT),.HLAYOUT(HLAYOUT)) u(
-   .ck(ck[1+33*c+:33]),.rst(rst[0]),.start(k_start),.desc(k_desc),
+   .ck(ck[1+37*c+:37]),.rst(rst[0]),.start(k_start),.desc(k_desc),
    .rq_v(k_rqv),.rq_row(k_rqrow),.vtag(k_vtag),
    .rs_v(k_rsv),.rs_d(k_rsd),
    .wq_v(k_wv),.wq_row(k_wrow),.wq_mask(k_wmask),.wq_d(k_wd),
@@ -188,22 +188,22 @@ endmodule
 // One copy cluster: static row sequencer + the unchanged exact arithmetic leaf.
 // Copy index and row bases arrive in the per-cluster descriptor (desc[17:16] = copy); lanes: 0 H, 1-2 K (REDUCE) / V (ADD, vtag), 3-4 W.
 module ot_s81_engram_mixq #(parameter integer MUT=0, VM_LAT=3, WRITE_COMMIT_LAT=1, HLAYOUT=1)(
- input wire [32:0] ck,input wire rst,input wire start,input wire [223:0] desc,
+ input wire [36:0] ck,input wire rst,input wire start,input wire [223:0] desc,
  output wire [4:0] rq_v,output wire [69:0] rq_row,output wire vtag,
  input wire [4:0] rs_v,input wire [2559:0] rs_d,
  output wire wq_v,output wire [13:0] wq_row,output wire [15:0] wq_mask,output wire [511:0] wq_d,
  output wire done,output wire fault);
- // Wires-only composition: shell owns ck[0] state; arithmetic keeps ck[1:32].
+ // Wires-only composition: shell owns five independent clock entries ck[4:0]; arithmetic owns ck[36:5].
  wire go,iv,phase,gv,ov,mf;wire [1:0] copy,gc,oc;
  wire [1023:0] h,kv,w,result;wire [31:0] eps,scale,gate,hh,kk,dd;
  ot_s81_engram_mixq_shell #(.MUT(MUT),.VM_LAT(VM_LAT),.WRITE_COMMIT_LAT(WRITE_COMMIT_LAT),.HLAYOUT(HLAYOUT)) shell(
-  .ck(ck[0]),.rst(rst),.start(start),.desc(desc),
+  .ck(ck[4:0]),.rst(rst),.start(start),.desc(desc),
   .rq_v(rq_v),.rq_row(rq_row),.vtag(vtag),.rs_v(rs_v),.rs_d(rs_d),
   .wq_v(wq_v),.wq_row(wq_row),.wq_mask(wq_mask),.wq_d(wq_d),.done(done),.fault(fault),
   .go(go),.iv(iv),.phase(phase),.copy(copy),.h(h),.kv(kv),.w(w),.eps(eps),.scale(scale),
   .gv(gv),.gc(gc),.ov(ov),.oc(oc),.result(result),.mf(mf));
- ot_s81_engram_mix #(.MUT(MUT==1?1:MUT==22?22:0)) mix(ck[1],rst,go,phase,iv,copy,h,kv,w,kv,eps,scale,
-  gv,gc,gate,hh,kk,dd,ov,oc,result,mf,ck[32:2]);
+ ot_s81_engram_mix #(.MUT(MUT==1?1:MUT==22?22:0)) mix(ck[5],rst,go,phase,iv,copy,h,kv,w,kv,eps,scale,
+  gv,gc,gate,hh,kk,dd,ov,oc,result,mf,ck[36:6]);
 endmodule
 
 // Shell = wires-only composition of FIVE hardened leaves (S-ELEM-C 2026-10-15, structural repair of the flat
@@ -215,10 +215,10 @@ endmodule
 // Exactly the same registers and cycles as the flat shell (808-cycle MIX4 calendar unchanged, 0 added edges): each
 // column captures rs_v itself (5 bits) and loads on the control's registered phase flags fr/fa (one-hot copies of
 // state==REDUCE / state==ADD, computed from the FSM next state), with the same pattern check as the control; the
-// write-data register loads on its own registered copy of ov, as the flat shell did. The current die clock ABI is
-// kept (one ck pin = mixq ck[0]); the die may promote the five leaf pins to separate entries without RTL change.
+// write-data register loads on its own registered copy of ov. Five explicit clock entries let the die deliver
+// phi-R independently to the control and each payload-column leaf; no parent clock tree is inferred.
 module ot_s81_engram_mixq_shell #(parameter integer MUT=0, VM_LAT=3, WRITE_COMMIT_LAT=1, HLAYOUT=1)(
- input wire ck,input wire rst,input wire start,input wire [223:0] desc,
+ input wire [4:0] ck,input wire rst,input wire start,input wire [223:0] desc,
  output wire [4:0] rq_v,output wire [69:0] rq_row,output wire vtag,
  input wire [4:0] rs_v,input wire [2559:0] rs_d,
  output wire wq_v,output wire [13:0] wq_row,output wire [15:0] wq_mask,output wire [511:0] wq_d,
@@ -228,12 +228,12 @@ module ot_s81_engram_mixq_shell #(parameter integer MUT=0, VM_LAT=3, WRITE_COMMI
  input wire gv,ov,mf,input wire [1:0] gc,oc,input wire [1023:0] result);
  wire fr,fa;
  ot_s81_engram_mixq_shctl #(.MUT(MUT),.VM_LAT(VM_LAT),.WRITE_COMMIT_LAT(WRITE_COMMIT_LAT),.HLAYOUT(HLAYOUT)) ctl(
-  .ck(ck),.rst(rst),.start(start),.desc(desc),.rq_v(rq_v),.rq_row(rq_row),.vtag(vtag),.rs_v(rs_v),
+  .ck(ck[0]),.rst(rst),.start(start),.desc(desc),.rq_v(rq_v),.rq_row(rq_row),.vtag(vtag),.rs_v(rs_v),
   .wq_v(wq_v),.wq_row(wq_row),.wq_mask(wq_mask),.done(done),.fault(fault),
   .go(go),.iv(iv),.phase(phase),.copy(copy),.eps(eps),.scale(scale),.gv(gv),.ov(ov),.mf(mf),.gc(gc),.oc(oc),.fr(fr),.fa(fa));
  genvar c;
  generate for(c=0;c<4;c=c+1)begin:col
-  ot_s81_engram_mixq_shcol #(.MUT(MUT)) u(.ck(ck),.rst(rst),.rs_v(rs_v),
+  ot_s81_engram_mixq_shcol #(.MUT(MUT)) u(.ck(ck[c+1]),.rst(rst),.rs_v(rs_v),
    .rs_d({rs_d[1536+256*c+:256],rs_d[512+256*c+:256],rs_d[128*c+:128]}),.fr(fr),.fa(fa),.ov(ov),.result(result[256*c+:256]),
    .h(h[256*c+:256]),.kv(kv[256*c+:256]),.w(w[256*c+:256]),.wq_d(wq_d[128*c+:128]));
  end endgenerate
