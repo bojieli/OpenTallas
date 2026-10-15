@@ -4,14 +4,14 @@ Runs on ot-run only. Mutants change actual DUT lane binding and fault capture.
 """
 import argparse, hashlib, json, re, subprocess, shutil
 from pathlib import Path
-p=argparse.ArgumentParser();p.add_argument('--out',required=True);a=p.parse_args()
+p=argparse.ArgumentParser();p.add_argument('--out',required=True);p.add_argument('--fold-ctrn',action='store_true');a=p.parse_args()
 r=Path(__file__).resolve().parents[2]; out=Path(a.out).resolve();out.mkdir(parents=True,exist_ok=True)
 s=(r/'rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_cth.sv').read_text()
 def module(name):
  b=s.index('module '+name+' #(');return s[b:s.index('\nendmodule',b)+len('\nendmodule')]
 support=(r/'rtl/hdc/ot_hdc_delay.sv').read_text()
 vline=(r/'rtl/hdc/ot_hdc_sfu.sv').read_text(); vb=vline.index('module ot_hdc_vline'); support+='\n'+vline[vb:vline.index('endmodule',vb)+9]
-ref=support+'\n'+'\n'.join(module(n) for n in ('ot_s81_hc_ctq','ot_s81_hc_ctrs','ot_s81_hc_ctra','ot_s81_hc_ctrb'))
+ref=support+'\n'+'\n'.join(module(n) for n in ('ot_s81_hc_ctq','ot_s81_hc_ctrs','ot_s81_hc_ctra','ot_s81_hc_ctrb','ot_s81_hc_ctrn'))
 (out/'reference.sv').write_text(ref)
 dut=(r/'rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_return_columns.sv').read_text()
 tops=[]
@@ -30,8 +30,13 @@ for half in ('a','b'):
  params='#(.NG(NG),.D(D),.NCOL(NCOL),.GS(GS),.S_RD(S_RD),.S_RT(S_RT),.ML(5),.AL(4),.CHAIN_STEP(6),.READ_STAGE(1))'
  links=[f'.{n}({n})' for _,n in inp]+[f'.{n}(ref_{n})' for _,n in outputs]
  lines += [name+' '+params+' ref_dut(.clk(clk),'+','.join(links)+');']
+ if a.fold_ctrn:
+  width='WA' if half=='a' else '512*SH'
+  lines += [f'wire [{width}-1:0] ref_rdm_output;', 'wire [S_RT+3:0] ref_rvm_output;',
+            f'ot_s81_hc_ctrn #(.S_RT(S_RT),.RDW({width}),.RLY(2)) ref_ctrn(.clk(clk),.rst_in(rst_in),.rvm('+('ref_rvm' if half=='a' else "8'b0")+'),.rdm(ref_rdm),.rv_out(ref_rvm_output),.rd_out(ref_rdm_output));']
  links=[f'.{n}({n})' for _,n in inp]+[f'.{n}(dut_{n})' for _,n in outputs]
- lines += [name+'_columns '+params+' dut(.clk_col({4{clk}}),'+','.join(links)+');','initial begin']
+ dutparams=params[:-1]+',.FOLD_CTRN(1))' if a.fold_ctrn else params
+ lines += [name+'_columns '+dutparams+' dut(.clk_col({4{clk}}),'+','.join(links)+');','initial begin']
  for _,n in inp:lines += [f'{n}=0;']
  lines += ['for(cycle=0;cycle<2500;cycle=cycle+1) begin','clk=0; #1;']
  for _,n in inp:
@@ -42,7 +47,7 @@ for half in ('a','b'):
  # Avoid invalid ybuf indices in unrestricted headers: return vector indices 0..NV-1=4.
  if half=='a':lines += ['for(j=0;j<S_RT;j=j+1) begin rd_in[S_RT+8*j +:8]=(cycle+j)%5;rd_in[S_RT+8*S_RT+16*j +:16]=(cycle+j)%640;end','rd_in[S_RT+24*S_RT +:8]=cycle%5;']
  else: lines += ['for(j=0;j<S_RT;j=j+1) begin rdh_in[S_RT+8*j +:8]=(cycle+j)%5;rdh_in[S_RT+8*S_RT+16*j +:16]=(cycle+j)%640;end','rdh_in[S_RT+24*S_RT +:8]=cycle%5;']
- for _,n in outputs:lines += [f'prev_{n}=ref_{n};']
+ for _,n in outputs:lines += [f'prev_{n}=ref_{n}'+('_output' if a.fold_ctrn and n in ('rdm','rvm') else '')+';']
  lines += ['#1;clk=1;#1;', 'if(cycle>12 && !(cycle>=1200 && cycle<1212)) begin']
  for _,n in outputs:
   expect='prev_'+n if n in ('rdm','rvm') else 'ref_'+n
@@ -67,5 +72,5 @@ for variant in ('positive','bad_lane','drop_fault','missing_column_clock'):
   okay=(run.returncode==0)==(variant=='positive')
   results.append(dict(variant=variant,half=half,returncode=run.returncode,expected_verdict=okay,log=str(log)))
   if not okay:raise SystemExit('UNEXPECTED VERDICT '+str(log))
-receipt={'status':'PASS','scope':'component delayed equivalence; not canonical programme or physical closure','cycles_per_positive':2500,'added_return_cycles':1,'source_sha256':hashlib.sha256(dut.encode()).hexdigest(),'results':results}
+receipt={'status':'PASS','scope':'component delayed equivalence; not canonical programme or physical closure','cycles_per_positive':2500,'added_return_cycles':1,'folded_ctrn_rly2':a.fold_ctrn,'reference':'legacy A/B plus real CTRn RLY2' if a.fold_ctrn else 'legacy A/B','source_sha256':hashlib.sha256(dut.encode()).hexdigest(),'results':results}
 (out/'receipt.json').write_text(json.dumps(receipt,indent=2)+'\n');print(json.dumps(receipt))

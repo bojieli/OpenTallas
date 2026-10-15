@@ -1,10 +1,13 @@
+// FOLD_CTRN=1 absorbs the existing RLY2 return-output FFs into the eight A/B leaves.
+// The caller must remove CTRn and use these as outgoing rd/rv; total +1 return edge stays.
+// Default0 preserves the standalone A/B component ABI and timing. No physical view aliases.
 // Four actual local return engines, each with a distinct clock entry and registered payload pins.
 // Return data/valid gain exactly one fixed cycle. Bank requests retain the original epoch.
 // BF16 y dependencies remain real and cross columns; this is not claimed as a free transpose.
 // All four clock roots require the same phase; COLUMN0 owns the merged-valid register. Canonical compiler/slot adoption is separate.
 
 module ot_s81_hc_ctra_column #(
-    parameter integer NG = 256, D = 5120, NCOL = 3, GS = 8, S_RD = 2, S_RT = 4, ML = 5, AL = 4, CHAIN_STEP = AL, READ_STAGE = 0, COLUMN = 0
+    parameter integer NG = 256, D = 5120, NCOL = 3, GS = 8, S_RD = 2, S_RT = 4, ML = 5, AL = 4, CHAIN_STEP = AL, READ_STAGE = 0, COLUMN = 0, FOLD_CTRN = 0
 ) (
     input  wire                   clk,
     input  wire                   rst_in,
@@ -30,13 +33,13 @@ module ot_s81_hc_ctra_column #(
     input  wire [1:0]             nflt_n, nflt_s,
     input  wire                   hov_d,
     output reg                    flag_fault, flag_hnz,
-    output reg [P_D-1:0]           header_delay,
+    output wire [P_D-1:0]          header_delay,
     input  wire                   hnz_n, hnz_s, pflt_n, pflt_s   // ctpl half 0 (N) / half 1 (S), group g
 );
     localparam integer O_D = 5 + S_RD * 16 + 20 + 6 + 8 + 32 + 1, FXW = O_D + S_RD * 512;
     localparam integer SH = S_RT / 2, P_D = S_RT + 8 * S_RT + 16 * S_RT + 8, RDW = P_D + 512 * S_RT, WA = P_D + 512 * SH;
 
-    initial if(S_RT!=4 || COLUMN<0 || COLUMN>3) $fatal(1,"return column requires S_RT4 and column0..3");
+    initial if(S_RT!=4 || COLUMN<0 || COLUMN>3 || FOLD_CTRN<0 || FOLD_CTRN>1) $fatal(1,"return column requires S_RT4 and column0..3");
     wire [S_RT+3:0] rv_base;
     wire [3:0] fault_flags = {peer_fault,flag_fault};
     wire [3:0] hnz_flags = {peer_hnz,flag_hnz};
@@ -51,7 +54,15 @@ module ot_s81_hc_ctra_column #(
                 rv_delay[S_RT+2]<=rv_base[S_RT+2] | (|fault_flags);
                 rv_delay[S_RT+3]<=rv_base[S_RT+3] | (|hnz_flags);
             end
-        assign rvm=rv_delay;
+        // RLY2 CTRn's existing output-valid FF lives with its true producer.
+        // rr_merge has the same rst_in sample edge as the removed CTRn rr.
+        if(FOLD_CTRN) begin : g_output
+            reg [S_RT+3:0] rv_output;
+            always @(posedge clk or negedge rr_merge)
+                if(!rr_merge) rv_output<='0;
+                else rv_output<=rv_delay;
+            assign rvm=rv_output;
+        end else assign rvm=rv_delay;
     end else begin : g_unmerged
         assign rvm=rv_base;
     end endgenerate
@@ -83,7 +94,13 @@ module ot_s81_hc_ctra_column #(
             flag_fault <= (|nflt_n) | (|nflt_s) | pflt_n | pflt_s;
             flag_hnz <= hnz_n | hnz_s;
         end
-    always @(posedge clk) header_delay <= rd_full[P_D-1:0];
+    reg [P_D-1:0] header_base;
+    always @(posedge clk) header_base <= rd_full[P_D-1:0];
+    generate if(FOLD_CTRN && COLUMN==0) begin : g_header_output
+        reg [P_D-1:0] header_output;
+        always @(posedge clk) header_output<=header_base;
+        assign header_delay=header_output;
+    end else assign header_delay=header_base; endgenerate
     ot_s81_hc_ctra #(.NG(NG),.D(D),.NCOL(NCOL),.GS(GS),.S_RD(S_RD),.S_RT(S_RT),.ML(ML),.AL(AL),.CHAIN_STEP(CHAIN_STEP),.READ_STAGE(READ_STAGE)) u (
         .clk(clk),
         .rst_in(rst_in),
@@ -125,11 +142,17 @@ module ot_s81_hc_ctra_column #(
             always @(posedge clk) payload_delay[128*sl+64*chunk +:64] <= rd_full[P_D+512*sl+64*(COLUMN+4*chunk) +:64];
         end
     end endgenerate
-    assign rdm=payload_delay;
+    // Opt-in register relocation: these are the old CTRn payload FFs, not
+    // extra calendar stages. The parent wires outgoing chunks directly.
+    generate if(FOLD_CTRN) begin : g_payload_output
+        reg [128*SH-1:0] payload_output;
+        always @(posedge clk) payload_output<=payload_delay;
+        assign rdm=payload_output;
+    end else assign rdm=payload_delay; endgenerate
 endmodule
 
 module ot_s81_hc_ctra_columns #(
-    parameter integer NG = 256, D = 5120, NCOL = 3, GS = 8, S_RD = 2, S_RT = 4, ML = 5, AL = 4, CHAIN_STEP = AL, READ_STAGE = 0
+    parameter integer NG = 256, D = 5120, NCOL = 3, GS = 8, S_RD = 2, S_RT = 4, ML = 5, AL = 4, CHAIN_STEP = AL, READ_STAGE = 0, FOLD_CTRN = 0
 ) (
     input  wire [3:0]             clk_col,
     input  wire                   rst_in,
@@ -207,7 +230,7 @@ module ot_s81_hc_ctra_columns #(
             assign hs_run_c3=local_hs_run;
             assign hs_c_c3=local_hs_c;
         end
-        ot_s81_hc_ctra_column #(.NG(NG),.D(D),.NCOL(NCOL),.GS(GS),.S_RD(S_RD),.S_RT(S_RT),.ML(ML),.AL(AL),.CHAIN_STEP(CHAIN_STEP),.READ_STAGE(READ_STAGE),.COLUMN(c)) u (
+        ot_s81_hc_ctra_column #(.NG(NG),.D(D),.NCOL(NCOL),.GS(GS),.S_RD(S_RD),.S_RT(S_RT),.ML(ML),.AL(AL),.CHAIN_STEP(CHAIN_STEP),.READ_STAGE(READ_STAGE),.COLUMN(c),.FOLD_CTRN(FOLD_CTRN)) u (
             .clk(clk_col[c]),
             .rst_in(rst_in),
             .tid(tid),
@@ -259,7 +282,7 @@ module ot_s81_hc_ctra_columns #(
 endmodule
 
 module ot_s81_hc_ctrb_column #(
-    parameter integer NG = 256, D = 5120, NCOL = 3, GS = 8, S_RD = 2, S_RT = 4, ML = 5, AL = 4, CHAIN_STEP = AL, READ_STAGE = 0, COLUMN = 0
+    parameter integer NG = 256, D = 5120, NCOL = 3, GS = 8, S_RD = 2, S_RT = 4, ML = 5, AL = 4, CHAIN_STEP = AL, READ_STAGE = 0, COLUMN = 0, FOLD_CTRN = 0
 ) (
     input  wire                   clk,
     input  wire                   rst_in,
@@ -278,7 +301,7 @@ module ot_s81_hc_ctrb_column #(
     localparam integer SH = S_RT / 2, P_D = S_RT + 8 * S_RT + 16 * S_RT + 8, RDW = P_D + 512 * S_RT;
     localparam integer WB = 512 * SH + 128;
 
-    initial if(S_RT!=4 || COLUMN<0 || COLUMN>3) $fatal(1,"return column requires S_RT4 and column0..3");
+    initial if(S_RT!=4 || COLUMN<0 || COLUMN>3 || FOLD_CTRN<0 || FOLD_CTRN>1) $fatal(1,"return column requires S_RT4 and column0..3");
     wire [512*SH-1:0] rd_full;
     wire [8*64*SH-1:0] hr_n, hr_s;
     wire [WB-1:0] rd_same, rd_shift, rd_bound;
@@ -318,11 +341,17 @@ module ot_s81_hc_ctrb_column #(
             always @(posedge clk) payload_delay[128*sl+64*chunk +:64] <= rd_full[0+512*sl+64*(COLUMN+4*chunk) +:64];
         end
     end endgenerate
-    assign rdm=payload_delay;
+    // Opt-in register relocation: these are the old CTRn payload FFs, not
+    // extra calendar stages. The parent wires outgoing chunks directly.
+    generate if(FOLD_CTRN) begin : g_payload_output
+        reg [128*SH-1:0] payload_output;
+        always @(posedge clk) payload_output<=payload_delay;
+        assign rdm=payload_output;
+    end else assign rdm=payload_delay; endgenerate
 endmodule
 
 module ot_s81_hc_ctrb_columns #(
-    parameter integer NG = 256, D = 5120, NCOL = 3, GS = 8, S_RD = 2, S_RT = 4, ML = 5, AL = 4, CHAIN_STEP = AL, READ_STAGE = 0
+    parameter integer NG = 256, D = 5120, NCOL = 3, GS = 8, S_RD = 2, S_RT = 4, ML = 5, AL = 4, CHAIN_STEP = AL, READ_STAGE = 0, FOLD_CTRN = 0
 ) (
     input  wire [3:0]             clk_col,
     input  wire                   rst_in,
@@ -356,7 +385,7 @@ module ot_s81_hc_ctrb_columns #(
             assign local_hr_n[64*SH*bank +:64*SH] = hrq_n[64*SH*(c+4*bank) +:64*SH];
             assign local_hr_s[64*SH*bank +:64*SH] = hrq_s[64*SH*(c+4*bank) +:64*SH];
         end
-        ot_s81_hc_ctrb_column #(.NG(NG),.D(D),.NCOL(NCOL),.GS(GS),.S_RD(S_RD),.S_RT(S_RT),.ML(ML),.AL(AL),.CHAIN_STEP(CHAIN_STEP),.READ_STAGE(READ_STAGE),.COLUMN(c)) u (
+        ot_s81_hc_ctrb_column #(.NG(NG),.D(D),.NCOL(NCOL),.GS(GS),.S_RD(S_RD),.S_RT(S_RT),.ML(ML),.AL(AL),.CHAIN_STEP(CHAIN_STEP),.READ_STAGE(READ_STAGE),.COLUMN(c),.FOLD_CTRN(FOLD_CTRN)) u (
             .clk(clk_col[c]),
             .rst_in(rst_in),
             .tid(tid),
