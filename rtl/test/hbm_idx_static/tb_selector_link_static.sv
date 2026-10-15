@@ -78,7 +78,7 @@ module tb_selector_link_static;
    tick(0,0,2);repeat(3)tick(0,0,2);
    for(integer j=0;j<10944;j=j+1)if(gold[j]!==linkseen[j])errors++;
    if(records!=512||flits!=64||fault||link_fault||selected_count!=512)errors++;
-   $display("IDX_SELECTOR_LINK_STATIC MUT%0d frame%0d records%0d errors%0d fault%0d edges%0d firstemit%0d threshold%h selected%h",MUT,frame,records,errors,fault,cyc-beginframe,firstemit-beginframe,threshold_observe,selected_observe);
+   $display("IDX_SELECTOR_LINK_STATIC MUT%0d frame%0d records%0d errors%0d fault%0d edges%0d firstemit%0d threshold%h selected%h",MUT,frame,records,errors,fault,cyc-beginframe,firsttx-beginframe,threshold_observe,selected_observe);
   end
   if(errors)$fatal(1,"fullshape exact selector mismatch");$finish;
  end
