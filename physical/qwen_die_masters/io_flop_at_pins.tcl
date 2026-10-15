@@ -233,6 +233,7 @@ foreach c $cand {
     B { set x $px; set y [expr {$cy0 + $sg + $col * $h}] }
     T { set x $px; set y [expr {$cy1 - $sg - ($col + 1) * $h}] }
   }
+  if {[[$ff getMaster] isBlock]} {error {standard cell placement refuses BLOCK}}
   $ff setLocation [expr {round($x * $ot_dbu)}] [expr {round($y * $ot_dbu)}]
   $ff setPlacementStatus FIRM
   lappend ot_list [$ff getName]
@@ -315,6 +316,7 @@ if {[llength $ot_extra]} {
     if {$best eq ""} { error "OT_IOFLOP: no legal capture site for $name ($port)" }
     lassign $best ri x y orient
     $ff setOrient $orient
+    if {[[$ff getMaster] isBlock]} {error {standard cell placement refuses BLOCK}}
     $ff setLocation $x $y
     $ff setPlacementStatus FIRM
     dict lappend ot_occupied $ri [list $x [expr {$x + $width}]]
@@ -375,6 +377,7 @@ if {[info exists ::env(OT_MPFLOP_PINS)] && $::env(OT_MPFLOP_PINS) ne ""} {
       } elseif {$dbo == $dm} { set x $px; set y [expr {$my0 - $mgap - $h}]
       } else { set x $px; set y [expr {$my1 + $mgap}] }
       set x [expr {max($cx0, min($x, $cx1 - $w))}]; set y [expr {max($cy0, min($y, $cy1 - $h))}]
+      if {[[$ff getMaster] isBlock]} {error {standard cell placement refuses BLOCK}}
       $ff setLocation [expr {round($x * $ot_dbu)}] [expr {round($y * $ot_dbu)}]
       $ff setPlacementStatus FIRM
       lappend ot_list $fn
