@@ -47,6 +47,9 @@ CASES['neg_badpos'] = dict(kind='static', params=dict(P=201, BADPOS=5, EXPECT_FA
 CASES['neg_war_cal'] = dict(kind='static', params=dict(P=174, EXPECT_FAULT=1), expect='fault')      # write before its row's read
 CASES['neg_run_cal'] = dict(kind='static', params=dict(P=150, EXPECT_FAULT=1), expect='fault')      # write while the core runs
 
+CASES['user865'] = dict(kind='static', params=dict(P=201, USER_BASE=865, NUSR=1), expect='pass')
+CASES['neg_user866'] = dict(kind='static', params=dict(P=201, USER_BASE=866, NUSR=1, EXPECT_FAULT=1), expect='fault')
+
 # Test the exact parameter-free hard child ABI as well as the configurable component.
 for name, case in list(CASES.items()):
     if case['kind'] == 'static':

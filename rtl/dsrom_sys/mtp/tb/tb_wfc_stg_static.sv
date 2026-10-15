@@ -19,7 +19,7 @@
 // PASS line: WFC_SS PASS jobs=.. period=.. rx_tx_min=.. rx_tx_max=.. done_tx_min=.. done_tx_max=..
 // ---------------------------------------------------------------------------------------------------------------
 module tb_wfc_stg_static;
-    parameter integer NJOB = 40, NUSR = 3, P = 200, H0 = 20, T_CORE = 80, RLAT = 17, START_GAP = 4, WLAT = 5;
+    parameter integer NJOB = 40, NUSR = 3, USER_BASE = 0, P = 200, H0 = 20, T_CORE = 80, RLAT = 17, START_GAP = 4, WLAT = 5;
     parameter integer EXPECT_FAULT = 0, BADPOS = -1;     // BADPOS j: job j's header carries a position out of window
     localparam integer FLIT = 512, NW = 21, USER_W = 10, VWA = 15, RXW = 41, TXW = 46;
     localparam integer HDR_TYPE = 16, HDR_LEN = 24, HDR_USER = 32, HDR_POS = 40, HDR_IDX = 61, HDR_VAL = 82,
@@ -55,6 +55,8 @@ module tb_wfc_stg_static;
         .t_ks(ks), .f_kd(kd), .t_hep(hep), .t_ft(ft));
     // Concrete hard ABI: reject elaboration that drops address / valid / marker bits.
     initial begin
+        if (u_dut.u_t.RXW != 41 || u_dut.u_t.TXW != 46 || u_dut.u_t.MAXU != 866)
+            $fatal(1, "WFC_SS priced shape mismatch");
         if ($bits(u_dut.u_x43t.s_d) != 527 || $bits(u_dut.u_x43s.o_d) != 527 ||
             $bits(u_dut.u_x43t.b0) != 528 || $bits(u_dut.u_x43s.b0) != 528 ||
             $bits(u_dut.u_x34s.s_d) != 514 || $bits(u_dut.u_x34t.o_d) != 514 ||
@@ -62,10 +64,10 @@ module tb_wfc_stg_static;
             $fatal(1, "WFC_SS ABI width mismatch");
     end
     // ---------------------------------------------------------------- jobs
-    integer job_u [0:1023], job_p [0:1023], job_t [0:1023], nxt [0:7], njob, i, fd, rc;
+    integer job_u [0:1023], job_p [0:1023], job_t [0:1023], nxt [0:1023], njob, i, fd, rc;
     reg [31:0] ju, jp, jt;
     initial begin
-        for (i = 0; i < 8; i = i + 1) nxt[i] = 0;
+        for (i = 0; i < 1024; i = i + 1) nxt[i] = 0;
         njob = NJOB;
 `ifdef JOBS
         fd = $fopen(`JOBS, "r"); njob = 0;
@@ -76,7 +78,7 @@ module tb_wfc_stg_static;
         $fclose(fd);
 `else
         for (i = 0; i < NJOB; i = i + 1) begin
-            job_u[i] = mix(7, i) % NUSR; job_p[i] = nxt[job_u[i]]; nxt[job_u[i]] = nxt[job_u[i]] + 1;
+            job_u[i] = USER_BASE + mix(7, i) % NUSR; job_p[i] = nxt[job_u[i]]; nxt[job_u[i]] = nxt[job_u[i]] + 1;
             job_t[i] = mix(job_u[i], job_p[i]) % 129280;
         end
 `endif
