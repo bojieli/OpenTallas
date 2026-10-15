@@ -1,0 +1,8 @@
+read_liberty -lib ss_merged.lib
+read_verilog -sv pinff_dut.sv
+synth -top ot_hbm_host_static_ingress -noabc
+dfflibmap -liberty ss_merged.lib
+abc -liberty ss_merged.lib -D 773.333
+clean
+stat -liberty ss_merged.lib
+write_json pinff_mapped.json

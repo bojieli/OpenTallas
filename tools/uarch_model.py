@@ -17281,6 +17281,9 @@ def hbm_host_static_ingress_model():
       launch='explicit F30 write only after actual aggregate block_ready, no active/fault, complete256bit assembly; fixed4edge guard after every config/descriptor output;7edge launch guard and host-only active lock',
       latency='host launch accepted at L -> launch flop after L; target collar samples L+1, emits start after L+2; native programme captures L+3 and starts L+4',
       local_readiness=dict(bitmap_bits_per_target=1024,scan_edges_per_1024row_descriptor=1024,write_commit_guard_edges=2,storage_macros=0,location='local programme target, outside ingress'),
-      area_slot_um=[432,432], slot_area_um2=186624,
+      area_slot_um=[216,216], slot_area_um2=46656, parent_host_cp_slot_um=[432,432],
+      ingress_mapped_area_um2=354.527280, ingress_mapped_ff=667, ingress_cts_ff=692,
+      local_readiness_mapped_area_um2=653.985900, local_readiness_mapped_ff=1101,
+      pre_route_cts_tt=dict(insertion_min_ps=226.6,insertion_max_ps=272.2,boundary_mean_ps=237.0,spread_ps=45.6),
       sink_bound='under700 source registers, no programme SRAM inside ingress; mapped area and CTS still required',
       scope='component ingress only; actual host packet/landing join, heterogeneous target adapters, all-ready reduction, fullchip binding and performance remain OPEN')
