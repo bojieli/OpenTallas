@@ -1,0 +1,26 @@
+{
+  "positions": 6,
+  "rows": 24,
+  "configuration_words": 1577,
+  "programme_pages": 2,
+  "row": {
+    "start_base": 0,
+    "start_limit": 1080,
+    "start_loops": 24,
+    "ROW_LOOP": 1,
+    "body_cycles": 1080
+  },
+  "tail": {
+    "start_base": 1080,
+    "start_limit": 1577,
+    "start_loops": 6,
+    "TAIL_LOOP": 1,
+    "body_cycles": 497
+  },
+  "first_row_consumer_cycle": 7,
+  "first_tail_consumer_cycle": 25942,
+  "sink_divisor": 7,
+  "sink_phase": 0,
+  "reconfigure_between_components": false,
+  "scope": "HC component image only; absolute parent start slots/VM allocation and physical clock qualification remain required"
+}
