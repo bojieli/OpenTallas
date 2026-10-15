@@ -86,7 +86,7 @@ def run(a):
     if exe.exists() and (not mf.exists() or json.loads(mf.read_text()) != manifest):
         raise ValueError('source changed: use a fresh work/build directory')
     if not exe.exists():
-        cmd=[HG.VERILATOR,'--debugi','1','--binary','--timing','--hierarchical','--hierarchical-threads',str(a.hier_workers),'-O2','-Wno-fatal','-Wno-WIDTH',
+        cmd=[HG.VERILATOR,'--binary','--timing','--hierarchical','--hierarchical-threads',str(a.hier_workers),'-O2','-Wno-fatal','-Wno-WIDTH',
              '--top-module','tb_s81_head_prep','-Mdir',str(obj),'-j','16',
              '--unroll-count','4','-fno-dfg','-GNG=256',f'-GMUT={a.mut}',
              '-GHIER=1','-GHALF=1','-GCSPLIT=1','-GTAIL_SPLIT=2',

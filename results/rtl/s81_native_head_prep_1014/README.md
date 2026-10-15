@@ -28,3 +28,13 @@ No timing/physical closure claim is made. Existing HC physical owners must quali
 Integration check: all five M0 row handoffs passed against the real MTP `h_in` fixtures using native bankgate21946 and bankgate128799 outputs. A mutated payload was rejected with `native embedding dump hash mismatch`. This closes the Python expansion/framing substitution at this handoff, subject to integration with the actual head token producer and real die transport. Embedding tiles' physical qualification is tracked separately by their owner.
 
 The initial flat real-FP head-prep builds exceeded their 96 GB / 64 GB memory caps and terminated with systemd `Result=oom-kill`, before any numerical verdict. The replacement `head_prep.vlt` preserves actual HC/FP module boundaries during Verilation; it substitutes no behavior. Baseline and mutant are being verified using that hierarchy.
+
+## Native final-gain producer
+
+`ot_s81_head_gain_stream` reads 320 consecutive words on the existing HCP tail parameter ROM port and emits 320 full 512-bit VM rows (16 BF16 gain values expanded to FP32 per row). `head_gain_image.py` extends the existing four 4096x72 mask images: main final gains at addresses512..831 and M2 final gains at832..1151, preserving coefficient parameters0..343 and all other mask rows. The HC home owner confirmed the allocation is free. No additional memory macro is allocated.
+
+Production reserves the shared ROM and VM ports statically. The module has no ready, credits, or runtime arbitration. For fixed commit latency WL=4 it finishes exactly326 serial cycles after start, checking every expected VM commit without extending that timeline. The physical HCP parent still needs the compiler-owned ROM/VM port selection; conflicts must fault. Gain-set ownership and the actual HC GAIN command remain compiler responsibilities.
+
+Actual mapped-ROM component evidence in `gain/`: both real main/M2 gain vectors PASS640 VM rows with zero mismatches at326 cycles each. Missing commits set fault without stretching execution (mutant1). The RTL gain-bit mutant2 FAILS640 rows, an observed numerical negative control. The ROM models are the existing `ot_rom_4096x72_m8` functional models, loaded with the extended actual resident parameter images. This proves the producer component; integrated parent physical closure and token qualification remain open.
+
+The temporary `--debugi1` head-prep compiler diagnostics generated818GB of AST `.tree` dumps. Those owned debug dumps were removed after bounded diagnostic preservation; complete child libraries and objects were retained. The option is removed. Native head-prep builds now resume with those partials at256GB without AST dumping. No RTL or arithmetic substitution was made to reduce simulation size.

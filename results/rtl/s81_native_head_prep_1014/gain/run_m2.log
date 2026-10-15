@@ -1,0 +1,4 @@
+S81_GAIN_STREAM FAIL rows=640 errors=640 fault=0 mut=2
+[6680000] %Fatal: tb_s81_head_gain_stream.sv:37: Assertion failed in tb_s81_head_gain_stream: gain stream mismatch
+%Error: gain_gate/tb_s81_head_gain_stream.sv:37: Verilog $stop
+Aborting...
