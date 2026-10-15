@@ -57,10 +57,10 @@
   "macro_halo_um": 5.4
  },
  "job": {
-  "owner": "Codex:/root/h_elements_b/su_static_arithmetic",
-  "branch": "claude/hbm-suvop-head-r5-1014",
-  "tag": "r0",
-  "purpose": "Actual sixreader pinnedSUbank;512replicas;6actual128x256macro perbank.2edge read/+1write from actualpinned RTL; independent sourcequalified CTS. Prototype enlarged from368.792x146.40 for native lattice/20um corechannels; noadoption claim.",
+  "owner": "Claude:H-ELEM-B",
+  "branch": "claude/hbm-elemb-su-1015",
+  "tag": "r1",
+  "purpose": "Static SU pinned store bank (6 read replicas x ot_sram_1r1w_128x256, read n->n+2, write commit n+1); 512 replicas in the whole static SU (32 per port-group slice). r1 = structural fix of r0 (TT +178.39 / FF -0.79 / DRC 3: M4 shorts where a net jogs through the SRAM east pin/OBS edge, bbox depth 1.331 um > 1.2 um guard): macro edge guard 2.4 um (OT_MEG_DEPTH_UM), recipe-2 hold margin 30 ps. No RTL or latency change.",
   "benched_by": "su_arithmetic_full512",
   "views_to": "physical/ref_tile/hbm_su_static_bank6_1015/views",
   "record_to": "results/arch/hbm_su_f2_static_1014/arithmetic/physical/bank_route"
@@ -69,6 +69,9 @@
  "sdc_extra": [
   "tools/hbm_static/su_arith_bank_clock.sdc"
  ],
+ "orfs_vars": {
+  "OT_MEG_DEPTH_UM": "2.4"
+ },
  "children": [],
  "inter": [],
  "io_flop_at_pins": {
