@@ -33,8 +33,8 @@
   "rst"
  ],
  "outline": {
-  "w": 86.4,
-  "h": 54.0,
+  "w": 54.0,
+  "h": 19.44,
   "exact": true
  },
  "util": 0.5,
@@ -86,7 +86,7 @@
   "hold_margin_ns": 0.03,
   "macro_halo_um": 5.4
  },
- "why_floorplan": "shell control leaf (419 ports, ~0.4k FF), mid-row between payload columns 1 and 2; one clock root per leaf (<=11,519 sinks); 1 per cluster x 4 clusters",
+ "why_floorplan": "shell control leaf (419 ports, 330 FF, std 251 um2), mid-row between payload columns 1 and 2; one clock root per leaf (<=11,519 sinks); 1 per cluster x 4 clusters",
  "structural_change": "Shell split (S-ELEM-C 2026-10-15): the flat shell (6,472 FF, one root over 742 um, native insertion 534.1 / spread 93.3 ps FAIL) becomes control leaf + 4 payload column leaves with the same registers and cycles (808-cycle MIX4 calendar, 0 added edges); each leaf has a local root.",
  "job": {
   "owner": "Claude:s81-surx-engram-1015",
