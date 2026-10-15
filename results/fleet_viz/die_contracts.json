@@ -212,8 +212,12 @@
    ],
    "streams": [
     [
-     "^qkd_(d2d|lnk|host|pll|ckbump)",
+     "^qkd_(d2d|lnk|pll|ckbump)",
      "Q-LINK"
+    ],
+    [
+     "^qkd_host",
+     "Q-KVSYS-DIE"
     ],
     [
      "^(qkd_|ot_qkh_|ot_qkvd_)",
