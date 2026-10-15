@@ -94,8 +94,10 @@
    }
   ],
   "reroute_reason": {
-   "kind": "slot_change",
-   "slot_change_request": "S-DIE r11 grant (3) main bb1b07c55, el1011-s81die.log 06:27: table entry names CLOSED ctfs_nt; fdm N re-pinned to the full-width straight bus physical/s81_die_pins/v22_hc_local_split/ot_s81_hc_ctfs_nt.tcl",
+   "kind": "die_window",
+   "slot": "cth_nt ctfs (ctfn/ctfs_nt fdm seam)",
+   "grt_overflow": 2450,
+   "source": "results/rtl/s81_layer_tput_1013/norm_tree_1014/native_closure_1014/fdm_span_1015/ctfn_np2_grt_window.json",
    "fix": "Re-pin (S-DIE r11 table entry): fdm N face becomes the full-width straight bus matching ctfn.fdm (1.5x span) so ctfn routes; HB4 hold pads. Same RTL/cycles/SDC. + per-cluster clock roots (clock_split_x.tcl, K=4): single-root gate TT spread was 87-132 ps over the full-span pins."
   }
  },
