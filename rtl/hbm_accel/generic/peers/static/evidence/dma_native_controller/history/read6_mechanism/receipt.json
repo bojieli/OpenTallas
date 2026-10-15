@@ -1,0 +1,10 @@
+{
+  "scope": "initial6edgeverificationRDmechanism only; notpricedreadlatency",
+  "positive": "PASS cold148/warm154STOREfence<=272; MAIN/MIRROR2561trueWR/ACK/nativeRDreadback each",
+  "native_source": "aec541364 unchanged",
+  "clocks": "833.333psstream,1024psHBMphase173",
+  "history": "warmfollowsallnativeverificationRDs; nohiddenwarmup/reset",
+  "canonical_successor": "postfenceREADverificationmust23edgesceil((12500+1024+10000)/1024); coldWRphaseunchanged,warmremeasured",
+  "ot_run": "AGIunit3826937 terminalexit0",
+  "negative": "PASS enqueue/fillcompletion ACK mutant rejected beforetrueWRdrain"
+}
