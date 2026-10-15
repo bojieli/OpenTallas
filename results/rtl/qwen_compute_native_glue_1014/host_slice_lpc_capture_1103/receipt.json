@@ -1,0 +1,35 @@
+{
+  "schema": "opentallas.host-slice-lpc-capture-proof.v1",
+  "source": "16d22694e",
+  "source_sha256": {
+    "rtl/qwen_sys/split_20261014/qkd_host_pc_slice_die.sv": "42ce2f33985928125f6aeaad4da5dbb67765423e302462b60b5c1a701d12b54a",
+    "rtl/qwen_sys/split_20261014/qkd_host_pc_slice.sv": "5a1cc9d9cab3dead2768d934999f938de75d3e96281328c5a1e4dc36fff2e1fa",
+    "rtl/qwen_sys/split_20261014/qkd_hbm_boot_static_completion.sv": "5fdfb6e7865f8c848a7463b7d79fe0c05de4ab035d5bb129168461797bf364c9",
+    "rtl/qwen_sys/split_20261014/qkd_hbm_boot_static.sv": "d938729874272e5b420b956b5b158f13eb22d61bdd49e5ac31a07f91e22e0e0a",
+    "rtl/qwen_sys/split_20261014/qkd_hbm_boot_pc.sv": "445921e88b5177bc3527fc2a4659e36af08d4c5660c80e3e52d6720267d58067",
+    "rtl/qwen_sys/split_20261014/qkd_static_completion_ownerdemux.sv": "922105c31c62edb779b914b724d068af59f020c485af548a01d4c153a92fcf9c",
+    "rtl/qwen_sys/host_20261013/qkd_host_ingest_station.sv": "28931dd981edaf460f2be7d928e3bea62ca8ea2cff8fa3ee72f78c36e96b460c",
+    "rtl/qwen_sys/host_20261013/qkd_host_static_pc_emback.sv": "c9c6208fb9219217d8900ee1e8a8de0c6390fe8e6300fd1153d3e2c4ea79866c",
+    "rtl/test/qwen_split/tb_host_pc_slice_die.sv": "acf16e1ad6997c2514de66dd98ad2e4c3dcde8169a82014482b72afddccabce4",
+    "tools/qwen_kv_die/run_host_slice_leaf_bench.sh": "3fedbc54f302bfcfb5d0ca619f4ce3bdfb843cb923d3b0bbcd460572552827f9"
+  },
+  "exact": {
+    "unit": "oth-ubuntu-920995-1792088165",
+    "exit": 0,
+    "slots": 32,
+    "cycles": 6000,
+    "activity_boot_done": 5939,
+    "activity_ctrl_es": 5939,
+    "head_boot_done": 5939
+  },
+  "mutant": {
+    "unit": "oth-ubuntu-921144-1792088172",
+    "exit": 1,
+    "mismatches": 5939,
+    "first_mismatch": 61,
+    "mutation": "LPC status bit xor1"
+  },
+  "host": "ot-agidock128",
+  "immutable_source_dir": "/srv/opentallas-scratch/claude/codex-hslice-proof-1103/src",
+  "scope": "LPC capture only; old boot-start latency. Subsequent bgi capture candidate aa0c50c21 has a separate new proof and remains unqualified pending that proof and fresh native physical gates."
+}

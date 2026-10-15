@@ -1,0 +1,20 @@
+ot-run: ot-epyc1tb     skipped: load hold: load1 > 1.5 x cores
+ot-run: ot-epyc4       skipped: load hold: load1 > 1.5 x cores
+ot-run: ot-pve1        skipped: load hold: load1 > 1.5 x cores
+ot-run: ot-agidock128  admits   -54 GB (avail 66, growth 42, headroom 24, waiters 3/64 GB) load 25/64 running 8 disk 131 GB 
+ot-run: -> ot-agidock128 (will queue: admits -54 GB < 4 GB)
+ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-921144-1792088172 after 0 s
+MISMATCH cyc61 status boot_done
+MISMATCH cyc62 status boot_done
+MISMATCH cyc63 status boot_done
+MISMATCH cyc64 status boot_done
+MISMATCH cyc65 status boot_done
+MISMATCH cyc66 status boot_done
+MISMATCH cyc67 status boot_done
+MISMATCH cyc68 status boot_done
+MISMATCH cyc69 status boot_done
+ACTIVITY boot_done=5939 ctrl_es=5939 head_boot_done=5939
+FAIL slice die wrapper: 5939 mismatches, first cycle 61
+FATAL: rtl/test/qwen_split/tb_host_pc_slice_die.sv:78: 
+       Time: 6000000  Scope: tb_host_pc_slice_die
+ot-run: RAN on ot-agidock128 (unit oth-ubuntu-921144-1792088172): exit 1

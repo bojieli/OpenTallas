@@ -1,0 +1,10 @@
+ot-run: ot-epyc1tb     skipped: load hold: load1 > 1.5 x cores
+ot-run: ot-epyc4       skipped: load hold: load1 > 1.5 x cores
+ot-run: ot-pve1        skipped: load hold: load1 > 1.5 x cores
+ot-run: ot-agidock128  admits   -67 GB (avail 66, growth 39, headroom 24, waiters 4/80 GB) load 26/64 running 7 disk 131 GB 
+ot-run: -> ot-agidock128 (will queue: admits -67 GB < 4 GB)
+ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-920995-1792088165 after 0 s
+ACTIVITY boot_done=5939 ctrl_es=5939 head_boot_done=5939
+PASS slice die wrapper: 32 slots physical order, 6000 cycles, per-slot outputs identical, head status = REF delayed k+1
+rtl/test/qwen_split/tb_host_pc_slice_die.sv:81: $finish called at 6000000 (1ps)
+ot-run: RAN on ot-agidock128 (unit oth-ubuntu-920995-1792088165): exit 0
