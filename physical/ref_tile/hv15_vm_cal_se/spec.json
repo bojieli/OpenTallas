@@ -1,0 +1,135 @@
+{
+ "name": "hv15_vm_cal_se",
+ "top": "hfd_hgi_vm_calendar_SE",
+ "kind": "tile",
+ "sources": [
+  "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_static.sv",
+  "rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "pins": {
+  "W": [
+   "clk",
+   "rst_n",
+   "cfg_we",
+   "cfg_addr",
+   "cfg_data",
+   "start_v",
+   "start_base",
+   "start_limit",
+   "start_loops"
+  ],
+  "E": [
+   "client_seq",
+   "response_enable",
+   "response_seq",
+   "bank_enable",
+   "bank_client",
+   "hub_ring_enable",
+   "hub_ring_client",
+   "rslot_v",
+   "wslot_v",
+   "rslot",
+   "wslot",
+   "ring_tx_enable",
+   "ring_tx_source",
+   "replay_enable",
+   "replay_source",
+   "lg_local_read",
+   "lg_local_write"
+  ],
+  "S": [
+   "calendar_v",
+   "active",
+   "done",
+   "fault",
+   "ordinal"
+  ]
+ },
+ "outline": {
+  "w": 259.2,
+  "h": 151.2
+ },
+ "layer_cap": "M5",
+ "recipe": 2,
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
+   "count": 1
+  }
+ ],
+ "route": {
+  "pd": 0.5,
+  "period_ps": 833.333,
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "job": {
+  "owner": "Claude:HBM-V15-HARDEN",
+  "branch": "claude/hbm-v15-harden-1015",
+  "tag": "hv15",
+  "purpose": "v15.1 VM calendar SE: compiler programme SRAM (1024x256) drives VM slice slots, LG selects, ring/replay, response enables on fixed cycles (no credits).",
+  "extra_paths": [
+   "tools/hbm_v15_harden",
+   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2"
+  ],
+  "record_to": "results/rtl/ref_tile/hv15_vm_cal_se",
+  "benches": [
+   {
+    "name": "exact",
+    "cmd": "bash tools/hbm_v15_harden/bench_calendar.sh {RUN}/bench/exact 0",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "VMS_STATIC_CALENDAR PASS",
+    "min_count_regex": "PASS(\\d+) gapless"
+   },
+   {
+    "name": "mutant1",
+    "cmd": "bash tools/hbm_v15_harden/bench_calendar.sh {RUN}/bench/mut1 1",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "mutant2",
+    "cmd": "bash tools/hbm_v15_harden/bench_calendar.sh {RUN}/bench/mut2 2",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ]
+   }
+  ]
+ },
+ "params": {},
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ }
+}
