@@ -20,11 +20,11 @@ def main():
                 atoms=[];beats=[];requests=[];bases=B.column_bases(primes[layer,rank*6:rank*6+6],True)
                 for j in range(6):
                     col=rank*6+j;row=hashes[layer][col];res=row-int(offsets[layer,col])
-                    codes,scale=E.row_bytes(layer,row)
-                    payload=bytes(codes)+bytes([scale])+bytes(7)
+                    codes,scales=E.row_bytes8(layer,row)   # F13: the released row, 8 block exponents
+                    payload=bytes(codes)+bytes(scales)
                     packed=B.packed_row(payload,True)
                     atoms += [packed[i:i+32] for i in range(0,288,32)]
-                    beats += [packed[i:i+32]+bytes([scale]) for i in range(0,256,32)]
+                    beats += [packed[i:i+32]+bytes([scales[i//32]]) for i in range(0,256,32)]
                     ordinal=(bases[j]+res*288)//288
                     pc=(ordinal%2)*32+(ordinal//2)%32;local=(ordinal//64)*9
                     requests.append((pc<<32)|local)

@@ -7,6 +7,9 @@ set ::env(OT_IOHOLD_IN) 1
 set ::env(OT_INHOLD_DRV) BUFx4f_ASAP7_75t_R
 set ::env(OT_OFLOP_HOPS) 8
 set ::env(OT_OFLOP_ALLOW_NONE) 1
+# r4pin (Claude group-B3 10-14): recipe-2 pin_reg_split FIRST (one dedicated launch flop per output pin; native audit
+# launch 271.7 ps > 220 on 1,393 outputs), then the unchanged hold corridor and io_flop_at_pins.
+source /src/physical/common_flow/pin_reg_split.tcl
 source /src/physical/dsrom_window_source/leaf_iohold.tcl
 set wp_blk [ord::get_db_block]
 set wp_dbu [[ord::get_db_tech] getDbUnitsPerMicron]
