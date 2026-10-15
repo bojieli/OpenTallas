@@ -1,5 +1,5 @@
 {
- "name": "s81hc_ctnl_l2_native_ref-np2-granted-COMMIT",
+ "name": "s81hc_ctnl_l2_native_ref-np2-granted-5e00ce2f5",
  "block": "ot_s81_hc_ctnl_l2",
  "ref_tile": true,
  "owner": "Codex:s_norm_native_leaves",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 24,
  "source": {
   "branch": "codex-s81-norm-native-leaves-1014",
-  "commit": "COMMIT"
+  "commit": "5e00ce2f5aa6a86621f5dea66450a4faf04f2901"
  },
  "stages": {
   "bench": [
@@ -71,7 +71,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/s81hc_ctnl_l2_native_ref/s81hc_ctnl_l2_native_ref-np2-granted-COMMIT"
+   "to": "results/rtl/ref_tile/s81hc_ctnl_l2_native_ref/s81hc_ctnl_l2_native_ref-np2-granted-5e00ce2f5"
   }
  ],
  "cycles_added": 0,
