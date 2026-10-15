@@ -142,3 +142,9 @@ rtl/dsrom_sys/s81_static_collective/s81_static_vm_boundary.sv
 rtl/dsrom_sys/s81_suhc/dsfd_sp_su_c.sv
 rtl/dsrom_sys/s81_suhc/dsfd_sp_hc_c.sv
 rtl/dsrom_sys/s81_suhc/dsfd_sp_hc.sv
+
+# S-BIND 2026-10-15 --bf-x2-static: one packed static x lane word xw/xe[1100:0] {x2 536 | legacy 564 | v} from the PQ
+# lane encoder (dsfd_pq_lx), column entry ot_s81_static_column_ingress (glue dsfd_cfifo), BF xb from the lane
++define+DSFD_PQ_STATIC_X2
+rtl/dsrom_sys/s81_die_bind/ot_s81_static_lane_cross.sv
+rtl/dsrom_sys/s81_die_bind/ot_s81_static_column_ingress.sv

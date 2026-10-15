@@ -14,6 +14,6 @@ done
 for mut in OT_S81_STATIC_COLUMN_MUT_SWAP OT_S81_STATIC_CROSS_MUT_OFFSET DSFD_PQ_X2_MUT_SWAP;do
   iverilog -g2012 -DDSFD_PQ_STATIC_X2 -D"$mut" -s tb_static_column_lane -o "$out/sim" "${sources[@]}"
   if vvp "$out/sim" > "$out/$mut.log" 2>&1;then echo "mutant escaped: $mut" >&2;exit 1;fi
-  rg 'composed mismatch' "$out/$mut.log"
+  grep -E 'composed mismatch' "$out/$mut.log"
 done
 echo 'STATIC_COLUMN_LANE_GATE PASS actual encoder, crossing, packed stages, BF decode; three mutants rejected'
