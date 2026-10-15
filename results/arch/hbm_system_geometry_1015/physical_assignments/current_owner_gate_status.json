@@ -67,6 +67,63 @@
       "source": "b244ead98/07f6eb52b frozenac98f015f",
       "epochs": "e9f935636",
       "physical_binding": "canonicalSID/global physical unbound; no added SRAM or head0 earlyPV credit"
+    },
+    {
+      "owner": "h_collective_physical",
+      "source": "79037c152",
+      "kit_commit": "ee1d9a146",
+      "leaf": "ot_hgi_coll_control256_capture",
+      "outline_um": [
+        43.2,
+        129.6
+      ],
+      "mapped_FF": 512,
+      "mapped_cells": 1024,
+      "std_area_um2": 172,
+      "TT_insertion_max_ps": 104.4,
+      "TT_spread_ps": 4.2,
+      "FF_insertion_ps": [
+        81.2,
+        85.8
+      ],
+      "status": "floorplan/PDN/pin placement and nativeCTS PASS; pre-routePASS, detailed routeQUEUED",
+      "actual_pin_readback": "still needed before replication; requested coordinates were not forced",
+      "full_parent": "current21/43 unqualified"
+    },
+    {
+      "owner": "h_elements_a/static_sm_feed",
+      "leaf": "ot_smh_static_stage256",
+      "unit": "oth-ubuntu-3985196-1792063232",
+      "clock_sinks": 256,
+      "TT_insertion_ps": [
+        79.3,
+        80.8
+      ],
+      "actual_native_launch_ps": 255.59,
+      "launch_limit_ps": 220,
+      "actual_capture_ps": 110.95,
+      "capture_limit_ps": 190,
+      "status": "NATIVE_LAUNCH_FAIL; no route launched",
+      "phase_normalization": "actual launch already compensated, canonical raw_source=True/clock_refs boundaryRmean80.1ps",
+      "next_action": "preservedCTSODB FFclockQ/wire/load path decomposition; source-preserving structural repair, no guessed shape or unpriced edge"
+    },
+    {
+      "owner": "h_engram_partition",
+      "hash_profile": "complete48column7root hash/dispatch",
+      "source": "1d6bed3ce",
+      "census": "6ddc845dd",
+      "logical_FF_per_root": [
+        5032,
+        3016,
+        3021,
+        3021,
+        3016,
+        3021,
+        3021
+      ],
+      "logical_FF_total": 23148,
+      "status": "functional64token3072descriptor and missing-clock mutantPASS; logical censusPASS",
+      "physical": "CTS/root insertion/minmax crossings/route/outline unknown, no inherited S81 count"
     }
   ]
 }
