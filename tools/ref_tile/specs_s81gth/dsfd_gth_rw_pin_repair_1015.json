@@ -1,0 +1,263 @@
+{
+ "name": "dsfd_gth_rw_pin_repair_1015",
+ "top": "dsfd_gth_rw",
+ "kind": "tile",
+ "params": {},
+ "clock_port": "ck",
+ "reset_ports": [
+  "rs"
+ ],
+ "sources": [
+  "rtl/dsrom_sys/s81_ph/ot_s81ph_root_leaf.sv",
+  "rtl/dsrom_sys/s81_ph/ot_s81ph_ret_root_s.sv",
+  "rtl/gpu/ot_fp32_add_rne_deep.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "physical/s81_ph_views/macros/ot_sram_1r1w_128x66_m1_r2c2/ot_sram_1r1w_128x66_m1_r2c2_bb.v",
+  "physical/s81_ph_views/macros/ot_sram_1r1w_256x34_m2_r2c2/ot_sram_1r1w_256x34_m2_r2c2_bb.v"
+ ],
+ "outline": {
+  "w": 190.08,
+  "h": 164.16
+ },
+ "macros": [
+  {
+   "view": "physical/s81_ph_views/macros/ot_sram_1r1w_256x34_m2_r2c2",
+   "count": 1,
+   "at": [
+    129.168,
+    22.8
+   ],
+   "at_exact": true,
+   "inst": "*g_r?0?*u_bm*u_m"
+  },
+  {
+   "view": "physical/s81_ph_views/macros/ot_sram_1r1w_128x66_m1_r2c2",
+   "count": 1,
+   "at": [
+    22.464,
+    22.8
+   ],
+   "at_exact": true,
+   "inst": "*g_r?0?*u_qm*u_m",
+   "orient": "MY"
+  },
+  {
+   "view": "physical/s81_ph_views/macros/ot_sram_1r1w_256x34_m2_r2c2",
+   "count": 1,
+   "at": [
+    129.168,
+    51.744
+   ],
+   "at_exact": true,
+   "inst": "*g_r?1?*u_bm*u_m"
+  },
+  {
+   "view": "physical/s81_ph_views/macros/ot_sram_1r1w_128x66_m1_r2c2",
+   "count": 1,
+   "at": [
+    22.464,
+    50.928
+   ],
+   "at_exact": true,
+   "inst": "*g_r?1?*u_qm*u_m",
+   "orient": "MY"
+  },
+  {
+   "view": "physical/s81_ph_views/macros/ot_sram_1r1w_256x34_m2_r2c2",
+   "count": 1,
+   "at": [
+    129.168,
+    80.688
+   ],
+   "at_exact": true,
+   "inst": "*g_r?2?*u_bm*u_m"
+  },
+  {
+   "view": "physical/s81_ph_views/macros/ot_sram_1r1w_128x66_m1_r2c2",
+   "count": 1,
+   "at": [
+    22.464,
+    79.056
+   ],
+   "at_exact": true,
+   "inst": "*g_r?2?*u_qm*u_m",
+   "orient": "MY"
+  },
+  {
+   "view": "physical/s81_ph_views/macros/ot_sram_1r1w_256x34_m2_r2c2",
+   "count": 1,
+   "at": [
+    129.168,
+    109.632
+   ],
+   "at_exact": true,
+   "inst": "*g_r?3?*u_bm*u_m"
+  },
+  {
+   "view": "physical/s81_ph_views/macros/ot_sram_1r1w_128x66_m1_r2c2",
+   "count": 1,
+   "at": [
+    22.464,
+    107.184
+   ],
+   "at_exact": true,
+   "inst": "*g_r?3?*u_qm*u_m",
+   "orient": "MY"
+  }
+ ],
+ "pins": {
+  "W": [
+   "li"
+  ],
+  "N": [
+   "ck",
+   "rs"
+  ],
+  "S": [
+   "co",
+   "st",
+   "rso"
+  ]
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 16,
+  "peak_ram_gb": 48,
+  "hold_margin_ns": 0.05,
+  "macro_halo_um": 5.4,
+  "cts_sink": {
+   "extra": "-no_obstruction_aware"
+  }
+ },
+ "job": {
+  "owner": "Codex:s81_hard_physical",
+  "branch": "codex/s81-hard-physical-1015",
+  "tag": "pinrepair1",
+  "purpose": "S81 gather v4 DIRECT leaf (W half) of the gather cluster dsfd_sp_gather_c: 4 roots ot_s81ph_ret_root_s (step B, S = 8 open rows = 2 x the measured real bound 4), queue 128 x 66 + pairing store 256 x 34 arrays per root; the leaf takes only its own 4 lanes and returns only its own 4 results + {busy, fault}; the parent delivers / collects through relay tiles in the channels (no lane or chain passes through a leaf).  Every port a flop at the pin.",
+  "structural_change": "Measured single-output native launch defect co178 q_lb221>220 on immutable CLOSED RWg8; actual data chain includes7hold/drive stages, FFhold95.071ps. Connect only the existing dedicated launch flop CLK to its existing local upstream clock net, before final clockbuffer, with strict20um proximity and genuine clock-net guards; no clock period/phase/uncertainty/timing exception/RTL/cycle change. Existing pin_register admission accepts actuallaunch violation, no recipe/slot/RTL fiction.",
+  "benches": [
+   {
+    "name": "root_s_lockstep",
+    "cmd": "SSA2=1 CONTROL_STRIP=1 LOCAL_BANKS=1 J=4 S=8 bash rtl/dsrom_sys/s81_ph/test/run_root_s.sh $PWD {RUN}/root_s rtl/dsrom_sys/s81_ph/test/real_order_trace.json",
+    "expect": "pass",
+    "pass_regex": "ROOT_S_GATE PASS \\(([0-9]+) runs\\)",
+    "min_count_regex": "ROOT_S_GATE PASS \\(([0-9]+) runs\\)",
+    "threads": 36,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "gather_cl_gate",
+    "cmd": "SSA2=1 CONTROL_STRIP=1 LOCAL_BANKS=1 DIE_CLOCKS=1 SS=8 J=4 bash rtl/dsrom_sys/s81_ph/test/run_gather_cl.sh $PWD {RUN}/gcl rtl/dsrom_sys/s81_ph/test/real_order_trace.json '2 20'",
+    "expect": "pass",
+    "pass_regex": "GATHER_CL_GATE PASS",
+    "min_count_regex": "GATHER_CL_GATE PASS \\(([0-9]+) runs\\)",
+    "threads": 40,
+    "peak_ram_gb": 64,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "gather_cl_neg_chain",
+    "cmd": "SSA2=1 CONTROL_STRIP=1 LOCAL_BANKS=1 DIE_CLOCKS=1 RAW=1 MODES=chain SS=8 J=4 bash rtl/dsrom_sys/s81_ph/test/run_gather_cl.sh $PWD {RUN}/gclm rtl/dsrom_sys/s81_ph/test/real_order_trace.json '2 20'",
+    "expect": "fail",
+    "fail_regex": "GATHER_CL_NEGATIVE FAIL_AS_REQUIRED",
+    "threads": 4,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "gather_cl_neg_ovf",
+    "cmd": "SSA2=1 CONTROL_STRIP=1 LOCAL_BANKS=1 DIE_CLOCKS=1 RAW=1 MODES=ovf SS=8 J=4 bash rtl/dsrom_sys/s81_ph/test/run_gather_cl.sh $PWD {RUN}/gclo rtl/dsrom_sys/s81_ph/test/real_order_trace.json '2 20'",
+    "expect": "fail",
+    "fail_regex": "GATHER_CL_NEGATIVE FAIL_AS_REQUIRED",
+    "threads": 4,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "gather_cl_neg_heap_epoch",
+    "cmd": "SSA2=1 CONTROL_STRIP=1 LOCAL_BANKS=1 DIE_CLOCKS=1 RAW=1 MODES=heap SS=8 J=4 bash rtl/dsrom_sys/s81_ph/test/run_gather_cl.sh $PWD {RUN}/gcl_heap rtl/dsrom_sys/s81_ph/test/real_order_trace.json '2 20'",
+    "expect": "fail",
+    "fail_regex": "GATHER_CL_NEGATIVE FAIL_AS_REQUIRED",
+    "threads": 4,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "gather_cl_neg_rstreg",
+    "cmd": "SSA2=1 CONTROL_STRIP=1 LOCAL_BANKS=1 DIE_CLOCKS=1 RAW=1 MODES=rstreg SS=8 J=4 bash rtl/dsrom_sys/s81_ph/test/run_gather_cl.sh $PWD {RUN}/gcl_rst rtl/dsrom_sys/s81_ph/test/real_order_trace.json '2 20'",
+    "expect": "fail",
+    "fail_regex": "GATHER_CL_NEGATIVE FAIL_AS_REQUIRED",
+    "threads": 4,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ],
+  "extra_paths": [
+   "rtl/dsrom_sys/s81_ph",
+   "rtl/dsrom_sys/s81_ctrl",
+   "rtl/lib",
+   "rtl/common",
+   "rtl/v41rom",
+   "rtl/proto",
+   "rtl/hdc",
+   "rtl/gpu",
+   "tools/s81_ph",
+   "physical/s81_ph_views/macros",
+   "results/rtl/s81_ph_20261006/gather",
+   "physical/s81_die_pins/v18/gather_leaves",
+   "physical/dsrom_window_source",
+   "physical/hbm_accel_die_views/stations/bench",
+   "physical/s81_ph_views/gather/leaf_midpoint",
+   "rtl/dsrom_sys/s81_glue",
+   "physical/s81_ph_views/gather/clock_leaf_candidate",
+   "physical/s81_die_pins/v19"
+  ],
+  "views_to": "physical/ref_tile/dsfd_gth_rw/views",
+  "record_to": "results/rtl/ref_tile/dsfd_gth_rw",
+  "reroute_reason": {
+   "kind": "pin_register",
+   "cell": "dsfd_gth_rw",
+   "source": "results/rtl/s81_ph_20261006/gather/v19_1015/rw_g8_native.json",
+   "launch_ps": 221.0,
+   "pair_cost_ps": 399.7,
+   "fix": "Source-owned local clock retap of the real co178 dedicated launch flop to its genuine upstream clock subtree, distance3.402um in measured donor; keep all output hold cells, exact RTL/stages, assigned v19 pins and outline. Original actualFF outputhold95.071ps leaves room for measured28ps clock advance, subject to full new TT/FF/DRC/native proof."
+  }
+ },
+ "floorplan_why": "Measured single-output native launch defect co178 q_lb221>220 on immutable CLOSED RWg8; actual data chain includes7hold/drive stages, FFhold95.071ps. Connect only the existing dedicated launch flop CLK to its existing local upstream clock net, before final clockbuffer, with strict20um proximity and genuine clock-net guards; no clock period/phase/uncertainty/timing exception/RTL/cycle change. Existing pin_register admission accepts actuallaunch violation, no recipe/slot/RTL fiction.",
+ "defines": [
+  "S81PH_GTH_LOCAL_BANKS",
+  "S81PH_GTH_SSA2"
+ ],
+ "children": [],
+ "inter": [],
+ "recipe": 2,
+ "pre_cts_extra": [
+  "physical/s81_ph_views/gather/clock_leaf_candidate/per_macro.tcl",
+  "physical/s81_ph_views/gather/clock_leaf_candidate/co178_local_retap.tcl"
+ ],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "io_tcl": "physical/s81_die_pins/v19/dsfd_gth_rw.tcl"
+}

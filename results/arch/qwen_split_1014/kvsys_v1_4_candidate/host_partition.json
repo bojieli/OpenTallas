@@ -1,0 +1,99 @@
+{
+ "schema": "opentallas.qwen_kv_host_partition.v1",
+ "sources": {
+  "root": {
+   "path": "rtl/qwen_sys/host_integrated_20261014/qkd_host_root_integrated.sv",
+   "sha256": "7cb792883c9961bf71a764e375aebef8fa6a8213b86d6cc93f7eba459ec6e44f"
+  },
+  "rank": {
+   "path": "rtl/qwen_sys/host_integrated_20261014/qkd_host_rank_services.sv",
+   "sha256": "090c7edf0d132245da343f89565082d25fe6523f17d22aadad460d71eb9c0811"
+  },
+  "chain": {
+   "path": "rtl/qwen_sys/host_20261013/qkd_host_ingest_chain_splitboot.sv",
+   "sha256": "d6f75890973fd4b23912ef50cc433e39753a3ddf5c37cb446fc94450e948276a"
+  },
+  "slice": {
+   "path": "rtl/qwen_sys/split_20261014/qkd_host_pc_slice.sv",
+   "sha256": "5a1cc9d9cab3dead2768d934999f938de75d3e96281328c5a1e4dc36fff2e1fa"
+  },
+  "station": {
+   "path": "rtl/qwen_sys/host_20261013/qkd_host_ingest_station.sv",
+   "sha256": "28931dd981edaf460f2be7d928e3bea62ca8ea2cff8fa3ee72f78c36e96b460c"
+  },
+  "static": {
+   "path": "rtl/qwen_sys/host_20261013/qkd_host_static_pc_emback.sv",
+   "sha256": "c9c6208fb9219217d8900ee1e8a8de0c6390fe8e6300fd1153d3e2c4ea79866c"
+  },
+  "boot": {
+   "path": "rtl/qwen_sys/split_20261014/qkd_hbm_boot_static_completion.sv",
+   "sha256": "5fdfb6e7865f8c848a7463b7d79fe0c05de4ab035d5bb129168461797bf364c9"
+  }
+ },
+ "generated": {
+  "root_pt": "rtl/qwen_sys/split_20261014/qkd_host_root_pt.sv",
+  "root_pt_sha256": "76baabc6fb8321e4c173bb62812ed8c563cca6223864b1a4e4379001ad917ab4",
+  "composed": "rtl/test/qwen_split/qkd_host_root_composed.sv",
+  "composed_sha256": "a5babe8e268ebc7919458553b472cef11efb3c4e3390268f062c996deee46d20"
+ },
+ "moved_per_pc": [
+  "qkd_host_ingest_station",
+  "qkd_host_static_pc_emback",
+  "qkd_hbm_boot_static_completion"
+ ],
+ "root_core_ports_removed": [
+  "ck_boot[128]",
+  "ck_boot_test[128]",
+  "ck_station[128]",
+  "ck_static[128]",
+  "land_es[36864]",
+  "land_er[33408]",
+  "ctrl_es[36864]",
+  "ctrl_er[33408]",
+  "ctrl_completion_v[128]",
+  "ctrl_completion_we[128]"
+ ],
+ "root_core_ports_added": {
+  "chain_f": 1164,
+  "chain_c": 128,
+  "chain_a": 128,
+  "chain_fault_i": 4,
+  "slice_ack": 128,
+  "slice_boot_done": 128,
+  "slice_boot_ok": 128,
+  "slice_boot_fault": 128
+ },
+ "slice_ports": {
+  "fi": 291,
+  "fo": 291,
+  "ci": 32,
+  "co": 32,
+  "ai": 32,
+  "ao": 32,
+  "fault_i": 1,
+  "fault_o": 1,
+  "land_es": 288,
+  "land_er": 261,
+  "ctrl_es": 288,
+  "ctrl_er": 261,
+  "ctrl_completion_v": 1,
+  "ctrl_completion_we": 1,
+  "lpc": 5,
+  "clocks": [
+   "ck_station",
+   "ck_static",
+   "ck_boot",
+   "ck_boot_test"
+  ],
+  "resets": [
+   "host_rst_n",
+   "hbm_rst_n"
+  ],
+  "status": [
+   "all_ack",
+   "boot_done",
+   "boot_ok",
+   "boot_fault"
+  ]
+ }
+}

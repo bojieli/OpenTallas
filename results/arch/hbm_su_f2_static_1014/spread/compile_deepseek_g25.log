@@ -32,4 +32,4 @@ moe_sum.2                    priced     60 edges    44 issues    1 rd    14 wr  
 moe_sum.4                    priced     60 edges    35 issues    1 rd    14 wr     0 reuse     53 elide     53
 moe_sum.6                    priced     60 edges    33 issues    1 rd     7 wr     7 reuse     53 elide      0
 deepseek {'priced': 3272.0, 'edges': 1839, 'ratio': 0.562} slices [14077, 12752, 12432, 11824] replicated 964 conflicts 0 affine_fail 0
-address map /home/ubuntu/wt/hbm-elemb-map-1015/results/arch/hbm_su_f2_static_1014/spread/address_map_deepseek_g25.json runs 469 obligations {'ATT': (640, 192), 'COLL': (3293, 3293), 'DMA': (2306, 0), 'FUSED': (40960, 82489), 'HC': (4, 0), 'IDX': (0, 384), 'SM': (793, 1960)}
+address map /home/ubuntu/wt/hbm-elemb-sfu-1015/results/arch/hbm_su_f2_static_1014/spread/address_map_deepseek_g25.json runs 469 obligations {'ATT': (640, 192), 'COLL': (3293, 3293), 'DMA': (2306, 0), 'FUSED': (40960, 82489), 'HC': (4, 0), 'IDX': (0, 384), 'SM': (793, 1960)}

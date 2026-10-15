@@ -1,5 +1,5 @@
 {
- "name": "qwen_glue_x1028-pm1-COMMIT",
+ "name": "qwen_glue_x1028-pm1-de14003b5",
  "block": "qwen_glue_x1028",
  "ref_tile": true,
  "owner": "Claude:q15_compute_elem",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 8,
  "source": {
   "branch": "claude/q15-nl-banked",
-  "commit": "COMMIT",
+  "commit": "de14003b5",
   "extra_paths": [
    "physical/qwen_tile_glue_banks_1015",
    "rtl/test/qwen_head_staging"
@@ -108,7 +108,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qwen_glue_x1028/qwen_glue_x1028-pm1-COMMIT"
+   "to": "results/rtl/ref_tile/qwen_glue_x1028/qwen_glue_x1028-pm1-de14003b5"
   }
  ],
  "cycles_added": 0,
