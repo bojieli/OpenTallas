@@ -1,0 +1,77 @@
+{
+  "source_sha256": {
+    "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_programme_static.sv": "f701bc7ea325dfae6521b11203123c6baf08c8443792f9238f96b25dc8ebeae4",
+    "rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv": "2a3f380c413bef2676087338d00d18cf869562e9bb611fc93c13251f3fb3f197",
+    "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v": "6530a2ef457f260a942e067b556ff55d75f931350af5807cfd6b05cd5e1ff380",
+    "rtl/test/tb_hgi_hc_programme_static.sv": "88f0b88ba724d1f857e0af098b05228e269851b1cae42b963e578ed625ca7467",
+    "rtl/test/hgi_hc_programme_static_harness.cpp": "267b0b6214a622a8851a9c46ff0b889eb98845650adf52dd9ce1826916f5fb77",
+    "tools/lower_hbm_hc_static_calendar.py": "d004524481801e25c2fd586a0055f47af221a48b798382baff05d5dc1f80bc55",
+    "tools/rtl_hgi_hc_programme_static_gate.py": "a4a961b0350dc0b61b2ca63157d98827e70c27a133ef8ab1952853e85ab74d6b"
+  },
+  "image": {
+    "kind": "row",
+    "instruction_payload_bits": 44,
+    "field_lsb_width": {
+      "clear": [
+        0,
+        1
+      ],
+      "row_launch": [
+        1,
+        1
+      ],
+      "row_raw_read": [
+        2,
+        1
+      ],
+      "row_weight_slot": [
+        3,
+        1
+      ],
+      "row_id": [
+        4,
+        5
+      ],
+      "tail_launch": [
+        9,
+        1
+      ],
+      "sink_launch": [
+        10,
+        1
+      ],
+      "sink_capture": [
+        11,
+        1
+      ],
+      "norm_eps": [
+        12,
+        32
+      ]
+    },
+    "first_consumer_cycle": 405,
+    "programme_start_edge": 400,
+    "start_base": 0,
+    "start_limit": 356,
+    "start_loops": 1,
+    "sink_divisor": 7,
+    "sink_phase": 0,
+    "events_relative_consumer0": {
+      "launch": 0,
+      "raw_ss": 180,
+      "raw_row": 340,
+      "result": 345,
+      "next_row_earliest": 356
+    },
+    "scope": "fixed HC component image; full layer and physical phase integration pending"
+  },
+  "scope": "real programme1024x256 macro and44HCcontrol pins, not arithmetic/wholelayer qualification",
+  "exact": {
+    "exit_code": 0,
+    "log_sha256": "9865fba9aefbddc549080ffa4c9df6c984400a1f83815e8a6070ea3721677374"
+  },
+  "mutant": {
+    "exit_code": -6,
+    "log_sha256": "c9ccfa28ff2261ec4cb9507c7e145238458e3b315c46eaee9df416de050d8b9e"
+  }
+}
