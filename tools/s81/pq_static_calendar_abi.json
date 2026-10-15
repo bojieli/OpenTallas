@@ -114,7 +114,8 @@
     "launch_to_bc_hr_go_pin": 2,
     "VM_response_to_AQI_metadata_pin": 26,
     "retire_to_ev_end_pin": 0,
-    "GA_input_sample_to_last_count_available_for_retire": 3
+    "GA_input_sample_to_last_count_available_for_retire": 4,
+    "fault_cause_input_to_fault_pin": 2
   },
   "boundary_note": "Output pins after edge N are consumed by downstream flops at edge N+1; QB_PIPE adds two further edges beyond bc_hr alignment. All delays require matching actual macro/pipeline composition.",
   "physical_read_program": {
@@ -133,5 +134,6 @@
     "pair_count": 2417,
     "BF_count": 519,
     "max_phases": 642
-  }
+  },
+  "incap_note": "OT_PQ_CTL_INCAP (canonical produced profile, 10-15): ga_i and every fault-cause input are pin-captured; count chain 3 -> 4 edges (root->retire 8 -> 9, compiler retained minimum 11 still holds), fault diagnosis +1 edge (never gates events). Requires OT_PQ_AQ_PIN_LAUNCH in ctl and AQ leaves. Reader/endpoint PINREG reset relay: release 3 edges after the port; the boot/PW writer starts >= 3 edges after reset release (initialization only)."
 }
