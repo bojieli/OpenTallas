@@ -22,6 +22,7 @@ module tb_qfd_band_lanes;
     parameter integer NBP = 6;               // bands: 6 (TP4, GT 6,144) or 3 (TP8, GT 3,072)
     parameter integer BL = 0;                // el1013-qwen-small-masters r3b: 1 = each band is the slot composition qfd_sp_band_lanes (16 x qfd_bl_lane); 2 = its lnk strap wrong
     parameter integer CDLY = 2;              // CL=1: leaf c-tap delay of the cluster (1 = the hardened leaf, selects one edge late)
+    parameter integer RPIN = 0, RSTX = 0;   // q14 r11: CL=2 leaf reset pin register; RSTX = extra idle edges after reset release (die schedule)
     parameter integer CL = 0;                // el1013-qwen-small-masters: 1 = the tree top is the die CLUSTER cell qfd_tt_up4 (NL 16, NBP 3, LNK 1:
                                              // its two pin stages ARE the one link relay stage; no u_l1..u_l4 delay on its links, sel undelayed)
     localparam integer NB = NBP, LG = $clog2(NB * 1024), LAT_L = 41, LAT_B = ((BL != 0) ? 4 : 0) + 46 + 2 * LNK - 8 * (13 - LG);   // qwen-tp8/spine: the upper has LG-11 levels
@@ -106,7 +107,7 @@ module tb_qfd_band_lanes;
         always @(posedge clk or negedge rst_n) if (!rst_n) wsel_st <= {2*(LG+1){1'b0}}; else wsel_st <= {tv[LG:0], sel[LG:0]};
         wire [2*(LG+1)-1:0] wsel = (CDLY == 1) ? wsel_st : {tv[LG:0], sel[LG:0]};
         initial if (CDLY == 1 && LNK != 0) begin $display("FAIL qfd_band_lanes CL=2 CDLY=1 is the hard leaf: LNK 0"); $fatal(1); end
-        qfd_tt_up4_w #(.DLY(CDLY == 1 ? 1 : 2 + LNK), .LNK(LNK), .LMUT((MUT == 2 || MUT == 3) ? MUT : 0)) u_up (
+        qfd_tt_up4_w #(.DLY(CDLY == 1 ? 1 : 2 + LNK), .LNK(LNK), .LMUT((MUT == 2 || MUT == 3) ? MUT : 0), .RPIN(RPIN)) u_up (
             .ck({4{clk}}), .rst_n({4{rst_n}}), .pw_l(wpw), .pv_l({4{pv_r}}), .lf_l({4{bf_r}}),
             .sel_l({4{wsel}}), .ty_l(wty), .tu_l(wtu), .tv_l(wtv), .flt_l(wfl));
         assign tu = wtu[0]; assign tvv = wtv[0]; assign uf = |wfl;
@@ -128,6 +129,17 @@ module tb_qfd_band_lanes;
         assign tu_r = cty[1536];
         assign tv_r2 = cty[1537];
         assign pw_r = pw; assign pv_r = pv; assign bf_r = bf; assign tt = cty[1535:0]; assign tu = cty[1536]; assign tvv = cty[1537];
+    end endgenerate
+    // q14 r11: CL=2 leaf reset pin register: the leaf's internal reset releases exactly one edge after rst_n (RPIN 1).
+    // RPIN 2 (bench mutant: register bypassed) releases on the rst_n edge itself and FAILS here.  The tree-top levels
+    // see their first op >= 24 edges after release, so the +1 edge is otherwise invisible to the data check.
+    generate if (CL == 2 && RPIN != 0) begin : g_rchk
+        integer re = 0;
+        always @(posedge clk) if (rst_n) begin
+            re = re + 1;
+            if (re == 1 && g_w.u_up.g_leaf[0].u_leaf.rs !== 1'b0) begin $display("FAIL qfd_band_lanes leaf reset released on the rst_n edge (no pin register)"); $fatal(1); end
+            if (re == 2 && g_w.u_up.g_leaf[0].u_leaf.rs !== 1'b1) begin $display("FAIL qfd_band_lanes leaf reset not released one edge after rst_n"); $fatal(1); end
+        end
     end endgenerate
     // ---- op history: cycle n's op (valid, split) -----------------------------------------------------------------------
     localparam integer HN = 1 << 14;
@@ -157,6 +169,7 @@ module tb_qfd_band_lanes;
         for (i = 0; i < HN; i = i + 1) begin hv[i] = 0; hs[i] = 7; end
         repeat (3) @(posedge clk);
         @(negedge clk); rst_n = 1;
+        repeat (RSTX) @(negedge clk);
         while (n < NOPS + 200) begin
             // ---- check outputs (negedge n: op n-LAT_C; its ty at +LAT_B, the lane's y at +41) ---------------------------
             yh[n % 128] = ry;
