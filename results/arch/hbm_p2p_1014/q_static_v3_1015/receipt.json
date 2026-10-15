@@ -1,0 +1,48 @@
+{
+  "status": "Q2_ELABORATION_AND_ENDPOINT_BINDING_PASS_NOT_FULL_QUALIFICATION",
+  "execution": {
+    "tool": "ot-run",
+    "host": "ot-agidock128",
+    "unit": "oth-ubuntu-3725329-1792052011",
+    "exit": 0
+  },
+  "verilator": {
+    "version": "5.050",
+    "mode": "--lint-only --hierarchical",
+    "top": "ot_hfd_coll_q2_static_v3",
+    "source_modules": 60,
+    "allocated_MB": 377.992,
+    "elapsed_seconds": 4.743,
+    "warnings": 0
+  },
+  "source_sha256": {
+    "ot_hfd_coll_q_static_v3.sv": "392bb8c72b4832bccb76b83d9350e30cd640f2d453dc8159b82829e45446d86e",
+    "lint_q_static_v3.sh": "3a128a830df5654210275911f9ecaaa0c8eeccbba4d009ed16d616585436397a",
+    "static_uop_layout_v3.json": "d0f2ef18ac23bf27cd1df452527d012cd4c4519d8e67274c048b739c0285db54"
+  },
+  "endpoint_dependency": "cc12ab88a",
+  "clock_root_counts": {
+    "q3": 108,
+    "q2": 68,
+    "endpoint_controller": 3201,
+    "endpoint_stores": [
+      597,
+      597,
+      597,
+      567
+    ],
+    "SW_qslots_output": 14824,
+    "q2_qslots_output": 13727
+  },
+  "cycle_contract": {
+    "rd_to_TX": 5,
+    "RX_to_payload": 1,
+    "sequence_metadata_lead": 1
+  },
+  "limitations": [
+    "no fullcurrent q3 elaboration/runtime evidence",
+    "full V3 production compiler calendar must use TX5 and real slot lifetime",
+    "runtime endpoint qualification owned by source-pinned cc12 component gate",
+    "no physical timing/area/CTS/tokenrate qualification"
+  ]
+}
