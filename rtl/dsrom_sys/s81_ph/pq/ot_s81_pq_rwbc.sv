@@ -10,7 +10,7 @@
 // Inputs per region r (a die TAP of the gather's t_capture root word r = {e, pos3, row16, fp32 32, v}):
 //   r_v[r] = t_capture[53r], r_tag[2r +: 2] = row[15:14] = t_capture[53r+48 : 53r+47] (PQ rows carry the op tag in the
 //   top two row bits), r_e[r] = t_capture[53r+52];  g_flt = the gather's sticky fault t_capture[6944] (the gather root
-//   faults; the native roots' r_flt), mdr = the PQ core's mdr_o (only the four live bits are read).
+//   faults; the native roots' r_flt), live = the PQ core's mdr_o[4*CFW +: 4] = mdr_o[455:452] (the four live bits; s81-die r6b: the die carries 4 b, not 458).
 // Outputs: ga[4t +: 4] = number of the group's regions with a valid row of tag t this cycle (NR <= 15), q2f.
 // Masters (die slots physical/s81_die_pins/v19/pq_count_slots.json, x-tiling 15 / 2 / 15 repeating):
 //   ot_s81_pq_rwbc15, ot_s81_pq_rwbc2.  Clock: the PQ stream clock.
@@ -29,7 +29,7 @@ module ot_s81_pq_rwbc_core #(
     input  wire [2*NR-1:0] r_tag,
     input  wire [NR-1:0]   r_e,
     input  wire            g_flt,
-    input  wire [GRW-1:0]  mdr,
+    input  wire [3:0]      live_i,      // = the PQ core's mdr_o[4*CFW +: 4] (the live bits; the die slices them, s81-die r6b)
     output reg             q2f,
     output reg  [15:0]     ga
 );
@@ -49,7 +49,7 @@ module ot_s81_pq_rwbc_core #(
     always @(posedge clk) q0_e <= p_e;
     // the group's configuration replica: only the live bits {live[3:0]} = rep[4*CFW +: 4] are read
     wire [3:0] live;
-    ot_v41_kreg #(.W(4)) u_rep (.clk(clk), .arst_n(rst_l[0]), .d(mdr[4*CFW +: 4]), .q(live));
+    ot_v41_kreg #(.W(4)) u_rep (.clk(clk), .arst_n(rst_l[0]), .d(live_i), .q(live));
     wire [4*NR-1:0] oh_cnt;
     reg  [NR-1:0]   q1_f;
     genvar gk;
@@ -86,19 +86,19 @@ endmodule
 module ot_s81_pq_rwbc15 (
     input  wire clk, rst_n,
     input  wire [14:0] r_v, input wire [29:0] r_tag, input wire [14:0] r_e, input wire g_flt,
-    input  wire [457:0] mdr,
+    input  wire [3:0] live,
     output wire q2f, output wire [15:0] ga
 );
     ot_s81_pq_rwbc_core #(.NR(15)) u_g (.clk(clk), .rst_n(rst_n), .r_v(r_v), .r_tag(r_tag), .r_e(r_e), .g_flt(g_flt),
-        .mdr(mdr), .q2f(q2f), .ga(ga));
+        .live_i(live), .q2f(q2f), .ga(ga));
 endmodule
 
 module ot_s81_pq_rwbc2 (
     input  wire clk, rst_n,
     input  wire [1:0] r_v, input wire [3:0] r_tag, input wire [1:0] r_e, input wire g_flt,
-    input  wire [457:0] mdr,
+    input  wire [3:0] live,
     output wire q2f, output wire [15:0] ga
 );
     ot_s81_pq_rwbc_core #(.NR(2)) u_g (.clk(clk), .rst_n(rst_n), .r_v(r_v), .r_tag(r_tag), .r_e(r_e), .g_flt(g_flt),
-        .mdr(mdr), .q2f(q2f), .ga(ga));
+        .live_i(live), .q2f(q2f), .ga(ga));
 endmodule
