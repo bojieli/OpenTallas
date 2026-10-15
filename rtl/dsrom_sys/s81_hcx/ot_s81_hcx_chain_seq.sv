@@ -11,7 +11,7 @@
 // Command arg24 (cmd[30:7]) is the projection's {0,layer6,h_base14,ffn}; raw/coef rows are compiler-fixed VM rows:
 // raw RAW_BASE (16-aligned, 2 rows), coefficients COEF_BASE + COEF_STRIDE*ffn (comb row, pre/post/eps row).
 module ot_s81_hcx_chain_seq #(
- parameter integer PROJ_DONE=1,G_OFF=1,GP_DONE=23,POST_TOG=1,POST_SEEN=1,DONE_OFF=2,
+ parameter integer PROJ_DONE=1,G_OFF=1,GP_DONE=24,POST_TOG=1,POST_SEEN=1,DONE_OFF=2,
  parameter[13:0]RAW_BASE=14'd2624,COEF_BASE=14'd2560,COEF_STRIDE=14'd2
 )(
  input wire ck,rst_n,skv,srst_n,

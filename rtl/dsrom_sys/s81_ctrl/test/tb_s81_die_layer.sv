@@ -480,13 +480,13 @@ module tb_s81_die_layer;
     // ot_s81_hcx_post_gain_native (post) -> coefficient rows C_BASE.. that the HC COEF job reads (f_inp = VM presence).
     // Offsets = the measured chain (tb_s81_hcx_chain, same clocks and reset edges). DECLARED: bench VM (RL/WL 4), the TP4
     // raw gather is bench transport (collective glue), ranks 1..3 read die 0's H rows and receive rank 0's command.
-    parameter integer HX_FAST = 0, HX_PROJ_DONE = 1, HX_G_OFF = 1, HX_POST_TOG = 1, HX_POST_SEEN = 1, HX_DONE_OFF = 2, HXMUT = 0;
+    parameter integer HX_FAST = 0, HX_PROJ_DONE = 1, HX_G_OFF = 1, HX_GP_DONE = 24, HX_POST_TOG = 1, HX_POST_SEEN = 1, HX_DONE_OFF = 2, HXMUT = 0;
     assign c[9] = legacy_hcx_c; assign d[9] = 9'd0; assign est[9] = 2'b10;   // no port-9 op remains
     assign hx_c = {mx_cv[11], mx_cd[84*11+:84]};
     reg hx_srst_n = 0; initial begin while(cyc<1000) @(negedge ck); @(negedge ckv); hx_srst_n = 1; end
     wire [84:0] hx_pcmd; wire [8:0] hx_pd [0:3]; wire [1:0] hx_pst [0:3];
     wire hx_gs, hx_gd, hx_gf, hx_ss, hx_sffn, hx_sd, hx_sf; wire [13:0] hx_graw, hx_sraw, hx_scoef; wire [5:0] hx_slayer;
-    ot_s81_hcx_chain_seq #(.PROJ_DONE(HX_PROJ_DONE),.G_OFF(HX_G_OFF),.POST_TOG(HX_POST_TOG),.POST_SEEN(HX_POST_SEEN),
+    ot_s81_hcx_chain_seq #(.PROJ_DONE(HX_PROJ_DONE),.G_OFF(HX_G_OFF),.GP_DONE(HX_GP_DONE),.POST_TOG(HX_POST_TOG),.POST_SEEN(HX_POST_SEEN),
         .DONE_OFF(HX_DONE_OFF),.RAW_BASE(14'd2624),.COEF_BASE(C_BASE),.COEF_STRIDE(14'd2)) u_hcx (
         .ck(ck),.rst_n(mx_rst_n),.skv(ckv),.srst_n(hx_srst_n),.c_cmd(hx_c),.c_done(hx_d),.c_st(hx_st),
         .p_cmd(hx_pcmd),.p_done(hx_pd[0]),.p_st(hx_pst[0]),.g_start(hx_gs),.g_raw_base(hx_graw),.g_done(hx_gd),.g_fault(hx_gf),

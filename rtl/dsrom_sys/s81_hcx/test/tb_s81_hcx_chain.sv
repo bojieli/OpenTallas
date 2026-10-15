@@ -11,7 +11,7 @@
 // faults 0, every completion on its compiled edge. CAL=1 prints the measured offsets instead (no verdict).
 // Modes: HLAYOUT (1 = h_rows VM layout), MUT_POST (post core mutant) -> FAIL.
 module tb_s81_hcx_chain #(parameter integer HLAYOUT=1,MUT_POST=0,CAL=0,FAST=0,
-  PROJ_DONE=1,G_OFF=2000,POST_TOG=2030,POST_SEEN=1,DONE_OFF=4000,ISSUE0=200,ISSUE1=4400,LAYER=1);
+  PROJ_DONE=1,G_OFF=2000,GP_DONE=24,POST_TOG=2030,POST_SEEN=1,DONE_OFF=4000,ISSUE0=200,ISSUE1=4400,LAYER=1);
  localparam real TS=0.8333, TV=1.1111;
  reg ck=0,ckv=0;always #(TS/2) ck=~ck;always #(TV/2) ckv=~ckv;
  integer cyc=0;always @(posedge ck)cyc<=cyc+1;
@@ -32,7 +32,7 @@ module tb_s81_hcx_chain #(parameter integer HLAYOUT=1,MUT_POST=0,CAL=0,FAST=0,
  // ---------------- chain sequencer (port 9)
  wire[84:0]p_cmd;wire[8:0]p_done[0:3];wire[1:0]p_st[0:3];
  wire g_start,g_done,g_fault,s_start,s_ffn,s_done,s_fault;wire[13:0]g_raw,s_raw,s_coef;wire[5:0]s_layer;
- ot_s81_hcx_chain_seq #(.PROJ_DONE(PROJ_DONE),.G_OFF(G_OFF),.POST_TOG(POST_TOG),.POST_SEEN(POST_SEEN),.DONE_OFF(DONE_OFF))
+ ot_s81_hcx_chain_seq #(.PROJ_DONE(PROJ_DONE),.G_OFF(G_OFF),.GP_DONE(GP_DONE),.POST_TOG(POST_TOG),.POST_SEEN(POST_SEEN),.DONE_OFF(DONE_OFF))
   chain(.ck(ck),.rst_n(rst_n),.skv(ckv),.srst_n(srst_n),.c_cmd(c9),.c_done(x_done),.c_st(x_st),
   .p_cmd(p_cmd),.p_done(p_done[0]),.p_st(p_st[0]),.g_start(g_start),.g_raw_base(g_raw),.g_done(g_done),.g_fault(g_fault),
   .s_start(s_start),.s_ffn(s_ffn),.s_layer(s_layer),.s_raw_base(s_raw),.s_coef_base(s_coef),.s_done(s_done),.s_fault(s_fault));
