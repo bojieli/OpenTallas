@@ -15,7 +15,8 @@ module tb_hbm_svc_vmdel_clock_ownership;
  initial begin
   for(b=0;b<8;b=b+1)begin
    rst_n=0;begin_v=0;clk_lane=0;#2;rst_n=1;#2;
-   begin_v=1;begin_epoch=16'h1300+b;#2;clk_lane=8'b1<<b;#2;clk_lane=0;#2;
+   // v3 lanes capture begin in a pin register: two owned pulses (capture, then state update)
+   begin_v=1;begin_epoch=16'h1300+b;#2;repeat(2) begin clk_lane=8'b1<<b;#2;clk_lane=0;#2; end
    for(k=0;k<8;k=k+1)begin
     if(own[k*2+:2] !== (k==b?2'b01:2'b00))$fatal(1,"clock owner b=%0d k=%0d owned=%b",b,k,own[k*2+:2]);
     if(epoch[k*16+:16] !== (k==b?begin_epoch:16'b0))$fatal(1,"clock epoch b=%0d k=%0d",b,k);

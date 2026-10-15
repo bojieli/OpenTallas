@@ -12,11 +12,11 @@
  ],
  "pins": {
   "S": [
-   "fill_v",
-   "fill_bank",
-   "fill_slot",
-   "fill_epoch",
-   "fill_data"
+   "fill_v_i",
+   "fill_bank_i",
+   "fill_slot_i",
+   "fill_epoch_i",
+   "fill_data_i"
   ],
   "N": [
    "dq"
@@ -25,13 +25,13 @@
    "clk",
    "rst_n",
    "bank_id",
-   "begin_v",
-   "begin_bank",
-   "begin_epoch",
-   "start",
-   "start_bank",
-   "start_epoch",
-   "start_base_sector"
+   "begin_v_i",
+   "begin_bank_i",
+   "begin_epoch_i",
+   "start_i",
+   "start_bank_i",
+   "start_epoch_i",
+   "start_base_sector_i"
   ],
   "E": [
    "full0_all",
@@ -62,9 +62,9 @@
  },
  "job": {
   "owner": "Claude:HBM-V15-HARDEN",
-  "branch": "claude/hbm-v15-harden-1015",
-  "tag": "hv15",
-  "purpose": "structural split of delivery_<q> (monolithic gate: 8,960 fill pins on one face = 124 % of slots, > 600 um clock span, 2,048-bit runtime group mux): 8 identical VM-bank lane leaves + 1 control leaf under a wires-only parent, cycle- and bit-identical (lockstep equivalence + production bench); cost 0 cycles. v2 lane leaf (v1 control leaf refused: in->out -57.9 ps feed-through): PCs b,8+b,16+b,24+b (4 real SRAMs) + dq[b] + replicated control; cross-lane = 3 registered status bits per lane; hardened once, 8 per quadrant.",
+  "branch": "claude/hbm-v15-harden-1015b",
+  "tag": "v3",
+  "purpose": "structural split of delivery_<q> (monolithic gate: 8,960 fill pins on one face = 124 % of slots, > 600 um clock span, 2,048-bit runtime group mux): 8 identical VM-bank lane leaves + 1 control leaf under a wires-only parent, cycle- and bit-identical (lockstep equivalence + production bench); cost 0 cycles. v2 lane leaf (v1 control leaf refused: in->out -57.9 ps feed-through): PCs b,8+b,16+b,24+b (4 real SRAMs) + dq[b] + replicated control; cross-lane = 3 registered status bits per lane; hardened once, 8 per quadrant. v3 (10-15): pin registers on every lane input and output (route countvisible-flow4536 TT -184.64 in->reg SRAM write enable / -171.07 SRAM Q->dq port), +2 cycles interface latency, II=1; kit regenerated with the recipe-2 macro-edge via guard (that route: 2 M4 shorts at the SRAM0 E edge).",
   "extra_paths": [
    "tools/hbm_v15_harden",
    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
