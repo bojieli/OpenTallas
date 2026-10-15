@@ -6333,7 +6333,7 @@
    },
    "origin": {
     "x": 13942.8,
-    "y": 18677.52,
+    "y": 19722.96,
     "orient": "R0"
    },
    "io_budget": {
@@ -6706,7 +6706,8 @@
      ],
      "reason": "v13 ADOPTED (layout needs it): two 172.8-um 256x256 SRAMs with pins on their short W/E edges leave ~45 um side channels at 226.8; GRT over-macro capacity is 0 under the M5 cap -> macro-band cut 0.65-0.86 of raw M3/M5 tracks (ces0_rt GRT-0116, 94 % of overflow inside the macros); 302.4 with the macros split S/N -> 0.24. Pin faces unchanged. Kit physical/ref_tile/dscoll_ces0_rts (claude/el1011-ds-coll); ce region (367.2..1,727.976 x 444.96..2,359.776, 1,360.8 wide) takes 4 a row at 302.4 + 21.6."
     }
-   }
+   },
+   "origin_receipt": "physical/s81_die_pins/v20_functional/origin_receipt.json"
   },
   {
    "name": "sp_collective/lane0",
@@ -13820,6 +13821,39 @@
    "geometry": "exact xsp7 full instance rectangle0collisions;25um eastofembedding",
    "pin_file": "physical/s81_die_pins/v20_functional/ot_s81_hcx_controller.tcl",
    "qualification": "OPEN native two-root controller; parent wires+6 actual projection leaves+controller; no raw payload stub"
+  },
+  {
+   "name": "sp_hcx_gatherpack",
+   "master": "ot_s81_hcx_gatherpack",
+   "at_um": [
+    15600.0,
+    22770.0
+   ],
+   "outline": {
+    "w": 216.0,
+    "h": 216.0
+   },
+   "pin_file": "physical/s81_die_pins/v20_functional/ot_s81_hcx_gatherpack.tcl",
+   "clock": "stream_1p2",
+   "geometry": "full xsp7 instance rectangle0overlaps;21.6um east of controller; disjoint all six HCP/MIX/embedding reservations",
+   "qualification": "NEW actual compaction leaf; no collective/VM transport latency claim"
+  },
+  {
+   "name": "sp_sseq",
+   "cell": "dsfd_stage_seq_c8",
+   "kind": "native_successor_reservation",
+   "parent": "s81_layer1",
+   "outline": {
+    "w": 1727.976,
+    "h": 88.536
+   },
+   "qualification": "actual predecessor geometry only; static issuer source, pin ABI, roots and timing must be rebound",
+   "origin": {
+    "x": 13942.8,
+    "y": 19461.6,
+    "orient": "R0"
+   },
+   "origin_receipt": "physical/s81_die_pins/v20_functional/origin_receipt.json"
   }
  ],
  "pdn": {
