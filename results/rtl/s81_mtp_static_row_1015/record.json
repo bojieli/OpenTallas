@@ -1,0 +1,76 @@
+{
+  "gate": "PASS",
+  "results": [
+    {
+      "mode": "exact",
+      "exit": 0,
+      "ok": true
+    },
+    {
+      "mode": "via_mutant",
+      "exit": -6,
+      "ok": true
+    },
+    {
+      "mode": "metadata_mutant",
+      "exit": -6,
+      "ok": true
+    }
+  ],
+  "source_sha256": {
+    "rtl/common/ot_prefix.sv": "01de55a0d8c474008eb4446e41e00788d466b5dfb2e2e8d85a0b70ff931f8cfc",
+    "rtl/v41rom/ot_v41_bmul2.sv": "15015cbd92c76526298c6647561f530499ee678e7bbe656bcc689fa40bb7c1e6",
+    "rtl/v41rom/ot_dsrom_bmul3.sv": "753636fd6fdc34a2229b492c46b71d130ed41d95cf97665cac5d1df6daa27498",
+    "rtl/v41rom/ot_v41_fadd.sv": "9062c07e99f3baedf2b4e6399d5e12e2501be1db2d99bf71a73c2437bf3a5b91",
+    "rtl/experimental/dsrom_markov_20261008/ot_s81_markov_k256_native.sv": "b6e93a3e4792bee734434984c00e7bb6c2655a5a650b6fc9c59663019c3762d0",
+    "rtl/experimental/dsrom_markov_20261008/ot_s81_markov_k256_static.sv": "7e5d1e0fd2fecf97fcb568e0ed39c70c1eb336793f2113a0171360100601c3b5",
+    "rtl/experimental/dsrom_markov_20261008/ot_dsrom_markov_embed_static.sv": "05d89e9c7889f5b6a0c4bfdeeb6db410686cfff217069fadc9ec1447536d8e9e",
+    "rtl/experimental/dsrom_markov_20261008/ot_dsrom_markov_weight32_static.sv": "acc31f7d13234708cfca192b90a669b346a8e7d0b01e1f43ad5d3a2852b405cb",
+    "rtl/experimental/dsrom_markov_20261008/ot_s81_markov_static_row.sv": "6822e43e459f6711cb0b4d4700a02741a7bcfdbc141dba1adc6b32c74c0add7a"
+  },
+  "actual_head": {
+    "npz_sha256": "07866c356fedcb5b0d8c9a2bbced50c9f6e024429d7c1d588648179071fc8b96",
+    "receipt_sha256": "355c97292094978dd332d038c1dd6f1f4a6872fa3755238f1c03e2e89d532acc",
+    "rows": [
+      1024,
+      1056
+    ]
+  },
+  "token": {
+    "value": 21946,
+    "terminal_receipt_sha256": "20e08f07c7993accbee25eaf448693976a7113fdd84d1ae63929e22f0b98bce4",
+    "scope": "actual main RTL terminal output replayed at component boundary; direct transport and draft recursive composition remain required"
+  },
+  "weights": {
+    "schema": "opentallas.md6.markovweight-image.v1",
+    "checkpoint_revision": "dba1be0a40aa45a94ad051997016db3960a90277",
+    "key": "mtp.2.markov_head.head.weight",
+    "shard": "model-00046-of-00048.safetensors",
+    "header": {
+      "dtype": "BF16",
+      "shape": [
+        129280,
+        256
+      ],
+      "data_offsets": [
+        71470552,
+        137661912
+      ]
+    },
+    "index_sha256": "74b0686a3d2891980d5e303251b075a3bccae2c2ff650747db2620a649b98fa8",
+    "row0": 1024,
+    "VALID_ROWS": 32,
+    "released_rows_copied": 32,
+    "padded_rows": 0,
+    "payload_sha256": "90268b07e7eef3e9f57b0d26baf6245b8a97bfffe6f416ccf6e502cc79cf202e",
+    "mapping": "macro=(16*local_row+beat)%2; addr=(16*local_row+beat)//2",
+    "ROM_ECC": false,
+    "images": {
+      "mk_1.viamap.hex": "951849511f56bdc2aa882664a4c0b54c8a00ab0fb3dc3dc8c859410a1d1ea41b",
+      "mk_0.viamap.hex": "f65023e18a23a15c075334246606eb698132812dea5f8f4da61436a7f08699f0"
+    }
+  },
+  "full_native_token_qualified": false,
+  "physical_qualified": false,
+  "scope": "actual mapped E/W and K256 using actual HC->head RTL logit outputs; replayed actual main token/head outputs, upstream operand transport/head physical mapping and full MTP program/acceptance remain open"
+}

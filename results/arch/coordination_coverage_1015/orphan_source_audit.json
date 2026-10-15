@@ -149,9 +149,9 @@
     {
       "gap": "hbm_serdes_hostphy",
       "priority": 1,
-      "ownership_evidence": "unconfirmed; q_control_host explicitly excludes HBM source",
+      "ownership_evidence": "H-DIE direct confirmation: root owns actual HOST digital recovery; dedicated SerDes geometry/source join owner still needed; H-DIE owns full197master32SM candidate only",
       "recommended_owner": "h_die endpoint owner",
-      "next_action": "Three actual rootedSerDes487 source/bench files absent; source_plan host slot request is proposal, cannot publish with invented slot.",
+      "next_action": "Three actual rootedSerDes487 source/bench files absent; source_plan host slot request is proposal, cannot publish with invented slot. Actual R0 endpoint2924x831um does not fit old HOST594x16824/SerDes260x1652 footprint; new shape needs repack.",
       "source_comparisons": [
         {
           "commit": "fe3cbf1e8",
@@ -210,7 +210,7 @@
     {
       "gap": "hbm_attention_quant_idx",
       "priority": 0,
-      "ownership_evidence": "h_elements_a excludes; h_hc_sfu excludes; h_elements_b response pending",
+      "ownership_evidence": "H-ELEM-A explicitly excludes IDX/attention/quant; h_hc_sfu excludes quant/attention; H-ELEM-B completed SU census/TOPK handoff without confirmation of current attention/quant work",
       "recommended_owner": "dedicated HBM attention/quant owner if H-ELEM-B cannotcover",
       "next_action": "Old HBM attentionhi/lo fullrepack/VM/quantPAY successors require explicit active ownership beyond SU/TOPK.",
       "source_comparisons": []
