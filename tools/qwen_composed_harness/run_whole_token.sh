@@ -56,7 +56,7 @@ for f in (core/'Vot_hdc_core_vector_weight_native_candidate___024root.h',probe):
 PYPROBE
  core_flags=(-DOT_CORE_HIERARCHICAL=1)
  python3 "$stage/src/core_arithmetic_receipt.py" --core "$lv6" --output "$out/core_arithmetic.json"
- mapfile -t lv6a < <(find "$lv6" -name '*.a' | sort); else lv6a=("$lv6/Vot_hdc_core_vector_weight_native_candidate__ALL.a"); fi
+ mapfile -t lv6a < <(find "$lv6" -name '*.a' ! -name libverilated.a | sort); else lv6a=("$lv6/Vot_hdc_core_vector_weight_native_candidate__ALL.a"); fi
 arch=("${lv6a[@]}" "$front/Vot_qwen_tp8_native_services_frontend_native59__ALL.a"
  "$sector/Vot_qwen_tp8_kv_sector_adapter__ALL.a" "$pc/Vqwen_native_hbm_pc_provider__ALL.a"
  "$helper/Vot_qwen_native59__ALL.a" "$host/Vqkd_host_token_service__ALL.a" "$board/Vqkd_host_board_port_fixture__ALL.a"
