@@ -2,6 +2,7 @@ set ::ot_ce_require_wire 1
 # OT_CLOCK_ENTRY_DOMAIN_API_VERSION 1
 # AUTO clock entries: bound insertion.json boundary refs; no ETM arc modification.
 set ::ot_ce_leaf_roots 1
+set ::ot_ce_related_data 0
 set ::ot_ce_refs [dict create ]
 set ::ot_ce_counts [dict create ]
 set ::ot_ce_domains [dict create {core} {clock core_clk io_budget_ps 166.667 inputs {{i_rv} {i_wv} {i_ra} {i_wa} {i_rt} {i_wt} {i_wm} {i_wd} {rst_n}} outputs {{o_rv} {o_wv} {o_ra} {o_wa} {o_rt} {o_wt} {o_wm} {o_wd}}} {response} {clock ot_io_response io_budget_ps 166.667 inputs {{i_sv} {i_cv} {i_sd} {i_st} {i_ct} {i_ca} {i_cm}} outputs {{o_sv} {o_cv} {o_sd} {o_st} {o_ct} {o_ca} {o_cm}}}]
@@ -19,9 +20,10 @@ proc ot_ce_leaf_ownership {inputs outputs} {
   set actual {}
   foreach c [all_clocks] {lappend actual [get_full_name $c]}
   if {[lsort $actual] ne [lsort $expected]} {error "OT_MULTI_ROOT: undeclared clock alias or relationship"}
-  set cells {}; set clocks {}
+  set cells {}; set clocks {}; set crossing_pairs {}; set domain_roots {}
   foreach root $::ot_ce_cts_roots {
     set domain [dict get $::ot_ce_source_domains $root]
+    dict set domain_roots $domain $root
     set clock [get_clocks ot_entry_[lsearch -exact $::ot_ce_ports $root]]
     foreach pin [all_registers -clock [get_full_name $clock] -clock_pins] {
       set cell [get_full_name [get_cells -of_objects $pin]]
@@ -33,9 +35,14 @@ proc ot_ce_leaf_ownership {inputs outputs} {
     set cell [get_full_name [get_cells -of_objects $pin]]
     if {![dict exists $cells $cell]} { error "OT_MULTI_ROOT: unowned register $cell" }
   }
-  # Every actual data startpoint must belong to the same domain as its sink.
-  # No false paths, clock groups, or asynchronous data crossings are introduced.
+  # OpenSTA's -data_pins population includes asynchronous clear/preset
+  # controls. Classify these from the actual loaded Liberty sequential arcs,
+  # never from port names or reset_ports. They retain recovery/removal timing;
+  # only ordinary synchronous D/control paths require data-domain ownership.
+  set async_pins {}
+  foreach pin [all_registers -async_pins] {dict set async_pins [get_full_name $pin] 1}
   foreach pin [all_registers -data_pins] {
+    if {[dict exists $async_pins [get_full_name $pin]]} continue
     set cell [get_full_name [get_cells -of_objects $pin]]
     set expected [dict get $cells $cell]
     foreach start [get_fanin -flat -startpoints_only -to $pin] {
@@ -47,8 +54,13 @@ proc ot_ce_leaf_ownership {inputs outputs} {
         }
       } else {
         set source [get_full_name [get_cells -quiet -of_objects $start]]
-        if {![dict exists $cells $source] || [dict get $cells $source] ne $expected} {
-          error "OT_MULTI_ROOT: cross-domain or unowned data path $source -> $cell"
+        if {![dict exists $cells $source]} {
+          error "OT_MULTI_ROOT: unowned data path $source -> $cell"
+        }
+        set source_domain [dict get $cells $source]
+        if {$source_domain ne $expected} {
+          if {!$::ot_ce_related_data} {error "OT_MULTI_ROOT: cross-domain data path $source -> $cell requires explicit related profile"}
+          dict set crossing_pairs [list $source_domain $expected] 1
         }
       }
     }
@@ -61,7 +73,24 @@ proc ot_ce_leaf_ownership {inputs outputs} {
       }
     }
   }
-  puts "OT_MULTI_ROOT OWNERSHIP PASS roots=[llength $::ot_ce_cts_roots] registers=[dict size $cells] inputs=[dict size $inputs] outputs=[dict size $outputs]"
+  dict for {pair unused} $crossing_pairs {
+    lassign $pair source_domain target_domain
+    set source_root [dict get $domain_roots $source_domain]
+    set target_root [dict get $domain_roots $target_domain]
+    set from [all_registers -clock ot_entry_[lsearch -exact $::ot_ce_ports $source_root] -clock_pins]
+    set to {}
+    foreach pin [all_registers -clock ot_entry_[lsearch -exact $::ot_ce_ports $target_root] -data_pins] {
+      if {![dict exists $async_pins [get_full_name $pin]]} {lappend to $pin}
+    }
+    foreach kind {max min} {
+      set paths [find_timing_paths -from $from -to $to -path_delay $kind -group_path_count 1 -endpoint_path_count 1]
+      if {![llength $paths] || ![ot_ce_finite [get_property [lindex $paths 0] slack]]} {
+        error "OT_MULTI_ROOT: related crossing lacks actual finite $kind STA path $source_domain -> $target_domain"
+      }
+      puts "OT_MULTI_ROOT RELATED_PATH $source_domain -> $target_domain $kind slack=[get_property [lindex $paths 0] slack] (ordinary synchronous timing retained)"
+    }
+  }
+  puts "OT_MULTI_ROOT OWNERSHIP PASS roots=[llength $::ot_ce_cts_roots] registers=[dict size $cells] inputs=[dict size $inputs] outputs=[dict size $outputs] async_control_pins=[dict size $async_pins]"
 }
 
 proc ot_ce_corner {} {
