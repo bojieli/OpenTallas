@@ -1,6 +1,6 @@
-PASS distributed548 8 frames 128 exact records; missing duplicate early stale faults
-FATAL: tb.sv:35: record mismatch context=0 beat=17
+PASS distributed548 9 frames 128 exact records; missing duplicate early stale epoch/layer faults
+FATAL: tb.sv:36: record mismatch context=0 beat=17
        Time: 550000 Scope: tb.frame
 PASS data mutant rejected at exact producer-local beat17
-787256bce0f3f68310cad94de222359ee7bd7ac74a7ce936913b3ba39122fecc  qkd_result_static.sv
-e898e18ec08354e06fb70912f4acfba70a563813246267f376346298c76d4f0a  tb.sv
+a531204219c868f1b6e8167492e3413ac7fa670dd1e12df1efef6ebbea9e7af0  qkd_result_static.sv
+c3aafa18be2c2d3b67d5feedad538b8f51726e22ea3a17a444431571a2bba33a  tb.sv

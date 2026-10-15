@@ -4,7 +4,7 @@
 module qkd_result_node #(
  parameter integer BEAT=0, CAPTURE_AGE=8, INJECT_AGE=25, DATA_MUT=0
 )(input wire ck,rst_n,cmd_v,input wire[15:0]cmd_epoch,input wire[5:0]cmd_layer,
- input wire producer_v,input wire[15:0]producer_epoch,input wire[511:0]producer_data,
+ input wire producer_v,input wire[15:0]producer_epoch,input wire[5:0]producer_layer,input wire[511:0]producer_data,
  input wire upstream_v,input wire[547:0]upstream_record,
  output reg out_v,output reg[547:0]out_record,output reg fault);
  reg active,seen,sent;reg[31:0]age;reg[15:0]epoch;reg[5:0]layer;reg[547:0]held;
@@ -24,7 +24,7 @@ module qkd_result_node #(
    end else begin
     if(producer_v!=capture)fault<=1;
     if(capture)begin
-     if(producer_v&&producer_epoch==epoch)begin
+     if(producer_v&&producer_epoch==epoch&&producer_layer==layer)begin
       held<={5'd0,4'd3,layer,epoch,5'(BEAT),producer_data ^ (512'(DATA_MUT))};seen<=1;
      end else fault<=1;
     end
@@ -77,7 +77,7 @@ module qkd_result_static #(
 )(input wire[31:0]clk_node,input wire[2:0]clk_merge,input wire rst_n,
  input wire[31:0]cmd_v,input wire[511:0]cmd_epoch,input wire[191:0]cmd_layer,
  input wire merge_cmd_v,
- input wire[31:0]producer_v,input wire[511:0]producer_epoch,input wire[16383:0]producer_data,
+ input wire[31:0]producer_v,input wire[511:0]producer_epoch,input wire[191:0]producer_layer,input wire[16383:0]producer_data,
  output wire result_v,output wire[547:0]result_record,output wire fault);
  initial begin
   if(STACK_FIRST[32+:32]!=STACK_FIRST[0+:32]+8 ||
@@ -97,7 +97,7 @@ module qkd_result_static #(
    qkd_result_node #(.BEAT(B),.CAPTURE_AGE(CAPTURE_AGES[B*32+:32]),
     .INJECT_AGE(STACK_FIRST[h*32+:32]+2*n-7),.DATA_MUT((B==17)?DATA_MUT:0))u(
     .ck(clk_node[B]),.rst_n(rst_n),.cmd_v(cmd_v[B]),.cmd_epoch(cmd_epoch[B*16+:16]),.cmd_layer(cmd_layer[B*6+:6]),
-    .producer_v(producer_v[B]),.producer_epoch(producer_epoch[B*16+:16]),.producer_data(producer_data[B*512+:512]),
+    .producer_v(producer_v[B]),.producer_epoch(producer_epoch[B*16+:16]),.producer_layer(producer_layer[B*6+:6]),.producer_data(producer_data[B*512+:512]),
     .upstream_v(uv),.upstream_record(ur),.out_v(nv[B]),.out_record(nr[B]),.fault(nf[B]));
   end
   assign sv[h]=nv[8*h+7];assign sr[h]=nr[8*h+7];

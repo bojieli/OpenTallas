@@ -56,3 +56,29 @@ mutant must fail the exact comparison at beat17. Bench clocks are equal phase.
 
 Physical qualification, actual finalizer wiring, real CMD/HBM/PV calendar,
 production throughput price, and complete token execution remain open.
+
+Actual arithmetic wiring successor
+---------------------------------
+`qkd_result_finalize_collected` instantiates the actual static finalizer from
+commit 385bc2d8b, with additive independent node_valid/node_epoch/node_layer
+outputs. Its 32 actual join16 producers capture layer on the same local start
+edge that captures epoch, and publish that held identity alongside arithmetic
+results. The collector checks both actual producer epoch AND layer. Aggregate
+out_valid/out_epoch remain for compatibility and are unused by collection.
+
+The wrapper preserves all 32 join clocks and uses each same clock for its
+producer-local collector. It accepts no credits or ready input; the legacy
+finalizer's out_ready is tied available and its ready outputs are observations
+left unused. Three independently exposed merge clocks still need qualified
+sampling phases. CONFIGURED defaults to zero and simulation fails closed.
+Compiler CAPTURE_AGES and STACK_FIRST default zero and must be supplied.
+Capture ages must equal the actual finalizer expression
+max(P0_AGE,P1_AGE,R_AGE)+ADD_LAT+MUL_LAT+2 under the stated age convention.
+This source equality is checked for every producer independently.
+
+`run_actual.sh` elaborates and runs ALL 32 actual 16-lane ADD7/MUL6 producers,
+not substitute arithmetic or aggregate valid aliases. It compares 1024 FP32
+words in two consecutive contexts through final RESULT548, including command
+bus changes after start. Its fixture P0/P1/R=8/20/48, capture63, stack windows
+80/88/96/104 exercise source wiring only. They are NOT the source-derived
+whole-service QK/PV/HBM or physical clock calendar.
