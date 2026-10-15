@@ -4,16 +4,16 @@
   "integration_ready": false,
   "scope": "Synthetic one-record gather controller only; no actual released source data, die timing, native VM reservation or production full-slab claim",
   "source": {
-    "rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller.sv": "47f95e472b91cfdbe3eed129bd2e98105a1b239e531b011d1839d6ce45f9bc32",
+    "rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller.sv": "fc27fbc278d92c059ed4636aab4729c7dadd2ce09b1f2249e4eb8c76e3ce0d4e",
     "tools/s81_static_collective/controller_image.py": "22a88245c033ae056c5948d48f0d8b8bbe47f42ed236a89da4488f9d01449c58",
     "tools/s81_static_collective/test_controller_image.py": "62337404ab8f7b292fb234c2680d30164890e90a5cc986ce936542957a8aece6"
   },
   "artifacts": {
     "nominal.log": "5458e166cb497576fe925c97434b7e46ab4c270534b13def4f900c27e251b23c",
-    "synthetic_calendar.json": "3081c22d1afc27e9bfa71108fead5ae19f834c6a55cd49ae28f1007c1a81355c",
-    "gate.log": "49d45a0b0edd1178e375cfe8392ffb42266964614ed5c3fa07d2a943608ae051",
+    "synthetic_calendar.json": "a38a9188e703e0a7ddace871cb154e68fcbc3f44be93f0be84031f95150fc13d",
+    "gate.log": "d4fb16e8501c4ecc56ca902188ed82c0f3c240cd65c69ac47d2a9676c535a9dd",
     "synthetic_calendar.mem": "0b58ee4d4d4c11dab51923e691596a8861a002432ca61805e7ea125b71e8f973",
-    "mutant_suppressed_issue.log": "a3dacf0f84deab18f409345856db3de15614a64e8972106fe834c1829324109a"
+    "mutant_suppressed_issue.log": "ea46afe8680dd5bdcdeb7f2011ecf37206c1c7dae197bf5f68cf1d84bc443e03"
   },
   "command": "S81_CONTROLLER_EVIDENCE=results/rtl/s81_static_controller_1014 python3 -m unittest discover -s tools/s81_static_collective -p test_controller_image.py -v",
   "cycle_profile": {

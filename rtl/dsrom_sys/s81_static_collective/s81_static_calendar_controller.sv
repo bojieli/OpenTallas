@@ -70,7 +70,7 @@ module s81_static_calendar_controller #(
  wire [RW-1:0] entry=rom[active ? cursor:{AW{1'b0}}];
  wire running=active || c_cmd_q[84];
  wire [84:0] expected=entry[CB+:85];
- wire descriptor_bad=c_cmd_q[84] && (c_cmd_q[30:24]!=0 || c_cmd_q[22:7]==0);
+ wire descriptor_bad=c_cmd_q[84] && (c_cmd_q[30:24]!=0 || c_cmd_q[22:7]==0 || c_cmd_q[22:7]>16'd1024);
  // Idle payload bits need not be zero on external pulse buses.
  wire command_bad=(c_cmd_q[84]!=expected[84]) ||
                   (c_cmd_q[84] && c_cmd_q[83:0]!=expected[83:0]);
