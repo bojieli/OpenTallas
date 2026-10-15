@@ -1,12 +1,12 @@
 {
  "schema": "opentallas.hier_contract.child_lint.v1",
- "lef": "/srv/opentallas-scratch2/claude/closure-loop/s81engm_sum-v21-bf044b7f6/record/views/ot_s81_engram_sum/ot_s81_engram_sum.lef",
+ "lef": "/srv/opentallas-scratch2/claude/closure-loop/s81engm_sum-fixed808-0833-26b917e43/record/views/ot_s81_engram_sum/ot_s81_engram_sum.lef",
  "verdict": "PASS",
  "fails": [],
  "warns": [
   "(f) face-pin access: 170 of 174 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. arst_n M4 (0.060,4.032), clk M4 (0.060,4.032), chunk_fault[0] M5 (19.392,0.016))"
  ],
- "summary": "ot_s81_engram_sum 90.72 x 99.36: PG M5 VDD 16 stripes (89% spread, 100% cov) / VSS 16 stripes (89% spread, 100% cov); strap M6; face pins 174 blocked-above 0 blocked-same 0; clock clk insertion 181 ps; pockets M5 0 (closed)",
+ "summary": "ot_s81_engram_sum 90.72 x 99.36: PG M5 VDD 16 stripes (89% spread, 100% cov) / VSS 16 stripes (89% spread, 100% cov); strap M6; face pins 174 blocked-above 0 blocked-same 0; clock clk insertion 180 ps; pockets M5 0 (closed)",
  "info": {
   "cell": "ot_s81_engram_sum",
   "W": 90.72,
@@ -40,7 +40,7 @@
   "face": {
    "face_pins": 174,
    "blocked_above": 0,
-   "covered_below": 46,
+   "covered_below": 0,
    "examples": [],
    "blocked_same": 0,
    "same_examples": [],
@@ -56,8 +56,8 @@
   },
   "clock_insertion": {
    "clk": {
-    "max_ps": 180.98,
-    "min_ps": 134.2
+    "max_ps": 180.21,
+    "min_ps": 133.52
    }
   },
   "pockets": {
@@ -66,7 +66,7 @@
    "marker": {
     "layer": "M5",
     "d_um": 1.536,
-    "added": 545
+    "added": 496
    },
    "count": 0,
    "area_um2": 0,
