@@ -702,5 +702,38 @@
       }
     }
   },
-  "production_quadrant_note": "NW/NE NC2 are real production producers, SE NC0. Bench with three no-CQ peers is adapter/ring isolation; it does not replace the production client map. Wide RG/WG allocations remain subject to H-ELEM owner confirmation."
+  "production_quadrant_note": "NW/NE NC2 are real production producers, SE NC0. Bench with three no-CQ peers is adapter/ring isolation; it does not replace the production client map. Wide RG/WG allocations remain subject to H-ELEM owner confirmation.",
+  "native_pair_timing": {
+    "corner": "TT",
+    "period_ps": 833.333,
+    "setup_uncertainty_ps": 60,
+    "compensated_die_skew_ps": 90,
+    "wire_ps_per_um": 0.76,
+    "pair_reach_um": {
+      "FP_to_FP": 507.3,
+      "state_to_state": 399.4,
+      "FP_to_state": 430.8,
+      "state_to_FP": 475.8
+    },
+    "FF_min_delay_self_ps": {
+      "FP": 170.7,
+      "state": 168.8
+    },
+    "FF_required_min_delay_ps": 100,
+    "required_clock_entry_offset_ps": {
+      "FP": {
+        "TT": -97.6,
+        "FF": -74.1
+      },
+      "state": {
+        "TT": -151.0,
+        "FF": -122.4
+      }
+    },
+    "full_pinreg_defect_flags": {
+      "FP": [],
+      "state": []
+    },
+    "placement_note": "State self reach is399.4um; place a relay within actual pair reach. Each exact parent pair still needs its own ETM timing check."
+  }
 }
