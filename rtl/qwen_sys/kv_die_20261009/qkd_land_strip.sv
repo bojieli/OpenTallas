@@ -273,7 +273,7 @@ module qkd_land_grp #(
             if (!rn_q) v_pin <= 1'b0; else v_pin <= rq[0];
         wire [15:0] head;
         wire empty, full;
-        wire release_req = !empty && cur_v && !lt[0] && !ls_q &&
+        wire release_req = !empty && cur_v && !ls_q &&
                            (head[15] == L_cur[0] || MUT == 4);
         ot_qkvd_fifo #(.W(16), .D(DQ)) u_q (.clk(ck), .rst_n(rn_q),
             .push(v_pin), .din(d_pin), .pop(release_req), .dout(head),
