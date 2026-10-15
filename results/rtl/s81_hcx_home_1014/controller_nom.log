@@ -1,0 +1,8 @@
+HCX_CONTROLLER job0 fixed_fast_cycles479
+HCX_CONTROLLER job1 fixed_fast_cycles479
+HCX_CONTROLLER job2 fixed_fast_cycles479
+HCX_CONTROLLER PASS twoactualrelatedclocks,threephase2commands,compiledjoins/completions,nocredits
+- tb_s81_hcx_controller.sv:37: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 9us; walltime 0.005 s; speed 1.295 ms/s
+- Verilator: cpu 0.007 s on 1 threads; alloced 1017 MB

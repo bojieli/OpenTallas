@@ -1,31 +1,37 @@
 {
-  "scope": "HCX physical VM transport prerequisite, not complete HC arithmetic home",
-  "state_owner": "ot_s81_hcx_vm_bridge transport leaf; die slot pending S-DIE assignment",
+  "scope": "Static compiler-reserved native HCX transport and real coefficient layout; no whole HC-home qualification",
+  "state_owner": "ot_s81_hcx_vm_scheduled transport leaf; die slot pending S-DIE assignment",
   "clock": "native VM serial clock, single clock across row client",
-  "queue_entries": 8,
-  "packet_outstanding_bound": 4,
-  "native_outstanding_bound": 1,
-  "packet_bits": 338,
-  "queue_storage_bits": 2704,
+  "queue_entries": 0,
+  "queue_storage_bits": 0,
   "operand_cache_bits": 512,
   "read_row_bytes": 64,
   "write_row_bytes": 64,
   "input": "20480 BF16 values in 640 native rows; 8 values per canonical FP32 packet sector, four cached quarters per row",
-  "output": "24 FP32 coefficients in 2 native rows, three packet sectors; last halfrow masked",
+  "output": "row0 comb16; row1 pre4/post4/norm_eps/reserved zeros; complete 32-word native layout",
   "input_wordbase": "32 * physical_native_row",
   "output_wordbase": "16 * physical_native_row",
-  "memory_operations_per_full_mix": {"native_reads": 640, "native_writes": 3},
-  "writes_retire": "only native VM bank commit pulse; acceptance is not completion",
-  "read_row_ownership": "immutable from VM operand-ready credit through HC job completion; cache invalidated on job_start",
-  "latency": "serial native service, measured with actual VM bank adapter before pricing; directed gate cycles are not production cost",
+  "memory_operations_per_full_mix": {
+    "native_reads": 640,
+    "native_writes": 4
+  },
+  "writes_retire": "Fixed WL edges; last packet WL+1 for statically reserved EPS halfrow. Real commit only validates timeline.",
+  "read_row_ownership": "compiler-reserved immutable input interval through fixed HC job completion; cache invalidated on job_start",
+  "latency": "RL/WL parameters must come from physical native VM schedule; directed gate uses RL=4 WL=4. Single packet/cycle 2560-sector input phase is too slow for229cycle fn price; wider staged full-HC architecture still required",
   "coefficient_home_requirements": {
     "fp32_weights_per_attention_or_ffn": 491520,
     "fp32_fn_bits_per_layer_attention_plus_ffn": 31457280,
     "current_fn_price_cycles": 229,
     "current_fn_price_evidence": "token_path_20261008/ds_rom.json hc.fn source grade modelled, no measured patch",
-    "rom_slot_assigned": false,
+    "rom_slot_assigned": true,
     "native_vm_bound": false,
     "production_throughput_measured": false,
-    "physical_closed": false
+    "physical_closed": false,
+    "rom_slot_evidence": "v20_functional projection six864x1296 homes; middle2 require die relay relocation"
+  },
+  "normal_execution": "No runtime ready, credit, backpressure, queue arbitration or commit-gated completion",
+  "historical_dynamic_bridge": {
+    "commit": "4dbb04160",
+    "status": "superseded before integration by owner static schedule requirement; logs retained as history only"
   }
 }

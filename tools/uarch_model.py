@@ -16129,3 +16129,55 @@ def hbm_qdq_dedicated_face_ff_model():
             "clock_sink_estimate":823,"replicas":4,"shape_um":[129.6,71.28],
             "launch_bits_per_cycle":190,"MACs_per_cycle":0,"memory_bytes_per_cycle":0,
             "default_off":True,"actual_pin_requirement":"P190/Q220 and per-pairL-H100"}
+
+
+def s81_hcx_resident_native_model():
+    """F12 coefficient home: shared HBM arithmetic, real resident native memory.
+
+    This sizes the actual implemented W32 source, not an adopted die/rate claim.
+    Shared projection arithmetic is ot_hdc_v41x_hcp from ot_hgi_hc_unit; tail
+    instantiates the actual unit with constant HC_MIX_POST records. Production
+    requires real VM/collective slots and measured physical relay calendars.
+    """
+    rom_area = 38.016 * 62.910
+    x_area = 94.824 * 41.040
+    mac = 256 * UNIT['fp32_mac_um2']
+    return dict(schema='opentallas.s81-hcx-resident-native.v1',
+        scope='candidate real RTL and native component evidence; not die qualification',
+        arithmetic='unchanged shared ot_hdc_v41x_hcp W32 and ot_hgi_hc_unit HC_MIX_POST',
+        per_rank_outputs=6, ranks=4, outputs=24, K=20480,
+        clock=dict(serial_GHz=0.9, fast_GHz=1.2, ratio=[4,3]),
+        each_projection=dict(macs_per_cycle=256,
+            weight_port_bytes_per_cycle=8*32*4,
+            x_port_bytes_per_cycle=8*32*2,
+            rom_macros=128, rom_macro='ot_rom_4096x72_m8', payload_bits=64,
+            rom_area_um2=128*rom_area,
+            fn_payload_bits=2*20480*32, fn_sets=['attn','ffn'],
+            rom_addresses=dict(attn=[0,79],ffn=[128,207]),
+            x_sram_macros=16, x_sram_macro='ot_sram_1r1w_128x256_m1_r2c2',
+            x_sram_area_um2=16*x_area, x_payload_bits=20480*16,
+            mac_cell_area_estimate_um2=mac,
+            footprint_lower_bound_um2=mac/.55+128*rom_area+16*x_area,
+            estimate_excludes='tree/scalar/tag/clock/hold/pin logic; actual synthesis required',
+            assigned_outline_um=[864,1296],
+            native_cmd_to_pin_result_cycles=264,
+            pin_register_cost_cycles=2,
+            native_result_source='results/rtl/s81_hcx_home_1014/projection_pin_L00.log',
+            clock_sinks='actual synthesis/CTS census required; >15k needs measured R<=300ps/spread<=80ps or partition'),
+        prefetch=dict(rows=640, bytes_per_row=64, reserved_read_ports=8,
+            native_rows_per_cycle=8, beats=80, payload_bits_per_beat=4096,
+            payload_multicast_sinks=6, replicated_link_bit_demand=6*4096,
+            reservation='real bankmod32 calendar plus capture/SU/field clients; not assigned by this model',
+            producer='actual HC H_STORE export after attention POST required for FFN h; fixture H_BASE is insufficient'),
+        projection_raw_link=dict(words_per_rank=6, bits_per_rank=192,
+            collective='real TP4 all-gather to 24 canonical FP32 mixes, fixed native phases',
+            raw_vm_rows=dict(attn=2624,ffn=2640)),
+        native_tail=dict(parameter_rom_macros=4, parameter_rom_area_um2=4*rom_area,
+            arithmetic='actual ot_hgi_hc_unit op2, RMAX2 PMAX2',
+            memory='native FP32 rawmix reads, comb/pre/post/eps/reserved output layout',
+            output_rows=dict(attn=2560,ffn=2576), words_per_output_region=32,
+            completion='fixed compiled deadline; actual arithmetic/VM commit checks never reschedule',
+            status='single-job observation535 serial cycles; repeated-job exact/timing gate still open'),
+        immutable_prices_fast_cycles=dict(fn=229,sumsq=253.6,rsqrt=197.3,pre_post=212.3,sinkhorn=637.2),
+        rate_qualification='open: native H export, VM8 reservation, real all-gather, CDC phase/hops, TT/FF/DRC and clock roots',
+        adoption=False)

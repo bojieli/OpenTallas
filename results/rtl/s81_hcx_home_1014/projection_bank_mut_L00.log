@@ -1,0 +1,7 @@
+HCX PROJ ERR block0 expectedc2c77f32 gotc2aac198 fault0
+HCX PROJ block0 resultc2aac198 exact0 native_cycles264
+HCX PROJ ERR block1 expectedc218cb21 gotc21f50db fault0
+HCX PROJ block1 resultc21f50db exact0 native_cycles264
+[7070000] %Fatal: tb_s81_hcx_projection_leaf.sv:29: Assertion failed in tb_s81_hcx_projection_leaf: HCX_PROJECTION FAIL errors2
+%Error: rtl/dsrom_sys/s81_hcx/test/tb_s81_hcx_projection_leaf.sv:29: Verilog $stop
+Aborting...

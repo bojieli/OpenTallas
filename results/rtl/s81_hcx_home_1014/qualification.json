@@ -1,0 +1,41 @@
+{
+  "scope": "candidate native HC coefficient home, component evidence only",
+  "projection": {
+    "arithmetic": "shared ot_hdc_v41x_hcp, full20480 BF16 terms and real FP32 weights",
+    "tested": "L00 row0 attn and FFN",
+    "serial_cycles_cmd_to_output": 264,
+    "exact_log": "projection_pin_L00.log",
+    "negative": "projection_bank_mut_L00.log (bank7zero fails both records)"
+  },
+  "controller": {
+    "actual_clocks_GHz": [
+      1.2,
+      0.9
+    ],
+    "fixed_fast_cycles_observed": 479,
+    "jobs": 3,
+    "positive": "controller_nom.log",
+    "negative": "controller_mut.log",
+    "synthetic_leaf_valid": "protocol-only, does not qualify arithmetic",
+    "FF_bits": {
+      "serial": 484,
+      "fast": 130
+    }
+  },
+  "prefetch": {
+    "rows": 640,
+    "read_ports": 8,
+    "beats": 80,
+    "positive": "prefetch_nom.log",
+    "negative": "prefetch_mut.log"
+  },
+  "open": [
+    "Native VM8 calendar and real payload multicast/relay phases",
+    "Actual four-rank raw24 allgather into native VM",
+    "Intermediate post-attn HC H_STORE before FFN projection",
+    "Native op2 repeated-job exact and fixed-time gate",
+    "All40+MTP native content mapping and complete functional token gate",
+    "All leaf/controller physical synthesis CTS timing DRC and clock-root closure"
+  ],
+  "adopted": false
+}

@@ -1,0 +1,99 @@
+{
+  "schema": "opentallas.s81-hcx-resident-native.v1",
+  "scope": "candidate real RTL and native component evidence; not die qualification",
+  "arithmetic": "unchanged shared ot_hdc_v41x_hcp W32 and ot_hgi_hc_unit HC_MIX_POST",
+  "per_rank_outputs": 6,
+  "ranks": 4,
+  "outputs": 24,
+  "K": 20480,
+  "clock": {
+    "serial_GHz": 0.9,
+    "fast_GHz": 1.2,
+    "ratio": [
+      4,
+      3
+    ]
+  },
+  "each_projection": {
+    "macs_per_cycle": 256,
+    "weight_port_bytes_per_cycle": 1024,
+    "x_port_bytes_per_cycle": 512,
+    "rom_macros": 128,
+    "rom_macro": "ot_rom_4096x72_m8",
+    "payload_bits": 64,
+    "rom_area_um2": 306123.07967999997,
+    "fn_payload_bits": 1310720,
+    "fn_sets": [
+      "attn",
+      "ffn"
+    ],
+    "rom_addresses": {
+      "attn": [
+        0,
+        79
+      ],
+      "ffn": [
+        128,
+        207
+      ]
+    },
+    "x_sram_macros": 16,
+    "x_sram_macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "x_sram_area_um2": 62265.23136,
+    "x_payload_bits": 327680,
+    "mac_cell_area_estimate_um2": 299210.49600000004,
+    "footprint_lower_bound_um2": 912407.3946763636,
+    "estimate_excludes": "tree/scalar/tag/clock/hold/pin logic; actual synthesis required",
+    "assigned_outline_um": [
+      864,
+      1296
+    ],
+    "native_cmd_to_pin_result_cycles": 264,
+    "pin_register_cost_cycles": 2,
+    "native_result_source": "results/rtl/s81_hcx_home_1014/projection_pin_L00.log",
+    "clock_sinks": "actual synthesis/CTS census required; >15k needs measured R<=300ps/spread<=80ps or partition"
+  },
+  "prefetch": {
+    "rows": 640,
+    "bytes_per_row": 64,
+    "reserved_read_ports": 8,
+    "native_rows_per_cycle": 8,
+    "beats": 80,
+    "payload_bits_per_beat": 4096,
+    "payload_multicast_sinks": 6,
+    "replicated_link_bit_demand": 24576,
+    "reservation": "real bankmod32 calendar plus capture/SU/field clients; not assigned by this model",
+    "producer": "actual HC H_STORE export after attention POST required for FFN h; fixture H_BASE is insufficient"
+  },
+  "projection_raw_link": {
+    "words_per_rank": 6,
+    "bits_per_rank": 192,
+    "collective": "real TP4 all-gather to 24 canonical FP32 mixes, fixed native phases",
+    "raw_vm_rows": {
+      "attn": 2624,
+      "ffn": 2640
+    }
+  },
+  "native_tail": {
+    "parameter_rom_macros": 4,
+    "parameter_rom_area_um2": 9566.346239999999,
+    "arithmetic": "actual ot_hgi_hc_unit op2, RMAX2 PMAX2",
+    "memory": "native FP32 rawmix reads, comb/pre/post/eps/reserved output layout",
+    "output_rows": {
+      "attn": 2560,
+      "ffn": 2576
+    },
+    "words_per_output_region": 32,
+    "completion": "fixed compiled deadline; actual arithmetic/VM commit checks never reschedule",
+    "status": "single-job observation535 serial cycles; repeated-job exact/timing gate still open"
+  },
+  "immutable_prices_fast_cycles": {
+    "fn": 229,
+    "sumsq": 253.6,
+    "rsqrt": 197.3,
+    "pre_post": 212.3,
+    "sinkhorn": 637.2
+  },
+  "rate_qualification": "open: native H export, VM8 reservation, real all-gather, CDC phase/hops, TT/FF/DRC and clock roots",
+  "adoption": false
+}
