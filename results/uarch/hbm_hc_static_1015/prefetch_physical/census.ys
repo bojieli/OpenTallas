@@ -1,0 +1,10 @@
+read_liberty -lib macro.lib
+read_verilog -sv -D SYNTHESIS reset.sv fifo.sv cdc.sv
+chparam -set DELIVERY_II 8 -set ISSUE_INTERLEAVE 1 -set MAX_OUTSTANDING 8 -set ISSUE_WIDTH 4 ot_hbm_svc_prefetch_block_cdc
+hierarchy -check -top ot_hbm_svc_prefetch_block_cdc
+proc
+opt
+memory_map
+opt
+stat
+write_json census.json

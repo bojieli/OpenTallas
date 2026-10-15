@@ -1,0 +1,147 @@
+{
+  "schema": "opentallas.hc.prefetch.physical-preflight.v1",
+  "source_pins": {
+    "cdc.sv": {
+      "ref": "21a5201c6fd5f88be9a71cf86a8f670403fc13f2",
+      "path": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_block_cdc.sv",
+      "sha256": "4c5d6dd620e17a11d36e9217bdcba492cd2e2fe4d595343f2fd957d9fc6376fb"
+    },
+    "fifo.sv": {
+      "ref": "e98d76186dbcdd4c0220c7985d9b03ed27c4365a",
+      "path": "rtl/lib/ot_async_fifo.sv",
+      "sha256": "e091268202e1c6bcc18c8eb83304730c5a29bc10e0a6c52a4dcfc19c177e882e"
+    },
+    "reset.sv": {
+      "ref": "e98d76186dbcdd4c0220c7985d9b03ed27c4365a",
+      "path": "rtl/lib/ot_reset_sync.sv",
+      "sha256": "489e493c19aa1260853031fee35c14ea3394ae62ff6853cf7ea407cb8fb78bbd"
+    },
+    "macro.lib": {
+      "ref": "e98d76186dbcdd4c0220c7985d9b03ed27c4365a",
+      "path": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_tt.lib",
+      "sha256": "c39f42e739c93c5809d82fdc12d41cbb3ddfc6ab43fba192e542e347a7f6ea94"
+    },
+    "direct": {
+      "commit": "21a5201c6fd5f88be9a71cf86a8f670403fc13f2",
+      "path": "rtl/hbm_accel/generic/peers/hc_prefetch_static/ot_hgi_hc_prefetch_direct_static.sv",
+      "sha256": "c5245b01bcb5c3df19d283ec6c1ffa3e92f1c1383ff82aabc642d1469df134c4"
+    },
+    "aperture": {
+      "commit": "e98d76186dbcdd4c0220c7985d9b03ed27c4365a",
+      "path": "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_aperture_static.sv",
+      "sha256": "7e14e88870dd131e8f558970dc7929175d1a76fd0317bfd24e0a71587d7419ae"
+    }
+  },
+  "status": "SOURCE_CENSUS_RUNNING_NO_ROUTE",
+  "resources": [
+    {
+      "master": "ot_hbm_svc_prefetch_block_cdc",
+      "instances": 4,
+      "hierarchy": "ot_hgi_hc_prefetch_direct_static/stack[s]/u_prefetch",
+      "parameters": {
+        "DELIVERY_II": 8,
+        "ISSUE_INTERLEAVE": 1,
+        "MAX_OUTSTANDING": 8,
+        "ISSUE_WIDTH": 4
+      },
+      "SRAMs_per_instance": 32,
+      "source_owner_bits_per_instance": 11776,
+      "response_FIFO_memory_bits_per_instance": 9088,
+      "descriptor_FIFO_memory_bits_per_instance": 244,
+      "stream_seen_bits_per_instance": 4096,
+      "roots": [
+        "stream_clk",
+        "hbm_clk"
+      ],
+      "slot": "UNASSIGNED",
+      "source_pin_defects": [
+        "out_data is mux of SRAM Q, no final output face register",
+        "k_v/k_addr/k_tag and kr_rdy combinational ownership selection at HBM boundary",
+        "root count synthesis active; no CTS insertion or spread receipt"
+      ],
+      "proposed_partition": "HBM owner table and response-FIFO write storage require separate hardened roots; owner groups per8 PC (2944 ownership bits), per-lane CDC FIFO (1136 storage bits), stream SRAM/seen engine; partition is REQUESTED and not implemented"
+    },
+    {
+      "master": "ot_hgi_hc_prefetch_direct_static",
+      "instances": 1,
+      "capture_bits": 8192,
+      "ap_output_register_bits": 2224,
+      "roots": [
+        "stream_clk"
+      ],
+      "slot": "UNASSIGNED",
+      "source_pin_defects": [
+        "capture valid/data comes from four CDC leaf SRAM outputs",
+        "AP output is registered but no physical face/phase/reach receipt"
+      ]
+    },
+    {
+      "master": "ot_hgi_hc_aperture_static",
+      "instances": 1,
+      "SRAMs_per_instance": 64,
+      "roots": [
+        "clk"
+      ],
+      "slot": "geometry bank weight stores, same64 in arithmetic80 inventory",
+      "inventory_overlap": "Do not add these64 to geometry arithmetic80; prefetch128 are additional distinct macros",
+      "source_pin_defects": [
+        "raw_weight is SRAM Q/mux with no final output register; arithmetic wd capture is next stage, physical pin proof required"
+      ]
+    }
+  ],
+  "macro_footprint": {
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "size_um": [
+      94.824,
+      41.04
+    ],
+    "pin_layer": "M4",
+    "prefetch128_area_um2": 498121.85088,
+    "aperture64_area_um2": 249060.92544,
+    "per_stack32_area_um2": 124530.46272,
+    "per_stack_4x8_macro_grid_with_5p4um_halo_um": [
+      422.496,
+      414.72
+    ],
+    "grid_covers": "SRAM+halo only; no logic/routing/pins/clock/PDN allowance or slot fit claim"
+  },
+  "common_native_controller": {
+    "master": "ot_hbm_svc_native_sector_owned_stack",
+    "owner": "/root/h_die/service_native",
+    "response_SRAM_count": 128,
+    "scope": "Separate common-owned physical stream, not duplicated here"
+  },
+  "clock_policy": {
+    "sink_limit": 15000,
+    "over_limit_requires_measured_CTS": {
+      "max_insertion_ps": 300,
+      "max_spread_ps": 80
+    },
+    "no_CTS_or_route_before_split_or_contract": true
+  },
+  "gaps": [
+    "No prefetch slot dimensions/pin faces granted",
+    "No source-exact mapped sink census yet",
+    "No CTS/insertion/corner/raw timing receipt",
+    "No phi-R or fixed boundary phase proof",
+    "No SS/FF or routed DRC qualification"
+  ],
+  "active_job": {
+    "session": 5585,
+    "host": "ot-agidock128",
+    "scope": "oth-ubuntu-3934240-1792061338.scope",
+    "remote": "/srv/opentallas-scratch/claude/codex-hc-prefetch-physical-1015",
+    "purpose": "Production-param generic optimized clock sequential-bit census; no ABC/CTS/route"
+  },
+  "physical_qualified": false,
+  "boundary_ownership": {
+    "HC_weight_ap_2224": "HC prefetch/H-DIE; no HVM allocation or capture slot granted",
+    "HVM_response": "separate LG/RG/SW seam, no inferred clock/slot alias",
+    "geometry": "arithmetic HCbank80 SRAM includes same aperture64weight"
+  },
+  "proposed_partition_notes": [
+    "Direct serializer capture8192+AP2224 =10416 source bits, suitable separate stream leaf subject mapped count/pin/slot",
+    "Four helper stream seen maps4096 each plus control and SRAM clock pins imply a monolithic shared stream root exceeds15000; harden each helper stream engine separately",
+    "Do not use the same root merely by declaring hierarchy; each hardened leaf needs an actual boundary clock pin and insertion measurement"
+  ]
+}
