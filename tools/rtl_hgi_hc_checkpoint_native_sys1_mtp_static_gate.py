@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Actual SRAM to projection to HC tail composition, fixed calendar and mutants."""
-import hashlib,json,subprocess,sys
+import hashlib,json,subprocess,sys,re
 from pathlib import Path
 import numpy as np
 ROOT=Path(__file__).resolve().parents[1]
@@ -10,11 +10,39 @@ import rtl_hdc_v41x_hcp_campaign as hc
 from lower_hbm_hc_sys1_mtp_static_calendar import lower_sys1 as lower
 from lower_hbm_hc_native_sys1_component_calendar import lower_native_sys1 as lower_native
 
+def analyze_structural_warnings(build):
+    prefix=ROOT/'rtl/hdc/ot_hdc_prefix.sv'
+    prefix_sha=hashlib.sha256(prefix.read_bytes()).hexdigest()
+    if prefix_sha!='98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587':
+        raise RuntimeError('prefix source differs from inspected level-directed DAG')
+    # Every generated g[l+1]/p[l+1] assignment reads level l only. The
+    # array-level Verilator warning collapses these distinct indexed nets.
+    # Permit only the two exact closed LG8 multiplier prefix array signals.
+    origin='tb_hgi_hc_checkpoint_native_sys1_mtp_static.dut.arithmetic.engine.projection.bank[0].mac[0].lanes.g_lane[0].u_mul.u_pw.'
+    accepted=[]
+    for line in build.splitlines():
+        if line.startswith('%Warning-LATCH:') or line.startswith('%Warning-MULTIDRIVEN:'):
+            raise RuntimeError(f'forbidden structural warning: {line}')
+        if line.startswith('%Warning-UNOPTFLAT:'):
+            match=re.fullmatch(r"%Warning-UNOPTFLAT: (.*):(\d+):(\d+): Signal unoptimizable: Circular combinational logic: '([^']+)'",line)
+            legal=(match and match[1]==str(prefix) and match[3]=='27' and
+                   (match[2],match[4]) in [('24',origin+'g'),('25',origin+'p')])
+            if not legal:raise RuntimeError(f'unexplained UNOPTFLAT: {line}')
+            accepted.append(line)
+    if len(accepted)>2:raise RuntimeError('unexpected repeated prefix warnings')
+    return {'accepted_indexed_prefix_headers':accepted,'source_sha256':prefix_sha,
+        'reason':'g/p at level l+1 depend only on level l; no directed bit-level cycle. Exact source/line/signal match only; raw warnings preserved.',
+        'all_other_UNOPTFLAT':0,'LATCH':0,'MULTIDRIVEN':0}
+
 def main():
     import os
     command_native=1
     sys_latency=86
     sys_delta=sys_latency-33
+    engine_path=Path(os.environ['HC_SYS1_ENGINE_RECEIPT'])
+    engine=json.loads(engine_path.read_text())
+    if engine.get('SYS_LAT_candidate')!=sys_latency or any(engine.get(k,{}).get('exit_code')!=0 for k in ('exact6','exact8','exact_early6','exact_early8')) or engine.get('mutant8',{}).get('exit_code',0)==0:
+        raise RuntimeError('actual SYS1 arithmetic prerequisite has not passed')
     build_threads=int(os.environ.get('HC_BUILD_THREADS','4'))
     if build_threads<1:raise ValueError('positive build threads')
     if command_native not in (0,1):raise ValueError('HC_COMMAND_NATIVE0/1')
@@ -92,7 +120,9 @@ def main():
         'rtl/hdc/v41/ot_hdc_sk_recip_rom.sv','rtl/test/tb_hgi_hc_checkpoint_native_sys1_mtp_static.sv',
         'rtl/test/hgi_hc_checkpoint_native_sys1_mtp_static_harness.cpp']
     pins=files+['tools/hdc_golden.py','tools/hdc_golden_v41.py','tools/rtl_hgi_hc_checkpoint_native_sys1_mtp_static_gate.py','tools/rtl_hdc_v41x_hcp_campaign.py','tools/lower_hbm_hc_mtp_static_calendar.py','tools/lower_hbm_hc_tail_loop_calendar.py','tools/lower_hbm_hc_sys1_mtp_static_calendar.py','tools/lower_hbm_hc_native_sys1_component_calendar.py']
-    receipt={'status':'PREPARED_NOT_RUN', 'SYS_LAT':sys_latency,'additional_pipeline_cycles':sys_delta,'residual_base_scales':'synthetic fixture; actual checkpoint FN only','canonical_G25_P1_qualified':False,'full_native_chip_qualified':False,'scope':'actual paged programme SRAM to SYS1 shared3830pin bankmemory/shell/32LG8MAC/core projection/tail; actual4SID32bankVM96SRAM and12LGtaps joined plus realresultVMwrites/readback; actual20GiB checkpoint PHY CDC staging128SRAM joined; only offchip PHY data model; no wholechip/physical qualification',
+    for f in set(pins)&set(engine['source_sha256']):
+        if hashlib.sha256((ROOT/f).read_bytes()).hexdigest()!=engine['source_sha256'][f]:raise RuntimeError(f'engine source mismatch: {f}')
+    receipt={'engine_receipt_sha256':hashlib.sha256(engine_path.read_bytes()).hexdigest(),'engine_sources_match':True,'status':'PREPARED_NOT_RUN', 'SYS_LAT':sys_latency,'additional_pipeline_cycles':sys_delta,'residual_base_scales':'synthetic fixture; actual checkpoint FN only','canonical_G25_P1_qualified':False,'full_native_chip_qualified':False,'scope':'actual paged programme SRAM to SYS1 shared3830pin bankmemory/shell/32LG8MAC/core projection/tail; actual4SID32bankVM96SRAM and12LGtaps joined plus realresultVMwrites/readback; actual20GiB checkpoint PHY CDC staging128SRAM joined; only offchip PHY data model; no wholechip/physical qualification',
         'source_sha256':{f:hashlib.sha256((ROOT/f).read_bytes()).hexdigest() for f in pins},
         'fixture_sha256':{p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in [*run.glob('*.mem'),run/'all24rows.hex']},
         'K':20480,'positions':[6,8],'projection_rows':24,'tail_words_per_position':24,'sink_clock_divisor':7,'checkpoint_fn_sha256':hashlib.sha256(original.read_bytes()).hexdigest(),'actual_SRAMs':306+128*command_native,'command_native':command_native,'build_threads':build_threads,'tail_configuration_words':497,'tail_programme_reconfigure_between_positions':False,'tail_body_period':497,'configuration_words_n6':1577+sys_delta,'configuration_words_n8':1897+sys_delta,'host_reconfigure_between_projection_and_tail':False,'PHY_model':('strict command-only offchipfixture canonical23edge; corrected owned-stacka7b86347d actualcontroller' if command_native else 'published request-level refresh-aware ot_chip_v41x_hbm3e_phy') ,'nominal_row_result_ages':[289+sys_delta+160*p for p in range(8)],'nominal_row_periods':{'6':1100+sys_delta,'8':1420+sys_delta},'early_row_result_ages':[269+sys_delta+160*p for p in range(8)],'early_row_periods':{'6':1080+sys_delta,'8':1400+sys_delta}}
@@ -105,8 +135,7 @@ def main():
             f'-GCOMMAND_NATIVE={command_native}','--output-split','10000','--top-module','tb_hgi_hc_checkpoint_native_sys1_mtp_static','-Mdir',str(run/'obj'),*[str(ROOT/f) for f in files]],
             cwd=run,stdout=log,stderr=subprocess.STDOUT,check=True)
     build_log=(run/'build.log').read_text()
-    for warning in ('UNOPTFLAT','LATCH','MULTIDRIVEN'):
-        if f'%Warning-{warning}:' in build_log:raise RuntimeError(f'structural warning {warning}')
+    receipt['structural_warning_analysis']=analyze_structural_warnings(build_log)
     exe=run/'obj/Vtb_hgi_hc_checkpoint_native_sys1_mtp_static'
     from concurrent.futures import ThreadPoolExecutor
     def simulate(item):
