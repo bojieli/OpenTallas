@@ -168,7 +168,7 @@ def derive(root=ROOT):
     localparam integer LOCAL_XF_MUT=0;
 `endif
     generate for(gs=0;gs<NS;gs=gs+1)begin:g_xf
-      ot_coll_local_xfold #(.MUT_RANK(LOCAL_XF_MUT)) u_region(
+      (* keep_hierarchy = 1 *) ot_coll_local_xfold #(.MUT_RANK(LOCAL_XF_MUT)) u_region(
         .ctl_ck(clk_region[28+gs]),.fold_ck(CCLK?clk_xfold[gs]:clk),.rst_n(rst_n),
         .pkg_s(pkg_s),.red_in(red2),.td(td_d[gs*128 +:128]),
         .sr0(srr_q[0][gs*128 +:128]),.sr1(srr_q[1][gs*128 +:128]),.sr2(srr_q[2][gs*128 +:128]),
