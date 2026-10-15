@@ -16279,3 +16279,8 @@ def s81_native_functional_homes_1014_model():
             embedding='physical/s81_die_pins/v20_embedding/home.json: actual2SRAM expander, upstream full table and S000 source role OPEN',
             probability='physical/s81_die_pins/v20_svc_native/ingress_layout.json: actual 1030 closed-pin joins max25.464um; native full parent OPEN',
             capture='physical/s81_die_pins/v20_hc_capture/cpl_geometry.json: 9080 actual CPL joins <=499.782um, first-stage M5 preserved, local capture M3; actual leaf routes pending'))
+
+
+def s81_static_channels_1014_model():
+    from uarch_model_s81_static_channels import s81_static_channels_1014_model as model
+    return model()
