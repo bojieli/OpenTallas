@@ -1,0 +1,23 @@
+#!/usr/bin/env python3
+"""Pre-build programme/cache join model; externalPC/WB/loader gates stay open."""
+def model():
+ return dict(schema='opentallas.smh-packed136-programme-join.v1',
+   production_shape=dict(SMs=32,columns_per_SM=8,rows_per_column=4,packet_bits=1099,command_bits=83,weights_bytes_per_line=128,scale_bytes_per_line=8),
+   programme_macros_per_SM=2,programme_macro='actual1024x256',
+   service_plane_bits=34,service_fields='read_v1,read_bank1,epoch16,row6,tag10',
+   cache_macros_per_SM=5,cache_macro='actual128x256',cache_bytes_per_SM=5*128*32,
+   packed_source_sectors_per_four_lines=17,source_pulses=[4,4,4,4,1],source_bytes_per_edge_peak=128,
+   packed_cache_rows_per_edge_peak=1,command_bits_per_edge=83,cache_payload_bits_per_edge=1099,
+   MACs_per_cycle='unchanged originalSM; thisjoinaddsnoarithmetic',
+   launch_relation='readprogramme starts exactly1edge beforecommandprogramme',
+   programme_first_output_edges=4,readmacro_output_edges=1,
+   first_S1_hop_after_command_start=6,frontend_added_edges=0,
+   root_note='eachprogrammeSRAM/calendar andcacheexistingclockroot independentphysicalqualificationpending',
+   area='2programme macros+5cache macrosperSM; physicalassignedslots/placement/pinsunqualified',
+   routing='actualreadplane34/source1024/command83/packet1099; nofabricreachclaim',
+   price_changed=False,throughput_price=1.374315789,
+   price_units='streamcyclesper136Bline immutableW19; localII1cacheburstdoesnotproveglobalprice',
+   remaining=['actualcheckpoint1088source+allocatorreservation','actual4PCnativeWB/34banddelivery','actualcompiledoperationcalendar','actualVMxwrite','nativeSMnumerical+throughput','physicalroots/cuts/reach'])
+if __name__=='__main__':
+ import json
+ print(json.dumps(model(),indent=2))

@@ -1,0 +1,376 @@
+{
+  "schema": "opentallas.actual-checkpoint-sm-payload.v1",
+  "checkpoint_snapshot": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/snapshots/dba1be0a40aa45a94ad051997016db3960a90277",
+  "checkpoint_index_sha256": "74b0686a3d2891980d5e303251b075a3bccae2c2ff650747db2620a649b98fa8",
+  "checkpoint_shard": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/e1281f85d0ce4a3dfb63d41926fc4a47fa71f36ba20992e3597e702ead49d4c9",
+  "checkpoint_shard_header_sha256": "71213f444f9c15a4af6dbcbddc36f7611542884ebb3aadef54de650071357449",
+  "tensor": "layers.0.attn.wq_a.weight",
+  "scale_tensor": "layers.0.attn.wq_a.scale",
+  "tensor_meta": {
+    "dtype": "F8_E4M3",
+    "shape": [
+      1280,
+      5120
+    ],
+    "data_offsets": [
+      510842328,
+      517395928
+    ]
+  },
+  "scale_meta": {
+    "dtype": "F8_E8M0",
+    "shape": [
+      40,
+      160
+    ],
+    "data_offsets": [
+      7968216,
+      7974616
+    ]
+  },
+  "selected_weight_bytes_sha256": "e108b37901f47ac05f87e9c02f124dbf8856117a4b8fa35c598438155edc562a",
+  "selected_scale_bytes_sha256": "f9df96ff2c02071613efe68df0348076e3cc6c96ab4e4be951bbcf397cee7cf1",
+  "rank": 0,
+  "tp": 96,
+  "global_rows": [
+    0,
+    13
+  ],
+  "SMs": 32,
+  "selection": "W19 even(n) TP96 then actualsmrecord Q=ceil(localM/32); idleSMs explicit",
+  "issue_order": "GS wave8(row*G+g),t0..7,slot0..7; onlyrealitems emit136B",
+  "source_sha256": {
+    "tools/export_hbm_smh_checkpoint_rows.py": "4112361be48a0c0869186b2dc42c7681cc38d5380ab61cbce75e712a3b6bd327",
+    "tools/hgi_e2e/sm_lines.py": "c33abbd965bbc535fa5e0a96e203da3ac5358bfc002c95f1a58e8177878fe096",
+    "tools/rtl_gpu_sm_exact.py": "1356dbfb6f1778f11d7b3e8156342e130d504a5670fa066e93f609ae975579f8",
+    "tools/hdc_golden_v41.py": "1bf8f3dd95228cabb0b717ea96d0b2ec903c88d0c85c5834a56c5fc8466373d4",
+    "tools/w19_hbm_tp96_isa.py": "82c948f1497a22fbb7cd05c3ae408a4d9d66c7dcaf7a07abd115c91bf75279e3",
+    "rtl/hbm_accel/generic/adapters/ot_hgi_sm_record.sv": "36d4b25585f255ebd6a1256c1728d9ddeaf4abaa889323f90b9232167f40cf56"
+  },
+  "ops": [
+    {
+      "sm": 0,
+      "active": true,
+      "global_rows": [
+        0,
+        1
+      ],
+      "rows": 1,
+      "K": 5120,
+      "fmt": 1,
+      "c": 8,
+      "groups": 5,
+      "gs": true,
+      "lines": 40,
+      "file": "sm00.lines.hex",
+      "sha256": "0af87b4cc48df8a6b671e89be2f9d4db24e2a47ee91cdd48bb031831ae7e9798"
+    },
+    {
+      "sm": 1,
+      "active": true,
+      "global_rows": [
+        1,
+        2
+      ],
+      "rows": 1,
+      "K": 5120,
+      "fmt": 1,
+      "c": 8,
+      "groups": 5,
+      "gs": true,
+      "lines": 40,
+      "file": "sm01.lines.hex",
+      "sha256": "a5cb5ef3fb13e31762873cefb4821de8329b4446adbd605cf821411fe31d7597"
+    },
+    {
+      "sm": 2,
+      "active": true,
+      "global_rows": [
+        2,
+        3
+      ],
+      "rows": 1,
+      "K": 5120,
+      "fmt": 1,
+      "c": 8,
+      "groups": 5,
+      "gs": true,
+      "lines": 40,
+      "file": "sm02.lines.hex",
+      "sha256": "bb6c147cbd3452de3a7a4b343fd67415e623d74674fa730412e09331f8038111"
+    },
+    {
+      "sm": 3,
+      "active": true,
+      "global_rows": [
+        3,
+        4
+      ],
+      "rows": 1,
+      "K": 5120,
+      "fmt": 1,
+      "c": 8,
+      "groups": 5,
+      "gs": true,
+      "lines": 40,
+      "file": "sm03.lines.hex",
+      "sha256": "d9c255cdcf95807ee9d1f4378ada7c7db3d485e55bea5fcc04de1f8d3bddd5f1"
+    },
+    {
+      "sm": 4,
+      "active": true,
+      "global_rows": [
+        4,
+        5
+      ],
+      "rows": 1,
+      "K": 5120,
+      "fmt": 1,
+      "c": 8,
+      "groups": 5,
+      "gs": true,
+      "lines": 40,
+      "file": "sm04.lines.hex",
+      "sha256": "bdedd7615b150518ef4a14c57272dd54e5af8b02a43ef5b713294beb2bb75e99"
+    },
+    {
+      "sm": 5,
+      "active": true,
+      "global_rows": [
+        5,
+        6
+      ],
+      "rows": 1,
+      "K": 5120,
+      "fmt": 1,
+      "c": 8,
+      "groups": 5,
+      "gs": true,
+      "lines": 40,
+      "file": "sm05.lines.hex",
+      "sha256": "9e9e2ec82aaaa253596f10298ca445dccece3e3f4ebeef0549b632c6bfc78651"
+    },
+    {
+      "sm": 6,
+      "active": true,
+      "global_rows": [
+        6,
+        7
+      ],
+      "rows": 1,
+      "K": 5120,
+      "fmt": 1,
+      "c": 8,
+      "groups": 5,
+      "gs": true,
+      "lines": 40,
+      "file": "sm06.lines.hex",
+      "sha256": "e38f1830c686b031b7b5538cacffc23e72df39441f483c5294a5187f702f4d80"
+    },
+    {
+      "sm": 7,
+      "active": true,
+      "global_rows": [
+        7,
+        8
+      ],
+      "rows": 1,
+      "K": 5120,
+      "fmt": 1,
+      "c": 8,
+      "groups": 5,
+      "gs": true,
+      "lines": 40,
+      "file": "sm07.lines.hex",
+      "sha256": "1106d6ab8d2b2d7e6c67595375b7644c1d68ad71527d83a73e33fffbe9595be8"
+    },
+    {
+      "sm": 8,
+      "active": true,
+      "global_rows": [
+        8,
+        9
+      ],
+      "rows": 1,
+      "K": 5120,
+      "fmt": 1,
+      "c": 8,
+      "groups": 5,
+      "gs": true,
+      "lines": 40,
+      "file": "sm08.lines.hex",
+      "sha256": "fc01e612d672def09bd2df5cb0055e5bb9afa920b3a84378f969f244ea5368ca"
+    },
+    {
+      "sm": 9,
+      "active": true,
+      "global_rows": [
+        9,
+        10
+      ],
+      "rows": 1,
+      "K": 5120,
+      "fmt": 1,
+      "c": 8,
+      "groups": 5,
+      "gs": true,
+      "lines": 40,
+      "file": "sm09.lines.hex",
+      "sha256": "4f0778c1388f0411c78d15a7e2b8c6b6557500efe844516bee69a3c8a16762ba"
+    },
+    {
+      "sm": 10,
+      "active": true,
+      "global_rows": [
+        10,
+        11
+      ],
+      "rows": 1,
+      "K": 5120,
+      "fmt": 1,
+      "c": 8,
+      "groups": 5,
+      "gs": true,
+      "lines": 40,
+      "file": "sm10.lines.hex",
+      "sha256": "a61e2c31188ecde5fe9ece8a94c94374e322753d956795511a1dd92a7dbc9b65"
+    },
+    {
+      "sm": 11,
+      "active": true,
+      "global_rows": [
+        11,
+        12
+      ],
+      "rows": 1,
+      "K": 5120,
+      "fmt": 1,
+      "c": 8,
+      "groups": 5,
+      "gs": true,
+      "lines": 40,
+      "file": "sm11.lines.hex",
+      "sha256": "3ffb20824ac228abbe273dd4e479d61c9c1be97d2dbdafe031ffff8996afc18d"
+    },
+    {
+      "sm": 12,
+      "active": true,
+      "global_rows": [
+        12,
+        13
+      ],
+      "rows": 1,
+      "K": 5120,
+      "fmt": 1,
+      "c": 8,
+      "groups": 5,
+      "gs": true,
+      "lines": 40,
+      "file": "sm12.lines.hex",
+      "sha256": "dc8f49d6cb835549ea99ff684b89215559baff617598b1fa72d7c41802fd9230"
+    },
+    {
+      "sm": 13,
+      "active": false,
+      "rows": 0
+    },
+    {
+      "sm": 14,
+      "active": false,
+      "rows": 0
+    },
+    {
+      "sm": 15,
+      "active": false,
+      "rows": 0
+    },
+    {
+      "sm": 16,
+      "active": false,
+      "rows": 0
+    },
+    {
+      "sm": 17,
+      "active": false,
+      "rows": 0
+    },
+    {
+      "sm": 18,
+      "active": false,
+      "rows": 0
+    },
+    {
+      "sm": 19,
+      "active": false,
+      "rows": 0
+    },
+    {
+      "sm": 20,
+      "active": false,
+      "rows": 0
+    },
+    {
+      "sm": 21,
+      "active": false,
+      "rows": 0
+    },
+    {
+      "sm": 22,
+      "active": false,
+      "rows": 0
+    },
+    {
+      "sm": 23,
+      "active": false,
+      "rows": 0
+    },
+    {
+      "sm": 24,
+      "active": false,
+      "rows": 0
+    },
+    {
+      "sm": 25,
+      "active": false,
+      "rows": 0
+    },
+    {
+      "sm": 26,
+      "active": false,
+      "rows": 0
+    },
+    {
+      "sm": 27,
+      "active": false,
+      "rows": 0
+    },
+    {
+      "sm": 28,
+      "active": false,
+      "rows": 0
+    },
+    {
+      "sm": 29,
+      "active": false,
+      "rows": 0
+    },
+    {
+      "sm": 30,
+      "active": false,
+      "rows": 0
+    },
+    {
+      "sm": 31,
+      "active": false,
+      "rows": 0
+    }
+  ],
+  "independent_verification": "existingSL.pack exactE4M3/UE8M0 + originalS.issue_order bitexact all520records",
+  "qualified": false,
+  "remaining": [
+    "actual allocatorreservation and fullPCimage binding",
+    "real loader/WB/34band delivery",
+    "native83programme/resource/xwrite/numerical gate",
+    "physical timing and immutable price"
+  ]
+}

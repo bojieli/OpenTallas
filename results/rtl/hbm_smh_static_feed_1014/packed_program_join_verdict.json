@@ -1,0 +1,25 @@
+{
+  "scope": "actual2programmeSRAM+5cacheSRAM packed136 static programme/feed join; proceduralsourceboundary only, not releasedcheckpoint/4PCWB/34band/nativeSMnumerical qualification",
+  "source_sha256": {
+    "rtl/hbm_accel/sm/static/ot_smh_calendar_static.sv": "4ecc595f2a0eb3fbc3c433f807013626abbafaba4aa0629b81b7e5faf582ba85",
+    "rtl/test/tb_smh_packed_program_join.sv": "dd77c1132410cf329732ee5cfd01b872ea807456aacf6461a1ea099184acc3df",
+    "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v": "6530a2ef457f260a942e067b556ff55d75f931350af5807cfd6b05cd5e1ff380",
+    "rtl/hbm_accel/sm/static/ot_smh_packed_program_join.sv": "cfe51db53c1ac8a30d083e69cd139bd3e08087538ee3f4c44152d8ae85af110c",
+    "rtl/hbm_accel/sm/static/ot_smh_static_feed.sv": "fb0ed7163cf1a0adadaea5dd0820523f01d1dbed48dd8aeaf3e6640ccd2b7d84",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_static_sm_packed136.sv": "05ea0bddc5a9ea27f0e3ca7d3882ee5f61748c43539f1569994f7ebcb85eaa87",
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": "d9801653d16576f40306c1fb1d01928e88e7371a3897b616e31d3e3df917cb2d"
+  },
+  "cases": [
+    {
+      "mutant": 0,
+      "returncode": 0,
+      "expected_pass": true
+    },
+    {
+      "mutant": 1,
+      "returncode": 1,
+      "expected_pass": false
+    }
+  ],
+  "verdict": "PASS"
+}

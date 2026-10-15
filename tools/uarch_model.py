@@ -16233,3 +16233,14 @@ def hbm_smh_staticfront_stage_local_model():
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
     return module.model()
+
+
+def hbm_smh_packed_programme_join_model():
+    """Actual83command+34read programme/cache join; immutable W19 price intact."""
+    import importlib.util
+    from pathlib import Path
+    path = Path(__file__).with_name('hbm_smh_packed_program_join_model.py')
+    spec = importlib.util.spec_from_file_location('_smh_packed_programme_model', path)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module.model()
