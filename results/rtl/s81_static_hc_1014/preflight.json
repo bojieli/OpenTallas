@@ -1,0 +1,53 @@
+{
+  "add_pipeline": "ot_s81ph_fp32_add_rne_preexp SPLIT=7 KS=1",
+  "add_register_stages": 8,
+  "adoption": false,
+  "fp32_add_replicas": 48,
+  "fp32_adds_per_issue": 48,
+  "fp32_lanes_per_record": 16,
+  "hc_row_bits": 8192,
+  "input_average_bytes_per_cycle": 48,
+  "input_bytes_per_issue": 256,
+  "input_payload_bits_per_issue": 2048,
+  "input_register_stages": 1,
+  "inputs_sha256": {
+    "rtl/dsrom_sys/s81_ph/coll/dsfd_coll_xc.sv": "02a54ca89d333466ebea43b07e7886aab0822529937d1425ab954ae8366c3fe0",
+    "rtl/dsrom_sys/s81_ph/ot_s81ph_fp32_add_rne_preexp.sv": "bcd4b251ecdddf7740cf652a1198950d2790e06d3618bc9c537a8a7257bb36af",
+    "rtl/rom/ot_w15_rom_oneshot_px_acceptedpop.sv": "a30655802d0d4fde9a1073fb9ec67ae8b0c923af637384eb6e9de3f332497bac",
+    "tools/uarch_model.py": "85857561788da0aded1791a5f22bb8478a0a18c1c24dc6863ff84880339c7b71"
+  },
+  "macs_per_cycle": 0,
+  "min_last_word_to_emit_edge_delta": 2,
+  "mux_demux": "16x512b static indexed assembly write; 8192b registered emit; no arbitration",
+  "open_gates": [
+    "real compiler HC source reservations and six-value/rank packing",
+    "production throughput and whole-layer price composition",
+    "die slot outline, faces, tracks, area and registered pin placement",
+    "SS/FF timing, DRC, insertion and phi-R bindings"
+  ],
+  "outline": "UNASSIGNED: die-owned slot request required before any synthesis/route",
+  "output_average_bytes_per_cycle": 12,
+  "output_bytes_per_record": 64,
+  "output_payload_bits_per_record": 512,
+  "output_register_stages": 1,
+  "pack_control": "compiler index4, tag32, complete bitmap16, explicit emit slot; no queue or ready",
+  "pack_output_register_bits": 8192,
+  "pack_storage_bits": 8192,
+  "pack_words": 16,
+  "peak_input_bytes_per_cycle": 256,
+  "peak_output_bytes_per_cycle": 64,
+  "rank_fanout": "each rank scalar reaches one input adder; inner outputs reach one outer adder",
+  "ranks": 4,
+  "records_per_16_cycles": 3,
+  "reduction_order": "RN(RN(p0+p1)+RN(p2+p3))",
+  "replica_count_per_die": 1,
+  "routing_tracks_and_area": "UNMEASURED: 16 lane pipelines plus assembly; source component only",
+  "scope": "SOURCE_COMPONENT_UNQUALIFIED",
+  "source_cadence_cycles": [
+    4,
+    4,
+    8
+  ],
+  "word_pipeline_register_stages": 18,
+  "word_sample_to_result_edge_delta": 17
+}
