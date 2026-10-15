@@ -1,0 +1,105 @@
+{
+  "scope": "Actual technology-mapped standardcell area, ASAP7 RVT TT via Yosys synth/dfflibmap/ABC; no placement, pin capacity, CTS, phi-R, reach or timing qualification",
+  "source_hierarchy_sha256": "3269845611e78337dd3da522ef167d86f37f131094070a067115a3406beecc8b",
+  "mapped_standardcell_area_um2": 292777.65576,
+  "hard_owner_standardcell_area_um2": {
+    "top/control": 6224.202000002932,
+    "top/final_tree": 716.6361600000174,
+    "top/g_bank[0].child": 1391.8359600000788,
+    "top/g_bank[1].child": 1391.8359600000788,
+    "top/g_bank[2].child": 1391.8359600000788,
+    "top/g_bank[3].child": 1391.8359600000788,
+    "top/g_bank[4].child": 1391.8359600000788,
+    "top/g_bank[5].child": 1391.8359600000788,
+    "top/g_bank[6].child": 1391.8359600000788,
+    "top/g_bank[7].child": 1391.8359600000788,
+    "top/g_group[0].g_lane8[0].child": 8276.584860005123,
+    "top/g_group[0].g_lane8[1].child": 8276.584860005123,
+    "top/g_group[0].g_lane8[2].child": 8276.584860005123,
+    "top/g_group[0].g_lane8[3].child": 8276.584860005123,
+    "top/g_group[1].g_lane8[0].child": 8276.584860005123,
+    "top/g_group[1].g_lane8[1].child": 8276.584860005123,
+    "top/g_group[1].g_lane8[2].child": 8276.584860005123,
+    "top/g_group[1].g_lane8[3].child": 8276.584860005123,
+    "top/g_group[2].g_lane8[0].child": 8276.584860005123,
+    "top/g_group[2].g_lane8[1].child": 8276.584860005123,
+    "top/g_group[2].g_lane8[2].child": 8276.584860005123,
+    "top/g_group[2].g_lane8[3].child": 8276.584860005123,
+    "top/g_group[3].g_lane8[0].child": 8276.584860005123,
+    "top/g_group[3].g_lane8[1].child": 8276.584860005123,
+    "top/g_group[3].g_lane8[2].child": 8276.584860005123,
+    "top/g_group[3].g_lane8[3].child": 8276.584860005123,
+    "top/g_group[4].g_lane8[0].child": 8276.584860005123,
+    "top/g_group[4].g_lane8[1].child": 8276.584860005123,
+    "top/g_group[4].g_lane8[2].child": 8276.584860005123,
+    "top/g_group[4].g_lane8[3].child": 8276.584860005123,
+    "top/g_group[5].g_lane8[0].child": 8276.584860005123,
+    "top/g_group[5].g_lane8[1].child": 8276.584860005123,
+    "top/g_group[5].g_lane8[2].child": 8276.584860005123,
+    "top/g_group[5].g_lane8[3].child": 8276.584860005123,
+    "top/g_group[6].g_lane8[0].child": 8276.584860005123,
+    "top/g_group[6].g_lane8[1].child": 8276.584860005123,
+    "top/g_group[6].g_lane8[2].child": 8276.584860005123,
+    "top/g_group[6].g_lane8[3].child": 8276.584860005123,
+    "top/g_group[7].g_lane8[0].child": 8276.584860005123,
+    "top/g_group[7].g_lane8[1].child": 8276.584860005123,
+    "top/g_group[7].g_lane8[2].child": 8276.584860005123,
+    "top/g_group[7].g_lane8[3].child": 8276.584860005123,
+    "top/g_quarter_tree[0].child": 2462.853600000461,
+    "top/g_quarter_tree[1].child": 2462.853600000461,
+    "top/g_quarter_tree[2].child": 2462.853600000461,
+    "top/g_quarter_tree[3].child": 2462.853600000461
+  },
+  "parent_standardcell_area_um2": 0,
+  "summary": {
+    "bank": {
+      "count": 8,
+      "min_stdcell_area_um2": 1391.8359600000788,
+      "max_stdcell_area_um2": 1391.8359600000788,
+      "total_stdcell_area_um2": 11134.68768000063
+    },
+    "controller": {
+      "count": 1,
+      "min_stdcell_area_um2": 6224.202000002932,
+      "max_stdcell_area_um2": 6224.202000002932,
+      "total_stdcell_area_um2": 6224.202000002932
+    },
+    "final_tree": {
+      "count": 1,
+      "min_stdcell_area_um2": 716.6361600000174,
+      "max_stdcell_area_um2": 716.6361600000174,
+      "total_stdcell_area_um2": 716.6361600000174
+    },
+    "lane8": {
+      "count": 32,
+      "min_stdcell_area_um2": 8276.584860005123,
+      "max_stdcell_area_um2": 8276.584860005123,
+      "total_stdcell_area_um2": 264850.71552016394
+    },
+    "quarter_tree": {
+      "count": 4,
+      "min_stdcell_area_um2": 2462.853600000461,
+      "max_stdcell_area_um2": 2462.853600000461,
+      "total_stdcell_area_um2": 9851.414400001844
+    }
+  },
+  "unmapped_logic_cells": {},
+  "actual_macros": {
+    "ot_rom_4096x266_m8": 64,
+    "ot_sram_1r1w_128x256_m1_r2c2": 16
+  },
+  "macro_areas_um2": {
+    "ROM4096x266_each": 7663.94784,
+    "SRAM128x256_each": 3891.57696,
+    "total": 552757.89312
+  },
+  "candidate_slot_um": [
+    1728,
+    1296
+  ],
+  "candidate_slot_area_um2": 2239488,
+  "tool_image_id": "sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29",
+  "mapping_log_sha256": "3bc1502e7f5c2cf8779e93ec4bd8623d7fe9d669c8eee0f66a140c7150a22c2a",
+  "mapping_script_sha256": "13d86d225e8f3d84e96df840c5213939ad1b59a5c0f28a92c28c3568394aff4b",
+  "standardcell_fraction_after_macro_area": 0.17357706165662773
+}

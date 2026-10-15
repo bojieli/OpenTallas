@@ -1,0 +1,212 @@
+{
+  "scope": "Pre-route dimensional pin-capacity and technology area sizing only; actual nativegroup32/twotracks/M4M5 rules; no realpins/CTS/reach/route/slot-adoption qualification",
+  "profiles": {
+    "lane8": {
+      "outline": [
+        237.6,
+        64.8
+      ],
+      "faces": {
+        "S": 2048,
+        "N": 1114,
+        "E": 257,
+        "W": 11
+      },
+      "measured_stdcell_area_um2": 8276.584860005123,
+      "stdcell_fraction_core": 0.5866267774474531,
+      "native_pin_fit": {
+        "S": {
+          "fits": true,
+          "why": "",
+          "slots": 2460,
+          "groups": 64,
+          "left": []
+        },
+        "N": {
+          "fits": true,
+          "why": "",
+          "slots": 2460,
+          "groups": 35,
+          "left": []
+        },
+        "E": {
+          "fits": true,
+          "why": "",
+          "slots": 660,
+          "groups": 9,
+          "left": []
+        },
+        "W": {
+          "fits": true,
+          "why": "",
+          "slots": 660,
+          "groups": 1,
+          "left": []
+        }
+      },
+      "all_faces_fit": true
+    },
+    "quarter_tree": {
+      "outline": [
+        216,
+        28.08
+      ],
+      "faces": {
+        "S": 2048,
+        "E": 34,
+        "W": 10
+      },
+      "measured_stdcell_area_um2": 2462.853600000461,
+      "stdcell_fraction_core": 0.48967996289434035,
+      "native_pin_fit": {
+        "S": {
+          "fits": true,
+          "why": "",
+          "slots": 2235,
+          "groups": 64,
+          "left": []
+        },
+        "E": {
+          "fits": true,
+          "why": "",
+          "slots": 277,
+          "groups": 2,
+          "left": []
+        },
+        "W": {
+          "fits": true,
+          "why": "",
+          "slots": 277,
+          "groups": 1,
+          "left": []
+        }
+      },
+      "all_faces_fit": true
+    },
+    "final_tree": {
+      "outline": [
+        64.8,
+        30.24
+      ],
+      "faces": {
+        "S": 128,
+        "W": 6,
+        "E": 34
+      },
+      "measured_stdcell_area_um2": 716.6361600000174,
+      "stdcell_fraction_core": 0.45714285714286834,
+      "native_pin_fit": {
+        "S": {
+          "fits": true,
+          "why": "",
+          "slots": 660,
+          "groups": 4,
+          "left": []
+        },
+        "W": {
+          "fits": true,
+          "why": "",
+          "slots": 300,
+          "groups": 1,
+          "left": []
+        },
+        "E": {
+          "fits": true,
+          "why": "",
+          "slots": 300,
+          "groups": 2,
+          "left": []
+        }
+      },
+      "all_faces_fit": true
+    },
+    "controller": {
+      "outline": [
+        211.68,
+        69.12
+      ],
+      "faces": {
+        "S": 272,
+        "N": 112,
+        "E": 34,
+        "W": 121
+      },
+      "measured_stdcell_area_um2": 6224.202000002932,
+      "stdcell_fraction_core": 0.4632161458335515,
+      "native_pin_fit": {
+        "S": {
+          "fits": true,
+          "why": "",
+          "slots": 2190,
+          "groups": 9,
+          "left": []
+        },
+        "N": {
+          "fits": true,
+          "why": "",
+          "slots": 2190,
+          "groups": 4,
+          "left": []
+        },
+        "E": {
+          "fits": true,
+          "why": "",
+          "slots": 705,
+          "groups": 2,
+          "left": []
+        },
+        "W": {
+          "fits": true,
+          "why": "",
+          "slots": 705,
+          "groups": 4,
+          "left": []
+        }
+      },
+      "all_faces_fit": true
+    },
+    "bank": {
+      "outline": [
+        324,
+        367.2
+      ],
+      "faces": {
+        "S": 34,
+        "N": 1536,
+        "W": 522
+      },
+      "measured_stdcell_area_um2": 1391.8359600000788,
+      "stdcell_fraction_core": 0.011998019224582403,
+      "native_pin_fit": {
+        "S": {
+          "fits": true,
+          "why": "",
+          "slots": 3360,
+          "groups": 2,
+          "left": []
+        },
+        "N": {
+          "fits": true,
+          "why": "",
+          "slots": 3360,
+          "groups": 48,
+          "left": []
+        },
+        "W": {
+          "fits": true,
+          "why": "",
+          "slots": 3810,
+          "groups": 17,
+          "left": []
+        }
+      },
+      "all_faces_fit": true
+    }
+  },
+  "all_faces_fit": true,
+  "source_commit": "15c472f82",
+  "component_serial_cycles": 269,
+  "immutable_prior_serial_cycles": 264,
+  "component_ratio": 1.018939393939394,
+  "physical_hops_in_price": false
+}

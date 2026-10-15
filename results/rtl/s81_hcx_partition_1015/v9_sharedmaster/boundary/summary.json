@@ -1,0 +1,66 @@
+{
+  "scope": "Exercise a pinned HCP partition binary against real full43 resident ROM data.\n\nEqual-phase clocks prove arithmetic and calendar only. This is not CTS, pin\nreach, physical closure, native VM integration or whole-token qualification.\n",
+  "rows": [
+    {
+      "tag": "L00",
+      "layer": 0,
+      "returncode": 0,
+      "exact_outputs": 2,
+      "cycles": 269,
+      "pass": true
+    },
+    {
+      "tag": "L24",
+      "layer": 24,
+      "returncode": 0,
+      "exact_outputs": 2,
+      "cycles": 269,
+      "pass": true
+    },
+    {
+      "tag": "L25",
+      "layer": 25,
+      "returncode": 0,
+      "exact_outputs": 2,
+      "cycles": 269,
+      "pass": true
+    },
+    {
+      "tag": "L39",
+      "layer": 39,
+      "returncode": 0,
+      "exact_outputs": 2,
+      "cycles": 269,
+      "pass": true
+    },
+    {
+      "tag": "M0R0",
+      "layer": 40,
+      "returncode": 0,
+      "exact_outputs": 2,
+      "cycles": 269,
+      "pass": true
+    },
+    {
+      "tag": "M1R0",
+      "layer": 41,
+      "returncode": 0,
+      "exact_outputs": 2,
+      "cycles": 269,
+      "pass": true
+    },
+    {
+      "tag": "M2R4",
+      "layer": 42,
+      "returncode": 0,
+      "exact_outputs": 2,
+      "cycles": 269,
+      "pass": true
+    }
+  ],
+  "mutant_rejected": true,
+  "mutant_returncode": 1,
+  "all_pass": true,
+  "binary_sha256": "8068614b8411dde4297f13a6428836c17a20de3ae435e80c87244c8c58223194",
+  "mutant": "Same binary replaces first staged4096bit beat by256BF16 1.0words for both sublayers; golden targets unchanged"
+}
