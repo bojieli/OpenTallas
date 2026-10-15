@@ -142,7 +142,7 @@ module ot_qfd_xhead_m #(parameter integer NW = 18, parameter integer AW = 24, pa
     assign cs_woff = lw_off[11:6]; assign cs_wm = lw_m[127:64]; assign cs_wd = lw_d[2047:1024]; assign cs_wctl = lw_ctl[143:72];
 endmodule
 
-module qfd_xhead_e (
+module qfd_xhead_e #(parameter integer MUT = 0) (   // bench-only head mutant; the die / cluster use the default
     input  wire          ck,
     input  wire          rst_n,
     input  wire [255:0]  tids,
@@ -171,7 +171,7 @@ module qfd_xhead_e (
     input  wire [255:0]  qs,
     input  wire [3:0]    qs_v, qs_bad
 );
-    ot_qfd_xhead_m u_h (.ck(ck), .rst_n(rst_n), .tids(tids), .fault_i(fault_i), .fault(fault),
+    ot_qfd_xhead_m #(.MUT(MUT)) u_h (.ck(ck), .rst_n(rst_n), .tids(tids), .fault_i(fault_i), .fault(fault),
         .h_in(w_d), .h_out(e_d), .n_d(n_d), .s_d(s_d),
         .cn_wv(cn_wv), .cn_wep(cn_wep), .cn_cv(cn_cv), .cn_cep(cn_cep), .cn_woff(cn_woff), .cn_wm(cn_wm), .cn_wd(cn_wd),
         .cn_wctl(cn_wctl), .cs_wv(cs_wv), .cs_wep(cs_wep), .cs_cv(cs_cv), .cs_cep(cs_cep), .cs_woff(cs_woff),
@@ -180,7 +180,7 @@ module qfd_xhead_e (
         .qs_v(qs_v), .qs_bad(qs_bad));
 endmodule
 
-module qfd_xhead_w (
+module qfd_xhead_w #(parameter integer MUT = 0) (   // bench-only head mutant; the die / cluster use the default
     input  wire          ck,
     input  wire          rst_n,
     input  wire [255:0]  tids,
@@ -209,7 +209,7 @@ module qfd_xhead_w (
     input  wire [255:0]  qs,
     input  wire [3:0]    qs_v, qs_bad
 );
-    ot_qfd_xhead_m u_h (.ck(ck), .rst_n(rst_n), .tids(tids), .fault_i(fault_i), .fault(fault),
+    ot_qfd_xhead_m #(.MUT(MUT)) u_h (.ck(ck), .rst_n(rst_n), .tids(tids), .fault_i(fault_i), .fault(fault),
         .h_in(e_d), .h_out(w_d), .n_d(n_d), .s_d(s_d),
         .cn_wv(cn_wv), .cn_wep(cn_wep), .cn_cv(cn_cv), .cn_cep(cn_cep), .cn_woff(cn_woff), .cn_wm(cn_wm), .cn_wd(cn_wd),
         .cn_wctl(cn_wctl), .cs_wv(cs_wv), .cs_wep(cs_wep), .cs_cv(cs_cv), .cs_cep(cs_cep), .cs_woff(cs_woff),
@@ -219,7 +219,7 @@ module qfd_xhead_w (
 endmodule
 
 // one column as ONE RTL module: xhead + 8 x qfd_xs_leaf (two write chains), one clock port per hardened child
-module ot_qfd_xcol #(parameter integer HEAD_MUT = 0) (
+module ot_qfd_xcol #(parameter integer HEAD_MUT = 0, parameter integer EAST = 1) (
     input  wire          ck0, ck1, ck2, ck3, ck4, ck5, ck6, ck7, ck8,
     input  wire          rst_n,
     input  wire [255:0]  tids,
@@ -239,14 +239,36 @@ module ot_qfd_xcol #(parameter integer HEAD_MUT = 0) (
     wire [3:0] r_v [0:1], r_t [0:1], r_ep [0:1], q_v [0:1], q_bad [0:1];
     wire [111:0] r_p [0:1];
     wire [255:0] q [0:1];
-    ot_qfd_xhead_m #(.MUT(HEAD_MUT)) u_h (.ck(ck0), .rst_n(rst_n), .tids(tids), .fault_i(fault_i), .fault(fault),
-        .h_in(h_in), .h_out(h_out), .n_d(n_d), .s_d(s_d),
+    // the column's hard children by their die names: head qfd_xhead_e (EAST) / qfd_xhead_w, leaves qfd_xs_leaf
+    generate if (EAST) begin : g_he
+`ifndef OT_QFD_XS_HARD
+    qfd_xhead_e #(.MUT(HEAD_MUT)) u_h (
+`else
+    qfd_xhead_e u_h (
+`endif
+        .ck(ck0), .rst_n(rst_n), .tids(tids), .fault_i(fault_i), .fault(fault),
+        .w_d(h_in), .e_d(h_out), .n_d(n_d), .s_d(s_d),
         .cn_wv(cw_v[0][0]), .cn_wep(cw_ep[0][0]), .cn_cv(cc_v[0][0]), .cn_cep(cc_ep[0][0]), .cn_woff(cw_off[0][0]),
         .cn_wm(cw_m[0][0]), .cn_wd(cw_d[0][0]), .cn_wctl(cw_ctl[0][0]),
         .cs_wv(cw_v[1][0]), .cs_wep(cw_ep[1][0]), .cs_cv(cc_v[1][0]), .cs_cep(cc_ep[1][0]), .cs_woff(cw_off[1][0]),
         .cs_wm(cw_m[1][0]), .cs_wd(cw_d[1][0]), .cs_wctl(cw_ctl[1][0]),
         .rn_v(r_v[0]), .rn_t(r_t[0]), .rn_ep(r_ep[0]), .rn_p(r_p[0]), .qn(q[0]), .qn_v(q_v[0]), .qn_bad(q_bad[0]),
         .rs_v(r_v[1]), .rs_t(r_t[1]), .rs_ep(r_ep[1]), .rs_p(r_p[1]), .qs(q[1]), .qs_v(q_v[1]), .qs_bad(q_bad[1]));
+    end else begin : g_hw
+`ifndef OT_QFD_XS_HARD
+    qfd_xhead_w #(.MUT(HEAD_MUT)) u_h (
+`else
+    qfd_xhead_w u_h (
+`endif
+        .ck(ck0), .rst_n(rst_n), .tids(tids), .fault_i(fault_i), .fault(fault),
+        .e_d(h_in), .w_d(h_out), .n_d(n_d), .s_d(s_d),
+        .cn_wv(cw_v[0][0]), .cn_wep(cw_ep[0][0]), .cn_cv(cc_v[0][0]), .cn_cep(cc_ep[0][0]), .cn_woff(cw_off[0][0]),
+        .cn_wm(cw_m[0][0]), .cn_wd(cw_d[0][0]), .cn_wctl(cw_ctl[0][0]),
+        .cs_wv(cw_v[1][0]), .cs_wep(cw_ep[1][0]), .cs_cv(cc_v[1][0]), .cs_cep(cc_ep[1][0]), .cs_woff(cw_off[1][0]),
+        .cs_wm(cw_m[1][0]), .cs_wd(cw_d[1][0]), .cs_wctl(cw_ctl[1][0]),
+        .rn_v(r_v[0]), .rn_t(r_t[0]), .rn_ep(r_ep[0]), .rn_p(r_p[0]), .qn(q[0]), .qn_v(q_v[0]), .qn_bad(q_bad[0]),
+        .rs_v(r_v[1]), .rs_t(r_t[1]), .rs_ep(r_ep[1]), .rs_p(r_p[1]), .qs(q[1]), .qs_v(q_v[1]), .qs_bad(q_bad[1]));
+    end endgenerate
     genvar h, j;
     generate for (h = 0; h < 2; h = h + 1) begin : g_ch
         for (j = 0; j < 4; j = j + 1) begin : g_leaf
@@ -284,7 +306,7 @@ module qfd_xcol_e #(parameter integer HEAD_MUT = 0) (   // bench-only; the die i
     (* keep *) wire tie_lo_w = 1'b0;
     assign tie_hi = tie_hi_w;
     assign tie_lo = tie_lo_w;
-    ot_qfd_xcol #(.HEAD_MUT(HEAD_MUT)) u_c (.ck0(ck0), .ck1(ck1), .ck2(ck2), .ck3(ck3), .ck4(ck4), .ck5(ck5), .ck6(ck6), .ck7(ck7), .ck8(ck8),
+    ot_qfd_xcol #(.HEAD_MUT(HEAD_MUT), .EAST(1)) u_c (.ck0(ck0), .ck1(ck1), .ck2(ck2), .ck3(ck3), .ck4(ck4), .ck5(ck5), .ck6(ck6), .ck7(ck7), .ck8(ck8),
         .rst_n(rst_n), .tids(tids), .fault_i(fault_i), .fault(fault), .h_in(w_d), .h_out(e_d),
         .n_d(n_d), .s_d(s_d));
 endmodule
@@ -307,7 +329,7 @@ module qfd_xcol_w #(parameter integer HEAD_MUT = 0) (   // bench-only; the die i
     (* keep *) wire tie_lo_w = 1'b0;
     assign tie_hi = tie_hi_w;
     assign tie_lo = tie_lo_w;
-    ot_qfd_xcol #(.HEAD_MUT(HEAD_MUT)) u_c (.ck0(ck0), .ck1(ck1), .ck2(ck2), .ck3(ck3), .ck4(ck4), .ck5(ck5), .ck6(ck6), .ck7(ck7), .ck8(ck8),
+    ot_qfd_xcol #(.HEAD_MUT(HEAD_MUT), .EAST(0)) u_c (.ck0(ck0), .ck1(ck1), .ck2(ck2), .ck3(ck3), .ck4(ck4), .ck5(ck5), .ck6(ck6), .ck7(ck7), .ck8(ck8),
         .rst_n(rst_n), .tids(tids), .fault_i(fault_i), .fault(fault), .h_in(e_d), .h_out(w_d),
         .n_d(n_d), .s_d(s_d));
 endmodule

@@ -246,34 +246,56 @@
   "purpose": "Qwen TP8 distributed x slice COLUMN HEAD r3 (owner 08:20 PT 10-14; el1014-qwen-dvm-build.log 16:15): head-row station (onward copy = input pin registers) for {fill, ib, go}, column slice control (epochs, 16 tile windows from the tids strap, pooled pairs, leaf write control), serial-read TDM sequencer, N / S corridor launch, fault chain inward; one clock root.",
   "benches": [
    {
-    "name": "dvm_array_exact",
-    "cmd": "bash rtl/qwen_sys/dvm_20261014/run_dvm.sh {RUN}/bench/pos tb_qwen_me_dvm_w12 -GNCOL=2 -GNH=8 -GSMIN=4 -GSMAX=7 -GNOPS=40 -GSEED=3 -GGAP=0",
+    "name": "native_core_exact",
+    "cmd": "bash rtl/qwen_sys/dvm_20261014/run_dvm.sh {RUN}/bench/core tb_qfd_xdvm_prod -GNATIVE_AFFINE=1 -GSTATIC_SCHEDULE=1 -GNW=18 -GNCOL=4 -GNLAYER=1 -GNRAND=6",
     "expect": "pass",
-    "pass_regex": "^PASS dvm",
-    "threads": 12,
-    "peak_ram_gb": 96,
+    "pass_regex": "^PASS xdvm_prod",
+    "threads": 16,
+    "peak_ram_gb": 32,
     "needs": [
      "verilator"
     ]
    },
    {
-    "name": "dvm_array_pooled_half",
-    "cmd": "bash rtl/qwen_sys/dvm_20261014/run_dvm.sh {RUN}/bench/neg tb_qwen_me_dvm_w12 -GNCOL=2 -GNH=8 -GSMIN=4 -GSMAX=7 -GNOPS=40 -GSEED=3 -GGAP=0 -GHEAD_MUT=6",
-    "expect": "fail",
-    "pass_regex": "^PASS dvm",
-    "threads": 12,
-    "peak_ram_gb": 96,
+    "name": "native_wrapper_composition",
+    "cmd": "bash tools/qwen_tp8/vm_replay_xcol_bench.sh {RUN}/bench/xcol",
+    "expect": "pass",
+    "pass_regex": "^PASS vm_replay_xcol",
+    "threads": 8,
+    "peak_ram_gb": 16,
     "needs": [
      "verilator"
     ]
    },
    {
-    "name": "dvm_array_wrong_station",
-    "cmd": "bash rtl/qwen_sys/dvm_20261014/run_dvm.sh {RUN}/bench/neg3 tb_qwen_me_dvm_w12 -GNCOL=2 -GNH=8 -GSMIN=4 -GSMAX=7 -GNOPS=12 -GSEED=3 -GGAP=0 -GHEAD_MUT=3",
+    "name": "native_wrapper_composition_macro",
+    "cmd": "bash tools/qwen_tp8/vm_replay_xcol_bench.sh {RUN}/bench/xcolm -GMEM=1",
+    "expect": "pass",
+    "pass_regex": "^PASS vm_replay_xcol",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "native_core_head_window_w_plus_1",
+    "cmd": "bash rtl/qwen_sys/dvm_20261014/run_dvm.sh {RUN}/bench/hm7 tb_qfd_xdvm_prod -GNATIVE_AFFINE=1 -GSTATIC_SCHEDULE=1 -GNW=18 -GNCOL=4 -GNLAYER=1 -GNRAND=6 -GHEAD_MUT=7",
     "expect": "fail",
-    "pass_regex": "^PASS dvm",
-    "threads": 12,
-    "peak_ram_gb": 96,
+    "pass_regex": "^PASS xdvm_prod",
+    "threads": 16,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "native_wrapper_head_wrong_station",
+    "cmd": "bash tools/qwen_tp8/vm_replay_xcol_bench.sh {RUN}/bench/xh3 -GHEAD_MUT=3",
+    "expect": "fail",
+    "pass_regex": "^PASS vm_replay_xcol",
+    "threads": 8,
+    "peak_ram_gb": 16,
     "needs": [
      "verilator"
     ]
@@ -282,7 +304,12 @@
   "extra_paths": [
    "rtl/hdc",
    "rtl/proto",
-   "rtl/qwen_sys/dvm_20261014"
+   "rtl/qwen_sys",
+   "rtl/physical",
+   "rtl/qwen_split",
+   "tools/qwen_tp8/vm_replay_xcol_bench.sh",
+   "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2"
   ],
   "views_to": "physical/ref_tile/qfd_xhead_w/views",
   "record_to": "results/rtl/ref_tile/qfd_xhead_w"
