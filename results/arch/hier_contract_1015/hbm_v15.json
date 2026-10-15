@@ -56,7 +56,7 @@
   {
    "name": "coll_SW",
    "cell": "ot_hfd_coll_q3_static",
-   "kind": "tile",
+   "kind": "cluster",
    "parent": "die",
    "outline": {
     "w": 671.76,
@@ -77,10 +77,10 @@
     "layer": "M5",
     "offset": 95.35
    },
-   "pg_layer": "M5",
-   "strap_layer": "M6",
-   "signal_max_layer": "M5",
-   "layer_cap": "M5",
+   "pg_layer": "M7",
+   "strap_layer": "M8",
+   "signal_max_layer": "M6",
+   "layer_cap": "M6",
    "version": 1,
    "pins": [
     {
@@ -576,7 +576,7 @@
    },
    "source": "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q_static.sv",
    "params": {},
-   "layer_rule": "tile",
+   "layer_rule": "cluster",
    "instance": "hb_coll_SW",
    "synth": null,
    "need_um2": 0,
@@ -608,12 +608,13 @@
     "fault",
     "done",
     "stat_cycles"
-   ]
+   ],
+   "hierarchy_status": "child leaf grants present; complete child placement/registered seams/clock/pin/cut proof OPEN"
   },
   {
    "name": "coll_SE",
    "cell": "ot_hfd_coll_q2_static",
-   "kind": "tile",
+   "kind": "cluster",
    "parent": "die",
    "outline": {
     "w": 963.36,
@@ -634,10 +635,10 @@
     "layer": "M4",
     "offset": 97.222
    },
-   "pg_layer": "M5",
-   "strap_layer": "M6",
-   "signal_max_layer": "M5",
-   "layer_cap": "M5",
+   "pg_layer": "M7",
+   "strap_layer": "M8",
+   "signal_max_layer": "M6",
+   "layer_cap": "M6",
    "version": 1,
    "pins": [
     {
@@ -1122,7 +1123,7 @@
    },
    "source": "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q_static.sv",
    "params": {},
-   "layer_rule": "tile",
+   "layer_rule": "cluster",
    "instance": "hb_coll_SE",
    "synth": {
     "std_um2": 38975.82462,
@@ -1165,12 +1166,13 @@
     "reference": "coll_SE",
     "orient": "R0",
     "own_face_match_bits": 1.0
-   }
+   },
+   "hierarchy_status": "child leaf grants present; complete child placement/registered seams/clock/pin/cut proof OPEN"
   },
   {
    "name": "coll_NW",
    "cell": "ot_hfd_coll_q2_static",
-   "kind": "tile",
+   "kind": "cluster",
    "parent": "die",
    "outline": {
     "w": 963.36,
@@ -1191,10 +1193,10 @@
     "layer": "M4",
     "offset": 97.222
    },
-   "pg_layer": "M5",
-   "strap_layer": "M6",
-   "signal_max_layer": "M5",
-   "layer_cap": "M5",
+   "pg_layer": "M7",
+   "strap_layer": "M8",
+   "signal_max_layer": "M6",
+   "layer_cap": "M6",
    "version": 1,
    "pins": [
     {
@@ -1673,7 +1675,7 @@
    ],
    "source": "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q_static.sv",
    "params": {},
-   "layer_rule": "tile",
+   "layer_rule": "cluster",
    "instance": "hb_coll_NW",
    "synth": {
     "std_um2": 38975.82462,
@@ -1732,12 +1734,13 @@
     "reference": "coll_SE",
     "orient": "R180",
     "own_face_match_bits": 0.947
-   }
+   },
+   "hierarchy_status": "child leaf grants present; complete child placement/registered seams/clock/pin/cut proof OPEN"
   },
   {
    "name": "coll_NE",
    "cell": "ot_hfd_coll_q2_static",
-   "kind": "tile",
+   "kind": "cluster",
    "parent": "die",
    "outline": {
     "w": 963.36,
@@ -1758,10 +1761,10 @@
     "layer": "M4",
     "offset": 97.222
    },
-   "pg_layer": "M5",
-   "strap_layer": "M6",
-   "signal_max_layer": "M5",
-   "layer_cap": "M5",
+   "pg_layer": "M7",
+   "strap_layer": "M8",
+   "signal_max_layer": "M6",
+   "layer_cap": "M6",
    "version": 1,
    "pins": [
     {
@@ -2240,7 +2243,7 @@
    ],
    "source": "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q_static.sv",
    "params": {},
-   "layer_rule": "tile",
+   "layer_rule": "cluster",
    "instance": "hb_coll_NE",
    "synth": {
     "std_um2": 38975.82462,
@@ -2299,7 +2302,8 @@
     "reference": "coll_SE",
     "orient": "MX",
     "own_face_match_bits": 0.855
-   }
+   },
+   "hierarchy_status": "child leaf grants present; complete child placement/registered seams/clock/pin/cut proof OPEN"
   },
   {
    "name": "hb_sfu_SW",
@@ -68521,10 +68525,10 @@
     "layer": "M4",
     "offset": 1460.568
    },
-   "pg_layer": "M5",
-   "strap_layer": "M6",
-   "signal_max_layer": "M5",
-   "layer_cap": "M5",
+   "pg_layer": "M7",
+   "strap_layer": "M8",
+   "signal_max_layer": "M6",
+   "layer_cap": "M6",
    "version": 1,
    "pins": [
     {
@@ -68772,8 +68776,8 @@
    ],
    "source": "rtl/hbm_accel/index/ot_hbm_idx_score_static.sv",
    "params": {},
-   "layer_rule": "tile",
-   "instance": "hb_idx/u_sched/u_parent/scorer[0]",
+   "layer_rule": "cluster",
+   "instance": "hb_idx/index/parent/gscore[0]/scorer",
    "stack": "SW",
    "children": {
     "hslice": {
@@ -68824,7 +68828,8 @@
     "reference": "idx_s3",
     "orient": "R180",
     "own_face_match_bits": 1.0
-   }
+   },
+   "hierarchy_status": "child leaf grants present; complete child placement/registered seams/clock/pin/cut proof OPEN"
   },
   {
    "name": "idx_s1",
@@ -68850,10 +68855,10 @@
     "layer": "M4",
     "offset": 1460.568
    },
-   "pg_layer": "M5",
-   "strap_layer": "M6",
-   "signal_max_layer": "M5",
-   "layer_cap": "M5",
+   "pg_layer": "M7",
+   "strap_layer": "M8",
+   "signal_max_layer": "M6",
+   "layer_cap": "M6",
    "version": 1,
    "pins": [
     {
@@ -69101,8 +69106,8 @@
    ],
    "source": "rtl/hbm_accel/index/ot_hbm_idx_score_static.sv",
    "params": {},
-   "layer_rule": "tile",
-   "instance": "hb_idx/u_sched/u_parent/scorer[1]",
+   "layer_rule": "cluster",
+   "instance": "hb_idx/index/parent/gscore[1]/scorer",
    "stack": "SE",
    "children": {
     "hslice": {
@@ -69153,7 +69158,8 @@
     "reference": "idx_s3",
     "orient": "R180",
     "own_face_match_bits": 1.0
-   }
+   },
+   "hierarchy_status": "child leaf grants present; complete child placement/registered seams/clock/pin/cut proof OPEN"
   },
   {
    "name": "idx_s2",
@@ -69179,10 +69185,10 @@
     "layer": "M4",
     "offset": 1460.568
    },
-   "pg_layer": "M5",
-   "strap_layer": "M6",
-   "signal_max_layer": "M5",
-   "layer_cap": "M5",
+   "pg_layer": "M7",
+   "strap_layer": "M8",
+   "signal_max_layer": "M6",
+   "layer_cap": "M6",
    "version": 1,
    "pins": [
     {
@@ -69430,8 +69436,8 @@
    ],
    "source": "rtl/hbm_accel/index/ot_hbm_idx_score_static.sv",
    "params": {},
-   "layer_rule": "tile",
-   "instance": "hb_idx/u_sched/u_parent/scorer[2]",
+   "layer_rule": "cluster",
+   "instance": "hb_idx/index/parent/gscore[2]/scorer",
    "stack": "NW",
    "children": {
     "hslice": {
@@ -69482,7 +69488,8 @@
     "reference": "idx_s3",
     "orient": "R0",
     "own_face_match_bits": 1.0
-   }
+   },
+   "hierarchy_status": "child leaf grants present; complete child placement/registered seams/clock/pin/cut proof OPEN"
   },
   {
    "name": "idx_s3",
@@ -69508,10 +69515,10 @@
     "layer": "M4",
     "offset": 1460.568
    },
-   "pg_layer": "M5",
-   "strap_layer": "M6",
-   "signal_max_layer": "M5",
-   "layer_cap": "M5",
+   "pg_layer": "M7",
+   "strap_layer": "M8",
+   "signal_max_layer": "M6",
+   "layer_cap": "M6",
    "version": 1,
    "pins": [
     {
@@ -69764,8 +69771,8 @@
    },
    "source": "rtl/hbm_accel/index/ot_hbm_idx_score_static.sv",
    "params": {},
-   "layer_rule": "tile",
-   "instance": "hb_idx/u_sched/u_parent/scorer[3]",
+   "layer_rule": "cluster",
+   "instance": "hb_idx/index/parent/gscore[3]/scorer",
    "stack": "NE",
    "children": {
     "hslice": {
@@ -69802,7 +69809,8 @@
     "reference": "idx_s3",
     "orient": "R0",
     "own_face_match_bits": 1.0
-   }
+   },
+   "hierarchy_status": "child leaf grants present; complete child placement/registered seams/clock/pin/cut proof OPEN"
   },
   {
    "name": "idx_sel",
@@ -71714,6 +71722,2278 @@
    "source_sha256": "6ddcdcd4f3c56c56b27130cc0fa25a636fa1de1dc194c0732e537e77ad0d85a5",
    "lef_sha256": "2067d355f80a1552435f49ddfd890312c087674c86466d4d7fd5e0efb2298b2e",
    "qualification_scope": "unchanged CLOSED component; native die transport and CP consumer OPEN"
+  },
+  {
+   "name": "coll_SW_writer0",
+   "cell": "ot_hgi_coll_static_vmwrite",
+   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_vmwrite.sv",
+   "source_sha256": "ec2cc4de9173c2bc059fbc23aa9d0136e89ab0952ff22cdd8cdda6d98b54897c",
+   "source_prerequisite": "HEAD",
+   "params": {
+    "MUT": 0
+   },
+   "kind": "tile",
+   "parent": "coll_SW",
+   "instance": "hb_coll_SW/u_q/u_writer",
+   "outline": {
+    "w": 103.68,
+    "h": 388.8
+   },
+   "origin": {
+    "x": 21.6,
+    "y": 21.6,
+    "orient": "MY"
+   },
+   "clock_entry": {
+    "pin": "clk",
+    "face": "N",
+    "layer": "M5"
+   },
+   "clock_domain": "stream",
+   "clock_period_ps": 833.333333,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_cap": "M5",
+   "layer_rule": "tile",
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2
+   },
+   "pins": [
+    {
+     "name": "rgx_v[3:0]",
+     "face": "W",
+     "layer": "M4",
+     "offset": 88.368,
+     "span_um": [
+      88.176,
+      88.56
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "rgx_addr[159:0]",
+     "face": "W",
+     "layer": "M4",
+     "offset": 96.24,
+     "span_um": [
+      88.56,
+      103.92
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "rgx_data[2047:0]",
+     "face": "W",
+     "layer": "M4",
+     "offset": 202.224,
+     "span_um": [
+      103.92,
+      300.528
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "rgx_vm",
+     "face": "W",
+     "layer": "M4",
+     "offset": 300.576,
+     "span_um": [
+      300.528,
+      300.624
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "kq[2247:0]",
+     "face": "E",
+     "layer": "M4",
+     "offset": 194.112,
+     "span_um": [
+      86.208,
+      302.016
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "launch_done[4:0]",
+     "face": "E",
+     "layer": "M4",
+     "offset": 302.256,
+     "span_um": [
+      302.016,
+      302.496
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "fault",
+     "face": "E",
+     "layer": "M4",
+     "offset": 302.544,
+     "span_um": [
+      302.496,
+      302.592
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "tkw_v",
+     "face": "S",
+     "layer": "M5",
+     "offset": 24.576,
+     "span_um": [
+      24.528,
+      24.624
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "tkw_d[567:0]",
+     "face": "S",
+     "layer": "M5",
+     "offset": 51.888,
+     "span_um": [
+      24.624,
+      79.152
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "clk",
+     "face": "N",
+     "layer": "M5",
+     "offset": 49.536,
+     "span_um": [
+      49.488,
+      49.584
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "rst_n",
+     "face": "N",
+     "layer": "M5",
+     "offset": 49.632,
+     "span_um": [
+      49.584,
+      49.68
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "sid[1:0]",
+     "face": "N",
+     "layer": "M5",
+     "offset": 49.776,
+     "span_um": [
+      49.68,
+      49.872
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "ingress_slot[4:0]",
+     "face": "N",
+     "layer": "M5",
+     "offset": 50.112,
+     "span_um": [
+      49.872,
+      50.352
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "slot_valid[7:0]",
+     "face": "N",
+     "layer": "M5",
+     "offset": 50.736,
+     "span_um": [
+      50.352,
+      51.12
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "slot_owner[31:0]",
+     "face": "N",
+     "layer": "M5",
+     "offset": 52.656,
+     "span_um": [
+      51.12,
+      54.192
+     ],
+     "offset_pending_view": true
+    }
+   ],
+   "version": 2,
+   "leaf_grant_1103": true,
+   "qualification_scope": "typed independent leaf slot; exact offsets adopted from final source-bound view; full parent and all incident registered relay/clock paths OPEN",
+   "reservation_basis": "registered VM writer at parent VM-facing edge; qslots/TKM/control placements and seams not yet qualified",
+   "measured_std_um2": 6730.9299,
+   "measured_ff": 6264,
+   "logical_cycles": "capture C, launch C+1/C+2 unchanged"
+  },
+  {
+   "name": "coll_SE_writer0",
+   "cell": "ot_hgi_coll_static_vmwrite",
+   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_vmwrite.sv",
+   "source_sha256": "ec2cc4de9173c2bc059fbc23aa9d0136e89ab0952ff22cdd8cdda6d98b54897c",
+   "source_prerequisite": "HEAD",
+   "params": {
+    "MUT": 0
+   },
+   "kind": "tile",
+   "parent": "coll_SE",
+   "instance": "hb_coll_SE/u_q/u_writer",
+   "outline": {
+    "w": 103.68,
+    "h": 388.8
+   },
+   "origin": {
+    "x": 838.08,
+    "y": 21.6,
+    "orient": "R0"
+   },
+   "clock_entry": {
+    "pin": "clk",
+    "face": "N",
+    "layer": "M5"
+   },
+   "clock_domain": "stream",
+   "clock_period_ps": 833.333333,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_cap": "M5",
+   "layer_rule": "tile",
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2
+   },
+   "pins": [
+    {
+     "name": "rgx_v[3:0]",
+     "face": "W",
+     "layer": "M4",
+     "offset": 88.368,
+     "span_um": [
+      88.176,
+      88.56
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "rgx_addr[159:0]",
+     "face": "W",
+     "layer": "M4",
+     "offset": 96.24,
+     "span_um": [
+      88.56,
+      103.92
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "rgx_data[2047:0]",
+     "face": "W",
+     "layer": "M4",
+     "offset": 202.224,
+     "span_um": [
+      103.92,
+      300.528
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "rgx_vm",
+     "face": "W",
+     "layer": "M4",
+     "offset": 300.576,
+     "span_um": [
+      300.528,
+      300.624
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "kq[2247:0]",
+     "face": "E",
+     "layer": "M4",
+     "offset": 194.112,
+     "span_um": [
+      86.208,
+      302.016
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "launch_done[4:0]",
+     "face": "E",
+     "layer": "M4",
+     "offset": 302.256,
+     "span_um": [
+      302.016,
+      302.496
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "fault",
+     "face": "E",
+     "layer": "M4",
+     "offset": 302.544,
+     "span_um": [
+      302.496,
+      302.592
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "tkw_v",
+     "face": "S",
+     "layer": "M5",
+     "offset": 24.576,
+     "span_um": [
+      24.528,
+      24.624
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "tkw_d[567:0]",
+     "face": "S",
+     "layer": "M5",
+     "offset": 51.888,
+     "span_um": [
+      24.624,
+      79.152
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "clk",
+     "face": "N",
+     "layer": "M5",
+     "offset": 49.536,
+     "span_um": [
+      49.488,
+      49.584
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "rst_n",
+     "face": "N",
+     "layer": "M5",
+     "offset": 49.632,
+     "span_um": [
+      49.584,
+      49.68
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "sid[1:0]",
+     "face": "N",
+     "layer": "M5",
+     "offset": 49.776,
+     "span_um": [
+      49.68,
+      49.872
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "ingress_slot[4:0]",
+     "face": "N",
+     "layer": "M5",
+     "offset": 50.112,
+     "span_um": [
+      49.872,
+      50.352
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "slot_valid[7:0]",
+     "face": "N",
+     "layer": "M5",
+     "offset": 50.736,
+     "span_um": [
+      50.352,
+      51.12
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "slot_owner[31:0]",
+     "face": "N",
+     "layer": "M5",
+     "offset": 52.656,
+     "span_um": [
+      51.12,
+      54.192
+     ],
+     "offset_pending_view": true
+    }
+   ],
+   "version": 2,
+   "leaf_grant_1103": true,
+   "qualification_scope": "typed independent leaf slot; exact offsets adopted from final source-bound view; full parent and all incident registered relay/clock paths OPEN",
+   "reservation_basis": "registered VM writer at parent VM-facing edge; qslots/TKM/control placements and seams not yet qualified",
+   "measured_std_um2": 6730.9299,
+   "measured_ff": 6264,
+   "logical_cycles": "capture C, launch C+1/C+2 unchanged"
+  },
+  {
+   "name": "coll_NW_writer0",
+   "cell": "ot_hgi_coll_static_vmwrite",
+   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_vmwrite.sv",
+   "source_sha256": "ec2cc4de9173c2bc059fbc23aa9d0136e89ab0952ff22cdd8cdda6d98b54897c",
+   "source_prerequisite": "HEAD",
+   "params": {
+    "MUT": 0
+   },
+   "kind": "tile",
+   "parent": "coll_NW",
+   "instance": "hb_coll_NW/u_q/u_writer",
+   "outline": {
+    "w": 103.68,
+    "h": 388.8
+   },
+   "origin": {
+    "x": 838.08,
+    "y": 21.6,
+    "orient": "R0"
+   },
+   "clock_entry": {
+    "pin": "clk",
+    "face": "N",
+    "layer": "M5"
+   },
+   "clock_domain": "stream",
+   "clock_period_ps": 833.333333,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_cap": "M5",
+   "layer_rule": "tile",
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2
+   },
+   "pins": [
+    {
+     "name": "rgx_v[3:0]",
+     "face": "W",
+     "layer": "M4",
+     "offset": 88.368,
+     "span_um": [
+      88.176,
+      88.56
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "rgx_addr[159:0]",
+     "face": "W",
+     "layer": "M4",
+     "offset": 96.24,
+     "span_um": [
+      88.56,
+      103.92
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "rgx_data[2047:0]",
+     "face": "W",
+     "layer": "M4",
+     "offset": 202.224,
+     "span_um": [
+      103.92,
+      300.528
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "rgx_vm",
+     "face": "W",
+     "layer": "M4",
+     "offset": 300.576,
+     "span_um": [
+      300.528,
+      300.624
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "kq[2247:0]",
+     "face": "E",
+     "layer": "M4",
+     "offset": 194.112,
+     "span_um": [
+      86.208,
+      302.016
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "launch_done[4:0]",
+     "face": "E",
+     "layer": "M4",
+     "offset": 302.256,
+     "span_um": [
+      302.016,
+      302.496
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "fault",
+     "face": "E",
+     "layer": "M4",
+     "offset": 302.544,
+     "span_um": [
+      302.496,
+      302.592
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "tkw_v",
+     "face": "S",
+     "layer": "M5",
+     "offset": 24.576,
+     "span_um": [
+      24.528,
+      24.624
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "tkw_d[567:0]",
+     "face": "S",
+     "layer": "M5",
+     "offset": 51.888,
+     "span_um": [
+      24.624,
+      79.152
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "clk",
+     "face": "N",
+     "layer": "M5",
+     "offset": 49.536,
+     "span_um": [
+      49.488,
+      49.584
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "rst_n",
+     "face": "N",
+     "layer": "M5",
+     "offset": 49.632,
+     "span_um": [
+      49.584,
+      49.68
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "sid[1:0]",
+     "face": "N",
+     "layer": "M5",
+     "offset": 49.776,
+     "span_um": [
+      49.68,
+      49.872
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "ingress_slot[4:0]",
+     "face": "N",
+     "layer": "M5",
+     "offset": 50.112,
+     "span_um": [
+      49.872,
+      50.352
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "slot_valid[7:0]",
+     "face": "N",
+     "layer": "M5",
+     "offset": 50.736,
+     "span_um": [
+      50.352,
+      51.12
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "slot_owner[31:0]",
+     "face": "N",
+     "layer": "M5",
+     "offset": 52.656,
+     "span_um": [
+      51.12,
+      54.192
+     ],
+     "offset_pending_view": true
+    }
+   ],
+   "version": 2,
+   "leaf_grant_1103": true,
+   "qualification_scope": "typed independent leaf slot; exact offsets adopted from final source-bound view; full parent and all incident registered relay/clock paths OPEN",
+   "reservation_basis": "registered VM writer at parent VM-facing edge; qslots/TKM/control placements and seams not yet qualified",
+   "measured_std_um2": 6730.9299,
+   "measured_ff": 6264,
+   "logical_cycles": "capture C, launch C+1/C+2 unchanged"
+  },
+  {
+   "name": "coll_NE_writer0",
+   "cell": "ot_hgi_coll_static_vmwrite",
+   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_vmwrite.sv",
+   "source_sha256": "ec2cc4de9173c2bc059fbc23aa9d0136e89ab0952ff22cdd8cdda6d98b54897c",
+   "source_prerequisite": "HEAD",
+   "params": {
+    "MUT": 0
+   },
+   "kind": "tile",
+   "parent": "coll_NE",
+   "instance": "hb_coll_NE/u_q/u_writer",
+   "outline": {
+    "w": 103.68,
+    "h": 388.8
+   },
+   "origin": {
+    "x": 838.08,
+    "y": 21.6,
+    "orient": "R0"
+   },
+   "clock_entry": {
+    "pin": "clk",
+    "face": "N",
+    "layer": "M5"
+   },
+   "clock_domain": "stream",
+   "clock_period_ps": 833.333333,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_cap": "M5",
+   "layer_rule": "tile",
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2
+   },
+   "pins": [
+    {
+     "name": "rgx_v[3:0]",
+     "face": "W",
+     "layer": "M4",
+     "offset": 88.368,
+     "span_um": [
+      88.176,
+      88.56
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "rgx_addr[159:0]",
+     "face": "W",
+     "layer": "M4",
+     "offset": 96.24,
+     "span_um": [
+      88.56,
+      103.92
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "rgx_data[2047:0]",
+     "face": "W",
+     "layer": "M4",
+     "offset": 202.224,
+     "span_um": [
+      103.92,
+      300.528
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "rgx_vm",
+     "face": "W",
+     "layer": "M4",
+     "offset": 300.576,
+     "span_um": [
+      300.528,
+      300.624
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "kq[2247:0]",
+     "face": "E",
+     "layer": "M4",
+     "offset": 194.112,
+     "span_um": [
+      86.208,
+      302.016
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "launch_done[4:0]",
+     "face": "E",
+     "layer": "M4",
+     "offset": 302.256,
+     "span_um": [
+      302.016,
+      302.496
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "fault",
+     "face": "E",
+     "layer": "M4",
+     "offset": 302.544,
+     "span_um": [
+      302.496,
+      302.592
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "tkw_v",
+     "face": "S",
+     "layer": "M5",
+     "offset": 24.576,
+     "span_um": [
+      24.528,
+      24.624
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "tkw_d[567:0]",
+     "face": "S",
+     "layer": "M5",
+     "offset": 51.888,
+     "span_um": [
+      24.624,
+      79.152
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "clk",
+     "face": "N",
+     "layer": "M5",
+     "offset": 49.536,
+     "span_um": [
+      49.488,
+      49.584
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "rst_n",
+     "face": "N",
+     "layer": "M5",
+     "offset": 49.632,
+     "span_um": [
+      49.584,
+      49.68
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "sid[1:0]",
+     "face": "N",
+     "layer": "M5",
+     "offset": 49.776,
+     "span_um": [
+      49.68,
+      49.872
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "ingress_slot[4:0]",
+     "face": "N",
+     "layer": "M5",
+     "offset": 50.112,
+     "span_um": [
+      49.872,
+      50.352
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "slot_valid[7:0]",
+     "face": "N",
+     "layer": "M5",
+     "offset": 50.736,
+     "span_um": [
+      50.352,
+      51.12
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "slot_owner[31:0]",
+     "face": "N",
+     "layer": "M5",
+     "offset": 52.656,
+     "span_um": [
+      51.12,
+      54.192
+     ],
+     "offset_pending_view": true
+    }
+   ],
+   "version": 2,
+   "leaf_grant_1103": true,
+   "qualification_scope": "typed independent leaf slot; exact offsets adopted from final source-bound view; full parent and all incident registered relay/clock paths OPEN",
+   "reservation_basis": "registered VM writer at parent VM-facing edge; qslots/TKM/control placements and seams not yet qualified",
+   "measured_std_um2": 6730.9299,
+   "measured_ff": 6264,
+   "logical_cycles": "capture C, launch C+1/C+2 unchanged"
+  },
+  {
+   "name": "idx_s0_meta0",
+   "cell": "hidx_meta_w25_d123_r0",
+   "source": "rtl/hbm_accel/index/hidx_meta_w25_d123_r0.sv",
+   "source_sha256": "d374c9e7c0d0a4a95c6a5b192d7b283d5b942c333de9d5d8bc45ef48ac712e81",
+   "source_prerequisite": "efb89a135",
+   "params": {},
+   "kind": "tile",
+   "parent": "idx_s0",
+   "instance": "hb_idx/index/parent/gscore[0]/scorer/ge[0]/md",
+   "outline": {
+    "w": 51.84,
+    "h": 51.84
+   },
+   "origin": {
+    "x": 2376.0,
+    "y": 2894.4,
+    "orient": "R0"
+   },
+   "clock_entry": {
+    "pin": "clk",
+    "face": "N",
+    "layer": "M5"
+   },
+   "clock_domain": "stream",
+   "clock_period_ps": 833.333333,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_cap": "M5",
+   "layer_rule": "tile",
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2
+   },
+   "pins": [
+    {
+     "name": "clk",
+     "face": "N",
+     "layer": "M5",
+     "offset": 24.672,
+     "span_um": [
+      24.624,
+      24.72
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "rst_n",
+     "face": "N",
+     "layer": "M5",
+     "offset": 24.768,
+     "span_um": [
+      24.72,
+      24.816
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "d[24:0]",
+     "face": "N",
+     "layer": "M5",
+     "offset": 26.016,
+     "span_um": [
+      24.816,
+      27.216
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "q[24:0]",
+     "face": "S",
+     "layer": "M5",
+     "offset": 25.92,
+     "span_um": [
+      24.72,
+      27.12
+     ],
+     "offset_pending_view": true
+    }
+   ],
+   "version": 2,
+   "leaf_grant_1103": true,
+   "qualification_scope": "typed independent leaf slot; exact offsets adopted from final source-bound view; full parent and all incident registered relay/clock paths OPEN",
+   "reservation_basis": "four previously unassigned footer reservations in planned20x26 hslice array; source-exact512hslice+glue packing still required",
+   "measured_std_um2": 1033,
+   "measured_ff": 3075,
+   "logical_cycles": 123
+  },
+  {
+   "name": "idx_s0_meta1",
+   "cell": "hidx_meta_w25_d123_r0",
+   "source": "rtl/hbm_accel/index/hidx_meta_w25_d123_r0.sv",
+   "source_sha256": "d374c9e7c0d0a4a95c6a5b192d7b283d5b942c333de9d5d8bc45ef48ac712e81",
+   "source_prerequisite": "efb89a135",
+   "params": {},
+   "kind": "tile",
+   "parent": "idx_s0",
+   "instance": "hb_idx/index/parent/gscore[0]/scorer/ge[1]/md",
+   "outline": {
+    "w": 51.84,
+    "h": 51.84
+   },
+   "origin": {
+    "x": 2592.0,
+    "y": 2894.4,
+    "orient": "R0"
+   },
+   "clock_entry": {
+    "pin": "clk",
+    "face": "N",
+    "layer": "M5"
+   },
+   "clock_domain": "stream",
+   "clock_period_ps": 833.333333,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_cap": "M5",
+   "layer_rule": "tile",
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2
+   },
+   "pins": [
+    {
+     "name": "clk",
+     "face": "N",
+     "layer": "M5",
+     "offset": 24.672,
+     "span_um": [
+      24.624,
+      24.72
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "rst_n",
+     "face": "N",
+     "layer": "M5",
+     "offset": 24.768,
+     "span_um": [
+      24.72,
+      24.816
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "d[24:0]",
+     "face": "N",
+     "layer": "M5",
+     "offset": 26.016,
+     "span_um": [
+      24.816,
+      27.216
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "q[24:0]",
+     "face": "S",
+     "layer": "M5",
+     "offset": 25.92,
+     "span_um": [
+      24.72,
+      27.12
+     ],
+     "offset_pending_view": true
+    }
+   ],
+   "version": 2,
+   "leaf_grant_1103": true,
+   "qualification_scope": "typed independent leaf slot; exact offsets adopted from final source-bound view; full parent and all incident registered relay/clock paths OPEN",
+   "reservation_basis": "four previously unassigned footer reservations in planned20x26 hslice array; source-exact512hslice+glue packing still required",
+   "measured_std_um2": 1033,
+   "measured_ff": 3075,
+   "logical_cycles": 123
+  },
+  {
+   "name": "idx_s0_meta2",
+   "cell": "hidx_meta_w25_d123_r0",
+   "source": "rtl/hbm_accel/index/hidx_meta_w25_d123_r0.sv",
+   "source_sha256": "d374c9e7c0d0a4a95c6a5b192d7b283d5b942c333de9d5d8bc45ef48ac712e81",
+   "source_prerequisite": "efb89a135",
+   "params": {},
+   "kind": "tile",
+   "parent": "idx_s0",
+   "instance": "hb_idx/index/parent/gscore[0]/scorer/ge[2]/md",
+   "outline": {
+    "w": 51.84,
+    "h": 51.84
+   },
+   "origin": {
+    "x": 2808.0,
+    "y": 2894.4,
+    "orient": "R0"
+   },
+   "clock_entry": {
+    "pin": "clk",
+    "face": "N",
+    "layer": "M5"
+   },
+   "clock_domain": "stream",
+   "clock_period_ps": 833.333333,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_cap": "M5",
+   "layer_rule": "tile",
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2
+   },
+   "pins": [
+    {
+     "name": "clk",
+     "face": "N",
+     "layer": "M5",
+     "offset": 24.672,
+     "span_um": [
+      24.624,
+      24.72
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "rst_n",
+     "face": "N",
+     "layer": "M5",
+     "offset": 24.768,
+     "span_um": [
+      24.72,
+      24.816
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "d[24:0]",
+     "face": "N",
+     "layer": "M5",
+     "offset": 26.016,
+     "span_um": [
+      24.816,
+      27.216
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "q[24:0]",
+     "face": "S",
+     "layer": "M5",
+     "offset": 25.92,
+     "span_um": [
+      24.72,
+      27.12
+     ],
+     "offset_pending_view": true
+    }
+   ],
+   "version": 2,
+   "leaf_grant_1103": true,
+   "qualification_scope": "typed independent leaf slot; exact offsets adopted from final source-bound view; full parent and all incident registered relay/clock paths OPEN",
+   "reservation_basis": "four previously unassigned footer reservations in planned20x26 hslice array; source-exact512hslice+glue packing still required",
+   "measured_std_um2": 1033,
+   "measured_ff": 3075,
+   "logical_cycles": 123
+  },
+  {
+   "name": "idx_s0_meta3",
+   "cell": "hidx_meta_w25_d123_r0",
+   "source": "rtl/hbm_accel/index/hidx_meta_w25_d123_r0.sv",
+   "source_sha256": "d374c9e7c0d0a4a95c6a5b192d7b283d5b942c333de9d5d8bc45ef48ac712e81",
+   "source_prerequisite": "efb89a135",
+   "params": {},
+   "kind": "tile",
+   "parent": "idx_s0",
+   "instance": "hb_idx/index/parent/gscore[0]/scorer/ge[3]/md",
+   "outline": {
+    "w": 51.84,
+    "h": 51.84
+   },
+   "origin": {
+    "x": 3024.0,
+    "y": 2894.4,
+    "orient": "R0"
+   },
+   "clock_entry": {
+    "pin": "clk",
+    "face": "N",
+    "layer": "M5"
+   },
+   "clock_domain": "stream",
+   "clock_period_ps": 833.333333,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_cap": "M5",
+   "layer_rule": "tile",
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2
+   },
+   "pins": [
+    {
+     "name": "clk",
+     "face": "N",
+     "layer": "M5",
+     "offset": 24.672,
+     "span_um": [
+      24.624,
+      24.72
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "rst_n",
+     "face": "N",
+     "layer": "M5",
+     "offset": 24.768,
+     "span_um": [
+      24.72,
+      24.816
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "d[24:0]",
+     "face": "N",
+     "layer": "M5",
+     "offset": 26.016,
+     "span_um": [
+      24.816,
+      27.216
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "q[24:0]",
+     "face": "S",
+     "layer": "M5",
+     "offset": 25.92,
+     "span_um": [
+      24.72,
+      27.12
+     ],
+     "offset_pending_view": true
+    }
+   ],
+   "version": 2,
+   "leaf_grant_1103": true,
+   "qualification_scope": "typed independent leaf slot; exact offsets adopted from final source-bound view; full parent and all incident registered relay/clock paths OPEN",
+   "reservation_basis": "four previously unassigned footer reservations in planned20x26 hslice array; source-exact512hslice+glue packing still required",
+   "measured_std_um2": 1033,
+   "measured_ff": 3075,
+   "logical_cycles": 123
+  },
+  {
+   "name": "idx_s1_meta0",
+   "cell": "hidx_meta_w25_d123_r0",
+   "source": "rtl/hbm_accel/index/hidx_meta_w25_d123_r0.sv",
+   "source_sha256": "d374c9e7c0d0a4a95c6a5b192d7b283d5b942c333de9d5d8bc45ef48ac712e81",
+   "source_prerequisite": "efb89a135",
+   "params": {},
+   "kind": "tile",
+   "parent": "idx_s1",
+   "instance": "hb_idx/index/parent/gscore[1]/scorer/ge[0]/md",
+   "outline": {
+    "w": 51.84,
+    "h": 51.84
+   },
+   "origin": {
+    "x": 2376.0,
+    "y": 2894.4,
+    "orient": "R0"
+   },
+   "clock_entry": {
+    "pin": "clk",
+    "face": "N",
+    "layer": "M5"
+   },
+   "clock_domain": "stream",
+   "clock_period_ps": 833.333333,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_cap": "M5",
+   "layer_rule": "tile",
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2
+   },
+   "pins": [
+    {
+     "name": "clk",
+     "face": "N",
+     "layer": "M5",
+     "offset": 24.672,
+     "span_um": [
+      24.624,
+      24.72
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "rst_n",
+     "face": "N",
+     "layer": "M5",
+     "offset": 24.768,
+     "span_um": [
+      24.72,
+      24.816
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "d[24:0]",
+     "face": "N",
+     "layer": "M5",
+     "offset": 26.016,
+     "span_um": [
+      24.816,
+      27.216
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "q[24:0]",
+     "face": "S",
+     "layer": "M5",
+     "offset": 25.92,
+     "span_um": [
+      24.72,
+      27.12
+     ],
+     "offset_pending_view": true
+    }
+   ],
+   "version": 2,
+   "leaf_grant_1103": true,
+   "qualification_scope": "typed independent leaf slot; exact offsets adopted from final source-bound view; full parent and all incident registered relay/clock paths OPEN",
+   "reservation_basis": "four previously unassigned footer reservations in planned20x26 hslice array; source-exact512hslice+glue packing still required",
+   "measured_std_um2": 1033,
+   "measured_ff": 3075,
+   "logical_cycles": 123
+  },
+  {
+   "name": "idx_s1_meta1",
+   "cell": "hidx_meta_w25_d123_r0",
+   "source": "rtl/hbm_accel/index/hidx_meta_w25_d123_r0.sv",
+   "source_sha256": "d374c9e7c0d0a4a95c6a5b192d7b283d5b942c333de9d5d8bc45ef48ac712e81",
+   "source_prerequisite": "efb89a135",
+   "params": {},
+   "kind": "tile",
+   "parent": "idx_s1",
+   "instance": "hb_idx/index/parent/gscore[1]/scorer/ge[1]/md",
+   "outline": {
+    "w": 51.84,
+    "h": 51.84
+   },
+   "origin": {
+    "x": 2592.0,
+    "y": 2894.4,
+    "orient": "R0"
+   },
+   "clock_entry": {
+    "pin": "clk",
+    "face": "N",
+    "layer": "M5"
+   },
+   "clock_domain": "stream",
+   "clock_period_ps": 833.333333,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_cap": "M5",
+   "layer_rule": "tile",
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2
+   },
+   "pins": [
+    {
+     "name": "clk",
+     "face": "N",
+     "layer": "M5",
+     "offset": 24.672,
+     "span_um": [
+      24.624,
+      24.72
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "rst_n",
+     "face": "N",
+     "layer": "M5",
+     "offset": 24.768,
+     "span_um": [
+      24.72,
+      24.816
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "d[24:0]",
+     "face": "N",
+     "layer": "M5",
+     "offset": 26.016,
+     "span_um": [
+      24.816,
+      27.216
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "q[24:0]",
+     "face": "S",
+     "layer": "M5",
+     "offset": 25.92,
+     "span_um": [
+      24.72,
+      27.12
+     ],
+     "offset_pending_view": true
+    }
+   ],
+   "version": 2,
+   "leaf_grant_1103": true,
+   "qualification_scope": "typed independent leaf slot; exact offsets adopted from final source-bound view; full parent and all incident registered relay/clock paths OPEN",
+   "reservation_basis": "four previously unassigned footer reservations in planned20x26 hslice array; source-exact512hslice+glue packing still required",
+   "measured_std_um2": 1033,
+   "measured_ff": 3075,
+   "logical_cycles": 123
+  },
+  {
+   "name": "idx_s1_meta2",
+   "cell": "hidx_meta_w25_d123_r0",
+   "source": "rtl/hbm_accel/index/hidx_meta_w25_d123_r0.sv",
+   "source_sha256": "d374c9e7c0d0a4a95c6a5b192d7b283d5b942c333de9d5d8bc45ef48ac712e81",
+   "source_prerequisite": "efb89a135",
+   "params": {},
+   "kind": "tile",
+   "parent": "idx_s1",
+   "instance": "hb_idx/index/parent/gscore[1]/scorer/ge[2]/md",
+   "outline": {
+    "w": 51.84,
+    "h": 51.84
+   },
+   "origin": {
+    "x": 2808.0,
+    "y": 2894.4,
+    "orient": "R0"
+   },
+   "clock_entry": {
+    "pin": "clk",
+    "face": "N",
+    "layer": "M5"
+   },
+   "clock_domain": "stream",
+   "clock_period_ps": 833.333333,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_cap": "M5",
+   "layer_rule": "tile",
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2
+   },
+   "pins": [
+    {
+     "name": "clk",
+     "face": "N",
+     "layer": "M5",
+     "offset": 24.672,
+     "span_um": [
+      24.624,
+      24.72
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "rst_n",
+     "face": "N",
+     "layer": "M5",
+     "offset": 24.768,
+     "span_um": [
+      24.72,
+      24.816
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "d[24:0]",
+     "face": "N",
+     "layer": "M5",
+     "offset": 26.016,
+     "span_um": [
+      24.816,
+      27.216
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "q[24:0]",
+     "face": "S",
+     "layer": "M5",
+     "offset": 25.92,
+     "span_um": [
+      24.72,
+      27.12
+     ],
+     "offset_pending_view": true
+    }
+   ],
+   "version": 2,
+   "leaf_grant_1103": true,
+   "qualification_scope": "typed independent leaf slot; exact offsets adopted from final source-bound view; full parent and all incident registered relay/clock paths OPEN",
+   "reservation_basis": "four previously unassigned footer reservations in planned20x26 hslice array; source-exact512hslice+glue packing still required",
+   "measured_std_um2": 1033,
+   "measured_ff": 3075,
+   "logical_cycles": 123
+  },
+  {
+   "name": "idx_s1_meta3",
+   "cell": "hidx_meta_w25_d123_r0",
+   "source": "rtl/hbm_accel/index/hidx_meta_w25_d123_r0.sv",
+   "source_sha256": "d374c9e7c0d0a4a95c6a5b192d7b283d5b942c333de9d5d8bc45ef48ac712e81",
+   "source_prerequisite": "efb89a135",
+   "params": {},
+   "kind": "tile",
+   "parent": "idx_s1",
+   "instance": "hb_idx/index/parent/gscore[1]/scorer/ge[3]/md",
+   "outline": {
+    "w": 51.84,
+    "h": 51.84
+   },
+   "origin": {
+    "x": 3024.0,
+    "y": 2894.4,
+    "orient": "R0"
+   },
+   "clock_entry": {
+    "pin": "clk",
+    "face": "N",
+    "layer": "M5"
+   },
+   "clock_domain": "stream",
+   "clock_period_ps": 833.333333,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_cap": "M5",
+   "layer_rule": "tile",
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2
+   },
+   "pins": [
+    {
+     "name": "clk",
+     "face": "N",
+     "layer": "M5",
+     "offset": 24.672,
+     "span_um": [
+      24.624,
+      24.72
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "rst_n",
+     "face": "N",
+     "layer": "M5",
+     "offset": 24.768,
+     "span_um": [
+      24.72,
+      24.816
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "d[24:0]",
+     "face": "N",
+     "layer": "M5",
+     "offset": 26.016,
+     "span_um": [
+      24.816,
+      27.216
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "q[24:0]",
+     "face": "S",
+     "layer": "M5",
+     "offset": 25.92,
+     "span_um": [
+      24.72,
+      27.12
+     ],
+     "offset_pending_view": true
+    }
+   ],
+   "version": 2,
+   "leaf_grant_1103": true,
+   "qualification_scope": "typed independent leaf slot; exact offsets adopted from final source-bound view; full parent and all incident registered relay/clock paths OPEN",
+   "reservation_basis": "four previously unassigned footer reservations in planned20x26 hslice array; source-exact512hslice+glue packing still required",
+   "measured_std_um2": 1033,
+   "measured_ff": 3075,
+   "logical_cycles": 123
+  },
+  {
+   "name": "idx_s2_meta0",
+   "cell": "hidx_meta_w25_d123_r0",
+   "source": "rtl/hbm_accel/index/hidx_meta_w25_d123_r0.sv",
+   "source_sha256": "d374c9e7c0d0a4a95c6a5b192d7b283d5b942c333de9d5d8bc45ef48ac712e81",
+   "source_prerequisite": "efb89a135",
+   "params": {},
+   "kind": "tile",
+   "parent": "idx_s2",
+   "instance": "hb_idx/index/parent/gscore[2]/scorer/ge[0]/md",
+   "outline": {
+    "w": 51.84,
+    "h": 51.84
+   },
+   "origin": {
+    "x": 2376.0,
+    "y": 2894.4,
+    "orient": "R0"
+   },
+   "clock_entry": {
+    "pin": "clk",
+    "face": "N",
+    "layer": "M5"
+   },
+   "clock_domain": "stream",
+   "clock_period_ps": 833.333333,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_cap": "M5",
+   "layer_rule": "tile",
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2
+   },
+   "pins": [
+    {
+     "name": "clk",
+     "face": "N",
+     "layer": "M5",
+     "offset": 24.672,
+     "span_um": [
+      24.624,
+      24.72
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "rst_n",
+     "face": "N",
+     "layer": "M5",
+     "offset": 24.768,
+     "span_um": [
+      24.72,
+      24.816
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "d[24:0]",
+     "face": "N",
+     "layer": "M5",
+     "offset": 26.016,
+     "span_um": [
+      24.816,
+      27.216
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "q[24:0]",
+     "face": "S",
+     "layer": "M5",
+     "offset": 25.92,
+     "span_um": [
+      24.72,
+      27.12
+     ],
+     "offset_pending_view": true
+    }
+   ],
+   "version": 2,
+   "leaf_grant_1103": true,
+   "qualification_scope": "typed independent leaf slot; exact offsets adopted from final source-bound view; full parent and all incident registered relay/clock paths OPEN",
+   "reservation_basis": "four previously unassigned footer reservations in planned20x26 hslice array; source-exact512hslice+glue packing still required",
+   "measured_std_um2": 1033,
+   "measured_ff": 3075,
+   "logical_cycles": 123
+  },
+  {
+   "name": "idx_s2_meta1",
+   "cell": "hidx_meta_w25_d123_r0",
+   "source": "rtl/hbm_accel/index/hidx_meta_w25_d123_r0.sv",
+   "source_sha256": "d374c9e7c0d0a4a95c6a5b192d7b283d5b942c333de9d5d8bc45ef48ac712e81",
+   "source_prerequisite": "efb89a135",
+   "params": {},
+   "kind": "tile",
+   "parent": "idx_s2",
+   "instance": "hb_idx/index/parent/gscore[2]/scorer/ge[1]/md",
+   "outline": {
+    "w": 51.84,
+    "h": 51.84
+   },
+   "origin": {
+    "x": 2592.0,
+    "y": 2894.4,
+    "orient": "R0"
+   },
+   "clock_entry": {
+    "pin": "clk",
+    "face": "N",
+    "layer": "M5"
+   },
+   "clock_domain": "stream",
+   "clock_period_ps": 833.333333,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_cap": "M5",
+   "layer_rule": "tile",
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2
+   },
+   "pins": [
+    {
+     "name": "clk",
+     "face": "N",
+     "layer": "M5",
+     "offset": 24.672,
+     "span_um": [
+      24.624,
+      24.72
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "rst_n",
+     "face": "N",
+     "layer": "M5",
+     "offset": 24.768,
+     "span_um": [
+      24.72,
+      24.816
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "d[24:0]",
+     "face": "N",
+     "layer": "M5",
+     "offset": 26.016,
+     "span_um": [
+      24.816,
+      27.216
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "q[24:0]",
+     "face": "S",
+     "layer": "M5",
+     "offset": 25.92,
+     "span_um": [
+      24.72,
+      27.12
+     ],
+     "offset_pending_view": true
+    }
+   ],
+   "version": 2,
+   "leaf_grant_1103": true,
+   "qualification_scope": "typed independent leaf slot; exact offsets adopted from final source-bound view; full parent and all incident registered relay/clock paths OPEN",
+   "reservation_basis": "four previously unassigned footer reservations in planned20x26 hslice array; source-exact512hslice+glue packing still required",
+   "measured_std_um2": 1033,
+   "measured_ff": 3075,
+   "logical_cycles": 123
+  },
+  {
+   "name": "idx_s2_meta2",
+   "cell": "hidx_meta_w25_d123_r0",
+   "source": "rtl/hbm_accel/index/hidx_meta_w25_d123_r0.sv",
+   "source_sha256": "d374c9e7c0d0a4a95c6a5b192d7b283d5b942c333de9d5d8bc45ef48ac712e81",
+   "source_prerequisite": "efb89a135",
+   "params": {},
+   "kind": "tile",
+   "parent": "idx_s2",
+   "instance": "hb_idx/index/parent/gscore[2]/scorer/ge[2]/md",
+   "outline": {
+    "w": 51.84,
+    "h": 51.84
+   },
+   "origin": {
+    "x": 2808.0,
+    "y": 2894.4,
+    "orient": "R0"
+   },
+   "clock_entry": {
+    "pin": "clk",
+    "face": "N",
+    "layer": "M5"
+   },
+   "clock_domain": "stream",
+   "clock_period_ps": 833.333333,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_cap": "M5",
+   "layer_rule": "tile",
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2
+   },
+   "pins": [
+    {
+     "name": "clk",
+     "face": "N",
+     "layer": "M5",
+     "offset": 24.672,
+     "span_um": [
+      24.624,
+      24.72
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "rst_n",
+     "face": "N",
+     "layer": "M5",
+     "offset": 24.768,
+     "span_um": [
+      24.72,
+      24.816
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "d[24:0]",
+     "face": "N",
+     "layer": "M5",
+     "offset": 26.016,
+     "span_um": [
+      24.816,
+      27.216
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "q[24:0]",
+     "face": "S",
+     "layer": "M5",
+     "offset": 25.92,
+     "span_um": [
+      24.72,
+      27.12
+     ],
+     "offset_pending_view": true
+    }
+   ],
+   "version": 2,
+   "leaf_grant_1103": true,
+   "qualification_scope": "typed independent leaf slot; exact offsets adopted from final source-bound view; full parent and all incident registered relay/clock paths OPEN",
+   "reservation_basis": "four previously unassigned footer reservations in planned20x26 hslice array; source-exact512hslice+glue packing still required",
+   "measured_std_um2": 1033,
+   "measured_ff": 3075,
+   "logical_cycles": 123
+  },
+  {
+   "name": "idx_s2_meta3",
+   "cell": "hidx_meta_w25_d123_r0",
+   "source": "rtl/hbm_accel/index/hidx_meta_w25_d123_r0.sv",
+   "source_sha256": "d374c9e7c0d0a4a95c6a5b192d7b283d5b942c333de9d5d8bc45ef48ac712e81",
+   "source_prerequisite": "efb89a135",
+   "params": {},
+   "kind": "tile",
+   "parent": "idx_s2",
+   "instance": "hb_idx/index/parent/gscore[2]/scorer/ge[3]/md",
+   "outline": {
+    "w": 51.84,
+    "h": 51.84
+   },
+   "origin": {
+    "x": 3024.0,
+    "y": 2894.4,
+    "orient": "R0"
+   },
+   "clock_entry": {
+    "pin": "clk",
+    "face": "N",
+    "layer": "M5"
+   },
+   "clock_domain": "stream",
+   "clock_period_ps": 833.333333,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_cap": "M5",
+   "layer_rule": "tile",
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2
+   },
+   "pins": [
+    {
+     "name": "clk",
+     "face": "N",
+     "layer": "M5",
+     "offset": 24.672,
+     "span_um": [
+      24.624,
+      24.72
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "rst_n",
+     "face": "N",
+     "layer": "M5",
+     "offset": 24.768,
+     "span_um": [
+      24.72,
+      24.816
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "d[24:0]",
+     "face": "N",
+     "layer": "M5",
+     "offset": 26.016,
+     "span_um": [
+      24.816,
+      27.216
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "q[24:0]",
+     "face": "S",
+     "layer": "M5",
+     "offset": 25.92,
+     "span_um": [
+      24.72,
+      27.12
+     ],
+     "offset_pending_view": true
+    }
+   ],
+   "version": 2,
+   "leaf_grant_1103": true,
+   "qualification_scope": "typed independent leaf slot; exact offsets adopted from final source-bound view; full parent and all incident registered relay/clock paths OPEN",
+   "reservation_basis": "four previously unassigned footer reservations in planned20x26 hslice array; source-exact512hslice+glue packing still required",
+   "measured_std_um2": 1033,
+   "measured_ff": 3075,
+   "logical_cycles": 123
+  },
+  {
+   "name": "idx_s3_meta0",
+   "cell": "hidx_meta_w25_d123_r0",
+   "source": "rtl/hbm_accel/index/hidx_meta_w25_d123_r0.sv",
+   "source_sha256": "d374c9e7c0d0a4a95c6a5b192d7b283d5b942c333de9d5d8bc45ef48ac712e81",
+   "source_prerequisite": "efb89a135",
+   "params": {},
+   "kind": "tile",
+   "parent": "idx_s3",
+   "instance": "hb_idx/index/parent/gscore[3]/scorer/ge[0]/md",
+   "outline": {
+    "w": 51.84,
+    "h": 51.84
+   },
+   "origin": {
+    "x": 2376.0,
+    "y": 2894.4,
+    "orient": "R0"
+   },
+   "clock_entry": {
+    "pin": "clk",
+    "face": "N",
+    "layer": "M5"
+   },
+   "clock_domain": "stream",
+   "clock_period_ps": 833.333333,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_cap": "M5",
+   "layer_rule": "tile",
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2
+   },
+   "pins": [
+    {
+     "name": "clk",
+     "face": "N",
+     "layer": "M5",
+     "offset": 24.672,
+     "span_um": [
+      24.624,
+      24.72
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "rst_n",
+     "face": "N",
+     "layer": "M5",
+     "offset": 24.768,
+     "span_um": [
+      24.72,
+      24.816
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "d[24:0]",
+     "face": "N",
+     "layer": "M5",
+     "offset": 26.016,
+     "span_um": [
+      24.816,
+      27.216
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "q[24:0]",
+     "face": "S",
+     "layer": "M5",
+     "offset": 25.92,
+     "span_um": [
+      24.72,
+      27.12
+     ],
+     "offset_pending_view": true
+    }
+   ],
+   "version": 2,
+   "leaf_grant_1103": true,
+   "qualification_scope": "typed independent leaf slot; exact offsets adopted from final source-bound view; full parent and all incident registered relay/clock paths OPEN",
+   "reservation_basis": "four previously unassigned footer reservations in planned20x26 hslice array; source-exact512hslice+glue packing still required",
+   "measured_std_um2": 1033,
+   "measured_ff": 3075,
+   "logical_cycles": 123
+  },
+  {
+   "name": "idx_s3_meta1",
+   "cell": "hidx_meta_w25_d123_r0",
+   "source": "rtl/hbm_accel/index/hidx_meta_w25_d123_r0.sv",
+   "source_sha256": "d374c9e7c0d0a4a95c6a5b192d7b283d5b942c333de9d5d8bc45ef48ac712e81",
+   "source_prerequisite": "efb89a135",
+   "params": {},
+   "kind": "tile",
+   "parent": "idx_s3",
+   "instance": "hb_idx/index/parent/gscore[3]/scorer/ge[1]/md",
+   "outline": {
+    "w": 51.84,
+    "h": 51.84
+   },
+   "origin": {
+    "x": 2592.0,
+    "y": 2894.4,
+    "orient": "R0"
+   },
+   "clock_entry": {
+    "pin": "clk",
+    "face": "N",
+    "layer": "M5"
+   },
+   "clock_domain": "stream",
+   "clock_period_ps": 833.333333,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_cap": "M5",
+   "layer_rule": "tile",
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2
+   },
+   "pins": [
+    {
+     "name": "clk",
+     "face": "N",
+     "layer": "M5",
+     "offset": 24.672,
+     "span_um": [
+      24.624,
+      24.72
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "rst_n",
+     "face": "N",
+     "layer": "M5",
+     "offset": 24.768,
+     "span_um": [
+      24.72,
+      24.816
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "d[24:0]",
+     "face": "N",
+     "layer": "M5",
+     "offset": 26.016,
+     "span_um": [
+      24.816,
+      27.216
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "q[24:0]",
+     "face": "S",
+     "layer": "M5",
+     "offset": 25.92,
+     "span_um": [
+      24.72,
+      27.12
+     ],
+     "offset_pending_view": true
+    }
+   ],
+   "version": 2,
+   "leaf_grant_1103": true,
+   "qualification_scope": "typed independent leaf slot; exact offsets adopted from final source-bound view; full parent and all incident registered relay/clock paths OPEN",
+   "reservation_basis": "four previously unassigned footer reservations in planned20x26 hslice array; source-exact512hslice+glue packing still required",
+   "measured_std_um2": 1033,
+   "measured_ff": 3075,
+   "logical_cycles": 123
+  },
+  {
+   "name": "idx_s3_meta2",
+   "cell": "hidx_meta_w25_d123_r0",
+   "source": "rtl/hbm_accel/index/hidx_meta_w25_d123_r0.sv",
+   "source_sha256": "d374c9e7c0d0a4a95c6a5b192d7b283d5b942c333de9d5d8bc45ef48ac712e81",
+   "source_prerequisite": "efb89a135",
+   "params": {},
+   "kind": "tile",
+   "parent": "idx_s3",
+   "instance": "hb_idx/index/parent/gscore[3]/scorer/ge[2]/md",
+   "outline": {
+    "w": 51.84,
+    "h": 51.84
+   },
+   "origin": {
+    "x": 2808.0,
+    "y": 2894.4,
+    "orient": "R0"
+   },
+   "clock_entry": {
+    "pin": "clk",
+    "face": "N",
+    "layer": "M5"
+   },
+   "clock_domain": "stream",
+   "clock_period_ps": 833.333333,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_cap": "M5",
+   "layer_rule": "tile",
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2
+   },
+   "pins": [
+    {
+     "name": "clk",
+     "face": "N",
+     "layer": "M5",
+     "offset": 24.672,
+     "span_um": [
+      24.624,
+      24.72
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "rst_n",
+     "face": "N",
+     "layer": "M5",
+     "offset": 24.768,
+     "span_um": [
+      24.72,
+      24.816
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "d[24:0]",
+     "face": "N",
+     "layer": "M5",
+     "offset": 26.016,
+     "span_um": [
+      24.816,
+      27.216
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "q[24:0]",
+     "face": "S",
+     "layer": "M5",
+     "offset": 25.92,
+     "span_um": [
+      24.72,
+      27.12
+     ],
+     "offset_pending_view": true
+    }
+   ],
+   "version": 2,
+   "leaf_grant_1103": true,
+   "qualification_scope": "typed independent leaf slot; exact offsets adopted from final source-bound view; full parent and all incident registered relay/clock paths OPEN",
+   "reservation_basis": "four previously unassigned footer reservations in planned20x26 hslice array; source-exact512hslice+glue packing still required",
+   "measured_std_um2": 1033,
+   "measured_ff": 3075,
+   "logical_cycles": 123
+  },
+  {
+   "name": "idx_s3_meta3",
+   "cell": "hidx_meta_w25_d123_r0",
+   "source": "rtl/hbm_accel/index/hidx_meta_w25_d123_r0.sv",
+   "source_sha256": "d374c9e7c0d0a4a95c6a5b192d7b283d5b942c333de9d5d8bc45ef48ac712e81",
+   "source_prerequisite": "efb89a135",
+   "params": {},
+   "kind": "tile",
+   "parent": "idx_s3",
+   "instance": "hb_idx/index/parent/gscore[3]/scorer/ge[3]/md",
+   "outline": {
+    "w": 51.84,
+    "h": 51.84
+   },
+   "origin": {
+    "x": 3024.0,
+    "y": 2894.4,
+    "orient": "R0"
+   },
+   "clock_entry": {
+    "pin": "clk",
+    "face": "N",
+    "layer": "M5"
+   },
+   "clock_domain": "stream",
+   "clock_period_ps": 833.333333,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_cap": "M5",
+   "layer_rule": "tile",
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2
+   },
+   "pins": [
+    {
+     "name": "clk",
+     "face": "N",
+     "layer": "M5",
+     "offset": 24.672,
+     "span_um": [
+      24.624,
+      24.72
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "rst_n",
+     "face": "N",
+     "layer": "M5",
+     "offset": 24.768,
+     "span_um": [
+      24.72,
+      24.816
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "d[24:0]",
+     "face": "N",
+     "layer": "M5",
+     "offset": 26.016,
+     "span_um": [
+      24.816,
+      27.216
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "q[24:0]",
+     "face": "S",
+     "layer": "M5",
+     "offset": 25.92,
+     "span_um": [
+      24.72,
+      27.12
+     ],
+     "offset_pending_view": true
+    }
+   ],
+   "version": 2,
+   "leaf_grant_1103": true,
+   "qualification_scope": "typed independent leaf slot; exact offsets adopted from final source-bound view; full parent and all incident registered relay/clock paths OPEN",
+   "reservation_basis": "four previously unassigned footer reservations in planned20x26 hslice array; source-exact512hslice+glue packing still required",
+   "measured_std_um2": 1033,
+   "measured_ff": 3075,
+   "logical_cycles": 123
   }
  ],
  "sub_layouts": {
@@ -74037,5 +76317,17 @@
    }
   ]
  },
- "service_source_prerequisite": "41faf638c per-PC-clock wrappers; every wrapper hash pinned in slot"
+ "service_source_prerequisite": "41faf638c per-PC-clock wrappers; every wrapper hash pinned in slot",
+ "independent_leaf_grants_1103": {
+  "masters": 2,
+  "replicas": {
+   "hidx_meta_w25_d123_r0": 16,
+   "ot_hgi_coll_static_vmwrite": 4
+  },
+  "scopes": "source-exact independent components; no full parent fit/timing or current-die closure inherited",
+  "source_sha256": {
+   "meta": "d374c9e7c0d0a4a95c6a5b192d7b283d5b942c333de9d5d8bc45ef48ac712e81",
+   "writer": "ec2cc4de9173c2bc059fbc23aa9d0136e89ab0952ff22cdd8cdda6d98b54897c"
+  }
+ }
 }
