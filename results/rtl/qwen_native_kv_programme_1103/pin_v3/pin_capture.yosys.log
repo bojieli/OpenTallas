@@ -1,0 +1,1048 @@
+
+-- Running command `read_verilog -sv /home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv; hierarchy -top qkd_kv_native_programme; proc; memory_map; opt_clean; write_json /tmp/qwen-kv-programme-pin-r5/pin_netlist.json' --
+
+1. Executing Verilog-2005 frontend: /home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv
+Parsing SystemVerilog input from `/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv' to AST representation.
+Generating RTLIL representation for module `\qkd_kv_native_programme'.
+Warning: Replacing memory \table_stop with list of registers. See /home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:55
+Warning: Replacing memory \table3 with list of registers. See /home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:54
+Warning: Replacing memory \table2 with list of registers. See /home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:54
+Warning: Replacing memory \table1 with list of registers. See /home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:53
+Warning: Replacing memory \table0 with list of registers. See /home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:53
+Successfully finished Verilog frontend.
+
+2. Executing HIERARCHY pass (managing design hierarchy).
+
+2.1. Analyzing design hierarchy..
+Top module:  \qkd_kv_native_programme
+
+2.2. Analyzing design hierarchy..
+Top module:  \qkd_kv_native_programme
+Removed 0 unused modules.
+
+3. Executing PROC pass (convert processes to netlists).
+
+3.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+3.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Removed 1 dead cases from process $proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:78$437 in module qkd_kv_native_programme.
+Marked 1 switch rules as full_case in process $proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:78$437 in module qkd_kv_native_programme.
+Marked 22 switch rules as full_case in process $proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:86$44 in module qkd_kv_native_programme.
+Marked 1 switch rules as full_case in process $proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:39$18 in module qkd_kv_native_programme.
+Removed a total of 1 dead cases.
+
+3.3. Executing PROC_INIT pass (extract init attributes).
+
+3.4. Executing PROC_ARST pass (detect async resets in processes).
+Found async reset \rst_n in `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:86$44'.
+Found async reset \rst_n in `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:39$18'.
+
+3.5. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:78$437'.
+     1/4: $1$func$\group_of$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:85$2$\group_of[2:0]$441
+     2/4: $0$func$\group_of$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:85$1$\group_of[2:0]$438
+     3/4: $0$func$\group_of$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:85$2$\group_of[2:0]$439
+     4/4: $0$func$\group_of$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:85$2$\logical_group[2:0]$440
+Creating decoders for process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$432'.
+     1/5: $0\table_stop[35][31:0]
+     2/5: $0\table3[35][31:0]
+     3/5: $0\table2[35][31:0]
+     4/5: $0\table1[35][31:0]
+     5/5: $0\table0[35][31:0]
+Creating decoders for process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$427'.
+     1/5: $0\table_stop[34][31:0]
+     2/5: $0\table3[34][31:0]
+     3/5: $0\table2[34][31:0]
+     4/5: $0\table1[34][31:0]
+     5/5: $0\table0[34][31:0]
+Creating decoders for process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$422'.
+     1/5: $0\table_stop[33][31:0]
+     2/5: $0\table3[33][31:0]
+     3/5: $0\table2[33][31:0]
+     4/5: $0\table1[33][31:0]
+     5/5: $0\table0[33][31:0]
+Creating decoders for process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$417'.
+     1/5: $0\table_stop[32][31:0]
+     2/5: $0\table3[32][31:0]
+     3/5: $0\table2[32][31:0]
+     4/5: $0\table1[32][31:0]
+     5/5: $0\table0[32][31:0]
+Creating decoders for process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$412'.
+     1/5: $0\table_stop[31][31:0]
+     2/5: $0\table3[31][31:0]
+     3/5: $0\table2[31][31:0]
+     4/5: $0\table1[31][31:0]
+     5/5: $0\table0[31][31:0]
+Creating decoders for process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$407'.
+     1/5: $0\table_stop[30][31:0]
+     2/5: $0\table3[30][31:0]
+     3/5: $0\table2[30][31:0]
+     4/5: $0\table1[30][31:0]
+     5/5: $0\table0[30][31:0]
+Creating decoders for process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$402'.
+     1/5: $0\table_stop[29][31:0]
+     2/5: $0\table3[29][31:0]
+     3/5: $0\table2[29][31:0]
+     4/5: $0\table1[29][31:0]
+     5/5: $0\table0[29][31:0]
+Creating decoders for process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$397'.
+     1/5: $0\table_stop[28][31:0]
+     2/5: $0\table3[28][31:0]
+     3/5: $0\table2[28][31:0]
+     4/5: $0\table1[28][31:0]
+     5/5: $0\table0[28][31:0]
+Creating decoders for process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$392'.
+     1/5: $0\table_stop[27][31:0]
+     2/5: $0\table3[27][31:0]
+     3/5: $0\table2[27][31:0]
+     4/5: $0\table1[27][31:0]
+     5/5: $0\table0[27][31:0]
+Creating decoders for process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$387'.
+     1/5: $0\table_stop[26][31:0]
+     2/5: $0\table3[26][31:0]
+     3/5: $0\table2[26][31:0]
+     4/5: $0\table1[26][31:0]
+     5/5: $0\table0[26][31:0]
+Creating decoders for process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$382'.
+     1/5: $0\table_stop[25][31:0]
+     2/5: $0\table3[25][31:0]
+     3/5: $0\table2[25][31:0]
+     4/5: $0\table1[25][31:0]
+     5/5: $0\table0[25][31:0]
+Creating decoders for process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$377'.
+     1/5: $0\table_stop[24][31:0]
+     2/5: $0\table3[24][31:0]
+     3/5: $0\table2[24][31:0]
+     4/5: $0\table1[24][31:0]
+     5/5: $0\table0[24][31:0]
+Creating decoders for process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$372'.
+     1/5: $0\table_stop[23][31:0]
+     2/5: $0\table3[23][31:0]
+     3/5: $0\table2[23][31:0]
+     4/5: $0\table1[23][31:0]
+     5/5: $0\table0[23][31:0]
+Creating decoders for process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$367'.
+     1/5: $0\table_stop[22][31:0]
+     2/5: $0\table3[22][31:0]
+     3/5: $0\table2[22][31:0]
+     4/5: $0\table1[22][31:0]
+     5/5: $0\table0[22][31:0]
+Creating decoders for process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$362'.
+     1/5: $0\table_stop[21][31:0]
+     2/5: $0\table3[21][31:0]
+     3/5: $0\table2[21][31:0]
+     4/5: $0\table1[21][31:0]
+     5/5: $0\table0[21][31:0]
+Creating decoders for process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$357'.
+     1/5: $0\table_stop[20][31:0]
+     2/5: $0\table3[20][31:0]
+     3/5: $0\table2[20][31:0]
+     4/5: $0\table1[20][31:0]
+     5/5: $0\table0[20][31:0]
+Creating decoders for process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$352'.
+     1/5: $0\table_stop[19][31:0]
+     2/5: $0\table3[19][31:0]
+     3/5: $0\table2[19][31:0]
+     4/5: $0\table1[19][31:0]
+     5/5: $0\table0[19][31:0]
+Creating decoders for process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$347'.
+     1/5: $0\table_stop[18][31:0]
+     2/5: $0\table3[18][31:0]
+     3/5: $0\table2[18][31:0]
+     4/5: $0\table1[18][31:0]
+     5/5: $0\table0[18][31:0]
+Creating decoders for process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$342'.
+     1/5: $0\table_stop[17][31:0]
+     2/5: $0\table3[17][31:0]
+     3/5: $0\table2[17][31:0]
+     4/5: $0\table1[17][31:0]
+     5/5: $0\table0[17][31:0]
+Creating decoders for process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$337'.
+     1/5: $0\table_stop[16][31:0]
+     2/5: $0\table3[16][31:0]
+     3/5: $0\table2[16][31:0]
+     4/5: $0\table1[16][31:0]
+     5/5: $0\table0[16][31:0]
+Creating decoders for process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$332'.
+     1/5: $0\table_stop[15][31:0]
+     2/5: $0\table3[15][31:0]
+     3/5: $0\table2[15][31:0]
+     4/5: $0\table1[15][31:0]
+     5/5: $0\table0[15][31:0]
+Creating decoders for process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$327'.
+     1/5: $0\table_stop[14][31:0]
+     2/5: $0\table3[14][31:0]
+     3/5: $0\table2[14][31:0]
+     4/5: $0\table1[14][31:0]
+     5/5: $0\table0[14][31:0]
+Creating decoders for process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$322'.
+     1/5: $0\table_stop[13][31:0]
+     2/5: $0\table3[13][31:0]
+     3/5: $0\table2[13][31:0]
+     4/5: $0\table1[13][31:0]
+     5/5: $0\table0[13][31:0]
+Creating decoders for process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$317'.
+     1/5: $0\table_stop[12][31:0]
+     2/5: $0\table3[12][31:0]
+     3/5: $0\table2[12][31:0]
+     4/5: $0\table1[12][31:0]
+     5/5: $0\table0[12][31:0]
+Creating decoders for process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$312'.
+     1/5: $0\table_stop[11][31:0]
+     2/5: $0\table3[11][31:0]
+     3/5: $0\table2[11][31:0]
+     4/5: $0\table1[11][31:0]
+     5/5: $0\table0[11][31:0]
+Creating decoders for process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$307'.
+     1/5: $0\table_stop[10][31:0]
+     2/5: $0\table3[10][31:0]
+     3/5: $0\table2[10][31:0]
+     4/5: $0\table1[10][31:0]
+     5/5: $0\table0[10][31:0]
+Creating decoders for process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$302'.
+     1/5: $0\table_stop[9][31:0]
+     2/5: $0\table3[9][31:0]
+     3/5: $0\table2[9][31:0]
+     4/5: $0\table1[9][31:0]
+     5/5: $0\table0[9][31:0]
+Creating decoders for process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$297'.
+     1/5: $0\table_stop[8][31:0]
+     2/5: $0\table3[8][31:0]
+     3/5: $0\table2[8][31:0]
+     4/5: $0\table1[8][31:0]
+     5/5: $0\table0[8][31:0]
+Creating decoders for process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$292'.
+     1/5: $0\table_stop[7][31:0]
+     2/5: $0\table3[7][31:0]
+     3/5: $0\table2[7][31:0]
+     4/5: $0\table1[7][31:0]
+     5/5: $0\table0[7][31:0]
+Creating decoders for process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$287'.
+     1/5: $0\table_stop[6][31:0]
+     2/5: $0\table3[6][31:0]
+     3/5: $0\table2[6][31:0]
+     4/5: $0\table1[6][31:0]
+     5/5: $0\table0[6][31:0]
+Creating decoders for process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$282'.
+     1/5: $0\table_stop[5][31:0]
+     2/5: $0\table3[5][31:0]
+     3/5: $0\table2[5][31:0]
+     4/5: $0\table1[5][31:0]
+     5/5: $0\table0[5][31:0]
+Creating decoders for process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$277'.
+     1/5: $0\table_stop[4][31:0]
+     2/5: $0\table3[4][31:0]
+     3/5: $0\table2[4][31:0]
+     4/5: $0\table1[4][31:0]
+     5/5: $0\table0[4][31:0]
+Creating decoders for process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$272'.
+     1/5: $0\table_stop[3][31:0]
+     2/5: $0\table3[3][31:0]
+     3/5: $0\table2[3][31:0]
+     4/5: $0\table1[3][31:0]
+     5/5: $0\table0[3][31:0]
+Creating decoders for process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$267'.
+     1/5: $0\table_stop[2][31:0]
+     2/5: $0\table3[2][31:0]
+     3/5: $0\table2[2][31:0]
+     4/5: $0\table1[2][31:0]
+     5/5: $0\table0[2][31:0]
+Creating decoders for process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$262'.
+     1/5: $0\table_stop[1][31:0]
+     2/5: $0\table3[1][31:0]
+     3/5: $0\table2[1][31:0]
+     4/5: $0\table1[1][31:0]
+     5/5: $0\table0[1][31:0]
+Creating decoders for process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$257'.
+     1/5: $0\table_stop[0][31:0]
+     2/5: $0\table3[0][31:0]
+     3/5: $0\table2[0][31:0]
+     4/5: $0\table1[0][31:0]
+     5/5: $0\table0[0][31:0]
+Creating decoders for process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:86$44'.
+     1/189: $4$mem2reg_rd$\table_stop$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:129$16_DATA[31:0]$252
+     2/189: $4$mem2reg_rd$\table3$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:129$15_DATA[31:0]$250
+     3/189: $4$mem2reg_rd$\table2$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:129$14_DATA[31:0]$248
+     4/189: $4$mem2reg_rd$\table1$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:128$13_DATA[31:0]$246
+     5/189: $4$mem2reg_rd$\table0$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:128$12_DATA[31:0]$244
+     6/189: $3$mem2reg_rd$\table_stop$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:129$16_DATA[31:0]$242
+     7/189: $3$mem2reg_rd$\table_stop$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:129$16_ADDR[5:0]$241
+     8/189: $3$mem2reg_rd$\table3$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:129$15_DATA[31:0]$240
+     9/189: $3$mem2reg_rd$\table3$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:129$15_ADDR[5:0]$239
+    10/189: $3$mem2reg_rd$\table2$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:129$14_DATA[31:0]$238
+    11/189: $3$mem2reg_rd$\table2$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:129$14_ADDR[5:0]$237
+    12/189: $3$mem2reg_rd$\table1$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:128$13_DATA[31:0]$236
+    13/189: $3$mem2reg_rd$\table1$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:128$13_ADDR[5:0]$235
+    14/189: $3$mem2reg_rd$\table0$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:128$12_DATA[31:0]$234
+    15/189: $3$mem2reg_rd$\table0$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:128$12_ADDR[5:0]$233
+    16/189: $2$mem2reg_rd$\table_stop$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:129$16_DATA[31:0]$224
+    17/189: $2$mem2reg_rd$\table_stop$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:129$16_ADDR[5:0]$223
+    18/189: $2$mem2reg_rd$\table3$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:129$15_DATA[31:0]$222
+    19/189: $2$mem2reg_rd$\table3$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:129$15_ADDR[5:0]$221
+    20/189: $2$mem2reg_rd$\table2$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:129$14_DATA[31:0]$220
+    21/189: $2$mem2reg_rd$\table2$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:129$14_ADDR[5:0]$219
+    22/189: $2$mem2reg_rd$\table1$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:128$13_DATA[31:0]$218
+    23/189: $2$mem2reg_rd$\table1$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:128$13_ADDR[5:0]$217
+    24/189: $2$mem2reg_rd$\table0$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:128$12_DATA[31:0]$216
+    25/189: $2$mem2reg_rd$\table0$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:128$12_ADDR[5:0]$215
+    26/189: $6$mem2reg_rd$\table3$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:117$11_DATA[31:0]$193
+    27/189: $6$mem2reg_rd$\table3$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:117$10_DATA[31:0]$192
+    28/189: $6$mem2reg_rd$\table3$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:116$9_DATA[31:0]$191
+    29/189: $6$mem2reg_rd$\table2$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:116$8_DATA[31:0]$190
+    30/189: $6$mem2reg_rd$\table2$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:116$7_DATA[31:0]$189
+    31/189: $6$mem2reg_rd$\table1$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:116$6_DATA[31:0]$188
+    32/189: $6$mem2reg_rd$\table1$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:115$5_DATA[31:0]$187
+    33/189: $6$mem2reg_rd$\table0$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:115$4_DATA[31:0]$186
+    34/189: $6$mem2reg_rd$\table0$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:115$3_DATA[31:0]$185
+    35/189: $5$mem2reg_rd$\table3$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:117$11_DATA[31:0]$184
+    36/189: $5$mem2reg_rd$\table3$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:117$11_ADDR[5:0]$183
+    37/189: $5$mem2reg_rd$\table3$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:117$10_DATA[31:0]$182
+    38/189: $5$mem2reg_rd$\table3$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:117$10_ADDR[5:0]$181
+    39/189: $5$mem2reg_rd$\table3$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:116$9_DATA[31:0]$180
+    40/189: $5$mem2reg_rd$\table3$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:116$9_ADDR[5:0]$179
+    41/189: $5$mem2reg_rd$\table2$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:116$8_DATA[31:0]$178
+    42/189: $5$mem2reg_rd$\table2$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:116$8_ADDR[5:0]$177
+    43/189: $5$mem2reg_rd$\table2$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:116$7_DATA[31:0]$176
+    44/189: $5$mem2reg_rd$\table2$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:116$7_ADDR[5:0]$175
+    45/189: $5$mem2reg_rd$\table1$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:116$6_DATA[31:0]$174
+    46/189: $5$mem2reg_rd$\table1$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:116$6_ADDR[5:0]$173
+    47/189: $5$mem2reg_rd$\table1$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:115$5_DATA[31:0]$172
+    48/189: $5$mem2reg_rd$\table1$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:115$5_ADDR[5:0]$171
+    49/189: $5$mem2reg_rd$\table0$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:115$4_DATA[31:0]$170
+    50/189: $5$mem2reg_rd$\table0$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:115$4_ADDR[5:0]$169
+    51/189: $5$mem2reg_rd$\table0$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:115$3_DATA[31:0]$168
+    52/189: $5$mem2reg_rd$\table0$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:115$3_ADDR[5:0]$167
+    53/189: $4$mem2reg_rd$\table3$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:117$11_DATA[31:0]$163
+    54/189: $4$mem2reg_rd$\table3$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:117$11_ADDR[5:0]$162
+    55/189: $4$mem2reg_rd$\table3$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:117$10_DATA[31:0]$161
+    56/189: $4$mem2reg_rd$\table3$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:117$10_ADDR[5:0]$160
+    57/189: $4$mem2reg_rd$\table3$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:116$9_DATA[31:0]$159
+    58/189: $4$mem2reg_rd$\table3$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:116$9_ADDR[5:0]$158
+    59/189: $4$mem2reg_rd$\table2$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:116$8_DATA[31:0]$157
+    60/189: $4$mem2reg_rd$\table2$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:116$8_ADDR[5:0]$156
+    61/189: $4$mem2reg_rd$\table2$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:116$7_DATA[31:0]$155
+    62/189: $4$mem2reg_rd$\table2$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:116$7_ADDR[5:0]$154
+    63/189: $4$mem2reg_rd$\table1$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:116$6_DATA[31:0]$153
+    64/189: $4$mem2reg_rd$\table1$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:116$6_ADDR[5:0]$152
+    65/189: $4$mem2reg_rd$\table1$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:115$5_DATA[31:0]$151
+    66/189: $4$mem2reg_rd$\table1$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:115$5_ADDR[5:0]$150
+    67/189: $4$mem2reg_rd$\table0$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:115$4_DATA[31:0]$149
+    68/189: $4$mem2reg_rd$\table0$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:115$4_ADDR[5:0]$148
+    69/189: $4$mem2reg_rd$\table0$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:115$3_DATA[31:0]$147
+    70/189: $4$mem2reg_rd$\table0$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:115$3_ADDR[5:0]$146
+    71/189: $3$mem2reg_rd$\table3$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:117$11_DATA[31:0]$144
+    72/189: $3$mem2reg_rd$\table3$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:117$11_ADDR[5:0]$143
+    73/189: $3$mem2reg_rd$\table3$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:117$10_DATA[31:0]$142
+    74/189: $3$mem2reg_rd$\table3$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:117$10_ADDR[5:0]$141
+    75/189: $3$mem2reg_rd$\table3$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:116$9_DATA[31:0]$140
+    76/189: $3$mem2reg_rd$\table3$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:116$9_ADDR[5:0]$139
+    77/189: $3$mem2reg_rd$\table2$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:116$8_DATA[31:0]$138
+    78/189: $3$mem2reg_rd$\table2$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:116$8_ADDR[5:0]$137
+    79/189: $3$mem2reg_rd$\table2$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:116$7_DATA[31:0]$136
+    80/189: $3$mem2reg_rd$\table2$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:116$7_ADDR[5:0]$135
+    81/189: $3$mem2reg_rd$\table1$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:116$6_DATA[31:0]$134
+    82/189: $3$mem2reg_rd$\table1$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:116$6_ADDR[5:0]$133
+    83/189: $3$mem2reg_rd$\table1$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:115$5_DATA[31:0]$132
+    84/189: $3$mem2reg_rd$\table1$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:115$5_ADDR[5:0]$131
+    85/189: $3$mem2reg_rd$\table0$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:115$4_DATA[31:0]$130
+    86/189: $3$mem2reg_rd$\table0$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:115$4_ADDR[5:0]$129
+    87/189: $3$mem2reg_rd$\table0$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:115$3_DATA[31:0]$128
+    88/189: $3$mem2reg_rd$\table0$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:115$3_ADDR[5:0]$127
+    89/189: $2$mem2reg_rd$\table3$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:117$11_DATA[31:0]$125
+    90/189: $2$mem2reg_rd$\table3$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:117$11_ADDR[5:0]$124
+    91/189: $2$mem2reg_rd$\table3$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:117$10_DATA[31:0]$123
+    92/189: $2$mem2reg_rd$\table3$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:117$10_ADDR[5:0]$122
+    93/189: $2$mem2reg_rd$\table3$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:116$9_DATA[31:0]$121
+    94/189: $2$mem2reg_rd$\table3$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:116$9_ADDR[5:0]$120
+    95/189: $2$mem2reg_rd$\table2$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:116$8_DATA[31:0]$119
+    96/189: $2$mem2reg_rd$\table2$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:116$8_ADDR[5:0]$118
+    97/189: $2$mem2reg_rd$\table2$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:116$7_DATA[31:0]$117
+    98/189: $2$mem2reg_rd$\table2$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:116$7_ADDR[5:0]$116
+    99/189: $2$mem2reg_rd$\table1$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:116$6_DATA[31:0]$115
+   100/189: $2$mem2reg_rd$\table1$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:116$6_ADDR[5:0]$114
+   101/189: $2$mem2reg_rd$\table1$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:115$5_DATA[31:0]$113
+   102/189: $2$mem2reg_rd$\table1$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:115$5_ADDR[5:0]$112
+   103/189: $2$mem2reg_rd$\table0$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:115$4_DATA[31:0]$111
+   104/189: $2$mem2reg_rd$\table0$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:115$4_ADDR[5:0]$110
+   105/189: $2$mem2reg_rd$\table0$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:115$3_DATA[31:0]$109
+   106/189: $2$mem2reg_rd$\table0$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:115$3_ADDR[5:0]$108
+   107/189: $1$mem2reg_rd$\table_stop$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:129$16_DATA[31:0]$101
+   108/189: $1$mem2reg_rd$\table_stop$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:129$16_ADDR[5:0]$100
+   109/189: $1$mem2reg_rd$\table3$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:129$15_DATA[31:0]$99
+   110/189: $1$mem2reg_rd$\table3$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:129$15_ADDR[5:0]$98
+   111/189: $1$mem2reg_rd$\table2$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:129$14_DATA[31:0]$97
+   112/189: $1$mem2reg_rd$\table2$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:129$14_ADDR[5:0]$96
+   113/189: $1$mem2reg_rd$\table1$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:128$13_DATA[31:0]$95
+   114/189: $1$mem2reg_rd$\table1$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:128$13_ADDR[5:0]$94
+   115/189: $1$mem2reg_rd$\table0$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:128$12_DATA[31:0]$93
+   116/189: $1$mem2reg_rd$\table0$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:128$12_ADDR[5:0]$92
+   117/189: $1$mem2reg_rd$\table3$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:117$11_DATA[31:0]$91
+   118/189: $1$mem2reg_rd$\table3$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:117$11_ADDR[5:0]$90
+   119/189: $1$mem2reg_rd$\table3$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:117$10_DATA[31:0]$89
+   120/189: $1$mem2reg_rd$\table3$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:117$10_ADDR[5:0]$88
+   121/189: $1$mem2reg_rd$\table3$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:116$9_DATA[31:0]$87
+   122/189: $1$mem2reg_rd$\table3$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:116$9_ADDR[5:0]$86
+   123/189: $1$mem2reg_rd$\table2$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:116$8_DATA[31:0]$85
+   124/189: $1$mem2reg_rd$\table2$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:116$8_ADDR[5:0]$84
+   125/189: $1$mem2reg_rd$\table2$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:116$7_DATA[31:0]$83
+   126/189: $1$mem2reg_rd$\table2$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:116$7_ADDR[5:0]$82
+   127/189: $1$mem2reg_rd$\table1$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:116$6_DATA[31:0]$81
+   128/189: $1$mem2reg_rd$\table1$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:116$6_ADDR[5:0]$80
+   129/189: $1$mem2reg_rd$\table1$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:115$5_DATA[31:0]$79
+   130/189: $1$mem2reg_rd$\table1$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:115$5_ADDR[5:0]$78
+   131/189: $1$mem2reg_rd$\table0$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:115$4_DATA[31:0]$77
+   132/189: $1$mem2reg_rd$\table0$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:115$4_ADDR[5:0]$76
+   133/189: $1$mem2reg_rd$\table0$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:115$3_DATA[31:0]$75
+   134/189: $1$mem2reg_rd$\table0$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:115$3_ADDR[5:0]$74
+   135/189: $0$mem2reg_rd$\table_stop$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:129$16_DATA[31:0]$72
+   136/189: $0$mem2reg_rd$\table_stop$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:129$16_ADDR[5:0]$71
+   137/189: $0$mem2reg_rd$\table3$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:129$15_DATA[31:0]$70
+   138/189: $0$mem2reg_rd$\table3$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:129$15_ADDR[5:0]$69
+   139/189: $0$mem2reg_rd$\table2$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:129$14_DATA[31:0]$68
+   140/189: $0$mem2reg_rd$\table2$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:129$14_ADDR[5:0]$67
+   141/189: $0$mem2reg_rd$\table1$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:128$13_DATA[31:0]$66
+   142/189: $0$mem2reg_rd$\table1$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:128$13_ADDR[5:0]$65
+   143/189: $0$mem2reg_rd$\table0$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:128$12_DATA[31:0]$64
+   144/189: $0$mem2reg_rd$\table0$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:128$12_ADDR[5:0]$63
+   145/189: $0$mem2reg_rd$\table3$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:117$11_DATA[31:0]$62
+   146/189: $0$mem2reg_rd$\table3$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:117$11_ADDR[5:0]$61
+   147/189: $0$mem2reg_rd$\table3$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:117$10_DATA[31:0]$60
+   148/189: $0$mem2reg_rd$\table3$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:117$10_ADDR[5:0]$59
+   149/189: $0$mem2reg_rd$\table3$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:116$9_DATA[31:0]$58
+   150/189: $0$mem2reg_rd$\table3$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:116$9_ADDR[5:0]$57
+   151/189: $0$mem2reg_rd$\table2$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:116$8_DATA[31:0]$56
+   152/189: $0$mem2reg_rd$\table2$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:116$8_ADDR[5:0]$55
+   153/189: $0$mem2reg_rd$\table2$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:116$7_DATA[31:0]$54
+   154/189: $0$mem2reg_rd$\table2$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:116$7_ADDR[5:0]$53
+   155/189: $0$mem2reg_rd$\table1$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:116$6_DATA[31:0]$52
+   156/189: $0$mem2reg_rd$\table1$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:116$6_ADDR[5:0]$51
+   157/189: $0$mem2reg_rd$\table1$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:115$5_DATA[31:0]$50
+   158/189: $0$mem2reg_rd$\table1$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:115$5_ADDR[5:0]$49
+   159/189: $0$mem2reg_rd$\table0$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:115$4_DATA[31:0]$48
+   160/189: $0$mem2reg_rd$\table0$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:115$4_ADDR[5:0]$47
+   161/189: $0$mem2reg_rd$\table0$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:115$3_DATA[31:0]$46
+   162/189: $0$mem2reg_rd$\table0$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:115$3_ADDR[5:0]$45
+   163/189: $0\kind_q[0:0]
+   164/189: $0\pending[0:0]
+   165/189: $0\word_index_q[1:0]
+   166/189: $0\kvn_slot_q[0:0]
+   167/189: $0\word_slot_q[0:0]
+   168/189: $0\generation_q[1:0]
+   169/189: $0\identity_q[58:0]
+   170/189: $0\cfg_word[2:0]
+   171/189: $0\cfg_stage[5:0]
+   172/189: $0\next_cfg[7:0]
+   173/189: $0\stage_q[5:0]
+   174/189: $0\stop_q[31:0]
+   175/189: $0\t3[31:0]
+   176/189: $0\t2[31:0]
+   177/189: $0\t1[31:0]
+   178/189: $0\t0[31:0]
+   179/189: $0\expected_address[28:0]
+   180/189: $0\expected_generation[1:0]
+   181/189: $0\expected_identity[58:0]
+   182/189: $0\expected_stack[1:0]
+   183/189: $0\expected_pc[19:0]
+   184/189: $0\expected_valid[3:0]
+   185/189: $0\cycle[31:0]
+   186/189: $0\fault[0:0]
+   187/189: $0\done[0:0]
+   188/189: $0\active[0:0]
+   189/189: $0\configured[0:0]
+Creating decoders for process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:39$18'.
+     1/2: $0\start_p[0:0]
+     2/2: $0\cfg_we_p[0:0]
+Creating decoders for process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:34$17'.
+     1/7: $0\generation_p[1:0]
+     2/7: $0\position_p[12:0]
+     3/7: $0\token_p[17:0]
+     4/7: $0\epoch_p[15:0]
+     5/7: $0\stage_p[5:0]
+     6/7: $0\cfg_data_p[63:0]
+     7/7: $0\cfg_addr_p[7:0]
+
+3.6. Executing PROC_DLATCH pass (convert process syncs to latches).
+No latch inferred for signal `\qkd_kv_native_programme.$func$\group_of$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:85$1$\group_of' from process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:78$437'.
+No latch inferred for signal `\qkd_kv_native_programme.$func$\group_of$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:85$2$\group_of' from process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:78$437'.
+No latch inferred for signal `\qkd_kv_native_programme.$func$\group_of$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:85$2$\logical_group' from process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:78$437'.
+
+3.7. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `\qkd_kv_native_programme.\table0[35]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$432'.
+  created $dff cell `$procdff$3002' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table1[35]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$432'.
+  created $dff cell `$procdff$3003' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table2[35]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$432'.
+  created $dff cell `$procdff$3004' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table3[35]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$432'.
+  created $dff cell `$procdff$3005' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table_stop[35]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$432'.
+  created $dff cell `$procdff$3006' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table0[34]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$427'.
+  created $dff cell `$procdff$3007' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table1[34]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$427'.
+  created $dff cell `$procdff$3008' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table2[34]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$427'.
+  created $dff cell `$procdff$3009' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table3[34]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$427'.
+  created $dff cell `$procdff$3010' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table_stop[34]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$427'.
+  created $dff cell `$procdff$3011' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table0[33]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$422'.
+  created $dff cell `$procdff$3012' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table1[33]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$422'.
+  created $dff cell `$procdff$3013' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table2[33]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$422'.
+  created $dff cell `$procdff$3014' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table3[33]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$422'.
+  created $dff cell `$procdff$3015' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table_stop[33]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$422'.
+  created $dff cell `$procdff$3016' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table0[32]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$417'.
+  created $dff cell `$procdff$3017' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table1[32]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$417'.
+  created $dff cell `$procdff$3018' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table2[32]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$417'.
+  created $dff cell `$procdff$3019' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table3[32]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$417'.
+  created $dff cell `$procdff$3020' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table_stop[32]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$417'.
+  created $dff cell `$procdff$3021' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table0[31]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$412'.
+  created $dff cell `$procdff$3022' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table1[31]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$412'.
+  created $dff cell `$procdff$3023' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table2[31]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$412'.
+  created $dff cell `$procdff$3024' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table3[31]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$412'.
+  created $dff cell `$procdff$3025' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table_stop[31]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$412'.
+  created $dff cell `$procdff$3026' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table0[30]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$407'.
+  created $dff cell `$procdff$3027' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table1[30]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$407'.
+  created $dff cell `$procdff$3028' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table2[30]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$407'.
+  created $dff cell `$procdff$3029' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table3[30]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$407'.
+  created $dff cell `$procdff$3030' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table_stop[30]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$407'.
+  created $dff cell `$procdff$3031' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table0[29]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$402'.
+  created $dff cell `$procdff$3032' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table1[29]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$402'.
+  created $dff cell `$procdff$3033' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table2[29]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$402'.
+  created $dff cell `$procdff$3034' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table3[29]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$402'.
+  created $dff cell `$procdff$3035' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table_stop[29]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$402'.
+  created $dff cell `$procdff$3036' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table0[28]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$397'.
+  created $dff cell `$procdff$3037' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table1[28]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$397'.
+  created $dff cell `$procdff$3038' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table2[28]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$397'.
+  created $dff cell `$procdff$3039' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table3[28]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$397'.
+  created $dff cell `$procdff$3040' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table_stop[28]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$397'.
+  created $dff cell `$procdff$3041' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table0[27]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$392'.
+  created $dff cell `$procdff$3042' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table1[27]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$392'.
+  created $dff cell `$procdff$3043' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table2[27]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$392'.
+  created $dff cell `$procdff$3044' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table3[27]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$392'.
+  created $dff cell `$procdff$3045' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table_stop[27]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$392'.
+  created $dff cell `$procdff$3046' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table0[26]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$387'.
+  created $dff cell `$procdff$3047' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table1[26]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$387'.
+  created $dff cell `$procdff$3048' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table2[26]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$387'.
+  created $dff cell `$procdff$3049' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table3[26]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$387'.
+  created $dff cell `$procdff$3050' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table_stop[26]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$387'.
+  created $dff cell `$procdff$3051' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table0[25]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$382'.
+  created $dff cell `$procdff$3052' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table1[25]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$382'.
+  created $dff cell `$procdff$3053' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table2[25]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$382'.
+  created $dff cell `$procdff$3054' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table3[25]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$382'.
+  created $dff cell `$procdff$3055' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table_stop[25]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$382'.
+  created $dff cell `$procdff$3056' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table0[24]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$377'.
+  created $dff cell `$procdff$3057' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table1[24]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$377'.
+  created $dff cell `$procdff$3058' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table2[24]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$377'.
+  created $dff cell `$procdff$3059' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table3[24]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$377'.
+  created $dff cell `$procdff$3060' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table_stop[24]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$377'.
+  created $dff cell `$procdff$3061' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table0[23]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$372'.
+  created $dff cell `$procdff$3062' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table1[23]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$372'.
+  created $dff cell `$procdff$3063' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table2[23]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$372'.
+  created $dff cell `$procdff$3064' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table3[23]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$372'.
+  created $dff cell `$procdff$3065' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table_stop[23]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$372'.
+  created $dff cell `$procdff$3066' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table0[22]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$367'.
+  created $dff cell `$procdff$3067' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table1[22]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$367'.
+  created $dff cell `$procdff$3068' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table2[22]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$367'.
+  created $dff cell `$procdff$3069' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table3[22]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$367'.
+  created $dff cell `$procdff$3070' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table_stop[22]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$367'.
+  created $dff cell `$procdff$3071' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table0[21]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$362'.
+  created $dff cell `$procdff$3072' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table1[21]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$362'.
+  created $dff cell `$procdff$3073' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table2[21]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$362'.
+  created $dff cell `$procdff$3074' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table3[21]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$362'.
+  created $dff cell `$procdff$3075' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table_stop[21]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$362'.
+  created $dff cell `$procdff$3076' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table0[20]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$357'.
+  created $dff cell `$procdff$3077' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table1[20]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$357'.
+  created $dff cell `$procdff$3078' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table2[20]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$357'.
+  created $dff cell `$procdff$3079' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table3[20]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$357'.
+  created $dff cell `$procdff$3080' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table_stop[20]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$357'.
+  created $dff cell `$procdff$3081' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table0[19]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$352'.
+  created $dff cell `$procdff$3082' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table1[19]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$352'.
+  created $dff cell `$procdff$3083' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table2[19]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$352'.
+  created $dff cell `$procdff$3084' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table3[19]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$352'.
+  created $dff cell `$procdff$3085' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table_stop[19]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$352'.
+  created $dff cell `$procdff$3086' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table0[18]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$347'.
+  created $dff cell `$procdff$3087' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table1[18]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$347'.
+  created $dff cell `$procdff$3088' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table2[18]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$347'.
+  created $dff cell `$procdff$3089' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table3[18]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$347'.
+  created $dff cell `$procdff$3090' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table_stop[18]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$347'.
+  created $dff cell `$procdff$3091' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table0[17]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$342'.
+  created $dff cell `$procdff$3092' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table1[17]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$342'.
+  created $dff cell `$procdff$3093' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table2[17]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$342'.
+  created $dff cell `$procdff$3094' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table3[17]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$342'.
+  created $dff cell `$procdff$3095' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table_stop[17]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$342'.
+  created $dff cell `$procdff$3096' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table0[16]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$337'.
+  created $dff cell `$procdff$3097' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table1[16]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$337'.
+  created $dff cell `$procdff$3098' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table2[16]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$337'.
+  created $dff cell `$procdff$3099' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table3[16]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$337'.
+  created $dff cell `$procdff$3100' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table_stop[16]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$337'.
+  created $dff cell `$procdff$3101' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table0[15]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$332'.
+  created $dff cell `$procdff$3102' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table1[15]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$332'.
+  created $dff cell `$procdff$3103' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table2[15]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$332'.
+  created $dff cell `$procdff$3104' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table3[15]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$332'.
+  created $dff cell `$procdff$3105' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table_stop[15]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$332'.
+  created $dff cell `$procdff$3106' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table0[14]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$327'.
+  created $dff cell `$procdff$3107' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table1[14]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$327'.
+  created $dff cell `$procdff$3108' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table2[14]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$327'.
+  created $dff cell `$procdff$3109' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table3[14]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$327'.
+  created $dff cell `$procdff$3110' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table_stop[14]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$327'.
+  created $dff cell `$procdff$3111' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table0[13]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$322'.
+  created $dff cell `$procdff$3112' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table1[13]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$322'.
+  created $dff cell `$procdff$3113' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table2[13]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$322'.
+  created $dff cell `$procdff$3114' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table3[13]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$322'.
+  created $dff cell `$procdff$3115' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table_stop[13]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$322'.
+  created $dff cell `$procdff$3116' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table0[12]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$317'.
+  created $dff cell `$procdff$3117' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table1[12]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$317'.
+  created $dff cell `$procdff$3118' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table2[12]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$317'.
+  created $dff cell `$procdff$3119' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table3[12]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$317'.
+  created $dff cell `$procdff$3120' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table_stop[12]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$317'.
+  created $dff cell `$procdff$3121' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table0[11]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$312'.
+  created $dff cell `$procdff$3122' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table1[11]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$312'.
+  created $dff cell `$procdff$3123' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table2[11]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$312'.
+  created $dff cell `$procdff$3124' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table3[11]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$312'.
+  created $dff cell `$procdff$3125' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table_stop[11]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$312'.
+  created $dff cell `$procdff$3126' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table0[10]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$307'.
+  created $dff cell `$procdff$3127' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table1[10]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$307'.
+  created $dff cell `$procdff$3128' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table2[10]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$307'.
+  created $dff cell `$procdff$3129' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table3[10]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$307'.
+  created $dff cell `$procdff$3130' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table_stop[10]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$307'.
+  created $dff cell `$procdff$3131' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table0[9]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$302'.
+  created $dff cell `$procdff$3132' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table1[9]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$302'.
+  created $dff cell `$procdff$3133' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table2[9]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$302'.
+  created $dff cell `$procdff$3134' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table3[9]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$302'.
+  created $dff cell `$procdff$3135' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table_stop[9]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$302'.
+  created $dff cell `$procdff$3136' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table0[8]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$297'.
+  created $dff cell `$procdff$3137' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table1[8]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$297'.
+  created $dff cell `$procdff$3138' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table2[8]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$297'.
+  created $dff cell `$procdff$3139' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table3[8]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$297'.
+  created $dff cell `$procdff$3140' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table_stop[8]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$297'.
+  created $dff cell `$procdff$3141' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table0[7]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$292'.
+  created $dff cell `$procdff$3142' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table1[7]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$292'.
+  created $dff cell `$procdff$3143' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table2[7]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$292'.
+  created $dff cell `$procdff$3144' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table3[7]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$292'.
+  created $dff cell `$procdff$3145' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table_stop[7]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$292'.
+  created $dff cell `$procdff$3146' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table0[6]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$287'.
+  created $dff cell `$procdff$3147' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table1[6]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$287'.
+  created $dff cell `$procdff$3148' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table2[6]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$287'.
+  created $dff cell `$procdff$3149' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table3[6]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$287'.
+  created $dff cell `$procdff$3150' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table_stop[6]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$287'.
+  created $dff cell `$procdff$3151' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table0[5]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$282'.
+  created $dff cell `$procdff$3152' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table1[5]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$282'.
+  created $dff cell `$procdff$3153' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table2[5]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$282'.
+  created $dff cell `$procdff$3154' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table3[5]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$282'.
+  created $dff cell `$procdff$3155' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table_stop[5]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$282'.
+  created $dff cell `$procdff$3156' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table0[4]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$277'.
+  created $dff cell `$procdff$3157' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table1[4]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$277'.
+  created $dff cell `$procdff$3158' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table2[4]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$277'.
+  created $dff cell `$procdff$3159' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table3[4]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$277'.
+  created $dff cell `$procdff$3160' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table_stop[4]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$277'.
+  created $dff cell `$procdff$3161' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table0[3]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$272'.
+  created $dff cell `$procdff$3162' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table1[3]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$272'.
+  created $dff cell `$procdff$3163' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table2[3]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$272'.
+  created $dff cell `$procdff$3164' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table3[3]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$272'.
+  created $dff cell `$procdff$3165' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table_stop[3]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$272'.
+  created $dff cell `$procdff$3166' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table0[2]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$267'.
+  created $dff cell `$procdff$3167' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table1[2]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$267'.
+  created $dff cell `$procdff$3168' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table2[2]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$267'.
+  created $dff cell `$procdff$3169' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table3[2]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$267'.
+  created $dff cell `$procdff$3170' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table_stop[2]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$267'.
+  created $dff cell `$procdff$3171' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table0[1]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$262'.
+  created $dff cell `$procdff$3172' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table1[1]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$262'.
+  created $dff cell `$procdff$3173' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table2[1]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$262'.
+  created $dff cell `$procdff$3174' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table3[1]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$262'.
+  created $dff cell `$procdff$3175' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table_stop[1]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$262'.
+  created $dff cell `$procdff$3176' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table0[0]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$257'.
+  created $dff cell `$procdff$3177' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table1[0]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$257'.
+  created $dff cell `$procdff$3178' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table2[0]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$257'.
+  created $dff cell `$procdff$3179' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table3[0]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$257'.
+  created $dff cell `$procdff$3180' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\table_stop[0]' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$257'.
+  created $dff cell `$procdff$3181' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\configured' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:86$44'.
+  created $adff cell `$procdff$3182' with positive edge clock and negative level reset.
+Creating register for signal `\qkd_kv_native_programme.\active' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:86$44'.
+  created $adff cell `$procdff$3183' with positive edge clock and negative level reset.
+Creating register for signal `\qkd_kv_native_programme.\done' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:86$44'.
+  created $adff cell `$procdff$3184' with positive edge clock and negative level reset.
+Creating register for signal `\qkd_kv_native_programme.\fault' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:86$44'.
+  created $adff cell `$procdff$3185' with positive edge clock and negative level reset.
+Creating register for signal `\qkd_kv_native_programme.\cycle' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:86$44'.
+  created $adff cell `$procdff$3186' with positive edge clock and negative level reset.
+Creating register for signal `\qkd_kv_native_programme.\expected_valid' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:86$44'.
+  created $adff cell `$procdff$3187' with positive edge clock and negative level reset.
+Creating register for signal `\qkd_kv_native_programme.\expected_pc' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:86$44'.
+  created $adff cell `$procdff$3188' with positive edge clock and negative level reset.
+Creating register for signal `\qkd_kv_native_programme.\expected_stack' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:86$44'.
+  created $adff cell `$procdff$3189' with positive edge clock and negative level reset.
+Creating register for signal `\qkd_kv_native_programme.\expected_identity' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:86$44'.
+  created $adff cell `$procdff$3190' with positive edge clock and negative level reset.
+Creating register for signal `\qkd_kv_native_programme.\expected_generation' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:86$44'.
+  created $adff cell `$procdff$3191' with positive edge clock and negative level reset.
+Creating register for signal `\qkd_kv_native_programme.\expected_address' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:86$44'.
+  created $adff cell `$procdff$3192' with positive edge clock and negative level reset.
+Creating register for signal `\qkd_kv_native_programme.\t0' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:86$44'.
+  created $adff cell `$procdff$3193' with positive edge clock and negative level reset.
+Creating register for signal `\qkd_kv_native_programme.\t1' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:86$44'.
+  created $adff cell `$procdff$3194' with positive edge clock and negative level reset.
+Creating register for signal `\qkd_kv_native_programme.\t2' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:86$44'.
+  created $adff cell `$procdff$3195' with positive edge clock and negative level reset.
+Creating register for signal `\qkd_kv_native_programme.\t3' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:86$44'.
+  created $adff cell `$procdff$3196' with positive edge clock and negative level reset.
+Creating register for signal `\qkd_kv_native_programme.\stop_q' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:86$44'.
+  created $adff cell `$procdff$3197' with positive edge clock and negative level reset.
+Creating register for signal `\qkd_kv_native_programme.\stage_q' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:86$44'.
+  created $adff cell `$procdff$3198' with positive edge clock and negative level reset.
+Creating register for signal `\qkd_kv_native_programme.\next_cfg' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:86$44'.
+  created $adff cell `$procdff$3199' with positive edge clock and negative level reset.
+Creating register for signal `\qkd_kv_native_programme.\cfg_stage' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:86$44'.
+  created $adff cell `$procdff$3200' with positive edge clock and negative level reset.
+Creating register for signal `\qkd_kv_native_programme.\cfg_word' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:86$44'.
+  created $adff cell `$procdff$3201' with positive edge clock and negative level reset.
+Creating register for signal `\qkd_kv_native_programme.\identity_q' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:86$44'.
+  created $adff cell `$procdff$3202' with positive edge clock and negative level reset.
+Creating register for signal `\qkd_kv_native_programme.\generation_q' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:86$44'.
+  created $adff cell `$procdff$3203' with positive edge clock and negative level reset.
+Creating register for signal `\qkd_kv_native_programme.\word_slot_q' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:86$44'.
+  created $adff cell `$procdff$3204' with positive edge clock and negative level reset.
+Creating register for signal `\qkd_kv_native_programme.\kvn_slot_q' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:86$44'.
+  created $adff cell `$procdff$3205' with positive edge clock and negative level reset.
+Creating register for signal `\qkd_kv_native_programme.\word_index_q' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:86$44'.
+  created $adff cell `$procdff$3206' with positive edge clock and negative level reset.
+Creating register for signal `\qkd_kv_native_programme.\pending' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:86$44'.
+  created $adff cell `$procdff$3207' with positive edge clock and negative level reset.
+Creating register for signal `\qkd_kv_native_programme.\kind_q' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:86$44'.
+  created $adff cell `$procdff$3208' with positive edge clock and negative level reset.
+Creating register for signal `\qkd_kv_native_programme.$mem2reg_rd$\table0$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:115$3_ADDR' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:86$44'.
+  created $adff cell `$procdff$3209' with positive edge clock and negative level reset.
+Creating register for signal `\qkd_kv_native_programme.$mem2reg_rd$\table0$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:115$3_DATA' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:86$44'.
+  created $adff cell `$procdff$3210' with positive edge clock and negative level reset.
+Creating register for signal `\qkd_kv_native_programme.$mem2reg_rd$\table0$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:115$4_ADDR' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:86$44'.
+  created $adff cell `$procdff$3211' with positive edge clock and negative level reset.
+Creating register for signal `\qkd_kv_native_programme.$mem2reg_rd$\table0$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:115$4_DATA' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:86$44'.
+  created $adff cell `$procdff$3212' with positive edge clock and negative level reset.
+Creating register for signal `\qkd_kv_native_programme.$mem2reg_rd$\table1$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:115$5_ADDR' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:86$44'.
+  created $adff cell `$procdff$3213' with positive edge clock and negative level reset.
+Creating register for signal `\qkd_kv_native_programme.$mem2reg_rd$\table1$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:115$5_DATA' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:86$44'.
+  created $adff cell `$procdff$3214' with positive edge clock and negative level reset.
+Creating register for signal `\qkd_kv_native_programme.$mem2reg_rd$\table1$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:116$6_ADDR' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:86$44'.
+  created $adff cell `$procdff$3215' with positive edge clock and negative level reset.
+Creating register for signal `\qkd_kv_native_programme.$mem2reg_rd$\table1$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:116$6_DATA' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:86$44'.
+  created $adff cell `$procdff$3216' with positive edge clock and negative level reset.
+Creating register for signal `\qkd_kv_native_programme.$mem2reg_rd$\table2$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:116$7_ADDR' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:86$44'.
+  created $adff cell `$procdff$3217' with positive edge clock and negative level reset.
+Creating register for signal `\qkd_kv_native_programme.$mem2reg_rd$\table2$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:116$7_DATA' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:86$44'.
+  created $adff cell `$procdff$3218' with positive edge clock and negative level reset.
+Creating register for signal `\qkd_kv_native_programme.$mem2reg_rd$\table2$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:116$8_ADDR' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:86$44'.
+  created $adff cell `$procdff$3219' with positive edge clock and negative level reset.
+Creating register for signal `\qkd_kv_native_programme.$mem2reg_rd$\table2$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:116$8_DATA' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:86$44'.
+  created $adff cell `$procdff$3220' with positive edge clock and negative level reset.
+Creating register for signal `\qkd_kv_native_programme.$mem2reg_rd$\table3$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:116$9_ADDR' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:86$44'.
+  created $adff cell `$procdff$3221' with positive edge clock and negative level reset.
+Creating register for signal `\qkd_kv_native_programme.$mem2reg_rd$\table3$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:116$9_DATA' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:86$44'.
+  created $adff cell `$procdff$3222' with positive edge clock and negative level reset.
+Creating register for signal `\qkd_kv_native_programme.$mem2reg_rd$\table3$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:117$10_ADDR' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:86$44'.
+  created $adff cell `$procdff$3223' with positive edge clock and negative level reset.
+Creating register for signal `\qkd_kv_native_programme.$mem2reg_rd$\table3$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:117$10_DATA' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:86$44'.
+  created $adff cell `$procdff$3224' with positive edge clock and negative level reset.
+Creating register for signal `\qkd_kv_native_programme.$mem2reg_rd$\table3$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:117$11_ADDR' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:86$44'.
+  created $adff cell `$procdff$3225' with positive edge clock and negative level reset.
+Creating register for signal `\qkd_kv_native_programme.$mem2reg_rd$\table3$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:117$11_DATA' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:86$44'.
+  created $adff cell `$procdff$3226' with positive edge clock and negative level reset.
+Creating register for signal `\qkd_kv_native_programme.$mem2reg_rd$\table0$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:128$12_ADDR' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:86$44'.
+  created $adff cell `$procdff$3227' with positive edge clock and negative level reset.
+Creating register for signal `\qkd_kv_native_programme.$mem2reg_rd$\table0$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:128$12_DATA' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:86$44'.
+  created $adff cell `$procdff$3228' with positive edge clock and negative level reset.
+Creating register for signal `\qkd_kv_native_programme.$mem2reg_rd$\table1$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:128$13_ADDR' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:86$44'.
+  created $adff cell `$procdff$3229' with positive edge clock and negative level reset.
+Creating register for signal `\qkd_kv_native_programme.$mem2reg_rd$\table1$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:128$13_DATA' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:86$44'.
+  created $adff cell `$procdff$3230' with positive edge clock and negative level reset.
+Creating register for signal `\qkd_kv_native_programme.$mem2reg_rd$\table2$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:129$14_ADDR' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:86$44'.
+  created $adff cell `$procdff$3231' with positive edge clock and negative level reset.
+Creating register for signal `\qkd_kv_native_programme.$mem2reg_rd$\table2$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:129$14_DATA' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:86$44'.
+  created $adff cell `$procdff$3232' with positive edge clock and negative level reset.
+Creating register for signal `\qkd_kv_native_programme.$mem2reg_rd$\table3$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:129$15_ADDR' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:86$44'.
+  created $adff cell `$procdff$3233' with positive edge clock and negative level reset.
+Creating register for signal `\qkd_kv_native_programme.$mem2reg_rd$\table3$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:129$15_DATA' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:86$44'.
+  created $adff cell `$procdff$3234' with positive edge clock and negative level reset.
+Creating register for signal `\qkd_kv_native_programme.$mem2reg_rd$\table_stop$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:129$16_ADDR' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:86$44'.
+  created $adff cell `$procdff$3235' with positive edge clock and negative level reset.
+Creating register for signal `\qkd_kv_native_programme.$mem2reg_rd$\table_stop$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:129$16_DATA' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:86$44'.
+  created $adff cell `$procdff$3236' with positive edge clock and negative level reset.
+Creating register for signal `\qkd_kv_native_programme.\cfg_we_p' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:39$18'.
+  created $adff cell `$procdff$3237' with positive edge clock and negative level reset.
+Creating register for signal `\qkd_kv_native_programme.\start_p' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:39$18'.
+  created $adff cell `$procdff$3238' with positive edge clock and negative level reset.
+Creating register for signal `\qkd_kv_native_programme.\cfg_addr_p' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:34$17'.
+  created $dff cell `$procdff$3239' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\cfg_data_p' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:34$17'.
+  created $dff cell `$procdff$3240' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\stage_p' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:34$17'.
+  created $dff cell `$procdff$3241' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\epoch_p' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:34$17'.
+  created $dff cell `$procdff$3242' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\token_p' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:34$17'.
+  created $dff cell `$procdff$3243' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\position_p' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:34$17'.
+  created $dff cell `$procdff$3244' with positive edge clock.
+Creating register for signal `\qkd_kv_native_programme.\generation_p' using process `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:34$17'.
+  created $dff cell `$procdff$3245' with positive edge clock.
+
+3.8. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 1 empty switch in `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:78$437'.
+Removing empty process `qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:78$437'.
+Found and cleaned up 2 empty switches in `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$432'.
+Removing empty process `qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$432'.
+Found and cleaned up 2 empty switches in `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$427'.
+Removing empty process `qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$427'.
+Found and cleaned up 2 empty switches in `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$422'.
+Removing empty process `qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$422'.
+Found and cleaned up 2 empty switches in `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$417'.
+Removing empty process `qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$417'.
+Found and cleaned up 2 empty switches in `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$412'.
+Removing empty process `qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$412'.
+Found and cleaned up 2 empty switches in `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$407'.
+Removing empty process `qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$407'.
+Found and cleaned up 2 empty switches in `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$402'.
+Removing empty process `qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$402'.
+Found and cleaned up 2 empty switches in `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$397'.
+Removing empty process `qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$397'.
+Found and cleaned up 2 empty switches in `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$392'.
+Removing empty process `qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$392'.
+Found and cleaned up 2 empty switches in `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$387'.
+Removing empty process `qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$387'.
+Found and cleaned up 2 empty switches in `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$382'.
+Removing empty process `qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$382'.
+Found and cleaned up 2 empty switches in `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$377'.
+Removing empty process `qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$377'.
+Found and cleaned up 2 empty switches in `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$372'.
+Removing empty process `qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$372'.
+Found and cleaned up 2 empty switches in `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$367'.
+Removing empty process `qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$367'.
+Found and cleaned up 2 empty switches in `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$362'.
+Removing empty process `qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$362'.
+Found and cleaned up 2 empty switches in `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$357'.
+Removing empty process `qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$357'.
+Found and cleaned up 2 empty switches in `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$352'.
+Removing empty process `qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$352'.
+Found and cleaned up 2 empty switches in `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$347'.
+Removing empty process `qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$347'.
+Found and cleaned up 2 empty switches in `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$342'.
+Removing empty process `qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$342'.
+Found and cleaned up 2 empty switches in `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$337'.
+Removing empty process `qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$337'.
+Found and cleaned up 2 empty switches in `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$332'.
+Removing empty process `qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$332'.
+Found and cleaned up 2 empty switches in `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$327'.
+Removing empty process `qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$327'.
+Found and cleaned up 2 empty switches in `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$322'.
+Removing empty process `qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$322'.
+Found and cleaned up 2 empty switches in `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$317'.
+Removing empty process `qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$317'.
+Found and cleaned up 2 empty switches in `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$312'.
+Removing empty process `qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$312'.
+Found and cleaned up 2 empty switches in `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$307'.
+Removing empty process `qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$307'.
+Found and cleaned up 2 empty switches in `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$302'.
+Removing empty process `qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$302'.
+Found and cleaned up 2 empty switches in `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$297'.
+Removing empty process `qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$297'.
+Found and cleaned up 2 empty switches in `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$292'.
+Removing empty process `qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$292'.
+Found and cleaned up 2 empty switches in `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$287'.
+Removing empty process `qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$287'.
+Found and cleaned up 2 empty switches in `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$282'.
+Removing empty process `qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$282'.
+Found and cleaned up 2 empty switches in `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$277'.
+Removing empty process `qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$277'.
+Found and cleaned up 2 empty switches in `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$272'.
+Removing empty process `qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$272'.
+Found and cleaned up 2 empty switches in `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$267'.
+Removing empty process `qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$267'.
+Found and cleaned up 2 empty switches in `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$262'.
+Removing empty process `qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$262'.
+Found and cleaned up 2 empty switches in `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$257'.
+Removing empty process `qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:51$257'.
+Found and cleaned up 29 empty switches in `\qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:86$44'.
+Removing empty process `qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:86$44'.
+Removing empty process `qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:39$18'.
+Removing empty process `qkd_kv_native_programme.$proc$/home/ubuntu/wt/codex-qwen-kv-programme-1103/rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:34$17'.
+Cleaned up 102 empty switches.
+
+4. Executing MEMORY_MAP pass (converting $mem cells to logic and flip-flops).
+
+5. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \qkd_kv_native_programme..
+Removed 240 unused cells and 1135 unused wires.
+<suppressed ~241 debug messages>
+
+6. Executing JSON backend.
