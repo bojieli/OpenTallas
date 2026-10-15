@@ -1,5 +1,6 @@
 import hashlib,json,pathlib,subprocess,sys,tempfile,unittest
 from fec_bit_graph import CLOCKS
+from fec_tt_cells import check_lef_areas
 class TTAuditTest(unittest.TestCase):
  def run_case(self,defect=None):
   with tempfile.TemporaryDirectory() as d:
@@ -22,4 +23,9 @@ class TTAuditTest(unittest.TestCase):
  def test_residual_generic_fails(self):self.run_case('residual')
  def test_undeclared_clock_fails(self):self.run_case('clock')
  def test_state_count_change_fails(self):self.run_case('state')
+ def test_lef_matches_area_and_rejects_wrong_scale(self):
+  with tempfile.TemporaryDirectory() as d:
+   p=pathlib.Path(d)/'cell.lef';p.write_text('MACRO ff1\n SIZE 1.08 BY 0.27 ;\nEND ff1\n')
+   self.assertTrue(check_lef_areas(p,{'ff1':{'area':0.2916}})['all_library_cells_match_actual_lef_area'])
+   with self.assertRaises(AssertionError):check_lef_areas(p,{'ff1':{'area':291600}})
 if __name__=='__main__':unittest.main()

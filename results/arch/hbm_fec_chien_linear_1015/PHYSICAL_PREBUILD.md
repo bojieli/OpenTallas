@@ -184,3 +184,13 @@ period with explicit ideal-wire/common-phase assumptions, no CTS/SPEF, no
 qualified external driver/load, and no reset recovery/removal signoff. Geometry
 outline, real face pins, track capacity, delivered phases, mapped total area and
 whole-joined physical qualification all remain open.
+
+The real RVT TT library area units are independently checked against the pinned
+PDK's actual 1x LEF: all 202 cells have a matching macro and equal width × height.
+`physical_prebuild/area_lef_check.json` binds image, five libraries, actual LEF
+and checker hashes. A library area unit is therefore one µm² of cell footprint
+for this kit. This establishes units for the eventual mapped total; it does not
+price placement whitespace, clock tree, buffering or routing. The fail-closed
+post-map audit also requires every clock root's FF count to match the cached
+scalar source exactly. Five tests cover area parsing, residual generic gates,
+unknown clocks, changed state inventory and incorrect LEF scaling.
