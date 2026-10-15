@@ -1,4 +1,6 @@
 `timescale 1ns/1ps
+// HISTORICAL (OWNER 2026-10-14T23:16 HANDOFF 0an): credit/ready flow control on an on-chip HBM path. Diagnostic/component
+// evidence only; NOT the production schedule. Being replaced by compiler-assigned fixed transfer slots (H-COLL plan, el1014-hbm-p2p-coll.log).
 // ---------------------------------------------------------------------------
 // ot_hbm_accel_tu_endpoint_qpsg (HBM peer-to-peer step 1, 2026-10-14): the quadrant engine's endpoint, derived from
 // rtl/hbm_accel/tu/ot_hbm_accel_tu_endpoint_psg.sv @ main d2940fc0a (that file is untouched).  ONE difference, the die-

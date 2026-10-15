@@ -35,5 +35,16 @@ class IoBudget(unittest.TestCase):
             RT.spec_io_budget(dict(BASE, clock='multiple_cts_roots', io_budget={'out': 0.6}))
 
 
+class OutPad(unittest.TestCase):
+    def test_out_cell(self):
+        s = dict(BASE, inhold=True, outhold=True, hold_pad={'cell': 'HB2xp67_ASAP7_75t_R', 'out_cell': 'HB1xp67_ASAP7_75t_R'})
+        v = RT.hold_pad_vars(s)
+        self.assertIn('--orfs-var OT_INHOLD_MASTER=HB2xp67_ASAP7_75t_R', v)
+        self.assertIn('--orfs-var OT_OUTHOLD_MASTER=HB1xp67_ASAP7_75t_R', v)
+        self.assertNotIn('OT_OUTHOLD_MASTER', ' '.join(RT.hold_pad_vars(dict(s, hold_pad={'cell': 'HB2xp67_ASAP7_75t_R'}))))
+        with self.assertRaises(RT.SpecError):
+            RT.hold_pad_vars(dict(s, outhold=False))
+
+
 if __name__ == '__main__':
     unittest.main()

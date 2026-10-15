@@ -1,0 +1,76 @@
+{
+ "schema": "opentallas.hier_contract.child_lint.v1",
+ "lef": "/srv/opentallas-scratch2/claude/closure-loop/hv15_vm_status4_margin1-takeover-67e4e876b/record/views/ot_vms_status4_static/ot_vms_status4_static.lef",
+ "verdict": "PASS",
+ "fails": [],
+ "warns": [
+  "(f) face-pin access: 97 of 97 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. clk M4 (0.060,3.408), quadrant_status[0] M4 (0.060,3.408), quadrant_status[10] M4 (0.060,3.408))"
+ ],
+ "summary": "ot_vms_status4_static 17.28 x 19.44: PG M5 VDD 3 stripes (62% spread, 100% cov) / VSS 3 stripes (62% spread, 100% cov); strap M6; face pins 97 blocked-above 0 blocked-same 0; clock clk insertion 85 ps; pockets M5 0 (closed)",
+ "info": {
+  "cell": "ot_vms_status4_static",
+  "W": 17.28,
+  "H": 19.44,
+  "pg": {
+   "nets": {
+    "VDD": {
+     "top_layer": "M5",
+     "stripes": 3,
+     "dir": "V",
+     "spread": 0.625,
+     "coverage": 1.0,
+     "shapes_on_top": 3
+    },
+    "VSS": {
+     "top_layer": "M5",
+     "stripes": 3,
+     "dir": "V",
+     "spread": 0.625,
+     "coverage": 1.0,
+     "shapes_on_top": 3
+    }
+   },
+   "top_layer": "M5",
+   "ok": true,
+   "why": []
+  },
+  "pg_layer": "M5",
+  "strap_layer": "M6",
+  "cap": null,
+  "face": {
+   "face_pins": 97,
+   "blocked_above": 0,
+   "covered_below": 6,
+   "examples": [],
+   "blocked_same": 0,
+   "same_examples": [],
+   "band_same": 97,
+   "band_examples": [
+    "clk M4 (0.060,3.408)",
+    "quadrant_status[0] M4 (0.060,3.408)",
+    "quadrant_status[10] M4 (0.060,3.408)",
+    "quadrant_status[11] M4 (0.060,3.408)",
+    "quadrant_status[12] M4 (0.060,3.408)",
+    "quadrant_status[13] M4 (0.060,3.408)"
+   ]
+  },
+  "clock_insertion": {
+   "clk": {
+    "max_ps": 85.22,
+    "min_ps": 72.65
+   }
+  },
+  "pockets": {
+   "layer": "M5",
+   "d_um": 1.536,
+   "marker": {
+    "layer": "M5",
+    "d_um": 1.536,
+    "added": 5
+   },
+   "count": 0,
+   "area_um2": 0,
+   "examples": []
+  }
+ }
+}

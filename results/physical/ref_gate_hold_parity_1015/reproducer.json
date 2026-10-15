@@ -1,0 +1,41 @@
+{
+  "scope": "Existing actual CTfx gate/production discrepancy; no hardware rerun, no causal claim for GPL failure",
+  "old_gate_shell_command": "SRC=$R/src SYNTH_TIMEOUT=unlimited OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/s81hc_ctfx_reset_native_ref/kit.env gate $R/routes floorplan",
+  "actual_production_command": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/s81hc_ctfx_reset_native_ref/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/s81hc_ctfx_reset_native_ref/kit.env {LABEL} {RUN}/routes",
+  "daemon_route_environment": {
+    "OT_ROUTE_HOLD_CORNERS": "mm"
+  },
+  "actual_old_gate_config": {
+    "HOLD_SLACK_MARGIN": 10,
+    "OT_HOLD_MM": null,
+    "OT_MM_FF_SDC": null,
+    "OT_CTS_FIX_HOOKS": null
+  },
+  "actual_production_config": {
+    "HOLD_SLACK_MARGIN": 30,
+    "OT_HOLD_MM": 1,
+    "OT_MM_FF_SDC": "/src/physical/ref_tile/s81hc_ctfx_reset_native_ref/signoff.sdc",
+    "OT_CTS_FIX_HOOKS": "physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl"
+  },
+  "owned_anchor_counts": {
+    "copied_odb_before": 6810,
+    "copied_odb_after": 6810,
+    "passing_old_context_gate": 6810,
+    "failing_actual_production_gpl": 6810
+  },
+  "maximum_anchor_move_um": 58.59,
+  "source_spec_route": {
+    "pd": 0.5,
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "hold_margin_ns": 0.03,
+    "macro_halo_um": 5.4
+  },
+  "old_gate_status": "WARN zero FAIL, CTS completed",
+  "production_status": "NEEDS_HUMAN: GPL-0305 twice",
+  "new_contract": "Gate derives HM/MM/FF-SDC from same generator context as route; includes actual physical CTS hooks; legacy gate flagged diagnostic, existing CLOSED stands untouched.",
+  "original_config_sha256": {
+    "gate_config.mk": "5f4091601ca788dcc99629a0d333fb2155329f7dd6f530b21fe14a1e68d7dc24",
+    "production_config.mk": "f1df972b6aced756420e8e07a588717565ef474753426d8b53d29d47126843f9"
+  }
+}

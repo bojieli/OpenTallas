@@ -1,0 +1,92 @@
+{
+ "kind": "tile",
+ "macros": [],
+ "recipe": 2,
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "layer_cap": "M5",
+ "name": "dsfd_vm_static_cap_ctl_1015_r2",
+ "top": "dsfd_vm_static_cap_ctl",
+ "sources": [
+  "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_cap.sv"
+ ],
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 21.6,
+  "h": 21.6,
+  "exact": true
+ },
+ "pins": {
+  "W": [
+   "ck",
+   "rst_n",
+   "st_live",
+   "st_drn",
+   "st_flt"
+  ],
+  "E": [
+   "rn",
+   "flush",
+   "s_flt"
+  ],
+  "N": [],
+  "S": []
+ },
+ "route": {
+  "pd": 0.4,
+  "threads": 8,
+  "peak_ram_gb": 16,
+  "period_ps": 770,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "structural_change": "Capture control root (ck_cap_control_s) hardened as its own leaf: the parent's reset-release pair, status pin register (3 used bits), drained edge, armed and sticky status fault moved unchanged (no edge added); production cap16 bench identical (1735 full / 8 partial, fault modes 1-5).",
+ "slot_change_request": {
+  "contract": "S81 VM capture face native geometry candidate (F2 1015)",
+  "version": "claude/s81-cap-pre-1015",
+  "why": "New category masters (ABI ck_cap_control_s / ck_cap_x34_s / ck_cap_x34_t) with no prior slot; die geometry reservation required before parent adoption"
+ },
+ "job": {
+  "owner": "claude:S81 VM F2 capture",
+  "branch": "claude/s81-cap-pre-1015",
+  "tag": "native2",
+  "purpose": "Native ck_cap_control_s master: exact production cap16 bench + flush mutant, TT/FF/DRC0 + measured R",
+  "benches": [
+   {
+    "name": "cap_prod",
+    "cmd": "bash tools/s81_vm/native_cap_pipe_bench.sh {RUN}/cap_prod base 2",
+    "expect": "pass",
+    "pass_regex": "TB_VMCAP PASS mode 0",
+    "threads": 1,
+    "peak_ram_gb": 4
+   },
+   {
+    "name": "neg_flush",
+    "cmd": "bash tools/s81_vm/native_cap_pipe_bench.sh {RUN}/neg_flush flush 2",
+    "expect": "fail",
+    "fail_regex": "TB_VMCAP FAIL mode 0",
+    "threads": 1,
+    "peak_ram_gb": 4
+   }
+  ]
+ },
+ "reroute_reason": {
+  "kind": "rtl_change",
+  "source": "results/physical/s81_vm_cap_native_audit_1015/audit_r2.json",
+  "why": "source file dsfd_vm_static_cap.sv (shared with the capture parent) changed: the parent selects NAT=1 3:4 transfers for CAP_PIPE=2; the dsfd_vm_static_cap_ctl module text is unchanged and its r1 view passed the native audit (R 47.0); re-route only so the routed view binds the current file"
+ }
+}

@@ -45,7 +45,7 @@ module ot_s81_su_rw #(
     reg  [3:0]   j, nw;
     reg  [31:0]  acc;
     reg  [31:0]  w [0:KMAX-1];
-    integer i;
+    integer i, ww;
 
     // ---------------------------------------------------------------- units
     reg          a_v; reg [31:0] a_a, a_b; wire [31:0] a_y; wire a_f;
@@ -113,8 +113,9 @@ module ot_s81_su_rw #(
             reg [511:0] r;
             reg [15:0]  m;
             r = 512'd0; m = 16'd0;
-            for (i = 0; i < KMAX; i = i + 1)
-                if (i < k) begin r[32 * (off + i) +: 32] = (MUT == 4) ? q_hold[i] : w[i]; m[off + i] = 1'b1; end
+            for (ww = 0; ww < 16; ww = ww + 1)        // decoded constant-index slices (no runtime part-select)
+                for (i = 0; i < KMAX; i = i + 1)
+                    if (i < k && {1'b0, off} + i[4:0] == ww[4:0]) begin r[32 * ww +: 32] = (MUT == 4) ? q_hold[i] : w[i]; m[ww] = 1'b1; end
             o_d <= r; o_m <= m;
         end
 endmodule

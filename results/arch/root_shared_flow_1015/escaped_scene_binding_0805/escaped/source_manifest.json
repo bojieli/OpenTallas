@@ -1,0 +1,90 @@
+[
+  {
+    "master": "ot_sram_1r1w_32x546_m1",
+    "instance_pattern": "u_coll.g_sring*0*.u_m",
+    "port": "ca",
+    "pin": "clk",
+    "reference": "raw_liberty_clock_pin",
+    "corners": {
+      "tt": {
+        "library": "ot_sram_1r1w_32x546_m1_tt",
+        "sha256": "6fd25b08829e040b4089f00701d64711ed6b3bf331fd37328bbafc58d003cf1c",
+        "clock_reference": "raw_liberty_clock_pin",
+        "arc_types": [
+          "hold_rising",
+          "rising_edge",
+          "setup_rising"
+        ]
+      },
+      "ff": {
+        "library": "ot_sram_1r1w_32x546_m1_ff",
+        "sha256": "3d94fe5a3c38973b04521c4754d9d1a8d2cec332bdcc8f1f788f008c0b912688",
+        "clock_reference": "raw_liberty_clock_pin",
+        "arc_types": [
+          "hold_rising",
+          "rising_edge",
+          "setup_rising"
+        ]
+      },
+      "ss": {
+        "library": "ot_sram_1r1w_32x546_m1_ss",
+        "sha256": "e6f86bfa8d697cd62c99cbb5d2f7240eae4a5dad98e28fded936e570b06e0b26",
+        "clock_reference": "raw_liberty_clock_pin",
+        "arc_types": [
+          "hold_rising",
+          "rising_edge",
+          "setup_rising"
+        ]
+      }
+    },
+    "lef_sha256": "d6e37f1b4ee5d9a3aa208940491ed5095b646fae19a8f29f0cd2341a2035f1a6",
+    "dimensions_um": [
+      177.768,
+      81.0
+    ]
+  },
+  {
+    "master": "ot_sram_1r1w_32x546_m1",
+    "instance_pattern": "u_coll.g_sring*1*.u_m",
+    "port": "cb",
+    "pin": "clk",
+    "reference": "raw_liberty_clock_pin",
+    "corners": {
+      "tt": {
+        "library": "ot_sram_1r1w_32x546_m1_tt",
+        "sha256": "6fd25b08829e040b4089f00701d64711ed6b3bf331fd37328bbafc58d003cf1c",
+        "clock_reference": "raw_liberty_clock_pin",
+        "arc_types": [
+          "hold_rising",
+          "rising_edge",
+          "setup_rising"
+        ]
+      },
+      "ff": {
+        "library": "ot_sram_1r1w_32x546_m1_ff",
+        "sha256": "3d94fe5a3c38973b04521c4754d9d1a8d2cec332bdcc8f1f788f008c0b912688",
+        "clock_reference": "raw_liberty_clock_pin",
+        "arc_types": [
+          "hold_rising",
+          "rising_edge",
+          "setup_rising"
+        ]
+      },
+      "ss": {
+        "library": "ot_sram_1r1w_32x546_m1_ss",
+        "sha256": "e6f86bfa8d697cd62c99cbb5d2f7240eae4a5dad98e28fded936e570b06e0b26",
+        "clock_reference": "raw_liberty_clock_pin",
+        "arc_types": [
+          "hold_rising",
+          "rising_edge",
+          "setup_rising"
+        ]
+      }
+    },
+    "lef_sha256": "d6e37f1b4ee5d9a3aa208940491ed5095b646fae19a8f29f0cd2341a2035f1a6",
+    "dimensions_um": [
+      177.768,
+      81.0
+    ]
+  }
+]

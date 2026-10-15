@@ -1,0 +1,178 @@
+{
+ "name": "qfd_slab_pair_add",
+ "top": "qfd_slab_pair_add",
+ "kind": "tile",
+ "sources": [
+  "rtl/qwen_split/qfd_slab_pair_add.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/hdc/ot_hdc_delay.sv"
+ ],
+ "params": {},
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n",
+  "rst_n_a",
+  "rst_n_b"
+ ],
+ "outline": {
+  "w": 86.4,
+  "h": 151.2
+ },
+ "pins": {
+  "W": [
+   "bw_a",
+   "ck_a",
+   "rst_n_a",
+   "bw_b",
+   "ck_b",
+   "rst_n_b"
+  ],
+  "E": [
+   "y",
+   "pv",
+   "pf"
+  ],
+  "S": [
+   "ck",
+   "rst_n"
+  ]
+ },
+ "layer_cap": "M5",
+ "recipe": 2,
+ "route": {
+  "pd": 0.55,
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "hold_margin_ns": 0.03,
+  "io_hold_margin_ns": 0.005,
+  "macro_halo_um": 5.4,
+  "period_ps": 770,
+  "signoff_period_ps": 833.333333
+ },
+ "structural_change": "q15 port-tiles: new leaf. The four level-6->7 FP32 pair adders of each slab word half (ck_pair0-3, 9,778 sinks each) were inline in qfd_slab_word_half and shared the 2.46 mm port_tiles parent; each is now its own hardened tile holding its two 515-b root capture banks as pin registers on their own entries ck_a/ck_b (=ck_bw<2p>/<2p+1>) and the adders on ck (=ck_pair<p>); pa1 gate (capture-free leaf) showed 800 input cones of 8 levels at the pins (structure-only, hierarchy-equivalence bench fc0e16f69).",
+ "job": {
+  "owner": "Claude:q15_compute_elem",
+  "branch": "claude/q15-port-tiles",
+  "tag": "pa3",
+  "purpose": "port_tiles pair-adder leaf (x4 per word half, 24 per die band set)",
+  "extra_paths": [
+   "physical/qwen_port_tiles_1015",
+   "rtl/qwen_split",
+   "rtl/hdc",
+   "rtl/physical"
+  ],
+  "benches": [
+   {
+    "name": "equiv_m0",
+    "cmd": "bash physical/qwen_port_tiles_1015/bench.sh equiv {RUN}/bench/equiv_m0 0",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^EQUIV MUT=0 .* PASS$"
+   },
+   {
+    "name": "equiv_m1",
+    "cmd": "bash physical/qwen_port_tiles_1015/bench.sh equiv {RUN}/bench/equiv_m1 1",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^EQUIV MUT=1 .* FAIL$"
+   },
+   {
+    "name": "equiv_m2",
+    "cmd": "bash physical/qwen_port_tiles_1015/bench.sh equiv {RUN}/bench/equiv_m2 2",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^EQUIV MUT=2 .* FAIL$"
+   }
+  ]
+ },
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "clock": "multiple_cts_roots",
+ "clock_ports": [
+  "ck",
+  "ck_a",
+  "ck_b"
+ ],
+ "clock_data_paths": "related_same_frequency",
+ "clock_relationship": {
+  "kind": "same_pll_fixed_phase",
+  "ratio": [
+   1,
+   1
+  ],
+  "phase_ps": 0
+ },
+ "clock_entry_domains": {
+  "core": {
+   "ports": [
+    "ck"
+   ],
+   "ratio": [
+    1,
+    1
+   ],
+   "inputs": [
+    "rst_n"
+   ],
+   "outputs": [
+    "y",
+    "pv",
+    "pf"
+   ]
+  },
+  "root_a": {
+   "ports": [
+    "ck_a"
+   ],
+   "ratio": [
+    1,
+    1
+   ],
+   "inputs": [
+    "bw_a",
+    "rst_n_a"
+   ],
+   "outputs": []
+  },
+  "root_b": {
+   "ports": [
+    "ck_b"
+   ],
+   "ratio": [
+    1,
+    1
+   ],
+   "inputs": [
+    "bw_b",
+    "rst_n_b"
+   ],
+   "outputs": []
+  }
+ }
+}

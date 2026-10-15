@@ -1,0 +1,22 @@
+qfd_port_tiles_0 total FF 100319
+  ck                   15267
+  ck_group3            10455
+  ck_group2            10455
+  ck_group1            10455
+  ck_group0            10455
+  ck_pair3             9778
+  ck_pair2             9778
+  ck_pair1             9778
+  ck_pair0             9778
+  ck_bw7               515
+  ck_bw6               515
+  ck_bw5               515
+  ck_bw4               515
+  ck_bw3               515
+  ck_bw2               515
+  ck_bw1               515
+  ck_bw0               515
+hard {'ot_qwen_slab_pg_col': 16, 'ot_qwen_slab_pg_lanes': 16}
+EQUIV MUT=0 cycles=3000 word_active=2375 result_active=2994 result_fault=0 mismatches=0 PASS
+EQUIV MUT=1 cycles=3000 word_active=2375 result_active=2994 result_fault=0 mismatches=2991 FAIL
+EQUIV MUT=2 cycles=3000 word_active=2375 result_active=2994 result_fault=0 mismatches=5973 FAIL

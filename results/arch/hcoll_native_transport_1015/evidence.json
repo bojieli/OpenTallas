@@ -1,0 +1,68 @@
+{
+  "base_commit": "3988d9fdfee337699c70b3b3ccd1bdb5d744b08d",
+  "source_sha256": {
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_link_seq.sv": "87af49ebf15625f6e58c912168512066428727c311f9b62bce86406afdf1ce7c",
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_seq_ctl.sv": "21a88e901f304638f66eaf743dfa4ef8555670db66bbe44ba2c489983b719c89",
+    "rtl/hbm_accel/io_static_20261015/ot_hbm_static_gearbox.sv": "3ca4eccbd1c00f04e57adf7b596e35d3fae26ad5c7441d5c256ef3cfbfaef5f0",
+    "rtl/hbm_accel/io_static_20261015/ot_hbm_static_frame_transport.sv": "605472ebab23abb6230d9787e6836f9e54c8a7f86defaff75d078db18961a7f8",
+    "rtl/hbm_accel/io_static_20261015/tb_static_native_endpoint_transport.sv": "374ed170db38c0a4f30f555d35c1b9bc389e18b345856f5805c7653ec6d3d2ba",
+    "rtl/hbm_accel/io_static_20261015/NATIVE_ENDPOINT_TRANSPORT.md": "786fe80e8bb4a7f663763432161635dbf121a5d3ad427c23245c7f093feef832",
+    "tools/hbm_io/run_native_endpoint_transport_gate.sh": "51c03d6371d767f6fd5cce5ec63607ac88e01262d258e99dd9592440a3fe4454",
+    "tools/uarch_model_hcoll_native_transport.py": "8a7739afb0a56d42459de1fb83c2c74580bd94c1d9a7892c5484fcf9883cb975"
+  },
+  "native_dependencies": {
+    "revision": "4c66b6a95b0395f64387565929e9f3cc2d645e02",
+    "git_blobs": {
+      "rtl/qwen_sys/split_20261014/ot_qwen_crc_parallel.sv": "ee550def08a3ef85007c9eca87073fb149340fbb",
+      "rtl/qwen_sys/split_20261014/ot_qkvd_d2d_llr.sv": "430cf4dfad6987d1b1b572f6a314c36d44de421d",
+      "rtl/qwen_sys/split_20261014/ot_qwen_static_slot_link.sv": "4e7c69f591dc5e6e235e444e1f40cc1f18864682",
+      "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v": "cab7462c766f31331f4274984e6cc0674d3e939b"
+    }
+  },
+  "model": {
+    "endpoint_payload_bits": 545,
+    "protected_endpoint_frame_bits": 612,
+    "transport_frame_bits": 613,
+    "transport_word_bits": 487,
+    "frame_acceptance_cycle": "17 + floor(613*j/487)",
+    "endpoint_read_cycle": "13 + floor(613*j/487)",
+    "endpoint_tx_pin_cycle": "16 + floor(613*j/487)",
+    "last_word_index": "ceil(613*(j+1)/487)-1",
+    "tx_start_cycle": 16,
+    "rx_start_cycle": 20,
+    "word_flight_registers": 3,
+    "first_rx_word_sample_cycle": 21,
+    "endpoint_rx_capture_cycle": "23 + last_word_index",
+    "endpoint_rx_publish_cycle": "24 + last_word_index",
+    "rx_wrapper_registered_face_edges": 1,
+    "sustained_transport_frames_per_cycle": 0.7944535073409462,
+    "maximum_payload_bytes_per_cycle": 54.12214518760196,
+    "test_slots": 300,
+    "test_valid_frames": 234,
+    "test_idle_frames": 66,
+    "storage_macros_per_endpoint": 4,
+    "state_leaf_width": 141,
+    "macs_per_cycle": 0,
+    "replicas": 2,
+    "tracks_per_word_boundary": 487,
+    "channel_capacity_tracks": null,
+    "area_slot_fit": "component integration only; gearbox and endpoint physical timing unqualified",
+    "latency": "nonuniform integer slot calendar; no ideal612-bit frame per corecycle",
+    "qualification": "actual SRAM/CRC and digital gearbox exactness only; no FEC, PHY, CDC or G96 tok/s claim"
+  },
+  "command": "bash tools/hbm_io/run_native_endpoint_transport_gate.sh /tmp/hcoll-native-transport-final-1015",
+  "exit_code": 0,
+  "results": {
+    "m0": "NATIVE_TRANSPORT PASS slots300 checks234 wire613 word487 TX3 RX1 flightwords3",
+    "m1": "NATIVE_TRANSPORT MUTANT PASS m1 errors230 abortcycles383 transportfaults0 causes000/004",
+    "m2": "NATIVE_TRANSPORT MUTANT PASS m2 errors0 abortcycles0 transportfaults393 causes000/000",
+    "m3": "NATIVE_TRANSPORT MUTANT PASS m3 errors235 abortcycles389 transportfaults0 causes000/001",
+    "m4": "NATIVE_TRANSPORT MUTANT PASS m4 errors462 abortcycles398 transportfaults0 causes010/004"
+  },
+  "limitations": [
+    "No actual FEC or CDC",
+    "No physical timing or channel-fit claim",
+    "No G96 token throughput claim"
+  ],
+  "failed_probe": "An initial corruption at word60 hit idle traffic and was correctly undetected by endpoint CRC. Final probe corrupts first word known to carry valid frame0, and requires CRC cause001."
+}

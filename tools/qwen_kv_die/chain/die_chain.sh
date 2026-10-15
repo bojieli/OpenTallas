@@ -18,8 +18,29 @@ validate_case() {
   python3 "$H/case_status.py" --log "$C/$log" --stage "$stage" --process-exit "$(cat "$C/$log.exit" 2>/dev/null || echo 1)"
 }
 say() { echo "$(date '+%F %T %Z') $*" >> $R/STATUS.log; }
+# q-compute-die 2026-10-15: OT_PDN_GB / OT_GRT_GB override the PDN / GRT container memory (C19s r22k PDN with 9 real
+# masters was OOM-killed at RSS 198.8 GB under the fixed 190 GB cap after 1 h 35 at "Inserting grid: core")
 case $DIE in kv) P1=20; P2=80; P3=60; P4=40;; r22k) P1=40; P2=130; P3=160; P4=110;; *) echo bad die; exit 2;; esac
 say "chain start die=$DIE src=$(cat $C/SOURCE_COMMIT 2>/dev/null) from=${OT_FROM:-case}"
+# Owner no-stubs rule: audit the actual die.v against this run's real RTL at
+# every launch, including preserved-case resumes. HARD_PHY still needs real ports.
+if [ "$DIE" = kv ]; then
+  BIND_ARGS=("$C/die.v" --split --out "$R/port_bind_launch.json" --strict)
+  [ -f "$C/qkd_kv_relays.sv" ] && BIND_ARGS+=(--relay-rtl "$C/qkd_kv_relays.sv")
+  [ -f "$R/expand.json" ] && BIND_ARGS+=(--expanded "$R/expand.json")
+  python3 "$SRC/tools/qwen_kv_die/die_port_bind_kv.py" "${BIND_ARGS[@]}" > "$R/bind_launch.log" 2>&1 || {
+    # OT_BIND_DIAGNOSTIC=1 (kvsys lead r5 2026-10-14, same convention as the S81 old-source pathfinding chains): the
+    # strict audit still runs and its FAIL is stamped on every STATUS line; the run is die-timing PATHFINDING only,
+    # never a die result, never a contract release, never native evidence. Default stays: refuse.
+    if [ "${OT_BIND_DIAGNOSTIC:-0}" = 1 ]; then
+      say "NATIVE PORT BIND FAIL ($R/bind_launch.log): DIAGNOSTIC PATHFINDING ONLY -- NOT A DIE RESULT, NOT RELEASE"
+      echo "PORT_BIND_FAIL_DIAGNOSTIC_ONLY" > "$R/NOT_A_DIE_RESULT"
+    else
+      say "NATIVE PORT BIND FAIL ($R/bind_launch.log): no die job launched"
+      exit 1
+    fi
+  }
+fi
 # OT_FROM=grt resumes on a case whose real case + PDN already passed (floorplan_pdn.odb present; logs re-checked)
 if [ "${OT_FROM:-case}" = grt ]; then
   validate_case run.log run.tcl && validate_case run_pdn.log run_pdn.tcl && [ -f $C/floorplan_pdn.odb ] || { say "OT_FROM=grt: case/PDN not passed"; exit 1; }
@@ -32,12 +53,19 @@ $ADMIT $P1 -- $H/run_case.sh $C run.tcl run.log 16 $((P1+40)) || { say "REAL CAS
 fi
 validate_case run.log run.tcl || { say "REAL CASE FAIL ($C/run.log)"; exit 1; }
 say "real case: $(grep -m4 -E 'OT_LEGAL|OT_ASSERT|OT_PA' $C/run.log | tr '\n' ' ')"
-$ADMIT $P2 -- $H/run_case.sh $C run_pdn.tcl run_pdn.log 8 $((P2+60)) || { say "PDN process/status failed"; exit 1; }
+if [ "${OT_PDN:-run}" = skip ]; then
+  # kvsys lead r5 2026-10-14: per-instance macro grids on the 13.4k expanded leaves insert ~15/min (~15 h): a
+  # DIAGNOSTIC chain may skip the die PDN (GRT then sees no M8/M9 straps: overflow optimistic; STA unaffected)
+  ln -f $C/floorplan.odb $C/floorplan_pdn.odb
+  say "PDN SKIPPED (OT_PDN=skip): GRT without die straps -- DIAGNOSTIC ONLY"
+else
+$ADMIT $P2 -- $H/run_case.sh $C run_pdn.tcl run_pdn.log 8 ${OT_PDN_GB:-$((P2+60))} || { say "PDN process/status failed"; exit 1; }
 validate_case run_pdn.log run_pdn.tcl || { say "PDN FAIL ($C/run_pdn.log)"; exit 1; }
 say "PDN PASS $(grep -m2 OT_PGCHECK $C/run_pdn.log | tr '\n' ' ')"
 fi
+fi
 mkdir -p $G; cp $H/grt.tcl $G/; ln -f $C/floorplan_pdn.odb $G/floorplan_pdn.odb
-$ADMIT $P3 -- $H/dietop_run.sh $G grt.tcl 16 $((P3+80)) OT_ITERS=${OT_ITERS:-30} OT_TILE_UM=4.8 OT_ROUTE_RESET=${OT_ROUTE_RESET:-0}
+$ADMIT $P3 -- $H/dietop_run.sh $G grt.tcl 16 ${OT_GRT_GB:-$((P3+80))} OT_ITERS=${OT_ITERS:-30} OT_TILE_UM=4.8 OT_ROUTE_RESET=${OT_ROUTE_RESET:-0}
 OV=$(awk '/Final congestion report/{f=1} f && /^Total/{print $NF; exit}' $G/grt.log)
 say "full-die GRT exit=$(cat $G/run.exit) overflow=${OV:-none} ($(grep -m1 'Total wirelength' $G/grt.log))"
 [ "${OT_STOP:-}" = grt ] && { say "stop after GRT (OT_STOP=grt)"; exit 0; }

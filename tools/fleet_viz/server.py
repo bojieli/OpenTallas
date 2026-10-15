@@ -10,6 +10,7 @@ Endpoints (bind 127.0.0.1:8765 by default):
   /replay?from=&to=&speed=   the same page playing a recorded window (/api/replay serves the data)
   /api/elements     per-element (block) closure status table (elements.py; share-safe: summary counts only)
   /api/layout/<element>/...  routed-geometry tiles for the element page's Layout tab (layout_service.py)
+  /api/fleetjobs    every job on every host: loop routes, ot-heavy/ot-run units, other containers, waiters
   /api/stream       server-sent events (latest history point only; /api/fleet
                     carries the full 60-minute history)
 Internal view is the default: real host aliases, job and block names, slacks
@@ -50,6 +51,7 @@ class Host:
         self.cfg = cfg; self.last = None; self.state = 'pending' if cfg.get('pending') else 'connecting'
         self.since = time.time(); self.lock = threading.Lock()
         self.ok_t = None; self.err = None; self.err_t = None; self.errq = collections.deque(maxlen=4)   # last sample (local receive time), last probe failure
+        self.jobs = None; self.jobs_t = None   # job inventory (agent.py jobs(): ot-heavy units, containers, waiters), every 3rd tick
         threading.Thread(target=self.run, daemon=True, name='host-' + cfg['id']).start()
 
     def cmd(self):
@@ -74,7 +76,9 @@ class Host:
                 for line in p.stdout:
                     try: d = json.loads(line)
                     except ValueError: continue
+                    jb = d.pop('jobs', None)
                     with self.lock:
+                        if jb is not None: self.jobs = jb; self.jobs_t = time.time()
                         self.last = d; self.state = 'up'; self.ok_t = time.time(); self.err = None; backoff = 5
                 rc = p.wait(); time.sleep(0.2)
                 with self.lock:
@@ -98,6 +102,13 @@ class Host:
         if st == 'up' and ok and time.time() - ok > 4 * POLL + 10:   # probe alive but silent (local receive time: no clock skew)
             st = 'stale'
         return st, d
+
+    def jobs_snap(self):
+        """the latest job inventory, or None when the host is not up or the inventory is older than 6 polls"""
+        st, _ = self.snap()
+        with self.lock: jb, t = self.jobs, self.jobs_t
+        if st != 'up' or jb is None or t is None or time.time() - t > 6 * POLL + 15: return None
+        return jb
 
     def fresh(self, now, safe):
         st, _ = self.snap()
@@ -313,15 +324,151 @@ def stamp(o, safe, **kw):
     now = time.time()
     return dict(o, generated_at=now, sent_at=now, fresh=fresh_block(safe, now, **kw))
 
+# ---------------------------------------------------------------- fleet jobs (owner 2026-10-15)
+# The page showed only closure-loop routes, so a host running ~100 ot-heavy units looked idle. Every host's agent lists
+# its ot-heavy scopes, docker containers, ot-heavy waiters and (coordinator) ot-run processes held by the load hold;
+# here they are joined with the loop's active jobs into one table. A docker container started by a unit (e.g. a
+# ref_gate's ORFS run) or by a loop route is folded into that row's memory/CPU, so nothing is counted twice.
+LOOP_RX = re.compile(r'/closure-loop/([^/\s]+)')
+GATE_RX = re.compile(r'ref_gate[/_]([A-Za-z0-9_.]+?)[-_](20\d{6}-\d{6})')
+OWN_RX = [re.compile(r'/srv/opentallas-scratch/(claude|codex)/([^/\s\'"]+)'), re.compile(r'/srv/opentallas-scratch/(claude|codex)-([^/\s\'"]+)'),
+          re.compile(r'/home/\w+/(?:wt/)?((?:wt|scratch)-?([^/\s\'"]+))'), re.compile(r'/tmp/()([^/\s\'"]+)/')]
+GENERIC = {'/', '/tmp', '/srv', '/srv/opentallas-scratch', '/srv/opentallas-scratch/claude', '/srv/opentallas-scratch/codex',
+           '/srv/opentallas-scratch/claude/ref_gate', '/srv/opentallas', '/srv/opentallas/claude'}
+SKIP_TOK = {'env', '/usr/bin/env', 'exec', 'nice', 'ionice', 'nohup', 'time', '/usr/bin/time', 'timeout', 'stdbuf', 'bash', 'sh',
+            '/bin/bash', '/usr/bin/bash', '/bin/sh', 'python3', 'python', '/usr/bin/python3', '-u', '-v', '-c', '-lc', '-x', '-e'}
+
+def job_owner(text, cwd):
+    """(owner, stream) from the scratch path convention: /srv/opentallas-scratch/<owner>/<stream>/..., codex-<stream>, ~/wt/<wt>"""
+    g = GATE_RX.search(cwd + ' ' + text)
+    for src in (cwd, text):
+        for i, rx in enumerate(OWN_RX):
+            m = rx.search(src + '/')
+            if m:
+                own = m.group(1) if i < 2 else ('claude' if 'claude' in m.group(0) else 'codex' if 'codex' in m.group(0) else '')
+                st = m.group(2)
+                if st == 'ref_gate': return (own or 'claude'), 'ref_gate' + (':' + g.group(1) if g else '')
+                return own, st
+    if g: return 'claude', 'ref_gate:' + g.group(1)
+    return '', ''
+
+def job_name(argv):
+    """a short name: 'ref_gate <block>', else the script/binary and its first argument (basenames)"""
+    g = GATE_RX.search(argv)
+    if g: return 'ref_gate ' + g.group(1)
+    a = argv
+    m = re.search(r'(?:^|\s)-l?c\s+(.*)$', a)   # bash -c '...': the inner command
+    if m: a = m.group(1).strip('\'"')
+    seg = [x.strip() for x in re.split(r'&&|;|\|\|', a) if x.strip()]
+    seg = [x for x in seg if not re.match(r'(cd|rm|mkdir|export|echo|set|trap|source|\.)\s', x)] or seg or ['']
+    out = []; toks = seg[0].split(); i = 0
+    while i < len(toks) and len(out) < 2:
+        t = toks[i].strip('\'"'); i += 1
+        if not out and (t in SKIP_TOK or re.match(r'^[A-Z_][A-Z0-9_]*=', t) or (t.startswith('-') and t not in ('-',))):
+            if t in ('-o', '-n', '-p') and i < len(toks): i += 1   # time -o FILE, nice -n N
+            continue
+        if t.startswith('>') or t.startswith('-') or t.startswith('+') or t == '2>&1': break
+        out.append(os.path.basename(t.rstrip('/')) or t)
+    return ' '.join(out) or argv[:60]
+
+def _prefixes(u):
+    ps = set()
+    c = (u.get('cwd') or '').rstrip('/')
+    if c and c not in GENERIC and c.count('/') >= 3: ps.add(c)
+    for t in re.findall(r'(/srv/[^\s\'";>]+|/tmp/[^\s\'";>]+)', u.get('argv') or ''):
+        t = t.rstrip('/'); d = t if not re.search(r'\.\w{1,4}$', t) else os.path.dirname(t)
+        if d not in GENERIC and d.count('/') >= 4: ps.add(d)
+    return ps
+
+_FJ = dict(t=0, v=None)
+def fleet_jobs():
+    """(rows, per-host summary) -- rebuilt at most every 3 s"""
+    now = time.time()
+    if _FJ['v'] is not None and now - _FJ['t'] < 3: return _FJ['v']
+    with CLOSURES.lock: act = list(CLOSURES.active)
+    rows = []; summ = {}
+    loop_by = {}
+    for j in act:
+        if j['status'] in ('RUNNING', 'SYNC', 'ECO') and j['host']:
+            loop_by[j['name']] = j
+    for h in HOSTS:
+        hid = h.cfg['id']; lab = h.cfg.get('name', hid); jb = h.jobs_snap()
+        s = dict(loop=sum(1 for j in loop_by.values() if j['host'] == hid), other=None, waiters=None, held=None, containers_unattributed=None, inv=jb is not None)
+        summ[lab] = s
+        lrows = {}
+        for j in loop_by.values():
+            if j['host'] != hid: continue
+            lrows[j['name']] = dict(kind='loop route', name=j['name'], owner=j.get('owner') or '', stream=j.get('cat') or '', host=lab,
+                                    start=j.get('since') or None, mem=0.0, peak=None, max=None, cpu=None, n=0, detail='%s · %s' % (j['status'], j.get('stage') or ''),
+                                    status=j['status'])
+        if jb is None or jb.get('error'):
+            rows.extend(lrows.values()); continue
+        urows = []
+        for u in jb.get('units') or []:
+            text = (u.get('argv') or '') + ' ' + (u.get('cwd') or '')
+            lm = LOOP_RX.search(text)
+            if lm and lm.group(1) in lrows:   # a loop route's own ot-heavy scope
+                r = lrows[lm.group(1)]; r['mem'] += u.get('mem') or 0; r['cpu'] = (r['cpu'] or 0) + (u.get('cpu') or 0); r['n'] += u.get('nproc') or 0
+                continue
+            own, st = job_owner(u.get('argv') or '', u.get('cwd') or '')
+            urows.append(dict(kind='ot-run job' if u.get('tag') else 'ot-heavy job', name=job_name(u.get('argv') or ''), owner=own, stream=st, host=lab,
+                              start=u.get('start'), mem=u.get('mem') or 0.0, peak=u.get('peak'), max=u.get('max'), cpu=u.get('cpu'), n=u.get('nproc') or 0,
+                              detail=u.get('argv') or '', cwd=u.get('cwd') or '', unit=u.get('unit'), tag=u.get('tag'), ctr=0,
+                              _pre=_prefixes(u), _gate=GATE_RX.search(text) and GATE_RX.search(text).groups()))
+        crow = []
+        for c in jb.get('containers') or []:
+            ms = c.get('mounts') or []; mt = ' '.join(ms)
+            lm = LOOP_RX.search(mt)
+            tgt = lrows.get(lm.group(1)) if lm else None
+            if tgt is None:
+                g = GATE_RX.search(mt); best = (0, None)
+                for r in urows:
+                    if g and r['_gate'] == g.groups(): best = (10**6, r); break
+                    for p in r['_pre']:
+                        if len(p) > best[0] and any(m == p or m.startswith(p + '/') for m in ms): best = (len(p), r)
+                tgt = best[1]
+            if tgt is not None:
+                tgt['mem'] = (tgt['mem'] or 0) + (c.get('mem') or 0); tgt['cpu'] = (tgt['cpu'] or 0) + (c.get('cpu') or 0)
+                tgt['ctr'] = tgt.get('ctr', 0) + 1
+                continue
+            own, st = job_owner(c.get('cmd') or '', ms[0] if ms else '')
+            nm = c.get('name') or c.get('id')
+            crow.append(dict(kind='container', name=nm, owner=own, stream=st, host=lab, start=c.get('start'), mem=c.get('mem') or 0.0,
+                             peak=c.get('peak'), max=c.get('max'), cpu=c.get('cpu'), n=1, detail='%s · %s · %s' % (c.get('image') or '', mt[:300], c.get('cmd') or ''),
+                             cwd=ms[0] if ms else ''))
+        wrows = []
+        for w in jb.get('waiters') or []:
+            own, st = job_owner(w.get('argv') or '', w.get('cwd') or '')
+            wrows.append(dict(kind='waiter', name=job_name(w.get('argv') or ''), owner=own, stream=st, host=lab, start=w.get('start'),
+                              mem=None, req=float(w['mem_req']) if (w.get('mem_req') or '').replace('.', '', 1).isdigit() else None,
+                              peak=None, max=None, cpu=None, n=0, detail=w.get('argv') or '', cwd=w.get('cwd') or '', tag=w.get('tag')))
+        for w in jb.get('held') or []:
+            own, st = job_owner(w.get('argv') or '', w.get('cwd') or '')
+            wrows.append(dict(kind='held (ot-run)', name=job_name(w.get('argv') or ''), owner=own, stream=st, host=lab, start=w.get('start'),
+                              mem=None, req=float(w['mem_req']) if (w.get('mem_req') or '').replace('.', '', 1).isdigit() else None,
+                              peak=None, max=None, cpu=None, n=0, detail=w.get('argv') or '', cwd=w.get('cwd') or ''))
+        for r in urows: r.pop('_pre'); r.pop('_gate')
+        s.update(other=len(urows) + len(crow), waiters=sum(1 for w in wrows if w['kind'] == 'waiter'),
+                 held=sum(1 for w in wrows if w['kind'] != 'waiter'), containers_unattributed=len(crow),
+                 jobs_mem=round(sum(r['mem'] or 0 for r in urows + crow), 1), loop_mem=round(sum(r['mem'] or 0 for r in lrows.values()), 1))
+        rows.extend(list(lrows.values()) + urows + crow + wrows)
+    for r in rows:
+        for k in ('mem', 'cpu'):
+            if isinstance(r.get(k), float): r[k] = round(r[k], 2)
+    _FJ.update(t=now, v=(rows, summ))
+    return rows, summ
+
 def build(safe):
     hosts = []; alias_to_label = {h.cfg['id']: h.cfg['label'] if safe else h.cfg.get('name', h.cfg['id']) for h in HOSTS}
     with CLOSURES.lock: cl = dict(CLOSURES.data)
     tot = dict(cores=0, busy=0.0, mem_total=0.0, mem_used=0.0, docker=0, hosts_up=0)
+    fj = {} if safe else fleet_jobs()[1]
     for h in HOSTS:
         st, d = h.snap(); c = h.cfg
         e = dict(label=c['label'] if safe else c.get('name', c['id']), kind=c['kind'], region=c['region'], state=st,
                  routes=cl.get('running_by_host', {}).get(c['id'], 0))
         if not safe: e['alias'] = c['id']
+        if not safe: e['jobs'] = fj.get(c.get('name', c['id']))
         e.update(t=h.ok_t, error=h.err if not safe else None)   # last good sample (server epoch), last probe failure
         if d and st == 'up':   # a stale or unreachable host carries no numbers: the page must not show old ones as live
             used = d['mem_total'] - d['mem_avail']
@@ -429,13 +576,15 @@ def ticker():
             log('snapshot: %s' % e)
 
 # ---------------------------------------------------------------- http
-STATIC = {'/explorer/flow_layout.js': ('explorer/flow_layout.js', 'text/javascript; charset=utf-8'), '/explorer_chip_dataflow.js': ('explorer_chip_dataflow.js', 'text/javascript; charset=utf-8'), '/explorer/dataflow.js': ('explorer/dataflow.js', 'text/javascript; charset=utf-8'), '/': ('index.html', 'text/html; charset=utf-8'), '/index.html': ('index.html', 'text/html; charset=utf-8'),
+STATIC = {'/': ('index.html', 'text/html; charset=utf-8'), '/index.html': ('index.html', 'text/html; charset=utf-8'),
           '/replay': ('index.html', 'text/html; charset=utf-8'), '/explorer': ('explorer.html', 'text/html; charset=utf-8'),
           '/explorer.html': ('explorer.html', 'text/html; charset=utf-8'),
           '/explorer.js': ('explorer.js', 'text/javascript; charset=utf-8'),
           '/explorer_story.js': ('explorer_story.js', 'text/javascript; charset=utf-8'),
           '/fv_stale.js': ('fv_stale.js', 'text/javascript; charset=utf-8'),
           '/fv_flow.js': ('fv_flow.js', 'text/javascript; charset=utf-8')}
+# /explorer/dataflow/...: data-flow views (page + modules) and data/<die revision>.links.json.gz (dataflow_links.py)
+DF_DIR = HERE / 'explorer' / 'dataflow'
 # /explorer/token/...: mount point for the token-path views (a separate stream ships them into explorer/token/)
 TOKEN_DIR = HERE / 'explorer' / 'token'
 TOKEN_TYPES = {'.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.css': 'text/css; charset=utf-8',
@@ -607,6 +756,10 @@ class H(BaseHTTPRequestHandler):
             rows = [dict(j, label=lab.get(j['host'], j['host'] or 'unplaced')) for j in act]
             body = json.dumps(stamp(dict(t=time.time(), jobs=rows, status=status_md(), hosts=[h.cfg.get('name', h.cfg['id']) for h in HOSTS]), safe), separators=(',', ':'))
             return self.send(200, body.encode(), 'application/json')
+        if u.path == '/api/fleetjobs':
+            rows, summ = fleet_jobs()
+            body = json.dumps(stamp(dict(t=time.time(), rows=rows, hosts=summ, order=[h.cfg.get('name', h.cfg['id']) for h in HOSTS]), safe), separators=(',', ':'))
+            return self.send(200, body.encode(), 'application/json')
         if u.path == '/api/verdicts':
             if safe: return self.send(403, b'{"safe":true}', 'application/json')
             lab = {h.cfg['id']: h.cfg.get('name', h.cfg['id']) for h in HOSTS}
@@ -642,6 +795,9 @@ class H(BaseHTTPRequestHandler):
         if u.path == '/explorer/element' or u.path.startswith('/explorer/element/'):
             if u.path == '/explorer/element': return self.redirect('/explorer/element/' + ('?' + u.query if u.query else ''))
             return self.elem(u.path[len('/explorer/element'):].lstrip('/') or 'index.html', safe)
+        if u.path == '/explorer/dataflow' or u.path.startswith('/explorer/dataflow/'):
+            if u.path == '/explorer/dataflow': return self.redirect('/explorer/dataflow/' + ('#' + u.fragment if u.fragment else ''))
+            return self.dataflow(u.path[len('/explorer/dataflow'):].lstrip('/') or 'index.html')
         if u.path == '/explorer/token' or u.path.startswith('/explorer/token/'):
             return self.token(u.path[len('/explorer/token'):].lstrip('/') or 'index.html')
         if u.path.startswith('/layout_store/'):
@@ -694,6 +850,20 @@ class H(BaseHTTPRequestHandler):
             return self.send(404, b'not found', 'text/plain')
         return self.send(200, p.read_bytes(), TOKEN_TYPES.get(p.suffix, 'application/octet-stream'))
 
+    def dataflow(self, rel):
+        try:
+            p = (DF_DIR / rel).resolve()
+            ok = p.is_relative_to(DF_DIR.resolve()) and p.is_file() and (p.suffix in TOKEN_TYPES or p.name.endswith('.json.gz'))
+        except (OSError, ValueError):
+            ok = False
+        if not ok: return self.send(404, b'not found', 'text/plain')
+        if p.name.endswith('.json.gz'):   # stored gzip: sent as is to every client that takes gzip
+            if 'gzip' in (self.headers.get('Accept-Encoding') or ''):
+                return self.send(200, p.read_bytes(), 'application/json', (('Content-Encoding', 'gzip'),))
+            import gzip as _gz
+            return self.send(200, _gz.decompress(p.read_bytes()), 'application/json')
+        return self.send(200, p.read_bytes(), TOKEN_TYPES[p.suffix])
+
     def token(self, rel):
         try:
             p = (TOKEN_DIR / rel).resolve()
@@ -710,16 +880,6 @@ class H(BaseHTTPRequestHandler):
         js = lambda o, code=200: self.send(code, json.dumps(o, separators=(',', ':')).encode(), 'application/json')
         if what == 'meta':
             return js(stamp(EXPLORER.api_meta(safe), safe, explorer=True))
-        if what == 'dataflow':
-            b = EXPLORER.dataflow_bytes(arg('die') or '', safe=safe)
-            if b is None: return js(dict(error='no geometry for this die yet'), 404)
-            if 'gzip' not in (self.headers.get('Accept-Encoding') or ''):
-                import gzip as _gz
-                return self.send(200, _gz.decompress(b), 'application/json')
-            self.send_response(200); self.send_header('Content-Type', 'application/json'); self.send_header('Content-Encoding', 'gzip')
-            self.send_header('Content-Length', str(len(b))); self.end_headers()
-            if self.command != 'HEAD': self.wfile.write(b)
-            return
         if what == 'geom':
             b = EXPLORER.geom_bytes(arg('die') or '', safe)
             if b is None: return js(dict(error='no geometry for this die yet'), 404)

@@ -1,5 +1,10 @@
 `timescale 1ns/1ps
 module tb_s81_pq_ctl_static;
+`ifdef OT_PQ_CTL_CALCAP
+ localparam integer IDLE_LAG=1;   // CALCAP: idle is a registered status (+1 edge, never gates events)
+`else
+ localparam integer IDLE_LAG=0;
+`endif
  reg clk=0;always #5 clk=~clk;
  reg rst_n=0,go=0,calendar_v=0,x_rv=0;
  reg[74:0] action=0;
@@ -94,7 +99,7 @@ module tb_s81_pq_ctl_static;
     if(x_re!==action[2] || (x_re&&x_addr!==action[21:3]))$fatal(1,"STATIC_CTL FAIL VM request shifted c=%0d",c);
     if(ev_end!==(c==retire)||(ev_end&&ev_tag!==tag))$fatal(1,"STATIC_CTL FAIL retire event c=%0d",c);
     if(ev_go!==(c==60))$fatal(1,"STATIC_CTL FAIL launch shifted c=%0d",c);
-    if(c>=16 && idle!==(c>=retire))$fatal(1,"STATIC_CTL FAIL retirement moved c=%0d",c);
+    if(c>=16+IDLE_LAG && idle!==(c>=retire+IDLE_LAG))$fatal(1,"STATIC_CTL FAIL retirement moved c=%0d",c);
     for(pos=0;pos<=np;pos=pos+1)begin
      k=c-(170+400*pos+5);
      if(k>=0&&k<192)begin

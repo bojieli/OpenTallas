@@ -1,0 +1,149 @@
+{
+ "name": "qfd_d2d_static_r1",
+ "top": "qfd_d2d_static",
+ "kind": "tile",
+ "sources": [
+  "rtl/qwen_sys/split_20261014/ot_qwen_crc_parallel.sv",
+  "rtl/qwen_sys/split_20261014/ot_qwen_static_slot_link.sv",
+  "rtl/qwen_sys/split_20261014/ot_qkvd_d2d_llr.sv",
+  "rtl/qwen_sys/split_20261014/qkd_native_attention_record.sv",
+  "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_static.sv",
+  "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_services.sv",
+  "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_dies.sv",
+  "rtl/qwen_split/qfd_kvn_static_transport.sv",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_bb.v"
+ ],
+ "params": {},
+ "clock_port": "ck",
+ "reset_ports": [
+  "por_n",
+  "rst_n"
+ ],
+ "outline": {
+  "w": 475.2,
+  "h": 280.8
+ },
+ "recipe": 2,
+ "io_flop_at_pins": false,
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+   "count": 4
+  }
+ ],
+ "pins": {
+  "S": [
+   "fdi_tx_up",
+   "fdi_tx_v",
+   "fdi_tx_flit",
+   "fdi_rx_v",
+   "fdi_rx_flit",
+   "phy_rst_n"
+  ],
+  "N": [
+   "native_tx_slot",
+   "native_tx_slot_kind",
+   "native_tx_slot_beat",
+   "native_tx_v",
+   "native_tx_payload",
+   "rx_payload",
+   "native_rx_v",
+   "native_rx_slot",
+   "native_rx_slot_kind",
+   "native_rx_slot_beat",
+   "prog_witness_slot",
+   "prog_auth_slot",
+   "prog_context_slot",
+   "prog_tx_observed_v",
+   "prog_tx_record",
+   "prog_rx_v",
+   "emb_rx_v",
+   "emb_rx_slot"
+  ],
+  "W": [
+   "kv_x3_slot",
+   "x3",
+   "x3_identity",
+   "x3_generation",
+   "status_epoch16",
+   "vm_drained",
+   "collective_drained",
+   "collective_busy",
+   "crom_fault",
+   "execution_active",
+   "admit_ready",
+   "result_v",
+   "result_done",
+   "result_fault",
+   "result_cause",
+   "result_tag",
+   "result_gen",
+   "result_token",
+   "result_value",
+   "result_cycles"
+  ],
+  "E": [
+   "ck",
+   "por_n",
+   "rst_n",
+   "cfg_tx_we",
+   "cfg_rx_we",
+   "cfg_addr",
+   "cfg_data",
+   "cal_start",
+   "cal_seg",
+   "fwd_epoch",
+   "fwd_link_rst_n",
+   "epoch_abort",
+   "transport_fault",
+   "fault"
+  ]
+ },
+ "layer_cap": "M5",
+ "route": {
+  "threads": 16,
+  "peak_ram_gb": 48,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "job": {
+  "owner": "Claude:q-link",
+  "branch": "claude/qwen-link-1015",
+  "tag": "r1",
+  "purpose": "Q-LINK static D2D link end qfd_d2d_static (compiler calendars, 583-bit PHY word slot link with 4x137 SRAM store, explicit recovery mode; no credits/backpressure). PHY on face S.",
+  "extra_paths": [
+   "rtl/qwen_sys",
+   "rtl/qwen_split",
+   "rtl/test/qwen_split",
+   "tools/qwen_split",
+   "physical/qwen_kv_die_phy",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2"
+  ],
+  "benches": [
+   {
+    "name": "d2d_dies_exact",
+    "cmd": "bash rtl/test/qwen_split/run_d2d_dies.sh {RUN}/bench/d0 0",
+    "expect": "pass",
+    "pass_regex": "D2D_DIES_PASS",
+    "threads": 1,
+    "peak_ram_gb": 8
+   },
+   {
+    "name": "d2d_dies_mut_slot",
+    "cmd": "bash rtl/test/qwen_split/run_d2d_dies.sh {RUN}/bench/m1 1",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 8
+   }
+  ],
+  "views_to": "physical/ref_tile/qfd_d2d_static_r1/views",
+  "record_to": "results/rtl/ref_tile/qfd_d2d_static_r1"
+ },
+ "children": [],
+ "inter": [],
+ "inhold": true,
+ "outhold": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ }
+}

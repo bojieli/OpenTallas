@@ -2,6 +2,8 @@
 `default_nettype none
 module tb_hgi_coll_b2_vmport;
     parameter integer RLY=8, MUT=0, N=128, KLINES=256, PHYSICAL_RING=1, ROUTE_MUT=0;
+    // SNC: SW slice local clients (die production 4 -> hub NC 9); client 0 carries the readback, the others idle
+    parameter integer SNC=1, SCW=0;   // SCW: COLL write-group relay stages (bank lane depth 4 + 2 SCW)
     function automatic integer next_sid(input integer s);
         if(!PHYSICAL_RING)next_sid=(s+1)%4;else case(s)0:next_sid=1;1:next_sid=3;3:next_sid=2;default:next_sid=0;endcase
     endfunction
@@ -28,11 +30,12 @@ module tb_hgi_coll_b2_vmport;
     for(genvar s=0;s<4;s=s+1) begin:g_slice
         wire [273:0] rsp;
         if(s==0)begin:g_sw
-            ot_vms_slice_coll_sw #(.PHYSICAL_RING(PHYSICAL_RING&&!ROUTE_MUT),.MUT(MUT)) u(.clk(clk),.rst_n(rst_n),.clk_coll_rx({5{clk}}),.clk_vm_child({13{clk}}),
+            wire [SNC*274-1:0] rspw; assign rsp=rspw[273:0];
+            ot_vms_slice_coll_sw #(.PHYSICAL_RING(PHYSICAL_RING&&!ROUTE_MUT),.NC(SNC),.COLL_WRS(SCW),.MUT(MUT)) u(.clk(clk),.rst_n(rst_n),.clk_coll_rx({5{clk}}),.clk_vm_child({13{clk}}),
                 .rgx_t_v(fr[RLY-1][2208 +:4]),.rgx_t_addr(fr[RLY-1][2048 +:160]),.rgx_t_data(fr[RLY-1][0 +:2048]),
                 .rgx_t_vm(fr[RLY-1][2212]),.rgx_f_cr(fc),.tkw_t_v(fr[RLY-1][2781]),.tkw_t_d(fr[RLY-1][2213 +:568]),
                 .tkw_f_cr(kfc),.coll_fault(ff),.coll_xw(),.coll_xwa(2'b0),
-                .cq(readq[s]),.cr(rsp),.rq(verify_rq[s]),.rq_cr(),.rr(verify_rr[s]),.wq('0),.wq_cr(),.wq_done(),.dq('0),.dq_done(),
+                .cq((SNC*338)'(readq[s])),.cr(rspw),.rq(verify_rq[s]),.rq_cr(),.rr(verify_rr[s]),.wq('0),.wq_cr(),.wq_done(),.dq('0),.dq_done(),
                 .vcb('0),.vcb_cr(),.kq_done(),.cw_in(ci[s]),.cw_in_cr(cic[s]),.cw_out(co[s]),.cw_out_cr(coc[s]),
                 .ccw_in(ni[s]),.ccw_in_cr(nic[s]),.ccw_out(no[s]),.ccw_out_cr(noc[s]),.bank_status(bs[s]),.hub_status(hs[s]),.mirror_busy(mb[s]));
         end else begin:g_peer
@@ -128,8 +131,8 @@ module tb_hgi_coll_b2_vmport;
             if(ks<KLINES)begin kv=1;kd={addr(4,ks),16'(ks%3==0?16'h5555:16'hffff),dataword(4,ks,1),dataword(4,ks,0)};end
             if(sent[0]==N&&sent[1]==N&&sent[2]==N&&sent[3]==N&&ks==KLINES&&ridle&&kidle)begin
                 // End-to-end drained means no packet write remains outstanding at the receiver.
-                for(integer l=0;l<5;l=l+1)if(g_slice[0].g_sw.u.u_coll.pc[l]!=4)$fatal(1,"premature credit drain lane%0d",l);
-                for(integer b=0;b<8;b=b+1)if(g_slice[0].g_sw.u.u_coll.on[b]!=0)$fatal(1,"premature wide write drain bank%0d",b);
+                for(integer l=0;l<5;l=l+1)if(g_slice[0].g_sw.u.u_coll.u_core.pc[l]!=4)$fatal(1,"premature credit drain lane%0d",l);
+                for(integer b=0;b<8;b=b+1)if(g_slice[0].g_sw.u.u_coll.u_core.on[b]!=0)$fatal(1,"premature wide write drain bank%0d",b);
                 $display("B2_WRITE cycles=%0d rgx=%0d topk=%0d",cycles-write_start,4*N,KLINES);phase=2;
             end
         end else if(phase==2&&!checking)begin
