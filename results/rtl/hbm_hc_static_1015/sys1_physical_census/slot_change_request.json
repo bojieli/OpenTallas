@@ -1,0 +1,194 @@
+{
+  "schema": "opentallas.physical.slot_change_request.v1",
+  "request_id": "HBM_HC_STATIC_SYS1_BANK_CLUSTER_V1",
+  "status": "REQUESTED_NOT_GRANTED",
+  "owners": {
+    "physical_assignment": "h_die",
+    "functional_integration": "h_hc_sfu/hc_static_engine"
+  },
+  "purpose": "Assign actual native static HC bank/shell/MAC-child/control clock contracts; legacy HCP envelope or S81 ROM partition cannot stand in for this composition",
+  "source_pins": [
+    {
+      "commit": "d30ae4714",
+      "path": "rtl/hdc/v41x/ot_hdc_v41x_hcp.sv",
+      "sha256": "a719521c87012ec5117e6b92f2089ade75b1a6faf727193543b758cf3ee8989f"
+    },
+    {
+      "commit": "d30ae4714",
+      "path": "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_projection_static.sv",
+      "sha256": "fee6286cf1ae6e3485608fe66d0ffcb6046f813f9cfdc30d357621cc5defad4f"
+    },
+    {
+      "commit": "faa293303",
+      "path": "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_engine_mtp_static.sv",
+      "sha256": "e59d83e85cdd95bca4a313d016c3972f2d93264645f1a026a10385274ca1d895"
+    },
+    {
+      "commit": "b3b45c34d",
+      "path": "results/rtl/ref_tile/hc_tile_xl/c5_redesign_spec.md",
+      "sha256": "bfaf8976706f00d15552eb0688e07e256cbcf6986595d23dc5231a8db7807c7e"
+    },
+    {
+      "commit": "15c472f82",
+      "path": "rtl/dsrom_sys/s81_hcx/ot_s81_hcx_hcp_partition.sv",
+      "sha256": "02802b5d806ae97cf21c91eaa2d796f0d389280c097b33d72504ff83d5dd4528"
+    },
+    {
+      "commit": "4bb5ee22d",
+      "path": "physical/ref_tile/hc_lanes_ref/views/ot_hdc_v41x_hcp_lanes/ot_hdc_v41x_hcp_lanes.lef",
+      "sha256": "8df98b519fa2bd613474ba9c5962ad7e2f719358cbbea193fbf0d739e527f642"
+    },
+    {
+      "commit": "4bb5ee22d",
+      "path": "physical/ref_tile/hc_lanes_ref/views/ot_hdc_v41x_hcp_lanes/child_lint.json",
+      "sha256": "95324898191517b66ef74517b036fcf01207c248215b4297c5cdadad9e6c71a3"
+    },
+    {
+      "commit": "4bb5ee22d",
+      "path": "physical/ref_tile/hc_lanes_ref/views/ot_hdc_v41x_hcp_lanes/insertion.json",
+      "sha256": "b85c649d8bc2575032df4175229f17bf553b6614b65d3bf3d9287ddcd64b71b7"
+    },
+    {
+      "commit": "4bb5ee22d",
+      "path": "physical/ref_tile/hc_lanes_ref/views/ot_hdc_v41x_hcp_lanes/abstract.json",
+      "sha256": "15619a52a7e295727cf6163736f35554c9359fa892d33139a10b1700eecb06c9"
+    }
+  ],
+  "actual_MAC_identity": {
+    "comparison": "closed job source vs d30ae4714 current static HCP source, actual MAC module body only",
+    "module": "ot_hdc_v41x_hcp_lanes",
+    "equal": true,
+    "current_module_sha256": "9a5b773b078624c3b8eaac5a4b25c42f6cc908f83f217da9ab1f3ca61c08ef48",
+    "closed_module_sha256": "9a5b773b078624c3b8eaac5a4b25c42f6cc908f83f217da9ab1f3ca61c08ef48"
+  },
+  "existing_closed_MAC": {
+    "outline_um": [
+      138.24,
+      138.24
+    ],
+    "flops": 11251,
+    "TT_setup_ps": 183.93,
+    "FF_hold_ps": 16.65,
+    "qualified_scope": "historical accepted MAC leaf; current export/physical binding must be checked before reuse; standalone leaf closure does not close bank/tile",
+    "routed_evidence": "lane_routed_ioref.json",
+    "insertion_reference": "physical/ref_tile/hc_lanes_ref/views/ot_hdc_v41x_hcp_lanes/insertion.json",
+    "per_bank_instances": 4,
+    "total_instances": 32,
+    "master": "ot_hdc_v41x_hcp_lanes",
+    "parameters": "default G8 LM8 LA7 SOR1 LRST1 ADRST0; no overrides"
+  },
+  "actual_failed_native_parent": {
+    "job": "hc_tile_xl-c4-550082537-hs",
+    "TT_setup_ps": -294.75,
+    "FF_hold_ps": -21.45,
+    "DRC": 11,
+    "c5_status": "source-pinned redesign specification only, no implemented/qualified replacement",
+    "causes": [
+      "250..480um wire plus5..14logic levels in one hop",
+      "window/memory capture cross-root skew",
+      "legacy weight-window runtime ready path forbidden in static successor"
+    ]
+  },
+  "failed_parent_raw_evidence": "tile_routed_ioref.json",
+  "requested_bank_clusters": {
+    "count": 8,
+    "per_cluster": {
+      "bank_stage": "ot_hdc_v41x_hcp_stage W32 AW16 ML3 LM8 LA7 SOR1 LG8",
+      "MAC_children": 4,
+      "real_SRAM_macros": [
+        {
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "source_commit": "4bb5ee22d",
+          "lef_path": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.lef",
+          "lef_sha256": "bb0024665e7323656008a9f4df35efe56fd6ca1cdef9ce4c8d2f9676fefb0227",
+          "outline_um": [
+            94.824,
+            41.04
+          ],
+          "instances_per_bank": 8
+        },
+        {
+          "master": "ot_sram_1r1w_1024x256_m2_r2c2",
+          "source_commit": "4bb5ee22d",
+          "lef_path": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.lef",
+          "lef_sha256": "bfb2797e8af014b88bea9717847ae66d67eb8038ec63bc00ab4543f2a913a3a4",
+          "outline_um": [
+            174.744,
+            70.47
+          ],
+          "instances_per_bank": 2
+        }
+      ],
+      "SRAM_clock_pins": 10,
+      "logical_read_ports": {
+        "FP32_weight": {
+          "bits_per_edge": 1024,
+          "selected_macros_per_edge": 4
+        },
+        "BF16_residual": {
+          "bits_per_edge": 512,
+          "selected_macros_per_edge": 2
+        }
+      },
+      "write_ports": "fixed compiler-owned SRAM write slots; local address/data capture shells required; no ready/credits/window queues",
+      "shell_clock_roots": 1,
+      "child_clock_roots": 4,
+      "hard_area_lower_bound_um2": 132202.22544,
+      "outline_um": null,
+      "pin_faces": null,
+      "reason_unassigned": "Actual shell area, clock population, pin/reach/cut placement not measured; die lead must assign model-composing slot before prototype/route"
+    }
+  },
+  "requested_controller_tree_tail": {
+    "controller_roots_expected_min": 1,
+    "tree_roots_expected_min": 1,
+    "tail_rsqrt_rawstore_roots_expected_min": 1,
+    "outline_um": null,
+    "required_action": "Derive actual bounded FF census; split further if >15000 sinks or measured CTS fails; no guessed closure"
+  },
+  "expected_clock_roots": {
+    "MAC": 32,
+    "bank_shell": 8,
+    "controller_tree_tail_lower_bound": 3,
+    "total_lower_bound": 43,
+    "exact_count": "OPEN pending bounded controller and shell census",
+    "clock_delivery": "Each actual hardchild needs phi-R at pin and insertion/spread receipt. Common-clk numerical proof does not qualify phase compensation."
+  },
+  "cross_bank_interface": {
+    "sum_bits": 1024,
+    "descriptor_bits": 40,
+    "fault_bits": 1,
+    "total_bits_per_edge": 1065,
+    "descriptor_hop_edges": 9,
+    "registered_pins_required": true,
+    "maximum_intertile_wire_um": 500,
+    "pin_faces": "TO_ASSIGN",
+    "cut_capacity": "TO_MEASURE"
+  },
+  "latency": {
+    "SYS1_legacy_formula_SYS_LAT_edges": 90,
+    "SYS1_leaf_capture_edges": 91,
+    "SYS0_leaf_capture_edges": 33,
+    "delta_leaf_edges": 58,
+    "status": "ANALYTICAL_PROPOSAL_NOT_MEASURED",
+    "caveat": "SYS_LAT is90; leaf capture is91. Additional assigned physical relays may add cycles; static raw-read calendar must be regenerated and proved."
+  },
+  "inherited_live_job": {
+    "host": "ot-epyc1tb",
+    "PID": 3397554,
+    "parent_PID": 3397070,
+    "state": "LIVE verified read-only at census",
+    "evidence": "inherited_live_process.txt",
+    "action": "PRESERVE; separate S81 resident projection characterization, do not restart or duplicate"
+  },
+  "required_assignment_response": [
+    "eight bank cluster slots/outlines and pin faces",
+    "32 accepted MAC child placement and actual clock delivery points",
+    "bounded bank-shell/controller/tree/tail clock-root plan",
+    "operand SRAM access and static crossbank/return calendar",
+    "routing cut capacity and <=500um segment budgets"
+  ],
+  "prototype_permitted": false,
+  "route_submitted": false,
+  "qualification": false
+}
