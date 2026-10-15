@@ -48,10 +48,10 @@
   ],
   "gap_um": 0.432,
   "manhattan_reach_um": 430.56,
-  "legal_origin_count": 866,
+  "legal_origin_count": 1210,
   "legal_origins_first_last": [
     [
-      13938.48,
+      13682.304,
       16517.52
     ],
     [
@@ -61,5 +61,7 @@
   ],
   "search_miss": "Default transverse samples floor(cy-h/2)=16515.36 outside bay lower16515.768 by0.408um, then +/-19.44um. Sole legal row16517.52 is absent. Across orientation cannot fit20.76um bay.",
   "limits": "Uses actual snapshot nearby occupancy, allowed bay and reach. PG/reset/CTS and native pin electrical feasibility unproved. No GRT/STA/finalized model. Not proof whole geometry impossible.",
-  "next": "Create wider explicit home/channel or local capture within complete connected group C; any exact legal-row search repair needs source-pinned tests and full physical qualification."
+  "next": "Create wider explicit home/channel or local capture within complete connected group C; any exact legal-row search repair needs source-pinned tests and full physical qualification.",
+  "audit_tool": "tools/s81/audit_return_boundary.py",
+  "enumeration_scope": "Entire allowed crossing bay intersected with actual source reach; previous866 count was the forward x>=13938.48 subset"
 }
