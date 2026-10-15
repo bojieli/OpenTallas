@@ -3,7 +3,7 @@
 //   mountDataflow(el, {data, clock, design, group, onNode})   data = token-path record, clock = token core Clock
 import { STATUS, BYPASS_COLOR, DATA_BASE, loadIndex, loadModel, fmtBits, fmtUm, fmtBitUm, widthPx, statusText, linkLabel, incident,
   cutMap, linkCutRatio, cutLabel, tokenMapping, linkActive } from './model.js';
-import { Floor, bundleText } from './floor.js';
+import { Floor, bundleText, strokePx } from './floor.js';
 import { LinkTable } from './table.js';
 import { mountDag, pairIndex } from './dag.js';
 
@@ -39,11 +39,15 @@ export async function mountDataflow(root, opts) {
   const modeBtns = data ? ['replay', 'all'].map((k) => H('button', { type: 'button', 'aria-pressed': String(S.mode === k), 'data-mode': k }, k === 'replay' ? 'Replay token' : 'All links')) : [];
   const tog = (key, label, title) => H('label', { class: 'df-tog', title }, H('input', { type: 'checkbox', 'data-k': key, ...(S[key] ? { checked: true } : {}) }), ' ' + label);
   const minSel = H('select', { 'aria-label': 'Minimum link width' }, ...[[0, 'all widths'], [8, '≥ 8 bit'], [64, '≥ 64 bit'], [256, '≥ 256 bit'], [1024, '≥ 1 kbit']].map(([v, t]) => H('option', { value: v }, t)));
+  const lenSel = H('select', { 'aria-label': 'Minimum link length', title: 'auto: links shorter than the reach are shown as a local density fill while zoomed out' },
+    ...[['auto', 'local → density'], ['0', 'all lengths'], ['100', '≥ 100 µm'], ['reach', '≥ reach'], ['2000', '≥ 2 mm']].map(([v, t]) => H('option', { value: v }, t)));
+  const wIn = H('input', { type: 'range', min: 0.3, max: 2.5, step: 0.1, value: 0.7, 'aria-label': 'Link width scale', class: 'df-w' });
+  const wLab = H('label', { class: 'df-tog', title: 'Stroke width scale (width ∝ log₂ bits, capped)' }, 'width ', wIn);
   const fitB = H('button', { type: 'button', title: 'Fit the die (key 0)' }, 'Fit');
   const top = H('div', { class: 'df-top' }, dieSel, H('div', { class: 'df-seg', role: 'group', 'aria-label': 'View' }, ...modeBtns),
     tog('cong', 'cut congestion', 'Bits crossing each 260 µm cut window ÷ routing tracks; red above the 0.60 limit'),
     tog('man', 'Manhattan', 'Draw links as L-shaped (x then y) routes'), data ? tog('trail', 'trail', 'Fade recently used links') : null,
-    tog('bypass', 'bypass only', 'Only links whose flight line crosses unrelated blocks'), minSel, fitB);
+    tog('bypass', 'bypass only', 'Only links whose flight line crosses unrelated blocks'), minSel, lenSel, wLab, fitB);
   const cov = H('div', { class: 'df-cov' });
   const cmp = H('details', { class: 'df-cmp', ...(rows.some((r) => r.role === 'candidate') ? { open: true } : {}) });
   const strip = H('canvas', { class: 'df-strip', role: 'slider', tabindex: 0, 'aria-label': 'Token stages; click to jump' });
@@ -70,7 +74,8 @@ export async function mountDataflow(root, opts) {
 
   let lodText = '';
   const floor = new Floor(floorEl, { onPick: pick, onHover: hover, onPaint: (f) => {
-    const t = `${(f.visibleCount || 0).toLocaleString()} link${f.visibleCount === 1 ? '' : 's'} in view · ${f.lod === 'bundled' ? 'bundled by screen area (zoom in to separate)' : 'each link drawn along its hops'}`;
+    const n = f.visibleCount || 0, loc = f.localCount || 0;
+    const t = `${n.toLocaleString()} link${n === 1 ? '' : 's'} in view · ${f.lod === 'bundled' ? `${(f.bundleCount || 0).toLocaleString()} strokes (parallel hops merged)` : 'each link along its hops'}${loc ? ` · ${loc.toLocaleString()} local as density` : ''}`;
     if (t !== lodText) { lodText = t; lod.textContent = t; } } });
   const table = new LinkTable(tableEl, { onSelect: (i) => selectLink(i, true) });
   const dag = data ? mountDag(dagEl, { colorOf: (c) => clsColor[c] || '#8a97b8', onEdge: (e) => { if (clock) clock.pause(); select({ kind: 'dag', ids: e.ids, label: e.label, text: e.text }, true); },
@@ -129,7 +134,8 @@ export async function mountDataflow(root, opts) {
     legend.replaceChildren(
       ...STATUS.slice(0, 3).map((s, k) => H('span', {}, sw(s.color), k === 0 ? `≤ ${m.reach} µm` : k === 1 ? (m.explicit ? 'relayed' : 'needs relay') : 'hop > reach')),
       H('span', {}, sw('#c3cbe0', true), 'crosses unrelated blocks'),
-      H('span', {}, H('i', { style: 'border-top:1px solid #c3cbe0;width:10px' }), H('i', { style: 'border-top:7px solid #c3cbe0;width:14px' }), 'width ∝ log₂ bits'),
+      H('span', {}, H('i', { style: `border-top:${Math.max(1, strokePx(8, floor.st.wscale)).toFixed(1)}px solid #c3cbe0;width:10px` }), H('i', { style: `border-top:${strokePx(4096, floor.st.wscale).toFixed(1)}px solid #c3cbe0;width:14px` }), 'width ∝ log₂ bits, capped; thick = bundle of N links (hover)'),
+      H('span', {}, H('i', { style: 'height:8px;width:10px;background:#7aa7ff80' }), 'local links (density)'),
       ...(S.cong ? [H('span', {}, sw('#ff3b3b'), `cut > ${m.rec.cut.limit}`)] : []));
   }
 
@@ -378,14 +384,16 @@ export async function mountDataflow(root, opts) {
     if (clock) clock.pause();
     if (p.link != null) select({ kind: 'link', i: p.link });
     else if (p.block != null) select({ kind: 'block', b: p.block });
-    else if (p.bundle) select({ kind: 'bundle', ids: p.bundle.links, label: 'Bundled links', text: bundleText(m, p.bundle) + (p.bundle.links.length < p.bundle.n ? ` (first ${p.bundle.links.length} listed)` : '') });
+    else if (p.bundle) select({ kind: 'bundle', ids: p.bundle.links, label: p.bundle.dens ? 'Local links' : 'Bundled links', text: bundleText(m, p.bundle) + (p.bundle.links.length < p.bundle.n ? ` (first ${p.bundle.links.length} listed)` : '') });
   }
   function hover(p, ev) {
     if (!p || !ev) { tipEl.style.display = 'none'; return; }
     let html = '';
-    if (p.link != null) { const i = p.link; html = `<b>${esc(linkLabel(m, i))}</b><br>${esc(m.rec.links[i].c)} · ${fmtBits(m.bits[i])} · ${fmtUm(m.len[i])}${m.stages[i] >= 0 ? ` · ${m.stages[i]} stages` : ''}<br><span style="color:${STATUS[m.status[i]].color}">${esc(statusText(m, i))}</span>${m.cross[i] ? `<br><span style="color:${BYPASS_COLOR}">crosses ${m.cross[i]} unrelated block${m.cross[i] === 1 ? '' : 's'}</span>` : ''}`; }
-    else if (p.bundle) html = esc(bundleText(m, p.bundle)) + '<br><span class="dim">click to list; zoom in to separate</span>';
-    else if (p.block != null) html = `<b>${esc(m.bname[p.block])}</b><br>${esc(m.bmaster[p.block] || '')} · ${incident(m, p.block).length} links`;
+    if (p.link != null) { const i = p.link, e = m.ends[i], ms = (b) => b >= 0 ? `${m.bmaster[b] || m.bname[b]}${m.bkind[b] ? ' [' + m.bkind[b] + ']' : ''}` : '?';
+      const sinks = [...new Set(e.slice(1).map(ms))];
+      html = `<b>${esc(linkLabel(m, i))}</b><br><span class="dim">${esc(ms(e[0]))} → ${esc(sinks.slice(0, 2).join(', '))}${sinks.length > 2 ? ` +${sinks.length - 2}` : ''}</span><br>${esc(m.rec.links[i].c)} · ${fmtBits(m.bits[i])} · ${fmtUm(m.len[i])}${m.stages[i] >= 0 ? ` · ${m.stages[i]} stages` : ''}<br><span style="color:${STATUS[m.status[i]].color}">${esc(statusText(m, i))}</span>${m.cross[i] ? `<br><span style="color:${BYPASS_COLOR}">crosses ${m.cross[i]} unrelated block${m.cross[i] === 1 ? '' : 's'}</span>` : ''}`; }
+    else if (p.bundle) html = `<b>${p.bundle.dens ? 'Local links' : `Bundle of ${p.bundle.n.toLocaleString()} links`}</b><br>` + esc(bundleText(m, p.bundle)) + '<br><span class="dim">click to list; zoom in to separate</span>';
+    else if (p.block != null) html = `<b>${esc(m.bname[p.block])}</b><br>${esc(m.bmaster[p.block] || '')}${m.bkind[p.block] ? ` [${esc(m.bkind[p.block])}]` : ''} · ${incident(m, p.block).length} links`;
     tipEl.innerHTML = html; tipEl.style.display = 'block';
     const x = Math.min(innerWidth - 300, ev.clientX + 14), y = Math.min(innerHeight - 90, ev.clientY + 14);
     tipEl.style.left = x + 'px'; tipEl.style.top = y + 'px';
@@ -407,6 +415,8 @@ export async function mountDataflow(root, opts) {
     if (k === 'trail') { cur = -1; onTime(clock.t, true); }
   });
   minSel.addEventListener('change', () => floor.set({ minBits: +minSel.value }));
+  lenSel.addEventListener('change', () => floor.set({ minLen: lenSel.value === 'auto' ? 'auto' : lenSel.value === 'reach' ? m.reach : +lenSel.value }));
+  wIn.addEventListener('input', () => { floor.set({ wscale: +wIn.value }); renderLegend(); });
   fitB.addEventListener('click', () => floor.fit());
   let unsub = null;
   if (data) {

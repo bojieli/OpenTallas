@@ -43,6 +43,15 @@ module tb_coll_tp8_static_links #(
     reg [159:0]  cmdv [0:4095];
     reg [73:0]   pwv  [0:255];        // {addr 10, data 64}
     integer NMSG, NPW, START, DROP, CORRUPT, MAXCYC;
+`ifdef OT_TP8S_SEQSU
+    // sequencer stage identity carried in every command/producer tag: {token, position, message}
+    localparam [17:0] TOKEN = 18'h2A5C3;
+    localparam [7:0]  POSN  = 8'h9B;
+    localparam [31:0] TAGBASE = {TOKEN, POSN, 6'd0};
+    integer TAGBAD, TOKMUT;
+`else
+    localparam [31:0] TAGBASE = 32'd0;
+`endif
     string dir;
     reg [3:0] rcnt = 0;
     wire rst_n = (rcnt == 4'hF);
@@ -88,10 +97,26 @@ module tb_coll_tp8_static_links #(
         for (g = 0; g < ND; g = g + 1) begin : g_die
             localparam integer P = g / 2, D = g % 2;
             // ---------------- issuer ----------------
+`ifdef OT_TP8S_SEQSU
+            // Actual sequencer collective face (qfd_seq_su_collective_calendar, as instantiated by qfd_seq_su_static /
+            // _gateway): the stage program arrives on the sequencer's decoded host word dh (PW window 944..960, start,
+            // token, position) and the die binds coll_cmd exactly as qfd_native_compute_join: v=[49], tag=[48:17]
+            // ({token 18, position 8, tag 6}), mode=[16], words=[15:0].  dh is the declared boundary stimulus.
+            wire [186:0] dh;
+            wire [49:0]  scmd;
+            assign dh = {68'd0, pw_go, (10'd944 + pw_a), ((TAGBAD && pw_a == 10'd1) ? 64'd3 : pw_d), 1'b0, stage_start,
+                         6'd0, (TOKMUT ? (TOKEN ^ 18'd1) : TOKEN), 10'd0, POSN};
+            qfd_seq_su_collective_calendar u_seqc (.ck(clk), .rsi(rst_n), .dh(dh), .cmd_free(cfree[g]), .cmd(scmd),
+                .cfg_ready(iact[g]), .fault(ifl[g]));
+            assign icv[g] = scmd[49]; assign itag[g*TAGW +: TAGW] = scmd[48:17];
+            assign imode[g] = scmd[16]; assign iwords[g*16 +: 16] = scmd[15:0];
+            assign idone[g] = 1'b0;
+`else
             ot_coll_cmd_issue #(.DEPTH(8), .BASE(0)) u_iss (.clk(clk), .rst_n(rst_n), .pw_v(pw_go), .pw_addr(pw_a),
                 .pw_data(pw_d), .start(stage_start), .cmd_free(cfree[g]), .cmd_v(icv[g]), .cmd_mode(imode[g]),
                 .cmd_words(iwords[g*16 +: 16]), .cmd_tag(itag[g*TAGW +: TAGW]), .active(iact[g]), .done(idone[g]),
                 .fault(ifl[g]));
+`endif
 `ifdef OT_TP8S_PARENT
             wire[54:0]fck;
             for(genvar cf=0;cf<5;cf=cf+1)begin:g_faceclocks
@@ -235,13 +260,13 @@ module tb_coll_tp8_static_links #(
             assign id[g*FW +: FW] = part[`C_PB(pm) + g*`C_W(pm) + pw];
             assign il[g] = (pw == `C_W(pm) - 1);
             assign im[g] = `C_MODE(pm);
-            assign it[g*TAGW +: TAGW] = pm;
+            assign it[g*TAGW +: TAGW] = TAGBASE | pm;
             // ---------------- issuer timing check: command at its compiled cycle with the compiled fields ----------
             integer cm = 0;
             always @(posedge clk) if (rst_n) begin
                 if (icv[g]) begin
                     if (cm >= NMSG || cyc != `C_ISS(cm) || imode[g] != `C_MODE(cm) || iwords[g*16 +: 16] != `C_W(cm) ||
-                        itag[g*TAGW +: TAGW] != cm) begin
+                        itag[g*TAGW +: TAGW] != (TAGBASE | cm)) begin
                         cmd_bad = cmd_bad + 1;
                         if (cmd_bad < 5) $display("CMD die=%0d cyc=%0d msg=%0d", g, cyc, cm);
                     end
@@ -300,6 +325,10 @@ module tb_coll_tp8_static_links #(
         if (!$value$plusargs("DROP=%d", DROP)) DROP = -1;
         if (!$value$plusargs("CORRUPT=%d", CORRUPT)) CORRUPT = -1;
         if (!$value$plusargs("MAXCYC=%d", MAXCYC)) MAXCYC = 400000;
+`ifdef OT_TP8S_SEQSU
+        if (!$value$plusargs("TAGBAD=%d", TAGBAD)) TAGBAD = 0;
+        if (!$value$plusargs("TOKMUT=%d", TOKMUT)) TOKMUT = 0;
+`endif
         $readmemh({dir, "/part.hex"}, part);
         $readmemh({dir, "/sum.hex"}, sum);
         $readmemh({dir, "/cmd.hex"}, cmdv);

@@ -44,7 +44,7 @@ module tb_dsfd_sp_vm_static;
     dsfd_sp_vm #(.CAP_PIPE(CAP_PIPE), .READ_PIPE(READ_PIPE)) dut (
         .ck_read_data_t({64{t_ck}}), .ck_read_valid_t({8{t_ck}}), .rss_read_data_t({64{rss}}), .rss_read_valid_t({8{rss}}),
         .ck_core_t(t_ck), .ck_rsched_t(t_ck), .ck_seq_t(t_ck), .ck_landing_t(t_ck),
-        .ck_mem_fsr_t({16{t_ck}}), .ck_mem_return_t({4{t_ck}}), .ck_mem_bank_t({128{t_ck}}),
+        .ck_mem_fsr_t({16{t_ck}}), .ck_mem_return_t({16{t_ck}}), .ck_mem_bank_t({128{t_ck}}),
         .ck_mem_wcapture_t({128{t_ck}}), .ck_mem_wscatter_t({16{t_ck}}),
         .ck_mem_relay_req_t({48{t_ck}}), .ck_mem_relay_rsp_t({48{t_ck}}),
         .ck_write_control_t(t_ck), .ck_write_header_t(t_ck), .ck_write_payload_t({4{t_ck}}),

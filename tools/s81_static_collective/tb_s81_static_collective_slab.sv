@@ -23,7 +23,7 @@ module tb_s81_static_collective_slab;
  dsfd_sp_vm vm(
   .ck_read_data_t({64{clk}}),.ck_read_valid_t({8{clk}}),.rss_read_data_t({64{rst_n}}),.rss_read_valid_t({8{rst_n}}),
   .ck_core_t(clk),.ck_rsched_t(clk),.ck_seq_t(clk),.ck_landing_t(clk),
-  .ck_mem_fsr_t({16{clk}}),.ck_mem_return_t({4{clk}}),.ck_mem_bank_t({128{clk}}),
+  .ck_mem_fsr_t({16{clk}}),.ck_mem_return_t({16{clk}}),.ck_mem_bank_t({128{clk}}),
   .ck_mem_wcapture_t({128{clk}}),.ck_mem_wscatter_t({16{clk}}),
   .ck_mem_relay_req_t({48{clk}}),.ck_mem_relay_rsp_t({48{clk}}),
   .ck_write_control_t(clk),.ck_write_header_t(clk),.ck_write_payload_t({4{clk}}),

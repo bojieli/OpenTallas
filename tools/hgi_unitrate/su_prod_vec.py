@@ -252,6 +252,8 @@ def main():
     ap.add_argument('--drain-traffic', action='store_true', help='independent per-record masked VM write golden for the production chain, including overwritten predecessor sinks')
     ap.add_argument('--ds-program', default='', help='a ds_native --program-out dump: use its layer-0 rank-0 records '
                     '(DeepSeek-V4.1 1M) instead of the Qwen3-8B token program')
+    ap.add_argument('--ds-layer', type=int, default=0, help='--ds-program layer index (0: T128 window layer; 3: a T640 '
+                    'sparse layer, the DS 38/40-layer shape)')
     ap.add_argument('--sink-unstaged', action=argparse.BooleanOptionalAction, default=None,
                     help='append the SINK_UNSTAGED case (see the module text); default: on with --chain')
     ap.add_argument('--fwd-pin', action='store_true',
@@ -268,7 +270,7 @@ def main():
     if a.ds_program:
         from hgi_sim.records import decode_one
         dd = json.loads(Path(a.ds_program).read_text())
-        lay = dd['layers'][0]
+        lay = dd['layers'][a.ds_layer]
         words, recs = [], []
         for x in lay['records']:
             b = bytes.fromhex(x['hex'])

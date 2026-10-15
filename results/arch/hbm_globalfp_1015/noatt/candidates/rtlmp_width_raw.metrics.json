@@ -1,0 +1,422 @@
+{
+ "sum_bits_mm": 3250957.3023629985,
+ "traffic_mm_qwen": 29404940521.31157,
+ "traffic_mm_ds": 13158586458.164991,
+ "relay_flops": 6321006.0,
+ "bits_over_500": 342598.0,
+ "fixed_return_violation_bits": 52256,
+ "fixed_return_violations": 94,
+ "fixed_return_worst": [
+  [
+   "vmb_SW7>hc_SW4:LG_HC",
+   19457
+  ],
+  [
+   "vmb_SW6>su_SW3:LG_SU",
+   16851
+  ],
+  [
+   "vmb_NE0>hc_NE0:LG_HC",
+   16342
+  ],
+  [
+   "vmb_NE0>su_NE0:LG_SU",
+   16019
+  ],
+  [
+   "vmb_SW6>hc_SW3:LG_HC",
+   15565
+  ],
+  [
+   "vmb_NE0>sfu_NE0:LG_SFU",
+   15122
+  ],
+  [
+   "vmb_SW7>sfu_SW4:LG_SFU",
+   14982
+  ],
+  [
+   "vmb_SW7>su_SW4:LG_SU",
+   14646
+  ]
+ ],
+ "worst_cut": {
+  "ratio": 38.553,
+  "axis": "x",
+  "line_um": 20200.0,
+  "segment_um": [
+   0.0,
+   1000.0
+  ],
+  "bits": 566.0,
+  "whole_line_max": {
+   "x": 0.34,
+   "y": 0.306
+  },
+  "segments_over_060": 1305
+ },
+ "overlaps": 0,
+ "outside": 0,
+ "by_class": {
+  "COLL_EP": {
+   "bits_mm": 8593.7,
+   "traffic_mm_qwen": 0.92,
+   "traffic_mm_ds": 4.674,
+   "relay_flops": 12240,
+   "longest_um": 1892
+  },
+  "COLL_RING": {
+   "bits_mm": 37489.5,
+   "traffic_mm_qwen": 26.77,
+   "traffic_mm_ds": 135.966,
+   "relay_flops": 72688,
+   "longest_um": 8213
+  },
+  "COLL_VM": {
+   "bits_mm": 90728.3,
+   "traffic_mm_qwen": 12.053,
+   "traffic_mm_ds": 57.086,
+   "relay_flops": 172605,
+   "longest_um": 13593
+  },
+  "EP_SERDES": {
+   "bits_mm": 217472.9,
+   "traffic_mm_qwen": 26.993,
+   "traffic_mm_ds": 137.097,
+   "relay_flops": 430848,
+   "longest_um": 31349
+  },
+  "HBM_K": {
+   "bits_mm": 571893.8,
+   "traffic_mm_qwen": 16506.415,
+   "traffic_mm_ds": 1573.024,
+   "relay_flops": 1103788,
+   "longest_um": 15076
+  },
+  "HBM_VM": {
+   "bits_mm": 100178.8,
+   "traffic_mm_qwen": 22.499,
+   "traffic_mm_ds": 26.836,
+   "relay_flops": 196096,
+   "longest_um": 27457
+  },
+  "HC_CORE": {
+   "bits_mm": 24647.8,
+   "traffic_mm_qwen": 0.0,
+   "traffic_mm_ds": 8.563,
+   "relay_flops": 48128,
+   "longest_um": 19339
+  },
+  "HC_ENG": {
+   "bits_mm": 6688.0,
+   "traffic_mm_qwen": 0.0,
+   "traffic_mm_ds": 21.427,
+   "relay_flops": 11776,
+   "longest_um": 5918
+  },
+  "IDX_COLL": {
+   "bits_mm": 36215.7,
+   "traffic_mm_qwen": 0.0,
+   "traffic_mm_ds": 0.631,
+   "relay_flops": 71940,
+   "longest_um": 16613
+  },
+  "IDX_INT": {
+   "bits_mm": 35079.6,
+   "traffic_mm_qwen": 0.0,
+   "traffic_mm_ds": 6.689,
+   "relay_flops": 67249,
+   "longest_um": 15865
+  },
+  "IDX_VM": {
+   "bits_mm": 9327.3,
+   "traffic_mm_qwen": 0.0,
+   "traffic_mm_ds": 1.292,
+   "relay_flops": 17810,
+   "longest_um": 14164
+  },
+  "KV_DESC": {
+   "bits_mm": 31666.0,
+   "traffic_mm_qwen": 0.0,
+   "traffic_mm_ds": 1.583,
+   "relay_flops": 62272,
+   "longest_um": 34620
+  },
+  "LG_HC": {
+   "bits_mm": 104296.6,
+   "traffic_mm_qwen": 0.0,
+   "traffic_mm_ds": 38.462,
+   "relay_flops": 200716,
+   "longest_um": 19457
+  },
+  "LG_SFU": {
+   "bits_mm": 112681.9,
+   "traffic_mm_qwen": 9.806,
+   "traffic_mm_ds": 0.0,
+   "relay_flops": 216284,
+   "longest_um": 15122
+  },
+  "LG_SU": {
+   "bits_mm": 96705.3,
+   "traffic_mm_qwen": 243.321,
+   "traffic_mm_ds": 277.4,
+   "relay_flops": 184592,
+   "longest_um": 16851
+  },
+  "QUANT_VM": {
+   "bits_mm": 25418.7,
+   "traffic_mm_qwen": 0.0,
+   "traffic_mm_ds": 0.938,
+   "relay_flops": 48840,
+   "longest_um": 9511
+  },
+  "SFU_CORE": {
+   "bits_mm": 14055.1,
+   "traffic_mm_qwen": 1.131,
+   "traffic_mm_ds": 0.0,
+   "relay_flops": 26368,
+   "longest_um": 16284
+  },
+  "SM_HBM": {
+   "bits_mm": 199705.5,
+   "traffic_mm_qwen": 11263.311,
+   "traffic_mm_ds": 1073.368,
+   "relay_flops": 384880,
+   "longest_um": 13517
+  },
+  "SM_OUT": {
+   "bits_mm": 133590.8,
+   "traffic_mm_qwen": 257.134,
+   "traffic_mm_ds": 118.755,
+   "relay_flops": 262710,
+   "longest_um": 34620
+  },
+  "SM_X": {
+   "bits_mm": 1115035.2,
+   "traffic_mm_qwen": 987.635,
+   "traffic_mm_ds": 9433.41,
+   "relay_flops": 2194374,
+   "longest_um": 35251
+  },
+  "SU_CORE": {
+   "bits_mm": 26813.2,
+   "traffic_mm_qwen": 16.601,
+   "traffic_mm_ds": 57.259,
+   "relay_flops": 52224,
+   "longest_um": 21544
+  },
+  "VM_HBM": {
+   "bits_mm": 100178.8,
+   "traffic_mm_qwen": 0.225,
+   "traffic_mm_ds": 129.784,
+   "relay_flops": 196096,
+   "longest_um": 27457
+  },
+  "VM_HUB": {
+   "bits_mm": 85498.3,
+   "traffic_mm_qwen": 21.242,
+   "traffic_mm_ds": 12.264,
+   "relay_flops": 161938,
+   "longest_um": 14038
+  },
+  "VM_RING": {
+   "bits_mm": 66996.5,
+   "traffic_mm_qwen": 8.884,
+   "traffic_mm_ds": 42.078,
+   "relay_flops": 124544,
+   "longest_um": 5833
+  }
+ },
+ "J": 405.0408239505499,
+ "long_returns": [
+  {
+   "link": "idx_link>coll_SW:IDX_COLL",
+   "cls": "IDX_COLL",
+   "bits": 2180,
+   "length_um": 16613,
+   "reason": "IDX top-k link feeds the SW COLL delivery"
+  },
+  {
+   "link": "phy_NW>pc_NW0:HBM_K",
+   "cls": "HBM_K",
+   "bits": 2212,
+   "length_um": 15076,
+   "reason": "PC group distance along the 8.5 mm PHY edge"
+  },
+  {
+   "link": "ep_S1>lk_S1:EP_SERDES",
+   "cls": "EP_SERDES",
+   "bits": 1056,
+   "length_um": 31349,
+   "reason": "SerDes shoreline"
+  },
+  {
+   "link": "ep_S3>lk_S3:EP_SERDES",
+   "cls": "EP_SERDES",
+   "bits": 1056,
+   "length_um": 31297,
+   "reason": "SerDes shoreline"
+  },
+  {
+   "link": "phy_NW>pc_NW5:HBM_K",
+   "cls": "HBM_K",
+   "bits": 2212,
+   "length_um": 13991,
+   "reason": "PC group distance along the 8.5 mm PHY edge"
+  },
+  {
+   "link": "ep_S4>lk_S4:EP_SERDES",
+   "cls": "EP_SERDES",
+   "bits": 1056,
+   "length_um": 27247,
+   "reason": "SerDes shoreline"
+  },
+  {
+   "link": "phy_NW>pc_NW2:HBM_K",
+   "cls": "HBM_K",
+   "bits": 2212,
+   "length_um": 12937,
+   "reason": "PC group distance along the 8.5 mm PHY edge"
+  },
+  {
+   "link": "ep_N1>lk_N1:EP_SERDES",
+   "cls": "EP_SERDES",
+   "bits": 1056,
+   "length_um": 26018,
+   "reason": "SerDes shoreline"
+  },
+  {
+   "link": "phy_NW>pc_NW3:HBM_K",
+   "cls": "HBM_K",
+   "bits": 2212,
+   "length_um": 12260,
+   "reason": "PC group distance along the 8.5 mm PHY edge"
+  },
+  {
+   "link": "phy_NW>pc_NW7:HBM_K",
+   "cls": "HBM_K",
+   "bits": 2212,
+   "length_um": 11839,
+   "reason": "PC group distance along the 8.5 mm PHY edge"
+  },
+  {
+   "link": "ep_S2>lk_S2:EP_SERDES",
+   "cls": "EP_SERDES",
+   "bits": 1056,
+   "length_um": 24786,
+   "reason": "SerDes shoreline"
+  },
+  {
+   "link": "phy_NW>pc_NW1:HBM_K",
+   "cls": "HBM_K",
+   "bits": 2212,
+   "length_um": 10770,
+   "reason": "PC group distance along the 8.5 mm PHY edge"
+  },
+  {
+   "link": "phy_NE>pc_NE0:HBM_K",
+   "cls": "HBM_K",
+   "bits": 2212,
+   "length_um": 10497,
+   "reason": "PC group distance along the 8.5 mm PHY edge"
+  },
+  {
+   "link": "ep_S0>lk_S0:EP_SERDES",
+   "cls": "EP_SERDES",
+   "bits": 1056,
+   "length_um": 21563,
+   "reason": "SerDes shoreline"
+  },
+  {
+   "link": "phy_NE>pc_NE5:HBM_K",
+   "cls": "HBM_K",
+   "bits": 2212,
+   "length_um": 10062,
+   "reason": "PC group distance along the 8.5 mm PHY edge"
+  },
+  {
+   "link": "ep_N0>lk_N0:EP_SERDES",
+   "cls": "EP_SERDES",
+   "bits": 1056,
+   "length_um": 20770,
+   "reason": "SerDes shoreline"
+  },
+  {
+   "link": "phy_NW>pc_NW4:HBM_K",
+   "cls": "HBM_K",
+   "bits": 2212,
+   "length_um": 9700,
+   "reason": "PC group distance along the 8.5 mm PHY edge"
+  },
+  {
+   "link": "phy_NE>pc_NE7:HBM_K",
+   "cls": "HBM_K",
+   "bits": 2212,
+   "length_um": 9639,
+   "reason": "PC group distance along the 8.5 mm PHY edge"
+  },
+  {
+   "link": "phy_NE>pc_NE2:HBM_K",
+   "cls": "HBM_K",
+   "bits": 2212,
+   "length_um": 9210,
+   "reason": "PC group distance along the 8.5 mm PHY edge"
+  },
+  {
+   "link": "phy_NE>pc_NE3:HBM_K",
+   "cls": "HBM_K",
+   "bits": 2212,
+   "length_um": 8775,
+   "reason": "PC group distance along the 8.5 mm PHY edge"
+  },
+  {
+   "link": "phy_NE>pc_NE4:HBM_K",
+   "cls": "HBM_K",
+   "bits": 2212,
+   "length_um": 8351,
+   "reason": "PC group distance along the 8.5 mm PHY edge"
+  },
+  {
+   "link": "phy_NE>pc_NE6:HBM_K",
+   "cls": "HBM_K",
+   "bits": 2212,
+   "length_um": 7920,
+   "reason": "PC group distance along the 8.5 mm PHY edge"
+  },
+  {
+   "link": "phy_SE>pc_SE0:HBM_K",
+   "cls": "HBM_K",
+   "bits": 2212,
+   "length_um": 7881,
+   "reason": "PC group distance along the 8.5 mm PHY edge"
+  },
+  {
+   "link": "phy_SE>pc_SE1:HBM_K",
+   "cls": "HBM_K",
+   "bits": 2212,
+   "length_um": 7867,
+   "reason": "PC group distance along the 8.5 mm PHY edge"
+  },
+  {
+   "link": "phy_SE>pc_SE3:HBM_K",
+   "cls": "HBM_K",
+   "bits": 2212,
+   "length_um": 7867,
+   "reason": "PC group distance along the 8.5 mm PHY edge"
+  }
+ ],
+ "n_long_returns": 607,
+ "runtime_s": 79.0,
+ "candidate": "rtlmp_width_raw",
+ "seed": 1,
+ "start": "rtlmp",
+ "transforms": [],
+ "only": null,
+ "iters": 0,
+ "structural": [],
+ "area_mm2": 443.988,
+ "die_h": 25980.528,
+ "die_mm2": 856.95,
+ "attention": "sm",
+ "kv_home": "stack_local"
+}
