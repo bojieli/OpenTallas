@@ -43,6 +43,25 @@ CLKRX_WH = (412.488, 412.488)
 # band slab stacks that would straddle the head-row channel move below it (res_ser_1 lands beside the VM).
 STACK = os.environ.get('OT_SPLIT_STACK', 'n')    # 'n' = C4..C11 (stack under the N-edge link), 'seam' = C12
 HROW = 216.0                    # head-row channel half height kept free of slab stacks (1,567-b root relay 80 um + 2 channels)
+# ---- v1.2 (compute lead r4, 2026-10-14 21:3x): strap ties from real tie cells.  The die top holds only hard masters, so
+# a strap written as a netlist literal becomes an OpenROAD one_ / zero_ POWER net with no tie cell and no std-cell rail
+# (C13 / C15 OT_PA FAIL DRT-0305).  A master listed here has two 1-b OUTPUT ports tie_hi / tie_lo driven by TIEHI /
+# TIELO inside (owner hierarchy rule: glue into tiles); the die wires every strap bit of the instance to its OWN tie_hi /
+# tie_lo, pins beside the strap input on the same face.  OT_SPLIT_TIE_SELF = comma list of masters ('all' = every strap
+# master); a master whose RTL lacks the ports must stay out (port-bind reports the literal straps until it lands).
+TIE_STRAP_MASTERS = ('qfd_tile_nk', 'qfd_tile_nl', 'qfd_xcst_n', 'qfd_xcst_s', 'qfd_xcol_e', 'qfd_xcol_w',
+                     'qfd_su_cbuf_g', 'qfd_crom_g', 'qfd_sp_band_lanes')
+# the contract straps (results/arch/qwen_split_compute_1014/straps.json): ONLY these are tie-driven; chain-terminus ties
+# (tap_r, a_r, b_r, w_r, e_r, fault_i) stay literals so the port-bind keeps reporting them as INPUT_TIED defects
+STRAP_PORTS = frozenset([('qfd_tile_nk', 'tile_id'), ('qfd_tile_nl', 'tile_id'), ('qfd_xcst_n', 'sidx'), ('qfd_xcst_s', 'sidx'),
+                         ('qfd_xcol_e', 'tids'), ('qfd_xcol_w', 'tids'), ('qfd_su_cbuf_g', 'grp'), ('qfd_su_cbuf_g', 'f_lat'),
+                         ('qfd_crom_g', 'crom_lb'), ('qfd_sp_band_lanes', 'b0'), ('qfd_sp_band_lanes', 'lnk'),
+                         ('qfd_sp_band_lanes', 'tt')])
+_ts = os.environ.get('OT_SPLIT_TIE_SELF', '').strip()
+TIE_SELF = frozenset(TIE_STRAP_MASTERS if _ts == 'all' else [s for s in _ts.split(',') if s])
+assert TIE_SELF <= set(TIE_STRAP_MASTERS), f'OT_SPLIT_TIE_SELF: unknown masters {sorted(TIE_SELF - set(TIE_STRAP_MASTERS))}'
+
+
 # ---- C4 (2026-10-14, compute-die lead r2): owner-adopted distributed x slices (HANDOFF 0aa, el1014-qwen-dvm-build.log)
 DVM = os.environ.get('OT_SPLIT_DVM', '1') != '0'
 XCOL_WH = (64.8, 1313.28)       # qfd_xcol_e/w: xhead + 8 x qfd_xs_leaf (two write chains N / S), in the column corridor,
@@ -443,6 +462,8 @@ def place(v, m, G):
         from qwen_split.tree_hosts import apply as tree_hosts_apply
         rec['tree_hosts'] = tree_hosts_apply(v, m, pitch=490.0)
     _child_clocks(m, rec)
+    m['tie_self'] = sorted(TIE_SELF)
+    rec['tie_self'] = sorted(TIE_SELF)
     _link_words(m, rec)
     if os.environ.get('OT_SPLIT_TREE_VF', '1') != '0':
         _tree_widths(m, rec)

@@ -1487,6 +1487,71 @@ def _wrap(v, m, G, peers):
             vmm_ = M.get('qfd_sp_vector_memory')
             if vmm_ is not None and 'ar' in vmm_.ports:
                 vmm_.ports['ar'] = (vmm_.ports['ar'][0], 520) + tuple(vmm_.ports['ar'][2:])
+        # v1.2 (compute lead r4, 21:4x): contract straps are REAL pins of the receiving master.  C14's abstracts had no
+        # tile_id / sidx / tids / b0 / lnk pins at all, so the case silently dropped those die connections; every strap
+        # port of the ties list that the master model lacks gets a face group in the nearest free window of the face
+        # that carries the master's rst_n, and (compute_spine TIE_SELF) its two 1-b tie_hi / tie_lo outputs beside it.
+        _CSm = sys.modules.get('compute_spine')
+        if _CSm is not None and SPLIT_COMPUTE:
+            tie_ports = {}
+            mof = {i.name: i.master for i in model['insts']}
+            for inst, port, bits, val in model.get('ties', []):
+                mn_ = mof.get(inst)
+                if (mn_, port) in _CSm.STRAP_PORTS:
+                    tie_ports.setdefault(mn_, {})[port] = max(bits, tie_ports.get(mn_, {}).get(port, 0))
+
+            def _spans(q_, side):
+                out = []
+                for p_, sp in q_.ports.items():
+                    if sp[0] == 'face' and sp[2] == side:
+                        hw = sp[1] * 0.048 * sp[5] / 2
+                        out.append((sp[4] - hw, sp[4] + hw))
+                    elif sp[0] == 'pins' and sp[2] == side:
+                        out += [(x - 0.05, x + 0.05) for x in sp[4]]
+                return sorted(out)
+
+            def _free(q_, side, length, near, gap=1.0):
+                lim = q_.w if side in 'NS' else q_.h
+                occ = _spans(q_, side)
+                cands, lo = [], 2.0
+                for a, b in occ + [(lim - 2.0, lim)]:
+                    if a - gap - lo >= length:
+                        c = min(max(near, lo + length / 2), a - gap - length / 2)
+                        cands.append((abs(c - near), c))
+                    lo = max(lo, b + gap)
+                if not cands:
+                    raise RuntimeError(f'{q_.name}: no free {length:.2f}-um window on face {side} for a strap group')
+                return round(min(cands)[1], 4)
+
+            for mn_, need in sorted(tie_ports.items()):
+                q = M.get(mn_)
+                if q is None:
+                    continue
+                rs = q.ports.get('rst_n')
+                if rs is None or rs[0] not in ('face', 'pins'):
+                    if mn_ in _CSm.TIE_SELF:
+                        raise RuntimeError(f'{mn_}: tie_hi / tie_lo need a face rst_n to sit beside')
+                    continue          # its strap pins come from the closed view's plan in final() (band_lanes b0 / lnk)
+                side, layer = rs[2], rs[3]
+                near = rs[4] if rs[0] == 'face' else rs[4][0]
+                groups = [(p_, n_) for p_, n_ in sorted(need.items()) if p_ not in q.ports]
+                if mn_ in _CSm.TIE_SELF and not ('tie_hi' in q.ports and 'tie_lo' in q.ports):
+                    groups += [('tie_hi', 1), ('tie_lo', 1)]
+                for p_, n_ in groups:
+                    # rst_n's face first, then the other faces (xcol: its 64.8-um N face is full of n_d / n_r / rst_n)
+                    for side_ in [side] + [f_ for f_ in 'EWSN' if f_ != side]:
+                        lay_ = layer if side_ in (side,) or (side_ in 'NS') == (side in 'NS') else ('M5' if side_ in 'NS' else 'M4')
+                        try:
+                            c = _free(q, side_, n_ * 0.096, near if side_ == side else (q.w if side_ in 'NS' else q.h) / 2)
+                        except RuntimeError:
+                            continue
+                        side, layer, near = side_, lay_, c
+                        break
+                    else:
+                        raise RuntimeError(f'{mn_}: no face has a free {n_ * 0.096:.2f}-um window for strap {p_}')
+                    q.ports[p_] = ('face', n_, side, layer, c, 2)
+                    if p_ not in q.order:
+                        q.order.append(p_)
         final(model, M, k)
         return M
 
@@ -1588,6 +1653,9 @@ def _wrap(v, m, G, peers):
             if inst in byi:
                 key = (byi[inst].master, port)
                 live[key] = max(live.get(key, 0), bits)
+        for i_ in model['insts']:
+            if i_.master in model.get('tie_self', []):
+                live[(i_.master, 'tie_hi')] = live[(i_.master, 'tie_lo')] = 1
         # a port without a die net on THIS die is not emitted (the KV-die widths carried D2D faces: qkd_seq rf / tf)
         return {key: live[key] for key in set(w) | set(live) if key in live}
 
@@ -1709,9 +1777,20 @@ def _wrap(v, m, G, peers):
         for (inst, real), vals in joined.items():
             assert set(vals) == set(range(max(vals) + 1)), (inst, real, 'incomplete join')
             conns[inst].append(f'.{real}({joined_expr(vals)})')
+        tie_self = set(model.get('tie_self', []))
+        tied = set()
         for inst, port, bits, val in ties:
-            if inst in conns:
+            if inst not in conns:
+                continue
+            if byi[inst].master in tie_self and (byi[inst].master, port) in sys.modules['compute_spine'].STRAP_PORTS:
+                # v1.2: every strap bit from the instance's own TIEHI / TIELO outputs (MSB first)
+                hi, lo = f'tih_{inst}', f'til_{inst}'
+                conns[inst].append(f'.{port}({{' + ', '.join(hi if (val >> b) & 1 else lo for b in range(bits - 1, -1, -1)) + '})')
+                tied.add(inst)
+            else:
                 conns[inst].append(f".{port}({bits}'h{val:x})")
+        for inst in sorted(tied):
+            conns[inst] += [f'.tie_hi(tih_{inst})', f'.tie_lo(til_{inst})']
         for inst, d in phyb.items():
             for b, bits_ in sorted(d.items()):
                 hi = max(bits_)
