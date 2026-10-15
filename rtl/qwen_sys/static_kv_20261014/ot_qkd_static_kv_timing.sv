@@ -47,6 +47,7 @@ module ot_qkd_static_kv_timing #(
   // AQ_RD: the pushed entry is a tagged read; the column command is a queued read
   input  wire        wr_rd, output wire col_aq,
   // SROW: static-row queue (push s_v && s_r) and the static flag of the column command
+  input wire [346:0] s_context,output wire [346:0] col_context,
   input  wire        s_v, input wire s_we, input wire [4:0] s_bank, input wire [4:0] s_col, input wire [18:0] s_row,
   output wire        s_r, output wire col_sr, output wire s_pop
 );
@@ -55,7 +56,7 @@ module ot_qkd_static_kv_timing #(
     assign desc_r=0; assign row_v=0; assign row_prio=0; assign row_op=0; assign row_bank=0;
     assign row_row=0; assign col_v=0; assign col_bank=0; assign col_col=0; assign busy=0;
     assign ref_fault=0; assign schedule_fault=0; assign phase_idle=1; assign wr_r=0; assign col_we=0; assign col_aq=0;
-    assign s_r=0; assign col_sr=0; assign s_pop=0;
+    assign s_r=0; assign col_sr=0; assign s_pop=0;assign col_context=0;
   end else begin : on
     localparam W = (WR_EN != 0);
     localparam integer WQW = (WQ > 1) ? $clog2(WQ) : 1;
@@ -116,6 +117,8 @@ module ot_qkd_static_kv_timing #(
     localparam integer SQW = (SQD > 1) ? $clog2(SQD) : 1;
     reg [4:0] sq_bank [0:SQD-1]; reg [4:0] sq_col [0:SQD-1]; reg [18:0] sq_row [0:SQD-1]; reg sq_we [0:SQD-1];
     reg [SQW:0] sq_n; reg [SQW-1:0] sq_rp;
+    reg [346:0] sq_context[0:SQD-1];reg [346:0] shead_context;
+    assign col_context=shead_context;
     wire sq_ne = S && sq_n != 0;
     // the head, REGISTERED (sb_oh one-hot): bank, column, row, direction; scm: committed (its ACT issued or it hit);
     // sfl: switched to the twin once.  so_*: the newest static-opened bank and its row (cleared by its PRE).
@@ -488,6 +491,7 @@ module ot_qkd_static_kv_timing #(
           if (s_v && s_r) begin
             sq_bank[SQW'(sq_rp + sq_n)] <= s_bank; sq_col[SQW'(sq_rp + sq_n)] <= s_col;
             sq_row[SQW'(sq_rp + sq_n)] <= s_row; sq_we[SQW'(sq_rp + sq_n)] <= s_we;
+            sq_context[SQW'(sq_rp + sq_n)]<=s_context;
           end
           sq_n <= sq_n + ((s_v && s_r) ? 1'b1 : 1'b0) - (s_go ? 1'b1 : 1'b0);
           if (s_go) sq_rp <= SQW'(sq_rp + 1'b1);
@@ -495,8 +499,10 @@ module ot_qkd_static_kv_timing #(
           chg = s_go || sq_n == 0;
           if (chg) begin
             if (sq_n - (s_go ? 1'b1 : 1'b0) != 0) begin
+              shead_context<=sq_context[rpn];
               sb <= sq_bank[rpn]; sc <= sq_col[rpn]; srw <= sq_row[rpn]; swe <= sq_we[rpn]; sb_oh <= 32'b1 << sq_bank[rpn];
             end else begin
+              shead_context<=s_context;
               sb <= s_bank; sc <= s_col; srw <= s_row; swe <= s_we; sb_oh <= 32'b1 << s_bank;
             end
             sfl <= 1'b0; scm <= 1'b0;

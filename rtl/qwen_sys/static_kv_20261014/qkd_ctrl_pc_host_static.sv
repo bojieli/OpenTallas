@@ -31,6 +31,12 @@ module qkd_ctrl_pc_host_static #(
     output reg          fo,
     input wire static_cmd_owner,input wire [42:0] static_cmd,input wire reserved_rd,input wire reserved_static_col,input wire reserved_write_col,
     input wire [15:0] static_epoch,input wire expected_raw_valid,
+    input wire [1:0] cfg_stack,
+    input wire [317:0] es_context,
+    input wire es_expected_valid,input wire [60:0] es_expected_identity,
+    input wire [28:0] es_expected_address,input wire [4:0] es_expected_pc,input wire [1:0] es_expected_stack,
+    output wire native_commit_valid,output wire [60:0] native_commit_identity,
+    output wire [28:0] native_commit_address,
     output wire [15:0] corrected_epoch,
     output wire completion_v,completion_we,completion_fault
 );
@@ -88,7 +94,7 @@ module qkd_ctrl_pc_host_static #(
 
     // ---- command arbiter ---------------------------------------------------------------------------------------------
     wire        c_v;                 // embedding static command, HBM side of its crossing (below)
-    wire [286:0] c_d;
+    wire [286:0] c_d;wire [61:0] c_context;wire [346:0] col_context;wire native_observer_fault;
     reg  [3:0]  cr;
     reg  [2:0]  hold;
     reg         cur_v;
@@ -144,7 +150,7 @@ module qkd_ctrl_pc_host_static #(
         .clk(hclk), .rst_n(hgo), .cmd_v(cmd_v), .cmd(cmd), .cmd_first(static_owner_q?static_first_q:10'd0),.reserved_rd(rdslot_q),.reserved_static_col(srslot_q),.reserved_write_col(wrslot_q), .cmd_credit(cmd_credit),
         .row_v(row_v), .row_op(row_op), .row_bank(row_bank), .row_row(row_row),
         .col_v(col_v), .col_bank(col_bank), .col_col(col_col), .col_we(col_we), .busy(), .phase_idle(ctl_phase_idle), .fault(ctl_fault),
-        .s_v(c_v), .s_we(c_d[285]), .s_bank(c_d[284:280]), .s_col(c_d[279:275]), .s_row(c_d[274:256]),
+        .s_context({c_context,c_d[274:256],c_d[284:280],c_d[279:275],c_d[255:0]}),.col_context(col_context),.s_v(c_v), .s_we(c_d[285]), .s_bank(c_d[284:280]), .s_col(c_d[279:275]), .s_row(c_d[274:256]),
         .s_cr(s_cr), .col_sr(col_sr));
 
     // ---- WR column -> h_wcon, the delayed column of the pcport, completion check, write-done -------------------------
@@ -226,6 +232,10 @@ module qkd_ctrl_pc_host_static #(
     // together, preserving JEDEC spacings and CWL alignment. Physical static
     // completion and KV write retirement move with the actual launched column.
     reg physical_col_sr;
+    reg [3:0] expected_sr_pipe;
+    always @(posedge hclk or negedge h_rn)if(!h_rn)expected_sr_pipe<=0;else expected_sr_pipe<={expected_sr_pipe[2:0],reserved_static_col};
+    reg [346:0] physical_context;
+    always @(posedge hclk)physical_context<=col_context;
     always @(posedge hclk or negedge h_rn)
       if(!h_rn)begin po<=0;physical_col_sr<=0;end
       else begin po<={wd,col_col,col_bank,col_we,col_v,row_row,row_bank,row_op,row_v};physical_col_sr<=col_sr;end
@@ -233,26 +243,51 @@ module qkd_ctrl_pc_host_static #(
     // ---- embedding static port crossing (strip engine on the core clock) ---------------------------------------------
     (* keep *) reg         es_v_q;
     (* keep *) reg [286:0] es_d_q;
+    (* keep *) reg [317:0] es_context_q;
+    (* keep *) reg es_expected_q;
+    (* keep *) reg [60:0] es_expected_identity_q;
+    (* keep *) reg [28:0] es_expected_address_q;
+    (* keep *) reg [4:0] es_expected_pc_q,pc_core_q;
+    (* keep *) reg [1:0] stack_q,es_expected_stack_q;
+    reg native_intake_fault;
+    always @(posedge ck)begin
+      es_context_q<=es_context;es_expected_identity_q<=es_expected_identity;
+      es_expected_address_q<=es_expected_address;es_expected_pc_q<=es_expected_pc;
+      es_expected_stack_q<=es_expected_stack;stack_q<=cfg_stack;pc_core_q<=pc;
+    end
+    always @(posedge ck or negedge rs_q)
+      if(!rs_q)begin es_expected_q<=0;native_intake_fault<=0;end
+      else begin
+        es_expected_q<=es_expected_valid;
+        if(PROFILE==0 && ((es_v_q&&es_context_q[317])!=es_expected_q))native_intake_fault<=1;
+        if(es_v_q&&es_context_q[317] && (es_context_q[316:256]!=es_expected_identity_q ||
+          es_context_q[255:0]!={256{1'b1}} || !es_d_q[286] || !es_d_q[285] ||
+          {es_d_q[274:256],es_d_q[284:280],es_d_q[279:275]}!=es_expected_address_q ||
+          pc_core_q!=es_expected_pc_q || stack_q!=es_expected_stack_q))native_intake_fault<=1;
+      end
     always @(posedge ck or negedge rs_q) if (!rs_q) es_v_q <= 1'b0; else es_v_q <= es[0];
     always @(posedge ck) es_d_q <= es[287:1];
     wire         e_v, s_credit, f_core, f_ecdc;
     wire [257:0] e_d;
-    ot_qfd_emb_cdc #(.ENABLE(1)) u_ecdc (
-        .clk(ck), .rst_n(rs_q), .hclk(hclk), .hrst_n(h_rn), .s_v(es_v_q), .s_d(es_d_q), .c_v(c_v), .c_d(c_d),
+    ot_qkd_static_emb_cdc #(.ENABLE(1)) u_ecdc (
+        .clk(ck), .rst_n(rs_q), .hclk(hclk), .hrst_n(h_rn), .s_v(es_v_q), .s_d(es_d_q),.s_context(es_context_q[317:256]), .c_v(c_v), .c_d(c_d),.c_context(c_context),
         .h_credit(s_cr), .s_credit(s_credit), .h_v(em_v), .h_d(em_d), .e_v(e_v), .e_d(e_d),
         .fault_core(f_core), .fault_hbm(f_ecdc));
     reg          er_v, er_cr, er_f;
     reg  [257:0] er_d;
     always @(posedge ck or negedge rs_q)
         if (!rs_q) begin er_v <= 1'b0; er_cr <= 1'b0; er_f <= 1'b0; end
-        else begin er_v <= e_v; er_cr <= s_credit; er_f <= f_core; end
+        else begin er_v <= e_v; er_cr <= s_credit; er_f <= f_core | native_intake_fault; end
     always @(posedge ck) er_d <= e_d;
     assign er = {er_f, er_cr, er_d, er_v};
 
     // ---- sticky fault chain, S -> N ----------------------------------------------------------------------------------
     always @(posedge hclk or negedge h_rn)
         if (!h_rn) fo <= 1'b0;
-        else fo <= fo | fi | ctl_fault | port_fault | ecc_fault | hf_q | f_ecdc | f_late | f_cmd | f_early | f_wmis | f_tag | (rv_q!=rawslot_q);
+        else fo <= fo | fi | ctl_fault | port_fault | ecc_fault | hf_q | f_ecdc | f_late | f_cmd | f_early | f_wmis | f_tag | (rv_q!=rawslot_q) | native_observer_fault;
+    qkd_static_kv_write_observer #(.STRICT(PROFILE==0)) u_native_write_observer(
+        .hclk(hclk),.rst_n(h_rn),.po(po),.static_column(physical_col_sr),.expected_static_column(expected_sr_pipe[3]),.context_word(physical_context),
+        .commit_valid(native_commit_valid),.commit_identity(native_commit_identity),.commit_address(native_commit_address),.fault(native_observer_fault));
     qkd_ctrl_static_commit #(.WDONE(WDONE),.MUT(EVMUT)) u_static_commit(
         .hclk(hclk),.hrst_n(h_rn),.ck(ck),.rst_n(rs_q),
         .col_v(po[28]),.col_we(po[29]),.col_sr(physical_col_sr),

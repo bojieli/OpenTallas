@@ -12,6 +12,7 @@ module ot_qkd_static_ctrl_pc_emb #(parameter integer ENABLE=0,PC=0,PHASE=0,SQD=4
  output reg [18:0] row_row,
  output reg col_v,output reg [4:0] col_bank,col_col,output reg col_we,
  output reg busy,fault,output wire phase_idle,
+ input wire [346:0] s_context,output reg [346:0] col_context,
  input wire s_v,s_we,input wire [4:0] s_bank,s_col,input wire [18:0] s_row,
  output reg s_cr,output reg col_sr
 );
@@ -32,6 +33,8 @@ module ot_qkd_static_ctrl_pc_emb #(parameter integer ENABLE=0,PC=0,PHASE=0,SQD=4
  wire desc_ready,wr_ready,core_fault,core_busy,schedule_fault,core_idle;
  wire rv,cv,cwe,csr,sr_r,spop;wire [2:0] rop;wire [4:0] rb,cb,cc;wire [18:0] rr;
  (* keep *) reg s_v_q,s_we_q;(* keep *) reg [4:0] s_bank_q,s_col_q;(* keep *) reg [18:0] s_row_q;
+ (* keep *) reg [346:0] s_context_q;
+ wire [346:0] core_context;
  wire malformed=(head[31:30]==3) ||
     (head[31:30]==0 && (head[29:19]==0 || head[29:19]>1024 || head_first>=head[29:19]));
  wire pop=live && (malformed || (head[31:30]==0 ? desc_ready : head[31:30]==2 ? wr_ready : 1'b1));
@@ -47,10 +50,11 @@ module ot_qkd_static_ctrl_pc_emb #(parameter integer ENABLE=0,PC=0,PHASE=0,SQD=4
   .busy(core_busy),.ref_fault(core_fault),
   .wr_v(live && head[31:30]==2),.wr_bank(head[4:0]),.wr_col(head[9:5]),
   .wr_r(wr_ready),.col_we(cwe),.wr_rd(1'b0),.col_aq(),
-  .s_v(ENABLE!=0 && s_v_q),.s_we(s_we_q),.s_bank(s_bank_q),.s_col(s_col_q),.s_row(s_row_q),
+  .s_context(s_context_q),.col_context(core_context),.s_v(ENABLE!=0 && s_v_q),.s_we(s_we_q),.s_bank(s_bank_q),.s_col(s_col_q),.s_row(s_row_q),
   .s_r(sr_r),.col_sr(csr),.s_pop(spop));
  always @(posedge clk) begin
   cmd_q<=cmd;first_q<=cmd_first;
+  s_context_q<=s_context;col_context<=core_context;
   s_we_q<=s_we;s_bank_q<=s_bank;s_col_q<=s_col;s_row_q<=s_row;
   if(push)begin fifo[wp]<=cmd_q;first_fifo[wp]<=first_q;end
   if(count==0 && push)begin head<=cmd_q;head_first<=first_q;end

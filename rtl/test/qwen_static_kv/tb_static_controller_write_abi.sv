@@ -21,7 +21,7 @@ module tb_static_controller_write_abi;
     wire [32:0]  ko;
     wire         fo;
     qkd_ctrl_pc_host_static #(.MUT(MUT),.PROFILE(1)) dut (.pll_hbm(hclk), .hrst(hrst), .ck(ck), .rsi(rsi), .pc(5'(PCI)), .ci(ci), .co(co),
-        .es(es), .er(er), .po(po), .pi(pi), .ki(ki), .ko(ko), .fi(1'b0), .fo(fo),.static_cmd_owner(1'b0),.static_cmd(43'b0),.reserved_rd(1'b0),.reserved_static_col(1'b0),.reserved_write_col(1'b0),.static_epoch(16'd7),.expected_raw_valid(pi[0]),.corrected_epoch(),.completion_v(),.completion_we(),.completion_fault());
+        .es(es), .er(er), .po(po), .pi(pi), .ki(ki), .ko(ko), .fi(1'b0), .fo(fo),.static_cmd_owner(1'b0),.static_cmd(43'b0),.reserved_rd(1'b0),.reserved_static_col(1'b0),.reserved_write_col(1'b0),.static_epoch(16'd7),.expected_raw_valid(pi[0]),.cfg_stack(2'b0),.es_context(318'b0),.es_expected_valid(1'b0),.es_expected_identity(61'b0),.es_expected_address(29'b0),.es_expected_pc(5'b0),.es_expected_stack(2'b0),.native_commit_valid(),.native_commit_identity(),.native_commit_address(),.corrected_epoch(),.completion_v(),.completion_we(),.completion_fault());
 
     wire        p_rv  = po[O_po_row_v];
     wire [2:0]  p_rop = po[O_po_row_op +: 3];

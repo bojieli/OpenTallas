@@ -15,7 +15,7 @@ case "$kind" in
   src=("$base/qkd_static_kv_landing.sv" physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v);;
  controller)
   top=tb_static_host_controller;negative=4
-  src=("$base/qkd_ctrl_pc_host_static.sv" "$base/ot_qkd_static_ctrl_pc_emb.sv" "$base/ot_qkd_static_kv_timing.sv"
+  src=("$base/ot_qkd_static_emb_cdc.sv" "$base/qkd_static_kv_write_observer.sv" "$base/qkd_ctrl_pc_host_static.sv" "$base/ot_qkd_static_ctrl_pc_emb.sv" "$base/ot_qkd_static_kv_timing.sv"
    rtl/qwen_sys/kv_die_20261009/ot_qkvd_kcmd_tap.sv
    rtl/qwen_sys/emb_hbm_20261008/synth/ot_qfd_emb_pcport.sv rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_cdc.sv
    rtl/qwen_sys/q5_20261009/synth/ot_qfd_kv_landing_ecc.sv rtl/qwen_sys/host_20261013/qkd_host_static_pc.sv
