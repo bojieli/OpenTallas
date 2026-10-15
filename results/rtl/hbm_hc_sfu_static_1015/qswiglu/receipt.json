@@ -1,0 +1,30 @@
+{
+  "source_commit": "78ca02928",
+  "source_sha256": {
+    "rtl/hbm_accel/generic/peers/ot_hgi_sfu_programmed_engine.sv": "3ac18f43a440a0b8ea6ff89a59d4668ff045f40cadfe75e9e111e046beff9cab",
+    "rtl/hbm_accel/generic/peers/ot_hgi_sfu_static_engine.sv": "33a0546fc89d8141568eabf87f2cf857aa8763a632db7038b819cf286722982e",
+    "rtl/hbm_accel/generic/peers/ot_hgi_sfu_static_operand_store.sv": "16d38219117e35990fbea969776490d27832f2d7643cd1dd66233547bdf88160",
+    "rtl/test/hbm_accel/generic/tb_hgi_sfu_qswiglu_static.sv": "e7cbb8d3ce284bb53b8c16ec66751886dbe292920ccf0f20454113e21d164607",
+    "tools/hbm_static/make_qswiglu_gate.py": "746a9215de7e6b4c601fa3315d422530a3b16945e6c9352426e453d09222088e",
+    "tools/hbm_static/sfu_vector_calendar.py": "261f7d1ccb8e60be082b4fab8c4a6344f14c0677e6a5bfca6d4f1e6e77c3f0c7"
+  },
+  "actual_C12_lanes": 16,
+  "operand_SRAMs": 80,
+  "programme_SRAMs": 16,
+  "actual_scalar_register": true,
+  "operation": "canonical SFU.GLU 3072: clampG/clipU,SILU(G)*U*route,BF16",
+  "exact_words": 3072,
+  "mutant": "actual route scalar FP32 exponentbit flipped in loaded register; FAIL ENGINE_WORD",
+  "preload_edges": 192,
+  "compiler_edges": 368,
+  "drain_edges": 192,
+  "programme_consumer_edges": 5,
+  "canonical_price": 120.0,
+  "component_cycles_preload_programme_drain": 757,
+  "ratio_component_to_canonical_price": 6.308333333333334,
+  "throughput_qualified": false,
+  "qualification_note": "16lane component vs pricedfullmodel; pipeline/full64lane rate not yet measured; never reprice120",
+  "native_VM_join": false,
+  "physical_qualified": false,
+  "layer_qualified": false
+}

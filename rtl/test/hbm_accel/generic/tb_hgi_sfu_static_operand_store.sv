@@ -3,6 +3,9 @@ module tb_hgi_sfu_static_operand_store;
  localparam LWB=15,WORDS=28672;
  reg clk=0;always #0.416667 clk=~clk;
  reg rst_n=0;
+ reg [3:0] scalar_load=0,scalar_enable=0;
+ reg [95:0] scalar_addr=0;
+ reg [127:0] scalar_data=0;
  reg [63:0] rd_re=0;
  reg [1535:0] rd_addr=0;
  wire [2047:0] rd_q;
@@ -21,7 +24,7 @@ module tb_hgi_sfu_static_operand_store;
  integer checks=0;
  function automatic [31:0] value(input integer g,a);value=32'h3e000000+32'(100000*g+a*7);endfunction
  ot_hgi_sfu_static_operand_store dut(.clk(clk),.rst_n(rst_n),.rd_re(rd_re),.rd_addr(rd_addr),.rd_src(128'd0),.rd_q(rd_q),
- .vm_we(vm_we),.vm_waddr(vm_addr),.vm_wdata(vm_data),.stage_v(stage_v),.stage_group(stage_group),
+ .vm_we(vm_we),.vm_waddr(vm_addr),.vm_wdata(vm_data),.scalar_load(scalar_load),.scalar_enable(scalar_enable),.scalar_addr(scalar_addr),.scalar_data(scalar_data),.stage_v(stage_v),.stage_group(stage_group),
  .stage_addr(stage_addr),.stage_mask(64'hffffffffffffffff),.stage_data(stage_data),
  .drain_v(drain_v),.drain_addr(drain_addr),.drain_data(drain_data),.drain_result_v(drain_rv),.fault(fault));
  initial begin
@@ -40,7 +43,7 @@ module tb_hgi_sfu_static_operand_store;
    rd_re='1;vm_we='1;
    for(integer l=0;l<16;l++)begin
     vm_addr[24*l+:24]=24'(beat*16+l);vm_data[32*l+:32]=value(4,beat*16+l);
-    for(integer g=0;g<4;g++)rd_addr[24*(4*l+g)+:24]=24'((beat*16+l)^($test$plusargs("MUT_ADDR")?1:0));
+    for(integer g=0;g<4;g++)rd_addr[24*(4*l+g)+:24]=24'(((beat*16+l)^($test$plusargs("MUT_ADDR")?1:0))|($test$plusargs("MUT_RANGE")?(1<<LWB):0));
    end
    @(posedge clk);#0.001;
    if(fault)$fatal(1,"STORE_FAULT");
@@ -60,7 +63,19 @@ module tb_hgi_sfu_static_operand_store;
    end
    @(negedge clk);
   end
-  $display("PASS SFU actual80SRAM operand store shape4x%0d operand_checks=%0d read_words_per_edge=64 stage_sectors_per_edge=8 output_words_per_edge=16 memory_latency=1",WORDS,checks);
+  drain_v=0;
+  scalar_load=4'b0010;scalar_enable=4'b0010;
+  scalar_addr[47:24]=24'd12672;scalar_data[63:32]=32'h3f200000;
+  @(negedge clk);scalar_load=0;
+  rd_re=0;
+  for(integer l=0;l<16;l++)begin
+   rd_re[4*l+1]=1;rd_addr[24*(4*l+1)+:24]=24'd12672+($test$plusargs("MUT_SCALAR_ADDR")?1:0);
+  end
+  @(posedge clk);#0.001;
+  for(integer l=0;l<16;l++)if(rd_q[32*(4*l+1)+:32]!==32'h3f200000)$fatal(1,"SCALAR_WORD");
+  @(negedge clk);rd_re=0;
+  @(negedge clk);if(fault)$fatal(1,"SCALAR_IDENTITY");
+  $display("PASS SFU actual80SRAM operand store shape4x%0d operand_checks=%0d read_words_per_edge=64 stage_sectors_per_edge=8 output_words_per_edge=16 memory_latency=1 scalar_broadcast=16 address_identity=exact",WORDS,checks);
   $finish;
  end
 endmodule

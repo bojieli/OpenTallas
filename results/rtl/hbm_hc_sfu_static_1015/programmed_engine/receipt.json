@@ -1,0 +1,34 @@
+{
+  "source_commit": "521cad8d4",
+  "source_sha256": {
+    "rtl/hbm_accel/generic/peers/ot_hgi_sfu_programmed_engine.sv": "5ea197aff9b1c9f796ca51c49e692d2e2f26ecc6858ad474ee9578e3527a4411",
+    "rtl/hbm_accel/generic/peers/ot_hgi_sfu_calendar_paged_static.sv": "863b63106f0963a85365e4a26a31ca2c1bbcf22a6c6fe9088a5d067d139e1ce8",
+    "rtl/hbm_accel/generic/peers/ot_hgi_sfu_program_stripe_static.sv": "cfc58626830f0e8fe6c66488b7768e48a6e38cc124983d0483ec1221aca6c6ee",
+    "rtl/hbm_accel/generic/peers/ot_hgi_sfu_static_engine.sv": "3dac2a3551703b5d8a7a718ec55a3bc30bb1d5f52a4b145db3033d02ef50b7cf",
+    "rtl/hbm_accel/generic/peers/ot_hgi_sfu_static_operand_store.sv": "e1a7d41038aa43e22a12886749f884a17900254f27fa5f4fe9efae84dfdcf524",
+    "rtl/hbm_accel/generic/peers/ot_hgi_sfu_static_quarter.sv": "3f995082745666a40a4585bbf8e916059d4b6b0a986fa96c1a830570e1fff633",
+    "rtl/test/hbm_accel/generic/tb_hgi_sfu_programmed_engine.sv": "c0c26f5200cfd16ffa47a63e936273fa2fcd268d361d36e540708dca2b981cbd",
+    "tools/hbm_static/sfu_vector_calendar.py": "d9009b962fbb0e404cabefa17508417bc1d4666773956ca9de6ea187b37412d7",
+    "tools/hbm_static/sfu_control_image.py": "b9a1c3b0b4f378b6492b76752610b5986eafc2e4ac3e45ec33dffb60bab53984"
+  },
+  "actual_C12_lanes": 16,
+  "operand_SRAMs": 80,
+  "programme_SRAMs": 16,
+  "programme_instructions": 1846,
+  "protected_PC_bits": 11,
+  "exact_words": 28672,
+  "shape": [
+    4,
+    7168
+  ],
+  "operation": "SFU_NONE pass-through; nonlinear exact arithmetic independently proved",
+  "preload_edges": 1792,
+  "compiler_edges": 1846,
+  "programme_to_consumer_edges": 5,
+  "drain_edges": 1792,
+  "mutant": "actual first scheduled issue suppressed in loaded SRAM image; FAIL ENGINE_WORD beat0 lane0",
+  "native_VM_join": false,
+  "whole_layer_calendar_qualified": false,
+  "physical_qualified": false,
+  "native_qualified": false
+}
