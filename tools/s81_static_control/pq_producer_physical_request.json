@@ -1,0 +1,392 @@
+{
+  "schema": "opentallas.s81.pq-producer-physical-request.v1",
+  "source_commit": "fab8ea606",
+  "source_sha256": {
+    "rtl/dsrom_sys/s81_static_control/dsfd_stage_seq_static_c9.sv": "97048196b673ac7e246fe819b7a3ef65a16994458f883b737d1d96935ee3ea52",
+    "rtl/dsrom_sys/s81_static_control/dsfd_stage_seq_static_c.sv": "3fc9e5cd96970d49788e9a5a06fce3a31fb4984baa8cd505ad49084ada338521",
+    "rtl/dsrom_sys/s81_static_control/ot_s81_fixed_issue.sv": "a13de720755895b5f443dd8bb4b10dbfbc5cde5af059841bc10270f408d0df23",
+    "rtl/dsrom_sys/s81_static_control/ot_s81_fixed_mailbox.sv": "e9629558b211dd2000ebb8970f87176d0648a00e3da2195201bbd135539412b7",
+    "rtl/dsrom_sys/s81_static_control/ot_s81_pq_boot_control.sv": "32ecceb7c7d91cb541d1d25c8cd2ee1a4be83b1a1c0eed0031502bc53d4fb747",
+    "rtl/dsrom_sys/s81_ingest/dsfd_host_c.sv": "104d28042fb6366a5375dbc51a0b8c20a3a313309799aa660e61cc42704c7dfb"
+  },
+  "status": "REQUEST_ONLY_NO_PHYSICAL_VIEW_INHERITANCE",
+  "masters": {
+    "dsfd_stage_seq_static_c9": {
+      "parameters": {
+        "NOPS": 128,
+        "STAGE": 0
+      },
+      "ports": {
+        "ckv": {
+          "width": 1,
+          "direction": "input"
+        },
+        "rsv": {
+          "width": 1,
+          "direction": "input"
+        },
+        "ck": {
+          "width": 1,
+          "direction": "input"
+        },
+        "rst": {
+          "width": 1,
+          "direction": "input"
+        },
+        "f_ks": {
+          "width": 53,
+          "direction": "input"
+        },
+        "t_kd": {
+          "width": 54,
+          "direction": "output"
+        },
+        "f_pw": {
+          "width": 36,
+          "direction": "input"
+        },
+        "f_pq_pw": {
+          "width": 36,
+          "direction": "input"
+        },
+        "f_plen": {
+          "width": 8,
+          "direction": "input"
+        },
+        "t_st": {
+          "width": 6,
+          "direction": "output"
+        },
+        "t_pq_desc_pw": {
+          "width": 36,
+          "direction": "output"
+        },
+        "calendar_prime": {
+          "width": 1,
+          "direction": "output"
+        },
+        "stage_start": {
+          "width": 1,
+          "direction": "output"
+        },
+        "calendar_base": {
+          "width": 12,
+          "direction": "output"
+        },
+        "calendar_length": {
+          "width": 13,
+          "direction": "output"
+        },
+        "pq_image_sealed": {
+          "width": 1,
+          "direction": "input"
+        },
+        "pq_calendar_primed": {
+          "width": 1,
+          "direction": "input"
+        },
+        "pq_calendar_fault": {
+          "width": 1,
+          "direction": "input"
+        },
+        "c0": {
+          "width": 85,
+          "direction": "output"
+        },
+        "d0": {
+          "width": 9,
+          "direction": "input"
+        },
+        "s0": {
+          "width": 2,
+          "direction": "input"
+        },
+        "c1": {
+          "width": 85,
+          "direction": "output"
+        },
+        "d1": {
+          "width": 9,
+          "direction": "input"
+        },
+        "s1": {
+          "width": 2,
+          "direction": "input"
+        },
+        "c2": {
+          "width": 85,
+          "direction": "output"
+        },
+        "d2": {
+          "width": 9,
+          "direction": "input"
+        },
+        "s2": {
+          "width": 2,
+          "direction": "input"
+        },
+        "c3": {
+          "width": 85,
+          "direction": "output"
+        },
+        "d3": {
+          "width": 9,
+          "direction": "input"
+        },
+        "s3": {
+          "width": 2,
+          "direction": "input"
+        },
+        "c4": {
+          "width": 85,
+          "direction": "output"
+        },
+        "d4": {
+          "width": 9,
+          "direction": "input"
+        },
+        "s4": {
+          "width": 2,
+          "direction": "input"
+        },
+        "c5": {
+          "width": 85,
+          "direction": "output"
+        },
+        "d5": {
+          "width": 9,
+          "direction": "input"
+        },
+        "s5": {
+          "width": 2,
+          "direction": "input"
+        },
+        "c6": {
+          "width": 85,
+          "direction": "output"
+        },
+        "d6": {
+          "width": 9,
+          "direction": "input"
+        },
+        "s6": {
+          "width": 2,
+          "direction": "input"
+        },
+        "c7": {
+          "width": 85,
+          "direction": "output"
+        },
+        "d7": {
+          "width": 9,
+          "direction": "input"
+        },
+        "s7": {
+          "width": 2,
+          "direction": "input"
+        },
+        "c12": {
+          "width": 85,
+          "direction": "output"
+        },
+        "d12": {
+          "width": 9,
+          "direction": "input"
+        },
+        "s12": {
+          "width": 2,
+          "direction": "input"
+        },
+        "c13": {
+          "width": 85,
+          "direction": "output"
+        },
+        "d13": {
+          "width": 9,
+          "direction": "input"
+        },
+        "s13": {
+          "width": 2,
+          "direction": "input"
+        }
+      },
+      "total_pin_bits": 1223,
+      "clock_entries": [
+        "ck[0]",
+        "ckv[0]"
+      ],
+      "reset_entries": [
+        "rst[0]",
+        "rsv[0]"
+      ],
+      "requested_outline_um": [
+        302.4,
+        82.08
+      ],
+      "mapped_area_and_per_root_counts": "pending latest source map"
+    },
+    "dsfd_host_c": {
+      "parameters": {
+        "NS": 1
+      },
+      "defines": [
+        "DSFD_HOST_C_STATIC",
+        "DSFD_HOST_PQ_BOOT"
+      ],
+      "ports": {
+        "ck": {
+          "width": 1,
+          "direction": "input"
+        },
+        "rst": {
+          "width": 1,
+          "direction": "input"
+        },
+        "ckv": {
+          "width": 1,
+          "direction": "input"
+        },
+        "rsv": {
+          "width": 1,
+          "direction": "input"
+        },
+        "ck_ingest": {
+          "width": 2,
+          "direction": "input"
+        },
+        "f_collective": {
+          "width": 515,
+          "direction": "input"
+        },
+        "t_collective": {
+          "width": 77,
+          "direction": "output"
+        },
+        "f_lf": {
+          "width": 4,
+          "direction": "input"
+        },
+        "t_sseq_pw": {
+          "width": 36,
+          "direction": "output"
+        },
+        "t_pq_pw": {
+          "width": 36,
+          "direction": "output"
+        },
+        "t_sseq_plen": {
+          "width": 8,
+          "direction": "output"
+        },
+        "f_sseq_st": {
+          "width": 6,
+          "direction": "input"
+        },
+        "f_wfc_ft": {
+          "width": 4,
+          "direction": "input"
+        },
+        "hw": {
+          "width": 292,
+          "direction": "output"
+        },
+        "hc": {
+          "width": 9,
+          "direction": "input"
+        }
+      },
+      "total_pin_bits": 993,
+      "clock_entries": [
+        "ck[0]",
+        "ckv[0]",
+        "ck_ingest[0]",
+        "ck_ingest[1]"
+      ],
+      "reset_entries": [
+        "rst[0]",
+        "rsv[0]"
+      ],
+      "requested_outline_um": [
+        453.6,
+        77.76
+      ],
+      "mapped_area_and_per_root_counts": "pending split source map"
+    }
+  },
+  "logical_bindings": [
+    [
+      "HOST.t_pq_pw",
+      "SSEQ.f_pq_pw"
+    ],
+    [
+      "SSEQ.c13",
+      "PQ.c_cmd"
+    ],
+    [
+      "PQ.c_done",
+      "SSEQ.d13"
+    ],
+    [
+      "PQ.c_st",
+      "SSEQ.s13"
+    ],
+    [
+      "SSEQ.t_pq_desc_pw",
+      "PQ.f_desc_pw"
+    ],
+    [
+      "SSEQ.calendar_prime",
+      "PQ.calendar_prime"
+    ],
+    [
+      "SSEQ.stage_start",
+      "PQ.stage_start"
+    ],
+    [
+      "SSEQ.calendar_base",
+      "PQ.calendar_base"
+    ],
+    [
+      "SSEQ.calendar_length",
+      "PQ.calendar_length"
+    ],
+    [
+      "PQ.image_sealed",
+      "SSEQ.pq_image_sealed"
+    ],
+    [
+      "PQ.calendar_primed",
+      "SSEQ.pq_calendar_primed"
+    ],
+    [
+      "PQ.calendar_fault",
+      "SSEQ.pq_calendar_fault"
+    ]
+  ],
+  "source_component_timing": {
+    "calendar_start": "job mailbox launch J",
+    "command": "J+R+1 for issuer row R",
+    "endpoint_GO": "J+R+3",
+    "calendar_action": "J+T+2 for calendar timestamp T",
+    "descriptor_boot": "PW mailbox +1 registered demux edge +endpoint input capture",
+    "status": "PQ pin capture1 +boot fault +serial synchronizer2 +status launch1",
+    "example_fixture": {
+      "reprime_job_edges": 46,
+      "job_period_edges": 60,
+      "command_pin_to_done_pin_edges": 37
+    }
+  },
+  "die_transport": {
+    "bound": false,
+    "dispatch_eligible": false,
+    "required": "DIE must publish per-lane physical stages/phase; compiler must bind command/calendar/return offsets. Component37edges are NOT integrated die latency."
+  },
+  "new_memory": {
+    "rom_macros": 0,
+    "sram_macros": 0,
+    "descriptor_existing": "64x117 mapped FF rows",
+    "calendar_existing": "2x4096x72 actual ROM macros",
+    "host_fifo_extra_bits": "one route bit per16 existing FIFO entries"
+  },
+  "physical_qualification": false
+}
