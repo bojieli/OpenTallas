@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.die_port_bind.v2",
- "die_v": "/tmp/hd/sub2/hbm_v15_sw_vm.v",
+ "die_v": "results/arch/hbm_die_v15/sw_vm_bind/hbm_v15_sw_vm.v",
  "top": "hbm_v15_sw_vm",
  "verdict": "FAIL",
  "failing": [
@@ -102,7 +102,7 @@
     "hb_su_SW"
    ],
    "param_sets": {
-    "{\"QID\": \"0\", \"READ_RETURN\": \"10\", \"WRITE_RETURN\": \"7\"}": 1
+    "{\"BANK_GROUP\": \"1126306048\", \"NPG\": \"5\", \"QID\": \"0\", \"READ_RETURN\": \"10\", \"WRITE_RETURN\": \"7\"}": 1
    },
    "die_port_not_in_rtl": [],
    "input_unconnected": [],
@@ -254,7 +254,7 @@
  "multi_driven_nets": {},
  "top_assigns": [],
  "params_not_in_rtl": [],
- "die_sha256": "f42facef4a26392f84d2e3691f653afd6937235ea1dea3e762efa40cf9644c15",
+ "die_sha256": "6658271b1e8858693cabdf7d8aefd25f138947cd199bfe9f3011efc88bd7cca1",
  "straps_declared": [],
  "params_file": null,
  "rtl_roots": [

@@ -1,0 +1,139 @@
+{
+ "name": "dsfd_vm_static_landing_native_1015_r2",
+ "top": "dsfd_vm_static_landing",
+ "kind": "tile",
+ "sources": [
+  "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_landing.sv"
+ ],
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 181.44,
+  "h": 181.44,
+  "exact": true
+ },
+ "pins": {
+  "W": [
+   "ck",
+   "rst_n",
+   "larm_v",
+   "larm_g",
+   "larm_base",
+   "fault",
+   "o_d23"
+  ],
+  "N": [
+   "i_v",
+   "i_d01"
+  ],
+  "S": [
+   "o_v",
+   "o_row",
+   "o_d01"
+  ],
+  "E": [
+   "i_d23"
+  ]
+ },
+ "io_tcl": "physical/s81_vm_ctl_native_1015/dsfd_vm_static_landing.tcl",
+ "macros": [],
+ "route": {
+  "pd": 0.4,
+  "threads": 8,
+  "peak_ram_gb": 16,
+  "period_ps": 770,
+  "hold_margin_ns": 0.03
+ },
+ "recipe": 2,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": false,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "structural_change": "PINREG=1 pin-registered LARM/valid/payload inputs (+1 edge landing commit age), outhold off, io_budget 0.6/0.57; r1 view (TT+141.69) fails native launch/capture.",
+ "slot_change_request": {
+  "contract": "S81 VM native control-leaf geometry candidate",
+  "version": "f3-1015",
+  "why": "new hardened leaf; die/parent pin grant required before parent adoption"
+ },
+ "job": {
+  "owner": "claude:S81 VM F8 native-launch",
+  "branch": "claude/s81-vm-f3-ret-1015",
+  "tag": "native2",
+  "extra_paths": [
+   "tools/s81_vm",
+   "rtl/dsrom_sys/s81_ph/vm",
+   "rtl/dsrom_sys/s81_ph/test",
+   "physical/s81_vm_ctl_native_1015",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2"
+  ],
+  "purpose": "Native hardened VM control leaf: exact production-shape bench + observed DUT mutant, native CTS, one route.",
+  "benches": [
+   {
+    "name": "landing_positive",
+    "cmd": "bash tools/s81_vm/core_leaf_bench.sh {RUN}/bench/land_base landing ",
+    "expect": "pass",
+    "threads": 2,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "CORE_LEAF PASS landing"
+   },
+   {
+    "name": "landing_mutant_stride",
+    "cmd": "bash tools/s81_vm/core_leaf_bench.sh {RUN}/bench/land_mstride landing_mstride OT_VM_LANDING_MUT_STRIDE",
+    "expect": "fail",
+    "threads": 2,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "CORE_LEAF FAIL landing_mstride"
+   },
+   {
+    "name": "landing_ref_pinreg0",
+    "cmd": "bash tools/s81_vm/core_leaf_bench.sh {RUN}/bench/land_ref0 landing_ref0 OT_VM_LANDING_PINREG0",
+    "expect": "pass",
+    "threads": 2,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "CORE_LEAF PASS landing_ref0"
+   },
+   {
+    "name": "landing_mutant_rowskew",
+    "cmd": "bash tools/s81_vm/core_leaf_bench.sh {RUN}/bench/land_mskew landing_mskew OT_VM_LANDING_MUT_ROWSKEW",
+    "expect": "fail",
+    "threads": 2,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "CORE_LEAF FAIL landing_mskew"
+   }
+  ],
+  "cycles_added": 1
+ },
+ "io_budget": {
+  "in": 0.6,
+  "out": 0.57
+ },
+ "reroute_reason": {
+  "kind": "rtl_change",
+  "cell": "dsfd_vm_static_landing",
+  "launch_ps": 366.6,
+  "capture_ps": 321.0,
+  "source": "results/physical/s81_vm_static_ownership_1015/vm_native_pin_audit_1015.json",
+  "fix": "native pin audit FAIL on the CLOSED r1 view (TT +141.69/FF +25.26): launch 366.6 ps on 2033 o_d pins (unconditional FIRM outhold BUF-HB2-BUF pad + driver, as relay native_option) and capture 321.0 ps on 22 LARM/lane-valid pins feeding the arm compare / base adder / valid AND before the first flop. STRUCTURAL: PINREG=1 pin stage on every input (arm and rows delayed together; landing commit age 1 -> 2 edges, modelled in tb LAND_AGE and the compiler LARM constant), outhold off, boundary io_budget in 0.6 / out 0.57 (launch <= ~208 ps). Same pins/outline/one root."
+ }
+}

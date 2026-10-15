@@ -237,7 +237,7 @@ module dsfd_vm_static_core #(parameter integer READ_PIPE=0) (  // READ_PIPE 0 le
         .larm_v(larm_v), .larm_g(larm_g), .larm_base(larm_base),
         .pqx_chk({f_pqx[19], f_pqx[6:1], f_pqx[0]}), .read_fault(out_fault), .edge_f(edge_f), .x_hdr(x_hdr), .x_al(x_al),
         .w_flt(w_flt), .m_flt(m_flt), .l_flt(l_flt), .r_flt(r_flt), .vm_fault(vm_fault));
-    dsfd_vm_static_landing u_land (.ck(ck_landing), .rst_n(rst_landing_n), .larm_v(larm_v), .larm_g(larm_g), .larm_base(larm_base),
+    dsfd_vm_static_landing #(.PINREG(`ifdef OT_VM_LANDING_PINREG0 0 `else 1 `endif)) u_land (.ck(ck_landing), .rst_n(rst_landing_n), .larm_v(larm_v), .larm_g(larm_g), .larm_base(larm_base),
         .i_v(l_v), .i_d01(l_d[1023:0]), .i_d23(l_d[2047:1024]), .o_v(lo_v), .o_row(lo_row),
         .o_d01(lo_d[1023:0]), .o_d23(lo_d[2047:1024]), .fault(l_flt));
 endmodule
