@@ -97,7 +97,7 @@ def main():
         if p in OUT:
             L.append(f" wire [{n * W[p] - 1}:0] {p}_ref;")
     L.append(f" wire [{n - 1}:0] want_rst;")
-    L.append(f" {mod} dut(.clk(clk),.rst_n(rst_n)," + ",".join(f".{p}({p})" for p in W) + ");")
+    L.append(f" {mod} dut(.clk_pc({{{n}{{clk}}}}),.rst_n(rst_n)," + ",".join(f".{p}({p})" for p in W) + ");")
     for k in range(n):
         sl = lambda p: f"[{k * W[p]} +: {W[p]}]"
         r = lambda p: (f"{p}_ref" if p in OUT else p) + sl(p)
@@ -133,6 +133,28 @@ def main():
   $display("BAND_EQUIV PASS band={mod} lanes={n} cycles=%0d checks=%0d min_lane_reads=%0d min_lane_dones=%0d min_lane_ready=%0d",
            CYCLES,checks,minr,mind,minb);
   $finish;
+ end
+endmodule""")
+    # per-PC clock entries (H-DIE grant 7aa4a2686): pulsing clk_pc[k] alone must update PC k only
+    L.append(f"""module tb_hv15_band_clk;
+ reg [{n - 1}:0] clk_pc=0; reg rst_n=0; integer k,j,checks=0;
+ wire [{2 * n - 1}:0] bank_owned;""")
+    for p in W:
+        if p not in OUT and p != "bank_owned":
+            val = "{%d{1'b1}}" % (n * W[p]) if p == "open_v" else ("{%d{7'd1}}" % n if p == "open_count" else "0")
+            L.append(f" wire [{n * W[p] - 1}:0] {p}={val};")
+    L.append(f" {mod} dut(.clk_pc(clk_pc),.rst_n(rst_n)," + ",".join(f".{p}({p})" for p in W if p in INP) + ",.bank_owned(bank_owned)"
+             + "".join(f",.{p}()" for p in OUT if p != "bank_owned") + ");")
+    L.append(f""" initial begin
+  for(k=0;k<{n};k=k+1) begin
+   rst_n=1; clk_pc=0; #1; rst_n=0; #2; rst_n=1; #2;
+   clk_pc={n}'b1<<k; #2; clk_pc=0; #2;
+   for(j=0;j<{n};j=j+1) begin
+    if(bank_owned[2*j +: 2] !== (j==k ? 2'b01 : 2'b00)) $fatal(1,"BAND_CLOCK owner k=%0d j=%0d owned=%b",k,j,bank_owned[2*j +: 2]);
+    checks=checks+1;
+   end
+  end
+  $display("BAND_CLOCK_OWNERSHIP PASS lanes={n} checks=%0d",checks); $finish;
  end
 endmodule""")
     out.write_text("\n".join(L) + "\n")
