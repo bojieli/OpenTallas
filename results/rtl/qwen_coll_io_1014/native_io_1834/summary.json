@@ -22,6 +22,15 @@
       "paired_mismatches": 0,
       "verdict": "PASS",
       "evidence": "local_native_regression.log"
+    },
+    {
+      "master": "qfd_io_ucie",
+      "words_each_direction_each_channel": 1500,
+      "channels": 2,
+      "phy_latency": 223,
+      "payload_pair": "R bitwise complement of P",
+      "verdict": "PASS",
+      "evidence": "ucie_exact.log"
     }
   ],
   "mutants": [
@@ -36,6 +45,12 @@
       "verdict": "FAIL_EXPECTED",
       "mismatched_words": 1125,
       "evidence": "serdes_mutant.log"
+    },
+    {
+      "master": "qfd_io_ucie",
+      "verdict": "FAIL_EXPECTED",
+      "mismatched_words": 1125,
+      "evidence": "ucie_mutant.log"
     }
   ],
   "native_local_physical": {
