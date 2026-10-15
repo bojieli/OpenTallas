@@ -1,4 +1,4 @@
-# dsfd_stnh_10x1: die generator pin centres (GEN18r construction_pass0 (EPYC4 s81-die-r10/gen18r), pins.lef); outline 17.256 x 17.256 (= generator slot)
+# dsfd_stnh_10x1: die generator pin centres (GEN18r construction_pass0 (EPYC4 s81-die-r10/gen18r), pins.lef); outline 17.28 x 17.28 (slot 17.256 x 17.256 grown in depth)
 place_pin -pin_name {fi0} -layer M4 -location {0.144000 8.316000} -force_to_die_boundary
 place_pin -pin_name {di0[0]} -layer M4 -location {0.144000 8.508000} -force_to_die_boundary
 place_pin -pin_name {di0[1]} -layer M4 -location {0.144000 8.556000} -force_to_die_boundary
@@ -10,14 +10,14 @@ place_pin -pin_name {di0[6]} -layer M4 -location {0.144000 8.796000} -force_to_d
 place_pin -pin_name {di0[7]} -layer M4 -location {0.144000 8.844000} -force_to_die_boundary
 place_pin -pin_name {di0[8]} -layer M4 -location {0.144000 8.892000} -force_to_die_boundary
 place_pin -pin_name {di0[9]} -layer M4 -location {0.144000 8.940000} -force_to_die_boundary
-place_pin -pin_name {fo0} -layer M4 -location {17.112000 8.316000} -force_to_die_boundary
-place_pin -pin_name {do0[0]} -layer M4 -location {17.112000 8.508000} -force_to_die_boundary
-place_pin -pin_name {do0[1]} -layer M4 -location {17.112000 8.556000} -force_to_die_boundary
-place_pin -pin_name {do0[2]} -layer M4 -location {17.112000 8.604000} -force_to_die_boundary
-place_pin -pin_name {do0[3]} -layer M4 -location {17.112000 8.652000} -force_to_die_boundary
-place_pin -pin_name {do0[4]} -layer M4 -location {17.112000 8.700000} -force_to_die_boundary
-place_pin -pin_name {do0[5]} -layer M4 -location {17.112000 8.748000} -force_to_die_boundary
-place_pin -pin_name {do0[6]} -layer M4 -location {17.112000 8.796000} -force_to_die_boundary
-place_pin -pin_name {do0[7]} -layer M4 -location {17.112000 8.844000} -force_to_die_boundary
-place_pin -pin_name {do0[8]} -layer M4 -location {17.112000 8.892000} -force_to_die_boundary
-place_pin -pin_name {do0[9]} -layer M4 -location {17.112000 8.940000} -force_to_die_boundary
+place_pin -pin_name {fo0} -layer M4 -location {17.136000 8.316000} -force_to_die_boundary
+place_pin -pin_name {do0[0]} -layer M4 -location {17.136000 8.508000} -force_to_die_boundary
+place_pin -pin_name {do0[1]} -layer M4 -location {17.136000 8.556000} -force_to_die_boundary
+place_pin -pin_name {do0[2]} -layer M4 -location {17.136000 8.604000} -force_to_die_boundary
+place_pin -pin_name {do0[3]} -layer M4 -location {17.136000 8.652000} -force_to_die_boundary
+place_pin -pin_name {do0[4]} -layer M4 -location {17.136000 8.700000} -force_to_die_boundary
+place_pin -pin_name {do0[5]} -layer M4 -location {17.136000 8.748000} -force_to_die_boundary
+place_pin -pin_name {do0[6]} -layer M4 -location {17.136000 8.796000} -force_to_die_boundary
+place_pin -pin_name {do0[7]} -layer M4 -location {17.136000 8.844000} -force_to_die_boundary
+place_pin -pin_name {do0[8]} -layer M4 -location {17.136000 8.892000} -force_to_die_boundary
+place_pin -pin_name {do0[9]} -layer M4 -location {17.136000 8.940000} -force_to_die_boundary
