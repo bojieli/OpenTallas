@@ -1,0 +1,81 @@
+{
+  "schema": "opentallas.head-bank-native-bindings.v1",
+  "masters": [
+    {
+      "name": "h263",
+      "main": "f2d95b0ad",
+      "setup_ps": 343.5,
+      "hold_ps": 26.47,
+      "R_tt_ps": 75.1,
+      "launch_tt_ps": 175.03283,
+      "capture_tt_ps": 126.71242,
+      "native_tt_failures": 0,
+      "drc": 0
+    },
+    {
+      "name": "h256",
+      "main": "870cf1cff",
+      "setup_ps": 340.82,
+      "hold_ps": 25.95,
+      "R_tt_ps": 76.0,
+      "launch_tt_ps": 177.44812,
+      "capture_tt_ps": 127.20002,
+      "native_tt_failures": 0,
+      "drc": 0
+    },
+    {
+      "name": "v263",
+      "main": "23f0ff3b3",
+      "setup_ps": 346.3,
+      "hold_ps": 27.8,
+      "R_tt_ps": 74.0,
+      "launch_tt_ps": 172.25363,
+      "capture_tt_ps": 124.1058,
+      "native_tt_failures": 0,
+      "drc": 0
+    },
+    {
+      "name": "v256",
+      "main": "5e33d9d2f",
+      "setup_ps": 345.71,
+      "hold_ps": 27.39,
+      "R_tt_ps": 73.5,
+      "launch_tt_ps": 172.65587,
+      "capture_tt_ps": 123.75444,
+      "native_tt_failures": 0,
+      "drc": 0
+    },
+    {
+      "name": "v34",
+      "main": "d41042266",
+      "setup_ps": 343.66,
+      "hold_ps": 30.4,
+      "R_tt_ps": 55.1,
+      "launch_tt_ps": 175.49274,
+      "capture_tt_ps": 117.8695,
+      "native_tt_failures": 0,
+      "drc": 0
+    },
+    {
+      "name": "v16",
+      "main": "148354ead",
+      "setup_ps": 344.56,
+      "hold_ps": 30.18,
+      "R_tt_ps": 52.4,
+      "launch_tt_ps": 174.33792,
+      "capture_tt_ps": 116.88416,
+      "native_tt_failures": 0,
+      "drc": 0
+    }
+  ],
+  "qualification": "All six exactsource mastersCLOSED withnativeTT/FFboundaryPASS. SSsensitivityreportedonly. Full balancedfeedgeometry/headcalendar/kernelprofile/nativecomposition remainsOPEN; no F/S claim.",
+  "vertical_clock_pin": {
+    "layer": "M4",
+    "xy_um": [
+      0.096,
+      1.308
+    ]
+  },
+  "vertical_data_pins": "unchanged exact assigned_pins JSON; actualclosedLEF authoritative",
+  "pg": "vertical M5pitch2.7 actualchild_lintPASS"
+}
