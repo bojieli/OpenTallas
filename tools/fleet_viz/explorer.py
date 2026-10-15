@@ -29,7 +29,8 @@ STATUS_LABEL = dict(closed='closed', below='closed below margin (<+15 ps)', runn
 CAT_STATUS = {'closed (TT era)': 'closed', 'closed (TT re-verified)': 'closed', 'closed (earlier)': 'closed',
               'first trial in flight': 'running', 'failed, re-running': 'failing', 'revoked, re-running': 'revoked',
               'revoked (no live job)': 'revoked', 'needs redesign (no live job)': 'failing',
-              'flow failure (no live job)': 'failing', 'cancelled only': 'failing', 'superseded': 'superseded'}
+              'flow failure (no live job)': 'failing', 'cancelled only': 'failing', 'superseded': 'superseded',
+              'not started (open)': 'placeholder', 'implementation recorded (no physical job)': 'placeholder'}
 ROLL = ['failing', 'revoked', 'running', 'below', 'closed', 'superseded']
 MARGIN = 15.0
 MASTER_TOKEN = re.compile(r'\b((?:hfd|qfd|dsfd)_[A-Za-z0-9_]+)')
