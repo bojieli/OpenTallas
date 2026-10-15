@@ -336,7 +336,8 @@ def main() -> int:
                     'purpose': f'S81 FILL-S2: die master {d["master"]} ({d["inst"]} replicas, hardened once): exact '
                                f'lockstep bench + failing mutant; recipe 2, M5 cap, GEN19b pins evenly spread',
                     'views_to': f'physical/ref_tile/{name}/views', 'record_to': f'results/rtl/ref_tile/{name}',
-                    'extra_paths': d['extra'], 'benches': benches},
+                    'extra_paths': [x if x != PIN_DIR else f'{PIN_DIR}/{pin_name(name, d)}.tcl' for x in d['extra']],
+                    'benches': benches},
         }
         p = ROOT / SPEC_DIR / f'{name}.json'
         p.write_text(json.dumps(spec, indent=1) + '\n')
