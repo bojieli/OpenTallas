@@ -18,6 +18,39 @@
   "existing_receipt_scope": "native producer before opt-in packed INDEX_PACK parameter; retained historical evidence only",
   "publication_base": "6a85caf5a",
   "current_main_producer_sha256": "404a70ae56d80df5f3bf2eb655ecc4b5cb4babe8c73be95db42c53306bb552ab",
-  "current_main_requalification": "PENDING actual INDEX_PACK1 native pair/AXI reruns; do not silently inherit older producer proof",
-  "physical": "OPEN; actual memorymacros plus38,656serial/9,728stream bitmapFF roots needpartition/CTS/nativephysical,parentclock/reset/sourcejoins"
+  "current_main_requalification": "PASS actual current-main INDEX_PACK1 pair+observedepochmutant and bothfullAXIimage/replay/error/partialword benches; packed6 remains separate unsupportedprofile",
+  "physical": "OPEN; actual memorymacros plus38,656serial/9,728stream bitmapFF roots needpartition/CTS/nativephysical,parentclock/reset/sourcejoins",
+  "current_main_source_commit": "62086607c",
+  "current_main_gates": {
+    "pair": {
+      "host": "ot-epyc1tb",
+      "unit": "oth-ubuntu-2684948-1792100894",
+      "exit": 0,
+      "mutant": "one-edge stream phase shift rejected atedge0"
+    },
+    "serial_axi": {
+      "host": "ot-epyc1tb",
+      "unit": "oth-ubuntu-2682549-1792100880",
+      "exit": 0,
+      "edges": 7116,
+      "macros": 302,
+      "writes": 34452,
+      "replays": 2
+    },
+    "stream_axi": {
+      "host": "ot-epyc1tb",
+      "unit": "oth-ubuntu-2682895-1792100881",
+      "exit": 0,
+      "edges": 9489,
+      "macros": 76,
+      "writes": 9493,
+      "replays": 2
+    }
+  },
+  "current_main_source_sha256": {
+    "rtl/hbm_accel/host_static_20261015/su_target/host_su_target.sv": "3a0cde497073fd9e664e251258a5307f634341b29580bf223d051e95bbf1e0ce",
+    "rtl/hbm_accel/host_static_20261015/su_target/host_su_axi_install.sv": "1a2b9715383e702ba05f1004d406384ab9d0b56f9ed412536feabb7e59142e28",
+    "rtl/hbm_accel/generic/adapters/static_su/programme/ot_hbm_su_programme.sv": "404a70ae56d80df5f3bf2eb655ecc4b5cb4babe8c73be95db42c53306bb552ab",
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": "dba769863f502de28853a78ac30544a406c7cb66fd3249019ef9fa5a5b73e36e"
+  }
 }
