@@ -18,7 +18,9 @@ foreach {name expected_source expected_sink} {
  set upstream [$input getNet];set downstream [$output getNet];set srcs {};set dsts {}
  foreach pin [$upstream getITerms] {if {$pin ne $input && [[$pin getMTerm] getIoType] eq "OUTPUT"} {lappend srcs [[$pin getInst] getName]}}
  foreach pin [$downstream getITerms] {if {$pin ne $output} {lappend dsts [[$pin getInst] getName]}}
- if {$srcs ne $expected_source || $dsts ne $expected_sink || [llength [$downstream getBTerms]]} {error "CTNL2 launch ECO connectivity $name: $srcs -> $dsts"}
+ set source_name [lindex $srcs 0]
+ regsub -all {\\([\[\]])} $source_name {\1} source_name
+ if {[llength $srcs] != 1 || [llength $dsts] != 1 || $source_name ne $expected_source || [lindex $dsts 0] ne $expected_sink || [llength [$downstream getBTerms]]} {error "CTNL2 launch ECO connectivity $name: $srcs -> $dsts"}
  foreach pin [$downstream getITerms] {if {$pin ne $output} {$pin connect $upstream}}
  odb::dbInst_destroy $inst;odb::dbNet_destroy $downstream
  puts "CTNL2_OUTPUT_ECO bypassed $name, preserving FF/inverter/boundary pad"

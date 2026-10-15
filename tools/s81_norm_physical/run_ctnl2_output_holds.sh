@@ -2,7 +2,7 @@
 set -euo pipefail
 # A new physical characterization; never modify the immutable CLOSED run.
 parent=/srv/opentallas-scratch/codex/s81-norm-physical-1015/ctnl2-surplus-v2
-run=/srv/opentallas-scratch/codex/s81-norm-physical-1015/ctnl2-output-v3
+run=/srv/opentallas-scratch/codex/s81-norm-physical-1015/ctnl2-output-v4
 rel=results/asap7/opentallas_ot_s81_hc_ctnl_l2_asap7_ref_s81hc_ctnl_l2_native_ref_np2_granted_57b4f1931/base
 mkdir -p "$run"
 test ! -e "$run/orfs"
