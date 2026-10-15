@@ -5,7 +5,7 @@
 // Fixed metadata translates actual native VM return/commit identities; nothing
 // waits for a response or adjusts the programme timeline.
 // This diagnostic logical map still requires canonical allocator/physical bind.
-module ot_hbm_p_h16_loop_static #(parameter integer PAGE_AW=2,AW=10+PAGE_AW)(
+module ot_hbm_p_h16_loop_static #(parameter integer PAGE_AW=2,AW=10+PAGE_AW,HEADS=16)(
  input wire clk,rst_n,
  input wire[15:0]clk_lane,clk_map,rst_lane_n,rst_map_n,
  input wire cfg_we,input wire[2:0]cfg_stripe,input wire[AW-1:0]cfg_addr,input wire[255:0]cfg_data,
@@ -72,10 +72,10 @@ module ot_hbm_p_h16_loop_static #(parameter integer PAGE_AW=2,AW=10+PAGE_AW)(
   end else begin
    if(io_start_v)begin
     active_head<=0;frame_row<=0;frame_length<=io_start_limit;rows_q<=profile_rows;
-    if(!(profile_rows==128||profile_rows==640)||io_start_limit==0)map_fault<=1;
+    if(!(profile_rows==128||profile_rows==640)||io_start_limit==0||HEADS<1||HEADS>16)map_fault<=1;
    end else if(cv)begin
     if(frame_row+1==frame_length)begin
-     frame_row<=0;if(active_head!=15)active_head<=active_head+1;
+     frame_row<=0;if(active_head!=HEADS-1)active_head<=active_head+1;
     end else frame_row<=frame_row+1;
    end
    mb_v<={mb_v[13:0],mb_read};mb_bank<={mb_bank[13:0],active_head[3]};
@@ -94,7 +94,7 @@ module ot_hbm_p_h16_loop_static #(parameter integer PAGE_AW=2,AW=10+PAGE_AW)(
  .clk(clk),.rst_n(rst_n),.clk_lane(clk_lane),.clk_map(clk_map),.rst_lane_n(rst_lane_n),.rst_map_n(rst_map_n),
  .cfg_we(cfg_we),.cfg_stripe(cfg_stripe),.cfg_addr(cfg_addr),.cfg_data(cfg_data),.start_base({AW{1'b0}}),.start_limit(start_limit),.start_loops(16'd1),
  .io_cfg_we(io_cfg_we),.io_cfg_stripe(io_cfg_stripe),.io_cfg_addr(io_cfg_addr),.io_cfg_data(io_cfg_data),
- .io_start_v(io_start_v),.io_start_base({AW{1'b0}}),.io_start_limit(io_start_limit),.io_start_loops(16'd16),
+ .io_start_v(io_start_v),.io_start_base({AW{1'b0}}),.io_start_limit(io_start_limit),.io_start_loops(16'(HEADS)),
  .aux_cfg_we(aux_cfg_we),.aux_cfg_addr(aux_cfg_addr),.aux_cfg_data(aux_cfg_data),
  .local_rq(core_rq),.local_rr(core_rr),.local_wq(core_wq),.local_w_done(core_done),
  .scalar_valid(scalar_valid),.scalar_tag(core_tag),.scalar_fp32(scalar_fp32),
