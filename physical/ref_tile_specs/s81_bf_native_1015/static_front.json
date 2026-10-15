@@ -48,7 +48,7 @@
     "rtl/dsrom_sys/s81_die_bind/dsfd_bf_front_static.sv"
   ],
   "params": {},
-  "clock_port": "ck[0]",
+  "clock_port": "ck",
   "reset_ports": [
     "rs"
   ],
@@ -128,7 +128,7 @@
   },
   "clock": "multiple_cts_roots",
   "clock_ports": [
-    "ck[0]",
+    "ck",
     "io_clk"
   ],
   "clock_data_paths": "related_same_frequency",
@@ -147,7 +147,7 @@
         1
       ],
       "ports": [
-        "ck[0]"
+        "ck"
       ],
       "inputs": [
         "qy0",
@@ -186,7 +186,15 @@
       198.72
     ],
     "request_file": "physical/ref_tile_specs/s81_bf_native_1015/static_pins/pin_request.json",
-    "status": "REQUESTED_NOT_GRANTED",
-    "reason": "actual static master addsf_prog38 andio_clk, preserving alloldlive pins; io_clk replaces unusedhph track"
+    "status": "APPROVED_INDEPENDENT_LEAF_ONLY",
+    "reason": "actual static master addsf_prog38 andio_clk, preserving alloldlive pins; io_clk replaces unusedhph track",
+    "grant": {
+      "owner": "/root/s81_die_1103",
+      "candidate_commit": "e36bb6531",
+      "pins_tcl_sha256": "109c5326cf729e682441a25a028bff530d6206a0fc04b11e9379667089a3b83b",
+      "request_json_sha256": "5fd0361711eb960fd0ef042a2746f74ace89ff8a313194a85019dc6345463493",
+      "scope": "Independent candidate leaf only. Parent composition, mapped census, route/native TT/FF remain open; no inherited insertion.",
+      "normalization": "S-DIE approved exact five scalar ABI aliases; same rectangles/all3264other bits unchanged. Final hashes pending record."
+    }
   }
 }

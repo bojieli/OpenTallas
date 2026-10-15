@@ -1,6 +1,6 @@
 {
   "schema": "opentallas.s81.static_bf_pin_request.v1",
-  "status": "REQUESTED_NOT_GRANTED",
+  "status": "APPROVED_INDEPENDENT_LEAF_ONLY_SCALAR_NORMALIZATION",
   "top": "dsfd_bf_front_static",
   "outline_um": [
     100.224,
@@ -12423,22 +12423,6 @@
       "h": "0.024",
       "source_pin": "c1_so_n[39]"
     },
-    "qy0[0]": {
-      "layer": "M5",
-      "x": 4.332,
-      "y": 0.0,
-      "w": "0.024",
-      "h": "0.192",
-      "source_pin": "c_qy_bkf_in[0]"
-    },
-    "qy1[0]": {
-      "layer": "M5",
-      "x": 95.916,
-      "y": 0.0,
-      "w": "0.024",
-      "h": "0.192",
-      "source_pin": "c_qy_bkf_in[1]"
-    },
     "x0[0]": {
       "layer": "M5",
       "x": 31.98,
@@ -16831,14 +16815,6 @@
       "h": "0.192",
       "source_pin": "xs_e1[9]"
     },
-    "go[0]": {
-      "layer": "M5",
-      "x": 24.204,
-      "y": 0.0,
-      "w": "0.024",
-      "h": "0.192",
-      "source_pin": "go"
-    },
     "cfg[0]": {
       "layer": "M5",
       "x": 18.828,
@@ -17286,22 +17262,6 @@
       "w": "0.024",
       "h": "0.192",
       "source_pin": "fault"
-    },
-    "ck[0]": {
-      "layer": "M5",
-      "x": 24.012,
-      "y": 0.0,
-      "w": "0.024",
-      "h": "0.192",
-      "source_pin": "clk"
-    },
-    "rs[0]": {
-      "layer": "M5",
-      "x": 24.492,
-      "y": 0.0,
-      "w": "0.024",
-      "h": "0.192",
-      "source_pin": "rst_n"
     },
     "xb[0]": {
       "layer": "M5",
@@ -26158,12 +26118,52 @@
       "w": ".024",
       "h": ".192",
       "source_pin": "new fixed programme pin"
+    },
+    "qy0": {
+      "layer": "M5",
+      "x": 4.332,
+      "y": 0.0,
+      "w": "0.024",
+      "h": "0.192",
+      "source_pin": "c_qy_bkf_in[0]"
+    },
+    "qy1": {
+      "layer": "M5",
+      "x": 95.916,
+      "y": 0.0,
+      "w": "0.024",
+      "h": "0.192",
+      "source_pin": "c_qy_bkf_in[1]"
+    },
+    "go": {
+      "layer": "M5",
+      "x": 24.204,
+      "y": 0.0,
+      "w": "0.024",
+      "h": "0.192",
+      "source_pin": "go"
+    },
+    "ck": {
+      "layer": "M5",
+      "x": 24.012,
+      "y": 0.0,
+      "w": "0.024",
+      "h": "0.192",
+      "source_pin": "clk"
+    },
+    "rs": {
+      "layer": "M5",
+      "x": 24.492,
+      "y": 0.0,
+      "w": "0.024",
+      "h": "0.192",
+      "source_pin": "rst_n"
     }
   },
   "pin_count": 3269,
   "added_programme_bits": 38,
   "new_root": "io_clk",
-  "source_sha256": "5d4bcd56da8de8791d45af20c9378dca87f81ed86dbf3d4e282cb20bd9a87f9b",
+  "source_sha256": "75b505b94b3295c731daa543a778776647b281a117599525bda7c2166bf072e5",
   "invariants": {
     "legacy_live_pin_locations_preserved": 3230,
     "duplicate_locations": 0,
@@ -26171,9 +26171,21 @@
     "program_contiguous_M5_tracks": 38
   },
   "clock_pins": [
-    "ck[0]",
+    "ck",
     "io_clk"
   ],
   "clock_rule": "both same833.333ps boundary phase, each root delivered at phi-R; actual cross-root D paths must remain timed",
-  "note": "xb controls are on S, xb data on N; every literal bit has an explicit assigned rectangle. No bus face may replace this table."
+  "note": "xb controls are on S, xb data on N; every literal bit has an explicit assigned rectangle. No bus face may replace this table.",
+  "scalar_normalization": {
+    "approved_by": "/root/s81_die_1103",
+    "ports": [
+      "qy0",
+      "qy1",
+      "go",
+      "ck",
+      "rs"
+    ],
+    "unchanged_geometry": true,
+    "other_bits_unchanged": 3264
+  }
 }
