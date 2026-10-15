@@ -77,7 +77,9 @@ module ot_qkd_ectl_part #(
     parameter integer ND = 1,
     parameter integer HXK = 0,
     parameter integer HXN = 0,
-    parameter integer RWD = (PART == 3) ? 32 : 512     // row bits held here (C holds none: a pruned dummy slice)
+    parameter integer RWD = (PART == 3) ? 32 : 512,    // row bits held here (C holds none: a pruned dummy slice)
+    parameter integer XB2 = 0            // B (PART 2) only: x_i already carries the stage-2 word (direct seams: C's x2), so
+                                         // B's stage 3 is its own pin flop x1 (kvsys-elements r3)
 ) (
     input  wire                 clk,
     input  wire                 rst_n,
@@ -201,9 +203,9 @@ module ot_qkd_ectl_part #(
         if (!rp) begin x1 <= {XW{1'b0}}; x2 <= {XW{1'b0}}; x3 <= {XW{1'b0}}; end
         else begin x1 <= x_d; x2 <= x1; x3 <= x2; end
 `ifdef KVD_ECTL3_MUT_B
-    wire [XW-1:0] xv = (PART == 3) ? x3 : x1;            // mutant: leaf B's control one cycle early
+    wire [XW-1:0] xv = (PART == 3) ? x3 : (PART == 2 && XB2 != 0) ? x_i : x1;   // mutant: leaf B's control one cycle early
 `else
-    wire [XW-1:0] xv = (PART == 3) ? x3 : (PART == 2) ? x2 : x1;
+    wire [XW-1:0] xv = (PART == 3) ? x3 : (PART == 2) ? ((XB2 != 0) ? x1 : x2) : x1;
 `endif
     assign x_o = x1;
     assign x2_o = x2;
