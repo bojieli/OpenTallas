@@ -1,12 +1,12 @@
 {
  "schema": "opentallas.hier_contract.child_lint.v1",
- "lef": "/srv/opentallas-scratch/claude/closure-loop/s81pq_ix_rb_native-g1-2ff54d0b7-arg1/record/views/ot_s81_pq_ix_rb_native/ot_s81_pq_ix_rb_native.lef",
+ "lef": "/srv/opentallas-scratch2/claude/closure-loop/s81pq_ix_rb_native-wv1-e2d195d93/record/views/ot_s81_pq_ix_rb_native/ot_s81_pq_ix_rb_native.lef",
  "verdict": "PASS",
  "fails": [],
  "warns": [
-  "(f) face-pin access: 328 of 331 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. ba_blk[0] M4 (0.156,38.880), ba_blk[1] M4 (0.156,38.880), ba_blk[2] M4 (0.156,38.880))"
+  "(f) face-pin access: 327 of 330 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. ba_blk[0] M4 (0.156,38.880), ba_blk[1] M4 (0.156,38.880), ba_blk[2] M4 (0.156,38.880))"
  ],
- "summary": "ot_s81_pq_ix_rb_native 142.56 x 86.4: PG M5 VDD 26 stripes (95% spread, 100% cov) / VSS 26 stripes (95% spread, 100% cov); strap M6; face pins 331 blocked-above 0 blocked-same 0; clock clk insertion 179 ps; pockets M5 0 (closed)",
+ "summary": "ot_s81_pq_ix_rb_native 142.56 x 86.4: PG M5 VDD 26 stripes (95% spread, 100% cov) / VSS 26 stripes (95% spread, 100% cov); strap M6; face pins 330 blocked-above 0 blocked-same 0; clock clk insertion 167 ps; pockets M5 0 (closed)",
  "info": {
   "cell": "ot_s81_pq_ix_rb_native",
   "W": 142.56,
@@ -38,13 +38,13 @@
   "strap_layer": "M6",
   "cap": null,
   "face": {
-   "face_pins": 331,
+   "face_pins": 330,
    "blocked_above": 0,
-   "covered_below": 89,
+   "covered_below": 110,
    "examples": [],
    "blocked_same": 0,
    "same_examples": [],
-   "band_same": 328,
+   "band_same": 327,
    "band_examples": [
     "ba_blk[0] M4 (0.156,38.880)",
     "ba_blk[1] M4 (0.156,38.880)",
@@ -56,8 +56,8 @@
   },
   "clock_insertion": {
    "clk": {
-    "max_ps": 179.36,
-    "min_ps": 131.07
+    "max_ps": 167.33,
+    "min_ps": 128.51
    }
   },
   "pockets": {
@@ -66,7 +66,7 @@
    "marker": {
     "layer": "M5",
     "d_um": 1.536,
-    "added": 170
+    "added": 187
    },
    "count": 0,
    "area_um2": 0,
