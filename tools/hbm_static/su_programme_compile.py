@@ -8,6 +8,7 @@ ROOT=Path(__file__).resolve().parents[2]
 def sha(p): return hashlib.sha256(Path(p).read_bytes()).hexdigest()
 def lower(source, out, extra=None, extra_bits=0, line_bits=9688, param_prefix="PROGRAMME"):
     assert 0<line_bits<=65536
+    assert extra or extra_bits==0
     assert re.fullmatch(r"[A-Z][A-Z0-9_]*",param_prefix)
     out.mkdir(parents=True,exist_ok=True)
     rows=[int(s,16) for s in source.read_text().split()]
@@ -38,6 +39,7 @@ def lower(source, out, extra=None, extra_bits=0, line_bits=9688, param_prefix="P
     for d,n in zip(dictionaries,db):
         for i,w in enumerate(d): config.append((base+i//128,i%128,w))
         base+=n
+    assert base<=65536, 'configuration bank ID exceeds physical host port'
     with (out/'config.mem').open('w') as f:
         for b,r,w in config: f.write(f'{b:04x}{r:02x}{w:064x}\n')
     (out/'expected.mem').write_text(''.join(f'{r:0{(bits+3)//4}x}\n' for r in rows))
