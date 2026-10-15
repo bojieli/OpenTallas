@@ -2047,5 +2047,31 @@
     "serial0.9capture andnativeHCP8read -> stream1.2 bank domain fixed3:4bridge",
     "sourceknown peredge packetlane assignment andread/write bank reservations",
     "bank pinroute andreturn fixedhop alignment, no dynamicwaiting"
-  ]
+  ],
+  "wide_return_alternative": {
+    "status": "COMPONENT_PASSED_PENDING_DIE_PIN_LAYOUT",
+    "return_master": {
+      "source": "dsfd_vm_static_return NROW=32",
+      "outline_um": [
+        345.6,
+        207.36
+      ],
+      "clock_sinks_estimate": 12550,
+      "output_rows_per_edge": 32,
+      "storage_rows": 64
+    },
+    "bank_outline_um": [
+      216,
+      47.52
+    ],
+    "bank_pitch_y_um": 49.68,
+    "lower16_y0_um": 108,
+    "write_scatter_y_um": 902.88,
+    "read_scatter_y_um": 1008.72,
+    "return32_y_um": 1062.72,
+    "upper16_y0_um": 1272.24,
+    "last_bank_end_um": 2064.96,
+    "hop_requirement": "central-to-far banks exceed0.60mm; fixed intermediate request/response relays must be assigned and priced; no zero-relay die qualification",
+    "not_yet_changed": "original proposed_instances await die owner decision on final pins and relay footprint"
+  }
 }

@@ -725,6 +725,22 @@
     "Physical pin/cut, phi-R, relay stages,833psCTS/setup/hold/DRC not qualified",
     "Serial0.9GHz source/consumer fixed3:4 ingress/return transport not implemented here",
     "Separate SU/HC/PQ return resources or conflict-free compiler calendar still required",
-    "Same-address read/write returns old data; consumer visibility must follow actual commit cycle"
-  ]
+    "Same-address read/write returns old data; consumer visibility must follow actual commit cycle",
+    "Central to far-bank ~1mm path requires fixed intermediate relay stages; all ideal offsets must be revised to actual relay composition before native scheduling"
+  ],
+  "return_profiles": {
+    "NROW16": {
+      "rows_per_release": 16,
+      "parity_storage_rows": 32,
+      "clock_sinks_estimate": 6400,
+      "evidence": "results/rtl/s81_vm_static_1014/native512p16/run_base.log"
+    },
+    "NROW32": {
+      "rows_per_release": 32,
+      "parity_storage_rows": 64,
+      "clock_sinks_estimate": 12550,
+      "evidence": "results/rtl/s81_vm_static_1014/native512wide/run_base.log",
+      "tag": "group[2:0],slot[4:0]"
+    }
+  }
 }
