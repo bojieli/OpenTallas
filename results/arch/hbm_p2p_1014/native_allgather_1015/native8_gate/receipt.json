@@ -1,0 +1,78 @@
+{
+  "status": "PASS native full-eight G2 ALL_GATHER mechanism",
+  "source_commit": "cf9c38c30",
+  "source_pins_revalidated": 22,
+  "compiler_provenance": "sha verified from cf9c38c30; not a native build input",
+  "binary_sha256": "6f2a142d0962c7eb6f42faaa247ba2ab5093d0208884ed8fe7c6129309b99e99",
+  "native_parents": 8,
+  "actual_SW_q3": 2,
+  "actual_q2": 6,
+  "SW_KMAX": 2048,
+  "shape_reduced": false,
+  "group_dies": 2,
+  "PF": 384,
+  "quarter_flits": 96,
+  "checked_payload_meta_flits": 1536,
+  "programme_rows": 63,
+  "last_delivery_phase": 78,
+  "wire_pipeline_edges": 5,
+  "rails_active_per_die": 8,
+  "rails_physical_per_die": 9,
+  "declared_external_SU_injection_latency": 12,
+  "actual_SU_arithmetic_join": false,
+  "actual_TKM_arithmetic_exercised": false,
+  "full_native_TKM_instantiated": true,
+  "frame_bits": 596,
+  "production613_487_cadence": false,
+  "PHY_FEC_join": false,
+  "production_G96_qualification": false,
+  "physical_qualified": false,
+  "original160GiB": "authoritative oom-kill preserved in failure160g",
+  "resume320": {
+    "original_tool_session": 25039,
+    "unit": "oth-ubuntu-1261452-1792051213",
+    "peak_bytes": 254529105920,
+    "cap_bytes": 343597383680,
+    "same_objects": true,
+    "completed_native_build": true,
+    "positive_runtime_seconds": 179.181,
+    "positive_runtime_allocated_MB": 600
+  },
+  "mutants": {
+    "tool_session": 97409,
+    "unit": "oth-ubuntu-1774479-1792060121",
+    "terminal_exit": 0,
+    "same_binary": true,
+    "mem_GiB": 8,
+    "threads": 3,
+    "cases": [
+      {
+        "kind": 1,
+        "name": "external SU payload bitflip",
+        "oracle_errors": 2,
+        "protocol_fault_edges": 0
+      },
+      {
+        "kind": 2,
+        "name": "actual programme replay read slot7 to6",
+        "oracle_errors": 0,
+        "protocol_fault_edges": 62,
+        "first_fault_phase": 25
+      },
+      {
+        "kind": 3,
+        "name": "actual programme missing SU0 capture",
+        "oracle_errors": 0,
+        "protocol_fault_edges": 75,
+        "first_fault_phase": 12
+      }
+    ]
+  },
+  "logs_sha256": {
+    "resume320-build.log": "22cd0634b08944c1e888be3d56f7e9223fada91b75951b8d1a66d910d6913c03",
+    "m0.log": "29bc23a3762b64cf0850d0ab1b16792781c82d2a363c3f18dff4dd58f4a100c5",
+    "m3.log": "37c4192c48c9854c928fb6b1633f50ada5bb855123e865344185e64a98da3d7f",
+    "m1.log": "507aee5c331dd10fc3603120eff61c9c651ad9571124f5cad6939414a8c1b90d",
+    "m2.log": "5c29c6d7ab7b456ae4a80f262657c3acb1e8c0513d6a8ee23a3ff8cdafdfc1ae"
+  }
+}
