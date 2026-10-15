@@ -25,6 +25,15 @@ class WriteItineraryTests(unittest.TestCase):
         self.assertEqual(before,self.requests)
         self.assertFalse(result['dispatch_eligible'])
 
+    def test_actual_dispatcher_two_stages_shift_fixed_capture_and_commit(self):
+        self.contract['source_to_storage_capture_cycles']=2
+        result=compile_itinerary(self.requests,self.contract)
+        self.assertEqual([r['source_capture_cycle'] for r in result['rows']],[10,10,10])
+        self.assertEqual([r['capture_cycle'] for r in result['rows']],[12,12,12])
+        self.assertEqual([r['scatter_issue_cycle'] for r in result['rows']],[13,14,15])
+        self.assertEqual([r['macro_commit_cycle'] for r in result['rows']],[18,19,20])
+        self.assertEqual(verify_itinerary(self.requests,result)['status'],'pass')
+
     def test_mask_or_storage_mutants_fail_independent_table_check(self):
         result=compile_itinerary(self.requests,self.contract)
         result['rows'][0]['mask']=65535
