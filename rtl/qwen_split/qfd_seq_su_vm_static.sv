@@ -54,6 +54,10 @@ module qfd_seq_su_vm_static (
     input wire [447:0] vm_leaf_ck,
     input wire [38:0] vm_commit_ck,
     input wire ck_vm,
+    // Real fixed relay roots matching the selected sequencer RLY=2 contract.
+    // Their phases must be assigned by the same compiler as all other roots.
+    input wire ck_vm_out_relay,
+    input wire ck_vm_in_relay,
     input wire vm_rst_n,
     input wire [2366:0] vm_sa,
     output wire [6143:0] vm_sq,
@@ -79,6 +83,14 @@ module qfd_seq_su_vm_static (
 );
     wire [20:0] vrd; wire [532:0] vwr;
     wire [511:0] vrq; wire svq_v;
+    wire [20:0] vm_read;
+    wire [532:0] vm_write;
+    wire [511:0] vm_read_data;
+    wire vm_read_valid;
+    ot_hdc_delay #(.W(554), .D(2), .RESET(1)) u_vm_out_relay
+        (.clk(ck_vm_out_relay), .rst_n(vm_rst_n), .d({vwr,vrd}), .q({vm_write,vm_read}));
+    ot_hdc_delay #(.W(513), .D(2), .RESET(1)) u_vm_in_relay
+        (.clk(ck_vm_in_relay), .rst_n(rsi), .d({vm_read_valid,vm_read_data}), .q({svq_v,vrq}));
     qfd_seq_su_static u_seq (
         .su_va_re(su_va_re),
         .su_va_addr(su_va_addr),
@@ -631,11 +643,11 @@ module qfd_seq_su_vm_static (
         .ld(vm_ld),
         .mo(vm_mo),
         .mee(vm_mee),
-        .svr(vrd),
+        .svr(vm_read),
         .svr_rdy(vm_svr_rdy),
-        .svq(vrq),
-        .svq_v(svq_v),
-        .svw(vwr),
+        .svq(vm_read_data),
+        .svq_v(vm_read_valid),
+        .svw(vm_write),
         .ar(vm_ar),
         .xaw(vm_xaw),
         .q_epoch(vm_q_epoch),
