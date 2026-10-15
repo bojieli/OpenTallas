@@ -1,6 +1,6 @@
 {
   "schema": "opentallas.s81.die.takeover.v1",
-  "updated_utc": "2026-10-15T18:45:00.332969+00:00",
+  "updated_utc": "2026-10-15T18:59:07.111905+00:00",
   "source_commit": "eb9cfa044920f23a9565d6c5fda43d2d5f217d06",
   "native_qualified": false,
   "clock_source_join": {
@@ -301,5 +301,79 @@
     "rtl_changes": false,
     "tests": "3tests PASS: all six K2/3/4 horizontal/vertical splits require no late search and preserve every lane endpoint; original compact reservation negative fails; single root/flag-off unchanged",
     "scope": "Geometry only; all incident pin, actual orientation, native clock and real-view obligations still apply"
+  },
+  "view_identity_guard": {
+    "commit": "f20836b4b",
+    "dependencies": [
+      "eac256d3b",
+      "2d5f752ce"
+    ],
+    "opt_in": "--require-view-identity",
+    "scope": "Actual selected source bytes, Git-pinned includes, instance parameters, synthesis recipe and elaborated hierarchy; separate from library presence and physical/native qualification",
+    "tests": "24 focused tests PASS; actual0/0 vs native4/2 rejected"
+  },
+  "bf_static_candidate_leaf_grant": {
+    "commit": "e36bb6531",
+    "master": "dsfd_bf_front_static",
+    "outline_um": [
+      100.224,
+      198.72
+    ],
+    "port_bits": 3269,
+    "pins_tcl": "physical/ref_tile_specs/s81_bf_native_1015/static_pins/pins.tcl",
+    "pins_tcl_sha256": "109c5326cf729e682441a25a028bff530d6206a0fc04b11e9379667089a3b83b",
+    "pin_request_sha256": "5fd0361711eb960fd0ef042a2746f74ace89ff8a313194a85019dc6345463493",
+    "clock_entries": [
+      "ck[0]",
+      "io_clk"
+    ],
+    "phase": "same PLL fixed phase0; no insertion inherited",
+    "status": "EXACT_INDEPENDENT_CANDIDATE_LEAF_GRANTED",
+    "open": [
+      "mapped root census",
+      "source-bound CTS",
+      "TT/FF/native",
+      "parent composition"
+    ]
+  },
+  "su_calendar_candidate_leaf_grant": {
+    "commit": "8d3ebe524",
+    "master": "ot_s81_su_calendar_ctl",
+    "outline_um": [
+      129.6,
+      129.6
+    ],
+    "port_bits": 1903,
+    "pins_tcl_sha256": "827df96259a1d823221c816e3486f06038cc35ac8d04221a908e05783d8eae26",
+    "faces": {
+      "N": "1024calendar M3/M5",
+      "S": "280request/announce",
+      "W": "512observedVM",
+      "E": "87status/control with centred clock"
+    },
+    "status": "EXACT_INDEPENDENT_CANDIDATE_LEAF_GRANTED",
+    "insertion_ps": null,
+    "gate_period_ps": 833.333,
+    "logical_clock": "serialsk0.9GHz; actual3:4 parent binding open",
+    "successor": {
+      "commit": "6bba9a9a8",
+      "master": "ot_s81_su_calendar_ctl_p",
+      "outline_um": [
+        129.6,
+        129.6
+      ],
+      "port_bits": 1905,
+      "source_sha256": "bea24fbc84161bcdf051d627fbf58ad78ab2b650e91a1b713fc9049b86ef0766",
+      "status": "ENVELOPE_AND_TWO_ADDITIONAL_E_PINS_APPROVED; exact Tcl coordinates/hash pending",
+      "cycles_added": "one startup/input observation stage; actual full4096 programme proof and compiler binding pending"
+    }
+  },
+  "return_structural_repair": {
+    "owner": "s81_die_1103/bind_recovery",
+    "source": "54d016448",
+    "status": "COMPONENT_FOLD_PASS_ACTUAL_PARENT_BINDING_IN_PROGRESS",
+    "fold": "Existing2164 CTRn FFs absorbed into eight A/B leaf outputs; existing+1 return cycle retained",
+    "component_receipt": "AGI unit1006829 exit0:9 fold positives/negatives plus2 default positives",
+    "next": "Explicit opt-in eight-clock CTH/chain binding; remove central CTRn state; parent proof and missing-clock/stage negatives; no inherited geometry/native"
   }
 }
