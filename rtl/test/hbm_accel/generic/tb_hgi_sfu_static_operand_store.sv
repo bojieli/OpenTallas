@@ -21,7 +21,7 @@ module tb_hgi_sfu_static_operand_store;
  integer checks=0;
  function automatic [31:0] value(input integer g,a);value=32'h3e000000+32'(100000*g+a*7);endfunction
  ot_hgi_sfu_static_operand_store dut(.clk(clk),.rst_n(rst_n),.rd_re(rd_re),.rd_addr(rd_addr),.rd_src(128'd0),.rd_q(rd_q),
- .vm_we(vm_we),.vm_waddr(vm_addr),.vm_wdata(vm_data),.stage_v(stage_v),.stage_group(stage_group),
+ .vm_we(vm_we),.vm_waddr(vm_addr),.vm_wdata(vm_data),.scalar_load(4'd0),.scalar_enable(4'd0),.scalar_addr(96'd0),.scalar_data(128'd0),.stage_v(stage_v),.stage_group(stage_group),
  .stage_addr(stage_addr),.stage_mask(64'hffffffffffffffff),.stage_data(stage_data),
  .drain_v(drain_v),.drain_addr(drain_addr),.drain_data(drain_data),.drain_result_v(drain_rv),.fault(fault));
  initial begin
