@@ -52,9 +52,11 @@ def apply_tile(q, entries):
     for p, (n, _) in ports.items():
         if p.startswith('ck_'):
             ch = clocks[p]  # absent child evidence is a hard error
-            xy = tuple(snap(z) for z in ch['at'])
+            xy = tuple(ch['at'])  # published child rectangle center, already transformed by orientation
             if not (0 <= xy[0] <= q.w and 0 <= xy[1] <= q.h):
                 raise ValueError(f'{q.name}.{p}: child clock outside parent: {xy}')
+            # Parent entry is M5 over the child's M4 rectangle: same XY,
+            # one local via; parent CTS must measure that entry wire.
             q.ports[p] = ('xy', 1, 'M5', [xy], 1)
             q.order.append(p)
     q.obs_top = 7
