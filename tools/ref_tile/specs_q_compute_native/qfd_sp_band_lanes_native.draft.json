@@ -222,7 +222,7 @@
     "OT_QFD_BL_HARD"
   ],
   "hard_define": "OT_QFD_BL_HARD",
-  "layer_cap": "M6",
+  "layer_cap": "M7",
   "recipe": 2,
   "reset_ports": [
     "rst_n"
@@ -302,5 +302,7 @@
     "views_to": "physical/ref_tile/qfd_sp_band_lanes_native/views",
     "record_to": "results/rtl/ref_tile/qfd_sp_band_lanes_native"
   },
-  "pending_topdown_pins": "Die lead approved881.28; actual17clock localpins requested. Do notgenerate/submit until assignedpins/io_tcl updated."
+  "pending_topdown_pins": "SUPERSEDED: final26portdieassignment e145a3a9f is in finalspec; do notgenerate thisdraft.",
+  "child_lattice_um": 2.16,
+  "superseded_by": "tools/ref_tile/specs_q_compute_native/qfd_sp_band_lanes_native.json"
 }
