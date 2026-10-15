@@ -4,11 +4,12 @@
   "rgx_lane_source": "eb2b7be61",
   "scope": "G2 DS gather exactness and carry rounds; SPMD96 gather shape; four failing mutants; RGX receiver lane extraction exact+mutants",
   "physical_qualification": false,
-  "topk": "f42cd2d31 build OOM at120GB (4 concurrent elaborations, one RSS36.9GB); retry224GB running",
+  "topk": "f42cd2d31 flat builds OOM120GB and224GB (4x~58.6GB at second kill); 50f708fe5 hierarchical real PT64 tile build running96GB",
   "remaining": [
     "G4/G8 real-die builds live",
     "TOPK production run/mutants",
     "partitioned ring and VMport native launch/clock closure",
     "physical pin assignments and leaves"
-  ]
+  ],
+  "reduction_quarter_fix": "51944700b expands erroneous2-bit unit index to12; G4 grm+Qwen+carry re-run live64GB; original grm failedq2/q3"
 }
