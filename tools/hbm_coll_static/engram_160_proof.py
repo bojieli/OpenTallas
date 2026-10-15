@@ -41,10 +41,10 @@ def prove(receipt,out):
   try:compile_calendar(r,layer,two_rate=True,local_slots=True)
   except AssertionError:pass
   else:raise AssertionError('fifth-owned-row mutant escaped')
- c=cal;limit=c['consumer_reads'][-1]['cycle']-406+1;banks=(limit+127)//128
- assert c['done']==2978 and limit==2569 and banks==21
+ c=cal;data_limit=c['consumer_reads'][-1]['cycle']-406+1;limit=data_limit+5;banks=(limit+127)//128
+ assert c['done']==2978 and limit==2574 and banks==21
  lastword=max((613*(h['ordinal']+1)+486)//487-1 for h in c['hops']);assert lastword<2048
- report=dict(status='PRE_RTL_FIXED_RESOURCE_CALENDAR_PASS',logical_rows=24,logical_sectors=216,physical_packets=160,selected_payloads=120,selected_application_NOPS=40,all_token_payload_count=120,hops=720,done_core_edges=c['done'],first_control_consumer=406,control_operations=limit,required_native_banks_per_node=banks,nodes=9,programme_native_banks=banks*9,largest_frame_ordinal=max(h['ordinal'] for h in c['hops']),last_physical_word=lastword,finite_words=2048,decode_continues_after_window=True,ownership_variant_checks=checks,fifth_owned_row_mutant='rejected',protocol='new typed inner-present0 application-NOP; outer613 valid/sequence remains active',native_successor_proven=False,physical_qualified=False,normative_unchanged_programme=False,source_sha256=hashlib.sha256(pathlib.Path(__file__).resolve().parents[1].joinpath('uarch_model_hcoll_rowgather.py').read_bytes()).hexdigest())
+ report=dict(status='PRE_RTL_FIXED_RESOURCE_CALENDAR_PASS',logical_rows=24,logical_sectors=216,physical_packets=160,selected_payloads=120,selected_application_NOPS=40,all_token_payload_count=120,hops=720,done_core_edges=c['done'],first_control_consumer=406,data_control_operations=data_limit,control_operations=limit,explicit_drain_NOPS=5,issuer_done_cycle=2978,required_native_banks_per_node=banks,nodes=9,programme_native_banks=banks*9,largest_frame_ordinal=max(h['ordinal'] for h in c['hops']),last_physical_word=lastword,finite_words=2048,decode_continues_after_window=True,ownership_variant_checks=checks,fifth_owned_row_mutant='rejected',protocol='new typed inner-present0 application-NOP; outer613 valid/sequence remains active',native_successor_proven=False,physical_qualified=False,normative_unchanged_programme=False,source_sha256=hashlib.sha256(pathlib.Path(__file__).resolve().parents[1].joinpath('uarch_model_hcoll_rowgather.py').read_bytes()).hexdigest())
  (out/'receipt.json').write_text(json.dumps(report,indent=2)+'\n');print(json.dumps(report,indent=2))
 if __name__=='__main__':
  p=argparse.ArgumentParser();p.add_argument('receipt',type=pathlib.Path);p.add_argument('out',type=pathlib.Path);a=p.parse_args();prove(json.loads(a.receipt.read_text()),a.out)

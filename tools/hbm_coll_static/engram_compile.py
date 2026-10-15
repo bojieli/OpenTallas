@@ -21,7 +21,7 @@ def lower_local_slots(cal):
     return _lower(cal,21,True)
 
 def _lower(cal,banks,slots):
-    limit=max(x['cycle'] for x in cal['consumer_reads'])-FIRST+1
+    limit=max(x['cycle'] for x in cal['consumer_reads'])-FIRST+1+(5 if slots else 0)
     assert limit<=banks*128
     words=[[0]*(banks*128) for _ in range(9)]
     def put(node,cycle,field,value,offset=0,width=None,merge=False):

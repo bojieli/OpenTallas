@@ -10,7 +10,7 @@ remain separate; continuation of core decode does not extend finite word steps.
 import collections,json,pathlib
 class ScheduleFault(ValueError):pass
 
-def compile_calendar(receipt,layer=1,profile_rx_base=614,two_rate=False,local_slots=False):
+def compile_calendar(receipt,layer=1,profile_rx_base=614,two_rate=False,local_slots=False,endpoint_ordered=False):
     rows=[x for x in receipt['rows'] if x['layer']==layer]
     assert [x['list_index'] for x in rows]==list(range(24))
     first=0 if layer==1 else 8;consumer=first+8
@@ -34,6 +34,8 @@ def compile_calendar(receipt,layer=1,profile_rx_base=614,two_rate=False,local_sl
             assert len(owned)<=4
             for slot in range(4):
                 schedule_rows.append(dict(rank=first+home,list_index=owned[slot]['list_index'] if slot<len(owned) else 0,local_slot=slot,present=slot<len(owned)))
+    if endpoint_ordered:
+        schedule_rows=sorted(schedule_rows,key=lambda row:(-row['rank'],row.get('local_slot',row['list_index'])))
     for row in schedule_rows:
         home=row['rank']-first;rid=row['list_index'];present=row.get('present',True)
         local_slot=row.get('local_slot')
@@ -53,6 +55,9 @@ def compile_calendar(receipt,layer=1,profile_rx_base=614,two_rate=False,local_sl
                         reserve(f'n{link}.qsink0',capture+1,identity)
                         reserve(f'n{link}.bridge0',capture+3,identity)
                         write=capture+5
+                        if endpoint_ordered and used[link]:
+                            previous=next(e for e in reversed(hops) if e['link']==link)
+                            if write<=previous['write']:raise ScheduleFault('native endpoint chronological write sequence')
                         j=max(0,((write+11-(511 if two_rate else 498))*487*(16 if two_rate else 1))//(613*(17 if two_rate else 1))-2)
                         if used[link]:j=max(j,max(used[link])+1)
                         while acceptance(j)<write+11:j+=1
@@ -82,6 +87,11 @@ def compile_calendar(receipt,layer=1,profile_rx_base=614,two_rate=False,local_sl
                     for link,j in undo:del used[link][j]
                     del hops[oldh:];del writes[oldw:]
             else:raise ScheduleFault('no finite resource-safe source schedule')
+    if endpoint_ordered:
+        for link in range(8):
+            trace=[h for h in hops if h['link']==link]
+            assert [h['seq'] for h in sorted(trace,key=lambda h:h['write'])]==list(range(len(trace)))
+            assert [h['seq'] for h in sorted(trace,key=lambda h:h['read'])]==list(range(len(trace)))
     assert len(writes)==216 and len({(x['row'],x['sector']) for x in writes})==216
     finalwrite=max(c for (unit,c) in events if unit=='consumer.write') if local_slots else max(x['cycle'] for x in writes)
     # Actualconsumer commit+1; scale read first, then eight code sectors.
@@ -91,7 +101,7 @@ def compile_calendar(receipt,layer=1,profile_rx_base=614,two_rate=False,local_sl
     stop=2877 if two_rate else 2658
     if any((613*(e['ordinal']+1)+486)//487-1>=2048 for e in hops):raise ScheduleFault('payload requiresword beyond2048wordepoch')
     if done>=stop and not local_slots:raise ScheduleFault(f'operation extends past compiled finite window:done{done} stop{stop}')
-    result=dict(status='PRE_RTL_CALENDAR_RESOURCE_PASS',layer=layer,home_ranks=list(range(first,consumer)),consumer_rank=consumer,rows=24,bytes_per_row=288,sectors=216,packets=160 if local_slots else 120,logical_payload_packets=120,application_NOP_packets=40 if local_slots else 0,local_slot_schedule=local_slots,links=8,requests=requests,packets_calendar=packets,hops=hops,consumer_writes=writes,consumer_reads=decode,last_packet_publication=last_rx,last_consumer_write=finalwrite,done=done,finite_read_last=2871 if two_rate else 2656,finite_window_headroom=stop-1-done,two_rate=two_rate,reserved_resources=len(events),profile=dict(tx=6,rx=2,accept_base=511 if two_rate else 498,rx_publication_base=702 if two_rate else profile_rx_base,word_bits=487,frame_bits=613,fec_age=151 if two_rate else 102,internal_cdc_age_fec=8,window_words=2048,core_period_ticks=16,fec_period_ticks=17 if two_rate else 16,qualification='ExacteventmodelpendingactualRTLproof' if two_rate else 'Provedsameclocklogicalbaseline'),physical='Source-pinned candidate8neighborchain. Functional PMA512/16:17 clock component is source-proven; actual pads, board, physical clocks and timing are unqualified.')
+    result=dict(status='PRE_RTL_CALENDAR_RESOURCE_PASS',layer=layer,home_ranks=list(range(first,consumer)),consumer_rank=consumer,rows=24,bytes_per_row=288,sectors=216,packets=160 if local_slots else 120,logical_payload_packets=120,application_NOP_packets=40 if local_slots else 0,local_slot_schedule=local_slots,endpoint_ordered=endpoint_ordered,programme_drain_NOPS=5 if local_slots else 0,programme_control_limit=done-406+2 if local_slots else decode[-1]['cycle']-406+1,links=8,requests=requests,packets_calendar=packets,hops=hops,consumer_writes=writes,consumer_reads=decode,last_packet_publication=last_rx,last_consumer_write=finalwrite,done=done,finite_read_last=2871 if two_rate else 2656,finite_window_headroom=stop-1-done,two_rate=two_rate,reserved_resources=len(events),profile=dict(tx=6,rx=2,accept_base=511 if two_rate else 498,rx_publication_base=702 if two_rate else profile_rx_base,word_bits=487,frame_bits=613,fec_age=151 if two_rate else 102,internal_cdc_age_fec=8,window_words=2048,core_period_ticks=16,fec_period_ticks=17 if two_rate else 16,qualification='ExacteventmodelpendingactualRTLproof' if two_rate else 'Provedsameclocklogicalbaseline'),physical='Source-pinned candidate8neighborchain. Functional PMA512/16:17 clock component is source-proven; actual pads, board, physical clocks and timing are unqualified.')
     return result
 
 def model():

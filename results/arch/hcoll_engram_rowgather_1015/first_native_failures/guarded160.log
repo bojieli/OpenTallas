@@ -1,0 +1,11 @@
+SLOT_CHAIN_PROGRESS globalC2048 phaseC-13252
+SLOT_CHAIN_PROGRESS globalC4096 phaseC-11204
+SLOT_CHAIN_PROGRESS globalC6144 phaseC-9156
+SLOT_CHAIN_PROGRESS globalC8192 phaseC-7108
+SLOT_CHAIN_PROGRESS globalC10240 phaseC-5060
+SLOT_CHAIN_PROGRESS globalC12288 phaseC-3012
+SLOT_CHAIN_PROGRESS globalC14336 phaseC-964
+SLOT_CHAIN_PREFLIGHT actual24rows216DRAMreads 9x21nativeprogrammeSRAMs ready C15118
+[13160000000] %Fatal: tb.sv:110: Assertion failed in tb.scoreboard: CHAIN_FAULT C492 node00e link00000000 fec0000 pma00000000 pad00 consumer0
+%Error: /tmp/hcoll-engram-slot-chain-1015/tb.sv:110: Verilog $stop
+Aborting...

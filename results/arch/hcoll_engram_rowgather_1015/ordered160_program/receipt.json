@@ -1,0 +1,83 @@
+{
+  "status": "MODEL_PASS_NATIVE_GATE_OPEN",
+  "ownership_variants": [
+    {
+      "layer": 1,
+      "shift": 0
+    },
+    {
+      "layer": 1,
+      "shift": 1
+    },
+    {
+      "layer": 1,
+      "shift": 2
+    },
+    {
+      "layer": 1,
+      "shift": 3
+    },
+    {
+      "layer": 1,
+      "shift": 4
+    },
+    {
+      "layer": 1,
+      "shift": 5
+    },
+    {
+      "layer": 1,
+      "shift": 6
+    },
+    {
+      "layer": 1,
+      "shift": 7
+    },
+    {
+      "layer": 14,
+      "shift": 0
+    },
+    {
+      "layer": 14,
+      "shift": 1
+    },
+    {
+      "layer": 14,
+      "shift": 2
+    },
+    {
+      "layer": 14,
+      "shift": 3
+    },
+    {
+      "layer": 14,
+      "shift": 4
+    },
+    {
+      "layer": 14,
+      "shift": 5
+    },
+    {
+      "layer": 14,
+      "shift": 6
+    },
+    {
+      "layer": 14,
+      "shift": 7
+    }
+  ],
+  "historical_sequence_order_mutant": "rejected",
+  "endpoint_order_checks": [
+    "write",
+    "read",
+    "receive"
+  ],
+  "done": 2495,
+  "limit": 2091,
+  "finite_window_last_word": 1472,
+  "source_sha256": {
+    "tools/hbm_coll_static/engram_ordered_compile.py": "a8e3a4830b4f07b0d2e76ee8ac84d1b0427d5819c58da42663199b3986ca80f2",
+    "tools/uarch_model_hcoll_rowgather.py": "5d9125bd73ba676c1fae810983623d6dd08e7562b4d70fbbb201e1d1ef7151b7",
+    "tools/hbm_coll_static/engram_compile.py": "5d95aaff9fa4d6a93ec2223a971a28005d852d83d065a9c130a3a91b9b94579b"
+  }
+}
