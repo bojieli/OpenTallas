@@ -11,6 +11,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'hier_contract'))
 import child_lint
+import direct_macro_clock_entries
 
 MODES = ("entries", "hybrid_entries", "multiple_cts_roots")
 
@@ -86,6 +87,7 @@ def generate(spec, root):
     if spec.get('clock') not in MODES:
         return ''
     ds = domains(spec)
+    direct = direct_macro_clock_entries.load(spec, root)
     roots = list(spec['clock_ports']) if spec.get('clock') == 'multiple_cts_roots' else (spec.get('clock_cts_roots', []) if spec.get('clock') == 'hybrid_entries' else [])
     if spec.get('clock') == 'hybrid_entries' and (not isinstance(roots, list) or not roots or
             not all(isinstance(p, str) for p in roots) or len(set(roots)) != len(roots) or not set(roots) < set(spec['clock_ports'])):
@@ -129,7 +131,7 @@ def generate(spec, root):
                 if not values[0] <= values[1] <= values[2]:
                     raise ValueError(f'{view}/{pin}/{corner}: inconsistent boundary reference')
                 refs[master][pin][corner] = values
-    expected = sum(counts[m] * len(refs[m]) for m in refs)
+    expected = sum(counts[m] * len(refs[m]) for m in refs) + len(direct['entries'])
     if expected != len(spec['clock_ports']) - len(roots):
         raise ValueError(f'entries: {expected} bound child clock pins, {len(spec["clock_ports"]) - len(roots)} hard source ports')
     rows = []
@@ -143,6 +145,9 @@ def generate(spec, root):
         patterns = lambda names: ' '.join('{' + n + '}' for n in names)
         domain_rows.append("{" + name + "} {clock " + virtual_clock(name) + " io_budget_ps " + str(round(833.333 * d["ratio"][0] / d["ratio"][1] * 0.2, 3)) + " inputs {" + patterns(d["inputs"]) + "} outputs {" + patterns(d["outputs"]) + "}}")
         owner_rows.extend(f"{{{p}}} {{{name}}}" for p in d['ports'])
+    body = LEAF_BODY if spec.get('clock') == 'multiple_cts_roots' else BODY
+    if direct['entries']:
+        body = direct_body(body, direct)
     return (f'# OT_CLOCK_ENTRY_DOMAIN_API_VERSION {ENTRY_DOMAIN_API_VERSION}\n'
             '# AUTO clock entries: bound insertion.json boundary refs; no ETM arc modification.\n'
             + (('set ::ot_ce_leaf_roots 1\n') if spec.get('clock') == 'multiple_cts_roots' else '') +
@@ -152,7 +157,7 @@ def generate(spec, root):
             'set ::ot_ce_source_domains [dict create ' + ' '.join(owner_rows) + ']\n'
             'set ::ot_ce_explicit_domains ' + str(int(spec.get('clock_entry_domains') is not None)) + '\n'
             'set ::ot_ce_cts_roots {' + ' '.join('{' + p + '}' for p in roots) + '}\n'
-            'set ::ot_ce_ports {' + ' '.join('{' + p + '}' for p in spec['clock_ports']) + '}\n' + (LEAF_BODY if spec.get('clock') == 'multiple_cts_roots' else BODY))
+            'set ::ot_ce_ports {' + ' '.join('{' + p + '}' for p in spec['clock_ports']) + '}\n' + body)
 
 
 BODY = r'''
@@ -532,3 +537,27 @@ def leaf_body():
 
 
 LEAF_BODY = leaf_body()
+
+
+def direct_body(body, direct):
+    """Add explicitly bound raw-memory pin references without changing ETM semantics."""
+    marker = '  # Each glue root owns a real CTS tree.'
+    hook = r'''  foreach row [ot_ce_direct_rows $corner] {
+    set name [get_full_name [lindex $row 0]]
+    if {[dict exists $seen $name]} {error "OT_DIRECT_MACRO: duplicate hard-source ownership $name"}
+    dict set seen $name 1
+    lappend rows $row
+  }
+'''
+    if body.count(marker) != 1:
+        raise ValueError('clock entry body changed; revalidate direct macro extension')
+    body = body.replace(marker, hook + marker)
+    # A parent with only direct raw SRAMs has no routed ETM master from which
+    # to identify the current scene; use its actual linked SRAM libraries too.
+    marker = '    if {![dict exists $::ot_ce_counts $master]} continue'
+    if body.count(marker) != 2:
+        raise ValueError('clock entry corner body changed; revalidate direct macro extension')
+    body = body.replace(marker, '    if {![dict exists $::ot_ce_counts $master] && $master ni $::ot_ce_direct_masters} continue', 1)
+    masters = sorted({e['master'] for e in direct['entries']})
+    return ('set ::ot_ce_direct_masters {' + ' '.join(masters) + '}\n'
+            + direct['bindings_tcl'] + body)

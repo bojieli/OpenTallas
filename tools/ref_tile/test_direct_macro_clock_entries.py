@@ -33,6 +33,16 @@ class Admission(unittest.TestCase):
         self.assertEqual(result['entries'][0]['dimensions_um'], [177.768, 81.0])
         self.assertIn('ot_ce_direct_rows', result['bindings_tcl'])
 
+    def test_full_entry_generator_counts_real_raw_macro_pins(self):
+        import clock_entry_constraints as C
+        s=spec();s.update(kind='cluster',clock_port='ca',children=[])
+        generated=C.generate(s,ROOT)
+        self.assertIn('foreach row [ot_ce_direct_rows $corner]',generated)
+        self.assertIn('set ::ot_ce_direct_masters',generated)
+        self.assertNotIn('set_false_path',generated)
+        s['clock_ports'].append('extra')
+        with self.assertRaisesRegex(ValueError,'bound child clock pins'):C.generate(s,ROOT)
+
     def test_bad_identity_and_policy(self):
         for field, value in [('port', 'unknown'), ('pin', 'r_ce_in'), ('reference', 'ETM')]:
             with self.subTest(field=field):
@@ -59,7 +69,8 @@ class Admission(unittest.TestCase):
 def probe(out):
     import clock_entry_constraints as C
     out = Path(out); out.mkdir(parents=True, exist_ok=True)
-    s = spec(); generated = D.load(s, ROOT)
+    s = spec(); s.update(clock_port='ca',kind='cluster',children=[])
+    generated = D.load(s, ROOT)
     (out/'source_manifest.json').write_text(json.dumps(generated['entries'], indent=2)+'\n')
     (out/'probe.v').write_text('module probe(input ca, cb, en, output [545:0] qa,qb);\n' +
         '\n'.join(f'{MASTER} u_{i}(.clk({p}),.r_ce_in(en),.rd_out(q{p[-1]}));'
@@ -82,6 +93,7 @@ def probe(out):
         base += C.clocks(s, 833.333)
         base += f'read_spef {{{out}/probe.spef}}\nset_propagated_clock [get_clocks ot_entry_*]\n'
         base += 'set_input_delay 0 -clock core_clk [get_ports en]\nset_output_delay 0 -clock core_clk [get_ports q*]\n'
+        integrated = base + 'set ::ot_ce_require_wire 1\n' + C.generate(s,ROOT) + f'\nputs INTEGRATED_RAW_MACRO_PASS_{corner}\n'
         base += C.BODY[:C.BODY.index('# Match ck_insertion.py')]
         base += generated['bindings_tcl']
         base += 'set ::ot_ce_ports {ca cb}\nset ::ot_ce_cts_roots {}\n'
@@ -118,22 +130,22 @@ foreach row $rows {
 }
 puts "RAW_MACRO_PROBE_PASS CORNER wires=$wires phi=$phi SRAM-clock-to-Q-arcs-retained"
 '''.replace('CORNER', corner)
-        for kind in ('pass', 'wrong_source', 'wrong_corner'):
+        for kind in ('pass', 'wrong_source', 'wrong_corner', 'integrated'):
             script = base
             if kind == 'wrong_source':
                 script += 'set e [lindex $::ot_ce_direct_entries 0]; lset e 2 cb; lset ::ot_ce_direct_entries 0 $e\n'
             if kind == 'wrong_corner':
                 script += 'set e [lindex $::ot_ce_direct_entries 0]; lset e 4 {tt wrong ff wrong ss wrong}; lset ::ot_ce_direct_entries 0 $e\n'
-            script += checks + '\nexit\n'
+            script = integrated if kind == 'integrated' else script + checks + '\nexit\n'
             path = out/f'{corner}_{kind}.tcl'; path.write_text(script)
             result = subprocess.run([os.environ.get('OPENROAD', 'openroad'),'-exit',str(path)], text=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
             (out/f'{corner}_{kind}.log').write_text(result.stdout)
-            ok = result.returncode == 0 and f'RAW_MACRO_PROBE_PASS {corner}' in result.stdout
-            if (kind == 'pass') != ok:
+            ok = result.returncode == 0 and (f'INTEGRATED_RAW_MACRO_PASS_{corner}' if kind == 'integrated' else f'RAW_MACRO_PROBE_PASS {corner}') in result.stdout
+            if (kind in ('pass','integrated')) != ok:
                 raise RuntimeError(f'{corner}/{kind}: unexpected status {result.returncode}\n{result.stdout[-3000:]}')
-            if kind != 'pass' and 'OT_DIRECT_MACRO:' not in result.stdout:
+            if kind not in ('pass','integrated') and 'OT_DIRECT_MACRO:' not in result.stdout:
                 raise RuntimeError('mutant did not fail in actual ownership/corner guard')
-            receipts.append(dict(corner=corner, kind=kind, returncode=result.returncode, expected=(kind=='pass')))
+            receipts.append(dict(corner=corner, kind=kind, returncode=result.returncode, expected=(kind in ('pass','integrated'))))
     (out/'receipt.json').write_text(json.dumps(receipts, indent=2)+'\n')
     print('RAW_MACRO_PROBE_SUITE_PASS all three corners, source/corner mutants rejected')
 
