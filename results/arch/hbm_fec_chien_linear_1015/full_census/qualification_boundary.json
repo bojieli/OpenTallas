@@ -1,0 +1,36 @@
+{
+  "count_gate": "PASS_ALL_12_ROOTS_AT_OR_BELOW_15000",
+  "actual_top": "hfd_serdes487_chien_linear_window",
+  "parameters": {
+    "EMUT": 0,
+    "DMUT": 0,
+    "WINDOW_WORDS": 2048,
+    "CDC_AW": 4
+  },
+  "actual_scope": [
+    "487-bit core TX pin register",
+    "actual 512-bit KP4 encoder transport with 544-bit PMA codewords",
+    "registered PMA TX and RX RTL models",
+    "actual rooted RS(544,514) decoder with explicit Chien constant XOR maps",
+    "actual 16x487 finite-window register CDC; 2048-word compiled window"
+  ],
+  "clock_family": "12 distinct scalar RTL input roots; independent physical phase/frequency/clock delivery unqualified",
+  "scope_excludes": [
+    "613-to-487 endpoint gearbox",
+    "actual registered collective TX/RX endpoint",
+    "whole complete link production calendar",
+    "library mapped area and TT/FF timing",
+    "CTS insertion/spread, per-bit pin geometry, route/DRC qualification"
+  ],
+  "total_flop_bits": 86152,
+  "maximum_root_bits": 13790,
+  "native_qualified": false,
+  "physical_qualified": false,
+  "other_joined_hierarchies_inherit_this_count": false,
+  "original_census": {
+    "pid": 1083099,
+    "state_last_verified": "LIVE_UNTOUCHED",
+    "elapsed": "02:49:26",
+    "rss_kb": 761700
+  }
+}
