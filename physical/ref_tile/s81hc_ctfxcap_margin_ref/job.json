@@ -1,5 +1,5 @@
 {
- "name": "s81hc_ctfxcap_margin_ref-native-margin-granted1-COMMIT",
+ "name": "s81hc_ctfxcap_margin_ref-native-margin-granted1-a5c919eae",
  "block": "ot_s81_hc_ctfx_cap",
  "ref_tile": true,
  "owner": "Codex:S81-NORM-PHYSICAL",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 24,
  "source": {
   "branch": "codex/s81-norm-physical-1015",
-  "commit": "COMMIT"
+  "commit": "a5c919eae"
  },
  "stages": {
   "bench": [
@@ -93,7 +93,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/s81hc_ctfxcap_margin_ref/s81hc_ctfxcap_margin_ref-native-margin-granted1-COMMIT"
+   "to": "results/rtl/ref_tile/s81hc_ctfxcap_margin_ref/s81hc_ctfxcap_margin_ref-native-margin-granted1-a5c919eae"
   }
  ],
  "cycles_added": 0,
