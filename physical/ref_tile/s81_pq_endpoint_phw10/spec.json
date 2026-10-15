@@ -6,7 +6,8 @@
   "rtl/dsrom_sys/s81_static_control/ot_s81_pq_command_endpoint.sv"
  ],
  "params": {
-  "PHW": 10
+  "PHW": 10,
+  "PINREG": 1
  },
  "clock_port": "ck",
  "reset_ports": [
@@ -43,7 +44,7 @@
   "hold_margin_ns": 0.03,
   "macro_halo_um": 5.4
  },
- "structural_change": "Actual canonical PHW10/SAW14 static producer/controller; real registered control and complete action75 instead of legacyPHW9 truncated action72. Generous independent leaf CTS geometry explicitly granted by S81 die lead; no historical view alias.",
+ "structural_change": "Actual explicit producer/reader inputcapture, fixed +1 calendar and +1 command capture, external command completion35 versus33 baseline. Controllerstate leaf removes35 purecombin ROMaddress bypasses; direct realregisteredproducer wires ownphase/stream ROMaddresses. No timingchecks weakened. Larger slots are independent nativeCTS grants only, not adopted fullparent geometry.",
  "slot_change_request": {
   "name": "s81-expanded-native-PQ-row-1015",
   "owner": "/root/s_die/mix4_sizing",
@@ -82,7 +83,33 @@
    "rtl/test/dsrom_sys",
    "physical/s81_pq_hier/pinned",
    "tools/s81",
-   "tools/s81_static_control"
+   "tools/s81_static_control",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8"
+  ],
+  "benches": [
+   {
+    "name": "actual_produced_component",
+    "cmd": "python3 tools/s81/pq_canonical_pins_gate.py --produced --work {RUN}/produced_exact",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "PRODUCED PASS"
+   },
+   {
+    "name": "actual_phase_source_mutant",
+    "cmd": "python3 tools/s81/pq_canonical_pins_gate.py --produced --mut PHW --work {RUN}/produced_mutant && {RUN}/produced_mutant/obj/Vtb_s81_pq_produced_pins +OT_ROM_DIR={RUN}/produced_mutant",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "PRODUCED FAIL"
+   }
   ]
  },
  "defines": [
