@@ -913,7 +913,10 @@ def _buses(m, T, r):
             for k_ in range(32):
                 add((f'les_{st}_{k_}', 'stack_local', 288, [(f'land_{st}', f'es{k_}'), (f'ctrl_{st}', f'es{k_}')]))
                 add((f'ler_{st}_{k_}', 'stack_local', 261, [(f'ctrl_{st}', f'er{k_}'), (f'land_{st}', f'er{k_}')]))
-            add((f'lkf_{st}', 'stack_local', 1, [(f'ctrl_{st}', 'kf'), (f'land_{st}', 'kf')]))
+            # v1.3: S stacks abut at the S ends (kc leaf <-> land pc0); N stacks run the kc leaf's fault (strip N end) to
+            # the landing's pc0 (S end) on relays (a fault level: latency is not a protocol term)
+            add((f'lkf_{st}', 'stack_local' if st.endswith('S') else 'kv_oneway', 1,
+                 [(f'ctrl_{st}', 'kf'), (f'land_{st}', 'kf')]))
     add(('ares', 'spine_local', 1 + 1 + 6 + 512, [('ahub', 'ao'), ('seq', 'ar')]))
     add(('hs', 'spine_local', 1, [('seq', 'hs'), ('ahub', 'hs')]))                  # layer start to the hub
     add(('d2df', 'spine_local', 6, [('d2d_kv', 'flt'), (lend, 'd2df')]))            # link-end fault + cause
@@ -1693,7 +1696,7 @@ LEVEL_PIN_MASTERS = ('qkd_land', 'qkd_land_n', 'qkd_astk', 'qkd_astk_n', 'qkd_se
                      'qkd_d2d')
 
 
-STRIP_ES_Y, STRIP_ER_Y, STRIP_KF_Y, STRIP_PC_PITCH = 60.0, 240.0, 6150.0, 378.0
+STRIP_ES_Y, STRIP_ER_Y, STRIP_KF_Y, STRIP_PC_PITCH = 60.0, 240.0, 21.6, 378.0
 PHY_STRIP_DY = 71.28           # the PHY band starts 71.28 um above its controller strip's end (r21c band)
 
 
@@ -1720,6 +1723,12 @@ def _strip_face_pins(mst, mm):
         if mt:
             y = STRIP_PC_PITCH * int(mt.group(2)) + (STRIP_ES_Y if mt.group(1) == 'es' else STRIP_ER_Y)
         elif p == 'kf':
+            # v1.3 (die-placed controller leaves): kf leaves the controller strip at its kc leaf = the strip's OUTER end
+            # (S stacks: qkd_ctrl_strip_sr, kc leaf at the S end; N stacks: kc leaf at the N end) and enters the landing
+            # strip's PC fault chain at pc0 = its S end; a mid-strip pin (v1.2 y 6,150) became a 6-mm unrelayed wire
+            if mst == 'qkd_ctrl_n':
+                mm.ports[p] = ('face', sp[1], 'N', 'M5', round(mm.w / 2 + 21.6, 4), 1)
+                continue
             y = STRIP_KF_Y
         else:
             continue
