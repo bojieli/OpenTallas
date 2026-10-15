@@ -8,6 +8,8 @@ module dsfd_vm_static512_suhc(
  input wire [3:0] ck_rscatter,ck_return,input wire [15:0] ck_wscatter,
  input wire [127:0] ck_wcapture,ck_bank,input wire rst_n,
  input wire [47:0] ck_relay_req,ck_relay_rsp,
+ input wire [3:0] rst_rscatter_n,rst_return_n,input wire [15:0] rst_wscatter_n,
+ input wire [127:0] rst_wcapture_n,rst_bank_n,input wire [47:0] rst_relay_n,
  input wire [17:0] native_rq_v,input wire [251:0] native_rq_row,input wire [89:0] native_rq_slot,
  input wire [2:0] native_rq_group,input wire [11:0] aux_rq_v,input wire [167:0] aux_rq_row,
  input wire [31:0] wq_v,input wire [447:0] wq_row,input wire [511:0] wq_mask,
@@ -29,13 +31,15 @@ module dsfd_vm_static512_suhc(
    assign wm[4*q+:4]=wq_mask[16*q+4*s+:4];
   end
   dsfd_vm_static_slice128_suhc u_slice(.ck_rscatter(ck_rscatter[s]),.ck_wcapture(ck_wcapture[32*s+:32]),.ck_wscatter(ck_wscatter[4*s+:4]),
-   .ck_bank(ck_bank[32*s+:32]),.rst_n(rst_n),.ck_relay_req(ck_relay_req[12*s+:12]),.ck_relay_rsp(ck_relay_rsp[12*s+:12]),.native_rq_v(native_rq_v),.native_rq_row(native_rq_row),.native_rq_slot(native_rq_slot),
+   .ck_bank(ck_bank[32*s+:32]),.rst_n(rst_n),
+   .rst_rscatter_n(rst_rscatter_n[s]),.rst_wcapture_n(rst_wcapture_n[32*s+:32]),.rst_wscatter_n(rst_wscatter_n[4*s+:4]),
+   .rst_bank_n(rst_bank_n[32*s+:32]),.rst_relay_n(rst_relay_n[12*s+:12]),.ck_relay_req(ck_relay_req[12*s+:12]),.ck_relay_rsp(ck_relay_rsp[12*s+:12]),.native_rq_v(native_rq_v),.native_rq_row(native_rq_row),.native_rq_slot(native_rq_slot),
    .native_rq_group(native_rq_group),.aux_rq_v(aux_rq_v),.aux_rq_row(aux_rq_row),
    .wq_v(wq_v),.wq_row(wq_row),.wq_mask(wm),.wq_data(wd),.wq_tag(wq_tag),
    .rs_v(rv),.rs_data(rd),.rs_tag(rt),.commit_v(commit_v[32*s+:32]),
    .commit_addr(commit_addr[288*s+:288]),.commit_mask(commit_mask[128*s+:128]),
    .commit_tag(commit_tag[256*s+:256]),.fault(fault[4*s+:2]));
-  dsfd_vm_static_return #(.NROW(NROW)) u_return(.ck(ck_return[s]),.rst_n(rst_n),.i_v(rv),.i_tag(rt),.i_data(rd),
+  dsfd_vm_static_return #(.NROW(NROW)) u_return(.ck(ck_return[s]),.rst_n(rst_return_n[s]),.i_v(rv),.i_tag(rt),.i_data(rd),
    .release_v(release_v),.release_group(release_group),.release_mask(release_mask),
    .o_v(group_v[NROW*s+:NROW]),.o_data(gd),.o_group(group_id[(8-SLOT_BITS)*s+:8-SLOT_BITS]),.fault(fault[4*s+2]));
   dsfd_vm_static_suhc_return_map u_native(.i_v(group_v[32*s+:32]),.i_data(gd),

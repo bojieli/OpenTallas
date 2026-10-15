@@ -43,7 +43,18 @@ module tb_dsfd_vm_static_core;
         assign cld[512*cl +: 512] = cvm[551*cl+31 +: 512];
     end endgenerate
     wire vm_fault;
-    dsfd_vm_static_core dut (.cks(ck), .rss(rss), .c_cmd(c_cmd), .c_done(c_done), .c_st(c_st), .t_inp_su(t_inp_su),
+    dsfd_vm_static_core dut (.cks(ck), .rss(rss),
+        .ck_rsched(ck), .ck_seq(ck), .ck_landing(ck),
+        .ck_mem_fsr({4{ck}}), .ck_mem_return({4{ck}}), .ck_mem_bank({128{ck}}),
+        .ck_mem_wcapture({128{ck}}), .ck_mem_wscatter({16{ck}}),
+        .ck_mem_relay_req({48{ck}}), .ck_mem_relay_rsp({48{ck}}),
+        .ck_write_control(ck), .ck_write_header(ck), .ck_write_payload({4{ck}}),
+        .ck_write_dispatch({16{ck}}), .ck_write_stage({128{ck}}),
+        .rst_rsched_n(rss), .rst_seq_n(rss), .rst_landing_n(rss),
+        .rst_mem_fsr_n({4{rss}}), .rst_mem_return_n({4{rss}}), .rst_mem_bank_n({128{rss}}),
+        .rst_mem_wcapture_n({128{rss}}), .rst_mem_wscatter_n({16{rss}}), .rst_mem_relay_n({48{rss}}),
+        .rst_write_control_n(rss), .rst_write_header_n(rss), .rst_write_payload_n({4{rss}}),
+        .rst_write_dispatch_n({16{rss}}), .rst_write_stage_n({128{rss}}), .c_cmd(c_cmd), .c_done(c_done), .c_st(c_st), .t_inp_su(t_inp_su),
         .t_inp_hc(t_inp_hc), .f_su_rqv(su_rqv), .f_su_rq(su_rq), .t_su_rsv(su_rsv), .t_su_rs(su_rs), .f_su_wqv(su_wqv),
         .f_su_wq(su_wq), .f_su_wqm(su_wqm), .f_su_wqd(su_wqd), .f_hc_rqv(hc_rqv), .f_hc_rq(hc_rq), .t_hc_rsv(hc_rsv),
         .t_hc_rs(hc_rs), .f_hc_wqv(hc_wqv), .f_hc_wq(hc_wq), .f_hc_wqm(hc_wqm), .f_hc_wqd(hc_wqd), .f_pqx(pqx), .t_pqx(pq_o), .x_av({4'd0, (crq[0] ? (4'b1 << crq[2:1]) : 4'd0)}), .x_ar({56'd0, {4{crq[14:1]}}}), .x_rv(xv), .x_rd(xd), .nf_v(), .nf_d(),

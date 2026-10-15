@@ -26,7 +26,20 @@ module tb_dsfd_sp_vm_static;
     reg [2203:0] fcol = 0; reg [14:0] crq = 0; wire [512:0] crs;
     reg [514:0] sel = 0, col = 0; reg [1026:0] asw = 0;
     wire [511:0] tgat; reg [10:0] xgo = 0; wire [512:0] qsw; reg [2:0] qsws = 3'b011;
-    dsfd_sp_vm dut (.ck(s_ck), .rst(rst), .cks(t_ck), .rss(rss), .c_cmd(c_cmd), .c_done(c_done), .c_st(c_st),
+    dsfd_sp_vm dut (.ck(s_ck), .rst(rst), .cks(t_ck), .rss(rss),
+        .ck_core_t(t_ck), .ck_rsched_t(t_ck), .ck_seq_t(t_ck), .ck_landing_t(t_ck),
+        .ck_mem_fsr_t({4{t_ck}}), .ck_mem_return_t({4{t_ck}}), .ck_mem_bank_t({128{t_ck}}),
+        .ck_mem_wcapture_t({128{t_ck}}), .ck_mem_wscatter_t({16{t_ck}}),
+        .ck_mem_relay_req_t({48{t_ck}}), .ck_mem_relay_rsp_t({48{t_ck}}),
+        .ck_write_control_t(t_ck), .ck_write_header_t(t_ck), .ck_write_payload_t({4{t_ck}}),
+        .ck_write_dispatch_t({16{t_ck}}), .ck_write_stage_t({128{t_ck}}),
+        .ck_landing_x34_s({3{s_ck}}), .ck_landing_x34_t({3{t_ck}}),
+        .rss_core_t(rss), .rss_rsched_t(rss), .rss_seq_t(rss), .rss_landing_t(rss),
+        .rss_mem_fsr_t({4{rss}}), .rss_mem_return_t({4{rss}}), .rss_mem_bank_t({128{rss}}),
+        .rss_mem_wcapture_t({128{rss}}), .rss_mem_wscatter_t({16{rss}}), .rss_mem_relay_t({48{rss}}),
+        .rss_write_control_t(rss), .rss_write_header_t(rss), .rss_write_payload_t({4{rss}}),
+        .rss_write_dispatch_t({16{rss}}), .rss_write_stage_t({128{rss}}),
+        .rst_landing_x34_s({3{rst}}), .rss_landing_x34_t({3{rss}}), .c_cmd(c_cmd), .c_done(c_done), .c_st(c_st),
         .t_inp_su(t_inp_su), .t_inp_hc(t_inp_hc),
         .f_su_rqv(su_rqv), .f_su_rq(su_rq), .t_su_rsv(su_rsv), .t_su_rs(su_rs),
         .f_su_wqv(su_wqv), .f_su_wq(su_wq), .f_su_wqm(su_wqm), .f_su_wqd(su_wqd),
