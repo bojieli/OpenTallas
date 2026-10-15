@@ -1,0 +1,3213 @@
+{
+  "schema": "opentallas.hbm.stage6-native-bank-slot-request.v1",
+  "candidate": "UNADOPTED. Exact typed grants required before gate/job; closed LG source/view stands.",
+  "LG_LEF": {
+    "path": "physical/ref_tile/vm_lg_bank_hc_static_1015/views/ot_hbm_vm_lg_static_bank/ot_hbm_vm_lg_static_bank.lef",
+    "sha256": "d17a8eaf341e68f21359a6dd9eabbfd8a7df0b8126adff45ae76ad1f99aa6c72",
+    "master": "ot_hbm_vm_lg_static_bank",
+    "outline_um": [
+      150.336,
+      151.2
+    ],
+    "orient": "R0",
+    "near": "E",
+    "far": "W",
+    "local": "S",
+    "scope": "Actual closed HC18/15 prototype. Source/params exact SU10/7 and SFU14/11 views must bind separately; no 96composition claim."
+  },
+  "bank_requests": [
+    {
+      "quadrant": "SW",
+      "replicas": 8,
+      "master": "hfd_vms_bank_stage6_SW",
+      "source": "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_stage6_SW.sv",
+      "core": "rtl/hbm_accel/generic/vm/static/ot_vms_bank_static_wdecode_ft_stageclocks.sv",
+      "params": {
+        "RG": 5,
+        "WG": 1
+      },
+      "kind": "tile",
+      "outline": {
+        "w": 356.4,
+        "h": 561.6,
+        "exact": true
+      },
+      "clock_ports": [
+        "clk_pin",
+        "clk_s1",
+        "clk_mem",
+        "clk_capture",
+        "clk_return",
+        "clk_status"
+      ],
+      "pins": {
+        "N": [
+          "rq4",
+          "rr4",
+          "rst_n",
+          "bid",
+          "wslot_v",
+          "status",
+          "clk_pin",
+          "clk_s1",
+          "clk_mem",
+          "clk_capture",
+          "clk_return",
+          "clk_status"
+        ],
+        "S": [
+          "rq1",
+          "rr1",
+          "pq",
+          "pr",
+          "eg"
+        ],
+        "E": [
+          "rq2",
+          "rr2",
+          "dq",
+          "dq_done",
+          "xq",
+          "xq_done",
+          "sid",
+          "wslot"
+        ],
+        "W": [
+          "rq3",
+          "rr3",
+          "kq",
+          "kq_done",
+          "xq2",
+          "xq2_done",
+          "rslot_v",
+          "rslot",
+          "rq0",
+          "rr0",
+          "wq0",
+          "wq_done0"
+        ]
+      },
+      "pin_windows_um": {
+        "rq0": [
+          379.64,
+          384.536
+        ],
+        "rr0": [
+          384.536,
+          458.552
+        ],
+        "rq4": [
+          116.283,
+          123.163
+        ],
+        "rr4": [
+          123.163,
+          227.167
+        ],
+        "wq0": [
+          458.552,
+          539.48
+        ],
+        "wq_done0": [
+          539.48,
+          539.768
+        ],
+        "rst_n": [
+          341.692,
+          342.097
+        ],
+        "bid": [
+          342.097,
+          343.311
+        ],
+        "wslot_v": [
+          343.311,
+          343.716
+        ],
+        "status": [
+          343.716,
+          351.0
+        ],
+        "rq1": [
+          5.4,
+          10.736
+        ],
+        "rr1": [
+          10.736,
+          91.408
+        ],
+        "pq": [
+          91.408,
+          180.868
+        ],
+        "pr": [
+          180.868,
+          264.365
+        ],
+        "eg": [
+          264.365,
+          351.0
+        ],
+        "rq2": [
+          5.4,
+          12.586
+        ],
+        "rr2": [
+          12.586,
+          121.225
+        ],
+        "dq": [
+          121.225,
+          240.01
+        ],
+        "dq_done": [
+          240.01,
+          240.433
+        ],
+        "xq": [
+          240.433,
+          357.104
+        ],
+        "xq_done": [
+          357.104,
+          357.526
+        ],
+        "sid": [
+          357.526,
+          358.372
+        ],
+        "wslot": [
+          358.372,
+          359.64
+        ],
+        "rq3": [
+          5.4,
+          12.595
+        ],
+        "rr3": [
+          12.595,
+          121.364
+        ],
+        "kq": [
+          121.364,
+          240.29
+        ],
+        "kq_done": [
+          240.29,
+          240.714
+        ],
+        "xq2": [
+          240.714,
+          357.524
+        ],
+        "xq2_done": [
+          357.524,
+          357.947
+        ],
+        "rslot_v": [
+          357.947,
+          358.37
+        ],
+        "rslot": [
+          358.37,
+          359.64
+        ],
+        "clk_pin": [
+          5.4,
+          5.688000000000001
+        ],
+        "clk_s1": [
+          5.688000000000001,
+          5.976
+        ],
+        "clk_mem": [
+          5.976,
+          6.264
+        ],
+        "clk_capture": [
+          6.264,
+          6.5520000000000005
+        ],
+        "clk_return": [
+          6.5520000000000005,
+          6.84
+        ],
+        "clk_status": [
+          6.84,
+          7.128
+        ]
+      },
+      "pin_widths": {
+        "clk_pin": 1,
+        "clk_s1": 1,
+        "clk_mem": 1,
+        "clk_capture": 1,
+        "clk_return": 1,
+        "clk_status": 1,
+        "rst_n": 1,
+        "bid": 3,
+        "sid": 2,
+        "rslot_v": 1,
+        "rslot": 3,
+        "wslot_v": 1,
+        "wslot": 3,
+        "rq0": 17,
+        "rq1": 17,
+        "rq2": 17,
+        "rq3": 17,
+        "rq4": 17,
+        "rr0": 257,
+        "rr1": 257,
+        "rr2": 257,
+        "rr3": 257,
+        "rr4": 257,
+        "wq0": 281,
+        "wq_done0": 1,
+        "dq": 281,
+        "dq_done": 1,
+        "kq": 281,
+        "kq_done": 1,
+        "xq": 276,
+        "xq_done": 1,
+        "xq2": 276,
+        "xq2_done": 1,
+        "eg": 276,
+        "pq": 285,
+        "pr": 266,
+        "status": 18
+      },
+      "LG0_W_window_um": [
+        379.64,
+        539.768
+      ],
+      "nonLG": "Exact surviving baseline semantic pin windows retained; NE HC/COLL renames tracked, ATT only removed.",
+      "state": "REQUESTED, NOT actual ODB/pin/PG/CTS evidence",
+      "home": "Root must legalize complete functional groups against all other adopted blocks; origin expansion is not accepted geometry."
+    },
+    {
+      "quadrant": "SE",
+      "replicas": 8,
+      "master": "hfd_vms_bank_stage6_SE",
+      "source": "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_stage6_SE.sv",
+      "core": "rtl/hbm_accel/generic/vm/static/ot_vms_bank_static_wdecode_ft_stageclocks.sv",
+      "params": {
+        "RG": 4,
+        "WG": 1
+      },
+      "kind": "tile",
+      "outline": {
+        "w": 356.4,
+        "h": 561.6,
+        "exact": true
+      },
+      "clock_ports": [
+        "clk_pin",
+        "clk_s1",
+        "clk_mem",
+        "clk_capture",
+        "clk_return",
+        "clk_status"
+      ],
+      "pins": {
+        "N": [
+          "rst_n",
+          "bid",
+          "wslot_v",
+          "status",
+          "clk_pin",
+          "clk_s1",
+          "clk_mem",
+          "clk_capture",
+          "clk_return",
+          "clk_status"
+        ],
+        "S": [
+          "rq1",
+          "rr1",
+          "pq",
+          "pr",
+          "eg"
+        ],
+        "E": [
+          "rq2",
+          "rr2",
+          "dq",
+          "dq_done",
+          "xq",
+          "xq_done",
+          "sid",
+          "wslot"
+        ],
+        "W": [
+          "rq3",
+          "rr3",
+          "kq",
+          "kq_done",
+          "xq2",
+          "xq2_done",
+          "rslot_v",
+          "rslot",
+          "rq0",
+          "rr0",
+          "wq0",
+          "wq_done0"
+        ]
+      },
+      "pin_windows_um": {
+        "rq0": [
+          379.64,
+          384.536
+        ],
+        "rr0": [
+          384.536,
+          458.552
+        ],
+        "wq0": [
+          458.552,
+          539.48
+        ],
+        "wq_done0": [
+          539.48,
+          539.768
+        ],
+        "rst_n": [
+          341.692,
+          342.097
+        ],
+        "bid": [
+          342.097,
+          343.311
+        ],
+        "wslot_v": [
+          343.311,
+          343.716
+        ],
+        "status": [
+          343.716,
+          351.0
+        ],
+        "rq1": [
+          5.4,
+          10.736
+        ],
+        "rr1": [
+          10.736,
+          91.408
+        ],
+        "pq": [
+          91.408,
+          180.868
+        ],
+        "pr": [
+          180.868,
+          264.365
+        ],
+        "eg": [
+          264.365,
+          351.0
+        ],
+        "rq2": [
+          5.4,
+          12.586
+        ],
+        "rr2": [
+          12.586,
+          121.225
+        ],
+        "dq": [
+          121.225,
+          240.01
+        ],
+        "dq_done": [
+          240.01,
+          240.433
+        ],
+        "xq": [
+          240.433,
+          357.104
+        ],
+        "xq_done": [
+          357.104,
+          357.526
+        ],
+        "sid": [
+          357.526,
+          358.372
+        ],
+        "wslot": [
+          358.372,
+          359.64
+        ],
+        "rq3": [
+          5.4,
+          12.595
+        ],
+        "rr3": [
+          12.595,
+          121.364
+        ],
+        "kq": [
+          121.364,
+          240.29
+        ],
+        "kq_done": [
+          240.29,
+          240.714
+        ],
+        "xq2": [
+          240.714,
+          357.524
+        ],
+        "xq2_done": [
+          357.524,
+          357.947
+        ],
+        "rslot_v": [
+          357.947,
+          358.37
+        ],
+        "rslot": [
+          358.37,
+          359.64
+        ],
+        "clk_pin": [
+          5.4,
+          5.688000000000001
+        ],
+        "clk_s1": [
+          5.688000000000001,
+          5.976
+        ],
+        "clk_mem": [
+          5.976,
+          6.264
+        ],
+        "clk_capture": [
+          6.264,
+          6.5520000000000005
+        ],
+        "clk_return": [
+          6.5520000000000005,
+          6.84
+        ],
+        "clk_status": [
+          6.84,
+          7.128
+        ]
+      },
+      "pin_widths": {
+        "clk_pin": 1,
+        "clk_s1": 1,
+        "clk_mem": 1,
+        "clk_capture": 1,
+        "clk_return": 1,
+        "clk_status": 1,
+        "rst_n": 1,
+        "bid": 3,
+        "sid": 2,
+        "rslot_v": 1,
+        "rslot": 3,
+        "wslot_v": 1,
+        "wslot": 3,
+        "rq0": 17,
+        "rq1": 17,
+        "rq2": 17,
+        "rq3": 17,
+        "rr0": 257,
+        "rr1": 257,
+        "rr2": 257,
+        "rr3": 257,
+        "wq0": 281,
+        "wq_done0": 1,
+        "dq": 281,
+        "dq_done": 1,
+        "kq": 281,
+        "kq_done": 1,
+        "xq": 276,
+        "xq_done": 1,
+        "xq2": 276,
+        "xq2_done": 1,
+        "eg": 276,
+        "pq": 285,
+        "pr": 266,
+        "status": 18
+      },
+      "LG0_W_window_um": [
+        379.64,
+        539.768
+      ],
+      "nonLG": "Exact surviving baseline semantic pin windows retained; NE HC/COLL renames tracked, ATT only removed.",
+      "state": "REQUESTED, NOT actual ODB/pin/PG/CTS evidence",
+      "home": "Root must legalize complete functional groups against all other adopted blocks; origin expansion is not accepted geometry."
+    },
+    {
+      "quadrant": "NW",
+      "replicas": 8,
+      "master": "hfd_vms_bank_stage6_NW",
+      "source": "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_stage6_NW.sv",
+      "core": "rtl/hbm_accel/generic/vm/static/ot_vms_bank_static_wdecode_ft_stageclocks.sv",
+      "params": {
+        "RG": 6,
+        "WG": 3
+      },
+      "kind": "tile",
+      "outline": {
+        "w": 393.12,
+        "h": 535.68,
+        "exact": true
+      },
+      "clock_ports": [
+        "clk_pin",
+        "clk_s1",
+        "clk_mem",
+        "clk_capture",
+        "clk_return",
+        "clk_status"
+      ],
+      "pins": {
+        "N": [
+          "rq4",
+          "rr4",
+          "dq",
+          "dq_done",
+          "wq2",
+          "wq_done2",
+          "rst_n",
+          "bid",
+          "sid",
+          "rslot_v",
+          "rslot",
+          "wslot_v",
+          "wslot",
+          "status",
+          "clk_pin",
+          "clk_s1",
+          "clk_mem",
+          "clk_capture",
+          "clk_return",
+          "clk_status"
+        ],
+        "S": [
+          "rq1",
+          "rr1",
+          "rq5",
+          "rr5",
+          "kq",
+          "kq_done",
+          "xq",
+          "xq_done",
+          "eg"
+        ],
+        "E": [
+          "rq2",
+          "rr2",
+          "xq2",
+          "xq2_done"
+        ],
+        "W": [
+          "rq3",
+          "rr3",
+          "pq",
+          "pr",
+          "wq1",
+          "wq_done1",
+          "rq0",
+          "rr0",
+          "wq0",
+          "wq_done0"
+        ]
+      },
+      "pin_windows_um": {
+        "rq0": [
+          353.72,
+          358.616
+        ],
+        "rr0": [
+          358.616,
+          432.632
+        ],
+        "rq4": [
+          98.28,
+          104.043
+        ],
+        "rr4": [
+          104.043,
+          191.16
+        ],
+        "dq": [
+          201.96,
+          294.511
+        ],
+        "dq_done": [
+          294.511,
+          294.84
+        ],
+        "wq2": [
+          294.84,
+          387.391
+        ],
+        "wq_done2": [
+          387.391,
+          387.72
+        ],
+        "rst_n": [
+          191.487,
+          191.815
+        ],
+        "bid": [
+          191.815,
+          192.796
+        ],
+        "sid": [
+          192.796,
+          193.451
+        ],
+        "rslot_v": [
+          193.451,
+          193.778
+        ],
+        "rslot": [
+          193.778,
+          194.76
+        ],
+        "wslot_v": [
+          194.76,
+          195.087
+        ],
+        "wslot": [
+          195.087,
+          196.069
+        ],
+        "status": [
+          196.069,
+          201.96
+        ],
+        "rq1": [
+          5.4,
+          10.1
+        ],
+        "rr1": [
+          10.1,
+          81.145
+        ],
+        "rq5": [
+          81.145,
+          85.845
+        ],
+        "rr5": [
+          85.845,
+          156.89
+        ],
+        "kq": [
+          156.89,
+          234.571
+        ],
+        "kq_done": [
+          234.571,
+          234.847
+        ],
+        "xq": [
+          234.847,
+          311.145
+        ],
+        "xq_done": [
+          311.145,
+          311.422
+        ],
+        "eg": [
+          311.422,
+          387.72
+        ],
+        "rq2": [
+          5.4,
+          10.442
+        ],
+        "rr2": [
+          10.442,
+          86.664
+        ],
+        "wq0": [
+          432.632,
+          513.56
+        ],
+        "wq_done0": [
+          513.56,
+          513.848
+        ],
+        "xq2": [
+          251.566,
+          333.423
+        ],
+        "xq2_done": [
+          333.423,
+          333.72
+        ],
+        "rq3": [
+          5.4,
+          10.442
+        ],
+        "rr3": [
+          10.442,
+          86.664
+        ],
+        "pq": [
+          86.664,
+          171.191
+        ],
+        "pr": [
+          171.191,
+          250.083
+        ],
+        "wq1": [
+          250.083,
+          333.423
+        ],
+        "wq_done1": [
+          333.423,
+          333.72
+        ],
+        "clk_pin": [
+          5.4,
+          5.688000000000001
+        ],
+        "clk_s1": [
+          5.688000000000001,
+          5.976
+        ],
+        "clk_mem": [
+          5.976,
+          6.264
+        ],
+        "clk_capture": [
+          6.264,
+          6.5520000000000005
+        ],
+        "clk_return": [
+          6.5520000000000005,
+          6.84
+        ],
+        "clk_status": [
+          6.84,
+          7.128
+        ]
+      },
+      "pin_widths": {
+        "clk_pin": 1,
+        "clk_s1": 1,
+        "clk_mem": 1,
+        "clk_capture": 1,
+        "clk_return": 1,
+        "clk_status": 1,
+        "rst_n": 1,
+        "bid": 3,
+        "sid": 2,
+        "rslot_v": 1,
+        "rslot": 3,
+        "wslot_v": 1,
+        "wslot": 3,
+        "rq0": 17,
+        "rq1": 17,
+        "rq2": 17,
+        "rq3": 17,
+        "rq4": 17,
+        "rq5": 17,
+        "rr0": 257,
+        "rr1": 257,
+        "rr2": 257,
+        "rr3": 257,
+        "rr4": 257,
+        "rr5": 257,
+        "wq0": 281,
+        "wq1": 281,
+        "wq2": 281,
+        "wq_done0": 1,
+        "wq_done1": 1,
+        "wq_done2": 1,
+        "dq": 281,
+        "dq_done": 1,
+        "kq": 281,
+        "kq_done": 1,
+        "xq": 276,
+        "xq_done": 1,
+        "xq2": 276,
+        "xq2_done": 1,
+        "eg": 276,
+        "pq": 285,
+        "pr": 266,
+        "status": 18
+      },
+      "LG0_W_window_um": [
+        353.72,
+        513.848
+      ],
+      "nonLG": "Exact surviving baseline semantic pin windows retained; NE HC/COLL renames tracked, ATT only removed.",
+      "state": "REQUESTED, NOT actual ODB/pin/PG/CTS evidence",
+      "home": "Root must legalize complete functional groups against all other adopted blocks; origin expansion is not accepted geometry."
+    },
+    {
+      "quadrant": "NE",
+      "replicas": 8,
+      "master": "hfd_vms_bank_stage6_NE",
+      "source": "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_stage6_NE.sv",
+      "core": "rtl/hbm_accel/generic/vm/static/ot_vms_bank_static_wdecode_ft_stageclocks.sv",
+      "params": {
+        "RG": 5,
+        "WG": 2
+      },
+      "kind": "tile",
+      "outline": {
+        "w": 393.12,
+        "h": 451.44,
+        "exact": true
+      },
+      "clock_ports": [
+        "clk_pin",
+        "clk_s1",
+        "clk_mem",
+        "clk_capture",
+        "clk_return",
+        "clk_status"
+      ],
+      "pins": {
+        "N": [
+          "rq3",
+          "rr3",
+          "dq",
+          "dq_done",
+          "wq1",
+          "wq_done1",
+          "rst_n",
+          "bid",
+          "sid",
+          "rslot_v",
+          "rslot",
+          "wslot_v",
+          "wslot",
+          "status",
+          "clk_pin",
+          "clk_s1",
+          "clk_mem",
+          "clk_capture",
+          "clk_return",
+          "clk_status"
+        ],
+        "S": [
+          "rq1",
+          "rr1",
+          "rq4",
+          "rr4",
+          "kq",
+          "kq_done",
+          "xq",
+          "xq_done",
+          "eg"
+        ],
+        "E": [
+          "rq2",
+          "rr2",
+          "xq2",
+          "xq2_done"
+        ],
+        "W": [
+          "pq",
+          "pr",
+          "rq0",
+          "rr0",
+          "wq0",
+          "wq_done0"
+        ]
+      },
+      "pin_windows_um": {
+        "rq0": [
+          270.083,
+          274.979
+        ],
+        "rr0": [
+          274.979,
+          348.995
+        ],
+        "rq3": [
+          98.28,
+          104.043
+        ],
+        "rr3": [
+          104.043,
+          191.16
+        ],
+        "dq": [
+          201.96,
+          294.511
+        ],
+        "dq_done": [
+          294.511,
+          294.84
+        ],
+        "wq1": [
+          294.84,
+          387.391
+        ],
+        "wq_done1": [
+          387.391,
+          387.72
+        ],
+        "rst_n": [
+          191.487,
+          191.815
+        ],
+        "bid": [
+          191.815,
+          192.796
+        ],
+        "sid": [
+          192.796,
+          193.451
+        ],
+        "rslot_v": [
+          193.451,
+          193.778
+        ],
+        "rslot": [
+          193.778,
+          194.76
+        ],
+        "wslot_v": [
+          194.76,
+          195.087
+        ],
+        "wslot": [
+          195.087,
+          196.069
+        ],
+        "status": [
+          196.069,
+          201.96
+        ],
+        "rq1": [
+          5.4,
+          10.1
+        ],
+        "rr1": [
+          10.1,
+          81.145
+        ],
+        "rq4": [
+          81.145,
+          85.845
+        ],
+        "rr4": [
+          85.845,
+          156.89
+        ],
+        "kq": [
+          156.89,
+          234.571
+        ],
+        "kq_done": [
+          234.571,
+          234.847
+        ],
+        "xq": [
+          234.847,
+          311.145
+        ],
+        "xq_done": [
+          311.145,
+          311.422
+        ],
+        "eg": [
+          311.422,
+          387.72
+        ],
+        "rq2": [
+          5.4,
+          10.442
+        ],
+        "rr2": [
+          10.442,
+          86.664
+        ],
+        "wq0": [
+          348.995,
+          429.923
+        ],
+        "wq_done0": [
+          429.923,
+          430.211
+        ],
+        "xq2": [
+          251.566,
+          333.423
+        ],
+        "xq2_done": [
+          333.423,
+          333.72
+        ],
+        "pq": [
+          86.664,
+          171.191
+        ],
+        "pr": [
+          171.191,
+          250.083
+        ],
+        "clk_pin": [
+          5.4,
+          5.688000000000001
+        ],
+        "clk_s1": [
+          5.688000000000001,
+          5.976
+        ],
+        "clk_mem": [
+          5.976,
+          6.264
+        ],
+        "clk_capture": [
+          6.264,
+          6.5520000000000005
+        ],
+        "clk_return": [
+          6.5520000000000005,
+          6.84
+        ],
+        "clk_status": [
+          6.84,
+          7.128
+        ]
+      },
+      "pin_widths": {
+        "clk_pin": 1,
+        "clk_s1": 1,
+        "clk_mem": 1,
+        "clk_capture": 1,
+        "clk_return": 1,
+        "clk_status": 1,
+        "rst_n": 1,
+        "bid": 3,
+        "sid": 2,
+        "rslot_v": 1,
+        "rslot": 3,
+        "wslot_v": 1,
+        "wslot": 3,
+        "rq0": 17,
+        "rq1": 17,
+        "rq2": 17,
+        "rq3": 17,
+        "rq4": 17,
+        "rr0": 257,
+        "rr1": 257,
+        "rr2": 257,
+        "rr3": 257,
+        "rr4": 257,
+        "wq0": 281,
+        "wq1": 281,
+        "wq_done0": 1,
+        "wq_done1": 1,
+        "dq": 281,
+        "dq_done": 1,
+        "kq": 281,
+        "kq_done": 1,
+        "xq": 276,
+        "xq_done": 1,
+        "xq2": 276,
+        "xq2_done": 1,
+        "eg": 276,
+        "pq": 285,
+        "pr": 266,
+        "status": 18
+      },
+      "LG0_W_window_um": [
+        270.083,
+        430.211
+      ],
+      "nonLG": "Exact surviving baseline semantic pin windows retained; NE HC/COLL renames tracked, ATT only removed.",
+      "state": "REQUESTED, NOT actual ODB/pin/PG/CTS evidence",
+      "home": "Root must legalize complete functional groups against all other adopted blocks; origin expansion is not accepted geometry."
+    }
+  ],
+  "global_adjacent_proposals": [
+    {
+      "instance": "vmb_SW0",
+      "adopted_old_box": {
+        "x": 9345.2,
+        "y": 5654.4,
+        "w": 812.808,
+        "h": 365.04
+      },
+      "proposed_bank": {
+        "x": 9856.208,
+        "y": 5654.4,
+        "w": 356.4,
+        "h": 561.6,
+        "exact": true
+      },
+      "local_channel_um": 20,
+      "LG": [
+        {
+          "instance": "lg_SW_0.g_bank[0].leaf",
+          "x": 9685.872000000001,
+          "y": 6038.504,
+          "w": 150.336,
+          "h": 151.2,
+          "orient": "R0",
+          "READ_RETURN": 10,
+          "WRITE_RETURN": 7,
+          "near_peer": "bank",
+          "same_edge_phase": true
+        },
+        {
+          "instance": "lg_SW_1.g_bank[0].leaf",
+          "x": 9515.536,
+          "y": 6038.504,
+          "w": 150.336,
+          "h": 151.2,
+          "orient": "R0",
+          "READ_RETURN": 14,
+          "WRITE_RETURN": 11,
+          "near_peer": "lg_SW_0.g_bank[0].leaf",
+          "same_edge_phase": true
+        },
+        {
+          "instance": "lg_SW_2.g_bank[0].leaf",
+          "x": 9345.2,
+          "y": 6038.504,
+          "w": 150.336,
+          "h": 151.2,
+          "orient": "R0",
+          "READ_RETURN": 18,
+          "WRITE_RETURN": 15,
+          "near_peer": "lg_SW_1.g_bank[0].leaf",
+          "same_edge_phase": true
+        }
+      ]
+    },
+    {
+      "instance": "vmb_SW1",
+      "adopted_old_box": {
+        "x": 8923.8,
+        "y": 6043.2,
+        "w": 812.808,
+        "h": 365.04
+      },
+      "proposed_bank": {
+        "x": 9434.807999999999,
+        "y": 6043.2,
+        "w": 356.4,
+        "h": 561.6,
+        "exact": true
+      },
+      "local_channel_um": 20,
+      "LG": [
+        {
+          "instance": "lg_SW_0.g_bank[1].leaf",
+          "x": 9264.472,
+          "y": 6427.304,
+          "w": 150.336,
+          "h": 151.2,
+          "orient": "R0",
+          "READ_RETURN": 10,
+          "WRITE_RETURN": 7,
+          "near_peer": "bank",
+          "same_edge_phase": true
+        },
+        {
+          "instance": "lg_SW_1.g_bank[1].leaf",
+          "x": 9094.135999999999,
+          "y": 6427.304,
+          "w": 150.336,
+          "h": 151.2,
+          "orient": "R0",
+          "READ_RETURN": 14,
+          "WRITE_RETURN": 11,
+          "near_peer": "lg_SW_0.g_bank[1].leaf",
+          "same_edge_phase": true
+        },
+        {
+          "instance": "lg_SW_2.g_bank[1].leaf",
+          "x": 8923.8,
+          "y": 6427.304,
+          "w": 150.336,
+          "h": 151.2,
+          "orient": "R0",
+          "READ_RETURN": 18,
+          "WRITE_RETURN": 15,
+          "near_peer": "lg_SW_1.g_bank[1].leaf",
+          "same_edge_phase": true
+        }
+      ]
+    },
+    {
+      "instance": "vmb_SW2",
+      "adopted_old_box": {
+        "x": 6723.3,
+        "y": 5563.1,
+        "w": 812.808,
+        "h": 365.04
+      },
+      "proposed_bank": {
+        "x": 7234.308,
+        "y": 5563.1,
+        "w": 356.4,
+        "h": 561.6,
+        "exact": true
+      },
+      "local_channel_um": 20,
+      "LG": [
+        {
+          "instance": "lg_SW_0.g_bank[2].leaf",
+          "x": 7063.972,
+          "y": 5947.204000000001,
+          "w": 150.336,
+          "h": 151.2,
+          "orient": "R0",
+          "READ_RETURN": 10,
+          "WRITE_RETURN": 7,
+          "near_peer": "bank",
+          "same_edge_phase": true
+        },
+        {
+          "instance": "lg_SW_1.g_bank[2].leaf",
+          "x": 6893.636,
+          "y": 5947.204000000001,
+          "w": 150.336,
+          "h": 151.2,
+          "orient": "R0",
+          "READ_RETURN": 14,
+          "WRITE_RETURN": 11,
+          "near_peer": "lg_SW_0.g_bank[2].leaf",
+          "same_edge_phase": true
+        },
+        {
+          "instance": "lg_SW_2.g_bank[2].leaf",
+          "x": 6723.3,
+          "y": 5947.204000000001,
+          "w": 150.336,
+          "h": 151.2,
+          "orient": "R0",
+          "READ_RETURN": 18,
+          "WRITE_RETURN": 15,
+          "near_peer": "lg_SW_1.g_bank[2].leaf",
+          "same_edge_phase": true
+        }
+      ]
+    },
+    {
+      "instance": "vmb_SW3",
+      "adopted_old_box": {
+        "x": 6850.5,
+        "y": 6460.0,
+        "w": 812.808,
+        "h": 365.04
+      },
+      "proposed_bank": {
+        "x": 7361.508,
+        "y": 6460.0,
+        "w": 356.4,
+        "h": 561.6,
+        "exact": true
+      },
+      "local_channel_um": 20,
+      "LG": [
+        {
+          "instance": "lg_SW_0.g_bank[3].leaf",
+          "x": 7191.172,
+          "y": 6844.104,
+          "w": 150.336,
+          "h": 151.2,
+          "orient": "R0",
+          "READ_RETURN": 10,
+          "WRITE_RETURN": 7,
+          "near_peer": "bank",
+          "same_edge_phase": true
+        },
+        {
+          "instance": "lg_SW_1.g_bank[3].leaf",
+          "x": 7020.835999999999,
+          "y": 6844.104,
+          "w": 150.336,
+          "h": 151.2,
+          "orient": "R0",
+          "READ_RETURN": 14,
+          "WRITE_RETURN": 11,
+          "near_peer": "lg_SW_0.g_bank[3].leaf",
+          "same_edge_phase": true
+        },
+        {
+          "instance": "lg_SW_2.g_bank[3].leaf",
+          "x": 6850.5,
+          "y": 6844.104,
+          "w": 150.336,
+          "h": 151.2,
+          "orient": "R0",
+          "READ_RETURN": 18,
+          "WRITE_RETURN": 15,
+          "near_peer": "lg_SW_1.g_bank[3].leaf",
+          "same_edge_phase": true
+        }
+      ]
+    },
+    {
+      "instance": "vmb_SW4",
+      "adopted_old_box": {
+        "x": 5965.8,
+        "y": 6179.7,
+        "w": 812.808,
+        "h": 365.04
+      },
+      "proposed_bank": {
+        "x": 6476.808,
+        "y": 6179.7,
+        "w": 356.4,
+        "h": 561.6,
+        "exact": true
+      },
+      "local_channel_um": 20,
+      "LG": [
+        {
+          "instance": "lg_SW_0.g_bank[4].leaf",
+          "x": 6306.472,
+          "y": 6563.804,
+          "w": 150.336,
+          "h": 151.2,
+          "orient": "R0",
+          "READ_RETURN": 10,
+          "WRITE_RETURN": 7,
+          "near_peer": "bank",
+          "same_edge_phase": true
+        },
+        {
+          "instance": "lg_SW_1.g_bank[4].leaf",
+          "x": 6136.136,
+          "y": 6563.804,
+          "w": 150.336,
+          "h": 151.2,
+          "orient": "R0",
+          "READ_RETURN": 14,
+          "WRITE_RETURN": 11,
+          "near_peer": "lg_SW_0.g_bank[4].leaf",
+          "same_edge_phase": true
+        },
+        {
+          "instance": "lg_SW_2.g_bank[4].leaf",
+          "x": 5965.8,
+          "y": 6563.804,
+          "w": 150.336,
+          "h": 151.2,
+          "orient": "R0",
+          "READ_RETURN": 18,
+          "WRITE_RETURN": 15,
+          "near_peer": "lg_SW_1.g_bank[4].leaf",
+          "same_edge_phase": true
+        }
+      ]
+    },
+    {
+      "instance": "vmb_SW5",
+      "adopted_old_box": {
+        "x": 5882.8,
+        "y": 5793.0,
+        "w": 812.808,
+        "h": 365.04
+      },
+      "proposed_bank": {
+        "x": 6393.808,
+        "y": 5793.0,
+        "w": 356.4,
+        "h": 561.6,
+        "exact": true
+      },
+      "local_channel_um": 20,
+      "LG": [
+        {
+          "instance": "lg_SW_0.g_bank[5].leaf",
+          "x": 6223.472,
+          "y": 6177.104,
+          "w": 150.336,
+          "h": 151.2,
+          "orient": "R0",
+          "READ_RETURN": 10,
+          "WRITE_RETURN": 7,
+          "near_peer": "bank",
+          "same_edge_phase": true
+        },
+        {
+          "instance": "lg_SW_1.g_bank[5].leaf",
+          "x": 6053.136,
+          "y": 6177.104,
+          "w": 150.336,
+          "h": 151.2,
+          "orient": "R0",
+          "READ_RETURN": 14,
+          "WRITE_RETURN": 11,
+          "near_peer": "lg_SW_0.g_bank[5].leaf",
+          "same_edge_phase": true
+        },
+        {
+          "instance": "lg_SW_2.g_bank[5].leaf",
+          "x": 5882.8,
+          "y": 6177.104,
+          "w": 150.336,
+          "h": 151.2,
+          "orient": "R0",
+          "READ_RETURN": 18,
+          "WRITE_RETURN": 15,
+          "near_peer": "lg_SW_1.g_bank[5].leaf",
+          "same_edge_phase": true
+        }
+      ]
+    },
+    {
+      "instance": "vmb_SW6",
+      "adopted_old_box": {
+        "x": 7558.5,
+        "y": 5771.3,
+        "w": 812.808,
+        "h": 365.04
+      },
+      "proposed_bank": {
+        "x": 8069.508,
+        "y": 5771.3,
+        "w": 356.4,
+        "h": 561.6,
+        "exact": true
+      },
+      "local_channel_um": 20,
+      "LG": [
+        {
+          "instance": "lg_SW_0.g_bank[6].leaf",
+          "x": 7899.172,
+          "y": 6155.404,
+          "w": 150.336,
+          "h": 151.2,
+          "orient": "R0",
+          "READ_RETURN": 10,
+          "WRITE_RETURN": 7,
+          "near_peer": "bank",
+          "same_edge_phase": true
+        },
+        {
+          "instance": "lg_SW_1.g_bank[6].leaf",
+          "x": 7728.835999999999,
+          "y": 6155.404,
+          "w": 150.336,
+          "h": 151.2,
+          "orient": "R0",
+          "READ_RETURN": 14,
+          "WRITE_RETURN": 11,
+          "near_peer": "lg_SW_0.g_bank[6].leaf",
+          "same_edge_phase": true
+        },
+        {
+          "instance": "lg_SW_2.g_bank[6].leaf",
+          "x": 7558.5,
+          "y": 6155.404,
+          "w": 150.336,
+          "h": 151.2,
+          "orient": "R0",
+          "READ_RETURN": 18,
+          "WRITE_RETURN": 15,
+          "near_peer": "lg_SW_1.g_bank[6].leaf",
+          "same_edge_phase": true
+        }
+      ]
+    },
+    {
+      "instance": "vmb_SW7",
+      "adopted_old_box": {
+        "x": 8083.5,
+        "y": 6171.2,
+        "w": 812.808,
+        "h": 365.04
+      },
+      "proposed_bank": {
+        "x": 8594.508,
+        "y": 6171.2,
+        "w": 356.4,
+        "h": 561.6,
+        "exact": true
+      },
+      "local_channel_um": 20,
+      "LG": [
+        {
+          "instance": "lg_SW_0.g_bank[7].leaf",
+          "x": 8424.172,
+          "y": 6555.304,
+          "w": 150.336,
+          "h": 151.2,
+          "orient": "R0",
+          "READ_RETURN": 10,
+          "WRITE_RETURN": 7,
+          "near_peer": "bank",
+          "same_edge_phase": true
+        },
+        {
+          "instance": "lg_SW_1.g_bank[7].leaf",
+          "x": 8253.836,
+          "y": 6555.304,
+          "w": 150.336,
+          "h": 151.2,
+          "orient": "R0",
+          "READ_RETURN": 14,
+          "WRITE_RETURN": 11,
+          "near_peer": "lg_SW_0.g_bank[7].leaf",
+          "same_edge_phase": true
+        },
+        {
+          "instance": "lg_SW_2.g_bank[7].leaf",
+          "x": 8083.5,
+          "y": 6555.304,
+          "w": 150.336,
+          "h": 151.2,
+          "orient": "R0",
+          "READ_RETURN": 18,
+          "WRITE_RETURN": 15,
+          "near_peer": "lg_SW_1.g_bank[7].leaf",
+          "same_edge_phase": true
+        }
+      ]
+    },
+    {
+      "instance": "vmb_SE0",
+      "adopted_old_box": {
+        "x": 25702.0,
+        "y": 6223.7,
+        "w": 812.808,
+        "h": 365.04
+      },
+      "proposed_bank": {
+        "x": 26213.008,
+        "y": 6223.7,
+        "w": 356.4,
+        "h": 561.6,
+        "exact": true
+      },
+      "local_channel_um": 20,
+      "LG": [
+        {
+          "instance": "lg_SE_0.g_bank[0].leaf",
+          "x": 26042.672000000002,
+          "y": 6607.804,
+          "w": 150.336,
+          "h": 151.2,
+          "orient": "R0",
+          "READ_RETURN": 10,
+          "WRITE_RETURN": 7,
+          "near_peer": "bank",
+          "same_edge_phase": true
+        },
+        {
+          "instance": "lg_SE_1.g_bank[0].leaf",
+          "x": 25872.336000000003,
+          "y": 6607.804,
+          "w": 150.336,
+          "h": 151.2,
+          "orient": "R0",
+          "READ_RETURN": 14,
+          "WRITE_RETURN": 11,
+          "near_peer": "lg_SE_0.g_bank[0].leaf",
+          "same_edge_phase": true
+        },
+        {
+          "instance": "lg_SE_2.g_bank[0].leaf",
+          "x": 25702.0,
+          "y": 6607.804,
+          "w": 150.336,
+          "h": 151.2,
+          "orient": "R0",
+          "READ_RETURN": 18,
+          "WRITE_RETURN": 15,
+          "near_peer": "lg_SE_1.g_bank[0].leaf",
+          "same_edge_phase": true
+        }
+      ]
+    },
+    {
+      "instance": "vmb_SE1",
+      "adopted_old_box": {
+        "x": 25747.0,
+        "y": 5831.1,
+        "w": 812.808,
+        "h": 365.04
+      },
+      "proposed_bank": {
+        "x": 26258.008,
+        "y": 5831.1,
+        "w": 356.4,
+        "h": 561.6,
+        "exact": true
+      },
+      "local_channel_um": 20,
+      "LG": [
+        {
+          "instance": "lg_SE_0.g_bank[1].leaf",
+          "x": 26087.672000000002,
+          "y": 6215.204000000001,
+          "w": 150.336,
+          "h": 151.2,
+          "orient": "R0",
+          "READ_RETURN": 10,
+          "WRITE_RETURN": 7,
+          "near_peer": "bank",
+          "same_edge_phase": true
+        },
+        {
+          "instance": "lg_SE_1.g_bank[1].leaf",
+          "x": 25917.336000000003,
+          "y": 6215.204000000001,
+          "w": 150.336,
+          "h": 151.2,
+          "orient": "R0",
+          "READ_RETURN": 14,
+          "WRITE_RETURN": 11,
+          "near_peer": "lg_SE_0.g_bank[1].leaf",
+          "same_edge_phase": true
+        },
+        {
+          "instance": "lg_SE_2.g_bank[1].leaf",
+          "x": 25747.0,
+          "y": 6215.204000000001,
+          "w": 150.336,
+          "h": 151.2,
+          "orient": "R0",
+          "READ_RETURN": 18,
+          "WRITE_RETURN": 15,
+          "near_peer": "lg_SE_1.g_bank[1].leaf",
+          "same_edge_phase": true
+        }
+      ]
+    },
+    {
+      "instance": "vmb_SE2",
+      "adopted_old_box": {
+        "x": 24462.0,
+        "y": 6054.9,
+        "w": 812.808,
+        "h": 365.04
+      },
+      "proposed_bank": {
+        "x": 24973.008,
+        "y": 6054.9,
+        "w": 356.4,
+        "h": 561.6,
+        "exact": true
+      },
+      "local_channel_um": 20,
+      "LG": [
+        {
+          "instance": "lg_SE_0.g_bank[2].leaf",
+          "x": 24802.672000000002,
+          "y": 6439.004,
+          "w": 150.336,
+          "h": 151.2,
+          "orient": "R0",
+          "READ_RETURN": 10,
+          "WRITE_RETURN": 7,
+          "near_peer": "bank",
+          "same_edge_phase": true
+        },
+        {
+          "instance": "lg_SE_1.g_bank[2].leaf",
+          "x": 24632.336000000003,
+          "y": 6439.004,
+          "w": 150.336,
+          "h": 151.2,
+          "orient": "R0",
+          "READ_RETURN": 14,
+          "WRITE_RETURN": 11,
+          "near_peer": "lg_SE_0.g_bank[2].leaf",
+          "same_edge_phase": true
+        },
+        {
+          "instance": "lg_SE_2.g_bank[2].leaf",
+          "x": 24462.0,
+          "y": 6439.004,
+          "w": 150.336,
+          "h": 151.2,
+          "orient": "R0",
+          "READ_RETURN": 18,
+          "WRITE_RETURN": 15,
+          "near_peer": "lg_SE_1.g_bank[2].leaf",
+          "same_edge_phase": true
+        }
+      ]
+    },
+    {
+      "instance": "vmb_SE3",
+      "adopted_old_box": {
+        "x": 25452.4,
+        "y": 5342.0,
+        "w": 812.808,
+        "h": 365.04
+      },
+      "proposed_bank": {
+        "x": 25963.408000000003,
+        "y": 5342.0,
+        "w": 356.4,
+        "h": 561.6,
+        "exact": true
+      },
+      "local_channel_um": 20,
+      "LG": [
+        {
+          "instance": "lg_SE_0.g_bank[3].leaf",
+          "x": 25793.072000000004,
+          "y": 5726.104,
+          "w": 150.336,
+          "h": 151.2,
+          "orient": "R0",
+          "READ_RETURN": 10,
+          "WRITE_RETURN": 7,
+          "near_peer": "bank",
+          "same_edge_phase": true
+        },
+        {
+          "instance": "lg_SE_1.g_bank[3].leaf",
+          "x": 25622.736000000004,
+          "y": 5726.104,
+          "w": 150.336,
+          "h": 151.2,
+          "orient": "R0",
+          "READ_RETURN": 14,
+          "WRITE_RETURN": 11,
+          "near_peer": "lg_SE_0.g_bank[3].leaf",
+          "same_edge_phase": true
+        },
+        {
+          "instance": "lg_SE_2.g_bank[3].leaf",
+          "x": 25452.4,
+          "y": 5726.104,
+          "w": 150.336,
+          "h": 151.2,
+          "orient": "R0",
+          "READ_RETURN": 18,
+          "WRITE_RETURN": 15,
+          "near_peer": "lg_SE_1.g_bank[3].leaf",
+          "same_edge_phase": true
+        }
+      ]
+    },
+    {
+      "instance": "vmb_SE4",
+      "adopted_old_box": {
+        "x": 25443.9,
+        "y": 10756.1,
+        "w": 812.808,
+        "h": 365.04
+      },
+      "proposed_bank": {
+        "x": 25954.908000000003,
+        "y": 10756.1,
+        "w": 356.4,
+        "h": 561.6,
+        "exact": true
+      },
+      "local_channel_um": 20,
+      "LG": [
+        {
+          "instance": "lg_SE_0.g_bank[4].leaf",
+          "x": 25784.572000000004,
+          "y": 11140.204,
+          "w": 150.336,
+          "h": 151.2,
+          "orient": "R0",
+          "READ_RETURN": 10,
+          "WRITE_RETURN": 7,
+          "near_peer": "bank",
+          "same_edge_phase": true
+        },
+        {
+          "instance": "lg_SE_1.g_bank[4].leaf",
+          "x": 25614.236000000004,
+          "y": 11140.204,
+          "w": 150.336,
+          "h": 151.2,
+          "orient": "R0",
+          "READ_RETURN": 14,
+          "WRITE_RETURN": 11,
+          "near_peer": "lg_SE_0.g_bank[4].leaf",
+          "same_edge_phase": true
+        },
+        {
+          "instance": "lg_SE_2.g_bank[4].leaf",
+          "x": 25443.9,
+          "y": 11140.204,
+          "w": 150.336,
+          "h": 151.2,
+          "orient": "R0",
+          "READ_RETURN": 18,
+          "WRITE_RETURN": 15,
+          "near_peer": "lg_SE_1.g_bank[4].leaf",
+          "same_edge_phase": true
+        }
+      ]
+    },
+    {
+      "instance": "vmb_SE5",
+      "adopted_old_box": {
+        "x": 25795.3,
+        "y": 10367.9,
+        "w": 812.808,
+        "h": 365.04
+      },
+      "proposed_bank": {
+        "x": 26306.308,
+        "y": 10367.9,
+        "w": 356.4,
+        "h": 561.6,
+        "exact": true
+      },
+      "local_channel_um": 20,
+      "LG": [
+        {
+          "instance": "lg_SE_0.g_bank[5].leaf",
+          "x": 26135.972,
+          "y": 10752.003999999999,
+          "w": 150.336,
+          "h": 151.2,
+          "orient": "R0",
+          "READ_RETURN": 10,
+          "WRITE_RETURN": 7,
+          "near_peer": "bank",
+          "same_edge_phase": true
+        },
+        {
+          "instance": "lg_SE_1.g_bank[5].leaf",
+          "x": 25965.636000000002,
+          "y": 10752.003999999999,
+          "w": 150.336,
+          "h": 151.2,
+          "orient": "R0",
+          "READ_RETURN": 14,
+          "WRITE_RETURN": 11,
+          "near_peer": "lg_SE_0.g_bank[5].leaf",
+          "same_edge_phase": true
+        },
+        {
+          "instance": "lg_SE_2.g_bank[5].leaf",
+          "x": 25795.3,
+          "y": 10752.003999999999,
+          "w": 150.336,
+          "h": 151.2,
+          "orient": "R0",
+          "READ_RETURN": 18,
+          "WRITE_RETURN": 15,
+          "near_peer": "lg_SE_1.g_bank[5].leaf",
+          "same_edge_phase": true
+        }
+      ]
+    },
+    {
+      "instance": "vmb_SE6",
+      "adopted_old_box": {
+        "x": 24376.0,
+        "y": 6506.3,
+        "w": 812.808,
+        "h": 365.04
+      },
+      "proposed_bank": {
+        "x": 24887.008,
+        "y": 6506.3,
+        "w": 356.4,
+        "h": 561.6,
+        "exact": true
+      },
+      "local_channel_um": 20,
+      "LG": [
+        {
+          "instance": "lg_SE_0.g_bank[6].leaf",
+          "x": 24716.672000000002,
+          "y": 6890.404,
+          "w": 150.336,
+          "h": 151.2,
+          "orient": "R0",
+          "READ_RETURN": 10,
+          "WRITE_RETURN": 7,
+          "near_peer": "bank",
+          "same_edge_phase": true
+        },
+        {
+          "instance": "lg_SE_1.g_bank[6].leaf",
+          "x": 24546.336000000003,
+          "y": 6890.404,
+          "w": 150.336,
+          "h": 151.2,
+          "orient": "R0",
+          "READ_RETURN": 14,
+          "WRITE_RETURN": 11,
+          "near_peer": "lg_SE_0.g_bank[6].leaf",
+          "same_edge_phase": true
+        },
+        {
+          "instance": "lg_SE_2.g_bank[6].leaf",
+          "x": 24376.0,
+          "y": 6890.404,
+          "w": 150.336,
+          "h": 151.2,
+          "orient": "R0",
+          "READ_RETURN": 18,
+          "WRITE_RETURN": 15,
+          "near_peer": "lg_SE_1.g_bank[6].leaf",
+          "same_edge_phase": true
+        }
+      ]
+    },
+    {
+      "instance": "vmb_SE7",
+      "adopted_old_box": {
+        "x": 24107.8,
+        "y": 5667.2,
+        "w": 812.808,
+        "h": 365.04
+      },
+      "proposed_bank": {
+        "x": 24618.808,
+        "y": 5667.2,
+        "w": 356.4,
+        "h": 561.6,
+        "exact": true
+      },
+      "local_channel_um": 20,
+      "LG": [
+        {
+          "instance": "lg_SE_0.g_bank[7].leaf",
+          "x": 24448.472,
+          "y": 6051.304,
+          "w": 150.336,
+          "h": 151.2,
+          "orient": "R0",
+          "READ_RETURN": 10,
+          "WRITE_RETURN": 7,
+          "near_peer": "bank",
+          "same_edge_phase": true
+        },
+        {
+          "instance": "lg_SE_1.g_bank[7].leaf",
+          "x": 24278.136000000002,
+          "y": 6051.304,
+          "w": 150.336,
+          "h": 151.2,
+          "orient": "R0",
+          "READ_RETURN": 14,
+          "WRITE_RETURN": 11,
+          "near_peer": "lg_SE_0.g_bank[7].leaf",
+          "same_edge_phase": true
+        },
+        {
+          "instance": "lg_SE_2.g_bank[7].leaf",
+          "x": 24107.8,
+          "y": 6051.304,
+          "w": 150.336,
+          "h": 151.2,
+          "orient": "R0",
+          "READ_RETURN": 18,
+          "WRITE_RETURN": 15,
+          "near_peer": "lg_SE_1.g_bank[7].leaf",
+          "same_edge_phase": true
+        }
+      ]
+    },
+    {
+      "instance": "vmb_NW0",
+      "adopted_old_box": {
+        "x": 8266.6,
+        "y": 19487.4,
+        "w": 849.528,
+        "h": 339.12
+      },
+      "proposed_bank": {
+        "x": 8777.608,
+        "y": 19487.4,
+        "w": 393.12,
+        "h": 535.68,
+        "exact": true
+      },
+      "local_channel_um": 20,
+      "LG": [
+        {
+          "instance": "lg_NW_0.g_bank[0].leaf",
+          "x": 8607.272,
+          "y": 19845.584000000003,
+          "w": 150.336,
+          "h": 151.2,
+          "orient": "R0",
+          "READ_RETURN": 10,
+          "WRITE_RETURN": 7,
+          "near_peer": "bank",
+          "same_edge_phase": true
+        },
+        {
+          "instance": "lg_NW_1.g_bank[0].leaf",
+          "x": 8436.936,
+          "y": 19845.584000000003,
+          "w": 150.336,
+          "h": 151.2,
+          "orient": "R0",
+          "READ_RETURN": 14,
+          "WRITE_RETURN": 11,
+          "near_peer": "lg_NW_0.g_bank[0].leaf",
+          "same_edge_phase": true
+        },
+        {
+          "instance": "lg_NW_2.g_bank[0].leaf",
+          "x": 8266.6,
+          "y": 19845.584000000003,
+          "w": 150.336,
+          "h": 151.2,
+          "orient": "R0",
+          "READ_RETURN": 18,
+          "WRITE_RETURN": 15,
+          "near_peer": "lg_NW_1.g_bank[0].leaf",
+          "same_edge_phase": true
+        }
+      ]
+    },
+    {
+      "instance": "vmb_NW1",
+      "adopted_old_box": {
+        "x": 8036.9,
+        "y": 19100.5,
+        "w": 849.528,
+        "h": 339.12
+      },
+      "proposed_bank": {
+        "x": 8547.908,
+        "y": 19100.5,
+        "w": 393.12,
+        "h": 535.68,
+        "exact": true
+      },
+      "local_channel_um": 20,
+      "LG": [
+        {
+          "instance": "lg_NW_0.g_bank[1].leaf",
+          "x": 8377.572,
+          "y": 19458.684,
+          "w": 150.336,
+          "h": 151.2,
+          "orient": "R0",
+          "READ_RETURN": 10,
+          "WRITE_RETURN": 7,
+          "near_peer": "bank",
+          "same_edge_phase": true
+        },
+        {
+          "instance": "lg_NW_1.g_bank[1].leaf",
+          "x": 8207.235999999999,
+          "y": 19458.684,
+          "w": 150.336,
+          "h": 151.2,
+          "orient": "R0",
+          "READ_RETURN": 14,
+          "WRITE_RETURN": 11,
+          "near_peer": "lg_NW_0.g_bank[1].leaf",
+          "same_edge_phase": true
+        },
+        {
+          "instance": "lg_NW_2.g_bank[1].leaf",
+          "x": 8036.9,
+          "y": 19458.684,
+          "w": 150.336,
+          "h": 151.2,
+          "orient": "R0",
+          "READ_RETURN": 18,
+          "WRITE_RETURN": 15,
+          "near_peer": "lg_NW_1.g_bank[1].leaf",
+          "same_edge_phase": true
+        }
+      ]
+    },
+    {
+      "instance": "vmb_NW2",
+      "adopted_old_box": {
+        "x": 5701.4,
+        "y": 19596.6,
+        "w": 849.528,
+        "h": 339.12
+      },
+      "proposed_bank": {
+        "x": 6212.407999999999,
+        "y": 19596.6,
+        "w": 393.12,
+        "h": 535.68,
+        "exact": true
+      },
+      "local_channel_um": 20,
+      "LG": [
+        {
+          "instance": "lg_NW_0.g_bank[2].leaf",
+          "x": 6042.071999999999,
+          "y": 19954.784,
+          "w": 150.336,
+          "h": 151.2,
+          "orient": "R0",
+          "READ_RETURN": 10,
+          "WRITE_RETURN": 7,
+          "near_peer": "bank",
+          "same_edge_phase": true
+        },
+        {
+          "instance": "lg_NW_1.g_bank[2].leaf",
+          "x": 5871.735999999999,
+          "y": 19954.784,
+          "w": 150.336,
+          "h": 151.2,
+          "orient": "R0",
+          "READ_RETURN": 14,
+          "WRITE_RETURN": 11,
+          "near_peer": "lg_NW_0.g_bank[2].leaf",
+          "same_edge_phase": true
+        },
+        {
+          "instance": "lg_NW_2.g_bank[2].leaf",
+          "x": 5701.4,
+          "y": 19954.784,
+          "w": 150.336,
+          "h": 151.2,
+          "orient": "R0",
+          "READ_RETURN": 18,
+          "WRITE_RETURN": 15,
+          "near_peer": "lg_NW_1.g_bank[2].leaf",
+          "same_edge_phase": true
+        }
+      ]
+    },
+    {
+      "instance": "vmb_NW3",
+      "adopted_old_box": {
+        "x": 5811.5,
+        "y": 19210.0,
+        "w": 849.528,
+        "h": 339.12
+      },
+      "proposed_bank": {
+        "x": 6322.508,
+        "y": 19210.0,
+        "w": 393.12,
+        "h": 535.68,
+        "exact": true
+      },
+      "local_channel_um": 20,
+      "LG": [
+        {
+          "instance": "lg_NW_0.g_bank[3].leaf",
+          "x": 6152.172,
+          "y": 19568.184,
+          "w": 150.336,
+          "h": 151.2,
+          "orient": "R0",
+          "READ_RETURN": 10,
+          "WRITE_RETURN": 7,
+          "near_peer": "bank",
+          "same_edge_phase": true
+        },
+        {
+          "instance": "lg_NW_1.g_bank[3].leaf",
+          "x": 5981.835999999999,
+          "y": 19568.184,
+          "w": 150.336,
+          "h": 151.2,
+          "orient": "R0",
+          "READ_RETURN": 14,
+          "WRITE_RETURN": 11,
+          "near_peer": "lg_NW_0.g_bank[3].leaf",
+          "same_edge_phase": true
+        },
+        {
+          "instance": "lg_NW_2.g_bank[3].leaf",
+          "x": 5811.5,
+          "y": 19568.184,
+          "w": 150.336,
+          "h": 151.2,
+          "orient": "R0",
+          "READ_RETURN": 18,
+          "WRITE_RETURN": 15,
+          "near_peer": "lg_NW_1.g_bank[3].leaf",
+          "same_edge_phase": true
+        }
+      ]
+    },
+    {
+      "instance": "vmb_NW4",
+      "adopted_old_box": {
+        "x": 6868.1,
+        "y": 19569.3,
+        "w": 849.528,
+        "h": 339.12
+      },
+      "proposed_bank": {
+        "x": 7379.108,
+        "y": 19569.3,
+        "w": 393.12,
+        "h": 535.68,
+        "exact": true
+      },
+      "local_channel_um": 20,
+      "LG": [
+        {
+          "instance": "lg_NW_0.g_bank[4].leaf",
+          "x": 7208.772,
+          "y": 19927.484,
+          "w": 150.336,
+          "h": 151.2,
+          "orient": "R0",
+          "READ_RETURN": 10,
+          "WRITE_RETURN": 7,
+          "near_peer": "bank",
+          "same_edge_phase": true
+        },
+        {
+          "instance": "lg_NW_1.g_bank[4].leaf",
+          "x": 7038.436,
+          "y": 19927.484,
+          "w": 150.336,
+          "h": 151.2,
+          "orient": "R0",
+          "READ_RETURN": 14,
+          "WRITE_RETURN": 11,
+          "near_peer": "lg_NW_0.g_bank[4].leaf",
+          "same_edge_phase": true
+        },
+        {
+          "instance": "lg_NW_2.g_bank[4].leaf",
+          "x": 6868.1,
+          "y": 19927.484,
+          "w": 150.336,
+          "h": 151.2,
+          "orient": "R0",
+          "READ_RETURN": 18,
+          "WRITE_RETURN": 15,
+          "near_peer": "lg_NW_1.g_bank[4].leaf",
+          "same_edge_phase": true
+        }
+      ]
+    },
+    {
+      "instance": "vmb_NW5",
+      "adopted_old_box": {
+        "x": 6836.7,
+        "y": 19203.5,
+        "w": 849.528,
+        "h": 339.12
+      },
+      "proposed_bank": {
+        "x": 7347.708,
+        "y": 19203.5,
+        "w": 393.12,
+        "h": 535.68,
+        "exact": true
+      },
+      "local_channel_um": 20,
+      "LG": [
+        {
+          "instance": "lg_NW_0.g_bank[5].leaf",
+          "x": 7177.371999999999,
+          "y": 19561.684,
+          "w": 150.336,
+          "h": 151.2,
+          "orient": "R0",
+          "READ_RETURN": 10,
+          "WRITE_RETURN": 7,
+          "near_peer": "bank",
+          "same_edge_phase": true
+        },
+        {
+          "instance": "lg_NW_1.g_bank[5].leaf",
+          "x": 7007.036,
+          "y": 19561.684,
+          "w": 150.336,
+          "h": 151.2,
+          "orient": "R0",
+          "READ_RETURN": 14,
+          "WRITE_RETURN": 11,
+          "near_peer": "lg_NW_0.g_bank[5].leaf",
+          "same_edge_phase": true
+        },
+        {
+          "instance": "lg_NW_2.g_bank[5].leaf",
+          "x": 6836.7,
+          "y": 19561.684,
+          "w": 150.336,
+          "h": 151.2,
+          "orient": "R0",
+          "READ_RETURN": 18,
+          "WRITE_RETURN": 15,
+          "near_peer": "lg_NW_1.g_bank[5].leaf",
+          "same_edge_phase": true
+        }
+      ]
+    },
+    {
+      "instance": "vmb_NW6",
+      "adopted_old_box": {
+        "x": 9418.6,
+        "y": 19563.1,
+        "w": 849.528,
+        "h": 339.12
+      },
+      "proposed_bank": {
+        "x": 9929.608,
+        "y": 19563.1,
+        "w": 393.12,
+        "h": 535.68,
+        "exact": true
+      },
+      "local_channel_um": 20,
+      "LG": [
+        {
+          "instance": "lg_NW_0.g_bank[6].leaf",
+          "x": 9759.272,
+          "y": 19921.284,
+          "w": 150.336,
+          "h": 151.2,
+          "orient": "R0",
+          "READ_RETURN": 10,
+          "WRITE_RETURN": 7,
+          "near_peer": "bank",
+          "same_edge_phase": true
+        },
+        {
+          "instance": "lg_NW_1.g_bank[6].leaf",
+          "x": 9588.936,
+          "y": 19921.284,
+          "w": 150.336,
+          "h": 151.2,
+          "orient": "R0",
+          "READ_RETURN": 14,
+          "WRITE_RETURN": 11,
+          "near_peer": "lg_NW_0.g_bank[6].leaf",
+          "same_edge_phase": true
+        },
+        {
+          "instance": "lg_NW_2.g_bank[6].leaf",
+          "x": 9418.6,
+          "y": 19921.284,
+          "w": 150.336,
+          "h": 151.2,
+          "orient": "R0",
+          "READ_RETURN": 18,
+          "WRITE_RETURN": 15,
+          "near_peer": "lg_NW_1.g_bank[6].leaf",
+          "same_edge_phase": true
+        }
+      ]
+    },
+    {
+      "instance": "vmb_NW7",
+      "adopted_old_box": {
+        "x": 9255.1,
+        "y": 19924.9,
+        "w": 849.528,
+        "h": 339.12
+      },
+      "proposed_bank": {
+        "x": 9766.108,
+        "y": 19924.9,
+        "w": 393.12,
+        "h": 535.68,
+        "exact": true
+      },
+      "local_channel_um": 20,
+      "LG": [
+        {
+          "instance": "lg_NW_0.g_bank[7].leaf",
+          "x": 9595.772,
+          "y": 20283.084000000003,
+          "w": 150.336,
+          "h": 151.2,
+          "orient": "R0",
+          "READ_RETURN": 10,
+          "WRITE_RETURN": 7,
+          "near_peer": "bank",
+          "same_edge_phase": true
+        },
+        {
+          "instance": "lg_NW_1.g_bank[7].leaf",
+          "x": 9425.436,
+          "y": 20283.084000000003,
+          "w": 150.336,
+          "h": 151.2,
+          "orient": "R0",
+          "READ_RETURN": 14,
+          "WRITE_RETURN": 11,
+          "near_peer": "lg_NW_0.g_bank[7].leaf",
+          "same_edge_phase": true
+        },
+        {
+          "instance": "lg_NW_2.g_bank[7].leaf",
+          "x": 9255.1,
+          "y": 20283.084000000003,
+          "w": 150.336,
+          "h": 151.2,
+          "orient": "R0",
+          "READ_RETURN": 18,
+          "WRITE_RETURN": 15,
+          "near_peer": "lg_NW_1.g_bank[7].leaf",
+          "same_edge_phase": true
+        }
+      ]
+    },
+    {
+      "instance": "vmb_NE0",
+      "adopted_old_box": {
+        "x": 22399.8,
+        "y": 19468.3,
+        "w": 849.528,
+        "h": 339.12
+      },
+      "proposed_bank": {
+        "x": 22910.808,
+        "y": 19468.3,
+        "w": 393.12,
+        "h": 451.44,
+        "exact": true
+      },
+      "local_channel_um": 20,
+      "LG": [
+        {
+          "instance": "lg_NE_0.g_bank[0].leaf",
+          "x": 22740.472,
+          "y": 19742.846999999998,
+          "w": 150.336,
+          "h": 151.2,
+          "orient": "R0",
+          "READ_RETURN": 10,
+          "WRITE_RETURN": 7,
+          "near_peer": "bank",
+          "same_edge_phase": true
+        },
+        {
+          "instance": "lg_NE_1.g_bank[0].leaf",
+          "x": 22570.136000000002,
+          "y": 19742.846999999998,
+          "w": 150.336,
+          "h": 151.2,
+          "orient": "R0",
+          "READ_RETURN": 14,
+          "WRITE_RETURN": 11,
+          "near_peer": "lg_NE_0.g_bank[0].leaf",
+          "same_edge_phase": true
+        },
+        {
+          "instance": "lg_NE_2.g_bank[0].leaf",
+          "x": 22399.8,
+          "y": 19742.846999999998,
+          "w": 150.336,
+          "h": 151.2,
+          "orient": "R0",
+          "READ_RETURN": 18,
+          "WRITE_RETURN": 15,
+          "near_peer": "lg_NE_1.g_bank[0].leaf",
+          "same_edge_phase": true
+        }
+      ]
+    },
+    {
+      "instance": "vmb_NE1",
+      "adopted_old_box": {
+        "x": 22409.1,
+        "y": 19105.8,
+        "w": 849.528,
+        "h": 339.12
+      },
+      "proposed_bank": {
+        "x": 22920.108,
+        "y": 19105.8,
+        "w": 393.12,
+        "h": 451.44,
+        "exact": true
+      },
+      "local_channel_um": 20,
+      "LG": [
+        {
+          "instance": "lg_NE_0.g_bank[1].leaf",
+          "x": 22749.772,
+          "y": 19380.346999999998,
+          "w": 150.336,
+          "h": 151.2,
+          "orient": "R0",
+          "READ_RETURN": 10,
+          "WRITE_RETURN": 7,
+          "near_peer": "bank",
+          "same_edge_phase": true
+        },
+        {
+          "instance": "lg_NE_1.g_bank[1].leaf",
+          "x": 22579.436,
+          "y": 19380.346999999998,
+          "w": 150.336,
+          "h": 151.2,
+          "orient": "R0",
+          "READ_RETURN": 14,
+          "WRITE_RETURN": 11,
+          "near_peer": "lg_NE_0.g_bank[1].leaf",
+          "same_edge_phase": true
+        },
+        {
+          "instance": "lg_NE_2.g_bank[1].leaf",
+          "x": 22409.1,
+          "y": 19380.346999999998,
+          "w": 150.336,
+          "h": 151.2,
+          "orient": "R0",
+          "READ_RETURN": 18,
+          "WRITE_RETURN": 15,
+          "near_peer": "lg_NE_1.g_bank[1].leaf",
+          "same_edge_phase": true
+        }
+      ]
+    },
+    {
+      "instance": "vmb_NE2",
+      "adopted_old_box": {
+        "x": 24846.8,
+        "y": 19136.8,
+        "w": 849.528,
+        "h": 339.12
+      },
+      "proposed_bank": {
+        "x": 25357.808,
+        "y": 19136.8,
+        "w": 393.12,
+        "h": 451.44,
+        "exact": true
+      },
+      "local_channel_um": 20,
+      "LG": [
+        {
+          "instance": "lg_NE_0.g_bank[2].leaf",
+          "x": 25187.472,
+          "y": 19411.346999999998,
+          "w": 150.336,
+          "h": 151.2,
+          "orient": "R0",
+          "READ_RETURN": 10,
+          "WRITE_RETURN": 7,
+          "near_peer": "bank",
+          "same_edge_phase": true
+        },
+        {
+          "instance": "lg_NE_1.g_bank[2].leaf",
+          "x": 25017.136000000002,
+          "y": 19411.346999999998,
+          "w": 150.336,
+          "h": 151.2,
+          "orient": "R0",
+          "READ_RETURN": 14,
+          "WRITE_RETURN": 11,
+          "near_peer": "lg_NE_0.g_bank[2].leaf",
+          "same_edge_phase": true
+        },
+        {
+          "instance": "lg_NE_2.g_bank[2].leaf",
+          "x": 24846.8,
+          "y": 19411.346999999998,
+          "w": 150.336,
+          "h": 151.2,
+          "orient": "R0",
+          "READ_RETURN": 18,
+          "WRITE_RETURN": 15,
+          "near_peer": "lg_NE_1.g_bank[2].leaf",
+          "same_edge_phase": true
+        }
+      ]
+    },
+    {
+      "instance": "vmb_NE3",
+      "adopted_old_box": {
+        "x": 25397.6,
+        "y": 19565.9,
+        "w": 849.528,
+        "h": 339.12
+      },
+      "proposed_bank": {
+        "x": 25908.608,
+        "y": 19565.9,
+        "w": 393.12,
+        "h": 451.44,
+        "exact": true
+      },
+      "local_channel_um": 20,
+      "LG": [
+        {
+          "instance": "lg_NE_0.g_bank[3].leaf",
+          "x": 25738.272,
+          "y": 19840.447,
+          "w": 150.336,
+          "h": 151.2,
+          "orient": "R0",
+          "READ_RETURN": 10,
+          "WRITE_RETURN": 7,
+          "near_peer": "bank",
+          "same_edge_phase": true
+        },
+        {
+          "instance": "lg_NE_1.g_bank[3].leaf",
+          "x": 25567.936,
+          "y": 19840.447,
+          "w": 150.336,
+          "h": 151.2,
+          "orient": "R0",
+          "READ_RETURN": 14,
+          "WRITE_RETURN": 11,
+          "near_peer": "lg_NE_0.g_bank[3].leaf",
+          "same_edge_phase": true
+        },
+        {
+          "instance": "lg_NE_2.g_bank[3].leaf",
+          "x": 25397.6,
+          "y": 19840.447,
+          "w": 150.336,
+          "h": 151.2,
+          "orient": "R0",
+          "READ_RETURN": 18,
+          "WRITE_RETURN": 15,
+          "near_peer": "lg_NE_1.g_bank[3].leaf",
+          "same_edge_phase": true
+        }
+      ]
+    },
+    {
+      "instance": "vmb_NE4",
+      "adopted_old_box": {
+        "x": 21392.0,
+        "y": 19827.5,
+        "w": 849.528,
+        "h": 339.12
+      },
+      "proposed_bank": {
+        "x": 21903.008,
+        "y": 19827.5,
+        "w": 393.12,
+        "h": 451.44,
+        "exact": true
+      },
+      "local_channel_um": 20,
+      "LG": [
+        {
+          "instance": "lg_NE_0.g_bank[4].leaf",
+          "x": 21732.672000000002,
+          "y": 20102.047,
+          "w": 150.336,
+          "h": 151.2,
+          "orient": "R0",
+          "READ_RETURN": 10,
+          "WRITE_RETURN": 7,
+          "near_peer": "bank",
+          "same_edge_phase": true
+        },
+        {
+          "instance": "lg_NE_1.g_bank[4].leaf",
+          "x": 21562.336000000003,
+          "y": 20102.047,
+          "w": 150.336,
+          "h": 151.2,
+          "orient": "R0",
+          "READ_RETURN": 14,
+          "WRITE_RETURN": 11,
+          "near_peer": "lg_NE_0.g_bank[4].leaf",
+          "same_edge_phase": true
+        },
+        {
+          "instance": "lg_NE_2.g_bank[4].leaf",
+          "x": 21392.0,
+          "y": 20102.047,
+          "w": 150.336,
+          "h": 151.2,
+          "orient": "R0",
+          "READ_RETURN": 18,
+          "WRITE_RETURN": 15,
+          "near_peer": "lg_NE_1.g_bank[4].leaf",
+          "same_edge_phase": true
+        }
+      ]
+    },
+    {
+      "instance": "vmb_NE5",
+      "adopted_old_box": {
+        "x": 21117.7,
+        "y": 19122.0,
+        "w": 849.528,
+        "h": 339.12
+      },
+      "proposed_bank": {
+        "x": 21628.708000000002,
+        "y": 19122.0,
+        "w": 393.12,
+        "h": 451.44,
+        "exact": true
+      },
+      "local_channel_um": 20,
+      "LG": [
+        {
+          "instance": "lg_NE_0.g_bank[5].leaf",
+          "x": 21458.372000000003,
+          "y": 19396.547,
+          "w": 150.336,
+          "h": 151.2,
+          "orient": "R0",
+          "READ_RETURN": 10,
+          "WRITE_RETURN": 7,
+          "near_peer": "bank",
+          "same_edge_phase": true
+        },
+        {
+          "instance": "lg_NE_1.g_bank[5].leaf",
+          "x": 21288.036000000004,
+          "y": 19396.547,
+          "w": 150.336,
+          "h": 151.2,
+          "orient": "R0",
+          "READ_RETURN": 14,
+          "WRITE_RETURN": 11,
+          "near_peer": "lg_NE_0.g_bank[5].leaf",
+          "same_edge_phase": true
+        },
+        {
+          "instance": "lg_NE_2.g_bank[5].leaf",
+          "x": 21117.7,
+          "y": 19396.547,
+          "w": 150.336,
+          "h": 151.2,
+          "orient": "R0",
+          "READ_RETURN": 18,
+          "WRITE_RETURN": 15,
+          "near_peer": "lg_NE_1.g_bank[5].leaf",
+          "same_edge_phase": true
+        }
+      ]
+    },
+    {
+      "instance": "vmb_NE6",
+      "adopted_old_box": {
+        "x": 18754.1,
+        "y": 18140.2,
+        "w": 849.528,
+        "h": 339.12
+      },
+      "proposed_bank": {
+        "x": 19265.108,
+        "y": 18140.2,
+        "w": 393.12,
+        "h": 451.44,
+        "exact": true
+      },
+      "local_channel_um": 20,
+      "LG": [
+        {
+          "instance": "lg_NE_0.g_bank[6].leaf",
+          "x": 19094.772,
+          "y": 18414.747,
+          "w": 150.336,
+          "h": 151.2,
+          "orient": "R0",
+          "READ_RETURN": 10,
+          "WRITE_RETURN": 7,
+          "near_peer": "bank",
+          "same_edge_phase": true
+        },
+        {
+          "instance": "lg_NE_1.g_bank[6].leaf",
+          "x": 18924.436,
+          "y": 18414.747,
+          "w": 150.336,
+          "h": 151.2,
+          "orient": "R0",
+          "READ_RETURN": 14,
+          "WRITE_RETURN": 11,
+          "near_peer": "lg_NE_0.g_bank[6].leaf",
+          "same_edge_phase": true
+        },
+        {
+          "instance": "lg_NE_2.g_bank[6].leaf",
+          "x": 18754.1,
+          "y": 18414.747,
+          "w": 150.336,
+          "h": 151.2,
+          "orient": "R0",
+          "READ_RETURN": 18,
+          "WRITE_RETURN": 15,
+          "near_peer": "lg_NE_1.g_bank[6].leaf",
+          "same_edge_phase": true
+        }
+      ]
+    },
+    {
+      "instance": "vmb_NE7",
+      "adopted_old_box": {
+        "x": 18752.4,
+        "y": 18853.5,
+        "w": 849.528,
+        "h": 339.12
+      },
+      "proposed_bank": {
+        "x": 19263.408000000003,
+        "y": 18853.5,
+        "w": 393.12,
+        "h": 451.44,
+        "exact": true
+      },
+      "local_channel_um": 20,
+      "LG": [
+        {
+          "instance": "lg_NE_0.g_bank[7].leaf",
+          "x": 19093.072000000004,
+          "y": 19128.047,
+          "w": 150.336,
+          "h": 151.2,
+          "orient": "R0",
+          "READ_RETURN": 10,
+          "WRITE_RETURN": 7,
+          "near_peer": "bank",
+          "same_edge_phase": true
+        },
+        {
+          "instance": "lg_NE_1.g_bank[7].leaf",
+          "x": 18922.736000000004,
+          "y": 19128.047,
+          "w": 150.336,
+          "h": 151.2,
+          "orient": "R0",
+          "READ_RETURN": 14,
+          "WRITE_RETURN": 11,
+          "near_peer": "lg_NE_0.g_bank[7].leaf",
+          "same_edge_phase": true
+        },
+        {
+          "instance": "lg_NE_2.g_bank[7].leaf",
+          "x": 18752.4,
+          "y": 19128.047,
+          "w": 150.336,
+          "h": 151.2,
+          "orient": "R0",
+          "READ_RETURN": 18,
+          "WRITE_RETURN": 15,
+          "near_peer": "lg_NE_1.g_bank[7].leaf",
+          "same_edge_phase": true
+        }
+      ]
+    }
+  ],
+  "unshifted_expansion_conflicts": [
+    {
+      "candidate": "vmb_SW0",
+      "peer": "vmb_SW1",
+      "overlap_um2": 67635.302
+    },
+    {
+      "candidate": "vmb_SW0",
+      "peer": "su_SW0",
+      "overlap_um2": 44352.918
+    },
+    {
+      "candidate": "vmb_SW1",
+      "peer": "su_SW0",
+      "overlap_um2": 7962.227
+    },
+    {
+      "candidate": "vmb_SW1",
+      "peer": "hc_SW0",
+      "overlap_um2": 6561.198
+    },
+    {
+      "candidate": "vmb_SW1",
+      "peer": "idx_op",
+      "overlap_um2": 54454.462
+    },
+    {
+      "candidate": "vmb_SW2",
+      "peer": "vmb_SW6",
+      "overlap_um2": 11382.307
+    },
+    {
+      "candidate": "vmb_SW2",
+      "peer": "sfu_SW1",
+      "overlap_um2": 47182.333
+    },
+    {
+      "candidate": "vmb_SW3",
+      "peer": "sm_SW2",
+      "overlap_um2": 103221.552
+    },
+    {
+      "candidate": "vmb_SW4",
+      "peer": "su_SW1",
+      "overlap_um2": 1659.487
+    },
+    {
+      "candidate": "vmb_SW4",
+      "peer": "su_SW2",
+      "overlap_um2": 37164.87
+    },
+    {
+      "candidate": "vmb_SW5",
+      "peer": "vmb_SW2",
+      "overlap_um2": 3636.347
+    },
+    {
+      "candidate": "vmb_SW5",
+      "peer": "vmb_SW4",
+      "overlap_um2": 137192.959
+    },
+    {
+      "candidate": "vmb_SW5",
+      "peer": "hc_SW2",
+      "overlap_um2": 7091.28
+    },
+    {
+      "candidate": "vmb_SW6",
+      "peer": "vmb_SW7",
+      "overlap_um2": 55367.374
+    },
+    {
+      "candidate": "vmb_SW6",
+      "peer": "su_SW3",
+      "overlap_um2": 43527.624
+    },
+    {
+      "candidate": "vmb_SW6",
+      "peer": "sfu_SW3",
+      "overlap_um2": 1225.384
+    },
+    {
+      "candidate": "vmb_SW6",
+      "peer": "hc_SW1",
+      "overlap_um2": 35009.63
+    },
+    {
+      "candidate": "vmb_SW6",
+      "peer": "hc_SW3",
+      "overlap_um2": 6577.0
+    },
+    {
+      "candidate": "vmb_SW7",
+      "peer": "vmb_SW1",
+      "overlap_um2": 6425.68
+    },
+    {
+      "candidate": "vmb_SE0",
+      "peer": "su_SE0",
+      "overlap_um2": 29385.982
+    },
+    {
+      "candidate": "vmb_SE1",
+      "peer": "vmb_SE0",
+      "overlap_um2": 129759.552
+    },
+    {
+      "candidate": "vmb_SE2",
+      "peer": "vmb_SE6",
+      "overlap_um2": 80094.242
+    },
+    {
+      "candidate": "vmb_SE2",
+      "peer": "sfu_SE0",
+      "overlap_um2": 11092.222
+    },
+    {
+      "candidate": "vmb_SE3",
+      "peer": "vmb_SE1",
+      "overlap_um2": 41528.58
+    },
+    {
+      "candidate": "vmb_SE3",
+      "peer": "hc_SE1",
+      "overlap_um2": 43525.0
+    },
+    {
+      "candidate": "vmb_SE4",
+      "peer": "hc_SE2",
+      "overlap_um2": 6152.0
+    },
+    {
+      "candidate": "vmb_SE5",
+      "peer": "vmb_SE4",
+      "overlap_um2": 80008.147
+    },
+    {
+      "candidate": "vmb_SE5",
+      "peer": "hc_SE2",
+      "overlap_um2": 42175.0
+    },
+    {
+      "candidate": "vmb_SE6",
+      "peer": "sm_SE7",
+      "overlap_um2": 143382.542
+    },
+    {
+      "candidate": "vmb_SE7",
+      "peer": "vmb_SE2",
+      "overlap_um2": 89246.871
+    },
+    {
+      "candidate": "vmb_SE7",
+      "peer": "sfu_SE3",
+      "overlap_um2": 57672.318
+    },
+    {
+      "candidate": "vmb_NW0",
+      "peer": "sfu_NW0",
+      "overlap_um2": 35203.437
+    },
+    {
+      "candidate": "vmb_NW0",
+      "peer": "sfu_NW3",
+      "overlap_um2": 46093.676
+    },
+    {
+      "candidate": "vmb_NW0",
+      "peer": "hc_NW0",
+      "overlap_um2": 7607.0
+    },
+    {
+      "candidate": "vmb_NW1",
+      "peer": "vmb_NW0",
+      "overlap_um2": 100341.398
+    },
+    {
+      "candidate": "vmb_NW1",
+      "peer": "su_NW0",
+      "overlap_um2": 7250.027
+    },
+    {
+      "candidate": "vmb_NW2",
+      "peer": "su_NW1",
+      "overlap_um2": 8089.922
+    },
+    {
+      "candidate": "vmb_NW3",
+      "peer": "vmb_NW2",
+      "overlap_um2": 110233.926
+    },
+    {
+      "candidate": "vmb_NW3",
+      "peer": "su_NW1",
+      "overlap_um2": 25120.78
+    },
+    {
+      "candidate": "vmb_NW4",
+      "peer": "su_NW2",
+      "overlap_um2": 2447.242
+    },
+    {
+      "candidate": "vmb_NW4",
+      "peer": "sfu_NW2",
+      "overlap_um2": 56710.929
+    },
+    {
+      "candidate": "vmb_NW4",
+      "peer": "hc_NW2",
+      "overlap_um2": 8482.0
+    },
+    {
+      "candidate": "vmb_NW5",
+      "peer": "vmb_NW4",
+      "overlap_um2": 144317.817
+    },
+    {
+      "candidate": "vmb_NW5",
+      "peer": "su_NW1",
+      "overlap_um2": 247.54
+    },
+    {
+      "candidate": "vmb_NW5",
+      "peer": "hc_NW2",
+      "overlap_um2": 146.573
+    },
+    {
+      "candidate": "vmb_NW6",
+      "peer": "vmb_NW7",
+      "overlap_um2": 119286.549
+    },
+    {
+      "candidate": "vmb_NW6",
+      "peer": "hc_NW3",
+      "overlap_um2": 4982.0
+    },
+    {
+      "candidate": "vmb_NW6",
+      "peer": "quant_NW3",
+      "overlap_um2": 3299.236
+    },
+    {
+      "candidate": "vmb_NW7",
+      "peer": "quant_NW3",
+      "overlap_um2": 6719.86
+    },
+    {
+      "candidate": "vmb_NE0",
+      "peer": "su_NE0",
+      "overlap_um2": 19295.027
+    },
+    {
+      "candidate": "vmb_NE1",
+      "peer": "vmb_NE0",
+      "overlap_um2": 74729.878
+    },
+    {
+      "candidate": "vmb_NE2",
+      "peer": "vmb_NE3",
+      "overlap_um2": 7893.348
+    },
+    {
+      "candidate": "vmb_NE2",
+      "peer": "hc_NE1",
+      "overlap_um2": 7307.0
+    },
+    {
+      "candidate": "vmb_NE5",
+      "peer": "su_NE2",
+      "overlap_um2": 15427.742
+    },
+    {
+      "candidate": "vmb_NE5",
+      "peer": "sfu_NE0",
+      "overlap_um2": 3332.52
+    },
+    {
+      "candidate": "vmb_NE5",
+      "peer": "sfu_NE2",
+      "overlap_um2": 6123.934
+    },
+    {
+      "candidate": "vmb_NE5",
+      "peer": "hc_NE0",
+      "overlap_um2": 4754.719
+    },
+    {
+      "candidate": "vmb_NE5",
+      "peer": "hc_NE2",
+      "overlap_um2": 15810.0
+    },
+    {
+      "candidate": "vmb_NE6",
+      "peer": "sm_NE1",
+      "overlap_um2": 14955.304
+    },
+    {
+      "candidate": "vmb_NE6",
+      "peer": "su_NE3",
+      "overlap_um2": 20007.603
+    },
+    {
+      "candidate": "vmb_NE6",
+      "peer": "hc_NE3",
+      "overlap_um2": 22610.0
+    },
+    {
+      "candidate": "vmb_NE7",
+      "peer": "sm_NE1",
+      "overlap_um2": 7054.957
+    },
+    {
+      "candidate": "vmb_NE7",
+      "peer": "coll_NE",
+      "overlap_um2": 37264.66
+    }
+  ],
+  "requirements": [
+    "all six per-stage clocks exposed independently at production parent; never tied in the wrapper",
+    "actual per-root insertion<=300ps/spread<=80ps and ordinary related-root setup/hold",
+    "real ODB signal/PG pin access and <=500um registered hops; real routing cut<=0.60",
+    "hub>=1100um or physically qualified eight-lane delivery split remains a separate source/slot obligation"
+  ]
+}

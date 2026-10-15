@@ -1,0 +1,403 @@
+{
+  "name": "hvm_stage6_ne",
+  "top": "hfd_vms_bank_stage6_NE",
+  "kind": "tile",
+  "sources": [
+    "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_stage6_NE.sv",
+    "rtl/hbm_accel/generic/vm/static/ot_vms_bank_static_wdecode_ft_stageclocks.sv",
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v"
+  ],
+  "clock_port": "clk_pin",
+  "reset_ports": [
+    "rst_n"
+  ],
+  "pins": {
+    "N": [
+      "rq3",
+      "rr3",
+      "dq",
+      "dq_done",
+      "wq1",
+      "wq_done1",
+      "rst_n",
+      "bid",
+      "sid",
+      "rslot_v",
+      "rslot",
+      "wslot_v",
+      "wslot",
+      "status",
+      "clk_pin",
+      "clk_s1",
+      "clk_mem",
+      "clk_capture",
+      "clk_return",
+      "clk_status"
+    ],
+    "S": [
+      "rq1",
+      "rr1",
+      "rq4",
+      "rr4",
+      "kq",
+      "kq_done",
+      "xq",
+      "xq_done",
+      "eg"
+    ],
+    "E": [
+      "rq2",
+      "rr2",
+      "xq2",
+      "xq2_done"
+    ],
+    "W": [
+      "pq",
+      "pr",
+      "rq0",
+      "rr0",
+      "wq0",
+      "wq_done0"
+    ]
+  },
+  "pin_ranges": {
+    "rq0": [
+      270.083,
+      274.979
+    ],
+    "rr0": [
+      274.979,
+      348.995
+    ],
+    "rq3": [
+      98.28,
+      104.043
+    ],
+    "rr3": [
+      104.043,
+      191.16
+    ],
+    "dq": [
+      201.96,
+      294.511
+    ],
+    "dq_done": [
+      294.511,
+      294.84
+    ],
+    "wq1": [
+      294.84,
+      387.391
+    ],
+    "wq_done1": [
+      387.391,
+      387.72
+    ],
+    "rst_n": [
+      191.487,
+      191.815
+    ],
+    "bid": [
+      191.815,
+      192.796
+    ],
+    "sid": [
+      192.796,
+      193.451
+    ],
+    "rslot_v": [
+      193.451,
+      193.778
+    ],
+    "rslot": [
+      193.778,
+      194.76
+    ],
+    "wslot_v": [
+      194.76,
+      195.087
+    ],
+    "wslot": [
+      195.087,
+      196.069
+    ],
+    "status": [
+      196.069,
+      201.96
+    ],
+    "rq1": [
+      5.4,
+      10.1
+    ],
+    "rr1": [
+      10.1,
+      81.145
+    ],
+    "rq4": [
+      81.145,
+      85.845
+    ],
+    "rr4": [
+      85.845,
+      156.89
+    ],
+    "kq": [
+      156.89,
+      234.571
+    ],
+    "kq_done": [
+      234.571,
+      234.847
+    ],
+    "xq": [
+      234.847,
+      311.145
+    ],
+    "xq_done": [
+      311.145,
+      311.422
+    ],
+    "eg": [
+      311.422,
+      387.72
+    ],
+    "rq2": [
+      5.4,
+      10.442
+    ],
+    "rr2": [
+      10.442,
+      86.664
+    ],
+    "wq0": [
+      348.995,
+      429.923
+    ],
+    "wq_done0": [
+      429.923,
+      430.211
+    ],
+    "xq2": [
+      251.566,
+      333.423
+    ],
+    "xq2_done": [
+      333.423,
+      333.72
+    ],
+    "pq": [
+      86.664,
+      171.191
+    ],
+    "pr": [
+      171.191,
+      250.083
+    ],
+    "clk_pin": [
+      5.4,
+      5.688000000000001
+    ],
+    "clk_s1": [
+      5.688000000000001,
+      5.976
+    ],
+    "clk_mem": [
+      5.976,
+      6.264
+    ],
+    "clk_capture": [
+      6.264,
+      6.5520000000000005
+    ],
+    "clk_return": [
+      6.5520000000000005,
+      6.84
+    ],
+    "clk_status": [
+      6.84,
+      7.128
+    ]
+  },
+  "outline": {
+    "w": 393.12,
+    "h": 451.44,
+    "exact": true
+  },
+  "layer_cap": "M5",
+  "recipe": 2,
+  "macros": [
+    {
+      "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
+      "count": 3
+    }
+  ],
+  "route": {
+    "pd": 0.5,
+    "period_ps": 833.333,
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "hold_margin_ns": 0.03,
+    "pin_balance": {
+      "group_max": 32,
+      "h": "M4",
+      "v": "M5"
+    },
+    "macro_halo_um": 5.4,
+    "signoff_period_ps": 833.333
+  },
+  "job": {
+    "owner": "Codex H-VM physical",
+    "branch": "codex/hbm-vm-physical-1103",
+    "tag": "stage6",
+    "purpose": "Six same-phase real bank roots; group0 W faces exact closed LG nearE. Unadopted source/slot successor; actual clocks, source SRAM, TT/FF/DRC and every incident pin required.",
+    "extra_paths": [
+      "rtl/hbm_accel/generic/vm/static"
+    ],
+    "record_to": "results/rtl/ref_tile/hvm_stage6_ne",
+    "benches": [],
+    "structural_change": "Six same-phase real bank roots; group0 W faces exact closed LG nearE. Unadopted source/slot successor; actual clocks, source SRAM, TT/FF/DRC and every incident pin required.",
+    "views_to": "physical/ref_tile/hvm_stage6_ne/views",
+    "reroute_reason": "rtl_change and slot_change; unclosed bank candidate"
+  },
+  "orfs_vars": {
+    "POST_IO_PLACEMENT_TCL": "rtl/hbm_accel/generic/vm/static/physical/native_bank_pin_audit.tcl"
+  },
+  "params": {},
+  "children": [],
+  "inter": [],
+  "io_flop_at_pins": {
+    "cols": 4,
+    "allow_none": true
+  },
+  "inhold": true,
+  "outhold": true,
+  "keep_pin_regs": true,
+  "pin_reg_split": true,
+  "hold_pad": {
+    "cell": "HB2xp67_ASAP7_75t_R"
+  },
+  "clock": "multiple_cts_roots",
+  "clock_ports": [
+    "clk_pin",
+    "clk_s1",
+    "clk_mem",
+    "clk_capture",
+    "clk_return",
+    "clk_status"
+  ],
+  "clock_data_paths": "related_same_frequency",
+  "clock_relationship": {
+    "kind": "same_pll_fixed_phase",
+    "ratio": [
+      1,
+      1
+    ],
+    "phase_ps": 0
+  },
+  "clock_entry_domains": {
+    "core": {
+      "ratio": [
+        1,
+        1
+      ],
+      "ports": [
+        "clk_pin"
+      ],
+      "inputs": [
+        "rst_n",
+        "bid",
+        "sid",
+        "rslot_v",
+        "rslot",
+        "wslot_v",
+        "wslot",
+        "rq0",
+        "rq1",
+        "rq2",
+        "rq3",
+        "rq4",
+        "wq0",
+        "wq1",
+        "dq",
+        "kq",
+        "xq",
+        "xq2",
+        "pq"
+      ],
+      "outputs": []
+    },
+    "s1": {
+      "ratio": [
+        1,
+        1
+      ],
+      "ports": [
+        "clk_s1"
+      ],
+      "inputs": [],
+      "outputs": [
+        "eg"
+      ]
+    },
+    "mem": {
+      "ratio": [
+        1,
+        1
+      ],
+      "ports": [
+        "clk_mem"
+      ],
+      "inputs": [],
+      "outputs": []
+    },
+    "capture": {
+      "ratio": [
+        1,
+        1
+      ],
+      "ports": [
+        "clk_capture"
+      ],
+      "inputs": [],
+      "outputs": [
+        "wq_done0",
+        "wq_done1",
+        "dq_done",
+        "kq_done",
+        "xq_done",
+        "xq2_done"
+      ]
+    },
+    "return": {
+      "ratio": [
+        1,
+        1
+      ],
+      "ports": [
+        "clk_return"
+      ],
+      "inputs": [],
+      "outputs": [
+        "rr0",
+        "rr1",
+        "rr2",
+        "rr3",
+        "rr4",
+        "pr"
+      ]
+    },
+    "status": {
+      "ratio": [
+        1,
+        1
+      ],
+      "ports": [
+        "clk_status"
+      ],
+      "inputs": [],
+      "outputs": [
+        "status"
+      ]
+    }
+  }
+}

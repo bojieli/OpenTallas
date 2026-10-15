@@ -1,0 +1,11 @@
+ot-run: ot-epyc1tb     skipped: no /srv/opentallas-scratch/codex/hbm-vm-stage6-1103/parent
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/codex/hbm-vm-stage6-1103/parent
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/codex/hbm-vm-stage6-1103/parent
+ot-run: ot-agidock128  admits    53 GB (avail 82, growth 12, headroom 24, waiters 0/0 GB) load 6/64 running 3 disk 83 GB 
+ot-run: -> ot-agidock128
+ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-1003930-1792090328 after 0 s
+ACTUAL_48BANKCLOCK_PARENT_PASS SW
+ACTUAL_48BANKCLOCK_PARENT_PASS SE
+ACTUAL_48BANKCLOCK_PARENT_PASS NW
+ACTUAL_48BANKCLOCK_PARENT_PASS NE
+ot-run: RAN on ot-agidock128 (unit oth-ubuntu-1003930-1792090328): exit 0

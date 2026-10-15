@@ -1,0 +1,23 @@
+	Command being timed: "iverilog -g2012 -Wall -s hfd_hgi_vms_stage6_SW -o parent-SW.vvp hfd_hgi_vms_stage6.sv ot_vms_bank_static.sv ot_vms_bank_static_wdecode_ft.sv ot_vms_bank_static_wdecode_ft_stageclocks.sv ot_vms_calendar_host_static.sv ot_vms_calendar_static.sv ot_vms_hub_static.sv ot_vms_rcl_static.sv ot_vms_rstop_static.sv ot_vms_slice_static.sv ot_vms_slice_static_stageclocks.sv ot_vms_status4_static.sv ot_vms_status_static.sv ot_sram_1r1w_1024x256_m2_r2c2.v"
+	User time (seconds): 0.11
+	System time (seconds): 0.01
+	Percent of CPU this job got: 102%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:00.13
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 24392
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 5166
+	Voluntary context switches: 15
+	Involuntary context switches: 0
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 4480
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0

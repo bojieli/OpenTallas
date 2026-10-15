@@ -1,0 +1,74 @@
+{
+  "schema": "opentallas.hbm.bank-six-stage-roots.v1",
+  "status": "FUNCTIONAL_UNADOPTED; native physical root/clock/pin gates OPEN",
+  "clocks": [
+    "clk_pin",
+    "clk_s1",
+    "clk_mem",
+    "clk_capture",
+    "clk_return",
+    "clk_status"
+  ],
+  "relationship": "same PLL833.333ps, phase0; ordinary setup and hold across every related root; bench ties only test-stimulus source",
+  "source": "ot_vms_bank_static_wdecode_ft_stageclocks; distinct from the adopted single-root FT and original bank",
+  "production_parent": "hfd_hgi_vms_stage6_{SW,SE,NW,NE}: each exposes six8bit bank root vectors, plus independent hub/ring/replay. No production clock ties.",
+  "parent_clock_entries_per_quadrant": 52,
+  "parent_clock_entry_delta_total": 160,
+  "units": {
+    "bank": "oth-ubuntu-997631-1792090137",
+    "parent": "oth-ubuntu-1003930-1792090328"
+  },
+  "hierarchy": {
+    "SW": "six-root bank and full52-root actual VM hierarchy elaborate PASS",
+    "SE": "six-root bank and full52-root actual VM hierarchy elaborate PASS",
+    "NW": "six-root bank and full52-root actual VM hierarchy elaborate PASS",
+    "NE": "six-root bank and full52-root actual VM hierarchy elaborate PASS"
+  },
+  "shapes": {
+    "SW": {
+      "RG": 5,
+      "WG": 1,
+      "positive_summary_identical_to_frozen_single_root_FT": true,
+      "allgroups": "24actualSRAM,1024DMAwrites,5120wide reads,8packet,n+6,8sectors/edge",
+      "allowner": "PASS static bank exact memory masks main/mirror ECC owner timing: reads=227 writes=236 egress=2 cycles=364 read=n+6 commit=n+3 egress=n+1 II=1",
+      "mutants": "wrong actual response group/write sector/CE population all KILLED"
+    },
+    "SE": {
+      "RG": 4,
+      "WG": 1,
+      "positive_summary_identical_to_frozen_single_root_FT": true,
+      "allgroups": "24actualSRAM,1024DMAwrites,4096wide reads,8packet,n+6,8sectors/edge",
+      "allowner": "PASS static bank exact memory masks main/mirror ECC owner timing: reads=225 writes=236 egress=2 cycles=362 read=n+6 commit=n+3 egress=n+1 II=1",
+      "mutants": "wrong actual response group/write sector/CE population all KILLED"
+    },
+    "NW": {
+      "RG": 6,
+      "WG": 3,
+      "positive_summary_identical_to_frozen_single_root_FT": true,
+      "allgroups": "24actualSRAM,1024DMAwrites,6144wide reads,8packet,n+6,8sectors/edge",
+      "allowner": "PASS static bank exact memory masks main/mirror ECC owner timing: reads=229 writes=244 egress=33 cycles=364 read=n+6 commit=n+3 egress=n+1 II=1",
+      "mutants": "wrong actual response group/write sector/CE population all KILLED"
+    },
+    "NE": {
+      "RG": 5,
+      "WG": 2,
+      "positive_summary_identical_to_frozen_single_root_FT": true,
+      "allgroups": "24actualSRAM,1024DMAwrites,5120wide reads,8packet,n+6,8sectors/edge",
+      "allowner": "PASS static bank exact memory masks main/mirror ECC owner timing: reads=227 writes=240 egress=34 cycles=368 read=n+6 commit=n+3 egress=n+1 II=1",
+      "mutants": "wrong actual response group/write sector/CE population all KILLED"
+    }
+  },
+  "source_sha256": {
+    "rtl/hbm_accel/generic/vm/static/ot_vms_bank_static_wdecode_ft_stageclocks.sv": "1b2dca324551bfa8b499fb22e1a0620024d01c165d0c285bbfe81325dbf058c5",
+    "rtl/hbm_accel/generic/vm/static/ot_vms_slice_static_stageclocks.sv": "c9462eeb75dc940774fa30b3469728f5707126ccfc6ef92c7b03bf860f3b077c",
+    "rtl/hbm_accel/generic/vm/static/hfd_hgi_vms_stage6.sv": "1b7c7f77742e5e2e9ed1ec19ef868af8f7ff0fc27d4fdb192b9c31dd43aac74f"
+  },
+  "physical": "Local kit PASS0fail0warn. Exact SW requested footprint356.4x561.6, LG group0 onW, six real roots; no actual ODB or route yet.",
+  "qualification": {
+    "SRAM": true,
+    "fixed_latency": true,
+    "source_hierarchy": true,
+    "native_physical": false,
+    "die": false
+  }
+}

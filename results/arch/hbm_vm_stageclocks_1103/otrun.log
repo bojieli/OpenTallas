@@ -1,0 +1,59 @@
+ot-run: ot-epyc1tb     skipped: no /srv/opentallas-scratch/codex/hbm-vm-stage6-1103
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/codex/hbm-vm-stage6-1103
+ot-run: ot-pve1        skipped: load hold: load1 > 1.5 x cores
+ot-run: ot-agidock128  admits    55 GB (avail 84, growth 24, headroom 24, waiters 0/0 GB) load 7/64 running 7 disk 96 GB 
+ot-run: -> ot-agidock128
+ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-997631-1792090137 after 0 s
+ACTUAL_FT_HIERARCHY_PASS SW
+ACTUAL_FT_HIERARCHY_PASS SE
+ACTUAL_FT_HIERARCHY_PASS NW
+ACTUAL_FT_HIERARCHY_PASS NE
+VM_ALLGROUPS_STATIC PASS RG=5 WG=1 banks=8 SRAMs=24 DMAwrites=1024 exactwide_reads=5120 eachgroup_reads=1024 packet_reads=8 sectors_per_cycle=8 return_edges=6 conflict_fault_no_arbitration=1
+tb_hbm_vm_allgroups_stage6.sv:141: $finish called at 8140000 (1ps)
+FATAL: tb_hbm_vm_allgroups_stage6.sv:75: actual bank response group mismatch RG=5 cycle=145 bank=0 group=0
+       Time: 1487000  Scope: tb_hbm_vm_allgroups_stage6.tick
+FATAL: tb_hbm_vm_allgroups_stage6.sv:77: actual SRAM readback mismatch
+       Time: 1487000  Scope: tb_hbm_vm_allgroups_stage6.tick
+PASS static bank exact memory masks main/mirror ECC owner timing: reads=227 writes=236 egress=2 cycles=364 read=n+6 commit=n+3 egress=n+1 II=1
+tb_bank_stage6_allowners.sv:151: $finish called at 3850000 (1ps)
+FATAL: tb_bank_stage6_allowners.sv:93: read payload cycle 30 lane 0
+       Time: 366000  Scope: tb_bank_stage6_allowners.tick
+FATAL: tb_bank_stage6_allowners.sv:130: last-word CE population mismatch status=00001
+       Time: 3000000  Scope: tb_bank_stage6_allowners
+VM_ALLGROUPS_STATIC PASS RG=4 WG=1 banks=8 SRAMs=24 DMAwrites=1024 exactwide_reads=4096 eachgroup_reads=1024 packet_reads=8 sectors_per_cycle=8 return_edges=6 conflict_fault_no_arbitration=1
+tb_hbm_vm_allgroups_stage6.sv:141: $finish called at 6860000 (1ps)
+FATAL: tb_hbm_vm_allgroups_stage6.sv:75: actual bank response group mismatch RG=4 cycle=145 bank=0 group=0
+       Time: 1487000  Scope: tb_hbm_vm_allgroups_stage6.tick
+FATAL: tb_hbm_vm_allgroups_stage6.sv:77: actual SRAM readback mismatch
+       Time: 1487000  Scope: tb_hbm_vm_allgroups_stage6.tick
+PASS static bank exact memory masks main/mirror ECC owner timing: reads=225 writes=236 egress=2 cycles=362 read=n+6 commit=n+3 egress=n+1 II=1
+tb_bank_stage6_allowners.sv:151: $finish called at 3830000 (1ps)
+FATAL: tb_bank_stage6_allowners.sv:93: read payload cycle 30 lane 0
+       Time: 366000  Scope: tb_bank_stage6_allowners.tick
+FATAL: tb_bank_stage6_allowners.sv:130: last-word CE population mismatch status=00001
+       Time: 2980000  Scope: tb_bank_stage6_allowners
+VM_ALLGROUPS_STATIC PASS RG=6 WG=3 banks=8 SRAMs=24 DMAwrites=1024 exactwide_reads=6144 eachgroup_reads=1024 packet_reads=8 sectors_per_cycle=8 return_edges=6 conflict_fault_no_arbitration=1
+tb_hbm_vm_allgroups_stage6.sv:141: $finish called at 9420000 (1ps)
+FATAL: tb_hbm_vm_allgroups_stage6.sv:75: actual bank response group mismatch RG=6 cycle=145 bank=0 group=0
+       Time: 1487000  Scope: tb_hbm_vm_allgroups_stage6.tick
+FATAL: tb_hbm_vm_allgroups_stage6.sv:77: actual SRAM readback mismatch
+       Time: 1487000  Scope: tb_hbm_vm_allgroups_stage6.tick
+PASS static bank exact memory masks main/mirror ECC owner timing: reads=229 writes=244 egress=33 cycles=364 read=n+6 commit=n+3 egress=n+1 II=1
+tb_bank_stage6_allowners.sv:151: $finish called at 3850000 (1ps)
+FATAL: tb_bank_stage6_allowners.sv:93: read payload cycle 38 lane 0
+       Time: 446000  Scope: tb_bank_stage6_allowners.tick
+FATAL: tb_bank_stage6_allowners.sv:130: last-word CE population mismatch status=00001
+       Time: 3100000  Scope: tb_bank_stage6_allowners
+VM_ALLGROUPS_STATIC PASS RG=5 WG=2 banks=8 SRAMs=24 DMAwrites=1024 exactwide_reads=5120 eachgroup_reads=1024 packet_reads=8 sectors_per_cycle=8 return_edges=6 conflict_fault_no_arbitration=1
+tb_hbm_vm_allgroups_stage6.sv:141: $finish called at 8140000 (1ps)
+FATAL: tb_hbm_vm_allgroups_stage6.sv:75: actual bank response group mismatch RG=5 cycle=145 bank=0 group=0
+       Time: 1487000  Scope: tb_hbm_vm_allgroups_stage6.tick
+FATAL: tb_hbm_vm_allgroups_stage6.sv:77: actual SRAM readback mismatch
+       Time: 1487000  Scope: tb_hbm_vm_allgroups_stage6.tick
+PASS static bank exact memory masks main/mirror ECC owner timing: reads=227 writes=240 egress=34 cycles=368 read=n+6 commit=n+3 egress=n+1 II=1
+tb_bank_stage6_allowners.sv:151: $finish called at 3890000 (1ps)
+FATAL: tb_bank_stage6_allowners.sv:93: read payload cycle 34 lane 0
+       Time: 406000  Scope: tb_bank_stage6_allowners.tick
+FATAL: tb_bank_stage6_allowners.sv:130: last-word CE population mismatch status=00001
+       Time: 3040000  Scope: tb_bank_stage6_allowners
+ot-run: RAN on ot-agidock128 (unit oth-ubuntu-997631-1792090137): exit 0
