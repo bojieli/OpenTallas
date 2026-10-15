@@ -12,7 +12,7 @@ def sha(p):
 def verify(oracle, actual, catalog_path=None, fields_path=None, grant_path=None):
     oracle_report = json.loads((oracle / 'oracle.json').read_text())
     if grant_path is None:
-        raise ValueError('native acceptance requires actual central held grant receipt')
+        raise ValueError('functional comparison requires actual central held grant receipt')
     grant = json.loads(grant_path.read_text())
     if not grant['delivered'] or not grant['busy'] or grant['generation'] != 2 or grant['position'] != oracle_report['position']:
         raise ValueError('actual central grant state/position differs')
@@ -218,6 +218,9 @@ def verify(oracle, actual, catalog_path=None, fields_path=None, grant_path=None)
                         all(b['errors'] == 0 for b in r['quiescent_segment_boundaries']) for r in ranks)
                     and all(c['errors'] == 0 for c in collectives),
               'oracle_receipt_sha256': sha(oracle / 'oracle.json')}
+    report['native_qualified'] = False
+    report['native_qualification_blocked_by'] = ['Actual target die hierarchy/operation binding unproven', 'On-chip memory/FP/link/controller models remain in this functional harness']
+    report['required_native_coverage_gate'] = 'tools/native_operation_coverage.py'
     report['explicit_catalog_sha256'] = sha(catalog_path) if catalog_path else None
     report['resolved_field_catalog_sha256'] = sha(fields_path)
     report['actual_held_grant_receipt_sha256'] = sha(grant_path)
