@@ -397,7 +397,7 @@ def d2ds_binding():
                            phy_rst_n=['phy_rst_n'], svc=list(D2DS_SVC), lup=['link_up'], rec_tx=list(D2DS_REC_TX),
                            rec_rx=list(D2DS_REC_RX), lrc=['host_link_reset_req', 'host_recovery_clear'],
                            fwd_epoch=['fwd_epoch'], fwd_link_rst_n=['fwd_link_rst_n'], serdes_up=['serdes_up']),
-                sliced={f'ck{i}': 'ck0' for i in range(1, 5)},
+                sliced={},
                 classed={'por_n': 'by_design: package POR pad (off-chip signal)'})
 
 
@@ -1252,7 +1252,7 @@ def _d2ds_swap(m):
             continue
         eps = [e for e in eps if e[0] != 'lnk' and e != ('d2d_kv', 'ck') and e != ('ucie_rom', 'rst_n')]
         if bid == 'clk_core_c':
-            eps = eps + [('d2d_kv', f'ck{i}') for i in range(5)]
+            eps = eps + [('d2d_kv', 'ck0')]          # Q-LINK r2b 496b4daa1: one clock root ck (no ck_bank)
         if bid == 'd2d_fdi':
             bits = 1 + 1 + 583 + 1 + 583             # the native UCIe word (kv_native_phy splits the PHY side)
         out.append((bid, cl, bits, eps))
