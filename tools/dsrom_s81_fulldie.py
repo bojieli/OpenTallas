@@ -2925,6 +2925,7 @@ COLL_FACE_UM = 1036.8         # --suhc-1011 collective slab height floor (pin fa
 # 36ccf0cb0: 3 x 572.4 columns, 29 tiles); HC root split (5db4c7ec6 / 597e34cac, ds-1010.log 14:14): 3 x 575.992 columns
 SU_V2_UM = (1727.976, 6069.6)
 HC_V2_UM = (1727.976, 9640.0)
+HC_S_GROW_DOWN = 0.0            # explicit contract growth keeps the HC north edge fixed
 HC_T_UM = None                  # contract v12 sp_hc_t: the HC chain tails in the E-column floor slot below the corridor
 HC_T_COLS = 3                   # HC columns (one chain each); v12 hc_s <-> hc_t crossing buses per column
 HC_T_FWD, HC_T_RET = 1264, 1090   # per column: fd 1128 + fv 7 + rst 1 + cy 128 / rd 1082 + rv 8 (ot_s81_hc_cth ports)
@@ -4094,7 +4095,7 @@ def build_r8(variant=None):
         # --suhc-v2 n (s81die-1011/ctrl): the one HC in the freed slot ABOVE the corridor, facing the VM rows (order A puts
         # the VM at the corridor): VM row slots run straight across the VCH, the collective's 8,192-b y is ~2.5 mm
         # shorter than to the floor slot (hb_collective_t_hc_y_hc_s: no station spot over a 7,451 um path)
-        slab('hc_s', HC_V2_UM[0] * HC_V2_UM[1] / 1e6, hcx, c1, up(HC_V2_UM[0], GX), dom=SUHC_DOM)
+        slab('hc_s', HC_V2_UM[0] * HC_V2_UM[1] / 1e6, hcx, c1 - HC_S_GROW_DOWN, up(HC_V2_UM[0], GX), dom=SUHC_DOM)
         if HC_T_UM:
             # contract v12 (s81-die-iter 2026-10-12): the 64 x 740.88 half-octet slots + root row (17,240 um) exceed the
             # E column above the corridor (12,655.5 um, die = full 26 mm field); the chain tails (7 / 5 / 7 slots) stand
@@ -7679,6 +7680,43 @@ def align_station_jogs(m, rounds=2):
                 if ok_:
                     why_ = []
                     break
+            # A banded hard port can need a wider channel rather than a full
+            # tangential alignment. Move the terminal station away from the
+            # hard face and toward its load pins together. The Manhattan length
+            # may stay unchanged even though the normal gap grows. try_move
+            # preserves EVERY hard-ended bit length, station reach and legality;
+            # tgt_ok rechecks the actual per-bit channel cut (no waiver).
+            if why_ and ALIGN_EXT[0] and len(tgt) == 1:
+                normal = 1 - ax
+                for members, sg in cands:
+                    if len(members) != 1:
+                        continue
+                    nm, it = next(iter(members.items()))
+                    # Driver moves away from the load; load moves away from
+                    # the driver. Opposing straight faces give this sign.
+                    away = (-1.0 if fa in 'EN' else 1.0) * sg
+                    for nstep in range(1, 21):
+                        retreat = nstep * (GX if normal == 0 else GY)
+                        for tangent in (retreat, 2 * retreat, 0.5 * retreat):
+                            delta = [0.0, 0.0]
+                            delta[normal] = away * retreat
+                            delta[ax] = sg * math.copysign(tangent, d)
+                            snap = {n_: (i_.x, i_.y) for n_, i_ in members.items()}
+                            mv0 = dict(moved)
+                            w_ = try_move(members, *delta)
+                            if not w_ and tgt_ok():
+                                ok_ = True
+                                why_ = []
+                                break
+                            if not w_:
+                                for n_, (x_, y_) in snap.items():
+                                    by[n_].x, by[n_].y = x_, y_
+                                moved.clear()
+                                moved.update(mv0)
+                        if ok_:
+                            break
+                    if ok_:
+                        break
             if why_:
                 refused[r['bus']] = why_
         if len(moved) == n0:
@@ -9350,7 +9388,8 @@ def apply_options(a):
     _ASSIGNED_PIN_CACHE.clear()
     global SUHC_1011, SUHC_DOM, SUHC_HC_VM, VM_SLAB, COLL_SLAB_H
     COLL_SLAB_H = getattr(a, 'coll_slab_h', None)
-    global SU_V2_UM, HC_V2_UM, HROW_UM, HC_T_UM, P2_OUTLINE_UM, P2_SLAB_MM2
+    global SU_V2_UM, HC_V2_UM, HROW_UM, HC_T_UM, HC_S_GROW_DOWN, P2_OUTLINE_UM, P2_SLAB_MM2
+    HC_S_GROW_DOWN = 0.0
     if getattr(a, 'contract', None):
         # --contract (s81-die-iter 2026-10-12): slab outlines from results/arch/hier_contract_1011/s81.json (v3+): SU / HC v2
         # slabs (column channels), centre hard elements, VM slab (overrides --vm-slab), MTP hrow
@@ -9358,6 +9397,8 @@ def apply_options(a):
         def _o(n_):
             return (float(cslots_[n_]['outline']['w']), float(cslots_[n_]['outline']['h']))
         SU_V2_UM, HC_V2_UM = _o('sp_su_s'), _o('sp_hc_s')
+        HC_S_GROW_DOWN = float(cslots_['sp_hc_s'].get('grow_down_um', 0.0))
+        assert HC_S_GROW_DOWN >= 0.0, 'HC contract growth must preserve the north edge'
         HC_T_UM = _o('sp_hc_t') if 'sp_hc_t' in cslots_ else None
         if 'sp_p2' in cslots_:   # contract v13: draft-A P2 = xport + head + fadd16 tiles (prefix_path_hub dropped)
             P2_OUTLINE_UM = _o('sp_p2')

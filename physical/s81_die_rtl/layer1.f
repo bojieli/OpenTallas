@@ -60,3 +60,24 @@ physical/s81_pq_hier/pinned/rtl/hdc/v41x/ot_dsrom_aq12m.sv
 physical/s81_pq_hier/pinned/rtl/v41die/ot_v41_pqc_tiles.sv
 physical/s81_pq_hier/pinned/physical/dsrom_field_spine/ot_v41_pqc_tile_tops.sv
 physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v
+
+# Static VM: real 128-bank SRAM service, fixed-phase serial crossings, and engine 12.
+# Pin mismatches with older die/collective recipes remain errors; no legacy port adapter.
+rtl/dsrom_sys/s81_ph/vm/dsfd_sp_vm_static.sv
+rtl/dsrom_sys/s81_ph/vm/ot_s81_vm_x34.sv
+rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_core.sv
+rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_wsched.sv
+rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_wstage128.sv
+rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_wdispatch128.sv
+rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_rsched.sv
+rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_landing.sv
+rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static512_suhc.sv
+rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_suhc_return_map.sv
+rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_slice128_suhc.sv
+rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_suhc_fsr.sv
+rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_scatter.sv
+rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_relay128.sv
+rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_bank128.sv
+physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v
+rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_return.sv
+rtl/dsrom_sys/s81_ph/vm/dsfd_vm_seq_static.sv
