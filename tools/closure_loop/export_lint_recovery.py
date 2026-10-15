@@ -57,7 +57,11 @@ def prepare(request):
             raise ValueError('original frozen helper changed: ' + str(p))
         hashes[str(p)] = row['sha256']
     # Capture the actual completed verdict, including all measured post-SDC inputs.
-    for p in list((run / 'cl').glob('routed_ioref*')) + [Path(x) for x in j['metrics'].get('corner_sta', [])]:
+    measured = list((run / 'cl').glob('routed_ioref*'))
+    for directory in list(measured):
+        if directory.is_dir():
+            measured.extend(directory.rglob('*'))
+    for p in measured + [Path(x) for x in j['metrics'].get('corner_sta', [])]:
         if p.is_file():
             hashes[str(p)] = digest(p)
     for rel in j['metrics'].get('post_sdc', []) + j['metrics'].get('setup_post_sdc', []):

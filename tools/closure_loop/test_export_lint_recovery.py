@@ -21,6 +21,8 @@ class ExportLintRecovery(unittest.TestCase):
             (self.base / ('6_final.' + ext)).write_text('retained original ' + ext)
         (self.run / 'cl').mkdir()
         (self.run / 'cl/child_lint.py').write_text('original frozen lint')
+        (self.run / 'cl/routed_ioref.a1_meas').mkdir()
+        (self.run / 'cl/routed_ioref.a1_meas/app0.sdc').write_text('actual measured private SDC')
         (self.run / 'record').mkdir()
         (self.run / 'record/child_lint.json').write_text('{"verdict":"FAIL"}')
         self.j = dict(name='station', run=str(self.run), status='NEEDS_HUMAN', stage_key='collect',
@@ -55,6 +57,7 @@ class ExportLintRecovery(unittest.TestCase):
         manifest = json.loads((Path(rec['directory']) / 'inputs.json').read_text())
         for path in (self.base / '6_final.odb', self.base / '6_final.sdc', self.base / '6_final.spef',
                      self.run / 'cl/child_lint.py', self.run / 'cl/helper_overlay_plan.json',
+                     self.run / 'cl/routed_ioref.a1_meas/app0.sdc',
                      Path(rec['directory']) / 'child_lint.py'):
             old = path.read_bytes()
             path.write_bytes(old + b'changed')
