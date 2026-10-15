@@ -36,7 +36,8 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--work", type=Path, required=True)
     ap.add_argument("--jobs", type=int, default=8)
-    ap.add_argument("--mut", choices=["ROMREG", "LANE"])
+    ap.add_argument("--mut", choices=["ROMREG", "LANE", "X2"])
+    ap.add_argument("--bf-x2", action="store_true", help="qualify die BF x2 extension lane")
     ap.add_argument("--define", action="append", default=[], help="core leaf-set define (OT_PQ_*), both models")
     a = ap.parse_args()
     w = a.work.resolve(); w.mkdir(parents=True, exist_ok=True)
@@ -47,6 +48,8 @@ def main():
     for name, top in (("core", "ot_s81_pq_core_native"), ("die", "dsfd_sp_pq_n")):
         files = srcs + CORE_FILES + ([ROOT / "rtl/dsrom_sys/s81_die_bind/dsfd_sp_pq_n.sv"] if name == "die" else [])
         defs = ["+define+OT_PQ_ROM_PORTS"] + [f"+define+{d}" for d in a.define]
+        if name == "die" and a.bf_x2: defs.append("+define+DSFD_PQ_BF_X2")
+        if name == "die" and a.mut == "X2": defs.append("+define+DSFD_PQ_X2_MUT_SWAP")
         if name == "die" and a.mut == "ROMREG":
             defs.append("+define+DSFD_PQ_ROM_MUT_REG")
         if name == "die" and a.mut == "LANE":
@@ -57,7 +60,7 @@ def main():
         run(["make", "-C", md, "-f", f"V{name}.mk", f"-j{a.jobs}", f"V{name}__ALL.a", "OPT_FAST=-O1", "OPT_SLOW=-O0"],
             w / f"{name}.make.log")
         libs.append(md / f"V{name}__ALL.a")
-    run(["g++", "-std=c++20", "-O2", f"-I{vroot}/include", f"-I{vroot}/include/vltstd", f"-I{w / 'core'}", f"-I{w / 'die'}",
+    run(["g++", "-std=c++20", "-O2", *(["-DDSFD_PQ_BF_X2"] if a.bf_x2 else []), f"-I{vroot}/include", f"-I{vroot}/include/vltstd", f"-I{w / 'core'}", f"-I{w / 'die'}",
          ROOT / "rtl/test/dsrom_sys/tb_s81_pq_die_n.cpp", *libs,
          f"{vroot}/include/verilated.cpp", f"{vroot}/include/verilated_threads.cpp", "-pthread", "-o", w / "bench"], w / "link.log")
     rc = subprocess.run([str(w / "bench")], stdout=(w / "run.log").open("w"), stderr=subprocess.STDOUT).returncode

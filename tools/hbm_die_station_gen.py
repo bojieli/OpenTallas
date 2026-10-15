@@ -481,6 +481,7 @@ def main(argv=None):
     ap.add_argument('--ports', required=True)
     ap.add_argument('--out', required=True)
     ap.add_argument('--master', action='append')
+    ap.add_argument('--variant', default='', help='HBM generator preset (as tools/hbm_die_views.py --variant)')
     ap.add_argument('--margin', action='store_true',
                     help='owner margin rule (2026-10-06): every face pin of a meso crossing registered -- the FIFO input '
                          'captured at the pin on the write clock (ot_hbm_stn_meso RI=1, +1 cycle), the FIFO readout '
@@ -498,6 +499,9 @@ def main(argv=None):
     ap.add_argument('--plreg', action='store_true', help='meso FIFOs: registered read-pointer placement (PLREG=1, 0 cycles)')
     ap.add_argument('--rsplit', action='store_true', help='--margin meso FIFOs: half-select readout flops (RSPLIT=1, 0 cycles)')
     a = ap.parse_args(argv)
+    if a.variant:
+        import hbm_die_views as V_
+        V_.L.VARIANT = a.variant
     kw = dict(wchk=a.wchk, pin_stages=a.pin_stages, fdly=a.fdly, ldly=a.ldly, fwd_rc=a.fwd_rc, plreg=a.plreg, rsplit=a.rsplit, onreg=a.onreg)
     fcm = fc_map()
     pdir = Path(a.ports)

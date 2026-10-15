@@ -287,6 +287,134 @@ CHILD_PLAN = {
 }
 
 
+def auto_plan(c):
+    """plan of a child slot the generator binds by view (contract v13: c['view'] = the closed view directory): PG /
+    signal layers and the clock pin are READ from the view's LEF (highest signal layer over pins and OBS, the PG pins'
+    layer, the ck / clk pin's face and layer).  Without a view: the M5 leaf default, status says so."""
+    cell = c['cell']
+    if not c.get('view'):
+        return dict(pg='M5', strap='M6', sig='M5', ck=dict(pin='clk', face='W', layer='M4'), status=c.get('status', 'no view'))
+    txt = (ROOT / c['view'] / f'{cell}.lef').read_text()
+    body = txt[txt.index(f'MACRO {cell}'):]
+    sig, pg, ck = 1, 1, None
+    for m_ in re.finditer(r'\n\s+PIN\s+(\S+)(.*?)\n\s+END\s+\1', body, re.S):
+        lays = [int(x) for x in re.findall(r'LAYER\s+M(\d+)', m_.group(2))]
+        if not lays:
+            continue
+        if re.search(r'USE\s+(POWER|GROUND)', m_.group(2)):
+            pg = max(pg, max(lays))
+        else:
+            sig = max(sig, max(lays))
+    ob = re.search(r'\n\s+OBS(.*?)\n\s+END\b', body, re.S)
+    if ob:
+        sig = max([sig] + [int(x) for x in re.findall(r'LAYER\s+M(\d+)', ob.group(1))])
+    _w, _h, vpins = lef_face_pins(ROOT / c['view'] / f'{cell}.lef', cell)
+    for pn_ in ('ck', 'clk', 'clk_i', 'ck_i'):
+        ck = ck or next((dict(pin=p_['name'], face=p_['face'], layer=p_['layer']) for p_ in vpins if p_['name'] == pn_), None)
+    return dict(view=c['view'], auto_view=True, pg=f'M{pg}', strap=f'M{pg + 1}', sig=f'M{sig}',
+                ck=ck or dict(pin='ck', face='W', layer='M4'), status=c.get('status', f"CLOSED view {c['view']}"))
+
+
+def group_slots(con, m, version):
+    """contract v13: a cluster that is the UNION of several die slots (m['group_slots']: the VM8 CP cluster over the four
+    logical quarter slots).  Adds the cluster slot (kind parent) and its child tiles (the views' outlines, pins and
+    layers), re-parents the member slots (origins in the cluster frame; they stay as the die-face port carriers) and
+    drops the members' own stale sub-slots."""
+    for g in m.get('group_slots') or []:
+        mem = set(g['members'])
+        con['slots'] = [s_ for s_ in con['slots'] if s_.get('parent') not in mem]
+        x0, y0 = g['xy']
+        for s_ in con['slots']:
+            if s_['name'] in mem:
+                s_['parent'] = g['name']
+                s_['origin'] = dict(s_['origin'], x=round(s_['origin']['x'] - x0, 3), y=round(s_['origin']['y'] - y0, 3))
+                s_['notes'] = (s_.get('notes', '') + f"; logical quarter of {g['name']} (die-face port carrier; the logic "
+                               'is in the cluster tiles)').lstrip('; ')
+        con['slots'].append(dict(
+            name=g['name'], cell=g['cell'], kind='parent', parent='die', outline=dict(w=g['wh'][0], h=g['wh'][1]),
+            origin=dict(x=x0, y=y0, orient='R0'),
+            io_budget=dict(in_delay_frac=0.2, out_delay_frac=0.2, registered_in=True, registered_out=True),
+            clock_entry=dict(pin='ck', face='N', layer='M7'), pg_layer='M7', strap_layer='M8', signal_max_layer='M7',
+            version=version, notes=g['note']))
+        seen = set()
+        for c in g['children']:
+            plan = auto_plan(c)
+            vw, vh, vpins = lef_face_pins(ROOT / c['view'] / f"{c['cell']}.lef", c['cell'])
+            assert abs(vw - c['wh'][0]) < 0.006 and abs(vh - c['wh'][1]) < 0.006, ('group child is not its closed view', c['name'])
+            con['slots'].append(dict(
+                name=f"{g['name']}/{c['name']}", cell=c['cell'], kind='tile', parent=g['name'],
+                outline=dict(w=c['wh'][0], h=c['wh'][1]), origin=dict(x=c['xy'][0], y=c['xy'][1], orient=c['orient']),
+                io_budget=dict(in_delay_frac=0.2, out_delay_frac=0.2, registered_in=True, registered_out=True),
+                clock_entry=plan['ck'], pg_layer=plan['pg'], strap_layer=plan['strap'], signal_max_layer=plan['sig'],
+                version=version, notes=f"cluster tile; {plan['status']}",
+                **({'pins': vpins} if c['cell'] not in seen else {})))
+            seen.add(c['cell'])
+    return con
+
+
+def clock_delivery(con):
+    """contract v13: the die clock delivery rule (owner / coordinator 2026-10-13 09:25, el1013-pinreg-audit.log;
+    tools/hier_contract/pinreg_audit.py v2), per tile class.  R = the TT boundary mean of the bound view's
+    insertion.json (the sign-off clock reference).  The die delivers the clock at the tile's clock pin at phi - R, never
+    a common phase at the pins.  R <= 300 ps: the common clock level (hops between two such tiles: SKEW 90, 683.3 ps for
+    o_A + 0.76 ps/um x L + s_B); R > 300: an earlier trunk tap, its hops at SKEW 150 (OCV 2 x 5 % x R).  Boundary
+    spread > 80 ps is a tile defect.  A cell with no view / no insertion.json is UNMEASURED: it is planned on the common
+    level at its target insertion and may not be bound until its view carries insertion.json."""
+    sys.path.insert(0, str(ROOT / 'tools/hier_contract'))
+    import die_real_census as DRC
+    by_cell = defaultdict(list)
+    for s_ in con['slots']:
+        if s_['kind'] in ('element', 'tile'):
+            by_cell[s_['cell']].append(s_)
+    idx = DRC.view_index([ROOT], set(by_cell))
+    rows, n = [], Counter()
+    for cell, sl in sorted(by_cell.items()):
+        w, h = sl[0]['outline']['w'], sl[0]['outline']['h']
+        row = dict(cell=cell, instances=len(sl), clock_pin=(sl[0].get('clock_entry') or {}).get('pin'))
+        ins = None
+        for vd in idx.get(cell, []):
+            vl = DRC.lef_macros(vd / f'{cell}.lef', {cell}).get(cell)
+            if vl and vl['size'] and abs(vl['size'][0] - w) <= 0.006 and abs(vl['size'][1] - h) <= 0.006 and \
+                    (vd / 'insertion.json').exists():
+                ins = (vd, json.loads((vd / 'insertion.json').read_text()))
+                break
+        if ins is None:
+            tgt = sl[0].get('target_insertion_ps')
+            row.update(state='UNMEASURED', level='common (planned)', R_tt_ps=None, planned_R_ps=tgt,
+                       note='no bound view with insertion.json: the stream posts it with the view')
+            n['unmeasured'] += len(sl)
+        else:
+            vd, j = ins
+            b = {c_: (j.get(c_) or {}).get('boundary') or {} for c_ in ('tt', 'ff', 'ss')}
+            R = b['tt'].get('mean')
+            if R is None:
+                row.update(state='UNMEASURED', level='common (planned)', R_tt_ps=None,
+                           note=f'insertion.json of {vd.relative_to(ROOT)} has no TT boundary record')
+                n['unmeasured'] += len(sl)
+            else:
+                spread = round(b['tt']['max'] - b['tt']['min'], 1)
+                lvl = 'common' if R <= 300.0 else 'early tap'
+                row.update(state='measured', view=str(vd.relative_to(ROOT)), R_tt_ps=round(R, 1),
+                           R_ff_ps=b['ff'].get('mean'), R_ss_ps=b['ss'].get('mean'), spread_tt_ps=spread, level=lvl,
+                           deliver_at_pin_ps=round(-R, 1), hop_skew_ps=90 if lvl == 'common' else 150,
+                           boundary_sinks=b['tt'].get('n'),
+                           **({'defect': f'boundary spread {spread} ps > 80'} if spread > 80.0 else {}))
+                n[lvl] += len(sl)
+                n['spread_defect'] += len(sl) if spread > 80.0 else 0
+        rows.append(row)
+    return dict(
+        rule='the die delivers the clock at each tile clock pin at phi - R (R = TT boundary mean of the bound view\'s '
+             'insertion.json), never a common phase at the pins; R <= 300 ps: common level; R > 300 ps: earlier trunk tap; '
+             'boundary spread <= 80 ps; every bound view carries insertion.json',
+        hop=dict(equation='o_A + wire_ps_per_um x L + s_B <= period - setup_unc - SKEW;  o = clk->pin - R, s = setup@pin + R',
+                 period_ps=PERIOD_PS, setup_unc_ps=60, skew_same_level_ps=90, skew_cross_level_ps=150,
+                 budget_same_level_ps=round(PERIOD_PS - 60 - 90, 1), budget_cross_level_ps=round(PERIOD_PS - 60 - 150, 1),
+                 wire_ps_per_um=0.76, reach_um=500),
+        tile_defect='launch > 220 ps or capture > 190 ps beyond the boundary clock, spread > 80 ps, o + s > 683.3 ps, '
+                    'L - H < 100 ps; a pin-registered tile with reach < 500 um is not a defect (relay within its reach)',
+        instances=dict(n), cells=rows)
+
+
 def child_tiles(m):
     """{parent cell: [tile dicts]} from the generator's granted child slots (m['child_slots']); region entries (cluster
     logic strips) stay in the detail sidecar only"""
@@ -297,10 +425,10 @@ def child_tiles(m):
             if c.get('kind') == 'region':
                 continue
             cell = c['cell']
-            plan = CHILD_VIEWS.get(cell) or CHILD_PLAN[cell]
+            plan = CHILD_VIEWS.get(cell) or CHILD_PLAN.get(cell) or auto_plan(c)
             w, h = c['wh']
             pins = None
-            if cell in CHILD_VIEWS:
+            if cell in CHILD_VIEWS or plan.get('auto_view'):
                 vw, vh, vpins = lef_face_pins(ROOT / plan['view'] / f'{cell}.lef', cell)
                 assert abs(vw - w) < 1e-3 and abs(vh - h) < 1e-3, ('child slot is not its closed view', cell, (w, h), (vw, vh))
                 pins = vpins
@@ -758,10 +886,21 @@ def main(argv=None):
     detail = a.out.with_name(a.out.stem + '_detail.json')
     rec['schema'] = 'hbmdie-1011 detail (sidecar of the opentallas.hier_contract.v1 file ' + a.out.name + ')'
     detail.write_text(json.dumps(rec, indent=1) + '\n')
-    con = to_schema(rec, a)
+    con = group_slots(to_schema(rec, a), m, a.version)
+    rec['group_slots'] = m.get('group_slots') or []
     summary = None
     if a.base:
         con, summary = merge_base(con, json.loads(a.base.read_text()), a.version, a.note or f'v{a.version}')
+    if m['variant'].get('pin_reach'):
+        con['clock_delivery'] = clock_delivery(con)
+        con['hop_rule'] = dict(rule='register at the pin -> wire <= 500 um PIN TO PIN -> register at the pin, on every die net '
+                                    '(reset nets included: a registered tree with staged release)',
+                               reach_um=m['variant']['pin_reach'], measure='half perimeter of the net\'s pin centroids '
+                               '(tools/fp_margin_lint.py die_pin_hops; tools/hier_contract/pinreg_audit.py --case)',
+                               relay_family='hbfd_rly_<8|48|136|304|624|1136>_<we|ew|sn|ns> (24 closed tiles): 21.6 um deep '
+                               '(23.76 for N-S >= 304 b), data faces at 0.096 um a bit (2 tracks a bit, one layer); a bus '
+                               'wider than 1,136 b travels as tile-wide slices',
+                               lint=(m.get('phys_relays') or {}).get('pin_repair'))
     a.out.write_text(json.dumps(con, indent=1, ensure_ascii=False) + '\n')
     if a.base:      # the layer plan by hierarchy (idempotent), then the true date back (the tool stamps its own)
         sys.path.insert(0, str(ROOT / 'tools/hier_contract'))
