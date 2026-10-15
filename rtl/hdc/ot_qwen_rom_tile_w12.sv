@@ -117,6 +117,9 @@ module ot_qwen_rom_tile_logic_w12 #(
     //           (t_out feed-through) input with lanes 0 / 1 swapped.
     //   q14: with NDH 1 the TOREG t_out / t_vout pin registers are the leaf's feed-through registers (needs TOREG 1).
     parameter integer NDH = 0,
+    // q14 r9 (2026-10-14): NODE 0 = node-less tile (the block-last tile of a 16-leaf tree has no node role): no node
+    //   logic at all, n_a / n_b / n_va unread, n_y / n_vy / node fault constant 0; t_out via the TOREG pin registers.
+    parameter integer NODE = 1,
     parameter integer BMUT = 0,
     parameter integer NREG = 1,
     parameter integer KV_LOCAL = 1,
@@ -219,7 +222,7 @@ module ot_qwen_rom_tile_logic_w12 #(
     //: t_out pins lie in the leaf's W pin band), same edge and value
     wire [W*32-1:0]   t_out_nd;
     wire              t_vout_nd;
-    generate if (NDH != 0) begin : g_tond
+    generate if (NDH != 0 && NODE != 0) begin : g_tond
         assign t_out = t_out_nd;
         assign t_vout = t_vout_nd;
     end else if (TOREG != 0) begin : g_toreg
@@ -255,7 +258,13 @@ module ot_qwen_rom_tile_logic_w12 #(
 
     // -- upper tree node ---------------------------------------------------------
     wire node_fault;
-    generate if (NDH != 0) begin : g_ndh
+    generate if (NODE == 0) begin : g_nonode
+        assign t_out_nd = {W*32{1'b0}};
+        assign t_vout_nd = 1'b0;
+        assign n_y = {W*32{1'b0}};
+        assign n_vy = 1'b0;
+        assign node_fault = 1'b0;
+    end else if (NDH != 0) begin : g_ndh
         if (W != 16 || NREG != 1 || TREE_LAT != 7 || ANR != 1 || TOREG == 0) begin : g_bad
             initial $error("NDH needs W 16, NREG 1, TREE_LAT 7, ANR 1, TOREG 1 (the fixed hardened leaf ot_qwen_tile_node)");
         end
@@ -705,6 +714,9 @@ module ot_qwen_rom_tile_w12 #(
     // hardened leaf
     // q13 spec r5 leaf 2: NDH = the tree node as the hardened leaf ot_qwen_tile_node; BMUT 2 = its bench boundary mutant
     parameter integer NDH = 0,
+    // q14 r9 (2026-10-14): NODE 0 = node-less tile (the block-last tile of a 16-leaf tree has no node role): no node
+    //   logic at all, n_a / n_b / n_va unread, n_y / n_vy / node fault constant 0; t_out via the TOREG pin registers.
+    parameter integer NODE = 1,
     parameter integer BMUT = 0,
     parameter integer TOREG = 0,
     parameter integer TIDR = 0,
@@ -744,7 +756,7 @@ module ot_qwen_rom_tile_w12 #(
     wire [6:0]            kvs_r_addr;
     wire [511:0]          kvs_rd;
     ot_qwen_rom_tile_logic_w12 #(.NW(NW), .GT(GT), .SMIN(SMIN), .CODE_BANKS(CODE_BANKS), .KV_LOCAL(KV_SLICE),
-        .KV_VB(KV_VB), .KV_NH(KV_NH), .MEM_EXTRA(MEM_EXTRA), .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT), .FAST_ISSUE(FAST_ISSUE), .KV_PREP(KV_PREP), .MUL_LAT(MUL_LAT), .ROM_PIPE(ROM_PIPE), .ROM_ARELAY(ROM_ARELAY), .ROM_CAP2(ROM_CAP2), .ROM_CAPX(ROM_CAPX), .LRST(LRST), .ARPB(ARPB), .MPR(MPR), .HIER(HIER), .HIER_HARD(HIER_HARD), .TOREG(TOREG), .TIDR(TIDR), .LRR(LRR), .RPH(RPH), .RQR(RQR), .XTX(XTX), .ANR(ANR), .BAW(BAW), .NDH(NDH), .BMUT(BMUT)) u_logic (
+        .KV_VB(KV_VB), .KV_NH(KV_NH), .MEM_EXTRA(MEM_EXTRA), .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT), .FAST_ISSUE(FAST_ISSUE), .KV_PREP(KV_PREP), .MUL_LAT(MUL_LAT), .ROM_PIPE(ROM_PIPE), .ROM_ARELAY(ROM_ARELAY), .ROM_CAP2(ROM_CAP2), .ROM_CAPX(ROM_CAPX), .LRST(LRST), .ARPB(ARPB), .MPR(MPR), .HIER(HIER), .HIER_HARD(HIER_HARD), .TOREG(TOREG), .TIDR(TIDR), .LRR(LRR), .RPH(RPH), .RQR(RQR), .XTX(XTX), .ANR(ANR), .BAW(BAW), .NDH(NDH), .NODE(NODE), .BMUT(BMUT)) u_logic (
         .clk(clk), .rst_n(rst_n), .tile_id(tile_id), .ib_go(ib_go), .ib(ib), .xl(xl),
         .t_out(t_out), .t_vout(t_vout), .n_a(n_a), .n_b(n_b), .n_va(n_va), .n_y(n_y), .n_vy(n_vy), .fault(fault),
         .rom_ce(rom_ce), .rom_addr(rom_addr), .rom_addr_n(rom_addr_n), .rom_addr_b(rom_addr_b), .rom_req_m(rom_req_m), .rom_rd(rom_rd),
