@@ -1,5 +1,5 @@
 {
- "name": "qfd_slab_pair_add-pa4-COMMIT",
+ "name": "qfd_slab_pair_add-pa4-b0560c450",
  "block": "qfd_slab_pair_add",
  "ref_tile": true,
  "owner": "Claude:q15_compute_elem",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 24,
  "source": {
   "branch": "claude/q15-port-tiles",
-  "commit": "COMMIT",
+  "commit": "b0560c450b1ac33da6025f1fed23f9137a1330d6",
   "extra_paths": [
    "physical/qwen_port_tiles_1015",
    "rtl/qwen_split",
@@ -110,7 +110,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qfd_slab_pair_add/qfd_slab_pair_add-pa4-COMMIT"
+   "to": "results/rtl/ref_tile/qfd_slab_pair_add/qfd_slab_pair_add-pa4-b0560c450"
   }
  ],
  "cycles_added": 0,
