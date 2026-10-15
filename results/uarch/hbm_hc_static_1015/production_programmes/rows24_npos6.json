@@ -1,0 +1,108 @@
+{
+  "kind": "row",
+  "instruction_payload_bits": 51,
+  "field_lsb_width": {
+    "clear": [
+      0,
+      1
+    ],
+    "row_launch": [
+      1,
+      1
+    ],
+    "row_raw_read": [
+      2,
+      1
+    ],
+    "row_weight_slot": [
+      3,
+      1
+    ],
+    "row_id": [
+      4,
+      5
+    ],
+    "tail_launch": [
+      9,
+      1
+    ],
+    "sink_launch": [
+      10,
+      1
+    ],
+    "sink_capture": [
+      11,
+      1
+    ],
+    "norm_eps": [
+      12,
+      32
+    ],
+    "row_npos": [
+      44,
+      4
+    ],
+    "tail_position": [
+      48,
+      3
+    ]
+  },
+  "first_consumer_cycle": 7,
+  "programme_start_edge": 2,
+  "start_base": 0,
+  "start_limit": 1080,
+  "start_loops": 24,
+  "programme_pages": 2,
+  "global_PC_lsb": 223,
+  "npos": 6,
+  "tail_position": 0,
+  "calendar_profile": "early_candidate",
+  "sink_divisor": 7,
+  "sink_phase": 0,
+  "events_relative_consumer0": {
+    "launch": 0,
+    "raw_ss": [
+      160,
+      320,
+      480,
+      640,
+      800,
+      960
+    ],
+    "raw_row": [
+      264,
+      424,
+      584,
+      744,
+      904,
+      1064
+    ],
+    "results": [
+      269,
+      429,
+      589,
+      749,
+      909,
+      1069
+    ],
+    "next_row_earliest": 1080
+  },
+  "scope": "fixed HC component image; full layer and physical phase integration pending",
+  "hardware_parameter": {
+    "ot_hgi_hc_programme_mtp_static.ROW_LOOP": 1
+  },
+  "static_row_identity": "rawrow+ordinal/body_period; slotxorlooplowbit; clearonlyordinal/body_period==0",
+  "shape": {
+    "rows": 24,
+    "npos": 6,
+    "K": 20480
+  },
+  "row_period_cycles": 1080,
+  "all24rows_cycles": 25920,
+  "hostprogramme_reconfiguration_between_rows": false,
+  "sources": {
+    "body_lowerer": "db1a999c3",
+    "ordinal_transform": "ee0dab7dc"
+  },
+  "qualification": "programmednativeVMjoinRUNNING; imageusesmeasuredcomponentearlycalendar; physicalclockphaseandcanonicalupstreamstillrequired"
+}
