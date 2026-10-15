@@ -1,0 +1,55 @@
+{
+  "verdict": "PASS",
+  "source_base": "6588c611c",
+  "change": "Explicit pre-epoch reset assertion after BAL clock gate opens; stimulus/checks enabled only at unchanged release epoch13244ps. No DUT RTL change.",
+  "vehicle": "Full128 real SRAM die-name master READ_PIPE4 CAP_PIPE2 WSCATTER_PIPE0 (existing implicit default)",
+  "qualification": {
+    "base_seeds": [
+      1,
+      2
+    ],
+    "named_fault_modes": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8
+    ],
+    "rejected_mutants": [
+      "OT_VM_CAPL_MUT_WORD",
+      "OT_VM_WFC_MUT_PAIR",
+      "OT_VM_X43_MUT_PHASE"
+    ],
+    "ot_run_exit": 0,
+    "admission": {
+      "memory_GB": 16,
+      "threads": 8,
+      "host": "ot-agidock128",
+      "unit": "oth-ubuntu-918461-1792088128"
+    }
+  },
+  "original_failure": {
+    "path": "ot-agidock128:/srv/opentallas-scratch/claude/s81vm-elema/seq3",
+    "base_both": "FAIL bad1 cap1; all numerical and endpoint counts pass",
+    "observer": "All16 lane faults0 statusfault0 and all16 x34 faults1. Before epoch release, gated inner core tp0 while outer tp3. Original logs/cache preserved."
+  },
+  "raw_SRAM_observation": {
+    "source": "original_seqcore_verFiles.dat",
+    "method": "Read-only C++ harness linked against original immutable compiled archive; observes all128 bank wvq/waq/wmq immediately before each actual posedge; wvq directly wires u_sram.w_ce_in. Reconstruct row from physical bank/address and compare cy against external exp_c[row] labels.",
+    "reads": 2000,
+    "same_as_original_core_leaf_bench_default": true,
+    "actual_write_events": 69696,
+    "raw_write_edge_minus_source_label": 9,
+    "returned_commit_minus_source_label": 11,
+    "note": "exp_c includes scheduled lane offset, and LAND_AGE for landing rows. Direct source writes are SRAM P+9+lane, returned commit P+11+lane. No extra write latency inferred from returnedcommit output.",
+    "ot_run_exit": 0,
+    "unit": "oth-ubuntu-943853-1792088557"
+  },
+  "limitations": [
+    "Functional exactness only; no new physical timing qualification.",
+    "WSCATTER_PIPE1 requires separate source-bound qualification."
+  ]
+}

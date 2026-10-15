@@ -2,12 +2,12 @@
  "name": "dsfd_vm_static_landing_native_1015_r4-rst4-COMMIT",
  "block": "dsfd_vm_static_landing",
  "ref_tile": true,
- "owner": "claude:S-ELEM-A S81 VM owner",
+ "owner": "Codex:S81 VM native takeover1103",
  "purpose": "Native hardened VM control leaf: exact production-shape bench + observed DUT mutant, native CTS, one route.",
  "threads": 8,
  "peak_ram_gb": 16,
  "source": {
-  "branch": "claude/s81-vm-elema-1015",
+  "branch": "codex/s81-vm-control-recovery-1103",
   "commit": "COMMIT",
   "extra_paths": [
    "tools/s81_vm",
