@@ -1,0 +1,3164 @@
+{
+ "schema": "opentallas.hbm.actual-v15-source-contract.v1",
+ "status": "FAIL_UNBOUND_NATIVE_PORTS",
+ "source_sha256": {
+  "rtl/hbm_accel/generic/vm/static/hfd_hgi_vms_static.sv": "245612df8d04a05b058272472bcac14219ba71fd4002f96f0fa66d5c9ee48ed3",
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_static_vm_delivery.sv": "91b0265ba4c0ce452cffbfd7776d25922dc6747de8a0a34b28c7b2e54354f3f2",
+  "rtl/hbm_accel/control/hfd_ckgen.sv": "57f4afadd7cfc6ac10d0a83d26625970c10816ec752ac5c1462ae13de9ee8ca6"
+ },
+ "abi_sha256": "ab8f8e3239c2903d0d6e294911269ff6bdb3ce9be5e22d349b728f872d3d9246",
+ "instances": {
+  "hb_vms_SW": {
+   "master": "hfd_hgi_vms_static_SW",
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vms_static.sv",
+   "ports": {
+    "clk_bank": {
+     "direction": "input",
+     "bits": 8
+    },
+    "clk_hub": {
+     "direction": "input",
+     "bits": 1
+    },
+    "clk_ring": {
+     "direction": "input",
+     "bits": 2
+    },
+    "clk_replay": {
+     "direction": "input",
+     "bits": 1
+    },
+    "rst_n": {
+     "direction": "input",
+     "bits": 1
+    },
+    "cq": {
+     "direction": "input",
+     "bits": 2366
+    },
+    "cr": {
+     "direction": "output",
+     "bits": 1918
+    },
+    "client_seq": {
+     "direction": "input",
+     "bits": 16
+    },
+    "response_enable": {
+     "direction": "input",
+     "bits": 8
+    },
+    "response_seq": {
+     "direction": "input",
+     "bits": 16
+    },
+    "bank_enable": {
+     "direction": "input",
+     "bits": 8
+    },
+    "bank_client": {
+     "direction": "input",
+     "bits": 24
+    },
+    "hub_ring_enable": {
+     "direction": "input",
+     "bits": 2
+    },
+    "hub_ring_client": {
+     "direction": "input",
+     "bits": 6
+    },
+    "rslot_v": {
+     "direction": "input",
+     "bits": 8
+    },
+    "wslot_v": {
+     "direction": "input",
+     "bits": 8
+    },
+    "rslot": {
+     "direction": "input",
+     "bits": 16
+    },
+    "wslot": {
+     "direction": "input",
+     "bits": 24
+    },
+    "rq": {
+     "direction": "input",
+     "bits": 408
+    },
+    "rr": {
+     "direction": "output",
+     "bits": 6168
+    },
+    "wq": {
+     "direction": "input",
+     "bits": 2248
+    },
+    "wq_done": {
+     "direction": "output",
+     "bits": 8
+    },
+    "dq": {
+     "direction": "input",
+     "bits": 2248
+    },
+    "kq": {
+     "direction": "input",
+     "bits": 2248
+    },
+    "dq_done": {
+     "direction": "output",
+     "bits": 8
+    },
+    "kq_done": {
+     "direction": "output",
+     "bits": 8
+    },
+    "cw_in": {
+     "direction": "input",
+     "bits": 2224
+    },
+    "ccw_in": {
+     "direction": "input",
+     "bits": 2224
+    },
+    "cw_out": {
+     "direction": "output",
+     "bits": 2224
+    },
+    "ccw_out": {
+     "direction": "output",
+     "bits": 2224
+    },
+    "ring_tx_enable": {
+     "direction": "input",
+     "bits": 2
+    },
+    "ring_tx_source": {
+     "direction": "input",
+     "bits": 6
+    },
+    "replay_enable": {
+     "direction": "input",
+     "bits": 1
+    },
+    "replay_source": {
+     "direction": "input",
+     "bits": 1
+    },
+    "bank_status": {
+     "direction": "output",
+     "bits": 144
+    },
+    "hub_status": {
+     "direction": "output",
+     "bits": 3
+    },
+    "mirror_busy": {
+     "direction": "output",
+     "bits": 2
+    },
+    "vmstat": {
+     "direction": "output",
+     "bits": 19
+    },
+    "ring_fault": {
+     "direction": "output",
+     "bits": 3
+    }
+   }
+  },
+  "delivery_SW": {
+   "master": "ot_hbm_svc_static_vm_delivery",
+   "source": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_static_vm_delivery.sv",
+   "ports": {
+    "clk": {
+     "direction": "input",
+     "bits": 1
+    },
+    "rst_n": {
+     "direction": "input",
+     "bits": 1
+    },
+    "begin_v": {
+     "direction": "input",
+     "bits": 1
+    },
+    "begin_bank": {
+     "direction": "input",
+     "bits": 1
+    },
+    "begin_epoch": {
+     "direction": "input",
+     "bits": 16
+    },
+    "fill_v": {
+     "direction": "input",
+     "bits": 32
+    },
+    "fill_bank": {
+     "direction": "input",
+     "bits": 32
+    },
+    "fill_slot": {
+     "direction": "input",
+     "bits": 192
+    },
+    "fill_epoch": {
+     "direction": "input",
+     "bits": 512
+    },
+    "fill_data": {
+     "direction": "input",
+     "bits": 8192
+    },
+    "block_ready": {
+     "direction": "output",
+     "bits": 2
+    },
+    "start": {
+     "direction": "input",
+     "bits": 1
+    },
+    "start_bank": {
+     "direction": "input",
+     "bits": 1
+    },
+    "start_epoch": {
+     "direction": "input",
+     "bits": 16
+    },
+    "start_base_sector": {
+     "direction": "input",
+     "bits": 16
+    },
+    "dq": {
+     "direction": "output",
+     "bits": 2248
+    },
+    "busy": {
+     "direction": "output",
+     "bits": 1
+    },
+    "fault": {
+     "direction": "output",
+     "bits": 1
+    }
+   }
+  },
+  "hb_vms_SE": {
+   "master": "hfd_hgi_vms_static_SE",
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vms_static.sv",
+   "ports": {
+    "clk_bank": {
+     "direction": "input",
+     "bits": 8
+    },
+    "clk_hub": {
+     "direction": "input",
+     "bits": 1
+    },
+    "clk_ring": {
+     "direction": "input",
+     "bits": 2
+    },
+    "clk_replay": {
+     "direction": "input",
+     "bits": 1
+    },
+    "rst_n": {
+     "direction": "input",
+     "bits": 1
+    },
+    "client_seq": {
+     "direction": "input",
+     "bits": 2
+    },
+    "response_enable": {
+     "direction": "input",
+     "bits": 1
+    },
+    "response_seq": {
+     "direction": "input",
+     "bits": 2
+    },
+    "bank_enable": {
+     "direction": "input",
+     "bits": 8
+    },
+    "bank_client": {
+     "direction": "input",
+     "bits": 8
+    },
+    "hub_ring_enable": {
+     "direction": "input",
+     "bits": 2
+    },
+    "hub_ring_client": {
+     "direction": "input",
+     "bits": 2
+    },
+    "rslot_v": {
+     "direction": "input",
+     "bits": 8
+    },
+    "wslot_v": {
+     "direction": "input",
+     "bits": 8
+    },
+    "rslot": {
+     "direction": "input",
+     "bits": 16
+    },
+    "wslot": {
+     "direction": "input",
+     "bits": 24
+    },
+    "rq": {
+     "direction": "input",
+     "bits": 408
+    },
+    "rr": {
+     "direction": "output",
+     "bits": 6168
+    },
+    "wq": {
+     "direction": "input",
+     "bits": 2248
+    },
+    "wq_done": {
+     "direction": "output",
+     "bits": 8
+    },
+    "dq": {
+     "direction": "input",
+     "bits": 2248
+    },
+    "kq": {
+     "direction": "input",
+     "bits": 2248
+    },
+    "dq_done": {
+     "direction": "output",
+     "bits": 8
+    },
+    "kq_done": {
+     "direction": "output",
+     "bits": 8
+    },
+    "cw_in": {
+     "direction": "input",
+     "bits": 2224
+    },
+    "ccw_in": {
+     "direction": "input",
+     "bits": 2224
+    },
+    "cw_out": {
+     "direction": "output",
+     "bits": 2224
+    },
+    "ccw_out": {
+     "direction": "output",
+     "bits": 2224
+    },
+    "ring_tx_enable": {
+     "direction": "input",
+     "bits": 2
+    },
+    "ring_tx_source": {
+     "direction": "input",
+     "bits": 6
+    },
+    "replay_enable": {
+     "direction": "input",
+     "bits": 1
+    },
+    "replay_source": {
+     "direction": "input",
+     "bits": 1
+    },
+    "bank_status": {
+     "direction": "output",
+     "bits": 144
+    },
+    "hub_status": {
+     "direction": "output",
+     "bits": 3
+    },
+    "mirror_busy": {
+     "direction": "output",
+     "bits": 2
+    },
+    "vmstat": {
+     "direction": "output",
+     "bits": 19
+    },
+    "ring_fault": {
+     "direction": "output",
+     "bits": 3
+    }
+   }
+  },
+  "delivery_SE": {
+   "master": "ot_hbm_svc_static_vm_delivery",
+   "source": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_static_vm_delivery.sv",
+   "ports": {
+    "clk": {
+     "direction": "input",
+     "bits": 1
+    },
+    "rst_n": {
+     "direction": "input",
+     "bits": 1
+    },
+    "begin_v": {
+     "direction": "input",
+     "bits": 1
+    },
+    "begin_bank": {
+     "direction": "input",
+     "bits": 1
+    },
+    "begin_epoch": {
+     "direction": "input",
+     "bits": 16
+    },
+    "fill_v": {
+     "direction": "input",
+     "bits": 32
+    },
+    "fill_bank": {
+     "direction": "input",
+     "bits": 32
+    },
+    "fill_slot": {
+     "direction": "input",
+     "bits": 192
+    },
+    "fill_epoch": {
+     "direction": "input",
+     "bits": 512
+    },
+    "fill_data": {
+     "direction": "input",
+     "bits": 8192
+    },
+    "block_ready": {
+     "direction": "output",
+     "bits": 2
+    },
+    "start": {
+     "direction": "input",
+     "bits": 1
+    },
+    "start_bank": {
+     "direction": "input",
+     "bits": 1
+    },
+    "start_epoch": {
+     "direction": "input",
+     "bits": 16
+    },
+    "start_base_sector": {
+     "direction": "input",
+     "bits": 16
+    },
+    "dq": {
+     "direction": "output",
+     "bits": 2248
+    },
+    "busy": {
+     "direction": "output",
+     "bits": 1
+    },
+    "fault": {
+     "direction": "output",
+     "bits": 1
+    }
+   }
+  },
+  "hb_vms_NW": {
+   "master": "hfd_hgi_vms_static_NW",
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vms_static.sv",
+   "ports": {
+    "clk_bank": {
+     "direction": "input",
+     "bits": 8
+    },
+    "clk_hub": {
+     "direction": "input",
+     "bits": 1
+    },
+    "clk_ring": {
+     "direction": "input",
+     "bits": 2
+    },
+    "clk_replay": {
+     "direction": "input",
+     "bits": 1
+    },
+    "rst_n": {
+     "direction": "input",
+     "bits": 1
+    },
+    "cq": {
+     "direction": "input",
+     "bits": 1352
+    },
+    "cr": {
+     "direction": "output",
+     "bits": 1096
+    },
+    "client_seq": {
+     "direction": "input",
+     "bits": 10
+    },
+    "response_enable": {
+     "direction": "input",
+     "bits": 5
+    },
+    "response_seq": {
+     "direction": "input",
+     "bits": 10
+    },
+    "bank_enable": {
+     "direction": "input",
+     "bits": 8
+    },
+    "bank_client": {
+     "direction": "input",
+     "bits": 24
+    },
+    "hub_ring_enable": {
+     "direction": "input",
+     "bits": 2
+    },
+    "hub_ring_client": {
+     "direction": "input",
+     "bits": 6
+    },
+    "rslot_v": {
+     "direction": "input",
+     "bits": 8
+    },
+    "wslot_v": {
+     "direction": "input",
+     "bits": 8
+    },
+    "rslot": {
+     "direction": "input",
+     "bits": 24
+    },
+    "wslot": {
+     "direction": "input",
+     "bits": 24
+    },
+    "rq": {
+     "direction": "input",
+     "bits": 680
+    },
+    "rr": {
+     "direction": "output",
+     "bits": 10280
+    },
+    "wq": {
+     "direction": "input",
+     "bits": 6744
+    },
+    "wq_done": {
+     "direction": "output",
+     "bits": 24
+    },
+    "dq": {
+     "direction": "input",
+     "bits": 2248
+    },
+    "kq": {
+     "direction": "input",
+     "bits": 2248
+    },
+    "dq_done": {
+     "direction": "output",
+     "bits": 8
+    },
+    "kq_done": {
+     "direction": "output",
+     "bits": 8
+    },
+    "cw_in": {
+     "direction": "input",
+     "bits": 2224
+    },
+    "ccw_in": {
+     "direction": "input",
+     "bits": 2224
+    },
+    "cw_out": {
+     "direction": "output",
+     "bits": 2224
+    },
+    "ccw_out": {
+     "direction": "output",
+     "bits": 2224
+    },
+    "ring_tx_enable": {
+     "direction": "input",
+     "bits": 2
+    },
+    "ring_tx_source": {
+     "direction": "input",
+     "bits": 6
+    },
+    "replay_enable": {
+     "direction": "input",
+     "bits": 1
+    },
+    "replay_source": {
+     "direction": "input",
+     "bits": 1
+    },
+    "bank_status": {
+     "direction": "output",
+     "bits": 144
+    },
+    "hub_status": {
+     "direction": "output",
+     "bits": 3
+    },
+    "mirror_busy": {
+     "direction": "output",
+     "bits": 2
+    },
+    "vmstat": {
+     "direction": "output",
+     "bits": 19
+    },
+    "ring_fault": {
+     "direction": "output",
+     "bits": 3
+    }
+   }
+  },
+  "delivery_NW": {
+   "master": "ot_hbm_svc_static_vm_delivery",
+   "source": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_static_vm_delivery.sv",
+   "ports": {
+    "clk": {
+     "direction": "input",
+     "bits": 1
+    },
+    "rst_n": {
+     "direction": "input",
+     "bits": 1
+    },
+    "begin_v": {
+     "direction": "input",
+     "bits": 1
+    },
+    "begin_bank": {
+     "direction": "input",
+     "bits": 1
+    },
+    "begin_epoch": {
+     "direction": "input",
+     "bits": 16
+    },
+    "fill_v": {
+     "direction": "input",
+     "bits": 32
+    },
+    "fill_bank": {
+     "direction": "input",
+     "bits": 32
+    },
+    "fill_slot": {
+     "direction": "input",
+     "bits": 192
+    },
+    "fill_epoch": {
+     "direction": "input",
+     "bits": 512
+    },
+    "fill_data": {
+     "direction": "input",
+     "bits": 8192
+    },
+    "block_ready": {
+     "direction": "output",
+     "bits": 2
+    },
+    "start": {
+     "direction": "input",
+     "bits": 1
+    },
+    "start_bank": {
+     "direction": "input",
+     "bits": 1
+    },
+    "start_epoch": {
+     "direction": "input",
+     "bits": 16
+    },
+    "start_base_sector": {
+     "direction": "input",
+     "bits": 16
+    },
+    "dq": {
+     "direction": "output",
+     "bits": 2248
+    },
+    "busy": {
+     "direction": "output",
+     "bits": 1
+    },
+    "fault": {
+     "direction": "output",
+     "bits": 1
+    }
+   }
+  },
+  "hb_vms_NE": {
+   "master": "hfd_hgi_vms_static_NE",
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vms_static.sv",
+   "ports": {
+    "clk_bank": {
+     "direction": "input",
+     "bits": 8
+    },
+    "clk_hub": {
+     "direction": "input",
+     "bits": 1
+    },
+    "clk_ring": {
+     "direction": "input",
+     "bits": 2
+    },
+    "clk_replay": {
+     "direction": "input",
+     "bits": 1
+    },
+    "rst_n": {
+     "direction": "input",
+     "bits": 1
+    },
+    "client_seq": {
+     "direction": "input",
+     "bits": 2
+    },
+    "response_enable": {
+     "direction": "input",
+     "bits": 1
+    },
+    "response_seq": {
+     "direction": "input",
+     "bits": 2
+    },
+    "bank_enable": {
+     "direction": "input",
+     "bits": 8
+    },
+    "bank_client": {
+     "direction": "input",
+     "bits": 8
+    },
+    "hub_ring_enable": {
+     "direction": "input",
+     "bits": 2
+    },
+    "hub_ring_client": {
+     "direction": "input",
+     "bits": 2
+    },
+    "rslot_v": {
+     "direction": "input",
+     "bits": 8
+    },
+    "wslot_v": {
+     "direction": "input",
+     "bits": 8
+    },
+    "rslot": {
+     "direction": "input",
+     "bits": 24
+    },
+    "wslot": {
+     "direction": "input",
+     "bits": 24
+    },
+    "rq": {
+     "direction": "input",
+     "bits": 680
+    },
+    "rr": {
+     "direction": "output",
+     "bits": 10280
+    },
+    "wq": {
+     "direction": "input",
+     "bits": 6744
+    },
+    "wq_done": {
+     "direction": "output",
+     "bits": 24
+    },
+    "dq": {
+     "direction": "input",
+     "bits": 2248
+    },
+    "kq": {
+     "direction": "input",
+     "bits": 2248
+    },
+    "dq_done": {
+     "direction": "output",
+     "bits": 8
+    },
+    "kq_done": {
+     "direction": "output",
+     "bits": 8
+    },
+    "cw_in": {
+     "direction": "input",
+     "bits": 2224
+    },
+    "ccw_in": {
+     "direction": "input",
+     "bits": 2224
+    },
+    "cw_out": {
+     "direction": "output",
+     "bits": 2224
+    },
+    "ccw_out": {
+     "direction": "output",
+     "bits": 2224
+    },
+    "ring_tx_enable": {
+     "direction": "input",
+     "bits": 2
+    },
+    "ring_tx_source": {
+     "direction": "input",
+     "bits": 6
+    },
+    "replay_enable": {
+     "direction": "input",
+     "bits": 1
+    },
+    "replay_source": {
+     "direction": "input",
+     "bits": 1
+    },
+    "bank_status": {
+     "direction": "output",
+     "bits": 144
+    },
+    "hub_status": {
+     "direction": "output",
+     "bits": 3
+    },
+    "mirror_busy": {
+     "direction": "output",
+     "bits": 2
+    },
+    "vmstat": {
+     "direction": "output",
+     "bits": 19
+    },
+    "ring_fault": {
+     "direction": "output",
+     "bits": 3
+    }
+   }
+  },
+  "delivery_NE": {
+   "master": "ot_hbm_svc_static_vm_delivery",
+   "source": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_static_vm_delivery.sv",
+   "ports": {
+    "clk": {
+     "direction": "input",
+     "bits": 1
+    },
+    "rst_n": {
+     "direction": "input",
+     "bits": 1
+    },
+    "begin_v": {
+     "direction": "input",
+     "bits": 1
+    },
+    "begin_bank": {
+     "direction": "input",
+     "bits": 1
+    },
+    "begin_epoch": {
+     "direction": "input",
+     "bits": 16
+    },
+    "fill_v": {
+     "direction": "input",
+     "bits": 32
+    },
+    "fill_bank": {
+     "direction": "input",
+     "bits": 32
+    },
+    "fill_slot": {
+     "direction": "input",
+     "bits": 192
+    },
+    "fill_epoch": {
+     "direction": "input",
+     "bits": 512
+    },
+    "fill_data": {
+     "direction": "input",
+     "bits": 8192
+    },
+    "block_ready": {
+     "direction": "output",
+     "bits": 2
+    },
+    "start": {
+     "direction": "input",
+     "bits": 1
+    },
+    "start_bank": {
+     "direction": "input",
+     "bits": 1
+    },
+    "start_epoch": {
+     "direction": "input",
+     "bits": 16
+    },
+    "start_base_sector": {
+     "direction": "input",
+     "bits": 16
+    },
+    "dq": {
+     "direction": "output",
+     "bits": 2248
+    },
+    "busy": {
+     "direction": "output",
+     "bits": 1
+    },
+    "fault": {
+     "direction": "output",
+     "bits": 1
+    }
+   }
+  },
+  "hb_ckgen": {
+   "master": "hfd_ckgen",
+   "source": "rtl/hbm_accel/control/hfd_ckgen.sv",
+   "ports": {
+    "refclk": {
+     "direction": "input",
+     "bits": 1
+    },
+    "por_n": {
+     "direction": "input",
+     "bits": 1
+    },
+    "pll_stream": {
+     "direction": "output",
+     "bits": 1
+    },
+    "pll_serial": {
+     "direction": "output",
+     "bits": 1
+    },
+    "pll_hbm": {
+     "direction": "output",
+     "bits": 1
+    },
+    "pll_link": {
+     "direction": "output",
+     "bits": 1
+    },
+    "por_stream": {
+     "direction": "output",
+     "bits": 1
+    },
+    "por_serial": {
+     "direction": "output",
+     "bits": 1
+    },
+    "por_hbm": {
+     "direction": "output",
+     "bits": 1
+    },
+    "por_link": {
+     "direction": "output",
+     "bits": 1
+    }
+   }
+  }
+ },
+ "known_actual_edges": [
+  {
+   "name": "ring_cw_SW",
+   "bits": 2224,
+   "source": [
+    "hb_vms_SW",
+    "cw_out"
+   ],
+   "sink": [
+    "hb_vms_SE",
+    "cw_in"
+   ],
+   "clock": "stream",
+   "ready_or_credit": false
+  },
+  {
+   "name": "ring_ccw_SW",
+   "bits": 2224,
+   "source": [
+    "hb_vms_SW",
+    "ccw_out"
+   ],
+   "sink": [
+    "hb_vms_NW",
+    "ccw_in"
+   ],
+   "clock": "stream",
+   "ready_or_credit": false
+  },
+  {
+   "name": "service_dq_SW",
+   "bits": 2248,
+   "source": [
+    "delivery_SW",
+    "dq"
+   ],
+   "sink": [
+    "hb_vms_SW",
+    "dq"
+   ],
+   "clock": "stream",
+   "ready_or_credit": false
+  },
+  {
+   "name": "ring_cw_SE",
+   "bits": 2224,
+   "source": [
+    "hb_vms_SE",
+    "cw_out"
+   ],
+   "sink": [
+    "hb_vms_NE",
+    "cw_in"
+   ],
+   "clock": "stream",
+   "ready_or_credit": false
+  },
+  {
+   "name": "ring_ccw_SE",
+   "bits": 2224,
+   "source": [
+    "hb_vms_SE",
+    "ccw_out"
+   ],
+   "sink": [
+    "hb_vms_SW",
+    "ccw_in"
+   ],
+   "clock": "stream",
+   "ready_or_credit": false
+  },
+  {
+   "name": "service_dq_SE",
+   "bits": 2248,
+   "source": [
+    "delivery_SE",
+    "dq"
+   ],
+   "sink": [
+    "hb_vms_SE",
+    "dq"
+   ],
+   "clock": "stream",
+   "ready_or_credit": false
+  },
+  {
+   "name": "ring_cw_NE",
+   "bits": 2224,
+   "source": [
+    "hb_vms_NE",
+    "cw_out"
+   ],
+   "sink": [
+    "hb_vms_NW",
+    "cw_in"
+   ],
+   "clock": "stream",
+   "ready_or_credit": false
+  },
+  {
+   "name": "ring_ccw_NE",
+   "bits": 2224,
+   "source": [
+    "hb_vms_NE",
+    "ccw_out"
+   ],
+   "sink": [
+    "hb_vms_SE",
+    "ccw_in"
+   ],
+   "clock": "stream",
+   "ready_or_credit": false
+  },
+  {
+   "name": "service_dq_NE",
+   "bits": 2248,
+   "source": [
+    "delivery_NE",
+    "dq"
+   ],
+   "sink": [
+    "hb_vms_NE",
+    "dq"
+   ],
+   "clock": "stream",
+   "ready_or_credit": false
+  },
+  {
+   "name": "ring_cw_NW",
+   "bits": 2224,
+   "source": [
+    "hb_vms_NW",
+    "cw_out"
+   ],
+   "sink": [
+    "hb_vms_SW",
+    "cw_in"
+   ],
+   "clock": "stream",
+   "ready_or_credit": false
+  },
+  {
+   "name": "ring_ccw_NW",
+   "bits": 2224,
+   "source": [
+    "hb_vms_NW",
+    "ccw_out"
+   ],
+   "sink": [
+    "hb_vms_NE",
+    "ccw_in"
+   ],
+   "clock": "stream",
+   "ready_or_credit": false
+  },
+  {
+   "name": "service_dq_NW",
+   "bits": 2248,
+   "source": [
+    "delivery_NW",
+    "dq"
+   ],
+   "sink": [
+    "hb_vms_NW",
+    "dq"
+   ],
+   "clock": "stream",
+   "ready_or_credit": false
+  }
+ ],
+ "clock_roots": [
+  {
+   "instance": "hb_vms_SW",
+   "port": "clk_bank",
+   "bit": 0,
+   "source": [
+    "hb_ckgen",
+    "pll_stream"
+   ],
+   "physical_insertion_reference": null,
+   "status": "NEEDS_REAL_CTS_VIEW"
+  },
+  {
+   "instance": "hb_vms_SW",
+   "port": "clk_bank",
+   "bit": 1,
+   "source": [
+    "hb_ckgen",
+    "pll_stream"
+   ],
+   "physical_insertion_reference": null,
+   "status": "NEEDS_REAL_CTS_VIEW"
+  },
+  {
+   "instance": "hb_vms_SW",
+   "port": "clk_bank",
+   "bit": 2,
+   "source": [
+    "hb_ckgen",
+    "pll_stream"
+   ],
+   "physical_insertion_reference": null,
+   "status": "NEEDS_REAL_CTS_VIEW"
+  },
+  {
+   "instance": "hb_vms_SW",
+   "port": "clk_bank",
+   "bit": 3,
+   "source": [
+    "hb_ckgen",
+    "pll_stream"
+   ],
+   "physical_insertion_reference": null,
+   "status": "NEEDS_REAL_CTS_VIEW"
+  },
+  {
+   "instance": "hb_vms_SW",
+   "port": "clk_bank",
+   "bit": 4,
+   "source": [
+    "hb_ckgen",
+    "pll_stream"
+   ],
+   "physical_insertion_reference": null,
+   "status": "NEEDS_REAL_CTS_VIEW"
+  },
+  {
+   "instance": "hb_vms_SW",
+   "port": "clk_bank",
+   "bit": 5,
+   "source": [
+    "hb_ckgen",
+    "pll_stream"
+   ],
+   "physical_insertion_reference": null,
+   "status": "NEEDS_REAL_CTS_VIEW"
+  },
+  {
+   "instance": "hb_vms_SW",
+   "port": "clk_bank",
+   "bit": 6,
+   "source": [
+    "hb_ckgen",
+    "pll_stream"
+   ],
+   "physical_insertion_reference": null,
+   "status": "NEEDS_REAL_CTS_VIEW"
+  },
+  {
+   "instance": "hb_vms_SW",
+   "port": "clk_bank",
+   "bit": 7,
+   "source": [
+    "hb_ckgen",
+    "pll_stream"
+   ],
+   "physical_insertion_reference": null,
+   "status": "NEEDS_REAL_CTS_VIEW"
+  },
+  {
+   "instance": "hb_vms_SW",
+   "port": "clk_hub",
+   "bit": 0,
+   "source": [
+    "hb_ckgen",
+    "pll_stream"
+   ],
+   "physical_insertion_reference": null,
+   "status": "NEEDS_REAL_CTS_VIEW"
+  },
+  {
+   "instance": "hb_vms_SW",
+   "port": "clk_ring",
+   "bit": 0,
+   "source": [
+    "hb_ckgen",
+    "pll_stream"
+   ],
+   "physical_insertion_reference": null,
+   "status": "NEEDS_REAL_CTS_VIEW"
+  },
+  {
+   "instance": "hb_vms_SW",
+   "port": "clk_ring",
+   "bit": 1,
+   "source": [
+    "hb_ckgen",
+    "pll_stream"
+   ],
+   "physical_insertion_reference": null,
+   "status": "NEEDS_REAL_CTS_VIEW"
+  },
+  {
+   "instance": "hb_vms_SW",
+   "port": "clk_replay",
+   "bit": 0,
+   "source": [
+    "hb_ckgen",
+    "pll_stream"
+   ],
+   "physical_insertion_reference": null,
+   "status": "NEEDS_REAL_CTS_VIEW"
+  },
+  {
+   "instance": "delivery_SW",
+   "port": "clk",
+   "bit": 0,
+   "source": [
+    "hb_ckgen",
+    "pll_stream"
+   ],
+   "physical_insertion_reference": null,
+   "status": "NEEDS_REAL_CTS_VIEW"
+  },
+  {
+   "instance": "hb_vms_SE",
+   "port": "clk_bank",
+   "bit": 0,
+   "source": [
+    "hb_ckgen",
+    "pll_stream"
+   ],
+   "physical_insertion_reference": null,
+   "status": "NEEDS_REAL_CTS_VIEW"
+  },
+  {
+   "instance": "hb_vms_SE",
+   "port": "clk_bank",
+   "bit": 1,
+   "source": [
+    "hb_ckgen",
+    "pll_stream"
+   ],
+   "physical_insertion_reference": null,
+   "status": "NEEDS_REAL_CTS_VIEW"
+  },
+  {
+   "instance": "hb_vms_SE",
+   "port": "clk_bank",
+   "bit": 2,
+   "source": [
+    "hb_ckgen",
+    "pll_stream"
+   ],
+   "physical_insertion_reference": null,
+   "status": "NEEDS_REAL_CTS_VIEW"
+  },
+  {
+   "instance": "hb_vms_SE",
+   "port": "clk_bank",
+   "bit": 3,
+   "source": [
+    "hb_ckgen",
+    "pll_stream"
+   ],
+   "physical_insertion_reference": null,
+   "status": "NEEDS_REAL_CTS_VIEW"
+  },
+  {
+   "instance": "hb_vms_SE",
+   "port": "clk_bank",
+   "bit": 4,
+   "source": [
+    "hb_ckgen",
+    "pll_stream"
+   ],
+   "physical_insertion_reference": null,
+   "status": "NEEDS_REAL_CTS_VIEW"
+  },
+  {
+   "instance": "hb_vms_SE",
+   "port": "clk_bank",
+   "bit": 5,
+   "source": [
+    "hb_ckgen",
+    "pll_stream"
+   ],
+   "physical_insertion_reference": null,
+   "status": "NEEDS_REAL_CTS_VIEW"
+  },
+  {
+   "instance": "hb_vms_SE",
+   "port": "clk_bank",
+   "bit": 6,
+   "source": [
+    "hb_ckgen",
+    "pll_stream"
+   ],
+   "physical_insertion_reference": null,
+   "status": "NEEDS_REAL_CTS_VIEW"
+  },
+  {
+   "instance": "hb_vms_SE",
+   "port": "clk_bank",
+   "bit": 7,
+   "source": [
+    "hb_ckgen",
+    "pll_stream"
+   ],
+   "physical_insertion_reference": null,
+   "status": "NEEDS_REAL_CTS_VIEW"
+  },
+  {
+   "instance": "hb_vms_SE",
+   "port": "clk_hub",
+   "bit": 0,
+   "source": [
+    "hb_ckgen",
+    "pll_stream"
+   ],
+   "physical_insertion_reference": null,
+   "status": "NEEDS_REAL_CTS_VIEW"
+  },
+  {
+   "instance": "hb_vms_SE",
+   "port": "clk_ring",
+   "bit": 0,
+   "source": [
+    "hb_ckgen",
+    "pll_stream"
+   ],
+   "physical_insertion_reference": null,
+   "status": "NEEDS_REAL_CTS_VIEW"
+  },
+  {
+   "instance": "hb_vms_SE",
+   "port": "clk_ring",
+   "bit": 1,
+   "source": [
+    "hb_ckgen",
+    "pll_stream"
+   ],
+   "physical_insertion_reference": null,
+   "status": "NEEDS_REAL_CTS_VIEW"
+  },
+  {
+   "instance": "hb_vms_SE",
+   "port": "clk_replay",
+   "bit": 0,
+   "source": [
+    "hb_ckgen",
+    "pll_stream"
+   ],
+   "physical_insertion_reference": null,
+   "status": "NEEDS_REAL_CTS_VIEW"
+  },
+  {
+   "instance": "delivery_SE",
+   "port": "clk",
+   "bit": 0,
+   "source": [
+    "hb_ckgen",
+    "pll_stream"
+   ],
+   "physical_insertion_reference": null,
+   "status": "NEEDS_REAL_CTS_VIEW"
+  },
+  {
+   "instance": "hb_vms_NW",
+   "port": "clk_bank",
+   "bit": 0,
+   "source": [
+    "hb_ckgen",
+    "pll_stream"
+   ],
+   "physical_insertion_reference": null,
+   "status": "NEEDS_REAL_CTS_VIEW"
+  },
+  {
+   "instance": "hb_vms_NW",
+   "port": "clk_bank",
+   "bit": 1,
+   "source": [
+    "hb_ckgen",
+    "pll_stream"
+   ],
+   "physical_insertion_reference": null,
+   "status": "NEEDS_REAL_CTS_VIEW"
+  },
+  {
+   "instance": "hb_vms_NW",
+   "port": "clk_bank",
+   "bit": 2,
+   "source": [
+    "hb_ckgen",
+    "pll_stream"
+   ],
+   "physical_insertion_reference": null,
+   "status": "NEEDS_REAL_CTS_VIEW"
+  },
+  {
+   "instance": "hb_vms_NW",
+   "port": "clk_bank",
+   "bit": 3,
+   "source": [
+    "hb_ckgen",
+    "pll_stream"
+   ],
+   "physical_insertion_reference": null,
+   "status": "NEEDS_REAL_CTS_VIEW"
+  },
+  {
+   "instance": "hb_vms_NW",
+   "port": "clk_bank",
+   "bit": 4,
+   "source": [
+    "hb_ckgen",
+    "pll_stream"
+   ],
+   "physical_insertion_reference": null,
+   "status": "NEEDS_REAL_CTS_VIEW"
+  },
+  {
+   "instance": "hb_vms_NW",
+   "port": "clk_bank",
+   "bit": 5,
+   "source": [
+    "hb_ckgen",
+    "pll_stream"
+   ],
+   "physical_insertion_reference": null,
+   "status": "NEEDS_REAL_CTS_VIEW"
+  },
+  {
+   "instance": "hb_vms_NW",
+   "port": "clk_bank",
+   "bit": 6,
+   "source": [
+    "hb_ckgen",
+    "pll_stream"
+   ],
+   "physical_insertion_reference": null,
+   "status": "NEEDS_REAL_CTS_VIEW"
+  },
+  {
+   "instance": "hb_vms_NW",
+   "port": "clk_bank",
+   "bit": 7,
+   "source": [
+    "hb_ckgen",
+    "pll_stream"
+   ],
+   "physical_insertion_reference": null,
+   "status": "NEEDS_REAL_CTS_VIEW"
+  },
+  {
+   "instance": "hb_vms_NW",
+   "port": "clk_hub",
+   "bit": 0,
+   "source": [
+    "hb_ckgen",
+    "pll_stream"
+   ],
+   "physical_insertion_reference": null,
+   "status": "NEEDS_REAL_CTS_VIEW"
+  },
+  {
+   "instance": "hb_vms_NW",
+   "port": "clk_ring",
+   "bit": 0,
+   "source": [
+    "hb_ckgen",
+    "pll_stream"
+   ],
+   "physical_insertion_reference": null,
+   "status": "NEEDS_REAL_CTS_VIEW"
+  },
+  {
+   "instance": "hb_vms_NW",
+   "port": "clk_ring",
+   "bit": 1,
+   "source": [
+    "hb_ckgen",
+    "pll_stream"
+   ],
+   "physical_insertion_reference": null,
+   "status": "NEEDS_REAL_CTS_VIEW"
+  },
+  {
+   "instance": "hb_vms_NW",
+   "port": "clk_replay",
+   "bit": 0,
+   "source": [
+    "hb_ckgen",
+    "pll_stream"
+   ],
+   "physical_insertion_reference": null,
+   "status": "NEEDS_REAL_CTS_VIEW"
+  },
+  {
+   "instance": "delivery_NW",
+   "port": "clk",
+   "bit": 0,
+   "source": [
+    "hb_ckgen",
+    "pll_stream"
+   ],
+   "physical_insertion_reference": null,
+   "status": "NEEDS_REAL_CTS_VIEW"
+  },
+  {
+   "instance": "hb_vms_NE",
+   "port": "clk_bank",
+   "bit": 0,
+   "source": [
+    "hb_ckgen",
+    "pll_stream"
+   ],
+   "physical_insertion_reference": null,
+   "status": "NEEDS_REAL_CTS_VIEW"
+  },
+  {
+   "instance": "hb_vms_NE",
+   "port": "clk_bank",
+   "bit": 1,
+   "source": [
+    "hb_ckgen",
+    "pll_stream"
+   ],
+   "physical_insertion_reference": null,
+   "status": "NEEDS_REAL_CTS_VIEW"
+  },
+  {
+   "instance": "hb_vms_NE",
+   "port": "clk_bank",
+   "bit": 2,
+   "source": [
+    "hb_ckgen",
+    "pll_stream"
+   ],
+   "physical_insertion_reference": null,
+   "status": "NEEDS_REAL_CTS_VIEW"
+  },
+  {
+   "instance": "hb_vms_NE",
+   "port": "clk_bank",
+   "bit": 3,
+   "source": [
+    "hb_ckgen",
+    "pll_stream"
+   ],
+   "physical_insertion_reference": null,
+   "status": "NEEDS_REAL_CTS_VIEW"
+  },
+  {
+   "instance": "hb_vms_NE",
+   "port": "clk_bank",
+   "bit": 4,
+   "source": [
+    "hb_ckgen",
+    "pll_stream"
+   ],
+   "physical_insertion_reference": null,
+   "status": "NEEDS_REAL_CTS_VIEW"
+  },
+  {
+   "instance": "hb_vms_NE",
+   "port": "clk_bank",
+   "bit": 5,
+   "source": [
+    "hb_ckgen",
+    "pll_stream"
+   ],
+   "physical_insertion_reference": null,
+   "status": "NEEDS_REAL_CTS_VIEW"
+  },
+  {
+   "instance": "hb_vms_NE",
+   "port": "clk_bank",
+   "bit": 6,
+   "source": [
+    "hb_ckgen",
+    "pll_stream"
+   ],
+   "physical_insertion_reference": null,
+   "status": "NEEDS_REAL_CTS_VIEW"
+  },
+  {
+   "instance": "hb_vms_NE",
+   "port": "clk_bank",
+   "bit": 7,
+   "source": [
+    "hb_ckgen",
+    "pll_stream"
+   ],
+   "physical_insertion_reference": null,
+   "status": "NEEDS_REAL_CTS_VIEW"
+  },
+  {
+   "instance": "hb_vms_NE",
+   "port": "clk_hub",
+   "bit": 0,
+   "source": [
+    "hb_ckgen",
+    "pll_stream"
+   ],
+   "physical_insertion_reference": null,
+   "status": "NEEDS_REAL_CTS_VIEW"
+  },
+  {
+   "instance": "hb_vms_NE",
+   "port": "clk_ring",
+   "bit": 0,
+   "source": [
+    "hb_ckgen",
+    "pll_stream"
+   ],
+   "physical_insertion_reference": null,
+   "status": "NEEDS_REAL_CTS_VIEW"
+  },
+  {
+   "instance": "hb_vms_NE",
+   "port": "clk_ring",
+   "bit": 1,
+   "source": [
+    "hb_ckgen",
+    "pll_stream"
+   ],
+   "physical_insertion_reference": null,
+   "status": "NEEDS_REAL_CTS_VIEW"
+  },
+  {
+   "instance": "hb_vms_NE",
+   "port": "clk_replay",
+   "bit": 0,
+   "source": [
+    "hb_ckgen",
+    "pll_stream"
+   ],
+   "physical_insertion_reference": null,
+   "status": "NEEDS_REAL_CTS_VIEW"
+  },
+  {
+   "instance": "delivery_NE",
+   "port": "clk",
+   "bit": 0,
+   "source": [
+    "hb_ckgen",
+    "pll_stream"
+   ],
+   "physical_insertion_reference": null,
+   "status": "NEEDS_REAL_CTS_VIEW"
+  }
+ ],
+ "registered_station_masters": [
+  {
+   "master": "hfd_stn_v15_cc2224",
+   "bits": 2224,
+   "role": "relay",
+   "latency_cycles": 1,
+   "sinks_per_root": 2224,
+   "physical_qualified": false,
+   "bench_qualified": true
+  },
+  {
+   "master": "hfd_stn_v15_cc2248",
+   "bits": 2248,
+   "role": "relay",
+   "latency_cycles": 1,
+   "sinks_per_root": 2248,
+   "physical_qualified": false,
+   "bench_qualified": true
+  }
+ ],
+ "unbound_ports": [
+  {
+   "instance": "hb_vms_SW",
+   "port": "cq",
+   "direction": "input",
+   "bits": 2366,
+   "required_owner": "actual static client source migration",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_vms_SW",
+   "port": "cr",
+   "direction": "output",
+   "bits": 1918,
+   "required_owner": "actual static client source migration",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_vms_SW",
+   "port": "client_seq",
+   "direction": "input",
+   "bits": 16,
+   "required_owner": "actual VM programme SRAM calendar issuer",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_vms_SW",
+   "port": "response_enable",
+   "direction": "input",
+   "bits": 8,
+   "required_owner": "actual VM programme SRAM calendar issuer",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_vms_SW",
+   "port": "response_seq",
+   "direction": "input",
+   "bits": 16,
+   "required_owner": "actual VM programme SRAM calendar issuer",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_vms_SW",
+   "port": "bank_enable",
+   "direction": "input",
+   "bits": 8,
+   "required_owner": "actual VM programme SRAM calendar issuer",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_vms_SW",
+   "port": "bank_client",
+   "direction": "input",
+   "bits": 24,
+   "required_owner": "actual VM programme SRAM calendar issuer",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_vms_SW",
+   "port": "hub_ring_enable",
+   "direction": "input",
+   "bits": 2,
+   "required_owner": "actual VM programme SRAM calendar issuer",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_vms_SW",
+   "port": "hub_ring_client",
+   "direction": "input",
+   "bits": 6,
+   "required_owner": "actual VM programme SRAM calendar issuer",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_vms_SW",
+   "port": "rslot_v",
+   "direction": "input",
+   "bits": 8,
+   "required_owner": "actual VM programme SRAM calendar issuer",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_vms_SW",
+   "port": "wslot_v",
+   "direction": "input",
+   "bits": 8,
+   "required_owner": "actual VM programme SRAM calendar issuer",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_vms_SW",
+   "port": "rslot",
+   "direction": "input",
+   "bits": 16,
+   "required_owner": "actual VM programme SRAM calendar issuer",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_vms_SW",
+   "port": "wslot",
+   "direction": "input",
+   "bits": 24,
+   "required_owner": "actual VM programme SRAM calendar issuer",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_vms_SW",
+   "port": "rq",
+   "direction": "input",
+   "bits": 408,
+   "required_owner": "actual static client source migration",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_vms_SW",
+   "port": "rr",
+   "direction": "output",
+   "bits": 6168,
+   "required_owner": "actual static client source migration",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_vms_SW",
+   "port": "wq",
+   "direction": "input",
+   "bits": 2248,
+   "required_owner": "actual static client source migration",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_vms_SW",
+   "port": "wq_done",
+   "direction": "output",
+   "bits": 8,
+   "required_owner": "actual static client source migration",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_vms_SW",
+   "port": "kq",
+   "direction": "input",
+   "bits": 2248,
+   "required_owner": "actual static COLL parent / VM writer",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_vms_SW",
+   "port": "dq_done",
+   "direction": "output",
+   "bits": 8,
+   "required_owner": "actual VM programme SRAM calendar issuer",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_vms_SW",
+   "port": "kq_done",
+   "direction": "output",
+   "bits": 8,
+   "required_owner": "actual static COLL parent / VM writer",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_vms_SW",
+   "port": "ring_tx_enable",
+   "direction": "input",
+   "bits": 2,
+   "required_owner": "actual VM programme SRAM calendar issuer",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_vms_SW",
+   "port": "ring_tx_source",
+   "direction": "input",
+   "bits": 6,
+   "required_owner": "actual VM programme SRAM calendar issuer",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_vms_SW",
+   "port": "replay_enable",
+   "direction": "input",
+   "bits": 1,
+   "required_owner": "actual VM programme SRAM calendar issuer",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_vms_SW",
+   "port": "replay_source",
+   "direction": "input",
+   "bits": 1,
+   "required_owner": "actual VM programme SRAM calendar issuer",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_vms_SW",
+   "port": "bank_status",
+   "direction": "output",
+   "bits": 144,
+   "required_owner": "actual four-quadrant status aggregate and CP consumer",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_vms_SW",
+   "port": "hub_status",
+   "direction": "output",
+   "bits": 3,
+   "required_owner": "actual four-quadrant status aggregate and CP consumer",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_vms_SW",
+   "port": "mirror_busy",
+   "direction": "output",
+   "bits": 2,
+   "required_owner": "actual four-quadrant status aggregate and CP consumer",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_vms_SW",
+   "port": "vmstat",
+   "direction": "output",
+   "bits": 19,
+   "required_owner": "actual four-quadrant status aggregate and CP consumer",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_vms_SW",
+   "port": "ring_fault",
+   "direction": "output",
+   "bits": 3,
+   "required_owner": "actual four-quadrant status aggregate and CP consumer",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "delivery_SW",
+   "port": "begin_v",
+   "direction": "input",
+   "bits": 1,
+   "required_owner": "actual PHY service band / compiler block command source",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "delivery_SW",
+   "port": "begin_bank",
+   "direction": "input",
+   "bits": 1,
+   "required_owner": "actual PHY service band / compiler block command source",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "delivery_SW",
+   "port": "begin_epoch",
+   "direction": "input",
+   "bits": 16,
+   "required_owner": "actual PHY service band / compiler block command source",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "delivery_SW",
+   "port": "fill_v",
+   "direction": "input",
+   "bits": 32,
+   "required_owner": "actual PHY service band / compiler block command source",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "delivery_SW",
+   "port": "fill_bank",
+   "direction": "input",
+   "bits": 32,
+   "required_owner": "actual PHY service band / compiler block command source",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "delivery_SW",
+   "port": "fill_slot",
+   "direction": "input",
+   "bits": 192,
+   "required_owner": "actual PHY service band / compiler block command source",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "delivery_SW",
+   "port": "fill_epoch",
+   "direction": "input",
+   "bits": 512,
+   "required_owner": "actual PHY service band / compiler block command source",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "delivery_SW",
+   "port": "fill_data",
+   "direction": "input",
+   "bits": 8192,
+   "required_owner": "actual PHY service band / compiler block command source",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "delivery_SW",
+   "port": "block_ready",
+   "direction": "output",
+   "bits": 2,
+   "required_owner": "actual PHY service band / compiler block command source",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "delivery_SW",
+   "port": "start",
+   "direction": "input",
+   "bits": 1,
+   "required_owner": "actual PHY service band / compiler block command source",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "delivery_SW",
+   "port": "start_bank",
+   "direction": "input",
+   "bits": 1,
+   "required_owner": "actual PHY service band / compiler block command source",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "delivery_SW",
+   "port": "start_epoch",
+   "direction": "input",
+   "bits": 16,
+   "required_owner": "actual PHY service band / compiler block command source",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "delivery_SW",
+   "port": "start_base_sector",
+   "direction": "input",
+   "bits": 16,
+   "required_owner": "actual PHY service band / compiler block command source",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "delivery_SW",
+   "port": "busy",
+   "direction": "output",
+   "bits": 1,
+   "required_owner": "actual PHY service band / compiler block command source",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "delivery_SW",
+   "port": "fault",
+   "direction": "output",
+   "bits": 1,
+   "required_owner": "actual PHY service band / compiler block command source",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_vms_SE",
+   "port": "client_seq",
+   "direction": "input",
+   "bits": 2,
+   "required_owner": "actual VM programme SRAM calendar issuer",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_vms_SE",
+   "port": "response_enable",
+   "direction": "input",
+   "bits": 1,
+   "required_owner": "actual VM programme SRAM calendar issuer",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_vms_SE",
+   "port": "response_seq",
+   "direction": "input",
+   "bits": 2,
+   "required_owner": "actual VM programme SRAM calendar issuer",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_vms_SE",
+   "port": "bank_enable",
+   "direction": "input",
+   "bits": 8,
+   "required_owner": "actual VM programme SRAM calendar issuer",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_vms_SE",
+   "port": "bank_client",
+   "direction": "input",
+   "bits": 8,
+   "required_owner": "actual VM programme SRAM calendar issuer",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_vms_SE",
+   "port": "hub_ring_enable",
+   "direction": "input",
+   "bits": 2,
+   "required_owner": "actual VM programme SRAM calendar issuer",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_vms_SE",
+   "port": "hub_ring_client",
+   "direction": "input",
+   "bits": 2,
+   "required_owner": "actual VM programme SRAM calendar issuer",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_vms_SE",
+   "port": "rslot_v",
+   "direction": "input",
+   "bits": 8,
+   "required_owner": "actual VM programme SRAM calendar issuer",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_vms_SE",
+   "port": "wslot_v",
+   "direction": "input",
+   "bits": 8,
+   "required_owner": "actual VM programme SRAM calendar issuer",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_vms_SE",
+   "port": "rslot",
+   "direction": "input",
+   "bits": 16,
+   "required_owner": "actual VM programme SRAM calendar issuer",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_vms_SE",
+   "port": "wslot",
+   "direction": "input",
+   "bits": 24,
+   "required_owner": "actual VM programme SRAM calendar issuer",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_vms_SE",
+   "port": "rq",
+   "direction": "input",
+   "bits": 408,
+   "required_owner": "actual static client source migration",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_vms_SE",
+   "port": "rr",
+   "direction": "output",
+   "bits": 6168,
+   "required_owner": "actual static client source migration",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_vms_SE",
+   "port": "wq",
+   "direction": "input",
+   "bits": 2248,
+   "required_owner": "actual static client source migration",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_vms_SE",
+   "port": "wq_done",
+   "direction": "output",
+   "bits": 8,
+   "required_owner": "actual static client source migration",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_vms_SE",
+   "port": "kq",
+   "direction": "input",
+   "bits": 2248,
+   "required_owner": "actual static COLL parent / VM writer",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_vms_SE",
+   "port": "dq_done",
+   "direction": "output",
+   "bits": 8,
+   "required_owner": "actual VM programme SRAM calendar issuer",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_vms_SE",
+   "port": "kq_done",
+   "direction": "output",
+   "bits": 8,
+   "required_owner": "actual static COLL parent / VM writer",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_vms_SE",
+   "port": "ring_tx_enable",
+   "direction": "input",
+   "bits": 2,
+   "required_owner": "actual VM programme SRAM calendar issuer",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_vms_SE",
+   "port": "ring_tx_source",
+   "direction": "input",
+   "bits": 6,
+   "required_owner": "actual VM programme SRAM calendar issuer",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_vms_SE",
+   "port": "replay_enable",
+   "direction": "input",
+   "bits": 1,
+   "required_owner": "actual VM programme SRAM calendar issuer",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_vms_SE",
+   "port": "replay_source",
+   "direction": "input",
+   "bits": 1,
+   "required_owner": "actual VM programme SRAM calendar issuer",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_vms_SE",
+   "port": "bank_status",
+   "direction": "output",
+   "bits": 144,
+   "required_owner": "actual four-quadrant status aggregate and CP consumer",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_vms_SE",
+   "port": "hub_status",
+   "direction": "output",
+   "bits": 3,
+   "required_owner": "actual four-quadrant status aggregate and CP consumer",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_vms_SE",
+   "port": "mirror_busy",
+   "direction": "output",
+   "bits": 2,
+   "required_owner": "actual four-quadrant status aggregate and CP consumer",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_vms_SE",
+   "port": "vmstat",
+   "direction": "output",
+   "bits": 19,
+   "required_owner": "actual four-quadrant status aggregate and CP consumer",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_vms_SE",
+   "port": "ring_fault",
+   "direction": "output",
+   "bits": 3,
+   "required_owner": "actual four-quadrant status aggregate and CP consumer",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "delivery_SE",
+   "port": "begin_v",
+   "direction": "input",
+   "bits": 1,
+   "required_owner": "actual PHY service band / compiler block command source",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "delivery_SE",
+   "port": "begin_bank",
+   "direction": "input",
+   "bits": 1,
+   "required_owner": "actual PHY service band / compiler block command source",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "delivery_SE",
+   "port": "begin_epoch",
+   "direction": "input",
+   "bits": 16,
+   "required_owner": "actual PHY service band / compiler block command source",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "delivery_SE",
+   "port": "fill_v",
+   "direction": "input",
+   "bits": 32,
+   "required_owner": "actual PHY service band / compiler block command source",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "delivery_SE",
+   "port": "fill_bank",
+   "direction": "input",
+   "bits": 32,
+   "required_owner": "actual PHY service band / compiler block command source",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "delivery_SE",
+   "port": "fill_slot",
+   "direction": "input",
+   "bits": 192,
+   "required_owner": "actual PHY service band / compiler block command source",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "delivery_SE",
+   "port": "fill_epoch",
+   "direction": "input",
+   "bits": 512,
+   "required_owner": "actual PHY service band / compiler block command source",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "delivery_SE",
+   "port": "fill_data",
+   "direction": "input",
+   "bits": 8192,
+   "required_owner": "actual PHY service band / compiler block command source",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "delivery_SE",
+   "port": "block_ready",
+   "direction": "output",
+   "bits": 2,
+   "required_owner": "actual PHY service band / compiler block command source",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "delivery_SE",
+   "port": "start",
+   "direction": "input",
+   "bits": 1,
+   "required_owner": "actual PHY service band / compiler block command source",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "delivery_SE",
+   "port": "start_bank",
+   "direction": "input",
+   "bits": 1,
+   "required_owner": "actual PHY service band / compiler block command source",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "delivery_SE",
+   "port": "start_epoch",
+   "direction": "input",
+   "bits": 16,
+   "required_owner": "actual PHY service band / compiler block command source",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "delivery_SE",
+   "port": "start_base_sector",
+   "direction": "input",
+   "bits": 16,
+   "required_owner": "actual PHY service band / compiler block command source",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "delivery_SE",
+   "port": "busy",
+   "direction": "output",
+   "bits": 1,
+   "required_owner": "actual PHY service band / compiler block command source",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "delivery_SE",
+   "port": "fault",
+   "direction": "output",
+   "bits": 1,
+   "required_owner": "actual PHY service band / compiler block command source",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_vms_NW",
+   "port": "cq",
+   "direction": "input",
+   "bits": 1352,
+   "required_owner": "actual static client source migration",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_vms_NW",
+   "port": "cr",
+   "direction": "output",
+   "bits": 1096,
+   "required_owner": "actual static client source migration",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_vms_NW",
+   "port": "client_seq",
+   "direction": "input",
+   "bits": 10,
+   "required_owner": "actual VM programme SRAM calendar issuer",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_vms_NW",
+   "port": "response_enable",
+   "direction": "input",
+   "bits": 5,
+   "required_owner": "actual VM programme SRAM calendar issuer",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_vms_NW",
+   "port": "response_seq",
+   "direction": "input",
+   "bits": 10,
+   "required_owner": "actual VM programme SRAM calendar issuer",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_vms_NW",
+   "port": "bank_enable",
+   "direction": "input",
+   "bits": 8,
+   "required_owner": "actual VM programme SRAM calendar issuer",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_vms_NW",
+   "port": "bank_client",
+   "direction": "input",
+   "bits": 24,
+   "required_owner": "actual VM programme SRAM calendar issuer",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_vms_NW",
+   "port": "hub_ring_enable",
+   "direction": "input",
+   "bits": 2,
+   "required_owner": "actual VM programme SRAM calendar issuer",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_vms_NW",
+   "port": "hub_ring_client",
+   "direction": "input",
+   "bits": 6,
+   "required_owner": "actual VM programme SRAM calendar issuer",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_vms_NW",
+   "port": "rslot_v",
+   "direction": "input",
+   "bits": 8,
+   "required_owner": "actual VM programme SRAM calendar issuer",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_vms_NW",
+   "port": "wslot_v",
+   "direction": "input",
+   "bits": 8,
+   "required_owner": "actual VM programme SRAM calendar issuer",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_vms_NW",
+   "port": "rslot",
+   "direction": "input",
+   "bits": 24,
+   "required_owner": "actual VM programme SRAM calendar issuer",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_vms_NW",
+   "port": "wslot",
+   "direction": "input",
+   "bits": 24,
+   "required_owner": "actual VM programme SRAM calendar issuer",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_vms_NW",
+   "port": "rq",
+   "direction": "input",
+   "bits": 680,
+   "required_owner": "actual static client source migration",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_vms_NW",
+   "port": "rr",
+   "direction": "output",
+   "bits": 10280,
+   "required_owner": "actual static client source migration",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_vms_NW",
+   "port": "wq",
+   "direction": "input",
+   "bits": 6744,
+   "required_owner": "actual static client source migration",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_vms_NW",
+   "port": "wq_done",
+   "direction": "output",
+   "bits": 24,
+   "required_owner": "actual static client source migration",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_vms_NW",
+   "port": "kq",
+   "direction": "input",
+   "bits": 2248,
+   "required_owner": "actual static COLL parent / VM writer",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_vms_NW",
+   "port": "dq_done",
+   "direction": "output",
+   "bits": 8,
+   "required_owner": "actual VM programme SRAM calendar issuer",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_vms_NW",
+   "port": "kq_done",
+   "direction": "output",
+   "bits": 8,
+   "required_owner": "actual static COLL parent / VM writer",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_vms_NW",
+   "port": "ring_tx_enable",
+   "direction": "input",
+   "bits": 2,
+   "required_owner": "actual VM programme SRAM calendar issuer",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_vms_NW",
+   "port": "ring_tx_source",
+   "direction": "input",
+   "bits": 6,
+   "required_owner": "actual VM programme SRAM calendar issuer",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_vms_NW",
+   "port": "replay_enable",
+   "direction": "input",
+   "bits": 1,
+   "required_owner": "actual VM programme SRAM calendar issuer",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_vms_NW",
+   "port": "replay_source",
+   "direction": "input",
+   "bits": 1,
+   "required_owner": "actual VM programme SRAM calendar issuer",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_vms_NW",
+   "port": "bank_status",
+   "direction": "output",
+   "bits": 144,
+   "required_owner": "actual four-quadrant status aggregate and CP consumer",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_vms_NW",
+   "port": "hub_status",
+   "direction": "output",
+   "bits": 3,
+   "required_owner": "actual four-quadrant status aggregate and CP consumer",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_vms_NW",
+   "port": "mirror_busy",
+   "direction": "output",
+   "bits": 2,
+   "required_owner": "actual four-quadrant status aggregate and CP consumer",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_vms_NW",
+   "port": "vmstat",
+   "direction": "output",
+   "bits": 19,
+   "required_owner": "actual four-quadrant status aggregate and CP consumer",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_vms_NW",
+   "port": "ring_fault",
+   "direction": "output",
+   "bits": 3,
+   "required_owner": "actual four-quadrant status aggregate and CP consumer",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "delivery_NW",
+   "port": "begin_v",
+   "direction": "input",
+   "bits": 1,
+   "required_owner": "actual PHY service band / compiler block command source",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "delivery_NW",
+   "port": "begin_bank",
+   "direction": "input",
+   "bits": 1,
+   "required_owner": "actual PHY service band / compiler block command source",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "delivery_NW",
+   "port": "begin_epoch",
+   "direction": "input",
+   "bits": 16,
+   "required_owner": "actual PHY service band / compiler block command source",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "delivery_NW",
+   "port": "fill_v",
+   "direction": "input",
+   "bits": 32,
+   "required_owner": "actual PHY service band / compiler block command source",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "delivery_NW",
+   "port": "fill_bank",
+   "direction": "input",
+   "bits": 32,
+   "required_owner": "actual PHY service band / compiler block command source",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "delivery_NW",
+   "port": "fill_slot",
+   "direction": "input",
+   "bits": 192,
+   "required_owner": "actual PHY service band / compiler block command source",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "delivery_NW",
+   "port": "fill_epoch",
+   "direction": "input",
+   "bits": 512,
+   "required_owner": "actual PHY service band / compiler block command source",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "delivery_NW",
+   "port": "fill_data",
+   "direction": "input",
+   "bits": 8192,
+   "required_owner": "actual PHY service band / compiler block command source",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "delivery_NW",
+   "port": "block_ready",
+   "direction": "output",
+   "bits": 2,
+   "required_owner": "actual PHY service band / compiler block command source",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "delivery_NW",
+   "port": "start",
+   "direction": "input",
+   "bits": 1,
+   "required_owner": "actual PHY service band / compiler block command source",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "delivery_NW",
+   "port": "start_bank",
+   "direction": "input",
+   "bits": 1,
+   "required_owner": "actual PHY service band / compiler block command source",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "delivery_NW",
+   "port": "start_epoch",
+   "direction": "input",
+   "bits": 16,
+   "required_owner": "actual PHY service band / compiler block command source",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "delivery_NW",
+   "port": "start_base_sector",
+   "direction": "input",
+   "bits": 16,
+   "required_owner": "actual PHY service band / compiler block command source",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "delivery_NW",
+   "port": "busy",
+   "direction": "output",
+   "bits": 1,
+   "required_owner": "actual PHY service band / compiler block command source",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "delivery_NW",
+   "port": "fault",
+   "direction": "output",
+   "bits": 1,
+   "required_owner": "actual PHY service band / compiler block command source",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_vms_NE",
+   "port": "client_seq",
+   "direction": "input",
+   "bits": 2,
+   "required_owner": "actual VM programme SRAM calendar issuer",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_vms_NE",
+   "port": "response_enable",
+   "direction": "input",
+   "bits": 1,
+   "required_owner": "actual VM programme SRAM calendar issuer",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_vms_NE",
+   "port": "response_seq",
+   "direction": "input",
+   "bits": 2,
+   "required_owner": "actual VM programme SRAM calendar issuer",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_vms_NE",
+   "port": "bank_enable",
+   "direction": "input",
+   "bits": 8,
+   "required_owner": "actual VM programme SRAM calendar issuer",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_vms_NE",
+   "port": "bank_client",
+   "direction": "input",
+   "bits": 8,
+   "required_owner": "actual VM programme SRAM calendar issuer",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_vms_NE",
+   "port": "hub_ring_enable",
+   "direction": "input",
+   "bits": 2,
+   "required_owner": "actual VM programme SRAM calendar issuer",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_vms_NE",
+   "port": "hub_ring_client",
+   "direction": "input",
+   "bits": 2,
+   "required_owner": "actual VM programme SRAM calendar issuer",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_vms_NE",
+   "port": "rslot_v",
+   "direction": "input",
+   "bits": 8,
+   "required_owner": "actual VM programme SRAM calendar issuer",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_vms_NE",
+   "port": "wslot_v",
+   "direction": "input",
+   "bits": 8,
+   "required_owner": "actual VM programme SRAM calendar issuer",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_vms_NE",
+   "port": "rslot",
+   "direction": "input",
+   "bits": 24,
+   "required_owner": "actual VM programme SRAM calendar issuer",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_vms_NE",
+   "port": "wslot",
+   "direction": "input",
+   "bits": 24,
+   "required_owner": "actual VM programme SRAM calendar issuer",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_vms_NE",
+   "port": "rq",
+   "direction": "input",
+   "bits": 680,
+   "required_owner": "actual static client source migration",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_vms_NE",
+   "port": "rr",
+   "direction": "output",
+   "bits": 10280,
+   "required_owner": "actual static client source migration",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_vms_NE",
+   "port": "wq",
+   "direction": "input",
+   "bits": 6744,
+   "required_owner": "actual static client source migration",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_vms_NE",
+   "port": "wq_done",
+   "direction": "output",
+   "bits": 24,
+   "required_owner": "actual static client source migration",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_vms_NE",
+   "port": "kq",
+   "direction": "input",
+   "bits": 2248,
+   "required_owner": "actual static COLL parent / VM writer",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_vms_NE",
+   "port": "dq_done",
+   "direction": "output",
+   "bits": 8,
+   "required_owner": "actual VM programme SRAM calendar issuer",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_vms_NE",
+   "port": "kq_done",
+   "direction": "output",
+   "bits": 8,
+   "required_owner": "actual static COLL parent / VM writer",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_vms_NE",
+   "port": "ring_tx_enable",
+   "direction": "input",
+   "bits": 2,
+   "required_owner": "actual VM programme SRAM calendar issuer",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_vms_NE",
+   "port": "ring_tx_source",
+   "direction": "input",
+   "bits": 6,
+   "required_owner": "actual VM programme SRAM calendar issuer",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_vms_NE",
+   "port": "replay_enable",
+   "direction": "input",
+   "bits": 1,
+   "required_owner": "actual VM programme SRAM calendar issuer",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_vms_NE",
+   "port": "replay_source",
+   "direction": "input",
+   "bits": 1,
+   "required_owner": "actual VM programme SRAM calendar issuer",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_vms_NE",
+   "port": "bank_status",
+   "direction": "output",
+   "bits": 144,
+   "required_owner": "actual four-quadrant status aggregate and CP consumer",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_vms_NE",
+   "port": "hub_status",
+   "direction": "output",
+   "bits": 3,
+   "required_owner": "actual four-quadrant status aggregate and CP consumer",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_vms_NE",
+   "port": "mirror_busy",
+   "direction": "output",
+   "bits": 2,
+   "required_owner": "actual four-quadrant status aggregate and CP consumer",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_vms_NE",
+   "port": "vmstat",
+   "direction": "output",
+   "bits": 19,
+   "required_owner": "actual four-quadrant status aggregate and CP consumer",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_vms_NE",
+   "port": "ring_fault",
+   "direction": "output",
+   "bits": 3,
+   "required_owner": "actual four-quadrant status aggregate and CP consumer",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "delivery_NE",
+   "port": "begin_v",
+   "direction": "input",
+   "bits": 1,
+   "required_owner": "actual PHY service band / compiler block command source",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "delivery_NE",
+   "port": "begin_bank",
+   "direction": "input",
+   "bits": 1,
+   "required_owner": "actual PHY service band / compiler block command source",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "delivery_NE",
+   "port": "begin_epoch",
+   "direction": "input",
+   "bits": 16,
+   "required_owner": "actual PHY service band / compiler block command source",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "delivery_NE",
+   "port": "fill_v",
+   "direction": "input",
+   "bits": 32,
+   "required_owner": "actual PHY service band / compiler block command source",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "delivery_NE",
+   "port": "fill_bank",
+   "direction": "input",
+   "bits": 32,
+   "required_owner": "actual PHY service band / compiler block command source",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "delivery_NE",
+   "port": "fill_slot",
+   "direction": "input",
+   "bits": 192,
+   "required_owner": "actual PHY service band / compiler block command source",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "delivery_NE",
+   "port": "fill_epoch",
+   "direction": "input",
+   "bits": 512,
+   "required_owner": "actual PHY service band / compiler block command source",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "delivery_NE",
+   "port": "fill_data",
+   "direction": "input",
+   "bits": 8192,
+   "required_owner": "actual PHY service band / compiler block command source",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "delivery_NE",
+   "port": "block_ready",
+   "direction": "output",
+   "bits": 2,
+   "required_owner": "actual PHY service band / compiler block command source",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "delivery_NE",
+   "port": "start",
+   "direction": "input",
+   "bits": 1,
+   "required_owner": "actual PHY service band / compiler block command source",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "delivery_NE",
+   "port": "start_bank",
+   "direction": "input",
+   "bits": 1,
+   "required_owner": "actual PHY service band / compiler block command source",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "delivery_NE",
+   "port": "start_epoch",
+   "direction": "input",
+   "bits": 16,
+   "required_owner": "actual PHY service band / compiler block command source",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "delivery_NE",
+   "port": "start_base_sector",
+   "direction": "input",
+   "bits": 16,
+   "required_owner": "actual PHY service band / compiler block command source",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "delivery_NE",
+   "port": "busy",
+   "direction": "output",
+   "bits": 1,
+   "required_owner": "actual PHY service band / compiler block command source",
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "delivery_NE",
+   "port": "fault",
+   "direction": "output",
+   "bits": 1,
+   "required_owner": "actual PHY service band / compiler block command source",
+   "status": "UNBOUND_FAIL"
+  }
+ ],
+ "unbound_count": 172,
+ "pin_only_placeholder_count": 0,
+ "legacy_failures_disposition": "77 legacy station failures remain historical; v15 validates actual source ports independently",
+ "qualification": {
+  "native_complete": false,
+  "pins": false,
+  "station_benches": true,
+  "clock_views": false,
+  "TT": false,
+  "FF": false,
+  "DRC": false
+ },
+ "required_remaining": [
+  "actual client and programme command source joins",
+  "actual static COLL combined parent",
+  "actual full service/SM/writeback composition",
+  "measured compact SM outline and all leaf views",
+  "pin plans, physical registered stations and exact compiler stage counts",
+  "real-view die GRT0/TT/FF/DRC0"
+ ]
+}
