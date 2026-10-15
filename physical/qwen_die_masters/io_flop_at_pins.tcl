@@ -1,6 +1,6 @@
 # PRE_GLOBAL_PLACE hook (drive-0849, 2026-10-09): out_flop_at_pins.tcl extended to INPUT ports.  For every output port its
-# launching flop, and for every input port its single capturing flop (the port net -- through up to three single-fanout
-# INV / BUF stages -- reaches exactly one DFF D pin), is placed FIRM just inside the core on the pin's own edge, in up to
+# launching flop, and for every input port its capturing flops (through bounded INV / BUF branches), are placed FIRM
+# just inside the core on the pin's own edge. Historical single-capture anchors use up to
 # 4 staggered columns by pin order.  Why: low-utilisation die-slot outlines (qfd_sp_constants_sequencer_sys 777.6 x 1000
 # at ~1 %, qfd_sp_res_ser) let timing-driven GPL pull pin flops into the central logic, so pin -> flop and flop -> pin
 # become 200-760 ps wires (ICUT 155370387: vm_rq -> line -514.8, c_data -309; res_ser r2q: i_addr -> c_addr 535 ps wire).
@@ -69,7 +69,10 @@ proc ot_of_fbonly {net cand chain} {
   }
   return 1
 }
-proc ot_of_isff {inst} { return [string match "DFF*" [[$inst getMaster] getName]] }
+proc ot_of_isff {inst} {
+  set master [[$inst getMaster] getName]
+  return [expr {[string match "DFF*" $master] || [string match "ASYNC_DFF*" $master]}]
+}
 proc ot_of_isbuf {inst} { set m [[$inst getMaster] getName]; return [expr {[string match "INV*" $m] || [string match "BUF*" $m] || [string match "HB*" $m]}] }
 # el1011-q-coll 2026-10-11: HB* = the ot_hdly kept hold-delay cells between a pin flop and its port (walked like a buffer)
 # the single input-signal sink of a net (or "" if 0 or > 1 sinks)
@@ -82,6 +85,31 @@ proc ot_of_sink {net} {
   }
   return $s
 }
+# Enumerate data captures through buffer branches. Reset/clock FF loads are not
+# capture endpoints; in particular rst may also be data for a reset synchronizer.
+proc ot_of_captures {net remaining seen} {
+  if {$remaining <= 0 || $net eq "NULL" || [dict exists $seen [$net getName]]} { return {} }
+  dict set seen [$net getName] 1
+  set found [dict create]
+  foreach it [$net getITerms] {
+    if {![$it isInputSignal]} continue
+    set inst [$it getInst]
+    if {[ot_of_isff $inst]} {
+      if {[[$it getMTerm] getName] eq "D"} { dict set found [$inst getName] $inst }
+    } elseif {[ot_of_isbuf $inst]} {
+      foreach ot [$inst getITerms] {
+        if {![$ot isOutputSignal]} continue
+        foreach ff [ot_of_captures [$ot getNet] [expr {$remaining - 1}] $seen] {
+          dict set found [$ff getName] $ff
+        }
+      }
+    }
+  }
+  set result {}
+  foreach name [lsort [dict keys $found]] { lappend result [dict get $found $name] }
+  return $result
+}
+set ot_extra_ports {}
 set ot_list {}; set ot_n 0; set ot_ni 0; set ot_skip 0
 set cand {}
 set ot_seen [dict create]
@@ -113,6 +141,7 @@ foreach bt [$ot_blk getBTerms] {
     }
   } elseif {$io eq "INPUT"} {
     if {[$net getSigType] eq "CLOCK"} continue
+    lappend ot_extra_ports [list $bt [ot_of_captures $net $ot_hops [dict create]]]
     set s [ot_of_sink $net]; if {$s eq ""} { incr ot_skip; continue }
     for {set hop 0} {$hop < $ot_hops} {incr hop} {
       set inst [$s getInst]
@@ -199,6 +228,91 @@ foreach c $cand {
   $ff setPlacementStatus FIRM
   lappend ot_list [$ff getName]
   if {$io eq "INPUT"} { incr ot_ni } else { incr ot_n }
+}
+# Keep historical single-capture/output placement byte-for-byte. Only previously
+# unanchored captures use the legal-row allocator below, after output ownership
+# has been resolved. Thus an output clone retains its output-side anchor.
+set ot_extra {}
+foreach request $ot_extra_ports {
+  lassign $request bt captures
+  foreach ff $captures {
+    set name [$ff getName]
+    if {[dict exists $ot_seen $name]} continue
+    dict set ot_seen $name 1
+    lappend ot_extra [list [$bt getName] $name $bt $ff]
+  }
+}
+set ot_extra [lsort -dictionary $ot_extra]
+if {[llength $ot_extra]} {
+  set ot_rows {}
+  foreach row [$ot_blk getRows] {
+    set box [$row getBBox]
+    lappend ot_rows [list [$box yMin] [$box xMin] [$box xMax] [$box yMax] \
+      [$row getSpacing] [$row getOrient]]
+  }
+  set ot_rows [lsort -integer -index 0 $ot_rows]
+  # Reserve all firm/fixed footprints, including existing pin anchors and stages.
+  set ot_occupied [dict create]
+  foreach inst [$ot_blk getInsts] {
+    if {[$inst getPlacementStatus] ni {FIRM LOCKED COVER}} continue
+    set box [$inst getBBox]
+    set ri 0
+    foreach row $ot_rows {
+      lassign $row ry rx ex ey pitch orient
+      if {[$box yMin] < $ey && [$box yMax] > $ry} {
+        dict lappend ot_occupied $ri [list [$box xMin] [$box xMax]]
+      }
+      incr ri
+    }
+  }
+  foreach blockage [$ot_blk getBlockages] {
+    set box [$blockage getBBox]
+    set ri 0
+    foreach row $ot_rows {
+      lassign $row ry rx ex ey pitch orient
+      if {[$box yMin] < $ey && [$box yMax] > $ry} {
+        dict lappend ot_occupied $ri [list [$box xMin] [$box xMax]]
+      }
+      incr ri
+    }
+  }
+  foreach request $ot_extra {
+    lassign $request port name bt ff
+    set box [$bt getBBox]
+    set px [expr {([$box xMin] + [$box xMax]) / 2.0}]
+    set py [expr {([$box yMin] + [$box yMax]) / 2.0}]
+    set width [[$ff getMaster] getWidth]; set height [[$ff getMaster] getHeight]
+    set best {}; set score Inf; set ri 0
+    foreach row $ot_rows {
+      lassign $row ry rx ex ey pitch orient
+      if {$height != $ey - $ry || $pitch <= 0} { incr ri; continue }
+      set blocks {}
+      if {[dict exists $ot_occupied $ri]} { set blocks [lsort -integer -index 0 [dict get $ot_occupied $ri]] }
+      lappend blocks [list $ex $ex]
+      set start $rx
+      foreach block $blocks {
+        lassign $block lo hi
+        set low [expr {$rx + int(ceil(double($start - $rx) / $pitch)) * $pitch}]
+        set high [expr {$rx + int(floor(double(min($lo, $ex) - $width - $rx) / $pitch)) * $pitch}]
+        if {$high >= $low} {
+          set x [expr {max($low, min($high, $rx + round(($px - $width / 2.0 - $rx) / $pitch) * $pitch))}]
+          set cost [expr {abs($x + $width / 2.0 - $px) + abs($ry + $height / 2.0 - $py)}]
+          if {$cost < $score} { set score $cost; set best [list $ri $x $ry $orient] }
+        }
+        set start [expr {max($start, $hi)}]
+      }
+      incr ri
+    }
+    if {$best eq ""} { error "OT_IOFLOP: no legal capture site for $name ($port)" }
+    lassign $best ri x y orient
+    $ff setOrient $orient
+    $ff setLocation $x $y
+    $ff setPlacementStatus FIRM
+    dict lappend ot_occupied $ri [list $x [expr {$x + $width}]]
+    lappend ot_list $name
+    incr ot_ni
+    puts "OT_IOFLOP extra capture $port -> $name at ($x, $y) DBU"
+  }
 }
 # OT_MPFLOP_PINS (el1011-q-kvd 2026-10-12, optional; comma-separated pin names, e.g. "pop"): also anchor the flop that
 # drives each such INPUT pin of a hard macro / hardened child (directly or through <= 3 single-fanout INV / BUF), FIRM
