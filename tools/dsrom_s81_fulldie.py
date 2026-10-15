@@ -7703,8 +7703,11 @@ def align_station_jogs(m, rounds=2):
                 # per-bit pins: dq on the load-facing face, di on the opposite face, same along-coordinate
                 fo_ = bx[2] if (horiz and toward > 0) else bx[0] if horiz else (bx[3] if toward > 0 else bx[1])
                 fi_ = bx[0] if (horiz and toward > 0) else bx[2] if horiz else (bx[1] if toward > 0 else bx[3])
-                Dq = [((fo_, q[1]) if horiz else (q[0], fo_)) for q in B]
-                Di = [((fi_, q[1]) if horiz else (q[0], fi_)) for q in B]
+                ly_ = 'M4' if horiz else 'M5'
+                fq_ = ('E' if toward > 0 else 'W') if horiz else ('N' if toward > 0 else 'S')
+                fd_ = dict(E='W', W='E', N='S', S='N')[fq_]
+                Dq = [((fo_, q[1], fq_, ly_) if horiz else (q[0], fo_, fq_, ly_)) for q in B]
+                Di = [((fi_, q[1], fd_, ly_) if horiz else (q[0], fi_, fd_, ly_)) for q in B]
                 bi = PA.bundle(A, Di)
                 if bi['verdict'] == 'FAIL' or max(abs(a[0] - b[0]) + abs(a[1] - b[1]) for a, b in zip(A, Di)) > ALIGN_STN_REACH_UM:
                     continue
