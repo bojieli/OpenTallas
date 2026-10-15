@@ -399,7 +399,11 @@ module qfd_sp_su64_sfu #(parameter integer CBUF_EDGES=5,COPY_DATA_MUT=0,EXTERNAL
  wire red_we;wire[23:0]red_addr;wire[31:0]red_data;
  wire ready,idle,active,su_fault,wrom_fault;wire[7:0]inflight;
  wire[15:0]progress,rows;wire[63:0]crom_re;wire[1535:0]crom_addr;wire[4095:0]crom_q;
- wire copy_fault;
+ wire copy_fault,copy_active_internal;
+ // Export a real pin register. Local availability remains the true internal
+ // occupancy; the new status edge never changes copy/arithmetic issue timing.
+ ot_hdc_delay #(.W(1),.D(1),.RESET(1))u_copy_active_pin
+  (.clk(ck),.rst_n(rst_n),.d(copy_active_internal),.q(cp_active));
  reg embed_epoch_valid,embed_epoch_fault;reg[15:0]embed_epoch;
  always @(posedge ck or negedge rst_n)
   if(!rst_n)begin embed_epoch_valid<=0;embed_epoch<=0;embed_epoch_fault<=0;end
@@ -408,7 +412,7 @@ module qfd_sp_su64_sfu #(parameter integer CBUF_EDGES=5,COPY_DATA_MUT=0,EXTERNAL
    if(EXTERNAL_EMBED==0&&preload_v&&(!embed_epoch_valid||preload_epoch!=embed_epoch||fill_begin))embed_epoch_fault<=1;
   end
  wire[2366:0] arithmetic_va;
- assign sd={su_fault|wrom_fault|copy_fault|embed_epoch_fault,rows,progress,kv_we,idle&&!cp_active,ready&&!cp_active,inflight,active|cp_active};
+ assign sd={su_fault|wrom_fault|copy_fault|embed_epoch_fault,rows,progress,kv_we,idle&&!copy_active_internal,ready&&!copy_active_internal,inflight,active|copy_active_internal};
  assign ca0={si[481:476],crom_addr[0+:192],crom_re[0+:8]};
  assign crom_q[0+:512]=cq0;
  assign ca1={si[481:476],crom_addr[192+:192],crom_re[8+:8]};
@@ -426,7 +430,7 @@ module qfd_sp_su64_sfu #(parameter integer CBUF_EDGES=5,COPY_DATA_MUT=0,EXTERNAL
  assign ca7={si[481:476],crom_addr[1344+:192],crom_re[56+:8]};
  assign crom_q[3584+:512]=cq7;
  qfd_su_vm_pack u_pack(.s_re0(re0),.s_re1(re1),.s_a0(a0),.s_a1(a1),.sw_mask(sw_mask),.sw_a0(sw_a0),.sw_a1(sw_a1),.sw_data(sw_data),.red_we(red_we),.red_addr(red_addr),.red_data(red_data),.va(arithmetic_va));
- qfd_su_static_copy #(.READ_EDGES(15),.DATA_MUT(COPY_DATA_MUT)) u_copy(.ck(ck),.rst_n(rst_n),.cp(cp),.su_va(arithmetic_va),.vq(vq),.va(va),.xsw(xsw),.cp_active(cp_active),.cp_done(cp_done),.fault(copy_fault));
+ qfd_su_static_copy #(.READ_EDGES(15),.DATA_MUT(COPY_DATA_MUT)) u_copy(.ck(ck),.rst_n(rst_n),.cp(cp),.su_va(arithmetic_va),.vq(vq),.va(va),.xsw(xsw),.cp_active(copy_active_internal),.cp_done(cp_done),.fault(copy_fault));
  ot_qfd_sp_su64_static_entries #(.EXTERNAL_EMBED(EXTERNAL_EMBED),.VL(14),.CRX(CBUF_EDGES-1),.LMIN(15)) u_su(
  .external_a_re(external_a_re),.external_a_addr(external_a_addr),.external_a_q(external_a_q),
  .external_vm_a_re(external_vm_a_re),.external_vm_a_addr(external_vm_a_addr),.external_embed_fault(external_embed_fault),
