@@ -46,7 +46,7 @@ def relay_children():
 
 
 def kit_of(master):
-    return {"dsfd_gth_rw": "dsfd_gth_rw", "dsfd_gth_re": "dsfd_gth_re", "dsfd_gth_ctl": "dsfd_gth_ctl"}.get(
+    return {"dsfd_gth_rw": "dsfd_gth_rw_v19", "dsfd_gth_re": "dsfd_gth_re_v19", "dsfd_gth_ctl": "dsfd_gth_ctl"}.get(
         master, "s81_rly_" + master[len("dsfd_rly_"):].lower())
 
 
@@ -62,7 +62,7 @@ def main():
     for g in range(8):
         for k in range(4):
             m = "dsfd_gth_rw" if g < 4 else "dsfd_gth_re"
-            children.append({"view": f"physical/ref_tile/{m}/views/{m}", "count": 1, "inst": f"u_l_{g}_{k}",
+            children.append({"view": f"physical/ref_tile/{kit_of(m)}/views/{m}", "count": 1, "inst": f"u_l_{g}_{k}",
                              "at": [round(LEAF_X[g], 3), round(ROW_Y[k], 3)], "orient": "R0"})
     children.append({"view": "physical/ref_tile/dsfd_gth_ctl/views/dsfd_gth_ctl", "count": 1, "inst": "u_ctl",
                      "at": [1598.4, 8.64], "orient": "R0"})

@@ -1,0 +1,37 @@
+{
+  "gate": "PASS",
+  "source_commit": "94fe68fe7",
+  "native_qualified": false,
+  "physical_qualified": false,
+  "whole_layer_qualified": false,
+  "exact_words": 47104,
+  "actual_C12_lanes": 16,
+  "shapes": [
+    [
+      1,
+      4096
+    ],
+    [
+      1,
+      7168
+    ],
+    [
+      1,
+      7168
+    ],
+    [
+      4,
+      7168
+    ]
+  ],
+  "compiler": "independent Python instruction lowering; no oracle controls replayed",
+  "oracle": "actual immutableC12 arithmetic used only for expected memory words",
+  "memory": "external deterministic word-port fixture; actual mapped store proved separately",
+  "mutant": "actual first scheduled issue suppressed; FAIL STATIC_SHAPE4096vs4080",
+  "source_sha256": {
+    "tools/hbm_static/sfu_vector_calendar.py": "9f4fe9825fea5f030d4bdc65ddd28688b04245d3935b713ca1aaa6838d7f3234",
+    "tools/hbm_static/sfu_control_image.py": "b9a1c3b0b4f378b6492b76752610b5986eafc2e4ac3e45ec33dffb60bab53984",
+    "rtl/test/hbm_accel/generic/tb_hgi_sfu_static_calendar.sv": "0f3206948f3bc873ca69999d108bf0601116b3b02061353626e0fd9cdb59ddde",
+    "rtl/hbm_accel/generic/peers/ot_hgi_sfu_static_quarter.sv": "3f995082745666a40a4585bbf8e916059d4b6b0a986fa96c1a830570e1fff633"
+  }
+}

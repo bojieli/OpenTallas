@@ -1,0 +1,281 @@
+
+-- Running command `read_verilog -sv rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv; hierarchy -top ot_vms_calendar_static -chparam W 48; proc; opt; write_json program_final.json; stat' --
+
+1. Executing Verilog-2005 frontend: rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv
+Parsing SystemVerilog input from `rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv' to AST representation.
+Generating RTLIL representation for module `\ot_vms_calendar_static'.
+Successfully finished Verilog frontend.
+
+2. Executing HIERARCHY pass (managing design hierarchy).
+Parameter \W = 48
+
+3. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_vms_calendar_static'.
+Parameter \W = 48
+Generating RTLIL representation for module `$paramod\ot_vms_calendar_static\W=32'00000000000000000000000000110000'.
+
+3.1. Analyzing design hierarchy..
+Top module:  \ot_vms_calendar_static
+
+3.2. Analyzing design hierarchy..
+Top module:  \ot_vms_calendar_static
+Removing unused module `$paramod\ot_vms_calendar_static\W=32'00000000000000000000000000110000'.
+Removed 1 unused modules.
+
+4. Executing PROC pass (convert processes to netlists).
+
+4.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 1 empty switch in `\ot_vms_calendar_static.$proc$rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv:63$76'.
+Found and cleaned up 1 empty switch in `\ot_vms_calendar_static.$proc$rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv:0$94'.
+Removing empty process `ot_vms_calendar_static.$proc$rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv:0$94'.
+Cleaned up 2 empty switches.
+
+4.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Marked 1 switch rules as full_case in process $proc$rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv:34$49 in module ot_vms_calendar_static.
+Marked 4 switch rules as full_case in process $proc$rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv:63$76 in module ot_vms_calendar_static.
+Removed a total of 0 dead cases.
+
+4.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 9 redundant assignments.
+Promoted 12 assignments to connections.
+
+4.4. Executing PROC_INIT pass (extract init attributes).
+
+4.5. Executing PROC_ARST pass (detect async resets in processes).
+Found async reset \rst_n in `\ot_vms_calendar_static.$proc$rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv:34$49'.
+Found async reset \rst_n in `\ot_vms_calendar_static.$proc$rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv:63$76'.
+
+4.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+<suppressed ~7 debug messages>
+
+4.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `\ot_vms_calendar_static.$proc$rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv:34$49'.
+     1/2: $0\start_v_q[0:0]
+     2/2: $0\cfg_we_q[0:0]
+Creating decoders for process `\ot_vms_calendar_static.$proc$rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv:57$73'.
+Creating decoders for process `\ot_vms_calendar_static.$proc$rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv:63$76'.
+     1/14: $0\done[0:0]
+     2/14: $0\active[0:0]
+     3/14: $0\calendar_v[0:0]
+     4/14: $0\last1[0:0]
+     5/14: $0\last0[0:0]
+     6/14: $0\valid1[0:0]
+     7/14: $0\valid0[0:0]
+     8/14: $0\issued[31:0]
+     9/14: $0\loops_left[15:0]
+    10/14: $0\limit[10:0]
+    11/14: $0\base[9:0]
+    12/14: $0\pc[9:0]
+    13/14: $0\running[0:0]
+    14/14: $0\fault[0:0]
+Creating decoders for process `\ot_vms_calendar_static.$proc$rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv:30$48'.
+
+4.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+
+4.9. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `\ot_vms_calendar_static.\cfg_we_q' using process `\ot_vms_calendar_static.$proc$rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv:34$49'.
+  created $adff cell `$procdff$164' with positive edge clock and positive level reset.
+Creating register for signal `\ot_vms_calendar_static.\start_v_q' using process `\ot_vms_calendar_static.$proc$rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv:34$49'.
+  created $adff cell `$procdff$169' with positive edge clock and positive level reset.
+Creating register for signal `\ot_vms_calendar_static.\calendar' using process `\ot_vms_calendar_static.$proc$rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv:57$73'.
+  created $dff cell `$procdff$170' with positive edge clock.
+Creating register for signal `\ot_vms_calendar_static.\ordinal' using process `\ot_vms_calendar_static.$proc$rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv:57$73'.
+  created $dff cell `$procdff$171' with positive edge clock.
+Creating register for signal `\ot_vms_calendar_static.\pc0' using process `\ot_vms_calendar_static.$proc$rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv:57$73'.
+  created $dff cell `$procdff$172' with positive edge clock.
+Creating register for signal `\ot_vms_calendar_static.\pc1' using process `\ot_vms_calendar_static.$proc$rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv:57$73'.
+  created $dff cell `$procdff$173' with positive edge clock.
+Creating register for signal `\ot_vms_calendar_static.\ord0' using process `\ot_vms_calendar_static.$proc$rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv:57$73'.
+  created $dff cell `$procdff$174' with positive edge clock.
+Creating register for signal `\ot_vms_calendar_static.\ord1' using process `\ot_vms_calendar_static.$proc$rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv:57$73'.
+  created $dff cell `$procdff$175' with positive edge clock.
+Creating register for signal `\ot_vms_calendar_static.\captured' using process `\ot_vms_calendar_static.$proc$rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv:57$73'.
+  created $dff cell `$procdff$176' with positive edge clock.
+Creating register for signal `\ot_vms_calendar_static.\calendar_v' using process `\ot_vms_calendar_static.$proc$rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv:63$76'.
+  created $adff cell `$procdff$181' with positive edge clock and positive level reset.
+Creating register for signal `\ot_vms_calendar_static.\active' using process `\ot_vms_calendar_static.$proc$rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv:63$76'.
+  created $adff cell `$procdff$186' with positive edge clock and positive level reset.
+Creating register for signal `\ot_vms_calendar_static.\done' using process `\ot_vms_calendar_static.$proc$rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv:63$76'.
+  created $adff cell `$procdff$191' with positive edge clock and positive level reset.
+Creating register for signal `\ot_vms_calendar_static.\fault' using process `\ot_vms_calendar_static.$proc$rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv:63$76'.
+  created $adff cell `$procdff$196' with positive edge clock and positive level reset.
+Creating register for signal `\ot_vms_calendar_static.\running' using process `\ot_vms_calendar_static.$proc$rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv:63$76'.
+  created $adff cell `$procdff$201' with positive edge clock and positive level reset.
+Creating register for signal `\ot_vms_calendar_static.\pc' using process `\ot_vms_calendar_static.$proc$rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv:63$76'.
+  created $adff cell `$procdff$206' with positive edge clock and positive level reset.
+Creating register for signal `\ot_vms_calendar_static.\base' using process `\ot_vms_calendar_static.$proc$rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv:63$76'.
+  created $adff cell `$procdff$211' with positive edge clock and positive level reset.
+Creating register for signal `\ot_vms_calendar_static.\limit' using process `\ot_vms_calendar_static.$proc$rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv:63$76'.
+  created $adff cell `$procdff$216' with positive edge clock and positive level reset.
+Creating register for signal `\ot_vms_calendar_static.\loops_left' using process `\ot_vms_calendar_static.$proc$rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv:63$76'.
+  created $adff cell `$procdff$221' with positive edge clock and positive level reset.
+Creating register for signal `\ot_vms_calendar_static.\issued' using process `\ot_vms_calendar_static.$proc$rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv:63$76'.
+  created $adff cell `$procdff$226' with positive edge clock and positive level reset.
+Creating register for signal `\ot_vms_calendar_static.\valid0' using process `\ot_vms_calendar_static.$proc$rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv:63$76'.
+  created $adff cell `$procdff$231' with positive edge clock and positive level reset.
+Creating register for signal `\ot_vms_calendar_static.\valid1' using process `\ot_vms_calendar_static.$proc$rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv:63$76'.
+  created $adff cell `$procdff$236' with positive edge clock and positive level reset.
+Creating register for signal `\ot_vms_calendar_static.\last0' using process `\ot_vms_calendar_static.$proc$rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv:63$76'.
+  created $adff cell `$procdff$241' with positive edge clock and positive level reset.
+Creating register for signal `\ot_vms_calendar_static.\last1' using process `\ot_vms_calendar_static.$proc$rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv:63$76'.
+  created $adff cell `$procdff$246' with positive edge clock and positive level reset.
+Creating register for signal `\ot_vms_calendar_static.\cfg_addr_q' using process `\ot_vms_calendar_static.$proc$rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv:30$48'.
+  created $dff cell `$procdff$247' with positive edge clock.
+Creating register for signal `\ot_vms_calendar_static.\start_base_q' using process `\ot_vms_calendar_static.$proc$rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv:30$48'.
+  created $dff cell `$procdff$248' with positive edge clock.
+Creating register for signal `\ot_vms_calendar_static.\cfg_data_q' using process `\ot_vms_calendar_static.$proc$rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv:30$48'.
+  created $dff cell `$procdff$249' with positive edge clock.
+Creating register for signal `\ot_vms_calendar_static.\start_limit_q' using process `\ot_vms_calendar_static.$proc$rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv:30$48'.
+  created $dff cell `$procdff$250' with positive edge clock.
+Creating register for signal `\ot_vms_calendar_static.\start_loops_q' using process `\ot_vms_calendar_static.$proc$rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv:30$48'.
+  created $dff cell `$procdff$251' with positive edge clock.
+
+4.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+4.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Removing empty process `ot_vms_calendar_static.$proc$rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv:34$49'.
+Removing empty process `ot_vms_calendar_static.$proc$rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv:57$73'.
+Found and cleaned up 7 empty switches in `\ot_vms_calendar_static.$proc$rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv:63$76'.
+Removing empty process `ot_vms_calendar_static.$proc$rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv:63$76'.
+Removing empty process `ot_vms_calendar_static.$proc$rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv:30$48'.
+Cleaned up 7 empty switches.
+
+4.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_vms_calendar_static.
+<suppressed ~35 debug messages>
+
+5. Executing OPT pass (performing simple optimizations).
+
+5.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_vms_calendar_static.
+<suppressed ~1 debug messages>
+
+5.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_vms_calendar_static'.
+<suppressed ~57 debug messages>
+Removed a total of 19 cells.
+
+5.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_vms_calendar_static..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~12 debug messages>
+
+5.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_vms_calendar_static.
+Performed a total of 0 changes.
+
+5.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_vms_calendar_static'.
+Removed a total of 0 cells.
+
+5.6. Executing OPT_DFF pass (perform DFF optimizations).
+Adding EN signal on $procdff$216 ($adff) from module ot_vms_calendar_static (D = \start_limit_q, Q = \limit).
+Adding EN signal on $procdff$226 ($adff) from module ot_vms_calendar_static (D = $procmux$100_Y, Q = \issued).
+Adding SRST signal on $procdff$170 ($dff) from module ot_vms_calendar_static (D = \captured [47:0], Q = \calendar, rval = 48'000000000000000000000000000000000000000000000000).
+Adding EN signal on $procdff$211 ($adff) from module ot_vms_calendar_static (D = \start_base_q, Q = \base).
+
+5.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_vms_calendar_static..
+Removed 7 unused cells and 101 unused wires.
+<suppressed ~9 debug messages>
+
+5.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_vms_calendar_static.
+<suppressed ~1 debug messages>
+
+5.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+5.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_vms_calendar_static..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~9 debug messages>
+
+5.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_vms_calendar_static.
+Performed a total of 0 changes.
+
+5.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_vms_calendar_static'.
+<suppressed ~6 debug messages>
+Removed a total of 2 cells.
+
+5.13. Executing OPT_DFF pass (perform DFF optimizations).
+
+5.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_vms_calendar_static..
+Removed 0 unused cells and 2 unused wires.
+<suppressed ~1 debug messages>
+
+5.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_vms_calendar_static.
+
+5.16. Rerunning OPT passes. (Maybe there is more to do..)
+
+5.17. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_vms_calendar_static..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~9 debug messages>
+
+5.18. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_vms_calendar_static.
+Performed a total of 0 changes.
+
+5.19. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_vms_calendar_static'.
+Removed a total of 0 cells.
+
+5.20. Executing OPT_DFF pass (perform DFF optimizations).
+
+5.21. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_vms_calendar_static..
+
+5.22. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_vms_calendar_static.
+
+5.23. Finished OPT passes. (There is nothing left to do.)
+
+6. Executing JSON backend.
+
+7. Printing statistics.
+
+=== ot_vms_calendar_static ===
+
+   Number of wires:                100
+   Number of wire bits:           1754
+   Number of public wires:          42
+   Number of public wire bits:    1380
+   Number of ports:                 15
+   Number of port bits:            391
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                 91
+     $add                            3
+     $adff                          13
+     $adffe                          3
+     $dff                           11
+     $eq                             4
+     $gt                             1
+     $le                             1
+     $logic_and                     13
+     $logic_not                      6
+     $logic_or                       3
+     $mux                           22
+     $ne                             1
+     $not                            1
+     $or                             2
+     $reduce_and                     2
+     $reduce_bool                    2
+     $sdff                           1
+     $sub                            1
+     ot_sram_1r1w_1024x256_m2_r2c2      1
+

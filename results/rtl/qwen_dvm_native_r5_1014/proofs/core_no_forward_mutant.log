@@ -1,0 +1,25 @@
+FAIL cyc=181 tile 10 element 0 ref c04f93e6 (operand c050) dvm 400c0000
+FAIL cyc=181 tile 10 element 1 ref 3fcac786 (operand 3fcb) dvm c0ca0000
+FAIL cyc=181 tile 10 element 2 ref 3eb49c7e (operand 3eb5) dvm bf330000
+FAIL cyc=181 tile 10 element 3 ref be18b59f (operand be19) dvm c0260000
+FAIL cyc=181 tile 11 element 0 ref c0c2dae8 (operand c0c3) dvm c07c0000
+FAIL cyc=181 tile 11 element 1 ref 40be8000 (operand 40be) dvm be6f0000
+FAIL cyc=181 tile 11 element 2 ref 403cb557 (operand 403d) dvm c0d30000
+FAIL cyc=181 tile 11 element 3 ref bfa89582 (operand bfa9) dvm bef50000
+FAIL cyc=181 tile 14 element 0 ref 3ee49cf0 (operand 3ee5) dvm bf450000
+FAIL cyc=181 tile 14 element 1 ref bed025b2 (operand bed0) dvm bfc40000
+FAIL cyc=181 tile 14 element 2 ref bfe22cb8 (operand bfe2) dvm c0160000
+FAIL cyc=181 tile 14 element 3 ref bf5dfe92 (operand bf5e) dvm 3e780000
+FAIL cyc=181 tile 15 element 0 ref 40fe1d0d (operand 40fe) dvm 3e850000
+FAIL cyc=181 tile 15 element 1 ref bfbb7e41 (operand bfbb) dvm bf4c0000
+FAIL cyc=181 tile 15 element 2 ref 4045ab69 (operand 4046) dvm bec50000
+FAIL cyc=181 tile 15 element 3 ref 3f57738a (operand 3f57) dvm 3edb0000
+FAIL cyc=181 tile 26 element 0 ref bfc0c29b (operand bfc1) dvm 40f80000
+FAIL cyc=181 tile 26 element 1 ref c0eae241 (operand c0eb) dvm 40560000
+FAIL cyc=181 tile 26 element 2 ref 3e6e8000 (operand 3e6e) dvm 3ed90000
+FAIL cyc=181 tile 26 element 3 ref 404cd72c (operand 404d) dvm 3ee70000
+FAIL errors=39928 checks=159744
+- rtl/qwen_sys/dvm_20261014/tb_qfd_xdvm_prod.sv:213: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 3us; walltime 0.495 s; speed 6.924 us/s
+- Verilator: cpu 0.495 s on 1 threads; allocated 17 MB

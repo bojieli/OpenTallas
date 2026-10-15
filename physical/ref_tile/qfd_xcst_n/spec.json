@@ -49,9 +49,9 @@
  },
  "slot_change_request": "el1014-qwen-split-compute.log (qwen-dvm-build request): replaces qfd_cst_n (384) for the distributed x slice: corridor 516 b (508 + 8 TDM tag), tap to the tile 508 b unchanged, strap sidx[2:0]; same outline as qfd_cst_n.",
  "job": {
-  "owner": "Claude:el1014-qwen-dvm-build",
+  "owner": "Codex:el1014-qwen-dvm-build",
   "branch": "claude/qwen-dvm-1014",
-  "tag": "xn3",
+  "tag": "xn7",
   "purpose": "Qwen TP8 corridor station with the tile's x hold (distributed x slice, owner 08:20 PT 10-14): onward + tap flops as qfd_cst_s, + TDM capture of its own tagged line and the tuple hold register (IL 8, XOFF 3) driving the tile's xl pins. r3: no tap ready (the tile never back-pressures; DIE_BUS_AUDIT row 10).",
   "benches": [
    {
@@ -99,12 +99,12 @@
    77.436
   ],
   "ck": [
-   52.5,
-   52.9
+   51.98,
+   52.16
   ],
   "rst_n": [
-   53.0,
-   53.4
+   52.28,
+   52.46
   ],
   "sidx": [
    0.2,
@@ -134,5 +134,9 @@
  "pin_reg_split": true,
  "hold_pad": {
   "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "structural_change": "Register corridor tag/data at the existing b_q face before selection; forward selected registered data into the fixed hold deadline, retaining historical cap when no tag matches. Fix measured native capture256.8/247.2ps without an added schedule edge.",
+ "reroute_reason": {
+  "kind": "rtl_change"
  }
 }

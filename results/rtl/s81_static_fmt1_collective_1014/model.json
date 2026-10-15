@@ -1,0 +1,60 @@
+{
+  "scope": "FMT1 component; actual die and full collective qualification pending",
+  "ranks": 4,
+  "payload_bits": 512,
+  "engine_record_bits": 547,
+  "forward_frame_bits": 595,
+  "gearbox_slot_bits": 596,
+  "phy_beat_bits": 512,
+  "forward_bits_per_phy_beat": 456,
+  "reverse_bits_per_phy_beat": 53,
+  "records_per_group": 3,
+  "phy_beats_per_group": 4,
+  "stream_cycles_per_phy_beat": 4,
+  "source_cadence_cycles": [
+    4,
+    4,
+    8
+  ],
+  "physical_bits_per_cycle_per_lane": 128,
+  "useful_payload_bits_per_cycle_per_lane": 96,
+  "gathered_bits_per_cycle_per_die": 384,
+  "board_budget_bits_per_cycle_per_lane": 157.58,
+  "peer_lane_count": 3,
+  "remaining_physical_lanes": 5,
+  "peer_mapping": "compiler/die must explicitly bind peer ranks to W/E lane slots",
+  "endpoint_issue_to_gather_edges": 11,
+  "gather_to_vm_source_edges": 1,
+  "vm_write_sources": [
+    44,
+    45,
+    46,
+    47
+  ],
+  "vm_write_record_bits": 551,
+  "vm_write_pin_bits": 2204,
+  "vm_read_request_bits": 15,
+  "vm_read_response_bits": 513,
+  "vm_read_pin_latency_edges": 12,
+  "vm_request_register_edges": 1,
+  "endpoint_samples_return_on_following_edge": true,
+  "core_leaf_clock_bits": 8380,
+  "lane_leaf_clock_bits": [
+    4547,
+    4547,
+    4548
+  ],
+  "vm_service_output_leaf_clock_bits": 2228,
+  "leaf_clock_rule": "each hardened leaf has its own clock root, not one combined root",
+  "old_two_beat_model": "historical prototype only; calendar()/model() do not describe FMT1",
+  "normal_mode_ready": false,
+  "normal_mode_credits": false,
+  "exceptional_mode": "CRC fault is sticky; explicit retry/recovery not implemented",
+  "unqualified": [
+    "actual source FIELD/capture allocation and full production calendar",
+    "SRAM physical source visibility and read latency composition in die epoch",
+    "HC exact all-reduce and HC output assembly",
+    "WFC/host static pass-through and physical eight-lane mapping",
+    "accepted die slot, TT/FF/DRC0, pin reach, phi-R clocks, reset and PHY flight"
+  ]
+}

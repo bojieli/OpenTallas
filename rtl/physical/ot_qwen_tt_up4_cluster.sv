@@ -172,7 +172,8 @@ module qfd_tt_up4_w #(
     parameter integer LNK  = 0,
     parameter integer TREE_LAT = 7,
     parameter integer TCUT = 7,
-    parameter integer LMUT = 0
+    parameter integer LMUT = 0,
+    parameter integer RPIN = 0            // q14 r11: leaf reset pin register (soft build / bench; the hard view is RPIN 1)
 ) (
     input  wire [3:0]        ck,          // one clock entry a leaf
     input  wire [3:0]        rst_n,
@@ -196,7 +197,7 @@ module qfd_tt_up4_w #(
 `ifdef OT_QFD_UP4_HARD
         ot_qfd_band_upper u_leaf (
 `else
-        ot_qfd_band_upper #(.NL(4), .NB(3), .LNK(LNK), .DLY(DLY), .TREE_LAT(TREE_LAT), .MUT(LMUT), .TCUT(TCUT), .LG(12)) u_leaf (
+        ot_qfd_band_upper #(.NL(4), .NB(3), .LNK(LNK), .DLY(DLY), .TREE_LAT(TREE_LAT), .MUT(LMUT), .TCUT(TCUT), .LG(12), .RPIN(RPIN)) u_leaf (
 `endif
             .clk(ck[l]), .rst_n(rst_n[l]), .pw(lpw), .pw_v(pv_l[3*l +: 3]), .lf(lf_l[3*l +: 3]),
             .sel_e(sel_l[26*l +: 13]), .tv_e(sel_l[26*l + 13 +: 13]),

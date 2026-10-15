@@ -1,0 +1,18 @@
+{
+  "scope": "actual sequencer dh PW/start leaf, actual issuer and fixed issue core; full sequencer body not simulated by this mechanism test; production layer calendar/physical D_seq remain open",
+  "sources": {
+    "rtl/test/tb_qfd_seq_su_collective_calendar.sv": "4414aa57612b0187a2de1871752a6219adda84a4630f4d6308027f3856bd9a54",
+    "rtl/qwen_split/qfd_seq_su_collective_calendar.sv": "46fe0b5bc621fe32f1353fc49849ad3efae84f758bcf3f5defdaccbfa513c170",
+    "rtl/rom/ot_coll_cmd_issue.sv": "22e08d8e69f7b449fffda8880cd6c0458d59e99403bdebc0b0b8a450da267a11",
+    "rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue.sv": "0d533e9a09514840fac0628053fd1aaa501bccbffeaf8913afb6a936d1d994b1",
+    "rtl/qwen_split/qfd_seq_su_static.sv": "d2516bf6f876b0e5cbbb3c9c9a764bf5e12a9df2a952eca0887db66bd9280d7c",
+    "tools/qwen_static_schedule/collective.py": "f7a83aac32e8beda337b3ead441d6f3dd19dd80ebe05ef8b9653be2d91dd76f2"
+  },
+  "command_issue_cycle": 8,
+  "stop_cycle": 12,
+  "PW_window": [
+    944,
+    960
+  ],
+  "native": false
+}

@@ -1,0 +1,28 @@
+{
+  "scope": "real HOST loader -> typed kind13 -> two independent observed1024PW actual4SRAM inputs/readback plus one genuineSU8DW receipt with TT1edge observation relay -> typed kind14 -> trusted actual PW1023 footer HOST witness; parent lint separately required; no native complete-token/physical/phase qualification",
+  "sources": {
+    "rtl/qwen_sys/context_transport_20261014/tb_qkd_host_record_port.sv": "b63c57ed59eef3637dc55a7e8909efdeb96b94f81a9bf81443746ef31162178b",
+    "rtl/qwen_sys/context_transport_20261014/qkd_host_record_port.sv": "39e1500710f2a1bd3f2a24f9e19678b25f2ff35d53ec271a7bb5856a28847051",
+    "rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv": "c5592a70fd70235272ef5d1c1f07cf9396722b43ec8cde80f64fd58c8e1d5282",
+    "rtl/qwen_sys/host_20261013/qkd_host_program_loader.sv": "1ac703c98330797cdbced7a5cc959b462c65b44285b3a64b09ea82891da888f4",
+    "rtl/qwen_sys/context_transport_20261014/qfd_program_record_port.sv": "4ffa85a0c0dfc1c9d945f8d24f3278050630053d110cb42fad0d17ed82811e15",
+    "rtl/qwen_sys/program_receiver_20261014/qkd_program_commit.sv": "26a396b1826998c681fe23090d0dab22b5a6df9334b10fd4b47fbd967e3eb291",
+    "rtl/qwen_sys/program_receiver_20261014/tb_qkd_program_join_revoke.sv": "8cf7750b5e406faac32a9567f72cbb644c0b16ec72bbdf1bea6af0e48deec5d7"
+  },
+  "macro_source": "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v",
+  "macro_sha256": "d4533939f695944bebd6a63a086e3771846bc0c379af52720de8974fee504145",
+  "fixed_edges": {
+    "HOST_record_TX": 2,
+    "metadata_RX": 1,
+    "bench_actual_data_relay": 4,
+    "bench_macro_pin_register": 1,
+    "actual_write_observer_register": 1,
+    "witness_TX": 1,
+    "HOST_witness_RX": 1
+  },
+  "negative_controls": [
+    "auth_digest_rejected",
+    "capability_rejected",
+    "missing_actual_commit_rejected"
+  ]
+}
