@@ -123,5 +123,13 @@
  "children": [],
  "recipe": 2,
  "keep_pin_regs": true,
- "reroute_reason": "pin_register"
+ "reroute_reason": {
+  "kind": "pin_register",
+  "source": "results/rtl/qwen_r11_pin_audit_1014/x3_mux_native_p1_2008d1b57.json",
+  "cell": "ot_qfd_x3_mux_native",
+  "launch_ps": 200.42,
+  "capture_ps": 249.31,
+  "fix": "RTL reset pin register in ot_qfd_x3_mux_native: rst_n lands in one kept flop (async assert, registered deassert); the five 120-bit slices reset from it; same outline, assigned pins (f7574712e), kit recipe"
+ },
+ "structural_change": "r11: rst_n pin register (native capture 249.3 ps on rst_n in CLOSED p1-2008d1b57); release +1 edge"
 }
