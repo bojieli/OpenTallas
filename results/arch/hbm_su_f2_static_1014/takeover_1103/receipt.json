@@ -215,18 +215,6 @@
       "host": "ot-pve1",
       "pid": 1436642,
       "mut": 4
-    },
-    {
-      "host": "ot-epyc1tb",
-      "pid": 731938,
-      "mut": 2,
-      "sim_pid": 883037
-    },
-    {
-      "host": "ot-epyc1tb",
-      "pid": 731935,
-      "mut": 8,
-      "sim_pid": 883004
     }
   ],
   "open": [
@@ -261,5 +249,20 @@
       "light": 28
     },
     "ledger": "historicalPROPOSED only; no new accepted cost row entered"
-  }
+  },
+  "collected_RTL_mutants": [
+    {
+      "MUT": 2,
+      "log": "whole_su/rtl_mut2.log",
+      "errors": 132583,
+      "exit": 1
+    },
+    {
+      "MUT": 8,
+      "log": "whole_su/rtl_mut8.log",
+      "errors": 1,
+      "exit": 1
+    }
+  ],
+  "source_files_scope": "Recovered original component proofs only; clock7 source successor has separate evidence and pending full composed proof."
 }

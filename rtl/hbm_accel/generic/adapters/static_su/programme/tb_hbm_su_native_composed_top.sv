@@ -48,7 +48,7 @@ module tb_hbm_su_native_composed_top;
  wire [19:0] fault;
  ot_hbm_su_static_top #(.RF_RELAY(RF_RELAY),.MLAT(MLAT),.ALAT(ALAT),.LEAF(LEAF),.MUT(MUT)) dut(
   .pg_clk({16{clk}}),.clk_lane({4096{clk}}),.clk_insert({2048{clk}}),.rst_lane_n({512{rst_n}}),
-  .clk_bcast({64{clk}}),.rst_bcast_n({64{rst_n}}),.clk_bank({512{clk}}),.clk_rf({256{clk}}),.clk_ctl({16{clk}}),
+  .clk_bcast({64{clk}}),.rst_bcast_n({64{rst_n}}),.clk_bank({512{clk}}),.clk_bank_macro({3072{clk}}),.clk_rf({256{clk}}),.clk_ctl({16{clk}}),
   .clk_core({4{clk}}),.clk_red({4{clk}}),.clk_side({6{clk}}),.clk_relay({4{clk}}),.rst_n(rst_n),
   .control(control),.vmr_cmd(vmr),.vmw_cmd(vmw),.rf_rd_cmd(rf),.red_cmd(red),
   .lg_rq(lg_rq),.lg_wq(lg_wq),.lg_rr(lg_rr),.lg_w_done(lg_w_done),.fault(fault));
@@ -124,6 +124,7 @@ module tb_hbm_su_native_composed_top;
   reg [15:0] presec;
   if(!$value$plusargs("DIR=%s",dir))$fatal(1,"DIR missing");
   if(!$value$plusargs("STOP=%d",stop))stop=NE;
+  if(stop!=NE)$fatal(1,"native composed proof requires the full compiled timeline");
   mut_data=$test$plusargs("MUT_DATA");mut_addr=$test$plusargs("MUT_ADDR");mut_rf=$test$plusargs("MUT_RF");mut_red=$test$plusargs("MUT_RED");mut_cal=$test$plusargs("MUT_CAL");
   for(i=0;i<32;i=i+1)for(q=0;q<4;q=q+1)for(p=0;p<8;p=p+1)begin pend_v[i][q][p]=0;pend_w[i][q][p]=0;pend_s[i][q][p]=0;end
   $readmemh({dir,"/programme/config.mem"},programme_config);
@@ -173,8 +174,8 @@ module tb_hbm_su_native_composed_top;
   if(ew!=NW)fail($sformatf("VM writes %0d of %0d expected",ew,NW));
   if(es!=NS)fail($sformatf("scalars %0d of %0d expected",es,NS));
   if(errors)$fatal(1,"SU_NATIVE_COMPOSED_TOP FAIL errors=%0d reads=%0d writes=%0d scalars=%0d",errors,reads,writes,scalars);
-  $display("SU_NATIVE_COMPOSED_TOP PASS lanes=512 slices=16 store_banks=512 SRAMs=3072+8+96 native_banks=32 reducers=4 rf_replicas=4 edges=%0d fill_reads=%0d vm_writes=%0d scalars=%0d RF_RELAY=%0d MLAT=%0d",
-           NE,reads,writes,scalars,RF_RELAY,MLAT);
+  $display("SU_NATIVE_COMPOSED_TOP PASS lanes=512 slices=16 store_banks=512 SRAMs=3072+8+96+%0d native_banks=32 reducers=4 rf_replicas=4 edges=%0d fill_reads=%0d vm_writes=%0d scalars=%0d RF_RELAY=%0d MLAT=%0d",
+           PROGRAMME_MACROS,NE,reads,writes,scalars,RF_RELAY,MLAT);
   $finish;
  end
 endmodule

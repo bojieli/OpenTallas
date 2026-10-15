@@ -22,6 +22,7 @@ module ot_hbm_su_static_top #(
  input wire [4095:0] clk_lane, input wire [2047:0] clk_insert, input wire [511:0] rst_lane_n,
  input wire [63:0] clk_bcast, rst_bcast_n,
  input wire [511:0] clk_bank,
+ input wire [3071:0] clk_bank_macro, // six separately delivered SRAM clocks per store bank
  input wire [255:0] clk_rf,
  input wire [15:0] clk_ctl,                      // one root per port-group slice
  input wire [3:0] clk_core,clk_red,
@@ -66,7 +67,7 @@ module ot_hbm_su_static_top #(
    .FETCH_EXTRA_EDGES(FETCH_EXTRA_EDGES),.MLAT(MLAT),.ALAT(ALAT),.LEAF(LEAF),.MUT(QMUT)) u_quarter(
    .pg_clk(pg_clk[q*4+:4]),.clk_lane(clk_lane[q*1024+:1024]),.clk_insert(clk_insert[q*512+:512]),
    .rst_lane_n(rst_lane_n[q*128+:128]),.clk_bcast(clk_bcast[q*16+:16]),.rst_bcast_n(rst_bcast_n[q*16+:16]),
-   .clk_bank(clk_bank[q*128+:128]),.clk_rf(clk_rf[q*64+:64]),.clk_ctl(clk_ctl[q*4+:4]),.clk_core(clk_core[q]),
+   .clk_bank(clk_bank[q*128+:128]),.clk_bank_macro(clk_bank_macro[q*768+:768]),.clk_rf(clk_rf[q*64+:64]),.clk_ctl(clk_ctl[q*4+:4]),.clk_core(clk_core[q]),
    .clk_red(clk_red[q]),.clk_side(clk_side),.rst_n(rst_n),.control(control[q*1742+:1742]),
    .vmr_cmd(vmr_cmd[q*240+:240]),.vmw_cmd(vmw_cmd[q*312+:312]),.rf_rd_cmd(rf_rd_cmd[q*54+:54]),
    .red_cmd(red_cmd[q*74+:74]),.rf_wv(wv),.rf_wa(wa),.rf_wd(wd),.red_sv(red_sv[q]),.red_tag(red_tag[q*32+:32]),
