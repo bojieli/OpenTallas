@@ -16429,3 +16429,13 @@ def hbm_idx_static_candidate_model():
         schedule='each score beat has fixed3edge candidate return, no queues or credit',
         slot='newsource no assignedphysicalroot/cut; downstream actualK2048 collective join OPEN',
         qualification='OPEN golden max/newest/allmasked/partial mutants, physical and global2048 price')
+
+
+def hbm_idx_static_calendar_model():
+    """Compiler32b microinstructions in one real256x256 SRAM,2048slot capacity."""
+    return dict(schema='opentallas.hbm-idx-static-calendar.v1',
+        program_bits=65536,instruction_bits=32,instruction_capacity=2048,
+        real_macros=1,shape='256x256 1R1W',ports=dict(load_bits=256,issue_bits=32),
+        issue_II=1,roots=2,latency='start→read0 at+1→registered instruction0 at+2',
+        schedule='fixed bounded PC; instruction fields drive actual operand/scorer/selector/link slots; no dataready',
+        qualification='OPEN actual nativeparent timeline and physical placement; no price acceptance')
