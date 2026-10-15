@@ -1,0 +1,73 @@
+{
+  "schema": "opentallas.qwen-native-kv-frozen-leaf-gate.v1",
+  "source_commit": "f74794fa41fba1b7f53946533e4e7c8f76bdbb35",
+  "source_branch": "codex/qwen-kv-programme-1103",
+  "producer_sha256": "b50da24fa0ebd9cce161e44af8028cfd76e47538c2494b594e8ce11d5a0bd60c",
+  "physical_grant_commit": "5838d364e",
+  "proposed_outline_um": [
+    86.4,
+    194.4
+  ],
+  "physical_pins": 348,
+  "clock_period_ps": 833.334,
+  "source_publication": {
+    "branch_pushed": true,
+    "root_publication_receipt": "PENDING_ROOT_OWNER"
+  },
+  "files": {
+    "qkd_kv_native_programme.sv": {
+      "upstream_path": "rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv",
+      "sha256": "b50da24fa0ebd9cce161e44af8028cfd76e47538c2494b594e8ce11d5a0bd60c"
+    },
+    "qkd_kv_static_writer.sv": {
+      "upstream_path": "rtl/qwen_sys/static_kv_20261014/qkd_kv_static_writer.sv",
+      "sha256": "53ca5402473ba845bc7683a58ce35b4d6fe2a9d1131f97ac0a59dbab5abb32f6"
+    },
+    "ot_qkd_kv_static_writer_native.sv": {
+      "upstream_path": "rtl/physical/ot_qkd_kv_static_writer_native.sv",
+      "sha256": "a3eb4d2985d154a11ad3b0179883636c46adf2ed108be9106a70cc247b0c6c3c"
+    },
+    "ot_rst_relay.sv": {
+      "upstream_path": "rtl/lib/ot_rst_relay.sv",
+      "sha256": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5"
+    },
+    "tb_qkd_kv_native_programme.sv": {
+      "upstream_path": "rtl/test/qwen_static_kv/tb_qkd_kv_native_programme.sv",
+      "sha256": "80684b02cc2e8d37a922ee04d275ac9886e3f5326cadc8afc76a4470b13277fb"
+    },
+    "boot.hex": {
+      "upstream_path": "results/rtl/qwen_native_kv_programme_1103/reset_v4/boot.hex",
+      "sha256": "5a4692f113422dc5c1d3d15f81d7dccb130c821398e0a405c05cb71e760d7bfe"
+    }
+  },
+  "fixture": {
+    "source": "reset_v4/boot.hex",
+    "stage_rows": 36,
+    "roots_per_stage": 5,
+    "boot_writes": 181,
+    "seal_address": 180,
+    "image_status": "COMPONENT_TEST_NOT_PRODUCTION_INSTALLABLE",
+    "programme_sha256": "f7a290112c2858f5b8dd169ade5c7c9afbaa372cc7f0f8e29a387c064f54bd71"
+  },
+  "positive": {
+    "tokens": 2,
+    "stages": 36,
+    "boundary_positions_per_stage": 16,
+    "cohorts": 1152,
+    "slots": 4608,
+    "sectors": 9216,
+    "normal_resets": 0,
+    "normal_configuration_writes": 0
+  },
+  "negative": {
+    "MUT1": "flip independently captured compiled TAG59 epoch bit; actual producer words retain the original identity; actual native writer must fault"
+  },
+  "dependencies": [
+    "bash",
+    "python3 standard library",
+    "iverilog",
+    "vvp"
+  ],
+  "global_model_imports": false,
+  "claim": "Standalone exact source-bound component fixture using actual upstream native writer core/wrapper/reset relay. No ideal writer array, compiler import, physical timing or full-token qualification."
+}
