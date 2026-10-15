@@ -30,6 +30,7 @@ module tb_static_controller_write_abi;
     wire        p_cv  = po[O_po_col_v], p_cwe = po[O_po_col_we];
     wire [4:0]  p_cb  = po[O_po_col_bank +: 5], p_cc = po[O_po_col_col +: 5];
     wire [287:0] p_wd = po[O_po_wd +: 288];
+    longint kv_write_column_cycle[$];
     longint cyc = 0, n_cmp = 0, n_err = 0, n_rowc = 0, n_colc = 0;
     task automatic bad(input string what);
         if (n_err < 12) $display("MISMATCH hclk=%0d %s", cyc, what);
@@ -114,6 +115,7 @@ module tb_static_controller_write_abi;
             rq_due.push_back(cyc + RL); rq_word.push_back(w);
         end
         if (hrst && p_cv && p_cwe) begin
+            if(b_row[p_cb]>=ROW0&&b_row[p_cb]<ROW0+64)kv_write_column_cycle.push_back(cyc);
             if (!b_open[p_cb]) bad("WR to a closed bank");
             wr_due.push_back(cyc + CVL + 3); wr_b.push_back(p_cb); wr_c.push_back(p_cc); wr_row.push_back(b_row[p_cb]);
         end
@@ -186,6 +188,11 @@ module tb_static_controller_write_abi;
         give = (rnd[3:0] < 4'd11) ? ((cred_pend > 3) ? 3 : int'(cred_pend)) : 0;
         ci[O_ci_h_cred +: 3] <= 3'(give); cred_pend -= give;
         if (o_av) begin
+            if(kv_write_column_cycle.size()==0)bad("write-done without physical WR column");
+            else begin
+                automatic longint column_cycle=kv_write_column_cycle.pop_front();
+                if(cyc-column_cycle!=17)bad($sformatf("physical WR-to-retirement %0d edges expected17",cyc-column_cycle));
+            end
             if (ack_q.size() == 0) bad("write-done with no completed write");
             else begin
                 automatic wr_t x = ack_q.pop_front();
@@ -266,7 +273,7 @@ module tb_static_controller_write_abi;
         if (exp_land.size() != 0 || exp_wr.size() != 0 || exp_st.size() != 0 || exp_sw.size() != 0) bad("expectations left over");
         if (n_kvw != nw || n_stw != 3 || n_er != 7 || n_flip < 20 || n_land != 1024 * NL) bad("coverage floor");
         if (n_err == 0)
-            $display("PASS static_controller_write_ABI pc=%0d: %0d actual hclk (diagnostic PROFILE only, no static schedule qualification) (%0d row, %0d column commands, %0d ACT); %0d sectors landed exact (%0d single-bit upsets corrected), %0d KV writes + %0d static writes exact at the PHY, %0d write-dones, %0d static beats, late-layer write held",
+            $display("PASS static_controller_write_ABI pc=%0d: %0d actual hclk (diagnostic PROFILE only, no static schedule qualification) (%0d row, %0d column commands, %0d ACT); %0d sectors landed exact (%0d single-bit upsets corrected), %0d KV writes + %0d static writes exact at the PHY, %0d physical-column+17 write-dones, %0d static beats, late-layer write held",
                      PCI, n_cmp, n_rowc, n_colc, n_act, n_land, n_flip, n_kvw, n_stw, n_ack, n_er);
         else $fatal(1,"FAIL static_controller_write_ABI pc=%0d mut=%0d: %0d mismatches", PCI, MUT, n_err);
         $finish;
