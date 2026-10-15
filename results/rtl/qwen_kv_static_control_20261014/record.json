@@ -1,0 +1,772 @@
+{
+  "timestamp": "2026-10-14T20:28:22.671952-07:00",
+  "source_commit": "bba7e787da97e5ec5b2fbdf532cabe4ccddb5278",
+  "scope": "control and actual mapped SRAM only; not native full arithmetic composition or physical closure",
+  "calendar": {
+    "schema": "qwen-tp8-static-qk-calendar-v1",
+    "scope": "native ECTL3 QK component; external service latency is a required implemented input; excludes ASTK/physical clock/native chip qualification",
+    "context": 8192,
+    "external_row_latency": 4,
+    "QK_ISSUE_AGE": 34,
+    "ROW_RETURN_LAT": 9,
+    "LANE_D": 4,
+    "capacity": 128,
+    "sources": {
+      "rtl/hdc/nearhbm/ot_qkd_ectl_parts.sv": "3e5b780de95ca1eb1d4a5adfdb7c3355ac27ca6a19ae784ca8adec16acabf3d4",
+      "rtl/qwen_sys/split_20261014/qkd_ectl3_epoch_direct_s.sv": "ada371abde8ca81864563580425764a813ca78dbe60ad78bac0d8fc904cc7a7d",
+      "rtl/qwen_sys/split_20261014/qkd_ectl_a_tp8_epoch_direct.sv": "bf30d15e3d95dabd9d152f359c1236718f96e01c9382c92229799815dbe5419c",
+      "rtl/qwen_sys/split_20261014/qkd_ectl_native_direct_tp8.sv": "c822c1c3b46a24b7de5dbcf0a2a7e7cb8e799d0b66861698a83da21db879c4a4",
+      "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": "d9801653d16576f40306c1fb1d01928e88e7371a3897b616e31d3e3df917cb2d"
+    },
+    "engines": [
+      {
+        "stack": 0,
+        "engine": 0,
+        "rows": 256,
+        "max_occupancy": 23,
+        "first": {
+          "t": 0,
+          "request": 4,
+          "write": 11,
+          "read": 33,
+          "consume": 34
+        },
+        "last": {
+          "t": 7800,
+          "request": 259,
+          "write": 266,
+          "read": 288,
+          "consume": 289
+        }
+      },
+      {
+        "stack": 0,
+        "engine": 1,
+        "rows": 256,
+        "max_occupancy": 23,
+        "first": {
+          "t": 1,
+          "request": 4,
+          "write": 11,
+          "read": 33,
+          "consume": 34
+        },
+        "last": {
+          "t": 7801,
+          "request": 259,
+          "write": 266,
+          "read": 288,
+          "consume": 289
+        }
+      },
+      {
+        "stack": 0,
+        "engine": 2,
+        "rows": 256,
+        "max_occupancy": 23,
+        "first": {
+          "t": 2,
+          "request": 4,
+          "write": 11,
+          "read": 33,
+          "consume": 34
+        },
+        "last": {
+          "t": 7802,
+          "request": 259,
+          "write": 266,
+          "read": 288,
+          "consume": 289
+        }
+      },
+      {
+        "stack": 0,
+        "engine": 3,
+        "rows": 256,
+        "max_occupancy": 23,
+        "first": {
+          "t": 3,
+          "request": 4,
+          "write": 11,
+          "read": 33,
+          "consume": 34
+        },
+        "last": {
+          "t": 7803,
+          "request": 259,
+          "write": 266,
+          "read": 288,
+          "consume": 289
+        }
+      },
+      {
+        "stack": 0,
+        "engine": 4,
+        "rows": 256,
+        "max_occupancy": 23,
+        "first": {
+          "t": 4,
+          "request": 4,
+          "write": 11,
+          "read": 33,
+          "consume": 34
+        },
+        "last": {
+          "t": 7804,
+          "request": 259,
+          "write": 266,
+          "read": 288,
+          "consume": 289
+        }
+      },
+      {
+        "stack": 0,
+        "engine": 5,
+        "rows": 256,
+        "max_occupancy": 23,
+        "first": {
+          "t": 5,
+          "request": 4,
+          "write": 11,
+          "read": 33,
+          "consume": 34
+        },
+        "last": {
+          "t": 7805,
+          "request": 259,
+          "write": 266,
+          "read": 288,
+          "consume": 289
+        }
+      },
+      {
+        "stack": 0,
+        "engine": 6,
+        "rows": 256,
+        "max_occupancy": 23,
+        "first": {
+          "t": 6,
+          "request": 4,
+          "write": 11,
+          "read": 33,
+          "consume": 34
+        },
+        "last": {
+          "t": 7806,
+          "request": 259,
+          "write": 266,
+          "read": 288,
+          "consume": 289
+        }
+      },
+      {
+        "stack": 0,
+        "engine": 7,
+        "rows": 256,
+        "max_occupancy": 23,
+        "first": {
+          "t": 7,
+          "request": 4,
+          "write": 11,
+          "read": 33,
+          "consume": 34
+        },
+        "last": {
+          "t": 7807,
+          "request": 259,
+          "write": 266,
+          "read": 288,
+          "consume": 289
+        }
+      },
+      {
+        "stack": 1,
+        "engine": 0,
+        "rows": 256,
+        "max_occupancy": 23,
+        "first": {
+          "t": 128,
+          "request": 4,
+          "write": 11,
+          "read": 33,
+          "consume": 34
+        },
+        "last": {
+          "t": 7928,
+          "request": 259,
+          "write": 266,
+          "read": 288,
+          "consume": 289
+        }
+      },
+      {
+        "stack": 1,
+        "engine": 1,
+        "rows": 256,
+        "max_occupancy": 23,
+        "first": {
+          "t": 129,
+          "request": 4,
+          "write": 11,
+          "read": 33,
+          "consume": 34
+        },
+        "last": {
+          "t": 7929,
+          "request": 259,
+          "write": 266,
+          "read": 288,
+          "consume": 289
+        }
+      },
+      {
+        "stack": 1,
+        "engine": 2,
+        "rows": 256,
+        "max_occupancy": 23,
+        "first": {
+          "t": 130,
+          "request": 4,
+          "write": 11,
+          "read": 33,
+          "consume": 34
+        },
+        "last": {
+          "t": 7930,
+          "request": 259,
+          "write": 266,
+          "read": 288,
+          "consume": 289
+        }
+      },
+      {
+        "stack": 1,
+        "engine": 3,
+        "rows": 256,
+        "max_occupancy": 23,
+        "first": {
+          "t": 131,
+          "request": 4,
+          "write": 11,
+          "read": 33,
+          "consume": 34
+        },
+        "last": {
+          "t": 7931,
+          "request": 259,
+          "write": 266,
+          "read": 288,
+          "consume": 289
+        }
+      },
+      {
+        "stack": 1,
+        "engine": 4,
+        "rows": 256,
+        "max_occupancy": 23,
+        "first": {
+          "t": 132,
+          "request": 4,
+          "write": 11,
+          "read": 33,
+          "consume": 34
+        },
+        "last": {
+          "t": 7932,
+          "request": 259,
+          "write": 266,
+          "read": 288,
+          "consume": 289
+        }
+      },
+      {
+        "stack": 1,
+        "engine": 5,
+        "rows": 256,
+        "max_occupancy": 23,
+        "first": {
+          "t": 133,
+          "request": 4,
+          "write": 11,
+          "read": 33,
+          "consume": 34
+        },
+        "last": {
+          "t": 7933,
+          "request": 259,
+          "write": 266,
+          "read": 288,
+          "consume": 289
+        }
+      },
+      {
+        "stack": 1,
+        "engine": 6,
+        "rows": 256,
+        "max_occupancy": 23,
+        "first": {
+          "t": 134,
+          "request": 4,
+          "write": 11,
+          "read": 33,
+          "consume": 34
+        },
+        "last": {
+          "t": 7934,
+          "request": 259,
+          "write": 266,
+          "read": 288,
+          "consume": 289
+        }
+      },
+      {
+        "stack": 1,
+        "engine": 7,
+        "rows": 256,
+        "max_occupancy": 23,
+        "first": {
+          "t": 135,
+          "request": 4,
+          "write": 11,
+          "read": 33,
+          "consume": 34
+        },
+        "last": {
+          "t": 7935,
+          "request": 259,
+          "write": 266,
+          "read": 288,
+          "consume": 289
+        }
+      },
+      {
+        "stack": 2,
+        "engine": 0,
+        "rows": 256,
+        "max_occupancy": 23,
+        "first": {
+          "t": 256,
+          "request": 4,
+          "write": 11,
+          "read": 33,
+          "consume": 34
+        },
+        "last": {
+          "t": 8056,
+          "request": 259,
+          "write": 266,
+          "read": 288,
+          "consume": 289
+        }
+      },
+      {
+        "stack": 2,
+        "engine": 1,
+        "rows": 256,
+        "max_occupancy": 23,
+        "first": {
+          "t": 257,
+          "request": 4,
+          "write": 11,
+          "read": 33,
+          "consume": 34
+        },
+        "last": {
+          "t": 8057,
+          "request": 259,
+          "write": 266,
+          "read": 288,
+          "consume": 289
+        }
+      },
+      {
+        "stack": 2,
+        "engine": 2,
+        "rows": 256,
+        "max_occupancy": 23,
+        "first": {
+          "t": 258,
+          "request": 4,
+          "write": 11,
+          "read": 33,
+          "consume": 34
+        },
+        "last": {
+          "t": 8058,
+          "request": 259,
+          "write": 266,
+          "read": 288,
+          "consume": 289
+        }
+      },
+      {
+        "stack": 2,
+        "engine": 3,
+        "rows": 256,
+        "max_occupancy": 23,
+        "first": {
+          "t": 259,
+          "request": 4,
+          "write": 11,
+          "read": 33,
+          "consume": 34
+        },
+        "last": {
+          "t": 8059,
+          "request": 259,
+          "write": 266,
+          "read": 288,
+          "consume": 289
+        }
+      },
+      {
+        "stack": 2,
+        "engine": 4,
+        "rows": 256,
+        "max_occupancy": 23,
+        "first": {
+          "t": 260,
+          "request": 4,
+          "write": 11,
+          "read": 33,
+          "consume": 34
+        },
+        "last": {
+          "t": 8060,
+          "request": 259,
+          "write": 266,
+          "read": 288,
+          "consume": 289
+        }
+      },
+      {
+        "stack": 2,
+        "engine": 5,
+        "rows": 256,
+        "max_occupancy": 23,
+        "first": {
+          "t": 261,
+          "request": 4,
+          "write": 11,
+          "read": 33,
+          "consume": 34
+        },
+        "last": {
+          "t": 8061,
+          "request": 259,
+          "write": 266,
+          "read": 288,
+          "consume": 289
+        }
+      },
+      {
+        "stack": 2,
+        "engine": 6,
+        "rows": 256,
+        "max_occupancy": 23,
+        "first": {
+          "t": 262,
+          "request": 4,
+          "write": 11,
+          "read": 33,
+          "consume": 34
+        },
+        "last": {
+          "t": 8062,
+          "request": 259,
+          "write": 266,
+          "read": 288,
+          "consume": 289
+        }
+      },
+      {
+        "stack": 2,
+        "engine": 7,
+        "rows": 256,
+        "max_occupancy": 23,
+        "first": {
+          "t": 263,
+          "request": 4,
+          "write": 11,
+          "read": 33,
+          "consume": 34
+        },
+        "last": {
+          "t": 8063,
+          "request": 259,
+          "write": 266,
+          "read": 288,
+          "consume": 289
+        }
+      },
+      {
+        "stack": 3,
+        "engine": 0,
+        "rows": 256,
+        "max_occupancy": 23,
+        "first": {
+          "t": 384,
+          "request": 4,
+          "write": 11,
+          "read": 33,
+          "consume": 34
+        },
+        "last": {
+          "t": 8184,
+          "request": 259,
+          "write": 266,
+          "read": 288,
+          "consume": 289
+        }
+      },
+      {
+        "stack": 3,
+        "engine": 1,
+        "rows": 256,
+        "max_occupancy": 23,
+        "first": {
+          "t": 385,
+          "request": 4,
+          "write": 11,
+          "read": 33,
+          "consume": 34
+        },
+        "last": {
+          "t": 8185,
+          "request": 259,
+          "write": 266,
+          "read": 288,
+          "consume": 289
+        }
+      },
+      {
+        "stack": 3,
+        "engine": 2,
+        "rows": 256,
+        "max_occupancy": 23,
+        "first": {
+          "t": 386,
+          "request": 4,
+          "write": 11,
+          "read": 33,
+          "consume": 34
+        },
+        "last": {
+          "t": 8186,
+          "request": 259,
+          "write": 266,
+          "read": 288,
+          "consume": 289
+        }
+      },
+      {
+        "stack": 3,
+        "engine": 3,
+        "rows": 256,
+        "max_occupancy": 23,
+        "first": {
+          "t": 387,
+          "request": 4,
+          "write": 11,
+          "read": 33,
+          "consume": 34
+        },
+        "last": {
+          "t": 8187,
+          "request": 259,
+          "write": 266,
+          "read": 288,
+          "consume": 289
+        }
+      },
+      {
+        "stack": 3,
+        "engine": 4,
+        "rows": 256,
+        "max_occupancy": 23,
+        "first": {
+          "t": 388,
+          "request": 4,
+          "write": 11,
+          "read": 33,
+          "consume": 34
+        },
+        "last": {
+          "t": 8188,
+          "request": 259,
+          "write": 266,
+          "read": 288,
+          "consume": 289
+        }
+      },
+      {
+        "stack": 3,
+        "engine": 5,
+        "rows": 256,
+        "max_occupancy": 23,
+        "first": {
+          "t": 389,
+          "request": 4,
+          "write": 11,
+          "read": 33,
+          "consume": 34
+        },
+        "last": {
+          "t": 8189,
+          "request": 259,
+          "write": 266,
+          "read": 288,
+          "consume": 289
+        }
+      },
+      {
+        "stack": 3,
+        "engine": 6,
+        "rows": 256,
+        "max_occupancy": 23,
+        "first": {
+          "t": 390,
+          "request": 4,
+          "write": 11,
+          "read": 33,
+          "consume": 34
+        },
+        "last": {
+          "t": 8190,
+          "request": 259,
+          "write": 266,
+          "read": 288,
+          "consume": 289
+        }
+      },
+      {
+        "stack": 3,
+        "engine": 7,
+        "rows": 256,
+        "max_occupancy": 23,
+        "first": {
+          "t": 391,
+          "request": 4,
+          "write": 11,
+          "read": 33,
+          "consume": 34
+        },
+        "last": {
+          "t": 8191,
+          "request": 259,
+          "write": 266,
+          "read": 288,
+          "consume": 289
+        }
+      }
+    ]
+  },
+  "shape_checks": [
+    {
+      "context": 1,
+      "rows": 1,
+      "max_occupancy": 1
+    },
+    {
+      "context": 8,
+      "rows": 8,
+      "max_occupancy": 1
+    },
+    {
+      "context": 127,
+      "rows": 127,
+      "max_occupancy": 16
+    },
+    {
+      "context": 128,
+      "rows": 128,
+      "max_occupancy": 16
+    },
+    {
+      "context": 129,
+      "rows": 129,
+      "max_occupancy": 16
+    },
+    {
+      "context": 511,
+      "rows": 511,
+      "max_occupancy": 16
+    },
+    {
+      "context": 512,
+      "rows": 512,
+      "max_occupancy": 16
+    },
+    {
+      "context": 513,
+      "rows": 513,
+      "max_occupancy": 17
+    },
+    {
+      "context": 1024,
+      "rows": 1024,
+      "max_occupancy": 23
+    },
+    {
+      "context": 4097,
+      "rows": 4097,
+      "max_occupancy": 23
+    },
+    {
+      "context": 8192,
+      "rows": 8192,
+      "max_occupancy": 23
+    }
+  ],
+  "rejected_calendars": [
+    {
+      "row_latency": 40,
+      "consume_age": 34,
+      "reason": "engine 0:0: SRAM read precedes write visibility"
+    },
+    {
+      "row_latency": 4,
+      "consume_age": 33,
+      "reason": "Q is unavailable on the reserved consume edge"
+    },
+    {
+      "row_latency": 4,
+      "consume_age": 200,
+      "reason": "engine 0:0: ring capacity at 139"
+    }
+  ],
+  "proofs": {
+    "ECTL": {
+      "requests": 256,
+      "consumes": 256,
+      "local_start": 3,
+      "first_face_request": 7,
+      "first_external_response": 11,
+      "first_ring_write": 14,
+      "first_consume": 37,
+      "last_consume": 292,
+      "unchanged_timeline_fault_mutants": [
+        "missing response",
+        "late response",
+        "Q beat tag"
+      ]
+    },
+    "ASTK_CTL": {
+      "words": 69,
+      "first_lmax": 301,
+      "first_z": 401,
+      "z_stride": 16,
+      "z_done": 657,
+      "unchanged_timeline_fault_mutants": [
+        "missing Z block",
+        "Z block tag"
+      ]
+    },
+    "observed_failing_timing_mutant": {
+      "ROW_RETURN_LAT": 10,
+      "expected": 9,
+      "exit": 1,
+      "reason": "first consumed row is row1, expected row0"
+    }
+  }
+}
