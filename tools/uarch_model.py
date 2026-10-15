@@ -60,6 +60,21 @@ def qwen_xpf_static_control_model(entries=4, program_words=64):
                 qualification='mechanism bench only; actual producer trace/calendar, native pin/reset/clock, area and measured layer cost remain unqualified')
 
 
+def qwen_static_segment_calendar_model():
+    """Replace runtime segment/collective waits with three compiled windows."""
+    return dict(schema='opentallas.qwen-static-segment-calendar.v1',replicas=1,
+        segments=3,PW_first=961,PW_last=975,configuration_bits=3*4*64,
+        existing_transmit_buffer_bits=4*512,MACs_per_cycle=0,
+        max_VM_read_bits_per_cycle=512,max_VM_write_bits_per_cycle=512,
+        command_bits=32,real_descriptor_bits=64,added_memory_macros=0,
+        clock_roots_added=0,configuration_port_bytes_per_cycle=8,
+        fixed_events='core start/end, VM reads, payload TX, return RX, stage stop from compiled cycles',
+        integrity='actual core done/descriptor/VM valid/collective valid check only; no runtime timeline stretching',
+        tag='full token18 + position8 + segment6, no truncation',
+        latency='compiler must include actual native port and physical phase/relay profiles; unknown profiles refuse emission',
+        qualification='source/controller mechanism only until actual stage/region waveform and physical contract gates pass')
+
+
 def qwen_compute_typed_record_model():
     """Declared storage/ports for actual two-PW/single-SU-DW record consumer."""
     return dict(schema='opentallas.qwen-compute-typed-record.v1',replicas=1,

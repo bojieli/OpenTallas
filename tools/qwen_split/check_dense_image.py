@@ -17,7 +17,7 @@ def fixture(program_bytes):
  for unit,pc,issue,arm,first in [(2,2,20,34,50),(3,4,60,64,80),(3,5,200,204,220),(3,6,340,344,360)]:
   value=(first<<156)|(issue<<124)|(arm<<92)|(stage<<86)|(unit<<84)|(pc<<72)|pf
   rows.append(dict(cfg_data_hex=f'{value:047x}'))
- return build(program_bytes,[0]*8,cal,stage,dict(period_fs=1,phase_fs=0,stop_cycle=600),dict(period_fs=1,phase_fs=0,stop_cycle=610),rows,605,dict(period_fs=1,phase_fs=0,stage_start_cycle=0,relay_edges=0,stop_cycle=600,command_pin_edges=1))
+ return build(program_bytes,[0]*8,cal,stage,dict(period_fs=1,phase_fs=0,stop_cycle=600),dict(period_fs=1,phase_fs=0,stop_cycle=610),rows,605,dict(period_fs=1,phase_fs=0,stage_start_cycle=0,relay_edges=0,stop_cycle=600,command_pin_edges=1),format_only=True)
 
 def check():
  program=subprocess.check_output(['git','show','origin/main:results/arch/qwen_tp8_native_dispatch_1014/token_source_plan/head_program_rank7.hex'],cwd=ROOT)

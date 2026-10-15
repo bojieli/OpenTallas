@@ -7,9 +7,10 @@ native instruction and is covered by the authorized whole-image digest.
 import hashlib
 import json
 from pathlib import Path
-from .calendar import ScheduleError
+from .calendar import ScheduleError, pins
 from .issue_rom import pw_image
 from .collective import pw_image as collective_pw_image
+from .segments import pw_image as segment_pw_image, MissingPhysicalProfile
 from qwen_split.command_abi import pack_me,ROOT
 import hdc_qwen_fullshape_isa_w12 as ISA
 
@@ -27,7 +28,31 @@ def native_capability(program,stage):
     return True
 
 
-def build(program_bytes,descriptors,calendar,stage,me_clock,su_clock,xpf_rows,xpf_stop,collective_clock=None):
+def validate_program_calendar(program,calendar,stage):
+    """Require every encoded operation and its actual operand/result RTL ports."""
+    pins(ROOT,calendar.get('source_sha256',{}))
+    issues=[i for i in calendar['issues']if i['stage']==stage]
+    if len(issues)!=len(program)or sorted(i['pc']for i in issues)!=list(range(len(program))):
+        raise ScheduleError('production calendar must issue every actual source PC exactly once')
+    for issue in issues:
+        decoded=ISA.decode_instruction(program[issue['pc']])
+        if issue['unit']!=decoded['unit']:raise ScheduleError('production calendar issue owner differs from actual encoded operation')
+        if decoded['unit']==0:continue
+        ports=[e for e in calendar['events']if e['stage']==stage and e.get('pc')==issue['pc']]
+        if not ports:raise ScheduleError('actual operation lacks operand/result port calendar')
+        for event in ports:
+            filename=event.get('rtl_source');port=event.get('rtl_port');module=event.get('rtl_module')
+            if not filename or filename not in calendar['source_sha256']or not port or not module or not event.get('rtl_instance'):
+                raise ScheduleError('actual microevent lacks source-pinned RTL port binding')
+            source=(ROOT/filename).read_text()
+            import re
+            if not re.search(r'\b'+re.escape(port)+r'\b',source)or not re.search(r'\bmodule\s+'+re.escape(module)+r'\b',source):
+                raise ScheduleError('emitted event does not map to selected actual RTL module/port')
+            if not event.get('requires')and not event.get('produces'):
+                raise ScheduleError('actual microevent lacks immutable operand/result identity')
+
+
+def build(program_bytes,descriptors,calendar,stage,me_clock,su_clock,xpf_rows,xpf_stop,collective_clock=None,segment_profile=None,*,format_only=False):
     program=[int(word,16)for word in program_bytes.decode().split()]
     if not 0<len(program)<60 or any(not 0<=w<1<<1024 for w in program):
         raise ScheduleError('dense image program exceeds real instruction reservation')
@@ -39,6 +64,10 @@ def build(program_bytes,descriptors,calendar,stage,me_clock,su_clock,xpf_rows,xp
         raise ScheduleError('dense image needs eight explicit actual descriptor words')
     if not 1<=len(xpf_rows)<=4 or not 0<xpf_stop<1<<32:
         raise ScheduleError('dense image needs actual1..4 XPF records and stop32')
+    if segment_profile is None and not format_only:
+        raise MissingPhysicalProfile(['segment_profile'])
+    if not format_only:validate_program_calendar(program,calendar,stage)
+    lowered=None if format_only else segment_pw_image(program_bytes,descriptors,stage,segment_profile)
     image=[0]*1024
     for pc,word in enumerate(program):
         for beat in range(16):image[pc*16+beat]=(word>>(beat*64))&((1<<64)-1)
@@ -56,6 +85,11 @@ def build(program_bytes,descriptors,calendar,stage,me_clock,su_clock,xpf_rows,xp
         if time<phase or (time-phase)%period:
             raise ScheduleError('collective command does not align with actual assigned clock')
         collective.append(dict(event,core_cmd_cycle=(time-phase)//period))
+    if lowered is not None:
+        actual=[(e['core_cmd_cycle'],e['words'],e['mode'],e['tag'])for e in lowered['collective']]
+        supplied=[(e['core_cmd_cycle'],e['words'],e['mode'],e['tag'])for e in collective]
+        if actual!=supplied:raise ScheduleError('collective events differ from actual source DW segment operations')
+        for write in lowered['writes']:image[write['address']]=int(write['data_hex'],16)
     for write in collective_pw_image(collective,collective_clock['stage_start_cycle'],
             collective_clock['relay_edges'],collective_clock['stop_cycle'],len(program),
             collective_clock['command_pin_edges']):
@@ -77,4 +111,5 @@ def build(program_bytes,descriptors,calendar,stage,me_clock,su_clock,xpf_rows,xp
                 source_program_sha256=pin,fused_native59_capability=cap,
                 PW_count=1024,DW_count=8,collective_command_count=len(collective),collective_PW_window=[944,960],authorized_digest_hex=f'{digest:016x}',
                 writes=writes,footer_hex=f'{image[1023]:016x}',
-                status='SOURCE_FORMAT_ONLY_UNTIL_NATIVE_MICROCALENDAR_PHYSICAL_AND_RECEIVER_WITNESSES')
+                segment_calendar=None if lowered is None else lowered,
+                status='FORMAT_FIXTURE_NOT_PRODUCTION_INSTALLABLE'if format_only else 'SOURCE_AND_PHYSICAL_PROFILE_BOUND_RECEIVER_WITNESSES_REQUIRED')
