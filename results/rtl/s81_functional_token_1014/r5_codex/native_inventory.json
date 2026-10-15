@@ -187,8 +187,8 @@
    "evidence_excerpt": "GATHER_REC = {'router_allgather': 4, 'a_allgather': 12, 'rows_allgather': 64, 'idx.topk_merge': 8,",
    "owner": "S-COMPILE-SCHEDULE + S-NATIVE-FIELD + S-FUNC",
    "native_qualified": false,
-   "defect": "Fixture a_allgather emits12 records/rank; actual released1792 field wq_a320+wkv128 requires28 FP32 records/rank,112 globally",
-   "progress": "Actual four-rank matrix slices confirmed by field owner; production semantic compiler must assign exact collective count and separate QN/KV landing views. Historical SU/HC request traces exclude true field/collective demand."
+   "defect": "Fixture a_allgather uses12 records/rank and router_allgather4. Actual native a_proj QN/KV subflow alone needs28, with compressor branches44 on L2/L8/L14 and36 on L20; actual main router96 FP32 values/rank needs6 records.",
+   "progress": "Native field/compiler owners pinned actual matrix slices and landing views; full native gather must replace count/timing/packing, including compressor fragments. Historical SU/HC traces exclude actual field/collective demand; DSpark router partition still needs actual MTP plan evidence."
   }
  ]
 }
