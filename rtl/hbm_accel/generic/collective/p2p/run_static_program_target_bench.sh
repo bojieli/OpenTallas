@@ -9,7 +9,7 @@ P=rtl/hbm_accel/generic/collective/p2p
 "$OUT/obj/Vtb_hgi_coll_static_program_target" > "$OUT/run.log" 2>&1
 cat "$OUT/run.log"
 grep -q '^PROGRAM_JOIN PASS ' "$OUT/run.log"
-for scenario in $(seq 1 17);do
+for scenario in $(seq 1 18);do
  "$OUT/obj/Vtb_hgi_coll_static_program_target" +fault="$scenario" > "$OUT/fault-$scenario.log" 2>&1
  grep -q '^PROGRAM_JOIN FAULT PASS ' "$OUT/fault-$scenario.log"
  cat "$OUT/fault-$scenario.log"
