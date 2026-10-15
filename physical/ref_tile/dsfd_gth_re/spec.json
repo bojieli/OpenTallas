@@ -120,14 +120,17 @@
   "threads": 16,
   "peak_ram_gb": 48,
   "hold_margin_ns": 0.05,
-  "macro_halo_um": 5.4
+  "macro_halo_um": 5.4,
+  "cts_sink": {
+   "extra": "-no_obstruction_aware"
+  }
  },
  "job": {
   "owner": "Claude:el1013-s81-gather",
   "branch": "claude/s81-gather-1014",
-  "tag": "g5",
+  "tag": "g6",
   "purpose": "S81 gather v4 DIRECT leaf (E half) of the gather cluster dsfd_sp_gather_c: 4 roots ot_s81ph_ret_root_s (step B, S = 8 open rows = 2 x the measured real bound 4), queue 128 x 66 + pairing store 256 x 34 arrays per root; the leaf takes only its own 4 lanes and returns only its own 4 results + {busy, fault}; the parent delivers / collects through relay tiles in the channels (no lane or chain passes through a leaf).  Every port a flop at the pin.",
-  "structural_change": "g5 after g4 EARLY_FAIL_HOLD (CTS hold stuck -23.6 ps): the routing structure at every SRAM edge changes -- macro-edge VIA guard (main fb67ed629, physical/common_flow/macro_edge_via_guard.tcl via sram_edge_guard.tcl, pre-GRT add / post-DRT remove) takes the top routing layer out of the GCells straddling each of the 8 macro faces so no net gets an over-macro track it can only leave by an M4 jog through the macro OBS (the g4 DRC shape); route hold margin 50 ps (the arg1 finishing variant of the same RTL converged CTS + GRT hold to FF +50). Same RTL, outline, pins, macro placement.",
+  "structural_change": "g6 after g4 + g5 EARLY_FAIL_HOLD (CTS hold stuck at -23.6 ps on u_l.g_r[3].u_root.u_add.s1_code[29]): CLOCK TREE STRUCTURE changes -- the obstruction-aware H-tree detoured round the two abutted SRAM stacks and delivered the band above the 256x34 stack (x 95-114, y 131-164) 38 ps late next to an early branch (FF arrival 242-247 vs 207 ps one column W; the failing pair launch 198 / capture 250 ps, the tree's latest sink). -no_obstruction_aware (route.cts_sink.extra) builds the tree over the stacks: measured on the g5 placement (CTS only, FF): sink spread 52.4 -> 38.6 ps, reg->reg hold WNS before repair -21.6 -> -8.4 ps (ex-uncertainty), endpoints < 20 ps 117 -> 79. Same RTL, outline, pins, macro placement, macro-edge guard, HM 50.",
   "benches": [
    {
     "name": "root_s_lockstep",
