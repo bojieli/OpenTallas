@@ -86,7 +86,7 @@ def run(a):
     if exe.exists() and (not mf.exists() or json.loads(mf.read_text()) != manifest):
         raise ValueError('source changed: use a fresh work/build directory')
     if not exe.exists():
-        cmd=[HG.VERILATOR,'--binary','--timing','--hierarchical','--hierarchical-threads','4','-O2','-Wno-fatal','-Wno-WIDTH',
+        cmd=[HG.VERILATOR,'--binary','--timing','--hierarchical','--hierarchical-threads',str(a.hier_workers),'-O2','-Wno-fatal','-Wno-WIDTH',
              '--top-module','tb_s81_head_prep','-Mdir',str(obj),'-j','16',
              '--unroll-count','4','-fno-dfg','-GNG=256',f'-GMUT={a.mut}',
              '-GHIER=1','-GHALF=1','-GCSPLIT=1','-GTAIL_SPLIT=2',
@@ -127,6 +127,6 @@ def main():
     q=sub.add_parser('prep'); q.add_argument('--work',required=True)
     for name in ('hout','pre','gain'): q.add_argument('--'+name,required=True)
     q.add_argument('--eps',default='358637bd')
-    q=sub.add_parser('run');q.add_argument('--work',required=True);q.add_argument('--build-work',help='reuse source-checked build directory across hardware handoffs');q.add_argument('--mut',type=int,choices=[0,3],default=0)
+    q=sub.add_parser('run');q.add_argument('--work',required=True);q.add_argument('--hier-workers',type=int,choices=range(1,5),default=1,help='bound concurrent native module compilers by memory');q.add_argument('--build-work',help='reuse source-checked build directory across hardware handoffs');q.add_argument('--mut',type=int,choices=[0,3],default=0)
     a=p.parse_args(); return dict(prep=prep,run=run)[a.step](a)
 if __name__=='__main__': main()
