@@ -20,7 +20,8 @@ def prepare(out, read_pipeline=1):
         add(clocks,'ck_'+cat+'_t','dut.u_core'+child+'.'+cp)
         add(resets,'rss_'+cat+'_t','dut.u_core'+child+'.'+rp)
     for cat,child in [('return','u_return')]:
-        add(clocks,'ck_mem_'+cat+'_t',[f'{mem}.slice[{s}].{child}.ck' for s in range(4)])
+        # one clock entry per hardened return lane (4 per slice, 5,380 FF each): 4 tied lanes were 21,520 FF/root > 15k
+        add(clocks,'ck_mem_'+cat+'_t',[f'{mem}.slice[{s}].{child}.ck[{l}]' for s in range(4) for l in range(4)])
         add(resets,'rss_mem_'+cat+'_t',[f'{mem}.slice[{s}].{child}.rst_n' for s in range(4)])
     fsrpaths=[f'{mem}.slice[{s}].u_slice.u_r.b{b}.leaf' for s in range(4) for b in range(4)]
     add(clocks,'ck_mem_fsr_t',[p+'.ck' for p in fsrpaths]);add(resets,'rss_mem_fsr_t',[p+'.rst_n' for p in fsrpaths])
@@ -65,7 +66,7 @@ def prepare(out, read_pipeline=1):
             mapping[port]={'kind':vec,'start':start,'width':len(paths),'leaf_pins':paths}
             if vec=='clocks':c+=len(paths)
             else:r+=len(paths)
-    assert (c,r)==(610+72*read_pipeline,546+72*read_pipeline),(c,r)
+    assert (c,r)==(622+72*read_pipeline,546+72*read_pipeline),(c,r)
     for port,(direction,_) in mod.ports.items():
         if direction=='input' and port not in mapping:
             width=mod.width(port,env);cons.append(f'.{port}({width}\'d0)')
