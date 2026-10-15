@@ -1,11 +1,18 @@
 `timescale 1ns/1ps
 module tb_dsfd_vm_static_read_router;
+`ifdef OT_VM_NATIVE_READ_PINREG
+ localparam integer LAT=2;  // dsfd_vm_static_read_router_p: pin registers + R0 + R1 (READ_PIPE 2)
+ `define OT_READ_ROUTER dsfd_vm_static_read_router_p
+`else
+ localparam integer LAT=1;
+ `define OT_READ_ROUTER dsfd_vm_static_read_router
+`endif
  reg ck=0,rst=0;always #0.417 ck=~ck;
  wire[63:0] cds={64{ck}};wire[7:0] cvs={8{ck}};
  reg[16383:0] data=0;reg[127:0] valid=0;
  reg[17:0] ne=0;reg[89:0] ns=0;reg[11:0] ae=0;reg[19:0] me=0;reg[99:0] ms=0;
  wire[9215:0] nd;wire[17:0] nv;wire[2047:0]pd;wire pv;wire[4095:0]xd;wire[7:0]xv;wire[10239:0]md;wire[19:0]mv;wire[7:0]fault;
- dsfd_vm_static_read_router dut(.ck_data(cds),.ck_valid(cvs),.rst_data_n({64{rst}}),.rst_valid_n({8{rst}}),.slot_data(data),.slot_valid(valid),.n_expected(ne),.n_slot(ns),.aux_expected(ae),.mx_expected(me),.mx_slot(ms),.n_data(nd),.n_valid(nv),.pq_data(pd),.pq_valid(pv),.x_data(xd),.x_valid(xv),.mx_data(md),.mx_valid(mv),.fault(fault));
+ `OT_READ_ROUTER dut(.ck_data(cds),.ck_valid(cvs),.rst_data_n({64{rst}}),.rst_valid_n({8{rst}}),.slot_data(data),.slot_valid(valid),.n_expected(ne),.n_slot(ns),.aux_expected(ae),.mx_expected(me),.mx_slot(ms),.n_data(nd),.n_valid(nv),.pq_data(pd),.pq_valid(pv),.x_data(xd),.x_valid(xv),.mx_data(md),.mx_valid(mv),.fault(fault));
  integer mode=0,seed=1,bad=0,cy=0,checks=0,native30=0,mix30=0,su1cross=0;
  reg[17:0]en[0:1000];reg[11:0]ea[0:1000];reg[19:0]em[0:1000];reg[9215:0]edn[0:1000];reg[2047:0]edp[0:1000];reg[4095:0]edx[0:1000];reg[10239:0]edm[0:1000];integer i,j,p,s,l,g,b;
  function[511:0]row(input integer cycle,input integer slot);integer w;begin for(w=0;w<16;w=w+1)row[32*w+:32]=32'(cycle*100003+slot*1709+w*131+seed*7919+19);end endfunction
@@ -22,11 +29,11 @@ module tb_dsfd_vm_static_read_router;
  end
  task step;begin @(negedge ck);cy=cy+1;ne=0;ns=0;ae=0;me=0;ms=0;valid=0;end endtask
  task expect_rows;begin
- en[cy+1]=ne;ea[cy+1]=ae;em[cy+1]=me;
- for(p=0;p<18;p=p+1)edn[cy+1][512*p+:512]=data[512*ns[5*p+:5]+:512];
- for(p=0;p<4;p=p+1)edp[cy+1][512*p+:512]=data[512*(20+p)+:512];
- for(p=0;p<8;p=p+1)edx[cy+1][512*p+:512]=data[512*(24+p)+:512];
- for(p=0;p<20;p=p+1)edm[cy+1][512*p+:512]=data[512*ms[5*p+:5]+:512];
+ en[cy+LAT]=ne;ea[cy+LAT]=ae;em[cy+LAT]=me;
+ for(p=0;p<18;p=p+1)edn[cy+LAT][512*p+:512]=data[512*ns[5*p+:5]+:512];
+ for(p=0;p<4;p=p+1)edp[cy+LAT][512*p+:512]=data[512*(20+p)+:512];
+ for(p=0;p<8;p=p+1)edx[cy+LAT][512*p+:512]=data[512*(24+p)+:512];
+ for(p=0;p<20;p=p+1)edm[cy+LAT][512*p+:512]=data[512*ms[5*p+:5]+:512];
  end endtask
  initial begin
  if(!$value$plusargs("mode=%d",mode))mode=0;if(!$value$plusargs("seed=%d",seed))seed=1;

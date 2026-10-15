@@ -14,7 +14,9 @@
 //   +mode 0 base (expect no fault); 1 four sources on one bank (lane >= 3); 2 drain collision; 3 PQ misaligned;
 //   4 P2RD native op; 5 duplicate read bank (FSR); 6 MIX and SU on one logical port -- each must raise ITS fault source.
 module tb_dsfd_vm_static_core;
-`ifdef OT_VM_NATIVE_READ
+`ifdef OT_VM_NATIVE_READ_PINREG
+    localparam integer READ_PIPE=2;
+`elsif OT_VM_NATIVE_READ
     localparam integer READ_PIPE=1;
 `else
     localparam integer READ_PIPE=0;
