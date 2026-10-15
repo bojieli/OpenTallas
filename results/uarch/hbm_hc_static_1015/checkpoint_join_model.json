@@ -1,0 +1,89 @@
+{
+  "scope": "RTL component composition of released L0 attention HC weights with declared native VM input and result apertures; not whole-token allocation or physical qualification",
+  "sources": {
+    "engine": "16b885432",
+    "prefetch": "b3cd9493a",
+    "book": "4b9a13572",
+    "join": "de0ca7df8"
+  },
+  "K": 20480,
+  "rows": 24,
+  "positions": [
+    6,
+    8
+  ],
+  "checkpoint": {
+    "row_bytes": 81920,
+    "row_count": 24,
+    "source_base_byte": 21474836480,
+    "fn_original_layout_sha256": "11c9abd39f35e3364aad812c3f2dcb9c5fa5cf71e0f837a1af684112a00f930c",
+    "payload_source": "released checkpoint tensor; external PHY only model"
+  },
+  "memory": {
+    "native_VM_1024x256": 96,
+    "programme_1024x256": 2,
+    "HC_residual_1024x256": 16,
+    "HC_weight_128x256": 64,
+    "PHY_source_128x256": 128,
+    "total_macros": 306,
+    "total_bytes": 4521984,
+    "source_actual_capacity_bytes": 524288,
+    "source_live_payload_bytes": 81920
+  },
+  "fixed_calendar": {
+    "row_period_n6": 1080,
+    "row_period_n8": 1400,
+    "drain_half0": 0,
+    "drain_half1": 330,
+    "reserve_next_half0": 330,
+    "reserve_next_half1": 660,
+    "last_actual_HC_store_commit_source_proof": 655,
+    "weight_row_ahead": true,
+    "projection_result_ages": [
+      269,
+      429,
+      589,
+      749,
+      909,
+      1069,
+      1229,
+      1389
+    ],
+    "initial_PHY_boundary_wait_allowed": true,
+    "steady_state_wait_allowed": false,
+    "host_programme_reconfigure_between_projection_rows": false
+  },
+  "ports": {
+    "PHY_stacks": 4,
+    "PHY_PC_per_stack": 32,
+    "PHY_max_outstanding_per_PC": 8,
+    "PHY_return_tag_bits": 17,
+    "PHY_owner_epoch_bits": 16,
+    "offchip_row_average_B_per_stream_cycle_n6": 75.85185185185185,
+    "offchip_row_average_B_per_stream_cycle_n8": 58.51428571428571,
+    "aperture_write_B_per_active_cycle": 128,
+    "aperture_bits_per_cycle": 2224,
+    "VM_request_bits": 136,
+    "VM_return_bits": 2056,
+    "VM_write_bits": 2248,
+    "assembled_residual_bits": 8192
+  },
+  "clocks": {
+    "stream_ps": 833.332,
+    "HBM_ps": 1024,
+    "test_PHY_latency_HBM_edges": [
+      80,
+      92
+    ],
+    "test_sink_divisor": 7,
+    "sink_clock_physical_qualified": false
+  },
+  "open_gates": [
+    "canonical whole-token VM input/output allocation and absolute issue timestamps",
+    "canonical host programme installation and actual checkpoint source placement",
+    "HC bank/shell/controller outlines and pin faces/clock roots/phi-R/reach/cuts",
+    "actual static SYS1 measured latency (analytical +58 edges cannot inherit SYS0 calendar)",
+    "separate Sinkhorn measured clock/phase and revised production tail image",
+    "immutable full-dataflow throughput price and SS/FF timing closure"
+  ]
+}
