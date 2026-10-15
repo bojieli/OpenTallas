@@ -15,7 +15,7 @@ physical/qkd_astk_strip/macros/ot_sram_1r1w_64x128_m1_r2c2/ot_sram_1r1w_64x128_m
   +define+KVD_HEADS=1 +define+KVD_Q_FP32=1 +define+KVD_QK_ONLY=1 \
   --top-module tb_qkd_astk_native_stack --Mdir "$out/obj" "$@" $F > "$out/build.log" 2>&1
 set +e
-"$out/obj/Vtb_qkd_astk_native_stack" > "$out/run.log" 2>&1
+"$out/obj/Vtb_qkd_astk_native_stack" ${ASTK_RUN_ARGS:-} > "$out/run.log" 2>&1
 rc=$?
 set -e
 cat "$out/run.log"
