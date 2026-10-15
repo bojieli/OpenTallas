@@ -2286,6 +2286,33 @@ def check(m):
     return dict(overlaps=len(bad), overlap_examples=bad[:10], outside=len(out), outside_examples=out[:10])
 
 
+def _case_ties(m, path):
+    """the case die.v (written by the base generator) gets this die's constants as assigns (mapped to tie cells by
+    die_constant_cells.tcl) and the v1.4 extra bit-tap connections.  2026-10-15 (r7): before this the case left the write
+    leaves' lane straps wlane_* / wtail_* (and would leave the HOST slice lpc straps) declared but UNDRIVEN."""
+    p_ = Path(path)
+    tx = p_.read_text()
+    for inst_, cs in m.get('extra_conns', {}).items():
+        mt = re.search(rf'^(  \S+ {inst_} \()(.*)(\);)$', tx, re.M)
+        if not mt:
+            raise ValueError(f'extra connection: no instance {inst_}')
+        tx = tx[:mt.end(2)] + ', ' + ', '.join(cs) + tx[mt.end(2):]
+    ties = {}
+    for b_, lane in (m.get('wq_straps') or {}).items():
+        ties[b_] = (3, lane)
+    if m['geo'].get('kv_wq_leaves'):
+        ties.update({f'wtail_{st}_{g}': (2, 0) for st in STACKS for g in range(4)})
+    ties.update(m.get('host_ties') or {})
+    lines = []
+    for b_, (w_, v_) in ties.items():
+        if f'wire [{w_ - 1}:0] n_{b_};' not in tx:
+            raise ValueError(f'constant net n_{b_} not in the case netlist')
+        if f'assign n_{b_}' not in tx:      # one-bit assigns, as kv_expand's tie nets (die_constant_cells.tcl maps them)
+            lines += [f"  assign n_{b_}[{i}] = 1'b{(v_ >> i) & 1};" for i in range(w_)]
+    tx = tx.replace('endmodule', '\n'.join(lines) + '\nendmodule', 1) if lines else tx
+    p_.write_text(tx)
+
+
 def case(m, work):
     """the die-level case of the r21 Qwen chain (tools/qwen_rom_fulldie.case_real: elements.lef from these masters,
     phy_ew.lef, die.v, place.tcl, run.tcl legality / on-track / pin access, run_pa.tcl PDN), written by the base
@@ -2302,6 +2329,7 @@ def case(m, work):
         man = F.case_real(m, work)
     finally:
         F.masters, F.port_widths = saved
+    _case_ties(m, work / 'die.v')
     run = (work / 'run.tcl').read_text()
     (work / 'run_pdn.tcl').write_text((work / 'run_pa.tcl').read_text())
     # the HBM PHY macros' own M4 power rails (the KV die's four PHY bands): a macro grid that straps them to M8 / M9,

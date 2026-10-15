@@ -38,8 +38,8 @@ if [ "${OT_KV_EXPAND:-all}" != none ]; then
   python3 tools/qwen_kv_die/kv_expand.py --run $O $( [ "${OT_KV_EXPAND:-all}" = all ] || echo --only ${OT_KV_EXPAND} ) > $O/expand.log
   EXP="--expanded $O/expand.json"
 fi
-# v1.4: the host SerDes binds its native ports (tx_up / tx_v / tx_flit / rx_v / rx_flit) to the root core's phy_* words
-[ -n "$H14" ] && python3 tools/qwen_kv_die/kv_native_phy.py --case $O/case_kv --only ot_qfd_serdes_112g_x12_phy > $O/native_phy.log \
+# v1.4: the host SerDes and the UCIe PHY bind their native ports (tx_up / tx_v / tx_flit / rx_v / rx_flit): SerDes <-> root core phy_*, UCIe <-> qkd_d2d_static fdi_* (583 b)
+[ -n "$H14" ] && python3 tools/qwen_kv_die/kv_native_phy.py --case $O/case_kv > $O/native_phy.log \
   && python3 tools/qwen_kv_die/kv_native_phy.py --case $O/case_kv --libs $O/libs >> $O/native_phy.log
 python3 tools/qwen_kv_die/kvsys_clocks.py --case $O/case_kv --views $O/libs/views.json --out $O/libs > $O/clocks.log
 python3 tools/qwen_kv_die/die_port_bind_kv.py $O/case_kv/die.v --split --relay-rtl $O/case_kv/qkd_kv_relays.sv $EXP --out $O/port_bind.json > $O/port_bind.log
