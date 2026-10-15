@@ -1,0 +1,12 @@
+{
+ "schema": "opentallas.qfunc-native-crom-trace-replay.v1",
+ "status": "COMPONENT_PASS_ACTUAL_CORE_REQUESTS_NOT_INTEGRATED",
+ "host": "ot-epyc4", "ot_run_unit": "oth-ubuntu-3588491-1792073663",
+ "trace_source": "/srv/opentallas-scratch/claude/qfunc-crom-1015/trace_l0 (seeded layer0 positive, G3072 RTL-FP core + f460 kernel, OT_CROM_TRACE observation-only, PASS executed layer prefix 1 errors 0, outer exit 0)",
+ "replay_dirs": "/srv/opentallas-scratch/claude/qfunc-crom-1015/replay_l0/rank0..7",
+ "masks": "/srv/opentallas-scratch/claude/qfunc-crom-1015/r1/masks (released 48-mask set, crom_released_r1)",
+ "dut": "ot_qfd_crom_lbuf/ot_qfd_crom (local CBUF E5) + ot_qfd_crom_gr far E8 + ot_rom_4096x266_m8 + ot_sram_1r1w_128x256 functional models, the cluster's exact constant path",
+ "positive": "PASS all 8 ranks: 148 recorded 64-lane constant reads each (layer 0), driven at the core's own request edges (min gap 1), exact E5, residency asserted never waited, 0 faults",
+ "mutants": {"rtl_MUT1": "FAIL 1184 errors per rank (8/8)"},
+ "scope": "Proves the native constant ROM path serves every constant read the actual core issued in layer 0 at exact fixed latency. Core still reads 1-edge C++ arrays at runtime (LV6 lanes ML=0); binding requires the native SU (ML=7) per README of native_memory_20261014. Not native qualification."
+}

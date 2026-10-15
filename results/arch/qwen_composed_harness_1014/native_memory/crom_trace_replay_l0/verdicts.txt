@@ -1,0 +1,50 @@
+rank0
+VECTORS reads 148 rank 0 stages [0] first_edge 21786 min_gap 1
+PASS crom_trace_replay reads=148 edges=3632 exact_E5 native_cbuf+crom_gr
+FAIL crom_trace_replay errors=1184 residency=0 reads=148
+rank1
+VECTORS reads 148 rank 1 stages [0] first_edge 21786 min_gap 1
+PASS crom_trace_replay reads=148 edges=3632 exact_E5 native_cbuf+crom_gr
+FAIL crom_trace_replay errors=1184 residency=0 reads=148
+rank2
+VECTORS reads 148 rank 2 stages [0] first_edge 21786 min_gap 1
+PASS crom_trace_replay reads=148 edges=3632 exact_E5 native_cbuf+crom_gr
+FAIL crom_trace_replay errors=1184 residency=0 reads=148
+rank3
+VECTORS reads 148 rank 3 stages [0] first_edge 21786 min_gap 1
+PASS crom_trace_replay reads=148 edges=3632 exact_E5 native_cbuf+crom_gr
+FAIL crom_trace_replay errors=1184 residency=0 reads=148
+rank4
+VECTORS reads 148 rank 4 stages [0] first_edge 21786 min_gap 1
+PASS crom_trace_replay reads=148 edges=3634 exact_E5 native_cbuf+crom_gr
+FAIL crom_trace_replay errors=1184 residency=0 reads=148
+rank5
+VECTORS reads 148 rank 5 stages [0] first_edge 21786 min_gap 1
+PASS crom_trace_replay reads=148 edges=3634 exact_E5 native_cbuf+crom_gr
+FAIL crom_trace_replay errors=1184 residency=0 reads=148
+rank6
+VECTORS reads 148 rank 6 stages [0] first_edge 21786 min_gap 1
+PASS crom_trace_replay reads=148 edges=3634 exact_E5 native_cbuf+crom_gr
+FAIL crom_trace_replay errors=1184 residency=0 reads=148
+rank7
+VECTORS reads 148 rank 7 stages [0] first_edge 21786 min_gap 1
+PASS crom_trace_replay reads=148 edges=3634 exact_E5 native_cbuf+crom_gr
+FAIL crom_trace_replay errors=1184 residency=0 reads=148
+
+7ec9ceae865b103d3a6f0c3104c221c1983b51e4cd022979f1c96b8d82ca21db  /srv/opentallas-scratch/claude/qfunc-crom-1015/src/tools/qwen_composed_harness/tb_crom_trace_replay.sv
+83413d8e691f18129f03136d97c8226f88339f0c8cbd134bc4dfb95e0e1f72c5  /srv/opentallas-scratch/claude/qfunc-crom-1015/src/rtl/qwen_sys/redesign_qwen/ot_qfd_crom_lbuf.sv
+dba769863f502de28853a78ac30544a406c7cb66fd3249019ef9fa5a5b73e36e  /srv/opentallas-scratch/claude/qfunc-crom-1015/src/physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v
+c47bf8006009af73b847c0407da673a09995fc0b666ec283412d6a149b165082  /srv/opentallas-scratch/claude/qfunc-crom-1015/src/rtl/qwen_sys/system_20261008/ot_qfd_crom.sv
+7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688  /srv/opentallas-scratch/claude/qfunc-crom-1015/src/rtl/hdc/ot_hdc_delay.sv
+a26eebf06605ae3e9bca8d25c6d979a95553ea03ddc5e82cacd3192bf811a16b  /srv/opentallas-scratch/claude/qfunc-crom-1015/src/physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8.v
+c208b2bd3a741c47834418c0644da23bcc813638113b33d338293a8b5c6252c8  /srv/opentallas-scratch/claude/qfunc-crom-1015/src/tools/qwen_composed_harness/crom_trace_vectors.py
+548dc3e79caea7afd8a9303fe1821402509588300f6240e3ace9b53f51a187c8  src/tools/qwen_composed_harness/run_crom_trace_replay.sh
+2b6314b6e6a04c644678b429bee5e90b2a541f66d1a7c2aa5f1c492bd28d5456  crom_trace/l0.0.txt
+d2d86deb2fd6bbbda83d4166d0ec1fe900a61521fe0436d63be22ded3e8ecddb  crom_trace/l0.1.txt
+607f3c5290b10f3f3e2d09ab53018381deee4cb83931f7251cd0ab84f8e37749  crom_trace/l0.2.txt
+6de676e9cd1f1be5bf6817220646ee81fa62898312766d53d933c6359fb97af5  crom_trace/l0.3.txt
+dc31610096a26d4031dbb56b3232bcdddb3c6c85a90c1e977b8bb6b122b1297a  crom_trace/l0.4.txt
+7676ff14981bd4ec00efce58e54b28498196dcb6a758e2d20bb655693aa8b3de  crom_trace/l0.5.txt
+7c4e0d35b2d29ae11bd7d395f1e20721d775bd8db3268c49e9c6d14964397847  crom_trace/l0.6.txt
+17158a28354f1f6fe0b36c958535f6d85d3b20cd325c6f9df965af4822ad226b  crom_trace/l0.7.txt
+5f3714ea14dde85c29dd46445ec4d5583bd7ed05161b92de9cf78f20b520312b  /srv/opentallas-scratch/claude/qfunc-crom-1015/trace_l0/whole_token
