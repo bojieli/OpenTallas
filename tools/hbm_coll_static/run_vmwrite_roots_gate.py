@@ -16,7 +16,8 @@ def run(name,top,sources,params=(),positive=True):
  if b.returncode:raise RuntimeError(name+' build failed')
  r=subprocess.run(['vvp',str(sim)],capture_output=True,text=True)
  (a.out/(name+'.log')).write_text(r.stdout+r.stderr)
- ok=(r.returncode==0)==positive
+ # A killed simulator or tool error cannot qualify a hardware mutant.
+ ok=(r.returncode==0 and ' PASS ' in r.stdout) if positive else (r.returncode==1 and 'FATAL:' in r.stdout)
  rows.append(dict(name=name,expected_pass=positive,exit_code=r.returncode,gate_pass=ok))
  print(name, 'PASS' if ok else 'FAIL',r.stdout.strip().splitlines()[-1] if r.stdout.strip() else '')
  if not ok:raise RuntimeError(name+' unexpected outcome')
