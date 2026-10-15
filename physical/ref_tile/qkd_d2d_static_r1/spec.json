@@ -24,7 +24,6 @@
   "h": 280.8
  },
  "recipe": 2,
- "io_flop_at_pins": false,
  "macros": [
   {
    "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
@@ -162,10 +161,17 @@
   "views_to": "physical/ref_tile/qkd_d2d_static_r1/views",
   "record_to": "results/rtl/ref_tile/qkd_d2d_static_r1"
  },
+ "pinreg_r4": "r4 (2026-10-15): die master is pin-registered (PR=1, tools/qwen_split/d2d_pinreg_gen.py): every functional port has one flop at its pin, placed FIRM at the pin by recipe-2 io_flop_at_pins; fixes qkd r1 EARLY_FAIL_SETUP (-434 ps, all boundary paths) and qfd r1 TT -79 / FF -32.6.",
  "children": [],
  "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
  "inhold": true,
  "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
  "hold_pad": {
   "cell": "HB2xp67_ASAP7_75t_R"
  }
