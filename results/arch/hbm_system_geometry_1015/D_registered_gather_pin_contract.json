@@ -1,0 +1,36 @@
+{
+  "source_path": "/home/ubuntu/wt/hbm-static-attn-quant-1014/rtl/hdc/v41x/static/ot_hbm_attn_pv_group_gather_registered.sv",
+  "source_sha256": "400f4613930d48b856637f6ff36648d62603069df8e032cc9f1317280bf78f0a",
+  "pin_TSV_sha256": "5d1a025ac95f1300c47db37c66f6a40e2d8cef171b944cea897fcba53cfecbfb",
+  "groups": 4,
+  "pins_per_group": 4759,
+  "face_counts_per_group": {
+    "W": 2112,
+    "E": 2641,
+    "N": 6
+  },
+  "actual_FF_per_leaf": 4757,
+  "actual_TT_logic_um2_per_leaf": 2487.59586,
+  "nominal_combined_bank_root_sinks": 11445,
+  "added_edges": 2,
+  "physical_reservation_um": [
+    500,
+    450
+  ],
+  "reservation_qualified": false,
+  "actual_pin_centers": null,
+  "planning_only_min_pitch_um": 0.096,
+  "planning_only_max_face_fraction": 0.6,
+  "required_face_length_before_PG_halo_um": {
+    "W": 337.92,
+    "E": 422.56
+  },
+  "clock_source_must_match_global_phase": true,
+  "limits": [
+    "New actual registered leaf; supersedes combinational4755pin face request.",
+    "Track count, PG contacts, pin-above keepout, actual buffered netlist and STA must precede physical adoption.",
+    "No single .096 pitch grant across arbitrary physical layers; actual kit determines legal sites.",
+    "Existing field/VM placement is candidate; source and destination outside contracts/128commit calendar remain required.",
+    "Face slots are ordered assignments, not invented routed pin coordinates."
+  ]
+}

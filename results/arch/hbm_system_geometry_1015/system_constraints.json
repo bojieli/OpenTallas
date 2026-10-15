@@ -1,0 +1,191 @@
+{
+  "schema": "opentallas.hbm.system_geometry.constraints.v1",
+  "whole_die_complete": false,
+  "adoption_allowed": false,
+  "references": {
+    "current_source_contract": {
+      "path": "/home/ubuntu/wt/hbm-die-feas-1014/results/arch/hbm_die_v15/source_contract/contract.json",
+      "sha256": "2766f05581d04a01c462a31a621c26a612a444f78d050bfd11cb603811f94464"
+    },
+    "VM_bank_tap_pins": {
+      "path": "/home/ubuntu/wt/hbm-vm-static-1014/results/arch/hbm_vm_lg_split_1015/pin_manifest.json",
+      "sha256": "d12a7cd3d9135b1beeb6dfb544194e38fd8680085106ad30d26b4d61d2e541ea"
+    },
+    "ATT_native_profile": {
+      "path": "/home/ubuntu/wt/hbm-static-attn-quant-1014/results/arch/hbm_attention_static_1015/physical_profile_model.json",
+      "sha256": "c066b68e7b1bfbadb0581fb6681375c09f655669a82c9e04902a683d62f67974"
+    },
+    "ATT_serializer": {
+      "path": "/home/ubuntu/wt/hbm-static-attn-quant-1014/results/arch/hbm_attention_static_1015/pv_headmajor_serializer_model.json",
+      "sha256": "126d827e8d0f222c8a344fded4bf644c5978a24270a6b5e812f6174a1ee0be62"
+    },
+    "Engram_8home_candidate": {
+      "path": "/home/ubuntu/wt/hbm-engram-repartition-1015/results/arch/hbm_engram_partition_1015/allocation_manifest.json",
+      "sha256": "879f64dc0cf6ed5c7be0f4db0b47ac9c48990c22aa274c7cd5faabb3bb45fe5a"
+    }
+  },
+  "required_groups": [
+    {
+      "role": "ATT",
+      "count": 1,
+      "inventory": {
+        "physical_pairs": 32,
+        "quads": 128,
+        "functional_HG1": 512,
+        "staging_1024x256": 34,
+        "query_32x128": 64,
+        "programme_1024x256": 1,
+        "PV_32x128_baseline": 128
+      },
+      "owner": "h_attention_quant",
+      "actual_pin_geometry_complete": false,
+      "source_mapping_complete": false,
+      "placement": null
+    },
+    {
+      "role": "VM",
+      "count": 4,
+      "inventory_per_group": {
+        "banks": 8,
+        "hub": 1,
+        "ringstop": 2,
+        "replay": 1
+      },
+      "owner": "h_vm",
+      "actual_pin_geometry_complete": false,
+      "placement": null,
+      "provisional_new_RG7_bank_um": [
+        393.12,
+        339.12
+      ],
+      "provisional_RG7_qualified": false
+    },
+    {
+      "role": "VM_LG",
+      "count": 96,
+      "organization": "4quadrants x3tapstages x8bankleaves",
+      "scalar_pins_per_leaf": 1673,
+      "faces_signal_bits_each": 556,
+      "owner": "h_vm",
+      "source_pin_manifest_available": true,
+      "actual_pin_geometry_complete": false,
+      "placement": null
+    },
+    {
+      "role": "SM",
+      "count": 32,
+      "owner": "h_elements_a",
+      "required": "current static fullfront/data/code/cache actual child inventory; old35front not silently substituted",
+      "actual_pin_geometry_complete": false,
+      "placement": null
+    },
+    {
+      "role": "SU_SFU_HC",
+      "count": null,
+      "owner": "h_hc_sfu",
+      "required": "actual canonical retained-memory and static controller child hierarchy; preserve native producer and consumer edges",
+      "actual_pin_geometry_complete": false,
+      "placement": null
+    },
+    {
+      "role": "IDX",
+      "count": 1,
+      "owner": "h_idx",
+      "source_revision_reported": "9c42a778d",
+      "actual_pin_geometry_complete": false,
+      "placement": null
+    },
+    {
+      "role": "COLL",
+      "count": 4,
+      "owner": "h_collective",
+      "required": "current host V3 endpoint, per-quarter bridge, actual FEC/staticwindow and G96 native clock/inventory; no inherited old views",
+      "actual_pin_geometry_complete": false,
+      "placement": null
+    },
+    {
+      "role": "PHY_and_stack_service",
+      "count": null,
+      "owner": "h_die",
+      "required": "source-bound shoreline/stack/PC allocation and physical service paths; no free extra stack ports",
+      "actual_pin_geometry_complete": false,
+      "placement": null
+    },
+    {
+      "role": "Engram",
+      "count": null,
+      "owner": "h_engram_partition",
+      "candidate": "two8home table allocation uses16physicalranks; all96rankroles retained",
+      "adopted": false,
+      "actual_pin_geometry_complete": false,
+      "placement": null
+    }
+  ],
+  "critical_adjacencies": [
+    {
+      "near": "NE_VM_RG3",
+      "far": "ATT_query",
+      "payload_bits_per_edge": 2048,
+      "query_bytes": 32768,
+      "minimum_edges": 128,
+      "geometry_verified": false
+    },
+    {
+      "near": "KV_stack_service",
+      "far": "ATT_staging",
+      "payload_bits_per_issue_edge": 8480,
+      "current_service_bits_per_edge": 2048,
+      "allocation_closed": false,
+      "geometry_verified": false
+    },
+    {
+      "near": "ATT_arithmetic",
+      "far": "PV_serializer",
+      "payload_bits_per_beat": 16384,
+      "flag_bits_per_beat": 512,
+      "dimension_beats": 16,
+      "geometry_verified": false
+    },
+    {
+      "near": "PV_serializer",
+      "far": "NE_VM_WG1",
+      "payload_bits_per_edge": 2048,
+      "flag_bits_per_edge": 64,
+      "commit_edges": 128,
+      "layout": "FP32[head][dimension]",
+      "geometry_verified": false
+    },
+    {
+      "near": "VM_bank",
+      "far": "LG_SU_SFU_HC_bank_chain",
+      "each_direction_stage_edges": 2,
+      "read_return_edges": [
+        10,
+        14,
+        18
+      ],
+      "write_return_edges": [
+        7,
+        11,
+        15
+      ],
+      "signal_bits_per_bank_seam": 556,
+      "geometry_verified": false
+    }
+  ],
+  "global_objective": [
+    "Production transfer activity x actual pin distance across all incident boundaries",
+    "Critical path and registered-hop cycle cost with actual launch/capture reach",
+    "Pin/PG-aware cuts <=0.60 and reserved relay/clock physical area",
+    "Actual phi-R clock delivery, sink/root count and boundary spread",
+    "Total die area and fixed-calendar throughput including external VM/KV/COLL paths"
+  ],
+  "required_before_whole_die_ranking": [
+    "Resolve current physical children and real view/source hashes for every group",
+    "Bind logicaltile-to-physicalpair and quarter mapping",
+    "Complete actual pin/halo/PG/clock geometry for every current master",
+    "Bind stack/PC/PHY and canonical NE VM producer/consumer homes",
+    "Insert actual selection, status, decoder and registered relay hardware",
+    "Compute cuts and objective including all outside paths; refuse a complete or optimum label while any are missing"
+  ]
+}
