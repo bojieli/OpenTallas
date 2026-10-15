@@ -1,13 +1,13 @@
 {
-  "status": "SCREEN7_TERMINAL_FAIL_PARTIAL_GRAPH_ONLY",
-  "source_commit": "f44b10366",
+  "status": "SCREEN8_LIVE_CONSTRUCTION_ONLY",
+  "source_commit": "3161f2115",
   "host": "ot-epyc4",
-  "pid": null,
-  "unit": "oth-ubuntu-1329812-1792052876",
-  "local_systemd_unit": "canonical-gen-1015-screen7.service",
-  "local_log": "/home/ubuntu/canonical-gen-1015-screen7.log",
+  "pid": 1636318,
+  "unit": "oth-ubuntu-1636298-1792058040",
+  "local_systemd_unit": "canonical-gen-1015-screen8.service",
+  "local_log": "/home/ubuntu/canonical-gen-1015-screen8.log",
   "remote_source": "/srv/opentallas-scratch/codex-canonical-gen-1015/src",
-  "output": "/srv/opentallas-scratch/codex-canonical-gen-1015/screen7",
+  "output": "/srv/opentallas-scratch/codex-canonical-gen-1015/screen8",
   "scope": "Actual full2417 typed generator. No native timing or placement success claim while active. All sourcepairIDs2417/BF519 andPHW10 metadata preserved.",
   "first_failure": "Historical slot_geometry required uniform BF_PER_REGION; canonical exactperframe slot inventory now replaces only canonical restriction. Failed screen1 remains immutable.",
   "artifacts_expected": {
@@ -42,7 +42,7 @@
     "local_systemd_unit": "canonical-gen-1015-screen3.service",
     "output": "/srv/opentallas-scratch/codex-canonical-gen-1015/screen3"
   },
-  "updated_utc": "2026-10-15T08:35:58.094900+00:00",
+  "updated_utc": "2026-10-15T09:54:43.083556+00:00",
   "screen7": {
     "status": "GEN_FAIL",
     "exit_code": 1,
@@ -55,5 +55,11 @@
       "partial_pin_exclusions.json"
     ],
     "next": "Measure existing RSC occupancy and implement structural lane packing or alternate legal street route before next full screen."
+  },
+  "screen8": {
+    "status": "LIVE",
+    "source": "3161f2115",
+    "structural_change": "Actual RSC-contained field-return relays packed west, unchanged stages/IDs/clocks/ports; max4 return lanes28.056um beside17.256um relays, east-offset roadmap. Each move checked against occupied rectangles.",
+    "reach_scope": "Construction only: inherited recipe final hop-gate0; independent sourceexact per-pin audit required, no closure claim."
   }
 }
