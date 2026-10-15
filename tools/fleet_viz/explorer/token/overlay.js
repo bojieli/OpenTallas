@@ -142,7 +142,7 @@ export class DieReplay {
     c.clearRect(0, 0, this.cw, this.ch);
     c.drawImage(this.base, 0, 0, this.cw, this.ch);
     const { events, links } = activeAt(this.ev, t);
-    const visible = new Set(filterConnections(this.df.edges, { mode: this.flowMode, selected: this.selected, activeNodes: events.map(e => e.node) })
+    const visible = new Set(filterConnections(this.flowOn ? this.df.edges : [], { mode: this.flowMode, selected: this.selected, activeNodes: events.map(e => e.node) })
       .filter(e => (!this.minimumWidth || (e.width_bits !== null && e.width_bits >= this.minimumWidth)) && (!this.search || [e.id, e.label, e.src, e.dst, ...e.endpoints.map(p => p.instance)].join(' ').toLowerCase().includes(this.search))).map(e => e.id));
     const candidates = this.flowOn ? this.segments.filter(s => visible.has(s.edge.id)) : [];
     const segments = candidates.slice(0, 600);
