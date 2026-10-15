@@ -14,7 +14,7 @@ module tb_s81_hcx_projection_partition;
 `else
  localparam integer MPAGE=0;
 `endif
- ot_s81_hcx_projection_partition #(.MUT_BANK(MUT),.MUT_PAGE(MPAGE))u(.clk(clk),.clk_lane({32{clk}}),.clk_tree(clk),.clk_bank({8{clk}}),.rst_n(rn),.stage_begin(sb),.stage_v(sv),.stage_word(a),.stage_d(d),.cmd_v(cv),.cmd_ffn(ffn),.cmd_layer(layer),.norm_eps(eps[0]),.o_v(ov),.o_d(od),.fault(f));
+ ot_s81_hcx_projection_partition #(.MUT_BANK(MUT),.MUT_PAGE(MPAGE))u(.clk(clk),.clk_lane({32{clk}}),.clk_tree({5{clk}}),.clk_bank({8{clk}}),.rst_n(rn),.stage_begin(sb),.stage_v(sv),.stage_word(a),.stage_d(d),.cmd_v(cv),.cmd_ffn(ffn),.cmd_layer(layer),.norm_eps(eps[0]),.o_v(ov),.o_d(od),.fault(f));
  always @(posedge clk)cyc<=cyc+1;
  initial begin
   if($value$plusargs("LAYER=%d",layer_arg))layer=6'(layer_arg);

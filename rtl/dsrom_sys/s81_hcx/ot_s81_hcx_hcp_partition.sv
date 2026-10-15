@@ -63,7 +63,7 @@
 // every input is registered before use.  fault (sticky per command): a
 // nonfinite operand or overflow anywhere, a divide fault, or R > 2^TL.
 // ---------------------------------------------------------------------------
-module ot_s81_hcx_hcp_partition #(
+module ot_s81_hcx_hcp_control #(
     parameter integer W    = 8,         // lanes per group (power of two >= 2); lanes = 8W (spec: W = 256)
     parameter integer TL   = 9,         // tail levels: runs per accumulation R <= 2^TL (spec: 4)
     parameter integer PMAX = 8,         // positions per command (power of two)
@@ -83,8 +83,6 @@ module ot_s81_hcx_hcp_partition #(
     parameter integer OXW  = (OMAX > 1) ? $clog2(OMAX) : 1
 ) (
     input  wire              clk,
-    input wire [31:0] clk_lane,
-    input wire clk_tree,
     input  wire              rst_n,
     // command
     input  wire              cmd_valid,
@@ -100,10 +98,8 @@ module ot_s81_hcx_hcp_partition #(
     // weight banks (binary32) and x banks (BF16), bank k at [k*...]
     output reg  [7:0]        w_re,
     output reg  [8*AW-1:0]   w_addr,
-    input  wire [8*W*32-1:0] w_data,
     output reg  [7:0]        x_re,
     output reg  [8*AW-1:0]   x_addr,
-    input  wire [8*W*16-1:0] x_data,
     // results
     output reg               o_valid,
     input  wire              o_ready,
@@ -120,7 +116,13 @@ module ot_s81_hcx_hcp_partition #(
     output wire [AW-1:0]     sd_wa,
     output wire [AW-1:0]     sd_xa,
     input  wire [W*32-1:0]   sys_sum,
-    input  wire              sys_fault
+    input  wire              sys_fault,
+    input wire [31:0] lane_faults,
+    input wire [4:0] tree_faults,
+    input wire [31:0] final_sum,
+    input wire final_vo,
+    output wire [87:0] lane_meta,
+    output wire [7:0] lane_gov,lane_first,lane_done
 );
     localparam integer LW  = $clog2(W);
     localparam integer NVW = LW + 1;
@@ -140,8 +142,8 @@ module ot_s81_hcx_hcp_partition #(
     localparam integer DW    = F_LO + 1;
     // pipeline taps (descriptor delay-line index of the task a stage holds)
     localparam integer T_OP   = 21 + ML + 3;                 // group operands of term 7
-    localparam integer T_LEAF = SYS ? SYS_LAT + 1 : 31 + ML; // tree leaves
-    localparam integer T_TAIL = T_LEAF + 3 * LW;             // tree output = tail level 0 input
+    localparam integer T_LEAF = SYS ? SYS_LAT + 1 : 32 + ML; // tree leaves: real lane input pin capture adds one edge
+    localparam integer T_TAIL = T_LEAF + 3 + 3 * LW;             // tree output = tail level 0 input
     localparam integer NDL    = T_TAIL + 3 * TL + 1;
 
     genvar gk, gg, gl, gv;
@@ -248,119 +250,57 @@ module ot_s81_hcx_hcp_partition #(
             x_addr[AW*i +: AW] <= dl[DW*(3*i) + F_XA +: AW];
         end
 
-    reg [W*32-1:0] leaf;
-    reg            leaf_v;
-    wire           lane_fault_any;
-    assign sd_v = d0[F_V]; assign sd_ss = d0[F_SS]; assign sd_nv = d0[F_NV +: NVW]; assign sd_wa = d0[F_WA +: AW];
-    assign sd_xa = d0[F_XA +: AW];
-    generate if (SYS == 0) begin : g_flat
-    // ------------------------------------------------------------------ input registers
-    // These existing capture flops live in each hardened memory-bank child.
-    wire [8*W*32-1:0] w_in = w_data;
-    wire [8*W*16-1:0] x_in = x_data;
-
-    // ------------------------------------------------------------------ rotation to groups, masking
-    // bank k's input register holds the task at tap 3k + 2 + ML
-    wire [63:0] sel;                                  // sel[8g + k]
-    for (gg = 0; gg < 8; gg = gg + 1) begin : g_sel
-        for (gk = 0; gk < 8; gk = gk + 1) begin : g_k
-            //: qualified by the task's valid bit: a bubble's group field may be stale (the delay line's data
-            //: bits carry no reset), and only valid tasks are guaranteed one per group
-            assign sel[8*gg + gk] = dl[DW*(3*gk + 2 + ML) + F_V] && (dl[DW*(3*gk + 2 + ML) + F_GRP +: 3] == gg);
-        end
-    end
-
-    reg  [7:0]        gfirst, glast;                // first: a = +0 (term 0, or no task)
-    reg  [7:0]        gov;                          // the group holds a task's operands
-    wire [W-1:0]    lane_fault;
-    wire [8*W*32-1:0] gsum;
-    reg  [7:0]        lastv [0:6];                  // group's last-term flag, delayed 0..6 from gw
-    reg  [7:0]        fst   [0:3];                  // group's first flag, delayed 0..3
-    for (gg = 0; gg < 8; gg = gg + 1) begin : g_grp
-        reg          ov, oss;
-        reg [NVW-1:0] onv;
-        reg [W*32-1:0] ow;
-        reg [W*16-1:0] ox;
-        integer k2;
-        always @(*) begin
-            ov = 1'b0; oss = 1'b0; onv = {NVW{1'b0}}; ow = {(W*32){1'b0}}; ox = {(W*16){1'b0}};
-            for (k2 = 0; k2 < 8; k2 = k2 + 1) begin
-                ov  = ov  | sel[8*gg + k2];
-                oss = oss | (sel[8*gg + k2] & dl[DW*(3*k2 + 2 + ML) + F_SS]);
-                onv = onv | ({NVW{sel[8*gg + k2]}} & dl[DW*(3*k2 + 2 + ML) + F_NV +: NVW]);
-                ow  = ow  | ({(W*32){sel[8*gg + k2]}} & w_in[W*32*k2 +: W*32]);
-                ox  = ox  | ({(W*16){sel[8*gg + k2]}} & x_in[W*16*k2 +: W*16]);
-            end
-        end
-        for (gl = 0; gl < W/8; gl = gl + 1) begin : g_hard_lane
-            // Real clock-owned child. Its input flops are the original gx/gw;
-            // its output flops are the original arithmetic pipes and lf_r.
-            // Do not flatten this boundary in physical composition.
-            ot_s81_hcx_hcp_lane8 child (
-                .clk(clk_lane[gg*(W/8)+gl]), .rst_n(rst_n),
-                .ov(ov), .oss(oss), .onv(onv), .lane_base(6'(gl*8)),
-                .ow(ow[gl*256+:256]), .ox(ox[gl*128+:128]),
-                .gov(gov[gg]), .first(fst[2][gg]),
-                .sum(gsum[32*(W*gg+gl*8)+:256]),
-                .fault_q(lane_fault[gg*(W/8)+gl]));
-        end
-        always @(posedge clk or negedge rst_n)
-            if (!rst_n) gov[gg] <= 1'b0; else gov[gg] <= ov;
-        always @(posedge clk) begin
-            gfirst[gg] <= sel[8*gg + 0] || !ov;
-            glast[gg]  <= sel[8*gg + 7];
-        end
-    end
-    always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) begin
-            for (i = 0; i < 7; i = i + 1) lastv[i] <= 8'd0;
-        end else begin
-            lastv[0] <= glast;
-            for (i = 1; i < 7; i = i + 1) lastv[i] <= lastv[i-1];
-        end
-    end
-    always @(posedge clk) begin
-        fst[0] <= gfirst;
-        for (i = 1; i < 4; i = i + 1) fst[i] <= fst[i-1];
-    end
-    //: fst[2] is the first flag of the term whose product the adder takes now;
-    //: lastv[5] marks the group whose adder output is a finished chunk sum.
-    wire [7:0] done_g = lastv[5];
-
-    // ------------------------------------------------------------------ tree over the W chunk sums
-    integer g3;
-    always @(posedge clk) begin
-        leaf <= {(W*32){1'b0}};
-        for (g3 = 0; g3 < 8; g3 = g3 + 1)
-            if (done_g[g3]) leaf <= gsum[W*32*g3 +: W*32];
-    end
-    always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) leaf_v <= 1'b0;
-        else leaf_v <= |done_g;
-    end
-    assign lane_fault_any = |lane_fault;
-    end else begin : g_sys
-    // the stage chain is outside: stage 7's chunk sums of the task at tap T_LEAF - 1 arrive on sys_sum now
-    always @(posedge clk) leaf <= dl[DW*(T_LEAF-1) + F_V] ? sys_sum : {(W*32){1'b0}};
-    always @(posedge clk or negedge rst_n)
-        if (!rst_n) leaf_v <= 1'b0;
-        else leaf_v <= dl[DW*(T_LEAF-1) + F_V];
-    assign lane_fault_any = sys_fault;
+    wire lane_fault_any;
+    assign sd_v=d0[F_V];assign sd_ss=d0[F_SS];assign sd_nv=d0[F_NV+:NVW];
+    assign sd_wa=d0[F_WA+:AW];assign sd_xa=d0[F_XA+:AW];
+    wire [63:0] sel;
+    generate for(gg=0;gg<8;gg=gg+1)begin:g_sel
+      for(gk=0;gk<8;gk=gk+1)begin:g_k
+        assign sel[8*gg+gk]=dl[DW*(3*gk+2+ML)+F_V] &&
+          (dl[DW*(3*gk+2+ML)+F_GRP+:3]==gg);
+      end
     end endgenerate
-    wire [31:0] root;
-    wire        tree_fault;
-    wire        tree_vo;
-    ot_hdc_v41x_addtree #(.N(W)) u_tree (.clk(clk_tree), .rst_n(rst_n), .v(leaf_v), .x(leaf), .y(root), .vo(tree_vo),
-                                         .fault(tree_fault));
-    wire [LW*3:0] tvv;
-    ot_hdc_v41x_vline #(.D(3*LW)) u_tvv (.clk(clk), .rst_n(rst_n), .v(leaf_v), .vd(tvv));
+    reg [7:0] gfirst,glast,gov;
+    reg [7:0] lastv[0:6];
+    reg [7:0] fst[0:3];
+    generate for(gg=0;gg<8;gg=gg+1)begin:g_group_control
+      wire ov=|sel[8*gg+:8];
+      always @(posedge clk or negedge rst_n)
+        if(!rst_n)gov[gg]<=0;else gov[gg]<=ov;
+      always @(posedge clk)begin
+        gfirst[gg]<=sel[8*gg]||!ov;
+        glast[gg]<=sel[8*gg+7];
+      end
+    end endgenerate
+    always @(posedge clk or negedge rst_n)
+      if(!rst_n)for(i=0;i<7;i=i+1)lastv[i]<=0;
+      else begin lastv[0]<=glast;for(i=1;i<7;i=i+1)lastv[i]<=lastv[i-1];end
+    always @(posedge clk)begin
+      fst[0]<=gfirst;for(i=1;i<4;i=i+1)fst[i]<=fst[i-1];
+    end
+    assign lane_gov=gov;assign lane_first=fst[2];assign lane_done=lastv[6];
+    generate for(gk=0;gk<8;gk=gk+1)begin:g_meta
+      assign lane_meta[gk*11+:11]={dl[DW*(3*gk+2+ML)+F_NV+:6],
+        dl[DW*(3*gk+2+ML)+F_SS],dl[DW*(3*gk+2+ML)+F_GRP+:3],
+        dl[DW*(3*gk+2+ML)+F_V]};
+    end endgenerate
+    reg [31:0] lane_fault_pin;
+    reg [4:0] tree_fault_pin;
+    reg [31:0] root;
+    reg tree_vo;
+    always @(posedge clk)root<=final_sum;
+    always @(posedge clk or negedge rst_n)
+      if(!rst_n)begin lane_fault_pin<=0;tree_fault_pin<=0;tree_vo<=0;end
+      else begin lane_fault_pin<=lane_faults;tree_fault_pin<=tree_faults;tree_vo<=final_vo;end
+    wire tree_fault=|tree_fault_pin;
+    assign lane_fault_any=|lane_fault_pin;
 
     // ------------------------------------------------------------------ tail: pairwise tree over runs
     wire [32*(TL+1)-1:0] ev_val;
     wire [TL:0]          ev_v;
     wire [TL-1:0]        tail_fault;
     assign ev_val[31:0] = root;
-    assign ev_v[0] = tvv[3*LW];
+    assign ev_v[0] = tree_vo;
     generate for (gv = 0; gv < TL; gv = gv + 1) begin : g_tail
         localparam integer TAP = T_TAIL + 3 * gv;
         wire bitl  = dl[DW*TAP + F_R + gv];
@@ -538,16 +478,52 @@ endmodule
 // Eight complete lanes with the existing three-slot recurrence unchanged.
 // This module is hardened independently: clk is its actual clock owner.
 module ot_s81_hcx_hcp_lane8 (
- input wire clk,rst_n,ov,oss,gov,first,
- input wire [5:0] onv,lane_base,
- input wire [255:0] ow,
- input wire [127:0] ox,
+ input wire clk,rst_n,gov,first,
+ input wire [2:0] cfg_group,
+ input wire [5:0] cfg_base,
+ input wire [87:0] meta,
+ input wire [2047:0] bank_w,
+ input wire [1023:0] bank_x,
  output wire [255:0] sum,
  output reg fault_q
 );
+ // Existing rotation mux now belongs to the receiving hard leaf.
+ // Every data cut is bank output flop -> wire -> leaf operand flop.
+ reg [2047:0] bank_w_q;
+ reg [1023:0] bank_x_q;
+ reg [87:0] meta_q;
+ reg gov_q,first_q;
+ reg [2:0] group_q;
+ reg [5:0] base_q;
+ always @(posedge clk or negedge rst_n)
+  if(!rst_n)begin group_q<=0;base_q<=0;end
+  else begin group_q<=cfg_group;base_q<=cfg_base;end
+ always @(posedge clk)begin
+  bank_w_q<=bank_w;bank_x_q<=bank_x;meta_q<=meta;
+  first_q<=first;
+ end
+ always @(posedge clk or negedge rst_n)
+  if(!rst_n)gov_q<=0;else gov_q<=gov;
+ wire [7:0] sel;
+ for(genvar bk=0;bk<8;bk=bk+1)begin:g_sel
+  assign sel[bk]=meta_q[bk*11] && meta_q[bk*11+1+:3]==group_q;
+ end
+ reg [255:0] ow;
+ reg [127:0] ox;
+ reg ov,oss;
+ reg [5:0] onv;
+ always @(*)begin
+  ow=0;ox=0;ov=0;oss=0;onv=0;
+  for(integer k=0;k<8;k=k+1)begin
+   ow=ow|({256{sel[k]}}&bank_w_q[k*256+:256]);
+   ox=ox|({128{sel[k]}}&bank_x_q[k*128+:128]);
+   ov=ov|sel[k];oss=oss|(sel[k]&meta_q[k*11+4]);
+   onv=onv|({6{sel[k]}}&meta_q[k*11+5+:6]);
+  end
+ end
  wire [7:0] lane_fault;
  for(genvar l=0;l<8;l=l+1) begin:g_lane
-  wire lv=ov && ((lane_base+l)<onv);
+  wire lv=ov && ((base_q+l)<onv);
   wire [31:0] xw={ox[l*16+:16],16'd0};
   reg [31:0] gx,gw;
   always @(posedge clk) begin
@@ -555,10 +531,44 @@ module ot_s81_hcx_hcp_lane8 (
    gw<=lv?(oss?xw:ow[l*32+:32]):32'd0;
   end
   wire [31:0] prod; wire [1:0] e0,e1; wire v0,v1;
-  ot_hdc_fp32_mul_fast u_mul(.clk(clk),.rst_n(rst_n),.valid_in(gov),.a(gw),.b(gx),.y(prod),.err(e0),.valid_out(v0));
-  ot_hdc_fp32_add_fast u_add(.clk(clk),.rst_n(rst_n),.valid_in(v0),.a(first?32'd0:sum[l*32+:32]),.b(prod),.y(sum[l*32+:32]),.err(e1),.valid_out(v1));
+  ot_hdc_fp32_mul_fast u_mul(.clk(clk),.rst_n(rst_n),.valid_in(gov_q),.a(gw),.b(gx),.y(prod),.err(e0),.valid_out(v0));
+  ot_hdc_fp32_add_fast u_add(.clk(clk),.rst_n(rst_n),.valid_in(v0),.a(first_q?32'd0:sum[l*32+:32]),.b(prod),.y(sum[l*32+:32]),.err(e1),.valid_out(v1));
   assign lane_fault[l]=(v0 && (|e0)) || (v1 && (|e1));
  end
  always @(posedge clk or negedge rst_n)
-  if(!rst_n) fault_q<=0; else fault_q<=|lane_fault;
+  if(!rst_n) fault_q<=0; else fault_q<=(|lane_fault)||base_q[5]||(|base_q[2:0]);
+endmodule
+
+
+// Quarter boundaries capture all lane data before the group-selection mux.
+// The four N8 subtrees plus N4 final subtree are exactly the original N32 tree.
+module ot_s81_hcx_hcp_quarter_tree(input wire clk,rst_n,
+ input wire [2047:0] partials,input wire [7:0] done,
+ output wire [31:0] y,output wire vo,output wire fault);
+ reg [2047:0] partials_q;
+ reg [7:0] done_q;
+ reg [255:0] leaf;
+ reg leaf_v;
+ always @(posedge clk)begin
+  partials_q<=partials;
+  leaf<=0;
+  for(integer g=0;g<8;g=g+1)if(done_q[g])leaf<=partials_q[g*256+:256];
+ end
+ always @(posedge clk or negedge rst_n)
+  if(!rst_n)begin done_q<=0;leaf_v<=0;end
+  else begin done_q<=done;leaf_v<=|done_q;end
+ ot_hdc_v41x_addtree #(.N(8)) tree(.clk(clk),.rst_n(rst_n),.v(leaf_v),.x(leaf),.y(y),.vo(vo),.fault(fault));
+endmodule
+
+module ot_s81_hcx_hcp_final_tree(input wire clk,rst_n,
+ input wire [127:0] x,input wire [3:0] v,
+ output wire [31:0] y,output wire vo,output reg fault);
+ wire tree_fault;
+ reg [127:0] x_q;
+ reg [3:0] v_q;
+ always @(posedge clk)x_q<=x;
+ always @(posedge clk or negedge rst_n)
+  if(!rst_n)begin v_q<=0;fault<=0;end
+  else begin v_q<=v;fault<=tree_fault || ((|v_q) && v_q!=4'hf);end
+ ot_hdc_v41x_addtree #(.N(4)) tree(.clk(clk),.rst_n(rst_n),.v(v_q[0]),.x(x_q),.y(y),.vo(vo),.fault(tree_fault));
 endmodule

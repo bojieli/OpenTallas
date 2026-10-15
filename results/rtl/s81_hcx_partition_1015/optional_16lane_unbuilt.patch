@@ -1,0 +1,154 @@
+diff --git a/rtl/dsrom_sys/s81_hcx/ot_s81_hcx_hcp_partition.sv b/rtl/dsrom_sys/s81_hcx/ot_s81_hcx_hcp_partition.sv
+index 38f7fcf40..94b23b504 100644
+--- a/rtl/dsrom_sys/s81_hcx/ot_s81_hcx_hcp_partition.sv
++++ b/rtl/dsrom_sys/s81_hcx/ot_s81_hcx_hcp_partition.sv
+@@ -65,6 +65,7 @@
+ // ---------------------------------------------------------------------------
+ module ot_s81_hcx_hcp_partition #(
+     parameter integer W    = 8,         // lanes per group (power of two >= 2); lanes = 8W (spec: W = 256)
++    parameter integer LANES_PER_CHILD = 8, // opt-in16 shares realclockownership only
+     parameter integer TL   = 9,         // tail levels: runs per accumulation R <= 2^TL (spec: 4)
+     parameter integer PMAX = 8,         // positions per command (power of two)
+     parameter integer OMAX = 32,        // rows per position (power of two)
+@@ -83,7 +84,7 @@ module ot_s81_hcx_hcp_partition #(
+     parameter integer OXW  = (OMAX > 1) ? $clog2(OMAX) : 1
+ ) (
+     input  wire              clk,
+-    input wire [31:0] clk_lane,
++    input wire [8*W/LANES_PER_CHILD-1:0] clk_lane,
+     input wire clk_tree,
+     input  wire              rst_n,
+     // command
+@@ -272,7 +273,7 @@ module ot_s81_hcx_hcp_partition #(
+ 
+     reg  [7:0]        gfirst, glast;                // first: a = +0 (term 0, or no task)
+     reg  [7:0]        gov;                          // the group holds a task's operands
+-    wire [W-1:0]    lane_fault;
++    wire [8*(W/LANES_PER_CHILD)-1:0] lane_fault;
+     wire [8*W*32-1:0] gsum;
+     reg  [7:0]        lastv [0:6];                  // group's last-term flag, delayed 0..6 from gw
+     reg  [7:0]        fst   [0:3];                  // group's first flag, delayed 0..3
+@@ -292,17 +293,17 @@ module ot_s81_hcx_hcp_partition #(
+                 ox  = ox  | ({(W*16){sel[8*gg + k2]}} & x_in[W*16*k2 +: W*16]);
+             end
+         end
+-        for (gl = 0; gl < W/8; gl = gl + 1) begin : g_hard_lane
++        for (gl = 0; gl < W/LANES_PER_CHILD; gl = gl + 1) begin : g_hard_lane
+             // Real clock-owned child. Its input flops are the original gx/gw;
+             // its output flops are the original arithmetic pipes and lf_r.
+             // Do not flatten this boundary in physical composition.
+-            ot_s81_hcx_hcp_lane8 child (
+-                .clk(clk_lane[gg*(W/8)+gl]), .rst_n(rst_n),
+-                .ov(ov), .oss(oss), .onv(onv), .lane_base(6'(gl*8)),
+-                .ow(ow[gl*256+:256]), .ox(ox[gl*128+:128]),
++            ot_s81_hcx_hcp_lane_group #(.G(LANES_PER_CHILD)) child (
++                .clk(clk_lane[gg*(W/LANES_PER_CHILD)+gl]), .rst_n(rst_n),
++                .ov(ov), .oss(oss), .onv(onv), .lane_base(6'(gl*LANES_PER_CHILD)),
++                .ow(ow[gl*LANES_PER_CHILD*32+:LANES_PER_CHILD*32]), .ox(ox[gl*LANES_PER_CHILD*16+:LANES_PER_CHILD*16]),
+                 .gov(gov[gg]), .first(fst[2][gg]),
+-                .sum(gsum[32*(W*gg+gl*8)+:256]),
+-                .fault_q(lane_fault[gg*(W/8)+gl]));
++                .sum(gsum[32*(W*gg+gl*LANES_PER_CHILD)+:LANES_PER_CHILD*32]),
++                .fault_q(lane_fault[gg*(W/LANES_PER_CHILD)+gl]));
+         end
+         always @(posedge clk or negedge rst_n)
+             if (!rst_n) gov[gg] <= 1'b0; else gov[gg] <= ov;
+@@ -537,16 +538,16 @@ endmodule
+ 
+ // Eight complete lanes with the existing three-slot recurrence unchanged.
+ // This module is hardened independently: clk is its actual clock owner.
+-module ot_s81_hcx_hcp_lane8 (
++module ot_s81_hcx_hcp_lane_group #(parameter integer G=8) (
+  input wire clk,rst_n,ov,oss,gov,first,
+  input wire [5:0] onv,lane_base,
+- input wire [255:0] ow,
+- input wire [127:0] ox,
+- output wire [255:0] sum,
++ input wire [G*32-1:0] ow,
++ input wire [G*16-1:0] ox,
++ output wire [G*32-1:0] sum,
+  output reg fault_q
+ );
+- wire [7:0] lane_fault;
+- for(genvar l=0;l<8;l=l+1) begin:g_lane
++ wire [G-1:0] lane_fault;
++ for(genvar l=0;l<G;l=l+1) begin:g_lane
+   wire lv=ov && ((lane_base+l)<onv);
+   wire [31:0] xw={ox[l*16+:16],16'd0};
+   reg [31:0] gx,gw;
+diff --git a/rtl/dsrom_sys/s81_hcx/ot_s81_hcx_projection_partition.sv b/rtl/dsrom_sys/s81_hcx/ot_s81_hcx_projection_partition.sv
+index 35820b261..26ba7d0a5 100644
+--- a/rtl/dsrom_sys/s81_hcx/ot_s81_hcx_projection_partition.sv
++++ b/rtl/dsrom_sys/s81_hcx/ot_s81_hcx_projection_partition.sv
+@@ -7,9 +7,9 @@
+ // Serial 0.9-GHz domain; stage bus is compiler-reserved, 80 consecutive beats
+ // of eight native packed-BF16 rows (4096b/beat). Commands follow SRAM visibility.
+ // Native static calendar must reserve the full prefetch; no credit/ready gating.
+-module ot_s81_hcx_projection_partition #(parameter IMAGE="hcx_r0",parameter integer MUT_BANK=0,MUT_PAGE=0)(
++module ot_s81_hcx_projection_partition #(parameter IMAGE="hcx_r0",parameter integer MUT_BANK=0,MUT_PAGE=0,LANES_PER_CHILD=8)(
+  input wire clk,rst_n,
+- input wire [31:0] clk_lane,
++ input wire [256/LANES_PER_CHILD-1:0] clk_lane,
+  input wire clk_tree,
+  input wire [7:0] clk_bank,
+  input wire stage_begin,stage_v,
+@@ -50,7 +50,7 @@ module ot_s81_hcx_projection_partition #(parameter IMAGE="hcx_r0",parameter inte
+    .wr(wr[b]),.wa(wa[b*16+:16]),.xr(xr[b]),.xa(xa[b*16+:16]),
+    .wd(wd2[b*1024+:1024]),.xd(xd2[b*512+:512]));
+  end endgenerate
+- ot_s81_hcx_hcp_partition #(.W(32),.TL(7),.PMAX(2),.OMAX(2),.AW(16),.CW(16),.ML(2))hcp(
++ ot_s81_hcx_hcp_partition #(.LANES_PER_CHILD(LANES_PER_CHILD),.W(32),.TL(7),.PMAX(2),.OMAX(2),.AW(16),.CW(16),.ML(2))hcp(
+   .clk(clk),.clk_lane(clk_lane),.clk_tree(clk_tree),.rst_n(rst_n),.cmd_valid(cmd_v_q),.cmd_ready(ready),.cmd_npos(2'd1),.cmd_nout(2'd1),
+   .cmd_nchunk(16'd2560),.cmd_scale(1'b1),.cmd_nf(32'h46a00000),.cmd_eps(norm_eps_q),
+   .cmd_wbase(16'((2*cmd_layer_q+cmd_ffn_q)*80)),.cmd_xbase(16'd0),
+diff --git a/rtl/dsrom_sys/s81_hcx/test/tb_s81_hcx_projection_partition.sv b/rtl/dsrom_sys/s81_hcx/test/tb_s81_hcx_projection_partition.sv
+index 17933648f..8ef6392dd 100644
+--- a/rtl/dsrom_sys/s81_hcx/test/tb_s81_hcx_projection_partition.sv
++++ b/rtl/dsrom_sys/s81_hcx/test/tb_s81_hcx_projection_partition.sv
+@@ -1,5 +1,10 @@
+ `timescale 1ns/1ps
+ module tb_s81_hcx_projection_partition;
++`ifdef LANE16
++ localparam integer LPC=16;
++`else
++ localparam integer LPC=8;
++`endif
+  reg clk=0;always #5 clk=~clk;
+  reg rn=0,sb=0,sv=0,cv=0,ffn=0;reg[6:0]a=0;reg[4095:0]d=0;wire ov,f;wire[31:0]od;
+  reg[4095:0]x0[0:79],x1[0:79];reg[31:0]expectm[0:1],eps[0:0];
+@@ -14,7 +19,7 @@ module tb_s81_hcx_projection_partition;
+ `else
+  localparam integer MPAGE=0;
+ `endif
+- ot_s81_hcx_projection_partition #(.MUT_BANK(MUT),.MUT_PAGE(MPAGE))u(.clk(clk),.clk_lane({32{clk}}),.clk_tree(clk),.clk_bank({8{clk}}),.rst_n(rn),.stage_begin(sb),.stage_v(sv),.stage_word(a),.stage_d(d),.cmd_v(cv),.cmd_ffn(ffn),.cmd_layer(layer),.norm_eps(eps[0]),.o_v(ov),.o_d(od),.fault(f));
++ ot_s81_hcx_projection_partition #(.MUT_BANK(MUT),.MUT_PAGE(MPAGE),.LANES_PER_CHILD(LPC))u(.clk(clk),.clk_lane({(256/LPC){clk}}),.clk_tree(clk),.clk_bank({8{clk}}),.rst_n(rn),.stage_begin(sb),.stage_v(sv),.stage_word(a),.stage_d(d),.cmd_v(cv),.cmd_ffn(ffn),.cmd_layer(layer),.norm_eps(eps[0]),.o_v(ov),.o_d(od),.fault(f));
+  always @(posedge clk)cyc<=cyc+1;
+  initial begin
+   if($value$plusargs("LAYER=%d",layer_arg))layer=6'(layer_arg);
+diff --git a/tools/s81_ftok/hcx_partition_census.py b/tools/s81_ftok/hcx_partition_census.py
+index 029fe1925..fa7a1ae2b 100755
+--- a/tools/s81_ftok/hcx_partition_census.py
++++ b/tools/s81_ftok/hcx_partition_census.py
+@@ -37,7 +37,7 @@ def census(source):
+                     for pin, net in zip(port["bits"], cell["connections"].get(pin_name, [])):
+                         child_bindings[pin] = bindings.get(net, (path, net))
+                 child_owner = owner
+-                if kind == "ot_s81_hcx_hcp_lane8" or "ot_s81_hcx_hcp_bank" in kind or cell_name == "u_tree":
++                if ("ot_s81_hcx_hcp_lane_group" in kind or kind == "ot_s81_hcx_hcp_lane8") or "ot_s81_hcx_hcp_bank" in kind or cell_name == "u_tree":
+                     child_owner = child_path
+                 walk(kind, child_path, child_bindings, child_owner)
+             elif kind.startswith("$") and "ff" in kind.lower():
+diff --git a/tools/s81_ftok/hcx_partition_gate.sh b/tools/s81_ftok/hcx_partition_gate.sh
+index 6edbd08d8..07dce2d3c 100755
+--- a/tools/s81_ftok/hcx_partition_gate.sh
++++ b/tools/s81_ftok/hcx_partition_gate.sh
+@@ -17,7 +17,8 @@ src=(
+  rtl/dsrom_sys/s81_hcx/ot_s81_hcx_hcp_partition.sv rtl/dsrom_sys/s81_hcx/ot_s81_hcx_projection_partition.sv rtl/dsrom_sys/s81_hcx/test/tb_s81_hcx_projection_partition.sv
+ )
+ defs=()
+-if [[ "$mode" == mut ]]; then defs=(+define+MUT_BANK); elif [[ "$mode" != pass ]]; then exit 2; fi
++if [[ "${LANE16:-0}" == 1 ]]; then defs=(+define+LANE16); fi
++if [[ "$mode" == mut ]]; then defs+=(+define+MUT_BANK); elif [[ "$mode" != pass ]]; then exit 2; fi
+ verilator --binary --timing -O3 -CFLAGS -O2 -Wno-fatal -Wno-WIDTH -Wno-UNOPTFLAT \
+  "${defs[@]}" --top-module tb_s81_hcx_projection_partition --Mdir "$out/obj" -j 8 "${src[@]}" > "$out/build.log" 2>&1
+ "$out/obj/Vtb_s81_hcx_projection_partition" +DIR="$out/vec" +OT_ROM_DIR="$out/vec" | tee "$out/run.log"

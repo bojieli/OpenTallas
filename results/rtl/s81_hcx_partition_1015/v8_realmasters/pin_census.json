@@ -1,0 +1,468 @@
+{
+  "scope": "Check actual hard-child receive/transmit flop cuts in source Yosys hierarchy.\n\nThis proves source connectivity only; physical pin placement, route, reach,\nclock insertion and phi-R delivery remain independent sign-off requirements.\n",
+  "hard_children": 46,
+  "parent_primitive_cells": [],
+  "pass": true,
+  "rows": [
+    {
+      "instance": "control",
+      "module": "ot_s81_hcx_projection_control",
+      "data_input_bits": 119,
+      "data_output_bits": 418,
+      "inputs_before_flop": [],
+      "outputs_without_flop": [],
+      "unused_data_inputs": [],
+      "pass": true
+    },
+    {
+      "instance": "final_tree",
+      "module": "ot_s81_hcx_hcp_final_tree",
+      "data_input_bits": 132,
+      "data_output_bits": 34,
+      "inputs_before_flop": [],
+      "outputs_without_flop": [],
+      "unused_data_inputs": [],
+      "pass": true
+    },
+    {
+      "instance": "g_bank[0].child",
+      "module": "$paramod$da3b7f58ce15a2d9c3ce974eb4cbb5a17f604877\\ot_s81_hcx_hcp_bank",
+      "data_input_bits": 554,
+      "data_output_bits": 1536,
+      "inputs_before_flop": [],
+      "outputs_without_flop": [],
+      "unused_data_inputs": [],
+      "pass": true
+    },
+    {
+      "instance": "g_bank[1].child",
+      "module": "$paramod$a0a92eb36749521d487cf3d8200afe6d4096db5f\\ot_s81_hcx_hcp_bank",
+      "data_input_bits": 554,
+      "data_output_bits": 1536,
+      "inputs_before_flop": [],
+      "outputs_without_flop": [],
+      "unused_data_inputs": [],
+      "pass": true
+    },
+    {
+      "instance": "g_bank[2].child",
+      "module": "$paramod$22941a08b7655d7a24cf8a7b92806ef26070c4da\\ot_s81_hcx_hcp_bank",
+      "data_input_bits": 554,
+      "data_output_bits": 1536,
+      "inputs_before_flop": [],
+      "outputs_without_flop": [],
+      "unused_data_inputs": [],
+      "pass": true
+    },
+    {
+      "instance": "g_bank[3].child",
+      "module": "$paramod$c5d693ff1895c5fe5f49cb15d354509ff18aff27\\ot_s81_hcx_hcp_bank",
+      "data_input_bits": 554,
+      "data_output_bits": 1536,
+      "inputs_before_flop": [],
+      "outputs_without_flop": [],
+      "unused_data_inputs": [],
+      "pass": true
+    },
+    {
+      "instance": "g_bank[4].child",
+      "module": "$paramod$848010d5b0949e5b78115ca5f8ca8e4b9487c4e4\\ot_s81_hcx_hcp_bank",
+      "data_input_bits": 554,
+      "data_output_bits": 1536,
+      "inputs_before_flop": [],
+      "outputs_without_flop": [],
+      "unused_data_inputs": [],
+      "pass": true
+    },
+    {
+      "instance": "g_bank[5].child",
+      "module": "$paramod$8ac21802fb49ca17e67b1deba452e28bf1f76c57\\ot_s81_hcx_hcp_bank",
+      "data_input_bits": 554,
+      "data_output_bits": 1536,
+      "inputs_before_flop": [],
+      "outputs_without_flop": [],
+      "unused_data_inputs": [],
+      "pass": true
+    },
+    {
+      "instance": "g_bank[6].child",
+      "module": "$paramod$81c8eea5b97842372780af3c7e74b6d7eb85c594\\ot_s81_hcx_hcp_bank",
+      "data_input_bits": 554,
+      "data_output_bits": 1536,
+      "inputs_before_flop": [],
+      "outputs_without_flop": [],
+      "unused_data_inputs": [],
+      "pass": true
+    },
+    {
+      "instance": "g_bank[7].child",
+      "module": "$paramod$094d3780eadc8110b1eee388ddb1d410a132af3c\\ot_s81_hcx_hcp_bank",
+      "data_input_bits": 554,
+      "data_output_bits": 1536,
+      "inputs_before_flop": [],
+      "outputs_without_flop": [],
+      "unused_data_inputs": [],
+      "pass": true
+    },
+    {
+      "instance": "g_group[0].g_lane8[0].child",
+      "module": "$paramod$7b2276ab0acf4e7e794128b65fde3a68aa71cf26\\ot_s81_hcx_hcp_lane8",
+      "data_input_bits": 3162,
+      "data_output_bits": 257,
+      "inputs_before_flop": [],
+      "outputs_without_flop": [],
+      "unused_data_inputs": [],
+      "pass": true
+    },
+    {
+      "instance": "g_group[0].g_lane8[1].child",
+      "module": "$paramod$282e2b2a3ca8c13922ebd53bf111d792e2a65bd0\\ot_s81_hcx_hcp_lane8",
+      "data_input_bits": 3162,
+      "data_output_bits": 257,
+      "inputs_before_flop": [],
+      "outputs_without_flop": [],
+      "unused_data_inputs": [],
+      "pass": true
+    },
+    {
+      "instance": "g_group[0].g_lane8[2].child",
+      "module": "$paramod$07f82976832ba28b0a8f9236bc43c7107686f789\\ot_s81_hcx_hcp_lane8",
+      "data_input_bits": 3162,
+      "data_output_bits": 257,
+      "inputs_before_flop": [],
+      "outputs_without_flop": [],
+      "unused_data_inputs": [],
+      "pass": true
+    },
+    {
+      "instance": "g_group[0].g_lane8[3].child",
+      "module": "$paramod$e07c75261ed90b2c46a655fb00c16b158bb122cf\\ot_s81_hcx_hcp_lane8",
+      "data_input_bits": 3162,
+      "data_output_bits": 257,
+      "inputs_before_flop": [],
+      "outputs_without_flop": [],
+      "unused_data_inputs": [],
+      "pass": true
+    },
+    {
+      "instance": "g_group[1].g_lane8[0].child",
+      "module": "$paramod$2068ac10c0fdb61ba4a9525217ee1847daa76c1f\\ot_s81_hcx_hcp_lane8",
+      "data_input_bits": 3162,
+      "data_output_bits": 257,
+      "inputs_before_flop": [],
+      "outputs_without_flop": [],
+      "unused_data_inputs": [],
+      "pass": true
+    },
+    {
+      "instance": "g_group[1].g_lane8[1].child",
+      "module": "$paramod$42d76cfa1fc7c87884ca1267887113bdb8343b73\\ot_s81_hcx_hcp_lane8",
+      "data_input_bits": 3162,
+      "data_output_bits": 257,
+      "inputs_before_flop": [],
+      "outputs_without_flop": [],
+      "unused_data_inputs": [],
+      "pass": true
+    },
+    {
+      "instance": "g_group[1].g_lane8[2].child",
+      "module": "$paramod$331c4749042524b4285cf52aacebab64f9e163e6\\ot_s81_hcx_hcp_lane8",
+      "data_input_bits": 3162,
+      "data_output_bits": 257,
+      "inputs_before_flop": [],
+      "outputs_without_flop": [],
+      "unused_data_inputs": [],
+      "pass": true
+    },
+    {
+      "instance": "g_group[1].g_lane8[3].child",
+      "module": "$paramod$38c87e955b48c30b31cf3fa216f95a4e204952a5\\ot_s81_hcx_hcp_lane8",
+      "data_input_bits": 3162,
+      "data_output_bits": 257,
+      "inputs_before_flop": [],
+      "outputs_without_flop": [],
+      "unused_data_inputs": [],
+      "pass": true
+    },
+    {
+      "instance": "g_group[2].g_lane8[0].child",
+      "module": "$paramod$37d0b0b1e16741724e0974e2c7d2f8d58b54b006\\ot_s81_hcx_hcp_lane8",
+      "data_input_bits": 3162,
+      "data_output_bits": 257,
+      "inputs_before_flop": [],
+      "outputs_without_flop": [],
+      "unused_data_inputs": [],
+      "pass": true
+    },
+    {
+      "instance": "g_group[2].g_lane8[1].child",
+      "module": "$paramod$b78d019b22211a2969a4f562db8f8c962e4476a4\\ot_s81_hcx_hcp_lane8",
+      "data_input_bits": 3162,
+      "data_output_bits": 257,
+      "inputs_before_flop": [],
+      "outputs_without_flop": [],
+      "unused_data_inputs": [],
+      "pass": true
+    },
+    {
+      "instance": "g_group[2].g_lane8[2].child",
+      "module": "$paramod$996c5ed68a9d4afcbf855e17030411fc60a6b2fb\\ot_s81_hcx_hcp_lane8",
+      "data_input_bits": 3162,
+      "data_output_bits": 257,
+      "inputs_before_flop": [],
+      "outputs_without_flop": [],
+      "unused_data_inputs": [],
+      "pass": true
+    },
+    {
+      "instance": "g_group[2].g_lane8[3].child",
+      "module": "$paramod$9b958c24197594a15b2adc04c99b035f7b31e366\\ot_s81_hcx_hcp_lane8",
+      "data_input_bits": 3162,
+      "data_output_bits": 257,
+      "inputs_before_flop": [],
+      "outputs_without_flop": [],
+      "unused_data_inputs": [],
+      "pass": true
+    },
+    {
+      "instance": "g_group[3].g_lane8[0].child",
+      "module": "$paramod$7f4d55a9ec43195d2864d76afda05c5fd026fb53\\ot_s81_hcx_hcp_lane8",
+      "data_input_bits": 3162,
+      "data_output_bits": 257,
+      "inputs_before_flop": [],
+      "outputs_without_flop": [],
+      "unused_data_inputs": [],
+      "pass": true
+    },
+    {
+      "instance": "g_group[3].g_lane8[1].child",
+      "module": "$paramod$1e716cef867ba4fa64998dfdd27107e58fdd6851\\ot_s81_hcx_hcp_lane8",
+      "data_input_bits": 3162,
+      "data_output_bits": 257,
+      "inputs_before_flop": [],
+      "outputs_without_flop": [],
+      "unused_data_inputs": [],
+      "pass": true
+    },
+    {
+      "instance": "g_group[3].g_lane8[2].child",
+      "module": "$paramod$1327131d8d878bbbaf964a5130eea9918af00d47\\ot_s81_hcx_hcp_lane8",
+      "data_input_bits": 3162,
+      "data_output_bits": 257,
+      "inputs_before_flop": [],
+      "outputs_without_flop": [],
+      "unused_data_inputs": [],
+      "pass": true
+    },
+    {
+      "instance": "g_group[3].g_lane8[3].child",
+      "module": "$paramod$9872799bcf8a64b4957d5269a08b971c1df66042\\ot_s81_hcx_hcp_lane8",
+      "data_input_bits": 3162,
+      "data_output_bits": 257,
+      "inputs_before_flop": [],
+      "outputs_without_flop": [],
+      "unused_data_inputs": [],
+      "pass": true
+    },
+    {
+      "instance": "g_group[4].g_lane8[0].child",
+      "module": "$paramod$07513753525d80cdcec7e83a988e8ea390afabe9\\ot_s81_hcx_hcp_lane8",
+      "data_input_bits": 3162,
+      "data_output_bits": 257,
+      "inputs_before_flop": [],
+      "outputs_without_flop": [],
+      "unused_data_inputs": [],
+      "pass": true
+    },
+    {
+      "instance": "g_group[4].g_lane8[1].child",
+      "module": "$paramod$b61ab4b31bfe0296c76d764d6fe95c276c9da9d2\\ot_s81_hcx_hcp_lane8",
+      "data_input_bits": 3162,
+      "data_output_bits": 257,
+      "inputs_before_flop": [],
+      "outputs_without_flop": [],
+      "unused_data_inputs": [],
+      "pass": true
+    },
+    {
+      "instance": "g_group[4].g_lane8[2].child",
+      "module": "$paramod$6723e044ea7782852bdf961b52f2b0efcc304c36\\ot_s81_hcx_hcp_lane8",
+      "data_input_bits": 3162,
+      "data_output_bits": 257,
+      "inputs_before_flop": [],
+      "outputs_without_flop": [],
+      "unused_data_inputs": [],
+      "pass": true
+    },
+    {
+      "instance": "g_group[4].g_lane8[3].child",
+      "module": "$paramod$50adb5004c19cf3cddc5405ae495bada17e3d769\\ot_s81_hcx_hcp_lane8",
+      "data_input_bits": 3162,
+      "data_output_bits": 257,
+      "inputs_before_flop": [],
+      "outputs_without_flop": [],
+      "unused_data_inputs": [],
+      "pass": true
+    },
+    {
+      "instance": "g_group[5].g_lane8[0].child",
+      "module": "$paramod$584ed12589b75f487ee921bddcfbcc6aae9f6f24\\ot_s81_hcx_hcp_lane8",
+      "data_input_bits": 3162,
+      "data_output_bits": 257,
+      "inputs_before_flop": [],
+      "outputs_without_flop": [],
+      "unused_data_inputs": [],
+      "pass": true
+    },
+    {
+      "instance": "g_group[5].g_lane8[1].child",
+      "module": "$paramod$fbf9a0b4997c2805f89482ad35851d43fc5025bf\\ot_s81_hcx_hcp_lane8",
+      "data_input_bits": 3162,
+      "data_output_bits": 257,
+      "inputs_before_flop": [],
+      "outputs_without_flop": [],
+      "unused_data_inputs": [],
+      "pass": true
+    },
+    {
+      "instance": "g_group[5].g_lane8[2].child",
+      "module": "$paramod$72b652ae8947782ddc73f375e79dcaa74b95f112\\ot_s81_hcx_hcp_lane8",
+      "data_input_bits": 3162,
+      "data_output_bits": 257,
+      "inputs_before_flop": [],
+      "outputs_without_flop": [],
+      "unused_data_inputs": [],
+      "pass": true
+    },
+    {
+      "instance": "g_group[5].g_lane8[3].child",
+      "module": "$paramod$ba8af7d366f7abd4951e220251b5101094cda4a8\\ot_s81_hcx_hcp_lane8",
+      "data_input_bits": 3162,
+      "data_output_bits": 257,
+      "inputs_before_flop": [],
+      "outputs_without_flop": [],
+      "unused_data_inputs": [],
+      "pass": true
+    },
+    {
+      "instance": "g_group[6].g_lane8[0].child",
+      "module": "$paramod$bfd62476442763d7599048d0f4957017f083fe9f\\ot_s81_hcx_hcp_lane8",
+      "data_input_bits": 3162,
+      "data_output_bits": 257,
+      "inputs_before_flop": [],
+      "outputs_without_flop": [],
+      "unused_data_inputs": [],
+      "pass": true
+    },
+    {
+      "instance": "g_group[6].g_lane8[1].child",
+      "module": "$paramod$fb5c2b32f23c99724bb9073c83369b53f7ad48a3\\ot_s81_hcx_hcp_lane8",
+      "data_input_bits": 3162,
+      "data_output_bits": 257,
+      "inputs_before_flop": [],
+      "outputs_without_flop": [],
+      "unused_data_inputs": [],
+      "pass": true
+    },
+    {
+      "instance": "g_group[6].g_lane8[2].child",
+      "module": "$paramod$5e68b82fbad9f8bb5dc70cae0a2c01f9fd812282\\ot_s81_hcx_hcp_lane8",
+      "data_input_bits": 3162,
+      "data_output_bits": 257,
+      "inputs_before_flop": [],
+      "outputs_without_flop": [],
+      "unused_data_inputs": [],
+      "pass": true
+    },
+    {
+      "instance": "g_group[6].g_lane8[3].child",
+      "module": "$paramod$36b2e8a83c4c8c1159d167caa23903d2c40a61a0\\ot_s81_hcx_hcp_lane8",
+      "data_input_bits": 3162,
+      "data_output_bits": 257,
+      "inputs_before_flop": [],
+      "outputs_without_flop": [],
+      "unused_data_inputs": [],
+      "pass": true
+    },
+    {
+      "instance": "g_group[7].g_lane8[0].child",
+      "module": "$paramod$dd6b2f2a93aa81085d48e35fcc488e3a85031cb1\\ot_s81_hcx_hcp_lane8",
+      "data_input_bits": 3162,
+      "data_output_bits": 257,
+      "inputs_before_flop": [],
+      "outputs_without_flop": [],
+      "unused_data_inputs": [],
+      "pass": true
+    },
+    {
+      "instance": "g_group[7].g_lane8[1].child",
+      "module": "$paramod$375721468f050be3d453c2728c9bb2f180c225ed\\ot_s81_hcx_hcp_lane8",
+      "data_input_bits": 3162,
+      "data_output_bits": 257,
+      "inputs_before_flop": [],
+      "outputs_without_flop": [],
+      "unused_data_inputs": [],
+      "pass": true
+    },
+    {
+      "instance": "g_group[7].g_lane8[2].child",
+      "module": "$paramod$65f2e6c09ca80f24b6371615762108446d6da14e\\ot_s81_hcx_hcp_lane8",
+      "data_input_bits": 3162,
+      "data_output_bits": 257,
+      "inputs_before_flop": [],
+      "outputs_without_flop": [],
+      "unused_data_inputs": [],
+      "pass": true
+    },
+    {
+      "instance": "g_group[7].g_lane8[3].child",
+      "module": "$paramod$0a49d2d8d5a370d663fef0639bc4b76109a5efc5\\ot_s81_hcx_hcp_lane8",
+      "data_input_bits": 3162,
+      "data_output_bits": 257,
+      "inputs_before_flop": [],
+      "outputs_without_flop": [],
+      "unused_data_inputs": [],
+      "pass": true
+    },
+    {
+      "instance": "g_quarter_tree[0].child",
+      "module": "ot_s81_hcx_hcp_quarter_tree",
+      "data_input_bits": 2056,
+      "data_output_bits": 34,
+      "inputs_before_flop": [],
+      "outputs_without_flop": [],
+      "unused_data_inputs": [],
+      "pass": true
+    },
+    {
+      "instance": "g_quarter_tree[1].child",
+      "module": "ot_s81_hcx_hcp_quarter_tree",
+      "data_input_bits": 2056,
+      "data_output_bits": 34,
+      "inputs_before_flop": [],
+      "outputs_without_flop": [],
+      "unused_data_inputs": [],
+      "pass": true
+    },
+    {
+      "instance": "g_quarter_tree[2].child",
+      "module": "ot_s81_hcx_hcp_quarter_tree",
+      "data_input_bits": 2056,
+      "data_output_bits": 34,
+      "inputs_before_flop": [],
+      "outputs_without_flop": [],
+      "unused_data_inputs": [],
+      "pass": true
+    },
+    {
+      "instance": "g_quarter_tree[3].child",
+      "module": "ot_s81_hcx_hcp_quarter_tree",
+      "data_input_bits": 2056,
+      "data_output_bits": 34,
+      "inputs_before_flop": [],
+      "outputs_without_flop": [],
+      "unused_data_inputs": [],
+      "pass": true
+    }
+  ]
+}

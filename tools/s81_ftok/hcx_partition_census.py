@@ -37,7 +37,7 @@ def census(source):
                     for pin, net in zip(port["bits"], cell["connections"].get(pin_name, [])):
                         child_bindings[pin] = bindings.get(net, (path, net))
                 child_owner = owner
-                if kind == "ot_s81_hcx_hcp_lane8" or "ot_s81_hcx_hcp_bank" in kind or cell_name == "u_tree":
+                if "ot_s81_hcx_hcp_lane8" in kind or "ot_s81_hcx_hcp_bank" in kind or "ot_s81_hcx_hcp_quarter_tree" in kind or "ot_s81_hcx_hcp_final_tree" in kind or kind == "ot_s81_hcx_projection_control" or cell_name == "u_tree":
                     child_owner = child_path
                 walk(kind, child_path, child_bindings, child_owner)
             elif kind.startswith("$") and "ff" in kind.lower():

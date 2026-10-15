@@ -1,0 +1,51 @@
+{
+  "scope": "Pre-build arithmetic-preserving structural candidate; not physical qualification",
+  "source": "ot_hdc_v41x_hcp W32 TL7 PMAX2 OMAX2 ML2",
+  "lane_count": 256,
+  "partition": {
+    "lane_leaves": 32,
+    "lanes_per_leaf": 8,
+    "tree_roots": 5,
+    "shell_roots": 1,
+    "memory_bank_roots": 8,
+    "controller_hardmasters": 1,
+    "parent_stdcell_clock_sinks": 0
+  },
+  "parallel_MACs_per_cycle": 256,
+  "weight_bits_per_cycle": 8192,
+  "x_bits_per_cycle": 4096,
+  "lane_leaf_ingress_bits": 3171,
+  "lane_leaf_egress_bits": 257,
+  "cycle_price_serial": 269,
+  "added_pipeline_cycles": 5,
+  "existing_macros": {
+    "ROM4096x266": 64,
+    "SRAM128x256": 16
+  },
+  "floorplan": {
+    "projection_homes": 6,
+    "home_um": [
+      1728,
+      864
+    ],
+    "status": "Child outlines, root census, pin reach and route tracks require measured proof"
+  },
+  "hard_gate": "Every actual child root <=15000 FF or measured CTS insertion<=300ps spread<=80ps; unchanged exact reduction order and output cycles; no physical qualification until real views",
+  "revision": 9,
+  "expected_bank_flops": 3585,
+  "expected_shell_flops": 11328,
+  "structural_change": "Strict registered receive cuts: replace single tree +shell gsum selector by4real quarter trees(each2048lane-sum PINFF+8flags, original256selected leaf register, exactN8tree) and finalN4tree with128bit inputPINFF. Canonicalcontiguous8quarters pairwise tree unchanged. Lane/bank V5 inputpinregs retained. +1edge vsV5, expected268serial mustmeasure; all46roots<=15k. Final reducer ->controller real32bit+valid inputPINFF adds1edge. Constantlane_base physicalinputs replacedbyfixedBASEparameter. Finalreducerchecksall4quartervalidbits agree atcompiledarrival, no wait. Allcontrol/state/pinFF nowinsideactualprojection_control hardchild; parentpurewire46hardchildren. No newstate/cyclesversusV7, expected269. Onegenericreal lane8master replicated32times: replaceGROUP/BASEparameters byregisteredstaticstrapgroup3/base6. NineactualPINFFsusedbyselection/masking; fixedtieconfigurationsettlesduring80stagingbeats, no arithmeticlatencychange. Basefaultvaliditycheckretained.",
+  "cut_status": "All operand and sum selection logic after realchild inputpinflops; exactface locations, pin capacity, routing, hopreach andphi-R stillUNQUALIFIED.",
+  "cycle_price_serial_before": 264,
+  "lane_expected_FF_bound": 10200,
+  "tree_expected_FF_bound": 7500,
+  "shell_expected_FF_bound": 11600,
+  "bank_expected_FF_bound": 3700,
+  "tree_boundary_bits": {
+    "quarter_ingress_each": 2056,
+    "quarter_egress_each": 34,
+    "final_ingress": 132,
+    "final_egress": 34
+  },
+  "lane_master_variants": 1
+}
