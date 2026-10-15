@@ -1,0 +1,26 @@
+{
+  "schema": "opentallas.programme-leaf-preparation.v1",
+  "producer_commit": "f74794fa41fba1b7f53946533e4e7c8f76bdbb35",
+  "producer_sha256": "b50da24fa0ebd9cce161e44af8028cfd76e47538c2494b594e8ce11d5a0bd60c",
+  "grant": "5838d364e",
+  "frozen_package": "db1ccb727",
+  "actual_exact": {
+    "host": "ot-agidock128",
+    "unit": "oth-ubuntu-1022624-1792090939",
+    "exit": 0,
+    "cases": 1152,
+    "slots": 4608,
+    "sectors": 9216
+  },
+  "actual_mutant": {
+    "host": "ot-agidock128",
+    "unit": "oth-ubuntu-1025027-1792090969",
+    "exit": 1,
+    "errors": 14,
+    "writer_fault": 1,
+    "observed": "OBSERVED_FAIL_native_programme_MUT1"
+  },
+  "boundary": "Component native programme plus real writer frozen boot proof; full parent producer, data/direct-D2D reach and drain adoption open.",
+  "root_publication": "Pending authoritative receipt. No route submission before receipt.",
+  "source_binding": "Both benches assert canonical physical producer SHA against frozen fixture producer SHA before compilation."
+}

@@ -1,0 +1,116 @@
+{
+ "name": "qkd_kv_native_programme",
+ "top": "qkd_kv_native_programme",
+ "kind": "tile",
+ "sources": [
+  "rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv"
+ ],
+ "params": {},
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 86.4,
+  "h": 194.4,
+  "exact": true
+ },
+ "pins": {
+  "W": [
+   "cfg_we",
+   "cfg_addr",
+   "cfg_data",
+   "start",
+   "stage",
+   "epoch",
+   "token",
+   "position",
+   "generation",
+   "ck",
+   "rst_n"
+  ],
+  "E": [
+   "compiled_word_slot",
+   "compiled_word_index",
+   "compiled_identity",
+   "compiled_generation",
+   "kvn_word_slot",
+   "expected_valid",
+   "expected_pc",
+   "expected_stack",
+   "expected_identity",
+   "expected_generation",
+   "expected_address"
+  ],
+  "N": [
+   "configured",
+   "active",
+   "done",
+   "fault",
+   "cycle"
+  ],
+  "S": []
+ },
+ "io_tcl": "results/arch/qwen_split_1014/kvsys_v1_4_2/programme_grant/qkd_kv_native_programme.tcl",
+ "layer_cap": "M5",
+ "route": {
+  "pd": 0.52,
+  "threads": 8,
+  "peak_ram_gb": 16,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "slot_change_request": "Exact candidate grant5838d364e, home4579.2,23371.2; parent producer/data reach/drain adoption held.",
+ "job": {
+  "owner": "Codex:qwen_elements_1103",
+  "branch": "codex/qwen-elements-1103",
+  "tag": "p1",
+  "purpose": "Final reset_v4 fixed native writer programme component only; +1 reset-release/start capture, output slotshift0. Parent production join held.",
+  "benches": [
+   {
+    "name": "all36_two_tokens",
+    "cmd": "bash tools/qwen_static_kv/bench_native_programme_leaf.sh {RUN}/bench/programme_exact 0",
+    "expect": "pass",
+    "pass_regex": "PASS programme\\+native_writer all36 two_tokens",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "actual_slot_mutant",
+    "cmd": "bash tools/qwen_static_kv/bench_native_programme_leaf.sh {RUN}/bench/programme_mutant 1",
+    "expect": "fail",
+    "fail_regex": "OBSERVED_FAIL_native_programme_MUT1",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
+   }
+  ],
+  "extra_paths": [
+   "tools/qwen_static_kv/bench_native_programme_leaf.sh",
+   "results/rtl/qwen_native_kv_programme_1103/leaf_package_v1",
+   "results/arch/qwen_split_1014/kvsys_v1_4_2/programme_grant"
+  ],
+  "views_to": "physical/ref_tile/qkd_kv_native_programme/views",
+  "record_to": "results/rtl/ref_tile/qkd_kv_native_programme"
+ },
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "recipe": 2,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": false
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ }
+}

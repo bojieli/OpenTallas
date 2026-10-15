@@ -1,0 +1,33 @@
+{
+  "status": "PASS_FROZEN_STANDALONE_COMPONENT_GATE",
+  "timestamp_utc": "2026-10-15T18:50:32.133531+00:00",
+  "source_commit": "f74794fa41fba1b7f53946533e4e7c8f76bdbb35",
+  "source_file_sha256": "b50da24fa0ebd9cce161e44af8028cfd76e47538c2494b594e8ce11d5a0bd60c",
+  "boot_sha256": "5a4692f113422dc5c1d3d15f81d7dccb130c821398e0a405c05cb71e760d7bfe",
+  "tests": [
+    {
+      "mut": 0,
+      "exit": 0,
+      "log": "receipt_mut0.log",
+      "cohorts": 1152,
+      "slots": 4608,
+      "sectors": 9216
+    },
+    {
+      "mut": 1,
+      "exit": 0,
+      "expected": "observed negative with writer_fault1",
+      "log": "receipt_mut1.log"
+    },
+    {
+      "mut": 1,
+      "scalar_invocation": true,
+      "exit": 0,
+      "log": "receipt_scalar_mut1.log"
+    }
+  ],
+  "runner_sha256": "90653cacdd2ccd89ab579e41d8104d909251addfa5d825389b3391ea33f95dcc",
+  "all_sources_sha_checked": true,
+  "global_compiler_or_uarch_imports": false,
+  "physical_timing_qualified": false
+}
