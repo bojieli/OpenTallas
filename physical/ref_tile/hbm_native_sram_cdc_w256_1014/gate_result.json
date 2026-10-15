@@ -2,13 +2,13 @@
  "schema": "opentallas.ref_tile.gate_result.v2",
  "kit": "hbm_native_sram_cdc_w256_1014",
  "verdict": "WARN",
- "generated": "2026-10-14T22:10:15-0700",
- "host": "ot-epyc1tb",
+ "generated": "2026-10-14T23:05:28-0700",
+ "host": "ot-agidock128",
  "cts": true,
  "commit": null,
  "source_binding": {
   "schema": "opentallas.ref_tile.source_snapshot.v1",
-  "start_commit": "a2b992c9c18636574a7f6f0aee08e70f662b993e",
+  "start_commit": "bc2db756369220de43836c03444e2e9c17db64b3",
   "commit": null,
   "identity": "exact_content_snapshot",
   "daemon_tree": "/home/ubuntu/wt-claude-closure-daemon-1010",
@@ -21,8 +21,8 @@
    "tools/orfs_hold_mm.tcl",
    "tools/textbook_lint.py"
   ],
-  "archive_sha256": "110ffe8ad273ff36d93d56fcf7b158dcc61e5860e916f3d91ddbc54d948caac8",
-  "manifest_sha256": "d79651b211bc34fbb2c83a868939bfe61511276ffe5407f3c6a9ba2774a9ce49",
+  "archive_sha256": "385103f60b85b1fe239c6ea04005eac8f8425352bfc57bec6ef54e06e99b6c09",
+  "manifest_sha256": "a2a8e60769409599a6b5675ef1c2d6e9402a1fa3cb09087c077a79de659b75d6",
   "files": [
    {
     "path": "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.json",
@@ -18051,8 +18051,8 @@
    {
     "path": "physical/ref_tile/hbm_native_sram_cdc_w256_1014/job.json",
     "kind": "file",
-    "sha256": "f2be0d4b6c87641ce3d9aa14c455c8b8396b2813b01c2b71969ca6e441fba03d",
-    "git_blob": "41726b4708ed95863d3d88edef4ec544ddbab623",
+    "sha256": "74b9aeb806c6ae71649f41128b53596c1b7863cc9dd8de14be4b98dbb7a94371",
+    "git_blob": "c8584aaa82d1723f191aa4c04b732d3066370f84",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -73259,8 +73259,8 @@
    {
     "path": "tools/fp_margin_lint.py",
     "kind": "file",
-    "sha256": "8515ae7bf245dfe1917ab7fb4376913649546f98724c088dd490f61e71cc3044",
-    "git_blob": "4f013fe292c88ffba7150eb62d5b0a19125f046f",
+    "sha256": "ae43f76c2b874a9b0c5061094e800e9909ffafbec0773d80c89b33c0fa955fd8",
+    "git_blob": "64c5174af25c1a06eb14a5f66eec0921446e42aa",
     "source": "daemon_overlay",
     "matches_provenance_commit": false
    },
@@ -116355,8 +116355,8 @@
   ],
   "route_overlay_plan": {
    "schema": "opentallas.closure_loop.helper_overlay_plan.v1",
-   "origin_main": "5e97eb2a3fc4099af019aaa1fc9bda8da1866311",
-   "content_sha256": "04479b51c1099324a92c10d653597aa6873626616900cf3115891b8772553365",
+   "origin_main": "921eeaff132eb40188713a58651824e631200c79",
+   "content_sha256": "567a16331b2484008d9edf879c76eca8fdca169e287379c494e5d703bde9192e",
    "files": [
     {
      "path": "physical/common_flow/cg_pushdown.tcl",
@@ -116632,11 +116632,11 @@
     },
     {
      "path": "tools/fp_margin_lint.py",
-     "sha256": "8515ae7bf245dfe1917ab7fb4376913649546f98724c088dd490f61e71cc3044",
-     "git_blob": "4f013fe292c88ffba7150eb62d5b0a19125f046f",
+     "sha256": "ae43f76c2b874a9b0c5061094e800e9909ffafbec0773d80c89b33c0fa955fd8",
+     "git_blob": "64c5174af25c1a06eb14a5f66eec0921446e42aa",
      "mode": 436,
      "resolution": "same",
-     "literal_git_blob": "4f013fe292c88ffba7150eb62d5b0a19125f046f"
+     "literal_git_blob": "64c5174af25c1a06eb14a5f66eec0921446e42aa"
     },
     {
      "path": "tools/fp_margin_lint.tcl",
@@ -116728,11 +116728,11 @@
     }
    ]
   },
-  "captured": "2026-10-14T21:42:14-0700",
-  "remote_script_sha256": "775d76787fef5d4763dff8998257dc00972e3c882f59d1207dfa39af8bc3c7cd",
+  "captured": "2026-10-14T22:30:52-0700",
+  "remote_script_sha256": "79c8a0f99dfd1e24d541acf599161836166e3fa2fb72c1cd5bf16402dde7b9c9",
   "tool_image_requested": "openroad/orfs:latest",
-  "remote_host": "ot-epyc1tb",
-  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/hbm_native_sram_cdc_w256_1014-20261014-214149",
+  "remote_host": "ot-agidock128",
+  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/hbm_native_sram_cdc_w256_1014-20261014-223011",
   "remote_archive_verified": true,
   "runtime_tool_provenance": [
    "GATE_TOOL_IMAGE_ID=sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29 GATE_TOOL_IMAGE_DIGESTS=[\"openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29\"]",
