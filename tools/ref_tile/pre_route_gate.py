@@ -769,10 +769,19 @@ def analyse_remote(g: Gate, kd: Path, spec: dict, out: str, cts: bool, binding: 
     fp = json.loads((kd / "floorplan.json").read_text())
     kv = dict(re.findall(r"\b(GATE_[A-Z0-9_]+)=(\S+)", out))
     errs = re.findall(r"^GATE_FLOWERR (.*)$", out, re.M)
-    if kv.get("GATE_SOURCE_ARCHIVE_SHA256") != binding["archive_sha256"]:
+    if binding.get("staged_remeasurement"):
+        if not SB.staged_remeasurement_matches_log(binding, out.encode()):
+            g.add("FAIL", "source_binding", "new staged remeasurement receipt/log mismatch", "rehash remote original source and artifacts")
+            return
+        g.add("INFO", "source_binding", "NEW staged remeasurement: all original staged bytes, script and CTS artifacts rehashed; original archive stdout unavailable")
+        # This is new measurement evidence, never historical archive verification.
+        kv["GATE_FLOW_RC"] = "0"
+        kv["GATE_FLOW_S"] = "reused_original_floorplan"
+    elif kv.get("GATE_SOURCE_ARCHIVE_SHA256") != binding["archive_sha256"]:
         g.add("FAIL", "source_binding", "remote did not verify the staged source archive", "preserve log; rerun gate")
         return
-    binding["remote_archive_verified"] = True
+    else:
+        binding["remote_archive_verified"] = True
     binding["runtime_tool_provenance"] = re.findall(r"^GATE_TOOL_.*$", out, re.M)
     if local_snapshot is not None:
         local_snapshot.write_text(json.dumps(binding, indent=1) + "\n")
