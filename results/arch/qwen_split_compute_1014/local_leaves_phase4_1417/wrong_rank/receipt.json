@@ -1,0 +1,52 @@
+{
+  "schema": "opentallas.qwen.local_leaf_unit.v1",
+  "source_ref": "1b53a196d469b244e0d405863b7363b76bfd7c41",
+  "source_pins": {
+    "rtl/rom/ot_coll_tp8_local_roots.sv": "7357002663d97afe6f44a218e40126a2f24b5a36b897b93fc1aeb268145dfe48",
+    "rtl/rom/ot_coll_tp8_static.sv": "f1a941b846a439ab95832aaa7d96426505a6b1b1767487faac0265c4e1365336",
+    "physical/asap7_memory_macros/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v": "44b8c75c3ba788b58405e819914a2966698079e871bd206d339af28cc1e77c59",
+    "rtl/test/tb_coll_local_leaves.sv": "62dccfcb155517274fb67fa4d33151ed6ebc1d8a1da3dafad5775f19784c3438",
+    "tools/qwen_coll_local_leaf_bench.py": "d0d6b56d349a898863ca9171f330a74df374ef25789a9cbd4698b99a0802086f"
+  },
+  "actual_macro": "physical/asap7_memory_macros/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v",
+  "helpers": [
+    "ot_coll_local_sring_data",
+    "ot_coll_local_sring_meta",
+    "ot_coll_local_sx_quarter",
+    "ot_coll_local_output",
+    "ot_coll_local_pair_capture",
+    "ot_coll_local_fold_capture"
+  ],
+  "cycles_per_case": 6000,
+  "scope": "Source-pinned phase-4 local leaf equivalence with actual SRAM macro models.\n\nThe reference implements original-parent SV logic independently in the bench.\nThis is a common-phase component test, not a native/die or physical result.\n",
+  "clocks": "Common compiled edge; physical phase, pin/reset/clock and native whole-die gates remain open",
+  "workload": "Full512data/640ringbits, all3SXfaces x4quarters, metadata/nonmetadataquarters, PK0..3, counter/select/metadata resets staggered midrun, full-rate bits including IEEE special encodings",
+  "extra_edges": 0,
+  "results": [
+    {
+      "name": "wrong_rank",
+      "compile_exit": 0,
+      "exit": 1,
+      "measured": {
+        "checks": 6000,
+        "ring_checks": 6000,
+        "known_ring_checks": 4966,
+        "ring_errors": 0,
+        "sx_errors": 0,
+        "output_errors": 2254,
+        "pair_errors": 0,
+        "fold_errors": 0,
+        "meta_errors": 0,
+        "pk0": 1552,
+        "pk1": 1538,
+        "pk2": 1455,
+        "pk3": 1455
+      },
+      "binary_sha256": "1a1f6a7244da00f61be2348e1457bdf22045dab2297fa712f0613bee2d2147c9",
+      "executed_helpers_sha256": "0dea9a5ed246f94e385262a44191324d695599e0a1ef885e1c024120179c7af6",
+      "compile_defines": [],
+      "ok": true
+    }
+  ],
+  "ok": true
+}

@@ -1,0 +1,26 @@
+[
+  {
+    "name": "wrong_rank",
+    "compile_exit": 0,
+    "exit": 1,
+    "measured": {
+      "checks": 6000,
+      "ring_checks": 6000,
+      "known_ring_checks": 4966,
+      "ring_errors": 0,
+      "sx_errors": 0,
+      "output_errors": 2254,
+      "pair_errors": 0,
+      "fold_errors": 0,
+      "meta_errors": 0,
+      "pk0": 1552,
+      "pk1": 1538,
+      "pk2": 1455,
+      "pk3": 1455
+    },
+    "binary_sha256": "1a1f6a7244da00f61be2348e1457bdf22045dab2297fa712f0613bee2d2147c9",
+    "executed_helpers_sha256": "0dea9a5ed246f94e385262a44191324d695599e0a1ef885e1c024120179c7af6",
+    "compile_defines": [],
+    "ok": true
+  }
+]

@@ -1,0 +1,28 @@
+[
+  {
+    "name": "wrong_gather_select",
+    "compile_exit": 0,
+    "exit": 1,
+    "measured": {
+      "checks": 6000,
+      "ring_checks": 6000,
+      "known_ring_checks": 4966,
+      "ring_errors": 1876,
+      "sx_errors": 6027,
+      "output_errors": 0,
+      "pair_errors": 0,
+      "fold_errors": 0,
+      "meta_errors": 0,
+      "pk0": 1552,
+      "pk1": 1538,
+      "pk2": 1455,
+      "pk3": 1455
+    },
+    "binary_sha256": "76a0fb7ec3a2dfeeb4e6d65581612cabb79ab63c901e91cfb2fcefbd23c56276",
+    "executed_helpers_sha256": "4a1c64be7adca6c410f11131e6bc88221d478ecbc6dd6fe2fa1a24df523baa4e",
+    "compile_defines": [
+      "-DOT_TP8S_MUT_GATHER"
+    ],
+    "ok": true
+  }
+]
