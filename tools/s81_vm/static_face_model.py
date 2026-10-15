@@ -16,6 +16,8 @@ def model(entries: int = 8) -> dict:
             'rows_per_stream_cycle_epoch_average_max': 12,
             'assembly_state_bits_per_lane': lane_state,
             'assembly_state_bits_total': 16 * lane_state,
+            'pin_register_bits_per_lane': 832 + 4 + 1,
+            'serial_state_bits_per_lane': lane_state + 832 + 4 + 1 + 543 + 5 + (entries.bit_length()) + 1,
             'cdc_data_bits_per_lane': 3 * 543,
             'mux_cost': '16 elements merge into direct-indexed entries; one statically due row per lane edge',
             'clock_plan': '16 separately hardened lanes; no flat >15000-sink capture root',
