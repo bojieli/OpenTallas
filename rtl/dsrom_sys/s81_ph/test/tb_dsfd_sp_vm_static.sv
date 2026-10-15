@@ -23,7 +23,9 @@ module tb_dsfd_sp_vm_static;
 `else
     localparam integer READ_PIPE=0;
 `endif
-`ifdef OT_VM_NATIVE_CAP
+`ifdef OT_VM_NATIVE_CAP_PINREG
+    localparam integer CAP_PIPE=2;
+`elsif OT_VM_NATIVE_CAP
     localparam integer CAP_PIPE=1;
 `else
     localparam integer CAP_PIPE=0;
