@@ -153,11 +153,12 @@ def main():
     wrapper = re.sub(r'(?<![\w$])ot_v41_rom_elem_w10(?![\w$])', 'cand_ot_v41_rom_elem_w10', wrapper)
     wrapper = re.sub(r'(?<![\w$])ot_hdc_cg(?![\w$])', 'cand_ot_hdc_cg', wrapper)
     files['ot_s81_bf_native.sv'] = wrapper
+    files['ot_s81_bf_seam.sv'] = (ROOT / 'rtl/s81/ot_s81_bf_seam.sv').read_text()
     # the wrapper holds the original element in generate block g_orig (RECUT = 0)
     tb = 'tb_dsrom_actual_element_rne_wake.sv'
     if 'cand_dut.u_e.g_orig.u_elem.' not in files[tb]:
         files[tb] = files[tb].replace('cand_dut.u_e.u_elem.', 'cand_dut.u_e.g_orig.u_elem.')
-    extra = []
+    extra = ['ot_s81_bf_seam.sv']
     for n in EXTRA:
         f = 'x_' + n + '.sv'
         files[f] = candify((ROOT / 'rtl/v41rom' / (n + '.sv')).read_text(), names)
