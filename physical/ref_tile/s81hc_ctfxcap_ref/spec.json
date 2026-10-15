@@ -62,7 +62,8 @@
   "pd": 0.5,
   "threads": 8,
   "peak_ram_gb": 24,
-  "hold_margin_ns": 0.03
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
  },
  "job": {
   "owner": "Codex:S-NORM",
@@ -112,5 +113,12 @@
  "io_flop_at_pins": {
   "cols": 4,
   "allow_none": false
- }
+ },
+ "io_tcl": "physical/s81_die_pins/v20_hc_capture/ot_s81_hc_ctfx_cap.tcl",
+ "assigned_pins": {
+  "file": "physical/s81_die_pins/v20_hc_capture/ot_s81_hc_ctfx_cap.json",
+  "source": "S81 die lead 2495f77a6; actual sink-neighborhood pin assignment",
+  "layout": "physical/s81_die_pins/v20_hc_capture/serial_capture_layout.json"
+ },
+ "slot_change_request": "S81 die lead 2495f77a6 accepted serial/NTREE captured strip 576.72x25.92; enclosing cth751.68, rowshifts12.96"
 }

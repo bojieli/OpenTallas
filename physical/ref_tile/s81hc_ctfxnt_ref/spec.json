@@ -120,10 +120,11 @@
   "cell": "HB1xp67_ASAP7_75t_R",
   "basis": "Native routed phi-R audit: output lead/HB2/buffer plus capture pad exceed 220/190ps; remove the fixed output pad and use HB1 at input pins, retaining all MIN constraints and automatic hold repair."
  },
- "io_tcl": "physical/s81_die_pins/v19_ntree/ot_s81_hc_ctfx_nt.tcl",
+ "io_tcl": "physical/s81_die_pins/v20_hc_capture/ot_s81_hc_ctfx_nt.tcl",
  "assigned_pins": {
-  "file": "physical/s81_die_pins/v19_ntree/ot_s81_hc_ctfx_nt.json",
-  "source": "S81 die lead r5 tools/s81/hc_ntree_pins.py (d46f94fbb, el1011-s81dieit), top-down per-bit",
+  "file": "physical/s81_die_pins/v20_hc_capture/ot_s81_hc_ctfx_nt.json",
+  "source": "S81 die lead 2495f77a6; actual sink-neighborhood pin assignment",
   "layout": "physical/s81_die_pins/v19_ntree/layout.json"
- }
+ },
+ "slot_change_request": "S81 die lead 2495f77a6 accepted serial/NTREE captured strip 576.72x25.92; enclosing cth751.68, rowshifts12.96"
 }
