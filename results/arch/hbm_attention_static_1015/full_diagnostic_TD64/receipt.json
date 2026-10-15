@@ -1,0 +1,29 @@
+{
+  "source_commit": "a6f2ced8c",
+  "host": "ot-epyc4",
+  "unit": "oth-ubuntu-1258147-1792051079",
+  "exit_status": 0,
+  "qualification": false,
+  "status": "PASS diagnostic full H16/D512 arithmetic and absolute static controller, not physical32pair target",
+  "profile": {
+    "H": 16,
+    "D": 512,
+    "TD": 64,
+    "NL": 4
+  },
+  "score_words": 12288,
+  "pv_words": 16384,
+  "actual_staging_macros": 68,
+  "programme_macros": 1,
+  "mutants_detected": [
+    "query absent",
+    "illegal fixed phase QK event",
+    "actual query operand mutation"
+  ],
+  "remaining": [
+    "TD32/NL2/FPL6/FML8 physical-profile full arithmetic gate",
+    "Actual PS/P/drain producer and full native programme",
+    "Hard-half registered pipeline mapping and physical closure",
+    "Immutable-throughput price qualification"
+  ]
+}
