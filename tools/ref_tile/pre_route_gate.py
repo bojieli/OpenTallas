@@ -439,6 +439,11 @@ def check_kit(g: Gate, kd: Path, job: dict | None, commit=None):
                   f"gives cap {fresh_lc['rlayers'][1]} / PG {fresh_lc['pg_layer']} ({fresh_lc.get('cap_basis')}; new tiles "
                   "cap at M5, M6 only with layer_cap_grant)", "re-run ref_tile.py gen")
         cap_n = int(rl.group(1)[1:])
+        if fresh_lc.get("signal_max_layer") and cap_n < 5:
+            cr = re.search(r"^CLOCK_RLAYERS='(M[2-4]) (M[2-4])'$", env, re.M)
+            if not cr or cr.groups() != (rl.group(1), rl.group(1)):
+                g.add("FAIL", "layer", "strict signal cap needs explicit matching CLOCK_RLAYERS; ASAP7 defaults start clocks at M5",
+                      "re-run ref_tile.py gen")
         pins_used = set()
         for k in ("PIN_H", "PIN_V", "export OT_PIN_BALANCE_H", "export OT_PIN_BALANCE_V"):
             mm = re.search(rf"^{k}='([^']*)'", env, re.M)
