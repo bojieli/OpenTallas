@@ -1,0 +1,412 @@
+{
+  "schema": "opentallas.hbm-idx-meta-exact-slot-route-binding.v1",
+  "captured": "2026-10-15T11:49:47.292030-07:00",
+  "canonical_grant_commit": "38c9e94a2",
+  "canonical_grant_file": "results/arch/hier_contract_1015/hbm_v15.json",
+  "canonical_grant_file_sha256": "00e85b3ccf199116de2bf6532a34acdb0ece7b821c77d06e7b32b91e9888402a",
+  "route_source_commit": "849481897",
+  "route_source_branch": "codex/hidx-physical-1103",
+  "master": "hidx_meta_w25_d123_r0",
+  "source_sha256": "d374c9e7c0d0a4a95c6a5b192d7b283d5b942c333de9d5d8bc45ef48ac712e81",
+  "underlying_params": {
+    "W": 25,
+    "D": 123,
+    "RESET": 0
+  },
+  "source_params": {},
+  "pins_per_slot": 52,
+  "pin_count_verified": 832,
+  "source_bound_gate_verdict": "PASS",
+  "source_binding_validation": [
+    "gate-consumed source and gate-executed overlays match"
+  ],
+  "logical_cycles": 123,
+  "cycles_added": 0,
+  "slots": [
+    {
+      "name": "idx_s0_meta0",
+      "instance": "hb_idx/index/parent/gscore[0]/scorer/ge[0]/md",
+      "parent": "idx_s0",
+      "origin": {
+        "x": 2376.0,
+        "y": 2894.4,
+        "orient": "R0"
+      },
+      "outline": {
+        "w": 51.84,
+        "h": 51.84
+      },
+      "clock_entry": {
+        "pin": "clk",
+        "face": "N",
+        "layer": "M5",
+        "offset": 2.364
+      },
+      "assigned_pin_file": "rtl/hbm_accel/index/static_1015/meta_leaf_actual_io_1015.json",
+      "assigned_pin_file_sha256": "678e353ef42e6f7259731c02038233118f18f88e2dc72969e5f85dec7e49b718",
+      "logical_cycles": 123,
+      "measured_ff": 3075
+    },
+    {
+      "name": "idx_s0_meta1",
+      "instance": "hb_idx/index/parent/gscore[0]/scorer/ge[1]/md",
+      "parent": "idx_s0",
+      "origin": {
+        "x": 2592.0,
+        "y": 2894.4,
+        "orient": "R0"
+      },
+      "outline": {
+        "w": 51.84,
+        "h": 51.84
+      },
+      "clock_entry": {
+        "pin": "clk",
+        "face": "N",
+        "layer": "M5",
+        "offset": 2.364
+      },
+      "assigned_pin_file": "rtl/hbm_accel/index/static_1015/meta_leaf_actual_io_1015.json",
+      "assigned_pin_file_sha256": "678e353ef42e6f7259731c02038233118f18f88e2dc72969e5f85dec7e49b718",
+      "logical_cycles": 123,
+      "measured_ff": 3075
+    },
+    {
+      "name": "idx_s0_meta2",
+      "instance": "hb_idx/index/parent/gscore[0]/scorer/ge[2]/md",
+      "parent": "idx_s0",
+      "origin": {
+        "x": 2808.0,
+        "y": 2894.4,
+        "orient": "R0"
+      },
+      "outline": {
+        "w": 51.84,
+        "h": 51.84
+      },
+      "clock_entry": {
+        "pin": "clk",
+        "face": "N",
+        "layer": "M5",
+        "offset": 2.364
+      },
+      "assigned_pin_file": "rtl/hbm_accel/index/static_1015/meta_leaf_actual_io_1015.json",
+      "assigned_pin_file_sha256": "678e353ef42e6f7259731c02038233118f18f88e2dc72969e5f85dec7e49b718",
+      "logical_cycles": 123,
+      "measured_ff": 3075
+    },
+    {
+      "name": "idx_s0_meta3",
+      "instance": "hb_idx/index/parent/gscore[0]/scorer/ge[3]/md",
+      "parent": "idx_s0",
+      "origin": {
+        "x": 3024.0,
+        "y": 2894.4,
+        "orient": "R0"
+      },
+      "outline": {
+        "w": 51.84,
+        "h": 51.84
+      },
+      "clock_entry": {
+        "pin": "clk",
+        "face": "N",
+        "layer": "M5",
+        "offset": 2.364
+      },
+      "assigned_pin_file": "rtl/hbm_accel/index/static_1015/meta_leaf_actual_io_1015.json",
+      "assigned_pin_file_sha256": "678e353ef42e6f7259731c02038233118f18f88e2dc72969e5f85dec7e49b718",
+      "logical_cycles": 123,
+      "measured_ff": 3075
+    },
+    {
+      "name": "idx_s1_meta0",
+      "instance": "hb_idx/index/parent/gscore[1]/scorer/ge[0]/md",
+      "parent": "idx_s1",
+      "origin": {
+        "x": 2376.0,
+        "y": 2894.4,
+        "orient": "R0"
+      },
+      "outline": {
+        "w": 51.84,
+        "h": 51.84
+      },
+      "clock_entry": {
+        "pin": "clk",
+        "face": "N",
+        "layer": "M5",
+        "offset": 2.364
+      },
+      "assigned_pin_file": "rtl/hbm_accel/index/static_1015/meta_leaf_actual_io_1015.json",
+      "assigned_pin_file_sha256": "678e353ef42e6f7259731c02038233118f18f88e2dc72969e5f85dec7e49b718",
+      "logical_cycles": 123,
+      "measured_ff": 3075
+    },
+    {
+      "name": "idx_s1_meta1",
+      "instance": "hb_idx/index/parent/gscore[1]/scorer/ge[1]/md",
+      "parent": "idx_s1",
+      "origin": {
+        "x": 2592.0,
+        "y": 2894.4,
+        "orient": "R0"
+      },
+      "outline": {
+        "w": 51.84,
+        "h": 51.84
+      },
+      "clock_entry": {
+        "pin": "clk",
+        "face": "N",
+        "layer": "M5",
+        "offset": 2.364
+      },
+      "assigned_pin_file": "rtl/hbm_accel/index/static_1015/meta_leaf_actual_io_1015.json",
+      "assigned_pin_file_sha256": "678e353ef42e6f7259731c02038233118f18f88e2dc72969e5f85dec7e49b718",
+      "logical_cycles": 123,
+      "measured_ff": 3075
+    },
+    {
+      "name": "idx_s1_meta2",
+      "instance": "hb_idx/index/parent/gscore[1]/scorer/ge[2]/md",
+      "parent": "idx_s1",
+      "origin": {
+        "x": 2808.0,
+        "y": 2894.4,
+        "orient": "R0"
+      },
+      "outline": {
+        "w": 51.84,
+        "h": 51.84
+      },
+      "clock_entry": {
+        "pin": "clk",
+        "face": "N",
+        "layer": "M5",
+        "offset": 2.364
+      },
+      "assigned_pin_file": "rtl/hbm_accel/index/static_1015/meta_leaf_actual_io_1015.json",
+      "assigned_pin_file_sha256": "678e353ef42e6f7259731c02038233118f18f88e2dc72969e5f85dec7e49b718",
+      "logical_cycles": 123,
+      "measured_ff": 3075
+    },
+    {
+      "name": "idx_s1_meta3",
+      "instance": "hb_idx/index/parent/gscore[1]/scorer/ge[3]/md",
+      "parent": "idx_s1",
+      "origin": {
+        "x": 3024.0,
+        "y": 2894.4,
+        "orient": "R0"
+      },
+      "outline": {
+        "w": 51.84,
+        "h": 51.84
+      },
+      "clock_entry": {
+        "pin": "clk",
+        "face": "N",
+        "layer": "M5",
+        "offset": 2.364
+      },
+      "assigned_pin_file": "rtl/hbm_accel/index/static_1015/meta_leaf_actual_io_1015.json",
+      "assigned_pin_file_sha256": "678e353ef42e6f7259731c02038233118f18f88e2dc72969e5f85dec7e49b718",
+      "logical_cycles": 123,
+      "measured_ff": 3075
+    },
+    {
+      "name": "idx_s2_meta0",
+      "instance": "hb_idx/index/parent/gscore[2]/scorer/ge[0]/md",
+      "parent": "idx_s2",
+      "origin": {
+        "x": 2376.0,
+        "y": 2894.4,
+        "orient": "R0"
+      },
+      "outline": {
+        "w": 51.84,
+        "h": 51.84
+      },
+      "clock_entry": {
+        "pin": "clk",
+        "face": "N",
+        "layer": "M5",
+        "offset": 2.364
+      },
+      "assigned_pin_file": "rtl/hbm_accel/index/static_1015/meta_leaf_actual_io_1015.json",
+      "assigned_pin_file_sha256": "678e353ef42e6f7259731c02038233118f18f88e2dc72969e5f85dec7e49b718",
+      "logical_cycles": 123,
+      "measured_ff": 3075
+    },
+    {
+      "name": "idx_s2_meta1",
+      "instance": "hb_idx/index/parent/gscore[2]/scorer/ge[1]/md",
+      "parent": "idx_s2",
+      "origin": {
+        "x": 2592.0,
+        "y": 2894.4,
+        "orient": "R0"
+      },
+      "outline": {
+        "w": 51.84,
+        "h": 51.84
+      },
+      "clock_entry": {
+        "pin": "clk",
+        "face": "N",
+        "layer": "M5",
+        "offset": 2.364
+      },
+      "assigned_pin_file": "rtl/hbm_accel/index/static_1015/meta_leaf_actual_io_1015.json",
+      "assigned_pin_file_sha256": "678e353ef42e6f7259731c02038233118f18f88e2dc72969e5f85dec7e49b718",
+      "logical_cycles": 123,
+      "measured_ff": 3075
+    },
+    {
+      "name": "idx_s2_meta2",
+      "instance": "hb_idx/index/parent/gscore[2]/scorer/ge[2]/md",
+      "parent": "idx_s2",
+      "origin": {
+        "x": 2808.0,
+        "y": 2894.4,
+        "orient": "R0"
+      },
+      "outline": {
+        "w": 51.84,
+        "h": 51.84
+      },
+      "clock_entry": {
+        "pin": "clk",
+        "face": "N",
+        "layer": "M5",
+        "offset": 2.364
+      },
+      "assigned_pin_file": "rtl/hbm_accel/index/static_1015/meta_leaf_actual_io_1015.json",
+      "assigned_pin_file_sha256": "678e353ef42e6f7259731c02038233118f18f88e2dc72969e5f85dec7e49b718",
+      "logical_cycles": 123,
+      "measured_ff": 3075
+    },
+    {
+      "name": "idx_s2_meta3",
+      "instance": "hb_idx/index/parent/gscore[2]/scorer/ge[3]/md",
+      "parent": "idx_s2",
+      "origin": {
+        "x": 3024.0,
+        "y": 2894.4,
+        "orient": "R0"
+      },
+      "outline": {
+        "w": 51.84,
+        "h": 51.84
+      },
+      "clock_entry": {
+        "pin": "clk",
+        "face": "N",
+        "layer": "M5",
+        "offset": 2.364
+      },
+      "assigned_pin_file": "rtl/hbm_accel/index/static_1015/meta_leaf_actual_io_1015.json",
+      "assigned_pin_file_sha256": "678e353ef42e6f7259731c02038233118f18f88e2dc72969e5f85dec7e49b718",
+      "logical_cycles": 123,
+      "measured_ff": 3075
+    },
+    {
+      "name": "idx_s3_meta0",
+      "instance": "hb_idx/index/parent/gscore[3]/scorer/ge[0]/md",
+      "parent": "idx_s3",
+      "origin": {
+        "x": 2376.0,
+        "y": 2894.4,
+        "orient": "R0"
+      },
+      "outline": {
+        "w": 51.84,
+        "h": 51.84
+      },
+      "clock_entry": {
+        "pin": "clk",
+        "face": "N",
+        "layer": "M5",
+        "offset": 2.364
+      },
+      "assigned_pin_file": "rtl/hbm_accel/index/static_1015/meta_leaf_actual_io_1015.json",
+      "assigned_pin_file_sha256": "678e353ef42e6f7259731c02038233118f18f88e2dc72969e5f85dec7e49b718",
+      "logical_cycles": 123,
+      "measured_ff": 3075
+    },
+    {
+      "name": "idx_s3_meta1",
+      "instance": "hb_idx/index/parent/gscore[3]/scorer/ge[1]/md",
+      "parent": "idx_s3",
+      "origin": {
+        "x": 2592.0,
+        "y": 2894.4,
+        "orient": "R0"
+      },
+      "outline": {
+        "w": 51.84,
+        "h": 51.84
+      },
+      "clock_entry": {
+        "pin": "clk",
+        "face": "N",
+        "layer": "M5",
+        "offset": 2.364
+      },
+      "assigned_pin_file": "rtl/hbm_accel/index/static_1015/meta_leaf_actual_io_1015.json",
+      "assigned_pin_file_sha256": "678e353ef42e6f7259731c02038233118f18f88e2dc72969e5f85dec7e49b718",
+      "logical_cycles": 123,
+      "measured_ff": 3075
+    },
+    {
+      "name": "idx_s3_meta2",
+      "instance": "hb_idx/index/parent/gscore[3]/scorer/ge[2]/md",
+      "parent": "idx_s3",
+      "origin": {
+        "x": 2808.0,
+        "y": 2894.4,
+        "orient": "R0"
+      },
+      "outline": {
+        "w": 51.84,
+        "h": 51.84
+      },
+      "clock_entry": {
+        "pin": "clk",
+        "face": "N",
+        "layer": "M5",
+        "offset": 2.364
+      },
+      "assigned_pin_file": "rtl/hbm_accel/index/static_1015/meta_leaf_actual_io_1015.json",
+      "assigned_pin_file_sha256": "678e353ef42e6f7259731c02038233118f18f88e2dc72969e5f85dec7e49b718",
+      "logical_cycles": 123,
+      "measured_ff": 3075
+    },
+    {
+      "name": "idx_s3_meta3",
+      "instance": "hb_idx/index/parent/gscore[3]/scorer/ge[3]/md",
+      "parent": "idx_s3",
+      "origin": {
+        "x": 3024.0,
+        "y": 2894.4,
+        "orient": "R0"
+      },
+      "outline": {
+        "w": 51.84,
+        "h": 51.84
+      },
+      "clock_entry": {
+        "pin": "clk",
+        "face": "N",
+        "layer": "M5",
+        "offset": 2.364
+      },
+      "assigned_pin_file": "rtl/hbm_accel/index/static_1015/meta_leaf_actual_io_1015.json",
+      "assigned_pin_file_sha256": "678e353ef42e6f7259731c02038233118f18f88e2dc72969e5f85dec7e49b718",
+      "logical_cycles": 123,
+      "measured_ff": 3075
+    }
+  ],
+  "qualification": "UNROUTED. Canonical sixteen independent leaf grants and exact freshCTS binding only. Full scorer, other leaves and all incident paths remain OPEN."
+}
