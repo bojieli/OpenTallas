@@ -13,7 +13,8 @@
 // places a release slot blk_go (pll_hbm domain) no earlier than the block's
 // nominal corrected landing + the PHY latency window. At blk_go the front
 // checks ONE ready for that block and re-emits its BLK sectors on fixed edges
-// (first put 2 edges after blk_go, then one every STRIDE edges) as a
+// (first put 2 edges after blk_go, then one every STRIDE edges; a pending
+// next block starts on the previous block's last take edge, back to back) as a
 // controller-format co word + compiled_hbm_put strobe, which drive the fixed
 // dual-clock return ring (qkd_static_kv_return_slots) unchanged.
 //
@@ -78,8 +79,9 @@ module qkd_kv_hbm_elastic_front #(
     reg emitting;
     reg [BW-1:0] cnt;
     reg [SW-1:0] sc;
-    wire start = pending != 0 && !emitting && ready;
     wire last = emitting && sc == SW'(STRIDE-1) && cnt == BW'(BLK-1);
+    wire idle_next = !emitting || last;     // back-to-back blocks: next block starts on the last take edge
+    wire start = pending != 0 && idle_next && ready;
     wire take = emitting && sc == SW'(STRIDE-1);
     reg put_q;
     reg [296:0] out_q;
@@ -96,9 +98,8 @@ module qkd_kv_hbm_elastic_front #(
             end
             pending <= pending + PW'(blk_go) - PW'(start);
             if (blk_go && pending == PW'(NBLK)) fault_go <= 1'b1;
-            hold <= pending != 0 && !emitting && !ready;
-            if (pending != 0 && !emitting && !ready && stall_edges != 16'hffff) stall_edges <= stall_edges + 1'b1;
-            if (start) begin emitting <= 1'b1; cnt <= 0; sc <= SW'(STRIDE-1); bs <= bs + (AW+1)'(BLK); end
+            hold <= pending != 0 && idle_next && !ready;
+            if (pending != 0 && idle_next && !ready && stall_edges != 16'hffff) stall_edges <= stall_edges + 1'b1;
             if (emitting) begin
                 sc <= (sc == SW'(STRIDE-1)) ? SW'(0) : sc + 1'b1;
                 if (take) begin
@@ -106,6 +107,7 @@ module qkd_kv_hbm_elastic_front #(
                     if (last) begin emitting <= 1'b0; blk_freed <= 1'b1; end
                 end
             end
+            if (start) begin emitting <= 1'b1; cnt <= 0; sc <= SW'(STRIDE-1); bs <= bs + (AW+1)'(BLK); end
         end
     always @(posedge pll_hbm) if (take) out_q <= mem[ra];
 

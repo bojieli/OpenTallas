@@ -192,9 +192,9 @@ module tb_kv_hbm_elastic_boundary;
       if(predicted_count%BLK==0)begin
        automatic integer tg=t+GO_DLY;
        go_arr[tg]=1;
-       // compiled release model: start = max(go+1, previous last take+1)
+       // compiled release model: start = max(go+1, previous block's last take)
        begin automatic integer st=(tg+1>model_free)?tg+1:model_free;
-        for(integer i=0;i<BLK;i++)model_arr[st+1+i]=1;model_free=st+BLK+1;end
+        for(integer i=0;i<BLK;i++)model_arr[st+1+i]=1;model_free=st+BLK;end
        if(first_go<0)first_go=tg;
       end
      end
