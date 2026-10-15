@@ -79,7 +79,7 @@
   "parent_strap": "M6",
   "signal_cap": "M4"
  },
- "structural_change": "New actual one-bank real1R1W native VM leaf replaces old queuedserialbankprofile; independent1read+1maskedwrite eachstreamedge. Officialstandard220.32x75.6 bank usesactual20um channels, real macro, exact assigned pins, explicitM4signals/M5PG, recipe2pinflops and finaltypedmetal audit. Legacyclosedbanks remain unchanged.",
+ "structural_change": "Repair physical routing obstruction structure after three routes all DRC2: disable recipe2 top-layer macro-edge guard on this strict M4 tile. The guard was designed for vertical free M5 over M4 macro OBS; at M4 it adds a horizontal y+0.024..1.2 strip across actual edge pin access. Both invariant DRC violations (raq[3], wdq[75]) lie at strip top y=23.664 (macro y22.464+1.2), not real macro interior. Preserve immutable SRAM LEF OBS, cap M4, PG M5, assigned outline/pins and RTL/833ps constraints.",
  "open_points": [
   "ParentVMtransport/serial3:4commonepochactualclocksource andfullnativecalendar remain unqualified",
   "NativebankCTS/TTsetup/FFhold/DRC0/LEFpinaccess and minpulse propagation mustpass; /3waveform is conditionalonclockowner actual sourcecontract"
@@ -87,7 +87,7 @@
  "job": {
   "owner": "Codex:S-VM",
   "branch": "claude/s81-grpA-r6-1014",
-  "tag": "v20std1",
+  "tag": "v20std2",
   "purpose": "Officialstandardbank220.32x75.6 M4signal/PGM5 nativeCTS+TT/FF/DRC candidate; parentproductionqualifiedfalse",
   "benches": [
    {
@@ -112,5 +112,6 @@
  "pin_reg_split": true,
  "hold_pad": {
   "cell": "HB2xp67_ASAP7_75t_R"
- }
+ },
+ "macro_edge_guard": false
 }
