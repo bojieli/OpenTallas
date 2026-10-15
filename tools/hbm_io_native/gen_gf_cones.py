@@ -47,3 +47,44 @@ def main():
   text=text[:start]+'\n'.join(block)+text[end:];(OUT/f'ot_hbm_kp4_{which}_linear.sv').write_text(text)
  print(json.dumps(stats['encoder']));print(json.dumps(stats['decoder_syndrome']))
 if __name__=='__main__':main()
+
+# Root partitioning is emitted as a separate candidate; the flat exactness
+# vehicle and every legacyS81 source remain byte-identical.
+def emit_rooted():
+ enc=(OUT/'ot_hbm_kp4_enc_linear.sv').read_text().replace('module ot_hbm_kp4_enc_linear','module ot_hbm_kp4_enc_rooted').replace('input  wire          clk,','input wire clk_ctrl,clk_collect,clk_encode,clk_codeword,')
+ start=enc.index('    always @(posedge clk or negedge rst_n)')
+ end=enc.index('    assign fault = flt;',start)
+ body='''    wire frame_strobe=(tx_v||run)&&ph==4'd9;
+    // Four actual delivered local-family roots. No common-clock fallback.
+    always @(posedge clk_ctrl or negedge rst_n)
+      if(!rst_n)begin ph<=0;run<=0;flt<=0;seq<=0;e_v<=0;o_v<=0;p_v<=0;p_d<=0;end
+      else begin
+        if(tx_v)run<=1;
+        if(run&&!tx_v)flt<=1;
+        if(tx_v||run)ph<=ph==9?0:ph+1'b1;
+        if(frame_strobe)begin seq<=seq+1'b1;e_v<=1;if(e_v)o_v<=1;end
+        p_v<=o_v;p_d<=o_v?o_c[5439-544*ph-:544]:544'd0;
+      end
+    always @(posedge clk_collect)
+      if(rst_n&&(tx_v||run))a_b[5119-512*ph-:512]<=tx_d;
+    always @(posedge clk_encode or negedge rst_n)
+      if(!rst_n)for(i=0;i<NP;i=i+1)rem[i]<=0;
+      else begin
+        if(e_v)for(i=0;i<NP;i=i+1)rem[i]<=nrem[i];
+        if(frame_strobe)begin
+          e_m<={4'hA,8'h5C,seq,a_b[5119:512],tx_d};
+          for(i=0;i<NP;i=i+1)rem[i]<=0;
+        end
+      end
+    always @(posedge clk_codeword)
+      if(rst_n&&frame_strobe&&e_v)o_c<={e_m,par};
+'''
+ enc=enc[:start]+body+enc[end:];(OUT/'ot_hbm_kp4_enc_rooted.sv').write_text(enc)
+ dec=(OUT/'ot_hbm_kp4_dec_linear.sv').read_text().replace('module ot_hbm_kp4_dec_linear','module ot_hbm_kp4_dec_rooted').replace('input  wire          clk,','input wire clk_capture,clk_syndrome,clk_bm0,clk_bm1,clk_bm2,clk_bm3,clk_chien,clk_emit,')
+ dec=dec.replace('    genvar u;','    wire[3:0]bm_clock={clk_bm3,clk_bm2,clk_bm1,clk_bm0};\n    genvar u;')
+ clocks=['clk_capture','clk_syndrome','bm_clock[u]','clk_syndrome','clk_chien','clk_emit']
+ for clock in clocks:dec=dec.replace('always @(posedge clk or negedge rst_n)',f'always @(posedge {clock} or negedge rst_n)',1)
+ assert 'posedge clk ' not in dec
+ (OUT/'ot_hbm_kp4_dec_rooted.sv').write_text(dec)
+
+if __name__=='__main__':emit_rooted()
