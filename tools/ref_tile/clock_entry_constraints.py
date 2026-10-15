@@ -42,6 +42,13 @@ def related_data(spec):
         if relationship is not None:
             raise ValueError('independent leaf datapaths do not consume a clock_relationship declaration')
         return False
+    if policy == 'related_pll_ratio':
+        # One die PLL, stream /3 and serial /4 of the VCO, common epoch origin (3 serial = 4 stream cycles): the
+        # serial domain declares ratio 4/3 of the core period.  Ordinary STA times every crossing at the actual
+        # related edge windows (VCO-tick setup window, coincident-edge hold); no exception is generated.
+        if relationship != dict(kind='same_pll_fixed_phase', ratio=[4, 3], phase_ps=0):
+            raise ValueError('related_pll_ratio leaf datapaths require explicit same_pll_fixed_phase ratio4/3 phase0 relationship')
+        return True
     if policy != 'related_same_frequency' or relationship != dict(kind='same_pll_fixed_phase', ratio=[1, 1], phase_ps=0):
         raise ValueError('related leaf datapaths require explicit same_pll_fixed_phase ratio1/1 phase0 relationship')
     return True
@@ -71,8 +78,10 @@ def domains(spec):
         ratio = data.get('ratio')
         if ratio not in ([1, 1], [4, 3]):
             raise ValueError('entries: only related CK1/1 and CKV4/3 are supported')
-        if leaf and (ratio != [1, 1] or len(data.get('ports', [])) != 1):
-            raise ValueError('multiple_cts_roots requires one actual related samefrequency phase0 root per domain')
+        pll = leaf and spec.get('clock_data_paths') == 'related_pll_ratio'
+        if leaf and (ratio != [1, 1] and not (pll and ratio == [4, 3] and name != 'core') or len(data.get('ports', [])) != 1):
+            raise ValueError('multiple_cts_roots requires one actual related phase0 root per domain '
+                             '(samefrequency, or a non-core 4/3 domain under related_pll_ratio)')
         if name == 'core' and ratio != [1, 1]:
             raise ValueError('entries: core ratio must be1/1')
         for field in ('ports', 'inputs', 'outputs'):
@@ -87,6 +96,8 @@ def domains(spec):
                 raise ValueError(f'entries: duplicate domain clock port {port}')
             owners[port] = name
         out[name] = data
+    if leaf and spec.get('clock_data_paths') == 'related_pll_ratio' and not any(d['ratio'] == [4, 3] for d in out.values()):
+        raise ValueError('related_pll_ratio requires at least one actual 4/3 domain (else use related_same_frequency)')
     if set(owners) != set(spec['clock_ports']):
         raise ValueError('entries: domain clock coverage differs from actual source ports')
     if owners[spec['clock_port']] != 'core':

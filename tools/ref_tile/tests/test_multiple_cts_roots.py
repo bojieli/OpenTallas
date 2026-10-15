@@ -42,6 +42,27 @@ class Schema(unittest.TestCase):
             m=copy.deepcopy(s);m.update(clock_data_paths='related_same_frequency',clock_relationship=relationship)
             with self.assertRaises(ValueError):CE.domains(m)
 
+    def test_related_pll_ratio_admits_only_a_noncore_four_thirds_domain(self):
+        s=spec();s['clock_entry_domains']['response']['ratio']=[4,3]
+        s.update(clock_data_paths='related_pll_ratio',clock_relationship=dict(kind='same_pll_fixed_phase',ratio=[4,3],phase_ps=0))
+        self.assertEqual(CE.domains(s)['response']['ratio'],[4,3])
+        clocks=CE.clocks(s,833.333)
+        self.assertIn('create_clock -name ot_entry_1 -period 1111.110666667',clocks)
+        self.assertIn('create_clock -name ot_io_response -period 1111.110666667',clocks)
+        text=CE.generate(s,ROOT)
+        self.assertIn('set ::ot_ce_related_data 1',text);self.assertIn('io_budget_ps 222.222',text)
+        self.assertNotIn('set_false_path',text);self.assertNotIn('set_clock_groups',text)
+        for mutate in [lambda x:x['clock_entry_domains']['core'].update(ratio=[4,3]),
+                       lambda x:x['clock_entry_domains']['response'].update(ratio=[3,4]),
+                       lambda x:x['clock_entry_domains']['response'].update(ratio=[1,1]),
+                       lambda x:x.update(clock_relationship=dict(kind='same_pll_fixed_phase',ratio=[1,1],phase_ps=0)),
+                       lambda x:x.update(clock_relationship=dict(kind='same_pll_fixed_phase',ratio=[4,3],phase_ps=10)),
+                       lambda x:x.update(clock_data_paths='related_same_frequency'),
+                       lambda x:x.update(clock_data_paths='independent',clock_relationship=None)]:
+            m=copy.deepcopy(s);mutate(m)
+            if m.get('clock_relationship') is None:m.pop('clock_relationship',None)
+            with self.assertRaises(ValueError):CE.domains(m)
+
     def test_explicit_leaf_signoff_period_and_budget(self):
         s=spec();s['route']={'period_ps':1111.111,'signoff_period_ps':1111.111}
         self.assertEqual(CE.signoff_period(s),1111.111)
@@ -111,6 +132,9 @@ class Physical(unittest.TestCase):
             kd='tools/ref_tile/tests'
             if mutant in ('related','related_wrong_input','related_cut'):
                 s.update(clock_data_paths='related_same_frequency',clock_relationship=dict(kind='same_pll_fixed_phase',ratio=[1,1],phase_ps=0))
+            if mutant in ('related_pll','related_pll_cut'):
+                s['clock_entry_domains']['response']['ratio']=[4,3]
+                s.update(clock_data_paths='related_pll_ratio',clock_relationship=dict(kind='same_pll_fixed_phase',ratio=[4,3],phase_ps=0))
             if mutant=='related_wrong_input':
                 s['clock_entry_domains']['core']['inputs']=['rsp'];s['clock_entry_domains']['response']['inputs']=['req']
             if mutant in ('async_reset','async_reset_data'):
@@ -189,7 +213,7 @@ if {"NULL" ni [get_lib_cells -of_objects [get_cells physical_tap]]} {error "fixt
 '''+f'source /src/{kd}/pre_cts.tcl',1)
             if mutant=='extra_alias':
                 flow=flow.replace('source /w/entry.tcl','create_clock -name unexpected_alias -period 833.333\nsource /w/entry.tcl',1)
-            if mutant=='related_cut':
+            if mutant in ('related_cut','related_pll_cut'):
                 flow=flow.replace('source /w/entry.tcl','set_false_path -from [get_clocks ot_entry_0] -to [get_clocks ot_entry_1]\nsource /w/entry.tcl',1)
             (w/'run.tcl').write_text(flow)
             p=subprocess.run(['docker','run','--rm','-v',f'{w}:/w','-v',f'{ROOT}:/src:ro','-v',f'{w}:/src/{kd}:ro',IMAGE,OR,'-no_init','-exit','/w/run.tcl'],capture_output=True,text=True,timeout=60)
@@ -206,7 +230,7 @@ if {"NULL" ni [get_lib_cells -of_objects [get_cells physical_tap]]} {error "fixt
                     values=re.findall(r'set_'+direction+r'_delay ([\d.eE+-]+) -clock \[get_clocks \{'+clock+r'\}\] -(min|max) -add_delay \[get_ports \{'+port+r'\}\]',final)
                     self.assertEqual(len(values),2,final)
                     actual={kind:float(value) for value,kind in values}
-                    budget=round(CE.signoff_period(s)*0.2,3)
+                    r=s['clock_entry_domains'][domain]['ratio'];budget=round(CE.signoff_period(s)*r[0]/r[1]*0.2,3)
                     expected={'min':lo,'max':budget+hi+90} if direction=='input' else {'min':-lo-50,'max':budget-hi+90}
                     for kind in ['min','max']:self.assertAlmostEqual(actual[kind],expected[kind],places=2)
             if p.returncode==0 and mutant=='serial':
@@ -254,6 +278,14 @@ if {"NULL" ni [get_lib_cells -of_objects [get_cells physical_tap]]} {error "fixt
             self.assertIn('RELATED_PATH '+pair+' min slack=',out)
         for mutant in ['related_wrong_input','related_cut']:
             rc,out=self.run_flow(mutant);self.assertNotEqual(rc,0,out[-8000:]);self.assertIn('OT_MULTI_ROOT',out)
+
+    def test_related_pll_ratio_crossings_keep_both_sta_directions(self):
+        rc,out=self.run_flow('related_pll',generated=True);self.assertEqual(rc,0,out[-8000:])
+        self.assertIn('OT_ENTRIES DOMAIN response 1111.11',out)
+        for pair in ['core -> response','response -> core']:
+            self.assertIn('RELATED_PATH '+pair+' max slack=',out)
+            self.assertIn('RELATED_PATH '+pair+' min slack=',out)
+        rc,out=self.run_flow('related_pll_cut');self.assertNotEqual(rc,0,out[-8000:]);self.assertIn('OT_MULTI_ROOT',out)
 
     def test_reset_declaration_does_not_waive_or_reclassify_data(self):
         rc,out=self.run_flow('declared_reset');self.assertEqual(rc,0,out[-7000:])

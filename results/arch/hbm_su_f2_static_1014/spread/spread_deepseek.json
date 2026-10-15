@@ -1,0 +1,959 @@
+{
+ "schema": "opentallas.hbm.su_f2_spread.v1",
+ "tool": "tools/hbm_static/su_f2_spread.py",
+ "design": "deepseek",
+ "qualification": false,
+ "kind": "compiler placement + static transport calendar; transport re-executed on RTL by the vehicle",
+ "constants": {
+  "VM_RD": 10,
+  "VM_WR": 7,
+  "LS_WR": 1,
+  "LS_RD": 2,
+  "ARITH": 23,
+  "RED_DEP": 8
+ },
+ "inputs": {
+  "su_prod.json": "8cfe6d8f26a8a02ddc62cc861741077f941c045293cbac019dbd7d8958c759ea",
+  "su_rec.mem": "e411062d8970d6572dc75a8251c1f51bd8bf939970915204dd6e764ce77bd818"
+ },
+ "slice_words_used": [
+  14077,
+  12752,
+  12432,
+  11824
+ ],
+ "replicated_words": 964,
+ "cross_quarter_conflict_words": 0,
+ "affine_base_failures": 0,
+ "affine_failures_at": [],
+ "broadcast_written_words": 4,
+ "rotations": [
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  3,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  3,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0
+ ],
+ "invalidated_local_words": 20709,
+ "chains": [
+  {
+   "tags": [
+    "q_norm.ss"
+   ],
+   "priced": 165.0,
+   "first": 0,
+   "end": 98,
+   "edges": 98,
+   "ratio": 0.594
+  },
+  {
+   "tags": [
+    "q_norm.rs"
+   ],
+   "priced": 152.0,
+   "first": 98,
+   "end": 131,
+   "edges": 33,
+   "ratio": 0.217
+  },
+  {
+   "tags": [
+    "q_norm.y"
+   ],
+   "priced": 62.0,
+   "first": 131,
+   "end": 186,
+   "edges": 55,
+   "ratio": 0.887
+  },
+  {
+   "tags": [
+    "kv_norm.ss",
+    "kv_norm.rs",
+    "kv_norm.y",
+    "kv_rope.tail"
+   ],
+   "priced": 423.0,
+   "first": 186,
+   "end": 264,
+   "edges": 78,
+   "ratio": 0.184
+  },
+  {
+   "tags": [
+    "q_rope.tail"
+   ],
+   "priced": 60.0,
+   "first": 264,
+   "end": 308,
+   "edges": 44,
+   "ratio": 0.733
+  },
+  {
+   "tags": [
+    "attend.max",
+    "attend.exp_sum"
+   ],
+   "priced": 372.0,
+   "first": 308,
+   "end": 394,
+   "edges": 86,
+   "ratio": 0.231
+  },
+  {
+   "tags": [
+    "attend.bf16_p"
+   ],
+   "priced": 60.0,
+   "first": 394,
+   "end": 427,
+   "edges": 33,
+   "ratio": 0.55
+  },
+  {
+   "tags": [
+    "attend.den",
+    "attend.norm",
+    "attend.inv_rope.tail"
+   ],
+   "priced": 290.0,
+   "first": 427,
+   "end": 473,
+   "edges": 46,
+   "ratio": 0.159
+  },
+  {
+   "tags": [
+    "attn.res_copy"
+   ],
+   "priced": 99.0,
+   "first": 473,
+   "end": 596,
+   "edges": 123,
+   "ratio": 1.242
+  },
+  {
+   "tags": [
+    "router_act"
+   ],
+   "priced": 339.0,
+   "first": 596,
+   "end": 639,
+   "edges": 43,
+   "ratio": 0.127
+  },
+  {
+   "tags": [
+    "route.scores_bias"
+   ],
+   "priced": 60.0,
+   "first": 639,
+   "end": 686,
+   "edges": 47,
+   "ratio": 0.783
+  },
+  {
+   "tags": [
+    "route.gather0",
+    "route.gather1",
+    "route.gather2",
+    "route.gather3"
+   ],
+   "priced": 240.0,
+   "first": 686,
+   "end": 721,
+   "edges": 35,
+   "ratio": 0.146
+  },
+  {
+   "tags": [
+    "route.gather4",
+    "route.gather5",
+    "route.total"
+   ],
+   "priced": 235.0,
+   "first": 721,
+   "end": 771,
+   "edges": 50,
+   "ratio": 0.213
+  },
+  {
+   "tags": [
+    "route.den"
+   ],
+   "priced": 60.0,
+   "first": 771,
+   "end": 803,
+   "edges": 32,
+   "ratio": 0.533
+  },
+  {
+   "tags": [
+    "route.weights"
+   ],
+   "priced": 75.0,
+   "first": 803,
+   "end": 836,
+   "edges": 33,
+   "ratio": 0.44
+  },
+  {
+   "tags": [
+    "swiglu"
+   ],
+   "priced": 181.0,
+   "first": 836,
+   "end": 883,
+   "edges": 47,
+   "ratio": 0.26
+  },
+  {
+   "tags": [
+    "moe_sum.0"
+   ],
+   "priced": 60.0,
+   "first": 883,
+   "end": 927,
+   "edges": 44,
+   "ratio": 0.733
+  },
+  {
+   "tags": [
+    "moe_sum.2"
+   ],
+   "priced": 60.0,
+   "first": 927,
+   "end": 971,
+   "edges": 44,
+   "ratio": 0.733
+  },
+  {
+   "tags": [
+    "moe_sum.4",
+    "moe_sum.6"
+   ],
+   "priced": 120.0,
+   "first": 971,
+   "end": 1016,
+   "edges": 45,
+   "ratio": 0.375
+  },
+  {
+   "tags": [
+    "ffn.res_copy"
+   ],
+   "priced": 99.0,
+   "first": 1016,
+   "end": 1139,
+   "edges": 123,
+   "ratio": 1.242
+  },
+  {
+   "tags": [
+    "pre <- ffn mix pre"
+   ],
+   "priced": 60.0,
+   "first": 1139,
+   "end": 1182,
+   "edges": 43,
+   "ratio": 0.717
+  }
+ ],
+ "records": [
+  {
+   "tag": "q_norm.ss",
+   "priced": 165.0,
+   "issues": 4,
+   "stage_sectors": 160,
+   "drain_sectors": 1,
+   "reused_words": 0,
+   "elided_drain_words": 0,
+   "adjacent_to_predecessor": false,
+   "first_edge": 0,
+   "end_edge": 98,
+   "own_edges": 98,
+   "edges": 98,
+   "over_price": false,
+   "reduction_tail_model": true
+  },
+  {
+   "tag": "q_norm.rs",
+   "priced": 152.0,
+   "issues": 1,
+   "stage_sectors": 0,
+   "drain_sectors": 4,
+   "reused_words": 1,
+   "elided_drain_words": 0,
+   "adjacent_to_predecessor": false,
+   "first_edge": 98,
+   "end_edge": 131,
+   "own_edges": 33,
+   "edges": 33,
+   "over_price": false,
+   "reduction_tail_model": false
+  },
+  {
+   "tag": "q_norm.y",
+   "priced": 62.0,
+   "issues": 3,
+   "stage_sectors": 272,
+   "drain_sectors": 160,
+   "reused_words": 388,
+   "elided_drain_words": 0,
+   "adjacent_to_predecessor": false,
+   "first_edge": 131,
+   "end_edge": 186,
+   "own_edges": 55,
+   "edges": 55,
+   "over_price": false,
+   "reduction_tail_model": false
+  },
+  {
+   "tag": "kv_norm.ss",
+   "priced": 151.0,
+   "issues": 1,
+   "stage_sectors": 64,
+   "drain_sectors": 1,
+   "reused_words": 0,
+   "elided_drain_words": 0,
+   "adjacent_to_predecessor": false,
+   "first_edge": 186,
+   "end_edge": 262,
+   "own_edges": 76,
+   "edges": 76,
+   "over_price": false,
+   "reduction_tail_model": true
+  },
+  {
+   "tag": "kv_norm.rs",
+   "priced": 152.0,
+   "issues": 1,
+   "stage_sectors": 0,
+   "drain_sectors": 4,
+   "reused_words": 1,
+   "elided_drain_words": 0,
+   "adjacent_to_predecessor": true,
+   "first_edge": 199,
+   "end_edge": 232,
+   "own_edges": 33,
+   "edges": 0,
+   "over_price": false,
+   "reduction_tail_model": false
+  },
+  {
+   "tag": "kv_norm.y",
+   "priced": 60.0,
+   "issues": 1,
+   "stage_sectors": 64,
+   "drain_sectors": 56,
+   "reused_words": 516,
+   "elided_drain_words": 64,
+   "adjacent_to_predecessor": true,
+   "first_edge": 188,
+   "end_edge": 264,
+   "own_edges": 76,
+   "edges": 2,
+   "over_price": false,
+   "reduction_tail_model": false
+  },
+  {
+   "tag": "kv_rope.tail",
+   "priced": 60.0,
+   "issues": 1,
+   "stage_sectors": 8,
+   "drain_sectors": 8,
+   "reused_words": 64,
+   "elided_drain_words": 0,
+   "adjacent_to_predecessor": true,
+   "first_edge": 190,
+   "end_edge": 234,
+   "own_edges": 44,
+   "edges": 0,
+   "over_price": false,
+   "reduction_tail_model": false
+  },
+  {
+   "tag": "q_rope.tail",
+   "priced": 60.0,
+   "issues": 1,
+   "stage_sectors": 16,
+   "drain_sectors": 8,
+   "reused_words": 0,
+   "elided_drain_words": 0,
+   "adjacent_to_predecessor": false,
+   "first_edge": 264,
+   "end_edge": 308,
+   "own_edges": 44,
+   "edges": 44,
+   "over_price": false,
+   "reduction_tail_model": false
+  },
+  {
+   "tag": "attend.max",
+   "priced": 139.0,
+   "issues": 1,
+   "stage_sectors": 16,
+   "drain_sectors": 1,
+   "reused_words": 0,
+   "elided_drain_words": 0,
+   "adjacent_to_predecessor": false,
+   "first_edge": 308,
+   "end_edge": 392,
+   "own_edges": 84,
+   "edges": 84,
+   "over_price": false,
+   "reduction_tail_model": true
+  },
+  {
+   "tag": "attend.exp_sum",
+   "priced": 233.0,
+   "issues": 1,
+   "stage_sectors": 0,
+   "drain_sectors": 17,
+   "reused_words": 129,
+   "elided_drain_words": 0,
+   "adjacent_to_predecessor": true,
+   "first_edge": 321,
+   "end_edge": 394,
+   "own_edges": 73,
+   "edges": 2,
+   "over_price": false,
+   "reduction_tail_model": true
+  },
+  {
+   "tag": "attend.bf16_p",
+   "priced": 60.0,
+   "issues": 1,
+   "stage_sectors": 0,
+   "drain_sectors": 16,
+   "reused_words": 128,
+   "elided_drain_words": 0,
+   "adjacent_to_predecessor": false,
+   "first_edge": 394,
+   "end_edge": 427,
+   "own_edges": 33,
+   "edges": 33,
+   "over_price": false,
+   "reduction_tail_model": false
+  },
+  {
+   "tag": "attend.den",
+   "priced": 154.0,
+   "issues": 1,
+   "stage_sectors": 1,
+   "drain_sectors": 4,
+   "reused_words": 2,
+   "elided_drain_words": 0,
+   "adjacent_to_predecessor": false,
+   "first_edge": 427,
+   "end_edge": 471,
+   "own_edges": 44,
+   "edges": 44,
+   "over_price": false,
+   "reduction_tail_model": false
+  },
+  {
+   "tag": "attend.norm",
+   "priced": 76.0,
+   "issues": 1,
+   "stage_sectors": 64,
+   "drain_sectors": 56,
+   "reused_words": 4,
+   "elided_drain_words": 64,
+   "adjacent_to_predecessor": true,
+   "first_edge": 427,
+   "end_edge": 473,
+   "own_edges": 46,
+   "edges": 2,
+   "over_price": false,
+   "reduction_tail_model": false
+  },
+  {
+   "tag": "attend.inv_rope.tail",
+   "priced": 60.0,
+   "issues": 1,
+   "stage_sectors": 0,
+   "drain_sectors": 8,
+   "reused_words": 128,
+   "elided_drain_words": 0,
+   "adjacent_to_predecessor": true,
+   "first_edge": 441,
+   "end_edge": 473,
+   "own_edges": 32,
+   "edges": 0,
+   "over_price": false,
+   "reduction_tail_model": false
+  },
+  {
+   "tag": "attn.res_copy",
+   "priced": 99.0,
+   "issues": 40,
+   "stage_sectors": 2560,
+   "drain_sectors": 2560,
+   "reused_words": 0,
+   "elided_drain_words": 0,
+   "adjacent_to_predecessor": false,
+   "first_edge": 473,
+   "end_edge": 596,
+   "own_edges": 123,
+   "edges": 123,
+   "over_price": true,
+   "reduction_tail_model": false
+  },
+  {
+   "tag": "router_act",
+   "priced": 339.0,
+   "issues": 1,
+   "stage_sectors": 1,
+   "drain_sectors": 1,
+   "reused_words": 0,
+   "elided_drain_words": 0,
+   "adjacent_to_predecessor": false,
+   "first_edge": 596,
+   "end_edge": 639,
+   "own_edges": 43,
+   "edges": 43,
+   "over_price": false,
+   "reduction_tail_model": false
+  },
+  {
+   "tag": "route.scores_bias",
+   "priced": 60.0,
+   "issues": 1,
+   "stage_sectors": 96,
+   "drain_sectors": 48,
+   "reused_words": 0,
+   "elided_drain_words": 0,
+   "adjacent_to_predecessor": false,
+   "first_edge": 639,
+   "end_edge": 686,
+   "own_edges": 47,
+   "edges": 47,
+   "over_price": false,
+   "reduction_tail_model": false
+  },
+  {
+   "tag": "route.gather0",
+   "priced": 60.0,
+   "issues": 1,
+   "stage_sectors": 0,
+   "drain_sectors": 1,
+   "reused_words": 1,
+   "elided_drain_words": 0,
+   "adjacent_to_predecessor": false,
+   "first_edge": 686,
+   "end_edge": 718,
+   "own_edges": 32,
+   "edges": 32,
+   "over_price": false,
+   "reduction_tail_model": false
+  },
+  {
+   "tag": "route.gather1",
+   "priced": 60.0,
+   "issues": 1,
+   "stage_sectors": 0,
+   "drain_sectors": 1,
+   "reused_words": 1,
+   "elided_drain_words": 0,
+   "adjacent_to_predecessor": true,
+   "first_edge": 687,
+   "end_edge": 719,
+   "own_edges": 32,
+   "edges": 1,
+   "over_price": false,
+   "reduction_tail_model": false
+  },
+  {
+   "tag": "route.gather2",
+   "priced": 60.0,
+   "issues": 1,
+   "stage_sectors": 0,
+   "drain_sectors": 1,
+   "reused_words": 1,
+   "elided_drain_words": 0,
+   "adjacent_to_predecessor": true,
+   "first_edge": 688,
+   "end_edge": 720,
+   "own_edges": 32,
+   "edges": 1,
+   "over_price": false,
+   "reduction_tail_model": false
+  },
+  {
+   "tag": "route.gather3",
+   "priced": 60.0,
+   "issues": 1,
+   "stage_sectors": 0,
+   "drain_sectors": 1,
+   "reused_words": 1,
+   "elided_drain_words": 0,
+   "adjacent_to_predecessor": true,
+   "first_edge": 689,
+   "end_edge": 721,
+   "own_edges": 32,
+   "edges": 1,
+   "over_price": false,
+   "reduction_tail_model": false
+  },
+  {
+   "tag": "route.gather4",
+   "priced": 60.0,
+   "issues": 1,
+   "stage_sectors": 0,
+   "drain_sectors": 1,
+   "reused_words": 1,
+   "elided_drain_words": 0,
+   "adjacent_to_predecessor": false,
+   "first_edge": 721,
+   "end_edge": 753,
+   "own_edges": 32,
+   "edges": 32,
+   "over_price": false,
+   "reduction_tail_model": false
+  },
+  {
+   "tag": "route.gather5",
+   "priced": 60.0,
+   "issues": 1,
+   "stage_sectors": 0,
+   "drain_sectors": 1,
+   "reused_words": 1,
+   "elided_drain_words": 0,
+   "adjacent_to_predecessor": true,
+   "first_edge": 722,
+   "end_edge": 754,
+   "own_edges": 32,
+   "edges": 1,
+   "over_price": false,
+   "reduction_tail_model": false
+  },
+  {
+   "tag": "route.total",
+   "priced": 115.0,
+   "issues": 1,
+   "stage_sectors": 0,
+   "drain_sectors": 1,
+   "reused_words": 6,
+   "elided_drain_words": 0,
+   "adjacent_to_predecessor": true,
+   "first_edge": 723,
+   "end_edge": 771,
+   "own_edges": 48,
+   "edges": 17,
+   "over_price": false,
+   "reduction_tail_model": true
+  },
+  {
+   "tag": "route.den",
+   "priced": 60.0,
+   "issues": 1,
+   "stage_sectors": 0,
+   "drain_sectors": 1,
+   "reused_words": 1,
+   "elided_drain_words": 0,
+   "adjacent_to_predecessor": false,
+   "first_edge": 771,
+   "end_edge": 803,
+   "own_edges": 32,
+   "edges": 32,
+   "over_price": false,
+   "reduction_tail_model": false
+  },
+  {
+   "tag": "route.weights",
+   "priced": 75.0,
+   "issues": 1,
+   "stage_sectors": 0,
+   "drain_sectors": 2,
+   "reused_words": 7,
+   "elided_drain_words": 0,
+   "adjacent_to_predecessor": false,
+   "first_edge": 803,
+   "end_edge": 836,
+   "own_edges": 33,
+   "edges": 33,
+   "over_price": false,
+   "reduction_tail_model": false
+  },
+  {
+   "tag": "swiglu",
+   "priced": 181.0,
+   "issues": 1,
+   "stage_sectors": 43,
+   "drain_sectors": 21,
+   "reused_words": 6,
+   "elided_drain_words": 0,
+   "adjacent_to_predecessor": false,
+   "first_edge": 836,
+   "end_edge": 883,
+   "own_edges": 47,
+   "edges": 47,
+   "over_price": false,
+   "reduction_tail_model": false
+  },
+  {
+   "tag": "moe_sum.0",
+   "priced": 60.0,
+   "issues": 1,
+   "stage_sectors": 14,
+   "drain_sectors": 7,
+   "reused_words": 0,
+   "elided_drain_words": 0,
+   "adjacent_to_predecessor": false,
+   "first_edge": 883,
+   "end_edge": 927,
+   "own_edges": 44,
+   "edges": 44,
+   "over_price": false,
+   "reduction_tail_model": false
+  },
+  {
+   "tag": "moe_sum.2",
+   "priced": 60.0,
+   "issues": 1,
+   "stage_sectors": 14,
+   "drain_sectors": 7,
+   "reused_words": 53,
+   "elided_drain_words": 0,
+   "adjacent_to_predecessor": false,
+   "first_edge": 927,
+   "end_edge": 971,
+   "own_edges": 44,
+   "edges": 44,
+   "over_price": false,
+   "reduction_tail_model": false
+  },
+  {
+   "tag": "moe_sum.4",
+   "priced": 60.0,
+   "issues": 1,
+   "stage_sectors": 14,
+   "drain_sectors": 0,
+   "reused_words": 53,
+   "elided_drain_words": 53,
+   "adjacent_to_predecessor": false,
+   "first_edge": 971,
+   "end_edge": 1006,
+   "own_edges": 35,
+   "edges": 35,
+   "over_price": false,
+   "reduction_tail_model": false
+  },
+  {
+   "tag": "moe_sum.6",
+   "priced": 60.0,
+   "issues": 1,
+   "stage_sectors": 7,
+   "drain_sectors": 7,
+   "reused_words": 53,
+   "elided_drain_words": 0,
+   "adjacent_to_predecessor": true,
+   "first_edge": 972,
+   "end_edge": 1016,
+   "own_edges": 44,
+   "edges": 10,
+   "over_price": false,
+   "reduction_tail_model": false
+  },
+  {
+   "tag": "ffn.res_copy",
+   "priced": 99.0,
+   "issues": 40,
+   "stage_sectors": 2560,
+   "drain_sectors": 2560,
+   "reused_words": 0,
+   "elided_drain_words": 0,
+   "adjacent_to_predecessor": false,
+   "first_edge": 1016,
+   "end_edge": 1139,
+   "own_edges": 123,
+   "edges": 123,
+   "over_price": true,
+   "reduction_tail_model": false
+  },
+  {
+   "tag": "pre <- ffn mix pre",
+   "priced": 60.0,
+   "issues": 1,
+   "stage_sectors": 1,
+   "drain_sectors": 1,
+   "reused_words": 0,
+   "elided_drain_words": 0,
+   "adjacent_to_predecessor": false,
+   "first_edge": 1139,
+   "end_edge": 1182,
+   "own_edges": 43,
+   "edges": 43,
+   "over_price": false,
+   "reduction_tail_model": false
+  }
+ ],
+ "total": {
+  "priced": 3272.0,
+  "edges": 1182,
+  "ratio": 0.361
+ },
+ "vehicle_transport_windows": {
+  "q_norm.ss#0": [
+   0,
+   98
+  ],
+  "q_norm.rs#1": [
+   124,
+   131
+  ],
+  "q_norm.y#2": [
+   131,
+   186
+  ],
+  "kv_norm.ss#3": [
+   186,
+   262
+  ],
+  "kv_norm.rs#4": [
+   225,
+   232
+  ],
+  "kv_norm.y#5": [
+   188,
+   264
+  ],
+  "kv_rope.tail#6": [
+   190,
+   234
+  ],
+  "q_rope.tail#7": [
+   264,
+   308
+  ],
+  "attend.max#8": [
+   308,
+   392
+  ],
+  "attend.exp_sum#9": [
+   346,
+   394
+  ],
+  "attend.bf16_p#10": [
+   419,
+   427
+  ],
+  "attend.den#11": [
+   427,
+   471
+  ],
+  "attend.norm#12": [
+   427,
+   473
+  ],
+  "attend.inv_rope.tail#13": [
+   466,
+   473
+  ],
+  "attn.res_copy#14": [
+   473,
+   596
+  ],
+  "router_act#15": [
+   596,
+   639
+  ],
+  "route.scores_bias#16": [
+   639,
+   686
+  ],
+  "route.gather0#17": [
+   711,
+   718
+  ],
+  "route.gather1#18": [
+   712,
+   719
+  ],
+  "route.gather2#19": [
+   713,
+   720
+  ],
+  "route.gather3#20": [
+   714,
+   721
+  ],
+  "route.gather4#21": [
+   746,
+   753
+  ],
+  "route.gather5#22": [
+   747,
+   754
+  ],
+  "route.total#23": [
+   764,
+   771
+  ],
+  "route.den#24": [
+   796,
+   803
+  ],
+  "route.weights#25": [
+   829,
+   836
+  ],
+  "swiglu#26": [
+   836,
+   883
+  ],
+  "moe_sum.0#27": [
+   883,
+   927
+  ],
+  "moe_sum.2#28": [
+   927,
+   971
+  ],
+  "moe_sum.4#29": [
+   971,
+   982
+  ],
+  "moe_sum.6#30": [
+   972,
+   1016
+  ],
+  "ffn.res_copy#31": [
+   1016,
+   1139
+  ],
+  "pre <- ffn mix pre#32": [
+   1139,
+   1182
+  ]
+ }
+}
