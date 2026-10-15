@@ -204,9 +204,13 @@ def classify(rows, repo, config=None):
         for index, original in enumerate(independent):
             if original['element'] != proof['element'] or (original.get('best') or {}).get('job') != proof['candidate_job']:
                 continue
-            body = module_body(repo.read(proof['path']), proof['module'])
-            if hashlib.sha256(normalized(body).encode()).hexdigest() != proof['body_sha256']:
-                continue  # current source changed; this narrowly pinned warning no longer applies
+            try:
+                body = module_body(repo.read(proof['path']), proof['module'])
+                if hashlib.sha256(normalized(body).encode()).hexdigest() != proof['body_sha256']:
+                    continue  # current source changed; narrowly pinned warning no longer applies
+            except (ValueError, TypeError, KeyError) as exc:
+                errors.append(dict(element=proof.get('element'), error=str(exc)))
+                continue
             row = copy.deepcopy(original)
             row['candidate_component_record'] = copy.deepcopy(original)
             row['component_category'] = original['category']

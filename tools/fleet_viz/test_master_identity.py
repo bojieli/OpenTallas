@@ -127,6 +127,10 @@ class Identity(unittest.TestCase):
         self.assertEqual(a[0]['candidate_component_record']['best']['job'],'candidate105')
         self.assertIsNone(a[0]['best']['job']);self.assertEqual(receipt['contract_mismatches'],['a'])
         self.assertEqual(r['category'],'closed (TT era)')
+        self.repo.files['a.sv']='module other; endmodule'
+        a,b,receipt=M.classify([r],self.repo,dict(contract_mismatches=[proof]))
+        self.assertEqual(a[0]['category'],'closed (TT era)');self.assertTrue(receipt['errors'])
+        self.repo.files['a.sv']='module a(input wire clk); child u(.clk(clk)); endmodule'
         r['best']['job']='current64'
         a,b,receipt=M.classify([r],self.repo,dict(contract_mismatches=[proof]))
         self.assertEqual(a[0]['category'],'closed (TT era)')
