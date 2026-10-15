@@ -1,5 +1,5 @@
 {
- "name": "qfd_su_cbuf_g_tp8-tp8-9f0d55593",
+ "name": "qfd_su_cbuf_g_tp8-tp8-55b451d97",
  "block": "ot_qfd_su_cbuf_g_tp8",
  "ref_tile": true,
  "owner": "Codex:Q-COMPUTE-ELEM",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 12,
  "source": {
   "branch": "claude/q14-r8-rekit",
-  "commit": "9f0d55593ad8706c3b24c6258c89da419fb3d7f9",
+  "commit": "55b451d9736ade252e5e2805b64069253c55d6cf",
   "extra_paths": [
    "tools/qwen_native_memory",
    "rtl/qwen_sys/native_memory_20261014",
@@ -97,7 +97,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qfd_su_cbuf_g_tp8/qfd_su_cbuf_g_tp8-tp8-9f0d55593"
+   "to": "results/rtl/ref_tile/qfd_su_cbuf_g_tp8/qfd_su_cbuf_g_tp8-tp8-55b451d97"
   }
  ],
  "cycles_added": 0,
