@@ -1,0 +1,69 @@
+{
+ "summary": {
+  "shape": "ds640",
+  "native_column": true,
+  "seed": 1015,
+  "mut": "pv1",
+  "T_window": 128,
+  "T_compressed": 512,
+  "pv_run_chunks": 4,
+  "ops": 2,
+  "passed": 0,
+  "wall_s": 162.1,
+  "pv_span_max": 386,
+  "pv_lines_max": 125,
+  "verdict": "FAIL"
+ },
+ "ops": [
+  {
+   "name": "pv_sm0",
+   "kind": "pv",
+   "kv4": 0,
+   "rows": 32,
+   "rc": 0,
+   "fault": false,
+   "cycles": {
+    "rows": 32,
+    "qk": 0,
+    "kv4": 0,
+    "lines": 125,
+    "first_in": 45,
+    "last_in": 258,
+    "last_out": 431,
+    "span": 386,
+    "beats": 256,
+    "first_beat": 100,
+    "last_beat": 355
+   },
+   "results": 512,
+   "expected": 512,
+   "mismatches": 512,
+   "pass": false
+  },
+  {
+   "name": "pv_sm5",
+   "kind": "pv",
+   "kv4": 1,
+   "rows": 32,
+   "rc": 0,
+   "fault": false,
+   "cycles": {
+    "rows": 32,
+    "qk": 0,
+    "kv4": 1,
+    "lines": 68,
+    "first_in": 45,
+    "last_in": 214,
+    "last_out": 407,
+    "span": 362,
+    "beats": 256,
+    "first_beat": 76,
+    "last_beat": 331
+   },
+   "results": 512,
+   "expected": 512,
+   "mismatches": 512,
+   "pass": false
+  }
+ ]
+}

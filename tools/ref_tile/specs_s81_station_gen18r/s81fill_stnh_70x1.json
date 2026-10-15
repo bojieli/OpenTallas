@@ -10,9 +10,15 @@
  "clock_port": "fi0",
  "reset_ports": [],
  "forwarded_clock": true,
+ "boundary_tcl": [
+  "physical/s81_station_native/fwd_clock_out.tcl"
+ ],
+ "sdc_extra": [
+  "physical/s81_station_native/fwd_clock_out.tcl"
+ ],
  "outline": {
-  "w": 17.256,
-  "h": 17.256,
+  "w": 17.28,
+  "h": 17.28,
   "exact": true
  },
  "layer_cap": "M5",
@@ -36,11 +42,11 @@
   "pin_v": "M3 M5",
   "m5_pg_pitch": 2.7
  },
- "structural_change": "First hardening of the GEN18r generated forwarded-clock station dsfd_stnh_70x1 (2488 die instances): capture on the falling edge of the forwarded fi0, fo0 = kept forwarding INV, 70 b, no reset, 0 cycles; RTL = the case glue module byte-identical (module sha256 f32fe267466452ac, glue 81730f1679e7bc00); pins at the generator centres. Generator slot kept.",
+ "structural_change": "First hardening of the GEN18r generated forwarded-clock station dsfd_stnh_70x1 (2488 die instances): capture on the falling edge of the forwarded fi0, fo0 = kept forwarding INV, 70 b, no reset, 0 cycles; RTL = the case glue module byte-identical (module sha256 f32fe267466452ac, glue 81730f1679e7bc00); pins at the generator centres. Slot 17.256 x 17.256 holds 167 um2 of core vs 65 um2 recipe-2 content (input hold + output min delay cells a bit) -> depth grown to 17.28 x 17.28 (data-pin coordinates unchanged).",
  "job": {
   "owner": "Claude:fill-s81",
   "branch": "claude/el1015-fill-1015",
-  "tag": "f1",
+  "tag": "f3",
   "purpose": "S81 FILL: GEN18r die station dsfd_stnh_70x1 (2488 replicas, hardened once): exact phase/basis/random bench + wrong-edge and payload mutants; recipe 2, M5 cap, generator pins",
   "views_to": "physical/ref_tile/s81fill_stnh_70x1/views",
   "record_to": "results/rtl/ref_tile/s81fill_stnh_70x1",
@@ -50,7 +56,8 @@
    "tools/s81_station_native",
    "physical/s81_die_pins/v22_gen18r_stations",
    "physical/hbm_accel_die_views/stations/bench",
-   "physical/hbm_w2_rb_station_20261006/forwarded_subtree.tcl"
+   "physical/hbm_w2_rb_station_20261006/forwarded_subtree.tcl",
+   "physical/s81_station_native"
   ],
   "benches": [
    {
@@ -77,6 +84,17 @@
     "threads": 2,
     "peak_ram_gb": 4
    }
+  ]
+ },
+ "slot_change_request": {
+  "reason": "recipe-2 content 65 um2 exceeds util 0.55 of the generator slot core 167 um2; depth-only growth keeps every data pin coordinate",
+  "outline": [
+   17.28,
+   17.28
+  ],
+  "generator_slot": [
+   17.256,
+   17.256
   ]
  }
 }

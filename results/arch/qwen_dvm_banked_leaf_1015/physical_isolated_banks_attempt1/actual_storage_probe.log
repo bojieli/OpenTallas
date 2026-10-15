@@ -1,0 +1,31 @@
+ot-run: ot-agidock128  admits    47 GB (avail 74, growth 10, headroom 24, waiters 0/0 GB) load 4/64 running 3 disk 23 GB 
+ot-run: -> ot-agidock128
+ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-3891920-1792058797 after 0 s
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[WARNING ORD-0039] .openroad ignored with -python
+SEQ u_leaf.g_t\[0\].g_banked.bank_sel\[0\]$_DFF_P_ [('CLK', 'clk'), ('D', 'u_leaf.g_t\\[0\\].nsel\\[5\\]'), ('QN', '_0266_'), ('VDD', 'VDD'), ('VSS', 'VSS')]
+SEQ u_leaf.g_t\[0\].g_banked.bank_sel\[1\]$_DFF_P_ [('CLK', 'clk'), ('D', 'u_leaf.g_t\\[0\\].nsel\\[6\\]'), ('QN', '_2556_'), ('VDD', 'VDD'), ('VSS', 'VSS')]
+SEQ u_leaf.g_t\[0\].g_banked.bank_sel_q\[0\]$_DFF_P_ [('CLK', 'clk'), ('D', 'u_leaf.g_t\\[0\\].g_banked.bank_sel\\[0\\]'), ('QN', '_0265_'), ('VDD', 'VDD'), ('VSS', 'VSS')]
+SEQ u_leaf.g_t\[0\].g_banked.bank_sel_q\[1\]$_DFF_P_ [('CLK', 'clk'), ('D', 'u_leaf.g_t\\[0\\].g_banked.bank_sel\\[1\\]'), ('QN', '_2557_'), ('VDD', 'VDD'), ('VSS', 'VSS')]
+SEQ u_leaf.g_t\[0\].g_banked.g_bank\[0\].u_bank/g_e\[0\].m\[0\]$_DFFE_PP_ [('CLK', 'clk'), ('D', 'u_leaf.g_t\\[0\\].g_banked.g_bank\\[0\\].u_bank/_1046_'), ('QN', 'u_leaf.g_t\\[0\\].g_banked.g_bank\\[0\\].u_bank/_0544_'), ('VDD', 'VDD'), ('VSS', 'VSS')]
+SEQ u_leaf.g_t\[0\].g_banked.g_bank\[0\].u_bank/g_e\[0\].m\[10\]$_DFFE_PP_ [('CLK', 'clk'), ('D', 'u_leaf.g_t\\[0\\].g_banked.g_bank\\[0\\].u_bank/_1036_'), ('QN', 'u_leaf.g_t\\[0\\].g_banked.g_bank\\[0\\].u_bank/_0074_'), ('VDD', 'VDD'), ('VSS', 'VSS')]
+SEQ u_leaf.g_t\[0\].g_banked.g_bank\[0\].u_bank/g_e\[0\].m\[11\]$_DFFE_PP_ [('CLK', 'clk'), ('D', 'u_leaf.g_t\\[0\\].g_banked.g_bank\\[0\\].u_bank/_1035_'), ('QN', 'u_leaf.g_t\\[0\\].g_banked.g_bank\\[0\\].u_bank/_0075_'), ('VDD', 'VDD'), ('VSS', 'VSS')]
+SEQ u_leaf.g_t\[0\].g_banked.g_bank\[0\].u_bank/g_e\[0\].m\[12\]$_DFFE_PP_ [('CLK', 'clk'), ('D', 'u_leaf.g_t\\[0\\].g_banked.g_bank\\[0\\].u_bank/_1034_'), ('QN', 'u_leaf.g_t\\[0\\].g_banked.g_bank\\[0\\].u_bank/_0076_'), ('VDD', 'VDD'), ('VSS', 'VSS')]
+SEQ u_leaf.g_t\[0\].g_banked.g_bank\[0\].u_bank/g_e\[0\].m\[13\]$_DFFE_PP_ [('CLK', 'clk'), ('D', 'u_leaf.g_t\\[0\\].g_banked.g_bank\\[0\\].u_bank/_1033_'), ('QN', 'u_leaf.g_t\\[0\\].g_banked.g_bank\\[0\\].u_bank/_0077_'), ('VDD', 'VDD'), ('VSS', 'VSS')]
+SEQ u_leaf.g_t\[0\].g_banked.g_bank\[0\].u_bank/g_e\[0\].m\[14\]$_DFFE_PP_ [('CLK', 'clk'), ('D', 'u_leaf.g_t\\[0\\].g_banked.g_bank\\[0\\].u_bank/_1032_'), ('QN', 'u_leaf.g_t\\[0\\].g_banked.g_bank\\[0\\].u_bank/_0078_'), ('VDD', 'VDD'), ('VSS', 'VSS')]
+SEQ u_leaf.g_t\[0\].g_banked.g_bank\[0\].u_bank/g_e\[0\].m\[15\]$_DFFE_PP_ [('CLK', 'clk'), ('D', 'u_leaf.g_t\\[0\\].g_banked.g_bank\\[0\\].u_bank/_1110_'), ('QN', 'u_leaf.g_t\\[0\\].g_banked.g_bank\\[0\\].u_bank/_0000_'), ('VDD', 'VDD'), ('VSS', 'VSS')]
+SEQ u_leaf.g_t\[0\].g_banked.g_bank\[0\].u_bank/g_e\[0\].m\[1\]$_DFFE_PP_ [('CLK', 'clk'), ('D', 'u_leaf.g_t\\[0\\].g_banked.g_bank\\[0\\].u_bank/_1045_'), ('QN', 'u_leaf.g_t\\[0\\].g_banked.g_bank\\[0\\].u_bank/_0065_'), ('VDD', 'VDD'), ('VSS', 'VSS')]
+SEQ u_leaf.g_t\[0\].g_banked.g_bank\[0\].u_bank/g_e\[0\].m\[2\]$_DFFE_PP_ [('CLK', 'clk'), ('D', 'u_leaf.g_t\\[0\\].g_banked.g_bank\\[0\\].u_bank/_1044_'), ('QN', 'u_leaf.g_t\\[0\\].g_banked.g_bank\\[0\\].u_bank/_0066_'), ('VDD', 'VDD'), ('VSS', 'VSS')]
+SEQ u_leaf.g_t\[0\].g_banked.g_bank\[0\].u_bank/g_e\[0\].m\[3\]$_DFFE_PP_ [('CLK', 'clk'), ('D', 'u_leaf.g_t\\[0\\].g_banked.g_bank\\[0\\].u_bank/_1043_'), ('QN', 'u_leaf.g_t\\[0\\].g_banked.g_bank\\[0\\].u_bank/_0067_'), ('VDD', 'VDD'), ('VSS', 'VSS')]
+SEQ u_leaf.g_t\[0\].g_banked.g_bank\[0\].u_bank/g_e\[0\].m\[4\]$_DFFE_PP_ [('CLK', 'clk'), ('D', 'u_leaf.g_t\\[0\\].g_banked.g_bank\\[0\\].u_bank/_1042_'), ('QN', 'u_leaf.g_t\\[0\\].g_banked.g_bank\\[0\\].u_bank/_0068_'), ('VDD', 'VDD'), ('VSS', 'VSS')]
+SEQ u_leaf.g_t\[0\].g_banked.g_bank\[0\].u_bank/g_e\[0\].m\[5\]$_DFFE_PP_ [('CLK', 'clk'), ('D', 'u_leaf.g_t\\[0\\].g_banked.g_bank\\[0\\].u_bank/_1041_'), ('QN', 'u_leaf.g_t\\[0\\].g_banked.g_bank\\[0\\].u_bank/_0069_'), ('VDD', 'VDD'), ('VSS', 'VSS')]
+SEQ u_leaf.g_t\[0\].g_banked.g_bank\[0\].u_bank/g_e\[0\].m\[6\]$_DFFE_PP_ [('CLK', 'clk'), ('D', 'u_leaf.g_t\\[0\\].g_banked.g_bank\\[0\\].u_bank/_1040_'), ('QN', 'u_leaf.g_t\\[0\\].g_banked.g_bank\\[0\\].u_bank/_0070_'), ('VDD', 'VDD'), ('VSS', 'VSS')]
+SEQ u_leaf.g_t\[0\].g_banked.g_bank\[0\].u_bank/g_e\[0\].m\[7\]$_DFFE_PP_ [('CLK', 'clk'), ('D', 'u_leaf.g_t\\[0\\].g_banked.g_bank\\[0\\].u_bank/_1039_'), ('QN', 'u_leaf.g_t\\[0\\].g_banked.g_bank\\[0\\].u_bank/_0071_'), ('VDD', 'VDD'), ('VSS', 'VSS')]
+SEQ u_leaf.g_t\[0\].g_banked.g_bank\[0\].u_bank/g_e\[0\].m\[8\]$_DFFE_PP_ [('CLK', 'clk'), ('D', 'u_leaf.g_t\\[0\\].g_banked.g_bank\\[0\\].u_bank/_1038_'), ('QN', 'u_leaf.g_t\\[0\\].g_banked.g_bank\\[0\\].u_bank/_0072_'), ('VDD', 'VDD'), ('VSS', 'VSS')]
+SEQ u_leaf.g_t\[0\].g_banked.g_bank\[0\].u_bank/g_e\[0\].m\[9\]$_DFFE_PP_ [('CLK', 'clk'), ('D', 'u_leaf.g_t\\[0\\].g_banked.g_bank\\[0\\].u_bank/_1037_'), ('QN', 'u_leaf.g_t\\[0\\].g_banked.g_bank\\[0\\].u_bank/_0073_'), ('VDD', 'VDD'), ('VSS', 'VSS')]
+SEQ u_leaf.g_t\[0\].g_banked.g_bank\[0\].u_bank/g_e\[0\].v$_SDFFE_PP0P_ [('CLK', 'clk'), ('D', 'u_leaf.g_t\\[0\\].g_banked.g_bank\\[0\\].u_bank/_1109_'), ('QN', 'u_leaf.g_t\\[0\\].g_banked.g_bank\\[0\\].u_bank/_0001_'), ('VDD', 'VDD'), ('VSS', 'VSS')]
+SEQ u_leaf.g_t\[0\].g_banked.g_bank\[0\].u_bank/g_e\[10\].m\[0\]$_DFFE_PP_ [('CLK', 'clk'), ('D', 'u_leaf.g_t\\[0\\].g_banked.g_bank\\[0\\].u_bank/_0896_'), ('QN', 'u_leaf.g_t\\[0\\].g_banked.g_bank\\[0\\].u_bank/_0214_'), ('VDD', 'VDD'), ('VSS', 'VSS')]
+ot-run: RAN on ot-agidock128 (unit oth-ubuntu-3891920-1792058797): exit 0

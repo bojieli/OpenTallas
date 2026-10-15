@@ -31,14 +31,12 @@
  "pins": {
   "W": [
    "ti_a",
-   "e_a"
+   "e_a",
+   "ck"
   ],
   "E": [
    "ti_b",
    "e_b"
-  ],
-  "S": [
-   "ck"
   ]
  },
  "clock_port": "ck",
@@ -67,8 +65,6 @@
   "physical/qwen_die_masters/post_plain.tcl",
   "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
   "physical/common_flow/grt_macro_top_layer.tcl",
-  "physical/ref_tile/qkh_head_tstage/io_pins.tcl",
-  "physical/dsrom_window_source/leaf_iohold.tcl",
-  "physical/dsrom_window_source/leaf_inhold_release.tcl"
+  "physical/ref_tile/qkh_head_tstage/io_pins.tcl"
  ]
 }

@@ -1,0 +1,101 @@
+{
+ "name": "s81net_xstg_515",
+ "top": "dsfd_xstg_515",
+ "kind": "tile",
+ "sources": [
+  "rtl/dsrom_sys/s81_die_bind/ot_s81_static_lane_cross.sv",
+  "rtl/dsrom_sys/s81_static_net/ot_s81_static_lane_end.sv",
+  "rtl/dsrom_sys/s81_static_net/gen/dsfd_xstg_515.sv"
+ ],
+ "params": {},
+ "clock_port": "ck",
+ "reset_ports": [],
+ "outline": {
+  "w": 17.28,
+  "h": 30.24,
+  "exact": true
+ },
+ "layer_cap": "M5",
+ "pins": {
+  "E": [
+   "i"
+  ],
+  "S": [
+   "ck",
+   "cw"
+  ],
+  "W": [
+   "o"
+  ]
+ },
+ "io_tcl": "physical/s81_die_pins/snet_gen19b/dsfd_xstg_515.tcl",
+ "recipe": 2,
+ "route": {
+  "pd": 0.5,
+  "threads": 4,
+  "peak_ram_gb": 8,
+  "pin_h": "M4",
+  "pin_v": "M3 M5",
+  "m5_pg_pitch": 2.7,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "structural_change": "S-NET dsfd_xstg_515 (2 die instances): the d8g1 ot_meso_fifo (trained placement + CREDITS 16) is replaced by ot_s81_static_lane_end (cw pin register, epoch from the lane marker, fixed-offset crossing, no credit/ready/placement), o = {data, valid & live, live}; RTL = the case glue module rendered by the generator (module sha256 1d1b0ddf83cc9d4b, glue db43fe8fec3ba6e8); pins at the generator centres (gen19b).",
+ "reroute_reason": {
+  "kind": "rtl_change"
+ },
+ "job": {
+  "owner": "Claude:s81-net",
+  "branch": "claude/el1015-s81-net-static",
+  "tag": "n2",
+  "purpose": "S81 S-NET static-schedule redesign: dsfd_xstg_515 (2 replicas, hardened once): exact bench + observed failing mutants; recipe 2, M5 cap, generator pins",
+  "views_to": "physical/ref_tile/s81net_xstg_515/views",
+  "record_to": "results/rtl/ref_tile/s81net_xstg_515",
+  "extra_paths": [
+   "rtl/dsrom_sys/s81_static_net/gen",
+   "physical/s81_die_pins/snet_gen19b",
+   "rtl/dsrom_sys/s81_die_bind",
+   "rtl/dsrom_sys/s81_static_net",
+   "tools/s81_static_net",
+   "physical/s81_static_net"
+  ],
+  "benches": [
+   {
+    "name": "xstg_exact",
+    "cmd": "bash tools/s81_static_net/bench_xstg_master.sh pass dsfd_xstg_515 rtl/dsrom_sys/s81_static_net/gen/dsfd_xstg_515.sv {RUN}/xstg_pass",
+    "expect": "pass",
+    "pass_regex": "XSTG_STATIC_GATE PASS",
+    "threads": 1,
+    "peak_ram_gb": 2
+   },
+   {
+    "name": "xstg_offset_mutant",
+    "cmd": "bash tools/s81_static_net/bench_xstg_master.sh mut_offset dsfd_xstg_515 rtl/dsrom_sys/s81_static_net/gen/dsfd_xstg_515.sv {RUN}/xstg_mut",
+    "expect": "fail",
+    "fail_regex": "GATE MUTANT .*REJECTED",
+    "threads": 1,
+    "peak_ram_gb": 2
+   }
+  ]
+ },
+ "sdc_extra": [
+  "physical/s81_static_net/xstg/dsfd_xstg_515.sdc"
+ ],
+ "boundary_tcl": [
+  "physical/s81_static_net/xstg/dsfd_xstg_515_boundary.tcl"
+ ],
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ }
+}

@@ -8,7 +8,7 @@ Per attention record (batch 1, serial with the matvecs: ATT idle_true_dep domina
   fa      = hbm.first_access + SM.overhead (measured constants of tools/hgi_sim timing: 104 + 155); prefetch variant drops
             the 104 (KV rows are known from the window ring / IDX top-k before q is ready)
   comp    = the busiest SM's measured span (first KV line -> last result) of its ops in the record:
-            QK T640: qk8 (4 window rows) + qk4 (16 compressed rows), measured as two serial ops (conservative)
+            QK T640: one op a SM over its 4 window (SM-KV8) + 16 top-k (SM-KV4) rows (older runs: two serial ops)
             PV T640: one aligned run of 4 chunks (32 tokens) on 20 SMs;  T128: QK 4 rows, PV 1 chunk on 16 SMs
   publish = MODEL: 512 FP32 PV node words leave the SM at 8 words / cycle (64 cycles)
   merge   = MODEL: pairwise cross-SM node merge on SU (fixed-slot 4-quadrant reduce-scatter, H-ELEM-B/H-COLL):
@@ -29,6 +29,20 @@ FA, FIRST = 104 + 155, 104
 CLK = 1.2e9
 
 
+def validate_evidence(d, shape):
+    """Only complete positive component records can supply measured model inputs."""
+    summary, ops = d.get("summary", {}), d.get("ops", [])
+    expected_scores = {"ds128": 128, "ds640": 640, "qwen8192": 65536}[shape]
+    if not (summary.get("shape") == shape and summary.get("verdict") == "PASS"
+            and summary.get("mut") is None and ops
+            and summary.get("ops") == summary.get("passed") == len(ops)
+            and summary.get("qk_scores_checked") == expected_scores
+            and summary.get("pv_cross_sm_merge_equals_att_pv") is True
+            and all(o.get("pass") is True and o.get("rc") == 0 and not o.get("fault")
+                    and o.get("mismatches") == 0 and o.get("results") == o.get("expected") for o in ops)):
+        raise ValueError(f"{shape}: complete positive exact component evidence required")
+
+
 def merge_cycles(nodes):
     lv, n, c = 0, nodes, 0
     while n > 1:
@@ -39,23 +53,69 @@ def merge_cycles(nodes):
     return c
 
 
+Q_TOK, Q_ATT_LAYER, Q_L = 1258136.0, 4 * 660.1, 36
+
+
+def qwen_model(d):
+    """Qwen3-8B TP4 T8192 on HBM (pathfinding): per die per layer 2 KV heads x (QK, PV), 4 q heads per KV head on 4 SM x
+    columns.  Busiest SM: QK op 256 rows a head, PV 2 ops x 128 tokens a head (4 token streams each).
+    publish MODEL 8 words/cycle: an op leaves 4 streams x 128 dims x 4 heads = 2048 words; merge MODEL as DS (SU, 512 lanes):
+    256 nodes x (128 dims x 4 heads) per KV head; 'smerge' variant merges the 4 stream nodes inside the SM first (lever)."""
+    validate_evidence(d, "qwen8192")
+    qk = max(o["cycles"]["span"] for o in d["ops"] if o["kind"] == "qk")
+    pv = max(o["cycles"]["span"] for o in d["ops"] if o["kind"] == "pv")
+    res = dict(measured=dict(qk_op=qk, pv_op=pv))
+
+    def merge(nodes, words):
+        c, n = 0, nodes
+        while n > 1:
+            c += math.ceil((n // 2) * words / 512) + 16
+            n = math.ceil(n / 2)
+        return c
+    for var, pub, nodes in (("streams_published", 2 * 2048 / 8, 256), ("smerge", 2 * 512 / 8, 64)):
+        for pf in (False, True):
+            fa = FA - (FIRST if pf else 0)
+            layer = 2 * (fa + qk) + 2 * (fa + 2 * pv + pub + merge(nodes, 512))
+            tok = Q_TOK + Q_L * (layer - Q_ATT_LAYER)
+            res[f"{var}_{'prefetch' if pf else 'exposed'}"] = dict(layer=round(layer, 1), a_layer=Q_ATT_LAYER,
+                tok_s=round(CLK / tok, 1), vs_A=round(Q_TOK / tok - 1, 4))
+    return res
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("ds640")
     ap.add_argument("ds128")
+    ap.add_argument("--qwen", help="qwen8192 bench JSON (Qwen3-8B TP4 on HBM, pathfinding)")
     ap.add_argument("--out")
     a = ap.parse_args()
     d640, d128 = json.load(open(a.ds640)), json.load(open(a.ds128))
+    validate_evidence(d640, "ds640")
+    validate_evidence(d128, "ds128")
 
     def span(d, prefix):
         return max(o["cycles"]["span"] for o in d["ops"] if o["name"].startswith(prefix))
 
-    comp = {640: dict(qk=span(d640, "qk8") + span(d640, "qk4"), pv=span(d640, "pv")),
-            128: dict(qk=span(d128, "qk8"), pv=span(d128, "pv"))}
+    def qk(d):          # one mixed-format QK op a SM (qk_sm*), or the older split qk8 + qk4 runs (serial)
+        if any(o["name"].startswith("qk_sm") for o in d["ops"]):
+            return span(d, "qk_sm")
+        return sum(span(d, p) for p in ("qk8", "qk4") if any(o["name"].startswith(p) for o in d["ops"]))
+
+    comp = {640: dict(qk=qk(d640), pv=span(d640, "pv")), 128: dict(qk=qk(d128), pv=span(d128, "pv"))}
     nodes = {640: sum(1 for o in d640["ops"] if o["kind"] == "pv"), 128: sum(1 for o in d128["ops"] if o["kind"] == "pv")}
     PUB = 64
-    out = dict(measured_comp=comp, pv_nodes=nodes, model_terms=dict(fa=FA, first_access=FIRST, publish=PUB,
+    out = dict(scope="component spans measured; first access, dispatch, publish and cross-SM merge modeled",
+               native_sm_integration_qualified=False, physical_closure_qualified=False, measured_comp=comp, pv_nodes=nodes, model_terms=dict(fa=FA, first_access=FIRST, publish=PUB,
                merge={T: merge_cycles(nodes[T]) for T in nodes}))
+    out["throughput_qualified"] = False
+    out["rate_scope"] = "conditional computation estimate at component8/11 line cadence; actual32SM PC service and KV4 byte expansion not priced"
+    # KV layout as measured: since 078967c11 the converter reads the CANONICAL packed rows (KV8 528 B, KV4 288 B) from the
+    # contiguous line stream; the bench's line count is the canonical byte count / 136 (no 544-B expansion).
+    lines = {o["name"]: o["cycles"]["lines"] for o in d640["ops"] if "cycles" in o}
+    out["kv_layout"] = dict(kv8_row_bytes=528, kv4_row_bytes=288, measured_lines_busiest=dict(
+        qk=max((v for k, v in lines.items() if k.startswith("qk")), default=None),
+        pv=max((v for k, v in lines.items() if k.startswith("pv")), default=None)),
+        note="spans include the line stream at the bench cadence (8 lines / 11 cycles per SM); actual 32-SM PC service cadence not yet qualified")
     for pf in (False, True):
         delta = 0.0
         rec = {}
@@ -72,6 +132,8 @@ def main():
     kvw = 6 * 40 * 30
     out["extra_kv_writes"] = dict(stores_per_token=6 * 40, dma_busy_added=kvw,
                                   critical_path_upper_bound_tok_s=round(CLK / (out["exposed"]["token_cycles"] + kvw), 1))
+    if a.qwen:
+        out["qwen"] = qwen_model(json.load(open(a.qwen)))
     s = json.dumps(out, indent=1)
     print(s)
     if a.out:

@@ -23,7 +23,7 @@ elif [ "$LEAF" = scatter ] && [ "$CASE" = address ];then define=-DOT_VM_DIRECT_S
 elif [ "$LEAF" = scatter ] && [ "$CASE" = valid ];then define=-DOT_VM_DIRECT_SCATTER_MUT_VALID
 elif [ "$CASE" != base ];then echo 'unknown actualDUT mutation';exit 2
 fi
-iverilog -g2012 $define -s tb_dsfd_vm_static_direct_scatter -o "$O/tb" "$S/vm/dsfd_vm_static_scatter.sv" "$CAP" "$SCAT" "$S/test/tb_dsfd_vm_static_direct_scatter.sv" > "$O/build.log" 2>&1
+iverilog -g2012 $define -Ptb_dsfd_vm_static_direct_scatter.PIPE=${PIPE:-0} -s tb_dsfd_vm_static_direct_scatter -o "$O/tb" "$S/vm/dsfd_vm_static_scatter.sv" "$CAP" "$SCAT" "$S/test/tb_dsfd_vm_static_direct_scatter.sv" > "$O/build.log" 2>&1
 rc=0
 vvp "$O/tb" +mode="$MODE" > "$O/run.log" 2>&1 || rc=$?
 cat "$O/run.log"

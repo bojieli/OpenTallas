@@ -413,7 +413,8 @@ def claim_ram(spec):
     return sized_ram(spec, spec.get("peak_ram_gb", 32))
 
 
-def sized_ram(spec, ram):
+def measured_peak_gb(spec):
+    """Largest recorded actual process peak for this block class, or zero if unknown."""
     p = Path(__file__).resolve().parent / "measured_peaks.json"
     try:
         mt = p.stat().st_mtime
@@ -422,7 +423,12 @@ def sized_ram(spec, ram):
         m = _MEASURED_PEAKS[1].get(measured_block(spec.get("name", "")))
         peak = float(m["peak_gb"]) if m else 0
     except (OSError, ValueError, KeyError, TypeError, AttributeError):
-        return ram
+        return 0
+    return peak if math.isfinite(peak) and peak > 0 else 0
+
+
+def sized_ram(spec, ram):
+    peak = measured_peak_gb(spec)
     if spec.get("measured_ram", True) is False or peak <= 0 or not isinstance(ram, (int, float)) or ram < 2 * peak:
         return ram
     return math.ceil(max(1.25 * peak, peak + 4))
@@ -3190,6 +3196,11 @@ def launch_stage(j, st, cmd):
         # calibrate runs in parallel: the IO SDC the calibrate stage would have generated is made here from the
         # assumed (or, on a re-route, measured) insertion in calib.env
         cmd = f"( {j['ctrack']['sdc_cmd']} ) || exit 5\n" + cmd
+    if j.get("export_lint_recovery") and st["key"] == "collect":
+        from export_lint_recovery import stage_script
+        before, after = stage_script(j["export_lint_recovery"], j.get("stage_source", j["run"] + "/src"))
+        env += before
+        cmd = f"( {cmd} )\n_ot_export_rc=$?\n{after}exit $_ot_export_rc\n"
     cmd = tt_overlay_fallback(cmd)
     body = f"#!/bin/bash\n# closure-loop {j['name']} stage {st['key']} attempt {j['attempt']}\nset -o pipefail\n{env}{subst(cmd, j)}\n"
     run = j["run"]
@@ -3700,6 +3711,8 @@ def publish(j, metrics):
                        checks=j.get("checks", {}), submit_checks=j.get("submit_checks"), calibration=j.get("calibration"), route_overlay_plan=j.get("route_overlay_plan"), cycles_added=spec.get("cycles_added"), status="CLOSED",
                        closed_at=now_iso(), job_spec=spec, io_budget=(j.get("rebudget") or {}).get("rb") or "link_budget_consistent (fixed split)",
                        rebudget=j.get("rebudget"))
+        if j.get("export_lint_recovery"):
+            verdict["export_lint_recovery"] = j["export_lint_recovery"]
         (cwt / rec_dir / "verdict.json").write_text(json.dumps(verdict, indent=1) + "\n")
         git("add", "--sparse", "--", *tos, cwd=cwt)
         staged = sh(["git", "-C", str(cwt), "diff", "--cached", "--name-only"], timeout=120).stdout.split()
@@ -5818,13 +5831,29 @@ def eco_post_sdcs(j, m, what="ECO"):
     return post_sdcs
 
 
+def hold_eco_resources(j):
+    """Size from the completed route and recorded block class, with an 8 GB ECO floor.
+
+    Small retained routes need not claim the old universal 32 GB (and 200 GB
+    disk floor). Larger or unknown routes keep at least that legacy request;
+    no ECO may underclaim its effective route request or a known class peak.
+    """
+    route = next((st for st in stage_list(j["spec"]) if st["kind"] == "route"), None)
+    route_ram = route["ram"] if route else claim_ram(j["spec"])
+    peak = measured_peak_gb(j["spec"])
+    measured = math.ceil(max(1.25 * peak, peak + 4)) if peak else 0
+    ram = math.ceil(max(8, route_ram, measured))
+    return 8, max(32, ram) if ram > LIGHT_STAGE_RAM_GB else ram
+
+
 def start_hold_eco(j, fleet, m):
     rb, ob = eco_paths(j, m)
     if not rb:
         return False
-    ok, why = fleet.fits(j["host"], 8, 32)
+    threads, ram = hold_eco_resources(j)
+    ok, why = fleet.fits(j["host"], threads, ram)
     if not ok:
-        event(j, f"hold ECO waiting for capacity: {why}")
+        event(j, f"hold ECO waiting for capacity ({threads} threads / {ram} GB): {why}")
         return True            # stays at the verdict stage; the next tick retries
     v, he = j["spec"].get("verdict", {}), j["spec"].get("hold_eco") or {}
     # rev 2 (2026-10-07): post-route hold goal +18 (coordinator: die-context margin over the +15 line), endpoint filter, sign-off-exact constraints per corner,
@@ -5834,7 +5863,7 @@ def start_hold_eco(j, fleet, m):
           f"HM={he.get('hold_margin_ps', 18)} SM={he.get('setup_margin_ps', 40)} FILT={he.get('setup_filter_ps', 40)} " \
           f"PASSES={he.get('passes', 2)} RESAWARE={int(he.get('resistance_aware', True))} HOLDCELLS={int(he.get('hold_cells', True))} " \
           f"ACC_SS={SS_MIN} ACC_FF={FF_MIN} SETUP_LIB={SETUP_LIB} KEEPCLK={he.get('keep_clock', 0)} BUF={he.get('max_buffer_percent', 30)} " \
-          f"MACROS={shlex.quote(' '.join(verdict_macros(j)))} THREADS=8"
+          f"MACROS={shlex.quote(' '.join(verdict_macros(j)))} THREADS={threads}"
     keepwires = bool(he.get("keep_wires") or j.get("auto_react_keepwires"))
     if keepwires:
         # LOOP-AUTO class a: narrow re-route -- every net the ECO did not touch keeps its detailed wires (hold_eco.sh
@@ -5866,9 +5895,9 @@ def start_hold_eco(j, fleet, m):
     ship_helpers(j["host"], j["run"], j)
     j["eco"] = dict(tried=True, rb=rb, ob=ob, out=out, post_sdc=post_sdcs, sdc_name=m.get("sdc_name") or "6_final.sdc",
                     setup_post_sdc=list(m.get("setup_post_sdc") or []), pre=dict(ss_ps=m["ss_ps"], ff_ps=m["ff_ps"]), started=now_iso(),
-                    keepwires=keepwires)
-    st = dict(key="hold_eco", kind="hold_eco", threads=8, ram=32)
-    launch_token = fleet.reserve_launch(j["host"], 8, 32)
+                    keepwires=keepwires, resources=dict(threads=threads, ram=ram))
+    st = dict(key="hold_eco", kind="hold_eco", threads=threads, ram=ram)
+    launch_token = fleet.reserve_launch(j["host"], threads, ram)
     try:
         launch_stage(j, st, cmd)
     finally:
@@ -6838,6 +6867,17 @@ def closure_on_main(j, ev):
     return j["name"] in ev["files"] or j["name"] in ev["recs"]
 
 
+def collect_crash_after_closed_verdict(j):
+    """ROOT 2026-10-15 (peer review 11:00): a route that finished and was judged CLOSED, then stopped NEEDS_HUMAN in
+    collect / export / record (30 S81 fill routes, collect crashed twice on a child_lint bug; 17 run dirs were released
+    or deleted before the lint fix), is evidence awaiting re-collection (retry --at collect): never deep-released while
+    it stays there.  Cancelling the job or a successful re-collect ends the retention."""
+    if j.get("status") != "NEEDS_HUMAN" or j.get("stage_key") not in ("collect", "export", "record"):
+        return False
+    ev = " ".join(j.get("events") or [])
+    return "route done (rc=0)" in ev and "-> CLOSED" in ev
+
+
 def deep_release_mode(j, closed, ev, now=None):
     """closed | fail | nearmiss | None (keep) for one job (DEEP RELEASE)"""
     if j.get("deep_released") or not j.get("host") or not j.get("run") or j["status"] not in TERMINAL:
@@ -6853,6 +6893,8 @@ def deep_release_mode(j, closed, ev, now=None):
             return "closed" if closure_on_main(j, ev) else None
         return "fail"                                   # revoked closure: a failure on its element
     if j["status"] not in DEEP_RELEASE_FAIL:
+        return None
+    if collect_crash_after_closed_verdict(j):
         return None
     if near_miss(j, closed) or (j.get("near_miss_retained") and j["spec"].get("block") not in closed):
         return "nearmiss"
@@ -8490,6 +8532,28 @@ def cmd_recover_eco_overlays(a):
 
 
 @locked_job_command
+def cmd_recover_export_lint(a):
+    """Attach an explicit main-pinned lint-only recovery, leaving retry to the operator."""
+    import base64
+    from export_lint_recovery import eligible
+    j = load_job(a.name)
+    eligible(j)
+    head = _ovl_head()
+    rel = "tools/hier_contract/child_lint.py"
+    data = subprocess.run(["git", "-C", str(REPO), "show", f"{head}:{rel}"],
+                          capture_output=True, check=True).stdout
+    request = dict(job=j, helper_commit=head, helper_b64=base64.b64encode(data).decode(),
+                   helper_sha256=hashlib.sha256(data).hexdigest(),
+                   guard_b64=base64.b64encode((HERE / "export_lint_recovery.py").read_bytes()).decode())
+    r = ssh(j["host"], "python3 - prepare " + shlex.quote(json.dumps(request)),
+            input=(HERE / "export_lint_recovery.py").read_text(), timeout=120, check=True)
+    j["export_lint_recovery"] = dict(json.loads(r.stdout), requested=now_iso())
+    event(j, f"explicit collect-only lint recovery pinned to main {head}; frozen helpers and route retained")
+    save_job(j)
+    print(json.dumps(j["export_lint_recovery"]))
+
+
+@locked_job_command
 def cmd_restore_cancelled(a):
     """Recover pre-lock cancellation lost to a stale save. Never stop remote work."""
     j = load_job(a.name)
@@ -8546,6 +8610,7 @@ def main():
     ks.add_argument("--orfs")
     rc = sub.add_parser("restore-cancelled"); rc.add_argument("name")
     er = sub.add_parser("recover-eco-overlays"); er.add_argument("name")
+    el = sub.add_parser("recover-export-lint"); el.add_argument("name")
     mg = sub.add_parser("migrate"); mg.add_argument("name"); mg.add_argument("host")
     a = ap.parse_args()
     if a.cmd == "daemon":
@@ -8579,6 +8644,8 @@ def main():
         cmd_hold_stop(a)
     elif a.cmd == "recover-eco-overlays":
         cmd_recover_eco_overlays(a)
+    elif a.cmd == "recover-export-lint":
+        cmd_recover_export_lint(a)
     elif a.cmd == "restore-cancelled":
         cmd_restore_cancelled(a)
     elif a.cmd == "migrate":     # executed by the daemon at its next tick (no race with the job's poller)

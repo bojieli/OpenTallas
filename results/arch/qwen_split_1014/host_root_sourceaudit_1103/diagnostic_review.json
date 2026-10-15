@@ -1,0 +1,126 @@
+{
+  "schema": "opentallas.qwen-host-root-source-diagnostic-review.v1",
+  "source_revision": "96967cee695fc14158e28367a0dbae641cd86141",
+  "source_sha256": {
+    "rtl/qwen_sys/split_20261014/qkd_host_root_pt.sv": "bed22a0c8c28d5ac18f5c3785c21c40c1efc8e430165244f18bfb10363f98294",
+    "rtl/qwen_sys/host_integrated_20261014/qkd_host_control_packet_observed.sv": "ec55a81b675965f7b5756b142ad95f11ad2730c4ead8c0d8f3c37015aa1d19cb",
+    "rtl/qwen_sys/host_integrated_20261014/qkd_host_control_prompt_observed.sv": "26a63ddbd0981328e912e6244e78252b45a709924ad4df5589cbbb3fbfbbb529",
+    "rtl/qwen_sys/host_integrated_20261014/qkd_host_fullcontrol_observed.sv": "8933aa0acd8aee6f578879512c95bba9b5f511bafd5eb6b35338c7d82c3fa3eb",
+    "rtl/qwen_sys/host_integrated_20261014/ot_host_if_pb2_observed.sv": "f2d98d8e3cdef955e0049bff5d0323b76df6c07c5de62dd4fa1dd64134d2a32d",
+    "rtl/qwen_sys/host_20261013/qkd_host_native_engine.sv": "1540cea1b3687b179edbffb6c690985f24c6bd7dcc115b8214e2f6a3e9925564",
+    "rtl/qwen_sys/host_20261013/qkd_host_service_guard.sv": "4cf2002bf0feb8f315598827eab527799289c9ae5f68fc52e91e9e188a6f7045"
+  },
+  "no_source_edits": true,
+  "status": "CLASSIFIED_LIMITED_WARNINGS_NOT_FUNCTIONAL_QUALIFICATION",
+  "findings": [
+    {
+      "kind": "SELRANGE",
+      "source": "rtl/qwen_sys/host_integrated_20261014/ot_host_if_pb2_observed.sv",
+      "line": 374,
+      "expression": "q_max = (FMT != 0) ? NW'(dsc0[63:48]) : dsc0[48 +: NW]",
+      "classification": "inactive legacy-format alternative exceeds descriptor64 when NW18; active source selected FMT1 branch is legal16-bit slice cast to18",
+      "evidence": [
+        {
+          "path": "rtl/qwen_sys/host_integrated_20261014/qkd_host_fullcontrol_observed.sv",
+          "line": 8,
+          "detail": "MUT_FMT default0"
+        },
+        {
+          "path": "rtl/qwen_sys/host_integrated_20261014/qkd_host_fullcontrol_observed.sv",
+          "line": 11,
+          "detail": "NW default18"
+        },
+        {
+          "path": "rtl/qwen_sys/host_integrated_20261014/qkd_host_fullcontrol_observed.sv",
+          "line": 152,
+          "detail": "actual host instance FMT(MUT_FMT?0:1)"
+        },
+        {
+          "path": "rtl/qwen_sys/host_integrated_20261014/qkd_host_control_prompt_observed.sv",
+          "line": 98,
+          "detail": "fullcontrol instance does not override MUT_FMT or NW"
+        }
+      ],
+      "functional_output": true,
+      "source_fix_required_for_selected_profile": false,
+      "limit": "No support claimed for legacy FMT0 NW18; no executed HOST payload proof"
+    },
+    {
+      "kind": "MULTIDRIVEN",
+      "source": "rtl/qwen_sys/host_20261013/qkd_host_native_engine.sv",
+      "declarations": [
+        798,
+        799
+      ],
+      "driver_line": 835,
+      "signals": [
+        "ck_q[0:15]",
+        "cv_q[0:15]"
+      ],
+      "classification": "different clocks drive distinct unpacked-array elements; generated gb selects one unique element per driver",
+      "evidence": "for(gb=0;gb<16;gb=gb+1) always@(posedge clk_bank[gb/8]) ck_q[gb]<=mko[gb]; cv_q[gb]<=mvo[gb]",
+      "functional_output": true,
+      "source_fix_required_for_selected_profile": false,
+      "limit": "Does not qualify CDC relationships or macro phase/native timing"
+    },
+    {
+      "kind": "PINMISSING",
+      "source": "rtl/qwen_sys/split_20261014/qkd_host_root_pt.sv",
+      "line": 129,
+      "ports": [
+        "begin_v",
+        "begin_epoch",
+        "begin_cr",
+        "begin_available",
+        "epoch_busy",
+        "startup_allowed"
+      ],
+      "direction": "output",
+      "classification": "parent-unread output copies; functional connections are internal to actual control composition",
+      "evidence": [
+        {
+          "path": "rtl/qwen_sys/host_integrated_20261014/qkd_host_control_packet_observed.sv",
+          "line": 97,
+          "detail": "control prompt outputs connected to composition-local wires"
+        },
+        {
+          "path": "rtl/qwen_sys/host_integrated_20261014/qkd_host_control_packet_observed.sv",
+          "line": 176,
+          "detail": "packet startup_allowed input uses composition-local wire"
+        },
+        {
+          "path": "rtl/qwen_sys/host_integrated_20261014/qkd_host_control_packet_observed.sv",
+          "line": 177,
+          "detail": "packet begin_v/begin_epoch/begin_cr/begin_available connected internally"
+        },
+        {
+          "path": "rtl/qwen_sys/host_integrated_20261014/qkd_host_fullcontrol_observed.sv",
+          "line": 179,
+          "detail": "prompt begin_block(epoch_busy),epoch_fault(begin_fault)"
+        },
+        {
+          "path": "rtl/qwen_sys/host_integrated_20261014/qkd_host_fullcontrol_observed.sv",
+          "line": 204,
+          "detail": "epoch_busy/startup_allowed used in actual control"
+        }
+      ],
+      "source_fix_required_for_selected_profile": false
+    },
+    {
+      "kind": "PINMISSING",
+      "source": "rtl/qwen_sys/split_20261014/qkd_host_root_pt.sv",
+      "line": 186,
+      "ports": [
+        "groups"
+      ],
+      "direction": "output",
+      "classification": "unused typed guard grouping observation; status/fault paths remain connected",
+      "source_fix_required_for_selected_profile": false
+    }
+  ],
+  "remaining": [
+    "201 width diagnostics and6 CASEINCOMPLETE retained in raw log; this bounded review does not waive them",
+    "Deferred Yosys hierarchy frontend not yet run",
+    "No mapped area/frame/physical timing/native execution claim"
+  ]
+}

@@ -34,7 +34,7 @@ module ot_qwen_d2d_recovery #(
     output wire       phy_rst_n,      // own PHY reset
     output reg        epoch_begin,
     output reg  [7:0] epoch,
-    output wire       link_up,
+    output reg        link_up,        // registered (pin flop): PHY tx_up is on the N face, HOST status on E (gate reach)
     output wire       links_drained,
     output wire       link_reset_seen,
     output wire       retrained,
@@ -54,17 +54,17 @@ module ot_qwen_d2d_recovery #(
     assign link_reset_seen = seen;
     assign retrained = (st == S_READY);
     assign recovering = (st != S_RUN);
-    assign link_up = p_tx_up && (st == S_RUN) && !abort;
     wire begin_now = MASTER ? eq[BUMP-1] : fq[BUMP-1];
     always @(posedge ck or negedge por_n)
         if (!por_n) begin epoch <= 8'd0; end
         else if (epoch_begin) epoch <= epoch + 8'd1;
     always @(posedge ck or negedge rst_n) begin
         if (!rst_n) begin
-            st <= S_RUN; n <= 0; seen <= 0; lrst <= 0; fep <= 0; eq <= 0; fq <= 0; epoch_begin <= 0; bq <= 0;
+            st <= S_RUN; n <= 0; seen <= 0; lrst <= 0; fep <= 0; eq <= 0; fq <= 0; epoch_begin <= 0; bq <= 0; link_up <= 0;
             transport_fault <= 0; counting <= 0; recovery_cycles <= 0;
         end else begin
             fep <= 1'b0; epoch_begin <= begin_now; bq <= boot_begin;
+            link_up <= p_tx_up && (st == S_RUN) && !abort;   // = the former combinational level, one edge later
             eq <= {eq, fep}; fq <= {fq, fwd_epoch_i};
             if (counting) recovery_cycles <= recovery_cycles + 1;
             if (begin_now) begin st <= S_RUN; seen <= 0; counting <= 0; transport_fault <= 0; end

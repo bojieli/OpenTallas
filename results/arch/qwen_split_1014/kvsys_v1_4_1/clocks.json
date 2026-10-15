@@ -1,0 +1,592 @@
+{
+ "schema": "opentallas.qwen_kvsys_clocks.v1",
+ "sinks": 15658,
+ "domains": {
+  "hclk_WN": 33,
+  "stream": 15504,
+  "hclk_WS": 33,
+  "hclk_EN": 33,
+  "hclk_ES": 33,
+  "host": 7,
+  "ingest": 4,
+  "phy": 11
+ },
+ "source_periods_ps": {
+  "hclk_WN": 1024.0,
+  "stream": 833.334,
+  "hclk_WS": 1024.0,
+  "hclk_EN": 1024.0,
+  "hclk_ES": 1024.0,
+  "host": 1000.0,
+  "ingest": 1666.668,
+  "phy": 1043.0
+ },
+ "period_source": "qkd_pll_analog_model real half-periods; no implicit domain fallback",
+ "measured": {
+  "qkd_cdc_wleaf": {
+   "view": "physical/ref_tile/qkd_cdc_wleaf_ref/views/qkd_cdc_wleaf",
+   "R_ps": {
+    "tt": {
+     "hclk[0]": 252.4,
+     "clk[0]": 220.5
+    },
+    "ff": {
+     "hclk[0]": 206.3,
+     "clk[0]": 181.0
+    },
+    "ss": {
+     "hclk[0]": 329.5,
+     "clk[0]": 287.6
+    }
+   }
+  },
+  "qkd_kvwq_leaf_s_w129_m": {
+   "view": "physical/ref_tile/qkd_kvwq_leaf_s_w129_m/views/qkd_kvwq_leaf_s_w129_m",
+   "R_ps": {
+    "tt": {
+     "ck[0]": 169.5
+    },
+    "ff": {
+     "ck[0]": 142.9
+    },
+    "ss": {
+     "ck[0]": 212.6
+    }
+   }
+  },
+  "qkd_kvwq_ctl_bin": {
+   "view": "physical/ref_tile/qkd_kvwq_ctl_bin/views/qkd_kvwq_ctl_bin",
+   "R_ps": {
+    "tt": {
+     "ck[0]": 199.8
+    },
+    "ff": {
+     "ck[0]": 165.7
+    },
+    "ss": {
+     "ck[0]": 256.1
+    }
+   }
+  },
+  "ot_qkh_head_frontq_native": {
+   "view": "physical/ref_tile/qkh_r4_frontq_1014/views/ot_qkh_head_frontq_native",
+   "R_ps": {
+    "tt": {
+     "clk": 151.0,
+     "clk[0]": 151.0
+    },
+    "ff": {
+     "clk": 124.7,
+     "clk[0]": 124.7
+    },
+    "ss": {
+     "clk": 195.0,
+     "clk[0]": 195.0
+    }
+   }
+  },
+  "ot_qkh_head_nb_native": {
+   "view": "physical/ref_tile/qkh_r3_nb_1014/views/ot_qkh_head_nb_native",
+   "R_ps": {
+    "tt": {
+     "clk": 51.1,
+     "clk[0]": 51.1
+    },
+    "ff": {
+     "clk": 38.9,
+     "clk[0]": 38.9
+    },
+    "ss": {
+     "clk": 72.5,
+     "clk[0]": 72.5
+    }
+   }
+  },
+  "ot_qkh_head_score4_native": {
+   "view": "physical/ref_tile/qkh_r4_score4_1014/views/ot_qkh_head_score4_native",
+   "R_ps": {
+    "tt": {
+     "clk": 49.9,
+     "clk[0]": 49.9
+    },
+    "ff": {
+     "clk": 38.4,
+     "clk[0]": 38.4
+    },
+    "ss": {
+     "clk": 69.7,
+     "clk[0]": 69.7
+    }
+   }
+  },
+  "ot_qkh_head_stin_native": {
+   "view": "physical/ref_tile/qkh_r3_stin_1014/views/ot_qkh_head_stin_native",
+   "R_ps": {
+    "tt": {
+     "clk": 100.3,
+     "clk[0]": 100.3
+    },
+    "ff": {
+     "clk": 76.7,
+     "clk[0]": 76.7
+    },
+    "ss": {
+     "clk": 142.9,
+     "clk[0]": 142.9
+    }
+   }
+  },
+  "ot_qkh_head_stk_native": {
+   "view": "physical/ref_tile/qkh_r3_stk_1014/views/ot_qkh_head_stk_native",
+   "R_ps": {
+    "tt": {
+     "clk": 53.1,
+     "clk[0]": 53.1
+    },
+    "ff": {
+     "clk": 40.6,
+     "clk[0]": 40.6
+    },
+    "ss": {
+     "clk": 75.0,
+     "clk[0]": 75.0
+    }
+   }
+  },
+  "ot_qkh_ktree": {
+   "view": "physical/ref_tile/ot_qkh_ktree_m5/views/ot_qkh_ktree",
+   "R_ps": {
+    "tt": {
+     "clk": 183.4,
+     "clk[0]": 183.4
+    },
+    "ff": {
+     "clk": 150.0,
+     "clk[0]": 150.0
+    },
+    "ss": {
+     "clk": 239.7,
+     "clk[0]": 239.7
+    }
+   }
+  },
+  "ot_qkh_lane8": {
+   "view": "physical/ref_tile/ot_qkh_lane8_m5/views/ot_qkh_lane8",
+   "R_ps": {
+    "tt": {
+     "clk": 180.9,
+     "clk[0]": 180.9
+    },
+    "ff": {
+     "clk": 147.8,
+     "clk[0]": 147.8
+    },
+    "ss": {
+     "clk": 237.5,
+     "clk[0]": 237.5
+    }
+   }
+  },
+  "qkd_ctrl_kc": {
+   "view": "physical/ref_tile/qkd_ctrl_kc/views/qkd_ctrl_kc",
+   "R_ps": {
+    "tt": {
+     "ck": 84.0,
+     "ck[0]": 84.0,
+     "pll_hbm": 78.2,
+     "pll_hbm[0]": 78.2
+    },
+    "ff": {
+     "ck": 67.0,
+     "ck[0]": 67.0,
+     "pll_hbm": 60.3,
+     "pll_hbm[0]": 60.3
+    },
+    "ss": {
+     "ck": 114.5,
+     "ck[0]": 114.5,
+     "pll_hbm": 103.7,
+     "pll_hbm[0]": 103.7
+    }
+   }
+  },
+  "qkd_ctrl_pc": {
+   "view": "physical/ref_tile/qkd_ctrl_pc/views/qkd_ctrl_pc",
+   "R_ps": {
+    "tt": {
+     "ck": 217.1,
+     "ck[0]": 217.1,
+     "pll_hbm": 231.2,
+     "pll_hbm[0]": 231.2
+    },
+    "ff": {
+     "ck": 181.1,
+     "ck[0]": 181.1,
+     "pll_hbm": 188.5,
+     "pll_hbm[0]": 188.5
+    },
+    "ss": {
+     "ck": 275.0,
+     "ck[0]": 275.0,
+     "pll_hbm": 303.4,
+     "pll_hbm[0]": 303.4
+    }
+   }
+  },
+  "qkd_ectl_a_tp8_epoch_direct": {
+   "view": "physical/ref_tile/qkd_ectl_a_tp8_direct/views/qkd_ectl_a_tp8_epoch_direct",
+   "R_ps": {
+    "tt": {
+     "ck": 375.3,
+     "ck[0]": 375.3
+    },
+    "ff": {
+     "ck": 301.6,
+     "ck[0]": 301.6
+    },
+    "ss": {
+     "ck": 496.0,
+     "ck[0]": 496.0
+    }
+   }
+  },
+  "qkd_ectl_b_tp8_direct": {
+   "view": "physical/ref_tile/qkd_ectl_b_tp8_direct/views/qkd_ectl_b_tp8_direct",
+   "R_ps": {
+    "tt": {
+     "ck": 438.4,
+     "ck[0]": 438.4
+    },
+    "ff": {
+     "ck": 350.8,
+     "ck[0]": 350.8
+    },
+    "ss": {
+     "ck": 581.1,
+     "ck[0]": 581.1
+    }
+   }
+  },
+  "qkd_ectl_c_tp8_direct": {
+   "view": "physical/ref_tile/qkd_ectl_c_tp8_direct/views/qkd_ectl_c_tp8_direct",
+   "R_ps": {
+    "tt": {
+     "ck": 197.3,
+     "ck[0]": 197.3
+    },
+    "ff": {
+     "ck": 162.5,
+     "ck[0]": 162.5
+    },
+    "ss": {
+     "ck": 256.3,
+     "ck[0]": 256.3
+    }
+   }
+  }
+ },
+ "assumed_ideal": [
+  "ot_qfd_serdes_112g_x12_phy",
+  "ot_qkvd_ucie_x64_phy",
+  "qkd_ahub",
+  "qkd_astk",
+  "qkd_astk_n",
+  "qkd_d2ds",
+  "qkd_embgw",
+  "qkd_hbm3e_phy_pc",
+  "qkd_host_rt",
+  "qkd_hslice",
+  "qkd_hslice_dn",
+  "qkd_land",
+  "qkd_land_n",
+  "qkd_rly_1",
+  "qkd_rly_1025",
+  "qkd_rly_1048",
+  "qkd_rly_13",
+  "qkd_rly_17",
+  "qkd_rly_2",
+  "qkd_rly_2089",
+  "qkd_rly_21",
+  "qkd_rly_284",
+  "qkd_rly_289",
+  "qkd_rly_291",
+  "qkd_rly_293",
+  "qkd_rly_32",
+  "qkd_rly_33",
+  "qkd_rly_36",
+  "qkd_rly_520",
+  "qkd_rly_521",
+  "qkd_rly_540",
+  "qkd_rly_563",
+  "qkd_rly_93",
+  "qkd_seq"
+ ],
+ "per_child_entries": {
+  "qkd_ectl": [
+   "ck_a",
+   "ck_b",
+   "ck_c"
+  ],
+  "qkd_rhead": [
+   "ck_f0",
+   "ck_f1",
+   "ck_f2",
+   "ck_f3",
+   "ck_k",
+   "ck_s",
+   "ck_i0",
+   "ck_i1",
+   "ck_i2",
+   "ck_i3",
+   "ck_i4",
+   "ck_i5",
+   "ck_i6",
+   "ck_i7",
+   "ck_i8",
+   "ck_i9",
+   "ck_i10",
+   "ck_i11",
+   "ck_i12",
+   "ck_i13",
+   "ck_i14",
+   "ck_i15",
+   "ck_t0",
+   "ck_t1",
+   "ck_t2",
+   "ck_t3",
+   "ck_t4",
+   "ck_t5",
+   "ck_t6",
+   "ck_t7",
+   "ck_t8",
+   "ck_t9",
+   "ck_t10",
+   "ck_t11",
+   "ck_t12",
+   "ck_t13",
+   "ck_t14",
+   "ck_t15",
+   "ck_a0",
+   "ck_a1",
+   "ck_a2",
+   "ck_a3",
+   "ck_a4",
+   "ck_a5",
+   "ck_a6",
+   "ck_a7",
+   "ck_a8",
+   "ck_a9",
+   "ck_a10",
+   "ck_a11",
+   "ck_a12",
+   "ck_a13",
+   "ck_a14",
+   "ck_a15",
+   "ck_b0",
+   "ck_b1",
+   "ck_b2",
+   "ck_b3",
+   "ck_b4",
+   "ck_b5",
+   "ck_b6",
+   "ck_b7",
+   "ck_b8",
+   "ck_b9",
+   "ck_b10",
+   "ck_b11",
+   "ck_b12",
+   "ck_b13",
+   "ck_b14",
+   "ck_b15",
+   "ck_l0",
+   "ck_l1",
+   "ck_l2",
+   "ck_l3",
+   "ck_l4",
+   "ck_l5",
+   "ck_l6",
+   "ck_l7",
+   "ck_l8",
+   "ck_l9",
+   "ck_l10",
+   "ck_l11",
+   "ck_l12",
+   "ck_l13",
+   "ck_l14",
+   "ck_l15"
+  ],
+  "qkd_ahub": [
+   "ck_c",
+   "ck_z0",
+   "ck_z1",
+   "ck_z2",
+   "ck_z3",
+   "ck_r",
+   "ck_p0",
+   "ck_p1",
+   "ck_p2",
+   "ck_p3",
+   "ck_v0",
+   "ck_v1",
+   "ck_v2",
+   "ck_v3"
+  ],
+  "qkd_land": [
+   "ck_p0",
+   "ck_p1",
+   "ck_p2",
+   "ck_p3",
+   "ck_p4",
+   "ck_p5",
+   "ck_p6",
+   "ck_p7",
+   "ck_p8",
+   "ck_p9",
+   "ck_p10",
+   "ck_p11",
+   "ck_p12",
+   "ck_p13",
+   "ck_p14",
+   "ck_p15",
+   "ck_p16",
+   "ck_p17",
+   "ck_p18",
+   "ck_p19",
+   "ck_p20",
+   "ck_p21",
+   "ck_p22",
+   "ck_p23",
+   "ck_p24",
+   "ck_p25",
+   "ck_p26",
+   "ck_p27",
+   "ck_p28",
+   "ck_p29",
+   "ck_p30",
+   "ck_p31",
+   "ck_g0",
+   "ck_g1",
+   "ck_g2",
+   "ck_g3",
+   "ck_g4",
+   "ck_g5",
+   "ck_g6",
+   "ck_g7",
+   "ck_e",
+   "ck_r"
+  ],
+  "qkd_astk": [
+   "ck_c",
+   "ck_z0",
+   "ck_z1",
+   "ck_z2",
+   "ck_z3",
+   "ck_v0",
+   "ck_v1",
+   "ck_v2",
+   "ck_v3",
+   "ck_v4",
+   "ck_v5",
+   "ck_v6",
+   "ck_v7",
+   "ck_v8",
+   "ck_v9",
+   "ck_v10",
+   "ck_v11",
+   "ck_v12",
+   "ck_v13",
+   "ck_v14",
+   "ck_v15",
+   "ck_v16",
+   "ck_v17",
+   "ck_v18",
+   "ck_v19",
+   "ck_v20",
+   "ck_v21",
+   "ck_v22",
+   "ck_v23",
+   "ck_v24",
+   "ck_v25",
+   "ck_v26",
+   "ck_v27",
+   "ck_v28",
+   "ck_v29",
+   "ck_v30",
+   "ck_v31",
+   "ck_v32",
+   "ck_v33",
+   "ck_v34",
+   "ck_v35",
+   "ck_v36",
+   "ck_v37",
+   "ck_v38",
+   "ck_v39",
+   "ck_v40",
+   "ck_v41",
+   "ck_v42",
+   "ck_v43",
+   "ck_v44",
+   "ck_v45",
+   "ck_v46",
+   "ck_v47",
+   "ck_v48",
+   "ck_v49",
+   "ck_v50",
+   "ck_v51",
+   "ck_v52",
+   "ck_v53",
+   "ck_v54",
+   "ck_v55",
+   "ck_v56",
+   "ck_v57",
+   "ck_v58",
+   "ck_v59",
+   "ck_v60",
+   "ck_v61",
+   "ck_v62",
+   "ck_v63",
+   "ck_x0",
+   "ck_x1",
+   "ck_x2",
+   "ck_x3",
+   "ck_x4",
+   "ck_x5",
+   "ck_x6",
+   "ck_x7",
+   "ck_x8",
+   "ck_x9",
+   "ck_x10",
+   "ck_x11",
+   "ck_x12",
+   "ck_x13",
+   "ck_x14",
+   "ck_x15",
+   "ck_x16",
+   "ck_x17",
+   "ck_x18",
+   "ck_x19",
+   "ck_x20",
+   "ck_x21",
+   "ck_x22",
+   "ck_x23",
+   "ck_x24",
+   "ck_x25",
+   "ck_x26",
+   "ck_x27",
+   "ck_x28",
+   "ck_x29",
+   "ck_x30",
+   "ck_x31",
+   "ck_e0",
+   "ck_e1",
+   "ck_e2",
+   "ck_e3",
+   "ck_e4",
+   "ck_e5",
+   "ck_e6",
+   "ck_e7",
+   "ck_r"
+  ]
+ },
+ "rule": "phi - R per sink, R = insertion.json boundary mean of the bound view (per corner); frames ideal (R 0)"
+}
