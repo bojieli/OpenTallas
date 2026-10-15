@@ -83,6 +83,7 @@ module ot_hbm_host_packet #(parameter integer MUT=0)(
  input wire  fault
 );
  reg sbw,sbr,hdw,hdr,hbw,hbr,mdw,mdr;
+ reg hb_sent,hr_sent,md_sent,mr_sent;
  reg sb_resp,sr_resp,hdw_resp,hdr_resp;
  reg hb_aw,hb_w,md_aw,md_w,hb_req,hr_req,md_req,mr_req;
  reg [15:0] sb_id,sr_id,hdw_id,hdr_id;
@@ -109,7 +110,7 @@ module ot_hbm_host_packet #(parameter integer MUT=0)(
   sbw<=0;sbr<=0;hdw<=0;hdr<=0;hbw<=0;hbr<=0;mdw<=0;mdr<=0;
   sb_resp<=0;sr_resp<=0;hdw_resp<=0;hdr_resp<=0;
   hb_aw<=0;hb_w<=0;md_aw<=0;md_w<=0;hb_req<=0;hr_req<=0;md_req<=0;mr_req<=0;
-  status_pending<=0;last_status<=0;
+  status_pending<=0;last_status<=0;hb_sent<=0;hr_sent<=0;md_sent<=0;mr_sent<=0;
   s_awvalid<=0;s_wvalid<=0;s_bready<=0;s_arvalid<=0;s_rready<=0;
   s_awaddr<=0;s_wdata<=0;s_wstrb<=0;s_araddr<=0;
   h_awready<=0;h_wready<=0;h_bvalid<=0;h_arready<=0;h_rvalid<=0;h_rdata<=0;
@@ -119,6 +120,7 @@ module ot_hbm_host_packet #(parameter integer MUT=0)(
   m_awready<=0;m_wready<=0;m_bvalid<=0;m_bresp<=0;
  end else begin
   if({fault,irq}!==last_status)begin status_pending<=1;last_status<={fault,irq};end
+  if(tx_valid&&tx_ready)case(tx_packet[7:0])8'h11:hb_sent<=1;8'h12:hr_sent<=1;8'h13:mr_sent<=1;8'h14:md_sent<=1;default:;endcase
   // Actual AXI handshakes; independent AW and W channels are joined once.
   h_awready<=!hbw&&!hb_aw;h_wready<=!hbw&&!hb_w;h_arready<=!hbr;
   m_awready<=!mdw&&!md_aw;m_wready<=!mdw&&!md_w;m_arready<=!mdr;
@@ -130,10 +132,10 @@ module ot_hbm_host_packet #(parameter integer MUT=0)(
   if(m_wvalid&&m_wready)begin if(m_wlast!==1'b1)protocol_fault<=1; md_w<=1;md_data<=m_wdata;md_strb<=m_wstrb;m_wready<=0;end
   if(md_aw&&md_w&&!mdw)begin mdw<=1;md_req<=1;end
   if(m_arvalid&&m_arready)begin if(m_arlen!==8'd0 || m_arsize!==3'd3)protocol_fault<=1; mdr<=1;mr_req<=1;mr_addr<=m_araddr;m_arready<=0;end
-  if(h_bvalid&&h_bready)begin h_bvalid<=0;hbw<=0;hb_aw<=0;hb_w<=0;end
-  if(h_rvalid&&h_rready)begin h_rvalid<=0;hbr<=0;end
-  if(m_bvalid&&m_bready)begin m_bvalid<=0;mdw<=0;md_aw<=0;md_w<=0;end
-  if(m_rvalid&&m_rready)begin m_rvalid<=0;mdr<=0;end
+  if(h_bvalid&&h_bready)begin h_bvalid<=0;hbw<=0;hb_sent<=0;hb_aw<=0;hb_w<=0;end
+  if(h_rvalid&&h_rready)begin h_rvalid<=0;hbr<=0;hr_sent<=0;end
+  if(m_bvalid&&m_bready)begin m_bvalid<=0;mdw<=0;md_sent<=0;md_aw<=0;md_w<=0;end
+  if(m_rvalid&&m_rready)begin m_rvalid<=0;mdr<=0;mr_sent<=0;end
   if(s_awvalid&&s_awready)s_awvalid<=0;
   if(s_wvalid&&s_wready)s_wvalid<=0;
   if(s_arvalid&&s_arready)s_arvalid<=0;
@@ -157,10 +159,10 @@ module ot_hbm_host_packet #(parameter integer MUT=0)(
     end
     8'h03:begin hdr<=1;hdr_id<=tid;h_dma_arvalid<=1;h_dma_araddr<=rx_packet[95:32];h_dma_rready<=1;end
     8'h04:begin hdw<=1;hdw_id<=tid;h_dma_awvalid<=1;h_dma_awaddr<=rx_packet[95:32];h_dma_wvalid<=1;h_dma_wdata<=rx_packet[159:96];h_dma_wstrb<=rx_packet[167:160];h_dma_bready<=1;end
-    8'h91:if(!hbw||tid!=0)protocol_fault<=1;else h_bvalid<=1;
-    8'h92:if(!hbr||tid!=0)protocol_fault<=1;else begin h_rvalid<=1;h_rdata<=rx_packet[127:96];end
-    8'h93:if(!mdr||tid!=0)protocol_fault<=1;else begin m_rvalid<=1;m_rdata<=rx_packet[159:96];m_rresp<=rx_packet[169:168];m_rlast<=rx_packet[170];if(rx_packet[170]!==1'b1)protocol_fault<=1;end
-    8'h94:if(!mdw||tid!=0)protocol_fault<=1;else begin m_bvalid<=1;m_bresp<=rx_packet[169:168];end
+    8'h91:if(!hbw||!hb_sent||tid!=0)protocol_fault<=1;else h_bvalid<=1;
+    8'h92:if(!hbr||!hr_sent||tid!=0)protocol_fault<=1;else begin h_rvalid<=1;h_rdata<=rx_packet[127:96];end
+    8'h93:if(!mdr||!mr_sent||tid!=0)protocol_fault<=1;else begin m_rvalid<=1;m_rdata<=rx_packet[159:96];m_rresp<=rx_packet[169:168];m_rlast<=rx_packet[170];if(rx_packet[170]!==1'b1)protocol_fault<=1;end
+    8'h94:if(!mdw||!md_sent||tid!=0)protocol_fault<=1;else begin m_bvalid<=1;m_bresp<=rx_packet[169:168];end
     default:protocol_fault<=1;
    endcase
   end
@@ -176,7 +178,7 @@ module ot_hbm_host_packet #(parameter integer MUT=0)(
    else if(hr_req)begin tx_packet<=packet(8'h12,0,{52'd0,hr_addr},0,0,0,1);hr_req<=0;end
    else if(mr_req)begin tx_packet<=packet(8'h13,0,mr_addr,0,0,0,1);mr_req<=0;end
    else if(md_req)begin tx_packet<=packet(8'h14,0,md_addr,md_data,md_strb,0,1);md_req<=0;end
-   else if(status_pending)begin tx_packet<=packet(8'hff,0,0,{62'd0,last_status},0,0,1);status_pending<=0;end
+   else if(status_pending)begin tx_packet<=packet(8'hff,0,0,{62'd0,fault,irq},0,0,1);status_pending<=0;end
    else tx_valid<=0;
   end
  end
