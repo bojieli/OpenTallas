@@ -244,7 +244,7 @@
   "egress_extension": {
     "status": "UNRESOLVED_REQUIRES_ACTUAL_SOURCE",
     "previous_50_output_roots_are_not_adopted": true,
-    "latest_proposal": "vm_bench 64 data stripe routes + 1 valid/fault root, adds one fixed edge L12->L13; no implementation or physical claim",
+    "latest_proposal": "64 data stripe route leaves plus distributed quartet valid/fault leaves; count and fault age still evolving, adds one data edge L12->L13. No implementation or physical claim; derive exact root set from final actual RTL.",
     "do_not_freeze_total_648": true
   },
   "clock_delivery": {
