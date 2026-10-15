@@ -40,6 +40,37 @@ def schedule(H=16,D=512,TD=64,NL=4,T=640,mode='qk'):
     words=[sum(1<<bits[e] for e in events.get(c,[])) for c in range(last+1)]
     return dict(H=H,D=D,TD=TD,NL=NL,T=T,mode=mode,events={str(k):v for k,v in sorted(events.items())},words=words,last_issue_cycle=last,issue_period=last+1)
 
+def resident_event_frames():
+    profiles=[schedule(T=T,mode=mode)["words"] for T in (128,640) for mode in ("qk","pv")]
+    return [sum((p[a] if a<len(p) else 0)<<(7*i) for i,p in enumerate(profiles)) for a in range(max(map(len,profiles)))]
+
+def outer_program(H=16,D=512,TD=64,NL=4,T=640,mode="qk",query_base_sector=0,query_epoch=0):
+    """Target49 producer: initial resident profiles, then real query fills/launch.
+
+    Resident profile SRAM is loaded once per batch. Prefetch instructions for the
+    next epoch may execute during current engine issue; the compiler reserves
+    those absolute VM slots and the next launch. There is no observed-ready loop.
+    """
+    s=schedule(H,D,TD,NL,T,mode)
+    if H!=16 or D!=512 or T not in (128,640):raise ValueError("resident production profiles H16 D512 T128/640")
+    if query_base_sector%8 or query_base_sector<0 or query_base_sector+1023>65535:raise ValueError("query sector aperture")
+    if query_base_sector//8192!=(query_base_sector+1023)//8192:raise ValueError("query prefetch crosses native SID/mirror aperture")
+    profile=(0 if T==128 else 2)+(mode=="pv")
+    config=[1|(addr<<4)|(frame<<12) for addr,frame in enumerate(resident_event_frames())]
+    words=[]
+    if mode=="qk":
+        for head in range(H):
+            for burst in range(8):
+                src=query_base_sector+head*64+burst*8
+                words.append(4|(query_epoch<<4)|(head<<5)|(burst<<9)|(src<<12))
+        words += [8]*9 # registered request + bank6 + capture1, then no RAW
+    words.append(2|(profile<<4)|(s["last_issue_cycle"]<<6)|(T<<14)|((mode=="pv")<<30)|(query_epoch<<31))
+    return dict(target=49,outer_instruction_bits=40,outer_port_bits=223,event_bits=7,
+        initial_profile_words=config,outer_words=words,event_count=len(s["words"]),profile=profile,mode=mode,T=T,
+        query_prefetch_runtime_words=128 if mode=="qk" else 0,
+        host_binding="actual ot_static_program_target PCW10/PC12 transport; pending source-bound host join",
+        data_source_binding="actual query prefetch and PS/P VM producer/score drain pending full composition")
+
 def model(H=16,D=512,NL=4):
     prefetch=H*D*4//256
     shapes=[schedule(H,D,64,NL,T,m) for T in (128,640) for m in ('qk','pv')]
@@ -49,4 +80,4 @@ if __name__=='__main__':
     (a.out/'model.json').write_text(json.dumps(model(),indent=2)+'\n')
     for T in (128,640):
         for mode in ('qk','pv'):
-            s=schedule(T=T,mode=mode);(a.out/f'{mode}{T}.json').write_text(json.dumps(s,indent=2)+'\n');(a.out/f'{mode}{T}.hex').write_text(''.join(f'{w:02x}\n' for w in s['words']))
+            s=schedule(T=T,mode=mode);op=outer_program(T=T,mode=mode);(a.out/f'{mode}{T}.outer.json').write_text(json.dumps(op,indent=2)+'\n');(a.out/f'{mode}{T}.outer.hex').write_text(''.join(f'{w:064x}\n' for w in op['outer_words']));(a.out/f'{mode}{T}.json').write_text(json.dumps(s,indent=2)+'\n');(a.out/f'{mode}{T}.hex').write_text(''.join(f'{w:02x}\n' for w in s['words']))

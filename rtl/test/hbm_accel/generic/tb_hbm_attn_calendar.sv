@@ -4,7 +4,7 @@ module tb_hbm_attn_calendar;
  reg clk=0;always #1 clk=~clk;reg rst_n=0;
  reg pwe=0,launch=0;reg[7:0]pa=0,last=0;reg[6:0]pe=0;
  wire[6:0]ev;wire[7:0]phase;wire valid,running,pfault;
- ot_hbm_attn_event_program program_mem(.clk(clk),.rst_n(rst_n),.program_we(pwe),.program_addr(pa),.program_events(pe),.launch(launch),.program_last(last),.events(ev),.phase(phase),.valid(valid),.running(running),.fault(pfault));
+ ot_hbm_attn_event_program program_mem(.clk(clk),.rst_n(rst_n),.program_we(pwe),.program_addr(pa),.program_events({21'd0,pe}),.program_profile(2'd0),.launch(launch),.program_last(last),.events(ev),.phase(phase),.valid(valid),.running(running),.fault(pfault));
  integer rows=128,mode=0,mut=0,job=0,qn=0,kn=0,pn=0;wire cf;
  reg[8191:0]q_w;reg[NL*ROWW-1:0]kv_w;reg[NL-1:0]kv_m;reg[1023:0]p_w;
  wire sc_v,pv_v;wire[15:0]sc_row;wire[NL-1:0]sc_m;wire[NL*H*32-1:0]sc_y;wire[NL*H-1:0]sc_f;
