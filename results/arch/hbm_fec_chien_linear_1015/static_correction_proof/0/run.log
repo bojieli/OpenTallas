@@ -1,0 +1,5 @@
+PASS actual FEC static-window words=2048 corrected_channel age=102 diagnostic_words=2376
+- /srv/opentallas-scratch/codex/fec-chien-linear-1015/static_correction_proof/0/tb_fec_static_window.sv:66: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 2us; walltime 0.566 s; speed 3.932 us/s
+- Verilator: cpu 0.567 s on 1 threads; alloced 1024 MB
