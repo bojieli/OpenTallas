@@ -1,5 +1,5 @@
 {
- "name": "qvm_bank_entries_my_native-ne2-COMMIT",
+ "name": "qvm_bank_entries_my_native-ne2-8e2cd3d55",
  "block": "qvm_bank_banked_native",
  "ref_tile": true,
  "owner": "Codex:takeover_qwen_elements_0757",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 8,
  "source": {
   "branch": "codex/takeover-qvm-bank-0808",
-  "commit": "COMMIT",
+  "commit": "8e2cd3d55954ebd7a31ba88621672c77faf13fac",
   "extra_paths": [
    "rtl/qwen_sys/vm_native_physical_20261015",
    "rtl/qwen_sys/vm_plane_20261013",
@@ -117,7 +117,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qvm_bank_entries_my_native/qvm_bank_entries_my_native-ne2-COMMIT"
+   "to": "results/rtl/ref_tile/qvm_bank_entries_my_native/qvm_bank_entries_my_native-ne2-8e2cd3d55"
   }
  ],
  "cycles_added": 0,
