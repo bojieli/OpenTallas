@@ -1,0 +1,19 @@
+{
+  "scope": "elaborated actual static SU parent with productionG3072/D8/PSRAM1 plus actualcollectivePW944; no arithmetic/layer runtime/nativepin/phase/production qualification",
+  "source_commit": "c8492f8dd",
+  "unit": "oth-ubuntu-970534-1792046598",
+  "host": "ot-epyc4",
+  "exit": 0,
+  "source_sha256": {
+    "rtl/qwen_split/qfd_seq_su_static.sv": "7119c0cd0f744548d9db6ff389ccc332726e557c8062c5a990210ce4a1d745ab",
+    "rtl/qwen_sys/static_schedule_20261014/ot_qfd_seq_su_bi_static.sv": "3753f2623815d0bfce658c827804de80663ce40abccb0511187a45d8240ec5cc",
+    "rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_su_static.sv": "27bf02049fee338352c78e1dc534e2ea0e8639d0f383a2265cab13015b271475",
+    "rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_pw.sv": "400fe076fb13a12a414cd15d95982704ecf5d77b61a8f2e2c3d7fd5ae8518659",
+    "rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv": "61467355ebbc7de8c617645a5566dd0b92be0af5fae01536f4d1b9a26dd79db8",
+    "rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue.sv": "0d533e9a09514840fac0628053fd1aaa501bccbffeaf8913afb6a936d1d994b1",
+    "rtl/rom/ot_coll_cmd_issue.sv": "eb7f363e2019f84903826e7aec7fb8e35f13f59b93c222447bbc093142796944",
+    "rtl/qwen_split/qfd_seq_su_collective_calendar.sv": "2c0bccc7cde60f44715f853f994175e48fbe186c92eb9543ef4716194e686f29",
+    "rtl/qwen_sys/program_receiver_20261014/qkd_program_commit.sv": "26a396b1826998c681fe23090d0dab22b5a6df9334b10fd4b47fbd967e3eb291",
+    "tools/qwen_split/elaborate_static_su_parent.sh": "7e1222f65290593a92e48a476fbc0eac17e11d4ae487728b5d914d530c676795"
+  }
+}
