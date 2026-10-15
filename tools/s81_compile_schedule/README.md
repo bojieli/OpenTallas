@@ -73,3 +73,15 @@ contract; the producer packet tags, formats, writes and their fixed calendars
 still need actual native implementation evidence. No tensor values are read or
 generated. These production-layout candidates and full graph witnesses live in
 `results/arch/s81_native_compile_1014/` with explicit incomplete status.
+
+`write_itinerary.py` compiles fixed write staging capture/drain tables, preserving
+source port, slot, job, tag, row, mask and event identity. Its independent table
+checker rejects missing writes, changed metadata, storage overwrite, early
+release and bank service conflicts. It specifies no dynamic queue arbitration.
+The current four source-pinned observed demand patterns need at most three
+register rows per bank (68 rows with individual bank sizing; 18 simultaneously
+live), at most three captures per bank per edge, and at most two extra drain
+cycles. The original write visibility deadlines are missing, so these remain
+**diagnostic demand itineraries**. Production rebasing can change conflicts.
+Actual staging RTL, physical paths, and compiled consumer/commit fences must be
+verified before any of these tables become executable native programs.
