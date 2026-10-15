@@ -214,6 +214,17 @@ module ot_vms_bank_static_wdecode_ft #(
             if (w_active[g] && !(wslot_v_d && int'(wslot_d)==g)) w_bad = 1'b1;
         schedule_bad = r_bad | w_bad;
     end
+    // Egress valid computed per wide leaf in parallel (H-ELEM-A 2026-10-15: gate reg->reg -65.5 ps ended at eg_v
+    // through the 276-b write OR tree): identical to selected_write && wslot_d < WG && mirror && !bad of the leaf.
+    reg eg_c;
+    always @* begin : egc
+        reg [11:0] ds;
+        eg_c = 1'b0;
+        for (integer g = 0; g < WG; g = g + 1) begin
+            ds = dsec(wq_r[g*281+264 +: 16],bid_r,sid_r);
+            if (wslot_onehot_d[g] && w_active[g] && wq_r[g*281 + 279] && !ds[11]) eg_c = 1'b1;
+        end
+    end
     reg s1w_v; reg [3:0] s1w_p; reg [10:0] s1w_row; reg [255:0] s1w_d; reg [7:0] s1w_m; reg [7:0] s1w_tag;
     reg s1r_v; reg [3:0] s1r_p; reg [10:0] s1r_row; reg [7:0] s1r_tag;
     // Sticky diagnostic fault as a registered 2-level tree (H-ELEM-A 2026-10-15; gate reg->reg -71 ps ended at flt
@@ -225,7 +236,7 @@ module ot_vms_bank_static_wdecode_ft #(
         if (!rn) begin s1w_v <= 0; s1r_v <= 0; eg_v <= 0; flt <= 0; flt_rs <= 0; flt_ws <= 0; flt_rd <= 0; flt_wd <= 0; end
         else begin
             s1w_v <= selected_write; s1r_v <= selected_read;
-            eg_v <= selected_write && int'(wslot_d)<WG && wr_decode[274] && !wr_decode[275];
+            eg_v <= eg_c;
             flt_rs <= r_bad; flt_ws <= w_bad;
             flt_rd <= selected_read && rd_decode[11];
             flt_wd <= selected_write && wr_decode[275];

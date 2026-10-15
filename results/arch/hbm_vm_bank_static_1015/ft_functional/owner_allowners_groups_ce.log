@@ -38,3 +38,4 @@ FATAL: tb_bank_ce_population.sv:20: CE population decoder mismatch expected=1 ac
 FATAL: tb_bank_ce_population.sv:20: CE population decoder mismatch expected=1 actual=0
        Time: 1351000 Scope: tb_bank_ce_population.check_count
 BANK_CE_PREFIX PASS states=65536 increments=16 cases=1048576 exact_saturation=1 unchanged_edge=1
+rc=0
