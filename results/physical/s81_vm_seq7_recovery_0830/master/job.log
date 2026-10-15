@@ -1,0 +1,9 @@
+ot-run: ot-epyc4       admits   696 GB (avail 923, growth 46, headroom 48, waiters 0/0 GB) load 34/128 running 18 disk 464 GB
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-174533-1792079220 after 0 s
+SPVM_TARGET PASS base
+SPVM_TARGET PASS capword
+SPVM_TARGET PASS wfcpair
+SPVM_TARGET PASS x43phase
+SPVM_GATE PASS
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-174533-1792079220): exit 0

@@ -1,0 +1,21 @@
+{
+ "source_commit": "2eaeb9344",
+ "component_gate": "PASS:3seeds1500jobs,6faultwitnesses,4actualDUTmutantsrejected",
+ "component_unit": "oth-ubuntu-423663-1792079149",
+ "master_gate": "PASS:READ_PIPE4,CAP_PIPE2,2seeds,8faultwitnesses,3actualDUTmutantsrejected,128mappedSRAMmodels",
+ "master_unit": "oth-ubuntu-174533-1792079220",
+ "mapped_local_copy_ff_bits": 12400,
+ "mapped_unprotected_r2_ff_bits": 8920,
+ "distinct_group_state_bits": 3712,
+ "old_distinct_group_state_bits": 232,
+ "max_generic_g_lo_load_pins": 8,
+ "old_max_generic_g_lo_load_pins": 68,
+ "command_done_stream_edges": 7,
+ "old_command_done_stream_edges": 6,
+ "command_ii_edges": 1,
+ "native_stream_read_edges": 16,
+ "external_clock_port_changes": 0,
+ "whole_token_cost": null,
+ "physical_qualification": "OPEN: native CTS gate still running; no inherited old seq view, no route claim",
+ "scope": "Sequencer and connected VM component proofs; no actual issuer programme, SU bridge, full die or whole token proof"
+}

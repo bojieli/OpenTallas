@@ -1,0 +1,18 @@
+ot-run: ot-agidock128  admits    58 GB (avail 83, growth 9, headroom 24, waiters 0/0 GB) load 6/64 running 4 disk 33 GB
+ot-run: -> ot-agidock128
+ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-423663-1792079149 after 0 s
+TB_VMSS RESULT mode 0 cycles 7512 commands 3287 dones 3287 commits 426043 inp_cycles 6303 errors 0
+TB_VMSS RESULT mode 0 cycles 7522 commands 3284 dones 3284 commits 442653 inp_cycles 5936 errors 0
+TB_VMSS RESULT mode 0 cycles 7497 commands 3319 dones 3319 commits 424890 inp_cycles 6108 errors 0
+TB_VMSS RESULT mode 1 cycles 7563 commands 3288 dones 3288 commits 403829 inp_cycles 6454 errors 0
+TB_VMSS RESULT mode 2 cycles 7563 commands 3288 dones 3288 commits 403830 inp_cycles 6454 errors 0
+TB_VMSS RESULT mode 3 cycles 7563 commands 3288 dones 3288 commits 403829 inp_cycles 6454 errors 0
+TB_VMSS RESULT mode 4 cycles 7563 commands 3288 dones 3289 commits 403829 inp_cycles 6454 errors 0
+TB_VMSS RESULT mode 5 cycles 7563 commands 3288 dones 3288 commits 403829 inp_cycles 6454 errors 0
+TB_VMSS RESULT mode 6 cycles 7563 commands 3288 dones 3289 commits 403829 inp_cycles 6454 errors 0
+TB_VMSS RESULT mode 0 cycles 7512 commands 3287 dones 3287 commits 426043 inp_cycles 6303 errors 4658
+TB_VMSS RESULT mode 0 cycles 7512 commands 3287 dones 3287 commits 426043 inp_cycles 6303 errors 10839
+TB_VMSS RESULT mode 0 cycles 7512 commands 3287 dones 3287 commits 426043 inp_cycles 6303 errors 8705
+TB_VMSS RESULT mode 0 cycles 7512 commands 3287 dones 3287 commits 426043 inp_cycles 6303 errors 13784
+VMSS_GATE PASS
+ot-run: RAN on ot-agidock128 (unit oth-ubuntu-423663-1792079149): exit 0
