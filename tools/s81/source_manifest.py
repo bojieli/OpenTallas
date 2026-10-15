@@ -1,115 +1,98 @@
 #!/usr/bin/env python3
-"""Source manifest for S81 die generations (S-DIE 2026-10-15).
-
-Hole closed: run scripts hashed only tools/ rtl/ physical/, so the contract that a
-generation actually loaded (results/arch/hier_contract_1011/*.json, the opts file,
-the canonical layout) was never source-bound. GEN16/screen14 ran on contract
-VERSION 18 while declaring a v19 source and nothing detected it.
-
-  tree   --root SRC --out M.json [--extra FILE ...]  hash a copied source tree
-  git    --commit C --out M.json                      expected hashes at a commit
-  check  --manifest M.json --expect E.json [--require FILE ...]
-
-Every --require path (the generator's input files) must be present in BOTH the
-manifest and the expected one with equal sha256, otherwise check exits 1.
-"""
-import argparse, hashlib, json, subprocess, sys
+"""Freeze a Git tree and verify actual snapshot bytes before geometry reuse."""
+import argparse
+import hashlib
+import json
+import os
 from pathlib import Path
-
-BASES = ('tools', 'rtl', 'physical', 'results/arch', 'results/physical/die_iter_1012/s81')
-
-
-def sha(p):
-    return hashlib.sha256(Path(p).read_bytes()).hexdigest()
+import subprocess
 
 
-def tree(root, extra=()):
-    root = Path(root).resolve(); out = {}
-    for base in BASES:
-        b = root / base
-        if not b.exists():
+def digest(path):
+    value = hashlib.sha256()
+    with Path(path).open('rb') as stream:
+        while chunk := stream.read(1024 * 1024):
+            value.update(chunk)
+    return value.hexdigest()
+
+
+def make(repo, commit):
+    commit = subprocess.check_output(['git', '-C', str(repo), 'rev-parse', commit], text=True).strip()
+    tree = subprocess.check_output(['git', '-C', str(repo), 'rev-parse', commit + '^{tree}'], text=True).strip()
+    raw = subprocess.check_output(['git', '-C', str(repo), 'ls-tree', '-rlz', commit])
+    files = []
+    for entry in raw.split(b'\0'):
+        if not entry:
             continue
-        for p in b.rglob('*'):
-            if p.is_file() and '__pycache__' not in p.parts:
-                out[str(p.relative_to(root))] = sha(p)
-    for e in extra:
-        p = Path(e); p = p if p.is_absolute() else root / p
-        if p.is_file():
-            key = str(p.relative_to(root)) if p.resolve().is_relative_to(root) else str(p)
-            out[key] = sha(p)
-    return out
+        head, path = entry.split(b'\t', 1)
+        mode, kind, blob, size = head.decode().split()
+        if kind != 'blob':
+            raise ValueError('unsupported Git tree entry: ' + head.decode())
+        files.append(dict(path=path.decode(), mode=mode, git_blob=blob, bytes=int(size)))
+    return dict(schema='opentallas.source-tree-manifest.v1', source_commit=commit,
+                git_tree=tree, files=files, external_files=[])
 
 
-def from_git(commit, repo='.'):
-    files = subprocess.run(['git', '-C', repo, 'ls-tree', '-r', '--name-only', commit, '--', *BASES],
-                           check=True, capture_output=True, text=True).stdout.split('\n')
-    files = [f for f in files if f]
-    out = {}
-    proc = subprocess.Popen(['git', '-C', repo, 'cat-file', '--batch'], stdin=subprocess.PIPE, stdout=subprocess.PIPE)
-    for f in files:
-        proc.stdin.write(f'{commit}:{f}\n'.encode()); proc.stdin.flush()
-        hdr = proc.stdout.readline().split()
-        if len(hdr) < 3 or hdr[1] != b'blob':
-            continue
-        data = proc.stdout.read(int(hdr[2])); proc.stdout.read(1)
-        out[f] = hashlib.sha256(data).hexdigest()
-    proc.stdin.close(); proc.wait()
-    return out
-
-
-def check(manifest, expect, require=()):
-    bad = []
-    for f in require:
-        a, b = manifest.get(f), expect.get(f)
-        if a is None or b is None or a != b:
-            bad.append(dict(path=f, tree=a, expected=b))
-    common = set(manifest) & set(expect)
-    drift = sorted(f for f in common if manifest[f] != expect[f])
-    return dict(verdict='FAIL' if bad else 'PASS', required_mismatch=bad,
-                drift_count=len(drift), drift_first=drift[:50],
-                contract_drift=[f for f in drift if f.startswith('results/arch/')])
+def verify(root, manifest):
+    root = root.resolve()
+    expected_paths = {item['path'] for item in manifest['files']}
+    for directory, folders, names in os.walk(root, followlinks=False):
+        folders[:] = [name for name in folders if name not in ('.git', '__pycache__')]
+        for name in names:
+            relative = str((Path(directory) / name).relative_to(root))
+            if relative not in expected_paths and relative != 'SOURCE_SHA':
+                raise ValueError('untracked input in source snapshot: ' + relative)
+    checked_bytes = 0
+    for entry in manifest['files']:
+        path = root / entry['path']
+        if not path.parent.resolve().is_relative_to(root):
+            raise ValueError('source file escapes snapshot: ' + entry['path'])
+        value = hashlib.sha1()
+        if entry['mode'] == '120000':
+            if not path.is_symlink():
+                raise ValueError('source symlink missing: ' + entry['path'])
+            payload = os.fsencode(os.readlink(path))
+            value.update(b'blob ' + str(len(payload)).encode() + b'\0' + payload)
+            # Targets outside the snapshot require an explicit frozen target inventory.
+            target = path.resolve()
+            if not target.is_relative_to(root):
+                extras = [Path(item['path']).resolve() for item in manifest['external_files']]
+                if not any(target == ext or target in ext.parents for ext in extras):
+                    raise ValueError('external symlink target is not inventoried: ' + entry['path'])
+        else:
+            if path.is_symlink() or not path.is_file():
+                raise ValueError('source file missing or replaced by symlink: ' + entry['path'])
+            size = path.stat().st_size
+            value.update(b'blob ' + str(size).encode() + b'\0')
+            with path.open('rb') as stream:
+                while chunk := stream.read(1024 * 1024):
+                    value.update(chunk)
+            checked_bytes += size
+        if value.hexdigest() != entry['git_blob']:
+            raise ValueError('actual source bytes differ from Git tree: ' + entry['path'])
+    for item in manifest['external_files']:
+        if digest(item['path']) != item['sha256']:
+            raise ValueError('external source bytes differ: ' + item['path'])
+    return dict(files=len(manifest['files']), bytes=checked_bytes,
+                external_files=len(manifest['external_files']), git_tree=manifest['git_tree'])
 
 
 def main():
-    ap = argparse.ArgumentParser(); sp = ap.add_subparsers(dest='cmd', required=True)
-    t = sp.add_parser('tree'); t.add_argument('--root', required=True); t.add_argument('--out', required=True); t.add_argument('--extra', nargs='*', default=[])
-    g = sp.add_parser('git'); g.add_argument('--commit', required=True); g.add_argument('--repo', default='.'); g.add_argument('--out', required=True)
-    c = sp.add_parser('check'); c.add_argument('--manifest', required=True); c.add_argument('--expect', required=True); c.add_argument('--require', nargs='*', default=[])
-    a = ap.parse_args()
-    if a.cmd == 'tree':
-        Path(a.out).write_text(json.dumps(tree(a.root, a.extra), indent=1, sort_keys=True)); return 0
-    if a.cmd == 'git':
-        Path(a.out).write_text(json.dumps(from_git(a.commit, a.repo), indent=1, sort_keys=True)); return 0
-    r = check(json.loads(Path(a.manifest).read_text()), json.loads(Path(a.expect).read_text()), a.require)
-    print(json.dumps(r, indent=1)); return 0 if r['verdict'] == 'PASS' else 1
-
-
-
-def generator_inputs(root, opts):
-    """Repo-relative input files named by generator options (+ env LEF overrides)."""
-    import os
-    root = Path(root).resolve(); found = set()
-    vals = list(opts.values()) + [v for k, v in os.environ.items() if k.startswith('OT_S81_')]
-    for v in vals:
-        for s in (v if isinstance(v, (list, tuple)) else [v]):
-            if not isinstance(s, (str, Path)) or not str(s) or len(str(s)) > 4096:
-                continue
-            p = Path(s); p = p if p.is_absolute() else root / p
-            try:
-                if p.is_file():
-                    found.add(str(p.resolve().relative_to(root)) if p.resolve().is_relative_to(root) else str(p))
-            except OSError:
-                pass
-    return sorted(found)
-
-
-def contract_record(root, contract):
-    if not contract:
-        return None
-    p = Path(contract); p = p if p.is_absolute() else Path(root) / p
-    d = json.loads(p.read_text())
-    return dict(path=str(contract), sha256=sha(p), version=d.get('version'), updated=d.get('updated'))
+    ap = argparse.ArgumentParser(description=__doc__)
+    sub = ap.add_subparsers(dest='mode', required=True)
+    create = sub.add_parser('make')
+    create.add_argument('--repo', type=Path, required=True)
+    create.add_argument('--commit', required=True)
+    create.add_argument('--out', type=Path, required=True)
+    check = sub.add_parser('verify')
+    check.add_argument('--root', type=Path, required=True)
+    check.add_argument('--manifest', type=Path, required=True)
+    args = ap.parse_args()
+    if args.mode == 'make':
+        args.out.write_text(json.dumps(make(args.repo, args.commit), separators=(',', ':')) + '\n')
+    else:
+        print(json.dumps(verify(args.root, json.loads(args.manifest.read_text()))))
 
 
 if __name__ == '__main__':
-    sys.exit(main())
+    main()

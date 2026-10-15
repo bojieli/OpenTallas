@@ -13,6 +13,7 @@ from pathlib import Path
 import runpy
 import shlex
 import sys
+import source_manifest
 
 
 def digest(path):
@@ -34,8 +35,16 @@ def validate(source, capture, metadata):
         raise ValueError('captured generator differs')
     if digest(source / metadata['recipe_path']) != metadata['recipe_sha256']:
         raise ValueError('captured recipe differs')
+    manifest_path = Path(metadata['source_manifest_path'])
+    if digest(manifest_path) != metadata['source_manifest_sha256']:
+        raise ValueError('captured source manifest digest differs')
+    manifest = json.loads(manifest_path.read_text())
+    if manifest['source_commit'] != metadata['source_commit']:
+        raise ValueError('captured source manifest commit differs')
+    source_manifest.verify(source, manifest)
     if digest(capture) != metadata['capture_sha256']:
         raise ValueError('captured model digest differs')
+    return manifest
 
 
 def main():
@@ -47,10 +56,12 @@ def main():
     args = ap.parse_args()
     source, capture = args.source.resolve(), args.capture.resolve()
     metadata = json.loads(capture.with_suffix('.json').read_text())
-    validate(source, capture, metadata)
+    manifest = validate(source, capture, metadata)
     script = (source / args.script).resolve()
     if not script.is_relative_to(source):
         raise ValueError('emitter must belong to the immutable source snapshot')
+    if str(script.relative_to(source)) not in {item['path'] for item in manifest['files']}:
+        raise ValueError('emitter is absent from the source tree manifest')
     sys.path.insert(0, str(source / 'tools'))
     os.chdir(source)
     import cloudpickle
