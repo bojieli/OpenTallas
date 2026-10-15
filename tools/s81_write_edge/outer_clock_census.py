@@ -23,12 +23,12 @@ def main():
  # 328 actual memory leaves; 48 of them have request and response root pins.
  for s in range(4):
   sp=f'{base}.slice[{s}].u_slice'
-  for b in range(32):add('memory_bank',f'{sp}.bank[{b}].u_bank','dsfd_vm_static_bank128','ck','stream','rst_n <- rss','u_core.u_mem.ck_bank[32*s+b] <- {128{ck}}',notes='Includes internal u_sram.clk on same bank root; not an additional delivery root.')
+  for b in range(32):add('memory_bank',f'{sp}.bank[{b}].u_bank','dsfd_vm_static_bank128','ck','stream','rst_n <- rss',f'u_core.u_mem.ck_bank[{32*s+b}] <- {{128{{ck}}}}',notes='Includes internal u_sram.clk on same bank root; not an additional delivery root.')
  for pin in ['ck_req','ck_rsp']:
   for s in range(4):
    sp=f'{base}.slice[{s}].u_slice'
    for kind,num,offset,master in [('bridge',4,0,'dsfd_vm_static_relay128_b8'),('quarter',8,4,'dsfd_vm_static_relay128_b4')]:
-    for g in range(num):add('memory_relay_'+('req' if pin=='ck_req' else 'rsp'),f'{sp}.{kind}[{g}].u_hop',master,pin,'stream','rst_n <- rss',f'u_mem.ck_relay_{"req" if pin=="ck_req" else "rsp"}[12*{s}+{g+offset}] <- {{48{{ck}}}}',notes='Wrapper forwards root to u_relay.'+pin+'; shared raw rst_n, independent req/rsp two-flop release.')
+    for g in range(num):add('memory_relay_'+('req' if pin=='ck_req' else 'rsp'),f'{sp}.{kind}[{g}].u_hop',master,pin,'stream','rst_n <- rss',f'u_mem.ck_relay_{"req" if pin=="ck_req" else "rsp"}[{12*s+g+offset}] <- {{48{{ck}}}}',notes='Wrapper forwards root to u_relay.'+pin+'; shared raw rst_n, independent req/rsp two-flop release.')
  for s in range(4):add('memory_read_fsr',f'{base}.slice[{s}].u_slice.u_r','dsfd_vm_static_suhc_fsr','ck','stream','rst_n <- rss',f'u_mem.ck_rscatter[{s}] <- {{4{{ck}}}}')
  for s in range(4):add('memory_return',f'{base}.slice[{s}].u_return','dsfd_vm_static_return','ck','stream','rst_n <- rss',f'u_mem.ck_return[{s}] <- {{4{{ck}}}}',params={'NROW':32})
  for s in range(4):
