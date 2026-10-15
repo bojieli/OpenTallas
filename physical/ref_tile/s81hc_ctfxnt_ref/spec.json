@@ -128,6 +128,8 @@
  },
  "slot_change_request": "S81 die lead 2495f77a6 accepted serial/NTREE captured strip 576.72x25.92; enclosing cth751.68, rowshifts12.96",
  "boundary_tcl": [
-  "physical/ref_tile/s81hc_ctfxnt_ref/local_clock_tap.tcl"
- ]
+  "physical/ref_tile/s81hc_ctfxnt_ref/local_clock_tap.tcl",
+  "physical/ref_tile/s81hc_ctfxnt_ref/capture_driver_size.tcl"
+ ],
+ "native_capture_repair": "Seven measured final BUFx2 dual-D drivers (~16fF) sized toBUFx3 after hold repair, legally placed and preserved. Same arithmetic, latency, pins and timing constraints; finalsource CTS/fullroute required."
 }

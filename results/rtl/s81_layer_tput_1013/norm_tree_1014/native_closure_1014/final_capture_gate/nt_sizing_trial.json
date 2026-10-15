@@ -1,0 +1,34 @@
+{
+  "scope": "UNQUALIFIED_IN_MEMORY_SIZING_TRIAL; placement repair and actual source gate still required",
+  "source_gate": "ot-epyc4:/srv/opentallas-scratch/claude/ref_gate/s81hc_ctfxnt_ref-20261014-205418",
+  "change": "Seven final dual-D BUF2 hold drivers ->BUF3. Same14D loads,nets,flops and clocks. No new/removed cells. Trial did not legalize resized cell footprints. Production hook requires detailed placement and placement checks.",
+  "TT_before": {
+    "capture_ps": 199.43945,
+    "capture_over": 7,
+    "launch_ps": 197.4
+  },
+  "TT_after": {
+    "capture_ps": 189.1,
+    "capture_over": 0,
+    "launch_ps": 197.4
+  },
+  "FF_hold_residual_ps_before": [
+    -84.0,
+    -83.9,
+    -78.8,
+    -80.7,
+    -78.4,
+    -96.9,
+    -86.8
+  ],
+  "FF_hold_residual_ps_after": [
+    -76.4,
+    -76.3,
+    -70.7,
+    -72.5,
+    -70.3,
+    -88.8,
+    -78.7
+  ],
+  "full_routed_FF_hold_qualification": "REQUIRED"
+}

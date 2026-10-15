@@ -1,0 +1,24 @@
+{
+  "cell": "ot_s81_hc_ctrb",
+  "view": "/tmp/snorm-ctrb-final-probe-view",
+  "lib_cell": "ot_s81_hc_ctrb",
+  "insertion": true,
+  "ref_src": [
+    "insertion.json boundary mean"
+  ],
+  "R_ps": 392.9,
+  "spread_ps": 66.6,
+  "outputs": 1024,
+  "inputs": 3513,
+  "launch_ps": 165.5,
+  "launch_pin": "rdm[155]",
+  "capture_ps": 529.9,
+  "capture_pin": "hrq_n[116]",
+  "launch_over": 0,
+  "capture_over": 2211,
+  "comb_pins": 0,
+  "comb_first": [],
+  "pass": false,
+  "fail_why": "capture 529.9 > 190 (2211 pins)",
+  "qualification_status": "UNQUALIFIED_PLACEMENT_ONLY"
+}

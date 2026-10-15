@@ -1,0 +1,24 @@
+{
+  "cell": "ot_s81_hc_ctra",
+  "view": "/tmp/snorm-ctra-final-probe-view",
+  "lib_cell": "ot_s81_hc_ctra",
+  "insertion": true,
+  "ref_src": [
+    "insertion.json boundary mean"
+  ],
+  "R_ps": 381.8,
+  "spread_ps": 47.6,
+  "outputs": 1464,
+  "inputs": 3622,
+  "launch_ps": 182.2,
+  "launch_pin": "rdm[199]",
+  "capture_ps": 674.0,
+  "capture_pin": "nflt_n[4]",
+  "launch_over": 0,
+  "capture_over": 2231,
+  "comb_pins": 0,
+  "comb_first": [],
+  "pass": false,
+  "fail_why": "capture 674.0 > 190 (2231 pins)",
+  "qualification_status": "UNQUALIFIED_PLACEMENT_ONLY"
+}

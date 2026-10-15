@@ -2,3 +2,4 @@
 source /src/physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl
 source /src/physical/qwen_die_masters/post_plain.tcl
 source /src/physical/ref_tile/s81hc_ctfxnt_ref/local_clock_tap.tcl
+source /src/physical/ref_tile/s81hc_ctfxnt_ref/capture_driver_size.tcl
