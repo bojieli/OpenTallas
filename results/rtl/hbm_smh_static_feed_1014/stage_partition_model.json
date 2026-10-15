@@ -53,6 +53,51 @@
         "pin_span_um": 24.48,
         "passes": true
       },
+      "narrow_EW_variants": [
+        {
+          "outline_um": [
+            17.28,
+            43.2
+          ],
+          "core_margin_um": 2.16,
+          "usable_core_area_um2": 503.88480000000004,
+          "FF_area_upper_um2": 97.04448,
+          "analytical_utilization": 0.19259259259259257,
+          "pin_faces_unchanged": true,
+          "physical_measurement_pending": true
+        },
+        {
+          "outline_um": [
+            25.92,
+            43.2
+          ],
+          "core_margin_um": 2.16,
+          "usable_core_area_um2": 839.8080000000001,
+          "FF_area_upper_um2": 97.04448,
+          "analytical_utilization": 0.11555555555555554,
+          "pin_faces_unchanged": true,
+          "physical_measurement_pending": true
+        }
+      ],
+      "vertical_face_variant": {
+        "outline_um": [
+          51.84,
+          43.2
+        ],
+        "pin_faces": {
+          "S": 256,
+          "N": 256
+        },
+        "layer": "M5",
+        "track_pitch_um": 0.064,
+        "pin_pitch_um": 0.128,
+        "usable_um": 35.84,
+        "pin_span_um": 32.64,
+        "cut_ratio": 0.45714285714285713,
+        "limit": 0.6,
+        "rotation_grant_required": false,
+        "note": "SeparateassignedNSpinmaster; do notrotateEWmasterwithoutcontractgrant"
+      },
       "flop_area_upper_um2": 97.04448,
       "outline_area_um2": 1866.2400000000002
     },
@@ -83,6 +128,18 @@
       },
       "face_cut_ratio": 0.4478102189781022,
       "face_cut_limit": 0.6,
+      "narrow_EW_variant": {
+        "outline_um": [
+          25.92,
+          103.68
+        ],
+        "core_margin_um": 2.16,
+        "usable_core_area_um2": 2146.1760000000004,
+        "FF_area_upper_um2": 310.08743999999996,
+        "analytical_utilization": 0.14448369565217387,
+        "pin_faces_unchanged": true,
+        "physical_measurement_pending": true
+      },
       "single_layer_pin_span_um": 78.432,
       "single_layer_pin_fits": true,
       "admitted": true

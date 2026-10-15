@@ -1,0 +1,34 @@
+{
+  "analogue": "ot_smh_tr_w128_s2_m0",
+  "pins_input": 128,
+  "pins_first": 128,
+  "pins_last": 128,
+  "edges": 2,
+  "register_bits": 256,
+  "clock_sink_gate": 259,
+  "source_pins": {
+    "/home/ubuntu/wt/hbm-smcompact-1014/physical/ref_tile/smh_tr_w128_s2_m0_ref/spec.json": "972933ea032691fa343464bdf263e15fb71ab8f004590f103b3e9980416e7f3d",
+    "/home/ubuntu/wt/hbm-smcompact-1014/physical/ref_tile/smh_tr_w128_s2_m0_ref/gate_result.json": "a779c55bfda59c51cc01b02f8de5c7fc00b5e225bb6b8e29d6f170231abccaff",
+    "/home/ubuntu/wt/hbm-smcompact-1014/physical/ref_tile/smh_tr_w128_s2_m0_ref/views/ot_smh_tr_w128_s2_m0/abstract.json": "4df16dda09c690c9b7a330be8206351c3170eee903a7c0f2fde29b0a6ee18bcf",
+    "/home/ubuntu/wt/hbm-smcompact-1014/physical/ref_tile/smh_tr_w128_s2_m0_ref/views/ot_smh_tr_w128_s2_m0/insertion.json": "ce9661afe0a9e9695a871be10c96eeca7bd659e3f5c85a84325752e026631073"
+  },
+  "limit": "Analogue is128-bit2-edge384datapin; new256-bit1-edge512datapin cannot inherit its routedfit or fixedholdarea.",
+  "known_prior_failure": {
+    "fixed_hold_cells": 1536,
+    "fixed_hold_area_um2": 343.884,
+    "flop_area_um2": 112,
+    "source": "spec.json structural_change"
+  },
+  "new_candidate": {
+    "shape_um": [
+      25.92,
+      43.2
+    ],
+    "clock_roots": 1,
+    "bits": 256,
+    "data_pins": 512,
+    "maximum_flop_sinks": 256,
+    "model_gate": "analyticalpin/rootpass; actualfixedhold/CTS/route pending",
+    "die_fit": false
+  }
+}

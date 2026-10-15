@@ -23,6 +23,18 @@ def model():
                           ratio=256/(usable/PITCH),limit=.60,
                           pin_pitch_um=PIN_PITCH,pin_span_um=255*PIN_PITCH)
     data['face_cut']['passes']=data['face_cut']['ratio']<=.60 and data['face_cut']['pin_span_um']<=usable
+    data['narrow_EW_variants']=[dict(outline_um=[width,43.2],core_margin_um=2.16,
+        usable_core_area_um2=(width-4.32)*(43.2-4.32),
+        FF_area_upper_um2=256*DFF_UPPER_UM2,
+        analytical_utilization=(256*DFF_UPPER_UM2)/((width-4.32)*(43.2-4.32)),
+        pin_faces_unchanged=True,physical_measurement_pending=True)
+        for width in (17.28,25.92)]
+    data['vertical_face_variant']=dict(outline_um=[51.84,43.2],pin_faces={'S':256,'N':256},
+                                       layer='M5',track_pitch_um=.064,pin_pitch_um=.128,
+                                       usable_um=51.84-16,pin_span_um=255*.128,
+                                       cut_ratio=256/((51.84-16)/.064),limit=.60,
+                                       rotation_grant_required=False,
+                                       note='SeparateassignedNSpinmaster; do notrotateEWmasterwithoutcontractgrant')
     data['flop_area_upper_um2']=256*DFF_UPPER_UM2
     data['outline_area_um2']=43.2**2
     rows=dict(master='ot_smh_static_row818',replicas=8,bits=818,register_bits=818,captures=1,
@@ -30,6 +42,11 @@ def model():
               maximum_sinks_per_root=818,
               outline_um=[69.12,103.68],pin_faces={'W':{'bundle_in':818},'E':{'bundle_out':818},'N':{'clk':1,'rst_n':1}},
               face_cut_ratio=818/((103.68-16)/PITCH),face_cut_limit=.60)
+    rows['narrow_EW_variant']=dict(outline_um=[25.92,103.68],core_margin_um=2.16,
+        usable_core_area_um2=(25.92-4.32)*(103.68-4.32),
+        FF_area_upper_um2=818*DFF_UPPER_UM2,
+        analytical_utilization=(818*DFF_UPPER_UM2)/((25.92-4.32)*(103.68-4.32)),
+        pin_faces_unchanged=True,physical_measurement_pending=True)
     rows['single_layer_pin_span_um']=817*PIN_PITCH
     rows['single_layer_pin_fits']=rows['single_layer_pin_span_um']<=103.68-16
     rows['admitted']=rows['single_layer_pin_fits'] and rows['face_cut_ratio']<=.60

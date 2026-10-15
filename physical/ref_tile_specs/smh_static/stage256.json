@@ -1,0 +1,79 @@
+{
+  "name": "smh_static_stage256_ref",
+  "top": "ot_smh_static_stage256",
+  "kind": "tile",
+  "sources": [
+    "rtl/hbm_accel/sm/static/ot_smh_static_stage256.sv"
+  ],
+  "defines": [],
+  "clock_port": "clk",
+  "reset_ports": [],
+  "outline": {
+    "w": 25.92,
+    "h": 43.2
+  },
+  "pg_layer": "M6",
+  "layer_cap": "M5",
+  "macros": [],
+  "pins": {
+    "W": [
+      "d"
+    ],
+    "E": [
+      "q"
+    ],
+    "N": [
+      "clk"
+    ]
+  },
+  "io_tcl": "physical/ref_tile_specs/smh_static/stage256_pins.tcl",
+  "route": {
+    "pd": 0.5,
+    "threads": 8,
+    "peak_ram_gb": 12,
+    "hold_margin_ns": 0.03,
+    "macro_halo_um": 5.4
+  },
+  "job": {
+    "owner": "Codex:H-ELEM-A:static-sm-feed",
+    "branch": "codex/hbm-sm-static-feed-1014",
+    "tag": "narrow1",
+    "purpose": "Component pathfinding: independently clocked one-edge256-bit stage from actualSM staticfront existing xwrite pipeline. Candidate25.92x43.2, no fullSM fit/throughput claim.",
+    "structural_change": "Replace flat23950-register northfrontend with stage-local independent roots. All256payloadbits and original six xwrite capture edges retained. This component measures512datapin hold/CTS cost;128bit2edgeanalogue cannot qualify it.",
+    "benches": [
+      {
+        "name": "original_register_lockstep",
+        "expect": "pass",
+        "pass_regex": "\"verdict\": \"PASS\"",
+        "threads": 1,
+        "peak_ram_gb": 2,
+        "cmd": "python3 tools/bench_smh_static_stage256.py --worker --case normal --out {RUN}/stage256_normal"
+      },
+      {
+        "name": "payload_bit_mutant",
+        "expect": "fail",
+        "fail_regex": "STATIC STAGE256 original register bit/cycle mismatch",
+        "threads": 1,
+        "peak_ram_gb": 2,
+        "cmd": "python3 tools/bench_smh_static_stage256.py --worker --case mutant --out {RUN}/stage256_mutant"
+      }
+    ],
+    "views_to": "physical/ref_tile/smh_static_stage256_ref/views",
+    "record_to": "results/rtl/ref_tile/smh_static_stage256_ref"
+  },
+  "params": {},
+  "children": [],
+  "inter": [],
+  "recipe": 2,
+  "io_flop_at_pins": {
+    "cols": 4,
+    "allow_none": true
+  },
+  "inhold": true,
+  "outhold": true,
+  "keep_pin_regs": true,
+  "pin_reg_split": true,
+  "hold_pad": {
+    "cell": "HB2xp67_ASAP7_75t_R"
+  }
+}
