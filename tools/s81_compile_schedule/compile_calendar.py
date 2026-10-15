@@ -39,6 +39,15 @@ def integer(value, label, low=0):
 # completion by one edge (issuer fault 8; MIX4 layer run 10-15, reproduced by
 # tb_s81_engram_mix4_fixed: 1428 FAIL code 8, 1429 PASS, 1430 FAIL code 6).
 ISSUE_TO_CMD_PIN_EDGES = 1
+PIPELINE_ABI = json.loads((ROOT / 'tools/s81/engine_pipeline_abi.json').read_text())['engines']
+
+
+def check_pipeline_abi(job):
+    """A measured duration is valid only for the engine's current fixed pipeline (e.g. HC return columns +1)."""
+    want = PIPELINE_ABI.get(job.get('engine'))
+    if want is not None and job.get('pipeline_abi') != want:
+        raise ValueError(f"duration measured against a stale {job.get('engine')} pipeline; re-measure with "
+                         f"{sorted(want)} (tools/s81/engine_pipeline_abi.json)")
 
 
 def issuer_done_row(issue, pin_to_pin):
@@ -213,6 +222,7 @@ def compile_program(program, binding, contract, root=ROOT):
                 raise ValueError('operation requires native RTL')
             if job.get('engine') != op['eng'] or not job.get('endpoint'):
                 raise ValueError('native engine/endpoint mismatch')
+            check_pipeline_abi(job)
             start = integer(op['start'], 'start')
             duration = integer(job['duration_cycles'], 'duration', 1)
             if op['end'] != issuer_done_row(start, duration):
@@ -311,6 +321,7 @@ def schedule_jobs(program, binding):
     ends, ports = {}, {}
     for index, op in enumerate(ops):
         owner = bindings[op['id']]
+        check_pipeline_abi(owner)
         duration = integer(owner['duration_cycles'], 'native duration', 1)
         phase_period = integer(owner['phase_period_stream'], 'phase period', 1)
         phase = integer(owner['start_phase_stream'], 'start phase')
