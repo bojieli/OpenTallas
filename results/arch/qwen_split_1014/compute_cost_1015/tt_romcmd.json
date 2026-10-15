@@ -1,0 +1,99 @@
+{
+ "unit": "TT.ROMCMD",
+ "change": "rom_cmd output register in ot_qfd_tt_ctlm_static_hr (CMDREG=1), +1 edge on every ROM-tree command",
+ "source": "claude/q15-tt-static c5fe8e060",
+ "bench": "physical/qwen_tt_static_cluster_1015/run_regroup.sh with RG_DEFS='-DREF_NO_CMDREG -DCOSTPROBE' (ref = original unregistered command, dut = h4)",
+ "programme": "results/arch/qwen_tp8_native_dispatch_1014/token_source_plan/head_program_rank7.hex, 8 runs x 640-edge windows",
+ "measured": {
+  "m_fin_rises": [
+   [
+    "ref",
+    "n=1",
+    "t=913000"
+   ],
+   [
+    "dut",
+    "n=1",
+    "t=913000"
+   ],
+   [
+    "ref",
+    "n=2",
+    "t=1560000"
+   ],
+   [
+    "dut",
+    "n=2",
+    "t=1560000"
+   ],
+   [
+    "ref",
+    "n=3",
+    "t=2207000"
+   ],
+   [
+    "dut",
+    "n=3",
+    "t=2207000"
+   ],
+   [
+    "ref",
+    "n=4",
+    "t=2854000"
+   ],
+   [
+    "dut",
+    "n=4",
+    "t=2854000"
+   ],
+   [
+    "ref",
+    "n=5",
+    "t=3501000"
+   ],
+   [
+    "dut",
+    "n=5",
+    "t=3501000"
+   ],
+   [
+    "ref",
+    "n=6",
+    "t=4148000"
+   ],
+   [
+    "dut",
+    "n=6",
+    "t=4148000"
+   ],
+   [
+    "ref",
+    "n=7",
+    "t=4795000"
+   ],
+   [
+    "dut",
+    "n=7",
+    "t=4795000"
+   ],
+   [
+    "ref",
+    "n=8",
+    "t=5442000"
+   ],
+   [
+    "dut",
+    "n=8",
+    "t=5442000"
+   ]
+  ],
+  "added_cycles_per_run": 0,
+  "note": "all 8 m_fin_o rises on the same edge with and without the register; 9 transient output differences (rom_cmd / me_acc_o / me_idle_o / t_tv_e one edge later) inside the runs"
+ },
+ "regroup_equivalence": {
+  "m0": "REGROUP_PASS cycles=65120 outputs=43 cmd_pair=32 ret_pair=1363",
+  "m1": "REGROUP_FAIL errs=285",
+  "m2": "REGROUP_FAIL errs=214454"
+ },
+ "upper_bound": "+1 per ME op (qkv, attn_kv, o_proj, gate_up, down x 36 + lm_head) = 181 cycles/token, 0.073 %"
+}
