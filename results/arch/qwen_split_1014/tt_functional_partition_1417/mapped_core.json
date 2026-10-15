@@ -1,0 +1,39 @@
+{
+  "schema": "opentallas.tt_mapped_census.v1",
+  "netlist": "/srv/opentallas-scratch/claude/ref_gate/qfd_tt_core_leaf-20261015-144016/routes/gate/work/orfs/results/asap7/opentallas_qfd_tt_core_leaf_asap7_ref_gate/base/1_2_yosys.v",
+  "netlist_sha256": "3ef4a304efd241c6c6579e3a4abcefbb822805b88eeaffc3711cc2450f419eaf",
+  "mapped_ff_total": 7247,
+  "groups": {
+    "u_tt.u_ctl": 2610,
+    "u_tt.u_ctl.u_ts": 865,
+    "u_tt": 823,
+    "tree_boundary": 497,
+    "u_tt.u_ctl.u_tag": 458,
+    "u_tt.u_ctl.g_ttreg": 325,
+    "u_tt.u_ctl.g_ami": 306,
+    "u_tt.u_ctl.g_issue_fast": 244,
+    "u_tt.u_ctl.u_v": 218,
+    "u_tt.u_ctl.u_rtag": 198,
+    "u_tt.u_ctl.g_scb": 177,
+    "u_tt.u_ctl.g_alvl[7]": 153,
+    "u_tt.u_ctl.g_alvl[8]": 102,
+    "u_tt.u_ctl.g_alvl[9]": 51,
+    "g_dpin": 40,
+    "u_tt.u_ctl.g_lctl[10]": 32,
+    "u_tt.u_ctl.g_lctl[8]": 32,
+    "u_tt.u_ctl.g_lctl[9]": 32,
+    "u_tt.u_ctl.g_lctl[11]": 28,
+    "u_snap": 24,
+    "u_tt.u_ctl.g_lctl[12]": 12,
+    "u_tt.u_ctl.u_ovl": 7,
+    "u_tt.u_ctl.g_amc": 6,
+    "u_tt.u_ctl.u_rv": 6,
+    "u_rs": 1
+  },
+  "sram_depth_bank_capture_ffs": {
+    "u_tt.u_ctl.u_tag.g_mem.g_b[0]": 143,
+    "u_tt.u_ctl.u_tag.g_mem.g_b[1]": 143
+  },
+  "qualification": "mapped inventory only; no native/physical qualification",
+  "finding": "Depth-bank captures do not divide the issue/control/scale/result FFs."
+}
