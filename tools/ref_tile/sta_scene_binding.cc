@@ -23,21 +23,28 @@ int census(ClientData, Tcl_Interp* ip, int argc, Tcl_Obj* const argv[]) {
     if (!scene) throw std::runtime_error("missing actual active scene");
     auto* network = sta->network();
     const std::string want = Tcl_GetString(argv[1]);
-    auto* inst = network->findInstance(want.c_str());
-    if (!inst) {
-      // The caller passes get_full_name of the cell it found; a flattened escaped name
-      // (e.g. u_coll.g_sring\[0\].u_m) does not round-trip through findInstance's path parser.
-      // Match the same pathName exactly over the leaf instances; never a pattern, never ambiguous.
+    // The caller passes get_full_name of the one cell get_cells found. Resolve it in the
+    // command (SDC) network that produced the name, then the base network; a flattened
+    // escaped name (u_coll.g_sring\[0\].u_m) may not round-trip through a path parser, so
+    // finally match the exact pathName over leaf instances (never a pattern, never ambiguous).
+    sta::Network* nets[2] = {sta->cmdNetwork(), network};
+    sta::Instance* inst = nullptr;
+    for (auto* net : nets) if (!inst && net) inst = net->findInstance(want.c_str());
+    std::string seen;
+    for (auto* net : nets) {
+      if (inst || !net) continue;
       int hits = 0;
-      auto* it = network->leafInstanceIterator();
+      auto* it = net->leafInstanceIterator();
       while (it->hasNext()) {
         auto* leaf = it->next();
-        if (network->pathName(leaf) == want) { inst = leaf; ++hits; }
+        std::string path = net->pathName(leaf);
+        if (path == want) { inst = leaf; ++hits; }
+        else if (seen.size() < 200 && net->libertyCell(leaf) && net->libertyCell(leaf)->isMemory()) seen += " " + path;
       }
       delete it;
-      if (hits > 1) throw std::runtime_error("ambiguous actual instance path name");
+      if (hits > 1) throw std::runtime_error("ambiguous actual instance path name " + want);
     }
-    if (!inst) throw std::runtime_error("missing actual instance");
+    if (!inst) throw std::runtime_error("missing actual instance " + want + " (memory leaves:" + seen + ")");
     auto* base = network->libertyCell(inst);
     if (!base) throw std::runtime_error("missing actual instance Liberty cell");
     auto* result = Tcl_NewDictObj();
