@@ -3,6 +3,7 @@
 // The events are independent of the renderer: a die map that draws its own geometry only needs overlayEvents()
 // and activeAt(); DieReplay is the reference renderer used by the standalone harness.
 import { P, instancesOf, elementsOf, CRIT, h, tip, detail, injectCSS, CSS, fmtCyc , COL, covLevel, covClasses, GAPS } from './core.js';
+import { normalizeDataflow, filterConnections, connectionSegments, connectionLabel, connectionDescription, sourceText } from '../dataflow.js';
 
 /**
  * Normalise a die geometry to {w, h, inst: [{name, kind, x, y, w, h, master}]} (DEF microns, y up). Accepts
@@ -75,22 +76,8 @@ export function overlayEvents(data, geometry, { range = null, group = null } = {
              phase: n.phase || null, hw: n.hw?.status || null, notBuilt,
              cov: covLevel(n), covCls: covClasses(n), covRows: n.cov ? n.cov.rows : [] };
   });
-  const centroid = (idx) => {
-    if (!idx || !idx.length) return null;
-    let x = 0, y = 0, a = 0;
-    for (const i of idx) { const r = G.inst[i]; const w = Math.max(1, r.w * r.h); x += (r.x + r.w / 2) * w; y += (r.y + r.h / 2) * w; a += w; }
-    return [x / a, y / a];
-  };
+  // Schedule dependencies are not physical transfer paths. Only explicit dataflow metadata is drawn.
   const links = [];
-  const inScope = new Set(nodes.map((n) => n.id));
-  for (const e of data.edges) {
-    if (!inScope.has(e.dst) || !inScope.has(e.src)) continue;
-    const a = centroid(idxOf[e.src]), b = centroid(idxOf[e.dst]);
-    if (!a || !b || (Math.abs(a[0] - b[0]) < 1 && Math.abs(a[1] - b[1]) < 1)) continue;
-    const d = p.nodes[e.dst];
-    links.push({ t0: d.start, t1: d.start + Math.max(d.cycles * 0.25, span * 0.006), src: e.src, dst: e.dst, from: a, to: b,
-                 critical: e.critical, bytes: e.bytes, link: e.link });
-  }
   events.sort((a, b) => a.t0 - b.t0);
   return { t0, t1, events, links };
 }
@@ -105,10 +92,15 @@ const R_CSS = `.tp-die{position:relative}.tp-die canvas{display:block;width:100%
 
 /** Reference die renderer: draws the geometry once, then the active instances / links for the Clock's time. */
 export class DieReplay {
-  constructor(el, geometry, data, { clock, group = null, range = null, maxH = 520 } = {}) {
+  constructor(el, geometry, data, { clock, group = null, range = null, maxH = 520, dataflow = null } = {}) {
     injectCSS('tp-css', CSS); injectCSS('tp-die-css', R_CSS);
     this.G = normalizeGeometry(geometry); this.data = data;
     this.ev = overlayEvents(data, geometry, { group, range });
+    this.df = normalizeDataflow(dataflow || {}); this.flowMode = 'all'; this.flowOn = false; this.showLabels = true;
+    this.selected = null; this.minimumWidth = 0; this.search = '';
+    const instanceMap = new Map(this.G.inst.map(i => [i.name, i]));
+    this.segments = this.df.edges.flatMap(edge => connectionSegments(edge, instanceMap).map(segment => ({ ...segment, edge })));
+
     const W = Math.max(280, el.clientWidth || 600);
     const s = Math.min(W / this.G.w, maxH / this.G.h);
     this.s = s; this.cw = Math.round(this.G.w * s); this.ch = Math.round(this.G.h * s);
@@ -116,7 +108,15 @@ export class DieReplay {
     this.root = h('div', { class: 'tp-die' });
     this.cv = h('canvas', { width: this.cw * dpr, height: this.ch * dpr, style: `max-width:${this.cw}px`, role: 'img', 'aria-label': 'die floorplan replay' });
     this.cap = h('div', { class: 'cap' });
-    this.root.append(this.cv, this.cap);
+    const toggle = h('input', { type: 'checkbox', 'aria-label': 'dataflow overlay', onchange: e => { this.flowOn = e.target.checked; this.draw(this.t); } });
+    const mode = h('select', { 'aria-label': 'dataflow scope', onchange: e => { this.flowMode = e.target.value; this.draw(this.t); } },
+      ...[['all', 'All physical connections'], ['current', 'Current operators'], ['selected', 'Selected operator'], ['critical', 'Critical connections']].map(([value, label]) => h('option', { value }, label)));
+    const labels = h('input', { type: 'checkbox', checked: '', 'aria-label': 'connection width labels', onchange: e => { this.showLabels = e.target.checked; this.draw(this.t); } });
+    const width = h('input', { type: 'number', min: 0, value: 0, style: 'width:68px', 'aria-label': 'minimum connection width', onchange: e => { this.minimumWidth = Math.max(0, Number(e.target.value) || 0); this.draw(this.t); } });
+    const search = h('input', { type: 'search', placeholder: 'Connection or instance', 'aria-label': 'connection search', oninput: e => { this.search = e.target.value.toLowerCase(); this.draw(this.t); } });
+    this.flowStatus = h('div', { class: 'kv', role: 'status' });
+    this.root.append(h('div', { class: 'ctl', style: 'margin-bottom:8px' }, h('label', {}, toggle, ' Dataflow'), mode, h('label', {}, labels, ' Width labels'), h('label', {}, 'Minimum bits ', width), search), this.cv, this.flowStatus,
+      h('div', { class: 'kv' }, 'Lines are schematic connections, not routed wires. Arrows require a known source and destination. Width is bits per connection; bandwidth requires clock and activity evidence.'), this.cap);
     el.replaceChildren(this.root);
     this.ctx = this.cv.getContext('2d'); this.ctx.scale(dpr, dpr);
     this.base = document.createElement('canvas'); this.base.width = this.cv.width; this.base.height = this.cv.height;
@@ -142,6 +142,15 @@ export class DieReplay {
     c.clearRect(0, 0, this.cw, this.ch);
     c.drawImage(this.base, 0, 0, this.cw, this.ch);
     const { events, links } = activeAt(this.ev, t);
+    const visible = new Set(filterConnections(this.df.edges, { mode: this.flowMode, selected: this.selected, activeNodes: events.map(e => e.node) })
+      .filter(e => (!this.minimumWidth || (e.width_bits !== null && e.width_bits >= this.minimumWidth)) && (!this.search || [e.id, e.label, e.src, e.dst, ...e.endpoints.map(p => p.instance)].join(' ').toLowerCase().includes(this.search))).map(e => e.id));
+    const candidates = this.flowOn ? this.segments.filter(s => visible.has(s.edge.id)) : [];
+    const segments = candidates.slice(0, 600);
+    this.drawnSegments = segments;
+    const mapped = this.df.coverage.token_mapped;
+    this.flowStatus.textContent = `${this.flowOn ? `${segments.length} segments shown${candidates.length > 600 ? ` / ${candidates.length}; narrow the filter` : ''}${this.showLabels && segments.length > 50 ? ' · first 50 width labels shown; narrow the filter or hover a line' : ''}` : 'Dataflow overlay off'} · ${this.df.coverage.total} source connections · ${this.df.coverage.widths_known} widths known · ${this.df.coverage.rates_known} required rates known · ${mapped} explicit token mappings` +
+      (!mapped ? ' · Current/selected operator filtering unavailable: no token-to-connection mapping.' : '') +
+      (this.df.error ? ` · ${this.df.error}` : '');
     events.sort((a, b) => a.critical - b.critical);
     for (const e of events) {
       c.fillStyle = e.color; c.globalAlpha = e.critical ? 0.9 : 0.5;
@@ -158,6 +167,20 @@ export class DieReplay {
       c.beginPath(); c.moveTo(ax, ay); c.lineTo(bx, by); c.stroke(); c.setLineDash([]);
       const f = Math.min(1, Math.max(0, (t - l.t0) / Math.max(1e-9, l.t1 - l.t0)));
       c.fillStyle = '#fff'; c.beginPath(); c.arc(ax + (bx - ax) * f, ay + (by - ay) * f, 3.5, 0, 6.3); c.fill();
+    }
+    for (const [index, segment] of segments.entries()) {
+      const [ax, ay] = this.pt(segment.from), [bx, by] = this.pt(segment.to), e = segment.edge;
+      c.strokeStyle = e.critical ? CRIT : '#efb971'; c.lineWidth = e.critical ? 2 : 1.2;
+      c.setLineDash(segment.directed ? [] : [4, 3]); c.beginPath(); c.moveTo(ax, ay); c.lineTo(bx, by); c.stroke(); c.setLineDash([]);
+      if (segment.directed) {
+        const angle = Math.atan2(by - ay, bx - ax); c.fillStyle = c.strokeStyle;
+        c.beginPath(); c.moveTo(bx, by); c.lineTo(bx - 8 * Math.cos(angle - .4), by - 8 * Math.sin(angle - .4)); c.lineTo(bx - 8 * Math.cos(angle + .4), by - 8 * Math.sin(angle + .4)); c.closePath(); c.fill();
+      }
+      if (this.showLabels && index < 50) {
+        const label = connectionLabel(e); c.font = '10px ui-monospace,monospace';
+        const x = (ax + bx) / 2, y = (ay + by) / 2, w = c.measureText(label).width;
+        c.fillStyle = '#070a14ee'; c.fillRect(x - w / 2 - 2, y - 10, w + 4, 13); c.fillStyle = '#ffe0a8'; c.fillText(label, x - w / 2, y);
+      }
     }
     // coverage: outline the instances of gap operators (pink = no hardware on a die, amber = other gaps)
     for (const e of events) {
@@ -200,9 +223,19 @@ export class DieReplay {
       (events.length > 1 ? ` · ${events.length - 1} more active` : '') : `${Math.round(t).toLocaleString()} cyc`;
     this.active = events;
   }
+  select(id) { this.selected = id; this.draw(this.t); }
   hover(ev) {
     const r = this.cv.getBoundingClientRect();
     const x = (ev.clientX - r.left) / r.width * this.cw / this.s, y = this.G.h - (ev.clientY - r.top) / r.height * this.ch / this.s;
+    const px = x * this.s, py = (this.G.h - y) * this.s;
+    const segment = (this.drawnSegments || []).find(s => {
+      const a = this.pt(s.from), b = this.pt(s.to), dx = b[0] - a[0], dy = b[1] - a[1], d = dx * dx + dy * dy;
+      const t = d ? Math.max(0, Math.min(1, ((px - a[0]) * dx + (py - a[1]) * dy) / d)) : 0;
+      return Math.hypot(px - a[0] - t * dx, py - a[1] - t * dy) < 5;
+    });
+    if (segment) return tip(h('div', {}, h('b', {}, connectionDescription(segment.edge)),
+      h('div', {}, segment.pin_located ? 'Explicit endpoint coordinates; schematic straight connection.' : 'Instance-centre schematic; exact pin locations/routed path unknown.'),
+      h('div', {}, `Source: ${sourceText(segment.edge.source)}`)), ev);
     const hit = this.G.inst.find((i) => x >= i.x && x <= i.x + i.w && y >= i.y && y <= i.y + i.h);
     if (!hit) return tip(null);
     const act = (this.active || []).filter((e) => e.idx.some((i) => this.G.inst[i] === hit));
