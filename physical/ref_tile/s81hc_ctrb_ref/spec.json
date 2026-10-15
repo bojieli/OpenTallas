@@ -41,28 +41,7 @@
  },
  "why_floorplan": "centre-band return slots 2-3 (sequencer/origination/ybuf replicated, takes the rd header + the 128 psb-shift bits): ~2.2k N / 2.5k S pins",
  "macros": [],
- "pins": {
-  "N": [
-   "rdm",
-   "hrq_n",
-   "yb_n"
-  ],
-  "S": [
-   "rv_in",
-   "rdh_in",
-   "rdd_in",
-   "hrq_s",
-   "yb_s",
-   "fv",
-   "fdx"
-  ],
-  "W": [
-   "clk",
-   "rst_in",
-   "tid",
-   "last"
-  ]
- },
+ "pins": {},
  "refglob": "*",
  "route": {
   "pd": 0.5,
@@ -74,12 +53,11 @@
  "job": {
   "owner": "Codex:S-NORM",
   "branch": "claude/s81-norm-tree-1014",
-  "tag": "v2-active-read",
+  "tag": "v2-assigned-active-read",
   "purpose": "Close production CNL_PIN1 CTRB at actual READ_STAGE1/CHAIN_STEP6; per-leaf exact probes and failing return payload mutant.",
-  "no_bench_reason": "bit-exactness is gated on the HC slab composition bench (tools/s81_suhc/hc_gate.py NG256 HIER=2 m0 PASS + m1 FAIL, NG64 m0 PASS + m3 FAIL) at the kit commit; the tile alone has no golden",
   "views_to": "physical/ref_tile/s81hc_ctrb_ref/views",
   "record_to": "results/rtl/ref_tile/s81hc_ctrb_ref",
-  "structural_change": "Route actual active READ_STAGE1 topology with kept/split boundary registers and one configured input pad before all data captures. No RTL or cycle change; unchanged outline and signoff budgets.",
+  "structural_change": "Active READ_STAGE1/CHAIN_STEP6, exact die-owned native-neighbor pin plan, kept boundary registers and configured input pads. Same accepted outline and IO/clock budgets. External rd_in/tid/last delivery still needs parent proof.",
   "benches": [
    {
     "name": "return_exact_pipe1",
@@ -122,5 +100,11 @@
  "io_flop_at_pins": {
   "cols": 4,
   "allow_none": false
+ },
+ "io_tcl": "physical/s81_die_pins/v20_hc_return/ot_s81_hc_ctrb.tcl",
+ "assigned_pins": {
+  "file": "physical/s81_die_pins/v20_hc_return/ot_s81_hc_ctrb.json",
+  "source": "S81 die lead a7fd2440e actual8453internalneighbor joins max397.008um; external rd_in/tid/last delivery remains OPEN",
+  "layout": "physical/s81_die_pins/v20_hc_capture/serial_capture_layout.json"
  }
 }

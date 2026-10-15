@@ -28,39 +28,7 @@
   "layer_cap": "M5",
   "cap_basis": "contract"
  },
- "pins": {
-  "N": [
-   "rvm",
-   "rdm",
-   "rq_q",
-   "hs_run",
-   "hs_c",
-   "hrq_n",
-   "yb_n",
-   "cs",
-   "nflt_n",
-   "hov_d",
-   "hnz_n",
-   "pflt_n"
-  ],
-  "S": [
-   "rv_in",
-   "rd_in",
-   "hrq_s",
-   "yb_s",
-   "nflt_s",
-   "hnz_s",
-   "pflt_s",
-   "fv",
-   "fdx"
-  ],
-  "W": [
-   "clk",
-   "rst_in",
-   "tid",
-   "last"
-  ]
- },
+ "pins": {},
  "clock_port": "clk",
  "blocks": [],
  "findings": [],
@@ -115,6 +83,7 @@
   "physical/qwen_die_masters/post_plain.tcl",
   "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
   "physical/common_flow/grt_macro_top_layer.tcl",
+  "physical/s81_die_pins/v20_hc_return/ot_s81_hc_ctra.tcl",
   "physical/qwen_die_masters/io_flop_at_pins.tcl",
   "physical/qwen_die_masters/out_flop_release.tcl",
   "physical/dsrom_window_source/leaf_inhold.tcl",
