@@ -445,7 +445,7 @@ def place(v, m, G):
     if STACK == 'seamw':
         # tap at the VM N face W end; tt_up4 right above it (its band words tt_ty / pword reach bands 0 and 2 from
         # the band-1 height), tt_ctlm above tt_up4 (tt_ib to the tap: one up4 height away)
-        xt = vm.x
+        xt = su.x - CH - TAP_WH[0]             # tap against the SU's W face (xs_sw 2,137 b), as far E as the column allows
         u4 = put('tt_up4_0', vm.x, su.y + TAP_SLOT_WH[1] + CH, UP4_WH)
         ct = put('tt_ctlm', vm.x, u4.y + UP4_WH[1] + CH, CTLM_WH)
     elif STACK == 'seam':
