@@ -63,7 +63,7 @@ CHILD_CK = {'qfd_tt_up4': ['ck_pin', 'ck_l0', 'ck_l1', 'ck_l2', 'ck_l3'],     # 
 # ---- C10 (compute lead r3): the link words at their REAL RTL widths (die-bus audit, link rows; owner no-stub rule):
 # qfd_d2d_rom = ot_qfd_split_romlink + ot_qkvd_d2d_llr (rtl/qwen_split/qfd_link_slots.sv).  Bundles pack LSB first in
 # the listed order, the same order at both ends (the SU / VM wrappers take the same packing).
-LINK_BITS = dict(x3=524, attn_ret=520, d2d_fdi=1169, o4_kvd=44,
+LINK_BITS = dict(x3=524, attn_ret=520, d2d_fdi=1169, o4_kvd=44, rs_0=551, rs_1=551, rs_2=551,
                  # C11 (lead answers 17:5x to the compute elements): the RTL is the width truth -- tt_ctlm c 341 / f 104,
                  # band_lanes lc 26 = {tv_e 13, sel_e 13}; SU issue si 482 (+ cb_stage 6, travels with each crom request);
                  # SU status sd 108 (no weight-ROM fields: the split SU issues no WROM reads)
@@ -89,7 +89,7 @@ def _link_words(m, rec):
     if os.environ.get('OT_SPLIT_LINK_WORDS', '1') == '0':
         return
     have = {b for b, _, _, _ in m['buses']}
-    m['buses'] = [(b, c, LINK_BITS.get(b, n), e) for b, c, n, e in m['buses']] + [x for x in LINK_CREDITS if x[0] not in have]
+    m['buses'] = [(b, c, 2050 if b.startswith('pfrag_') else LINK_BITS.get(b, n), e) for b, c, n, e in m['buses']] + [x for x in LINK_CREDITS if x[0] not in have]
     split = m.setdefault('port_split', {})
     for mst, d in LINK_SPLIT.items():
         split.setdefault(mst, {}).update({k: list(q) for k, q in d.items()})

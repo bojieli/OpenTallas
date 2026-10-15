@@ -1,4 +1,4 @@
-# Qwen3-8B TP8 split — COMPUTE die contract v1.1 (2026-10-14 17:30 PT)
+# Qwen3-8B TP8 split — COMPUTE die contract v1.2 (2026-10-14 18:48 PT; structural candidate, unqualified)
 
 Owner decision 06:45 PT 10-14: Qwen is a two-die design (compute/ROM die + KV/system die). This file is the compute
 die's contract of record. Generator: `OT_TP8_SPLIT=compute` mode of the tp8b generator (`tools/die_top_lint.py`,
@@ -45,7 +45,7 @@ element queue is at its top). v1 (07:27) is superseded by this revision.
   measured CTS). Fallback B (die change, on request only): xcol 64.8 x ~3,900 absorbing stations 7/8.
 - `qfd_xcst_n/s` (768): the station slot 52.68 x 103.66, corridor word 516 b {go, ib 379, xl 128, tag 8} + ready.
 - `qfd_xs_tap` (1): 345.6 x 345.6 at the VM N face; inputs sw 2,137 b (SU lane write), aw 553 b (VM attention write),
-  xpf 74 b (tt_ctlm), gi 380 b (tree top go / ib); outputs two registered head words hw / he 1,567 b.
+  xpf 72 b (real controller lookahead BEFORE producer writes), gi 380 b (one-cycle go / descriptor); outputs two registered head words hw / he 1,568 b. Column faults return inward through fault_i/fault, with the two outermost fault_i ports declared zero-valued termini; the tap consumes hw_f/he_f.
 
 ## 4. Die-to-die link (boundary with the KV/system die: LINK.md, el1014-qwen-split-kvsys.log)
 - KV/system die owns the PLL; core clock + reset forwarded over the D2D bump pair (`qfd_ckbump` model -> `qfd_clkrx`;
@@ -77,3 +77,35 @@ element queue is at its top). v1 (07:27) is superseded by this revision.
 - PDN in the die chain: r7 (`tools/qwen_split/pdn_regroup.py --skip-prefix rly_`): M8 at 8.64 um (= 4 x the 2.16-um
   origin lattice), M9 at the bump pitch; no macro grid for die relays (pdngen costs ~2 s per instance grid; the core
   lattice runs over the relays either way). Relay M7->M8 vias are a recorded PDN scope item.
+
+## 6. C13 structural candidate and authoritative interface corrections
+
+This revision is a candidate, not a qualified die. C8 real-case placement failed before PDN/GRT/STA due to overlapping
+relay frames; the exact source and pair are in `c8_case_failure/overlap.json`. The shared allocator fix removes
+unreserved pass-one frames after a failed lifted-chain repair, retains the unrepaired verdict, and permits a fresh
+search. C9/C11 builds remain live; their old-source results must be collected before deciding whether to route.
+
+C13 uses `OT_SPLIT_STACK=seam`: the SU/VM registered faces retain the existing 24-nm abutment and zero extra transport
+edges. The seam lies 216 um above the head row. The tap sits beside the SU; the controller and tree-top receiver sit
+above the tap; the clock receiver sits below the VM. Slab stacks clear the head-row channel. Head words use die M8/M9
+over the M7-capped VM. Latency, 2-D cut windows, pin alignment and TT/FF endpoints require measurement on the full plan.
+
+The port-frame slot remains **1,036.8 x 2,462.4**. The earlier claim of eight result groups per frame confused block
+words with result groups: TP8 has 48 block words and 24 result groups (eight BW FIFO inputs and four result groups per
+half-band frame). The 1,101.6-wide direct-leaf diagnostic option is retained as an environment parameter only and is
+not adopted. Every final frame must include its real BW transport and actual result functionality.
+
+The half-band fragment carries **2,050 bits**: four distinct level-TCUT7 words (2,048 data bits, lowest word first),
+valid at bit 2,048, fault at bit 2,049. It cannot be represented by the old 512-bit aggregate: production matvec issues
+on each active edge, so four-cycle serialization would reduce throughput. The primary consumes this vector on cf1,
+and the secondary produces it on cw<band>. Both faces must be registered and the cut/relay plan must be rebuilt.
+The band tw/ty vectors are 4,096 bits each, matching qfd_sp_band_lanes; control tc is 341 and tf is 104.
+
+Serializer output rb0..2 is 551 bits and follows the actual qfd_sp_res_ser RTL: data bits 0..511, mask 512..527,
+row 528..547, nul 548, end 549, valid 550. A v-at-bit-zero wrapper corrupts this protocol. The serializer me_en inputs
+come from one-bit tt_ctlm mer0..2 outputs; serializer sticky faults return on one-bit rf0..2 inputs.
+
+Open native requirements: the real VM Q exporter and arbitration with SU KVN traffic; pre-write XPF compiler/controller
+lookahead including resident-X coverage; native no-X VM bundles (full 20-bit row addresses), reset and 448 child-clock
+entries; collective and link replay per-child clocks; native half-band reducers and frame transport; block-last
+node-less tile binding. No testbench producer, tied functional port, or unqualified native clock path proves these.
