@@ -1,0 +1,43 @@
+{
+  "schema": "opentallas.kvsys.static_memory_slots.v1",
+  "status": "DIE_ASSIGNED_NEW_OUTLINE; ACTUAL_ADAPTER_PORTS_AND_GLOBAL_REPLAN_PENDING",
+  "pc_leaf": {
+    "instances": 128,
+    "outline_um": [
+      108,
+      172.8
+    ],
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "macro_um": [
+      94.824,
+      41.064
+    ],
+    "macro_origin_um": [
+      6.48,
+      64.8
+    ],
+    "macro_orientation": "OWNER_SELECT_R0_OR_MX_FROM_REAL_PIN_PATHS",
+    "macro_halo_um": 5.4,
+    "macro_halo_fits": true,
+    "clock": "independent coreck entry perPC; actualnativephi-R required",
+    "reset": "actualcontroller/source-ownerreset required",
+    "new_master_required": true,
+    "old_master": "qkd_land_pc86.4x172.8 remainsoldview"
+  },
+  "landing_parent": {
+    "old_width_um": 172.8,
+    "reserved_new_width_um": 194.4,
+    "canonical_pc_column_x_um": 86.4,
+    "historical_merge_column_width_um": 86.4,
+    "reason": "94.824wide actual128x256macro cannot fit86.4oldPC slot. 108PCslot providesmacro+5.4halo."
+  },
+  "scope": "Actualdieglobalplacements/buses/relaycost must be regenerated before native case launch. Source/schema excludes oldDQ128 kept-row matcher/credit fallback. Shape reservation does not certify mapped area or timing.",
+  "open": [
+    "actualstaticadaptertop/portABI",
+    "sourcecorrectperPCdatafaceassignment",
+    "globaldie194.4landingreplan",
+    "mappedareaandclockcensus",
+    "realcontrollerfixedreturnwindowandHBMphase",
+    "nativecapture/launch/phi-R/reset/TTFFDRC"
+  ]
+}
