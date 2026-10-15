@@ -23,7 +23,10 @@ def schedule(T,mode):
   plast=0;flast=0;lasts=[]
   for b in range(math.ceil(T/TD)):
    nw=math.ceil(math.ceil(min(T-b*TD,TD)/R)/PW)
-   start=max(plast+1,lasts[b-NB]+GP if b>=NB else 1)
+   # RTL p_ready: a new block's first P word needs pl_blk < iss_blk + LA (LA = NBANK-1), and iss_blk
+   # advances the edge after block b-LA's last PV beat; bank reuse (b-NB) also needs the drain gap GP.
+   LA=NB-1
+   start=max(plast+1,lasts[b-LA]+1 if b>=LA else 1,lasts[b-NB]+GP if b>=NB else 1)
    for c in range(nw):put(start+c,'p')
    plast=start+nw-1
    fs=max(flast+1,2,lasts[b-2] if b>=2 else 2)
