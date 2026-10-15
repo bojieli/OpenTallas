@@ -1,0 +1,169 @@
+{
+ "cut": {
+  "y": 15100,
+  "xwin": [
+   17680,
+   17940
+  ],
+  "demand_bits": 3685,
+  "usable_tracks": 5450,
+  "ratio": 0.6761467889908257
+ },
+ "capacity_at_owner_060": 3270,
+ "extra_tracks_required": 691.666666666667,
+ "equivalent_width_growth_um": 32.99694189602451,
+ "candidate_buses": [
+  {
+   "bus": "x3__r14",
+   "cls": "spine_local",
+   "bits": 525,
+   "names": [
+    "rly_x3_13",
+    "rly_x3_14"
+   ],
+   "pins": [
+    [
+     17704.62,
+     15120.096
+    ],
+    [
+     17695.98,
+     14759.16
+    ]
+   ]
+  },
+  {
+   "bus": "emb__r1",
+   "cls": "io",
+   "bits": 1024,
+   "names": [
+    "rly_emb_0",
+    "rly_emb_1"
+   ],
+   "pins": [
+    [
+     17783.7,
+     15093.960000000001
+    ],
+    [
+     17783.7,
+     15457.055999999999
+    ]
+   ]
+  },
+  {
+   "bus": "emb_a__r14",
+   "cls": "io",
+   "bits": 26,
+   "names": [
+    "rly_emb_a_13",
+    "rly_emb_a_14"
+   ],
+   "pins": [
+    [
+     17781.516,
+     15163.296
+    ],
+    [
+     17716.716,
+     14847.720000000001
+    ]
+   ]
+  },
+  {
+   "bus": "emb_cr__r1",
+   "cls": "io",
+   "bits": 1,
+   "names": [
+    "rly_emb_cr_0",
+    "rly_emb_cr_1"
+   ],
+   "pins": [
+    [
+     17783.676,
+     14931.960000000001
+    ],
+    [
+     17904.636,
+     15202.176
+    ]
+   ]
+  },
+  {
+   "bus": "kvn_WN__r2",
+   "cls": "kvn",
+   "bits": 1048,
+   "names": [
+    "rly_kvn_WN_1",
+    "rly_kvn_WN_2"
+   ],
+   "pins": [
+    [
+     17674.404000000002,
+     15093.960000000001
+    ],
+    [
+     17868.804,
+     15249.696
+    ]
+   ]
+  },
+  {
+   "bus": "emf_WN__r1",
+   "cls": "kvn",
+   "bits": 530,
+   "names": [
+    "rly_emf_WN_0",
+    "rly_emf_WN_1"
+   ],
+   "pins": [
+    [
+     17716.74,
+     14921.16
+    ],
+    [
+     17673.54,
+     15228.096
+    ]
+   ]
+  },
+  {
+   "bus": "emr_WN__r68",
+   "cls": "kvn",
+   "bits": 530,
+   "names": [
+    "rly_emr_WN_67",
+    "rly_emr_WN_68"
+   ],
+   "pins": [
+    [
+     17846.34,
+     15184.895999999999
+    ],
+    [
+     17695.14,
+     14985.960000000001
+    ]
+   ]
+  }
+ ],
+ "nearby_obstacles": [
+  {
+   "n": "pll",
+   "m": "qkd_pll",
+   "x": 17816.112,
+   "y": 14850.0,
+   "w": 323.976,
+   "h": 323.976
+  },
+  {
+   "n": "embgw",
+   "m": "qkd_embgw",
+   "x": 17783.712,
+   "y": 14456.88,
+   "w": 388.776,
+   "h": 388.776
+  }
+ ],
+ "note": "Requested cut arithmetic from die lead; candidate buses use actual case pins with either L choice; not identical to generator face-projected cut model."
+}
