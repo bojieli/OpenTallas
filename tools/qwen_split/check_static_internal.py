@@ -19,11 +19,11 @@ def run():
    (out/(name+'.log')).write_text(r.stdout+r.stderr)
    if (r.returncode==0)!=success:raise RuntimeError(name+': '+r.stdout+r.stderr)
   headsrc=[str(D/f) for f in ['ot_qwen_rom_core_ctrl_static.sv','ot_qfd_tt_ctlm_split_static.sv','ot_qwen_fixed_issue.sv','ot_qwen_fixed_issue_pw.sv','tb_qfd_static_head_face.sv']]+['rtl/hdc/ot_hdc_dyn_ttiles.sv','rtl/hdc/ot_hdc_delay.sv','rtl/hdc/ot_hdc_prefix.sv','rtl/hdc/ot_hdc_qwen_int8_embed_decode.sv','rtl/qwen_sys/missing_masters_20261007/ot_qfd_split_exact.sv','rtl/qwen_sys/missing_masters_20261007/ot_qfd_spine_masters.sv','rtl/physical/ot_qfd_tt_ctlm_split.sv']
-  for name,mut in [('actual_head_face',False),('head_context_mutant',True)]:
+  for name,mut,params in [('actual_head_face',False,[]),('head_cp_busy_fault_timeline',False,['CP_BUSY=1']),('head_program_write_fault_timeline',False,['ACTIVE_WRITE=1']),('head_context_mutant',True,[])]:
    paths=headsrc.copy()
    if mut:
     newhead=Path(tmp)/'head.sv';newhead.write_text((ROOT/D/'ot_qfd_tt_ctlm_split_static.sv').read_text().replace('if(accepted_start)begin native_tok','if(1\'b1)begin native_tok'));paths[1]=str(newhead)
-   compiled=subprocess.run(['iverilog','-g2012','-s','tb_qfd_static_head_face','-o',exe]+paths,cwd=ROOT,capture_output=True,text=True)
+   compiled=subprocess.run(['iverilog','-g2012','-s','tb_qfd_static_head_face','-o',exe]+['-Ptb_qfd_static_head_face.'+p for p in params]+paths,cwd=ROOT,capture_output=True,text=True)
    (out/(name+'_compile.log')).write_text(compiled.stdout+compiled.stderr)
    if compiled.returncode:raise RuntimeError(compiled.stderr)
    r=subprocess.run(['vvp',exe,'+PROGRAM='+str(program_local)],cwd=ROOT,capture_output=True,text=True);(out/(name+'.log')).write_text(r.stdout+r.stderr)

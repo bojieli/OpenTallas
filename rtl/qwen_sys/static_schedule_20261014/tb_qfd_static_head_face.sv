@@ -3,7 +3,7 @@
 // stimuli. PSRAM0 exercises the source FF program-store profile; SRAM physical
 // mode and actual endpoint/VM composition require separate admitted gates.
 module tb_qfd_static_head_face;
- parameter MUT_CONTEXT=0;
+ parameter MUT_CONTEXT=0,CP_BUSY=0,ACTIVE_WRITE=0;
  reg clk=0;always #0.5 clk=~clk;
  reg rst_n=0,start=0,pv=0;reg[9:0]pa=0;reg[63:0]pd=0;
  reg[17:0]token=1,pos=7;
@@ -14,7 +14,7 @@ module tb_qfd_static_head_face;
  reg before_me,before_cp;reg[11:0]before_pc;
  localparam[55:0]COPY={7'd64,24'd8192,24'd8192,1'b1};
  qfd_tt_ctlm_head_static #(.PSRAM(0))d(
- .clk(clk),.ck_sched(clk),.cp_active(1'b0),.cp(cp),.layer_context_v(ctx),.native_tok(nt),.native_pos(np),
+ .clk(clk),.ck_sched(clk),.cp_active(CP_BUSY?1'b1:1'b0),.cp(cp),.layer_context_v(ctx),.native_tok(nt),.native_pos(np),
  .rst_n(rst_n),.h_start(start),.token(token),.pos(pos),.prog_base(12'd0),
  .pw_v(pv),.pw_addr(pa),.pw_data(pd),.x_oacc(24'd3),.x_oidle(1'b1),.x_oprog(16'hffff),.x_orows(16'hffff),
  .kv_ok(1'b1),.kv_write_drained(1'b1),.me_mem_ok(1'b0),.me_clk_en(ce),.c_fault(cf),
@@ -54,8 +54,9 @@ module tb_qfd_static_head_face;
  end
  if(cp[0])begin if(cp!==COPY)$fatal(1,"actual CP56 payload corrupted");cp_seen=cp_seen+1;end
  @(negedge clk);if(c>4)begin token=999;pos=555;end
+ if(ACTIVE_WRITE&&c==100)begin pv=1;pa=0;pd=rom[0][63:0];end else pv=0;
  end
- if(cf!==1'b0||me_seen!=4||cp_seen!=3||ctx_seen!=1||ce!==1'b1)$fatal(1,"head face composition fault");
+ if(cf!==((CP_BUSY||ACTIVE_WRITE)?1'b1:1'b0)||me_seen!=4||cp_seen!=3||ctx_seen!=1||ce!==1'b1)$fatal(1,"head face composition fault");
  $display("PASS real head PW/IS/decoder/GO+CP56 stations, registered unit/PC, accepted context despite raw pin changes");$finish;
  end
 endmodule
