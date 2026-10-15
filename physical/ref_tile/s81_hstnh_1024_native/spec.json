@@ -1,0 +1,104 @@
+{
+ "name": "s81_hstnh_1024_native",
+ "top": "dsfd_hstnh_1024",
+ "kind": "tile",
+ "sources": [
+  "rtl/common/ot_fwd_link_stage.sv",
+  "rtl/dsrom_sys/s81_station_native/dsfd_hstnh_1024.sv"
+ ],
+ "params": {},
+ "clock_port": "ck",
+ "reset_ports": [],
+ "outline": {
+  "w": 17.256,
+  "h": 53.976,
+  "exact": true
+ },
+ "layer_cap": "M5",
+ "pins": {
+  "W": [
+   "di"
+  ],
+  "E": [
+   "dq"
+  ],
+  "N": [
+   "ck"
+  ]
+ },
+ "io_tcl": "physical/s81_die_pins/v22_hstnh_1024_candidate/dsfd_hstnh_1024.tcl",
+ "recipe": 2,
+ "route": {
+  "pd": 0.5,
+  "threads": 4,
+  "peak_ram_gb": 12,
+  "pin_h": "M4",
+  "pin_v": "M3 M5",
+  "m5_pg_pitch": 2.7,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "structural_change": "First actual qualification of exact generated common-clock station dsfd_hstnh_1024; one top ck root, actual kept INV followed by negedge payload stage (top posedge). 81 instances in GEN18r. No forwarded output clock port; no stage or target-clock changes. Exact tight outline and original generator pin centers are a candidate and must pass real IO/PG/CTS/native boundary checks; generated LEF is not a qualified physical view.",
+ "slot_change_request": {
+  "reason": "First exact hardening of current generated placeholder; no footprint growth, all interfaces preserved; source-bound native geometry qualification pending",
+  "outline": [
+   17.256,
+   53.976
+  ]
+ },
+ "job": {
+  "owner": "Codex:S81-die-takeover",
+  "branch": "codex/takeover-s81die-0757",
+  "tag": "native1",
+  "purpose": "One canonical 1024b common-clock station for 81 GEN18r replicas; exact phase/basis/random gates and actual pin geometry",
+  "views_to": "physical/ref_tile/s81_hstnh_1024_native/views",
+  "record_to": "results/rtl/ref_tile/s81_hstnh_1024_native",
+  "extra_paths": [
+   "rtl/common",
+   "rtl/dsrom_sys/s81_station_native",
+   "tools/s81_station_native",
+   "physical/s81_die_pins/v22_hstnh_1024_candidate",
+   "physical/hbm_accel_die_views/stations/bench"
+  ],
+  "benches": [
+   {
+    "name": "actual_phase_words",
+    "cmd": "bash tools/s81_station_native/run_gate.sh pass {RUN}/bench_actual",
+    "expect": "pass",
+    "pass_regex": "STATION PASS 20000 words 20480000 bits top_posedge",
+    "threads": 2,
+    "peak_ram_gb": 4
+   },
+   {
+    "name": "wrong_clock_edge_mutant",
+    "cmd": "bash tools/s81_station_native/run_gate.sh clock_mutant {RUN}/bench_clock_mutant",
+    "expect": "pass",
+    "pass_regex": "STATION MUTANT REJECTED clock_mutant",
+    "threads": 2,
+    "peak_ram_gb": 4
+   },
+   {
+    "name": "payload_bit_mutant",
+    "cmd": "bash tools/s81_station_native/run_gate.sh data_mutant {RUN}/bench_data_mutant",
+    "expect": "pass",
+    "pass_regex": "STATION MUTANT REJECTED data_mutant",
+    "threads": 2,
+    "peak_ram_gb": 4
+   }
+  ]
+ },
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ }
+}
