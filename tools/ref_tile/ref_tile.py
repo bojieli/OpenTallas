@@ -1220,7 +1220,9 @@ def gen_env(s: dict, kd: str, W: float, H: float, lc: dict, blocks: list) -> str
         f"PINEX={0 if (s['pins'].get('ANY') or s.get('io_tcl')) else 1}", f"INTER={shq(inter)}", f"REFGLOB={shq(refglob)}", f"CLKPORT={s['clock_port']}",
         f"PD={r.get('pd', 0.55)}", f"NC={r.get('threads', 8)}", f"PIN_H={shq(ph)}", f"PIN_V={shq(pv)}", f"PIN_MIN_TRACKS={r.get('pin_min_tracks', 2)}", "STAGES=pnr",
         f"RLAYERS={shq(' '.join(lc['rlayers']))}", f"ROUTE_PERIOD_NS={r.get('period_ps', 770) / 1000.0}",
-        *([f"CLOCK_RLAYERS={shq(lc['rlayers'][1] + ' ' + lc['rlayers'][1])}"]
+        # OpenROAD set_routing_layers rejects an equal clock range (M4-M4 -> ODB-0137, measured 2026-10-14 in
+        # openroad/orfs:asap7lock): the clock range under a strict cap is the cap and the layer below it.
+        *([f"CLOCK_RLAYERS={shq('M%d' % (metal(lc['rlayers'][1]) - 1) + ' ' + lc['rlayers'][1])}"]
           if lc.get("signal_max_layer") and metal(lc["rlayers"][1]) < 5 else []),
         f"KIT=/src/{kd}", f"MACROS=({' '.join(views)})", f"EXTRA=({' '.join(extra)})", *pin_balance_env(r, lc),
         *([f"export OT_PIN_GROUP_MAX={pin_group_max(s)}"] if "pin_group_max" in r else []),

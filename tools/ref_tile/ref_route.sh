@@ -28,8 +28,8 @@ hook() {
 }
 S=(); for f in $SRCS; do S+=(--source $f); done
 M=(); for m in "${MACROS[@]}"; do M+=(--macro $m); done
-# The ASAP7 default clock floor is M5. An explicit stricter signal contract
-# supplies its own clock range; legacy kits leave both platform defaults alone.
+# An explicit stricter signal contract supplies its own clock range (cap-1 .. cap: OpenROAD rejects an equal range,
+# ODB-0137); legacy kits leave both platform defaults alone.
 CR=()
 if [ -n "${CLOCK_RLAYERS:-}" ]; then
   read -r OT_CLK_LO OT_CLK_HI <<< "$CLOCK_RLAYERS"
