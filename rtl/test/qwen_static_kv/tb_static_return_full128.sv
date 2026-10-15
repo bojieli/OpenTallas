@@ -3,7 +3,7 @@
 // each HOST native WR/readback then K256/V256 without resetting. Discovery is
 // a separate executable whose frozen fixture is replayed by PROFILE0. Return
 // calendar is reservation-only; production physical phases/source/token OPEN.
-module qkd_full128_return_cell #(parameter integer PC=0, STACK=0, DISCOVERY=0)(output reg done=0);
+module qkd_full128_return_cell #(parameter integer PC=0, STACK=0, DISCOVERY=0)(output reg done=0, output wire [327:0] phy_command, output wire phy_clk);
  localparam CYCLES=2600,RL=23;
  string fixture_root; string fixture_file; integer fixture_fd;
  
@@ -50,6 +50,7 @@ module qkd_full128_return_cell #(parameter integer PC=0, STACK=0, DISCOVERY=0)(o
   if(!DISCOVERY&&rst&&(return_hfault||return_cfault))$fatal(1,"actual controller dual-clock slot fault at core%0d",core_edge);
  end
  reg ck=0;always #0.512 ck=~ck;
+ assign phy_clk=ck;assign phy_command=po;
  reg rst=0;
  reg owner=0;reg [42:0] cmd=0;reg reserved=0,sr_reserved=0,wr_reserved=0;
  reg [287:0] es=0;reg [288:0] pi=0;
@@ -89,7 +90,8 @@ module qkd_full128_return_cell #(parameter integer PC=0, STACK=0, DISCOVERY=0)(o
  task automatic bad(input string message);
   if(errors<12)$display("BAD pc%0d stack%0d %s",PC,STACK,message);errors++;
  endtask
- task automatic drive(input integer t);
+ task automatic drive(input integer edge_index);
+  integer t;t=edge_index-40;
   es=0;cmd=0;owner=t>=220;
   if(t==100)es={1'b1,1'b1,5'd5,5'd7,19'd24427,data(24427,157),1'b1};
   if(t==160)es={1'b0,1'b0,5'd5,5'd7,19'd24427,256'b0,1'b1};
@@ -120,13 +122,13 @@ module qkd_full128_return_cell #(parameter integer PC=0, STACK=0, DISCOVERY=0)(o
     drive(t);
     if(phase==0)begin reserved=0;sr_reserved=0;wr_reserved=0;end
     else begin reserved=slots[t];sr_reserved=srslots[t];wr_reserved=wrslots[t];end
-    sr_read_reserved=sr_reserved && t>=150;
+    sr_read_reserved=sr_reserved && t>=190 && mode!=8;
     if(phase==1&&mode==1&&t>0)reserved=slots[t-1];
-    if(phase==1&&mode==2&&t==1300)cmd[42:33]=10'd513;
+    if(phase==1&&mode==2&&t==1340)cmd[42:33]=10'd513;
     pi={word[t],due[t]};
     rawslot=phase==0?due[t]:rawslots[t];
     if(phase==0)rawslots[t]=due[t];
-    if(phase==1&&mode==3&&t==400)pi[0]=0;
+    if(phase==1&&mode==3&&t==440)pi[0]=0;
     @(posedge ck);
     // Wrapper has two RD reservation pin stages ahead of its actual core.
     if(phase==0&&t>=2)begin
@@ -189,10 +191,22 @@ endmodule
 
 module tb_static_return_full128 #(parameter integer DISCOVERY=0);
  wire [127:0] done;
+ wire [127:0] phy_clk;wire [327:0] phy_command[0:127];
+ integer paired_row_conflicts=0,paired_column_conflicts=0,phy_edges=0;
+ // This is a raw simultaneous-command audit, not a validated HBM3 serializer.
+ // Actual DDR edge encoding, shared-PC source program and phase remain OPEN.
+ always @(posedge phy_clk[0])begin
+  for(integer i=0;i<128;i+=2)begin
+   if(phy_command[i][0]&&phy_command[i+1][0])paired_row_conflicts++;
+   if(phy_command[i][28]&&phy_command[i+1][28])paired_column_conflicts++;
+  end
+  phy_edges++;
+ end
  for(genvar i=0;i<128;i++)begin:pc
-  qkd_full128_return_cell #(.PC(i%32),.STACK(i/32),.DISCOVERY(DISCOVERY)) cell_i(.done(done[i]));
+  qkd_full128_return_cell #(.PC(i%32),.STACK(i/32),.DISCOVERY(DISCOVERY)) cell_i(.done(done[i]),.phy_clk(phy_clk[i]),.phy_command(phy_command[i]));
  end
  always @(done)if(&done)begin
+  $display("AUDIT pairedPC sharedbus simultaneous row%0d column%0d edges%0d DDRSerializationOPEN",paired_row_conflicts,paired_column_conflicts,phy_edges);
   $display("PASS full128 persistent actual controllers 65536 KV sectors hostWriteRead128 completions256 discovery%0d physicalPhaseSourceProfileFullTokenOPEN",DISCOVERY);
   $finish;
  end

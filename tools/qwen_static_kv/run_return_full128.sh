@@ -9,7 +9,7 @@ for p in rtl/qwen_sys/static_kv_20261014/{ot_qkd_static_emb_cdc,qkd_static_kv_wr
  mkdir -p "$src/$(dirname "$p")";git -C "$root" show "3221e4f5e:$p" > "$src/$p"
 done
 for p in rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_slots.sv rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_calendar.sv;do
- mkdir -p "$src/$(dirname "$p")";git -C "$root" show "8539ea1ef:$p" > "$src/$p"
+ mkdir -p "$src/$(dirname "$p")";rev=8539ea1ef;[[ "$p" == *return_slots.sv ]] && rev=df5c31ed0;git -C "$root" show "$rev:$p" > "$src/$p"
 done
 p=rtl/test/qwen_static_kv/tb_static_return_full128.sv;mkdir -p "$src/$(dirname "$p")";cp "$root/$p" "$src/$p"
 mapfile -d '' sources < <(find "$src" -name '*.sv' -print0)
@@ -20,7 +20,7 @@ for discover in 1 0;do
   find "$out/fixtures" -type f -print0 | sort -z | xargs -0 sha256sum > "$out/fixtures.sha256"
  else
   for phase in 137 637;do
-   for mode in 0 1 2 3 4 5 6 7;do
+   for mode in 0 1 2 3 4 5 6 7 8;do
     if "$out/obj0/Vtb_static_return_full128" +fixtures="$out/fixtures" +phase="$phase" +faultmode="$mode" > "$out/p${phase}_m${mode}.log" 2>&1;then rc=0;else rc=$?;fi
     echo "$rc" > "$out/p${phase}_m${mode}.exit"
     if ((mode==0));then test "$rc" = 0;grep -q '^PASS full128 persistent' "$out/p${phase}_m${mode}.log";else test "$rc" != 0;fi
@@ -29,4 +29,4 @@ for discover in 1 0;do
  fi
 done
 find "$src" -name '*.sv' -print0 | sort -z | xargs -0 sha256sum > "$out/source.sha256"
-echo 'PASS full128 actual persistent controllers and frozen independent return calendars; dual phases and seven mutants each'
+echo 'PASS full128 actual persistent controllers and frozen independent return calendars; dual phases and eight mutants each'
