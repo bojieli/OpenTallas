@@ -1,0 +1,20 @@
+{
+  "schema": "opentallas.hbm.program-ready-pin-sizing.v1",
+  "source_core": "ot_hbm_program_block_ready PCW10 TARGET48 MUT0 unchanged actual finite bitmap",
+  "cause": "old output ready had rawprogram_active combinationalpath; rawcfgwe/addresshit1024bitdecode; directresetfanout1024",
+  "structure": "unconditional inputpinFFs, local2FFasyncassert/syncrelease, originalvalidator, ready/faultoutputFFs",
+  "cost": {
+    "new_input_edges": 1,
+    "new_status_edges": 1,
+    "execution_edges_added": 0,
+    "old_std_area_um2": 653.9859,
+    "old_ff": 1101,
+    "estimated_ff_upper_bound": 1200,
+    "estimated_std_area_um2_upper_bound": 730,
+    "diagnostic_outline_um": [
+      86.4,
+      86.4
+    ]
+  },
+  "scope": "local installed-row validator only; parenthome/11downstreamwriteports/physical CTS/nativepin proof OPEN"
+}
