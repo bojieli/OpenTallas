@@ -80,7 +80,7 @@
     "name": "node_window_mutant",
     "cmd": "bash tools/s81_static_net/bench_node_master.sh mut_window dsfd_node_NNfd rtl/dsrom_sys/s81_static_net/gen/dsfd_node_NNfd.sv {RUN}/node_mw",
     "expect": "fail",
-    "fail_regex": "NODE_STATIC",
+    "fail_regex": "GATE MUTANT .*REJECTED",
     "threads": 2,
     "peak_ram_gb": 4
    },
@@ -88,7 +88,7 @@
     "name": "node_fault_chain_mutant",
     "cmd": "bash tools/s81_static_net/bench_node_master.sh mut_fault dsfd_node_NNfd rtl/dsrom_sys/s81_static_net/gen/dsfd_node_NNfd.sv {RUN}/node_mf",
     "expect": "fail",
-    "fail_regex": "NODE_STATIC",
+    "fail_regex": "GATE MUTANT .*REJECTED",
     "threads": 2,
     "peak_ram_gb": 4
    }

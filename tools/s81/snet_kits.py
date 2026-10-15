@@ -176,9 +176,9 @@ def main() -> int:
                 {'name': 'node_exact', 'cmd': f'bash {bench} pass {mst} {rtl} {{RUN}}/node_pass', 'expect': 'pass',
                  'pass_regex': 'NODE_STATIC_GATE PASS', 'threads': 2, 'peak_ram_gb': 4},
                 {'name': 'node_window_mutant', 'cmd': f'bash {bench} mut_window {mst} {rtl} {{RUN}}/node_mw',
-                 'expect': 'fail', 'fail_regex': 'NODE_STATIC', 'threads': 2, 'peak_ram_gb': 4},
+                 'expect': 'fail', 'fail_regex': 'GATE MUTANT .*REJECTED', 'threads': 2, 'peak_ram_gb': 4},
                 {'name': 'node_fault_chain_mutant', 'cmd': f'bash {bench} mut_fault {mst} {rtl} {{RUN}}/node_mf',
-                 'expect': 'fail', 'fail_regex': 'NODE_STATIC', 'threads': 2, 'peak_ram_gb': 4}]
+                 'expect': 'fail', 'fail_regex': 'GATE MUTANT .*REJECTED', 'threads': 2, 'peak_ram_gb': 4}]
             change = (f'S-NET static return node {mst} ({n} die instances): the ot_v41_retn_w17w10 wrapper (D=64 x 2 queues, '
                       'WAIT-timeout forwarding, older-side-first / yield-to-add arbitration) is replaced by ot_s81_retn_static '
                       '(owner static-schedule rule 10-14 18:59): sibling window WIN=2, every output at edge early+WIN+8, no queue/'
@@ -192,7 +192,7 @@ def main() -> int:
                 {'name': 'sstn_exact', 'cmd': f'bash {bench} pass {mst} {rtl} {{RUN}}/sstn_pass', 'expect': 'pass',
                  'pass_regex': 'SSTN_REG_GATE PASS', 'threads': 1, 'peak_ram_gb': 2},
                 {'name': 'sstn_noreset_mutant', 'cmd': f'bash {bench} mut_noreset {mst} {rtl} {{RUN}}/sstn_mut',
-                 'expect': 'fail', 'fail_regex': 'SSTN_REG', 'threads': 1, 'peak_ram_gb': 2}]
+                 'expect': 'fail', 'fail_regex': 'GATE MUTANT .*REJECTED', 'threads': 1, 'peak_ram_gb': 2}]
             change = (f'S-NET {mst} ({n} die instances): the reset-qualified valid is now a column-reset flop at the pin '
                       '(--sstn-reg) instead of flop AND rs behind the output pin (logic after the output register); '
                       + ('the undeclared cc driver removed; ' if mst == 'dsfd_sstn_e0c0' else '') + '0 cycles, same ports')
@@ -201,11 +201,18 @@ def main() -> int:
             sources = [LANE_CROSS, f'{SNET}/ot_s81_static_lane_end.sv', RATIO_SRC, rtl]
             clock, resets = 'ck', ['rs'] + (['rss'] if 'input wire [0:0] rss' in txt else [])
             bench = 'tools/s81_static_net/bench_hend_master.sh'
-            benches = [
+            if re.search(r'_vs[01]_1x1__', mst):   # status lane: start + end pair bench (partner RTL in the same dir)
+                benches = [
+                    {'name': 'status_pair_exact', 'cmd': f'bash tools/s81_static_net/bench_status_master.sh pass {mst} {rtl} {{RUN}}/st_pass',
+                     'expect': 'pass', 'pass_regex': 'STATUS_STATIC_GATE PASS', 'threads': 1, 'peak_ram_gb': 2},
+                    {'name': 'status_delay_mutant', 'cmd': f'bash tools/s81_static_net/bench_status_master.sh mut_offset {mst} {rtl} {{RUN}}/st_mut',
+                     'expect': 'fail', 'fail_regex': 'GATE MUTANT .*REJECTED', 'threads': 1, 'peak_ram_gb': 2}]
+            else:
+                benches = [
                 {'name': 'hend_exact', 'cmd': f'bash {bench} pass {mst} {rtl} {{RUN}}/hend_pass', 'expect': 'pass',
                  'pass_regex': 'HEND_STATIC_GATE PASS', 'threads': 1, 'peak_ram_gb': 4},
                 {'name': 'hend_offset_mutant', 'cmd': f'bash {bench} mut_offset {mst} {rtl} {{RUN}}/hend_mut',
-                 'expect': 'fail', 'fail_regex': 'HEND_STATIC', 'threads': 1, 'peak_ram_gb': 4}]
+                 'expect': 'fail', 'fail_regex': 'GATE MUTANT .*REJECTED', 'threads': 1, 'peak_ram_gb': 4}]
             how = ('ot_s81_static_ratio_cross (fixed source-edge map, compiled bubble phase)' if 'ratio_cross' in txt else
                    'ot_s81_static_lane_end (pin register, marker epoch, fixed offset)' if 'lane_end' in txt else
                    'a same-clock pin pipeline (ck and cks are one die net)')
@@ -225,7 +232,7 @@ def main() -> int:
                 {'name': 'xstg_exact', 'cmd': f'bash {bench} pass {mst} {rtl} {{RUN}}/xstg_pass', 'expect': 'pass',
                  'pass_regex': 'XSTG_STATIC_GATE PASS', 'threads': 1, 'peak_ram_gb': 2},
                 {'name': 'xstg_offset_mutant', 'cmd': f'bash {bench} mut_offset {mst} {rtl} {{RUN}}/xstg_mut',
-                 'expect': 'fail', 'fail_regex': 'XSTG', 'threads': 1, 'peak_ram_gb': 2}]
+                 'expect': 'fail', 'fail_regex': 'GATE MUTANT .*REJECTED', 'threads': 1, 'peak_ram_gb': 2}]
             change = (f'S-NET {mst} ({n} die instances): the d8g1 ot_meso_fifo (trained placement + CREDITS 16) is replaced by '
                       'ot_s81_static_lane_end (cw pin register, epoch from the lane marker, fixed-offset crossing, no credit/'
                       'ready/placement), o = {data, valid & live, live}')
