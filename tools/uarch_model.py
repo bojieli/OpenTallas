@@ -16198,7 +16198,7 @@ def s81_hcx_resident_native_model():
                 vm_write_bits_per_cycle=512,vm_write_mask_bits=16,
                 measured_gain_serial_cycles=326,public_start_to_done_serial_cycles=327,vm_commit_latency=4,
                 ownership='fixed compiler mode; post/gain conflicts fault, never arbitrate/wait',
-                qualification='source+component only; actual shared-port native bench pending'),
+                qualification='native six-job post/gain/post component PASS; same-binary ROM sign-bit mutant FAIL; physical/liveVM open'),
             memory='native FP32 rawmix reads, comb/pre/post/eps/reserved output layout',
             output_rows=dict(attn=2560,ffn=2576), words_per_output_region=32,
             completion='fixed compiled deadline; actual arithmetic/VM commit checks never reschedule',
