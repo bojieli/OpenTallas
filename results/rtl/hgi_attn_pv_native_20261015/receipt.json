@@ -1,0 +1,73 @@
+{
+  "schema": "hgi-attention-pv-native-component-v1",
+  "verdict": "PASS",
+  "scope": "actual four ring stops, direct scratch landing, actual local reducer, compiler-fixed component calendar; no physical or full SM qualification",
+  "boundary": "64 Qwen block partials of 128 rows each; 5 DS blocks zero-padded to 8; single DS128 block directly lands without arithmetic",
+  "clock": "synchronous component edge semantics; ring LAT8, adjacent link two edges; no STA claim",
+  "source_base": "d25e2a2b1924d646ef2d8547a5affdbdde775eaa",
+  "source_sha256": {
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_attn_pv_pkg.sv": "bde954ba121c292de7f6c02dc14f2bdcdd8b0270e2a45d3cec884b17c8dbae6e",
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_attn_pv_native.sv": "f7ab13748e95a2e0151cda2fee1a774d22b053c8f4439342b7dfcbc8ee285419",
+    "rtl/hbm_accel/generic/collective/p2p/tb_hgi_attn_pv_native.sv": "137f09db9e3c2c7ba06c425ecc26dd035cd13555f757098b7c480775581b3166",
+    "rtl/hbm_accel/generic/collective/p2p/run_attn_pv_native_bench.sh": "37812f299998dac43f030901516372daf2e6a9bb7ec5243e14a38bc2eb6341f5",
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static.sv": "c827fb8dc971baca5e155b88a3381eab218999b127e3a4b9f419f3f28e77d514",
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_reduce_static.sv": "208ece87fe5d2beb545dcfa11ad50836a98d704bfc0b3afef06ddac940d4f5db",
+    "rtl/hbm_accel/generic/collective/p2p/f32add.c": "fb471ffa0ebfb78c26b9d9a4f1d29514607d92b049fb6bccb05c5a6dc98b4040",
+    "rtl/hdc/ot_hdc_fp32_add_lat.sv": "f5e88cfcd8ce4809826eccf77fa8b83bc1ef14b430964dcf01cef70f70577b30",
+    "rtl/hdc/ot_hdc_prefix.sv": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+    "rtl/hdc/ot_hdc_fastfp.sv": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643"
+  },
+  "binary_sha256": {
+    "normal": "fe732d46ea0764eefef4bce069adade3a54ad7728145051498de9c36a67130fc",
+    "carry": "9c49325fa9716f9e6c8b80f3736e2abb0e4cdfe1cf9d39d77874577e109f48b0"
+  },
+  "production_batches": [
+    {
+      "blocks": 64,
+      "batches": 128,
+      "fp32_outputs": 1024,
+      "active_edges_per_batch": 885
+    },
+    {
+      "blocks": 5,
+      "batches": 64,
+      "fp32_outputs": 512,
+      "active_edges_per_batch": 101
+    },
+    {
+      "blocks": 1,
+      "batches": 64,
+      "fp32_outputs": 512,
+      "active_edges_per_batch": 9
+    }
+  ],
+  "external_compiler_programme": "manifest.json: exact control files independently emitted from tools/hbm_coll_static/attention_calendar.py; full 256 batches run continuously with only one initial four-edge reset and explicit compiler clear on last edge of each batch",
+  "expected": "DPI f32add only in expected-input/golden construction; 128 row block from 16 chunks each 8 sequential FP32 terms, then exact pairwise chunk tree and quadrant-first block tree. DUT consumes declared block nodes; TB never copies internal arithmetic results.",
+  "mutants": {
+    "local_before_quadrant": {
+      "verdict": "REJECTED",
+      "mismatching_batches": 128,
+      "fault": false
+    },
+    "ring_MUTCARRY": {
+      "verdict": "REJECTED",
+      "mismatching_batches": 192,
+      "fault": false
+    },
+    "early_publication": {
+      "verdict": "REJECTED",
+      "fault": true
+    }
+  },
+  "retained_failures": [
+    "initial-full-syntax-fail/build.log",
+    "compiler-cw-direction-fail.log",
+    "compiler-cw-direction-fail-manifest.json"
+  ],
+  "run_commands": [
+    "env REDUCE_STATIC_ROOT=$PWD JOBS=4 bash rtl/hbm_accel/generic/collective/p2p/run_attn_pv_native_bench.sh OUT",
+    "env REDUCE_STATIC_ROOT=$PWD JOBS=4 bash rtl/hbm_accel/generic/collective/p2p/run_attn_pv_native_bench.sh OUT_CARRY carry",
+    "OUT/obj/Vtb_hgi_attn_pv_native +PROGRAM_DIR=LOWERED_HEX +NO_RESET"
+  ],
+  "resource_admission": "ot-run --mem 8 --threads 4 ot-epyc1tb compilation; ot-run --mem 1 --threads 1 continuous binary simulation; measured binary allocation9MB; full build admission8GB; every run reported RAN exit0 except retained failures"
+}
