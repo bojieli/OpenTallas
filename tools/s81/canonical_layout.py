@@ -136,7 +136,7 @@ def trunks(G,m,CH,cor,starts,ga,end_spec,hub_block,bus):
   G.chain_nets(CH,f'cx{side}_spine',rootsource,[i for i,_,_ in pre],[G.LSW+2]);tail[entry]=(pre[-1][0].name,'fo0','do0') if pre else rootsource
   loc[entry]=(pre[-1][0].x+pre[-1][0].w/2,pre[-1][0].y+pre[-1][0].h/2) if pre else source;flight[entry]=len(pre)
   for k,n in enumerate(sorted(required-{entry},key=lambda n:dist[n])):
-   par=parent[n];src=loc[par];path=G._dedup([src,par,n]);name=f'cx{side}_edge{k}'
+   par=parent[n];src=loc[par];path=G._dedup([src,(par[0],src[1]),par,n]);name=f'cx{side}_edge{k}'
    sts=CH.run(name,[G.LSW+2],path,allowed,src,forced=[G._poly_len(path)])
    G.chain_nets(CH,name,tail[par],[i for i,_,_ in sts],[G.LSW+2]);tail[n]=(sts[-1][0].name,'fo0','do0') if sts else tail[par]
    loc[n]=(sts[-1][0].x+sts[-1][0].w/2,sts[-1][0].y+sts[-1][0].h/2) if sts else src;flight[n]=flight[par]+len(sts)
@@ -159,10 +159,33 @@ def trunks(G,m,CH,cor,starts,ga,end_spec,hub_block,bus):
     f=m['frames'][r];cf=next(i for i in m['insts'] if i.name==f'cf{r}');src=(cf.x+cf.w/2,f['street'][1]+28.64)
     anchor=(G.s14_x(m,f['half'],f'r{t}'),endb.y+endb.h/2)
     path=list(reversed(road.to_root(f['half'],anchor,r,'r')));path=G._dedup([src,(path[0][0],src[1])]+path)
-    # Crossing a physical/logical half uses the actual HC corridor and VCH.
     dst=(endb.x+endb.w/2,endb.y+endb.h/2)
+    if f['half']=='E':
+     # Every physical E return must traverse the actual HC corridor,
+     # including those whose logical gather group is also E.
+     cy=G.corr_y(m,f'r{t}');vx=G.vch_x(m,f'r{t}')
+     path +=[(path[-1][0],cy),(vx,cy)]
     if f['half']!=half:
-     cy=G.corr_y(m,f'r{t}');path +=[(path[-1][0],cy),(G.vch_x(m,f'r{t}'),cy),(G.vch_x(m,f'r{t}'),dst[1])]
+     # Crossing the W hub column needs an actual free gap between its
+     # hard slabs. Derive it from all placed boxes; never cross the VM,
+     # capture or gather outline at the return endpoint's y.
+     wx=G.s14_x(m,'W',f'r{t}');vx=G.vch_x(m,f'r{t}');xx0,xx1=sorted((wx,vx))
+     free=[(20.,G.DIE[1]-20.)];margin=.432
+     for obj in m['insts']:
+      if obj.x>=xx1 or obj.x+obj.w<=xx0:continue
+      cut=(obj.y-margin,obj.y+obj.h+margin);nfree=[]
+      for lo,hi in free:
+       if cut[1]<=lo or cut[0]>=hi:nfree.append((lo,hi));continue
+       if cut[0]>lo:nfree.append((lo,cut[0]))
+       if cut[1]<hi:nfree.append((cut[1],hi))
+      free=nfree
+     gaps=[(lo,hi) for lo,hi in free if hi-lo>=17.28+2*margin]
+     assert gaps,('canonical W crossing has no real gap',r)
+     lo,hi=min(gaps,key=lambda ab:abs((ab[0]+ab[1])/2-dst[1]));yy=(lo+hi)/2
+     bypass=(xx0-20,lo,xx1+20,hi);allowed.append(bypass)
+     endx=wx if half=='W' else vx
+     path +=[(path[-1][0],yy),(endx,yy)]
+     m.setdefault('canonical_w_crossings',[]).append(dict(root=r,logical_half=half,gap_um=[lo,hi],crossing_y_um=yy,unqualified_cut=True))
     path=G._dedup(path+[(path[-1][0],dst[1]),dst])
     sts=CH.run(f'cr{r}',[G.CRET+2],path,allowed,src)
     G.chain_nets(CH,f'cr{r}',(cf.name,'rf','rd'),[i for i,_,_ in sts],[G.CRET+2]);last=(sts[-1][0].name,'fo0','do0') if sts else (cf.name,'rf','rd')

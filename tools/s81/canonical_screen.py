@@ -32,7 +32,8 @@ def main():
     # for source-complete masters only, and enumerate excluded masters.
     G.ALIGN_JOGS=False
     mm=live['m'];G.finalize_r8(mm);excluded={}
-    for master,ports in mm['pdir'].items():
+    for master in {i.master for i in mm['insts']}:
+     ports=mm['pdir'].get(master,{})
      rec=G._assigned_record(master)
      absent=[] if not rec else [pn for pn,spec in rec['ports'].items() if pn not in ports or ports[pn][1]!=spec['bits']]
      if absent:excluded[master]=absent
