@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """VM bank <-> LG tap leaf face search (GEO-H, 2026-10-15).
 
-Inputs are actual views only: the CLOSED LG leaf LEF (ot_hbm_vm_lg_static_bank, R0 only:
+Inputs are actual views only: the CLOSED LG0 leaf LEF (stage 0 = hfd_vm_lg_su10 sits next to the bank; R0 only:
 no SYMMETRY declared) and the actual RG7/WG3 bank BTerm centres read back from ODB.
 The bank kit is unclosed (gate WARN), so its pin plan may still be assigned top-down.
 
@@ -45,8 +45,12 @@ def group(pins, base):
 
 LINK = [('near_rq', 'rq'), ('near_wq', 'wq'), ('near_rr', 'rr'), ('near_w_done', 'wq_done')]
 
+def wdone(wg):
+    # write-slot group -> its done bit: wq<n> -> wq_done<n>; dq -> dq_done; kq -> kq_done
+    return re.sub(r'^(\w+?q)(\d*)$', r'\1_done\2', wg)
+
 def plan_pairs(bp, lp, rg, wg):
-    names = {'rq': f'rq{rg}', 'rr': f'rr{rg}', 'wq': f'wq{wg}', 'wq_done': f'wq_done{wg}'}
+    names = {'rq': f'rq{rg}', 'rr': f'rr{rg}', 'wq': wg, 'wq_done': wdone(wg)}
     pairs = []
     for lg_port, b in LINK:
         bs, ls = group(bp, names[b]), group(lp, lg_port)
@@ -95,21 +99,29 @@ def main():
     ap.add_argument('--lg-lef', required=True); ap.add_argument('--bank-pins', required=True)
     ap.add_argument('--out', required=True); a = ap.parse_args()
     leaf, lp = lef_pins(a.lg_lef); bank, bp = bank_pins(a.bank_pins)
-    plans = {'P0_current_RG0_WG0': (0, 0)}
-    for rg in range(7):
-        for wg in range(3):
-            if (rg, wg) != (0, 0): plans[f'P_RG{rg}_WG{wg}_slots'] = (rg, wg)
+    # every same-width slot group the bank actually has: rq<n>/rr<n> read slots, and write slots
+    # (wq<n>, dq, kq ...) whose width equals the LG near_wq width and that carry a done bit
+    names = {re.sub(r'\[\d+\]$', '', n) for n in bp}
+    rgs = sorted(int(n[2:]) for n in names if re.fullmatch(r'rq\d+', n) and f'rr{n[2:]}' in names)
+    wn = len(group(lp, 'near_wq'))
+    wgs = sorted(n for n in names if re.fullmatch(r'\w+?q\d*', n) and not n.startswith(('rq', 'rr'))
+                 and wdone(n) in names and len(group(bp, n)) == wn)
+    plans = {'P0_current_RG0_WG0': (0, 'wq0')}
+    for rg in rgs:
+        for wg in wgs:
+            if (rg, wg) != (0, 'wq0'): plans[f'P_RG{rg}_{wg.upper()}_slots'] = (rg, wg)
     res = {}
     for name, (rg, wg) in plans.items():
         pr = plan_pairs(bp, lp, rg, wg)
         faces = sorted({face(b, *bank) for b, _ in pr})
-        r = search(pr, bank, leaf); r.update(bank_slot_groups=[f'rq{rg}', f'rr{rg}', f'wq{wg}', f'wq_done{wg}'], bank_faces=faces, bits=len(pr))
+        r = search(pr, bank, leaf); r.update(bank_slot_groups=[f'rq{rg}', f'rr{rg}', wg, wdone(wg)], bank_faces=faces, bits=len(pr))
         res[name] = r
     base = res['P0_current_RG0_WG0']['sum_bit_um']
     for r in res.values(): r['delta_vs_current_pct'] = round(100 * (r['sum_bit_um'] - base) / base, 2)
     ranked = sorted(res, key=lambda k: res[k]['sum_bit_um'])
     out = dict(schema='opentallas.hbm.geo.vm_lg_face_search.v1',
                inputs=dict(lg_lef=a.lg_lef, lg_lef_sha256=sha(a.lg_lef), bank_pins=a.bank_pins, bank_pins_sha256=sha(a.bank_pins)),
+               bank_face_groups={g: sorted({face(xy, *bank) for xy in group(bp, g)}) for g in sorted(names) if group(bp, g)},
                lg_leaf_um=leaf, bank_um=bank, lg_orientation='R0 only (no SYMMETRY)', clearance_um=5.4,
                lg_chain_hop=chain(lp, leaf), plans=res, ranked=ranked,
                scope='per bank; x8 banks x4 quadrants for die totals; pin-centre Manhattan, no route/timing/PG claim')

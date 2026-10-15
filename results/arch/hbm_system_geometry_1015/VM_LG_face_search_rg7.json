@@ -1,10 +1,132 @@
 {
  "schema": "opentallas.hbm.geo.vm_lg_face_search.v1",
  "inputs": {
-  "lg_lef": "/home/ubuntu/wt/hbm-vm-static-1014/physical/ref_tile/vm_lg_bank_hc_static_1015/views/ot_hbm_vm_lg_static_bank/ot_hbm_vm_lg_static_bank.lef",
-  "lg_lef_sha256": "d17a8eaf341e68f21359a6dd9eabbfd8a7df0b8126adff45ae76ad1f99aa6c72",
+  "lg_lef": "/home/ubuntu/wt/hbm-vm-static-1014/physical/ref_tile/vm_lg_bank_su10_static_1015/views/hfd_vm_lg_su10/hfd_vm_lg_su10.lef",
+  "lg_lef_sha256": "a573acd435c16a1a4a72bc4374dfaa91154b3f2196a16daf691dbc6f0e23a829",
   "bank_pins": "/home/ubuntu/wt/hbm-vm-static-1014/results/arch/hbm_vm_bank_static_1015/native_pin_pg_diagnostic/native_bank_actual_pin_pg.json",
   "bank_pins_sha256": "1cca154eb2dfe2de38731ad9ca0b2889d73ec76f055ef8d4191ff2967b48c2df"
+ },
+ "bank_face_groups": {
+  "bid": [
+   "N"
+  ],
+  "clk": [
+   "N"
+  ],
+  "dq": [
+   "N"
+  ],
+  "dq_done": [
+   "N"
+  ],
+  "eg": [
+   "S"
+  ],
+  "kq": [
+   "S"
+  ],
+  "kq_done": [
+   "S"
+  ],
+  "pq": [
+   "W"
+  ],
+  "pr": [
+   "W"
+  ],
+  "rq0": [
+   "N"
+  ],
+  "rq1": [
+   "S"
+  ],
+  "rq2": [
+   "E"
+  ],
+  "rq3": [
+   "W"
+  ],
+  "rq4": [
+   "N"
+  ],
+  "rq5": [
+   "S"
+  ],
+  "rq6": [
+   "E"
+  ],
+  "rr0": [
+   "N"
+  ],
+  "rr1": [
+   "S"
+  ],
+  "rr2": [
+   "E"
+  ],
+  "rr3": [
+   "W"
+  ],
+  "rr4": [
+   "N"
+  ],
+  "rr5": [
+   "S"
+  ],
+  "rr6": [
+   "E"
+  ],
+  "rslot": [
+   "N"
+  ],
+  "rslot_v": [
+   "N"
+  ],
+  "rst_n": [
+   "N"
+  ],
+  "sid": [
+   "N"
+  ],
+  "status": [
+   "N"
+  ],
+  "wq0": [
+   "E"
+  ],
+  "wq1": [
+   "W"
+  ],
+  "wq2": [
+   "N"
+  ],
+  "wq_done0": [
+   "E"
+  ],
+  "wq_done1": [
+   "W"
+  ],
+  "wq_done2": [
+   "N"
+  ],
+  "wslot": [
+   "N"
+  ],
+  "wslot_v": [
+   "N"
+  ],
+  "xq": [
+   "S"
+  ],
+  "xq2": [
+   "E"
+  ],
+  "xq2_done": [
+   "E"
+  ],
+  "xq_done": [
+   "S"
+  ]
  },
  "lg_leaf_um": [
   150.336,
@@ -17,14 +139,14 @@
  "lg_orientation": "R0 only (no SYMMETRY)",
  "clearance_um": 5.4,
  "lg_chain_hop": {
-  "per_hop_sum_bit_um": 6371.664,
-  "per_hop_max_bit_um": 25.836,
+  "per_hop_sum_bit_um": 6624.624,
+  "per_hop_max_bit_um": 28.812,
   "bits": 556
  },
  "plans": {
   "P0_current_RG0_WG0": {
    "sum_bit_um": 158023.952,
-   "max_bit_um": 504.192,
+   "max_bit_um": 494.976,
    "lg0_origin_um": [
     -155.912,
     197.032
@@ -42,12 +164,51 @@
    "bits": 556,
    "delta_vs_current_pct": 0.0
   },
-  "P_RG0_WG1_slots": {
-   "sum_bit_um": 28438.388,
-   "max_bit_um": 113.796,
+  "P_RG0_DQ_slots": {
+   "sum_bit_um": 96055.88,
+   "max_bit_um": 368.268,
    "lg0_origin_um": [
     -155.912,
-    243.472
+    261.4
+   ],
+   "bank_slot_groups": [
+    "rq0",
+    "rr0",
+    "dq",
+    "dq_done"
+   ],
+   "bank_faces": [
+    "N"
+   ],
+   "bits": 556,
+   "delta_vs_current_pct": -39.21
+  },
+  "P_RG0_KQ_slots": {
+   "sum_bit_um": 159586.236,
+   "max_bit_um": 398.728,
+   "lg0_origin_um": [
+    -155.912,
+    -51.584
+   ],
+   "bank_slot_groups": [
+    "rq0",
+    "rr0",
+    "kq",
+    "kq_done"
+   ],
+   "bank_faces": [
+    "N",
+    "S"
+   ],
+   "bits": 556,
+   "delta_vs_current_pct": 0.99
+  },
+  "P_RG0_WQ1_slots": {
+   "sum_bit_um": 28754.996,
+   "max_bit_um": 112.284,
+   "lg0_origin_um": [
+    -155.912,
+    241.96
    ],
    "bank_slot_groups": [
     "rq0",
@@ -60,9 +221,9 @@
     "W"
    ],
    "bits": 556,
-   "delta_vs_current_pct": -82.0
+   "delta_vs_current_pct": -81.8
   },
-  "P_RG0_WG2_slots": {
+  "P_RG0_WQ2_slots": {
    "sum_bit_um": 122248.136,
    "max_bit_um": 461.148,
    "lg0_origin_um": [
@@ -81,12 +242,51 @@
    "bits": 556,
    "delta_vs_current_pct": -22.64
   },
-  "P_RG1_WG0_slots": {
-   "sum_bit_um": 189744.704,
-   "max_bit_um": 504.04,
+  "P_RG1_DQ_slots": {
+   "sum_bit_um": 184204.836,
+   "max_bit_um": 451.992,
    "lg0_origin_um": [
     -155.912,
-    92.272
+    259.672
+   ],
+   "bank_slot_groups": [
+    "rq1",
+    "rr1",
+    "dq",
+    "dq_done"
+   ],
+   "bank_faces": [
+    "N",
+    "S"
+   ],
+   "bits": 556,
+   "delta_vs_current_pct": 16.57
+  },
+  "P_RG1_KQ_slots": {
+   "sum_bit_um": 78899.892,
+   "max_bit_um": 308.472,
+   "lg0_origin_um": [
+    -155.912,
+    -77.72
+   ],
+   "bank_slot_groups": [
+    "rq1",
+    "rr1",
+    "kq",
+    "kq_done"
+   ],
+   "bank_faces": [
+    "S"
+   ],
+   "bits": 556,
+   "delta_vs_current_pct": -50.07
+  },
+  "P_RG1_WQ0_slots": {
+   "sum_bit_um": 189670.976,
+   "max_bit_um": 494.752,
+   "lg0_origin_um": [
+    -155.912,
+    101.56
    ],
    "bank_slot_groups": [
     "rq1",
@@ -99,14 +299,14 @@
     "S"
    ],
    "bits": 556,
-   "delta_vs_current_pct": 20.07
+   "delta_vs_current_pct": 20.03
   },
-  "P_RG1_WG1_slots": {
-   "sum_bit_um": 101418.824,
-   "max_bit_um": 366.672,
+  "P_RG1_WQ1_slots": {
+   "sum_bit_um": 101345.096,
+   "max_bit_um": 375.96,
    "lg0_origin_um": [
     -155.912,
-    174.352
+    183.64
    ],
    "bank_slot_groups": [
     "rq1",
@@ -119,9 +319,9 @@
     "W"
    ],
    "bits": 556,
-   "delta_vs_current_pct": -35.82
+   "delta_vs_current_pct": -35.87
   },
-  "P_RG1_WG2_slots": {
+  "P_RG1_WQ2_slots": {
    "sum_bit_um": 210397.092,
    "max_bit_um": 459.42,
    "lg0_origin_um": [
@@ -141,7 +341,47 @@
    "bits": 556,
    "delta_vs_current_pct": 33.14
   },
-  "P_RG2_WG0_slots": {
+  "P_RG2_DQ_slots": {
+   "sum_bit_um": 165987.664,
+   "max_bit_um": 523.392,
+   "lg0_origin_um": [
+    143.248,
+    344.56
+   ],
+   "bank_slot_groups": [
+    "rq2",
+    "rr2",
+    "dq",
+    "dq_done"
+   ],
+   "bank_faces": [
+    "E",
+    "N"
+   ],
+   "bits": 556,
+   "delta_vs_current_pct": 5.04
+  },
+  "P_RG2_KQ_slots": {
+   "sum_bit_um": 111473.312,
+   "max_bit_um": 317.872,
+   "lg0_origin_um": [
+    83.416,
+    -156.776
+   ],
+   "bank_slot_groups": [
+    "rq2",
+    "rr2",
+    "kq",
+    "kq_done"
+   ],
+   "bank_faces": [
+    "E",
+    "S"
+   ],
+   "bits": 556,
+   "delta_vs_current_pct": -29.46
+  },
+  "P_RG2_WQ0_slots": {
    "sum_bit_um": 116316.432,
    "max_bit_um": 354.432,
    "lg0_origin_um": [
@@ -160,12 +400,12 @@
    "bits": 556,
    "delta_vs_current_pct": -26.39
   },
-  "P_RG2_WG1_slots": {
-   "sum_bit_um": 184637.048,
-   "max_bit_um": 658.488,
+  "P_RG2_WQ1_slots": {
+   "sum_bit_um": 184563.32,
+   "max_bit_um": 661.632,
    "lg0_origin_um": [
     -155.912,
-    174.352
+    183.64
    ],
    "bank_slot_groups": [
     "rq2",
@@ -178,11 +418,11 @@
     "W"
    ],
    "bits": 556,
-   "delta_vs_current_pct": 16.84
+   "delta_vs_current_pct": 16.79
   },
-  "P_RG2_WG2_slots": {
+  "P_RG2_WQ2_slots": {
    "sum_bit_um": 140538.736,
-   "max_bit_um": 436.656,
+   "max_bit_um": 430.512,
    "lg0_origin_um": [
     236.128,
     344.56
@@ -200,12 +440,52 @@
    "bits": 556,
    "delta_vs_current_pct": -11.06
   },
-  "P_RG3_WG0_slots": {
-   "sum_bit_um": 165271.064,
-   "max_bit_um": 504.04,
+  "P_RG3_DQ_slots": {
+   "sum_bit_um": 159731.196,
+   "max_bit_um": 366.54,
    "lg0_origin_um": [
     -155.912,
-    92.272
+    259.672
+   ],
+   "bank_slot_groups": [
+    "rq3",
+    "rr3",
+    "dq",
+    "dq_done"
+   ],
+   "bank_faces": [
+    "N",
+    "W"
+   ],
+   "bits": 556,
+   "delta_vs_current_pct": 1.08
+  },
+  "P_RG3_KQ_slots": {
+   "sum_bit_um": 67089.476,
+   "max_bit_um": 326.184,
+   "lg0_origin_um": [
+    -155.912,
+    -60.008
+   ],
+   "bank_slot_groups": [
+    "rq3",
+    "rr3",
+    "kq",
+    "kq_done"
+   ],
+   "bank_faces": [
+    "S",
+    "W"
+   ],
+   "bits": 556,
+   "delta_vs_current_pct": -57.54
+  },
+  "P_RG3_WQ0_slots": {
+   "sum_bit_um": 165197.336,
+   "max_bit_um": 494.752,
+   "lg0_origin_um": [
+    -155.912,
+    101.56
    ],
    "bank_slot_groups": [
     "rq3",
@@ -218,14 +498,14 @@
     "W"
    ],
    "bits": 556,
-   "delta_vs_current_pct": 4.59
+   "delta_vs_current_pct": 4.54
   },
-  "P_RG3_WG1_slots": {
-   "sum_bit_um": 76945.184,
-   "max_bit_um": 265.452,
+  "P_RG3_WQ1_slots": {
+   "sum_bit_um": 76871.456,
+   "max_bit_um": 268.596,
    "lg0_origin_um": [
     -155.912,
-    174.352
+    183.64
    ],
    "bank_slot_groups": [
     "rq3",
@@ -237,9 +517,9 @@
     "W"
    ],
    "bits": 556,
-   "delta_vs_current_pct": -51.31
+   "delta_vs_current_pct": -51.35
   },
-  "P_RG3_WG2_slots": {
+  "P_RG3_WQ2_slots": {
    "sum_bit_um": 185923.452,
    "max_bit_um": 459.42,
    "lg0_origin_um": [
@@ -259,9 +539,48 @@
    "bits": 556,
    "delta_vs_current_pct": 17.66
   },
-  "P_RG4_WG0_slots": {
+  "P_RG4_DQ_slots": {
+   "sum_bit_um": 74483.368,
+   "max_bit_um": 242.556,
+   "lg0_origin_um": [
+    52.96,
+    344.56
+   ],
+   "bank_slot_groups": [
+    "rq4",
+    "rr4",
+    "dq",
+    "dq_done"
+   ],
+   "bank_faces": [
+    "N"
+   ],
+   "bits": 556,
+   "delta_vs_current_pct": -52.87
+  },
+  "P_RG4_KQ_slots": {
+   "sum_bit_um": 153536.96,
+   "max_bit_um": 563.292,
+   "lg0_origin_um": [
+    22.72,
+    -156.776
+   ],
+   "bank_slot_groups": [
+    "rq4",
+    "rr4",
+    "kq",
+    "kq_done"
+   ],
+   "bank_faces": [
+    "N",
+    "S"
+   ],
+   "bits": 556,
+   "delta_vs_current_pct": -2.84
+  },
+  "P_RG4_WQ0_slots": {
    "sum_bit_um": 150206.768,
-   "max_bit_um": 390.176,
+   "max_bit_um": 384.032,
    "lg0_origin_um": [
     242.608,
     344.56
@@ -279,12 +598,12 @@
    "bits": 556,
    "delta_vs_current_pct": -4.95
   },
-  "P_RG4_WG1_slots": {
-   "sum_bit_um": 53888.468,
-   "max_bit_um": 206.676,
+  "P_RG4_WQ1_slots": {
+   "sum_bit_um": 54205.076,
+   "max_bit_um": 205.164,
    "lg0_origin_um": [
     -155.912,
-    243.472
+    241.96
    ],
    "bank_slot_groups": [
     "rq4",
@@ -297,11 +616,11 @@
     "W"
    ],
    "bits": 556,
-   "delta_vs_current_pct": -65.9
+   "delta_vs_current_pct": -65.7
   },
-  "P_RG4_WG2_slots": {
+  "P_RG4_WQ2_slots": {
    "sum_bit_um": 99932.584,
-   "max_bit_um": 293.408,
+   "max_bit_um": 287.264,
    "lg0_origin_um": [
     145.84,
     344.56
@@ -318,7 +637,46 @@
    "bits": 556,
    "delta_vs_current_pct": -36.76
   },
-  "P_RG5_WG0_slots": {
+  "P_RG5_DQ_slots": {
+   "sum_bit_um": 174421.168,
+   "max_bit_um": 551.66,
+   "lg0_origin_um": [
+    52.96,
+    344.56
+   ],
+   "bank_slot_groups": [
+    "rq5",
+    "rr5",
+    "dq",
+    "dq_done"
+   ],
+   "bank_faces": [
+    "N",
+    "S"
+   ],
+   "bits": 556,
+   "delta_vs_current_pct": 10.38
+  },
+  "P_RG5_KQ_slots": {
+   "sum_bit_um": 65894.648,
+   "max_bit_um": 226.32,
+   "lg0_origin_um": [
+    7.6,
+    -156.776
+   ],
+   "bank_slot_groups": [
+    "rq5",
+    "rr5",
+    "kq",
+    "kq_done"
+   ],
+   "bank_faces": [
+    "S"
+   ],
+   "bits": 556,
+   "delta_vs_current_pct": -58.3
+  },
+  "P_RG5_WQ0_slots": {
    "sum_bit_um": 178760.976,
    "max_bit_um": 461.328,
    "lg0_origin_um": [
@@ -338,12 +696,12 @@
    "bits": 556,
    "delta_vs_current_pct": 13.12
   },
-  "P_RG5_WG1_slots": {
-   "sum_bit_um": 122171.672,
-   "max_bit_um": 442.416,
+  "P_RG5_WQ1_slots": {
+   "sum_bit_um": 122097.944,
+   "max_bit_um": 451.704,
    "lg0_origin_um": [
     -155.912,
-    174.352
+    183.64
    ],
    "bank_slot_groups": [
     "rq5",
@@ -356,11 +714,11 @@
     "W"
    ],
    "bits": 556,
-   "delta_vs_current_pct": -22.69
+   "delta_vs_current_pct": -22.73
   },
-  "P_RG5_WG2_slots": {
+  "P_RG5_WQ2_slots": {
    "sum_bit_um": 199870.384,
-   "max_bit_um": 650.684,
+   "max_bit_um": 644.54,
    "lg0_origin_um": [
     145.84,
     344.56
@@ -378,12 +736,52 @@
    "bits": 556,
    "delta_vs_current_pct": 26.48
   },
-  "P_RG6_WG0_slots": {
-   "sum_bit_um": 115632.976,
-   "max_bit_um": 261.12,
+  "P_RG6_DQ_slots": {
+   "sum_bit_um": 143721.232,
+   "max_bit_um": 442.128,
+   "lg0_origin_um": [
+    143.248,
+    344.56
+   ],
+   "bank_slot_groups": [
+    "rq6",
+    "rr6",
+    "dq",
+    "dq_done"
+   ],
+   "bank_faces": [
+    "E",
+    "N"
+   ],
+   "bits": 556,
+   "delta_vs_current_pct": -9.05
+  },
+  "P_RG6_KQ_slots": {
+   "sum_bit_um": 133739.744,
+   "max_bit_um": 399.136,
+   "lg0_origin_um": [
+    83.416,
+    -156.776
+   ],
+   "bank_slot_groups": [
+    "rq6",
+    "rr6",
+    "kq",
+    "kq_done"
+   ],
+   "bank_faces": [
+    "E",
+    "S"
+   ],
+   "bits": 556,
+   "delta_vs_current_pct": -15.37
+  },
+  "P_RG6_WQ0_slots": {
+   "sum_bit_um": 115559.248,
+   "max_bit_um": 255.368,
    "lg0_origin_um": [
     398.56,
-    92.272
+    101.56
    ],
    "bank_slot_groups": [
     "rq6",
@@ -395,14 +793,14 @@
     "E"
    ],
    "bits": 556,
-   "delta_vs_current_pct": -26.83
+   "delta_vs_current_pct": -26.87
   },
-  "P_RG6_WG1_slots": {
-   "sum_bit_um": 162370.616,
-   "max_bit_um": 577.224,
+  "P_RG6_WQ1_slots": {
+   "sum_bit_um": 162296.888,
+   "max_bit_um": 580.368,
    "lg0_origin_um": [
     -155.912,
-    174.352
+    183.64
    ],
    "bank_slot_groups": [
     "rq6",
@@ -415,11 +813,11 @@
     "W"
    ],
    "bits": 556,
-   "delta_vs_current_pct": 2.75
+   "delta_vs_current_pct": 2.7
   },
-  "P_RG6_WG2_slots": {
+  "P_RG6_WQ2_slots": {
    "sum_bit_um": 118272.304,
-   "max_bit_um": 355.392,
+   "max_bit_um": 349.248,
    "lg0_origin_um": [
     236.128,
     344.56
@@ -439,27 +837,41 @@
   }
  },
  "ranked": [
-  "P_RG0_WG1_slots",
-  "P_RG4_WG1_slots",
-  "P_RG3_WG1_slots",
-  "P_RG4_WG2_slots",
-  "P_RG1_WG1_slots",
-  "P_RG6_WG0_slots",
-  "P_RG2_WG0_slots",
-  "P_RG6_WG2_slots",
-  "P_RG5_WG1_slots",
-  "P_RG0_WG2_slots",
-  "P_RG2_WG2_slots",
-  "P_RG4_WG0_slots",
+  "P_RG0_WQ1_slots",
+  "P_RG4_WQ1_slots",
+  "P_RG5_KQ_slots",
+  "P_RG3_KQ_slots",
+  "P_RG4_DQ_slots",
+  "P_RG3_WQ1_slots",
+  "P_RG1_KQ_slots",
+  "P_RG0_DQ_slots",
+  "P_RG4_WQ2_slots",
+  "P_RG1_WQ1_slots",
+  "P_RG2_KQ_slots",
+  "P_RG6_WQ0_slots",
+  "P_RG2_WQ0_slots",
+  "P_RG6_WQ2_slots",
+  "P_RG5_WQ1_slots",
+  "P_RG0_WQ2_slots",
+  "P_RG6_KQ_slots",
+  "P_RG2_WQ2_slots",
+  "P_RG6_DQ_slots",
+  "P_RG4_WQ0_slots",
+  "P_RG4_KQ_slots",
   "P0_current_RG0_WG0",
-  "P_RG6_WG1_slots",
-  "P_RG3_WG0_slots",
-  "P_RG5_WG0_slots",
-  "P_RG2_WG1_slots",
-  "P_RG3_WG2_slots",
-  "P_RG1_WG0_slots",
-  "P_RG5_WG2_slots",
-  "P_RG1_WG2_slots"
+  "P_RG0_KQ_slots",
+  "P_RG3_DQ_slots",
+  "P_RG6_WQ1_slots",
+  "P_RG3_WQ0_slots",
+  "P_RG2_DQ_slots",
+  "P_RG5_DQ_slots",
+  "P_RG5_WQ0_slots",
+  "P_RG1_DQ_slots",
+  "P_RG2_WQ1_slots",
+  "P_RG3_WQ2_slots",
+  "P_RG1_WQ0_slots",
+  "P_RG5_WQ2_slots",
+  "P_RG1_WQ2_slots"
  ],
  "scope": "per bank; x8 banks x4 quadrants for die totals; pin-centre Manhattan, no route/timing/PG claim"
 }
