@@ -1,7 +1,7 @@
 `timescale 1ns/1ps
 module tb_qkh_head_gather;
  parameter integer MUT=0;
- reg ck=0;always #.5 ck=~ck;
+ reg ck=0;always #0.5 ck=~ck;
  reg[1558:0] a=0;reg[15:0] e=0;
  wire[1558:0] b;wire[15:0] f;
  reg[1574:0] expected=0;
@@ -18,7 +18,7 @@ module tb_qkh_head_gather;
    for(bitno=0;bitno<1559;bitno=bitno+1)
     if((bitno+cycle*7)%67==0)a[bitno]=~a[bitno];
    e=e^16'(cycle*19);
-   #.1;
+   #0.1;
    if(cycle>1)begin
     checks=checks+1;
     if({f,b}!==expected)begin
