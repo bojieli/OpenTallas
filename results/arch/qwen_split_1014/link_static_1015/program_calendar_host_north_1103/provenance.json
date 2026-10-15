@@ -1,0 +1,57 @@
+{
+  "schema": "opentallas.qwen.link.host_north_calendar.v1",
+  "source_base_commit": "eb9cfa044920f23a9565d6c5fda43d2d5f217d06",
+  "rtl_recovered_commit": "f40f6f762fa248318704bdf8f14564dc356cf603",
+  "measurement": {
+    "source_commit": "63717e37e",
+    "source_log": "/home/ubuntu/claude-takeover-20261007/el1015-qwen-link.log",
+    "entry": "2026-10-15 10:08:33 PDT [kvsys lead r8]",
+    "configuration": "kv_die.py --host-north / OT_KV_HOST_NORTH=1",
+    "host_to_d2d_relay_stages": {
+      "svc": 0,
+      "lup": 0,
+      "rec_tx": 0,
+      "rec_rx": 0,
+      "lrc": 0
+    },
+    "fwd_epoch_stages": 1,
+    "fwd_link_rst_n_stages": 2,
+    "serdes_fdi_stages": 56,
+    "serdes_scope": "elastic HOST link to S-edge PHY; excluded from static D2D calendar"
+  },
+  "calendar_command": "python3 tools/qwen_split/d2d_link_calendar.py --profile program --txl 6 --phy 5 --txd-c 1,2,1,2 --txd-k 1,2,1,1 --host-stages 0 --out results/arch/qwen_split_1014/link_static_1015/program_calendar_host_north_1103",
+  "calendar_qualification": "Measured HOST relay latency admitted. Compiler image only: producer integration, native routed SS/FF timing and deterministic PHY qualification remain open.",
+  "checks": {
+    "C_tx.segment0": 38,
+    "C_tx.segment1": 39,
+    "C_rx.segment0": 33,
+    "C_rx.segment1": 97,
+    "K_tx.segment0": 33,
+    "K_tx.segment1": 97,
+    "K_rx.segment0": 38,
+    "K_rx.segment1": 39,
+    "image_decode": "PASS: all eight image segments independently decoded to exact expected event cycles/ports/kinds/beats",
+    "measured_host_zero": true,
+    "result_at_kv_host": 17,
+    "embedding_budget_cycles": 179,
+    "unknown_host_rejected": {
+      "returncode": 2,
+      "error": "d2d_link_calendar.py: error: program calendar requires --host-stages from the measured KV die plan; use --allow-unmeasured-host only for diagnostics"
+    },
+    "negative_host_rejected": {
+      "returncode": 1,
+      "error": "ValueError: host_stages must be a measured nonnegative integer or None (pending)"
+    }
+  },
+  "sha256": {
+    "cal_K_tx_seg1.memh": "129805c9e04279ac36de91e8a541a3b3ff5bdda8542b6e7dec6f7771439362cf",
+    "cal_C_tx.memh": "9e8c471e812910d8bd55860ac96ef8d1e74a71b639e6e51589ac284d62a1b6dd",
+    "calendar.json": "5347a0662ad7e35ec3a7cb15986fd1f11ba91298a8bfff925daff783522833cc",
+    "cal_K_rx.memh": "8fab43ee09a114e293a418bab7582f3e45a0b6c72ad784c817988b0dd882b48c",
+    "cal_C_rx.memh": "3874a9f77910f1ac62c4d6950a5249004b27e6f35a16383b99406c319cf7fe9c",
+    "cal_K_tx.memh": "3dec3d182516a2e36fc695846ddb777e3be0de60739509db870252299786e2b5",
+    "cal_K_rx_seg1.memh": "b596659d005974101f82a9e365eba1b188a97200f6b010039ccfd00db78c4f4d",
+    "cal_C_rx_seg1.memh": "129805c9e04279ac36de91e8a541a3b3ff5bdda8542b6e7dec6f7771439362cf",
+    "cal_C_tx_seg1.memh": "b596659d005974101f82a9e365eba1b188a97200f6b010039ccfd00db78c4f4d"
+  }
+}
