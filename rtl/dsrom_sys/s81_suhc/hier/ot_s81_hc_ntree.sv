@@ -732,7 +732,7 @@ endmodule
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_s81_hc_cth_nt #(
     parameter integer NG = 256, D = 5120, NCOL = 3, GS = 8, S_RD = 2, S_RT = 4, WIN = 2, WOUT = 2, ML = 5, AL = 4,
-    parameter integer RLY = 2, CNL_PIN = 0, CHAIN_STEP = AL, LANE_SPECIALIZE = 0, LOCAL_SPLIT = 1
+    parameter integer RLY = 2, CNL_PIN = 0, CHAIN_STEP = AL, LANE_SPECIALIZE = 0, LOCAL_SPLIT = 1, FS_YSHIFT = 1
 ) (
     input  wire                       clk,
     input  wire                       rst_in,
@@ -805,8 +805,13 @@ module ot_s81_hc_cth_nt #(
     wire [16*32-1:0] acc;
     wire [FDW-1:0]  fdm;
     wire            rst_c;                     // ctfn's first reset stage -> one relay flop in every tile
-    ot_s81_hc_ctfn #(.NG(NG), .D(D), .NCOL(NCOL), .GS(GS), .S_RD(S_RD)) u_fn (
-        .clk(clk), .rst_in(rst_in), .rst_c(rst_c), .fv_in(fv_in), .fd_in(fd_in), .fvm(fvm), .fdm(fdm));
+    generate if (FS_YSHIFT) begin : g_fnnt
+        ot_s81_hc_ctfn_nt #(.NG(NG), .D(D), .NCOL(NCOL), .GS(GS), .S_RD(S_RD)) u_fn (
+            .clk(clk), .rst_in(rst_in), .rst_c(rst_c), .fv_in(fv_in), .fd_in(fd_in), .fvm(fvm), .fdm(fdm));
+    end else begin : g_fn
+        ot_s81_hc_ctfn #(.NG(NG), .D(D), .NCOL(NCOL), .GS(GS), .S_RD(S_RD)) u_fn (
+            .clk(clk), .rst_in(rst_in), .rst_c(rst_c), .fv_in(fv_in), .fd_in(fd_in), .fvm(fvm), .fdm(fdm));
+    end endgenerate
     wire [DLW-1:0] dl_m;
     wire [32:0]    ul_m;
     generate if (LOCAL_SPLIT && CNL_PIN) begin : g_fxs
@@ -820,7 +825,7 @@ module ot_s81_hc_cth_nt #(
             .clk(clk), .rst_in(rst_c), .fv_in(fv_in), .fd_in(fd_in[FXW-1:0]), .fv(fv), .fdx(fdx), .fv_local(fv_local), .fdx_local(fdx_local),
             .tid(tid), .cs_n(cs[63:0]), .cs_s(cs[127:64]), .dl_in(dl_in), .dl_out(dl_m), .ul_in(ul_m), .ul_out(ul_out));
     end endgenerate
-    ot_s81_hc_ctfs_nt #(.NG(NG), .D(D), .NCOL(NCOL), .GS(GS), .S_RD(S_RD), .RLY(RLY)) u_fs (
+    ot_s81_hc_ctfs_nt #(.NG(NG), .D(D), .NCOL(NCOL), .GS(GS), .S_RD(S_RD), .RLY(RLY), .YSHIFT(FS_YSHIFT)) u_fs (
         .clk(clk), .rst_in(rst_c), .rst_out(rst_out), .fvm(fvm), .fdm(fdm), .fv_out(fv_out), .fd_out(fd_out),
         .dl_in(dl_m), .dl_out(dl_out), .ul_in(ul_in), .ul_out(ul_m));
     wire [16*S_RT-1:0]  rq_q;
@@ -955,8 +960,14 @@ endmodule
 // ot_s81_hc_ctfs_nt: the closed ot_s81_hc_ctfs + one relay register of the partial lane (dl, N -> S) + one relay register
 // of the scale lane (ul, S -> N; r2: moved here from ctrn_nt so the closed ctrn stands and its thin strip does not grow:
 // hops ctfx_nt -> N face -> the tile above's ctfs_nt ~380 um, ctfs_nt -> its ctfx_nt ~335 um, both <= 500 um).
+// YSHIFT 1 (S-NORM 2026-10-15, structural closure of ctfn np6 GRT-0116): the y-beat shift (fdm y-field >> GT*32 when the
+// beat's y select is set) moves from ctfn's second stage to this strip's second stage.  ctfn_nt becomes a straight
+// 2-register relay (its 25.92-um strip could not carry the shift's 736-bit vertical cut: M2/M4 overflow 6,424 at x 250-350);
+// this strip grows to 51.84 um (sized by the measured cut: 2x the horizontal tracks).  Same registers per path, same
+// cycle for every bit: ctfn stage 1 = pin flop, stage 2 = relay, ctfs stage 1 = pin flop + y select copies (from fvm, the
+// relayed fv of the same beat), stage 2 = shifted output.  Bit-exact by construction; 0 cycles.
 module ot_s81_hc_ctfs_nt #(
-    parameter integer NG = 256, D = 5120, NCOL = 3, GS = 8, S_RD = 2, RLY = 2
+    parameter integer NG = 256, D = 5120, NCOL = 3, GS = 8, S_RD = 2, RLY = 2, YSHIFT = 0
 ) (
     input  wire               clk,
     input  wire               rst_in,
@@ -983,9 +994,51 @@ module ot_s81_hc_ctfs_nt #(
     always @(posedge clk or negedge rst_n)
         if (!rst_n) fv_out <= 0;
         else fv_out <= fvm_d;
-    always @(posedge clk) fd_out <= fdm_d;
+    generate if (YSHIFT) begin : g_ysh
+        initial if (RLY != 2) $fatal(1, "ot_s81_hc_ctfs_nt YSHIFT needs RLY 2");
+        localparam integer GT = GS / 2, NYR = 16, YSL = (YW + NYR - 1) / NYR;
+        (* keep *) reg [NYR-1:0] ysel;               // replicated y select (same pin, same cycle as fdm_d)
+        always @(posedge clk or negedge rst_n) if (!rst_n) ysel <= 0; else ysel <= {NYR{fvm[S_RD]}};
+        wire [YW-1:0] ysh = fdm_d[O_D +: YW] >> (GT * 32);
+        integer yb;
+        always @(posedge clk) begin
+            fd_out <= fdm_d;
+            for (yb = 0; yb < YW; yb = yb + 1)
+                if (ysel[yb / YSL]) fd_out[O_D + yb] <= ysh[yb];
+        end
+    end else begin : g_noysh
+        always @(posedge clk) fd_out <= fdm_d;
+    end endgenerate
     ot_hdc_delay #(.W(S_RD + 5), .D(RLY - 1), .RESET(1)) u_fvr (.clk(clk), .rst_n(rst_n), .d(fvm), .q(fvm_d));
     ot_hdc_delay #(.W(FDW), .D(RLY - 1)) u_fdr (.clk(clk), .rst_n(rst_n), .d(fdm), .q(fdm_d));
     always @(posedge clk or negedge rst_n) if (!rst_n) dl_out <= 0; else dl_out <= dl_in;
     always @(posedge clk or negedge rst_n) if (!rst_n) ul_out <= 0; else ul_out <= ul_in;
+endmodule
+
+// ctfn_nt (S-NORM 2026-10-15, FS_YSHIFT): ot_s81_hc_ctfn without the y-beat shift (moved to ctfs_nt YSHIFT 1): pin flops
+// fd / fv, relay registers fdm / fvm, the same 2-stage reset (rst_c = first stage).  Straight: bit i in and out at one x.
+module ot_s81_hc_ctfn_nt #(
+    parameter integer NG = 256, D = 5120, NCOL = 3, GS = 8, S_RD = 2
+) (
+    input  wire               clk,
+    input  wire               rst_in,
+    input  wire [S_RD+4:0]    fv_in,
+    input  wire [FDW-1:0]     fd_in,
+    output wire               rst_c,
+    output reg  [S_RD+4:0]    fvm,
+    output reg  [FDW-1:0]     fdm
+);
+    localparam integer NS = NG / GS, NP = (NS + NCOL - 1) / NCOL, YW = NP * GS * 32;
+    localparam integer FDD = (S_RD * 512 > YW) ? S_RD * 512 : YW;
+    localparam integer O_D = 5 + S_RD * 16 + 20 + 6 + 8 + 32 + 1, FDW = O_D + FDD;
+    reg [1:0] rr;
+    always @(posedge clk) rr <= {rr[0], rst_in};
+    wire rst_n = rr[1];
+    assign rst_c = rr[0];
+    reg [S_RD+4:0] fv;
+    reg [FDW-1:0]  fd;
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) begin fv <= 0; fvm <= 0; end
+        else begin fv <= fv_in; fvm <= fv; end
+    always @(posedge clk) begin fd <= fd_in; fdm <= fd; end
 endmodule

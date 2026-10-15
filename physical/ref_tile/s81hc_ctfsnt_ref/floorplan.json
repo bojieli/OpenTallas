@@ -7,13 +7,13 @@
   0,
   0,
   576.72,
-  25.92
+  51.84
  ],
  "core": [
   2.16,
   2.16,
   574.5600000000001,
-  23.76
+  49.68000000000001
  ],
  "why": "spec outline",
  "std_area_um2": 2150,
@@ -51,7 +51,7 @@
   [
    "WARN",
    "util",
-   "utilisation 17% outside 45%-60% (std 2150 + macro 0 in core 12364 um2)",
+   "utilisation 8% outside 45%-60% (std 2150 + macro 0 in core 27200 um2)",
    "resize the outline to util 0.50-0.55 (drop 'outline', set util)"
   ]
  ],
@@ -109,7 +109,7 @@
   "physical/qwen_die_masters/post_plain.tcl",
   "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
   "physical/common_flow/grt_macro_top_layer.tcl",
-  "physical/s81_die_pins/v24_hc_norm_spread_candidate/ot_s81_hc_ctfs_nt.tcl",
+  "physical/s81_die_pins/v25_hc_norm_fs_yshift_candidate/ot_s81_hc_ctfs_nt.tcl",
   "physical/qwen_die_masters/io_flop_at_pins.tcl",
   "physical/qwen_die_masters/out_flop_release.tcl",
   "physical/dsrom_window_source/leaf_inhold.tcl",
