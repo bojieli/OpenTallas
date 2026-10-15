@@ -17,7 +17,7 @@
   "latency_edges": {
     "link_request": 1,
     "link_response": 1,
-    "bank_response": "bound by RD_LAT parameter; must match native source measured latency"
+    "bank_response": "bank n+6 registered result, sampled by link n+7; RD_LAT7"
   },
   "throughput": "one sector per bank per edge; compiler owns RG0/WG0, disallows competing traffic",
   "capacity": "32 fixed request slots, no queues, credits, ready, lease, CDC or backpressure",
@@ -27,6 +27,6 @@
     "Qwen": 1548
   },
   "qualification_gap": "historical SU head/lane credit scheduler not connected; actual static native whole service and F2 ordered reduction remain required",
-  "retained_register_bits_per_quarter": 4746,
+  "retained_register_bits_per_quarter": 4754,
   "clock_roots": 4
 }
