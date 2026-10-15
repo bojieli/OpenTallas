@@ -30439,8 +30439,35 @@
   "canonical_HEADS1_binding_gap": {
     "canonical_programme": "frozenG25opcode369 logicalH1",
     "hardware_profile": "actual H16/D512 32pairs128quads retained unless explicitly replaced by source-qualified successor",
-    "activity": "headmask/actual production active pin/event map must be bound before workload ranking",
+    "activity": "physicalhead0 fixed, all H16 arithmetic/buses/clocks retained; native writer/wholearith join open",
     "native_P_successor": "3ad2f11d8 frozen5c1bb65fd, HEADS1 scaledSC/futureE lease proof in progress",
-    "H16_results": "component architecture and workload exploration only; no native canonical headmap claim"
+    "H16_results": "component architecture and workload exploration only; no native canonical headmap claim",
+    "H1_owner_report": {
+      "physical_head": 0,
+      "physical_quad_cohort": [
+        0,
+        1,
+        4,
+        5
+      ],
+      "query_real_VM_bursts": 8,
+      "query_zero_fill_slots": 120,
+      "P_real_VM_bursts_T128_T640": [
+        2,
+        10
+      ],
+      "P_zero_fill_slots_T128_T640": [
+        30,
+        150
+      ],
+      "SC_64word_commits_T128_T640": [
+        2,
+        10
+      ],
+      "PV_64word_commits": 8,
+      "all512_HG1_execute_schedule": true,
+      "zero_fills_are_real_SRAM_writes": true,
+      "source_artifact_pending": true
+    }
   }
 }

@@ -1,7 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1320" height="1470">
 <defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0,0L10,5L0,10z" fill="context-stroke"/></marker><pattern id="hatch" width="5" height="5" patternUnits="userSpaceOnUse"><path d="M0,5L5,0" stroke="#b63b55" stroke-width="1"/></pattern></defs>
 <rect width="100%" height="100%" fill="white"/>
-<text x="16" y="25" font-size="20">HBM forward-flow candidate: shared QK/PV compute, real local stores, unfinished boundaries</text>
+<text x="16" y="25" font-size="20">HBM H16 component forward-flow study: shared compute, local stores, unfinished boundaries</text>
 <text x="16" y="47" font-size="13">All panels same 32.984×25.981 mm die / true aspect ratio. Lines show required connectivity; unplaced intermediates prevent timing/routing claims.</text>
 <text x="16" y="68" font-size="13">K → QK(shared orange) → SC → scale/MAX/EXP → rawE + BF16EB → PV(same orange + localV) → PV/DEN → inverseRoPE</text>
 <text x="16" y="88" font-size="12">Solid endpoint dots use actual LEF pins where present. Dashed diamonds/lines are unplaced reduction/mux obligations; they are not free wire paths.</text>
@@ -3335,7 +3335,7 @@
 <line x1="377.309536" y1="396.502392" x2="372.040046" y2="412.011492" stroke="#1478aa" stroke-width="1.3" opacity=".72" stroke-dasharray="4 3" marker-end="url(#arrow)"/>
 <line x1="377.309536" y1="396.502392" x2="372.040046" y2="389.116266" stroke="#1478aa" stroke-width="1.3" opacity=".72" stroke-dasharray="4 3" marker-end="url(#arrow)"/>
 <text x="20" y="601.6689759999999" font-size="11">Representative head0: 2 lanes ×16 featurepartials, 32b/edge each.</text>
-<text x="20" y="618.6689759999999" font-size="11">All16heads: 16,384 partial bits/edge. Diamonds: TREE UNPLACED.</text>
+<text x="20" y="618.6689759999999" font-size="11">H1 uses physicalhead0; full local H16 buses/clocks still present.</text>
 <text x="20" y="635.6689759999999" font-size="11">Query64 partitions fourSL slices/field; 512b/client,128VM reads.</text>
 <line x1="45.5" y1="561.2689760000001" x2="130.5" y2="561.2689760000001" stroke="black" stroke-width="2"/><text x="45.5" y="556.2689760000001" font-size="10">5000µm</text>
 <text x="675" y="125" font-size="14">KV/PV phase: same34 mode-local code; localP4 + transpose missing</text>
@@ -9884,9 +9884,9 @@
 <line x1="449.87525999999997" y1="924.249066" x2="393.31306400000005" y2="914.443976" stroke="#a52b79" stroke-width="1" opacity=".72" stroke-dasharray="4 3" marker-end="url(#arrow)"/>
 <line x1="401.81306400000005" y1="914.443976" x2="403.901378" y2="925.874164" stroke="#592ca2" stroke-width="1.6" opacity=".72" stroke-dasharray="4 3" marker-end="url(#arrow)"/>
 <line x1="401.81306400000005" y1="914.443976" x2="403.901378" y2="919.374724" stroke="#592ca2" stroke-width="1.6" opacity=".72" stroke-dasharray="4 3" marker-end="url(#arrow)"/>
-<text x="20" y="1196.668976" font-size="11">Gather4×4757FF /4759pins, +2edges,11445 nominal roots/group.</text>
-<text x="20" y="1213.668976" font-size="11">128headmajor commits unchanged; 500×450 reservations UNQUALIFIED.</text>
-<text x="20" y="1230.668976" font-size="11">HC/query/P/read/control now reach four physicalNE bank pairs.</text>
+<text x="20" y="1196.668976" font-size="11">Shown4historical full-gather reservations; real nativeclock FAILED.</text>
+<text x="20" y="1213.668976" font-size="11">Current8bank-half leaves2386FF each, same+2edges; not placed here.</text>
+<text x="20" y="1230.668976" font-size="11">Same128commits; nominal11460 sinks/region, no actualCTS grant.</text>
 <line x1="45.5" y1="1156.268976" x2="130.5" y2="1156.268976" stroke="black" stroke-width="2"/><text x="45.5" y="1151.268976" font-size="10">5000µm</text>
 <text x="675" y="720" font-size="14">Algorithm and outside boundaries: local reductions ≠ global COLL</text>
 <rect x="675" y="735" width="560.7328960000001" height="441.668976" fill="#f8f8f8" stroke="black"/>
@@ -13130,5 +13130,5 @@
 <text x="20" y="1360" font-size="12">Inventory shown:128 realquad outlines /2048PV /34KV /64Q /512P SRAMs;32SMframes,32VMbanks,96LGprototypes,9SerDes/endpoints,4PHYreservations.</text>
 <text x="20" y="1380" font-size="12">Missing realhardware listed above prevents whole-die fit/clock/cut/native-performance closure. White space is unverified. Orange compute is shared by QK/PV phases.</text>
 <text x="20" y="1400" font-size="11">Sources mode34 9cf430e13; Q64 363c3cfaa; P4 4408c92e6; gather adf0ef9d5; quadLEF ac510d59eafc85b5…</text>
-<text x="20" y="1420" font-size="11">Blue=W ld_w actualpin; red=E oy actualpin. All R0; no unqualified flip. Connectivity overlays are diagnostic, not actual routed wires or zero-cycle permissions.</text>
+<text x="20" y="1420" font-size="11">Canonical logicalH1 fixes physicalhead0; fifteen zero-filled Q/P slots and ALL local buses/clocks retained. Native writer/wholearith join OPEN.</text>
 </svg>
