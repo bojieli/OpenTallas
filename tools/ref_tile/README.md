@@ -249,3 +249,22 @@ differing insertion references, source compensation, generated hooks, and
 wrong-domain/unknown-port/crossing mutants. These are flow fixtures; production
 leaf placement, routed TT/FF timing, DRC, and native boundary closure remain
 required.
+
+### Direct raw SRAM clock entries
+
+An `entries` or `hybrid_entries` cluster may expose a raw SRAM clock on its own
+face, alongside independently clocked routed children and local CTS roots.
+Annotate each individual `macros` item with
+`"clock_entry":{"port":"clk_mem0","pin":"clk","reference":"raw_liberty_clock_pin"}`
+and an exact `inst` pattern and `count:1`. The port must be a declared hard entry,
+not a local CTS root. The generator binds the actual LEF clock pin and all three
+raw SRAM Liberty files, requiring memory semantics and real setup, hold and
+clock-to-Q arcs. Routed-child ETM insertion records remain a separate reference.
+
+Runtime checks prove the exact linked instance, library corner, sole source and
+clock pin. Only the actual propagated source-to-SRAM wire is compensated; no
+SRAM internal insertion is invented and its Liberty arcs stay unchanged. Pure
+raw-macro clusters are supported as well. The direct-macro probe checks all
+three corners, source/corner mutants, unchanged real clock-to-Q timing and the
+complete generated entry SDC. Its nonzero-RC SPEF is a test fixture, not routed
+layout qualification.

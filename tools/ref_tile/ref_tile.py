@@ -258,7 +258,8 @@ def load_spec(path: str) -> dict:
     pin_group_max(s)
     s.setdefault("reset_ports", [])
     s.setdefault("inter", [])
-    if s["kind"] == "cluster" and not s["children"]:
+    direct_entries = s.get("clock") in ("entries", "hybrid_entries") and any(m.get("clock_entry") for m in s["macros"])
+    if s["kind"] == "cluster" and not s["children"] and not direct_entries:
         raise SpecError("spec: a cluster needs hard children (children[])")
     if s["kind"] == "tile" and s["children"]:
         raise SpecError("spec: a leaf tile has no hard children (use kind cluster)")
