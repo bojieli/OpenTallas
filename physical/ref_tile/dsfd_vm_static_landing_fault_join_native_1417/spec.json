@@ -1,0 +1,114 @@
+{
+ "name": "dsfd_vm_static_landing_fault_join_native_1417",
+ "top": "dsfd_vm_static_landing_fault_join",
+ "kind": "tile",
+ "sources": [
+  "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_landing_fault_join.sv"
+ ],
+ "clock_port": "ck",
+ "reset_ports": [],
+ "outline": {
+  "w": 21.6,
+  "h": 21.6,
+  "exact": true
+ },
+ "pins": {
+  "W": [
+   "i_fault"
+  ],
+  "E": [
+   "o_fault"
+  ],
+  "N": [
+   "ck"
+  ]
+ },
+ "io_tcl": "physical/s81_vm_landing_fault_join_1417/pins.tcl",
+ "macros": [],
+ "route": {
+  "pd": 0.4,
+  "threads": 4,
+  "peak_ram_gb": 4,
+  "period_ps": 770,
+  "hold_margin_ns": 0.03,
+  "cts_sink": {
+   "size": 8,
+   "diameter_um": 15,
+   "extra": "-distance_between_buffers 15"
+  },
+  "macro_halo_um": 5.4
+ },
+ "recipe": 2,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R",
+  "out_cell": "HB1xp67_ASAP7_75t_R"
+ },
+ "io_budget": {
+  "in": 0.55,
+  "out": 0.55
+ },
+ "structural_change": "Real15FF hard fault join replaces parent combinational OR:12 plain pin captures then3 registered OR4 outputs. Two diagnostic edges, zero data/calendar edges; every parent connection is wire between real hardmasters. No local reset; producer reset zeros propagate exactly through2 stages. Model tools/s81_vm/landing_fault_join_model.json.",
+ "slot_change_request": {
+  "contract": "S81 five-root landing candidate",
+  "version": "1417-faultjoin",
+  "why": "One21.6um square faultjoin plus4x95.04um lanes: .0365969664mm2 perVM vs old.0329204736 (+.0036764928); roots1->5 (+4), data age2 unchanged, diagnostic+2; no parent fit claim"
+ },
+ "job": {
+  "owner": "codex:S81 VM landing1417",
+  "branch": "codex/s81-vm-landing-1417",
+  "tag": "join1",
+  "cycles_added": 0,
+  "extra_paths": [
+   "tools/s81_vm",
+   "rtl/dsrom_sys/s81_ph/vm",
+   "physical/s81_vm_landing_fault_join_1417"
+  ],
+  "purpose": "Harden fault reduction in its own root; full4096pattern exact bench, observed missing-lane mutant, fulljoined2048bit composition equivalent with diagnostic+2.",
+  "benches": [
+   {
+    "name": "fault_join_base",
+    "cmd": "bash tools/s81_vm/landing_fault_join_gate.sh {RUN}/bench/fault_base base",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 1,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "LANDING_FAULT_JOIN PASS"
+   },
+   {
+    "name": "fault_join_drop",
+    "cmd": "bash tools/s81_vm/landing_fault_join_gate.sh {RUN}/bench/fault_drop drop",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 1,
+    "needs": [
+     "iverilog"
+    ],
+    "fail_regex": "LANDING_FAULT_JOIN FAIL"
+   },
+   {
+    "name": "joined_component",
+    "cmd": "bash tools/s81_vm/landing_joined_gate.sh {RUN}/bench/joined base",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 1,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "LANDING_JOINED PASS"
+   }
+  ]
+ },
+ "params": {},
+ "children": [],
+ "inter": []
+}
