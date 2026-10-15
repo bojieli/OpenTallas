@@ -1,0 +1,14 @@
+original_sha256 c075657dd73f0ecfe37d3c96b34284f043c65c628bd2a5c4b8e2f1fa3f168b80
+OT_ENTRIES ERROR: clock entry clk_macro0 drives 2 pins (one hard-child clock pin per entry)
+OT_ENTRIES ERROR: clock entry clk_macro1 drives 0 pins (one hard-child clock pin per entry)
+OT_ENTRIES entry clk_macro2 -> u_bank.u_data.g_read\[2\].u_m/clk (ot_sram_1r1w_128x256_m1_r2c2) wire 242.0 um LONG
+OT_ENTRIES entry clk_macro3 -> u_bank.u_data.g_read\[3\].u_m/clk (ot_sram_1r1w_128x256_m1_r2c2) wire 178.5 um LONG
+OT_ENTRIES entry clk_macro4 -> u_bank.u_data.g_read\[4\].u_m/clk (ot_sram_1r1w_128x256_m1_r2c2) wire 64.3 um LONG
+OT_ENTRIES entry clk_macro5 -> u_bank.u_data.g_read\[5\].u_m/clk (ot_sram_1r1w_128x256_m1_r2c2) wire 179.2 um LONG
+TOPOLOGY_SOURCE clk_macro0 net=clk_macro0 bterms=clk_macro0 iterms={u_bank.u_data.g_read\[1\].u_m/clk} {u_bank.u_data.g_read\[0\].u_m/clk}
+TOPOLOGY_SOURCE clk_macro1 net=clk_macro1 bterms=clk_macro1 iterms=
+TOPOLOGY_SOURCE clk_macro2 net=clk_macro2 bterms=clk_macro2 iterms={u_bank.u_data.g_read\[2\].u_m/clk}
+TOPOLOGY_SOURCE clk_macro3 net=clk_macro3 bterms=clk_macro3 iterms={u_bank.u_data.g_read\[3\].u_m/clk}
+TOPOLOGY_SOURCE clk_macro4 net=clk_macro4 bterms=clk_macro4 iterms={u_bank.u_data.g_read\[4\].u_m/clk}
+TOPOLOGY_SOURCE clk_macro5 net=clk_macro5 bterms=clk_macro5 iterms={u_bank.u_data.g_read\[5\].u_m/clk}
+Error: cts.tcl, 36 OT_ENTRIES: 2 clock entries are not port -> one hard-child clock pin

@@ -1,0 +1,40 @@
+{
+  "source_topology": "R1 direct stream payload capture,80bit phase payload capture+tag+valid,wrapper reset capture",
+  "source_ff_added": 86,
+  "sram_added": 0,
+  "production_edges_added": 0,
+  "phase_descriptor_internal_edges_added": 1,
+  "reset_deassert_priming_edges_added": 3,
+  "static_gate_checks": 2500,
+  "stream_beats": 1152,
+  "fault_only_modes": [
+    "missingVM",
+    "missingcount"
+  ],
+  "actual_mutants": [
+    "TAG",
+    "PHW",
+    "SAW",
+    "NOGA"
+  ],
+  "scope": "component source proof; no physical or production claim",
+  "limits": [
+    "production compiler minimum phase-response preparation gap must bind new internal1edge stage",
+    "new CTS and routed allpin TT/FF/DRC required",
+    "pairedROM zero-payload fixture proves public width/control edges only; no canonicalweights or native numerical/production qualification"
+  ],
+  "produced_wrapper": {
+    "positive": "PASS280checks phases511..514 DONE36 unchanged",
+    "source_mutants": [
+      "CALGO FAIL native config payload",
+      "PHW FAIL hardware descriptor phase512"
+    ],
+    "source_commit": "aa4ea9545",
+    "source_archive_sha256": "ab00b3e19753492bb9cd106e87fb987a18c095bf16e57abcfe88c09650389b70",
+    "host": "ot-agidock128",
+    "unit": "oth-ubuntu-940954-1792088450",
+    "status": "terminal0",
+    "run": "/srv/opentallas-scratch/codex/s81-pq-physical-1103/c4-aa4ea9545-v2",
+    "first_attempt": "terminalbeforecompile missingABIjson fromsourcearchive; originalfailurepreserved"
+  }
+}

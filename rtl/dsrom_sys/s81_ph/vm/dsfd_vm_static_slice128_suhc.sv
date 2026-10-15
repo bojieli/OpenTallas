@@ -4,7 +4,7 @@
 // All clocks are stream1.2GHz; separate pins preserve die phi-R delivery to leaves.
 // Compiler owns incoming32-record packet and bank reservations. Serial clients
 // need explicit fixed-ratio ingress, not a credit adapter hidden in this parent.
-module dsfd_vm_static_slice128_suhc(
+module dsfd_vm_static_slice128_suhc #(parameter integer WSCATTER_PIPE=0)(
  input wire [3:0] ck_rscatter,input wire [31:0] ck_wcapture,input wire [3:0] ck_wscatter,input wire [31:0] ck_bank,
  input wire [11:0] ck_relay_req,ck_relay_rsp,
  input wire [3:0] rst_rscatter_n,input wire [31:0] rst_wcapture_n,rst_bank_n,
@@ -35,7 +35,7 @@ module dsfd_vm_static_slice128_suhc(
     .o_v(cap_v[B]),.o_we(cap_we[B]),.o_row(cap_row[14*B+:14]),.o_mask(cap_mask[4*B+:4]),
     .o_data(cap_data[128*B+:128]),.o_tag(cap_tag[8*B+:8]));
   end
-  dsfd_vm_static_scatter_b8_out #(.BANK_BASE(8*l)) u_w(.ck(ck_wscatter[l]),.rst_n(rst_wscatter_n[l]),
+  dsfd_vm_static_scatter_b8_out #(.BANK_BASE(8*l), .PIPE(WSCATTER_PIPE)) u_w(.ck(ck_wscatter[l]),.rst_n(rst_wscatter_n[l]),
    .i_v(cap_v[8*l+:8]),.i_we(cap_we[8*l+:8]),.i_row(cap_row[112*l+:112]),
    .i_mask(cap_mask[32*l+:32]),.i_data(cap_data[1024*l+:1024]),.i_tag(cap_tag[64*l+:64]),
    .o_v(wv[8*l+:8]),.o_we(we[8*l+:8]),.o_addr(wa[72*l+:72]),.o_mask(wm[32*l+:32]),

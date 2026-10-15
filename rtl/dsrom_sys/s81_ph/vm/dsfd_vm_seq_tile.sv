@@ -30,11 +30,20 @@ module dsfd_vm_seq_tile (
     always @(posedge ck or negedge rst[0]) if (!rst[0]) rq <= 2'b00; else rq <= {rq[0], 1'b1};
     wire rn = rq[1];
     wire v_cv; wire [83:0] v_cd; reg v_dv; reg [7:0] v_dt; reg op_bad, pq_bad, o_bad, p_bad, e_flt;
-    wire x_flt = |x_al | p_bad | e_flt;
+    // r3 (S-ELEM-A 2026-10-15): every fault/check INPUT is captured in a plain pin flop first (r2 routed TT -48.77 on
+    // input -> OR tree -> vm_fault / u_seq.v_flt, e.g. l_flt[2]).  Faults are diagnostic and never gate data or the
+    // command calendar: vm_fault and the sequencer's fault flag move one edge later; command issue/done timing unchanged.
+    reg w_flt_q, r_flt_q; reg [39:0] m_flt_q; reg [2:0] l_flt_q; reg [7:0] pqx_q;
+    reg [2:0] x_al_q; reg [8:0] x_hdr_q; reg [7:0] rf_q; reg [2:0] ef_q;
+    always @(posedge ck) begin
+        w_flt_q <= w_flt; r_flt_q <= r_flt; m_flt_q <= m_flt; l_flt_q <= l_flt; pqx_q <= pqx_chk;
+        x_al_q <= x_al; x_hdr_q <= x_hdr; rf_q <= read_fault; ef_q <= edge_f;
+    end
+    wire x_flt = |x_al_q | p_bad | e_flt;
     // landing header check per x34 i (sel 0, col 1, aSW 2): x_hdr[3i+2] valid, [3i+1] header top bit, [3i] header bit
-    wire hdr_bad = (x_hdr[2] && (!x_hdr[0] || x_hdr[1])) || (x_hdr[5] && (!x_hdr[3] || x_hdr[4])) ||
-                   (x_hdr[8] && (!x_hdr[6] || x_hdr[7]));
-    wire svc_flt = w_flt | |m_flt | |l_flt | pq_bad | o_bad | op_bad | r_flt | x_flt;
+    wire hdr_bad = (x_hdr_q[2] && (!x_hdr_q[0] || x_hdr_q[1])) || (x_hdr_q[5] && (!x_hdr_q[3] || x_hdr_q[4])) ||
+                   (x_hdr_q[8] && (!x_hdr_q[6] || x_hdr_q[7]));
+    wire svc_flt = w_flt_q | |m_flt_q | |l_flt_q | pq_bad | o_bad | op_bad | r_flt_q | x_flt;
     dsfd_vm_seq_static u_seq (.ck(ck), .rst(rst), .c_cmd(c_cmd), .c_done(c_done), .c_st(c_st),
         .o_cv(o_cv), .o_ca(o_ca), .o_cm(o_cm), .o_rv(o_rv), .o_rr(o_rr),
         .v_cv(v_cv), .v_cd(v_cd), .v_dv(v_dv), .v_dt(v_dt), .v_flt(svc_flt),
@@ -48,10 +57,10 @@ module dsfd_vm_seq_tile (
         else begin
             v_dv <= v_cv;                                   // every native op retires one edge after its forward
             if (v_cv && (v_code == 3'd5 || v_code == 3'd7 || (v_code == 3'd6 && v_cd[27:24] == 4'd7))) op_bad <= 1'b1;
-            if (pqx_chk[0] && (pqx_chk[7] || pqx_chk[6:1] != 6'd0)) pq_bad <= 1'b1;
-            if (|read_fault) o_bad <= 1'b1;
+            if (pqx_q[0] && (pqx_q[7] || pqx_q[6:1] != 6'd0)) pq_bad <= 1'b1;
+            if (|rf_q) o_bad <= 1'b1;
             if (hdr_bad) p_bad <= 1'b1;
-            if (|edge_f) e_flt <= 1'b1;
+            if (|ef_q) e_flt <= 1'b1;
             vm_fault <= svc_flt;
         end
         v_dt <= {v_cd[83], v_cd[6:0]};

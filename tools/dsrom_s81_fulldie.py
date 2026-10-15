@@ -3471,10 +3471,6 @@ def stn_dims(lanes, horiz):
     """station size: pins of every lane (fclk + data) on the input and the output face; ~0.7 um2 a stage bit"""
     pins = sum(w + 1 for w in lanes)
     bits = sum(lanes)
-    if STN_FOOTPRINTS and len(lanes) == 1 and ('h' if horiz else 'v', bits) in STN_FOOTPRINTS:
-        # --stn-footprints (S-DIE r12 grant 10-15): FILL-S measured recipe-2 content > util 0.55 of the generator slot;
-        # depth-only growth (flow direction), every data-pin coordinate unchanged
-        return STN_FOOTPRINTS[('h' if horiz else 'v', bits)]
     face = face_need([b for w in lanes for b in (1, w)])
     if STN_WIDE_SQUARE and bits >= 1000:
         # S-BIND r6 --stn-wide-square: a >= 1,000-b station (the packed 1,102-b static x lane) as a square of the same
@@ -3500,7 +3496,14 @@ def relay_dims(bits, horiz):
     """
     if RLY_REAL_DIMS and bits in (266, 283):
         return 34.56, 30.24
-    return stn_dims([bits], horiz)
+    # Faces are selected from the actual neighbours AFTER the site is reserved.
+    # A path's initial direction does not constrain that choice: BF x2's 536-bit
+    # relay can enter a horizontal search and finish as SN or a corner master.
+    # Reserve the enclosing outlines for both pin orientations now, including
+    # the full-width and bundled-view pin capacity in stn_dims/face_need.
+    horizontal = stn_dims([bits], True)
+    vertical = stn_dims([bits], False)
+    return tuple(max(a, b) for a, b in zip(horizontal, vertical))
 
 
 def _split_multi_lane_stations(m):
@@ -3561,6 +3564,44 @@ def _split_multi_lane_stations(m):
     m['stn70_split'] = rec
     m.setdefault('notes', []).append('--stn70-split: %d multi-lane 70-b stations -> %d x dsfd_stn*_70x1'
                                      % (len(victims), sum(r_['lanes'] for r_ in rec)))
+
+
+def _apply_station_footprints(m):
+    """--stn-footprints (S-DIE r12 grant 10-15): instances of the FILL-S-measured station masters (exact final master
+    name, after the common-clock hstn conversion) take the granted outline: depth-only growth in the flow direction,
+    the data-pin face length unchanged.  Grow toward the output face; if that box is taken, toward the input face; else
+    the nearest legal box (<= 120 um).  Counted in m.stn_footprints."""
+    W, H = DIE
+    hits = [it for it in m['insts'] if it.master in STN_FOOTPRINTS]
+    if not hits:
+        return
+    names = {it.name for it in hits}
+    P = Placer(dict(m, insts=[it for it in m['insts'] if it.name not in names]))
+    rec = dict(in_place=0, flipped=0, moved=[], masters={})
+    for it in hits:
+        w2, h2 = STN_FOOTPRINTS[it.master]
+        horiz = 'stnh' in it.master
+        cands = [(it.x, it.y)]
+        if horiz:
+            cands.append((dn(it.x + it.w - w2, GX), it.y))
+        else:
+            cands.append((it.x, dn(it.y + it.h - h2, GY)))
+        done = None
+        for j, (x0, y0) in enumerate(cands):
+            box = (x0, y0, x0 + w2, y0 + h2)
+            if box[0] >= 0 and box[1] >= 0 and box[2] <= W and box[3] <= H and P.occ.free(box, 0.432):
+                done = (x0, y0)
+                rec['in_place' if j == 0 else 'flipped'] += 1
+                break
+        if done is None:
+            pl = P.near(it.x + it.w / 2, it.y + it.h / 2, w2, h2, [(0.0, 0.0, W, H)], horiz=horiz, span=120.0, rows=12)
+            assert pl, ('--stn-footprints: no box for granted outline', it.name, it.master, (w2, h2))
+            rec['moved'].append([it.name, round(pl[0] - it.x, 3), round(pl[1] - it.y, 3)])
+            done = pl
+        it.x, it.y, it.w, it.h = done[0], done[1], w2, h2
+        P.occ.add(it.box())
+        rec['masters'][it.master] = rec['masters'].get(it.master, 0) + 1
+    m['stn_footprints'] = rec
 
 
 def _station_pin_layers(M):
@@ -4569,6 +4610,8 @@ def build_r8(variant=None):
     buses_r8(m)
     if STN70_SPLIT:
         _split_multi_lane_stations(m)
+    if STN_FOOTPRINTS:
+        _apply_station_footprints(m)
     if RTL_HUB_WIDTHS and 'wfc' in hub and hub['wfc'].master in WFC_FIELD_SPLIT:
         _split_fields(m, hub['wfc'].name, (WFC_FIELD_SPLIT_PRICED if WFC_PRICED else WFC_FIELD_SPLIT)[hub['wfc'].master])
     return m
@@ -10094,12 +10137,8 @@ def apply_options(a):
             sp_ = json.loads(f_.read_text())
             if not sp_.get('slot_change_request'):
                 continue
-            mm_ = re.fullmatch(r'dsfd_h?stn([hv])_(\d+)(?:x1)?', sp_['top'])
-            if not mm_:
-                continue
-            key_ = (mm_.group(1), int(mm_.group(2)))
-            o_ = tuple(sp_['slot_change_request']['outline'])
-            STN_FOOTPRINTS[key_] = tuple(max(a_, b_) for a_, b_ in zip(o_, STN_FOOTPRINTS.get(key_, o_)))
+            if re.fullmatch(r'dsfd_h?stn[hv]_\d+(x1)?', sp_['top']):
+                STN_FOOTPRINTS[sp_['top']] = tuple(sp_['slot_change_request']['outline'])
     HUB_LAYOUT = RETURN_TREES = None
     for opt_, nm_ in (('hub_layout', 'HUB_LAYOUT'), ('return_trees', 'RETURN_TREES')):
         if getattr(a, opt_, None):
