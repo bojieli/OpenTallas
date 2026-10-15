@@ -1,0 +1,105 @@
+{
+ "name": "s81_pq_endpoint_phw10",
+ "top": "ot_s81_pq_command_endpoint",
+ "kind": "tile",
+ "sources": [
+  "rtl/dsrom_sys/s81_static_control/ot_s81_pq_command_endpoint.sv"
+ ],
+ "params": {
+  "PHW": 10
+ },
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 259.2,
+  "h": 259.2
+ },
+ "pins": {
+  "N": [],
+  "S": [
+   "ck",
+   "rst_n"
+  ],
+  "E": [
+   "c_cmd",
+   "f_desc_pw",
+   "c_done",
+   "c_st",
+   "image_sealed"
+  ],
+  "W": [
+   "t_iss",
+   "f_iss"
+  ]
+ },
+ "layer_cap": "M5",
+ "recipe": 2,
+ "route": {
+  "pd": 0.5,
+  "threads": 16,
+  "peak_ram_gb": 16,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "structural_change": "Actual canonical PHW10/SAW14 static producer/controller; real registered control and complete action75 instead of legacyPHW9 truncated action72. Generous independent leaf CTS geometry explicitly granted by S81 die lead; no historical view alias.",
+ "slot_change_request": {
+  "name": "s81-expanded-native-PQ-row-1015",
+  "owner": "/root/s_die/mix4_sizing",
+  "outline": [
+   259.2,
+   259.2
+  ],
+  "pin_faces": {
+   "N": [],
+   "S": [
+    "ck",
+    "rst_n"
+   ],
+   "E": [
+    "c_cmd",
+    "f_desc_pw",
+    "c_done",
+    "c_st",
+    "image_sealed"
+   ],
+   "W": [
+    "t_iss",
+    "f_iss"
+   ]
+  },
+  "basis": "Independent native CTS dimensions and producer/consumer facing pins granted in live coordinator stream; full parent/hub placement remains unadopted."
+ },
+ "job": {
+  "peak_ram_gb": 16,
+  "views_to": "physical/ref_tile/s81_pq_endpoint_phw10/views",
+  "record_to": "results/rtl/ref_tile/s81_pq_endpoint_phw10",
+  "extra_paths": [
+   "rtl/dsrom_sys/s81_static_control",
+   "rtl/dsrom_sys/s81_die_bind",
+   "rtl/dsrom_sys/s81_ph/pq",
+   "rtl/test/dsrom_sys",
+   "physical/s81_pq_hier/pinned",
+   "tools/s81",
+   "tools/s81_static_control"
+  ]
+ },
+ "defines": [
+  "OT_PQ_ROM_PORTS"
+ ],
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ }
+}

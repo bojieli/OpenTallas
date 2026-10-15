@@ -1,0 +1,96 @@
+{
+ "schema": "opentallas.ref_tile.floorplan.v1",
+ "name": "s81_pq_reader75",
+ "top": "ot_s81_pq_calendar_reader",
+ "kind": "tile",
+ "die": [
+  0,
+  0,
+  108.0,
+  108.0
+ ],
+ "core": [
+  2.16,
+  2.16,
+  105.84,
+  105.84
+ ],
+ "why": "spec outline",
+ "std_area_um2": 374.79348,
+ "layer_contract": {
+  "children": {},
+  "pg_layer": "M5",
+  "rlayers": [
+   "M2",
+   "M5"
+  ],
+  "strap_layer": "M6",
+  "layer_cap": "M5",
+  "cap_basis": "contract"
+ },
+ "pins": {
+  "N": [],
+  "S": [
+   "ck",
+   "rst_n"
+  ],
+  "E": [
+   "rom_addr",
+   "rom_action",
+   "rom_time"
+  ],
+  "W": [
+   "prime",
+   "stage_start",
+   "base",
+   "length",
+   "action",
+   "active",
+   "primed",
+   "fault"
+  ]
+ },
+ "clock_port": "ck",
+ "blocks": [],
+ "findings": [
+  [
+   "WARN",
+   "util",
+   "utilisation 3% outside 45%-60% (std 375 + macro 0 in core 10750 um2)",
+   "resize the outline to util 0.50-0.55 (drop 'outline', set util)"
+  ]
+ ],
+ "referenced": [
+  "rtl/dsrom_sys/s81_static_control/ot_s81_pq_calendar_reader.sv",
+  "physical/ref_tile/s81_pq_reader75/kit.env",
+  "physical/ref_tile/s81_pq_reader75/clock.sdc",
+  "physical/ref_tile/s81_pq_reader75/signoff.sdc",
+  "physical/ref_tile/s81_pq_reader75/pdn.tcl",
+  "physical/ref_tile/s81_pq_reader75/pre_cts.tcl",
+  "physical/ref_tile/s81_pq_reader75/post_cts.tcl",
+  "physical/ref_tile/s81_pq_reader75/post_grt.tcl",
+  "physical/ref_tile/s81_pq_reader75/pre_drt.tcl",
+  "physical/ref_tile/s81_pq_reader75/pre_fill.tcl",
+  "physical/ref_tile/s81_pq_reader75/post_fill.tcl",
+  "physical/ref_tile/s81_pq_reader75/pre_grt.tcl",
+  "physical/ref_tile/s81_pq_reader75/post_drt.tcl",
+  "tools/ref_tile/ref_route.sh",
+  "physical/qwen_die_masters/io_ref_skew.sdc",
+  "physical/qwen_die_masters/io_plain.sdc",
+  "physical/qwen_die_masters/repair_budget.tcl",
+  "physical/qwen_die_masters/pre_cts_skew.tcl",
+  "physical/qwen_die_masters/pre_ref_skew.tcl",
+  "physical/qwen_die_masters/post_plain.tcl",
+  "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
+  "physical/common_flow/grt_macro_top_layer.tcl",
+  "physical/qwen_die_masters/io_flop_at_pins.tcl",
+  "physical/qwen_die_masters/out_flop_release.tcl",
+  "physical/dsrom_window_source/leaf_iohold.tcl",
+  "physical/dsrom_window_source/leaf_inhold_release.tcl",
+  "physical/dsrom_window_source/leaf_inhold.tcl",
+  "physical/dsrom_window_source/leaf_inhold_release.tcl",
+  "physical/ref_tile/s81_pq_reader75/pre_gpl.tcl",
+  "physical/ref_tile/s81_pq_reader75/pre_dpl.tcl",
+  "physical/common_flow/pin_reg_split.tcl"
+ ]
+}

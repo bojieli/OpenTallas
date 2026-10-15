@@ -1,0 +1,98 @@
+{
+  "name": "s81_pq_reader75",
+  "top": "ot_s81_pq_calendar_reader",
+  "kind": "tile",
+  "sources": [
+    "rtl/dsrom_sys/s81_static_control/ot_s81_pq_calendar_reader.sv"
+  ],
+  "params": {
+    "ACTION_BITS": 75
+  },
+  "clock_port": "ck",
+  "reset_ports": [
+    "rst_n"
+  ],
+  "outline": {
+    "w": 108,
+    "h": 108
+  },
+  "pins": {
+    "N": [],
+    "S": [
+      "ck",
+      "rst_n"
+    ],
+    "E": [
+      "rom_addr",
+      "rom_action",
+      "rom_time"
+    ],
+    "W": [
+      "prime",
+      "stage_start",
+      "base",
+      "length",
+      "action",
+      "active",
+      "primed",
+      "fault"
+    ]
+  },
+  "layer_cap": "M5",
+  "recipe": 2,
+  "route": {
+    "pd": 0.5,
+    "threads": 16,
+    "peak_ram_gb": 16
+  },
+  "structural_change": "Actual canonical PHW10/SAW14 static producer/controller; real registered control and complete action75 instead of legacyPHW9 truncated action72. Generous independent leaf CTS geometry explicitly granted by S81 die lead; no historical view alias.",
+  "slot_change_request": {
+    "name": "s81-expanded-native-PQ-row-1015",
+    "owner": "/root/s_die/mix4_sizing",
+    "outline": [
+      108,
+      108
+    ],
+    "pin_faces": {
+      "N": [],
+      "S": [
+        "ck",
+        "rst_n"
+      ],
+      "E": [
+        "rom_addr",
+        "rom_action",
+        "rom_time"
+      ],
+      "W": [
+        "prime",
+        "stage_start",
+        "base",
+        "length",
+        "action",
+        "active",
+        "primed",
+        "fault"
+      ]
+    },
+    "basis": "Independent native CTS dimensions and producer/consumer facing pins granted in live coordinator stream; full parent/hub placement remains unadopted."
+  },
+  "job": {
+    "peak_ram_gb": 16,
+    "views_to": "physical/ref_tile/s81_pq_reader75/views",
+    "record_to": "results/rtl/ref_tile/s81_pq_reader75",
+    "extra_paths": [
+      "rtl/dsrom_sys/s81_static_control",
+      "rtl/dsrom_sys/s81_die_bind",
+      "rtl/dsrom_sys/s81_ph/pq",
+      "rtl/test/dsrom_sys",
+      "physical/s81_pq_hier/pinned",
+      "tools/s81",
+      "tools/s81_static_control"
+    ]
+  },
+  "defines": [
+    "OT_PQ_ROM_PORTS"
+  ],
+  "macros": []
+}
