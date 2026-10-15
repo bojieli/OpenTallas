@@ -1,0 +1,17 @@
+{
+  "status": "PASS_INTERMEDIATE_ELABORATION_ONLY",
+  "scope": "Controller+external-decoder SU math+NOX VM+retained provider. Predates addition of actual ME END peer and source CBUF requirement. Not final stage execution and not physical qualification.",
+  "ot_run": {
+    "host": "ot-epyc4",
+    "unit": "oth-ubuntu-1266333-1792051414",
+    "exit_code": 0,
+    "mem_GB": 40,
+    "threads": 2,
+    "immutable_input": "/srv/opentallas-scratch/codex/q-embedding-stage-control-1015"
+  },
+  "input_files": [
+    "pre_head_embedding_stage.f",
+    "pre_head_elaboration.log",
+    "pre_head_qfd_embedding_stage_static.sv"
+  ]
+}

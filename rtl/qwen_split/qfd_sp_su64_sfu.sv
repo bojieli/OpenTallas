@@ -4,8 +4,14 @@
 // edges (VL14), cache response is compile-time5 or8; no ideal memory adapter.
 // SI fields are the actual qfd_seq_su482 ABI, not a second instruction decoder.
 // Raw KV output feeds the native formatter; no reference results are accepted.
-module qfd_sp_su64_sfu #(parameter integer CBUF_EDGES=5,COPY_DATA_MUT=0)(
+module qfd_sp_su64_sfu #(parameter integer CBUF_EDGES=5,COPY_DATA_MUT=0,EXTERNAL_EMBED=0)(
     input wire ck,rst_n,
+    output wire [63:0] external_a_re,
+    output wire [1535:0] external_a_addr,
+    input wire [2047:0] external_a_q,
+    input wire [63:0] external_vm_a_re,
+    input wire [1535:0] external_vm_a_addr,
+    input wire external_embed_fault,
     input wire [481:0] si,
     output wire [107:0] sd,
     output wire [23:0] acc,
@@ -398,8 +404,8 @@ module qfd_sp_su64_sfu #(parameter integer CBUF_EDGES=5,COPY_DATA_MUT=0)(
  always @(posedge ck or negedge rst_n)
   if(!rst_n)begin embed_epoch_valid<=0;embed_epoch<=0;embed_epoch_fault<=0;end
   else begin
-   if(fill_begin)begin embed_epoch_valid<=1;embed_epoch<=fill_epoch;end
-   if(preload_v&&(!embed_epoch_valid||preload_epoch!=embed_epoch||fill_begin))embed_epoch_fault<=1;
+   if(EXTERNAL_EMBED==0&&fill_begin)begin embed_epoch_valid<=1;embed_epoch<=fill_epoch;end
+   if(EXTERNAL_EMBED==0&&preload_v&&(!embed_epoch_valid||preload_epoch!=embed_epoch||fill_begin))embed_epoch_fault<=1;
   end
  wire[2366:0] arithmetic_va;
  assign sd={su_fault|wrom_fault|copy_fault|embed_epoch_fault,rows,progress,kv_we,idle&&!cp_active,ready&&!cp_active,inflight,active|cp_active};
@@ -421,7 +427,9 @@ module qfd_sp_su64_sfu #(parameter integer CBUF_EDGES=5,COPY_DATA_MUT=0)(
  assign crom_q[3584+:512]=cq7;
  qfd_su_vm_pack u_pack(.s_re0(re0),.s_re1(re1),.s_a0(a0),.s_a1(a1),.sw_mask(sw_mask),.sw_a0(sw_a0),.sw_a1(sw_a1),.sw_data(sw_data),.red_we(red_we),.red_addr(red_addr),.red_data(red_data),.va(arithmetic_va));
  qfd_su_static_copy #(.READ_EDGES(15),.DATA_MUT(COPY_DATA_MUT)) u_copy(.ck(ck),.rst_n(rst_n),.cp(cp),.su_va(arithmetic_va),.vq(vq),.va(va),.xsw(xsw),.cp_active(cp_active),.cp_done(cp_done),.fault(copy_fault));
- ot_qfd_sp_su64_static_entries #(.VL(14),.CRX(CBUF_EDGES-1),.LMIN(15)) u_su(
+ ot_qfd_sp_su64_static_entries #(.EXTERNAL_EMBED(EXTERNAL_EMBED),.VL(14),.CRX(CBUF_EDGES-1),.LMIN(15)) u_su(
+ .external_a_re(external_a_re),.external_a_addr(external_a_addr),.external_a_q(external_a_q),
+ .external_vm_a_re(external_vm_a_re),.external_vm_a_addr(external_vm_a_addr),.external_embed_fault(external_embed_fault),
  .clk(ck),.rst_n(rst_n),.go(si[0]),.accepted_ops(acc),.ready(ready),.idle(idle),.obs_active(active),.obs_inflight(inflight),
  .ck_head({ck_head63,ck_head62,ck_head61,ck_head60,ck_head59,ck_head58,ck_head57,ck_head56,ck_head55,ck_head54,ck_head53,ck_head52,ck_head51,ck_head50,ck_head49,ck_head48,ck_head47,ck_head46,ck_head45,ck_head44,ck_head43,ck_head42,ck_head41,ck_head40,ck_head39,ck_head38,ck_head37,ck_head36,ck_head35,ck_head34,ck_head33,ck_head32,ck_head31,ck_head30,ck_head29,ck_head28,ck_head27,ck_head26,ck_head25,ck_head24,ck_head23,ck_head22,ck_head21,ck_head20,ck_head19,ck_head18,ck_head17,ck_head16,ck_head15,ck_head14,ck_head13,ck_head12,ck_head11,ck_head10,ck_head9,ck_head8,ck_head7,ck_head6,ck_head5,ck_head4,ck_head3,ck_head2,ck_head1,ck_head0}),
  .ck_exp({ck_exp63,ck_exp62,ck_exp61,ck_exp60,ck_exp59,ck_exp58,ck_exp57,ck_exp56,ck_exp55,ck_exp54,ck_exp53,ck_exp52,ck_exp51,ck_exp50,ck_exp49,ck_exp48,ck_exp47,ck_exp46,ck_exp45,ck_exp44,ck_exp43,ck_exp42,ck_exp41,ck_exp40,ck_exp39,ck_exp38,ck_exp37,ck_exp36,ck_exp35,ck_exp34,ck_exp33,ck_exp32,ck_exp31,ck_exp30,ck_exp29,ck_exp28,ck_exp27,ck_exp26,ck_exp25,ck_exp24,ck_exp23,ck_exp22,ck_exp21,ck_exp20,ck_exp19,ck_exp18,ck_exp17,ck_exp16,ck_exp15,ck_exp14,ck_exp13,ck_exp12,ck_exp11,ck_exp10,ck_exp9,ck_exp8,ck_exp7,ck_exp6,ck_exp5,ck_exp4,ck_exp3,ck_exp2,ck_exp1,ck_exp0}),

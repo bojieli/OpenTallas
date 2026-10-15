@@ -41,8 +41,17 @@ module ot_qfd_sp_su64_static_entries #(
     parameter integer RD = 2,
     parameter integer LMIN = 15,
     parameter integer RED_ENTRIES = 1,
-    parameter integer ALIGN_ENTRIES = 1
+    parameter integer ALIGN_ENTRIES = 1,
+    parameter integer EXTERNAL_EMBED = 0
 ) (
+    // Selected controller owns the exact INT8 decoder in this mode. These
+    // are actual registered lane requests, not reconstructed compact requests.
+    output wire [SW-1:0] external_a_re,
+    output wire [SW*AW-1:0] external_a_addr,
+    input wire [SW*32-1:0] external_a_q,
+    input wire [SW-1:0] external_vm_a_re,
+    input wire [SW*AW-1:0] external_vm_a_addr,
+    input wire external_embed_fault,
     input wire[63:0]ck_head,ck_exp,ck_rcp,ck_rsq,
     input wire[15:0]ck_align,input wire[63:0]ck_lane,input wire[8:0]ck_red,
     input  wire              clk,
@@ -128,6 +137,17 @@ module ot_qfd_sp_su64_static_entries #(
     wire [SW*AW-1:0] s_va_addr, e_va_addr;
     wire [SW*32-1:0] e_va_q;
     wire e_pend, e_fault;
+    assign external_a_re=s_va_re;
+    assign external_a_addr=s_va_addr;
+    generate if(EXTERNAL_EMBED!=0)begin:g_controller_embedding
+        assign go_s=go_q;
+        assign f_go=f_q;
+        assign e_pend=1'b0;
+        assign e_fault=external_embed_fault;
+        assign e_va_q=external_a_q;
+        assign e_va_re=external_vm_a_re;
+        assign e_va_addr=external_vm_a_addr;
+    end else begin:g_resident_embedding
     ot_qfd_su_embed_static #(.SW(SW), .AW(AW), .NW(NW), .HID(HID), .FI(FI)) u_emb (
         .clk(clk), .rst_n(rs), .go_in(go_q), .a_src(asrc_q), .tok(tok_q), .f_in(f_q), .go_out(go_s), .f_out(f_go),
         .pend(e_pend), .fill_begin(fill_begin),.fill_token(fill_token),
@@ -135,6 +155,7 @@ module ot_qfd_sp_su64_static_entries #(
         .preload_word(preload_word),.preload_token(preload_token),.preload_data(preload_data),
         .su_va_re(s_va_re), .su_va_addr(s_va_addr), .su_va_q(e_va_q), .va_re(e_va_re),
         .va_addr(e_va_addr), .va_q({(SW*32){1'b0}}), .fault(e_fault));
+    end endgenerate
     // ---- descriptors to the banked memory (lane 0 / lane 1 registers) ----
     wire [SW-1:0] vb_re, vc_re;
     wire [SW*AW-1:0] vb_addr, vc_addr;

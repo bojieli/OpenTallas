@@ -58,8 +58,13 @@ def program_segments(program_bytes, descriptors):
     return result
 
 
+def requires_constant_rom(program_bytes):
+    return any(f['unit']==2 and(f['b_src']or f['c_src'])for f in(ISA.decode_instruction(int(w,16))for w in program_bytes.split()))
+
+
 def pw_image(program_bytes,descriptors,stage,profile):
     segments=program_segments(program_bytes,descriptors)
+    requires_cbuf=requires_constant_rom(program_bytes)
     physical_profile(profile,program_bytes)
     if not 0<=stage<64 or len(profile['segments'])!=len(segments):
         raise ScheduleError('outer calendar does not cover actual program segments')
@@ -109,6 +114,6 @@ def pw_image(program_bytes,descriptors,stage,profile):
     if occupancy:raise ScheduleError('unconsumed actual VM payload at stage end')
     for addr in range(BASE+4*len(segments),973):out.append(dict(address=addr,data_hex='0000000000000000'))
     out.extend([dict(address=973,data_hex=f'{0x53475431<<32|stop:016x}'),
-                dict(address=974,data_hex=f'{0x53475453<<32|stage<<2|len(segments):016x}'),
+                dict(address=974,data_hex=f'{0x53475453<<32|int(requires_cbuf)<<8|stage<<2|len(segments):016x}'),
                 dict(address=975,data_hex='0000000000000000')])
-    return dict(writes=out,segments=segments,queue_high_water=high_water,port_reservations=[dict(resource=r,cycle=c,segment=k,beat=b)for(r,c),(k,b)in sorted(reservations.items())],collective=collective)
+    return dict(writes=out,segments=segments,requires_cbuf=requires_cbuf,queue_high_water=high_water,port_reservations=[dict(resource=r,cycle=c,segment=k,beat=b)for(r,c),(k,b)in sorted(reservations.items())],collective=collective)
