@@ -35,21 +35,22 @@
 // MUT = 1 (bench mutant): flips bit 0 of lane 0's answer.
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_qfd_crom #(
+    parameter integer TP = 4, // Actual emitted constant layout; TP8 is not TP4 padded.
     parameter integer SW = 64,
     parameter integer AW = 24,
     parameter integer LW = 6,
     parameter integer QK0 = 4096,
-    parameter integer POST0 = 5376,
-    parameter integer QSCALE = 9472,
-    parameter integer ROPE0 = 9473,
-    parameter integer OSC0 = 533761,
-    parameter integer DSC0 = 537857,
-    parameter integer END = 541953,
+    parameter integer POST0 = 4096 + 5120 / TP,
+    parameter integer QSCALE = 8192 + 5120 / TP,
+    parameter integer ROPE0 = 8193 + 5120 / TP,
+    parameter integer OSC0 = 532481 + 5120 / TP,
+    parameter integer DSC0 = 536577 + 5120 / TP,
+    parameter integer END = 540673 + 5120 / TP,
     parameter integer HEAD = 36,
     parameter integer HEAD_N = 4096,
-    parameter integer QKR = 20,                 // QK rows a layer
-    parameter integer LROWS = 148,              // narrow rows a layer
-    parameter integer FN_ROW0 = 5328,
+    parameter integer QKR = 80 / TP,                 // QK rows a layer
+    parameter integer LROWS = 128 + 80 / TP,              // narrow rows a layer
+    parameter integer FN_ROW0 = 36 * (128 + 80 / TP),
     parameter [63:0] QSCALE_WORD = 64'h3db504f3_00000000,
     parameter integer MUT = 0,
     // LB (redesign-qwen 2026-10-09; 0 = unchanged): global index of lane 0 -- an 8-lane GROUP TILE (SW 8: 2 wide columns +
@@ -118,8 +119,8 @@ module ot_qfd_crom #(
     end endgenerate
 
     // ---- e2: per-lane region decode ----
-    // narrow row of a layer-local region: stage * LROWS + off (LROWS = 148 = 128 + 16 + 4: three shifted adds)
-    wire [RW-1:0] lbase = ({{(RW-LW){1'b0}}, st1} << 7) + ({{(RW-LW){1'b0}}, st1} << 4) + ({{(RW-LW){1'b0}}, st1} << 2);
+    // Constant-folded row stride: TP4=148, TP8=138; never retain the TP4 shift-add when TP changes.
+    wire [RW-1:0] lbase = RW'(st1 * LROWS);
     reg  [SW-1:0]    t_v;
     reg  [SW*3-1:0]  t_kind;
     reg  [SW*RW-1:0] t_row;
@@ -355,7 +356,7 @@ module ot_qfd_crom_g (
     output wire [1:0]        fault_code
 );
     ot_qfd_crom #(.SW(8), .LB(0)) u_c (.clk(clk), .rst_n(rst_n), .crom_re(crom_re), .crom_addr(crom_addr),
-        .crom_stage(crom_stage), .crom_q(crom_q), .fault(fault), .fault_code(fault_code));
+        .crom_stage(crom_stage), .crom_lb(6'd0), .crom_q(crom_q), .fault(fault), .fault_code(fault_code));
 endmodule
 
 
@@ -364,6 +365,7 @@ endmodule
 // crom_lb pin (registered in the input station beside crom_addr: 0 added edges, no timing exception), so the 8 groups are
 // 8 placements of ONE hardened tile; the die ties crom_lb of group g to 8 g.  IMG_LB names the simulation mask images only.
 module ot_qfd_crom_gs #(
+    parameter integer TP = 4,
     parameter integer IMG_LB = 0,
     parameter integer MUT = 0
 ) (
@@ -377,7 +379,7 @@ module ot_qfd_crom_gs #(
     output wire              fault,
     output wire [1:0]        fault_code
 );
-    ot_qfd_crom #(.SW(8), .LB(IMG_LB), .LBS(1), .MUT(MUT)) u_c (.clk(clk), .rst_n(rst_n), .crom_re(crom_re), .crom_addr(crom_addr),
+    ot_qfd_crom #(.TP(TP), .SW(8), .LB(IMG_LB), .LBS(1), .MUT(MUT)) u_c (.clk(clk), .rst_n(rst_n), .crom_re(crom_re), .crom_addr(crom_addr),
         .crom_stage(crom_stage), .crom_lb(crom_lb), .crom_q(crom_q), .fault(fault), .fault_code(fault_code));
 endmodule
 
@@ -385,6 +387,7 @@ endmodule
 // Die master qfd_crom_g, slot-shaped M5 tile (q13 2026-10-13): ot_qfd_crom_gs (lane-base strap: ONE hardened tile for the
 // 8 groups) with the RLY 1 relay stages; strobe -> q = 8 edges at this master's pins (was 5).  IMG_LB / MUT as crom_gs.
 module ot_qfd_crom_gr #(
+    parameter integer TP = 4,
     parameter integer IMG_LB = 0,
     parameter integer MUT = 0
 ) (
@@ -398,6 +401,6 @@ module ot_qfd_crom_gr #(
     output wire              fault,
     output wire [1:0]        fault_code
 );
-    ot_qfd_crom #(.SW(8), .LB(IMG_LB), .LBS(1), .MUT(MUT), .RLY(1), .RSTR(1)) u_c (.clk(clk), .rst_n(rst_n), .crom_re(crom_re),
+    ot_qfd_crom #(.TP(TP), .SW(8), .LB(IMG_LB), .LBS(1), .MUT(MUT), .RLY(1), .RSTR(1)) u_c (.clk(clk), .rst_n(rst_n), .crom_re(crom_re),
         .crom_addr(crom_addr), .crom_stage(crom_stage), .crom_lb(crom_lb), .crom_q(crom_q), .fault(fault), .fault_code(fault_code));
 endmodule
