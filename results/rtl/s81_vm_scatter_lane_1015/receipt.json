@@ -82,11 +82,14 @@
     "actual_SRAMs": 128
   },
   "core": {
-    "status": "RUNNING_BOUNDED_REPAIR",
+    "status": "PASS_2SEEDS_1000CALENDARS_6FAULT_5KILLEDMUTANTS",
     "host": "ot-epyc4",
     "unit": "oth-ubuntu-1645891-1792058246",
     "session": 74595,
-    "output": "/srv/opentallas-scratch/codex-s81-vm-lane-scatter-1015/results/core3_bounded"
+    "output": "/srv/opentallas-scratch/codex-s81-vm-lane-scatter-1015/results/core3_bounded",
+    "read_age": 12,
+    "K_commit_observation_age": 11,
+    "done_elapsed_age": 6
   },
   "resource_failure": {
     "unit": "oth-ubuntu-1642518-1792058118.scope",
