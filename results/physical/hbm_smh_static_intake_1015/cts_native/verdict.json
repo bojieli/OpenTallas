@@ -1,0 +1,34 @@
+{
+  "schema": "opentallas.smh.stage256.cts-native.v1",
+  "source_db": "/srv/opentallas-scratch/claude/ref_gate/smh_static_stage256_ref-20261015-002911/routes/gate/work/orfs/results/asap7/opentallas_ot_smh_static_stage256_asap7_ref_gate/base/4_1_cts.odb",
+  "source_db_sha256": "cd686322297b4ac7000b74feef3ea498959826e2083be22f426bc6a6c746dbcf",
+  "source_sdc_sha256": "80ccf6d96679e9047940a6d80d7f56002170c4856b837decb9686c3023d4198e",
+  "scope": "placement-RC CTS extraction only; no routed qualification",
+  "clock": {
+    "n": 256,
+    "mean": 80.1,
+    "min": 79.3,
+    "max": 80.8
+  },
+  "launch_ps": 255.58973,
+  "launch_pin": "q[179]",
+  "capture_ps": 110.95226,
+  "capture_pin": "d[15]",
+  "comb_pins": [],
+  "native_pass": false,
+  "image": "openroad/orfs:latest",
+  "image_id": "sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29",
+  "command": [
+    "docker",
+    "run",
+    "--rm",
+    "-v",
+    "/srv/opentallas-scratch/claude/ref_gate/smh_static_stage256_ref-20261015-002911/routes/gate/work/orfs/results/asap7/opentallas_ot_smh_static_stage256_asap7_ref_gate/base:/base:ro",
+    "-v",
+    "/var/tmp/smh-stage256-native-intake-1015/out:/out",
+    "openroad/orfs:latest",
+    "bash",
+    "-lc",
+    "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -no_init -exit /out/native.tcl"
+  ]
+}

@@ -7,7 +7,7 @@
   "geometry_contract": "first_cluster_contract.json",
   "qualification_cluster_only": true,
   "canonical_full_SM_home_assigned": false,
-  "next_job": "read-only originalCTSODB nativeIO+pinpreview, thenroute ifPASS; paired128S2sourcevariantproof beforeparentadoption",
+  "next_job": "Decompose preserved CTS q[179] compensated255.59ps launch into FF/pin/wire/load before structural same-edge repair; no route",
   "known_master_clock": {
     "sinks": 256,
     "TTmax_ps": 80.8,
@@ -18,8 +18,8 @@
     {
       "family": "stage256",
       "ready": "source/exactbench+CTS",
-      "next": "nativepinpreview\u2192realpin/PGreadback\u2192route",
-      "blocker": "nativeIO notyetmeasured; pairedsourcevariantproof pending"
+      "next": "source/cell/path decomposition\u2192structural repair\u2192nativegate\u2192route",
+      "blocker": "Native output launch255.59ps exceeds220ps; actual path decomposition and same-edge output repair required"
     },
     {
       "family": "north ctrl15/ctrl21/decode21/row818",
@@ -45,5 +45,14 @@
       "next": "exactsource inventory+closedviews nativeaudit, selectunclosedparentkit",
       "blocker": "parentinactive; concretefreshmasterinventorypending"
     }
-  ]
+  ],
+  "native_preview": {
+    "unit": "oth-ubuntu-3985196-1792063232",
+    "exit": 0,
+    "native_pass": false,
+    "launch_ps": 255.58973,
+    "capture_ps": 110.95226,
+    "evidence": "cts_native/verdict.json",
+    "routed": false
+  }
 }

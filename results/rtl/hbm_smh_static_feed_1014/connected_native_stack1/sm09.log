@@ -1,0 +1,6 @@
+SM_ACTIVATION_NATIVE PASS rawFP32words40960 actualDQcommits5120 SW8RG6banks24SRAM programmeSRAM2_words703each codeSRAM16_actualwrites2560 AQ2_blocks1280 RQ640 actualVMprogrammeRG2only XWRITE520_exact first_postNBA71 last_postNBA704 safeDone705 engineStart1358 VMstart1356
+CONNECTED_VM_NATIVE_SM PASS sm=9 stack=1 exact_records=40 sectors=172 PHY_bursts=52 row_base=20738 cold_prefetch_ps=111249.955000 native_FP32columns=8 result_after_command_edges=197 actual_VM_xwrites=520 native_PCowners=32 command_reads=172 full_price_qualified=0
+- rtl/test/tb_smh_connected_checkpoint_native.sv:124: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 2us; walltime 24.128 s; speed 90.612 ns/s
+- Verilator: cpu 24.118 s on 1 threads; alloced 1082 MB

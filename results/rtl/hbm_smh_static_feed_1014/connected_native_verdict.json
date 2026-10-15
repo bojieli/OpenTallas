@@ -1,0 +1,85 @@
+{
+  "schema": "opentallas.smh.connected.native.numeric.v1",
+  "timestamp_utc": "2026-10-15T11:22:23.912747+00:00",
+  "status": "PASS",
+  "source_commit": "8020b094d",
+  "source_archive_sha256": "384a098bb6d1c55c418bd653a688e0c179dceaebfa5327849d45a612df957104",
+  "unit": "oth-ubuntu-921703-1792060536",
+  "host": "ot-epyc1tb",
+  "exit": 0,
+  "build_seconds": 2589.333,
+  "cases": [
+    {
+      "sm": 8,
+      "stack": 1,
+      "exact_records": 40,
+      "physical_sectors": 172,
+      "FP32_outputs": 8,
+      "actual_VM_xwrites": 520,
+      "cold_prefetch_ps": 111249.955
+    },
+    {
+      "sm": 9,
+      "stack": 1,
+      "exact_records": 40,
+      "physical_sectors": 172,
+      "FP32_outputs": 8,
+      "actual_VM_xwrites": 520,
+      "cold_prefetch_ps": 111249.955
+    },
+    {
+      "sm": 10,
+      "stack": 1,
+      "exact_records": 40,
+      "physical_sectors": 172,
+      "FP32_outputs": 8,
+      "actual_VM_xwrites": 520,
+      "cold_prefetch_ps": 111249.955
+    },
+    {
+      "sm": 11,
+      "stack": 1,
+      "exact_records": 40,
+      "physical_sectors": 172,
+      "FP32_outputs": 8,
+      "actual_VM_xwrites": 520,
+      "cold_prefetch_ps": 111249.955
+    },
+    {
+      "sm": 12,
+      "stack": 1,
+      "exact_records": 40,
+      "physical_sectors": 172,
+      "FP32_outputs": 8,
+      "actual_VM_xwrites": 520,
+      "cold_prefetch_ps": 111249.955
+    }
+  ],
+  "totals": {
+    "records": 200,
+    "physical_sectors": 860,
+    "FP32_bit_exact_outputs": 40
+  },
+  "mutant": "RawDQ firstFP32 sign flip rejected at actual activation code SRAM beat0",
+  "mechanism": "actual rawFP32 DQ\u2192VM24SRAM\u2192AQ2/code16SRAM/programme2SRAM\u2192xwrite\u2192original NC8SUB4; shared nativecbd92 32PC command-only controller\u2192mapped4 landing32SRAM\u2192packed136 cache5SRAM\u219283/34 programme2SRAM\u2192original arithmetic",
+  "external_boundary": "decoded host/config/start and raw tensor/DRAM fixture setup; golden files assertion-only",
+  "full_price_qualified": false,
+  "full_die_qualified": false,
+  "open": [
+    "STACK0 new connected specialization not run; previous13 baseline separate",
+    "WB34 physical distribution and host/DMA integration",
+    "nativecontroller production throughput",
+    "WKV seven-fill source95/static600 programme numerical join",
+    "real clock phase, native leaf routing and die timing"
+  ],
+  "sha256": {
+    "build.log": "6ff122df5f6a5df6127b411c82bea6ab5da598d562b08281151b46ed42b7fc36",
+    "exitcode": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "mutant.log": "807920d789f0851f33160c480fda8428bf140e9e844193f6d9aee26856f9257e",
+    "sm08.log": "dd618f500e1518c68b84ad4ba1479cf3942c54b474cdae7f5866a9f47d961fa7",
+    "sm09.log": "25c08c2e00373092b103fdfc3d6b38fad96ede592ebb263b4fd343e27a3ba555",
+    "sm10.log": "75f46ab96dda0f1a20bfd7999f778cf042a55ea6b33c87b81ef2fbb3e2d63acb",
+    "sm11.log": "90718d0462efdaadb1e5d9304ad07f40fe8fffaef91d71a6e2e6bb067e443781",
+    "sm12.log": "97b0393a94a364ad5f68205ae71f8f1269f7b3cc583ffd16642b09dce0e05f48"
+  }
+}
