@@ -86,6 +86,10 @@ def build(spec):
             raise ValueError('Protected programme payload/PC does not fit its actual word')
         if target < 4 and pcw != 10:
             raise ValueError('Direct VM programme SRAM has exactly ten address bits')
+        if target == 125:
+            contract = target_contract(target)
+            if spec.get('vm_profile') != contract['vm_profile'] or pcw != 10 or payload != 94:
+                raise ValueError('SW Quant target125 requires actual sw_quant_v2 VM profile and protected94b/PC10 image')
         programme = image['programme']
         start = {k: integer(programme['start'][k]) for k in ('base', 'limit', 'loops')}
         if not (0 <= start['base'] < start['limit'] <= 1 << pcw and 1 <= start['loops'] <= 65535):

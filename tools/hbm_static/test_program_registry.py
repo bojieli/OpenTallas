@@ -85,6 +85,17 @@ class RegistryTest(unittest.TestCase):
         with self.assertRaises(ValueError):
             raw_fragment(dict(target=120, encoding='raw_control256', programme=dict(disabled=True)))
 
+    def test_sw_quant_requires_versioned_real_ports(self):
+        spec = fixture(); spec['required_targets'][-1] = 125
+        spec['images'][-1] = dict(target=125, PCW=10, payload_bits=94, programme=dict(
+            start=dict(base=0, limit=1, loops=1),
+            configuration_writes=[dict(addr=0, data=f'{0xc7a1 << 240:064x}')]))
+        with self.assertRaisesRegex(ValueError, 'sw_quant_v2'): build(spec)
+        spec['vm_profile'] = 'sw_quant_v2'
+        self.assertEqual(build(spec)['targets'][-1]['target'], 125)
+        spec['images'][-1]['payload_bits'] = 48
+        with self.assertRaises(ValueError): build(spec)
+
     def test_old_registered_profile_unchanged(self):
         spec = fixture(); spec['required_targets'].pop(); spec['images'].pop()
         image = build(spec)
