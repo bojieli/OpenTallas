@@ -5,7 +5,7 @@ import argparse,hashlib,json,pathlib,subprocess,time
 def sha(p):return hashlib.sha256(p.read_bytes()).hexdigest()
 def main():
  ap=argparse.ArgumentParser();ap.add_argument('--source',type=pathlib.Path,required=True);ap.add_argument('--out',type=pathlib.Path,required=True);ap.add_argument('--basis',action='store_true');ap.add_argument('--mutant',choices=['none','lastword','write_decode','read_wire'],default='none');a=ap.parse_args()
- source=a.source.resolve();out=a.out.resolve();out.mkdir(parents=True,exist_ok=False);files={p.name:p for p in source.glob('*.sv')};assert len(files)==3
+ source=a.source.resolve();out=a.out.resolve();out.mkdir(parents=True,exist_ok=False);files={n:source/n for n in ['ot_hbm_pma_block_gearbox.sv','ot_hbm_pma_block_gearbox_static_words.sv','tb_pma_static_words.sv']};assert all(p.is_file() for p in files.values())
  pins={n:sha(p) for n,p in files.items()};candidate=files['ot_hbm_pma_block_gearbox_static_words.sv'];text=candidate.read_text();mut=0
  if a.mutant=='lastword':mut=1
  elif a.mutant=='write_decode':

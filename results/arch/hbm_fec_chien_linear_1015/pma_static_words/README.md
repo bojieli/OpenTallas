@@ -33,3 +33,22 @@ returned terminal runner exit 0. The comparison is source/state/calendar evidenc
 not an unbounded formal proof. No full FEC/frame/native programme join, mapped
 cell area, actual fanout/timing or physical fit is inherited. The original/current
 151-edge profile, full 23-root map and existing TT mapper remain unchanged.
+
+The isolated actual TX+RX candidate scalar map now completes in 8.50 seconds /
+645.48 MB peak with Yosys strict checks passing: 70,882 FF bits / 12 actual roots,
+146,173 combinational gates. Every bank retains exactly 8,704 FF bits. Fixed data
+wires have zero generic D gates, with 8-level enable cones; the enable logic and
+library DFFE mux implementation still need timing. Read-root depth is 23 generic
+levels, so no uniform timing improvement is claimed. Maximum registered-Q
+signal pin uses is 14, but shared combinational predecode nets still reach 2,177
+input pins. Their buffering and physical route cost remains explicit.
+
+The first collection wrapper returned 1 because I incorrectly expected 70,880
+FF bits, omitting the two q_v FFs observable in this isolated adapter. They are
+pruned in the current full joined wrapper. The unchanged candidate controller
+already contains these FFs; this is an inclusion/observability distinction.
+The completed cache was collected without rerunning Yosys, retaining the initial
+wrapper failure and original collector source. `mapping/reviewed_summary.json`
+binds corrected scope, actual receipts, log, graph and source. The frozen current
+23-root count remains unchanged; candidate full-chain counts require their own
+join. These generic gate/pin metrics are not mapped area, delay or physical fit.

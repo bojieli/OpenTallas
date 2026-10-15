@@ -17,6 +17,16 @@ class GraphTest(unittest.TestCase):
    for i,r in enumerate(names):
     row=j['clock_roots'][r];self.assertEqual(row['max_D_logic_levels'],2);self.assertEqual(row['registered_source_Q_bits_exact'],{r:1,names[(i+1)%root_count]:1})
    self.assertEqual(len(j['cross_root_registered_relations']),root_count)
+ def test_direct_registered_loads_are_counted_without_clock_pins(self):
+  with tempfile.TemporaryDirectory() as d:
+   p=pathlib.Path(d);names=['a','b'];ports={r:{'direction':'input','bits':[10+i]} for i,r in enumerate(names)}
+   cells={r:{'type':'$_DFF_P_','connections':{'C':[10+i],'D':[100+(i+1)%2],'Q':[100+i]},'port_directions':{'C':'input','D':'input','Q':'output'}} for i,r in enumerate(names)}
+   (p/'in.json').write_text(json.dumps({'modules':{'dut':{'ports':ports,'cells':cells}}}));(p/'clocks.json').write_text(json.dumps({'clocks':names}))
+   cp=subprocess.run([sys.executable,str(pathlib.Path(__file__).with_name('fec_bit_graph.py')),'--top','dut','--clock-manifest',str(p/'clocks.json'),'--netlist',str(p/'in.json'),'--out',str(p/'out.json')],capture_output=True,text=True);self.assertEqual(cp.returncode,0,cp.stderr)
+   result=json.loads((p/'out.json').read_text())
+   for r in names:
+    self.assertEqual(result['clock_roots'][r]['max_Q_fanout'],0)
+    self.assertEqual(result['clock_roots'][r]['max_Q_signal_input_pin_uses'],1)
  def test_default_twelve_roots(self):self.check_graph(12)
  def test_manifest_twenty_three_roots(self):self.check_graph(23)
 if __name__=='__main__':unittest.main()
