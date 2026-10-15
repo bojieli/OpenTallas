@@ -30,9 +30,10 @@ module tb_s81_su_rxh_eq;
     generate if (XMUT == 5) begin : g_m5
         initial force u_clu.g_ra[3].u_f.x_nan = 1'b1;
     end endgenerate
-    // XMUT 6 (control leaf negative control): the QR coefficient row-index copies stuck at row 0
+    // XMUT 6 (bit-slice leaves' negative control, RXC split): the QR coefficient row-index copies stuck at row 0
     generate if (XMUT == 6) begin : g_m6
-        initial force u_clu.u_c.cj = 16'd0;
+        initial begin force u_clu.u_c.g_sl[0].u_sl.cj = 16'd0; force u_clu.u_c.g_sl[1].u_sl.cj = 16'd0;
+                      force u_clu.u_c.g_sl[2].u_sl.cj = 16'd0; force u_clu.u_c.g_sl[3].u_sl.cj = 16'd0; end
     end endgenerate
     // ---------------------------------------------------------------- result queues
     reg [541:0] qf [0:65535]; reg [541:0] qc [0:65535];

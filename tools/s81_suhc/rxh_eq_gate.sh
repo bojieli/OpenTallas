@@ -13,7 +13,7 @@ SRC="rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_rxh.sv rtl/dsrom_sys/s81_suhc/hier/ot
  rtl/hdc/v41x/ot_dsrom_su_f12.sv rtl/dsrom_sys/s81_suhc/test/tb_s81_su_rxh_eq.sv"
 sha256sum $SRC > "$OUT/sources.sha256"
 rc_all=0; : > "$OUT/summary.txt"
-for X in ${XLIST:-0 1 2 3 4 5 6}; do
+for X in ${XLIST:-0 1 2 3 4 5 6 7}; do
   obj="$OUT/obj_x$X"
   XSRC="$SRC"
   if [ "$X" -ge 5 ]; then

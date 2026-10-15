@@ -1,0 +1,122 @@
+{
+ "name": "s81su_rxcs_ref",
+ "top": "dsfd_su_t_rxcs",
+ "kind": "tile",
+ "sources": [
+  "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_rxh.sv",
+  "rtl/dsrom_sys/s81_suhc/ot_s81_su_rw.sv",
+  "rtl/dsrom_sys/s81_suhc/ot_s81_su_rx.sv",
+  "rtl/hdc/v41x/ot_hdc_v41x_spshort.sv",
+  "rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/hdc/ot_hdc_sfu.sv",
+  "rtl/hdc/v41x/ot_dsrom_su_norm.sv",
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/hdc/ot_hdc_fp32_f12.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv",
+  "rtl/hdc/v41x/ot_dsrom_su_fdiv_f12.sv",
+  "rtl/hdc/v41x/ot_dsrom_su_f12.sv"
+ ],
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst"
+ ],
+ "pins": {
+  "N": [
+   "ck",
+   "rst",
+   "dn_st",
+   "dn_kind",
+   "dn_v",
+   "dn_d"
+  ],
+  "W": [
+   "xa_x",
+   "xa_vi",
+   "xa_r"
+  ],
+  "E": [
+   "xq_x",
+   "xq_c",
+   "xq_s",
+   "xq_vi"
+  ],
+  "S": [
+   "o_d",
+   "o_d2",
+   "xq_y",
+   "xb_vi",
+   "xb_wi",
+   "xb_y"
+  ]
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 16,
+  "peak_ram_gb": 64,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "aspect": 1.0,
+ "recipe": 2,
+ "job": {
+  "owner": "Claude:s81-surx-engram-1015",
+  "branch": "codex/s81-rxc-recovery-1500",
+  "tag": "split-recovery-1500",
+  "purpose": "S81 SU RXC bit-slice data leaf (tap slice, param rows 1-4, operand rows, issue data, QR coefficients, result rows), x4 in the rx cluster",
+  "views_to": "physical/ref_tile/s81su_rxcs_ref/views",
+  "record_to": "results/rtl/ref_tile/s81su_rxcs_ref",
+  "benches": [
+   {
+    "name": "rxh_eq_exact",
+    "expect": "pass",
+    "threads": 16,
+    "peak_ram_gb": 24,
+    "pass_regex": "x0 s4 RXH_EQ PASS shadow_fail=0",
+    "cmd": "export PATH=/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin:$PATH; NJOB=48 XLIST=0 RAW=1 bash tools/s81_suhc/rxh_eq_gate.sh {RUN}/bench/eq0 \"1 2 3 4\""
+   },
+   {
+    "name": "rxh_eq_mut6",
+    "expect": "fail",
+    "threads": 16,
+    "peak_ram_gb": 24,
+    "fail_regex": "x6 s1 RXH_EQ FAIL",
+    "cmd": "export PATH=/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin:$PATH; NJOB=48 XLIST=6 RAW=1 bash tools/s81_suhc/rxh_eq_gate.sh {RUN}/bench/eq6 \"1\""
+   }
+  ],
+  "extra_paths": [
+   "physical/s81_die_pins/s81su_rxc_split",
+   "rtl/dsrom_sys/s81_suhc",
+   "rtl/hdc",
+   "rtl/lib",
+   "tools/s81_suhc"
+  ],
+  "hold_merge": "RXCsplit actualsource candidate requires full rxh exact+observablemutants, routed nativephi-R and currentactualSUparent/dieclock homes beforeadoption."
+ },
+ "outline": {
+  "w": 99.36,
+  "h": 99.36,
+  "exact": true
+ },
+ "params": {},
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": false,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "structural_change": "RXC split (S-ELEM-C 10-15): the CLOSED g4 control (dsfd_su_t_rxc, 11,566 sinks on one root over 280.8 x 367.2) failed the native pin audit (R 368.1 / spread 67.2 ps, launch 265.5 > 220 on xq_x, capture 201.3 > 190 on 52 xa_r pins). It becomes one control leaf + four identical bit-slice leaves (slice s = 64-bit quarter s of both 256-bit halves of every row, so the QR coefficient select is slice-local), each leaf with its own replicated slot/row context (~40 FF) so no select crosses a leaf; 0 added cycles. Pins evenly spread per face (<= 0.55 of capacity), no output hold pads.",
+ "io_tcl": "physical/s81_die_pins/s81su_rxc_split/dsfd_su_t_rxcs_spread.tcl",
+ "why_floorplan": "pin-limited: N 650 b, S 642 b, E 514 b (M4), W 257 b -> 99.36 sq keeps every face <= 0.55 of pin capacity; ~3.3k FF on one local root"
+}
