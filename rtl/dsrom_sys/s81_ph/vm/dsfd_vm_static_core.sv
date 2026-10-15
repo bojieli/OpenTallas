@@ -24,7 +24,27 @@
 // Every service fault is ORed onto the engine's legacy-fault input (seq flt[10] -> c_st[0]).
 // ---------------------------------------------------------------------------------------------------------------
 module dsfd_vm_static_core (
+    // cks owns this core's bounded local control registers. Every child root is an explicit
+    // independently deliverable clock pin; tying these pins is a TESTBENCH decision only.
     input  wire          cks, rss,
+    input  wire          ck_rsched, ck_seq, ck_landing,
+    input  wire [3:0]    ck_mem_fsr, ck_mem_return,
+    input  wire [127:0]  ck_mem_bank, ck_mem_wcapture,
+    input  wire [15:0]   ck_mem_wscatter,
+    input  wire [47:0]   ck_mem_relay_req, ck_mem_relay_rsp,
+    input  wire          ck_write_control, ck_write_header,
+    input  wire [3:0]    ck_write_payload,
+    input  wire [15:0]   ck_write_dispatch,
+    input  wire [127:0]  ck_write_stage,
+    input  wire          rst_rsched_n, rst_seq_n, rst_landing_n,
+    input  wire [3:0]    rst_mem_fsr_n, rst_mem_return_n,
+    input  wire [127:0]  rst_mem_bank_n, rst_mem_wcapture_n,
+    input  wire [15:0]   rst_mem_wscatter_n,
+    input  wire [47:0]   rst_mem_relay_n,
+    input  wire          rst_write_control_n, rst_write_header_n,
+    input  wire [3:0]    rst_write_payload_n,
+    input  wire [15:0]   rst_write_dispatch_n,
+    input  wire [127:0]  rst_write_stage_n,
     // sequencer engine 12
     input  wire [84:0]   c_cmd, output wire [8:0] c_done, output wire [1:0] c_st,
     output wire          t_inp_su, t_inp_hc,
@@ -78,7 +98,7 @@ module dsfd_vm_static_core (
     wire [17:0] n_v; wire [251:0] n_row; wire [89:0] n_slot; wire [2:0] n_group; wire [11:0] a_v; wire [167:0] a_row;
     wire rel_v; wire [2:0] rel_g; wire [31:0] rel_m; wire [17:0] exp_v; wire [89:0] rel_s; wire [11:0] aux_exp;
     wire [419:0] obs_row; wire [19:0] mx_exp; wire [99:0] mx_sl; wire r_flt;
-    dsfd_vm_static_rsched u_rs (.ck(ck), .rst_n(rss), .su_v(f_su_rqv), .su_row(f_su_rq), .hc_v(f_hc_rqv), .hc_row(f_hc_rq),
+    dsfd_vm_static_rsched u_rs (.ck(ck_rsched), .rst_n(rst_rsched_n), .su_v(f_su_rqv), .su_row(f_su_rq), .hc_v(f_hc_rqv), .hc_row(f_hc_rq),
         .aux_v(aux_v), .aux_row(aux_row), .mx_v(f_mx_rqv), .mx_row(f_mx_rq),
         .mx_expected(mx_exp), .mx_rslot(mx_sl), .sched_fault(r_flt), .n_v(n_v), .n_row(n_row), .n_slot(n_slot), .n_group(n_group), .a_v(a_v), .a_row(a_row),
         .release_v(rel_v), .release_group(rel_g), .release_mask(rel_m), .expected_v(exp_v), .release_slot(rel_s),
@@ -120,15 +140,19 @@ module dsfd_vm_static_core (
         s_v[52] = wf_v; s_row[14*52 +: 14] = wf_row; s_m[16*52 +: 16] = 16'hffff; s_d[512*52 +: 512] = wf_d; s_t[8*52 +: 8] = 8'd52;
     end
     wire [31:0] wq_v; wire [447:0] wq_row; wire [511:0] wq_mask; wire [16383:0] wq_data; wire [255:0] wq_tag; wire w_flt;
-    dsfd_vm_static_wsched #(.NSRC(NSRC)) u_ws (.ck_control(ck), .ck_header(ck), .ck_payload({4{ck}}),
-        .ck_dispatch({16{ck}}), .ck_stage({128{ck}}), .rst_n(rss), .i_v(s_v), .i_row(s_row), .i_mask(s_m), .i_data(s_d),
+    dsfd_vm_static_wsched #(.NSRC(NSRC)) u_ws (.ck_control(ck_write_control), .ck_header(ck_write_header), .ck_payload(ck_write_payload),
+        .ck_dispatch(ck_write_dispatch), .ck_stage(ck_write_stage), .rst_n(rss),
+        .rst_control_n(rst_write_control_n), .rst_header_n(rst_write_header_n), .rst_payload_n(rst_write_payload_n),
+        .rst_dispatch_n(rst_write_dispatch_n), .rst_stage_n(rst_write_stage_n), .i_v(s_v), .i_row(s_row), .i_mask(s_m), .i_data(s_d),
         .i_tag(s_t), .wq_v(wq_v), .wq_row(wq_row), .wq_mask(wq_mask), .wq_data(wq_data), .wq_tag(wq_tag), .fault(w_flt));
 
     // ---------------------------------------------------------------- native memory
     wire [71:0] nat_v; wire [9215:0] nat_d; wire [127:0] grp_v; wire [16383:0] grp_d; wire [11:0] grp_id;
     wire [127:0] cm_v; wire [1151:0] cm_a; wire [511:0] cm_m; wire [1023:0] cm_t; wire [15:0] m_flt;
-    dsfd_vm_static512_suhc u_mem (.ck_rscatter({4{ck}}), .ck_wcapture({128{ck}}),.ck_wscatter({16{ck}}), .ck_return({4{ck}}), .ck_bank({128{ck}}),
-        .rst_n(rss), .ck_relay_req({48{ck}}), .ck_relay_rsp({48{ck}}),
+    dsfd_vm_static512_suhc u_mem (.ck_rscatter(ck_mem_fsr), .ck_wcapture(ck_mem_wcapture),.ck_wscatter(ck_mem_wscatter), .ck_return(ck_mem_return), .ck_bank(ck_mem_bank),
+        .rst_n(rss), .ck_relay_req(ck_mem_relay_req), .ck_relay_rsp(ck_mem_relay_rsp),
+        .rst_rscatter_n(rst_mem_fsr_n), .rst_return_n(rst_mem_return_n), .rst_bank_n(rst_mem_bank_n),
+        .rst_wcapture_n(rst_mem_wcapture_n), .rst_wscatter_n(rst_mem_wscatter_n), .rst_relay_n(rst_mem_relay_n),
         .native_rq_v(n_v), .native_rq_row(n_row), .native_rq_slot(n_slot), .native_rq_group(n_group),
         .aux_rq_v(a_v), .aux_rq_row(a_row),
         .wq_v(wq_v), .wq_row(wq_row), .wq_mask(wq_mask), .wq_data(wq_data), .wq_tag(wq_tag),
@@ -164,7 +188,7 @@ module dsfd_vm_static_core (
     // ---------------------------------------------------------------- engine 12 + static native ops
     wire v_cv; wire [83:0] v_cd; reg v_dv; reg [7:0] v_dt; reg op_bad;
     wire svc_flt = w_flt | |m_flt | |l_flt | pq_bad | o_bad | op_bad | r_flt | x_flt;
-    dsfd_vm_seq_static u_seq (.ck(ck), .rst(rss), .c_cmd(c_cmd), .c_done(c_done), .c_st(c_st),
+    dsfd_vm_seq_static u_seq (.ck(ck_seq), .rst(rst_seq_n), .c_cmd(c_cmd), .c_done(c_done), .c_st(c_st),
         .o_cv(cm_v), .o_ca(cm_a), .o_cm(cm_m), .o_rv({2'b00, a_v, n_v}), .o_rr({28'd0, obs_row}),
         .v_cv(v_cv), .v_cd(v_cd), .v_dv(v_dv), .v_dt(v_dt), .v_flt(svc_flt),
         .t_inp_su(t_inp_su), .t_inp_hc(t_inp_hc));
@@ -180,7 +204,7 @@ module dsfd_vm_static_core (
         end
         v_dt <= {v_cd[83], v_cd[6:0]};
     end
-    dsfd_vm_static_landing u_land (.ck(ck), .rst_n(rss), .larm_v(larm_v), .larm_g(v_cd[27:24]), .larm_base(v_cd[20:7]),
+    dsfd_vm_static_landing u_land (.ck(ck_landing), .rst_n(rst_landing_n), .larm_v(larm_v), .larm_g(v_cd[27:24]), .larm_base(v_cd[20:7]),
         .i_v(l_v), .i_d(l_d), .o_v(lo_v), .o_row(lo_row), .o_d(lo_d), .fault(l_flt));
     assign vm_fault = svc_flt;
 endmodule

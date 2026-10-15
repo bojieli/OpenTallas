@@ -29,6 +29,26 @@
 // ---------------------------------------------------------------------------------------------------------------
 module dsfd_sp_vm (
     input  wire [0:0]    ck, rst, cks, rss,
+    input  wire          ck_core_t, ck_rsched_t, ck_seq_t, ck_landing_t,
+    input  wire [3:0]    ck_mem_fsr_t, ck_mem_return_t,
+    input  wire [127:0]  ck_mem_bank_t, ck_mem_wcapture_t,
+    input  wire [15:0]   ck_mem_wscatter_t,
+    input  wire [47:0]   ck_mem_relay_req_t, ck_mem_relay_rsp_t,
+    input  wire          ck_write_control_t, ck_write_header_t,
+    input  wire [3:0]    ck_write_payload_t,
+    input  wire [15:0]   ck_write_dispatch_t,
+    input  wire [127:0]  ck_write_stage_t,
+    input  wire [2:0]    ck_landing_x34_s, ck_landing_x34_t,
+    input  wire          rss_core_t, rss_rsched_t, rss_seq_t, rss_landing_t,
+    input  wire [3:0]    rss_mem_fsr_t, rss_mem_return_t,
+    input  wire [127:0]  rss_mem_bank_t, rss_mem_wcapture_t,
+    input  wire [15:0]   rss_mem_wscatter_t,
+    input  wire [47:0]   rss_mem_relay_t,
+    input  wire          rss_write_control_t, rss_write_header_t,
+    input  wire [3:0]    rss_write_payload_t,
+    input  wire [15:0]   rss_write_dispatch_t,
+    input  wire [127:0]  rss_write_stage_t,
+    input  wire [2:0]    rst_landing_x34_s, rss_landing_x34_t,
     input  wire [84:0]   c_cmd, output wire [8:0] c_done, output wire [1:0] c_st,
     output wire [0:0]    t_inp_su, t_inp_hc,
     input  wire [15:0]   f_su_rqv, input wire [223:0] f_su_rq, output wire [15:0] t_su_rsv, output wire [8191:0] t_su_rs,
@@ -54,12 +74,12 @@ module dsfd_sp_vm (
 `endif
     // ---------------------------------------------------------------- serial -> stream landing transfers
     wire xs_v, xc_v, xw_v; wire [513:0] xs_d, xc_d; wire [1025:0] xw_d; wire [2:0] x_al;
-    ot_s81_vm_x34 #(.W(514)) u_xsel (.s_ck(ck[0]), .s_rst_n(rst[0]), .s_v(sel[0]), .s_d(sel[514:1]),
-        .t_ck(cks[0]), .t_rst_n(rss[0]), .o_v(xs_v), .o_d(xs_d), .fault(x_al[0]));
-    ot_s81_vm_x34 #(.W(514)) u_xcol (.s_ck(ck[0]), .s_rst_n(rst[0]), .s_v(col[0]), .s_d(col[514:1]),
-        .t_ck(cks[0]), .t_rst_n(rss[0]), .o_v(xc_v), .o_d(xc_d), .fault(x_al[1]));
-    ot_s81_vm_x34 #(.W(1026)) u_xsw (.s_ck(ck[0]), .s_rst_n(rst[0]), .s_v(aSW[0]), .s_d(aSW[1026:1]),
-        .t_ck(cks[0]), .t_rst_n(rss[0]), .o_v(xw_v), .o_d(xw_d), .fault(x_al[2]));
+    ot_s81_vm_x34 #(.W(514)) u_xsel (.s_ck(ck_landing_x34_s[0]), .s_rst_n(rst_landing_x34_s[0]), .s_v(sel[0]), .s_d(sel[514:1]),
+        .t_ck(ck_landing_x34_t[0]), .t_rst_n(rss_landing_x34_t[0]), .o_v(xs_v), .o_d(xs_d), .fault(x_al[0]));
+    ot_s81_vm_x34 #(.W(514)) u_xcol (.s_ck(ck_landing_x34_s[1]), .s_rst_n(rst_landing_x34_s[1]), .s_v(col[0]), .s_d(col[514:1]),
+        .t_ck(ck_landing_x34_t[1]), .t_rst_n(rss_landing_x34_t[1]), .o_v(xc_v), .o_d(xc_d), .fault(x_al[1]));
+    ot_s81_vm_x34 #(.W(1026)) u_xsw (.s_ck(ck_landing_x34_s[2]), .s_rst_n(rst_landing_x34_s[2]), .s_v(aSW[0]), .s_d(aSW[1026:1]),
+        .t_ck(ck_landing_x34_t[2]), .t_rst_n(rss_landing_x34_t[2]), .o_v(xw_v), .o_d(xw_d), .fault(x_al[2]));
     reg p_bad;
     always @(posedge cks[0] or negedge rss[0])
         if (!rss[0]) p_bad <= 1'b0;
@@ -84,7 +104,18 @@ module dsfd_sp_vm (
     // edge faults -> engine 12 legacy-fault input (c_st[0]); serial levels registered once in the stream domain
     reg e_flt;
     always @(posedge cks[0] or negedge rss[0]) if (!rss[0]) e_flt <= 1'b0; else if (cap_f | wfc_f | xio_f) e_flt <= 1'b1;
-    dsfd_vm_static_core u_core (.cks(cks[0]), .rss(rss[0]), .c_cmd(c_cmd), .c_done(c_done), .c_st(c_st),
+    dsfd_vm_static_core u_core (.cks(ck_core_t), .rss(rss_core_t),
+        .rst_rsched_n(rss_rsched_t), .rst_seq_n(rss_seq_t), .rst_landing_n(rss_landing_t),
+        .rst_mem_fsr_n(rss_mem_fsr_t), .rst_mem_return_n(rss_mem_return_t), .rst_mem_bank_n(rss_mem_bank_t),
+        .rst_mem_wcapture_n(rss_mem_wcapture_t), .rst_mem_wscatter_n(rss_mem_wscatter_t), .rst_mem_relay_n(rss_mem_relay_t),
+        .rst_write_control_n(rss_write_control_t), .rst_write_header_n(rss_write_header_t), .rst_write_payload_n(rss_write_payload_t),
+        .rst_write_dispatch_n(rss_write_dispatch_t), .rst_write_stage_n(rss_write_stage_t),
+        .ck_rsched(ck_rsched_t), .ck_seq(ck_seq_t), .ck_landing(ck_landing_t),
+        .ck_mem_fsr(ck_mem_fsr_t), .ck_mem_return(ck_mem_return_t), .ck_mem_bank(ck_mem_bank_t),
+        .ck_mem_wcapture(ck_mem_wcapture_t), .ck_mem_wscatter(ck_mem_wscatter_t),
+        .ck_mem_relay_req(ck_mem_relay_req_t), .ck_mem_relay_rsp(ck_mem_relay_rsp_t),
+        .ck_write_control(ck_write_control_t), .ck_write_header(ck_write_header_t), .ck_write_payload(ck_write_payload_t),
+        .ck_write_dispatch(ck_write_dispatch_t), .ck_write_stage(ck_write_stage_t), .c_cmd(c_cmd), .c_done(c_done), .c_st(c_st),
         .t_inp_su(t_inp_su[0]), .t_inp_hc(t_inp_hc[0]),
         .f_su_rqv(f_su_rqv), .f_su_rq(f_su_rq), .t_su_rsv(t_su_rsv), .t_su_rs(t_su_rs),
         .f_su_wqv(f_su_wqv), .f_su_wq(f_su_wq), .f_su_wqm(f_su_wqm), .f_su_wqd(f_su_wqd),
