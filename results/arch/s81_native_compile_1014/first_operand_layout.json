@@ -44,6 +44,16 @@
     "path": "results/uarch/dsrom_s81_released_binding_20261004/canonical/matrix_map.jsonl.gz",
     "sha256": "985a9ee7ea26d2a7bb1aebadc5151252836eacf8181e8794b1ef6d7819db0326"
   },
+  "abi_evidence": [
+    {
+      "path": "rtl/dsrom_sys/s81_suhc/ot_s81_su_core.sv",
+      "sha256": "4becec96c1d40d80bafa532ee8f4f3c201d7418c80bbd40d963273a2a1e88de4"
+    },
+    {
+      "path": "tools/s81_suhc/su_gate.py",
+      "sha256": "7995e776adb894b327324397bba823153b21ab91f87c227e0ea3fb5ffa4b69a7"
+    }
+  ],
   "status": "PRODUCTION_ALLOCATION_REQUIRES_NATIVE_PRODUCER_INTEGRATION",
   "source_matrices": 160,
   "rank_fragments": 640,
@@ -17969,6 +17979,852 @@
       "fixed_calendar": null
     }
   ],
+  "field_quantized_operand_views": {
+    "QN": [
+      {
+        "code_row": 4176,
+        "code_lsb": 0,
+        "code_bits": 256,
+        "exponent_row": 4180,
+        "exponent_lsb": 0,
+        "exponent_bits": 16,
+        "scalar_begin": 0,
+        "scalar_count": 32,
+        "required_native_reads": [
+          4176,
+          4180
+        ],
+        "native_transport_bound": false
+      },
+      {
+        "code_row": 4176,
+        "code_lsb": 256,
+        "code_bits": 256,
+        "exponent_row": 4180,
+        "exponent_lsb": 16,
+        "exponent_bits": 16,
+        "scalar_begin": 32,
+        "scalar_count": 32,
+        "required_native_reads": [
+          4176,
+          4180
+        ],
+        "native_transport_bound": false
+      },
+      {
+        "code_row": 4177,
+        "code_lsb": 0,
+        "code_bits": 256,
+        "exponent_row": 4180,
+        "exponent_lsb": 32,
+        "exponent_bits": 16,
+        "scalar_begin": 64,
+        "scalar_count": 32,
+        "required_native_reads": [
+          4177,
+          4180
+        ],
+        "native_transport_bound": false
+      },
+      {
+        "code_row": 4177,
+        "code_lsb": 256,
+        "code_bits": 256,
+        "exponent_row": 4180,
+        "exponent_lsb": 48,
+        "exponent_bits": 16,
+        "scalar_begin": 96,
+        "scalar_count": 32,
+        "required_native_reads": [
+          4177,
+          4180
+        ],
+        "native_transport_bound": false
+      },
+      {
+        "code_row": 4178,
+        "code_lsb": 0,
+        "code_bits": 256,
+        "exponent_row": 4180,
+        "exponent_lsb": 64,
+        "exponent_bits": 16,
+        "scalar_begin": 128,
+        "scalar_count": 32,
+        "required_native_reads": [
+          4178,
+          4180
+        ],
+        "native_transport_bound": false
+      },
+      {
+        "code_row": 4178,
+        "code_lsb": 256,
+        "code_bits": 256,
+        "exponent_row": 4180,
+        "exponent_lsb": 80,
+        "exponent_bits": 16,
+        "scalar_begin": 160,
+        "scalar_count": 32,
+        "required_native_reads": [
+          4178,
+          4180
+        ],
+        "native_transport_bound": false
+      },
+      {
+        "code_row": 4179,
+        "code_lsb": 0,
+        "code_bits": 256,
+        "exponent_row": 4180,
+        "exponent_lsb": 96,
+        "exponent_bits": 16,
+        "scalar_begin": 192,
+        "scalar_count": 32,
+        "required_native_reads": [
+          4179,
+          4180
+        ],
+        "native_transport_bound": false
+      },
+      {
+        "code_row": 4179,
+        "code_lsb": 256,
+        "code_bits": 256,
+        "exponent_row": 4180,
+        "exponent_lsb": 112,
+        "exponent_bits": 16,
+        "scalar_begin": 224,
+        "scalar_count": 32,
+        "required_native_reads": [
+          4179,
+          4180
+        ],
+        "native_transport_bound": false
+      },
+      {
+        "code_row": 4181,
+        "code_lsb": 0,
+        "code_bits": 256,
+        "exponent_row": 4185,
+        "exponent_lsb": 0,
+        "exponent_bits": 16,
+        "scalar_begin": 256,
+        "scalar_count": 32,
+        "required_native_reads": [
+          4181,
+          4185
+        ],
+        "native_transport_bound": false
+      },
+      {
+        "code_row": 4181,
+        "code_lsb": 256,
+        "code_bits": 256,
+        "exponent_row": 4185,
+        "exponent_lsb": 16,
+        "exponent_bits": 16,
+        "scalar_begin": 288,
+        "scalar_count": 32,
+        "required_native_reads": [
+          4181,
+          4185
+        ],
+        "native_transport_bound": false
+      },
+      {
+        "code_row": 4182,
+        "code_lsb": 0,
+        "code_bits": 256,
+        "exponent_row": 4185,
+        "exponent_lsb": 32,
+        "exponent_bits": 16,
+        "scalar_begin": 320,
+        "scalar_count": 32,
+        "required_native_reads": [
+          4182,
+          4185
+        ],
+        "native_transport_bound": false
+      },
+      {
+        "code_row": 4182,
+        "code_lsb": 256,
+        "code_bits": 256,
+        "exponent_row": 4185,
+        "exponent_lsb": 48,
+        "exponent_bits": 16,
+        "scalar_begin": 352,
+        "scalar_count": 32,
+        "required_native_reads": [
+          4182,
+          4185
+        ],
+        "native_transport_bound": false
+      },
+      {
+        "code_row": 4183,
+        "code_lsb": 0,
+        "code_bits": 256,
+        "exponent_row": 4185,
+        "exponent_lsb": 64,
+        "exponent_bits": 16,
+        "scalar_begin": 384,
+        "scalar_count": 32,
+        "required_native_reads": [
+          4183,
+          4185
+        ],
+        "native_transport_bound": false
+      },
+      {
+        "code_row": 4183,
+        "code_lsb": 256,
+        "code_bits": 256,
+        "exponent_row": 4185,
+        "exponent_lsb": 80,
+        "exponent_bits": 16,
+        "scalar_begin": 416,
+        "scalar_count": 32,
+        "required_native_reads": [
+          4183,
+          4185
+        ],
+        "native_transport_bound": false
+      },
+      {
+        "code_row": 4184,
+        "code_lsb": 0,
+        "code_bits": 256,
+        "exponent_row": 4185,
+        "exponent_lsb": 96,
+        "exponent_bits": 16,
+        "scalar_begin": 448,
+        "scalar_count": 32,
+        "required_native_reads": [
+          4184,
+          4185
+        ],
+        "native_transport_bound": false
+      },
+      {
+        "code_row": 4184,
+        "code_lsb": 256,
+        "code_bits": 256,
+        "exponent_row": 4185,
+        "exponent_lsb": 112,
+        "exponent_bits": 16,
+        "scalar_begin": 480,
+        "scalar_count": 32,
+        "required_native_reads": [
+          4184,
+          4185
+        ],
+        "native_transport_bound": false
+      },
+      {
+        "code_row": 4186,
+        "code_lsb": 0,
+        "code_bits": 256,
+        "exponent_row": 4190,
+        "exponent_lsb": 0,
+        "exponent_bits": 16,
+        "scalar_begin": 512,
+        "scalar_count": 32,
+        "required_native_reads": [
+          4186,
+          4190
+        ],
+        "native_transport_bound": false
+      },
+      {
+        "code_row": 4186,
+        "code_lsb": 256,
+        "code_bits": 256,
+        "exponent_row": 4190,
+        "exponent_lsb": 16,
+        "exponent_bits": 16,
+        "scalar_begin": 544,
+        "scalar_count": 32,
+        "required_native_reads": [
+          4186,
+          4190
+        ],
+        "native_transport_bound": false
+      },
+      {
+        "code_row": 4187,
+        "code_lsb": 0,
+        "code_bits": 256,
+        "exponent_row": 4190,
+        "exponent_lsb": 32,
+        "exponent_bits": 16,
+        "scalar_begin": 576,
+        "scalar_count": 32,
+        "required_native_reads": [
+          4187,
+          4190
+        ],
+        "native_transport_bound": false
+      },
+      {
+        "code_row": 4187,
+        "code_lsb": 256,
+        "code_bits": 256,
+        "exponent_row": 4190,
+        "exponent_lsb": 48,
+        "exponent_bits": 16,
+        "scalar_begin": 608,
+        "scalar_count": 32,
+        "required_native_reads": [
+          4187,
+          4190
+        ],
+        "native_transport_bound": false
+      },
+      {
+        "code_row": 4188,
+        "code_lsb": 0,
+        "code_bits": 256,
+        "exponent_row": 4190,
+        "exponent_lsb": 64,
+        "exponent_bits": 16,
+        "scalar_begin": 640,
+        "scalar_count": 32,
+        "required_native_reads": [
+          4188,
+          4190
+        ],
+        "native_transport_bound": false
+      },
+      {
+        "code_row": 4188,
+        "code_lsb": 256,
+        "code_bits": 256,
+        "exponent_row": 4190,
+        "exponent_lsb": 80,
+        "exponent_bits": 16,
+        "scalar_begin": 672,
+        "scalar_count": 32,
+        "required_native_reads": [
+          4188,
+          4190
+        ],
+        "native_transport_bound": false
+      },
+      {
+        "code_row": 4189,
+        "code_lsb": 0,
+        "code_bits": 256,
+        "exponent_row": 4190,
+        "exponent_lsb": 96,
+        "exponent_bits": 16,
+        "scalar_begin": 704,
+        "scalar_count": 32,
+        "required_native_reads": [
+          4189,
+          4190
+        ],
+        "native_transport_bound": false
+      },
+      {
+        "code_row": 4189,
+        "code_lsb": 256,
+        "code_bits": 256,
+        "exponent_row": 4190,
+        "exponent_lsb": 112,
+        "exponent_bits": 16,
+        "scalar_begin": 736,
+        "scalar_count": 32,
+        "required_native_reads": [
+          4189,
+          4190
+        ],
+        "native_transport_bound": false
+      },
+      {
+        "code_row": 4191,
+        "code_lsb": 0,
+        "code_bits": 256,
+        "exponent_row": 4195,
+        "exponent_lsb": 0,
+        "exponent_bits": 16,
+        "scalar_begin": 768,
+        "scalar_count": 32,
+        "required_native_reads": [
+          4191,
+          4195
+        ],
+        "native_transport_bound": false
+      },
+      {
+        "code_row": 4191,
+        "code_lsb": 256,
+        "code_bits": 256,
+        "exponent_row": 4195,
+        "exponent_lsb": 16,
+        "exponent_bits": 16,
+        "scalar_begin": 800,
+        "scalar_count": 32,
+        "required_native_reads": [
+          4191,
+          4195
+        ],
+        "native_transport_bound": false
+      },
+      {
+        "code_row": 4192,
+        "code_lsb": 0,
+        "code_bits": 256,
+        "exponent_row": 4195,
+        "exponent_lsb": 32,
+        "exponent_bits": 16,
+        "scalar_begin": 832,
+        "scalar_count": 32,
+        "required_native_reads": [
+          4192,
+          4195
+        ],
+        "native_transport_bound": false
+      },
+      {
+        "code_row": 4192,
+        "code_lsb": 256,
+        "code_bits": 256,
+        "exponent_row": 4195,
+        "exponent_lsb": 48,
+        "exponent_bits": 16,
+        "scalar_begin": 864,
+        "scalar_count": 32,
+        "required_native_reads": [
+          4192,
+          4195
+        ],
+        "native_transport_bound": false
+      },
+      {
+        "code_row": 4193,
+        "code_lsb": 0,
+        "code_bits": 256,
+        "exponent_row": 4195,
+        "exponent_lsb": 64,
+        "exponent_bits": 16,
+        "scalar_begin": 896,
+        "scalar_count": 32,
+        "required_native_reads": [
+          4193,
+          4195
+        ],
+        "native_transport_bound": false
+      },
+      {
+        "code_row": 4193,
+        "code_lsb": 256,
+        "code_bits": 256,
+        "exponent_row": 4195,
+        "exponent_lsb": 80,
+        "exponent_bits": 16,
+        "scalar_begin": 928,
+        "scalar_count": 32,
+        "required_native_reads": [
+          4193,
+          4195
+        ],
+        "native_transport_bound": false
+      },
+      {
+        "code_row": 4194,
+        "code_lsb": 0,
+        "code_bits": 256,
+        "exponent_row": 4195,
+        "exponent_lsb": 96,
+        "exponent_bits": 16,
+        "scalar_begin": 960,
+        "scalar_count": 32,
+        "required_native_reads": [
+          4194,
+          4195
+        ],
+        "native_transport_bound": false
+      },
+      {
+        "code_row": 4194,
+        "code_lsb": 256,
+        "code_bits": 256,
+        "exponent_row": 4195,
+        "exponent_lsb": 112,
+        "exponent_bits": 16,
+        "scalar_begin": 992,
+        "scalar_count": 32,
+        "required_native_reads": [
+          4194,
+          4195
+        ],
+        "native_transport_bound": false
+      },
+      {
+        "code_row": 4196,
+        "code_lsb": 0,
+        "code_bits": 256,
+        "exponent_row": 4200,
+        "exponent_lsb": 0,
+        "exponent_bits": 16,
+        "scalar_begin": 1024,
+        "scalar_count": 32,
+        "required_native_reads": [
+          4196,
+          4200
+        ],
+        "native_transport_bound": false
+      },
+      {
+        "code_row": 4196,
+        "code_lsb": 256,
+        "code_bits": 256,
+        "exponent_row": 4200,
+        "exponent_lsb": 16,
+        "exponent_bits": 16,
+        "scalar_begin": 1056,
+        "scalar_count": 32,
+        "required_native_reads": [
+          4196,
+          4200
+        ],
+        "native_transport_bound": false
+      },
+      {
+        "code_row": 4197,
+        "code_lsb": 0,
+        "code_bits": 256,
+        "exponent_row": 4200,
+        "exponent_lsb": 32,
+        "exponent_bits": 16,
+        "scalar_begin": 1088,
+        "scalar_count": 32,
+        "required_native_reads": [
+          4197,
+          4200
+        ],
+        "native_transport_bound": false
+      },
+      {
+        "code_row": 4197,
+        "code_lsb": 256,
+        "code_bits": 256,
+        "exponent_row": 4200,
+        "exponent_lsb": 48,
+        "exponent_bits": 16,
+        "scalar_begin": 1120,
+        "scalar_count": 32,
+        "required_native_reads": [
+          4197,
+          4200
+        ],
+        "native_transport_bound": false
+      },
+      {
+        "code_row": 4198,
+        "code_lsb": 0,
+        "code_bits": 256,
+        "exponent_row": 4200,
+        "exponent_lsb": 64,
+        "exponent_bits": 16,
+        "scalar_begin": 1152,
+        "scalar_count": 32,
+        "required_native_reads": [
+          4198,
+          4200
+        ],
+        "native_transport_bound": false
+      },
+      {
+        "code_row": 4198,
+        "code_lsb": 256,
+        "code_bits": 256,
+        "exponent_row": 4200,
+        "exponent_lsb": 80,
+        "exponent_bits": 16,
+        "scalar_begin": 1184,
+        "scalar_count": 32,
+        "required_native_reads": [
+          4198,
+          4200
+        ],
+        "native_transport_bound": false
+      },
+      {
+        "code_row": 4199,
+        "code_lsb": 0,
+        "code_bits": 256,
+        "exponent_row": 4200,
+        "exponent_lsb": 96,
+        "exponent_bits": 16,
+        "scalar_begin": 1216,
+        "scalar_count": 32,
+        "required_native_reads": [
+          4199,
+          4200
+        ],
+        "native_transport_bound": false
+      },
+      {
+        "code_row": 4199,
+        "code_lsb": 256,
+        "code_bits": 256,
+        "exponent_row": 4200,
+        "exponent_lsb": 112,
+        "exponent_bits": 16,
+        "scalar_begin": 1248,
+        "scalar_count": 32,
+        "required_native_reads": [
+          4199,
+          4200
+        ],
+        "native_transport_bound": false
+      }
+    ],
+    "KV": [
+      {
+        "code_row": 4256,
+        "code_lsb": 0,
+        "code_bits": 256,
+        "exponent_row": 4264,
+        "exponent_lsb": 0,
+        "exponent_bits": 16,
+        "scalar_begin": 0,
+        "scalar_count": 32,
+        "required_native_reads": [
+          4256,
+          4264
+        ],
+        "native_transport_bound": false
+      },
+      {
+        "code_row": 4256,
+        "code_lsb": 256,
+        "code_bits": 256,
+        "exponent_row": 4264,
+        "exponent_lsb": 16,
+        "exponent_bits": 16,
+        "scalar_begin": 32,
+        "scalar_count": 32,
+        "required_native_reads": [
+          4256,
+          4264
+        ],
+        "native_transport_bound": false
+      },
+      {
+        "code_row": 4257,
+        "code_lsb": 0,
+        "code_bits": 256,
+        "exponent_row": 4264,
+        "exponent_lsb": 32,
+        "exponent_bits": 16,
+        "scalar_begin": 64,
+        "scalar_count": 32,
+        "required_native_reads": [
+          4257,
+          4264
+        ],
+        "native_transport_bound": false
+      },
+      {
+        "code_row": 4257,
+        "code_lsb": 256,
+        "code_bits": 256,
+        "exponent_row": 4264,
+        "exponent_lsb": 48,
+        "exponent_bits": 16,
+        "scalar_begin": 96,
+        "scalar_count": 32,
+        "required_native_reads": [
+          4257,
+          4264
+        ],
+        "native_transport_bound": false
+      },
+      {
+        "code_row": 4258,
+        "code_lsb": 0,
+        "code_bits": 256,
+        "exponent_row": 4264,
+        "exponent_lsb": 64,
+        "exponent_bits": 16,
+        "scalar_begin": 128,
+        "scalar_count": 32,
+        "required_native_reads": [
+          4258,
+          4264
+        ],
+        "native_transport_bound": false
+      },
+      {
+        "code_row": 4258,
+        "code_lsb": 256,
+        "code_bits": 256,
+        "exponent_row": 4264,
+        "exponent_lsb": 80,
+        "exponent_bits": 16,
+        "scalar_begin": 160,
+        "scalar_count": 32,
+        "required_native_reads": [
+          4258,
+          4264
+        ],
+        "native_transport_bound": false
+      },
+      {
+        "code_row": 4259,
+        "code_lsb": 0,
+        "code_bits": 256,
+        "exponent_row": 4264,
+        "exponent_lsb": 96,
+        "exponent_bits": 16,
+        "scalar_begin": 192,
+        "scalar_count": 32,
+        "required_native_reads": [
+          4259,
+          4264
+        ],
+        "native_transport_bound": false
+      },
+      {
+        "code_row": 4259,
+        "code_lsb": 256,
+        "code_bits": 256,
+        "exponent_row": 4264,
+        "exponent_lsb": 112,
+        "exponent_bits": 16,
+        "scalar_begin": 224,
+        "scalar_count": 32,
+        "required_native_reads": [
+          4259,
+          4264
+        ],
+        "native_transport_bound": false
+      },
+      {
+        "code_row": 4260,
+        "code_lsb": 0,
+        "code_bits": 256,
+        "exponent_row": 4264,
+        "exponent_lsb": 128,
+        "exponent_bits": 16,
+        "scalar_begin": 256,
+        "scalar_count": 32,
+        "required_native_reads": [
+          4260,
+          4264
+        ],
+        "native_transport_bound": false
+      },
+      {
+        "code_row": 4260,
+        "code_lsb": 256,
+        "code_bits": 256,
+        "exponent_row": 4264,
+        "exponent_lsb": 144,
+        "exponent_bits": 16,
+        "scalar_begin": 288,
+        "scalar_count": 32,
+        "required_native_reads": [
+          4260,
+          4264
+        ],
+        "native_transport_bound": false
+      },
+      {
+        "code_row": 4261,
+        "code_lsb": 0,
+        "code_bits": 256,
+        "exponent_row": 4264,
+        "exponent_lsb": 160,
+        "exponent_bits": 16,
+        "scalar_begin": 320,
+        "scalar_count": 32,
+        "required_native_reads": [
+          4261,
+          4264
+        ],
+        "native_transport_bound": false
+      },
+      {
+        "code_row": 4261,
+        "code_lsb": 256,
+        "code_bits": 256,
+        "exponent_row": 4264,
+        "exponent_lsb": 176,
+        "exponent_bits": 16,
+        "scalar_begin": 352,
+        "scalar_count": 32,
+        "required_native_reads": [
+          4261,
+          4264
+        ],
+        "native_transport_bound": false
+      },
+      {
+        "code_row": 4262,
+        "code_lsb": 0,
+        "code_bits": 256,
+        "exponent_row": 4264,
+        "exponent_lsb": 192,
+        "exponent_bits": 16,
+        "scalar_begin": 384,
+        "scalar_count": 32,
+        "required_native_reads": [
+          4262,
+          4264
+        ],
+        "native_transport_bound": false
+      },
+      {
+        "code_row": 4262,
+        "code_lsb": 256,
+        "code_bits": 256,
+        "exponent_row": 4264,
+        "exponent_lsb": 208,
+        "exponent_bits": 16,
+        "scalar_begin": 416,
+        "scalar_count": 32,
+        "required_native_reads": [
+          4262,
+          4264
+        ],
+        "native_transport_bound": false
+      },
+      {
+        "code_row": 4263,
+        "code_lsb": 0,
+        "code_bits": 256,
+        "exponent_row": 4264,
+        "exponent_lsb": 224,
+        "exponent_bits": 16,
+        "scalar_begin": 448,
+        "scalar_count": 32,
+        "required_native_reads": [
+          4263,
+          4264
+        ],
+        "native_transport_bound": false
+      },
+      {
+        "code_row": 4263,
+        "code_lsb": 256,
+        "code_bits": 256,
+        "exponent_row": 4264,
+        "exponent_lsb": 240,
+        "exponent_bits": 16,
+        "scalar_begin": 480,
+        "scalar_count": 32,
+        "required_native_reads": [
+          4263,
+          4264
+        ],
+        "native_transport_bound": false
+      }
+    ]
+  },
   "descriptors": {
     "QN": {
       "row": 12288,
