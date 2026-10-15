@@ -58,6 +58,7 @@ ROOT = TOOLS.parent
 sys.path.insert(0, str(TOOLS))
 import hdc_isa_v41 as I  # noqa: E402
 import w19_hbm_tp96_isa as W  # noqa: E402
+import hbm_engram_partition as EG  # noqa: E402
 
 from hgi_sim import machine as MC  # noqa: E402
 from hgi_sim.qwen_compiler import Builder, sut  # noqa: E402
@@ -96,7 +97,7 @@ class Layout:
                  SS=8, RS=8, qr=1280, kvn=512, kvr=512, win_new=512, q=512, ROPE=64, q_own=512, SC=640, MB=8,
                  E=640, SE=8, EB=640, SINK=8, ES=8, DEN=8, PV=512, O=512, o_own=512, zpart=12288, z=12288, y=D,
                  gsc=384, BIAS=384, router=384, rid=8, SEL=8, TOT=8, DENR=8, route_w=8, ea=7 * 2304, yf=D,
-                 TOK=8, eg_rows=6144, eg_kv=25600, EGW=HC * D, EGID=144, EGC=6144, EGS=192, SSH=8, RH=8, SSK=8,
+                 TOK=8, eg_rows=6144, eg_kv=25600, EGW=HC * D, EGID=EG.TABLE_WORDS, EGC=6144, EGS=192, SSH=8, RH=8, SSK=8,
                  RK=8, RST=8, DOTR=8, GATE=8, cmp=1024, iwr=32, iq=4096, SELIDX=2048, SLOTKV=1024, SLOTSC=1024, MXC=512, EC=1024,
                  DENC=512, PC=1024, P2=1024, POOL=512, LAT0=512, LAT=512, GCN=512, KIN=128, GKN=128, KN=128, KR=128,
                  LR=512, IK=128, CK=512, ROPE2=64, logits=1352,
@@ -164,9 +165,9 @@ def data_window_hit(base, size):
         if base < lo + DATA_WIN_BYTES and lo < base + size:
             return lo + DATA_WIN_BYTES
     return None
-# E-HOME (owner rule, lead GO 10-10): each Engram table lives in the HBM of 4 home dies (layer 1: ranks 0-3, layer 14:
-# ranks 4-7), 288 B rows {256 B E4M3 codes | 8 B UE8M0 | 24 B 0}, rows split contiguously over the 4 homes
-EG_HOMES = [[0, 1, 2, 3], [4, 5, 6, 7]]
+# Eight-home structural successor: fixed four-home tables exceeded real stack capacity.
+# Physical intervals and bounded metadata are owned by hbm_engram_partition.
+EG_HOMES = [list(h) for h in EG.HOMES]
 EG_ROWB = 288
 EG_TBASE = 96 << 30                  # the home die's table (stack 3), < 2^37
 EG_STG = 2 << 30                     # per Engram layer: the home die's 24-row staging store, then every die's list store
@@ -888,18 +889,18 @@ class Lower:
 
     # -- Engram (layers 1, 14): rows by host-hashed ids through indexed descriptors, decoded on the SU ----------------
     def engram_fetch(self, add, su, L):
-        """E-HOME: the host writes EGHT (spec: G13 + E-HOME host table) per token; the 4 home dies of this Engram layer
+        """E-HOME: the host writes EGHT (spec: G13 + E-HOME host table) per token; the 8 home dies of this Engram layer
         stream their owned rows (indexed row stream, count from VM) into a 24-row staging store; one G25 ROW_GATHER
         (slot ids < 2^20) delivers the 24 rows in list order to every die; 2 strided loads decode codes / scales."""
         V, m, lay = self.lay.V, self.m, self.lay
         li = m.engram.layer_ids.index(L)
         homes = EG_HOMES[li]
         hp = self.rank_now - homes[0]
-        home = 0 <= hp < 4
+        home = 0 <= hp < len(homes)
         stg, lst = EG_STG + li * EG_LSPAN, EG_LIST + li * EG_LSPAN
         w = EG_ROWB // 4
-        add(Rec("DMA", "LOAD", desc=dict(A=MDesc(space="HBM", fmt="U32", base=TBASE + TABLE_OFF["EGHT"], n=144),
-                                         O=MDesc(space="VM", fmt="U32", base=lay.vm["EGID"], n=144)),
+        add(Rec("DMA", "LOAD", desc=dict(A=MDesc(space="HBM", fmt="U32", base=TBASE + TABLE_OFF["EGHT"], n=EG.TABLE_WORDS),
+                                         O=MDesc(space="VM", fmt="U32", base=lay.vm["EGID"], n=EG.TABLE_WORDS)),
                 tag="engram.host_table", family="engram"), [], ["EGID"])
         hq = max(hp, 0)
         add(Rec("DMA", "LOAD", desc=dict(
@@ -1180,22 +1181,8 @@ hist_of = [None]
 
 
 def eg_host_table(ids, nrows, li):
-    """E-HOME host table (144 U32 = 18 sectors, written by the host per token beside the G13 ids; words 136..143 = 0): words 0..23 the G25 slot ids
-    (list entry j owned by home rank R as its t-th row: i' = (t div 8) 768 + 8 R + t mod 8, so the ROW_GATHER owner rule
-    (i' div 8) mod 96 = R and local row (i' div 768) 8 + i' mod 8 = t); words 32..35 each home's owned count; words
-    40 + 24 h + t the home h's t-th owned table row (local, list order).  Rows split contiguously: home h = id div RPH."""
-    rph = -(-nrows // 4)
-    out = np.zeros(144, np.uint32)
-    cnt = [0, 0, 0, 0]
-    for j, g in enumerate(np.asarray(ids, np.int64)):
-        h, loc = int(g // rph), int(g % rph)
-        t = cnt[h]
-        R = EG_HOMES[li][h]
-        out[j] = (t // 8) * 768 + 8 * R + t % 8
-        out[40 + 24 * h + t] = loc
-        cnt[h] += 1
-    out[32:36] = cnt
-    return out
+    """232-word eight-home image; shared contract validates all 24 IDs before emitting."""
+    return np.asarray(EG.host_table(ids, nrows, li), dtype=np.uint32)
 
 
 def build_tables(m, st, L, pos, rank, region=TBASE):
@@ -1454,10 +1441,14 @@ def ds_units(m, man, golib):
             Lw = CUR_LAYER[0]
             li = m.engram.layer_ids.index(Lw)
             hp = die.rank - EG_HOMES[li][0]
+            if not 0 <= hp < len(EG_HOMES[li]):
+                raise MC.Fault(3, "Engram read on non-home rank")
             codes, sc = m.emb_codes[Lw]
-            rph = -(-codes.shape[0] // 4)
+            rph = EG.rows_per_home(codes.shape[0])
             for e in range(cnt):
                 g = hp * rph + int(die.vm[ib + L + e])
+                if not 0 <= g < codes.shape[0] or g // rph != hp:
+                    raise MC.Fault(3, "Engram local row outside owned extent")
                 row = np.zeros(EG_ROWB, np.uint8)
                 row[:256] = np.asarray(codes[np.array([g])]).reshape(-1).astype(np.uint8)
                 row[256:264] = (np.asarray(sc[np.array([g])], dtype=np.int64).reshape(-1) + 127).astype(np.uint8)
