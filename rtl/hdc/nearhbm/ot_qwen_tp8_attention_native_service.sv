@@ -107,9 +107,9 @@ module ot_qwen_tp8_attention_native_service #(
  generate for(s=0;s<4;s=s+1)begin:gs
   wire [135:0] k_request;wire [8199:0] k_response;
   wire [35:0] am_s={hub_am[36*s+:32],hub_am[36*s+32+:2],hub_am[36*s+34],hub_am[36*s+35]};
-  ot_qwen_tp8_attention_native_stack_cp #(.STACK(s),.QK_ISSUE_AGE(QK_ISSUE_AGE),.ROW_RETURN_LAT(ROW_RETURN_LAT),
+  ot_qwen_tp8_attention_native_stack_cp #(.QK_ISSUE_AGE(QK_ISSUE_AGE),.ROW_RETURN_LAT(ROW_RETURN_LAT),
    .Z_STRIDE(Z_STRIDE)) u_stack(
-   .cal(cal[47:0]),.clk(clk),.rst_n(rst_n),.aq(aq),.am(am_s),.ap(ap_all[563*s+:563]),.active_layer_parity(layer[0]),
+   .cal(cal[47:0]),.stack_id(2'(s)),.clk(clk),.rst_n(rst_n),.aq(aq),.am(am_s),.ap(ap_all[563*s+:563]),.active_layer_parity(layer[0]),
    .k_request(k_request),.k_response(k_response),
    .er_v(er_v[s]),.er_addr(er_addr[11*s+:11]),.er_rsp_v(er_rsp_v[s]),.er_rsp_addr(er_rsp_addr[11*s+:11]),
    .er_data(er_data[64*s+:64]),.exp_committed(exp_committed[16*s+:16]),.score_committed(score_committed[s]),
@@ -249,9 +249,9 @@ endmodule
 // Functional/arithmetic composition only; per-root insertion/phase binding belongs to the KV die clock contract.
 // Also the simulator hierarchy cut (one clock port), see tools/qwen_attention_native/native_service.vlt.
 module ot_qwen_tp8_attention_native_stack_cp #(
- parameter integer STACK=0,QK_ISSUE_AGE=34,ROW_RETURN_LAT=9,Z_STRIDE=4
+ parameter integer QK_ISSUE_AGE=34,ROW_RETURN_LAT=9,Z_STRIDE=4
 )(
- input wire [47:0] cal,
+ input wire [47:0] cal,input wire [1:0] stack_id,
  input wire clk,rst_n,input wire[539:0] aq,input wire[35:0] am,output wire[562:0] ap,input wire active_layer_parity,
  output wire[135:0] k_request,input wire[8199:0] k_response,
  input wire er_v,input wire[10:0] er_addr,output wire er_rsp_v,output wire[10:0] er_rsp_addr,output wire[63:0] er_data,
@@ -259,9 +259,9 @@ module ot_qwen_tp8_attention_native_stack_cp #(
  output wire[7:0] dbg   // calendar observation taps only
 );
  assign dbg={3'd0,u_native.u_astk.cq[536],u_native.u_astk.ep_so[0],u_native.u_astk.cq[534],u_native.u_astk.score_committed,u_native.so[13]};
- ot_qwen_tp8_attention_native_stack_cal #(.STACK(STACK),.RL(1),.QK_ISSUE_AGE(QK_ISSUE_AGE),.ROW_RETURN_LAT(ROW_RETURN_LAT),
+ ot_qwen_tp8_attention_native_stack_cal #(.RL(1),.QK_ISSUE_AGE(QK_ISSUE_AGE),.ROW_RETURN_LAT(ROW_RETURN_LAT),
   .Z_STRIDE(Z_STRIDE)) u_native(
-  .cal(cal),.rst_n(rst_n),.ck_astk_c(clk),.ck_astk_r(clk),.ck_astk_z({4{clk}}),.ck_astk_x({32{clk}}),.ck_astk_e({8{clk}}),
+  .cal(cal),.stack_id(stack_id),.rst_n(rst_n),.ck_astk_c(clk),.ck_astk_r(clk),.ck_astk_z({4{clk}}),.ck_astk_x({32{clk}}),.ck_astk_e({8{clk}}),
   .ck_ectl({24{clk}}),.ck_head({2752{clk}}),
   .aq(aq),.am(am),.ap(ap),.active_layer_parity(active_layer_parity),.k_request(k_request),.k_response(k_response),
   .er_v(er_v),.er_addr(er_addr),.er_rsp_v(er_rsp_v),.er_rsp_addr(er_rsp_addr),.er_data(er_data),

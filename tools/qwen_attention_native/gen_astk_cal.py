@@ -67,6 +67,11 @@ def derive():
     top = top[top.index('module ot_qwen_tp8_attention_native_stack'):]
     top = edit(top, 'module ot_qwen_tp8_attention_native_stack #(', 'module ot_qwen_tp8_attention_native_stack_cal #(')
     top = edit(top, ' input wire rst_n,', ' input wire [47:0] cal,\n input wire rst_n,')
+    # The stack index is a strap port (as qkd_ectl3 cfg / ASTK st already are): one master serves all four stacks.
+    top = edit(top, ' parameter integer STACK=0,RL=1,', ' parameter integer RL=1,')
+    top = edit(top, ' input wire [47:0] cal,', ' input wire [47:0] cal,\n input wire [1:0] stack_id,')
+    top = edit(top, '.st(2\'(STACK))', '.st(stack_id)')
+    top = edit(top, '.cfg({3\'(engine),2\'(STACK)})', '.cfg({3\'(engine),stack_id})')
     top = edit(top, ' qkd_astk_native_stack_s #(', ' qkd_astk_native_stack_cal #(')
     top = edit(top, ' u_astk(\n', ' u_astk(.cal(cal),\n')
     h = hashlib.sha256(SRC.read_bytes()).hexdigest()

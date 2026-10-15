@@ -593,10 +593,11 @@ module qkd_astk_native_stack_cal #(
 endmodule
 
 module ot_qwen_tp8_attention_native_stack_cal #(
- parameter integer STACK=0,RL=1,QK_ISSUE_AGE=34,ROW_RETURN_LAT=9,
+ parameter integer RL=1,QK_ISSUE_AGE=34,ROW_RETURN_LAT=9,
  parameter integer EXP_START_AGE=0,LMAX_START_AGE=0,Z_START_AGE=0,Z_STRIDE=4
 )(
  input wire [47:0] cal,
+ input wire [1:0] stack_id,
  input wire rst_n,
  input wire ck_astk_c,ck_astk_r,input wire[3:0] ck_astk_z,
  input wire[31:0] ck_astk_x,input wire[7:0] ck_astk_e,
@@ -614,7 +615,7 @@ module ot_qwen_tp8_attention_native_stack_cal #(
   .EXP_START_AGE(EXP_START_AGE),.LMAX_START_AGE(LMAX_START_AGE),
   .Z_START_AGE(Z_START_AGE),.Z_STRIDE(Z_STRIDE)) u_astk(.cal(cal),
   .ck_c(ck_astk_c),.ck_z(ck_astk_z),.ck_x(ck_astk_x),.ck_e(ck_astk_e),.ck_r(ck_astk_r),
-  .rst_n(rst_n),.st(2'(STACK)),.aq(aq),.am(am),.ap(ap),.af(astk_fault),.lt(lt),
+  .rst_n(rst_n),.st(stack_id),.aq(aq),.am(am),.ap(ap),.af(astk_fault),.lt(lt),
   .er_v(er_v),.er_addr(er_addr),.er_rsp_v(er_rsp_v),.er_rsp_addr(er_rsp_addr),.er_data(er_data),
   .exp_committed(exp_committed),.score_committed(score_committed),
   .so0(so[0+:425]),.so1(so[425+:425]),.so2(so[850+:425]),.so3(so[1275+:425]),
@@ -627,7 +628,7 @@ module ot_qwen_tp8_attention_native_stack_cal #(
   wire[63:0] e;wire[135:0] scores;wire[1558:0] t0,t1;wire[16:0] rq;
   qkd_ectl3_epoch_direct_s #(.STATIC_QK(1),.QK_ISSUE_AGE(QK_ISSUE_AGE),
    .ROW_RETURN_LAT(ROW_RETURN_LAT)) u_ectl(
-   .ck(ck_ectl[3*engine+:3]),.rst_n(rst_n),.cfg({3'(engine),2'(STACK)}),
+   .ck(ck_ectl[3*engine+:3]),.rst_n(rst_n),.cfg({3'(engine),stack_id}),
    .e0(e[0+:16]),.e1(e[16+:16]),.e2(e[32+:16]),.e3(e[48+:16]),
    .s0(scores[0+:34]),.s1(scores[34+:34]),.s2(scores[68+:34]),.s3(scores[102+:34]),
    .t0(t0),.t1(t1),.rq(rq),.rs(k_response[1025*engine+:1025]),
