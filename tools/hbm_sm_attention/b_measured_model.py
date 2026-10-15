@@ -109,12 +109,13 @@ def main():
                merge={T: merge_cycles(nodes[T]) for T in nodes}))
     out["throughput_qualified"] = False
     out["rate_scope"] = "conditional computation estimate at component8/11 line cadence; actual32SM PC service and KV4 byte expansion not priced"
-    out["unpriced_kv4_layout"] = dict(canonical_row_bytes=288, implemented_row_bytes=544,
-        extra_read_bytes_per_ds640_pass=512*(544-288), extra_read_bytes_per_ds640_qk_pv=2*512*(544-288),
-        extra_read_bytes_per_token=38*2*512*(544-288),
-        extra_replica_write_bytes_per_token_if_writer_uses544=3*40*(544-288),
-        critical_path_cycles=None, actual_PC_cadence_qualified=False,
-        reason="Current KV4 packs4x136B with all32scales repeated in everyline. Actual writer/home/cache/PC schedule must match this layout; no token-rate penalty inferred from byte ratio.")
+    # KV layout as measured: since 078967c11 the converter reads the CANONICAL packed rows (KV8 528 B, KV4 288 B) from the
+    # contiguous line stream; the bench's line count is the canonical byte count / 136 (no 544-B expansion).
+    lines = {o["name"]: o["cycles"]["lines"] for o in d640["ops"] if "cycles" in o}
+    out["kv_layout"] = dict(kv8_row_bytes=528, kv4_row_bytes=288, measured_lines_busiest=dict(
+        qk=max((v for k, v in lines.items() if k.startswith("qk")), default=None),
+        pv=max((v for k, v in lines.items() if k.startswith("pv")), default=None)),
+        note="spans include the line stream at the bench cadence (8 lines / 11 cycles per SM); actual 32-SM PC service cadence not yet qualified")
     for pf in (False, True):
         delta = 0.0
         rec = {}
