@@ -45,6 +45,14 @@ module tb_s81_hcx_chain #(parameter integer HLAYOUT=1,MUT_POST=0,CAL=0,FAST=0,
   dsfd_sp_hcx_projection #(.RANK(r),.RL(4),.FAST_CYC(FAST),.HLAYOUT(HLAYOUT))u(
    .cck(ck),.crst_n(rst_n),.skctl(ckv),.srst_n(srst_n),.sk_leaf({6{ckv}}),.c_cmd(p_cmd),.c_done(p_done[r]),.c_st(p_st[r]),
    .rq_v(rq_v[r]),.rq_row(rq_row[r]),.rs_v(rv_p[r][3]),.rs_d(rd_p[r][3]),.t_raw_v(raw_v[r]),.t_raw_d(raw_d[r]));
+`ifdef OT_HCX_ROM_HIERLOAD
+  for (genvar l = 0; l < 6; l++) for (genvar b = 0; b < 8; b++) for (genvar m = 0; m < 4; m++) for (genvar pg = 0; pg < 2; pg++) begin : g_ld
+   initial begin string rd; #1;
+    if ($value$plusargs("OT_ROM_DIR=%s", rd))
+     $readmemh($sformatf("%s/hcx_r%0d_p%0d_b%0d_l%0d_p%0d.viamap.hex", rd, r, l, b, m, pg), u.g_leaf[l].leaf.g_bank[b].g_rom[m].g_page[pg].rom.arr);
+   end
+  end
+`endif
   always @(posedge ckv)begin
    rv_p[r][0]<=rq_v[r];
    for(integer p=0;p<8;p=p+1)rd_p[r][0][512*p+:512]<=vm[rq_row[r][14*p+:14]];

@@ -39,7 +39,13 @@ module dsfd_sp_hcx_projection #(
   .rq_v(rq_v),.rq_row(rq_row),.rs_v(rs_v),.stage_begin(sb),.stage_v(sv),.stage_word(sw),
   .leaf_cmd_v(pv),.leaf_ffn(ffn),.leaf_layer(layer),.leaf_v(ov),.leaf_fault(lf|{5'd0,tf}),.leaf_d(od),.t_raw_v(t_raw_v),.t_raw_d(t_raw_d));
  generate for(genvar l=0;l<6;l=l+1)begin:g_leaf
-  ot_s81_hcx_projection_leaf #(.IMAGE($sformatf("%s_r%0d_p%0d",IMAGE_PREFIX,RANK,l)),.HLAYOUT(HLAYOUT))leaf(
+  ot_s81_hcx_projection_leaf #(
+`ifdef OT_HCX_ROM_HIERLOAD
+   .IMAGE("hcx")
+`else
+   .IMAGE($sformatf("%s_r%0d_p%0d",IMAGE_PREFIX,RANK,l))
+`endif
+   ,.HLAYOUT(HLAYOUT))leaf(
    .clk(sk_leaf[l]),.rst_n(srst_n),.stage_begin(sb),.stage_v(tv),.stage_word(tw),.stage_d(td),
    .cmd_v(pv),.cmd_ffn(ffn),.cmd_layer(layer),.norm_eps(NORM_EPS),.o_v(ov[l]),.o_d(od[32*l+:32]),.fault(lf[l]));
  end endgenerate

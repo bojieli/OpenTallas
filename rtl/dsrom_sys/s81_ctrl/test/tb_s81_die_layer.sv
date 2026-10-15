@@ -497,6 +497,14 @@ module tb_s81_die_layer;
             .cck(ck),.crst_n(mx_rst_n),.skctl(ckv),.srst_n(hx_srst_n),.sk_leaf({6{ckv}}),.c_cmd(hx_pcmd),.c_done(hx_pd[hr]),
             .c_st(hx_pst[hr]),.rq_v(hx_rq[hr]),.rq_row(hx_rr[hr]),.rs_v(hx_rv[hr][3]),.rs_d(hx_rd[hr][3]),
             .t_raw_v(hx_tv[hr]),.t_raw_d(hx_td[hr]));
+`ifdef OT_HCX_ROM_HIERLOAD
+  for (genvar l = 0; l < 6; l++) for (genvar b = 0; b < 8; b++) for (genvar m = 0; m < 4; m++) for (genvar pg = 0; pg < 2; pg++) begin : g_ld
+   initial begin string rd; #1;
+    if ($value$plusargs("OT_ROM_DIR=%s", rd))
+     $readmemh($sformatf("%s/hcx_r%0d_p%0d_b%0d_l%0d_p%0d.viamap.hex", rd, hr, l, b, m, pg), u_p.g_leaf[l].leaf.g_bank[b].g_rom[m].g_page[pg].rom.arr);
+   end
+  end
+`endif
         always @(posedge ckv) begin
             hx_rv[hr][0] <= hx_rq[hr];
             for (int p8 = 0; p8 < 8; p8++) begin

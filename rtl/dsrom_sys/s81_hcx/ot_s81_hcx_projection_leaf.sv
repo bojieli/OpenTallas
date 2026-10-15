@@ -49,9 +49,16 @@ module ot_s81_hcx_projection_leaf #(parameter IMAGE="hcx_r0",parameter integer M
    for(genvar pg=0;pg<2;pg=pg+1)begin:g_page
    // Two4096-row pages carry all40main+3MTP layer sets, no ECC.
    // 8 canonical FP32 lanes per266-bit macro;10 unused bits definedzero.
-`ifndef SYNTHESIS
-   ot_rom_4096x266_m8 #(.INSTANCE($sformatf("%s_b%0d_l%0d_p%0d",IMAGE,b,m,pg)))rom(
+`ifdef OT_HCX_ROM_HIERLOAD
+   // Simulation-only: one ROM module specialization; the bench $readmemh-s each via mask into rom.arr by hierarchy
+   // (24 leaves x 64 macros as distinct INSTANCE strings overflow the Verilator front end).
+   ot_rom_4096x266_m8 rom(
+`elsif SYNTHESIS
+   ot_rom_4096x266_m8 rom(
 `else
+   ot_rom_4096x266_m8 #(.INSTANCE($sformatf("%s_b%0d_l%0d_p%0d",IMAGE,b,m,pg)))rom(
+`endif
+`ifdef OT_HCX_ROM_NEVER
    ot_rom_4096x266_m8 rom(
 `endif
     .clk(clk),.ce_in(wr[b] && wa[16*b+12]==pg),.addr_in(wa[16*b+:12]),.rd_out(q[pg]));

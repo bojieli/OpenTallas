@@ -110,7 +110,7 @@ SUD=""; [ -n "${SUSNAP:-}" ] && SUD="+define+TB_SU_REAL"
 [ -n "${SUSNAP:-}" ] && for L in $LAYERS; do f=${SUSNAP//%L/$L}; case $L in L*) f=${f//%N/$(printf %02d ${L#L})};; esac; sha256sum $f; done >> $OUT/sources.sha256
 [ -n "$CHAINS" ] && sha256sum $SRC/tools/s81_ctrl/die_layer_chain.py $(for L in $LAYERS; do f=${CHAINS//%L/$L}; [ -f "$f" ] && echo $f; done | sort -u) >> $OUT/sources.sha256
 [ -n "${MIXSNAP:-}" ] && SUD="$SUD +define+TB_MIX4_REAL"
-[ -n "${HCXROM:-}" ] && SUD="$SUD +define+TB_HCX_REAL"
+[ -n "${HCXROM:-}" ] && SUD="$SUD +define+TB_HCX_REAL +define+OT_HCX_ROM_HIERLOAD"
 SPL="+define+OT_S81PH_GBX_FMT1 +define+OT_S81PH_EP_PIPE2 +define+OT_S81PH_COLL_OQPIPE +define+OT_S81PH_COLL_QPIPE +define+OT_S81PH_COLL_SPLIT +define+OT_S81PH_COLL_CR +define+OT_S81PH_LANE_CR +define+OT_S81PH_COLL_PULL +define+OT_S81PH_COLL_TREP"
 HX=""; [ $HCH = 1 ] && HX="+define+TB_HC_HIER -GHIER=1 -GHALF=1 -GCSPLIT=1 -GTAIL_SPLIT=2 -GCNL_PIN=1 -GCHAIN_STEP=6 -GHEAD_ROWS=$([ $NG = 256 ] && echo 10 || echo 2)"
 for m in $MODES; do
