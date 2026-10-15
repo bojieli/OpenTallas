@@ -1,5 +1,5 @@
 {
- "name": "qfd_x3_mux_nativer-r1-60df7ed09",
+ "name": "qfd_x3_mux_nativer-r1-937c53962",
  "block": "ot_qfd_x3_mux_native",
  "ref_tile": true,
  "owner": "Claude:q14-compute-elements",
@@ -7,8 +7,8 @@
  "threads": 8,
  "peak_ram_gb": 8,
  "source": {
-  "branch": "claude/q14-r11-x3rst",
-  "commit": "60df7ed09666e3dfd0903109db7011844a1f7d99",
+  "branch": "claude/q14-r11-x3job",
+  "commit": "937c53962",
   "extra_paths": [
    "tools/qwen_split",
    "rtl/test/qwen_split",
@@ -112,7 +112,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qfd_x3_mux_nativer/qfd_x3_mux_nativer-r1-60df7ed09"
+   "to": "results/rtl/ref_tile/qfd_x3_mux_nativer/qfd_x3_mux_nativer-r1-937c53962"
   }
  ],
  "cycles_added": 2,

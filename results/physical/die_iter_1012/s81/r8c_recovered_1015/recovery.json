@@ -1,0 +1,37 @@
+{
+ "status": "PATHFINDING_FAIL",
+ "source": "/srv/opentallas-scratch/claude/s81-die-iter/r8a_screen",
+ "terminal_launcher": "/home/ubuntu/s81die-r8/otrun_r8c.log: ot-run RAN unit oth-ubuntu-648739-1792043303 exit0",
+ "findings": {
+  "c10p": "GEN_FAIL import die_hop_gate (terminal, not live)",
+  "c9p": "stopped by predecessor21:52; no process currently",
+  "r8a": "terminal tuple shape error",
+  "r8b": "superseded by r8c",
+  "r8c": {
+   "verdict": "FAIL",
+   "bundles": 115795,
+   "bits": 8750688,
+   "by_verdict": {
+    "OK": 46342,
+    "WARN": 69452,
+    "FAIL": 1
+   },
+   "jog_max": 285.12,
+   "jog_over_warn": {
+    "bundles": 56567,
+    "bits": 1508743
+   },
+   "order_not_preserved": {
+    "bundles": 16897,
+    "bits": 799351
+   },
+   "cut_limit": 0.6
+  }
+ },
+ "release_blockers": [
+  "1gather_rW2 pin_align spill",
+  "8owed forwarded hold pairs",
+  "actual native master binding and static seams"
+ ],
+ "qualified": false
+}

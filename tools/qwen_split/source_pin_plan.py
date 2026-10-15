@@ -29,6 +29,7 @@ def snap(z):
 
 
 def apply_tile(q, entries):
+    q.w, q.h = 449.28, 1442.88  # actual parent-kit outline, never legacy SHAVE
     ports = rtl_ports(ROOT / 'rtl/physical/qfd_tile_nk_slot.sv', q.name)
     old = q.ports
     q.ports, q.order = {}, []
@@ -71,6 +72,7 @@ def apply_slabs(M):
     for q in M.values():
         if not q.name.startswith('qfd_port_tiles_'):
             continue
+        q.w, q.h = 1036.8, 2462.4
         ports = rtl_ports(ROOT / 'rtl/qwen_split/qfd_port_tiles.sv', q.name)
         old = q.ports
         q.ports, q.order = {}, []
@@ -177,8 +179,8 @@ def export(q, out):
 if __name__ == '__main__':
     from qwen_rom_fulldie import Master
     out = Path(sys.argv[1])
-    M = {n:Master(n,449.256,1442.856,7,'') for n in ('qfd_tile_nk','qfd_tile_nl')}
-    M.update({f'qfd_port_tiles_{b}{s}':Master(f'qfd_port_tiles_{b}{s}',1036.776,2462.376,7,'') for b in range(3) for s in ('','_f1')})
+    M = {n:Master(n,449.28,1442.88,7,'') for n in ('qfd_tile_nk','qfd_tile_nl')}
+    M.update({f'qfd_port_tiles_{b}{s}':Master(f'qfd_port_tiles_{b}{s}',1036.8,2462.4,7,'') for b in range(3) for s in ('','_f1')})
     apply(M)
     evidence = {n:export(q,out) for n,q in M.items()}
     (out/'INDEX.json').write_text(json.dumps(evidence,indent=1)+'\n')
