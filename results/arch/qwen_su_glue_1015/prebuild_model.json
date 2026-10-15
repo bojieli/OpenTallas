@@ -1,0 +1,71 @@
+{
+  "schema": "opentallas.qwen-su-glue-cut-model.v1",
+  "source_commit": "c6c44c12c",
+  "source_sha256": {
+    "rtl/physical/ot_qfd_su_align_entries64.sv": "047bf5912323d1365adb629e8fc41705955843325497587ed5365bf1b98c51af",
+    "rtl/qwen_sys/static_schedule_20261014/ot_hdc_vstream_static_entries.sv": "3aec6ea06c328e53284758b544c50fe942bd96a9577e6e7611b7604c8b0b99bb",
+    "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688"
+  },
+  "qualification": "prebuild analytical inventory; no physical qualification",
+  "parameters": {
+    "SW": 64,
+    "WR": 16,
+    "AW": 24,
+    "NW": 18,
+    "RD": 2,
+    "VL": 14,
+    "ML": 15
+  },
+  "arithmetic": {
+    "macs_per_cycle": 0,
+    "compute_intensity": 0,
+    "communication_only": true
+  },
+  "memory_bytes_per_cycle_added": 0,
+  "added_cycles": 0,
+  "cut_rule": "existing state only; preserve async assertion and one-edge lane reset deassert, unreset payload, exact per-lane offsets",
+  "lane": {
+    "replicas": 64,
+    "GBW": 500,
+    "PDW": 256,
+    "OVW": 11,
+    "ODW": 291,
+    "register_bits": 1622,
+    "input_bits_per_cycle": 1062,
+    "output_bits_per_cycle": 1062,
+    "fanout": "one lane tile per relay; group broadcast fanout8 remains existing",
+    "mux_demux": "none within relay shell; four24bit offset adders per lane remain in actual parent base,256 adders total",
+    "memory_bytes_per_cycle": 0
+  },
+  "align": {
+    "replicas": 16,
+    "input_bits_per_cycle": 784,
+    "output_bits_per_cycle": 772,
+    "register_bits_cbuf5": 5232,
+    "register_bits_cbuf8": 4464,
+    "mux_demux": "twelve32-bit hold muxes per group",
+    "fanout": "one group of4lanes; masks one32-bit mux each",
+    "memory_bytes_per_cycle": 96.0
+  },
+  "base": {
+    "replicas": 1,
+    "state": "actual controller/group-relay/reduction-input/status state not yet cut; explicitly unqualified",
+    "group_register_bits": 4032,
+    "offset_adders": 256,
+    "offset_adder_bits": 24
+  },
+  "area": {
+    "sequential_cell_assumption_um2": 0.2916,
+    "lane_register_area_um2": 472.97520000000003,
+    "align_register_area_cbuf5_um2": 1525.6512000000002,
+    "align_register_area_cbuf8_um2": 1301.7024000000001,
+    "slot_fit": "not established; real synthesis/pin-fit required",
+    "floorplan_utilization_target": 0.55
+  },
+  "routing": {
+    "lane_signal_tracks_min": 2124,
+    "align_signal_tracks_min": 1556,
+    "capacity": "pending exact M4/M5 pin-fit and routed LEF; no capacity credit"
+  },
+  "latency_composition": "no registers added/moved; RD2 inbound/outbound and ML15 alignment preserve current single-user edge schedule; data phase/RC closure pending"
+}

@@ -1,0 +1,90 @@
+{
+  "name": "qsu_align_mc6",
+  "top": "ot_qfd_su_align_group4",
+  "kind": "tile",
+  "sources": [
+    "rtl/hdc/ot_hdc_delay.sv",
+    "rtl/physical/ot_qfd_su_align_entries64.sv"
+  ],
+  "params": {
+    "ML": 15,
+    "VL": 14,
+    "MC": 6
+  },
+  "clock_port": "clk",
+  "reset_ports": [
+    "rst_n"
+  ],
+  "pins": {
+    "N": [
+      "clk",
+      "rst_n"
+    ],
+    "W": [
+      "vm_q",
+      "crom_q",
+      "emb_q",
+      "emb_sel",
+      "vm_mask"
+    ],
+    "E": [
+      "vm_eff",
+      "crom_m",
+      "emb_m",
+      "emb_sel_m"
+    ],
+    "S": []
+  },
+  "outline": {
+    "w": 180,
+    "h": 180
+  },
+  "layer_cap": "M5",
+  "recipe": 2,
+  "inter": [
+    "vm_q",
+    "crom_q",
+    "emb_q",
+    "emb_sel",
+    "vm_mask",
+    "vm_eff",
+    "crom_m",
+    "emb_m",
+    "emb_sel_m"
+  ],
+  "route": {
+    "pd": 0.55,
+    "period_ps": 770,
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "hold_margin_ns": 0.03
+  },
+  "io_budget": {
+    "in": 0.2,
+    "out": 0.2
+  },
+  "job": {
+    "owner": "Codex:su-glue-physical-1015",
+    "branch": "codex/su-glue-physical-1015",
+    "tag": "v1",
+    "purpose": "Actual c6c44 source-preserving SU relay/alignment state cut; no added edges. Serial0.9GHz domain. Parent offset comb logic remains explicitly unqualified. Standard strict833.333ps leaf characterization retained; no slower-clock SDC override.",
+    "cycles_added": 0,
+    "benches": [
+      {
+        "name": "source_cut_and_mutants",
+        "cmd": "bash tools/qwen_su_glue_1015/gate.sh {RUN}/bench",
+        "expect": "pass",
+        "threads": 1,
+        "peak_ram_gb": 2,
+        "needs": [
+          "iverilog"
+        ],
+        "pass_regex": "PASS su_glue gate"
+      }
+    ],
+    "extra_paths": [
+      "rtl/test/qwen_su_glue_1015",
+      "tools/qwen_su_glue_1015"
+    ]
+  }
+}

@@ -1,0 +1,109 @@
+{
+  "name": "qsu_lane_relay",
+  "top": "ot_qfd_su_lane_relay",
+  "kind": "tile",
+  "sources": [
+    "rtl/hdc/ot_hdc_delay.sv",
+    "rtl/physical/ot_qfd_su_lane_relay.sv"
+  ],
+  "params": {
+    "AW": 24,
+    "NW": 18,
+    "WR": 16,
+    "RD": 2,
+    "RTREE": 1
+  },
+  "clock_port": "clk",
+  "reset_ports": [
+    "rst_n"
+  ],
+  "pins": {
+    "N": [
+      "clk",
+      "rst_n"
+    ],
+    "W": [
+      "b_d",
+      "b_v",
+      "live",
+      "cura",
+      "curb",
+      "curc",
+      "curd",
+      "mem_q"
+    ],
+    "E": [
+      "b_q",
+      "bv_q",
+      "lv_q",
+      "p_q",
+      "rst_l"
+    ],
+    "S": [
+      "o_v",
+      "o_d",
+      "o_vq",
+      "o_dq"
+    ]
+  },
+  "outline": {
+    "w": 180,
+    "h": 180
+  },
+  "layer_cap": "M5",
+  "recipe": 2,
+  "inter": [
+    "b_d",
+    "b_v",
+    "live",
+    "cura",
+    "curb",
+    "curc",
+    "curd",
+    "mem_q",
+    "b_q",
+    "bv_q",
+    "lv_q",
+    "p_q",
+    "rst_l",
+    "o_v",
+    "o_d",
+    "o_vq",
+    "o_dq"
+  ],
+  "route": {
+    "pd": 0.55,
+    "period_ps": 770,
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "hold_margin_ns": 0.03
+  },
+  "io_budget": {
+    "in": 0.2,
+    "out": 0.2
+  },
+  "job": {
+    "owner": "Codex:su-glue-physical-1015",
+    "branch": "codex/su-glue-physical-1015",
+    "tag": "v1",
+    "purpose": "Actual c6c44 source-preserving SU relay/alignment state cut; no added edges. Serial0.9GHz domain. Parent offset comb logic remains explicitly unqualified. Standard strict833.333ps leaf characterization retained; no slower-clock SDC override.",
+    "cycles_added": 0,
+    "benches": [
+      {
+        "name": "source_cut_and_mutants",
+        "cmd": "bash tools/qwen_su_glue_1015/gate.sh {RUN}/bench",
+        "expect": "pass",
+        "threads": 1,
+        "peak_ram_gb": 2,
+        "needs": [
+          "iverilog"
+        ],
+        "pass_regex": "PASS su_glue gate"
+      }
+    ],
+    "extra_paths": [
+      "rtl/test/qwen_su_glue_1015",
+      "tools/qwen_su_glue_1015"
+    ]
+  }
+}
