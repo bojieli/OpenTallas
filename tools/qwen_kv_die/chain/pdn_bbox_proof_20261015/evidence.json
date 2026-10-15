@@ -4,14 +4,15 @@
   "case_source_commit": "59fb67ed5",
   "input_source": "ot-epyc1tb:/srv/opentallas-scratch/claude/qwen-split-compute/c21sa/chain/case_r22k/elements.lef",
   "run": "ot-agidock128:/srv/opentallas-scratch/codex/pdn-obs-1320",
-  "unit": "oth-ubuntu-1361164-1792096137",
+  "unit": "oth-ubuntu-1378101-1792096358",
   "proof": {
     "PDN": "PASS",
     "VDD": "PASS",
     "VSS": "PASS",
     "detailed_OBS_after_ODB_reload": "identical",
     "PG_pin_geometry_mutant": "refused before swap",
-    "original_OBS_mutant": "refused before output"
+    "original_OBS_mutant": "refused before output",
+    "shrunken_bbox_mutant": "refused before swap by integer-coordinate OpenDB containment guard"
   },
   "actual_tap_OBS": {
     "original_rectangles": 14305,
@@ -25,6 +26,10 @@
     "master.lef": {
       "sha256": "1dfb9ef230eedf416d369dd4ff65217fd9306d9d0deaaecd9f13e6bd80630662",
       "bytes": 480772
+    },
+    "tech.lef": {
+      "sha256": "7694bf4f8ef2f9745e4579f454788a0cf048e8605320f32d1d83ec540ed4ca41",
+      "source": "/home/ubuntu/wt-mtp-hrow/results/uarch/topk_finite_track_turn_model_20261002/inputs/tech.lef"
     }
   },
   "limits": [
