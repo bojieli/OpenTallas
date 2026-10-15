@@ -6315,7 +6315,7 @@ proc mem {tag} { set f [open /proc/self/status]; set s [read $f]; close $f
 read_db /work/floorplan.odb
 mem read
 set t0 [clock seconds]
-if {[catch {source /work/pdn.tcl; pdngen} err]} { puts "OT_PDN FAIL $err"; error $err } else {
+if {[catch {source /work/pdn.tcl; pdngen; source /work/die_constant_pg_check.tcl} err]} { puts "OT_PDN FAIL $err"; error $err } else {
   set nsw 0; foreach net [[ord::get_db_block] getNets] { foreach sw [$net getSWires] { incr nsw [llength [$sw getWires]] } }
   puts "OT_PDN PASS special_shapes=$nsw" }
 puts "OT_TIME pdn_s=[expr {[clock seconds]-$t0}]"
