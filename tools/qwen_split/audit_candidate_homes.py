@@ -52,6 +52,8 @@ def audit(old, current, homes):
     map_errors = []
     if len(set(mapping.values())) != len(mapping):
         map_errors.append(dict(reason='non_bijective_logical_map'))
+    if set(mapping) != set(mapping.values()):
+        map_errors.append(dict(reason='map_collides_with_implicit_identity_or_omits_source'))
     for src, dst in mapping.items():
         if src not in ci or dst not in ci:
             map_errors.append(dict(source=src, destination=dst, reason='missing_current_instance'))

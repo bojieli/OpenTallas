@@ -39,5 +39,11 @@ class HomesTests(unittest.TestCase):
         self.assertEqual(len(r['logical_map_errors']),2)
         self.assertFalse(r['compatible_for_geometry_recheck'])
 
+    def test_partial_map_cannot_alias_an_unchanged_tile(self):
+        self.homes['logical_tile_map']={'a':'b'}
+        r=audit(self.graph,self.graph,self.homes)
+        self.assertIn('map_collides_with_implicit_identity_or_omits_source',
+                      [e['reason'] for e in r['logical_map_errors']])
+
 
 if __name__=='__main__': unittest.main()
