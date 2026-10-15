@@ -1,28 +1,28 @@
 {
   "name": "ot_s81_markov_fold_native",
-  "orfs_dir": "/srv/opentallas/claude/closure-loop/s81_markov_fold_native-pc1-ca28c2640/routes/s81_markov_fold_native_pc1_ca28c2640/work/orfs",
+  "orfs_dir": "/srv/opentallas-scratch2/claude/closure-loop/s81_markov_fold_native-pc2-fd21a1202/routes/s81_markov_fold_native_pc2_fd21a1202/work/orfs",
   "corners": {
     "ss": {
       "returncode": 0,
       "done": true,
-      "ws": "OT_WS max -4.8975545841045687e-11 min 6.81760203846693e-11",
+      "ws": "OT_WS max -8.584605248884714e-11 min 8.575913590380679e-11",
       "image": "openroad/orfs:latest",
       "command": [
         "docker",
         "run",
         "--rm",
         "-v",
-        "/srv/opentallas/claude/closure-loop/s81_markov_fold_native-pc1-ca28c2640/routes/s81_markov_fold_native_pc1_ca28c2640/work/orfs:/in:ro",
+        "/srv/opentallas-scratch2/claude/closure-loop/s81_markov_fold_native-pc2-fd21a1202/routes/s81_markov_fold_native_pc2_fd21a1202/work/orfs:/in:ro",
         "-v",
-        "/srv/opentallas/claude/closure-loop/s81_markov_fold_native-pc1-ca28c2640/record/views/ot_s81_markov_fold_native:/out",
+        "/srv/opentallas-scratch2/claude/closure-loop/s81_markov_fold_native-pc2-fd21a1202/record/views/ot_s81_markov_fold_native:/out",
         "-v",
-        "/srv/opentallas/claude/closure-loop/s81_markov_fold_native-pc1-ca28c2640/src/physical/ref_tile/s81_markov_fold_native/signoff.sdc:/interface.sdc:ro",
+        "/srv/opentallas-scratch2/claude/closure-loop/s81_markov_fold_native-pc2-fd21a1202/src/physical/ref_tile/s81_markov_fold_native/signoff.sdc:/interface.sdc:ro",
         "-v",
-        "/srv/opentallas/claude/closure-loop/s81_markov_fold_native-pc1-ca28c2640/routes/s81_markov_fold_native_pc1_ca28c2640/work/orfs:/work:ro",
+        "/srv/opentallas-scratch2/claude/closure-loop/s81_markov_fold_native-pc2-fd21a1202/routes/s81_markov_fold_native_pc2_fd21a1202/work/orfs:/work:ro",
         "-v",
-        "/srv/opentallas/claude/closure-loop/s81_markov_fold_native-pc1-ca28c2640/src:/src:ro",
+        "/srv/opentallas-scratch2/claude/closure-loop/s81_markov_fold_native-pc2-fd21a1202/src:/src:ro",
         "-v",
-        "/srv/opentallas/claude/closure-loop/s81_markov_fold_native-pc1-ca28c2640/cl/routed_ioref.a1_meas:/meas:ro",
+        "/srv/opentallas-scratch2/claude/closure-loop/s81_markov_fold_native-pc2-fd21a1202/cl/routed_ioref.a1_meas:/meas:ro",
         "openroad/orfs:latest",
         "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
         "-no_init",
@@ -33,24 +33,24 @@
     "ff": {
       "returncode": 0,
       "done": true,
-      "ws": "OT_WS max 3.84930337604672e-10 min 2.385427966267173e-11",
+      "ws": "OT_WS max 3.5701164247115e-10 min 2.509495389269034e-11",
       "image": "openroad/orfs:latest",
       "command": [
         "docker",
         "run",
         "--rm",
         "-v",
-        "/srv/opentallas/claude/closure-loop/s81_markov_fold_native-pc1-ca28c2640/routes/s81_markov_fold_native_pc1_ca28c2640/work/orfs:/in:ro",
+        "/srv/opentallas-scratch2/claude/closure-loop/s81_markov_fold_native-pc2-fd21a1202/routes/s81_markov_fold_native_pc2_fd21a1202/work/orfs:/in:ro",
         "-v",
-        "/srv/opentallas/claude/closure-loop/s81_markov_fold_native-pc1-ca28c2640/record/views/ot_s81_markov_fold_native:/out",
+        "/srv/opentallas-scratch2/claude/closure-loop/s81_markov_fold_native-pc2-fd21a1202/record/views/ot_s81_markov_fold_native:/out",
         "-v",
-        "/srv/opentallas/claude/closure-loop/s81_markov_fold_native-pc1-ca28c2640/src/physical/ref_tile/s81_markov_fold_native/signoff.sdc:/interface.sdc:ro",
+        "/srv/opentallas-scratch2/claude/closure-loop/s81_markov_fold_native-pc2-fd21a1202/src/physical/ref_tile/s81_markov_fold_native/signoff.sdc:/interface.sdc:ro",
         "-v",
-        "/srv/opentallas/claude/closure-loop/s81_markov_fold_native-pc1-ca28c2640/routes/s81_markov_fold_native_pc1_ca28c2640/work/orfs:/work:ro",
+        "/srv/opentallas-scratch2/claude/closure-loop/s81_markov_fold_native-pc2-fd21a1202/routes/s81_markov_fold_native_pc2_fd21a1202/work/orfs:/work:ro",
         "-v",
-        "/srv/opentallas/claude/closure-loop/s81_markov_fold_native-pc1-ca28c2640/src:/src:ro",
+        "/srv/opentallas-scratch2/claude/closure-loop/s81_markov_fold_native-pc2-fd21a1202/src:/src:ro",
         "-v",
-        "/srv/opentallas/claude/closure-loop/s81_markov_fold_native-pc1-ca28c2640/cl/routed_ioref.a1_meas:/meas:ro",
+        "/srv/opentallas-scratch2/claude/closure-loop/s81_markov_fold_native-pc2-fd21a1202/cl/routed_ioref.a1_meas:/meas:ro",
         "openroad/orfs:latest",
         "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
         "-no_init",
@@ -61,24 +61,24 @@
     "tt": {
       "returncode": 0,
       "done": true,
-      "ws": "OT_WS max 2.3123986059303547e-10 min 4.8459375401321836e-11",
+      "ws": "OT_WS max 1.9695101105554613e-10 min 4.996690561309691e-11",
       "image": "openroad/orfs:latest",
       "command": [
         "docker",
         "run",
         "--rm",
         "-v",
-        "/srv/opentallas/claude/closure-loop/s81_markov_fold_native-pc1-ca28c2640/routes/s81_markov_fold_native_pc1_ca28c2640/work/orfs:/in:ro",
+        "/srv/opentallas-scratch2/claude/closure-loop/s81_markov_fold_native-pc2-fd21a1202/routes/s81_markov_fold_native_pc2_fd21a1202/work/orfs:/in:ro",
         "-v",
-        "/srv/opentallas/claude/closure-loop/s81_markov_fold_native-pc1-ca28c2640/record/views/ot_s81_markov_fold_native:/out",
+        "/srv/opentallas-scratch2/claude/closure-loop/s81_markov_fold_native-pc2-fd21a1202/record/views/ot_s81_markov_fold_native:/out",
         "-v",
-        "/srv/opentallas/claude/closure-loop/s81_markov_fold_native-pc1-ca28c2640/src/physical/ref_tile/s81_markov_fold_native/signoff.sdc:/interface.sdc:ro",
+        "/srv/opentallas-scratch2/claude/closure-loop/s81_markov_fold_native-pc2-fd21a1202/src/physical/ref_tile/s81_markov_fold_native/signoff.sdc:/interface.sdc:ro",
         "-v",
-        "/srv/opentallas/claude/closure-loop/s81_markov_fold_native-pc1-ca28c2640/routes/s81_markov_fold_native_pc1_ca28c2640/work/orfs:/work:ro",
+        "/srv/opentallas-scratch2/claude/closure-loop/s81_markov_fold_native-pc2-fd21a1202/routes/s81_markov_fold_native_pc2_fd21a1202/work/orfs:/work:ro",
         "-v",
-        "/srv/opentallas/claude/closure-loop/s81_markov_fold_native-pc1-ca28c2640/src:/src:ro",
+        "/srv/opentallas-scratch2/claude/closure-loop/s81_markov_fold_native-pc2-fd21a1202/src:/src:ro",
         "-v",
-        "/srv/opentallas/claude/closure-loop/s81_markov_fold_native-pc1-ca28c2640/cl/routed_ioref.a1_meas:/meas:ro",
+        "/srv/opentallas-scratch2/claude/closure-loop/s81_markov_fold_native-pc2-fd21a1202/cl/routed_ioref.a1_meas:/meas:ro",
         "openroad/orfs:latest",
         "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
         "-no_init",
@@ -88,51 +88,51 @@
     }
   },
   "interface_sdc": {
-    "path": "/srv/opentallas/claude/closure-loop/s81_markov_fold_native-pc1-ca28c2640/src/physical/ref_tile/s81_markov_fold_native/signoff.sdc",
+    "path": "/srv/opentallas-scratch2/claude/closure-loop/s81_markov_fold_native-pc2-fd21a1202/src/physical/ref_tile/s81_markov_fold_native/signoff.sdc",
     "sha256": "a1bb72d960d297da452c9f63ef8867def58be1377c431dac04ed7a69ac4b0d2a",
     "purpose": "interface timing extraction, not a new leaf signoff verdict",
     "in_verdict_sequence": true
   },
   "verdict": {
-    "json": "/srv/opentallas/claude/closure-loop/s81_markov_fold_native-pc1-ca28c2640/cl/routed_ioref.a1.json",
-    "sha256": "f8938c944033c96323ff5d20ea94735e7abcde9bc66a49526e59089e7808ccd8",
+    "json": "/srv/opentallas-scratch2/claude/closure-loop/s81_markov_fold_native-pc2-fd21a1202/cl/routed_ioref.a1.json",
+    "sha256": "57cf3dca665eefac09e186957451ec7f9f9810358c56aca3782900b94957e9ad",
     "expect_ps": {
-      "tt": 231.24,
-      "ff": 23.85
+      "tt": 196.95,
+      "ff": 25.09
     },
     "tol_ps": 0.05,
-    "work": "/srv/opentallas/claude/closure-loop/s81_markov_fold_native-pc1-ca28c2640/routes/s81_markov_fold_native_pc1_ca28c2640/work/orfs",
+    "work": "/srv/opentallas-scratch2/claude/closure-loop/s81_markov_fold_native-pc2-fd21a1202/routes/s81_markov_fold_native_pc2_fd21a1202/work/orfs",
     "files": {
       "/meas/app0_io_ref_routed.sdc": {
-        "host": "/srv/opentallas/claude/closure-loop/s81_markov_fold_native-pc1-ca28c2640/cl/routed_ioref.a1_meas/app0_io_ref_routed.sdc",
+        "host": "/srv/opentallas-scratch2/claude/closure-loop/s81_markov_fold_native-pc2-fd21a1202/cl/routed_ioref.a1_meas/app0_io_ref_routed.sdc",
         "sha256": "cb2805c3a4a622051ebd24447f6898db2d82fdd6060317692dc3180ef5ac6a7e"
       },
-      "/work/results/asap7/opentallas_ot_s81_markov_fold_native_asap7_ref_s81_markov_fold_native_pc1_ca28c2640/base/6_final.odb": {
-        "host": "/srv/opentallas/claude/closure-loop/s81_markov_fold_native-pc1-ca28c2640/routes/s81_markov_fold_native_pc1_ca28c2640/work/orfs/results/asap7/opentallas_ot_s81_markov_fold_native_asap7_ref_s81_markov_fold_native_pc1_ca28c2640/base/6_final.odb",
-        "sha256": "e72e19f55f8228367e89c7c7bee0c793e62fd7601b8ac1c6da8028dae52a843b"
+      "/work/results/asap7/opentallas_ot_s81_markov_fold_native_asap7_ref_s81_markov_fold_native_pc2_fd21a1202/base/6_final.odb": {
+        "host": "/srv/opentallas-scratch2/claude/closure-loop/s81_markov_fold_native-pc2-fd21a1202/routes/s81_markov_fold_native_pc2_fd21a1202/work/orfs/results/asap7/opentallas_ot_s81_markov_fold_native_asap7_ref_s81_markov_fold_native_pc2_fd21a1202/base/6_final.odb",
+        "sha256": "711a928db6436245820a8e914cf1a1147b86a481d0f99d278745781820f5ef8d"
       },
-      "/work/results/asap7/opentallas_ot_s81_markov_fold_native_asap7_ref_s81_markov_fold_native_pc1_ca28c2640/base/6_final.sdc": {
-        "host": "/srv/opentallas/claude/closure-loop/s81_markov_fold_native-pc1-ca28c2640/routes/s81_markov_fold_native_pc1_ca28c2640/work/orfs/results/asap7/opentallas_ot_s81_markov_fold_native_asap7_ref_s81_markov_fold_native_pc1_ca28c2640/base/6_final.sdc",
-        "sha256": "0af310d4236f36f0ff3225c8c19cf47b37acb731becafa167e07a6b9fc972905"
+      "/work/results/asap7/opentallas_ot_s81_markov_fold_native_asap7_ref_s81_markov_fold_native_pc2_fd21a1202/base/6_final.sdc": {
+        "host": "/srv/opentallas-scratch2/claude/closure-loop/s81_markov_fold_native-pc2-fd21a1202/routes/s81_markov_fold_native_pc2_fd21a1202/work/orfs/results/asap7/opentallas_ot_s81_markov_fold_native_asap7_ref_s81_markov_fold_native_pc2_fd21a1202/base/6_final.sdc",
+        "sha256": "f362a046a60c37386e9c564bd49959cba2e7b0b4a004276a6aff220ad069a723"
       },
-      "/work/results/asap7/opentallas_ot_s81_markov_fold_native_asap7_ref_s81_markov_fold_native_pc1_ca28c2640/base/6_final.spef": {
-        "host": "/srv/opentallas/claude/closure-loop/s81_markov_fold_native-pc1-ca28c2640/routes/s81_markov_fold_native_pc1_ca28c2640/work/orfs/results/asap7/opentallas_ot_s81_markov_fold_native_asap7_ref_s81_markov_fold_native_pc1_ca28c2640/base/6_final.spef",
-        "sha256": "30c6d3aba049e2990e037c12b6fa3ab577f5f4c15078473aa53f51677dae9621"
+      "/work/results/asap7/opentallas_ot_s81_markov_fold_native_asap7_ref_s81_markov_fold_native_pc2_fd21a1202/base/6_final.spef": {
+        "host": "/srv/opentallas-scratch2/claude/closure-loop/s81_markov_fold_native-pc2-fd21a1202/routes/s81_markov_fold_native_pc2_fd21a1202/work/orfs/results/asap7/opentallas_ot_s81_markov_fold_native_asap7_ref_s81_markov_fold_native_pc2_fd21a1202/base/6_final.spef",
+        "sha256": "5a0ed94433181bc9b8e719846b41455dd19dfba3ee634291ee5c70db700a0753"
       },
       "/work/w18_extra.sdc": {
-        "host": "/srv/opentallas/claude/closure-loop/s81_markov_fold_native-pc1-ca28c2640/routes/s81_markov_fold_native_pc1_ca28c2640/work/orfs/w18_extra.sdc",
+        "host": "/srv/opentallas-scratch2/claude/closure-loop/s81_markov_fold_native-pc2-fd21a1202/routes/s81_markov_fold_native_pc2_fd21a1202/work/orfs/w18_extra.sdc",
         "sha256": "a1bb72d960d297da452c9f63ef8867def58be1377c431dac04ed7a69ac4b0d2a"
       }
     },
     "check": {
       "ff": {
-        "export_ps": 23.85427966267173,
-        "verdict_ps": 23.85,
+        "export_ps": 25.09495389269034,
+        "verdict_ps": 25.09,
         "ok": true
       },
       "tt": {
-        "export_ps": 231.23986059303547,
-        "verdict_ps": 231.24,
+        "export_ps": 196.95101105554613,
+        "verdict_ps": 196.95,
         "ok": true
       }
     }
@@ -141,10 +141,10 @@
     "ss": {
       "mode": "verdict",
       "tcl": [
-        "read_db /work/results/asap7/opentallas_ot_s81_markov_fold_native_asap7_ref_s81_markov_fold_native_pc1_ca28c2640/base/6_final.odb",
+        "read_db /work/results/asap7/opentallas_ot_s81_markov_fold_native_asap7_ref_s81_markov_fold_native_pc2_fd21a1202/base/6_final.odb",
         "set ::ot_ce_corner ss",
-        "read_sdc /work/results/asap7/opentallas_ot_s81_markov_fold_native_asap7_ref_s81_markov_fold_native_pc1_ca28c2640/base/6_final.sdc",
-        "read_spef /work/results/asap7/opentallas_ot_s81_markov_fold_native_asap7_ref_s81_markov_fold_native_pc1_ca28c2640/base/6_final.spef",
+        "read_sdc /work/results/asap7/opentallas_ot_s81_markov_fold_native_asap7_ref_s81_markov_fold_native_pc2_fd21a1202/base/6_final.sdc",
+        "read_spef /work/results/asap7/opentallas_ot_s81_markov_fold_native_asap7_ref_s81_markov_fold_native_pc2_fd21a1202/base/6_final.spef",
         "set_propagated_clock [all_clocks]",
         "read_sdc /work/w18_extra.sdc",
         "read_sdc /meas/app0_io_ref_routed.sdc"
@@ -153,10 +153,10 @@
     "ff": {
       "mode": "verdict",
       "tcl": [
-        "read_db /work/results/asap7/opentallas_ot_s81_markov_fold_native_asap7_ref_s81_markov_fold_native_pc1_ca28c2640/base/6_final.odb",
+        "read_db /work/results/asap7/opentallas_ot_s81_markov_fold_native_asap7_ref_s81_markov_fold_native_pc2_fd21a1202/base/6_final.odb",
         "set ::ot_ce_corner ff",
-        "read_sdc /work/results/asap7/opentallas_ot_s81_markov_fold_native_asap7_ref_s81_markov_fold_native_pc1_ca28c2640/base/6_final.sdc",
-        "read_spef /work/results/asap7/opentallas_ot_s81_markov_fold_native_asap7_ref_s81_markov_fold_native_pc1_ca28c2640/base/6_final.spef",
+        "read_sdc /work/results/asap7/opentallas_ot_s81_markov_fold_native_asap7_ref_s81_markov_fold_native_pc2_fd21a1202/base/6_final.sdc",
+        "read_spef /work/results/asap7/opentallas_ot_s81_markov_fold_native_asap7_ref_s81_markov_fold_native_pc2_fd21a1202/base/6_final.spef",
         "set_propagated_clock [all_clocks]",
         "read_sdc /work/w18_extra.sdc",
         "read_sdc /meas/app0_io_ref_routed.sdc"
@@ -165,10 +165,10 @@
     "tt": {
       "mode": "verdict",
       "tcl": [
-        "read_db /work/results/asap7/opentallas_ot_s81_markov_fold_native_asap7_ref_s81_markov_fold_native_pc1_ca28c2640/base/6_final.odb",
+        "read_db /work/results/asap7/opentallas_ot_s81_markov_fold_native_asap7_ref_s81_markov_fold_native_pc2_fd21a1202/base/6_final.odb",
         "set ::ot_ce_corner ss",
-        "read_sdc /work/results/asap7/opentallas_ot_s81_markov_fold_native_asap7_ref_s81_markov_fold_native_pc1_ca28c2640/base/6_final.sdc",
-        "read_spef /work/results/asap7/opentallas_ot_s81_markov_fold_native_asap7_ref_s81_markov_fold_native_pc1_ca28c2640/base/6_final.spef",
+        "read_sdc /work/results/asap7/opentallas_ot_s81_markov_fold_native_asap7_ref_s81_markov_fold_native_pc2_fd21a1202/base/6_final.sdc",
+        "read_spef /work/results/asap7/opentallas_ot_s81_markov_fold_native_asap7_ref_s81_markov_fold_native_pc2_fd21a1202/base/6_final.spef",
         "set_propagated_clock [all_clocks]",
         "read_sdc /work/w18_extra.sdc",
         "read_sdc /meas/app0_io_ref_routed.sdc"
@@ -177,10 +177,10 @@
   },
   "macro_views": [],
   "files": {
-    "ot_s81_markov_fold_native.lef": "71866dd890f53eb3add44a277971b77ff581791fc5e21abe1fd3a6e892a7f58c",
-    "ot_s81_markov_fold_native_ff.lib": "eb7c20ac882c6c77f27b949e3756d84c2f146f056db86de10ca49a45f01e95f1",
-    "ot_s81_markov_fold_native_ss.lib": "1e690f5230c25134340b717ea3f8da4bbc5e390bee5e6d967c4e8db2c716d4b6",
-    "ot_s81_markov_fold_native_tt.lib": "18c1d643a7a3baabc3dec07c3e0400b228d364be88c682d377d48c5b8c39cad5"
+    "ot_s81_markov_fold_native.lef": "ca854f934e62ff288a76b2965181bb2472a59367929d83626f66393aeada6890",
+    "ot_s81_markov_fold_native_ff.lib": "3796cdbc5c7698e42089dac1259c4dc146b81d2b997ea63e7cdc82a8d4962dfb",
+    "ot_s81_markov_fold_native_ss.lib": "0516d621cdba79c9c55c179f74c2345f2f60b747f0f25345c74c83871ef1749c",
+    "ot_s81_markov_fold_native_tt.lib": "947124f1cd65c5f082a098165cd6c90fc485805a432bd33b36a12c57867c55cb"
   },
   "ok": true,
   "checked": true
