@@ -142,7 +142,9 @@ def apply_band(q):
         if r.get('interior'):
             q.ports[p]=('xy',1,r['layer'],[tuple(r['positions_xy_um'][0])],1);q.order.append(p)
         else:
-            q.face(p,ports[p][0],r['face'],r['layer'],sum(r['range_um'])/2,2)
+            n=ports[p][0];lo,hi=r['range_um']
+            points=[lo+(hi-lo)*k/(n-1) for k in range(n)] if n>1 else [lo]
+            q.ports[p]=('pins',n,r['face'],r['layer'],points,1);q.order.append(p)
     for p,c in [('tw',650),('ty',230)]:q.face(p,ports[p][0],'N','M5',c,2)
     for p,c in [('tt',750),('pw',350),('f',400),('c',430),('f_up',460)]:
         q.face(p,ports[p][0],'E','M4',c,2)
@@ -172,6 +174,14 @@ def export(q, out):
     face_q.order = list(face_q.ports)
     rects += pin_rects(face_q, 1, {p: n for p,(n,_) in ports.items()})
     for p, s in q.ports.items():
+        if s[0]=='pins':
+            _,n,f,L,positions,_=s
+            for k,pos in enumerate(positions):
+                r=((0,pos-.012,.192,pos+.012) if f=='W' else
+                   (q.w-.192,pos-.012,q.w,pos+.012) if f=='E' else
+                   (pos-.012,0,pos+.012,.192) if f=='S' else
+                   (pos-.012,q.h-.192,pos+.012,q.h))
+                rects.append((p+f'[{k}]',L,r))
         if s[0] == 'xy':
             x,y = s[3][0]
             rects.append((p+'[0]', s[2], (x-.012,y-.012,x+.012,y+.012)))
@@ -200,7 +210,7 @@ def export(q, out):
             bins.setdefault(k,[]).append((name,r))
         tcl.append(f'place_pin -pin_name {{{name}}} -layer {layer} -location {{{x:.4f} {y:.4f}}}')
         s = q.ports[base]
-        face = s[2] if s[0]=='face' else min(dict(W=x,E=q.w-x,S=y,N=q.h-y), key=dict(W=x,E=q.w-x,S=y,N=q.h-y).get)
+        face = s[2] if s[0] in ('face','pins') else min(dict(W=x,E=q.w-x,S=y,N=q.h-y), key=dict(W=x,E=q.w-x,S=y,N=q.h-y).get)
         groups.setdefault(base,[]).append((index,x,y,face,layer,direction,s[0]=='xy'))
     if len(seen) != sum(n for n,_ in ports.values()):
         raise ValueError('missing RTL pins')
