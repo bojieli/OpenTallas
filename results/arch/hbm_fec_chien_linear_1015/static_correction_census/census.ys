@@ -1,0 +1,11 @@
+read_verilog -sv -D SYNTHESIS -Irtl/dsrom_sys/s81_link rtl/hbm_accel/io_native_20261014/ot_hbm_kp4_enc_rooted.sv rtl/hbm_accel/io_native_20261014/ot_hbm_kp4_dec_static_correction.sv rtl/hbm_accel/io_native_20261014/ot_hbm_kp4_chien55_map.sv rtl/hbm_accel/io_native_20261014/ot_hbm_kp4_correction55_static.sv rtl/hbm_accel/io_native_20261014/ot_hbm_kp4_encode52_map.sv rtl/hbm_accel/io_native_20261014/ot_hbm_kp4_syndrome55_map.sv rtl/hbm_accel/io_native_20261014/hfd_serdes487_static_correction_window.sv rtl/hbm_accel/io_static_20261015/ot_hbm_static_word_cdc.sv rtl/dsrom_sys/s81_link/ot_pdie_serdes.sv
+chparam -set EMUT 0 -set DMUT 0 -set WINDOW_WORDS 2048 -set CDC_AW 4 hfd_serdes487_static_correction_window
+hierarchy -check -top hfd_serdes487_static_correction_window
+proc
+flatten
+opt
+memory_map
+opt
+check -assert
+write_json /srv/opentallas-scratch/codex/fec-chien-linear-1015/static_correction_census_0/netlist.json
+stat

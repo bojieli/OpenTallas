@@ -1,0 +1,147 @@
+Oct 15 03:34:29 regular-crane kernel: docker0: port 1(vethae27c1c) entered disabled state
+Oct 15 03:34:29 regular-crane kernel: veth4a5dbf1: renamed from eth0
+Oct 15 03:34:29 regular-crane kernel: docker0: port 1(vethae27c1c) entered disabled state
+Oct 15 03:34:29 regular-crane kernel: vethae27c1c (unregistering): left allmulticast mode
+Oct 15 03:34:29 regular-crane kernel: vethae27c1c (unregistering): left promiscuous mode
+Oct 15 03:34:29 regular-crane kernel: docker0: port 1(vethae27c1c) entered disabled state
+Oct 15 03:34:30 regular-crane kernel: docker0: port 2(veth60c9d6c) entered disabled state
+Oct 15 03:34:30 regular-crane kernel: veth44c8559: renamed from eth0
+Oct 15 03:34:30 regular-crane kernel: docker0: port 2(veth60c9d6c) entered disabled state
+Oct 15 03:34:30 regular-crane kernel: veth60c9d6c (unregistering): left allmulticast mode
+Oct 15 03:34:30 regular-crane kernel: veth60c9d6c (unregistering): left promiscuous mode
+Oct 15 03:34:30 regular-crane kernel: docker0: port 2(veth60c9d6c) entered disabled state
+Oct 15 03:34:30 regular-crane kernel: docker0: port 1(veth66e3783) entered blocking state
+Oct 15 03:34:30 regular-crane kernel: docker0: port 1(veth66e3783) entered disabled state
+Oct 15 03:34:30 regular-crane kernel: veth66e3783: entered allmulticast mode
+Oct 15 03:34:30 regular-crane kernel: veth66e3783: entered promiscuous mode
+Oct 15 03:34:30 regular-crane kernel: eth0: renamed from veth9a63614
+Oct 15 03:34:30 regular-crane kernel: docker0: port 1(veth66e3783) entered blocking state
+Oct 15 03:34:30 regular-crane kernel: docker0: port 1(veth66e3783) entered forwarding state
+Oct 15 03:34:30 regular-crane kernel: yosys invoked oom-killer: gfp_mask=0xcc0(GFP_KERNEL), order=0, oom_score_adj=0
+Oct 15 03:34:30 regular-crane kernel: CPU: 41 UID: 1000 PID: 1783139 Comm: yosys Not tainted 7.0.0-38-generic #38-Ubuntu PREEMPT(lazy) 
+Oct 15 03:34:30 regular-crane kernel: Hardware name: Supermicro AS -1116CS-TN/H14SHM, BIOS 2.0 03/23/2026
+Oct 15 03:34:30 regular-crane kernel: Call Trace:
+Oct 15 03:34:30 regular-crane kernel:  <TASK>
+Oct 15 03:34:30 regular-crane kernel:  show_stack+0x49/0x60
+Oct 15 03:34:30 regular-crane kernel:  dump_stack_lvl+0x5f/0x90
+Oct 15 03:34:30 regular-crane kernel:  dump_stack+0x10/0x18
+Oct 15 03:34:30 regular-crane kernel:  dump_header+0x48/0x1c7
+Oct 15 03:34:30 regular-crane kernel:  oom_kill_process.cold+0x8/0xac
+Oct 15 03:34:30 regular-crane kernel:  out_of_memory+0xff/0x2b0
+Oct 15 03:34:30 regular-crane kernel:  mem_cgroup_out_of_memory+0xc8/0xe0
+Oct 15 03:34:30 regular-crane kernel:  try_charge_memcg+0x3c3/0x620
+Oct 15 03:34:30 regular-crane kernel:  charge_memcg+0x34/0x80
+Oct 15 03:34:30 regular-crane kernel:  __mem_cgroup_charge+0x2f/0xa0
+Oct 15 03:34:30 regular-crane kernel:  alloc_anon_folio+0x20c/0x4b0
+Oct 15 03:34:30 regular-crane kernel:  do_anonymous_page+0x14a/0x4d0
+Oct 15 03:34:30 regular-crane kernel:  ? __pte_offset_map+0x1c/0x130
+Oct 15 03:34:30 regular-crane kernel:  handle_pte_fault+0x1cb/0x1f0
+Oct 15 03:34:30 regular-crane kernel:  __handle_mm_fault+0x493/0x720
+Oct 15 03:34:30 regular-crane kernel:  handle_mm_fault+0xee/0x2e0
+Oct 15 03:34:30 regular-crane kernel:  do_user_addr_fault+0x2ee/0x830
+Oct 15 03:34:30 regular-crane kernel:  exc_page_fault+0x83/0x1e0
+Oct 15 03:34:30 regular-crane kernel:  asm_exc_page_fault+0x27/0x30
+Oct 15 03:34:30 regular-crane kernel: RIP: 0033:0x7f6ef7cb2ff4
+Oct 15 03:34:30 regular-crane kernel: Code: 39 d3 0f 95 c2 4a 8d 0c 17 4c 8d 67 10 4c 29 d0 0f b6 d2 48 83 c8 01 49 89 4b 08 48 c1 e2 02 4c 09 d2 48 83 ca 01 48 89 57 08 <48> 89 41 08 8b 05 e6 61 16 00 85 c0 0f 84 6c f7 ff ff e9 3d f9 ff
+Oct 15 03:34:30 regular-crane kernel: RSP: 002b:00007ffd9dd27b40 EFLAGS: 00010202
+Oct 15 03:34:30 regular-crane kernel: RAX: 0000000000003fe1 RBX: 0000000000000020 RCX: 00005ee85629a020
+Oct 15 03:34:30 regular-crane kernel: RDX: 0000000000000031 RSI: 00007f6ef7e12af8 RDI: 00005ee856299ff0
+Oct 15 03:34:30 regular-crane kernel: RBP: 00007ffd9dd27bb0 R08: 0000000000000000 R09: 00007f6ef7e12ac8
+Oct 15 03:34:30 regular-crane kernel: R10: 0000000000000030 R11: 00007f6ef7e12ac0 R12: 00005ee85629a000
+Oct 15 03:34:30 regular-crane kernel: R13: 00007f6ef7e12af8 R14: 00005ee856299ee0 R15: 00005eda68bcc0f0
+Oct 15 03:34:30 regular-crane kernel:  </TASK>
+Oct 15 03:34:30 regular-crane kernel: memory: usage 67108864kB, limit 67108864kB, failcnt 22
+Oct 15 03:34:30 regular-crane kernel: swap: usage 0kB, limit 0kB, failcnt 0
+Oct 15 03:34:30 regular-crane kernel: Memory cgroup stats for /user.slice/user-1000.slice/user@1000.service/app.slice/oth-ubuntu-1783118-1792060370.scope:
+Oct 15 03:34:30 regular-crane kernel: anon 68584091648
+Oct 15 03:34:30 regular-crane kernel: file 0
+Oct 15 03:34:30 regular-crane kernel: kernel 135385088
+Oct 15 03:34:30 regular-crane kernel: kernel_stack 16384
+Oct 15 03:34:30 regular-crane kernel: pagetables 135139328
+Oct 15 03:34:30 regular-crane kernel: sec_pagetables 0
+Oct 15 03:34:30 regular-crane kernel: percpu 4160
+Oct 15 03:34:30 regular-crane kernel: sock 0
+Oct 15 03:34:30 regular-crane kernel: vmalloc 0
+Oct 15 03:34:30 regular-crane kernel: shmem 0
+Oct 15 03:34:30 regular-crane kernel: zswap 0
+Oct 15 03:34:30 regular-crane kernel: zswapped 0
+Oct 15 03:34:30 regular-crane kernel: file_mapped 0
+Oct 15 03:34:30 regular-crane kernel: file_dirty 0
+Oct 15 03:34:30 regular-crane kernel: file_writeback 0
+Oct 15 03:34:30 regular-crane kernel: swapcached 0
+Oct 15 03:34:30 regular-crane kernel: anon_thp 0
+Oct 15 03:34:30 regular-crane kernel: file_thp 0
+Oct 15 03:34:30 regular-crane kernel: shmem_thp 0
+Oct 15 03:34:30 regular-crane kernel: inactive_anon 68582285312
+Oct 15 03:34:30 regular-crane kernel: active_anon 1806336
+Oct 15 03:34:30 regular-crane kernel: inactive_file 0
+Oct 15 03:34:30 regular-crane kernel: active_file 0
+Oct 15 03:34:30 regular-crane kernel: unevictable 0
+Oct 15 03:34:30 regular-crane kernel: slab_reclaimable 8624
+Oct 15 03:34:30 regular-crane kernel: slab_unreclaimable 213520
+Oct 15 03:34:30 regular-crane kernel: slab 222144
+Oct 15 03:34:30 regular-crane kernel: hugetlb 0
+Oct 15 03:34:30 regular-crane kernel: workingset_refault_anon 0
+Oct 15 03:34:30 regular-crane kernel: workingset_refault_file 0
+Oct 15 03:34:30 regular-crane kernel: workingset_activate_anon 0
+Oct 15 03:34:30 regular-crane kernel: workingset_activate_file 0
+Oct 15 03:34:30 regular-crane kernel: workingset_restore_anon 0
+Oct 15 03:34:30 regular-crane kernel: workingset_restore_file 0
+Oct 15 03:34:30 regular-crane kernel: workingset_nodereclaim 0
+Oct 15 03:34:30 regular-crane kernel: pgdemote_kswapd 0
+Oct 15 03:34:30 regular-crane kernel: pgdemote_direct 0
+Oct 15 03:34:30 regular-crane kernel: pgdemote_khugepaged 0
+Oct 15 03:34:30 regular-crane kernel: pgdemote_proactive 0
+Oct 15 03:34:30 regular-crane kernel: pgpromote_success 0
+Oct 15 03:34:30 regular-crane kernel: pgscan 15
+Oct 15 03:34:30 regular-crane kernel: pgsteal 13
+Oct 15 03:34:30 regular-crane kernel: pswpin 0
+Oct 15 03:34:30 regular-crane kernel: pswpout 0
+Oct 15 03:34:30 regular-crane kernel: pgscan_kswapd 0
+Oct 15 03:34:30 regular-crane kernel: pgscan_direct 15
+Oct 15 03:34:30 regular-crane kernel: pgscan_khugepaged 0
+Oct 15 03:34:30 regular-crane kernel: pgscan_proactive 0
+Oct 15 03:34:30 regular-crane kernel: pgsteal_kswapd 0
+Oct 15 03:34:30 regular-crane kernel: pgsteal_direct 13
+Oct 15 03:34:30 regular-crane kernel: pgsteal_khugepaged 0
+Oct 15 03:34:30 regular-crane kernel: pgsteal_proactive 0
+Oct 15 03:34:30 regular-crane kernel: pgfault 17828452
+Oct 15 03:34:30 regular-crane kernel: pgmajfault 0
+Oct 15 03:34:30 regular-crane kernel: pgrefill 2
+Oct 15 03:34:30 regular-crane kernel: pgactivate 1
+Oct 15 03:34:30 regular-crane kernel: pgdeactivate 0
+Oct 15 03:34:30 regular-crane kernel: pglazyfree 0
+Oct 15 03:34:30 regular-crane kernel: pglazyfreed 0
+Oct 15 03:34:30 regular-crane kernel: swpin_zero 0
+Oct 15 03:34:30 regular-crane kernel: swpout_zero 0
+Oct 15 03:34:30 regular-crane kernel: zswpin 0
+Oct 15 03:34:30 regular-crane kernel: zswpout 0
+Oct 15 03:34:30 regular-crane kernel: zswpwb 0
+Oct 15 03:34:30 regular-crane kernel: thp_fault_alloc 0
+Oct 15 03:34:30 regular-crane kernel: thp_collapse_alloc 0
+Oct 15 03:34:30 regular-crane kernel: thp_swpout 0
+Oct 15 03:34:30 regular-crane kernel: thp_swpout_fallback 0
+Oct 15 03:34:30 regular-crane kernel: numa_pages_migrated 0
+Oct 15 03:34:30 regular-crane kernel: numa_pte_updates 0
+Oct 15 03:34:30 regular-crane kernel: numa_hint_faults 0
+Oct 15 03:34:30 regular-crane kernel: Memory cgroup min protection 0kB -- low protection 0kB
+Oct 15 03:34:30 regular-crane kernel: Tasks state (memory values in pages):
+Oct 15 03:34:30 regular-crane kernel: [  pid  ]   uid  tgid total_vm      rss rss_anon rss_file rss_shmem pgtables_bytes swapents oom_score_adj name
+Oct 15 03:34:30 regular-crane kernel: [1783118]  1000 1783118     8472     5348     2318     3030         0   106496        0             0 python3
+Oct 15 03:34:30 regular-crane kernel: [1783139]  1000 1783139 18917342 16747771 16741845     5926         0 135016448        0             0 yosys
+Oct 15 03:34:30 regular-crane kernel: oom-kill:constraint=CONSTRAINT_MEMCG,nodemask=(null),cpuset=user.slice,mems_allowed=0,oom_memcg=/user.slice/user-1000.slice/user@1000.service/app.slice/oth-ubuntu-1783118-1792060370.scope,task_memcg=/user.slice/user-1000.slice/user@1000.service/app.slice/oth-ubuntu-1783118-1792060370.scope,task=yosys,pid=1783139,uid=1000
+Oct 15 03:34:30 regular-crane kernel: Memory cgroup out of memory: Killed process 1783139 (yosys) total-vm:75669368kB, anon-rss:66967380kB, file-rss:23704kB, shmem-rss:0kB, UID:1000 pgtables:131852kB oom_score_adj:0
+Oct 15 03:34:34 regular-crane kernel: oom_reaper: reaped process 1783139 (yosys), now anon-rss:0kB, file-rss:0kB, shmem-rss:0kB
+Oct 15 03:34:34 regular-crane kernel: docker0: port 1(veth66e3783) entered disabled state
+Oct 15 03:34:34 regular-crane kernel: veth9a63614: renamed from eth0
+Oct 15 03:34:34 regular-crane kernel: docker0: port 1(veth66e3783) entered disabled state
+Oct 15 03:34:34 regular-crane kernel: veth66e3783 (unregistering): left allmulticast mode
+Oct 15 03:34:34 regular-crane kernel: veth66e3783 (unregistering): left promiscuous mode
+Oct 15 03:34:34 regular-crane kernel: docker0: port 1(veth66e3783) entered disabled state
+Oct 15 03:34:34 regular-crane kernel: docker0: port 1(veth6227d51) entered blocking state
+Oct 15 03:34:34 regular-crane kernel: docker0: port 1(veth6227d51) entered disabled state
+Oct 15 03:34:34 regular-crane kernel: veth6227d51: entered allmulticast mode
+Oct 15 03:34:34 regular-crane kernel: veth6227d51: entered promiscuous mode
+Oct 15 03:34:34 regular-crane kernel: eth0: renamed from vethb90d550
+Oct 15 03:34:34 regular-crane kernel: docker0: port 1(veth6227d51) entered blocking state
+Oct 15 03:34:34 regular-crane kernel: docker0: port 1(veth6227d51) entered forwarding state
