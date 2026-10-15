@@ -125,6 +125,8 @@ def apply_slabs(M):
                 f = 'W' if not q.name.endswith('_f1') else 'E'
             elif p in ('tw', 'ty') and n == 4096:
                 f = 'S'
+            elif p == 'rq' and not q.name.endswith('_f1'):
+                f = 'N'      # the band serializer abuts every W slab on its master-N face (res_train swap 2026-10-15)
             elif p in ('cf1', 'rqe', 'ame', 'tc_e', 'tye'):
                 f = 'E'
             elif q.name.endswith('_f1') and p in ('cw0', 'rq', 'am', 'tc', 'ty'):
