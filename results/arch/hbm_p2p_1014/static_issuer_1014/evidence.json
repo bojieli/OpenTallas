@@ -1,0 +1,120 @@
+{
+  "status": "PASS: actual native-memory issuer component at64rows1536bits and2048countedloop; no physical/nativequadrant/token qualification",
+  "base_commit": "0780634a3",
+  "sources_sha256": {
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_issuer.sv": "bcc5a2ca21788b0a312266a5a4b8533b652081c16695897bc8f9152b52362f42",
+    "rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_static_issuer.sv": "3b12f5593b143e7f37843c74b752b0564c5d7b9ddda011170d030f1eecd68b1b",
+    "rtl/hbm_accel/generic/collective/p2p/run_static_issuer_bench.sh": "3d5c8a9cd04482cc8a19d5fd491aebba5765bfe8cd4e3ed9c7288f24c4ed75d2",
+    "rtl/hbm_accel/generic/collective/p2p/run_static_issuer_suite.sh": "4677d72575bdccdc87fe933f6e023fa528911aac2e8258bc8e915f7d96be9b38",
+    "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v": "d4533939f695944bebd6a63a086e3771846bc0c379af52720de8974fee504145"
+  },
+  "run": {
+    "host": "ot-epyc4",
+    "unit": "oth-ubuntu-1027795-1792047488",
+    "exit": 0,
+    "command": "ot-run --mem 4 --threads 8 --disk 2 --dir /tmp/hbm-static-ring-src-1014 -- bash rtl/hbm_accel/generic/collective/p2p/run_static_issuer_suite.sh /tmp/hbm-static-issuer-suite-r4-1014"
+  },
+  "positive": {
+    "log": "positive/run.log",
+    "program_rows": 64,
+    "native_macros": 3,
+    "width_bits": 1536,
+    "loop_repeat_count": 2048,
+    "starts": 2,
+    "instructions_checked": 131184,
+    "every_bit_checked": true,
+    "every_PC_and_iteration_checked": true,
+    "first_uop_offset": 3,
+    "inter_uop_cycles": 1,
+    "last_uop_done_offset": 65594,
+    "trailing_uops": 0,
+    "budget_instructions_per_cycle": 1,
+    "measured_instructions_per_cycle": 1
+  },
+  "mutants": {
+    "data": {
+      "log": "data/run.log",
+      "expected": "data mismatch",
+      "exit": 1
+    },
+    "program": {
+      "log": "program/run.log",
+      "expected": "program mismatch",
+      "exit": 1
+    }
+  },
+  "fault_cases": {
+    "1": {
+      "log": "positive/fault-1.log",
+      "expected_fault": "missing native bank row",
+      "passed": true
+    },
+    "2": {
+      "log": "positive/fault-2.log",
+      "expected_fault": "missing metadata half",
+      "passed": true
+    },
+    "3": {
+      "log": "positive/fault-3.log",
+      "expected_fault": "unexpected config opcode",
+      "passed": true
+    },
+    "4": {
+      "log": "positive/fault-4.log",
+      "expected_fault": "start with incomplete bank assembly",
+      "passed": true
+    },
+    "5": {
+      "log": "positive/fault-5.log",
+      "expected_fault": "start while busy",
+      "passed": true
+    },
+    "6": {
+      "log": "positive/fault-6.log",
+      "expected_fault": "invalid bank3",
+      "passed": true
+    },
+    "7": {
+      "log": "positive/fault-7.log",
+      "expected_fault": "metadata reserved bits",
+      "passed": true
+    },
+    "8": {
+      "log": "positive/fault-8.log",
+      "expected_fault": "configuration while busy",
+      "passed": true
+    }
+  },
+  "root_measurement": {
+    "host": "ot-agidock128",
+    "unit": "oth-ubuntu-2963614-1792047432",
+    "exit": 0,
+    "log": "root_register_bits.json",
+    "script": "root_count.sh",
+    "actual_macro_interface": "blackbox port declaration extracted verbatim from source-pinned catalog macro for register count only; functional bench executes entire catalog macro model",
+    "control_register_bits": 7639,
+    "per_macro_leaf_output_register_bits": 512,
+    "per_macro_leaf_registered_output_bits": 512
+  },
+  "history": {
+    "r1": "Initial small-loop bench had early$finish fallthrough and printed PASSbeforelaterfatal; not qualification.",
+    "r2_r3": "Strict runner rejected fault logs containing fatal despite simulator exit0. R3sample preserved history/rejected-r3-fault-1.log; rewritten bench exits fault loops structurally and invokes$finish only as finalstatement.",
+    "invalid_root_measurement": "unitoth-ubuntu-2914087-1792047274 terminated143: read_verilog-lib expanded functionalmacrobody rather than immediately extracting blackbox. Replaced with exact actualport-declaration extraction. Functional benches unchanged."
+  },
+  "metadata": {
+    "bits5_0": "nextPC",
+    "bits11_6": "targetPC",
+    "bits43_12": "repeat_count",
+    "bit44": "halt",
+    "bits50_45": "loop_id",
+    "bits63_51": "reserved0",
+    "iteration": "pre-update selected loopcounter; loopend fetch increments before nextbodyfetch, finalvisit resets and fallsnext"
+  },
+  "integration_contract": "Consumer samples registered uop/uop_v on nextedge after issuer publication; parent must price this boundary. Parent dispatches config commands0..3 only, gates cfg_v for other namespaces. clk_control and three clk_mem roots are synchronous with physical phase compensation pending.",
+  "unqualified": [
+    "assigned leaf slots and physical pin placement",
+    "TTsetup/FFhold",
+    "actual quadrant decoder/producer/operand integration",
+    "full production collective/token throughput"
+  ]
+}

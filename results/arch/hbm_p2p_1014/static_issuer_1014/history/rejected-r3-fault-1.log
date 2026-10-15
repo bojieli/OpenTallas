@@ -1,0 +1,6 @@
+STATIC_ISSUER FAULT PASS scenario=1 offset=8
+- rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_static_issuer.sv:70: Verilog $finish
+[3455000] %Fatal: tb_hgi_coll_static_issuer.sv:88: Assertion failed in tb_hgi_coll_static_issuer.test.unnamedblk10: fault escaped scenario1
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 3us; walltime 0.001 s; speed 2.759 ms/s
+- Verilator: cpu 0.001 s on 1 threads; allocated 7 MB
