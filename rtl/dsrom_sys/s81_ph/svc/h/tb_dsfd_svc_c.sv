@@ -20,6 +20,8 @@
 module tb_dsfd_svc_c (input wire clk);
     parameter integer DIE = 0;
     parameter integer ST = 0;
+    parameter bit SRAM_MACRO = 0;
+    parameter bit NATIVE_FP32_PV = 0;
     parameter integer P = 8;
     parameter integer NHBM = 32768;
     parameter integer MAXCYC = 900000;
@@ -33,11 +35,18 @@ module tb_dsfd_svc_c (input wire clk);
     reg [255:0] hdat [0:NHBM-1];
     reg [D*16-1:0] qm [0:H-1];
     reg [TD*16-1:0] pm [0:639];
+    reg [511:0] em [0:639];
     reg [H*33-1:0] scm [0:639];
     reg [H*33-1:0] pvm [0:D-1];
     reg [255:0] hbm [longint];
     reg [1023:0] dir;
     integer seed = 1, lat = 60, gap = 10;
+    integer static_inputs = 0, pv_cycle = -1, expected_end = -1, schedule_errors = 0;
+    // Optional component trace: capture actual pin results, never the expected
+    // arrays. A consumer can use these to drive the real SU and compare the
+    // service/SU boundary without substituting golden attention results.
+    string trace_dir, p_file, e_file;
+    integer trace_sc = 0, trace_pv = 0, trace_q = 0, trace_pc = 0;
     integer wcount, nsel, npub, nh, T;
     longint hk;
     integer i, j, k, h;
@@ -46,6 +55,19 @@ module tb_dsfd_svc_c (input wire clk);
         if ($value$plusargs("seed=%d", seed)) ;
         if ($value$plusargs("lat=%d", lat)) ;
         if ($value$plusargs("gap=%d", gap)) ;
+        if ($value$plusargs("static_inputs=%d", static_inputs)) ;
+        if ($value$plusargs("pv_cycle=%d", pv_cycle)) ;
+        if ($value$plusargs("expected_end=%d", expected_end)) ;
+        if (static_inputs != 0 && (pv_cycle < 41 || expected_end < pv_cycle))
+            $fatal(1, "static_inputs requires assigned pv_cycle and expected_end");
+        if ($value$plusargs("trace=%s", trace_dir)) begin
+            trace_sc = $fopen({trace_dir, "/scores.tsv"}, "w");
+            trace_pv = $fopen({trace_dir, "/pv.tsv"}, "w");
+            trace_q = $fopen({trace_dir, "/q.tsv"}, "w");
+            trace_pc = $fopen({trace_dir, "/pc.tsv"}, "w");
+            if (!trace_sc || !trace_pv || !trace_q || !trace_pc)
+                $fatal(1, "cannot open native service pin traces");
+        end
         $readmemh({dir, "/cfg.hex"}, cfg);
         $readmemh({dir, "/sel.hex"}, selm);
         $readmemh({dir, "/win.hex"}, winm);
@@ -53,6 +75,13 @@ module tb_dsfd_svc_c (input wire clk);
         $readmemh({dir, "/hdat.hex"}, hdat);
         $readmemh({dir, "/q.hex"}, qm);
         $readmemh({dir, "/p.hex"}, pm);
+        // The native SU bridge may supply actual SE/BF16 probabilities. The
+        // expected PV remains checker-only; no DUT result comes from it.
+        if ($value$plusargs("p_file=%s", p_file)) $readmemh(p_file, pm);
+        if (NATIVE_FP32_PV) begin
+            if (!$value$plusargs("e_file=%s", e_file)) $fatal(1, "native FP32 probabilities require actual SU +e_file");
+            $readmemh(e_file, em);
+        end
         $readmemh({dir, "/sc.hex"}, scm);
         $readmemh({dir, "/pv.hex"}, pvm);
         wcount = cfg[0]; nsel = cfg[1]; npub = cfg[2]; nh = cfg[3]; T = cfg[4];
@@ -86,10 +115,10 @@ module tb_dsfd_svc_c (input wire clk);
     reg [32:0] jcmd = 0; wire [1:0] jd;
     reg [291:0] hw = 0; wire [8:0] hc;
     wire [513:0] od, xd; wire [1025:0] ad; wire of, xf, af, hub_fault;
-    dsfd_svc_c #(.DIE_ID(DIE), .ST(ST)) dut (
+    dsfd_svc_c #(.DIE_ID(DIE), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .NATIVE_FP32_PV(NATIVE_FP32_PV)) dut (
         .ck(clk), .rst(rst_n), .j(jcmd), .jd(jd), .q({1'b0, 1'b1, q_d, q_v}),
         .od(od), .of(of), .xd(xd), .xf(xf), .ad(ad), .af(af), .fault(hub_fault),
-        .rq(rq), .rk(rk), .wd(wd), .rv(rv), .r_data(r_data), .r_tag(r_tag), .r_beat(r_beat), .hw(hw), .hc(hc));
+        .rq(rq), .rk(rk), .wd(wd), .rv(rv), .r_data(r_data), .r_tag(r_tag), .r_beat(r_beat), .hw(hw), .hc(hc), .hs(2'b01));
     // ---------------- host writes (dsfd_host_sd hw / hc contract: 8 credits, cr per word, ack per completed sector) ----
     // NHW sector writes (KV class, then RoPE class) to a region no job touches, one KV marker (no write, no ack),
     // interleaved with the job; at the end every written sector must hold its data in the HBM image and the acks must
@@ -104,7 +133,7 @@ module tb_dsfd_svc_c (input wire clk);
     always @(posedge clk) begin
         hw <= 0;
         h_cred = h_cred + hc[0]; h_ack = h_ack + hc[8:1];
-        if (rst_n && cyc > 30 && h_cred > 0 && ($urandom % 4) == 0) begin
+        if (static_inputs == 0 && rst_n && cyc > 30 && h_cred > 0 && ($urandom % 4) == 0) begin
             if (h_sent < NHW) begin
                 hw <= {(h_adr[h_sent][31] ? 2'd1 : 2'd0), 1'b1, h_adr[h_sent], h_dat[h_sent], 1'b1}; h_sent = h_sent + 1; h_cred = h_cred - 1;
             end else if (h_mark == 0) begin
@@ -114,11 +143,11 @@ module tb_dsfd_svc_c (input wire clk);
     end
     task automatic host_check();
         integer ii; longint kk;
-        for (ii = 0; ii < NHW; ii = ii + 1) begin
+        for (ii = 0; static_inputs == 0 && ii < NHW; ii = ii + 1) begin
             kk = (longint'(DIE) << 32) | (longint'(ST) << 30) | longint'(h_adr[ii][29:0]);
             if (!hbm.exists(kk) || hbm[kk] !== h_dat[ii]) h_err = h_err + 1;
         end
-        if (h_ack != NHW || h_cred != 8) h_err = h_err + 1;
+        if ((static_inputs == 0 && h_ack != NHW) || h_cred != 8) h_err = h_err + 1;
     endtask
     assign a0_v = ad[0]; assign a0_d = ad[512:1];
     assign od_v = od[1]; assign od_d = od[513:2];
@@ -177,7 +206,8 @@ module tb_dsfd_svc_c (input wire clk);
         cnt = 0;
         for (r = 0; r < nsel; r = r + 1) if (!own_sel(r))
             for (pr = 0; pr < 8; pr = pr + 1) if (held_sel(r) || pr / 2 == ST) begin order[cnt] = r * 8 + pr; cnt = cnt + 1; end
-        for (r = cnt - 1; r > 0; r = r - 1) begin t = $urandom % (r + 1); b = order[r]; order[r] = order[t]; order[t] = b; end
+        if (static_inputs == 0)
+            for (r = cnt - 1; r > 0; r = r - 1) begin t = $urandom % (r + 1); b = order[r]; order[r] = order[t]; order[t] = b; end
         npair_in = cnt;
         base = 0;
         while (base < cnt) begin
@@ -193,11 +223,16 @@ module tb_dsfd_svc_c (input wire clk);
         end
         nq_pre = nq;
         // PV: ceil(T / 2) words in frames of <= 250
-        n = (T + 1) / 2; base = 0;
+        n = NATIVE_FP32_PV ? T : (T + 1) / 2; base = 0;
         while (base < n) begin
             sz = (n - base > 250) ? 250 : n - base;
-            qw[nq] = hdr(4'd5, 12'(sz), 449'd0); nq = nq + 1;
-            for (b = 0; b < sz; b = b + 1) begin qw[nq] = pm[base + b]; nq = nq + 1; end
+            // Native FP32-PV conversion resets its row pairing at each
+            // frame; all intermediate chunks are even (250), and only
+            // the final chunk may contain an odd row.
+            qw[nq] = hdr(NATIVE_FP32_PV ? 4'd14 : 4'd5, 12'(sz), 449'd0); nq = nq + 1;
+            for (b = 0; b < sz; b = b + 1) begin
+                qw[nq] = NATIVE_FP32_PV ? em[base + b] : pm[base + b]; nq = nq + 1;
+            end
             base = base + sz;
         end
         qw[last_hdr][507] = 1'b1;      // protocol v1.1: END on the job's last q frame
@@ -239,8 +274,15 @@ module tb_dsfd_svc_c (input wire clk);
         end
         // q stream (valid-only, gaps); PV frames only after the last expected score
         q_v <= 0;
-        if (rst_n && built && cyc > 40 && qi < nq && ($urandom % 100) >= gap &&
-            (qi < nq_pre || sc_rows >= exp_scores) && (qi < nq_own + 1 || qi >= nq_own + 1)) begin
+        if (q_v && trace_q) $fdisplay(trace_q, "%0d\t%0128x", cyc, q_d);
+        // In static mode PV launches at its reserved cycle; score completion is
+        // checked and cannot gate or postpone input issue. External PC service
+        // has a declared fixed latency. The legacy random mode is diagnostic.
+        if (static_inputs != 0 && cyc == pv_cycle && (qi != nq_pre || sc_rows != exp_scores))
+            schedule_errors = schedule_errors + 1;
+        if (rst_n && built && cyc > 40 && qi < nq &&
+            (static_inputs != 0 || ($urandom % 100) >= gap) &&
+            (qi < nq_pre || (static_inputs != 0 ? cyc >= pv_cycle : sc_rows >= exp_scores))) begin
             q_v <= 1; q_d <= qw[qi]; qi = qi + 1;
             if (first_q_cyc < 0) first_q_cyc = cyc;
         end
@@ -249,7 +291,8 @@ module tb_dsfd_svc_c (input wire clk);
         rk <= 0; rv <= 0; wd <= 0;
         for (i = 0; i < 32; i = i + 1) begin
             if (rq[i*341]) begin
-                pq_t[i][(pq_h[i] + pq_n[i]) % PQ] = cyc + lat + ($urandom % 16);
+                if (trace_pc) $fdisplay(trace_pc, "%0d\t%0d\t%086x", cyc, i, rq[i*341 +: 341]);
+                pq_t[i][(pq_h[i] + pq_n[i]) % PQ] = cyc + lat + (static_inputs != 0 ? 0 : ($urandom % 16));
                 pq_w[i][(pq_h[i] + pq_n[i]) % PQ] = rq[i*341 +: 341];
                 pq_n[i] = pq_n[i] + 1;
                 if (pq_n[i] > 8) begin cred_err = cred_err + 1; end
@@ -281,7 +324,11 @@ module tb_dsfd_svc_c (input wire clk);
                 a_sub = a0_d[448:447]; a_row = a0_d[446:431]; a_mask = a0_d[430:427]; a_fl = a0_d[255:0];
                 a_left = a0_d[491:480]; a_k = 0; a_endf = a0_d[507];
                 if (a_sub == 1 && a_left != 16) fmt_err = fmt_err + 1;
-                if (a_endf) begin n_end = n_end + 1; end_cyc = cyc; if (pv_beats != 7) fmt_err = fmt_err + 1; end
+                if (a_endf) begin
+                    n_end = n_end + 1; end_cyc = cyc;
+                    if (pv_beats != 7) fmt_err = fmt_err + 1;
+                    if (static_inputs != 0 && cyc != expected_end) schedule_errors = schedule_errors + 1;
+                end
                 if (a_sub == 0) for (j = 0; j < 4; j = j + 1) begin
                     if (a_mask[j]) begin
                         if (!held_row(a_row + j) || got_row[a_row + j]) begin sc_err = sc_err + 1; $display("SC ROW %0d not held/dup", a_row + j); end
@@ -292,6 +339,8 @@ module tb_dsfd_svc_c (input wire clk);
                 if (a_sub == 0) begin
                     while (!a_mask[a_k]) a_k = a_k + 1;
                     for (h = 0; h < H; h = h + 1) begin
+                        if (trace_sc) $fdisplay(trace_sc, "%0d\t%0d\t%0d\t%08x\t%0d", cyc,
+                                               a_row + a_k, h, a0_d[32*h +: 32], a_fl[16*a_k + h]);
                         sc_chk = sc_chk + 1;
                         if (a0_d[32*h +: 32] !== scm[a_row + a_k][h*33 +: 32] && !scm[a_row + a_k][h*33 + 32] ||
                             a_fl[16*a_k + h] !== scm[a_row + a_k][h*33 + 32]) begin
@@ -304,6 +353,8 @@ module tb_dsfd_svc_c (input wire clk);
                 end else begin
                     k = 128 * ST + 8 * a_k + a_row;
                     for (h = 0; h < H; h = h + 1) begin
+                        if (trace_pv) $fdisplay(trace_pv, "%0d\t%0d\t%0d\t%08x\t%0d", cyc,
+                                               k, h, a0_d[32*h +: 32], a_fl[16*a_k + h]);
                         pv_chk = pv_chk + 1;
                         if (a0_d[32*h +: 32] !== pvm[k][h*33 +: 32] && !pvm[k][h*33 + 32] || a_fl[16*a_k + h] !== pvm[k][h*33 + 32]) begin
                             pv_err = pv_err + 1;
@@ -339,11 +390,13 @@ module tb_dsfd_svc_c (input wire clk);
         if ((n_end > 0 && n_done > 0 && cyc > end_cyc + 200) || (n_end > 0 && cyc > end_cyc + 5000) || cyc >= MAXCYC || (fault && cyc > 20 && n_end == 0 && cyc > MAXCYC / 2)) begin
             for (i = 0; i < T; i = i + 1) if (held_row(i) && !got_row[i]) sc_err = sc_err + 1;
             host_check();
+            $display("SVCC_SCHEDULE static_inputs=%0d pv_cycle=%0d expected_end=%0d errors=%0d",
+                     static_inputs, pv_cycle, expected_end, schedule_errors);
             $display("SVCC_HOST sent=%0d acks=%0d credits=%0d errors=%0d", h_sent, h_ack, h_cred, h_err);
             $display("SVCC done=%0d die=%0d st=%0d T=%0d window=%0d nsel=%0d held_rows=%0d score_rows=%0d sc_checked=%0d sc_errors=%0d pv_beats=%0d pv_checked=%0d pv_errors=%0d own_rows=%0d rowx=%0d rowx_errors=%0d pairs_in=%0d ends=%0d after_end=%0d fmt_errors=%0d fault=%0d fault_code=%016x cred_err=%0d pc_err=%0d first_q=%0d last_score=%0d end=%0d cycles=%0d timeout=%0d verdict=%s",
                      n_done, DIE, ST, T, wcount, nsel, exp_scores, sc_rows, sc_chk, sc_err, pv_beats, pv_chk, pv_err, exp_own, x_rows, x_err,
                      npair_in, n_end, after_end, fmt_err, fault, fault_code, cred_err, pc_err, first_q_cyc, last_score_cyc, end_cyc, cyc, cyc >= MAXCYC,
-                     (n_done == 1 && h_err == 0 && sc_err == 0 && pv_err == 0 && x_err == 0 && fmt_err == 0 && after_end == 0 && n_end == 1 && pv_beats == 8 &&
+                     (schedule_errors == 0 && n_done == 1 && h_err == 0 && sc_err == 0 && pv_err == 0 && x_err == 0 && fmt_err == 0 && after_end == 0 && n_end == 1 && pv_beats == 8 &&
                       sc_rows == exp_scores && x_rows == exp_own && !fault && cred_err == 0 && pc_err == 0 && cyc < MAXCYC) ? "PASS" : "FAIL");
             $finish;
         end

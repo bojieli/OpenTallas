@@ -234,8 +234,10 @@ module ot_qwen_w12_matvec_part #(
     parameter integer LRR = 0,            // el1011-q-tile h3: one reset relay flop per hardened leaf (1-cycle later leaf release)
     parameter integer XTX = 0,            // el1011-q-tile r3 (HIER_HARD): XTX registered transmit rungs in front of every hardened
                                           // leaf (v/first/split/w and the ROUNDED x), one kept copy per leaf; +XTX cycles of latency
+    parameter integer CHILD_CLOCKS = 0,
     parameter integer ANR = 0            // hardcore-1010 D: lane / tree adders as ot_hdc_fp32_add_lat_nr (0 = unchanged)
 ) (
+    input wire [7:0] ck_lsl,
     input  wire              clk,
     input  wire              rst_n,
     input  wire              go,
@@ -876,7 +878,7 @@ end endgenerate
                 end else begin : g_ntx
                     assign tx_q = tx_d;
                 end
-                ot_qwen_tile_lsl u_lh (.clk(clk), .rst_n(rst_l), .v_d(tx_q[XW-1]), .first_d(tx_q[XW-2]), .split_d(tx_q[XW-3 -: 4]),
+                ot_qwen_tile_lsl u_lh (.clk(CHILD_CLOCKS ? ck_lsl[g] : clk), .rst_n(rst_l), .v_d(tx_q[XW-1]), .first_d(tx_q[XW-2]), .split_d(tx_q[XW-3 -: 4]),
                     .w_d(tx_q[G*32 +: G*HIER*32]), .x_d(tx_q[G*32-1:0]), .t_out(top[HIER*32*g +: HIER*32]), .lfault(lf), .tfault(stf[g]));
             end else begin : g_sf
             ot_qwen_w12_lane_slice #(.G(G), .NPL(HIER), .IL(IL), .MUL_LAT(MUL_LAT), .ACC_LAT(ACC_LAT),
