@@ -92,7 +92,10 @@
     "maximum_grouped_physical_row_visits_per_PC": 4,
     "address_bound_receipt": "results/arch/hbm_die_v15/native_column_close_guard/grouped_address_bound.json",
     "guarded_strict_per_layer_sample_qualified": true,
-    "real_Kport_frontend_exposed": true
+    "real_Kport_frontend_exposed": true,
+    "shared_client_ownership_mux_component_qualified": true,
+    "shared_client_ownership_mux": "ot_hbm_native_client_mux: 3 clients, original17-bit tags and beats, atomic len1..4 read ownership, true posted WR ACK routing; no bank/REF state",
+    "shared_client_timing_reservation": "Exclusive Engram request window plus prior-client drain is required; whole-kernel reservation/arbiter control remains unbound."
   },
   "source_read": {
     "input": [
@@ -149,10 +152,15 @@
     "frontend_inventory_excludes": [
       "common read32 controller",
       "32 response SRAMs/stack",
-      "two staging SRAMs/home"
+      "two staging SRAMs/home",
+      "full48-column shipped hash",
+      "shared K-client ownership mux"
     ],
     "physical_clock_route_qualified": false,
-    "protected_state_qualified": false
+    "protected_state_qualified": false,
+    "shared_client_mux_logical_FF_per_PC_root": 233,
+    "shared_client_mux_logical_FF_per_stack": 7456,
+    "hash_clock_root_gap": "Current full48-column shipped hash is excluded from frontend counts. S81 separate six-group 1:1 related-clock successor4f047d49c is being proved by its owner, not yet adopted or qualified here."
   },
   "qualification": {
     "exact_released_numerical_memory_histories": true,
@@ -176,6 +184,7 @@
     "rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc.sv": "36ab8140f3a9f14d4098729f79f5091f1e67156409997dc2d6276387a23315c8",
     "rtl/hbm_accel/loader/service_native/ot_hbm_svc_native_sector_guarded_stack.sv": "a38dae243ea6cb4167b1a75e484c37237819c15624c9fbb09aba6d6933be0992",
     "rtl/hbm_accel/loader/service_native/ot_hbm_svc_native_stream_pc.sv": "f18b70157a6502526b56227ebba05d252897cce1d09a80cc08f7fc67bb713bde",
-    "tools/hbm_engram_grouped_address_bound.py": "b1b76d8a86f5d8368b641d9bdcba6e3a4e423e99da68d7bd5757a26fa0162617"
+    "tools/hbm_engram_grouped_address_bound.py": "b1b76d8a86f5d8368b641d9bdcba6e3a4e423e99da68d7bd5757a26fa0162617",
+    "rtl/hbm_accel/engram_static_20261015/ot_hbm_native_client_mux.sv": "6ae7f6f612d239ac41f7be5e6196ccdbef76fce0cca73d459b9909224f20116b"
   }
 }
