@@ -21,6 +21,8 @@ def encode_bank(words):
         raise ValueError('exactly4096 native48bit payload rows required')
     physical = [0] * (ROWS // 8)
     for addr, word in enumerate(words):
+        if word == 0:
+            continue
         for bit in range(48):
             physical[addr // 8] |= ((word >> bit) & 1) << (8 * bit + addr % 8)
     return physical
@@ -29,7 +31,8 @@ def encode_bank(words):
 def decode_bank(physical):
     if len(physical) != ROWS // 8 or any(w < 0 or w >= 1 << 576 for w in physical):
         raise ValueError('native MUX8 array geometry required')
-    return [sum(((physical[a // 8] >> (8 * bit + a % 8)) & 1) << bit
+    return [0 if physical[a // 8] == 0 else
+            sum(((physical[a // 8] >> (8 * bit + a % 8)) & 1) << bit
                 for bit in range(72)) for a in range(ROWS)]
 
 
