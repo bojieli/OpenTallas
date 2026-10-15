@@ -1,0 +1,119 @@
+{
+ "name": "hgi_qdq_program_sw125_r6-sw125r6-927dd7e7e",
+ "block": "ot_hgi_qdq_sw_program_leaf",
+ "ref_tile": true,
+ "owner": "Claude:H-ATTQ",
+ "purpose": "R4b native launch fails (22 outputs 220.6..250.8 > 220) decomposed on the r5 ETM: launch = (flop clock - R) + clk->q + the outhold BUF/HB2/BUF trio (~75 ps TT) + wire; the trio is the largest term and moving the clock entry (r5) only moved the late corner (37 fails). Structural fix: no producer-side output hold trio on this leaf (outhold=false, as the bank-gather successor): FF hold at the consumer is owned by the consumer's input pin flops + INHOLD pads (engine/transport kits have inhold=true); measured r4 routed FF hold on command outputs before trio removal: +60.6 ps min with ~45 ps trio delay. The r4 17-bit trio-removal hook is retired. Pin geometry: r4b (clk N-west).",
+ "threads": 8,
+ "peak_ram_gb": 24,
+ "source": {
+  "branch": "main",
+  "commit": "927dd7e7e",
+  "extra_paths": [
+   "rtl/hdc",
+   "rtl/lib",
+   "rtl/hbm_accel/generic",
+   "rtl/test/hbm_accel/generic",
+   "physical/hbm_accel_die_views/common",
+   "physical/hbm_accel_die_views/quant",
+   "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "tools/hgi_unit_tput",
+   "results/hbm_static_quant_1015/SW_replica"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_hgi_qdq_sw_program_leaf #(.COMPACT(1), .PIN_BOUNDARY(1)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_sw_host_static.sv rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_record_calendar.sv rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v rtl/lib/ot_rst_relay.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "SW125_native_component_exact",
+    "cmd": "PIN_BOUNDARY=1 bash tools/hgi_unit_tput/run_qdq_sw_host_static.sh {RUN}/bench_SW125 && cat {RUN}/bench_SW125/m0.log",
+    "expect": "pass",
+    "pass_regex": "PASS HGI_QDQ_SW_TARGET125_NATIVE_HOST",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "SW125_sector_map_mutant",
+    "cmd": "PIN_BOUNDARY=1 bash tools/hgi_unit_tput/run_qdq_sw_host_static.sh {RUN}/bench_SW125_mutant && {RUN}/bench_SW125_mutant/m1.obj/sim +DIR=results/hbm_static_quant_1015/SW_replica/vectors +PROGRAM=results/hbm_static_quant_1015/SW_replica/program.hex",
+    "expect": "fail",
+    "fail_regex": "gold mismatch",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/hgi_qdq_program_sw125_r6/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/hgi_qdq_program_sw125_r6/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 8,
+   "peak_ram_gb": 24
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/hgi_qdq_program_sw125_r6 --out {RUN}/record/views/ot_hgi_qdq_sw_program_leaf --macro-view physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2 > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/hgi_qdq_program_sw125_r6/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/hgi_qdq_program_sw125_r6/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/hgi_qdq_program_sw125_r6/hgi_qdq_program_sw125_r6-sw125r6-927dd7e7e"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "R4b native launch fails (22 outputs 220.6..250.8 > 220) decomposed on the r5 ETM: launch = (flop clock - R) + clk->q + the outhold BUF/HB2/BUF trio (~75 ps TT) + wire; the trio is the largest term and moving the clock entry (r5) only moved the late corner (37 fails). Structural fix: no producer-side output hold trio on this leaf (outhold=false, as the bank-gather successor): FF hold at the consumer is owned by the consumer's input pin flops + INHOLD pads (engine/transport kits have inhold=true); measured r4 routed FF hold on command outputs before trio removal: +60.6 ps min with ~45 ps trio delay. The r4 17-bit trio-removal hook is retired. Pin geometry: r4b (clk N-west)."
+}

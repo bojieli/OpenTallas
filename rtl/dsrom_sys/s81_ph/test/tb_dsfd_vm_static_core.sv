@@ -21,7 +21,9 @@ module tb_dsfd_vm_static_core;
 `else
     localparam integer LAND_AGE = 2;
 `endif
-`ifdef OT_VM_NATIVE_READ_PINREG
+`ifdef OT_VM_NATIVE_READ_L16
+    localparam integer READ_PIPE=4;     // + pin-registered rsched / return lanes (L16)
+`elsif OT_VM_NATIVE_READ_PINREG
     localparam integer READ_PIPE=2;
 `elsif OT_VM_NATIVE_READ
     localparam integer READ_PIPE=1;

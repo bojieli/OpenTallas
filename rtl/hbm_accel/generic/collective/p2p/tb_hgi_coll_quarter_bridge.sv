@@ -20,7 +20,7 @@ module tb_hgi_coll_quarter_bridge;
     reg [7:0] check_v[0:CYCLES-1][0:3];
     reg [8*545-1:0] check_d[0:CYCLES-1][0:3];
     integer total=0;
-    wire rx_v,rx_fault_dummy;
+    wire rx_v;
     wire [1:0] rx_fault;
     wire [544:0] rx_d,relay1_d,relay2_d;
     wire relay1_v,relay2_v;
@@ -62,8 +62,13 @@ module tb_hgi_coll_quarter_bridge;
     task add_transfer(input integer start,input integer src,input integer dst,input integer seed);
         integer q,n,t,input_sel,output_sel,direction;
         reg [544:0] flit;
+        reg [31:0] rng;
         begin:transfer
-            for(integer b=0;b<545;b=b+1) flit[b]=((b*37+seed*13)^(b>>2)^(seed>>1))&1;
+            rng=32'h9e3779b9^32'(seed);
+            for(integer b=0;b<545;b=b+1) begin
+                rng=rng^(rng<<13);rng=rng^(rng>>17);rng=rng^(rng<<5);
+                flit[b]=rng[0];
+            end
             flit[544:512]={1'b1,8'hff,8'(src),16'(seed)};
             q=src;t=start;input_sel=0;direction=seed&1;
             plan_injv[t][q]=1;plan_inj[t][q]=flit;
