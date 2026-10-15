@@ -8,7 +8,7 @@
 module ot_hbm_su_static_replicated_bank #(
  parameter integer READERS=6,RB=9,MUT_COHERENCE=0
 )(
- input wire clk,
+ input wire[READERS-1:0]clk_macro,
  input wire[READERS-1:0]read_v,
  input wire[READERS*RB-1:0]read_addr,
  output wire[READERS*32-1:0]read_data,
@@ -16,7 +16,7 @@ module ot_hbm_su_static_replicated_bank #(
 );
  for(genvar r=0;r<READERS;r=r+1)begin:g_read
   ot_hgi_su_lbank #(.RB(RB),.MACRO(1))u_bank(
-   .clk(clk),.re(read_v[r]),.ra(read_addr[r*RB+:RB]),.rd(read_data[r*32+:32]),
+   .clk(clk_macro[r]),.re(read_v[r]),.ra(read_addr[r*RB+:RB]),.rd(read_data[r*32+:32]),
    .we(write_v && !(MUT_COHERENCE!=0&&r==READERS-1)),.wa(write_addr),.wd(write_data));
  end
 endmodule
@@ -29,7 +29,7 @@ endmodule
 module ot_hbm_su_static_data_store #(
  parameter integer QUARTERS=4,BANKS_PER_QUARTER=128,READERS=6,RB=9,MUT_COHERENCE=0
 )(
- input wire[QUARTERS*BANKS_PER_QUARTER-1:0]clk_bank,
+ input wire[QUARTERS*BANKS_PER_QUARTER*READERS-1:0]clk_macro,
  input wire[QUARTERS*BANKS_PER_QUARTER*READERS-1:0]read_v,
  input wire[QUARTERS*BANKS_PER_QUARTER*READERS*RB-1:0]read_addr,
  output wire[QUARTERS*BANKS_PER_QUARTER*READERS*32-1:0]read_data,
@@ -41,7 +41,7 @@ module ot_hbm_su_static_data_store #(
   for(genvar b=0;b<BANKS_PER_QUARTER;b=b+1)begin:g_bank
    localparam I=q*BANKS_PER_QUARTER+b;
    ot_hbm_su_static_replicated_bank #(.READERS(READERS),.RB(RB),.MUT_COHERENCE(MUT_COHERENCE))u_bank(
-    .clk(clk_bank[I]),.read_v(read_v[I*READERS+:READERS]),
+    .clk_macro(clk_macro[I*READERS+:READERS]),.read_v(read_v[I*READERS+:READERS]),
     .read_addr(read_addr[I*READERS*RB+:READERS*RB]),.read_data(read_data[I*READERS*32+:READERS*32]),
     .write_v(write_v[I]),.write_addr(write_addr[I*RB+:RB]),.write_data(write_data[I*32+:32]));
   end
