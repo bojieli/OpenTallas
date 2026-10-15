@@ -34,6 +34,55 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
 
 
+
+def qwen_xpf_static_control_model(entries=4, program_words=64):
+    """Static compiler arm transport under the real TT parent; no rate claim."""
+    record_bits = entries * 188
+    monitor_bits = record_bits + 3*entries + 117
+    loader_bits = 377
+    boundary_bits = 75 + 49 + 16 + 2
+    ordinal_map_bits = program_words*6 + 7 + 7 + 1
+    return dict(schema='opentallas.qwen-xpf-static-control.v1',
+                opt_in_default=False, replicas=1, macs_per_cycle=0,
+                SRAM_macros_added=0, declared_register_bits=monitor_bits+loader_bits+boundary_bits+ordinal_map_bits,
+                control_record_bits=188, table_entries=entries,
+                control_write_bits_per_cycle=64, arm_bits_per_cycle=72,
+                SU_observer_bits_per_cycle=16, additional_die_data_tracks=88,
+                memory_bytes_per_cycle_added=0,
+                mux_demux_cost='four-way descriptor/cycle selection;64x6 ordinal-PC map read',
+                fanout='single local consumer per observer; table comparators share local cycle32',
+                roots='ck_head/ck_tree preserve closed child phi-R; new ck_xpf local root at its own phi-R',
+                outline_um=[777.6,1814.4],
+                slot_fit='parent slot assigned by compute lead; added logic area/pins await synthesis and route',
+                price_policy='immutable price unchanged; no issue delay, ready, credit or production gating',
+                latency='compiled arm phase includes actual assigned transport+three tap edges; configuration uses existing pw75 before start',
+                fixed_config_edges_max=3*entries+3,
+                qualification='mechanism bench only; actual producer trace/calendar, native pin/reset/clock, area and measured layer cost remain unqualified')
+
+
+def qwen_static_native_parent_model():
+    """Prephysical census for the actual fixed ME controller successor."""
+    xpf = qwen_xpf_static_control_model()
+    # Replace image-derived ordinal map by two real 16b observer stations.
+    xpf_bits = xpf['declared_register_bits'] - (64*6+7+7+1) + 32
+    return dict(schema='opentallas.qwen-static-native-parent.v1',
+        opt_in_default=False, replicas=1, SRAM_macros_added=0,
+        additional_declared_register_bits=xpf_bits+643+6+9+173+56+37+1+1,
+        issue_store='actual ME8x47 FF rows plus consumer/control; published Yosys census643FF',
+        parent_state='6bit CALS stage plus sticky relocation1/native select1/native fault1',
+        removed_logic='entire private tree shadow head; area/FF savings unmeasured',
+        clocks='head,tree,xpf,me_sched independent scalar entries at own phi-R; sched phase matched to head decoder',
+        engine_enable='normal1; no memory/status gate; stage cycles fixed by compiler calendar',
+        command_latency='existing actual head GO station1; classify/relocate0; existing tree station latency retained',
+        observer_latency='actual head identity station1 aligned with cmdGO, xpf capture1',
+        added_data_tracks=380+95+6-53-1+56+1+37,
+        track_contract='nativecmd380/native_ret95/stage6/CP56/copy_active1/accepted_context37; obsolete VMxd53/xr1 removed',
+        outline_um=[777.6,1814.4],
+        slot_fit='assigned parent envelope; actual area/pins/CTS and placement remain open',
+        CP56='three56b rows+valid3+index2=173 state bits; head CP56/context37/programfault1/copyactive observer1 included; actual mapping open',
+        price_policy='immutable prices unchanged; no physical or layer-rate qualification')
+
+
 def s81_cn_ik_shared_kv_model(s_rd=16, s_wr=16):
     """F11 functional successor: share the existing512-lane KV norm bank.
 

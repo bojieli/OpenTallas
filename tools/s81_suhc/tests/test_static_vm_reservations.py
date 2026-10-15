@@ -1,4 +1,6 @@
 import copy
+import hashlib
+import tempfile
 import importlib.util
 from pathlib import Path
 import unittest
@@ -113,5 +115,79 @@ class FixedScheduleTests(unittest.TestCase):
     def test_issue_only_trace_does_not_prove_reservations(self):
         del self.schedule['events'][1]['service_cycle']
         self.assertIn('missing_reservation',self.kinds())
+
+class ActualOneReadOneWriteTests(unittest.TestCase):
+    def setUp(self):
+        FixedScheduleTests.setUp(self)
+        self.tmp=tempfile.TemporaryDirectory();self.addCleanup(self.tmp.cleanup)
+        self.root=Path(self.tmp.name)
+        source=self.root/'bank.sv';source.write_text('// compiler test source pin; hardware qualification is separate\n')
+        self.contract.update(bank_port_capacities={'read':1,'write':1},same_address_policy='forbid',
+                             bank_port_evidence=[dict(path='bank.sv',sha256=hashlib.sha256(source.read_bytes()).hexdigest())])
+        self.schedule['events'][1].update(issue_cycle=0,ingress_cycle=1,bank_enqueue_cycle=1,
+                                         service_cycle=2,row=96,response_cycle=5,deadline_cycle=5)
+        self.schedule['dependencies']=[]
+        self.schedule['jobs'][1]['done_cycle']=5
+
+    def result(self):
+        return m.check(self.schedule,self.contract,self.root)
+
+    def kinds(self):
+        return {x['kind'] for x in self.result()['violations']}
+
+    def test_actual_independent_read_and_write_ports(self):
+        before=copy.deepcopy(self.schedule)
+        self.assertEqual(self.result()['status'],'pass')
+        self.assertEqual(before,self.schedule)
+        self.assertFalse(self.result()['qualified'])
+
+    def test_two_reads_cannot_borrow_write_port(self):
+        self.contract['read_ingress_per_cycle']=2
+        other=copy.deepcopy(self.schedule['events'][1]);other.update(id='r2',slot=1,row=128)
+        self.schedule['events'].append(other)
+        self.assertIn('bank_port_collision',self.kinds())
+
+    def test_two_writes_cannot_borrow_read_port(self):
+        self.contract['write_ingress_per_cycle']=2;self.contract['slot_capacity']['su/write/1']=1
+        other=copy.deepcopy(self.schedule['events'][0]);other.update(id='w2',slot=1,row=128)
+        self.schedule['events'].append(other)
+        self.assertIn('bank_port_collision',self.kinds())
+
+    def test_same_address_requires_explicit_actual_visibility(self):
+        self.schedule['events'][1]['row']=64
+        self.assertIn('same_edge_read_write_address_collision',self.kinds())
+        self.contract['same_address_policy']='read_before_write'
+        self.assertIn('same_edge_read_visibility_unbound',self.kinds())
+        self.schedule['events'][1]['read_visibility']='before_same_edge_write'
+        self.assertEqual(self.result()['status'],'pass')
+
+    def test_read_before_write_cannot_supply_new_value_dependency(self):
+        self.schedule['events'][1].update(row=64,read_visibility='before_same_edge_write')
+        self.contract['same_address_policy']='read_before_write'
+        self.schedule['dependencies']=[dict(producer='w',consumer='r')]
+        self.assertIn('consume_before_commit',self.kinds())
+
+    def test_same_edge_commit_does_not_make_new_word_visible_to_macro_read(self):
+        self.contract.update(stream_period_ps=1,vm_period_ps=1,commit_min_ps=0,read_min_ps=0)
+        self.schedule['events'][0].update(service_cycle=2,commit_cycle=2,deadline_cycle=2)
+        self.schedule['events'][1].update(row=64,read_visibility='before_same_edge_write')
+        self.contract['same_address_policy']='read_before_write'
+        self.schedule['dependencies']=[dict(producer='w',consumer='r')]
+        self.assertIn('consume_before_same_edge_write_visibility',self.kinds())
+
+    def test_profile_cannot_inflate_ports(self):
+        self.contract['bank_port_capacities']['read']=2
+        self.assertIn('invalid_contract',self.kinds())
+
+    def test_changed_source_cannot_qualify_new_profile(self):
+        (self.root/'bank.sv').write_text('different actual bank')
+        self.assertIn('invalid_contract',self.kinds())
+
+    def test_group_response_deadline_stays_fixed_with_1r1w(self):
+        self.contract['read_ingress_per_cycle']=2
+        other=copy.deepcopy(self.schedule['events'][1]);other.update(id='r2',slot=1,row=97,
+            response_cycle=6,deadline_cycle=6)
+        self.schedule['events'].append(other);self.schedule['groups']=[dict(events=['r','r2'])]
+        self.assertIn('response_group_split',self.kinds())
 
 if __name__ == '__main__': unittest.main()
