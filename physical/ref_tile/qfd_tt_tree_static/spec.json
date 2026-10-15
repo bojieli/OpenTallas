@@ -139,12 +139,52 @@
   "OT_CHANNEL_BLOCK_UM": "20",
   "OT_ROW_MIN_UM": "6"
  },
- "structural_change": "NEW leaf of the selected static TT controller (TT50 source 6fd2bbf9): exact RTL u_body.u_tree = qfd_tt_ctlm_tree_static, one root (9,636 flops, census EPYC4), 4 SRAM 128x256; replaces the obsolete dynamic ICG tree (tr4 NEEDS_RTL). Leaf of a qfd_tt_ctlm_static_s cluster (flat 4-root leaf model refused: pw/st/xm/control_stores_ready ports span two roots). t2: outline 302.4x216 -> 280.8x172.8 (t1 gate std 8,833 um2, util 35%, TT insertion 290.6..412.3 / spread 121.7): denser leaf for shorter clock tree.",
+ "structural_change": "t3 (Q-COMPUTE-ELEM r14): t2 kit unchanged physically (280.8x172.8, one root clk 10,626 sinks <= 15k, measured TT insertion 374.4/spread 100.0 within the sink-count rule); adds the sensitized regroup benches (directed production programme phase; m2 swaps the tree GO command bit -> 214,461 mismatches, m1 swaps tree done/fault return -> 285) as the tree functional qualification. NEW leaf of the selected static TT controller (TT50 source 6fd2bbf9): exact RTL u_body.u_tree = qfd_tt_ctlm_tree_static, one root (9,636 flops, census EPYC4), 4 SRAM 128x256; replaces the obsolete dynamic ICG tree (tr4 NEEDS_RTL). Leaf of a qfd_tt_ctlm_static_s cluster (flat 4-root leaf model refused: pw/st/xm/control_stores_ready ports span two roots). t2: outline 302.4x216 -> 280.8x172.8 (t1 gate std 8,833 um2, util 35%, TT insertion 290.6..412.3 / spread 121.7): denser leaf for shorter clock tree.",
  "job": {
   "owner": "Claude:q15_compute_elem",
   "branch": "claude/q15-tt-static",
-  "tag": "t2",
-  "purpose": "Static TT tree leaf (exact RTL, single root) for the qfd_tt_ctlm_static_s cluster"
+  "tag": "t3",
+  "purpose": "Static TT tree leaf (exact RTL, single root) for the qfd_tt_ctlm_static_s cluster",
+  "extra_paths": [
+   "physical/qwen_tt_static_cluster_1015",
+   "results/arch/qwen_tp8_native_dispatch_1014/token_source_plan",
+   "rtl/qwen_sys/static_schedule_20261014"
+  ],
+  "benches": [
+   {
+    "name": "bench_tt_regroup_m0",
+    "cmd": "RG_OBJ={RUN}/bench/rg_m0 bash physical/qwen_tt_static_cluster_1015/run_regroup.sh 0 60000",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "REGROUP_PASS"
+   },
+   {
+    "name": "bench_tt_regroup_m1",
+    "cmd": "RG_OBJ={RUN}/bench/rg_m1 bash physical/qwen_tt_static_cluster_1015/run_regroup.sh 1 60000",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "REGROUP_FAIL"
+   },
+   {
+    "name": "bench_tt_regroup_m2",
+    "cmd": "RG_OBJ={RUN}/bench/rg_m2 bash physical/qwen_tt_static_cluster_1015/run_regroup.sh 2 60000",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "REGROUP_FAIL"
+   }
+  ]
  },
  "children": [],
  "inter": [],
