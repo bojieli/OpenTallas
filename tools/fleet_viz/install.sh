@@ -8,7 +8,7 @@ cp "$src"/{landing.py,coverage.py,native_provenance.py,elem_shell.py,elem_desc.p
 mkdir -p "$dst/stories" "$dst/explorer"
 cp "$src/explorer_chip_dataflow.js" "$dst/"
 cp "$src/explorer_dataflow.py" "$dst/"
-cp "$src/explorer/dataflow.js" "$dst/explorer/"
+cp "$src/explorer/dataflow.js" "$src/explorer/flow_layout.js" "$dst/explorer/"
 cp "$src"/stories/*.json "$dst/stories/"
 rm -rf "$dst/explorer/token"; cp -r "$src/explorer/token" "$dst/explorer/token"
 rm -rf "$dst/explorer/coverage"; cp -r "$src/explorer/coverage" "$dst/explorer/coverage"

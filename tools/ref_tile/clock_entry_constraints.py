@@ -19,6 +19,21 @@ CORNERS = ('tt', 'ff', 'ss')
 ENTRY_DOMAIN_API_VERSION = 1
 
 
+def signoff_period(spec):
+    """Opt-in leaf signoff period; all existing profiles retain their ABI."""
+    route = spec.get('route', {})
+    value = route.get('signoff_period_ps', 833.333)
+    if 'signoff_period_ps' in route and spec.get('clock') != 'multiple_cts_roots':
+        raise ValueError('signoff_period_ps requires multiple_cts_roots leaf timing ownership')
+    if isinstance(value, bool) or not isinstance(value, (int, float)) or not math.isfinite(value) or value <= 0:
+        raise ValueError('signoff_period_ps must be finite and positive')
+    if 'signoff_period_ps' in route:
+        physical = route.get('period_ps', 770)
+        if isinstance(physical, bool) or not isinstance(physical, (int, float)) or not math.isfinite(physical) or physical <= 0 or physical > value:
+            raise ValueError('route period must be finite, positive and no greater than signoff_period_ps')
+    return float(value)
+
+
 def related_data(spec):
     """Explicit opt-in to ordinary STA across related leaf roots."""
     policy = spec.get('clock_data_paths', 'independent')
@@ -37,6 +52,7 @@ def domains(spec):
     declared = spec.get('clock_entry_domains')
     leaf = spec.get('clock') == 'multiple_cts_roots'
     if leaf:
+        signoff_period(spec)
         related_data(spec)
     if leaf and (spec.get('kind') != 'tile' or declared is None or len(spec.get('clock_ports', [])) < 2):
         raise ValueError('multiple_cts_roots requires a leaf tile, at least two roots and explicit IO domains')
@@ -50,7 +66,7 @@ def domains(spec):
     for name, data in declared.items():
         if not re.fullmatch(r'[A-Za-z][A-Za-z0-9_]*', name):
             raise ValueError('entries: invalid domain name')
-        if set(data) - {'ratio', 'ports', 'inputs', 'outputs'}:
+        if set(data) - {'ratio', 'ports', 'inputs', 'outputs', 'io_budget'}:
             raise ValueError('entries: unsupported domain policy (no clock exceptions)')
         ratio = data.get('ratio')
         if ratio not in ([1, 1], [4, 3]):
@@ -97,6 +113,24 @@ def clocks(spec, period):
         lines.append(f"create_clock -name ot_entry_{i} -period {value:.9f} [get_ports {{{port}}}]")
     return '\n'.join(lines) + '\n'
 
+
+
+def domain_io_budget(name, d):
+    """(in, out) outside-share fractions of a clock-entry domain's period.  Default 0.2 / 0.2 (the nominal native pin
+    budget).  A domain may carry "io_budget": {"in": f, "out": f} derived from the composed parent hop (wire length +
+    the peer's measured residual); only TIGHTENING (f >= 0.2, f <= 0.8) is accepted, so a child can never be closed
+    against a looser boundary than the nominal one."""
+    io = d.get('io_budget') or {}
+    unknown = set(io) - {'in', 'out'}
+    if unknown:
+        raise ValueError(f'domain {name}: unknown io_budget keys {sorted(unknown)}')
+    vals = []
+    for k in ('in', 'out'):
+        f = float(io.get(k, 0.2))
+        if not (0.2 <= f <= 0.8):
+            raise ValueError(f'domain {name}: io_budget {k} {f} outside [0.2, 0.8] (only tightening is allowed)')
+        vals.append(f)
+    return tuple(vals)
 
 def generate(spec, root):
     if spec.get('clock') not in MODES:
@@ -158,7 +192,10 @@ def generate(spec, root):
     owner_rows = []
     for name, d in ds.items():
         patterns = lambda names: ' '.join('{' + n + '}' for n in names)
-        domain_rows.append("{" + name + "} {clock " + virtual_clock(name) + " io_budget_ps " + str(round(833.333 * d["ratio"][0] / d["ratio"][1] * 0.2, 3)) + " inputs {" + patterns(d["inputs"]) + "} outputs {" + patterns(d["outputs"]) + "}}")
+        period = signoff_period(spec) * d["ratio"][0] / d["ratio"][1]
+        fin, fout = domain_io_budget(name, d)
+        out_row = '' if fout == 0.2 else " io_budget_out_ps " + str(round(period * fout, 3))
+        domain_rows.append("{" + name + "} {clock " + virtual_clock(name) + " io_budget_ps " + str(round(period * fin, 3)) + out_row + " inputs {" + patterns(d["inputs"]) + "} outputs {" + patterns(d["outputs"]) + "}}")
         owner_rows.extend(f"{{{p}}} {{{name}}}" for p in d['ports'])
     body = LEAF_BODY if spec.get('clock') == 'multiple_cts_roots' else BODY
     if direct['entries']:
@@ -424,6 +461,9 @@ proc ot_ce_apply {} {
     set dlmax [lindex [lsort -real [dict get $domain_high $domain]] end]
     set vc [get_clocks [dict get $info clock]]
     set budget [dict get $info io_budget_ps]
+    # Optional composition-derived output budget (domain "io_budget": {"out": f}, f >= 0.2): the outside share of the
+    # cycle on this domain's outputs; larger = a TIGHTER launch (flop -> pin) inside the child, never a relaxation.
+    set budget_out [expr {[dict exists $info io_budget_out_ps] ? [dict get $info io_budget_out_ps] : $budget}]
     set inputs {}; set outputs {}
     foreach pattern [dict get $info inputs] {
       foreach p [get_ports -quiet $pattern -filter "direction == input"] {
@@ -445,7 +485,7 @@ proc ot_ce_apply {} {
       set_input_delay [expr {$dlmin-$hki}] -min -clock $vc $inputs
     }
     if {[llength $outputs]} {
-      set_output_delay [expr {$budget-$dlmax+$sk}] -max -clock $vc $outputs
+      set_output_delay [expr {$budget_out-$dlmax+$sk}] -max -clock $vc $outputs
       set_output_delay [expr {-$dlmin-$hk}] -min -clock $vc $outputs
     }
     if {[info exists ::env(OT_IO_INTER)] && $::env(OT_IO_INTER) ne ""} {
@@ -456,7 +496,7 @@ proc ot_ce_apply {} {
             set_input_delay [expr {$budget+$dlmax+150}] -max -clock $vc $p
           }
           if {[dict exists $covered_out $n] && [dict get $covered_out $n] eq $domain} {
-            set_output_delay [expr {$budget-$dlmax+150}] -max -clock $vc $p
+            set_output_delay [expr {$budget_out-$dlmax+150}] -max -clock $vc $p
           }
         }
       }
@@ -527,9 +567,36 @@ proc ot_ce_leaf_ownership {inputs outputs} {
       }
     }
   }
+  # A cell is a constant source when it is a library TIEHI/TIELO, or a
+  # combinational cell (synthesis output buffer) whose every input is driven
+  # only by constant sources. Registers, ports and unknown drivers are never.
+  set ::ot_mr_regs {}
+  foreach r [all_registers -cells] { dict set ::ot_mr_regs [get_full_name $r] 1 }
+  proc ot_mr_constant {cell depth} {
+    if {[regexp {^TIE(HI|LO)} [get_property $cell ref_name]]} { return 1 }
+    if {$depth <= 0} { return 0 }
+    if {![llength [get_lib_cells -quiet -of_objects $cell]] || [dict exists $::ot_mr_regs [get_full_name $cell]]} { return 0 }
+    set ins [get_pins -quiet -of_objects $cell -filter "direction==input"]
+    if {![llength $ins]} { return 0 }
+    foreach pin $ins {
+      set net [get_nets -quiet -of_objects $pin]
+      if {![llength $net]} { return 0 }
+      set drivers [get_pins -quiet -of_objects $net -filter "direction==output"]
+      if {[llength [get_ports -quiet -of_objects $net]] || [llength $drivers] != 1} { return 0 }
+      if {![ot_mr_constant [get_cells -of_objects $drivers] [expr {$depth - 1}]]} { return 0 }
+    }
+    return 1
+  }
   dict for {name domain} $outputs {
     foreach start [get_fanin -flat -startpoints_only -to [get_ports $name]] {
       set source [get_full_name [get_cells -quiet -of_objects $start]]
+      # A die strap tie output (contract v1.2 tie_hi/tie_lo) is a library
+      # TIEHI/TIELO constant: it has no clock and no data domain to own.
+      set source_cell [get_cells -quiet -of_objects $start]
+      if {(![dict exists $cells $source] || [dict get $cells $source] ne $domain) && [llength $source_cell] == 1 && [ot_mr_constant $source_cell 4]} {
+        puts "OT_MULTI_ROOT constant output $name <- [get_property $source_cell ref_name] $source"
+        continue
+      }
       if {![dict exists $cells $source] || [dict get $cells $source] ne $domain} {
         error "OT_MULTI_ROOT: output $name has wrong or unregistered source domain $source"
       }

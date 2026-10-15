@@ -308,6 +308,9 @@ module tb_dsfd_vm_static_core;
             $display("TB_VMCORE %s mode %0d", bad == 0 ? "PASS" : "FAIL", mode);
             $finish;
         end
+        // Verilator schedules $finish for the end of this time step. A fault
+        // witness must not fall through into the base-calendar count checks.
+        if (mode == 0) begin
         if (mode == 0 && (vm_fault || c_st[0])) begin bad = bad + 1;
             $display("UNEXPECTED FAULT vm_fault %b c_st %b: wsched own %b dflt %h sflt %h | mem %h | land %b pq %b out %b op %b rsched %b | seq flt %b",
                 vm_fault, c_st, dut.u_ws.own, dut.u_ws.dflt, dut.u_ws.sflt, dut.m_flt, dut.l_flt, dut.pq_bad, dut.o_bad, dut.op_bad,
@@ -317,5 +320,6 @@ module tb_dsfd_vm_static_core;
         if (commits != 4 * (16384 + 24 + 16 + mxwrites)) begin bad = bad + 1; $display("COMMIT COUNT %0d", commits); end
         $display("TB_VMCORE %s mode %0d", bad == 0 ? "PASS" : "FAIL", mode);
         $finish;
+        end
     end
 endmodule

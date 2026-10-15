@@ -1,0 +1,451 @@
+{
+ "status": "B_SYSTEM_SLOT_CHANGE_REQUEST_READY_FOR_NATIVE_LEAF_MEASUREMENT",
+ "basis": "Actual current B470placedreal leaves, source-bound328core+150edge;8readblocks remainunplaced",
+ "system_sha256": "e2cb17711cfdcfbc2abfabd02d342fce3d4610fa164bad33f29f5caf024aa8ab",
+ "reservation_xywh_um": [
+  15703.2,
+  17729.28,
+  756,
+  1101.6
+ ],
+ "lane_pitch_um": [
+  194.4,
+  280.8
+ ],
+ "interleaf_channel_um": [
+  21.6,
+  21.6
+ ],
+ "leaves": [
+  {
+   "name": "VM_cap0",
+   "logical_gid": 0,
+   "xy_um": [
+    15703.2,
+    17729.28
+   ],
+   "outline_um": [
+    172.8,
+    259.2
+   ],
+   "orientation": "R0",
+   "master": "dsfd_vm_static_cap_leaf",
+   "source_roots": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "clock_root_request": "cap_0_serial_ck",
+   "clock_port": "ck"
+  },
+  {
+   "name": "VM_cap1",
+   "logical_gid": 1,
+   "xy_um": [
+    15897.6,
+    17729.28
+   ],
+   "outline_um": [
+    172.8,
+    259.2
+   ],
+   "orientation": "R0",
+   "master": "dsfd_vm_static_cap_leaf",
+   "source_roots": [
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15
+   ],
+   "clock_root_request": "cap_1_serial_ck",
+   "clock_port": "ck"
+  },
+  {
+   "name": "VM_cap2",
+   "logical_gid": 2,
+   "xy_um": [
+    16092.0,
+    17729.28
+   ],
+   "outline_um": [
+    172.8,
+    259.2
+   ],
+   "orientation": "R0",
+   "master": "dsfd_vm_static_cap_leaf",
+   "source_roots": [
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23
+   ],
+   "clock_root_request": "cap_2_serial_ck",
+   "clock_port": "ck"
+  },
+  {
+   "name": "VM_cap3",
+   "logical_gid": 3,
+   "xy_um": [
+    16286.400000000001,
+    17729.28
+   ],
+   "outline_um": [
+    172.8,
+    259.2
+   ],
+   "orientation": "R0",
+   "master": "dsfd_vm_static_cap_leaf",
+   "source_roots": [
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31
+   ],
+   "clock_root_request": "cap_3_serial_ck",
+   "clock_port": "ck"
+  },
+  {
+   "name": "VM_cap4",
+   "logical_gid": 4,
+   "xy_um": [
+    15703.2,
+    18010.079999999998
+   ],
+   "outline_um": [
+    172.8,
+    259.2
+   ],
+   "orientation": "R0",
+   "master": "dsfd_vm_static_cap_leaf",
+   "source_roots": [
+    32,
+    33,
+    34,
+    35,
+    36,
+    37,
+    38,
+    39
+   ],
+   "clock_root_request": "cap_4_serial_ck",
+   "clock_port": "ck"
+  },
+  {
+   "name": "VM_cap5",
+   "logical_gid": 5,
+   "xy_um": [
+    15897.6,
+    18010.079999999998
+   ],
+   "outline_um": [
+    172.8,
+    259.2
+   ],
+   "orientation": "R0",
+   "master": "dsfd_vm_static_cap_leaf",
+   "source_roots": [
+    40,
+    41,
+    42,
+    43,
+    44,
+    45,
+    46,
+    47
+   ],
+   "clock_root_request": "cap_5_serial_ck",
+   "clock_port": "ck"
+  },
+  {
+   "name": "VM_cap6",
+   "logical_gid": 6,
+   "xy_um": [
+    16092.0,
+    18010.079999999998
+   ],
+   "outline_um": [
+    172.8,
+    259.2
+   ],
+   "orientation": "R0",
+   "master": "dsfd_vm_static_cap_leaf",
+   "source_roots": [
+    48,
+    49,
+    50,
+    51,
+    52,
+    53,
+    54,
+    55
+   ],
+   "clock_root_request": "cap_6_serial_ck",
+   "clock_port": "ck"
+  },
+  {
+   "name": "VM_cap7",
+   "logical_gid": 7,
+   "xy_um": [
+    16286.400000000001,
+    18010.079999999998
+   ],
+   "outline_um": [
+    172.8,
+    259.2
+   ],
+   "orientation": "R0",
+   "master": "dsfd_vm_static_cap_leaf",
+   "source_roots": [
+    56,
+    57,
+    58,
+    59,
+    60,
+    61,
+    62,
+    63
+   ],
+   "clock_root_request": "cap_7_serial_ck",
+   "clock_port": "ck"
+  },
+  {
+   "name": "VM_cap8",
+   "logical_gid": 8,
+   "xy_um": [
+    15703.2,
+    18290.879999999997
+   ],
+   "outline_um": [
+    172.8,
+    259.2
+   ],
+   "orientation": "R0",
+   "master": "dsfd_vm_static_cap_leaf",
+   "source_roots": [
+    64,
+    65,
+    66,
+    67,
+    68,
+    69,
+    70,
+    71
+   ],
+   "clock_root_request": "cap_8_serial_ck",
+   "clock_port": "ck"
+  },
+  {
+   "name": "VM_cap9",
+   "logical_gid": 9,
+   "xy_um": [
+    15897.6,
+    18290.879999999997
+   ],
+   "outline_um": [
+    172.8,
+    259.2
+   ],
+   "orientation": "R0",
+   "master": "dsfd_vm_static_cap_leaf",
+   "source_roots": [
+    72,
+    73,
+    74,
+    75,
+    76,
+    77,
+    78,
+    79
+   ],
+   "clock_root_request": "cap_9_serial_ck",
+   "clock_port": "ck"
+  },
+  {
+   "name": "VM_cap10",
+   "logical_gid": 10,
+   "xy_um": [
+    16092.0,
+    18290.879999999997
+   ],
+   "outline_um": [
+    172.8,
+    259.2
+   ],
+   "orientation": "R0",
+   "master": "dsfd_vm_static_cap_leaf",
+   "source_roots": [
+    80,
+    81,
+    82,
+    83,
+    84,
+    85,
+    86,
+    87
+   ],
+   "clock_root_request": "cap_10_serial_ck",
+   "clock_port": "ck"
+  },
+  {
+   "name": "VM_cap11",
+   "logical_gid": 11,
+   "xy_um": [
+    16286.400000000001,
+    18290.879999999997
+   ],
+   "outline_um": [
+    172.8,
+    259.2
+   ],
+   "orientation": "R0",
+   "master": "dsfd_vm_static_cap_leaf",
+   "source_roots": [
+    88,
+    89,
+    90,
+    91,
+    92,
+    93,
+    94,
+    95
+   ],
+   "clock_root_request": "cap_11_serial_ck",
+   "clock_port": "ck"
+  },
+  {
+   "name": "VM_cap12",
+   "logical_gid": 12,
+   "xy_um": [
+    15703.2,
+    18571.68
+   ],
+   "outline_um": [
+    172.8,
+    259.2
+   ],
+   "orientation": "R0",
+   "master": "dsfd_vm_static_cap_leaf",
+   "source_roots": [
+    96,
+    97,
+    98,
+    99,
+    100,
+    101,
+    102,
+    103
+   ],
+   "clock_root_request": "cap_12_serial_ck",
+   "clock_port": "ck"
+  },
+  {
+   "name": "VM_cap13",
+   "logical_gid": 13,
+   "xy_um": [
+    15897.6,
+    18571.68
+   ],
+   "outline_um": [
+    172.8,
+    259.2
+   ],
+   "orientation": "R0",
+   "master": "dsfd_vm_static_cap_leaf",
+   "source_roots": [
+    104,
+    105,
+    106,
+    107,
+    108,
+    109,
+    110,
+    111
+   ],
+   "clock_root_request": "cap_13_serial_ck",
+   "clock_port": "ck"
+  },
+  {
+   "name": "VM_cap14",
+   "logical_gid": 14,
+   "xy_um": [
+    16092.0,
+    18571.68
+   ],
+   "outline_um": [
+    172.8,
+    259.2
+   ],
+   "orientation": "R0",
+   "master": "dsfd_vm_static_cap_leaf",
+   "source_roots": [
+    112,
+    113,
+    114,
+    115,
+    116,
+    117,
+    118,
+    119
+   ],
+   "clock_root_request": "cap_14_serial_ck",
+   "clock_port": "ck"
+  },
+  {
+   "name": "VM_cap15",
+   "logical_gid": 15,
+   "xy_um": [
+    16286.400000000001,
+    18571.68
+   ],
+   "outline_um": [
+    172.8,
+    259.2
+   ],
+   "orientation": "R0",
+   "master": "dsfd_vm_static_cap_leaf",
+   "source_roots": [
+    120,
+    121,
+    122,
+    123,
+    124,
+    125,
+    126,
+    127
+   ],
+   "clock_root_request": "cap_15_serial_ck",
+   "clock_port": "ck"
+  }
+ ],
+ "coarse_body_overlaps": [],
+ "producer_separate": "sp_capture remains x13942.8..15670.776,y17837.28..18398.856; t_vm13376 feeds cap16; actualproducer pin binding pending",
+ "boundary_bits": {
+  "input_f_c": 13312,
+  "additional_parent_status": 64,
+  "output_per_leaf": 548,
+  "leaf_clock_roots": 16
+ },
+ "cut_scope": "Only actualleaf face capacity proven below; no claimed allboundarycut<=.60 without clock/PG/phase/throughtraffic",
+ "open": [
+  "16actualx34 native footprints remainadditional, not merged withupstreamcapture",
+  "Parent scalarclock alias is not physical rootdelivery;598rootbind owns sourceplumbing",
+  "Uniformregisteredinput/outputdistribution andcompilerages notyetpriced"
+ ]
+}

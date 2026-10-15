@@ -7,8 +7,13 @@ import json,collections,sys,hashlib
 from pathlib import Path
 R=Path(__file__).resolve().parents[2]
 def main():
+ import argparse
+ ap=argparse.ArgumentParser(description=__doc__)
+ ap.add_argument('--relay-kit',default='native_option',help='relay kit suffix whose CLOSED views are composed (native_option | native_cb)')
+ ap.add_argument('--out',default='results/physical/s81_vm_static_ownership_1015/routed_local_hops.json')
+ a=ap.parse_args()
  sys.path.insert(0,str(R/"tools/hier_contract"));import pinreg_audit as P
- viewdirs={"dsfd_vm_static_bank128":R/"physical/ref_tile/dsfd_vm_static_bank128_m4_v20/views/dsfd_vm_static_bank128",**{f"dsfd_vm_static_relay128_b{n}":R/f"physical/ref_tile/dsfd_vm_static_relay128_b{n}_native_option/views/dsfd_vm_static_relay128_b{n}" for n in [4,8]}}
+ viewdirs={"dsfd_vm_static_bank128":R/"physical/ref_tile/dsfd_vm_static_bank128_m4_v20/views/dsfd_vm_static_bank128",**{f"dsfd_vm_static_relay128_b{n}":R/f"physical/ref_tile/dsfd_vm_static_relay128_b{n}_{a.relay_kit}/views/dsfd_vm_static_relay128_b{n}" for n in [4,8]}}
  metrics={};provenance={}
  for master,d in viewdirs.items():
   ins=json.loads((d/"insertion.json").read_text());metrics[master]={};provenance[master]={}
@@ -59,5 +64,5 @@ def main():
   for k,x in v.items():
    if isinstance(x,float):v[k]=round(x,3)
  d=dict(schema='opentallas.s81.actual-routed-local-hop-diagnostic.v1',tool_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),status='REJECT_NATIVE_ADOPTION' if timing_worst or missing or worst else 'LOCAL_SETUP_PASS_GLOBAL_AND_EXTRACTED_DIE_OPEN',scope='83712 bank-quarter-bridge endpoint bits in old188 local template; proposed328 retains these microcluster relative pins; real clock-domain-specific TT/FF exported arcs, phase compensated per measured boundary R. Linear .76ps/um TT wire is a construction model, not extracted die STA.',rule=dict(T_ps=833.333,setup_unc_ps=60,skew_ps=90,wire_ps_per_um=.76,hold_reserve_ps=100,hold_wire_credit_ps=0),stats=stats,missing_arcs=missing[:100],missing_arc_count=len(missing),over500=worst[:100],worst_setup=sorted(timing_worst,key=lambda e:e['setup_slack_ps'])[:100],view_provenance=provenance,limits=['CLOSED leaf route stands; this diagnostic is no reroute authorization','Classify actual launch residual vs export-source reference before native structural repair','No global cap/CDC/FSR/return/writeedge geometry, no load/slew sweep or extracted die timing','FF reserve uses no minimum wire credit; no FF wire estimate invented'])
- out=R/'results/physical/s81_vm_static_ownership_1015/routed_local_hops.json';out.write_text(json.dumps(d,indent=2)+'\n');print(json.dumps(dict(status=d['status'],stats=stats,missing=len(missing))))
+ out=R/a.out;out.write_text(json.dumps(d,indent=2)+'\n');print(json.dumps(dict(status=d['status'],stats=stats,missing=len(missing))))
 if __name__=='__main__':main()

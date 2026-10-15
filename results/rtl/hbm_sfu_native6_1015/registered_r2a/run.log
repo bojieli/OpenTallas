@@ -1,0 +1,5 @@
+PASS actualSIDE R2registeredfaces plus2edges sixphase0roots exactgolden=16384 originalcycleequiv=16384 RSQRT37=4096 SQRT31=4096 SPSQRT162=4096 EGATE104=4096 fnmutantdiff=16384 egatemutantdiff=4096 rows=20681 physicaltimingUNQUALIFIED
+- rtl/test/hbm_accel/generic/tb_hbm_su_static_side_native6r2a.sv:53: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 17us; walltime 13.092 s; speed 1.318 us/s
+- Verilator: cpu 13.086 s on 1 threads; allocated 26 MB

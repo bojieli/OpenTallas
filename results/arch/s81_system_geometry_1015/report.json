@@ -1,0 +1,8951 @@
+{
+ "schema": "opentallas.s81.system_geometry_options.v1",
+ "scope": "CANONICAL_FULL_FIELD_AND_ACTUAL_VM_CORE_RECTANGLES_ONLY",
+ "input_sha256": {
+  "capacity.json": "b7c9c87f9f4b16b600cc3788f1e41feef45d57593307de26a4f8a2af90325c3e",
+  "layout_option.json": "f691becc6b969d1e7e4a4d1da47c498e5ef90581ce00eed146a142e5a553036b",
+  "s81_v20_hc.json": "4d5356afb23eeabf74a1206520dc1f1e7f8515480e8279038011302152842cfb",
+  "field_before_trunks.json.gz": "98dfbe5ea956efd0e863b2ebca03bcee5de9d0ef39720cba5e727df575c68307",
+  "/srv/opentallas-scratch/codex-geometry-s81-system-options-r2-1015/system_geometry_options.py": "f9c9d3939ed7de38babbeedcd7b5fa8193054e41148b75f2bac5bbedf4752f6e"
+ },
+ "die_um": [
+  33000,
+  26000
+ ],
+ "unchanged_field_children": 32942,
+ "baseline_snapshot_instances": 32969,
+ "source_VM_template_nodes": 164,
+ "source_VM_template_status": "SUPERSEDED_EXACT_PIN_AUDIT_FAIL_MAX1097.9UM:164node template is rectangle diagnostic only; successor188nodes pending",
+ "options": [
+  {
+   "name": "A_vertical_expansion",
+   "slice_origins_um": [
+    [
+     14036.112,
+     12804.48
+    ],
+    [
+     14036.112,
+     14359.68
+    ],
+    [
+     14036.112,
+     15914.88
+    ],
+    [
+     14036.112,
+     17470.08
+    ]
+   ],
+   "vm_nodes": [
+    {
+     "name": "vm_s0_bank0",
+     "xy_um": [
+      14079.312,
+      12847.68
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 0
+    },
+    {
+     "name": "vm_s0_bank1",
+     "xy_um": [
+      14079.312,
+      12977.279999999999
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 0
+    },
+    {
+     "name": "vm_s0_bank2",
+     "xy_um": [
+      14079.312,
+      13106.88
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 0
+    },
+    {
+     "name": "vm_s0_bank3",
+     "xy_um": [
+      14079.312,
+      13236.48
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 0
+    },
+    {
+     "name": "vm_s0_bank4",
+     "xy_um": [
+      14338.511999999999,
+      12847.68
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 0
+    },
+    {
+     "name": "vm_s0_bank5",
+     "xy_um": [
+      14338.511999999999,
+      12977.279999999999
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 0
+    },
+    {
+     "name": "vm_s0_bank6",
+     "xy_um": [
+      14338.511999999999,
+      13106.88
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 0
+    },
+    {
+     "name": "vm_s0_bank7",
+     "xy_um": [
+      14338.511999999999,
+      13236.48
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 0
+    },
+    {
+     "name": "vm_s0_bank8",
+     "xy_um": [
+      15548.112,
+      12847.68
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 0
+    },
+    {
+     "name": "vm_s0_bank9",
+     "xy_um": [
+      15548.112,
+      12977.279999999999
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 0
+    },
+    {
+     "name": "vm_s0_bank10",
+     "xy_um": [
+      15548.112,
+      13106.88
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 0
+    },
+    {
+     "name": "vm_s0_bank11",
+     "xy_um": [
+      15548.112,
+      13236.48
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 0
+    },
+    {
+     "name": "vm_s0_bank12",
+     "xy_um": [
+      15807.312,
+      12847.68
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 0
+    },
+    {
+     "name": "vm_s0_bank13",
+     "xy_um": [
+      15807.312,
+      12977.279999999999
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 0
+    },
+    {
+     "name": "vm_s0_bank14",
+     "xy_um": [
+      15807.312,
+      13106.88
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 0
+    },
+    {
+     "name": "vm_s0_bank15",
+     "xy_um": [
+      15807.312,
+      13236.48
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 0
+    },
+    {
+     "name": "vm_s0_bank16",
+     "xy_um": [
+      14079.312,
+      13366.08
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 0
+    },
+    {
+     "name": "vm_s0_bank17",
+     "xy_um": [
+      14079.312,
+      13495.68
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 0
+    },
+    {
+     "name": "vm_s0_bank18",
+     "xy_um": [
+      14079.312,
+      13625.279999999999
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 0
+    },
+    {
+     "name": "vm_s0_bank19",
+     "xy_um": [
+      14079.312,
+      13754.88
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 0
+    },
+    {
+     "name": "vm_s0_bank20",
+     "xy_um": [
+      14338.511999999999,
+      13366.08
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 0
+    },
+    {
+     "name": "vm_s0_bank21",
+     "xy_um": [
+      14338.511999999999,
+      13495.68
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 0
+    },
+    {
+     "name": "vm_s0_bank22",
+     "xy_um": [
+      14338.511999999999,
+      13625.279999999999
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 0
+    },
+    {
+     "name": "vm_s0_bank23",
+     "xy_um": [
+      14338.511999999999,
+      13754.88
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 0
+    },
+    {
+     "name": "vm_s0_bank24",
+     "xy_um": [
+      15548.112,
+      13366.08
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 0
+    },
+    {
+     "name": "vm_s0_bank25",
+     "xy_um": [
+      15548.112,
+      13495.68
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 0
+    },
+    {
+     "name": "vm_s0_bank26",
+     "xy_um": [
+      15548.112,
+      13625.279999999999
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 0
+    },
+    {
+     "name": "vm_s0_bank27",
+     "xy_um": [
+      15548.112,
+      13754.88
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 0
+    },
+    {
+     "name": "vm_s0_bank28",
+     "xy_um": [
+      15807.312,
+      13366.08
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 0
+    },
+    {
+     "name": "vm_s0_bank29",
+     "xy_um": [
+      15807.312,
+      13495.68
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 0
+    },
+    {
+     "name": "vm_s0_bank30",
+     "xy_um": [
+      15807.312,
+      13625.279999999999
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 0
+    },
+    {
+     "name": "vm_s0_bank31",
+     "xy_um": [
+      15807.312,
+      13754.88
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 0
+    },
+    {
+     "name": "vm_s0_quarter0",
+     "xy_um": [
+      14597.712,
+      13020.48
+     ],
+     "outline_um": [
+      172.8,
+      172.8
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_relay128_b8",
+     "slice": 0
+    },
+    {
+     "name": "vm_s0_quarter1",
+     "xy_um": [
+      15332.112,
+      13020.48
+     ],
+     "outline_um": [
+      172.8,
+      172.8
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_relay128_b8",
+     "slice": 0
+    },
+    {
+     "name": "vm_s0_quarter2",
+     "xy_um": [
+      14597.712,
+      13582.08
+     ],
+     "outline_um": [
+      172.8,
+      172.8
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_relay128_b8",
+     "slice": 0
+    },
+    {
+     "name": "vm_s0_quarter3",
+     "xy_um": [
+      15332.112,
+      13582.08
+     ],
+     "outline_um": [
+      172.8,
+      172.8
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_relay128_b8",
+     "slice": 0
+    },
+    {
+     "name": "vm_s0_bridge0",
+     "xy_um": [
+      14943.312,
+      12977.279999999999
+     ],
+     "outline_um": [
+      345.6,
+      345.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_relay128_b16",
+     "slice": 0
+    },
+    {
+     "name": "vm_s0_bridge1",
+     "xy_um": [
+      14943.312,
+      13970.88
+     ],
+     "outline_um": [
+      345.6,
+      345.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_relay128_b16",
+     "slice": 0
+    },
+    {
+     "name": "vm_s0_wscatter",
+     "xy_um": [
+      14900.112,
+      13495.68
+     ],
+     "outline_um": [
+      345.6,
+      103.68
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_scatter",
+     "slice": 0
+    },
+    {
+     "name": "vm_s0_read_frontend",
+     "xy_um": [
+      14900.112,
+      13625.279999999999
+     ],
+     "outline_um": [
+      345.6,
+      51.84
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_suhc_fsr",
+     "slice": 0
+    },
+    {
+     "name": "vm_s0_return32",
+     "xy_um": [
+      14900.112,
+      13711.68
+     ],
+     "outline_um": [
+      345.6,
+      207.36
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_return",
+     "slice": 0
+    },
+    {
+     "name": "vm_s1_bank0",
+     "xy_um": [
+      14079.312,
+      14402.88
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 1
+    },
+    {
+     "name": "vm_s1_bank1",
+     "xy_um": [
+      14079.312,
+      14532.48
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 1
+    },
+    {
+     "name": "vm_s1_bank2",
+     "xy_um": [
+      14079.312,
+      14662.08
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 1
+    },
+    {
+     "name": "vm_s1_bank3",
+     "xy_um": [
+      14079.312,
+      14791.68
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 1
+    },
+    {
+     "name": "vm_s1_bank4",
+     "xy_um": [
+      14338.511999999999,
+      14402.88
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 1
+    },
+    {
+     "name": "vm_s1_bank5",
+     "xy_um": [
+      14338.511999999999,
+      14532.48
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 1
+    },
+    {
+     "name": "vm_s1_bank6",
+     "xy_um": [
+      14338.511999999999,
+      14662.08
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 1
+    },
+    {
+     "name": "vm_s1_bank7",
+     "xy_um": [
+      14338.511999999999,
+      14791.68
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 1
+    },
+    {
+     "name": "vm_s1_bank8",
+     "xy_um": [
+      15548.112,
+      14402.88
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 1
+    },
+    {
+     "name": "vm_s1_bank9",
+     "xy_um": [
+      15548.112,
+      14532.48
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 1
+    },
+    {
+     "name": "vm_s1_bank10",
+     "xy_um": [
+      15548.112,
+      14662.08
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 1
+    },
+    {
+     "name": "vm_s1_bank11",
+     "xy_um": [
+      15548.112,
+      14791.68
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 1
+    },
+    {
+     "name": "vm_s1_bank12",
+     "xy_um": [
+      15807.312,
+      14402.88
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 1
+    },
+    {
+     "name": "vm_s1_bank13",
+     "xy_um": [
+      15807.312,
+      14532.48
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 1
+    },
+    {
+     "name": "vm_s1_bank14",
+     "xy_um": [
+      15807.312,
+      14662.08
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 1
+    },
+    {
+     "name": "vm_s1_bank15",
+     "xy_um": [
+      15807.312,
+      14791.68
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 1
+    },
+    {
+     "name": "vm_s1_bank16",
+     "xy_um": [
+      14079.312,
+      14921.279999999999
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 1
+    },
+    {
+     "name": "vm_s1_bank17",
+     "xy_um": [
+      14079.312,
+      15050.880000000001
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 1
+    },
+    {
+     "name": "vm_s1_bank18",
+     "xy_um": [
+      14079.312,
+      15180.48
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 1
+    },
+    {
+     "name": "vm_s1_bank19",
+     "xy_um": [
+      14079.312,
+      15310.079999999998
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 1
+    },
+    {
+     "name": "vm_s1_bank20",
+     "xy_um": [
+      14338.511999999999,
+      14921.279999999999
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 1
+    },
+    {
+     "name": "vm_s1_bank21",
+     "xy_um": [
+      14338.511999999999,
+      15050.880000000001
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 1
+    },
+    {
+     "name": "vm_s1_bank22",
+     "xy_um": [
+      14338.511999999999,
+      15180.48
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 1
+    },
+    {
+     "name": "vm_s1_bank23",
+     "xy_um": [
+      14338.511999999999,
+      15310.079999999998
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 1
+    },
+    {
+     "name": "vm_s1_bank24",
+     "xy_um": [
+      15548.112,
+      14921.279999999999
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 1
+    },
+    {
+     "name": "vm_s1_bank25",
+     "xy_um": [
+      15548.112,
+      15050.880000000001
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 1
+    },
+    {
+     "name": "vm_s1_bank26",
+     "xy_um": [
+      15548.112,
+      15180.48
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 1
+    },
+    {
+     "name": "vm_s1_bank27",
+     "xy_um": [
+      15548.112,
+      15310.079999999998
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 1
+    },
+    {
+     "name": "vm_s1_bank28",
+     "xy_um": [
+      15807.312,
+      14921.279999999999
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 1
+    },
+    {
+     "name": "vm_s1_bank29",
+     "xy_um": [
+      15807.312,
+      15050.880000000001
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 1
+    },
+    {
+     "name": "vm_s1_bank30",
+     "xy_um": [
+      15807.312,
+      15180.48
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 1
+    },
+    {
+     "name": "vm_s1_bank31",
+     "xy_um": [
+      15807.312,
+      15310.079999999998
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 1
+    },
+    {
+     "name": "vm_s1_quarter0",
+     "xy_um": [
+      14597.712,
+      14575.68
+     ],
+     "outline_um": [
+      172.8,
+      172.8
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_relay128_b8",
+     "slice": 1
+    },
+    {
+     "name": "vm_s1_quarter1",
+     "xy_um": [
+      15332.112,
+      14575.68
+     ],
+     "outline_um": [
+      172.8,
+      172.8
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_relay128_b8",
+     "slice": 1
+    },
+    {
+     "name": "vm_s1_quarter2",
+     "xy_um": [
+      14597.712,
+      15137.279999999999
+     ],
+     "outline_um": [
+      172.8,
+      172.8
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_relay128_b8",
+     "slice": 1
+    },
+    {
+     "name": "vm_s1_quarter3",
+     "xy_um": [
+      15332.112,
+      15137.279999999999
+     ],
+     "outline_um": [
+      172.8,
+      172.8
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_relay128_b8",
+     "slice": 1
+    },
+    {
+     "name": "vm_s1_bridge0",
+     "xy_um": [
+      14943.312,
+      14532.48
+     ],
+     "outline_um": [
+      345.6,
+      345.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_relay128_b16",
+     "slice": 1
+    },
+    {
+     "name": "vm_s1_bridge1",
+     "xy_um": [
+      14943.312,
+      15526.079999999998
+     ],
+     "outline_um": [
+      345.6,
+      345.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_relay128_b16",
+     "slice": 1
+    },
+    {
+     "name": "vm_s1_wscatter",
+     "xy_um": [
+      14900.112,
+      15050.880000000001
+     ],
+     "outline_um": [
+      345.6,
+      103.68
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_scatter",
+     "slice": 1
+    },
+    {
+     "name": "vm_s1_read_frontend",
+     "xy_um": [
+      14900.112,
+      15180.48
+     ],
+     "outline_um": [
+      345.6,
+      51.84
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_suhc_fsr",
+     "slice": 1
+    },
+    {
+     "name": "vm_s1_return32",
+     "xy_um": [
+      14900.112,
+      15266.880000000001
+     ],
+     "outline_um": [
+      345.6,
+      207.36
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_return",
+     "slice": 1
+    },
+    {
+     "name": "vm_s2_bank0",
+     "xy_um": [
+      14079.312,
+      15958.08
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 2
+    },
+    {
+     "name": "vm_s2_bank1",
+     "xy_um": [
+      14079.312,
+      16087.679999999998
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 2
+    },
+    {
+     "name": "vm_s2_bank2",
+     "xy_um": [
+      14079.312,
+      16217.28
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 2
+    },
+    {
+     "name": "vm_s2_bank3",
+     "xy_um": [
+      14079.312,
+      16346.88
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 2
+    },
+    {
+     "name": "vm_s2_bank4",
+     "xy_um": [
+      14338.511999999999,
+      15958.08
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 2
+    },
+    {
+     "name": "vm_s2_bank5",
+     "xy_um": [
+      14338.511999999999,
+      16087.679999999998
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 2
+    },
+    {
+     "name": "vm_s2_bank6",
+     "xy_um": [
+      14338.511999999999,
+      16217.28
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 2
+    },
+    {
+     "name": "vm_s2_bank7",
+     "xy_um": [
+      14338.511999999999,
+      16346.88
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 2
+    },
+    {
+     "name": "vm_s2_bank8",
+     "xy_um": [
+      15548.112,
+      15958.08
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 2
+    },
+    {
+     "name": "vm_s2_bank9",
+     "xy_um": [
+      15548.112,
+      16087.679999999998
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 2
+    },
+    {
+     "name": "vm_s2_bank10",
+     "xy_um": [
+      15548.112,
+      16217.28
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 2
+    },
+    {
+     "name": "vm_s2_bank11",
+     "xy_um": [
+      15548.112,
+      16346.88
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 2
+    },
+    {
+     "name": "vm_s2_bank12",
+     "xy_um": [
+      15807.312,
+      15958.08
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 2
+    },
+    {
+     "name": "vm_s2_bank13",
+     "xy_um": [
+      15807.312,
+      16087.679999999998
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 2
+    },
+    {
+     "name": "vm_s2_bank14",
+     "xy_um": [
+      15807.312,
+      16217.28
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 2
+    },
+    {
+     "name": "vm_s2_bank15",
+     "xy_um": [
+      15807.312,
+      16346.88
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 2
+    },
+    {
+     "name": "vm_s2_bank16",
+     "xy_um": [
+      14079.312,
+      16476.479999999996
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 2
+    },
+    {
+     "name": "vm_s2_bank17",
+     "xy_um": [
+      14079.312,
+      16606.079999999998
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 2
+    },
+    {
+     "name": "vm_s2_bank18",
+     "xy_um": [
+      14079.312,
+      16735.679999999997
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 2
+    },
+    {
+     "name": "vm_s2_bank19",
+     "xy_um": [
+      14079.312,
+      16865.28
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 2
+    },
+    {
+     "name": "vm_s2_bank20",
+     "xy_um": [
+      14338.511999999999,
+      16476.479999999996
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 2
+    },
+    {
+     "name": "vm_s2_bank21",
+     "xy_um": [
+      14338.511999999999,
+      16606.079999999998
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 2
+    },
+    {
+     "name": "vm_s2_bank22",
+     "xy_um": [
+      14338.511999999999,
+      16735.679999999997
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 2
+    },
+    {
+     "name": "vm_s2_bank23",
+     "xy_um": [
+      14338.511999999999,
+      16865.28
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 2
+    },
+    {
+     "name": "vm_s2_bank24",
+     "xy_um": [
+      15548.112,
+      16476.479999999996
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 2
+    },
+    {
+     "name": "vm_s2_bank25",
+     "xy_um": [
+      15548.112,
+      16606.079999999998
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 2
+    },
+    {
+     "name": "vm_s2_bank26",
+     "xy_um": [
+      15548.112,
+      16735.679999999997
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 2
+    },
+    {
+     "name": "vm_s2_bank27",
+     "xy_um": [
+      15548.112,
+      16865.28
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 2
+    },
+    {
+     "name": "vm_s2_bank28",
+     "xy_um": [
+      15807.312,
+      16476.479999999996
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 2
+    },
+    {
+     "name": "vm_s2_bank29",
+     "xy_um": [
+      15807.312,
+      16606.079999999998
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 2
+    },
+    {
+     "name": "vm_s2_bank30",
+     "xy_um": [
+      15807.312,
+      16735.679999999997
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 2
+    },
+    {
+     "name": "vm_s2_bank31",
+     "xy_um": [
+      15807.312,
+      16865.28
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 2
+    },
+    {
+     "name": "vm_s2_quarter0",
+     "xy_um": [
+      14597.712,
+      16130.88
+     ],
+     "outline_um": [
+      172.8,
+      172.8
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_relay128_b8",
+     "slice": 2
+    },
+    {
+     "name": "vm_s2_quarter1",
+     "xy_um": [
+      15332.112,
+      16130.88
+     ],
+     "outline_um": [
+      172.8,
+      172.8
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_relay128_b8",
+     "slice": 2
+    },
+    {
+     "name": "vm_s2_quarter2",
+     "xy_um": [
+      14597.712,
+      16692.479999999996
+     ],
+     "outline_um": [
+      172.8,
+      172.8
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_relay128_b8",
+     "slice": 2
+    },
+    {
+     "name": "vm_s2_quarter3",
+     "xy_um": [
+      15332.112,
+      16692.479999999996
+     ],
+     "outline_um": [
+      172.8,
+      172.8
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_relay128_b8",
+     "slice": 2
+    },
+    {
+     "name": "vm_s2_bridge0",
+     "xy_um": [
+      14943.312,
+      16087.679999999998
+     ],
+     "outline_um": [
+      345.6,
+      345.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_relay128_b16",
+     "slice": 2
+    },
+    {
+     "name": "vm_s2_bridge1",
+     "xy_um": [
+      14943.312,
+      17081.28
+     ],
+     "outline_um": [
+      345.6,
+      345.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_relay128_b16",
+     "slice": 2
+    },
+    {
+     "name": "vm_s2_wscatter",
+     "xy_um": [
+      14900.112,
+      16606.079999999998
+     ],
+     "outline_um": [
+      345.6,
+      103.68
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_scatter",
+     "slice": 2
+    },
+    {
+     "name": "vm_s2_read_frontend",
+     "xy_um": [
+      14900.112,
+      16735.679999999997
+     ],
+     "outline_um": [
+      345.6,
+      51.84
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_suhc_fsr",
+     "slice": 2
+    },
+    {
+     "name": "vm_s2_return32",
+     "xy_um": [
+      14900.112,
+      16822.079999999998
+     ],
+     "outline_um": [
+      345.6,
+      207.36
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_return",
+     "slice": 2
+    },
+    {
+     "name": "vm_s3_bank0",
+     "xy_um": [
+      14079.312,
+      17513.28
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 3
+    },
+    {
+     "name": "vm_s3_bank1",
+     "xy_um": [
+      14079.312,
+      17642.880000000005
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 3
+    },
+    {
+     "name": "vm_s3_bank2",
+     "xy_um": [
+      14079.312,
+      17772.480000000003
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 3
+    },
+    {
+     "name": "vm_s3_bank3",
+     "xy_um": [
+      14079.312,
+      17902.08
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 3
+    },
+    {
+     "name": "vm_s3_bank4",
+     "xy_um": [
+      14338.511999999999,
+      17513.28
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 3
+    },
+    {
+     "name": "vm_s3_bank5",
+     "xy_um": [
+      14338.511999999999,
+      17642.880000000005
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 3
+    },
+    {
+     "name": "vm_s3_bank6",
+     "xy_um": [
+      14338.511999999999,
+      17772.480000000003
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 3
+    },
+    {
+     "name": "vm_s3_bank7",
+     "xy_um": [
+      14338.511999999999,
+      17902.08
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 3
+    },
+    {
+     "name": "vm_s3_bank8",
+     "xy_um": [
+      15548.112,
+      17513.28
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 3
+    },
+    {
+     "name": "vm_s3_bank9",
+     "xy_um": [
+      15548.112,
+      17642.880000000005
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 3
+    },
+    {
+     "name": "vm_s3_bank10",
+     "xy_um": [
+      15548.112,
+      17772.480000000003
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 3
+    },
+    {
+     "name": "vm_s3_bank11",
+     "xy_um": [
+      15548.112,
+      17902.08
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 3
+    },
+    {
+     "name": "vm_s3_bank12",
+     "xy_um": [
+      15807.312,
+      17513.28
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 3
+    },
+    {
+     "name": "vm_s3_bank13",
+     "xy_um": [
+      15807.312,
+      17642.880000000005
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 3
+    },
+    {
+     "name": "vm_s3_bank14",
+     "xy_um": [
+      15807.312,
+      17772.480000000003
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 3
+    },
+    {
+     "name": "vm_s3_bank15",
+     "xy_um": [
+      15807.312,
+      17902.08
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 3
+    },
+    {
+     "name": "vm_s3_bank16",
+     "xy_um": [
+      14079.312,
+      18031.68
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 3
+    },
+    {
+     "name": "vm_s3_bank17",
+     "xy_um": [
+      14079.312,
+      18161.28
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 3
+    },
+    {
+     "name": "vm_s3_bank18",
+     "xy_um": [
+      14079.312,
+      18290.880000000005
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 3
+    },
+    {
+     "name": "vm_s3_bank19",
+     "xy_um": [
+      14079.312,
+      18420.480000000003
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 3
+    },
+    {
+     "name": "vm_s3_bank20",
+     "xy_um": [
+      14338.511999999999,
+      18031.68
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 3
+    },
+    {
+     "name": "vm_s3_bank21",
+     "xy_um": [
+      14338.511999999999,
+      18161.28
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 3
+    },
+    {
+     "name": "vm_s3_bank22",
+     "xy_um": [
+      14338.511999999999,
+      18290.880000000005
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 3
+    },
+    {
+     "name": "vm_s3_bank23",
+     "xy_um": [
+      14338.511999999999,
+      18420.480000000003
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 3
+    },
+    {
+     "name": "vm_s3_bank24",
+     "xy_um": [
+      15548.112,
+      18031.68
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 3
+    },
+    {
+     "name": "vm_s3_bank25",
+     "xy_um": [
+      15548.112,
+      18161.28
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 3
+    },
+    {
+     "name": "vm_s3_bank26",
+     "xy_um": [
+      15548.112,
+      18290.880000000005
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 3
+    },
+    {
+     "name": "vm_s3_bank27",
+     "xy_um": [
+      15548.112,
+      18420.480000000003
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 3
+    },
+    {
+     "name": "vm_s3_bank28",
+     "xy_um": [
+      15807.312,
+      18031.68
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 3
+    },
+    {
+     "name": "vm_s3_bank29",
+     "xy_um": [
+      15807.312,
+      18161.28
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 3
+    },
+    {
+     "name": "vm_s3_bank30",
+     "xy_um": [
+      15807.312,
+      18290.880000000005
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 3
+    },
+    {
+     "name": "vm_s3_bank31",
+     "xy_um": [
+      15807.312,
+      18420.480000000003
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 3
+    },
+    {
+     "name": "vm_s3_quarter0",
+     "xy_um": [
+      14597.712,
+      17686.08
+     ],
+     "outline_um": [
+      172.8,
+      172.8
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_relay128_b8",
+     "slice": 3
+    },
+    {
+     "name": "vm_s3_quarter1",
+     "xy_um": [
+      15332.112,
+      17686.08
+     ],
+     "outline_um": [
+      172.8,
+      172.8
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_relay128_b8",
+     "slice": 3
+    },
+    {
+     "name": "vm_s3_quarter2",
+     "xy_um": [
+      14597.712,
+      18247.68
+     ],
+     "outline_um": [
+      172.8,
+      172.8
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_relay128_b8",
+     "slice": 3
+    },
+    {
+     "name": "vm_s3_quarter3",
+     "xy_um": [
+      15332.112,
+      18247.68
+     ],
+     "outline_um": [
+      172.8,
+      172.8
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_relay128_b8",
+     "slice": 3
+    },
+    {
+     "name": "vm_s3_bridge0",
+     "xy_um": [
+      14943.312,
+      17642.880000000005
+     ],
+     "outline_um": [
+      345.6,
+      345.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_relay128_b16",
+     "slice": 3
+    },
+    {
+     "name": "vm_s3_bridge1",
+     "xy_um": [
+      14943.312,
+      18636.480000000003
+     ],
+     "outline_um": [
+      345.6,
+      345.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_relay128_b16",
+     "slice": 3
+    },
+    {
+     "name": "vm_s3_wscatter",
+     "xy_um": [
+      14900.112,
+      18161.28
+     ],
+     "outline_um": [
+      345.6,
+      103.68
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_scatter",
+     "slice": 3
+    },
+    {
+     "name": "vm_s3_read_frontend",
+     "xy_um": [
+      14900.112,
+      18290.880000000005
+     ],
+     "outline_um": [
+      345.6,
+      51.84
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_suhc_fsr",
+     "slice": 3
+    },
+    {
+     "name": "vm_s3_return32",
+     "xy_um": [
+      14900.112,
+      18377.28
+     ],
+     "outline_um": [
+      345.6,
+      207.36
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_return",
+     "slice": 3
+    }
+   ],
+   "fixed": [
+    {
+     "name": "sp_su_s",
+     "xy_um": [
+      13780.8,
+      2073.6
+     ],
+     "outline_um": [
+      1889.976,
+      10709.256
+     ],
+     "kind": "hard_cluster",
+     "orientation": "R0"
+    },
+    {
+     "name": "sp_capture",
+     "xy_um": [
+      13942.8,
+      16778.88
+     ],
+     "outline_um": [
+      1727.976,
+      561.576
+     ],
+     "kind": "hard_cluster",
+     "orientation": "R0"
+    },
+    {
+     "name": "sp_gather",
+     "xy_um": [
+      13942.8,
+      17362.08
+     ],
+     "outline_um": [
+      1727.976,
+      803.496
+     ],
+     "kind": "hard_cluster",
+     "orientation": "R0"
+    },
+    {
+     "name": "sp_pq",
+     "xy_um": [
+      13942.8,
+      18338.4
+     ],
+     "outline_um": [
+      1672.248,
+      449.256
+     ],
+     "kind": "hard_cluster",
+     "orientation": "R0"
+    },
+    {
+     "name": "sp_wfc",
+     "xy_um": [
+      13942.8,
+      18960.48
+     ],
+     "outline_um": [
+      1727.976,
+      328.296
+     ],
+     "kind": "hard_cluster",
+     "orientation": "R0"
+    },
+    {
+     "name": "sp_sseq",
+     "xy_um": [
+      13942.8,
+      19461.6
+     ],
+     "outline_um": [
+      1727.976,
+      88.536
+     ],
+     "kind": "hard_cluster",
+     "orientation": "R0"
+    },
+    {
+     "name": "sp_collective",
+     "xy_um": [
+      13942.8,
+      19722.96
+     ],
+     "outline_um": [
+      1727.976,
+      2721.576
+     ],
+     "kind": "hard_cluster",
+     "orientation": "R0"
+    },
+    {
+     "name": "sp_host",
+     "xy_um": [
+      13942.8,
+      22617.36
+     ],
+     "outline_um": [
+      1727.976,
+      129.576
+     ],
+     "kind": "hard_cluster",
+     "orientation": "R0"
+    },
+    {
+     "name": "sp_hc_s",
+     "xy_um": [
+      17312.4,
+      13337.975999999999
+     ],
+     "outline_um": [
+      1816.536,
+      8806.32
+     ],
+     "kind": "hard_cluster",
+     "orientation": "R0"
+    },
+    {
+     "name": "sp_hc_t",
+     "xy_um": [
+      17312.4,
+      2879.2559999999994
+     ],
+     "outline_um": [
+      1816.536,
+      9227.52
+     ],
+     "kind": "hard_cluster",
+     "orientation": "R0"
+    },
+    {
+     "name": "phy_SW",
+     "xy_um": [
+      2884.896,
+      21.6
+     ],
+     "outline_um": [
+      8500.056,
+      1177.2
+     ],
+     "kind": "hard_cluster",
+     "orientation": "R0"
+    },
+    {
+     "name": "ctrl_SW",
+     "xy_um": [
+      2884.896,
+      1207.44
+     ],
+     "outline_um": [
+      8500.032,
+      248.376
+     ],
+     "kind": "hard_cluster",
+     "orientation": "R0"
+    },
+    {
+     "name": "svc_SW",
+     "xy_um": [
+      2884.896,
+      1464.48
+     ],
+     "outline_um": [
+      8500.032,
+      1576.776
+     ],
+     "kind": "hard_cluster",
+     "orientation": "R0"
+    },
+    {
+     "name": "bk_selector",
+     "xy_um": [
+      13872.384,
+      1464.48
+     ],
+     "outline_um": [
+      5270.376,
+      321.816
+     ],
+     "kind": "hard_cluster",
+     "orientation": "R0"
+    },
+    {
+     "name": "bk_collector",
+     "xy_um": [
+      13872.384,
+      23654.16
+     ],
+     "outline_um": [
+      5270.376,
+      881.256
+     ],
+     "kind": "hard_cluster",
+     "orientation": "R0"
+    },
+    {
+     "name": "lk_W0",
+     "xy_um": [
+      20.304,
+      8735.04
+     ],
+     "outline_um": [
+      260.808,
+      1652.424
+     ],
+     "kind": "hard_cluster",
+     "orientation": "R0"
+    },
+    {
+     "name": "lk_W1",
+     "xy_um": [
+      31.536,
+      10432.8
+     ],
+     "outline_um": [
+      250.056,
+      2250.216
+     ],
+     "kind": "hard_cluster",
+     "orientation": "R0"
+    },
+    {
+     "name": "lk_W2",
+     "xy_um": [
+      31.536,
+      12726.72
+     ],
+     "outline_um": [
+      250.056,
+      2250.216
+     ],
+     "kind": "hard_cluster",
+     "orientation": "R0"
+    },
+    {
+     "name": "lk_W3",
+     "xy_um": [
+      31.536,
+      15020.64
+     ],
+     "outline_um": [
+      250.056,
+      2250.216
+     ],
+     "kind": "hard_cluster",
+     "orientation": "R0"
+    },
+    {
+     "name": "lk_E0",
+     "xy_um": [
+      32719.248,
+      8735.04
+     ],
+     "outline_um": [
+      260.808,
+      1652.424
+     ],
+     "kind": "hard_cluster",
+     "orientation": "R0"
+    },
+    {
+     "name": "lk_E1",
+     "xy_um": [
+      32718.384,
+      10432.8
+     ],
+     "outline_um": [
+      250.056,
+      2250.216
+     ],
+     "kind": "hard_cluster",
+     "orientation": "R0"
+    },
+    {
+     "name": "lk_E2",
+     "xy_um": [
+      32718.384,
+      12726.72
+     ],
+     "outline_um": [
+      250.056,
+      2250.216
+     ],
+     "kind": "hard_cluster",
+     "orientation": "R0"
+    },
+    {
+     "name": "lk_E3",
+     "xy_um": [
+      32718.384,
+      15020.64
+     ],
+     "outline_um": [
+      250.056,
+      2250.216
+     ],
+     "kind": "hard_cluster",
+     "orientation": "R0"
+    },
+    {
+     "name": "svcj",
+     "xy_um": [
+      9052.128,
+      3045.6
+     ],
+     "outline_um": [
+      64.8,
+      43.2
+     ],
+     "kind": "hard_cluster",
+     "orientation": "R0"
+    },
+    {
+     "name": "sp_hcx_south0",
+     "xy_um": [
+      9417.6,
+      24624.0
+     ],
+     "outline_um": [
+      1728.0,
+      1296.0
+     ],
+     "kind": "unbound_HCP_reservation",
+     "orientation": "R0"
+    },
+    {
+     "name": "sp_hcx_south1",
+     "xy_um": [
+      11232.0,
+      24624.0
+     ],
+     "outline_um": [
+      1728.0,
+      1296.0
+     ],
+     "kind": "unbound_HCP_reservation",
+     "orientation": "R0"
+    },
+    {
+     "name": "sp_hcx_north0",
+     "xy_um": [
+      13046.400000000001,
+      24624.0
+     ],
+     "outline_um": [
+      1728.0,
+      1296.0
+     ],
+     "kind": "unbound_HCP_reservation",
+     "orientation": "R0"
+    },
+    {
+     "name": "sp_hcx_north1",
+     "xy_um": [
+      14860.800000000001,
+      24624.0
+     ],
+     "outline_um": [
+      1728.0,
+      1296.0
+     ],
+     "kind": "unbound_HCP_reservation",
+     "orientation": "R0"
+    },
+    {
+     "name": "sp_hcx_west0",
+     "xy_um": [
+      16675.2,
+      24624.0
+     ],
+     "outline_um": [
+      1728.0,
+      1296.0
+     ],
+     "kind": "unbound_HCP_reservation",
+     "orientation": "R0"
+    },
+    {
+     "name": "sp_hcx_west1",
+     "xy_um": [
+      18489.6,
+      24624.0
+     ],
+     "outline_um": [
+      1728.0,
+      1296.0
+     ],
+     "kind": "unbound_HCP_reservation",
+     "orientation": "R0"
+    }
+   ],
+   "edge": {
+    "name": "VM_global_edge_UNPROVEN",
+    "xy_um": [
+     14079.312,
+     19025.28
+    ],
+    "outline_um": [
+     1987.2,
+     561.6
+    ],
+    "kind": "unproven_edge_reservation",
+    "orientation": "R0"
+   },
+   "changes": {
+    "hc_tower_translation_x_um": 0,
+    "su_translation_x_um": 0,
+    "service_stack_translation_x_um": 0
+   },
+   "architectural_tradeoff": "Existing vertical grouping with actual larger VM; exposes overlap rather than claiming old slot fit",
+   "rectangle_collisions": [
+    [
+     "vm_s2_bank18",
+     "sp_capture"
+    ],
+    [
+     "vm_s2_bank19",
+     "sp_capture"
+    ],
+    [
+     "vm_s2_bank22",
+     "sp_capture"
+    ],
+    [
+     "vm_s2_bank23",
+     "sp_capture"
+    ],
+    [
+     "vm_s2_bank26",
+     "sp_capture"
+    ],
+    [
+     "vm_s2_bank27",
+     "sp_capture"
+    ],
+    [
+     "vm_s2_quarter2",
+     "sp_capture"
+    ],
+    [
+     "vm_s2_quarter3",
+     "sp_capture"
+    ],
+    [
+     "vm_s2_bridge1",
+     "sp_capture"
+    ],
+    [
+     "vm_s2_bridge1",
+     "sp_gather"
+    ],
+    [
+     "vm_s2_read_frontend",
+     "sp_capture"
+    ],
+    [
+     "vm_s2_return32",
+     "sp_capture"
+    ],
+    [
+     "vm_s3_bank0",
+     "sp_gather"
+    ],
+    [
+     "vm_s3_bank1",
+     "sp_gather"
+    ],
+    [
+     "vm_s3_bank2",
+     "sp_gather"
+    ],
+    [
+     "vm_s3_bank3",
+     "sp_gather"
+    ],
+    [
+     "vm_s3_bank4",
+     "sp_gather"
+    ],
+    [
+     "vm_s3_bank5",
+     "sp_gather"
+    ],
+    [
+     "vm_s3_bank6",
+     "sp_gather"
+    ],
+    [
+     "vm_s3_bank7",
+     "sp_gather"
+    ],
+    [
+     "vm_s3_bank8",
+     "sp_gather"
+    ],
+    [
+     "vm_s3_bank9",
+     "sp_gather"
+    ],
+    [
+     "vm_s3_bank10",
+     "sp_gather"
+    ],
+    [
+     "vm_s3_bank11",
+     "sp_gather"
+    ],
+    [
+     "vm_s3_bank16",
+     "sp_gather"
+    ],
+    [
+     "vm_s3_bank17",
+     "sp_gather"
+    ],
+    [
+     "vm_s3_bank18",
+     "sp_pq"
+    ],
+    [
+     "vm_s3_bank19",
+     "sp_pq"
+    ],
+    [
+     "vm_s3_bank20",
+     "sp_gather"
+    ],
+    [
+     "vm_s3_bank21",
+     "sp_gather"
+    ],
+    [
+     "vm_s3_bank22",
+     "sp_pq"
+    ],
+    [
+     "vm_s3_bank23",
+     "sp_pq"
+    ],
+    [
+     "vm_s3_bank24",
+     "sp_gather"
+    ],
+    [
+     "vm_s3_bank25",
+     "sp_gather"
+    ],
+    [
+     "vm_s3_bank26",
+     "sp_pq"
+    ],
+    [
+     "vm_s3_bank27",
+     "sp_pq"
+    ],
+    [
+     "vm_s3_quarter0",
+     "sp_gather"
+    ],
+    [
+     "vm_s3_quarter1",
+     "sp_gather"
+    ],
+    [
+     "vm_s3_quarter2",
+     "sp_pq"
+    ],
+    [
+     "vm_s3_quarter3",
+     "sp_pq"
+    ],
+    [
+     "vm_s3_bridge0",
+     "sp_gather"
+    ],
+    [
+     "vm_s3_bridge1",
+     "sp_pq"
+    ],
+    [
+     "vm_s3_bridge1",
+     "sp_wfc"
+    ],
+    [
+     "vm_s3_wscatter",
+     "sp_gather"
+    ],
+    [
+     "vm_s3_read_frontend",
+     "sp_pq"
+    ],
+    [
+     "vm_s3_return32",
+     "sp_pq"
+    ],
+    [
+     "VM_global_edge_UNPROVEN",
+     "sp_wfc"
+    ],
+    [
+     "VM_global_edge_UNPROVEN",
+     "sp_sseq"
+    ]
+   ],
+   "outside": [],
+   "scope": "GEOMETRY_ONLY_UNADOPTED_SYSTEM_ALTERNATIVE",
+   "hardware_counts": {
+    "field_pairs": 2417,
+    "BF_fronts": 519,
+    "CFG_ROM": 16919,
+    "root_regions": 128,
+    "VM_core_nodes": 164,
+    "VM_banks": 128
+   },
+   "unproven": [
+    "Global53writer/cap16/CDC16 packing in edge reservation",
+    "Actual global readissue/return/write pin faces and clock/phase delivery",
+    "All boundary wire length, actual relay allocation/cuts<=0.60 and priced extra static cycles",
+    "All native HC children and expandedHCP source pin contracts",
+    "Full revised canonical FIELD return/broadcast topology regenerates; old transport not kept"
+   ]
+  },
+  {
+   "name": "B_compact_2x2",
+   "slice_origins_um": [
+    [
+     13446.0,
+     12804.48
+    ],
+    [
+     15541.2,
+     12804.48
+    ],
+    [
+     13446.0,
+     14381.279999999999
+    ],
+    [
+     15541.2,
+     14381.279999999999
+    ]
+   ],
+   "vm_nodes": [
+    {
+     "name": "vm_s0_bank0",
+     "xy_um": [
+      13489.2,
+      12847.68
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 0
+    },
+    {
+     "name": "vm_s0_bank1",
+     "xy_um": [
+      13489.2,
+      12977.279999999999
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 0
+    },
+    {
+     "name": "vm_s0_bank2",
+     "xy_um": [
+      13489.2,
+      13106.88
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 0
+    },
+    {
+     "name": "vm_s0_bank3",
+     "xy_um": [
+      13489.2,
+      13236.48
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 0
+    },
+    {
+     "name": "vm_s0_bank4",
+     "xy_um": [
+      13748.4,
+      12847.68
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 0
+    },
+    {
+     "name": "vm_s0_bank5",
+     "xy_um": [
+      13748.4,
+      12977.279999999999
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 0
+    },
+    {
+     "name": "vm_s0_bank6",
+     "xy_um": [
+      13748.4,
+      13106.88
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 0
+    },
+    {
+     "name": "vm_s0_bank7",
+     "xy_um": [
+      13748.4,
+      13236.48
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 0
+    },
+    {
+     "name": "vm_s0_bank8",
+     "xy_um": [
+      14958.0,
+      12847.68
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 0
+    },
+    {
+     "name": "vm_s0_bank9",
+     "xy_um": [
+      14958.0,
+      12977.279999999999
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 0
+    },
+    {
+     "name": "vm_s0_bank10",
+     "xy_um": [
+      14958.0,
+      13106.88
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 0
+    },
+    {
+     "name": "vm_s0_bank11",
+     "xy_um": [
+      14958.0,
+      13236.48
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 0
+    },
+    {
+     "name": "vm_s0_bank12",
+     "xy_um": [
+      15217.2,
+      12847.68
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 0
+    },
+    {
+     "name": "vm_s0_bank13",
+     "xy_um": [
+      15217.2,
+      12977.279999999999
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 0
+    },
+    {
+     "name": "vm_s0_bank14",
+     "xy_um": [
+      15217.2,
+      13106.88
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 0
+    },
+    {
+     "name": "vm_s0_bank15",
+     "xy_um": [
+      15217.2,
+      13236.48
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 0
+    },
+    {
+     "name": "vm_s0_bank16",
+     "xy_um": [
+      13489.2,
+      13366.08
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 0
+    },
+    {
+     "name": "vm_s0_bank17",
+     "xy_um": [
+      13489.2,
+      13495.68
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 0
+    },
+    {
+     "name": "vm_s0_bank18",
+     "xy_um": [
+      13489.2,
+      13625.279999999999
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 0
+    },
+    {
+     "name": "vm_s0_bank19",
+     "xy_um": [
+      13489.2,
+      13754.88
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 0
+    },
+    {
+     "name": "vm_s0_bank20",
+     "xy_um": [
+      13748.4,
+      13366.08
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 0
+    },
+    {
+     "name": "vm_s0_bank21",
+     "xy_um": [
+      13748.4,
+      13495.68
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 0
+    },
+    {
+     "name": "vm_s0_bank22",
+     "xy_um": [
+      13748.4,
+      13625.279999999999
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 0
+    },
+    {
+     "name": "vm_s0_bank23",
+     "xy_um": [
+      13748.4,
+      13754.88
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 0
+    },
+    {
+     "name": "vm_s0_bank24",
+     "xy_um": [
+      14958.0,
+      13366.08
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 0
+    },
+    {
+     "name": "vm_s0_bank25",
+     "xy_um": [
+      14958.0,
+      13495.68
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 0
+    },
+    {
+     "name": "vm_s0_bank26",
+     "xy_um": [
+      14958.0,
+      13625.279999999999
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 0
+    },
+    {
+     "name": "vm_s0_bank27",
+     "xy_um": [
+      14958.0,
+      13754.88
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 0
+    },
+    {
+     "name": "vm_s0_bank28",
+     "xy_um": [
+      15217.2,
+      13366.08
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 0
+    },
+    {
+     "name": "vm_s0_bank29",
+     "xy_um": [
+      15217.2,
+      13495.68
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 0
+    },
+    {
+     "name": "vm_s0_bank30",
+     "xy_um": [
+      15217.2,
+      13625.279999999999
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 0
+    },
+    {
+     "name": "vm_s0_bank31",
+     "xy_um": [
+      15217.2,
+      13754.88
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 0
+    },
+    {
+     "name": "vm_s0_quarter0",
+     "xy_um": [
+      14007.6,
+      13020.48
+     ],
+     "outline_um": [
+      172.8,
+      172.8
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_relay128_b8",
+     "slice": 0
+    },
+    {
+     "name": "vm_s0_quarter1",
+     "xy_um": [
+      14742.0,
+      13020.48
+     ],
+     "outline_um": [
+      172.8,
+      172.8
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_relay128_b8",
+     "slice": 0
+    },
+    {
+     "name": "vm_s0_quarter2",
+     "xy_um": [
+      14007.6,
+      13582.08
+     ],
+     "outline_um": [
+      172.8,
+      172.8
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_relay128_b8",
+     "slice": 0
+    },
+    {
+     "name": "vm_s0_quarter3",
+     "xy_um": [
+      14742.0,
+      13582.08
+     ],
+     "outline_um": [
+      172.8,
+      172.8
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_relay128_b8",
+     "slice": 0
+    },
+    {
+     "name": "vm_s0_bridge0",
+     "xy_um": [
+      14353.2,
+      12977.279999999999
+     ],
+     "outline_um": [
+      345.6,
+      345.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_relay128_b16",
+     "slice": 0
+    },
+    {
+     "name": "vm_s0_bridge1",
+     "xy_um": [
+      14353.2,
+      13970.88
+     ],
+     "outline_um": [
+      345.6,
+      345.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_relay128_b16",
+     "slice": 0
+    },
+    {
+     "name": "vm_s0_wscatter",
+     "xy_um": [
+      14310.0,
+      13495.68
+     ],
+     "outline_um": [
+      345.6,
+      103.68
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_scatter",
+     "slice": 0
+    },
+    {
+     "name": "vm_s0_read_frontend",
+     "xy_um": [
+      14310.0,
+      13625.279999999999
+     ],
+     "outline_um": [
+      345.6,
+      51.84
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_suhc_fsr",
+     "slice": 0
+    },
+    {
+     "name": "vm_s0_return32",
+     "xy_um": [
+      14310.0,
+      13711.68
+     ],
+     "outline_um": [
+      345.6,
+      207.36
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_return",
+     "slice": 0
+    },
+    {
+     "name": "vm_s1_bank0",
+     "xy_um": [
+      15584.400000000001,
+      12847.679999999998
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 1
+    },
+    {
+     "name": "vm_s1_bank1",
+     "xy_um": [
+      15584.400000000001,
+      12977.279999999999
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 1
+    },
+    {
+     "name": "vm_s1_bank2",
+     "xy_um": [
+      15584.400000000001,
+      13106.88
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 1
+    },
+    {
+     "name": "vm_s1_bank3",
+     "xy_um": [
+      15584.400000000001,
+      13236.48
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 1
+    },
+    {
+     "name": "vm_s1_bank4",
+     "xy_um": [
+      15843.6,
+      12847.679999999998
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 1
+    },
+    {
+     "name": "vm_s1_bank5",
+     "xy_um": [
+      15843.6,
+      12977.279999999999
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 1
+    },
+    {
+     "name": "vm_s1_bank6",
+     "xy_um": [
+      15843.6,
+      13106.88
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 1
+    },
+    {
+     "name": "vm_s1_bank7",
+     "xy_um": [
+      15843.6,
+      13236.48
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 1
+    },
+    {
+     "name": "vm_s1_bank8",
+     "xy_um": [
+      17053.2,
+      12847.679999999998
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 1
+    },
+    {
+     "name": "vm_s1_bank9",
+     "xy_um": [
+      17053.2,
+      12977.279999999999
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 1
+    },
+    {
+     "name": "vm_s1_bank10",
+     "xy_um": [
+      17053.2,
+      13106.88
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 1
+    },
+    {
+     "name": "vm_s1_bank11",
+     "xy_um": [
+      17053.2,
+      13236.48
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 1
+    },
+    {
+     "name": "vm_s1_bank12",
+     "xy_um": [
+      17312.4,
+      12847.679999999998
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 1
+    },
+    {
+     "name": "vm_s1_bank13",
+     "xy_um": [
+      17312.4,
+      12977.279999999999
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 1
+    },
+    {
+     "name": "vm_s1_bank14",
+     "xy_um": [
+      17312.4,
+      13106.88
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 1
+    },
+    {
+     "name": "vm_s1_bank15",
+     "xy_um": [
+      17312.4,
+      13236.48
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 1
+    },
+    {
+     "name": "vm_s1_bank16",
+     "xy_um": [
+      15584.400000000001,
+      13366.079999999998
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 1
+    },
+    {
+     "name": "vm_s1_bank17",
+     "xy_um": [
+      15584.400000000001,
+      13495.679999999998
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 1
+    },
+    {
+     "name": "vm_s1_bank18",
+     "xy_um": [
+      15584.400000000001,
+      13625.279999999999
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 1
+    },
+    {
+     "name": "vm_s1_bank19",
+     "xy_um": [
+      15584.400000000001,
+      13754.88
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 1
+    },
+    {
+     "name": "vm_s1_bank20",
+     "xy_um": [
+      15843.6,
+      13366.079999999998
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 1
+    },
+    {
+     "name": "vm_s1_bank21",
+     "xy_um": [
+      15843.6,
+      13495.679999999998
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 1
+    },
+    {
+     "name": "vm_s1_bank22",
+     "xy_um": [
+      15843.6,
+      13625.279999999999
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 1
+    },
+    {
+     "name": "vm_s1_bank23",
+     "xy_um": [
+      15843.6,
+      13754.88
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 1
+    },
+    {
+     "name": "vm_s1_bank24",
+     "xy_um": [
+      17053.2,
+      13366.079999999998
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 1
+    },
+    {
+     "name": "vm_s1_bank25",
+     "xy_um": [
+      17053.2,
+      13495.679999999998
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 1
+    },
+    {
+     "name": "vm_s1_bank26",
+     "xy_um": [
+      17053.2,
+      13625.279999999999
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 1
+    },
+    {
+     "name": "vm_s1_bank27",
+     "xy_um": [
+      17053.2,
+      13754.88
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 1
+    },
+    {
+     "name": "vm_s1_bank28",
+     "xy_um": [
+      17312.4,
+      13366.079999999998
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 1
+    },
+    {
+     "name": "vm_s1_bank29",
+     "xy_um": [
+      17312.4,
+      13495.679999999998
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 1
+    },
+    {
+     "name": "vm_s1_bank30",
+     "xy_um": [
+      17312.4,
+      13625.279999999999
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 1
+    },
+    {
+     "name": "vm_s1_bank31",
+     "xy_um": [
+      17312.4,
+      13754.88
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 1
+    },
+    {
+     "name": "vm_s1_quarter0",
+     "xy_um": [
+      16102.800000000001,
+      13020.48
+     ],
+     "outline_um": [
+      172.8,
+      172.8
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_relay128_b8",
+     "slice": 1
+    },
+    {
+     "name": "vm_s1_quarter1",
+     "xy_um": [
+      16837.2,
+      13020.48
+     ],
+     "outline_um": [
+      172.8,
+      172.8
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_relay128_b8",
+     "slice": 1
+    },
+    {
+     "name": "vm_s1_quarter2",
+     "xy_um": [
+      16102.800000000001,
+      13582.079999999998
+     ],
+     "outline_um": [
+      172.8,
+      172.8
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_relay128_b8",
+     "slice": 1
+    },
+    {
+     "name": "vm_s1_quarter3",
+     "xy_um": [
+      16837.2,
+      13582.079999999998
+     ],
+     "outline_um": [
+      172.8,
+      172.8
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_relay128_b8",
+     "slice": 1
+    },
+    {
+     "name": "vm_s1_bridge0",
+     "xy_um": [
+      16448.4,
+      12977.279999999999
+     ],
+     "outline_um": [
+      345.6,
+      345.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_relay128_b16",
+     "slice": 1
+    },
+    {
+     "name": "vm_s1_bridge1",
+     "xy_um": [
+      16448.4,
+      13970.88
+     ],
+     "outline_um": [
+      345.6,
+      345.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_relay128_b16",
+     "slice": 1
+    },
+    {
+     "name": "vm_s1_wscatter",
+     "xy_um": [
+      16405.2,
+      13495.679999999998
+     ],
+     "outline_um": [
+      345.6,
+      103.68
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_scatter",
+     "slice": 1
+    },
+    {
+     "name": "vm_s1_read_frontend",
+     "xy_um": [
+      16405.2,
+      13625.279999999999
+     ],
+     "outline_um": [
+      345.6,
+      51.84
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_suhc_fsr",
+     "slice": 1
+    },
+    {
+     "name": "vm_s1_return32",
+     "xy_um": [
+      16405.2,
+      13711.679999999998
+     ],
+     "outline_um": [
+      345.6,
+      207.36
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_return",
+     "slice": 1
+    },
+    {
+     "name": "vm_s2_bank0",
+     "xy_um": [
+      13489.2,
+      14424.479999999998
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 2
+    },
+    {
+     "name": "vm_s2_bank1",
+     "xy_um": [
+      13489.2,
+      14554.08
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 2
+    },
+    {
+     "name": "vm_s2_bank2",
+     "xy_um": [
+      13489.2,
+      14683.679999999998
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 2
+    },
+    {
+     "name": "vm_s2_bank3",
+     "xy_um": [
+      13489.2,
+      14813.28
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 2
+    },
+    {
+     "name": "vm_s2_bank4",
+     "xy_um": [
+      13748.4,
+      14424.479999999998
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 2
+    },
+    {
+     "name": "vm_s2_bank5",
+     "xy_um": [
+      13748.4,
+      14554.08
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 2
+    },
+    {
+     "name": "vm_s2_bank6",
+     "xy_um": [
+      13748.4,
+      14683.679999999998
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 2
+    },
+    {
+     "name": "vm_s2_bank7",
+     "xy_um": [
+      13748.4,
+      14813.28
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 2
+    },
+    {
+     "name": "vm_s2_bank8",
+     "xy_um": [
+      14958.0,
+      14424.479999999998
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 2
+    },
+    {
+     "name": "vm_s2_bank9",
+     "xy_um": [
+      14958.0,
+      14554.08
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 2
+    },
+    {
+     "name": "vm_s2_bank10",
+     "xy_um": [
+      14958.0,
+      14683.679999999998
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 2
+    },
+    {
+     "name": "vm_s2_bank11",
+     "xy_um": [
+      14958.0,
+      14813.28
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 2
+    },
+    {
+     "name": "vm_s2_bank12",
+     "xy_um": [
+      15217.2,
+      14424.479999999998
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 2
+    },
+    {
+     "name": "vm_s2_bank13",
+     "xy_um": [
+      15217.2,
+      14554.08
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 2
+    },
+    {
+     "name": "vm_s2_bank14",
+     "xy_um": [
+      15217.2,
+      14683.679999999998
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 2
+    },
+    {
+     "name": "vm_s2_bank15",
+     "xy_um": [
+      15217.2,
+      14813.28
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 2
+    },
+    {
+     "name": "vm_s2_bank16",
+     "xy_um": [
+      13489.2,
+      14942.88
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 2
+    },
+    {
+     "name": "vm_s2_bank17",
+     "xy_um": [
+      13489.2,
+      15072.479999999998
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 2
+    },
+    {
+     "name": "vm_s2_bank18",
+     "xy_um": [
+      13489.2,
+      15202.08
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 2
+    },
+    {
+     "name": "vm_s2_bank19",
+     "xy_um": [
+      13489.2,
+      15331.679999999998
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 2
+    },
+    {
+     "name": "vm_s2_bank20",
+     "xy_um": [
+      13748.4,
+      14942.88
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 2
+    },
+    {
+     "name": "vm_s2_bank21",
+     "xy_um": [
+      13748.4,
+      15072.479999999998
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 2
+    },
+    {
+     "name": "vm_s2_bank22",
+     "xy_um": [
+      13748.4,
+      15202.08
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 2
+    },
+    {
+     "name": "vm_s2_bank23",
+     "xy_um": [
+      13748.4,
+      15331.679999999998
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 2
+    },
+    {
+     "name": "vm_s2_bank24",
+     "xy_um": [
+      14958.0,
+      14942.88
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 2
+    },
+    {
+     "name": "vm_s2_bank25",
+     "xy_um": [
+      14958.0,
+      15072.479999999998
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 2
+    },
+    {
+     "name": "vm_s2_bank26",
+     "xy_um": [
+      14958.0,
+      15202.08
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 2
+    },
+    {
+     "name": "vm_s2_bank27",
+     "xy_um": [
+      14958.0,
+      15331.679999999998
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 2
+    },
+    {
+     "name": "vm_s2_bank28",
+     "xy_um": [
+      15217.2,
+      14942.88
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 2
+    },
+    {
+     "name": "vm_s2_bank29",
+     "xy_um": [
+      15217.2,
+      15072.479999999998
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 2
+    },
+    {
+     "name": "vm_s2_bank30",
+     "xy_um": [
+      15217.2,
+      15202.08
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 2
+    },
+    {
+     "name": "vm_s2_bank31",
+     "xy_um": [
+      15217.2,
+      15331.679999999998
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 2
+    },
+    {
+     "name": "vm_s2_quarter0",
+     "xy_um": [
+      14007.6,
+      14597.28
+     ],
+     "outline_um": [
+      172.8,
+      172.8
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_relay128_b8",
+     "slice": 2
+    },
+    {
+     "name": "vm_s2_quarter1",
+     "xy_um": [
+      14742.0,
+      14597.28
+     ],
+     "outline_um": [
+      172.8,
+      172.8
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_relay128_b8",
+     "slice": 2
+    },
+    {
+     "name": "vm_s2_quarter2",
+     "xy_um": [
+      14007.6,
+      15158.88
+     ],
+     "outline_um": [
+      172.8,
+      172.8
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_relay128_b8",
+     "slice": 2
+    },
+    {
+     "name": "vm_s2_quarter3",
+     "xy_um": [
+      14742.0,
+      15158.88
+     ],
+     "outline_um": [
+      172.8,
+      172.8
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_relay128_b8",
+     "slice": 2
+    },
+    {
+     "name": "vm_s2_bridge0",
+     "xy_um": [
+      14353.2,
+      14554.08
+     ],
+     "outline_um": [
+      345.6,
+      345.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_relay128_b16",
+     "slice": 2
+    },
+    {
+     "name": "vm_s2_bridge1",
+     "xy_um": [
+      14353.2,
+      15547.679999999998
+     ],
+     "outline_um": [
+      345.6,
+      345.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_relay128_b16",
+     "slice": 2
+    },
+    {
+     "name": "vm_s2_wscatter",
+     "xy_um": [
+      14310.0,
+      15072.479999999998
+     ],
+     "outline_um": [
+      345.6,
+      103.68
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_scatter",
+     "slice": 2
+    },
+    {
+     "name": "vm_s2_read_frontend",
+     "xy_um": [
+      14310.0,
+      15202.08
+     ],
+     "outline_um": [
+      345.6,
+      51.84
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_suhc_fsr",
+     "slice": 2
+    },
+    {
+     "name": "vm_s2_return32",
+     "xy_um": [
+      14310.0,
+      15288.479999999998
+     ],
+     "outline_um": [
+      345.6,
+      207.36
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_return",
+     "slice": 2
+    },
+    {
+     "name": "vm_s3_bank0",
+     "xy_um": [
+      15584.400000000001,
+      14424.479999999998
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 3
+    },
+    {
+     "name": "vm_s3_bank1",
+     "xy_um": [
+      15584.400000000001,
+      14554.08
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 3
+    },
+    {
+     "name": "vm_s3_bank2",
+     "xy_um": [
+      15584.400000000001,
+      14683.679999999998
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 3
+    },
+    {
+     "name": "vm_s3_bank3",
+     "xy_um": [
+      15584.400000000001,
+      14813.279999999997
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 3
+    },
+    {
+     "name": "vm_s3_bank4",
+     "xy_um": [
+      15843.6,
+      14424.479999999998
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 3
+    },
+    {
+     "name": "vm_s3_bank5",
+     "xy_um": [
+      15843.6,
+      14554.08
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 3
+    },
+    {
+     "name": "vm_s3_bank6",
+     "xy_um": [
+      15843.6,
+      14683.679999999998
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 3
+    },
+    {
+     "name": "vm_s3_bank7",
+     "xy_um": [
+      15843.6,
+      14813.279999999997
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 3
+    },
+    {
+     "name": "vm_s3_bank8",
+     "xy_um": [
+      17053.2,
+      14424.479999999998
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 3
+    },
+    {
+     "name": "vm_s3_bank9",
+     "xy_um": [
+      17053.2,
+      14554.08
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 3
+    },
+    {
+     "name": "vm_s3_bank10",
+     "xy_um": [
+      17053.2,
+      14683.679999999998
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 3
+    },
+    {
+     "name": "vm_s3_bank11",
+     "xy_um": [
+      17053.2,
+      14813.279999999997
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 3
+    },
+    {
+     "name": "vm_s3_bank12",
+     "xy_um": [
+      17312.4,
+      14424.479999999998
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 3
+    },
+    {
+     "name": "vm_s3_bank13",
+     "xy_um": [
+      17312.4,
+      14554.08
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 3
+    },
+    {
+     "name": "vm_s3_bank14",
+     "xy_um": [
+      17312.4,
+      14683.679999999998
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 3
+    },
+    {
+     "name": "vm_s3_bank15",
+     "xy_um": [
+      17312.4,
+      14813.279999999997
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 3
+    },
+    {
+     "name": "vm_s3_bank16",
+     "xy_um": [
+      15584.400000000001,
+      14942.88
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 3
+    },
+    {
+     "name": "vm_s3_bank17",
+     "xy_um": [
+      15584.400000000001,
+      15072.479999999998
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 3
+    },
+    {
+     "name": "vm_s3_bank18",
+     "xy_um": [
+      15584.400000000001,
+      15202.08
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 3
+    },
+    {
+     "name": "vm_s3_bank19",
+     "xy_um": [
+      15584.400000000001,
+      15331.679999999998
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 3
+    },
+    {
+     "name": "vm_s3_bank20",
+     "xy_um": [
+      15843.6,
+      14942.88
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 3
+    },
+    {
+     "name": "vm_s3_bank21",
+     "xy_um": [
+      15843.6,
+      15072.479999999998
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 3
+    },
+    {
+     "name": "vm_s3_bank22",
+     "xy_um": [
+      15843.6,
+      15202.08
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 3
+    },
+    {
+     "name": "vm_s3_bank23",
+     "xy_um": [
+      15843.6,
+      15331.679999999998
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 3
+    },
+    {
+     "name": "vm_s3_bank24",
+     "xy_um": [
+      17053.2,
+      14942.88
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 3
+    },
+    {
+     "name": "vm_s3_bank25",
+     "xy_um": [
+      17053.2,
+      15072.479999999998
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 3
+    },
+    {
+     "name": "vm_s3_bank26",
+     "xy_um": [
+      17053.2,
+      15202.08
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 3
+    },
+    {
+     "name": "vm_s3_bank27",
+     "xy_um": [
+      17053.2,
+      15331.679999999998
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 3
+    },
+    {
+     "name": "vm_s3_bank28",
+     "xy_um": [
+      17312.4,
+      14942.88
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 3
+    },
+    {
+     "name": "vm_s3_bank29",
+     "xy_um": [
+      17312.4,
+      15072.479999999998
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 3
+    },
+    {
+     "name": "vm_s3_bank30",
+     "xy_um": [
+      17312.4,
+      15202.08
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 3
+    },
+    {
+     "name": "vm_s3_bank31",
+     "xy_um": [
+      17312.4,
+      15331.679999999998
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 3
+    },
+    {
+     "name": "vm_s3_quarter0",
+     "xy_um": [
+      16102.800000000001,
+      14597.279999999997
+     ],
+     "outline_um": [
+      172.8,
+      172.8
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_relay128_b8",
+     "slice": 3
+    },
+    {
+     "name": "vm_s3_quarter1",
+     "xy_um": [
+      16837.2,
+      14597.279999999997
+     ],
+     "outline_um": [
+      172.8,
+      172.8
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_relay128_b8",
+     "slice": 3
+    },
+    {
+     "name": "vm_s3_quarter2",
+     "xy_um": [
+      16102.800000000001,
+      15158.88
+     ],
+     "outline_um": [
+      172.8,
+      172.8
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_relay128_b8",
+     "slice": 3
+    },
+    {
+     "name": "vm_s3_quarter3",
+     "xy_um": [
+      16837.2,
+      15158.88
+     ],
+     "outline_um": [
+      172.8,
+      172.8
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_relay128_b8",
+     "slice": 3
+    },
+    {
+     "name": "vm_s3_bridge0",
+     "xy_um": [
+      16448.4,
+      14554.08
+     ],
+     "outline_um": [
+      345.6,
+      345.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_relay128_b16",
+     "slice": 3
+    },
+    {
+     "name": "vm_s3_bridge1",
+     "xy_um": [
+      16448.4,
+      15547.679999999998
+     ],
+     "outline_um": [
+      345.6,
+      345.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_relay128_b16",
+     "slice": 3
+    },
+    {
+     "name": "vm_s3_wscatter",
+     "xy_um": [
+      16405.2,
+      15072.479999999998
+     ],
+     "outline_um": [
+      345.6,
+      103.68
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_scatter",
+     "slice": 3
+    },
+    {
+     "name": "vm_s3_read_frontend",
+     "xy_um": [
+      16405.2,
+      15202.08
+     ],
+     "outline_um": [
+      345.6,
+      51.84
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_suhc_fsr",
+     "slice": 3
+    },
+    {
+     "name": "vm_s3_return32",
+     "xy_um": [
+      16405.2,
+      15288.479999999998
+     ],
+     "outline_um": [
+      345.6,
+      207.36
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_return",
+     "slice": 3
+    }
+   ],
+   "fixed": [
+    {
+     "name": "sp_su_s",
+     "xy_um": [
+      13780.8,
+      2073.6
+     ],
+     "outline_um": [
+      1889.976,
+      10709.256
+     ],
+     "kind": "hard_cluster",
+     "orientation": "R0"
+    },
+    {
+     "name": "sp_capture",
+     "xy_um": [
+      13942.8,
+      16778.88
+     ],
+     "outline_um": [
+      1727.976,
+      561.576
+     ],
+     "kind": "hard_cluster",
+     "orientation": "R0"
+    },
+    {
+     "name": "sp_gather",
+     "xy_um": [
+      13942.8,
+      17362.08
+     ],
+     "outline_um": [
+      1727.976,
+      803.496
+     ],
+     "kind": "hard_cluster",
+     "orientation": "R0"
+    },
+    {
+     "name": "sp_pq",
+     "xy_um": [
+      13942.8,
+      18338.4
+     ],
+     "outline_um": [
+      1672.248,
+      449.256
+     ],
+     "kind": "hard_cluster",
+     "orientation": "R0"
+    },
+    {
+     "name": "sp_wfc",
+     "xy_um": [
+      13942.8,
+      18960.48
+     ],
+     "outline_um": [
+      1727.976,
+      328.296
+     ],
+     "kind": "hard_cluster",
+     "orientation": "R0"
+    },
+    {
+     "name": "sp_sseq",
+     "xy_um": [
+      13942.8,
+      19461.6
+     ],
+     "outline_um": [
+      1727.976,
+      88.536
+     ],
+     "kind": "hard_cluster",
+     "orientation": "R0"
+    },
+    {
+     "name": "sp_collective",
+     "xy_um": [
+      13942.8,
+      19722.96
+     ],
+     "outline_um": [
+      1727.976,
+      2721.576
+     ],
+     "kind": "hard_cluster",
+     "orientation": "R0"
+    },
+    {
+     "name": "sp_host",
+     "xy_um": [
+      13942.8,
+      22617.36
+     ],
+     "outline_um": [
+      1727.976,
+      129.576
+     ],
+     "kind": "hard_cluster",
+     "orientation": "R0"
+    },
+    {
+     "name": "sp_hc_s",
+     "xy_um": [
+      17636.4,
+      13337.975999999999
+     ],
+     "outline_um": [
+      1816.536,
+      8806.32
+     ],
+     "kind": "hard_cluster",
+     "orientation": "R0"
+    },
+    {
+     "name": "sp_hc_t",
+     "xy_um": [
+      17636.4,
+      2879.2559999999994
+     ],
+     "outline_um": [
+      1816.536,
+      9227.52
+     ],
+     "kind": "hard_cluster",
+     "orientation": "R0"
+    },
+    {
+     "name": "phy_SW",
+     "xy_um": [
+      2884.896,
+      21.6
+     ],
+     "outline_um": [
+      8500.056,
+      1177.2
+     ],
+     "kind": "hard_cluster",
+     "orientation": "R0"
+    },
+    {
+     "name": "ctrl_SW",
+     "xy_um": [
+      2884.896,
+      1207.44
+     ],
+     "outline_um": [
+      8500.032,
+      248.376
+     ],
+     "kind": "hard_cluster",
+     "orientation": "R0"
+    },
+    {
+     "name": "svc_SW",
+     "xy_um": [
+      2884.896,
+      1464.48
+     ],
+     "outline_um": [
+      8500.032,
+      1576.776
+     ],
+     "kind": "hard_cluster",
+     "orientation": "R0"
+    },
+    {
+     "name": "bk_selector",
+     "xy_um": [
+      13872.384,
+      1464.48
+     ],
+     "outline_um": [
+      5270.376,
+      321.816
+     ],
+     "kind": "hard_cluster",
+     "orientation": "R0"
+    },
+    {
+     "name": "bk_collector",
+     "xy_um": [
+      13872.384,
+      23654.16
+     ],
+     "outline_um": [
+      5270.376,
+      881.256
+     ],
+     "kind": "hard_cluster",
+     "orientation": "R0"
+    },
+    {
+     "name": "lk_W0",
+     "xy_um": [
+      20.304,
+      8735.04
+     ],
+     "outline_um": [
+      260.808,
+      1652.424
+     ],
+     "kind": "hard_cluster",
+     "orientation": "R0"
+    },
+    {
+     "name": "lk_W1",
+     "xy_um": [
+      31.536,
+      10432.8
+     ],
+     "outline_um": [
+      250.056,
+      2250.216
+     ],
+     "kind": "hard_cluster",
+     "orientation": "R0"
+    },
+    {
+     "name": "lk_W2",
+     "xy_um": [
+      31.536,
+      12726.72
+     ],
+     "outline_um": [
+      250.056,
+      2250.216
+     ],
+     "kind": "hard_cluster",
+     "orientation": "R0"
+    },
+    {
+     "name": "lk_W3",
+     "xy_um": [
+      31.536,
+      15020.64
+     ],
+     "outline_um": [
+      250.056,
+      2250.216
+     ],
+     "kind": "hard_cluster",
+     "orientation": "R0"
+    },
+    {
+     "name": "lk_E0",
+     "xy_um": [
+      32719.248,
+      8735.04
+     ],
+     "outline_um": [
+      260.808,
+      1652.424
+     ],
+     "kind": "hard_cluster",
+     "orientation": "R0"
+    },
+    {
+     "name": "lk_E1",
+     "xy_um": [
+      32718.384,
+      10432.8
+     ],
+     "outline_um": [
+      250.056,
+      2250.216
+     ],
+     "kind": "hard_cluster",
+     "orientation": "R0"
+    },
+    {
+     "name": "lk_E2",
+     "xy_um": [
+      32718.384,
+      12726.72
+     ],
+     "outline_um": [
+      250.056,
+      2250.216
+     ],
+     "kind": "hard_cluster",
+     "orientation": "R0"
+    },
+    {
+     "name": "lk_E3",
+     "xy_um": [
+      32718.384,
+      15020.64
+     ],
+     "outline_um": [
+      250.056,
+      2250.216
+     ],
+     "kind": "hard_cluster",
+     "orientation": "R0"
+    },
+    {
+     "name": "svcj",
+     "xy_um": [
+      9052.128,
+      3045.6
+     ],
+     "outline_um": [
+      64.8,
+      43.2
+     ],
+     "kind": "hard_cluster",
+     "orientation": "R0"
+    },
+    {
+     "name": "sp_hcx_south0",
+     "xy_um": [
+      9417.6,
+      24624.0
+     ],
+     "outline_um": [
+      1728.0,
+      1296.0
+     ],
+     "kind": "unbound_HCP_reservation",
+     "orientation": "R0"
+    },
+    {
+     "name": "sp_hcx_south1",
+     "xy_um": [
+      11232.0,
+      24624.0
+     ],
+     "outline_um": [
+      1728.0,
+      1296.0
+     ],
+     "kind": "unbound_HCP_reservation",
+     "orientation": "R0"
+    },
+    {
+     "name": "sp_hcx_north0",
+     "xy_um": [
+      13046.400000000001,
+      24624.0
+     ],
+     "outline_um": [
+      1728.0,
+      1296.0
+     ],
+     "kind": "unbound_HCP_reservation",
+     "orientation": "R0"
+    },
+    {
+     "name": "sp_hcx_north1",
+     "xy_um": [
+      14860.800000000001,
+      24624.0
+     ],
+     "outline_um": [
+      1728.0,
+      1296.0
+     ],
+     "kind": "unbound_HCP_reservation",
+     "orientation": "R0"
+    },
+    {
+     "name": "sp_hcx_west0",
+     "xy_um": [
+      16675.2,
+      24624.0
+     ],
+     "outline_um": [
+      1728.0,
+      1296.0
+     ],
+     "kind": "unbound_HCP_reservation",
+     "orientation": "R0"
+    },
+    {
+     "name": "sp_hcx_west1",
+     "xy_um": [
+      18489.6,
+      24624.0
+     ],
+     "outline_um": [
+      1728.0,
+      1296.0
+     ],
+     "kind": "unbound_HCP_reservation",
+     "orientation": "R0"
+    }
+   ],
+   "edge": {
+    "name": "VM_global_edge_UNPROVEN",
+    "xy_um": [
+     13489.2,
+     15958.08
+    ],
+    "outline_um": [
+     1987.2,
+     561.6
+    ],
+    "kind": "unproven_edge_reservation",
+    "orientation": "R0"
+   },
+   "changes": {
+    "hc_tower_translation_x_um": 324.0,
+    "su_translation_x_um": 0,
+    "service_stack_translation_x_um": 0
+   },
+   "architectural_tradeoff": "Whole native32bank slices in2x2; shorter physical span, new global fanout/calendar must be built",
+   "rectangle_collisions": [],
+   "outside": [],
+   "scope": "GEOMETRY_ONLY_UNADOPTED_SYSTEM_ALTERNATIVE",
+   "hardware_counts": {
+    "field_pairs": 2417,
+    "BF_fronts": 519,
+    "CFG_ROM": 16919,
+    "root_regions": 128,
+    "VM_core_nodes": 164,
+    "VM_banks": 128
+   },
+   "unproven": [
+    "Global53writer/cap16/CDC16 packing in edge reservation",
+    "Actual global readissue/return/write pin faces and clock/phase delivery",
+    "All boundary wire length, actual relay allocation/cuts<=0.60 and priced extra static cycles",
+    "All native HC children and expandedHCP source pin contracts",
+    "Full revised canonical FIELD return/broadcast topology regenerates; old transport not kept"
+   ]
+  },
+  {
+   "name": "C_two_client_regions",
+   "slice_origins_um": [
+    [
+     15584.4,
+     6000.48
+    ],
+    [
+     15584.4,
+     7577.28
+    ],
+    [
+     15584.4,
+     14001.12
+    ],
+    [
+     15584.4,
+     15577.92
+    ]
+   ],
+   "vm_nodes": [
+    {
+     "name": "vm_s0_bank0",
+     "xy_um": [
+      15627.6,
+      6043.679999999999
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 0
+    },
+    {
+     "name": "vm_s0_bank1",
+     "xy_um": [
+      15627.6,
+      6173.28
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 0
+    },
+    {
+     "name": "vm_s0_bank2",
+     "xy_um": [
+      15627.6,
+      6302.879999999999
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 0
+    },
+    {
+     "name": "vm_s0_bank3",
+     "xy_um": [
+      15627.6,
+      6432.48
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 0
+    },
+    {
+     "name": "vm_s0_bank4",
+     "xy_um": [
+      15886.8,
+      6043.679999999999
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 0
+    },
+    {
+     "name": "vm_s0_bank5",
+     "xy_um": [
+      15886.8,
+      6173.28
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 0
+    },
+    {
+     "name": "vm_s0_bank6",
+     "xy_um": [
+      15886.8,
+      6302.879999999999
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 0
+    },
+    {
+     "name": "vm_s0_bank7",
+     "xy_um": [
+      15886.8,
+      6432.48
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 0
+    },
+    {
+     "name": "vm_s0_bank8",
+     "xy_um": [
+      17096.4,
+      6043.679999999999
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 0
+    },
+    {
+     "name": "vm_s0_bank9",
+     "xy_um": [
+      17096.4,
+      6173.28
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 0
+    },
+    {
+     "name": "vm_s0_bank10",
+     "xy_um": [
+      17096.4,
+      6302.879999999999
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 0
+    },
+    {
+     "name": "vm_s0_bank11",
+     "xy_um": [
+      17096.4,
+      6432.48
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 0
+    },
+    {
+     "name": "vm_s0_bank12",
+     "xy_um": [
+      17355.6,
+      6043.679999999999
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 0
+    },
+    {
+     "name": "vm_s0_bank13",
+     "xy_um": [
+      17355.6,
+      6173.28
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 0
+    },
+    {
+     "name": "vm_s0_bank14",
+     "xy_um": [
+      17355.6,
+      6302.879999999999
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 0
+    },
+    {
+     "name": "vm_s0_bank15",
+     "xy_um": [
+      17355.6,
+      6432.48
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 0
+    },
+    {
+     "name": "vm_s0_bank16",
+     "xy_um": [
+      15627.6,
+      6562.08
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 0
+    },
+    {
+     "name": "vm_s0_bank17",
+     "xy_um": [
+      15627.6,
+      6691.679999999999
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 0
+    },
+    {
+     "name": "vm_s0_bank18",
+     "xy_um": [
+      15627.6,
+      6821.28
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 0
+    },
+    {
+     "name": "vm_s0_bank19",
+     "xy_um": [
+      15627.6,
+      6950.879999999999
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 0
+    },
+    {
+     "name": "vm_s0_bank20",
+     "xy_um": [
+      15886.8,
+      6562.08
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 0
+    },
+    {
+     "name": "vm_s0_bank21",
+     "xy_um": [
+      15886.8,
+      6691.679999999999
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 0
+    },
+    {
+     "name": "vm_s0_bank22",
+     "xy_um": [
+      15886.8,
+      6821.28
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 0
+    },
+    {
+     "name": "vm_s0_bank23",
+     "xy_um": [
+      15886.8,
+      6950.879999999999
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 0
+    },
+    {
+     "name": "vm_s0_bank24",
+     "xy_um": [
+      17096.4,
+      6562.08
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 0
+    },
+    {
+     "name": "vm_s0_bank25",
+     "xy_um": [
+      17096.4,
+      6691.679999999999
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 0
+    },
+    {
+     "name": "vm_s0_bank26",
+     "xy_um": [
+      17096.4,
+      6821.28
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 0
+    },
+    {
+     "name": "vm_s0_bank27",
+     "xy_um": [
+      17096.4,
+      6950.879999999999
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 0
+    },
+    {
+     "name": "vm_s0_bank28",
+     "xy_um": [
+      17355.6,
+      6562.08
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 0
+    },
+    {
+     "name": "vm_s0_bank29",
+     "xy_um": [
+      17355.6,
+      6691.679999999999
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 0
+    },
+    {
+     "name": "vm_s0_bank30",
+     "xy_um": [
+      17355.6,
+      6821.28
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 0
+    },
+    {
+     "name": "vm_s0_bank31",
+     "xy_um": [
+      17355.6,
+      6950.879999999999
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 0
+    },
+    {
+     "name": "vm_s0_quarter0",
+     "xy_um": [
+      16146.0,
+      6216.48
+     ],
+     "outline_um": [
+      172.8,
+      172.8
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_relay128_b8",
+     "slice": 0
+    },
+    {
+     "name": "vm_s0_quarter1",
+     "xy_um": [
+      16880.4,
+      6216.48
+     ],
+     "outline_um": [
+      172.8,
+      172.8
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_relay128_b8",
+     "slice": 0
+    },
+    {
+     "name": "vm_s0_quarter2",
+     "xy_um": [
+      16146.0,
+      6778.08
+     ],
+     "outline_um": [
+      172.8,
+      172.8
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_relay128_b8",
+     "slice": 0
+    },
+    {
+     "name": "vm_s0_quarter3",
+     "xy_um": [
+      16880.4,
+      6778.08
+     ],
+     "outline_um": [
+      172.8,
+      172.8
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_relay128_b8",
+     "slice": 0
+    },
+    {
+     "name": "vm_s0_bridge0",
+     "xy_um": [
+      16491.6,
+      6173.28
+     ],
+     "outline_um": [
+      345.6,
+      345.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_relay128_b16",
+     "slice": 0
+    },
+    {
+     "name": "vm_s0_bridge1",
+     "xy_um": [
+      16491.6,
+      7166.879999999999
+     ],
+     "outline_um": [
+      345.6,
+      345.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_relay128_b16",
+     "slice": 0
+    },
+    {
+     "name": "vm_s0_wscatter",
+     "xy_um": [
+      16448.4,
+      6691.679999999999
+     ],
+     "outline_um": [
+      345.6,
+      103.68
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_scatter",
+     "slice": 0
+    },
+    {
+     "name": "vm_s0_read_frontend",
+     "xy_um": [
+      16448.4,
+      6821.28
+     ],
+     "outline_um": [
+      345.6,
+      51.84
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_suhc_fsr",
+     "slice": 0
+    },
+    {
+     "name": "vm_s0_return32",
+     "xy_um": [
+      16448.4,
+      6907.679999999999
+     ],
+     "outline_um": [
+      345.6,
+      207.36
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_return",
+     "slice": 0
+    },
+    {
+     "name": "vm_s1_bank0",
+     "xy_um": [
+      15627.6,
+      7620.4800000000005
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 1
+    },
+    {
+     "name": "vm_s1_bank1",
+     "xy_um": [
+      15627.6,
+      7750.079999999999
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 1
+    },
+    {
+     "name": "vm_s1_bank2",
+     "xy_um": [
+      15627.6,
+      7879.679999999999
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 1
+    },
+    {
+     "name": "vm_s1_bank3",
+     "xy_um": [
+      15627.6,
+      8009.28
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 1
+    },
+    {
+     "name": "vm_s1_bank4",
+     "xy_um": [
+      15886.8,
+      7620.4800000000005
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 1
+    },
+    {
+     "name": "vm_s1_bank5",
+     "xy_um": [
+      15886.8,
+      7750.079999999999
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 1
+    },
+    {
+     "name": "vm_s1_bank6",
+     "xy_um": [
+      15886.8,
+      7879.679999999999
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 1
+    },
+    {
+     "name": "vm_s1_bank7",
+     "xy_um": [
+      15886.8,
+      8009.28
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 1
+    },
+    {
+     "name": "vm_s1_bank8",
+     "xy_um": [
+      17096.4,
+      7620.4800000000005
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 1
+    },
+    {
+     "name": "vm_s1_bank9",
+     "xy_um": [
+      17096.4,
+      7750.079999999999
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 1
+    },
+    {
+     "name": "vm_s1_bank10",
+     "xy_um": [
+      17096.4,
+      7879.679999999999
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 1
+    },
+    {
+     "name": "vm_s1_bank11",
+     "xy_um": [
+      17096.4,
+      8009.28
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 1
+    },
+    {
+     "name": "vm_s1_bank12",
+     "xy_um": [
+      17355.6,
+      7620.4800000000005
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 1
+    },
+    {
+     "name": "vm_s1_bank13",
+     "xy_um": [
+      17355.6,
+      7750.079999999999
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 1
+    },
+    {
+     "name": "vm_s1_bank14",
+     "xy_um": [
+      17355.6,
+      7879.679999999999
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 1
+    },
+    {
+     "name": "vm_s1_bank15",
+     "xy_um": [
+      17355.6,
+      8009.28
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 1
+    },
+    {
+     "name": "vm_s1_bank16",
+     "xy_um": [
+      15627.6,
+      8138.88
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 1
+    },
+    {
+     "name": "vm_s1_bank17",
+     "xy_um": [
+      15627.6,
+      8268.48
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 1
+    },
+    {
+     "name": "vm_s1_bank18",
+     "xy_um": [
+      15627.6,
+      8398.079999999998
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 1
+    },
+    {
+     "name": "vm_s1_bank19",
+     "xy_um": [
+      15627.6,
+      8527.679999999998
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 1
+    },
+    {
+     "name": "vm_s1_bank20",
+     "xy_um": [
+      15886.8,
+      8138.88
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 1
+    },
+    {
+     "name": "vm_s1_bank21",
+     "xy_um": [
+      15886.8,
+      8268.48
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 1
+    },
+    {
+     "name": "vm_s1_bank22",
+     "xy_um": [
+      15886.8,
+      8398.079999999998
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 1
+    },
+    {
+     "name": "vm_s1_bank23",
+     "xy_um": [
+      15886.8,
+      8527.679999999998
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 1
+    },
+    {
+     "name": "vm_s1_bank24",
+     "xy_um": [
+      17096.4,
+      8138.88
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 1
+    },
+    {
+     "name": "vm_s1_bank25",
+     "xy_um": [
+      17096.4,
+      8268.48
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 1
+    },
+    {
+     "name": "vm_s1_bank26",
+     "xy_um": [
+      17096.4,
+      8398.079999999998
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 1
+    },
+    {
+     "name": "vm_s1_bank27",
+     "xy_um": [
+      17096.4,
+      8527.679999999998
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 1
+    },
+    {
+     "name": "vm_s1_bank28",
+     "xy_um": [
+      17355.6,
+      8138.88
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 1
+    },
+    {
+     "name": "vm_s1_bank29",
+     "xy_um": [
+      17355.6,
+      8268.48
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 1
+    },
+    {
+     "name": "vm_s1_bank30",
+     "xy_um": [
+      17355.6,
+      8398.079999999998
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 1
+    },
+    {
+     "name": "vm_s1_bank31",
+     "xy_um": [
+      17355.6,
+      8527.679999999998
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 1
+    },
+    {
+     "name": "vm_s1_quarter0",
+     "xy_um": [
+      16146.0,
+      7793.28
+     ],
+     "outline_um": [
+      172.8,
+      172.8
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_relay128_b8",
+     "slice": 1
+    },
+    {
+     "name": "vm_s1_quarter1",
+     "xy_um": [
+      16880.4,
+      7793.28
+     ],
+     "outline_um": [
+      172.8,
+      172.8
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_relay128_b8",
+     "slice": 1
+    },
+    {
+     "name": "vm_s1_quarter2",
+     "xy_um": [
+      16146.0,
+      8354.88
+     ],
+     "outline_um": [
+      172.8,
+      172.8
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_relay128_b8",
+     "slice": 1
+    },
+    {
+     "name": "vm_s1_quarter3",
+     "xy_um": [
+      16880.4,
+      8354.88
+     ],
+     "outline_um": [
+      172.8,
+      172.8
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_relay128_b8",
+     "slice": 1
+    },
+    {
+     "name": "vm_s1_bridge0",
+     "xy_um": [
+      16491.6,
+      7750.079999999999
+     ],
+     "outline_um": [
+      345.6,
+      345.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_relay128_b16",
+     "slice": 1
+    },
+    {
+     "name": "vm_s1_bridge1",
+     "xy_um": [
+      16491.6,
+      8743.679999999998
+     ],
+     "outline_um": [
+      345.6,
+      345.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_relay128_b16",
+     "slice": 1
+    },
+    {
+     "name": "vm_s1_wscatter",
+     "xy_um": [
+      16448.4,
+      8268.48
+     ],
+     "outline_um": [
+      345.6,
+      103.68
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_scatter",
+     "slice": 1
+    },
+    {
+     "name": "vm_s1_read_frontend",
+     "xy_um": [
+      16448.4,
+      8398.079999999998
+     ],
+     "outline_um": [
+      345.6,
+      51.84
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_suhc_fsr",
+     "slice": 1
+    },
+    {
+     "name": "vm_s1_return32",
+     "xy_um": [
+      16448.4,
+      8484.48
+     ],
+     "outline_um": [
+      345.6,
+      207.36
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_return",
+     "slice": 1
+    },
+    {
+     "name": "vm_s2_bank0",
+     "xy_um": [
+      15627.6,
+      14044.320000000002
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 2
+    },
+    {
+     "name": "vm_s2_bank1",
+     "xy_um": [
+      15627.6,
+      14173.92
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 2
+    },
+    {
+     "name": "vm_s2_bank2",
+     "xy_um": [
+      15627.6,
+      14303.520000000002
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 2
+    },
+    {
+     "name": "vm_s2_bank3",
+     "xy_um": [
+      15627.6,
+      14433.12
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 2
+    },
+    {
+     "name": "vm_s2_bank4",
+     "xy_um": [
+      15886.8,
+      14044.320000000002
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 2
+    },
+    {
+     "name": "vm_s2_bank5",
+     "xy_um": [
+      15886.8,
+      14173.92
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 2
+    },
+    {
+     "name": "vm_s2_bank6",
+     "xy_um": [
+      15886.8,
+      14303.520000000002
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 2
+    },
+    {
+     "name": "vm_s2_bank7",
+     "xy_um": [
+      15886.8,
+      14433.12
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 2
+    },
+    {
+     "name": "vm_s2_bank8",
+     "xy_um": [
+      17096.4,
+      14044.320000000002
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 2
+    },
+    {
+     "name": "vm_s2_bank9",
+     "xy_um": [
+      17096.4,
+      14173.92
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 2
+    },
+    {
+     "name": "vm_s2_bank10",
+     "xy_um": [
+      17096.4,
+      14303.520000000002
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 2
+    },
+    {
+     "name": "vm_s2_bank11",
+     "xy_um": [
+      17096.4,
+      14433.12
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 2
+    },
+    {
+     "name": "vm_s2_bank12",
+     "xy_um": [
+      17355.6,
+      14044.320000000002
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 2
+    },
+    {
+     "name": "vm_s2_bank13",
+     "xy_um": [
+      17355.6,
+      14173.92
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 2
+    },
+    {
+     "name": "vm_s2_bank14",
+     "xy_um": [
+      17355.6,
+      14303.520000000002
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 2
+    },
+    {
+     "name": "vm_s2_bank15",
+     "xy_um": [
+      17355.6,
+      14433.12
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 2
+    },
+    {
+     "name": "vm_s2_bank16",
+     "xy_um": [
+      15627.6,
+      14562.720000000003
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 2
+    },
+    {
+     "name": "vm_s2_bank17",
+     "xy_um": [
+      15627.6,
+      14692.320000000002
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 2
+    },
+    {
+     "name": "vm_s2_bank18",
+     "xy_um": [
+      15627.6,
+      14821.92
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 2
+    },
+    {
+     "name": "vm_s2_bank19",
+     "xy_um": [
+      15627.6,
+      14951.520000000002
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 2
+    },
+    {
+     "name": "vm_s2_bank20",
+     "xy_um": [
+      15886.8,
+      14562.720000000003
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 2
+    },
+    {
+     "name": "vm_s2_bank21",
+     "xy_um": [
+      15886.8,
+      14692.320000000002
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 2
+    },
+    {
+     "name": "vm_s2_bank22",
+     "xy_um": [
+      15886.8,
+      14821.92
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 2
+    },
+    {
+     "name": "vm_s2_bank23",
+     "xy_um": [
+      15886.8,
+      14951.520000000002
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 2
+    },
+    {
+     "name": "vm_s2_bank24",
+     "xy_um": [
+      17096.4,
+      14562.720000000003
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 2
+    },
+    {
+     "name": "vm_s2_bank25",
+     "xy_um": [
+      17096.4,
+      14692.320000000002
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 2
+    },
+    {
+     "name": "vm_s2_bank26",
+     "xy_um": [
+      17096.4,
+      14821.92
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 2
+    },
+    {
+     "name": "vm_s2_bank27",
+     "xy_um": [
+      17096.4,
+      14951.520000000002
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 2
+    },
+    {
+     "name": "vm_s2_bank28",
+     "xy_um": [
+      17355.6,
+      14562.720000000003
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 2
+    },
+    {
+     "name": "vm_s2_bank29",
+     "xy_um": [
+      17355.6,
+      14692.320000000002
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 2
+    },
+    {
+     "name": "vm_s2_bank30",
+     "xy_um": [
+      17355.6,
+      14821.92
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 2
+    },
+    {
+     "name": "vm_s2_bank31",
+     "xy_um": [
+      17355.6,
+      14951.520000000002
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 2
+    },
+    {
+     "name": "vm_s2_quarter0",
+     "xy_um": [
+      16146.0,
+      14217.12
+     ],
+     "outline_um": [
+      172.8,
+      172.8
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_relay128_b8",
+     "slice": 2
+    },
+    {
+     "name": "vm_s2_quarter1",
+     "xy_um": [
+      16880.4,
+      14217.12
+     ],
+     "outline_um": [
+      172.8,
+      172.8
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_relay128_b8",
+     "slice": 2
+    },
+    {
+     "name": "vm_s2_quarter2",
+     "xy_um": [
+      16146.0,
+      14778.720000000003
+     ],
+     "outline_um": [
+      172.8,
+      172.8
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_relay128_b8",
+     "slice": 2
+    },
+    {
+     "name": "vm_s2_quarter3",
+     "xy_um": [
+      16880.4,
+      14778.720000000003
+     ],
+     "outline_um": [
+      172.8,
+      172.8
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_relay128_b8",
+     "slice": 2
+    },
+    {
+     "name": "vm_s2_bridge0",
+     "xy_um": [
+      16491.6,
+      14173.92
+     ],
+     "outline_um": [
+      345.6,
+      345.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_relay128_b16",
+     "slice": 2
+    },
+    {
+     "name": "vm_s2_bridge1",
+     "xy_um": [
+      16491.6,
+      15167.520000000002
+     ],
+     "outline_um": [
+      345.6,
+      345.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_relay128_b16",
+     "slice": 2
+    },
+    {
+     "name": "vm_s2_wscatter",
+     "xy_um": [
+      16448.4,
+      14692.320000000002
+     ],
+     "outline_um": [
+      345.6,
+      103.68
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_scatter",
+     "slice": 2
+    },
+    {
+     "name": "vm_s2_read_frontend",
+     "xy_um": [
+      16448.4,
+      14821.92
+     ],
+     "outline_um": [
+      345.6,
+      51.84
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_suhc_fsr",
+     "slice": 2
+    },
+    {
+     "name": "vm_s2_return32",
+     "xy_um": [
+      16448.4,
+      14908.320000000002
+     ],
+     "outline_um": [
+      345.6,
+      207.36
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_return",
+     "slice": 2
+    },
+    {
+     "name": "vm_s3_bank0",
+     "xy_um": [
+      15627.6,
+      15621.12
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 3
+    },
+    {
+     "name": "vm_s3_bank1",
+     "xy_um": [
+      15627.6,
+      15750.72
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 3
+    },
+    {
+     "name": "vm_s3_bank2",
+     "xy_um": [
+      15627.6,
+      15880.319999999998
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 3
+    },
+    {
+     "name": "vm_s3_bank3",
+     "xy_um": [
+      15627.6,
+      16009.92
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 3
+    },
+    {
+     "name": "vm_s3_bank4",
+     "xy_um": [
+      15886.8,
+      15621.12
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 3
+    },
+    {
+     "name": "vm_s3_bank5",
+     "xy_um": [
+      15886.8,
+      15750.72
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 3
+    },
+    {
+     "name": "vm_s3_bank6",
+     "xy_um": [
+      15886.8,
+      15880.319999999998
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 3
+    },
+    {
+     "name": "vm_s3_bank7",
+     "xy_um": [
+      15886.8,
+      16009.92
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 3
+    },
+    {
+     "name": "vm_s3_bank8",
+     "xy_um": [
+      17096.4,
+      15621.12
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 3
+    },
+    {
+     "name": "vm_s3_bank9",
+     "xy_um": [
+      17096.4,
+      15750.72
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 3
+    },
+    {
+     "name": "vm_s3_bank10",
+     "xy_um": [
+      17096.4,
+      15880.319999999998
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 3
+    },
+    {
+     "name": "vm_s3_bank11",
+     "xy_um": [
+      17096.4,
+      16009.92
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 3
+    },
+    {
+     "name": "vm_s3_bank12",
+     "xy_um": [
+      17355.6,
+      15621.12
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 3
+    },
+    {
+     "name": "vm_s3_bank13",
+     "xy_um": [
+      17355.6,
+      15750.72
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 3
+    },
+    {
+     "name": "vm_s3_bank14",
+     "xy_um": [
+      17355.6,
+      15880.319999999998
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 3
+    },
+    {
+     "name": "vm_s3_bank15",
+     "xy_um": [
+      17355.6,
+      16009.92
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 3
+    },
+    {
+     "name": "vm_s3_bank16",
+     "xy_um": [
+      15627.6,
+      16139.519999999999
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 3
+    },
+    {
+     "name": "vm_s3_bank17",
+     "xy_um": [
+      15627.6,
+      16269.12
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 3
+    },
+    {
+     "name": "vm_s3_bank18",
+     "xy_um": [
+      15627.6,
+      16398.72
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 3
+    },
+    {
+     "name": "vm_s3_bank19",
+     "xy_um": [
+      15627.6,
+      16528.32
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 3
+    },
+    {
+     "name": "vm_s3_bank20",
+     "xy_um": [
+      15886.8,
+      16139.519999999999
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 3
+    },
+    {
+     "name": "vm_s3_bank21",
+     "xy_um": [
+      15886.8,
+      16269.12
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 3
+    },
+    {
+     "name": "vm_s3_bank22",
+     "xy_um": [
+      15886.8,
+      16398.72
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 3
+    },
+    {
+     "name": "vm_s3_bank23",
+     "xy_um": [
+      15886.8,
+      16528.32
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 3
+    },
+    {
+     "name": "vm_s3_bank24",
+     "xy_um": [
+      17096.4,
+      16139.519999999999
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 3
+    },
+    {
+     "name": "vm_s3_bank25",
+     "xy_um": [
+      17096.4,
+      16269.12
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 3
+    },
+    {
+     "name": "vm_s3_bank26",
+     "xy_um": [
+      17096.4,
+      16398.72
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 3
+    },
+    {
+     "name": "vm_s3_bank27",
+     "xy_um": [
+      17096.4,
+      16528.32
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 3
+    },
+    {
+     "name": "vm_s3_bank28",
+     "xy_um": [
+      17355.6,
+      16139.519999999999
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 3
+    },
+    {
+     "name": "vm_s3_bank29",
+     "xy_um": [
+      17355.6,
+      16269.12
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 3
+    },
+    {
+     "name": "vm_s3_bank30",
+     "xy_um": [
+      17355.6,
+      16398.72
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 3
+    },
+    {
+     "name": "vm_s3_bank31",
+     "xy_um": [
+      17355.6,
+      16528.32
+     ],
+     "outline_um": [
+      220.32,
+      75.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_bank128",
+     "slice": 3
+    },
+    {
+     "name": "vm_s3_quarter0",
+     "xy_um": [
+      16146.0,
+      15793.92
+     ],
+     "outline_um": [
+      172.8,
+      172.8
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_relay128_b8",
+     "slice": 3
+    },
+    {
+     "name": "vm_s3_quarter1",
+     "xy_um": [
+      16880.4,
+      15793.92
+     ],
+     "outline_um": [
+      172.8,
+      172.8
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_relay128_b8",
+     "slice": 3
+    },
+    {
+     "name": "vm_s3_quarter2",
+     "xy_um": [
+      16146.0,
+      16355.519999999999
+     ],
+     "outline_um": [
+      172.8,
+      172.8
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_relay128_b8",
+     "slice": 3
+    },
+    {
+     "name": "vm_s3_quarter3",
+     "xy_um": [
+      16880.4,
+      16355.519999999999
+     ],
+     "outline_um": [
+      172.8,
+      172.8
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_relay128_b8",
+     "slice": 3
+    },
+    {
+     "name": "vm_s3_bridge0",
+     "xy_um": [
+      16491.6,
+      15750.72
+     ],
+     "outline_um": [
+      345.6,
+      345.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_relay128_b16",
+     "slice": 3
+    },
+    {
+     "name": "vm_s3_bridge1",
+     "xy_um": [
+      16491.6,
+      16744.32
+     ],
+     "outline_um": [
+      345.6,
+      345.6
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_relay128_b16",
+     "slice": 3
+    },
+    {
+     "name": "vm_s3_wscatter",
+     "xy_um": [
+      16448.4,
+      16269.12
+     ],
+     "outline_um": [
+      345.6,
+      103.68
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_scatter",
+     "slice": 3
+    },
+    {
+     "name": "vm_s3_read_frontend",
+     "xy_um": [
+      16448.4,
+      16398.72
+     ],
+     "outline_um": [
+      345.6,
+      51.84
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_suhc_fsr",
+     "slice": 3
+    },
+    {
+     "name": "vm_s3_return32",
+     "xy_um": [
+      16448.4,
+      16485.120000000003
+     ],
+     "outline_um": [
+      345.6,
+      207.36
+     ],
+     "kind": "VM_core",
+     "orientation": "R0",
+     "master": "dsfd_vm_static_return",
+     "slice": 3
+    }
+   ],
+   "fixed": [
+    {
+     "name": "sp_su_s",
+     "xy_um": [
+      13672.8,
+      2073.6
+     ],
+     "outline_um": [
+      1889.976,
+      10709.256
+     ],
+     "kind": "hard_cluster",
+     "orientation": "R0"
+    },
+    {
+     "name": "sp_capture",
+     "xy_um": [
+      13726.8,
+      16778.88
+     ],
+     "outline_um": [
+      1727.976,
+      561.576
+     ],
+     "kind": "hard_cluster",
+     "orientation": "R0"
+    },
+    {
+     "name": "sp_gather",
+     "xy_um": [
+      13726.8,
+      17362.08
+     ],
+     "outline_um": [
+      1727.976,
+      803.496
+     ],
+     "kind": "hard_cluster",
+     "orientation": "R0"
+    },
+    {
+     "name": "sp_pq",
+     "xy_um": [
+      13726.8,
+      18338.4
+     ],
+     "outline_um": [
+      1672.248,
+      449.256
+     ],
+     "kind": "hard_cluster",
+     "orientation": "R0"
+    },
+    {
+     "name": "sp_wfc",
+     "xy_um": [
+      13726.8,
+      18960.48
+     ],
+     "outline_um": [
+      1727.976,
+      328.296
+     ],
+     "kind": "hard_cluster",
+     "orientation": "R0"
+    },
+    {
+     "name": "sp_sseq",
+     "xy_um": [
+      13726.8,
+      19461.6
+     ],
+     "outline_um": [
+      1727.976,
+      88.536
+     ],
+     "kind": "hard_cluster",
+     "orientation": "R0"
+    },
+    {
+     "name": "sp_collective",
+     "xy_um": [
+      13726.8,
+      19722.96
+     ],
+     "outline_um": [
+      1727.976,
+      2721.576
+     ],
+     "kind": "hard_cluster",
+     "orientation": "R0"
+    },
+    {
+     "name": "sp_host",
+     "xy_um": [
+      13726.8,
+      22617.36
+     ],
+     "outline_um": [
+      1727.976,
+      129.576
+     ],
+     "kind": "hard_cluster",
+     "orientation": "R0"
+    },
+    {
+     "name": "sp_hc_s",
+     "xy_um": [
+      17701.2,
+      13337.975999999999
+     ],
+     "outline_um": [
+      1816.536,
+      8806.32
+     ],
+     "kind": "hard_cluster",
+     "orientation": "R0"
+    },
+    {
+     "name": "sp_hc_t",
+     "xy_um": [
+      17701.2,
+      2879.2559999999994
+     ],
+     "outline_um": [
+      1816.536,
+      9227.52
+     ],
+     "kind": "hard_cluster",
+     "orientation": "R0"
+    },
+    {
+     "name": "phy_SW",
+     "xy_um": [
+      2884.896,
+      21.6
+     ],
+     "outline_um": [
+      8500.056,
+      1177.2
+     ],
+     "kind": "hard_cluster",
+     "orientation": "R0"
+    },
+    {
+     "name": "ctrl_SW",
+     "xy_um": [
+      2884.896,
+      1207.44
+     ],
+     "outline_um": [
+      8500.032,
+      248.376
+     ],
+     "kind": "hard_cluster",
+     "orientation": "R0"
+    },
+    {
+     "name": "svc_SW",
+     "xy_um": [
+      2884.896,
+      1464.48
+     ],
+     "outline_um": [
+      8500.032,
+      1576.776
+     ],
+     "kind": "hard_cluster",
+     "orientation": "R0"
+    },
+    {
+     "name": "bk_selector",
+     "xy_um": [
+      13872.384,
+      1464.48
+     ],
+     "outline_um": [
+      5270.376,
+      321.816
+     ],
+     "kind": "hard_cluster",
+     "orientation": "R0"
+    },
+    {
+     "name": "bk_collector",
+     "xy_um": [
+      13872.384,
+      23654.16
+     ],
+     "outline_um": [
+      5270.376,
+      881.256
+     ],
+     "kind": "hard_cluster",
+     "orientation": "R0"
+    },
+    {
+     "name": "lk_W0",
+     "xy_um": [
+      20.304,
+      8735.04
+     ],
+     "outline_um": [
+      260.808,
+      1652.424
+     ],
+     "kind": "hard_cluster",
+     "orientation": "R0"
+    },
+    {
+     "name": "lk_W1",
+     "xy_um": [
+      31.536,
+      10432.8
+     ],
+     "outline_um": [
+      250.056,
+      2250.216
+     ],
+     "kind": "hard_cluster",
+     "orientation": "R0"
+    },
+    {
+     "name": "lk_W2",
+     "xy_um": [
+      31.536,
+      12726.72
+     ],
+     "outline_um": [
+      250.056,
+      2250.216
+     ],
+     "kind": "hard_cluster",
+     "orientation": "R0"
+    },
+    {
+     "name": "lk_W3",
+     "xy_um": [
+      31.536,
+      15020.64
+     ],
+     "outline_um": [
+      250.056,
+      2250.216
+     ],
+     "kind": "hard_cluster",
+     "orientation": "R0"
+    },
+    {
+     "name": "lk_E0",
+     "xy_um": [
+      32719.248,
+      8735.04
+     ],
+     "outline_um": [
+      260.808,
+      1652.424
+     ],
+     "kind": "hard_cluster",
+     "orientation": "R0"
+    },
+    {
+     "name": "lk_E1",
+     "xy_um": [
+      32718.384,
+      10432.8
+     ],
+     "outline_um": [
+      250.056,
+      2250.216
+     ],
+     "kind": "hard_cluster",
+     "orientation": "R0"
+    },
+    {
+     "name": "lk_E2",
+     "xy_um": [
+      32718.384,
+      12726.72
+     ],
+     "outline_um": [
+      250.056,
+      2250.216
+     ],
+     "kind": "hard_cluster",
+     "orientation": "R0"
+    },
+    {
+     "name": "lk_E3",
+     "xy_um": [
+      32718.384,
+      15020.64
+     ],
+     "outline_um": [
+      250.056,
+      2250.216
+     ],
+     "kind": "hard_cluster",
+     "orientation": "R0"
+    },
+    {
+     "name": "svcj",
+     "xy_um": [
+      9052.128,
+      3045.6
+     ],
+     "outline_um": [
+      64.8,
+      43.2
+     ],
+     "kind": "hard_cluster",
+     "orientation": "R0"
+    },
+    {
+     "name": "sp_hcx_south0",
+     "xy_um": [
+      9417.6,
+      24624.0
+     ],
+     "outline_um": [
+      1728.0,
+      1296.0
+     ],
+     "kind": "unbound_HCP_reservation",
+     "orientation": "R0"
+    },
+    {
+     "name": "sp_hcx_south1",
+     "xy_um": [
+      11232.0,
+      24624.0
+     ],
+     "outline_um": [
+      1728.0,
+      1296.0
+     ],
+     "kind": "unbound_HCP_reservation",
+     "orientation": "R0"
+    },
+    {
+     "name": "sp_hcx_north0",
+     "xy_um": [
+      13046.400000000001,
+      24624.0
+     ],
+     "outline_um": [
+      1728.0,
+      1296.0
+     ],
+     "kind": "unbound_HCP_reservation",
+     "orientation": "R0"
+    },
+    {
+     "name": "sp_hcx_north1",
+     "xy_um": [
+      14860.800000000001,
+      24624.0
+     ],
+     "outline_um": [
+      1728.0,
+      1296.0
+     ],
+     "kind": "unbound_HCP_reservation",
+     "orientation": "R0"
+    },
+    {
+     "name": "sp_hcx_west0",
+     "xy_um": [
+      16675.2,
+      24624.0
+     ],
+     "outline_um": [
+      1728.0,
+      1296.0
+     ],
+     "kind": "unbound_HCP_reservation",
+     "orientation": "R0"
+    },
+    {
+     "name": "sp_hcx_west1",
+     "xy_um": [
+      18489.6,
+      24624.0
+     ],
+     "outline_um": [
+      1728.0,
+      1296.0
+     ],
+     "kind": "unbound_HCP_reservation",
+     "orientation": "R0"
+    }
+   ],
+   "edge": {
+    "name": "VM_global_edge_UNPROVEN",
+    "xy_um": [
+     13770,
+     12804.48
+    ],
+    "outline_um": [
+     1987.2,
+     561.6
+    ],
+    "kind": "unproven_edge_reservation",
+    "orientation": "R0"
+   },
+   "changes": {
+    "hc_tower_translation_x_um": 388.7999999999993,
+    "su_translation_x_um": -108,
+    "service_stack_translation_x_um": -216
+   },
+   "architectural_tradeoff": "Two slices near lowerSU/HC and two near upperHC; global all-slice service equalization may add substantial cycles",
+   "rectangle_collisions": [],
+   "outside": [],
+   "scope": "GEOMETRY_ONLY_UNADOPTED_SYSTEM_ALTERNATIVE",
+   "hardware_counts": {
+    "field_pairs": 2417,
+    "BF_fronts": 519,
+    "CFG_ROM": 16919,
+    "root_regions": 128,
+    "VM_core_nodes": 164,
+    "VM_banks": 128
+   },
+   "unproven": [
+    "Global53writer/cap16/CDC16 packing in edge reservation",
+    "Actual global readissue/return/write pin faces and clock/phase delivery",
+    "All boundary wire length, actual relay allocation/cuts<=0.60 and priced extra static cycles",
+    "All native HC children and expandedHCP source pin contracts",
+    "Full revised canonical FIELD return/broadcast topology regenerates; old transport not kept"
+   ]
+  }
+ ],
+ "recommendation": "B is the first candidate to evaluate if it clears rectangle checks. It compacts the actual4slice VM while keeping SU and service vertical locations. C compares physical client grouping but may worsen shared all-slice service latency. No routed/performance ranking is proven."
+}

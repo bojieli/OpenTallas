@@ -13,8 +13,10 @@
 // row[3:0] = G), so the write service's lane rule is met at full rate; any other overlap is a write-service fault.
 // Faults (sticky, OR -> fault): lane faults (range, alignment, alias, duplicate, two rows due), capture status fault
 // (st[3]), x34 epoch / phase assertions.  No ready, credit, queue or timeout.
-// Latency (fixed): element at the f_capture pin, serial edge P -> lane row registered P + 3 (pin, merge, out) -> x34
-// stream output at the fixed epoch slot of that serial edge (+2..4 stream edges, x34 header) -> write source.
+// Exact measured age, P=zero-based physical f_capture PIN SAMPLE edge: legacy lane row at P+1,
+// CAP_PIPE=1 lane row at P+2; x34 samples that row at q=P+2+CAP_PIPE. Its stream output
+// is registered at edge 4*floor(q/3)+2+(q%3). The bench's one-based tk adds1 only for reporting.
+// +1 serial stage moves first stream visibility by [1,1,2] edges over the three phases; II remains1.
 // ---------------------------------------------------------------------------------------------------------------
 module dsfd_vm_static_cap #(parameter integer E = 8, parameter integer CAP_PIPE = 0) (
     // Actual source categories. All serial/stream roots share the 3:4 PLL

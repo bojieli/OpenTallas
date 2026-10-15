@@ -46,6 +46,28 @@ class CompileTest(unittest.TestCase):
         self.assertEqual(r['schedule']['events'][1]['service_cycle'],15)
         self.assertEqual(len(r['schedule']['dependencies']),1)
 
+    def test_sparse_tensor_counts_actual_rows_not_reserved_holes(self):
+        self.binding['tensors']['q'].update(nrows=80,row_stride=4,reserved_span_rows=320)
+        for job in self.binding['jobs'].values():job['accesses'][0]['row_offset']=79
+        r=self.run_compile()
+        self.assertTrue(r['dispatch_eligible'],r)
+        self.assertEqual([e['row'] for e in r['schedule']['events']],[572,572])
+        self.assertEqual(len(r['schedule']['dependencies']),1)
+    def test_sparse_tensor_capacity_uses_stride(self):
+        self.binding['tensors']['q'].update(base_row=16380,nrows=2,row_stride=4)
+        r=self.run_compile()
+        self.assertFalse(r['dispatch_eligible'])
+        self.assertIn('invalid_tensor_binding',[e['kind'] for e in r['rejections']])
+    def test_sparse_hole_is_reserved_without_fake_producer_write(self):
+        self.binding['tensors']['q'].update(nrows=80,row_stride=4,reserved_span_rows=320)
+        self.binding['tensors']['r']=copy.deepcopy(self.binding['tensors']['q'])
+        self.binding['tensors']['r'].update(base_row=257,nrows=1,row_stride=1,reserved_span_rows=1)
+        r=self.run_compile()
+        self.assertFalse(r['dispatch_eligible'])
+        self.assertIn('live_tensor_address_alias',[e['kind'] for e in r['rejections']])
+    def test_sparse_reserved_bound_cannot_omit_last_live_row(self):
+        self.binding['tensors']['q'].update(nrows=80,row_stride=4,reserved_span_rows=80)
+        self.assertFalse(self.run_compile()['dispatch_eligible'])
     def test_missing_job_blocks_atomic_dispatch(self):
         del self.binding['jobs']['su']
         r=self.run_compile()

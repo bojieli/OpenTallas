@@ -1,0 +1,97 @@
+{
+  "schema": "opentallas.qwen.native-join-profile.v1",
+  "name": "su347_io108_gateway_clock",
+  "top_module": "qfd_native_compute_join_957",
+  "nodes": {
+    "su": [
+      "qfd_sp_su64_sfu_glue_entries",
+      "rtl/physical/qfd_sp_su64_sfu_glue_entries.sv",
+      "79cf22d0b"
+    ],
+    "io": [
+      "qfd_collective_static_io_production",
+      "rtl/physical/ot_qfd_collective_static_io_production.sv",
+      "a7faf16ba"
+    ],
+    "seq": [
+      "qfd_seq_su_gateway",
+      "rtl/qwen_split/qfd_seq_su_gateway.sv",
+      "fee778245"
+    ]
+  },
+  "io_sources_ref": "a7faf16ba",
+  "parameters": {
+    "io": "#(.PU(25),.PS(339),.LU(58),.LS(376),.RU(5),.RS0(0),.RS1(0),.RS2(5))"
+  },
+  "source_extras": [
+    {
+      "path": "rtl/physical/ot_qfd_sp_su64_static_glue_entries.sv",
+      "ref": "79cf22d0b"
+    },
+    {
+      "path": "rtl/physical/ot_hdc_vstream_static_relay_entries.sv",
+      "ref": "79cf22d0b"
+    },
+    {
+      "path": "rtl/physical/ot_qfd_su_lane_relay.sv",
+      "ref": "79cf22d0b"
+    },
+    {
+      "path": "rtl/physical/ot_qfd_su_lane_relay_native.sv",
+      "ref": "79cf22d0b"
+    },
+    {
+      "path": "rtl/physical/qfd_su_static_copy_entries.sv",
+      "ref": "79cf22d0b"
+    },
+    {
+      "path": "rtl/physical/ot_qfd_su_copy_core.sv",
+      "ref": "79cf22d0b"
+    },
+    {
+      "path": "rtl/physical/ot_qfd_su_align_group4_hold.sv",
+      "ref": "79cf22d0b"
+    },
+    {
+      "path": "rtl/physical/ot_qfd_su_delay_hold.sv",
+      "ref": "79cf22d0b"
+    },
+    {
+      "path": "rtl/qwen_sys/static_schedule_20261014/ot_qfd_seq_su_bi_gateway.sv",
+      "ref": "fee778245"
+    },
+    {
+      "path": "rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_su_gateway.sv",
+      "ref": "fee778245"
+    },
+    {
+      "path": "rtl/qwen_sys/static_schedule_20261014/ot_qwen_a_operand_gateway_v1.sv",
+      "ref": "d8fdf94f1"
+    }
+  ],
+  "physical_status": "All real clock roots exposed independently. Core1.2GHz and FDI1GHz commonPLL/rationalphase requirements unqualified physically; no same-phase ties. Gateway not included. One independently exposed seq.ck_gateway clocks actual nested gateway; arithmetic/data state/edges unchanged. Native physical clock/pins still unqualified.",
+  "clock_requirements": [
+    {
+      "node": "io",
+      "port": "gearbox_core_ck",
+      "bits": 1,
+      "frequency_hz": 1200000000,
+      "physical_phase_binding": null
+    },
+    {
+      "node": "io",
+      "port": "fdi_ck",
+      "bits": 1,
+      "frequency_hz": 1000000000,
+      "physical_phase_binding": null
+    },
+    {
+      "node": "io",
+      "port": "fdi_rx_ck",
+      "bits": 3,
+      "frequency_hz": 1000000000,
+      "physical_phase_binding": null
+    }
+  ],
+  "rational_clock_requirement": "6 core edges per5 FDI edges from a commonPLL with source-defined reset/start phase contract; actual PLL/CTS/phase views OPEN."
+}

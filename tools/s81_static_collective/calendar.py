@@ -141,7 +141,7 @@ def fmt1_model() -> dict:
         gathered_bits_per_cycle_per_die=384,
         board_budget_bits_per_cycle_per_lane=157.58,
         peer_lane_count=3, remaining_physical_lanes=5,
-        peer_mapping='compiler/die must explicitly bind peer ranks to W/E lane slots',
+        peer_mapping='W0=rank^1 package,W1=rank^2 board,W2=rank^3 board; W3/E0..E3 pass channels0..4',
         endpoint_issue_to_gather_edges=11, gather_to_vm_source_edges=1,
         vm_write_sources=[44,45,46,47], vm_write_record_bits=551,
         vm_write_pin_bits=2204, vm_read_request_bits=15, vm_read_response_bits=513,

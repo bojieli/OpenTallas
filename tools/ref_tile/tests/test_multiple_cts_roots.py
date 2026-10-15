@@ -42,6 +42,24 @@ class Schema(unittest.TestCase):
             m=copy.deepcopy(s);m.update(clock_data_paths='related_same_frequency',clock_relationship=relationship)
             with self.assertRaises(ValueError):CE.domains(m)
 
+    def test_explicit_leaf_signoff_period_and_budget(self):
+        s=spec();s['route']={'period_ps':1111.111,'signoff_period_ps':1111.111}
+        self.assertEqual(CE.signoff_period(s),1111.111)
+        self.assertIn('io_budget_ps 222.222',CE.generate(s,ROOT))
+        route=RT.gen_sdc(s,1111.111);signoff=RT.gen_signoff(s,'*','none_*')
+        for text in (route,signoff):
+            self.assertIn('-period 1111.111000000',text)
+            self.assertIn('set_clock_uncertainty -setup 60',text)
+            self.assertIn('set_clock_uncertainty -hold 25',text)
+        self.assertIn('set_input_delay 222.222',route)
+        for value in (0,-1,float('nan'),float('inf'),True,'1111.111'):
+            m=copy.deepcopy(s);m['route']['signoff_period_ps']=value
+            with self.assertRaises(ValueError):CE.signoff_period(m)
+        m=copy.deepcopy(s);m['route']['period_ps']=1200
+        with self.assertRaises(ValueError):CE.signoff_period(m)
+        m=copy.deepcopy(s);m['clock']='cts'
+        with self.assertRaises(ValueError):CE.signoff_period(m)
+
     def test_load_spec_and_generated_stage_coverage(self):
         s=spec()
         with tempfile.NamedTemporaryFile(mode='w',suffix='.json') as f:
@@ -88,6 +106,7 @@ class Physical(unittest.TestCase):
     def run_flow(self,mutant='',generated=False):
         with tempfile.TemporaryDirectory() as d:
             w=Path(d);s=spec();s.update(params={},route={},macros=[])
+            if mutant=='serial':s['route']={'period_ps':1111.111,'signoff_period_ps':1111.111}
             # Mount the fixture on an existing source directory beneath the read-only repo.
             kd='tools/ref_tile/tests'
             if mutant in ('related','related_wrong_input','related_cut'):
@@ -102,6 +121,7 @@ class Physical(unittest.TestCase):
             if mutant=='wrong_output':
                 s['clock_entry_domains']['core']['outputs']=['zo'];s['clock_entry_domains']['response']['outputs']=['qo']
             if mutant=='unknown_port':s['clock_entry_domains']['core']['inputs']=['req','missing']
+            if mutant.startswith('tie'):s['clock_entry_domains']['core']['outputs'].append('th')
             if generated:
                 for name,text in RT.gen_hooks(s,kd).items():(w/name).write_text(text)
                 (w/'signoff.sdc').write_text(RT.gen_signoff(s,'*','none_*'))
@@ -113,8 +133,10 @@ class Physical(unittest.TestCase):
                 cells=cells.replace('DFFHQNx1_ASAP7_75t_R s0 (.CLK(ck_rsp),.D(rsp),.QN(z0));',
                     'DFFASRHQNx1_ASAP7_75t_R s0 (.CLK(ck_rsp),.D('+('rst_n' if mutant=='async_reset_data' else 'rsp')+'),.RESETN(rst_n),.SETN(1\'b1),.QN(z0));')
             extra=',rst_n' if mutant in ('async_reset','async_reset_data') else ''
-            (w/'t.v').write_text('module top(input ck_req,ck_rsp,req,rsp'+extra+',output qo,zo);\n'+cells+'\nassign qo=q0;assign zo=z0;endmodule\n')
-            (w/'clocks.tcl').write_text(CE.clocks(s,833.333))
+            src={'tie':'tc','tie_port':'req','tie_reg':'z1'}.get(mutant)
+            tie=(',th','\nwire tc;TIEHIx1_ASAP7_75t_R t0 (.H(tc));BUFx2_ASAP7_75t_R b0 (.A('+src+'),.Y(th));') if src else ('','')
+            (w/'t.v').write_text('module top(input ck_req,ck_rsp,req,rsp'+extra+',output qo,zo'+tie[0]+');\n'+cells+tie[1]+'\nassign qo=q0;assign zo=z0;endmodule\n')
+            (w/'clocks.tcl').write_text(CE.clocks(s,s['route'].get('period_ps',833.333)))
             (w/'entry.tcl').write_text('set ::ot_ce_require_wire 1\n'+CE.generate(s,ROOT))
             flow=r'''
 set_thread_count 2
@@ -184,9 +206,18 @@ if {"NULL" ni [get_lib_cells -of_objects [get_cells physical_tap]]} {error "fixt
                     values=re.findall(r'set_'+direction+r'_delay ([\d.eE+-]+) -clock \[get_clocks \{'+clock+r'\}\] -(min|max) -add_delay \[get_ports \{'+port+r'\}\]',final)
                     self.assertEqual(len(values),2,final)
                     actual={kind:float(value) for value,kind in values}
-                    expected={'min':lo,'max':166.667+hi+90} if direction=='input' else {'min':-lo-50,'max':166.667-hi+90}
+                    budget=round(CE.signoff_period(s)*0.2,3)
+                    expected={'min':lo,'max':budget+hi+90} if direction=='input' else {'min':-lo-50,'max':budget-hi+90}
                     for kind in ['min','max']:self.assertAlmostEqual(actual[kind],expected[kind],places=2)
+            if p.returncode==0 and mutant=='serial':
+                periods=[float(x) for x in re.findall(r'create_clock -name \S+ -period ([\d.]+)',(w/'final.sdc').read_text())]
+                self.assertEqual(len(periods),4)
+                for period in periods:self.assertAlmostEqual(period,1111.111,places=3)
             return p.returncode,output
+    def test_actual_serial_profile_hooks_and_numeric_io(self):
+        rc,out=self.run_flow('serial',generated=True);self.assertEqual(rc,0,out[-8000:])
+        self.assertIn('OWNERSHIP PASS roots=2 registers=20',out)
+
     def test_actual_roots_and_distinct_references(self):
         rc,out=self.run_flow();self.assertEqual(rc,0,out[-7000:])
         self.assertIn('ck_req sinks=16',out);self.assertIn('ck_rsp sinks=4',out)
@@ -198,6 +229,14 @@ if {"NULL" ni [get_lib_cells -of_objects [get_cells physical_tap]]} {error "fixt
         for a,b in zip(refs[:2],refs[2:]):
             self.assertEqual(a[0],b[0])
             for x,y in zip(a[1:],b[1:]):self.assertAlmostEqual(float(x),float(y),places=8)
+    def test_die_strap_tie_output_is_constant_not_a_domain(self):
+        rc,out=self.run_flow('tie');self.assertEqual(rc,0,out[-8000:])
+        self.assertIn('OT_MULTI_ROOT constant output th <- BUFx2_ASAP7_75t_R',out)
+        # A buffered port passthrough still fails closed; a buffered other-domain register is refused by name.
+        rc,out=self.run_flow('tie_port');self.assertNotEqual(rc,0,out[-8000:])
+        rc,out=self.run_flow('tie_reg');self.assertNotEqual(rc,0,out[-8000:])
+        self.assertIn('output th has wrong or unregistered source domain',out)
+
     def test_generated_hooks_with_actual_lef_only_tap(self):
         rc,out=self.run_flow('physical_tap',generated=True);self.assertEqual(rc,0,out[-8000:])
         self.assertIn('MULTI_ROOT_RESULT PASS',out)

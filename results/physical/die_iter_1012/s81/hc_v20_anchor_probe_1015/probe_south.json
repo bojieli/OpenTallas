@@ -1,0 +1,82 @@
+{
+ "contract": "results/arch/hier_contract_1011/s81_v20_hc_probe_south.json",
+ "HC_S_GROW_DOWN": 0.0,
+ "HC_V2_UM": [
+  1816.56,
+  8806.32
+ ],
+ "HC_T_UM": [
+  1816.56,
+  9227.52
+ ],
+ "stopped": "PROBE_STOP_BEFORE_BUSES",
+ "hc": [
+  [
+   "sp_hc_s",
+   "dsfd_sp_hc_c",
+   17312.399999999998,
+   13955.76,
+   1816.536,
+   8806.296
+  ],
+  [
+   "sp_hc_t",
+   "dsfd_sp_hc_t",
+   17312.399999999998,
+   3216.24,
+   1816.536,
+   9227.496000000001
+  ]
+ ],
+ "hc_overlaps": [],
+ "regions": [
+  {
+   "name": "spine",
+   "kind": "hub",
+   "rect": [
+    13942.8,
+    2073.6,
+    19040.4,
+    22762.056
+   ]
+  },
+  {
+   "name": "vch",
+   "kind": "channel",
+   "rect": [
+    15670.8,
+    2073.6,
+    17312.399999999998,
+    22762.056
+   ]
+  },
+  {
+   "name": "hc_corridor",
+   "kind": "channel",
+   "rect": [
+    17312.399999999998,
+    12443.76,
+    19040.4,
+    13955.76
+   ]
+  },
+  {
+   "name": "svc_SW",
+   "kind": "svc",
+   "rect": [
+    2884.896,
+    1207.44,
+    11384.952000000001,
+    3041.2799999999997
+   ]
+  }
+ ],
+ "legality": {
+  "instances": 32969,
+  "overlaps": 0,
+  "overlap_examples": [],
+  "outside": 0,
+  "outside_examples": []
+ },
+ "n_insts": 32969
+}

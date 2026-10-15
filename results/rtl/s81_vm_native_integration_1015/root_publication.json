@@ -1,0 +1,26 @@
+{
+  "updated_utc": "2026-10-15T11:58:06.989810+00:00",
+  "qualification": "Functional source and explicit clock/reset interface only; physical parent/canonical programmes/SU serial bridge remain open",
+  "source_dependency_recovered": "d7c9b5fb5 fixed two-source capture merge, including old/new equivalence and mutants; absent from first supplied list",
+  "conflict_resolution": "Retained full exact new native_cap_boundary_bench.sh and staged_age.json when antecedent files were absent on main; simulator two-source quoting corrected1940f296d",
+  "source_binding": "40 of43 final integration receipt entries byte-identical; remaining3 exactly51008bb25 faultfixture/gate correction and timingcomments; DUTcap comments-only difference",
+  "new_root_checks": {
+    "static_VM_tests": 10,
+    "disk_admission_tests": 7,
+    "SFU_source_hash_entries": 25,
+    "shell_syntax": "native_cap_boundary_bench PASS"
+  },
+  "required_generator": {
+    "CAP_PIPE": 1,
+    "READ_PIPE": 1,
+    "clocks": 682,
+    "raw_resets": 618,
+    "scalar_fallback": false
+  },
+  "timing_scope": {
+    "native_read": "13 STREAM edges, NOT serial SU edges",
+    "WFC": "18 serial edges",
+    "SU_serial_VM_bridge": "MISSING; compiler owns actualsource and VMowner actual128SRAMphase proof; no inferred latency"
+  },
+  "unchanged_constraints": "TTsetup>=0,FFhold>=0,DRC0 and nativeboundary/source/phase/realmemory remain required"
+}

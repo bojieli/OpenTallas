@@ -4,6 +4,7 @@ The reference is the actual Liberty clock pin. Clock-to-Q and setup/hold remain
 in that Liberty; no internal delay is inferred, subtracted or added to them.
 Only the propagated source-to-pin wire is balanced by the parent CE policy.
 """
+import base64
 import hashlib
 import math
 import re
@@ -122,15 +123,67 @@ def load(spec, root):
                             dimensions_um=[physical['W'], physical['H']]))
     rows = []
     for e in entries:
-        corners = ' '.join(_word(c) + ' ' + _word(e['corners'][c]['library']) for c in CORNERS)
+        corners = ' '.join(_word(c) + ' {' + _word(e['corners'][c]['library']) + ' ' + _word(e['corners'][c]['sha256']) + '}' for c in CORNERS)
         rows.append('{' + ' '.join(_word(e[k]) for k in ('master', 'instance_pattern', 'port', 'pin')) + ' {' + corners + '}}')
-    return dict(entries=entries, bindings_tcl='set ::ot_ce_direct_entries {' + ' '.join(rows) + '}\n' + BODY)
+    return dict(entries=entries, bindings_tcl='set ::ot_ce_direct_entries {' + ' '.join(rows) + '}\n' + (scene_accessor_tcl() if entries else '') + BODY)
+
+
+def scene_accessor_tcl():
+    """Embed source so every generated kit uses exactly the reviewed accessor.
+
+    The module is compiled with the running image's headers and dynamically
+    resolves that executable's OpenSTA symbols. No prebuilt binary is shipped.
+    """
+    source = Path(__file__).with_name('sta_scene_binding.cc').read_bytes()
+    return ('set ::ot_scene_accessor_source_b64 {' + base64.b64encode(source).decode() + '}\n'
+            + 'set ::ot_scene_accessor_source_sha256 {' + hashlib.sha256(source).hexdigest() + '}\n'
+            + SCENE_LOADER)
+
+
+SCENE_LOADER = r'''
+proc ot_direct_sha256 {filename} {
+  if {![file isfile $filename]} {error "OT_DIRECT_MACRO: missing source file $filename"}
+  set result [exec sha256sum -- $filename]
+  if {![regexp {^([0-9a-f]{64}) } $result -> digest]} {error "OT_DIRECT_MACRO: invalid source digest $filename"}
+  return $digest
+}
+proc ot_direct_load_scene_accessor {} {
+  if {[info exists ::ot_scene_accessor_loaded]} {return}
+  # Compile within the exact running image against its installed headers. A
+  # missing compiler/header/symbol is an admission failure, never a fallback.
+  set channel [file tempfile directory ot_sta_scene_]
+  close $channel; file delete $directory; file mkdir $directory
+  set source [file join $directory sta_scene_binding.cc]
+  set channel [open $source w]; fconfigure $channel -translation binary
+  puts -nonewline $channel [binary decode base64 $::ot_scene_accessor_source_b64]; close $channel
+  if {[ot_direct_sha256 $source] ne $::ot_scene_accessor_source_sha256} {error "OT_DIRECT_MACRO: accessor source digest mismatch"}
+  set executable [file normalize [file readlink /proc/self/exe]]
+  set include [file normalize [file join [file dirname $executable] .. include]]
+  set flags [list -std=c++20 -shared -fPIC -I$include -I/usr/include/tcl]
+  if {![file isfile /usr/include/fmt/core.h] && ![file isfile /usr/local/include/fmt/core.h]} {
+    set bundled /usr/local/include/spdlog/fmt/bundled
+    if {![file isfile $bundled/core.h]} {error "OT_DIRECT_MACRO: matching image fmt headers missing"}
+    file link -symbolic [file join $directory fmt] $bundled
+    lappend flags -I$directory
+  }
+  set module [file join $directory ot_scene_binding.so]
+  if {[catch {exec g++ {*}$flags $source -o $module 2>@1} output]} {
+    error "OT_DIRECT_MACRO: accessor compile failed ($directory): $output"
+  }
+  if {[catch {load $module Otscenebinding} output]} {error "OT_DIRECT_MACRO: accessor ABI/load failed: $output"}
+  set version [lindex [split [exec g++ --version] \n] 0]
+  puts "OT_DIRECT_MACRO ACCESSOR source_sha256=$::ot_scene_accessor_source_sha256 executable_sha256=[ot_direct_sha256 $executable] module_sha256=[ot_direct_sha256 $module] compiler=$version"
+  set ::ot_scene_accessor_loaded 1
+  file delete -force $directory
+}
+'''
 
 
 BODY = r'''
 # Return existing CE row shape. Zero internal OFFSET means Liberty-pin reference;
 # it is not a measured zero SRAM insertion and does not modify any macro arcs.
 proc ot_ce_direct_rows {corner} {
+  if {[llength $::ot_ce_direct_entries]} {ot_direct_load_scene_accessor}
   set rows {}; set cells_seen {}
   foreach entry $::ot_ce_direct_entries {
     lassign $entry master pattern name libpin libraries
@@ -141,11 +194,21 @@ proc ot_ce_direct_rows {corner} {
       error "OT_DIRECT_MACRO: duplicate/wrong actual macro $cellname"
     }
     dict set cells_seen $cellname 1
-    set libs [get_lib_cells -quiet -of_objects $cell]
-    set actual {}
-    foreach lib $libs { lappend actual [get_full_name $lib] }
-    set expected "[dict get $libraries $corner]/$master"
-    if {$expected ni $actual} { error "OT_DIRECT_MACRO: actual corner mismatch: $actual expected $expected" }
+    lassign [dict get $libraries $corner] expected_library expected_sha
+    set expected "$expected_library/$master"
+    if {[catch {ot_sta_scene_binding $cellname $libpin} binding]} {
+      error "OT_DIRECT_MACRO: actual scene binding failed: $binding"
+    }
+    foreach mm {min max} {
+      set actual [dict get $binding $mm]
+      if {[dict get $actual library] ne $expected_library || [dict get $actual cell] ne $master ||
+          [dict get $actual clock_pin] ne $libpin} {
+        error "OT_DIRECT_MACRO: actual corner mismatch: scene=[dict get $binding scene] $mm [dict get $actual library]/[dict get $actual cell] expected $expected"
+      }
+      if {[ot_direct_sha256 [dict get $actual filename]] ne $expected_sha} {
+        error "OT_DIRECT_MACRO: actual scene Liberty source digest mismatch $expected"
+      }
+    }
     set pins {}
     foreach p [get_pins -of_objects $cell] {
       if {[get_property $p lib_pin_name] eq $libpin} { lappend pins $p }
