@@ -1,0 +1,15 @@
+COMMIT MISMATCH cy 1140 row 5001 slice 0 exp_c 1127 K 11
+COMMIT MISMATCH cy 1140 row 5001 slice 1 exp_c 1127 K 11
+COMMIT MISMATCH cy 1140 row 5001 slice 2 exp_c 1127 K 11
+COMMIT MISMATCH cy 1140 row 5001 slice 3 exp_c 1127 K 11
+COMMIT MISMATCH cy 1142 row 5002 slice 0 exp_c 1129 K 11
+COMMIT MISMATCH cy 1142 row 5003 slice 0 exp_c 1129 K 11
+COMMIT MISMATCH cy 1142 row 5002 slice 1 exp_c 1129 K 11
+COMMIT MISMATCH cy 1142 row 5003 slice 1 exp_c 1129 K 11
+COMMIT MISMATCH cy 1142 row 5002 slice 2 exp_c 1129 K 11
+TB_VMCORE RESULT mode 0 cycles 2210 commits 67696 K 11 reads 9813 pq 252 mix_reads 1998 mix_writes 500 rows_checked 12819 dones 4 cmds 4 bad 26
+TB_VMCORE FAIL mode 0
+- /srv/opentallas-scratch/codex-s81-vm-small-groups-1015/tb_dsfd_vm_static_core.sv:296: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 2us; walltime 5.668 s; speed 325.633 ns/s
+- Verilator: cpu 5.667 s on 1 threads; allocated 52 MB
