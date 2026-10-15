@@ -1,0 +1,94 @@
+{
+  "schema": "opentallas.hbm_attn.source_activity.v1",
+  "source": "rtl/hdc/v41x/static/ot_hdc_v41x_attn_physical_calendar.sv",
+  "params": {
+    "H": 16,
+    "D": 512,
+    "TD": 32,
+    "NL": 2,
+    "PWORDS": 2,
+    "logical_tiles": 32,
+    "quad_count": 128
+  },
+  "quad_head_ownership": {
+    "0": [
+      0,
+      1,
+      4,
+      5
+    ],
+    "2": [
+      2,
+      3,
+      6,
+      7
+    ],
+    "8": [
+      8,
+      9,
+      12,
+      13
+    ],
+    "10": [
+      10,
+      11,
+      14,
+      15
+    ]
+  },
+  "QK_tile_mapping": "g=lane*16+SL; qloadslice SL*TD, QKoperand lane/groupSL",
+  "PV_tile_mapping": "g mapsfeature16dims g*16..g*16+15; fillusesBOTHlanes groupfloor(g/2),XOFF=(g*16)%32",
+  "native_staging_bit_layout": "Interleaved265bgroups:code256,scale8,format1. Existingraw256bmacrostriping isNOT separatecode/meta.",
+  "interpretation": "Usefulstationarywrites differ fromactualexternalquadportbroadcast. Query heads reachall4quads/tile butonlyonequadownseachhead; P1024bword reachallquadports buteachowns4of16heads. No toggleprobability or clockpower invented.",
+  "source_lines": {
+    "query_and_P_tileloads": "g_t: localparamSL=gk%S; ldw=e_ld_mode?e_p_w:zeroextended e_q_w[SL*TD*16+:TD*16]",
+    "QK_expansion": "g_qkl/g_qks/g_qke: elem(rd_q_qk[lane*ROWW+SL*265+:265],...)",
+    "PVfill": "g_tr/g_g:w_g[gl*265+:265]=rd_q_fl[gl*ROWW+floor(g*DPT/32)*265+:265]"
+  },
+  "cases": [
+    {
+      "T": 128,
+      "source_K_or_V_bytes": 69632,
+      "packed_numeric_code_scale_bytes": 67584,
+      "packed_format_bits": 2048,
+      "packed_staging_bytes": 67840,
+      "query_FP32_VM_bytes": 32768,
+      "query_BF16_unique_bytes": 16384,
+      "query_stationary_consumed_bytes": 32768,
+      "query_quadport_delivery_bytes": 131072,
+      "query_quadport_physical_bus_bits": 1024,
+      "query_meaningful_bits_per_load": 512,
+      "P_FP32_VM_bytes": 8192,
+      "P_BF16_unique_bytes": 4096,
+      "P_stationary_consumed_bytes": 131072,
+      "P_quadport_delivery_bytes": 524288,
+      "P_issue_load_edges": 32,
+      "expanded_operand_functional_bytes": 147456,
+      "expanded_operand_quadport_bytes": 589824,
+      "PVfill_packed_tileport_bytes": 135680
+    },
+    {
+      "T": 640,
+      "source_K_or_V_bytes": 348160,
+      "packed_numeric_code_scale_bytes": 337920,
+      "packed_format_bits": 10240,
+      "packed_staging_bytes": 339200,
+      "query_FP32_VM_bytes": 32768,
+      "query_BF16_unique_bytes": 16384,
+      "query_stationary_consumed_bytes": 32768,
+      "query_quadport_delivery_bytes": 131072,
+      "query_quadport_physical_bus_bits": 1024,
+      "query_meaningful_bits_per_load": 512,
+      "P_FP32_VM_bytes": 40960,
+      "P_BF16_unique_bytes": 20480,
+      "P_stationary_consumed_bytes": 655360,
+      "P_quadport_delivery_bytes": 2621440,
+      "P_issue_load_edges": 160,
+      "expanded_operand_functional_bytes": 737280,
+      "expanded_operand_quadport_bytes": 2949120,
+      "PVfill_packed_tileport_bytes": 678400
+    }
+  ],
+  "qualification": false,
+  "remaining": "Actual logicaltile\u2192physicalpair assignment, source/hardpipe binding, whole-system pinexact geometry, clock/cut/route"
+}
