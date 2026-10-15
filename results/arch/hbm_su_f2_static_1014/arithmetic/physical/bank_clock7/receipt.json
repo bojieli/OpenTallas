@@ -32,6 +32,30 @@
   "host": "ot-agidock128",
   "unit": "oth-ubuntu-944449-1792088591",
   "ot_run_exit": 0,
-  "CTS": "waiting for shared helper b3d0ea974 main publication before renewed physical gate",
-  "remote_bench_run": "/srv/opentallas-scratch/codex/su-bank-clock7-hybrid-1103"
+  "CTS": "attempt2 rejected: global CTS clock-net repair buffered4of6 explicitly excluded raw SRAM entries; actual OpenDB/STA proof in attempt2. Shared flow owner notified; no route.",
+  "remote_bench_run": "/srv/opentallas-scratch/codex/su-bank-clock7-hybrid-1103",
+  "topology_diagnostic": {
+    "host": "ot-agidock128",
+    "unit": "oth-ubuntu-964375-1792089182",
+    "result_exit": 2,
+    "ODB": "/srv/opentallas-scratch/codex/su-bank-clock7-topology-1103/orfs/diag_post_cts.odb",
+    "macro0_source_net": "clk_macro0",
+    "macro0_source_sink": "wire3581/A",
+    "macro0_clock_net": "net3580",
+    "macro0_clock_net_sources": 0,
+    "macro0_clock_net_pins": [
+      "u_bank.u_data.g_read[0].u_m/clk",
+      "wire3581/Y"
+    ],
+    "buffered_macro_entries": [
+      0,
+      2,
+      3,
+      5
+    ],
+    "direct_macro_entries": [
+      1,
+      4
+    ]
+  }
 }

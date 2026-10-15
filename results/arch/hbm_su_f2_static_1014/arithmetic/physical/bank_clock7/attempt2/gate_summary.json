@@ -1,0 +1,58 @@
+{
+  "schema": "opentallas.ref_tile.gate_result.v2",
+  "kit": "hbm_su_static_bank6_clock7_1015",
+  "verdict": "FAIL",
+  "generated": "2026-10-15T11:29:30-0700",
+  "host": "ot-agidock128",
+  "cts": true,
+  "clock": {
+    "max_root_sinks": 324,
+    "root": "port:clk",
+    "cts": true,
+    "tt_insertion_ps": null,
+    "tt_spread_ps": null,
+    "declared_clock": "hybrid_entries",
+    "limits": {
+      "sinks": 15000,
+      "insertion_ps": 300.0,
+      "spread_ps": 80.0
+    },
+    "verdict": "PASS",
+    "text": "324 sinks on the largest root <= 15,000; no measured clock tree (no --cts gate evidence)"
+  },
+  "items": [
+    {
+      "severity": "WARN",
+      "check": "util",
+      "message": "synthesized std area 358 um2 + macros 23349 in core 53617: util 44%",
+      "fix": "set \"std_area_um2\": 358 and drop 'outline' (gen sizes to util 0.52)"
+    },
+    {
+      "severity": "WARN",
+      "check": "textbook.util_channel",
+      "message": "utilisation 44.2% outside 45%-65% (std 368 + macro 23349 um2 in 53617 um2): shrink the outline (long wires / sparse placement)",
+      "fix": "size the outline to util 0.50-0.55 with >= 20 um macro channels"
+    },
+    {
+      "severity": "FAIL",
+      "check": "cts_run",
+      "message": "placement / CTS of the kit failed: ",
+      "fix": "the route would fail the same way (DPL-0033 / GPL-0305 / CTS-*): fix the floorplan / density before routing"
+    },
+    {
+      "severity": "WARN",
+      "check": "cts_calibration",
+      "message": "CTS rc=2 ck_insertion rc=1",
+      "fix": ""
+    }
+  ],
+  "source_binding_summary": {
+    "remote_host": "ot-agidock128",
+    "remote_run": "/srv/opentallas-scratch/claude/ref_gate/hbm_su_static_bank6_clock7_1015-20261015-112638",
+    "remote_script_sha256": "3776c2f9a134c6fe6ff02e50a3595b1ae967948bf2f35fad2529a9237db300d4",
+    "captured": "2026-10-15T11:27:03-0700",
+    "archive_sha256": "1ed4a20f5fdf73dd49b71f5eb89b22d56a4166c1c6b886796bc32e0a33287705",
+    "manifest_sha256": "adb708eb4465215ba802d92a4577b0c55119041cccb806f5ddce5dfca93fe407"
+  },
+  "full_gate_sha256": "e3d87bbc027328dc42f9f664380a63f78355a6adef9f1d37eadcd9284fb40c8e"
+}

@@ -1,0 +1,9 @@
+DIAG_DB_SOURCE clk_macro0 net=clk_macro0 bterms=clk_macro0 iterms=wire3581/A
+DIAG_DB_SOURCE clk_macro1 net=clk_macro1 bterms=clk_macro1 iterms={u_bank.u_data.g_read\[1\].u_m/clk}
+DIAG_DB_SOURCE clk_macro2 net=clk_macro2 bterms=clk_macro2 iterms=wire3582/A
+DIAG_DB_SOURCE clk_macro3 net=clk_macro3 bterms=clk_macro3 iterms=wire3583/A
+DIAG_DB_SOURCE clk_macro4 net=clk_macro4 bterms=clk_macro4 iterms={u_bank.u_data.g_read\[4\].u_m/clk}
+DIAG_DB_SOURCE clk_macro5 net=clk_macro5 bterms=clk_macro5 iterms=wire3584/A
+DIAG_STA_MACRO pin=u_bank.u_data.g_read[0].u_m/clk net=net3580 sources_n=0 sources= sinks_n=2 sinks={u_bank.u_data.g_read[0].u_m/clk} wire3581/Y
+Error: cts.tcl, 36 DIAGNOSTIC retained original failure: OT_DIRECT_MACRO: actual exclusive direct source/pin ownership mismatch clk_macro0 -> u_bank.u_data.g_read[0].u_m/clk
+ot-run: RAN on ot-agidock128 (unit oth-ubuntu-964375-1792089182): exit 2

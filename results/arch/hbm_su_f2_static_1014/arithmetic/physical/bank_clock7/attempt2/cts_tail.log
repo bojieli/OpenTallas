@@ -1,0 +1,101 @@
+original_sha256 aa18853ff46129814e946140ac839d811c186c198fe01da2c8aeab43e6d90ff8
+write_sdc -no_timestamp /work/results/asap7/opentallas_ot_hbm_su_static_bank6_clock_physical_asap7_ref_gate/base/3_place.sdc
+Elapsed time: 0:10.92[h:]min:sec. CPU time: user 11.58 sys 0.70 (112%). Peak memory: 538648KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+3_5_place_dp              .odb           10            526 b7a4e336226a80331f0a
+cp /work/results/asap7/opentallas_ot_hbm_su_static_bank6_clock_physical_asap7_ref_gate/base/3_5_place_dp.odb /work/results/asap7/opentallas_ot_hbm_su_static_bank6_clock_physical_asap7_ref_gate/base/3_place.odb
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 4_1_cts cts
+Running cts.tcl, stage 4_1_cts
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_liberty /src/physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_tt.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_liberty /src/physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_ff.lib
+read_db /work/results/asap7/opentallas_ot_hbm_su_static_bank6_clock_physical_asap7_ref_gate/base/3_place.odb
+read_sdc -mode ss /work/results/asap7/opentallas_ot_hbm_su_static_bank6_clock_physical_asap7_ref_gate/base/3_place.sdc
+read_sdc -mode ff /work/results/asap7/opentallas_ot_hbm_su_static_bank6_clock_physical_asap7_ref_gate/base/3_place.sdc
+OT_HOLD_MM: scenes WC (mode ss) / BC (mode ff) from /work/results/asap7/opentallas_ot_hbm_su_static_bank6_clock_physical_asap7_ref_gate/base/3_place.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+source /work/hooks/pre_cts_ot_cts_fix.tcl
+clock_tree_synthesis -sink_clustering_enable -repair_clock_nets -delay_buffer_derate 0.75
+OT_CG_PUSHDOWN total gates=0 clones=0 K=48 MIN=64
+OT_ENTRIES entry clk_macro0 -> u_bank.u_data.g_read\[0\].u_m/clk (ot_sram_1r1w_128x256_m1_r2c2) wire 240.9 um LONG
+OT_ENTRIES entry clk_macro1 -> u_bank.u_data.g_read\[1\].u_m/clk (ot_sram_1r1w_128x256_m1_r2c2) wire 127.2 um LONG
+OT_ENTRIES entry clk_macro2 -> u_bank.u_data.g_read\[2\].u_m/clk (ot_sram_1r1w_128x256_m1_r2c2) wire 242.0 um LONG
+OT_ENTRIES entry clk_macro3 -> u_bank.u_data.g_read\[3\].u_m/clk (ot_sram_1r1w_128x256_m1_r2c2) wire 178.5 um LONG
+OT_ENTRIES entry clk_macro4 -> u_bank.u_data.g_read\[4\].u_m/clk (ot_sram_1r1w_128x256_m1_r2c2) wire 64.3 um LONG
+OT_ENTRIES entry clk_macro5 -> u_bank.u_data.g_read\[5\].u_m/clk (ot_sram_1r1w_128x256_m1_r2c2) wire 179.2 um LONG
+OT_MACRO_CTS 6 clocked macros: -macro_clustering_size 2 -macro_clustering_max_diameter 40
+[INFO CTS-0050] Root buffer is BUFx24_ASAP7_75t_R.
+[INFO CTS-0051] Sink buffer is BUFx24_ASAP7_75t_R.
+[INFO CTS-0052] The following clock buffers will be used for CTS:
+                    BUFx24_ASAP7_75t_R
+[INFO CTS-0049] Characterization buffer is BUFx24_ASAP7_75t_R.
+[INFO CTS-0001] Running TritonCTS with user-specified clock roots: clk.
+[INFO CTS-0095] Net "clk" found.
+[INFO CTS-0010]  Clock net "clk" has 324 sinks.
+[INFO CTS-0008] TritonCTS found 1 clock nets.
+[INFO CTS-0097] Characterization used 1 buffer(s) types.
+[INFO CTS-0201] 6 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net clk.
+[INFO CTS-0028]  Total number of sinks: 324.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 32 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0204] A clustering solution was found from clustering size of 32 and max clustering diameter of 52.
+[INFO CTS-0205] Better solution may be possible if either -sink_clustering_size, -sink_clustering_max_diameter, or both options are omitted to enable automatic clustering.
+[INFO CTS-0019]  Total number of sinks after clustering: 17.
+[INFO CTS-0024]  Normalized sink region: [(4.3856, 17.4), (266.211, 79.8857)].
+[INFO CTS-0025]     Width:  261.8253.
+[INFO CTS-0026]     Height: 62.4857.
+ Level 1
+    Direction: Horizontal
+    Sinks per sub-region: 9
+    Sub-region size: 130.9127 X 62.4857
+[INFO CTS-0034]     Segment length (rounded): 66.
+ Level 2
+    Direction: Vertical
+    Sinks per sub-region: 5
+    Sub-region size: 130.9127 X 31.2429
+[INFO CTS-0034]     Segment length (rounded): 16.
+ Level 3
+    Direction: Horizontal
+    Sinks per sub-region: 3
+    Sub-region size: 65.4563 X 31.2429
+[INFO CTS-0034]     Segment length (rounded): 32.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (162.640 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 17.
+[INFO CTS-0018]     Created 30 clock buffers.
+[INFO CTS-0012]     Minimum number of buffers in the clock path: 5.
+[INFO CTS-0013]     Maximum number of buffers in the clock path: 5.
+[INFO CTS-0015]     Created 30 clock nets.
+[INFO CTS-0016]     Fanout distribution for the current clock = 1:1, 2:6, 3:1, 4:1, 5:1, 8:1, 9:1, 12:2, 18:1, 20:1, 21:2, 22:1, 27:2, 28:1, 29:1, 31:2..
+[INFO CTS-0017]     Max level of the clock tree: 3.
+[INFO CTS-0098] Clock net "clk"
+[INFO CTS-0099]  Sinks 336
+[INFO CTS-0100]  Leaf buffers 17
+[INFO CTS-0101]  Average sink wire length 342.16 um
+[INFO CTS-0102]  Path depth 4 - 5
+[INFO CTS-0207]  Dummy loads inserted 12
+[INFO RSZ-0047] Found 4 long wires.
+[INFO RSZ-0048] Inserted 4 buffers in 4 nets.
+[INFO CTS-0500] Runtime: 1.88s
+OT_HYBRID CTS roots clk; hard-child entries excluded
+OT_ENTRIES done: 6 independent hard entries, 1 glue CTS roots, 6 entry wires over 60.0 um
+QDM PINFLOP reference: 106 input pin flops, median arrival 236.508179 (range 233.783722 .. 262.821503)
+QDM reference pin u_bank.a_pin[44]$_DFF_P_/CLK clock arrival max 236.508179 min 188.775864 skew 90 hold 50
+OT_IO_INTER 0 inputs 0 outputs at 150 ps
+QDM boundary referenced to the propagated tree
+OT_DIRECT_MACRO ACCESSOR source_sha256=61aaf3f8c874867d13acbca9ef2f8d861a8217793d5b3605318886f8fd9f5777 executable_sha256=21eda99eeae7eccb22ca64ad28949c08a6c01dcece3ccb23e2206d635f8d2846 module_sha256=b3221367ae6d71774163a505c69426a7ccd4b817b5c989460e5860b145a6dfe9 compiler=g++ (Ubuntu 11.4.0-1ubuntu1~22.04.3) 11.4.0
+Error: cts.tcl, 36 OT_DIRECT_MACRO: actual exclusive direct source/pin ownership mismatch clk_macro0 -> u_bank.u_data.g_read[0].u_m/clk
+Elapsed time: 0:08.91[h:]min:sec. CPU time: user 8.98 sys 0.91 (110%). Peak memory: 385052KB.
+make[1]: *** [Makefile:548: do-4_1_cts] Error 1
+make: *** [Makefile:548: /work/results/asap7/opentallas_ot_hbm_su_static_bank6_clock_physical_asap7_ref_gate/base/4_1_cts.odb] Error 2
