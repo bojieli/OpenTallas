@@ -65,10 +65,18 @@ for k in range(4):
      [dict(view=SR128,count=8)],dict(w=432.0,h=302.4),
      f'v15.1 hb_dbk_{("SW","SE","NW","NE")[k]}: static scheduled DMA STORE back engine, STK={k}, eight real landing SRAMs, VM RG1 direct (bank n+1/n+7), fixed cycles.',
      bench('bench_dma_back.sh',[1,2],r'PASS DMA static actual production',ram=8),params=dict(STK=k),extra=['rtl/hbm_accel/generic/vm/static'])
-dl='rtl/hbm_accel/loader/service_native/ot_hbm_svc_static_vm_delivery.sv'
-spec('hv15_vm_delivery','ot_hbm_svc_static_vm_delivery',[dl,'rtl/hbm_accel/loader/service_native/ot_hbm_svc_static_landing.sv',SR128+'/ot_sram_1r1w_128x256_m1_r2c2_bb.v'],
+# monolithic delivery kit removed 10-15: local gate FAIL pin_fit (8,960 pins on S = 124 % of slots), clock span > 600 um,
+# 2,048-bit runtime part-select -> structural split below (ot_hbm_svc_static_vm_delivery_split).
+spl='rtl/hbm_accel/loader/service_native/split/ot_hbm_svc_static_vm_delivery_split.sv'
+SPLIT_PURPOSE=('structural split of delivery_<q> (monolithic gate: 8,960 fill pins on one face = 124 %% of slots, > 600 um clock span, '
+ '2,048-bit runtime group mux): 8 identical VM-bank lane leaves + 1 control leaf under a wires-only parent, cycle- and bit-identical '
+ '(lockstep equivalence + production bench); cost 0 cycles. %s')
+dsb=lambda: bench('bench_delivery_split.sh',[1,2],r'DELIVERY_SPLIT_BENCH PASS',r'checks=(\d+)',ram=8)
+spec('hv15_vmdel_bank','ot_hbm_svc_vmdel_bank',[spl,SR128+'/ot_sram_1r1w_128x256_m1_r2c2_bb.v'],
  dict(S=['fill_v','fill_bank','fill_slot','fill_epoch','fill_data'],N=['dq'],
-      W=['clk','rst_n','begin_v','begin_bank','begin_epoch','block_ready','start','start_bank','start_epoch','start_base_sector','busy','fault']),
- [dict(view=SR128,count=32)],dict(w=691.2,h=432.0),
- 'v15.1 delivery_<q> (4 inst, one master): 32 real PC landing SRAMs + compiler-allocated 8-bank dq stream into the VM (sample next edge, commit +3), no response arbitration/credits; begin/fill are PHY-boundary operations.',
- bench('bench_delivery.sh',[1,2],r'STATIC_VM_DELIVERY PASS',r'sectors=(\d+)',ram=8))
+      W=['clk','rst_n','bank_id','owned','epochs','issue','rb','rg','rs','clear_bank','begin_bank','landing_fault','dq_v','out_group','sector_hi','full0','full1','pc_fault']),
+ [dict(view=SR128,count=4)],dict(w=302.4,h=172.8),SPLIT_PURPOSE%'Leaf: PCs b,8+b,16+b,24+b (4 real SRAMs) + dq[b]; hardened once, 8 per quadrant.',dsb())
+spec('hv15_vmdel_ctl','ot_hbm_svc_vmdel_ctl',[spl],
+ dict(W=['clk','rst_n','begin_v','begin_bank','begin_epoch','start','start_bank','start_epoch','start_base_sector','block_ready','busy','fault'],
+      E=['full0','full1','pc_fault','owned','epochs','issue','rb','rg','rs','clear_bank','landing_fault','dq_v','out_group','sector_hi']),
+ [],dict(w=43.2,h=43.2),SPLIT_PURPOSE%'Leaf: begin/start/aperture/owned/epoch/running state, block_ready/fault aggregation.',dsb())

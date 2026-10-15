@@ -1,10 +1,9 @@
 {
- "name": "hv15_vm_delivery",
- "top": "ot_hbm_svc_static_vm_delivery",
+ "name": "hv15_vmdel_bank",
+ "top": "ot_hbm_svc_vmdel_bank",
  "kind": "tile",
  "sources": [
-  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_static_vm_delivery.sv",
-  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_static_landing.sv",
+  "rtl/hbm_accel/loader/service_native/split/ot_hbm_svc_static_vm_delivery_split.sv",
   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v"
  ],
  "clock_port": "clk",
@@ -25,16 +24,22 @@
   "W": [
    "clk",
    "rst_n",
-   "begin_v",
+   "bank_id",
+   "owned",
+   "epochs",
+   "issue",
+   "rb",
+   "rg",
+   "rs",
+   "clear_bank",
    "begin_bank",
-   "begin_epoch",
-   "block_ready",
-   "start",
-   "start_bank",
-   "start_epoch",
-   "start_base_sector",
-   "busy",
-   "fault"
+   "landing_fault",
+   "dq_v",
+   "out_group",
+   "sector_hi",
+   "full0",
+   "full1",
+   "pc_fault"
   ]
  },
  "layer_cap": "M5",
@@ -42,7 +47,7 @@
  "macros": [
   {
    "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
-   "count": 32
+   "count": 4
   }
  ],
  "route": {
@@ -56,7 +61,7 @@
   "owner": "Claude:HBM-V15-HARDEN",
   "branch": "claude/hbm-v15-harden-1015",
   "tag": "hv15",
-  "purpose": "v15.1 delivery_<q> (4 inst, one master): 32 real PC landing SRAMs + compiler-allocated 8-bank dq stream into the VM (sample next edge, commit +3), no response arbitration/credits; begin/fill are PHY-boundary operations.",
+  "purpose": "structural split of delivery_<q> (monolithic gate: 8,960 fill pins on one face = 124 % of slots, > 600 um clock span, 2,048-bit runtime group mux): 8 identical VM-bank lane leaves + 1 control leaf under a wires-only parent, cycle- and bit-identical (lockstep equivalence + production bench); cost 0 cycles. Leaf: PCs b,8+b,16+b,24+b (4 real SRAMs) + dq[b]; hardened once, 8 per quadrant.",
   "extra_paths": [
    "tools/hbm_v15_harden",
    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
@@ -64,23 +69,23 @@
    "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
    "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2"
   ],
-  "record_to": "results/rtl/ref_tile/hv15_vm_delivery",
+  "record_to": "results/rtl/ref_tile/hv15_vmdel_bank",
   "benches": [
    {
     "name": "exact",
-    "cmd": "bash tools/hbm_v15_harden/bench_delivery.sh {RUN}/bench/exact 0",
+    "cmd": "bash tools/hbm_v15_harden/bench_delivery_split.sh {RUN}/bench/exact 0",
     "expect": "pass",
     "threads": 1,
     "peak_ram_gb": 8,
     "needs": [
      "iverilog"
     ],
-    "pass_regex": "STATIC_VM_DELIVERY PASS",
-    "min_count_regex": "sectors=(\\d+)"
+    "pass_regex": "DELIVERY_SPLIT_BENCH PASS",
+    "min_count_regex": "checks=(\\d+)"
    },
    {
     "name": "mutant1",
-    "cmd": "bash tools/hbm_v15_harden/bench_delivery.sh {RUN}/bench/mut1 1",
+    "cmd": "bash tools/hbm_v15_harden/bench_delivery_split.sh {RUN}/bench/mut1 1",
     "expect": "fail",
     "threads": 1,
     "peak_ram_gb": 8,
@@ -90,7 +95,7 @@
    },
    {
     "name": "mutant2",
-    "cmd": "bash tools/hbm_v15_harden/bench_delivery.sh {RUN}/bench/mut2 2",
+    "cmd": "bash tools/hbm_v15_harden/bench_delivery_split.sh {RUN}/bench/mut2 2",
     "expect": "fail",
     "threads": 1,
     "peak_ram_gb": 8,
@@ -101,7 +106,7 @@
   ]
  },
  "outline": {
-  "w": 691.2,
-  "h": 432.0
+  "w": 302.4,
+  "h": 172.8
  }
 }
