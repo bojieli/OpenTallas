@@ -72,6 +72,18 @@ def qwen_central_vm_banked_native_model():
         qualification='model then actual9root miter+mutants and native leafCTS/route; no physical adoption')
 
 
+def qwen_central_vm_operand_bank_model():
+    """Actual NSB1 DEPTH695 LAWS10 operand SRAM counterpart of row-bank split."""
+    x=qwen_central_vm_banked_native_model()
+    x.update(schema='opentallas.qwen-central-vm-operand-bank.v1',replicas=48,
+        physical_depth=1024,logical_depth=695,address_bits=10,control_leaf_bits=37,
+        total_register_bits_per_bank=1573,
+        memory_macro='ot_sram_1r1w_1024x256_m2_r2c2',
+        original_native_failure='launch293.5ps/capture260.9ps/boundaryspread95.9ps',
+        qualification='exact9root operandbank actualSRAM miter+mutants and native37FF control in progress; reused data256 actualroute pending qualification')
+    return x
+
+
 def qwen_central_vm_control_leaf_model(observer=False):
     """Selected 488-root VM, actual LAW8 control leaves before native CTS/route."""
     bits_in, bits_out, registers, copies = (27,25,51,39) if observer else (35,35,70,64)
