@@ -258,7 +258,7 @@ module tb_static_paced_v_landing_full128;
  reg [31:0] rq=0,rv=0;reg [13:0] rt[0:31];
  wire [31:0] ov,kind,fault;wire [1023:0] od[0:31];wire [13:0] ot[0:31];
  wire [15:0] oe[0:31];wire [5:0] ol[0:31];
- wire arm=(edge_index==40);
+ reg arm=0;
  function automatic integer slotgroup(input integer g);
   case(g)4:return 0;5:return 1;0:return 2;1:return 3;2:return 4;3:return 5;6:return 6;7:return 7;endcase
  endfunction
@@ -314,14 +314,48 @@ module tb_static_paced_v_landing_full128;
    rt[n]=0;
   end
   $fclose(fd);
+  for(integer n=0;n<32;n++)if(basev[n]!=basev[8*((n/8)%2)]+128*((n/8)/2)+n%8)
+   $fatal(1,"calendar violates actual shared pair source group%0d",n);
+ end
+ // Real canonical two-pair V issuer, including its 128-edge PV init
+ // reservation. EXP input is a zero fixture in this KV-only component gate;
+ // no arithmetic/PV/native whole-attention qualification is implied.
+ wire [1:0] vreqlo,vreqhi,vdone,vfault;
+ wire [13:0] vtag[0:1];wire [2:0] vslot[0:1];wire [15:0] vepoch[0:1];
+ reg [1:0] vstart=0,vdone_seen=0;
+ for(genvar pair=0;pair<2;pair++)begin:canonical_v
+  reg lo_valid,hi_valid;reg [13:0] lo_tag,hi_tag;
+  reg [15:0] lo_epoch,hi_epoch;reg [1023:0] lo_row,hi_row;
+  reg [2:0] lo_slot,hi_slot;
+  // Slot is source ordinal modulo8. Actual group ordinal tag t contains the
+  // correct global pair traversal position, so slot=t[2:0].
+  always @*begin
+   lo_valid=0;hi_valid=0;lo_tag=0;hi_tag=0;lo_epoch=0;hi_epoch=0;
+   lo_row=0;hi_row=0;lo_slot=0;hi_slot=0;
+   for(integer n=0;n<32;n++)if(ov[n]&&kind[n])begin
+    if(n/8==pair)begin lo_valid=1;lo_tag=ot[n];lo_epoch=oe[n];lo_row=od[n];lo_slot=ot[n][2:0];end
+    if(n/8==pair+2)begin hi_valid=1;hi_tag=ot[n];hi_epoch=oe[n];hi_row=od[n];hi_slot=ot[n][2:0];end
+   end
+  end
+  ot_qwen_tp8_vrow_static #(.PAIR(pair),.RETURN_LATENCY(8),.INIT_CYCLES(128))u_v(
+   .clk(core[0]),.rst_n(reset_n[0]),.start(vstart[pair]),.context_len(14'd8192),.epoch(16'd7),
+   .lo_req_valid(vreqlo[pair]),.hi_req_valid(vreqhi[pair]),.lo_req_ready(1'b1),.hi_req_ready(1'b1),
+   .req_slot(vslot[pair]),.req_t(vtag[pair]),.req_epoch(vepoch[pair]),
+   .lo_rsp_valid(lo_valid),.hi_rsp_valid(hi_valid),.lo_rsp_slot(lo_slot),.hi_rsp_slot(hi_slot),
+   .lo_rsp_t(lo_tag),.hi_rsp_t(hi_tag),.lo_rsp_epoch(lo_epoch),.hi_rsp_epoch(hi_epoch),
+   .lo_vrow(lo_row),.hi_vrow(hi_row),.lo_exp(64'b0),.hi_exp(64'b0),
+   .out_valid(),.out_ready(1'b1),.out_vrow(),.out_exp(),.out_t(),.out_epoch(),.out_first(),.out_last(),
+   .done(vdone[pair]),.fault(vfault[pair]));
  end
  always @(negedge core[0])begin
+  arm=(edge_index==40);
+  for(integer pair=0;pair<2;pair++)vstart[pair]=(edge_index==basev[8*pair]-129);
   for(integer n=0;n<32;n++)begin
    automatic integer k=edge_index-basek[n],v=edge_index-basev[n];
    rq[n]=0;rv[n]=0;
    if(k>=0&&k<256)begin rq[n]=1;rt[n]=kt(k,n/8,n%8);end
-   if(v>=0&&v<4096&&(v%256)<128&&(v%8)==0)begin
-    rq[n]=1;rv[n]=1;rt[n]=vt(16*(v/256)+(v%256)/8,n/8,n%8);
+   if((vreqlo[(n/8)%2]||vreqhi[(n/8)%2])&&((vtag[(n/8)%2]>>7)&3)==n/8&&(vtag[(n/8)%2]&7)==n%8)begin
+    rq[n]=1;rv[n]=1;rt[n]=vtag[(n/8)%2];
    end
    if(mode==10&&n==0&&rq[n])rt[n]^=14'd1;
   end
@@ -329,6 +363,7 @@ module tb_static_paced_v_landing_full128;
  reg [31:0] exvalid[0:7],exkind[0:7];reg [13:0] ext[0:7][0:31];reg [1023:0] exdata[0:7][0:31];
  always @(posedge core[0])begin
   edge_index++;
+  vdone_seen<=vdone_seen|vdone;
   if(!reset_n[0])for(integer d=0;d<8;d++)exvalid[d]<=0;
   else begin
    exvalid[0]<=rq;exkind[0]<=rv;
@@ -341,6 +376,7 @@ module tb_static_paced_v_landing_full128;
   #0.000001;
   if(reset_n[0])begin
    if(ov!==exvalid[7])begin if(errors<4)$display("BAD landing valid edge%0d got%h expected%h",edge_index,ov,exvalid[7]);errors++;end
+   if(|vfault)begin if(errors<4)$display("BAD actual V source fault edge%0d mask%h",edge_index,vfault);errors++;end
    if(|fault)begin if(errors<4)$display("BAD landing fault edge%0d mask%h",edge_index,fault);errors++;end
    for(integer n=0;n<32;n++)if(ov[n])begin
     seen++;
@@ -351,8 +387,8 @@ module tb_static_paced_v_landing_full128;
   end
  end
  always @(done)if(&done)begin
-  if(errors||seen!=16384)$fatal(1,"landing errors%0d rows%0d want16384",errors,seen);
-  $display("PASS actual128 persistent controllers fixed returns mapped128SRAM physical32groups K8192 V8192 sevenedge exact phase%0d",phase);
+  if(errors||seen!=16384||vdone_seen!=3)$fatal(1,"landing errors%0d rows%0d want16384",errors,seen);
+  $display("PASS actual128 persistent controllers fixed returns mapped128SRAM physical32groups actual2Vissuers K8192 V8192 sevenedge exact phase%0d",phase);
   $finish;
  end
 endmodule

@@ -1,0 +1,5 @@
+CLOCK core period_ns0.833334000 first_ns0.553667000
+CLOCK hbm period_ns1.024000000
+[381000000] %Fatal: tb_static_paced_v_return_full128.sv:80: Assertion failed in tb_static_paced_v_return_full128.pc[0].cell_i: actual controller dual-clock return metadata/data
+%Error: /var/tmp/qkv-paced-v-7f7ce0e43-full128/source/rtl/test/qwen_static_kv/tb_static_paced_v_return_full128.sv:80: Verilog $stop
+Aborting...
