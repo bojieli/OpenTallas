@@ -1,0 +1,10 @@
+`verilator_config
+hier_block -module "ot_hdc_v41x_attn_hgrp_s"
+hier_block -module "ot_hdc_v41x_attn_merge_s"
+hier_block -module "ot_hdc_v41x_attn_staging"
+hier_block -module "ot_hdc_v41x_qaddf"
+hier_block -module "ot_hdc_v41x_attn_bmul_l"
+hier_block -module "ot_hbm_attn_transpose_regs"
+hier_block -module "ot_hbm_attn_staging_grouped"
+hier_block -module "ot_hbm_attn_staging_mode_local"
+hier_block -module "ot_hbm_attn_stage_tile_decode"
