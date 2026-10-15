@@ -13,6 +13,7 @@ Every nonzero signal segment is counted, including classes intended to abut.
     python3 tools/qwen_kv_die/kvsys_window.py [--split] [--fine 260] [--coarse 1040] --out OUT.json
 """
 import argparse
+import hashlib
 import json
 import sys
 from collections import Counter, defaultdict
@@ -160,18 +161,26 @@ def main(argv=None):
     ap.add_argument('--host-v14', action='store_true', help='kvsys v1.4 geometry (HOST slices, static D2D end)')
     ap.add_argument('--host-north', action='store_true', help='kvsys v1.4.1: HOST root core below the static D2D end')
     ap.add_argument('--host-trees', action='store_true', help='kvsys v1.4.2: HOST reset / boot relay trees')
+    ap.add_argument('--allocation-json', type=Path, help='Exact source-checked N3 incident allocation; no regeneration or physical adoption')
     ap.add_argument('--fine', type=float, default=260.0)
     ap.add_argument('--coarse', type=float, default=1040.0)
     ap.add_argument('--bundle-centre', action='store_true', help='the old screen: every bus from one bundle-centre point')
     ap.add_argument('--out', type=Path, required=True)
     a = ap.parse_args(argv)
-    m = K.build(kv_wq_leaves=True, kv_wq_binary=True, kv_wq_leaf_s=True, kv_wq_wide=True, kv_wq_mirror=True, split=a.split, host_v14=a.host_v14, host_north=getattr(a, 'host_north', False) or None,
-                host_trees=getattr(a, 'host_trees', False) or None)
+    if a.allocation_json:
+        import head_source_bands
+        m=head_source_bands.load_allocation(a.allocation_json,K)
+    else:
+        m = K.build(kv_wq_leaves=True, kv_wq_binary=True, kv_wq_leaf_s=True, kv_wq_wide=True, kv_wq_mirror=True, split=a.split, host_v14=a.host_v14, host_north=getattr(a, 'host_north', False) or None,
+                    host_trees=getattr(a, 'host_trees', False) or None)
     M = K.masters(m, 1)
     rec = dict(schema='opentallas.qwen_kvsys_window.v1', split=a.split, die_um=[m['die']['w'], m['die']['h']],
                rule='L-routes between drawn pins, 50/50 H-V / V-H; capacity 9.375 tr/um over blocks, 31.5 in channels',
                fine=scan(m, M, a.fine, not a.bundle_centre), coarse=scan(m, M, a.coarse, not a.bundle_centre),
                per_bit=not a.bundle_centre)
+    if a.allocation_json:
+        rec.update(qualified=False,adopted=False,allocation_sha256=hashlib.sha256(a.allocation_json.read_bytes()).hexdigest(),
+            scope='N3 source-band incident allocation with raw R4 input buses retained; actual ABC/T1 gather/dataflow cuts still required')
     a.out.write_text(json.dumps(rec, indent=1, default=str) + '\n')
     print(json.dumps({k: (dict(max_h=v['max_util_h'], max_v=v['max_util_v'], over_055=v['over_055'], over_060=v['over_060'])
                           if isinstance(v, dict) and 'max_util_h' in v else v) for k, v in rec.items() if k != 'rule'}))

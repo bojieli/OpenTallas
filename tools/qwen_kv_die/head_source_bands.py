@@ -105,3 +105,30 @@ def lifecycle(m, K):
     m['head_source_bands']['lifecycle']=dict(depths=depths,relay_flush=K.RELAY_FLUSH,
         all_reset_forwarding_relays_clocked=True,normal_forwarding_calendar_qualified=False,
         obligation='Actual epoch/reset forwarding added edges must be consumed by peer static calendar and recovery/reset proof before adoption')
+
+
+def write_allocation(m, K, out):
+    """Save exact pin assignments and all regenerated buses for independent cuts."""
+    rec=dict(schema='opentallas.qwen-n3-allocation.v1',qualified=False,adopted=False,
+        note='Raw R4 input buses retained until real ABC/T1/native integration; this is an incident-allocation diagnostic, not N3 dataflow or die qualification',
+        source_sha256={str(p.relative_to(K.ROOT)):hashlib.sha256(p.read_bytes()).hexdigest()
+            for p in (Path(__file__),Path(K.__file__),Path(ingress.__file__),
+                      K.ROOT/'tools/qwen_kv_die/kv_pin_repair.py',
+                      K.ROOT/'tools/qwen_kv_die/channel_detour.py')},
+        model={key:m[key]for key in ('die','buses','geo','relay_stages','regions','assigned_ports')},
+        target_reach=K.pin_reach(m,K.masters(m,1),reach=K.PIN_REACH),
+        head_source_bands=m['head_source_bands'])
+    rec['model']['insts']=[{key:getattr(i,key)for key in i.__slots__}for i in m['insts']]
+    (out/'allocation.json').write_text(json.dumps(rec,indent=1)+'\n')
+
+
+def load_allocation(path, K):
+    rec=json.loads(path.read_text())
+    if rec['schema']!='opentallas.qwen-n3-allocation.v1':raise ValueError('wrong allocation schema')
+    for name,expected in rec['source_sha256'].items():
+        if hashlib.sha256((K.ROOT/name).read_bytes()).hexdigest()!=expected:
+            raise ValueError('source changed since allocation: '+name)
+    m=rec['model'];K._set_geometry(m['geo']['split'])
+    m['insts']=[K.F.Inst(**i)for i in m['insts']]
+    m['head_source_bands']=rec['head_source_bands']
+    return m

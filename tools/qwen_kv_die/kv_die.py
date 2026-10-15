@@ -2805,6 +2805,9 @@ def main(argv=None):
     if real_rows:
         (a.out/'actual_pin_bindings.json').write_text(json.dumps(real_rows,indent=1)+'\n')
     (a.out / 'insts.json').write_text(json.dumps([i.d() for i in m['insts']]) + '\n')
+    if a.head_source_bands:
+        import head_source_bands as HSB
+        HSB.write_allocation(m,sys.modules[__name__],a.out)
     write_netlist(m, 1, a.out / 'kv_die.v', top='qkd_die')
     print(json.dumps({k_: rec[k_] for k_ in ('die_um', 'die_mm2', 'instances', 'fill', 'legality')}))
     return 0 if not rec['legality']['overlaps'] and not rec['legality']['outside'] else 1
