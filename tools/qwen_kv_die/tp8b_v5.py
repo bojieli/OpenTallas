@@ -1057,10 +1057,12 @@ def _wrap(v, m, G, peers):
         # Legacy frame clock planning cannot mirror M8 pins; these two frames are
         # replaced by closed M5 pins below, so construct their disposable frame R0.
         frame_model = dict(model)
-        frame_model['insts'] = [copy.copy(i) if i.master in ('qfd_su_cbuf_g', 'qfd_crom_g') else i for i in model['insts']]
+        frame_model['insts'] = [copy.copy(i) if i.master in ('qfd_su_cbuf_g', 'qfd_crom_g', 'qfd_tile_nl') else i for i in model['insts']]
         for i in frame_model['insts']:
             if i.master in ('qfd_su_cbuf_g', 'qfd_crom_g'):
                 i.orient = 'R0'
+            elif i.master == 'qfd_tile_nl':
+                i.master = 'qfd_tile_nk'  # base frame shape; actual node-less ports below
         M = base_m(frame_model, k, port_bits)
         byi = {i.name: i for i in model['insts']}
         Master = type(next(iter(M.values())))
@@ -1153,6 +1155,11 @@ def _wrap(v, m, G, peers):
             sp = t.ports['tap']
             t.ports['tap'] = (sp[0], DW) + tuple(sp[2:])
             add_face(t, 'rst_n', 1, sp[2], sp[4] - 30.0, 2)
+            if any(i.master == 'qfd_tile_nl' for i in model['insts']):
+                nt = Master('qfd_tile_nl', t.w, t.h, t.obs_top, t.note + ' | real node-less tile')
+                nt.ports = {p: sp for p, sp in t.ports.items() if p not in ('n_a', 'n_b', 'n_y')}
+                nt.order = [p for p in t.order if p in nt.ports]
+                M['qfd_tile_nl'] = nt
         # ---- T8 cdc_wleaf
         q = M.get('qkd_cdc_wleaf')
         if q is not None:
@@ -1667,7 +1674,7 @@ def _wrap(v, m, G, peers):
             conns[inst].append(f'.{real}({joined_expr(vals)})')
         for inst, port, bits, val in ties:
             if inst in conns:
-                conns[inst].append(f".{port}({bits}'d{val})")
+                conns[inst].append(f".{port}({bits}'h{val:x})")
         for inst, d in phyb.items():
             for b, bits_ in sorted(d.items()):
                 hi = max(bits_)
