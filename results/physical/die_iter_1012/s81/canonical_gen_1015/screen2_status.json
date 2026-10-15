@@ -1,0 +1,12 @@
+{
+ "status": "GEN_FAIL",
+ "error": "RuntimeError('chain cx2: no station spot near s=2075 of 35999 (17635, 18562)')",
+ "traceback": "Traceback (most recent call last):\n  File \"/srv/opentallas-scratch/codex-canonical-gen-1015/src/tools/s81/canonical_screen.py\", line 22, in main\n    m=G.build();G.finalize_r8(m);export(m,'canonical_plan',True)\n  File \"/srv/opentallas-scratch/codex-canonical-gen-1015/src/tools/dsrom_s81_fulldie.py\", line 567, in build\n    return build_r8(variant)\n  File \"/srv/opentallas-scratch/codex-canonical-gen-1015/src/tools/dsrom_s81_fulldie.py\", line 3653, in build_r8\n    m0 = build_r8(variant)\n  File \"/srv/opentallas-scratch/codex-canonical-gen-1015/src/tools/dsrom_s81_fulldie.py\", line 4303, in build_r8\n    buses_r8(m)\n    ~~~~~~~~^^^\n  File \"/srv/opentallas-scratch/codex-canonical-gen-1015/src/tools/s81/canonical_screen.py\", line 15, in capture\n    return old(m)\n  File \"/srv/opentallas-scratch/codex-canonical-gen-1015/src/tools/dsrom_s81_fulldie.py\", line 4671, in buses_r8\n    canonical_trunks(sys.modules[__name__], m, CH8, cor, starts, ga, end_spec, hub_block, bus)\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/srv/opentallas-scratch/codex-canonical-gen-1015/src/tools/s81/canonical_layout.py\", line 105, in trunks\n    sts=CH.run(f'cx{r}',[G.LSW+2],path,allowed,src,forced=[G._poly_len(path)])\n  File \"/srv/opentallas-scratch/codex-canonical-gen-1015/src/tools/dsrom_s81_fulldie.py\", line 3518, in run\n    raise RuntimeError(f'chain {name}: no station spot near s={target:.0f} of {L:.0f} ({cx:.0f}, {cy:.0f})')\nRuntimeError: chain cx2: no station spot near s=2075 of 35999 (17635, 18562)\n",
+ "native_qualified": false,
+ "source_sha256": {
+  "tools/dsrom_s81_fulldie.py": "7e97435e7cfaeebb938d633c9318e0363627ca8df2f032d195203136bce64ad4",
+  "tools/s81/canonical_layout.py": "9ee72cefbf7ba1cf60bf4fab7a37bc2a7aaf595b943b8c67b4ef817b052f58f5",
+  "tools/s81/canonical_screen.py": "d8905cf1fe190678d1947c148e2c5113bc86f4f28d0c013d2844f74931317a6b"
+ },
+ "capacity_sha256": "b7c9c87f9f4b16b600cc3788f1e41feef45d57593307de26a4f8a2af90325c3e"
+}

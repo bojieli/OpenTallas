@@ -25,7 +25,15 @@ def main():
   (w/'pin_align.json').write_text(json.dumps(G.pin_align_gate(m,texts,raise_on_fail=False),indent=1,default=list))
   status={'status':'GEN_COMPLETE','native_qualified':False,'legality':G.legality(m),'calendar':m.get('canonical_calendar')}
  except Exception as ex:
-  if 'm' in live:export(live['m'],'canonical_partial',False)
+  if 'm' in live:
+   export(live['m'],'canonical_partial',False)
+   try:
+    G.finalize_r8(live['m'])
+    texts=G.die_lef_texts(live['m'])
+    with gzip.open(w/'partial_exact_pins.lef.gz','wt') as f:f.write('\n'.join(texts))
+    export(live['m'],'canonical_partial_finalized',False)
+   except Exception as secondary:
+    (w/'partial_pin_export_failure.txt').write_text(repr(secondary))
   status={'status':'GEN_FAIL','error':repr(ex),'traceback':traceback.format_exc(),'native_qualified':False};traceback.print_exc()
  sources=['tools/dsrom_s81_fulldie.py','tools/s81/canonical_layout.py','tools/s81/canonical_screen.py'];status['source_sha256']={x:hashlib.sha256((R/x).read_bytes()).hexdigest()for x in sources};status['capacity_sha256']=G.CANONICAL_LAYOUT['sha256'];(w/'status.json').write_text(json.dumps(status,indent=1,default=list));return 0 if status['status']=='GEN_COMPLETE' else 1
 if __name__=='__main__':sys.exit(main())
