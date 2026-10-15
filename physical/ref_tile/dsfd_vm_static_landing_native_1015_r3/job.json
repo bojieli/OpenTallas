@@ -133,9 +133,10 @@
  "merge_target": null,
  "structural_change": "r3 (same RTL/pins/outline/clock as r2, PINREG=1): the fixed input hold stage on the measured short group is sized up: i_d23 (E face, farthest from the W-face clock pin, latest pin-flop clock arrival) and larm_* get HB4 instead of HB2 (about +30 ps FF delay at the pin), the rest keep HB2. r2 routed FF -8.68 with a CTS-stage hold stall on exactly these 181 I2R endpoints (-25.7). A clustered-CTS variant was gated and REJECTED: TT insertion 393.3 ps > 300 (spread 58.8). Capture budget: pin-flop capture ~130 ps class + ~30 ps < 190. Zero cycles.",
  "reroute_reason": {
-  "kind": "kit_change",
+  "kind": "rtl_change",
   "cell": "dsfd_vm_static_landing",
   "source": "loop job dsfd_vm_static_landing_native_1015_r2-native2-25d678c8d (NEEDS_RTL FF -8.68; ot_hold_stall_cts.rpt I2R 181 @ -25.7, i_d23 160)",
-  "fix": "fixed input hold stage HB2 -> HB4 on the measured short group (i_d23, larm_*), sized to the -25.7 ps CTS-stage deficit; same RTL/pins/outline/root"
+  "fix": "fixed input hold stage HB2 -> HB4 on the measured short group (i_d23, larm_*), sized to the -25.7 ps CTS-stage deficit; same RTL/pins/outline/root",
+  "note": "RTL differs from closed r1 (PINREG=1, r2 source); r3 adds the sized HB4 input hold stage on the measured short group"
  }
 }
