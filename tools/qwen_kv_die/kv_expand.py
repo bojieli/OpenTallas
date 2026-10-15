@@ -312,6 +312,7 @@ def main(argv=None):
                 if not isinstance(bid, str) and bid not in names:
                     names[bid] = (nn, i, len(nv['bits']))
         iw = {}
+        tie_values = {}
 
         def ref(bid, cell):
             if isinstance(bid, str) or bid in strap_bits:
@@ -320,6 +321,7 @@ def main(argv=None):
                     raise ValueError(f'{inst}/{cell}: undefined constant {v}')
                 tn = f'n_{inst}__{re.sub(r"[^A-Za-z0-9_]", "_", cell)}__tie{v}'
                 iw[tn] = 1
+                tie_values[tn] = v
                 return f'{tn}[0]'
             if bid in bitnet:
                 return bitnet[bid]
@@ -371,6 +373,8 @@ def main(argv=None):
             raise ValueError(f'{inst}: {len(multi)} bits with several leaf drivers')
         for wn, w in iw.items():
             add_wires.append(f'  wire [{w - 1}:0] {wn};')
+            if wn in tie_values:
+                add_wires.append(f"  assign {wn} = 1'b{tie_values[wn]};")
         drop_inst.add(inst)
         fr = rep['frames'].setdefault(mst, dict(module=b['module'], instances=0, leaves_per_instance=nleaf,
                                                  internal_wires_per_instance=len(iw), straps=sorted(straps),
