@@ -99,7 +99,7 @@ def render(model):
     nodes=model['nodes'];assigned=model['assigned'];used=model['used_outputs']
     lines=['`timescale 1ns/1ps','// Real wires-only native compute/control join; external ports are unresolved REAL hardware boundaries.',
       '// Individual clocks require actual physical phi-R delivery; defaults refuse unassigned production route ages.',
-      'module qfd_native_compute_join #(parameter integer XPF_TRANSPORT_EDGES=-1,',
+      'module qfd_native_compute_join #(parameter integer XPF_TRANSPORT_EDGES=-1,NATIVE_PROFILE=1,',
       ' parameter integer VM_ROUTE_QUALIFIED=0,VM_FORWARD_EDGES=-1,VM_RETURN_EDGES=-1,VM_PHASE_EDGES=-1) (']
     ext=[]
     for name,node in nodes.items():
@@ -120,7 +120,7 @@ def render(model):
     expr[('seq','cc')]='{'+','.join('w_io_'+p for p,n in model['return_parts'])+'}'
     params={'tt':'#(.XPF_TRANSPORT_EDGES(XPF_TRANSPORT_EDGES))','su':'#(.EXTERNAL_EMBED(1))',
         'vm':'#(.USE_MACRO(1),.USE_LEAF_CLOCKS(1))',
-        'native':'#(.NATIVE_PROFILE(1),.VM_ROUTE_QUALIFIED(VM_ROUTE_QUALIFIED),.VM_FORWARD_EDGES(VM_FORWARD_EDGES),.VM_RETURN_EDGES(VM_RETURN_EDGES),.VM_PHASE_EDGES(VM_PHASE_EDGES))'}
+        'native':'#(.NATIVE_PROFILE(NATIVE_PROFILE),.VM_ROUTE_QUALIFIED(VM_ROUTE_QUALIFIED),.VM_FORWARD_EDGES(VM_FORWARD_EDGES),.VM_RETURN_EDGES(VM_RETURN_EDGES),.VM_PHASE_EDGES(VM_PHASE_EDGES))'}
     for n,node in nodes.items():
         lines.append(' '+node['top']+' '+params.get(n,'')+' u_'+n+' (')
         for k,(p,s)in enumerate(node['ports'].items()):
@@ -140,6 +140,7 @@ def main():
       nodes=m['nodes'],joins=m['joins'],actual_clock_roots=dict(tt=4,seq=2,su=346,vm=488,native=6,io=103,embed=1),external_ports=[dict(node=n,port=p,**s)for n,p,s in ext],
       source_register_edges=dict(copy_active=1,su_image_ready=1,su_issue_observer=1,native_return=1),
       clock_binding='all real roots exposed independently; no common phase or physical insertion invented',
+      default_profile='production1, unknown routes refuse; diagnostic0 requires explicit nonnegative component ages and remains unqualified',
       critical_unassigned=['TT kok/kwd current KV visibility and fabric fault aggregation','all per-face licensed PHY capacities and external native59 transport','actual HOST/store/reservation/calendar sources','all real pin/child placements and timing/source-equivalent physical views'],
       rtl_sha256=hashlib.sha256(rtl.encode()).hexdigest())
     (a.out/'actual_join.json').write_text(json.dumps(manifest,indent=2)+'\n')
