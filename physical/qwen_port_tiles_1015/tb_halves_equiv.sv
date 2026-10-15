@@ -31,9 +31,12 @@ module tb_halves_equiv;
         for(i=0;i<64;i=i+1) begin r=$random(seed); ty[32*i +: 32]={r[31],4'b1000 ^ r[30:27],r[26:0]}; end
     end endtask
     always @(negedge ck) begin
-        cyc=cyc+1; if(cyc==24) rst_n=1;   // die boot: >= 16 asserted reset edges (pt_q strap settles on edge 1) if(cyc==1200) rst_n=0; if(cyc==1206) rst_n=1;
+        // die boot contract (pl4): the 5-bit strap pt_q is a plain pin flop that loads on the first clock edge;
+        // power-up reset is held >= 16 edges and outputs are compared from edge 17 (strap-dependent pipeline <= 9 deep,
+        // consumers are in reset meanwhile).  The mid-run reset at 1200..1206 checks reset behaviour with the strap settled.
+        cyc=cyc+1; if(cyc==24) rst_n=1; if(cyc==1200) rst_n=0; if(cyc==1206) rst_n=1;
         drive_inputs;
-        if (cyc>2) begin
+        if (cyc>16) begin
             if (cw_o!==cw_n) begin err=err+1; if(err<4) $display("MISMATCH cw cyc %0d",cyc); end
             if (rq_o!==rq_n) begin err=err+1; if(err<4) $display("MISMATCH rq cyc %0d",cyc); end
             if (am_o!==am_n) begin err=err+1; if(err<4) $display("MISMATCH am cyc %0d",cyc); end
