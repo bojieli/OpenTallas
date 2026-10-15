@@ -1,0 +1,39 @@
+{
+  "scope": "CTSplacementRCdiagnostic only, not actualroutednativequalification",
+  "launch": [
+    157.76668,
+    "ti_b[45]"
+  ],
+  "capture": [
+    106.57560000000001,
+    "ti_a[1233]"
+  ],
+  "refs": {
+    "ck": {
+      "rise": 213.3,
+      "fall": 226.122085,
+      "min": 184.51328,
+      "max": 231.48827,
+      "src": "insertion.json boundary mean",
+      "bmin": 193.4,
+      "bmax": 231.5,
+      "n": 1575
+    }
+  },
+  "outputs": 1575,
+  "inputs": 1575,
+  "missing_outputs": [],
+  "schema": "opentallas.n4_gather_cts_diagnostic_etm.v1",
+  "generated": "2026-10-15T14:59:58.425468-07:00",
+  "source_commit": "8801fc34513da35acb6a411ef0d69025d0024bd2",
+  "job": "qkh_head_gather_stage-n4r1-8801fc345",
+  "qualified": false,
+  "gate_run": "ot-epyc1tb:/srv/opentallas-scratch/claude/ref_gate/qkh_head_gather_stage-20261015-145244",
+  "gate_db": "4_1_cts.odb",
+  "sdc": "4_cts.sdc then exact shippedphysical/ref_tile/qkh_head_gather_stage/signoff.sdc",
+  "unit": "oth-ubuntu-2763765-1792101518",
+  "ETM_sha256": "dbe21e8a9ea1ffa6a931c9fbddc769fe99a77e791623065ab768a1123746b3be",
+  "insertion_sha256": "dc87a4ad0a261d893ef63c630b40c5389de52d50a7f864f853653716bed93139",
+  "script_sha256": "6c7b30de76c4b8a9cd61c41f856a72562b3c20c5429d5b392bc066f11ad4b1cc",
+  "note": "R213.3alone doesnot imply nativecapturefailure. PreserveWclockroute; no pinmove orsuccessor fromthisdiagnostic. ActualrouteETM/TTFFDRC andallincidentstaticcomposition required."
+}
