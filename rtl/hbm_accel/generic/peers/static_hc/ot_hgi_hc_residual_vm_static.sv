@@ -37,7 +37,7 @@ module ot_hgi_hc_residual_vm_static #(
             valid<=(valid<<1)|fire;
             x_wave_v<=0;done<=0;
             if(launch)begin
-                if(active||(|valid)||npos<1||npos>8||base_sector[4:0]!=0||({1'b0,base_sector}+npos*2560)>65536)fault<=1;
+                if(active||(|valid)||npos<1||npos>8||base_sector[4:0]!=0||({1'b0,base_sector}+npos*2560)>32768)fault<=1;
                 active<=1;issue<=0;total<=npos*320;base<=base_sector;
             end
             if(fire)begin
