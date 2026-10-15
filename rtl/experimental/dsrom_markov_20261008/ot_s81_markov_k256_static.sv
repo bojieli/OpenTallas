@@ -16,7 +16,7 @@ module ot_s81_markov_ctl_static (
   if(!rst_n) rs_q<=0;else rs_q<={rs_q[0],1'b1};
  reg[15:0] slots;reg[176:0] done_slots;reg start_q;reg[31:0] h_q,held_head;
  reg[15:0] pf_q,bc_q;reg[4:0] bt_q;reg[1:0] je_q;reg jv_q;
- reg sticky;reg[5:0] pv;
+ reg sticky,done_q;reg[5:0] pv;
  wire operand_slot=|slots;
  always @(posedge clk) begin
   h_q<=head_logit;
@@ -27,7 +27,7 @@ module ot_s81_markov_ctl_static (
   out_bits<=jd;
  end
  always @(posedge clk or negedge rl_n) begin
-  if(!rl_n) begin slots<=0;done_slots<=0;start_q<=0;mul_fire<=0;pv<=0;jv_q<=0;out_valid<=0;sticky<=0;fault<=0;end
+  if(!rl_n) begin slots<=0;done_slots<=0;start_q<=0;mul_fire<=0;pv<=0;jv_q<=0;done_q<=0;out_valid<=0;sticky<=0;fault<=0;end
   else begin
    slots<={slots[14:0],start};done_slots<={done_slots[175:0],start};start_q<=start;
    `ifdef OT_S81_MARKOV_STATIC_DROP_BEAT
@@ -36,8 +36,8 @@ module ot_s81_markov_ctl_static (
    mul_fire<=operand_slot;
 `endif
    pv<={pv[4:0],mul_fire};
-   jv_q<=jv;out_valid<=done_slots[176];
-   if((|pf_q) || |bc_q || |bt_q || (jv_q && je_q!=0) || (start_q && |done_slots[176:1]) || (jv != done_slots[176])) sticky<=1;
+   jv_q<=jv;done_q<=done_slots[176];out_valid<=done_slots[176];
+   if((|pf_q) || |bc_q || |bt_q || (jv_q && je_q!=0) || (start_q && |done_slots[176:1]) || (jv_q != done_q)) sticky<=1;
    fault<=sticky;
   end
  end
