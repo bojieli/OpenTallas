@@ -450,6 +450,18 @@ def hgi_collective_static_quarter_bridge_model():
     return model()
 
 
+def hgi_collective_bridge_program_model(banks=2,qid=0):
+    """Real49-bit bridge catalogue and fixed native SRAM prefetch."""
+    from uarch_model_hcoll_bridge_program import model
+    return model(banks,qid)
+
+
+def hgi_collective_engram_control256_model(banks=19):
+    """Distinct238-bit ENGRAM programme in native512b catalogue words."""
+    from uarch_model_hcoll_control256 import model
+    return model(banks)
+
+
 def hgi_collective_static_reduction_model():
     """16 real native FP32 lanes and fixed-calendar collective publication."""
     from uarch_model_hcoll_reduce_static import model
