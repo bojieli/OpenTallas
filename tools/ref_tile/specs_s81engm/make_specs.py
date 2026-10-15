@@ -28,9 +28,9 @@ EXTRA = [('shell', 'ot_s81_engram_mixq_shell', 'ck', 'rst', ['rtl/dsrom_sys/engr
          # shsplit (S-ELEM-C 2026-10-15): the flat shell strip failed native clock (534.1 / spread 93.3 ps on 6,472 FF over
          # 742 um); it is now a composition of a small control leaf + 4 payload column leaves, each on its own local root.
          ('shctl', 'ot_s81_engram_mixq_shctl', 'ck', 'rst', ['rtl/dsrom_sys/engram/mix/dsfd_engram_mix4_c.sv'],
-          'shell control leaf (419 ports, 330 FF, std 251 um2), mid-row between payload columns 1 and 2'),
+          'shell control leaf (419 ports, ~0.4k FF), mid-row between payload columns 1 and 2'),
          ('shcol', 'ot_s81_engram_mixq_shcol', 'ck', 'rst', ['rtl/dsrom_sys/engram/mix/dsfd_engram_mix4_c.sv'],
-          'shell payload column leaf (1,802 ports, 1,544 FF, std 984 um2, lanes 8c..8c+7), one per add8/mul4 column')]
+          'shell payload column leaf (1,802 ports, ~1.5k FF, lanes 8c..8c+7), one per add8/mul4 column')]
 
 
 def main():

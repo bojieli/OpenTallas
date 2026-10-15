@@ -86,14 +86,14 @@ def main():
     # shell is now a composition of one control leaf (mid-row, between columns 1 and 2) and four payload column leaves
     # (one per add8 / mul4 column, lanes 8c..8c+7). Row order E-W: col0 | col1 | ctl | col2 | col3 (801.36 um row).
     sc = {k: bits(w, env) for k, (d, w) in ports('ot_s81_engram_mixq_shctl', t4).items()}
-    ol = [54.0, 19.44]   # gate 852391742 at 86.4 x 54: std 251 um2, util 6% -> right-sized (pin-limited N face)
+    ol = [86.4, 54.0]
     pp = place({'N': [(4.032, [(n, sc[n]) for n in ('start', 'desc', 'rq_v', 'rq_row', 'vtag', 'rs_v', 'wq_v', 'wq_row', 'wq_mask', 'done', 'fault')])],
                 'S': [(4.032, [(n, sc[n]) for n in ('fr', 'fa', 'go', 'iv', 'phase', 'copy', 'eps', 'scale', 'gv', 'gc', 'ov', 'oc', 'mf')])]}, ol)
     pp['ck'] = [['W', 'M4', 4.032, .084]]; pp['rst'] = [['W', 'M4', 4.992, .084]]
     assert {p: len(v) for p, v in pp.items()} == sc, set(sc) ^ set(pp)
     V.write(OUT, 'ot_s81_engram_mixq_shctl', ol, pp, 'ck', 'N top/VM side (relay stations); S phase flags to the columns + scalar bits to the arithmetic/relay; W clock/reset', 'v21_engram_mix4', meta('ck', 'rst'))
     so = {k: bits(w, env) for k, (d, w) in ports('ot_s81_engram_mixq_shcol', t4).items()}
-    ol = [172.8, 19.44]  # gate 852391742 at 172.8 x 54: std 984 um2, util 12% -> right-sized (width = add8 column, pin-limited)
+    ol = [172.8, 54.0]
     pp = place({'N': [(4.032, [(n, so[n]) for n in ('rs_v', 'rs_d', 'wq_d')])],
                 'S': [(4.032, [(n, so[n]) for n in ('fr', 'fa', 'ov', 'h', 'kv', 'w', 'result')])]}, ol)
     pp['ck'] = [['W', 'M4', 4.032, .084]]; pp['rst'] = [['W', 'M4', 4.992, .084]]
