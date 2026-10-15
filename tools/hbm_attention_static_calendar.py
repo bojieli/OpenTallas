@@ -19,7 +19,7 @@ def schedule(H=16,D=512,TD=64,NL=4,T=640,mode='qk'):
         for c in range(math.ceil(T/NL)):put(qk0+c,'qk')
         last=qk0+math.ceil(T/NL)-1
     elif mode=='pv':
-        blocks=math.ceil(T/TD);plast=-1;lasts=[]
+        blocks=math.ceil(T/TD);plast=-1;lasts=[];filllast=0
         guardp=1+max(max(0,3*((R*g+j)%8-1)) - g for g in range(H) for j in range(R))
         for b in range(blocks):
             nw=math.ceil(min(T-b*TD,TD)/R)
@@ -28,7 +28,8 @@ def schedule(H=16,D=512,TD=64,NL=4,T=640,mode='qk'):
             start=max(plast+1,1,lasts[b-3]+guardp if b>=3 else 1)
             for c in range(nw):put(start+c,'p')
             plast=start+nw-1
-            fs=2+b*fillc
+            fs=max(filllast+1,2,lasts[b-2] if b>=2 else 2)
+            filllast=fs+fillc-1
             for c in range(fillc):put(fs+c,'fill')
             first=max(fs+fillc+1,plast+1,lasts[-1]+1 if lasts else 1)
             for c in range(dpt):put(first+c,'pv')
