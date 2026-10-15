@@ -3,10 +3,10 @@
     "quadrant": "SW",
     "params": {
       "NC": 7,
-      "RG": 3,
+      "RG": 5,
       "WG": 1,
       "CW": 3,
-      "RB": 2,
+      "RB": 3,
       "WB": 3
     },
     "fields": [
@@ -57,46 +57,46 @@
       },
       {
         "name": "rslot",
-        "bits": 16,
+        "bits": 24,
         "lo": 96
       },
       {
         "name": "wslot",
         "bits": 24,
-        "lo": 112
+        "lo": 120
       },
       {
         "name": "ring_tx_enable",
         "bits": 2,
-        "lo": 136
+        "lo": 144
       },
       {
         "name": "ring_tx_source",
         "bits": 6,
-        "lo": 138
+        "lo": 146
       },
       {
         "name": "replay_enable",
         "bits": 1,
-        "lo": 144
+        "lo": 152
       },
       {
         "name": "replay_source",
         "bits": 1,
-        "lo": 145
+        "lo": 153
       },
       {
         "name": "lg_local_read",
         "bits": 24,
-        "lo": 146
+        "lo": 154
       },
       {
         "name": "lg_local_write",
         "bits": 24,
-        "lo": 170
+        "lo": 178
       }
     ],
-    "bits": 194,
+    "bits": 202,
     "startup_edges": 4,
     "sustained_calendars_per_edge": 1
   },
@@ -104,10 +104,10 @@
     "quadrant": "SE",
     "params": {
       "NC": 0,
-      "RG": 3,
+      "RG": 5,
       "WG": 1,
       "CW": 1,
-      "RB": 2,
+      "RB": 3,
       "WB": 3
     },
     "fields": [
@@ -158,46 +158,46 @@
       },
       {
         "name": "rslot",
-        "bits": 16,
+        "bits": 24,
         "lo": 41
       },
       {
         "name": "wslot",
         "bits": 24,
-        "lo": 57
+        "lo": 65
       },
       {
         "name": "ring_tx_enable",
         "bits": 2,
-        "lo": 81
+        "lo": 89
       },
       {
         "name": "ring_tx_source",
         "bits": 6,
-        "lo": 83
+        "lo": 91
       },
       {
         "name": "replay_enable",
         "bits": 1,
-        "lo": 89
+        "lo": 97
       },
       {
         "name": "replay_source",
         "bits": 1,
-        "lo": 90
+        "lo": 98
       },
       {
         "name": "lg_local_read",
         "bits": 24,
-        "lo": 91
+        "lo": 99
       },
       {
         "name": "lg_local_write",
         "bits": 24,
-        "lo": 115
+        "lo": 123
       }
     ],
-    "bits": 139,
+    "bits": 147,
     "startup_edges": 4,
     "sustained_calendars_per_edge": 1
   },
@@ -205,7 +205,7 @@
     "quadrant": "NW",
     "params": {
       "NC": 4,
-      "RG": 5,
+      "RG": 7,
       "WG": 3,
       "CW": 3,
       "RB": 3,
@@ -306,7 +306,7 @@
     "quadrant": "NE",
     "params": {
       "NC": 0,
-      "RG": 5,
+      "RG": 7,
       "WG": 3,
       "CW": 1,
       "RB": 3,

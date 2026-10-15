@@ -41,6 +41,73 @@ def pack(spec, values):
     return result
 
 
+def validate_resources(spec, cycles, loops):
+    """Check actual bank selectors and the fixed two-edge LG tap transports.
+
+    Dedicated engine command streams must independently prove their request
+    traces. Here local-read/write bits denote reserved real LG requests, so
+    two different tap sources may never arrive at the same bank port edge.
+    """
+    params = spec['params']
+    rg, wg, nc = params['RG'], params['WG'], params['NC']
+    total = len(cycles) * loops
+    numeric = []
+    for cycle in cycles:
+        values = {k: int(v, 0) if isinstance(v, str) else v for k, v in cycle.items()}
+        pack(spec, values)
+        for bank in range(8):
+            if (values.get('rslot_v', 0) >> bank) & 1:
+                owner = (values.get('rslot', 0) >> (bank*params['RB'])) & ((1 << params['RB'])-1)
+                if owner > rg:
+                    raise ValueError('read owner exceeds actual bank port count')
+            if (values.get('wslot_v', 0) >> bank) & 1:
+                owner = (values.get('wslot', 0) >> (bank*params['WB'])) & ((1 << params['WB'])-1)
+                if owner >= wg+5:
+                    raise ValueError('write owner exceeds actual bank port count')
+            if (values.get('bank_enable', 0) >> bank) & 1:
+                client = (values.get('bank_client', 0) >> (bank*params['CW'])) & ((1 << params['CW'])-1)
+                if client > nc:
+                    raise ValueError('hub client exceeds actual source count')
+        for direction in range(2):
+            if (values.get('ring_tx_enable', 0) >> direction) & 1:
+                if (values.get('ring_tx_source', 0) >> (3*direction)) & 7 > 4:
+                    raise ValueError('ring source exceeds actual five-source mux')
+        numeric.append(values)
+    # A maximum six-edge tap transport can only overlap this many neighboring
+    # loop iterations. Checking their real absolute times avoids modulo aliases.
+    representative_loops = min(loops, 2 + 6//len(cycles))
+    arrivals = {}
+    for iteration in range(representative_loops):
+        for offset, values in enumerate(numeric):
+            edge = iteration*len(cycles)+offset
+            for kind, name in [('read', 'lg_local_read'), ('write', 'lg_local_write')]:
+                for tap in range(3):
+                    for bank in range(8):
+                        if not ((values.get(name, 0) >> (tap*8+bank)) & 1):
+                            continue
+                        arrival = edge + 2*(tap+1)
+                        key = (kind, arrival, bank)
+                        if key in arrivals:
+                            raise ValueError(f'LG {kind} collision at bank {bank}, edge {arrival}')
+                        arrivals[key] = (tap, edge)
+                        if arrival >= total:
+                            raise ValueError('programme ends before fixed LG transport drains')
+                        dest = numeric[arrival % len(cycles)]
+                        valid = (dest.get('rslot_v' if kind == 'read' else 'wslot_v', 0) >> bank) & 1
+                        bits = params['RB' if kind == 'read' else 'WB']
+                        owner = (dest.get('rslot' if kind == 'read' else 'wslot', 0) >> (bank*bits)) & ((1 << bits)-1)
+                        if not valid or owner != 0:
+                            raise ValueError(f'LG {kind} arrives outside its compiler-assigned group0 bank edge')
+    # The final iteration also needs enough fixed drain cycles even for large
+    # loop counts not enumerated above.
+    for offset, values in enumerate(numeric):
+        for field in ('lg_local_read', 'lg_local_write'):
+            for tap in range(3):
+                if (values.get(field, 0) >> (8*tap)) & 255:
+                    if offset+2*(tap+1) >= len(cycles):
+                        raise ValueError('last loop would leave an LG request after programme end')
+
+
 def compile_schedule(spec, schedule):
     base = schedule.get('base', 0)
     loops = schedule.get('loops', 1)
@@ -49,6 +116,7 @@ def compile_schedule(spec, schedule):
         raise ValueError('Programme must occupy a nonempty range of actual 1024-word SRAM')
     if not 1 <= loops <= 65535:
         raise ValueError('Loop count must fit the actual nonzero 16-bit counter')
+    validate_resources(spec, cycles, loops)
     writes = []
     for offset, values in enumerate(cycles):
         pc = base + offset

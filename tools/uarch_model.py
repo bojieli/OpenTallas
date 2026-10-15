@@ -16361,13 +16361,26 @@ def hbm_vm_static_calendar_model():
     return dict(schema='opentallas.hbm.static-calendar.v1',macs_per_cycle=0,
         replicas=4,macro='ot_sram_1r1w_1024x256_m2_r2c2',macros_per_quadrant=1,
         storage_bytes=32768,memory_bytes_per_cycle=dict(read=32,configuration_write=32),
-        calendar_bits=dict(SW=194,SE=139,NW=187,NE=147),
+        calendar_bits=dict(SW=202,SE=147,NW=187,NE=147),
         datapath='input pin rung, one native macro read each compiler edge, dedicated capture rung, registered calendar outputs',
         mux='PC increment/wrap of fixed compiler range, finite loop decrement; no data-dependent branches',
         latency_edges=dict(start_to_first_calendar=4,fetch_to_calendar=2),
         throughput='one compiler calendar per cycle after startup, no gaps at loop wrap',
-        boundaries='configuration266bits; start38bits; calendar139..194bits plus fixed-cycle ordinal32/valid/done/fault',
+        boundaries='configuration266bits; start38bits; calendar147..202bits plus fixed-cycle ordinal32/valid/done/fault',
         route='per-quadrant fixed producer; physical slot/pinface/reach/CTS unqualified',
         floorplan='one actual macro174.744x70.47um plus PC/capture/output control, slot requested from H-DIE',
         area='macro36942.62904um2 plus unmeasured control; no inherited closure',
         qualification='actual macro programme bench+mutants required; layer compiler calendar/CP-loader join remain separate')
+
+
+def hbm_vm_static_calendar_host_model():
+    return dict(schema='opentallas.hbm.calendar-host.v1',replicas=1,macs_per_cycle=0,
+      storage='one256b assemblyword plus4x37b launchdescriptors; no additional SRAM',
+      input='existinghostAXIlite12baddress/32bdata; existingrealLCP419doorbellbit71',
+      output='fourprogrammeconfig256b+addr10+we and4launch(base10,limit11,loops16,v)',
+      configuration_rate='eight32bhostwrites per256bprogrammeword; hostboundaryonly, beforelaunch',
+      execution='oneglobalexistingCPdoorbell launchesallfourcalendars; nohostcallsinsideprogramme',
+      map='newF00-Fff window; existingC/D CP andE MTP windows pass unchanged',
+      clocks='hostconfigurationclock mustsharedefinedcompilerphase atlaunch or getexplicitstaticcrossing',
+      physical='newnativeproducer requiresdiepin/slot/clock qualification; no closedloaderalias',
+      qualification='realexistingloaderCP→LCPdoorbell→real4programmeSRAMs composition test required')

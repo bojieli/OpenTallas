@@ -4,10 +4,10 @@
     "quadrant": "SW",
     "params": {
       "NC": 7,
-      "RG": 3,
+      "RG": 5,
       "WG": 1,
       "CW": 3,
-      "RB": 2,
+      "RB": 3,
       "WB": 3
     },
     "fields": [
@@ -58,65 +58,69 @@
       },
       {
         "name": "rslot",
-        "bits": 16,
+        "bits": 24,
         "lo": 96
       },
       {
         "name": "wslot",
         "bits": 24,
-        "lo": 112
+        "lo": 120
       },
       {
         "name": "ring_tx_enable",
         "bits": 2,
-        "lo": 136
+        "lo": 144
       },
       {
         "name": "ring_tx_source",
         "bits": 6,
-        "lo": 138
+        "lo": 146
       },
       {
         "name": "replay_enable",
         "bits": 1,
-        "lo": 144
+        "lo": 152
       },
       {
         "name": "replay_source",
         "bits": 1,
-        "lo": 145
+        "lo": 153
       },
       {
         "name": "lg_local_read",
         "bits": 24,
-        "lo": 146
+        "lo": 154
       },
       {
         "name": "lg_local_write",
         "bits": 24,
-        "lo": 170
+        "lo": 178
       }
     ],
-    "bits": 194,
+    "bits": 202,
     "startup_edges": 4,
     "sustained_calendars_per_edge": 1
   },
   "configuration_writes": [
     {
       "addr": 7,
-      "data": "c7a1000700000003ffffffffffffffffffffffffffffffffffffffffffffffff"
+      "data": "c7a10007000000000000000000000000006db6db00ff00000000000000000000"
     },
     {
       "addr": 8,
-      "data": "c7a1000800000000000000000000000000000000000000000000000000000000"
+      "data": "c7a100080000000000000000000000000092492400ff00000000000000000000"
+    },
+    {
+      "addr": 9,
+      "data": "c7a1000900000000000000000000000000000000000000000000000000000000"
     }
   ],
   "start": {
     "base": 7,
-    "limit": 9,
+    "limit": 10,
     "loops": 3
   },
-  "output_edges": 6,
+  "output_edges": 9,
   "first_output_after_start": 4,
   "configuration": "Writes and launch are consumed by real input pin registers; no ready/credit path",
   "limits": "Caller must prove these calendars against actual producer requests, transport latency and response identities."

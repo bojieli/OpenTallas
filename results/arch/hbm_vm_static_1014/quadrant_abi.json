@@ -5,10 +5,10 @@
       "master": "hfd_hgi_vms_static_SW",
       "params": {
         "NC": 7,
-        "RG": 3,
+        "RG": 5,
         "WG": 1,
         "CW": 3,
-        "RB": 2,
+        "RB": 3,
         "WB": 3
       },
       "sid": 0,
@@ -96,7 +96,7 @@
         {
           "name": "rslot",
           "direction": "input",
-          "bits": 16
+          "bits": 24
         },
         {
           "name": "wslot",
@@ -106,12 +106,12 @@
         {
           "name": "rq",
           "direction": "input",
-          "bits": 408
+          "bits": 680
         },
         {
           "name": "rr",
           "direction": "output",
-          "bits": 6168
+          "bits": 10280
         },
         {
           "name": "wq",
@@ -214,10 +214,10 @@
       "master": "hfd_hgi_vms_static_SE",
       "params": {
         "NC": 0,
-        "RG": 3,
+        "RG": 5,
         "WG": 1,
         "CW": 1,
-        "RB": 2,
+        "RB": 3,
         "WB": 3
       },
       "sid": 1,
@@ -295,7 +295,7 @@
         {
           "name": "rslot",
           "direction": "input",
-          "bits": 16
+          "bits": 24
         },
         {
           "name": "wslot",
@@ -305,12 +305,12 @@
         {
           "name": "rq",
           "direction": "input",
-          "bits": 408
+          "bits": 680
         },
         {
           "name": "rr",
           "direction": "output",
-          "bits": 6168
+          "bits": 10280
         },
         {
           "name": "wq",
@@ -413,7 +413,7 @@
       "master": "hfd_hgi_vms_static_NW",
       "params": {
         "NC": 4,
-        "RG": 5,
+        "RG": 7,
         "WG": 3,
         "CW": 3,
         "RB": 3,
@@ -514,12 +514,12 @@
         {
           "name": "rq",
           "direction": "input",
-          "bits": 680
+          "bits": 952
         },
         {
           "name": "rr",
           "direction": "output",
-          "bits": 10280
+          "bits": 14392
         },
         {
           "name": "wq",
@@ -622,7 +622,7 @@
       "master": "hfd_hgi_vms_static_NE",
       "params": {
         "NC": 0,
-        "RG": 5,
+        "RG": 7,
         "WG": 3,
         "CW": 1,
         "RB": 3,
@@ -713,12 +713,12 @@
         {
           "name": "rq",
           "direction": "input",
-          "bits": 680
+          "bits": 952
         },
         {
           "name": "rr",
           "direction": "output",
-          "bits": 10280
+          "bits": 14392
         },
         {
           "name": "wq",
@@ -842,7 +842,9 @@
       "read": [
         "SU/SFU/HC group",
         "DMA back",
-        "SM xload"
+        "SM xload",
+        "COLL",
+        "IDX"
       ],
       "write": [
         "SU/SFU/HC group"
@@ -861,7 +863,9 @@
       "read": [
         "SU/SFU/HC group",
         "DMA back",
-        "SM xload"
+        "SM xload",
+        "COLL",
+        "IDX"
       ],
       "write": [
         "SU/SFU/HC group"
@@ -874,7 +878,9 @@
         "DMA back",
         "SM xload",
         "CP",
-        "quant"
+        "quant",
+        "COLL",
+        "IDX"
       ],
       "write": [
         "SU/SFU/HC group",
@@ -894,7 +900,9 @@
         "DMA back",
         "SM xload",
         "attention",
-        "HC engine"
+        "HC engine",
+        "COLL",
+        "IDX"
       ],
       "write": [
         "SU/SFU/HC group",
