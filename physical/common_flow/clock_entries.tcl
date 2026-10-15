@@ -34,7 +34,9 @@ if {[info procs clock_tree_synthesis] ne "" && [info procs ot_ce_cts_orig] eq ""
           foreach pin $endpoints {
             set cell [get_cells -quiet -of_objects $pin]
             if {[llength $cell] != 1} { error "OT_HYBRID: CTS source $pname reaches a non-register endpoint" }
-            set inst [$block findInst [get_full_name $cell]]
+            # STA renders escaped identifiers differently from OpenDB names.
+            # Convert the actual instance object rather than reparsing its name.
+            set inst [sta::sta_to_db_inst [lindex $cell 0]]
             if {$inst eq "NULL" || [[$inst getMaster] isBlock] || [get_full_name $pin] ni $regnames} {
               error "OT_HYBRID: CTS source $pname must reach only standard-cell clock pins"
             }

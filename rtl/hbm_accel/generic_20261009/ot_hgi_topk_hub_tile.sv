@@ -49,8 +49,9 @@ module ot_hgi_topk_hub_tile #(
  localparam integer CIW = $clog2(NCI + 1), COW = $clog2(NCO + 1), QA = $clog2(NCI);
  reg active,c_valid,s_valid,q_valid,pending_done,o_rdy;
  // ---------------------------------------------------------------- reset relay + command pin landing
- wire [1:0] hr;                                                      // hub-tile regions (engine relays rst_n itself)
- ot_rst_relay #(.REGIONS(2), .SYNC_STAGES(2), .TREE_STAGES(1)) u_hrr (.clk(clk), .rst_n_in(rst_n), .rst_n(hr));
+ // j3 (native audit of CLOSED j2: capture 208.6 ps on rst_n = the port fed two relays): the engine's relay is the
+ // ONLY port load; the hub registers take its two exported regions (same release edge as the engine and the lanes).
+ wire [1:0] hr;
  localparam integer CDW = 4 + 6 + 25 + 32 + 32 + 1;
  reg cv_q, rdy_q, cmd_rdy; reg [CDW-1:0] cd_q;                       // pin registers
  reg [CDW-1:0] cs [0:1]; reg cs_w, cs_r; reg [1:0] cs_n;             // landing skid
@@ -90,7 +91,7 @@ module ot_hgi_topk_hub_tile #(
   .t_k(),.t_op_v(),.t_op_ext(),.t_clr_go(),.t_op_x(),.t_op_cr(8'd0),.t_ext_v(8'd0),
   .t_idle_i(8'd0),.t_ext_d(432'd0),.t_root_key(424'd0),
   .lt_ph(lt_ph),.lt_k(lt_k),.lt_clr(lt_clr),.lt_pv(lt_pv),.lt_mcr(lt_mcr),.lt_pd(lt_pd),.lt_q(lt_q),.lt_x(lt_x),.lt_ok(lt_ok),
-  .lt_mv(lt_mv),.lt_me(lt_me),.lt_root(lt_root),.lt_md(lt_md));
+  .lt_mv(lt_mv),.lt_me(lt_me),.lt_root(lt_root),.lt_md(lt_md),.rr_x(hr));
  always @(posedge clk) begin
   cd_q <= {cmd_unit, cmd_op, cmd_param, cmd_n, cmd_m, cmd_values};
   if (acc) cs[cs_w] <= cd_q;

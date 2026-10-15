@@ -1,0 +1,66 @@
+{
+  "status": "component simulation only; native VM integration, F2 record dispatch, ordered reduction, physical closure and fullshape performance unmeasured",
+  "source_sha256": {
+    "rtl/hbm_accel/generic/adapters/static_su/ot_hbm_su_f2_static_link.sv": "7f07df561f7f7c710748f07dfafad0f179eac02323b289b4f48e4e70c9f0520c",
+    "rtl/hbm_accel/generic/adapters/static_su/tb_hbm_su_f2_static_link.sv": "dac24002bc7240cd179793fa18aa1c5422f86f52ec760572cc682343ed0dc1c7"
+  },
+  "runs": [
+    {
+      "name": "exact",
+      "rc": 0,
+      "compile_command": [
+        "iverilog",
+        "-g2012",
+        "-s",
+        "tb_hbm_su_f2_static_link",
+        "-o",
+        "/tmp/hbm_su_static_exact",
+        "rtl/hbm_accel/generic/adapters/static_su/ot_hbm_su_f2_static_link.sv",
+        "rtl/hbm_accel/generic/adapters/static_su/tb_hbm_su_f2_static_link.sv"
+      ],
+      "log": "exact.log"
+    },
+    {
+      "name": "route_mutant",
+      "rc": 1,
+      "compile_command": [
+        "iverilog",
+        "-g2012",
+        "-s",
+        "tb_hbm_su_f2_static_link",
+        "-Ptb_hbm_su_f2_static_link.MUT_ROUTE=1",
+        "-o",
+        "/tmp/hbm_su_static_route_mutant",
+        "rtl/hbm_accel/generic/adapters/static_su/ot_hbm_su_f2_static_link.sv",
+        "rtl/hbm_accel/generic/adapters/static_su/tb_hbm_su_f2_static_link.sv"
+      ],
+      "log": "route_mutant.log"
+    },
+    {
+      "name": "reuse_mutant",
+      "rc": 1,
+      "compile_command": [
+        "iverilog",
+        "-g2012",
+        "-s",
+        "tb_hbm_su_f2_static_link",
+        "-Ptb_hbm_su_f2_static_link.MUT_REUSE=1",
+        "-o",
+        "/tmp/hbm_su_static_reuse_mutant",
+        "rtl/hbm_accel/generic/adapters/static_su/ot_hbm_su_f2_static_link.sv",
+        "rtl/hbm_accel/generic/adapters/static_su/tb_hbm_su_f2_static_link.sv"
+      ],
+      "log": "reuse_mutant.log"
+    }
+  ],
+  "lint": {
+    "command": [
+      "verilator",
+      "--lint-only",
+      "--top-module",
+      "ot_hbm_su_f2_static_link",
+      "rtl/hbm_accel/generic/adapters/static_su/ot_hbm_su_f2_static_link.sv"
+    ],
+    "rc": 0
+  }
+}
