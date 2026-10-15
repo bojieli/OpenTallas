@@ -1,0 +1,51 @@
+{
+  "source_validated": "b2e69d210",
+  "source_binding_ok": true,
+  "why": "gate-consumed source and gate-executed overlays match; 17 staged file(s) the gate did not consume differ (reported, not refused): physical/s81_die_pins/v24_hc_norm_spread_candidate/ot_s81_hc_ctfl_nt.json, physical/s81_die_pins/v24_hc_norm_spread_candidate/ot_s81_hc_ctfl_nt.tcl, physical/s81_die_pins/v24_hc_norm_spread_candidate/report.json, rtl/qwen_sys/host_integrated_20261014/qkd_host_root_integrated.sv, rtl/qwen_sys/split_20261014/qkd_host_root_pt.sv, rtl/qwen_sys/static_kv_20261014/qkd_kv_hbm_elastic_front.sv (+11 more); route-only helper drift (not gate-relevant): tools/hier_contract/child_lint.py",
+  "verdict": "WARN",
+  "clock": {
+    "max_root_sinks": 6163,
+    "root": "port:clk",
+    "cts": true,
+    "tt_insertion_ps": 297.0,
+    "tt_spread_ps": 36.6,
+    "declared_clock": null,
+    "limits": {
+      "sinks": 15000,
+      "insertion_ps": 300.0,
+      "spread_ps": 80.0
+    },
+    "clock_measurements": [
+      {
+        "source": "clk",
+        "clock": "core_clk",
+        "tt": {
+          "boundary": {
+            "n": 6164,
+            "mean": 280.5,
+            "min": 260.4,
+            "max": 297.0
+          },
+          "all": {
+            "n": 6164,
+            "mean": 280.5,
+            "min": 260.4,
+            "max": 297.0
+          },
+          "errors": [],
+          "macros": null,
+          "macro_libs": 0
+        }
+      }
+    ],
+    "measured_clock": "core_clk",
+    "verdict": "PASS",
+    "text": "6,163 sinks on the largest root <= 15,000; measured TT insertion 297.0 ps, leaf spread 36.6 ps"
+  },
+  "context": {
+    "HM": "0.03",
+    "OT_ROUTE_HOLD_CORNERS": "mm",
+    "OT_MM_FF_SDC": "physical/ref_tile/s81hc_ctfsnt_ref/signoff.sdc"
+  },
+  "scope": "Retained production placement/CTS only; no duplicate run, native/routed claim or alias. Reset fanout323 warning retained."
+}
