@@ -18,7 +18,7 @@ module qfd_io_serdes #(parameter integer MUT=0) (
 endmodule
 // UCIe P and R have independent link credit domains: the collective's
 // 546-bit partial and 514-bit result records cannot share an untagged FIFO.
-module qfd_io_ucie (
+module qfd_io_ucie #(parameter integer MUT=0) (
 input wire rst_n,
 input wire p_ck0, p_ck1, p_ck2, p_ck3, p_ck4, p_ck5, p_ck6, p_ck7,
 input wire p_c_v,
@@ -47,6 +47,6 @@ input wire r_rx_v,
 input wire [1042:0] r_rx_flit,
 output wire r_fault
 );
- qfd_io_serdes u_p (.rst_n(rst_n), .ck0(p_ck0), .ck1(p_ck1), .ck2(p_ck2), .ck3(p_ck3), .ck4(p_ck4), .ck5(p_ck5), .ck6(p_ck6), .ck7(p_ck7), .c_v(p_c_v), .c_d(p_c_d), .c_cr(p_c_cr), .r_v(p_r_v), .r_d(p_r_d), .r_cr(p_r_cr), .tx_up(p_tx_up), .tx_v(p_tx_v), .tx_flit(p_tx_flit), .rx_v(p_rx_v), .rx_flit(p_rx_flit), .fault(p_fault));
+ qfd_io_serdes #(.MUT(MUT)) u_p (.rst_n(rst_n), .ck0(p_ck0), .ck1(p_ck1), .ck2(p_ck2), .ck3(p_ck3), .ck4(p_ck4), .ck5(p_ck5), .ck6(p_ck6), .ck7(p_ck7), .c_v(p_c_v), .c_d(p_c_d), .c_cr(p_c_cr), .r_v(p_r_v), .r_d(p_r_d), .r_cr(p_r_cr), .tx_up(p_tx_up), .tx_v(p_tx_v), .tx_flit(p_tx_flit), .rx_v(p_rx_v), .rx_flit(p_rx_flit), .fault(p_fault));
  qfd_io_serdes u_r (.rst_n(rst_n), .ck0(r_ck0), .ck1(r_ck1), .ck2(r_ck2), .ck3(r_ck3), .ck4(r_ck4), .ck5(r_ck5), .ck6(r_ck6), .ck7(r_ck7), .c_v(r_c_v), .c_d(r_c_d), .c_cr(r_c_cr), .r_v(r_r_v), .r_d(r_r_d), .r_cr(r_r_cr), .tx_up(r_tx_up), .tx_v(r_tx_v), .tx_flit(r_tx_flit), .rx_v(r_rx_v), .rx_flit(r_rx_flit), .fault(r_fault));
 endmodule
