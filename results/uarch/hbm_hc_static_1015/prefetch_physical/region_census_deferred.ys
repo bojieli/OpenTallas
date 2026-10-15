@@ -1,0 +1,13 @@
+read_liberty -lib macro.lib
+read_verilog -sv -defer -D SYNTHESIS reset.sv fifo.sv region.sv
+hierarchy -check -top ot_hbm_svc_prefetch_region_cdc -chparam DELIVERY_II 8 -chparam ISSUE_INTERLEAVE 1 -chparam MAX_OUTSTANDING 8 -chparam ISSUE_WIDTH 4
+proc
+opt
+memory_map
+opt
+stat
+write_json census.json
+techmap t:$*dff*
+opt_clean
+stat
+write_json sequential_bitmapped.json

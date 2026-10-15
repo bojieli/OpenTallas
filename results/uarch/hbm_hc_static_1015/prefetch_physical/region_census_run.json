@@ -1,0 +1,63 @@
+{
+  "schema": "opentallas.hc.region.physical-census-run.v1",
+  "state": "LIVE",
+  "functional_gate_authorization": "Parent explicitly triggered after all8native320positives, criticalP6absolutephase and staleepoch/4same-region/wrongtag/payloadmutantsPASS; actualDUTSHAunchanged, benchonlycad2e3b94",
+  "source_pins": {
+    "region.sv": {
+      "commit": "29272fdde3585a83fe803ba2d63166b98b1df016",
+      "path": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_region_cdc.sv",
+      "sha256": "2dda0c920f3c295bb27507ef08da28e8ab418864e86cef56a68bbf8b7b9a6f96"
+    },
+    "resident.sv": {
+      "commit": "29272fdde3585a83fe803ba2d63166b98b1df016",
+      "path": "rtl/hbm_accel/generic/peers/hc_prefetch_static/ot_hgi_hc_prefetch_resident_static.sv",
+      "sha256": "2f48b7acfbc645bb919e3e33b2b90cdb080e24c821b966088e3806d548b603a3"
+    },
+    "fifo.sv": {
+      "ref": "e98d76186dbcdd4c0220c7985d9b03ed27c4365a",
+      "path": "rtl/lib/ot_async_fifo.sv",
+      "sha256": "e091268202e1c6bcc18c8eb83304730c5a29bc10e0a6c52a4dcfc19c177e882e"
+    },
+    "reset.sv": {
+      "ref": "e98d76186dbcdd4c0220c7985d9b03ed27c4365a",
+      "path": "rtl/lib/ot_reset_sync.sv",
+      "sha256": "489e493c19aa1260853031fee35c14ea3394ae62ff6853cf7ea407cb8fb78bbd"
+    },
+    "macro.lib": {
+      "ref": "e98d76186dbcdd4c0220c7985d9b03ed27c4365a",
+      "path": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_tt.lib",
+      "sha256": "c39f42e739c93c5809d82fdc12d41cbb3ddfc6ab43fba192e542e347a7f6ea94"
+    }
+  },
+  "dependencies_match_29272fdde": true,
+  "run": {
+    "session": 4669,
+    "host": "ot-agidock128",
+    "unit": "oth-ubuntu-3984672-1792063191.scope",
+    "PID": 3984689,
+    "remote": "/srv/opentallas-scratch/claude/codex-hc-prefetch-region-census-1015",
+    "command": "ot-run --mem 8 --threads 1 --dir /srv/opentallas-scratch/claude/codex-hc-prefetch-region-census-1015 -- bash run_deferred.sh",
+    "stages": [
+      "read_liberty -lib legacy macro only",
+      "read_verilog -defer unchanged actual sources",
+      "hierarchy actualMAX8/WIDTH4/II8/interleave1",
+      "proc/opt/memory_map/opt",
+      "genericJSON",
+      "sequentialprimitive bitmapping ONLY",
+      "bitmappedJSON"
+    ],
+    "no_CTS_or_route": true
+  },
+  "initial_terminal_failure": {
+    "session": 10835,
+    "host": "ot-epyc4",
+    "unit": "oth-ubuntu-2040857-1792063162",
+    "exit": 1,
+    "reason": "read_verilog initially elaborated forbidden defaultMAX_OUTSTANDING1 before override; source initialfatal correctlyrefused",
+    "fix": "Use deferredVerilogAST and hierarchy -chparam actualMAX8 beforeelaboration; source unchanged",
+    "preserved_log": "ot-epyc4:/srv/opentallas-scratch/claude/codex-hc-prefetch-region-census-1015/yosys.log",
+    "preserved_script": "census.ys/run.sh",
+    "not_an_observation_timeout_restart": true
+  },
+  "limits": "Helper standalone production parameters with frozen dependencies. Wrapper hash pinned and4instances sourceaudited but wrapper notsynthesized. No LIBmapped/CTS/physicalqualification claim."
+}
