@@ -6,7 +6,7 @@
 // word it names (order kept).  VRL = 0: the base ot_qwen_tp_seq_w12 (assumes 1 edge); VRL > 0: ot_qwen_tp_seq_w12_vrl
 // with that read latency.  Expected: base FAILS at any station; VRL = round trip PASSES; VRL = round trip - 1 FAILS.
 module tb_qwen_seq_row_transport;
-    parameter integer VARIABLE = 0, MUT = 0, VRL = 19, OS = 1, IS = 1, RLY = 2, NWORDS = 256, VW0 = 256, CRDY = 1, CST = 0, CRED = 0, IB = 0, TRUNC = 0, FENCE = 0;
+    parameter integer VARIABLE = 0, MUT = 0, VRL = 19, OS = 1, IS = 1, RLY = 2, NWORDS = 256, VW0 = 256, CRDY = 1, CST = 0, CRED = 128, IB = 512, TRUNC = 0, FENCE = 0;
     // CRED > 0: credit-mode collective port: the receiver buffers IB words, drains them at random and returns one credit
     // pulse per drained word through the stations (c_ready = credit); an overflow of its buffer is a FAIL
     // CST 1: the collective handshake also crosses the stations (c_valid / c_data through OS, c_ready back through IS)
@@ -98,13 +98,13 @@ module tb_qwen_seq_row_transport;
         if (sent == NWORDS && back < NWORDS) begin r_valid <= 1'b1; r_data <= expected(VW0 + back); r_last <= (back == NWORDS - 1); back = back + 1; end
     end
     generate begin : g_vrl
-        ot_qwen_tp_seq_w12_vrl #(.VRL(VRL), .VARIABLE(VARIABLE), .STATIC(1), .VWA(20), .VM_ADDR_EXT(!TRUNC), .CRED(CRED), .ENABLE_AR256(1), .N(4), .NW(NW), .QWEN_FULLSHAPE(1)) u (
+        ot_qwen_tp_seq_w12_vrl #(.VRL(VRL), .VARIABLE(VARIABLE), .STATIC(1), .VWA(20), .VM_ADDR_EXT(!TRUNC), .CRED(CRED), .ENABLE_AR256(1), .N(8), .NW(NW), .QWEN_FULLSHAPE(1)) u (
             .clk(clk), .rst_n(rst_n), .rst_nw(rst_n), .start(start), .token(18'd5), .pos(18'd9), .done(done), .next_token(ntok), .next_val(nval),
             .fault(fault), .coll_busy(coll_busy), .core_start(core_start), .core_token(core_tok), .core_pos(core_pos),
             .core_done(core_done), .core_next_token(18'd0), .core_next_val(32'd0), .core_fault(1'b0), .prog_base(prog_base),
             .desc_re(desc_re), .desc_addr(desc_addr), .desc_q(desc_q), .vm_re(vm_re), .vm_raddr(vm_raddr), .vm_rq(vm_rq), .vm_rvalid(vm_rvalid),
             .vm_we(vm_we), .vm_waddr(vm_waddr), .vm_wdata(vm_wdata), .c_valid(c_valid), .c_ready(q_ready), .c_data(c_data),
-            .c_last(c_last), .c_mode(c_mode), .c_tag(c_tag), .r_valid(r_valid), .r_data(r_data), .r_last(r_last), .r_rank(2'd0), .r_err(1'b0));
+            .c_last(c_last), .c_mode(c_mode), .c_tag(c_tag), .r_valid(r_valid), .r_data(r_data), .r_last(r_last), .r_rank(3'd0), .r_err(1'b0));
     end endgenerate
     integer t0;
     initial begin
