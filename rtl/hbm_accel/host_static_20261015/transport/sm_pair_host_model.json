@@ -1,0 +1,47 @@
+{
+  "schema": "opentallas.hbm.sm-pair-host-sizing.v1",
+  "scope": "host initialization adapter foractual32SM protected2word programmes; fullhost/diephysical open",
+  "target_registry": {
+    "base": 128,
+    "count": 32,
+    "owner_grant": "H-DIE15:03ordinaryregistryacceptance",
+    "collision_check": "knownsourcefamilies48,52..55,120..125distinct; fullregistry muststillfailmissing/collision"
+  },
+  "actual_target_shape": {
+    "programme_macros_per_SM": 2,
+    "programme_rows": 1024,
+    "word_bits": 256,
+    "logical_bits_per_row": 430,
+    "payload_per_plane": 215,
+    "role_bits": "222:215 A0/A1, bit223reserved0",
+    "addr_bits": "addr10plane,row9:0;addr11zero",
+    "whole_programme_bits": 16777216,
+    "host_frame_count": 65536,
+    "host_min32bit_payload_writes": 524288
+  },
+  "protocol": {
+    "F4C": "begin reserved8/epoch16/target8",
+    "F20": "selecttarget8/addr12",
+    "F24": "eightLE32payloadchunks; finalresponsewaitsactualtaggedmacroACK",
+    "F50": "commit reserved8/epoch16/target8",
+    "F28": "globalbase/limit",
+    "F2C": "globalloops16",
+    "F58": "requiredlaunchEpoch16",
+    "F30": "globalonepulseonlyafteractualparticipatingmask+matchingepochs+noactive/fault",
+    "autoaddress": "0,1024,1,1025,...,1023,2047 canonicalplane0/plane1seal"
+  },
+  "hardware_control": {
+    "per_target_begin_epochs_bits": 512,
+    "actual_ready_epoch_input_bits": 512,
+    "status_masks_bits": 96,
+    "pending_ack_tag_bits": 37,
+    "assembly_bits": 224,
+    "estimated_ff_upper_bound": 2400,
+    "programme_SRAM_inside_adapter": 0,
+    "host_interface_only_elastic": true,
+    "runtime_ready_backpressure": false,
+    "no_closed_view_reuse": true
+  },
+  "runtime_contract": "Backendcalendarfirstedge measured by owner; fixedpubliclaunch/relay/targetcapture latency mustbe compilerbound. No dispatch whilebodyruns.",
+  "proof_status": "source+elaboration only; actual32targetACK/SRAMjoin andmutants pending"
+}
