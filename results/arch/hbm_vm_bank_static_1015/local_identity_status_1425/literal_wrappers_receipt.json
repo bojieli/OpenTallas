@@ -1,0 +1,11 @@
+{
+  "timestamp": "2026-10-15T21:43:18.861953+00:00",
+  "source_commit": "2de820027",
+  "physical_master_manifest": "source_specialized_masters.json",
+  "host": "ot-agidock128",
+  "unit": "oth-ubuntu-1639916-1792100318",
+  "otrun_exit": 0,
+  "proof": "Actual32namedliteralconfiguredwrappers/96SRAM;4quarters1024DMAwrites each,5120/4096/6144/6144exactwidereads+8packetreadsperquarter PASS. CorewrongcompiledBID/SIDmutants in separate completedreceipt.",
+  "sha256": "2165d7b0eda843bebb380681398ddf6b7b618a39b35a983b8a0a91d4438cb229",
+  "scope": "functional source binding only; no physicalviews or productiondie binding"
+}
