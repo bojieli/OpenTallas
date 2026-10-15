@@ -1,0 +1,26 @@
+{
+ "source_commit": "fcc943a08",
+ "unit": "oth-ubuntu-1611953-1792099563",
+ "host": "ot-epyc4",
+ "remote": "/srv/opentallas-scratch/codex/hcoll-state-capture-1417",
+ "admission_gib": 8,
+ "threads": 2,
+ "positive": {
+  "cycles": 8192,
+  "word_checks": 32252,
+  "result": "PASS"
+ },
+ "mutant": {
+  "mechanism": "read add_src xor1 actualcandidateport",
+  "result": "EXPECTED_ASSERTION_FAIL",
+  "cycle": 129,
+  "field": "carry_add"
+ },
+ "claim": "actual old RTL equivalence shifted one edge; no parent or physical qualification; Verilator2state startup, predecessor explicit alltag/carry/readhold proof retained",
+ "source_sha256": {
+  "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static.sv": "c827fb8dc971baca5e155b88a3381eab218999b127e3a4b9f419f3f28e77d514",
+  "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static_state_capture.sv": "9ffba061514f1f2fc150a38da9706c8a53c22dd38d077cbc3c7e24a7fb096857",
+  "tools/hbm_coll_static/tb_state_capture_miter.sv": "7917cdfd5cc30241e3639807629c4b66da5bc4a71001ffa34c747cee4ef9aa9d",
+  "tools/hbm_coll_static/run_state_capture_miter.sh": "4a2d3a56a6b074a75f7dfd105a9bc14cba88b867b7442f5f18820e3c5ee493fa"
+ }
+}
