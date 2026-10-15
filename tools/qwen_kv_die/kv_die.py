@@ -375,7 +375,48 @@ def pll_model_binding():
     return b
 
 
-BINDINGS.update(qkd_host_rt=host_rt_binding(), qkd_hslice=slice_die_binding(), qkd_pllm=pll_model_binding())
+# v1.4 + Q-LINK (main c43263b31): the static compute <-> KV slot link end qkd_d2d_static (583-b PHY word = 548 payload + 19
+# frame + CRC16, compiler-assigned slots, NO credits) replaces qkd_d2d (ot_qkvd_kv_end, credit-based, historical) + qkd_lnk;
+# it produces 28 of the root's 31 previously unproduced inputs (results/arch/qwen_split_1014/link_static_1015/
+# host_input_producers.json).  Die bundles: svc (27 producer words, the root's port order), lup (link_up, NL = 2 real
+# link ends), rec_tx / rec_rx (the HOST record port), lrc (exceptional link reset / recovery clear from the root),
+# fdi (the UCIe native 583-b word), fwd_epoch / fwd_link_rst_n (two forwarded bumps to the compute die)
+D2DS_FILE = 'rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_dies.sv'
+D2DS_SVC = ['transport_fault', 'native_links_drained', 'native_link_reset_seen', 'native_retrained', 'abort_drained',
+            'native_kv_drained', 'native_vm_drained', 'native_collective_drained', 'native_host_drained',
+            'native_collective_busy', 'native_kv_flush', 'native_admit_ready', 'crom_fault', 'execution_active',
+            'engine_result_v', 'engine_result_done', 'engine_result_fault', 'engine_result_cause', 'engine_result_tag',
+            'engine_result_gen', 'engine_result_token', 'engine_result_value', 'engine_result_cycles']
+D2DS_REC_TX = ['record_tx_observed_v', 'record_tx']
+D2DS_REC_RX = ['record_send_kind', 'record_witness_slot', 'record_rx_v', 'record_rx']
+
+
+def d2ds_binding():
+    return dict(module='qkd_d2d_static', file=D2DS_FILE, parameters=dict(NL=2),
+                ports=dict(ck0=['ck'], rst_n=['rst_n'], fdi=['fdi_tx_up', 'fdi_tx_v', 'fdi_tx_flit', 'fdi_rx_v', 'fdi_rx_flit'],
+                           phy_rst_n=['phy_rst_n'], svc=list(D2DS_SVC), lup=['link_up'], rec_tx=list(D2DS_REC_TX),
+                           rec_rx=list(D2DS_REC_RX), lrc=['host_link_reset_req', 'host_recovery_clear'],
+                           fwd_epoch=['fwd_epoch'], fwd_link_rst_n=['fwd_link_rst_n'], serdes_up=['serdes_up']),
+                sliced={f'ck{i}': 'ck0' for i in range(1, 5)},
+                classed={'por_n': 'by_design: package POR pad (off-chip signal)'})
+
+
+def _host_rt_v14(b):
+    for g, ps in (('svc', D2DS_SVC), ('rec_tx', D2DS_REC_TX), ('rec_rx', D2DS_REC_RX)):
+        for p_ in ps:
+            b['ports'].pop(p_, None)
+        b['ports'][g] = list(ps)
+    b['ports'].pop('link_up', None)
+    b['ports']['lup'] = ['link_up']
+    for p_ in ('host_link_reset_req', 'host_recovery_clear'):
+        b['ports'].pop(p_, None)
+    b['ports']['lrc'] = ['host_link_reset_req', 'host_recovery_clear']
+    return b
+
+
+BINDINGS.update(qkd_host_rt=_host_rt_v14(host_rt_binding()), qkd_hslice=slice_die_binding(), qkd_pllm=pll_model_binding(),
+                qkd_d2ds=d2ds_binding())
+RTL.update(qkd_d2ds=D2DS_FILE)
 RTL.update(qkd_host_rt=HOST_RT_FILE, qkd_hslice=SLICE_DIE_FILE)
 
 
@@ -890,7 +931,7 @@ def _build(r=R, kv_wq_leaves=False, kv_wq_binary=False, kv_wq_leaf_s=False, kv_w
     uy = Hk - MARGIN - UCIE[2]
     add('ucie_rom', UCIE[0], xc - UCIE[1] / 2, uy, UCIE[1] - SHAVE, UCIE[2] - SHAVE, 'MX', 'phy_d2d', 'io')
     dw, dh = FRAMES['qkd_d2d']
-    add('d2d_kv', 'qkd_d2d', xc - dw / 2, up(uy - GY - dh, GY), dw - SHAVE, dh - SHAVE, 'R0', 'd2d', 'io')
+    add('d2d_kv', 'qkd_d2ds' if slice_w else 'qkd_d2d', xc - dw / 2, up(uy - GY - dh, GY), dw - SHAVE, dh - SHAVE, 'R0', 'd2d', 'io')
     sw, sh = FRAMES['qkd_seq']
     sy = up(uy - 2 * GY - dh - sh, GY)
     if split:
@@ -1114,11 +1155,13 @@ def _host_v14_buses(m):
         keep.append((bid, cl, bits, eps))
     B[:] = keep
     add = B.append
+    _d2ds_swap(m)
     ties = m.setdefault('host_ties', {})
     sl = lambda st, k: f'hsl_{st}_{k}'  # noqa: E731
     slices = [sl(st, k) for st in STACKS for k in range(32)]
     add(('rst_die', 'reset', 1, [('host', 'die_rst_n')] + list(dict.fromkeys(die_l))))
     add(('rst_hbm', 'reset', 1, [('host', 'hbm_rst_n')] + list(dict.fromkeys(hbm_l)) + [(s, 'hbm_rst_n') for s in slices]))
+    link_l = [e for e in link_l if e[0] != 'lnk' and e != ('ucie_rom', 'rst_n')]     # ucie rst_n = the d2d end's phy_rst_n
     add(('rst_link', 'reset', 1, [('host', 'link_rst_n')] + list(dict.fromkeys(link_l))))
     add(('rst_host', 'reset', 1, [('host', 'host_rst_n')] + [(s, 'host_rst_n') for s in slices]))
     add(('hboot', 'reset', 1, [('host', 'boot_go')] + [(sl(st, 0), 'bgi') for st in STACKS]))
@@ -1158,6 +1201,41 @@ def _host_v14_buses(m):
         for o, rp, w_ in (('co', 'chc', 32), ('ao', 'cha', 32), ('fault_o', 'chx', 1), ('sko', 'sak', 32), ('sdo', 'sbd', 32),
                           ('soo', 'sbo', 32), ('sfo', 'sbf', 32)):
             add((f'h{rp}_{st}', 'kv_oneway', w_, [(s0, o), ('host', f'{rp}{si}')]))
+
+
+def _d2ds_swap(m):
+    """v1.4 + Q-LINK: qkd_d2d_static replaces the credit link end (qkd_d2d) and the bridge qkd_lnk.  The sequencer's
+    lx / lr and the gateway's gq / gr lose their bridge (their static adapters are owed: unconnected = MISMATCH, never
+    tied); the d2d end's attention record / KVN faces, cfg loader port, cal_start, status epoch and KV-local drains have
+    no producer yet (named in the v1.4 contract)."""
+    B = m['buses']
+    m['insts'][:] = [i for i in m['insts'] if i.name != 'lnk']
+    out = []
+    for bid, cl, bits, eps in B:
+        if bid in ('d2d_dn', 'd2d_up', 'lx', 'lr', 'gq', 'gr', 'd2df'):
+            continue
+        eps = [e for e in eps if e[0] != 'lnk' and e != ('d2d_kv', 'ck') and e != ('ucie_rom', 'rst_n')]
+        if bid == 'clk_core_c':
+            eps = eps + [('d2d_kv', f'ck{i}') for i in range(5)]
+        if bid == 'd2d_fdi':
+            bits = 1 + 1 + 583 + 1 + 583             # the native UCIe word (kv_native_phy splits the PHY side)
+        out.append((bid, cl, bits, eps))
+    B[:] = out
+    add = B.append
+    add(('rst_phyd2d', 'reset', 1, [('d2d_kv', 'phy_rst_n'), ('ucie_rom', 'rst_n')]))
+    add(('hsvc', 'spine_local', 8 + 3 + 4 + 9 + 1 + 1 + 1 + 4 + 59 + 2 + 18 + 32 + 32, [('d2d_kv', 'svc'), ('host', 'svc')]))
+    add(('hlup', 'spine_local', 2, [('d2d_kv', 'lup'), ('host', 'lup')]))
+    add(('hrec_tx', 'spine_local', 1 + 548, [('host', 'rec_tx'), ('d2d_kv', 'rec_tx')]))
+    add(('hrec_rx', 'spine_local', 2 + 1 + 1 + 548, [('d2d_kv', 'rec_rx'), ('host', 'rec_rx')]))
+    add(('hlrc', 'spine_local', 2, [('host', 'lrc'), ('d2d_kv', 'lrc')]))
+    by = {i.name: i for i in m['insts']}
+    ck_ = by['ckb_kv']
+    for j, (n_, p_) in enumerate((('fwb_ep', 'fwd_epoch'), ('fwb_rs', 'fwd_link_rst_n'))):
+        it = F.Inst(n_, 'qkd_fwdbump', round(ck_.x - (j + 1) * (43.2 + 4 * GX), 4), ck_.y, ck_.w, ck_.h, 'R0', kind='bump',
+                    region='io', domain='stream_1p2')
+        m['insts'].append(it)
+        add((f'h{p_}', 'kv_oneway', 1, [('d2d_kv', p_), (n_, 'a')]))
+    m.setdefault('extra_conns', {})['d2d_kv'] = ['.serdes_up(n_host_fdi[0])']     # SerDes tx_up (fdi bit 0) also feeds link_up[1]
 
 
 def _centre(it, port=None):
@@ -1658,6 +1736,8 @@ def masters(m, k=1, port_bits=None):
             _land_level_pins(m, mm, inst0, face_load, by)
     if m['geo'].get('split'):
         _split_pins(M, m)
+    if 'qkd_d2ds' in M and 'serdes_up' not in M['qkd_d2ds'].ports:
+        M['qkd_d2ds'].area('serdes_up', 1, round(M['qkd_d2ds'].w / 2, 3), round(M['qkd_d2ds'].h / 2 - 9.6, 3), 1)   # v1.4 extra_conns tap
     for mst in list(M):
         if mst not in used and mst not in sizes:
             M.pop(mst)
@@ -2101,6 +2181,16 @@ def port_widths(m, k=1):
 
 def write_netlist(m, k, path, top='qkd_die'):
     F.write_netlist(m, k, path, top=top)
+    if m.get('extra_conns'):
+        # v1.4: a port tapping one bit of an existing bundle (the SerDes tx_up of the host FDI word into the D2D end)
+        p_ = Path(path)
+        tx = p_.read_text()
+        for inst_, cs in m['extra_conns'].items():
+            mt = re.search(rf'^(  \S+ {inst_} \()(.*)(\);)$', tx, re.M)
+            if not mt:
+                raise ValueError(f'extra connection: no instance {inst_}')
+            tx = tx[:mt.end(2)] + ', ' + ', '.join(cs) + tx[mt.end(2):]
+        p_.write_text(tx)
     if m.get('host_ties'):
         # v1.4: per-slice logical-PC straps and the stack chain terminators (the source parent's constants), as tie cells
         p_ = Path(path)
