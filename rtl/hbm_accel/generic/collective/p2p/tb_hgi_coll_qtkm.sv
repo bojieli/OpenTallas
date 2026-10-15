@@ -43,7 +43,7 @@ module tb_hgi_coll_qtkm;
     // P2P: the SW quadrant body (qid 0, QSOLO: TOPK_MERGE runs whole here) with its TOPK line writes crossing RLY die relay
     // stages each way by credit flow (ot_hgi_coll_crl_tx in the engine, ot_hgi_coll_crl_rx in ot_hgi_coll_vmport) to the
     // VM write model (valid / ready with +WSTALL back-pressure)
-    wire q_v, q_r, q_idle, t_v, f_cr, txf, rxf; wire [39:0] q_a; wire [15:0] q_m; wire [FW-1:0] q_d; wire [FW+55:0] t_d, o_d;
+    wire q_v, q_r, q_idle, t_v, f_cr, ctxf, crxf; wire [39:0] q_a; wire [15:0] q_m; wire [FW-1:0] q_d; wire [FW+55:0] t_d, o_d;
     ot_hgi_coll_qep #(.QSOLO(0), .SOLO_CAP(1), .PFMAX(512), .TKM(1), .TKM_KMAX(TKM_KMAX), .MUT_TKM(MUT_TKM), .NPT(NPT), .PIPE(1),
                       .RGXHW(1), .RFMT(0)) u_ce (.clk(clk), .rst_n(rst_n), .pclk(clk), .prst_n(rst_n), .qid(2'd0),
         .rank(8'd0), .pf(16'd0), .go(1'b0),
@@ -56,11 +56,11 @@ module tb_hgi_coll_qtkm;
         .hgi_recx(recx), .hgi_inj_addr(iad), .tk_w_v(q_v), .tk_w_addr(q_a), .tk_w_mask(q_m), .tk_w_data(q_d), .tk_w_rdy(q_r),
         .tk_w_idle(q_idle));
     ot_hgi_coll_crl_tx #(.W(FW + 56), .CRD(TCRD)) u_tx (.clk(clk), .rst_n(rst_n), .in_v(q_v), .in_d({q_a, q_m, q_d}), .in_rdy(q_r),
-        .idle(q_idle), .t_v(t_v), .t_d(t_d), .f_cr(bw[RLY-1]), .fault(txf));
+        .idle(q_idle), .t_v(t_v), .t_d(t_d), .f_cr(bw[RLY-1]), .fault(ctxf));
     reg [FW+56:0] fw [0:RLY-1]; reg bw [0:RLY-1];
     always @(posedge clk) begin fw[0] <= {t_v, t_d}; bw[0] <= f_cr; for (integer i = 1; i < RLY; i = i + 1) begin fw[i] <= fw[i-1]; bw[i] <= bw[i-1]; end end
     ot_hgi_coll_crl_rx #(.W(FW + 56), .CRD(TCRD), .MUT(CRL_MUT)) u_rx (.clk(clk), .rst_n(rst_n), .t_v(fw[RLY-1][FW+56]), .t_d(fw[RLY-1][FW+55:0]),
-        .f_cr(f_cr), .out_v(tw_v), .out_d(o_d), .out_rdy(tw_r), .fault(rxf));
+        .f_cr(f_cr), .out_v(tw_v), .out_d(o_d), .out_rdy(tw_r), .fault(crxf));
     assign tw_a = o_d[FW+55 -: 40]; assign tw_m = o_d[FW+15 -: 16]; assign tw_d = o_d[FW-1:0];
     // ---------------------------------------------------------------- inject model (two 8-word halves a flit)
     always @* begin
@@ -220,6 +220,7 @@ module tb_hgi_coll_qtkm;
         $display("TKM G=%0d n=%0d M=%0d k=%0d nout=%0d rank=%0d R=%0d CYCLES=%0d SURV=%0d INS=%0d SINK=%0d", G, NL, M, K, NOUT, RANK, HASR,
                  t1 - t0, u_ce.g_tkm.u_tkm.stat_surv, u_ce.g_tkm.u_tkm.stat_ins, u_ce.g_tkm.u_tkm.stat_cycles);
         $display("TIMELINE first_delivery=%0d last_delivery=%0d sink_credit_blocked_cycles=%0d", t_first, t_last, nperm0);
+        if (ctxf || crxf) begin $display("FAIL credit link fault tx %0d rx %0d", ctxf, crxf); errs = errs + 1; end
         if (errs == 0) $display("PASS tb_hgi_coll_tkm %s", dir);
         else $display("FAIL tb_hgi_coll_tkm %s errors %0d", dir, errs);
         $finish;
