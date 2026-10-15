@@ -1,6 +1,7 @@
 `timescale 1ps/1fs
 module tb_dma_wb_phy_static;
 parameter integer MUT=0;
+parameter integer TRACE=0;
 parameter integer WB_PIPELINE=0;
 parameter integer HBM_SECTOR_BASE=32'h28800000;
 parameter integer PRE_SECTOR_BASE=32'h28800a00;
@@ -24,6 +25,14 @@ ot_hgi_b2_swap_wb_grp_static #(.MUT(MUT),.WB_PIPELINE(WB_PIPELINE)) dut(.stream_
  .k_v(wb_k_v),.k_rdy(wb_k_rdy),.k_addr(wb_k_addr),.k_len(wb_k_len),.k_tag(wb_k_tag),.k_we(wb_k_we),.k_wdata(wb_k_data),.k_wstrb(wb_k_strb),.k_wr_done(actual_k_wr_done));
 assign wd=dut.wd;assign reserve=dut.reserve;assign fill=dut.fill_start;assign sectors=dut.reserve_total;assign base=dut.reserve_base;
 assign reserve_bank=dut.reserve_bank;assign fill_bank=dut.fill_bank;assign reserve_epoch=dut.reserve_epoch;assign fill_epoch=dut.fill_epoch;
+generate if(TRACE!=0&&WB_PIPELINE!=0)begin:TRACE_BOUNDARY
+ for(genvar q=0;q<4;q=q+1)begin:Q
+ always @(negedge clk)if(rst_n&&armed)begin
+  if(reserve[q]||fill[q]||wb_fill_done[q]||dut.Q[q].PIPELINED_WB.wb.start_copy||wb_done[q])
+   $display("TRACE_STAGE mode%0d q%0d stream%0d start%0d reserve%0b fill%0b staged%0b copy%0b done%0b",mode,q,cycle,start_at,reserve[q],fill[q],wb_fill_done[q],dut.Q[q].PIPELINED_WB.wb.start_copy,wb_done[q]);
+ end
+ end
+end endgenerate
 integer physical_writes[0:3],physical_acks[0:3],memory_checks[0:3];
 integer first_phy[0:3],last_phy[0:3],last_ack[0:3],hbm_edge=0,throughput_bad=0;
 reg [640:0] phy_seen[0:3];reg check_memory=0;
@@ -55,6 +64,22 @@ for(genvar stack=0;stack<4;stack=stack+1)begin:PHY
     physical_writes[stack]=physical_writes[stack]+1;last_phy[stack]=hbm_edge;
    end
   end
+ end
+ if(TRACE!=0)begin:TRACE_MODEL
+ integer old_ref[0:31],old_act[0:31],waited[0:31];
+ initial for(integer p=0;p<32;p=p+1)begin old_ref[p]=0;old_act[p]=0;waited[p]=0;end
+ always @(negedge hbm_clk)if(rst_n&&armed)begin
+  for(integer p=0;p<32;p=p+1)begin
+   if(model.u_k.st_ref[p]!=old_ref[p])begin
+    $display("TRACE_REF mode%0d stack%0d pc%0d hbm%0d now%0d refcount%0d next%0d",mode,stack,p,hbm_edge,model.u_k.now,model.u_k.st_ref[p],model.u_k.next_ref[p]);
+    for(integer b=0;b<32;b=b+1)if(model.u_k.b_refend[p][b]>model.u_k.now)$display("TRACE_REFBANK pc%0d bank%0d until%0d",p,b,model.u_k.b_refend[p][b]);
+    old_ref[p]=model.u_k.st_ref[p];
+   end
+   if(model.u_k.h_sched[p]&&model.u_k.h_tcol[p]-model.u_k.now>100000&&waited[p]!=mode+1)begin
+    $display("TRACE_LONGWAIT mode%0d stack%0d pc%0d hbm%0d now%0d column%0d addr%h bank%0d refs%0d act%0d hits%0d conflicts%0d",mode,stack,p,hbm_edge,model.u_k.now,model.u_k.h_tcol[p],model.u_k.q_addr[p][model.u_k.q_rp[p]],int'(model.u_k.q_addr[p][model.u_k.q_rp[p]][1:0]),model.u_k.st_ref[p],model.u_k.st_act[p],model.u_k.st_hit[p],model.u_k.st_conf[p]);waited[p]=mode+1;
+   end
+  end
+ end
  end
  // Off-chip verification only. No preload or hierarchical write is performed.
  always @(posedge clk)begin:CHECK_HBM_ARRAY

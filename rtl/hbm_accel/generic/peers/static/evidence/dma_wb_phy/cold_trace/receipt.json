@@ -1,0 +1,36 @@
+{
+  "result": "cold423/warm207 reproduced exactly with read-only trace; actual REFpb blocking plus WB block serialization",
+  "RTL_changed": false,
+  "ot_run": {
+    "host": "ot-agidock128",
+    "unit": "oth-ubuntu-3784680-1792054099",
+    "exit": 0,
+    "terminal": true,
+    "memGB": 4,
+    "threads": 4
+  },
+  "causal_evidence": [
+    "Cold wholeh staged/copy starts atstream196, commandstart87:109cycles; warm954-start845 also109cycles. DMA/landing/WB initial fixed phase is unchanged.",
+    "Coldpc0 firstREF observation atHBM166 now168960ps; bank1 busy until321875ps; later28800001 head atHBM202 now205824ps waits column331250ps.",
+    "Coldpc15 firstREF atHBM167 now169984ps; bank1 busy until379003ps; later2880003d head atHBM210 waits column388378ps.",
+    "REFchoice executes when scheduling firstqueuedhead; laterrequests expose futurebank1 demand. Realfullnative row/bank/hash preserved.",
+    "PREstaged218 butWBcopy waits for htrueACK CDCreceipt atstream483; PREphysicalissue400, ACK411, fence423cycles.",
+    "WarmPREstaged976 butcopy waits htrueACK at1025; finalfence207cycles."
+  ],
+  "model_timing": {
+    "REFPB": 3,
+    "PULLIN": 0,
+    "tREFI_ps": 3900000,
+    "banks_per_PC": 32,
+    "first_REF_due_ps": "121875+floor(3900000*pc/(32*32))",
+    "tRFCpb_ps": 200000,
+    "controller_req_ps": 10000,
+    "tRCDWR_ps": 9375,
+    "reset": "allbanksclosed; nextREFpositive stagger; no wake/training init procedure modeled"
+  },
+  "conclusion": "No evidence supports one-time cold exception or warm qualification. Recurring REFpb may block denseblocks; need actual PHY-boundary ready/phase/calendar or controller lookahead solution and declared firsttokeninit-state proof. Existing248/272 remains immutable.",
+  "qualification": "FAIL cold423>272; noarea/route/globalallocation claims",
+  "trace_script_sha256": "8d9460da5d0e482c7e8345081da055f97bc788cb04fa5f21ac9588012004c958",
+  "trace_bench_sha256": "aff2d156939dbc3e1034352c85a56a187907c09d53c19bd55871416de15af8c2",
+  "original_source_pins": "../trueaddr_pipeline/input_sha256.json; onlytestbench addsTRACE parameter"
+}
