@@ -1,7 +1,7 @@
 {
   "schema": "opentallas.hbm_attn.pv_serializer_model.v1",
   "qualification": false,
-  "canonical_output_layout_pending_HVM": true,
+  "canonical_output_layout_pending_HVM": false,
   "source_layout": "32tiles x16heads FP32 words per PVbeat c0..15;dim=tile*16+c",
   "candidate_VM_layout": "head-major contiguous FP32[16][512],8x256b peredge",
   "physical_memory": {
@@ -46,5 +46,15 @@
     "Actualtarget49outputprogrammeandWG1bankjoin",
     "RTL fullshape +mutants and measuredprice",
     "Mappedcell/clock/geometry/routing qualification"
-  ]
+  ],
+  "native_output_contract": {
+    "confirmed_by": "/root/h_vm",
+    "WG": 1,
+    "WG_total": 3,
+    "quadrant": "NE",
+    "payload": "unchanged FP32 head-major[head][dim]",
+    "flags": "Preserve perword throughserializer, aggregate into stickyunitfault\u2192realCP/dispatch; noVMmetadataregion",
+    "bank_commit_edges": 3,
+    "candidate_adapter_retire": "Last write request capture n +3 actualmacrocommit; success onlyif stickyfaultclear. CP mustobserveafteractualcommit."
+  }
 }
