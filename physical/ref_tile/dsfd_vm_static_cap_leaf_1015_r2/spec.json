@@ -1,0 +1,109 @@
+{
+ "name": "dsfd_vm_static_cap_leaf_1015_r2",
+ "top": "dsfd_vm_static_cap_leaf",
+ "kind": "tile",
+ "sources": [
+  "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_cap_leaf.sv",
+  "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv"
+ ],
+ "params": {
+  "E": 8
+ },
+ "clock_port": "ck",
+ "reset_ports": [
+  "rn"
+ ],
+ "outline": {
+  "w": 172.8,
+  "h": 259.2,
+  "exact": true
+ },
+ "std_area_um2": 4161.6423,
+ "layer_cap": "M5",
+ "pins": {
+  "N": [
+   "f_c"
+  ],
+  "S": [
+   "o_v",
+   "o_row",
+   "o_m",
+   "o_d",
+   "flt"
+  ],
+  "W": [
+   "ck",
+   "rn",
+   "gid",
+   "flush"
+  ],
+  "E": []
+ },
+ "io_tcl": "physical/s81_die_pins/v20_vm_cap_generous/dsfd_vm_static_cap_leaf.tcl",
+ "recipe": 2,
+ "route": {
+  "pd": 0.45,
+  "period_ps": 770,
+  "threads": 8,
+  "peak_ram_gb": 16,
+  "pin_h": "M4",
+  "pin_v": "M5",
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "slot_change_request": {
+  "source": "physical/s81_vm_cap_1015/slot_request.json",
+  "reason": "Replace invalid old80.64um capture width with actual top-down1387pin 172.8x259.2leaf in separate4x4Breservation; actual upstreamcapture remains separate.",
+  "geometry_source": "physical/s81_die_pins/v20_vm_cap_generous/slot_request.json"
+ },
+ "structural_change": "Real native1 gate refused rn6196loads and23level pin_gid-to-output: factor rn into per-word acceptance while keeping all4176DAT/KEY bits and exactresetstate (no extra reset enable), and balance keyselection using parallelconstantprefix onehot/OR;24000cycles fullregisteredstate-equivalencePASS. Pin-first172.8x259.2/1387pins and833signoff unchanged. FreshnativeCTS required; native1 preserved live no duplicate identicalsource.",
+ "job": {
+  "owner": "Codex:S_VM/capleaf",
+  "branch": "codex/s81-capl-merge-1015",
+  "tag": "native2",
+  "purpose": "Real staticcaplane independentnativeCTS/TTFFDRC and typedmetal; parentclock/calendar unqualified",
+  "benches": [
+   {
+    "name": "cap_leaf_exact",
+    "cmd": "bash tools/s81_vm/native_cap_boundary_bench.sh {RUN}/cap_leaf_exact base",
+    "expect": "pass",
+    "pass_regex": "TB_VMCAP PASS mode 0",
+    "min_count_regex": "rows full ([0-9]+)",
+    "threads": 1,
+    "peak_ram_gb": 4
+   },
+   {
+    "name": "neg_word",
+    "cmd": "bash tools/s81_vm/native_cap_boundary_bench.sh {RUN}/neg_word word",
+    "expect": "fail",
+    "fail_regex": "TB_VMCAP FAIL mode 0",
+    "threads": 1,
+    "peak_ram_gb": 4
+   }
+  ]
+ },
+ "assigned_pin_grant": {
+  "source": "physical/s81_vm_cap_1015/pins_native2.json",
+  "sha256": "0e92d0b7412c3384d7fd5b67769553bf00c18dc68b6016606bd5bdf037c5050e",
+  "commit": "4247d3160",
+  "prior_commit": "fdca7e391"
+ },
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "open_points": [
+  "New physical variant area unmeasured until this source gate: prior production5702FF mapped4161um2/actualORFS6492um2; generous42942um2 core remains area envelope, exactlogic/CTS evaluated here.",
+  "Parentdelivery/calendar remain unqualified, no falsepath/clocks waived."
+ ]
+}
