@@ -66,7 +66,7 @@ def crosscheck(rel, die_v, split=True):
     sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
     sys.path.insert(0, str(Path(__file__).resolve().parent))
     import kv_die as K
-from binding_order import sliced_order
+    from binding_order import sliced_order
     import die_port_bind_kv as P
     K._set_geometry(split)
     root = Path(__file__).resolve().parents[2]
