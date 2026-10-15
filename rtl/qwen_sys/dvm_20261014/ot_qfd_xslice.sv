@@ -514,6 +514,15 @@ module ot_qfd_xhead #(
     localparam integer NR   = 2 * NH;            // rows (tiles) of the column
     localparam integer NE   = NH / 2;            // TDM edges a tuple
     localparam integer QD   = 7;                 // read issue -> answer usable: lr 1, leaf 5, answer pin register 1
+    // leaf / tile of row r: N station s in N leaf s / 2 (tile s mod 2), S station s in S leaf (NH-1-s) / 2 (tile
+    // (NH-1-s) mod 2): a pooled pair (N s, S NH-1-s) sits at the SAME chain depth, and every read at TDM edge e is of
+    // a leaf at depth <= e + 2 (the far leaves are read last: a fill reaches depth d d edges after depth 0)
+    function automatic integer lf(input integer rw);
+        lf = (rw < NH) ? (rw >> 1) : NE + ((NH - 1 - (rw - NH)) >> 1);
+    endfunction
+    function automatic integer tb(input integer rw);
+        tb = (rw < NH) ? (rw & 1) : ((NH - 1 - (rw - NH)) & 1);
+    endfunction
     generate if (DX - FILL_LEAD != QD + 1) begin : g_bad_dx
         initial $error("ot_qfd_xhead: DX must be FILL_LEAD + %0d", QD + 1);
     end endgenerate
@@ -575,7 +584,8 @@ module ot_qfd_xhead #(
     reg               e_pool [0:1];
     // tile windows: beat W and start position of the tile's slot, per epoch and row
     reg  [BW-1:0]     wb  [0:1][0:NR-1];
-    reg  [5:0]        wo  [0:1][0:NR-1];
+    reg  [5:0]        wo  [0:1][0:NR-1];      // write window start (pooled: 0, the slot is one whole beat)
+    reg  [5:0]        ro  [0:1][0:NR-1];      // read offset = the footprint's start position (emin mod 64)
     // descriptor pipeline: masked quads + factors (stage A), products + footprint (stage B), windows + pool checks
     // (stage C, written at the end of the descriptor's third edge: the tap puts the first data beat >= 3 edges behind
     // its descriptor on the head row)
@@ -605,9 +615,10 @@ module ot_qfd_xhead #(
         for (r = 0; r < NR; r = r + 1) emin[r] = dp_xb + dp_pr[r];
         pool_n = (dp_fm >= 64);
         pfault_n = (dp_fm >= 128);
+        // pooled: the pair reads the same quad (equal start) and its footprint fits beats W, W + 1 (start + fp <= 128)
         if (pool_n)
             for (r = 0; r < NH; r = r + 1)
-                if (emin[r] != emin[NH + NH - 1 - r] || emin[r][5:0] != 6'd0) pfault_n = 1'b1;
+                if (emin[r] != emin[NH + NH - 1 - r] || {1'b0, emin[r][5:0]} + dp_fm[7:0] >= 8'd128) pfault_n = 1'b1;
     end
     always @(posedge ck)
         if (dp_v) begin
@@ -615,7 +626,8 @@ module ot_qfd_xhead #(
             for (r = 0; r < NR; r = r + 1) begin
                 // pooled: the S tile of a pair holds beat W + 1
                 wb[dp_ep][r] <= emin[r][AW-1:6] + ((pool_n && r >= NH) ? 1'b1 : 1'b0);
-                wo[dp_ep][r] <= emin[r][5:0];
+                wo[dp_ep][r] <= pool_n ? 6'd0 : emin[r][5:0];
+                ro[dp_ep][r] <= emin[r][5:0];
             end
         end
 
@@ -641,7 +653,7 @@ module ot_qfd_xhead #(
         ctl = {(NH*18){1'b0}};
         for (r = 0; r < NR; r = r + 1) begin
             dd = {1'b0, fb} - {1'b0, wb[fep][r]};
-            ctl[18*(r >> 1) + 9*(r & 1) +: 9] = {
+            ctl[18*lf(r) + 9*tb(r) +: 9] = {
                 (dd == 0) || (dd == 1) || (dd == {(BW+1){1'b1}}),                       // en
                 (dd == {(BW+1){1'b1}}) ? 2'b10 : (dd == 1) ? 2'b01 : 2'b00,            // d = fb - W
                 wo[fep][r]};
@@ -682,6 +694,7 @@ module ot_qfd_xhead #(
     reg           f_pos;
     reg  [AW:0]   rel;
     reg  [5:0]    pos;
+    reg  [AW:0]   ab;
     reg  [NH*28-1:0] rp;
     reg  [NH-1:0] rv;
     reg  [NH-1:0] rt;
@@ -709,18 +722,20 @@ module ot_qfd_xhead #(
         // every index below is static (row r, element i): no runtime part-select
         for (r = 0; r < NR; r = r + 1)
             if (rd_now && ph_now == row_edge(r)) begin
-                rv[r >> 1] = 1'b1;
-                rt[r >> 1] = r & 1;
+                rv[lf(r)] = 1'b1;
+                rt[lf(r)] = tb(r);
                 for (i = 0; i < 4; i = i + 1) begin
                     if (!pool_now) begin
                         // own slot: position (wo + rel) mod 64; a footprint <= 64 keeps rel < 64
                         if (rel_i[i] >= 64) f_pos = 1'b1;
-                        pos = wo[rep_now][r] + rel_i[i][5:0];
-                        rp[28*(r >> 1) + 7*i +: 7] = {1'b1, pos};
+                        pos = ro[rep_now][r] + rel_i[i][5:0];
+                        rp[28*lf(r) + 7*i +: 7] = {1'b1, pos};
                     end else begin
-                        // pooled: the N tile (row < NH) holds rel 0 .. 63, the S tile rel 64 .. 127
-                        if (rel_i[i] >= 128) f_pos = 1'b1;
-                        rp[28*(r >> 1) + 7*i +: 7] = {(r < NH) ? !rel_i[i][6] : rel_i[i][6], rel_i[i][5:0]};
+                        // pooled: absolute position ro + rel: 0 .. 63 in the N tile's slot (beat W), 64 .. 127 in
+                        // the S tile's (beat W + 1)
+                        ab = {{(AW-5){1'b0}}, ro[rep_now][r]} + rel_i[i];
+                        if (ab >= 128) f_pos = 1'b1;
+                        rp[28*lf(r) + 7*i +: 7] = {(r < NH) ? !ab[6] : ab[6], ab[5:0]};
                     end
                 end
             end
@@ -749,14 +764,14 @@ module ot_qfd_xhead #(
         xn = 128'd0; xs = 128'd0; tn = 8'd0; ts = 8'd0; miss = 1'b0;
         qna = 64'd0; qnb = 64'd0; qsa = 64'd0; qsb = 64'd0;
         na = phd; nb = phd + NE; sa = NH - 1 - phd; sb = NE - 1 - phd;
-        // static selects: TDM edge e reads N rows e, e + NE and S rows NH + NH-1-e, NH + NE-1-e (leaf = row / 2)
+        // static selects: TDM edge e reads N rows e, e + NE and S rows NH + NH-1-e, NH + NE-1-e
         for (e = 0; e < NE; e = e + 1)
             if (phd == e) begin
-                qna = lqp[64*(e >> 1) +: 64];
-                qnb = lqp[64*((e + NE) >> 1) +: 64];
-                qsa = lqp[64*((NH + NH - 1 - e) >> 1) +: 64];
-                qsb = lqp[64*((NH + NE - 1 - e) >> 1) +: 64];
-                miss = !lqvp[e >> 1] || !lqvp[(e + NE) >> 1] || !lqvp[(NH + NH - 1 - e) >> 1] || !lqvp[(NH + NE - 1 - e) >> 1];
+                qna = lqp[64*lf(e) +: 64];
+                qnb = lqp[64*lf(e + NE) +: 64];
+                qsa = lqp[64*lf(NH + NH - 1 - e) +: 64];
+                qsb = lqp[64*lf(NH + NE - 1 - e) +: 64];
+                miss = !lqvp[lf(e)] || !lqvp[lf(e + NE)] || !lqvp[lf(NH + NH - 1 - e)] || !lqvp[lf(NH + NE - 1 - e)];
             end
         if (vd) begin
             if (pd) begin
