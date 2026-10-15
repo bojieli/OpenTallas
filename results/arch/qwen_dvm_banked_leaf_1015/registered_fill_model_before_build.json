@@ -53,7 +53,12 @@
   382.60836,
   379.83816
  ],
- "shared_write_comb_cells": 2772,
+ "shared_write_comb_cells_before": 3208,
+ "encapsulated_full_bank_modules": true,
+ "ABC_cross_bank_data_mask_sharing_allowed": false,
+ "capture_polarity_restoration_local": true,
+ "estimated_extra_mask_gate_instances": 3072,
+ "extra_mask_area_measured_um2": null,
  "minimum_bank_fence_um": [
   51.84,
   12.96
@@ -70,7 +75,7 @@
  "late_data_buffers_rebound_before_CTS": true,
  "actual_strip_cut_before": {
   "nets": 3811,
-  "available_tracks": 3070,
+  "available_tracks": 3066,
   "lower_bound_util": 1.243
  },
  "raw_input_hold_to_N_capture_cut_nets_before": 1096,

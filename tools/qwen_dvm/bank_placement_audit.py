@@ -46,10 +46,10 @@ if len(regions)!=8:
 # alone. Clock trees are deliberately excluded from a data locality test.
 region_by_key={int(r['name'].rsplit('_',1)[1]):r for r in regions}
 roots=defaultdict(list)
-for i in b.getInsts():
-    m=re.search(r'g_t\[([01])\].*g_bank\[([0-3])\].*result_q',i.getName().replace('\\',''))
-    if m and re.search('DFF|SDFF|LATCH',i.getMaster().getName()):
-        roots[int(m[1])*4+int(m[2])].append(i)
+for inst in b.getInsts():
+    m=re.search(r'g_t\[([01])\].*g_bank\[([0-3])\].*(?:result_q|u_bank/q)\[([0-9]+)\]',inst.getName().replace('\\',''))
+    if m and re.search('DFF|SDFF|LATCH',inst.getMaster().getName()):
+        roots[int(m[1])*4+int(m[2])].append(inst)
 cones=[]
 cone_owner={}
 for k,rr in sorted(roots.items()):
@@ -106,6 +106,8 @@ for net in b.getNets():
         net_points.append((net.getName(),points))
         nets.append((net.getName(),min(p[1] for p in points),max(p[1] for p in points)))
 
+routing_adjustment=float(os.environ.get("DVM_ROUTING_LAYER_ADJUSTMENT","0.25"))
+if not 0<=routing_adjustment<1:raise ValueError("invalid routing layer adjustment")
 cuts = []
 ordered_regions=sorted(regions,key=lambda r:r['box_um'][1])
 cut_ys=[(r['box_um'][1]+r['box_um'][3])/2 for r in ordered_regions]
@@ -145,11 +147,20 @@ for y_um in sorted(set(cut_ys)):
             if layer and layer.getName() in tracks:
                 obstruct(layer.getName(),xy.xMin(),xy.yMin(),xy.xMax(),xy.yMax())
     available=sum(len(xs)-len(blocked[l]) for l,xs in tracks.items())
+    derated_available=available*(1-routing_adjustment)
     cuts.append(dict(y_um=y_um, placed_net_crossing_lower_bound=len(crossing),
                      available_vertical_tracks=available,
                      blocked_tracks={l:len(blocked[l]) for l in tracks},
                      lower_bound_util=len(crossing)/available if available else None,
+                     derated_available_vertical_tracks=derated_available,
+                     lower_bound_util_derated=len(crossing)/derated_available if derated_available else None,
                      largest_names=crossing[:12]))
+
+# An admission screen requires explicit20% residual margin after the actual
+# platform routing adjustment. Actual global-route/via access still required.
+for c in cuts:
+    if c['lower_bound_util_derated'] is None or c['lower_bound_util_derated']>0.80:
+        fail.append(f"cut y={c['y_um']:.3f}: actual demand{c['placed_net_crossing_lower_bound']} lacks20% margin in derated track estimate")
 
 # Also screen both directions *inside each bank*. A whole-die cut alone
 # can hide a bank with too little horizontal routing capacity. These bbox
@@ -188,6 +199,11 @@ if pin_overlaps:
     fail.append(f'{len(pin_overlaps)} distinct signal pin box overlaps')
 result=dict(schema='opentallas.qwen.dvm.actual_bank_placement.v1',odb=os.environ['DVM_ODB'],
             die_um=[die.xMin()/dbu,die.yMin()/dbu,die.xMax()/dbu,die.yMax()/dbu],
+            routing_layer_adjustment=routing_adjustment,
+            adjustment_source='Actual ORFS ASAP7 platform config.mk default0.25; override must match run config',
+            clock_pin_boxes=[dict(pin=p[0],layer=p[1],box_um=[v/dbu for v in p[2:]]) for p in pins if p[0] in ('clk','ck')],
+            actual_cell_area_um2=sum(i.getMaster().getWidth()*i.getMaster().getHeight()/dbu**2 for i in b.getInsts()),
+            actual_flop_count=sum(bool(re.search('DFF|SDFF|LATCH',i.getMaster().getName())) for i in b.getInsts()),
             regions=regions,placed_data_cones=cones,local_bank_cuts=local_cuts,horizontal_tracks={l:len(ys) for l,ys in horizontal_tracks.items()},tracks={l:len(xs) for l,xs in tracks.items()},cuts=cuts,
             pin_box_count=len(pins),pin_overlaps=pin_overlaps[:50],
             placement_screen_pass=not fail,fail=fail,route_admitted=False,

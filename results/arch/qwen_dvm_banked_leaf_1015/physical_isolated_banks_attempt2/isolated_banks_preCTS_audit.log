@@ -1,0 +1,11 @@
+ot-run: ot-epyc4       admits   561 GB (avail 787, growth 92, headroom 48, waiters 0/0 GB) load 40/128 running 19 disk 465 GB 
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-1700756-1792059180 after 1 s
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[WARNING ORD-0039] .openroad ignored with -python
+{"placement_screen_pass": true, "fail": [], "tracks": {"M3": 1800, "M5": 1350}, "pin_box_count": 2463, "route_admitted": false}
+swig/python detected a memory leak of type 'odb::Rect *', no destructor found.
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-1700756-1792059180): exit 0

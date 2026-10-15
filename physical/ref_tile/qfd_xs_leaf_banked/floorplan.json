@@ -1,19 +1,19 @@
 {
  "schema": "opentallas.ref_tile.floorplan.v1",
  "name": "qfd_xs_leaf_banked",
- "top": "ot_qfd_xs_leaf",
+ "top": "qfd_xs_leaf_banked",
  "kind": "tile",
  "die": [
   0,
   0,
   64.8,
-  149.04
+  162.0
  ],
  "core": [
   2.16,
   2.16,
   62.64,
-  146.88
+  159.84
  ],
  "why": "spec outline (exact: the closed view's sub-slot)",
  "std_area_um2": null,
@@ -69,7 +69,9 @@
  "referenced": [
   "rtl/qwen_sys/dvm_20261014/ot_qfd_xslice.sv",
   "rtl/hdc/ot_hdc_delay.sv",
+  "physical/ref_tile/qfd_xs_leaf_banked/rebind_before_cts.tcl",
   "physical/ref_tile/qfd_xs_leaf_banked/local_banks.tcl",
+  "physical/ref_tile/qfd_xs_leaf_banked/fill_restore_local.tcl",
   "physical/ref_tile/qfd_xs_leaf_banked/kit.env",
   "physical/ref_tile/qfd_xs_leaf_banked/clock.sdc",
   "physical/ref_tile/qfd_xs_leaf_banked/signoff.sdc",

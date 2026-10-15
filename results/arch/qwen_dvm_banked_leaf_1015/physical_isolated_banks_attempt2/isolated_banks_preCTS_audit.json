@@ -1,0 +1,662 @@
+{
+ "schema": "opentallas.qwen.dvm.actual_bank_placement.v1",
+ "odb": "/work/qroot_preCTS_check.odb",
+ "die_um": [
+  0.0,
+  0.0,
+  64.8,
+  162.0
+ ],
+ "routing_layer_adjustment": 0.25,
+ "adjustment_source": "Actual ORFS ASAP7 platform config.mk default0.25; override must match run config",
+ "clock_pin_boxes": [
+  {
+   "pin": "clk",
+   "layer": "M4",
+   "box_um": [
+    0.0,
+    80.976,
+    0.084,
+    81.0
+   ]
+  }
+ ],
+ "actual_cell_area_um2": 5250.2142600023335,
+ "actual_flop_count": 7114,
+ "regions": [
+  {
+   "name": "dvm_local_bank_0",
+   "box_um": [
+    6.48,
+    24.84,
+    58.32,
+    37.8
+   ],
+   "cells": 3236,
+   "cell_area_um2": 405.48438,
+   "outside": []
+  },
+  {
+   "name": "dvm_local_bank_1",
+   "box_um": [
+    6.48,
+    38.88,
+    58.32,
+    51.84
+   ],
+   "cells": 3190,
+   "cell_area_um2": 402.9183,
+   "outside": []
+  },
+  {
+   "name": "dvm_local_bank_2",
+   "box_um": [
+    6.48,
+    52.92,
+    58.32,
+    65.88
+   ],
+   "cells": 3206,
+   "cell_area_um2": 403.85142,
+   "outside": []
+  },
+  {
+   "name": "dvm_local_bank_3",
+   "box_um": [
+    6.48,
+    66.96,
+    58.32,
+    79.92
+   ],
+   "cells": 3186,
+   "cell_area_um2": 402.0435,
+   "outside": []
+  },
+  {
+   "name": "dvm_local_bank_4",
+   "box_um": [
+    6.48,
+    81.0,
+    58.32,
+    93.96
+   ],
+   "cells": 3242,
+   "cell_area_um2": 405.9801,
+   "outside": []
+  },
+  {
+   "name": "dvm_local_bank_5",
+   "box_um": [
+    6.48,
+    95.04,
+    58.32,
+    108.0
+   ],
+   "cells": 3197,
+   "cell_area_um2": 403.95348,
+   "outside": []
+  },
+  {
+   "name": "dvm_local_bank_6",
+   "box_um": [
+    6.48,
+    109.08,
+    58.32,
+    122.04
+   ],
+   "cells": 3213,
+   "cell_area_um2": 404.25966,
+   "outside": []
+  },
+  {
+   "name": "dvm_local_bank_7",
+   "box_um": [
+    6.48,
+    123.12,
+    58.32,
+    136.08
+   ],
+   "cells": 3196,
+   "cell_area_um2": 403.31196,
+   "outside": []
+  }
+ ],
+ "placed_data_cones": [
+  {
+   "bank": 0,
+   "roots": 17,
+   "actual_cone_cells": 1681,
+   "outside": [],
+   "shared": []
+  },
+  {
+   "bank": 1,
+   "roots": 17,
+   "actual_cone_cells": 1687,
+   "outside": [],
+   "shared": []
+  },
+  {
+   "bank": 2,
+   "roots": 17,
+   "actual_cone_cells": 1684,
+   "outside": [],
+   "shared": []
+  },
+  {
+   "bank": 3,
+   "roots": 17,
+   "actual_cone_cells": 1684,
+   "outside": [],
+   "shared": []
+  },
+  {
+   "bank": 4,
+   "roots": 17,
+   "actual_cone_cells": 1682,
+   "outside": [],
+   "shared": []
+  },
+  {
+   "bank": 5,
+   "roots": 17,
+   "actual_cone_cells": 1684,
+   "outside": [],
+   "shared": []
+  },
+  {
+   "bank": 6,
+   "roots": 17,
+   "actual_cone_cells": 1690,
+   "outside": [],
+   "shared": []
+  },
+  {
+   "bank": 7,
+   "roots": 17,
+   "actual_cone_cells": 1686,
+   "outside": [],
+   "shared": []
+  }
+ ],
+ "local_bank_cuts": [
+  {
+   "bank": "dvm_local_bank_0",
+   "vertical_cut_horizontal_tracks_raw": 607,
+   "vertical_cut_bbox_demand": 406,
+   "horizontal_cut_vertical_tracks_raw": 2520,
+   "horizontal_cut_bbox_demand": 714,
+   "vertical_cut_bbox_util": 0.6688632619439868,
+   "horizontal_cut_bbox_util": 0.2833333333333333
+  },
+  {
+   "bank": "dvm_local_bank_1",
+   "vertical_cut_horizontal_tracks_raw": 607,
+   "vertical_cut_bbox_demand": 372,
+   "horizontal_cut_vertical_tracks_raw": 2520,
+   "horizontal_cut_bbox_demand": 800,
+   "vertical_cut_bbox_util": 0.6128500823723229,
+   "horizontal_cut_bbox_util": 0.31746031746031744
+  },
+  {
+   "bank": "dvm_local_bank_2",
+   "vertical_cut_horizontal_tracks_raw": 607,
+   "vertical_cut_bbox_demand": 445,
+   "horizontal_cut_vertical_tracks_raw": 2520,
+   "horizontal_cut_bbox_demand": 807,
+   "vertical_cut_bbox_util": 0.7331136738056013,
+   "horizontal_cut_bbox_util": 0.3202380952380952
+  },
+  {
+   "bank": "dvm_local_bank_3",
+   "vertical_cut_horizontal_tracks_raw": 607,
+   "vertical_cut_bbox_demand": 386,
+   "horizontal_cut_vertical_tracks_raw": 2520,
+   "horizontal_cut_bbox_demand": 838,
+   "vertical_cut_bbox_util": 0.6359143327841845,
+   "horizontal_cut_bbox_util": 0.3325396825396825
+  },
+  {
+   "bank": "dvm_local_bank_4",
+   "vertical_cut_horizontal_tracks_raw": 607,
+   "vertical_cut_bbox_demand": 452,
+   "horizontal_cut_vertical_tracks_raw": 2520,
+   "horizontal_cut_bbox_demand": 901,
+   "vertical_cut_bbox_util": 0.7446457990115322,
+   "horizontal_cut_bbox_util": 0.35753968253968255
+  },
+  {
+   "bank": "dvm_local_bank_5",
+   "vertical_cut_horizontal_tracks_raw": 607,
+   "vertical_cut_bbox_demand": 405,
+   "horizontal_cut_vertical_tracks_raw": 2520,
+   "horizontal_cut_bbox_demand": 874,
+   "vertical_cut_bbox_util": 0.6672158154859967,
+   "horizontal_cut_bbox_util": 0.3468253968253968
+  },
+  {
+   "bank": "dvm_local_bank_6",
+   "vertical_cut_horizontal_tracks_raw": 607,
+   "vertical_cut_bbox_demand": 430,
+   "horizontal_cut_vertical_tracks_raw": 2520,
+   "horizontal_cut_bbox_demand": 867,
+   "vertical_cut_bbox_util": 0.7084019769357496,
+   "horizontal_cut_bbox_util": 0.34404761904761905
+  },
+  {
+   "bank": "dvm_local_bank_7",
+   "vertical_cut_horizontal_tracks_raw": 607,
+   "vertical_cut_bbox_demand": 383,
+   "horizontal_cut_vertical_tracks_raw": 2520,
+   "horizontal_cut_bbox_demand": 873,
+   "vertical_cut_bbox_util": 0.6309719934102141,
+   "horizontal_cut_bbox_util": 0.3464285714285714
+  }
+ ],
+ "horizontal_tracks": {
+  "M2": 4199,
+  "M4": 3375
+ },
+ "tracks": {
+  "M3": 1800,
+  "M5": 1350
+ },
+ "cuts": [
+  {
+   "y_um": 31.32,
+   "placed_net_crossing_lower_bound": 1687,
+   "available_vertical_tracks": 3054,
+   "blocked_tracks": {
+    "M3": 36,
+    "M5": 60
+   },
+   "lower_bound_util": 0.5523903077930583,
+   "derated_available_vertical_tracks": 2290.5,
+   "lower_bound_util_derated": 0.7365204103907443,
+   "largest_names": [
+    "_0001_",
+    "_0002_",
+    "_0003_",
+    "_0004_",
+    "_0192_",
+    "_0193_",
+    "_0194_",
+    "_0200_",
+    "_0202_",
+    "_0209_",
+    "_0213_",
+    "_0216_"
+   ]
+  },
+  {
+   "y_um": 38.34,
+   "placed_net_crossing_lower_bound": 1405,
+   "available_vertical_tracks": 3054,
+   "blocked_tracks": {
+    "M3": 36,
+    "M5": 60
+   },
+   "lower_bound_util": 0.46005239030779305,
+   "derated_available_vertical_tracks": 2290.5,
+   "lower_bound_util_derated": 0.6134031870770574,
+   "largest_names": [
+    "_0001_",
+    "_0002_",
+    "_0003_",
+    "_0004_",
+    "_0192_",
+    "_0193_",
+    "_0200_",
+    "_0202_",
+    "_0209_",
+    "_0213_",
+    "_0216_",
+    "_0218_"
+   ]
+  },
+  {
+   "y_um": 45.36,
+   "placed_net_crossing_lower_bound": 1602,
+   "available_vertical_tracks": 3054,
+   "blocked_tracks": {
+    "M3": 36,
+    "M5": 60
+   },
+   "lower_bound_util": 0.5245579567779961,
+   "derated_available_vertical_tracks": 2290.5,
+   "lower_bound_util_derated": 0.6994106090373281,
+   "largest_names": [
+    "_0001_",
+    "_0002_",
+    "_0003_",
+    "_0004_",
+    "_0192_",
+    "_0209_",
+    "_0267_",
+    "_0276_",
+    "_0277_",
+    "_0278_",
+    "_0279_",
+    "_0280_"
+   ]
+  },
+  {
+   "y_um": 52.38,
+   "placed_net_crossing_lower_bound": 1325,
+   "available_vertical_tracks": 3054,
+   "blocked_tracks": {
+    "M3": 36,
+    "M5": 60
+   },
+   "lower_bound_util": 0.4338572364112639,
+   "derated_available_vertical_tracks": 2290.5,
+   "lower_bound_util_derated": 0.5784763152150185,
+   "largest_names": [
+    "_0001_",
+    "_0002_",
+    "_0003_",
+    "_0004_",
+    "_0267_",
+    "_0276_",
+    "_0277_",
+    "_0278_",
+    "_0279_",
+    "_0280_",
+    "_0281_",
+    "_0282_"
+   ]
+  },
+  {
+   "y_um": 59.4,
+   "placed_net_crossing_lower_bound": 1581,
+   "available_vertical_tracks": 3054,
+   "blocked_tracks": {
+    "M3": 36,
+    "M5": 60
+   },
+   "lower_bound_util": 0.5176817288801572,
+   "derated_available_vertical_tracks": 2290.5,
+   "lower_bound_util_derated": 0.6902423051735429,
+   "largest_names": [
+    "_0001_",
+    "_0002_",
+    "_0003_",
+    "_0004_",
+    "_0071_",
+    "_0072_",
+    "_0267_",
+    "_0281_",
+    "_0282_",
+    "_0283_",
+    "_0284_",
+    "_0285_"
+   ]
+  },
+  {
+   "y_um": 66.41999999999999,
+   "placed_net_crossing_lower_bound": 1326,
+   "available_vertical_tracks": 3054,
+   "blocked_tracks": {
+    "M3": 36,
+    "M5": 60
+   },
+   "lower_bound_util": 0.43418467583497056,
+   "derated_available_vertical_tracks": 2290.5,
+   "lower_bound_util_derated": 0.5789129011132941,
+   "largest_names": [
+    "_0074_",
+    "_0105_",
+    "_0267_",
+    "_0282_",
+    "_0285_",
+    "_0286_",
+    "_0287_",
+    "_0288_",
+    "_0289_",
+    "_0290_",
+    "_0291_",
+    "_0292_"
+   ]
+  },
+  {
+   "y_um": 73.44,
+   "placed_net_crossing_lower_bound": 1549,
+   "available_vertical_tracks": 3054,
+   "blocked_tracks": {
+    "M3": 36,
+    "M5": 60
+   },
+   "lower_bound_util": 0.5072036673215455,
+   "derated_available_vertical_tracks": 2290.5,
+   "lower_bound_util_derated": 0.6762715564287274,
+   "largest_names": [
+    "_0061_",
+    "_0075_",
+    "_0076_",
+    "_0267_",
+    "_0282_",
+    "_0286_",
+    "_0287_",
+    "_0288_",
+    "_0289_",
+    "_0290_",
+    "_0291_",
+    "_0292_"
+   ]
+  },
+  {
+   "y_um": 80.46000000000001,
+   "placed_net_crossing_lower_bound": 1251,
+   "available_vertical_tracks": 3054,
+   "blocked_tracks": {
+    "M3": 36,
+    "M5": 60
+   },
+   "lower_bound_util": 0.40962671905697445,
+   "derated_available_vertical_tracks": 2290.5,
+   "lower_bound_util_derated": 0.5461689587426326,
+   "largest_names": [
+    "_0267_",
+    "_0289_",
+    "_0290_",
+    "_0291_",
+    "_0292_",
+    "_0293_",
+    "_0294_",
+    "_0316_",
+    "_0317_",
+    "_0318_",
+    "_0319_",
+    "_0320_"
+   ]
+  },
+  {
+   "y_um": 87.47999999999999,
+   "placed_net_crossing_lower_bound": 1566,
+   "available_vertical_tracks": 3054,
+   "blocked_tracks": {
+    "M3": 36,
+    "M5": 60
+   },
+   "lower_bound_util": 0.5127701375245579,
+   "derated_available_vertical_tracks": 2290.5,
+   "lower_bound_util_derated": 0.6836935166994106,
+   "largest_names": [
+    "_0009_",
+    "_0010_",
+    "_0099_",
+    "_0267_",
+    "_0290_",
+    "_0294_",
+    "_0316_",
+    "_0317_",
+    "_0318_",
+    "_0319_",
+    "_0324_",
+    "_0327_"
+   ]
+  },
+  {
+   "y_um": 94.5,
+   "placed_net_crossing_lower_bound": 1232,
+   "available_vertical_tracks": 3054,
+   "blocked_tracks": {
+    "M3": 36,
+    "M5": 60
+   },
+   "lower_bound_util": 0.4034053700065488,
+   "derated_available_vertical_tracks": 2290.5,
+   "lower_bound_util_derated": 0.5378738266753984,
+   "largest_names": [
+    "_0007_",
+    "_0084_",
+    "_0100_",
+    "_0115_",
+    "_0116_",
+    "_0117_",
+    "_0267_",
+    "_0316_",
+    "_2569_",
+    "_2685_",
+    "_2760_",
+    "_2815_"
+   ]
+  },
+  {
+   "y_um": 101.52000000000001,
+   "placed_net_crossing_lower_bound": 1525,
+   "available_vertical_tracks": 3054,
+   "blocked_tracks": {
+    "M3": 36,
+    "M5": 60
+   },
+   "lower_bound_util": 0.4993451211525868,
+   "derated_available_vertical_tracks": 2290.5,
+   "lower_bound_util_derated": 0.6657934948701157,
+   "largest_names": [
+    "_0163_",
+    "_0268_",
+    "_2551_",
+    "_2606_",
+    "net8455",
+    "net8454",
+    "net8453",
+    "net8452",
+    "net8451",
+    "net8450",
+    "net8449",
+    "net8448"
+   ]
+  },
+  {
+   "y_um": 108.53999999999999,
+   "placed_net_crossing_lower_bound": 1220,
+   "available_vertical_tracks": 3054,
+   "blocked_tracks": {
+    "M3": 36,
+    "M5": 60
+   },
+   "lower_bound_util": 0.3994760969220694,
+   "derated_available_vertical_tracks": 2290.5,
+   "lower_bound_util_derated": 0.5326347958960925,
+   "largest_names": [
+    "net8455",
+    "net8454",
+    "net8453",
+    "net8452",
+    "net8451",
+    "net8450",
+    "net8449",
+    "net8448",
+    "net8447",
+    "net8446",
+    "net8445",
+    "net8444"
+   ]
+  },
+  {
+   "y_um": 115.56,
+   "placed_net_crossing_lower_bound": 1484,
+   "available_vertical_tracks": 3054,
+   "blocked_tracks": {
+    "M3": 36,
+    "M5": 60
+   },
+   "lower_bound_util": 0.4859201047806156,
+   "derated_available_vertical_tracks": 2290.5,
+   "lower_bound_util_derated": 0.6478934730408208,
+   "largest_names": [
+    "net8455",
+    "net8454",
+    "net8453",
+    "net8452",
+    "net8451",
+    "net8450",
+    "net8449",
+    "net8448",
+    "net8447",
+    "net8446",
+    "net8445",
+    "net8444"
+   ]
+  },
+  {
+   "y_um": 122.58000000000001,
+   "placed_net_crossing_lower_bound": 1191,
+   "available_vertical_tracks": 3054,
+   "blocked_tracks": {
+    "M3": 36,
+    "M5": 60
+   },
+   "lower_bound_util": 0.3899803536345776,
+   "derated_available_vertical_tracks": 2290.5,
+   "lower_bound_util_derated": 0.5199738048461034,
+   "largest_names": [
+    "net8455",
+    "net8454",
+    "net8453",
+    "net8452",
+    "net8451",
+    "net8450",
+    "net8449",
+    "net8448",
+    "net8447",
+    "net8446",
+    "net8445",
+    "net8444"
+   ]
+  },
+  {
+   "y_um": 129.60000000000002,
+   "placed_net_crossing_lower_bound": 1472,
+   "available_vertical_tracks": 3054,
+   "blocked_tracks": {
+    "M3": 36,
+    "M5": 60
+   },
+   "lower_bound_util": 0.4819908316961362,
+   "derated_available_vertical_tracks": 2290.5,
+   "lower_bound_util_derated": 0.6426544422615149,
+   "largest_names": [
+    "net8455",
+    "net8454",
+    "net8453",
+    "net8452",
+    "net8451",
+    "net8450",
+    "net8449",
+    "net8448",
+    "net8447",
+    "net8446",
+    "net8445",
+    "net8444"
+   ]
+  }
+ ],
+ "pin_box_count": 2463,
+ "pin_overlaps": [],
+ "placement_screen_pass": true,
+ "fail": [],
+ "route_admitted": false,
+ "limits": "Actual placed cut demand is a lower bound; detailed via access and actual global-route congestion remain required. No routed OBS/export qualification."
+}

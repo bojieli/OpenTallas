@@ -1,0 +1,27 @@
+ot-run: ot-agidock128  admits    40 GB (avail 74, growth 12, headroom 24, waiters 0/0 GB) load 5/64 running 3 disk 23 GB 
+ot-run: -> ot-agidock128
+ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-3891612-1792058779 after 0 s
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[WARNING ORD-0039] .openroad ignored with -python
+NET u_leaf.g_t\[0\].g_banked.g_bank\[0\].u_bank/result_q\[0\] [('u_leaf.g_t\\[0\\].g_banked.g_bank\\[0\\].u_bank/_6293_', 'A'), ('u_leaf.g_t\\[0\\].g_banked.g_bank\\[0\\].u_bank/_6103_', 'Y')]
+NET u_leaf.g_t\[0\].g_banked.g_bank\[0\].u_bank/result_q\[10\] [('u_leaf.g_t\\[0\\].g_banked.g_bank\\[0\\].u_bank/_6303_', 'A'), ('u_leaf.g_t\\[0\\].g_banked.g_bank\\[0\\].u_bank/_6113_', 'Y')]
+NET u_leaf.g_t\[0\].g_banked.g_bank\[0\].u_bank/result_q\[11\] [('u_leaf.g_t\\[0\\].g_banked.g_bank\\[0\\].u_bank/_6304_', 'A'), ('u_leaf.g_t\\[0\\].g_banked.g_bank\\[0\\].u_bank/_6114_', 'Y')]
+NET u_leaf.g_t\[0\].g_banked.g_bank\[0\].u_bank/result_q\[12\] [('u_leaf.g_t\\[0\\].g_banked.g_bank\\[0\\].u_bank/_6305_', 'A'), ('u_leaf.g_t\\[0\\].g_banked.g_bank\\[0\\].u_bank/_6115_', 'Y')]
+NET u_leaf.g_t\[0\].g_banked.g_bank\[0\].u_bank/result_q\[13\] [('u_leaf.g_t\\[0\\].g_banked.g_bank\\[0\\].u_bank/_6306_', 'A'), ('u_leaf.g_t\\[0\\].g_banked.g_bank\\[0\\].u_bank/_6116_', 'Y')]
+NET u_leaf.g_t\[0\].g_banked.g_bank\[0\].u_bank/result_q\[14\] [('u_leaf.g_t\\[0\\].g_banked.g_bank\\[0\\].u_bank/_6307_', 'A'), ('u_leaf.g_t\\[0\\].g_banked.g_bank\\[0\\].u_bank/_6117_', 'Y')]
+INST u_leaf.g_t\[0\].g_banked.bank_sel\[0\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R
+INST u_leaf.g_t\[0\].g_banked.bank_sel\[1\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R
+INST u_leaf.g_t\[0\].g_banked.bank_sel_q\[0\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R
+INST u_leaf.g_t\[0\].g_banked.bank_sel_q\[1\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R
+INST u_leaf.g_t\[0\].g_banked.g_bank\[0\].u_bank/_3410_ INVx1_ASAP7_75t_R
+INST u_leaf.g_t\[0\].g_banked.g_bank\[0\].u_bank/_3411_ INVx1_ASAP7_75t_R
+INST u_leaf.g_t\[0\].g_banked.g_bank\[0\].u_bank/_3412_ BUFx2_ASAP7_75t_R
+INST u_leaf.g_t\[0\].g_banked.g_bank\[0\].u_bank/_3413_ INVx1_ASAP7_75t_R
+INST u_leaf.g_t\[0\].g_banked.g_bank\[0\].u_bank/_3414_ BUFx2_ASAP7_75t_R
+INST u_leaf.g_t\[0\].g_banked.g_bank\[0\].u_bank/_3415_ BUFx6f_ASAP7_75t_R
+INST u_leaf.g_t\[0\].g_banked.g_bank\[0\].u_bank/_3416_ INVx1_ASAP7_75t_R
+INST u_leaf.g_t\[0\].g_banked.g_bank\[0\].u_bank/_3417_ BUFx2_ASAP7_75t_R
+ot-run: RAN on ot-agidock128 (unit oth-ubuntu-3891612-1792058779): exit 0

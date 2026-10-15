@@ -1,0 +1,12 @@
+ot-run: ot-epyc1tb     admits   348 GB (avail 575, growth 123, headroom 64, waiters 0/0 GB) load 41/128 running 17 disk 977 GB 
+ot-run: ot-epyc4       admits   555 GB (avail 781, growth 101, headroom 48, waiters 0/0 GB) load 44/128 running 24 disk 487 GB 
+ot-run: ot-pve1        skipped: load hold: load1 > 1.5 x cores
+ot-run: ot-agidock128  skipped: load hold: load1 > 1.5 x cores
+ot-run: -> ot-epyc1tb
+ot-heavy: admitted on ot-epyc1tb as oth-ubuntu-814467-1792058130 after 0 s
+PASS banked leaf checks=129 good=128 invalid=1 added_read_edges=1 same_tile_II=8
+- rtl/qwen_sys/dvm_20261014/tb_qfd_xs_leaf_banked.sv:59: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 1us; walltime 0.001 s; speed 1.310 ms/s
+- Verilator: cpu 0.001 s on 1 threads; allocated 7 MB
+ot-run: RAN on ot-epyc1tb (unit oth-ubuntu-814467-1792058130): exit 0

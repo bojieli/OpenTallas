@@ -395,6 +395,7 @@ module ot_qfd_xs_leaf #(
     wire [2:0]  asm_e [0:1];                            // enabled of elements 0 .. 2
     wire [1:0]  l_en;                                   // element 3 enabled
     wire [1:0]  coll;                                   // a request for a tile whose read is in flight
+    wire [135:0] bank_result_all;
     wire [2176*2-1:0] mem_all;                          // {valid, data} of every entry, tile 0 then tile 1
     genvar gt, ge, lv, c;
     generate for (gt = 0; gt < 2; gt = gt + 1) begin : g_t
@@ -454,30 +455,18 @@ module ot_qfd_xs_leaf #(
             ot_qfd_xs_mux_rep #(.W(17), .LN(7), .SW(RSW)) u_m (.d(mem_all[2176*SRC +: 2176]), .s(sr), .q(tr[gt]));
             assign asv=sv; assign ael=el; assign aen=hp[7*el+6];
         end else begin : g_banked
-            // Each bank's32 storage entries, replicated low selects, mux and17b
-            // result register form one physical locality group. Admission needs
-            // actual placement/cut proof; hierarchy alone does not guarantee it.
-            localparam integer BSW=ot_qfd_xs_mux_rep_sw(17,5);
+            // Complete local modules keep data masking beside storage. ABC
+            // must not share masked512b data planes across distant banks.
             wire [67:0] bank_q;
-            genvar bk, bl, bc;
+            genvar bk;
             for(bk=0;bk<4;bk=bk+1)begin : g_bank
-                wire [BSW-1:0] bs;
-                wire [16:0] comb_q;
-                for(bl=0;bl<5;bl=bl+1)begin : g_lv
-                    localparam integer NR=ot_qfd_xs_nrep(17,5,bl);
-                    localparam integer OF=ot_qfd_xs_soff(17,5,bl);
-                    for(bc=0;bc<NR;bc=bc+1)begin : g_c
-                        (* keep *) reg f;
-                        always @(posedge clk) f<=nsel[bl];
-                        assign bs[OF+bc]=f;
-                    end
-                end
-                ot_qfd_xs_mux_rep #(.W(17),.LN(5),.SW(BSW)) u_local
-                    (.d(mem_all[2176*SRC+544*bk+:544]),.s(bs),.q(comb_q));
-                (* keep *) reg [16:0] result_q;
-                always @(posedge clk)result_q<=comb_q;
-                assign bank_q[17*bk+:17]=result_q;
+                ot_qfd_xs_local_bank #(.BANK(bk)) u_bank (
+                    .clk(clk),.wv(wv),.wep(wep),.woff(woff),
+                    .wm(wm[32*(bk%2)+:32]),.wd(wd[512*(bk%2)+:512]),
+                    .cv(cv),.cep(cep),.en(en),.dd(dd),.wo(wo),
+                    .r_sel(nsel[4:0]),.q(bank_q[17*bk+:17]));
             end
+            assign bank_result_all[68*gt+:68]=bank_q;
             reg [1:0] bank_sel, bank_sel_q;
             reg vq, enq;
             reg [1:0] elq;
@@ -488,7 +477,7 @@ module ot_qfd_xs_leaf #(
             always @(posedge clk or negedge rst_n)
                 if(!rst_n)vq<=0;else vq<=sv;
             ot_qfd_xs_mux_rep #(.W(17),.LN(2),.SW(2)) u_final
-                (.d(bank_q),.s(bank_sel_q),.q(tr[gt]));
+                (.d(bank_result_all[68*SRC+:68]),.s(bank_sel_q),.q(tr[gt]));
             assign asv=vq;assign ael=elq;assign aen=enq;
         end
         // assembly of elements 0 .. 2 (element 3 goes straight to the answer register)
@@ -527,6 +516,46 @@ module ot_qfd_xs_leaf #(
 endmodule
 
 
+
+// Synthesis boundary for one real32-entry {valid,BF16} bank. Keep this
+// hierarchy through ABC, then flatten into the hardened leaf for placement.
+(* keep_hierarchy = "yes" *) module ot_qfd_xs_local_bank #(parameter integer BANK=0)(
+    input wire clk,wv,wep,cv,cep,en,
+    input wire [5:0] woff,wo,
+    input wire [1:0] dd,
+    input wire [31:0] wm,
+    input wire [511:0] wd,
+    input wire [4:0] r_sel,
+    output wire [16:0] q
+);
+    wire [543:0] entries;
+    genvar e,lv,c;
+    generate for(e=0;e<32;e=e+1)begin:g_e
+        localparam integer EP=(BANK%2)*32+e,EE=BANK/2;
+        wire tf=(EP>=woff),tw=(EP>=wo);
+        wire cond=(dd==0)?(tf==tw):(dd==1)?(tf&&!tw):(dd==2)?(!tf&&tw):1'b0;
+        wire we=wv&&(wep==EE)&&en&&cond&&wm[e];
+        reg [15:0] m;
+        reg v;
+        always @(posedge clk)if(we)m<=wd[16*e+:16];
+        always @(posedge clk)if(cv&&cep==EE)v<=0;else if(we)v<=1;
+        assign entries[17*e+:17]={v,m};
+    end endgenerate
+    wire [5:0] select_q;
+    generate for(lv=0;lv<5;lv=lv+1)begin:g_lv
+        localparam integer NR=(lv==0)?2:1,OF=(lv==0)?0:lv+1;
+        for(c=0;c<NR;c=c+1)begin:g_c
+            (* keep *) reg f;
+            always @(posedge clk)f<=r_sel[lv];
+            assign select_q[OF+c]=f;
+        end
+    end endgenerate
+    wire [16:0] comb_q;
+    ot_qfd_xs_mux_rep #(.W(17),.LN(5),.SW(6)) u_local(.d(entries),.s(select_q),.q(comb_q));
+    (* keep *) reg [16:0] result_q;
+    always @(posedge clk)result_q<=comb_q;
+    assign q=result_q;
+endmodule
 
 // Fixed production candidate master: no runtime/parent parameter overrides.
 // Qualified only with its own physical view and compiler+clock profile.
