@@ -33,5 +33,14 @@
     "Full parent consumer/calendar integration",
     "Canonical immutable-price throughput composition"
   ],
-  "policy": "833.333ps signoff /770ps route unchanged; no runtime flow or price relaxation"
+  "policy": "833.333ps signoff /770ps route unchanged; no runtime flow or price relaxation",
+  "P_convention": {
+    "bench_sk": "one based serial counter incremented at edge; drive fc at edge+10ps",
+    "P": "zero based serial edge where last element is actually sampled at leaf pin; equals bench drive sk numerically because drive uses prior edge then next sample",
+    "PIPE0": "leaf postNBA at P+1; x34 bank write at P+2",
+    "PIPE1": "leaf postNBA at P+2; x34 bank write at P+3",
+    "stream": "zero based output edge 4*floor(q/3)+2+q%3, q=x34 serial bank write zero based; bench tk is one based, +1",
+    "trace": "LEAF_POST/STREAM_POST printed +1ps after actual edge; sample/bank exact edge"
+  },
+  "edge_witness": "results/rtl/s81_vm_static_capl_1015/pipe_edge_trace/receipt.json"
 }
