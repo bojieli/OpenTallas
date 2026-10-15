@@ -21,7 +21,11 @@ module tb_hgi_hc_prefetch_direct_static;
  reg [255:0] image[0:61439];reg pending[0:127][0:7];integer delay_q[0:127][0:7];
  reg [16:0] tag_q[0:127][0:7];reg [255:0] data_q[0:127][0:7];
  reg injected=0;reg [16:0] oldest_tag[0:127];reg have_oldest[0:127];
- integer fault_mode=BADTAG;
+ integer fault_mode=BADTAG;reg request_stalls=0;integer hcycle=0;
+ always @(posedge hbm_clk)hcycle=hcycle+1;
+ always @(negedge hbm_clk)if(request_stalls)begin
+  for(integer p=0;p<128;p=p+1)k_rdy[p]=(hcycle+p)%5!=0;
+ end
  integer run_period=PERIOD;integer requests=0,responses=0,checked=0,stream_cycles=0,last_ap_commit=0;
  string image_path;
  ot_hgi_hc_prefetch_direct_static #(.MUT(MUT),.MAX_OUTSTANDING(MAX_OUTSTANDING)) dut(.*);
@@ -84,6 +88,7 @@ module tb_hgi_hc_prefetch_direct_static;
   integer row,t,b,q,pos,r,start_cycle,relative_commit;reg [255:0] expected;
   if($value$plusargs("PERIOD=%d",run_period))begin end
   if($value$plusargs("FAULT=%d",fault_mode))begin end
+  request_stalls=$test$plusargs("STALL");
   if(!$value$plusargs("IMAGE=%s",image_path))$fatal(1,"IMAGE required");$readmemh(image_path,image);
   for(integer i=0;i<128;i=i+1)begin have_oldest[i]=0;oldest_tag[i]=0;for(integer os=0;os<8;os=os+1)begin pending[i][os]=0;delay_q[i][os]=0;end end
   idle(4);stream_rst_n=1;hbm_rst_n=1;idle(12);

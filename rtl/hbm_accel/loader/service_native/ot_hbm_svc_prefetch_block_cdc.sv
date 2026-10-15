@@ -54,7 +54,7 @@ module ot_hbm_svc_prefetch_block_cdc #(parameter [1:0] STACK=0, parameter intege
  reg [15:0] owner_epoch[0:31][0:MAX_OUTSTANDING-1];
  reg owner_bank[0:31][0:MAX_OUTSTANDING-1];
  reg [16:0] next_tag;
- integer request_slot[0:ISSUE_WIDTH-1];reg tag_collision[0:ISSUE_WIDTH-1];
+ integer request_slot[0:ISSUE_WIDTH-1];reg tag_collision[0:ISSUE_WIDTH-1],request_duplicate[0:ISSUE_WIDTH-1];
  reg [11:0] request_sequence[0:ISSUE_WIDTH-1],request_ordinal[0:ISSUE_WIDTH-1];
  reg [29:0] request_sector[0:ISSUE_WIDTH-1];reg [4:0] request_pc[0:ISSUE_WIDTH-1];
  reg [16:0] request_tag[0:ISSUE_WIDTH-1];
@@ -69,6 +69,9 @@ module ot_hbm_svc_prefetch_block_cdc #(parameter [1:0] STACK=0, parameter intege
    request_sequence[rq]=h_next+12'(rq);
    request_ordinal[rq]=ISSUE_INTERLEAVE?{request_sequence[rq][11:6],request_sequence[rq][3:0],request_sequence[rq][5:4]}:request_sequence[rq];
    request_sector[rq]=h_base+request_ordinal[rq];request_pc[rq]=pc_of(request_sector[rq]);
+   request_duplicate[rq]=0;
+   for(integer prev=0;prev<ISSUE_WIDTH;prev=prev+1)
+    if(prev<rq&&request_pc[prev]==request_pc[rq])request_duplicate[rq]=1;
    request_tag[rq]=MAX_OUTSTANDING==1?{h_bank,h_epoch}:next_tag+17'(rq);
    request_slot[rq]=-1;tag_collision[rq]=0;
    for(integer os=0;os<MAX_OUTSTANDING;os=os+1)begin
@@ -87,9 +90,9 @@ module ot_hbm_svc_prefetch_block_cdc #(parameter [1:0] STACK=0, parameter intege
  always @*begin
   k_v=0;k_addr=0;request_tags=0;issue_count=0;issue_prefix=1;
   // Only a contiguous accepted prefix advances h_next. All candidates have
-  //distinctPCs under the64-sector transpose. Variable k_rdy is PHY-local only.
+  //distinctPCs, including partial-prefix tile crossings. Variable k_rdy is PHY-local only.
   for(integer rq=0;rq<ISSUE_WIDTH;rq=rq+1)begin
-   if(h_active&&request_sequence[rq]<h_total&&request_slot[rq]>=0&&!tag_collision[rq]&&!hbm_fault&&issue_prefix)begin
+   if(h_active&&request_sequence[rq]<h_total&&request_slot[rq]>=0&&!tag_collision[rq]&&!request_duplicate[rq]&&!hbm_fault&&issue_prefix)begin
     k_v[request_pc[rq]]=1;k_addr[30*request_pc[rq]+:30]=request_sector[rq];
     request_tags[17*request_pc[rq]+:17]=request_tag[rq];
     if(k_rdy[request_pc[rq]])issue_count=issue_count+1;else issue_prefix=0;
