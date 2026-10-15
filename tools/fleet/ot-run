@@ -62,9 +62,19 @@ def ratio(r, threads):
     return (r.get("load1", 0) + THREADS * r.get("fresh", 0) + threads) / r["ncpu"]
 
 
+def physically_capable(row, mem):
+    """Do not queue a request on a host that cannot admit it even when idle.
+
+    Unknown totals retain compatibility with older probes; remote admission
+    remains authoritative. Both existing headroom rules still apply.
+    """
+    total = row.get("total_gb")
+    return total is None or mem <= total - max(row.get("headroom_gb", 0), row.get("floor_gb", 0))
+
+
 def choose(res, mem, threads=THREADS):
     """res: host -> --free row (hosts that qualify by disk/dir only).  Returns (host, will_queue)."""
-    ok = {h: r for h, r in res.items() if r and not r.get("error") and r.get("ncpu")}
+    ok = {h: r for h, r in res.items() if r and not r.get("error") and r.get("ncpu") and physically_capable(r, mem)}
     if not ok:
         return None, False
     fits = [h for h in ok if ok[h].get("admit_gb", ok[h]["free_gb"]) >= mem]
@@ -212,7 +222,7 @@ def main():
     while True:
         with cf.ThreadPoolExecutor(len(hosts)) as ex:
             res = dict(ex.map(lambda h: probe(h, d), hosts))
-        live = {h: r for h, r in res.items() if r and not r.get("error") and r.get("ncpu") and r["disk_gb"] >= disk}
+        live = {h: r for h, r in res.items() if r and not r.get("error") and r.get("ncpu") and r["disk_gb"] >= disk and physically_capable(r, mem)}
         # A host that cannot admit this request cannot release the CPU hold:
         # otherwise an idle, memory-full EPYC filters out a loaded PVE that
         # actually has memory, then choose() queues on the full EPYC forever.
@@ -241,6 +251,8 @@ def main():
     ok = {}
     for h, r in res.items():
         note = "no " + str(d) if r is None else r.get("error") or ("disk %d GB < %d" % (r["disk_gb"], disk) if r["disk_gb"] < disk else "")
+        if r and not r.get("error") and not physically_capable(r, mem):
+            note = "request %d GB exceeds physical RAM after mandatory headroom" % mem
         if r and not r.get("error"):
             print(f"ot-run: {h:14s} admits {r.get('admit_gb', r['free_gb']):5d} GB (avail {r['avail_gb']}, growth {r['growth_gb']}, headroom "
                   f"{r['headroom_gb']}, waiters {r['waiting']}/{r['waiting_gb']} GB) load {r.get('load1', 0):.0f}/{r.get('ncpu', 0)} "
