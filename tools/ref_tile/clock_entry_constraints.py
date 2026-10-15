@@ -489,6 +489,55 @@ ot_ce_apply
 
 
 LEAF_OWNERSHIP = r'''
+# Prove constants from actual OpenDB connectivity and loaded Liberty functions.
+# Timing-graph constant pruning, case analysis and port/cell names are not proofs.
+# Every loaded corner of the actual master must agree on a literal or one-input
+# (possibly inverted) function; unsupported logic remains an ownership error.
+proc ot_ce_constant_net {net seen remaining} {
+  if {$remaining <= 0 || $net in {"" NULL}} {return 0}
+  foreach port [$net getBTerms] {if {[$port getIoType] ne "OUTPUT"} {return 0}}
+  set drivers {}
+  foreach pin [$net getITerms] {if {[$pin isOutputSignal]} {lappend drivers $pin}}
+  if {[llength $drivers] != 1} {return 0}
+  return [ot_ce_constant_iterm [lindex $drivers 0] $seen $remaining]
+}
+proc ot_ce_constant_iterm {pin seen remaining} {
+  if {$remaining <= 0 || ![$pin isOutputSignal]} {return 0}
+  set inst [$pin getInst];set name "[$inst getName]/[[$pin getMTerm] getName]"
+  if {[dict exists $seen $name]} {return 0}
+  dict set seen $name 1
+  set master [[$inst getMaster] getName];set output [[$pin getMTerm] getName]
+  set functions {};set matched 0
+  foreach library [get_libs -quiet *] {
+    set cell [$library find_liberty_cell $master]
+    if {$cell in {"" NULL}} continue
+    set lp [$cell find_liberty_port $output]
+    if {$lp in {"" NULL} || [sta::liberty_port_direction $lp] ne "output"} {return 0}
+    dict set functions [string map {" " "" "\t" "" "\n" ""} [$lp function]] 1
+    incr matched
+  }
+  if {!$matched || [dict size $functions] != 1} {return 0}
+  set function [lindex [dict keys $functions] 0]
+  if {$function in {0 1}} {return 1}
+  if {![regexp {^!?([A-Za-z_][A-Za-z0-9_]*)$} $function -> input]} {return 0}
+  set pin [$inst findITerm $input]
+  if {$pin in {"" NULL} || ![$pin isInputSignal]} {return 0}
+  return [ot_ce_constant_net [$pin getNet] $seen [expr {$remaining-1}]]
+}
+proc ot_ce_constant_cone {start seen} {
+  set block [ord::get_db_block]
+  if {[sta::object_type $start] eq "Port" || ([sta::object_type $start] eq "Pin" && [$start is_top_level_port])} {
+    set port [$block findBTerm [get_full_name $start]]
+    if {$port in {"" NULL} || [$port getIoType] ne "OUTPUT"} {return 0}
+    return [ot_ce_constant_net [$port getNet] $seen 64]
+  }
+  if {[sta::object_type $start] ne "Pin"} {return 0}
+  set inst [$block findInst [get_full_name [$start instance]]]
+  if {$inst in {"" NULL}} {return 0}
+  set pin [$inst findITerm [get_property $start lib_pin_name]]
+  if {$pin in {"" NULL}} {return 0}
+  return [ot_ce_constant_iterm $pin $seen 64]
+}
 # A multi-root leaf contains independent synchronous datapaths. Domain declarations
 # are checked against the real synthesized timing graph, not trusted as metadata.
 proc ot_ce_leaf_ownership {inputs outputs} {
@@ -533,6 +582,10 @@ proc ot_ce_leaf_ownership {inputs outputs} {
       } else {
         set source [get_full_name [get_cells -quiet -of_objects $start]]
         if {![dict exists $cells $source]} {
+          if {[ot_ce_constant_cone $start {}]} {
+            puts "OT_MULTI_ROOT LIBERTY_CONSTANT [get_full_name $start] -> [get_full_name $pin]"
+            continue
+          }
           error "OT_MULTI_ROOT: unowned data path $source -> $cell"
         }
         set source_domain [dict get $cells $source]
@@ -545,8 +598,19 @@ proc ot_ce_leaf_ownership {inputs outputs} {
   }
   dict for {name domain} $outputs {
     foreach start [get_fanin -flat -startpoints_only -to [get_ports $name]] {
+      if {[sta::object_type $start] eq "Pin" && [$start is_top_level_port]} {
+        if {[ot_ce_constant_cone $start {}]} {
+          puts "OT_MULTI_ROOT LIBERTY_CONSTANT [get_full_name $start] -> $name"
+          continue
+        }
+        error "OT_MULTI_ROOT: output $name has wrong or unregistered source domain [get_full_name $start]"
+      }
       set source [get_full_name [get_cells -quiet -of_objects $start]]
       if {![dict exists $cells $source] || [dict get $cells $source] ne $domain} {
+        if {![dict exists $cells $source] && [ot_ce_constant_cone $start {}]} {
+          puts "OT_MULTI_ROOT LIBERTY_CONSTANT [get_full_name $start] -> $name"
+          continue
+        }
         error "OT_MULTI_ROOT: output $name has wrong or unregistered source domain $source"
       }
     }

@@ -131,8 +131,13 @@ class Physical(unittest.TestCase):
                     'DFFASRHQNx1_ASAP7_75t_R r0 (.CLK(ck_req),.D(req),.RESETN(rst_n),.SETN(1\'b1),.QN(q0));')
                 cells=cells.replace('DFFHQNx1_ASAP7_75t_R s0 (.CLK(ck_rsp),.D(rsp),.QN(z0));',
                     'DFFASRHQNx1_ASAP7_75t_R s0 (.CLK(ck_rsp),.D('+('rst_n' if mutant=='async_reset_data' else 'rsp')+'),.RESETN(rst_n),.SETN(1\'b1),.QN(z0));')
+            constant_case=mutant in ('constant','constant_nonconstant','constant_case_analysis')
+            if constant_case:
+                source='req' if mutant!='constant' else 'tie_zero'
+                cells+='\nTIELOx1_ASAP7_75t_R arbitrary_name(.L(tie_zero));\n'
+                cells+=f'BUFx2_ASAP7_75t_R preserved_buffer(.A({source}),.Y(zo));\n'
             extra=',rst_n' if mutant in ('async_reset','async_reset_data') else ''
-            (w/'t.v').write_text('module top(input ck_req,ck_rsp,req,rsp'+extra+',output qo,zo);\n'+cells+'\nassign qo=q0;assign zo=z0;endmodule\n')
+            (w/'t.v').write_text('module top(input ck_req,ck_rsp,req,rsp'+extra+',output qo,zo);\n'+cells+'\nassign qo=q0;'+('' if constant_case else 'assign zo=z0;')+'endmodule\n')
             (w/'clocks.tcl').write_text(CE.clocks(s,s['route'].get('period_ps',833.333)))
             (w/'entry.tcl').write_text('set ::ot_ce_require_wire 1\n'+CE.generate(s,ROOT))
             flow=r'''
@@ -184,10 +189,13 @@ $tap setLocation 10000 90000
 $tap setPlacementStatus FIRM
 if {"NULL" ni [get_lib_cells -of_objects [get_cells physical_tap]]} {error "fixture missing actual LEF-only cell"}
 '''+f'source /src/{kd}/pre_cts.tcl',1)
+            if mutant=='constant_case_analysis':
+                flow=flow.replace('source /w/entry.tcl','set_case_analysis 0 [get_ports req]\nsource /w/entry.tcl',1)
             if mutant=='extra_alias':
                 flow=flow.replace('source /w/entry.tcl','create_clock -name unexpected_alias -period 833.333\nsource /w/entry.tcl',1)
             if mutant=='related_cut':
                 flow=flow.replace('source /w/entry.tcl','set_false_path -from [get_clocks ot_entry_0] -to [get_clocks ot_entry_1]\nsource /w/entry.tcl',1)
+            flow='try {\n'+flow+'\n} on error {message options} {puts stderr [dict get $options -errorinfo];exit 1}\n'
             (w/'run.tcl').write_text(flow)
             p=subprocess.run(['docker','run','--rm','-v',f'{w}:/w','-v',f'{ROOT}:/src:ro','-v',f'{w}:/src/{kd}:ro',IMAGE,OR,'-no_init','-exit','/w/run.tcl'],capture_output=True,text=True,timeout=60)
             output=p.stdout+p.stderr
@@ -211,6 +219,13 @@ if {"NULL" ni [get_lib_cells -of_objects [get_cells physical_tap]]} {error "fixt
                 self.assertEqual(len(periods),4)
                 for period in periods:self.assertAlmostEqual(period,1111.111,places=3)
             return p.returncode,output
+    def test_actual_liberty_constant_output_and_nonconstant_mutants(self):
+        rc,out=self.run_flow('constant',generated=True);self.assertEqual(rc,0,out[-8000:])
+        self.assertIn('LIBERTY_CONSTANT',out)
+        for mutant in ('constant_nonconstant','constant_case_analysis'):
+            rc,out=self.run_flow(mutant);self.assertNotEqual(rc,0,out[-5000:])
+            self.assertIn('wrong or unregistered source domain',out)
+
     def test_actual_serial_profile_hooks_and_numeric_io(self):
         rc,out=self.run_flow('serial',generated=True);self.assertEqual(rc,0,out[-8000:])
         self.assertIn('OWNERSHIP PASS roots=2 registers=20',out)
