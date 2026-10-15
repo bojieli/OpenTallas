@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """Production core lockstep vs the original parameterized flop buffer tiles.
 
-The native DUT contains the real 36 macro models. The reference substitutes
+The native DUT contains actual macro models; count is profile-dependent.
+The fully split canonical profile has44 SRAMs (8AQ+4QB+32IX). The reference substitutes
 only unchanged IX/QB tiles; control, quantisers, ROM model and external twelve
 group count stimulus are shared. This gate covers core integration, separately
 from the storage adversarial gates and the still-required physical die gates.

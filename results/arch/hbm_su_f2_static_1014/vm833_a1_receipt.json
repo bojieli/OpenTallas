@@ -1,0 +1,63 @@
+{
+ "schema": "opentallas.hbm.vm833_a1_receipt.v1",
+ "generated": "2026-10-15 05:40 PDT",
+ "question": "owner 10-14 21:35 (a1): run the VM slices at 833 ps instead of 1,111; first measure SRAM bank access at 833, add one bank edge if it misses",
+ "sram": {
+  "macro": "ot_sram_1r1w_1024x256_m2_r2c2",
+  "tt_lib_min_period_ps": 527.166,
+  "tt_clk_to_rd_out_ps": [
+   544.8,
+   628.5
+  ],
+  "tt_setup_ps_range": [
+   -3.2,
+   107.0
+  ],
+  "source": "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_tt.lib"
+ },
+ "measured_bank_closures": [
+  {
+   "job": "vms_bank-v04-98ae25577-h",
+   "block": "ot_vms_bank (B2, 3 macros, SECDED)",
+   "route_period_ps": 770.0,
+   "tt_setup_ps": 48.63,
+   "ff_hold_ps": 8.59,
+   "status": "CLOSED",
+   "source": "results/rtl/ref_tile/vms_bank/vms_bank-v04-98ae25577/corner_sta.json"
+  },
+  {
+   "job": "vms_bank-v08-bb49c6813",
+   "block": "ot_vms_bank (B2 v08)",
+   "route_period_ps": 770.0,
+   "tt_setup_ps": 4.13,
+   "ff_hold_ps": 3.86,
+   "status": "CLOSED",
+   "source": "results/rtl/ref_tile/vms_bank/vms_bank-v08-bb49c6813/corner_sta.json"
+  }
+ ],
+ "static_successor": {
+  "rtl": "rtl/hbm_accel/generic/vm/static/ot_vms_bank_static.sv",
+  "latency": "read input n -> response n+6 (macro pin n+2, capture n+4), write commit n+3; II 1, 1 read + 1 write sector per bank per edge",
+  "die_clock": "results/arch/hbm_die_v15/source_contract/contract.json: every hb_vms_* clk_bank/clk_hub/clk_ring/clk_replay root sources hb_ckgen.pll_stream (833.333 ps); die PLL domains stream/serial/hbm/link only (no VM 1,111 domain); static slice has no C/V CDC crossers",
+  "cts_gates_833": [
+   {
+    "kit": "vms_bank_static_rg5wg1_1015",
+    "verdict": "WARN (util only)",
+    "tt_insertion_ps": 600.0,
+    "spread_ps": 143.2
+   },
+   {
+    "kit": "vms_bank_static_rg7wg3_1015",
+    "verdict": "WARN (util only)",
+    "tt_insertion_ps": 634.7,
+    "spread_ps": 84.2,
+    "pre_route_reg_to_reg_ps": -71.0,
+    "pre_route_in_to_reg_ps": -54.2,
+    "note": "bank.flt DFFE / rq_v reset recovery: logic + reset, not the SRAM read path"
+   }
+  ],
+  "transport_proof": "f545eb913 / 6fe48a464: actual 32 banks / 96 SRAM, 16,384 sectors / 131,072 words, sustained 32 sectors per engine edge read and write, wrong-bank mutant FAIL"
+ },
+ "verdict": "SRAM access FITS 833 with the registered macro pin + capture the bank already has (closed B2 bank at 770 ps TT +48.63 / +4.13): no extra bank pipeline edge. (a1) is realised by construction in the static VM (pll_stream, no CDC); the 1,111-ps B2 slice tiles are historical credit RTL. Open (owner h_vm): static bank route closure at 833 (rg7wg3 pre-route -71.0 reg->reg, -54.2 reset recovery; insertion 600-635 ps > 300 needs split/measured waiver).",
+ "qualification": false
+}

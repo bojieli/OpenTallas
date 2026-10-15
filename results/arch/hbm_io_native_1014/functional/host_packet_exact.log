@@ -1,0 +1,6 @@
+ot-run: ot-epyc1tb     admits   301 GB (avail 528, growth 54, headroom 64, waiters 0/0 GB) load 46/128 running 16 disk 168 GB 
+ot-run: -> ot-epyc1tb
+ot-heavy: admitted on ot-epyc1tb as oth-ubuntu-3451730-1792036219 after 0 s
+HBM_HOST_PACKET_PASS checks1536 transactions256 source_exact_ports73 bits787
+rtl/hbm_accel/io_native_20261014/tb_hbm_host_packet.sv:206: $finish called at 24390000 (1ps)
+ot-run: RAN on ot-epyc1tb (unit oth-ubuntu-3451730-1792036219): exit 0
