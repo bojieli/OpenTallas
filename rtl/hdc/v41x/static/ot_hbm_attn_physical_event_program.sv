@@ -11,7 +11,7 @@ module ot_hbm_attn_physical_event_program(
  reg[9:0]pc,last;reg[1:0]profile;wire[255:0]word;
  ot_sram_1r1w_1024x256_m2_r2c2 u_program(.clk(clk),.r_ce_in(running),.r_addr_in(pc),.rd_out(word),
   .w_ce_in(program_we),.w_addr_in(program_addr),.wd_in({228'd0,program_events}),.w_mask_in({256{1'b1}}),
-  .rr_en(2'b00),.rr_addr(18'd0),.cr_en(2'b00),.cr_sel(20'd0));
+  .rr_en(2'b00),.rr_addr(18'd0),.cr_en(2'b00),.cr_sel(16'd0));
  assign events=valid?word[profile*7+:7]:7'd0;
  always @(posedge clk or negedge rst_n)if(!rst_n)begin pc<=0;last<=0;phase<=0;valid<=0;running<=0;fault<=0;profile<=0;end
  else begin
