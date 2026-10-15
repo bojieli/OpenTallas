@@ -74,10 +74,10 @@ module s81_static_collective_slab #(
    if(!rst_n)rr<=0;else rr<={rr[0],1'b1};
   assign rn_control[root]=rr[1];
  end endgenerate
- wire[1:0]controller_status;wire busy;wire transport_fault,channel_fault,raw_fault,reduce_fault,assemble_fault;
+ wire[1:0]controller_status;wire busy;wire transport_fault,channel_fault,raw_fault,reduce_fault,assemble_fault,host_queue_fault;
  wire boundary_fault;
  wire pack_bad;
- wire datapath_fault=transport_fault|channel_fault|raw_fault|reduce_fault|assemble_fault|boundary_fault;
+ wire datapath_fault=transport_fault|channel_fault|raw_fault|reduce_fault|assemble_fault|boundary_fault|host_queue_fault;
  s81_static_calendar_controller #(.ROM_FILE(ROM_FILE),.CYCLES(CYCLES)) calendar(
  .clk(ck_control[0]),.rst_n(rn_control[0]),.c_cmd(c_cmd),.c_done(c_done),.c_st(controller_status),
  .datapath_fault(datapath_fault),.busy(busy),
@@ -188,11 +188,19 @@ module s81_static_collective_slab #(
  .rx_payload_row(raw_rx_payload_row),.rx_meta_row(raw_rx_meta_row),.rx_tag(raw_rx_tag),
  .vm_write_sources(raw_sources),.fault(raw_fault));
  wire[515:0]host_rx;
+ // S-BIND r6 2026-10-15: static host face. The host's completions are single-edge pulses; this queue (adapter clock,
+ // where the channel samples the host word) holds them for the compiled host tx slot. No credit, no ready.
+ reg host_slot;
+ always @* begin host_slot=1'b0; for(integer h=0;h<5;h=h+1)if(channel_tx_slot[h]&&channel_tx_kind[h*2+:2]==2'd2)host_slot=1'b1; end
+ wire host_tx_valid_q;wire[10:0]host_status_q;wire[64:0]host_completion_q;
+ s81_static_host_queue #(.DEPTH(16),.MUT(MUT)) host_queue(.clk(ck_control[3]),.rst_n(rn_control[3]),.f_host(f_host),
+  .slot(host_slot),.host_tx_valid(host_tx_valid_q),.host_status(host_status_q),.host_completion(host_completion_q),
+  .fault(host_queue_fault));
  s81_static_fmt1_channels_clocked #(.LOCAL_RESET_SYNC(1)) channels(
  .clk_adapter(ck_control[3]),.clk_lane(ck_lane[7:3]),.rst_n(rn_control[3]),
  .tx_slot(channel_tx_slot),.rx_slot(channel_rx_slot),.tx_kind(channel_tx_kind),.rx_kind(channel_rx_kind),
  .vm_tx_last(vm_tx_last),.vm_tx_valid(vm_tx_valid),.vm_tx_channel(vm_tx_channel),.vm_tx_payload(vm_tx_payload),
- .wfc_tx(f_wfc),.host_tx_valid(f_host[76]),.host_status(f_host[75:65]),.host_completion(f_host[64:0]),
+ .wfc_tx(f_wfc),.host_tx_valid(host_tx_valid_q),.host_status(host_status_q),.host_completion(host_completion_q),
  .vm_rx_last(vm_rx_last),.vm_rx_valid(vm_rx_valid),.vm_rx_channel(vm_rx_channel),.vm_rx_payload(vm_rx_payload),
  .wfc_rx(t_wfc),.host_rx(host_rx),.tx_seq(channel_tx_seq),
  .rx_expected_seq(channel_rx_seq),.rx_expected_last(channel_rx_last),

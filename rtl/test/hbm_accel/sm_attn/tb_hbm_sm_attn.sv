@@ -11,6 +11,7 @@ module tb_hbm_sm_attn;
     parameter integer PVMUT = 0;
     parameter integer LV = 4;
     parameter integer NCOL = 1;
+    parameter integer NATIVE = 0;
     reg clk = 0, rst_n = 0;
     always #0.5 clk = ~clk;
     reg [1087:0] lines [0:8191];
@@ -38,10 +39,21 @@ module tb_hbm_sm_attn;
     generate for (cc = 0; cc < NCOL; cc = cc + 1) begin : g_col
         for (q = 0; q < 4; q = q + 1) begin : g_c
             localparam integer I = 4 * cc + q;
+            if (NATIVE != 0) begin : g_native
+                ot_hbm_sm_attn_native_col #(.TAGW(16), .LV(LV), .MUT(PVMUT)) u_c (
+                    .clk(clk), .rst_n(rst_n), .i_v(c_v), .i_first(c_first),
+                    .i_qk_last(c_last && !c_tag[15]), .i_pv_last(c_last && c_tag[15]),
+                    .i_run_first(c_tag[14]), .i_run_last(c_tag[13]), .i_tag(c_tag),
+                    .i_w(c_w[256*q +: 256]), .i_x(c_x[1024*cc + 256*q +: 256]),
+                    .ov(ov[I]), .y(y[32*I +: 32]), .otag(otag[16*I +: 16]),
+                    .pv_v(pvv[I]), .pv_y(pvy[512*I +: 512]), .pv_tag(pvt[16*I +: 16]), .fault(cf[I]),
+                    .pub_start(1'b0), .pub_slot(3'd0), .pub_v(), .pub_data(), .pub_word(), .pub_out_slot(), .pub_tag());
+            end else begin : g_flat
             ot_hbm_sm_tcpv_col #(.L(16), .IL(8), .TAGW(16), .ALAT(7), .LV(LV), .MUT(PVMUT)) u_c (.clk(clk), .rst_n(rst_n),
                 .v(c_v), .first(c_first), .last(c_last), .tag(c_tag), .w(c_w[256*q +: 256]), .x(c_x[1024*cc + 256*q +: 256]),
                 .ov(ov[I]), .y(y[32*I +: 32]), .otag(otag[16*I +: 16]), .pv_v(pvv[I]), .pv_y(pvy[512*I +: 512]),
                 .pv_tag(pvt[16*I +: 16]), .fault(cf[I]));
+            end
         end
         // the SM back end's 4-leaf combine (QK at head dim 512; bypassed at head dim 128)
         ot_gpu_tree #(.N(4), .TAGW(16), .ALAT(7)) u_be (.clk(clk), .rst_n(rst_n), .v(ov[4*cc]), .d(y[128*cc +: 128]),

@@ -37,7 +37,7 @@ SRC = ["rtl/hdc/ot_hdc_prefix.sv", "rtl/gpu/ot_gpu_fadd.sv", "rtl/hdc/ot_hdc_fp3
        "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v",
        "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v",
        "rtl/hbm_accel/sm/attn/ot_hbm_sm_kv_line.sv", "rtl/hbm_accel/sm/attn/ot_hbm_sm_attn_issue.sv",
-       "rtl/hbm_accel/sm/attn/ot_hbm_sm_tcpv_col.sv", "rtl/test/hbm_accel/sm_attn/tb_hbm_sm_attn.sv"]
+       "rtl/hbm_accel/sm/attn/ot_hbm_sm_pv_merge.sv", "rtl/hbm_accel/sm/attn/ot_hbm_sm_tcpv_col.sv", "rtl/test/hbm_accel/sm_attn/tb_hbm_sm_attn.sv"]
 
 
 def bits32(a):
@@ -266,15 +266,19 @@ def qwen_vectors(rec, op, d):
     return write_vec(d, name, lines, xs, QW_G)
 
 
-def build(work, kvmut, pvmut, ncol=1):
-    obj = work / f"obj_kv{kvmut}_pv{pvmut}_c{ncol}"
+def build(work, kvmut, pvmut, ncol=1, native=False):
+    obj = work / f"obj_kv{kvmut}_pv{pvmut}_c{ncol}_n{int(native)}"
     exe = obj / "Vtb_hbm_sm_attn"
     if exe.exists():
         return exe
     vl = os.environ.get("VERILATOR") or next((c for c in (os.path.expanduser("~/.local/opentallas-tools/verilator-5.050/bin/verilator"),) if os.path.exists(c)), "verilator")
     cmd = [vl, "--binary", "-j", "16", "-O3", "--x-assign", "fast", "-Wno-fatal", "-Wno-lint", "-Wno-style",
            "-Wno-TIMESCALEMOD", "-Wno-MULTIDRIVEN", "--unroll-count", "128", "--top-module", "tb_hbm_sm_attn",
-           f"-GKVMUT={kvmut}", f"-GPVMUT={pvmut}", f"-GNCOL={ncol}", "--Mdir", str(obj)] + [str(ROOT / s) for s in SRC]
+           f"-GKVMUT={kvmut}", f"-GPVMUT={pvmut}", f"-GNCOL={ncol}", f"-GNATIVE={int(native)}", "--Mdir", str(obj)] + [str(ROOT / s) for s in SRC]
+    if native:
+        cmd += ["-DOT_SMH_HIER", str(ROOT / "rtl/hbm_accel/sm/ot_hbm_accel_smh_bd.sv"),
+                str(ROOT / "rtl/hbm_accel/sm/ot_hbm_accel_smh.sv"),
+                str(ROOT / "rtl/hbm_accel/sm/attn/ot_hbm_sm_attn_native_col.sv")]
     r = subprocess.run(cmd, capture_output=True, text=True)
     (work / f"build_kv{kvmut}_pv{pvmut}.log").write_text(r.stdout + r.stderr)
     if r.returncode != 0:
@@ -358,6 +362,7 @@ def main(argv=None):
     sub = ap.add_subparsers(dest="cmd", required=True)
     p = sub.add_parser("run")
     p.add_argument("--shape", choices=["ds640", "ds128", "qwen8192"], default="ds640")
+    p.add_argument("--native-column", action="store_true", help="reuse actual hardened tcl/tct arithmetic with the separate PV merge leaf")
     p.add_argument("--seed", type=int, default=1015)
     p.add_argument("--mut", default="")
     p.add_argument("--work", required=True)
@@ -378,14 +383,16 @@ def main(argv=None):
         ops, nrun = plan(rec, a.shape)
     if a.only:
         ops = [o for o in ops if any(o[0].startswith(x) for x in a.only.split(","))]
+    if not ops:
+        ap.error("--only matched no operations; an empty run cannot qualify a component")
     kvm = int(a.mut[2:]) if a.mut.startswith("kv") else 0
     pvm = int(a.mut[2:]) if a.mut.startswith("pv") else 0
-    exe = build(work, kvm, pvm, QW_G if a.shape == "qwen8192" else 1)
+    exe = build(work, kvm, pvm, QW_G if a.shape == "qwen8192" else 1, a.native_column)
     vec = work / f"vec_{a.shape}_{a.mut or 'm0'}"
     vec.mkdir(exist_ok=True)
     with cf.ThreadPoolExecutor(a.jobs) as ex:
         res = list(ex.map(lambda o: run_op(exe, rec, o, vec), ops))
-    summary = dict(shape=a.shape, seed=a.seed, mut=a.mut or None, T_window=T8, T_compressed=T4, pv_run_chunks=nrun,
+    summary = dict(shape=a.shape, native_column=a.native_column, seed=a.seed, mut=a.mut or None, T_window=T8, T_compressed=T4, pv_run_chunks=nrun,
                    ops=len(res), passed=sum(r["pass"] for r in res), wall_s=round(time.time() - t0, 1))
     pv = [r for r in res if r["kind"] == "pv"]
     if pv and all(r["pass"] for r in pv) and not a.only:

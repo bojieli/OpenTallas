@@ -70,6 +70,9 @@ def prepare(out, read_pipeline=1, cap_pipeline=1):
             if vec=='clocks':c+=len(paths)
             else:r+=len(paths)
     assert (c,r)==(621+72*bool(read_pipeline),545+72*bool(read_pipeline)),(c,r)
+    inactive_read = set() if read_pipeline else {'ck_read_data_t','ck_read_valid_t','rss_read_data_t','rss_read_valid_t'}
+    actual_clock_reset = {n for n in mod.ports if n.startswith(('ck_', 'rss_', 'rst_'))}
+    assert set(mapping) | inactive_read == actual_clock_reset, (sorted(actual_clock_reset-set(mapping)-inactive_read), sorted(set(mapping)-actual_clock_reset))
     for port,(direction,_) in mod.ports.items():
         if direction=='input' and port not in mapping:
             width=mod.width(port,env);cons.append(f'.{port}({width}\'d0)')
@@ -92,7 +95,7 @@ end
 endmodule
 '''
     out.mkdir(parents=True,exist_ok=False);(out/'tb_vm_native_clock_pins.sv').write_text(tb)
-    (out/'mapping.json').write_text(json.dumps({'source_sha256':hashlib.sha256(text.encode()).hexdigest(),'clocks':c,'raw_reset_pins':r,'cap_rn_distribution':'16synchronous lane rn pins remain driven by existing cap-control rq2; physicalreset delivery unqualified','categories':mapping},indent=2)+'\n')
+    (out/'mapping.json').write_text(json.dumps({'source_sha256':hashlib.sha256(text.encode()).hexdigest(),'read_pipeline':read_pipeline,'cap_pipeline':cap_pipeline,'clocks':c,'scope':'Independent raw root connectivity only; no CTS, sink-count, related-clock timing, or reset-function qualification.','raw_reset_pins':r,'cap_rn_distribution':'16synchronous lane rn pins remain driven by existing cap-control rq2; physicalreset delivery unqualified','categories':mapping},indent=2)+'\n')
 
 if __name__=='__main__':
     ap=argparse.ArgumentParser();ap.add_argument('--out',type=Path,required=True);ap.add_argument('--read-pipe',type=int,choices=[0,1,2,4],default=4);ap.add_argument('--cap-pipe',type=int,choices=[0,1,2],default=2);a=ap.parse_args();prepare(a.out,a.read_pipe,a.cap_pipe)
