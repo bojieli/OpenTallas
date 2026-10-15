@@ -1,0 +1,37 @@
+{
+  "status": "PASS local160 codec unit only",
+  "native_SRAMs": 18,
+  "source_metadata": "declared unit input from exact checkpoint receipt; actual native producer join separate",
+  "packets": 160,
+  "NOPs": 40,
+  "sectors": 216,
+  "decoded_blocks": 192,
+  "runs": [
+    {
+      "mutant": 0,
+      "output": "SLOT_CODEC_PASS mut0 nativeSRAM18 packets160 NOP40 sectors216 blocks192 BF166144 complete1\n/tmp/hcoll-engram-slot-codec-1015/tb.sv:135: $finish called at 11500000 (1ps)"
+    },
+    {
+      "mutant": 1,
+      "output": "SLOT_CODEC_PASS mut1 nativeSRAM18 packets160 NOP40 sectors216 blocks192 BF166144 complete1\n/tmp/hcoll-engram-slot-codec-1015/tb.sv:135: $finish called at 11500000 (1ps)"
+    },
+    {
+      "mutant": 2,
+      "output": "SLOT_CODEC_PASS mut2 nativeSRAM18 packets160 NOP40 sectors216 blocks192 BF166144 complete1\n/tmp/hcoll-engram-slot-codec-1015/tb.sv:135: $finish called at 11500000 (1ps)"
+    },
+    {
+      "mutant": 3,
+      "output": "SLOT_CODEC_PASS mut3 nativeSRAM18 packets160 NOP40 sectors216 blocks192 BF166144 complete0\n/tmp/hcoll-engram-slot-codec-1015/tb.sv:135: $finish called at 11500000 (1ps)"
+    }
+  ],
+  "source_sha256": {
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": "dba769863f502de28853a78ac30544a406c7cb66fd3249019ef9fa5a5b73e36e",
+    "rtl/hdc/v41/ot_hdc_engram_tables_shipped_pkg.sv": "743063fbfc402bda039919cfe0de959980ac5f1fa3999474503dc70060342989",
+    "rtl/hdc/v41/ot_hdc_engram_gather.sv": "2edd7582a38629ebd662f68eff7eb88c5f90d88c689157cbbe2acf5d5a2099ed",
+    "rtl/hbm_accel/engram_static_20261015/ot_hbm_engram_row_store_decode.sv": "e450c13fee2e85d1c5099f225875af1914075ba7154894c5b50659e46505df2d",
+    "rtl/hbm_accel/generic/collective/p2p/ot_hcoll_engram_slot_transport.sv": "effb72897087699be344a31bcae12651d5235ad6fa5c09ac2654612f73cf23ea"
+  },
+  "native_hash_controller_join": false,
+  "native_endpoint_network_join": false,
+  "physical_qualified": false
+}
