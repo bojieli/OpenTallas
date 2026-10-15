@@ -1,0 +1,55 @@
+{
+  "qualified": false,
+  "scope": "actual fixed issuer/PW endpoint and actual pairedROM reader components; no production arithmetic/operand/calendar qualification",
+  "canonical_core_dependency": "b54bde671",
+  "ABI": {
+    "action_bits": 75,
+    "row_bits": 144,
+    "timestamp_low": 75,
+    "timestamp_high": 98,
+    "descriptor_bits": 117,
+    "config_bits": 91,
+    "issue_bits": 93,
+    "PHW": 10,
+    "SAW": 14
+  },
+  "endpoint": {
+    "unit": "oth-ubuntu-3778422-1792053701",
+    "outer_exit": 0,
+    "actual_phase": 641,
+    "hardware_commands": 252,
+    "tags": 4,
+    "fixed_issue_and_done_under_fault": true,
+    "fault_modes": [
+      "ready low",
+      "missing retire",
+      "early retire",
+      "wrongtag"
+    ],
+    "source_mutants": [
+      "deadline+1 fails",
+      "phasebit9 truncated fails"
+    ]
+  },
+  "calendar": {
+    "unit": "oth-ubuntu-3778543-1792053722",
+    "outer_exit": 0,
+    "real_macros": 2,
+    "macro": "ot_rom_4096x72_m8",
+    "events": 24,
+    "stream_addresses": "8192..8214",
+    "fixed_prefill": true,
+    "missing_prime_fault": true,
+    "actual_via_mutants": [
+      "lowROM actionbit mismatch edge2",
+      "secondROM action72 finalphase_end mismatch edge81"
+    ]
+  },
+  "source_hashes": {
+    "rtl/dsrom_sys/s81_static_control/ot_s81_pq_command_endpoint.sv": "e65927d5be96ce4fb85a139f1fdcbd8e0463310b7d14a050cebc7a17d19c880f",
+    "rtl/dsrom_sys/s81_static_control/ot_s81_pq_calendar_reader.sv": "3c2947f99b5625d32b9a823a4b99755b07705c15300de168fb161f82e1d1a4b9",
+    "rtl/dsrom_sys/s81_static_control/ot_s81_pq_calendar_rom.sv": "86caad46558d8672e83eebcae869713decd63cb5d631307f48c5596b6b6e59b0",
+    "tools/s81_static_control/pq_descriptors.py": "61cc2cc8b3b29aa0f719404b62e41542217996db04772effff83c2a36b179772",
+    "tools/s81_static_control/pq_calendar.py": "a72da6c1df53e9369bdbffbb861a293d833783bd33dcdeaa85b81230d2b51985"
+  }
+}

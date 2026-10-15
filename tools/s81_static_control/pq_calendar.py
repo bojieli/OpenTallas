@@ -2,9 +2,9 @@
 FIELDS={
  'accept_tag':(0,2),'vm_req':(2,1),'vm_addr':(3,19),'vm_resp':(22,1),
  'resp_k':(23,14),'resp_par':(37,1),'resp_fam':(38,1),'stream_req':(39,1),
- 'stream_addr':(40,11),'stream_tag':(51,2),'stream_pos':(53,3),'stream_fam':(56,1),
- 'stream_lastpos':(57,1),'stream_lastop':(58,1),'cfg':(59,1),'cfg_tag':(60,2),
- 'launch':(62,1),'launch_tag':(63,2),'retire_mask':(65,4),'phase_end':(69,1)}
+ 'stream_addr':(40,14),'stream_tag':(54,2),'stream_pos':(56,3),'stream_fam':(59,1),
+ 'stream_lastpos':(60,1),'stream_lastop':(61,1),'cfg':(62,1),'cfg_tag':(63,2),
+ 'launch':(65,1),'launch_tag':(66,2),'retire_mask':(68,4),'phase_end':(72,1)}
 
 
 def action_word(fields):
@@ -31,7 +31,7 @@ def compile_events(events,commands):
     for e in events:
         t=e['timestamp']
         if type(t)is not int or not prev<t<1<<24:raise ValueError('strict increasing timestamp24 required')
-        word=action_word(e['action']);rows.append((t<<72)|word);by_time[t]=e['action'];prev=t
+        word=action_word(e['action']);rows.append((t<<75)|word);by_time[t]=e['action'];prev=t
         if e['action'].get('phase_end',0):ends.append(t)
     if ends!=[prev]:raise ValueError('exactly one final phase_end required')
     occupied=set()

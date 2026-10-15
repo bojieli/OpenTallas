@@ -3,7 +3,7 @@
 module ot_s81_pq_calendar_rom #(
  parameter string ACTION_IMAGE="",TIME_IMAGE=""
 )(input wire ck,rst_n,prime,stage_start,input wire[11:0]base,input wire[12:0]length,
- output wire[71:0]action,output wire active,primed,fault);
+ output wire[74:0]action,output wire active,primed,fault);
  wire[11:0]addr;wire[71:0]a,t;
  ot_rom_4096x72_m8 #(.VIAMAP(ACTION_IMAGE),.INSTANCE("pq_calendar_action"))u_action(.clk(ck),.ce_in(1'b1),.addr_in(addr),.rd_out(a));
  ot_rom_4096x72_m8 #(.VIAMAP(TIME_IMAGE),.INSTANCE("pq_calendar_time"))u_time(.clk(ck),.ce_in(1'b1),.addr_in(addr),.rd_out(t));

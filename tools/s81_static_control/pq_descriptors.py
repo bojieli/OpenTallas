@@ -9,7 +9,7 @@ from pathlib import Path
 import hashlib
 import json
 import argparse
-FIELDS=[('ph',9),('np',3),('xbase',19),('xps',19),('obase',19),('ops',19),('fmt',2)]
+FIELDS=[('ph',10),('np',3),('xbase',19),('xps',19),('obase',19),('ops',19),('fmt',2)]
 
 
 def encode_descriptors(rows):
@@ -30,7 +30,7 @@ def encode_descriptors(rows):
             raise ValueError('actual command-to-observed-END24 required')
         tag=row['native_tag']
         if type(tag)is not int or not 0<=tag<4:raise ValueError('actual compiler-selected native tag2 required')
-        packed=cfg|(duration<<90)|(tag<<114)
+        packed=cfg|(duration<<91)|(tag<<115)
         words.extend((index<<28)|(page<<25)|((packed>>(24*page))&((1<<24)-1)) for page in range(5))
     words.append((7<<25)|(1<<24)|len(rows))
     return words
@@ -60,7 +60,7 @@ def compile_descriptors(request,root):
     return dict(command_table_eligible=not rejected,dispatch_eligible=not rejected and not blocked,
                 qualified=False,rows=rows if not rejected else [],rejected=rejected,blockers=blocked,
                 pw_words=encode_descriptors(rows)if not rejected else [],
-                descriptor_abi='s81.pq.command-endpoint.pw36.v1',go_extra_edges=1,
+                descriptor_abi='s81.pq.command-endpoint.pw36.v2',go_extra_edges=1,
                 pin_origin='sampled cmd85 to registered f_iss GO plus1')
 
 
