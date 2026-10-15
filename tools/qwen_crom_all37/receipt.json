@@ -1,0 +1,107 @@
+{
+  "schema": "opentallas.qwen-r3-crom-all37-component.v1",
+  "status": "STANDALONE_COMPONENT_PASS_WITH_TWO_DATA_MUTANTS",
+  "source_parent_commit": "5b7116662d2d519e300b6fcccdfa2c6902f26377",
+  "host": "ot-agidock128",
+  "unit": "oth-ubuntu-993546-1792089975",
+  "outer_exit": 0,
+  "admission": {
+    "memory_GB": 4,
+    "threads": 1
+  },
+  "scope": "Actual R3 CBUF SRAM +48releasedmaskROM CROM +actual three-register return leaves;24declared clock roots driven in phase. Expected-only checkpoint images never write DUT.",
+  "positive": {
+    "reads": 15420,
+    "lane_comparisons": 986880,
+    "contexts": 111,
+    "stage_sequence": "0..36 repeated for positions0,8191,1",
+    "token_starts": 3,
+    "resets": 1,
+    "read_edges": 5,
+    "fill_window": 400,
+    "residency_errors": 0,
+    "errors": 0
+  },
+  "mutants": [
+    {
+      "kind": "Actual CROM data-bit RTL mutant",
+      "parameter": "CROM_MUT=1",
+      "word_errors": 121632,
+      "residency_errors": 0,
+      "contexts": 111
+    },
+    {
+      "kind": "Actual return leaf third-stage bypass",
+      "parameter": "RETURN_MUT=1 (p1 instead of p2)",
+      "word_errors": 945618,
+      "residency_errors": 0,
+      "contexts": 111
+    }
+  ],
+  "source_sha256": {
+    "rtl/test/qwen_split/tb_crom8_r3_all37.sv": "236799776b20f9411e87d3f218fd8706f5c73cf9ce69bb04e50daa20625fdafb",
+    "rtl/qwen_split/qfd_native_crom8_r3_tp8.sv": "7648175b1d8ffccde0706eb7db56ef9d82db9b31de7ddfb43a4cdb0a2f25be2a",
+    "rtl/physical/ot_qfd_su_cbuf_native_l0_p13_l12_r3.sv": "2a3aff18b1dab3570ed80197e971ecfc2ee3f31a25dd9ae6fc13e6736c95e8bd",
+    "rtl/physical/ot_qfd_crom_lbuf_ready_epoch.sv": "0985f9ce6bdd0f1bba6f11534111ce081dd07d7a6eb985cda3c0cf62cddf52eb",
+    "rtl/qwen_sys/redesign_qwen/ot_qfd_crom_lbuf.sv": "83413d8e691f18129f03136d97c8226f88339f0c8cbd134bc4dfb95e0e1f72c5",
+    "rtl/qwen_sys/system_20261008/ot_qfd_crom.sv": "c47bf8006009af73b847c0407da673a09995fc0b666ec283412d6a149b165082",
+    "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+    "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+    "physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8.v": "a26eebf06605ae3e9bca8d25c6d979a95553ea03ddc5e82cacd3192bf811a16b",
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": "d9801653d16576f40306c1fb1d01928e88e7371a3897b616e31d3e3df917cb2d"
+  },
+  "vector_manifest_sha256": "2bcf662287dceeb55ba9cbd785bcd43eed67c0fc6302dfce5f9b50f4e3ef90a1",
+  "input_tar_sha256": "ded07429b58aa0b731bdcb68449e146948161c78dff798591fef90972aadcf73",
+  "artifacts": "/home/ubuntu/artifacts/qwen-crom-all37-1103",
+  "remote_inputs": "/tmp/codex-qwen-crom-all37-1103",
+  "resources": {
+    "build0": {
+      "maxrss_KiB": "454824",
+      "wall": "0:28.47",
+      "exit": "0"
+    },
+    "run0": {
+      "maxrss_KiB": "22192",
+      "wall": "0:03.22",
+      "exit": "0"
+    },
+    "build1": {
+      "maxrss_KiB": "454436",
+      "wall": "0:28.90",
+      "exit": "0"
+    },
+    "run1": {
+      "maxrss_KiB": "22196",
+      "wall": "0:03.21",
+      "exit": "0"
+    },
+    "build2": {
+      "maxrss_KiB": "453888",
+      "wall": "0:28.47",
+      "exit": "0"
+    },
+    "run2": {
+      "maxrss_KiB": "22188",
+      "wall": "0:03.09",
+      "exit": "0"
+    }
+  },
+  "claims": {
+    "no_reset_between_contexts": true,
+    "all64lanes_checked": true,
+    "cbr_stage_position_ready_checked": true,
+    "seq_integration": false,
+    "full_native_token": false,
+    "physical": false,
+    "measured_performance_adoption": false
+  },
+  "binary_sha256_file": "evidence/binaries.sha256",
+  "source_and_observer_files_sha256": {
+    "tools/qwen_crom_all37/generate.py": "c7b4774363857af7f507387d49a6299594b71a717c95257c7a26959eac987d11",
+    "tools/qwen_crom_all37/run.sh": "57b2ab2ec9da25d10cfcc9483bf9f8e74ca8633a9e723730b9b5912347337434",
+    "tools/qwen_crom_all37/released_mask_manifest.json": "c20014ac3b773b33643c08cd745bc730faeeacff08e427049ab7d1e2bda4bdc1",
+    "tools/qwen_crom_all37/source.json": "d9dc2187f90f883ef6ac5f74a1b907d1e7e8e513e6112ab5ef1149269f3e2f3b",
+    "tools/qwen_crom_all37/sources.f": "94bb3909e9c39236ac446e6d7fdd5e2763f44f8b727e7acd65d5727f58a7cb94",
+    "tools/qwen_crom_all37/head_rank_image_pins.sha256": "5bc7da4d8c850c328999e955e1a2591a7cc05e10f3530d16a969a8ede530b59d"
+  }
+}
