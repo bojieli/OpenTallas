@@ -143,7 +143,7 @@ module qfd_tt_ctlm_static_s #(parameter integer XPF_TRANSPORT_EDGES=-1) (
     assign w_kv_ok = kok;
     assign w_kv_write_drained = kwd;
     assign mer0=w_me_clk_en;assign mer1=w_me_clk_en;assign mer2=w_me_clk_en;
-    
+
     assign w_fab_fault = fab|rf0|rf1|rf2|xflt|xpf_loader_fault|xpf_schedule_fault;
     assign cf = w_c_fault;
     assign ovf = w_ov;

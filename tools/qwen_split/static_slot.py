@@ -47,4 +47,5 @@ s=s.replace('    wire w_rst_n;', '    generate if(XPF_TRANSPORT_EDGES<0)begin:g_
 for k in (3,4,5):
     s=re.sub(r'^    output wire mer'+str(k)+r',\n','',s,flags=re.M)
     s=s.replace(',rf'+str(k),'').replace('assign mer'+str(k)+'=w_me_clk_en;','').replace('|rf'+str(k),'')
+s='\n'.join(line.rstrip()for line in s.splitlines())+'\n'
 (root/'rtl/qwen_sys/static_schedule_20261014/qfd_tt_ctlm_static_s.sv').write_text('// New native static slot master; fresh physical qualification required.\n// Existing c341/f104/lc26 packing retained; obsolete VM xd/xr removed.\n'+s)
