@@ -7,12 +7,11 @@
 // seq_su (o4_kvd).  tr_fault is tied 0 (retired input).  kok / kwd / fab / cf / ovf: body ports with no bundle.
 // OT_QFD_TT_CTLM_SLOT_MUT (bench mutant only): xm / xd / c0 bits 0 and 1 swapped.
 module qfd_tt_ctlm_s (
-`ifdef OT_QFD_DVM_GUARD
-    input wire dvm_issue_allow,
+`ifdef OT_QFD_XPF_MONITOR
     output wire dvm_candidate_v,output wire [11:0] dvm_candidate_pc,
     output wire [1:0] dvm_candidate_unit,output wire dvm_issue,
 `endif
-`ifdef OT_QFD_DVM_GUARD
+`ifdef OT_QFD_XPF_MONITOR
     output wire [379:0] ib,
     output wire mer0,mer1,mer2,mer3,mer4,mer5,
     input wire rf0,rf1,rf2,rf3,rf4,rf5,xflt,
@@ -157,7 +156,7 @@ module qfd_tt_ctlm_s (
     assign w_x_oacc[23:0] = xs[56:33];
     assign w_kv_ok = kok;
     assign w_kv_write_drained = kwd;
-`ifdef OT_QFD_DVM_GUARD
+`ifdef OT_QFD_XPF_MONITOR
     assign mer0=w_me_clk_en;assign mer1=w_me_clk_en;assign mer2=w_me_clk_en;
     assign mer3=w_me_clk_en;assign mer4=w_me_clk_en;assign mer5=w_me_clk_en;
     assign w_fab_fault = fab|rf0|rf1|rf2|rf3|rf4|rf5|xflt;
@@ -167,11 +166,11 @@ module qfd_tt_ctlm_s (
     assign cf = w_c_fault;
     assign ovf = w_ov;
     ot_qfd_tt_ctlm_split_hard u_body (
-`ifdef OT_QFD_DVM_GUARD
-        .dvm_issue_allow(dvm_issue_allow),.dvm_candidate_v(dvm_candidate_v),
+`ifdef OT_QFD_XPF_MONITOR
+        .dvm_candidate_v(dvm_candidate_v),
         .dvm_candidate_pc(dvm_candidate_pc),.dvm_candidate_unit(dvm_candidate_unit),.dvm_issue(dvm_issue),
 `endif
-`ifdef OT_QFD_DVM_GUARD
+`ifdef OT_QFD_XPF_MONITOR
         .dvm_cmd(ib),
 `endif
 

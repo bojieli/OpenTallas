@@ -117,9 +117,8 @@ module ot_qwen_rom_core_ctrl_x_bi #(
     output reg  [31:0]       next_val,        // its logit (for an argmax combined across packages)
     output reg  [31:0]       cycles,
     output reg               fault,
-`ifdef OT_QFD_DVM_GUARD
-    // Real NEXT candidate / issue events for the compiler producer-PC arm guard.
-    input wire dvm_issue_allow,
+`ifdef OT_QFD_XPF_MONITOR
+    // Real NEXT candidate / issue events for the static compiler schedule monitor.
     output wire dvm_candidate_v, output wire [PAW-1:0] dvm_candidate_pc,
     output wire [1:0] dvm_candidate_unit, output wire dvm_issue,
 `endif
@@ -585,20 +584,17 @@ localparam integer W_ME_AMC = 1;
     wire odep = (XMUT == 2) ? 1'b0 : (d_barrier || d_chase || ((OWN == 1) ? d_wait_me : d_wait_su));
     wire skip = (st == S_RUN) && nx_v && oth && (!odep || opast);
     //: issue NEXT this cycle; the unit latches its fields on this edge
-`ifdef OT_QFD_DVM_GUARD
-    wire dvm_release_ok = dvm_issue_allow;
+`ifdef OT_QFD_XPF_MONITOR
     assign dvm_candidate_v = (st == S_RUN) && nx_v && own;
     assign dvm_candidate_pc = pc;
     assign dvm_candidate_unit = d_unit;
     assign dvm_issue = issue;
-`else
-    wire dvm_release_ok = 1'b1;
 `endif
     wire issue_live = (st == S_RUN) && nx_v && own && xdep_ok
-                 && unit_ready && kv_gate && w_gate && dvm_release_ok;
+                 && unit_ready && kv_gate && w_gate;
     reg ready_q;
     wire issue = (ICUT == 0) ? issue_live :
-                 ((st == S_RUN) && nx_v && own && ready_q && (d_unit != 2'd1 || me_en) && kv_gate && w_gate && dvm_release_ok);
+                 ((st == S_RUN) && nx_v && own && ready_q && (d_unit != 2'd1 || me_en) && kv_gate && w_gate);
     assign me_go = issue && (d_unit == 2'd1);
     assign su_go = issue && (d_unit == 2'd2);
     wire fin = (st == S_RUN) && nx_v && (d_unit == 2'd0) && x_drained && ((OWN == 1) || x_ofin);
@@ -1075,9 +1071,8 @@ module ot_qfd_seq_su_bi #(
     parameter integer RBW = (D > 1) ? $clog2(D) : 1,
     parameter integer TPMUT = 0
 ) (
-`ifdef OT_QFD_DVM_GUARD
-    // Real NEXT candidate / issue events for the compiler producer-PC arm guard.
-    input wire dvm_issue_allow,
+`ifdef OT_QFD_XPF_MONITOR
+    // Real NEXT candidate / issue events for the static compiler schedule monitor.
     output wire dvm_candidate_v, output wire [PAW-1:0] dvm_candidate_pc,
     output wire [1:0] dvm_candidate_unit, output wire dvm_issue,
 `endif
@@ -1200,7 +1195,7 @@ module ot_qfd_seq_su_bi #(
     output wire [1-1:0] kvd_kindk,
     output wire [NW-1:0] kvd_pos
 );
-`ifdef OT_QFD_DVM_GUARD
+`ifdef OT_QFD_XPF_MONITOR
     wire [11:0] dvm_pc_local;
     // Sideband records address the entire loaded instruction image, not a
     // segment-relative PC (the real ROM address adds this same base).
@@ -1500,8 +1495,8 @@ module ot_qfd_seq_su_bi #(
     end endgenerate
     wire wrom_re_w; assign b_rom_fault = wrom_re_w; assign b_core_fault = core_fault_w;
     ot_qwen_rom_core_ctrl_x_bi #(.OWN(2), .XW(24), .XMUT(0), .XREG(1), .ICUT(1), .PRL(2), .W(W), .G(G), .AW(AW), .NW(NW), .PAW(PAW), .SU_VEC(1), .SW(SW), .LV(LV), .KV_FP8(1), .INT8_WEIGHT(1), .INT8_SCALE_WCS_BASE(1), .INT8_EMBED(1), .QWEN_FULLSHAPE(1), .HID(4096), .HALF(64), .HD(128), .EMB_CODE_LANES(64), .EMB_ADDR_BASE(0), .KV_HBM(1), .KV_VEC_WRITE_BRIDGE(1), .ME_STALL(1), .ME_IDLE_GATE(1), .PCUT(PCUT), .OLAG(OLAG), .SMIN(SMIN), .SMAX(SMAX), .TCUT(TCUT), .FQ_HEAD((HQ2 >= 2) ? 3 : (HQ2 != 0) ? 2 : 1)) u_ctrl (
-`ifdef OT_QFD_DVM_GUARD
-        .dvm_issue_allow(dvm_issue_allow),.dvm_candidate_v(dvm_candidate_v),
+`ifdef OT_QFD_XPF_MONITOR
+        .dvm_candidate_v(dvm_candidate_v),
         .dvm_candidate_pc(dvm_pc_local),.dvm_candidate_unit(dvm_candidate_unit),.dvm_issue(dvm_issue),
 `endif
         .clk(clk),

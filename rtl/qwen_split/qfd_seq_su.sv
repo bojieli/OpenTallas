@@ -36,8 +36,7 @@
 // OT_QFD_SEQ_SU_MUT (bench only): group 7's st_rdy is ignored in the ready AND.
 // =====================================================================================================================
 module qfd_seq_su (
-`ifdef OT_QFD_DVM_GUARD
-    input wire dvm_issue_allow,
+`ifdef OT_QFD_XPF_MONITOR
     output wire dvm_candidate_v,output wire [11:0] dvm_candidate_pc,
     output wire [1:0] dvm_candidate_unit,output wire dvm_issue,
 `endif
@@ -119,8 +118,8 @@ module qfd_seq_su (
     wire [2:0]  i_ad, i_sfu;
     wire [31:0] i_imm1, i_imm2;
     ot_qfd_seq_su_bi #(.RRG(1), .PCUT(1), .G(3072), .D(D), .PSRAM(1), .HQ2(1), .CRED(128), .RLY(2)) u_seq (
-`ifdef OT_QFD_DVM_GUARD
-        .dvm_issue_allow(dvm_issue_allow),.dvm_candidate_v(dvm_candidate_v),
+`ifdef OT_QFD_XPF_MONITOR
+        .dvm_candidate_v(dvm_candidate_v),
         .dvm_candidate_pc(dvm_candidate_pc),.dvm_candidate_unit(dvm_candidate_unit),.dvm_issue(dvm_issue),
 `endif
         .clk(ck), .rst_n(rsi),

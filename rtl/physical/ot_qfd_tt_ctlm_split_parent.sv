@@ -1,11 +1,10 @@
 // Fixed wires-only parent, one entry per independently rooted child.
 module ot_qfd_tt_ctlm_split_hard (
-`ifdef OT_QFD_DVM_GUARD
-    input wire dvm_issue_allow,
+`ifdef OT_QFD_XPF_MONITOR
     output wire dvm_candidate_v,output wire [11:0] dvm_candidate_pc,
     output wire [1:0] dvm_candidate_unit,output wire dvm_issue,
 `endif
-`ifdef OT_QFD_DVM_GUARD
+`ifdef OT_QFD_XPF_MONITOR
     output wire [379:0] dvm_cmd,
 `endif
     input wire ck_head,
@@ -71,12 +70,12 @@ module ot_qfd_tt_ctlm_split_hard (
     output wire [16*32-1:0] mx_data
 );
     wire [379:0] cmd; wire [94:0] ret;
-`ifdef OT_QFD_DVM_GUARD
+`ifdef OT_QFD_XPF_MONITOR
     assign dvm_cmd=cmd;
 `endif
     qfd_tt_ctlm_head u_head (
-`ifdef OT_QFD_DVM_GUARD
-        .dvm_issue_allow(dvm_issue_allow),.dvm_candidate_v(dvm_candidate_v),
+`ifdef OT_QFD_XPF_MONITOR
+        .dvm_candidate_v(dvm_candidate_v),
         .dvm_candidate_pc(dvm_candidate_pc),.dvm_candidate_unit(dvm_candidate_unit),.dvm_issue(dvm_issue),
 `endif
 
@@ -116,9 +115,6 @@ module ot_qfd_tt_ctlm_split_hard (
         .kvd_pos(kvd_pos),
         .cmd(cmd),.ret(ret));
     qfd_tt_ctlm_tree u_tree (
-`ifdef OT_QFD_DVM_GUARD
-        .dvm_issue_allow(dvm_issue_allow),
-`endif
 
         .clk(ck_tree),
         .rst_n(rst_n),

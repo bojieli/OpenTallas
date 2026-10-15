@@ -137,7 +137,8 @@ def chain_schedule(images, effects):
 
     `images` includes embedding, each layer and head in execution order.
     Native write receipts are per-image; no effect is inferred from a label.
-    Packed records are exactly the RTL schedule bank's92-bit load interface.
+    Address records still need an actual fixed-cycle trace before production
+    serialization. static_cycle_table emits the real188-bit monitor format.
     """
     if len(images) != len(effects) or len(images) > 64:
         raise ValueError('stage/effect inventory or actual six-bit stage width')
@@ -162,13 +163,75 @@ def chain_schedule(images, effects):
         records = [r for r in result['records'] if r['arm_before_pc'] is not None]
         if len(records) > 8:
             raise ValueError('producer stage exceeds real eight-entry arm bank; repartition or enlarge with measured cost')
-        result['cfg_data_hex'] = [f"{(index<<86)|(r['producer_unit']<<84)|(r['arm_before_pc']<<72)|int(r['xpf_hex'],16):023x}" for r in records]
+        result['producer_records'] = records
         result['stage'] = index
         stages.append(result)
         remaining.extend(dict(gap, stage=index) for gap in unresolved)
     return dict(schema='opentallas.qwen-xpf-chain-schedule.v1', stages=stages,
                 unresolved=remaining, status='UNRESOLVED' if remaining else 'STATIC_PREPRODUCER_CHAIN_RESOLVED',
-                claim='Instruction-bound static chain only; actual configuration transport, all producer issue guards and DVM consumption must pass RTL composition before adoption.')
+                claim='Instruction-bound address chain only; source-bound fixed-cycle trace, actual configuration transport and DVM consumption must pass RTL composition before adoption.')
+
+
+def static_cycle_table(stage_schedule, trace, arm_transport_edges):
+    """Compile fault-only static arms from ACTUAL issue/write event cycles.
+
+    trace.issues contains {unit,pc,cycle}; trace.writes contains
+    {unit,pc,cycle,address,mask,lanes,stride}. Only real masked word writes
+    cover X; no VM residency, offered request or credit is a commit event.
+    The trace must pin the program and producing RTL source hashes.
+    """
+    if trace['program_sha256'] != stage_schedule['program_sha256']:
+        raise ValueError('fixed-cycle trace does not match actual instruction image')
+    if not trace.get('source_sha256') or arm_transport_edges < 0:
+        raise ValueError('real producer source hashes and assigned arm transport required')
+    for filename, digest in trace['source_sha256'].items():
+        if hashlib.sha256(Path(filename).read_bytes()).hexdigest() != digest:
+            raise ValueError('actual producer source drifted from measured cycle trace')
+    table = []
+    occupied = set()
+    for record in stage_schedule['producer_records']:
+        descriptor_bits = int(record['xpf_hex'], 16)
+        xb = (descriptor_bits >> 1) & ((1 << 24)-1)
+        xc = (descriptor_bits >> 25) & 4095
+        xk = (descriptor_bits >> 37) & 4095
+        split = (descriptor_bits >> 49) & 15
+        nk = (descriptor_bits >> 53) & ((1 << 18)-1)
+        required = {xb+c*xc+k*xk for c in range(1 << split) for k in range(nk)}
+        writes = [w for w in trace['writes'] if w['pc'] in record['producer_pcs']]
+        covered = set()
+        first_write = None
+        for write in writes:
+            if not 0 <= write['cycle'] < 1 << 32 or not 0 < write['lanes'] <= 64 or write['stride'] not in (0, 1):
+                raise ValueError('actual producer event exceeds native cycle/vector format')
+            touched = {write['address']+lane*write['stride'] for lane in range(write['lanes'])
+                       if write['mask'] & (1 << lane)} & required
+            if touched:
+                covered.update(touched)
+                first_write = write['cycle'] if first_write is None else min(first_write, write['cycle'])
+        if covered != required:
+            raise ValueError('actual producer trace does not publish every operand word')
+        issues = [e for e in trace['issues'] if e['pc'] == record['arm_before_pc'] and
+                  e['unit'] == record['producer_unit']]
+        if len(issues) != 1 or first_write < issues[0]['cycle']:
+            raise ValueError('producer acceptance/write ordering is not unique and actual')
+        arm_cycle = first_write - arm_transport_edges - 3
+        while arm_cycle in occupied:
+            arm_cycle -= 1
+        if arm_cycle < 0:
+            raise ValueError('producer writes before an arm can traverse assigned die pipeline')
+        occupied.add(arm_cycle)
+        issue_cycle = issues[0]['cycle']
+        if not 0 <= issue_cycle < 1 << 32:
+            raise ValueError('producer issue cycle exceeds native counter width')
+        packed = (first_write << 156) | (issue_cycle << 124) | (arm_cycle << 92) | \
+                 (stage_schedule['stage'] << 86) | (record['producer_unit'] << 84) | \
+                 (record['arm_before_pc'] << 72) | descriptor_bits
+        table.append(dict(record, arm_cycle=arm_cycle, issue_cycle=issue_cycle,
+                          first_write_cycle=first_write, cfg_data_hex=f'{packed:047x}'))
+    return dict(schema='opentallas.qwen-xpf-static-cycle-table.v1',
+                program_sha256=trace['program_sha256'], source_sha256=trace['source_sha256'],
+                stage=stage_schedule['stage'], arm_transport_edges=arm_transport_edges,
+                records=table, policy='fixed compiled cycles; producer schedule is never stalled; mismatch faults')
 
 
 if __name__ == '__main__':

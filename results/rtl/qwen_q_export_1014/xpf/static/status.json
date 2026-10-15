@@ -1,0 +1,27 @@
+{
+  "policy": "Owner static-cycle rule: no production issue gating, credits or backpressure",
+  "status": "mechanism verified; real producer trace/configuration/die composition unverified",
+  "source_sha256": {
+    "rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv": "2f97b9766c6576c4436ff379dbf7ecb54e847fef5fead2048575ce6a3be5ffa7",
+    "rtl/qwen_sys/dvm_20261014/tb_qfd_xpf_static_schedule.sv": "42161a67b25a1a42c115f716e50e72c218f0cd109f26df124dcdda1bacaa6e7f",
+    "tools/qwen_split/xpf_schedule.py": "acb3969a17b49d97f73888196c4378a8e8f39511c64731f99ed2653ec286fe86"
+  },
+  "retired_runtime_guard_commits": [
+    "a60157517",
+    "f1fd69c16",
+    "f50f16a99"
+  ],
+  "historical_logs": "Parent xpf guard/bank logs retain their original safety-prototype scope; their RTL is preserved in git history and removed from active sources.",
+  "tests": {
+    "positive": "two configured static producers,13-hop pipeline,3-edge separation, no stall output",
+    "late_mutant": "observed FAIL",
+    "issue_cycle_mutant": "observed FAIL"
+  },
+  "remaining": [
+    "actual source-bound stage producer issue/write cycle trace",
+    "compiler table loading through real host control",
+    "static monitor instantiated under real tt_ctlm die name",
+    "actual ME/SU issue observer die wiring",
+    "assigned pin/clock/relay timing and whole producer composition gate"
+  ]
+}
