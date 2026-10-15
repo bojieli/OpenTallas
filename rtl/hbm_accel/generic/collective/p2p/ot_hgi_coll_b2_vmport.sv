@@ -27,17 +27,19 @@ module ot_hgi_coll_b2_vmport #(
 );
     wire [4:0] hv, pop, qfault;
     wire [199:0] ha; wire [2559:0] hd; wire [79:0] hm;
-    wire [3:0] unused_rgx_cr;
+    wire [4:0] epoch; reg [4:0] issued_epoch;
+    wire [4:0] blocked = ~(epoch ^ issued_epoch);
     for (genvar l = 0; l < 4; l = l + 1) begin : g_rx
-        ot_hgi_coll_rgx_rx_lane #(.CRD(CRD)) u_rx (.clk(clk_rx[l]), .rst_n(rst_n),
-            .t_v(rgx_t_v[l]), .t_addr(rgx_t_addr[l*40 +: 40]), .t_data(rgx_t_data[l*512 +: 512]),
-            .f_cr(unused_rgx_cr[l]), .w_v(hv[l]), .w_addr(ha[l*40 +: 40]), .w_data(hd[l*512 +: 512]),
-            .w_rdy(pop[l]), .fault(qfault[l]));
+        wire [551:0] h;
+        ot_hgi_coll_rx_native #(.W(552), .CRD(CRD)) u_rx (.clk(clk_rx[l]), .rst_n(rst_n),
+            .t_v(rgx_t_v[l]), .t_d({rgx_t_addr[l*40 +: 40],rgx_t_data[l*512 +: 512]}),
+            .out_v(hv[l]), .out_d(h), .out_rdy(pop[l]), .epoch(epoch[l]), .fault(qfault[l]));
+        assign ha[l*40 +: 40] = h[551:512]; assign hd[l*512 +: 512] = h[511:0];
         assign hm[l*16 +: 16] = 16'hffff;
     end
-    wire [567:0] th; wire unused_tkw_cr;
-    ot_hgi_coll_crl_rx #(.CRD(TCRD)) u_trx (.clk(clk_rx[4]), .rst_n(rst_n), .t_v(tkw_t_v), .t_d(tkw_t_d),
-        .f_cr(unused_tkw_cr), .out_v(hv[4]), .out_d(th), .out_rdy(pop[4]), .fault(qfault[4]));
+    wire [567:0] th;
+    ot_hgi_coll_rx_native #(.W(568), .CRD(TCRD)) u_trx (.clk(clk_rx[4]), .rst_n(rst_n), .t_v(tkw_t_v), .t_d(tkw_t_d),
+        .out_v(hv[4]), .out_d(th), .out_rdy(pop[4]), .epoch(epoch[4]), .fault(qfault[4]));
     assign ha[160 +: 40] = th[567:528]; assign hm[64 +: 16] = th[527:512]; assign hd[2048 +: 512] = th[511:0];
     reg vm_q, vm_run; reg [3:0] rv_q;
     always @(posedge clk or negedge rst_n)
@@ -45,7 +47,7 @@ module ot_hgi_coll_b2_vmport #(
         else begin vm_q <= rgx_t_vm; rv_q <= rgx_t_v; if (|rv_q) vm_run <= vm_q; end
     // Preserve the existing real HBM write clients for HBM-space ROW_GATHER.
     wire [3:0] hpop; wire hf;
-    ot_hgi_coll_rgx_snk #(.LQ(8)) u_hbm (.clk(clk), .rst_n(rst_n), .rg_w_v(hv[3:0] & {4{!vm_run}}),
+    ot_hgi_coll_rgx_snk #(.LQ(8)) u_hbm (.clk(clk), .rst_n(rst_n), .rg_w_v(hv[3:0] & ~blocked[3:0] & {4{!vm_run}}),
         .rg_w_addr(ha[159:0]), .rg_w_vm(1'b0), .rg_w_data(hd[2047:0]), .rg_w_rdy(hpop),
         .c_req(), .c_gnt(1'b0), .c_q(), .c_cr(32'd0), .c_rsp(32'd0), .xw(xw), .xwa(xwa), .fault(hf));
     localparam integer OD = WCRD + 16, BW = $clog2(OD), CW = $clog2(WCRD+1), OW = $clog2(OD+1);
@@ -62,7 +64,7 @@ module ot_hgi_coll_b2_vmport #(
             reg [39:0] a; reg [15:0] s0, s1; reg [2:0] b0, b1; reg [31:0] bm;
             a = ha[l*40 +: 40]; s0 = a[18:3]; s1 = s0 + 1'b1; b0 = s0[2:0]; b1 = s1[2:0];
             bm = 0; for (integer j = 0; j < 8; j = j + 1) bm[j*4 +: 4] = {4{hm[l*16 + (half[l] ? 8 : 0) + j]}};
-            if (hv[l] && (l == 4 || vm_run)) begin
+            if (hv[l] && !blocked[l] && (l == 4 || vm_run)) begin
                 if (!s0[15] && s0[14:13] == me && s1[14:13] == me && !s1[15] && a[2:0] == 0 && a[39:19] == 0) begin
                     if (!used[b0] && !used[b1] && wc[b0] != 0 && wc[b1] != 0) begin
                         wp[l] = 1; used[b0] = 1; used[b1] = 1; take[b0] = 1; take[b1] = 1;
@@ -84,7 +86,7 @@ module ot_hgi_coll_b2_vmport #(
     end
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
-            wq <= 0; cq <= 0; rgx_f_cr <= 0; tkw_f_cr <= 0; fault <= 0;
+            wq <= 0; cq <= 0; rgx_f_cr <= 0; tkw_f_cr <= 0; fault <= 0; issued_epoch <= '1;
             for (integer b = 0; b < 8; b = b + 1) begin wc[b] <= CW'(WCRD); oh[b] <= 0; ot[b] <= 0; on[b] <= 0; end
             for (integer l = 0; l < 5; l = l + 1) begin pc[l] <= 4; half[l] <= 0; itag[l] <= 0; rtag[l] <= 0; ack_rem[l] <= 0; end
         end else begin
@@ -93,6 +95,7 @@ module ot_hgi_coll_b2_vmport #(
             if ((|qfault) || hf) fault <= 1;
             for (integer l = 0; l < 5; l = l + 1) begin
                 na[l] = ack_rem[l];
+                if (pop[l]) issued_epoch[l] <= epoch[l];
                 pc[l] <= pc[l] - 3'(pp[l]) + 3'(cr_q[l*274+273]);
                 if (pp[l]) begin half[l] <= !half[l]; itag[l] <= itag[l] + 1'b1; end
                 if (cr_q[l*274+273]) begin

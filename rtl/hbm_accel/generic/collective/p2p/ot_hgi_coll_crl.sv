@@ -121,3 +121,37 @@ module ot_hgi_coll_vmport #(
     always @(posedge clk or negedge rst_n) if (!rst_n) f_fault <= 1'b0; else f_fault <= sf | tf;
 endmodule
 `default_nettype wire
+
+`default_nettype none
+// Physical receive leaf: data and consume pulse land in pin flops. The head epoch lets the
+// local issuer suppress a repeated grant while its registered consume pulse crosses the boundary.
+module ot_hgi_coll_rx_native #(parameter integer W=552, CRD=16)(
+    input wire clk,rst_n,t_v,
+    input wire [W-1:0] t_d,
+    output reg out_v,
+    output reg [W-1:0] out_d,
+    input wire out_rdy,
+    output reg epoch,
+    output reg fault
+);
+    localparam integer AW=(CRD>1)?$clog2(CRD):1;
+    reg v_pin,pop_pin;reg[W-1:0]d_pin;
+    reg[W-1:0]q[0:CRD-1];reg[AW-1:0]hd,tl;reg[AW:0]n;
+    wire pop=out_v&&pop_pin;
+    always @(posedge clk)d_pin<=t_d;
+    always @(posedge clk or negedge rst_n)
+        if(!rst_n)begin v_pin<=0;pop_pin<=0;hd<=0;tl<=0;n<=0;out_v<=0;epoch<=0;fault<=0;end
+        else begin
+            v_pin<=t_v;pop_pin<=out_rdy;
+            if(v_pin)begin
+                if(n==(AW+1)'(CRD)&&!pop)fault<=1;
+                q[tl]<=d_pin;tl<=(tl==AW'(CRD-1))?'0:tl+1'b1;
+            end
+            if(pop)begin hd<=(hd==AW'(CRD-1))?'0:hd+1'b1;epoch<=!epoch;end
+            n<=n+(AW+1)'(v_pin)-(AW+1)'(pop);
+            out_v<=(n+(AW+1)'(v_pin)-(AW+1)'(pop))!='0;
+            if((n==0&&v_pin)||(n==1&&pop&&v_pin))out_d<=d_pin;
+            else if(pop&&n>1)out_d<=q[(hd==AW'(CRD-1))?'0:hd+1'b1];
+        end
+endmodule
+`default_nettype wire
