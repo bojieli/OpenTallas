@@ -1,0 +1,23 @@
+{
+  "source_commit": "44720c8ad6ad",
+  "job": "hcoll-pinreg-store141-44720c8ad-tc",
+  "stage": "route.a3; raw route corner_sta before routed-reference rejudge/ECO",
+  "top": "ot_hgi_coll_static_pinreg_store",
+  "outline_um": [
+    207.36,
+    129.6
+  ],
+  "DRC": 0,
+  "signoff_period_ps": 833.333,
+  "uncertainty_ps": {
+    "setup": 60,
+    "hold": 25
+  },
+  "TT_setup_ps": 267.2,
+  "SS_sensitivity_ps": 54.83,
+  "FF_hold_ps": -11.75,
+  "closed": false,
+  "first_physical_limitation": "FF output-port hold -11.75ps; register-to-register hold+3.10, input-to-register+22.62",
+  "actual_model_cost": "TX5/RX1 vs frozen TX3/RX1; four unchanged native SRAMs; all physical input/output faces registered",
+  "scope": "single actual genericW141 store hardleaf; no controller/endpt/PHY/token-price qualification"
+}
