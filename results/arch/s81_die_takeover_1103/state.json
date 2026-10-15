@@ -1,6 +1,6 @@
 {
   "schema": "opentallas.s81.die.takeover.v1",
-  "updated_utc": "2026-10-15T18:14:59.657457+00:00",
+  "updated_utc": "2026-10-15T18:21:22.404763+00:00",
   "source_commit": "eb9cfa044920f23a9565d6c5fda43d2d5f217d06",
   "native_qualified": false,
   "clock_source_join": {
@@ -250,5 +250,27 @@
     "behavior": "Refuse missing source-filtered SS/TT/FF library files before timing library emission; no interim cell or SS-as-TT substitution",
     "tests": "7 unit regressions PASS:2 new real-view gate +5 collective source binding",
     "scope": "Library gate only; physical clock/phase/hardware composition remain independent requirements"
+  },
+  "vm_boundary_candidate_leaf_grant": {
+    "source_commit": "5def3d4801ec0349fa00d7ea3cf9ccc56e3118b4",
+    "pin_artifact_commit": "b47229479",
+    "outline_um": [
+      151.2,
+      237.6
+    ],
+    "signal_pins": 6614,
+    "json_path": "physical/s81_die_pins/v24_static_vm_boundary_candidate/s81_static_vm_boundary.json",
+    "json_sha256": "e5fbe96910268130ba8e022dbb11dd620c97e0586ae817026054fcd1ec6f903f",
+    "tcl_sha256": "e313afa4188188ee34196abd213e17efd1dd0942edc11d1373e56de219f37d97",
+    "source_odb_sha256": "c719471432b22b6057321fa259f0c9e232115ad0b4cef1e2eff6ffbb8ba4b69d",
+    "scope": "Exact candidate leaf pins only; full collective constituent packing/VM source join/native clock budget remain OPEN"
+  },
+  "norm_actual_row_schema": "results/arch/s81_die_takeover_1103/nt_rows_candidate.json",
+  "road_repair": {
+    "branch": "codex/s81-sa-road-1015",
+    "commit": "63b1286f4",
+    "verdict": "NO_BUILDABLE_REPAIR_YET",
+    "artifact": "results/arch/s81_globalfp_1015/road_repair/ranked_report.json",
+    "next": "Full source VM actual pin-local packing + system-level source-preserving geometry; reject432road BFx2cut0.643 and648road height overflow"
   }
 }
