@@ -1,0 +1,185 @@
+{
+ "verdict": "FAIL",
+ "items": [
+  {
+   "severity": "FAIL",
+   "check": "macro_edge",
+   "message": "qfd_bl_lane#0 15.1 um from the E core edge (< 20 um, a pin face)",
+   "fix": "move the macro inward / to a face without pins (sliver + pin-access blockage)"
+  },
+  {
+   "severity": "FAIL",
+   "check": "macro_edge",
+   "message": "qfd_bl_lane#0 15.1 um from the E core edge (< 20 um, a pin face)",
+   "fix": "move the macro inward / to a face without pins (sliver + pin-access blockage)"
+  },
+  {
+   "severity": "FAIL",
+   "check": "macro_edge",
+   "message": "qfd_bl_lane#0 15.1 um from the E core edge (< 20 um, a pin face)",
+   "fix": "move the macro inward / to a face without pins (sliver + pin-access blockage)"
+  },
+  {
+   "severity": "FAIL",
+   "check": "macro_edge",
+   "message": "qfd_bl_lane#0 15.1 um from the E core edge (< 20 um, a pin face)",
+   "fix": "move the macro inward / to a face without pins (sliver + pin-access blockage)"
+  },
+  {
+   "severity": "FAIL",
+   "check": "macro_edge",
+   "message": "qfd_bl_lane#0 15.1 um from the E core edge (< 20 um, a pin face)",
+   "fix": "move the macro inward / to a face without pins (sliver + pin-access blockage)"
+  },
+  {
+   "severity": "FAIL",
+   "check": "channel",
+   "message": "qfd_bl_lane#0 / qfd_bl_lane#0 channel 0.0 um (< 20 um)",
+   "fix": "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0, no pin on the touching faces: abutted_stack)"
+  },
+  {
+   "severity": "FAIL",
+   "check": "channel",
+   "message": "qfd_bl_lane#0 / qfd_bl_lane#0 channel 0.0 um (< 20 um)",
+   "fix": "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0, no pin on the touching faces: abutted_stack)"
+  },
+  {
+   "severity": "FAIL",
+   "check": "channel",
+   "message": "qfd_bl_lane#0 / qfd_bl_lane#0 channel 0.0 um (< 20 um)",
+   "fix": "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0, no pin on the touching faces: abutted_stack)"
+  },
+  {
+   "severity": "FAIL",
+   "check": "channel",
+   "message": "qfd_bl_lane#0 / qfd_bl_lane#0 channel 0.0 um (< 20 um)",
+   "fix": "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0, no pin on the touching faces: abutted_stack)"
+  },
+  {
+   "severity": "FAIL",
+   "check": "channel",
+   "message": "qfd_bl_lane#0 / qfd_bl_lane#0 channel 0.0 um (< 20 um)",
+   "fix": "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0, no pin on the touching faces: abutted_stack)"
+  },
+  {
+   "severity": "INFO",
+   "check": "layer",
+   "message": "cluster: PG M7 stripes as pins, signals M2-M7, parent strap M8; children PG {'qfd_bl_lane': 'M5'}",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "oflop",
+   "message": "E face 7.9 pins/um (pw): recipe-2 hold stages take 2.65 um behind the face, the pin flops need gap 3.4 um and 8 columns (derived in the flow)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "oflop",
+   "message": "S face 10.5 pins/um (tw): recipe-2 hold stages take 2.3 um behind the face, the pin flops need gap 2.9 um and 21 columns (derived in the flow)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "oflop",
+   "message": "W face 7.9 pins/um (ty, tt): recipe-2 hold stages take 2.65 um behind the face, the pin flops need gap 3.4 um and 8 columns (derived in the flow)",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "qfd_bl_lane: (f) face-pin access: 656 of 679 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. c[10] M5 (68.544,150.469), c[8] M5 (68.544,150.469), c[9] M5 (68.544,150.469))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "qfd_bl_lane: (f) face-pin access: 656 of 679 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. c[10] M5 (68.544,150.469), c[8] M5 (68.544,150.469), c[9] M5 (68.544,150.469))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "qfd_bl_lane: (f) face-pin access: 656 of 679 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. c[10] M5 (68.544,150.469), c[8] M5 (68.544,150.469), c[9] M5 (68.544,150.469))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "qfd_bl_lane: (f) face-pin access: 656 of 679 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. c[10] M5 (68.544,150.469), c[8] M5 (68.544,150.469), c[9] M5 (68.544,150.469))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "qfd_bl_lane: (f) face-pin access: 656 of 679 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. c[10] M5 (68.544,150.469), c[8] M5 (68.544,150.469), c[9] M5 (68.544,150.469))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "qfd_bl_lane: (f) face-pin access: 656 of 679 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. c[10] M5 (68.544,150.469), c[8] M5 (68.544,150.469), c[9] M5 (68.544,150.469))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "qfd_bl_lane: (f) face-pin access: 656 of 679 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. c[10] M5 (68.544,150.469), c[8] M5 (68.544,150.469), c[9] M5 (68.544,150.469))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "qfd_bl_lane: (f) face-pin access: 656 of 679 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. c[10] M5 (68.544,150.469), c[8] M5 (68.544,150.469), c[9] M5 (68.544,150.469))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "qfd_bl_lane: (f) face-pin access: 656 of 679 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. c[10] M5 (68.544,150.469), c[8] M5 (68.544,150.469), c[9] M5 (68.544,150.469))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "qfd_bl_lane: (f) face-pin access: 656 of 679 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. c[10] M5 (68.544,150.469), c[8] M5 (68.544,150.469), c[9] M5 (68.544,150.469))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "qfd_bl_lane: (f) face-pin access: 656 of 679 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. c[10] M5 (68.544,150.469), c[8] M5 (68.544,150.469), c[9] M5 (68.544,150.469))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "qfd_bl_lane: (f) face-pin access: 656 of 679 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. c[10] M5 (68.544,150.469), c[8] M5 (68.544,150.469), c[9] M5 (68.544,150.469))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "qfd_bl_lane: (f) face-pin access: 656 of 679 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. c[10] M5 (68.544,150.469), c[8] M5 (68.544,150.469), c[9] M5 (68.544,150.469))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "qfd_bl_lane: (f) face-pin access: 656 of 679 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. c[10] M5 (68.544,150.469), c[8] M5 (68.544,150.469), c[9] M5 (68.544,150.469))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "qfd_bl_lane: (f) face-pin access: 656 of 679 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. c[10] M5 (68.544,150.469), c[8] M5 (68.544,150.469), c[9] M5 (68.544,150.469))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "qfd_bl_lane: (f) face-pin access: 656 of 679 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. c[10] M5 (68.544,150.469), c[8] M5 (68.544,150.469), c[9] M5 (68.544,150.469))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  }
+ ]
+}

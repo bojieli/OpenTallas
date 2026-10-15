@@ -1,0 +1,12 @@
+TB_VMSS schedule: mode 0 seed 1 jobs 100 commands 217 commits 23596 cycles 494
+TB_VMSS ERROR cycle 26 c_done 100 expected 000
+TB_VMSS ERROR cycle 27 c_done 102 expected 100
+TB_VMSS ERROR cycle 28 c_done 000 expected 102
+TB_VMSS ERROR cycle 31 c_done 181 expected 000
+TB_VMSS ERROR cycle 32 c_done 104 expected 181
+TB_VMSS ERROR cycle 33 c_done 000 expected 104
+TB_VMSS ERROR cycle 34 c_done 183 expected 000
+TB_VMSS ERROR cycle 35 c_done 106 expected 183
+TB_VMSS ERROR cycle 36 c_done 185 expected 106
+TB_VMSS RESULT mode 0 cycles 518 commands 217 dones 217 commits 23596 inp_cycles 459 errors 314
+TB_VMSS FAIL mode 0

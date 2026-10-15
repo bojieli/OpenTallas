@@ -1,0 +1,13 @@
+GATE INFO layer: tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)
+GATE INFO remote: remote log /tmp/s81suhc-r10/ref_gate_s81su_qne_ref_20261013-185338.log; host dir ot-epyc1tb:/srv/opentallas-scratch/claude/ref_gate/s81su_qne_ref-20261013-185338
+GATE INFO remote: synth + floorplan + PDN OK on ot-epyc1tb in 425 s (gate total 1092 s)
+GATE INFO util: synthesized std area 10135 um2 + macros 13323 in core 47594: util 49%
+GATE INFO textbook: PASS dsfd_su_t_qne cells 83,037 flops 10,062 depth 588.5 ps util 0.4776 reach 0.0 um (1.8 s)
+GATE INFO cts_calibration: ss insertion all 387.8..524.5 ps (spread 136.7), boundary mean 437.2; tt insertion all 288.3..417.0 ps (spread 128.7), boundary mean 343.4; ff insertion all 224.9..349.1 ps (spread 124.2), boundary mean 284.1; macro_clk flag False
+GATE INFO density: effective global-placement target density 0.500 vs spec PD 0.50
+GATE INFO path_classes: reg->reg      600 paths, worst slack 69.1 ps (e.g. u_e.g_lane[2].u_m.genblk1.genblk1.g_l5.u.u.u_k1.g_r.r[33]$_DFF_P_/D)
+GATE INFO path_classes: setup WNS 6.905098715037639e-11 hold WNS -6.375242000977721e-11
+GATE INFO clock_rule: root port:ck: 10,063 sinks on the largest root <= 15,000; measured TT insertion 417.0 ps, leaf spread 128.7 ps
+PRE_ROUTE_GATE: PASS (0 fail, 0 warn)
+GATE: s81su_qne_ref/gate_result.json written (clock evidence for the submit gate: commit it with the kit)
+GATE_EXIT=0

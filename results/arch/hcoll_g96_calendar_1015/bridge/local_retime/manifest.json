@@ -1,0 +1,74 @@
+{
+  "schema": "hcoll.g96.immutable.calendar.receipt.v1",
+  "host": "regular-crane",
+  "created_utc": "2026-10-15T08:41:53.929389+00:00",
+  "files": {
+    "calendar.json": {
+      "bytes": 111534129,
+      "sha256": "9e721d90745a50c252403b85f91e5b0dc24e6e972b953fd23b808fb7a7bae29d"
+    },
+    "expanded_uops.jsonl": {
+      "bytes": 34190416,
+      "sha256": "69b58f0a72e0d30c300266ca045ab2f5431ba5032cc88bb12df8324a366d0f93"
+    },
+    "expanded_bridge.jsonl": {
+      "bytes": 8002249,
+      "sha256": "6be7cdd126ea1925fd3162ce1829f818e4ee77680770516e353a1dbba7831330"
+    },
+    "model.json": {
+      "bytes": 1662,
+      "sha256": "cf60b10b199601451ad6f9a9a9d4d9ab7a88db7cfcefe620630cbac016396fa7"
+    },
+    "independent_audit.json": {
+      "bytes": 709,
+      "sha256": "637f907e825d4d33e85fc25e9ae52b7b395b4e46797fc598ee480555825f1a3e"
+    },
+    "independent_bridge_audit.json": {
+      "bytes": 532,
+      "sha256": "b2b36bb607bb42f87e0eecacce142106c0a7b138d0e356bc94520f2f8fd58ae4"
+    },
+    "cause_analysis.json": {
+      "bytes": 1131,
+      "sha256": "be28fc092b34b10cce941f17a530252596baa2b4b230196b6e9feabe74fa1853"
+    },
+    "compiler.py": {
+      "bytes": 14245,
+      "sha256": "fc3bfed6869ed8f5292459cbe1bd953079c34aaa5348a32b5353d6326a02b2bf"
+    }
+  },
+  "sources": {
+    "g96_calendar.py": {
+      "bytes": 26443,
+      "sha256": "f8e94f86ec7189e8f9c940f9b6c8f70cdbef84de6fe5a010cc1b5f13df987e69"
+    },
+    "g96_bridge_calendar.py": {
+      "bytes": 14245,
+      "sha256": "fc3bfed6869ed8f5292459cbe1bd953079c34aaa5348a32b5353d6326a02b2bf"
+    },
+    "audit_g96.py": {
+      "bytes": 5233,
+      "sha256": "fe2d4e384bbccbe80a8ac5f83cb51c361a33adb24619a814229b5f291bed656d"
+    },
+    "audit_g96_bridge.py": {
+      "bytes": 2789,
+      "sha256": "2c1d911d644043896dbfa275bdd044bd73862b77c6ffeab8ab4948138a554d2e"
+    },
+    "analyze_g96.py": {
+      "bytes": 1753,
+      "sha256": "13a01c62dfa92c9864bc279ef59193a2119a70abae84ebbe97766127ac4afa4a"
+    },
+    "v2_layout_source.json": {
+      "bytes": 8547,
+      "sha256": "9d64823c8ad0bd9214ed168a3956fce902aa266741e972eb492ebc22e622904c"
+    }
+  },
+  "expanded_program": {
+    "owners": 384,
+    "distinct_words_min": 120,
+    "distinct_words_max": 563,
+    "active_words_min": 264,
+    "active_words_max": 700,
+    "counted_affine_compression": "UNVERIFIED; distinct-word count is not a counted-program lower bound"
+  },
+  "qualification": "Candidate compiler/calendar proof only; native extra program/catalog join, physical relays, full FEC/board clock contract and native SU composition unqualified"
+}

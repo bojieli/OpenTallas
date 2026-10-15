@@ -1,0 +1,15 @@
+{
+  "unit": "oth-ubuntu-418675-1792049521",
+  "host": "ot-epyc1tb",
+  "result": "RAN exit0",
+  "bank_sha256": "7b2e2fbafead30cbabc427303bb339da070645637af9d1a69f0dbdaa0a88ee53",
+  "qualified_payload": "rr payload captures only own group valid, eg only actual egress; no valid transaction latency changes",
+  "counter_exhaustion": {
+    "states": 65536,
+    "increments": 16,
+    "cases": 1048576,
+    "result": "PASS"
+  },
+  "real_macro_CE_UE_masks_allowners": "PASS 220 reads240writes34egress352cycles",
+  "literal_group_wrappers": "RG7WG3 andRG5WG1 positivesPASS, actual-return-group mutants killed"
+}

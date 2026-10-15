@@ -1,0 +1,10 @@
+`verilator_config
+hier_block -module "ot_hbm_idx_hslice_ready_native"
+hier_block -module "ot_hbm_idx_chunk_owned_native"
+hier_block -module "ot_hbm_idx_engine_static"
+hier_block -module "ot_hbm_idx_score_static"
+hier_block -module "ot_hbm_idx_query_static"
+hier_block -module "ot_hbm_idx_query_bank_native"
+no_inline -module "ot_hdc_v41x_q4dot_l"
+no_inline -module "ot_hdc_v41x_bmul_l"
+no_inline -module "ot_hdc_fp32_add_fast"

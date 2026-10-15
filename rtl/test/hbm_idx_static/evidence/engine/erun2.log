@@ -1,0 +1,8 @@
+ENGINE_ERR n=0 expected=0540baff804000ff80 actual=054094ff804010ff80
+ENGINE_ERR n=1 expected=0f41fa409c40fe3fa1 actual=0f41b7405a40a33f82
+ENGINE_ERR n=2 expected=0f3fe34032406840b4 actual=0f3fe34024409140cf
+ENGINE_ERR n=3 expected=0f3f1f3de9414c413f actual=0f3ebb3d0c40c24054
+IDX_ENGINE_STATIC MUT=2 beats=192 refbeats=192 errors=192 cycle=976 FAIL
+[976000] %Fatal: tb_idx_engine_static.sv:68: Assertion failed in tb_idx_engine_static: arithmetic/order mismatch
+%Error: rtl/test/hbm_idx_static/tb_idx_engine_static.sv:68: Verilog $stop
+Aborting...

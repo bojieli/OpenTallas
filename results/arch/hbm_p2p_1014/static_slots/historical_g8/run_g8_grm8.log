@@ -1,0 +1,12 @@
+DIAG central ep=0 multi=0 pipe=0 rec=0 state= 0
+REC 0 op=4 n=5120 afmt=0 ofmt=1 | die0 issue->done central 1270 p2p 1335 cycles
+REC 1 op=4 n=5120 afmt=0 ofmt=0 | die0 issue->done central 1270 p2p 2619 cycles
+REC 2 op=4 n=5120 afmt=0 ofmt=1 | die0 issue->done central 1270 p2p 3864 cycles
+REC 3 op=4 n=5120 afmt=0 ofmt=0 | die0 issue->done central 1270 p2p 3864 cycles
+SEQ case=grm8 G=8 records=4 central 5080 cycles, p2p 5199 cycles (first issue -> last done, all dies); flits sent central 9920 p2p 9920
+IMAGES words=122880 diff=0 count_mismatch=0 gather_expect_mismatch=0
+PASS HGI_COLL_P2P case=grm8 G=8 records=4 rc=0
+- rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_p2p.sv:556: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 5us; walltime 149.967 s; speed 32.355 ns/s
+- Verilator: cpu 149.954 s on 1 threads; allocated 251 MB

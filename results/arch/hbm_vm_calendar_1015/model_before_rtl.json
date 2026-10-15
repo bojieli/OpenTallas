@@ -1,0 +1,30 @@
+{
+  "schema": "opentallas.hbm.static-calendar.v1",
+  "macs_per_cycle": 0,
+  "replicas": 4,
+  "macro": "ot_sram_1r1w_1024x256_m2_r2c2",
+  "macros_per_quadrant": 1,
+  "storage_bytes": 32768,
+  "memory_bytes_per_cycle": {
+    "read": 32,
+    "configuration_write": 32
+  },
+  "calendar_bits": {
+    "SW": 146,
+    "SE": 91,
+    "NW": 139,
+    "NE": 99
+  },
+  "datapath": "one native macro read each compiler edge, dedicated capture rung, registered calendar outputs",
+  "mux": "PC increment/wrap of fixed compiler range, finite loop decrement; no data-dependent branches",
+  "latency_edges": {
+    "start_to_first_calendar": 3,
+    "fetch_to_calendar": 2
+  },
+  "throughput": "one compiler calendar per cycle after startup, no gaps at loop wrap",
+  "boundaries": "configuration266bits; start38bits; calendar91..146bits plus fixed-cycle ordinal32/valid/done/fault",
+  "route": "per-quadrant fixed producer; physical slot/pinface/reach/CTS unqualified",
+  "floorplan": "one actual macro174.744x70.47um plus PC/capture/output control, slot requested from H-DIE",
+  "area": "macro36942.62904um2 plus unmeasured control; no inherited closure",
+  "qualification": "actual macro programme bench+mutants required; layer compiler calendar/CP-loader join remain separate"
+}

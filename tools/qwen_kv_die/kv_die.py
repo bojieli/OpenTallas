@@ -771,7 +771,8 @@ def _build(r=R, kv_wq_leaves=False, kv_wq_binary=False, kv_wq_leaf_s=False, kv_w
         # MIRROR of the WS group about the die's vertical axis (E stacks: aggregator MY, engines 0-3 in the column next
         # to the landing on both sides), so a shared master's pin is level with the same peer in every stack; the N
         # stacks' aggregator is its own master qkd_astk_n (hub words ap / am on the S face, toward the hub)
-        add(f'astk_{st}', 'qkd_astk_n' if st[1] == 'N' else 'qkd_astk', gx + RENG[0] + GX, gy, ASTK_W - SHAVE, gh - SHAVE,
+        add(f'astk_{st}', 'qkd_astk_n' if st[1] == 'N' else 'qkd_astk', gx + RENG[0] + GX, gy, ASTK_W - SHAVE,
+            gh + (237.6 if ASTK_W > 324 else 0.0) - SHAVE,
             'MY' if side == 'E' else 'R0', 'attn_stack', 'attn')
         for e in range(r):
             col = (e // 4) if side == 'W' else 1 - e // 4      # physical column: 0 = the landing side on the W stacks

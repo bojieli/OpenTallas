@@ -1,0 +1,59 @@
+{
+  "scope": "Actual distributed PHY-local PC service leaf; no die or full-token qualification",
+  "model": {
+    "schema": "opentallas.hbm-svc-v15-pc.v1",
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "macros_per_pc": 1,
+    "pcs_per_stack": 32,
+    "stacks": 4,
+    "macro_area_per_stack_um2": 124603.287552,
+    "sectors_per_bank": 64,
+    "banks": 2,
+    "capacity_bytes_per_stack": 131072,
+    "phy_outstanding_per_pc": 1,
+    "read_request_ii": "PHY request and response latency plus one capture edge",
+    "write_request_ii": "one SRAM read edge plus capture and PHY acceptance/completion",
+    "scheduled_output_bytes_per_pc_cycle": 32,
+    "scheduled_pc_parallelism": 8,
+    "scheduled_block_cycles": 256,
+    "scheduled_block_bytes": 65536,
+    "fill_bytes_per_pc_cycle": 32,
+    "phy_bits_per_pc": 622,
+    "scheduled_payload_boundary_bits_per_pc": 256,
+    "valid_bits_per_pc": 128,
+    "controller_state_bits_per_pc_upper_bound": 300,
+    "macs_per_cycle": 0,
+    "mux_cost": "one 1R1W SRAM; static drain vs PHY-writeback read exclusion; HBM fill vs scheduledfill exclusion",
+    "routing_tracks_needed_per_pc": 878,
+    "routing_capacity": null,
+    "slot_fit": null,
+    "timing_closed": false,
+    "compiler_calendar_bound": false,
+    "adopted": false,
+    "composition": "prefetch64sectors then one blockready check; 256 fixed8PCgroup drain slots; no production perlane ready"
+  },
+  "source_sha256": {
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_static_pc.sv": "cd805d0891cd70c8d1ba94d16ce86f6654bfcb975101f9719932c094eb532585",
+    "rtl/hbm_accel/loader/service_native/tb_hbm_svc_static_pc.sv": "221a076053a067ead0f9f5fa59b22ea7e8d9403b308898bf07319aa1920e9c0f",
+    "rtl/hbm_accel/loader/service_native/run_static_pc_bench.sh": "fe0520d2c7283781e8f284d4f30da241871daaa9913de772d54ec814ee455c21"
+  },
+  "logs": {
+    "positive.log": "STATIC_PC PASS read_vectors=192 write_vectors=148 prefetch_requests=84 simultaneous_read_fill=64 faults=5\n",
+    "mutant.log": "FATAL: rtl/hbm_accel/loader/service_native/tb_hbm_svc_static_pc.sv:84: payload read mismatch slot=0\n       Time: 1366000 Scope: tb_hbm_svc_static_pc\n"
+  },
+  "yosys": "hierarchy/proc/opt_clean/check -assert PASS",
+  "gaps": [
+    "Actual SM/static row format join pending",
+    "WB and prefetch block controllers being composed",
+    "2334 non-PC shared PHY bits and historical native ports remain strict contract gaps",
+    "Physical slot/timing/clock qualification absent"
+  ],
+  "qualification_status": "REJECTED_FOR_ACTUAL_PHY_ADDRESS_AND_CLOCK_CONTRACT",
+  "authoritative_contradictions": {
+    "source": "rtl/hbm_accel/ingest/ot_hbm_loader_kport_address.sv",
+    "PHY_address": "full local sector30, not PC-local byte30",
+    "PC": "s[6:2]^s[11:7]^s[16:12]",
+    "old_leaf_alignment32": "incorrect for sector interface; legacy bench is artificial byte-address mechanism only",
+    "clock": "HBM1024ps distinct from stream833.333ps; no actual crossing in this historical leaf"
+  }
+}

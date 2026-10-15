@@ -10,7 +10,7 @@
 // Two contexts may execute the same immutable calendar. No runtime signal
 // changes an issue, KIT or END edge. Availability/completions only detect faults.
 module ot_s81_fixed_issue #(
- parameter integer NOPS=128, NENG=13, STAGE=0,
+ parameter integer NOPS=128, NENG=13, STAGE=0, OP_BASE=0,
  parameter [12:0] ENG_PRESENT=13'h1fff,
  parameter integer MUT=0
 )(
@@ -45,7 +45,7 @@ module ot_s81_fixed_issue #(
  reg[NENG-1:0]legit_done;
 `ifndef SYNTHESIS
  initial begin
-  if(NOPS<2||NOPS>128||NENG<1||NENG>13||STAGE<0||STAGE>127)$fatal(1,"invalid native S81 issuer shape");
+  if(NOPS<2||NOPS>128||NENG<1||NENG>13||STAGE<0||STAGE>127||OP_BASE<0||OP_BASE+NOPS>128)$fatal(1,"invalid native S81 issuer shape");
  end
 `endif
  always @(posedge clk or negedge rst_n)begin
@@ -126,7 +126,7 @@ module ot_s81_fixed_issue #(
     for(i=0;i<NOPS;i=i+1)if(i<length_q)begin
      eng=mem[i][27:24];
      if(eng<14&&age[s]!=0&&mem[i][75:52]==age[s]-1'b1)begin
-      if(!dv_q[eng]||dt_q[8*eng+:8]!={1'(s),7'(i)}||!pending[s][i])begin run_fault<=1;if(fault_code==0)fault_code<=8;end
+      if(!dv_q[eng]||dt_q[8*eng+:8]!={1'(s),7'(i+OP_BASE)}||!pending[s][i])begin run_fault<=1;if(fault_code==0)fault_code<=8;end
       else begin legit_done[eng]=1;pending[s][i]<=0;end
      end
      if(age[s]==mem[i][51:28]+((MUT==1&&eng<14)?24'd1:24'd0))begin
@@ -157,7 +157,7 @@ module ot_s81_fixed_issue #(
     m0=j<length_q&&mem[j][27:24]==ge&&ENG_PRESENT[ge]&&active[0]&&age[0]==mem[j][51:28]+(MUT==1?24'd1:24'd0);
     m1=j<length_q&&mem[j][27:24]==ge&&ENG_PRESENT[ge]&&active[1]&&age[1]==mem[j][51:28]+(MUT==1?24'd1:24'd0);
     h0=h0|m0;h1=h1|m1;
-    a0=a0|({31{m0}}&{mem[j][23:0],7'(j)});a1=a1|({31{m1}}&{mem[j][23:0],7'(j)});
+    a0=a0|({31{m0}}&{mem[j][23:0],7'(j+OP_BASE)});a1=a1|({31{m1}}&{mem[j][23:0],7'(j+OP_BASE)});
    end
   end
   always @(posedge clk or negedge rst_n)begin

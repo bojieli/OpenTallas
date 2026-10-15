@@ -1,0 +1,659 @@
+{
+  "schema": "opentallas.hbm-svc-block-boundary.v1",
+  "modules": {
+    "ot_hbm_svc_wb_block_cdc": {
+      "source": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_block_cdc.sv",
+      "sha256": "9571d70cbc5a127d5bfea05a11805009bdc8bf544f2d6031c53fb5b63cb90dca",
+      "ports": {
+        "stream_clk": {
+          "direction": "input",
+          "bits": 1,
+          "domain": "stream833"
+        },
+        "stream_rst_n": {
+          "direction": "input",
+          "bits": 1,
+          "domain": "stream833"
+        },
+        "hbm_clk": {
+          "direction": "input",
+          "bits": 1,
+          "domain": "hbm1024"
+        },
+        "hbm_rst_n": {
+          "direction": "input",
+          "bits": 1,
+          "domain": "hbm1024"
+        },
+        "reserve_v": {
+          "direction": "input",
+          "bits": 1,
+          "domain": "stream833"
+        },
+        "reserve_ready": {
+          "direction": "output",
+          "bits": 1,
+          "domain": "stream833"
+        },
+        "reserve_bank": {
+          "direction": "input",
+          "bits": 1,
+          "domain": "stream833"
+        },
+        "reserve_epoch": {
+          "direction": "input",
+          "bits": 16,
+          "domain": "stream833"
+        },
+        "reserve_base": {
+          "direction": "input",
+          "bits": 32,
+          "domain": "stream833"
+        },
+        "reserve_total": {
+          "direction": "input",
+          "bits": 12,
+          "domain": "stream833"
+        },
+        "fill_start": {
+          "direction": "input",
+          "bits": 1,
+          "domain": "stream833"
+        },
+        "fill_start_bank": {
+          "direction": "input",
+          "bits": 1,
+          "domain": "stream833"
+        },
+        "fill_start_epoch": {
+          "direction": "input",
+          "bits": 16,
+          "domain": "stream833"
+        },
+        "wd": {
+          "direction": "input",
+          "bits": 2312,
+          "domain": "stream833"
+        },
+        "fill_done": {
+          "direction": "output",
+          "bits": 1,
+          "domain": "stream833"
+        },
+        "done_v": {
+          "direction": "output",
+          "bits": 1,
+          "domain": "stream833"
+        },
+        "done_bank": {
+          "direction": "output",
+          "bits": 1,
+          "domain": "stream833"
+        },
+        "done_epoch": {
+          "direction": "output",
+          "bits": 16,
+          "domain": "stream833"
+        },
+        "done_sectors": {
+          "direction": "output",
+          "bits": 12,
+          "domain": "stream833"
+        },
+        "bank_owned": {
+          "direction": "output",
+          "bits": 2,
+          "domain": "stream833"
+        },
+        "fault": {
+          "direction": "output",
+          "bits": 1,
+          "domain": "stream833"
+        },
+        "k_v": {
+          "direction": "output",
+          "bits": 32,
+          "domain": "hbm1024"
+        },
+        "k_rdy": {
+          "direction": "input",
+          "bits": 32,
+          "domain": "hbm1024"
+        },
+        "k_addr": {
+          "direction": "output",
+          "bits": 960,
+          "domain": "hbm1024"
+        },
+        "k_len": {
+          "direction": "output",
+          "bits": 128,
+          "domain": "hbm1024"
+        },
+        "k_tag": {
+          "direction": "output",
+          "bits": 544,
+          "domain": "hbm1024"
+        },
+        "k_we": {
+          "direction": "output",
+          "bits": 32,
+          "domain": "hbm1024"
+        },
+        "k_wdata": {
+          "direction": "output",
+          "bits": 8192,
+          "domain": "hbm1024"
+        },
+        "k_wstrb": {
+          "direction": "output",
+          "bits": 1024,
+          "domain": "hbm1024"
+        },
+        "k_wr_done": {
+          "direction": "input",
+          "bits": 32,
+          "domain": "hbm1024"
+        }
+      }
+    },
+    "ot_hbm_svc_prefetch_block_cdc": {
+      "source": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_block_cdc.sv",
+      "sha256": "f32e3574435d9598361ec6c22404ba3ad7ac267d4f58867b52454fc360dd49fc",
+      "ports": {
+        "stream_clk": {
+          "direction": "input",
+          "bits": 1,
+          "domain": "stream833"
+        },
+        "stream_rst_n": {
+          "direction": "input",
+          "bits": 1,
+          "domain": "stream833"
+        },
+        "hbm_clk": {
+          "direction": "input",
+          "bits": 1,
+          "domain": "hbm1024"
+        },
+        "hbm_rst_n": {
+          "direction": "input",
+          "bits": 1,
+          "domain": "hbm1024"
+        },
+        "reserve_v": {
+          "direction": "input",
+          "bits": 1,
+          "domain": "stream833"
+        },
+        "reserve_ready": {
+          "direction": "output",
+          "bits": 1,
+          "domain": "stream833"
+        },
+        "reserve_base": {
+          "direction": "input",
+          "bits": 32,
+          "domain": "stream833"
+        },
+        "reserve_total": {
+          "direction": "input",
+          "bits": 12,
+          "domain": "stream833"
+        },
+        "reserve_bank": {
+          "direction": "input",
+          "bits": 1,
+          "domain": "stream833"
+        },
+        "reserve_epoch": {
+          "direction": "input",
+          "bits": 16,
+          "domain": "stream833"
+        },
+        "block_ready": {
+          "direction": "output",
+          "bits": 2,
+          "domain": "stream833"
+        },
+        "block_ready_v": {
+          "direction": "output",
+          "bits": 1,
+          "domain": "stream833"
+        },
+        "block_ready_bank": {
+          "direction": "output",
+          "bits": 1,
+          "domain": "stream833"
+        },
+        "block_ready_epoch": {
+          "direction": "output",
+          "bits": 16,
+          "domain": "stream833"
+        },
+        "start_v": {
+          "direction": "input",
+          "bits": 1,
+          "domain": "stream833"
+        },
+        "start_bank": {
+          "direction": "input",
+          "bits": 1,
+          "domain": "stream833"
+        },
+        "start_epoch": {
+          "direction": "input",
+          "bits": 16,
+          "domain": "stream833"
+        },
+        "out_v": {
+          "direction": "output",
+          "bits": 1,
+          "domain": "stream833"
+        },
+        "out_mask": {
+          "direction": "output",
+          "bits": 8,
+          "domain": "stream833"
+        },
+        "out_data": {
+          "direction": "output",
+          "bits": 2048,
+          "domain": "stream833"
+        },
+        "out_ordinal": {
+          "direction": "output",
+          "bits": 11,
+          "domain": "stream833"
+        },
+        "out_bank": {
+          "direction": "output",
+          "bits": 1,
+          "domain": "stream833"
+        },
+        "out_epoch": {
+          "direction": "output",
+          "bits": 16,
+          "domain": "stream833"
+        },
+        "out_last": {
+          "direction": "output",
+          "bits": 1,
+          "domain": "stream833"
+        },
+        "fault": {
+          "direction": "output",
+          "bits": 1,
+          "domain": "stream833"
+        },
+        "k_v": {
+          "direction": "output",
+          "bits": 32,
+          "domain": "hbm1024"
+        },
+        "k_rdy": {
+          "direction": "input",
+          "bits": 32,
+          "domain": "hbm1024"
+        },
+        "k_addr": {
+          "direction": "output",
+          "bits": 960,
+          "domain": "hbm1024"
+        },
+        "k_len": {
+          "direction": "output",
+          "bits": 128,
+          "domain": "hbm1024"
+        },
+        "k_tag": {
+          "direction": "output",
+          "bits": 544,
+          "domain": "hbm1024"
+        },
+        "k_we": {
+          "direction": "output",
+          "bits": 32,
+          "domain": "hbm1024"
+        },
+        "k_wdata": {
+          "direction": "output",
+          "bits": 8192,
+          "domain": "hbm1024"
+        },
+        "k_wstrb": {
+          "direction": "output",
+          "bits": 1024,
+          "domain": "hbm1024"
+        },
+        "k_wr_done": {
+          "direction": "input",
+          "bits": 32,
+          "domain": "hbm1024"
+        },
+        "kr_v": {
+          "direction": "input",
+          "bits": 32,
+          "domain": "hbm1024"
+        },
+        "kr_rdy": {
+          "direction": "output",
+          "bits": 32,
+          "domain": "hbm1024"
+        },
+        "kr_tag": {
+          "direction": "input",
+          "bits": 544,
+          "domain": "hbm1024"
+        },
+        "kr_beat": {
+          "direction": "input",
+          "bits": 128,
+          "domain": "hbm1024"
+        },
+        "kr_data": {
+          "direction": "input",
+          "bits": 8192,
+          "domain": "hbm1024"
+        }
+      }
+    },
+    "ot_hbm_svc_phy_mux": {
+      "source": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_phy_mux.sv",
+      "sha256": "86fa1f19baadad3168cb43aeea8a308e378c3abcfb8056b20a7a766a09d64745",
+      "ports": {
+        "hbm_clk": {
+          "direction": "input",
+          "bits": 1,
+          "domain": "hbm1024"
+        },
+        "hbm_rst_n": {
+          "direction": "input",
+          "bits": 1,
+          "domain": "hbm1024"
+        },
+        "rd_v": {
+          "direction": "input",
+          "bits": 32,
+          "domain": "hbm1024"
+        },
+        "rd_rdy": {
+          "direction": "output",
+          "bits": 32,
+          "domain": "hbm1024"
+        },
+        "rd_addr": {
+          "direction": "input",
+          "bits": 960,
+          "domain": "hbm1024"
+        },
+        "rd_len": {
+          "direction": "input",
+          "bits": 128,
+          "domain": "hbm1024"
+        },
+        "rd_tag": {
+          "direction": "input",
+          "bits": 544,
+          "domain": "hbm1024"
+        },
+        "wb_v": {
+          "direction": "input",
+          "bits": 32,
+          "domain": "hbm1024"
+        },
+        "wb_rdy": {
+          "direction": "output",
+          "bits": 32,
+          "domain": "hbm1024"
+        },
+        "wb_addr": {
+          "direction": "input",
+          "bits": 960,
+          "domain": "hbm1024"
+        },
+        "wb_len": {
+          "direction": "input",
+          "bits": 128,
+          "domain": "hbm1024"
+        },
+        "wb_tag": {
+          "direction": "input",
+          "bits": 544,
+          "domain": "hbm1024"
+        },
+        "wb_data": {
+          "direction": "input",
+          "bits": 8192,
+          "domain": "hbm1024"
+        },
+        "wb_strb": {
+          "direction": "input",
+          "bits": 1024,
+          "domain": "hbm1024"
+        },
+        "k_v": {
+          "direction": "output",
+          "bits": 32,
+          "domain": "hbm1024"
+        },
+        "k_rdy": {
+          "direction": "input",
+          "bits": 32,
+          "domain": "hbm1024"
+        },
+        "k_addr": {
+          "direction": "output",
+          "bits": 960,
+          "domain": "hbm1024"
+        },
+        "k_len": {
+          "direction": "output",
+          "bits": 128,
+          "domain": "hbm1024"
+        },
+        "k_tag": {
+          "direction": "output",
+          "bits": 544,
+          "domain": "hbm1024"
+        },
+        "k_we": {
+          "direction": "output",
+          "bits": 32,
+          "domain": "hbm1024"
+        },
+        "k_wdata": {
+          "direction": "output",
+          "bits": 8192,
+          "domain": "hbm1024"
+        },
+        "k_wstrb": {
+          "direction": "output",
+          "bits": 1024,
+          "domain": "hbm1024"
+        }
+      }
+    },
+    "ot_hbm_svc_static_sm_rows": {
+      "source": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_static_sm_rows.sv",
+      "sha256": "61e7596009657dd668189bce7ae45e7f6f4ce43f52225997656af4bc0a5dd907",
+      "ports": {
+        "clk": {
+          "direction": "input",
+          "bits": 1,
+          "domain": "stream833"
+        },
+        "rst_n": {
+          "direction": "input",
+          "bits": 1,
+          "domain": "stream833"
+        },
+        "open_v": {
+          "direction": "input",
+          "bits": 1,
+          "domain": "stream833"
+        },
+        "open_bank": {
+          "direction": "input",
+          "bits": 1,
+          "domain": "stream833"
+        },
+        "open_epoch": {
+          "direction": "input",
+          "bits": 16,
+          "domain": "stream833"
+        },
+        "open_count": {
+          "direction": "input",
+          "bits": 7,
+          "domain": "stream833"
+        },
+        "fill_v": {
+          "direction": "input",
+          "bits": 1,
+          "domain": "stream833"
+        },
+        "fill_bank": {
+          "direction": "input",
+          "bits": 1,
+          "domain": "stream833"
+        },
+        "fill_epoch": {
+          "direction": "input",
+          "bits": 16,
+          "domain": "stream833"
+        },
+        "fill_row": {
+          "direction": "input",
+          "bits": 6,
+          "domain": "stream833"
+        },
+        "fill_part": {
+          "direction": "input",
+          "bits": 3,
+          "domain": "stream833"
+        },
+        "fill_data": {
+          "direction": "input",
+          "bits": 256,
+          "domain": "stream833"
+        },
+        "fill_tag": {
+          "direction": "input",
+          "bits": 10,
+          "domain": "stream833"
+        },
+        "read_v": {
+          "direction": "input",
+          "bits": 1,
+          "domain": "stream833"
+        },
+        "read_bank": {
+          "direction": "input",
+          "bits": 1,
+          "domain": "stream833"
+        },
+        "read_epoch": {
+          "direction": "input",
+          "bits": 16,
+          "domain": "stream833"
+        },
+        "read_row": {
+          "direction": "input",
+          "bits": 6,
+          "domain": "stream833"
+        },
+        "read_tag": {
+          "direction": "input",
+          "bits": 10,
+          "domain": "stream833"
+        },
+        "retire_v": {
+          "direction": "input",
+          "bits": 1,
+          "domain": "stream833"
+        },
+        "retire_bank": {
+          "direction": "input",
+          "bits": 1,
+          "domain": "stream833"
+        },
+        "retire_epoch": {
+          "direction": "input",
+          "bits": 16,
+          "domain": "stream833"
+        },
+        "block_ready": {
+          "direction": "output",
+          "bits": 2,
+          "domain": "stream833"
+        },
+        "bank_owned": {
+          "direction": "output",
+          "bits": 2,
+          "domain": "stream833"
+        },
+        "fault": {
+          "direction": "output",
+          "bits": 1,
+          "domain": "stream833"
+        },
+        "out_packet": {
+          "direction": "output",
+          "bits": 1099,
+          "domain": "stream833"
+        }
+      }
+    }
+  },
+  "dependency_sha256": {
+    "rtl/chip/ot_chip_v41x_hbm3e_phy.sv": "257547b1b904af203a2b0d70e5414d8b49de7c5c941a1966325d7ed1172afd36",
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_hbm.sv": "c757ae39d767291db3fd37565ce6c5ff6eec9ed119cc97ee06432f301d87ecf4",
+    "rtl/hbm_accel/ingest/ot_hbm_loader_kport_address.sv": "b6eea0ffce657114439b555d6d4eee5ee6ad7efa4c6d226e94aa8697d539898b",
+    "rtl/hbm_accel/service/ot_hbm_kport_map.sv": "93e6f1e03c7c9ce4780da18b3c453381878107d5db68cda8312d2fb9a61ab84f",
+    "rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv": "6b92d2ef1e24a526bd8f674d9aa696f61d4430b802155f35575d68efa439502b",
+    "rtl/lib/ot_async_fifo.sv": "e091268202e1c6bcc18c8eb83304730c5a29bc10e0a6c52a4dcfc19c177e882e",
+    "rtl/lib/ot_reset_sync.sv": "489e493c19aa1260853031fee35c14ea3394ae62ff6853cf7ea407cb8fb78bbd"
+  },
+  "clocks": {
+    "stream_period_ps": 833.3333333333334,
+    "hbm_period_ps": 1024,
+    "relationship": "asynchronous; actual FIFOs and synchronized block identity"
+  },
+  "address": {
+    "global_wd": "stack2,local_sector30",
+    "k_addr": "full local sector30",
+    "pc": "s[6:2]^s[11:7]^s[16:12]"
+  },
+  "writeback": {
+    "admission": "one reserve_ready check per buffer block",
+    "payload": "8x{v,global_sector32,data256}",
+    "fixed_fill_cycles": "ceil(total/8), total1..2048",
+    "posted_count": "done_v ? done_sectors12 : 0",
+    "completion": "only matching actual k_wr_done for every sector, returned through ACK CDC with bank/epoch"
+  },
+  "prefetch": {
+    "admission": "whole block ready before compiled start",
+    "fixed_delivery_cycles": "ceil(total/8)",
+    "issue_policy": "serialized source-correct successor only; NOT throughput-qualified",
+    "response_identity": "full epoch16/bank and physical owner ordinal; arbitrary response waits remain inside boundary"
+  },
+  "physical_inventory": {
+    "wb_sram_macros": 32,
+    "prefetch_sram_macros": 32,
+    "sm_row_macros_per_sm": 5,
+    "wb_payload_fifos": 8,
+    "prefetch_payload_fifos": 8,
+    "old_34_pc_wrappers": "historical address/clock assumptions rejected; not corrected block physical wrappers"
+  },
+  "fail_closed_requirements": [
+    "Corrected block hardware is not yet physically partitioned into all34 accepted service bands",
+    "Actual 900GB/s/stack service price and production prefetch overlap not met by serialized issue",
+    "Actual compiler83bit SM program, real scale/weight allocation and rowcache fill calendar not bound",
+    "Actual loader programme/native block command issuer not bound",
+    "Real macro placements, source-derived clock sink census, CTS and die timing not qualified",
+    "2334 shared PHY W/clock/status bits require explicit active-source or protocol-idle binding",
+    "Mapped PHY, root clock/reset and every physical boundary require source-exact station graph and timing evidence"
+  ],
+  "qualified": false
+}

@@ -1,0 +1,18 @@
+{
+  "schema": "opentallas.ref_tile.staged_remeasurement.v1",
+  "tool_image_identity": "sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29",
+  "original_archive_stdout": "unavailable",
+  "original_script_sha256": "ce458fb5982f0db4f6a3e9b96f1a3070f5d8954d5f4868587fb6f3df31bd2ca7",
+  "manifest_sha256": "036ce70da180514a68fdeaafa84b3cd803d8d3153c5715bd62d09efb3610e893",
+  "artifacts_sha256": {
+    "routes/gate/work/orfs/results/asap7/opentallas_qkh_packet_v256_asap7_ref_gate/base/1_2_yosys.v": "80f0d05246cc4aa91a50a1d8482edc6c90b93638c87c64fc1a5aeb69400e4cd3",
+    "routes/gate/work/orfs/results/asap7/opentallas_qkh_packet_v256_asap7_ref_gate/base/3_2_place_iop.odb": "9867ee1c971f49ad862fe34194f0f46dc58e5569a8d45227bd5a541ecc3fc7e0",
+    "routes/gate/work/orfs/results/asap7/opentallas_qkh_packet_v256_asap7_ref_gate/base/4_1_cts.odb": "608fbfccbb84ba1c3004d8e651fd0eabe5aec1d0f78e8a6f75163cb5d66819a8",
+    "routes/gate/work/orfs/results/asap7/opentallas_qkh_packet_v256_asap7_ref_gate/base/4_cts.sdc": "05bb60ae5e05e0e85933f86e03761a9277fb58c70118b47ee8e0890ff2f4055d",
+    "routes/gate/work/orfs/config.mk": "ba3ea56376b3ef727fe5e5f58e59a1b6f074a21a629a2988e1eb3639b76eb444"
+  },
+  "measurement_script_sha256": "e7cbe3181493ffbbf68ee2b5508172b7be3d7d7b3f6105bc98d6b67edf03301e",
+  "measurement_log_sha256": "6b0788f66207774523e2653207dfe57dabff5b966d7a01806e3c2260319d971f",
+  "new_measurement_only": true,
+  "physical_thresholds": "unchanged"
+}

@@ -220,3 +220,32 @@ An optional tile `signal_max_layer` may tighten the existing signal ceiling, for
 This opt-in profile runs a net-type audit after DRT and again while exporting each final routed corner, including any hold ECO. It checks signal and clock wire/via geometry against the signal ceiling, PG special-wire geometry against the PG ceiling, and actual signal pins. The exact exported LEF must have no signal pin above the lower ceiling; higher OBS must remain within the PG ceiling and have actual PG metal evidence in the same final ODB. Hard-macro OBS above the requested signal limit are unsupported without separate net-type evidence. Reports and helper hashes are carried in `abstract.json`. An old route report cannot qualify a later ECO.
 
 A held geometry probe never relaxes the 20 um requirement for a production closure candidate. Removing `job.hold_merge` restores the original FAIL; measured access, timing, DRC and eventual die acceptance remain separate requirements.
+
+### Independent CTS roots inside a leaf tile
+
+Opt in with `"clock":"multiple_cts_roots"`, `"kind":"tile"`,
+`"clock_ports":["ck_req","ck_rsp"]`, and `"clock_port":"ck_req"`.
+Every listed port owns a real standard-cell CTS tree; no hard children or
+fabricated child insertion records are used. Explicit `clock_entry_domains`
+are required, with one `[1,1]` clock root per domain, the primary root in
+`core`, and literal base input/output names covering every IO once (including
+reset). The supported relationship is related samefrequency clocks with zero
+nominal phase; asynchronous groups, ratio changes, or unassigned IO are refused.
+Shared asynchronous resets get one IO reference; actual data-pin paths (including
+synchronous resets) must obey their declared domain like other data inputs.
+
+Each root is measured in the actual loaded corner. Its boundary register
+population determines its own R; delivery compensates each source to phi−R.
+Generated CTS, route, fill, and signoff hooks replay the complete domain
+boundary. Actual timing-graph ownership checks reject cross-domain datapaths,
+wrong input/output assignments, and unowned registers. This mode deliberately
+does not apply the legacy single-clock IO shim. The pre-route gate requires
+`--cts`, exact per-source measurement coverage, and the clock rule on each
+actual root separately. `ck_insertion.py --all-clocks --raw-source` and exported
+multi-clock insertion records preserve the physical per-pin references.
+
+`tests/test_multiple_cts_roots.py` exercises two actual OpenROAD CTS trees,
+differing insertion references, source compensation, generated hooks, and
+wrong-domain/unknown-port/crossing mutants. These are flow fixtures; production
+leaf placement, routed TT/FF timing, DRC, and native boundary closure remain
+required.

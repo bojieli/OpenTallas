@@ -1318,6 +1318,7 @@ set t0 [clock seconds]
 source /work/place.tcl
 puts "OT_TIME place_s=[expr {{[clock seconds]-$t0}}]"
 mem placed
+source /work/die_constant_cells.tcl
 # legality: every instance inside the die, no two macros overlap (sweep on x), lattice moves reported
 set blk [ord::get_db_block]
 set boxes {{}}
@@ -1344,17 +1345,20 @@ foreach b $boxes {{
   set active $keep
 }}
 puts "OT_LEGAL instances=$n overlaps=$ov outside=$out"
+if {{$ov || $out}} {{ error "OT_LEGAL: invalid placement" }}
 write_def /work/floorplan_placed.def
 mem def
-if {{[catch {{ot_mts::assert_on_track -label fulldie}} err]}} {{ puts "OT_ASSERT FAIL $err" }} else {{ puts "OT_ASSERT PASS" }}
+if {{[catch {{ot_mts::assert_on_track -label fulldie}} err]}} {{ puts "OT_ASSERT FAIL $err"; error $err }} else {{ puts "OT_ASSERT PASS" }}
 mem assert
 set t0 [clock seconds]
 set_routing_layers -signal M2-M9
-if {{[catch {{pin_access -verbose 1}} err]}} {{ puts "OT_PA FAIL $err" }} else {{ puts "OT_PA DONE" }}
+if {{[catch {{pin_access -verbose 1}} err]}} {{ puts "OT_PA FAIL $err"; error $err }} else {{ puts "OT_PA DONE" }}
 puts "OT_TIME pa_s=[expr {{[clock seconds]-$t0}}]"
 mem pa
 write_db /work/floorplan.odb
 """
+    for helper in ('die_constant_cells.tcl', 'die_constant_pg_check.tcl'):
+        (work / helper).write_text((ROOT / 'physical/common_flow' / helper).read_text())
     (work / 'run.tcl').write_text(tcl)
     (work / 'run_pa.tcl').write_text(f"""# case (a) follow-on: pin access and die PDN on the placed floorplan
 proc mem {{tag}} {{ set f [open /proc/self/status]; set s [read $f]; close $f
@@ -1363,16 +1367,16 @@ read_db /work/floorplan.odb
 mem read
 set_routing_layers -signal M2-M9
 set t0 [clock seconds]
-if {{[catch {{pin_access -verbose 1}} err]}} {{ puts "OT_PA FAIL $err" }} else {{ puts "OT_PA DONE" }}
+if {{[catch {{pin_access -verbose 1}} err]}} {{ puts "OT_PA FAIL $err"; error $err }} else {{ puts "OT_PA DONE" }}
 puts "OT_TIME pa_s=[expr {{[clock seconds]-$t0}}]"
 mem pa
 set t0 [clock seconds]
-if {{[catch {{source /work/pdn.tcl; pdngen}} err]}} {{ puts "OT_PDN FAIL $err" }} else {{
+if {{[catch {{source /work/pdn.tcl; pdngen; source /work/die_constant_pg_check.tcl}} err]}} {{ puts "OT_PDN FAIL $err"; error $err }} else {{
   set nsw 0; foreach net [[ord::get_db_block] getNets] {{ foreach sw [$net getSWires] {{ incr nsw [llength [$sw getWires]] }} }}
   puts "OT_PDN PASS special_shapes=$nsw" }}
 puts "OT_TIME pdn_s=[expr {{[clock seconds]-$t0}}]"
 mem pdn
-foreach net {{VDD VSS}} {{ if {{[catch {{check_power_grid -net $net}} err]}} {{ puts "OT_PGCHECK $net FAIL $err" }} else {{ puts "OT_PGCHECK $net PASS" }} }}
+foreach net {{VDD VSS}} {{ if {{[catch {{check_power_grid -net $net}} err]}} {{ puts "OT_PGCHECK $net FAIL $err"; error $err }} else {{ puts "OT_PGCHECK $net PASS" }} }}
 write_db /work/floorplan_pdn.odb
 """)
     man = dict(case='a', instances=len(m['insts']), pins=npins, nets=sum(b[2] for b in m['buses']),
@@ -1857,10 +1861,16 @@ def record_a(work):
         mm = re.search(pat, log)
         if mm:
             pa[key] = int(mm.group(1))
-    pa['status'] = 'DONE' if 'OT_PA DONE' in log else ('FAIL' if 'OT_PA FAIL' in log else 'not reached')
+    pa_failed = re.search(r'OT_PA\s*FAIL|\[ERROR DRT-|^Error:', log, re.M)
+    pa['status'] = 'FAIL' if pa_failed else ('DONE' if 'OT_PA DONE' in log else 'not reached')
+    pa['unroutable_power_errors'] = len(re.findall(r'DRT-0305', log))
     pa['no_access_errors'] = len(re.findall(r'DRT-0073|No access point', log))
-    pa['examples'] = re.findall(r'\[(?:WARNING|ERROR) DRT-00(?:73|74|83)\].*', log)[:20]
+    pa['examples'] = re.findall(r'\[(?:WARNING|ERROR) DRT-(?:00(?:73|74|83)|0305)\].*', log)[:20]
     out['pin_access'] = pa
+    cm = re.search(r'OT_CONST MAPPED cells=(\d+) hard_macros_unchanged=(\d+)', log)
+    if cm:
+        out['constant_mapping'] = dict(cells=int(cm[1]), hard_macros_unchanged=int(cm[2]),
+                                       power_grid='OPEN' if 'OT_CONST PG_OPEN' in log else 'not required')
     out['errors'] = re.findall(r'\[ERROR [^\]]+\].*|^Error: .*', log, re.M)[:10]
     return out
 

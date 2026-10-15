@@ -1,0 +1,51 @@
+{
+  "schema": "opentallas.s81.actual_hc_head_terminal.v1",
+  "gate": "PASS",
+  "actual_hc_xf_chained": true,
+  "all_field_roots_from_rtl": true,
+  "rows": 129280,
+  "full_native_token_qualified": false,
+  "scope": "actual HC arithmetic -> mapped ROM head -> TP4 terminal; VM/input producers and physical composition unqualified",
+  "expected_checker": {
+    "path": "/srv/opentallas-scratch/claude/s81-ftok/r3/head/expect.mem",
+    "sha256": "6c59ed7b5b88afe40af5ef7fa64379c1a19348e4ca54f05c1c845d1bb11fb7cf",
+    "token": 21946,
+    "bits": "4173a558"
+  },
+  "field_provenance_sha256": "49c602d9bbed5f9d4d0b60b309f65c3e7e19f1c73165e3c915a0961072e1adfe",
+  "independent_checker_logits": {
+    "logits_r0.mem": {
+      "path": "/srv/opentallas-scratch/claude/s81-ftok/r3/head/logits_r0.mem",
+      "sha256": "86b0486a5ee327272d5ad8e2f7f36e973526be4f21078b8afa79aace8f3caabe"
+    },
+    "logits_r1.mem": {
+      "path": "/srv/opentallas-scratch/claude/s81-ftok/r3/head/logits_r1.mem",
+      "sha256": "658e605944fc0f99a4170826da2ea352600331d3b695c965a37fdff29fc73eee"
+    },
+    "logits_r2.mem": {
+      "path": "/srv/opentallas-scratch/claude/s81-ftok/r3/head/logits_r2.mem",
+      "sha256": "bb14882830128ba5ef7c16a0919fb932aee7fa8dfbe24caff8d744900130fe53"
+    },
+    "logits_r3.mem": {
+      "path": "/srv/opentallas-scratch/claude/s81-ftok/r3/head/logits_r3.mem",
+      "sha256": "058fc5a6103eceafa3f7389945a5ce64803e2673bb70a41f52b6df99f1285c42"
+    }
+  },
+  "tools": {
+    "finish_native_head.py": "3292fb09075ee28f6fdb897dad25cdd415ff2be4eaf0d2861401e6b5a07f778a",
+    "head_stage.py": "15bca41033aa1ea0fa2e4132b24b841474eff296f2b1e163c86298489ffb4932",
+    "collect_native_head_field.py": "a7effb3a4cc017d5a69b07409733c05edeb7213c85b24dae4bd505c78b0a0d25"
+  },
+  "terminal": [
+    {
+      "mutant": 0,
+      "expected": "PASS",
+      "stdout": "S81_HEAD rows_sent=32320/32320/32320/32320 logits=32320/32320/32320/32320 logit_bad=0 order_bad=0 poisoned=0 rank_fault=0000 fault=0 token=21946 bits=4173a558 expect=21946/4173a558 cycles=36985 MUT=0\nS81_HEAD PASS token=21946\n"
+    },
+    {
+      "mutant": 1,
+      "expected": "FAIL",
+      "stdout": "S81_HEAD rows_sent=32320/32320/32320/32320 logits=32320/32320/32320/32320 logit_bad=32320 order_bad=0 poisoned=0 rank_fault=0000 fault=0 token=21946 bits=4149efd6 expect=21946/4173a558 cycles=36985 MUT=1\nS81_HEAD FAIL token=21946\n"
+    }
+  ]
+}

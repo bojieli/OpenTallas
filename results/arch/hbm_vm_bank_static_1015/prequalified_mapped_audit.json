@@ -1,0 +1,28 @@
+{
+  "source_commit": "3a1802888",
+  "host": "ot-epyc4",
+  "evidence": "Actual mapped1_2_yosys.raw.v, counts of DFF instance declarations and their rr_d/eg_d names",
+  "RG7WG3": {
+    "remote_run": "/srv/opentallas-scratch/claude/ref_gate/vms_bank_static_rg7wg3_1015-20261015-001412",
+    "mapped_DFF_clock_sinks": 4606,
+    "macro_clock_sinks": 3,
+    "rr_payload_DFFs": 256,
+    "required_distinct_rr_payload_DFFs": 1792,
+    "eg_payload_named_DFFs": 10,
+    "PDN_occupied_area_um2": 39674,
+    "body_um": [
+      410.4,
+      410.4
+    ],
+    "PDN_utilization_percent": 24
+  },
+  "RG5WG1": {
+    "remote_run": "/srv/opentallas-scratch/claude/ref_gate/vms_bank_static_rg5wg1_1015-20261015-001427",
+    "mapped_DFF_clock_sinks": 4006,
+    "macro_clock_sinks": 3,
+    "rr_payload_DFFs": 256,
+    "required_distinct_rr_payload_DFFs": 1280,
+    "eg_payload_named_DFFs": 12
+  },
+  "next_structural_change": "Valid-qualified independent per-group rr captures and mirror-only eg capture; payload is unspecified when output valid iszero, so valid transaction values and edge latency stay unchanged. Actual body chosen from utilization and per-face PG/pin capacity, not an outline guess."
+}

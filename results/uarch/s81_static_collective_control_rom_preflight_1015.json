@@ -1,0 +1,99 @@
+{
+  "schema": "opentallas.s81.collective-control-rom-preflight.v1",
+  "cycles": 2400,
+  "replicas_per_collective": 1,
+  "MACs_per_cycle": 0,
+  "compute_intensity": 0,
+  "macro": "ot_rom_4096x266_m8",
+  "macro_count": 3,
+  "macro_width_bits": 266,
+  "macro_depth": 4096,
+  "physical_capacity_bits": 3268608,
+  "logical_bits": 1353600,
+  "capacity_utilization": 0.41412124060150374,
+  "word_bits": 564,
+  "physical_word_bits": 798,
+  "unused_width_bits": 234,
+  "bytes_per_memory_read_cycle": 99.75,
+  "meaningful_bytes_per_cycle": 70.5,
+  "boundary_bits_per_cycle": {
+    "ROM_to_controller": 798,
+    "ROM_address": 12,
+    "ROM_enable": 1,
+    "command": 85,
+    "controls": 468,
+    "done": 9,
+    "status": 2,
+    "busy": 1
+  },
+  "mux_demux_fanout": {
+    "ROM_address_pins": 12,
+    "fanout_per_address_bit": 3,
+    "enable_fanout": 3,
+    "wide_output_muxes": 0,
+    "bank_concat": 3
+  },
+  "source_register_estimate_bits": 578,
+  "macro_output_register_bits": 798,
+  "area": {
+    "macro_width_um": 121.824,
+    "macro_height_um": 62.91,
+    "macro_area_um2": 7663.94784,
+    "all3_macros_area_um2": 22991.84352,
+    "all3_macros_area_mm2": 0.02299184352,
+    "one_row_minimum_outline_um": [
+      365.472,
+      62.91
+    ],
+    "outline_excludes_logic_halo_clock_reset_and_routes": true
+  },
+  "routing": {
+    "ROM_result_tracks": 798,
+    "address_enable_tracks_with3replicas": 39,
+    "pitch_um_example": 0.064,
+    "signal_share_example": 0.5,
+    "example2layer_width_lower_bound_um": 51.072,
+    "accepted_slot": null,
+    "actual_track_capacity": null,
+    "slot_and_pin_fit_proven": false
+  },
+  "latency": {
+    "actual_macro_synchronous_read_edges": 1,
+    "command_register_edges": 1,
+    "control_output_register_edges": 1,
+    "first_command_sample_edge": 0,
+    "row0_macro_sample_edge": 0,
+    "row0_control_available_after_edge": 1,
+    "downstream_row0_consume_edge": 2,
+    "added_unhidden_normal_calendar_cycles": 0,
+    "boot_prefetch_rule": "Enable row0 on first reset-released edge; command pin register overlaps this actual macro read",
+    "subsequent_rows": "Macro samples rowi on edgei; controller consumes rowi and registers outputs on edgei+1",
+    "final_row": "Prefetch row0 on actual final row to permit immediate next program"
+  },
+  "timing": {
+    "TT_setup_required": true,
+    "FF_hold_required": true,
+    "SS_sensitivity_only": true,
+    "macro_read_model": "actual physical macro rd_out<=word_read(addr_in) on enabled rising edge",
+    "measured_context_delay_ps": null,
+    "logic_after_macro_delay_ps": null,
+    "contextual_timing_closed": false
+  },
+  "protection": "No ROM ECC/parity, owner2026-10-02; row-valid and descriptor/address/identity guards retained",
+  "page_contract": "One fixed immutable page; >4096cycles refused. Whole1791job calendar/page installation remains OPEN",
+  "price": "Preflight physical area/capacity only. Existing job prices unchanged and not accepted by this record",
+  "source_sha256": {
+    "physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8.v": "a26eebf06605ae3e9bca8d25c6d979a95553ea03ddc5e82cacd3192bf811a16b",
+    "physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8.lef": "f35311e2ad164c3a112aa918b73b510b84b2fdf1414a7d8da591fe71cb662611",
+    "physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8_tt.lib": "6e7116ec070820e045a1e57b342a716bcfc35e05be7c4e5b90d82cdaa9ba2021",
+    "physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8_ff.lib": "d9c7e59c2e13749d2fff34790226704f512bcc767dd89584ebacddbdbbcbe346",
+    "physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8_ss.lib": "8612ab20df323464bfcdffd197cd2d087a249c2f6f2a2ec92ec8be219cf3d805",
+    "rtl/hdc/ot_qwen_rt_rom_bank.sv": "16471ef538de4a01492f5dbeac8782cc0f177d6a3bd222797dc2eaa71a0c8aec"
+  },
+  "admission": {
+    "component_RTL": true,
+    "place_route": false,
+    "token_rate_credit": false,
+    "native_full_calendar": false
+  }
+}

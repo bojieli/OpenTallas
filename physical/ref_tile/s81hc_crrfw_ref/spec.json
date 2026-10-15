@@ -15,7 +15,7 @@
  ],
  "outline": {
   "w": 276.48,
-  "h": 597.24
+  "h": 345.6
  },
  "util": 0.52,
  "macros": [],
@@ -42,21 +42,59 @@
   "pd": 0.45,
   "threads": 16,
   "peak_ram_gb": 40,
-  "hold_margin_ns": 0.01,
-  "pin_min_tracks": 1
+  "hold_margin_ns": 0.03,
+  "pin_min_tracks": 1,
+  "pin_v": "M3 M5",
+  "pin_h": "M4",
+  "macro_halo_um": 5.4
  },
  "job": {
-  "benches_from": "tools/s81_suhc/hc_gate_benches.json",
-  "owner": "Claude:s81hc-1013",
-  "branch": "claude/s81hc-1013",
-  "tag": "v2-pinplan",
-  "purpose": "[hc-crootr] crootr v2 4-tile split, C=0 (comb E): forward column (far face, full height): fd relays RF=5, y pin flop + mid-height y relay, chain output flop; 14.2k flops; replaces s81hc_crootrw_ref (one 34.6k-sink root, hold WNS frozen -102 ps); v2 pin plan (tools/s81_suhc/crr_pinplan.py, v1 FLOORPLAN_MARGIN 20 b/um on one layer): N/S buses over the full face on M5+M3 (5.2-5.4 b/um/layer), f_* on M4 at 180-368.4 (6.0); slot unchanged",
-  "no_bench_reason": "bit-exactness is gated on dsfd_sp_hc HIER=1/2 (tools/s81_suhc/hc_gate.py NG64 m0 PASS + m1/m3 FAIL, NG256 HIER=1 m0 PASS); the tile alone has no golden",
+  "benches_from": "tools/s81_suhc/hc_tile_benches_crrfw.json",
+  "owner": "Claude:s81-elemB6-1014",
+  "branch": "claude/s81-elemB6-crrf",
+  "tag": "v6",
+  "purpose": "[hc-crootr r10] forward column root, pin-register form (die hop gate against the closed y slice leaf): RTL: p_req is 11 kept pin flops (one a y slice leaf) fed from the W-face capture of f_fv, the mid-height y relay is removed (0 cycles added at the chain face; lockstep 0 / 60,000); kit recipe 2: every port flop FIRM at its pin in 24 staggered rows (io_flop_at_pins), in-hold stages kept, out-hold off (S face 10.8 b/um); N pins on the pins of the 11 closed leaves (8 abutted, 3 on one 97.2-um jog)",
   "views_to": "physical/ref_tile/s81hc_crrfw_ref/views",
-  "record_to": "results/rtl/ref_tile/s81hc_crrfw_ref"
+  "record_to": "results/rtl/ref_tile/s81hc_crrfw_ref",
+  "extra_paths": [
+   "rtl/dsrom_sys/s81_suhc/test",
+   "rtl/link",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2"
+  ]
  },
  "inhold": true,
  "io_tcl": "physical/s81_hc_pinplan/crrf_w.tcl",
+ "recipe": 2,
+ "outhold": false,
+ "io_flop_at_pins": {
+  "cols": 24,
+  "allow_none": true
+ },
+ "reroute_reason": {
+  "kind": "rtl_change",
+  "why": "v6 (B6 s81-elemB 10-14): v5 RTL (POST select NPR=16 kept replicas, lockstep 0/60,000) in a 276.48 x 345.6 tile = the bottom of the 598.32 slot: the v5 --cts gate (276 x 598) measured TT insertion 674-797 / spread 122.3 ps > 80 with flops firm at N, W/E and S faces 598 um apart; the y slices now cross the freed 252.7 um above the tile as die wires (hop <= 683.3 with L <= 350), 0 cycles | clock: default TritonCTS (no sink clustering): measured on the 345.6 tile TT insertion 316-376 / spread 59.6 ps (sink-clustered 16/16/20: 470-574 / 104.0; 8/10/15: 102.4; 30/30: 159.5)"
+ },
+ "structural_change": "v2 (CLOSED) left the port flops to timing-driven placement: p_y captured ~439 um behind the N pins (s 497.0 ps), ch_fd launched 372 ps after the boundary clock, one p_req flop for 11 leaf pins over 324 um. RTL: p_req is 11 kept pin flops (one a y slice leaf) fed from the W-face capture of f_fv, the mid-height y relay is removed (0 cycles added at the chain face; lockstep 0 / 60,000); kit recipe 2: every port flop FIRM at its pin in 24 staggered rows (io_flop_at_pins), in-hold stages kept, out-hold off (S face 10.8 b/um); N pins on the pins of the 11 closed leaves (8 abutted, 3 on one 97.2-um jog); planned balanced clock spine replaces CTS after measured flat CTS spread 238.4 ps (control 59 ps), die spread budget 80 ps | v5 (s81-elemB 10-14): routed v4 (spine) failed TT -83.7 / FF -39.36 with the boundary clock at 805 ps mean, 137 ps spread (spine leaf spread 31-33 ps pre-route did not survive routing): the 11.4k sinks are on ONE CTS root again but sink-clustered (16 sinks / 16 um, 20 um buffer spacing: the Cn leaf topology that measured 54.5 ps routed spread); the POST select that fanned out from ONE flop to the 2,816-bit chain output mux is now NPR = 16 kept replicas of the last fv relay stage (0 cycles; lockstep 0 / 60,000 C0 and C2; new mutant 3 = one replica stuck FAILS 18,272). | v6 (B6 s81-elemB 10-14): clock spread is set by the tile HEIGHT (flops firm at N, f face and S face): one root over 598 um measured 122-137 ps; the y crossing (one register-to-register die hop, o 197.3 + 0.76 L + s) replaces the in-tile 598-um span, so the tile shrinks to 345.6 um at 0 cycles (no RF change, no comb/ccr/pad re-route; the coordinator's accepted N/S split would cost +2 y stages = RF 7 under the pin-capture rule).",
+ "why_floorplan": "v6: tile = bottom 345.6 um of the 276.48 x 598.32 slot sp_hc_s/crootr_c*/f (origin unchanged, S face unchanged on the chain); N pins at the abutment x of the 11 y slice leaves (crr_pinplan crrf_n_plan), y crosses 252.7 um of die channel straight down; f face on the T_tree overlap (tile-local 150 .. 343.4); slot_change_request to the die lead",
+ "clock": "cts",
  "children": [],
- "inter": []
+ "inter": [],
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "slot_change_request": {
+  "name": "s81hc_crrfw_ref",
+  "reason": "v6: tile occupies the bottom 345.6 um of the unchanged slot; the top 252.72 um becomes die channel for the y slice / p_req wires (straight under the leaves)",
+  "outline": [
+   276.48,
+   345.6
+  ],
+  "origin_in_slot": [
+   0.0,
+   0.0
+  ]
+ }
 }

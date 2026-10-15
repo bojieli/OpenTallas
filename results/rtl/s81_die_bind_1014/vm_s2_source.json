@@ -1,0 +1,227 @@
+{
+  "schema": "opentallas.s81.vm_s2_binding_source.v1",
+  "source": "rtl/dsrom_sys/s81_ph/vm/dsfd_sp_vm_static.sv",
+  "ports": {
+    "ck": {
+      "direction": "input",
+      "bits": 1
+    },
+    "rst": {
+      "direction": "input",
+      "bits": 1
+    },
+    "cks": {
+      "direction": "input",
+      "bits": 1
+    },
+    "rss": {
+      "direction": "input",
+      "bits": 1
+    },
+    "c_cmd": {
+      "direction": "input",
+      "bits": 85
+    },
+    "c_done": {
+      "direction": "output",
+      "bits": 9
+    },
+    "c_st": {
+      "direction": "output",
+      "bits": 2
+    },
+    "t_inp_su": {
+      "direction": "output",
+      "bits": 1
+    },
+    "t_inp_hc": {
+      "direction": "output",
+      "bits": 1
+    },
+    "f_su_rqv": {
+      "direction": "input",
+      "bits": 16
+    },
+    "f_su_rq": {
+      "direction": "input",
+      "bits": 224
+    },
+    "t_su_rsv": {
+      "direction": "output",
+      "bits": 16
+    },
+    "t_su_rs": {
+      "direction": "output",
+      "bits": 8192
+    },
+    "f_su_wqv": {
+      "direction": "input",
+      "bits": 16
+    },
+    "f_su_wq": {
+      "direction": "input",
+      "bits": 224
+    },
+    "f_su_wqm": {
+      "direction": "input",
+      "bits": 256
+    },
+    "f_su_wqd": {
+      "direction": "input",
+      "bits": 8192
+    },
+    "f_hc_rqv": {
+      "direction": "input",
+      "bits": 2
+    },
+    "f_hc_rq": {
+      "direction": "input",
+      "bits": 28
+    },
+    "t_hc_rsv": {
+      "direction": "output",
+      "bits": 2
+    },
+    "t_hc_rs": {
+      "direction": "output",
+      "bits": 1024
+    },
+    "f_hc_wqv": {
+      "direction": "input",
+      "bits": 8
+    },
+    "f_hc_wq": {
+      "direction": "input",
+      "bits": 112
+    },
+    "f_hc_wqm": {
+      "direction": "input",
+      "bits": 128
+    },
+    "f_hc_wqd": {
+      "direction": "input",
+      "bits": 4096
+    },
+    "f_pqx": {
+      "direction": "input",
+      "bits": 20
+    },
+    "t_pqx": {
+      "direction": "output",
+      "bits": 2049
+    },
+    "sel": {
+      "direction": "input",
+      "bits": 515
+    },
+    "col": {
+      "direction": "input",
+      "bits": 515
+    },
+    "aSW": {
+      "direction": "input",
+      "bits": 1027
+    },
+    "f_capture": {
+      "direction": "input",
+      "bits": 13376
+    },
+    "f_wfc": {
+      "direction": "input",
+      "bits": 560
+    },
+    "t_wfc": {
+      "direction": "output",
+      "bits": 1029
+    },
+    "f_collective": {
+      "direction": "input",
+      "bits": 2204
+    },
+    "f_crq": {
+      "direction": "input",
+      "bits": 15
+    },
+    "t_crs": {
+      "direction": "output",
+      "bits": 513
+    },
+    "t_gather": {
+      "direction": "output",
+      "bits": 512
+    },
+    "f_xgo": {
+      "direction": "input",
+      "bits": 11
+    },
+    "qSW": {
+      "direction": "output",
+      "bits": 513
+    },
+    "qSWs": {
+      "direction": "input",
+      "bits": 3
+    },
+    "f_mx_rqv": {
+      "direction": "input",
+      "bits": 20
+    },
+    "f_mx_rq": {
+      "direction": "input",
+      "bits": 280
+    },
+    "t_mx_rsv": {
+      "direction": "output",
+      "bits": 20
+    },
+    "t_mx_rs": {
+      "direction": "output",
+      "bits": 10240
+    },
+    "f_mx_wqv": {
+      "direction": "input",
+      "bits": 4
+    },
+    "f_mx_wq": {
+      "direction": "input",
+      "bits": 56
+    },
+    "f_mx_wqm": {
+      "direction": "input",
+      "bits": 64
+    },
+    "f_mx_wqd": {
+      "direction": "input",
+      "bits": 2048
+    }
+  },
+  "closure": {
+    "dsfd_sp_vm": "rtl/dsrom_sys/s81_ph/vm/dsfd_sp_vm_static.sv",
+    "dsfd_vm_seq_static": "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_seq_static.sv",
+    "dsfd_vm_static512_suhc": "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static512_suhc.sv",
+    "dsfd_vm_static_bank128": "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_bank128.sv",
+    "dsfd_vm_static_cap": "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_cap.sv",
+    "dsfd_vm_static_capl": "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv",
+    "dsfd_vm_static_core": "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_core.sv",
+    "dsfd_vm_static_landing": "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_landing.sv",
+    "dsfd_vm_static_relay128": "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_relay128.sv",
+    "dsfd_vm_static_return": "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_return.sv",
+    "dsfd_vm_static_rsched": "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_rsched.sv",
+    "dsfd_vm_static_scatter": "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_scatter.sv",
+    "dsfd_vm_static_slice128_suhc": "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_slice128_suhc.sv",
+    "dsfd_vm_static_suhc_fsr": "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_suhc_fsr.sv",
+    "dsfd_vm_static_suhc_return_map": "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_suhc_return_map.sv",
+    "dsfd_vm_static_wdispatch128": "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_wdispatch128.sv",
+    "dsfd_vm_static_wfc": "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_wfc.sv",
+    "dsfd_vm_static_wsched": "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_wsched.sv",
+    "dsfd_vm_static_wstage128": "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_wstage128.sv",
+    "dsfd_vm_static_xio": "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_xio.sv",
+    "ot_s81_vm_x34": "rtl/dsrom_sys/s81_ph/vm/ot_s81_vm_x34.sv",
+    "ot_s81_vm_x43": "rtl/dsrom_sys/s81_ph/vm/ot_s81_vm_x43.sv",
+    "ot_sram_1r1w_512x128_m4_r2c2": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v",
+    "dsfd_vm_static_cap_leaf": "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_cap_leaf.sv"
+  },
+  "missing": [],
+  "native_qualified": false,
+  "die_connectivity_verified": false
+}
