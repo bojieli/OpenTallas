@@ -1,5 +1,6 @@
 """Ordered arithmetic graph and finite-host topology invariants."""
 import copy
+import struct
 import unittest
 from tree_hosts import candidate, blocks
 
@@ -50,6 +51,14 @@ class TreeHostsTest(unittest.TestCase):
         ib=next(i for i,b in enumerate(bad['buses']) if b[0]=='tree_0_0_2a')
         bad['buses'][ia][3][0],bad['buses'][ib][3][0]=bad['buses'][ib][3][0],bad['buses'][ia][3][0]
         self.assertNotEqual(ordered_ast(new),ordered_ast(bad))
+        def fp32(x):return struct.unpack('f',struct.pack('f',x))[0]
+        def evaluate(expr,values):
+            if isinstance(expr,str):return values.get(expr,0.0)
+            return fp32(evaluate(expr[0],values)+evaluate(expr[1],values))
+        leaves=ordered_ast(new)
+        values={'t_0_0':fp32(1e20),'t_1_0':fp32(-1e20),'t_0_1':fp32(3.14)}
+        self.assertEqual(evaluate(ordered_ast(fixture()),values),evaluate(leaves,values))
+        self.assertNotEqual(evaluate(leaves,values),evaluate(ordered_ast(bad),values))
 
     def test_relayed_input_refused(self):
         d=fixture();d['buses'][0][3][0]='rly_bad'
