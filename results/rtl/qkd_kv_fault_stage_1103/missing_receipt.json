@@ -1,0 +1,11 @@
+{
+  "mode": "missing",
+  "exit_code": 1,
+  "source_sha256": {
+    "rtl/physical/qkd_kv_fault_stage.sv": "d3766611254a08f65eaafce5098afe5e009782df8bf9b19a93ed52e036f61068",
+    "rtl/test/qwen_static_kv/tb_qkd_kv_fault_stage.sv": "5430677918c37f626f2a58f5601ae5062471f83fba08a6c393de65ca1472ee27",
+    "tools/qwen_kv_die/run_fault_stage_bench.py": "8865f0f647360348b02a27325591ab3b424a321230ebe617d894b876c016f1fc"
+  },
+  "mutated_source_sha256": "18c3b121fc0bdf589118089b31588f3ccc517c0547563cfcbebd83307c5f595c",
+  "claim": "Component one fault-observation edge only; no parent/native/physical qualification"
+}
