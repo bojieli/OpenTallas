@@ -21,7 +21,11 @@ fi
 [ "${PREP_ONLY:-0}" = 1 ] && exit 0
 mapfile -d '' sources < <(find "$src" -name '*.sv' -print0)
 b(){ local tag=$1;shift;verilator --binary --timing -Wno-fatal -j "${JOBS:-4}" --top-module tb_kv_hbm_elastic_boundary "$@" --Mdir "$out/obj_$tag" "${sources[@]}" > "$out/build_$tag.log" 2>&1; }
-b prod & b fm1 -GFRONT_MUT=1 & b fm2 -GFRONT_MUT=2 & b fm3 -GFRONT_MUT=3 & b ce0 -GCTRL_ELASTIC=0 & wait
+if [ "${BUILD_SERIAL:-0}" = 1 ]; then
+ b prod; b fm1 -GFRONT_MUT=1; b fm2 -GFRONT_MUT=2; b fm3 -GFRONT_MUT=3; b ce0 -GCTRL_ELASTIC=0
+else
+ b prod & b fm1 -GFRONT_MUT=1 & b fm2 -GFRONT_MUT=2 & b fm3 -GFRONT_MUT=3 & b ce0 -GCTRL_ELASTIC=0 & wait
+fi
 run(){ local tag=$1 name=$2;shift 2;if "$out/obj_$tag/Vtb_kv_hbm_elastic_boundary" "$@" > "$out/$name.log" 2>&1;then echo 0;else echo $?;fi > "$out/$name.exit"; }
 fails=0
 for ph in 137 637;do for jit in 0 8 16;do for seed in 1 2 3;do
