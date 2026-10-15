@@ -6,7 +6,7 @@ import numpy as np
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
 from hdc_golden_v41 import csum
 
-LAT=8  # command issue -> commit / scalar (r1: one registered SRAM-operand stage; was 7)
+LAT=9  # r3 pin ingress + registered SRAM operand + LAT6 arithmetic
 def bits(x): return int(np.float32(x).view(np.uint32))
 def bf(x): return ((x+0x7fff+((x>>16)&1))>>16)&65535
 class Program:
@@ -64,7 +64,7 @@ class Program:
   (path/'commands.txt').write_text(''.join(' '.join(map(str,r))+'\n' for r in self.commands))
   (path/'expected.txt').write_text(''.join(' '.join(map(str,r))+'\n' for r in self.outputs))
   (path/'source_schedule.txt').write_text(''.join(' '.join(map(str,r))+'\n' for r in self.sources))
-  (path/'calendar.json').write_text(json.dumps(dict(cycles=self.c,command_count=len(self.commands),rows=self.rows,operand_rate='oneFP32/cycle with compiler-visibleRAWspacing9; operand producer must supportsample-majorSRAMreads; no fullSFU throughputqualification',latency=LAT),indent=2)+'\n')
+  (path/'calendar.json').write_text(json.dumps(dict(cycles=self.c,command_count=len(self.commands),rows=self.rows,operand_rate='oneFP32/cycle with compiler-visibleRAWspacing10; operand producer must supportsample-majorSRAMreads; no fullSFU throughputqualification',latency=LAT),indent=2)+'\n')
 def main():
  a=argparse.ArgumentParser();a.add_argument('out');a.add_argument('--wrong-tree',action='store_true');args=a.parse_args();rng=np.random.default_rng(151015);p=Program();tag=0
  for n,heads in [(128,16),(640,16),(5120,1),(8192,1)]:
