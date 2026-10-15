@@ -44,8 +44,8 @@
  "job": {
   "owner": "Claude:H-ELEM-A",
   "branch": "claude/hbm-smcompact-1014",
-  "tag": "land1",
-  "structural_change": "West beat transport split: beat_w (216x216, one W-face 2069-bit input forked to transit+north+south register sets; routed keep1-7ff908809 CLOSED TT +59.09 / FF +21.27 but native audit FAIL launch 227 / capture 463.1 / spread 82.4 ps because landing flops sat up to ~200 um from their W input pins) is replaced by the CLOSED 43.2x216 beat_e transit master (same 2-stage RTL body/reset mask) plus this ONE new one-edge landing master, hardened once and instanced twice (north, south). Input d on the S face (M5, 0.096 pitch), output q on the N face 43.2 um away, so every pin->D and Q->pin leg is <= ~43 um. Same 51 west logical slices and edge counts (transit 2, landing 1): 0 cycles, no compiler change. 2,069 sinks on one root.",
+  "tag": "land2",
+  "structural_change": "West beat transport split: beat_w (216x216, one W-face 2069-bit input forked to transit+north+south register sets; routed keep1-7ff908809 CLOSED TT +59.09 / FF +21.27 but native audit FAIL launch 227 / capture 463.1 / spread 82.4 ps because landing flops sat up to ~200 um from their W input pins) is replaced by the CLOSED 43.2x216 beat_e transit master (same 2-stage RTL body/reset mask) plus this ONE new one-edge landing master, hardened once and instanced twice (north, south). Input d on the S face (M5, 0.096 pitch), output q on the N face 43.2 um away, so every pin->D and Q->pin leg is <= ~43 um. Same 51 west logical slices and edge counts (transit 2, landing 1): 0 cycles, no compiler change. 2,069 sinks on one root. | land2: land1 CLOSED TT +288.90 / FF +19.22 / DRC 0, native audit capture 145.6 PASS (beat_w 463.1) but launch 222.5 > 220 on 5/2069 q pins (median 191.9): the recipe-2 outhold stage puts BUF->HB2->BUF between every q flop and its pin; the landing's q pins feed a die-level wire to a receiver whose own inhold covers hold, so the output hold stage is dropped (outhold false); pin flops stay FIRM at the N face. Same RTL/pins/cycles.",
   "purpose": "West landing (north/south) master of the SM compact transport split; exact 4096-cycle full-width original-reference bench with the split composition + landing-latency mutant.",
   "benches": [
    {
@@ -66,7 +66,8 @@
    }
   ],
   "views_to": "physical/ref_tile/smh_tr_group_land_ref/views",
-  "record_to": "results/rtl/ref_tile/smh_tr_group_land_ref"
+  "record_to": "results/rtl/ref_tile/smh_tr_group_land_ref",
+  "reroute_reason": "land1 native audit launch 222.5 > 220 (5 pins) from the output hold stage; outhold dropped"
  },
  "params": {},
  "children": [],
@@ -77,7 +78,7 @@
   "allow_none": true
  },
  "inhold": true,
- "outhold": true,
+ "outhold": false,
  "keep_pin_regs": true,
  "pin_reg_split": true,
  "hold_pad": {
