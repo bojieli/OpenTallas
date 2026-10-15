@@ -40,9 +40,15 @@ fails at phase 0/vector 0. Full actual FEC passes 2,048 words with unchanged age
 102 and 2,376 decoded words checked; actual Forney MUT2 fails at cycle 302.
 Proof logs are under `static_correction_proof/`.
 
-The new full census is running as unit `oth-ubuntu-1799123-1792060811`, output
-`/srv/opentallas-scratch/codex/fec-chien-linear-1015/static_correction_census_0`.
-Its exact flattened state and scalar expansion remain unproven until collected.
+The new full census completed with status0, unit `oth-ubuntu-1799123-1792060811`.
+It proves identical86,152 FF bits and all12 exact per-root counts, max13,790.
+Generic synthesis/check uses451.66 seconds and3727.70MB peak versus683.82seconds
+and5229.71MB before. `static_correction_census/` preserves exact source/receipt
+and losslessly compressed log. The new generic model reduces conservative scalar
+expansion15.648M→2.405M units (84.6%), shifts114→4 and shiftx57→2.
+A distinct static-source bit mapper is live as unit1830755, output
+`/srv/opentallas-scratch/codex/fec-chien-linear-1015/static_correction_bit_mapper_0`.
+Exact scalar gates and paths remain unproven until this completes.
 
 ## Placement and partition alternatives to measure
 
@@ -73,3 +79,19 @@ full census; bounded scalar expansion; exact state/clock and interface graph;
 explicit hard-leaf source partition; actual TT library area and timing; geometric
 pin/channel fit; then pre-route admission. Wire delay, reset delivery, recovered
 clock phase, and joined endpoint roots remain separate mandatory checks.
+
+
+## Actual current 512-pin system scope
+
+The historical standalone mechanism above uses544-bit PMA and102-cycle age.
+The current actual source is `ot_hbm_core_fec_frame_static_correction_link`,
+helper commit96c91fc64 with source-pinned receipts f72e2454d. Its actual512-bit
+PMA, core1.2GHz/FEC16:17 families and151-FEC-edge calendar pass234payloads/66idle,
+2048decoded/internalCDC words, all four runtime mutants, and actual ForneyMUT2.
+It has23 named clock inputs (core +16FEC +6PHY); native TX6/RX2 endpoints remain
+caller-owned. No standalone count transfers to that larger hierarchy.
+
+Geometry/H-DIE owners confirm no current authoritative FEC slot or face/track
+capacity grant. Their68-node v15 contract has zeroHOST/SerDes/FEC instances.
+Historical864um E-strip and old HOST/HS slabs cannot constrain or price the new
+actual hierarchy. `physical_prebuild/geometry_boundary.json` records this gap.
