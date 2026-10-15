@@ -2576,7 +2576,7 @@ def build_r25gq_net(variant):
                     n_dead += 1         # only loads already found unreachable: reported, not tried again
                     nb_.append(b_)
                     continue
-                if bits > RLY_CLASSES[-1] and V.get('rly_family') and bid not in fcl_ and all(e[0] in by for e in eps) and \
+                if bits > RLY_CLASSES[-1] and V.get('rly_family') and bid not in fcl_ and bid not in fclk_new_ and all(e[0] in by for e in eps) and \
                         all((by[e[0]].master.startswith('hfd_stn_q') and port_base(e[1]) in ('a', 'b') or
                              by[e[0]].master.startswith('hfd_stn_lg') and mcount_[by[e[0]].master] == 1
                              if by[e[0]].kind == 'waypoint' else mcount_[by[e[0]].master] == 1) for e in eps):
@@ -2589,6 +2589,8 @@ def build_r25gq_net(variant):
                                 stnf_[nm2_] = dict(stnf_[it_.master])
                             it_.master = nm2_
                             mcount_[nm2_] = 1
+                    # (H-DIE 10-14: a segment forwarded after the fcl_ snapshot (fclk_new_) is never sliced into common-clock
+                    #  tiles: the slices carried its forwarded-clock positions as data, 5 phantom bits at the launch)
                     # v13 r7: a bus wider than the widest family tile (1,136 b) travels as that many tile-wide slices,
                     # each on its own chain of single tiles (109 x 21.6 um).  One strip of tiles side by side (2,068 b
                     # = 229 um, 4,206 b = 458 um) found no site in the hub channels; tiles of one bus need not abut.
