@@ -15,7 +15,8 @@ def replace_once(text, old, new):
     assert text.count(old) == 1, old
     return text.replace(old, new, 1)
 
-def generate(out, read_pipe=0):
+def generate(out, read_pipe=0, wscatter_pipe=0):
+    if wscatter_pipe and read_pipe!=4: raise ValueError("WSCATTER1 requires READ4/CAP2 candidate")
     out.mkdir(parents=True, exist_ok=True)
     source = ROOT / 'rtl/dsrom_sys/s81_static_collective'
     paths = {}
@@ -51,16 +52,21 @@ def generate(out, read_pipe=0):
         text=replace_once(text,'reg rst_n=0;','reg rst_n=1;')
         text=replace_once(text,'idle_edges(4);rst_n=1;idle_edges(8);',
             '#3337;rst_n=0;#9907;rst_n=1;@(negedge clk);idle_edges(8);\n  if(vm.u_cap.xf!==16\'d0)$fatal(1,"CAP2 warm reset x34 alarms %h",vm.u_cap.xf);')
-        text=replace_once(text,' dsfd_sp_vm vm(', ' dsfd_sp_vm #(.READ_PIPE(4),.CAP_PIPE(2)) vm(')
+        text=replace_once(text,' dsfd_sp_vm vm(', f' dsfd_sp_vm #(.READ_PIPE(4),.CAP_PIPE(2),.WSCATTER_PIPE({wscatter_pipe})) vm(')
         text=replace_once(text,'e<498+14','e<498+18')
         text=replace_once(text,'e>=12&&e<510','e>=16&&e<514')
         text=replace_once(text,'j=e-12','j=e-16')
+    if wscatter_pipe:
+        # exact-count source guard: every rewritten literal must occur the expected number of times
+        for old,new,n in [('2141','2153',2),('2140','2152',1),('e<2150','e<2162',1),('e!=308','e!=318',1),('e!=2134','e!=2144',1)]:
+            if text.count(old)!=n: raise ValueError(f'WSCATTER1 bench rewrite: {old!r} occurs {text.count(old)}x, expected {n}')
+            text=text.replace(old,new)
     (out / 'tb_s81_static_collective_slab.sv').write_text(text)
     paths[str(tb.relative_to(ROOT))] = hashlib.sha256(tb.read_bytes()).hexdigest()
     (out / 'source_manifest.json').write_text(json.dumps(dict(source_sha256=paths,
         added_delivered_clock_pins=['ck_calendar_rom[0..2]', 'ck_calendar_outputs[0..2]'],
-        normal_edges_added=0, initialization_extra_rom_edges=1,reset_epoch=('explicit warm pulse3337..13244ps; first common 3:4 rising13344ps' if read_pipe==4 else 'historical default component epoch'),vm_parameters=dict(READ_PIPE=read_pipe,CAP_PIPE=2 if read_pipe==4 else 0),
+        normal_edges_added=0, initialization_extra_rom_edges=1,reset_epoch=('explicit warm pulse3337..13244ps; first common 3:4 rising13344ps' if read_pipe==4 else 'historical default component epoch'),vm_parameters=dict(READ_PIPE=read_pipe,CAP_PIPE=2 if read_pipe==4 else 0,WSCATTER_PIPE=wscatter_pipe),
         qualification='component candidate; die ABI, phi-R, placement and native route remain open'), indent=2)+'\n')
 
 if __name__ == '__main__':
-    p=argparse.ArgumentParser();p.add_argument('--out',type=Path,required=True);p.add_argument('--read-pipe',type=int,choices=[0,4],default=0);a=p.parse_args();generate(a.out,a.read_pipe)
+    p=argparse.ArgumentParser();p.add_argument('--out',type=Path,required=True);p.add_argument('--read-pipe',type=int,choices=[0,4],default=0);p.add_argument('--wscatter-pipe',type=int,choices=[0,1],default=0);a=p.parse_args();generate(a.out,a.read_pipe,a.wscatter_pipe)

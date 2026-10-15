@@ -40,6 +40,7 @@ LATENCIES=dict(control_rom_synchronous_read_edges=1,control_rom_idle_prefetch_ed
 # The native candidate uses the existing four additional return stages. It is an
 # explicit component profile; production remains L12 until die adoption.
 L16_LATENCIES=dict(LATENCIES, vm_request_to_issue_edges=18)
+L16_W1_LATENCIES=dict(L16_LATENCIES, vm_pin_to_raw_write_edges=10, vm_read_pin_to_raw_read_edges=7, vm_read_control_to_pin_edges=2)
 def physical_profile(request,root):
     profile=request.get('vm_profile')
     if profile is None:
@@ -50,10 +51,42 @@ def physical_profile(request,root):
         source=root/'rtl/dsrom_sys/s81_ph/vm/dsfd_sp_vm_static.sv'
         if profile.get('source_sha256')!=hashlib.sha256(source.read_bytes()).hexdigest():
             raise ValueError('stale VM profile source')
-        expected=L16_LATENCIES
+        scatter=profile.get("WSCATTER_PIPE",0)
+        if scatter not in (0,1): raise ValueError("unsupported VM write scatter profile")
+        expected=L16_W1_LATENCIES if scatter else L16_LATENCIES
     if request['abi']!=ABI or request['latencies']!=expected:
         raise ValueError('unbound physical latency profile')
     return expected
+
+def vm_service_audit(request):
+    """Prove sameaddress source requests sample strictly after prior raw writes.
+
+    Only actual scheduled gather/reduced writes are covered here. Raw channel
+    services remain separate explicit reservations; this is no aggregate rate proof.
+    """
+    latency=request['latencies']
+    if 'vm_pin_to_raw_write_edges' not in latency: return None
+    writes=[]
+    for cycle in request['cycles']:
+        ctrl=cycle['controls'];edge=cycle['edge']
+        if ctrl['commit_slot'] and ctrl['commit_gather']:
+            pin=edge+latency['commit_control_to_vm_pin_edges']
+            for rank in range(4): writes.append((pin,(ctrl['commit_rows']>>(15*rank))&32767,rank))
+        if ctrl['hc_write_slot']:
+            # The row is the corresponding reduce gather's rank0 landing row.
+            source=edge-latency['hc_reduce_to_write_control_edges']-1
+            gather=request['cycles'][source]['controls']
+            writes.append((edge+latency['hc_write_control_to_vm_pin_edges'],gather['commit_rows']&32767,0))
+    checked=0
+    for read in request['read_reservations']:
+        for pin,row,rank in writes:
+            q=read['edge']+latency['vm_read_control_to_pin_edges']
+            if pin<q and row==read['row']:
+                checked+=1
+                if q+latency['vm_read_pin_to_raw_read_edges']<=pin+latency['vm_pin_to_raw_write_edges']:
+                    raise ValueError('VM sameaddress raw read precedes write visibility')
+    return dict(scheduled_write_ports=len(writes),sameaddress_dependencies=checked,
+                raw_channel_services='not covered by this gather/reduce audit')
 
 def pack_controls(values):
     if set(values)!={n for n,_ in FIELDS}: raise ValueError('every cycle must explicitly name every control field')
@@ -84,6 +117,7 @@ def compile_image(request,root):
     # boundary prices; the control compiler never infers a physical allocation.
     for name in ('native_source_binding','vm_reservations','physical_phase_binding','timing_price_binding'):
         if not request.get(name): raise ValueError('missing '+name)
+    vm_service_audit(request)
     cycles=request['cycles']
     if len(cycles)>4096: raise ValueError('actual control ROM has one4096cycle page; larger calendars require real page implementation')
     if not cycles or not cycles[0]['cmd_valid']: raise ValueError('first edge must name start command')
@@ -231,6 +265,10 @@ def compile_image(request,root):
                 raise ValueError('completion precedes actual final scheduled output')
             if not owner['mode'] and (owner['reduced_written']!=owner['count'] or owner['last_reduce_write']>=edge+latency['done_rom_to_c_done_edges']):
                 raise ValueError('completion precedes final reduced VM word')
+            if 'vm_pin_to_raw_write_edges' in latency:
+                final_pin=owner['last_commit'] if owner['mode'] else owner['last_reduce_write']
+                if final_pin is None or edge+latency['done_rom_to_c_done_edges']<=final_pin+latency['vm_pin_to_raw_write_edges']:
+                    raise ValueError('completion precedes raw VM write commit')
             if assembly_owner is owner: raise ValueError('completion leaves partial HC assembly')
             del pending[tag]
         elif c['done_tag']!=0: raise ValueError('nonzero idle completion tag')

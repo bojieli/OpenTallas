@@ -2,12 +2,13 @@
 """Full production-stage shapes, synthetic external source values; not chip qualification."""
 from pathlib import Path
 import argparse,hashlib,json
-from controller_image import FIELDS,ABI,LATENCIES,L16_LATENCIES,emit
-p=argparse.ArgumentParser();p.add_argument('--out',type=Path,required=True);p.add_argument('--read-pipe',type=int,choices=[0,4],default=0);a=p.parse_args();a.out.mkdir(parents=True,exist_ok=True)
+from controller_image import FIELDS,ABI,LATENCIES,L16_LATENCIES,L16_W1_LATENCIES,emit
+p=argparse.ArgumentParser();p.add_argument('--out',type=Path,required=True);p.add_argument('--read-pipe',type=int,choices=[0,4],default=0);p.add_argument('--wscatter-pipe',type=int,choices=[0,1],default=0);a=p.parse_args();a.out.mkdir(parents=True,exist_ok=True)
 root=Path(__file__).resolve().parents[2]
-latency=L16_LATENCIES if a.read_pipe==4 else LATENCIES
+if a.wscatter_pipe and a.read_pipe!=4: p.error("WSCATTER1 requires READ4/CAP2 candidate")
+latency=L16_W1_LATENCIES if a.wscatter_pipe else L16_LATENCIES if a.read_pipe==4 else LATENCIES
 read_flight=latency['vm_request_to_issue_edges']
-N=2141
+N=2153 if a.wscatter_pipe else 2141
 cycles=[dict(edge=e,cmd_valid=0,cmd84=0,consumer='none',transport_tag=0,done_valid=0,done_tag=0,controls=dict.fromkeys([n for n,w in FIELDS],0)) for e in range(N)]
 reads=[]
 def command(e,n,gather,tag,desc,consumer):
@@ -31,8 +32,8 @@ command(0,44,1,0x123,5,'gather_vm')
 command(320,320,0,0x456,6,'reduce_vm_hc')
 for j in range(44):record(j,64,44,0x123,0)
 for j in range(320):record(j,400,320,0x456,1)
-cycles[307].update(done_valid=1,done_tag=133)
-cycles[2133].update(done_valid=1,done_tag=134)
+cycles[317 if a.wscatter_pipe else 307].update(done_valid=1,done_tag=133)
+cycles[2143 if a.wscatter_pipe else 2133].update(done_valid=1,done_tag=134)
 # Global peer PHY calendar. All beats, including idle beats, are explicit.
 for e,c in enumerate(cycles):
  x=c['controls'];tp=((e-3)//4)%4;rp=((e-4)//4)%4
@@ -62,7 +63,7 @@ request=dict(abi=ABI,command_abi='opentallas.s81.cmd84.v1',latencies=latency,
  timing_price_binding='UNQUALIFIED: immutable model not altered; full production stage shapes only',
  read_reservations=reads,cycles=cycles,integration_ready=False)
 if a.read_pipe==4:
- request['vm_profile']=dict(READ_PIPE=4,CAP_PIPE=2,source_sha256=hashlib.sha256((root/'rtl/dsrom_sys/s81_ph/vm/dsfd_sp_vm_static.sv').read_bytes()).hexdigest())
+ request['vm_profile']=dict(READ_PIPE=4,CAP_PIPE=2,WSCATTER_PIPE=a.wscatter_pipe,source_sha256=hashlib.sha256((root/'rtl/dsrom_sys/s81_ph/vm/dsfd_sp_vm_static.sv').read_bytes()).hexdigest())
 result=emit(request,root,a.out/'calendar.mem')
 (a.out/'request.json').write_text(json.dumps(request,indent=2)+'\n')
 (a.out/'image_receipt.json').write_text(json.dumps(result,indent=2)+'\n')

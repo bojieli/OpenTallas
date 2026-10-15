@@ -83,6 +83,26 @@ class Check(unittest.TestCase):
         with self.assertRaisesRegex(ValueError,'unsupported VM pipeline profile'):compile_image(bad,ROOT)
         bad=copy.deepcopy(r);bad.pop('vm_profile')
         with self.assertRaisesRegex(ValueError,'unbound physical latency profile'):compile_image(bad,ROOT)
+    def test_wscatter_commit_and_sameaddress_visibility(self):
+        r=fixture()
+        r['vm_profile']=dict(READ_PIPE=4,CAP_PIPE=2,WSCATTER_PIPE=1,source_sha256=hashlib.sha256((ROOT/'rtl/dsrom_sys/s81_ph/vm/dsfd_sp_vm_static.sv').read_bytes()).hexdigest())
+        r['latencies']=L16_W1_LATENCIES
+        self.assertEqual(physical_profile(r,ROOT)['vm_pin_to_raw_write_edges'],10)
+        # Direct raw service audit: a real gather write at pin29 is sampled
+        # by raw SRAM at39. Request32 samples39 (read-before-write): reject.
+        r['read_reservations']=[dict(edge=30,row=4096,consumer='tp4')]
+        with self.assertRaisesRegex(ValueError,'sameaddress'):vm_service_audit(r)
+        r['read_reservations'][0]['edge']=31
+        self.assertEqual(vm_service_audit(r)['sameaddress_dependencies'],1)
+        # Use an actual generated source-correct candidate calendar, then
+        # regress only its first completion to the old pin-only epoch.
+        with tempfile.TemporaryDirectory() as td:
+            subprocess.run(['python3',str(ROOT/'tools/s81_static_collective/build_slab_fixture.py'),'--out',td,'--read-pipe','4','--wscatter-pipe','1'],check=True,stdout=subprocess.DEVNULL)
+            full=json.loads((Path(td)/'request.json').read_text());compile_image(full,ROOT)
+            full['cycles'][317].update(done_valid=0,done_tag=0)
+            full['cycles'][307].update(done_valid=1,done_tag=133)
+            with self.assertRaisesRegex(ValueError,'raw VM write commit'):compile_image(full,ROOT)
+
     def test_image_and_rejections(self):
         request=fixture(raw=True);self.assertEqual(len(compile_image(request,ROOT)),30)
         mutations=[lambda r:r['cycles'][0]['controls'].update(tx_beat_slot=1),
