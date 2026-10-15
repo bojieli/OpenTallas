@@ -21,7 +21,7 @@ LG_SOURCE = 'rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_split.sv'
 SFU_SOURCE = 'rtl/hbm_accel/generic/peers/ot_hgi_sfu_scheduled_engine.sv'      # LG mid tap 14/11
 DBK_SOURCE = 'rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static.sv'    # direct RG, bank n+1/n+7
 IDX_SOURCE = 'rtl/hbm_accel/index/ot_hbm_idx_client_static.sv'                 # H-IDX 40e9f801e: INDEX+TOPK, RG4 + record client 4
-ATT_PV_SOURCE = 'rtl/hdc/v41x/static/ot_hbm_attn_pv_native_output_quad_local.sv'  # D local PV (owner-approved 10-15)
+# ATT PV source (D local PV) not bound while attention architecture is under comparison (owner 10:30).
 SU_SOURCE = 'rtl/hbm_accel/generic/adapters/static_su/ot_hbm_su_static_vm_ports.sv'  # LG near tap 10/7, 4 bank-pair groups
 SID = ('SW','SE','NW','NE')
 # H-IDX answer 2026-10-15 (main 40e9f801e): SW record clients 7 -> 3.
@@ -108,7 +108,6 @@ def generate(out):
         module('hb_su_'+q,SU_SOURCE,'ot_hbm_su_static_vm_ports',dict(QID=SID.index(q),READ_RETURN=10,WRITE_RETURN=7,
                NPG=5 if swse else 4,BANK_GROUP=0x43221100 if swse else 0x33221100))
     module('hb_idx',IDX_SOURCE,'ot_hbm_idx_client_static')
-    module('hb_attn_pv',ATT_PV_SOURCE,'ot_hbm_attn_pv_native_output_quad_local',dict(ACTIVE_HEADS=16))
     edges=[]; connected=set(); parts={}; logical_constants=[]
     def edge(name,src,dst):
         sm,sp=src; dm,dp=dst
@@ -205,18 +204,11 @@ def generate(out):
     logical_constants.append(dict(sink=['hb_idx','sid'],bits=2,value=0,
         reason='INDEX operand face reads the SW slice (sid order SW,SE,NW,NE)',physical_tie_cells_qualified=False))
     connected.add(('hb_idx','sid'))
-    # D local PV (owner-approved floorplan direction 2026-10-15): PV staging is quadrant-local
-    # (128 stores / 2048 32x128 macros, head order per quadrant), but the source has ONE
-    # serializer output wq that commits to the NE slice's canonical 'attention' write group.
-    g=abi['clients']['NE']['write'].index('attention')
-    slice_edge('attn_pv_wq',('hb_attn_pv','wq',0),('hb_vms_NE','wq',2248*g),2248)
-    slice_bind['NE']['write_groups'][str(g)]='hb_attn_pv'
-    long_returns=[dict(name='attn_pv_wq (PV drain -> NE VM WG%d)'%g,bits_per_edge=2248,
-        source='hb_attn_pv serializer (gathers SW/SE/NW/NE quad-local PV stores)',sink='hb_vms_NE wq group %d'%g,
-        reason='VM ABI gives attention a write group on NE only (canonical WG1); D source has one serializer output',
-        cost='OPEN: bit-um / relay stages / compiler edges for the non-NE quadrants pending GEO-H D2 corridor measurement',
-        alternative='per-quadrant attention write group (WG+1 on SW/SE/NW, 4 serializer outputs): bank port/area cost vs removed long drain -> GEO-H + H-ATTQ to price',
-        status='OPEN_LONG_RETURN')]
+    # OWNER 10:30 2026-10-15: attention architecture under comparison (dedicated ATT tiles vs
+    # attention on SM engines + SU/SFU softmax, H-ATTQ). No ATT-specific die resources in v15
+    # until the verdict: no attention instance, write group binding or PV drain/return here.
+    # Placeholder note lives in die_chain_readiness.json only.
+    long_returns=[]
     for q in abi['quadrants']:
         reads=abi['clients'][q]['read'];rec=slice_bind[q]
         for i,name in enumerate(reads):
@@ -247,8 +239,6 @@ def generate(out):
                 rec['status']=('SOURCE MET (%d pg_clk groups, db4f2facb)%s; pins open'%(need,
                                '' if need==4 else ', BANK_GROUP 0x43221100 provisional (bank 7 alone) pending GEO-H RG5 readback'))
     # H-ATTQ request 2026-10-15T07:17: other LG-attached engines carry the same rule.
-    engine_rule['engines']['ATT_NE']=dict(tap=None,instance='hb_attn_pv',owner='H-ATTQ',required_port_groups=4,
-        physical_port_groups=None,status='RTL groups present (H-ATTQ); physical leaves open')
     engine_rule['engines']['QUANT_SW']=dict(tap=None,instance=None,owner='H-ATTQ',required_port_groups=5,
         physical_port_groups=5,bank_group='0x43221100 (same provisional SW/SE map as SU; H-ATTQ bench PASS 152 cy)',
         status='RTL groups present (H-ATTQ); physical leaves open; quant not yet a contract instance')
@@ -363,7 +353,7 @@ def generate(out):
                 service_qualification_rejections=service['qualification_rejections'] if service else [],
                 abi_sha256=hashlib.sha256(abi_path.read_bytes()).hexdigest(),
                 instances=modules,known_actual_edges=edges,clock_roots=roots,vm_slice_bind=slice_bind,
-                engine_lg_port_group_rule=engine_rule,floorplan_direction='HBM D local PV (owner-approved 2026-10-15)',
+                engine_lg_port_group_rule=engine_rule,floorplan_direction='HBM D local PV (owner-approved 2026-10-15); attention resources ON HOLD (owner 10:30, H-ATTQ comparison)',
                 long_returns=long_returns,vm_abi_change_requests=VM_ABI_CHANGE_REQUESTS,
                 flow_control_boundaries=FLOW_CONTROL_BOUNDARIES,
                 registered_station_masters=generated,logical_constant_requests=logical_constants,unbound_ports=unresolved,
