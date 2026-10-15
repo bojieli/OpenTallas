@@ -241,14 +241,19 @@ module ot_s81_engram_lookup_clock_roots #(
     endgenerate
 
     // ---- row buffers ------------------------------------------------------------------
-    reg [255:0] rb [0:CPR-1][0:ATOMS-1];
+    wire [255:0] rb [0:CPR-1][0:ATOMS-1];
     reg [3:0]   rcnt [0:CPR-1];
     reg [1:0]   roff [0:CPR-1];             // row start within its first atom, in 8-byte units (0 / 2)
     integer j;
-    genvar bank;
+    genvar bank, atom;
     generate for (bank=0; bank<CPR; bank=bank+1) begin : g_clocked_row
-        always @(posedge clk_rows[bank])
-            if (hr_valid && hr_tag == bank) rb[bank][hr_idx] <= hr_data;
+        wire [256*ATOMS-1:0] stored;
+        ot_s81_engram_rowbank_clock_leaf #(.ATOMS(ATOMS)) storage (
+            .ck(clk_rows[bank]), .write_v(hr_valid && hr_tag == bank),
+            .write_idx(hr_idx), .write_data(hr_data), .rows(stored));
+        for (atom=0; atom<ATOMS; atom=atom+1) begin : g_read
+            assign rb[bank][atom]=stored[256*atom+:256];
+        end
     end endgenerate
 
     // ---- issue ------------------------------------------------------------------------
