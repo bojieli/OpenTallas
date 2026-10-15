@@ -1,5 +1,12 @@
 # Qwen3-8B TP8 split — COMPUTE die contract v1.2 (2026-10-14 18:48 PT; structural candidate, unqualified)
 
+**Binding owner clarification 2026-10-14 18:59:24 PT:** ROM production is statically cycle scheduled by the compiler.
+No runtime credit counters, readiness-driven issue, demand arbitration, or backpressure may schedule normal execution.
+The compiler reserves compute, memory ports, link slots, finite-buffer occupancy and write visibility using measured
+implemented latencies and phases. Availability/commit checks fault on a missed reservation; they never reschedule it.
+The credit-based interfaces below are retained as historical/diagnostic evidence until replaced by real static RTL
+and an exact production composition. Arbitrarily stalled safety benches do not qualify production timing or tok/s.
+
 Owner decision 06:45 PT 10-14: Qwen is a two-die design (compute/ROM die + KV/system die). This file is the compute
 die's contract of record. Generator: `OT_TP8_SPLIT=compute` mode of the tp8b generator (`tools/die_top_lint.py`,
 `tools/qwen_rom_fulldie_b3r2.py`, `tools/qwen_kv_die/tp8b_v5.py`) + the spine slot table
@@ -109,3 +116,15 @@ Open native requirements: the real VM Q exporter and arbitration with SU KVN tra
 lookahead including resident-X coverage; native no-X VM bundles (full 20-bit row addresses), reset and 448 child-clock
 entries; collective and link replay per-child clocks; native half-band reducers and frame transport; block-last
 node-less tile binding. No testbench producer, tied functional port, or unqualified native clock path proves these.
+
+### Static production mux pin request (supersedes credit proposal)
+
+The new Q/KVN mux uses compiler-selected `slot_v` and `slot_q`, registered Q/KVN data inputs and registered unified x3
+output. It has no production credit/ready ports or counters. Proposed hardened leaf envelope: 129.6 x 129.6 um inside
+the existing link adapter rectangle; Q data north, KVN data west, unified x3 east, schedule/reset south, own die clock
+entry. Exact RTL port names and physical pin assignments are pending the actual mux implementation; these prose names
+must never be inserted as phantom ports. Q exporter/producer adapters must be changed to the same static schedule.
+
+The existing `C13` source-frozen smoke is a geometry diagnostic (61297767d). It is not the compiler scheduled production
+die: no relays, old interfaces, incomplete native binding. Actual OpenROAD placement proves only its 1,630-instance
+outline/overlap/on-track scope. Full die timing and exact static end-to-end cost remain open.
