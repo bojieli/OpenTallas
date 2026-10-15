@@ -1,0 +1,18 @@
+SU DATA MISMATCH tk 1917 row 6144
+SU DATA MISMATCH tk 1918 row 6145
+SU DATA MISMATCH tk 1919 row 6146
+SU DATA MISMATCH tk 1920 row 6147
+SU DATA MISMATCH tk 1921 row 6148
+SU DATA MISMATCH tk 1922 row 6149
+SU DATA MISMATCH tk 1923 row 6150
+SU DATA MISMATCH tk 1924 row 6151
+SU DATA MISMATCH tk 1925 row 6152
+SU DATA MISMATCH tk 1926 row 6153
+SU DATA MISMATCH tk 1927 row 6154
+UNEXPECTED FAULT c_st 11 t_err 1 xio 0 wfc 0 cap 1
+TB_SPVM RESULT mode 0 records 32 qSW 20 gather 4 wfc_rd 32 su_rd 245 cl_rows 101 dones 5 bad 52
+TB_SPVM FAIL mode 0
+- /srv/opentallas-scratch/codex/s81vm-master-fix-1103/msrc/tb_dsfd_sp_vm_static.sv:312: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 2us; walltime 6.369 s; speed 316.376 ns/s
+- Verilator: cpu 6.368 s on 1 threads; allocated 55 MB
