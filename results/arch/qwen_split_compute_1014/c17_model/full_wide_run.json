@@ -1,0 +1,42 @@
+{
+  "schema": "opentallas.qwen.c17-wide-relay-run.v1",
+  "scope": "Full registered relay allocator on revised known compute graph; production static source binding and routing qualification remain open",
+  "host": "ot-epyc4",
+  "unit": "oth-ubuntu-1201509-1792049388",
+  "pid": 1201509,
+  "remote_source": "/srv/opentallas-scratch/claude/qwen-split-compute/c17_repack_model/src_wide",
+  "output": "../full_wide",
+  "staged_base": "568773954",
+  "delta_commits": [
+    "69b624998",
+    "59c8e3cf0",
+    "55882d6cc",
+    "9952aa9c0",
+    "58533b5a0",
+    "28cc224e1"
+  ],
+  "file_sha256": {
+    "tools/qwen_rom_fulldie_b3r2.py": "1cbe5eb73882759bef01ea449c7593093287691bb95b8595cc226a09df70b80f",
+    "tools/qwen_tp8/relay_data_run.py": "5989e3b8fb03181cf40bea594d79c4e7a86947bae9fa1b71d0f14d9473ae54d9",
+    "tools/qwen_split/placement_repack.py": "362a9bb74041b11591943b9e744e5e01c5a0f66112f1f54f0375250620238aa2",
+    "tools/qwen_split/compute_spine.py": "539d135e98cd6d2e42b6482b5c1100cddee9f988ec75e582d52de1e6c2e22c31"
+  },
+  "relay_skip": false,
+  "status": "RUNNING",
+  "not_yet_measured": [
+    "relay_population",
+    "relay_site_legality",
+    "registered_pin_hop_reach",
+    "final_cut_utilization",
+    "route_timing"
+  ],
+  "prior_skip_result": {
+    "qualified": false,
+    "cycles_per_ar_token": null,
+    "invalid_raw_diagnostic": -17634,
+    "nonrelay_instances": 1637,
+    "worst_cut": 0.842,
+    "worst_non_io_reported_cut": 0.568,
+    "pin_align_fail": 111
+  }
+}

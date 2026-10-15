@@ -21,7 +21,8 @@ class ClockOwnership(unittest.TestCase):
             census(d, 'top', ['a', 'b'])
 
     def test_hidden_state_or_hierarchy_is_rejected(self):
-        for kind in ('$dlatch', '$mem_v2', 'unresolved_child'):
+        for kind in ('$dlatch', '$mem_v2', '$ff', '$sr', '$fsm', '$anyseq',
+                     'unresolved_child'):
             with self.subTest(kind=kind):
                 d = self.fixture(); d['modules']['top']['cells']['bad'] = {'type': kind}
                 with self.assertRaises(ValueError):

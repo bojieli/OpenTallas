@@ -76,16 +76,21 @@ def run_group(exe, work, start, perm):
     (work / 'sim.log').write_text(proc.stdout + proc.stderr)
     aa, bb, ll, cycles = {q:[] for q in range(4)}, [], {q:[] for q in range(4)}, []
     result = None
+    public = {}
     for line in proc.stdout.splitlines():
         t = line.split()
         if not t:
             continue
+        if t[0] == 'HEAD': public[int(t[1])] = (int(t[2],16),int(t[3]))
         if t[0] == 'A': aa[int(t[1])].append(int(t[2],16)); cycles.append(int(t[3]))
         if t[0] == 'B': bb.append(int(t[2],16)); cycles.append(int(t[3]))
         if t[0] == 'L': ll[int(t[1])].append(int(t[2],16)); cycles.append(int(t[3]))
         if t[0] == 'RES': result = dict(row=int(t[1]), bits=int(t[2],16), fault=int(t[3]),cycle=int(t[4]))
     if any(len(aa[q]) != 32 or len(ll[q]) != 32 for q in range(4)) or len(bb)!=128 or not result or result['fault']:
         raise RuntimeError(f'incomplete/faulted RTL group {start}: {result}')
+    expected_logits = np.asarray(sum(ll.values(),[]),dtype=np.uint32)
+    if set(public) != set(range(start,start+128)) or any(public[start+i][0] != int(expected_logits[i]) for i in range(128)):
+        raise RuntimeError('physical head logit pins incomplete or differ from actual arithmetic')
     b = np.zeros(128,dtype=np.uint32); b[perm] = bb
     return np.asarray(sum(aa.values(),[]),dtype=np.uint32), b, np.asarray(sum(ll.values(),[]),dtype=np.uint32), result
 
@@ -150,7 +155,7 @@ def main():
     record=dict(schema='opentallas.s81.native_head_field.v1',scope='replicated hardware component; VM delivery and die timing unqualified',
                 complete_rows=complete,groups=len(summary),bad=total_bad,mutant=a.mutant,
                 xf_sha256=sha(a.xf),xf_provenance=provenance,xf_provenance_sha256=sha(a.xf_provenance) if a.xf_provenance else None,
-                native_xf_chained=not a.component_input,
+                native_xf_chained=not a.component_input,physical_head_logit_pins_checked=True,
                 source=json.loads((a.work/'build.json').read_text()),checkpoint_header_sha256=ck.pins,
                 b_root_format='root1024 padded with two RTL +0 stages',static_group_cycles=sorted({r['rtl_result']['cycle'] for r in summary}))
     (a.work/'record.json').write_text(json.dumps(record,indent=2)+'\n')

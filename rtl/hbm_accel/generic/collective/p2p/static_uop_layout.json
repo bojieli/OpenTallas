@@ -1,0 +1,302 @@
+{
+  "schema": "hcoll.static.microop.v1",
+  "width": 1536,
+  "fields": {
+    "capture_slot": {
+      "lsb": 0,
+      "width": 10
+    },
+    "sink_slot": {
+      "lsb": 10,
+      "width": 16
+    },
+    "sink_select": {
+      "lsb": 26,
+      "width": 64
+    },
+    "inj_rd": {
+      "lsb": 90,
+      "width": 2
+    },
+    "inj_idx": {
+      "lsb": 92,
+      "width": 32
+    },
+    "inj_addr": {
+      "lsb": 124,
+      "width": 160
+    },
+    "inj_meta": {
+      "lsb": 284,
+      "width": 66
+    },
+    "lk_wr_v": {
+      "lsb": 350,
+      "width": 3
+    },
+    "lk_wr_slot": {
+      "lsb": 353,
+      "width": 18
+    },
+    "lk_rd_v": {
+      "lsb": 371,
+      "width": 3
+    },
+    "lk_rd_slot": {
+      "lsb": 374,
+      "width": 18
+    },
+    "lk_rx_expect": {
+      "lsb": 392,
+      "width": 3
+    },
+    "lk_rx_slot": {
+      "lsb": 395,
+      "width": 18
+    },
+    "lk_epoch_begin": {
+      "lsb": 413,
+      "width": 3
+    },
+    "lk_epoch": {
+      "lsb": 416,
+      "width": 8
+    },
+    "rgx_addr": {
+      "lsb": 424,
+      "width": 160
+    },
+    "rgx_vm": {
+      "lsb": 584,
+      "width": 1
+    },
+    "vm_ingress_slot": {
+      "lsb": 585,
+      "width": 5
+    },
+    "vm_slot_valid": {
+      "lsb": 590,
+      "width": 8
+    },
+    "vm_slot_owner": {
+      "lsb": 598,
+      "width": 32
+    },
+    "ring": {
+      "lsb": 630,
+      "width": 88
+    },
+    "tkm_start": {
+      "lsb": 718,
+      "width": 1
+    },
+    "tkm_del_slot": {
+      "lsb": 719,
+      "width": 4
+    },
+    "tkm_cfg_n": {
+      "lsb": 723,
+      "width": 12
+    },
+    "tkm_cfg_k": {
+      "lsb": 735,
+      "width": 13
+    },
+    "tkm_cfg_nout": {
+      "lsb": 748,
+      "width": 13
+    },
+    "tkm_cfg_g": {
+      "lsb": 761,
+      "width": 8
+    },
+    "tkm_cfg_gbase": {
+      "lsb": 769,
+      "width": 8
+    },
+    "tkm_cfg_pf": {
+      "lsb": 777,
+      "width": 16
+    },
+    "tkm_cfg_obase": {
+      "lsb": 793,
+      "width": 40
+    },
+    "tkm_cfg_rbase": {
+      "lsb": 833,
+      "width": 40
+    },
+    "tkm_cfg_has_r": {
+      "lsb": 873,
+      "width": 1
+    },
+    "del_obase": {
+      "lsb": 874,
+      "width": 160
+    },
+    "vm_rq": {
+      "lsb": 1034,
+      "width": 136
+    },
+    "vm_meta": {
+      "lsb": 1170,
+      "width": 132
+    },
+    "iter_vm_step": {
+      "lsb": 1302,
+      "width": 16
+    },
+    "iter_rgx_step": {
+      "lsb": 1318,
+      "width": 16
+    },
+    "iter_inj_idx_step": {
+      "lsb": 1334,
+      "width": 16
+    },
+    "iter_del_step": {
+      "lsb": 1350,
+      "width": 16
+    },
+    "iter_inj_addr_step": {
+      "lsb": 1366,
+      "width": 16
+    },
+    "tkm_done_slot": {
+      "lsb": 1382,
+      "width": 1
+    },
+    "vm_pair_select": {
+      "lsb": 1383,
+      "width": 24
+    },
+    "iter_link_slot_step": {
+      "lsb": 1407,
+      "width": 8
+    }
+  },
+  "reserved_lsb": 1415,
+  "ring_fields": {
+    "lp_we": {
+      "lsb": 0,
+      "width": 1
+    },
+    "lp_tag": {
+      "lsb": 1,
+      "width": 3
+    },
+    "state_read_add": {
+      "lsb": 4,
+      "width": 1
+    },
+    "state_add_tag": {
+      "lsb": 5,
+      "width": 3
+    },
+    "state_add_src": {
+      "lsb": 8,
+      "width": 2
+    },
+    "state_add_rhs_acc": {
+      "lsb": 10,
+      "width": 1
+    },
+    "state_read_tx": {
+      "lsb": 11,
+      "width": 1
+    },
+    "state_tx_tag": {
+      "lsb": 12,
+      "width": 3
+    },
+    "state_tx_acc": {
+      "lsb": 15,
+      "width": 1
+    },
+    "state_read_rr": {
+      "lsb": 16,
+      "width": 1
+    },
+    "state_rr_tag": {
+      "lsb": 17,
+      "width": 3
+    },
+    "add_v": {
+      "lsb": 20,
+      "width": 1
+    },
+    "add_tag": {
+      "lsb": 21,
+      "width": 3
+    },
+    "add_src": {
+      "lsb": 24,
+      "width": 2
+    },
+    "add_rhs_acc": {
+      "lsb": 26,
+      "width": 1
+    },
+    "tx_inject": {
+      "lsb": 27,
+      "width": 2
+    },
+    "tx_forward": {
+      "lsb": 29,
+      "width": 2
+    },
+    "tx_tag": {
+      "lsb": 31,
+      "width": 3
+    },
+    "tx_dst": {
+      "lsb": 34,
+      "width": 2
+    },
+    "tx_result": {
+      "lsb": 36,
+      "width": 1
+    },
+    "tx_acc": {
+      "lsb": 37,
+      "width": 1
+    },
+    "rx_slot": {
+      "lsb": 38,
+      "width": 2
+    },
+    "rx_kind": {
+      "lsb": 40,
+      "width": 4
+    },
+    "rx_src": {
+      "lsb": 44,
+      "width": 4
+    },
+    "rx_tag": {
+      "lsb": 48,
+      "width": 6
+    },
+    "rr_local": {
+      "lsb": 54,
+      "width": 1
+    },
+    "rr_local_tag": {
+      "lsb": 55,
+      "width": 3
+    }
+  },
+  "ring_reserved_lsb": 58,
+  "source_order": "SU0,SU1,rail0..NPT-1,VM0..VM3,reserved zero lane",
+  "sink_order": "rail0..NPT-1,SU0..3,RGX0..3,TKM0..3,reserved zero lane",
+  "notes": [
+    "All reserved fields must be zero. Ring has actual separate RC producer pins; qslots ring source/sink slot is reserved invalid in this parent.",
+    "Sink instruction C+1 selects captured source C; registered sink changes C+2.",
+    "VM RQ eight bank minor tuples {valid,sector16}; iteration*vmstep added to each sector; VM metadata 4x33 accompanies request.",
+    "RGX and delivery address offsets add iteration*their respective steps; injection idx and low16 metadata bits add iteration*injidxstep; each40b injection address adds iteration*injaddrstep.",
+    "Source metadata33 bits opaque flit header matching endpoint ABI; compiler must set real source/index/mode.",
+    "Program is actual static lowered ISA; full normative record compiler/entry producer join remains required.",
+    "vm_pair_select four6b entries {high_bank3,low_bank3}, explicit input sector assembly. Parent raw input capture then assembly output register adds2edges; registered VMrequest P gives qslots VMcapture P+10.",
+    "Each link wr/rd/rx slot6 adds iteration*iter_link_slot_step; compiler rejects range>=64 and uses explicit next epoch, no modulo wrap."
+  ]
+}
