@@ -1,0 +1,145 @@
+{
+  "s81hc_ctflnt_ref": {
+    "source_commit_validated": "28dd8dbda",
+    "source_binding_ok": true,
+    "source_binding_reason": "gate-consumed source and gate-executed overlays match; 13 staged file(s) the gate did not consume differ (reported, not refused): rtl/qwen_sys/host_integrated_20261014/qkd_host_root_integrated.sv, rtl/qwen_sys/split_20261014/qkd_host_root_pt.sv, rtl/qwen_sys/static_kv_20261014/qkd_kv_hbm_elastic_front.sv, rtl/test/qwen_split/qkd_host_root_composed.sv, rtl/test/qwen_static_kv/tb_kv_hbm_elastic_boundary.sv, tools/closure_loop/closure_loop.py (+7 more); route-only helper drift (not gate-relevant): tools/hier_contract/child_lint.py",
+    "receipt_sha256": "2aaeaa6870843ad55850e0e315aedea0821b2e7e44262c1b65dc1ab730138d74",
+    "verdict": "WARN",
+    "route_hold_context": {
+      "HM": "0.03",
+      "OT_ROUTE_HOLD_CORNERS": "mm",
+      "OT_MM_FF_SDC": "physical/ref_tile/s81hc_ctflnt_ref/signoff.sdc"
+    },
+    "clock": {
+      "max_root_sinks": 1136,
+      "root": "port:clk",
+      "cts": true,
+      "tt_insertion_ps": 122.5,
+      "tt_spread_ps": 13.3,
+      "declared_clock": null,
+      "limits": {
+        "sinks": 15000,
+        "insertion_ps": 300.0,
+        "spread_ps": 80.0
+      },
+      "clock_measurements": [
+        {
+          "source": "clk",
+          "clock": "core_clk",
+          "tt": {
+            "boundary": {
+              "n": 1136,
+              "mean": 116.2,
+              "min": 109.2,
+              "max": 122.5
+            },
+            "all": {
+              "n": 1136,
+              "mean": 116.2,
+              "min": 109.2,
+              "max": 122.5
+            },
+            "errors": [],
+            "macros": null,
+            "macro_libs": 0
+          }
+        }
+      ],
+      "measured_clock": "core_clk",
+      "verdict": "PASS",
+      "text": "1,136 sinks on the largest root <= 15,000; measured TT insertion 122.5 ps, leaf spread 13.3 ps"
+    },
+    "scope": "Existing retained production-config placement/CTS only. No native/routed qualification; old receipts preserved."
+  },
+  "s81hc_ctfxsnt_ref": {
+    "source_commit_validated": "28dd8dbda",
+    "source_binding_ok": true,
+    "source_binding_reason": "gate-consumed source and gate-executed overlays match; 13 staged file(s) the gate did not consume differ (reported, not refused): rtl/qwen_sys/host_integrated_20261014/qkd_host_root_integrated.sv, rtl/qwen_sys/split_20261014/qkd_host_root_pt.sv, rtl/qwen_sys/static_kv_20261014/qkd_kv_hbm_elastic_front.sv, rtl/test/qwen_split/qkd_host_root_composed.sv, rtl/test/qwen_static_kv/tb_kv_hbm_elastic_boundary.sv, tools/closure_loop/closure_loop.py (+7 more); route-only helper drift (not gate-relevant): tools/hier_contract/child_lint.py",
+    "receipt_sha256": "7814e51ae4daf261b3212df100048a621f5f0aebc576ab9564bb9f66a06223fb",
+    "verdict": "WARN",
+    "route_hold_context": {
+      "HM": "0.03",
+      "OT_ROUTE_HOLD_CORNERS": "mm",
+      "OT_MM_FF_SDC": "physical/ref_tile/s81hc_ctfxsnt_ref/signoff.sdc"
+    },
+    "clock": {
+      "max_root_sinks": 1135,
+      "root": "port:clk",
+      "cts": true,
+      "tt_insertion_ps": 111.5,
+      "tt_spread_ps": 20.1,
+      "declared_clock": "multiple_cts_roots",
+      "limits": {
+        "sinks": 15000,
+        "insertion_ps": 300.0,
+        "spread_ps": 80.0
+      },
+      "clock_measurements": [
+        {
+          "source": "clk",
+          "clock": "ot_entry_0",
+          "tt": {
+            "boundary": {
+              "n": 1139,
+              "mean": 100.6,
+              "min": 91.4,
+              "max": 111.5
+            },
+            "all": {
+              "n": 1139,
+              "mean": 100.6,
+              "min": 91.4,
+              "max": 111.5
+            },
+            "errors": [],
+            "macros": null,
+            "macro_libs": 0
+          }
+        },
+        {
+          "source": "clk_l",
+          "clock": "ot_entry_1",
+          "tt": {
+            "boundary": {
+              "n": 348,
+              "mean": 187.3,
+              "min": 167.0,
+              "max": 195.0
+            },
+            "all": {
+              "n": 616,
+              "mean": 169.0,
+              "min": 120.9,
+              "max": 195.0
+            },
+            "errors": [],
+            "macros": null,
+            "macro_libs": 0
+          }
+        }
+      ],
+      "measured_clock": "ot_entry_0",
+      "verdict": "PASS",
+      "text": "1,135 sinks on the largest root <= 15,000; measured TT insertion 111.5 ps, leaf spread 20.1 ps",
+      "per_root": [
+        {
+          "source": "clk",
+          "sinks": 1139,
+          "tt_insertion_ps": 111.5,
+          "tt_spread_ps": 20.099999999999994,
+          "verdict": "PASS",
+          "text": "1,139 sinks on the largest root <= 15,000; measured TT insertion 111.5 ps, leaf spread 20.1 ps"
+        },
+        {
+          "source": "clk_l",
+          "sinks": 616,
+          "tt_insertion_ps": 195.0,
+          "tt_spread_ps": 74.1,
+          "verdict": "PASS",
+          "text": "616 sinks on the largest root <= 15,000; measured TT insertion 195.0 ps, leaf spread 74.1 ps"
+        }
+      ]
+    },
+    "scope": "Existing retained production-config placement/CTS only. No native/routed qualification; old receipts preserved."
+  }
+}

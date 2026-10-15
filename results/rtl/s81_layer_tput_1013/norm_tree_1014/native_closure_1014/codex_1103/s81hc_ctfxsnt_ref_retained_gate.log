@@ -1,0 +1,19 @@
+GATE INFO layer: tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)
+GATE INFO remote: ot-run selected ot-pve1 for 24 GB memory; disk pick 22 GiB, runtime 22 GiB includes 20 GiB work reserve plus snapshot staging
+GATE INFO source_binding: immutable shipping manifest /tmp/ref_gate_s81hc_ctfxsnt_ref_20261015-104726.source_snapshot.json
+GATE INFO remote: remote log /tmp/ref_gate_s81hc_ctfxsnt_ref_20261015-104726.log; host dir ot-pve1:/srv/opentallas-scratch/claude/ref_gate/s81hc_ctfxsnt_ref-20261015-104726
+GATE INFO remote: synth + floorplan + PDN OK on ot-pve1 in 163 s (gate total 1505 s)
+GATE WARN util: synthesized std area 671 um2 + macros 0 in core 12364: util 5%  -> FIX: set "std_area_um2": 671 and drop 'outline' (gen sizes to util 0.52)
+GATE INFO textbook: WARN ot_s81_hc_ctfxs_nt cells 4,134 flops 1,718 depth 146.7 ps util 0.0557 reach 32.5 um (1.1 s)
+GATE WARN textbook.util_channel: utilisation 5.6% outside 45%-65% (std 688 + macro 0 um2 in 12364 um2): shrink the outline (long wires / sparse placement)  -> FIX: size the outline to util 0.50-0.55 with >= 20 um macro channels
+GATE INFO cts_calibration: ss insertion all 125.6..147.0 ps (spread 21.4), boundary mean 135.3; tt insertion all 91.4..111.5 ps (spread 20.1), boundary mean 100.6; ff insertion all 71.5..91.5 ps (spread 20.0), boundary mean 80.8; macro_clk flag False
+GATE INFO density: effective global-placement target density 0.500 vs spec PD 0.50
+GATE INFO path_classes: constraints signoff /src/physical/ref_tile/s81hc_ctfxsnt_ref/signoff.sdc (TT placement RC; diagnostic)
+GATE INFO path_classes: reg->reg      592 paths, worst slack 148.7 ps (e.g. u_x.u_q.u_vs.line[4]$_DFF_PN0_/RESETN)
+GATE INFO path_classes: in->reg       308 paths, worst slack 279.5 ps (e.g. u_x.dl_out[274]$_DFF_PN0_/D)
+GATE INFO path_classes: reg->out      600 paths, worst slack 335.0 ps (e.g. fdx[544])
+GATE INFO path_classes: setup WNS 1.4865386699369765e-10 hold WNS 5.183015128196189e-11
+GATE INFO clock_rule: root port:clk: 1,135 sinks on the largest root <= 15,000; measured TT insertion 111.5 ps, leaf spread 20.1 ps
+PRE_ROUTE_GATE: WARN (0 fail, 2 warn)
+GATE: previous result preserved as unqualified evidence: /home/ubuntu/wt/s81-norm-tree-1014/physical/ref_tile/s81hc_ctfxsnt_ref/source_binding_history/b00cdd270c81e6d1959c4d2f7dea06068aa69247f2c304f43ddac37acc948752.json
+GATE: s81hc_ctfxsnt_ref/gate_result.json written (exact staged source binding; commit it with the kit)
