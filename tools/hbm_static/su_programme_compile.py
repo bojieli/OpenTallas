@@ -77,13 +77,14 @@ def lower(source, out, extra=None, extra_bits=0, line_bits=9688, param_prefix="P
 TB='''`timescale 1ns/1ps
 module tb;
 localparam integer B=@BITS@, N=@EDGES@, W=@WRITES@;
+localparam integer DB[0:(B+255)/256-1]=@DB@;
 logic clk=0; always #5 clk=~clk;
 logic rst_n=0,cfg_we=0,start=0;
 logic [15:0] cfg_bank=0; logic [6:0] cfg_row=0; logic[255:0] cfg_data=0;
 wire busy,valid,done,fault; wire[15:0] edge_index; wire[B-1:0] command;
 reg[279:0] config_words[0:W-1]; reg[B-1:0] expected_words[0:N-1];
 string dir; integer data_mut,addr_mut,phase_mut;
-ot_hbm_su_programme #(.LINE_BITS(B),.COLS((B+255)/256),.EDGES(N),.INDEX_PACK(@PACK@),.DICT_BANKS(@DB@),.MACROS(@MACROS@)) dut(
+ot_hbm_su_programme #(.LINE_BITS(B),.COLS((B+255)/256),.EDGES(N),.INDEX_PACK(@PACK@),.DICT_BANKS(DB),.MACROS(@MACROS@)) dut(
  .clk(clk),.clk_macro({@MACROS@{clk}}),.rst_n(rst_n),.cfg_we(cfg_we),.cfg_bank(cfg_bank),.cfg_row(cfg_row),.cfg_data(cfg_data),
  .start(start),.length(16'(N)),.busy(busy),.valid(valid),.done(done),.fault(fault),
  .edge_index(edge_index),.command(command));
