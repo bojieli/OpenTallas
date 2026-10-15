@@ -70,6 +70,17 @@
     "needs": [
      "verilator"
     ]
+   },
+   {
+    "name": "elastic_front_wrong_read_address",
+    "cmd": "JOBS=2 bash tools/qwen_static_kv/run_elastic_front_read_mutant.sh {RUN}/bench/wrong_read_address",
+    "expect": "fail",
+    "fail_regex": "OBSERVED_FAIL",
+    "threads": 2,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ]
    }
   ],
   "extra_paths": [
