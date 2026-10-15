@@ -1,5 +1,5 @@
 {
- "name": "dsfd_vm_static_return_bank8_l1_p_native_1015_l16-l16-COMMIT",
+ "name": "dsfd_vm_static_return_bank8_l1_p_native_1015_l16-l16-ceea362ab",
  "block": "dsfd_vm_static_return_bank8_l1_p",
  "ref_tile": true,
  "owner": "claude:S81 VM owner r11",
@@ -7,8 +7,8 @@
  "threads": 8,
  "peak_ram_gb": 16,
  "source": {
-  "branch": "claude/s81-vm-r10-relay-1015",
-  "commit": "COMMIT",
+  "branch": "codex/takeover-s81-vm-0802",
+  "commit": "ceea362abde54593eadecd5ef29d09c24608b17d",
   "extra_paths": [
    "tools/s81_vm",
    "rtl/dsrom_sys/s81_ph/vm",
@@ -100,7 +100,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/dsfd_vm_static_return_bank8_l1_p_native_1015_l16/dsfd_vm_static_return_bank8_l1_p_native_1015_l16-l16-COMMIT"
+   "to": "results/rtl/ref_tile/dsfd_vm_static_return_bank8_l1_p_native_1015_l16/dsfd_vm_static_return_bank8_l1_p_native_1015_l16-l16-ceea362ab"
   }
  ],
  "cycles_added": 1,
