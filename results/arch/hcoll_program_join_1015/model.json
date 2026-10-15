@@ -1,0 +1,58 @@
+{
+  "host_target": "52+qid",
+  "instruction_bits": 1536,
+  "metadata_bits": 64,
+  "frames_per_row": 7,
+  "frame_bits": 256,
+  "rows": 64,
+  "address": "reserved[11:9]=0,row[8:3],segment[2:0]; segments0..5 data,6 metadata(low64),7 illegal",
+  "initialization_commands_per_row": 53,
+  "drain_guard_edges": 1,
+  "host_last_frame_to_first_cfg_edges": 2,
+  "host_last_frame_to_row_complete_edges": 55,
+  "host_launch_to_issuer_start_edges": 2,
+  "host_launch_to_first_uop_edges": 5,
+  "host_next_row_frame_gap_edges": 55,
+  "descriptor_validation_scan_edges": 64,
+  "host_descriptor_to_launch_gap_edges": 66,
+  "metadata_flow_storage_bits": 896,
+  "metadata_rule": "every nonhalt next and active repeat target within descriptor; lastrow must halt",
+  "descriptor_units": "instructions; base<limit<=64; loops must equal1; native metadata32b loops retained",
+  "assembler_muxes": {
+    "input_demux": "6x256b segments plus64b metadata",
+    "drain": "48to1x32b registered cfg data",
+    "metadata_scan": "64to1x14b"
+  },
+  "replicas_per_die": 4,
+  "assembler_registered_output_bits": 47,
+  "fixed_execution_uops_per_cycle": 1,
+  "execution_extra_cycles": 2,
+  "macs_per_cycle": 0,
+  "memory": {
+    "native_issuer_macros": 3,
+    "macro": "ot_sram_1r1w_64x512_m1_r2c2",
+    "read_bytes_per_macro_per_cycle": 64,
+    "total_read_bytes_per_cycle": 192,
+    "init_cfg_bits_per_cycle": 37
+  },
+  "boundary_bits": {
+    "host_cfg": 277,
+    "host_desc": 42,
+    "launch": 1,
+    "issuer_cfg": 37,
+    "issuer_start": 7,
+    "issuer_status_inputs": 9
+  },
+  "assembler_register_upper_bound": 3600,
+  "issuer_control_register_bits": 7639,
+  "separate_clock_roots": {
+    "assembler": 1,
+    "issuer_control": 1,
+    "issuer_memory": 3
+  },
+  "no_elastic_queue": true,
+  "overlap_rule": "addressed frame during row drain or execution faults, does not wait",
+  "routing": "one assembler per quadrant; 37b local cfg and7b start; physical slot/tracks unmeasured, no fit claim",
+  "area": "1600b assembly FF + input pin registers + metadata/row bookkeeping, mapped area unmeasured",
+  "qualification": "component initialization/execution model; physical and full workload qualification pending"
+}
