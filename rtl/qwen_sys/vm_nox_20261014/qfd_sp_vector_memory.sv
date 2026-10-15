@@ -2,7 +2,7 @@
 // Native compute-die VM binding. This wrapper requires OT_QFD_VM_NOX and binds the real tiled VM.
 // Bit packing is LSB-first within bundles; seq row addresses are full20-bit ROW addresses (no implicit base).
 module qfd_sp_vector_memory #(
-    parameter integer USE_MACRO=0, USE_LEAF_CLOCKS=1, OBS_MUT=0, MUT=0
+    parameter integer USE_MACRO=1, USE_LEAF_CLOCKS=1, OBS_MUT=0, MUT=0
 )(
     input wire ck, rst_n,
     input wire ck_r0_0,

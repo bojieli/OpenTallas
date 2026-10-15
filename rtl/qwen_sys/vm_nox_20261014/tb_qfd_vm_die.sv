@@ -1,6 +1,6 @@
 `timescale 1ns/1ps
 module tb_qfd_vm_die;
-parameter integer OBS_MUT=0,PACK_MUT=0;
+parameter integer OBS_MUT=0,PACK_MUT=0,MEM=0;
 integer epoch=0;
 reg [63:0] swmask=0;reg [23:0] swa0=0,swa1=0;reg [2047:0] swdata=0;
 wire [2366:0] sa;
@@ -10,7 +10,7 @@ reg [532:0] svw=0; reg [20:0] svr=0; reg [519:0] ar=0;
 reg qe=0,qs=0,qcr=0;wire qsr,qd,fault,svq_v;wire [511:0] svq;wire [523:0] q;
 integer beats=0,errors=0,arcredits=0;
 wire acr;
-qfd_sp_vector_memory #(.USE_LEAF_CLOCKS(1),.OBS_MUT(OBS_MUT)) dut(
+qfd_sp_vector_memory #(.USE_MACRO(MEM),.USE_LEAF_CLOCKS(1),.OBS_MUT(OBS_MUT)) dut(
 .ck(clk),.rst_n(rst_n),
 .ck_r0_0(clk),
 .ck_r0_1(clk),
