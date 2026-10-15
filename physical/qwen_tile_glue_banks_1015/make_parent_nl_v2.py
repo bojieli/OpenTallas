@@ -49,6 +49,11 @@ s['reroute_reason']['source']='rtl/qwen_sys/tile_parent_nl_banked_20261015/qfd_t
 b=(r/'physical/qwen_tile_glue_banks_1015/hard_face_binding_nl.tcl').read_text()
 b=one(b,'{ck_bank[38]} {{face_t_out} {qwen_glue_v514} {clk}}','{ck_bank[38]} {{face_t_out} {qwen_glue_w514} {clk}}')
 b=one(b,'hard_face_audit_nl.tcl','hard_face_audit_nl_v2.tcl')
+import hashlib
+vw=r/'physical/ref_tile/qwen_glue_w514/views/qwen_glue_w514'
+if (vw/'qwen_glue_w514.lef').exists():
+ add=''.join(f" {{{f}}} {hashlib.sha256((r/f).read_bytes()).hexdigest()}\n" for f in ['rtl/qwen_sys/tile_glue_banks_20261015/qwen_glue_w514.sv','physical/ref_tile/qwen_glue_w514/views/qwen_glue_w514/qwen_glue_w514.lef','physical/ref_tile/qwen_glue_w514/views/qwen_glue_w514/qwen_glue_w514_tt.lib','physical/ref_tile/qwen_glue_w514/views/qwen_glue_w514/insertion.json'])
+ b=one(b,'set qce_face_hashes {\n','set qce_face_hashes {\n'+add)
 (r/'physical/qwen_tile_glue_banks_1015/hard_face_binding_nl_v2.tcl').write_text(b)
 a=(r/'physical/qwen_tile_glue_banks_1015/hard_face_audit_nl.tcl').read_text()
 a=one(a,' t_out 514 face_t_out qwen_glue_v514 q OUTPUT',' t_out 514 face_t_out qwen_glue_w514 q OUTPUT')

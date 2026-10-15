@@ -1,5 +1,5 @@
 PASS actual full old-NL staged-reference vs53bank TX198 ALLB0 FAULT0 checks3499 output264 nonzero264 faults0
 - physical/qwen_tile_glue_banks_1015/tb_parent_nl_banked.sv:49: Verilog $finish
 - S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
-- Verilator: $finish at 36us; walltime 25.190 s; speed 1.437 us/s
-- Verilator: cpu 25.186 s on 1 threads; alloced 1033 MB
+- Verilator: $finish at 36us; walltime 37.711 s; speed 960.659 ns/s
+- Verilator: cpu 37.682 s on 1 threads; alloced 1033 MB

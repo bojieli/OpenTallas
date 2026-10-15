@@ -111,14 +111,12 @@ qkh_packet_v256 tx7_r0_lo(.clk(ck_bank[35]),.rst_n(r_reset_branch_e_mid[2]),.d(b
 assign bank_q[18246 +: 258]=0;
 qkh_packet_v256 tx7_r1_lo(.clk(ck_bank[36]),.rst_n(r_reset_branch_e_mid[6]),.d(bank_d[18504 +: 256]),.q(bank_q[18504 +: 256]));
 assign bank_q[18760 +: 258]=0;
+wire [513:0] tor_q;
+qwen_glue_v514 to_reg(.clk(ck_bank[37]),.rst_n(r_reset_branch_e_low[14]),.d(bank_d[19018 +: 514]),.q(tor_q));
 `ifndef SYNTHESIS
-generate if(MUT==4)begin:g_tor_mut
-qwen_glue_v514 #(.MUT(1)) to_reg(.clk(ck_bank[37]),.rst_n(r_reset_branch_e_low[14]),.d(bank_d[19018 +: 514]),.q(bank_q[19018 +: 514]));
-end else begin:g_tor
-`endif
-qwen_glue_v514 to_reg(.clk(ck_bank[37]),.rst_n(r_reset_branch_e_low[14]),.d(bank_d[19018 +: 514]),.q(bank_q[19018 +: 514]));
-`ifndef SYNTHESIS
-end endgenerate
+assign bank_q[19018 +: 514] = (MUT==4) ? bank_d[19018 +: 514] : tor_q;
+`else
+assign bank_q[19018 +: 514] = tor_q;
 `endif
 qwen_glue_w514 face_t_out(.clk(ck_bank[38]),.rst_n(r_reset_branch_w_high0[4]),.d(bank_d[20560 +: 514]),.q(bank_q[20560 +: 514]));
 qwen_glue_v508 face_tap(.clk(ck_bank[39]),.rst_n(r_reset_branch_e_mid[7]),.d(bank_d[21074 +: 508]),.q(bank_q[21074 +: 508]));

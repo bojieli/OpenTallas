@@ -85,9 +85,11 @@ for i,n in enumerate(NL_NAMES):
  b=nkb[n];w=b['w']
  mut=''
  if n=='to_reg':
-  top+=f"`ifndef SYNTHESIS\ngenerate if(MUT==4)begin:g_tor_mut\n{b['master']} #(.MUT(1)) {n}(.clk(ck_bank[{i}]),.rst_n({b['rst']}),.d(bank_d[{b['base']} +: {w}]),.q(bank_q[{b['base']} +: {w}]));\nend else begin:g_tor\n`endif\n"
- top+=f"{b['master']} {n}(.clk(ck_bank[{i}]),.rst_n({b['rst']}),.d(bank_d[{b['base']} +: {w}]),.q(bank_q[{b['base']} +: {w}]));\n"
- if n=='to_reg':top+="`ifndef SYNTHESIS\nend endgenerate\n`endif\n"
+  # bench-only mutant 4 (to_reg bypass) without parameter overrides on the hard child (gate rule hard_child_params)
+  top+=f"wire [513:0] tor_q;\n{b['master']} {n}(.clk(ck_bank[{i}]),.rst_n({b['rst']}),.d(bank_d[{b['base']} +: {w}]),.q(tor_q));\n"
+  top+=f"`ifndef SYNTHESIS\nassign bank_q[{b['base']} +: {w}] = (MUT==4) ? bank_d[{b['base']} +: {w}] : tor_q;\n`else\nassign bank_q[{b['base']} +: {w}] = tor_q;\n`endif\n"
+ else:
+  top+=f"{b['master']} {n}(.clk(ck_bank[{i}]),.rst_n({b['rst']}),.d(bank_d[{b['base']} +: {w}]),.q(bank_q[{b['base']} +: {w}]));\n"
  if w<514:top+=f"assign bank_q[{b['base']+w} +: {514-w}]=0;\n"
 for n in REMOVED:top+=f"assign bank_q[{slot[n]*514} +: 514]=0; assign bank_d[{slot[n]*514} +: 514]=0; // NK-only {n}\n"
 top+=f'wire rst_core_n={core}; // UNPLACED residual root reset target (as NK)\nwire [13:0] rst_child_n;\n'
