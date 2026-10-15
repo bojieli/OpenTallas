@@ -211,7 +211,8 @@
     "rtl/qwen_sys/tile_parent_banked_20261015/ot_qwen_rom_tile_logic_banked_v1.sv",
     "rtl/qwen_sys/tile_parent_banked_20261015/qfd_tile_nk_banked_v1.sv",
     "rtl/qwen_sys/tile_glue_banks_20261015/ot_qwen_tx198.sv",
-    "physical/qwen_tile_glue_banks_1015/parent_banks_bb.v"
+    "physical/qwen_tile_glue_banks_1015/parent_banks_bb.v",
+    "rtl/qwen_sys/tile_parent_banked_20261015/ot_qce_banked_v1_prunable_arith.sv"
   ],
   "defines": [
     "OT_QWEN_LSL_FP1"
@@ -1206,7 +1207,7 @@
         "needs": [
           "verilator"
         ],
-        "cmd": "verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -DSYNTHESIS -DOT_QWEN_LSL_FP1 --top-module qfd_tile_nk_banked_v1 rtl/physical/ot_qwen_rom_tile_die.sv rtl/hdc/kv/ot_qwen_kv_land_merge.sv rtl/hdc/ot_hdc_fpu.sv rtl/hdc/ot_hdc_fp32_mul_pipe.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_sfu.sv rtl/hdc/ot_hdc_matvec.sv rtl/hdc/ot_qwen_me_array_w12.sv rtl/hdc/ot_qwen_rom_tile_w12.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_fp32_mul_lat.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_qwen_w12_matvec.sv rtl/hdc/ot_qwen_w12_arith.sv rtl/proto/ot_fp32_add_rne_pipe.sv rtl/hdc/ot_hdc_fp32_add_lat_nr.sv rtl/physical/ot_qwen_rom_tile_nk.sv physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8_bb.v physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v rtl/physical/bb/ot_qwen_tile_rpair_bb.v rtl/physical/bb/ot_qwen_tile_node_bb.v rtl/physical/bb/ot_qwen_tile_lsl_fp1_bb.v rtl/qwen_sys/tile_parent_banked_20261015/ot_qwen_w12_matvec_part_banked_v1.sv rtl/qwen_sys/tile_parent_banked_20261015/ot_qwen_rom_tile_logic_banked_v1.sv rtl/qwen_sys/tile_parent_banked_20261015/qfd_tile_nk_banked_v1.sv rtl/qwen_sys/tile_glue_banks_20261015/ot_qwen_tx198.sv physical/qwen_tile_glue_banks_1015/parent_banks_bb.v && echo lint-ok"
+        "cmd": "verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -DSYNTHESIS -DOT_QWEN_LSL_FP1 --top-module qfd_tile_nk_banked_v1 rtl/physical/ot_qwen_rom_tile_die.sv rtl/hdc/kv/ot_qwen_kv_land_merge.sv rtl/hdc/ot_hdc_fpu.sv rtl/hdc/ot_hdc_fp32_mul_pipe.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_sfu.sv rtl/hdc/ot_hdc_matvec.sv rtl/hdc/ot_qwen_me_array_w12.sv rtl/hdc/ot_qwen_rom_tile_w12.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_fp32_mul_lat.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_qwen_w12_matvec.sv rtl/hdc/ot_qwen_w12_arith.sv rtl/proto/ot_fp32_add_rne_pipe.sv rtl/hdc/ot_hdc_fp32_add_lat_nr.sv rtl/physical/ot_qwen_rom_tile_nk.sv physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8_bb.v physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v rtl/physical/bb/ot_qwen_tile_rpair_bb.v rtl/physical/bb/ot_qwen_tile_node_bb.v rtl/physical/bb/ot_qwen_tile_lsl_fp1_bb.v rtl/qwen_sys/tile_parent_banked_20261015/ot_qwen_w12_matvec_part_banked_v1.sv rtl/qwen_sys/tile_parent_banked_20261015/ot_qwen_rom_tile_logic_banked_v1.sv rtl/qwen_sys/tile_parent_banked_20261015/qfd_tile_nk_banked_v1.sv rtl/qwen_sys/tile_glue_banks_20261015/ot_qwen_tx198.sv physical/qwen_tile_glue_banks_1015/parent_banks_bb.v rtl/qwen_sys/tile_parent_banked_20261015/ot_qce_banked_v1_prunable_arith.sv && echo lint-ok"
       },
       {
         "name": "actual_parent_source_oracle",

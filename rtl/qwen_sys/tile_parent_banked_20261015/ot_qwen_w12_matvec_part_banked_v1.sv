@@ -324,8 +324,8 @@ end else begin : g_issue_fast
     end
     wire [AW+PRW-1:0] tsum, osum;
     wire [NB_GT*(AW+PRW)-1:0] tsh_flat, osh_flat;
-    ot_qwen_w12_ksum #(.W(AW+PRW), .N(NB_GT)) u_ts (.rows(tsh_flat), .s(tsum));
-    ot_qwen_w12_ksum #(.W(AW+PRW), .N(NB_GT)) u_os (.rows(osh_flat), .s(osum));
+    ot_qce_banked_v1_prunable_ksum #(.W(AW+PRW), .N(NB_GT)) u_ts (.rows(tsh_flat), .s(tsum));
+    ot_qce_banked_v1_prunable_ksum #(.W(AW+PRW), .N(NB_GT)) u_os (.rows(osh_flat), .s(osum));
     genvar tb;
     for (tb = 0; tb < NB_GT; tb = tb + 1) begin : g_fl
         assign tsh_flat[tb*(AW+PRW) +: AW+PRW] = tsh[tb];
@@ -344,20 +344,20 @@ end else begin : g_issue_fast
     wire [AW-1:0] cur_js, oa_j, xc_j, bk_k, xk_k, bt_t, ot_t;
     wire [NW:0]   nb_j, nbt_t, lb_t;
     wire [NW-1:0] k_1, k_2, t_1, t_2;
-    ot_qwen_w12_kadd #(.W(AW)) u_a0 (.a(cur), .b(js_r), .s(cur_js));
-    ot_qwen_w12_kadd #(.W(AW)) u_a1 (.a(oa), .b(ojs_r), .s(oa_j));
-    ot_qwen_w12_kadd #(.W(AW)) u_a2 (.a(xc), .b(xjs_r), .s(xc_j));
-    ot_qwen_w12_kadd #(.W(AW)) u_a3 (.a(base_k), .b(ks_r), .s(bk_k));
-    ot_qwen_w12_kadd #(.W(AW)) u_a4 (.a(xk), .b(xks_r), .s(xk_k));
-    ot_qwen_w12_kadd #(.W(AW)) u_a5 (.a(base_t), .b(tstep_r), .s(bt_t));
-    ot_qwen_w12_kadd #(.W(AW)) u_a6 (.a(ot), .b(ot_step), .s(ot_t));
-    ot_qwen_w12_kadd #(.W(NW+1)) u_a7 (.a(nb), .b(WNB), .s(nb_j));
-    ot_qwen_w12_kadd #(.W(NW+1)) u_a8 (.a(nb_t), .b(nb_step), .s(nbt_t));
-    ot_qwen_w12_kadd #(.W(NW+1)) u_a9 (.a(lb), .b(lb_step), .s(lb_t));
-    ot_qwen_w12_kadd #(.W(NW)) u_a10 (.a(k), .b(ONE), .s(k_1));
-    ot_qwen_w12_kadd #(.W(NW)) u_a11 (.a(k), .b(TWO), .s(k_2));
-    ot_qwen_w12_kadd #(.W(NW)) u_a12 (.a(t), .b(ONE), .s(t_1));
-    ot_qwen_w12_kadd #(.W(NW)) u_a13 (.a(t), .b(TWO), .s(t_2));
+    ot_qce_banked_v1_prunable_kadd #(.W(AW)) u_a0 (.a(cur), .b(js_r), .s(cur_js));
+    ot_qce_banked_v1_prunable_kadd #(.W(AW)) u_a1 (.a(oa), .b(ojs_r), .s(oa_j));
+    ot_qce_banked_v1_prunable_kadd #(.W(AW)) u_a2 (.a(xc), .b(xjs_r), .s(xc_j));
+    ot_qce_banked_v1_prunable_kadd #(.W(AW)) u_a3 (.a(base_k), .b(ks_r), .s(bk_k));
+    ot_qce_banked_v1_prunable_kadd #(.W(AW)) u_a4 (.a(xk), .b(xks_r), .s(xk_k));
+    ot_qce_banked_v1_prunable_kadd #(.W(AW)) u_a5 (.a(base_t), .b(tstep_r), .s(bt_t));
+    ot_qce_banked_v1_prunable_kadd #(.W(AW)) u_a6 (.a(ot), .b(ot_step), .s(ot_t));
+    ot_qce_banked_v1_prunable_kadd #(.W(NW+1)) u_a7 (.a(nb), .b(WNB), .s(nb_j));
+    ot_qce_banked_v1_prunable_kadd #(.W(NW+1)) u_a8 (.a(nb_t), .b(nb_step), .s(nbt_t));
+    ot_qce_banked_v1_prunable_kadd #(.W(NW+1)) u_a9 (.a(lb), .b(lb_step), .s(lb_t));
+    ot_qce_banked_v1_prunable_kadd #(.W(NW)) u_a10 (.a(k), .b(ONE), .s(k_1));
+    ot_qce_banked_v1_prunable_kadd #(.W(NW)) u_a11 (.a(k), .b(TWO), .s(k_2));
+    ot_qce_banked_v1_prunable_kadd #(.W(NW)) u_a12 (.a(t), .b(ONE), .s(t_1));
+    ot_qce_banked_v1_prunable_kadd #(.W(NW)) u_a13 (.a(t), .b(TWO), .s(t_2));
     //: the go's own first-boundary flags, without the K-step divide: ceil(K/S) == 1 <=> K <= S
     wire kc_is_1 = i_wsrc ? ({{(32-NW){1'b0}}, i_k} <= (32'd1 << i_split)) : (i_k == 1);
     always @(posedge clk or negedge rst_n) begin
@@ -467,21 +467,21 @@ end endgenerate
             wire [31:0] qv = (gb + gq) >> split_r;
             wire [31:0] cv = (gb + gq) & ((1 << split_r) - 1);
             wire [8*AW-1:0] part;
-            ot_qwen_w12_csa_tree #(.W(AW), .N(QL)) u_q0 (.rows(qrows[QL*AW-1:0]), .s(part[0*AW +: AW]), .c(part[1*AW +: AW]));
-            ot_qwen_w12_csa_tree #(.W(AW), .N(QW-QL)) u_q1 (.rows(qrows[QW*AW-1:QL*AW]), .s(part[2*AW +: AW]), .c(part[3*AW +: AW]));
-            ot_qwen_w12_csa_tree #(.W(AW), .N(CL)) u_c0 (.rows(crows[CL*AW-1:0]), .s(part[4*AW +: AW]), .c(part[5*AW +: AW]));
-            ot_qwen_w12_csa_tree #(.W(AW), .N(CW-CL)) u_c1 (.rows(crows[CW*AW-1:CL*AW]), .s(part[6*AW +: AW]), .c(part[7*AW +: AW]));
+            ot_qce_banked_v1_prunable_csa_tree #(.W(AW), .N(QL)) u_q0 (.rows(qrows[QL*AW-1:0]), .s(part[0*AW +: AW]), .c(part[1*AW +: AW]));
+            ot_qce_banked_v1_prunable_csa_tree #(.W(AW), .N(QW-QL)) u_q1 (.rows(qrows[QW*AW-1:QL*AW]), .s(part[2*AW +: AW]), .c(part[3*AW +: AW]));
+            ot_qce_banked_v1_prunable_csa_tree #(.W(AW), .N(CL)) u_c0 (.rows(crows[CL*AW-1:0]), .s(part[4*AW +: AW]), .c(part[5*AW +: AW]));
+            ot_qce_banked_v1_prunable_csa_tree #(.W(AW), .N(CW-CL)) u_c1 (.rows(crows[CW*AW-1:CL*AW]), .s(part[6*AW +: AW]), .c(part[7*AW +: AW]));
             reg  [8*AW-1:0] r_part;
             wire [AW-1:0] cs_s, cs_c;
-            ot_qwen_w12_csa_tree #(.W(AW), .N(8)) u_cs (.rows(r_part), .s(cs_s), .c(cs_c));
+            ot_qce_banked_v1_prunable_csa_tree #(.W(AW), .N(8)) u_cs (.rows(r_part), .s(cs_s), .c(cs_c));
             if (KV_PREP >= 4) begin : g_cs_reg
                 //: KV_PREP >= 4 (margin rule 2026-10-06; tile_tp4_t4 SS -18.9 ps on r_part -> 8-row CSA -> prefix sum
                 //: -> off): the two carry-save rows are registered before the kept prefix sum (offset ready after 4)
                 reg [AW-1:0] cs_s_q, cs_c_q;
                 always @(posedge clk) begin cs_s_q <= cs_s; cs_c_q <= cs_c; end
-                ot_qwen_w12_kadd #(.W(AW)) u_sum (.a(cs_s_q), .b(cs_c_q), .s(osum));
+                ot_qce_banked_v1_prunable_kadd #(.W(AW)) u_sum (.a(cs_s_q), .b(cs_c_q), .s(osum));
             end else begin : g_cs_comb
-                ot_qwen_w12_kadd #(.W(AW)) u_sum (.a(cs_s), .b(cs_c), .s(osum));
+                ot_qce_banked_v1_prunable_kadd #(.W(AW)) u_sum (.a(cs_s), .b(cs_c), .s(osum));
             end
             always @(posedge clk) begin
                 q_p[gq] <= qv[QW-1:0];
@@ -489,7 +489,7 @@ end endgenerate
                 r_part <= part;
                 off[gq] <= osum;
             end
-            ot_qwen_w12_kadd #(.W(AW)) u_ka (.a(cur), .b(off[gq]), .s(a_s));
+            ot_qce_banked_v1_prunable_kadd #(.W(AW)) u_ka (.a(cur), .b(off[gq]), .s(a_s));
             always @(posedge clk)
                 if (active) kv_addr[gq*AW +: AW] <= a_s;
         end
@@ -594,7 +594,7 @@ end endgenerate
     genvar xr;
     generate for (xr = 0; xr < GL; xr = xr + 1) begin : g_xrnd
         if (FAST_ISSUE != 0) begin : g_keep_round
-            ot_qwen_w12_kadd #(.W(32)) u_r (.a(s2_x[32*xr +: 32]), .b(32'h7FFF + {31'd0, s2_x[32*xr + 16]}), .s(x_rnd[32*xr +: 32]));
+            ot_qce_banked_v1_prunable_kadd #(.W(32)) u_r (.a(s2_x[32*xr +: 32]), .b(32'h7FFF + {31'd0, s2_x[32*xr + 16]}), .s(x_rnd[32*xr +: 32]));
         end else begin : g_legacy_round
             assign x_rnd[32*xr +: 32] = s2_x[32*xr +: 32] + 32'h7FFF + {31'd0, s2_x[32*xr + 16]};
         end
