@@ -305,6 +305,9 @@ def main(argv=None):
                 if not isinstance(bid, str):
                     strap_bits[bid] = '1' if (val >> i) & 1 else '0'
         unbound_ports = sorted(p for p in J['ports'] if p not in {rp for v in mp.values() for rp, _ in v} and p not in straps)
+        unbound_inputs = [p for p in unbound_ports if J['ports'][p]['direction'] == 'input']
+        if unbound_inputs:
+            raise ValueError(f'{inst}: functional parent inputs without die bindings {unbound_inputs}')
         # internal (leaf-to-leaf) wire names from the parent's netnames
         names = {}
         for nn, nv in sorted(J['netnames'].items(), key=lambda kv: (kv[1].get('hide_name', 0), len(kv[0]))):
@@ -334,6 +337,8 @@ def main(argv=None):
         ff = FLIP[fo]
         nleaf, conn_bits, tie_bits = 0, 0, 0
         drivers = defaultdict(int)
+        inputs = set()
+        rectangles = []
         for cname, c in J['cells'].items():
             cell = cname.lstrip('\\')
             ct = base_type(c['type'])
@@ -343,6 +348,16 @@ def main(argv=None):
             L = leaf[ct]
             cx, cy, co = spec['plan'](cell, fw, fh)
             w_, h_ = L['size']
+            # Generated frame outlines shave 24 nm from the nominal contract.
+            # Match bind_views' 50 nm outline tolerance while rejecting real spill.
+            if min(cx, cy) < -0.001 or cx + w_ > fw + 0.05 or cy + h_ > fh + 0.05:
+                raise ValueError(f'{inst}/{cell}: closed leaf outside contract frame')
+            rect = (cell, cx, cy, cx + w_, cy + h_)
+            for other in rectangles:
+                if min(rect[3], other[3]) - max(rect[1], other[1]) > 0.001 and \
+                   min(rect[4], other[4]) - max(rect[2], other[2]) > 0.001:
+                    raise ValueError(f'{inst}: overlapping closed leaves {cell} / {other[0]}')
+            rectangles.append(rect)
             px = fw - cx - w_ if ff[0] else cx
             py = fh - cy - h_ if ff[1] else cy
             cf = FLIP[co]
@@ -357,6 +372,8 @@ def main(argv=None):
                 refs = [ref(bid, cell) for bid in bits]
                 conn_bits += len(bits)
                 tie_bits += sum('__tie' in r_ for r_ in refs)
+                if L['ports'][p]['dir'] == 'input':
+                    inputs.update(bid for bid in bits if not isinstance(bid, str))
                 if L['ports'][p]['dir'] == 'output':
                     for bid in bits:
                         if not isinstance(bid, str):
@@ -371,6 +388,11 @@ def main(argv=None):
         multi = [bid for bid, n in drivers.items() if n > 1]
         if multi:
             raise ValueError(f'{inst}: {len(multi)} bits with several leaf drivers')
+        available = set(drivers) | set(strap_bits) | {bid for p in J['ports'].values()
+                    if p['direction'] == 'input' for bid in p['bits'] if not isinstance(bid, str)}
+        undriven = sorted(inputs - available)
+        if undriven:
+            raise ValueError(f'{inst}: {len(undriven)} undriven child-input bits {undriven[:8]}')
         for wn, w in iw.items():
             add_wires.append(f'  wire [{w - 1}:0] {wn};')
             if wn in tie_values:
@@ -379,7 +401,8 @@ def main(argv=None):
         fr = rep['frames'].setdefault(mst, dict(module=b['module'], instances=0, leaves_per_instance=nleaf,
                                                  internal_wires_per_instance=len(iw), straps=sorted(straps),
                                                  rtl_ports_without_die_port=unbound_ports, leaf_pin_bits=conn_bits,
-                                                 tie_pin_bits=tie_bits))
+                                                 tie_pin_bits=tie_bits, connectivity_checks=dict(undriven_inputs=0, multiple_drivers=0,
+                                                 unbound_parent_inputs=0, overlaps=0, outside_slot=0)))
         fr['instances'] += 1
     if not drop_inst:
         print('nothing expanded')
