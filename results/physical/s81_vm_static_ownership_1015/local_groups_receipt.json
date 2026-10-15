@@ -1,0 +1,16 @@
+{
+  "status": "GEOMETRY_AND_NECESSARY_REACH_PASS_ONLY",
+  "source_sha256": {
+    "tools/s81/vm_static_local_groups.py": "5fd510ee5030eb20fc20595eb45838870926aa2a438c06ed7349299a7d4f583b",
+    "tools/ref_tile/ref_tile.py": "57fd157f3fafc7a68f1754437aa3275fa81cc7c28fe5ede9d7a0d57568b79b87",
+    "physical/s81_die_pins/v20_vm_static_local_groups/layout_option.json": "c84cd3d50a6b707f31907f83a70830b1fe5b29b851c68e9e52a4941faac00220"
+  },
+  "mandatory_missing": [
+    "actual worst-bit face-pin Manhattan and phi-R setup/launch budget",
+    "real registered endpoint hardening vs provisional dimensions",
+    "164core+16capture+16x34+otheredge/staging packing",
+    "parent layer cut/clock/layer contract",
+    "native physical TTFFDRC and actual compiler calendar/production rate"
+  ],
+  "no_added_cycles_claimed": true
+}

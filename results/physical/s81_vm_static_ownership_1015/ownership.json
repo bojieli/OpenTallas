@@ -193,5 +193,18 @@
     "be_sl": "ot-pve1 OpenROAD1177371 under docker1177327, hold_eco/pass2; old1138376 terminal",
     "cap_mapper": "ot-epyc1tb271098 live1h40CPU99.9% in PROC_DLATCH, not restarted"
   },
-  "full_goal_status": "NOT qualified; native parent/cuts/pins/TTFFDRC/throughput remain open"
+  "full_goal_status": "NOT qualified; native parent/cuts/pins/TTFFDRC/throughput remain open",
+  "structural_slot_option": {
+    "artifact": "physical/s81_die_pins/v20_vm_static_local_groups/layout_option.json",
+    "new_outline_um": [
+      1728,
+      5702.4
+    ],
+    "area_growth_mm2": 3.7594204076159983,
+    "necessary_hop_screen_over500": 0,
+    "necessary_hop_max_um": 464.4,
+    "production_floorplan_checks": [],
+    "status": "NOT_ADOPTED; actual per-bit pins/phi-R/cuts/capture/staging fit/real views pending",
+    "next_owner": "S-VM physical with S-DIE canonical placement; no unchanged route retry"
+  }
 }
