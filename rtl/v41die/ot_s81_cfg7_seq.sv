@@ -153,3 +153,30 @@ module ot_s81_cfg7_seq #(
     assign go_tag = (PQ != 0) ? tag : 2'd0;
 `endif
 endmodule
+
+// ot_s81_cfg7_seq_bf (s81-die-rtl-bind 2026-10-14): the BF pair's configuration sequencer die master.  The BF pair's
+// front (ot_s81_bf_front: the DS q element ot_v41_rom_elem_qx_w10 re-cut, not the PQ element) exposes no configuration-
+// shadow handshake, so its loader is the pinned PQ 0 loader of ot_s81_cfg7_seq (load at broadcast, go_tag 0): the same
+// RTL at PQ 0 with no ef / go_tag pins (the PQ 0 loader never reads ef; cycle-identical to ot_s81_cfg7_seq PQ 0, gate
+// rtl/v41die/test/tb_ot_s81_cfg7_seq.sv PQ 0).
+module ot_s81_cfg7_seq_bf #(
+    parameter integer NSEG = 8,
+    parameter integer PHW = 10,
+    parameter integer NROM = 7
+) (
+    input  wire [0:0]          clk,
+    input  wire [0:0]          rst_n,
+    input  wire [PHW+4:0]      lc,
+    output wire [11:0]         a,
+    output wire [0:0]          ce0, ce1, ce2, ce3, ce4, ce5, ce6,
+    input  wire [47:0]         q0, q1, q2, q3, q4, q5, q6,
+    output wire [53:0]         cfg,
+    output wire [0:0]          go_e,
+    output wire [1:0]          st
+);
+    wire [1:0] go_tag_0;      // constant 0 at PQ 0
+    ot_s81_cfg7_seq #(.NSEG(NSEG), .PHW(PHW), .NROM(NROM), .PQ(0)) u (.clk(clk), .rst_n(rst_n), .lc(lc), .a(a),
+        .ce0(ce0), .ce1(ce1), .ce2(ce2), .ce3(ce3), .ce4(ce4), .ce5(ce5), .ce6(ce6),
+        .q0(q0), .q1(q1), .q2(q2), .q3(q3), .q4(q4), .q5(q5), .q6(q6),
+        .cfg(cfg), .go_e(go_e), .st(st), .ef(2'b00), .go_tag(go_tag_0));
+endmodule

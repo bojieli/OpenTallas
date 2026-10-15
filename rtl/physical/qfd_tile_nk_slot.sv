@@ -87,3 +87,66 @@ module qfd_tile_nk #(
         end
     assign n_y = {fy_q, nvy, ny};
 endmodule
+
+// q14 r9 (2026-10-14): qfd_tile_nl = the NODE-LESS compute tile (die lead 17:19 port-bind table: the 48 block-last tiles,
+// tile_id 16k+15, have no node role in the 16-leaf block tree, so qfd_tile_nk's n_a / n_b would be die ties and n_y
+// unread).  Same body, outline, ROM leaves and tap / t_out faces as qfd_tile_nk; the node leaf is not instantiated
+// (ot_qwen_rom_tile_w12 NODE 0: t_out via the TOREG pin registers instead of the node leaf's feed-through registers,
+// same edge and value).  No n_* ports, so nothing is tied on the die.  OT_QFD_TILE_NL_MUT (bench only): go from tap[507].
+module qfd_tile_nl #(
+    parameter integer NW = 18,
+    parameter integer GT = 3072,
+    parameter integer SMIN = 7,
+    parameter integer CODE_BANKS = 5,
+    parameter integer KV_VB = 131072,
+    parameter integer KV_NH = 2,
+    parameter integer MEM_EXTRA = 1,
+    parameter integer ACC_LAT = 7,
+    parameter integer FAST_ISSUE = 1,
+    parameter integer KV_PREP = 4,
+    parameter integer MUL_LAT = 8,
+    parameter integer TREE_LAT = 7,
+    parameter integer ROM_PIPE = 1,
+    parameter integer ROM_ARELAY = 2,
+    parameter integer ROM_CAP2 = 1,
+    parameter integer ROM_CAPX = 2,
+    parameter integer LRST = 3,
+    parameter integer ARPB = 1,
+    parameter integer MPR = 1,
+    parameter integer HIER = 2,
+    parameter integer HIER_HARD = 1,
+    parameter integer TOREG = 1,
+    parameter integer TIDR = 1,
+    parameter integer LRR = 1,
+    parameter integer RPH = 2,
+    parameter integer RQR = 1,
+    parameter integer XTX = 2,
+    parameter integer ANR = 1,
+    parameter integer NDH = 1
+) (
+    input  wire          ck,
+    input  wire          rst_n,
+    input  wire [15:0]   tile_id,
+    input  wire [507:0]  tap,
+    output wire [513:0]  t_out
+);
+    localparam integer IBW = 3 * NW + 13 * 24 + 13;               // 379
+    initial if (1 + IBW + 128 != 508) $fatal(1, "qfd_tile_nl: tap must be {xl 128, ib %0d, go 1} = 508 b", IBW);
+`ifdef OT_QFD_TILE_NL_MUT
+    wire           go = tap[507];
+`else
+    wire           go = tap[0];
+`endif
+    wire [IBW-1:0] ib = tap[IBW:1];
+    wire [127:0]   xl = tap[507 -: 128];
+    wire [511:0]   to;
+    wire           tv, tf;
+    ot_qwen_rom_tile_nk #(.NW(NW), .GT(GT), .SMIN(SMIN), .CODE_BANKS(CODE_BANKS), .KV_VB(KV_VB), .KV_NH(KV_NH),
+        .MEM_EXTRA(MEM_EXTRA), .ACC_LAT(ACC_LAT), .FAST_ISSUE(FAST_ISSUE), .KV_PREP(KV_PREP), .MUL_LAT(MUL_LAT),
+        .TREE_LAT(TREE_LAT), .ROM_PIPE(ROM_PIPE), .ROM_ARELAY(ROM_ARELAY), .ROM_CAP2(ROM_CAP2), .ROM_CAPX(ROM_CAPX),
+        .LRST(LRST), .ARPB(ARPB), .MPR(MPR), .HIER(HIER), .HIER_HARD(HIER_HARD), .TOREG(TOREG), .TIDR(TIDR), .LRR(LRR),
+        .RPH(RPH), .RQR(RQR), .XTX(XTX), .ANR(ANR), .NDH(NDH), .NODE(0)) u_tile (
+        .clk(ck), .rst_n(rst_n), .tile_id(tile_id), .ib_go(go), .ib(ib), .xl(xl), .t_out(to), .t_vout(tv),
+        .n_a(512'd0), .n_b(512'd0), .n_va(1'b0), .n_y(), .n_vy(), .fault(tf));   // NODE 0: n_* not read / not driven
+    assign t_out = {tf, tv, to};
+endmodule

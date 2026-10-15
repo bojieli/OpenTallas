@@ -1,8 +1,11 @@
 #!/usr/bin/env python3
 """Stream a released Engram rank's columns into dsfd_host RAW boot descriptors.
 
-Input columns retain their released 264-byte rows. Only bytes 257..263 (padding)
-change in the HBM image: the lookup engine's CRC-32, then three zero bytes.
+Input columns retain their released 264-byte rows (256 E4M3 codes + 8 UE8M0 block
+exponents, one per 32 columns). The HBM image row is 272 bytes (ROWSTRIPE: 288): the
+released 264 bytes unchanged, the lookup engine's CRC-32 over them at 264..267, then
+zero bytes. (F13, 2026-10-14: the first version treated bytes 257..263 as padding and
+overwrote seven of the eight released exponents with the CRC.)
 Columns start on 32-byte atoms, exactly as ot_dsrom_engram_lookup.col_base.
 Output records are one class byte followed by one little-endian 512-bit word;
 the caller sends them against dsfd_host credits and waits for fenced completions.
@@ -16,7 +19,8 @@ import json
 from pathlib import Path
 from typing import BinaryIO, Iterable, Iterator
 
-ROW_BYTES = 264
+ROW_BYTES = 264          # released row
+STORED_ROW_BYTES = 272   # HBM image row (ROWSTRIPE 288)
 ATOM_BYTES = 32
 MAX_SEGMENT_BYTES = 65535 * 64  # descriptor nb is 16 bits; no arbitrary build bound
 # 10 is the existing RoPE boot class. 11 is the Engram class, whose local
@@ -47,7 +51,7 @@ def crc32_msb(data: bytes) -> int:
 def packed_row(row: bytes, rowstripe: bool = False) -> bytes:
     if len(row) != ROW_BYTES:
         raise ValueError("released row must contain exactly 264 bytes")
-    return row[:257] + crc32_msb(row[:257]).to_bytes(4, "little") + bytes(27 if rowstripe else 3)
+    return row + crc32_msb(row).to_bytes(4, "little") + bytes(20 if rowstripe else 4)
 
 
 def column_bases(rows: Iterable[int], rowstripe: bool = False) -> list[int]:
@@ -56,7 +60,7 @@ def column_bases(rows: Iterable[int], rowstripe: bool = False) -> list[int]:
         if count <= 0:
             raise ValueError("column row counts must be positive")
         bases.append(offset)
-        offset += (count * (288 if rowstripe else ROW_BYTES) + ATOM_BYTES - 1) // ATOM_BYTES * ATOM_BYTES
+        offset += (count * (288 if rowstripe else STORED_ROW_BYTES) + ATOM_BYTES - 1) // ATOM_BYTES * ATOM_BYTES
     return bases
 
 
@@ -139,7 +143,7 @@ def main() -> int:
     print(json.dumps(dict(records=records, sha256=digest.hexdigest(),
                           layer=a.layer, rank=a.rank,
                           column_byte_bases=column_bases(rows_per_column, a.rowstripe),
-                          rowstripe=a.rowstripe, stored_row_bytes=288 if a.rowstripe else 264,
+                          rowstripe=a.rowstripe, stored_row_bytes=288 if a.rowstripe else STORED_ROW_BYTES,
                           requires="Engram class 11 dispatch, SW/SE atom striping, fenced completions")))
     return 0
 
