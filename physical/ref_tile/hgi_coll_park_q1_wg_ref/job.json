@@ -1,5 +1,5 @@
 {
- "name": "hgi_coll_park_q1_wg_ref-pstage2-ca5361f1b",
+ "name": "hgi_coll_park_q1_wg_ref-pstage3-COMMIT",
  "block": "ot_hgi_coll_park_q1",
  "ref_tile": true,
  "owner": "Claude:hbm-groupA-1014",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 24,
  "source": {
   "branch": "claude/hbm-groupA-1014",
-  "commit": "ca5361f1b",
+  "commit": "COMMIT",
   "extra_paths": [
    "rtl/hbm_accel/generic/collective",
    "rtl/link",
@@ -98,7 +98,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/hgi_coll_park_q1_wg_ref/hgi_coll_park_q1_wg_ref-pstage2-ca5361f1b"
+   "to": "results/rtl/ref_tile/hgi_coll_park_q1_wg_ref/hgi_coll_park_q1_wg_ref-pstage3-COMMIT"
   }
  ],
  "cycles_added": 0,
