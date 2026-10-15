@@ -1,12 +1,12 @@
 {
  "schema": "opentallas.hier_contract.child_lint.v1",
- "lef": "/srv/opentallas/claude/closure-loop/qfd_su_cbuf_g_m5-nl1-d10a72896/record/views/ot_qfd_su_cbuf_g/ot_qfd_su_cbuf_g.lef",
+ "lef": "/srv/opentallas/claude/closure-loop/qfd_su_cbuf_g_m5-nl2-ad5a17b36/record/views/ot_qfd_su_cbuf_g/ot_qfd_su_cbuf_g.lef",
  "verdict": "PASS",
  "fails": [],
  "warns": [
   "(f) face-pin access: 1482 of 1482 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. clk M5 (0.144,215.845), crom_addr[0] M5 (0.144,215.845), crom_addr[100] M5 (0.144,215.845))"
  ],
- "summary": "ot_qfd_su_cbuf_g 194.376 x 215.976: PG M5 VDD 36 stripes (97% spread, 100% cov) / VSS 36 stripes (97% spread, 100% cov); strap M6; face pins 1482 blocked-above 0 blocked-same 0; clock clk insertion 415 ps; pockets M5 0 (closed)",
+ "summary": "ot_qfd_su_cbuf_g 194.376 x 215.976: PG M5 VDD 36 stripes (97% spread, 100% cov) / VSS 36 stripes (97% spread, 100% cov); strap M6; face pins 1482 blocked-above 0 blocked-same 0; clock clk insertion 448 ps; pockets M5 0 (closed)",
  "info": {
   "cell": "ot_qfd_su_cbuf_g",
   "W": 194.376,
@@ -56,8 +56,8 @@
   },
   "clock_insertion": {
    "clk": {
-    "max_ps": 414.54,
-    "min_ps": 276.55
+    "max_ps": 448.4,
+    "min_ps": 344.5
    }
   },
   "pockets": {
@@ -66,7 +66,7 @@
    "marker": {
     "layer": "M5",
     "d_um": 1.536,
-    "added": 1105
+    "added": 860
    },
    "count": 0,
    "area_um2": 0,
