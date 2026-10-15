@@ -32,3 +32,10 @@ def pll_analog_binding():
            'pll_hbm_WS','pll_hbm_WN','pll_hbm_ES','pll_hbm_EN','pll_host','pll_ingest','pll_phy']
     return dict(module='qkd_pll_analog_model',file='rtl/qwen_sys/split_20261014/qkd_pll_analog_model.sv',
                 ports={name:[name] for name in names},classed={},hard_phy_analog=True)
+
+
+def gateway_splitboot_binding(base):
+    import copy
+    binding=copy.deepcopy(base)
+    binding.update(module='qkd_embgw_splitboot',file='rtl/qwen_sys/split_20261014/qkd_embgw_splitboot.sv')
+    return binding

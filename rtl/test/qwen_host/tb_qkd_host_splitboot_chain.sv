@@ -3,7 +3,7 @@ module tb_qkd_host_splitboot_chain;
  parameter integer MUT=0,HOT=0;
  reg ck=0;always #5 ck=~ck;reg rst_n=0;
  reg[289:0]ing=0;wire ing_cr;wire[289:0]kv;wire kv_cr;wire[282:0]hb;reg hb_cr=0;reg[36863:0]land_es=0;wire[127:0]all_acks;wire prefix;wire[31:0]global_issued,global_landed;wire df;
- qkd_host_boot_dispatch #(.MUT(MUT))dispatch(.ck(ck),.ck_order(ck),.rst_n(rst_n),.ing(ing),.ing_cr(ing_cr),.kv(kv),.kv_cr(kv_cr),.hb(hb),.hb_cr(hb_cr),.acks(all_acks),.prefix_v(prefix),.issued(global_issued),.landed(global_landed),.fault(df));wire[36863:0]ctrl_es,land_er_unused;wire[33407:0]land_er;
+ qkd_host_boot_dispatch #(.MUT(MUT))dispatch(.ck(ck),.ck_order(ck),.rst_n(rst_n),.boot_release(1'b0),.ing(ing),.ing_cr(ing_cr),.kv(kv),.kv_cr(kv_cr),.hb(hb),.hb_cr(hb_cr),.acks(all_acks),.prefix_v(prefix),.issued(global_issued),.landed(global_landed),.fault(df));wire[36863:0]ctrl_es,land_er_unused;wire[33407:0]land_er;
  reg[33407:0]ctrl_er=0;reg[127:0]cv=0;wire mv,mf;wire[65:0]marker;wire[31:0]issued,landed;wire[3:0]cf;
  qkd_host_ingest_chain_splitboot #(.MUT(0))dut(.ck_map(ck),.ck_sum(ck),.ck_order(ck),.ck_station({128{ck}}),.ck_static({128{ck}}),.rst_n(rst_n),
  .ing(kv),.ing_cr(kv_cr),.all_acks(all_acks),.land_es(land_es),.land_er(land_er),.ctrl_es(ctrl_es),.ctrl_er(ctrl_er),
