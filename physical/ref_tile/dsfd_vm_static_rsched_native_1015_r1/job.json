@@ -1,5 +1,5 @@
 {
- "name": "dsfd_vm_static_rsched_native_1015_r1-native1-09a0eb9a4",
+ "name": "dsfd_vm_static_rsched_native_1015_r1-native1-2bc13fdc7",
  "block": "dsfd_vm_static_rsched",
  "ref_tile": true,
  "owner": "claude:S81 VM F3 ctl",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 16,
  "source": {
   "branch": "claude/s81-vm-f3-ret-1015",
-  "commit": "09a0eb9a441cba468bee2c192490153fa994c78f",
+  "commit": "2bc13fdc731a749133f75f0b7a9a9aeaee580da3",
   "extra_paths": [
    "tools/s81_vm",
    "rtl/dsrom_sys/s81_ph/vm",
@@ -111,7 +111,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/dsfd_vm_static_rsched_native_1015_r1/dsfd_vm_static_rsched_native_1015_r1-native1-09a0eb9a4"
+   "to": "results/rtl/ref_tile/dsfd_vm_static_rsched_native_1015_r1/dsfd_vm_static_rsched_native_1015_r1-native1-2bc13fdc7"
   }
  ],
  "cycles_added": 0,
