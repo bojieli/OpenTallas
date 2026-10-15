@@ -1,0 +1,151 @@
+{
+ "name": "dsfd_vm_write_dispatch_b16_native",
+ "top": "dsfd_vm_static_wdispatch128_B16",
+ "kind": "tile",
+ "sources": [
+  "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_wdispatch128.sv",
+  "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_wdispatch128_profiles.sv"
+ ],
+ "clock": "cts",
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 734.4,
+  "h": 345.6,
+  "exact": true
+ },
+ "pins": {
+  "N": [
+   "i_v_n",
+   "i_row_n",
+   "i_mask_n",
+   "i_data_n",
+   "i_tag_n",
+   "i_capture_lane_n",
+   "i_storage_slot_n",
+   "ck",
+   "rst_n"
+  ],
+  "S": [
+   "i_v_s",
+   "i_row_s",
+   "i_mask_s",
+   "i_data_s",
+   "i_tag_s",
+   "i_capture_lane_s",
+   "i_storage_slot_s"
+  ],
+  "E": [
+   "o_v_e",
+   "o_slot_e",
+   "o_row_e",
+   "o_mask_e",
+   "o_data_e",
+   "o_tag_e",
+   "fault"
+  ],
+  "W": [
+   "o_v_w",
+   "o_slot_w",
+   "o_row_w",
+   "o_mask_w",
+   "o_data_w",
+   "o_tag_w"
+  ]
+ },
+ "io_tcl": "physical/s81_vm_write_edge_1015/native/dsfd_vm_static_wdispatch128_B16.tcl",
+ "params": {},
+ "layer_cap": "M5",
+ "macros": [],
+ "route": {
+  "pd": 0.4,
+  "threads": 16,
+  "peak_ram_gb": 48,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "recipe": 2,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": false,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "structural_change": "Native write-edge leaf: the scalar 29,203-sink W0/wsched register is split into 150 independently clocked actual leaves (control1/header1/payload4/dispatch16/stage128); same RTL, fixed edges W0 P, dispatch P+1/P+2, storage P+3, scatter P+4+lane; no ready/credit/stage added. Pins on closed-leaf M5/M4 tracks; outhold off (receivers carry the composed hold pad).",
+ "slot_change_request": {
+  "contract": "S81 static VM write-edge native option",
+  "version": "101a4e629/a60002977",
+  "why": "New native write leaves: per-category clock roots need closed views with measured R; parent geometry adoption by S-DIE"
+ },
+ "job": {
+  "owner": "claude:S81 VM F1 write-edge",
+  "branch": "claude/s81-vm-write-native-1015",
+  "tag": "wn1",
+  "purpose": "Actual dsfd_vm_static_wdispatch128_B16 native leaf for ck_write_dispatch_t (4 roots): TT setup/FF hold/DRC0, native face IO, measured R",
+  "extra_paths": [
+   "rtl/dsrom_sys/s81_ph/vm",
+   "rtl/dsrom_sys/s81_ph/test",
+   "tools/s81_write_edge",
+   "physical/s81_vm_write_edge_1015"
+  ],
+  "benches": [
+   {
+    "name": "exact_dispatch_wsched53",
+    "cmd": "bash tools/s81_write_edge/leaf_bench.sh {RUN}/bench/dispatch_base dispatch base",
+    "expect": "pass",
+    "pass_regex": "WRITE_LEAF_BENCH PASS dispatch base WRITE_ROOTS_RESULT sent=11024 got=11024 bad=0",
+    "min_count_regex": "sent=(\\d+)",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "mutant_actual_dispatch",
+    "cmd": "bash tools/s81_write_edge/leaf_bench.sh {RUN}/bench/dispatch_mut dispatch mutant",
+    "expect": "fail",
+    "fail_regex": "WRITE_LEAF_BENCH FAIL dispatch mutant WRITE_ROOTS_RESULT sent=11024 got=11024 bad=[1-9]",
+    "min_count_regex": "sent=(\\d+)",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "profile_equiv",
+    "cmd": "python3 tools/s81_write_edge/profile_equiv.py {RUN}/bench/pe dsfd_vm_static_wdispatch128_B16",
+    "expect": "pass",
+    "pass_regex": "PROFILE_EQUIV PASS dsfd_vm_static_wdispatch128_B16 cycles 3000",
+    "min_count_regex": "cycles (\\d+)",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "profile_equiv_mutant",
+    "cmd": "python3 tools/s81_write_edge/profile_equiv.py {RUN}/bench/pem dsfd_vm_static_wdispatch128_B16 --mutant",
+    "expect": "fail",
+    "fail_regex": "PROFILE_EQUIV FAIL dsfd_vm_static_wdispatch128_B16 cycles 3000 bad [1-9]",
+    "min_count_regex": "cycles (\\d+)",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
+   }
+  ]
+ },
+ "children": [],
+ "inter": []
+}

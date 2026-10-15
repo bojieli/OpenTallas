@@ -1,0 +1,138 @@
+{
+ "name": "dsfd_vm_write_dispatch_b24_native-wn1-COMMIT",
+ "block": "dsfd_vm_static_wdispatch128_B24",
+ "ref_tile": true,
+ "owner": "claude:S81 VM F1 write-edge",
+ "purpose": "Actual dsfd_vm_static_wdispatch128_B24 native leaf for ck_write_dispatch_t (4 roots): TT setup/FF hold/DRC0, native face IO, measured R",
+ "threads": 16,
+ "peak_ram_gb": 48,
+ "source": {
+  "branch": "claude/s81-vm-write-native-1015",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "rtl/dsrom_sys/s81_ph/vm",
+   "rtl/dsrom_sys/s81_ph/test",
+   "tools/s81_write_edge",
+   "physical/s81_vm_write_edge_1015"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; dsfd_vm_static_wdispatch128_B24 u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_wdispatch128.sv rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_wdispatch128_profiles.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "exact_dispatch_wsched53",
+    "cmd": "bash tools/s81_write_edge/leaf_bench.sh {RUN}/bench/dispatch_base dispatch base",
+    "expect": "pass",
+    "pass_regex": "WRITE_LEAF_BENCH PASS dispatch base WRITE_ROOTS_RESULT sent=11024 got=11024 bad=0",
+    "min_count_regex": "sent=(\\d+)",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "mutant_actual_dispatch",
+    "cmd": "bash tools/s81_write_edge/leaf_bench.sh {RUN}/bench/dispatch_mut dispatch mutant",
+    "expect": "fail",
+    "fail_regex": "WRITE_LEAF_BENCH FAIL dispatch mutant WRITE_ROOTS_RESULT sent=11024 got=11024 bad=[1-9]",
+    "min_count_regex": "sent=(\\d+)",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "profile_equiv",
+    "cmd": "python3 tools/s81_write_edge/profile_equiv.py {RUN}/bench/pe dsfd_vm_static_wdispatch128_B24",
+    "expect": "pass",
+    "pass_regex": "PROFILE_EQUIV PASS dsfd_vm_static_wdispatch128_B24 cycles 3000",
+    "min_count_regex": "cycles (\\d+)",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "profile_equiv_mutant",
+    "cmd": "python3 tools/s81_write_edge/profile_equiv.py {RUN}/bench/pem dsfd_vm_static_wdispatch128_B24 --mutant",
+    "expect": "fail",
+    "fail_regex": "PROFILE_EQUIV FAIL dsfd_vm_static_wdispatch128_B24 cycles 3000 bad [1-9]",
+    "min_count_regex": "cycles (\\d+)",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/dsfd_vm_write_dispatch_b24_native/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/dsfd_vm_write_dispatch_b24_native/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 16,
+   "peak_ram_gb": 48
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/dsfd_vm_write_dispatch_b24_native --out {RUN}/record/views/dsfd_vm_static_wdispatch128_B24  > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/dsfd_vm_write_dispatch_b24_native/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": []
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/dsfd_vm_write_dispatch_b24_native/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/dsfd_vm_write_dispatch_b24_native/dsfd_vm_write_dispatch_b24_native-wn1-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "Native write-edge leaf: the scalar 29,203-sink W0/wsched register is split into 150 independently clocked actual leaves (control1/header1/payload4/dispatch16/stage128); same RTL, fixed edges W0 P, dispatch P+1/P+2, storage P+3, scatter P+4+lane; no ready/credit/stage added. Pins on closed-leaf M5/M4 tracks; outhold off (receivers carry the composed hold pad)."
+}

@@ -1,0 +1,113 @@
+{
+ "schema": "opentallas.ref_tile.floorplan.v1",
+ "name": "dsfd_vm_write_dispatch_b8_native",
+ "top": "dsfd_vm_static_wdispatch128_B8",
+ "kind": "tile",
+ "die": [
+  0,
+  0,
+  734.4,
+  345.6
+ ],
+ "core": [
+  2.16,
+  2.16,
+  732.24,
+  343.44
+ ],
+ "why": "spec outline (exact: the closed view's sub-slot)",
+ "std_area_um2": null,
+ "layer_contract": {
+  "children": {},
+  "pg_layer": "M5",
+  "rlayers": [
+   "M2",
+   "M5"
+  ],
+  "strap_layer": "M6",
+  "layer_cap": "M5",
+  "cap_basis": "contract"
+ },
+ "pins": {
+  "N": [
+   "i_v_n",
+   "i_row_n",
+   "i_mask_n",
+   "i_data_n",
+   "i_tag_n",
+   "i_capture_lane_n",
+   "i_storage_slot_n",
+   "ck",
+   "rst_n"
+  ],
+  "S": [
+   "i_v_s",
+   "i_row_s",
+   "i_mask_s",
+   "i_data_s",
+   "i_tag_s",
+   "i_capture_lane_s",
+   "i_storage_slot_s"
+  ],
+  "E": [
+   "o_v_e",
+   "o_slot_e",
+   "o_row_e",
+   "o_mask_e",
+   "o_data_e",
+   "o_tag_e",
+   "fault"
+  ],
+  "W": [
+   "o_v_w",
+   "o_slot_w",
+   "o_row_w",
+   "o_mask_w",
+   "o_data_w",
+   "o_tag_w"
+  ]
+ },
+ "clock_port": "ck",
+ "blocks": [],
+ "findings": [
+  [
+   "WARN",
+   "clock_span",
+   "734.4 x 345.6 um: one clock root over > 600 um",
+   "split into hardened sub-tiles with local roots (kind cluster) or keep the sink count small"
+  ]
+ ],
+ "referenced": [
+  "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_wdispatch128.sv",
+  "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_wdispatch128_profiles.sv",
+  "physical/ref_tile/dsfd_vm_write_dispatch_b8_native/kit.env",
+  "physical/ref_tile/dsfd_vm_write_dispatch_b8_native/clock.sdc",
+  "physical/ref_tile/dsfd_vm_write_dispatch_b8_native/signoff.sdc",
+  "physical/ref_tile/dsfd_vm_write_dispatch_b8_native/pdn.tcl",
+  "physical/ref_tile/dsfd_vm_write_dispatch_b8_native/pre_cts.tcl",
+  "physical/ref_tile/dsfd_vm_write_dispatch_b8_native/post_cts.tcl",
+  "physical/ref_tile/dsfd_vm_write_dispatch_b8_native/post_grt.tcl",
+  "physical/ref_tile/dsfd_vm_write_dispatch_b8_native/pre_drt.tcl",
+  "physical/ref_tile/dsfd_vm_write_dispatch_b8_native/pre_fill.tcl",
+  "physical/ref_tile/dsfd_vm_write_dispatch_b8_native/post_fill.tcl",
+  "physical/ref_tile/dsfd_vm_write_dispatch_b8_native/pre_grt.tcl",
+  "physical/ref_tile/dsfd_vm_write_dispatch_b8_native/post_drt.tcl",
+  "tools/ref_tile/ref_route.sh",
+  "physical/qwen_die_masters/io_ref_skew.sdc",
+  "physical/qwen_die_masters/io_plain.sdc",
+  "physical/qwen_die_masters/repair_budget.tcl",
+  "physical/qwen_die_masters/pre_cts_skew.tcl",
+  "physical/qwen_die_masters/pre_ref_skew.tcl",
+  "physical/qwen_die_masters/post_plain.tcl",
+  "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
+  "physical/common_flow/grt_macro_top_layer.tcl",
+  "physical/s81_vm_write_edge_1015/native/dsfd_vm_static_wdispatch128_B8.tcl",
+  "physical/qwen_die_masters/io_flop_at_pins.tcl",
+  "physical/qwen_die_masters/out_flop_release.tcl",
+  "physical/dsrom_window_source/leaf_inhold.tcl",
+  "physical/dsrom_window_source/leaf_inhold_release.tcl",
+  "physical/ref_tile/dsfd_vm_write_dispatch_b8_native/pre_gpl.tcl",
+  "physical/ref_tile/dsfd_vm_write_dispatch_b8_native/pre_dpl.tcl",
+  "physical/common_flow/pin_reg_split.tcl"
+ ]
+}

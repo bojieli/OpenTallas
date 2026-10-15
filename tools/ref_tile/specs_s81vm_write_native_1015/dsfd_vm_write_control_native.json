@@ -1,0 +1,105 @@
+{
+ "name": "dsfd_vm_write_control_native",
+ "top": "dsfd_vm_static_wcontrol",
+ "kind": "tile",
+ "sources": [
+  "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_wcontrol.sv"
+ ],
+ "clock": "cts",
+ "clock_port": "ck_control",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 216,
+  "h": 86.4,
+  "exact": true
+ },
+ "pins": {
+  "N": [
+   "pv",
+   "pr",
+   "header_epoch",
+   "payload_epoch"
+  ],
+  "S": [
+   "lane",
+   "lv",
+   "dr_v",
+   "dr_s",
+   "own"
+  ],
+  "E": [],
+  "W": [
+   "cap_v",
+   "ck_control",
+   "rst_n"
+  ]
+ },
+ "io_tcl": "physical/s81_vm_write_edge_1015/native/dsfd_vm_static_wcontrol.tcl",
+ "params": {},
+ "layer_cap": "M5",
+ "macros": [],
+ "route": {
+  "pd": 0.4,
+  "threads": 8,
+  "peak_ram_gb": 16,
+  "hold_margin_ns": 0.03
+ },
+ "recipe": 2,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": false,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "structural_change": "Native write-edge leaf: the scalar 29,203-sink W0/wsched register is split into 150 independently clocked actual leaves (control1/header1/payload4/dispatch16/stage128); same RTL, fixed edges W0 P, dispatch P+1/P+2, storage P+3, scatter P+4+lane; no ready/credit/stage added. Pins on closed-leaf M5/M4 tracks; outhold off (receivers carry the composed hold pad).",
+ "slot_change_request": {
+  "contract": "S81 static VM write-edge native option",
+  "version": "101a4e629/a60002977",
+  "why": "New native write leaves: per-category clock roots need closed views with measured R; parent geometry adoption by S-DIE"
+ },
+ "job": {
+  "owner": "claude:S81 VM F1 write-edge",
+  "branch": "claude/s81-vm-write-native-1015",
+  "tag": "wn1",
+  "purpose": "Actual dsfd_vm_static_wcontrol native leaf for ck_write_control_t (1 roots): TT setup/FF hold/DRC0, native face IO, measured R",
+  "extra_paths": [
+   "rtl/dsrom_sys/s81_ph/vm",
+   "rtl/dsrom_sys/s81_ph/test",
+   "tools/s81_write_edge",
+   "physical/s81_vm_write_edge_1015"
+  ],
+  "benches": [
+   {
+    "name": "exact_control_wsched53",
+    "cmd": "bash tools/s81_write_edge/leaf_bench.sh {RUN}/bench/control_base control base",
+    "expect": "pass",
+    "pass_regex": "WRITE_LEAF_BENCH PASS control base WRITE_ROOTS_RESULT sent=11024 got=11024 bad=0",
+    "min_count_regex": "sent=(\\d+)",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "mutant_actual_control",
+    "cmd": "bash tools/s81_write_edge/leaf_bench.sh {RUN}/bench/control_mut control mutant",
+    "expect": "fail",
+    "fail_regex": "WRITE_LEAF_BENCH FAIL control mutant WRITE_ROOTS_RESULT sent=11024 got=11024 bad=[1-9]",
+    "min_count_regex": "sent=(\\d+)",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ]
+ }
+}
