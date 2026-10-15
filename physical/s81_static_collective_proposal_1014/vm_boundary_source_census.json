@@ -1,0 +1,145 @@
+{
+  "schema": "opentallas.source-width-census.v1",
+  "top": "s81_static_vm_boundary",
+  "ports": {
+    "clk": {
+      "bits": 1,
+      "direction": "input"
+    },
+    "rst_n": {
+      "bits": 1,
+      "direction": "input"
+    },
+    "read_slot": {
+      "bits": 1,
+      "direction": "input"
+    },
+    "read_row": {
+      "bits": 14,
+      "direction": "input"
+    },
+    "t_crq": {
+      "bits": 15,
+      "direction": "output"
+    },
+    "t_vm": {
+      "bits": 2204,
+      "direction": "output"
+    },
+    "commit_gather": {
+      "bits": 1,
+      "direction": "input"
+    },
+    "hc_reduce_slot": {
+      "bits": 1,
+      "direction": "input"
+    },
+    "gather_we": {
+      "bits": 4,
+      "direction": "input"
+    },
+    "gather_rows": {
+      "bits": 60,
+      "direction": "input"
+    },
+    "gather_data": {
+      "bits": 2048,
+      "direction": "input"
+    },
+    "gather_tag": {
+      "bits": 32,
+      "direction": "input"
+    },
+    "hc_write_slot": {
+      "bits": 1,
+      "direction": "input"
+    },
+    "reduced_valid": {
+      "bits": 1,
+      "direction": "input"
+    },
+    "reduced_error": {
+      "bits": 1,
+      "direction": "input"
+    },
+    "reduced_last": {
+      "bits": 1,
+      "direction": "input"
+    },
+    "reduced_seq": {
+      "bits": 16,
+      "direction": "input"
+    },
+    "hc_expect_seq": {
+      "bits": 16,
+      "direction": "input"
+    },
+    "hc_expect_last": {
+      "bits": 1,
+      "direction": "input"
+    },
+    "reduced_data": {
+      "bits": 512,
+      "direction": "input"
+    },
+    "reduced_tag": {
+      "bits": 32,
+      "direction": "input"
+    },
+    "raw_sources": {
+      "bits": 1102,
+      "direction": "input"
+    },
+    "phy_rx_fault": {
+      "bits": 8,
+      "direction": "input"
+    },
+    "phy_rx_valid": {
+      "bits": 8,
+      "direction": "input"
+    },
+    "phy_rx_live": {
+      "bits": 8,
+      "direction": "input"
+    },
+    "issue_slot": {
+      "bits": 1,
+      "direction": "input"
+    },
+    "raw_capture": {
+      "bits": 1,
+      "direction": "input"
+    },
+    "raw_capture_payload_slot": {
+      "bits": 1,
+      "direction": "input"
+    },
+    "raw_capture_meta_slot": {
+      "bits": 1,
+      "direction": "input"
+    },
+    "raw_tx_count": {
+      "bits": 3,
+      "direction": "input"
+    },
+    "host_rx": {
+      "bits": 516,
+      "direction": "input"
+    },
+    "pack_bad_out": {
+      "bits": 1,
+      "direction": "output"
+    },
+    "fault": {
+      "bits": 1,
+      "direction": "output"
+    }
+  },
+  "total_port_bits": 6614,
+  "source_sha256": {
+    "/home/ubuntu/wt/codex-s81-static-collective-sparse-1014/rtl/dsrom_sys/s81_static_collective/s81_static_vm_boundary.sv": "ce6385c2372da04cc9203cd75ffe4712094b50dc7fbf3a37118ce8293f6077df"
+  },
+  "defines": [],
+  "elaboration_diagnostics": "",
+  "qualification": "elaborated source port widths only; physical and native behavior unqualified"
+}

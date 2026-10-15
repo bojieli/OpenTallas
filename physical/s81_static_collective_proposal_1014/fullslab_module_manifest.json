@@ -2,7 +2,7 @@
   "top": "dsfd_sp_collective_static_c",
   "source_sha256": {
     "rtl/dsrom_sys/s81_static_collective/dsfd_sp_collective_static_c.sv": "e2a0b394d02742fca19b94f5b5593b3ba2edcf9f9703dbd47ee7256383ca6163",
-    "rtl/dsrom_sys/s81_static_collective/s81_static_collective_slab.sv": "9528fb728777bd94e124fd0fa88647444a61a2ecbea248839a7ef6e5b4d6989d",
+    "rtl/dsrom_sys/s81_static_collective/s81_static_collective_slab.sv": "20e54f4032c4bcf54d8529c038cedea9fe6329a73cff2dd45292b44e75fca403",
     "rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller.sv": "67ba78bda301e8aa383629099871ad03f3358e5adb42b169e7bcf71d01e3a15a",
     "rtl/dsrom_sys/s81_static_collective/s81_static_fmt1_rank_dynamic_clocked.sv": "d6bbf3f20edc12b235bc44f3051f7f0f55dfe1f4e4aced6fdd70d8edfe7c05be",
     "rtl/dsrom_sys/s81_static_collective/s81_static_fmt1_core_dynamic.sv": "e0a1f6bbb2ead12198c873fb924a16e7c8e6bdcaeb2d957fb19c48889f7e0527",
@@ -24,9 +24,10 @@
     "rtl/dsrom_sys/s81_ph/coll/dsfd_coll_ck.sv": "29c8509ea4b4c18b8f7a5a1d2b2e0c437b5844f1faba764b026977521a1a1299",
     "rtl/dsrom_sys/s81_ph/coll/ot_s81ph_ckbuf.sv": "767d0fb750db539d0c7076709cb7d39b0fd8df8ad1d058e9c8aa0d1c41881a7b",
     "rtl/dsrom_sys/s81_ph/ot_s81ph_coll_rstc.sv": "5088b726e17245248c9e0547c15eafe704d663c6d03a50ed5a7701448d924123",
-    "rtl/dsrom_sys/s81_ph/ot_s81_pll_bb.sv": "1f67fdb4e27aac34e26d4ebd300bf7e3dabe268bfab39f388030b02bce610a53"
+    "rtl/dsrom_sys/s81_ph/ot_s81_pll_bb.sv": "1f67fdb4e27aac34e26d4ebd300bf7e3dabe268bfab39f388030b02bce610a53",
+    "rtl/dsrom_sys/s81_static_collective/s81_static_vm_boundary.sv": "ce6385c2372da04cc9203cd75ffe4712094b50dc7fbf3a37118ce8293f6077df"
   },
-  "qualification": "native source candidate only; combined 29root functional/physical gate pending",
+  "qualification": "native source candidate only; extracted boundary integrated gate running; physical gate unqualified",
   "clock_delivery": {
     "ck_control": 5,
     "ck_lane": 8,

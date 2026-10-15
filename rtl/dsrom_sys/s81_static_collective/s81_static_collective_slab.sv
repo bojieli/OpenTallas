@@ -10,7 +10,7 @@ module s81_static_collective_slab #(
  input wire[4:0]ck_control,input wire[7:0]ck_lane,input wire[15:0]ck_hc_lane,
  input wire rst_n,input wire[1:0]f_rank,
  input wire[84:0]c_cmd,output wire[8:0]c_done,output wire[1:0]c_st,
- output reg[14:0]t_crq,input wire[512:0]f_crs,output reg[2203:0]t_vm,
+ output wire[14:0]t_crq,input wire[512:0]f_crs,output wire[2203:0]t_vm,
  input wire[7:0]phy_rx_valid,input wire[4095:0]phy_rx_data,
  input wire[7:0]phy_rx_fault,input wire[7:0]phy_rx_live,
  output wire[7:0]phy_tx_valid,output wire[4095:0]phy_tx_data,
@@ -75,7 +75,8 @@ module s81_static_collective_slab #(
   assign rn_control[root]=rr[1];
  end endgenerate
  wire[1:0]controller_status;wire busy;wire transport_fault,channel_fault,raw_fault,reduce_fault,assemble_fault;
- reg boundary_fault;
+ wire boundary_fault;
+ wire pack_bad;
  wire datapath_fault=transport_fault|channel_fault|raw_fault|reduce_fault|assemble_fault|boundary_fault;
  s81_static_calendar_controller #(.ROM_FILE(ROM_FILE),.CYCLES(CYCLES)) calendar(
  .clk(ck_control[0]),.rst_n(rn_control[0]),.c_cmd(c_cmd),.c_done(c_done),.c_st(controller_status),
@@ -149,11 +150,6 @@ module s81_static_collective_slab #(
  .phy_rx_valid(phy_rx_valid[2:0]),.phy_rx_data(phy_rx_data[1535:0]),
  .vm_we(gather_we),.vm_rows(gather_rows),.vm_data(gather_data),
  .gather_tag(gather_tag),.gather_seq(gather_seq),.gather_last(gather_last),.fault(transport_fault));
- reg gather_mode_q;reg[13:0]reduce_row[0:17];integer p;
- always @(posedge ck_control[2])begin
-  gather_mode_q<=commit_gather;reduce_row[0]<=gather_rows[13:0];
-  for(p=1;p<18;p=p+1)reduce_row[p]<=reduce_row[p-1];
- end
  wire reduced_valid,reduced_last,reduced_error;
  wire[511:0]reduced_data;wire[31:0]reduced_tag;wire[15:0]reduced_seq;
  s81_static_hc_reduce_clocked #(.LOCAL_RESET_SYNC(1)) reduce(
@@ -206,38 +202,13 @@ module s81_static_collective_slab #(
  // Native host ingress omits the historical credit bit. Its wire reservation
  // remains zero; accepting a nonzero bit would silently restore flow control.
  assign t_host=host_rx[514:0];
- reg[2203:0]next_vm;reg pack_bad;reg[3:0]occupied;
- reg[550:0]word;integer k;
- always @*begin
-  next_vm=0;pack_bad=0;occupied=0;word=0;
-  if(|gather_we)begin
-   if(gather_mode_q)begin
-    for(integer j=0;j<4;j=j+1)if(gather_we[j])begin
-     if(gather_rows[j*15+14])pack_bad=1;
-     next_vm[j*551+:551]={gather_tag[7:0],gather_data[j*512+:512],16'hffff,gather_rows[j*15+:14],1'b1};occupied[j]=1;
-    end
-   end else if(!hc_reduce_slot)pack_bad=1;
-  end
-  if(hc_write_slot)begin
-   if(occupied[0]||!reduced_valid||reduced_error||reduced_seq!=hc_expect_seq||reduced_last!=hc_expect_last)pack_bad=1;
-   next_vm[0+:551]={reduced_tag[7:0],reduced_data,16'hffff,reduce_row[17],1'b1};occupied[0]=1;
-  end
-  if(reduced_valid!=hc_write_slot)pack_bad=1;
-  for(integer j=0;j<2;j=j+1)begin
-   word=raw_sources[j*551+:551];
-   if(word[0])begin if(occupied[j])pack_bad=1;next_vm[j*551+:551]=word;occupied[j]=1;end
-  end
-  if(MUT==1 && hc_write_slot)next_vm[31]=~next_vm[31];
-  if(pack_bad||boundary_fault)for(integer j=0;j<4;j=j+1)next_vm[j*551]=0;
- end
- always @(posedge ck_control[2] or negedge rn_control[2])begin
-  if(!rn_control[2])begin t_crq<=0;t_vm<=0;boundary_fault<=0;end
-  else begin
-   t_crq<={read_row,read_slot};t_vm<=next_vm;
-   if(pack_bad||(|phy_rx_fault)||(issue_slot&&raw_capture)||
-      (raw_capture_payload_slot&&raw_capture_meta_slot)||raw_tx_count>1||
-      (host_rx[0]&&host_rx[515]))boundary_fault<=1;
-   for(integer j=0;j<8;j=j+1)if(phy_rx_valid[j]&&!phy_rx_live[j])boundary_fault<=1;
-  end
- end
+ s81_static_vm_boundary #(.MUT(MUT)) vm_boundary(
+ .clk(ck_control[2]),.rst_n(rn_control[2]),.read_slot(read_slot),.read_row(read_row),.t_crq(t_crq),.t_vm(t_vm),
+ .commit_gather(commit_gather),.hc_reduce_slot(hc_reduce_slot),.gather_we(gather_we),.gather_rows(gather_rows),.gather_data(gather_data),.gather_tag(gather_tag),
+ .hc_write_slot(hc_write_slot),.reduced_valid(reduced_valid),.reduced_error(reduced_error),.reduced_last(reduced_last),.reduced_seq(reduced_seq),
+ .hc_expect_seq(hc_expect_seq),.hc_expect_last(hc_expect_last),.reduced_data(reduced_data),.reduced_tag(reduced_tag),.raw_sources(raw_sources),
+ .phy_rx_fault(phy_rx_fault),.phy_rx_valid(phy_rx_valid),.phy_rx_live(phy_rx_live),.issue_slot(issue_slot),.raw_capture(raw_capture),
+ .raw_capture_payload_slot(raw_capture_payload_slot),.raw_capture_meta_slot(raw_capture_meta_slot),.raw_tx_count(raw_tx_count),.host_rx(host_rx),
+ .pack_bad_out(pack_bad),.fault(boundary_fault));
+
 endmodule
