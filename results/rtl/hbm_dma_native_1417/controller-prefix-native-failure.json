@@ -1,0 +1,23 @@
+{
+ "cell": "ot_hgi_dma_back_static_vp4_controller",
+ "view": "ot_hgi_dma_back_static_vp4_controller",
+ "lib_cell": "ot_hgi_dma_back_static_vp4_controller",
+ "insertion": true,
+ "ref_src": [
+  "insertion.json boundary mean"
+ ],
+ "R_ps": 125.2,
+ "spread_ps": 22.5,
+ "outputs": 483,
+ "inputs": 363,
+ "launch_ps": 185.7,
+ "launch_pin": "bank_read_addr[101]",
+ "capture_ps": 458.4,
+ "capture_pin": "rst_n",
+ "launch_over": 0,
+ "capture_over": 9,
+ "comb_pins": 0,
+ "comb_first": [],
+ "pass": false,
+ "fail_why": "capture 458.4049 > 190 (9 pins)"
+}
