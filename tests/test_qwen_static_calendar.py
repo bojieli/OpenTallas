@@ -16,13 +16,13 @@ class StaticCalendar(unittest.TestCase):
         self.source = self.root/'engine.sv'
         self.source.write_text('module engine; endmodule\n')
         self.program = self.root/'program.hex'
-        self.program.write_text('1\n2\n')
+        self.program.write_text('2\n1\n')
         self.contract = dict(schema='opentallas.qwen-native-microcalendar.v1',
             source_sha256={'engine.sv':sha(self.source)}, clocks={'core':dict(period_fs=10,phase_fs=0)},
             resources={'vm':dict(clock='core',capacity=1)}, deadline_fs=1000, start_fs=100,
-            instructions=[dict(stage=0,pc=0,word='1',unit=2,clock='core',rtl_instance='dut.su',rtl_module='engine',
+            instructions=[dict(stage=0,pc=0,word='2',unit=2,clock='core',rtl_instance='dut.su',rtl_module='engine',
                 events=[dict(id='write',offset_fs=20,resource='vm',produces=['X:epoch0'],kind='vm_write_tap',address=0,lanes=1,stride=1,mask=1)]),
-                dict(stage=0,pc=1,word='2',unit=1,clock='core',rtl_instance='dut.me',rtl_module='engine',
+                dict(stage=0,pc=1,word='1',unit=1,clock='core',rtl_instance='dut.me',rtl_module='engine',
                 events=[dict(id='read',offset_fs=0,resource='vm',requires=['X:epoch0'])])])
 
     def tearDown(self): self.tmp.cleanup()
@@ -91,6 +91,17 @@ class StaticCalendar(unittest.TestCase):
         self.contract['instructions']=[]
         with self.assertRaisesRegex(ScheduleError,'incomplete actual instruction coverage'):
             compile_calendar(programs,self.contract,self.root)
+
+    def test_issue_serializer(self):
+        from qwen_static_schedule.issue_rom import rows
+        result=self.compile()
+        result['issues'].append(dict(stage=0,pc=2,time_fs=200,unit=0))
+        result['events'].append(dict(stage=0,pc=2,time_fs=200,kind='owner_end',owner=1))
+        encoded=rows(result,0,1,10,0,20)
+        self.assertEqual(len(encoded),2)
+        self.assertEqual(int(encoded[-1]['hex'],16)>>46,1)
+        result['issues'][0]['unit']=1
+        with self.assertRaises(ScheduleError):rows(result,0,1,10,0,19)
 
     def test_multi_clock_phase(self):
         self.contract['clocks']['slow']=dict(period_fs=20,phase_fs=0)
