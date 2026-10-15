@@ -1,0 +1,55 @@
+{
+  "gate": "PASS",
+  "results": [
+    {
+      "mutant": 0,
+      "exit": 0,
+      "ok": true
+    },
+    {
+      "mutant": 1,
+      "exit": -6,
+      "ok": true
+    }
+  ],
+  "source_sha256": {
+    "rtl/experimental/dsrom_markov_20261008/ot_dsrom_markov_weight32_static.sv": "acc31f7d13234708cfca192b90a669b346a8e7d0b01e1f43ad5d3a2852b405cb",
+    "physical/asap7_memory_macros/ot_rom_4096x274_m8/ot_rom_4096x274_m8.v": "57823a0353236533a2b15a669025480c61930874cde8af6e77f7fca372f6fada",
+    "tools/s81/markov_weight_static_gate.py": "c555b4ef808a7d4961c1bd114727922c9d129adb3246d7672ea387521568cf91"
+  },
+  "released": {
+    "schema": "opentallas.md6.markovweight-image.v1",
+    "checkpoint_revision": "dba1be0a40aa45a94ad051997016db3960a90277",
+    "key": "mtp.2.markov_head.head.weight",
+    "shard": "model-00046-of-00048.safetensors",
+    "header": {
+      "dtype": "BF16",
+      "shape": [
+        129280,
+        256
+      ],
+      "data_offsets": [
+        71470552,
+        137661912
+      ]
+    },
+    "index_sha256": "74b0686a3d2891980d5e303251b075a3bccae2c2ff650747db2620a649b98fa8",
+    "row0": 1024,
+    "VALID_ROWS": 32,
+    "released_rows_copied": 32,
+    "padded_rows": 0,
+    "payload_sha256": "90268b07e7eef3e9f57b0d26baf6245b8a97bfffe6f416ccf6e502cc79cf202e",
+    "mapping": "macro=(16*local_row+beat)%2; addr=(16*local_row+beat)//2",
+    "ROM_ECC": false,
+    "images": {
+      "mk_1.viamap.hex": "951849511f56bdc2aa882664a4c0b54c8a00ab0fb3dc3dc8c859410a1d1ea41b",
+      "mk_0.viamap.hex": "f65023e18a23a15c075334246606eb698132812dea5f8f4da61436a7f08699f0"
+    }
+  },
+  "rows": 32,
+  "beats": 512,
+  "latency": 6,
+  "full_native_token_qualified": false,
+  "physical_qualified": false,
+  "scope": "actual released W32 mapped mask-ROM and fixed slots only; all 4040 row blocks/full-head static composition remain required"
+}

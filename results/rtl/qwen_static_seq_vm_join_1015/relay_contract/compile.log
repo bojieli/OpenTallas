@@ -1,0 +1,711 @@
+%Warning-PINMISSING: rtl/qwen_sys/missing_masters_20261007/ot_qfd_spine_masters.sv:135:83: Cell has missing pin: 'obs_active'
+  135 |     ot_hdc_vstream #(.SW(SW), .LV(LV), .WR(W), .AW(AW), .NW(NW), .KV_FP8(KV_FP8)) u_su (
+      |                                                                                   ^~~~
+                     rtl/hdc/ot_hdc_vstream.sv:109:30: ... Location of port declaration
+  109 |     output wire              obs_active,
+      |                              ^~~~~~~~~~
+                     ... For warning description see https://verilator.org/warn/PINMISSING?v=5.032
+                     ... Use "/* verilator lint_off PINMISSING */" and lint_on around source to disable this message.
+%Warning-PINMISSING: rtl/qwen_sys/missing_masters_20261007/ot_qfd_spine_masters.sv:135:83: Cell has missing pin: 'obs_inflight'
+  135 |     ot_hdc_vstream #(.SW(SW), .LV(LV), .WR(W), .AW(AW), .NW(NW), .KV_FP8(KV_FP8)) u_su (
+      |                                                                                   ^~~~
+                     rtl/hdc/ot_hdc_vstream.sv:110:30: ... Location of port declaration
+  110 |     output wire [7:0]        obs_inflight
+      |                              ^~~~~~~~~~~~
+%Warning-PINMISSING: rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_xtree.sv:230:124: Cell has missing pin: 'line_data'
+  230 |     ot_qfd_vm_xline_t #(.NRB(NRB), .SMIN(SMIN), .SMAX(SMAX), .BMAX(BMAX), .ND(ND), .DSET(DSET), .MEREG(MEREG), .MUT(LMUT)) u_l (
+      |                                                                                                                            ^~~
+                     rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_xtree.sv:69:40: ... Location of port declaration
+   69 |     output wire [(1<<SMAX)-1:0]        line_data,
+      |                                        ^~~~~~~~~
+%Warning-PINMISSING: rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_tree_top.sv:383:76: Cell has missing pin: 'b_pw'
+  383 |         .SCALE_LAT(SCALE_LAT), .IS(0), .OS(0), .LANDED(LANDED), .MUT(MUT)) u_tt (
+      |                                                                            ^~~~
+                     rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_tree_top.sv:84:31: ... Location of port declaration
+   84 |     input  wire [NB*W*32-1:0] b_pw,
+      |                               ^~~~
+%Warning-PINMISSING: rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_tree_top.sv:383:76: Cell has missing pin: 'b_pv'
+  383 |         .SCALE_LAT(SCALE_LAT), .IS(0), .OS(0), .LANDED(LANDED), .MUT(MUT)) u_tt (
+      |                                                                            ^~~~
+                     rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_tree_top.sv:85:30: ... Location of port declaration
+   85 |     input  wire [NB-1:0]     b_pv,
+      |                              ^~~~
+%Warning-PINMISSING: rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_tree_top.sv:383:76: Cell has missing pin: 'b_lf'
+  383 |         .SCALE_LAT(SCALE_LAT), .IS(0), .OS(0), .LANDED(LANDED), .MUT(MUT)) u_tt (
+      |                                                                            ^~~~
+                     rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_tree_top.sv:86:30: ... Location of port declaration
+   86 |     input  wire [NB-1:0]     b_lf,
+      |                              ^~~~
+%Warning-PINMISSING: rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_tree_top.sv:383:76: Cell has missing pin: 'tt_ty'
+  383 |         .SCALE_LAT(SCALE_LAT), .IS(0), .OS(0), .LANDED(LANDED), .MUT(MUT)) u_tt (
+      |                                                                            ^~~~
+                     rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_tree_top.sv:87:30: ... Location of port declaration
+   87 |     output wire [3*W*32-1:0] tt_ty,
+      |                              ^~~~~
+%Warning-PINMISSING: rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_tree_top.sv:383:76: Cell has missing pin: 'tt_use'
+  383 |         .SCALE_LAT(SCALE_LAT), .IS(0), .OS(0), .LANDED(LANDED), .MUT(MUT)) u_tt (
+      |                                                                            ^~~~
+                     rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_tree_top.sv:88:30: ... Location of port declaration
+   88 |     output wire              tt_use,
+      |                              ^~~~~~
+%Warning-PINMISSING: rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_tree_top.sv:383:76: Cell has missing pin: 'tt_v'
+  383 |         .SCALE_LAT(SCALE_LAT), .IS(0), .OS(0), .LANDED(LANDED), .MUT(MUT)) u_tt (
+      |                                                                            ^~~~
+                     rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_tree_top.sv:89:30: ... Location of port declaration
+   89 |     output wire              tt_v,
+      |                              ^~~~
+%Warning-WIDTHEXPAND: rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1053:36: Operator VAR 'DV' expects 32 bits on the Initial value, but Initial value's SEL generates 8 bits.
+                                                                                       : ... note: In instance 'qfd_seq_su_vm_static.u_vm.u_vm'
+ 1053 |                 localparam integer DV = DSET[dd*8 +: 8];
+      |                                    ^~
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue.sv:39:44: Operator EQ expects 32 bits on the LHS, but LHS's SEL generates 2 bits.
+                                                                                        : ... note: In instance 'qfd_seq_su_vm_static.u_seq.u_seq.u_fixed_issue.g_dense.u_store.u_issue'
+   39 |     assign issue_v=scheduled && head[45:44]==OWN;
+      |                                            ^~
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue.sv:47:69: Operator ADD expects 5 bits on the RHS, but RHS's CONST '2'h2' generates 2 bits.
+                                                                                        : ... note: In instance 'qfd_seq_su_vm_static.u_seq.u_seq.u_fixed_issue.g_dense.u_store.u_issue'
+   47 |                      second_read ? {{(ROW_AW-1){1'b0}},1'b1} : index+2'd2;
+      |                                                                     ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue.sv:74:45: Operator NEQ expects 32 bits on the LHS, but LHS's SEL generates 2 bits.
+                                                                                        : ... note: In instance 'qfd_seq_su_vm_static.u_seq.u_seq.u_fixed_issue.g_dense.u_store.u_issue'
+   74 |             if(head[45:44]!=0 && head[45:44]!=OWN && !(OWN==1&&head[45:44]==3)) fault<=1;
+      |                                             ^~
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue.sv:47:69: Operator ADD expects 12 bits on the RHS, but RHS's CONST '2'h2' generates 2 bits.
+                                                                                        : ... note: In instance 'qfd_seq_su_vm_static.u_seq.u_coll_calendar.u_issue.u_core'
+   47 |                      second_read ? {{(ROW_AW-1){1'b0}},1'b1} : index+2'd2;
+      |                                                                     ^
+%Warning-WIDTHEXPAND: rtl/hdc/ot_hdc_dyn_ttiles.sv:26:34: Operator SUB expects 32 bits on the RHS, but RHS's VARREF 'split_log2' generates 4 bits.
+                                                        : ... note: In instance 'qfd_seq_su_vm_static.u_seq.u_seq.u_ctrl.g_dtab.g_ds[15].u_t'
+   26 |     wire [4:0] shift_amount=WT+GT-split_log2;
+      |                                  ^
+%Warning-WIDTHTRUNC: rtl/hdc/ot_hdc_dyn_ttiles.sv:26:28: Operator ASSIGNW expects 5 bits on the Assign RHS, but Assign RHS's SUB generates 32 bits.
+                                                       : ... note: In instance 'qfd_seq_su_vm_static.u_seq.u_seq.u_ctrl.g_dtab.g_ds[15].u_t'
+   26 |     wire [4:0] shift_amount=WT+GT-split_log2;
+      |                            ^
+%Warning-WIDTHEXPAND: rtl/hdc/ot_hdc_dyn_ttiles.sv:28:54: Operator GT expects 32 bits on the LHS, but LHS's VARREF 'split_log2' generates 4 bits.
+                                                        : ... note: In instance 'qfd_seq_su_vm_static.u_seq.u_seq.u_ctrl.g_dtab.g_ds[15].u_t'
+   28 |     assign invalid_split=(W != (1<<WT)) || split_log2>GT || split_log2>WT+GT;
+      |                                                      ^
+%Warning-WIDTHEXPAND: rtl/hdc/ot_hdc_dyn_ttiles.sv:28:71: Operator GT expects 32 bits on the LHS, but LHS's VARREF 'split_log2' generates 4 bits.
+                                                        : ... note: In instance 'qfd_seq_su_vm_static.u_seq.u_seq.u_ctrl.g_dtab.g_ds[15].u_t'
+   28 |     assign invalid_split=(W != (1<<WT)) || split_log2>GT || split_log2>WT+GT;
+      |                                                                       ^
+%Warning-WIDTHEXPAND: rtl/hdc/ot_hdc_dyn_ttiles.sv:29:33: Operator COND expects 32 bits on the Conditional True, but Conditional True's REPLICATE generates 18 bits.
+                                                        : ... note: In instance 'qfd_seq_su_vm_static.u_seq.u_seq.u_ctrl.g_dtab.g_ds[15].u_t'
+   29 |     assign rounds=invalid_split ? {NW{1'b0}} : (shifted/ODD)+1'b1;
+      |                                 ^
+%Warning-WIDTHEXPAND: rtl/hdc/ot_hdc_dyn_ttiles.sv:29:56: Operator DIV expects 32 bits on the LHS, but LHS's VARREF 'shifted' generates 18 bits.
+                                                        : ... note: In instance 'qfd_seq_su_vm_static.u_seq.u_seq.u_ctrl.g_dtab.g_ds[15].u_t'
+   29 |     assign rounds=invalid_split ? {NW{1'b0}} : (shifted/ODD)+1'b1;
+      |                                                        ^
+%Warning-WIDTHTRUNC: rtl/hdc/ot_hdc_dyn_ttiles.sv:29:18: Operator ASSIGNW expects 18 bits on the Assign RHS, but Assign RHS's COND generates 32 bits.
+                                                       : ... note: In instance 'qfd_seq_su_vm_static.u_seq.u_seq.u_ctrl.g_dtab.g_ds[15].u_t'
+   29 |     assign rounds=invalid_split ? {NW{1'b0}} : (shifted/ODD)+1'b1;
+      |                  ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv:27:22: Operator GTE expects 32 bits on the LHS, but LHS's VARREF 'pw_addr' generates 10 bits.
+                                                                                                 : ... note: In instance 'qfd_seq_su_vm_static.u_seq.u_seq.u_fixed_issue.g_dense.u_store'
+   27 |  wire own_row=pw_addr>=BASE&&pw_addr<BASE+DEPTH;
+      |                      ^~
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv:27:37: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'pw_addr' generates 10 bits.
+                                                                                                 : ... note: In instance 'qfd_seq_su_vm_static.u_seq.u_seq.u_fixed_issue.g_dense.u_store'
+   27 |  wire own_row=pw_addr>=BASE&&pw_addr<BASE+DEPTH;
+      |                                     ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv:33:64: Operator GT expects 32 bits on the LHS, but LHS's VARREF 'count' generates 6 bits.
+                                                                                                 : ... note: In instance 'qfd_seq_su_vm_static.u_seq.u_seq.u_fixed_issue.g_dense.u_store'
+   33 |            meta_q[27:18]==0||meta_q[27:18]>=61||count==0||count>DEPTH||
+      |                                                                ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv:41:30: Operator SUB expects 32 bits on the LHS, but LHS's VARREF 'count' generates 6 bits.
+                                                                                                 : ... note: In instance 'qfd_seq_su_vm_static.u_seq.u_seq.u_fixed_issue.g_dense.u_store'
+   41 |     if(rows[k][46]!=(k==count-1))seal_bad=1;
+      |                              ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv:56:17: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'read_addr' generates 5 bits.
+                                                                                                 : ... note: In instance 'qfd_seq_su_vm_static.u_seq.u_seq.u_fixed_issue.g_dense.u_store'
+   56 |     if(read_addr<DEPTH&&valid[read_addr])q<=rows[read_addr];else begin q<=0;read_fault<=1;end
+      |                 ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv:64:32: Operator SUB expects 32 bits on the LHS, but LHS's VARREF 'pw_addr' generates 10 bits.
+                                                                                                 : ... note: In instance 'qfd_seq_su_vm_static.u_seq.u_seq.u_fixed_issue.g_dense.u_store'
+   64 |      if(!loading||valid[pw_addr-BASE]||pw_data[63:47]!=0)cfg_fault<=1;
+      |                                ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv:65:18: Operator SUB expects 32 bits on the LHS, but LHS's VARREF 'pw_addr' generates 10 bits.
+                                                                                                 : ... note: In instance 'qfd_seq_su_vm_static.u_seq.u_seq.u_fixed_issue.g_dense.u_store'
+   65 |      rows[pw_addr-BASE]<=pw_data[46:0];valid[pw_addr-BASE]<=1;
+      |                  ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv:65:53: Operator SUB expects 32 bits on the LHS, but LHS's VARREF 'pw_addr' generates 10 bits.
+                                                                                                 : ... note: In instance 'qfd_seq_su_vm_static.u_seq.u_seq.u_fixed_issue.g_dense.u_store'
+   65 |      rows[pw_addr-BASE]<=pw_data[46:0];valid[pw_addr-BASE]<=1;
+      |                                                     ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/vm_nox_20261014/ot_qfd_vm_region_nx.sv:75:38: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'USE_LEAF_CLOCKS' generates 32 bits.
+                                                                              : ... note: In instance 'qfd_seq_su_vm_static.u_vm.u_vm.g_tile.g_t[7].u_t'
+   75 |     wire [55:0] lc = USE_LEAF_CLOCKS ? leaf_ck : {56{clk}};
+      |                                      ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/vm_nox_20261014/ot_qfd_vm_region_nx.sv:119:42: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'USE_OBSERVER_CLOCKS' generates 32 bits.
+                                                                               : ... note: In instance 'qfd_seq_su_vm_static.u_vm.u_vm.g_tile.g_t[7].u_t'
+  119 |         wire obs_clk=USE_OBSERVER_CLOCKS ? observer_ck[g] : lc[4*g+2];
+      |                                          ^
+%Warning-WIDTHEXPAND: rtl/rom/ot_coll_cmd_issue.sv:53:36: Operator GTE expects 32 bits on the LHS, but LHS's VARREF 'pw_addr' generates 10 bits.
+                                                        : ... note: In instance 'qfd_seq_su_vm_static.u_seq.u_coll_calendar.u_issue'
+   53 |     wire in_rows = pw_v && pw_addr >= BASE && pw_addr < BASE + 2 * DEPTH;
+      |                                    ^~
+%Warning-WIDTHEXPAND: rtl/rom/ot_coll_cmd_issue.sv:53:55: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'pw_addr' generates 10 bits.
+                                                        : ... note: In instance 'qfd_seq_su_vm_static.u_seq.u_coll_calendar.u_issue'
+   53 |     wire in_rows = pw_v && pw_addr >= BASE && pw_addr < BASE + 2 * DEPTH;
+      |                                                       ^
+%Warning-WIDTHEXPAND: rtl/rom/ot_coll_cmd_issue.sv:56:35: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'pw_addr' generates 10 bits.
+                                                        : ... note: In instance 'qfd_seq_su_vm_static.u_seq.u_coll_calendar.u_issue'
+   56 |     wire seal_w = pw_v && pw_addr == BASE + 2 * DEPTH;
+      |                                   ^~
+%Warning-WIDTHEXPAND: rtl/rom/ot_coll_cmd_issue.sv:81:36: Operator GT expects 32 bits on the LHS, but LHS's SEL generates 6 bits.
+                                                        : ... note: In instance 'qfd_seq_su_vm_static.u_seq.u_coll_calendar.u_issue'
+   81 |                     pw_data[37:32] > DEPTH) cfg_fault <= 1'b1;
+      |                                    ^
+%Warning-WIDTHEXPAND: rtl/rom/ot_coll_cmd_issue.sv:88:42: Operator COND expects 32 bits on the Conditional True, but Conditional True's SEL generates 6 bits.
+                                                        : ... note: In instance 'qfd_seq_su_vm_static.u_seq.u_coll_calendar.u_issue'
+   88 |                     if (ck_row < (seal_w ? pw_data[37:32] : count_q) &&
+      |                                          ^
+%Warning-WIDTHEXPAND: rtl/rom/ot_coll_cmd_issue.sv:88:42: Operator COND expects 32 bits on the Conditional False, but Conditional False's VARREF 'count_q' generates 6 bits.
+                                                        : ... note: In instance 'qfd_seq_su_vm_static.u_seq.u_coll_calendar.u_issue'
+   88 |                     if (ck_row < (seal_w ? pw_data[37:32] : count_q) &&
+      |                                          ^
+%Warning-WIDTHEXPAND: rtl/rom/ot_coll_cmd_issue.sv:96:30: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'slot_addr' generates 12 bits.
+                                                        : ... note: In instance 'qfd_seq_su_vm_static.u_seq.u_coll_calendar.u_issue'
+   96 |         slot_q <= (slot_addr < DEPTH && slot_addr < count_q)
+      |                              ^
+%Warning-WIDTHEXPAND: rtl/rom/ot_coll_cmd_issue.sv:96:51: Operator LT expects 12 bits on the RHS, but RHS's VARREF 'count_q' generates 6 bits.
+                                                        : ... note: In instance 'qfd_seq_su_vm_static.u_seq.u_coll_calendar.u_issue'
+   96 |         slot_q <= (slot_addr < DEPTH && slot_addr < count_q)
+      |                                                   ^
+%Warning-WIDTHEXPAND: rtl/rom/ot_coll_cmd_issue.sv:105:31: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'issue_pc' generates 12 bits.
+                                                         : ... note: In instance 'qfd_seq_su_vm_static.u_seq.u_coll_calendar.u_issue'
+  105 |         .candidate_v(issue_pc < DEPTH && loaded[ip]), .candidate_pc(issue_pc), .candidate_unit(issue_unit),
+      |                               ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_su_static.sv:526:37: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'KV_VEC_WRITE_BRIDGE' generates 32 bits.
+                                                                                                    : ... note: In instance 'qfd_seq_su_vm_static.u_seq.u_seq.u_ctrl'
+  526 |                       (su_ready && (!KV_VEC_WRITE_BRIDGE || (su_idle && kv_write_drained)));
+      |                                     ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_su_static.sv:534:43: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'KV_VEC_WRITE_BRIDGE' generates 32 bits.
+                                                                                                    : ... note: In instance 'qfd_seq_su_vm_static.u_seq.u_seq.u_ctrl'
+  534 |     wire drained = me_idle && su_idle && (!KV_VEC_WRITE_BRIDGE || kv_write_drained);
+      |                                           ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_su_static.sv:552:48: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'KV_VEC_WRITE_BRIDGE' generates 32 bits.
+                                                                                                    : ... note: In instance 'qfd_seq_su_vm_static.u_seq.u_seq.u_ctrl'
+  552 |     wire x_drained = own_idle && o_drained && (!KV_VEC_WRITE_BRIDGE || kv_write_drained);
+      |                                                ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_su_static.sv:648:56: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'KV_VEC_WRITE_BRIDGE' generates 32 bits.
+                                                                                                    : ... note: In instance 'qfd_seq_su_vm_static.u_seq.u_seq.u_ctrl'
+  648 |                  (bar ? (own_idle_n && o_drained_n && (!KV_VEC_WRITE_BRIDGE || kd_n)) :
+      |                                                        ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_su_static.sv:651:66: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'KV_VEC_WRITE_BRIDGE' generates 32 bits.
+                                                                                                    : ... note: In instance 'qfd_seq_su_vm_static.u_seq.u_seq.u_ctrl'
+  651 |                     ((OWN == 1) ? own_ready_n : (own_ready_n && (!KV_VEC_WRITE_BRIDGE || (own_idle_n && kd_n))));
+      |                                                                  ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_su_static.sv:696:38: Operator ADD expects 32 bits on the LHS, but LHS's REPLICATE generates 4 bits.
+                                                                                                     : ... note: In instance 'qfd_seq_su_vm_static.u_seq.u_seq.u_ctrl'
+  696 |                     if ({1'b0, fq_n} + ((FQ_HEAD >= 2) ? hc : (FQ_HEAD != 0) ? {1'b0, hq_v} : 2'd0) + prog_re + pend1 + ((PRL > 1) ? pend2 : 1'b0) < NFQ) begin
+      |                                      ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_su_static.sv:696:56: Operator COND expects 32 bits on the Conditional True, but Conditional True's VARREF 'hc' generates 2 bits.
+                                                                                                     : ... note: In instance 'qfd_seq_su_vm_static.u_seq.u_seq.u_ctrl'
+  696 |                     if ({1'b0, fq_n} + ((FQ_HEAD >= 2) ? hc : (FQ_HEAD != 0) ? {1'b0, hq_v} : 2'd0) + prog_re + pend1 + ((PRL > 1) ? pend2 : 1'b0) < NFQ) begin
+      |                                                        ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_su_static.sv:696:78: Operator COND expects 32 bits on the Conditional True, but Conditional True's REPLICATE generates 2 bits.
+                                                                                                     : ... note: In instance 'qfd_seq_su_vm_static.u_seq.u_seq.u_ctrl'
+  696 |                     if ({1'b0, fq_n} + ((FQ_HEAD >= 2) ? hc : (FQ_HEAD != 0) ? {1'b0, hq_v} : 2'd0) + prog_re + pend1 + ((PRL > 1) ? pend2 : 1'b0) < NFQ) begin
+      |                                                                              ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_su_static.sv:696:78: Operator COND expects 32 bits on the Conditional False, but Conditional False's CONST '2'h0' generates 2 bits.
+                                                                                                     : ... note: In instance 'qfd_seq_su_vm_static.u_seq.u_seq.u_ctrl'
+  696 |                     if ({1'b0, fq_n} + ((FQ_HEAD >= 2) ? hc : (FQ_HEAD != 0) ? {1'b0, hq_v} : 2'd0) + prog_re + pend1 + ((PRL > 1) ? pend2 : 1'b0) < NFQ) begin
+      |                                                                              ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_su_static.sv:696:101: Operator ADD expects 32 bits on the RHS, but RHS's VARREF 'prog_re' generates 1 bits.
+                                                                                                      : ... note: In instance 'qfd_seq_su_vm_static.u_seq.u_seq.u_ctrl'
+  696 |                     if ({1'b0, fq_n} + ((FQ_HEAD >= 2) ? hc : (FQ_HEAD != 0) ? {1'b0, hq_v} : 2'd0) + prog_re + pend1 + ((PRL > 1) ? pend2 : 1'b0) < NFQ) begin
+      |                                                                                                     ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_su_static.sv:696:111: Operator ADD expects 32 bits on the RHS, but RHS's VARREF 'pend1' generates 1 bits.
+                                                                                                      : ... note: In instance 'qfd_seq_su_vm_static.u_seq.u_seq.u_ctrl'
+  696 |                     if ({1'b0, fq_n} + ((FQ_HEAD >= 2) ? hc : (FQ_HEAD != 0) ? {1'b0, hq_v} : 2'd0) + prog_re + pend1 + ((PRL > 1) ? pend2 : 1'b0) < NFQ) begin
+      |                                                                                                               ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_su_static.sv:696:132: Operator COND expects 32 bits on the Conditional True, but Conditional True's VARREF 'pend2' generates 1 bits.
+                                                                                                      : ... note: In instance 'qfd_seq_su_vm_static.u_seq.u_seq.u_ctrl'
+  696 |                     if ({1'b0, fq_n} + ((FQ_HEAD >= 2) ? hc : (FQ_HEAD != 0) ? {1'b0, hq_v} : 2'd0) + prog_re + pend1 + ((PRL > 1) ? pend2 : 1'b0) < NFQ) begin
+      |                                                                                                                                    ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_su_static.sv:696:132: Operator COND expects 32 bits on the Conditional False, but Conditional False's CONST '1'h0' generates 1 bits.
+                                                                                                      : ... note: In instance 'qfd_seq_su_vm_static.u_seq.u_seq.u_ctrl'
+  696 |                     if ({1'b0, fq_n} + ((FQ_HEAD >= 2) ? hc : (FQ_HEAD != 0) ? {1'b0, hq_v} : 2'd0) + prog_re + pend1 + ((PRL > 1) ? pend2 : 1'b0) < NFQ) begin
+      |                                                                                                                                    ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_su_static.sv:767:16: Operator ASSIGNDLY expects 24 bits on the Assign RHS, but Assign RHS's MUL generates 32 bits.
+                                                                                                    : ... note: In instance 'qfd_seq_su_vm_static.u_seq.u_seq.u_ctrl'
+  767 |         dyn[1] <= tok_r * HID;
+      |                ^~
+%Warning-WIDTHTRUNC: rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_su_static.sv:768:16: Operator ASSIGNDLY expects 24 bits on the Assign RHS, but Assign RHS's MUL generates 32 bits.
+                                                                                                    : ... note: In instance 'qfd_seq_su_vm_static.u_seq.u_seq.u_ctrl'
+  768 |         dyn[2] <= pos_r * HALF;
+      |                ^~
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_su_static.sv:769:26: Operator SHIFTR expects 32 bits on the LHS, but LHS's VARREF 'pos_r' generates 18 bits.
+                                                                                                     : ... note: In instance 'qfd_seq_su_vm_static.u_seq.u_seq.u_ctrl'
+  769 |         dyn[3] <= (pos_r >> LW) * (HD * W) + (pos_r & (W - 1));
+      |                          ^~
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_su_static.sv:769:53: Operator AND expects 32 bits on the LHS, but LHS's VARREF 'pos_r' generates 18 bits.
+                                                                                                     : ... note: In instance 'qfd_seq_su_vm_static.u_seq.u_seq.u_ctrl'
+  769 |         dyn[3] <= (pos_r >> LW) * (HD * W) + (pos_r & (W - 1));
+      |                                                     ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_su_static.sv:769:16: Operator ASSIGNDLY expects 24 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                                                                    : ... note: In instance 'qfd_seq_su_vm_static.u_seq.u_seq.u_ctrl'
+  769 |         dyn[3] <= (pos_r >> LW) * (HD * W) + (pos_r & (W - 1));
+      |                ^~
+%Warning-WIDTHTRUNC: rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_su_static.sv:770:16: Operator ASSIGNDLY expects 24 bits on the Assign RHS, but Assign RHS's MUL generates 32 bits.
+                                                                                                    : ... note: In instance 'qfd_seq_su_vm_static.u_seq.u_seq.u_ctrl'
+  770 |         dyn[4] <= pos_r * HD;
+      |                ^~
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_su_static.sv:771:25: Operator ADD expects 32 or 24 bits on the LHS, but LHS's VARREF 'pos_r' generates 18 bits.
+                                                                                                     : ... note: In instance 'qfd_seq_su_vm_static.u_seq.u_seq.u_ctrl'
+  771 |         dyn[5] <= pos_r + 1;
+      |                         ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_su_static.sv:772:16: Operator ASSIGNDLY expects 24 bits on the Assign RHS, but Assign RHS's VARREF 'dyn_tiles_zero' generates 18 bits.
+                                                                                                     : ... note: In instance 'qfd_seq_su_vm_static.u_seq.u_seq.u_ctrl'
+  772 |         dyn[6] <= dyn_tiles_zero;                  
+      |                ^~
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_su_static.sv:779:47: Operator ADD expects 24 bits on the LHS, but LHS's SEL generates 16 bits.
+                                                                                                     : ... note: In instance 'qfd_seq_su_vm_static.u_seq.u_seq.u_ctrl'
+  779 |         me_nout <= ir[O_ME_NOUT +: W_ME_NOUT] + dyn[ir[O_ME_D_NOUT +: W_ME_D_NOUT]];
+      |                                               ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_su_static.sv:779:17: Operator ASSIGNDLY expects 18 bits on the Assign RHS, but Assign RHS's ADD generates 24 bits.
+                                                                                                    : ... note: In instance 'qfd_seq_su_vm_static.u_seq.u_seq.u_ctrl'
+  779 |         me_nout <= ir[O_ME_NOUT +: W_ME_NOUT] + dyn[ir[O_ME_D_NOUT +: W_ME_D_NOUT]];
+      |                 ^~
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_su_static.sv:781:50: Operator ADD expects 24 bits on the LHS, but LHS's SEL generates 16 bits.
+                                                                                                     : ... note: In instance 'qfd_seq_su_vm_static.u_seq.u_seq.u_ctrl'
+  781 |         me_tiles <= ir[O_ME_TILES +: W_ME_TILES] + ((ir[O_ME_D_TILES +: W_ME_D_TILES] == 3'd6) ? dyn_tiles_split
+      |                                                  ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_su_static.sv:781:96: Operator COND expects 24 bits on the Conditional True, but Conditional True's VARREF 'dyn_tiles_split' generates 18 bits.
+                                                                                                     : ... note: In instance 'qfd_seq_su_vm_static.u_seq.u_seq.u_ctrl'
+  781 |         me_tiles <= ir[O_ME_TILES +: W_ME_TILES] + ((ir[O_ME_D_TILES +: W_ME_D_TILES] == 3'd6) ? dyn_tiles_split
+      |                                                                                                ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_su_static.sv:781:18: Operator ASSIGNDLY expects 18 bits on the Assign RHS, but Assign RHS's ADD generates 24 bits.
+                                                                                                    : ... note: In instance 'qfd_seq_su_vm_static.u_seq.u_seq.u_ctrl'
+  781 |         me_tiles <= ir[O_ME_TILES +: W_ME_TILES] + ((ir[O_ME_D_TILES +: W_ME_D_TILES] == 3'd6) ? dyn_tiles_split
+      |                  ^~
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_su_static.sv:783:38: Operator ADD expects 24 bits on the LHS, but LHS's SEL generates 16 bits.
+                                                                                                     : ... note: In instance 'qfd_seq_su_vm_static.u_seq.u_seq.u_ctrl'
+  783 |         me_k <= ir[O_ME_K +: W_ME_K] + dyn[ir[O_ME_D_K +: W_ME_D_K]];
+      |                                      ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_su_static.sv:783:14: Operator ASSIGNDLY expects 18 bits on the Assign RHS, but Assign RHS's ADD generates 24 bits.
+                                                                                                    : ... note: In instance 'qfd_seq_su_vm_static.u_seq.u_seq.u_ctrl'
+  783 |         me_k <= ir[O_ME_K +: W_ME_K] + dyn[ir[O_ME_D_K +: W_ME_D_K]];
+      |              ^~
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_su_static.sv:787:47: Operator OR expects 18 bits on the LHS, but LHS's SEL generates 16 bits.
+                                                                                                     : ... note: In instance 'qfd_seq_su_vm_static.u_seq.u_seq.u_ctrl'
+  787 |         me_row0 <= ir[O_ME_ROW0 +: W_ME_ROW0] |
+      |                                               ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_su_static.sv:800:17: Operator ASSIGNDLY expects 18 bits on the Assign RHS, but Assign RHS's SEL generates 16 bits.
+                                                                                                     : ... note: In instance 'qfd_seq_su_vm_static.u_seq.u_seq.u_ctrl'
+  800 |         su_nout <= ir[O_SU_NOUT +: W_SU_NOUT];
+      |                 ^~
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_su_static.sv:801:44: Operator ADD expects 24 bits on the LHS, but LHS's SEL generates 16 bits.
+                                                                                                     : ... note: In instance 'qfd_seq_su_vm_static.u_seq.u_seq.u_ctrl'
+  801 |         su_nin <= ir[O_SU_NIN +: W_SU_NIN] + dyn[ir[O_SU_D_NIN +: W_SU_D_NIN]];
+      |                                            ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_su_static.sv:801:16: Operator ASSIGNDLY expects 18 bits on the Assign RHS, but Assign RHS's ADD generates 24 bits.
+                                                                                                    : ... note: In instance 'qfd_seq_su_vm_static.u_seq.u_seq.u_ctrl'
+  801 |         su_nin <= ir[O_SU_NIN +: W_SU_NIN] + dyn[ir[O_SU_D_NIN +: W_SU_D_NIN]];
+      |                ^~
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_su_static.sv:831:33: Operator SUB expects 32 bits on the LHS, but LHS's SEL generates 24 bits.
+                                                                                                     : ... note: In instance 'qfd_seq_su_vm_static.u_seq.u_seq.u_ctrl'
+  831 |          (((su_va_addr[0 +: AW] - EMB_ADDR_BASE) & (HID - 1)) /
+      |                                 ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_su_static.sv:833:31: Operator SUB expects 32 bits on the LHS, but LHS's SEL generates 24 bits.
+                                                                                                     : ... note: In instance 'qfd_seq_su_vm_static.u_seq.u_seq.u_ctrl'
+  833 |         ((su_va_addr[0 +: AW] - EMB_ADDR_BASE) >> $clog2(EMB_CODE_LANES));
+      |                               ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_su_static.sv:829:28: Operator ASSIGNW expects 24 bits on the Assign RHS, but Assign RHS's COND generates 32 bits.
+                                                                                                    : ... note: In instance 'qfd_seq_su_vm_static.u_seq.u_seq.u_ctrl'
+  829 |     assign embed_code_addr = (QWEN_FULLSHAPE != 0) ?
+      |                            ^
+%Warning-WIDTHCONCAT: rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_su_static.sv:925:22: More than a 8k bit replication is probably wrong: 49152
+                                                                                                     : ... note: In instance 'qfd_seq_su_vm_static.u_seq.u_seq.u_ctrl'
+  925 |     assign vx_addr = '0;    
+      |                      ^~
+%Warning-WIDTHCONCAT: rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_su_static.sv:928:19: More than a 8k bit replication is probably wrong: 65536
+                                                                                                     : ... note: In instance 'qfd_seq_su_vm_static.u_seq.u_seq.u_ctrl'
+  928 |     assign xl_d = '0;    
+      |                   ^~
+%Warning-WIDTHCONCAT: rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_su_static.sv:933:25: More than a 8k bit replication is probably wrong: 12288
+                                                                                                     : ... note: In instance 'qfd_seq_su_vm_static.u_seq.u_seq.u_ctrl'
+  933 |     assign vw_me_data = '0;    
+      |                         ^~
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_tp_seq_calendar.sv:37:18: Operator SUB expects 32 bits on the LHS, but LHS's VARREF 'count_q' generates 2 bits.
+                                                                                            : ... note: In instance 'qfd_seq_su_vm_static.u_seq.u_seq.u_seq'
+   37 |     if(k==count_q-1&&cfg[4*k+3][1:0]==1)bad=1;
+      |                  ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_tp_seq_calendar.sv:40:38: Operator SUB expects 32 bits on the LHS, but LHS's VARREF 'count_q' generates 2 bits.
+                                                                                            : ... note: In instance 'qfd_seq_su_vm_static.u_seq.u_seq.u_seq'
+   40 |     if(cfg[4*k+3][1:0]>2||(k!=count_q-1&&cfg[4*k+3][1:0]!=1))bad=1;
+      |                                      ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_tp_seq_calendar.sv:85:14: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'ri' generates 9 bits.
+                                                                                            : ... note: In instance 'qfd_seq_su_vm_static.u_seq.u_seq.u_seq'
+   85 |    rx_slot=ri<(descriptor[1:0]==1?words:N)&&cycle==next_rx[seg];
+      |              ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_tp_seq_calendar.sv:85:34: Operator COND expects 32 bits on the Conditional True, but Conditional True's VARREF 'words' generates 9 bits.
+                                                                                            : ... note: In instance 'qfd_seq_su_vm_static.u_seq.u_seq.u_seq'
+   85 |    rx_slot=ri<(descriptor[1:0]==1?words:N)&&cycle==next_rx[seg];
+      |                                  ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_tp_seq_calendar.sv:106:65: Operator OR expects 19 bits on the RHS, but RHS's VARREF 'read_slot' generates 1 bits.
+                                                                                             : ... note: In instance 'qfd_seq_su_vm_static.u_seq.u_seq.u_seq'
+  106 |    done<=0;vm_we<=0;core_done_q<=core_done;rd_pipe<=(rd_pipe<<1)|read_slot;
+      |                                                                 ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_tp_seq_calendar.sv:115:88: Operator ADD expects 32 bits on the RHS, but RHS's VARREF 'tx_stride' generates 16 bits.
+                                                                                             : ... note: In instance 'qfd_seq_su_vm_static.u_seq.u_seq.u_seq'
+  115 |     if(read_slot)begin rd_index[seg]<=rd_index[seg]+1'b1;next_read[seg]<=next_read[seg]+tx_stride;end
+      |                                                                                        ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_tp_seq_calendar.sv:117:48: Operator ADD expects 32 bits on the RHS, but RHS's VARREF 'tx_stride' generates 16 bits.
+                                                                                             : ... note: In instance 'qfd_seq_su_vm_static.u_seq.u_seq.u_seq'
+  117 |     if(tx_slot)begin next_tx[seg]<=next_tx[seg]+tx_stride;tx_index[seg]<=tx_index[seg]+1'b1;if(!c_mode)begin q_r<=q_r+1'b1;if(q_count==0)runtime_fault<=1;end end
+      |                                                ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_tp_seq_calendar.sv:118:21: Operator ADD expects 3 bits on the RHS, but RHS's VARREF 'expected_read' generates 1 bits.
+                                                                                             : ... note: In instance 'qfd_seq_su_vm_static.u_seq.u_seq.u_seq'
+  118 |     q_count<=q_count+expected_read-(tx_slot&&!c_mode);
+      |                     ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_tp_seq_calendar.sv:118:35: Operator SUB expects 3 bits on the RHS, but RHS's LOGAND generates 1 bits.
+                                                                                             : ... note: In instance 'qfd_seq_su_vm_static.u_seq.u_seq.u_seq'
+  118 |     q_count<=q_count+expected_read-(tx_slot&&!c_mode);
+      |                                   ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_tp_seq_calendar.sv:123:32: Operator ADD expects 32 bits on the RHS, but RHS's VARREF 'rx_stride' generates 16 bits.
+                                                                                             : ... note: In instance 'qfd_seq_su_vm_static.u_seq.u_seq.u_seq'
+  123 |      next_rx[seg]<=next_rx[seg]+rx_stride;rx_index[seg]<=rx_index[seg]+1'b1;
+      |                                ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_tp_seq_calendar.sv:124:38: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'ri' generates 9 bits.
+                                                                                             : ... note: In instance 'qfd_seq_su_vm_static.u_seq.u_seq.u_seq'
+  124 |      if(!r_valid||r_err||r_last!==(ri==(descriptor[1:0]==1?words:N)-1))runtime_fault<=1;
+      |                                      ^~
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_tp_seq_calendar.sv:124:59: Operator COND expects 32 bits on the Conditional True, but Conditional True's VARREF 'words' generates 9 bits.
+                                                                                             : ... note: In instance 'qfd_seq_su_vm_static.u_seq.u_seq.u_seq'
+  124 |      if(!r_valid||r_err||r_last!==(ri==(descriptor[1:0]==1?words:N)-1))runtime_fault<=1;
+      |                                                           ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_tp_seq_calendar.sv:127:16: Operator NEQ expects 9 bits on the LHS, but LHS's VARREF 'r_rank' generates 3 bits.
+                                                                                             : ... note: In instance 'qfd_seq_su_vm_static.u_seq.u_seq.u_seq'
+  127 |       if(r_rank!=ri)runtime_fault<=1;
+      |                ^~
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_tp_seq_calendar.sv:129:12: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'ri' generates 9 bits.
+                                                                                             : ... note: In instance 'qfd_seq_su_vm_static.u_seq.u_seq.u_seq'
+  129 |       if(ri==N-1)begin
+      |            ^~
+%Warning-WIDTHTRUNC: rtl/qwen_sys/missing_masters_20261007/ot_qfd_spine_masters.sv:38:20: Operator ASSIGNDLY expects 1 bits on the Assign RHS, but Assign RHS's REPLICATE generates 2 bits.
+                                                                                        : ... note: In instance 'qfd_seq_su_vm_static.u_seq.u_seq.u_rs'
+   38 |             else r <= {r, 1'b1};
+      |                    ^~
+%Warning-WIDTHEXPAND: rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:389:69: Operator EQ expects 24 bits on the RHS, but RHS's SEL generates 8 bits.
+                                                                                      : ... note: In instance 'qfd_seq_su_vm_static.u_vm.u_vm'
+  389 |     always @(*) for (di = 0; di < ND; di = di + 1) din[di] = (x_dcs == DSET[di*8 +: 8]);
+      |                                                                     ^~
+%Warning-WIDTHEXPAND: rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:415:36: Operator DIV expects 37 bits on the RHS, but RHS's VARREF 'BEAT' generates 32 bits.
+                                                                                      : ... note: In instance 'qfd_seq_su_vm_static.u_vm.u_vm'
+  415 |         wire [AW+12:0] bq = span_n / BEAT;
+      |                                    ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:417:28: Operator GTE expects 37 bits on the RHS, but RHS's VARREF 'BMAX' generates 32 bits.
+                                                                                      : ... note: In instance 'qfd_seq_su_vm_static.u_vm.u_vm'
+  417 |         assign bq_ge = (bq >= BMAX);
+      |                            ^~
+%Warning-WIDTHEXPAND: rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:429:39: Operator ADD expects 32 bits on the RHS, but RHS's ARRAYSEL generates 4 bits.
+                                                                                      : ... note: In instance 'qfd_seq_su_vm_static.u_vm.u_vm'
+  429 |                 bi_v = 1'b1; bi_j = a + h_b[a] - (XVMI - 7 - XS); bi_dc = h_dc[a]; bi_d = h_d[a]; bi_sp = h_sp[a];
+      |                                       ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:429:35: Operator ASSIGN expects 4 bits on the Assign RHS, but Assign RHS's SUB generates 32 bits.
+                                                                                     : ... note: In instance 'qfd_seq_su_vm_static.u_vm.u_vm'
+  429 |                 bi_v = 1'b1; bi_j = a + h_b[a] - (XVMI - 7 - XS); bi_dc = h_dc[a]; bi_d = h_d[a]; bi_sp = h_sp[a];
+      |                                   ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:430:34: Operator ADD expects 37 bits on the LHS, but LHS's ARRAYSEL generates 24 bits.
+                                                                                      : ... note: In instance 'qfd_seq_su_vm_static.u_vm.u_vm'
+  430 |                 bi_end = h_dc[a] + h_span[a];
+      |                                  ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:428:31: Operator ADD expects 32 bits on the RHS, but RHS's ARRAYSEL generates 4 bits.
+                                                                                      : ... note: In instance 'qfd_seq_su_vm_static.u_vm.u_vm'
+  428 |             if (h_new[a] && a + h_b[a] >= XVMI - 7 - XS && a <= XVMI - 8 - XS) begin
+      |                               ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:435:26: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'xcnt' generates 6 bits.
+                                                                                      : ... note: In instance 'qfd_seq_su_vm_static.u_vm.u_vm'
+  435 |     assign x_rdy = (xcnt == BMAX);
+      |                          ^~
+%Warning-WIDTHTRUNC: rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:437:26: Operator ASSIGNDLY expects 6 bits on the Assign RHS, but Assign RHS's VARREF 'BMAX' generates 32 bits.
+                                                                                     : ... note: In instance 'qfd_seq_su_vm_static.u_vm.u_vm'
+  437 |         if (!rst_n) xcnt <= BMAX;
+      |                          ^~
+%Warning-WIDTHEXPAND: rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:438:47: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'xcnt' generates 6 bits.
+                                                                                      : ... note: In instance 'qfd_seq_su_vm_static.u_vm.u_vm'
+  438 |         else if (me_c) xcnt <= nt ? 0 : (xcnt == BMAX) ? xcnt : xcnt + 1'b1;
+      |                                               ^~
+%Warning-WIDTHEXPAND: rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:446:50: Operator GT expects 32 bits on the LHS, but LHS's VARREF 'x_dsp' generates 4 bits.
+                                                                                      : ... note: In instance 'qfd_seq_su_vm_static.u_vm.u_vm'
+  446 |             if (nt && (bq_ge || !(|din) || x_dsp > SMAX || x_dsp < SMIN)) x_fault <= 1'b1;
+      |                                                  ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:446:66: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'x_dsp' generates 4 bits.
+                                                                                      : ... note: In instance 'qfd_seq_su_vm_static.u_vm.u_vm'
+  446 |             if (nt && (bq_ge || !(|din) || x_dsp > SMAX || x_dsp < SMIN)) x_fault <= 1'b1;
+      |                                                                  ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:456:30: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'bi_dc' generates 24 bits.
+                                                                                      : ... note: In instance 'qfd_seq_su_vm_static.u_vm.u_vm'
+  456 |     wire [AW-1:0] ba = bi_dc + bi_j * BEAT;
+      |                              ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:456:22: Operator ASSIGNW expects 24 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                                                     : ... note: In instance 'qfd_seq_su_vm_static.u_vm.u_vm'
+  456 |     wire [AW-1:0] ba = bi_dc + bi_j * BEAT;
+      |                      ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:460:31: Operator ADD expects 37 bits on the LHS, but LHS's VARREF 'ba' generates 24 bits.
+                                                                                      : ... note: In instance 'qfd_seq_su_vm_static.u_vm.u_vm'
+  460 |     wire [AW+12:0] bl_e = (ba + BEAT - 1 < bi_end) ? ba + BEAT - 1 : bi_end;
+      |                               ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:460:31: Operator ADD expects 37 bits on the RHS, but RHS's VARREF 'BEAT' generates 32 bits.
+                                                                                      : ... note: In instance 'qfd_seq_su_vm_static.u_vm.u_vm'
+  460 |     wire [AW+12:0] bl_e = (ba + BEAT - 1 < bi_end) ? ba + BEAT - 1 : bi_end;
+      |                               ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:460:57: Operator ADD expects 37 bits on the LHS, but LHS's VARREF 'ba' generates 24 bits.
+                                                                                      : ... note: In instance 'qfd_seq_su_vm_static.u_vm.u_vm'
+  460 |     wire [AW+12:0] bl_e = (ba + BEAT - 1 < bi_end) ? ba + BEAT - 1 : bi_end;
+      |                                                         ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:460:57: Operator ADD expects 37 bits on the RHS, but RHS's VARREF 'BEAT' generates 32 bits.
+                                                                                      : ... note: In instance 'qfd_seq_su_vm_static.u_vm.u_vm'
+  460 |     wire [AW+12:0] bl_e = (ba + BEAT - 1 < bi_end) ? ba + BEAT - 1 : bi_end;
+      |                                                         ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:461:40: Operator SUB expects 33 bits on the RHS, but RHS's VARREF 'br0' generates 20 bits.
+                                                                                      : ... note: In instance 'qfd_seq_su_vm_static.u_vm.u_vm'
+  461 |     wire [AW+8:0]  bnr = bl_e[AW+12:4] - br0 + 1'b1;       
+      |                                        ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:466:34: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'br0' generates 20 bits.
+                                                                                      : ... note: In instance 'qfd_seq_su_vm_static.u_vm.u_vm'
+  466 |         wire [AW-5:0] rowb = br0 + ((g - br0) & (NRB - 1));
+      |                                  ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:466:40: Operator SUB expects 32 bits on the RHS, but RHS's VARREF 'br0' generates 20 bits.
+                                                                                      : ... note: In instance 'qfd_seq_su_vm_static.u_vm.u_vm'
+  466 |         wire [AW-5:0] rowb = br0 + ((g - br0) & (NRB - 1));
+      |                                        ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:466:28: Operator ASSIGNW expects 20 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                                                     : ... note: In instance 'qfd_seq_su_vm_static.u_vm.u_vm'
+  466 |         wire [AW-5:0] rowb = br0 + ((g - br0) & (NRB - 1));
+      |                            ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:468:46: Operator SUB expects 33 bits on the RHS, but RHS's VARREF 'br0' generates 20 bits.
+                                                                                      : ... note: In instance 'qfd_seq_su_vm_static.u_vm.u_vm'
+  468 |             b_re[g] <= (me_c && bi_v && (((g - br0) & (NRB - 1)) < bnr)) || (r_v && r_rdy && (r_row[LNRB-1:0] == g));
+      |                                              ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:499:87: Operator ASSIGNDLY expects 9 bits on the Assign RHS, but Assign RHS's REPLICATE generates 10 bits.
+                                                                                     : ... note: In instance 'qfd_seq_su_vm_static.u_vm.u_vm'
+  499 |         always @(posedge clk or negedge rst_n) if (!rst_n) qb <= 0; else if (me_c) qb <= {qb, s2_bv};
+      |                                                                                       ^~
+%Warning-WIDTHTRUNC: rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:500:44: Operator ASSIGNDLY expects 414 bits on the Assign RHS, but Assign RHS's REPLICATE generates 460 bits.
+                                                                                     : ... note: In instance 'qfd_seq_su_vm_static.u_vm.u_vm'
+  500 |         always @(posedge clk) if (me_c) qd <= {qd, s2_j, s2_a, s2_d, s2_sp};
+      |                                            ^~
+%Warning-WIDTHEXPAND: rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:512:69: Operator EQ expects 24 bits on the RHS, but RHS's SEL generates 8 bits.
+                                                                                      : ... note: In instance 'qfd_seq_su_vm_static.u_vm.u_vm'
+  512 |     always @(*) for (di = 0; di < ND; di = di + 1) bdin[di] = (bi_d == DSET[di*8 +: 8]);
+      |                                                                     ^~
+%Warning-WIDTHTRUNC: rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:552:82: Operator ASSIGN expects 6 bits on the Assign RHS, but Assign RHS's VARREF 'i' generates 32 bits.
+                                                                                     : ... note: In instance 'qfd_seq_su_vm_static.u_vm.u_vm'
+  552 |     always @(*) begin hi_l = 0; for (i = 0; i < SW; i = i + 1) if (e1_m[i]) hi_l = i; end
+      |                                                                                  ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:565:43: Operator SUB expects 32 bits on the RHS, but RHS's VARREF 'e1_off' generates 4 bits.
+                                                                                      : ... note: In instance 'qfd_seq_su_vm_static.u_vm.u_vm'
+  565 |             mm = 1'b0; md = 32'd0; ll = g - e1_off;
+      |                                           ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:571:39: Operator ADD expects 32 bits on the LHS, but LHS's REPLICATE generates 24 bits.
+                                                                                      : ... note: In instance 'qfd_seq_su_vm_static.u_vm.u_vm'
+  571 |             if ({e1_a0[AW-1:4], 4'h0} + g >= ELEMS) mm = 1'b0;
+      |                                       ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:567:23: Operator EQ expects 32 or 5 bits on the RHS, but RHS's VARREF 'e1_off' generates 4 bits.
+                                                                                      : ... note: In instance 'qfd_seq_su_vm_static.u_vm.u_vm'
+  567 |                 if (g == e1_off) begin mm = |e1_m; md = e1_d[hi_l*32 +: 32]; end
+      |                       ^~
+%Warning-WIDTHEXPAND: rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:567:23: Operator EQ expects 32 or 6 bits on the RHS, but RHS's VARREF 'e1_off' generates 4 bits.
+                                                                                      : ... note: In instance 'qfd_seq_su_vm_static.u_vm.u_vm'
+  567 |                 if (g == e1_off) begin mm = |e1_m; md = e1_d[hi_l*32 +: 32]; end
+      |                       ^~
+%Warning-WIDTHEXPAND: rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:567:23: Operator EQ expects 32 or 7 bits on the RHS, but RHS's VARREF 'e1_off' generates 4 bits.
+                                                                                      : ... note: In instance 'qfd_seq_su_vm_static.u_vm.u_vm'
+  567 |                 if (g == e1_off) begin mm = |e1_m; md = e1_d[hi_l*32 +: 32]; end
+      |                       ^~
+%Warning-WIDTHEXPAND: rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:588:90: Operator ADD expects 32 bits on the LHS, but LHS's REPLICATE generates 24 bits.
+                                                                                      : ... note: In instance 'qfd_seq_su_vm_static.u_vm.u_vm'
+  588 |         for (i = 0; i < 16; i = i + 1) k1_mb[k][i] = k1_mask[k][i] && ({k1_row[k], 4'h0} + i < ELEMS);
+      |                                                                                          ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:600:86: Operator ADD expects 32 bits on the LHS, but LHS's REPLICATE generates 24 bits.
+                                                                                      : ... note: In instance 'qfd_seq_su_vm_static.u_vm.u_vm'
+  600 |     always @(*) for (i = 0; i < 16; i = i + 1) m_mb[i] = m_mask[i] && ({m_row, 4'h0} + i < ELEMS);
+      |                                                                                      ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:637:36: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'kk' generates 6 bits.
+                                                                                      : ... note: In instance 'qfd_seq_su_vm_static.u_vm.u_vm'
+  637 |             su_hit[b] = f_v && (kk < NWR) && (|f_m[kk*16 +: 16]);
+      |                                    ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:646:35: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'kk' generates 4 bits.
+                                                                                      : ... note: In instance 'qfd_seq_su_vm_static.u_vm.u_vm'
+  646 |             su_hs[b] = f_v && (kk < NWR) && (|f_m[kk*16 +: 16]);
+      |                                   ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:691:35: Operator ADD expects 20 bits on the RHS, but RHS's VARREF 'kk' generates 3 bits.
+                                                                                      : ... note: In instance 'qfd_seq_su_vm_static.u_vm.u_vm'
+  691 |         wire [RW-1:0] srow = f_r0 + kk;
+      |                                   ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:703:29: Operator OR expects 32 bits on the LHS, but LHS's VARREF 'es' generates 3 bits.
+                                                                                      : ... note: In instance 'qfd_seq_su_vm_static.u_vm.u_vm'
+  703 |                     es = es | ((ee / SQD == 3) ? 6 : ee / SQD + 2); er = er | q_row[ee]; em = em | q_mask[ee]; ed = ed | q_data[ee];
+      |                             ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:703:24: Operator ASSIGN expects 3 bits on the Assign RHS, but Assign RHS's OR generates 32 bits.
+                                                                                     : ... note: In instance 'qfd_seq_su_vm_static.u_vm.u_vm'
+  703 |                     es = es | ((ee / SQD == 3) ? 6 : ee / SQD + 2); er = er | q_row[ee]; em = em | q_mask[ee]; ed = ed | q_data[ee];
+      |                        ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:730:35: Operator ADD expects 20 bits on the RHS, but RHS's VARREF 'kk' generates 4 bits.
+                                                                                      : ... note: In instance 'qfd_seq_su_vm_static.u_vm.u_vm'
+  730 |         wire [RW-1:0] srow = f_r0 + kk;
+      |                                   ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:772:76: Operator ASSIGN expects 1 bits on the Assign RHS, but Assign RHS's VARREF 'i' generates 32 bits.
+                                                                                     : ... note: In instance 'qfd_seq_su_vm_static.u_vm.u_vm'
+  772 |                     cs_v[k*SQD + n] = 1'b1; cs_src[(k*SQD + n)*LSQ +: LSQ] = i; n = n + 1;
+      |                                                                            ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:981:80: Operator SHIFTR expects 32 or 10 bits on the LHS, but LHS's VARREF 'rbq' generates 6 bits.
+                                                                                      : ... note: In instance 'qfd_seq_su_vm_static.u_vm.u_vm'
+  981 |         always @(posedge clk) if (rr_v[RV + RO + 3 + TLR]) r_qr <= ro_all[(rbq >> 3)*512 +: 512];
+      |                                                                                ^~
+%Warning-WIDTHEXPAND: rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:993:55: Operator AND expects 32 bits on the LHS, but LHS's VARREF 'rot' generates 6 bits.
+                                                                                      : ... note: In instance 'qfd_seq_su_vm_static.u_vm.u_vm'
+  993 |                 rot1[i*512 +: 512] <= capx[((i + (rot & ~((NRB >= 8) ? 7 : 0))) % NRB)*512 +: 512];
+      |                                                       ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:997:115: Operator COND expects 32 bits on the Conditional True, but Conditional True's VARREF 'rotf' generates 6 bits.
+                                                                                       : ... note: In instance 'qfd_seq_su_vm_static.u_vm.u_vm'
+  997 |             for (i = 0; i < NRB; i = i + 1) if (me_x[(i * 8) / NRB]) rot2[i*512 +: 512] <= rot1[((i + ((NRB >= 8) ? rotf : 0)) % NRB)*512 +: 512];
+      |                                                                                                                   ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1002:42: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 's5_a' generates 24 bits.
+                                                                                       : ... note: In instance 'qfd_seq_su_vm_static.u_vm.u_vm'
+ 1002 |                 bv[i*32 +: 32] <= ((s5_a + i) < ELEMS) ? rot2[(i + sh)*32 +: 32] : 32'd0;
+      |                                          ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1002:66: Operator ADD expects 32 bits on the RHS, but RHS's VARREF 'sh' generates 4 bits.
+                                                                                       : ... note: In instance 'qfd_seq_su_vm_static.u_vm.u_vm'
+ 1002 |                 bv[i*32 +: 32] <= ((s5_a + i) < ELEMS) ? rot2[(i + sh)*32 +: 32] : 32'd0;
+      |                                                                  ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1057:56: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 's6_j' generates 4 bits.
+                                                                                       : ... note: In instance 'qfd_seq_su_vm_static.u_vm.u_vm'
+ 1057 |                     assign hit[dd] = s6_d[dd] && (s6_j == JJ);
+      |                                                        ^~
+%Warning-WIDTHEXPAND: rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1169:41: Operator ADD expects 32 bits on the LHS, but LHS's SEL generates 4 bits.
+                                                                                       : ... note: In instance 'qfd_seq_su_vm_static.u_vm.u_vm'
+ 1169 |             d2_nr <= si1 ? ((d1_a0[3:0] + SW - 1) >> 4) + 1 : 4'd1;
+      |                                         ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1169:26: Operator COND expects 32 bits on the Conditional False, but Conditional False's CONST '4'h1' generates 4 bits.
+                                                                                       : ... note: In instance 'qfd_seq_su_vm_static.u_vm.u_vm'
+ 1169 |             d2_nr <= si1 ? ((d1_a0[3:0] + SW - 1) >> 4) + 1 : 4'd1;
+      |                          ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1169:19: Operator ASSIGNDLY expects 4 bits on the Assign RHS, but Assign RHS's COND generates 32 bits.
+                                                                                      : ... note: In instance 'qfd_seq_su_vm_static.u_vm.u_vm'
+ 1169 |             d2_nr <= si1 ? ((d1_a0[3:0] + SW - 1) >> 4) + 1 : 4'd1;
+      |                   ^~
+%Warning-WIDTHEXPAND: rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1177:41: Operator ADD expects 20 bits on the RHS, but RHS's VARREF 'kk' generates 4 bits.
+                                                                                       : ... note: In instance 'qfd_seq_su_vm_static.u_vm.u_vm'
+ 1177 |             wire [RW-1:0]    rr = d2_r0 + kk;
+      |                                         ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1188:17: Operator ASSIGNDLY expects 12 bits on the Assign RHS, but Assign RHS's REPLICATE generates 13 bits.
+                                                                                      : ... note: In instance 'qfd_seq_su_vm_static.u_vm.u_vm'
+ 1188 |             dvv <= {dvv, d2_v}; dsv <= {dsv, d2_si}; dav <= {dav, d2_a0};
+      |                 ^~
+%Warning-WIDTHTRUNC: rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1188:37: Operator ASSIGNDLY expects 12 bits on the Assign RHS, but Assign RHS's REPLICATE generates 13 bits.
+                                                                                      : ... note: In instance 'qfd_seq_su_vm_static.u_vm.u_vm'
+ 1188 |             dvv <= {dvv, d2_v}; dsv <= {dsv, d2_si}; dav <= {dav, d2_a0};
+      |                                     ^~
+%Warning-WIDTHTRUNC: rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1188:58: Operator ASSIGNDLY expects 288 bits on the Assign RHS, but Assign RHS's REPLICATE generates 312 bits.
+                                                                                      : ... note: In instance 'qfd_seq_su_vm_static.u_vm.u_vm'
+ 1188 |             dvv <= {dvv, d2_v}; dsv <= {dsv, d2_si}; dav <= {dav, d2_a0};
+      |                                                          ^~
+%Warning-WIDTHEXPAND: rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1205:81: Operator AND expects 32 bits on the LHS, but LHS's VARREF 'r5' generates 4 bits.
+                                                                                       : ... note: In instance 'qfd_seq_su_vm_static.u_vm.u_vm'
+ 1205 |             for (i = 0; i < NPS; i = i + 1) pos[i*512 +: 512] <= scap[((i + (r5 & ~7)) % NRBS)*512 +: 512];
+      |                                                                                 ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1207:79: Operator AND expects 32 bits on the LHS, but LHS's VARREF 'r6' generates 4 bits.
+                                                                                       : ... note: In instance 'qfd_seq_su_vm_static.u_vm.u_vm'
+ 1207 |             for (i = 0; i < NWR; i = i + 1) win[i*512 +: 512] <= pos[(i + (r6 & 7))*512 +: 512];
+      |                                                                               ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1213:43: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'd7_a0' generates 24 bits.
+                                                                                       : ... note: In instance 'qfd_seq_su_vm_static.u_vm.u_vm'
+ 1213 |                 q8[i*32 +: 32] <= ((d7_a0 + (d7_si ? i : 0)) < ELEMS) ? win[(off7 + (d7_si ? i : 0))*32 +: 32] : 32'd0;
+      |                                           ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1213:83: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'off7' generates 4 bits.
+                                                                                       : ... note: In instance 'qfd_seq_su_vm_static.u_vm.u_vm'
+ 1213 |                 q8[i*32 +: 32] <= ((d7_a0 + (d7_si ? i : 0)) < ELEMS) ? win[(off7 + (d7_si ? i : 0))*32 +: 32] : 32'd0;
+      |                                                                                   ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1241:63: Operator NEQ expects 32 bits on the LHS, but LHS's SEL generates 3 bits.
+                                                                                       : ... note: In instance 'qfd_seq_su_vm_static.u_vm.u_vm'
+ 1241 |                     bw_src[q_row[k*SQD + i][LNRB-1:0]*3 +: 3] != ((k == 3) ? 6 : k + 2) &&
+      |                                                               ^~
+%Warning-WIDTHEXPAND: rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1258:28: Operator LTE expects 37 bits on the LHS, but LHS's REPLICATE generates 24 bits.
+                                                                                       : ... note: In instance 'qfd_seq_su_vm_static.u_vm.u_vm'
+ 1258 |         hits = ({lo, 4'h0} <= dc + sp) && ({hi, 4'hf} >= dc);
+      |                            ^~
+%Warning-WIDTHEXPAND: rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1258:34: Operator ADD expects 37 bits on the LHS, but LHS's VARREF 'dc' generates 24 bits.
+                                                                                       : ... note: In instance 'qfd_seq_su_vm_static.u_vm.u_vm'
+ 1258 |         hits = ({lo, 4'h0} <= dc + sp) && ({hi, 4'hf} >= dc);
+      |                                  ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1264:44: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'lr_r0' generates 20 bits.
+                                                                                       : ... note: In instance 'qfd_seq_su_vm_static.u_vm.u_vm'
+ 1264 |             if (lr_su && hits(lr_r0, lr_r0 + NWR - 1, h_dc[a], h_span[a])) hzx = 1'b1;
+      |                                            ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1264:26: Operator FUNCREF 'hits' expects 20 bits on the Function Argument, but Function Argument's SUB generates 32 bits.
+                                                                                      : ... note: In instance 'qfd_seq_su_vm_static.u_vm.u_vm'
+ 1264 |             if (lr_su && hits(lr_r0, lr_r0 + NWR - 1, h_dc[a], h_span[a])) hzx = 1'b1;
+      |                          ^~~~
+%Warning-WIDTHEXPAND: rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1269:44: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'lr_r0' generates 20 bits.
+                                                                                       : ... note: In instance 'qfd_seq_su_vm_static.u_vm.u_vm'
+ 1269 |             if (lr_su && hits(lr_r0, lr_r0 + NWR - 1, x_dc, span_n)) hzx = 1'b1;
+      |                                            ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1269:26: Operator FUNCREF 'hits' expects 20 bits on the Function Argument, but Function Argument's SUB generates 32 bits.
+                                                                                      : ... note: In instance 'qfd_seq_su_vm_static.u_vm.u_vm'
+ 1269 |             if (lr_su && hits(lr_r0, lr_r0 + NWR - 1, x_dc, span_n)) hzx = 1'b1;
+      |                          ^~~~
+%Warning-WIDTHTRUNC: rtl/qwen_sys/static_schedule_20261014/ot_qfd_seq_su_bi_static.sv:179:24: Operator ASSIGNDLY expects 1 bits on the Assign RHS, but Assign RHS's REPLICATE generates 2 bits.
+                                                                                            : ... note: In instance 'qfd_seq_su_vm_static.u_seq.u_seq'
+  179 |                 else r <= {r, 1'b1};
+      |                        ^~
+%Warning-WIDTHCONCAT: rtl/qwen_sys/static_schedule_20261014/ot_qfd_seq_su_bi_static.sv:510:17: More than a 8k bit replication is probably wrong: 786432
+                                                                                             : ... note: In instance 'qfd_seq_su_vm_static.u_seq.u_seq'
+  510 |         .wrom_q('0),
+      |                 ^~
+%Warning-WIDTHCONCAT: rtl/qwen_sys/static_schedule_20261014/ot_qfd_seq_su_bi_static.sv:579:15: More than a 8k bit replication is probably wrong: 65536
+                                                                                             : ... note: In instance 'qfd_seq_su_vm_static.u_seq.u_seq'
+  579 |         .vx_q('0),
+      |               ^~
+%Warning-WIDTHCONCAT: rtl/qwen_sys/static_schedule_20261014/ot_qfd_seq_su_bi_static.sv:583:16: More than a 8k bit replication is probably wrong: 12288
+                                                                                             : ... note: In instance 'qfd_seq_su_vm_static.u_seq.u_seq'
+  583 |         .t_lvl('0),
+      |                ^~
+%Warning-WIDTHEXPAND: rtl/qwen_sys/dvm_20261014/ot_qfd_vm_q_export_fixed.sv:12:27: Operator GTE expects 32 bits on the LHS, but LHS's VARREF 'cycle' generates 7 bits.
+                                                                                 : ... note: In instance 'qfd_seq_su_vm_static.u_vm.u_q'
+   12 |  wire emit=active && cycle>=RL && cycle<RL+32;
+      |                           ^~
+%Warning-WIDTHEXPAND: rtl/qwen_sys/dvm_20261014/ot_qfd_vm_q_export_fixed.sv:12:40: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'cycle' generates 7 bits.
+                                                                                 : ... note: In instance 'qfd_seq_su_vm_static.u_vm.u_q'
+   12 |  wire emit=active && cycle>=RL && cycle<RL+32;
+      |                                        ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/dvm_20261014/ot_qfd_vm_q_export_fixed.sv:13:23: Operator SUB expects 32 bits on the LHS, but LHS's VARREF 'cycle' generates 7 bits.
+                                                                                 : ... note: In instance 'qfd_seq_su_vm_static.u_vm.u_q'
+   13 |  wire [4:0] beat=cycle-RL;
+      |                       ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/dvm_20261014/ot_qfd_vm_q_export_fixed.sv:13:17: Operator ASSIGNW expects 5 bits on the Assign RHS, but Assign RHS's SUB generates 32 bits.
+                                                                                : ... note: In instance 'qfd_seq_su_vm_static.u_vm.u_q'
+   13 |  wire [4:0] beat=cycle-RL;
+      |                 ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/dvm_20261014/ot_qfd_vm_q_export_fixed.sv:17:25: Operator ADD expects 20 bits on the RHS, but RHS's VARREF 'cycle' generates 7 bits.
+                                                                                 : ... note: In instance 'qfd_seq_su_vm_static.u_vm.u_q'
+   17 |  assign read_row=20'd856+cycle;
+      |                         ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/dvm_20261014/ot_qfd_vm_q_export_fixed.sv:28:13: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'cycle' generates 7 bits.
+                                                                                 : ... note: In instance 'qfd_seq_su_vm_static.u_vm.u_q'
+   28 |     if(cycle==RL+31)begin active<=0;emitted_done<=1;end
+      |             ^~
+%Warning-WIDTHEXPAND: rtl/qwen_sys/dvm_20261014/ot_qfd_vm_q_export_fixed.sv:31:24: Operator NEQ expects 32 bits on the LHS, but LHS's VARREF 'cycle' generates 7 bits.
+                                                                                 : ... note: In instance 'qfd_seq_su_vm_static.u_vm.u_q'
+   31 |     if((active && cycle!=RL+31)||!qr_committed||epoch_begin)fault<=1;
+      |                        ^~
+%Warning-WIDTHEXPAND: rtl/qwen_sys/vm_nox_20261014/qfd_sp_vector_memory.sv:1054:33: Operator ADD expects 20 bits on the RHS, but RHS's SEL generates 6 bits.
+                                                                                  : ... note: In instance 'qfd_seq_su_vm_static.u_vm'
+ 1054 |     wire [19:0] ar_row=20'd3167 + ar[512+:6];
+      |                                 ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/vm_nox_20261014/qfd_sp_vector_memory.sv:1065:30: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'OBS_MUT' generates 32 bits.
+                                                                                 : ... note: In instance 'qfd_seq_su_vm_static.u_vm'
+ 1065 |         .commit_mask(OBS_MUT ? (commit_mask & ~(512'd1<<511)) : commit_mask),
+      |                              ^
+%Warning-CMPCONST: rtl/qwen_sys/static_schedule_20261014/ot_qwen_tp_seq_calendar.sv:30:63: Comparison is constant due to limited range
+                                                                                         : ... note: In instance 'qfd_seq_su_vm_static.u_seq.u_seq.u_seq'
+   30 |   bad=!header_seen||!meta_seen||!pad_seen||count_q==0||count_q>3;
+      |                                                               ^
+- V e r i l a t i o n   R e p o r t: Verilator 5.032 2025-01-01 rev (Debian 5.032-1)
+- Verilator: Built from 10.119 MB sources in 118 modules, into 19.486 MB in 40 C++ files needing 0.000 MB
+- Verilator: Walltime 13.331 s (elab=2.179, cvt=10.865, bld=0.000); cpu 13.330 s on 1 threads; alloced 686.676 MB

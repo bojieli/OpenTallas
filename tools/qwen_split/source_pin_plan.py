@@ -52,9 +52,11 @@ def apply_tile(q, entries):
     for p, (n, _) in ports.items():
         if p.startswith('ck_'):
             ch = clocks[p]  # absent child evidence is a hard error
-            xy = tuple(snap(z) for z in ch['at'])
+            xy = tuple(ch['at'])  # published child rectangle center, already transformed by orientation
             if not (0 <= xy[0] <= q.w and 0 <= xy[1] <= q.h):
                 raise ValueError(f'{q.name}.{p}: child clock outside parent: {xy}')
+            # Parent entry is M5 over the child's M4 rectangle: same XY,
+            # one local via; parent CTS must measure that entry wire.
             q.ports[p] = ('xy', 1, 'M5', [xy], 1)
             q.order.append(p)
     q.obs_top = 7
@@ -104,18 +106,67 @@ def apply_slabs(M):
         q.obs_top = 7
 
 
+def apply_dvm_clocks(M):
+    # Grown DVM column: four MX south leaves, head, four R0 north
+    # leaves. These are actual IO-placement rectangle centers supplied by
+    # Q-DVM, in the RTL ck0=head, ck1..4=north, ck5..8=south order.
+    ys = [754.812,950.412,1086.492,1222.572,1358.652,
+          483.828,347.748,211.668,75.588]
+    for name in ('qfd_xcol_e','qfd_xcol_w'):
+        q = M.get(name)
+        if q is None:
+            continue
+        for k,y in enumerate(ys):
+            p = f'ck{k}'
+            q.ports[p] = ('xy',1,'M5',[(.042,y)],1)
+            if p not in q.order:
+                q.order.append(p)
+    for name in ('qfd_xcst_n','qfd_xcst_s'):
+        q = M.get(name)
+        if q is None:
+            continue
+        for p,xy in (('ck',(52.065,103.637)),('rst_n',(52.353,103.637))):
+            q.ports[p] = ('xy',1,'M3',[xy],1)
+            if p not in q.order:
+                q.order.append(p)
+
+
+def apply_band(q):
+    """Actual quarter-output ABI, retaining every legacy RTL output pin."""
+    q.w,q.h=881.28,1131.84
+    ports=rtl_ports(ROOT/'rtl/physical/ot_qwen_band_lanes_slots.sv',q.name)
+    old=json.loads((ROOT/'results/arch/qwen_split_compute_1014/c15_preflight/qfd_sp_band_lanes.json').read_text())['ports']
+    q.ports,q.order={},[]
+    for p in ('ck',*[f'ck_l{k}' for k in range(16)],'rst_n','b0','lnk'):
+        r=old[p]
+        if r.get('interior'):
+            q.ports[p]=('xy',1,r['layer'],[tuple(r['positions_xy_um'][0])],1);q.order.append(p)
+        else:
+            n=ports[p][0];lo,hi=r['range_um']
+            points=[lo+(hi-lo)*k/(n-1) for k in range(n)] if n>1 else [lo]
+            q.ports[p]=('pins',n,r['face'],r['layer'],points,1);q.order.append(p)
+    for p,c in [('tw',650),('ty',230)]:q.face(p,ports[p][0],'N','M5',c,2)
+    for p,c in [('tt',750),('pw',350),('f',400),('c',430),('f_up',460)]:
+        q.face(p,ports[p][0],'E','M4',c,2)
+    for k in range(4):q.face(f'pw_l{k}',129,'E','M4',520+(k-1.5)*(129*.096+.384),2)
+    if set(q.ports)!=set(ports):raise ValueError('band source ABI not completely assigned')
+
+
 def apply(M):
     entries = json.loads((ROOT / 'results/arch/qwen_compute_child_clocks_1014/entries.json').read_text())['masters']
     for name in ('qfd_tile_nk', 'qfd_tile_nl'):
         if name in M:
             apply_tile(M[name], entries)
     apply_slabs(M)
+    apply_dvm_clocks(M)
+    if 'qfd_sp_band_lanes' in M:apply_band(M['qfd_sp_band_lanes'])
 
 
 def export(q, out):
     """Publish assignment JSON and exact TCL using the die's pin rectangles."""
     from qwen_rom_fulldie import pin_rects
-    source = 'rtl/physical/qfd_tile_nk_slot.sv' if q.name.startswith('qfd_tile_n') else 'rtl/qwen_split/qfd_port_tiles.sv'
+    source = ('rtl/physical/ot_qwen_band_lanes_slots.sv' if q.name=='qfd_sp_band_lanes' else
+              'rtl/physical/qfd_tile_nk_slot.sv' if q.name.startswith('qfd_tile_n') else 'rtl/qwen_split/qfd_port_tiles.sv')
     ports = rtl_ports(ROOT / source, q.name)
     rects = []
     face_q = type(q)(q.name, q.w, q.h, q.obs_top, q.note)
@@ -123,6 +174,14 @@ def export(q, out):
     face_q.order = list(face_q.ports)
     rects += pin_rects(face_q, 1, {p: n for p,(n,_) in ports.items()})
     for p, s in q.ports.items():
+        if s[0]=='pins':
+            _,n,f,L,positions,_=s
+            for k,pos in enumerate(positions):
+                r=((0,pos-.012,.192,pos+.012) if f=='W' else
+                   (q.w-.192,pos-.012,q.w,pos+.012) if f=='E' else
+                   (pos-.012,0,pos+.012,.192) if f=='S' else
+                   (pos-.012,q.h-.192,pos+.012,q.h))
+                rects.append((p+f'[{k}]',L,r))
         if s[0] == 'xy':
             x,y = s[3][0]
             rects.append((p+'[0]', s[2], (x-.012,y-.012,x+.012,y+.012)))
@@ -151,7 +210,7 @@ def export(q, out):
             bins.setdefault(k,[]).append((name,r))
         tcl.append(f'place_pin -pin_name {{{name}}} -layer {layer} -location {{{x:.4f} {y:.4f}}}')
         s = q.ports[base]
-        face = s[2] if s[0]=='face' else min(dict(W=x,E=q.w-x,S=y,N=q.h-y), key=dict(W=x,E=q.w-x,S=y,N=q.h-y).get)
+        face = s[2] if s[0] in ('face','pins') else min(dict(W=x,E=q.w-x,S=y,N=q.h-y), key=dict(W=x,E=q.w-x,S=y,N=q.h-y).get)
         groups.setdefault(base,[]).append((index,x,y,face,layer,direction,s[0]=='xy'))
     if len(seen) != sum(n for n,_ in ports.values()):
         raise ValueError('missing RTL pins')

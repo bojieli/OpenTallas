@@ -1,0 +1,27 @@
+ot-run: ot-epyc1tb     admits   288 GB (avail 515, growth 143, headroom 64, waiters 0/0 GB) load 82/128 running 21 disk 742 GB 
+ot-run: ot-epyc4       admits   391 GB (avail 618, growth 163, headroom 48, waiters 0/0 GB) load 151/128 running 31 disk 570 GB 
+ot-run: ot-pve1        admits   157 GB (avail 205, growth 9, headroom 32, waiters 0/0 GB) load 35/28 running 3 disk 1307 GB 
+ot-run: ot-agidock128  admits    -3 GB (avail 76, growth 56, headroom 24, waiters 0/0 GB) load 24/64 running 9 disk 84 GB 
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-928269-1792046009 after 0 s
+TB_VMCORE RESULT mode 0 cycles 2210 commits 67696 K 11 reads 9813 pq 252 mix_reads 1998 mix_writes 500 rows_checked 12819 dones 4 cmds 4 bad 0
+TB_VMCORE RESULT mode 0 cycles 2210 commits 67696 K 11 reads 9770 pq 227 mix_reads 2016 mix_writes 500 rows_checked 12694 dones 4 cmds 4 bad 0
+TB_VMCORE FAULT mode 1 vm_fault 1 c_st 11 own_source 1
+TB_VMCORE RESULT mode 1 cycles 35 commits 12 K 11 reads 0 pq 0 mix_reads 0 mix_writes 0 rows_checked 0 dones 0 cmds 0 bad 0
+TB_VMCORE FAULT mode 2 vm_fault 1 c_st 11 own_source 1
+TB_VMCORE RESULT mode 2 cycles 36 commits 8 K 11 reads 0 pq 0 mix_reads 0 mix_writes 0 rows_checked 0 dones 0 cmds 0 bad 0
+TB_VMCORE FAULT mode 3 vm_fault 1 c_st 11 own_source 1
+TB_VMCORE RESULT mode 3 cycles 35 commits 0 K -1 reads 0 pq 0 mix_reads 0 mix_writes 0 rows_checked 0 dones 0 cmds 0 bad 0
+TB_VMCORE FAULT mode 4 vm_fault 1 c_st 11 own_source 1
+TB_VMCORE RESULT mode 4 cycles 35 commits 0 K -1 reads 0 pq 0 mix_reads 0 mix_writes 0 rows_checked 0 dones 1 cmds 1 bad 0
+TB_VMCORE FAULT mode 5 vm_fault 1 c_st 11 own_source 1
+TB_VMCORE RESULT mode 5 cycles 35 commits 0 K -1 reads 0 pq 0 mix_reads 0 mix_writes 0 rows_checked 0 dones 0 cmds 0 bad 0
+TB_VMCORE FAULT mode 6 vm_fault 1 c_st 11 own_source 1
+TB_VMCORE RESULT mode 6 cycles 35 commits 0 K -1 reads 0 pq 0 mix_reads 0 mix_writes 0 rows_checked 0 dones 0 cmds 0 bad 0
+TB_VMCORE RESULT mode 0 cycles 2210 commits 67664 K 11 reads 9813 pq 252 mix_reads 1998 mix_writes 500 rows_checked 12819 dones 4 cmds 4 bad 5
+TB_VMCORE RESULT mode 0 cycles 2210 commits 67632 K 11 reads 9813 pq 252 mix_reads 1998 mix_writes 500 rows_checked 12819 dones 4 cmds 4 bad 52
+TB_VMCORE RESULT mode 0 cycles 2210 commits 67696 K 11 reads 9813 pq 252 mix_reads 1998 mix_writes 500 rows_checked 12819 dones 4 cmds 4 bad 160
+TB_VMCORE RESULT mode 0 cycles 2210 commits 67696 K 11 reads 9813 pq 252 mix_reads 1998 mix_writes 500 rows_checked 12819 dones 4 cmds 4 bad 925
+TB_VMCORE RESULT mode 0 cycles 2210 commits 67696 K 11 reads 9813 pq 252 mix_reads 1998 mix_writes 500 rows_checked 12819 dones 4 cmds 4 bad 26
+VMCORE_GATE PASS
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-928269-1792046009): exit 0

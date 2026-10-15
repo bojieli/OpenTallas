@@ -1,0 +1,31 @@
+{
+  "scope": "Pre-build arithmetic-preserving structural candidate; not physical qualification",
+  "source": "ot_hdc_v41x_hcp W32 TL7 PMAX2 OMAX2 ML2",
+  "lane_count": 256,
+  "partition": {
+    "lane_leaves": 32,
+    "lanes_per_leaf": 8,
+    "tree_roots": 1,
+    "shell_roots": 1
+  },
+  "parallel_MACs_per_cycle": 256,
+  "weight_bits_per_cycle": 8192,
+  "x_bits_per_cycle": 4096,
+  "lane_leaf_ingress_bits": 387,
+  "lane_leaf_egress_bits": 257,
+  "cycle_price_serial": 264,
+  "added_pipeline_cycles": 0,
+  "existing_macros": {
+    "ROM4096x266": 64,
+    "SRAM128x256": 16
+  },
+  "floorplan": {
+    "projection_homes": 6,
+    "home_um": [
+      1728,
+      864
+    ],
+    "status": "Child outlines, root census, pin reach and route tracks require measured proof"
+  },
+  "hard_gate": "Every actual child root <=15000 FF or measured CTS insertion<=300ps spread<=80ps; unchanged exact reduction order and output cycles; no physical qualification until real views"
+}

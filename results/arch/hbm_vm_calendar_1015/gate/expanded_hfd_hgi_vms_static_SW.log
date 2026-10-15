@@ -1,0 +1,91 @@
+%Warning-DECLFILENAME: /home/ubuntu/wt/hbm-vm-static-1014/rtl/hbm_accel/generic/vm/static/hfd_hgi_vms_static.sv:3:8: Filename 'hfd_hgi_vms_static' does not match MODULE name: 'hfd_hgi_vms_static_SW'
+    3 | module hfd_hgi_vms_static_SW (
+      |        ^~~~~~~~~~~~~~~~~~~~~
+                       ... For warning description see https://verilator.org/warn/DECLFILENAME?v=5.050
+                       ... Use "/* verilator lint_off DECLFILENAME */" and lint_on around source to disable this message.
+%Warning-UNUSEDSIGNAL: /home/ubuntu/wt/hbm-vm-static-1014/rtl/hbm_accel/generic/vm/static/ot_vms_rcl_static.sv:16:17: Bits of signal are not used: 'response'[257]
+                                                                                                                    : ... note: In instance 'hfd_hgi_vms_static_SW.u_slice.u_replay'
+   16 |     reg [273:0] response;
+      |                 ^~~~~~~~
+                       ... For warning description see https://verilator.org/warn/UNUSEDSIGNAL?v=5.050
+                       ... Use "/* verilator lint_off UNUSEDSIGNAL */" and lint_on around source to disable this message.
+%Warning-UNUSEDSIGNAL: /home/ubuntu/wt/hbm-vm-static-1014/rtl/hbm_accel/generic/vm/static/ot_vms_hub_static.sv:54:17: Bits of signal are not used: 'rr0'[263]
+                                                                                                                    : ... note: In instance 'hfd_hgi_vms_static_SW.u_slice.u_hub'
+   54 |     reg [263:0] rr0,rr1;
+      |                 ^~~
+%Warning-UNUSEDSIGNAL: /home/ubuntu/wt/hbm-vm-static-1014/rtl/hbm_accel/generic/vm/static/ot_vms_hub_static.sv:54:21: Bits of signal are not used: 'rr1'[263]
+                                                                                                                    : ... note: In instance 'hfd_hgi_vms_static_SW.u_slice.u_hub'
+   54 |     reg [263:0] rr0,rr1;
+      |                     ^~~
+%Warning-UNUSEDSIGNAL: /home/ubuntu/wt/hbm-vm-static-1014/rtl/hbm_accel/generic/vm/static/ot_vms_hub_static.sv:67:21: Bits of signal are not used: 'cr_payload'[2191,1917,1643,1369,1095,821,547,273]
+                                                                                                                    : ... note: In instance 'hfd_hgi_vms_static_SW.u_slice.u_hub'
+   67 |     reg [N*274-1:0] cr_payload;
+      |                     ^~~~~~~~~~
+%Warning-UNUSEDSIGNAL: /home/ubuntu/wt/hbm-vm-static-1014/rtl/hbm_accel/generic/vm/static/ot_vms_hub_static.sv:68:21: Bits of signal are not used: 'pq_payload'[2279,1994,1709,1424,1139,854,569,284]
+                                                                                                                    : ... note: In instance 'hfd_hgi_vms_static_SW.u_slice.u_hub'
+   68 |     reg [8*285-1:0] pq_payload;
+      |                     ^~~~~~~~~~
+%Warning-UNUSEDSIGNAL: /home/ubuntu/wt/hbm-vm-static-1014/rtl/hbm_accel/generic/vm/static/ot_vms_hub_static.sv:93:52: Bits of function variable are not used: 'q'[337:313,308:0]
+                                                                                                                    : ... note: In instance 'hfd_hgi_vms_static_SW.u_slice.u_hub'
+   93 |     function automatic [2:0] bank_of(input [337:0] q);
+      |                                                    ^
+%Warning-UNUSEDSIGNAL: /home/ubuntu/wt/hbm-vm-static-1014/rtl/hbm_accel/generic/vm/static/ot_vms_hub_static.sv:99:51: Bits of function variable are not used: 'q'[337:325,321:0]
+                                                                                                                    : ... note: In instance 'hfd_hgi_vms_static_SW.u_slice.u_hub'
+   99 |     function automatic local_needed(input [337:0] q,input integer c);
+      |                                                   ^
+%Warning-UNUSEDSIGNAL: /home/ubuntu/wt/hbm-vm-static-1014/rtl/hbm_accel/generic/vm/static/ot_vms_hub_static.sv:102:48: Bits of function variable are not used: 'q'[337,335:325,321:0]
+                                                                                                                     : ... note: In instance 'hfd_hgi_vms_static_SW.u_slice.u_hub'
+  102 |     function automatic cw_needed(input [337:0] q,input integer c);
+      |                                                ^
+%Warning-UNUSEDSIGNAL: /home/ubuntu/wt/hbm-vm-static-1014/rtl/hbm_accel/generic/vm/static/ot_vms_hub_static.sv:105:49: Bits of function variable are not used: 'q'[337,335:325,321:0]
+                                                                                                                     : ... note: In instance 'hfd_hgi_vms_static_SW.u_slice.u_hub'
+  105 |     function automatic ccw_needed(input [337:0] q,input integer c);
+      |                                                 ^
+%Warning-UNUSEDSIGNAL: /home/ubuntu/wt/hbm-vm-static-1014/rtl/hbm_accel/generic/vm/static/ot_vms_hub_static.sv:129:26: Bits of signal are not used: 'rs'[31:2]
+                                                                                                                     : ... note: In instance 'hfd_hgi_vms_static_SW.u_slice.u_hub'
+  129 |         integer c,k,b,rc,rs,completed;
+      |                          ^~
+%Warning-UNUSEDSIGNAL: /home/ubuntu/wt/hbm-vm-static-1014/rtl/hbm_accel/generic/vm/static/ot_vms_hub_static.sv:129:29: Signal is not used: 'completed'
+                                                                                                                     : ... note: In instance 'hfd_hgi_vms_static_SW.u_slice.u_hub'
+  129 |         integer c,k,b,rc,rs,completed;
+      |                             ^~~~~~~~~
+%Warning-UNUSEDSIGNAL: /home/ubuntu/wt/hbm-vm-static-1014/rtl/hbm_accel/generic/vm/static/ot_vms_bank_static.sv:58:58: Function variable is not used: 'dummy'
+                                                                                                                     : ... note: In instance 'hfd_hgi_vms_static_SW.u_slice.g_bank[7].u_bank'
+   58 |     function automatic [32*7-1:0] cols_all(input integer dummy);
+      |                                                          ^~~~~
+%Warning-UNUSEDSIGNAL: /home/ubuntu/wt/hbm-vm-static-1014/rtl/hbm_accel/generic/vm/static/ot_vms_bank_static.sv:63:58: Function variable is not used: 'dummy'
+                                                                                                                     : ... note: In instance 'hfd_hgi_vms_static_SW.u_slice.g_bank[7].u_bank'
+   63 |     function automatic [7*32-1:0] rows_all(input integer dummy);
+      |                                                          ^~~~~
+%Warning-UNUSEDSIGNAL: /home/ubuntu/wt/hbm-vm-static-1014/rtl/hbm_accel/generic/vm/static/ot_vms_bank_static.sv:88:62: Bits of signal are not used: 'dq_d'[280]
+                                                                                                                     : ... note: In instance 'hfd_hgi_vms_static_SW.u_slice.g_bank[7].u_bank'
+   88 |     reg [RG*17-1:0] rq_d; reg [WG*281-1:0] wq_d; reg [280:0] dq_d, kq_d; reg [275:0] xq_d, x2_d; reg [284:0] pq_d;
+      |                                                              ^~~~
+%Warning-UNUSEDSIGNAL: /home/ubuntu/wt/hbm-vm-static-1014/rtl/hbm_accel/generic/vm/static/ot_vms_bank_static.sv:88:68: Bits of signal are not used: 'kq_d'[280]
+                                                                                                                     : ... note: In instance 'hfd_hgi_vms_static_SW.u_slice.g_bank[7].u_bank'
+   88 |     reg [RG*17-1:0] rq_d; reg [WG*281-1:0] wq_d; reg [280:0] dq_d, kq_d; reg [275:0] xq_d, x2_d; reg [284:0] pq_d;
+      |                                                                    ^~~~
+%Warning-UNUSEDSIGNAL: /home/ubuntu/wt/hbm-vm-static-1014/rtl/hbm_accel/generic/vm/static/ot_vms_bank_static.sv:88:86: Bits of signal are not used: 'xq_d'[275]
+                                                                                                                     : ... note: In instance 'hfd_hgi_vms_static_SW.u_slice.g_bank[7].u_bank'
+   88 |     reg [RG*17-1:0] rq_d; reg [WG*281-1:0] wq_d; reg [280:0] dq_d, kq_d; reg [275:0] xq_d, x2_d; reg [284:0] pq_d;
+      |                                                                                      ^~~~
+%Warning-UNUSEDSIGNAL: /home/ubuntu/wt/hbm-vm-static-1014/rtl/hbm_accel/generic/vm/static/ot_vms_bank_static.sv:88:92: Bits of signal are not used: 'x2_d'[275]
+                                                                                                                     : ... note: In instance 'hfd_hgi_vms_static_SW.u_slice.g_bank[7].u_bank'
+   88 |     reg [RG*17-1:0] rq_d; reg [WG*281-1:0] wq_d; reg [280:0] dq_d, kq_d; reg [275:0] xq_d, x2_d; reg [284:0] pq_d;
+      |                                                                                            ^~~~
+%Warning-UNUSEDSIGNAL: /home/ubuntu/wt/hbm-vm-static-1014/rtl/hbm_accel/generic/vm/static/ot_vms_bank_static.sv:88:110: Bits of signal are not used: 'pq_d'[284]
+                                                                                                                      : ... note: In instance 'hfd_hgi_vms_static_SW.u_slice.g_bank[7].u_bank'
+   88 |     reg [RG*17-1:0] rq_d; reg [WG*281-1:0] wq_d; reg [280:0] dq_d, kq_d; reg [275:0] xq_d, x2_d; reg [284:0] pq_d;
+      |                                                                                                              ^~~~
+%Warning-UNUSEDSIGNAL: /home/ubuntu/wt/hbm-vm-static-1014/rtl/hbm_accel/generic/vm/static/ot_vms_bank_static.sv:223:23: Bits of signal are not used: 'rdB'[255:112]
+                                                                                                                      : ... note: In instance 'hfd_hgi_vms_static_SW.u_slice.g_bank[7].u_bank'
+  223 |     wire [255:0] rdA, rdB, rdC;
+      |                       ^~~
+%Warning-UNUSEDSIGNAL: /home/ubuntu/wt/hbm-vm-static-1014/rtl/hbm_accel/generic/vm/static/ot_vms_bank_static.sv:233:116: Signal is not driven, nor used: 'cw_p'
+                                                                                                                       : ... note: In instance 'hfd_hgi_vms_static_SW.u_slice.g_bank[7].u_bank'
+  233 |     reg c_v; reg [3:0] c_p; reg c_mir; reg [7:0] c_tag; reg [255:0] c_a, c_c; reg [111:0] c_b; reg cw_v; reg [3:0] cw_p; reg [7:0] cw_tag;
+      |                                                                                                                    ^~~~
+%Warning-UNUSEDSIGNAL: /home/ubuntu/wt/hbm-vm-static-1014/rtl/hbm_accel/generic/vm/static/ot_vms_bank_static.sv:234:103: Signal is not driven, nor used: 'dw_p'
+                                                                                                                       : ... note: In instance 'hfd_hgi_vms_static_SW.u_slice.g_bank[7].u_bank'
+  234 |     reg d_v; reg [3:0] d_p; reg [7:0] d_tag; reg [255:0] d_dat; reg [55:0] d_syn; reg dw_v; reg [3:0] dw_p; reg [7:0] dw_tag;
+      |                                                                                                       ^~~~

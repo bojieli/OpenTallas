@@ -1,0 +1,38 @@
+{
+ "schema": "opentallas.s81.mix4_layer.integration.v1",
+ "verdict": "RUNNING",
+ "native_qualified": false,
+ "scope": "Actual MIX4 endpoint drives layer VM writes, target RTL arithmetic; ideal VM and fixture field/collective/HC coefficients remain. NG16 HC is correctness only, no throughput claim.",
+ "host": "ot-epyc1tb",
+ "directory": "/srv/opentallas-scratch/codex/s81-mix-layer",
+ "unit": "oth-ubuntu-174307-1792045673",
+ "local_session": 68861,
+ "modes": {
+  "nom": [
+   "L1",
+   "L14"
+  ],
+  "mut_mix": [
+   "L1"
+  ]
+ },
+ "mutant": "MIX4 MUT2: cluster3 reads copy2 H rows",
+ "prep_checks": {
+  "L1": {
+   "fixture_sha256": "d8919d852845c50c6650a0768cfed83d122ad99d97b0418e256daa72c64c7199",
+   "single_mix_command": true,
+   "coef_h_oracle_rows": 0,
+   "h_input_equals_layer_entry": true,
+   "mix_oracle_equals_hc_input": true,
+   "ops": 62
+  },
+  "L14": {
+   "fixture_sha256": "657807bcc42906616d9901da1133f11d16a952d7a8cc138500aead0a403593c9",
+   "single_mix_command": true,
+   "coef_h_oracle_rows": 0,
+   "h_input_equals_layer_entry": true,
+   "mix_oracle_equals_hc_input": true,
+   "ops": 79
+  }
+ }
+}

@@ -2606,7 +2606,7 @@
     "face": "N",
     "layer": "M4"
    },
-   "target_insertion_ps": 591.7,
+   "target_insertion_ps": 394.9,
    "version": 20,
    "pg_layer": "M6",
    "strap_layer": "M7",
@@ -2626,8 +2626,8 @@
    "clock_tap": "earlier trunk tap (R > 300 ps), hops SKEW 150 ps (die clock delivery rule, owner 10-13 09:25); measured TT boundary mean of kit crrfw, leaf spread <= 33.2 ps, 11,430 sinks",
    "clock_evidence": {
     "kind": "pre_route_cts",
-    "spread_ps": 77.6,
-    "source": "el1011-s81die.log 2026-10-14 22:21 v6 gates"
+    "spread_ps": 78.9,
+    "source": "S-ELEM final v6 gates 056c994dd (west394.9/78.9; east375.6/59.6)"
    },
    "slot_change": {
     "bottom_anchored": true,
@@ -3415,7 +3415,7 @@
    "clock_evidence": {
     "kind": "pre_route_cts",
     "spread_ps": 59.6,
-    "source": "el1011-s81die.log 2026-10-14 22:21 v6 gates"
+    "source": "S-ELEM final v6 gates 056c994dd (west394.9/78.9; east375.6/59.6)"
    },
    "slot_change": {
     "bottom_anchored": true,

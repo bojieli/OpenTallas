@@ -166,7 +166,8 @@ module dsfd_sp_hc #(
         localparam integer CC = 0;
         localparam integer LCC = (CC == 0) ? L0 : L2;
         localparam integer BCC = (CC == 0) ? B0 : B2;
-        wire             p_req, p_flt;
+        wire [LCC-1:0]   p_req;
+        wire             p_flt;
         wire [LCC*GS*32-1:0] p_y;
         wire [4*WSL-1:0] p_w;
         ot_s81_hc_crooty #(.NG(NG), .NCOL(NCOL), .GS(GS), .S_RD(S_RD), .S_RT(S_RT), .C(CC)) u_y (
@@ -184,7 +185,8 @@ module dsfd_sp_hc #(
         localparam integer CC = 2;
         localparam integer LCC = (CC == 0) ? L0 : L2;
         localparam integer BCC = (CC == 0) ? B0 : B2;
-        wire             p_req, p_flt;
+        wire [LCC-1:0]   p_req;
+        wire             p_flt;
         wire [LCC*GS*32-1:0] p_y;
         wire [4*WSL-1:0] p_w;
         ot_s81_hc_crooty #(.NG(NG), .NCOL(NCOL), .GS(GS), .S_RD(S_RD), .S_RT(S_RT), .C(CC)) u_y (

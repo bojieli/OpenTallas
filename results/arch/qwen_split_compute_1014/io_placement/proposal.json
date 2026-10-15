@@ -1,0 +1,689 @@
+{
+  "schema": "opentallas.qwen.static-io-placement-proposal.v1",
+  "die": {
+    "w": 32413.392,
+    "h": 25937.28,
+    "mm2": 840.715,
+    "budget_mm2": 858,
+    "margin_mm2": 17.285
+  },
+  "scope": "full-global legal rectangles with exact collective assigned-face segments; not native qualification",
+  "placements": [
+    {
+      "n": "io_serdes_2",
+      "m": "qfd_io_serdes",
+      "x": 7343.568,
+      "y": 21.6,
+      "w": 2557.848,
+      "h": 1563.816,
+      "o": "R0"
+    },
+    {
+      "n": "io_serdes_1",
+      "m": "qfd_io_serdes",
+      "x": 9905.76,
+      "y": 21.6,
+      "w": 2557.848,
+      "h": 1563.816,
+      "o": "R0"
+    },
+    {
+      "n": "io_collective",
+      "m": "qfd_io_collective_static",
+      "x": 12467.952,
+      "y": 21.6,
+      "w": 864.0,
+      "h": 950.4,
+      "o": "R0"
+    },
+    {
+      "n": "io_serdes",
+      "m": "qfd_io_serdes",
+      "x": 13336.272,
+      "y": 21.6,
+      "w": 2557.848,
+      "h": 1563.816,
+      "o": "R0"
+    },
+    {
+      "n": "io_ucie",
+      "m": "qfd_io_ucie",
+      "x": 15898.464,
+      "y": 21.6,
+      "w": 6394.871999999999,
+      "h": 1563.816,
+      "o": "R0"
+    }
+  ],
+  "retired_legacy_envelopes": [
+    "io_xfifo"
+  ],
+  "envelope_semantics": "SerDes/UCIe reservations preserve historical combined sizes. Licensed PHY-only outline, pin/clock views and static codec fit remain unproven.",
+  "global_geometry": {
+    "instances": 1636,
+    "overlaps": 0,
+    "outside": 0
+  },
+  "distances": {
+    "io_serdes": {
+      "before_gap_um": 7108.152,
+      "after_gap_um": 4.32,
+      "before_geometric_relays": 14,
+      "after_geometric_relays": 0
+    },
+    "io_serdes_1": {
+      "before_gap_um": 4.344,
+      "after_gap_um": 4.344,
+      "before_geometric_relays": 0,
+      "after_geometric_relays": 0
+    },
+    "io_serdes_2": {
+      "before_gap_um": 2566.536,
+      "after_gap_um": 2566.536,
+      "before_geometric_relays": 5,
+      "after_geometric_relays": 5
+    },
+    "io_ucie": {
+      "before_gap_um": 708.936,
+      "after_gap_um": 2566.512,
+      "before_geometric_relays": 1,
+      "after_geometric_relays": 5
+    }
+  },
+  "actual_collective_face_assignments": [
+    {
+      "port": "sr2_valid",
+      "face": "W",
+      "assigned_global_segment": [
+        12467.952,
+        171.6,
+        12467.952,
+        172.6
+      ],
+      "remote_physical_endpoint": null
+    },
+    {
+      "port": "sr2_rec",
+      "face": "W",
+      "assigned_global_segment": [
+        12467.952,
+        251.64,
+        12467.952,
+        331.64000000000004
+      ],
+      "remote_physical_endpoint": null
+    },
+    {
+      "port": "sx2_valid",
+      "face": "W",
+      "assigned_global_segment": [
+        12467.952,
+        334.64000000000004,
+        12467.952,
+        335.64000000000004
+      ],
+      "remote_physical_endpoint": null
+    },
+    {
+      "port": "sx2_rec",
+      "face": "W",
+      "assigned_global_segment": [
+        12467.952,
+        338.64000000000004,
+        12467.952,
+        418.64000000000004
+      ],
+      "remote_physical_endpoint": null
+    },
+    {
+      "port": "sx2_peer_slot",
+      "face": "W",
+      "assigned_global_segment": [
+        12467.952,
+        421.64000000000004,
+        12467.952,
+        422.64000000000004
+      ],
+      "remote_physical_endpoint": null
+    },
+    {
+      "port": "sr1_valid",
+      "face": "W",
+      "assigned_global_segment": [
+        12467.952,
+        425.64000000000004,
+        12467.952,
+        426.64000000000004
+      ],
+      "remote_physical_endpoint": null
+    },
+    {
+      "port": "sr1_rec",
+      "face": "W",
+      "assigned_global_segment": [
+        12467.952,
+        467.64000000000004,
+        12467.952,
+        547.64
+      ],
+      "remote_physical_endpoint": null
+    },
+    {
+      "port": "sx1_valid",
+      "face": "W",
+      "assigned_global_segment": [
+        12467.952,
+        550.64,
+        12467.952,
+        551.64
+      ],
+      "remote_physical_endpoint": null
+    },
+    {
+      "port": "sx1_rec",
+      "face": "W",
+      "assigned_global_segment": [
+        12467.952,
+        554.64,
+        12467.952,
+        634.64
+      ],
+      "remote_physical_endpoint": null
+    },
+    {
+      "port": "sx1_peer_slot",
+      "face": "W",
+      "assigned_global_segment": [
+        12467.952,
+        637.64,
+        12467.952,
+        638.64
+      ],
+      "remote_physical_endpoint": null
+    },
+    {
+      "port": "sr0_valid",
+      "face": "E",
+      "assigned_global_segment": [
+        13331.952,
+        81.6,
+        13331.952,
+        82.6
+      ],
+      "remote_physical_endpoint": null
+    },
+    {
+      "port": "sr0_rec",
+      "face": "E",
+      "assigned_global_segment": [
+        13331.952,
+        85.6,
+        13331.952,
+        165.6
+      ],
+      "remote_physical_endpoint": null
+    },
+    {
+      "port": "sx0_valid",
+      "face": "E",
+      "assigned_global_segment": [
+        13331.952,
+        168.6,
+        13331.952,
+        169.6
+      ],
+      "remote_physical_endpoint": null
+    },
+    {
+      "port": "sx0_rec",
+      "face": "E",
+      "assigned_global_segment": [
+        13331.952,
+        251.64,
+        13331.952,
+        331.64000000000004
+      ],
+      "remote_physical_endpoint": null
+    },
+    {
+      "port": "sx0_peer_slot",
+      "face": "E",
+      "assigned_global_segment": [
+        13331.952,
+        334.64000000000004,
+        13331.952,
+        335.64000000000004
+      ],
+      "remote_physical_endpoint": null
+    },
+    {
+      "port": "dr_valid",
+      "face": "E",
+      "assigned_global_segment": [
+        13331.952,
+        338.64000000000004,
+        13331.952,
+        339.64000000000004
+      ],
+      "remote_physical_endpoint": null
+    },
+    {
+      "port": "dr_rec",
+      "face": "E",
+      "assigned_global_segment": [
+        13331.952,
+        342.64000000000004,
+        13331.952,
+        418.64000000000004
+      ],
+      "remote_physical_endpoint": null
+    },
+    {
+      "port": "ur_valid",
+      "face": "E",
+      "assigned_global_segment": [
+        13331.952,
+        421.64000000000004,
+        13331.952,
+        422.64000000000004
+      ],
+      "remote_physical_endpoint": null
+    },
+    {
+      "port": "ur_rec",
+      "face": "E",
+      "assigned_global_segment": [
+        13331.952,
+        467.64000000000004,
+        13331.952,
+        543.64
+      ],
+      "remote_physical_endpoint": null
+    },
+    {
+      "port": "ur_peer_slot",
+      "face": "E",
+      "assigned_global_segment": [
+        13331.952,
+        546.64,
+        13331.952,
+        547.64
+      ],
+      "remote_physical_endpoint": null
+    },
+    {
+      "port": "dp_valid",
+      "face": "E",
+      "assigned_global_segment": [
+        13331.952,
+        550.64,
+        13331.952,
+        551.64
+      ],
+      "remote_physical_endpoint": null
+    },
+    {
+      "port": "dp_rec",
+      "face": "E",
+      "assigned_global_segment": [
+        13331.952,
+        554.64,
+        13331.952,
+        634.64
+      ],
+      "remote_physical_endpoint": null
+    },
+    {
+      "port": "up_valid",
+      "face": "E",
+      "assigned_global_segment": [
+        13331.952,
+        637.64,
+        13331.952,
+        638.64
+      ],
+      "remote_physical_endpoint": null
+    },
+    {
+      "port": "up_rec",
+      "face": "E",
+      "assigned_global_segment": [
+        13331.952,
+        683.64,
+        13331.952,
+        763.64
+      ],
+      "remote_physical_endpoint": null
+    },
+    {
+      "port": "up_slot",
+      "face": "E",
+      "assigned_global_segment": [
+        13331.952,
+        766.64,
+        13331.952,
+        767.64
+      ],
+      "remote_physical_endpoint": null
+    },
+    {
+      "port": "cmd_v",
+      "face": "N",
+      "assigned_global_segment": [
+        12727.952,
+        972.0,
+        12728.952,
+        972.0
+      ],
+      "remote_physical_endpoint": null
+    },
+    {
+      "port": "cmd_mode",
+      "face": "N",
+      "assigned_global_segment": [
+        12729.351999999999,
+        972.0,
+        12730.351999999999,
+        972.0
+      ],
+      "remote_physical_endpoint": null
+    },
+    {
+      "port": "cmd_words",
+      "face": "N",
+      "assigned_global_segment": [
+        12730.751999999999,
+        972.0,
+        12734.751999999999,
+        972.0
+      ],
+      "remote_physical_endpoint": null
+    },
+    {
+      "port": "cmd_tag",
+      "face": "N",
+      "assigned_global_segment": [
+        12735.152,
+        972.0,
+        12743.152,
+        972.0
+      ],
+      "remote_physical_endpoint": null
+    },
+    {
+      "port": "cmd_free",
+      "face": "N",
+      "assigned_global_segment": [
+        12743.552,
+        972.0,
+        12744.552,
+        972.0
+      ],
+      "remote_physical_endpoint": null
+    },
+    {
+      "port": "in_valid",
+      "face": "N",
+      "assigned_global_segment": [
+        12744.952,
+        972.0,
+        12745.952,
+        972.0
+      ],
+      "remote_physical_endpoint": null
+    },
+    {
+      "port": "in_data",
+      "face": "N",
+      "assigned_global_segment": [
+        12746.351999999999,
+        972.0,
+        12866.351999999999,
+        972.0
+      ],
+      "remote_physical_endpoint": null
+    },
+    {
+      "port": "in_last",
+      "face": "N",
+      "assigned_global_segment": [
+        12866.751999999999,
+        972.0,
+        12867.751999999999,
+        972.0
+      ],
+      "remote_physical_endpoint": null
+    },
+    {
+      "port": "in_mode",
+      "face": "N",
+      "assigned_global_segment": [
+        12868.152,
+        972.0,
+        12869.152,
+        972.0
+      ],
+      "remote_physical_endpoint": null
+    },
+    {
+      "port": "in_tag",
+      "face": "N",
+      "assigned_global_segment": [
+        12869.552,
+        972.0,
+        12877.552,
+        972.0
+      ],
+      "remote_physical_endpoint": null
+    },
+    {
+      "port": "out_valid",
+      "face": "N",
+      "assigned_global_segment": [
+        13047.952,
+        972.0,
+        13048.952,
+        972.0
+      ],
+      "remote_physical_endpoint": null
+    },
+    {
+      "port": "out_data",
+      "face": "N",
+      "assigned_global_segment": [
+        13049.351999999999,
+        972.0,
+        13169.351999999999,
+        972.0
+      ],
+      "remote_physical_endpoint": null
+    },
+    {
+      "port": "out_last",
+      "face": "N",
+      "assigned_global_segment": [
+        13169.751999999999,
+        972.0,
+        13170.751999999999,
+        972.0
+      ],
+      "remote_physical_endpoint": null
+    },
+    {
+      "port": "out_rank",
+      "face": "N",
+      "assigned_global_segment": [
+        13171.152,
+        972.0,
+        13173.152,
+        972.0
+      ],
+      "remote_physical_endpoint": null
+    },
+    {
+      "port": "out_err",
+      "face": "N",
+      "assigned_global_segment": [
+        13173.552,
+        972.0,
+        13174.552,
+        972.0
+      ],
+      "remote_physical_endpoint": null
+    }
+  ],
+  "static_graph": [
+    {
+      "tx": "up",
+      "rx": "dp",
+      "record_bits": 546,
+      "collective_face": "E",
+      "tx_chain": [
+        "collective.up_rec/valid/token",
+        "fixed equal-age relays",
+        "qfd_static_ch546 (TX write1/read3)",
+        "static slot codec",
+        "licensed PHY"
+      ],
+      "rx_chain": [
+        "licensed PHY",
+        "static slot codec",
+        "qfd_static_ch546 (RX write1/read3)",
+        "fixed equal-age relays",
+        "collective.dp_rec/valid"
+      ],
+      "calendar_controls": [
+        "ot_coll_lcal_tx: CDC write/read and codec write/read fixed slots",
+        "ot_coll_lcal_rx: codec expectation and CDC write/read fixed slots"
+      ],
+      "physical_homes": "OPEN: CDC leaf views exist, but per-face children and calendar/codec slot joins missing",
+      "codec_phy_frame_bits": 597
+    },
+    {
+      "tx": "ur",
+      "rx": "dr",
+      "record_bits": 514,
+      "collective_face": "E",
+      "tx_chain": [
+        "collective.ur_rec/valid/token",
+        "fixed equal-age relays",
+        "qfd_static_ch546 (TX write1/read3)",
+        "static slot codec",
+        "licensed PHY"
+      ],
+      "rx_chain": [
+        "licensed PHY",
+        "static slot codec",
+        "qfd_static_ch546 (RX write1/read3)",
+        "fixed equal-age relays",
+        "collective.dr_rec/valid"
+      ],
+      "calendar_controls": [
+        "ot_coll_lcal_tx: CDC write/read and codec write/read fixed slots",
+        "ot_coll_lcal_rx: codec expectation and CDC write/read fixed slots"
+      ],
+      "physical_homes": "OPEN: CDC leaf views exist, but per-face children and calendar/codec slot joins missing",
+      "codec_phy_frame_bits": 565
+    },
+    {
+      "tx": "sx0",
+      "rx": "sr0",
+      "record_bits": 546,
+      "collective_face": "E",
+      "tx_chain": [
+        "collective.sx0_rec/valid/token",
+        "fixed equal-age relays",
+        "qfd_static_ch546 (TX write1/read3)",
+        "static slot codec",
+        "licensed PHY"
+      ],
+      "rx_chain": [
+        "licensed PHY",
+        "static slot codec",
+        "qfd_static_ch546 (RX write1/read3)",
+        "fixed equal-age relays",
+        "collective.sr0_rec/valid"
+      ],
+      "calendar_controls": [
+        "ot_coll_lcal_tx: CDC write/read and codec write/read fixed slots",
+        "ot_coll_lcal_rx: codec expectation and CDC write/read fixed slots"
+      ],
+      "physical_homes": "OPEN: CDC leaf views exist, but per-face children and calendar/codec slot joins missing",
+      "codec_phy_frame_bits": 597
+    },
+    {
+      "tx": "sx1",
+      "rx": "sr1",
+      "record_bits": 546,
+      "collective_face": "W",
+      "tx_chain": [
+        "collective.sx1_rec/valid/token",
+        "fixed equal-age relays",
+        "qfd_static_ch546 (TX write1/read3)",
+        "static slot codec",
+        "licensed PHY"
+      ],
+      "rx_chain": [
+        "licensed PHY",
+        "static slot codec",
+        "qfd_static_ch546 (RX write1/read3)",
+        "fixed equal-age relays",
+        "collective.sr1_rec/valid"
+      ],
+      "calendar_controls": [
+        "ot_coll_lcal_tx: CDC write/read and codec write/read fixed slots",
+        "ot_coll_lcal_rx: codec expectation and CDC write/read fixed slots"
+      ],
+      "physical_homes": "OPEN: CDC leaf views exist, but per-face children and calendar/codec slot joins missing",
+      "codec_phy_frame_bits": 597
+    },
+    {
+      "tx": "sx2",
+      "rx": "sr2",
+      "record_bits": 546,
+      "collective_face": "W",
+      "tx_chain": [
+        "collective.sx2_rec/valid/token",
+        "fixed equal-age relays",
+        "qfd_static_ch546 (TX write1/read3)",
+        "static slot codec",
+        "licensed PHY"
+      ],
+      "rx_chain": [
+        "licensed PHY",
+        "static slot codec",
+        "qfd_static_ch546 (RX write1/read3)",
+        "fixed equal-age relays",
+        "collective.sr2_rec/valid"
+      ],
+      "calendar_controls": [
+        "ot_coll_lcal_tx: CDC write/read and codec write/read fixed slots",
+        "ot_coll_lcal_rx: codec expectation and CDC write/read fixed slots"
+      ],
+      "physical_homes": "OPEN: CDC leaf views exist, but per-face children and calendar/codec slot joins missing",
+      "codec_phy_frame_bits": 597
+    }
+  ],
+  "cut_diagnostic": {
+    "legacy_bits": 2053,
+    "legacy_tracks": 2438,
+    "legacy_util": 0.8420836751435603,
+    "native_serdes_pair_bits": 1095,
+    "pair_only_same_tracks_util": 0.4491386382280558,
+    "two_pairs_same_tracks_util": 0.8982772764561116,
+    "ucie_both_pairs_bits": 2126,
+    "qualification": false,
+    "condition": "1095/2438 is conditional bookkeeping only; no claim that routes use these tracks. Separate W SerDes1/2 windows and E UCIe P/R windows, reserve exact track capacity and physical relay sites."
+  },
+  "missing": [
+    "Per-face static codec/calendar children and assigned physical pins.",
+    "Licensed PHY-only envelopes, FDI pins, source views and UCIe P/R concurrent capacity.",
+    "Seq/cq CDC homes and epoch/reset/static slot producers.",
+    "Exact pin-to-pin paths, real relay count/equal ages, cuts <=0.60 and routed TT/FF/DRC."
+  ],
+  "inputs": {
+    "/tmp/qwen-c17-wide.json": "f8f13d4895927bdbc9d0912f60df44bd08e47b72a5cf1e6a7976c4bdb7054fc2",
+    "/tmp/qwen_io_s2_spec.json": "e506490a63c9c9482d05495d515a17d3b228b82c400413ffc649a3cc8585d03d",
+    "/home/ubuntu/wt/qwen-split-compute-1014/results/arch/qwen_split_compute_1014/c17_model/relay_run.json": "46f04dcb745ba4defae0ae0127db9632d1bc1d07b012775977ce117bac2705c8"
+  }
+}

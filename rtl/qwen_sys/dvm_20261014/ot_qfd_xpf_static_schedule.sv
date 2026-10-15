@@ -18,9 +18,10 @@ module ot_qfd_xpf_static_schedule #(
  input wire me_issue,input wire [11:0] me_pc,
  input wire su_issue,input wire [11:0] su_pc,
  input wire cp_issue,input wire [11:0] cp_pc,
- output reg [71:0] xpf,output reg fault,output reg active,output reg [31:0] cycle
+ output wire image_ready,output reg [71:0] xpf,output reg fault,output reg active,output reg [31:0] cycle
 );
  reg [187:0] records[0:N-1];reg [N-1:0] loaded,armed,issued;
+ assign image_ready=sealed&&!fault;
  reg sealed;reg [IW:0] count;reg [5:0] stage_r;
  reg good,have_arm;reg [IW-1:0] arm_pick;integer i,j;
  always @* begin
