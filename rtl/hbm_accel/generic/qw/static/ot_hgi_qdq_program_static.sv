@@ -11,7 +11,7 @@
 module ot_hgi_qdq_program_static #(
     parameter integer RL=7, WC=4, MUT=0
 )(
-    input wire clk_program,clk_engine,rst_n,
+    input wire clk_program,clk_transport,clk_dxl,clk_dbq,clk_daq,rst_n,
     input wire cfg_we,
     input wire [9:0] cfg_addr,
     input wire [255:0] cfg_data,
@@ -35,7 +35,7 @@ module ot_hgi_qdq_program_static #(
         .calendar(command),.calendar_v(command_v),.ordinal(ordinal),
         .active(program_active),.done(program_done),.fault(program_fault));
     ot_hgi_qdq_static #(.RL(RL),.WC(WC),.MUT(MUT)) engine(
-        .clk(clk_engine),.rst_n(rst_n),.cmd_v(command_v&&command[0]),
+        .clk_transport(clk_transport),.clk_dxl(clk_dxl),.clk_dbq(clk_dbq),.clk_daq(clk_daq),.rst_n(rst_n),.cmd_v(command_v&&command[0]),
         .cmd_op(command[6:1]),.cmd_block(command[14:7]),.cmd_src(command[30:15]),
         .cmd_dst(command[46:31]),.cmd_last(command[47]),
         .rq(rq),.rr(rr),.wq(wq),.beat_done(beat_done),.record_done(record_done),.fault(engine_fault));

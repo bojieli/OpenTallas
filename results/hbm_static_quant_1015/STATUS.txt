@@ -21,9 +21,12 @@ RQ registered0, bank samples1,response7,gather8,decoder input9,decoder output33,
 WQ registered34,bank samples35,actual commit38. 104 commands+38=142 elapsed
 cycles. Mapped programme output4,engine captures5,so launch+147 fullcomponent.
 
-NOT PHYSICALLY CLOSED. No views for transport/programme/control; mixed engine
-logic must split into transport leaf + wires-only decoder parent before physical
-submission. Programme macro174.744x70.470 plus halo; provisional hb_quant parent
+NOT PHYSICALLY CLOSED. No views for transport/programme/control. Native engine
+is now a wires-only parent with a transport leaf and unchanged DXL/DBQ/DAQ. Five
+independent physical clock entries remain explicit. Physical-split exact gate
+retains 147 launch-to-commit cycles and three killed mutants. Geometry prototype
+has zero 5.4-um halo overlaps and actual closed decoder pin hops <=333.132 um;
+this does not prove timing, PG, new pins or source-matched view reuse. Programme macro174.744x70.470 plus halo; provisional hb_quant parent
 1399.656x648 at14736.384,15958.08 R0 assigned by H-DIE; actual packing/PG/pin/cut
 checks unproven. Actual NW station count not measured; RL/WC and compiler
 reservation parameters remain explicit and must use source-matched measured
@@ -31,6 +34,6 @@ latencies. No old parent alias, physical decoder views not rerouted.
 
 Full native host/global launch target decode and whole-layer programme composition
 remain OPEN. Config/launch ports are explicit, not tied: cfgwe/addr10/data256,
-startv/base10/limit11/loops16. Programme and engine have separate phi-R clock
-entries. No native wholechip/full unit qualification claim. Local SID0 operand
+startv/base10/limit11/loops16. Programme, transport and all three decoder children have separate phi-R
+clock entries. No native wholechip/full unit qualification claim. Local SID0 operand
 relocation reproduces historical B2 component scope, not full multi-SID binding.

@@ -8,7 +8,7 @@
 // Faults report an invalid calendar; they never stall or extend that calendar.
 // The actual released decoder is retained verbatim. Physical reuse of its views
 // is conditional on matching phase and pin contract; this transport has no views yet.
-module ot_hgi_qdq_static #(
+module ot_hgi_qdq_static_transport #(
     parameter integer RL=7,
     parameter integer DL=25, // pipeline stages; post-input edge delta = 24
     parameter integer WC=4, // outgoing bank acceptance1 + actual macro commit3
@@ -24,7 +24,12 @@ module ot_hgi_qdq_static #(
     input wire [8*257-1:0] rr,
     output reg [8*281-1:0] wq,
     output reg beat_done, record_done,
-    output reg fault
+    output reg fault,
+    output wire dec_v,
+    output wire [127:0] dec_header,
+    output wire [1023:0] dec_x,
+    input wire vo,qfault,decode_fault,
+    input wire [511:0] y
 );
     localparam integer NP=RL+1;
     reg [NP-1:0] vp, lp;
@@ -37,10 +42,7 @@ module ot_hgi_qdq_static #(
     reg [DL-1:0] dv, dl;
     reg [WC-1:0] donep,lastp;
     reg [15:0] dst [0:DL-1];
-    wire vo, qfault, decode_fault;
-    wire [511:0] y;
-    ot_hgi_qw_dec3 decoder(.clk(clk),.rst_n(rst_n),.v(gv),.header(gh),.x(gx),
-        .vo(vo),.y(y),.fault(qfault),.decode_fault(decode_fault));
+    assign dec_v=gv;assign dec_header=gh;assign dec_x=gx;
     reg [7:0] expected;
     reg bad;
     always @* begin
@@ -99,5 +101,37 @@ module ot_hgi_qdq_static #(
         for(integer k=1;k<DL;k=k+1) dst[k]<=dst[k-1];
     end
     initial if(RL<1 || DL<2 || WC<2) $fatal(1,"invalid measured QDQ pipeline");
+endmodule
+// Wires-only native engine. All five physical roots remain explicit at the
+// enclosing programme parent. Decoder leaf arithmetic is unchanged dec3.
+module ot_hgi_qdq_static #(
+    parameter integer RL=7,DL=25,WC=4,MUT=0
+)(
+    input wire clk_transport,clk_dxl,clk_dbq,clk_daq,rst_n,
+    input wire cmd_v,
+    input wire [5:0] cmd_op,
+    input wire [7:0] cmd_block,
+    input wire [15:0] cmd_src,cmd_dst,
+    input wire cmd_last,
+    output wire [8*17-1:0] rq,
+    input wire [8*257-1:0] rr,
+    output wire [8*281-1:0] wq,
+    output wire beat_done,record_done,fault
+);
+    wire v,vo,qfault,decode_fault;
+    wire [127:0] header;wire [1023:0] x;
+    wire [511:0] y;
+    wire [17:0] hd={header[127:118],header[71:64]};
+    wire [1023:0] xs,xb,xa;wire bvo,bfo;wire [511:0] byo;
+    ot_hgi_qdq_static_transport #(.RL(RL),.DL(DL),.WC(WC),.MUT(MUT)) transport(
+        .clk(clk_transport),.rst_n(rst_n),.cmd_v(cmd_v),.cmd_op(cmd_op),.cmd_block(cmd_block),
+        .cmd_src(cmd_src),.cmd_dst(cmd_dst),.cmd_last(cmd_last),.rq(rq),.rr(rr),.wq(wq),
+        .beat_done(beat_done),.record_done(record_done),.fault(fault),
+        .dec_v(v),.dec_header(header),.dec_x(x),.vo(vo),.qfault(qfault),.decode_fault(decode_fault),.y(y));
+    ot_hgi_qw_dxl u_dxl(.clk(clk_dxl),.x(x),.xs(xs),.xb(xb),.xa(xa));
+    ot_hgi_qw_dbq u_dbq(.clk(clk_dbq),.rst_n(rst_n),.v(v),.hd(hd),.xs(xs),.xb(xb),
+        .bvo(bvo),.bfo(bfo),.byo(byo));
+    ot_hgi_qw_daq u_daq(.clk(clk_daq),.rst_n(rst_n),.v(v),.hd(hd),.xs(xs),.xa(xa),
+        .bvo(bvo),.bfo(bfo),.byo(byo),.vo(vo),.y(y),.fault(qfault),.decode_fault(decode_fault));
 endmodule
 `default_nettype wire
