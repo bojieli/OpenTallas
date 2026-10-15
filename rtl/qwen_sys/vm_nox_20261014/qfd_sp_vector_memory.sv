@@ -1,5 +1,5 @@
 `timescale 1ns/1ps
-// Native compute-die VM binding. This wrapper requires OT_QFD_VM_NOX and binds the real tiled VM.
+// Native STATIC compute-die VM binding (HANDOFF0ah). No credit ports,queues or runtime scheduling. This wrapper requires OT_QFD_VM_NOX and binds the real tiled VM.
 // Bit packing is LSB-first within bundles; seq row addresses are full20-bit ROW addresses (no implicit base).
 module qfd_sp_vector_memory #(
     parameter integer USE_MACRO=1, USE_LEAF_CLOCKS=1, OBS_MUT=0, MUT=0
@@ -453,15 +453,47 @@ module qfd_sp_vector_memory #(
     input wire ck_r7_53,
     input wire ck_r7_54,
     input wire ck_r7_55,
+    input wire ck_r3_56,
+    input wire ck_r3_57,
+    input wire ck_r3_58,
+    input wire ck_r3_59,
+    input wire ck_r3_60,
+    input wire ck_r3_61,
+    input wire ck_r3_62,
+    input wire ck_r3_63,
+    input wire ck_r4_56,
+    input wire ck_r4_57,
+    input wire ck_r4_58,
+    input wire ck_r4_59,
+    input wire ck_r4_60,
+    input wire ck_r4_61,
+    input wire ck_r4_62,
+    input wire ck_r4_63,
+    input wire ck_r5_56,
+    input wire ck_r5_57,
+    input wire ck_r5_58,
+    input wire ck_r5_59,
+    input wire ck_r5_60,
+    input wire ck_r5_61,
+    input wire ck_r5_62,
+    input wire ck_r5_63,
+    input wire ck_r6_56,
+    input wire ck_r6_57,
+    input wire ck_r6_58,
+    input wire ck_r6_59,
+    input wire ck_r6_60,
+    input wire ck_r6_61,
+    input wire ck_r6_62,
+    input wire ck_r6_63,
     input wire [2366:0] sa, output wire [6143:0] sq,
     input wire [552:0] mx, input wire [550:0] rb0,rb1,rb2,
-    output wire rc0,rc1,rc2, input wire rk0,rk1,rk2,
+    
     output wire [15:0] ld, output wire mo, input wire mee,
     input wire [20:0] svr, output wire svr_rdy, output wire [511:0] svq, output wire svq_v,
     input wire [532:0] svw,
-    input wire [519:0] ar, output wire ar_cr, output reg [552:0] xaw,
-    input wire q_epoch, q_start, output wire q_start_ready,
-    output wire [523:0] q, input wire q_cr, output wire q_done,
+    input wire [519:0] ar, output reg [552:0] xaw,
+    input wire q_epoch, q_start, output wire q_committed,
+    output wire [523:0] q, output wire q_done,
     output wire fault
 );
     wire [447:0] lc;
@@ -913,6 +945,71 @@ module qfd_sp_vector_memory #(
     assign lc[445]=ck_r7_53;
     assign lc[446]=ck_r7_54;
     assign lc[447]=ck_r7_55;
+    wire [63:0] oc;
+    assign oc[0]=1'b0; // No Q observer in this bank group.
+    assign oc[1]=1'b0; // No Q observer in this bank group.
+    assign oc[2]=1'b0; // No Q observer in this bank group.
+    assign oc[3]=1'b0; // No Q observer in this bank group.
+    assign oc[4]=1'b0; // No Q observer in this bank group.
+    assign oc[5]=1'b0; // No Q observer in this bank group.
+    assign oc[6]=1'b0; // No Q observer in this bank group.
+    assign oc[7]=1'b0; // No Q observer in this bank group.
+    assign oc[8]=1'b0; // No Q observer in this bank group.
+    assign oc[9]=1'b0; // No Q observer in this bank group.
+    assign oc[10]=1'b0; // No Q observer in this bank group.
+    assign oc[11]=1'b0; // No Q observer in this bank group.
+    assign oc[12]=1'b0; // No Q observer in this bank group.
+    assign oc[13]=1'b0; // No Q observer in this bank group.
+    assign oc[14]=1'b0; // No Q observer in this bank group.
+    assign oc[15]=1'b0; // No Q observer in this bank group.
+    assign oc[16]=1'b0; // No Q observer in this bank group.
+    assign oc[17]=1'b0; // No Q observer in this bank group.
+    assign oc[18]=1'b0; // No Q observer in this bank group.
+    assign oc[19]=1'b0; // No Q observer in this bank group.
+    assign oc[20]=1'b0; // No Q observer in this bank group.
+    assign oc[21]=1'b0; // No Q observer in this bank group.
+    assign oc[22]=1'b0; // No Q observer in this bank group.
+    assign oc[23]=1'b0; // No Q observer in this bank group.
+    assign oc[24]=ck_r3_56;
+    assign oc[25]=ck_r3_57;
+    assign oc[26]=ck_r3_58;
+    assign oc[27]=ck_r3_59;
+    assign oc[28]=ck_r3_60;
+    assign oc[29]=ck_r3_61;
+    assign oc[30]=ck_r3_62;
+    assign oc[31]=ck_r3_63;
+    assign oc[32]=ck_r4_56;
+    assign oc[33]=ck_r4_57;
+    assign oc[34]=ck_r4_58;
+    assign oc[35]=ck_r4_59;
+    assign oc[36]=ck_r4_60;
+    assign oc[37]=ck_r4_61;
+    assign oc[38]=ck_r4_62;
+    assign oc[39]=ck_r4_63;
+    assign oc[40]=ck_r5_56;
+    assign oc[41]=ck_r5_57;
+    assign oc[42]=ck_r5_58;
+    assign oc[43]=ck_r5_59;
+    assign oc[44]=ck_r5_60;
+    assign oc[45]=ck_r5_61;
+    assign oc[46]=ck_r5_62;
+    assign oc[47]=ck_r5_63;
+    assign oc[48]=ck_r6_56;
+    assign oc[49]=ck_r6_57;
+    assign oc[50]=ck_r6_58;
+    assign oc[51]=ck_r6_59;
+    assign oc[52]=ck_r6_60;
+    assign oc[53]=ck_r6_61;
+    assign oc[54]=ck_r6_62;
+    assign oc[55]=ck_r6_63;
+    assign oc[56]=1'b0; // No Q observer in this bank group.
+    assign oc[57]=1'b0; // No Q observer in this bank group.
+    assign oc[58]=1'b0; // No Q observer in this bank group.
+    assign oc[59]=1'b0; // No Q observer in this bank group.
+    assign oc[60]=1'b0; // No Q observer in this bank group.
+    assign oc[61]=1'b0; // No Q observer in this bank group.
+    assign oc[62]=1'b0; // No Q observer in this bank group.
+    assign oc[63]=1'b0; // No Q observer in this bank group.
     wire [2:0] sre0,sre1;
     wire [71:0] sa0,sa1;
     genvar s;
@@ -924,25 +1021,19 @@ module qfd_sp_vector_memory #(
     wire [63:0] swmask=sa[2246+:64];
     wire [23:0] swa0=sa[2198+:24],swa1=sa[2222+:24];
     wire [2047:0] swdata=sa[150+:2048];
-    wire qr_v, qr_ready, qr_rsp, qvm_v, qvm_ready;
+    wire qr_v,qr_rsp,qvm_v,qvm_ready,q_window;
     wire [19:0] qr_row;
-    wire [511:0] vmq, commit_mask;
-    wire qcommitted, qfault, w_fault,w_hazard;
-    // Sequencer priority: Q export holds its read request until the shared real row port accepts it.
-    assign qvm_v=svr[20] | qr_v;
-    wire [19:0] qvm_row=svr[20] ? svr[0+:20] : qr_row;
-    assign svr_rdy=qvm_ready;
-    assign qr_ready=qvm_ready & ~svr[20];
-    // Queue response ownership at each accepted read; outstanding reads are bounded by the fixed VM row latency.
-    reg [63:0] owners;
-    reg [5:0] wrptr,rdptr;
+    wire [511:0] vmq,commit_mask;
+    wire qfault,w_fault,w_hazard;
+    // Q owns its compiler-reserved window. Sequencer requests in that window are faults,never demand-arbitrated.
+    assign qvm_v=q_window ? qr_v : svr[20];
+    wire [19:0] qvm_row=q_window ? qr_row : svr[19:0];
+    assign svr_rdy=qvm_ready; // Observation/assertion pin,not production issue control.
+    assign svq=vmq;assign svq_v=qr_rsp && !q_window;
+    reg slot_fault;
     always @(posedge ck or negedge rst_n)
-        if(!rst_n) begin owners<=0;wrptr<=0;rdptr<=0;end
-        else begin
-            if(qvm_v && qvm_ready) begin owners[wrptr]<=!svr[20];wrptr<=wrptr+1'b1;end
-            if(qr_rsp) rdptr<=rdptr+1'b1;
-        end
-    assign svq=vmq; assign svq_v=qr_rsp & ~owners[rdptr];
+        if(!rst_n)slot_fault<=0;
+        else if((q_window && svr[20]) || (qvm_v && !qvm_ready))slot_fault<=1;
     // The native TP8 head has g=0. g=1 is invalid; never invent a group offset.
     wire [19:0] ar_row=20'd3167 + ar[512+:6];
     wire ar_valid=ar[519] & ~ar[518] & (ar[512+:6]<32);
@@ -953,24 +1044,26 @@ module qfd_sp_vector_memory #(
     always @(posedge ck or negedge rst_n)
         if(!rst_n) ar_bad<=0;
         else if(ar[519] && !ar_valid) ar_bad<=1;
-    ot_qfd_vm_q_export #(.ENABLE(1)) u_q (
-        .clk(ck),.rst_n(rst_n),.epoch_begin(q_epoch),.commit_mask(OBS_MUT ? (commit_mask & ~(512'd1<<511)) : commit_mask),
-        .start_v(q_start),.start_ready(q_start_ready),.qr_committed(qcommitted),
-        .read_v(qr_v),.read_row(qr_row),.read_ready(qr_ready),
-        .rsp_v(qr_rsp & owners[rdptr]),.rsp_data(vmq),.q(q),.q_cr(q_cr),.emitted_done(q_done),.fault(qfault));
+    ot_qfd_vm_q_export_fixed u_q (
+        .clk(ck),.rst_n(rst_n),.epoch_begin(q_epoch),
+        .commit_mask(OBS_MUT ? (commit_mask & ~(512'd1<<511)) : commit_mask),
+        .start_v(q_start),.qr_committed(q_committed),.window_active(q_window),
+        .read_v(qr_v),.read_row(qr_row),.rsp_v(qr_rsp && q_window),.rsp_data(vmq),
+        .q(q),.emitted_done(q_done),.fault(qfault));
     ot_qfd_sp_vector_memory_bv #(.USE_MACRO(USE_MACRO),.USE_LEAF_CLOCKS(USE_LEAF_CLOCKS),
-        .NRB(64),.NB(3),.SQD(32),.MEE(1),.VMT(1),.RO(1),.MUT(MUT)) u_vm (
-        .clk(ck),.leaf_ck(lc),.rst_n(rst_n),.me_en(mee),.me_en_e(mee),
+        .USE_OBSERVER_CLOCKS(1),.NRB(64),.NB(3),.SQD(1),.STATIC_SCHEDULE(1),.MEE(1),.VMT(1),.RO(1),.MUT(MUT)) u_vm (
+        .clk(ck),.leaf_ck(lc),.observer_ck(oc),.rst_n(rst_n),.me_en(mee),.me_en_e(mee),
         .s_re0(sre0),.s_re1(sre1),.s_a0(sa0),.s_a1(sa1),.s_q(sq),
         .sw_mask(swmask),.sw_a0(swa0),.sw_a1(swa1),.sw_data(swdata),
         .rd_v(sa[2366]),.rd_addr(sa[2342+:24]),.rd_data(sa[2310+:32]),
         .w_v(svw[532]),.w_row(svw[512+:20]),.w_mask(16'hffff),.w_data(svw[0+:512]),
         .r_v(qvm_v),.r_rdy(qvm_ready),.r_row(qvm_row),.r_qv(qr_rsp),.r_q(vmq),
         .mx_we(mx[552]),.mx_addr(mx[512+:24]),.mx_mask(mx[536+:16]),.mx_data(mx[0+:512]),
-        .aw_v(ar_valid),.aw_row(ar_row),.aw_data(ar[511:0]),.aw_cr(ar_cr),
+        .aw_v(ar_valid),.aw_row(ar_row),.aw_data(ar[511:0]),.aw_cr(),
         .rb_v({rb2[550],rb1[550],rb0[550]}),.rb_end({rb2[549],rb1[549],rb0[549]}),.rb_nul({rb2[548],rb1[548],rb0[548]}),
         .rb_row({rb2[528+:20],rb1[528+:20],rb0[528+:20]}),.rb_mask({rb2[512+:16],rb1[512+:16],rb0[512+:16]}),
-        .rb_data({rb2[0+:512],rb1[0+:512],rb0[0+:512]}),.rb_cr({rc2,rc1,rc0}),.rb_ok({rk2,rk1,rk0}),
-        .me_ok(mo),.land_cnt(ld),.w_fault(w_fault),.w_hazard(w_hazard),.qr_commit_mask(commit_mask));
-    assign fault=qfault | w_fault | w_hazard | ar_bad;
+        .rb_data({rb2[0+:512],rb1[0+:512],rb0[0+:512]}),.rb_cr(),.rb_ok(3'b0),
+        .me_ok(),.land_cnt(ld),.w_fault(w_fault),.w_hazard(w_hazard),.qr_commit_mask(commit_mask));
+    assign fault=qfault | w_fault | w_hazard | ar_bad | slot_fault;
+    assign mo=~fault;
 endmodule
