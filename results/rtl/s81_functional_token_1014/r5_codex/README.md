@@ -30,3 +30,21 @@ and size; it is explicitly not a native operand-ownership qualification.
 Recovered field_all.py correction splits the golden ratio-2 compressor's
 concatenated wkv/wgate matvec into named per-tensor records. Existing field
 runs already use this fix; no duplicate jobs launched.
+
+Native VM read-group integration prerequisite: `dsfd_vm_read_group` sits
+between one client's wide requests and the serialized VM adapter, collecting
+responses by slot and emitting the original valid mask/data together. This is
+required by hierarchical SU RB/QR pairs and wide HC/SU beats; slot-by-slot
+native responses break their arithmetic grouping. Clients must issue
+contiguous slot prefixes containing slot0; its credit returns only with the
+whole batch, retaining one batch in flight. Independent SU NR16 and HC NR2
+shims allow the two clients to operate concurrently. Backend responses may
+arrive reordered. Duplicate/unsolicited responses and overlapping or invalid
+request batches set sticky fault. This shim is not a replacement for core
+credit pacing, native write completion or operand ownership.
+
+Production-shape gate via ot-run2GB EPYC1: 128 variable-width batches, reversed
+response order and variable response gaps: NR16 PASS128groups0errors, NR2
+PASS128groups0errors. MUT_EARLY=1 reproduces ungrouped response timing and FAILS
+with1080errors. Logs in read_group/. Reproduction script
+`tools/s81_vm/vm_read_group_gate.sh SRC OUT` (fleet host, wrapped in ot-run).
