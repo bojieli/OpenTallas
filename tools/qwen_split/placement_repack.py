@@ -54,6 +54,20 @@ def propose(dump):
     # Mirror the complete band-0 stack, retaining its original outer envelope.
     modified = copy.deepcopy(original)
     ix = {i['n']: i for i in modified}
+    # Keep the registered SU/VM seam and constant-group adjacencies intact,
+    # but translate their whole communicating cluster east into its measured
+    # spare area. This turns the 86.4um choke into a293.76um routing corridor.
+    # Compute the move from the target gap, so repeated application is stable.
+    f1right0=max(i['x']+i['w'] for i in modified if i['n'].startswith('sp_port_tiles_') and i['n'].endswith('_f1'))
+    old_gap=ix['sp_vector_memory']['x']-f1right0
+    delta=math.ceil(max(0.,293.76-old_gap-1e-6)/2.16)*2.16
+    if old_gap<0 or delta>207.36+.001:
+        raise ValueError('west VM channel too narrow: required central shift exceeds measured207.36um spare')
+    central={'sp_vector_memory','sp_su64_sfu','seq_su','xs_tap','tt_ctlm','tt_up4_0'}
+    for i in modified:
+        if i['n'] in central or i['n'].startswith(('cbuf_g_','crom_g_')):
+            i['x']=round(i['x']+delta,4)
+    parent=ix['tt_up4_0']
     lane, port, res = [ix[f'sp_{k}_0'] for k in ['band_lanes', 'port_tiles', 'res_ser']]
     if {i['o'] for i in [lane, port, res]} not in ({'R0'}, {'MX'}):
         raise ValueError('band-0 repack requires uniformly R0 or MX stack')
@@ -98,6 +112,8 @@ def propose(dump):
     return dict(schema='opentallas.qwen.placement-repack-projection.v1',
                 evidence_scope='legal source rectangle proposal; geometric lower bounds only',
                 die=dump['die'], baseline=baseline, band0_flip_only=flip_score,
+                central_translation_um=round(delta,4), routing_gap_before_um=round(old_gap,4),
+                routing_gap_after_um=round(ix['sp_vector_memory']['x']-f1right0,4),
                 candidate=metrics, candidate_leaves=leaves, placements=changed, retired=['tt_up4_0'],
                 baseline_geometry_errors=baseline_errors, candidate_geometry_errors=errors,
                 saved_critical_stages=baseline['critical_roundtrip_relays']-metrics['critical_roundtrip_relays'],

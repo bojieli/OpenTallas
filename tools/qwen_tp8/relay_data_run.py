@@ -23,7 +23,9 @@ fine = [dict(ax=r['ax'], pos=float(r['pos']), win=[float(q) for q in r['win']] i
              bits=float(r['bits']), usable=float(r['usable']), util=float(r['util']), fam={str(k): float(x) for k, x in r['fam'].items()})
         for r in A.fine(top=40)]
 try:
-    cost = G.relay_token_cost(v, m)
+    cost = (dict(qualified=False,cycles_per_ar_token=None,
+                 reason='OT_RELAY_SKIP: no placed relay stages; no performance evidence')
+            if (m.get('r21_relays') or {}).get('skipped') else G.relay_token_cost(v,m))
 except Exception as e:   # noqa: BLE001
     import traceback
     cost = dict(error=repr(e), trace=traceback.format_exc()[-1500:])

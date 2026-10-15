@@ -1,0 +1,28 @@
+{
+  "schema": "opentallas.qwen.relay-performance-illustration.v1",
+  "scope": "C9 historical total with upper-path geometric savings only; not a C17 compiled token result",
+  "base_cycles_per_token": 249431,
+  "ops_per_token": 217,
+  "ops_derivation": "36 layers * 6 ME ops + 1 LM head",
+  "historical_extra_cycles": 32116,
+  "metric": "1 - base_cycles / (base_cycles + extra_cycles)",
+  "historical_loss_pct": 11.40697645508565,
+  "narrow_projection": {
+    "saved_stages_per_op": 14,
+    "saved_cycles_per_token": 3038,
+    "remaining_extra_cycles": 29078,
+    "loss_pct": 10.440596174629901
+  },
+  "wide_projection": {
+    "saved_stages_per_op": 13,
+    "saved_cycles_per_token": 2821,
+    "remaining_extra_cycles": 29295,
+    "loss_pct": 10.510321964940484
+  },
+  "invalid_historical_link_credit": {
+    "cycles": -3312,
+    "warning": "Do not credit -46 stages * 72 link traversals: split-die KV lead already books this link."
+  },
+  "upper_path_endpoints": "max band0/1/2 -> upper reduction leaf + max upper leaf -> band0; rectangle lower bound, not full VM roundtrip",
+  "assumption": "Savings exposed on every dependent ME op; actual static schedule and route ages must prove this."
+}

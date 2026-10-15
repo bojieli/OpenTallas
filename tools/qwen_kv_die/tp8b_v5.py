@@ -1061,9 +1061,13 @@ def _wrap(v, m, G, peers):
         # Legacy frame clock planning cannot mirror M8 pins; these two frames are
         # replaced by closed M5 pins below, so construct their disposable frame R0.
         frame_model = dict(model)
-        frame_model['insts'] = [copy.copy(i) if i.master in ('qfd_su_cbuf_g', 'qfd_crom_g', 'qfd_tile_nl') else i for i in model['insts']]
+        frame_model['insts'] = [copy.copy(i) if i.master in ('qfd_su_cbuf_g', 'qfd_crom_g', 'qfd_tile_nl')
+                                or (SPLIT_COMPUTE and i.master.startswith('qfd_port_tiles_')) else i
+                                for i in model['insts']]
         for i in frame_model['insts']:
-            if i.master in ('qfd_su_cbuf_g', 'qfd_crom_g'):
+            if i.master in ('qfd_su_cbuf_g', 'qfd_crom_g') or (SPLIT_COMPUTE and i.master.startswith('qfd_port_tiles_')):
+                # Native source-exact static slab pins and49clock entries are
+                # rebuilt by final(); legacy M8 mirror planning is disposable.
                 i.orient = 'R0'
             elif i.master == 'qfd_tile_nl':
                 i.master = 'qfd_tile_nk'  # base frame shape; actual node-less ports below
@@ -1651,6 +1655,7 @@ def _wrap(v, m, G, peers):
                 band.w,band.h=881.28,1131.84
                 for pn,n,centre in (('tt',1538,750.0),('pw',513,520.0),('c',26,430.0),('f',1,460.0)):
                     band.ports[pn]=('face',n,'E','M4',centre,2)
+                    if pn not in band.order:band.order.append(pn)
                 band.order = list(dict.fromkeys(band.order + ['b0','lnk']))
                 band.obs_top = 7  # actual native cluster signalsM2-M7/PGM7, not a leaf-only M6 draft
             # v1.3 (compute lead r4): the tile parents' clock entries at their CLOSED children's measured clock-pin XY
@@ -1700,11 +1705,11 @@ def _wrap(v, m, G, peers):
                 if band is not None and 'pw' in band.ports:
                     # Four true registered quarter-valid outputs avoid an
                     # unrelayed long fanout from the legacy single valid pin.
-                    pwsp=band.ports.pop('pw');band.order.remove('pw')
+                    pwsp=band.ports.pop('pw');band.order[:]=[p for p in band.order if p!='pw']
                     for l in range(4):
                         centre=pwsp[4]+(l-1.5)*(129*.096+.384)
                         band.face(f'pw_l{l}',129,pwsp[2],pwsp[3],centre,2)
-                    fsp=band.ports.pop('f');band.order.remove('f')
+                    fsp=band.ports.pop('f');band.order[:]=[p for p in band.order if p!='f']
                     if fsp[0]=='face':
                         band.face('f_up',4,fsp[2],fsp[3],fsp[4],2)
                     elif fsp[0]=='pins':

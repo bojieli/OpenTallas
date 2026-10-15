@@ -253,6 +253,20 @@ def _dvm(v, m, put, rec, vm, su, xt, ty=None):
         h.master = 'qfd_xcol_w' if c < half else 'qfd_xcol_e'
         h.w, h.h = XCOL_WH[0] - S, XCOL_WH[1] - S
         h.y = round(v.dn(cy - XCOL_WH[1] / 2, v.GY), 4)
+    # The density-qualified1434.24um stack is taller than the old1313.28
+    # envelope. Move only its nearest corridor stations out into the existing
+    # tile-row space; shrinking the leaves or overlapping them is not legal.
+    head_by_column={int(h.name.split('_')[-1]):h for h in heads}
+    station_moves=[]
+    for station in m['insts']:
+        if station.kind!='station':continue
+        c=int(station.name.split('_')[1]);h=head_by_column[c]
+        if station.y<h.y+h.h and h.y<station.y+station.h:
+            old_y=station.y
+            station.y=(_snap(v,h.y+h.h+4.32,v.GY) if station.y+station.h/2>h.y+h.h/2
+                       else _snap(v,h.y-4.32-station.h,v.GY))
+            station_moves.append(dict(instance=station.name,old_y=old_y,new_y=station.y,dy_um=round(station.y-old_y,4)))
+    rec['dvm_station_clearance_moves']=station_moves
     rows = {}
     for i in m['insts']:
         if i.kind == 'station':
