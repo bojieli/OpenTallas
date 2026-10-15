@@ -98,6 +98,7 @@
    "why": "New category masters (ABI ck_cap_control_s / ck_cap_x34_s / ck_cap_x34_t) with no prior slot; die geometry reservation required before parent adoption"
   },
   "source": "results/physical/s81_vm_cap_native_audit_1015/audit_r1.json",
-  "why": "r1 view fails the native pin audit (capture 273.6 ps > 190 on 1458 inputs): square body puts capture flops ~170 um from their input pins; r2 changes the slot to a 43.2x345.6 flow-direction slice (same RTL)"
+  "why": "r1 view fails the native pin audit (capture 273.6 ps > 190 on 1458 inputs): square body puts capture flops ~170 um from their input pins; r2 changes the slot to a 43.2x345.6 flow-direction slice (same RTL)",
+  "contract": "S81 VM capture native geometry candidate F2 1015 (claude/s81-cap-pre-1015): ot_s81_vm_x34_t W542 slot 172.8x172.8 -> 43.2x345.6 flow-direction slice; SLOT CHANGE REQUEST logged el1011-s81die.log 2026-10-15"
  }
 }
