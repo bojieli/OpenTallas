@@ -1,0 +1,35 @@
+{
+  "scope": "Static HCPOST consumer implementation in progress; no native or physical qualification",
+  "source_base": "origin/main at worktree creation",
+  "canonical_scope_preserved": {
+    "HC_roots": 2417,
+    "BF": 519,
+    "PHW": 10
+  },
+  "implemented": {
+    "mapped_y_rows": "32actual128x256SRAM,2slotsx20rows,explicitreserve/row/tag writes andreads,noFIFO/credit/ready",
+    "POST_sequencer": "Fixedage command intake/POST issue/completion,missingrowfaultneverstretches20issues orcompletion",
+    "explicit_ages": "Compiled20x32bit per-row tables supportactual84/84/88collectivecadence; notconstantstride assumption",
+    "HCPOST_tile": "Actual2mappedSRAM +ot_dsrom_su_hcpost NG4 WIN0 WOUT0 ML5 AL4,measuredWB_LAT24,20actualHwritebacks",
+    "allkind_cseq_candidate": "Explicit command completion, norm scalar input/output ages and fixed VM response calendar implemented; only POST regression proved, native allkind profiles OPEN"
+  },
+  "verified": {
+    "rowstore": "40rows10240FP32wordsPASS,wrongtagmutantFAIL",
+    "cseq_POST": "Current allkind candidate POST20issues21..40done85PASS and missingrowmutantfault1 withidenticalcalendar",
+    "calendar": "ActualSRAM5120FP32wordsPASSfirst13last32done34,missingpulsefaultsamecalendar",
+    "HCPOST_tile": "320BF16outputsPASS,coefficientmutantFAIL80outputs,20writebacksfirst54last73unchanged",
+    "actual_producer_consumer_base": "ActualVM128SRAM+TP4\u2192consumer32SRAM PASS20rows5120FP32words first521last2141fault0; diagnostic componenttag0x456"
+  },
+  "open": [
+    "Corrected missingpulse mutant and base repeat compiling session90566/unit660748; first mutant missed sampling edge and survived, preserved",
+    "ReleasednativepayloadHCPOSTtilebench",
+    "Replaceallnativelegacycpin/ccf/crootFIFOs andadapterready sources usingstatictransport",
+    "Allkind native completion/VM/scalar ages and actual fullkind regressions stillOPEN",
+    "Canonicalcmd84toROMtransporttag32+20eventage programme mapping mustcomeexplicitcompilerimage",
+    "Actualtechnologyclockcensus/area:wide8192rowstorePINcapture/output aloneexceeds15kroot,soactualclock-owned256bitslicepartitionrequiredbeforephysicalsubmission",
+    "HCPOST NG4 arithmetic mayalsoexceed15kroot,mustmeasureandsplitrealoutputlaneownersbeforephysicalsubmission",
+    "NoSS/FF/DRC/CTS/phi-R/physicalpinreachqualification",
+    "NativeVMfixedlat12/writeK11prefix0..2 actualintegration",
+    "CanonicalFIELDproducer/fullnative2417composition"
+  ]
+}

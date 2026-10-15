@@ -9,7 +9,7 @@ module tb_s81_hc_cseq_static;
  ot_s81_hc_cseq_static #(.POST_FIRST(16),.CMD_LAT(2),.PD(40))u(
   .cck(clk),.crs(rn),.sk(clk),.srs(rn),.n_cmd_v(cv),.n_cmd_d(cd),.n_done_v(dv),.n_done_tag(dt),.n_inp(1'b1),
   .n_rq_v(rqv),.n_rq_row(rqr),.n_rs_v(2'd0),.n_rs_d(1024'd0),.n_flt(flt),.n_online(onl),.n_fcode(fc),
-  .n_yacc(ya),.n_y_tag(yt),.n_y_row(yr),.command_y_tag(32'h12345678),.n_ypop(ypop),.w_flt(1'b0),.e_flt(1'b0),
+  .n_yacc(ya),.n_y_tag(yt),.n_y_row(yr),.command_y_tag(32'h12345678),.command_done_age(32'd76),.command_ss_age(32'd0),.command_scalar_age(32'd0),.n_ypop(ypop),.w_flt(1'b0),.e_flt(1'b0),
   .w_fv(wv),.e_fv(ev),.c_fv(xv),.w_fd(wd),.e_fd(ed),.c_fd(xd),.ngo(ngo),.t_ssv(1'b0),.t_ss(32'd0),.t_flt(1'b0),
   .j_v(jv),.kind(kind),.base(base),.f_q(fq),.f_y(fy),.j_end(je),.fault(fault),.j_civ(jci),
   .x_wdone(1'b0),.x_pob(1'b0),.x_f1(1'b0),.x_f4(1'b0),.c_yfl(1'b0));

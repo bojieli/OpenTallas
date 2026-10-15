@@ -1,0 +1,4 @@
+HC_POST_STATIC_TILE rows20 writes20 first54 last73 fault0 errors80
+[1050000] %Fatal: tb_s81_hc_post_tile_static.sv:28: Assertion failed in tb_s81_hc_post_tile_static: HC_POST_STATIC_TILE FAIL
+%Error: rtl/dsrom_sys/s81_suhc/static/tb_s81_hc_post_tile_static.sv:28: Verilog $stop
+Aborting...

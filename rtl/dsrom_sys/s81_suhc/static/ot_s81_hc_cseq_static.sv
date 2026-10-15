@@ -1,12 +1,14 @@
 `timescale 1ns/1ps
 // Compiler-calendar successor candidate for the actual HC combine sequencer.
 // POST issue and completion never consult operand readiness or credits. Other
-// HC kinds retain exact arithmetic while their fixed completion gates are OPEN.
+// HC kinds use explicit compiled completion/VM/scalar ages; native profile binding remains OPEN.
 // Not production-integrated until canonical source/tag/VM schedules are proven.
 module ot_s81_hc_cseq_static #(
     parameter integer NG = 256, D = 5120, NCOL = 3, GS = 8, S_RD = 2, S_WR = 8, S_RT = 4, ML = 5, AL = 4,
     parameter integer MUT = 0, AMUT = 0, RF = 1, RT = 1, RW = 2, YD = 16, HALF = 0, RLY = 1, DW = 3 + RW,
-    parameter integer PIPE = 1, PD = 40, POST_FIRST = 16, CMD_LAT = 2,VM_LAT = 12
+    parameter integer PIPE = 1, PD = 40, POST_FIRST = 16, POST_STRIDE = 1, CMD_LAT = 2,VM_LAT = 12,
+    parameter integer POST_EXPLICIT = 0,
+    parameter [20*32-1:0] POST_AGES = 0
 ) (
     input  wire                 cck, crs, sk, srs,
     input  wire                 n_cmd_v,
@@ -25,6 +27,7 @@ module ot_s81_hc_cseq_static #(
     input wire [31:0] n_y_tag,
     input wire [4:0] n_y_row,
     input wire [31:0] command_y_tag,
+    input wire [31:0] command_done_age,command_ss_age,command_scalar_age,
     output reg                  n_ypop,
     input  wire                 w_flt, e_flt,
     output reg  [FVW-1:0]       w_fv, e_fv, c_fv,
@@ -85,11 +88,12 @@ module ot_s81_hc_cseq_static #(
     wire a_flt=1'b0;
     reg d_v;
     reg [7:0] d_t;
-    wire [116:0] command_pipe;
+    wire [212:0] command_pipe;
+    wire [31:0] done_age_q,ss_age_q,scalar_age_q;
     wire [31:0] command_tag_q;
-    ot_hdc_delay #(.W(117),.D(CMD_LAT),.RESET(1)) command_pin(
-      .clk(sk),.rst_n(rs_n),.d({command_y_tag,n_cmd_v,n_cmd_d}),.q(command_pipe));
-    assign {command_tag_q,e_v,e_d}=command_pipe;
+    ot_hdc_delay #(.W(213),.D(CMD_LAT),.RESET(1)) command_pin(
+      .clk(sk),.rst_n(rs_n),.d({command_done_age,command_ss_age,command_scalar_age,command_y_tag,n_cmd_v,n_cmd_d}),.q(command_pipe));
+    assign {done_age_q,ss_age_q,scalar_age_q,command_tag_q,e_v,e_d}=command_pipe;
     assign online=rs_n;
     wire [8:0] completion_pipe;
     ot_hdc_delay #(.W(9),.D(DW),.RESET(1)) completion_pin(
@@ -120,12 +124,27 @@ module ot_s81_hc_cseq_static #(
     reg [15:0] ci,cr,post_ob;
     reg [31:0] age;
     reg [31:0] expected_y_tag;
-    wire y_take=run && kind==K_POST && age>=POST_FIRST && age<POST_FIRST+NR;
-    wire [4:0] compiled_y_row=5'(age-POST_FIRST);
+    reg [31:0] job_done_age,job_ss_age,job_scalar_age;
+    wire fixed_ss=run&&kind==K_NORM&&age==job_ss_age;
+    wire fixed_scalar=run&&kind==K_NORM&&age==job_scalar_age;
+    wire [S_RD-1:0] expected_response;
+    ot_hdc_delay #(.W(S_RD),.D(VM_LAT+2),.RESET(1)) response_calendar(
+      .clk(sk),.rst_n(rs_n),.d(rq_v),.q(expected_response));
+    reg y_take;
+    reg [4:0] compiled_y_row;
+    always @(*)begin
+     y_take=0;compiled_y_row=0;
+     for(integer row=0;row<NR;row=row+1)begin
+      if(run&&kind==K_POST&&age==(POST_EXPLICIT?POST_AGES[row*32+:32]:POST_FIRST+row*POST_STRIDE))begin
+       y_take=1;compiled_y_row=5'(row);
+      end
+     end
+    end
+    localparam integer POST_LAST=POST_EXPLICIT?POST_AGES[(NR-1)*32+:32]:POST_FIRST+(NR-1)*POST_STRIDE;
 
     // ---------------------------------------------------------------- norm scalar tail
     wire [32:0] ssw;
-    ot_hdc_delay #(.W(33), .D(RW), .RESET(1)) u_rw (.clk(sk), .rst_n(rs_n), .d({ssq_v, ssq}), .q(ssw));
+    ot_hdc_delay #(.W(33), .D(RW), .RESET(1)) u_rw (.clk(sk), .rst_n(rs_n), .d({fixed_ss, ssq}), .q(ssw));
     function automatic integer tz(input integer x);
         integer t;
         begin t = 0; while (t < 31 && ((x >> t) & 1) == 0) t = t + 1; tz = t; end
@@ -164,10 +183,12 @@ module ot_s81_hc_cseq_static #(
             run <= 1'b0; kind <= 0; jslot <= 0; jtag <= 0; base <= 0; gsel <= 0; f_q <= 0; f_y <= 0; st0 <= 0;
             d_v <= 1'b0; d_t <= 0; fault <= 1'b0; fault_code <= 0;
             ci <= 0; cr <= 0; post_ob <= 0; rq_v <= 0; fv <= 0; ngo <= 1'b0; j_v <= 1'b0; j_end <= 1'b0; j_civ <= 1'b0;
-            pdc <= 0; pob_out <= 0;age<=0;expected_y_tag<=0;
+            pdc <= 0; pob_out <= 0;age<=0;expected_y_tag<=0;job_done_age<=0;job_ss_age<=0;job_scalar_age<=0;
         end else begin
             if(run)age<=age+1;
             if(e_v&&run)begin fault<=1;fault_code<=7;end
+            if(rs_v!=expected_response)begin fault<=1;fault_code<=9;end
+            if(run&&kind==K_NORM&&(ssq_v!=fixed_ss||rr_v!=fixed_scalar))begin fault<=1;fault_code<=10;end
             if(y_take && (!ya || y_tag_q!=expected_y_tag || y_row_q!=compiled_y_row))begin fault<=1;fault_code<=8;end
             d_v <= 1'b0; rq_v <= 0; fv <= 0; ngo <= 1'b0; j_v <= 1'b0; j_end <= 1'b0;
             j_civ <= (ci == NV + 1);
@@ -179,16 +200,17 @@ module ot_s81_hc_cseq_static #(
             if (take) begin
                 run <= 1'b1; kind <= c_arg[22:20]; jslot <= e_d[83]; jtag <= {e_d[83], e_d[6:0]};
                 base <= c_arg[13:0]; gsel <= c_arg[19:18]; f_q <= c_arg[14]; f_y <= c_arg[15]; st0 <= 1'b0;
-                ci <= 0; cr <= 0; post_ob <= 0; j_v <= 1'b1; pdc <= 0;age<=0;expected_y_tag<=command_tag_q;
+                ci <= 0; cr <= 0; post_ob <= 0; j_v <= 1'b1; pdc <= 0;age<=0;expected_y_tag<=command_tag_q;job_done_age<=done_age_q;job_ss_age<=ss_age_q;job_scalar_age<=scalar_age_q;
                 if (c_arg[23] || c_arg[22:20] > 3'd5 || (c_arg[22:20] == K_NORM && !c_arg[14] && !c_arg[15])) begin
                     fault <= 1'b1; fault_code <= 4'd3;
                 end
             end
-            // HSTORE / NORM: the writer's count (ot_s81_hc_crx) ends the job
-            if (wd_q && run && (kind == K_HSTORE || kind == K_NORM) && !fault) begin
-                run <= 1'b0; d_v <= 1'b1; d_t <= (MUT == 5) ? (jtag ^ 8'h01) : jtag; j_end <= 1'b1;
+            // Every kind ends at its compiled age, regardless of faults/returns.
+            if(run&&age==job_done_age)begin
+             run<=0;d_v<=1;d_t<=jtag;j_end<=1;
+             if((kind==K_HSTORE||kind==K_NORM)&&!wd_q)begin fault<=1;fault_code<=11;end
             end
-            if (rr_v) begin fv[S_RD + 3] <= 1'b1; fd[O_R +: 32] <= rr_; end
+            if (fixed_scalar) begin fv[S_RD + 3] <= 1'b1; fd[O_R +: 32] <= rr_; end
             if (PIPE != 0) begin
                 // outstanding write-back events: + 1 a beat issued (with write-back), - 1 an event returned
                 pob_out <= pob_out + ((run && !fault && kind == K_POST && y_take) ? 16'd1 : 16'd0)
@@ -212,15 +234,13 @@ module ot_s81_hc_cseq_static #(
                         fd[O_RS] <= (kind == K_HLOAD) ? hs : jslot;
                         fd[O_RG +: 2] <= gsel;
                         for (s = 0; s < S_RD; s = s + 1)
-                            if (rs_v[s]) begin
+                            if (expected_response[s]) begin
                                 fv[s] <= 1'b1; fd[O_RC + 16 * s +: 16] <= cc; fd[O_D + 512 * s +: 512] <= rs_d[512 * s +: 512];
                                 if (kind == K_COEF && cc == 1) cf_eps[jslot] <= rs_d[512 * s + 256 +: 32];
                                 cc = cc + 1;
                             end
                         cr <= cc;
-                        if (cc == ((kind == K_HLOAD) ? HROWS : (kind == K_COEF) ? 2 : GROWS)) begin
-                            run <= 1'b0; d_v <= 1'b1; d_t <= (MUT == 5) ? (jtag ^ 8'h01) : jtag; j_end <= 1'b1;
-                        end
+                        // Response count checks data identity only. It never ends a job.
                     end
                 end
                 K_HSTORE: if (!st0) begin fv[S_RD + 4] <= 1'b1; fd[O_HS] <= hs; st0 <= 1'b1; end
@@ -231,13 +251,10 @@ module ot_s81_hc_cseq_static #(
                         fd[O_PB + 4 +: 16] <= ci;
                         ci <= ci + 1;
                     end
-                    if(age==POST_FIRST+NR+PD)begin
-                     run<=0;d_v<=1;d_t<=jtag;j_end<=1;
-                    end
                 end
                 K_NORM: begin
                     if (MUT == 3) begin
-                        run <= 1'b0; d_v <= 1'b1; d_t <= jtag; j_end <= 1'b1;
+                        fault<=1;fault_code<=12;
                     end else if (ci == 0) begin
                         fv[S_RD + 1] <= 1'b1; ngo <= 1'b1; n_eps <= cf_eps[jslot];
                         fd[O_NG] <= hs; fd[O_NG + 1] <= jslot; fd[O_NG + 2 +: 2] <= gsel; fd[O_NG + 4] <= f_q; fd[O_NG + 5] <= f_y;

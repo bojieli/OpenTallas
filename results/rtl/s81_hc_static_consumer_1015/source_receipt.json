@@ -1,0 +1,26 @@
+{
+  "updated_utc": "2026-10-15T08:54:33.612876+00:00",
+  "scope": "Mechanism component evidence only; no canonical production or physical qualification",
+  "source_sha256": {
+    "rtl/dsrom_sys/s81_suhc/static/ot_s81_hc_rows_static.sv": "5f6992f3d3861f6c5b5fef462171507fb204bf09e61dc343b8fdc958fc15e369",
+    "rtl/dsrom_sys/s81_suhc/static/tb_s81_hc_post_tile_static.sv": "28cf61abaeedfcc5b0342b8b2e95be1547e31b13a6d05be829ddf23532cc9b51",
+    "rtl/dsrom_sys/s81_suhc/static/ot_s81_hc_cseq_static.sv": "c00da87c8539d5d928d496a3ce854c55f37c1afd833074af0f0eed5e6a88deb0",
+    "rtl/dsrom_sys/s81_suhc/static/ot_s81_hc_y_calendar.sv": "9845dd6939b40528757521d852570782cff834a91563b8f1ca213354a526133b",
+    "rtl/dsrom_sys/s81_suhc/static/tb_s81_hc_y_calendar.sv": "b29a8353c25dca5f0a31d5397651665b162c67e7a0a1eedff3e114700fa1b98a",
+    "rtl/dsrom_sys/s81_suhc/static/tb_s81_hc_cseq_static.sv": "5e01626eceebb440e783782ba26cf305718c86ce921aed6a0b0b7865e0686652",
+    "rtl/dsrom_sys/s81_suhc/static/tb_s81_hc_rows_static.sv": "1764f4ad2bc83338af5283b0e7d742b6770215004a85b1e27189433fc467b8bf",
+    "rtl/dsrom_sys/s81_suhc/static/ot_s81_hc_post_tile_static.sv": "8ab30680bc6d3a2483688b993ed07aecd716f77d43fef923739af269267e97ee",
+    "results/rtl/s81_hc_static_consumer_1015/producer_exact_profile.json": "3cc915d617936bd31e7dce0d11e79329e903d1d0c65d484a81e9d9c9f4a13e35",
+    "results/rtl/s81_hc_static_consumer_1015/cseq_sources.json": "f329aea3af15d96b2aaf794933d97fb60c5eb1a795e1b04e106853ff27380d8e",
+    "results/rtl/s81_hc_static_consumer_1015/post_sources.json": "799065425ac287eccd06531819fa2eea982e9e4cc3e6dc67a5c0656b26f6f4b1",
+    "results/rtl/s81_hc_static_consumer_1015/calendar_before_build.json": "70a09fb49e91c49776cf49f71c301fc21ac64b18abc372e931eb876a4fcf29bc",
+    "results/rtl/s81_hc_static_consumer_1015/model_before_build.json": "d598a393cd19e368eb560f24034fe7dfc4b4a40b304e32c90360a9da7593257e",
+    "results/rtl/s81_hc_static_consumer_1015/post_tile_before_build.json": "af1bcd1b5b01c224d0dcb8702b038cf148ba8495e83bd33271d68dd2b38719de",
+    "results/rtl/s81_hc_static_consumer_1015/status.json": "61266884bece0338d6f09384bfbfc720f32946f74b000ee335a50b0d536719f9",
+    "results/rtl/s81_hc_static_consumer_1015/collective_component_profile.json": "2650f9f7cd7776514558f24aaf9ca69d79fbe4ba627c9607a08737691d965034"
+  },
+  "actual_producer_snapshot": "/srv/opentallas-scratch/codex/s81-hc-producer-consumer-1015",
+  "note": "Flat snapshot preserves actual pre-externalwire assembler dut.row_tag FF; eca67dfcc later exposes same FF without added cycle",
+  "failed_mutant": "First e1109 mask missed synchronous sample; retained no qualification from surviving mutant; corrected active e1000..1200 pin window",
+  "cseq_profile_scope": "POST observed21..40completion85 only; explicit-age sequencer allkind code is candidate pending actual native VM/scalar profiles"
+}

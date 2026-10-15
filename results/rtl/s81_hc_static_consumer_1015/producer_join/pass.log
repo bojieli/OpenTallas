@@ -1,0 +1,7 @@
+HC_REAL_CONSUMER calendar rows20 first521 last2141 fault0
+HC_REAL_CONSUMER PASS actualVM128SRAM actualTP4HC actualconsumer32SRAM 5120FP32words
+PASS fullstatic slab actual128SRAM rows=498 fp32_bits_checked=7968 HCrows=20 done=2 WFC=1 host=1
+- tb_s81_static_collective_slab.sv:182: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 3us; walltime 23.792 s; speed 110.420 ns/s
+- Verilator: cpu 23.788 s on 1 threads; allocated 74 MB
