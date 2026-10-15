@@ -3,13 +3,10 @@
 // Compiler-reserved quadrant transport successor (HANDOFF 0an).
 // Sources: SU[INJ], rail[NPT], VM[DEL], ring-result[1].
 // Sinks: rail[NPT], SU[DEL], RGX[DEL], TKM[DEL], ring-partial[1].
-// A source sampled at edge C is available to a sink instruction at C+1;
-// that instruction produces its registered pin output immediately after C+1.
-// Each instruction is consumed at its edge even on a schedule fault. Nothing
-// stalls, retries, grants, queues or changes issue timing according to data.
-// Separate input/output roots each remain below 15k sinks at production shape.
-// The compiler/controller supplying the cycle words is a separate real block;
-// this transport is not a replacement for TOPK/reduction arithmetic.
+// Source sampled C -> registered output C+1. Both leaf clock pins are supplied
+// by the die clock tree at their own phi-R; they share the logical cycle phase.
+// Faults never stall/retry, and no payload-dependent arbitration exists.
+// Actual hardenable capture and switch leaves have separate clock roots.
 module ot_hgi_coll_qslots #(
     parameter integer NPT=3, INJ=2, DEL=4, PWT=545,
     parameter integer NS=INJ+NPT+DEL+1,
@@ -23,24 +20,58 @@ module ot_hgi_coll_qslots #(
     input wire [NS-1:0] capture_slot,
     input wire [ND-1:0] sink_slot,
     input wire [ND*SELW-1:0] sink_select,
-    output reg [ND-1:0] dst_v,
-    output reg [ND*PWT-1:0] dst_d,
+    output wire [ND-1:0] dst_v,
+    output wire [ND*PWT-1:0] dst_d,
     output wire fault,
-    output reg [3:0] fault_kind
+    output wire [3:0] fault_kind
 );
-    reg [NS*PWT-1:0] captured;
-    reg [NS-1:0] captured_slot;
-    reg ingress_fault;
-    // Payload is unreset and only read when its compiler reservation is valid.
-    always @(posedge clk_capture) captured <= src_d;
-    always @(posedge clk_capture or negedge rst_n)
-        if (!rst_n) begin captured_slot <= '0; ingress_fault <= 1'b0; end
+    wire [NS*PWT-1:0] captured;
+    wire [NS-1:0] captured_slot;
+    wire ingress_fault, select_fault, unavailable_fault;
+    ot_hgi_coll_qslots_capture #(.NS(NS),.PWT(PWT)) u_capture(
+        .clk(clk_capture),.rst_n(rst_n),.src_v(src_v),.src_d(src_d),.capture_slot(capture_slot),
+        .captured(captured),.captured_slot(captured_slot),.fault(ingress_fault));
+    ot_hgi_coll_qslots_output #(.NS(NS),.ND(ND),.PWT(PWT),.SELW(SELW),.MUT_SELECT(MUT_SELECT)) u_output(
+        .clk(clk_output),.rst_n(rst_n),.captured(MUT_PIN_LATENCY!=0?src_d:captured),
+        .captured_slot(captured_slot),.sink_slot(sink_slot),.sink_select(sink_select),
+        .dst_v(dst_v),.dst_d(dst_d),.select_fault(select_fault),.unavailable_fault(unavailable_fault));
+    assign fault=ingress_fault | select_fault | unavailable_fault;
+    assign fault_kind={1'b0,unavailable_fault,select_fault,ingress_fault};
+endmodule
+
+// Payload is not reset. Its compiler reservation must be present before use.
+module ot_hgi_coll_qslots_capture #(
+    parameter integer NS=10,PWT=545
+)(
+    input wire clk,rst_n,
+    input wire [NS-1:0] src_v,capture_slot,
+    input wire [NS*PWT-1:0] src_d,
+    output reg [NS*PWT-1:0] captured,
+    output reg [NS-1:0] captured_slot,
+    output reg fault
+);
+    always @(posedge clk) captured <= src_d;
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) begin captured_slot <= '0; fault <= 1'b0; end
         else begin
             captured_slot <= capture_slot;
-            if (src_v != capture_slot) ingress_fault <= 1'b1;
+            if (src_v != capture_slot) fault <= 1'b1;
         end
-    reg select_fault, unavailable_fault;
-    always @(posedge clk_output or negedge rst_n)
+endmodule
+
+module ot_hgi_coll_qslots_output #(
+    parameter integer NS=10,ND=16,PWT=545,SELW=$clog2(NS),MUT_SELECT=0
+)(
+    input wire clk,rst_n,
+    input wire [NS*PWT-1:0] captured,
+    input wire [NS-1:0] captured_slot,
+    input wire [ND-1:0] sink_slot,
+    input wire [ND*SELW-1:0] sink_select,
+    output reg [ND-1:0] dst_v,
+    output reg [ND*PWT-1:0] dst_d,
+    output reg select_fault,unavailable_fault
+);
+    always @(posedge clk or negedge rst_n)
         if (!rst_n) begin dst_v <= '0; select_fault <= 0; unavailable_fault <= 0; end
         else begin
             dst_v <= sink_slot;
@@ -51,8 +82,8 @@ module ot_hgi_coll_qslots #(
                 end
             end
         end
-    // Constant-source AND/OR, no data-dependent arbitration or shared bus grants.
-    always @(posedge clk_output) begin : outputs
+    // Constant-source AND/OR: no dynamic arbitration or shared-bus grant.
+    always @(posedge clk) begin : outputs
         reg [PWT-1:0] selected;
         integer sel;
         for (integer d=0;d<ND;d=d+1) begin
@@ -60,11 +91,9 @@ module ot_hgi_coll_qslots #(
             sel=int'(sink_select[d*SELW+:SELW]);
             if (MUT_SELECT!=0 && d==0) sel=(sel+1)%NS;
             for (integer s=0;s<NS;s=s+1)
-                if (s==sel) selected=selected | (MUT_PIN_LATENCY!=0 ? src_d[s*PWT+:PWT] : captured[s*PWT+:PWT]);
+                if (s==sel) selected=selected | captured[s*PWT+:PWT];
             dst_d[d*PWT+:PWT] <= selected;
         end
     end
-    assign fault=ingress_fault | select_fault | unavailable_fault;
-    always @* fault_kind={1'b0,unavailable_fault,select_fault,ingress_fault};
 endmodule
 `default_nettype wire
