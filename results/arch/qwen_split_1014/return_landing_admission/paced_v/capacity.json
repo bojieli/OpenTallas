@@ -1806,5 +1806,41 @@
       "nominal_consumer_span_core_edges": 3960
     }
   ],
-  "infeasible_groups": 0
+  "infeasible_groups": 0,
+  "canonical_pair_windows": [
+    {
+      "phase_ps": 137,
+      "pair": 0,
+      "first_request_min_core": 1999,
+      "first_request_max_core": 1953,
+      "slack_core_edges": -46,
+      "feasible": false
+    },
+    {
+      "phase_ps": 137,
+      "pair": 1,
+      "first_request_min_core": 1999,
+      "first_request_max_core": 1953,
+      "slack_core_edges": -46,
+      "feasible": false
+    },
+    {
+      "phase_ps": 637,
+      "pair": 0,
+      "first_request_min_core": 1998,
+      "first_request_max_core": 1953,
+      "slack_core_edges": -45,
+      "feasible": false
+    },
+    {
+      "phase_ps": 637,
+      "pair": 1,
+      "first_request_min_core": 1998,
+      "first_request_max_core": 1953,
+      "slack_core_edges": -45,
+      "feasible": false
+    }
+  ],
+  "infeasible_canonical_pairs": 4,
+  "canonical_pair_constraint": "actual two V issuers: group request offset = group + 128*(stack//2), pair=stack%2"
 }

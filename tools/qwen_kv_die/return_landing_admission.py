@@ -87,24 +87,40 @@ def main():
                             'K group II1; V group 16 requests spaced8, next burst256',
                             'no scheduling from actual return valid or readiness'],
                groups=rows, infeasible_groups=sum(not r['feasible'] for r in rows))
-    if args.calendar_directory:
-        if out['infeasible_groups']:
-            raise ValueError('refusing to compile requests: landing lifetime infeasible')
-        args.calendar_directory.mkdir(parents=True, exist_ok=True)
-        for phase in (137, 637):
-            lines = []
-            for stack in range(4):
-                for group in range(8):
-                    bb = {r['kind']: (r['first_request_min_core'] + r['first_request_max_core']) // 2
-                          for r in rows if r['phase_ps'] == phase and r['stack'] == stack and r['group'] == group}
-                    lines.append(f"{bb['K']} {bb['V']}")
-            (args.calendar_directory / f'p{phase}.mem').write_text('\n'.join(lines) + '\n')
+    pairs = []
+    for phase in (137, 637):
+        for pair in (0, 1):
+            rr = [r for r in rows if r['phase_ps'] == phase and r['kind'] == 'V' and r['stack'] % 2 == pair]
+            lo = max(r['first_request_min_core'] - (128 * (r['stack'] // 2) + r['group']) for r in rr)
+            hi = min(r['first_request_max_core'] - (128 * (r['stack'] // 2) + r['group']) for r in rr)
+            pairs.append(dict(phase_ps=phase, pair=pair, first_request_min_core=lo,
+                              first_request_max_core=hi, slack_core_edges=hi-lo, feasible=lo<=hi))
+    out['canonical_pair_windows'] = pairs
+    out['infeasible_canonical_pairs'] = sum(not p['feasible'] for p in pairs)
+    out['canonical_pair_constraint'] = 'actual two V issuers: group request offset = group + 128*(stack//2), pair=stack%2'
     with open(args.output, 'w') as f:
         json.dump(out, f, indent=2)
         f.write('\n')
+    if args.calendar_directory:
+        if out['infeasible_groups'] or out['infeasible_canonical_pairs']:
+            raise ValueError('refusing to compile requests: group lifetime or shared-pair calendar infeasible')
+        args.calendar_directory.mkdir(parents=True, exist_ok=True)
+        for phase in (137, 637):
+            kr = [r for r in rows if r['phase_ps'] == phase and r['kind'] == 'K']
+            klo = max(r['first_request_min_core'] for r in kr)
+            khi = min(r['first_request_max_core'] for r in kr)
+            if klo > khi:
+                raise ValueError('common K request start infeasible')
+            kb = (klo + khi) // 2
+            vp = {r['pair']: (r['first_request_min_core'] + r['first_request_max_core']) // 2
+                  for r in pairs if r['phase_ps'] == phase}
+            lines = [f"{kb} {vp[stack % 2] + 128 * (stack // 2) + group}"
+                     for stack in range(4) for group in range(8)]
+            (args.calendar_directory / f'p{phase}.mem').write_text('\n'.join(lines) + '\n')
     print(json.dumps(dict(groups=len(rows), infeasible_groups=out['infeasible_groups'],
                           K_slack=min(r['slack_core_edges'] for r in rows if r['kind']=='K'),
-                          V_slack=min(r['slack_core_edges'] for r in rows if r['kind']=='V'))))
+                          V_slack=min(r['slack_core_edges'] for r in rows if r['kind']=='V'),
+                          canonical_pair_slack=min(r['slack_core_edges'] for r in pairs))))
 
 
 if __name__ == '__main__':

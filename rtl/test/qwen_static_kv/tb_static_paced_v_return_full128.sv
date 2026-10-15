@@ -3,7 +3,7 @@
 // each HOST native WR/readback then K256/V256 without resetting. Discovery is
 // a separate executable whose frozen fixture is replayed by PROFILE0. Return
 // calendar is reservation-only; production physical phases/source/token OPEN.
-module qkd_paced_v_return_cell #(parameter integer PC=0, STACK=0, DISCOVERY=0, HOST_DUAL=0)(output reg done=0, output wire [327:0] phy_command, output wire phy_clk);
+module qkd_paced_v_return_cell #(parameter integer PC=0, STACK=0, DISCOVERY=0, HOST_DUAL=0, V_PERIOD=8)(output reg done=0, output wire [327:0] phy_command, output wire phy_clk);
  localparam CYCLES=6500,RL=23;
  // Source qkd_ctrl_pc_host_static: pc_q and dsel run throughout reset;
  // hr_q takes the release edge, then dcnt needs dtab[pc]+1 edges to hgo.
@@ -163,7 +163,7 @@ module qkd_paced_v_return_cell #(parameter integer PC=0, STACK=0, DISCOVERY=0, H
     // PROFILE2 intersects these advance-compiled request pins with actual
     // JEDEC legality. Only its frozen accepted slots enter PROFILE0 replay.
     if(phase==0)begin
-     reserved=(t<1300+PROGRAM_SHIFT)||((t-(1300+PROGRAM_SHIFT))%7==0);
+     reserved=(t<1300+PROGRAM_SHIFT)||((t-(1300+PROGRAM_SHIFT))%V_PERIOD==0);
      sr_reserved=1;wr_reserved=1;
     end
     else begin reserved=slots[t];sr_reserved=srslots[t];wr_reserved=wrslots[t];end
@@ -234,7 +234,7 @@ module qkd_paced_v_return_cell #(parameter integer PC=0, STACK=0, DISCOVERY=0, H
  end
 endmodule
 
-module tb_static_paced_v_return_full128 #(parameter integer DISCOVERY=0,HOST_DUAL=1,NPCS=128);
+module tb_static_paced_v_return_full128 #(parameter integer DISCOVERY=0,HOST_DUAL=1,NPCS=128,V_PERIOD=8);
  wire [NPCS-1:0] done;
  wire [127:0] phy_clk;wire [327:0] phy_command[0:127];
  integer paired_row_conflicts=0,paired_column_conflicts=0,phy_edges=0;
@@ -248,7 +248,7 @@ module tb_static_paced_v_return_full128 #(parameter integer DISCOVERY=0,HOST_DUA
   phy_edges++;
  end
  for(genvar i=0;i<NPCS;i++)begin:pc
-  qkd_paced_v_return_cell #(.PC(i%32),.STACK(i/32),.DISCOVERY(DISCOVERY),.HOST_DUAL(HOST_DUAL)) cell_i(.done(done[i]),.phy_clk(phy_clk[i]),.phy_command(phy_command[i]));
+  qkd_paced_v_return_cell #(.PC(i%32),.STACK(i/32),.DISCOVERY(DISCOVERY),.HOST_DUAL(HOST_DUAL),.V_PERIOD(V_PERIOD)) cell_i(.done(done[i]),.phy_clk(phy_clk[i]),.phy_command(phy_command[i]));
  end
  always @(done)if(&done)begin
   $display("AUDIT pairedPC sharedbus simultaneous row%0d column%0d edges%0d DDRSerializationOPEN",paired_row_conflicts,paired_column_conflicts,phy_edges);
