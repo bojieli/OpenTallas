@@ -16343,3 +16343,19 @@ def hbm_idx_static_query_model():
         scheduling='compiler issues every block and head slot; missing/duplicate/early slot faults, no waiting',
         price='immutable query/INDEX prices unchanged; fixed compiler transport still must be measured',
         qualification='OPEN real query exactness + mutants, CTS, slot, native parent composition')
+
+
+def hbm_idx_static_score_engine_model():
+    """Exact four-key engine: static launches and returns replace output FIFO."""
+    return dict(schema='opentallas.hbm-idx-static-score-engine.v1',
+        heads=32, keys_per_edge=4, block_dots_per_edge=4*32*4,
+        scalar_products_per_edge=4*32*128,
+        replicas=dict(engines_per_scorer=4,scorers_per_die=4,hslices_per_engine=128),
+        latency_edges=dict(chunk=106,tail=16,pin=1,launch_to_return=123),
+        communication_bits_per_edge=dict(key=2176,query=568,result=72),
+        clock_roots=dict(hslice=128,chunk=4,tail=1,control=1),
+        buffering='none: fixed launch/return slots; retained keep pipeline424bits',
+        arithmetic='unchanged golden32head/fourblock order, BF16 head products and FP32 tree',
+        area='arithmetic census unchanged; remove credit/outputFIFO; physical successor UNQUALIFIED',
+        compiler='query settle and all leaf reset readiness validated as faults, never wait/gate launch',
+        price='INDEX immutable price unchanged; II1 engine necessary but not wholeparent qualification')
