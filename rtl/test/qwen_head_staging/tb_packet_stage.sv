@@ -5,8 +5,14 @@ module tb_packet_stage;
  always #0.416667 clk=~clk;
  reg [W-1:0] d=0;
  wire [W-1:0] mid,qa,qb,oa,ob;
+`ifdef QKH_PACKET_DUT
+ `QKH_PACKET_DUT #(.MUT(MUT)) ingress(.clk(clk),.rst_n(rst_n),.d(d),.q(mid));
+ localparam integer FORK_MUT=0;
+`else
  ot_qkh_packet_pipe #(.W(W)) ingress(.clk(clk),.rst_n(rst_n),.d(d),.q(mid));
- ot_qkh_packet_fork2 #(.W(W),.MUT(MUT)) fork_stage(.clk0(clk),.clk1(clk),.rst_n(rst_n),.d(mid),.q0(qa),.q1(qb));
+ localparam integer FORK_MUT=MUT;
+`endif
+ ot_qkh_packet_fork2 #(.W(W),.MUT(FORK_MUT)) fork_stage(.clk0(clk),.clk1(clk),.rst_n(rst_n),.d(mid),.q0(qa),.q1(qb));
  ot_qkh_packet_pipe #(.W(W)) leaf_a(.clk(clk),.rst_n(rst_n),.d(qa),.q(oa));
  ot_qkh_packet_pipe #(.W(W)) leaf_b(.clk(clk),.rst_n(rst_n),.d(qb),.q(ob));
  reg [W-1:0] hist0=0,hist1=0,hist2=0;

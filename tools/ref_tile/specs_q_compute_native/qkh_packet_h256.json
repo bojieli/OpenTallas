@@ -1,15 +1,13 @@
 {
   "name": "qkh_packet_h256",
-  "top": "ot_qkh_packet_pipe",
+  "top": "qkh_packet_h256",
   "kind": "tile",
   "sources": [
     "rtl/qwen_sys/head_staging_20261015/ot_qkh_packet_stage.sv",
-    "rtl/lib/ot_rst_relay.sv"
+    "rtl/lib/ot_rst_relay.sv",
+    "rtl/qwen_sys/head_staging_20261015/qkh_packet_masters.sv"
   ],
-  "params": {
-    "W": 256,
-    "MUT": 0
-  },
+  "params": {},
   "clock_port": "clk",
   "reset_ports": [
     "rst_n"
@@ -52,11 +50,11 @@
       "v": "M5"
     }
   },
-  "structural_change": "New actual fixed-cycle ECTL/head and score/ECTL pin stage; actual input capture and output launch flops; no enable/ready/credit. Skinny slot approved by q_kv_die; parent global per-bit wires and composed cycle ages remain separately gated.",
+  "structural_change": "Actual Q519 split into263b metadata+lowerQ and256b upperQ banks at SAMEfixededge, eachrealownclockroot. LiteralspreadM4/M5pins+PGavoidance frozen beforeCTS. H519failedrecipe2posthookarea755.7>core653.2; bitbanking preservesallQbits/throughput, no density or timing waiver.",
   "job": {
     "owner": "Codex:q_compute_elem_head_stage",
     "branch": "codex/q-compute-native-parents-1014",
-    "tag": "p1",
+    "tag": "bp1",
     "purpose": "Native actual packet staging for classified ECTL/head die timing failure",
     "extra_paths": [
       "physical/qwen_head_staging_1015",
@@ -65,7 +63,7 @@
     "benches": [
       {
         "name": "fixed_packet_0",
-        "cmd": "bash physical/qwen_head_staging_1015/bench.sh {RUN}/bench/packet_0 256 0",
+        "cmd": "bash physical/qwen_head_staging_1015/bench.sh {RUN}/bench/packet_0 256 0 qkh_packet_h256",
         "expect": "pass",
         "threads": 1,
         "peak_ram_gb": 1,
@@ -76,7 +74,7 @@
       },
       {
         "name": "fixed_packet_1",
-        "cmd": "bash physical/qwen_head_staging_1015/bench.sh {RUN}/bench/packet_1 256 1",
+        "cmd": "bash physical/qwen_head_staging_1015/bench.sh {RUN}/bench/packet_1 256 1 qkh_packet_h256",
         "expect": "fail",
         "threads": 1,
         "peak_ram_gb": 1,
@@ -87,7 +85,7 @@
       },
       {
         "name": "fixed_packet_2",
-        "cmd": "bash physical/qwen_head_staging_1015/bench.sh {RUN}/bench/packet_2 256 2",
+        "cmd": "bash physical/qwen_head_staging_1015/bench.sh {RUN}/bench/packet_2 256 2 qkh_packet_h256",
         "expect": "fail",
         "threads": 1,
         "peak_ram_gb": 1,
@@ -99,5 +97,16 @@
     ],
     "views_to": "physical/ref_tile/qkh_packet_h256/views",
     "record_to": "results/rtl/ref_tile/qkh_packet_h256"
+  },
+  "io_tcl": "physical/ref_tile/qkh_packet_h256/assigned_pins.tcl",
+  "pin_ranges": {
+    "d": [
+      5.436,
+      59.388
+    ],
+    "q": [
+      5.436,
+      59.388
+    ]
   }
 }

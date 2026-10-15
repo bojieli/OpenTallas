@@ -1,15 +1,13 @@
 {
   "name": "qkh_packet_v16",
-  "top": "ot_qkh_packet_pipe",
+  "top": "qkh_packet_v16",
   "kind": "tile",
   "sources": [
     "rtl/qwen_sys/head_staging_20261015/ot_qkh_packet_stage.sv",
-    "rtl/lib/ot_rst_relay.sv"
+    "rtl/lib/ot_rst_relay.sv",
+    "rtl/qwen_sys/head_staging_20261015/qkh_packet_masters.sv"
   ],
-  "params": {
-    "W": 16,
-    "MUT": 0
-  },
+  "params": {},
   "clock_port": "clk",
   "reset_ports": [
     "rst_n"
@@ -56,7 +54,7 @@
   "job": {
     "owner": "Codex:q_compute_elem_head_stage",
     "branch": "codex/q-compute-native-parents-1014",
-    "tag": "p1",
+    "tag": "bp1",
     "purpose": "Native actual packet staging for classified ECTL/head die timing failure",
     "extra_paths": [
       "physical/qwen_head_staging_1015",
@@ -65,7 +63,7 @@
     "benches": [
       {
         "name": "fixed_packet_0",
-        "cmd": "bash physical/qwen_head_staging_1015/bench.sh {RUN}/bench/packet_0 16 0",
+        "cmd": "bash physical/qwen_head_staging_1015/bench.sh {RUN}/bench/packet_0 16 0 qkh_packet_v16",
         "expect": "pass",
         "threads": 1,
         "peak_ram_gb": 1,
@@ -76,7 +74,7 @@
       },
       {
         "name": "fixed_packet_1",
-        "cmd": "bash physical/qwen_head_staging_1015/bench.sh {RUN}/bench/packet_1 16 1",
+        "cmd": "bash physical/qwen_head_staging_1015/bench.sh {RUN}/bench/packet_1 16 1 qkh_packet_v16",
         "expect": "fail",
         "threads": 1,
         "peak_ram_gb": 1,
@@ -87,7 +85,7 @@
       },
       {
         "name": "fixed_packet_2",
-        "cmd": "bash physical/qwen_head_staging_1015/bench.sh {RUN}/bench/packet_2 16 2",
+        "cmd": "bash physical/qwen_head_staging_1015/bench.sh {RUN}/bench/packet_2 16 2 qkh_packet_v16",
         "expect": "fail",
         "threads": 1,
         "peak_ram_gb": 1,

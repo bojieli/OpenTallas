@@ -1,7 +1,7 @@
 {
  "schema": "opentallas.ref_tile.floorplan.v1",
  "name": "qkh_packet_h256",
- "top": "ot_qkh_packet_pipe",
+ "top": "qkh_packet_h256",
  "kind": "tile",
  "die": [
   0,
@@ -46,6 +46,7 @@
  "referenced": [
   "rtl/qwen_sys/head_staging_20261015/ot_qkh_packet_stage.sv",
   "rtl/lib/ot_rst_relay.sv",
+  "rtl/qwen_sys/head_staging_20261015/qkh_packet_masters.sv",
   "physical/ref_tile/qkh_packet_h256/kit.env",
   "physical/ref_tile/qkh_packet_h256/clock.sdc",
   "physical/ref_tile/qkh_packet_h256/signoff.sdc",
@@ -67,6 +68,7 @@
   "physical/qwen_die_masters/post_plain.tcl",
   "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
   "physical/common_flow/grt_macro_top_layer.tcl",
+  "physical/ref_tile/qkh_packet_h256/assigned_pins.tcl",
   "physical/qwen_die_masters/io_flop_at_pins.tcl",
   "physical/qwen_die_masters/out_flop_release.tcl",
   "physical/dsrom_window_source/leaf_iohold.tcl",

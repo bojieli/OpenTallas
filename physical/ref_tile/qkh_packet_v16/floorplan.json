@@ -1,7 +1,7 @@
 {
  "schema": "opentallas.ref_tile.floorplan.v1",
  "name": "qkh_packet_v16",
- "top": "ot_qkh_packet_pipe",
+ "top": "qkh_packet_v16",
  "kind": "tile",
  "die": [
   0,
@@ -46,6 +46,7 @@
  "referenced": [
   "rtl/qwen_sys/head_staging_20261015/ot_qkh_packet_stage.sv",
   "rtl/lib/ot_rst_relay.sv",
+  "rtl/qwen_sys/head_staging_20261015/qkh_packet_masters.sv",
   "physical/ref_tile/qkh_packet_v16/kit.env",
   "physical/ref_tile/qkh_packet_v16/clock.sdc",
   "physical/ref_tile/qkh_packet_v16/signoff.sdc",
