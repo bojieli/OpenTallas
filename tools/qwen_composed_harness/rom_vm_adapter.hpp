@@ -11,6 +11,10 @@
 #include <stdexcept>
 #include <algorithm>
 #include <unordered_map>
+#include <atomic>
+#include <cstdio>
+#include <cstdlib>
+#include <memory>
 namespace qwen_native {
 constexpr unsigned G=3072,W=16,SW=64,VM_WORDS=56816;
 template<size_t N> using HexWord=std::array<uint32_t,N>;
@@ -64,6 +68,18 @@ public:
     std::vector<HexWord<2>> constants;
     Response pending,next;
     std::vector<Commit> writes;
+    // OT_CROM_TRACE=<prefix>: observation only. Records every constant-ROM read the DUT
+    // issues (edge, lane mask, lane addresses) and every bank switch, one file per
+    // adapter instance, so the native mapped CROM/CBUF path can be replayed against
+    // exactly the requests this core made. Nothing read here reaches the DUT.
+    std::shared_ptr<FILE> crom_trace;
+    void open_trace(){
+        const char* p=std::getenv("OT_CROM_TRACE");if(!p||!*p)return;
+        static std::atomic<unsigned> instances{0};
+        std::string path=std::string(p)+"."+std::to_string(instances++)+".txt";
+        FILE* f=std::fopen(path.c_str(),"w");if(!f)throw std::runtime_error("cannot open crom trace "+path);
+        crom_trace.reset(f,std::fclose);
+    }
     RomVmAdapter(const std::string& image,const std::string& fused_program,const std::string& x_preload,bool zero_cold_vm=false)
       :vm(VM_WORDS,0),program(read_hex<32>(fused_program)),
        code(read_hex<G*W/4>(image+"/matrix_int8.hex")),
@@ -76,6 +92,7 @@ public:
             for(size_t i=0;i<x.size();++i)vm[i]=x[i][0];
         }
         if(code.size()!=512)throw std::runtime_error("actual compact code bank must contain512words");
+        open_trace();if(crom_trace)std::fprintf(crom_trace.get(),"B %llu %s\n",(unsigned long long)edge,image.c_str());
     }
     uint32_t load(unsigned addr)const{if(addr>=vm.size())throw std::runtime_error("VM read outside56816: "+std::to_string(addr));return vm[addr];}
     // Caller must prove all DUT providers drained. Swap only backing ROM banks;
@@ -92,6 +109,7 @@ public:
            (required_program_words&&new_program.size()!=required_program_words)||
            (required_scale_words&&new_scales.size()!=required_scale_words))throw std::runtime_error("invalid actual backing bank shape");
         program=std::move(new_program);code=std::move(new_code);scales=std::move(new_scales);constants=std::move(new_constants);
+        if(crom_trace)std::fprintf(crom_trace.get(),"B %llu %s\n",(unsigned long long)edge,image.c_str());
         segment_base=0;pending=Response{};next=Response{};
         accepted.clear();retired.clear();speculative_fetches.clear();commits.clear();
     }
@@ -110,6 +128,11 @@ public:
             if(bits(m.scale_gre,g,1)){unsigned a=bits(m.scale_addr,g*24,24);if(a>=scales.size())throw std::runtime_error("scale read outside actual independent bank");for(unsigned j=0;j<W/2;++j)next.scales[g*(W/2)+j]=scales[a][j];}
             if(bits(m.vx_re,g,1))next.x[g]=load(bits(m.vx_addr,g*24,24));
             if(bits(m.vw_me_we,g,1)){unsigned a=bits(m.vw_me_addr,g*24,24)*W;for(unsigned j=0;j<W;++j)if(bits(m.vw_me_mask,g*W+j,1))store(a+j,m.vw_me_data[g*W+j],"ME");}
+        }
+        if(crom_trace&&m.crom_re){
+            std::fprintf(crom_trace.get(),"R %llu %016llx",(unsigned long long)edge,(unsigned long long)uint64_t(m.crom_re));
+            for(unsigned s=0;s<SW;++s)if(uint64_t(m.crom_re)&(uint64_t(1)<<s))std::fprintf(crom_trace.get()," %x",bits(m.crom_addr,s*24,24));
+            std::fputc('\n',crom_trace.get());
         }
         for(unsigned s=0;s<SW;++s){
             uint64_t mask=uint64_t(1)<<s;
