@@ -61,9 +61,33 @@
   "branch": "claude/hbm-elemb-su-1015",
   "tag": "r1",
   "purpose": "Static SU pinned store bank (6 read replicas x ot_sram_1r1w_128x256, read n->n+2, write commit n+1); 512 replicas in the whole static SU (32 per port-group slice). r1 = structural fix of r0 (TT +178.39 / FF -0.79 / DRC 3: M4 shorts where a net jogs through the SRAM east pin/OBS edge, bbox depth 1.331 um > 1.2 um guard): macro edge guard 2.4 um (OT_MEG_DEPTH_UM), recipe-2 hold margin 30 ps. No RTL or latency change.",
-  "benched_by": "su_arithmetic_full512",
   "views_to": "physical/ref_tile/hbm_su_static_bank6_1015/views",
-  "record_to": "results/arch/hbm_su_f2_static_1014/arithmetic/physical/bank_route"
+  "record_to": "results/arch/hbm_su_f2_static_1014/arithmetic/physical/bank_route",
+  "benches": [
+   {
+    "name": "bank_exact",
+    "cmd": "bash tools/hbm_static/su_bank_run.sh {RUN}/bench/bank",
+    "expect": "pass",
+    "pass_regex": "SU_PINNED_BANK PASS",
+    "min_count_regex": "checks=(\\d+)",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "bank_mutant_coherence",
+    "cmd": "bash tools/hbm_static/su_bank_run.sh {RUN}/bench/bank_mut coherence",
+    "expect": "fail",
+    "fail_regex": "SU_PINNED_BANK FAIL",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ]
  },
  "recipe": 2,
  "sdc_extra": [
