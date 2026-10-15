@@ -1,0 +1,34 @@
+q_norm.ss                    priced    165 edges   103 issues    4 rd   160 wr     1 reuse      0 elide      0
+q_norm.rs                    priced    152 edges    99 issues    1 rd     0 wr     4 reuse      1 elide      0
+q_norm.y                     priced     62 edges    60 issues    3 rd   272 wr   160 reuse    388 elide      0
+kv_norm.ss                   priced    151 edges    81 issues    1 rd    64 wr     1 reuse      0 elide      0
+kv_norm.rs                   priced    152 edges    93 issues    1 rd     0 wr     4 reuse      1 elide      0
+kv_norm.y                    priced     60 edges    30 issues    1 rd    64 wr    56 reuse    516 elide     64
+kv_rope.tail                 priced     60 edges    28 issues    1 rd     8 wr     8 reuse     64 elide      0
+q_rope.tail                  priced     60 edges    49 issues    1 rd    16 wr     8 reuse      0 elide      0
+attend.max                   priced    139 edges    89 issues    1 rd    16 wr     1 reuse      0 elide      0
+attend.exp_sum               priced    233 edges   130 issues    4 rd     0 wr    17 reuse    129 elide      0
+attend.bf16_p                priced     60 edges    38 issues    1 rd     0 wr    16 reuse    128 elide      0
+attend.den                   priced    154 edges   105 issues    1 rd     1 wr     4 reuse      2 elide      0
+attend.norm                  priced     76 edges    47 issues    4 rd    64 wr    56 reuse      4 elide     64
+attend.inv_rope.tail         priced     60 edges    29 issues    1 rd     0 wr     8 reuse    128 elide      0
+attn.res_copy                priced     99 edges   128 issues   40 rd  2560 wr  2560 reuse      0 elide      0  OVER
+router_act                   priced    339 edges   231 issues    4 rd     1 wr     4 reuse      0 elide      0
+route.scores_bias            priced     60 edges    52 issues    1 rd    96 wr    48 reuse      0 elide      0
+route.gather0                priced     60 edges    37 issues    1 rd     0 wr     1 reuse      1 elide      0
+route.gather1                priced     60 edges     1 issues    1 rd     0 wr     1 reuse      1 elide      0
+route.gather2                priced     60 edges     1 issues    1 rd     0 wr     1 reuse      1 elide      0
+route.gather3                priced     60 edges     1 issues    1 rd     0 wr     1 reuse      1 elide      0
+route.gather4                priced     60 edges    37 issues    1 rd     0 wr     1 reuse      1 elide      0
+route.gather5                priced     60 edges     1 issues    1 rd     0 wr     1 reuse      1 elide      0
+route.total                  priced    115 edges    45 issues    1 rd     0 wr     1 reuse      6 elide      0
+route.den                    priced     60 edges    37 issues    1 rd     0 wr     1 reuse      1 elide      0
+route.weights                priced     75 edges    53 issues    1 rd     0 wr     2 reuse      7 elide      0
+swiglu                       priced    181 edges   129 issues    4 rd    43 wr    21 reuse      6 elide      0
+moe_sum.0                    priced     60 edges    49 issues    1 rd    14 wr     7 reuse      0 elide      0
+moe_sum.2                    priced     60 edges    49 issues    1 rd    14 wr     7 reuse     53 elide      0
+moe_sum.4                    priced     60 edges    40 issues    1 rd    14 wr     0 reuse     53 elide     53
+moe_sum.6                    priced     60 edges    38 issues    1 rd     7 wr     7 reuse     53 elide      0
+ffn.res_copy                 priced     99 edges   128 issues   40 rd  2560 wr  2560 reuse      0 elide      0  OVER
+pre <- ffn mix pre           priced     60 edges    48 issues    1 rd     1 wr     1 reuse      0 elide      0
+deepseek {'priced': 3272.0, 'edges': 2086, 'ratio': 0.638} slices [14077, 12752, 12432, 11824] replicated 964 conflicts 0 affine_fail 0
