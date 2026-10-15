@@ -1,5 +1,5 @@
 {
- "name": "qvm_bank_entries_my_native-ne3-a1d6e4f89",
+ "name": "qvm_bank_entries_my_native-ne3-COMMIT",
  "block": "qvm_bank_banked_native",
  "ref_tile": true,
  "owner": "Claude:q15_compute_elem",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 8,
  "source": {
   "branch": "claude/qvm-ne2r-1015",
-  "commit": "a1d6e4f89",
+  "commit": "COMMIT",
   "extra_paths": [
    "rtl/qwen_sys/vm_native_physical_20261015",
    "rtl/qwen_sys/vm_plane_20261013",
@@ -117,7 +117,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qvm_bank_entries_my_native/qvm_bank_entries_my_native-ne3-a1d6e4f89"
+   "to": "results/rtl/ref_tile/qvm_bank_entries_my_native/qvm_bank_entries_my_native-ne3-COMMIT"
   }
  ],
  "cycles_added": 0,
@@ -128,10 +128,8 @@
  "merge_target": null,
  "structural_change": "ne3 NATIVE successor of ne2r-d73debae3 (CLOSED TT +140.37/FF +26.15/DRC0 but native audit FAIL: q launch 297.5 ps on all 512 pins, rst_n capture 220.3). Measured cause (ne2r insertion.json/ETM): all 9 clock entries + rst_n sat on the S face while u_ctrl sits top-left (ck_ctrl raw entry wire 130.9 ps, slew 415 ps; rst_n to u_ctrl the same run) and u_in_hi/lo are mid/low-left (ck_in_hi 153.4 ps, ck_in_lo 82.0 ps); q spread over the full 220 um E face while u_out_lo/hi q pins span y 25.9-77.8 / 99.4-151.2 (+26.6 ps wire after the child's 201.6 ps native launch). Fix (geometry only, wires-only parent): ck_ctrl/rst_n moved to the W face at u_ctrl's clk/rst pin height (y 181.4/182.4), ck_in_lo/hi to the W face at the u_in clk pin heights (48.6/122.1), q ranged to y 24-153 facing u_out; ck_mem/cap/out stay S (6.8-29.8 ps). RTL, children, macros, outline, clock entries, data edges and capacity unchanged; cycles_added 0.",
  "reroute_reason": {
-  "kind": "native_launch",
-  "source": "results/arch/qwen_split_1014/compute_native_audit_1015/qvm_bank_banked_native_ne2r.json",
-  "cell": "qvm_bank_banked_native",
-  "launch_ps": 297.5,
-  "fix": "pin geometry: clock/rst entries at child clock-pin heights, q ranged facing u_out"
+  "kind": "slot_change",
+  "slot_change_request": "el1014-qwen-split-compute.log QVM PIN SLOT CHANGE REQUEST qvm_bank_banked_native (Q-COMPUTE-ELEM r2 10-15)",
+  "why": "native_launch: ne2r audit launch 297.5 > 220 (512 q pins), rst_n capture 220.3 > 190; results/arch/qwen_split_1014/compute_native_audit_1015/qvm_bank_banked_native_ne2r.json"
  }
 }
