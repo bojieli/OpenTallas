@@ -38,11 +38,11 @@
   "hold_margin_ns": 0.03,
   "macro_halo_um": 5.4
  },
- "structural_change": "First hardening of the GEN18r common-clock station dsfd_hstnv_514 (4 die instances) in the --hstn-posedge form: plain posedge flops on ck (the glue INV + negedge stage is the same function but its inverted sinks failed the IO reference in every gate, OT_LINK_BUDGET no latency for core_clk), 514 b, no reset, 0 cycles; RTL = the generator --hstn-posedge emission of the case glue header (module sha256 a90cd312a6a9a648, glue 81730f1679e7bc00); pins at the generator centres. Slot 30.216 x 17.256 holds 335 um2 of core vs 439 um2 recipe-2 content (input hold + output min delay cells a bit) -> depth grown to 30.216 x 35.208 (data-pin coordinates unchanged). Gate at PD 0.50 diverged in global placement twice (GPL-0305, deterministic; siblings 513/515 in the same outline pass): placement density target 0.65.",
+ "structural_change": "First hardening of the GEN18r common-clock station dsfd_hstnv_514 (4 die instances) in the --hstn-posedge form: plain posedge flops on ck (the glue INV + negedge stage is the same function but its inverted sinks failed the IO reference in every gate, OT_LINK_BUDGET no latency for core_clk), 514 b, no reset, 0 cycles; RTL = the generator --hstn-posedge emission of the case glue header (module sha256 a90cd312a6a9a648, glue 81730f1679e7bc00); pins at the generator centres. Slot 30.216 x 17.256 holds 335 um2 of core vs 439 um2 recipe-2 content (input hold + output min delay cells a bit) -> depth grown to 30.216 x 35.208 (data-pin coordinates unchanged). Placement density 0.65 (PD 0.50 diverged in GPL twice, GPL-0305).",
  "job": {
   "owner": "Claude:fill-s81",
   "branch": "claude/el1015-fill-1015",
-  "tag": "f1",
+  "tag": "f2",
   "purpose": "S81 FILL: GEN18r die station dsfd_hstnv_514 (4 replicas, hardened once): exact phase/basis/random bench + wrong-edge and payload mutants; recipe 2, M5 cap, generator pins",
   "views_to": "physical/ref_tile/s81fill_hstnv_514/views",
   "record_to": "results/rtl/ref_tile/s81fill_hstnv_514",
