@@ -288,7 +288,7 @@
    "count": 1,
    "at": [
     30.24,
-    30.24
+    51.84
    ],
    "orient": "R0",
    "inst": "*u_shadow*g_psram*g_m?0?*u_pm"
@@ -298,7 +298,7 @@
    "count": 1,
    "at": [
     30.24,
-    129.6
+    151.2
    ],
    "orient": "R0",
    "inst": "*u_shadow*g_psram*g_m?1?*u_pm"
@@ -358,7 +358,7 @@
  "job": {
   "owner": "Claude:q14-r8-compute",
   "branch": "claude/q14-r8-ttree",
-  "tag": "tr2",
+  "tag": "tr3",
   "purpose": "Native idle/supply-preserving controller/tree split with engine-local pruned gate predictor; full TP8 fields/18-bit rows; no clock/enable forwarding and zero added station stages. Production behavior must pass strict flat33975 comparison before routes.",
   "extra_paths": [
    "physical/qfd_tt_ctlm_split",
@@ -424,7 +424,7 @@
  },
  "inhold": true,
  "outhold": true,
- "structural_change": "tr2 after qfd_tt_ctlm_tree-native-current-s1-2984e0c51 TT +12.58 / FF -8.12 / DRC 5 (NOT CLOSED; archive 16c5406b8): (1) the five DRC markers are SRAM M4 perimeter markers (4 upper bank, 1 lower) = the illegal over-macro via jog the band leaf fixed with the macro-edge via guard (qfd_bl_lane_ce CLOSED): the kit is regenerated on current main where recipe 2 + hard macros carry the guard (pre-GRT add / post-DRT remove); (2) the FF miss is internal reg->reg (engine argmax c3/c5 -> atop3/5): reg->reg hold repair margin 30 -> 50 ps while the boundary keeps 10 ps (route.io_hold_margin_ns, route-time FF repair SDC only; sign-off unchanged), so the extra margin does not pad the pin flops. Same RTL, outline, pins, clock (single native ICG, spine).",
+ "structural_change": "tr2 after qfd_tt_ctlm_tree-native-current-s1-2984e0c51 TT +12.58 / FF -8.12 / DRC 5 (NOT CLOSED; archive 16c5406b8): (1) the five DRC markers are SRAM M4 perimeter markers (4 upper bank, 1 lower) = the illegal over-macro via jog the band leaf fixed with the macro-edge via guard (qfd_bl_lane_ce CLOSED): the kit is regenerated on current main where recipe 2 + hard macros carry the guard (pre-GRT add / post-DRT remove); (2) the FF miss is internal reg->reg (engine argmax c3/c5 -> atop3/5): reg->reg hold repair margin 30 -> 50 ps while the boundary keeps 10 ps (route.io_hold_margin_ns, route-time FF repair SDC only; sign-off unchanged), so the extra margin does not pad the pin flops. Same RTL, outline, pins, clock (single native ICG, spine). | tr3: the two 64x512 PSRAM macros move up 21.6 um (S channel 30.2 -> 51.8, N channel 73.4 -> 51.8, middle 21.6 kept): tr2 GRT-0183 heap underflow on a 33-pin BUFx16f net packed into the 24 um S channel under PSRAM0 (S-face pin logic, horizontal overflow x 140-190 y 0-60)",
  "keep_pin_regs": true,
  "pin_reg_split": true,
  "hold_pad": {
