@@ -1,0 +1,311 @@
+{
+  "audit_source_sha256": "88da30c93336076504b867a04117ef89d1e5f56217cad78ae14e8d8d6c9d5a9a",
+  "schema": "opentallas.hcoll.above-pin-geometry.v1",
+  "source_odb": "/data/cl/eco/pass2/orfs/results/asap7/opentallas_ot_hgi_coll_static_pinreg_store_asap7_qdm_hcoll_pinreg_store141_44720c8ad_tc/base/6_final.odb",
+  "odb_sha256": "1fc0cabc612b6feed0804e4d3cfba21851758aa90e4d160e46d9348a0fc26633",
+  "read_only": true,
+  "native_dbu_per_um": 1000,
+  "queries": [
+    {
+      "pin": "dout[128]",
+      "net": "dout[128]",
+      "pin_box_dbu": [
+        185664,
+        129516,
+        185688,
+        129600
+      ],
+      "above_layer": "M6",
+      "hits": [
+        {
+          "net": "dout[100]",
+          "own_net": false,
+          "kind": "routed_segment_conservative_200DBU_end_halo",
+          "rect_dbu": [
+            146056,
+            129352,
+            189716,
+            129752
+          ],
+          "centerline_dbu": [
+            [
+              189516,
+              129552
+            ],
+            [
+              146256,
+              129552
+            ]
+          ]
+        },
+        {
+          "net": "dout[105]",
+          "own_net": false,
+          "kind": "routed_segment_conservative_200DBU_end_halo",
+          "rect_dbu": [
+            152968,
+            129288,
+            190820,
+            129688
+          ],
+          "centerline_dbu": [
+            [
+              190620,
+              129488
+            ],
+            [
+              153168,
+              129488
+            ]
+          ]
+        },
+        {
+          "net": "dout[107]",
+          "own_net": false,
+          "kind": "routed_segment_conservative_200DBU_end_halo",
+          "rect_dbu": [
+            155784,
+            129224,
+            189812,
+            129624
+          ],
+          "centerline_dbu": [
+            [
+              189612,
+              129424
+            ],
+            [
+              155984,
+              129424
+            ]
+          ]
+        }
+      ],
+      "foreign_actual_centerline_hits": [
+        {
+          "net": "dout[100]",
+          "own_net": false,
+          "kind": "routed_segment_conservative_200DBU_end_halo",
+          "rect_dbu": [
+            146056,
+            129352,
+            189716,
+            129752
+          ],
+          "centerline_dbu": [
+            [
+              189516,
+              129552
+            ],
+            [
+              146256,
+              129552
+            ]
+          ]
+        }
+      ],
+      "classification": "foreign_metal_present"
+    },
+    {
+      "pin": "dout[129]",
+      "net": "dout[129]",
+      "pin_box_dbu": [
+        187104,
+        129516,
+        187128,
+        129600
+      ],
+      "above_layer": "M6",
+      "hits": [
+        {
+          "net": "dout[100]",
+          "own_net": false,
+          "kind": "routed_segment_conservative_200DBU_end_halo",
+          "rect_dbu": [
+            146056,
+            129352,
+            189716,
+            129752
+          ],
+          "centerline_dbu": [
+            [
+              189516,
+              129552
+            ],
+            [
+              146256,
+              129552
+            ]
+          ]
+        },
+        {
+          "net": "dout[105]",
+          "own_net": false,
+          "kind": "routed_segment_conservative_200DBU_end_halo",
+          "rect_dbu": [
+            152968,
+            129288,
+            190820,
+            129688
+          ],
+          "centerline_dbu": [
+            [
+              190620,
+              129488
+            ],
+            [
+              153168,
+              129488
+            ]
+          ]
+        },
+        {
+          "net": "dout[107]",
+          "own_net": false,
+          "kind": "routed_segment_conservative_200DBU_end_halo",
+          "rect_dbu": [
+            155784,
+            129224,
+            189812,
+            129624
+          ],
+          "centerline_dbu": [
+            [
+              189612,
+              129424
+            ],
+            [
+              155984,
+              129424
+            ]
+          ]
+        }
+      ],
+      "foreign_actual_centerline_hits": [
+        {
+          "net": "dout[100]",
+          "own_net": false,
+          "kind": "routed_segment_conservative_200DBU_end_halo",
+          "rect_dbu": [
+            146056,
+            129352,
+            189716,
+            129752
+          ],
+          "centerline_dbu": [
+            [
+              189516,
+              129552
+            ],
+            [
+              146256,
+              129552
+            ]
+          ]
+        }
+      ],
+      "classification": "foreign_metal_present"
+    },
+    {
+      "pin": "dout[130]",
+      "net": "dout[130]",
+      "pin_box_dbu": [
+        188496,
+        129516,
+        188520,
+        129600
+      ],
+      "above_layer": "M6",
+      "hits": [
+        {
+          "net": "dout[100]",
+          "own_net": false,
+          "kind": "routed_segment_conservative_200DBU_end_halo",
+          "rect_dbu": [
+            146056,
+            129352,
+            189716,
+            129752
+          ],
+          "centerline_dbu": [
+            [
+              189516,
+              129552
+            ],
+            [
+              146256,
+              129552
+            ]
+          ]
+        },
+        {
+          "net": "dout[105]",
+          "own_net": false,
+          "kind": "routed_segment_conservative_200DBU_end_halo",
+          "rect_dbu": [
+            152968,
+            129288,
+            190820,
+            129688
+          ],
+          "centerline_dbu": [
+            [
+              190620,
+              129488
+            ],
+            [
+              153168,
+              129488
+            ]
+          ]
+        },
+        {
+          "net": "dout[107]",
+          "own_net": false,
+          "kind": "routed_segment_conservative_200DBU_end_halo",
+          "rect_dbu": [
+            155784,
+            129224,
+            189812,
+            129624
+          ],
+          "centerline_dbu": [
+            [
+              189612,
+              129424
+            ],
+            [
+              155984,
+              129424
+            ]
+          ]
+        }
+      ],
+      "foreign_actual_centerline_hits": [
+        {
+          "net": "dout[100]",
+          "own_net": false,
+          "kind": "routed_segment_conservative_200DBU_end_halo",
+          "rect_dbu": [
+            146056,
+            129352,
+            189716,
+            129752
+          ],
+          "centerline_dbu": [
+            [
+              189516,
+              129552
+            ],
+            [
+              146256,
+              129552
+            ]
+          ]
+        }
+      ],
+      "classification": "foreign_metal_present"
+    }
+  ],
+  "qualification": "Geometry ownership audit only; does not change LEF, routing, timing, or imply parent via DRC."
+}

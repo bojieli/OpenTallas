@@ -18,10 +18,10 @@ for name in ['dout[128]','dout[129]','dout[130]']:
    if box.getTechLayer().getName()=='M5':queries.append({'pin':name,'net':bt.getNet().getName(),'pin_box_dbu':rect(box),'above_layer':'M6','hits':[]})
 if len(queries)!=3:raise ValueError('Expected exact3M5 facepins')
 
-def check(net,layer,box,kind):
+def check(net,layer,box,kind,centerline=None):
  if layer!='M6':return
  for q in queries:
-  if ov(box,q['pin_box_dbu']):q['hits'].append({'net':net.getName(),'own_net':net.getName()==q['net'],'kind':kind,'rect_dbu':box})
+  if ov(box,q['pin_box_dbu']):q['hits'].append({'net':net.getName(),'own_net':net.getName()==q['net'],'kind':kind,'rect_dbu':box,'centerline_dbu':centerline})
 for net in block.getNets():
  wire=net.getWire()
  if wire:
@@ -36,13 +36,12 @@ for net in block.getNets():
      width=layer.getWidth()
      ndr=net.getNonDefaultRule()
      if ndr:
-      rules=[r for r in ndr.getLayerRules() if r.getLayer()==layer]
-      if len(rules)!=1:raise ValueError('Unresolved native nondefault width')
-      width=max(width,rules[0].getWidth())
+      rule=ndr.getLayerRule(layer)
+      if rule:width=max(width,rule.getWidth())
      # Conservative end extension: no false empty-space claim at a segment end.
      h=max(width/2,200)
      box=[min(prev[0],pt[0])-h,min(prev[1],pt[1])-h,max(prev[0],pt[0])+h,max(prev[1],pt[1])+h]
-     check(net,layer.getName(),box,'routed_segment_conservative_200DBU_end_halo')
+     check(net,layer.getName(),box,'routed_segment_conservative_200DBU_end_halo',[prev,pt])
     prev=pt
    elif op in (odb.dbWireDecoder.TECH_VIA,odb.dbWireDecoder.VIA):
     pt=list(dec.getPoint());via=dec.getTechVia() if op==odb.dbWireDecoder.TECH_VIA else dec.getVia()
@@ -58,7 +57,14 @@ for net in block.getNets():
     via=box.getTechVia() or box.getBlockVia()
     if via and any(b.getTechLayer().getName()=='M6' for b in via.getBoxes()):check(net,'M6',rect(box),'special_via_conservative_bbox')
 for q in queries:
+ exact=[]
+ for h in q['hits']:
+  c=h.get('centerline_dbu');b=q['pin_box_dbu']
+  if not c or h['own_net']:continue
+  (x0,y0),(x1,y1)=c
+  if (y0==y1 and b[1]<y0<b[3] and min(x0,x1)<b[2] and max(x0,x1)>b[0]) or (x0==x1 and b[0]<x0<b[2] and min(y0,y1)<b[3] and max(y0,y1)>b[1]):exact.append(h)
+ q['foreign_actual_centerline_hits']=exact
  q['classification']='foreign_metal_present' if any(not h['own_net'] for h in q['hits']) else ('own_signal_metal_only' if q['hits'] else 'no_actual_above_metal')
 if sha(a.odb)!=before:raise AssertionError('ODB mutated')
-x={'schema':'opentallas.hcoll.above-pin-geometry.v1','source_odb':a.odb,'odb_sha256':before,'read_only':True,'native_dbu_per_um':dbu,'queries':queries,'qualification':'Geometry ownership audit only; does not change LEF, routing, timing, or imply parent via DRC.'}
+x={'audit_source_sha256':sha(__file__),'schema':'opentallas.hcoll.above-pin-geometry.v1','source_odb':a.odb,'odb_sha256':before,'read_only':True,'native_dbu_per_um':dbu,'queries':queries,'qualification':'Geometry ownership audit only; does not change LEF, routing, timing, or imply parent via DRC.'}
 Path(a.out).write_text(json.dumps(x,indent=2)+'\n');print(json.dumps(x,indent=2))

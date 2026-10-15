@@ -1,0 +1,24 @@
+{
+  "schema": "opentallas.hcoll.south-slot-submit.v1",
+  "job": "hcoll-pinreg-store141-south-f4fad1626-tc",
+  "source_commit": "f4fad16268278e8889b4d2ab4a3063e6dc2ca46e",
+  "host": "ot-epyc4",
+  "root": "/srv/opentallas-scratch2/claude/closure-loop/hcoll-pinreg-store141-south-f4fad1626-tc",
+  "events_at_capture": [
+    "2026-10-15T02:24:08-07:00 ingested from /tmp/claude-review-20261003/closure_jobs/hcoll-pinreg-store141-south-f4fad1626-tc.json",
+    "2026-10-15T02:24:10-07:00 CLOSED-STANDS PASS: ot_hgi_coll_static_pinreg_store is CLOSED with a published view (hcoll-pinreg-store141-44720c8ad-tc @ 44720c8ad); reroute_reason slot_change: outline / pin faces differ from the closed view per 'physical/hcoll_seq612_1015/slot_contract_south_v2.json version2' (not verifiable: no kit.env geometry)",
+    "2026-10-15T02:24:10-07:00 submit lint PASS (estimate {'W': 0.01, 'S': 1.54} b/um, limit 12.0); PASS rtl_boundary ot_hgi_coll_static_pinreg_store: registered boundary (in->reg 0, reg->out 0 levels)",
+    "2026-10-15T02:24:10-07:00 macro_grid PASS: macro grid: physical/hcoll_seq612_1015/place.tcl 1 macros on-grid",
+    "2026-10-15T02:24:10-07:00 ref gate PASS: pre-route gate PASS",
+    "2026-10-15T02:24:23-07:00 benches run in parallel with calibrate/route (2 benches; spec bench_first opts out)",
+    "2026-10-15T02:24:34-07:00 git-mirror sync f4fad1626827 via upstream in 2s + extract 1s; 249 views / 0.4 GB hard-linked from the host view store",
+    "2026-10-15T02:24:37-07:00 source f4fad1626827 synced to ot-epyc4:/srv/opentallas-scratch2/claude/closure-loop/hcoll-pinreg-store141-south-f4fad1626-tc/src",
+    "2026-10-15T02:24:40-07:00 bench track: launched bench_native_three_laps (bench_native_three_laps.a1b1) beside None",
+    "2026-10-15T02:24:48-07:00 launched calibrate (attempt 1) on ot-epyc4",
+    "2026-10-15T02:25:23-07:00 bench track: bench_native_three_laps PASS (rc=0) work: [192]",
+    "2026-10-15T02:25:26-07:00 bench track: launched bench_native_output_bit_mutant (bench_native_output_bit_mutant.a1b1) beside calibrate",
+    "2026-10-15T02:25:27-07:00 TEXTBOOK-LINT calibrate.a1: PASS ot_hgi_coll_static_pinreg_store cells 1,736 flops 597 depth 200.0 ps util 0.5365 reach 0.0 um (0.0 s) || INFO clock_roots max_root_sinks=598 root=port:clk rule=PASS: 598 sinks on the largest root <= 15,000; no measured clock tree (no --cts gate evidence)"
+  ],
+  "status_at_capture": "RUNNING",
+  "qualification": "Submitted source-bound genuine N-to-S return pin-face slot change. Old native view adoption HOLD; no new closure or system placement grant."
+}
