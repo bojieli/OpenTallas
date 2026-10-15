@@ -1,0 +1,2482 @@
+{
+  "status": "EXHAUSTIVE_SOURCE_BACKED_WIRING_REQUEST_NOT_COMPLETE_ONCHIP_COMPOSITION",
+  "source_branch_tip": "feec70f1f",
+  "host_ports": {
+    "ck_phy": {
+      "rtl_port": "ck_phy",
+      "endpoint": "pll.pll_phy -> u_adapter.g_slice[g].u_slice.ck (8 independent qfd_link_adp128 entries)",
+      "clock_family": "PHY1043",
+      "status": "SOURCE_BACKED_CONNECTION",
+      "note": "Each listed sink is its own physical entry/root; synchronous families require per-child phi-R compensation, not a shared parent CTS alias."
+    },
+    "ck_pad": {
+      "rtl_port": "ck_pad",
+      "endpoint": "pll.pll_phy -> u_phy.u_pad.clk",
+      "clock_family": "PHY1043",
+      "status": "SOURCE_BACKED_CONNECTION",
+      "note": "Each listed sink is its own physical entry/root; synchronous families require per-child phi-R compensation, not a shared parent CTS alias."
+    },
+    "ck_phy_rx_w": {
+      "rtl_port": "ck_phy_rx_w",
+      "endpoint": "pll.pll_phy -> u_phy.u_rx.wclk",
+      "clock_family": "PHY1043",
+      "status": "SOURCE_BACKED_CONNECTION",
+      "note": "Each listed sink is its own physical entry/root; synchronous families require per-child phi-R compensation, not a shared parent CTS alias."
+    },
+    "ck_phy_tx_r": {
+      "rtl_port": "ck_phy_tx_r",
+      "endpoint": "pll.pll_phy -> u_phy.u_tx.rclk",
+      "clock_family": "PHY1043",
+      "status": "SOURCE_BACKED_CONNECTION",
+      "note": "Each listed sink is its own physical entry/root; synchronous families require per-child phi-R compensation, not a shared parent CTS alias."
+    },
+    "ck_qm_host": {
+      "rtl_port": "ck_qm_host",
+      "endpoint": "pll.pll_host -> u_qm.clk_h",
+      "clock_family": "HOST1000",
+      "status": "SOURCE_BACKED_CONNECTION",
+      "note": "Each listed sink is its own physical entry/root; synchronous families require per-child phi-R compensation, not a shared parent CTS alias."
+    },
+    "ck_qm_ing_r": {
+      "rtl_port": "ck_qm_ing_r",
+      "endpoint": "pll.pll_host -> u_bridge.u_ing.rclk",
+      "clock_family": "HOST1000",
+      "status": "SOURCE_BACKED_CONNECTION",
+      "note": "Each listed sink is its own physical entry/root; synchronous families require per-child phi-R compensation, not a shared parent CTS alias."
+    },
+    "ck_qm_credit": {
+      "rtl_port": "ck_qm_credit",
+      "endpoint": "pll.pll_host -> u_bridge.u_pacer.clk_h",
+      "clock_family": "HOST1000",
+      "status": "SOURCE_BACKED_CONNECTION",
+      "note": "Each listed sink is its own physical entry/root; synchronous families require per-child phi-R compensation, not a shared parent CTS alias."
+    },
+    "ck_qm_done_w": {
+      "rtl_port": "ck_qm_done_w",
+      "endpoint": "pll.pll_host -> u_bridge.u_done.wclk",
+      "clock_family": "HOST1000",
+      "status": "SOURCE_BACKED_CONNECTION",
+      "note": "Each listed sink is its own physical entry/root; synchronous families require per-child phi-R compensation, not a shared parent CTS alias."
+    },
+    "ck_fence_host": {
+      "rtl_port": "ck_fence_host",
+      "endpoint": "pll.pll_host -> u_fence.clk_h",
+      "clock_family": "HOST1000",
+      "status": "SOURCE_BACKED_CONNECTION",
+      "note": "Each listed sink is its own physical entry/root; synchronous families require per-child phi-R compensation, not a shared parent CTS alias."
+    },
+    "ck_qm_ingest": {
+      "rtl_port": "ck_qm_ingest",
+      "endpoint": "pll.pll_ingest -> u_qm.clk_i",
+      "clock_family": "INGEST1666.668",
+      "status": "SOURCE_BACKED_CONNECTION",
+      "note": "Each listed sink is its own physical entry/root; synchronous families require per-child phi-R compensation, not a shared parent CTS alias."
+    },
+    "ck_qm_bank": {
+      "rtl_port": "ck_qm_bank",
+      "endpoint": "pll.pll_ingest -> u_qm.clk_i_bank[0..1] (2 entries)",
+      "clock_family": "INGEST1666.668",
+      "status": "SOURCE_BACKED_CONNECTION",
+      "note": "Each listed sink is its own physical entry/root; synchronous families require per-child phi-R compensation, not a shared parent CTS alias."
+    },
+    "ck_qm_out": {
+      "rtl_port": "ck_qm_out",
+      "endpoint": "pll.pll_ingest -> u_qm.clk_i_out",
+      "clock_family": "INGEST1666.668",
+      "status": "SOURCE_BACKED_CONNECTION",
+      "note": "Each listed sink is its own physical entry/root; synchronous families require per-child phi-R compensation, not a shared parent CTS alias."
+    },
+    "ck_phy_rx_r": {
+      "rtl_port": "ck_phy_rx_r",
+      "endpoint": "pll.pll_c -> u_phy.u_rx.rclk",
+      "clock_family": "CORE833.334",
+      "status": "SOURCE_BACKED_CONNECTION",
+      "note": "Each listed sink is its own physical entry/root; synchronous families require per-child phi-R compensation, not a shared parent CTS alias."
+    },
+    "ck_phy_tx_w": {
+      "rtl_port": "ck_phy_tx_w",
+      "endpoint": "pll.pll_c -> u_phy.u_tx.wclk",
+      "clock_family": "CORE833.334",
+      "status": "SOURCE_BACKED_CONNECTION",
+      "note": "Each listed sink is its own physical entry/root; synchronous families require per-child phi-R compensation, not a shared parent CTS alias."
+    },
+    "ck_host": {
+      "rtl_port": "ck_host",
+      "endpoint": "pll.pll_c -> u_control.u_control.u_control.u_host.clk",
+      "clock_family": "CORE833.334",
+      "status": "SOURCE_BACKED_CONNECTION",
+      "note": "Each listed sink is its own physical entry/root; synchronous families require per-child phi-R compensation, not a shared parent CTS alias."
+    },
+    "ck_csr": {
+      "rtl_port": "ck_csr",
+      "endpoint": "pll.pll_c -> u_control.u_control.u_control.u_csr.clk",
+      "clock_family": "CORE833.334",
+      "status": "SOURCE_BACKED_CONNECTION",
+      "note": "Each listed sink is its own physical entry/root; synchronous families require per-child phi-R compensation, not a shared parent CTS alias."
+    },
+    "ck_rst": {
+      "rtl_port": "ck_rst",
+      "endpoint": "pll.pll_c -> u_control.u_control.u_control.u_rst.clk",
+      "clock_family": "CORE833.334",
+      "status": "SOURCE_BACKED_CONNECTION",
+      "note": "Each listed sink is its own physical entry/root; synchronous families require per-child phi-R compensation, not a shared parent CTS alias."
+    },
+    "ck_ctl": {
+      "rtl_port": "ck_ctl",
+      "endpoint": "pll.pll_c -> u_control.u_control.u_control.u_pkg.ck",
+      "clock_family": "CORE833.334",
+      "status": "SOURCE_BACKED_CONNECTION",
+      "note": "Each listed sink is its own physical entry/root; synchronous families require per-child phi-R compensation, not a shared parent CTS alias."
+    },
+    "ck_prompt": {
+      "rtl_port": "ck_prompt",
+      "endpoint": "pll.pll_c -> u_control.u_control.u_prompt.ck",
+      "clock_family": "CORE833.334",
+      "status": "SOURCE_BACKED_CONNECTION",
+      "note": "Each listed sink is its own physical entry/root; synchronous families require per-child phi-R compensation, not a shared parent CTS alias."
+    },
+    "ck_rx": {
+      "rtl_port": "ck_rx",
+      "endpoint": "pll.pll_c -> u_control.u_packet.u_rx.ck",
+      "clock_family": "CORE833.334",
+      "status": "SOURCE_BACKED_CONNECTION",
+      "note": "Each listed sink is its own physical entry/root; synchronous families require per-child phi-R compensation, not a shared parent CTS alias."
+    },
+    "ck_tx": {
+      "rtl_port": "ck_tx",
+      "endpoint": "pll.pll_c -> u_control.u_packet.u_tx.ck",
+      "clock_family": "CORE833.334",
+      "status": "SOURCE_BACKED_CONNECTION",
+      "note": "Each listed sink is its own physical entry/root; synchronous families require per-child phi-R compensation, not a shared parent CTS alias."
+    },
+    "ck_axi": {
+      "rtl_port": "ck_axi",
+      "endpoint": "pll.pll_c -> u_control.u_packet.u_axi.ck",
+      "clock_family": "CORE833.334",
+      "status": "SOURCE_BACKED_CONNECTION",
+      "note": "Each listed sink is its own physical entry/root; synchronous families require per-child phi-R compensation, not a shared parent CTS alias."
+    },
+    "ck_ctrl": {
+      "rtl_port": "ck_ctrl",
+      "endpoint": "pll.pll_c -> u_control.u_packet.u_ctrl.ck",
+      "clock_family": "CORE833.334",
+      "status": "SOURCE_BACKED_CONNECTION",
+      "note": "Each listed sink is its own physical entry/root; synchronous families require per-child phi-R compensation, not a shared parent CTS alias."
+    },
+    "ck_hc": {
+      "rtl_port": "ck_hc",
+      "endpoint": "pll.pll_c -> u_control.u_hc.ck",
+      "clock_family": "CORE833.334",
+      "status": "SOURCE_BACKED_CONNECTION",
+      "note": "Each listed sink is its own physical entry/root; synchronous families require per-child phi-R compensation, not a shared parent CTS alias."
+    },
+    "ck_qm_queue": {
+      "rtl_port": "ck_qm_queue",
+      "endpoint": "pll.pll_c -> u_bridge.u_queue.ck",
+      "clock_family": "CORE833.334",
+      "status": "SOURCE_BACKED_CONNECTION",
+      "note": "Each listed sink is its own physical entry/root; synchronous families require per-child phi-R compensation, not a shared parent CTS alias."
+    },
+    "ck_qm_ing_w": {
+      "rtl_port": "ck_qm_ing_w",
+      "endpoint": "pll.pll_c -> u_bridge.u_ing.wclk",
+      "clock_family": "CORE833.334",
+      "status": "SOURCE_BACKED_CONNECTION",
+      "note": "Each listed sink is its own physical entry/root; synchronous families require per-child phi-R compensation, not a shared parent CTS alias."
+    },
+    "ck_qm_done_r": {
+      "rtl_port": "ck_qm_done_r",
+      "endpoint": "pll.pll_c -> u_bridge.u_done.rclk",
+      "clock_family": "CORE833.334",
+      "status": "SOURCE_BACKED_CONNECTION",
+      "note": "Each listed sink is its own physical entry/root; synchronous families require per-child phi-R compensation, not a shared parent CTS alias."
+    },
+    "ck_qm_core": {
+      "rtl_port": "ck_qm_core",
+      "endpoint": "pll.pll_c -> u_qm.ck",
+      "clock_family": "CORE833.334",
+      "status": "SOURCE_BACKED_CONNECTION",
+      "note": "Each listed sink is its own physical entry/root; synchronous families require per-child phi-R compensation, not a shared parent CTS alias."
+    },
+    "ck_map": {
+      "rtl_port": "ck_map",
+      "endpoint": "pll.pll_c -> u_chain.u_map.ck",
+      "clock_family": "CORE833.334",
+      "status": "SOURCE_BACKED_CONNECTION",
+      "note": "Each listed sink is its own physical entry/root; synchronous families require per-child phi-R compensation, not a shared parent CTS alias."
+    },
+    "ck_sum": {
+      "rtl_port": "ck_sum",
+      "endpoint": "pll.pll_c -> u_chain.u_sum.ck",
+      "clock_family": "CORE833.334",
+      "status": "SOURCE_BACKED_CONNECTION",
+      "note": "Each listed sink is its own physical entry/root; synchronous families require per-child phi-R compensation, not a shared parent CTS alias."
+    },
+    "ck_order": {
+      "rtl_port": "ck_order",
+      "endpoint": "pll.pll_c -> u_chain.u_order.ck",
+      "clock_family": "CORE833.334",
+      "status": "SOURCE_BACKED_CONNECTION",
+      "note": "Each listed sink is its own physical entry/root; synchronous families require per-child phi-R compensation, not a shared parent CTS alias."
+    },
+    "ck_dispatch": {
+      "rtl_port": "ck_dispatch",
+      "endpoint": "pll.pll_c -> u_dispatch.ck",
+      "clock_family": "CORE833.334",
+      "status": "SOURCE_BACKED_CONNECTION",
+      "note": "Each listed sink is its own physical entry/root; synchronous families require per-child phi-R compensation, not a shared parent CTS alias."
+    },
+    "ck_retire": {
+      "rtl_port": "ck_retire",
+      "endpoint": "pll.pll_c -> u_dispatch.u_order.ck",
+      "clock_family": "CORE833.334",
+      "status": "SOURCE_BACKED_CONNECTION",
+      "note": "Each listed sink is its own physical entry/root; synchronous families require per-child phi-R compensation, not a shared parent CTS alias."
+    },
+    "ck_bootbarrier": {
+      "rtl_port": "ck_bootbarrier",
+      "endpoint": "pll.pll_c -> u_bootbarrier.ck",
+      "clock_family": "CORE833.334",
+      "status": "SOURCE_BACKED_CONNECTION",
+      "note": "Each listed sink is its own physical entry/root; synchronous families require per-child phi-R compensation, not a shared parent CTS alias."
+    },
+    "ck_station": {
+      "rtl_port": "ck_station",
+      "endpoint": "pll.pll_c -> u_chain.g_stack[st].g_pc[lpc].u_station.ck (128 independent entries)",
+      "clock_family": "CORE833.334",
+      "status": "SOURCE_BACKED_CONNECTION",
+      "note": "Each listed sink is its own physical entry/root; synchronous families require per-child phi-R compensation, not a shared parent CTS alias."
+    },
+    "ck_static": {
+      "rtl_port": "ck_static",
+      "endpoint": "pll.pll_c -> u_chain.g_stack[st].g_pc[lpc].u_static.ck (128 independent entries)",
+      "clock_family": "CORE833.334",
+      "status": "SOURCE_BACKED_CONNECTION",
+      "note": "Each listed sink is its own physical entry/root; synchronous families require per-child phi-R compensation, not a shared parent CTS alias."
+    },
+    "ck_fence_core": {
+      "rtl_port": "ck_fence_core",
+      "endpoint": "pll.pll_c -> u_fence.ck",
+      "clock_family": "CORE833.334",
+      "status": "SOURCE_BACKED_CONNECTION",
+      "note": "Each listed sink is its own physical entry/root; synchronous families require per-child phi-R compensation, not a shared parent CTS alias."
+    },
+    "ck_guard": {
+      "rtl_port": "ck_guard",
+      "endpoint": "pll.pll_c -> u_guard.ck_guard",
+      "clock_family": "CORE833.334",
+      "status": "SOURCE_BACKED_CONNECTION",
+      "note": "Each listed sink is its own physical entry/root; synchronous families require per-child phi-R compensation, not a shared parent CTS alias."
+    },
+    "ck_native": {
+      "rtl_port": "ck_native",
+      "endpoint": "pll.pll_c -> u_native.ck",
+      "clock_family": "CORE833.334",
+      "status": "SOURCE_BACKED_CONNECTION",
+      "note": "Each listed sink is its own physical entry/root; synchronous families require per-child phi-R compensation, not a shared parent CTS alias."
+    },
+    "por_n": {
+      "rtl_port": "por_n",
+      "endpoint": "package POR pad -> HOST power/reset input",
+      "clock_family": "ASYNC_POR",
+      "status": "SOURCE_BACKED_CONNECTION",
+      "note": ""
+    },
+    "pll_locked": {
+      "rtl_port": "pll_locked",
+      "endpoint": "pll.locked -> HOST power/reset qualification",
+      "clock_family": "REF/CORE_SYNC",
+      "status": "SOURCE_BACKED_CONNECTION",
+      "note": ""
+    },
+    "die_id": {
+      "rtl_port": "die_id",
+      "endpoint": "package strap: HOST role=2*PKG+DIE",
+      "clock_family": "STRAP_CAPTURE",
+      "status": "SOURCE_BACKED_CONNECTION",
+      "note": ""
+    },
+    "phy_up": {
+      "rtl_port": "phy_up",
+      "endpoint": "host_serdes.tx_up -> HOST.phy_up -> u_adapter.tx_up (actual analog PHY train status)",
+      "clock_family": "PHY1043",
+      "status": "SOURCE_BACKED_CONNECTION",
+      "note": ""
+    },
+    "phy_rx_v": {
+      "rtl_port": "phy_rx_v",
+      "endpoint": "host_serdes.rx_v -> HOST.phy_rx_v -> u_adapter.rx_v",
+      "clock_family": "PHY1043",
+      "status": "SOURCE_BACKED_CONNECTION",
+      "note": ""
+    },
+    "phy_rx_flit": {
+      "rtl_port": "phy_rx_flit",
+      "endpoint": "host_serdes.rx_flit -> HOST.phy_rx_flit -> u_adapter.rx_flit",
+      "clock_family": "PHY1043",
+      "status": "SOURCE_BACKED_CONNECTION",
+      "note": ""
+    },
+    "phy_tx_v": {
+      "rtl_port": "phy_tx_v",
+      "endpoint": "u_adapter.tx_v -> HOST.phy_tx_v -> host_serdes.tx_v",
+      "clock_family": "PHY1043",
+      "status": "SOURCE_BACKED_CONNECTION",
+      "note": ""
+    },
+    "phy_tx_flit": {
+      "rtl_port": "phy_tx_flit",
+      "endpoint": "u_adapter.tx_flit -> HOST.phy_tx_flit -> host_serdes.tx_flit",
+      "clock_family": "PHY1043",
+      "status": "SOURCE_BACKED_CONNECTION",
+      "note": ""
+    },
+    "host_rst_n": {
+      "rtl_port": "host_rst_n",
+      "endpoint": "HOST u_rst output -> HOST children/soft-reset interface; hold identity allocator/cohort on POR-only separately",
+      "clock_family": "CORE833",
+      "status": "SOURCE_BACKED_CONNECTION",
+      "note": ""
+    },
+    "link_rst_n": {
+      "rtl_port": "link_rst_n",
+      "endpoint": "HOST u_rst output -> actual SerDes/D2D link reset trees; preserve link-training reset separately",
+      "clock_family": "CORE833",
+      "status": "SOURCE_BACKED_CONNECTION",
+      "note": ""
+    },
+    "hbm_rst_n": {
+      "rtl_port": "hbm_rst_n",
+      "endpoint": "HOST u_rst output -> controller core/HBM startup and BIST trees; separately synchronise each HBM domain",
+      "clock_family": "CORE833",
+      "status": "SOURCE_BACKED_CONNECTION",
+      "note": ""
+    },
+    "boot_go": {
+      "rtl_port": "boot_go",
+      "endpoint": "HOST u_rst output -> real128 BIST starters (qkd_hbm_boot_static.u_test.start)",
+      "clock_family": "CORE833",
+      "status": "SOURCE_BACKED_CONNECTION",
+      "note": ""
+    },
+    "die_rst_n": {
+      "rtl_port": "die_rst_n",
+      "endpoint": "HOST u_rst output -> execution roots (seq/heads/ECTL/ASTK/hub), after actual boot completion",
+      "clock_family": "CORE833",
+      "status": "SOURCE_BACKED_CONNECTION",
+      "note": ""
+    },
+    "sys_ready": {
+      "rtl_port": "sys_ready",
+      "endpoint": "actual u_rst result -> admission warm-ready collector, never fixed1",
+      "clock_family": "CORE833",
+      "status": "SOURCE_BACKED_CONNECTION",
+      "note": ""
+    },
+    "local_boot": {
+      "rtl_port": "local_boot",
+      "endpoint": "local_boot[0]=AND boot_done[127:0];[1]=AND boot_ok[127:0], both from real perPC readback checker",
+      "clock_family": "CORE833",
+      "status": "SOURCE_BACKED_CONNECTION",
+      "note": ""
+    },
+    "hc": {
+      "rtl_port": "hc",
+      "endpoint": "HOST HC182 -> seq HC182 and native command/context endpoint; rawHC includes start38/gen37:36/token35:18/pos17:0/program181:39",
+      "clock_family": "CORE833",
+      "status": "SOURCE_BACKED_CONNECTION",
+      "note": ""
+    },
+    "tk": {
+      "rtl_port": "local_tk",
+      "endpoint": "seq.tk93 -> HOST.local_tk legacy status capture; ENABLE_NATIVE=1 means true native result/drain path is authoritative",
+      "clock_family": "CORE833",
+      "status": "SOURCE_BACKED_CONNECTION",
+      "note": ""
+    },
+    "kst": {
+      "rtl_port": "local_kst",
+      "endpoint": "seq.kst10 -> HOST.local_kst -> existing CTRL status transport",
+      "clock_family": "CORE833",
+      "status": "SOURCE_BACKED_CONNECTION",
+      "note": ""
+    },
+    "token_epoch_valid": {
+      "rtl_port": "token_epoch_valid",
+      "endpoint": "HOST u_packet.u_ctrl transported HC22v2 epoch output -> TT/native59 command context capture, same wires already feed u_native",
+      "clock_family": "CORE833",
+      "status": "SOURCE_BACKED_CONNECTION",
+      "note": ""
+    },
+    "token_epoch": {
+      "rtl_port": "token_epoch",
+      "endpoint": "HOST u_packet.u_ctrl transported HC22v2 epoch output -> TT/native59 command context capture, same wires already feed u_native",
+      "clock_family": "CORE833",
+      "status": "SOURCE_BACKED_CONNECTION",
+      "note": ""
+    },
+    "native_request_v": {
+      "rtl_port": "native_request_v",
+      "endpoint": "HOST u_native -> real command/context endpoint; request TAG59 stage0/segment0 and program metadata143 captured with admission",
+      "clock_family": "CORE833",
+      "status": "SOURCE_BACKED_CONNECTION",
+      "note": ""
+    },
+    "native_request_tag": {
+      "rtl_port": "native_request_tag",
+      "endpoint": "HOST u_native -> real command/context endpoint; request TAG59 stage0/segment0 and program metadata143 captured with admission",
+      "clock_family": "CORE833",
+      "status": "SOURCE_BACKED_CONNECTION",
+      "note": ""
+    },
+    "native_request_gen": {
+      "rtl_port": "native_request_gen",
+      "endpoint": "HOST u_native -> real command/context endpoint; request TAG59 stage0/segment0 and program metadata143 captured with admission",
+      "clock_family": "CORE833",
+      "status": "SOURCE_BACKED_CONNECTION",
+      "note": ""
+    },
+    "native_request_token": {
+      "rtl_port": "native_request_token",
+      "endpoint": "HOST u_native -> real command/context endpoint; request TAG59 stage0/segment0 and program metadata143 captured with admission",
+      "clock_family": "CORE833",
+      "status": "SOURCE_BACKED_CONNECTION",
+      "note": ""
+    },
+    "native_request_pos": {
+      "rtl_port": "native_request_pos",
+      "endpoint": "HOST u_native -> real command/context endpoint; request TAG59 stage0/segment0 and program metadata143 captured with admission",
+      "clock_family": "CORE833",
+      "status": "SOURCE_BACKED_CONNECTION",
+      "note": ""
+    },
+    "native_pr": {
+      "rtl_port": "native_pr",
+      "endpoint": "HOST u_native -> real command/context endpoint; request TAG59 stage0/segment0 and program metadata143 captured with admission",
+      "clock_family": "CORE833",
+      "status": "SOURCE_BACKED_CONNECTION",
+      "note": ""
+    },
+    "native_request_trace": {
+      "rtl_port": "native_request_trace",
+      "endpoint": "HOST u_native diagnostic trace32 -> context diagnostics; never an identity substitute",
+      "clock_family": "CORE833",
+      "status": "SOURCE_BACKED_CONNECTION",
+      "note": ""
+    },
+    "native_request_cr": {
+      "rtl_port": "native_request_cr",
+      "endpoint": "cohort.request_credit[native_rank] -> HOST u_native.request_cr; consume actual participant endpoint pulse, not offered HC",
+      "clock_family": "CORE833",
+      "status": "REQUIRES_PARTICIPANT_TRANSPORT_AND_SINGLETON_RTL_COHORT",
+      "note": ""
+    },
+    "native_result_v": {
+      "rtl_port": "native_result_v",
+      "endpoint": "true stage37/segment0 result/cancellation collector -> HOST u_native result pins; require identity tag59/gen and credit",
+      "clock_family": "CORE833",
+      "status": "REQUIRES_REAL_TERMINAL_COLLECTOR",
+      "note": ""
+    },
+    "native_result_tag": {
+      "rtl_port": "native_result_tag",
+      "endpoint": "true stage37/segment0 result/cancellation collector -> HOST u_native result pins; require identity tag59/gen and credit",
+      "clock_family": "CORE833",
+      "status": "REQUIRES_REAL_TERMINAL_COLLECTOR",
+      "note": ""
+    },
+    "native_result_gen": {
+      "rtl_port": "native_result_gen",
+      "endpoint": "true stage37/segment0 result/cancellation collector -> HOST u_native result pins; require identity tag59/gen and credit",
+      "clock_family": "CORE833",
+      "status": "REQUIRES_REAL_TERMINAL_COLLECTOR",
+      "note": ""
+    },
+    "native_result_done": {
+      "rtl_port": "native_result_done",
+      "endpoint": "true stage37/segment0 result/cancellation collector -> HOST u_native result pins; require identity tag59/gen and credit",
+      "clock_family": "CORE833",
+      "status": "REQUIRES_REAL_TERMINAL_COLLECTOR",
+      "note": ""
+    },
+    "native_result_fault": {
+      "rtl_port": "native_result_fault",
+      "endpoint": "true stage37/segment0 result/cancellation collector -> HOST u_native result pins; require identity tag59/gen and credit",
+      "clock_family": "CORE833",
+      "status": "REQUIRES_REAL_TERMINAL_COLLECTOR",
+      "note": ""
+    },
+    "native_result_cause": {
+      "rtl_port": "native_result_cause",
+      "endpoint": "true stage37/segment0 result/cancellation collector -> HOST u_native result pins; require identity tag59/gen and credit",
+      "clock_family": "CORE833",
+      "status": "REQUIRES_REAL_TERMINAL_COLLECTOR",
+      "note": ""
+    },
+    "native_result_token": {
+      "rtl_port": "native_result_token",
+      "endpoint": "true stage37/segment0 result/cancellation collector -> HOST u_native result pins; require identity tag59/gen and credit",
+      "clock_family": "CORE833",
+      "status": "REQUIRES_REAL_TERMINAL_COLLECTOR",
+      "note": ""
+    },
+    "native_result_value": {
+      "rtl_port": "native_result_value",
+      "endpoint": "true stage37/segment0 result/cancellation collector -> HOST u_native result pins; require identity tag59/gen and credit",
+      "clock_family": "CORE833",
+      "status": "REQUIRES_REAL_TERMINAL_COLLECTOR",
+      "note": ""
+    },
+    "native_result_cycles": {
+      "rtl_port": "native_result_cycles",
+      "endpoint": "true stage37/segment0 result/cancellation collector -> HOST u_native result pins; require identity tag59/gen and credit",
+      "clock_family": "CORE833",
+      "status": "REQUIRES_REAL_TERMINAL_COLLECTOR",
+      "note": ""
+    },
+    "native_result_cr": {
+      "rtl_port": "native_result_cr",
+      "endpoint": "HOST u_native.result_cr -> held result collector credit; return only after real matching result/drain retirement",
+      "clock_family": "CORE833",
+      "status": "SOURCE_BACKED_CONNECTION",
+      "note": ""
+    },
+    "native_kv_drained": {
+      "rtl_port": "native_kv_drained",
+      "endpoint": "real local KV queue/controller/landing drain reduction -> HOST u_native",
+      "clock_family": "CORE833",
+      "status": "SOURCE_BACKED_CONNECTION",
+      "note": ""
+    },
+    "native_vm_drained": {
+      "rtl_port": "native_vm_drained",
+      "endpoint": "compute-die VM drain receiver -> HOST u_native",
+      "clock_family": "CORE833",
+      "status": "REQUIRES_REAL_CROSS_DIE_DRAIN_TRANSPORT",
+      "note": ""
+    },
+    "native_collective_drained": {
+      "rtl_port": "native_collective_drained",
+      "endpoint": "true collective provider drain/busy receiver -> HOST u_native",
+      "clock_family": "CORE833",
+      "status": "REQUIRES_REAL_PROVIDER_STATUS_TRANSPORT",
+      "note": ""
+    },
+    "native_collective_busy": {
+      "rtl_port": "native_collective_busy",
+      "endpoint": "true collective provider drain/busy receiver -> HOST u_native",
+      "clock_family": "CORE833",
+      "status": "REQUIRES_REAL_PROVIDER_STATUS_TRANSPORT",
+      "note": ""
+    },
+    "native_host_drained": {
+      "rtl_port": "native_host_drained",
+      "endpoint": "actual HOST transport/descriptor/CQ drain reduction -> HOST u_native; PRE drain cannot stand in for POST retirement",
+      "clock_family": "CORE833",
+      "status": "REQUIRES_REAL_HOST_DRAIN_COLLECTOR",
+      "note": ""
+    },
+    "native_kv_flush": {
+      "rtl_port": "native_kv_flush",
+      "endpoint": "real KV flush/controller state -> HOST u_native",
+      "clock_family": "CORE833",
+      "status": "SOURCE_BACKED_CONNECTION",
+      "note": ""
+    },
+    "abort_drained": {
+      "rtl_port": "abort_drained",
+      "endpoint": "{HOST,collective,VM,KV} genuine local drain bits -> control cancellation; bit0KV/1VM/2collective/3HOST",
+      "clock_family": "CORE833",
+      "status": "SOURCE_BACKED_CONNECTION",
+      "note": ""
+    },
+    "token_request_valid": {
+      "rtl_port": "token_request_valid",
+      "endpoint": "HOST role0 -> sole ot_qwen_tp8_token_epoch_allocator request_*; physical singleton on designated coordinator KV die",
+      "clock_family": "CORE833",
+      "status": "SOURCE_BACKED_CONNECTION",
+      "note": ""
+    },
+    "token_request_token": {
+      "rtl_port": "token_request_token",
+      "endpoint": "HOST role0 -> sole ot_qwen_tp8_token_epoch_allocator request_*; physical singleton on designated coordinator KV die",
+      "clock_family": "CORE833",
+      "status": "SOURCE_BACKED_CONNECTION",
+      "note": ""
+    },
+    "token_request_position": {
+      "rtl_port": "token_request_position",
+      "endpoint": "HOST role0 -> sole ot_qwen_tp8_token_epoch_allocator request_*; physical singleton on designated coordinator KV die",
+      "clock_family": "CORE833",
+      "status": "SOURCE_BACKED_CONNECTION",
+      "note": ""
+    },
+    "token_request_generation": {
+      "rtl_port": "token_request_generation",
+      "endpoint": "HOST role0 -> sole ot_qwen_tp8_token_epoch_allocator request_*; physical singleton on designated coordinator KV die",
+      "clock_family": "CORE833",
+      "status": "SOURCE_BACKED_CONNECTION",
+      "note": ""
+    },
+    "token_request_ready": {
+      "rtl_port": "token_request_ready",
+      "endpoint": "sole allocator.request_ready -> role0 HOST (peer role does not request allocation)",
+      "clock_family": "CORE833",
+      "status": "REQUIRES_SINGLETON_LOCAL_OR_TRANSPORTED_CONTROL",
+      "note": ""
+    },
+    "token_grant_valid": {
+      "rtl_port": "token_grant_valid",
+      "endpoint": "sole allocator.grant_valid -> HOST control grant receiver",
+      "clock_family": "CORE833",
+      "status": "REQUIRES_SINGLETON_LOCAL_OR_TRANSPORTED_CONTROL",
+      "note": ""
+    },
+    "token_grant_epoch": {
+      "rtl_port": "token_grant_epoch",
+      "endpoint": "sole allocator.grant_epoch -> HOST control grant receiver",
+      "clock_family": "CORE833",
+      "status": "REQUIRES_SINGLETON_LOCAL_OR_TRANSPORTED_CONTROL",
+      "note": ""
+    },
+    "token_grant_token": {
+      "rtl_port": "token_grant_token",
+      "endpoint": "sole allocator.grant_token -> HOST control grant receiver",
+      "clock_family": "CORE833",
+      "status": "REQUIRES_SINGLETON_LOCAL_OR_TRANSPORTED_CONTROL",
+      "note": ""
+    },
+    "token_grant_position": {
+      "rtl_port": "token_grant_position",
+      "endpoint": "sole allocator.grant_position -> HOST control grant receiver",
+      "clock_family": "CORE833",
+      "status": "REQUIRES_SINGLETON_LOCAL_OR_TRANSPORTED_CONTROL",
+      "note": ""
+    },
+    "token_grant_generation": {
+      "rtl_port": "token_grant_generation",
+      "endpoint": "sole allocator.grant_generation -> HOST control grant receiver",
+      "clock_family": "CORE833",
+      "status": "REQUIRES_SINGLETON_LOCAL_OR_TRANSPORTED_CONTROL",
+      "note": ""
+    },
+    "token_grant_tag": {
+      "rtl_port": "token_grant_tag",
+      "endpoint": "sole allocator.grant_tag -> HOST control grant receiver",
+      "clock_family": "CORE833",
+      "status": "REQUIRES_SINGLETON_LOCAL_OR_TRANSPORTED_CONTROL",
+      "note": ""
+    },
+    "token_grant_ready": {
+      "rtl_port": "token_grant_ready",
+      "endpoint": "HOST role0.token_grant_ready -> sole allocator.grant_ready; cohort.begin_valid=allocator.grant_valid&&allocator.grant_ready, begin_tag=allocator.grant_tag, begin_generation=allocator.grant_generation",
+      "clock_family": "CORE833",
+      "status": "SOURCE_BACKED_CONNECTION",
+      "note": "Source HostOwner.connect lines73..77 does not gate on cohort.begin_ready. Onchip admission collector must prove begin_ready at delivery or backpressure grant visibility BEFORE HOST emits HC; gating only returned ACK after HC is too late."
+    },
+    "allocated_valid": {
+      "rtl_port": "allocated_valid",
+      "endpoint": "sole allocator.allocated_valid retained POR-only witness -> HOST cancellation control; warm-reset must not erase it",
+      "clock_family": "CORE833",
+      "status": "REQUIRES_SINGLETON_WITNESS_TRANSPORT",
+      "note": ""
+    },
+    "allocated_delivered": {
+      "rtl_port": "allocated_delivered",
+      "endpoint": "sole allocator.allocated_delivered retained POR-only witness -> HOST cancellation control; warm-reset must not erase it",
+      "clock_family": "CORE833",
+      "status": "REQUIRES_SINGLETON_WITNESS_TRANSPORT",
+      "note": ""
+    },
+    "allocated_epoch": {
+      "rtl_port": "allocated_epoch",
+      "endpoint": "sole allocator.grant_epoch retained tuple -> HOST cancellation witness",
+      "clock_family": "CORE833",
+      "status": "REQUIRES_SINGLETON_WITNESS_TRANSPORT",
+      "note": ""
+    },
+    "allocated_token": {
+      "rtl_port": "allocated_token",
+      "endpoint": "sole allocator.grant_token retained tuple -> HOST cancellation witness",
+      "clock_family": "CORE833",
+      "status": "REQUIRES_SINGLETON_WITNESS_TRANSPORT",
+      "note": ""
+    },
+    "allocated_position": {
+      "rtl_port": "allocated_position",
+      "endpoint": "sole allocator.grant_position retained tuple -> HOST cancellation witness",
+      "clock_family": "CORE833",
+      "status": "REQUIRES_SINGLETON_WITNESS_TRANSPORT",
+      "note": ""
+    },
+    "allocated_generation": {
+      "rtl_port": "allocated_generation",
+      "endpoint": "sole allocator.grant_generation retained tuple -> HOST cancellation witness",
+      "clock_family": "CORE833",
+      "status": "REQUIRES_SINGLETON_WITNESS_TRANSPORT",
+      "note": ""
+    },
+    "token_allocator_fault": {
+      "rtl_port": "token_allocator_fault",
+      "endpoint": "sticky allocator.identity_fault OR cohort.identity_fault -> HOST fault input; transport peer fault notification",
+      "clock_family": "CORE833",
+      "status": "REQUIRES_SINGLETON_FAULT_TRANSPORT",
+      "note": ""
+    },
+    "cancel_valid": {
+      "rtl_port": "cancel_valid",
+      "endpoint": "HOST retained cancellation -> real held terminal/cancellation collector -> allocator/cohort terminal_*",
+      "clock_family": "CORE833",
+      "status": "REQUIRES_REAL_TERMINAL_COLLECTOR",
+      "note": ""
+    },
+    "cancel_tag": {
+      "rtl_port": "cancel_tag",
+      "endpoint": "HOST retained cancellation -> real held terminal/cancellation collector -> allocator/cohort terminal_*",
+      "clock_family": "CORE833",
+      "status": "REQUIRES_REAL_TERMINAL_COLLECTOR",
+      "note": ""
+    },
+    "cancel_generation": {
+      "rtl_port": "cancel_generation",
+      "endpoint": "HOST retained cancellation -> real held terminal/cancellation collector -> allocator/cohort terminal_*",
+      "clock_family": "CORE833",
+      "status": "REQUIRES_REAL_TERMINAL_COLLECTOR",
+      "note": ""
+    },
+    "cancel_done": {
+      "rtl_port": "cancel_done",
+      "endpoint": "HOST retained cancellation -> real held terminal/cancellation collector -> allocator/cohort terminal_*",
+      "clock_family": "CORE833",
+      "status": "REQUIRES_REAL_TERMINAL_COLLECTOR",
+      "note": ""
+    },
+    "cancel_fault": {
+      "rtl_port": "cancel_fault",
+      "endpoint": "HOST retained cancellation -> real held terminal/cancellation collector -> allocator/cohort terminal_*",
+      "clock_family": "CORE833",
+      "status": "REQUIRES_REAL_TERMINAL_COLLECTOR",
+      "note": ""
+    },
+    "cancel_drained": {
+      "rtl_port": "cancel_drained",
+      "endpoint": "HOST retained cancellation -> real held terminal/cancellation collector -> allocator/cohort terminal_*",
+      "clock_family": "CORE833",
+      "status": "REQUIRES_REAL_TERMINAL_COLLECTOR",
+      "note": ""
+    },
+    "token_cancel_accepted": {
+      "rtl_port": "token_cancel_accepted",
+      "endpoint": "allocator.terminal_accepted AND (HOST.cancel_tag==accepted_terminal_tag) AND (HOST.cancel_generation==accepted_terminal_gen) AND HOST.cancel_valid",
+      "clock_family": "CORE833",
+      "status": "REQUIRES_IDENTITY_QUALIFIED_ACCEPTED_TERMINAL_LATCH",
+      "note": ""
+    },
+    "token_wrap_fence_valid": {
+      "rtl_port": "token_wrap_fence_valid",
+      "endpoint": "real wrap/recovery controller certifying drains+link reset+retraining -> allocator recovery/host diagnostics; no fake completion counter",
+      "clock_family": "CORE833",
+      "status": "REQUIRES_REAL_RECOVERY_CONTROLLER",
+      "note": ""
+    },
+    "token_wrap_drained": {
+      "rtl_port": "token_wrap_drained",
+      "endpoint": "real wrap/recovery controller certifying drains+link reset+retraining -> allocator recovery/host diagnostics; no fake completion counter",
+      "clock_family": "CORE833",
+      "status": "REQUIRES_REAL_RECOVERY_CONTROLLER",
+      "note": ""
+    },
+    "token_wrap_link_reset_seen": {
+      "rtl_port": "token_wrap_link_reset_seen",
+      "endpoint": "real wrap/recovery controller certifying drains+link reset+retraining -> allocator recovery/host diagnostics; no fake completion counter",
+      "clock_family": "CORE833",
+      "status": "REQUIRES_REAL_RECOVERY_CONTROLLER",
+      "note": ""
+    },
+    "token_wrap_retraining_done": {
+      "rtl_port": "token_wrap_retraining_done",
+      "endpoint": "real wrap/recovery controller certifying drains+link reset+retraining -> allocator recovery/host diagnostics; no fake completion counter",
+      "clock_family": "CORE833",
+      "status": "REQUIRES_REAL_RECOVERY_CONTROLLER",
+      "note": ""
+    },
+    "hb": {
+      "rtl_port": "hb",
+      "endpoint": "HOST dispatch hb283 -> embgw.hb283",
+      "clock_family": "CORE833",
+      "status": "SOURCE_BACKED_CONNECTION",
+      "note": ""
+    },
+    "hb_cr": {
+      "rtl_port": "hb_cr",
+      "endpoint": "embgw.hb_cr -> HOST dispatch (capacity only, not durability)",
+      "clock_family": "CORE833",
+      "status": "SOURCE_BACKED_CONNECTION",
+      "note": ""
+    },
+    "est": {
+      "rtl_port": "est",
+      "endpoint": "qkd_embgw_splitboot.est13 -> HOST barrier/guard ([0]ready,[1]fault,[12:2]cause)",
+      "clock_family": "CORE833",
+      "status": "SOURCE_BACKED_CONNECTION",
+      "note": ""
+    },
+    "land_es": {
+      "rtl_port": "land_es",
+      "endpoint": "perPC land_pc.es -> HOST u_static.land_es slice ID=st*32+lpc; physicalslot->logicalpc permutation table below",
+      "clock_family": "CORE833",
+      "status": "SOURCE_BACKED_CONNECTION",
+      "note": ""
+    },
+    "land_er": {
+      "rtl_port": "land_er",
+      "endpoint": "HOST u_static.land_er slice ID -> matching land_pc.er (credit/read-return/fault)",
+      "clock_family": "CORE833",
+      "status": "SOURCE_BACKED_CONNECTION",
+      "note": ""
+    },
+    "ctrl_es": {
+      "rtl_port": "ctrl_es",
+      "endpoint": "HOST u_static.ctrl_es -> matching boot_static.normal_es; boot_static.ctrl_es -> physical controller.es",
+      "clock_family": "CORE833",
+      "status": "SOURCE_BACKED_CONNECTION",
+      "note": ""
+    },
+    "ctrl_er": {
+      "rtl_port": "ctrl_er",
+      "endpoint": "controller.er -> boot_static.ctrl_er; boot_static.normal_er -> HOST u_static.ctrl_er",
+      "clock_family": "CORE833",
+      "status": "SOURCE_BACKED_CONNECTION",
+      "note": ""
+    },
+    "completion_v": {
+      "rtl_port": "completion_v",
+      "endpoint": "qkd_ctrl_pc_host real static-column commit observer -> boot/normal OWNER demux -> matching HOST u_static completion pins",
+      "clock_family": "CORE833",
+      "status": "REQUIRES_REAL_BOOT_VS_NORMAL_COMPLETION_DEMUX",
+      "note": "BIST commands did not enter HOST owner FIFO. Never forward their completions unclassified. Current boot_static has es/er only; this demux is not yet implemented."
+    },
+    "completion_we": {
+      "rtl_port": "completion_we",
+      "endpoint": "qkd_ctrl_pc_host real static-column commit observer -> boot/normal OWNER demux -> matching HOST u_static completion pins",
+      "clock_family": "CORE833",
+      "status": "REQUIRES_REAL_BOOT_VS_NORMAL_COMPLETION_DEMUX",
+      "note": "BIST commands did not enter HOST owner FIFO. Never forward their completions unclassified. Current boot_static has es/er only; this demux is not yet implemented."
+    },
+    "marker_v": {
+      "rtl_port": "marker_v",
+      "endpoint": "HOST verified fresh-image/global-retirement marker -> real service/allocator lifecycle receipt collector",
+      "clock_family": "CORE833",
+      "status": "SOURCE_BACKED_CONNECTION",
+      "note": ""
+    },
+    "marker": {
+      "rtl_port": "marker",
+      "endpoint": "HOST verified fresh-image/global-retirement marker -> real service/allocator lifecycle receipt collector",
+      "clock_family": "CORE833",
+      "status": "SOURCE_BACKED_CONNECTION",
+      "note": ""
+    },
+    "marker_cr": {
+      "rtl_port": "marker_cr",
+      "endpoint": "credit from actual lifecycle receipt collector consuming marker65:0; C++ fixture self-ACK marker_v is not an onchip endpoint",
+      "clock_family": "CORE833",
+      "status": "REQUIRES_REAL_MARKER_RECEIPT_CONSUMER",
+      "note": ""
+    },
+    "link_up": {
+      "rtl_port": "link_up",
+      "endpoint": "six real link train-status bits selected by package topology -> HOST reset sequencer",
+      "clock_family": "CORE833",
+      "status": "REQUIRES_DOCUMENTED_SIX_LINK_STATUS_PRODUCERS",
+      "note": "Analog PHY up is one status; other bits must name actual link endpoints. Existing fixture inputs.link_up is external, not hardware producer."
+    },
+    "transport_fault": {
+      "rtl_port": "transport_fault",
+      "endpoint": "sticky real transport/PHY/ROM fault collector -> HOST guard/CSR; split lnk.flt must feed appropriate actual local-rank fault bit",
+      "clock_family": "CORE833",
+      "status": "REQUIRES_REAL_TYPED_FAULT_COLLECTOR",
+      "note": ""
+    },
+    "physical_fault": {
+      "rtl_port": "physical_fault",
+      "endpoint": "sticky real transport/PHY/ROM fault collector -> HOST guard/CSR; split lnk.flt must feed appropriate actual local-rank fault bit",
+      "clock_family": "CORE833",
+      "status": "REQUIRES_REAL_TYPED_FAULT_COLLECTOR",
+      "note": ""
+    },
+    "crom_fault": {
+      "rtl_port": "crom_fault",
+      "endpoint": "sticky real transport/PHY/ROM fault collector -> HOST guard/CSR; split lnk.flt must feed appropriate actual local-rank fault bit",
+      "clock_family": "CORE833",
+      "status": "REQUIRES_REAL_TYPED_FAULT_COLLECTOR",
+      "note": ""
+    },
+    "pr": {
+      "rtl_port": "pr",
+      "endpoint": "actual ROM program-write producer143 -> HOST control (LSB pw_data64,pw_addr10,pw_v,dw_data64,dw_addr3,dw_v)",
+      "clock_family": "CORE833",
+      "status": "REQUIRES_REAL_ROM_PROGRAM_LOADER",
+      "note": "HostOwner C++ fixture writes zero; no source-backed production program producer currently identified."
+    },
+    "package_abort": {
+      "rtl_port": "package_abort",
+      "endpoint": "real HOST control/guard outputs -> singleton warm admission + execution/ingest/cancellation control",
+      "clock_family": "CORE833",
+      "status": "SOURCE_BACKED_CONNECTION",
+      "note": ""
+    },
+    "service_ready": {
+      "rtl_port": "service_ready",
+      "endpoint": "real HOST control/guard outputs -> singleton warm admission + execution/ingest/cancellation control",
+      "clock_family": "CORE833",
+      "status": "SOURCE_BACKED_CONNECTION",
+      "note": ""
+    },
+    "service_abort": {
+      "rtl_port": "service_abort",
+      "endpoint": "real HOST control/guard outputs -> singleton warm admission + execution/ingest/cancellation control",
+      "clock_family": "CORE833",
+      "status": "SOURCE_BACKED_CONNECTION",
+      "note": ""
+    },
+    "ingest_permission": {
+      "rtl_port": "ingest_permission",
+      "endpoint": "real HOST control/guard outputs -> singleton warm admission + execution/ingest/cancellation control",
+      "clock_family": "CORE833",
+      "status": "SOURCE_BACKED_CONNECTION",
+      "note": ""
+    },
+    "local_service_epoch": {
+      "rtl_port": "local_service_epoch",
+      "endpoint": "HOST prefill service epoch16 -> real service diagnostics/transport; not token identity epoch16",
+      "clock_family": "CORE833",
+      "status": "SOURCE_BACKED_CONNECTION",
+      "note": ""
+    },
+    "service_diag_raw": {
+      "rtl_port": "service_diag_raw",
+      "endpoint": "HOST actual diagnostic output -> system CSR/debug observation plan; output may be explicitly unread by design, never replace input producer",
+      "clock_family": "CORE833",
+      "status": "SOURCE_BACKED_CONNECTION",
+      "note": ""
+    },
+    "service_status": {
+      "rtl_port": "service_status",
+      "endpoint": "HOST actual diagnostic output -> system CSR/debug observation plan; output may be explicitly unread by design, never replace input producer",
+      "clock_family": "CORE833",
+      "status": "SOURCE_BACKED_CONNECTION",
+      "note": ""
+    },
+    "seen": {
+      "rtl_port": "seen",
+      "endpoint": "HOST actual diagnostic output -> system CSR/debug observation plan; output may be explicitly unread by design, never replace input producer",
+      "clock_family": "CORE833",
+      "status": "SOURCE_BACKED_CONNECTION",
+      "note": ""
+    },
+    "irq": {
+      "rtl_port": "irq",
+      "endpoint": "HOST actual diagnostic output -> system CSR/debug observation plan; output may be explicitly unread by design, never replace input producer",
+      "clock_family": "CORE833",
+      "status": "SOURCE_BACKED_CONNECTION",
+      "note": ""
+    },
+    "fault_src": {
+      "rtl_port": "fault_src",
+      "endpoint": "HOST actual diagnostic output -> system CSR/debug observation plan; output may be explicitly unread by design, never replace input producer",
+      "clock_family": "CORE833",
+      "status": "SOURCE_BACKED_CONNECTION",
+      "note": ""
+    },
+    "source_cr": {
+      "rtl_port": "source_cr",
+      "endpoint": "HOST actual diagnostic output -> system CSR/debug observation plan; output may be explicitly unread by design, never replace input producer",
+      "clock_family": "CORE833",
+      "status": "SOURCE_BACKED_CONNECTION",
+      "note": ""
+    },
+    "available": {
+      "rtl_port": "available",
+      "endpoint": "HOST actual diagnostic output -> system CSR/debug observation plan; output may be explicitly unread by design, never replace input producer",
+      "clock_family": "CORE833",
+      "status": "SOURCE_BACKED_CONNECTION",
+      "note": ""
+    },
+    "issued": {
+      "rtl_port": "issued",
+      "endpoint": "HOST actual diagnostic output -> system CSR/debug observation plan; output may be explicitly unread by design, never replace input producer",
+      "clock_family": "CORE833",
+      "status": "SOURCE_BACKED_CONNECTION",
+      "note": ""
+    },
+    "landed": {
+      "rtl_port": "landed",
+      "endpoint": "HOST actual diagnostic output -> system CSR/debug observation plan; output may be explicitly unread by design, never replace input producer",
+      "clock_family": "CORE833",
+      "status": "SOURCE_BACKED_CONNECTION",
+      "note": ""
+    },
+    "physical_ack_n": {
+      "rtl_port": "physical_ack_n",
+      "endpoint": "HOST actual diagnostic output -> system CSR/debug observation plan; output may be explicitly unread by design, never replace input producer",
+      "clock_family": "CORE833",
+      "status": "SOURCE_BACKED_CONNECTION",
+      "note": ""
+    },
+    "service_faults": {
+      "rtl_port": "service_faults",
+      "endpoint": "HOST actual diagnostic output -> system CSR/debug observation plan; output may be explicitly unread by design, never replace input producer",
+      "clock_family": "CORE833",
+      "status": "SOURCE_BACKED_CONNECTION",
+      "note": ""
+    }
+  },
+  "per_pc_logical_to_physical": [
+    {
+      "stack": 0,
+      "stack_name": "WS",
+      "physical_slot": 0,
+      "logical_pc": 4,
+      "host_slice_ID": 4,
+      "land_leaf": "landpc_WS_0",
+      "controller_leaf": "ctrlpc_WS_0",
+      "ck_station_bit": 4,
+      "ck_static_bit": 4
+    },
+    {
+      "stack": 0,
+      "stack_name": "WS",
+      "physical_slot": 1,
+      "logical_pc": 12,
+      "host_slice_ID": 12,
+      "land_leaf": "landpc_WS_1",
+      "controller_leaf": "ctrlpc_WS_1",
+      "ck_station_bit": 12,
+      "ck_static_bit": 12
+    },
+    {
+      "stack": 0,
+      "stack_name": "WS",
+      "physical_slot": 2,
+      "logical_pc": 20,
+      "host_slice_ID": 20,
+      "land_leaf": "landpc_WS_2",
+      "controller_leaf": "ctrlpc_WS_2",
+      "ck_station_bit": 20,
+      "ck_static_bit": 20
+    },
+    {
+      "stack": 0,
+      "stack_name": "WS",
+      "physical_slot": 3,
+      "logical_pc": 28,
+      "host_slice_ID": 28,
+      "land_leaf": "landpc_WS_3",
+      "controller_leaf": "ctrlpc_WS_3",
+      "ck_station_bit": 28,
+      "ck_static_bit": 28
+    },
+    {
+      "stack": 0,
+      "stack_name": "WS",
+      "physical_slot": 4,
+      "logical_pc": 5,
+      "host_slice_ID": 5,
+      "land_leaf": "landpc_WS_4",
+      "controller_leaf": "ctrlpc_WS_4",
+      "ck_station_bit": 5,
+      "ck_static_bit": 5
+    },
+    {
+      "stack": 0,
+      "stack_name": "WS",
+      "physical_slot": 5,
+      "logical_pc": 13,
+      "host_slice_ID": 13,
+      "land_leaf": "landpc_WS_5",
+      "controller_leaf": "ctrlpc_WS_5",
+      "ck_station_bit": 13,
+      "ck_static_bit": 13
+    },
+    {
+      "stack": 0,
+      "stack_name": "WS",
+      "physical_slot": 6,
+      "logical_pc": 21,
+      "host_slice_ID": 21,
+      "land_leaf": "landpc_WS_6",
+      "controller_leaf": "ctrlpc_WS_6",
+      "ck_station_bit": 21,
+      "ck_static_bit": 21
+    },
+    {
+      "stack": 0,
+      "stack_name": "WS",
+      "physical_slot": 7,
+      "logical_pc": 29,
+      "host_slice_ID": 29,
+      "land_leaf": "landpc_WS_7",
+      "controller_leaf": "ctrlpc_WS_7",
+      "ck_station_bit": 29,
+      "ck_static_bit": 29
+    },
+    {
+      "stack": 0,
+      "stack_name": "WS",
+      "physical_slot": 8,
+      "logical_pc": 0,
+      "host_slice_ID": 0,
+      "land_leaf": "landpc_WS_8",
+      "controller_leaf": "ctrlpc_WS_8",
+      "ck_station_bit": 0,
+      "ck_static_bit": 0
+    },
+    {
+      "stack": 0,
+      "stack_name": "WS",
+      "physical_slot": 9,
+      "logical_pc": 8,
+      "host_slice_ID": 8,
+      "land_leaf": "landpc_WS_9",
+      "controller_leaf": "ctrlpc_WS_9",
+      "ck_station_bit": 8,
+      "ck_static_bit": 8
+    },
+    {
+      "stack": 0,
+      "stack_name": "WS",
+      "physical_slot": 10,
+      "logical_pc": 16,
+      "host_slice_ID": 16,
+      "land_leaf": "landpc_WS_10",
+      "controller_leaf": "ctrlpc_WS_10",
+      "ck_station_bit": 16,
+      "ck_static_bit": 16
+    },
+    {
+      "stack": 0,
+      "stack_name": "WS",
+      "physical_slot": 11,
+      "logical_pc": 24,
+      "host_slice_ID": 24,
+      "land_leaf": "landpc_WS_11",
+      "controller_leaf": "ctrlpc_WS_11",
+      "ck_station_bit": 24,
+      "ck_static_bit": 24
+    },
+    {
+      "stack": 0,
+      "stack_name": "WS",
+      "physical_slot": 12,
+      "logical_pc": 1,
+      "host_slice_ID": 1,
+      "land_leaf": "landpc_WS_12",
+      "controller_leaf": "ctrlpc_WS_12",
+      "ck_station_bit": 1,
+      "ck_static_bit": 1
+    },
+    {
+      "stack": 0,
+      "stack_name": "WS",
+      "physical_slot": 13,
+      "logical_pc": 9,
+      "host_slice_ID": 9,
+      "land_leaf": "landpc_WS_13",
+      "controller_leaf": "ctrlpc_WS_13",
+      "ck_station_bit": 9,
+      "ck_static_bit": 9
+    },
+    {
+      "stack": 0,
+      "stack_name": "WS",
+      "physical_slot": 14,
+      "logical_pc": 17,
+      "host_slice_ID": 17,
+      "land_leaf": "landpc_WS_14",
+      "controller_leaf": "ctrlpc_WS_14",
+      "ck_station_bit": 17,
+      "ck_static_bit": 17
+    },
+    {
+      "stack": 0,
+      "stack_name": "WS",
+      "physical_slot": 15,
+      "logical_pc": 25,
+      "host_slice_ID": 25,
+      "land_leaf": "landpc_WS_15",
+      "controller_leaf": "ctrlpc_WS_15",
+      "ck_station_bit": 25,
+      "ck_static_bit": 25
+    },
+    {
+      "stack": 0,
+      "stack_name": "WS",
+      "physical_slot": 16,
+      "logical_pc": 2,
+      "host_slice_ID": 2,
+      "land_leaf": "landpc_WS_16",
+      "controller_leaf": "ctrlpc_WS_16",
+      "ck_station_bit": 2,
+      "ck_static_bit": 2
+    },
+    {
+      "stack": 0,
+      "stack_name": "WS",
+      "physical_slot": 17,
+      "logical_pc": 10,
+      "host_slice_ID": 10,
+      "land_leaf": "landpc_WS_17",
+      "controller_leaf": "ctrlpc_WS_17",
+      "ck_station_bit": 10,
+      "ck_static_bit": 10
+    },
+    {
+      "stack": 0,
+      "stack_name": "WS",
+      "physical_slot": 18,
+      "logical_pc": 18,
+      "host_slice_ID": 18,
+      "land_leaf": "landpc_WS_18",
+      "controller_leaf": "ctrlpc_WS_18",
+      "ck_station_bit": 18,
+      "ck_static_bit": 18
+    },
+    {
+      "stack": 0,
+      "stack_name": "WS",
+      "physical_slot": 19,
+      "logical_pc": 26,
+      "host_slice_ID": 26,
+      "land_leaf": "landpc_WS_19",
+      "controller_leaf": "ctrlpc_WS_19",
+      "ck_station_bit": 26,
+      "ck_static_bit": 26
+    },
+    {
+      "stack": 0,
+      "stack_name": "WS",
+      "physical_slot": 20,
+      "logical_pc": 3,
+      "host_slice_ID": 3,
+      "land_leaf": "landpc_WS_20",
+      "controller_leaf": "ctrlpc_WS_20",
+      "ck_station_bit": 3,
+      "ck_static_bit": 3
+    },
+    {
+      "stack": 0,
+      "stack_name": "WS",
+      "physical_slot": 21,
+      "logical_pc": 11,
+      "host_slice_ID": 11,
+      "land_leaf": "landpc_WS_21",
+      "controller_leaf": "ctrlpc_WS_21",
+      "ck_station_bit": 11,
+      "ck_static_bit": 11
+    },
+    {
+      "stack": 0,
+      "stack_name": "WS",
+      "physical_slot": 22,
+      "logical_pc": 19,
+      "host_slice_ID": 19,
+      "land_leaf": "landpc_WS_22",
+      "controller_leaf": "ctrlpc_WS_22",
+      "ck_station_bit": 19,
+      "ck_static_bit": 19
+    },
+    {
+      "stack": 0,
+      "stack_name": "WS",
+      "physical_slot": 23,
+      "logical_pc": 27,
+      "host_slice_ID": 27,
+      "land_leaf": "landpc_WS_23",
+      "controller_leaf": "ctrlpc_WS_23",
+      "ck_station_bit": 27,
+      "ck_static_bit": 27
+    },
+    {
+      "stack": 0,
+      "stack_name": "WS",
+      "physical_slot": 24,
+      "logical_pc": 6,
+      "host_slice_ID": 6,
+      "land_leaf": "landpc_WS_24",
+      "controller_leaf": "ctrlpc_WS_24",
+      "ck_station_bit": 6,
+      "ck_static_bit": 6
+    },
+    {
+      "stack": 0,
+      "stack_name": "WS",
+      "physical_slot": 25,
+      "logical_pc": 14,
+      "host_slice_ID": 14,
+      "land_leaf": "landpc_WS_25",
+      "controller_leaf": "ctrlpc_WS_25",
+      "ck_station_bit": 14,
+      "ck_static_bit": 14
+    },
+    {
+      "stack": 0,
+      "stack_name": "WS",
+      "physical_slot": 26,
+      "logical_pc": 22,
+      "host_slice_ID": 22,
+      "land_leaf": "landpc_WS_26",
+      "controller_leaf": "ctrlpc_WS_26",
+      "ck_station_bit": 22,
+      "ck_static_bit": 22
+    },
+    {
+      "stack": 0,
+      "stack_name": "WS",
+      "physical_slot": 27,
+      "logical_pc": 30,
+      "host_slice_ID": 30,
+      "land_leaf": "landpc_WS_27",
+      "controller_leaf": "ctrlpc_WS_27",
+      "ck_station_bit": 30,
+      "ck_static_bit": 30
+    },
+    {
+      "stack": 0,
+      "stack_name": "WS",
+      "physical_slot": 28,
+      "logical_pc": 7,
+      "host_slice_ID": 7,
+      "land_leaf": "landpc_WS_28",
+      "controller_leaf": "ctrlpc_WS_28",
+      "ck_station_bit": 7,
+      "ck_static_bit": 7
+    },
+    {
+      "stack": 0,
+      "stack_name": "WS",
+      "physical_slot": 29,
+      "logical_pc": 15,
+      "host_slice_ID": 15,
+      "land_leaf": "landpc_WS_29",
+      "controller_leaf": "ctrlpc_WS_29",
+      "ck_station_bit": 15,
+      "ck_static_bit": 15
+    },
+    {
+      "stack": 0,
+      "stack_name": "WS",
+      "physical_slot": 30,
+      "logical_pc": 23,
+      "host_slice_ID": 23,
+      "land_leaf": "landpc_WS_30",
+      "controller_leaf": "ctrlpc_WS_30",
+      "ck_station_bit": 23,
+      "ck_static_bit": 23
+    },
+    {
+      "stack": 0,
+      "stack_name": "WS",
+      "physical_slot": 31,
+      "logical_pc": 31,
+      "host_slice_ID": 31,
+      "land_leaf": "landpc_WS_31",
+      "controller_leaf": "ctrlpc_WS_31",
+      "ck_station_bit": 31,
+      "ck_static_bit": 31
+    },
+    {
+      "stack": 1,
+      "stack_name": "WN",
+      "physical_slot": 0,
+      "logical_pc": 4,
+      "host_slice_ID": 36,
+      "land_leaf": "landpc_WN_0",
+      "controller_leaf": "ctrlpc_WN_0",
+      "ck_station_bit": 36,
+      "ck_static_bit": 36
+    },
+    {
+      "stack": 1,
+      "stack_name": "WN",
+      "physical_slot": 1,
+      "logical_pc": 12,
+      "host_slice_ID": 44,
+      "land_leaf": "landpc_WN_1",
+      "controller_leaf": "ctrlpc_WN_1",
+      "ck_station_bit": 44,
+      "ck_static_bit": 44
+    },
+    {
+      "stack": 1,
+      "stack_name": "WN",
+      "physical_slot": 2,
+      "logical_pc": 20,
+      "host_slice_ID": 52,
+      "land_leaf": "landpc_WN_2",
+      "controller_leaf": "ctrlpc_WN_2",
+      "ck_station_bit": 52,
+      "ck_static_bit": 52
+    },
+    {
+      "stack": 1,
+      "stack_name": "WN",
+      "physical_slot": 3,
+      "logical_pc": 28,
+      "host_slice_ID": 60,
+      "land_leaf": "landpc_WN_3",
+      "controller_leaf": "ctrlpc_WN_3",
+      "ck_station_bit": 60,
+      "ck_static_bit": 60
+    },
+    {
+      "stack": 1,
+      "stack_name": "WN",
+      "physical_slot": 4,
+      "logical_pc": 5,
+      "host_slice_ID": 37,
+      "land_leaf": "landpc_WN_4",
+      "controller_leaf": "ctrlpc_WN_4",
+      "ck_station_bit": 37,
+      "ck_static_bit": 37
+    },
+    {
+      "stack": 1,
+      "stack_name": "WN",
+      "physical_slot": 5,
+      "logical_pc": 13,
+      "host_slice_ID": 45,
+      "land_leaf": "landpc_WN_5",
+      "controller_leaf": "ctrlpc_WN_5",
+      "ck_station_bit": 45,
+      "ck_static_bit": 45
+    },
+    {
+      "stack": 1,
+      "stack_name": "WN",
+      "physical_slot": 6,
+      "logical_pc": 21,
+      "host_slice_ID": 53,
+      "land_leaf": "landpc_WN_6",
+      "controller_leaf": "ctrlpc_WN_6",
+      "ck_station_bit": 53,
+      "ck_static_bit": 53
+    },
+    {
+      "stack": 1,
+      "stack_name": "WN",
+      "physical_slot": 7,
+      "logical_pc": 29,
+      "host_slice_ID": 61,
+      "land_leaf": "landpc_WN_7",
+      "controller_leaf": "ctrlpc_WN_7",
+      "ck_station_bit": 61,
+      "ck_static_bit": 61
+    },
+    {
+      "stack": 1,
+      "stack_name": "WN",
+      "physical_slot": 8,
+      "logical_pc": 0,
+      "host_slice_ID": 32,
+      "land_leaf": "landpc_WN_8",
+      "controller_leaf": "ctrlpc_WN_8",
+      "ck_station_bit": 32,
+      "ck_static_bit": 32
+    },
+    {
+      "stack": 1,
+      "stack_name": "WN",
+      "physical_slot": 9,
+      "logical_pc": 8,
+      "host_slice_ID": 40,
+      "land_leaf": "landpc_WN_9",
+      "controller_leaf": "ctrlpc_WN_9",
+      "ck_station_bit": 40,
+      "ck_static_bit": 40
+    },
+    {
+      "stack": 1,
+      "stack_name": "WN",
+      "physical_slot": 10,
+      "logical_pc": 16,
+      "host_slice_ID": 48,
+      "land_leaf": "landpc_WN_10",
+      "controller_leaf": "ctrlpc_WN_10",
+      "ck_station_bit": 48,
+      "ck_static_bit": 48
+    },
+    {
+      "stack": 1,
+      "stack_name": "WN",
+      "physical_slot": 11,
+      "logical_pc": 24,
+      "host_slice_ID": 56,
+      "land_leaf": "landpc_WN_11",
+      "controller_leaf": "ctrlpc_WN_11",
+      "ck_station_bit": 56,
+      "ck_static_bit": 56
+    },
+    {
+      "stack": 1,
+      "stack_name": "WN",
+      "physical_slot": 12,
+      "logical_pc": 1,
+      "host_slice_ID": 33,
+      "land_leaf": "landpc_WN_12",
+      "controller_leaf": "ctrlpc_WN_12",
+      "ck_station_bit": 33,
+      "ck_static_bit": 33
+    },
+    {
+      "stack": 1,
+      "stack_name": "WN",
+      "physical_slot": 13,
+      "logical_pc": 9,
+      "host_slice_ID": 41,
+      "land_leaf": "landpc_WN_13",
+      "controller_leaf": "ctrlpc_WN_13",
+      "ck_station_bit": 41,
+      "ck_static_bit": 41
+    },
+    {
+      "stack": 1,
+      "stack_name": "WN",
+      "physical_slot": 14,
+      "logical_pc": 17,
+      "host_slice_ID": 49,
+      "land_leaf": "landpc_WN_14",
+      "controller_leaf": "ctrlpc_WN_14",
+      "ck_station_bit": 49,
+      "ck_static_bit": 49
+    },
+    {
+      "stack": 1,
+      "stack_name": "WN",
+      "physical_slot": 15,
+      "logical_pc": 25,
+      "host_slice_ID": 57,
+      "land_leaf": "landpc_WN_15",
+      "controller_leaf": "ctrlpc_WN_15",
+      "ck_station_bit": 57,
+      "ck_static_bit": 57
+    },
+    {
+      "stack": 1,
+      "stack_name": "WN",
+      "physical_slot": 16,
+      "logical_pc": 2,
+      "host_slice_ID": 34,
+      "land_leaf": "landpc_WN_16",
+      "controller_leaf": "ctrlpc_WN_16",
+      "ck_station_bit": 34,
+      "ck_static_bit": 34
+    },
+    {
+      "stack": 1,
+      "stack_name": "WN",
+      "physical_slot": 17,
+      "logical_pc": 10,
+      "host_slice_ID": 42,
+      "land_leaf": "landpc_WN_17",
+      "controller_leaf": "ctrlpc_WN_17",
+      "ck_station_bit": 42,
+      "ck_static_bit": 42
+    },
+    {
+      "stack": 1,
+      "stack_name": "WN",
+      "physical_slot": 18,
+      "logical_pc": 18,
+      "host_slice_ID": 50,
+      "land_leaf": "landpc_WN_18",
+      "controller_leaf": "ctrlpc_WN_18",
+      "ck_station_bit": 50,
+      "ck_static_bit": 50
+    },
+    {
+      "stack": 1,
+      "stack_name": "WN",
+      "physical_slot": 19,
+      "logical_pc": 26,
+      "host_slice_ID": 58,
+      "land_leaf": "landpc_WN_19",
+      "controller_leaf": "ctrlpc_WN_19",
+      "ck_station_bit": 58,
+      "ck_static_bit": 58
+    },
+    {
+      "stack": 1,
+      "stack_name": "WN",
+      "physical_slot": 20,
+      "logical_pc": 3,
+      "host_slice_ID": 35,
+      "land_leaf": "landpc_WN_20",
+      "controller_leaf": "ctrlpc_WN_20",
+      "ck_station_bit": 35,
+      "ck_static_bit": 35
+    },
+    {
+      "stack": 1,
+      "stack_name": "WN",
+      "physical_slot": 21,
+      "logical_pc": 11,
+      "host_slice_ID": 43,
+      "land_leaf": "landpc_WN_21",
+      "controller_leaf": "ctrlpc_WN_21",
+      "ck_station_bit": 43,
+      "ck_static_bit": 43
+    },
+    {
+      "stack": 1,
+      "stack_name": "WN",
+      "physical_slot": 22,
+      "logical_pc": 19,
+      "host_slice_ID": 51,
+      "land_leaf": "landpc_WN_22",
+      "controller_leaf": "ctrlpc_WN_22",
+      "ck_station_bit": 51,
+      "ck_static_bit": 51
+    },
+    {
+      "stack": 1,
+      "stack_name": "WN",
+      "physical_slot": 23,
+      "logical_pc": 27,
+      "host_slice_ID": 59,
+      "land_leaf": "landpc_WN_23",
+      "controller_leaf": "ctrlpc_WN_23",
+      "ck_station_bit": 59,
+      "ck_static_bit": 59
+    },
+    {
+      "stack": 1,
+      "stack_name": "WN",
+      "physical_slot": 24,
+      "logical_pc": 6,
+      "host_slice_ID": 38,
+      "land_leaf": "landpc_WN_24",
+      "controller_leaf": "ctrlpc_WN_24",
+      "ck_station_bit": 38,
+      "ck_static_bit": 38
+    },
+    {
+      "stack": 1,
+      "stack_name": "WN",
+      "physical_slot": 25,
+      "logical_pc": 14,
+      "host_slice_ID": 46,
+      "land_leaf": "landpc_WN_25",
+      "controller_leaf": "ctrlpc_WN_25",
+      "ck_station_bit": 46,
+      "ck_static_bit": 46
+    },
+    {
+      "stack": 1,
+      "stack_name": "WN",
+      "physical_slot": 26,
+      "logical_pc": 22,
+      "host_slice_ID": 54,
+      "land_leaf": "landpc_WN_26",
+      "controller_leaf": "ctrlpc_WN_26",
+      "ck_station_bit": 54,
+      "ck_static_bit": 54
+    },
+    {
+      "stack": 1,
+      "stack_name": "WN",
+      "physical_slot": 27,
+      "logical_pc": 30,
+      "host_slice_ID": 62,
+      "land_leaf": "landpc_WN_27",
+      "controller_leaf": "ctrlpc_WN_27",
+      "ck_station_bit": 62,
+      "ck_static_bit": 62
+    },
+    {
+      "stack": 1,
+      "stack_name": "WN",
+      "physical_slot": 28,
+      "logical_pc": 7,
+      "host_slice_ID": 39,
+      "land_leaf": "landpc_WN_28",
+      "controller_leaf": "ctrlpc_WN_28",
+      "ck_station_bit": 39,
+      "ck_static_bit": 39
+    },
+    {
+      "stack": 1,
+      "stack_name": "WN",
+      "physical_slot": 29,
+      "logical_pc": 15,
+      "host_slice_ID": 47,
+      "land_leaf": "landpc_WN_29",
+      "controller_leaf": "ctrlpc_WN_29",
+      "ck_station_bit": 47,
+      "ck_static_bit": 47
+    },
+    {
+      "stack": 1,
+      "stack_name": "WN",
+      "physical_slot": 30,
+      "logical_pc": 23,
+      "host_slice_ID": 55,
+      "land_leaf": "landpc_WN_30",
+      "controller_leaf": "ctrlpc_WN_30",
+      "ck_station_bit": 55,
+      "ck_static_bit": 55
+    },
+    {
+      "stack": 1,
+      "stack_name": "WN",
+      "physical_slot": 31,
+      "logical_pc": 31,
+      "host_slice_ID": 63,
+      "land_leaf": "landpc_WN_31",
+      "controller_leaf": "ctrlpc_WN_31",
+      "ck_station_bit": 63,
+      "ck_static_bit": 63
+    },
+    {
+      "stack": 2,
+      "stack_name": "ES",
+      "physical_slot": 0,
+      "logical_pc": 4,
+      "host_slice_ID": 68,
+      "land_leaf": "landpc_ES_0",
+      "controller_leaf": "ctrlpc_ES_0",
+      "ck_station_bit": 68,
+      "ck_static_bit": 68
+    },
+    {
+      "stack": 2,
+      "stack_name": "ES",
+      "physical_slot": 1,
+      "logical_pc": 12,
+      "host_slice_ID": 76,
+      "land_leaf": "landpc_ES_1",
+      "controller_leaf": "ctrlpc_ES_1",
+      "ck_station_bit": 76,
+      "ck_static_bit": 76
+    },
+    {
+      "stack": 2,
+      "stack_name": "ES",
+      "physical_slot": 2,
+      "logical_pc": 20,
+      "host_slice_ID": 84,
+      "land_leaf": "landpc_ES_2",
+      "controller_leaf": "ctrlpc_ES_2",
+      "ck_station_bit": 84,
+      "ck_static_bit": 84
+    },
+    {
+      "stack": 2,
+      "stack_name": "ES",
+      "physical_slot": 3,
+      "logical_pc": 28,
+      "host_slice_ID": 92,
+      "land_leaf": "landpc_ES_3",
+      "controller_leaf": "ctrlpc_ES_3",
+      "ck_station_bit": 92,
+      "ck_static_bit": 92
+    },
+    {
+      "stack": 2,
+      "stack_name": "ES",
+      "physical_slot": 4,
+      "logical_pc": 5,
+      "host_slice_ID": 69,
+      "land_leaf": "landpc_ES_4",
+      "controller_leaf": "ctrlpc_ES_4",
+      "ck_station_bit": 69,
+      "ck_static_bit": 69
+    },
+    {
+      "stack": 2,
+      "stack_name": "ES",
+      "physical_slot": 5,
+      "logical_pc": 13,
+      "host_slice_ID": 77,
+      "land_leaf": "landpc_ES_5",
+      "controller_leaf": "ctrlpc_ES_5",
+      "ck_station_bit": 77,
+      "ck_static_bit": 77
+    },
+    {
+      "stack": 2,
+      "stack_name": "ES",
+      "physical_slot": 6,
+      "logical_pc": 21,
+      "host_slice_ID": 85,
+      "land_leaf": "landpc_ES_6",
+      "controller_leaf": "ctrlpc_ES_6",
+      "ck_station_bit": 85,
+      "ck_static_bit": 85
+    },
+    {
+      "stack": 2,
+      "stack_name": "ES",
+      "physical_slot": 7,
+      "logical_pc": 29,
+      "host_slice_ID": 93,
+      "land_leaf": "landpc_ES_7",
+      "controller_leaf": "ctrlpc_ES_7",
+      "ck_station_bit": 93,
+      "ck_static_bit": 93
+    },
+    {
+      "stack": 2,
+      "stack_name": "ES",
+      "physical_slot": 8,
+      "logical_pc": 0,
+      "host_slice_ID": 64,
+      "land_leaf": "landpc_ES_8",
+      "controller_leaf": "ctrlpc_ES_8",
+      "ck_station_bit": 64,
+      "ck_static_bit": 64
+    },
+    {
+      "stack": 2,
+      "stack_name": "ES",
+      "physical_slot": 9,
+      "logical_pc": 8,
+      "host_slice_ID": 72,
+      "land_leaf": "landpc_ES_9",
+      "controller_leaf": "ctrlpc_ES_9",
+      "ck_station_bit": 72,
+      "ck_static_bit": 72
+    },
+    {
+      "stack": 2,
+      "stack_name": "ES",
+      "physical_slot": 10,
+      "logical_pc": 16,
+      "host_slice_ID": 80,
+      "land_leaf": "landpc_ES_10",
+      "controller_leaf": "ctrlpc_ES_10",
+      "ck_station_bit": 80,
+      "ck_static_bit": 80
+    },
+    {
+      "stack": 2,
+      "stack_name": "ES",
+      "physical_slot": 11,
+      "logical_pc": 24,
+      "host_slice_ID": 88,
+      "land_leaf": "landpc_ES_11",
+      "controller_leaf": "ctrlpc_ES_11",
+      "ck_station_bit": 88,
+      "ck_static_bit": 88
+    },
+    {
+      "stack": 2,
+      "stack_name": "ES",
+      "physical_slot": 12,
+      "logical_pc": 1,
+      "host_slice_ID": 65,
+      "land_leaf": "landpc_ES_12",
+      "controller_leaf": "ctrlpc_ES_12",
+      "ck_station_bit": 65,
+      "ck_static_bit": 65
+    },
+    {
+      "stack": 2,
+      "stack_name": "ES",
+      "physical_slot": 13,
+      "logical_pc": 9,
+      "host_slice_ID": 73,
+      "land_leaf": "landpc_ES_13",
+      "controller_leaf": "ctrlpc_ES_13",
+      "ck_station_bit": 73,
+      "ck_static_bit": 73
+    },
+    {
+      "stack": 2,
+      "stack_name": "ES",
+      "physical_slot": 14,
+      "logical_pc": 17,
+      "host_slice_ID": 81,
+      "land_leaf": "landpc_ES_14",
+      "controller_leaf": "ctrlpc_ES_14",
+      "ck_station_bit": 81,
+      "ck_static_bit": 81
+    },
+    {
+      "stack": 2,
+      "stack_name": "ES",
+      "physical_slot": 15,
+      "logical_pc": 25,
+      "host_slice_ID": 89,
+      "land_leaf": "landpc_ES_15",
+      "controller_leaf": "ctrlpc_ES_15",
+      "ck_station_bit": 89,
+      "ck_static_bit": 89
+    },
+    {
+      "stack": 2,
+      "stack_name": "ES",
+      "physical_slot": 16,
+      "logical_pc": 2,
+      "host_slice_ID": 66,
+      "land_leaf": "landpc_ES_16",
+      "controller_leaf": "ctrlpc_ES_16",
+      "ck_station_bit": 66,
+      "ck_static_bit": 66
+    },
+    {
+      "stack": 2,
+      "stack_name": "ES",
+      "physical_slot": 17,
+      "logical_pc": 10,
+      "host_slice_ID": 74,
+      "land_leaf": "landpc_ES_17",
+      "controller_leaf": "ctrlpc_ES_17",
+      "ck_station_bit": 74,
+      "ck_static_bit": 74
+    },
+    {
+      "stack": 2,
+      "stack_name": "ES",
+      "physical_slot": 18,
+      "logical_pc": 18,
+      "host_slice_ID": 82,
+      "land_leaf": "landpc_ES_18",
+      "controller_leaf": "ctrlpc_ES_18",
+      "ck_station_bit": 82,
+      "ck_static_bit": 82
+    },
+    {
+      "stack": 2,
+      "stack_name": "ES",
+      "physical_slot": 19,
+      "logical_pc": 26,
+      "host_slice_ID": 90,
+      "land_leaf": "landpc_ES_19",
+      "controller_leaf": "ctrlpc_ES_19",
+      "ck_station_bit": 90,
+      "ck_static_bit": 90
+    },
+    {
+      "stack": 2,
+      "stack_name": "ES",
+      "physical_slot": 20,
+      "logical_pc": 3,
+      "host_slice_ID": 67,
+      "land_leaf": "landpc_ES_20",
+      "controller_leaf": "ctrlpc_ES_20",
+      "ck_station_bit": 67,
+      "ck_static_bit": 67
+    },
+    {
+      "stack": 2,
+      "stack_name": "ES",
+      "physical_slot": 21,
+      "logical_pc": 11,
+      "host_slice_ID": 75,
+      "land_leaf": "landpc_ES_21",
+      "controller_leaf": "ctrlpc_ES_21",
+      "ck_station_bit": 75,
+      "ck_static_bit": 75
+    },
+    {
+      "stack": 2,
+      "stack_name": "ES",
+      "physical_slot": 22,
+      "logical_pc": 19,
+      "host_slice_ID": 83,
+      "land_leaf": "landpc_ES_22",
+      "controller_leaf": "ctrlpc_ES_22",
+      "ck_station_bit": 83,
+      "ck_static_bit": 83
+    },
+    {
+      "stack": 2,
+      "stack_name": "ES",
+      "physical_slot": 23,
+      "logical_pc": 27,
+      "host_slice_ID": 91,
+      "land_leaf": "landpc_ES_23",
+      "controller_leaf": "ctrlpc_ES_23",
+      "ck_station_bit": 91,
+      "ck_static_bit": 91
+    },
+    {
+      "stack": 2,
+      "stack_name": "ES",
+      "physical_slot": 24,
+      "logical_pc": 6,
+      "host_slice_ID": 70,
+      "land_leaf": "landpc_ES_24",
+      "controller_leaf": "ctrlpc_ES_24",
+      "ck_station_bit": 70,
+      "ck_static_bit": 70
+    },
+    {
+      "stack": 2,
+      "stack_name": "ES",
+      "physical_slot": 25,
+      "logical_pc": 14,
+      "host_slice_ID": 78,
+      "land_leaf": "landpc_ES_25",
+      "controller_leaf": "ctrlpc_ES_25",
+      "ck_station_bit": 78,
+      "ck_static_bit": 78
+    },
+    {
+      "stack": 2,
+      "stack_name": "ES",
+      "physical_slot": 26,
+      "logical_pc": 22,
+      "host_slice_ID": 86,
+      "land_leaf": "landpc_ES_26",
+      "controller_leaf": "ctrlpc_ES_26",
+      "ck_station_bit": 86,
+      "ck_static_bit": 86
+    },
+    {
+      "stack": 2,
+      "stack_name": "ES",
+      "physical_slot": 27,
+      "logical_pc": 30,
+      "host_slice_ID": 94,
+      "land_leaf": "landpc_ES_27",
+      "controller_leaf": "ctrlpc_ES_27",
+      "ck_station_bit": 94,
+      "ck_static_bit": 94
+    },
+    {
+      "stack": 2,
+      "stack_name": "ES",
+      "physical_slot": 28,
+      "logical_pc": 7,
+      "host_slice_ID": 71,
+      "land_leaf": "landpc_ES_28",
+      "controller_leaf": "ctrlpc_ES_28",
+      "ck_station_bit": 71,
+      "ck_static_bit": 71
+    },
+    {
+      "stack": 2,
+      "stack_name": "ES",
+      "physical_slot": 29,
+      "logical_pc": 15,
+      "host_slice_ID": 79,
+      "land_leaf": "landpc_ES_29",
+      "controller_leaf": "ctrlpc_ES_29",
+      "ck_station_bit": 79,
+      "ck_static_bit": 79
+    },
+    {
+      "stack": 2,
+      "stack_name": "ES",
+      "physical_slot": 30,
+      "logical_pc": 23,
+      "host_slice_ID": 87,
+      "land_leaf": "landpc_ES_30",
+      "controller_leaf": "ctrlpc_ES_30",
+      "ck_station_bit": 87,
+      "ck_static_bit": 87
+    },
+    {
+      "stack": 2,
+      "stack_name": "ES",
+      "physical_slot": 31,
+      "logical_pc": 31,
+      "host_slice_ID": 95,
+      "land_leaf": "landpc_ES_31",
+      "controller_leaf": "ctrlpc_ES_31",
+      "ck_station_bit": 95,
+      "ck_static_bit": 95
+    },
+    {
+      "stack": 3,
+      "stack_name": "EN",
+      "physical_slot": 0,
+      "logical_pc": 4,
+      "host_slice_ID": 100,
+      "land_leaf": "landpc_EN_0",
+      "controller_leaf": "ctrlpc_EN_0",
+      "ck_station_bit": 100,
+      "ck_static_bit": 100
+    },
+    {
+      "stack": 3,
+      "stack_name": "EN",
+      "physical_slot": 1,
+      "logical_pc": 12,
+      "host_slice_ID": 108,
+      "land_leaf": "landpc_EN_1",
+      "controller_leaf": "ctrlpc_EN_1",
+      "ck_station_bit": 108,
+      "ck_static_bit": 108
+    },
+    {
+      "stack": 3,
+      "stack_name": "EN",
+      "physical_slot": 2,
+      "logical_pc": 20,
+      "host_slice_ID": 116,
+      "land_leaf": "landpc_EN_2",
+      "controller_leaf": "ctrlpc_EN_2",
+      "ck_station_bit": 116,
+      "ck_static_bit": 116
+    },
+    {
+      "stack": 3,
+      "stack_name": "EN",
+      "physical_slot": 3,
+      "logical_pc": 28,
+      "host_slice_ID": 124,
+      "land_leaf": "landpc_EN_3",
+      "controller_leaf": "ctrlpc_EN_3",
+      "ck_station_bit": 124,
+      "ck_static_bit": 124
+    },
+    {
+      "stack": 3,
+      "stack_name": "EN",
+      "physical_slot": 4,
+      "logical_pc": 5,
+      "host_slice_ID": 101,
+      "land_leaf": "landpc_EN_4",
+      "controller_leaf": "ctrlpc_EN_4",
+      "ck_station_bit": 101,
+      "ck_static_bit": 101
+    },
+    {
+      "stack": 3,
+      "stack_name": "EN",
+      "physical_slot": 5,
+      "logical_pc": 13,
+      "host_slice_ID": 109,
+      "land_leaf": "landpc_EN_5",
+      "controller_leaf": "ctrlpc_EN_5",
+      "ck_station_bit": 109,
+      "ck_static_bit": 109
+    },
+    {
+      "stack": 3,
+      "stack_name": "EN",
+      "physical_slot": 6,
+      "logical_pc": 21,
+      "host_slice_ID": 117,
+      "land_leaf": "landpc_EN_6",
+      "controller_leaf": "ctrlpc_EN_6",
+      "ck_station_bit": 117,
+      "ck_static_bit": 117
+    },
+    {
+      "stack": 3,
+      "stack_name": "EN",
+      "physical_slot": 7,
+      "logical_pc": 29,
+      "host_slice_ID": 125,
+      "land_leaf": "landpc_EN_7",
+      "controller_leaf": "ctrlpc_EN_7",
+      "ck_station_bit": 125,
+      "ck_static_bit": 125
+    },
+    {
+      "stack": 3,
+      "stack_name": "EN",
+      "physical_slot": 8,
+      "logical_pc": 0,
+      "host_slice_ID": 96,
+      "land_leaf": "landpc_EN_8",
+      "controller_leaf": "ctrlpc_EN_8",
+      "ck_station_bit": 96,
+      "ck_static_bit": 96
+    },
+    {
+      "stack": 3,
+      "stack_name": "EN",
+      "physical_slot": 9,
+      "logical_pc": 8,
+      "host_slice_ID": 104,
+      "land_leaf": "landpc_EN_9",
+      "controller_leaf": "ctrlpc_EN_9",
+      "ck_station_bit": 104,
+      "ck_static_bit": 104
+    },
+    {
+      "stack": 3,
+      "stack_name": "EN",
+      "physical_slot": 10,
+      "logical_pc": 16,
+      "host_slice_ID": 112,
+      "land_leaf": "landpc_EN_10",
+      "controller_leaf": "ctrlpc_EN_10",
+      "ck_station_bit": 112,
+      "ck_static_bit": 112
+    },
+    {
+      "stack": 3,
+      "stack_name": "EN",
+      "physical_slot": 11,
+      "logical_pc": 24,
+      "host_slice_ID": 120,
+      "land_leaf": "landpc_EN_11",
+      "controller_leaf": "ctrlpc_EN_11",
+      "ck_station_bit": 120,
+      "ck_static_bit": 120
+    },
+    {
+      "stack": 3,
+      "stack_name": "EN",
+      "physical_slot": 12,
+      "logical_pc": 1,
+      "host_slice_ID": 97,
+      "land_leaf": "landpc_EN_12",
+      "controller_leaf": "ctrlpc_EN_12",
+      "ck_station_bit": 97,
+      "ck_static_bit": 97
+    },
+    {
+      "stack": 3,
+      "stack_name": "EN",
+      "physical_slot": 13,
+      "logical_pc": 9,
+      "host_slice_ID": 105,
+      "land_leaf": "landpc_EN_13",
+      "controller_leaf": "ctrlpc_EN_13",
+      "ck_station_bit": 105,
+      "ck_static_bit": 105
+    },
+    {
+      "stack": 3,
+      "stack_name": "EN",
+      "physical_slot": 14,
+      "logical_pc": 17,
+      "host_slice_ID": 113,
+      "land_leaf": "landpc_EN_14",
+      "controller_leaf": "ctrlpc_EN_14",
+      "ck_station_bit": 113,
+      "ck_static_bit": 113
+    },
+    {
+      "stack": 3,
+      "stack_name": "EN",
+      "physical_slot": 15,
+      "logical_pc": 25,
+      "host_slice_ID": 121,
+      "land_leaf": "landpc_EN_15",
+      "controller_leaf": "ctrlpc_EN_15",
+      "ck_station_bit": 121,
+      "ck_static_bit": 121
+    },
+    {
+      "stack": 3,
+      "stack_name": "EN",
+      "physical_slot": 16,
+      "logical_pc": 2,
+      "host_slice_ID": 98,
+      "land_leaf": "landpc_EN_16",
+      "controller_leaf": "ctrlpc_EN_16",
+      "ck_station_bit": 98,
+      "ck_static_bit": 98
+    },
+    {
+      "stack": 3,
+      "stack_name": "EN",
+      "physical_slot": 17,
+      "logical_pc": 10,
+      "host_slice_ID": 106,
+      "land_leaf": "landpc_EN_17",
+      "controller_leaf": "ctrlpc_EN_17",
+      "ck_station_bit": 106,
+      "ck_static_bit": 106
+    },
+    {
+      "stack": 3,
+      "stack_name": "EN",
+      "physical_slot": 18,
+      "logical_pc": 18,
+      "host_slice_ID": 114,
+      "land_leaf": "landpc_EN_18",
+      "controller_leaf": "ctrlpc_EN_18",
+      "ck_station_bit": 114,
+      "ck_static_bit": 114
+    },
+    {
+      "stack": 3,
+      "stack_name": "EN",
+      "physical_slot": 19,
+      "logical_pc": 26,
+      "host_slice_ID": 122,
+      "land_leaf": "landpc_EN_19",
+      "controller_leaf": "ctrlpc_EN_19",
+      "ck_station_bit": 122,
+      "ck_static_bit": 122
+    },
+    {
+      "stack": 3,
+      "stack_name": "EN",
+      "physical_slot": 20,
+      "logical_pc": 3,
+      "host_slice_ID": 99,
+      "land_leaf": "landpc_EN_20",
+      "controller_leaf": "ctrlpc_EN_20",
+      "ck_station_bit": 99,
+      "ck_static_bit": 99
+    },
+    {
+      "stack": 3,
+      "stack_name": "EN",
+      "physical_slot": 21,
+      "logical_pc": 11,
+      "host_slice_ID": 107,
+      "land_leaf": "landpc_EN_21",
+      "controller_leaf": "ctrlpc_EN_21",
+      "ck_station_bit": 107,
+      "ck_static_bit": 107
+    },
+    {
+      "stack": 3,
+      "stack_name": "EN",
+      "physical_slot": 22,
+      "logical_pc": 19,
+      "host_slice_ID": 115,
+      "land_leaf": "landpc_EN_22",
+      "controller_leaf": "ctrlpc_EN_22",
+      "ck_station_bit": 115,
+      "ck_static_bit": 115
+    },
+    {
+      "stack": 3,
+      "stack_name": "EN",
+      "physical_slot": 23,
+      "logical_pc": 27,
+      "host_slice_ID": 123,
+      "land_leaf": "landpc_EN_23",
+      "controller_leaf": "ctrlpc_EN_23",
+      "ck_station_bit": 123,
+      "ck_static_bit": 123
+    },
+    {
+      "stack": 3,
+      "stack_name": "EN",
+      "physical_slot": 24,
+      "logical_pc": 6,
+      "host_slice_ID": 102,
+      "land_leaf": "landpc_EN_24",
+      "controller_leaf": "ctrlpc_EN_24",
+      "ck_station_bit": 102,
+      "ck_static_bit": 102
+    },
+    {
+      "stack": 3,
+      "stack_name": "EN",
+      "physical_slot": 25,
+      "logical_pc": 14,
+      "host_slice_ID": 110,
+      "land_leaf": "landpc_EN_25",
+      "controller_leaf": "ctrlpc_EN_25",
+      "ck_station_bit": 110,
+      "ck_static_bit": 110
+    },
+    {
+      "stack": 3,
+      "stack_name": "EN",
+      "physical_slot": 26,
+      "logical_pc": 22,
+      "host_slice_ID": 118,
+      "land_leaf": "landpc_EN_26",
+      "controller_leaf": "ctrlpc_EN_26",
+      "ck_station_bit": 118,
+      "ck_static_bit": 118
+    },
+    {
+      "stack": 3,
+      "stack_name": "EN",
+      "physical_slot": 27,
+      "logical_pc": 30,
+      "host_slice_ID": 126,
+      "land_leaf": "landpc_EN_27",
+      "controller_leaf": "ctrlpc_EN_27",
+      "ck_station_bit": 126,
+      "ck_static_bit": 126
+    },
+    {
+      "stack": 3,
+      "stack_name": "EN",
+      "physical_slot": 28,
+      "logical_pc": 7,
+      "host_slice_ID": 103,
+      "land_leaf": "landpc_EN_28",
+      "controller_leaf": "ctrlpc_EN_28",
+      "ck_station_bit": 103,
+      "ck_static_bit": 103
+    },
+    {
+      "stack": 3,
+      "stack_name": "EN",
+      "physical_slot": 29,
+      "logical_pc": 15,
+      "host_slice_ID": 111,
+      "land_leaf": "landpc_EN_29",
+      "controller_leaf": "ctrlpc_EN_29",
+      "ck_station_bit": 111,
+      "ck_static_bit": 111
+    },
+    {
+      "stack": 3,
+      "stack_name": "EN",
+      "physical_slot": 30,
+      "logical_pc": 23,
+      "host_slice_ID": 119,
+      "land_leaf": "landpc_EN_30",
+      "controller_leaf": "ctrlpc_EN_30",
+      "ck_station_bit": 119,
+      "ck_static_bit": 119
+    },
+    {
+      "stack": 3,
+      "stack_name": "EN",
+      "physical_slot": 31,
+      "logical_pc": 31,
+      "host_slice_ID": 127,
+      "land_leaf": "landpc_EN_31",
+      "controller_leaf": "ctrlpc_EN_31",
+      "ck_station_bit": 127,
+      "ck_static_bit": 127
+    }
+  ],
+  "rank_mapping": {
+    "host_role": "2*PKG+DIE",
+    "native_rank": "4*DIE+PKG",
+    "cohort_bit": "native_rank",
+    "host_id_for_native_rank": "2*(rank%4)+rank//4"
+  },
+  "physical_expansion": "HOST parent is wires-only; physically expand real children. Place8 PHYadapter roots at SerDes;128 station+static arbiters by corresponding controller/landing leaves; central packet/control/prompt/QM/retire/barrier leaves get own slots/clockpins. No parent-proxy view or147-pin single-clock frame alias. Existing native inventory outlines are requests, not qualified placements.",
+  "missing_cpp_glue": [
+    "participant request aggregation/credit transport across8 physical ranks",
+    "held terminal/cancel snapshot, identity ACK qualification, rearm",
+    "POST_TERMINAL retirement barrier inhibiting new warm_ready",
+    "wrap/link-reset/retraining recovery witness",
+    "real program-write pr143 producer",
+    "boot/normal physical-completion owner demux",
+    "real marker receipt consumer and six-link status/fault collectors"
+  ],
+  "sources": {
+    "rtl/qwen_sys/host_20261013/qkd_host_splitboot_service.sv": "eb2966dda0301e24a813ff2b87b81b0bd4dd802eec91650d58c499dcb0bfc784",
+    "rtl/qwen_sys/host_20261013/qkd_host_ctrl_token_service_packet.sv": "5ad73d69799b4908bdc04cd8b89120dd69047a4ce6467a5a28d2b333da41f049",
+    "rtl/qwen_sys/host_20261013/qkd_host_ingest_chain_splitboot.sv": "d6f75890973fd4b23912ef50cc433e39753a3ddf5c37cb446fc94450e948276a",
+    "rtl/qwen_sys/host_20261013/qkd_host_native_token_endpoint.sv": "f58cd996e34541112286e340d82c5b0e940ae25c9d43e2c9437d3553d88eb82e",
+    "rtl/qwen_sys/host_20261013/qkd_host_control_packet_capture_token_service.sv": "8b5eb6a7b6565fff00e7952837f0a5f82a735c69858fa5c1d5bd8d0b767730f9",
+    "rtl/physical/ot_qwen_host_ctl.sv": "343b41d14a837a8b2a16f67839dee6bd33f033dba6961b52c17d66fcfc5968db",
+    "rtl/qwen_sys/redesign_qwen/ot_qwen_tp8_token_epoch_allocator.sv": "3a7d297b3492b1a3eb3d0ce2a067d3962e034328e8614956cd63f08e005180fd",
+    "rtl/qwen_sys/redesign_qwen/ot_qwen_tp8_token_cohort.sv": "56396c2a8ff6ed64760c38e5fd4b798866d11aedb88d08496be930f99647e919",
+    "tools/qwen_native_host/host_owner.hpp": "e68e05b0207b5dc7e20ddaf5d370a913b216bb9dc0cdea5f4e4ed07fa0fcc5c8",
+    "tools/qwen_kv_die/kv_strips.py": "45d7193b7280b899be7d7ea63b7e8f4d882018cb8eb787d0d30309cac0258f40",
+    "tools/qwen_missing/link_phy_gen.py": "d28595bd68bdfadbc25ac85950ffe55c772068941a38b9dd8839907e5ec7681d"
+  },
+  "singleton_placement": {
+    "allocator": "one actual ot_qwen_tp8_token_epoch_allocator on designated coordinator KV die; POR-only identity state",
+    "cohort": "one actual ot_qwen_tp8_token_cohort on same coordinator KV die; per-rank request/credit transport required",
+    "warm_ready": "host0.host_rst_n && host0.service_ready && host0.sys_ready && !host0.package_abort && !host0.service_abort && !post_terminal_pending (real POST-terminal collector state)",
+    "begin": "accepted actual allocator grant -> cohort.begin_*",
+    "dispatch": "cohort.dispatch_valid && all actual rank ready -> command/context admission; preserve accepted_ranks native-rank indexing",
+    "terminal": "held true stage37 TAG59/gen result or retained cancellation + genuine four-class all-rank drain proof -> allocator/cohort; preserve exactly-once terminal_rearm and matching POST barrier"
+  }
+}

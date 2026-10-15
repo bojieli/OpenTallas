@@ -218,7 +218,11 @@ module ot_qfd_band_upper #(
     parameter integer TREE_LAT = 7,
     parameter integer MUT = 0,
     parameter integer TCUT = 7,
-    parameter integer LG = TCUT + 6
+    parameter integer LG = TCUT + 6,
+    // q14 r11: RPIN 1 = reset pin register (native audit of the TP8 leaf qfd_tt_up4_leaf-lf1-421afad00: rst_n capture
+    // 324.1 ps): rst_n lands in ONE kept flop (async assert, registered deassert), the leaf resets from it; reset
+    // release +1 edge, data latency unchanged.  RPIN 2 = bench mutant: no register (reset straight from the pin).
+    parameter integer RPIN = 0
 ) (
     input  wire                clk,
     input  wire                rst_n,
@@ -232,6 +236,14 @@ module ot_qfd_band_upper #(
     output wire                tt_v,
     output wire                fault
 );
+    wire rs;
+    generate if (RPIN == 1) begin : g_rpin
+        (* keep = "true", dont_touch = "true" *) reg rs_q;
+        always @(posedge clk or negedge rst_n) if (!rst_n) rs_q <= 1'b0; else rs_q <= 1'b1;
+        assign rs = rs_q;
+    end else begin : g_rpin0
+        assign rs = rst_n;
+    end endgenerate
     localparam integer TA = TREE_LAT;
     localparam integer NU = (MUT == 4) ? 2 : LG - TCUT - 4;   // levels TCUT+4 .. TCUT+3+NU (= LG-1): 2 at TP4, 1 at TP8
     generate if (NU < 1 || NU > 2 || TCUT + 3 + NU > LG) begin : g_bad
@@ -241,14 +253,14 @@ module ot_qfd_band_upper #(
     (* keep *) reg [NB*NL*32-1:0] pw_q;
     reg [NB-1:0] pv_q, lf_q;
     always @(posedge clk) pw_q <= pw;
-    always @(posedge clk or negedge rst_n) if (!rst_n) begin pv_q <= 0; lf_q <= 0; end else begin pv_q <= pw_v; lf_q <= lf; end
+    always @(posedge clk or negedge rs) if (!rs) begin pv_q <= 0; lf_q <= 0; end else begin pv_q <= pw_v; lf_q <= lf; end
     // the lane's sel_r / tv_r (sel_e / tv_e registered) DLY edges later: DLY delay stages, then one flop copy per lane
     wire [NU-1:0] sel_d, tv_d;
-    ot_hdc_delay #(.W(NU), .D(DLY)) u_sd (.clk(clk), .rst_n(rst_n), .d(sel_e[TCUT+3+NU:TCUT+4]), .q(sel_d));
-    ot_hdc_delay #(.W(NU), .D(DLY), .RESET(1)) u_td (.clk(clk), .rst_n(rst_n), .d(tv_e[TCUT+3+NU:TCUT+4]), .q(tv_d));
+    ot_hdc_delay #(.W(NU), .D(DLY)) u_sd (.clk(clk), .rst_n(rs), .d(sel_e[TCUT+3+NU:TCUT+4]), .q(sel_d));
+    ot_hdc_delay #(.W(NU), .D(DLY), .RESET(1)) u_td (.clk(clk), .rst_n(rs), .d(tv_e[TCUT+3+NU:TCUT+4]), .q(tv_d));
     reg [NU-1:0] sel_r, tv_r;   // the control copy (use / valid / lockstep)
     always @(posedge clk) sel_r <= sel_d;
-    always @(posedge clk or negedge rst_n) if (!rst_n) tv_r <= {NU{1'b0}}; else tv_r <= tv_d;
+    always @(posedge clk or negedge rs) if (!rs) tv_r <= {NU{1'b0}}; else tv_r <= tv_d;
     // -- levels 11, 12 per lane --------------------------------------------------------------------------------------
     wire [NL-1:0] lpf;
     wire [3*NL*32-1:0] y;
@@ -257,7 +269,7 @@ module ot_qfd_band_upper #(
         wire [NB*32-1:0] li, lo;
         (* keep *) reg [NU-1:0] sl, tl;       // this lane's copy of sel_r / tv_r
         always @(posedge clk) sl <= sel_d;
-        always @(posedge clk or negedge rst_n) if (!rst_n) tl <= {NU{1'b0}}; else tl <= tv_d;
+        always @(posedge clk or negedge rs) if (!rs) tl <= {NU{1'b0}}; else tl <= tv_d;
         for (b = 0; b < NB; b = b + 1) begin : g_b
             // MUT = 3 (band-index mutant, TP8 qwen_tp8_1012): band b's slot reads band NB-1-b's word
             assign li[32*b +: 32] = pw_q[32*(((MUT == 3) ? (NB - 1 - b) : b)*NL + l) +: 32];
@@ -266,26 +278,26 @@ module ot_qfd_band_upper #(
             assign y[32*(b*NL + l) +: 32] = lo[32*b +: 32];
         end
         ot_qfd_bt_levels #(.GI(NB), .NLV(NU), .TREE_LAT(TREE_LAT), .MUTLV(MUT == 2 ? 1 : 0)) u_lv (
-            .clk(clk), .rst_n(rst_n), .l0(li), .sel_r(sl), .tv_r(tl), .lo(lo), .pf(lpf[l]));
+            .clk(clk), .rst_n(rs), .l0(li), .sel_r(sl), .tv_r(tl), .lo(lo), .pf(lpf[l]));
     end endgenerate
     // use = the op's level-11 select at its L11 capture, carried to the L12 output; v = its level-11 valid
     wire uv, vv;
     reg use11;          // captured on the L11 lq edge, from the select that edge uses
-    always @(posedge clk or negedge rst_n) if (!rst_n) use11 <= 1'b0; else use11 <= sel_r[0];
-    ot_hdc_delay #(.W(1), .D((NU - 1) * (TA + 1)), .RESET(1)) u_use (.clk(clk), .rst_n(rst_n), .d(use11), .q(uv));
-    ot_hdc_delay #(.W(1), .D(NU * (TA + 1)), .RESET(1)) u_v (.clk(clk), .rst_n(rst_n), .d(tv_r[0]), .q(vv));
+    always @(posedge clk or negedge rs) if (!rs) use11 <= 1'b0; else use11 <= sel_r[0];
+    ot_hdc_delay #(.W(1), .D((NU - 1) * (TA + 1)), .RESET(1)) u_use (.clk(clk), .rst_n(rs), .d(use11), .q(uv));
+    ot_hdc_delay #(.W(1), .D(NU * (TA + 1)), .RESET(1)) u_v (.clk(clk), .rst_n(rs), .d(tv_r[0]), .q(vv));
     // -- output station ---------------------------------------------------------------------------------------------
     (* keep *) reg [3*NL*32-1:0] ty_s;
     (* keep *) reg use_s, v_s;
     always @(posedge clk) ty_s <= y;
-    always @(posedge clk or negedge rst_n) if (!rst_n) begin use_s <= 1'b0; v_s <= 1'b0; end
+    always @(posedge clk or negedge rs) if (!rs) begin use_s <= 1'b0; v_s <= 1'b0; end
         else begin use_s <= uv; v_s <= vv; end
     assign tt_ty = ty_s; assign tt_use = use_s; assign tt_v = v_s;
     // -- fault: adder faults, the bands' faults, a band word out of lockstep -----------------------------------------
     reg f_q;
     (* keep *) reg f_s;
-    always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin f_q <= 1'b0; f_s <= 1'b0; end
+    always @(posedge clk or negedge rs)
+        if (!rs) begin f_q <= 1'b0; f_s <= 1'b0; end
         else begin f_q <= (|lpf) || (|lf_q) || (pv_q != {NB{tv_r[0]}}); f_s <= f_q; end
     assign fault = f_s;
 endmodule

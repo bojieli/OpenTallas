@@ -1,0 +1,27 @@
+ot-run: ot-epyc1tb     skipped: load hold: load1 > 1.5 x cores
+ot-run: ot-epyc4       admits   331 GB (avail 558, growth 176, headroom 48, waiters 0/0 GB) load 77/128 running 29 disk 557 GB 
+ot-run: ot-pve1        skipped: load hold: load1 > 1.5 x cores
+ot-run: ot-agidock128  skipped: load hold: load1 > 1.5 x cores
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-1066601-1792047650 after 0 s
+GATE_SOURCE_ARCHIVE_SHA256=0877915b789cfb42ae11590fa9934eed9c0cbc26d4dd2f7e63fdfdc426854c61
+GATE_FLOW_RC=0 GATE_FLOW_S=290
+GATE_IOP_RC=0
+GATE_DUMP_RC=0
+GATE_TB textbook_lint: WARN ot_s81_engram_mul4 cells 90,819 flops 9,395 depth 466.8 ps util 0.4772 reach 0.5 um (1.9 s)
+GATE_TB textbook_lint: INFO clock_roots max_root_sinks=9395 root=port:clk rule=PASS: 9,395 sinks on the largest root <= 15,000; no measured clock tree (no --cts gate evidence)
+GATE_TB textbook_lint: WARN high_fanout: reset reset_leaf.sync[1]$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R): 549 loads (549 flops, e.g. fault$_DFFE_PN0P_) > 256: register it and replicate per region (rtl/lib/ot_rst_relay.sv: one relay copy per region)
+GATE_PORTS {"clk": [1, false], "arst_n": [1, false], "v": [1, false], "phase": [1, false], "h": [null, true], "k": [null, true], "w": [null, true], "vo": [1, false], "hh": [null, true], "kk": [null, true], "dot": [null, true], "fault": [1, false]}
+GATE_AREA    Chip area for module '\ot_s81_engram_mul4': 11242.288080
+GATE_CTS_RC=0
+GATE_GPLD global_placement -density 0.5 -pad_left 0 -pad_right 0 -routability_driven -timing_driven -force_center_initial_place -min_phi_coef 0.95 -max_phi_coef 1.05
+GATE_GPLD [INFO GPL-0023] Placement target density:       0.5200
+GATE_CK_RC=0
+GATE_CK ss insertion all 301.0..320.3 ps (spread 19.3), boundary mean 313.8; tt insertion all 232.5..248.5 ps (spread 16.0), boundary mean 243.9; ff insertion all 190.2..205.2 ps (spread 15.0), boundary mean 200.9; macro_clk flag False
+GATE_CK_DOMAIN {"source": "clk", "clock": "core_clk", "tt": {"boundary": {"n": 765, "mean": 243.9, "min": 236.4, "max": 247.2}, "all": {"n": 9396, "mean": 240.8, "min": 232.5, "max": 248.5}, "errors": [], "macros": null, "macro_libs": 0}}
+GATE_PC constraints signoff /src/physical/ref_tile/s81engram_mul4_native_sizing_1015/signoff.sdc (TT placement RC; diagnostic)
+GATE_PC reg->reg      598 paths, worst slack 109.7 ps (e.g. lane[3].mw.genblk1.genblk1.g_l5.u.u.u_k3.g_r.r[30]$_DFF_P_/D)
+GATE_PC in->reg         2 paths, worst slack 404.1 ps (e.g. reset_leaf.sync[1]$_DFF_PN0_/RESETN)
+GATE_PC setup WNS 1.0974510189498687e-10 hold WNS 2.6640328831817328e-11
+GATE_DONE
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-1066601-1792047650): exit 0

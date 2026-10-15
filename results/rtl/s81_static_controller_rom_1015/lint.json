@@ -1,0 +1,14 @@
+{
+  "command": [
+    "verilator",
+    "--lint-only",
+    "-Wno-fatal",
+    "--top-module",
+    "s81_static_calendar_controller",
+    "rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller.sv",
+    "physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8.v"
+  ],
+  "returncode": 0,
+  "stdout": "",
+  "stderr": ""
+}

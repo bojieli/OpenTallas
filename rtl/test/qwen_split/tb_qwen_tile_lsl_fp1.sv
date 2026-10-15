@@ -4,7 +4,9 @@ module tb_qwen_tile_lsl_fp1;
  reg [3:0]split_d=0;reg [255:0]w_d=0;reg [127:0]x_d=0;
  always #5 clk=!clk;
  wire [63:0] old_t,t_out;wire [7:0]old_l,lfault;wire old_f,tfault;
- ot_qwen_tile_lsl golden(.clk(clk),.rst_n(rst_n),.v_d(v_d),.first_d(first_d),.split_d(split_d),.w_d(w_d),.x_d(x_d),.t_out(old_t),.lfault(old_l),.tfault(old_f));
+ // the DUT's reset pin register releases one edge after rst_n: the golden legacy leaf sees the same released reset
+ reg rst_g=0; always @(posedge clk or negedge rst_n) if(!rst_n) rst_g<=0; else rst_g<=1;
+ ot_qwen_tile_lsl golden(.clk(clk),.rst_n(rst_g),.v_d(v_d),.first_d(first_d),.split_d(split_d),.w_d(w_d),.x_d(x_d),.t_out(old_t),.lfault(old_l),.tfault(old_f));
  ot_qwen_tile_lsl_fp1 dut(.*);
  reg [8:0] prev_fault=0;integer checks=0,events=0,c=0,j=0;
  wire [8:0] observed={tfault,lfault};

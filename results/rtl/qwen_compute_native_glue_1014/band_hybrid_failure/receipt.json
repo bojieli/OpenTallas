@@ -1,0 +1,11 @@
+{
+  "gate_source": "a4edbc90b",
+  "native_parent_checkpoint": "641debf6b",
+  "gate_status": "FAIL",
+  "reason": "OT_HYBRID raw STA instance names fail OpenDB findInst for scalar glue-clock registers",
+  "actual_glue_fanout": 10278,
+  "actual_glue_clock_registers": 10278,
+  "remote": "ot-agidock128:/srv/opentallas-scratch/claude/ref_gate/qfd_sp_band_lanes_native-20261014-204626",
+  "live_route_submitted": false,
+  "all_bench_and_view_qualification_still_required": true
+}

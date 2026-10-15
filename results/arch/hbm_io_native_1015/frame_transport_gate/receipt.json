@@ -1,0 +1,41 @@
+{
+  "scope": "actual digital frame-transport wrapper with component-boundary endpoint stimuli, direct transport loopback",
+  "positive": {
+    "data_frames": 1448,
+    "idle_frames": 1474,
+    "total_reserved_frames": 2922,
+    "epochs": 2,
+    "periods_per_epoch": 3,
+    "period_edges": 613,
+    "frames_per_period": 487,
+    "rx_registered_face_extra_edges": 1
+  },
+  "negative_controls": {
+    "m1": "endpoint valid flipped: expected-valid mismatch cycle3",
+    "m2": "missing transport word: reservation fault cycle7",
+    "m3": "corrupt transport word: payload mismatch cycle4"
+  },
+  "source_sha256": {
+    "rtl/hbm_accel/io_static_20261015/ot_hbm_static_gearbox.sv": "3ca4eccbd1c00f04e57adf7b596e35d3fae26ad5c7441d5c256ef3cfbfaef5f0",
+    "rtl/hbm_accel/io_static_20261015/ot_hbm_static_frame_transport.sv": "605472ebab23abb6230d9787e6836f9e54c8a7f86defaff75d078db18961a7f8",
+    "rtl/hbm_accel/io_static_20261015/tb_static_frame_transport.sv": "bf7102fc1eb476f3e84a59234a9cb2c213f2303b22725458a3c40731aa9ee83f",
+    "tools/hbm_io/gearbox_calendar.py": "efc8ff9775470522594121f2a7b4fcda746c5535137398cb05ea1ede1e3fc357",
+    "tools/hbm_io/make_gearbox_vectors.py": "9e64042f391fafbbe1f28cc32473c8d9630e0c9317f851e924f1e2732c120943",
+    "tools/hbm_io/run_frame_transport_gate.sh": "96c69d8e1c6410b11b3522d844fde955d2132d0b7732e69e8cfcc6decb573f7f"
+  },
+  "run": {
+    "host": "ot-epyc4",
+    "unit": "oth-ubuntu-1242044-1792050492",
+    "exit": 0,
+    "mem_gb": 2,
+    "threads": 1
+  },
+  "open": [
+    "Actual replay endpoint SRAM producer/consumer",
+    "Actual FEC/recovered-clock and rate-match latency",
+    "Production valid/idle calendar and immutable collective performance",
+    "Physical pin/clock/shift mux implementation and TT/FF/DRC"
+  ],
+  "native_qualified": false,
+  "physical_qualified": false
+}

@@ -1,0 +1,59 @@
+{
+  "scope": "new static HC FP32 weight aperture producer/store; opt-in; historical HCunit/SYS1 unchanged",
+  "production": {
+    "W": 32,
+    "RMAX": 128,
+    "PMAX": 8,
+    "banks": 8,
+    "slots": 2,
+    "sectors_per_word": 4,
+    "sectors_per_slot": 4096,
+    "SRAM_128x256_macros": 64,
+    "storage_bytes": 262144
+  },
+  "rates": {
+    "MACs_per_cycle_store": 0,
+    "HC_stage_MACs_per_cycle": 32,
+    "fill_sectors_per_cycle": 8,
+    "fill_payload_bytes_per_cycle": 256,
+    "read_weight_bytes_per_cycle": 1024,
+    "full_slot_fill_cycles": 512,
+    "full_slot_readback_cycles": 128,
+    "HC_8bank_MACs_per_cycle": 256,
+    "HC_BF16_x_read_bytes_per_cycle": 512
+  },
+  "boundaries_bits": {
+    "delivery_dq": 2248,
+    "aperture_bank_fixed": 2224,
+    "read_valid": 8,
+    "read_slot": 8,
+    "read_row": 56,
+    "raw_weights": 8192,
+    "weight_valid": 8,
+    "compiler_descriptor": 27
+  },
+  "replication": {
+    "macro_read_fanout_per_bank": 8,
+    "quarter_write_fanout_per_bank": 8,
+    "mux": "8 independent2:1\u00d71024bslot-selects; no input selection/arbitration",
+    "die_aperture_replicas": 1
+  },
+  "latency_edges": {
+    "dq_to_aperture_output": 1,
+    "aperture_input_to_macro_commit": 1,
+    "read_request_to_macro_raw": "same sampled edge, synchronous macro",
+    "raw_to_parent_wd_capture": 1,
+    "HC_read_latency_ML": 2
+  },
+  "composition": "four actual2048-sector landing blocks -> descriptor positions0/256 for each of2slots ->8192sectors -> allrow/bank readback and actualg_wq/ML2wdcapture; numericconsumption ownedby dedicatedstaticHCengine",
+  "physical": "unclosed successor. 64real macros retained; slot dimensions, tracks/capacity and placed footprint must be assigned before route. No timing/physical-fit claim.",
+  "integration_gap": "SYS1 HCtile hasnoaperturewriteport andHSRC0 restriction; legacy1200/16 hasnoactualproducer. New2224b/8192breadseamexplicit; no aliases.",
+  "reused_weight_budget": {
+    "positions": 8,
+    "MACs_per_weight": 8,
+    "MACs_per_weight_byte": 2,
+    "full_row_set_consumer_cycles": 1024,
+    "full_slot_refill_cycles": 512,
+    "assumption": "weights reused across8positions as historicalPMAX8; all8banksreadoneW32word/cycle. Sourcefillbudget512cycles fits1024consumercycles. Launch/normalization overhead composed by HCengineowner."
+  }
+}

@@ -64,11 +64,11 @@ PRODUCTION = [
 ]
 
 
-def program_words(prog, nwords):
+def program_words(prog, nwords, cmd_pin_stages=0):
     """Stage program for ot_coll_cmd_issue: rows {cycle, words, mode}, tags, END row, seal (see its header)."""
     pw, rows = [], []
     for k, p in enumerate(prog):
-        x = p["cmd_cycle"] - START - 1
+        x = p["cmd_cycle"] - START - 1 - cmd_pin_stages
         assert x >= 4, "first command too close to the stage start"
         rows.append((x, nwords[k], p["mode"], 0, k))
     last = prog[-1]
@@ -141,7 +141,7 @@ def main():
         prog = schedule(modes, nw, a.latu, a.lats, start=START + 6)
         vec = a.out / f"vec_{name}"
         vectors(vec, nw, prog, 1000 + i)
-        pw = program_words(prog, nw)
+        pw = program_words(prog, nw, cmd_pin_stages=int(a.qfd))
         (vec / "pw.hex").write_text("".join(f"{ad:03x}{d:016x}\n" for ad, d in pw))
         args = [str(exe), f"+VEC={vec}", f"+NMSG={nmsg}", f"+NPW={len(pw)}", f"+START={START}"] + \
                [f"+{k}={v}" for k, v in extra.items()]
@@ -170,7 +170,7 @@ def main():
     (a.out / "record.json").write_text(json.dumps(dict(
         schema="opentallas.qwen.tp8.collective.static_links.v1", ranks=ND, latu=a.latu, lats=a.lats, kc=KC, kw=KW,
         phy_ucie=PU, phy_serdes=PS, xu=a.xu, xs=a.xs, phi=a.phi, die_name_master=a.qfd, mutant=a.mutant_define,
-        expect_fail=a.expect_fail, production=a.production, issuer_depth=DEPTH, stage_start=START,
+        expect_fail=a.expect_fail, production=a.production, issuer_depth=DEPTH, stage_start=START, cmd_pin_stages=int(a.qfd),
         modelled="PHY frame pipes only (fixed latency); all on-chip blocks are the real RTL masters",
         mechanism="compiler program -> fixed-issue core -> collective tokens -> IO calendar slots; no credits/ready/"
                   "backpressure; observed validity, CRC and publication are fault-only checks",

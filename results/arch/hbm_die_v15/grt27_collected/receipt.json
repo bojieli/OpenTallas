@@ -1,0 +1,54 @@
+{
+ "status": "FAIL_CONGESTION_DIAGNOSTIC_HISTORICAL_MODEL",
+ "source": "0cf8f68d2",
+ "host": "ot-epyc1tb",
+ "case": "/srv/opentallas-scratch/claude/hbmdie-v13/grt27_p2",
+ "original_pid": 143790,
+ "terminal_exit": 0,
+ "overflow": 51123,
+ "by_layer": {
+  "M4": 807,
+  "M5": 2424,
+  "M6": 33013,
+  "M7": 2506,
+  "M8": 9754,
+  "M9": 2619
+ },
+ "wirelength_um": 211429144,
+ "sampled_gcell_overflow": 39044,
+ "sampled_is_router_total": false,
+ "hotspots_mm": [
+  [
+   19,
+   15
+  ],
+  [
+   18,
+   16
+  ],
+  [
+   19,
+   10
+  ],
+  [
+   13,
+   9
+  ],
+  [
+   14,
+   16
+  ]
+ ],
+ "dominant_source_families": [
+  "SU_NE/SE-VM request/response",
+  "NE/SE/SW/NW lane-group wide write/read",
+  "NW loader write"
+ ],
+ "required_structural_fix": "Source-exact static VM lane clients and bank-local placement; regenerate routes against actual 32-SM outlines. Do not tune history on superseded placeholder ABI.",
+ "limits": [
+  "old SM slots undersized",
+  "pin-only/dynamic VM/service source interfaces",
+  "not successor die timing or physical proof",
+  "all 77 legacy station failures retained as historical evidence"
+ ]
+}

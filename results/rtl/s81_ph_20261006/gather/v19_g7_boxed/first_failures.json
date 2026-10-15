@@ -1,0 +1,78 @@
+{
+  "qualification": "FAILED_GRT_DIAGNOSIS_ONLY",
+  "source_commit": "2d1996f77",
+  "cases": {
+    "rw": {
+      "name": "dsfd_gth_rw_v19-g7-2d1996f77",
+      "state": null,
+      "reason": "route crashed twice (rc=1 ok-check failed;; first error: dsfd_gth_rw_v19_g7_2d1996f77/flow.log: [ERROR GRT-0183] Net _02831_: the 3D maze router ran out of legal paths (heap underflow) - the net is boxed in by local congestion or blockages. [step do-5_1_grt]; resource=False)",
+      "finished_at": "2026-10-14T19:29:28-07:00",
+      "bench_work": {
+        "bench_lint": "WARN: pass log has no count line (set min_count_regex)",
+        "bench_root_s_lockstep": "work: [274]",
+        "bench_gather_cl_gate": "work: [15]"
+      },
+      "hm_auto_seen": [
+        "1|stage=cts HM auto-reduced 50->28.9: 11564 endpoints in margin (worst FF hold -18.89, ~24335 buffers, +6.6 util pts of 29692 um2 core; 11564 endpoints in margin > 10000)",
+        "2|stage=cts HM auto-reduced 50->28.9: 11564 endpoints in margin (worst FF hold -18.89, ~24335 buffers, +6.6 util pts of 29692 um2 core; 11564 endpoints in margin > 10000)"
+      ],
+      "crashes": [
+        {
+          "stage": "route",
+          "host": "ot-epyc1tb",
+          "attempt": 1,
+          "why": "rc=1 ok-check failed;; first error: dsfd_gth_rw_v19_g7_2d1996f77/flow.log: [ERROR GRT-0183] Net _02831_: the 3D maze router ran out of legal paths (heap underflow) - the net is boxed in by local congestion or blockages. [step do-5_1_grt]",
+          "resource": false,
+          "tail": "rror: global_route.tcl, 175 GRT-0183\n\nElapsed time: 0:04.70[h:]min:sec. CPU time: user 4.52 sys 0.17 (99%). Peak memory: 414684KB.\nElapsed time: 0:33.13[h:]min:sec. CPU time: user 34.12 sys 0.58 (104%). Peak memory: 526792KB.\nElapsed time: 0:03.87[h:]min:sec. CPU time: user 3.65 sys 0.14 (97%). Peak memory: 387400KB.\nElapsed time: 0:04.00[h:]min:sec. CPU time: user 3.69 sys 0.15 (96%). Peak memory: 358016KB.\nElapsed time: 0:05.15[h:]min:sec. CPU time: user 4.94 sys 0.16 (99%). Peak memory: 421992KB.\nElapsed time: 0:03.70[h:]min:sec. CPU time: user 3.51 sys 0.16 (99%). Peak memory: 363368KB.\nElapsed time: 0:03.46[h:]min:sec. CPU time: user 3.30 sys 0.15 (99%). Peak memory: 395868KB.\nElapsed time: 10:18.81[h:]min:sec. CPU time: user 1499.92 sys 6.39 (243%). Peak memory: 1110872KB.\nElapsed time: 0:47.93[h:]min:sec. CPU time: user 58.42 sys 8.26 (139%). Peak memory: 610732KB.\nElapsed time: 1:10.58[h:]min:sec. CPU time: user 77.08 sys 2.14 (112%). Peak memory: 790624KB.\nElapsed time: 2:37.98[h:]min:sec. CPU time: user 205.69 sys 12.03 (137%). Peak memory: 1171272KB.\nElapsed time: 4:59.85[h:]min:sec. CPU time: user 1094.96 sys 13.06 (369%). Peak memory: 1605572KB.\nmake[1]: *** [Makefile:585: do-5_1_grt] Error 1\nmake: *** [Makefile:585: /work/results/asap7/opentallas_dsfd_gth_rw_asap7_ref_dsfd_gth_rw_v19_g7_2d1996f77/base/5_1_grt.odb] Error 2\n\npartial record written to /srv/opentallas/claude/closure-loop/dsfd_gth_rw_v19-g7-2d1996f77/routes/dsfd_gth_rw_v19_g7_2d1996f77/physical.json\n",
+          "first_error": "dsfd_gth_rw_v19_g7_2d1996f77/flow.log: [ERROR GRT-0183] Net _02831_: the 3D maze router ran out of legal paths (heap underflow) - the net is boxed in by local congestion or blockages. [step do-5_1_grt]"
+        },
+        {
+          "stage": "route",
+          "host": "ot-epyc1tb",
+          "attempt": 2,
+          "why": "rc=1 ok-check failed;; first error: dsfd_gth_rw_v19_g7_2d1996f77/flow.log: [ERROR GRT-0183] Net _02831_: the 3D maze router ran out of legal paths (heap underflow) - the net is boxed in by local congestion or blockages. [step do-5_1_grt]",
+          "resource": false,
+          "tail": "Error: global_route.tcl, 175 GRT-0183\n\nElapsed time: 0:04.39[h:]min:sec. CPU time: user 4.23 sys 0.16 (99%). Peak memory: 412192KB.\nElapsed time: 0:31.70[h:]min:sec. CPU time: user 33.37 sys 0.84 (107%). Peak memory: 523556KB.\nElapsed time: 0:03.85[h:]min:sec. CPU time: user 3.68 sys 0.17 (99%). Peak memory: 387024KB.\nElapsed time: 0:03.71[h:]min:sec. CPU time: user 3.53 sys 0.17 (99%). Peak memory: 357524KB.\nElapsed time: 0:05.26[h:]min:sec. CPU time: user 5.04 sys 0.20 (99%). Peak memory: 420340KB.\nElapsed time: 0:03.62[h:]min:sec. CPU time: user 3.45 sys 0.14 (99%). Peak memory: 363532KB.\nElapsed time: 0:03.40[h:]min:sec. CPU time: user 3.23 sys 0.17 (99%). Peak memory: 395416KB.\nElapsed time: 3:51.28[h:]min:sec. CPU time: user 1246.28 sys 9.50 (542%). Peak memory: 1102708KB.\nElapsed time: 0:52.64[h:]min:sec. CPU time: user 63.26 sys 9.54 (138%). Peak memory: 613608KB.\nElapsed time: 1:11.68[h:]min:sec. CPU time: user 76.91 sys 1.65 (109%). Peak memory: 793300KB.\nElapsed time: 2:34.10[h:]min:sec. CPU time: user 202.51 sys 12.54 (139%). Peak memory: 1159736KB.\nElapsed time: 4:48.90[h:]min:sec. CPU time: user 1097.29 sys 19.58 (386%). Peak memory: 1602568KB.\nmake[1]: *** [Makefile:585: do-5_1_grt] Error 1\nmake: *** [Makefile:585: /work/results/asap7/opentallas_dsfd_gth_rw_asap7_ref_dsfd_gth_rw_v19_g7_2d1996f77/base/5_1_grt.odb] Error 2\n\npartial record written to /srv/opentallas/claude/closure-loop/dsfd_gth_rw_v19-g7-2d1996f77/routes/dsfd_gth_rw_v19_g7_2d1996f77/physical.json\n",
+          "first_error": "dsfd_gth_rw_v19_g7_2d1996f77/flow.log: [ERROR GRT-0183] Net _02831_: the 3D maze router ran out of legal paths (heap underflow) - the net is boxed in by local congestion or blockages. [step do-5_1_grt]"
+        }
+      ],
+      "classification": "Deterministic physical global-route capacity/access failure GRT-0183; both attempts same first net; not missing files, parser, RTL bench, or resource failure."
+    },
+    "re": {
+      "name": "dsfd_gth_re_v19-g7-2d1996f77",
+      "state": null,
+      "reason": "route crashed twice (rc=1 ok-check failed;; first error: dsfd_gth_re_v19_g7_2d1996f77/flow.log: [ERROR GRT-0183] Net net5875: the 3D maze router ran out of legal paths (heap underflow) - the net is boxed in by local congestion or blockages. [step do-5_1_grt]; resource=False)",
+      "finished_at": "2026-10-14T19:27:26-07:00",
+      "bench_work": {
+        "bench_lint": "WARN: pass log has no count line (set min_count_regex)",
+        "bench_root_s_lockstep": "work: [274]",
+        "bench_gather_cl_gate": "work: [15]"
+      },
+      "hm_auto_seen": [
+        "1|stage=cts HM auto-reduced 50->35.1: 11462 endpoints in margin (worst FF hold -25.07, ~24169 buffers, +6.5 util pts of 29692 um2 core; 11462 endpoints in margin > 10000)",
+        "2|stage=cts HM auto-reduced 50->35.1: 11462 endpoints in margin (worst FF hold -25.07, ~24169 buffers, +6.5 util pts of 29692 um2 core; 11462 endpoints in margin > 10000)"
+      ],
+      "crashes": [
+        {
+          "stage": "route",
+          "host": "ot-epyc1tb",
+          "attempt": 1,
+          "why": "rc=1 ok-check failed;; first error: dsfd_gth_re_v19_g7_2d1996f77/flow.log: [ERROR GRT-0183] Net net5875: the 3D maze router ran out of legal paths (heap underflow) - the net is boxed in by local congestion or blockages. [step do-5_1_grt]",
+          "resource": false,
+          "tail": "\nError: global_route.tcl, 175 GRT-0183\n\nElapsed time: 0:04.55[h:]min:sec. CPU time: user 4.37 sys 0.16 (99%). Peak memory: 414400KB.\nElapsed time: 0:32.90[h:]min:sec. CPU time: user 34.00 sys 0.58 (105%). Peak memory: 526172KB.\nElapsed time: 0:03.87[h:]min:sec. CPU time: user 3.70 sys 0.16 (99%). Peak memory: 388052KB.\nElapsed time: 0:03.79[h:]min:sec. CPU time: user 3.59 sys 0.15 (98%). Peak memory: 357144KB.\nElapsed time: 0:05.01[h:]min:sec. CPU time: user 4.72 sys 0.15 (97%). Peak memory: 423008KB.\nElapsed time: 0:03.64[h:]min:sec. CPU time: user 3.46 sys 0.17 (99%). Peak memory: 364412KB.\nElapsed time: 0:03.64[h:]min:sec. CPU time: user 3.49 sys 0.15 (99%). Peak memory: 397400KB.\nElapsed time: 9:41.61[h:]min:sec. CPU time: user 1287.62 sys 4.14 (222%). Peak memory: 1203032KB.\nElapsed time: 0:54.12[h:]min:sec. CPU time: user 62.43 sys 4.69 (124%). Peak memory: 618412KB.\nElapsed time: 1:02.93[h:]min:sec. CPU time: user 72.48 sys 8.59 (128%). Peak memory: 784368KB.\nElapsed time: 2:28.97[h:]min:sec. CPU time: user 193.01 sys 8.41 (135%). Peak memory: 1069804KB.\nElapsed time: 4:56.33[h:]min:sec. CPU time: user 1050.75 sys 13.09 (359%). Peak memory: 1527608KB.\nmake[1]: *** [Makefile:585: do-5_1_grt] Error 1\nmake: *** [Makefile:585: /work/results/asap7/opentallas_dsfd_gth_re_asap7_ref_dsfd_gth_re_v19_g7_2d1996f77/base/5_1_grt.odb] Error 2\n\npartial record written to /srv/opentallas/claude/closure-loop/dsfd_gth_re_v19-g7-2d1996f77/routes/dsfd_gth_re_v19_g7_2d1996f77/physical.json\n",
+          "first_error": "dsfd_gth_re_v19_g7_2d1996f77/flow.log: [ERROR GRT-0183] Net net5875: the 3D maze router ran out of legal paths (heap underflow) - the net is boxed in by local congestion or blockages. [step do-5_1_grt]"
+        },
+        {
+          "stage": "route",
+          "host": "ot-epyc1tb",
+          "attempt": 2,
+          "why": "rc=1 ok-check failed;; first error: dsfd_gth_re_v19_g7_2d1996f77/flow.log: [ERROR GRT-0183] Net net5875: the 3D maze router ran out of legal paths (heap underflow) - the net is boxed in by local congestion or blockages. [step do-5_1_grt]",
+          "resource": false,
+          "tail": ".\nError: global_route.tcl, 175 GRT-0183\n\nElapsed time: 0:03.96[h:]min:sec. CPU time: user 3.78 sys 0.18 (99%). Peak memory: 414316KB.\nElapsed time: 0:30.65[h:]min:sec. CPU time: user 32.83 sys 1.59 (112%). Peak memory: 527012KB.\nElapsed time: 0:03.22[h:]min:sec. CPU time: user 3.05 sys 0.17 (99%). Peak memory: 389032KB.\nElapsed time: 0:03.55[h:]min:sec. CPU time: user 3.38 sys 0.16 (99%). Peak memory: 357040KB.\nElapsed time: 0:04.68[h:]min:sec. CPU time: user 4.52 sys 0.16 (99%). Peak memory: 420708KB.\nElapsed time: 0:03.33[h:]min:sec. CPU time: user 3.17 sys 0.15 (99%). Peak memory: 361904KB.\nElapsed time: 0:03.45[h:]min:sec. CPU time: user 3.27 sys 0.17 (99%). Peak memory: 395180KB.\nElapsed time: 3:19.15[h:]min:sec. CPU time: user 972.20 sys 10.73 (493%). Peak memory: 1187436KB.\nElapsed time: 0:53.53[h:]min:sec. CPU time: user 61.03 sys 2.31 (118%). Peak memory: 619652KB.\nElapsed time: 1:10.12[h:]min:sec. CPU time: user 79.20 sys 4.25 (119%). Peak memory: 787508KB.\nElapsed time: 2:37.87[h:]min:sec. CPU time: user 198.62 sys 6.53 (129%). Peak memory: 1065424KB.\nElapsed time: 4:37.99[h:]min:sec. CPU time: user 986.62 sys 17.51 (361%). Peak memory: 1528288KB.\nmake[1]: *** [Makefile:585: do-5_1_grt] Error 1\nmake: *** [Makefile:585: /work/results/asap7/opentallas_dsfd_gth_re_asap7_ref_dsfd_gth_re_v19_g7_2d1996f77/base/5_1_grt.odb] Error 2\n\npartial record written to /srv/opentallas/claude/closure-loop/dsfd_gth_re_v19-g7-2d1996f77/routes/dsfd_gth_re_v19_g7_2d1996f77/physical.json\n",
+          "first_error": "dsfd_gth_re_v19_g7_2d1996f77/flow.log: [ERROR GRT-0183] Net net5875: the 3D maze router ran out of legal paths (heap underflow) - the net is boxed in by local congestion or blockages. [step do-5_1_grt]"
+        }
+      ],
+      "classification": "Deterministic physical global-route capacity/access failure GRT-0183; both attempts same first net; not missing files, parser, RTL bench, or resource failure."
+    }
+  }
+}

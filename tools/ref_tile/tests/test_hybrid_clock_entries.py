@@ -65,6 +65,7 @@ class HybridOpenroad(unittest.TestCase):
                 f'DFFHQNx1_ASAP7_75t_R r{i} (.CLK(ck),.D({"q0" if mixed_internal and i >= 4 else "d"}),.QN(q{i}));' for i in range(16))
             if second_root: cells+='\n'+'\n'.join(f'DFFHQNx1_ASAP7_75t_R s{i} (.CLK(ck2),.D({"q0" if internal_root else "d"}),.QN(z{i}));' for i in range(4))
             net='module top(input '+','.join(ports)+',input d,output y);\n'+cells+'\nhard h(.CLK(child),.D(d),.Q(y));\nendmodule\n'
+            if mutant=='escaped_names':net=net.replace(' r0 (', ' \\c_q[0]$_DFF_P_ (')
             if mutant=='child_on_cts':net=net.replace('.CLK(child)', '.CLK(ck)')
             if mutant=='glue_on_entry':net=net.replace('.CLK(ck)', '.CLK(child)',1)
             (w/'t.v').write_text(net)
@@ -140,6 +141,11 @@ puts "HYBRID_RESULT PASS"
         self.assertIn('CTS_MEASURE tt ck sinks=16',out)
         self.assertIn('CTS_MEASURE tt ck2 sinks=4',out)
         self.assertIn('CTS roots ck ck2;',out)
+
+    def test_escaped_register_instance_maps_to_actual_db_object(self):
+        rc,out=self.run_flow('escaped_names');self.assertEqual(rc,0,out[-5000:])
+        self.assertIn('CTS_MEASURE tt ck sinks=16',out)
+        self.assertIn('HYBRID_RESULT PASS',out)
 
     def test_internal_only_root_declares_its_reference_scope(self):
         rc,out=self.run_flow(second_root=True,internal_root=True);self.assertEqual(rc,0,out[-5000:])

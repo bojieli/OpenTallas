@@ -9,8 +9,10 @@ assert hashlib.sha256(Path('rtl/hdc/ot_qwen_w12_matvec.sv').read_bytes()).hexdig
 text=Path('rtl/physical/ot_qwen_tile_lsl_fp1.sv').read_text()
 if mode==1:
  text=text.replace('output reg  [7:0]','output wire [7:0]').replace('output reg           tfault','output wire          tfault')
- a=text.index('    always @(posedge clk or negedge rst_n)')
+ a=text.index('    always @(posedge clk or negedge rs)\n')
  text=text[:a]+'    assign {tfault,lfault}=fault_pin_raw;\nendmodule\n'
+elif mode==3:
+ text='`define OT_LSL_RST_MUT\n'+text
 elif mode==2:
  text=text.replace('else begin {tfault,lfault} <= fault_pin_raw; end','else begin {tfault,lfault} <= 0; end')
 (out/'wrapper.sv').write_text(text)

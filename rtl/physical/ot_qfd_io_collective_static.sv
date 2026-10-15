@@ -57,11 +57,23 @@ module qfd_io_collective_static (
 `ifndef OT_QFDS_LS
 `define OT_QFDS_LS 376
 `endif
+    // Command pin boundary: the compiler issues one core cycle earlier than
+    // the internal collective command calendar. Payload/link calendars retain
+    // their original cycles. This extra command lead is paid explicitly.
+    (* keep *) reg cv_pin, cm_pin;
+    (* keep *) reg [15:0] cw_pin;
+    (* keep *) reg [31:0] ct_pin;
+    always @(posedge clk)begin cm_pin<=cmd_mode;cw_pin<=cmd_words;ct_pin<=cmd_tag;end
+    always @(posedge clk or negedge rst_n)if(!rst_n)cv_pin<=0;else cv_pin<=cmd_v;
     ot_coll_tp8_static #(.LANES(16), .TAGW(32), .ADD_LAT(7), .LU(`OT_QFDS_LU), .LS(`OT_QFDS_LS), .GC(8), .CCLK(1)) u_coll (
         .clk(clk), .clk_pfold({clk_pfold3, clk_pfold2, clk_pfold1, clk_pfold0}),
         .clk_xfold({clk_xfold3, clk_xfold2, clk_xfold1, clk_xfold0}),
         .rst_n(rst_n), .pkg_s(pkg_s), .die_ps(die_ps),
+        `ifdef OT_TP8S_MUT_CMDPIN
         .cmd_v(cmd_v), .cmd_mode(cmd_mode), .cmd_words(cmd_words), .cmd_tag(cmd_tag),
+`else
+        .cmd_v(cv_pin), .cmd_mode(cm_pin), .cmd_words(cw_pin), .cmd_tag(ct_pin),
+`endif
         .in_valid(in_valid), .in_data(in_data), .in_last(in_last), .in_mode(in_mode), .in_tag(in_tag),
         .up_valid(up_valid), .up_rec(up_rec), .dp_valid(dp_valid), .dp_rec(dp_rec),
         .ur_valid(ur_valid), .ur_rec(ur_rec), .dr_valid(dr_valid), .dr_rec(dr_rec),
@@ -69,5 +81,5 @@ module qfd_io_collective_static (
         .sr_valid({sr2_valid, sr1_valid, sr0_valid}), .sr_rec({sr2_rec, sr1_rec, sr0_rec}),
         .out_valid(out_valid), .out_data(out_data), .out_last(out_last), .out_rank(out_rank), .out_err(out_err),
         .fault(fault), .fault_code(fault_code),
-        .up_slot(up_slot), .ur_peer_slot(ur_peer_slot), .sx_peer_slot({sx2_peer_slot, sx1_peer_slot, sx0_peer_slot}), .cmd_free(cmd_free));
+        .up_slot(up_slot), .ur_peer_slot(ur_peer_slot), .sx_peer_slot({sx2_peer_slot, sx1_peer_slot, sx0_peer_slot}), .cmd_free(), .cmd_free_next(cmd_free));
 endmodule

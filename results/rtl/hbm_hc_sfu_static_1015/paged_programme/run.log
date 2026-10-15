@@ -1,0 +1,5 @@
+PASS SFU actual16SRAM protected paged programme controls=3936 width=1742 payload=7x222+188 globalPC11 page1023to1024=exact loop_boundary=exact no_bubbles=1
+- rtl/test/hbm_accel/generic/tb_hgi_sfu_calendar_paged_static.sv:41: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 16us; walltime 1.020 s; speed 16.117 us/s
+- Verilator: cpu 1.019 s on 1 threads; allocated 8 MB

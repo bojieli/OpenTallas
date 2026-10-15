@@ -1,0 +1,36 @@
+{
+ "head_e_job": "qfd_xhead_e-xh5-27465de7a",
+ "geometry_scope": "IO placement only, no native timing qualification",
+ "odb_sha256": "612cbe1d6a279fdc06da0c070d4089100a1ae295c6bae05fb6ad58c02e40de9f",
+ "station_source_commit": "64e317cbe",
+ "station_routed_records": [
+  "49d3aa973",
+  "22478e136"
+ ],
+ "native_status": "FAIL raw corridor tag to cap capture; structural repair proofs in flight",
+ "repair": "Existing b_q captures corridor before tag decode; forward selected b_q line at unchanged hold edge, else retained cap. No new schedule edge.",
+ "repair_source_sha256": "8094428beb501dde53ebcf0a61d41b14d081f775f45414a7f400b15fd1109cc9",
+ "observed_no_forward_source_sha256": "97e8c1c4155cb91c6c9ca14a5543e092e1b5e1cf1c6b17b84f68200af1f98009",
+ "proof": {
+  "positive": "proofs/core_forward.log",
+  "positive_checks": 159744,
+  "cycles": 1710,
+  "first_result_minus_ref_edges": 1,
+  "negative": "proofs/core_no_forward_mutant.log",
+  "negative_errors": 39928,
+  "native_wrapper": "in flight",
+  "native_tt_producer": "open"
+ },
+ "station_proof_scope": "native_core contains actual 64 tiles and stations; vm_replay_xcol stops at head n/s outputs and does not contain xcst, so wrapper is not a station repair proof",
+ "tt_producer_join": {
+  "source_commit": "5b348f611",
+  "owner": "q_control_host",
+  "paths": [
+   "rtl/qwen_sys/static_schedule_20261014/qfd_tt_ctlm_static_s.sv",
+   "rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_static_parent.sv",
+   "rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_split_static.sv",
+   "rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_dense_pw_loader.sv"
+  ],
+  "status": "source supplied, actual composition OPEN; fullstage event/phase calibration OPEN"
+ }
+}
