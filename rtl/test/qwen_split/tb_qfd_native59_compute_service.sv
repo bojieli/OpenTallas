@@ -2,9 +2,9 @@
 // Declared SU/VM/HOST/remote-native548 boundary stimuli. This verifies the
 // selected local composition only, not arithmetic or physical/full-token closure.
 module tb_qfd_native59_compute_service;
- parameter integer BAD_RESULT=0,CODEC_MUT=0,BAD_COMMIT=0,NO_VISIBILITY=0;localparam HEADS=1;
+ parameter integer BAD_RESULT=0,CODEC_MUT=0,BAD_COMMIT=0,NO_VISIBILITY=0,NATIVE_PROFILE=0;localparam HEADS=1;
  reg ck=0,rst_n=0;always #1 ck=~ck;
- reg context_v=0,q_epoch=0,q_start=0,q_committed=0,kvslot=0,xslot=0,qslot=0,txslot=0,rxslot=0,rxv=0,visibility_slot=0,complete_slot=0;
+ reg context_v=0,q_committed=0,kvslot=0,xslot=0,qslot=0,txslot=0,rxslot=0,rxv=0,visibility_slot=0,complete_slot=0;
  reg[5:0]stage=1;reg[17:0]token=50994,position=255;reg[379:0]cmd=0;reg[481:0]si=0;
  reg[1:0]kvindex=0;reg[4:0]qb=0,tb=0,rb=0;reg[3:0]tk=0,rk=0;
  reg[63:0]we=0;reg[1535:0]wa=0;reg[2047:0]wd=0;reg[523:0]q=0;reg[547:0]rxdata=0;
@@ -24,17 +24,17 @@ module tb_qfd_native59_compute_service;
    raw_mask[16*(7+pending_beat[7])+:16]=16'hffff;
   end
  end
- wire[58:0]xid;wire[1:0]xgen;wire[523:0]x3;wire tv,wv,completed,fault;wire[547:0]td;wire[19:0]ww;wire[4:0]wb;wire[58:0]wt;wire[511:0]wdata;wire[94:0]ret;
+ wire q_epoch,q_start;wire[58:0]xid;wire[1:0]xgen;wire[523:0]x3;wire tv,wv,completed,fault;wire[547:0]td;wire[19:0]ww;wire[4:0]wb;wire[58:0]wt;wire[511:0]wdata;wire[94:0]ret;
  localparam[58:0]TAG={16'd9,6'd1,18'd50994,13'd255,6'd0};
- qfd_native59_compute_service #(.CODEC_MUT(CODEC_MUT))dut(
+ qfd_native59_compute_service #(.CODEC_MUT(CODEC_MUT),.NATIVE_PROFILE(NATIVE_PROFILE))dut(
  .ck_context(ck),.ck_service(ck),.ck_format(ck),.ck_record(ck),.ck_qtag(ck),.ck_x3(ck),.rst_n(rst_n),
  .host_epoch_valid(1'b1),.host_fused_capability(1'b1),.host_epoch(16'd9),.host_tag({16'd9,6'd0,18'd50994,13'd255,6'd0}),.host_generation(2'd1),.layer_context_v(context_v),.command_stage(stage),.native_token(token),.native_position(position),.native_cmd(cmd),
- .si(si),.kv_we(we),.kv_waddr(wa),.kv_wdata(wd),.kv_word_slot(kvslot),.kv_word_index(kvindex),.kv_x3_slot(xslot),.x3(x3),.x3_identity(xid),.x3_generation(xgen),
- .q_epoch(q_epoch),.q_start(q_start),.q_committed(q_committed),.q_fault(1'b0),.q(q),.q_slot(qslot),.q_slot_beat(qb),
+ .native_issue({si[293:270],si[269:268],si[36:1],si[0]}),.kv_we(we),.kv_waddr(wa),.kv_wdata(wd),.kv_word_slot(kvslot),.kv_word_index(kvindex),.kv_x3_slot(xslot),.x3(x3),.x3_identity(xid),.x3_generation(xgen),
+ .vm_q_epoch(q_epoch),.vm_q_start(q_start),.q_committed(q_committed),.q_fault(1'b0),.q(q),.q_slot(qslot),.q_slot_beat(qb),
  .tx_slot(txslot),.tx_slot_kind(tk),.tx_slot_beat(tb),.native_tx_v(tv),.native_tx_payload(td),.native_rx_v(rxv),.native_rx_payload(rxdata),.rx_slot(rxslot),.rx_slot_kind(rk),.rx_slot_beat(rb),
  .vm_write_v(wv),.vm_write_word(ww),.vm_write_beat(wb),.vm_write_tag(wt),.vm_write_data(wdata),
  .write_commit_v(raw_v),.write_commit_line(raw_line),.write_commit_mask(raw_mask),.visibility_slot(visibility_slot),.complete_slot(complete_slot),.completed(completed),.native_ret(ret),.fault(fault));
- integer ep=0,i,j,l,p,k,h,di,errors=0,kvcount=0,qcount=0,cmdcount=0,writecount=0;reg[511:0]expected;
+ integer ep=0,i,j,l,p,k,h,di,errors=0,kvcount=0,qcount=0,cmdcount=0,writecount=0,epochcount=0,startcount=0;reg[511:0]expected;
  function automatic [7:0] code(input integer k,input integer h,input integer d);
   integer x;begin x=(k*91+h*37+d+ep*17)%254;if(x>=127)x=x+1;code=x;end
  endfunction
@@ -64,6 +64,8 @@ module tb_qfd_native59_compute_service;
   end
  end endtask
  always @(negedge ck)if(rst_n)begin
+  if(q_epoch)epochcount=epochcount+1;
+  if(q_start)startcount=startcount+1;
   if(x3[523])begin
    k=x3[514];h=x3[513];di=x3[512]*64;expected=0;
    for(j=0;j<64;j=j+1)expected[8*j+:8]=code(k,h,di+j);
@@ -84,7 +86,7 @@ module tb_qfd_native59_compute_service;
   end
  end
  initial begin
- repeat(4)step();rst_n=1;context_v=1;step();context_v=0;q_epoch=1;step();q_epoch=0;
+ repeat(4)step();rst_n=1;context_v=1;step();context_v=0;repeat(2)step();
  issue(0,128,address(1,0,0));writes(1,0,128);
  issue(1,64,address(0,0,0));writes(0,0,64);
  issue(2,64,address(0,0,64));writes(0,64,64);
@@ -92,7 +94,7 @@ module tb_qfd_native59_compute_service;
  for(i=0;i<7;i=i+1)begin kvslot=i<4;kvindex=i;xslot=i>=3;step();end
  kvslot=0;xslot=0;repeat(3)step();q_committed=1;
  cmd=380'h0000003000001000001000c5f0000000000000000000000000100358000000000000000000000000080100000080401;step();cmd=0;txslot=1;tk=1;tb=0;step();txslot=0;
- q_start=1;step();q_start=0;
+ repeat(2)step();
  // A future rawhead context must not relabel this already accepted operation.
  stage=3;token=42;position=8191;
  for(i=0;i<33;i=i+1)begin
@@ -111,7 +113,7 @@ module tb_qfd_native59_compute_service;
   if(!fault||completed)$fatal(1,"FAIL stale remote metadata or missing SRAM commit qualified local completion");
   $display("PASS selected local native service invalid result or missing SRAM commit faults before completion");$finish;
  end
- if(fault||!completed||ret[93:78]!=32||ret[1:0]!=3||kvcount!=4||qcount!=32||cmdcount!=1||writecount!=32||errors)
+ if(fault||!completed||ret[93:78]!=32||ret[1:0]!=3||kvcount!=4||qcount!=32||cmdcount!=1||writecount!=32||epochcount!=1||startcount!=1||errors)
   $fatal(1,"FAIL selected local native service fault%0d complete%0d ret%h KV%0d Q%0d CMD%0d writes%0d errors%0d",fault,completed,ret,kvcount,qcount,cmdcount,writecount,errors);
  $display("PASS selected local native service actualSI/KVformatter+QproducerTAG+native548codec+32VMcommit 4KV/32Q/32results no duplicateQ no credits");$finish;
  end

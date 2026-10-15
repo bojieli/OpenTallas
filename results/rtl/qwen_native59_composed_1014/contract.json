@@ -12,12 +12,20 @@
   "schedule": "All begin/request/Q/formatter/x3/TX/RX/visibility/completion slots compiler-fixed. Fault terminates validity; never waits/retries/reschedules. No local KVcommit admission. Remote controller must return actual visibility/identity faults before fixed completion.",
   "actual_source_context": "HOSTkind12 full tag59/runtime epoch16/gen2/cap; accepted head token18/position18/stage6. HOST token-wide stage0/segment0; layer native stage1..36.",
   "q_transport": "Actual DVM q_epoch captures identity before physical producer writes. One Q producer goes directly into native548 kind2; x3 holds KVN only with per-word retained TAG59/gen2.",
-  "completion": "Real raw39 SRAM-consume fence48ef95d84 drives all32 registered vm_commit events. Mandatory compiled visibility_slot must follow lastwrite+10 or later. complete_slot must follow visibility_slot by >=1 whole service edge, and kernel_done/error transport must be observed before complete_slot. Missing/late/write identity/line/mask events invalidate fixed completion, no deferred completion.",
+  "completion": "Real raw39 SRAM-consume fence48ef95d84 drives all32 registered vm_commit events. Mandatory compiled visibility_slot must follow lastwrite+VM_TOTAL_EDGES+2 or later. complete_slot must follow visibility_slot by >=1 whole service edge, and kernel_done/error transport must be observed before complete_slot. Missing/late/write identity/line/mask events invalidate fixed completion, no deferred completion.",
   "vm_latency": {
     "raw_consume_after_issue_edges": 8,
     "fence_output_after_issue_edges": 9,
     "earliest_visibility_after_last_issue_edges": 10,
-    "earliest_completion_after_last_issue_edges": 11
+    "earliest_completion_after_last_issue_edges": 11,
+    "scope": "common-clock component only; native total=internal8+measured forward+return+phase edges",
+    "native_parameters": [
+      "NATIVE_PROFILE=1",
+      "VM_ROUTE_QUALIFIED=1",
+      "VM_FORWARD_EDGES",
+      "VM_RETURN_EDGES",
+      "VM_PHASE_EDGES"
+    ]
   },
   "dependency_proofs": {
     "actual_VM_macro_and_fence": "e10417cf4",
@@ -33,7 +41,8 @@
     "context": "PASS good and wrongHOSTepoch/stage/descriptor/cap/gen2/fullHOSTtag checks",
     "formatter": "PASS 40epochs10240bytes160fixedwords; early word rejects; mask mutant FAIL",
     "final_fault": "PASS sourcefault at completion suppresses success",
-    "earlycompletion_hardware_mutant": "FAIL as required"
+    "earlycompletion_hardware_mutant": "FAIL as required",
+    "unset_native_VM_route": "PASS NATIVE_PROFILE1 with no measured qualified route fails at elaborated time0"
   },
   "physical_qualified": false,
   "full_target_native_qualified": false,
@@ -44,5 +53,17 @@
     "compiler complete source-pinned stage/operator/calendar with physical relay/CDC phases",
     "actual math64RTL/staticembedding fullshape positive+mutants",
     "six-root mapped area/pins/phase and route qualification"
-  ]
+  ],
+  "issue_monitor": {
+    "physical_port": "native_issue63={dbase24,dst2,nin18,nout18,go1}",
+    "source": "registered actual SU input face, post-DYN; one fixed edge",
+    "not_qualified": "SU wrapper arithmetic build pending, monitor source will publish with successor"
+  },
+  "q_control_producers": {
+    "module": "qfd_native59_q_export_control",
+    "vm_q_epoch": "registered actual begin_slot/accepted layer context, +1 source edge",
+    "vm_q_start": "registered actual native_cmd380 GO/request_slot, +1 source edge",
+    "q_committed": "fault-only at actual start; never gates/reschedules",
+    "physical": "pinroutes/phases and VM exporter14..45 edges must be compiler-aligned"
+  }
 }

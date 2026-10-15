@@ -5,10 +5,10 @@
     "ck_service": 2013,
     "ck_format": 6605,
     "ck_record": 1074,
-    "ck_qtag": 239,
+    "ck_qtag": 242,
     "ck_x3": 1728
   },
-  "total_flop_bits": 11717,
+  "total_flop_bits": 11720,
   "unmapped_memories": {},
   "ports": {
     "ck_context": {
@@ -79,9 +79,9 @@
       "direction": "input",
       "bits": 380
     },
-    "si": {
+    "native_issue": {
       "direction": "input",
-      "bits": 482
+      "bits": 63
     },
     "kv_we": {
       "direction": "input",
@@ -119,12 +119,12 @@
       "direction": "output",
       "bits": 2
     },
-    "q_epoch": {
-      "direction": "input",
+    "vm_q_epoch": {
+      "direction": "output",
       "bits": 1
     },
-    "q_start": {
-      "direction": "input",
+    "vm_q_start": {
+      "direction": "output",
       "bits": 1
     },
     "q_committed": {
@@ -242,6 +242,7 @@
   },
   "physical_qualified": false,
   "area_um2": null,
+  "profile": "explicit common-clock component routes0; native measured forward/return/phase edges increase state and require new census",
   "source_dependencies": {
     "VMfence": "48ef95d84",
     "native548codec": "34cfa0d07"
