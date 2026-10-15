@@ -1,0 +1,37 @@
+{
+  "cell": "qkd_kv_static_writer_native",
+  "view": "views/qkd_kv_static_writer_native",
+  "lib_cell": "qkd_kv_static_writer_native",
+  "insertion": true,
+  "ref_src": [
+    "insertion.json boundary mean"
+  ],
+  "R_ps": 261.6,
+  "spread_ps": 33.2,
+  "outputs": 1284,
+  "inputs": 650,
+  "launch_ps": 213.6,
+  "launch_pin": "es[461]",
+  "capture_ps": 162.4,
+  "capture_pin": "compiled_identity[30]",
+  "launch_over": 0,
+  "capture_over": 0,
+  "comb_pins": 0,
+  "comb_first": [],
+  "pass": true,
+  "fail_why": "",
+  "scope": "DIAGNOSTIC COMPONENT ONLY; held under0az, not production adoption",
+  "job": "qkd_kv_static_writer_native_r1-r4-3b9e625b5",
+  "source_sha256": {
+    "insertion.json": "c778f2180b404dd1965a9b7d095bb584212b262d49aec151b0481d930d2ef8cc",
+    "qkd_kv_static_writer_native_tt.lib": "b4d8819362bb68d52cbdf7dda8501f9d2295877098ae2b1b2a0b968d69ec088b",
+    "abstract.json": "363d0f828ccf163112210901a593de154dccecb9cf7ebf7af64c35b9025839f1"
+  },
+  "TTsetup_ps": 96.03,
+  "FFhold_ps": 21.53,
+  "DRC": 0,
+  "diagnostic_export_unit": "oth-ubuntu-166860-1792079099",
+  "reset_pin_native_capture_ps": 138.87448,
+  "previous_reset_pin_native_capture_ps": 268.0,
+  "native_capture_improvement_ps": 129.12552
+}
