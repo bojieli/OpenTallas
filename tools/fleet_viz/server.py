@@ -20,7 +20,7 @@ headers) or from a non-loopback address are always served share-safe.
 import collections, datetime, json, os, signal, pathlib, re, subprocess, sys, threading, time
 from http.server import ThreadingHTTPServer, BaseHTTPRequestHandler
 from urllib.parse import urlparse, parse_qs
-import recorder, elements, explorer, coverage, landing, elem_shell, layout_service
+import recorder, elements, explorer, coverage, landing, elem_shell, layout_service, native_provenance
 
 HERE = pathlib.Path(__file__).resolve().parent
 CFG = json.loads(pathlib.Path(os.environ.get('FLEET_VIZ_HOSTS', HERE / 'fleet_hosts.json')).read_text())
@@ -446,6 +446,7 @@ TOKEN_PLACEHOLDER = (b'<!doctype html><meta charset="utf-8"><meta name="viewport
                      b'here (tools/fleet_viz/explorer/token/).</p><p><a style="color:#5ee7ff" href="/explorer">&larr; Chip Explorer</a></p>')
 # /explorer/coverage/...: the coverage matrix view (results/arch/coverage_20261008 ledgers, joined with /api/elements)
 COVERAGE_DIR = HERE / 'explorer' / 'coverage'
+NATIVE = native_provenance.NativeLifecycle(os.environ.get('FLEET_VIZ_REPO', '/home/ubuntu/OpenTallas'), TOKEN_DIR)
 COVERAGE = coverage.Coverage(os.environ.get('FLEET_VIZ_REPO', '/home/ubuntu/OpenTallas'), ELEMENTS, TOKEN_DIR, log=log)
 # /explorer/element/...: per-element post-route pages (page + pages.json from the repo; data/ written by
 # tools/explorer_elem_export.py pack, never committed).  Share-safe requests get the data with raw names stripped.
@@ -592,6 +593,10 @@ class H(BaseHTTPRequestHandler):
             return self.send(200, json.dumps(stamp(dict(v=ver, verdicts=rows), safe), separators=(',', ':')).encode(), 'application/json')
         if u.path == '/api/elements':
             return self.send(200, json.dumps(stamp(ELEMENTS.snapshot(safe), safe), separators=(',', ':')).encode(), 'application/json')
+        if u.path == '/api/native/coverage':
+            if safe: return self.send(403, b'{"safe":true,"error":"native provenance is private"}', 'application/json')
+            o = NATIVE.api(q.get('design', [''])[0])
+            return self.send(200, json.dumps(o, separators=(',', ':')).encode(), 'application/json')
         if u.path in ('/api/coverage', '/api/coverage/version', '/api/coverage/token'):
             if safe: return self.send(403, b'{"safe":true,"error":"coverage is not part of the share-safe view"}', 'application/json')
             if u.path == '/api/coverage/version': o = COVERAGE.version()
