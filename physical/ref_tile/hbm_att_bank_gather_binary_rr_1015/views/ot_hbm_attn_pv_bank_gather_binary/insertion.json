@@ -1,0 +1,184 @@
+{
+ "schema": "opentallas.closure_loop.ck_insertion.v1",
+ "base": "/srv/opentallas/claude/closure-loop/hbm_att_bank_gather_binary_rr_1015-attgatherrr1015-483d1b9ba/routes/hbm_att_bank_gather_binary_rr_1015_attgatherrr1015_483d1b9ba/work/orfs/results/asap7/opentallas_ot_hbm_attn_pv_bank_gather_binary_asap7_ref_hbm_att_bank_gather_binary_rr_1015_attgatherrr1015_483d1b9ba/base",
+ "db": "6_final.odb",
+ "sdc": "6_final.sdc",
+ "clock": "core_clk",
+ "parasitics": "spef",
+ "raw_source": true,
+ "ss": {
+  "boundary": {
+   "n": 2382,
+   "mean": 254.3,
+   "min": 239.9,
+   "max": 272.6
+  },
+  "all": {
+   "n": 2646,
+   "mean": 254.3,
+   "min": 239.9,
+   "max": 272.6
+  },
+  "errors": [],
+  "macros": null,
+  "macro_libs": 0
+ },
+ "tt": {
+  "boundary": {
+   "n": 2382,
+   "mean": 201.0,
+   "min": 187.4,
+   "max": 218.1
+  },
+  "all": {
+   "n": 2646,
+   "mean": 200.8,
+   "min": 186.8,
+   "max": 218.1
+  },
+  "errors": [],
+  "macros": null,
+  "macro_libs": 0
+ },
+ "ff": {
+  "boundary": {
+   "n": 2382,
+   "mean": 168.4,
+   "min": 153.4,
+   "max": 184.9
+  },
+  "all": {
+   "n": 2646,
+   "mean": 168.2,
+   "min": 152.9,
+   "max": 184.9
+  },
+  "errors": [],
+  "macros": null,
+  "macro_libs": 0
+ },
+ "route_corner": null,
+ "macro_clk": {
+  "n": 0,
+  "slew_ps": 120.0,
+  "late_ps": 30.0,
+  "flag": false,
+  "outliers": []
+ },
+ "env": {
+  "CK_SS_MEAN": 254,
+  "CK_SS_ALL_MEAN": 254,
+  "CK_SS_MIN": 240,
+  "CK_SS_ALL_MIN": 240,
+  "CK_SS_MAX": 273,
+  "CK_SS_ALL_MAX": 273,
+  "CK_TT_MEAN": 201,
+  "CK_TT_ALL_MEAN": 201,
+  "CK_TT_MIN": 187,
+  "CK_TT_ALL_MIN": 187,
+  "CK_TT_MAX": 218,
+  "CK_TT_ALL_MAX": 218,
+  "CK_FF_MEAN": 168,
+  "CK_FF_ALL_MEAN": 168,
+  "CK_FF_MIN": 153,
+  "CK_FF_ALL_MIN": 153,
+  "CK_FF_MAX": 185,
+  "CK_FF_ALL_MAX": 185,
+  "CK_ROUTE_REF": "SS"
+ },
+ "lib_clock_pin": "clk",
+ "clock_mapping_basis": "6_final.sdc create_clock -name core_clk [get_ports {clk}]",
+ "clock_measurements": {
+  "clk": {
+   "schema": "opentallas.closure_loop.ck_insertion.v1",
+   "base": "/srv/opentallas/claude/closure-loop/hbm_att_bank_gather_binary_rr_1015-attgatherrr1015-483d1b9ba/routes/hbm_att_bank_gather_binary_rr_1015_attgatherrr1015_483d1b9ba/work/orfs/results/asap7/opentallas_ot_hbm_attn_pv_bank_gather_binary_asap7_ref_hbm_att_bank_gather_binary_rr_1015_attgatherrr1015_483d1b9ba/base",
+   "db": "6_final.odb",
+   "sdc": "6_final.sdc",
+   "clock": "core_clk",
+   "parasitics": "spef",
+   "raw_source": true,
+   "ss": {
+    "boundary": {
+     "n": 2382,
+     "mean": 254.3,
+     "min": 239.9,
+     "max": 272.6
+    },
+    "all": {
+     "n": 2646,
+     "mean": 254.3,
+     "min": 239.9,
+     "max": 272.6
+    },
+    "errors": [],
+    "macros": null,
+    "macro_libs": 0
+   },
+   "tt": {
+    "boundary": {
+     "n": 2382,
+     "mean": 201.0,
+     "min": 187.4,
+     "max": 218.1
+    },
+    "all": {
+     "n": 2646,
+     "mean": 200.8,
+     "min": 186.8,
+     "max": 218.1
+    },
+    "errors": [],
+    "macros": null,
+    "macro_libs": 0
+   },
+   "ff": {
+    "boundary": {
+     "n": 2382,
+     "mean": 168.4,
+     "min": 153.4,
+     "max": 184.9
+    },
+    "all": {
+     "n": 2646,
+     "mean": 168.2,
+     "min": 152.9,
+     "max": 184.9
+    },
+    "errors": [],
+    "macros": null,
+    "macro_libs": 0
+   },
+   "route_corner": null,
+   "macro_clk": {
+    "n": 0,
+    "slew_ps": 120.0,
+    "late_ps": 30.0,
+    "flag": false,
+    "outliers": []
+   },
+   "env": {
+    "CK_SS_MEAN": 254,
+    "CK_SS_ALL_MEAN": 254,
+    "CK_SS_MIN": 240,
+    "CK_SS_ALL_MIN": 240,
+    "CK_SS_MAX": 273,
+    "CK_SS_ALL_MAX": 273,
+    "CK_TT_MEAN": 201,
+    "CK_TT_ALL_MEAN": 201,
+    "CK_TT_MIN": 187,
+    "CK_TT_ALL_MIN": 187,
+    "CK_TT_MAX": 218,
+    "CK_TT_ALL_MAX": 218,
+    "CK_FF_MEAN": 168,
+    "CK_FF_ALL_MEAN": 168,
+    "CK_FF_MIN": 153,
+    "CK_FF_ALL_MIN": 153,
+    "CK_FF_MAX": 185,
+    "CK_FF_ALL_MAX": 185,
+    "CK_ROUTE_REF": "SS"
+   },
+   "lib_clock_pin": "clk",
+   "clock_mapping_basis": "6_final.sdc create_clock -name core_clk [get_ports {clk}]"
+  }
+ }
+}
