@@ -32,11 +32,27 @@
    "done_boundary": "engine_pin",
    "write_issues_after_external_done": 0,
    "native_qualified": false
+  },
+  {
+   "name": "L2",
+   "verdict": "PASS",
+   "ops": 68,
+   "su_jobs": 17,
+   "su_rows_exact": 1538,
+   "hstore_rows_exact": 640,
+   "T": 640,
+   "request_counts": {
+    "hc_read": 1288,
+    "su_read": 2709,
+    "hc_write": 970,
+    "su_write": 1689
+   },
+   "done_boundary": "engine_pin",
+   "write_issues_after_external_done": 0,
+   "native_qualified": false
   }
  ],
- "pending": [
-  "L2"
- ],
+ "pending": [],
  "native_missing": [
   "actual numerical field/SVC/collective/HCX/MIX producers",
   "real VM macro service and commit events",
