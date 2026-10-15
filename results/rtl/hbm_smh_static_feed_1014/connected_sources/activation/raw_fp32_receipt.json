@@ -1,0 +1,13 @@
+{
+  "scope": "External raw FP32 activation, not released checkpoint activations",
+  "seed": 20261015,
+  "generation": "numpy.default_rng(seed); for n0..7 (standard_normal(5120)*(.1*(n+1))).astype(float32)",
+  "shape": [
+    8,
+    5120
+  ],
+  "layout": "one IEEE754 FP32 word per line; offset n*5120+k; column n, feature k",
+  "sha256": "8139fc833a6f006d35e7b416c58ce216864c6510dffba907d57bfd828f0acfae",
+  "words": 40960,
+  "previous_xw_and_goldens_byte_identical": true
+}

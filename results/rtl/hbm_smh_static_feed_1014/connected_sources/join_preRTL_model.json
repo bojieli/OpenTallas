@@ -1,0 +1,38 @@
+{
+  "source_scope": "ActualVMbank/AQxwrite\u2192originalnativeSM; mapped4PF\u2192onecommon32PCnativecontroller\u2192command-onlyDRAMfixture\u2192packed136cache/83programme",
+  "activation_component": "79d1f839d/4a0a19b8c",
+  "controller_component": "cbd92c1cc4e6f2860d09ca96851a33f70df2716d",
+  "activation_input": "rawFP32 40960words throughactualDQcommits; goldenxw assertionsonly",
+  "activation_latency_after_engineStart": {
+    "postNBAfirst": 71,
+    "postNBAlast": 704,
+    "consumerfirst": 72,
+    "consumerlast": 705,
+    "safeDone": 705
+  },
+  "controller_response": "RL23 HBMclock1024ps, physicalACT/PRE/RD/REF checkedbyoffchipfixture",
+  "SMABI": "one2048xwrite/en/addr7/grp7; command83/read34,packet1099",
+  "SM_arithmetic_unchanged": true,
+  "new_compute_cycles": 0,
+  "scope_exclusions": [
+    "decodedhostcfg/DQinitialboundary notwholehostboot",
+    "WB34physicalbandcomposition notconnected",
+    "allrootsfunctionalphase no measuredphysicalclosure",
+    "fulloperationaheadprefetchthroughput unqualified",
+    "fullbookinstallation separate"
+  ],
+  "price_unchanged": 1.374315789,
+  "native_universal_rate_qualified": false,
+  "connected_initial_scope": {
+    "stack": 1,
+    "sms": [
+      8,
+      9,
+      10,
+      11,
+      12
+    ],
+    "minimum_mechanism": "one full production NC8/SUB4 SM reused across5actualcheckpointrows; baseline13arithcases preserved separately",
+    "object_source": "preserve originalobj/native asnative_stack1_preserved, sameVerilator top identity; newsourcearchive independent"
+  }
+}
