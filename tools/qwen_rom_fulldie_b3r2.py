@@ -1216,6 +1216,12 @@ def _su_vm_bus(v, m, a_bits=None, q_bits=None):
     def masters(model, k=1, port_bits=None):
         out = base(model, k, port_bits)
         s, q = out['qfd_sp_su64_sfu'], out['qfd_sp_vector_memory']
+        if model.get('native_control_contract'):
+            # Native controller retired the legacy VM request/ready service.
+            # These are unbound abstract pins, not a reusable physical view.
+            for retired in ('xd', 'xr'):
+                q.ports.pop(retired, None)
+                q.order[:] = [p for p in q.order if p != retired]
         for M_, f, mine in ((s, 'S' if north else 'N', ('va', 'vq')), (q, 'N' if north else 'S', ('sa', 'sq'))):
             for pn in mine:                 # the base wrapper's default pin group for the new bus: replaced here
                 if pn in M_.ports:
