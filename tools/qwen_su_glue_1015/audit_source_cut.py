@@ -24,11 +24,11 @@ r=new
 r=r.removeprefix('// Source-preserving opt-in relay leaf candidate derived from c6c44c12c.\n')
 r=r.replace('module ot_hdc_vstream_static_relay_entries #(','module ot_hdc_vstream_static_entries #(',1)
 r=r.replace('    parameter integer RELAY_CUT = 0, // opt-in exact existing-state leaf; no added edge\n','',1)
-r=r.replace('if (RELAY_CUT != 0 && LT != 0) begin : g_relay_reset\n            // rst_l is driven by the extracted leaf below.\n        end else if (RTREE != 0) begin : g_rl','if (RTREE != 0) begin : g_rl',1)
+r=r.replace('if (RELAY_CUT != 0 && LT != 0 && RTREE != 0) begin : g_relay_reset\n            // rst_l is driven by the extracted leaf below.\n        end else if (RTREE != 0) begin : g_rl','if (RTREE != 0) begin : g_rl',1)
 r=r.replace('            if (RELAY_CUT == 0) begin:g_inline_in\n','',1)
 r=r.replace('            end\n            wire [NW-1:0] t_i','            wire [NW-1:0] t_i',1)
 r=r.replace('            if (RELAY_CUT == 0) begin:g_inline_out\n','',1)
-a=r.index('            end else begin:g_relay_leaf')
+a=r.index('            end else if(RTREE != 0) begin:g_relay_leaf')
 b=r.index('            assign {va_re',a)
 r=r[:a]+r[b:]
 assert r==src,'Unexpected parent edits outside the explicitly replaced relay cuts'

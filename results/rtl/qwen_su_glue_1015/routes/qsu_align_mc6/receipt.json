@@ -1,0 +1,15 @@
+{
+  "schema": "opentallas.qwen-su-cut-route.v1",
+  "host": "ot-agidock128",
+  "remote": "/srv/opentallas-scratch/codex/su-glue-route-v2/routes/qsu_align_mc6",
+  "unit": "3861738",
+  "flow_rc": 0,
+  "corner_rc": 0,
+  "scope": "leaf route only; parent phi-R/clock wires/boundary pair/throughput not qualified",
+  "setup_tt_ps": 224.32,
+  "setup_ss_sensitivity_ps": 110.98,
+  "hold_ff_ps": -7.17,
+  "drc": 0,
+  "threshold15_pass": false,
+  "qualification": "MC6 hold FAIL preserved; structural delay-cell successor pending"
+}

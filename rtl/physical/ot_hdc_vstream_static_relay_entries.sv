@@ -205,7 +205,7 @@ module ot_hdc_vstream_static_relay_entries #(
     generate for (l = 0; l < SW; l = l + 1) begin : g_lane
         wire live = ({1'b0, v} << LS) + l < {1'b0, nin_r};
         wire rst_l;                                   // this lane's reset (RTREE: its own register)
-        if (RELAY_CUT != 0 && LT != 0) begin : g_relay_reset
+        if (RELAY_CUT != 0 && LT != 0 && RTREE != 0) begin : g_relay_reset
             // rst_l is driven by the extracted leaf below.
         end else if (RTREE != 0) begin : g_rl
             reg rl;
@@ -295,9 +295,16 @@ module ot_hdc_vstream_static_relay_entries #(
             if (RELAY_CUT == 0) begin:g_inline_out
             ot_hdc_delay #(.W(OVW), .D(RD), .RESET(1)) u_ov (.clk(ck_lane[l]), .rst_n(rst_l), .d(o_v), .q(o_vq));
             ot_hdc_delay #(.W(ODW), .D(RD)) u_od (.clk(ck_lane[l]), .rst_n(rst_l), .d(o_d), .q(o_dq));
-            end else begin:g_relay_leaf
+            end else if(RTREE != 0) begin:g_relay_leaf
                 ot_qfd_su_lane_relay #(.AW(AW),.NW(NW),.WR(WR),.RD(RD),.RTREE(RTREE)) u_relay (
                     .clk(ck_lane[l]),.rst_n(rst_n),.rst_l(rst_l),
+                    .b_d(b_d),.b_v(b_v),.live(live),
+                    .cura(tcura),.curb(tcurb),.curc(tcurc),.curd(tcurd),
+                    .mem_q({va_q[32*l+:32],vb_q[32*l+:32],vc_q[32*l+:32],crom_q[64*l+:64]}),
+                    .o_v(o_v),.o_d(o_d),.b_q(b_q),.bv_q(bv_q),.lv_q(lv_q),.p_q(p_q),.o_vq(o_vq),.o_dq(o_dq));
+            end else begin:g_native_relay_leaf
+                ot_qfd_su_lane_relay_native #(.AW(AW),.NW(NW),.WR(WR),.RD(RD)) u_relay (
+                    .clk(ck_lane[l]),.rst_n(rst_n),
                     .b_d(b_d),.b_v(b_v),.live(live),
                     .cura(tcura),.curb(tcurb),.curc(tcurc),.curd(tcurd),
                     .mem_q({va_q[32*l+:32],vb_q[32*l+:32],vc_q[32*l+:32],crom_q[64*l+:64]}),

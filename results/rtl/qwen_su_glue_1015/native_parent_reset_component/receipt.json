@@ -1,0 +1,26 @@
+{
+  "schema": "opentallas.qwen-su-physical-cut-gate.v1",
+  "host": "ot-agidock128",
+  "unit": "oth-ubuntu-3892305-1792058834",
+  "outer_exit": 0,
+  "MC": [
+    6,
+    9
+  ],
+  "cycles_each": 669,
+  "lanes": 64,
+  "resets": 3,
+  "scope": "source-state/reset/edge equivalence; realphysicalcells validatedseparately",
+  "source_sha256": {
+    "rtl/physical/ot_qfd_su_lane_relay_native.sv": "0bdd4b63b36a8876bbdd97436ad16966b3ccb27fc101421171aaaef3dd6e009e",
+    "rtl/physical/ot_qfd_su_lane_relay.sv": "9bf926d9506c83cfa5a9009f8616a1d36d24c7090aa7812189179b481bd722db",
+    "rtl/physical/ot_hdc_vstream_static_relay_entries.sv": "b50dbbd1b1923b780ddeb3f931d2277bc8a5de0f2d074389641a4c119fb5ec79",
+    "tools/qwen_su_glue_1015/native_gate.sh": "61b61b7e4f7445ef262fe117d9f4e4650869e25157014b580c4bf12151265d9f",
+    "rtl/test/qwen_su_glue_1015/tb_su_glue.sv": "6535372ffcef37c3c95ea96a5e4bf143db0fbb987e4a564da5036fa85960e647"
+  },
+  "log_sha256": {
+    "native9.log": "837724edb015b7a00f5aa704a73a16771630c4b84833a01ed645808c056d8aa0",
+    "native6.log": "d274611ceab0ef8ad13b5f08f1c4ec71d288e43cb8bec228df7344c70c9d6473",
+    "native_mut.log": "2339892111f69b4b1e0b91d2eecb9c49cb0e9c8408318a987a689d060fe57fa2"
+  }
+}

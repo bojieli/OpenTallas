@@ -1,0 +1,38 @@
+{
+  "schema": "opentallas.qwen-su-align-hold-prebuild.v1",
+  "source": "c6c44c12c ot_qfd_su_align_group4",
+  "reason": "actual MC6 FF hold\u22127.17ps across255shift-chain endpoints",
+  "parameters": {
+    "ML": 15,
+    "VL": 14,
+    "MC": 6
+  },
+  "replicas": 16,
+  "macs_per_cycle": 0,
+  "memory_bytes_per_cycle_added": 0,
+  "state_bits_added": 0,
+  "cycles_added": 0,
+  "kept_delay_cells": 4848,
+  "delay_cell": "HB4xp67_ASAP7_75t_R, one per existing delayed-bit D input, boundary stages included",
+  "area_basis": "actual original synthesis1871um2; added4848 realHB4cells, actual sum awaitssynthesis",
+  "outline_candidate_um": [
+    96,
+    96
+  ],
+  "mux_fanout": "unchanged native hold mux and12mask fanout32; additional delaycells1:1",
+  "routing_tracks_boundary": 1556,
+  "routing_capacity": "four-face M4/M5 pin fit and real route required",
+  "single_user_latency": "no change in any sampled edge; added within-cycle delay must close actual setupandhold",
+  "qualification": "prebuild structural hold candidate; no timing credit without actual cells/count/route",
+  "measured_floorplan_synth": {
+    "flops": 5232,
+    "hold_cells": 4848,
+    "area_um2": 2366,
+    "extra_area_um2": 495,
+    "outline_um": [
+      97.2,
+      97.2
+    ],
+    "physical_timing": "pending"
+  }
+}
