@@ -35,15 +35,16 @@ def build(src, lef, width=1036.8, height=399.6):
     children = re.findall(r'\bot_hbm_svc_static_pc\s+(\w+)\s*\((.*?)\n    \);', text, re.S)
     n = len(children)
     assert 1 <= n <= 5 and all(f'clk_pc{k}' in ports for k in range(n)), 'actual per-PC clocks required'
-    cw,ch,gap = 140.4,112.32,21.6
-    x0 = grid((width - (n*cw+(n-1)*gap))/2)
-    cy = grid(height-ch-23.76)
+    cw,ch,gap = 140.4,112.32,32.4
+    x0 = round(round((width - (n*cw+(n-1)*gap))/2/43.2)*43.2,6)
+    cy = round(math.floor((height-ch-20)/43.2)*43.2,6)
     pins, joins, kids = {}, [], []
     # Shared reset remains a real source fanout; put its entry near the median
     # child WEST pin, above the row, outside all per-PC data windows.
     resetx = track(x0 + (n-1)*(cw+gap)/2)
     for c,(inst,body) in enumerate(children):
         cx = round(x0+c*(cw+gap),6)
+        assert abs(cx/43.2-round(cx/43.2))<1e-8 and abs(cy/43.2-round(cy/43.2))<1e-8
         kids.append(dict(name=inst, cell=PC, outline=dict(w=cw,h=ch),
                          origin=dict(x=cx,y=cy,orient='R0'), own_clock_root=True,
                          clock_entry=dict(pin='clk',face='W',layer='M4',offset=19.452)))
@@ -134,6 +135,7 @@ def main():
                  clock_entry=dict(pin='clk_pc0',face='N',layer='M5',offset=next(x['x'] for x in p['pins'] if x['name']=='clk_pc0')),
                  clock_entries=[dict(pin=x['name'],face='N',layer='M5',offset=x['x']) for x in p['pins'] if x['name'].startswith('clk_pc')],
                  pg_layer='M7',strap_layer='M8',signal_max_layer='M6',layer_cap='M6',layer_rule='cluster',
+                 clock_domain='hbm',clock_period_ps=1024.0,clock_compensation_status='OPEN: per-PC measured insertion and phase homes required',
                  face_utilisation=p['face_utilisation'], io_tcl=str((out/('n'+str(len(p['children']))+'.tcl')).relative_to(ROOT)),
                  source_sha256=p['source_sha256'], geometry_status='EXACT_SOURCE_BIT_PLAN; routed clock/TT/FF/DRC and die joins OPEN',
                  geometric_max_wire_um=p['worst']['manhattan_um'], version=2)
