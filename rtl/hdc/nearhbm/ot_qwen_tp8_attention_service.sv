@@ -17,7 +17,9 @@ module ot_qwen_tp8_attention_service #(
  // mode requires its implemented return geometry in the compiler calendar;
  // V transport and phase scheduling must also qualify before native adoption.
  parameter integer STATIC_K_TRANSPORT=0,
- parameter integer K_RETURN_LATENCY=16
+ parameter integer K_RETURN_LATENCY=16,
+ parameter integer STATIC_V_TRANSPORT=0,
+ parameter integer V_RETURN_LATENCY=17
 ) (
  input wire clk,rst_n,
  input wire request_valid,output wire request_ready,
@@ -156,8 +158,8 @@ module ot_qwen_tp8_attention_service #(
    if(!rst_n)begin rv<=0;slots<=0;ts<=0;eps<=0;rows<=0;bad0<=0;bad1<=0;end
    else begin
     rv<={eread[s+2],eread[s]};
-    if(v_rsp_valid[s]&&v_rsp_ready[s]&&!rsp_good[0])bad0<=1;
-    if(v_rsp_valid[s+2]&&v_rsp_ready[s+2]&&!rsp_good[1])bad1<=1;
+    if(v_rsp_valid[s]&&((v_rsp_ready[s]&&!rsp_good[0])||(STATIC_V_TRANSPORT&&!v_rsp_ready[s])))bad0<=1;
+    if(v_rsp_valid[s+2]&&((v_rsp_ready[s+2]&&!rsp_good[1])||(STATIC_V_TRANSPORT&&!v_rsp_ready[s+2])))bad1<=1;
     slots<={v_rsp_slot[3*(s+2)+:3],v_rsp_slot[3*s+:3]};ts<={v_rsp_t[14*(s+2)+:14],v_rsp_t[14*s+:14]};
     eps<={v_rsp_epoch[16*(s+2)+:16],v_rsp_epoch[16*s+:16]};rows<={v_rsp_data[1024*(s+2)+:1024],v_rsp_data[1024*s+:1024]};
    end
@@ -172,6 +174,15 @@ module ot_qwen_tp8_attention_service #(
   end
   assign v_req_slot[3*s+:3]=slot;assign v_req_slot[3*(s+2)+:3]=slot;
   assign v_req_t[14*s+:14]=req_t;assign v_req_t[14*(s+2)+:14]=req_t;
+  if(STATIC_V_TRANSPORT)begin:gstatic
+   assign rsp_ready=2'b11;assign want_ready=1'b0;
+  ot_qwen_tp8_vrow_static #(.PAIR(s),.RETURN_LATENCY(V_RETURN_LATENCY)) u_merge(.clk(clk),.rst_n(rst_n),.start(start_pv),.context_len(ctx),.epoch(ep),
+   .lo_req_valid(v_req_valid[s]),.hi_req_valid(v_req_valid[s+2]),.lo_req_ready(v_req_ready[s]),.hi_req_ready(v_req_ready[s+2]),.req_slot(slot),.req_t(req_t),.req_epoch(req_ep),
+   .lo_rsp_valid(rv[0]),.hi_rsp_valid(rv[1]),
+   .lo_rsp_slot(slots[2:0]),.hi_rsp_slot(slots[5:3]),.lo_rsp_t(ts[13:0]),.hi_rsp_t(ts[27:14]),.lo_rsp_epoch(eps[15:0]),.hi_rsp_epoch(eps[31:16]),
+   .lo_vrow(rows[1023:0]),.hi_vrow(rows[2047:1024]),.lo_exp(edata[64*s+:64]),.hi_exp(edata[64*(s+2)+:64]),
+   .out_valid(ov),.out_ready(ordy),.out_vrow(vdata),.out_exp(expdata),.out_t(ot),.out_epoch(oep),.out_first(first),.out_last(last),.done(vdone[s]),.fault(vf[s]));
+  end else begin:ghistorical
   ot_qwen_tp8_vrow_merge #(.PAIR(s)) u_merge(.clk(clk),.rst_n(rst_n),.start(start_pv),.context_len(ctx),.epoch(ep),
    .want_valid(want_run),.want_ready(want_ready),.want_t(want_t),
    .lo_req_valid(v_req_valid[s]),.hi_req_valid(v_req_valid[s+2]),.lo_req_ready(v_req_ready[s]),.hi_req_ready(v_req_ready[s+2]),.req_slot(slot),.req_t(req_t),.req_epoch(req_ep),
@@ -179,6 +190,7 @@ module ot_qwen_tp8_attention_service #(
    .lo_rsp_slot(slots[2:0]),.hi_rsp_slot(slots[5:3]),.lo_rsp_t(ts[13:0]),.hi_rsp_t(ts[27:14]),.lo_rsp_epoch(eps[15:0]),.hi_rsp_epoch(eps[31:16]),
    .lo_vrow(rows[1023:0]),.hi_vrow(rows[2047:1024]),.lo_exp(edata[64*s+:64]),.hi_exp(edata[64*(s+2)+:64]),
    .out_valid(ov),.out_ready(ordy),.out_vrow(vdata),.out_exp(expdata),.out_t(ot),.out_epoch(oep),.out_first(first),.out_last(last),.done(vdone[s]),.fault(vf[s]));
+  end
   ot_qwen_tp8_pv256_pair #(.PAIR(s),.TREE(1)) u_pv(.clk(clk),.rst_n(rst_n),.start(start_pv),.slice_clk({32{clk}}),.context_len(ctx),.epoch(ep),
    .in_valid(ov),.in_ready(ordy),.in_v(vdata),.in_e(expdata),.in_c(ot[6:0]),.in_t(ot),.in_epoch(oep),.in_first(first),.in_last(last),
    .out_valid(pvalid[s]),.out_ready(pready[s]),.out_leaf(partial[16384*s+:16384]),.out_c(),.out_epoch(pep[16*s+:16]),.fault(pf[s]),.busy(),.accepted(vc[s]),.committed(),.peak_inflight());
