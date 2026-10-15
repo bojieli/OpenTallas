@@ -29,6 +29,20 @@ FA, FIRST = 104 + 155, 104
 CLK = 1.2e9
 
 
+def validate_evidence(d, shape):
+    """Only complete positive component records can supply measured model inputs."""
+    summary, ops = d.get("summary", {}), d.get("ops", [])
+    expected_scores = {"ds128": 128, "ds640": 640, "qwen8192": 65536}[shape]
+    if not (summary.get("shape") == shape and summary.get("verdict") == "PASS"
+            and summary.get("mut") is None and ops
+            and summary.get("ops") == summary.get("passed") == len(ops)
+            and summary.get("qk_scores_checked") == expected_scores
+            and summary.get("pv_cross_sm_merge_equals_att_pv") is True
+            and all(o.get("pass") is True and o.get("rc") == 0 and not o.get("fault")
+                    and o.get("mismatches") == 0 and o.get("results") == o.get("expected") for o in ops)):
+        raise ValueError(f"{shape}: complete positive exact component evidence required")
+
+
 def merge_cycles(nodes):
     lv, n, c = 0, nodes, 0
     while n > 1:
@@ -47,6 +61,7 @@ def qwen_model(d):
     columns.  Busiest SM: QK op 256 rows a head, PV 2 ops x 128 tokens a head (4 token streams each).
     publish MODEL 8 words/cycle: an op leaves 4 streams x 128 dims x 4 heads = 2048 words; merge MODEL as DS (SU, 512 lanes):
     256 nodes x (128 dims x 4 heads) per KV head; 'smerge' variant merges the 4 stream nodes inside the SM first (lever)."""
+    validate_evidence(d, "qwen8192")
     qk = max(o["cycles"]["span"] for o in d["ops"] if o["kind"] == "qk")
     pv = max(o["cycles"]["span"] for o in d["ops"] if o["kind"] == "pv")
     res = dict(measured=dict(qk_op=qk, pv_op=pv))
@@ -75,6 +90,8 @@ def main():
     ap.add_argument("--out")
     a = ap.parse_args()
     d640, d128 = json.load(open(a.ds640)), json.load(open(a.ds128))
+    validate_evidence(d640, "ds640")
+    validate_evidence(d128, "ds128")
 
     def span(d, prefix):
         return max(o["cycles"]["span"] for o in d["ops"] if o["name"].startswith(prefix))
@@ -87,7 +104,8 @@ def main():
     comp = {640: dict(qk=qk(d640), pv=span(d640, "pv")), 128: dict(qk=qk(d128), pv=span(d128, "pv"))}
     nodes = {640: sum(1 for o in d640["ops"] if o["kind"] == "pv"), 128: sum(1 for o in d128["ops"] if o["kind"] == "pv")}
     PUB = 64
-    out = dict(measured_comp=comp, pv_nodes=nodes, model_terms=dict(fa=FA, first_access=FIRST, publish=PUB,
+    out = dict(scope="component spans measured; first access, dispatch, publish and cross-SM merge modeled",
+               native_sm_integration_qualified=False, physical_closure_qualified=False, measured_comp=comp, pv_nodes=nodes, model_terms=dict(fa=FA, first_access=FIRST, publish=PUB,
                merge={T: merge_cycles(nodes[T]) for T in nodes}))
     for pf in (False, True):
         delta = 0.0

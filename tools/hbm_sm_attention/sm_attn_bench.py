@@ -378,6 +378,8 @@ def main(argv=None):
         ops, nrun = plan(rec, a.shape)
     if a.only:
         ops = [o for o in ops if any(o[0].startswith(x) for x in a.only.split(","))]
+    if not ops:
+        ap.error("--only matched no operations; an empty run cannot qualify a component")
     kvm = int(a.mut[2:]) if a.mut.startswith("kv") else 0
     pvm = int(a.mut[2:]) if a.mut.startswith("pv") else 0
     exe = build(work, kvm, pvm, QW_G if a.shape == "qwen8192" else 1)
