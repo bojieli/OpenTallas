@@ -1,0 +1,73 @@
+{
+  "schema": "opentallas.ref_tile.gate_result.v2",
+  "kit": "hcoll_vmwrite_static_v1",
+  "verdict": "WARN",
+  "generated": "2026-10-15T13:57:53-0700",
+  "host": "ot-agidock128",
+  "clock": {
+    "max_root_sinks": 6288,
+    "root": "port:clk",
+    "cts": true,
+    "tt_insertion_ps": 318.4,
+    "tt_spread_ps": 39.6,
+    "declared_clock": null,
+    "limits": {
+      "sinks": 15000,
+      "insertion_ps": 300.0,
+      "spread_ps": 80.0
+    },
+    "clock_measurements": [
+      {
+        "source": "clk",
+        "clock": "core_clk",
+        "tt": {
+          "boundary": {
+            "n": 4921,
+            "mean": 299.3,
+            "min": 284.8,
+            "max": 318.4
+          },
+          "all": {
+            "n": 6289,
+            "mean": 299.4,
+            "min": 278.8,
+            "max": 318.4
+          },
+          "errors": [],
+          "macros": null,
+          "macro_libs": 0
+        }
+      }
+    ],
+    "measured_clock": "core_clk",
+    "verdict": "PASS",
+    "text": "6,288 sinks on the largest root <= 15,000; measured TT insertion 318.4 ps, leaf spread 39.6 ps"
+  },
+  "items": [
+    {
+      "severity": "WARN",
+      "check": "util",
+      "message": "utilisation 18% outside 45%-60% (std 6731 + macro 0 in core 38202 um2)",
+      "fix": "resize the outline to util 0.50-0.55 (drop 'outline', set util)"
+    },
+    {
+      "severity": "WARN",
+      "check": "util",
+      "message": "synthesized std area 4169 um2 + macros 0 in core 38202: util 11%",
+      "fix": "set \"std_area_um2\": 4169 and drop 'outline' (gen sizes to util 0.52)"
+    },
+    {
+      "severity": "WARN",
+      "check": "textbook.boundary",
+      "message": "1 input->register endpoint(s) > 3 levels (worst slot_owner[19]->fault$_DFFE_PN0P_/D 8 lv): register the boundary (pin flops / registered outputs)",
+      "fix": "register every boundary: pin flop in, flop out; never an ICG enable from a port"
+    },
+    {
+      "severity": "WARN",
+      "check": "textbook.util_channel",
+      "message": "utilisation 10.9% outside 45%-65% (std 4170 + macro 0 um2 in 38202 um2): shrink the outline (long wires / sparse placement)",
+      "fix": "size the outline to util 0.50-0.55 with >= 20 um macro channels"
+    }
+  ],
+  "qualification": "Diagnostic only: actual TT in->reg fault path -210.1ps; no routed/native closure. Normal data reg->reg+63.4ps, hold+39.7ps."
+}

@@ -1,0 +1,22 @@
+GATE WARN util: utilisation 18% outside 45%-60% (std 6731 + macro 0 in core 38202 um2)  -> FIX: resize the outline to util 0.50-0.55 (drop 'outline', set util)
+GATE INFO layer: tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)
+GATE INFO oflop: E face 10.5 pins/um (kq, launch_done, fault): recipe-2 hold stages take 3.52 um behind the face, the pin flops need gap 4.5 um and 6 columns (derived in the flow)
+GATE INFO oflop: S face 10.5 pins/um (tkw_v, tkw_d): recipe-2 hold stages take 2.3 um behind the face, the pin flops need gap 2.9 um and 21 columns (derived in the flow)
+GATE INFO oflop: W face 10.5 pins/um (rgx_v, rgx_addr, rgx_data): recipe-2 hold stages take 2.3 um behind the face, the pin flops need gap 2.9 um and 6 columns (derived in the flow)
+GATE INFO remote: ot-run selected ot-agidock128 for 24 GB memory; disk pick 22 GiB, runtime 22 GiB includes 20 GiB work reserve plus snapshot staging
+GATE INFO source_binding: immutable shipping manifest /tmp/ref_gate_hcoll_vmwrite_static_v1_20261015-134337.source_snapshot.json
+GATE INFO remote: remote log /tmp/ref_gate_hcoll_vmwrite_static_v1_20261015-134337.log; host dir ot-agidock128:/srv/opentallas-scratch/claude/ref_gate/hcoll_vmwrite_static_v1-20261015-134337
+GATE INFO remote: synth + floorplan + PDN OK on ot-agidock128 in 100 s (gate total 841 s)
+GATE WARN util: synthesized std area 4169 um2 + macros 0 in core 38202: util 11%  -> FIX: set "std_area_um2": 4169 and drop 'outline' (gen sizes to util 0.52)
+GATE INFO textbook: WARN ot_hgi_coll_static_vmwrite cells 28,915 flops 6,288 depth 326.7 ps util 0.1092 reach 198.4 um (1.3 s)
+GATE WARN textbook.boundary: 1 input->register endpoint(s) > 3 levels (worst slot_owner[19]->fault$_DFFE_PN0P_/D 8 lv): register the boundary (pin flops / registered outputs)  -> FIX: register every boundary: pin flop in, flop out; never an ICG enable from a port
+GATE WARN textbook.util_channel: utilisation 10.9% outside 45%-65% (std 4170 + macro 0 um2 in 38202 um2): shrink the outline (long wires / sparse placement)  -> FIX: size the outline to util 0.50-0.55 with >= 20 um macro channels
+GATE INFO cts_calibration: ss insertion all 359.3..401.6 ps (spread 42.3), boundary mean 380.2; tt insertion all 278.8..318.4 ps (spread 39.6), boundary mean 299.3; ff insertion all 229.6..268.0 ps (spread 38.4), boundary mean 249.7; macro_clk flag False
+GATE INFO density: effective global-placement target density 0.500 vs spec PD 0.50
+GATE INFO path_classes: constraints signoff /src/physical/ref_tile/hcoll_vmwrite_static_v1/signoff.sdc (TT placement RC; diagnostic)
+GATE INFO path_classes: in->reg        19 paths, worst slack -210.1 ps (e.g. fault$_DFFE_PN0P_/D)
+GATE INFO path_classes: reg->reg      298 paths, worst slack 63.4 ps (e.g. kq[2123]$_DFF_P_/D)
+GATE INFO path_classes: setup WNS -2.1008450534765188e-10 hold WNS 3.972716600131321e-11
+GATE INFO clock_rule: root port:clk: 6,288 sinks on the largest root <= 15,000; measured TT insertion 318.4 ps, leaf spread 39.6 ps
+PRE_ROUTE_GATE: WARN (0 fail, 4 warn)
+GATE: hcoll_vmwrite_static_v1/gate_result.json written (exact staged source binding; commit it with the kit)
