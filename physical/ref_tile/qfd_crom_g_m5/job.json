@@ -1,5 +1,5 @@
 {
- "name": "qfd_crom_g_m5-nl1-COMMIT",
+ "name": "qfd_crom_g_m5-nl1-deb1e0461",
  "block": "ot_qfd_crom_gr",
  "ref_tile": true,
  "owner": "Claude:q14-r8-compute",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 16,
  "source": {
   "branch": "main",
-  "commit": "COMMIT"
+  "commit": "deb1e04616462a5969903a5f903bdaf82f6e38e3"
  },
  "stages": {
   "bench": [
@@ -106,7 +106,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qfd_crom_g_m5/qfd_crom_g_m5-nl1-COMMIT"
+   "to": "results/rtl/ref_tile/qfd_crom_g_m5/qfd_crom_g_m5-nl1-deb1e0461"
   }
  ],
  "cycles_added": 0,
