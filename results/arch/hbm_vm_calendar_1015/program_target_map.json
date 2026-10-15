@@ -957,7 +957,9 @@
       "read_group": 5,
       "write_group": 1,
       "clock_entries": 5,
-      "status": "Actual source prepared; SW source-exact component gate running; no global timestamps/physical qualification"
+      "status": "Actual SWv2 programme/host/engine/bank component PASS8records128beats4096words512readbacks181vs192+6mutants; SU/DMAglobalepochs and physicalopen",
+      "source_commit": "0a2b7d317",
+      "source_sha256": "0e12a87cbeafad331a802fcb5f697b694324ace98e7e719ea4662862ecc0bb3c"
     }
   },
   "map": "F20={PC12 bits19:8,target8 bits7:0}; F24 eight32b pieces; F28={limit13 bits24:12,base12 bits11:0}; F2c loops16; VM F00/F08 retains10/11 addresses",

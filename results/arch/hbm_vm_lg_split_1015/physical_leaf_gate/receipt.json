@@ -1,0 +1,98 @@
+{
+  "schema": "opentallas.hbm.actual-lg-leaf-prototype.v1",
+  "source_commit": "a09b0c7df",
+  "leaf_source_sha256": "31acf6679c2fcd95c2abd3897daae041710f7c7a5f318d9d2e1f8541c8b377a4",
+  "pin_hook_source": "7eb4de7d2",
+  "source_binding_archive_sha256": "fb61e3d5ba506b8cbb18386acb7b6035e102bde2fec3b8e6ec2d7a0fe2012146",
+  "functional_gate": "87f942c53 programme\u219224LGleaf\u21928realVMbank/24SRAM:3072writes/readbacks; identical leafsource andbank7b2",
+  "host": "ot-epyc1tb",
+  "run": "/srv/opentallas-scratch/claude/ref_gate/vm_lg_bank_hc_static_1015-20261015-023632",
+  "root_sinks": 1448,
+  "std_area_um2": 579,
+  "core_area_um2": 21447,
+  "utilization": 0.027,
+  "outline_um": [
+    150.336,
+    151.2
+  ],
+  "replicas": 96,
+  "aggregate_prototype_mm2": 2.1821571072,
+  "clock_ps": {
+    "TT": {
+      "min": 185.8,
+      "max": 238.3,
+      "mean": 200,
+      "spread": 52.5
+    },
+    "SS": {
+      "min": 243.9,
+      "max": 298.8,
+      "mean": 258.3,
+      "spread": 54.9
+    },
+    "FF": {
+      "min": 149.7,
+      "max": 200.7,
+      "mean": 164.5,
+      "spread": 51
+    }
+  },
+  "placement_TT_path_ps": {
+    "setup_WNS": 231.6057345908,
+    "hold_WNS": 37.1521702291
+  },
+  "actual_pin_audit": {
+    "scope": "actual signal BTerm PORT rectangles, requested actual ODB routingtrack indices, and both VDD/VSS PG contact projections",
+    "actual_sha256": "2a1782d62c2a7d70606b182f54a0e8559e82a505499b28265dc30258ea479033",
+    "coordinates_sha256": "83bf46f24cbfb2fb5f29aba83583d7275945ddf2ebf492b7a1571b484d6529d7",
+    "outline_um": [
+      0.0,
+      0.0,
+      150.336,
+      151.2
+    ],
+    "scalar_pins": 1673,
+    "PG_contact_shapes": 54,
+    "face_pins": {
+      "N": 5,
+      "W": 556,
+      "S": 556,
+      "E": 556
+    },
+    "clock_port": [
+      "clk",
+      "clk",
+      "SIGNAL",
+      "INPUT",
+      [
+        [
+          "M5",
+          [
+            33.264,
+            151.116,
+            33.288,
+            151.2
+          ]
+        ]
+      ]
+    ],
+    "shifted_actual_pins": [],
+    "PG_clearance_violations": [],
+    "signal_pitch_violations": [],
+    "missing_or_multiple_rectangles": [],
+    "pass": true
+  },
+  "pin_files": {
+    "rectangles": "actual_pin_pg.json",
+    "centers": "pin_coordinates.tsv"
+  },
+  "orientation": "R0 only; no routedLEF/MYsymmetry claim",
+  "face_roles": {
+    "N": "clk/rst/fault/localread/localwrite5",
+    "E": "nearVM556",
+    "W": "farengine556",
+    "S": "localengine556"
+  },
+  "status": "Actual source-exact synthesis/floorplan/PG/pinreadback/CTS prototype PASS mechanisms; gateWARN lowutil and1bitvector. H-DIE explicitly pinlimited candidate; fullroute/DRC/FFhold/reach/systemcut/placementgrant notestablished",
+  "routing_tradeoff": "2.18mm2/96leaves candidate cost versus~0.056mm2stdcells; pinaccess/clockspace retained. No minimumcellarea fit assumption."
+}
