@@ -44,6 +44,13 @@ def bits32(a):
     return np.asarray(a, dtype=F).view(np.uint32)
 
 
+def zbits(a):
+    """bits with zeros canonical (+0): the golden's qdq keeps -0 for a negative element that rounds to zero, but every
+    product with it is canonical +0 (hdc_golden mul), so -0 and +0 KV elements are the same operand."""
+    a = np.asarray(a, dtype=F)
+    return bits32(np.where(a == 0, F(0), a))
+
+
 def bf16b(a):
     return (bits32(V.to_bf16(a)) >> 16).astype(np.uint32)
 
@@ -69,7 +76,7 @@ def kv8_row(x):
     deq = V.qdq_fp8(x)
     ue = (np.asarray(e, dtype=np.int64) + 127).astype(np.uint8)
     chk = np.array([(_dec8(c) * 2.0 ** (int(ue[i // 32]) - 127)) for i, c in enumerate(codes)], dtype=np.float64)
-    assert np.array_equal(bits32(V.to_bf16(chk.astype(F))), bits32(deq)), "KV8 encode != golden qdq_fp8"
+    assert np.array_equal(zbits(V.to_bf16(chk.astype(F))), zbits(deq)), "KV8 encode != golden qdq_fp8"
     return codes, ue, deq
 
 
@@ -95,7 +102,7 @@ def kv4_row(x):
     sign = (xb < 0) & (code > 0)
     codes = (code | (sign.astype(np.int64) << 3)).reshape(-1).astype(np.uint8)
     chk = np.array([(-1 if c & 8 else 1) * E2M1[c & 7] * _dec8(scodes[i // 16]) for i, c in enumerate(codes)])
-    assert np.array_equal(bits32(V.to_bf16(chk.astype(F))), bits32(deq)), "KV4 encode != golden qdq_fp4_e4m3"
+    assert np.array_equal(zbits(V.to_bf16(chk.astype(F))), zbits(deq)), "KV4 encode != golden qdq_fp4_e4m3"
     return codes, scodes, deq
 
 
