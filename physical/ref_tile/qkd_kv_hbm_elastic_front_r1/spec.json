@@ -55,9 +55,9 @@
  },
  "slot_change_request": "Q-KVSYS-DIE v1.4.1 (lead r8, HANDOFF 0az): NEW per-PC slot 64.8 x 216 abutting the W face of the static return ring home (native_return_{WS,WN,ES,EN}_{0..31}): E face = the ring's controller_co / controller_epoch / compiled_hbm_put pin y (tools/qwen_static_kv/elastic_front_pins.py), W face straight-through toward the controller. 128 homes; die area +1.79 mm2 if not absorbed by the ring column.",
  "job": {
-  "owner": "Claude:el1014-qwen-split-kvsys",
-  "branch": "claude/qwen-split-kvsys-1014",
-  "tag": "r1",
+  "owner": "Codex:qwen_elements_1103",
+  "branch": "codex/qwen-elements-1103",
+  "tag": "r3",
   "purpose": "0az elastic KV-HBM boundary front buffer (pll_hbm domain): corrected KV sectors land at ACTUAL arrival in a 4 x 8 x 297-b block ring; one ready per block; release on the compiled blk_go at fixed edges into the unchanged static return ring; blk_freed block credit toward the RD issuer; hold/stall = explicit exceptional block pause. No per-lane credits.",
   "benches": [
    {
@@ -92,7 +92,7 @@
  "recipe": 2,
  "io_flop_at_pins": {
   "cols": 4,
-  "allow_none": true
+  "allow_none": false
  },
  "inhold": true,
  "outhold": true,

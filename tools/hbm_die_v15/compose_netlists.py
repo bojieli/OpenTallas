@@ -76,7 +76,23 @@ def main():
         txt = nl.read_text(errors='replace')
         txt = re.sub(r'^module\s+' + re.escape(mod) + r'\s*\(', f'module {new}(', txt, count=1, flags=re.M)
         dst.write_text(txt)
-        L.append(f'read_verilog {dst.name}')
+        L.append(f'read_verilog -icells {dst.name}')
+    # black boxes kept inside a master's netlist (e.g. IDX hslices) bind to their own synthesised netlist (unchanged name)
+    for new, r in list(used.items()):
+        for b in r['blackboxes']:
+            rb = [x for x in runs.get(b, []) if not x['params']]
+            if not rb:
+                missing.append(dict(instance=f'{new}/<{b}>', master=b, params={}))
+                continue
+            key = f'__bb__{b}'
+            if key in used:
+                continue
+            used[key] = rb[0]
+            fl = json.loads((Path(rb[0]['netlist']).parent / f'{rb[0]["run"]}.files.json').read_text())
+            for m in fl['macros']:
+                macros.add(m['file'])
+            (out / f'{b}.v').write_text(Path(rb[0]['netlist']).read_text(errors='replace'))
+            L.append(f'read_verilog -icells {b}.v')
     L = L[:1] + [f'read_verilog -lib /src/{m}' for m in sorted(macros)] + L[1:]
     L += ['read_verilog composed_top.v', f'hierarchy -check -top {top}', 'check -assert', 'tee -o compose.stat stat']
     (out / 'compose.ys').write_text('\n'.join(L) + '\n')

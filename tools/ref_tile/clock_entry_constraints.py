@@ -23,8 +23,8 @@ def signoff_period(spec):
     """Opt-in leaf signoff period; all existing profiles retain their ABI."""
     route = spec.get('route', {})
     value = route.get('signoff_period_ps', 833.333)
-    if 'signoff_period_ps' in route and spec.get('clock') != 'multiple_cts_roots':
-        raise ValueError('signoff_period_ps requires multiple_cts_roots leaf timing ownership')
+    if 'signoff_period_ps' in route and not native_leaf(spec):
+        raise ValueError('signoff_period_ps requires native leaf timing ownership (multiple_cts_roots or hybrid_entries tile)')
     if isinstance(value, bool) or not isinstance(value, (int, float)) or not math.isfinite(value) or value <= 0:
         raise ValueError('signoff_period_ps must be finite and positive')
     if 'signoff_period_ps' in route:
@@ -325,6 +325,20 @@ proc ot_ce_apply {} {
   # Wires-only parents have no CTS tree to set this flag for us.
   # Ideal clocks silently report zero network arrival despite real entry wires.
   set_propagated_clock [get_clocks ot_entry_*]
+  # Before CTS, a standard-cell root is still one unbuffered high-fanout
+  # net. Propagating that net invents multi-ns skew and clock-pin slew;
+  # its delay is not the tree that CTS will build. Keep only these declared
+  # CTS roots ideal during the explicit pre-CTS diagnostic. Raw macro and
+  # hardened-child entries retain actual entry-wire propagation. Routed
+  # require-wire checks always propagate and measure every physical root.
+  if {[info exists ::ot_ref_pre_cts] && $::ot_ref_pre_cts &&
+      (![info exists ::ot_ce_require_wire] || !$::ot_ce_require_wire)} {
+    foreach name $::ot_ce_cts_roots {
+      set clock [get_clocks ot_entry_[lsearch -exact $::ot_ce_ports $name]]
+      unset_propagated_clock $clock
+      puts "OT_ENTRIES PRE_CTS_IDEAL_CTS_ROOT $name"
+    }
+  }
   set sources {}; set names {}
   foreach c [get_clocks ot_entry_*] {
     foreach p [get_property $c sources] { lappend sources $p; lappend names [get_full_name $p] }

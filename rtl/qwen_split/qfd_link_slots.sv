@@ -155,3 +155,12 @@ module qfd_rstseq #(
             rso_seq  <= s[1] && n >= FLUSH + 4 * STEP;
         end
 endmodule
+
+// single-signal package bump receiver = HARD-MACRO MODEL (port-bind --allow-model qfd_sigbump): an off-chip signal of
+// the KV/system die (Q-LINK static link: forwarded epoch strobe, forwarded link reset) arriving on a bump pad; the far
+// die is not a net of this die.  Simulation behaviour: drives its reset value (RV) until a bench forces it.
+module qfd_sigbump #(parameter integer RV = 0) (
+    output wire o
+);
+    assign o = RV[0];
+endmodule

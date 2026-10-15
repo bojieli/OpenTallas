@@ -12,7 +12,7 @@ PREF=""; [ "${1:-}" = "--prefer" ] && PREF="--prefer $SRC/$2"
 BBARG=""; [ "$BB" != "-" ] && BBARG="--bb $BB"
 mkdir -p $OUT
 HDIE_ALLOW_AMBIGUOUS=1 python3 $SRC/tools/hbm_die_v15/master_filelist.py $TOP --root $SRC --json $PREF $BBARG > $OUT/$NAME.files.json || { echo "$NAME FILELIST_FAIL"; exit 2; }
-python3 - "$OUT/$NAME.files.json" "$OUT/$NAME.ys" "$TOP" "$PRM" "$BB" "$NAME" <<'PY'
+python3 - "$OUT/$NAME.files.json" "$OUT/$NAME.ys" "$TOP" "$PRM" "$BB" "$NAME" "${COARSE:-0}" <<'PY'
 import json,sys
 d=json.load(open(sys.argv[1])); ys=sys.argv[2]; top=sys.argv[3]; prm=sys.argv[4]; bb=sys.argv[5]; name=sys.argv[6]
 L=[]
@@ -23,7 +23,11 @@ for b in ([] if bb=='-' else bb.split(',')):
 if prm!='-':
     for kv in prm.split(','):
         k,v=kv.split('='); L.append(f"chparam -set {k} {v} {top}")
-L += [f"hierarchy -check -top {top}", f"tee -o /out/{name}.hier.stat stat",
+if sys.argv[7] == '1':   # COARSE=1: real flattened word-level netlist (no techmap/abc) for composed elaboration only
+    L += [f"hierarchy -check -top {top}", f"synth -top {top} -flatten -run begin:fine", "opt_clean",
+          f"tee -o /out/{name}.stat stat", f"write_verilog -noattr /out/{name}.netlist.v"]
+else:
+    L += [f"hierarchy -check -top {top}", f"tee -o /out/{name}.hier.stat stat",
       f"synth -top {top} -flatten", "dfflibmap -liberty /tmp/lib/seq.lib", "abc -liberty /tmp/lib/all.lib", "opt_clean",
       f"tee -o /out/{name}.stat stat -liberty /tmp/lib/all.lib", f"write_verilog -noattr /out/{name}.netlist.v"]
 open(ys,'w').write("\n".join(L)+"\n")
