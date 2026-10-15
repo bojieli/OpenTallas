@@ -78,10 +78,11 @@
     "normal_arbitration": false,
     "producer": "actual mapped full-vocabulary E lookup preloaded once per token before row windows",
     "source_sha256": "2f6cfd05b5373287b4bdc73b18c5166ce1909cc3382b61169dfdfa872bc443b8",
-    "measured": false
+    "measured": true,
+    "gate": "results/rtl/s81_mtp_static_row_1015/cache/record.json",
+    "scope": "all32rows exact fullK actualmappedE/W+actualheadlogits; ROMviaflip and metadata mutants fail"
   },
   "remaining": [
-    "cache integrated full-K gate verdict",
     "direct actual public head-port wiring on all four A phases",
     "all vocabulary groups and recursive actual draft token chain",
     "static carried argmax and acceptance/rollback program plus full program calendar",

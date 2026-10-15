@@ -7,7 +7,7 @@ from pathlib import Path
 import numpy as np
 ROOT=Path(__file__).resolve().parents[2]
 def sha(p):return hashlib.sha256(p.read_bytes()).hexdigest()
-def run(out,inputs,embed_root,build_work=None):
+def run(out,inputs,embed_root,build_work=None,cache=False):
  out.mkdir(parents=True,exist_ok=False)
  upstream=json.loads((inputs/'mtp-actual-main-record.json').read_text())
  if not upstream.get('native_xf_chained')or upstream.get('bad',-1)!=0:raise ValueError('actual HC/head receipt required')
@@ -75,8 +75,18 @@ module tb;
  initial begin #30000;$fatal(1,"timeout");end
 endmodule
 '''.replace('TOKEN_ID',str(token)))
+ if cache:
+  text=tb.read_text()
+  text=text.replace('wire ev;wire[255:0]ed;wire[3:0]eb;wire[16:0]et;wire[59:0]ei;wire efault;', 'wire ev;wire[255:0]ed;wire[3:0]eb;wire[16:0]et;wire[59:0]ei;wire efault; reg preload=0; wire lv,lfault;wire[255:0]ld;wire[3:0]lb;wire[16:0]lt;wire[59:0]li;')
+  text=text.replace('.request_slot(request_slot),.token(token),.identity(identity),\n .word_v(ev),.word_data(ed),.word_beat(eb),.word_token(et),.word_identity(ei),.fault(efault));', '.request_slot(preload),.token(token),.identity(identity),\n .word_v(lv),.word_data(ld),.word_beat(lb),.word_token(lt),.word_identity(li),.fault(lfault));\n ot_s81_markov_embed_cache_static cache(.clk(clk),.rst_n(rst_n),.load_v(lv),.load_data(ld),.load_beat(lb),.load_token(lt),.load_identity(li),.request_slot(request_slot),.token(token),.identity(identity),.word_v(ev),.word_data(ed),.word_beat(eb),.word_token(et),.word_identity(ei),.fault(efault));')
+  text=text.replace('for(n=0;n<32;n=n+1)begin','identity=60\'(1048576); preload=1; @(negedge clk);#0.001;preload=0;repeat(24)begin @(negedge clk);#0.001;end\n  for(n=0;n<32;n=n+1)begin')
+  text=text.replace("expected_id=60'(1048576+n)","expected_id=60'(1048576)")
+  text=text.replace('if(efault)$fatal','if(efault||lfault)$fatal')
+  text=text.replace('mappedE506_W2 fixedR183','mappedE506_W2 REAL_FF_CACHE fixedR183')
+  tb.write_text(text)
  paths=['rtl/common/ot_prefix.sv','rtl/v41rom/ot_v41_bmul2.sv','rtl/v41rom/ot_dsrom_bmul3.sv','rtl/v41rom/ot_v41_fadd.sv']
  paths+=['rtl/experimental/dsrom_markov_20261008/'+s+'.sv'for s in('ot_s81_markov_k256_native','ot_s81_markov_k256_static','ot_dsrom_markov_embed_static','ot_dsrom_markov_weight32_static','ot_s81_markov_static_row')]
+ if cache:paths+=['rtl/experimental/dsrom_markov_20261008/ot_s81_markov_embed_cache_static.sv']
  macro_source=ROOT/'physical/asap7_memory_macros/ot_rom_4096x274_m8/ot_rom_4096x274_m8.v';macro=out/'macro.v'
  macro.write_text(macro_source.read_text().replace('rd_out <= word_read(addr_in)','rd_out <= #0.744 word_read(addr_in)'))
  obj=(build_work or out)/'obj'
@@ -101,4 +111,4 @@ endmodule
  rec=dict(gate='PASS'if all(x['ok']for x in results)else'FAIL',results=results,source_sha256={x:sha(ROOT/x)for x in paths},actual_head=dict(npz_sha256=sha(inputs/'mtp-actual-main-rank0.npz'),receipt_sha256=sha(inputs/'mtp-actual-main-record.json'),rows=[1024,1056]),token=dict(value=token,terminal_receipt_sha256=sha(terminal_path),scope='actual main RTL terminal output replayed at component boundary; direct transport and draft recursive composition remain required'),weights=json.loads((inputs/'weights/manifest.json').read_text()),full_native_token_qualified=False,physical_qualified=False,scope='actual mapped E/W and K256 using actual HC->head RTL logit outputs; replayed actual main token/head outputs, upstream operand transport/head physical mapping and full MTP program/acceptance remain open')
  (out/'record.json').write_text(json.dumps(rec,indent=2)+'\n');return rec['gate']=='PASS'
 if __name__=='__main__':
- p=argparse.ArgumentParser();p.add_argument('--out',type=Path,required=True);p.add_argument('--inputs',type=Path,required=True);p.add_argument('--embed-root',type=Path,required=True);p.add_argument('--build-work',type=Path);a=p.parse_args();raise SystemExit(0 if run(a.out.resolve(),a.inputs.resolve(),a.embed_root.resolve(),a.build_work.resolve()if a.build_work else None)else 1)
+ p=argparse.ArgumentParser();p.add_argument('--out',type=Path,required=True);p.add_argument('--inputs',type=Path,required=True);p.add_argument('--embed-root',type=Path,required=True);p.add_argument('--build-work',type=Path);p.add_argument('--cache',action='store_true');a=p.parse_args();raise SystemExit(0 if run(a.out.resolve(),a.inputs.resolve(),a.embed_root.resolve(),a.build_work.resolve()if a.build_work else None,a.cache)else 1)
