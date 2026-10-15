@@ -17,5 +17,24 @@
   "fixed_control_buffer_bits_4096edges": 7135232,
   "physical_qualification": false,
   "full_layer_calendar": false,
-  "outline_fit": "unmeasured; existing immutable arithmetic lanes reused; added1742pinFF and existingmapper logic only; no route launched"
+  "outline_fit": "unmeasured; existing immutable arithmetic lanes reused; added1742pinFF and existingmapper logic only; no route launched",
+  "operand_store_candidate": {
+    "module": "ot_hgi_sfu_static_operand_store",
+    "LWB": 15,
+    "lanes": 16,
+    "groups": 5,
+    "SRAMs": 80,
+    "SRAM_macro": "ot_sram_1r1w_256x256_m2_r2c2",
+    "capacity_bytes": 655360,
+    "stage_bytes_per_edge": 256,
+    "operand_bytes_per_edge": 256,
+    "output_bytes_per_edge": 64,
+    "index_service": "external/unbound",
+    "source_selection": "VM only; nonVM faults",
+    "physical_area_fit": "unmeasured; no route launched",
+    "VM_read_return_edges": 14,
+    "store_word_read_edges": 1,
+    "prefetch_policy": "compiler reserves sector arrivals before vector launch; no runtime wait",
+    "production_qualified": false
+  }
 }
