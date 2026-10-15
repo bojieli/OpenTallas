@@ -1,0 +1,9 @@
+The selected source composes eight actual EP memory engines, 32 actual EXP leaves, four actual Z nodes, the native HEADS1 controller and the relay clock. Its 46 clock inputs remain distinct. The 64 legacy PV leaves and clock ports are absent; the native PV256 service is external.
+
+The component uses the real score (2x256x128 per EP) and exponential (4x64x128 per EP) SRAM models and real native FP arithmetic. The test writes 8,192 distinct finite score words, checks their raw values after the score SRAM at XA, then checks 2,048 three-edge exponential reads and 64 Z words. The tiny scores are below 2^-30, so FP32 EXP rounds to one. This checks mapped address/data transport and actual arithmetic without a DUT backing array or DPI arithmetic.
+
+The fixture assigns writes at t40..295 and hub maxima at t360..363 for T8192/stack0. Local EXP ages are 365/375/386/396/407/417/428/438; lmax age350, Z age900 and block stride16. These are a component calendar; final head/ECTL/hub delivery and physical root phases must provide and prove their own complete calendar. The root count86 describes each native head's clock roots, never a latency.
+
+The score-address mutant corrupts one physical write address bit. The late-AM mutant delays maxima40 cycles and must fault while all EXP, lmax and Z slots remain fixed. A real SO fault pulse must reach and remain in the selected stack fault observer. All faults are observations and never gate issue.
+
+Physical homes are the baseline selected nonPV plan b0cc24a03. EP ks4 remains open (routing overflow403); static EP/CTL profiles and the parent relay/observer flops require actual views, pin/reset/phase checks and timing closure. Unchanged EX/ZN module bodies match original1dfea0ac7, which alone does not qualify the whole new profile. No full attention/token, throughput, power or native physical closure claim is made.

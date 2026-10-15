@@ -11,6 +11,15 @@ module ot_qfd_x3_mux_native #(parameter integer MUT=0)(
  output wire fault
 );
  localparam integer NS=5;
+ // q14 r11 (2026-10-14): reset pin register.  Native pin audit of the CLOSED view qfd_x3_mux_native-p1-2008d1b57
+ // (TT +209.56): rst_n capture 249.3 ps > 190 -- the port fanned out to the async resets of all five 120-bit slices
+ // spread over the 129.6 um tile.  The port now lands in ONE flop at the pin (async assert, registered deassert one
+ // edge later); the slices reset from it.  Release is 1 clk edge later than before: inputs presented on the first
+ // edge after the rst_n pin rises are ignored (the die holds reset/idle >= 1 extra edge before the first slot;
+ // static schedule: reset release +1 edge).  Data latency (2 edges) is unchanged.  MUT=3: reset bypass mutant.
+ (* keep = "true", dont_touch = "true" *) reg rs_q;
+ always @(posedge ck or negedge rst_n) if(!rst_n) rs_q<=1'b0; else rs_q<=1'b1;
+ wire rst_s = (MUT==3) ? rst_n : rs_q;
  wire [522:0] kword={kvn_tag,kvn_d};
  wire [522:0] outword;
  wire [NS-1:0] lane_v,lane_fault;
@@ -19,7 +28,7 @@ module ot_qfd_x3_mux_native #(parameter integer MUT=0)(
   localparam integer LO=g*120;
   localparam integer WIDTH=(523-LO>120)?120:523-LO;
   (* keep_hierarchy="yes" *) ot_qfd_x3_mux_native_slice #(.W(WIDTH),.MUT(MUT)) u (
-   .ck(ck),.rst_n(rst_n),.qv(q[523]),.qd(q[LO+:WIDTH]),
+   .ck(ck),.rst_n(rst_s),.qv(q[523]),.qd(q[LO+:WIDTH]),
    .qkind(q[522:517]),.kv(kvn_v),.kd(kword[LO+:WIDTH]),.kkind(kvn_tag[10:8]),
    .slot_v(slot_v),.slot_q(slot_q),.ov(lane_v[g]),.od(outword[LO+:WIDTH]),.fault(lane_fault[g]));
  end endgenerate
@@ -29,7 +38,7 @@ module ot_qfd_x3_mux_native #(parameter integer MUT=0)(
  // the registered first-slice status directly; no logic behind the face pin.
  assign fault=lane_fault[0];
 `ifndef SYNTHESIS
- always @(posedge ck) if(rst_n && (lane_v!={NS{lane_v[0]}} || lane_fault!={NS{lane_fault[0]}}))
+ always @(posedge ck) if(rst_s && (lane_v!={NS{lane_v[0]}} || lane_fault!={NS{lane_fault[0]}}))
   $fatal(1,"native mux slice control state diverged");
 `endif
 endmodule
