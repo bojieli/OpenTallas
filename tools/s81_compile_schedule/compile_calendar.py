@@ -8,6 +8,7 @@ The separate static_vm_reservations checker validates the generated calendar.
 """
 from __future__ import annotations
 import argparse
+from copy import deepcopy
 from fractions import Fraction
 import hashlib
 import json
@@ -191,19 +192,70 @@ def compile_program(program, binding, contract, root=ROOT):
                 note='Compiler lowering only; actual native RTL replay and die timing remain mandatory.')
 
 
+def schedule_jobs(program, binding):
+    """Compile engine issue times offline from owned durations and clock phases.
+
+    Memory/transfer reservations are subsequently lowered and checked; a
+    conflict is a compile failure, never runtime waiting. The ordering is the
+    emitted program order, with one in-flight job per physical engine port.
+    Owner lowering must first fuse graph nodes that the real native job fuses.
+    """
+    result = deepcopy(program)
+    ops = result.get('ops', [])
+    bindings = binding.get('jobs', {})
+    if not ops or set(bindings) != {op['id'] for op in ops}:
+        raise ValueError('offline scheduling requires every native job binding exactly once')
+    ends, ports = {}, {}
+    for index, op in enumerate(ops):
+        owner = bindings[op['id']]
+        duration = integer(owner['duration_cycles'], 'native duration', 1)
+        phase_period = integer(owner['phase_period_stream'], 'phase period', 1)
+        phase = integer(owner['start_phase_stream'], 'start phase')
+        if phase >= phase_period:
+            raise ValueError('start phase outside recurring phase period')
+        predecessors = op.get('preds', [])
+        if any(type(p) is not int or p not in ends for p in predecessors):
+            raise ValueError(f"{op['id']} requires topologically ordered native predecessors")
+        earliest = max([integer(op.get('ext', 0), 'external arrival'), ports.get(op['port'], 0)]
+                       + [ends[p] for p in predecessors])
+        start = earliest + (phase - earliest) % phase_period
+        op.update(start=start, end=start+duration, dur=duration)
+        ends[index] = op['end']
+        ports[op['port']] = op['end']
+    previous = program.get('makespan', max(o['end'] for o in program['ops']))
+    result['makespan'] = max(ends.values())
+    result['offline_schedule'] = dict(policy='fixed native duration, single inflight per port, explicit clock phase',
+                                     original_makespan=previous, native_makespan=result['makespan'],
+                                     added_cycles=result['makespan']-previous,
+                                     performance_accepted=False)
+    return result
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--programs', type=Path, required=True)
     parser.add_argument('--bindings', type=Path, required=True)
     parser.add_argument('--contract', type=Path, required=True)
     parser.add_argument('--out', type=Path, required=True)
+    parser.add_argument('--schedule-native-jobs', action='store_true',
+                        help='Compile offline port/phase issue times using actual owned native durations')
     args = parser.parse_args()
     bindings = json.loads(args.bindings.read_text())
     contract = json.loads(args.contract.read_text())
     reports = []
     for source in sorted(args.programs.glob('S[0-9][0-9][0-9].json')):
         program = json.loads(source.read_text())
-        report = compile_program(program, bindings.get(program['stage'], {}), contract)
+        binding = bindings.get(program['stage'], {})
+        try:
+            if args.schedule_native_jobs:
+                program = schedule_jobs(program, binding)
+            report = compile_program(program, binding, contract)
+            if args.schedule_native_jobs:
+                report['compiled_program'] = program
+        except (ValueError, KeyError, TypeError) as error:
+            report = dict(stage=program['stage'], dispatch_eligible=False, qualified=False,
+                          jobs_required=len(program['ops']), jobs_bound=0,
+                          rejections=[dict(kind='native_schedule_blocked', reason=str(error))])
         report['program_sha256'] = digest(source)
         reports.append(report)
     result = dict(status='COMPILED_STATIC_CALENDARS' if reports and all(r['dispatch_eligible'] for r in reports)
