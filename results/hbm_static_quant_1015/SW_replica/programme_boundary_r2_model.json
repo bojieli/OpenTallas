@@ -1,0 +1,22 @@
+{
+  "schema": "opentallas.quant.programme_boundary_model.v1",
+  "baseline": "4d4ac803c",
+  "trigger": "actual native audit launch350.8/capture430.6",
+  "option": "PIN_BOUNDARY=1, off by default",
+  "new_reset": "actual ot_rst_relay REGIONS2 SYNC2 TREE1; release3edges; no operation issued until existing actualhostconfig completes",
+  "new_fault": "sticky OR registered at physicalboundary; diagnostic visibility+1edge; arithmetic issue/commit unchanged",
+  "extra_ff": 5,
+  "extra_sram": 0,
+  "command_issue_edges_added": 0,
+  "production_epoch_claim": false,
+  "command_physical_fix": {
+    "Eoutputs": 69,
+    "face_span_um": 121.6,
+    "density_bits_per_um": 0.5674342105263158,
+    "one_column_capacity_flops_per_um": 3.7037037037037033,
+    "minimum_cols": 1,
+    "dense_W_auto_spreading": "retained",
+    "cycles_added": 0,
+    "reason": "remove needless4columnstagger for sparse output face; localize launchflops after baseline17commandbits2..7ps excess"
+  }
+}

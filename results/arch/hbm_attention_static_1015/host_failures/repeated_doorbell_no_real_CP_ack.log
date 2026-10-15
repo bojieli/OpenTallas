@@ -1,0 +1,4 @@
+ATT_FRONT_PROFILE PASS profile0 heads16
+[137010000] %Fatal: tb_hbm_attn_host_front.sv:143: Assertion failed in tb_hbm_attn_host_front: ATT_FRONT event/head accounting
+%Error: rtl/test/hbm_accel/generic/tb_hbm_attn_host_front.sv:143: Verilog $stop
+Aborting...

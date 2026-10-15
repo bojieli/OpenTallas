@@ -1,0 +1,188 @@
+{
+ "scope": "Component numerical evidence reuse only. DPI arithmetic in historical HC benches is not full native hardware qualification. Native mapped clock/reset/topology and timing remain owed by each new route.",
+ "selected_tuple": "NG256 HIER3 CNL_PIN1 CHAIN_STEP6 LANE_SPECIALIZE1 PIPE1 PD40 NTREE0",
+ "optional_tuple": "same leaves, NTREE1",
+ "rtl_changed": false,
+ "added_data_edges": 0,
+ "added_valid_edges": 0,
+ "added_fault_edges": 0,
+ "arithmetic_order_changed": false,
+ "exact_receipts": [
+  {
+   "path": "results/rtl/s81_layer_tput_1013/norm_tree_1014/native_closure_1014/return_column_aliases/serial_exact/run_ng256_dpi_m0_a0_hier3tail_cp1_cs6_ls1_pipe40_probe.json",
+   "sha256": "ff4fc15788688ace8b270e357a6ccc9789a99f9bf170c5a617a5c212bd5f8cfa",
+   "all_source_hashes_match": true,
+   "fp": "dpi",
+   "ntree": 0,
+   "pipe": 1,
+   "runs": [
+    {
+     "run": "golden_L0_L2",
+     "rows": 1940,
+     "err_rows": 0,
+     "cycles": 5548
+    },
+    {
+     "run": "stress_0",
+     "rows": 1940,
+     "err_rows": 0,
+     "cycles": 5548
+    },
+    {
+     "run": "stress_1",
+     "rows": 1940,
+     "err_rows": 0,
+     "cycles": 5548
+    }
+   ]
+  },
+  {
+   "path": "results/rtl/s81_layer_tput_1013/norm_tree_1014/native_closure_1014/return_column_aliases/nt_exact/run_ng256_dpi_m0_a0_hier3tail_cp1_cs6_ls1_pipe40_nt67_probe.json",
+   "sha256": "45b559c78743de016c28c6b1f0ffebed33ec698561421a305073e0d47ce426ff",
+   "all_source_hashes_match": true,
+   "fp": "dpi",
+   "ntree": 1,
+   "pipe": 1,
+   "runs": [
+    {
+     "run": "golden_L0_L2",
+     "rows": 1940,
+     "err_rows": 0,
+     "cycles": 4695
+    },
+    {
+     "run": "stress_0",
+     "rows": 1940,
+     "err_rows": 0,
+     "cycles": 4695
+    },
+    {
+     "run": "stress_1",
+     "rows": 1940,
+     "err_rows": 0,
+     "cycles": 4695
+    }
+   ]
+  }
+ ],
+ "mutants": [
+  {
+   "cell": "ot_s81_hc_ctfn",
+   "record": "results/rtl/s81_suhc_20261013/hc_tile_qualification2_1013.json",
+   "bench_source": "d312a8e77",
+   "module_sha256": "b04bf5caa2875a3ff9ebff14f0702120e05540ff5861e09501229edf115827af",
+   "module_byte_identical": true,
+   "core_byte_identical": true,
+   "edit": [
+    "fd <= fd_in;",
+    "fd <= fd_in ^ ({{(FDW-1){1'b0}}, 1'b1} << (O_D + 15));"
+   ],
+   "runs": [
+    {
+     "run": "golden_L0_L2",
+     "ok": false,
+     "err_rows": 1426,
+     "rows": 1940,
+     "cycles": 6392,
+     "fault": 0
+    },
+    {
+     "run": "stress_0",
+     "ok": false,
+     "err_rows": 1169,
+     "rows": 1940,
+     "cycles": 6392,
+     "fault": 0
+    },
+    {
+     "run": "stress_1",
+     "ok": false,
+     "err_rows": 685,
+     "rows": 1940,
+     "cycles": 6392,
+     "fault": 0
+    }
+   ],
+   "scope": "Historical within-leaf observed numerical mutant; unchanged module/core bodies. Current PIPE1 exact source bound separately."
+  },
+  {
+   "cell": "ot_s81_hc_ctnl_l2",
+   "record": "results/rtl/s81_suhc_20261013/hc_tile_qualification_1013.json",
+   "bench_source": "0c0a3fe61",
+   "module_sha256": "9b8237be114fda4418fe901f28bf027247a0251ca1dd1c2ce9f7476ea26d180b",
+   "module_byte_identical": true,
+   "core_byte_identical": true,
+   "edit": [
+    "=fdx[O_D+rp*P_BITS+PBIT];",
+    "=fdx[O_D+rp*P_BITS+PBIT]^(b==94);"
+   ],
+   "runs": [
+    {
+     "run": "golden_L0_L2",
+     "ok": false,
+     "err_rows": 1940,
+     "rows": 1940,
+     "cycles": 2388,
+     "fault": 1
+    },
+    {
+     "run": "stress_0",
+     "ok": false,
+     "err_rows": 1940,
+     "rows": 1940,
+     "cycles": 1658,
+     "fault": 1
+    },
+    {
+     "run": "stress_1",
+     "ok": false,
+     "err_rows": 1940,
+     "rows": 1940,
+     "cycles": 1640,
+     "fault": 1
+    }
+   ],
+   "scope": "Historical within-leaf observed numerical mutant; unchanged module/core bodies. Current PIPE1 exact source bound separately."
+  },
+  {
+   "cell": "ot_s81_hc_ctnl_l3",
+   "record": "results/rtl/s81_suhc_20261013/hc_tile_qualification_1013.json",
+   "bench_source": "0c0a3fe61",
+   "module_sha256": "74e8854699766669ed57134579440265baa7e098d66e12f969a8be10d0877db4",
+   "module_byte_identical": true,
+   "core_byte_identical": true,
+   "edit": [
+    "=fdx[O_D+rp*P_BITS+PBIT];",
+    "=fdx[O_D+rp*P_BITS+PBIT]^(b==94);"
+   ],
+   "runs": [
+    {
+     "run": "golden_L0_L2",
+     "ok": false,
+     "err_rows": 1940,
+     "rows": 1940,
+     "cycles": 2388,
+     "fault": 1
+    },
+    {
+     "run": "stress_0",
+     "ok": false,
+     "err_rows": 1940,
+     "rows": 1940,
+     "cycles": 1658,
+     "fault": 1
+    },
+    {
+     "run": "stress_1",
+     "ok": false,
+     "err_rows": 1940,
+     "rows": 1940,
+     "cycles": 1640,
+     "fault": 1
+    }
+   ],
+   "scope": "Historical within-leaf observed numerical mutant; unchanged module/core bodies. Current PIPE1 exact source bound separately."
+  }
+ ],
+ "plan": "Dedicated same-cycle output-flop cloning and anchoring; enumerate/anchor every pure capture D endpoint through buffer branches. Preserve source/reset/cycle epochs, all clock/SDC/hold margins, and assigned exact predecessor pin centres/layers/rectangles. Measure native gates on new routes before adoption."
+}

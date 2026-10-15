@@ -1,0 +1,17 @@
+{
+  "unit": "EPYC4/1920281",
+  "keys": 8,
+  "sector_writes": 24,
+  "bytes_written": 544,
+  "errors": 0,
+  "neighbour_preservation": true,
+  "negative": [
+    "duplicatepart:16bytemismatches+fault",
+    "keybit:1byte mismatch"
+  ],
+  "scope": "actualstore serializer with DECLAREDoffchipPHYoracle only. Noonchipmappedmemory substitute; actualHBMstore/service join OPEN",
+  "sha256": {
+    "rtl/hbm_accel/index/ot_hbm_idx_keystore_static.sv": "772d172e864c6762d0497578db0a8e871132abc1f0d67a81265e3dc8fd428b0f",
+    "rtl/test/hbm_idx_static/tb_keystore_static.sv": "ac777b4c702760ac439372a58efffa455ff03bfa2e46f61fdc74f12af7af4e84"
+  }
+}
