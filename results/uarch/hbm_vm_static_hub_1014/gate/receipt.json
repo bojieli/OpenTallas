@@ -1,0 +1,35 @@
+{
+  "scope": "static packet hub local service and explicit remote packet ports; no physical closure claim",
+  "sources_sha256": {
+    "rtl/hbm_accel/generic/vm/static/ot_vms_hub_static.sv": "364b6a3601b5042344513810a4fb6de6f25259c2de7d386d630b62fc807b5cf9",
+    "rtl/hbm_accel/generic/vm/static/tb_vms_hub_static.sv": "987e4a7b71283cbad704c0df8a2422e4099419101495883354c98edf1fa96515",
+    "rtl/hbm_accel/generic/vm/static/run_hub_static.sh": "7e66395f105310a2a2685180266d8b1a5df114fbd76b6fc5a0746485f5987ec1"
+  },
+  "baseline": "PASS",
+  "replay_only_NC0": "PASS",
+  "mutants": {
+    "1_wrong_bank_decode": "KILLED",
+    "2_wrong_tag": "KILLED",
+    "3_ignore_compiler_selection": "KILLED",
+    "4_wait_for_missing_ack": "KILLED"
+  },
+  "local_throughput": {
+    "responses": 2000,
+    "issue_cycles": 1000,
+    "packets_per_cycle": 2,
+    "roundtrip_edges": 10
+  },
+  "mechanisms": [
+    "client-selected bank routing",
+    "original client tag echo",
+    "physical ring CW/CCW destination mask",
+    "mirror visibility waits four acknowledgements",
+    "remote read response routing",
+    "unscheduled request fault",
+    "slot overwrite fault",
+    "compiler response calendar",
+    "missing ack faults on calendar edge",
+    "late ack cannot replay"
+  ],
+  "iverilog_version": "Icarus Verilog version 12.0 (stable) ()"
+}
