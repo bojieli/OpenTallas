@@ -1,0 +1,2338 @@
+{
+ "layer": "L14",
+ "native_qualified": false,
+ "native_operation_audit": [
+  {
+   "op_id": "L14.hc.gain_attn",
+   "index": 0,
+   "engine": "hc",
+   "port": 2,
+   "target_module": "dsfd_sp_hc_c",
+   "engine_implementation": "RTL",
+   "operand_provenance": "behavioural VM; golden hcx coefficients and golden-partitioned collective y",
+   "output_override": false,
+   "native_memory_bound": false,
+   "native_qualified": false,
+   "blocking_reasons": [
+    "no elaborated whole-die execution binding",
+    "behavioural VM",
+    "numerical fixture operands or missing arithmetic engine"
+   ]
+  },
+  {
+   "op_id": "L14.hc.gain_ffn",
+   "index": 1,
+   "engine": "hc",
+   "port": 2,
+   "target_module": "dsfd_sp_hc_c",
+   "engine_implementation": "RTL",
+   "operand_provenance": "behavioural VM; golden hcx coefficients and golden-partitioned collective y",
+   "output_override": false,
+   "native_memory_bound": false,
+   "native_qualified": false,
+   "blocking_reasons": [
+    "no elaborated whole-die execution binding",
+    "behavioural VM",
+    "numerical fixture operands or missing arithmetic engine"
+   ]
+  },
+  {
+   "op_id": "L14.eng.add",
+   "index": 2,
+   "engine": "mix4",
+   "port": 10,
+   "target_module": null,
+   "engine_implementation": "BEHAVIOURAL_DURATION",
+   "operand_provenance": "behavioural endpoint; no actual native numerical producer",
+   "output_override": true,
+   "native_memory_bound": false,
+   "native_qualified": false,
+   "blocking_reasons": [
+    "no elaborated whole-die execution binding",
+    "behavioural VM",
+    "numerical fixture operands or missing arithmetic engine"
+   ]
+  },
+  {
+   "op_id": "L14.hc.h_load",
+   "index": 3,
+   "engine": "hc",
+   "port": 2,
+   "target_module": "dsfd_sp_hc_c",
+   "engine_implementation": "RTL",
+   "operand_provenance": "behavioural VM; golden hcx coefficients and golden-partitioned collective y",
+   "output_override": false,
+   "native_memory_bound": false,
+   "native_qualified": false,
+   "blocking_reasons": [
+    "no elaborated whole-die execution binding",
+    "behavioural VM",
+    "numerical fixture operands or missing arithmetic engine"
+   ]
+  },
+  {
+   "op_id": "L14.attn.hc.coef_a",
+   "index": 4,
+   "engine": "hc",
+   "port": 2,
+   "target_module": "dsfd_sp_hc_c",
+   "engine_implementation": "RTL",
+   "operand_provenance": "behavioural VM; golden hcx coefficients and golden-partitioned collective y",
+   "output_override": false,
+   "native_memory_bound": false,
+   "native_qualified": false,
+   "blocking_reasons": [
+    "no elaborated whole-die execution binding",
+    "behavioural VM",
+    "numerical fixture operands or missing arithmetic engine"
+   ]
+  },
+  {
+   "op_id": "L14.attn.hc_pre",
+   "index": 5,
+   "engine": "hc",
+   "port": 2,
+   "target_module": "dsfd_sp_hc_c",
+   "engine_implementation": "RTL",
+   "operand_provenance": "behavioural VM; golden hcx coefficients and golden-partitioned collective y",
+   "output_override": false,
+   "native_memory_bound": false,
+   "native_qualified": false,
+   "blocking_reasons": [
+    "no elaborated whole-die execution binding",
+    "behavioural VM",
+    "numerical fixture operands or missing arithmetic engine"
+   ]
+  },
+  {
+   "op_id": "L14.attn.hc.fn",
+   "index": 6,
+   "engine": "hcx",
+   "port": 9,
+   "target_module": null,
+   "engine_implementation": "BEHAVIOURAL_DURATION",
+   "operand_provenance": "golden coefficient rows written at behavioural done",
+   "output_override": true,
+   "native_memory_bound": false,
+   "native_qualified": false,
+   "blocking_reasons": [
+    "no elaborated whole-die execution binding",
+    "behavioural VM",
+    "numerical fixture operands or missing arithmetic engine"
+   ]
+  },
+  {
+   "op_id": "L14.attn.hc.sumsq",
+   "index": 7,
+   "engine": "hcx",
+   "port": 9,
+   "target_module": null,
+   "engine_implementation": "BEHAVIOURAL_DURATION",
+   "operand_provenance": "golden coefficient rows written at behavioural done",
+   "output_override": true,
+   "native_memory_bound": false,
+   "native_qualified": false,
+   "blocking_reasons": [
+    "no elaborated whole-die execution binding",
+    "behavioural VM",
+    "numerical fixture operands or missing arithmetic engine"
+   ]
+  },
+  {
+   "op_id": "L14.attn.hc.rsqrt",
+   "index": 8,
+   "engine": "hcx",
+   "port": 9,
+   "target_module": null,
+   "engine_implementation": "BEHAVIOURAL_DURATION",
+   "operand_provenance": "golden coefficient rows written at behavioural done",
+   "output_override": true,
+   "native_memory_bound": false,
+   "native_qualified": false,
+   "blocking_reasons": [
+    "no elaborated whole-die execution binding",
+    "behavioural VM",
+    "numerical fixture operands or missing arithmetic engine"
+   ]
+  },
+  {
+   "op_id": "L14.attn.a_proj",
+   "index": 9,
+   "engine": "fld",
+   "port": 0,
+   "target_module": "dsfd_sp_gather_c",
+   "engine_implementation": "RTL_TRANSPORT_ONLY",
+   "operand_provenance": "fixture root words; real gather/capture transport only, no field matvec engines",
+   "output_override": false,
+   "native_memory_bound": false,
+   "native_qualified": false,
+   "blocking_reasons": [
+    "no elaborated whole-die execution binding",
+    "behavioural VM",
+    "numerical fixture operands or missing arithmetic engine"
+   ]
+  },
+  {
+   "op_id": "L14.attn.hc.pre_post",
+   "index": 10,
+   "engine": "hcx",
+   "port": 9,
+   "target_module": null,
+   "engine_implementation": "BEHAVIOURAL_DURATION",
+   "operand_provenance": "golden coefficient rows written at behavioural done",
+   "output_override": true,
+   "native_memory_bound": false,
+   "native_qualified": false,
+   "blocking_reasons": [
+    "no elaborated whole-die execution binding",
+    "behavioural VM",
+    "numerical fixture operands or missing arithmetic engine"
+   ]
+  },
+  {
+   "op_id": "L14.attn.hc.pre_fwd",
+   "index": 11,
+   "engine": "hcx",
+   "port": 9,
+   "target_module": null,
+   "engine_implementation": "BEHAVIOURAL_DURATION",
+   "operand_provenance": "golden coefficient rows written at behavioural done",
+   "output_override": true,
+   "native_memory_bound": false,
+   "native_qualified": false,
+   "blocking_reasons": [
+    "no elaborated whole-die execution binding",
+    "behavioural VM",
+    "numerical fixture operands or missing arithmetic engine"
+   ]
+  },
+  {
+   "op_id": "L14.attn.hc.sinkhorn",
+   "index": 12,
+   "engine": "hcx",
+   "port": 9,
+   "target_module": null,
+   "engine_implementation": "BEHAVIOURAL_DURATION",
+   "operand_provenance": "golden coefficient rows written at behavioural done",
+   "output_override": true,
+   "native_memory_bound": false,
+   "native_qualified": false,
+   "blocking_reasons": [
+    "no elaborated whole-die execution binding",
+    "behavioural VM",
+    "numerical fixture operands or missing arithmetic engine"
+   ]
+  },
+  {
+   "op_id": "L14.attn.hc.coef",
+   "index": 13,
+   "engine": "hc",
+   "port": 2,
+   "target_module": "dsfd_sp_hc_c",
+   "engine_implementation": "RTL",
+   "operand_provenance": "behavioural VM; golden hcx coefficients and golden-partitioned collective y",
+   "output_override": false,
+   "native_memory_bound": false,
+   "native_qualified": false,
+   "blocking_reasons": [
+    "no elaborated whole-die execution binding",
+    "behavioural VM",
+    "numerical fixture operands or missing arithmetic engine"
+   ]
+  },
+  {
+   "op_id": "L14.attn.a_allgather",
+   "index": 14,
+   "engine": "coll",
+   "port": 3,
+   "target_module": "dsfd_sp_collective_c",
+   "engine_implementation": "RTL",
+   "operand_provenance": "golden y partitioned into four fixture contributions; actual field/SVC partials absent",
+   "output_override": false,
+   "native_memory_bound": false,
+   "native_qualified": false,
+   "blocking_reasons": [
+    "no elaborated whole-die execution binding",
+    "behavioural VM",
+    "numerical fixture operands or missing arithmetic engine"
+   ]
+  },
+  {
+   "op_id": "L14.attn.q_norm.sumsq",
+   "index": 15,
+   "engine": "su",
+   "port": 1,
+   "target_module": "dsfd_sp_su_h",
+   "engine_implementation": "RTL",
+   "operand_provenance": "golden SU operand snapshots preloaded in behavioural VM; no native field/SVC producer edge",
+   "output_override": false,
+   "native_memory_bound": false,
+   "native_qualified": false,
+   "blocking_reasons": [
+    "no elaborated whole-die execution binding",
+    "behavioural VM",
+    "numerical fixture operands or missing arithmetic engine"
+   ]
+  },
+  {
+   "op_id": "L14.attn.cmp.pool",
+   "index": 16,
+   "engine": "su",
+   "port": 1,
+   "target_module": "dsfd_sp_su_h",
+   "engine_implementation": "RTL",
+   "operand_provenance": "golden SU operand snapshots preloaded in behavioural VM; no native field/SVC producer edge",
+   "output_override": false,
+   "native_memory_bound": false,
+   "native_qualified": false,
+   "blocking_reasons": [
+    "no elaborated whole-die execution binding",
+    "behavioural VM",
+    "numerical fixture operands or missing arithmetic engine"
+   ]
+  },
+  {
+   "op_id": "L14.attn.kv_norm.sumsq",
+   "index": 17,
+   "engine": "su",
+   "port": 1,
+   "target_module": "dsfd_sp_su_h",
+   "engine_implementation": "RTL",
+   "operand_provenance": "golden SU operand snapshots preloaded in behavioural VM; no native field/SVC producer edge",
+   "output_override": false,
+   "native_memory_bound": false,
+   "native_qualified": false,
+   "blocking_reasons": [
+    "no elaborated whole-die execution binding",
+    "behavioural VM",
+    "numerical fixture operands or missing arithmetic engine"
+   ]
+  },
+  {
+   "op_id": "L14.attn.q_quant",
+   "index": 18,
+   "engine": "su",
+   "port": 1,
+   "target_module": "dsfd_sp_su_h",
+   "engine_implementation": "RTL",
+   "operand_provenance": "golden SU operand snapshots preloaded in behavioural VM; no native field/SVC producer edge",
+   "output_override": false,
+   "native_memory_bound": false,
+   "native_qualified": false,
+   "blocking_reasons": [
+    "no elaborated whole-die execution binding",
+    "behavioural VM",
+    "numerical fixture operands or missing arithmetic engine"
+   ]
+  },
+  {
+   "op_id": "L14.attn.kv_rope_qdq",
+   "index": 19,
+   "engine": "su",
+   "port": 1,
+   "target_module": "dsfd_sp_su_h",
+   "engine_implementation": "RTL",
+   "operand_provenance": "golden SU operand snapshots preloaded in behavioural VM; no native field/SVC producer edge",
+   "output_override": false,
+   "native_memory_bound": false,
+   "native_qualified": false,
+   "blocking_reasons": [
+    "no elaborated whole-die execution binding",
+    "behavioural VM",
+    "numerical fixture operands or missing arithmetic engine"
+   ]
+  },
+  {
+   "op_id": "L14.attn.own_row_write",
+   "index": 20,
+   "engine": "svc",
+   "port": 4,
+   "target_module": null,
+   "engine_implementation": "BEHAVIOURAL_DURATION",
+   "operand_provenance": "behavioural endpoint; no actual native numerical producer",
+   "output_override": true,
+   "native_memory_bound": false,
+   "native_qualified": false,
+   "blocking_reasons": [
+    "no elaborated whole-die execution binding",
+    "behavioural VM",
+    "numerical fixture operands or missing arithmetic engine"
+   ]
+  },
+  {
+   "op_id": "L14.attn.cmp.norm.sumsq",
+   "index": 21,
+   "engine": "su",
+   "port": 1,
+   "target_module": "dsfd_sp_su_h",
+   "engine_implementation": "RTL",
+   "operand_provenance": "golden SU operand snapshots preloaded in behavioural VM; no native field/SVC producer edge",
+   "output_override": false,
+   "native_memory_bound": false,
+   "native_qualified": false,
+   "blocking_reasons": [
+    "no elaborated whole-die execution binding",
+    "behavioural VM",
+    "numerical fixture operands or missing arithmetic engine"
+   ]
+  },
+  {
+   "op_id": "L14.attn.wq_b",
+   "index": 22,
+   "engine": "fld",
+   "port": 0,
+   "target_module": "dsfd_sp_gather_c",
+   "engine_implementation": "RTL_TRANSPORT_ONLY",
+   "operand_provenance": "fixture root words; real gather/capture transport only, no field matvec engines",
+   "output_override": false,
+   "native_memory_bound": false,
+   "native_qualified": false,
+   "blocking_reasons": [
+    "no elaborated whole-die execution binding",
+    "behavioural VM",
+    "numerical fixture operands or missing arithmetic engine"
+   ]
+  },
+  {
+   "op_id": "L14.attn.cmp.norm.rsqrt",
+   "index": 23,
+   "engine": "su",
+   "port": 1,
+   "target_module": "dsfd_sp_su_h",
+   "engine_implementation": "RTL",
+   "operand_provenance": "golden SU operand snapshots preloaded in behavioural VM; no native field/SVC producer edge",
+   "output_override": false,
+   "native_memory_bound": false,
+   "native_qualified": false,
+   "blocking_reasons": [
+    "no elaborated whole-die execution binding",
+    "behavioural VM",
+    "numerical fixture operands or missing arithmetic engine"
+   ]
+  },
+  {
+   "op_id": "L14.attn.cmp.norm.scale",
+   "index": 24,
+   "engine": "su",
+   "port": 1,
+   "target_module": "dsfd_sp_su_h",
+   "engine_implementation": "RTL",
+   "operand_provenance": "golden SU operand snapshots preloaded in behavioural VM; no native field/SVC producer edge",
+   "output_override": false,
+   "native_memory_bound": false,
+   "native_qualified": false,
+   "blocking_reasons": [
+    "no elaborated whole-die execution binding",
+    "behavioural VM",
+    "numerical fixture operands or missing arithmetic engine"
+   ]
+  },
+  {
+   "op_id": "L14.attn.cmp.wk",
+   "index": 25,
+   "engine": "fld",
+   "port": 0,
+   "target_module": "dsfd_sp_gather_c",
+   "engine_implementation": "RTL_TRANSPORT_ONLY",
+   "operand_provenance": "fixture root words; real gather/capture transport only, no field matvec engines",
+   "output_override": false,
+   "native_memory_bound": false,
+   "native_qualified": false,
+   "blocking_reasons": [
+    "no elaborated whole-die execution binding",
+    "behavioural VM",
+    "numerical fixture operands or missing arithmetic engine"
+   ]
+  },
+  {
+   "op_id": "L14.attn.cmp.row_qdq",
+   "index": 26,
+   "engine": "su",
+   "port": 1,
+   "target_module": "dsfd_sp_su_h",
+   "engine_implementation": "RTL",
+   "operand_provenance": "golden SU operand snapshots preloaded in behavioural VM; no native field/SVC producer edge",
+   "output_override": false,
+   "native_memory_bound": false,
+   "native_qualified": false,
+   "blocking_reasons": [
+    "no elaborated whole-die execution binding",
+    "behavioural VM",
+    "numerical fixture operands or missing arithmetic engine"
+   ]
+  },
+  {
+   "op_id": "L14.attn.cmp.k_norm.sumsq",
+   "index": 27,
+   "engine": "su",
+   "port": 1,
+   "target_module": "dsfd_sp_su_h",
+   "engine_implementation": "RTL",
+   "operand_provenance": "golden SU operand snapshots preloaded in behavioural VM; no native field/SVC producer edge",
+   "output_override": false,
+   "native_memory_bound": false,
+   "native_qualified": false,
+   "blocking_reasons": [
+    "no elaborated whole-die execution binding",
+    "behavioural VM",
+    "numerical fixture operands or missing arithmetic engine"
+   ]
+  },
+  {
+   "op_id": "L14.attn.cmp.k_norm.rsqrt",
+   "index": 28,
+   "engine": "su",
+   "port": 1,
+   "target_module": "dsfd_sp_su_h",
+   "engine_implementation": "RTL",
+   "operand_provenance": "golden SU operand snapshots preloaded in behavioural VM; no native field/SVC producer edge",
+   "output_override": false,
+   "native_memory_bound": false,
+   "native_qualified": false,
+   "blocking_reasons": [
+    "no elaborated whole-die execution binding",
+    "behavioural VM",
+    "numerical fixture operands or missing arithmetic engine"
+   ]
+  },
+  {
+   "op_id": "L14.attn.cmp.k_norm.scale",
+   "index": 29,
+   "engine": "su",
+   "port": 1,
+   "target_module": "dsfd_sp_su_h",
+   "engine_implementation": "RTL",
+   "operand_provenance": "golden SU operand snapshots preloaded in behavioural VM; no native field/SVC producer edge",
+   "output_override": false,
+   "native_memory_bound": false,
+   "native_qualified": false,
+   "blocking_reasons": [
+    "no elaborated whole-die execution binding",
+    "behavioural VM",
+    "numerical fixture operands or missing arithmetic engine"
+   ]
+  },
+  {
+   "op_id": "L14.attn.cmp.k_rope_qdq",
+   "index": 30,
+   "engine": "su",
+   "port": 1,
+   "target_module": "dsfd_sp_su_h",
+   "engine_implementation": "RTL",
+   "operand_provenance": "golden SU operand snapshots preloaded in behavioural VM; no native field/SVC producer edge",
+   "output_override": false,
+   "native_memory_bound": false,
+   "native_qualified": false,
+   "blocking_reasons": [
+    "no elaborated whole-die execution binding",
+    "behavioural VM",
+    "numerical fixture operands or missing arithmetic engine"
+   ]
+  },
+  {
+   "op_id": "L14.attn.idx.q",
+   "index": 31,
+   "engine": "fld",
+   "port": 0,
+   "target_module": "dsfd_sp_gather_c",
+   "engine_implementation": "RTL_TRANSPORT_ONLY",
+   "operand_provenance": "fixture root words; real gather/capture transport only, no field matvec engines",
+   "output_override": false,
+   "native_memory_bound": false,
+   "native_qualified": false,
+   "blocking_reasons": [
+    "no elaborated whole-die execution binding",
+    "behavioural VM",
+    "numerical fixture operands or missing arithmetic engine"
+   ]
+  },
+  {
+   "op_id": "L14.attn.q_rope",
+   "index": 32,
+   "engine": "su",
+   "port": 1,
+   "target_module": "dsfd_sp_su_h",
+   "engine_implementation": "RTL",
+   "operand_provenance": "golden SU operand snapshots preloaded in behavioural VM; no native field/SVC producer edge",
+   "output_override": false,
+   "native_memory_bound": false,
+   "native_qualified": false,
+   "blocking_reasons": [
+    "no elaborated whole-die execution binding",
+    "behavioural VM",
+    "numerical fixture operands or missing arithmetic engine"
+   ]
+  },
+  {
+   "op_id": "L14.attn.idx.score",
+   "index": 33,
+   "engine": "svc",
+   "port": 4,
+   "target_module": null,
+   "engine_implementation": "BEHAVIOURAL_DURATION",
+   "operand_provenance": "behavioural endpoint; no actual native numerical producer",
+   "output_override": true,
+   "native_memory_bound": false,
+   "native_qualified": false,
+   "blocking_reasons": [
+    "no elaborated whole-die execution binding",
+    "behavioural VM",
+    "numerical fixture operands or missing arithmetic engine"
+   ]
+  },
+  {
+   "op_id": "L14.attn.idx.newkey",
+   "index": 34,
+   "engine": "su",
+   "port": 1,
+   "target_module": "dsfd_sp_su_h",
+   "engine_implementation": "RTL",
+   "operand_provenance": "golden SU operand snapshots preloaded in behavioural VM; no native field/SVC producer edge",
+   "output_override": false,
+   "native_memory_bound": false,
+   "native_qualified": false,
+   "blocking_reasons": [
+    "no elaborated whole-die execution binding",
+    "behavioural VM",
+    "numerical fixture operands or missing arithmetic engine"
+   ]
+  },
+  {
+   "op_id": "L14.attn.idx.topk_local",
+   "index": 35,
+   "engine": "sel",
+   "port": 5,
+   "target_module": null,
+   "engine_implementation": "BEHAVIOURAL_DURATION",
+   "operand_provenance": "behavioural endpoint; no actual native numerical producer",
+   "output_override": true,
+   "native_memory_bound": false,
+   "native_qualified": false,
+   "blocking_reasons": [
+    "no elaborated whole-die execution binding",
+    "behavioural VM",
+    "numerical fixture operands or missing arithmetic engine"
+   ]
+  },
+  {
+   "op_id": "L14.attn.idx.topk_merge",
+   "index": 36,
+   "engine": "coll",
+   "port": 3,
+   "target_module": "dsfd_sp_collective_c",
+   "engine_implementation": "RTL",
+   "operand_provenance": "golden y partitioned into four fixture contributions; actual field/SVC partials absent",
+   "output_override": false,
+   "native_memory_bound": false,
+   "native_qualified": false,
+   "blocking_reasons": [
+    "no elaborated whole-die execution binding",
+    "behavioural VM",
+    "numerical fixture operands or missing arithmetic engine"
+   ]
+  },
+  {
+   "op_id": "L14.attn.idx.topk_final",
+   "index": 37,
+   "engine": "sel",
+   "port": 5,
+   "target_module": null,
+   "engine_implementation": "BEHAVIOURAL_DURATION",
+   "operand_provenance": "behavioural endpoint; no actual native numerical producer",
+   "output_override": true,
+   "native_memory_bound": false,
+   "native_qualified": false,
+   "blocking_reasons": [
+    "no elaborated whole-die execution binding",
+    "behavioural VM",
+    "numerical fixture operands or missing arithmetic engine"
+   ]
+  },
+  {
+   "op_id": "L14.attn.gather",
+   "index": 38,
+   "engine": "col",
+   "port": 6,
+   "target_module": null,
+   "engine_implementation": "BEHAVIOURAL_DURATION",
+   "operand_provenance": "behavioural endpoint; no actual native numerical producer",
+   "output_override": true,
+   "native_memory_bound": false,
+   "native_qualified": false,
+   "blocking_reasons": [
+    "no elaborated whole-die execution binding",
+    "behavioural VM",
+    "numerical fixture operands or missing arithmetic engine"
+   ]
+  },
+  {
+   "op_id": "L14.attn.window_load",
+   "index": 39,
+   "engine": "svc",
+   "port": 4,
+   "target_module": null,
+   "engine_implementation": "BEHAVIOURAL_DURATION",
+   "operand_provenance": "behavioural endpoint; no actual native numerical producer",
+   "output_override": true,
+   "native_memory_bound": false,
+   "native_qualified": false,
+   "blocking_reasons": [
+    "no elaborated whole-die execution binding",
+    "behavioural VM",
+    "numerical fixture operands or missing arithmetic engine"
+   ]
+  },
+  {
+   "op_id": "L14.attn.rows_allgather",
+   "index": 40,
+   "engine": "coll",
+   "port": 3,
+   "target_module": "dsfd_sp_collective_c",
+   "engine_implementation": "RTL",
+   "operand_provenance": "golden y partitioned into four fixture contributions; actual field/SVC partials absent",
+   "output_override": false,
+   "native_memory_bound": false,
+   "native_qualified": false,
+   "blocking_reasons": [
+    "no elaborated whole-die execution binding",
+    "behavioural VM",
+    "numerical fixture operands or missing arithmetic engine"
+   ]
+  },
+  {
+   "op_id": "L14.attn.scores",
+   "index": 41,
+   "engine": "svc",
+   "port": 4,
+   "target_module": null,
+   "engine_implementation": "BEHAVIOURAL_DURATION",
+   "operand_provenance": "behavioural endpoint; no actual native numerical producer",
+   "output_override": true,
+   "native_memory_bound": false,
+   "native_qualified": false,
+   "blocking_reasons": [
+    "no elaborated whole-die execution binding",
+    "behavioural VM",
+    "numerical fixture operands or missing arithmetic engine"
+   ]
+  },
+  {
+   "op_id": "L14.attn.max",
+   "index": 42,
+   "engine": "su",
+   "port": 1,
+   "target_module": "dsfd_sp_su_h",
+   "engine_implementation": "RTL",
+   "operand_provenance": "golden SU operand snapshots preloaded in behavioural VM; no native field/SVC producer edge",
+   "output_override": false,
+   "native_memory_bound": false,
+   "native_qualified": false,
+   "blocking_reasons": [
+    "no elaborated whole-die execution binding",
+    "behavioural VM",
+    "numerical fixture operands or missing arithmetic engine"
+   ]
+  },
+  {
+   "op_id": "L14.attn.exp",
+   "index": 43,
+   "engine": "su",
+   "port": 1,
+   "target_module": "dsfd_sp_su_h",
+   "engine_implementation": "RTL",
+   "operand_provenance": "golden SU operand snapshots preloaded in behavioural VM; no native field/SVC producer edge",
+   "output_override": false,
+   "native_memory_bound": false,
+   "native_qualified": false,
+   "blocking_reasons": [
+    "no elaborated whole-die execution binding",
+    "behavioural VM",
+    "numerical fixture operands or missing arithmetic engine"
+   ]
+  },
+  {
+   "op_id": "L14.attn.den",
+   "index": 44,
+   "engine": "su",
+   "port": 1,
+   "target_module": "dsfd_sp_su_h",
+   "engine_implementation": "RTL",
+   "operand_provenance": "golden SU operand snapshots preloaded in behavioural VM; no native field/SVC producer edge",
+   "output_override": false,
+   "native_memory_bound": false,
+   "native_qualified": false,
+   "blocking_reasons": [
+    "no elaborated whole-die execution binding",
+    "behavioural VM",
+    "numerical fixture operands or missing arithmetic engine"
+   ]
+  },
+  {
+   "op_id": "L14.attn.pv",
+   "index": 45,
+   "engine": "svc",
+   "port": 4,
+   "target_module": null,
+   "engine_implementation": "BEHAVIOURAL_DURATION",
+   "operand_provenance": "behavioural endpoint; no actual native numerical producer",
+   "output_override": true,
+   "native_memory_bound": false,
+   "native_qualified": false,
+   "blocking_reasons": [
+    "no elaborated whole-die execution binding",
+    "behavioural VM",
+    "numerical fixture operands or missing arithmetic engine"
+   ]
+  },
+  {
+   "op_id": "L14.attn.sink",
+   "index": 46,
+   "engine": "su",
+   "port": 1,
+   "target_module": "dsfd_sp_su_h",
+   "engine_implementation": "RTL",
+   "operand_provenance": "golden SU operand snapshots preloaded in behavioural VM; no native field/SVC producer edge",
+   "output_override": false,
+   "native_memory_bound": false,
+   "native_qualified": false,
+   "blocking_reasons": [
+    "no elaborated whole-die execution binding",
+    "behavioural VM",
+    "numerical fixture operands or missing arithmetic engine"
+   ]
+  },
+  {
+   "op_id": "L14.attn.normalize",
+   "index": 47,
+   "engine": "su",
+   "port": 1,
+   "target_module": "dsfd_sp_su_h",
+   "engine_implementation": "RTL",
+   "operand_provenance": "golden SU operand snapshots preloaded in behavioural VM; no native field/SVC producer edge",
+   "output_override": false,
+   "native_memory_bound": false,
+   "native_qualified": false,
+   "blocking_reasons": [
+    "no elaborated whole-die execution binding",
+    "behavioural VM",
+    "numerical fixture operands or missing arithmetic engine"
+   ]
+  },
+  {
+   "op_id": "L14.attn.wo_a",
+   "index": 48,
+   "engine": "fld",
+   "port": 0,
+   "target_module": "dsfd_sp_gather_c",
+   "engine_implementation": "RTL_TRANSPORT_ONLY",
+   "operand_provenance": "fixture root words; real gather/capture transport only, no field matvec engines",
+   "output_override": false,
+   "native_memory_bound": false,
+   "native_qualified": false,
+   "blocking_reasons": [
+    "no elaborated whole-die execution binding",
+    "behavioural VM",
+    "numerical fixture operands or missing arithmetic engine"
+   ]
+  },
+  {
+   "op_id": "L14.attn.z_quant",
+   "index": 49,
+   "engine": "su",
+   "port": 1,
+   "target_module": "dsfd_sp_su_h",
+   "engine_implementation": "RTL",
+   "operand_provenance": "golden SU operand snapshots preloaded in behavioural VM; no native field/SVC producer edge",
+   "output_override": false,
+   "native_memory_bound": false,
+   "native_qualified": false,
+   "blocking_reasons": [
+    "no elaborated whole-die execution binding",
+    "behavioural VM",
+    "numerical fixture operands or missing arithmetic engine"
+   ]
+  },
+  {
+   "op_id": "L14.attn.wo_b",
+   "index": 50,
+   "engine": "fld",
+   "port": 0,
+   "target_module": "dsfd_sp_gather_c",
+   "engine_implementation": "RTL_TRANSPORT_ONLY",
+   "operand_provenance": "fixture root words; real gather/capture transport only, no field matvec engines",
+   "output_override": false,
+   "native_memory_bound": false,
+   "native_qualified": false,
+   "blocking_reasons": [
+    "no elaborated whole-die execution binding",
+    "behavioural VM",
+    "numerical fixture operands or missing arithmetic engine"
+   ]
+  },
+  {
+   "op_id": "L14.attn.out_allreduce",
+   "index": 51,
+   "engine": "coll",
+   "port": 3,
+   "target_module": "dsfd_sp_collective_c",
+   "engine_implementation": "RTL",
+   "operand_provenance": "golden y partitioned into four fixture contributions; actual field/SVC partials absent",
+   "output_override": false,
+   "native_memory_bound": false,
+   "native_qualified": false,
+   "blocking_reasons": [
+    "no elaborated whole-die execution binding",
+    "behavioural VM",
+    "numerical fixture operands or missing arithmetic engine"
+   ]
+  },
+  {
+   "op_id": "L14.attn.hc_post",
+   "index": 52,
+   "engine": "hc",
+   "port": 2,
+   "target_module": "dsfd_sp_hc_c",
+   "engine_implementation": "RTL",
+   "operand_provenance": "behavioural VM; golden hcx coefficients and golden-partitioned collective y",
+   "output_override": false,
+   "native_memory_bound": false,
+   "native_qualified": false,
+   "blocking_reasons": [
+    "no elaborated whole-die execution binding",
+    "behavioural VM",
+    "numerical fixture operands or missing arithmetic engine"
+   ]
+  },
+  {
+   "op_id": "L14.ffn.hc.coef_a",
+   "index": 53,
+   "engine": "hc",
+   "port": 2,
+   "target_module": "dsfd_sp_hc_c",
+   "engine_implementation": "RTL",
+   "operand_provenance": "behavioural VM; golden hcx coefficients and golden-partitioned collective y",
+   "output_override": false,
+   "native_memory_bound": false,
+   "native_qualified": false,
+   "blocking_reasons": [
+    "no elaborated whole-die execution binding",
+    "behavioural VM",
+    "numerical fixture operands or missing arithmetic engine"
+   ]
+  },
+  {
+   "op_id": "L14.ffn.hc_pre",
+   "index": 54,
+   "engine": "hc",
+   "port": 2,
+   "target_module": "dsfd_sp_hc_c",
+   "engine_implementation": "RTL",
+   "operand_provenance": "behavioural VM; golden hcx coefficients and golden-partitioned collective y",
+   "output_override": false,
+   "native_memory_bound": false,
+   "native_qualified": false,
+   "blocking_reasons": [
+    "no elaborated whole-die execution binding",
+    "behavioural VM",
+    "numerical fixture operands or missing arithmetic engine"
+   ]
+  },
+  {
+   "op_id": "L14.ffn.hc.fn",
+   "index": 55,
+   "engine": "hcx",
+   "port": 9,
+   "target_module": null,
+   "engine_implementation": "BEHAVIOURAL_DURATION",
+   "operand_provenance": "golden coefficient rows written at behavioural done",
+   "output_override": true,
+   "native_memory_bound": false,
+   "native_qualified": false,
+   "blocking_reasons": [
+    "no elaborated whole-die execution binding",
+    "behavioural VM",
+    "numerical fixture operands or missing arithmetic engine"
+   ]
+  },
+  {
+   "op_id": "L14.ffn.hc.sumsq",
+   "index": 56,
+   "engine": "hcx",
+   "port": 9,
+   "target_module": null,
+   "engine_implementation": "BEHAVIOURAL_DURATION",
+   "operand_provenance": "golden coefficient rows written at behavioural done",
+   "output_override": true,
+   "native_memory_bound": false,
+   "native_qualified": false,
+   "blocking_reasons": [
+    "no elaborated whole-die execution binding",
+    "behavioural VM",
+    "numerical fixture operands or missing arithmetic engine"
+   ]
+  },
+  {
+   "op_id": "L14.ffn.hc.rsqrt",
+   "index": 57,
+   "engine": "hcx",
+   "port": 9,
+   "target_module": null,
+   "engine_implementation": "BEHAVIOURAL_DURATION",
+   "operand_provenance": "golden coefficient rows written at behavioural done",
+   "output_override": true,
+   "native_memory_bound": false,
+   "native_qualified": false,
+   "blocking_reasons": [
+    "no elaborated whole-die execution binding",
+    "behavioural VM",
+    "numerical fixture operands or missing arithmetic engine"
+   ]
+  },
+  {
+   "op_id": "L14.ffn.router",
+   "index": 58,
+   "engine": "fld",
+   "port": 0,
+   "target_module": "dsfd_sp_gather_c",
+   "engine_implementation": "RTL_TRANSPORT_ONLY",
+   "operand_provenance": "fixture root words; real gather/capture transport only, no field matvec engines",
+   "output_override": false,
+   "native_memory_bound": false,
+   "native_qualified": false,
+   "blocking_reasons": [
+    "no elaborated whole-die execution binding",
+    "behavioural VM",
+    "numerical fixture operands or missing arithmetic engine"
+   ]
+  },
+  {
+   "op_id": "L14.ffn.hc.pre_post",
+   "index": 59,
+   "engine": "hcx",
+   "port": 9,
+   "target_module": null,
+   "engine_implementation": "BEHAVIOURAL_DURATION",
+   "operand_provenance": "golden coefficient rows written at behavioural done",
+   "output_override": true,
+   "native_memory_bound": false,
+   "native_qualified": false,
+   "blocking_reasons": [
+    "no elaborated whole-die execution binding",
+    "behavioural VM",
+    "numerical fixture operands or missing arithmetic engine"
+   ]
+  },
+  {
+   "op_id": "L14.ffn.hc.sinkhorn",
+   "index": 60,
+   "engine": "hcx",
+   "port": 9,
+   "target_module": null,
+   "engine_implementation": "BEHAVIOURAL_DURATION",
+   "operand_provenance": "golden coefficient rows written at behavioural done",
+   "output_override": true,
+   "native_memory_bound": false,
+   "native_qualified": false,
+   "blocking_reasons": [
+    "no elaborated whole-die execution binding",
+    "behavioural VM",
+    "numerical fixture operands or missing arithmetic engine"
+   ]
+  },
+  {
+   "op_id": "L14.ffn.hc.coef",
+   "index": 61,
+   "engine": "hc",
+   "port": 2,
+   "target_module": "dsfd_sp_hc_c",
+   "engine_implementation": "RTL",
+   "operand_provenance": "behavioural VM; golden hcx coefficients and golden-partitioned collective y",
+   "output_override": false,
+   "native_memory_bound": false,
+   "native_qualified": false,
+   "blocking_reasons": [
+    "no elaborated whole-die execution binding",
+    "behavioural VM",
+    "numerical fixture operands or missing arithmetic engine"
+   ]
+  },
+  {
+   "op_id": "L14.ffn.softplus_sqrt",
+   "index": 62,
+   "engine": "su",
+   "port": 1,
+   "target_module": "dsfd_sp_su_h",
+   "engine_implementation": "RTL",
+   "operand_provenance": "golden SU operand snapshots preloaded in behavioural VM; no native field/SVC producer edge",
+   "output_override": false,
+   "native_memory_bound": false,
+   "native_qualified": false,
+   "blocking_reasons": [
+    "no elaborated whole-die execution binding",
+    "behavioural VM",
+    "numerical fixture operands or missing arithmetic engine"
+   ]
+  },
+  {
+   "op_id": "L14.ffn.shared_gu",
+   "index": 63,
+   "engine": "fld",
+   "port": 0,
+   "target_module": "dsfd_sp_gather_c",
+   "engine_implementation": "RTL_TRANSPORT_ONLY",
+   "operand_provenance": "fixture root words; real gather/capture transport only, no field matvec engines",
+   "output_override": false,
+   "native_memory_bound": false,
+   "native_qualified": false,
+   "blocking_reasons": [
+    "no elaborated whole-die execution binding",
+    "behavioural VM",
+    "numerical fixture operands or missing arithmetic engine"
+   ]
+  },
+  {
+   "op_id": "L14.ffn.router_allgather",
+   "index": 64,
+   "engine": "coll",
+   "port": 3,
+   "target_module": "dsfd_sp_collective_c",
+   "engine_implementation": "RTL",
+   "operand_provenance": "golden y partitioned into four fixture contributions; actual field/SVC partials absent",
+   "output_override": false,
+   "native_memory_bound": false,
+   "native_qualified": false,
+   "blocking_reasons": [
+    "no elaborated whole-die execution binding",
+    "behavioural VM",
+    "numerical fixture operands or missing arithmetic engine"
+   ]
+  },
+  {
+   "op_id": "L14.ffn.bias",
+   "index": 65,
+   "engine": "su",
+   "port": 1,
+   "target_module": "dsfd_sp_su_h",
+   "engine_implementation": "RTL",
+   "operand_provenance": "golden SU operand snapshots preloaded in behavioural VM; no native field/SVC producer edge",
+   "output_override": false,
+   "native_memory_bound": false,
+   "native_qualified": false,
+   "blocking_reasons": [
+    "no elaborated whole-die execution binding",
+    "behavioural VM",
+    "numerical fixture operands or missing arithmetic engine"
+   ]
+  },
+  {
+   "op_id": "L14.ffn.shared_swiglu",
+   "index": 66,
+   "engine": "su",
+   "port": 1,
+   "target_module": "dsfd_sp_su_h",
+   "engine_implementation": "RTL",
+   "operand_provenance": "golden SU operand snapshots preloaded in behavioural VM; no native field/SVC producer edge",
+   "output_override": false,
+   "native_memory_bound": false,
+   "native_qualified": false,
+   "blocking_reasons": [
+    "no elaborated whole-die execution binding",
+    "behavioural VM",
+    "numerical fixture operands or missing arithmetic engine"
+   ]
+  },
+  {
+   "op_id": "L14.ffn.top6",
+   "index": 67,
+   "engine": "sel",
+   "port": 5,
+   "target_module": null,
+   "engine_implementation": "BEHAVIOURAL_DURATION",
+   "operand_provenance": "behavioural endpoint; no actual native numerical producer",
+   "output_override": true,
+   "native_memory_bound": false,
+   "native_qualified": false,
+   "blocking_reasons": [
+    "no elaborated whole-die execution binding",
+    "behavioural VM",
+    "numerical fixture operands or missing arithmetic engine"
+   ]
+  },
+  {
+   "op_id": "L14.ffn.top6_order",
+   "index": 68,
+   "engine": "sel",
+   "port": 5,
+   "target_module": null,
+   "engine_implementation": "BEHAVIOURAL_DURATION",
+   "operand_provenance": "behavioural endpoint; no actual native numerical producer",
+   "output_override": true,
+   "native_memory_bound": false,
+   "native_qualified": false,
+   "blocking_reasons": [
+    "no elaborated whole-die execution binding",
+    "behavioural VM",
+    "numerical fixture operands or missing arithmetic engine"
+   ]
+  },
+  {
+   "op_id": "L14.ffn.experts_gu",
+   "index": 69,
+   "engine": "fld",
+   "port": 0,
+   "target_module": "dsfd_sp_gather_c",
+   "engine_implementation": "RTL_TRANSPORT_ONLY",
+   "operand_provenance": "fixture root words; real gather/capture transport only, no field matvec engines",
+   "output_override": false,
+   "native_memory_bound": false,
+   "native_qualified": false,
+   "blocking_reasons": [
+    "no elaborated whole-die execution binding",
+    "behavioural VM",
+    "numerical fixture operands or missing arithmetic engine"
+   ]
+  },
+  {
+   "op_id": "L14.ffn.weights",
+   "index": 70,
+   "engine": "su",
+   "port": 1,
+   "target_module": "dsfd_sp_su_h",
+   "engine_implementation": "RTL",
+   "operand_provenance": "golden SU operand snapshots preloaded in behavioural VM; no native field/SVC producer edge",
+   "output_override": false,
+   "native_memory_bound": false,
+   "native_qualified": false,
+   "blocking_reasons": [
+    "no elaborated whole-die execution binding",
+    "behavioural VM",
+    "numerical fixture operands or missing arithmetic engine"
+   ]
+  },
+  {
+   "op_id": "L14.ffn.shared_quant",
+   "index": 71,
+   "engine": "su",
+   "port": 1,
+   "target_module": "dsfd_sp_su_h",
+   "engine_implementation": "RTL",
+   "operand_provenance": "golden SU operand snapshots preloaded in behavioural VM; no native field/SVC producer edge",
+   "output_override": false,
+   "native_memory_bound": false,
+   "native_qualified": false,
+   "blocking_reasons": [
+    "no elaborated whole-die execution binding",
+    "behavioural VM",
+    "numerical fixture operands or missing arithmetic engine"
+   ]
+  },
+  {
+   "op_id": "L14.ffn.swiglu",
+   "index": 72,
+   "engine": "su",
+   "port": 1,
+   "target_module": "dsfd_sp_su_h",
+   "engine_implementation": "RTL",
+   "operand_provenance": "golden SU operand snapshots preloaded in behavioural VM; no native field/SVC producer edge",
+   "output_override": false,
+   "native_memory_bound": false,
+   "native_qualified": false,
+   "blocking_reasons": [
+    "no elaborated whole-die execution binding",
+    "behavioural VM",
+    "numerical fixture operands or missing arithmetic engine"
+   ]
+  },
+  {
+   "op_id": "L14.ffn.route_w",
+   "index": 73,
+   "engine": "su",
+   "port": 1,
+   "target_module": "dsfd_sp_su_h",
+   "engine_implementation": "RTL",
+   "operand_provenance": "golden SU operand snapshots preloaded in behavioural VM; no native field/SVC producer edge",
+   "output_override": false,
+   "native_memory_bound": false,
+   "native_qualified": false,
+   "blocking_reasons": [
+    "no elaborated whole-die execution binding",
+    "behavioural VM",
+    "numerical fixture operands or missing arithmetic engine"
+   ]
+  },
+  {
+   "op_id": "L14.ffn.quant2",
+   "index": 74,
+   "engine": "su",
+   "port": 1,
+   "target_module": "dsfd_sp_su_h",
+   "engine_implementation": "RTL",
+   "operand_provenance": "golden SU operand snapshots preloaded in behavioural VM; no native field/SVC producer edge",
+   "output_override": false,
+   "native_memory_bound": false,
+   "native_qualified": false,
+   "blocking_reasons": [
+    "no elaborated whole-die execution binding",
+    "behavioural VM",
+    "numerical fixture operands or missing arithmetic engine"
+   ]
+  },
+  {
+   "op_id": "L14.ffn.down",
+   "index": 75,
+   "engine": "fld",
+   "port": 0,
+   "target_module": "dsfd_sp_gather_c",
+   "engine_implementation": "RTL_TRANSPORT_ONLY",
+   "operand_provenance": "fixture root words; real gather/capture transport only, no field matvec engines",
+   "output_override": false,
+   "native_memory_bound": false,
+   "native_qualified": false,
+   "blocking_reasons": [
+    "no elaborated whole-die execution binding",
+    "behavioural VM",
+    "numerical fixture operands or missing arithmetic engine"
+   ]
+  },
+  {
+   "op_id": "L14.ffn.combine_allreduce",
+   "index": 76,
+   "engine": "coll",
+   "port": 3,
+   "target_module": "dsfd_sp_collective_c",
+   "engine_implementation": "RTL",
+   "operand_provenance": "golden y partitioned into four fixture contributions; actual field/SVC partials absent",
+   "output_override": false,
+   "native_memory_bound": false,
+   "native_qualified": false,
+   "blocking_reasons": [
+    "no elaborated whole-die execution binding",
+    "behavioural VM",
+    "numerical fixture operands or missing arithmetic engine"
+   ]
+  },
+  {
+   "op_id": "L14.ffn.hc_post",
+   "index": 77,
+   "engine": "hc",
+   "port": 2,
+   "target_module": "dsfd_sp_hc_c",
+   "engine_implementation": "RTL",
+   "operand_provenance": "behavioural VM; golden hcx coefficients and golden-partitioned collective y",
+   "output_override": false,
+   "native_memory_bound": false,
+   "native_qualified": false,
+   "blocking_reasons": [
+    "no elaborated whole-die execution binding",
+    "behavioural VM",
+    "numerical fixture operands or missing arithmetic engine"
+   ]
+  },
+  {
+   "op_id": "L14.hc.h_store",
+   "index": 78,
+   "engine": "hc",
+   "port": 2,
+   "target_module": "dsfd_sp_hc_c",
+   "engine_implementation": "RTL",
+   "operand_provenance": "behavioural VM; golden hcx coefficients and golden-partitioned collective y",
+   "output_override": false,
+   "native_memory_bound": false,
+   "native_qualified": false,
+   "blocking_reasons": [
+    "no elaborated whole-die execution binding",
+    "behavioural VM",
+    "numerical fixture operands or missing arithmetic engine"
+   ]
+  }
+ ],
+ "vm_coefficient_stride": 2,
+ "vm_coefficient_bases": [
+  2560,
+  2562
+ ],
+ "ng": 16,
+ "ops": 79,
+ "field_phases": 10,
+ "coll_messages": [
+  {
+   "op": "L14.attn.a_allgather",
+   "mode": 1,
+   "nrec": 12,
+   "blk": "attn"
+  },
+  {
+   "op": "L14.attn.idx.topk_merge",
+   "mode": 1,
+   "nrec": 8,
+   "blk": "attn"
+  },
+  {
+   "op": "L14.attn.rows_allgather",
+   "mode": 1,
+   "nrec": 64,
+   "blk": "attn"
+  },
+  {
+   "op": "L14.attn.out_allreduce",
+   "mode": 0,
+   "nrec": 320,
+   "blk": "attn"
+  },
+  {
+   "op": "L14.ffn.router_allgather",
+   "mode": 1,
+   "nrec": 4,
+   "blk": "ffn"
+  },
+  {
+   "op": "L14.ffn.combine_allreduce",
+   "mode": 0,
+   "nrec": 320,
+   "blk": "ffn"
+  }
+ ],
+ "coll_records": 728,
+ "y_words": 640,
+ "exp_rows": 1120,
+ "hstore_rows": 640,
+ "golden_checks_vs_pickle": 0,
+ "program": [
+  {
+   "k": 0,
+   "id": "L14.hc.gain_attn",
+   "port": 2,
+   "eng": "hc",
+   "arg": 5244160,
+   "argument_provenance": "native endpoint descriptor",
+   "preds": []
+  },
+  {
+   "k": 1,
+   "id": "L14.hc.gain_ffn",
+   "port": 2,
+   "eng": "hc",
+   "arg": 5506624,
+   "argument_provenance": "native endpoint descriptor",
+   "preds": []
+  },
+  {
+   "k": 2,
+   "id": "L14.eng.add",
+   "port": 10,
+   "eng": "mix4",
+   "arg": 11880,
+   "argument_provenance": "fixture program argument; native binding unproven",
+   "preds": []
+  },
+  {
+   "k": 3,
+   "id": "L14.hc.h_load",
+   "port": 2,
+   "eng": "hc",
+   "arg": 0,
+   "argument_provenance": "native endpoint descriptor",
+   "preds": [
+    2
+   ]
+  },
+  {
+   "k": 4,
+   "id": "L14.attn.hc.coef_a",
+   "port": 2,
+   "eng": "hc",
+   "arg": 2099716,
+   "argument_provenance": "native endpoint descriptor",
+   "preds": [
+    3
+   ]
+  },
+  {
+   "k": 5,
+   "id": "L14.attn.hc_pre",
+   "port": 2,
+   "eng": "hc",
+   "arg": 4213760,
+   "argument_provenance": "native endpoint descriptor",
+   "preds": [
+    3,
+    4
+   ]
+  },
+  {
+   "k": 6,
+   "id": "L14.attn.hc.fn",
+   "port": 9,
+   "eng": "hcx",
+   "arg": 6,
+   "argument_provenance": "fixture program argument; native binding unproven",
+   "preds": [
+    2
+   ]
+  },
+  {
+   "k": 7,
+   "id": "L14.attn.hc.sumsq",
+   "port": 9,
+   "eng": "hcx",
+   "arg": 7,
+   "argument_provenance": "fixture program argument; native binding unproven",
+   "preds": [
+    2
+   ]
+  },
+  {
+   "k": 8,
+   "id": "L14.attn.hc.rsqrt",
+   "port": 9,
+   "eng": "hcx",
+   "arg": 8,
+   "argument_provenance": "fixture program argument; native binding unproven",
+   "preds": [
+    7
+   ]
+  },
+  {
+   "k": 9,
+   "id": "L14.attn.a_proj",
+   "port": 0,
+   "eng": "fld",
+   "arg": 0,
+   "argument_provenance": "fixture program argument; native binding unproven",
+   "preds": [
+    5
+   ]
+  },
+  {
+   "k": 10,
+   "id": "L14.attn.hc.pre_post",
+   "port": 9,
+   "eng": "hcx",
+   "arg": 10,
+   "argument_provenance": "fixture program argument; native binding unproven",
+   "preds": [
+    6,
+    8
+   ]
+  },
+  {
+   "k": 11,
+   "id": "L14.attn.hc.pre_fwd",
+   "port": 9,
+   "eng": "hcx",
+   "arg": 11,
+   "argument_provenance": "fixture program argument; native binding unproven",
+   "preds": [
+    10
+   ]
+  },
+  {
+   "k": 12,
+   "id": "L14.attn.hc.sinkhorn",
+   "port": 9,
+   "eng": "hcx",
+   "arg": 12,
+   "argument_provenance": "fixture program argument; native binding unproven",
+   "preds": [
+    10
+   ]
+  },
+  {
+   "k": 13,
+   "id": "L14.attn.hc.coef",
+   "port": 2,
+   "eng": "hc",
+   "arg": 2099712,
+   "argument_provenance": "native endpoint descriptor",
+   "preds": [
+    5,
+    10,
+    12
+   ]
+  },
+  {
+   "k": 14,
+   "id": "L14.attn.a_allgather",
+   "port": 3,
+   "eng": "coll",
+   "arg": 65548,
+   "argument_provenance": "fixture program argument; native binding unproven",
+   "preds": [
+    9
+   ]
+  },
+  {
+   "k": 15,
+   "id": "L14.attn.q_norm.sumsq",
+   "port": 1,
+   "eng": "su",
+   "arg": 15,
+   "argument_provenance": "native endpoint descriptor",
+   "preds": [
+    14
+   ]
+  },
+  {
+   "k": 16,
+   "id": "L14.attn.cmp.pool",
+   "port": 1,
+   "eng": "su",
+   "arg": 16,
+   "argument_provenance": "native endpoint descriptor",
+   "preds": [
+    14
+   ]
+  },
+  {
+   "k": 17,
+   "id": "L14.attn.kv_norm.sumsq",
+   "port": 1,
+   "eng": "su",
+   "arg": 17,
+   "argument_provenance": "native endpoint descriptor",
+   "preds": [
+    14
+   ]
+  },
+  {
+   "k": 18,
+   "id": "L14.attn.q_quant",
+   "port": 1,
+   "eng": "su",
+   "arg": 18,
+   "argument_provenance": "native endpoint descriptor",
+   "preds": [
+    15
+   ]
+  },
+  {
+   "k": 19,
+   "id": "L14.attn.kv_rope_qdq",
+   "port": 1,
+   "eng": "su",
+   "arg": 19,
+   "argument_provenance": "native endpoint descriptor",
+   "preds": [
+    17
+   ]
+  },
+  {
+   "k": 20,
+   "id": "L14.attn.own_row_write",
+   "port": 4,
+   "eng": "svc",
+   "arg": 20,
+   "argument_provenance": "fixture program argument; native binding unproven",
+   "preds": [
+    19
+   ]
+  },
+  {
+   "k": 21,
+   "id": "L14.attn.cmp.norm.sumsq",
+   "port": 1,
+   "eng": "su",
+   "arg": 21,
+   "argument_provenance": "native endpoint descriptor",
+   "preds": [
+    16
+   ]
+  },
+  {
+   "k": 22,
+   "id": "L14.attn.wq_b",
+   "port": 0,
+   "eng": "fld",
+   "arg": 1,
+   "argument_provenance": "fixture program argument; native binding unproven",
+   "preds": [
+    18
+   ]
+  },
+  {
+   "k": 23,
+   "id": "L14.attn.cmp.norm.rsqrt",
+   "port": 1,
+   "eng": "su",
+   "arg": 23,
+   "argument_provenance": "native endpoint descriptor",
+   "preds": [
+    21
+   ]
+  },
+  {
+   "k": 24,
+   "id": "L14.attn.cmp.norm.scale",
+   "port": 1,
+   "eng": "su",
+   "arg": 24,
+   "argument_provenance": "native endpoint descriptor",
+   "preds": [
+    23
+   ]
+  },
+  {
+   "k": 25,
+   "id": "L14.attn.cmp.wk",
+   "port": 0,
+   "eng": "fld",
+   "arg": 2,
+   "argument_provenance": "fixture program argument; native binding unproven",
+   "preds": [
+    24
+   ]
+  },
+  {
+   "k": 26,
+   "id": "L14.attn.cmp.row_qdq",
+   "port": 1,
+   "eng": "su",
+   "arg": 26,
+   "argument_provenance": "native endpoint descriptor",
+   "preds": [
+    24
+   ]
+  },
+  {
+   "k": 27,
+   "id": "L14.attn.cmp.k_norm.sumsq",
+   "port": 1,
+   "eng": "su",
+   "arg": 27,
+   "argument_provenance": "native endpoint descriptor",
+   "preds": [
+    25
+   ]
+  },
+  {
+   "k": 28,
+   "id": "L14.attn.cmp.k_norm.rsqrt",
+   "port": 1,
+   "eng": "su",
+   "arg": 28,
+   "argument_provenance": "native endpoint descriptor",
+   "preds": [
+    27
+   ]
+  },
+  {
+   "k": 29,
+   "id": "L14.attn.cmp.k_norm.scale",
+   "port": 1,
+   "eng": "su",
+   "arg": 29,
+   "argument_provenance": "native endpoint descriptor",
+   "preds": [
+    28
+   ]
+  },
+  {
+   "k": 30,
+   "id": "L14.attn.cmp.k_rope_qdq",
+   "port": 1,
+   "eng": "su",
+   "arg": 30,
+   "argument_provenance": "native endpoint descriptor",
+   "preds": [
+    29
+   ]
+  },
+  {
+   "k": 31,
+   "id": "L14.attn.idx.q",
+   "port": 0,
+   "eng": "fld",
+   "arg": 3,
+   "argument_provenance": "fixture program argument; native binding unproven",
+   "preds": [
+    22
+   ]
+  },
+  {
+   "k": 32,
+   "id": "L14.attn.q_rope",
+   "port": 1,
+   "eng": "su",
+   "arg": 32,
+   "argument_provenance": "native endpoint descriptor",
+   "preds": [
+    22
+   ]
+  },
+  {
+   "k": 33,
+   "id": "L14.attn.idx.score",
+   "port": 4,
+   "eng": "svc",
+   "arg": 33,
+   "argument_provenance": "fixture program argument; native binding unproven",
+   "preds": [
+    14,
+    31
+   ]
+  },
+  {
+   "k": 34,
+   "id": "L14.attn.idx.newkey",
+   "port": 1,
+   "eng": "su",
+   "arg": 34,
+   "argument_provenance": "native endpoint descriptor",
+   "preds": [
+    30,
+    31
+   ]
+  },
+  {
+   "k": 35,
+   "id": "L14.attn.idx.topk_local",
+   "port": 5,
+   "eng": "sel",
+   "arg": 35,
+   "argument_provenance": "fixture program argument; native binding unproven",
+   "preds": [
+    33,
+    34
+   ]
+  },
+  {
+   "k": 36,
+   "id": "L14.attn.idx.topk_merge",
+   "port": 3,
+   "eng": "coll",
+   "arg": 65544,
+   "argument_provenance": "fixture program argument; native binding unproven",
+   "preds": [
+    35
+   ]
+  },
+  {
+   "k": 37,
+   "id": "L14.attn.idx.topk_final",
+   "port": 5,
+   "eng": "sel",
+   "arg": 37,
+   "argument_provenance": "fixture program argument; native binding unproven",
+   "preds": [
+    36
+   ]
+  },
+  {
+   "k": 38,
+   "id": "L14.attn.gather",
+   "port": 6,
+   "eng": "col",
+   "arg": 38,
+   "argument_provenance": "fixture program argument; native binding unproven",
+   "preds": [
+    37
+   ]
+  },
+  {
+   "k": 39,
+   "id": "L14.attn.window_load",
+   "port": 4,
+   "eng": "svc",
+   "arg": 39,
+   "argument_provenance": "fixture program argument; native binding unproven",
+   "preds": [
+    20,
+    32,
+    37
+   ]
+  },
+  {
+   "k": 40,
+   "id": "L14.attn.rows_allgather",
+   "port": 3,
+   "eng": "coll",
+   "arg": 65600,
+   "argument_provenance": "fixture program argument; native binding unproven",
+   "preds": [
+    26,
+    38
+   ]
+  },
+  {
+   "k": 41,
+   "id": "L14.attn.scores",
+   "port": 4,
+   "eng": "svc",
+   "arg": 41,
+   "argument_provenance": "fixture program argument; native binding unproven",
+   "preds": [
+    19,
+    32,
+    39,
+    40
+   ]
+  },
+  {
+   "k": 42,
+   "id": "L14.attn.max",
+   "port": 1,
+   "eng": "su",
+   "arg": 42,
+   "argument_provenance": "native endpoint descriptor",
+   "preds": [
+    41
+   ]
+  },
+  {
+   "k": 43,
+   "id": "L14.attn.exp",
+   "port": 1,
+   "eng": "su",
+   "arg": 43,
+   "argument_provenance": "native endpoint descriptor",
+   "preds": [
+    42
+   ]
+  },
+  {
+   "k": 44,
+   "id": "L14.attn.den",
+   "port": 1,
+   "eng": "su",
+   "arg": 44,
+   "argument_provenance": "native endpoint descriptor",
+   "preds": [
+    43
+   ]
+  },
+  {
+   "k": 45,
+   "id": "L14.attn.pv",
+   "port": 4,
+   "eng": "svc",
+   "arg": 45,
+   "argument_provenance": "fixture program argument; native binding unproven",
+   "preds": [
+    43
+   ]
+  },
+  {
+   "k": 46,
+   "id": "L14.attn.sink",
+   "port": 1,
+   "eng": "su",
+   "arg": 46,
+   "argument_provenance": "native endpoint descriptor",
+   "preds": [
+    42,
+    44
+   ]
+  },
+  {
+   "k": 47,
+   "id": "L14.attn.normalize",
+   "port": 1,
+   "eng": "su",
+   "arg": 47,
+   "argument_provenance": "native endpoint descriptor",
+   "preds": [
+    45,
+    46
+   ]
+  },
+  {
+   "k": 48,
+   "id": "L14.attn.wo_a",
+   "port": 0,
+   "eng": "fld",
+   "arg": 4,
+   "argument_provenance": "fixture program argument; native binding unproven",
+   "preds": [
+    47
+   ]
+  },
+  {
+   "k": 49,
+   "id": "L14.attn.z_quant",
+   "port": 1,
+   "eng": "su",
+   "arg": 49,
+   "argument_provenance": "native endpoint descriptor",
+   "preds": [
+    48
+   ]
+  },
+  {
+   "k": 50,
+   "id": "L14.attn.wo_b",
+   "port": 0,
+   "eng": "fld",
+   "arg": 5,
+   "argument_provenance": "fixture program argument; native binding unproven",
+   "preds": [
+    49
+   ]
+  },
+  {
+   "k": 51,
+   "id": "L14.attn.out_allreduce",
+   "port": 3,
+   "eng": "coll",
+   "arg": 320,
+   "argument_provenance": "fixture program argument; native binding unproven",
+   "preds": [
+    50
+   ]
+  },
+  {
+   "k": 52,
+   "id": "L14.attn.hc_post",
+   "port": 2,
+   "eng": "hc",
+   "arg": 3145728,
+   "argument_provenance": "native endpoint descriptor",
+   "preds": [
+    2,
+    12,
+    13,
+    51
+   ]
+  },
+  {
+   "k": 53,
+   "id": "L14.ffn.hc.coef_a",
+   "port": 2,
+   "eng": "hc",
+   "arg": 2099718,
+   "argument_provenance": "native endpoint descriptor",
+   "preds": [
+    11
+   ]
+  },
+  {
+   "k": 54,
+   "id": "L14.ffn.hc_pre",
+   "port": 2,
+   "eng": "hc",
+   "arg": 4509184,
+   "argument_provenance": "native endpoint descriptor",
+   "preds": [
+    52,
+    53
+   ]
+  },
+  {
+   "k": 55,
+   "id": "L14.ffn.hc.fn",
+   "port": 9,
+   "eng": "hcx",
+   "arg": 55,
+   "argument_provenance": "fixture program argument; native binding unproven",
+   "preds": [
+    52
+   ]
+  },
+  {
+   "k": 56,
+   "id": "L14.ffn.hc.sumsq",
+   "port": 9,
+   "eng": "hcx",
+   "arg": 56,
+   "argument_provenance": "fixture program argument; native binding unproven",
+   "preds": [
+    52
+   ]
+  },
+  {
+   "k": 57,
+   "id": "L14.ffn.hc.rsqrt",
+   "port": 9,
+   "eng": "hcx",
+   "arg": 57,
+   "argument_provenance": "fixture program argument; native binding unproven",
+   "preds": [
+    56
+   ]
+  },
+  {
+   "k": 58,
+   "id": "L14.ffn.router",
+   "port": 0,
+   "eng": "fld",
+   "arg": 6,
+   "argument_provenance": "fixture program argument; native binding unproven",
+   "preds": [
+    54
+   ]
+  },
+  {
+   "k": 59,
+   "id": "L14.ffn.hc.pre_post",
+   "port": 9,
+   "eng": "hcx",
+   "arg": 59,
+   "argument_provenance": "fixture program argument; native binding unproven",
+   "preds": [
+    55,
+    57
+   ]
+  },
+  {
+   "k": 60,
+   "id": "L14.ffn.hc.sinkhorn",
+   "port": 9,
+   "eng": "hcx",
+   "arg": 60,
+   "argument_provenance": "fixture program argument; native binding unproven",
+   "preds": [
+    59
+   ]
+  },
+  {
+   "k": 61,
+   "id": "L14.ffn.hc.coef",
+   "port": 2,
+   "eng": "hc",
+   "arg": 2099714,
+   "argument_provenance": "native endpoint descriptor",
+   "preds": [
+    54,
+    59,
+    60
+   ]
+  },
+  {
+   "k": 62,
+   "id": "L14.ffn.softplus_sqrt",
+   "port": 1,
+   "eng": "su",
+   "arg": 62,
+   "argument_provenance": "native endpoint descriptor",
+   "preds": [
+    58
+   ]
+  },
+  {
+   "k": 63,
+   "id": "L14.ffn.shared_gu",
+   "port": 0,
+   "eng": "fld",
+   "arg": 7,
+   "argument_provenance": "fixture program argument; native binding unproven",
+   "preds": [
+    54,
+    58
+   ]
+  },
+  {
+   "k": 64,
+   "id": "L14.ffn.router_allgather",
+   "port": 3,
+   "eng": "coll",
+   "arg": 65540,
+   "argument_provenance": "fixture program argument; native binding unproven",
+   "preds": [
+    62
+   ]
+  },
+  {
+   "k": 65,
+   "id": "L14.ffn.bias",
+   "port": 1,
+   "eng": "su",
+   "arg": 65,
+   "argument_provenance": "native endpoint descriptor",
+   "preds": [
+    64
+   ]
+  },
+  {
+   "k": 66,
+   "id": "L14.ffn.shared_swiglu",
+   "port": 1,
+   "eng": "su",
+   "arg": 66,
+   "argument_provenance": "native endpoint descriptor",
+   "preds": [
+    63
+   ]
+  },
+  {
+   "k": 67,
+   "id": "L14.ffn.top6",
+   "port": 5,
+   "eng": "sel",
+   "arg": 67,
+   "argument_provenance": "fixture program argument; native binding unproven",
+   "preds": [
+    65
+   ]
+  },
+  {
+   "k": 68,
+   "id": "L14.ffn.top6_order",
+   "port": 5,
+   "eng": "sel",
+   "arg": 68,
+   "argument_provenance": "fixture program argument; native binding unproven",
+   "preds": [
+    67
+   ]
+  },
+  {
+   "k": 69,
+   "id": "L14.ffn.experts_gu",
+   "port": 0,
+   "eng": "fld",
+   "arg": 8,
+   "argument_provenance": "fixture program argument; native binding unproven",
+   "preds": [
+    63,
+    68
+   ]
+  },
+  {
+   "k": 70,
+   "id": "L14.ffn.weights",
+   "port": 1,
+   "eng": "su",
+   "arg": 70,
+   "argument_provenance": "native endpoint descriptor",
+   "preds": [
+    64,
+    68
+   ]
+  },
+  {
+   "k": 71,
+   "id": "L14.ffn.shared_quant",
+   "port": 1,
+   "eng": "su",
+   "arg": 71,
+   "argument_provenance": "native endpoint descriptor",
+   "preds": [
+    66
+   ]
+  },
+  {
+   "k": 72,
+   "id": "L14.ffn.swiglu",
+   "port": 1,
+   "eng": "su",
+   "arg": 72,
+   "argument_provenance": "native endpoint descriptor",
+   "preds": [
+    69
+   ]
+  },
+  {
+   "k": 73,
+   "id": "L14.ffn.route_w",
+   "port": 1,
+   "eng": "su",
+   "arg": 73,
+   "argument_provenance": "native endpoint descriptor",
+   "preds": [
+    70,
+    72
+   ]
+  },
+  {
+   "k": 74,
+   "id": "L14.ffn.quant2",
+   "port": 1,
+   "eng": "su",
+   "arg": 74,
+   "argument_provenance": "native endpoint descriptor",
+   "preds": [
+    73
+   ]
+  },
+  {
+   "k": 75,
+   "id": "L14.ffn.down",
+   "port": 0,
+   "eng": "fld",
+   "arg": 9,
+   "argument_provenance": "fixture program argument; native binding unproven",
+   "preds": [
+    71,
+    74
+   ]
+  },
+  {
+   "k": 76,
+   "id": "L14.ffn.combine_allreduce",
+   "port": 3,
+   "eng": "coll",
+   "arg": 320,
+   "argument_provenance": "fixture program argument; native binding unproven",
+   "preds": [
+    75
+   ]
+  },
+  {
+   "k": 77,
+   "id": "L14.ffn.hc_post",
+   "port": 2,
+   "eng": "hc",
+   "arg": 3145728,
+   "argument_provenance": "native endpoint descriptor",
+   "preds": [
+    60,
+    61,
+    76
+   ]
+  },
+  {
+   "k": 78,
+   "id": "L14.hc.h_store",
+   "port": 2,
+   "eng": "hc",
+   "arg": 1054720,
+   "argument_provenance": "native endpoint descriptor",
+   "preds": [
+    77
+   ]
+  }
+ ],
+ "cases_sha256": "8c18c0655ccf6a147cde5e8a65e709ad5ccfd62ba9024e2644019289cd8d2108",
+ "coef_split": true,
+ "h_stream": false,
+ "su_sched": null,
+ "dur_override": null,
+ "su_real": null,
+ "mix4": {
+  "native_qualified": false,
+  "master": "dsfd_engram_mix4_c",
+  "descriptor": 11880,
+  "operand_sha256": "657807bcc42906616d9901da1133f11d16a952d7a8cc138500aead0a403593c9",
+  "golden_output_injection": false,
+  "scope": "actual arithmetic endpoint; ideal VM and fixture producers remain"
+ },
+ "chain_fixture_sha256": "f109288558bdb0a785a527d65aa9d337e3c89239cd035a16001f75c2899e4c71",
+ "chain_schema": "opentallas.s81-ctrl.die-layer-hc-chain.v1",
+ "chain_checks": {
+  "engram_equals_shard": true,
+  "attn_norm_equals_shard": true,
+  "attn_norm_hc_gate_equals_shard": true,
+  "attn_post_hc_gate_equals_model": true,
+  "ffn_norm_equals_shard": true,
+  "ffn_norm_hc_gate_equals_shard": true,
+  "ffn_post_hc_gate_equals_model": true,
+  "h_out_equals_shard": true,
+  "h_out_equals_block": true,
+  "pre_out_equals_shard": true
+ },
+ "shard": "ctx1048576_L14.npz",
+ "shard_sha256": "2f0d79a326a122c996aebf8b2adc5daceeed95e13df27ff35f16441e98c5a901",
+ "golden_checks_vs_shard": 4,
+ "payload": "layer-entry h (shard h_in)",
+ "engram": {
+  "ops": [
+   "L14.eng.dot",
+   "L14.eng.hh",
+   "L14.eng.gate",
+   "L14.eng.add"
+  ],
+  "port": 10,
+  "hosting": "BEHAVIOURAL at program duration (not Engram RTL)",
+  "h_rows_written_by": "L14.eng.add at its end: 640 golden post-Engram h rows (shard L14.engram) over VM rows 0..639",
+  "h_load_pred": "L14.eng.add"
+ }
+}

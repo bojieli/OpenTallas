@@ -130,7 +130,22 @@ if '--case' in sys.argv:
         if re.match(r'^(q[fk]d_rly|qfd_rst_rep)', name) or not any(getattr(i, 'master', '') == name for i in m['insts']):
             continue
         g = {}
-        for nm, layer, r in v.pin_rects(mst, 1, {q: pw.get((name, q), 0) for q in mst.order}):
+        rects_ = list(v.pin_rects(mst, 1, {q: pw.get((name, q), 0) for q in mst.order}))
+        # v1.3 (compute lead r4): a published pin file must be overlap-free (elements r11: c16s tile / slab files had
+        # coincident clock entries and duplicated groups); count same-layer overlapping pin rectangles
+        ov_, byL_ = 0, {}
+        for nm_, L_, r_ in rects_:
+            byL_.setdefault(L_, []).append(r_)
+        for L_, lst_ in byL_.items():
+            lst_.sort()
+            for i_ in range(len(lst_)):
+                a_ = lst_[i_]
+                for b_ in lst_[i_ + 1:]:
+                    if b_[0] >= a_[2]:
+                        break
+                    if b_[1] < a_[3] and b_[3] > a_[1]:
+                        ov_ += 1
+        for nm, layer, r in rects_:
             base, _, idx = nm.partition('[')
             cx, cy = (r[0] + r[2]) / 2, (r[1] + r[3]) / 2
             d = dict(W=cx, E=mst.w - cx, S=cy, N=mst.h - cy)
@@ -152,10 +167,14 @@ if '--case' in sys.argv:
         rec_ = dict(schema='opentallas.qwen-tp8.assigned-pins.v1', master=name, outline=dict(w=mst.w, h=mst.h),
                     instances=sum(1 for i in m['insts'] if getattr(i, 'master', '') == name),
                     pins={f: [b_ for _, b_ in sorted(l)] for f, l in sorted(faces.items())}, pin_ranges=rng, ports=ports,
+                    overlapping_pin_pairs=ov_,
                     note='assigned by the die generator (tools/qwen_tp8/relay_data_run.py --case); a real-view master '
                          'lists its view pins')
         (pdir / f'{name}.json').write_text(json.dumps(rec_, indent=1) + '\n')
-        index[name] = dict(instances=rec_['instances'], ports=len(ports), bits=sum(q_['bits'] for q_ in ports.values()))
+        index[name] = dict(instances=rec_['instances'], ports=len(ports), bits=sum(q_['bits'] for q_ in ports.values()),
+                           overlapping_pin_pairs=ov_)
+        if ov_:
+            print(f'PIN_OVERLAP FAIL {name}: {ov_} overlapping pin pairs', flush=True)
     v.EMIT_SPLIT = emit_saved
     (pdir / 'INDEX.json').write_text(json.dumps(index, indent=1) + '\n')
 r = rec['relays']  # pin rectangle iteration above uses its own local r value
