@@ -8,10 +8,10 @@ import argparse,copy,hashlib,json
 from pathlib import Path
 
 def main():
- ap=argparse.ArgumentParser(description=__doc__);ap.add_argument('--input',type=Path,required=True);ap.add_argument('--out',type=Path,required=True);a=ap.parse_args()
+ ap=argparse.ArgumentParser(description=__doc__);ap.add_argument('--input',type=Path,required=True);ap.add_argument('--out',type=Path,required=True);ap.add_argument('--shift',type=float,default=64.8);a=ap.parse_args()
  base=json.loads(a.input.read_text());p=copy.deepcopy(base)
  assert p['pair_count']==2417 and p['bf_pairs']==519 and p['root_count']==128
- cols=sorted(p['columns'],key=lambda q:q['x_um']);col=cols[10];before=col['x_um'];dx=64.8
+ cols=sorted(p['columns'],key=lambda q:q['x_um']);col=cols[10];before=col['x_um'];dx=a.shift
  selected=[f for f in p['placements'] if abs(f['origin_um'][0]-before)<1e-6]
  assert len(selected)==col['roots']==6
  col['x_um']=round(before+dx,6)
@@ -19,9 +19,9 @@ def main():
  width=selected[0]['outline_um'][0];x0=round(cols[9]['x_um']+width,6);x1=col['x_um']
  p['service_access_corridors']=[dict(name='SW_service_access',rect_um=[x0,20.,x1,24604.],between_columns=[9,10])]
  p['status']='COARSE_FULL2417_SERVICE_SPINE_CANDIDATE_NOT_NATIVE'
- p['changes'].append('Translate entire physical W innercolumn10 +64.8um, preserving6typedframes and everypair/root; expose73.44um actualgap for q514/a1026 service routing')
+ p['changes'].append(f'Translate entire physical W innercolumn10 +{dx}um, preserving6typedframes and everypair/root; expose{x1-x0:.3f}um actualgap for q/a/ix/co service routing')
  p['service_access_provenance']=dict(source_capacity_sha256=hashlib.sha256(a.input.read_bytes()).hexdigest(),generator_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),moved_roots=[f['root'] for f in selected],translation_um=[dx,0],old_gap_um=8.64,new_gap_um=round(x1-x0,6),service_return_station_um=[54.84,17.256],station_side_clearance_if_centered_um=round((x1-x0-54.84)/2,6),q514_a1026_combined_bits=1540,
-   isolated_a1026_cut_diagnostic=1026/((x1-x0)*31.510416666666668),isolated_q514_plus_a1026_cut_diagnostic=1540/((x1-x0)*31.510416666666668),
+   isolated_a1026_cut_diagnostic=1026/((x1-x0)*31.510416666666668),isolated_q514_plus_a1026_cut_diagnostic=1540/((x1-x0)*31.510416666666668),all_q_a_ix_co_bits=2568,all_q_a_ix_co_cut_diagnostic=2568/((x1-x0)*31.510416666666668),
    warning='Single-bus cut is not aggregate proof. If q514 and a1026 share this cut simultaneously combined demand is above0.60; route on distinct windows/channels/layers with actual capacities or widen further. Existing S14/clock stations need full generator overlap/reach checks.')
  def overlap(a,b):return a[0]<b[0]+b[2]-1e-6 and a[0]+a[2]>b[0]+1e-6 and a[1]<b[1]+b[3]-1e-6 and a[1]+a[3]>b[1]+1e-6
  boxes=[(f['root'],[*f['origin_um'],*f['outline_um']]) for f in p['placements']]
