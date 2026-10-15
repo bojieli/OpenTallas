@@ -7,7 +7,7 @@
 // edge; TX is registered. Thus an adjacent TX -> RX reservation is two edges.
 // Relay edges must be added to the compiler trace. An invalid trace faults; it
 // never waits or repairs the timeline. This component is not a die qualification.
-module ot_hgi_coll_pring_captured_static #
+module ot_hgi_coll_pring_captured_static #(
     parameter integer NT=8, LAT=8, SPLIT_CLOCKS=0,
     parameter integer MUT_CARRY=0, MUT_TAG=0
 )(
