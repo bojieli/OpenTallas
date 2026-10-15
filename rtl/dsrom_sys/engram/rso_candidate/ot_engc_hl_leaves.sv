@@ -1,7 +1,11 @@
 `timescale 1ns/1ps
 // ---- hardened leaves of dsfd_engram_c_hl ------------------------------------------------------------------------
 // Return relay leaf, 256 bits (one master, placed twice: at the PB0 and PB1 read-data source pins).
-module ot_engc_rr256 (input wire ck, rst_n, input wire [255:0] d, output wire [255:0] q);
+// B6 10-14: like rr64 it conditions the async die reset itself (routed hl2 view: the 421-um rst_io_n net into 256 flops
+// across the 166-um leaf captured at 264 ps > 190).
+module ot_engc_rr256 (input wire ck, rst, input wire [255:0] d, output wire [255:0] q);
+    wire rst_n;
+    ot_engc_hl_rsync u_rst (.clk(ck), .async_rst_n(rst), .sync_rst_n(rst_n));
     (* keep = "true", dont_touch = "true" *) reg [255:0] r;
     always @(posedge ck or negedge rst_n)
         if (!rst_n) r <= 256'b0;
