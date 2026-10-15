@@ -65,6 +65,7 @@ module ot_s81_pq_qb_headp_native (
     // word and the registered write enables/rows are captured once more, one copy per bank, and the head-local
     // metadata commits one edge after the bank data (bank wq/wr outputs unchanged). Rows are written by the loader
     // before any read of the same row (loader contract: the +2 read pipeline already orders reads after writes).
+    wire [15:0] rd0_b [0:3], rd1_b [0:3];
     reg [29:0] aqm_q [0:3];
     reg [6:0] wr0_d [0:3], wr1_d [0:3];
     reg wq0_d [0:3], wq1_d [0:3];
@@ -86,6 +87,13 @@ module ot_s81_pq_qb_headp_native (
             end
         end
         assign written[gb] = wbits;
+        // Per-bank read-index copies (gate p2: i0/i1[2:1] drove ~3,600 read-mux loads each): each bank's 96:1
+        // metadata read uses its own register copy, loaded on the same edge as i0/i1 (0 cycles); the i0/i1
+        // output pins keep their own flops.
+        reg [6:0] r0c, r1c;
+        always @(posedge clk) begin r0c <= {h_b0[8:4], h_b0[2:1]}; r1c <= {h_b1[8:4], h_b1[2:1]}; end
+        assign rd0_b[gb] = {written[gb][r0c], meta[gb][r0c][14:0]};
+        assign rd1_b[gb] = {written[gb][r1c], meta[gb][r1c][14:0]};
     end endgenerate
     always @(posedge clk or negedge rst_l[0]) begin
       if(!rst_l[0]) begin
@@ -94,8 +102,8 @@ module ot_s81_pq_qb_headp_native (
       end else begin
         selected0[0]<=bank0; selected1[0]<=bank1;
         valid[0]<=gates & {2{consume_1}};
-        if(consume_1&&gates[0]) m0[0]<={written[bank0][row0],meta[bank0][row0][14:0]};
-        if(consume_1&&gates[1]) m1[0]<={written[bank1][row1],meta[bank1][row1][14:0]};
+        if(consume_1&&gates[0]) m0[0]<=rd0_b[bank0];
+        if(consume_1&&gates[1]) m1[0]<=rd1_b[bank1];
         for(j=1;j<3;j=j+1) begin
           selected0[j]<=selected0[j-1];selected1[j]<=selected1[j-1];
           valid[j]<=valid[j-1];m0[j]<=m0[j-1];m1[j]<=m1[j-1];
