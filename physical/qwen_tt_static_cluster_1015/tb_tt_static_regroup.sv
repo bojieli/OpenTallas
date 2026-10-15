@@ -125,7 +125,8 @@ module tb_tt_static_regroup;
     repeat(`NCYC) begin @(negedge clk); rnd; cyc=cyc+1; if(cyc%20000==10000) begin rst_n=0; @(negedge clk); rnd; rst_n=1; end end
     seam_report;
     if(errs==0 && (cmd_pair<`MIN_PAIR || ret_pair<`MIN_PAIR)) $display("REGROUP_UNSENSITIZED cmd_pair=%0d ret_pair=%0d min=%0d",cmd_pair,ret_pair,`MIN_PAIR);
-    else if(errs==0) $display("REGROUP_PASS cycles=%0d outputs=%0d cmd_pair=%0d ret_pair=%0d",cyc,43,cmd_pair,ret_pair); else $display("REGROUP_FAIL errs=%0d",errs); $finish; end
+    else if(errs==0) $display("REGROUP_PASS cycles=%0d outputs=%0d cmd_pair=%0d ret_pair=%0d",cyc,43,cmd_pair,ret_pair); else $display("REGROUP_FAIL errs=%0d",errs);
+    if(errs!=0 || cmd_pair<`MIN_PAIR || ret_pair<`MIN_PAIR) $fatal(1,"REGROUP_NOT_PASS"); $finish; end
   integer ct[0:379], rt[0:94]; integer cmd_pair=0, ret_pair=0, k; reg [379:0] pc; reg [94:0] pr;
   initial begin for(k=0;k<380;k=k+1) ct[k]=0; for(k=0;k<95;k=k+1) rt[k]=0; pc=0; pr=0; end
   always @(posedge clk) if(rst_n) begin

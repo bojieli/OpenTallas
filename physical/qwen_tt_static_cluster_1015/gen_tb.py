@@ -62,7 +62,8 @@ L.append('    rst_n=0; rnd; repeat(20) @(negedge clk) rnd; rst_n=1;')
 L.append('    repeat(`NCYC) begin @(negedge clk); rnd; cyc=cyc+1; if(cyc%20000==10000) begin rst_n=0; @(negedge clk); rnd; rst_n=1; end end')
 L.append('    seam_report;')
 L.append('    if(errs==0 && (cmd_pair<`MIN_PAIR || ret_pair<`MIN_PAIR)) $display("REGROUP_UNSENSITIZED cmd_pair=%0d ret_pair=%0d min=%0d",cmd_pair,ret_pair,`MIN_PAIR);')
-L.append('    else if(errs==0) $display("REGROUP_PASS cycles=%0d outputs=%0d cmd_pair=%0d ret_pair=%0d",cyc,`NOUT,cmd_pair,ret_pair); else $display("REGROUP_FAIL errs=%0d",errs); $finish; end')
+L.append('    else if(errs==0) $display("REGROUP_PASS cycles=%0d outputs=%0d cmd_pair=%0d ret_pair=%0d",cyc,`NOUT,cmd_pair,ret_pair); else $display("REGROUP_FAIL errs=%0d",errs);')
+L.append('    if(errs!=0 || cmd_pair<`MIN_PAIR || ret_pair<`MIN_PAIR) $fatal(1,"REGROUP_NOT_PASS"); $finish; end')
 # r14: seam sensitization. Count, on the regrouped dut, cycles where each regroup-seam bit toggles and where the
 # two bits a mutant swaps differ; the bench FAILS (not passes vacuously) unless both mutant pairs are exercised.
 L.append('  integer ct[0:379], rt[0:94]; integer cmd_pair=0, ret_pair=0, k; reg [379:0] pc; reg [94:0] pr;')
