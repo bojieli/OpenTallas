@@ -1,0 +1,28 @@
+GATE_SOURCE_ARCHIVE_SHA256=e532ec882e4e529ee1c17010632fdac518cdca6f7a2f7d7f6b09f3083658c215
+GATE_TOOL_IMAGE_ID=sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29 GATE_TOOL_IMAGE_DIGESTS=["openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29"]
+GATE_TOOL_CTS_MACRO_CLUSTER=
+GATE_FLOW_RC=0 GATE_FLOW_S=35
+GATE_IOP_RC=2
+GATE_DUMP_RC=0
+GATE_TB textbook_lint: WARN hfd_vms_bank_static_rg7wg3 cells 21,527 flops 6,409 depth 540.1 ps util 0.3086 reach 0.0 um (0.4 s)
+GATE_TB textbook_lint: INFO clock_roots max_root_sinks=6412 root=port:clk rule=PASS: 6,412 sinks on the largest root <= 15,000; no measured clock tree (no --cts gate evidence)
+GATE_TB textbook_lint: WARN util_channel: utilisation 30.9% outside 45%-65% (std 3218 + macro 36952 um2 in 130170 um2): shrink the outline (long wires / sparse placement)
+GATE_PORTS {"clk": [1, false], "rst_n": [1, false], "bid": [null, true], "sid": [null, true], "rslot_v": [1, false], "rslot": [null, true], "wslot_v": [1, false], "wslot": [null, true], "rq0": [null, true], "rr0": [null, true], "rq1": [null, true], "rr1": [null, true], "rq2": [null, true], "rr2": [null, true], "rq3": [null, true], "rr3": [null, true], "rq4": [null, true], "rr4": [null, true], "rq5": [null, true], "rr5": [null, true], "rq6": [null, true], "rr6": [null, true], "wq0": [null, true], "wq_done0": [1, false], "wq1": [null, true], "wq_done1": [1, false], "wq2": [null, true], "wq_done2": [1, false], "dq": [null, true], "dq_done": [1, false], "kq": [null, true], "kq_done": [1, false], "xq": [null, true], "xq_done": [1, false], "xq2": [null, true], "xq2_done": [1, false], "eg": [null, true], "pq": [null, true], "pr": [null, true], "status": [null, true]}
+GATE_AREA    Chip area for module '\hfd_vms_bank_static_rg7wg3': 40148.992740
+GATE_CTS_RC=0
+GATE_GPLD global_placement -density 0.5 -pad_left 0 -pad_right 0 -routability_driven -timing_driven -force_center_initial_place -min_phi_coef 0.95 -max_phi_coef 1.05
+GATE_GPLD [INFO GPL-0023] Placement target density:       0.5000
+GATE_CK_RC=0
+GATE_CK ss insertion all 501.7..571.4 ps (spread 69.7), boundary mean 536.3; tt insertion all 380.1..445.4 ps (spread 65.3), boundary mean 412.9; ff insertion all 306.4..368.6 ps (spread 62.2), boundary mean 338.0; macro_clk flag True
+GATE_CK_DOMAIN {"source": "clk", "clock": "core_clk", "tt": {"boundary": {"n": 4772, "mean": 412.9, "min": 381.1, "max": 445.4}, "all": {"n": 8479, "mean": 410.5, "min": 380.1, "max": 445.4}, "errors": [], "macros": {"n": 3, "nets": 2, "max_per_net": 2, "reg_mean": 410.5, "max_slew": 155.0, "max_late": 9.2, "pins": [{"pin": "bank.u_a/clk", "arr": 388.4, "slew": 63.5, "late": -22.1, "net": "clknet_1_0_0_clk"}, {"pin": "bank.u_b/clk", "arr": 381.6, "slew": 46.4, "late": -28.9, "net": "clknet_1_0_0_clk"}, {"pin": "bank.u_c/clk", "arr": 419.7, "slew": 155.0, "late": 9.2, "net": "clknet_1_1_0_clk"}]}, "macro_libs": 1}}
+GATE_PC constraints signoff /src/physical/ref_tile/vms_bank_static_rg7wg3_1015/signoff.sdc (TT placement RC; diagnostic)
+GATE_PC reg->reg      300 paths, worst slack -45.3 ps (e.g. bank.s1w_d[36]$_DFF_P_/D)
+GATE_PC in->reg        83 paths, worst slack -13.7 ps (e.g. bank.xq_done$_DFF_PN0_/RESETN)
+GATE_PC setup WNS -4.534539410627758e-11 hold WNS 2.5131507985776125e-11
+GATE_DONE
+
+--- stderr
+ot-run: ot-epyc4       admits   541 GB (avail 767, growth 74, headroom 48, waiters 0/0 GB) load 42/128 running 19 disk 508 GB 
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-1493271-1792055258 after 1 s
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-1493271-1792055258): exit 0

@@ -1,0 +1,10 @@
+{
+  "verdict": "FAIL",
+  "native_qualified": false,
+  "reason": "Actual pin-center assertion failed; driver continued CTS. Clock spread diagnostic passes but setup and reset fail.",
+  "tt_clock_spread_ps": 65.3,
+  "tt_setup_wns_ps": -45.3,
+  "reset_slack_ps": -13.7,
+  "ff_hold_ps": 25.1,
+  "next": "Complete signal-BPin replacement649e98850 fresh full gate; unchanged RTL."
+}
