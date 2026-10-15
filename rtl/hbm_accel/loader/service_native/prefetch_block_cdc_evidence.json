@@ -1,0 +1,390 @@
+{
+  "artifacts_sha256": {
+    "results/arch/hbm_die_v15/prefetch_block_cdc/initial_policy_model.json": "0a9a86c3961b55109876eefb0ffb4134cf193c2a19558f421c4465faabcf4db9",
+    "results/arch/hbm_die_v15/prefetch_block_cdc/low5_pc_mutant.log": "06606d0b495b6af84dc9c66fc249ca43d765c4e239513e9c48da136b5409b8ed",
+    "results/arch/hbm_die_v15/prefetch_block_cdc/phase_137.log": "c13d550615e4a5f45608ec947baf122187bf89f257102f9deb950540e6d796cd",
+    "results/arch/hbm_die_v15/prefetch_block_cdc/phase_773.log": "2eb709ac829fb75c83d9314eafd051d0a6e9b0b2ab38f32467e645727bd72a0f",
+    "results/arch/hbm_die_v15/prefetch_block_cdc/run.log": "b5646062032fbd748cbd1d85fe4c8d9f0015f66a43c7031fe3d514347daa0a63",
+    "results/arch/hbm_die_v15/prefetch_block_cdc/source.sha256": "567cf1928ba538687cf9e8ca5f327172783e60557c1588238a665e4f6da56539",
+    "results/arch/hbm_die_v15/prefetch_block_cdc/source_structure.log": "3f59532f505595888503f4a14b2348234d015cdb8a7fc3fda5f7c5ed89d119a8",
+    "results/arch/hbm_die_v15/prefetch_block_cdc/wrong_tag.log": "da3036e4d2699413b17d2f9723edf557c20f958ccd12514e34b626d8836dcfc9"
+  },
+  "behavior": {
+    "delivery": "one-cycle SRAM read latency after start; ceil(total/8) fixed consecutive cycles; partial last-lane mask; no output ready",
+    "issue_policy": "one global ordinal at a time; wait until its PC is free",
+    "landing": "lane=ordinal%8,row=ordinal/8,chip=bank*2+row[7]",
+    "max_outstanding_per_PC": 1,
+    "native_address_unit": "full_30bit_sector",
+    "pc_mapping": "s[6:2]^s[11:7]^s[16:12]",
+    "ready": "one whole-block announcement only after every exact ordinal has landed",
+    "response_FIFO_packet": "{ordinal11,bank1,epoch16,data256}"
+  },
+  "clocks": {
+    "PHY_CLK_PS": 1024,
+    "PHY_K_model_CLK_PS_forwarding_verified": true,
+    "hbm_period_ps": 1024,
+    "periods_asserted_from_raw_timestamps": true,
+    "phase_offsets_ps": [
+      137,
+      773
+    ],
+    "stream_period_ps": 833.333334
+  },
+  "fleet": {
+    "admission_gb": 2,
+    "exit_status": 0,
+    "host": "ot-agidock128",
+    "structural_exit_status": 0,
+    "structural_unit": "oth-ubuntu-3157901-1792048052",
+    "threads": 4,
+    "time_max_RSS_kib": 349600,
+    "unit": "oth-ubuntu-3299112-1792048478",
+    "verilator_reported_alloc_MB": 506,
+    "wall_seconds": 23.08
+  },
+  "functional_status": "pass_actual_PHY_and_actual_SRAM",
+  "historical_timing_receipts": [
+    {
+      "fleet": {
+        "admission_gb": 2,
+        "exit_status": 0,
+        "host": "ot-agidock128",
+        "structural_exit_status": 0,
+        "structural_unit": "oth-ubuntu-3157901-1792048052",
+        "threads": 4,
+        "time_max_RSS_kib": 349600,
+        "unit": "oth-ubuntu-3299112-1792048478",
+        "verilator_reported_alloc_MB": 506,
+        "wall_seconds": 23.08
+      },
+      "measured_cases": [
+        {
+          "effective_bytes_per_second": 700599012.1553929,
+          "epoch": 1,
+          "fixed_stream_cycles": 80,
+          "hbm_reserve_to_ready_cycles": 28547,
+          "latency_ns": 29232.128,
+          "phase_ps": 137,
+          "total_sectors": 640
+        },
+        {
+          "effective_bytes_per_second": 704985569.8266176,
+          "epoch": 2,
+          "fixed_stream_cycles": 256,
+          "hbm_reserve_to_ready_cycles": 90782,
+          "latency_ns": 92960.768,
+          "phase_ps": 137,
+          "total_sectors": 2048
+        },
+        {
+          "effective_bytes_per_second": 676406926.4069264,
+          "epoch": 3,
+          "fixed_stream_cycles": 1,
+          "hbm_reserve_to_ready_cycles": 231,
+          "latency_ns": 236.544,
+          "phase_ps": 137,
+          "total_sectors": 5
+        },
+        {
+          "effective_bytes_per_second": 700574471.0662744,
+          "epoch": 1,
+          "fixed_stream_cycles": 80,
+          "hbm_reserve_to_ready_cycles": 28548,
+          "latency_ns": 29233.152000000002,
+          "phase_ps": 773,
+          "total_sectors": 640
+        },
+        {
+          "effective_bytes_per_second": 705716302.0465773,
+          "epoch": 2,
+          "fixed_stream_cycles": 256,
+          "hbm_reserve_to_ready_cycles": 90688,
+          "latency_ns": 92864.512,
+          "phase_ps": 773,
+          "total_sectors": 2048
+        },
+        {
+          "effective_bytes_per_second": 682314410.4803494,
+          "epoch": 3,
+          "fixed_stream_cycles": 1,
+          "hbm_reserve_to_ready_cycles": 229,
+          "latency_ns": 234.496,
+          "phase_ps": 773,
+          "total_sectors": 5
+        }
+      ],
+      "reason": "PHY wrapper omitted forwarding CLK_PS to K model; historical timings used internal1000ps vs external1024ps",
+      "source_PHY_sha256": "23d3470ccf31c747d18787d7b619b17bbe04c24754e89fe6f87d260dd59ed05b"
+    }
+  ],
+  "measured_cases": [
+    {
+      "effective_bytes_per_second": 699912510.936133,
+      "epoch": 1,
+      "fixed_stream_cycles": 80,
+      "hbm_reserve_to_ready_cycles": 28575,
+      "latency_ns": 29260.8,
+      "phase_ps": 137,
+      "total_sectors": 640
+    },
+    {
+      "effective_bytes_per_second": 706401766.004415,
+      "epoch": 2,
+      "fixed_stream_cycles": 256,
+      "hbm_reserve_to_ready_cycles": 90600,
+      "latency_ns": 92774.40000000001,
+      "phase_ps": 137,
+      "total_sectors": 2048
+    },
+    {
+      "effective_bytes_per_second": 517384105.9602649,
+      "epoch": 3,
+      "fixed_stream_cycles": 1,
+      "hbm_reserve_to_ready_cycles": 302,
+      "latency_ns": 309.248,
+      "phase_ps": 137,
+      "total_sectors": 5
+    },
+    {
+      "effective_bytes_per_second": 699888017.9171332,
+      "epoch": 1,
+      "fixed_stream_cycles": 80,
+      "hbm_reserve_to_ready_cycles": 28576,
+      "latency_ns": 29261.824,
+      "phase_ps": 773,
+      "total_sectors": 640
+    },
+    {
+      "effective_bytes_per_second": 706784022.2636967,
+      "epoch": 2,
+      "fixed_stream_cycles": 256,
+      "hbm_reserve_to_ready_cycles": 90551,
+      "latency_ns": 92724.224,
+      "phase_ps": 773,
+      "total_sectors": 2048
+    },
+    {
+      "effective_bytes_per_second": 446428571.42857146,
+      "epoch": 3,
+      "fixed_stream_cycles": 1,
+      "hbm_reserve_to_ready_cycles": 350,
+      "latency_ns": 358.40000000000003,
+      "phase_ps": 773,
+      "total_sectors": 5
+    }
+  ],
+  "module": "ot_hbm_svc_prefetch_block_cdc",
+  "open_requirements": [
+    "serialized_issue_performance_far_below_peak_HBM_target",
+    "post_synthesis_clock_sink_cost_not_measured",
+    "physical_CDC_timing_and_constraints_not_qualified",
+    "physical_34_band_placement_and_route_not_integrated",
+    "actual_SM_loader_fixed_schedule_source_joins_unbound",
+    "shared_2334_PHY_bits_unbound"
+  ],
+  "qualification_status": "unqualified",
+  "schema": "opentallas.hbm_prefetch_block_cdc_evidence.v1",
+  "source_port_table": {
+    "block_ready": {
+      "bits": 2,
+      "direction": "output"
+    },
+    "block_ready_bank": {
+      "bits": 1,
+      "direction": "output"
+    },
+    "block_ready_epoch": {
+      "bits": 16,
+      "direction": "output"
+    },
+    "block_ready_v": {
+      "bits": 1,
+      "direction": "output"
+    },
+    "fault": {
+      "bits": 1,
+      "direction": "output"
+    },
+    "hbm_clk": {
+      "bits": 1,
+      "direction": "input"
+    },
+    "hbm_rst_n": {
+      "bits": 1,
+      "direction": "input"
+    },
+    "k_addr": {
+      "bits": 960,
+      "direction": "output"
+    },
+    "k_len": {
+      "bits": 128,
+      "direction": "output"
+    },
+    "k_rdy": {
+      "bits": 32,
+      "direction": "input"
+    },
+    "k_tag": {
+      "bits": 544,
+      "direction": "output"
+    },
+    "k_v": {
+      "bits": 32,
+      "direction": "output"
+    },
+    "k_wdata": {
+      "bits": 8192,
+      "direction": "output"
+    },
+    "k_we": {
+      "bits": 32,
+      "direction": "output"
+    },
+    "k_wr_done": {
+      "bits": 32,
+      "direction": "input"
+    },
+    "k_wstrb": {
+      "bits": 1024,
+      "direction": "output"
+    },
+    "kr_beat": {
+      "bits": 128,
+      "direction": "input"
+    },
+    "kr_data": {
+      "bits": 8192,
+      "direction": "input"
+    },
+    "kr_rdy": {
+      "bits": 32,
+      "direction": "output"
+    },
+    "kr_tag": {
+      "bits": 544,
+      "direction": "input"
+    },
+    "kr_v": {
+      "bits": 32,
+      "direction": "input"
+    },
+    "out_bank": {
+      "bits": 1,
+      "direction": "output"
+    },
+    "out_data": {
+      "bits": 2048,
+      "direction": "output"
+    },
+    "out_epoch": {
+      "bits": 16,
+      "direction": "output"
+    },
+    "out_last": {
+      "bits": 1,
+      "direction": "output"
+    },
+    "out_mask": {
+      "bits": 8,
+      "direction": "output"
+    },
+    "out_ordinal": {
+      "bits": 11,
+      "direction": "output"
+    },
+    "out_v": {
+      "bits": 1,
+      "direction": "output"
+    },
+    "reserve_bank": {
+      "bits": 1,
+      "direction": "input"
+    },
+    "reserve_base": {
+      "bits": 32,
+      "direction": "input"
+    },
+    "reserve_epoch": {
+      "bits": 16,
+      "direction": "input"
+    },
+    "reserve_ready": {
+      "bits": 1,
+      "direction": "output"
+    },
+    "reserve_total": {
+      "bits": 12,
+      "direction": "input"
+    },
+    "reserve_v": {
+      "bits": 1,
+      "direction": "input"
+    },
+    "start_bank": {
+      "bits": 1,
+      "direction": "input"
+    },
+    "start_epoch": {
+      "bits": 16,
+      "direction": "input"
+    },
+    "start_v": {
+      "bits": 1,
+      "direction": "input"
+    },
+    "stream_clk": {
+      "bits": 1,
+      "direction": "input"
+    },
+    "stream_rst_n": {
+      "bits": 1,
+      "direction": "input"
+    }
+  },
+  "source_sha256": {
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": "d9801653d16576f40306c1fb1d01928e88e7371a3897b616e31d3e3df917cb2d",
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v": "9352069d59a398f6946d3971477dcc989306f1351c9c205cea9d68b183728c2c",
+    "rtl/chip/ot_chip_v41x_hbm3e_phy.sv": "257547b1b904af203a2b0d70e5414d8b49de7c5c941a1966325d7ed1172afd36",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_block_cdc.sv": "f32e3574435d9598361ec6c22404ba3ad7ac267d4f58867b52454fc360dd49fc",
+    "rtl/hbm_accel/loader/service_native/prefetch_block_cdc_model.py": "2d12b82086ee7475c2243760993a6ed6976403dcb4dcd783adc6a7781845a323",
+    "rtl/hbm_accel/loader/service_native/run_prefetch_block_cdc_bench.sh": "079c867ea2d5c612a6e67575372dcbb291b8cb9bfbe0d068497721c09acf9ebb",
+    "rtl/hbm_accel/loader/service_native/tb_hbm_svc_prefetch_block_cdc.sv": "763c51afedbece0251b420d43b95c066fd998bf6b3f05e697a57d834c41e6f87",
+    "rtl/hdc/kv/ot_hdc_hbm_model.sv": "d19116e6485266aef997ae52c82a46421267f5de9bb6d0b380d7348b30ffd57d",
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_hbm.sv": "c757ae39d767291db3fd37565ce6c5ff6eec9ed119cc97ee06432f301d87ecf4",
+    "rtl/lib/ot_async_fifo.sv": "e091268202e1c6bcc18c8eb83304730c5a29bc10e0a6c52a4dcfc19c177e882e",
+    "rtl/lib/ot_reset_sync.sv": "489e493c19aa1260853031fee35c14ea3394ae62ff6853cf7ea407cb8fb78bbd"
+  },
+  "storage": {
+    "banks": 2,
+    "descriptor_FIFO_data_bits_clocked_on_stream": 244,
+    "descriptor_FIFO_depth": 4,
+    "descriptor_FIFO_width": 61,
+    "macro_shape": [
+      128,
+      256
+    ],
+    "max_sectors_per_bank": 2048,
+    "payload_SRAM_macros": 32,
+    "per_lane_macro_count": 4,
+    "response_FIFO_data_bits_clocked_on_HBM": 9088,
+    "response_FIFO_depth": 4,
+    "response_FIFO_width": 284,
+    "response_async_FIFO_count": 8,
+    "stream_seen_bits": 4096
+  },
+  "tests": {
+    "PHY_boundary_wait_fixture": "deterministic request/response pause masks surrounding the unmodified actual PHY stand-in",
+    "per_phase_exact_vectors": 2693,
+    "per_phase_fixed_delivery_cycles": 337,
+    "per_phase_request_count": 2693,
+    "request_stalls_phase137": 1778,
+    "request_stalls_phase773": 1734,
+    "source_structure": "Yosys hierarchy/proc/check passed; 32 actual SRAM macros",
+    "withheld_PHY_response_cycles_phase137": 4558,
+    "withheld_PHY_response_cycles_phase773": 4662,
+    "wrong_low5_PC_mutant": "rejected by independent actual XOR PC assertion",
+    "wrong_response_epoch": "rejected"
+  },
+  "actual_PHY_roundtrip_receipt": "results/arch/hbm_die_v15/block_roundtrip/receipt.json"
+}
