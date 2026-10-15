@@ -19,6 +19,21 @@ def pins(faces,wh):
    cur+=span
  return out
 
+def exact_meta_pins(h):
+ raw=subprocess.run(['git','-C',str(ROOT),'show','7fec90d47:rtl/hbm_accel/index/static_1015/meta_leaf_actual_io_1015.json'],capture_output=True,check=True).stdout
+ io=json.loads(raw);assert io['outline_um']==[51.84,51.84]
+ expect={'clk','rst_n'}|{f'{n}[{i}]' for n in ('d','q') for i in range(25)}
+ assert {p['name'] for p in io['pins']}==expect
+ for slot in h['slots']:
+  if slot.get('cell')!='hidx_meta_w25_d123_r0':continue
+  slot['pins']=[dict(name=p['name'],face=p['face'],layer=p['layer'],offset=p['offset_um'],span_um=[p['bbox_um'][0],p['bbox_um'][2]],bbox_um=p['bbox_um'],offset_pending_view=False) for p in io['pins']]
+  slot['clock_entry'].update(offset=2.364)
+  slot['assigned_pin_file']='rtl/hbm_accel/index/static_1015/meta_leaf_actual_io_1015.json'
+  slot['assigned_pin_file_sha256']=hashlib.sha256(raw).hexdigest()
+  slot['pin_status']='EXACT_SOURCE_BOUND_51.84_GATE_IOP; final routed LEF must match'
+ return h
+
+
 def apply(h):
  keep=[s for s in h['slots'] if not s.get('leaf_grant_1103')]
  h['slots']=keep
@@ -63,7 +78,7 @@ def apply(h):
  h['independent_leaf_grants_1103']=dict(masters=2,replicas=dict(hidx_meta_w25_d123_r0=16,ot_hgi_coll_static_vmwrite=4),
   scopes='source-exact independent components; no full parent fit/timing or current-die closure inherited',
   source_sha256=hashes)
- return h
+ return exact_meta_pins(h)
 
 if __name__=='__main__':
  a=argparse.ArgumentParser();a.add_argument('--input',type=Path,required=True);a.add_argument('--out',type=Path,required=True);args=a.parse_args()
