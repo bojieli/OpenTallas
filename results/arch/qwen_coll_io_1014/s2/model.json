@@ -47,9 +47,10 @@
   },
   "buffer_schedule": "unconditional P/S/R offset rings, unchanged ages LU37 LS376, no production credits or wait",
   "price_cycles": 1121,
-  "measured_production_cycles": null,
+  "measured_production_cycles": 763,
   "immutable_price_changed": false,
-  "actual_link_composition_pending": true,
+  "actual_link_composition_pending": false,
   "physical_gate_pending": true,
-  "die_qualified": false
+  "die_qualified": false,
+  "actual_link_evidence": "results/rtl/qwen_coll_io_1014/static_links_s2_1014/summary.json"
 }
