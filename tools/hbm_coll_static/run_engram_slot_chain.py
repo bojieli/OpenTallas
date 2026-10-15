@@ -16,11 +16,11 @@ def bench():
  t=t.replace('`timescale 1ps/1fs','`timescale 1ns/1fs').replace('task tick;begin @(posedge core_clk);#3;', 'task tick;begin @(posedge core_clk);#0.003;')
  old='reg core_clk=0,hbm_clk=0;always #416.667 core_clk=~core_clk;initial begin #17;forever #512 hbm_clk=~hbm_clk;end'
  t=t.replace(old,f'''localparam real TICK=0.0520833333333333;
-localparam integer PREFIX={PREFIX},FPREFIX={PREFIX*16//17};
+localparam integer PREFIX={PREFIX},FPREFIX=0;
 reg core_clk=0,fec_clk=0,hbm_clk=0;
-always #(8*TICK)core_clk=~core_clk;always #(8.5*TICK)fec_clk=~fec_clk;
+always #(8*TICK)core_clk=~core_clk;initial begin wait(link_core_on);forever #(8.5*TICK)fec_clk=~fec_clk;end
 initial begin #0.017;forever #0.512 hbm_clk=~hbm_clk;end
-integer fc=0,cc=0;''')
+integer fc=0,cc=0;realtime link_origin;always @(posedge link_core_on)link_origin=$realtime;always @(posedge fec_clk)if(global_fc==0 && ($realtime-link_origin<0.4427075 || $realtime-link_origin>0.4427085))$fatal(1,"FEC_ORIGIN_PHASE");''')
  t=t.replace('reg local_read_v=0;reg[1:0]local_read_slot=0;reg[3:0]local_read_sector=0;','wire[7:0]local_read_v;wire[1:0]local_read_slot[0:7];wire[3:0]local_read_sector[0:7];\nwire[3:0]owned_valid[0:7];wire[19:0]owned_rows[0:7];wire[2:0]owned_count[0:7];wire[7:0]response_v,response_present;wire[4:0]response_row[0:7];wire[3:0]response_sector[0:7];')
  for h in range(8):
   t=t.replace(f'.local_read_v(local_read_v),.local_read_slot(local_read_slot),.local_read_sector(local_read_sector),.fetch_start(fetch_start),.read_v(read_v[{h}]),.read_row(read_row),.read_sector(read_sector)',f'.local_read_v(local_read_v[{h}]),.local_read_slot(local_read_slot[{h}]),.local_read_sector(local_read_sector[{h}]),.fetch_start(fetch_start),.read_v(1\'b0),.read_row(5\'b0),.read_sector(4\'b0),.owned_slot_valid(owned_valid[{h}]),.owned_slot_global_row(owned_rows[{h}]),.owned_row_count(owned_count[{h}]),.slot_response_v(response_v[{h}]),.slot_response_present(response_present[{h}]),.slot_response_row(response_row[{h}]),.slot_response_sector(response_sector[{h}])')
@@ -69,10 +69,10 @@ endmodule
  nodes=nodes.replace('ot_hbm_core_fec_frame_link link(.core_clk(core_clk),.rst_n(rst_n),.fec_clks({16{fec_clk}}),.phy_clks({6{core_clk}})', 'ot_hbm_core_fec_frame_link link(.core_clk(link_core_clk),.rst_n(link_rst_n),.fec_clks({16{link_fec_clk}}),.phy_clks({6{link_core_clk}})')
  nodes=nodes.replace('reg txstart=0', '''reg link_core_on=0,link_fec_on=0,link_rst_n=0;
  wire link_core_clk=core_clk&&link_core_on,link_fec_clk=fec_clk&&link_fec_on;
- always @(negedge core_clk)if(core_edge==PREFIX)link_core_on=1;
- always @(negedge fec_clk)begin if(global_fc==FPREFIX)link_fec_on=1;if(fc==8)link_rst_n=1;end
+ always @(negedge core_clk)if(core_edge==PREFIX)begin link_core_on=1;link_fec_on=1;end
+ always @(negedge fec_clk)begin if(fc==8)link_rst_n=1;end
  reg txstart=0''')
- nodes += "\nfor(genvar d=0;d<9;d=d+1)begin:g_diagnostic\n always @(posedge core_clk)begin #0.0000005;if(cc>450 && (g_node[d].node.packet_fault || g_node[d].node.qfault || (|g_node[d].node.bf) || (|g_node[d].node.rf) || g_node[d].node.tx_abort || g_node[d].node.rx_abort))begin\n $display(\"NODE_DETAIL C%0d n%0d program%b packet%b q%b kind%h bridge%h face%h tx%h rx%h ctl%h\",cc,d,g_node[d].node.program_fault,g_node[d].node.packet_fault,g_node[d].node.qfault,g_node[d].node.qkind,g_node[d].node.bf,g_node[d].node.rf,g_node[d].node.tx_cause,g_node[d].node.rx_cause,g_node[d].node.ctl);$fflush;end end\nend\n"
+ nodes += "\nfor(genvar d=0;d<9;d=d+1)begin:g_diagnostic\n always @(posedge core_clk)begin #0.0000005;if((cc>=508 && cc<=513)||(cc>=699 && cc<=707))begin $display(\"FRAME_EDGE C%0d n%0d tx%b rx%b expect%b seq%0d\",cc,d,txv[d],rxv[d],g_node[d].node.ctl[124],g_node[d].node.ctl[125+:16]);$fflush;end if(cc>450 && (g_node[d].node.packet_fault || g_node[d].node.qfault || (|g_node[d].node.bf) || (|g_node[d].node.rf) || g_node[d].node.tx_abort || g_node[d].node.rx_abort))begin\n $display(\"NODE_DETAIL C%0d n%0d program%b packet%b q%b kind%h bridge%h face%h tx%h rx%h ctl%h\",cc,d,g_node[d].node.program_fault,g_node[d].node.packet_fault,g_node[d].node.qfault,g_node[d].node.qkind,g_node[d].node.bf,g_node[d].node.rf,g_node[d].node.tx_cause,g_node[d].node.rx_cause,g_node[d].node.ctl);$fflush;end end\nend\n"
  t=t.replace('integer j,s,cididx,fetch_edge;','integer j,s,cididx,fetch_edge;\n'+nodes)
  assert 'images[0:24191]' in t
  return t
