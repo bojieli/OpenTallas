@@ -1,5 +1,5 @@
 {
-  "schema": "opentallas.hbm.static-program-target-map.v1",
+  "schema": "opentallas.hbm.static-program-target-map.v2",
   "transport": "ot_vms_calendar_host_static registered F20 engine frames -> ot_static_program_target local two-rung consumer",
   "direct_VM_targets": {
     "SW": 0,
@@ -223,10 +223,15 @@
       "configuration": "actual wide3x512 controller must define256b frame lowering"
     },
     "56": {
-      "owner": "DMA",
+      "owner": "COLL bridge49",
       "quadrant": "SW",
-      "payload_bits": 309,
-      "configuration": "actual wide controller must define256b frame lowering"
+      "payload_bits": 49,
+      "encoding": "raw512_packed10x49",
+      "source": "ot_hgi_coll_bridge_program",
+      "source_commit": "54118d70e",
+      "address": "global512word*2+half",
+      "descriptor_units": "control cycles",
+      "loops": 1
     },
     "64": {
       "owner": "SU",
@@ -311,10 +316,15 @@
       "configuration": "actual wide3x512 controller must define256b frame lowering"
     },
     "57": {
-      "owner": "DMA",
+      "owner": "COLL bridge49",
       "quadrant": "SE",
-      "payload_bits": 309,
-      "configuration": "actual wide controller must define256b frame lowering"
+      "payload_bits": 49,
+      "encoding": "raw512_packed10x49",
+      "source": "ot_hgi_coll_bridge_program",
+      "source_commit": "54118d70e",
+      "address": "global512word*2+half",
+      "descriptor_units": "control cycles",
+      "loops": 1
     },
     "65": {
       "owner": "SU",
@@ -399,10 +409,15 @@
       "configuration": "actual wide3x512 controller must define256b frame lowering"
     },
     "58": {
-      "owner": "DMA",
+      "owner": "COLL bridge49",
       "quadrant": "NW",
-      "payload_bits": 309,
-      "configuration": "actual wide controller must define256b frame lowering"
+      "payload_bits": 49,
+      "encoding": "raw512_packed10x49",
+      "source": "ot_hgi_coll_bridge_program",
+      "source_commit": "54118d70e",
+      "address": "global512word*2+half",
+      "descriptor_units": "control cycles",
+      "loops": 1
     },
     "66": {
       "owner": "SU",
@@ -487,10 +502,15 @@
       "configuration": "actual wide3x512 controller must define256b frame lowering"
     },
     "59": {
-      "owner": "DMA",
+      "owner": "COLL bridge49",
       "quadrant": "NE",
-      "payload_bits": 309,
-      "configuration": "actual wide controller must define256b frame lowering"
+      "payload_bits": 49,
+      "encoding": "raw512_packed10x49",
+      "source": "ot_hgi_coll_bridge_program",
+      "source_commit": "54118d70e",
+      "address": "global512word*2+half",
+      "descriptor_units": "control cycles",
+      "loops": 1
     },
     "67": {
       "owner": "SU",
@@ -567,6 +587,98 @@
       "payload_bits": 51,
       "PCW": 11,
       "scope": "actual PMAX8 paged programme; W44 mechanism historical"
+    },
+    "120": {
+      "owner": "ENGRAM COLL control256",
+      "quadrant": "SW",
+      "payload_bits": 238,
+      "transport_bits": 256,
+      "encoding": "raw_control256",
+      "source": "ot_hgi_coll_control256_program",
+      "source_owner": "/root/h_collective/static_program_join",
+      "address": "global512word*2+half = control ordinal",
+      "descriptor_units": "control cycles",
+      "base_alignment": 2,
+      "limit_exclusive": true,
+      "loops": 1,
+      "native_op_pc_bits": 13,
+      "host_base_bits": 12,
+      "host_limit_bits": 13,
+      "native_banks": 19,
+      "capacity_cycles": 2432,
+      "descriptor_to_launch_min_edges": 1218,
+      "first_control_after_raw_launch": 6,
+      "first_consumer_after_raw_launch": 7,
+      "status": "source-owned reserved; actual issuer gate and kernel binding required"
+    },
+    "121": {
+      "owner": "ENGRAM COLL control256",
+      "quadrant": "SE",
+      "payload_bits": 238,
+      "transport_bits": 256,
+      "encoding": "raw_control256",
+      "source": "ot_hgi_coll_control256_program",
+      "source_owner": "/root/h_collective/static_program_join",
+      "address": "global512word*2+half = control ordinal",
+      "descriptor_units": "control cycles",
+      "base_alignment": 2,
+      "limit_exclusive": true,
+      "loops": 1,
+      "native_op_pc_bits": 13,
+      "host_base_bits": 12,
+      "host_limit_bits": 13,
+      "native_banks": 19,
+      "capacity_cycles": 2432,
+      "descriptor_to_launch_min_edges": 1218,
+      "first_control_after_raw_launch": 6,
+      "first_consumer_after_raw_launch": 7,
+      "status": "source-owned reserved; actual issuer gate and kernel binding required"
+    },
+    "122": {
+      "owner": "ENGRAM COLL control256",
+      "quadrant": "NW",
+      "payload_bits": 238,
+      "transport_bits": 256,
+      "encoding": "raw_control256",
+      "source": "ot_hgi_coll_control256_program",
+      "source_owner": "/root/h_collective/static_program_join",
+      "address": "global512word*2+half = control ordinal",
+      "descriptor_units": "control cycles",
+      "base_alignment": 2,
+      "limit_exclusive": true,
+      "loops": 1,
+      "native_op_pc_bits": 13,
+      "host_base_bits": 12,
+      "host_limit_bits": 13,
+      "native_banks": 19,
+      "capacity_cycles": 2432,
+      "descriptor_to_launch_min_edges": 1218,
+      "first_control_after_raw_launch": 6,
+      "first_consumer_after_raw_launch": 7,
+      "status": "source-owned reserved; actual issuer gate and kernel binding required"
+    },
+    "123": {
+      "owner": "ENGRAM COLL control256",
+      "quadrant": "NE",
+      "payload_bits": 238,
+      "transport_bits": 256,
+      "encoding": "raw_control256",
+      "source": "ot_hgi_coll_control256_program",
+      "source_owner": "/root/h_collective/static_program_join",
+      "address": "global512word*2+half = control ordinal",
+      "descriptor_units": "control cycles",
+      "base_alignment": 2,
+      "limit_exclusive": true,
+      "loops": 1,
+      "native_op_pc_bits": 13,
+      "host_base_bits": 12,
+      "host_limit_bits": 13,
+      "native_banks": 19,
+      "capacity_cycles": 2432,
+      "descriptor_to_launch_min_edges": 1218,
+      "first_control_after_raw_launch": 6,
+      "first_consumer_after_raw_launch": 7,
+      "status": "source-owned reserved; actual issuer gate and kernel binding required"
     }
   },
   "map": "F20={PC12 bits19:8,target8 bits7:0}; F24 eight32b pieces; F28={limit13 bits24:12,base12 bits11:0}; F2c loops16; VM F00/F08 retains10/11 addresses",
@@ -575,5 +687,7 @@
     "external_two_rung_target": 8
   },
   "implementation_limits": "Only actual instantiated collars/controllers are consumers. This map reserves identifiers and does not claim missing engines, PHY or placement implemented. Every required target and word plane must be emitted and bound before release.",
-  "external_PCW": "8..12 typed local endpoint; refuses high address/limit bits before any narrow output; no alias"
+  "external_PCW": "8..12 typed local endpoint; refuses high address/limit bits before any narrow output; no alias",
+  "legacy_profile": "v1 DMA309 reservation56..59 was not an instantiated consumer; actual v2 bridge49 owns56..59. Historical v1 document remains in git.",
+  "unallocated_policy": "Only explicitly listed targets are allocated. No implicit use of gaps or truncating payloads. New allocations require registry revision and source consumer owner."
 }
