@@ -83,7 +83,7 @@
     "needs": [
      "verilator"
     ],
-    "pass_regex": "^RUN ng256_dpi_m0_a0_hier3tail_cp1_cs6_ls1 pass$"
+    "pass_regex": "^RUN ng256_dpi_m0_a0_hier3tail_cp1_cs6_ls1_pipe40 pass$"
    },
    {
     "name": "owned_serial_local_mut",
@@ -94,7 +94,7 @@
     "needs": [
      "verilator"
     ],
-    "fail_regex": "^RUN ng256_dpi_m0_a0_hier3tail_cp1_cs6_ls1_tm-ot_s81_hc_ctfx_cap fail$"
+    "fail_regex": "^RUN ng256_dpi_m0_a0_hier3tail_cp1_cs6_ls1_pipe40_tm-ot_s81_hc_ctfx_cap fail$"
    }
   ]
  },
