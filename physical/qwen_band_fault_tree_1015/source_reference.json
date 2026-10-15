@@ -1,0 +1,9 @@
+{
+  "original_path": "rtl/physical/ot_qwen_band_lanes_slots.sv",
+  "full_file_sha256": "e19571890ddde7371e0b747b7ed3c36aebe838c056a9a2f86e4b49eac0ff26a9",
+  "extracted_module_sha256": "3279cd2e647ac505f17443fb57727eb0200cefadb6521922689249d21584b261",
+  "scope": "unchanged current upperfaces registered quarterfunction; originalglobalf expression independently retained in miter",
+  "legacy_globalf_expression_original": "(&lnk_q) | |lf | (|(lpv ^ {16{lpv[0]}}))",
+  "reference_globalf_expression": "(&rawlnk)| |lf | (|(lpv^{16{lpv[0]}}))",
+  "global_expression_exact_after_input_rename": true
+}
