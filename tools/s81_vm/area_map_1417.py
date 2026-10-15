@@ -14,21 +14,27 @@ from map_measure import merge_lib, block
 ap=argparse.ArgumentParser()
 ap.add_argument('--root',type=Path,required=True)
 ap.add_argument('--out',type=Path,required=True)
-ap.add_argument('--kind',choices=['selector','data16','metadata26','benes16','idsel','iddata16','idmetadata26'],required=True)
+ap.add_argument('--kind',choices=['selector','data16','metadata26','benes16','idsel','iddata16','idmetadata26','a2control','a2header','a2payload','a2faultjoin'],required=True)
 ap.add_argument('--base',type=int,default=0)
 ap.add_argument('--dist',type=int,default=1)
 a=ap.parse_args()
 a.out.mkdir(parents=True,exist_ok=False)
-src=a.root/('tools/s81_vm/area_benes_rail.sv' if a.kind=='benes16' else ('tools/s81_vm/area_id_candidate.sv' if a.kind.startswith('id') else 'tools/s81_vm/area_stripe_candidate.sv'))
+src=a.root/('tools/s81_vm/area_benes_rail.sv' if a.kind=='benes16' else ('tools/s81_vm/area_id_native.sv' if a.kind.startswith('id') else ('tools/s81_vm/area_id_native_join.sv' if a.kind=='a2faultjoin' else ('tools/s81_vm/area_a2_controlled.sv' if a.kind.startswith('a2') else 'tools/s81_vm/area_stripe_candidate.sv'))))
 is_selector=a.kind in ('selector','idsel')
 top='s81_area_selector' if is_selector else ('s81_area_benes_stage' if a.kind=='benes16' else 's81_area_stripe')
 params={'NSRC':53,'BASE':a.base} if is_selector else ({'W':16,'DIST':a.dist} if a.kind=='benes16' else {'NSRC':53,'W':26 if 'metadata26' in a.kind else 16})
+if a.kind=='a2control':top='s81_a2_controller';params={'NSRC':53,'BASE':a.base}
+if a.kind=='a2faultjoin':top='s81_area_id_fault_join';params={}
+if a.kind=='a2header':top='s81_a2_w0_header';params={'NSRC':53}
+if a.kind=='a2payload':top='s81_a2_w0_payload';params={'NSRC':53}
 libdir=Path('/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM')
 libs=sorted(p for p in libdir.glob('*RVT_TT*') if 'FAKE' not in p.name and p.name.split('_')[1] in ['AO','OA','SIMPLE','SEQ','INVBUF'])
 assert len(libs)==5,[str(p) for p in libs]
 merged,libraries=merge_lib(libs);lib=a.out/'mapped.lib';lib.write_text(merged)
 (a.out/'input.sv').write_bytes(src.read_bytes())
-ys=f'read_verilog -sv {a.out}/input.sv\nchparam '+ ' '.join(f'-set {k} {v}' for k,v in params.items())+f' {top}\nhierarchy -top {top}\nsynth -top {top} -flatten -noabc\n'
+ys=f'read_verilog -sv {a.out}/input.sv\n'
+if params:ys+='chparam '+ ' '.join(f'-set {k} {v}' for k,v in params.items())+f' {top}\n'
+ys+=f'hierarchy -top {top}\nsynth -top {top} -flatten -noabc\n'
 ys+=f'write_json {a.out}/generic.json\ndffunmap\ndfflibmap -liberty {lib}\nabc -liberty {lib}\nclean\nstat -liberty {lib}\nwrite_json {a.out}/mapped.json\nwrite_verilog {a.out}/mapped.v\n'
 (a.out/'map.ys').write_text(ys)
 cmd=['yosys','-s',str(a.out/'map.ys')]
@@ -37,7 +43,8 @@ receipt=dict(schema='opentallas.s81.vm-area-stripe-map.v1',kind=a.kind,top=top,p
  returncode=r.returncode,source_sha256=hashlib.sha256(src.read_bytes()).hexdigest(),libraries=libraries,command=cmd,
  status='MAPPED_CELL_AREA_FF_PORTS_ONLY_NO_CTS_TIMING_OR_PHYSICAL_QUALIFICATION',area_calibration_scale=1.0,
  calibration='Enrolled DFFHQNx1 LEF1.08x0.27=0.2916um2 matcheslibertyarea0.2916; no divide16',
- benched_by='results/arch/s81_vm_area_1417/'+('benes_rail.json' if a.kind=='benes16' else ('idstripe_proof.json' if a.kind.startswith('id') else 'stripe_proof.json')))
+ benched_by='results/arch/s81_vm_area_1417/'+('benes_rail.json' if a.kind=='benes16' else ('native_id_proof.json' if a.kind.startswith('id') else ('a2_controlled_proof.json' if a.kind.startswith('a2') else 'stripe_proof.json'))))
+if a.kind=='a2faultjoin':receipt['benched_by']='results/arch/s81_vm_area_1417/fault_join_proof.json'
 if r.returncode==0:
  gen=json.loads((a.out/'generic.json').read_text())['modules'][top]
  net=json.loads((a.out/'mapped.json').read_text())['modules'][top]
