@@ -30,9 +30,9 @@ element queue is at its top). v1 (07:27) is superseded by this revision.
 - IO band on the S edge: 3 x `qfd_io_serdes`, `qfd_io_collective`, `qfd_io_xfifo`, `qfd_io_ucie` (in-package peer).
 
 ## 2. Spine slot table (7.3 mm wide)
-- W sub-area, per band b at the band's tile centroid, centred on the port column: `qfd_sp_band_lanes` 777.6 x 1,131.84,
+- W sub-area, per band b at the band's tile centroid, centred on the port column: `qfd_sp_band_lanes` 803.52 x 1,131.84,
   `qfd_port_tiles_b` 1,036.8 x 2,462.4, `qfd_sp_res_ser` 777.6 x 518.4. E edge: `qfd_port_tiles_b_f1` 1,036.8 x 2,462.4
-  at the band centroid (E-field block words land without crossing the spine; one 512-b pfrag word per band crosses).
+  at the band centroid (E-field block words land without crossing the spine; four full-rate TCUT7 words per band half cross as 2050 bits (2048 data + valid + fault)).
 - E sub-area, N -> S: die link (UCIe x64 PHY `ot_qkvd_ucie_x64_phy` 777.6 x 777.6 on the N edge, **MX**; `qfd_d2d_rom`
   777.6 x 518.4 below it, **MX**, FDI faces abutted across 4.32 um; `qfd_ckbump` + `qfd_rstsync` W of the PHY);
   `qfd_sp_su64_sfu` 3,240 x 3,672 with the constant group E of it (8 `qfd_crom_g`, 8 `qfd_su_cbuf_g`, `qfd_seq_su`) and
@@ -128,3 +128,11 @@ must never be inserted as phantom ports. Q exporter/producer adapters must be ch
 The existing `C13` source-frozen smoke is a geometry diagnostic (61297767d). It is not the compiler scheduled production
 die: no relays, old interfaces, incomplete native binding. Actual OpenROAD placement proves only its 1,630-instance
 outline/overlap/on-track scope. Full die timing and exact static end-to-end cost remain open.
+
+## Current native qualification gaps (2026-10-14 takeover)
+
+C14 source `6284141cf` is a frozen structural diagnostic: DP tree rehosting preserves the exact ordered AST and exports the physical host manifest. Its full relay allocator is running; neither prere lay center-distance improvements nor pin files qualify the production die. The no-relay C13 case passed placement legality (1630 instances, zero overlaps/outside) but pin access failed on the ordinary POWER net `one_`; proper tie/PG integration remains open.
+
+The native tile wrapper still requires real pin registers and reset; the element owner is implementing them and reporting two extra tile data edges and two edges per node hop. These must enter the compiler schedule and measured cost. The tap candidate has positive TT/FF timing but boundary clock spread86.6ps exceeds80ps: no final pin publication until repaired. VM requires32 separately clocked commit-observer leaves in regions3..6 in addition to448 existing closed leaves.
+
+Static CDC local pins are assigned in `static_cdc/qfd_static_ch546.json`:216x151.2um, R0, exact15 real ports, two independent clock entries. Native kits may use these local pins; twelve absolute die sites await the source-bound producer/consumer map. Legacy monolithic padded IO interfaces do not establish the new native fit.
