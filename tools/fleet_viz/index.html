@@ -22,7 +22,7 @@ h1{margin:0;font-size:clamp(18px,2.4vw,26px);font-weight:800;letter-spacing:-.02
 h1 .g{background:linear-gradient(90deg,var(--accent),#a78bfa 60%,var(--hot));-webkit-background-clip:text;background-clip:text;color:transparent}
 .sub{color:var(--dim);font-size:13px;margin-top:4px}
 .dsum{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:6px;font-size:12px;color:var(--dim)}
-.dsum span.d{white-space:nowrap;cursor:pointer}.dsum b{color:var(--fg,#e6edf3)}.dsum .o{color:#fbbf24}.dsum .c{color:#4ade80}.dsum .n{color:#f472b6}
+.dsum span.d{white-space:nowrap;cursor:pointer}.dsum b{color:var(--fg,#e6edf3)}.dsum .do{color:#fbbf24}.dsum .dc{color:#4ade80}.dsum .dn{color:#f472b6}
 .live{display:inline-flex;align-items:center;gap:8px;font:600 12px var(--mono);color:var(--ink);padding:6px 10px;border:1px solid var(--line);border-radius:999px;background:#0b1020cc}
 .dot{width:8px;height:8px;border-radius:50%;background:var(--hot);box-shadow:0 0 10px var(--hot);animation:pulse 1.6s infinite}
 .live.stale .dot{background:var(--faint);box-shadow:none;animation:none}
@@ -937,7 +937,7 @@ function dieText(r) {   // contract membership: die label + role + owner stream 
 function nativeText(r) { return (r.native || []).map(c => `${c.kind}: ${c.verdict || '?'} (${c.path || ''})`).join('; '); }
 function renderDieSum() {
   const D = ED && ED.designs; if (!D) return;
-  setHTML($('dieSum'), Object.entries(D).map(([k, s]) => `<span class="d" data-k="${esc(k)}" title="${esc(s.revision + ' · lead ' + (s.lead || '') + ' · in flight ' + s.in_flight + ', failed ' + s.failed + ', superseded ' + s.superseded + (s.complete ? '' : ' · contract incomplete'))}"><b>${esc(s.label)}</b> <span class="o">${s.open} open</span> / <span class="c">${s.closed} closed</span> / <span class="n">${s.not_started} not started</span></span>`).join(''));
+  setHTML($('dieSum'), Object.entries(D).map(([k, s]) => `<span class="d" data-k="${esc(k)}" title="${esc(s.revision + ' · lead ' + (s.lead || '') + ' · in flight ' + s.in_flight + ', failed ' + s.failed + ', superseded ' + s.superseded + (s.complete ? '' : ' · contract incomplete'))}"><b>${esc(s.label)}</b> <span class="do">${s.open} open</span> / <span class="dc">${s.closed} closed</span> / <span class="dn">${s.not_started} not started</span></span>`).join(''));
 }
 function renderElements() {
   if (!ED) return;
