@@ -1,0 +1,71 @@
+{
+  "native_profile": "slot160_21_drain5",
+  "issuer_source_commit": "79037c152",
+  "issuer_sha256": "25dcd51a52b5ff57aac1804725844f707db9d953a1e4895eaf3c3af4a3659bcc",
+  "issuer_RTL_changed": false,
+  "raw_images_changed": false,
+  "packed_catalogues_changed": false,
+  "image_identity_proof": "image_sha_comparison.json pinsall18new/priorraw+packedSHA256 andassertsbyteidentity",
+  "initialization": {
+    "target": 120,
+    "NBANKS": 21,
+    "actual_native64x512_macros": 21,
+    "actual_capture_leaves": 21,
+    "clock_roots": 43,
+    "raw_frames_per_image": 2688,
+    "native512words_per_image": 1344,
+    "base": 0,
+    "limit": 2574,
+    "loops": 1,
+    "host_descriptor_gap_edges": 1346
+  },
+  "drain": {
+    "new_zero_control_indices": [
+      2569,
+      2570,
+      2571,
+      2572,
+      2573
+    ],
+    "new_zero_controls_per_first_run": 5,
+    "remaining_unused_zero_controls": 114,
+    "prior_limit2569_receipt": "results/arch/hcoll_control256_slot160_1015/receipt.json preserved unchanged asissuertransportonly"
+  },
+  "native_measured": {
+    "images": 18,
+    "layers": [
+      1,
+      14
+    ],
+    "nodes_per_layer": 9,
+    "each_first_run_controls": 2574,
+    "each_base640_replay_controls": 1934,
+    "exact_control_bits_each": 256,
+    "total_exact_controls": 81144,
+    "total_exact_bits": 20772864,
+    "zero_drain_controls_checked_including_replays": 180,
+    "first_control_output_after_raw_launch_capture": 6,
+    "publication": "onecontrolperedge,no gaps",
+    "done": "bench assertsdoneexactlywithlastpublishedcontrol",
+    "last_control_index": 2573
+  },
+  "logical_done_edge": {
+    "launch_capture": 399,
+    "first_control_output": 405,
+    "last_control_and_done_FF": 2978,
+    "calculation": "399+6+(2574-1); derivedfrommeasuredfirstedge6,continuous2574operationsandnativeexactlastdoneassert",
+    "expected_decoder_last_FF": 2977,
+    "decoder_timing_scope": "modelprovidedbystatic_ring,notmeasuredbyissuercomponentgate"
+  },
+  "terminal": {
+    "unit": "oth-ubuntu-3964274-1792062135",
+    "host": "ot-agidock128",
+    "tool": "ot-run",
+    "exit": 0,
+    "admitted_memory_GB": 4,
+    "binary_reused": "source-frozen21bankbinaryfrom unit3906682; no rebuild/restart/networkduplication"
+  },
+  "host_registry": "h_vm bda862f73 native_profile slot160_21_drain5,capacity2688/guard1346",
+  "qualification": "source-bound issuer/descriptor completion gate only; no network/FEC/CDC/decoder arithmetic/kernel/WKV/physical/productionrate claim",
+  "network_status": "ownerstatic_ring diagnosingnative9nodefailureC492nodes1..3; thisissuerpassdoesnotresolveoroverrideit"
+}
