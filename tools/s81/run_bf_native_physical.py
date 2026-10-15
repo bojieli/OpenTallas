@@ -7,7 +7,7 @@ ROOT=Path(__file__).resolve().parents[2]
 sys.path.insert(0,str(ROOT/'tools'))
 import run_abi3_physical as flow
 
-SOURCES=['rtl/s81/ot_s81_bf_native.sv','rtl/common/ot_prefix.sv',
+SOURCES=['rtl/s81/ot_s81_bf_seam.sv','rtl/s81/ot_s81_bf_native.sv','rtl/common/ot_prefix.sv',
  'rtl/hdc/ot_hdc_cg.sv','rtl/hdc/ot_hdc_delay.sv','rtl/hdc/ot_hdc_fp32_mul_pipe.sv',
  'rtl/hdc/ot_hdc_fpu.sv','rtl/proto/ot_fp32_add_rne_pipe.sv']
 SOURCES += ['rtl/v41rom/'+n+'.sv' for n in (
