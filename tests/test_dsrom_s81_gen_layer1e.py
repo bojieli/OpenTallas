@@ -135,3 +135,13 @@ def test_station_pin_alternation_halves_density():
     for face_x in (0.0,):
         lys = [r[1] for r in after if r[2][0] <= 1e-6]
         assert lys.count('M4') == lys.count('M6') == 512
+
+
+def test_station_footprint_grant_depth_only(monkeypatch):
+    monkeypatch.setattr(F, 'STN_FOOTPRINTS', {'dsfd_hstnh_1024': (36.288, 53.976)})
+    a = F.Inst('s1', 'dsfd_hstnh_1024', 1000.08, 2000.16, 17.256, 53.976, kind='stn')
+    blk = F.Inst('blk', 'x', 1018.0, 2000.16, 30.0, 60.0)          # output side taken -> grows toward the input
+    m = {'insts': [a, blk], 'buses': []}
+    F._apply_station_footprints(m)
+    assert (a.w, a.h) == (36.288, 53.976) and a.x + a.w <= 1000.08 + 17.256 + 1e-6
+    assert m['stn_footprints']['flipped'] == 1
