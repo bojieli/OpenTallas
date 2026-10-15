@@ -61,7 +61,8 @@ def model() -> dict:
          'physical DSCOLL endpoint/lane mapping, reset and clock phi-R checks'])
 
 def vm_events(slots: tuple[Slot, ...], *, identity: int,
-              reservations: dict[tuple[int, int], tuple[int, int]]) -> list[dict]:
+              reservations: dict[tuple[int, int], tuple[int, int]],
+              drain_delays: dict[tuple[int, int], int]) -> list[dict]:
     """Require compiler-selected staging locations; never invent storage slots.
 
     Emit SOURCE PIN edges. Uniform native VM observes each write ten edges later.
@@ -71,14 +72,19 @@ def vm_events(slots: tuple[Slot, ...], *, identity: int,
     if not 0 <= identity < 256: raise ValueError('VM identity must fit tag8')
     required={(s.seq,r) for s in slots for r in range(4)}
     if set(reservations) != required: raise ValueError('missing/extra VM staging reservations')
+    if set(drain_delays) != required: raise ValueError('missing/extra VM bank drain calendar')
     result=[]
     for s in slots:
         for r,row in enumerate(s.rows):
             lane,storage=reservations[s.seq,r]
+            drain=drain_delays[s.seq,r]
+            if drain not in (0,1,2): raise ValueError('VM bank drain delay')
             if not 0 <= row < 16384: raise ValueError('VM row')
             if not 0 <= lane < 3 or not 0 <= storage < 3:
                 raise ValueError('uniform native VM supports three capture lanes/storage slots')
             result.append(dict(source=44+r, edge=s.commit+1, row=row, mask=65535,
                                tag=identity, capture_lane=lane, storage_slot=storage,
-                               observation_edge=s.commit+11, sequence=s.seq, rank=r))
+                               sram_visibility_edge=s.commit+9+drain,
+                               observation_edge=s.commit+11+drain, sequence=s.seq, rank=r,
+                               bank_drain_delay=drain))
     return result
