@@ -1,0 +1,5 @@
+PASS canonical Qswiglu actual exp/div/multiply/BF16 16 C12 lanes 80 operand SRAMs 16 programme SRAMs 24 protected VM SRAMs 6 IOprogramme SRAMs actualtap14 real scalar-route capture words=3072 exact_VM_committed_words=3072 one_start=1 actual_IO_rows=432 actual_arithmetic_rows=368 no_manual_prefetch_drain=1 golden=actualcanonicalhgiMachine
+- rtl/test/hbm_accel/generic/tb_hgi_sfu_qswiglu_scheduled.sv:131: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 4us; walltime 59.256 s; speed 71.105 ns/s
+- Verilator: cpu 59.250 s on 1 threads; allocated 76 MB

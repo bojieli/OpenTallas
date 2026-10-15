@@ -38,6 +38,7 @@ sources+=(rtl/hbm_accel/generic/peers/ot_hgi_sfu_scheduled_engine.sv
  "$M/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v"
  "$M/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v")
 defs=("-DSFU_IMAGE=\"$OUT/image.hex\"" "-DSFU_DATA_DIR=\"$OUT/data\"")
+if [ "${SFU_IO_OVERLAP:-0}" = 1 ];then defs+=(-DSFU_IO_ROWS=432 -DSFU_SCALAR_EDGE=0);fi
 if [ "${MUT_PHASE:-0}" = 1 ];then defs+=(-DOT_SFU_STATIC_PHASE_MUTANT);fi
 "${VERILATOR:-$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator}" --binary --timing -O2 -j 8 -CFLAGS -O0 -Wno-fatal -Wno-TIMESCALEMOD "${defs[@]}" --top-module tb_hgi_sfu_qswiglu_scheduled --Mdir "$OUT/obj" "${sources[@]}" > "$OUT/build.log" 2>&1
 "$OUT/obj/Vtb_hgi_sfu_qswiglu_scheduled" > "$OUT/run.log" 2>&1
