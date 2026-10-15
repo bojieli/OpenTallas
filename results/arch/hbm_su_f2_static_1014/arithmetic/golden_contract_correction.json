@@ -1,5 +1,5 @@
 {
-  "status": "golden contract corrected; native pass pending",
+  "status": "terminalPASS correctedcontract nativebaseline base+3failingmutants",
   "changed_words": 680,
   "all_changes": "80000000 to 00000000",
   "compare_policy": "strict32bit bitwise unchanged; no tolerance or zero masking",
@@ -19,6 +19,6 @@
     "host": "ot-epyc1tb",
     "session": 17500,
     "result": "/tmp/hbm-su-arithmetic-stageclk-1015/validate_v3",
-    "status": "live"
+    "status": "terminalPASS unit868419,393216outputs,786432checks"
   }
 }

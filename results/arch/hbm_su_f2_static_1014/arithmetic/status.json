@@ -19,10 +19,10 @@
     "local_lane_id": "0..127; compilerquarterbases explicit",
     "affine_lowering": "84/104 fixture records including repeatedprofiles; 20 unsupported records explicit",
     "canonical_profile_counts": "actual coverage_ds33 + coverage_qwen12 =45 requiredVMcomponentrecords;28lowered,17explicitunsupported",
-    "fixed_issue": "64issues/op,32768words/op,12ops,393216total; no dynamicissue",
+    "fixed_issue": "64issues/op,32768words/op,31arithmeticcases,1015808outputs; nodynamicissue",
     "canonical_report": "arithmetic/canonical/canonical_lowering.json",
     "canonical_indexed_policy": "MDESCindexed scalar flags unresolved actualTOPK nativecalendar; never copy pre-resolvedfixturebase as finaladdress",
-    "side_function_ports": "side_fn and side_fn_out are real global lane0 registered ci_sfu/cs_sfu fields; original scalar SIDE owner joining"
+    "side_function_ports": "Actual global lane0 ci_sfu/cs_sfu. Separate true native scalar head proof1a291c29e/42a5cc2ed passed with actualSIDE; fullgrid canonicalSIDEprogramme join remainsopen"
   },
   "stage_clocks": {
     "entries_per_lane": 8,
@@ -31,7 +31,7 @@
     "insertion_max_register_bits_per_root": 5808,
     "broadcast_roots": 64,
     "broadcast_bits_per_root": 13936,
-    "related": "1:1 phase0; real CTS and registercensus remainpending",
+    "related": "1:1 logicalphase0; actual Yosys sinkcensus PASS; routedCTS/insertion pending",
     "sink_census": "PASS actual Yosys all3KINDs <=11532,zero unknownclocks; noCTS"
   },
   "SRAM_contract": {
@@ -84,8 +84,9 @@
       "host": "ot-epyc4",
       "unit": "oth-ubuntu-1795385-1792060675",
       "session": 79737,
-      "status": "live full31-case affine/control/BF16 expansion;1015808words plusstrictcyclechecks",
-      "result": "/tmp/hbm-su-arithmetic-all-affine-1015/run"
+      "status": "TERMINAL PASS native31cases+3expectedfailmutants",
+      "result": "/tmp/hbm-su-arithmetic-all-affine-1015/run",
+      "exit": 0
     }
   ],
   "open": [
@@ -129,5 +130,44 @@
     "max_clock_sinks": 13902,
     "physical": false
   },
-  "memory_demand_model": "canonical_memory_demand.json:16/28loweredrecords need>1 narrowwordrow perbank;7need>1physicalmacroline; wideinterfaceUNIMPLEMENTED"
+  "memory_demand_model": "canonical_memory_demand.json:16/28loweredrecords need>1 narrowwordrow perbank;7need>1physicalmacroline; wideinterfaceUNIMPLEMENTED",
+  "baseline_expanded_native_exact_pass": true,
+  "baseline_expanded_cases": 31,
+  "baseline_expanded_outputs": 1015808,
+  "baseline_expanded_strict_output_readback_checks": 2031616,
+  "baseline_expanded_exact_calendar_pass": true,
+  "baseline_expanded_mutants": {
+    "ADDR": "FAIL expected",
+    "DATA": "FAIL expected",
+    "PHASE": "FAIL expected; all1015808 outputs retained and1015808 timingerrors"
+  },
+  "baseline_expanded_job": {
+    "host": "ot-epyc4",
+    "unit": "oth-ubuntu-1795385-1792060675",
+    "session": 79737,
+    "exit": 0,
+    "source": "/tmp/hbm-su-arithmetic-all-affine-1015/source",
+    "receipts": "full_affine_gate",
+    "wall_s": 524.519
+  },
+  "physical_mapping": {
+    "kind0": {
+      "area_um2": 5539.457,
+      "cells": 42400,
+      "mappedFF": 5823,
+      "status": "sourcequalified mapping only; noCTS"
+    },
+    "kind1": {
+      "area_um2": 18429.8,
+      "cells": 132865,
+      "mappedFF": 27959,
+      "status": "sourcequalified mapping only; noCTS"
+    },
+    "kind2": {
+      "area_um2": 22171.489,
+      "cells": 155237,
+      "mappedFF": 38970,
+      "status": "sourcequalified mapping only; noCTS"
+    }
+  }
 }
