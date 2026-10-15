@@ -1,0 +1,82 @@
+{
+  "basis": "Source-exact final024127 ODB SHA f803a67058944cf548d0d1da4c8336b8c8f9db132d8b3589358dd14f88862f19; actual TT pin records and actual BUF24 driver chains",
+  "actual_defects": {
+    "macroC": {
+      "clock_pin_um": [
+        109.308,
+        225.42
+      ],
+      "driver_um": [
+        74.196,
+        133.65
+      ],
+      "driver_master": "BUFx24_ASAP7_75t_R",
+      "slew_ps": 155,
+      "wire_manhattan_lower_bound_um": 126.882
+    },
+    "boundary_phase": {
+      "min_ps": 381.161,
+      "max_ps": 465.822,
+      "spread_ps": 84.661,
+      "early_leaf": "clknet_leaf_247_clk_regs",
+      "late_leaf": "clknet_leaf_429_clk_regs"
+    }
+  },
+  "candidate_macro_repair": "Move existing single-macro driver to an actual legal placement site immediately left of its clock pin; no extra stage or cell; verify actual STA slew/phase and row/overlap legality.",
+  "candidate_regional_repair": "If measured phase still exceeds75ps design target, add one noninverting existing-library BUF24 on selected fast register-leaf nets only, then re-estimate actual parasitics and remeasure. No new clock source/port, no latency edge, no generated clock or SDC change.",
+  "bounds": {
+    "clock_balance_target_ps": 78,
+    "owner_phase_limit_ps": 80,
+    "max_extra_clock_buffers": 32,
+    "cell_master": "BUFx24_ASAP7_75t_R",
+    "cell_size_um": [
+      1.62,
+      0.27
+    ],
+    "max_added_cell_area_um2": 13.9968,
+    "expected_local_added_delay_ps": [
+      25,
+      45
+    ],
+    "synth_clock_sinks_delta": 0,
+    "max_regional_reattachments": 64,
+    "max_nearby_parent_distance_um": 80,
+    "long_delivery_threshold_um": 100
+  },
+  "requirements": [
+    "Actual TT/FF/SS library-cell diagnostic before physical retry",
+    "No branch with macro or nonclock loads may receive register phase buffer",
+    "Reject polarity-changing cells and excess phase/transition",
+    "All inserted cells legalize with real row/macro geometry",
+    "Recheck real setup/hold/reset and all actual pin/PG rectangles",
+    "No changed shared-flow files or historical kits",
+    "Register and macro phases must both fit full all-sink span; macro-only leaf may be balanced only with explicit measured cell load/phase checks.",
+    "Regional reattachment cannot connect to a descendant or change clock owner; only same-level existing BUF24 regional trunks in the same core_clk tree are eligible."
+  ],
+  "qualification": "Model/candidate only; no clock fix or timing closure claimed yet.",
+  "candidate_macro_phase_balance": "If actual all-registers timing census includes macro FF clocks at earliest phase, allow separate noninverting BUF24 stage on a macro-only leaf (one or two actual SRAM clocks), with measured slew <=120ps and macro arrival <=register mean+30ps at all corners. This is distinct from register-leaf balance; no mixed-load branch permitted.",
+  "measured_diagnostic_update": {
+    "unit": "oth-ubuntu-1748551-1792059653",
+    "macro_driver_and_dummy_relocation": "Both placed legally near actual C pin",
+    "after_16_phase_buffers_spread_ps": 78.07666,
+    "verdict": "Refused original75ps internal goal at16-cell budget; owner80ps met but model scope not complete",
+    "next_model": "Use78ps internal goal (2ps tighter than owner) and32-cell hard ceiling for source-independent regional leaf count. Preserve all failed diagnostics."
+  },
+  "SW6_measured_regional_defect": {
+    "run": "vms_bank_static_rg6wg2_swquant_1015-20261015-024859",
+    "TT_all_spread_ps": 193.232422,
+    "TT_boundary_spread_ps": 186.033753,
+    "late_leaf": "clkbuf_leaf_424_clk_regs",
+    "late_leaf_um": [
+      7.074,
+      6.21
+    ],
+    "regional_parent": "clkbuf_6_49__f_clk_regs",
+    "parent_um": [
+      278.64,
+      130.68
+    ],
+    "path": "Two resizer wire buffers carry clock across bank from far-east regional node to southwest leaf.",
+    "repair_model": "Statically reconnect abnormally long FF leaf delivery to nearest compatible same-level BUF24 regional trunk in same sole clock. Require >100um old distance, at least2x distance improvement and new distance<=80um; preserve waveform/polarity, remove only private unused wire buffers. Remeasure all actual clocks and data setup/hold after change."
+  }
+}

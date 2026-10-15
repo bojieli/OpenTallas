@@ -1,0 +1,291 @@
+{
+  "name": "vms_bank_wdecode_rg7wg3_1015",
+  "top": "hfd_vms_bank_wdecode_rg7wg3",
+  "kind": "tile",
+  "sources": [
+    "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_wdecode_rg7wg3.sv",
+    "rtl/hbm_accel/generic/vm/static/ot_vms_bank_static_wdecode.sv",
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v"
+  ],
+  "clock_port": "clk",
+  "reset_ports": [
+    "rst_n"
+  ],
+  "pins": {
+    "N": [
+      "rq0",
+      "rr0",
+      "rq4",
+      "rr4",
+      "dq",
+      "dq_done",
+      "wq2",
+      "wq_done2",
+      "clk",
+      "rst_n",
+      "bid",
+      "sid",
+      "rslot_v",
+      "rslot",
+      "wslot_v",
+      "wslot",
+      "status"
+    ],
+    "S": [
+      "rq1",
+      "rr1",
+      "rq5",
+      "rr5",
+      "kq",
+      "kq_done",
+      "xq",
+      "xq_done",
+      "eg"
+    ],
+    "E": [
+      "rq2",
+      "rr2",
+      "rq6",
+      "rr6",
+      "wq0",
+      "wq_done0",
+      "xq2",
+      "xq2_done"
+    ],
+    "W": [
+      "rq3",
+      "rr3",
+      "pq",
+      "pr",
+      "wq1",
+      "wq_done1"
+    ]
+  },
+  "pin_ranges": {
+    "rq0": [
+      5.4,
+      11.163
+    ],
+    "rr0": [
+      11.163,
+      98.28
+    ],
+    "rq4": [
+      98.28,
+      104.043
+    ],
+    "rr4": [
+      104.043,
+      191.16
+    ],
+    "dq": [
+      201.96,
+      294.511
+    ],
+    "dq_done": [
+      294.511,
+      294.84
+    ],
+    "wq2": [
+      294.84,
+      387.391
+    ],
+    "wq_done2": [
+      387.391,
+      387.72
+    ],
+    "rq1": [
+      5.4,
+      10.1
+    ],
+    "rr1": [
+      10.1,
+      81.145
+    ],
+    "rq5": [
+      81.145,
+      85.845
+    ],
+    "rr5": [
+      85.845,
+      156.89
+    ],
+    "kq": [
+      156.89,
+      234.571
+    ],
+    "kq_done": [
+      234.571,
+      234.847
+    ],
+    "xq": [
+      234.847,
+      311.145
+    ],
+    "xq_done": [
+      311.145,
+      311.422
+    ],
+    "eg": [
+      311.422,
+      387.72
+    ],
+    "rq2": [
+      5.4,
+      10.442
+    ],
+    "rr2": [
+      10.442,
+      86.664
+    ],
+    "rq6": [
+      86.664,
+      91.706
+    ],
+    "rr6": [
+      91.706,
+      167.929
+    ],
+    "wq0": [
+      167.929,
+      251.269
+    ],
+    "wq_done0": [
+      251.269,
+      251.566
+    ],
+    "xq2": [
+      251.566,
+      333.423
+    ],
+    "xq2_done": [
+      333.423,
+      333.72
+    ],
+    "rq3": [
+      5.4,
+      10.442
+    ],
+    "rr3": [
+      10.442,
+      86.664
+    ],
+    "pq": [
+      86.664,
+      171.191
+    ],
+    "pr": [
+      171.191,
+      250.083
+    ],
+    "wq1": [
+      250.083,
+      333.423
+    ],
+    "wq_done1": [
+      333.423,
+      333.72
+    ],
+    "clk": [
+      191.16,
+      191.487
+    ],
+    "rst_n": [
+      191.487,
+      191.815
+    ],
+    "bid": [
+      191.815,
+      192.796
+    ],
+    "sid": [
+      192.796,
+      193.451
+    ],
+    "rslot_v": [
+      193.451,
+      193.778
+    ],
+    "rslot": [
+      193.778,
+      194.76
+    ],
+    "wslot_v": [
+      194.76,
+      195.087
+    ],
+    "wslot": [
+      195.087,
+      196.069
+    ],
+    "status": [
+      196.069,
+      201.96
+    ]
+  },
+  "outline": {
+    "w": 393.12,
+    "h": 339.12,
+    "exact": true
+  },
+  "layer_cap": "M5",
+  "recipe": 2,
+  "macros": [
+    {
+      "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
+      "count": 3
+    }
+  ],
+  "route": {
+    "pd": 0.5,
+    "period_ps": 833.333,
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "hold_margin_ns": 0.03,
+    "pin_balance": {
+      "group_max": 32,
+      "h": "M4",
+      "v": "M5"
+    },
+    "macro_halo_um": 5.4
+  },
+  "job": {
+    "owner": "Codex:H-VM static bank native physical",
+    "branch": "codex/hbm-vm-static-hub-1014",
+    "tag": "static1015",
+    "purpose": "Distinct registered compiler write decode/balanced mux and measured leaf clock delivery repair; same actual3SRAMs, fixed cycles and pin ABI; no historical kit changes or route admission.",
+    "extra_paths": [
+      "rtl/hbm_accel/generic/vm/static"
+    ],
+    "benched_by": "results/arch/hbm_vm_bank_static_1015/write_decode_functional/receipt.json",
+    "record_to": "results/rtl/ref_tile/vms_bank_wdecode_rg7wg3_1015",
+    "benches": [
+      {
+        "name": "all_native_groups_exact_and_mutants",
+        "cmd": "mkdir -p {RUN}/bench_inputs && cp rtl/hbm_accel/generic/vm/static/ot_vms_bank_static_wdecode.sv physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v {RUN}/bench_inputs/ && bash rtl/hbm_accel/generic/vm/static/physical/run_physical_banks_wdecode.sh {RUN}/bench/allgroups {RUN}/bench_inputs",
+        "expect": "pass",
+        "threads": 1,
+        "peak_ram_gb": 2,
+        "min_count_regex": "eachgroup_reads=(\\d+)"
+      }
+    ]
+  },
+  "orfs_vars": {
+    "POST_IO_PLACEMENT_TCL": "rtl/hbm_accel/generic/vm/static/physical/native_bank_pin_audit.tcl",
+    "POST_CTS_TCL": "rtl/hbm_accel/generic/vm/static/wdecode/native_bank_clock_postcts.tcl"
+  },
+  "params": {},
+  "children": [],
+  "inter": [],
+  "io_flop_at_pins": {
+    "cols": 4,
+    "allow_none": true
+  },
+  "inhold": true,
+  "outhold": true,
+  "keep_pin_regs": true,
+  "pin_reg_split": true,
+  "hold_pad": {
+    "cell": "HB2xp67_ASAP7_75t_R"
+  }
+}
