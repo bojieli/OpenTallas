@@ -37,6 +37,10 @@ def export(v, model):
         masters=pins, port_join=model.get('port_join', {}),
         port_split=model.get('port_split', {}),
         relay_equal_groups=model.get('relay_equal_groups', {}),
+        generation_environment={k: val for k, val in sorted(os.environ.items())
+            if k.startswith(('OT_SPLIT_', 'OT_TP8_', 'OT_TREE_')) or k in
+            ('OT_RELAY_SKIP', 'OT_RELAY_GATE', 'OT_RESET_GATE', 'OT_PIN_ALIGN_GATE')},
+        res_train_bind=model.get('res_train_bind'),
         centroid_only_pins=[dict(instance=i, port=p, xy=list(xy))
                             for (i,p),xy in (getattr(v,'PIN_POS_EXTRA',None) or {}).items()],
         constraints=dict(per_hop_um=500, cut_max=.60,
