@@ -243,11 +243,14 @@ W = W[:hdr_end + 4] + '''    // bf-arch: the partial outputs leave from the hard
 ''' + W[hdr_end + 4:]
 i = W.index('        genvar cm;\n        for (cm = 0; cm < NB; cm = cm + 1) begin : g_col')
 j = W.index('        end\n', W.index('.qy_bkf(c_qy_bkf[cm]));', i)) + len('        end\n')
-rep = '        // replicated column interface: one pin set per column face (west: column 0, east: column 1)\n'
+rep = '        // Independent pin registers on both column faces, fixed +CPIN cycle.\n'
+fields = ('issue', 'a_ctr', 'i1_v', 'i1_bk', 'i1_bf', 'i1_t', 'i2x_q0', 'i2x_e0', 'i2x_q1', 'i2x_e1', 'ze_d', 'so_idx', 'so_n', 'so_row')
+rep += '        localparam integer CW = 1+14+3+CTW+2*256+2*10+1+2*5*NSEG+16*NSEG;\n'
 for c in (0, 1):
-    for s in ('issue', 'a_ctr', 'i1_v', 'i1_bk', 'i1_bf', 'i1_t', 'i2x_q0', 'i2x_e0', 'i2x_q1', 'i2x_e1', 'ze_d', 'so_idx', 'so_n'):
-        rep += f'        assign c{c}_{s} = c_{s};\n'
-    rep += f'        assign c{c}_so_row = c_so_row[16*NSEG*{c} +: 16*NSEG];\n'
+    inputs = [f'c_{s}' if s != 'so_row' else f'c_so_row[16*NSEG*{c} +: 16*NSEG]' for s in fields]
+    outputs = [f'c{c}_{s}' for s in fields]
+    rep += f'        ot_s81_bf_seam #(.W(CW), .PIPE(CPIN)) u_seam{c} (.clk(clk), .rst_n(rst_n),\n'
+    rep += '            .d({' + ', '.join(inputs) + '}), .q({' + ', '.join(outputs) + '}));\n'
 rep += '        assign c_qy_bkf = c_qy_bkf_in;\n'
 rep += "        assign pv_e = '0; assign pval_e = '0; assign prow_e = '0; assign pseg_e = '0; assign pnseg_e = '0; assign perr_e = '0; assign ppos_e = '0;\n"
 W = W[:i] + rep + W[j:]
