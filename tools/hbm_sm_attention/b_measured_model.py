@@ -39,10 +39,39 @@ def merge_cycles(nodes):
     return c
 
 
+Q_TOK, Q_ATT_LAYER, Q_L = 1258136.0, 4 * 660.1, 36
+
+
+def qwen_model(d):
+    """Qwen3-8B TP4 T8192 on HBM (pathfinding): per die per layer 2 KV heads x (QK, PV), 4 q heads per KV head on 4 SM x
+    columns.  Busiest SM: QK op 256 rows a head, PV 2 ops x 128 tokens a head (4 token streams each).
+    publish MODEL 8 words/cycle: an op leaves 4 streams x 128 dims x 4 heads = 2048 words; merge MODEL as DS (SU, 512 lanes):
+    256 nodes x (128 dims x 4 heads) per KV head; 'smerge' variant merges the 4 stream nodes inside the SM first (lever)."""
+    qk = max(o["cycles"]["span"] for o in d["ops"] if o["kind"] == "qk")
+    pv = max(o["cycles"]["span"] for o in d["ops"] if o["kind"] == "pv")
+    res = dict(measured=dict(qk_op=qk, pv_op=pv))
+
+    def merge(nodes, words):
+        c, n = 0, nodes
+        while n > 1:
+            c += math.ceil((n // 2) * words / 512) + 16
+            n = math.ceil(n / 2)
+        return c
+    for var, pub, nodes in (("streams_published", 2 * 2048 / 8, 256), ("smerge", 2 * 512 / 8, 64)):
+        for pf in (False, True):
+            fa = FA - (FIRST if pf else 0)
+            layer = 2 * (fa + qk) + 2 * (fa + 2 * pv + pub + merge(nodes, 512))
+            tok = Q_TOK + Q_L * (layer - Q_ATT_LAYER)
+            res[f"{var}_{'prefetch' if pf else 'exposed'}"] = dict(layer=round(layer, 1), a_layer=Q_ATT_LAYER,
+                tok_s=round(CLK / tok, 1), vs_A=round(Q_TOK / tok - 1, 4))
+    return res
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("ds640")
     ap.add_argument("ds128")
+    ap.add_argument("--qwen", help="qwen8192 bench JSON (Qwen3-8B TP4 on HBM, pathfinding)")
     ap.add_argument("--out")
     a = ap.parse_args()
     d640, d128 = json.load(open(a.ds640)), json.load(open(a.ds128))
@@ -76,6 +105,8 @@ def main():
     kvw = 6 * 40 * 30
     out["extra_kv_writes"] = dict(stores_per_token=6 * 40, dma_busy_added=kvw,
                                   critical_path_upper_bound_tok_s=round(CLK / (out["exposed"]["token_cycles"] + kvw), 1))
+    if a.qwen:
+        out["qwen"] = qwen_model(json.load(open(a.qwen)))
     s = json.dumps(out, indent=1)
     print(s)
     if a.out:

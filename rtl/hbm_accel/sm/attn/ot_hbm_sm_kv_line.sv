@@ -37,7 +37,8 @@
 // Faults (sticky, fail closed where the golden value would not be a normal number): KV8 NaN code (S.1111.111), e = 255,
 // a non-zero dequantised value outside the BF16 normal range; KV4 negative or NaN scale; a beat requested while idle.
 // Mutants (bench negative controls): MUT 1 = KV8 lane j uses block j/2 (wrong scale); MUT 2 = wrong beat half (beat t reads
-// the codes of beat t ^ 1); MUT 3 = KV4 E2M1 subnormal code read as normal.
+// the codes of beat t ^ 1); MUT 3 = KV4 E2M1 subnormal code read as normal; MUT 4 = head-dim-128 QK beat
+// takes its 4 rows in reverse sub-row order.
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_hbm_sm_kv_line #(
     parameter integer MUT = 0
@@ -241,7 +242,7 @@ module ot_hbm_sm_kv_line #(
     genvar j;
     generate for (j = 0; j < 64; j = j + 1) begin : g_lane
         localparam integer B8 = (MUT == 1) ? (j / 2) % 16 : j / 4;
-        localparam integer Q = j / 16, JJ = j % 16;
+        localparam integer Q = (MUT == 4) ? 3 - j / 16 : j / 16, JJ = j % 16;   // MUT 4: rows of a 4-row beat reversed
         wire [7:0] c8 = p2_h ? rdat[512 + 8*j +: 8] : rdat[8*j +: 8];
         wire [3:0] c4 = p2_h ? rdat[256 + 4*j +: 4] : rdat[4*j +: 4];
         wire [16:0] r8 = dq8(c8, p2_sc[8*B8 +: 8]);
