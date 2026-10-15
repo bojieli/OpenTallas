@@ -9,7 +9,7 @@ sizes=[]
 for k,p in enumerate(profiles):
  w=outer_record(k,k//2,query_base_sector=(k//2)*1024,P_base_sector=4096+(k//2)*2048)
  (a.out/f'outer{k}.hex').write_text(''.join(f'{x:056x}\n' for x in w+[0]*(256-len(w))))
- reads=128 if p['mode']=='qk' else16*p['T']//64
+ reads=128 if p['mode']=='qk' else 16*p['T']//64
  ne=[0]*900
  for c in range(343,343+reads):ne[c]=(255<<25)|(sum(3<<(b*3) for b in range(8))<<41)
  (a.out/f'ne{k}.hex').write_text(''.join(f'{x:056x}\n' for x in ne))
