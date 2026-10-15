@@ -1,5 +1,5 @@
 {
- "name": "qfd_tt_ctlm_tree-tr3-COMMIT",
+ "name": "qfd_tt_ctlm_tree-tr3-4ad7c0a32",
  "block": "qfd_tt_ctlm_tree",
  "ref_tile": true,
  "owner": "Claude:q14-r8-compute",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 12,
  "source": {
   "branch": "claude/q14-r8-ttree",
-  "commit": "COMMIT",
+  "commit": "4ad7c0a32d483225f87b08753905597c7de129cd",
   "extra_paths": [
    "physical/qfd_tt_ctlm_split",
    "rtl/test/tb_qfd_tt_ctlm_i_psram.sv",
@@ -114,7 +114,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qfd_tt_ctlm_tree/qfd_tt_ctlm_tree-tr3-COMMIT"
+   "to": "results/rtl/ref_tile/qfd_tt_ctlm_tree/qfd_tt_ctlm_tree-tr3-4ad7c0a32"
   }
  ],
  "cycles_added": 0,
