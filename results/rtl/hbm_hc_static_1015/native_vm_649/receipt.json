@@ -1,0 +1,26 @@
+{
+  "scope": "actual4SID32VMbanks96SRAM12taps\u2192HCresidualproducer; not full arithmetic or physical/nativechip qualification",
+  "source_sha256": {
+    "rtl/test/tb_hgi_hc_residual_vm_static.sv": "4d57c556482a5ef85a3db9c1df79f2600d8a6b038c826b7f8980a6ee037b4dca",
+    "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_residual_vm_static.sv": "7c9d159338edceb7d2c3686600d3a7fb44f684d57de23799502b4232871d5b75",
+    "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_tap.sv": "cc7c0d00ead994fb66360a00da7acd4b70e8a2f9f6e2a3b8013a9672d1ab29de",
+    "rtl/hbm_accel/generic/vm/static/ot_vms_bank_static.sv": "7b2e2fbafead30cbabc427303bb339da070645637af9d1a69f0dbdaa0a88ee53",
+    "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v": "6530a2ef457f260a942e067b556ff55d75f931350af5807cfd6b05cd5e1ff380"
+  },
+  "positions": 8,
+  "K": 20480,
+  "sectors": 20480,
+  "waves": 640,
+  "request_to_response_output_edges": 18,
+  "response_consumer_capture": 19,
+  "first_wave_emission": 22,
+  "wave_interval": 4,
+  "m0": {
+    "exit_code": 0,
+    "log_sha256": "0a10d95bfcc3a8ebf4904e7dc2d95a4de3e0abc751c29ac3bb695c2c5da31910"
+  },
+  "m1": {
+    "exit_code": 1,
+    "log_sha256": "d70a4c047cc54fa2c81bd6115423ff6b7349a1685f048fac7546028dbb13ee52"
+  }
+}
