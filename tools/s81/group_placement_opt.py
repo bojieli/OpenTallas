@@ -52,7 +52,11 @@ class Model:
     def points(self,n,port,bits):
         it=self.insts[n];w,h,pp=self.pins[it.master]
         if abs(w-it.w)>0.002 or abs(h-it.h)>0.002:raise ValueError('LEF and placement outline disagree')
-        names=self.plan.get('pins',{}).get(n+'|'+port,PA.default_names(n,port,bits))
+        names=self.plan.get('pins',{}).get(n+'|'+port)
+        if names is None:
+            part=PA._PSL.match(port);base=part.group(1) if part else port;lo=int(part.group(2)) if part else 0
+            alias=self.plan.get('port_aliases',{}).get(it.master,{}).get(base)
+            names=alias[lo:lo+bits] if alias is not None else PA.default_names(n,port,bits)
         return [PA.place(it,w,h,pp[k]) for k in names]
 
     def legal(self,moves):

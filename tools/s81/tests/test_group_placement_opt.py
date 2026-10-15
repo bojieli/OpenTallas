@@ -50,6 +50,13 @@ class GeometryTests(unittest.TestCase):
         self.assertEqual(candidates,[])
         self.assertTrue(tradeoffs)
 
+    def test_source_exported_port_aliases_resolve_actual_lef_pins(self):
+        p=plan();p['buses']=[['aliased','data',2,[['left','logical[1:2]'],['move','logical[1:2]']]]]
+        p['port_aliases']={'tile':{'logical':['p[0]','p[1]','p[2]','p[3]']}}
+        m=self.model(p)
+        self.assertEqual(m.missing,[])
+        self.assertAlmostEqual(m.metrics(m.edges)['sum_bit_um'],200.)
+
     def test_internal_group_positions_preserved(self):
         m=self.model()
         self.assertTrue(m.legal({'left':(50,50),'move':(50,50)}))
