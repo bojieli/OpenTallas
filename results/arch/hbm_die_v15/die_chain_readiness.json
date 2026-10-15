@@ -1,0 +1,165 @@
+{
+ "schema": "opentallas.hbm.v15-die-chain-readiness.v1",
+ "ref": "582297e6e3579ea329b14d57d64a81d86b16ff1e",
+ "rule": "die GRT/STA counts only on a REAL-view die (owner 10-13); no pin-only/stub masters (owner 10-14 08:05)",
+ "masters": 35,
+ "instances": 77,
+ "masters_with_view": [
+  "ot_hbm3e_phy_v41x_aw30_e8p5"
+ ],
+ "masters_without_view": {
+  "hfd_hgi_vms_static_SW": [
+   "hb_vms_SW"
+  ],
+  "ot_hbm_svc_static_vm_delivery": [
+   "delivery_SW",
+   "delivery_SE",
+   "delivery_NW",
+   "delivery_NE"
+  ],
+  "hfd_hgi_vms_static_SE": [
+   "hb_vms_SE"
+  ],
+  "hfd_hgi_vms_static_NW": [
+   "hb_vms_NW"
+  ],
+  "hfd_hgi_vms_static_NE": [
+   "hb_vms_NE"
+  ],
+  "hfd_ckgen": [
+   "hb_ckgen"
+  ],
+  "hfd_svc_v15_SW_s0": [
+   "svc_SW_s0",
+   "svc_NW_s0"
+  ],
+  "hfd_svc_v15_SW_s1": [
+   "svc_SW_s1",
+   "svc_NW_s1"
+  ],
+  "hfd_svc_v15_SW_s2": [
+   "svc_SW_s2",
+   "svc_NW_s2"
+  ],
+  "hfd_svc_v15_SW_s3": [
+   "svc_SW_s3",
+   "svc_NW_s3"
+  ],
+  "hfd_svc_v15_SW_s4": [
+   "svc_SW_s4",
+   "svc_NW_s4"
+  ],
+  "hfd_svc_v15_SW_s5": [
+   "svc_SW_s5",
+   "svc_NW_s5"
+  ],
+  "hfd_svc_v15_SW_s6": [
+   "svc_SW_s6",
+   "svc_NW_s6"
+  ],
+  "hfd_svc_v15_SW_s7": [
+   "svc_SW_s7",
+   "svc_NW_s7"
+  ],
+  "hfd_svc_v15_SE_s0": [
+   "svc_SE_s0",
+   "svc_NE_s0"
+  ],
+  "hfd_svc_v15_SE_s1": [
+   "svc_SE_s1",
+   "svc_NE_s1"
+  ],
+  "hfd_svc_v15_SE_s2": [
+   "svc_SE_s2",
+   "svc_NE_s2"
+  ],
+  "hfd_svc_v15_SE_s3": [
+   "svc_SE_s3",
+   "svc_NE_s3"
+  ],
+  "hfd_svc_v15_SE_s4": [
+   "svc_SE_s4",
+   "svc_NE_s4"
+  ],
+  "hfd_svc_v15_SE_s5": [
+   "svc_SE_s5",
+   "svc_NE_s5"
+  ],
+  "hfd_svc_v15_SE_s6": [
+   "svc_SE_s6",
+   "svc_NE_s6"
+  ],
+  "hfd_svc_v15_SE_s7": [
+   "svc_SE_s7",
+   "svc_NE_s7"
+  ],
+  "hfd_svc_v15_SE_s8": [
+   "svc_SE_s8",
+   "svc_NE_s8"
+  ],
+  "hfd_hgi_vm_calendar_SW": [
+   "calendar_SW"
+  ],
+  "ot_hbm_vm_lg_static_split": [
+   "lg_SW_0",
+   "lg_SW_1",
+   "lg_SW_2",
+   "lg_SE_0",
+   "lg_SE_1",
+   "lg_SE_2",
+   "lg_NW_0",
+   "lg_NW_1",
+   "lg_NW_2",
+   "lg_NE_0",
+   "lg_NE_1",
+   "lg_NE_2"
+  ],
+  "hfd_hgi_vm_calendar_SE": [
+   "calendar_SE"
+  ],
+  "hfd_hgi_vm_calendar_NW": [
+   "calendar_NW"
+  ],
+  "hfd_hgi_vm_calendar_NE": [
+   "calendar_NE"
+  ],
+  "ot_vms_status4_static": [
+   "vm_status4"
+  ],
+  "ot_hfd_coll_q3_static": [
+   "hb_coll_SW"
+  ],
+  "ot_hfd_coll_q2_static": [
+   "hb_coll_SE",
+   "hb_coll_NW",
+   "hb_coll_NE"
+  ],
+  "ot_hgi_sfu_scheduled_engine": [
+   "hb_sfu_SW",
+   "hb_sfu_SE",
+   "hb_sfu_NW",
+   "hb_sfu_NE"
+  ],
+  "ot_hgi_dma_back_static": [
+   "hb_dbk_SW",
+   "hb_dbk_SE",
+   "hb_dbk_NW",
+   "hb_dbk_NE"
+  ],
+  "ot_hbm_idx_scheduled_static": [
+   "hb_idx"
+  ]
+ },
+ "leaf_views_only": {
+  "ot_hbm_vm_lg_static_split": "leaf ot_hbm_vm_lg_static_bank CLOSED (vm_lg_bank_hc_static_1015); parent composition view absent"
+ },
+ "verdict": "NOT LAUNCHED: 34/35 v15 masters (73/77 instances) lack any physical view; a die chain now would be a placeholder run. grt27_p2 (old model) already gave the diagnostic cause (M6 33,013 of 51,123 overflow).",
+ "unblock_order": [
+  "VM bank RG5/RG7 kits (NW pin B, CTS spread) -> route",
+  "LG split parent + calendar + hub/ring/replay leaves",
+  "svc_v15 bands + delivery",
+  "COLL q2/q3 static parents",
+  "SFU/DMA back/IDX static kits with >=4 LG port groups",
+  "compact SM tile (H-ELEM-A)"
+ ]
+}
