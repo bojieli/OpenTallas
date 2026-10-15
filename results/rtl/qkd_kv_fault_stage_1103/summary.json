@@ -65,5 +65,10 @@
     "Root reviews source/kit/gate before any closure-loop submission",
     "Actual routed TT/FF/DRC and native launch/capture audit",
     "Current die parent all-signal-pin physical binding and reach audit"
-  ]
+  ],
+  "cts_source_snapshot": {
+    "path": "cts_source_snapshot.json.gz",
+    "uncompressed_sha256": "d1615619d2b80397922632dae272c9e47a15c81305237d6778be94564685bad7",
+    "uncompressed_bytes": 3309925
+  }
 }
