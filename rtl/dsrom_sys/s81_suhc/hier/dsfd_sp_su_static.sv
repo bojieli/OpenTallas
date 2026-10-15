@@ -127,14 +127,26 @@ module dsfd_sp_su_static #(
     wire [S_RD*30-1:0] p_rf;
     wire [S_WR-1:0] p_uv;
     wire rst_c = srs;
+    wire moe_iv,moe_ov,moe_fault;
+    wire [13:0]moe_ir,moe_or;
+    wire [511:0]moe_od;
+    reg moe_availability_fault;
+    // Explicit compiler operand pulse; missing operands latch a fault and never
+    // defer, cancel, or replay the arithmetic. Slots 0..6 are E0 through E6.
+    ot_s81_su_moe_sum_static u_moe(.ck({6{sk}}),.rst_n(rst_c),.i_v(moe_iv),
+        .i_e(dd[0][3583:0]),.i_present(dv[0][6:0]),.i_row(moe_ir),.o_v(moe_ov),.o_d(moe_od),
+        .o_row(moe_or),.fault(moe_fault));
+    always @(posedge sk or negedge rst_c)
+        if(!rst_c)moe_availability_fault<=0;
+        else if(moe_iv && dv[0][6:0]!=7'h7f)moe_availability_fault<=1;
     ot_s81_su_calendar_ctl u_calendar (
         .clk(sk), .rst_n(srs), .arm(arm), .calendar_valid(calendar_valid),
         .calendar_cycle(calendar_cycle), .calendar_word(calendar_word), .cycle(cycle),
         .rq_v(c_rq_v), .rq_row(c_rq_row), .rs_v(rs_v),
         .wq_v(wq_v), .wq_row(wq_row), .wq_mask(wq_mask),
         .dn_st(dst[0]), .dn_kind(dkd[0]), .dn_gsel(dgs[0]),
-        .dn_fp4(df4[0]), .dn_jid(dji[0]), .done(done), .done_tag(done_tag),
-        .up_fu(ufu[0]), .up_fo(ufo[0]), .up_alive(ual[0]),
+        .dn_fp4(df4[0]), .dn_jid(dji[0]), .moe_v(moe_iv), .moe_row(moe_ir), .done(done), .done_tag(done_tag),
+        .up_fu(ufu[0]|moe_fault|moe_availability_fault), .up_fo(ufo[0]), .up_alive(ual[0]),
         .up_den(ude[0]), .up_rdy(urd[0]), .up_rjid(urj[0]),
         .fault(flt), .fault_code(fcode), .running(online));
     initial begin
@@ -728,6 +740,8 @@ module dsfd_sp_su_static #(
                 if (s >= W0 && s < W0 + WS && o_v[s - W0]) begin
                     ua_q[14 * s +: 14] <= o_a[14 * (s - W0) +: 14]; um_q[16 * s +: 16] <= o_m[16 * (s - W0) +: 16];
                     ud_q[512 * s +: 512] <= o_d[512 * (s - W0) +: 512];
+                end else if (t == 0 && s == 0 && moe_ov) begin
+                    ua_q[13:0] <= moe_or; um_q[15:0] <= 16'hffff; ud_q[511:0] <= moe_od;
                 end else if (t == 0 && s == 0 && rx_v) begin
                     ua_q[13:0] <= rx_a; um_q[15:0] <= rx_m; ud_q[511:0] <= rx_d;
                 end else if (t == 0 && s == 1 && rx_v2) begin
@@ -740,7 +754,7 @@ module dsfd_sp_su_static #(
         always @(posedge sk or negedge rst[t]) begin
             if (!rst[t]) begin uv_q <= 0; ufu_q <= 0; ufo_q <= 0; ual_q <= 0; ude_q <= 0; urd_q <= 0; urj_q <= 0; end
             else begin
-                for (s = 0; s < S_WR; s = s + 1) uv_q[s] <= uv[t + 1][s] || (s >= W0 && s < W0 + WS && o_v[s - W0]) || (t == 0 && s == 0 && rx_v) || (t == 0 && s == 1 && rx_v2);
+                for (s = 0; s < S_WR; s = s + 1) uv_q[s] <= uv[t + 1][s] || (s >= W0 && s < W0 + WS && o_v[s - W0]) || (t == 0 && s == 0 && (rx_v || moe_ov)) || (t == 0 && s == 1 && rx_v2);
                 ufu_q <= ufu[t + 1] || o_fu || (t == 0 && rx_fu); ufo_q <= ufo[t + 1] || o_fo || (t == 0 && rx_fo);
                 ual_q <= ual[t + 1] && o_alive && (t != 0 || rx_alive);
                 ude_q <= ude[t + 1] && o_den; urd_q <= urd[t + 1] || o_rdy; urj_q <= o_rdy ? o_rjid : urj[t + 1];

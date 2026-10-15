@@ -16,12 +16,13 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 HIER = 'rtl/dsrom_sys/s81_suhc/hier/'
 OPS = dict(QN=0, KV=1, QB=2, SW=3, SE=4, SO=5, GQ=6, GK=7,
-           RA=8, RB=9, QR=10, RW=11, CN=12, IK=13)
+           RA=8, RB=9, QR=10, RW=11, CN=12, IK=13, MOE=14)
 SOURCES = {k: [HIER+'dsfd_sp_su_static.sv', HIER+'ot_s81_su_calendar_ctl.sv'] for k in OPS}
 for ks, files in [('QN GQ', ['ot_s81_su_qn.sv']), ('KV GK', ['ot_s81_su_kv.sv','ot_s81_su_qn.sv']),
                   ('QB', ['ot_s81_su_qb.sv']), ('SW', ['ot_s81_su_sw.sv','ot_s81_su_qb.sv']),
                   ('SE SO', ['ot_s81_su_sm.sv']), ('RA RB QR RW', ['ot_s81_su_rxt.sv']),
-                  ('CN IK', ['ot_s81_su_kv.sv','ot_s81_su_cn_ik.sv'])]:
+                  ('CN IK', ['ot_s81_su_kv.sv','ot_s81_su_cn_ik.sv']),
+                  ('MOE', ['ot_s81_su_moe_sum_static.sv'])]:
     for k in ks.split(): SOURCES[k] += [HIER+f for f in files]
 
 COMMON_SOURCES = ['rtl/hdc/ot_hdc_fastfp.sv',
@@ -64,6 +65,7 @@ COMMON_SOURCES = ['rtl/hdc/ot_hdc_fastfp.sv',
  'rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_tile.sv',
  'rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_norm_lg.sv']
 COMMON_SOURCES += [
+    HIER+'ot_s81_su_moe_sum_static.sv',
     'physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v',
     'physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v']
 for paths in SOURCES.values():
@@ -73,7 +75,7 @@ for paths in SOURCES.values():
 def row_counts(k, count):
     """Actual production dimensions, including separately masked exponent writes."""
     if not isinstance(count, int) or count < 1: raise ValueError('positive count required')
-    if k in ('QN','KV','SO','GQ','GK','CN','IK') and count!=1: raise ValueError('fixed-shape count must be one')
+    if k in ('QN','KV','SO','GQ','GK','CN','IK','MOE') and count!=1: raise ValueError('fixed-shape count must be one')
     if k=='SE' and count>40: raise ValueError('softmax storage NVMAX40 exceeded')
     return {
         'QN': (1,80,40), 'KV': (5,32,26), 'QB': (1,64*count,64*count),
@@ -81,7 +83,7 @@ def row_counts(k, count):
         'SO': (5,512,256), 'GQ': (1,80,0), 'GK': (1,32,0),
         'RA': (1,count,count), 'RB': (1,2*count,count),
         'QR': (5,4*count,4*count), 'RW': (1,count,1),
-        'CN': (5,32,48), 'IK': (5,32,8),
+        'CN': (5,32,48), 'IK': (5,32,8), 'MOE': (0,7*80,80),
     }[k]
 
 def digest(p): return hashlib.sha256((ROOT/p).read_bytes()).hexdigest()
@@ -96,7 +98,7 @@ def inventory():
                                          canonical_capacity_proven=False),
             control_replica_count=1,physical_slot=None,physical_qualified=False),
         vm=dict(read_slots=16,write_slots=16,response_vm_edges=12,
-                commit_vm_edges='11 + bank-prefix (0..2)',phase_lowering_required=True,
+                commit_observed_vm_edges='11 + bank-prefix (0..2)',macro_write_visibility_edges=None,phase_lowering_required=True,
                 source='rtl/dsrom_sys/s81_ph/vm/dsfd_sp_vm_static.sv',
                 source_sha256=digest('rtl/dsrom_sys/s81_ph/vm/dsfd_sp_vm_static.sv')),
         operations={k: dict(kind=v, counts_order=['parameters','operand_reads','masked_writes'],
@@ -145,6 +147,11 @@ def compile_program(program):
         put(start,752,1,1); put(start,753,4,OPS[k]); put(start,757,2,job['gain_set'])
         put(start,759,1,int(job['fp4'])); put(start,760,8,job['id'])
         put(end,768,1,1); put(end,769,8,job['tag'])
+        mo=events.get('moe_operands',[])
+        if len(mo)!=(80 if k=='MOE' else 0): raise ValueError('incomplete MOE operand pulse coverage')
+        for pulse in mo:
+            if not start<=pulse['cycle']<=end: raise ValueError('MOE pulse outside job')
+            put(pulse['cycle'],789,1,1);put(pulse['cycle'],790,14,pulse['output_row'])
         for r in reads:
             c=r['cycle']; s=r['slot']
             if not start<=c<=end or not 0<=s<16: raise ValueError('read outside job')
