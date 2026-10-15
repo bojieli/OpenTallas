@@ -4,9 +4,9 @@
 // response/ready signal enters the production controller. Raw row/column
 // commands and all 128 PC sector addresses must match the compiled profile.
 module tb_static_kv_timing;
- localparam N=128,CYCLES=2200;
+ localparam N=128,CYCLES=7000;
  reg ck=0;always #0.512 ck=~ck;
- reg rst=0,dv=0,go=0;reg [9:0] first=0;reg [10:0] last=0;
+ reg rst=0,dv=0,go=0,desired=0;reg [9:0] first=0;reg [10:0] last=0;
  reg [N-1:0] reserved=0;
  wire [N-1:0] pcv,prv,pf,psf,cv,rv,ff,sf;
  wire [4:0] pcb[0:N-1],pcc[0:N-1],prb[0:N-1],cb[0:N-1],cc[0:N-1],rb[0:N-1];
@@ -18,9 +18,9 @@ module tb_static_kv_timing;
  genvar p;
  generate for(p=0;p<N;p=p+1)begin:pcs
   wire unused0,unused1,unused2,unused3,unused4;
-  ot_qkd_static_kv_timing #(.ENABLE(1),.PC(p%32),.REF_PHASE(((p%32)*118)/32),.PROFILE(1))profile(
+  ot_qkd_static_kv_timing #(.ENABLE(1),.PC(p%32),.REF_PHASE(((p%32)*118)/32),.PROFILE(2))profile(
    .clk(ck),.rst_n(rst),.desc_v(dv),.desc_r(),.desc_row(19'd67),.desc_n(last),.desc_first(first),.go(go),.next_posted(1'b0),
-   .reserved_rd(1'b0),.reserved_static_col(1'b0),.reserved_write_col(1'b0),.schedule_fault(psf[p]),.row_v(prv[p]),.row_prio(),.row_gnt(1'b1),.row_op(pro[p]),.row_bank(prb[p]),.row_row(prr[p]),
+   .reserved_rd(desired),.reserved_static_col(1'b0),.reserved_write_col(1'b0),.schedule_fault(psf[p]),.row_v(prv[p]),.row_prio(),.row_gnt(1'b1),.row_op(pro[p]),.row_bank(prb[p]),.row_row(prr[p]),
    .col_v(pcv[p]),.col_bank(pcb[p]),.col_col(pcc[p]),.busy(),.ref_fault(pf[p]),
    .wr_v(1'b0),.wr_bank(5'b0),.wr_col(5'b0),.wr_r(),.col_we(),.wr_rd(1'b0),.col_aq(),
    .s_context(347'b0),.col_context(),.s_v(1'b0),.s_we(1'b0),.s_bank(5'b0),.s_col(5'b0),.s_row(19'b0),.s_r(),.col_sr(),.s_pop());
@@ -32,6 +32,7 @@ module tb_static_kv_timing;
    .s_context(347'b0),.col_context(),.s_v(1'b0),.s_we(1'b0),.s_bank(5'b0),.s_col(5'b0),.s_row(19'b0),.s_r(),.col_sr(),.s_pop());
  end endgenerate
  task automatic drive(input integer t);
+  desired=t<1200||(t>=1264&&(t-1264)%13==0);
   dv=(t==32||t==1200);go=(t==96||t==1264);first=t<1200?10'd0:10'd512;last=t<1200?11'd256:11'd768;
  endtask
  task automatic bad(input string msg);
@@ -78,6 +79,6 @@ module tb_static_kv_timing;
    @(negedge ck);
   end
   if(errors)begin $display("FAIL staticKV128 timing errors%0d mode%0d",errors,mode);$fatal(1);end
-  $display("PASS staticKV128 timing PCs128 K256 V256consumerOrder sectors%0d period1024ps profilecycles2200 exactProductionReplay noCreditPort",total);$finish;
+  $display("PASS staticKV128 timing PCs128 K256 V256consumerOrder sectors%0d period1024ps profilecycles7000 Vpace13 exactProductionReplay noCreditPort",total);$finish;
  end
 endmodule

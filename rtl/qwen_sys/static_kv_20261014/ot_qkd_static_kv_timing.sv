@@ -4,7 +4,8 @@
 // No read-credit input, credit counter, consumer-ready or backpressure state.
 // Production RD events issue only at the compiler's reserved_rd cycles; a slot
 // without JEDEC permission faults and never reschedules that operation.
-// PROFILE=1 is a bench/compiler calibration vehicle, never a production mode.
+// PROFILE1 discovers maximum legal slots; PROFILE2 samples a paced request
+// calendar. Both are compiler/bench vehicles, never production modes.
 // Descriptor range [desc_first,desc_n) permits K 0..255 and V 512..767 without
 // reading unused head g=1. Normal acquisition is read-only: SROW/WR_EN/AQ_RD=0.
 module ot_qkd_static_kv_timing #(
@@ -20,7 +21,7 @@ module ot_qkd_static_kv_timing #(
   parameter integer T_RCD = 19, T_RP = 16, T_RAS = 28, T_RTP = 6, T_CCDL = 3,
   parameter integer T_RRDS = 3, T_RRDL = 4, T_FAW = 15, T_RFC = 342, T_RFCPB = 196,
   parameter integer T_REFI = 3808, T_REFIPB = 118, T_RREFD = 8,
-  parameter integer PROFILE = 0, // bench-only: discover legal fixed slots; production must use compiled reserved_rd
+  parameter integer PROFILE = 0, // 0 strict production,1 maximum-legal compiler,2 paced compiler
   parameter integer REF_PHASE = 0,
   parameter integer IDLE0 = 3, IDLE1 = 4, IDLE2 = 2, IDLE3 = 5,
   parameter integer IDLE4 = 1, IDLE5 = 6, IDLE6 = 0, IDLE7 = 7,
@@ -51,6 +52,9 @@ module ot_qkd_static_kv_timing #(
   input  wire        s_v, input wire s_we, input wire [4:0] s_bank, input wire [4:0] s_col, input wire [18:0] s_row,
   output wire        s_r, output wire col_sr, output wire s_pop
 );
+`ifdef SYNTHESIS
+  initial if(PROFILE!=0)$error("Compiler profile cannot be a native physical master");
+`endif
   localparam [2:0] PRE=0, ACT=1, RD=2, REFAB=4, PREALL=5, REFPB=6;
   generate if (!ENABLE) begin : off
     assign desc_r=0; assign row_v=0; assign row_prio=0; assign row_op=0; assign row_bank=0;
@@ -294,16 +298,16 @@ module ot_qkd_static_kv_timing #(
     wire s_col_ok = s_hit && ccdl_z[sb[1:0]] && !(|(sb_oh & blk)) && !rd_block &&
                     (swe ? (W && |(sb_oh & rcdw_z) && rtw_c == 0) : (|(sb_oh & rcd_z) && wtr_c == 0));
     wire legal_static = s_col_ok && (sprio || (!rd_ok_base && !(W && wr_ok0)));
-    assign s_go = legal_static && (PROFILE != 0 || reserved_static_col);
+    assign s_go = legal_static && (PROFILE == 1 || reserved_static_col);
     wire legal_rd = rd_ok0 && !s_go && !(|(rd_oh & s_pblk));
-    assign rd_ok = legal_rd && (PROFILE != 0 || reserved_rd);
+    assign rd_ok = legal_rd && (PROFILE == 1 || reserved_rd);
     reg fault_schedule;
     assign schedule_fault = fault_schedule;
     always @(posedge clk or negedge rst_n)
       if (!rst_n) fault_schedule <= 0;
       else if (PROFILE == 0 && ((reserved_rd && !legal_rd) || (reserved_static_col && !legal_static) || (reserved_write_col && !legal_write) || (({1'b0,reserved_rd}+{1'b0,reserved_static_col}+{1'b0,reserved_write_col})>1))) fault_schedule <= 1;
     wire legal_write = wr_ok0 && !s_go && !(|(hb_oh & s_pblk));
-    assign wr_ok = legal_write && (PROFILE != 0 || reserved_write_col);
+    assign wr_ok = legal_write && (PROFILE == 1 || reserved_write_col);
     // ---- row: refresh > forced PRE > ACT ahead (sets k, k+1) > PRE finished -----------
     function automatic [4:0] act_bank(input integer c, input [2:0] kk);
       act_bank = {(c >= 4) ? kk + 3'd1 : kk, 2'(c & 3)};
