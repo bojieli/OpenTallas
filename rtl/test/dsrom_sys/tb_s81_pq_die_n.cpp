@@ -64,6 +64,8 @@ static void encode(const uint32_t* fb,uint32_t* w){
 int main(int argc,char**argv){
     Verilated::commandArgs(argc,argv);
     uint64_t compared=0,lane_words=0,lane_q=0,lane_go=0,lane_cfg=0,reads=0;
+    // BF-beat adjacency of the native broadcast (the serial-BF-lane question): beats, back-to-back pairs, min gap
+    uint64_t bf_beats=0,bf_b2b=0,q_beats=0,q_b2b=0;long bf_mingap=1<<30,q_mingap=1<<30;
     for(int test=0;test<4;test++){
         Vcore r;Vdie d;Stim s;
         int fam=test&1,np=(test>>1),phase=257+test*37;
@@ -82,7 +84,7 @@ int main(int argc,char**argv){
         std::deque<std::pair<int,uint32_t>> pending;
         struct Return{int at,tag,total;};std::deque<Return> returns;
         int issued=0,seen_go=0,last_issue=-100,idles=0;bool finished=false;
-        uint32_t prev_enc[18];bool have_prev=false;
+        uint32_t prev_enc[18];bool have_prev=false;long last_bf=-1000000,last_q=-1000000;
         for(int c=0;c<30000;c++){
             s.reset=c>=16;s.go=0;s.rv=0;std::memset(s.ga,0,sizeof(s.ga));
             if(c>=32&&issued<4&&r.ready&&c-last_issue>8){s.go=1;s.ph=phase;s.np=np;issued++;last_issue=c;}
@@ -121,6 +123,8 @@ int main(int argc,char**argv){
                 }
                 encode(r.f_bus.data(),prev_enc);have_prev=true;
                 if(r.fault){std::printf("PQ_DIE_N FAIL test=%d cycle=%d unexpected fault\n",test,c);return 1;}
+                if(bits(r.f_bus.data(),1063,1)){bf_beats++;if(c-last_bf==1)bf_b2b++;if(last_bf>-1000000&&c-last_bf<bf_mingap)bf_mingap=c-last_bf;last_bf=c;}
+                if(bits(r.f_bus.data(),1615,1)){q_beats++;if(c-last_q==1)q_b2b++;if(last_q>-1000000&&c-last_q<q_mingap)q_mingap=c-last_q;last_q=c;}
                 if(r.x_re){pending.push_back({c+6,r.x_addr});reads++;}
                 if(bits(r.f_bus.data(),1619,1)){seen_go++;int tag=bits(r.f_bus.data(),1616,2);returns.push_back({c+40,tag,32*(np+1)});}
                 if(issued==4&&seen_go==4&&r.idle&&pending.empty()&&returns.empty())idles++;else idles=0;
@@ -131,6 +135,8 @@ int main(int argc,char**argv){
     }
     if(!lane_q||lane_go!=16||!reads){std::printf("PQ_DIE_N FAIL coverage words=%llu q=%llu go=%llu reads=%llu\n",
         (unsigned long long)lane_words,(unsigned long long)lane_q,(unsigned long long)lane_go,(unsigned long long)reads);return 1;}
+    std::printf("BF_BEAT_ADJACENCY bf_beats=%llu back_to_back=%llu min_gap=%ld q_beats=%llu q_back_to_back=%llu q_min_gap=%ld\n",
+        (unsigned long long)bf_beats,(unsigned long long)bf_b2b,bf_mingap,(unsigned long long)q_beats,(unsigned long long)q_b2b,q_mingap);
     std::printf("PQ_DIE_N PASS compared=%llu lane_words=%llu q_beats=%llu gos=%llu cfg=%llu x_reads=%llu\n",(unsigned long long)compared,
         (unsigned long long)lane_words,(unsigned long long)lane_q,(unsigned long long)lane_go,(unsigned long long)lane_cfg,(unsigned long long)reads);
     return 0;
