@@ -112,25 +112,34 @@ foreach {c ins outs} {core_clk {wrst_n we wdata* wepoch*} {full rd_freed* w_faul
 # (OpenSTA has no -datapath_only / set_bus_skew: -ignore_clock_latency + false-path -hold is the same check.)
 proc ot_ncdc_arcs {} {
   set t [expr {min([get_property [get_clocks core_clk] period],[get_property [get_clocks vm_clk] period])}]
-  set sy {}; set ld {}
+  set syc {}; set syv {}; set ld {}
   foreach c [all_registers -cells] {
     set b [string trimleft [lindex [split [get_full_name $c] "\["] 0] "\\"]
-    if {[lsearch -exact {ack1 ackn1 re1 ren1 pub1 pubn1 we1 wen1} $b] >= 0} {
-      lappend sy $c
+    if {[lsearch -exact {ack1 ackn1 re1 ren1} $b] >= 0} {
+      lappend syc $c
+    } elseif {[lsearch -exact {pub1 pubn1 we1 wen1} $b] >= 0} {
+      lappend syv $c
     } elseif {$b eq "landed_slots"} {
       lappend ld $c
     }
   }
+  # -from the OTHER domain's clock: only the crossing arcs, never the destination's own reset / pin paths
   # (plain variables in the constraint commands: OpenSTA's sdc_file_line list-parses the calling command text)
   set dp [expr {0.5*$t}]; set dm [expr {$t-60.0}]
-  if {[llength $sy]} {
-    set_max_delay -ignore_clock_latency $dp -to $sy
-    set_false_path -hold -to $sy
+  set cc [get_clocks core_clk]; set vc [get_clocks vm_clk]
+  if {[llength $syc]} {
+    set_max_delay -ignore_clock_latency $dp -from $vc -to $syc
+    set_false_path -hold -from $vc -to $syc
+  }
+  if {[llength $syv]} {
+    set_max_delay -ignore_clock_latency $dp -from $cc -to $syv
+    set_false_path -hold -from $cc -to $syv
   }
   if {[llength $ld]} {
-    set_max_delay -ignore_clock_latency $dm -to $ld
-    set_false_path -hold -to $ld
+    set_max_delay -ignore_clock_latency $dm -from $cc -to $ld
+    set_false_path -hold -from $cc -to $ld
   }
+  set sy [concat $syc $syv]
   puts [format "NATIVE_CDC arcs: %d first synchroniser flops (max datapath %.1f ps, no hold), %d landing flops (max datapath %.1f ps, no hold)" [llength $sy] $dp [llength $ld] $dm]
 }
 ot_ncdc_arcs
