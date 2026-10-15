@@ -1,0 +1,82 @@
+`timescale 1ns/1ps
+`default_nettype none
+// Eight banks j=LANE+4*k and eight slots s=LANE+4*q. Two parity buffers.
+// prepare is exactly the release descriptor one edge early (rsched stage9).
+// The completion token describes state AFTER this edge's release and arrivals.
+// All four lane tokens are checked INSIDE every leaf: no free parent reduction.
+module dsfd_vm_static_return_bank8 #(parameter integer DW=128, parameter integer LANE=0)(
+ input wire ck,rst_n,
+ input wire [7:0] i_v,input wire [63:0] i_tag,input wire [8*DW-1:0] i_data,
+ input wire release_v,input wire [2:0] release_group,input wire [7:0] release_mask,
+ input wire prepare_v,input wire [2:0] prepare_group,input wire [7:0] prepare_mask,
+ input wire [19:0] peer_token,
+ output reg [4:0] completion_token,
+ output reg [7:0] o_v,output reg [8*DW-1:0] o_data,
+ output reg [2:0] o_group,output reg fault
+);
+ reg [1:0] reset_release;
+ always @(posedge ck or negedge rst_n)
+  if(!rst_n)reset_release<=0;else reset_release<={reset_release[0],1'b1};
+ wire rn=reset_release[1];
+ reg [15:0] valid,valid_n,used;
+ reg [2:0] groups[0:15];wire [2:0] groups_next[0:15];
+ reg [DW-1:0] data[0:15];
+ wire [15:0] hit;
+ reg [7:0] prepared_mask;
+ reg bad,complete,prepare_complete;
+ integer j,idx,s,p;
+ always @*begin
+  complete=1;
+  for(p=0;p<4;p=p+1)begin
+`ifdef OT_VM_RETURN_BANK8_MUT_LOCAL
+   if(p==LANE)
+`endif
+   if(!peer_token[5*p+4] || peer_token[5*p+1+:3]!=release_group || !peer_token[5*p])complete=0;
+  end
+  if(prepared_mask!=release_mask)complete=0;
+  valid_n=valid;used=0;bad=0;
+  if(release_v)begin
+   for(s=0;s<8;s=s+1)if(release_mask[s])valid_n[8*release_group[0]+s]=0;
+   if(!complete)bad=1;
+  end
+  for(j=0;j<8;j=j+1)if(i_v[j])begin
+   idx=i_tag[8*j+2+:4];
+   if(i_tag[8*j+:2]!=2'(LANE))bad=1;
+   if(valid_n[idx] || used[idx])bad=1;
+   used[idx]=1;valid_n[idx]=1;
+  end
+  prepare_complete=1;
+  for(s=0;s<8;s=s+1)if(prepare_mask[s])begin
+   idx=8*prepare_group[0]+s;
+   if(!valid_n[idx] || groups_next[idx]!=prepare_group)prepare_complete=0;
+  end
+ end
+ always @(posedge ck or negedge rn)begin
+  if(!rn)begin valid<=0;o_v<=0;fault<=0;o_group<=0;completion_token<=0;prepared_mask<=0;end
+  else begin
+   valid<=valid_n;fault<=fault|bad;
+   o_v<=release_v && complete ? release_mask : 8'b0;
+   o_group<=release_group;
+   completion_token<={prepare_v,prepare_group,prepare_complete};
+   prepared_mask<=prepare_mask;
+  end
+ end
+ always @(posedge ck)begin : outputs integer q;
+  if(release_v)for(q=0;q<8;q=q+1)o_data[DW*q+:DW]<=data[8*release_group[0]+q];
+ end
+ genvar g;
+ generate for(g=0;g<16;g=g+1)begin:slot_store
+  reg h;reg [DW-1:0] nd;reg [2:0] ng;integer k;
+  always @*begin
+   h=0;nd=0;ng=0;
+   for(k=0;k<8;k=k+1)if(i_v[k] && i_tag[8*k+:6]=={4'(g),2'(LANE)})begin
+    h=1;nd=nd|i_data[DW*k+:DW];ng=ng|i_tag[8*k+5+:3];
+   end
+  end
+  assign hit[g]=h;
+  assign groups_next[g]=h ? ng : groups[g];
+  always @(posedge ck)if(h)begin data[g]<=nd;groups[g]<=ng;end
+ end endgenerate
+ initial if(LANE<0 || LANE>3)$error("LANE must be0..3");
+endmodule
+`default_nettype wire
