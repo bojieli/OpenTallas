@@ -7,6 +7,7 @@ not established by this row substitution.
 import copy
 import hashlib
 import json
+import re
 import subprocess
 from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
@@ -39,14 +40,20 @@ def derive():
         p = 'physical/s81_die_pins/v24_hc_norm_spread_candidate/' + master + '.json'
         return json.loads(subprocess.check_output(['git', 'show', PIN_REF + ':' + p]))
     ps = {k: pins('ot_s81_hc_' + k) for k in ('ctfs_nt', 'ctfn', 'ctfxs_nt')}
+    pin_centres = {}
+    for short in ps:
+        pin_path = 'physical/s81_die_pins/v24_hc_norm_spread_candidate/ot_s81_hc_' + short + '.tcl'
+        text = subprocess.check_output(['git', 'show', PIN_REF + ':' + pin_path], text=True)
+        pin_centres[short] = {name: (float(x), float(y)) for name, x, y in
+                             re.findall(r'-pin_name \{([^}]+)\}.*?-location \{([-\d.]+) ([-\d.]+)\}', text)}
     def xy(short, port, previous=False):
         row = by[short]
-        rec = ps[short]
+        bits = ps[short]['ports'][port]['bits']
         result = []
-        for face, layer, along, direction in rec['ports'][port]['per_bit']:
-            assert face in ('N', 'S'), (short, port, face)
-            x = along if face in 'NS' else (0 if face == 'W' else row['w'])
-            y = -row['y'] - (0 if face == 'N' else row['h'])
+        for bit in range(bits):
+            name = port if bits == 1 else f'{port}[{bit}]'
+            x, local_y = pin_centres[short][name]
+            y = -row['y'] - row['h'] + local_y
             if previous:
                 y += height
             result.append((x, y))
@@ -70,6 +77,7 @@ def derive():
                 source_serial_contract=str(path.relative_to(ROOT)), source_sha256=hashlib.sha256(raw).hexdigest(),
                 pin_source_commit=PIN_REF, outline_um=[576.72, height], rows=rows, spare_um=old['spare_um'],
                 growth_per_row_um=shift, supersedes_incorrect_790_56_budget=True, seams=seams,
+                seam_coordinates='Actual exact v24 Tcl pin centres, including0.042um face insets and2.16um row spare',
                 parent_maximum_row_counts=dict(head=10,tail=12),
                 legacy_hc_corridor_um=round(1226.88-(10+12)*shift,3),
                 open=['CTfl to all eight CLOSED CTPL current810 origins requires139bit repin; oldv24 has139/9080 over500 max512.694',

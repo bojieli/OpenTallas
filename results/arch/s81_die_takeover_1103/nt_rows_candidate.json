@@ -155,30 +155,31 @@
   "seams": {
     "fd_out_to_ctfn": {
       "bits": 2920,
-      "max_manhattan_um": 440.64,
+      "max_manhattan_um": 440.724,
       "over500": 0
     },
     "fd_out_to_ctfxs_nt": {
       "bits": 1128,
-      "max_manhattan_um": 434.112,
+      "max_manhattan_um": 434.196,
       "over500": 0
     },
     "fv_out_to_ctfn": {
       "bits": 7,
-      "max_manhattan_um": 440.64,
+      "max_manhattan_um": 440.724,
       "over500": 0
     },
     "fv_out_to_ctfxs_nt": {
       "bits": 7,
-      "max_manhattan_um": 390.528,
+      "max_manhattan_um": 390.612,
       "over500": 0
     },
     "fdm_ctfn_to_ctfs_nt": {
       "bits": 2920,
-      "max_manhattan_um": 317.52,
+      "max_manhattan_um": 317.604,
       "over500": 0
     }
   },
+  "seam_coordinates": "Actual exact v24 Tcl pin centres, including0.042um face insets and2.16um row spare",
   "parent_maximum_row_counts": {
     "head": 10,
     "tail": 12

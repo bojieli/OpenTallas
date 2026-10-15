@@ -1,6 +1,6 @@
 {
   "schema": "opentallas.s81.die.takeover.v1",
-  "updated_utc": "2026-10-15T18:21:22.404763+00:00",
+  "updated_utc": "2026-10-15T18:28:29.651639+00:00",
   "source_commit": "eb9cfa044920f23a9565d6c5fda43d2d5f217d06",
   "native_qualified": false,
   "clock_source_join": {
@@ -35,7 +35,17 @@
     "superseded_tied_root_ff": 21520,
     "source_fix": "34eba5ffe",
     "proof": "results/rtl/s81_vm_return_clock16_1015/receipt.json",
-    "qualification_scope": "Source ABI join only; physical delivery and individual routed views still required"
+    "qualification_scope": "Source ABI counts only. Fixed16 entry ports do not establish L16/CAP2 use under actual default0/0. Physical view parameters, compiler calendar and hierarchy must match before adoption.",
+    "actual_die_effective_parameters": {
+      "READ_PIPE": 0,
+      "CAP_PIPE": 0,
+      "basis": "Actual RTL defaults; die_master_params has no VM override"
+    },
+    "native_candidate_parameters": {
+      "READ_PIPE": 4,
+      "CAP_PIPE": 2,
+      "basis": "L16/CAP2 benches, routed return leaves and current640-leaf geometry; not actual die adoption"
+    }
   },
   "norm_v24_candidate_leaf_grant": {
     "source_commit": "7a483898c1737dbd1216c23aef56f8cdfb970f0a",
@@ -164,7 +174,15 @@
       }
     },
     "clock_rule": "Deliver each actual root at phi - wire - R from source-matched insertion.json; no inherited/default R",
-    "parent_geometry_open": "Actual NT substitution ctfxs25.92+ctfl25.92 replacing serialctfx12.96 adds38.88, not advertised19.44: v22cth771.12 ->810.00 lowerbound. v23claimed790.56 is not an actual row packing. Head/tail independent chain lengths/root controls must be source-reconciled before global grant."
+    "parent_geometry_open": "Actual NT substitution ctfxs25.92+ctfl25.92 replacing serialctfx12.96 adds38.88, not advertised19.44: v22cth771.12 ->810.00 lowerbound. v23claimed790.56 is not an actual row packing. Head/tail independent chain lengths/root controls must be source-reconciled before global grant.",
+    "ctfl_810_successor_grant": {
+      "source_commit": "e1af956aa",
+      "json_sha256": "08c7a05252d7c64fdffd9c3983023f86e80eb30e748f5500f235c95359f9a4f8",
+      "tcl_sha256": "fe6b075eb82c59d8ef8da01d7816c16054c6daa48d98826e972dda5fe694442d",
+      "decision": "Authorize current810-row candidate CTfl pins; supersedes prior7a483 CTfl pin grant only. Other three master pin files and clocks byte-identical.",
+      "evidence": "All9080 directed legs to actual8CPL LEFs: max499.782um,0over500;685pins moved up to32.112um; internal cut198 vs82. Old CTfl gate invalid for these pins.",
+      "scope": "Candidate leaf closure only; full source hierarchy, first/last chain anchors and actual physical qualification remain OPEN"
+    }
   },
   "blockers": [
     {
