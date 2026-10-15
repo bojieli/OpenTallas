@@ -1,7 +1,35 @@
 `timescale 1ns/1ps
 module tb_qfd_vm_die_static;
 parameter integer OBS_MUT=0,PACK_MUT=0,MEM=0,CONFLICT_MUT=0;
+integer COMMIT_MUT=0;
+initial void'($value$plusargs("COMMIT_MUT=%d",COMMIT_MUT));
 integer epoch=0;
+wire [38:0] cv;wire [311:0] cl;wire [623:0] cm;
+integer awcycle[0:31];integer commits=0,fence_commits=0;
+wire fv,ff,fc;wire [4:0] fb;wire [58:0] ft;
+reg [38:0] delayed_v;reg [311:0] delayed_l;reg [623:0] delayed_m;
+always @(posedge clk)begin delayed_v<=cv;delayed_l<=cl;delayed_m<=cm;end
+wire [38:0] checked_v=(COMMIT_MUT==1) ? (cv & ~(39'd1<<38)) :
+    (COMMIT_MUT==3) ? delayed_v : (COMMIT_MUT==6) ? (cv | (cv[38] ? (39'd1<<37) : 39'd0)) : cv;
+wire [311:0] checked_l=(COMMIT_MUT==6 && cv[38]) ? ((cl & ~(312'hff<<(37*8))) | (312'd49<<(37*8))) : (COMMIT_MUT==2) ? (cl ^ (312'd1<<(38*8))) : (COMMIT_MUT==3) ? delayed_l : cl;
+wire [623:0] checked_m=(COMMIT_MUT==6 && cv[38]) ? (cm | (624'hffff<<(37*16))) : (COMMIT_MUT==4) ? (cm & ~(624'd1<<(38*16))) : (COMMIT_MUT==3) ? delayed_m : cm;
+qfd_vm_attention_commit_fence #(.COMMIT_EDGES(8)) u_fence(
+ .ck(clk),.rst_n(rst_n),.request_slot((qe && epoch==0) || (COMMIT_MUT==8 && ar[519] && ar[516:512]==0)),.request_tag59(59'h12345678),
+ .write_v(ar[519]),.write_beat(ar[516:512]),.write_tag59(59'h12345678 ^ ((COMMIT_MUT==5)?59'd1:59'd0)),
+ .visibility_slot(qs && epoch==0),.write_commit_v(checked_v),.write_commit_line(checked_l),.write_commit_mask(checked_m),
+ .vm_commit_v(fv),.vm_commit_beat(fb),.vm_commit_tag59(ft),.complete(fc),.fault(ff));
+genvar rg,bg;
+generate for(rg=0;rg<8;rg=rg+1)begin : g_check_r
+ for(bg=0;bg<8;bg=bg+1)begin : g_check_b
+  // Compare actual SRAM-consumed pins independently of the observer.
+  always @(posedge clk)if(rst_n && dut.u_vm.g_tile.g_t[rg].u_t.g_b[bg].u_bt.p_we &&
+     dut.u_vm.g_tile.g_t[rg].u_t.g_b[bg].u_bt.p_wl==49)begin
+   if(dut.u_vm.g_tile.g_t[rg].u_t.g_b[bg].u_bt.p_wd!==image(49*64+rg*8+bg) ||
+      dut.u_vm.g_tile.g_t[rg].u_t.g_b[bg].u_bt.p_wm!==16'hffff)
+       $fatal(1,"FAIL actual SRAM consumed data/mask r%0d b%0d",rg,bg);
+  end
+ end
+end endgenerate
 reg [63:0] swmask=0;reg [23:0] swa0=0,swa1=0;reg [2047:0] swdata=0;
 wire [2366:0] sa;
 qfd_su_vm_pack u_pack(.s_re0(3'd0),.s_re1(3'd0),.s_a0(72'd0),.s_a1(72'd0),.sw_mask(swmask),.sw_a0(swa0),.sw_a1(swa1+PACK_MUT),.sw_data(swdata),.red_we(1'b0),.red_addr(24'd0),.red_data(32'd0),.va(sa));
@@ -460,6 +488,14 @@ qfd_sp_vector_memory #(.USE_MACRO(MEM),.USE_LEAF_CLOCKS(1),.OBS_MUT(OBS_MUT)) du
 .ck_r7_53(clk),
 .ck_r7_54(clk),
 .ck_r7_55(clk),
+.ck_r7_56(clk),
+.ck_r7_57(clk),
+.ck_r7_58(clk),
+.ck_r7_59(clk),
+.ck_r7_60(clk),
+.ck_r7_61(clk),
+.ck_r7_62(clk),
+
 .ck_r3_56(clk),
 .ck_r3_57(clk),
 .ck_r3_58(clk),
@@ -495,12 +531,23 @@ qfd_sp_vector_memory #(.USE_MACRO(MEM),.USE_LEAF_CLOCKS(1),.OBS_MUT(OBS_MUT)) du
 .sa(sa),.sq(),.mx(553'd0),.rb0(551'd0),.rb1(551'd0),.rb2(551'd0),
 .ld(),.mo(),.mee(1'b1),
 .svr(svr),.svr_rdy(),.svq(svq),.svq_v(svq_v),.svw(svw),.ar(ar),.xaw(),
+.write_commit_v(cv),.write_commit_line(cl),.write_commit_mask(cm),
 .q_epoch(qe),.q_start(qs),.q_committed(qsr),.q(q),.q_done(qd),.fault(fault));
 function automatic [511:0] image(input integer row);
 integer l;begin for(l=0;l<16;l=l+1)image[32*l+:32]=32'h3f800000+16*row+l+epoch*32768;end
 endfunction
 always @(negedge clk) if(rst_n)begin
 cycles=cycles+1;
+if(fv)begin
+ if(fb!==5'(fence_commits) || ft!==59'h12345678)$fatal(1,"FAIL fence beat/tag");
+ if(cycles-awcycle[fb]!=9)$fatal(1,"FAIL fence output latency");
+ fence_commits=fence_commits+1;
+end
+for(integer b=7;b<39;b=b+1)if(cv[b] && cl[8*b+:8]==49)begin
+ if(cm[16*b+:16]!==16'hffff)begin errors=errors+1;$display("FAIL commitmask bank%0d",b+24);end
+ if(cycles-awcycle[b-7]!=8)$fatal(1,"FAIL actual commit latency");
+ commits=commits+1;
+end
 if(q[523])begin
  if(q[516:512]!==beats[4:0] || q[511:0]!==image(856+beats))begin errors=errors+1;$display("FAIL beat=%0d tag=%0d",beats,q[516:512]);end
  if(cycles!=start_cycle+15+beats)begin errors=errors+1;$display("FAIL Q cadence cycle%0d expected%0d",cycles,start_cycle+15+beats);end
@@ -514,6 +561,7 @@ if(svq_v)begin
 end
 end
 always @(posedge clk)if(rst_n)begin
+ if(ar[519])awcycle[ar[516:512]]=cycles;
  if(qs)start_cycle=cycles;
  if(svr[20])begin if(requests==0)req_start=cycles;requests=requests+1;end
 end
@@ -524,7 +572,7 @@ repeat(8)@(negedge clk);qe=1;@(negedge clk);qe=0;
 // Both row sources active: attention writes must not replace sequencer Q writes or lose credits.
 for(i=0;i<32;i=i+1)begin
  svw={1'b1,20'(856+i),image(856+i)};
- ar={1'b1,1'b0,6'((i+(CONFLICT_MUT?9:0))%32),image(3167+i)};
+ ar={1'b1,1'b0,6'((i+(CONFLICT_MUT?9:0))%32),image(3167+i) ^ ((COMMIT_MUT==7 && i==31)?512'd1:512'd0)};
  @(negedge clk);
 end
 svw=0;ar=0;
@@ -532,6 +580,8 @@ svw=0;ar=0;
 repeat(16)@(negedge clk);
 qs=1;@(negedge clk);qs=0;
 repeat(46)@(negedge clk);
+if(fence_commits!=32 || ff || !fc)$fatal(1,"FAIL fence commits=%0d fault=%0d complete=%0d",fence_commits,ff,fc);
+if(commits!=32)begin errors=errors+1;$display("FAIL commits=%0d",commits);end
 if(beats!=32 || fault)begin errors=errors+1;$display("FAIL beats=%0d fault=%0d",beats,fault);end
 // Fixed interval1 row service:256 requests in256 consecutive cycles,exact13-edge responses.
 for(i=0;i<256;i=i+1)begin svr={1'b1,20'(3167+i%32)};@(negedge clk);end
@@ -549,7 +599,7 @@ repeat(16)@(negedge clk);
 qs=1;@(negedge clk);qs=0;
 repeat(46)@(negedge clk);
 if(beats!=32 || fault)begin errors=errors+1;$display("FAIL SU beats=%0d fault=%0d",beats,fault);end
-if(errors==0)$display("PASS vm_die_static real_Q_rows=64 words=1024 attention_rows=32 seq_requests=%0d fixed_RL=13 Q_cadence=1",requests);
+if(errors==0)$display("PASS vm_die_static real_Q_rows=64 words=1024 attention_rows=32 actual_commit_edges=8 fenced_commit_edges=9 TAG59=checked seq_requests=%0d fixed_RL=13 Q_cadence=1",requests);
 else $display("FAIL vm_die_static errors=%0d",errors);
 $finish;
 end
