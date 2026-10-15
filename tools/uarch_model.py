@@ -16889,3 +16889,23 @@ def hbm_smh_split_west_transport_model():
                         "newmaster preCTS+TT/FF/DRC+native pin budgets",
                         "fullSM source/clock/root/throughput composition"],
         status="MODEL_ONLY_NOT_ADMITTED_FOR_RTL_OR_PHYSICAL")
+
+
+def dsrom_wfc_static_link_price():
+    """S81 WFC stage kit STATIC die form (dsfd_wfc_stg_cl.sv +define DSFD_WFC_STG_STATIC, S-VM F7 2026-10-15): the
+    compiler-scheduled link to the static collective.  Measured on tools/dsrom_wfc_static_bench.py (PRICED stage shape,
+    static VM, RXWORDS 41 / XWORDS 46, 40 jobs) against the grant form on the same bench with an ideal collective."""
+    grant = dict(period_edges=12023 / 40, rx_last_to_tx_header_edges=(241, 244))
+    static = dict(period_edges_min=298, calendar_period_edges=300, tx_off_edges=272, tx_off_min_measured=264,
+                  rx_last_to_tx_header_edges=274, rx_buffer_flits=32, rx_max_occupancy=14,
+                  tx_buffer_flits=64, tx_max_occupancy=9, buffer_bits=(32 + 64) * 513)
+    return dict(schema='opentallas.s81.wfc_static_link_price.v1', clock='fast (stream) edges', grant_form=grant,
+                static_form=static,
+                added_latency_edges_per_stage_handoff=static['rx_last_to_tx_header_edges'] - grant['rx_last_to_tx_header_edges'][0],
+                throughput_change='none: calendar period 300 >= the grant form 300.6 edges/job; 298 measured minimum',
+                compiler_constants=dict(TX_OFF=272, tx_slots='consecutive edges from last RX arrival + TX_OFF',
+                                        rx_slots='any calendar edge; occupancy <= 32 flits'),
+                open=['TX_OFF is measured at the bench stage-core time (T_CORE 80): set per production stage programme',
+                      'internal WFC tokpipe in/out grants and VM write credits stay inside the master (absorbed by the '
+                      'static buffers; any would-be wait at the boundary is a sticky fault)',
+                      'buffers as flops (49,248 b): map to ot_sram_1r1w_64x512 macros at hardening'])
