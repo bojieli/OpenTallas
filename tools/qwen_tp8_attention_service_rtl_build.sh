@@ -12,10 +12,16 @@ out=$(realpath -m "$out")
 mkdir -p "$out"; cd "$root"
 sha256sum $src "$here/qwen_tp8_attention_service_rtl.vlt" "$0" > "$out/source.sha256"
 start=$(date +%s)
-$vl --cc --build --hierarchical -j ${JOBS:-1} -O2 -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN --top-module ot_qwen_tp8_attention_service \
- -GSTATIC_K_TRANSPORT="${STATIC_K_TRANSPORT:-0}" -GK_RETURN_LATENCY="${K_RETURN_LATENCY:-16}" \
+cpp_jobs=${CPP_JOBS:-16}
+[[ "$cpp_jobs" =~ ^[1-9][0-9]*$ ]] || { echo 'CPP_JOBS must be positive integer' >&2; exit 2; }
+$vl --cc --hierarchical -j 1 -O2 -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN --top-module ot_qwen_tp8_attention_service \
+ -GSTATIC_IO_TIMING="${STATIC_IO_TIMING:-0}" -GSTATIC_K_TRANSPORT="${STATIC_K_TRANSPORT:-0}" -GK_RETURN_LATENCY="${K_RETURN_LATENCY:-16}" \
  -GSTATIC_V_TRANSPORT="${STATIC_V_TRANSPORT:-0}" -GV_RETURN_LATENCY="${V_RETURN_LATENCY:-17}" \
  +define+KVD_HEADS=1 +define+KVD_Q_FP32=1 +define+KVD_QK_ONLY=1 +define+KVD_ECTL3 -CFLAGS "-O2 -fPIC" --Mdir "$out/obj" "$here/qwen_tp8_attention_service_rtl.vlt" $src > "$out/build.log" 2>&1
+# Keep the outer hierarchy serial: each real stack elaboration needs107GB.
+# Only the C++ compile child gets parallel jobs. A global -j16 would launch
+# several huge elaborations and exceed the admitted memory reservation.
+make -C "$out/obj" -f Vot_qwen_tp8_attention_service_hier.mk -j1 "MAKE=make -j$cpp_jobs" hier_build >> "$out/build.log" 2>&1
 cd "$out/obj"
 libs=$(find . -name "*.a" | sort)
 g++ -shared -o "$out/libot_qwen_tp8_attention_service.so" -Wl,--whole-archive $libs -Wl,--no-whole-archive >> "$out/build.log" 2>&1

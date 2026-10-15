@@ -16,6 +16,7 @@ module ot_qwen_tp8_attention_service #(
  // Historical arbitrary-stall transport remains diagnostic only. Static K
  // mode requires its implemented return geometry in the compiler calendar;
  // V transport and phase scheduling must also qualify before native adoption.
+ parameter integer STATIC_IO_TIMING=0,
  parameter integer STATIC_K_TRANSPORT=0,
  parameter integer K_RETURN_LATENCY=16,
  parameter integer STATIC_V_TRANSPORT=0,
@@ -70,6 +71,12 @@ module ot_qwen_tp8_attention_service #(
    start_qk<=0;start_pv<=0;result_done<=0;
    if(boot_count<80)boot_count<=boot_count+1'b1;
    if(busy)cycles<=cycles+1;
+   if(STATIC_IO_TIMING)begin
+    // A compiler command is followed by one arm edge, then exactly32 Q beats.
+    // Interface availability is checked, never used to shift these slots.
+    if(request_valid&&!request_ready)local_fault<=1;
+    if((q_valid!=(state==QLOAD&&!start_qk)) || (result_valid&&!result_ready))local_fault<=1;
+   end
    if(fault)state<=BAD;
    else case(state)
     IDLE:if(request_valid&&request_ready)begin
