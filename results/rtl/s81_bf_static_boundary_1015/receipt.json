@@ -1,0 +1,61 @@
+{
+  "schema": "opentallas.s81.bf-static-boundary.v1",
+  "master": "dsfd_bf_front_static",
+  "clock_roots": {
+    "io_clk": [
+      "g_pin input/output boundary",
+      "programme_pin_q38",
+      "two CPIN egress faces"
+    ],
+    "ck": [
+      "arithmetic/frontend core"
+    ]
+  },
+  "programme": {
+    "bits": 38,
+    "fields": {
+      "issue": [
+        0,
+        0
+      ],
+      "pp_address": [
+        14,
+        1
+      ],
+      "operand_family_position_block_unit": [
+        29,
+        15
+      ],
+      "segment": [
+        32,
+        30
+      ],
+      "half": [
+        33,
+        33
+      ],
+      "chain": [
+        37,
+        34
+      ]
+    },
+    "pin_capture_to_core_consume_edges": 1,
+    "cpin_additional_edges": 1
+  },
+  "source_sha256": {
+    "tools/s81/bf_static_front_boundary.py": "d9d2ec32e2fdc3532e50df8437a6fc765723b9c76005b5934de521fe45abd875",
+    "tools/s81/gen_bf_die_wrappers.py": "a0f668bd8b6d6617e2dc9a49166543586f90dab2acf16335dce3848a2bcd52f0",
+    "tools/s81/gen_bf_hier.py": "92e95a1e710611b24b306327ecc99797a0d62b2c3cb502a161ec699db9ec6c5a",
+    "rtl/s81/ot_s81_bf_front.sv": "01b0163a974fe2583e86d23160c6dadf7d24aa3154dc9cf28900657a7924a17e",
+    "rtl/dsrom_sys/s81_die_bind/dsfd_bf_front_static.sv": "c4e9691799d5699c0ed7a9ad43df3957b193b44b1af3d3057cc6710d43a48618",
+    "rtl/v41rom/ot_v41_bf_front_core.sv": "2625caf237706f9ee697e66fc442067ad2fc5aa56734e69a085eae1473359583",
+    "rtl/s81/ot_s81_bf_seam.sv": "786c8542f81371e3a7a63962ff0ce83136f3c6873641d89c8d49b48ded5d2fc0"
+  },
+  "validation": {
+    "actual_top_elaboration_lint": 0,
+    "tool": "Verilator5.050 --lint-only --timing",
+    "memory_models": "Runtime macro declarations used for lint only; no simulation/memory qualification claim.",
+    "generator_check": "Exact generated front/master reproducibility required; column generator historical drift deliberately not adopted."
+  },
+  "qualification": "OPEN: meaningful numerical/production programme/native-memory integration, canonical images, actual source-derived root counts, io/core clockphase pairs, pins/slot, CTS/TT/FF/DRC/throughput pending. Old CLOSED BF view cannot qualify this new master."
+}

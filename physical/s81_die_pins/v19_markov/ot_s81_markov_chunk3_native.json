@@ -666,7 +666,15 @@
   }
  },
  "phi_R_ps": {
-  "tt": 111.9,
-  "ff": 91.6
+  "ss": 149.4,
+  "tt": 113.6,
+  "ff": 93.6
+ },
+ "clock_reference": {
+  "source": "physical/ref_tile/s81_markov_chunk3_native/views/ot_s81_markov_chunk3_native/insertion.json",
+  "sha256": "1e9b843fa4222a16aad2a0549c3524eaac66f19c77c18f2745e3cd42b66408fb",
+  "basis": "measured boundary mean; deliver clock at phi - R, per corner",
+  "job": "s81_markov_chunk3_native-pc2-fd21a1202",
+  "status": "current pc2 routed arithmetic view"
  }
 }

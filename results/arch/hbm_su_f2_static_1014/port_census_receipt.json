@@ -1,0 +1,13 @@
+{
+  "status": "PASS",
+  "hardware_preprocessed_equal": true,
+  "normalized_hardware_sha256": "73156e890669d6c89c48278469f3e508f403d7404e49f4cf4822a12ee0a68eb0",
+  "actual_lmem_hook_elaboration": "PASS iverilog -g2012 -DSV_PORT_CENSUS -s ot_hgi_sv_lmem",
+  "observer_test": "port_census_test.log",
+  "purpose": "upcoming actual production address census; no production result yet",
+  "source_sha256": {
+    "rtl/hbm_accel/generic/peers/ot_hgi_sv_unit.sv": "3771fd29e0b7578f6095195b5b5b35795348d990ed5ed3bcab1740caadef87e1",
+    "rtl/hbm_accel/generic/adapters/static_su/ot_hbm_su_port_census.sv": "ded187feb81ff10f6ad2a4540c46ca640fb10527af38114c6c3040a055963e2a",
+    "rtl/hbm_accel/generic/adapters/static_su/tb_hbm_su_port_census.sv": "c232395eac691f78be07662cb6a886a4bbbe8ec4454e7ac540afa6bf844dae4c"
+  }
+}

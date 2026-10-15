@@ -1,0 +1,216 @@
+{
+  "schema": "opentallas.hbm.bandwidth_audit.v1",
+  "status": "STRUCTURAL_REPAIR_REQUIRED_NO_PERFORMANCE_QUALIFICATION",
+  "source_sha256": {
+    "tools/w19_hbm_token_compose.py": "1918078e4e3208b85abba4f9be81e85b2ceb3c9f76454887d9d0579712fdb44c",
+    "tools/hgi_sim/calibration.json": "de95d20c8489d93f840c5988844989b9d81379a2ae164bec5b2d264180114076",
+    "tools/hgi_sim/ds_native.py": "127598c96f67e21e3de6a176d4749bc30b2a45ba17675c7ee5a1b91ff57558ad",
+    "rtl/gpu/ot_gpu_payload_assemble.sv": "355f01e90ccba32fca58339ea65d0b0bc87b906b7fe9b59d57eb6fc04636baa4",
+    "rtl/chip/ot_chip_v41x_hbm3e_phy.sv": "257547b1b904af203a2b0d70e5414d8b49de7c5c941a1966325d7ed1172afd36"
+  },
+  "frozen_constants": {
+    "F_FAST": 1200000000.0,
+    "N_SM": 32,
+    "HBM_STACKS": 4,
+    "HBM_STACK_BYTES_PER_S": 1000000000000.0,
+    "HBM_SUSTAINED": 0.95,
+    "SM_LINE_BYTES": 136,
+    "SM_HBM_PEAK_BYTES_PER_CYCLE": 104.16666666666667,
+    "SM_HBM_BYTES_PER_CYCLE": 98.95833333333333
+  },
+  "clock_units": {
+    "stream_period_ps": 833.3333333333334,
+    "hbm_period_ps": 1024,
+    "raw_bytes_per_sm_hbm_edge": 128
+  },
+  "immutable_price": {
+    "raw_bytes_per_sm_stream_edge_peak": 104.16666666666667,
+    "raw_bytes_per_sm_stream_edge_95pct": 98.95833333333333,
+    "stream_edges_per_136byte_line": 1.3743157894736844,
+    "payload": {
+      "weights_bytes": 128,
+      "checkpoint_scale_bytes": 8
+    }
+  },
+  "padded_nb5": {
+    "raw_bytes_per_line": 160,
+    "peak_stream_edges_per_line": 1.536,
+    "sustained_stream_edges_per_line": 1.616842105263158,
+    "peak_ratio_to_frozen_price": 1.1176470588235292,
+    "sustained_ratio_to_frozen_price": 1.1764705882352942,
+    "useful_bytes_per_stream_edge_peak": 88.54166666666667,
+    "useful_bytes_per_stream_edge_95pct": 84.11458333333333
+  },
+  "packed_candidate": {
+    "phase_bytes": [
+      0,
+      8,
+      16,
+      24
+    ],
+    "sectors_per_four_lines": 17,
+    "bytes_per_four_lines": 544,
+    "existing_reference": "rtl/gpu/ot_gpu_payload_assemble.sv is opt-in and handshaken; static production migration required",
+    "blocks": [
+      {
+        "lines": 1,
+        "final_padding_granule_bytes": 32,
+        "raw_bytes": 160,
+        "padding_bytes": 24,
+        "ideal_95pct_stream_edges": 1.616842105263158,
+        "ratio_to_frozen_line_floor": 1.1764705882352942,
+        "max_extra_setup_edges_at_110pct": -0.10509473684210513
+      },
+      {
+        "lines": 1,
+        "final_padding_granule_bytes": 128,
+        "raw_bytes": 256,
+        "padding_bytes": 120,
+        "ideal_95pct_stream_edges": 2.5869473684210527,
+        "ratio_to_frozen_line_floor": 1.8823529411764703,
+        "max_extra_setup_edges_at_110pct": -1.0751999999999997
+      },
+      {
+        "lines": 4,
+        "final_padding_granule_bytes": 32,
+        "raw_bytes": 544,
+        "padding_bytes": 0,
+        "ideal_95pct_stream_edges": 5.4972631578947375,
+        "ratio_to_frozen_line_floor": 1.0,
+        "max_extra_setup_edges_at_110pct": 0.5497263157894743
+      },
+      {
+        "lines": 4,
+        "final_padding_granule_bytes": 128,
+        "raw_bytes": 640,
+        "padding_bytes": 96,
+        "ideal_95pct_stream_edges": 6.467368421052632,
+        "ratio_to_frozen_line_floor": 1.1764705882352942,
+        "max_extra_setup_edges_at_110pct": -0.4203789473684205
+      },
+      {
+        "lines": 16,
+        "final_padding_granule_bytes": 32,
+        "raw_bytes": 2176,
+        "padding_bytes": 0,
+        "ideal_95pct_stream_edges": 21.98905263157895,
+        "ratio_to_frozen_line_floor": 1.0,
+        "max_extra_setup_edges_at_110pct": 2.198905263157897
+      },
+      {
+        "lines": 16,
+        "final_padding_granule_bytes": 128,
+        "raw_bytes": 2176,
+        "padding_bytes": 0,
+        "ideal_95pct_stream_edges": 21.98905263157895,
+        "ratio_to_frozen_line_floor": 1.0,
+        "max_extra_setup_edges_at_110pct": 2.198905263157897
+      },
+      {
+        "lines": 32,
+        "final_padding_granule_bytes": 32,
+        "raw_bytes": 4352,
+        "padding_bytes": 0,
+        "ideal_95pct_stream_edges": 43.9781052631579,
+        "ratio_to_frozen_line_floor": 1.0,
+        "max_extra_setup_edges_at_110pct": 4.397810526315794
+      },
+      {
+        "lines": 32,
+        "final_padding_granule_bytes": 128,
+        "raw_bytes": 4352,
+        "padding_bytes": 0,
+        "ideal_95pct_stream_edges": 43.9781052631579,
+        "ratio_to_frozen_line_floor": 1.0,
+        "max_extra_setup_edges_at_110pct": 4.397810526315794
+      },
+      {
+        "lines": 128,
+        "final_padding_granule_bytes": 32,
+        "raw_bytes": 17408,
+        "padding_bytes": 0,
+        "ideal_95pct_stream_edges": 175.9124210526316,
+        "ratio_to_frozen_line_floor": 1.0,
+        "max_extra_setup_edges_at_110pct": 17.591242105263177
+      },
+      {
+        "lines": 128,
+        "final_padding_granule_bytes": 128,
+        "raw_bytes": 17408,
+        "padding_bytes": 0,
+        "ideal_95pct_stream_edges": 175.9124210526316,
+        "ratio_to_frozen_line_floor": 1.0,
+        "max_extra_setup_edges_at_110pct": 17.591242105263177
+      },
+      {
+        "lines": 256,
+        "final_padding_granule_bytes": 32,
+        "raw_bytes": 34816,
+        "padding_bytes": 0,
+        "ideal_95pct_stream_edges": 351.8248421052632,
+        "ratio_to_frozen_line_floor": 1.0,
+        "max_extra_setup_edges_at_110pct": 35.182484210526354
+      },
+      {
+        "lines": 256,
+        "final_padding_granule_bytes": 128,
+        "raw_bytes": 34816,
+        "padding_bytes": 0,
+        "ideal_95pct_stream_edges": 351.8248421052632,
+        "ratio_to_frozen_line_floor": 1.0,
+        "max_extra_setup_edges_at_110pct": 35.182484210526354
+      },
+      {
+        "lines": 1024,
+        "final_padding_granule_bytes": 32,
+        "raw_bytes": 139264,
+        "padding_bytes": 0,
+        "ideal_95pct_stream_edges": 1407.2993684210528,
+        "ratio_to_frozen_line_floor": 1.0,
+        "max_extra_setup_edges_at_110pct": 140.72993684210542
+      },
+      {
+        "lines": 1024,
+        "final_padding_granule_bytes": 128,
+        "raw_bytes": 139264,
+        "padding_bytes": 0,
+        "ideal_95pct_stream_edges": 1407.2993684210528,
+        "ratio_to_frozen_line_floor": 1.0,
+        "max_extra_setup_edges_at_110pct": 140.72993684210542
+      },
+      {
+        "lines": 4096,
+        "final_padding_granule_bytes": 32,
+        "raw_bytes": 557056,
+        "padding_bytes": 0,
+        "ideal_95pct_stream_edges": 5629.197473684211,
+        "ratio_to_frozen_line_floor": 1.0,
+        "max_extra_setup_edges_at_110pct": 562.9197473684217
+      },
+      {
+        "lines": 4096,
+        "final_padding_granule_bytes": 128,
+        "raw_bytes": 557056,
+        "padding_bytes": 0,
+        "ideal_95pct_stream_edges": 5629.197473684211,
+        "ratio_to_frozen_line_floor": 1.0,
+        "max_extra_setup_edges_at_110pct": 562.9197473684217
+      }
+    ]
+  },
+  "scope_notes": [
+    "99 B/cycle is rounded sustained RAW physical bandwidth per SM per streaming edge; the frozen W19 136-byte line includes 8 scale bytes.",
+    "Qwen fmt3_transport=1.25 already charges its 160-byte stride per128 INT8 codes. That separate calibration does not charge DS W19 160 bytes.",
+    "Final padding and setup must be included once per actual transfer block, not silently amortized over an unbounded stream.",
+    "The measured off-chip 77/122 HBM-edge baselines exclude new CDC staging; actual service pipeline has failed its 110-percent timing gate.",
+    "No revised bandwidth, SM count, throughput target, or performance waiver is authorized."
+  ],
+  "required_gates": [
+    "actual 136-byte checkpoint image and full 30-bit XOR-PC mapping",
+    "actual static formatter and 1099-bit consumer including real scales/tags",
+    "compiled 83-bit programme and all setup/padding/drain costs",
+    "full production-shape end-to-end run at distinct actual clocks",
+    "95-percent sustained throughput and immutable accepted latency gates",
+    "physical roots, pins, SRAM, TT setup, FF hold and DRC0"
+  ]
+}

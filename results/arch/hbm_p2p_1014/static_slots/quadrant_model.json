@@ -1,0 +1,42 @@
+{
+  "2": {
+    "source_lanes": 9,
+    "sink_lanes": 15,
+    "flit_bits": 545,
+    "capture_edges": 2,
+    "output_edges": 1,
+    "latency_edges": 2,
+    "bits_per_cycle_in": 4905,
+    "bits_per_cycle_out": 8175,
+    "payload_flops": 17985,
+    "control_flops": 84,
+    "clock_roots_required": 2,
+    "largest_root_sinks": 13248,
+    "select_cost_bits": 73575,
+    "period_ps": 833.3,
+    "elastic_entries": 0,
+    "compiler_rule": "sink instruction at C+1 selects a source captured C; output pin changes C+2",
+    "routing_rule": "sources may multicast; distinct sources cannot own the same sink edge",
+    "status": "SIZED transport only; no physical closure or complete collective price"
+  },
+  "3": {
+    "source_lanes": 10,
+    "sink_lanes": 16,
+    "flit_bits": 545,
+    "capture_edges": 2,
+    "output_edges": 1,
+    "latency_edges": 2,
+    "bits_per_cycle_in": 5450,
+    "bits_per_cycle_out": 8720,
+    "payload_flops": 19620,
+    "control_flops": 90,
+    "clock_roots_required": 2,
+    "largest_root_sinks": 14350,
+    "select_cost_bits": 87200,
+    "period_ps": 833.3,
+    "elastic_entries": 0,
+    "compiler_rule": "sink instruction at C+1 selects a source captured C; output pin changes C+2",
+    "routing_rule": "sources may multicast; distinct sources cannot own the same sink edge",
+    "status": "SIZED transport only; no physical closure or complete collective price"
+  }
+}

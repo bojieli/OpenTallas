@@ -1,0 +1,240 @@
+{
+  "schema": "opentallas.s81.source_assigned_pin_audit.v1",
+  "scope": "Actual module headers versus assigned pin group names/widths only; not emitted die connectivity or physical qualification",
+  "native_qualified": false,
+  "masters": [
+    {
+      "master": "dsfd_sp_gather_c",
+      "source": "rtl/dsrom_sys/s81_ph/ctrl_c/dsfd_sp_gather_c_cl.sv",
+      "source_sha256": "3d513d0333e177f4d5e186acde67d127b2cefd2fe4086adefb78ad2eec2f803e",
+      "pins": "physical/s81_die_pins/v19/dsfd_sp_gather_c.json",
+      "pins_sha256": "f23cd2f6ad2866e84bdbe23487935afc99bb0c6a8a43862cc8b602b6157a8ba9",
+      "defines": {
+        "S81PH_GTH_DIE_CLOCKS": "",
+        "S81PH_GTH_CONTROL_STRIP": "",
+        "S81PH_GTH_CL_NAME": "dsfd_sp_gather_c"
+      },
+      "missing_rtl": [],
+      "missing_pin_groups": [],
+      "width_mismatch": [],
+      "source_parse_errors": [],
+      "ports": {
+        "ck": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rst": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ckv": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rsv": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_l": {
+          "direction": "input",
+          "bits": 32
+        },
+        "ck_r": {
+          "direction": "input",
+          "bits": 133
+        },
+        "ck_q": {
+          "direction": "input",
+          "bits": 48
+        },
+        "f_vm": {
+          "direction": "input",
+          "bits": 512
+        },
+        "t_capture": {
+          "direction": "output",
+          "bits": 6947
+        },
+        "rW0": {
+          "direction": "input",
+          "bits": 692
+        },
+        "rW1": {
+          "direction": "input",
+          "bits": 761
+        },
+        "rW2": {
+          "direction": "input",
+          "bits": 761
+        },
+        "rW3": {
+          "direction": "input",
+          "bits": 761
+        },
+        "rW4": {
+          "direction": "input",
+          "bits": 761
+        },
+        "rW5": {
+          "direction": "input",
+          "bits": 692
+        },
+        "rE0": {
+          "direction": "input",
+          "bits": 692
+        },
+        "rE1": {
+          "direction": "input",
+          "bits": 761
+        },
+        "rE2": {
+          "direction": "input",
+          "bits": 761
+        },
+        "rE3": {
+          "direction": "input",
+          "bits": 761
+        },
+        "rE4": {
+          "direction": "input",
+          "bits": 761
+        },
+        "rE5": {
+          "direction": "input",
+          "bits": 692
+        },
+        "c_cmd": {
+          "direction": "input",
+          "bits": 85
+        },
+        "c_done": {
+          "direction": "output",
+          "bits": 9
+        },
+        "c_st": {
+          "direction": "output",
+          "bits": 2
+        },
+        "f_cd": {
+          "direction": "input",
+          "bits": 12
+        },
+        "t_xgo": {
+          "direction": "output",
+          "bits": 11
+        }
+      },
+      "verdict": "PASS"
+    },
+    {
+      "master": "ot_s81_pq_rwbc15",
+      "source": "rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_rwbc.sv",
+      "source_sha256": "b574326cf41eacf023fa5b77b84ed03bd9879e265e6b7eb2f5f15433c7e6f48f",
+      "pins": "physical/s81_die_pins/v20/ot_s81_pq_rwbc15.json",
+      "pins_sha256": "ce87e329574d599523b72e7af95870faca0f51423669bce254c8db1091e340c7",
+      "defines": {},
+      "missing_rtl": [],
+      "missing_pin_groups": [],
+      "width_mismatch": [],
+      "source_parse_errors": [],
+      "ports": {
+        "clk": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rst_n": {
+          "direction": "input",
+          "bits": 1
+        },
+        "r_v": {
+          "direction": "input",
+          "bits": 15
+        },
+        "r_tag": {
+          "direction": "input",
+          "bits": 30
+        },
+        "r_e": {
+          "direction": "input",
+          "bits": 15
+        },
+        "g_flt": {
+          "direction": "input",
+          "bits": 1
+        },
+        "live": {
+          "direction": "input",
+          "bits": 4
+        },
+        "q2f": {
+          "direction": "output",
+          "bits": 1
+        },
+        "ga": {
+          "direction": "output",
+          "bits": 16
+        },
+        "live_o": {
+          "direction": "output",
+          "bits": 4
+        }
+      },
+      "verdict": "PASS"
+    },
+    {
+      "master": "ot_s81_pq_rwbc2",
+      "source": "rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_rwbc.sv",
+      "source_sha256": "b574326cf41eacf023fa5b77b84ed03bd9879e265e6b7eb2f5f15433c7e6f48f",
+      "pins": "physical/s81_die_pins/v20/ot_s81_pq_rwbc2.json",
+      "pins_sha256": "6a6aa60e77fdbd3a4da11f41458be0433dff039efe440ff620ba8032561515b2",
+      "defines": {},
+      "missing_rtl": [],
+      "missing_pin_groups": [],
+      "width_mismatch": [],
+      "source_parse_errors": [],
+      "ports": {
+        "clk": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rst_n": {
+          "direction": "input",
+          "bits": 1
+        },
+        "r_v": {
+          "direction": "input",
+          "bits": 2
+        },
+        "r_tag": {
+          "direction": "input",
+          "bits": 4
+        },
+        "r_e": {
+          "direction": "input",
+          "bits": 2
+        },
+        "g_flt": {
+          "direction": "input",
+          "bits": 1
+        },
+        "live": {
+          "direction": "input",
+          "bits": 4
+        },
+        "q2f": {
+          "direction": "output",
+          "bits": 1
+        },
+        "ga": {
+          "direction": "output",
+          "bits": 16
+        },
+        "live_o": {
+          "direction": "output",
+          "bits": 4
+        }
+      },
+      "verdict": "PASS"
+    }
+  ]
+}

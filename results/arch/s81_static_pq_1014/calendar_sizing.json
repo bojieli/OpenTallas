@@ -1,0 +1,40 @@
+{
+  "status": "UNQUALIFIED_NATIVE_COMPONENT_DESIGN",
+  "shape": {
+    "phase_descriptors": 64,
+    "descriptor_bits": 116,
+    "native_tags": 4,
+    "max_sparse_events": 4096,
+    "calendar_action_bits": 72,
+    "timestamp_bits": 24,
+    "macro_words": 4096,
+    "macro_bits": 72,
+    "rom_macros": 2
+  },
+  "resources": {
+    "calendar_ROM_bits": 589824,
+    "macro_area_um2": 4783.1731199999995,
+    "descriptor_storage_FF": 7424,
+    "calendar_prefetch_storage_FF": 576
+  },
+  "bandwidth": {
+    "action_bits_per_cycle": 72,
+    "paired_ROM_bits_per_cycle": 144,
+    "paired_ROM_GBps_at_1p2GHz": 21.6
+  },
+  "timing": {
+    "ROM_launch_to_consumer_capture_edges": 2,
+    "prefetch_events": 4,
+    "stage_start_to_timestamp0_action_pin_edges": 1,
+    "endpoint_cmd_sample_to_native_GO_pin_edges": 1,
+    "live_source_pin_to_farthest_count_leaf_edges": 12,
+    "root_pin_to_count_leaf_ga_edges": 4,
+    "root_pin_to_count_leaf_fault_edges": 5
+  },
+  "missing": [
+    "static controller actual count last-consume timing",
+    "physical native clock/phase and placement slot",
+    "measured fullstage immutable source calendar and real VM service profile",
+    "per-layer throughput model join and release qualification"
+  ]
+}

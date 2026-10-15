@@ -1,0 +1,13 @@
+{
+  "runner": "ot-run --mem 2 --threads 1 --dir /var/tmp/hbm-staging-vm-static-1015 -- bash inputs/run_staging_vm_static.sh gate_prod inputs",
+  "host": "ot-epyc1tb",
+  "unit": "oth-ubuntu-257598-1792046250",
+  "result": "RAN exit 0",
+  "frozen_source_origin": {
+    "ot_hbm_svc_static_vm_delivery.sv": "/home/ubuntu/wt/hbm-die-feas-1014/rtl/hbm_accel/loader/service_native/ot_hbm_svc_static_vm_delivery.sv",
+    "ot_hbm_svc_static_landing.sv": "/home/ubuntu/wt/hbm-die-feas-1014/rtl/hbm_accel/loader/service_native/ot_hbm_svc_static_landing.sv",
+    "ot_vms_bank_static.sv": "/home/ubuntu/wt/hbm-vm-static-bank-1014/rtl/hbm_accel/generic/vm/static/ot_vms_bank_static.sv"
+  },
+  "bank_source_commit": "0334452c354ae46f8ed1671753f98f8579742711",
+  "shape": "RG3 WG1, DMA=WG+4=5"
+}

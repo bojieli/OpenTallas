@@ -1,0 +1,15 @@
+{
+  "status": "characterization_only_not_exported_views",
+  "failed": [
+    "h519",
+    "v519",
+    "h512"
+  ],
+  "passed_geometry_only": [
+    "h256",
+    "v34",
+    "v16"
+  ],
+  "failure_cause": "H519 recipe2 fixed cells669.382um2 exceed core653.184um2; fixed+movable755.735um2. Structural bank263+256 required; changing target density cannot fix negative free area.",
+  "namespace": "Initial generic top ot_qkh_packet_pipe shared across variants is unsuitable for coexisting die views; final leaf variants use distinct literal-width source master names and fresh gates."
+}

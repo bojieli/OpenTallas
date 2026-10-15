@@ -1,0 +1,41 @@
+{
+  "schema": "opentallas.s81.static-su-physical-request.v1",
+  "qualified": false,
+  "control": {
+    "master": "ot_s81_su_calendar_ctl",
+    "flop_count": 318,
+    "max_sinks": 15000,
+    "slot": null,
+    "pin_file": null
+  },
+  "program_store": {
+    "master": "ot_s81_su_calendar_store",
+    "default_depth": 4096,
+    "width": 1024,
+    "actual_macro": "ot_sram_1r1w_64x512_m1_r2c2",
+    "macro_count": 128,
+    "placement": null,
+    "read_pipeline_edges": 1,
+    "bank_select_registered": true,
+    "macro_to_controller_reach_proven": false,
+    "clock_delivery_proven": false
+  },
+  "arithmetic": "existing granular QN/KV/QB/SW/SM/RX/CN/IK masters reused with unchanged RTL",
+  "requires": [
+    "canonical full program capacity/compaction measurement",
+    "actual source pins/macro placement and bank-select reach; split/register if required",
+    "new controller slot, pin registers, clock delivery and TT setup/FF hold/DRC0",
+    "full actual VM phase and write-commit calendar; all producer/consumer joins"
+  ],
+  "physical_submission_ready": false,
+  "moe_sum": {
+    "master": "ot_s81_su_moe_sum_static",
+    "lane_count": 16,
+    "adder_leaves": 6,
+    "latency_edges": 42,
+    "side_alignment_macros": 5,
+    "clock_roots": 6,
+    "clock_tree_census_proven": false,
+    "slot": null
+  }
+}

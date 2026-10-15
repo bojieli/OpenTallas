@@ -1,0 +1,7 @@
+read_verilog -sv -DSYNTHESIS rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_fpu.sv rtl/hdc/ot_hdc_fp32_mul_pipe.sv rtl/proto/ot_fp32_add_rne_pipe.sv rtl/hdc/ot_hdc_sfu.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_fastfp_lat.sv rtl/hdc/ot_hdc_fp32_mul_lat.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/v41/ot_hdc_fsqrt.sv rtl/hdc/v41/ot_hdc_fdiv.sv rtl/hdc/v41/ot_hdc_softplus.sv rtl/hdc/v41x/ot_hdc_v41x_sfu.sv rtl/hdc/v41x/ot_hdc_v41x_hcp.sv rtl/dsrom_sys/s81_hcx/ot_s81_hcx_hcp_partition.sv rtl/dsrom_sys/s81_hcx/ot_s81_hcx_projection_partition.sv
+read_verilog -sv macro_blackboxes.v
+hierarchy -check -top ot_s81_hcx_projection_partition
+proc
+opt
+write_json hierarchy.json
+stat

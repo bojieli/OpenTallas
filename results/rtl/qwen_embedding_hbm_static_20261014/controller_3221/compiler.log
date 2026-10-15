@@ -1,0 +1,5 @@
+PASS compiler PROFILE1 only: actual8codeReads+1scaleRead dualclock core833.334ps phase137ps HBM1024ps
+- rtl/qwen_sys/static_embedding_20261014/test/tb_static_embed_controller.sv:134: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 8us; walltime 0.172 s; speed 43.064 us/s
+- Verilator: cpu 0.174 s on 1 threads; alloced 1018 MB

@@ -1,0 +1,17 @@
+HBM_STATIC_LINK_PASS FW545 CW32 checks256 TX3 RX1 PHY5
+HBM_STATIC_LINK_FAIL FW545 CW32 checks256 errors212 abort_cycles144 causes004/001 MUT1
+mutant 1 rejected as required
+HBM_STATIC_LINK_FAIL FW545 CW32 checks256 errors240 abort_cycles160 causes102/004 MUT2
+mutant 2 rejected as required
+HBM_STATIC_LINK_FAIL FW545 CW32 checks256 errors128 abort_cycles0 causes000/000 MUT3
+native store mutant 3 rejected by independent payload scoreboard
+HBM_STATIC_LINK_FAIL FW545 CW32 checks256 errors256 abort_cycles158 causes004/004 MUT4
+mutant 4 rejected as required
+HBM_STATIC_LINK_FAIL FW545 CW32 checks256 errors128 abort_cycles80 causes020/020 MUT5
+mutant 5 rejected as required
+HBM_STATIC_LINK_FAIL FW545 CW32 checks256 errors128 abort_cycles81 causes000/000 MUT6
+mutant 6 rejected as required
+HBM_STATIC_LINK_FAIL FW545 CW32 checks256 errors128 abort_cycles172 causes080/004 MUT7
+mutant 7 rejected as required
+HBM_STATIC_LINK_FAIL FW545 CW32 checks256 errors212 abort_cycles144 causes004/004 MUT8
+mutant 8 rejected as required

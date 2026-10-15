@@ -1,17 +1,18 @@
 // New native static slot master; fresh physical qualification required.
 // Existing c341/f104/lc26 packing retained; obsolete VM xd/xr removed.
-module qfd_tt_ctlm_static_s #(parameter integer XPF_TRANSPORT_EDGES=0) (
+module qfd_tt_ctlm_static_s #(parameter integer XPF_TRANSPORT_EDGES=-1) (
     input wire ck_xpf,
     input wire ck_me_sched,
     input wire cp_active,output wire [55:0] cp,
+    input wire su_image_ready,output wire control_stores_ready,output wire [75:0] program_obs,
     output wire layer_context_v,output wire [17:0] native_tok,native_pos,
     output wire [379:0] native_cmd,
     input wire [94:0] native_ret,
     output wire [5:0] command_stage,
     output wire [379:0] ib,
     input wire [15:0] su_observe,output wire [71:0] xpf,
-    output wire mer0,mer1,mer2,mer3,mer4,mer5,
-    input wire rf0,rf1,rf2,rf3,rf4,rf5,xflt,
+    output wire mer0,mer1,mer2,
+    input wire rf0,rf1,rf2,xflt,
     input wire ck_head,
     input wire ck_tree,
     output wire [340:0] c0,
@@ -31,7 +32,7 @@ module qfd_tt_ctlm_static_s #(parameter integer XPF_TRANSPORT_EDGES=0) (
     input  wire rsi,
     output wire [25:0] sel,
     input  wire [48:0] st,
-    input  wire uf,
+    input  wire [3:0] uf,
     output wire [91:0] xm,
     input  wire [56:0] xs,
     input  wire kok,
@@ -40,6 +41,9 @@ module qfd_tt_ctlm_static_s #(parameter integer XPF_TRANSPORT_EDGES=0) (
     output wire cf,
     output wire ovf
 );
+    generate if(XPF_TRANSPORT_EDGES<0)begin:g_unassigned_arm_route
+      initial $error("native XPF transport edges require assigned physical route");
+    end endgenerate
     wire w_rst_n;
     wire w_h_start;
     wire [17:0] w_token;
@@ -125,7 +129,7 @@ module qfd_tt_ctlm_static_s #(parameter integer XPF_TRANSPORT_EDGES=0) (
     assign w_pos[17:0] = st[29:12];
     assign w_token[17:0] = st[47:30];
     assign w_h_start = st[48];
-    assign w_up_fault = uf;
+    assign w_up_fault = |uf; // Four real upper leaves; existing downstream fault capture is retained.
     wire [91:0] m_xm = {w_me_acc_o[23:0], w_me_idle_o, w_me_prog_o[15:0], w_m_fin_o, w_m_fidx_o[17:0], w_m_fval_o[31:0]};
 `ifdef OT_QFD_TT_CTLM_SLOT_MUT
     assign xm = {m_xm[91:2], m_xm[0], m_xm[1]};
@@ -139,10 +143,12 @@ module qfd_tt_ctlm_static_s #(parameter integer XPF_TRANSPORT_EDGES=0) (
     assign w_kv_ok = kok;
     assign w_kv_write_drained = kwd;
     assign mer0=w_me_clk_en;assign mer1=w_me_clk_en;assign mer2=w_me_clk_en;
-    assign mer3=w_me_clk_en;assign mer4=w_me_clk_en;assign mer5=w_me_clk_en;
-    assign w_fab_fault = fab|rf0|rf1|rf2|rf3|rf4|rf5|xflt|xpf_loader_fault|xpf_schedule_fault;
+
+    assign w_fab_fault = fab|rf0|rf1|rf2|xflt|xpf_loader_fault|xpf_schedule_fault;
     assign cf = w_c_fault;
     assign ovf = w_ov;
+    wire me_image_ready,xpf_loader_ready,xpf_monitor_ready;
+    assign control_stores_ready=me_image_ready&&su_image_ready&&xpf_loader_ready&&xpf_monitor_ready;
     wire monitor_rs;
     ot_reset_sync #(.ASYNC_STAGES(2)) u_xpf_reset
       (.clk(ck_xpf),.async_rst_n(w_rst_n),.sync_rst_n(monitor_rs));
@@ -159,11 +165,11 @@ module qfd_tt_ctlm_static_s #(parameter integer XPF_TRANSPORT_EDGES=0) (
     wire xpf_loader_fault,xpf_schedule_fault,xpf_active;
     wire cfg_clear,cfg_v,cfg_seal;wire [2:0] cfg_index;wire [187:0] cfg_data;
     wire [3:0] cfg_count;wire [5:0] xpf_stage;wire [31:0] stop_cycle,xpf_cycle;
-    ot_qfd_xpf_pw_loader u_xpf_loader
+    ot_qfd_xpf_dense_pw_loader u_xpf_loader
       (.clk(ck_xpf),.rst_n(monitor_rs),.stage_active(xpf_active),
        .pw_v(monitor_pw[74]),.pw_addr(monitor_pw[73:64]),.pw_data(monitor_pw[63:0]),
        .cfg_clear(cfg_clear),.cfg_v(cfg_v),.cfg_seal(cfg_seal),.cfg_index(cfg_index),.cfg_data(cfg_data),
-       .cfg_count(cfg_count),.stage(xpf_stage),.stop_cycle(stop_cycle),.fault(xpf_loader_fault));
+       .cfg_count(cfg_count),.stage(xpf_stage),.stop_cycle(stop_cycle),.image_ready(xpf_loader_ready),.fault(xpf_loader_fault));
     wire [15:0] actual_me_observe,monitor_me;
     ot_hdc_delay #(.W(16),.D(1),.RESET(1)) u_xpf_me_face
       (.clk(ck_xpf),.rst_n(monitor_rs),.d(actual_me_observe),.q(monitor_me));
@@ -176,10 +182,11 @@ module qfd_tt_ctlm_static_s #(parameter integer XPF_TRANSPORT_EDGES=0) (
        .cfg_index(cfg_index[1:0]),.cfg_data(cfg_data),.cfg_count(cfg_count[2:0]),
        .start(dvm_stage_start),.stop(xpf_active&&xpf_cycle==stop_cycle),.stage(xpf_stage),
        .cp_issue(monitor_me[15]&&monitor_me[13:12]==3),.cp_pc(xpf_me_pc),.me_issue(xpf_me_event&&monitor_me[13:12]==1),.me_pc(xpf_me_pc),.su_issue(monitor_su[15]),.su_pc(monitor_su[11:0]),
-       .xpf(xpf),.fault(xpf_schedule_fault),.active(xpf_active),.cycle(xpf_cycle));
+       .xpf(xpf),.image_ready(xpf_monitor_ready),.fault(xpf_schedule_fault),.active(xpf_active),.cycle(xpf_cycle));
     ot_qfd_tt_ctlm_static_parent u_body (
         .ck_me_sched(ck_me_sched),
         .cp_active(cp_active),.cp(cp),
+        .me_image_ready(me_image_ready),.program_obs(program_obs),
         .layer_context_v(layer_context_v),.native_tok(native_tok),.native_pos(native_pos),
         .native_cmd(native_cmd),.native_ret(native_ret),.command_stage(command_stage),
         .me_observe(actual_me_observe),

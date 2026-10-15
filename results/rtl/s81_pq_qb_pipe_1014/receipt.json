@@ -1,0 +1,91 @@
+{
+  "status": "FUNCTIONAL_CANDIDATE_PHYSICAL_AND_NATIVE_SYSTEM_UNQUALIFIED",
+  "base_commit": "03637f961ef734f10b59cdd97841a6c98826d0ef",
+  "source_sha256": {
+    "rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_qb_pipe_native.sv": "05375d6440c6924f442b01bdfb05f615d930a88161213e95b771f65db700f2f8",
+    "rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_core_native.sv": "c8706a30f91e137b52b4cb936e25e2c916e5ffffef4990f508794031e368573f",
+    "rtl/test/dsrom_sys/tb_s81_pq_core_pipe.cpp": "bf3bd625d96c3cc30b0124b30156c45827f139824babe14cc9228d0c8072a9c9",
+    "rtl/test/dsrom_sys/tb_s81_pq_qb_pipe.sv": "4a9f9a2f4f695f2f0714322173189c3d5da8c58993cc233b90605b2b2653965f",
+    "tools/s81/pq_native_core_bench.py": "e84bba3406e77fcc33df24877c65ef091c5b1b81677b9a619f9ca2f62c6cedab",
+    "tools/s81/pq_qb_pipe_bench.sh": "656240b1be689167549751927a8c1e92a21d1a57a9af0c1fd4e62d14656a39d0",
+    "physical/s81_pq_hier/pinned/rtl/v41die/ot_v41_pqc_tiles.sv": "f6c45bff4f75c10441765ecff25aba83e800c8c9ec72e48b493a9eba2f74a78a",
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": "d9801653d16576f40306c1fb1d01928e88e7371a3897b616e31d3e3df917cb2d"
+  },
+  "selection": "OT_PQ_QB_PHYS_SPLIT + OT_PQ_QB_PIPE; opt-in, default unchanged",
+  "implemented_fixed_latency": {
+    "QB_read_extra_cycles": 2,
+    "bank_write_extra_cycles": 1,
+    "CTL_and_IX_broadcast_alignment_extra_cycles": 2,
+    "fault_check": "sticky parity checked one edge after hq/he output; no cycle equality claim vs old sticky fault"
+  },
+  "component": {
+    "result": "PASS",
+    "compared_bits": 345800,
+    "logical_words": 384,
+    "rows_per_bank": 96,
+    "macros": 4,
+    "mutants": [
+      "QBX data select FAIL",
+      "QBHEAD bank select FAIL"
+    ],
+    "metadata_corruption": "exponent bit detected and sticky"
+  },
+  "core_diagnostic": {
+    "result": "PASS",
+    "native_full_token_qualified": false,
+    "external_models": [
+      "ROM and operand input boundary stimuli",
+      "field return count injected 40 cycles after final emitted operand beat per tag"
+    ],
+    "baseline_total_cycles": 5857,
+    "candidate_total_cycles": 5871,
+    "measured_diagnostic_loss_pct": 0.23903022024927,
+    "cases": [
+      {
+        "baseline_cycles": 936,
+        "candidate_cycles": 938,
+        "phases": 4
+      },
+      {
+        "baseline_cycles": 992,
+        "candidate_cycles": 994,
+        "phases": 4
+      },
+      {
+        "baseline_cycles": 1917,
+        "candidate_cycles": 1925,
+        "phases": 4
+      },
+      {
+        "baseline_cycles": 2012,
+        "candidate_cycles": 2014,
+        "phases": 4
+      }
+    ],
+    "warning": "No native end-to-end loss or ledger admission is established by the diagnostic return model. The inherited early-return model returns 40 cycles after stream start and hides the added latency; retained separately as historical diagnostic."
+  },
+  "physical": {
+    "routed": false,
+    "gated": false,
+    "new_masters": [
+      "ot_s81_pq_qb_headp_native",
+      "ot_s81_pq_qb_bankp_native",
+      "ot_s81_pq_qb_align_native"
+    ],
+    "head_metadata_bits": 6144,
+    "align_effective_bits_per_stage": 1101,
+    "required": [
+      "head/align slot sizing and assigned die pins",
+      "kit generation",
+      "exact and negative physical gates",
+      "TT setup/FF hold/DRC closure",
+      "compiler +2 per phase schedule and native full-shape measured end-to-end qualification"
+    ]
+  },
+  "accepted_cost_ledger_row_added": false,
+  "commands": {
+    "component": "bash tools/s81/pq_qb_pipe_bench.sh final-component",
+    "core": "python3 tools/s81/pq_native_core_bench.py --qb-pipe --aq-pin --aq-parity --ix-bank-split --aq-split --ctl-fixed --bc-sliced --work core-lastbeat --jobs 8"
+  },
+  "exploratory_early_return_snapshot_sha256": "08a5d00fb8092185fc8be1ea10fdf91b4a1ce773838bff6e2f9c3d2b5ef8f036"
+}

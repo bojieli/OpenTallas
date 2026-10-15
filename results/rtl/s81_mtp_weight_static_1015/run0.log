@@ -1,0 +1,5 @@
+MARKOV_WEIGHT_STATIC PASS checked=512 fixed_latency=6 beats=16 rows=32
+- /srv/opentallas-scratch/codex/mtp-weight-static-1015/gate3/tb.sv:27: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 645ns; walltime 0.061 s; speed 11.372 us/s
+- Verilator: cpu 0.057 s on 1 threads; alloced 1017 MB

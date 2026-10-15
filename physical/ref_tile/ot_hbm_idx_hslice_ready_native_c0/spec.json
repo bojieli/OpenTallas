@@ -62,9 +62,9 @@
   "QL": 5
  },
  "job": {
-  "owner": "Claude:hbm-group-B3-1014",
-  "branch": "claude/hbm-group-b2-1014",
-  "tag": "ready1pin",
+  "owner": "Claude:hbm-group-B6-1014",
+  "branch": "claude/hbm-idx-ready3-1014",
+  "tag": "ready3",
   "purpose": "Distinct actual reset-ready successor. Requested same related legacy outline, not an accepted physical view or alias. Fresh CTS required for nominal15335 sinks: measured300ps insertion/80ps spread rule or partition. Source exact full2048/parent gold and actual stopped-clock negatives published. No physical or die-slot claim.",
   "benches": [
    {
@@ -105,15 +105,14 @@
  },
  "recipe": 2,
  "slot_change_request": "Distinct native reset-ready successor requests standalone172.8x103.68um outline only. Actual full scorer2048 placement remains unassigned; no legacy view or old2000.16x2646 parent slot alias.",
- "structural_change": "ready1pin (Claude group-B3 10-14): same RTL as CLOSED ready0log-5300bde80 (TT +129.35 / FF +21.49 / DRC 0); native pin audit vs r25gq v12 (results/arch/hbm_group_b2_1014/pinreg_idx_ready0.md): launch 281.0 ps > 220 on 27 ko_key outputs (76 ps over a pin flop), capture 184.8, pair 465.8, spread 42.0. Kit regenerated with recipe-2 pin defaults of main >= 36de4b87f (pin_reg_split: one dedicated launch flop per output pin, keep_pin_regs, HB2 pad, flops at pins).",
+ "structural_change": "ready3 (Claude group-B6 10-14): ready2-0137554eb (relay-cleared online, outhold off) failed GRT-0116 at the S output face after a DPL-0033 CTS crash: without the recipe-2 out pads the flow's hold repair clustered buffers at the output pins (M3 44->57 %, M5 12->27 % vs CLOSED ready1pin). RTL = ready2 (rst_n -> relay only, fixes ready1pin capture 215.5 on rst_n); kit = ready1pin recipe 2 with outhold ON and HB1xp67 pin pads (ready1pin launch 224.2 / 221.1 ps on 2 ko_key pins was the HB2 out pad).",
  "reroute_reason": {
-  "kind": "pin_register",
-  "source": "results/arch/hbm_group_b2_1014/pinreg_idx_ready0.json",
-  "cell": "ot_hbm_idx_hslice_ready_native",
-  "launch_ps": 281.0,
-  "capture_ps": 184.8,
-  "pair_cost_ps": 465.8,
-  "fix": "27 ko_key outputs over 220 (worst 281.0, 76 ps over a pin flop): kit regenerated with recipe-2 pin_reg_split (one dedicated launch flop per output pin), keep_pin_regs, HB2 pad, flops at pins; RTL unchanged"
+  "kind": "rtl_change",
+  "why": "online flop async clear moved from the rst_n port to the relay output (native capture 215.5 on rst_n); outhold off for the 2 launch pins over 220"
+ },
+ "hold_pad": {
+  "cell": "HB1xp67_ASAP7_75t_R",
+  "basis": "ready3 (B6 10-14): ready2 with outhold off routed GRT-0116 (173 overflow at the S output face, M3/M5 use 44->57 % / 12->27 % vs ready1pin: flow hold repair replaced the pin pads); ready1pin native launch 224.2/221.1 on 2 ko_key pins came from the HB2 out pad -> HB1 pads on every pin, outhold back on"
  },
  "children": [],
  "inter": [],
@@ -124,8 +123,5 @@
  "inhold": true,
  "outhold": true,
  "keep_pin_regs": true,
- "pin_reg_split": true,
- "hold_pad": {
-  "cell": "HB2xp67_ASAP7_75t_R"
- }
+ "pin_reg_split": true
 }

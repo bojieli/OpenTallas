@@ -3,14 +3,15 @@
 // Four independent fixed-cycle SU quarter links to the 32 native VM banks.
 // Bank q*8+b belongs to quadrant q and bank b. No arbitration, queues or return
 // flow control: the compiler owns RG0/WG0 and schedules every read/write slot.
-// RD_LAT is measured from the bank's sampled request to sampled response.
+// RD_LAT counts sampled edges: n+6 registered bank response is sampled here
+// at n+7 (RD_LAT=7). The extra edge is the registered link return boundary.
 // Native bank ECC data is carried without reinterpretation. Address errors and
 // missed/unsolicited response slots latch a fault; faults never stall the clock.
 // Operand broadcast: a compiler load fills ONE sector per quarter, replayed into
 // selected write lanes. Load/replay on the same edge sees the previously loaded
 // sector, preserving synchronous SRAM semantics. Source data may be fetched once
 // and reused without eight further reads; payload data are not reset.
-module ot_hbm_su_f2_static_quarter #(parameter integer QID=0,RD_LAT=6,MUT_ROUTE=0,MUT_REUSE=0)(
+module ot_hbm_su_f2_static_quarter #(parameter integer QID=0,RD_LAT=7,MUT_ROUTE=0,MUT_REUSE=0)(
  input wire clk,rst_n,
  input wire [8*17-1:0] su_rq,input wire[8*281-1:0]su_wq,
  output reg[8*17-1:0]vm_rq,output reg[8*281-1:0]vm_wq,
@@ -49,7 +50,7 @@ module ot_hbm_su_f2_static_quarter #(parameter integer QID=0,RD_LAT=6,MUT_ROUTE=
   end
  end
 endmodule
-module ot_hbm_su_f2_static_link #(parameter integer RD_LAT=6,MUT_ROUTE=0,MUT_REUSE=0)(
+module ot_hbm_su_f2_static_link #(parameter integer RD_LAT=7,MUT_ROUTE=0,MUT_REUSE=0)(
  input wire[3:0]quarter_clk,input wire rst_n,
  input wire[32*17-1:0]su_rq,input wire[32*281-1:0]su_wq,
  output wire[32*17-1:0]vm_rq,output wire[32*281-1:0]vm_wq,
@@ -58,7 +59,7 @@ module ot_hbm_su_f2_static_link #(parameter integer RD_LAT=6,MUT_ROUTE=0,MUT_REU
  input wire[31:0]operand_replay,output wire[3:0]fault
 );
  // Each independently hardened quarter has one compensated clock input and
- // 4,746 register bits (RD_LAT=6); the parent contains only fixed wires.
+ // 4,754 register bits (RD_LAT=7); the parent contains only fixed wires.
  for(genvar q=0;q<4;q=q+1)begin:g_quarter
   ot_hbm_su_f2_static_quarter #(.QID(q),.RD_LAT(RD_LAT),.MUT_ROUTE(MUT_ROUTE),.MUT_REUSE(MUT_REUSE))u_q(
    .clk(quarter_clk[q]),.rst_n(rst_n),

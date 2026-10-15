@@ -1,0 +1,47 @@
+{
+ "schema": "opentallas.s81.hstn_banded_equivalence.v1",
+ "status": "PASS",
+ "scope": "Actual generator glue_rtl hstn path + real ot_fwd_clk_inv/ot_fwd_link_stage RTL. Common ideal bench clock, same rising capture edge; no physical clock/root/CTS, die hopcut or timing qualification.",
+ "width": 759,
+ "original_primitive_slices": [
+  512,
+  247
+ ],
+ "split_bands": [
+  276,
+  276,
+  207
+ ],
+ "split_clock_entries": 3,
+ "registered_data_bits_each": 759,
+ "additional_capture_cycles": 0,
+ "positive_capture_edges": 5616,
+ "stimuli": "Zeros, ones, all 759 walking-one and walking-zero patterns, 4096 full-width xorshift patterns; output stability between capture edges",
+ "mutant": "Swap middle-band local input bits 0/1 before the actual generated stage; same clock and width",
+ "sources_sha256": {
+  "rtl/common/ot_fwd_link_stage.sv": "dcd1ec4292f5d9061b14a5ce79f50f8c1f939dae3ac9e21e4acf5970a009d49a",
+  "tools/s81_hstn_split/tb_hstn_split.sv": "773ae1fce87a802152c6733ec99c8842c82612770411e13a1411e98dee331ad6",
+  "tools/s81_hstn_split/gate.py": "c958fee86b3b639e4c4a709a01480ea6a40924f8beb3920ef60b8c3801a32867",
+  "tools/dsrom_s81_fulldie.py": "d9338644688593041c5540ebc9b94d7658698782a0269199259c07d55b4c32f0"
+ },
+ "base_git_commit": "da99877a89ea00ea5136341b7035ab33326034c1",
+ "runs": [
+  {
+   "kind": "exact",
+   "exit": 0,
+   "expected": "pass",
+   "observed_expected_result": true,
+   "generated_rtl_sha256": "cf95fb1e3f493df9e18726ece1a308528592d0a2df72e5082227eada5720c791",
+   "run_log_sha256": "4e0f5576804416aef9f7c8e9a4162b00db8e5523e502d3e17951645a7327248d"
+  },
+  {
+   "kind": "middle_bit_swap",
+   "exit": 1,
+   "expected": "fail",
+   "observed_expected_result": true,
+   "generated_rtl_sha256": "f6d6fd6a51217b0bcc88e52f0c55ce91ecb9be1fa5825996048b35ebaaca0d30",
+   "run_log_sha256": "837e0d8465a1f1be42bd72857243f75ae597eb7ea0edc7af1961f1144072086d"
+  }
+ ],
+ "iverilog_version": "Icarus Verilog version 11.0 (stable) ()"
+}

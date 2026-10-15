@@ -1,0 +1,75 @@
+{
+  "schema": "ot.hbm.kp4.native_clock_request.v1",
+  "status": "SOURCE_IMPLEMENTED_CANDIDATE_ONLY; physical sites, pins, phi-R and actual native clock timing must be assigned/gated before adoption",
+  "encoder": {
+    "master": "ot_hbm_kp4_enc_rooted",
+    "roots": {
+      "clk_ctrl": {
+        "family": "local_link",
+        "rtl_flop_upper_bound": 561
+      },
+      "clk_collect": {
+        "family": "local_link",
+        "rtl_flop_upper_bound": 5120
+      },
+      "clk_encode": {
+        "family": "local_link",
+        "rtl_flop_upper_bound": 5440
+      },
+      "clk_codeword": {
+        "family": "local_link",
+        "rtl_flop_upper_bound": 5440
+      }
+    }
+  },
+  "decoder": {
+    "master": "ot_hbm_kp4_dec_rooted",
+    "roots": {
+      "clk_capture": {
+        "family": "recovered_PMA",
+        "rtl_flop_upper_bound": 5481
+      },
+      "clk_syndrome": {
+        "family": "recovered_PMA",
+        "rtl_flop_upper_bound": 5747
+      },
+      "clk_bm0": {
+        "family": "recovered_PMA",
+        "rtl_flop_upper_bound": 6994
+      },
+      "clk_bm1": {
+        "family": "recovered_PMA",
+        "rtl_flop_upper_bound": 6994
+      },
+      "clk_bm2": {
+        "family": "recovered_PMA",
+        "rtl_flop_upper_bound": 6994
+      },
+      "clk_bm3": {
+        "family": "recovered_PMA",
+        "rtl_flop_upper_bound": 6994
+      },
+      "clk_chien": {
+        "family": "recovered_PMA",
+        "rtl_flop_upper_bound": 11369
+      },
+      "clk_emit": {
+        "family": "recovered_PMA",
+        "rtl_flop_upper_bound": 6043
+      }
+    }
+  },
+  "timing": {
+    "period_ps": 833.333,
+    "setup_uncertainty_ps": 60,
+    "hold_uncertainty_ps": 25,
+    "same_family_ports": "Independent delivered tree entries must meet actual same-edge capture/launch phase budget; no common-clock pin substitute. Functional unitbench same-phase stimulus does not qualify physical delivery.",
+    "added_datapath_edges": 0,
+    "added_flops": 0
+  },
+  "count_per_nine_link_bank": {
+    "local_encoder_roots": 36,
+    "recovered_decoder_roots": 72
+  },
+  "sizing": "Counts are source register-bank upper bounds, not synthesized/physical measurements. Existing one-root fullFEC view does not stand in for this candidate."
+}

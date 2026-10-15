@@ -1,0 +1,38 @@
+{
+  "schema": "opentallas.qwen-segment-controller-proof.v1",
+  "status": "PASS_COMPONENT_ONLY",
+  "scope": "Actual released DW and four real SRAM models; core completion and collective loopback are explicit interface fixtures. No whole-layer arithmetic, eight-rank collective, or physical timing qualification.",
+  "tests": [
+    {
+      "case": "normal",
+      "exit_code": 0,
+      "expected_pass": true,
+      "status": "PASS"
+    },
+    {
+      "case": "missing_return",
+      "exit_code": 0,
+      "expected_pass": true,
+      "status": "PASS"
+    },
+    {
+      "case": "stop_wait_mutant",
+      "exit_code": 1,
+      "expected_pass": false,
+      "status": "REJECTED"
+    },
+    {
+      "case": "token_truncation_mutant",
+      "exit_code": 1,
+      "expected_pass": false,
+      "status": "REJECTED"
+    }
+  ],
+  "source_sha256": {
+    "rtl/qwen_sys/static_schedule_20261014/ot_qwen_tp_seq_calendar.sv": "11c43345f8fa9d6a73263deaa5c5876f441f55daf8399f7e0195ba6405da1977",
+    "rtl/qwen_sys/static_schedule_20261014/tb_qwen_tp_seq_calendar.sv": "51408274922d694cace86edd44e50d3769d0485ae6f8b079bb81cad71ba0d8af",
+    "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v": "6f87b48e0860f3645178d2973638322af7867280a6884809be5e2024b2d91828",
+    "results/arch/qwen_tp8_native_dispatch_1014/token_source_plan/layer_candidate_segments.hex": "cacab45708d0502163266b18c3903a3ff81ddd03f249b1943316173ea70ed9d9"
+  }
+}

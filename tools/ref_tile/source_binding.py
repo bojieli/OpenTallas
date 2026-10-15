@@ -21,6 +21,8 @@ CONSUMED_SCHEMA = "opentallas.ref_tile.gate_consumed.v1"
 # working-tree tools the remote gate script runs itself (REMOTE_SH), besides the daemon overlays (SHIP_HELPERS)
 GATE_TOOLS = ("tools/ref_tile/ref_route.sh", "tools/textbook_lint.py", "tools/closure_loop/ck_insertion.py",
               "tools/ref_tile/path_classes.tcl")
+# Non-Python source read by an imported generator and embedded in its kit.
+PY_DATA = {"tools/ref_tile/direct_macro_clock_entries.py": ("tools/ref_tile/sta_scene_binding.cc",)}
 PY_DIRS = ("tools", "tools/ref_tile", "tools/closure_loop", "tools/w18")
 SCAN = (".tcl", ".sdc", ".sh", ".env", ".mk", ".cfg", ".f")    # flow scripts: every repo path they name is consumed
 HDL = (".v", ".sv", ".svh", ".vh")
@@ -155,6 +157,7 @@ def consumed_closure(files, seeds, prefixes, path_re):
                      and (not p.endswith(".py") or m.group(1).endswith((".tcl", ".sdc", ".sh", ".env")))]
         if p.endswith(".py"):
             todo += [(q, False) for q in sorted(_py_imports(p, text, files))]
+            todo += [(q, True) for q in PY_DATA.get(p, ())]
         if p.endswith(".f"):
             todo += [(ln.strip(), True) for ln in text.splitlines()
                      if ln.strip() and not ln.lstrip().startswith(("-", "/", "#"))]
@@ -326,3 +329,139 @@ def recover_verified_snapshot(binding, staged_root, log_bytes, script_bytes):
     recovered["recovery"] = {"kind": "full_original_snapshot_verified", "log_sha256": hashlib.sha256(log_bytes).hexdigest(),
                              "staged_root": str(staged_root), "qualification": "original_source_only_not_current_HEAD"}
     return recovered
+
+
+def staged_measurement_script(original_script, run):
+    """Only resume original post-floorplan commands; never reconstruct old stdout."""
+    start = original_script.index('C=$R/routes/gate/work/orfs;')
+    tail = original_script[start:].replace('[ $FRC -eq 0 ] || exit 0', '')
+    line = next(x for x in tail.splitlines() if 'make DESIGN_CONFIG=' in x and ' cts" >' in x)
+    tail = tail.replace(line, '  echo GATE_CTS_RC=0; echo RECOVERY_CTS_REUSED_EXISTING_DATABASE')
+    return ('set -uo pipefail\nR=' + str(run) + '\nexport PATH="$R/bin:$PATH"\n'
+            'export OT_ORFS_CORNER_OVERRIDE=TC\ncd "$R/src"\n'
+            "docker image inspect --format 'GATE_TOOL_IMAGE_ID={{.Id}} GATE_TOOL_IMAGE_DIGESTS={{json .RepoDigests}}' openroad/orfs:latest || exit 1\n"
+            'echo RECOVERY_STAGED_REMEASUREMENT\n' + tail)
+
+
+def staged_measurement_artifacts(run):
+    """The physical state reused by the new measurement, including constraints."""
+    run = Path(run)
+    base = list((run / 'routes/gate/work/orfs/results/asap7').glob('*/base'))
+    if len(base) != 1:
+        raise ValueError('one original ORFS database directory required')
+    required = [base[0] / n for n in ('1_2_yosys.v', '3_2_place_iop.odb', '4_1_cts.odb', '4_cts.sdc')]
+    required += [run / 'routes/gate/work/orfs/config.mk']
+    for p in required:
+        if not p.is_file() or not p.stat().st_size:
+            raise ValueError('missing original physical artifact: ' + str(p))
+    return {str(p.relative_to(run)): hashlib.sha256(p.read_bytes()).hexdigest() for p in required}
+
+
+def verify_staged_measurement_inputs(binding, run, original_script):
+    run = Path(run)
+    ok, why = validate(binding, run / 'src', run / 'src', route_overlay=False)
+    if not ok:
+        raise ValueError(why)
+    if hashlib.sha256(original_script).hexdigest() != binding.get('remote_script_sha256'):
+        raise ValueError('original execution script digest differs')
+    identity = binding.get('commit') or 'snapshot-sha256:' + binding['manifest_sha256']
+    if (run / 'src/SOURCE_COMMIT').read_text().strip() != identity:
+        raise ValueError('original SOURCE_COMMIT marker differs')
+    return staged_measurement_artifacts(run)
+
+
+def staged_measurement_image(log_bytes):
+    """New log must identify its actual tool and contain no reused-flow errors."""
+    text = log_bytes.decode(errors='replace')
+    if re.search(r'^GATE_FLOWERR\b', text, re.M):
+        raise ValueError('new measurement reports a flow error')
+    codes = re.findall(r'\bGATE_FLOW_RC=(\S+)', text)
+    if any(code != '0' for code in codes):
+        raise ValueError('new measurement reports nonzero flow status')
+    identities = re.findall(r'^GATE_TOOL_IMAGE_ID=(sha256:[a-f0-9]{64})(?:\s|$)', text, re.M)
+    if len(identities) != 1:
+        raise ValueError('new measurement requires one actual tool image identity')
+    return identities[0]
+
+
+def run_staged_remeasurement(binding, run, original_script_path):
+    """Execute a NEW canonical measurement on a verified, completed CTS database.
+
+    Caller must use fleet admission. Original archive stdout remains unavailable.
+    A before/after artifact check forbids changing the reused physical state.
+    """
+    run = Path(run)
+    original = Path(original_script_path).read_bytes()
+    artifacts = verify_staged_measurement_inputs(binding, run, original)
+    script = staged_measurement_script(original.decode(), run).encode()
+    script_path = run / 'staged_remeasurement.sh'
+    log_path = run / 'staged_remeasurement.log'
+    receipt_path = run / 'staged_remeasurement.json'
+    if receipt_path.exists():
+        raise ValueError('staged remeasurement already has a receipt; verify it instead of duplicating work')
+    script_path.write_bytes(script)
+    with log_path.open('wb') as log:
+        result = subprocess.run(['bash', str(script_path)], stdout=log, stderr=subprocess.STDOUT)
+    after = verify_staged_measurement_inputs(binding, run, original)
+    if artifacts != after:
+        raise ValueError('remeasurement modified original physical artifacts')
+    if result.returncode or b'GATE_DONE' not in log_path.read_bytes():
+        raise ValueError('new measurement did not finish successfully')
+    image = staged_measurement_image(log_path.read_bytes())
+    receipt = dict(schema='opentallas.ref_tile.staged_remeasurement.v1', tool_image_identity=image,
+                   original_archive_stdout='unavailable', original_script_sha256=hashlib.sha256(original).hexdigest(),
+                   manifest_sha256=binding['manifest_sha256'], artifacts_sha256=artifacts,
+                   measurement_script_sha256=hashlib.sha256(script).hexdigest(),
+                   measurement_log_sha256=hashlib.sha256(log_path.read_bytes()).hexdigest(),
+                   new_measurement_only=True, physical_thresholds='unchanged')
+    receipt_path.write_text(json.dumps(receipt, indent=2) + '\n')
+    return receipt
+
+
+def recover_staged_remeasurement(binding, run, original_script_path, expected_log):
+    """Rehash remote source, script, database, persisted new script/log and receipt."""
+    import copy
+    run = Path(run)
+    original = Path(original_script_path).read_bytes()
+    artifacts = verify_staged_measurement_inputs(binding, run, original)
+    receipt = json.loads((run / 'staged_remeasurement.json').read_text())
+    canonical = staged_measurement_script(original.decode(), run).encode()
+    checks = {
+        'schema': 'opentallas.ref_tile.staged_remeasurement.v1',
+        'tool_image_identity': staged_measurement_image(expected_log),
+        'original_archive_stdout': 'unavailable',
+        'original_script_sha256': hashlib.sha256(original).hexdigest(),
+        'manifest_sha256': binding['manifest_sha256'],
+        'artifacts_sha256': artifacts,
+        'measurement_script_sha256': hashlib.sha256(canonical).hexdigest(),
+        'measurement_log_sha256': hashlib.sha256(expected_log).hexdigest(),
+        'new_measurement_only': True, 'physical_thresholds': 'unchanged'}
+    if receipt != checks:
+        raise ValueError('new staged measurement receipt differs from rehashed evidence')
+    if (run / 'staged_remeasurement.sh').read_bytes() != canonical:
+        raise ValueError('new measurement script is not the canonical original-script continuation')
+    if (run / 'staged_remeasurement.log').read_bytes() != expected_log:
+        raise ValueError('new persisted measurement log differs')
+    if b'GATE_DONE' not in expected_log:
+        raise ValueError('new measurement log lacks completion')
+    recovered = copy.deepcopy(binding)
+    recovered.pop('remote_archive_verified', None)
+    recovered['staged_remeasurement'] = receipt
+    return recovered
+
+
+def staged_remeasurement_matches_log(binding, log_bytes):
+    """Receipt integrity guard; only remote rehash recovery can produce this receipt."""
+    r = binding.get('staged_remeasurement') or {}
+    try:
+        image = staged_measurement_image(log_bytes)
+    except ValueError:
+        return False
+    return (isinstance(r, dict) and r.get('tool_image_identity') == image and r.get('schema') == 'opentallas.ref_tile.staged_remeasurement.v1'
+            and r.get('original_archive_stdout') == 'unavailable'
+            and r.get('manifest_sha256') == binding.get('manifest_sha256')
+            and r.get('original_script_sha256') == binding.get('remote_script_sha256')
+            and r.get('measurement_log_sha256') == hashlib.sha256(log_bytes).hexdigest()
+            and bool(r.get('artifacts_sha256')) and bool(r.get('measurement_script_sha256'))
+            and r.get('new_measurement_only') is True and r.get('physical_thresholds') == 'unchanged'
+            and not binding.get('remote_archive_verified'))

@@ -1,0 +1,24 @@
+{
+  "scope": "actual staticSU parent elaboration only; productionG3072/D8/PSRAM1/CRED0/realCCseal; no arithmetic/layer runtime/physical pin/phase/rate qualification",
+  "source_commit": "1c237810a",
+  "unit": "oth-ubuntu-1081613-1792047860",
+  "host": "ot-epyc4",
+  "exit": 0,
+  "defines": [
+    "OT_QFD_SEQ_SU_NOWROM"
+  ],
+  "source_sha256": {
+    "rtl/qwen_split/qfd_seq_su_static.sv": "d2516bf6f876b0e5cbbb3c9c9a764bf5e12a9df2a952eca0887db66bd9280d7c",
+    "rtl/qwen_sys/static_schedule_20261014/ot_qfd_seq_su_bi_static.sv": "3753f2623815d0bfce658c827804de80663ce40abccb0511187a45d8240ec5cc",
+    "rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_su_static.sv": "27bf02049fee338352c78e1dc534e2ea0e8639d0f383a2265cab13015b271475",
+    "rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_pw.sv": "400fe076fb13a12a414cd15d95982704ecf5d77b61a8f2e2c3d7fd5ae8518659",
+    "rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv": "61467355ebbc7de8c617645a5566dd0b92be0af5fae01536f4d1b9a26dd79db8",
+    "rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue.sv": "0d533e9a09514840fac0628053fd1aaa501bccbffeaf8913afb6a936d1d994b1",
+    "rtl/rom/ot_coll_cmd_issue.sv": "22e08d8e69f7b449fffda8880cd6c0458d59e99403bdebc0b0b8a450da267a11",
+    "rtl/qwen_split/qfd_seq_su_collective_calendar.sv": "773c2402b6948f8eed2787bbda9924de18570df6db9d76d011543fa9e768c2c8",
+    "rtl/qwen_sys/program_receiver_20261014/qkd_program_commit.sv": "26a396b1826998c681fe23090d0dab22b5a6df9334b10fd4b47fbd967e3eb291",
+    "tools/qwen_split/elaborate_static_su_parent.sh": "5b462eba8eacd2a828015ec8b687d9287ce519fab43b23caa03c6a41d714e7d1",
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v": "862e21e63d6805e46226cb8ca27b731a7a6c778783e4c44f123ca30950ffde83"
+  },
+  "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

@@ -1,0 +1,33 @@
+{
+  "schema": "opentallas.hbm.engram.native_hash_home.v1",
+  "status": "pass",
+  "tokens": 64,
+  "actual_descriptors": 3072,
+  "calendar": {
+    "first_request_age": 13,
+    "last_request_done_age": 36,
+    "assumed_clock": "common functional clock only; physical delivery unproved"
+  },
+  "actual_rtl": [
+    {
+      "name": "baseline",
+      "returncode": 0,
+      "stdout": "PASS actual hash to home descriptors=3072 tokens=64 exact ages13..36\nhash_proof/tb.sv:4110: $finish called at 24346000 (1ps)"
+    },
+    {
+      "name": "rank_mutant",
+      "returncode": 1,
+      "stdout": "FATAL: hash_proof/tb.sv:72: hash/home mismatch layer0 col0 rank1 want0 row5702652 want5702652\n       Time: 166000  Scope: tb"
+    }
+  ],
+  "native_full_layer_qualified": false,
+  "physical_qualified": false,
+  "boundaries": "Compressed CID boundary and HBM request descriptors. Raw-token mapped producer, actual DMA/read returns, collectives and decode consumer not joined.",
+  "source_sha256": {
+    "rtl/hdc/v41/ot_hdc_engram_tables_shipped_pkg.sv": "743063fbfc402bda039919cfe0de959980ac5f1fa3999474503dc70060342989",
+    "rtl/hdc/v41/ot_hdc_engram_hash_shipped.sv": "86749dce384ec65ec1ac3dd99e34848161c1ddc8931b69ee3c5688c953fb4a98",
+    "rtl/hbm_accel/engram_static_20261015/ot_hbm_engram_home_dispatch.sv": "1132b94038342443ba24380f1a1e697ebb8c7aa7c2fea231d2e83a991f8a94f9",
+    "rtl/hbm_accel/engram_static_20261015/ot_hbm_engram_hash_home_native.sv": "23bdc9cc444b51b85bf0b7c353998cc4394cce6a73d843d973e2c98327f68f78",
+    "tools/hbm_engram_hash_home_gate.py": "e8681e223ecbb70f5157806fb273c2d64f75a9cc9a2a1119daf1141d30de042b"
+  }
+}

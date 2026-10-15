@@ -1,0 +1,25 @@
+%Error: rtl/hbm_accel/io_static_20261015/tb_fec_static_window.sv:42:29: syntax error, unexpected checker, expecting IDENTIFIER or IDENTIFIER-for-cell or IDENTIFIER-for-type or randomize
+   42 |  always @(posedge clk)begin:checker
+      |                             ^~~~~~~
+%Error: rtl/hbm_accel/io_static_20261015/tb_fec_static_window.sv:46:10: syntax error, unexpected '=', expecting IDENTIFIER or randomize
+   46 |   sampled=u.qd[486:0];had_word=u.qv;
+      |          ^
+%Error: rtl/hbm_accel/io_static_20261015/tb_fec_static_window.sv:50:16: syntax error, unexpected '=', expecting '('
+   50 |     incoming_id=sampled[31:0];age=cycle-incoming_id;
+      |                ^
+%Error: rtl/hbm_accel/io_static_20261015/tb_fec_static_window.sv:55:9: syntax error, unexpected '=', expecting '('
+   55 |     diag=diag+1;
+      |         ^
+%Error: rtl/hbm_accel/io_static_20261015/tb_fec_static_window.sv:58:3: syntax error, unexpected '#'
+   58 |   #0.000001;
+      |   ^
+%Error: rtl/hbm_accel/io_static_20261015/tb_fec_static_window.sv:62:11: syntax error, unexpected '=', expecting '('
+   62 |    checked=checked+1;
+      |           ^
+%Error: rtl/hbm_accel/io_static_20261015/tb_fec_static_window.sv:66:4: syntax error, unexpected $display
+   66 |    $display("PASS actual FEC static-window words=%0d corrected_channel age=%0d diagnostic_words=%0d",checked,age,diag);$finish;
+      |    ^~~~~~~~
+%Error: rtl/hbm_accel/io_static_20261015/tb_fec_static_window.sv:70:43: syntax error, unexpected end
+   70 |  initial begin #10000;$fatal(1,"timeout");end
+      |                                           ^~~
+%Error: Cannot continue

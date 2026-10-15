@@ -327,7 +327,7 @@ def apply(v, m, G):
     pair = m.setdefault('bus_pair', {})
     split = m.setdefault('port_split', {})
     split.update({k: dict(q) for k, q in SPLIT.items()})
-    m['port_join'] = JOIN
+    m['port_join'] = {name: dict(parts) for name, parts in JOIN.items()}
     B = list(m['buses'])
 
     def drop_insts(names):
@@ -998,6 +998,7 @@ def _wrap(v, m, G, peers):
     base_m, base_pw, base_pr, base_case = v.masters, v.port_widths, v.pin_rects, v.case_real
     ties = m['ties']
     split = m['port_split']
+    join_plan = m.get('port_join', JOIN)
     S = v.SHAVE
     plan_cache = {}
 
@@ -1060,9 +1061,13 @@ def _wrap(v, m, G, peers):
         # Legacy frame clock planning cannot mirror M8 pins; these two frames are
         # replaced by closed M5 pins below, so construct their disposable frame R0.
         frame_model = dict(model)
-        frame_model['insts'] = [copy.copy(i) if i.master in ('qfd_su_cbuf_g', 'qfd_crom_g', 'qfd_tile_nl') else i for i in model['insts']]
+        frame_model['insts'] = [copy.copy(i) if i.master in ('qfd_su_cbuf_g', 'qfd_crom_g', 'qfd_tile_nl')
+                                or (SPLIT_COMPUTE and i.master.startswith('qfd_port_tiles_')) else i
+                                for i in model['insts']]
         for i in frame_model['insts']:
-            if i.master in ('qfd_su_cbuf_g', 'qfd_crom_g'):
+            if i.master in ('qfd_su_cbuf_g', 'qfd_crom_g') or (SPLIT_COMPUTE and i.master.startswith('qfd_port_tiles_')):
+                # Native source-exact static slab pins and49clock entries are
+                # rebuilt by final(); legacy M8 mirror planning is disposable.
                 i.orient = 'R0'
             elif i.master == 'qfd_tile_nl':
                 i.master = 'qfd_tile_nk'  # base frame shape; actual node-less ports below
@@ -1608,7 +1613,7 @@ def _wrap(v, m, G, peers):
             ref.ports, ref.order = {'ti': sp}, ['ti']
             rects = base_pr(ref, 1, {'ti': 1559})
             positions = [(r[0] + r[2]) / 2 if sp[2] in 'NS' else (r[1] + r[3]) / 2 for _, _, r in rects]
-            for pn, (_, bits) in JOIN['qkd_rhead'].items():
+            for pn, (_, bits) in join_plan['qkd_rhead'].items():
                 q.ports[pn] = ('pins', len(bits), sp[2], sp[3], [round(positions[j], 4) for j in bits], 1)
                 q.order.append(pn)
         io_pairs(model, M)
@@ -1644,9 +1649,13 @@ def _wrap(v, m, G, peers):
                 # below the native12pins/um limit; old single-track pads do not.
                 band.ports['tw'] = ('face', 4096, 'N', 'M5', 650.0, 2)
                 band.ports['ty'] = ('face', 4096, 'N', 'M5', 230.0, 2)
-                for pn in ('tt', 'pw', 'c'):
-                    sp=band.ports[pn]
-                    band.ports[pn]=sp[:-1]+(2,)
+                # Real registered core face, toward the upper leaves in the
+                # channel east of the slab stack. Legacy M8 area pads are not
+                # a legal parent contract.
+                band.w,band.h=881.28,1131.84
+                for pn,n,centre in (('tt',1538,750.0),('pw',513,520.0),('c',26,430.0),('f',1,460.0)):
+                    band.ports[pn]=('face',n,'E','M4',centre,2)
+                    if pn not in band.order:band.order.append(pn)
                 band.order = list(dict.fromkeys(band.order + ['b0','lnk']))
                 band.obs_top = 7  # actual native cluster signalsM2-M7/PGM7, not a leaf-only M6 draft
             # v1.3 (compute lead r4): the tile parents' clock entries at their CLOSED children's measured clock-pin XY
@@ -1688,6 +1697,33 @@ def _wrap(v, m, G, peers):
             if SPLIT_COMPUTE:
                 from qwen_split.source_pin_plan import apply as source_pin_plan
                 source_pin_plan(M)
+            if model.get('direct_up4'):
+                from qwen_split.direct_up4 import install_leaf_master, partition_master, MASTER, VIEW
+                VIEWS[MASTER] = VIEW
+                install_leaf_master(M, model, Master, view_pins(MASTER))
+                band = M.get('qfd_sp_band_lanes')
+                if band is not None and 'pw_l0' in band.ports:
+                    # Source-exact ABI includes quarter outputs AND legacy
+                    # outputs. Partition only connected real quarter bits.
+                    rects=v.pin_rects(band,1,{p:sp[1] for p,sp in band.ports.items()})
+                    partition_master(band,join_plan['qfd_sp_band_lanes'],rects)
+                elif band is not None and 'pw' in band.ports:
+                    # Four true registered quarter-valid outputs avoid an
+                    # unrelayed long fanout from the legacy single valid pin.
+                    pwsp=band.ports.pop('pw');band.order[:]=[p for p in band.order if p!='pw']
+                    for l in range(4):
+                        centre=pwsp[4]+(l-1.5)*(129*.096+.384)
+                        band.face(f'pw_l{l}',129,pwsp[2],pwsp[3],centre,2)
+                    fsp=band.ports.pop('f');band.order[:]=[p for p in band.order if p!='f']
+                    if fsp[0]=='face':
+                        band.face('f_up',4,fsp[2],fsp[3],fsp[4],2)
+                    elif fsp[0]=='pins':
+                        band.ports['f_up']=('pins',4,fsp[2],fsp[3],[fsp[4][0]+.096*l for l in range(4)],1)
+                        band.order.append('f_up')
+                    else:
+                        raise ValueError('band quarter fault requires a real face pin')
+                    rects = v.pin_rects(band, 1, {p:sp[1] for p,sp in band.ports.items()})
+                    partition_master(band, join_plan['qfd_sp_band_lanes'], rects)
             for mst_ in M.values():
                 mst_.order[:] = list(dict.fromkeys(mst_.order))
 
@@ -1758,7 +1794,7 @@ def _wrap(v, m, G, peers):
                 vp = view_pins(mst.name)
                 if vp is not None:
                     out = [(nm[:-3] if nm.endswith('[0]') and nm[:-3] in vp[2] else nm, layer, r) for nm, layer, r in out]
-            for pn, (real, bits) in JOIN.get(mst.name, {}).items():
+            for pn, (real, bits) in join_plan.get(mst.name, {}).items():
                 ren = {f'{pn}[{j}]': f'{real}[{bit}]' for j, bit in enumerate(bits)}
                 out = [(ren.get(nm, nm), layer, r) for nm, layer, r in out]
         return out
@@ -1812,7 +1848,7 @@ def _wrap(v, m, G, peers):
                     pn = port.lstrip('*')
                     parts = split.get(byi[inst].master, {}).get(pn) if k == 1 else None
                     perm = PERM.get(byi[inst].master, {}).get(pn) if k == 1 else None
-                    join = JOIN.get(byi[inst].master, {}).get(pn) if k == 1 else None
+                    join = join_plan.get(byi[inst].master, {}).get(pn) if k == 1 else None
                     if join:
                         real, indexes = join
                         assert len(indexes) == n, (inst, pn, n)
@@ -1861,6 +1897,8 @@ def _wrap(v, m, G, peers):
             V.append(f'  {it.master} {it.name} (' + ', '.join(conns[it.name]) + ');')
         V.append('endmodule\n')
         Path(path).write_text('\n'.join(V))
+        if model.get('master_params'):
+            Path(str(path)+'.params.json').write_text(json.dumps({'masters':model['master_params']},indent=2)+'\n')
 
     base_phy = v.phy_pins
 

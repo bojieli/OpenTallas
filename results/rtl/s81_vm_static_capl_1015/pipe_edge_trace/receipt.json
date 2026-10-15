@@ -1,0 +1,225 @@
+{
+  "schema": "opentallas.s81.cap.named-edge-witness.v1",
+  "scope": "Actual production cap16 RTL and independent scoreboard; instrumentation only, common functional clocks not physical CTS evidence",
+  "admission": "AGI oth-ubuntu-4001205-1792063768 exit0 PIPE0 andPIPE1 both productionPASS",
+  "convention": {
+    "bench_sk": "one based serial counter incremented at edge; drive fc at edge+10ps",
+    "P": "zero based serial edge where last element is actually sampled at leaf pin; equals bench drive sk numerically because drive uses prior edge then next sample",
+    "PIPE0": "leaf postNBA at P+1; x34 bank write at P+2",
+    "PIPE1": "leaf postNBA at P+2; x34 bank write at P+3",
+    "stream": "zero based output edge 4*floor(q/3)+2+q%3, q=x34 serial bank write zero based; bench tk is one based, +1",
+    "trace": "LEAF_POST/STREAM_POST printed +1ps after actual edge; sample/bank exact edge"
+  },
+  "witnesses": [
+    {
+      "PIPE": 0,
+      "row": 0,
+      "bench_drive_sk": 13,
+      "input_sample_sk": 14,
+      "input_sample_zero_based_serial_edge": 13,
+      "leaf_output_sk": 15,
+      "x34_bank_write_sk": 16,
+      "x34_bank_phase": 0,
+      "stream_output_tk": 23,
+      "zero_based_stream_output_edge": 22,
+      "trace": {
+        "sample_last_time_ps": 28356,
+        "DRIVE": {
+          "time": 27254,
+          "Pdrive": 13,
+          "row": 0
+        },
+        "LEAF_POST": {
+          "time": 29469,
+          "row": 0,
+          "sk": 15
+        },
+        "BANK_WRITE": {
+          "time": 30580,
+          "row": 0,
+          "bank": 0
+        },
+        "STREAM_POST": {
+          "time": 32110,
+          "row": 0,
+          "tk": 23
+        }
+      }
+    },
+    {
+      "PIPE": 0,
+      "row": 32,
+      "bench_drive_sk": 18,
+      "input_sample_sk": 19,
+      "input_sample_zero_based_serial_edge": 18,
+      "leaf_output_sk": 20,
+      "x34_bank_write_sk": 21,
+      "x34_bank_phase": 2,
+      "stream_output_tk": 29,
+      "zero_based_stream_output_edge": 28,
+      "trace": {
+        "sample_last_time_ps": 33916,
+        "DRIVE": {
+          "time": 32814,
+          "Pdrive": 18,
+          "row": 32
+        },
+        "LEAF_POST": {
+          "time": 35029,
+          "row": 32,
+          "sk": 20
+        },
+        "BANK_WRITE": {
+          "time": 36140,
+          "row": 32,
+          "bank": 2
+        },
+        "STREAM_POST": {
+          "time": 37114,
+          "row": 32,
+          "tk": 29
+        }
+      }
+    },
+    {
+      "PIPE": 0,
+      "row": 64,
+      "bench_drive_sk": 20,
+      "input_sample_sk": 21,
+      "input_sample_zero_based_serial_edge": 20,
+      "leaf_output_sk": 22,
+      "x34_bank_write_sk": 23,
+      "x34_bank_phase": 1,
+      "stream_output_tk": 32,
+      "zero_based_stream_output_edge": 31,
+      "trace": {
+        "sample_last_time_ps": 36140,
+        "DRIVE": {
+          "time": 35038,
+          "Pdrive": 20,
+          "row": 64
+        },
+        "LEAF_POST": {
+          "time": 37253,
+          "row": 64,
+          "sk": 22
+        },
+        "BANK_WRITE": {
+          "time": 38364,
+          "row": 64,
+          "bank": 1
+        },
+        "STREAM_POST": {
+          "time": 39616,
+          "row": 64,
+          "tk": 32
+        }
+      }
+    },
+    {
+      "PIPE": 1,
+      "row": 0,
+      "bench_drive_sk": 13,
+      "input_sample_sk": 14,
+      "input_sample_zero_based_serial_edge": 13,
+      "leaf_output_sk": 16,
+      "x34_bank_write_sk": 17,
+      "x34_bank_phase": 1,
+      "stream_output_tk": 24,
+      "zero_based_stream_output_edge": 23,
+      "trace": {
+        "sample_last_time_ps": 28356,
+        "DRIVE": {
+          "time": 27254,
+          "Pdrive": 13,
+          "row": 0
+        },
+        "LEAF_POST": {
+          "time": 30581,
+          "row": 0,
+          "sk": 16
+        },
+        "BANK_WRITE": {
+          "time": 31692,
+          "row": 0,
+          "bank": 1
+        },
+        "STREAM_POST": {
+          "time": 32944,
+          "row": 0,
+          "tk": 24
+        }
+      }
+    },
+    {
+      "PIPE": 1,
+      "row": 32,
+      "bench_drive_sk": 18,
+      "input_sample_sk": 19,
+      "input_sample_zero_based_serial_edge": 18,
+      "leaf_output_sk": 21,
+      "x34_bank_write_sk": 22,
+      "x34_bank_phase": 0,
+      "stream_output_tk": 31,
+      "zero_based_stream_output_edge": 30,
+      "trace": {
+        "sample_last_time_ps": 33916,
+        "DRIVE": {
+          "time": 32814,
+          "Pdrive": 18,
+          "row": 32
+        },
+        "LEAF_POST": {
+          "time": 36141,
+          "row": 32,
+          "sk": 21
+        },
+        "BANK_WRITE": {
+          "time": 37252,
+          "row": 32,
+          "bank": 0
+        },
+        "STREAM_POST": {
+          "time": 38782,
+          "row": 32,
+          "tk": 31
+        }
+      }
+    },
+    {
+      "PIPE": 1,
+      "row": 64,
+      "bench_drive_sk": 20,
+      "input_sample_sk": 21,
+      "input_sample_zero_based_serial_edge": 20,
+      "leaf_output_sk": 23,
+      "x34_bank_write_sk": 24,
+      "x34_bank_phase": 2,
+      "stream_output_tk": 33,
+      "zero_based_stream_output_edge": 32,
+      "trace": {
+        "sample_last_time_ps": 36140,
+        "DRIVE": {
+          "time": 35038,
+          "Pdrive": 20,
+          "row": 64
+        },
+        "LEAF_POST": {
+          "time": 38365,
+          "row": 64,
+          "sk": 23
+        },
+        "BANK_WRITE": {
+          "time": 39476,
+          "row": 64,
+          "bank": 2
+        },
+        "STREAM_POST": {
+          "time": 40450,
+          "row": 64,
+          "tk": 33
+        }
+      }
+    }
+  ]
+}

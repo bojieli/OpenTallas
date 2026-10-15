@@ -1,0 +1,56 @@
+{
+  "schema": "opentallas.qwen.collective.structural_microarchitecture.v2",
+  "status": "CANDIDATE_NOT_PHYSICAL_QUALIFIED",
+  "source_sha256": {
+    "rtl/physical/ot_qfd_io_collective_static.sv": "93a46ba5b5e7dee10683f18a1482ccea3b7423d89cf6937c1dd2c07d03f2eef1",
+    "rtl/rom/ot_coll_tp8_static.sv": "dcfb13facdc83c3d920ff88a911ec37901027c64abef24997b435cc34d1cda44",
+    "tools/ref_tile/specs_qcollio/qfd_io_collective_s2.json": "069c022560c14b27b55f43f8cc2008e273fa04eeaf8c0427d938af8d519cc73f"
+  },
+  "replaces": "s1 failed547fixedreachstages; oppositefaceports shared one synthesized register bank; pincommandpredecode",
+  "outline_um": [
+    864,
+    950.4
+  ],
+  "slot_um": [
+    3453.4,
+    1563.8
+  ],
+  "clock_ps": 833.333,
+  "hardened_children": {
+    "ot_coll_fold_slice": 8,
+    "clock_entries": 8
+  },
+  "memory_macros": {
+    "512x128": 5,
+    "32x546": 4
+  },
+  "face_registers": {
+    "independent_banks": 3,
+    "bits_each": 547,
+    "extra_functional_cycles": 0,
+    "increment_over_merged_s1_register_bits": 1094
+  },
+  "command_boundary": {
+    "register_bits": 50,
+    "compiler_lead_cycles": 1,
+    "pin_issue_cycle": "internal_core_command_cycle-D_seq-1",
+    "PW_row_cycle": "internal_core_command_cycle-D_seq-stage_start-2",
+    "payload_and_link_and_output_slots": "unchanged at internal core command calendar",
+    "cmd_free": "deterministic one-edge-next availability; checked only, never gates"
+  },
+  "bus_bits_per_cycle": {
+    "producer": 546,
+    "serdes_each": 546,
+    "ucie_P": 546,
+    "ucie_R": 514,
+    "output": 517
+  },
+  "buffer_schedule": "unconditional P/S/R offset rings, unchanged ages LU37 LS376, no production credits or wait",
+  "price_cycles": 1121,
+  "measured_production_cycles": 763,
+  "immutable_price_changed": false,
+  "actual_link_composition_pending": false,
+  "physical_gate_pending": true,
+  "die_qualified": false,
+  "actual_link_evidence": "results/rtl/qwen_coll_io_1014/static_links_s2_1014/summary.json"
+}

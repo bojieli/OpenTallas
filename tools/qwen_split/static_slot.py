@@ -1,39 +1,37 @@
 #!/usr/bin/env python3
-"""Generate separately named static slot around the new native parent."""
+"""Emit the complete selected static controller from its canonical ABI template.
+
+Historical physical-slot sources omit the real XPF monitor and cannot generate
+this master. The selected TP8 graph has exactly three result serializers; every
+fault input and engine-enable output names one of those real endpoints.
+"""
 from pathlib import Path
-import re
-root=Path(__file__).resolve().parents[2];src=root/'rtl/physical/ot_qfd_tt_ctlm_split_slot.sv';s=src.read_text()
-# Resolve just the opt-in monitor macro. Retain independent bench mutant branches.
-s=re.sub(r'`ifdef OT_QFD_XPF_MONITOR\n(.*?)`else\n.*?`endif',r'\1',s,flags=re.S) if False else s
-lines=[];inside=False;emit=True
-for line in s.splitlines(True):
- if line.strip()=='`ifdef OT_QFD_XPF_MONITOR':inside=True;emit=True;continue
- if inside and line.strip()=='`else':emit=False;continue
- if inside and line.strip()=='`endif':inside=False;emit=True;continue
- if emit:lines.append(line)
-s=''.join(lines);s=s[s.index('module qfd_tt_ctlm_s'):];s=s.replace('module qfd_tt_ctlm_s','module qfd_tt_ctlm_static_s',1)
-s=s.replace('    input wire ck_xpf,','''    input wire ck_xpf,
-    input wire ck_me_sched,
-    input wire cp_active,output wire [55:0] cp,
-    output wire layer_context_v,output wire [17:0] native_tok,native_pos,
-    output wire [379:0] native_cmd,
-    input wire [94:0] native_ret,
-    output wire [5:0] command_stage,''',1)
-s=re.sub(r'^\s*(?:input|output)\s+wire(?:\s*\[[^\n]+\])?\s+(?:xd|xr),\n','',s,flags=re.M)
-for name in ['w_x_rdy','w_x_dv','w_x_dc','w_x_dcs','w_x_dsp']:
- s=re.sub(r'^\s*wire(?:\s*\[[^\n]+\])?\s+'+name+r';\n','',s,flags=re.M)
- s=re.sub(r'^\s*assign '+name+r' = [^\n]*\n','',s,flags=re.M)
-a=s.index('    wire [52:0] m_xd =');b=s.index('    wire [91:0] m_xm =',a);s=s[:a]+s[b:]
-a=s.index('    // PC identity comes from');b=s.index('    // Transport parameter',a)
-s=s[:a]+'''    wire [15:0] actual_me_observe,monitor_me;
-    ot_hdc_delay #(.W(16),.D(1),.RESET(1)) u_xpf_me_face
-      (.clk(ck_xpf),.rst_n(monitor_rs),.d(actual_me_observe),.q(monitor_me));
-    wire xpf_me_event=monitor_me[15];
-    wire [11:0] xpf_me_pc=monitor_me[11:0];
-'''+s[b:]
-s=s.replace('|me_map_fault','')
-s=s.replace('ot_qfd_tt_ctlm_split_hard u_body (','ot_qfd_tt_ctlm_static_parent u_body (\n        .ck_me_sched(ck_me_sched),\n        .cp_active(cp_active),.cp(cp),\n        .layer_context_v(layer_context_v),.native_tok(native_tok),.native_pos(native_pos),\n        .native_cmd(native_cmd),.native_ret(native_ret),.command_stage(command_stage),\n        .me_observe(actual_me_observe),')
-s=s.replace('.dvm_cmd(ib)', '.rom_cmd(ib)')
-s=s.replace(".cp_issue(1'b0),.cp_pc(12'd0),.me_issue(xpf_me_event)",".cp_issue(monitor_me[15]&&monitor_me[13:12]==3),.cp_pc(xpf_me_pc),.me_issue(xpf_me_event&&monitor_me[13:12]==1)")
-for name in ['x_rdy','x_dv','x_dc','x_dcs','x_dsp']:s=re.sub(r'^\s*\.'+name+r'\([^\n]*\),\n','',s,flags=re.M)
-(root/'rtl/qwen_sys/static_schedule_20261014/qfd_tt_ctlm_static_s.sv').write_text('// New native static slot master; fresh physical qualification required.\n// Existing c341/f104/lc26 packing retained; obsolete VM xd/xr removed.\n'+s)
+import argparse,hashlib,re
+ROOT=Path(__file__).resolve().parents[2]
+TEMPLATE=ROOT/'rtl/qwen_sys/static_schedule_20261014/qfd_tt_ctlm_static_s.sv.in'
+OUTPUT=TEMPLATE.with_suffix('')
+SERIALIZERS=3
+
+def render():
+    text=TEMPLATE.read_text()
+    values=dict(SERIALIZER_ENABLE_PORTS=','.join(f'mer{k}'for k in range(SERIALIZERS)),
+        SERIALIZER_FAULT_PORTS=','.join(f'rf{k}'for k in range(SERIALIZERS)),
+        SERIALIZER_ENABLE_ASSIGNMENTS=''.join(f'assign mer{k}=w_me_clk_en;'for k in range(SERIALIZERS)),
+        SERIALIZER_FAULT_OR='|'.join(f'rf{k}'for k in range(SERIALIZERS)))
+    for key,value in values.items():
+        marker='@'+key+'@'
+        if text.count(marker)!=1:raise ValueError('canonical ABI template missing/duplicate '+key)
+        text=text.replace(marker,value)
+    if re.search(r'@[A-Z_]+@|\b(?:mer|rf)[345]\b',text):raise ValueError('unresolved or nonexistent selected controller endpoint')
+    for key in ('cp_active','native_ret','su_observe','su_image_ready','ck_head','ck_tree','ck_xpf','ck_me_sched'):
+        if not re.search(r'\b'+key+r'\b',text):raise ValueError('canonical controller dropped actual '+key)
+    return text
+
+def main():
+    p=argparse.ArgumentParser(description=__doc__);p.add_argument('--check',action='store_true');p.add_argument('--output',type=Path,default=OUTPUT);a=p.parse_args()
+    text=render()
+    if a.check:
+        if not a.output.is_file()or a.output.read_text()!=text:raise SystemExit('FAIL selected controller differs from canonical template')
+    else:a.output.write_text(text)
+    print('PASS selected NB3 static controller ABI '+hashlib.sha256(text.encode()).hexdigest())
+if __name__=='__main__':main()

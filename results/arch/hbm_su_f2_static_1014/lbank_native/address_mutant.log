@@ -1,0 +1,7 @@
+MISMATCH address=0 expected=91a20000 got=90a00100
+MISMATCH address=1 expected=91a30201 got=90a10301
+MISMATCH address=2 expected=91a00402 got=90a60502
+MISMATCH address=3 expected=91a10603 got=90a70703
+[30726000] %Fatal: tb_lbank_native.sv:32: Assertion failed in tb_lbank_native: LBANK_NATIVE FAIL checks=2560 errors=2432
+%Error: rtl/hbm_accel/generic/adapters/static_su/lbank_native/tb_lbank_native.sv:32: Verilog $stop
+Aborting...

@@ -1,0 +1,48 @@
+{
+  "scope": "Actual source component only; no die or full-token qualification",
+  "model": {
+    "schema": "opentallas.hbm-svc-static-sm-rows.v1",
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "macros_per_sm": 5,
+    "sms_per_stack": 8,
+    "macros_per_stack": 40,
+    "macro_area_per_sm_um2": 19469.265,
+    "macro_area_per_stack_um2": 155754.12,
+    "banks": 2,
+    "rows_per_bank": 64,
+    "physical_payload_bits_per_row": 1280,
+    "useful_payload_bits_per_row": 1088,
+    "tag_bits_per_row": 10,
+    "tag_storage_bits": 1280,
+    "part_seen_storage_bits": 640,
+    "scheduled_fill_sectors_per_cycle": 1,
+    "fill_sectors_per_row": 5,
+    "scheduled_read_rows_per_cycle": 1,
+    "read_latency_edges": 1,
+    "hbm_period_ps": 1024,
+    "stream_period_ps": 833.3333333333334,
+    "phy_max_rows_per_hbm_cycle_at_four_pcs": 0.8,
+    "phy_max_rows_per_stream_cycle_at_four_pcs": 0.6510416666666667,
+    "packet_bits": 1099,
+    "packet_layout": "{valid,tag10,scale64,weights1024}",
+    "scale_source": "low64 of fifth real SRAM",
+    "compiler_fill_vs_read_calendar_bound": false,
+    "physical_qualified": false,
+    "adopted": false
+  },
+  "source_sha256": {
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_static_sm_rows.sv": "61e7596009657dd668189bce7ae45e7f6f4ce43f52225997656af4bc0a5dd907",
+    "rtl/hbm_accel/loader/service_native/tb_hbm_svc_static_sm_rows.sv": "f4124c8460de57a7ad84fa9cbeab601077a3372b965e50d92abe4ee1767e1a1a",
+    "rtl/hbm_accel/loader/service_native/run_static_sm_rows_bench.sh": "d15e336f1f8c88f14a369bfc8f52664ae88513ba780b4bb5b6577b5537db8632"
+  },
+  "logs": {
+    "positive.log": "STATIC_SM_ROWS PASS rows=385 crossbank_cycles=320 initial_fill_sectors=400 faults=8\n",
+    "mutant.log": "FATAL: rtl/hbm_accel/loader/service_native/tb_hbm_svc_static_sm_rows.sv:27: row payload/tag mismatch bank=0 row=0 scale=f6bc9d82f79fd8e5 expected=527f6bd9d95f79ed8f2e98c91bce8a9d407ebca2f6eeaf761f1ed13a458ec3cfea3ef59310aee7a746d82a3c455838681ee80e57a8781d83418863cf1b18713ab4a847664e385552184bbc638eebae37d55b980863cb8bdc8a3bf590d0abe7657f1bd139858bc30dd3face56c87adc0293caea3d255af9e9ccaa87a5963a9550398aa30cc31ab138956\n       Time: 856000 Scope: tb_hbm_svc_static_sm_rows.check_read\n"
+  },
+  "yosys": "hierarchy/proc/check PASS",
+  "remaining": [
+    "Source-pinned compiler calendar and immutable memory price",
+    "Actual whole boundary source composition",
+    "Physical slot/routing/clock qualification"
+  ]
+}

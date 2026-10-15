@@ -1,14 +1,20 @@
 {
- "name": "s81hc_crrfw_ref-v2-pinplan-f41de6496",
+ "name": "s81hc_crrfw_ref-v6-COMMIT",
  "block": "ot_s81_hc_crootr_f",
  "ref_tile": true,
- "owner": "Claude:s81hc-1013",
- "purpose": "[hc-crootr] crootr v2 4-tile split, C=0 (comb E): forward column (far face, full height): fd relays RF=5, y pin flop + mid-height y relay, chain output flop; 14.2k flops; replaces s81hc_crootrw_ref (one 34.6k-sink root, hold WNS frozen -102 ps); v2 pin plan (tools/s81_suhc/crr_pinplan.py, v1 FLOORPLAN_MARGIN 20 b/um on one layer): N/S buses over the full face on M5+M3 (5.2-5.4 b/um/layer), f_* on M4 at 180-368.4 (6.0); slot unchanged",
+ "owner": "Claude:s81-elemB6-1014",
+ "purpose": "[hc-crootr r10] forward column root, pin-register form (die hop gate against the closed y slice leaf): RTL: p_req is 11 kept pin flops (one a y slice leaf) fed from the W-face capture of f_fv, the mid-height y relay is removed (0 cycles added at the chain face; lockstep 0 / 60,000); kit recipe 2: every port flop FIRM at its pin in 24 staggered rows (io_flop_at_pins), in-hold stages kept, out-hold off (S face 10.8 b/um); N pins on the pins of the 11 closed leaves (8 abutted, 3 on one 97.2-um jog)",
  "threads": 16,
  "peak_ram_gb": 40,
  "source": {
-  "branch": "claude/s81hc-1013",
-  "commit": "f41de6496"
+  "branch": "claude/s81-elemB6-crrf",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "rtl/dsrom_sys/s81_suhc/test",
+   "rtl/link",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2"
+  ]
  },
  "stages": {
   "bench": [
@@ -23,10 +29,55 @@
     ]
    },
    {
-    "name": "hc_exact_ng64",
-    "cmd": "bash tools/s81_suhc/hc_gate_bench.sh {RUN}/bench/hc_m0 0",
+    "name": "lockstep_exact",
+    "cmd": "bash tools/s81_suhc/crrf_pq_bench.sh {RUN}/bench/lock0 0 0",
     "expect": "pass",
-    "pass_regex": "^RUN ng64_dpi_m0_a0_hier3tail_cp1_cs6_ls1 pass$",
+    "pass_regex": "^CRRF_PQ PASS$",
+    "min_count_regex": "(\\d+) compared cycles",
+    "threads": 4,
+    "peak_ram_gb": 6,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "lockstep_mutant",
+    "cmd": "bash tools/s81_suhc/crrf_pq_bench.sh {RUN}/bench/lock1 1 0",
+    "expect": "fail",
+    "fail_regex": "^CRRF_PQ FAIL$",
+    "threads": 4,
+    "peak_ram_gb": 6,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "lockstep_mutant2",
+    "cmd": "bash tools/s81_suhc/crrf_pq_bench.sh {RUN}/bench/lock2 2 0",
+    "expect": "fail",
+    "fail_regex": "^CRRF_PQ FAIL$",
+    "threads": 4,
+    "peak_ram_gb": 6,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "lockstep_mutant3",
+    "cmd": "bash tools/s81_suhc/crrf_pq_bench.sh {RUN}/bench/lock3 3 0",
+    "expect": "fail",
+    "fail_regex": "^CRRF_PQ FAIL$",
+    "threads": 4,
+    "peak_ram_gb": 6,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "hc_tile_exact",
+    "cmd": "bash tools/s81_suhc/hc_tile_bench.sh {RUN}/bench/tq_exact exact ot_s81_hc_crootr_f,ot_s81_hc_cryys",
+    "expect": "pass",
+    "pass_regex": "^RUN ng256_dpi_m0_a0_hier3tail_cp1_cs6_ls1_probe pass$",
     "threads": 16,
     "peak_ram_gb": 24,
     "needs": [
@@ -34,10 +85,10 @@
     ]
    },
    {
-    "name": "hc_neg_m3",
-    "cmd": "bash tools/s81_suhc/hc_gate_bench.sh {RUN}/bench/hc_m3 3",
+    "name": "hc_tile_mut",
+    "cmd": "bash tools/s81_suhc/hc_tile_bench.sh {RUN}/bench/tq_mut ot_s81_hc_crootr_f",
     "expect": "fail",
-    "fail_regex": "^RUN ng64_dpi_m3_a0_hier3tail_cp1_cs6_ls1 fail$",
+    "fail_regex": "^RUN ng256_dpi_m0_a0_hier3tail_cp1_cs6_ls1_tm-ot_s81_hc_crootr_f fail$",
     "threads": 16,
     "peak_ram_gb": 24,
     "needs": [
@@ -50,7 +101,7 @@
    "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
   },
   "route": {
-   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.01 OT_MM_FF_SDC='physical/ref_tile/s81hc_crrfw_ref/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/s81hc_crrfw_ref/kit.env {LABEL} {RUN}/routes",
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/s81hc_crrfw_ref/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/s81hc_crrfw_ref/kit.env {LABEL} {RUN}/routes",
    "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
    "logs": [
     "{RUN}/routes/{LABEL}/flow.log"
@@ -93,14 +144,18 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/s81hc_crrfw_ref/s81hc_crrfw_ref-v2-pinplan-f41de6496"
+   "to": "results/rtl/ref_tile/s81hc_crrfw_ref/s81hc_crrfw_ref-v6-COMMIT"
   }
  ],
  "cycles_added": 0,
  "route_hold_corners": "mm",
- "route_hold_margin_ns": 0.01,
+ "route_hold_margin_ns": 0.03,
  "route_corner": "TC",
  "notes": "generated by tools/ref_tile/ref_tile.py",
  "merge_target": null,
- "no_bench_reason": "bit-exactness is gated on dsfd_sp_hc HIER=1/2 (tools/s81_suhc/hc_gate.py NG64 m0 PASS + m1/m3 FAIL, NG256 HIER=1 m0 PASS); the tile alone has no golden"
+ "structural_change": "v2 (CLOSED) left the port flops to timing-driven placement: p_y captured ~439 um behind the N pins (s 497.0 ps), ch_fd launched 372 ps after the boundary clock, one p_req flop for 11 leaf pins over 324 um. RTL: p_req is 11 kept pin flops (one a y slice leaf) fed from the W-face capture of f_fv, the mid-height y relay is removed (0 cycles added at the chain face; lockstep 0 / 60,000); kit recipe 2: every port flop FIRM at its pin in 24 staggered rows (io_flop_at_pins), in-hold stages kept, out-hold off (S face 10.8 b/um); N pins on the pins of the 11 closed leaves (8 abutted, 3 on one 97.2-um jog); planned balanced clock spine replaces CTS after measured flat CTS spread 238.4 ps (control 59 ps), die spread budget 80 ps | v5 (s81-elemB 10-14): routed v4 (spine) failed TT -83.7 / FF -39.36 with the boundary clock at 805 ps mean, 137 ps spread (spine leaf spread 31-33 ps pre-route did not survive routing): the 11.4k sinks are on ONE CTS root again but sink-clustered (16 sinks / 16 um, 20 um buffer spacing: the Cn leaf topology that measured 54.5 ps routed spread); the POST select that fanned out from ONE flop to the 2,816-bit chain output mux is now NPR = 16 kept replicas of the last fv relay stage (0 cycles; lockstep 0 / 60,000 C0 and C2; new mutant 3 = one replica stuck FAILS 18,272). | v6 (B6 s81-elemB 10-14): clock spread is set by the tile HEIGHT (flops firm at N, f face and S face): one root over 598 um measured 122-137 ps; the y crossing (one register-to-register die hop, o 197.3 + 0.76 L + s) replaces the in-tile 598-um span, so the tile shrinks to 345.6 um at 0 cycles (no RF change, no comb/ccr/pad re-route; the coordinator's accepted N/S split would cost +2 y stages = RF 7 under the pin-capture rule).",
+ "reroute_reason": {
+  "kind": "rtl_change",
+  "why": "v6 (B6 s81-elemB 10-14): v5 RTL (POST select NPR=16 kept replicas, lockstep 0/60,000) in a 276.48 x 345.6 tile = the bottom of the 598.32 slot: the v5 --cts gate (276 x 598) measured TT insertion 674-797 / spread 122.3 ps > 80 with flops firm at N, W/E and S faces 598 um apart; the y slices now cross the freed 252.7 um above the tile as die wires (hop <= 683.3 with L <= 350), 0 cycles"
+ }
 }

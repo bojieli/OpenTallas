@@ -1,0 +1,158 @@
+{
+  "schema": "opentallas.static_return_controller_calendar.v1",
+  "status": "SOURCE_COMPONENT_VERIFIED_NOT_NATIVE_DIE",
+  "native_qualified": false,
+  "controller_source": "3221e4f5e",
+  "return_source": "df5c31ed0",
+  "clock_ps": {
+    "hbm": 1024,
+    "core": 833.334
+  },
+  "hbm_pipeline_edges": {
+    "reservation_to_physical_RD": 4,
+    "raw_HBM_RL": 23,
+    "raw_to_corrected_co": 5,
+    "reservation_to_corrected_co": 32
+  },
+  "rows": [
+    {
+      "phase_ps": 137,
+      "mode": 0,
+      "exit": 0,
+      "log": "p137_m0.log",
+      "sha256": "767098d62b8edee15231f3f33dd43e56f2e244b7cbd81f7c5546d85eef2a13af"
+    },
+    {
+      "phase_ps": 137,
+      "mode": 1,
+      "exit": 134,
+      "log": "p137_m1.log",
+      "sha256": "b1773e429f3bebc864f7f77cac4647d3e68ccba0914705a19615b4c6869be8c8"
+    },
+    {
+      "phase_ps": 137,
+      "mode": 2,
+      "exit": 134,
+      "log": "p137_m2.log",
+      "sha256": "2c59c5dbb732286af0517e15daabb60a7d5315f79e05fb7d4464e56ca3727cb7"
+    },
+    {
+      "phase_ps": 137,
+      "mode": 3,
+      "exit": 134,
+      "log": "p137_m3.log",
+      "sha256": "1e2ea1539ea1109817ba80d675c39cde16487d6ece18bbdf99453f810c89b5ba"
+    },
+    {
+      "phase_ps": 137,
+      "mode": 4,
+      "exit": 134,
+      "log": "p137_m4.log",
+      "sha256": "3b1cc231e97de8e11d945d388e9081e8a4532eca85bcd3b22cba85470b3e3e29"
+    },
+    {
+      "phase_ps": 137,
+      "mode": 5,
+      "exit": 134,
+      "log": "p137_m5.log",
+      "sha256": "edd480c1e5ab6bbcb1132a286aa42c669a022cbac00345329e56d8738a16ac54"
+    },
+    {
+      "phase_ps": 137,
+      "mode": 6,
+      "exit": 134,
+      "log": "p137_m6.log",
+      "sha256": "4fb83630b2bab59b0e879527710477a8a6a6b86cffa5222c5311509c5a593b5c"
+    },
+    {
+      "phase_ps": 137,
+      "mode": 7,
+      "exit": 134,
+      "log": "p137_m7.log",
+      "sha256": "cfe4891a494e0079ffad989150778a2675055bc1ac504ad822bfa317c38705e7"
+    },
+    {
+      "phase_ps": 637,
+      "mode": 0,
+      "exit": 0,
+      "log": "p637_m0.log",
+      "sha256": "3d6c76c478a0237104b66fc770166250a863dc7b0c89c2d68ed04377777a8033"
+    },
+    {
+      "phase_ps": 637,
+      "mode": 1,
+      "exit": 134,
+      "log": "p637_m1.log",
+      "sha256": "b1773e429f3bebc864f7f77cac4647d3e68ccba0914705a19615b4c6869be8c8"
+    },
+    {
+      "phase_ps": 637,
+      "mode": 2,
+      "exit": 134,
+      "log": "p637_m2.log",
+      "sha256": "4e51a67bd40bd8a4db1c34b01fbd987b631d60410578a57dde5e1ca4cc49d898"
+    },
+    {
+      "phase_ps": 637,
+      "mode": 3,
+      "exit": 134,
+      "log": "p637_m3.log",
+      "sha256": "c5ee5335f720bdfa726fe5dd8271d2950baa0ee1f2e101ad281f2eec156783a6"
+    },
+    {
+      "phase_ps": 637,
+      "mode": 4,
+      "exit": 134,
+      "log": "p637_m4.log",
+      "sha256": "3b1cc231e97de8e11d945d388e9081e8a4532eca85bcd3b22cba85470b3e3e29"
+    },
+    {
+      "phase_ps": 637,
+      "mode": 5,
+      "exit": 134,
+      "log": "p637_m5.log",
+      "sha256": "2dfdfc1f840388ab3f4fc9cf271e2f5b6c841f32f20f6afc3c55625331cb2cc5"
+    },
+    {
+      "phase_ps": 637,
+      "mode": 6,
+      "exit": 134,
+      "log": "p637_m6.log",
+      "sha256": "4fb83630b2bab59b0e879527710477a8a6a6b86cffa5222c5311509c5a593b5c"
+    },
+    {
+      "phase_ps": 637,
+      "mode": 7,
+      "exit": 134,
+      "log": "p637_m7.log",
+      "sha256": "b096ba4de27a6e464b61e9fde89c7378c51cbe947a3feed4ebc8cc66eafd0753"
+    }
+  ],
+  "actual_controller_test": {
+    "K_sectors": 256,
+    "V_sectors": 256,
+    "host_writes": 1,
+    "host_reads": 1,
+    "boot_completions": 2,
+    "no_reset_between_host_K_V": true,
+    "external_memory_stores_actual_PHY_writes": true
+  },
+  "core_slot_construction": "For predicted co edge t, publication is t+1024ps. First core pin slot at ceil((t+1024ps+2*833.334ps-CORE_FIRST)/833.334ps), consumed one captured core edge later. No co.valid/ready/publication-dependent issue.",
+  "scope": "Discovery/replay uses the frozen controller PROFILE1 component fixture to generate legal command reservations; strict PROFILE0 executes them. This does not establish a compiled full-layer production schedule or native clock insertion/phase.",
+  "negative_modes": {
+    "1": "RD reservation late",
+    "2": "wrong V range",
+    "3": "missing raw PHY beat",
+    "4": "corrupt actual off-chip stored host data",
+    "5": "compiled HBM put late",
+    "6": "return epoch corrupt",
+    "7": "missing corrected controller beat"
+  },
+  "remaining": [
+    "Actual128PC command/compiler calendar including refresh and destination distribution",
+    "Fixed full-shape K/V prefill and 128row ring lifetime proof",
+    "Physical per-child phase and source pin timing",
+    "Actual seven-edge landing to source-bound ECTL/ASTK/HUB/PV/result service",
+    "Mapped fit/TT/FF/DRC0 and full native token cost"
+  ]
+}

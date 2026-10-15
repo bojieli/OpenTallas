@@ -1,0 +1,72 @@
+{
+ "comment": "S81 HC forward column root ot_s81_hc_crootr_f, pin-register form (s81-suhc r10), run in the job's own source snapshot. (1) lockstep + composition with the 11 y slice leaves: crootr_f PQ 1 + 11 x ot_s81_hc_cryys (leaf k asked by p_req[k]) against the v2 form PQ 0 + the same leaves, ch_fv / ch_fd / ch_rst on every cycle, no p_flt, legal traffic with back-to-back POSTs, a full FIFO and a reset in mid traffic; mutant = the request one cycle early. (2) the NG256 production-shape HC gate bit-exact AND the probe shows every ot_s81_hc_crootr_f and ot_s81_hc_cryys instance at its routed tuple; mutant = one fd relay fewer inside the tile, the same gate must fail. v5: mutant3 = one of the NPR kept POST-select replicas stuck at 0 (its ch_fd slice never takes the y slice).",
+ "benches": [
+  {
+   "name": "lockstep_exact",
+   "cmd": "bash tools/s81_suhc/crrf_pq_bench.sh {RUN}/bench/lock0 0 0",
+   "expect": "pass",
+   "pass_regex": "^CRRF_PQ PASS$",
+   "min_count_regex": "(\\d+) compared cycles",
+   "threads": 4,
+   "peak_ram_gb": 6,
+   "needs": [
+    "verilator"
+   ]
+  },
+  {
+   "name": "lockstep_mutant",
+   "cmd": "bash tools/s81_suhc/crrf_pq_bench.sh {RUN}/bench/lock1 1 0",
+   "expect": "fail",
+   "fail_regex": "^CRRF_PQ FAIL$",
+   "threads": 4,
+   "peak_ram_gb": 6,
+   "needs": [
+    "verilator"
+   ]
+  },
+  {
+   "name": "lockstep_mutant2",
+   "cmd": "bash tools/s81_suhc/crrf_pq_bench.sh {RUN}/bench/lock2 2 0",
+   "expect": "fail",
+   "fail_regex": "^CRRF_PQ FAIL$",
+   "threads": 4,
+   "peak_ram_gb": 6,
+   "needs": [
+    "verilator"
+   ]
+  },
+  {
+   "name": "lockstep_mutant3",
+   "cmd": "bash tools/s81_suhc/crrf_pq_bench.sh {RUN}/bench/lock3 3 0",
+   "expect": "fail",
+   "fail_regex": "^CRRF_PQ FAIL$",
+   "threads": 4,
+   "peak_ram_gb": 6,
+   "needs": [
+    "verilator"
+   ]
+  },
+  {
+   "name": "hc_tile_exact",
+   "cmd": "bash tools/s81_suhc/hc_tile_bench.sh {RUN}/bench/tq_exact exact ot_s81_hc_crootr_f,ot_s81_hc_cryys",
+   "expect": "pass",
+   "pass_regex": "^RUN ng256_dpi_m0_a0_hier3tail_cp1_cs6_ls1_probe pass$",
+   "threads": 16,
+   "peak_ram_gb": 24,
+   "needs": [
+    "verilator"
+   ]
+  },
+  {
+   "name": "hc_tile_mut",
+   "cmd": "bash tools/s81_suhc/hc_tile_bench.sh {RUN}/bench/tq_mut ot_s81_hc_crootr_f",
+   "expect": "fail",
+   "fail_regex": "^RUN ng256_dpi_m0_a0_hier3tail_cp1_cs6_ls1_tm-ot_s81_hc_crootr_f fail$",
+   "threads": 16,
+   "peak_ram_gb": 24,
+   "needs": [
+    "verilator"
+   ]
+  }
+ ]
+}

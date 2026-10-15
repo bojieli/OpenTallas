@@ -367,7 +367,7 @@ ROWQ = 0x1A0000000                   # per die: the block rows' q (head die's 51
 ROWMIX = 0x1A0010000                 # per die: the block rows' attention mixes (24 words) by row i
 DLOG = 0x1B0000000                   # per die: the block rows' LM-head logits (this die's <= 1,352 rows) by row i
 WTAB = 0x1C0000000                   # per position p (64 B): [n_win(p-j)+j for j<5 | n_win(p-j)+5 for j<5 | p mod 16]
-GOLDB = 0x200000000                  # LABELLED REPLAY: golden h / pre after layer L at position p (layers 1..39)
+GOLDB = 19 << 30                  # LABELLED REPLAY: golden h / pre after layer L at position p (layers 1..39)
 GSTR, GPOS = 81952, 16
 MHB = 0x280000000                    # main hidden parts (layers 37..39 inputs), ring of 16 positions x 61,440 B
 MEMB = 0x290000000                   # Markov-head embedding rows (BF16 x 256) by token: MEMB + token * 512

@@ -38,7 +38,7 @@ SRC = [ROOT / p for p in (
     "rtl/qwen_sys/split_20261014/ot_qwen_crc_parallel.sv", "rtl/qwen_sys/split_20261014/ot_qkvd_d2d_llr.sv",
     "rtl/qwen_sys/split_20261014/ot_qwen_static_slot_link.sv",
     "rtl/physical/ot_qfd_static_transport.sv", "rtl/physical/ot_qfd_io_xfifo_static.sv",
-    "rtl/physical/ot_qfd_io_links_static.sv",
+    "rtl/physical/ot_qfd_io_links_static.sv", "rtl/physical/ot_qfd_coll_static_face.sv", "rtl/physical/ot_qfd_ucie_static_share.sv", "rtl/physical/ot_qfd_ucie_six_five.sv", "rtl/physical/ot_qfd_collective_static_io.sv", "rtl/physical/ot_qfd_collective_static_io_production.sv",
     "rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue.sv",
     "rtl/rom/ot_coll_tp8_static.sv", "rtl/physical/ot_qfd_io_collective_static.sv",
     "rtl/rom/ot_coll_static_linkcal.sv", "rtl/rom/ot_coll_cmd_issue.sv",
@@ -64,11 +64,11 @@ PRODUCTION = [
 ]
 
 
-def program_words(prog, nwords):
+def program_words(prog, nwords, cmd_pin_stages=0):
     """Stage program for ot_coll_cmd_issue: rows {cycle, words, mode}, tags, END row, seal (see its header)."""
     pw, rows = [], []
     for k, p in enumerate(prog):
-        x = p["cmd_cycle"] - START - 1
+        x = p["cmd_cycle"] - START - 1 - cmd_pin_stages
         assert x >= 4, "first command too close to the stage start"
         rows.append((x, nwords[k], p["mode"], 0, k))
     last = prog[-1]
@@ -83,14 +83,18 @@ def program_words(prog, nwords):
     return pw
 
 
-def build(out: Path, lu, ls, xu, xs, phi, define=None, qfd=False):
+def build(out: Path, lu, ls, xu, xs, phi, define=None, qfd=False, parent=False, relays=(0,0,0,0), shared=False, six_five=False):
     obj = out / f"obj_u{lu}_s{ls}_xu{xu}_xs{xs}_phi{phi}{'_qfd' if qfd else ''}{('_' + define) if define else ''}"
     h = out / f"harness_phi{phi}.cpp"
     step = ("t->clk = 1; t->lck = 1; t->eval(); t->clk = 0; t->lck = 0; t->eval();" if phi == 0 else
             "t->clk = 1; t->eval(); t->lck = 1; t->eval(); t->clk = 0; t->eval(); t->lck = 0; t->eval();")
+    if six_five:
+        step="bool ce=(tick%5==0),fe=(tick%6==fphi);t->clk=ce;t->lck=ce;t->fdi_ck=fe;t->eval();t->clk=0;t->lck=0;t->fdi_ck=0;t->eval();tick++;"
+    old_h = h.read_text() if h.exists() else None
     h.write_text('#include "Vtb_coll_tp8_static_links.h"\n#include "verilated.h"\n'
-                 "int main(int argc, char** argv) { Verilated::commandArgs(argc, argv);\n"
-                 "  auto* t = new Vtb_coll_tp8_static_links; t->clk = 0; t->lck = 0; t->eval();\n"
+                 "#include <cstring>\n#include <cstdlib>\nint main(int argc, char** argv) { Verilated::commandArgs(argc, argv);\n"
+                 "  unsigned tick=0;int fphi=0;for(int i=1;i<argc;i++)if(!strncmp(argv[i],\"+FDIPHI=\",8))fphi=atoi(argv[i]+8);\n"
+                 "  auto* t = new Vtb_coll_tp8_static_links; t->clk = 0; t->lck = 0; t->fdi_ck=0; t->eval();\n"
                  f"  while (!Verilated::gotFinish()) {{ {step} }}\n"
                  "  t->final(); delete t; return 0; }\n")
     cmd = ["verilator", "--cc", "--exe", "--build", "-O2", "-Wno-fatal", "-Wno-WIDTH", "-Wno-UNUSED", "-Wno-BLKSEQ",
@@ -98,8 +102,24 @@ def build(out: Path, lu, ls, xu, xs, phi, define=None, qfd=False):
            f"-GLATU={lu}", f"-GLATS={ls}", f"-GPU={PU}", f"-GPS={PS}", f"-GKC={KC}", f"-GKW={KW}", f"-GXU={xu}",
            f"-GXS={xs}", "-Mdir", str(obj)] + ([f"+define+{define}"] if define else []) + [str(s) for s in SRC] + \
           [str(h), "-CFLAGS", "-O1", "-j", "16"]
+    if six_five:cmd += ["+define+OT_TP8S_PRODUCTION_WRAPPER"]
+    if parent:
+        cmd += [f"-GSHARED={int(shared)}",f"-GSIXFIVE={int(six_five)}", "+define+OT_TP8S_PARENT"] + [f"-G{p}={v}" for p,v in zip(("RU","RS0","RS1","RS2"),relays)]
     if qfd:
         cmd += ["+define+OT_TP8S_QFD", f"+define+OT_QFDS_LU={lu}", f"+define+OT_QFDS_LS={ls}"]
+    # Reuse only the exact source/executable/driver/profile previously recorded
+    # in this output directory. FDIphase is a runtime argument, not a build.
+    receipt=out/"record.json"
+    exe=obj/"Vtb_coll_tp8_static_links"
+    if receipt.exists() and exe.exists() and old_h==h.read_text():
+        prior=json.loads(receipt.read_text())
+        exact_sources={str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest() for p in SRC}
+        if (prior.get("source_sha256")==exact_sources and
+            prior.get("executable_sha256")==hashlib.sha256(exe.read_bytes()).hexdigest() and
+            all(prior.get(k)==v for k,v in dict(latu=lu,lats=ls,xu=xu,xs=xs,phi=phi,
+              phy_ucie=PU,phy_serdes=PS,die_name_master=qfd,production_parent=parent,
+              relays=list(relays),shared_ucie=shared,six_five=six_five,mutant=define).items())):
+            return exe
     r = subprocess.run(cmd, capture_output=True, text=True)
     if r.returncode:
         sys.exit(f"build failed:\n{r.stdout[-4000:]}{r.stderr[-4000:]}")
@@ -107,6 +127,7 @@ def build(out: Path, lu, ls, xu, xs, phi, define=None, qfd=False):
 
 
 def main():
+    global PU
     ap = argparse.ArgumentParser()
     ap.add_argument("--out", type=Path, required=True)
     ap.add_argument("--latu", type=int, default=KC + KW + 17 + PU)
@@ -119,7 +140,17 @@ def main():
     ap.add_argument("--mutant-define", default=None)
     ap.add_argument("--only", default=None)
     ap.add_argument("--qfd", action="store_true")
+    ap.add_argument("--relays",type=int,nargs=4,default=[0,0,0,0],metavar=("U","S0","S1","S2"))
+    ap.add_argument("--parent",action="store_true",help="actualproduction collective+fiveface parent")
+    ap.add_argument("--shared-ucie",action="store_true")
+    ap.add_argument("--six-five",action="store_true")
+    ap.add_argument("--fdi-phase",type=int,choices=range(6),default=0)
+    ap.add_argument("--unsafe-shared-calendar",action="store_true")
     a = ap.parse_args()
+    if a.six_five:
+        a.parent=True;a.shared_ucie=True
+        PU=25
+    if a.parent:a.qfd=True
     a.out = a.out.resolve()
     a.out.mkdir(parents=True, exist_ok=True)
     cases = PRODUCTION if a.production else UNIT
@@ -129,7 +160,7 @@ def main():
         cases = [("phy_longer_than_compiled", 4, 8, "m", "link", {})]
     if a.expect_fail:
         cases = [c for c in cases if c[4] == "pos"]
-    exe = build(a.out, a.latu, a.lats, a.xu, a.xs, a.phi, a.mutant_define, a.qfd)
+    exe = build(a.out, a.latu, a.lats, a.xu, a.xs, a.phi, a.mutant_define, a.qfd, a.parent, a.relays, a.shared_ucie, a.six_five)
     bad, records = [], []
     for i, (name, nmsg, words, mk, kind, extra) in enumerate(cases):
         rng = np.random.default_rng(100 + i)
@@ -138,12 +169,12 @@ def main():
         else:
             modes = {"r": [0] * nmsg, "g": [1] * nmsg, "m": [int(x) for x in rng.integers(0, 2, nmsg)]}[mk]
             nw = [words] * nmsg
-        prog = schedule(modes, nw, a.latu, a.lats, start=START + 6)
+        prog = schedule(modes, nw, a.latu, a.lats, start=START + 6, shared_ucie=a.shared_ucie and not a.unsafe_shared_calendar)
         vec = a.out / f"vec_{name}"
         vectors(vec, nw, prog, 1000 + i)
-        pw = program_words(prog, nw)
+        pw = program_words(prog, nw, cmd_pin_stages=int(a.qfd))
         (vec / "pw.hex").write_text("".join(f"{ad:03x}{d:016x}\n" for ad, d in pw))
-        args = [str(exe), f"+VEC={vec}", f"+NMSG={nmsg}", f"+NPW={len(pw)}", f"+START={START}"] + \
+        args = [str(exe), f"+VEC={vec}", f"+NMSG={nmsg}", f"+NPW={len(pw)}", f"+START={START}", f"+FDIPHI={a.fdi_phase}"] + \
                [f"+{k}={v}" for k, v in extra.items()]
         run = subprocess.run(args, capture_output=True, text=True)
         txt = run.stdout
@@ -169,12 +200,14 @@ def main():
             bad.append(name)
     (a.out / "record.json").write_text(json.dumps(dict(
         schema="opentallas.qwen.tp8.collective.static_links.v1", ranks=ND, latu=a.latu, lats=a.lats, kc=KC, kw=KW,
-        phy_ucie=PU, phy_serdes=PS, xu=a.xu, xs=a.xs, phi=a.phi, die_name_master=a.qfd, mutant=a.mutant_define,
-        expect_fail=a.expect_fail, production=a.production, issuer_depth=DEPTH, stage_start=START,
+        phy_ucie=PU, phy_serdes=PS, xu=a.xu, xs=a.xs, phi=a.phi, die_name_master=a.qfd, production_parent=a.parent, relays=a.relays, shared_ucie=a.shared_ucie, six_five=a.six_five, FDI_phase_ticks=a.fdi_phase, unsafe_shared_calendar=a.unsafe_shared_calendar, mutant=a.mutant_define,
+        expect_fail=a.expect_fail, production=a.production, issuer_depth=DEPTH, stage_start=START, cmd_pin_stages=int(a.qfd),
         modelled="PHY frame pipes only (fixed latency); all on-chip blocks are the real RTL masters",
         mechanism="compiler program -> fixed-issue core -> collective tokens -> IO calendar slots; no credits/ready/"
                   "backpressure; observed validity, CRC and publication are fault-only checks",
         cases=records, source_sha256={str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in SRC},
+        helper_sha256={f:hashlib.sha256((ROOT/f).read_bytes()).hexdigest() for f in
+          ("tools/qwen_coll_tp8_static_links_bench.py","tools/qwen_coll_tp8_static_bench.py","tools/qwen_coll_tp8_bench.py","tools/hdc_golden.py")},
         executable_sha256=hashlib.sha256(exe.read_bytes()).hexdigest(), native_layer_qualified=False,
         physical_qualified=False), indent=2) + "\n")
     if bad:

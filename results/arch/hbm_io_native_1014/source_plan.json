@@ -1,0 +1,1109 @@
+{
+  "schema": "ot.hbm.native_io.source_plan.v1",
+  "source_loader": "rtl/hbm_accel/generic/loader/ot_hfd_loader_hgi.sv",
+  "host_controller_master": "ot_hbm_host_packet",
+  "loader_ports": [
+    {
+      "name": "s_awvalid",
+      "loader_direction": "input",
+      "controller_direction": "output",
+      "width": 1,
+      "range": "",
+      "h_slice": [
+        406,
+        406
+      ]
+    },
+    {
+      "name": "s_awready",
+      "loader_direction": "output",
+      "controller_direction": "input",
+      "width": 1,
+      "range": "",
+      "h_slice": [
+        0,
+        0
+      ]
+    },
+    {
+      "name": "s_awaddr",
+      "loader_direction": "input",
+      "controller_direction": "output",
+      "width": 12,
+      "range": "[11:0]",
+      "h_slice": [
+        418,
+        407
+      ]
+    },
+    {
+      "name": "s_wvalid",
+      "loader_direction": "input",
+      "controller_direction": "output",
+      "width": 1,
+      "range": "",
+      "h_slice": [
+        419,
+        419
+      ]
+    },
+    {
+      "name": "s_wready",
+      "loader_direction": "output",
+      "controller_direction": "input",
+      "width": 1,
+      "range": "",
+      "h_slice": [
+        1,
+        1
+      ]
+    },
+    {
+      "name": "s_wdata",
+      "loader_direction": "input",
+      "controller_direction": "output",
+      "width": 32,
+      "range": "[31:0]",
+      "h_slice": [
+        451,
+        420
+      ]
+    },
+    {
+      "name": "s_wstrb",
+      "loader_direction": "input",
+      "controller_direction": "output",
+      "width": 4,
+      "range": "[3:0]",
+      "h_slice": [
+        455,
+        452
+      ]
+    },
+    {
+      "name": "s_bvalid",
+      "loader_direction": "output",
+      "controller_direction": "input",
+      "width": 1,
+      "range": "",
+      "h_slice": [
+        2,
+        2
+      ]
+    },
+    {
+      "name": "s_bready",
+      "loader_direction": "input",
+      "controller_direction": "output",
+      "width": 1,
+      "range": "",
+      "h_slice": [
+        456,
+        456
+      ]
+    },
+    {
+      "name": "s_arvalid",
+      "loader_direction": "input",
+      "controller_direction": "output",
+      "width": 1,
+      "range": "",
+      "h_slice": [
+        457,
+        457
+      ]
+    },
+    {
+      "name": "s_arready",
+      "loader_direction": "output",
+      "controller_direction": "input",
+      "width": 1,
+      "range": "",
+      "h_slice": [
+        3,
+        3
+      ]
+    },
+    {
+      "name": "s_araddr",
+      "loader_direction": "input",
+      "controller_direction": "output",
+      "width": 12,
+      "range": "[11:0]",
+      "h_slice": [
+        469,
+        458
+      ]
+    },
+    {
+      "name": "s_rvalid",
+      "loader_direction": "output",
+      "controller_direction": "input",
+      "width": 1,
+      "range": "",
+      "h_slice": [
+        4,
+        4
+      ]
+    },
+    {
+      "name": "s_rready",
+      "loader_direction": "input",
+      "controller_direction": "output",
+      "width": 1,
+      "range": "",
+      "h_slice": [
+        470,
+        470
+      ]
+    },
+    {
+      "name": "s_rdata",
+      "loader_direction": "output",
+      "controller_direction": "input",
+      "width": 32,
+      "range": "[31:0]",
+      "h_slice": [
+        36,
+        5
+      ]
+    },
+    {
+      "name": "h_awvalid",
+      "loader_direction": "output",
+      "controller_direction": "input",
+      "width": 1,
+      "range": "",
+      "h_slice": [
+        37,
+        37
+      ]
+    },
+    {
+      "name": "h_awready",
+      "loader_direction": "input",
+      "controller_direction": "output",
+      "width": 1,
+      "range": "",
+      "h_slice": [
+        471,
+        471
+      ]
+    },
+    {
+      "name": "h_awaddr",
+      "loader_direction": "output",
+      "controller_direction": "input",
+      "width": 12,
+      "range": "[11:0]",
+      "h_slice": [
+        49,
+        38
+      ]
+    },
+    {
+      "name": "h_wvalid",
+      "loader_direction": "output",
+      "controller_direction": "input",
+      "width": 1,
+      "range": "",
+      "h_slice": [
+        50,
+        50
+      ]
+    },
+    {
+      "name": "h_wready",
+      "loader_direction": "input",
+      "controller_direction": "output",
+      "width": 1,
+      "range": "",
+      "h_slice": [
+        472,
+        472
+      ]
+    },
+    {
+      "name": "h_wdata",
+      "loader_direction": "output",
+      "controller_direction": "input",
+      "width": 32,
+      "range": "[31:0]",
+      "h_slice": [
+        82,
+        51
+      ]
+    },
+    {
+      "name": "h_wstrb",
+      "loader_direction": "output",
+      "controller_direction": "input",
+      "width": 4,
+      "range": "[3:0]",
+      "h_slice": [
+        86,
+        83
+      ]
+    },
+    {
+      "name": "h_bvalid",
+      "loader_direction": "input",
+      "controller_direction": "output",
+      "width": 1,
+      "range": "",
+      "h_slice": [
+        473,
+        473
+      ]
+    },
+    {
+      "name": "h_bready",
+      "loader_direction": "output",
+      "controller_direction": "input",
+      "width": 1,
+      "range": "",
+      "h_slice": [
+        87,
+        87
+      ]
+    },
+    {
+      "name": "h_arvalid",
+      "loader_direction": "output",
+      "controller_direction": "input",
+      "width": 1,
+      "range": "",
+      "h_slice": [
+        88,
+        88
+      ]
+    },
+    {
+      "name": "h_arready",
+      "loader_direction": "input",
+      "controller_direction": "output",
+      "width": 1,
+      "range": "",
+      "h_slice": [
+        474,
+        474
+      ]
+    },
+    {
+      "name": "h_araddr",
+      "loader_direction": "output",
+      "controller_direction": "input",
+      "width": 12,
+      "range": "[11:0]",
+      "h_slice": [
+        100,
+        89
+      ]
+    },
+    {
+      "name": "h_rvalid",
+      "loader_direction": "input",
+      "controller_direction": "output",
+      "width": 1,
+      "range": "",
+      "h_slice": [
+        475,
+        475
+      ]
+    },
+    {
+      "name": "h_rready",
+      "loader_direction": "output",
+      "controller_direction": "input",
+      "width": 1,
+      "range": "",
+      "h_slice": [
+        101,
+        101
+      ]
+    },
+    {
+      "name": "h_rdata",
+      "loader_direction": "input",
+      "controller_direction": "output",
+      "width": 32,
+      "range": "[31:0]",
+      "h_slice": [
+        507,
+        476
+      ]
+    },
+    {
+      "name": "h_dma_arvalid",
+      "loader_direction": "input",
+      "controller_direction": "output",
+      "width": 1,
+      "range": "",
+      "h_slice": [
+        508,
+        508
+      ]
+    },
+    {
+      "name": "h_dma_arready",
+      "loader_direction": "output",
+      "controller_direction": "input",
+      "width": 1,
+      "range": "",
+      "h_slice": [
+        102,
+        102
+      ]
+    },
+    {
+      "name": "h_dma_araddr",
+      "loader_direction": "input",
+      "controller_direction": "output",
+      "width": 64,
+      "range": "[63:0]",
+      "h_slice": [
+        572,
+        509
+      ]
+    },
+    {
+      "name": "h_dma_rvalid",
+      "loader_direction": "output",
+      "controller_direction": "input",
+      "width": 1,
+      "range": "",
+      "h_slice": [
+        103,
+        103
+      ]
+    },
+    {
+      "name": "h_dma_rready",
+      "loader_direction": "input",
+      "controller_direction": "output",
+      "width": 1,
+      "range": "",
+      "h_slice": [
+        573,
+        573
+      ]
+    },
+    {
+      "name": "h_dma_rdata",
+      "loader_direction": "output",
+      "controller_direction": "input",
+      "width": 64,
+      "range": "[63:0]",
+      "h_slice": [
+        167,
+        104
+      ]
+    },
+    {
+      "name": "h_dma_rresp",
+      "loader_direction": "output",
+      "controller_direction": "input",
+      "width": 2,
+      "range": "[1:0]",
+      "h_slice": [
+        169,
+        168
+      ]
+    },
+    {
+      "name": "h_dma_rlast",
+      "loader_direction": "output",
+      "controller_direction": "input",
+      "width": 1,
+      "range": "",
+      "h_slice": [
+        170,
+        170
+      ]
+    },
+    {
+      "name": "h_dma_awvalid",
+      "loader_direction": "input",
+      "controller_direction": "output",
+      "width": 1,
+      "range": "",
+      "h_slice": [
+        574,
+        574
+      ]
+    },
+    {
+      "name": "h_dma_awready",
+      "loader_direction": "output",
+      "controller_direction": "input",
+      "width": 1,
+      "range": "",
+      "h_slice": [
+        171,
+        171
+      ]
+    },
+    {
+      "name": "h_dma_awaddr",
+      "loader_direction": "input",
+      "controller_direction": "output",
+      "width": 64,
+      "range": "[63:0]",
+      "h_slice": [
+        638,
+        575
+      ]
+    },
+    {
+      "name": "h_dma_wvalid",
+      "loader_direction": "input",
+      "controller_direction": "output",
+      "width": 1,
+      "range": "",
+      "h_slice": [
+        639,
+        639
+      ]
+    },
+    {
+      "name": "h_dma_wready",
+      "loader_direction": "output",
+      "controller_direction": "input",
+      "width": 1,
+      "range": "",
+      "h_slice": [
+        172,
+        172
+      ]
+    },
+    {
+      "name": "h_dma_wdata",
+      "loader_direction": "input",
+      "controller_direction": "output",
+      "width": 64,
+      "range": "[63:0]",
+      "h_slice": [
+        703,
+        640
+      ]
+    },
+    {
+      "name": "h_dma_wstrb",
+      "loader_direction": "input",
+      "controller_direction": "output",
+      "width": 8,
+      "range": "[7:0]",
+      "h_slice": [
+        711,
+        704
+      ]
+    },
+    {
+      "name": "h_dma_bvalid",
+      "loader_direction": "output",
+      "controller_direction": "input",
+      "width": 1,
+      "range": "",
+      "h_slice": [
+        173,
+        173
+      ]
+    },
+    {
+      "name": "h_dma_bready",
+      "loader_direction": "input",
+      "controller_direction": "output",
+      "width": 1,
+      "range": "",
+      "h_slice": [
+        712,
+        712
+      ]
+    },
+    {
+      "name": "h_dma_bresp",
+      "loader_direction": "output",
+      "controller_direction": "input",
+      "width": 2,
+      "range": "[1:0]",
+      "h_slice": [
+        175,
+        174
+      ]
+    },
+    {
+      "name": "m_arvalid",
+      "loader_direction": "output",
+      "controller_direction": "input",
+      "width": 1,
+      "range": "",
+      "h_slice": [
+        176,
+        176
+      ]
+    },
+    {
+      "name": "m_arready",
+      "loader_direction": "input",
+      "controller_direction": "output",
+      "width": 1,
+      "range": "",
+      "h_slice": [
+        713,
+        713
+      ]
+    },
+    {
+      "name": "m_araddr",
+      "loader_direction": "output",
+      "controller_direction": "input",
+      "width": 64,
+      "range": "[63:0]",
+      "h_slice": [
+        240,
+        177
+      ]
+    },
+    {
+      "name": "m_arlen",
+      "loader_direction": "output",
+      "controller_direction": "input",
+      "width": 8,
+      "range": "[7:0]",
+      "h_slice": [
+        248,
+        241
+      ]
+    },
+    {
+      "name": "m_arsize",
+      "loader_direction": "output",
+      "controller_direction": "input",
+      "width": 3,
+      "range": "[2:0]",
+      "h_slice": [
+        251,
+        249
+      ]
+    },
+    {
+      "name": "m_rvalid",
+      "loader_direction": "input",
+      "controller_direction": "output",
+      "width": 1,
+      "range": "",
+      "h_slice": [
+        714,
+        714
+      ]
+    },
+    {
+      "name": "m_rready",
+      "loader_direction": "output",
+      "controller_direction": "input",
+      "width": 1,
+      "range": "",
+      "h_slice": [
+        252,
+        252
+      ]
+    },
+    {
+      "name": "m_rdata",
+      "loader_direction": "input",
+      "controller_direction": "output",
+      "width": 64,
+      "range": "[63:0]",
+      "h_slice": [
+        778,
+        715
+      ]
+    },
+    {
+      "name": "m_rresp",
+      "loader_direction": "input",
+      "controller_direction": "output",
+      "width": 2,
+      "range": "[1:0]",
+      "h_slice": [
+        780,
+        779
+      ]
+    },
+    {
+      "name": "m_rlast",
+      "loader_direction": "input",
+      "controller_direction": "output",
+      "width": 1,
+      "range": "",
+      "h_slice": [
+        781,
+        781
+      ]
+    },
+    {
+      "name": "m_awvalid",
+      "loader_direction": "output",
+      "controller_direction": "input",
+      "width": 1,
+      "range": "",
+      "h_slice": [
+        253,
+        253
+      ]
+    },
+    {
+      "name": "m_awready",
+      "loader_direction": "input",
+      "controller_direction": "output",
+      "width": 1,
+      "range": "",
+      "h_slice": [
+        782,
+        782
+      ]
+    },
+    {
+      "name": "m_awaddr",
+      "loader_direction": "output",
+      "controller_direction": "input",
+      "width": 64,
+      "range": "[63:0]",
+      "h_slice": [
+        317,
+        254
+      ]
+    },
+    {
+      "name": "m_awlen",
+      "loader_direction": "output",
+      "controller_direction": "input",
+      "width": 8,
+      "range": "[7:0]",
+      "h_slice": [
+        325,
+        318
+      ]
+    },
+    {
+      "name": "m_awsize",
+      "loader_direction": "output",
+      "controller_direction": "input",
+      "width": 3,
+      "range": "[2:0]",
+      "h_slice": [
+        328,
+        326
+      ]
+    },
+    {
+      "name": "m_wvalid",
+      "loader_direction": "output",
+      "controller_direction": "input",
+      "width": 1,
+      "range": "",
+      "h_slice": [
+        329,
+        329
+      ]
+    },
+    {
+      "name": "m_wready",
+      "loader_direction": "input",
+      "controller_direction": "output",
+      "width": 1,
+      "range": "",
+      "h_slice": [
+        783,
+        783
+      ]
+    },
+    {
+      "name": "m_wdata",
+      "loader_direction": "output",
+      "controller_direction": "input",
+      "width": 64,
+      "range": "[63:0]",
+      "h_slice": [
+        393,
+        330
+      ]
+    },
+    {
+      "name": "m_wstrb",
+      "loader_direction": "output",
+      "controller_direction": "input",
+      "width": 8,
+      "range": "[7:0]",
+      "h_slice": [
+        401,
+        394
+      ]
+    },
+    {
+      "name": "m_wlast",
+      "loader_direction": "output",
+      "controller_direction": "input",
+      "width": 1,
+      "range": "",
+      "h_slice": [
+        402,
+        402
+      ]
+    },
+    {
+      "name": "m_bvalid",
+      "loader_direction": "input",
+      "controller_direction": "output",
+      "width": 1,
+      "range": "",
+      "h_slice": [
+        784,
+        784
+      ]
+    },
+    {
+      "name": "m_bready",
+      "loader_direction": "output",
+      "controller_direction": "input",
+      "width": 1,
+      "range": "",
+      "h_slice": [
+        403,
+        403
+      ]
+    },
+    {
+      "name": "m_bresp",
+      "loader_direction": "input",
+      "controller_direction": "output",
+      "width": 2,
+      "range": "[1:0]",
+      "h_slice": [
+        786,
+        785
+      ]
+    },
+    {
+      "name": "irq",
+      "loader_direction": "output",
+      "controller_direction": "input",
+      "width": 1,
+      "range": "",
+      "h_slice": [
+        404,
+        404
+      ]
+    },
+    {
+      "name": "fault",
+      "loader_direction": "output",
+      "controller_direction": "input",
+      "width": 1,
+      "range": "",
+      "h_slice": [
+        405,
+        405
+      ]
+    }
+  ],
+  "host_protocol": {
+    "packet_bits": 512,
+    "header": {
+      "op": [
+        7,
+        0
+      ],
+      "version": [
+        15,
+        8
+      ],
+      "transaction_id": [
+        31,
+        16
+      ],
+      "address": [
+        95,
+        32
+      ],
+      "data": [
+        159,
+        96
+      ],
+      "byte_strobe": [
+        167,
+        160
+      ],
+      "response": [
+        169,
+        168
+      ],
+      "last": 170
+    },
+    "external_service_only": "External host transactions may wait for external AXI/PHY service; no production compute scheduling or token generation is modeled by this controller."
+  },
+  "serdes": {
+    "count": 9,
+    "endpoint_master": "hfd_lk_ep",
+    "endpoint_phy_bits_each_direction": 487,
+    "serdes_word_bits": 512,
+    "zero_pad_high_bits": 25,
+    "PMA_bits_each_direction": 544,
+    "PMA_clocks": [
+      "pma_tck",
+      "pma_rck"
+    ],
+    "digital_sources": [
+      "rtl/dsrom_sys/s81_link/ot_s81_kp4_enc.sv",
+      "rtl/dsrom_sys/s81_link/ot_s81_kp4_dec.sv",
+      "rtl/dsrom_sys/s81_link/ot_pdie_serdes.sv"
+    ],
+    "physical_status": "No native digital FEC timing/area qualification exists; old SerDes reservation is not a hardened digital implementation.",
+    "master": "hfd_serdes487",
+    "core_ports": {
+      "clk": 1,
+      "rst_n": 1,
+      "tx": 487,
+      "rx": 487,
+      "st": 2,
+      "padding_fault": 1
+    },
+    "instance_map": [
+      {
+        "endpoint": "ep_S0",
+        "serdes": "lk_S0",
+        "endpoint_phy_tx_slice": [
+          486,
+          0
+        ],
+        "serdes_tx_port": "tx",
+        "endpoint_phy_rx_slice": [
+          973,
+          487
+        ],
+        "serdes_rx_port": "rx",
+        "clock": "clk_link",
+        "reset": "rst_link",
+        "external_pads": {
+          "pma_tx": "pad_S0_pma_tx",
+          "pma_tck": "pad_S0_pma_tck",
+          "pma_rx": "pad_S0_pma_rx",
+          "pma_rck": "pad_S0_pma_rck"
+        }
+      },
+      {
+        "endpoint": "ep_S1",
+        "serdes": "lk_S1",
+        "endpoint_phy_tx_slice": [
+          486,
+          0
+        ],
+        "serdes_tx_port": "tx",
+        "endpoint_phy_rx_slice": [
+          973,
+          487
+        ],
+        "serdes_rx_port": "rx",
+        "clock": "clk_link",
+        "reset": "rst_link",
+        "external_pads": {
+          "pma_tx": "pad_S1_pma_tx",
+          "pma_tck": "pad_S1_pma_tck",
+          "pma_rx": "pad_S1_pma_rx",
+          "pma_rck": "pad_S1_pma_rck"
+        }
+      },
+      {
+        "endpoint": "ep_S2",
+        "serdes": "lk_S2",
+        "endpoint_phy_tx_slice": [
+          486,
+          0
+        ],
+        "serdes_tx_port": "tx",
+        "endpoint_phy_rx_slice": [
+          973,
+          487
+        ],
+        "serdes_rx_port": "rx",
+        "clock": "clk_link",
+        "reset": "rst_link",
+        "external_pads": {
+          "pma_tx": "pad_S2_pma_tx",
+          "pma_tck": "pad_S2_pma_tck",
+          "pma_rx": "pad_S2_pma_rx",
+          "pma_rck": "pad_S2_pma_rck"
+        }
+      },
+      {
+        "endpoint": "ep_S3",
+        "serdes": "lk_S3",
+        "endpoint_phy_tx_slice": [
+          486,
+          0
+        ],
+        "serdes_tx_port": "tx",
+        "endpoint_phy_rx_slice": [
+          973,
+          487
+        ],
+        "serdes_rx_port": "rx",
+        "clock": "clk_link",
+        "reset": "rst_link",
+        "external_pads": {
+          "pma_tx": "pad_S3_pma_tx",
+          "pma_tck": "pad_S3_pma_tck",
+          "pma_rx": "pad_S3_pma_rx",
+          "pma_rck": "pad_S3_pma_rck"
+        }
+      },
+      {
+        "endpoint": "ep_S4",
+        "serdes": "lk_S4",
+        "endpoint_phy_tx_slice": [
+          486,
+          0
+        ],
+        "serdes_tx_port": "tx",
+        "endpoint_phy_rx_slice": [
+          973,
+          487
+        ],
+        "serdes_rx_port": "rx",
+        "clock": "clk_link",
+        "reset": "rst_link",
+        "external_pads": {
+          "pma_tx": "pad_S4_pma_tx",
+          "pma_tck": "pad_S4_pma_tck",
+          "pma_rx": "pad_S4_pma_rx",
+          "pma_rck": "pad_S4_pma_rck"
+        }
+      },
+      {
+        "endpoint": "ep_N0",
+        "serdes": "lk_N0",
+        "endpoint_phy_tx_slice": [
+          486,
+          0
+        ],
+        "serdes_tx_port": "tx",
+        "endpoint_phy_rx_slice": [
+          973,
+          487
+        ],
+        "serdes_rx_port": "rx",
+        "clock": "clk_link",
+        "reset": "rst_link",
+        "external_pads": {
+          "pma_tx": "pad_N0_pma_tx",
+          "pma_tck": "pad_N0_pma_tck",
+          "pma_rx": "pad_N0_pma_rx",
+          "pma_rck": "pad_N0_pma_rck"
+        }
+      },
+      {
+        "endpoint": "ep_N1",
+        "serdes": "lk_N1",
+        "endpoint_phy_tx_slice": [
+          486,
+          0
+        ],
+        "serdes_tx_port": "tx",
+        "endpoint_phy_rx_slice": [
+          973,
+          487
+        ],
+        "serdes_rx_port": "rx",
+        "clock": "clk_link",
+        "reset": "rst_link",
+        "external_pads": {
+          "pma_tx": "pad_N1_pma_tx",
+          "pma_tck": "pad_N1_pma_tck",
+          "pma_rx": "pad_N1_pma_rx",
+          "pma_rck": "pad_N1_pma_rck"
+        }
+      },
+      {
+        "endpoint": "ep_N2",
+        "serdes": "lk_N2",
+        "endpoint_phy_tx_slice": [
+          486,
+          0
+        ],
+        "serdes_tx_port": "tx",
+        "endpoint_phy_rx_slice": [
+          973,
+          487
+        ],
+        "serdes_rx_port": "rx",
+        "clock": "clk_link",
+        "reset": "rst_link",
+        "external_pads": {
+          "pma_tx": "pad_N2_pma_tx",
+          "pma_tck": "pad_N2_pma_tck",
+          "pma_rx": "pad_N2_pma_rx",
+          "pma_rck": "pad_N2_pma_rck"
+        }
+      },
+      {
+        "endpoint": "ep_N3",
+        "serdes": "lk_N3",
+        "endpoint_phy_tx_slice": [
+          486,
+          0
+        ],
+        "serdes_tx_port": "tx",
+        "endpoint_phy_rx_slice": [
+          973,
+          487
+        ],
+        "serdes_rx_port": "rx",
+        "clock": "clk_link",
+        "reset": "rst_link",
+        "external_pads": {
+          "pma_tx": "pad_N3_pma_tx",
+          "pma_tck": "pad_N3_pma_tck",
+          "pma_rx": "pad_N3_pma_rx",
+          "pma_rck": "pad_N3_pma_rck"
+        }
+      }
+    ],
+    "opt_in_rooted_master": "hfd_serdes487_rooted",
+    "opt_in_source": "rtl/hbm_accel/io_native_20261014/hfd_serdes487_rooted.sv",
+    "rooted_clock_contract": "4localENC+8recoveredDECdelivered entries perlane, source fec_clock_request.json; samefamilyphase mustbe actualnativequalified. No common-clock port fallback."
+  },
+  "model": {
+    "stream_period_ps": 833.333,
+    "serdes_raw_bits_per_cycle_each": 544,
+    "serdes_payload_bits_per_cycle_each": 487,
+    "SerDes_count": 9,
+    "aggregate_endpoint_bits_per_cycle": 4383,
+    "host_max_outstanding_per_channel": 1,
+    "host_packet_queue_depth": 4,
+    "host_width_source_exact": true,
+    "added_pin_capture_latency_edges_each_face": 1,
+    "area_and_rate": "Synthesis/native physical gate and actual host load/token workload rate pending. No measured area or token-rate claim."
+  },
+  "host_die_face": {
+    "master": "hfd_host_packet_face",
+    "h_width": 787,
+    "loader_to_host_slice": [
+      405,
+      0
+    ],
+    "host_to_loader_slice": [
+      786,
+      406
+    ],
+    "status": "Real packet/AXI controller with declared external packet boundary; physical host PHY reliability and transport composition open."
+  },
+  "host_full_path": {
+    "master": "hfd_host_native",
+    "controller": "hfd_host_packet_face/ot_hbm_host_packet",
+    "CRC_replay_endpoint": "hfd_lk_ep HARD_CLOCKS1 unchanged NS3 FCR256 TXQ32",
+    "landing": "ot_hbm_host_landing256 two real256x256 SRAMs,256packets capacity,2edge read",
+    "digital_PHY": "ot_pdie_ucie actual digital rate matcher over behavioural analog PMA513",
+    "clock_contract": "controller,landing,17endpoint roots,PHYlocal need actual separate delivered entries in synchronous link family; externalpma_rck recovered domain. No native phase/physical closure claimed.",
+    "physical_status": "NEW actual controller,landing and tenth endpoint require charged area and assigned real slots/views. Old ot_hbm_host_phy placeholder cannot qualify this implementation."
+  }
+}

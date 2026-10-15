@@ -1,0 +1,42 @@
+{
+  "scope": "actual HOST allocator/HC22/native endpoint -> typed548 -> real static SRAM/CRC link -> retained receiver; image-ledger write-event fixture; cohort dispatch/head/physical join remain open",
+  "sources": {
+    "rtl/qwen_sys/host_20261013/qkd_host_ctrl_token_service_packet.sv": {
+      "revision": "35697e26c",
+      "sha256": "5ad73d69799b4908bdc04cd8b89120dd69047a4ce6467a5a28d2b333da41f049"
+    },
+    "rtl/qwen_sys/redesign_qwen/ot_qwen_tp8_token_epoch_allocator.sv": {
+      "revision": "35697e26c",
+      "sha256": "3a7d297b3492b1a3eb3d0ce2a067d3962e034328e8614956cd63f08e005180fd"
+    },
+    "rtl/qwen_sys/host_integrated_20261014/qkd_host_native_token_endpoint_cancel.sv": {
+      "revision": "35697e26c",
+      "sha256": "e9922374f05ae9a492b831e2032ecf2ef995a293e73002fe414800061e0796b0"
+    },
+    "rtl/qwen_sys/split_20261014/ot_qwen_static_slot_link.sv": {
+      "revision": "5f8109ed6",
+      "sha256": "3b4d10d5d8f86557f3a6a342d9964ecad6d99579c90fc9438d469b14a5da478c"
+    },
+    "rtl/qwen_sys/split_20261014/ot_qkvd_d2d_llr.sv": {
+      "revision": "5f8109ed6",
+      "sha256": "df23697e8d58e67ae3209eac9162d1393bed3a510a6e090149c2694bea9eacd8"
+    },
+    "rtl/qwen_sys/split_20261014/ot_qwen_crc_parallel.sv": {
+      "revision": "5f8109ed6",
+      "sha256": "5af1eb77614de845771413c279de8858017a1e8220407e847d501537b110f43a"
+    },
+    "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v": {
+      "revision": "origin/main",
+      "sha256": "d4533939f695944bebd6a63a086e3771846bc0c379af52720de8974fee504145"
+    }
+  },
+  "codec_sha256": "c5592a70fd70235272ef5d1c1f07cf9396722b43ec8cde80f64fd58c8e1d5282",
+  "outcomes": "positive PASS, image digest/cap/runtime epoch mutants observed FAIL",
+  "fixed_edges": {
+    "codecTX": 1,
+    "linkTX": 3,
+    "modeledPHY": 5,
+    "linkRX": 1,
+    "codecRX": 1
+  }
+}

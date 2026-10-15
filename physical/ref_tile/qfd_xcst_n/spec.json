@@ -51,7 +51,7 @@
  "job": {
   "owner": "Codex:el1014-qwen-dvm-build",
   "branch": "claude/qwen-dvm-1014",
-  "tag": "xn6",
+  "tag": "xn10",
   "purpose": "Qwen TP8 corridor station with the tile's x hold (distributed x slice, owner 08:20 PT 10-14): onward + tap flops as qfd_cst_s, + TDM capture of its own tagged line and the tuple hold register (IL 8, XOFF 3) driving the tile's xl pins. r3: no tap ready (the tile never back-pressures; DIE_BUS_AUDIT row 10).",
   "benches": [
    {
@@ -80,7 +80,9 @@
   "extra_paths": [
    "rtl/hdc",
    "rtl/proto",
-   "rtl/qwen_sys/dvm_20261014"
+   "rtl/qwen_sys/dvm_20261014",
+   "physical/ref_tile/qfd_xcst_n/native_capture_driver.tcl",
+   "physical/ref_tile/qfd_xcst_n/native_audit_xn9.json"
   ],
   "views_to": "physical/ref_tile/qfd_xcst_n/views",
   "record_to": "results/rtl/ref_tile/qfd_xcst_n"
@@ -135,5 +137,16 @@
  "hold_pad": {
   "cell": "HB2xp67_ASAP7_75t_R"
  },
- "structural_change": "Repair invalid clock/reset face coordinates: bound ck and rst_n to the actual 52.68um north face, retain data slots and tie face."
+ "structural_change": "Keep HB2 and boundary flop; resize only b_d[256] pad-to-flop wire driver BUFx4f->BUFx8 before pin-flop placement to correct measured native capture190.7ps. Hold/clock constraints unchanged.",
+ "reroute_reason": {
+  "kind": "pin_register",
+  "source": "physical/ref_tile/qfd_xcst_n/native_audit_xn9.json",
+  "cell": "qfd_xcst_n",
+  "launch_ps": 208.5,
+  "capture_ps": 190.7,
+  "fix": "Keep HB2 and boundary flop; resize only b_d[256] pad-to-flop wire driver BUFx4f->BUFx8 before pin-flop placement to correct measured native capture190.7ps. Hold/clock constraints unchanged."
+ },
+ "pin_hook_before_flops": [
+  "physical/ref_tile/qfd_xcst_n/native_capture_driver.tcl"
+ ]
 }

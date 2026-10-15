@@ -1,0 +1,2 @@
+PASS ring4 packet real SRAM: four banks twelve macros eight stops four real hubs four replay controllers;8 remote write/read transactions,8 native replays,8 exact user responses;physical sid0,1,3,2;CW2-hop and CCW1-hop;source CQ->CR30/26 cycles;all statuses clean;cycles=340
+tb_vms_static_ring4_packet.sv:106: $finish called at 3430000 (1ps)

@@ -1,0 +1,50 @@
+{
+  "scope": "Actual common native read burst/pipeline controller with32 real response SRAMs to strict command-only off-chip DRAM; no full PF block qualification",
+  "unit": "oth-ubuntu-3844702-1792056991",
+  "terminal_exit": 0,
+  "read_latency_HBM_edges": 23,
+  "physical_reads": 2048,
+  "exact_response_beats": 2048,
+  "input_read_bursts": 512,
+  "burst_length": 4,
+  "actual_response_SRAMs": 32,
+  "actual_bank_refresh_controllers": 32,
+  "source_sha256": {
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_native_sector_pipeline_stack.sv": "e64cfb071eb16aca278f75bb0a5bdba6793b8fb74e4928c1a5d217f87697e65d",
+    "rtl/hbm_accel/loader/service_native/tb_hbm_svc_native_sector_pipeline.sv": "c09f34872ff4a880b826504b2b3dd36d9e0a76ac4068e2ab430369ed00c93c40",
+    "rtl/hbm_accel/loader/service_native/tb_hbm_svc_command_dram_pipeline_fixture.sv": "3bb69a5cd9d058bfd28df57acee4fb24e2a3d4992b4a468dbb638c4e5c8ade8f",
+    "rtl/hbm_accel/loader/service_native/run_native_sector_pipeline_bench.sh": "ba9372cfbe25cd9a24df6cd3311366bbe3cf630e4bb5a92b21585eb2e648c34e",
+    "rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc.sv": "36ab8140f3a9f14d4098729f79f5091f1e67156409997dc2d6276387a23315c8",
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": "d9801653d16576f40306c1fb1d01928e88e7371a3897b616e31d3e3df917cb2d"
+  },
+  "cold_controller_component": {
+    "first_request_HBM_edge": 13,
+    "last_response_HBM_edge": 137,
+    "elapsed_HBM_edges": 124,
+    "max_reserved": 32,
+    "max_in_flight": 24,
+    "max_response_SRAM_slots": 2
+  },
+  "stalled_component": {
+    "elapsed_HBM_edges": 267,
+    "max_reserved": 32,
+    "max_in_flight": 24,
+    "max_response_SRAM_slots": 32
+  },
+  "mutants": {
+    "wrong_beat": "rejected",
+    "unbounded_read": "rejected",
+    "wrong_SRAM_row": "rejected"
+  },
+  "raw_log_sha256": {
+    "results/arch/hbm_die_v15/native_read_pipeline/component/wrong_SRAM_row.log": "2f6d084c3c6e1889bee6b73467c827bb1e8352f09705f535e7075607bd08c9ba",
+    "results/arch/hbm_die_v15/native_read_pipeline/component/positive.log": "570ce40797f0e14f6954c994ef98a9c9ec7e142d02e0e1421589bdc71a4726c5",
+    "results/arch/hbm_die_v15/native_read_pipeline/component/unbounded_read.log": "32265c4391ffef2e5abdd58eae73d4db5af8aea9360639ea654d760e09053053",
+    "results/arch/hbm_die_v15/native_read_pipeline/component/wrong_beat.log": "2a0bfdfac4acb4f16dcc6ba3e0025b12692806c1faf9283457e3fe1c587bf812",
+    "results/arch/hbm_die_v15/native_read_pipeline/component/stalls.log": "3804c428e01fef206c189b2c2be1eec6f301df0c867c99724cf34b4f16ceb3a5"
+  },
+  "full_native_PF_84_7_134_2_gates": "pending actual composition",
+  "physical_qualified": false,
+  "protected_state_admitted": false,
+  "clock_root_measurement": "pending"
+}

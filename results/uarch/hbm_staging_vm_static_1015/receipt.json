@@ -1,0 +1,35 @@
+{
+  "scope": "actual SRAM staging to actual VM SECDED banks; behavioural macro models; no physical timing claim",
+  "sources_sha256": {
+    "ot_hbm_svc_static_vm_delivery.sv": "91b0265ba4c0ce452cffbfd7776d25922dc6747de8a0a34b28c7b2e54354f3f2",
+    "ot_hbm_svc_static_landing.sv": "0c3122d06032896c52c97a11c3e65bf041ae5f420259671868e1f2ef988fab25",
+    "ot_vms_bank_static.sv": "7828d619da2fd2462cf0253b78c074dad1171e6ca77799bfc21f22987ed72237",
+    "ot_sram_1r1w_128x256_m1_r2c2.v": "dba769863f502de28853a78ac30544a406c7cb66fd3249019ef9fa5a5b73e36e",
+    "ot_sram_1r1w_1024x256_m2_r2c2.v": "6530a2ef457f260a942e067b556ff55d75f931350af5807cfd6b05cd5e1ff380",
+    "tb_hbm_staging_vm_static.sv": "4975081f837606e6caf542f6e91dbe1b107e95db3fd2f7b75df18380235e6c52"
+  },
+  "positive": "PASS",
+  "mutant_row_address_bit3": "KILLED at actual VM readback, not by source-port checking",
+  "shape": {
+    "landing_SRAMs_128x256": 32,
+    "VM_SRAMs_1024x256": 24,
+    "VM_banks": 8,
+    "RG": 3,
+    "WG": 1,
+    "DMA_wslot": 5
+  },
+  "measured": {
+    "write_sectors": 2048,
+    "readback_sectors": 2048,
+    "delivery_slots": 256,
+    "sectors_per_cycle": 8,
+    "VM_sample_to_commit_edges": 3,
+    "VM_read_sample_to_response_edges": 6
+  },
+  "landing_fill": {
+    "epoch": 77,
+    "base_sector": "0x2800",
+    "sid": 1,
+    "pattern": "{8{0x17624611 ^ (pseudochannel << 12) ^ slot}}"
+  }
+}

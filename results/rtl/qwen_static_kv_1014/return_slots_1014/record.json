@@ -1,0 +1,32 @@
+{
+  "schema": "opentallas.qkd.static_return_slots.v1",
+  "status": "COMPONENT_ONLY_NOT_BOUND",
+  "unit": "oth-ubuntu-946271-1792046271",
+  "rows": 512,
+  "depth": 8,
+  "core_period_ps": 833.334,
+  "hbm_period_ps": 1024,
+  "tested_phases_ps": [
+    137,
+    637
+  ],
+  "normal": "2/2 exact outputs at fixed slots",
+  "fault_cases": [
+    "missing actual valid: both domains fault, all512 slots/data unchanged",
+    "wrong sector: core fault",
+    "compiled output +1 edge: independent external timing oracle fails"
+  ],
+  "rtl_mutant": "read address +1 fails512rows with bothfaults",
+  "source_sha256": {
+    "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_slots.sv": "07f2fa4171ec1ed9a4071381ed892d6ce0cba77183a137e96cf98e8980e9acf2",
+    "rtl/test/qwen_static_kv/tb_static_return_slots.sv": "fbc04bd90264432e9766e4cfc72bb8c1aa83932dcfa9f246cb4588be1a0e93a0"
+  },
+  "required_integration": [
+    "compiled_hbm_put from actual frozen controller read calendar RL23/ECC/returnpipeline, never actual co0",
+    "actual dual-root phi-R and wire/relay ages",
+    "official639pin freshslot; no legacyCDC alias",
+    "source-bound full128controller/SRAM/attention composition"
+  ],
+  "native_qualified": false,
+  "physical_qualified": false
+}
