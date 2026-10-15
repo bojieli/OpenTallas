@@ -22,3 +22,33 @@ physical/asap7_memory_macros_v2/ot_rom_4096x72_m8/ot_rom_4096x72_m8.v
 +define+DSFD_WFC_STG_CL_DIE
 rtl/dsrom_sys/mtp/dsfd_wfc_stg_cl.sv
 +libdir+physical/s81_ph_views/mtp/macros
+# BF pair (x512): the CLOSED compact199 views under their die names (tools/s81/gen_bf_die_wrappers.py: die bit i = the
+# view pin tools/s81/bf_direct_pins.groups names; closed routes' parameters); dsfd_bf_front.xb = the native BF stream
+rtl/dsrom_sys/s81_die_bind/dsfd_bf_col.sv
+rtl/dsrom_sys/s81_die_bind/dsfd_bf_front.sv
+rtl/s81/ot_s81_bf_front.sv
+rtl/v41rom/ot_v41_bf_col.sv
+rtl/v41rom/ot_v41_bf_front_core.sv
+# BF weight ROM macro model (bit array; the macro is hard IP)
+physical/asap7_memory_macros_v2/ot_rom_4096x274_m8/ot_rom_4096x274_m8.v
+# PQ core slot (--rtl-bind master dsfd_sp_pq_n): the production native core cluster + ROM register / x-lane leaves.
+# Core leaf set = these OT_PQ_* defines (tools/dsrom_s81_fulldie.py pq_rtl_clock_ports() reads them: one source).  The
+# PQ's pinned-only modules come from its pinned tree; the repo copies of the shared float modules are supersets whose
+# default parameters are the pinned behaviour (el1011-q-sp: L = 3 = the original adders), so they serve both.
++define+OT_PQ_ROM_PORTS
+rtl/dsrom_sys/s81_die_bind/dsfd_sp_pq_n.sv
+rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_core_native.sv
+rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_ctl_native.sv
+rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_ctl_fixed_native.sv
+rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_ix_sram.sv
+rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_ix_pin_variants.sv
+rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_ix_split_native.sv
+rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_aq_split_native.sv
+rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_qb_sram.sv
+rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_qb_split_native.sv
+rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_qb_one_native.sv
+physical/s81_pq_hier/pinned/rtl/hdc/v41x/ot_dsrom_aq12t.sv
+physical/s81_pq_hier/pinned/rtl/hdc/v41x/ot_dsrom_aq12m.sv
+physical/s81_pq_hier/pinned/rtl/v41die/ot_v41_pqc_tiles.sv
+physical/s81_pq_hier/pinned/physical/dsrom_field_spine/ot_v41_pqc_tile_tops.sv
+physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v
