@@ -31,14 +31,15 @@ def main():
     paths += ['rtl/qwen_sys/dvm_20261014/'+s+'.sv'for s in('ot_qfd_xpf_dense_pw_loader','ot_qfd_xpf_static_schedule')]
     paths += ['rtl/qwen_split/'+s+'.sv'for s in('qfd_native59_q_export_control','qfd_native59_command_context','qfd_native59_static_service','qfd_native59_record_endpoint','qfd_kvn_static_transport')]
     paths += ['rtl/qwen_sys/redesign_qwen/ot_qfd_su_kv_static_posted.sv','rtl/qwen_sys/vm_nox_20261014/qfd_vm_attention_commit_fence.sv','rtl/qwen_sys/split_20261014/qkd_native_attention_record.sv']
-    text=read('8d92a8870','tools/qwen_coll_tp8_static_links_bench.py').decode()
+    io_ref=profile.get('io_sources_ref','8d92a8870')
+    text=read(io_ref,'tools/qwen_coll_tp8_static_links_bench.py').decode()
     block=text[text.index('SRC = '):text.index('RES = ')]
     io_paths=re.findall(r'"((?:rtl|physical)/[^\"]+\.(?:sv|v))"',block)
     paths += io_paths
     override={path:ref for top,path,ref in specs.values()}
     for extra in profile.get("source_extras",[]):
         paths.append(extra["path"]);override[extra["path"]]=extra["ref"]
-    for path in io_paths:override.setdefault(path,'8d92a8870')
+    for path in io_paths:override.setdefault(path,io_ref)
     # Shared actual math source comes from the selected native compute profile;
     # avoid changing it merely because the IO proof used the same helper name.
     for path in io_paths:

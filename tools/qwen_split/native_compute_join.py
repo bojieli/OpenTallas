@@ -159,7 +159,7 @@ def graph_metadata(model,external):
         hi=remaining-1;remaining-=bits
         parts.append(dict(source=['io',port],bits=bits,sink_select=[hi,remaining]))
     if remaining:raise ValueError('collective assembly does not cover actual cc width')
-    assembly=dict(name='coll_return',kind='concatenation',sink=['seq','cc'],bits=518,
+    assembly=dict(name='coll_return',kind='concatenation',sink=['seq','cc'],bits=model['nodes']['seq']['ports']['cc']['bits'],
         order='most significant first',parts=parts,
         rtl_expression='{'+','.join('w_io_'+p for p,b in model['return_parts'])+'}')
     edges=[dict(name=j['name'],source=j['source'],source_select=j['select'],sink=sink,bits=j['bits'])
