@@ -7,7 +7,7 @@ p=rtl/hbm_accel/generic/collective/p2p
 t=rtl/hbm_accel/generic/collective/tkm
 src=("$p/ot_hfd_coll_q_static_v3.sv" "$p/ot_hgi_coll_static_issuer.sv"
  "$p/ot_hgi_coll_qslots.sv" "$p/ot_hgi_coll_pring_static.sv" "$p/ot_hgi_coll_static_vmwrite.sv"
- "$p/ot_hgi_coll_static_link_pinreg.sv" "$p/ot_hgi_coll_static_pinreg_ctl.sv" "$p/ot_hgi_coll_static_pinreg_store.sv" "$p/ot_hgi_coll_reduce_static.sv" "$p/ot_hgi_coll_argmax_static.sv" "$root/rtl/hbm_accel/generic/collective/ot_hgi_coll_amerge.sv" "$t/ot_hgi_coll_tkm_static.sv" "$t/ot_hgi_coll_tkm.sv" "$t/ot_hgi_coll_tkm_buffer.sv"
+ "$p/ot_hgi_coll_static_seq_ctl.sv" "$p/ot_hgi_coll_static_link_pinreg.sv" "$p/ot_hgi_coll_static_pinreg_ctl.sv" "$p/ot_hgi_coll_static_pinreg_store.sv" "$p/ot_hgi_coll_reduce_static.sv" "$p/ot_hgi_coll_argmax_static.sv" "$root/rtl/hbm_accel/generic/collective/ot_hgi_coll_amerge.sv" "$t/ot_hgi_coll_tkm_static.sv" "$t/ot_hgi_coll_tkm.sv" "$t/ot_hgi_coll_tkm_buffer.sv"
  rtl/lib/ot_rst_relay.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_fastfp.sv
  rtl/qwen_sys/split_20261014/ot_qwen_crc_parallel.sv rtl/qwen_sys/split_20261014/ot_qkvd_d2d_llr.sv
  rtl/qwen_sys/split_20261014/ot_qwen_static_slot_link.sv
