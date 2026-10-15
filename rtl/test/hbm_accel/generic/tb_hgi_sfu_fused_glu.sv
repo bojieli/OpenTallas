@@ -1,6 +1,6 @@
 `timescale 1ns/1ps
 module tb_hgi_sfu_fused_glu;
- reg clk=0;always #.4166665 clk=~clk;
+ reg clk=0;always #0.4166665 clk=~clk;
  reg rst_n=0,v=0;
  reg [31:0] gate=0,up=0,route=0,tag=0;
  wire vo,mut_vo,fault,mut_fault;
@@ -19,7 +19,7 @@ module tb_hgi_sfu_fused_glu;
    issue_edge[tag]=edge_count;
    if(first_issue<0) first_issue=edge_count;
   end
-  #.01;
+  #0.01;
   if(rst_n && vo) begin
    if(first_output<0) first_output=edge_count;
    if(out_tag!==checked) $fatal(1,"FUSED_TAG tag=%d expected=%d",out_tag,checked);
