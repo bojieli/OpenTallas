@@ -140,7 +140,7 @@ module ot_qkvd_d2d_llr_ctl #(
         end
 endmodule
 
-// 64 x 137 = 8,768 storage sinks at the native production shape. No reset
+// Native64x137: 8,768 storage +137 output +144 write-face =9,049 sinks. No reset
 // touches the payload array: occupancy/sequence control prevents invalid reads.
 // The read output is registered at the leaf pin. Control prefetches its next
 // send pointer and a write-through bypass covers enqueue into an empty queue.
@@ -157,9 +157,18 @@ module ot_qkvd_llr_replay_leaf #(
     // Expand storage before memory_dff: otherwise Yosys retimes the output
     // flops into six read-address flops, destroying the registered pin face.
     (* mem2reg *) reg [W-1:0] q [0:QD-1];
-    always @(posedge ck) if (we) q[wa] <= din;
+    // Capture the write face once at the pins instead of fanning each input
+    // bit to all 64 words. The queued write commits a cycle later; two bypass
+    // cases make that delay invisible to the predicted read pipeline.
+    reg wq;
+    reg [QA-1:0] aq;
+    reg [W-1:0] dq;
+    always @(posedge ck) begin
+        wq <= we; aq <= wa; dq <= din;
+        if (wq) q[aq] <= dq;
+    end
     always @(posedge ck)
-        dout <= (we && wa == ra ? din : q[ra]) ^
+        dout <= (we && wa == ra ? din : (wq && aq == ra ? dq : q[ra])) ^
             (MUT != 0 ? {{(W-1){1'b0}}, 1'b1} : {W{1'b0}});
 endmodule
 
