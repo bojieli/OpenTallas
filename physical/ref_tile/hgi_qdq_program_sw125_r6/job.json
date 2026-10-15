@@ -1,5 +1,5 @@
 {
- "name": "hgi_qdq_program_sw125_r6-sw125r6-COMMIT",
+ "name": "hgi_qdq_program_sw125_r6-sw125r6-927dd7e7e",
  "block": "ot_hgi_qdq_sw_program_leaf",
  "ref_tile": true,
  "owner": "Claude:H-ATTQ",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 24,
  "source": {
   "branch": "main",
-  "commit": "COMMIT",
+  "commit": "927dd7e7e",
   "extra_paths": [
    "rtl/hdc",
    "rtl/lib",
@@ -106,7 +106,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/hgi_qdq_program_sw125_r6/hgi_qdq_program_sw125_r6-sw125r6-COMMIT"
+   "to": "results/rtl/ref_tile/hgi_qdq_program_sw125_r6/hgi_qdq_program_sw125_r6-sw125r6-927dd7e7e"
   }
  ],
  "cycles_added": 0,
