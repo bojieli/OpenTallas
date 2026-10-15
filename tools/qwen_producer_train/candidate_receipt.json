@@ -11,7 +11,7 @@
     "invalid_config_fixedmaxwindow"
   ],
   "dut_mutant": "bank emit stride24 ->23; independent fixed-calendar scoreboard rejects",
-  "real_producer_join": "PASS actual fullshape controller/port marker-cone -> candidate fixedstart c296: eight captures1edge apart; candidate outputs24edges apart with exact rows/masks and no fault. Actual bank23vs24 mutant rejects21 observer errors. Fullsoftport original positive passes oldfault; separate missingOV mutant still live.",
+  "real_producer_join": "PASS actual fullshape controller/port marker-cone -> candidate fixedstart c296: eight captures1edge apart; candidate outputs24edges apart with exact rows/masks and no fault. Actual bank23vs24 mutant rejects21 observer errors. Fullsoftport original positive passes oldfault; original actual producer missingOV mutant naturally completes with explicit count0/gap999/fault0 rejection.",
   "root_partition": {
     "data_bank_roots_per_band": 24,
     "control_output_roots_per_band": 1,
