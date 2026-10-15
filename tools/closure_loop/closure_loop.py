@@ -6838,6 +6838,17 @@ def closure_on_main(j, ev):
     return j["name"] in ev["files"] or j["name"] in ev["recs"]
 
 
+def collect_crash_after_closed_verdict(j):
+    """ROOT 2026-10-15 (peer review 11:00): a route that finished and was judged CLOSED, then stopped NEEDS_HUMAN in
+    collect / export / record (30 S81 fill routes, collect crashed twice on a child_lint bug; 17 run dirs were released
+    or deleted before the lint fix), is evidence awaiting re-collection (retry --at collect): never deep-released while
+    it stays there.  Cancelling the job or a successful re-collect ends the retention."""
+    if j.get("status") != "NEEDS_HUMAN" or j.get("stage_key") not in ("collect", "export", "record"):
+        return False
+    ev = " ".join(j.get("events") or [])
+    return "route done (rc=0)" in ev and "-> CLOSED" in ev
+
+
 def deep_release_mode(j, closed, ev, now=None):
     """closed | fail | nearmiss | None (keep) for one job (DEEP RELEASE)"""
     if j.get("deep_released") or not j.get("host") or not j.get("run") or j["status"] not in TERMINAL:
@@ -6853,6 +6864,8 @@ def deep_release_mode(j, closed, ev, now=None):
             return "closed" if closure_on_main(j, ev) else None
         return "fail"                                   # revoked closure: a failure on its element
     if j["status"] not in DEEP_RELEASE_FAIL:
+        return None
+    if collect_crash_after_closed_verdict(j):
         return None
     if near_miss(j, closed) or (j.get("near_miss_retained") and j["spec"].get("block") not in closed):
         return "nearmiss"
