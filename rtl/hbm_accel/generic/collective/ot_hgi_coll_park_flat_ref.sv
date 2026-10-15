@@ -27,7 +27,8 @@ module ot_hgi_coll_park_flat_ref #(
     parameter integer DEL   = 4,
     parameter integer PWT   = 545,
     parameter integer MACRO = 2,        // ot_fifo_sram_fwft MACRO: 2 = ot_sram_1r1w_128x256 (PPK / DEL <= 128)
-    parameter integer MUT_PARK = 0      // bench mutant: 1 = bank index ignored (every lane writes bank 0)
+    parameter integer MUT_PARK = 0,     // bench mutant: 1 = bank index ignored (every lane writes bank 0)
+    parameter [3:0]   PSTAGE_MASK = 4'b0010  // reference timing of the queues with a bank-local push stage (one park edge)
 ) (
     input  wire                         clk,
     input  wire                         rst_n,
@@ -82,7 +83,16 @@ module ot_hgi_coll_park_flat_ref #(
                     if (r_v[k] && r_q[k] == c[QB-1:0] && r_s[k] == b[SB-1:0]) begin push = 1'b1; wd = wd | r_d[k]; end
             end
             wire bpop = ld && hb == b[SB-1:0];
-            ot_fifo_sram_fwft #(.W(PWT), .DEPTH(BD), .MACRO(MACRO)) u_f (.clk(clk), .rst_n(rn[c]), .push(push), .wdata(wd),
+            wire bpush; wire [PWT-1:0] bwd;
+            if (PSTAGE_MASK[c]) begin : g_ps
+                reg ps_v; reg [PWT-1:0] ps_d;
+                always @(posedge clk or negedge rn[c]) if (!rn[c]) ps_v <= 1'b0; else ps_v <= push;
+                always @(posedge clk) ps_d <= wd;
+                assign bpush = ps_v; assign bwd = ps_d;
+            end else begin : g_nps
+                assign bpush = push; assign bwd = wd;
+            end
+            ot_fifo_sram_fwft #(.W(PWT), .DEPTH(BD), .MACRO(MACRO)) u_f (.clk(clk), .rst_n(rn[c]), .push(bpush), .wdata(bwd),
                 .pop(bpop), .hv(b_hv[c*DEL + b]), .head(b_hd[c*DEL + b]), .ovf(b_ovf[c*DEL + b]));
         end
         // registered queue head: (re)load when empty or popped last edge, from the head bank's FWFT head
