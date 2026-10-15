@@ -14,8 +14,8 @@ banks / 3,072 SRAM models, 4 reducers, 4 RF replicas, RF relay routes). Nothing 
          RF sector drains (class 5 + slice-0 port 0) from EVERY quarter of every quarter's results (replica coherence).
 Expected values: hdc_golden add/mul/to_bf16 (independent NumPy FP32 RNE, canonical +0) in the compiled order.
 Edge rule (see RTL headers): command line E is sampled at edge E; LG samples fill requests at E (data back E+10), drain
-writes at E+4; reducer command E -> scalar held from E+9 (checked at E+10); RF word readable by a read sampled at
->= export_edge + 11 + RF_RELAY; lane store read n consumed n+3; RF broadcast class command issued n-1 (held for the op).
+writes at E+4; reducer command E -> issue E+2 -> scalar held from E+10 (checked at E+11, reducer r1 LAT 8); RF word
+readable by a read sampled at >= export_edge + 12 + RF_RELAY; lane store read n consumed n+3; RF broadcast class command issued n-1 (held for the op).
 """
 import argparse, json, subprocess, sys
 from pathlib import Path
@@ -156,42 +156,55 @@ def main():
     rf_val = {}
     lane_sum = [7 * q + 3 for q in range(4)]; lane_max = [11 * q + 5 for q in range(4)]
     X = {}
-    for kind, t, lanes, base_addr, rfo in (('sum', t_ab, lane_sum, 0, 0), ('max', t_aa, lane_max, 16, 1)):
+    RLAT = 8                     # reducer command edge E -> issue E+2 -> commit / scalar issue+8 (r1 operand stage)
+    DEP = RLAT + 1               # same-address dependent command distance
+    NCH = DEP                    # interleaved accumulation chains so one lane output per edge never waits
+    for kind, t, lanes, base_addr, rfo in (('sum', t_ab, lane_sum, 0, 0), ('max', t_aa, lane_max, 32, 1)):
         for q in range(4):
             l = lanes[q]; vals = [int(golds[t][c * 512 + 128 * q + l]) for c in range(64)]
-            acc = [None] * 8
+            acc = [None] * NCH; ready = {}
             for c in range(64):
-                e = S[t] + FO + c; k = c % 8
-                if c < 8:
+                e = S[t] + FO + c; k = c % NCH
+                if c < NCH:
                     P.red_cmd(e, q, 0, d=base_addr + k, lane=l); acc[k] = vals[c]
                 else:
                     op = 1 if kind == 'sum' else 3
+                    assert e >= ready[base_addr + k]
                     P.red_cmd(e, q, op, a=base_addr + k, d=base_addr + k, lane=l)
                     acc[k] = u32(add(f32(acc[k]), f32(vals[c]))) if kind == 'sum' else fmax(acc[k], vals[c])
-            T = S[t] + FO + 63
+                ready[base_addr + k] = e + DEP
             comb = (lambda x, y: u32(add(f32(x), f32(y)))) if kind == 'sum' else fmax
             top = 2 if kind == 'sum' else 5
-            tree = [(T + 8, 0, 1, 8), (T + 9, 2, 3, 9), (T + 10, 4, 5, 10), (T + 11, 6, 7, 11), (T + 17, 8, 9, 12),
-                    (T + 19, 10, 11, 13), (T + 27, 12, 13, 14)]
-            vv = {i: acc[i] for i in range(8)}
-            for e, x, y, d in tree:
-                P.red_cmd(e, q, top, a=base_addr + x, b=base_addr + y, d=base_addr + d)
-                vv[d] = comb(vv[x], vv[y])
-            ex = T + 35; tag = 0x100 | (8 * q + rfo)
-            P.red_cmd(ex, q, 4, a=base_addr + 14, tag=tag)
-            P.exps.append((ex + 10, q, tag, vv[14]))
-            rf_val[8 * q + rfo] = vv[14]; X[(kind, q)] = ex
+            # pairwise tree over the chains (left-to-right pairs per level), each op at the first edge its operands are
+            # committed and the reducer's command slot is free
+            vv = {base_addr + i: acc[i] for i in range(NCH)}
+            level = [base_addr + i for i in range(NCH)]; nxt_addr = base_addr + NCH; last = S[t] + FO + 63
+            while len(level) > 1:
+                nl = []
+                for i in range(0, len(level) - 1, 2):
+                    x, y = level[i], level[i + 1]
+                    e = max(ready[x], ready[y], last + 1); last = e
+                    d = nxt_addr; nxt_addr += 1
+                    P.red_cmd(e, q, top, a=x, b=y, d=d); vv[d] = comb(vv[x], vv[y]); ready[d] = e + DEP; nl.append(d)
+                if len(level) % 2: nl.append(level[-1])
+                level = nl
+            root = level[0]
+            ex = max(ready[root], last + 1); tag = 0x100 | (8 * q + rfo)
+            assert nxt_addr < base_addr + 32
+            P.red_cmd(ex, q, 4, a=root, tag=tag)
+            P.exps.append((ex + RLAT + 3, q, tag, vv[root]))
+            rf_val[8 * q + rfo] = vv[root]; X[(kind, q)] = ex
     xl = max(X.values())
-    m = xl + 13 + R
+    m = xl + RLAT + 4 + 2 + R    # class-4 read (m-2) after the RF commit of the last export (+RLAT+4+R)
     gsum = None
     for i in range(4):
-        e = m + 8 * i
+        e = m + DEP * i
         P.rf_cmd(e - 2, 0, 4, 8 * i)
-        P.red_cmd(e, 0, 0 if i == 0 else 1, a=40, d=40, osel=1)
+        P.red_cmd(e, 0, 0 if i == 0 else 1, a=80, d=80, osel=1)
         gsum = rf_val[8 * i] if i == 0 else u32(add(f32(gsum), f32(rf_val[8 * i])))
-    ex3 = m + 32; tag = 0x100 | G_ADDR
-    P.red_cmd(ex3, 0, 4, a=40, tag=tag); P.exps.append((ex3 + 10, 0, tag, gsum)); rf_val[G_ADDR] = gsum
-    g_ready = ex3 + 11 + R
+    ex3 = m + 4 * DEP; tag = 0x100 | G_ADDR
+    P.red_cmd(ex3, 0, 4, a=80, tag=tag); P.exps.append((ex3 + RLAT + 3, 0, tag, gsum)); rf_val[G_ADDR] = gsum
+    g_ready = ex3 + RLAT + 4 + R
     # AB_RF: B = RF word G broadcast (class 1 held one edge ahead through the op)
     t_rf = nbase + 1
     assert S[t_rf] - 1 >= g_ready

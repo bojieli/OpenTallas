@@ -12,7 +12,7 @@
 //               the 8 words are registered here (rf_dsec) and taken by slice 0's drain stage.
 // Reducer: red_cmd = {v, op3, a10, b10, dst10, tag32, osel, lane7} at E. The slices register the selected lane's ro_x at
 // E; the core picks slice (lane[5:4]) or the RF class-4 word (osel) and registers operand + command at E+1; the reducer
-// samples at E+2 (its issue), scalar valid held E+9.. (issue + 7). tag[8] = write RF word tag[7:0] (through the top's
+// samples at E+2 (its issue), scalar valid held E+10.. (issue + 8, reducer r1 registered SRAM-operand stage). tag[8] = write RF word tag[7:0] (through the top's
 // relay routes, which return to this replica's write port rf_w* like every other replica).
 // Checks (FAULT): two RF writers on one bank in one edge; class-5 address not sector aligned; an RF-source drain without
 // the class-5 read one edge earlier; reducer fault.
