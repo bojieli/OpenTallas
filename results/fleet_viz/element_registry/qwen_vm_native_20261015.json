@@ -203,7 +203,7 @@
         }
       },
       "physical": {
-        "status": "Actual9-entry parent CTS PASS131.4ps minimum TTsetup, zero ownFF; fullMY route in flight.2084 actual internal pin-leg model margins >=125.69ps, no missing arcs. Routed FF/DRC/nativeparent/PG/cuts remainOPEN.",
+        "status": "Actual9-entry parent CTS passed131.4ps minimum TTsetup, zero ownFF; full route STOPPED beforeCTS completion by direct-macro TT-network/FF-scene library assertion. Tool correction in progress.2084 actual internal pin-leg model margins >=125.69ps. Routed FF/DRC/nativeparent/PG/cuts remainOPEN.",
         "job": "qvm_bank_entries_my_native-ne1-4eeecdcb6",
         "evidence": [
           "physical/ref_tile/qvm_bank_entries_my_native/gate_result.json",
