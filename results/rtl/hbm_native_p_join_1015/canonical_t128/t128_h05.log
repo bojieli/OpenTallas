@@ -1,0 +1,5 @@
+PASS actual SFU/VM/SRAM/MAX/MB/EXP/E/SUM/SE/RNE-EB T128 H5 words128 checks512 fixedIO795; rawSC boundary; production physical false
+- rtl/test/hbm_accel/generic/tb_hbm_p_native_producer_static.sv:103: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 7us; walltime 48.343 s; speed 138.720 ns/s
+- Verilator: cpu 48.338 s on 1 threads; allocated 78 MB
