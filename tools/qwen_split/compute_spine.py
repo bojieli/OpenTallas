@@ -553,7 +553,21 @@ def place(v, m, G):
     rec['direct_up4'] = direct_up4(v, m)
     from qwen_split.native_control_contract import apply as native_control_apply
     rec['native_control_contract'] = native_control_apply(m)
+    # static production collective + PHYs replace the credit IO row (OT_SPLIT_IO=legacy keeps the historical graph)
+    if os.environ.get('OT_SPLIT_IO', 'static') == 'static':
+        from qwen_split.native_static_io_bind import apply as static_io_bind
+        rec['native_static_io_bind'] = static_io_bind(m)
     _child_clocks(m, rec)
+    # GEO-Q 2026-10-15 (codex/geometry-qwen-1015 be0856ede), coordinator ADOPT: x3_mux R0 -> MY (x3m 512 b loses its
+    # only relay), xs_tap R0 -> MX (head_23 1,567 b -1 relay; xfault_e 1 b +1).  Same rectangles; pins follow orient.
+    if os.environ.get('OT_SPLIT_GEOQ_ORIENT', '1') != '0':
+        flips = dict(x3_mux='MY', xs_tap='MX')
+        for i in m['insts']:
+            if i.name in flips:
+                if i.orient != 'R0':
+                    raise ValueError(f'GEO-Q orientation expects {i.name} R0, found {i.orient}')
+                i.orient = flips[i.name]
+        rec['geoq_orient'] = flips
     m['tie_self'] = sorted(TIE_SELF)
     rec['tie_self'] = sorted(TIE_SELF)
     _link_words(m, rec)
@@ -563,8 +577,9 @@ def place(v, m, G):
         ins = [dict(n=i.name, m=i.master, x=i.x, y=i.y, w=i.w, h=i.h, o=i.orient) for i in m['insts']]
         bus = [dict(b=b_, c=c_, n=n_, e=[list(x) for x in e_]) for b_, c_, n_, e_ in m.get('buses', [])]
         json.dump(dict(die=m['die'], rec=rec, insts=ins, buses=bus), open(os.environ['OT_SPLIT_DUMP'], 'w'), default=str)
-    from qwen_split.static_io_contract import build as static_io_build
-    m['native_static_io_contract'] = static_io_build(next(i for i in m['insts'] if i.name == 'io_xfifo'))
-    rec['native_static_io_contract'] = dict(children=12, roots=24, native_endpoint_binding='OPEN; legacy IO graph remains diagnostic')
+    if 'native_static_io_bind' not in m:
+        from qwen_split.static_io_contract import build as static_io_build
+        m['native_static_io_contract'] = static_io_build(next(i for i in m['insts'] if i.name == 'io_xfifo'))
+        rec['native_static_io_contract'] = dict(children=12, roots=24, native_endpoint_binding='OPEN; legacy IO graph remains diagnostic')
     m['split_compute'] = rec
     return rec
