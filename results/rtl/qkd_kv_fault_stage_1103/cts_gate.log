@@ -1,0 +1,28 @@
+GATE_SOURCE_ARCHIVE_SHA256=1838edcd6692ebaaf23b02c9058abee692c5424b064c33914b0f0ef3f21b8495
+GATE_TOOL_IMAGE_ID=sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29 GATE_TOOL_IMAGE_DIGESTS=["openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29"]
+GATE_TOOL_CTS_MACRO_CLUSTER=
+GATE_FLOW_RC=0 GATE_FLOW_S=16
+GATE_IOP_RC=0
+GATE_DUMP_RC=0
+GATE_TB textbook_lint: WARN qkd_kv_fault_stage cells 2 flops 1 depth 0.0 ps util 0.0012 reach 16.2 um (0.0 s)
+GATE_TB textbook_lint: INFO clock_roots max_root_sinks=1 root=port:ck rule=PASS: 1 sinks on the largest root <= 15,000; no measured clock tree (no --cts gate evidence)
+GATE_TB textbook_lint: WARN util_channel: utilisation 0.1% outside 45%-65% (std 0 + macro 0 um2 in 299 um2): shrink the outline (long wires / sparse placement)
+GATE_PORTS {"ck": [1, false], "a": [null, true], "b": [null, true]}
+GATE_AREA    Chip area for module '\qkd_kv_fault_stage': 0.364500
+GATE_CTS_RC=0
+GATE_GPLD global_placement -density 0.45 -pad_left 0 -pad_right 0 -routability_driven -timing_driven -force_center_initial_place -min_phi_coef 0.95 -max_phi_coef 1.05
+GATE_GPLD [INFO GPL-0023] Placement target density:       0.4500
+GATE_CK_RC=0
+GATE_CK ss insertion all 0.0..0.0 ps (spread 0.0), boundary mean 0.0; tt insertion all 0.0..0.0 ps (spread 0.0), boundary mean 0.0; ff insertion all 0.0..0.0 ps (spread 0.0), boundary mean 0.0; macro_clk flag False
+GATE_CK_DOMAIN {"source": "ck", "clock": "core_clk", "tt": {"boundary": {"n": 1, "mean": 0.0, "min": 0.0, "max": 0.0}, "all": {"n": 1, "mean": 0.0, "min": 0.0, "max": 0.0}, "errors": [], "macros": null, "macro_libs": 0}}
+GATE_PC constraints signoff /src/physical/ref_tile/qkd_kv_fault_stage/signoff.sdc (TT placement RC; diagnostic)
+GATE_PC reg->out        1 paths, worst slack 320.9 ps (e.g. b[0])
+GATE_PC in->reg         1 paths, worst slack 439.5 ps (e.g. b$_DFF_P_/D)
+GATE_PC setup WNS 3.208554533173924e-10 hold WNS 3.3819998884743185e-11
+GATE_DONE
+
+--- stderr
+ot-run: ot-epyc1tb     admits    38 GB (avail 323, growth 221, headroom 64, waiters 0/0 GB) load 68/128 running 25 disk 320 GB 
+ot-run: -> ot-epyc1tb
+ot-heavy: admitted on ot-epyc1tb as oth-ubuntu-1082683-1792089452 after 0 s
+ot-run: RAN on ot-epyc1tb (unit oth-ubuntu-1082683-1792089452): exit 0

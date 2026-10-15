@@ -1,0 +1,8787 @@
+{
+  "schema": "qwen.head_staged_actual_pin_candidates.v1",
+  "qualified": false,
+  "physical_class": "Necessary actual-pin and rectangle feasibility; no new route/timing qualification",
+  "source_sha256": {
+    "plan": "b29f180c3a5a3e6795d94d50137f87a2c8b1a3d3e52a8fd39b74df87dd8ac2d6",
+    "staged_rtl": "fc99193d8427b0e5abf4c4af7fa89b4851474bb24957f24a03d5f235f551143b",
+    "front_rtl": "d78b8d9905aa93bbf364880dd53d35d4d2538f01640fa3ede096aa1ea3aa4421",
+    "tstage": "697a913f1c42b188ff5f6ddd432e20d7e401e710fe98d8f3e43fdbdb521aab5f",
+    "sstage": "fee30ec1e9a4cb75c822e9514a8d2b5817cb82f4ad50e060f4a5703cc25502d0",
+    "front": "035eb9a445c57df79561803d55b579400e1c0f71c5c71443e8900cba5b4161de",
+    "score": "e7ec180535629b7d1c7faa4653468ef1cd178cb68491759e7293d015d0fd6315",
+    "stin": "d89f8ec31c4e3697571d42eff035afd7ae58c9a1b5b1b783f142f4d2231e0915",
+    "stk": "d20d820394944b42c7e56ae83ca1e58ee7215ef4623855e0501c4a7881339748",
+    "nb": "31f49053b3dded91ab40bb32585b36ca324939e62ead40eb5d65a408f405e84f",
+    "lane": "2cd38b6f4ffba2b51429d7c9290ba81573d84c2ca21153eb06fafbbbd592982f",
+    "ktree": "a2a3dd4b53d162a79640fa8b659a94fefe46064e7772dff3aa2b94ef03094e43"
+  },
+  "sources": {
+    "plan": "results/arch/qwen_split_1014/head_native_r4_codex_1014/plan.json",
+    "staged_rtl": "rtl/qwen_sys/split_20261014/qkh_head_stages.sv",
+    "front_rtl": "rtl/qwen_sys/split_20261014/ot_qkh_head_native_r4.sv",
+    "tstage": "physical/ref_tile/qkh_head_tstage/views/qkh_head_tstage/qkh_head_tstage.lef",
+    "sstage": "physical/ref_tile/qkh_head_sstage/views/qkh_head_sstage/qkh_head_sstage.lef",
+    "front": "physical/ref_tile/qkh_r4_frontq_1014/views/ot_qkh_head_frontq_native/ot_qkh_head_frontq_native.lef",
+    "score": "physical/ref_tile/qkh_r4_score4_1014/views/ot_qkh_head_score4_native/ot_qkh_head_score4_native.lef",
+    "stin": "physical/ref_tile/qkh_r3_stin_1014/views/ot_qkh_head_stin_native/ot_qkh_head_stin_native.lef",
+    "stk": "physical/ref_tile/qkh_r3_stk_1014/views/ot_qkh_head_stk_native/ot_qkh_head_stk_native.lef",
+    "nb": "physical/ref_tile/qkh_r3_nb_1014/views/ot_qkh_head_nb_native/ot_qkh_head_nb_native.lef",
+    "lane": "physical/ref_tile/ot_qkh_lane8_m5/views/ot_qkh_lane8/ot_qkh_lane8.lef",
+    "ktree": "physical/ref_tile/ot_qkh_ktree_m5/views/ot_qkh_ktree/ot_qkh_ktree.lef"
+  },
+  "rtl_master": "ot_qkh_head_native_r4_staged",
+  "source_exact_stages_per_head": {
+    "tstage": 2,
+    "sstage": 1
+  },
+  "source_edges": {
+    "issue": 2,
+    "score_return": 1,
+    "per_layer": 3
+  },
+  "clock_entries": {
+    "existing": 86,
+    "added": 3,
+    "total": 89
+  },
+  "clock_contract": "Each added leaf ck must receive its own compensated1.2GHz entry using its actual insertion.json. No parent/shared stage clock root is inferred.",
+  "cuts": {
+    "input_bits_per_head": 1575,
+    "score_bits_per_head": 34,
+    "added_registered_bits_per_head": 3184,
+    "stage_W_face_track_fraction": 0.583704,
+    "widen54_necessary_capacity": {
+      "assumption": "Normalized track demand at0.096um/bit and55percent occupancy; necessary layer count only, actual metal directions and obstructions require backend admission.",
+      "ectl_to_paired_T1": {
+        "unique_driver_nets": 1591,
+        "width_um": 1133.976,
+        "one_layer_fraction": 0.134691
+      },
+      "paired_T1_to_T2": {
+        "distinct_registered_nets": 3150,
+        "maximum_available_height_um": 492.456,
+        "one_layer_fraction_lower_bound": 0.614065,
+        "eligible_horizontal_layers_required_at55": 2
+      },
+      "T2_to_either_front_column": {
+        "unique_driver_nets": 1063,
+        "height_um": 259.2,
+        "one_layer_fraction": 0.393704
+      }
+    }
+  },
+  "alternatives": {
+    "inside_head": {
+      "domain_um": [
+        0,
+        1079.976,
+        0,
+        492.456
+      ],
+      "origin_pitch_um": 5.4,
+      "clearance_um": 5.4,
+      "existing_children": 86,
+      "origins": 8624,
+      "free_origins": 222,
+      "all_four_orientations_checked": true,
+      "reach_pass_origins": 0,
+      "feasible_sites": [],
+      "best_free": {
+        "xy": [
+          16.2,
+          0.0
+        ],
+        "orient": "MX",
+        "worst": {
+          "bit": "ti_b[1]->front3.q_data_in[1]",
+          "um": 955.488,
+          "source_corner": [
+            37.727999999999994,
+            256.896
+          ],
+          "destination_corner": [
+            750.6,
+            14.280000000000001
+          ]
+        },
+        "blockers": []
+      },
+      "best_reach_only": {
+        "xy": [
+          459.0,
+          0.0
+        ],
+        "orient": "MX",
+        "worst": {
+          "bit": "ti_b[1]->front3.q_data_in[1]",
+          "um": 512.688,
+          "source_corner": [
+            480.528,
+            256.896
+          ],
+          "destination_corner": [
+            750.6,
+            14.280000000000001
+          ]
+        },
+        "blockers": [
+          "front1",
+          "ktree",
+          "lane6",
+          "nb1_0"
+        ]
+      },
+      "admitted": false,
+      "constraint": "Mandatory u_t2 -> actual front input rectangles must be <=500 um, with no overlap or less than5.4 um clearance against all86 unchanged children. Failure rejects this domain on this origin lattice; repacking/rotation90/new views are outside this bounded proof, not declared impossible.",
+      "continuous_lower_bound_ignoring_all_obstacles": {
+        "minimum_um": 510.06,
+        "xy": [
+          461.62800000000004,
+          0.0
+        ],
+        "orient": "MX",
+        "domain": "inside",
+        "worst": {
+          "bit": "ti_b[0]->front0.q_data_in[0]",
+          "um": 510.06,
+          "source_corner": [
+            483.30000000000007,
+            257.03999999999996
+          ],
+          "destination_corner": [
+            216.0,
+            14.280000000000001
+          ]
+        },
+        "certificate": {
+          "signs": [
+            [
+              -1,
+              -1
+            ],
+            [
+              -1,
+              1
+            ],
+            [
+              1,
+              -1
+            ],
+            [
+              1,
+              1
+            ]
+          ],
+          "constants": [
+            736.7760000000001,
+            971.6880000000001,
+            -188.35199999999998,
+            48.43199999999999
+          ],
+          "bounds_um": [
+            0,
+            1058.3760000000002,
+            0,
+            233.25600000000003
+          ],
+          "inequality_duals": [
+            -0.0,
+            -0.5,
+            -0.0,
+            -0.5
+          ],
+          "lower_bound_duals": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "upper_bound_duals": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      }
+    },
+    "adjacent_channel": {
+      "domain_um": [
+        -129.6,
+        1209.576,
+        -280.8,
+        773.2560000000001
+      ],
+      "origin_pitch_um": 5.4,
+      "clearance_um": 5.4,
+      "existing_children": 86,
+      "origins": 7059,
+      "free_origins": 7059,
+      "all_four_orientations_checked": true,
+      "reach_pass_origins": 0,
+      "feasible_sites": [],
+      "best_free": {
+        "xy": [
+          464.4,
+          -264.6
+        ],
+        "orient": "MX",
+        "worst": {
+          "bit": "ti_b[1558]->front0.c_in[3]",
+          "um": 540.648,
+          "source_corner": [
+            486.072,
+            -259.82400000000007
+          ],
+          "destination_corner": [
+            216.0,
+            10.752
+          ]
+        },
+        "blockers": []
+      },
+      "best_reach_only": {
+        "xy": [
+          464.4,
+          -264.6
+        ],
+        "orient": "MX",
+        "worst": {
+          "bit": "ti_b[1558]->front0.c_in[3]",
+          "um": 540.648,
+          "source_corner": [
+            486.072,
+            -259.82400000000007
+          ],
+          "destination_corner": [
+            216.0,
+            10.752
+          ]
+        },
+        "blockers": []
+      },
+      "admitted": false,
+      "constraint": "Mandatory u_t2 -> actual front input rectangles must be <=500 um, with no overlap or less than5.4 um clearance against all86 unchanged children. Failure rejects this domain on this origin lattice; repacking/rotation90/new views are outside this bounded proof, not declared impossible.",
+      "continuous_lower_bound_ignoring_die_obstacles": {
+        "minimum_um": 538.812,
+        "xy": [
+          462.56399999999996,
+          -264.6
+        ],
+        "orient": "MX",
+        "domain": "below",
+        "worst": {
+          "bit": "e_b[15]->front3.e_in[15]",
+          "um": 538.812,
+          "source_corner": [
+            484.092,
+            -262.41600000000005
+          ],
+          "destination_corner": [
+            750.6,
+            9.888000000000002
+          ]
+        },
+        "certificate": {
+          "signs": [
+            [
+              -1,
+              -1
+            ],
+            [
+              -1,
+              1
+            ],
+            [
+              1,
+              -1
+            ],
+            [
+              1,
+              1
+            ]
+          ],
+          "constants": [
+            736.7760000000001,
+            971.6880000000001,
+            -188.35199999999998,
+            48.43199999999999
+          ],
+          "bounds_um": [
+            -129.6,
+            1187.976,
+            -280.8,
+            -264.6
+          ],
+          "inequality_duals": [
+            -0.5,
+            -0.0,
+            -0.5,
+            -0.0
+          ],
+          "lower_bound_duals": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "upper_bound_duals": [
+            0.0,
+            -1.0,
+            0.0
+          ]
+        }
+      }
+    }
+  },
+  "repacked_actual_leaf_plan": {
+    "admitted": true,
+    "scope": "All86 actual leaf rectangles retained; fourfronts,ktree,score and displaced stations rehomed. Every internal data/reset incident bit uses actual routed LEF rectangle corners.",
+    "moves": [
+      {
+        "child": "stin10",
+        "xy": [
+          658.8,
+          70.2
+        ],
+        "incident_max_um": 247.56
+      },
+      {
+        "child": "stin2",
+        "xy": [
+          351.0,
+          356.4
+        ],
+        "incident_max_um": 436.944
+      },
+      {
+        "child": "stin9",
+        "xy": [
+          351.0,
+          405.0
+        ],
+        "incident_max_um": 404.544
+      },
+      {
+        "child": "stk3",
+        "xy": [
+          351.0,
+          54.0
+        ],
+        "incident_max_um": 265.944
+      },
+      {
+        "child": "stk6",
+        "xy": [
+          523.8,
+          253.8
+        ],
+        "incident_max_um": 204.708
+      },
+      {
+        "child": "stk8",
+        "xy": [
+          523.8,
+          356.4
+        ],
+        "incident_max_um": 298.092
+      },
+      {
+        "child": "nb1_0",
+        "xy": [
+          583.2,
+          102.6
+        ],
+        "incident_max_um": 443.604
+      },
+      {
+        "child": "nb1_1",
+        "xy": [
+          523.8,
+          280.8
+        ],
+        "incident_max_um": 380.724
+      },
+      {
+        "child": "nb1_4",
+        "xy": [
+          523.8,
+          205.2
+        ],
+        "incident_max_um": 270.408
+      }
+    ],
+    "initial_conflicts": [
+      [
+        "front3",
+        "stin10"
+      ],
+      [
+        "ktree",
+        "nb1_1"
+      ],
+      [
+        "ktree",
+        "nb1_4"
+      ],
+      [
+        "ktree",
+        "stk6"
+      ],
+      [
+        "ktree",
+        "nb1_0"
+      ],
+      [
+        "ktree",
+        "stk3"
+      ],
+      [
+        "score",
+        "stin9"
+      ],
+      [
+        "score",
+        "stk8"
+      ]
+    ],
+    "children": {
+      "front0": [
+        388.8,
+        5.4,
+        129.6,
+        43.2
+      ],
+      "front1": [
+        523.8,
+        5.4,
+        129.6,
+        43.2
+      ],
+      "front2": [
+        388.8,
+        54.0,
+        129.6,
+        43.2
+      ],
+      "front3": [
+        523.8,
+        54.0,
+        129.6,
+        43.2
+      ],
+      "ktree": [
+        388.8,
+        102.6,
+        151.2,
+        97.2
+      ],
+      "score": [
+        550.8,
+        151.2,
+        43.2,
+        43.2
+      ],
+      "stin2": [
+        351.0,
+        356.4,
+        32.4,
+        43.2
+      ],
+      "stk2": [
+        178.2,
+        151.2,
+        32.4,
+        21.6
+      ],
+      "nb1_2": [
+        432.0,
+        340.2,
+        32.4,
+        10.8
+      ],
+      "nb2_2": [
+        696.6,
+        216.0,
+        32.4,
+        10.8
+      ],
+      "lane2": [
+        43.2,
+        356.4,
+        129.6,
+        129.6
+      ],
+      "stin5": [
+        351.0,
+        280.8,
+        32.4,
+        43.2
+      ],
+      "stk5": [
+        351.0,
+        237.6,
+        32.4,
+        21.6
+      ],
+      "nb1_5": [
+        545.4,
+        340.2,
+        32.4,
+        10.8
+      ],
+      "nb2_5": [
+        869.4,
+        340.2,
+        32.4,
+        10.8
+      ],
+      "lane5": [
+        216.0,
+        356.4,
+        129.6,
+        129.6
+      ],
+      "stin7": [
+        351.0,
+        183.6,
+        32.4,
+        43.2
+      ],
+      "stk7": [
+        523.8,
+        226.8,
+        32.4,
+        21.6
+      ],
+      "nb1_7": [
+        696.6,
+        383.4,
+        32.4,
+        10.8
+      ],
+      "nb2_7": [
+        869.4,
+        291.6,
+        32.4,
+        10.8
+      ],
+      "lane7": [
+        388.8,
+        356.4,
+        129.6,
+        129.6
+      ],
+      "stin9": [
+        351.0,
+        405.0,
+        32.4,
+        43.2
+      ],
+      "stk9": [
+        523.8,
+        297.0,
+        32.4,
+        21.6
+      ],
+      "nb1_9": [
+        766.8,
+        340.2,
+        32.4,
+        10.8
+      ],
+      "nb2_9": [
+        966.6,
+        340.2,
+        32.4,
+        10.8
+      ],
+      "lane9": [
+        561.6000000000001,
+        356.4,
+        129.6,
+        129.6
+      ],
+      "stin12": [
+        696.6,
+        167.4,
+        32.4,
+        43.2
+      ],
+      "stk12": [
+        523.8,
+        394.2,
+        32.4,
+        21.6
+      ],
+      "nb1_12": [
+        869.4,
+        356.4,
+        32.4,
+        10.8
+      ],
+      "nb2_12": [
+        1004.4,
+        340.2,
+        32.4,
+        10.8
+      ],
+      "lane12": [
+        734.4000000000001,
+        356.4,
+        129.6,
+        129.6
+      ],
+      "stin15": [
+        869.4,
+        140.4,
+        32.4,
+        43.2
+      ],
+      "stk15": [
+        696.6,
+        291.6,
+        32.4,
+        21.6
+      ],
+      "nb1_15": [
+        869.4,
+        421.2,
+        32.4,
+        10.8
+      ],
+      "nb2_15": [
+        918.0,
+        340.2,
+        32.4,
+        10.8
+      ],
+      "lane15": [
+        907.2,
+        356.4,
+        129.6,
+        129.6
+      ],
+      "stin1": [
+        178.2,
+        189.0,
+        32.4,
+        43.2
+      ],
+      "stk1": [
+        351.0,
+        329.4,
+        32.4,
+        21.6
+      ],
+      "nb1_1": [
+        523.8,
+        280.8,
+        32.4,
+        10.8
+      ],
+      "nb2_1": [
+        734.4,
+        189.0,
+        32.4,
+        10.8
+      ],
+      "lane1": [
+        43.2,
+        205.2,
+        129.6,
+        129.6
+      ],
+      "stin4": [
+        178.2,
+        70.2,
+        32.4,
+        43.2
+      ],
+      "stk4": [
+        351.0,
+        156.6,
+        32.4,
+        21.6
+      ],
+      "nb1_4": [
+        523.8,
+        205.2,
+        32.4,
+        10.8
+      ],
+      "nb2_4": [
+        810.0,
+        189.0,
+        32.4,
+        10.8
+      ],
+      "lane4": [
+        216.0,
+        205.2,
+        129.6,
+        129.6
+      ],
+      "stin6": [
+        351.0,
+        108.0,
+        32.4,
+        43.2
+      ],
+      "stk6": [
+        523.8,
+        253.8,
+        32.4,
+        21.6
+      ],
+      "nb1_6": [
+        696.6,
+        270.0,
+        32.4,
+        10.8
+      ],
+      "nb2_6": [
+        869.4,
+        237.6,
+        32.4,
+        10.8
+      ],
+      "lane6": [
+        388.8,
+        205.2,
+        129.6,
+        129.6
+      ],
+      "stin8": [
+        545.4,
+        102.6,
+        32.4,
+        43.2
+      ],
+      "stk8": [
+        523.8,
+        356.4,
+        32.4,
+        21.6
+      ],
+      "nb1_8": [
+        772.2,
+        189.0,
+        32.4,
+        10.8
+      ],
+      "nb2_8": [
+        928.8,
+        189.0,
+        32.4,
+        10.8
+      ],
+      "lane8": [
+        561.6000000000001,
+        205.2,
+        129.6,
+        129.6
+      ],
+      "stin11": [
+        631.8,
+        151.2,
+        32.4,
+        43.2
+      ],
+      "stk11": [
+        685.8,
+        140.4,
+        32.4,
+        21.6
+      ],
+      "nb1_11": [
+        874.8,
+        189.0,
+        32.4,
+        10.8
+      ],
+      "nb2_11": [
+        1015.2,
+        189.0,
+        32.4,
+        10.8
+      ],
+      "lane11": [
+        734.4000000000001,
+        205.2,
+        129.6,
+        129.6
+      ],
+      "stin14": [
+        869.4,
+        48.6,
+        32.4,
+        43.2
+      ],
+      "stk14": [
+        696.6,
+        232.2,
+        32.4,
+        21.6
+      ],
+      "nb1_14": [
+        869.4,
+        270.0,
+        32.4,
+        10.8
+      ],
+      "nb2_14": [
+        966.6,
+        189.0,
+        32.4,
+        10.8
+      ],
+      "lane14": [
+        907.2,
+        205.2,
+        129.6,
+        129.6
+      ],
+      "stin0": [
+        75.6,
+        5.4,
+        32.4,
+        43.2
+      ],
+      "stk0": [
+        351.0,
+        81.0,
+        32.4,
+        21.6
+      ],
+      "nb1_0": [
+        583.2,
+        102.6,
+        32.4,
+        10.8
+      ],
+      "nb2_0": [
+        869.4,
+        205.2,
+        32.4,
+        10.8
+      ],
+      "lane0": [
+        43.2,
+        54.0,
+        129.6,
+        129.6
+      ],
+      "stin3": [
+        178.2,
+        21.6,
+        32.4,
+        43.2
+      ],
+      "stk3": [
+        351.0,
+        54.0,
+        32.4,
+        21.6
+      ],
+      "nb1_3": [
+        583.2,
+        118.8,
+        32.4,
+        10.8
+      ],
+      "nb2_3": [
+        869.4,
+        124.2,
+        32.4,
+        10.8
+      ],
+      "lane3": [
+        216.0,
+        54.0,
+        129.6,
+        129.6
+      ],
+      "stin10": [
+        658.8,
+        70.2,
+        32.4,
+        43.2
+      ],
+      "stk10": [
+        626.4,
+        118.8,
+        32.4,
+        21.6
+      ],
+      "nb1_10": [
+        869.4,
+        221.4,
+        32.4,
+        10.8
+      ],
+      "nb2_10": [
+        869.4,
+        253.8,
+        32.4,
+        10.8
+      ],
+      "lane10": [
+        734.4000000000001,
+        54.0,
+        129.6,
+        129.6
+      ],
+      "stin13": [
+        799.2,
+        5.4,
+        32.4,
+        43.2
+      ],
+      "stk13": [
+        696.6,
+        102.6,
+        32.4,
+        21.6
+      ],
+      "nb1_13": [
+        999.0,
+        37.8,
+        32.4,
+        10.8
+      ],
+      "nb2_13": [
+        1036.8,
+        37.8,
+        32.4,
+        10.8
+      ],
+      "lane13": [
+        907.2,
+        54.0,
+        129.6,
+        129.6
+      ]
+    },
+    "internal_edges": [
+      {
+        "source": "front0",
+        "destination": "stin0",
+        "um": 339.624
+      },
+      {
+        "source": "stin0",
+        "destination": "lane0",
+        "um": 175.944
+      },
+      {
+        "source": "lane0",
+        "destination": "stk0",
+        "um": 240.18
+      },
+      {
+        "source": "stk0",
+        "destination": "ktree",
+        "um": 243.36
+      },
+      {
+        "source": "lane0",
+        "destination": "nb1_0",
+        "um": 443.604
+      },
+      {
+        "source": "nb1_0",
+        "destination": "nb2_0",
+        "um": 356.808
+      },
+      {
+        "source": "front0",
+        "destination": "stin1",
+        "um": 409.944
+      },
+      {
+        "source": "stin1",
+        "destination": "lane1",
+        "um": 246.144
+      },
+      {
+        "source": "lane1",
+        "destination": "stk1",
+        "um": 293.34
+      },
+      {
+        "source": "stk1",
+        "destination": "ktree",
+        "um": 249.828
+      },
+      {
+        "source": "lane1",
+        "destination": "nb1_1",
+        "um": 380.724
+      },
+      {
+        "source": "nb1_1",
+        "destination": "nb2_1",
+        "um": 270.408
+      },
+      {
+        "source": "front0",
+        "destination": "stin2",
+        "um": 436.944
+      },
+      {
+        "source": "stin2",
+        "destination": "lane2",
+        "um": 402.744
+      },
+      {
+        "source": "lane2",
+        "destination": "stk2",
+        "um": 299.58
+      },
+      {
+        "source": "stk2",
+        "destination": "ktree",
+        "um": 341.448
+      },
+      {
+        "source": "lane2",
+        "destination": "nb1_2",
+        "um": 357.204
+      },
+      {
+        "source": "nb1_2",
+        "destination": "nb2_2",
+        "um": 356.808
+      },
+      {
+        "source": "front0",
+        "destination": "stin3",
+        "um": 318.024
+      },
+      {
+        "source": "stin3",
+        "destination": "lane3",
+        "um": 110.484
+      },
+      {
+        "source": "lane3",
+        "destination": "stk3",
+        "um": 94.38
+      },
+      {
+        "source": "stk3",
+        "destination": "ktree",
+        "um": 265.944
+      },
+      {
+        "source": "lane3",
+        "destination": "nb1_3",
+        "um": 256.524
+      },
+      {
+        "source": "nb1_3",
+        "destination": "nb2_3",
+        "um": 259.608
+      },
+      {
+        "source": "front1",
+        "destination": "stin4",
+        "um": 393.744
+      },
+      {
+        "source": "stin4",
+        "destination": "lane4",
+        "um": 213.084
+      },
+      {
+        "source": "lane4",
+        "destination": "stk4",
+        "um": 142.98
+      },
+      {
+        "source": "stk4",
+        "destination": "ktree",
+        "um": 163.44
+      },
+      {
+        "source": "lane4",
+        "destination": "nb1_4",
+        "um": 260.004
+      },
+      {
+        "source": "nb1_4",
+        "destination": "nb2_4",
+        "um": 270.408
+      },
+      {
+        "source": "front1",
+        "destination": "stin5",
+        "um": 463.944
+      },
+      {
+        "source": "stin5",
+        "destination": "lane5",
+        "um": 305.544
+      },
+      {
+        "source": "lane5",
+        "destination": "stk5",
+        "um": 213.18
+      },
+      {
+        "source": "stk5",
+        "destination": "ktree",
+        "um": 158.412
+      },
+      {
+        "source": "lane5",
+        "destination": "nb1_5",
+        "um": 297.804
+      },
+      {
+        "source": "nb1_5",
+        "destination": "nb2_5",
+        "um": 292.008
+      },
+      {
+        "source": "front1",
+        "destination": "stin6",
+        "um": 323.544
+      },
+      {
+        "source": "stin6",
+        "destination": "lane6",
+        "um": 175.284
+      },
+      {
+        "source": "lane6",
+        "destination": "stk6",
+        "um": 45.78
+      },
+      {
+        "source": "stk6",
+        "destination": "ktree",
+        "um": 204.708
+      },
+      {
+        "source": "lane6",
+        "destination": "nb1_6",
+        "um": 197.124
+      },
+      {
+        "source": "nb1_6",
+        "destination": "nb2_6",
+        "um": 173.208
+      },
+      {
+        "source": "front1",
+        "destination": "stin7",
+        "um": 431.544
+      },
+      {
+        "source": "stin7",
+        "destination": "lane7",
+        "um": 250.884
+      },
+      {
+        "source": "lane7",
+        "destination": "stk7",
+        "um": 223.98
+      },
+      {
+        "source": "stk7",
+        "destination": "ktree",
+        "um": 174.636
+      },
+      {
+        "source": "lane7",
+        "destination": "nb1_7",
+        "um": 233.004
+      },
+      {
+        "source": "nb1_7",
+        "destination": "nb2_7",
+        "um": 232.608
+      },
+      {
+        "source": "front2",
+        "destination": "stin8",
+        "um": 201.576
+      },
+      {
+        "source": "stin8",
+        "destination": "lane8",
+        "um": 181.344
+      },
+      {
+        "source": "lane8",
+        "destination": "stk8",
+        "um": 274.296
+      },
+      {
+        "source": "stk8",
+        "destination": "ktree",
+        "um": 298.092
+      },
+      {
+        "source": "lane8",
+        "destination": "nb1_8",
+        "um": 179.004
+      },
+      {
+        "source": "nb1_8",
+        "destination": "nb2_8",
+        "um": 124.608
+      },
+      {
+        "source": "front2",
+        "destination": "stin9",
+        "um": 404.544
+      },
+      {
+        "source": "stin9",
+        "destination": "lane9",
+        "um": 272.712
+      },
+      {
+        "source": "lane9",
+        "destination": "stk9",
+        "um": 280.728
+      },
+      {
+        "source": "stk9",
+        "destination": "ktree",
+        "um": 235.62
+      },
+      {
+        "source": "lane9",
+        "destination": "nb1_9",
+        "um": 173.604
+      },
+      {
+        "source": "nb1_9",
+        "destination": "nb2_9",
+        "um": 167.808
+      },
+      {
+        "source": "front2",
+        "destination": "stin10",
+        "um": 247.56
+      },
+      {
+        "source": "stin10",
+        "destination": "lane10",
+        "um": 105.312
+      },
+      {
+        "source": "lane10",
+        "destination": "stk10",
+        "um": 258.096
+      },
+      {
+        "source": "stk10",
+        "destination": "ktree",
+        "um": 308.688
+      },
+      {
+        "source": "lane10",
+        "destination": "nb1_10",
+        "um": 126.924
+      },
+      {
+        "source": "nb1_10",
+        "destination": "nb2_10",
+        "um": 64.824
+      },
+      {
+        "source": "front2",
+        "destination": "stin11",
+        "um": 239.376
+      },
+      {
+        "source": "stin11",
+        "destination": "lane11",
+        "um": 196.884
+      },
+      {
+        "source": "lane11",
+        "destination": "stk11",
+        "um": 296.928
+      },
+      {
+        "source": "stk11",
+        "destination": "ktree",
+        "um": 340.344
+      },
+      {
+        "source": "lane11",
+        "destination": "nb1_11",
+        "um": 108.804
+      },
+      {
+        "source": "nb1_11",
+        "destination": "nb2_11",
+        "um": 108.408
+      },
+      {
+        "source": "front3",
+        "destination": "stin12",
+        "um": 282.576
+      },
+      {
+        "source": "stin12",
+        "destination": "lane12",
+        "um": 267.084
+      },
+      {
+        "source": "lane12",
+        "destination": "stk12",
+        "um": 356.328
+      },
+      {
+        "source": "stk12",
+        "destination": "ktree",
+        "um": 309.78
+      },
+      {
+        "source": "lane12",
+        "destination": "nb1_12",
+        "um": 87.204
+      },
+      {
+        "source": "nb1_12",
+        "destination": "nb2_12",
+        "um": 119.208
+      },
+      {
+        "source": "front3",
+        "destination": "stin13",
+        "um": 350.16
+      },
+      {
+        "source": "stin13",
+        "destination": "lane13",
+        "um": 196.884
+      },
+      {
+        "source": "lane13",
+        "destination": "stk13",
+        "um": 345.528
+      },
+      {
+        "source": "stk13",
+        "destination": "ktree",
+        "um": 395.088
+      },
+      {
+        "source": "lane13",
+        "destination": "nb1_13",
+        "um": 135.528
+      },
+      {
+        "source": "nb1_13",
+        "destination": "nb2_13",
+        "um": 5.808
+      },
+      {
+        "source": "front3",
+        "destination": "stin14",
+        "um": 344.76
+      },
+      {
+        "source": "stin14",
+        "destination": "lane14",
+        "um": 234.684
+      },
+      {
+        "source": "lane14",
+        "destination": "stk14",
+        "um": 367.128
+      },
+      {
+        "source": "stk14",
+        "destination": "ktree",
+        "um": 352.836
+      },
+      {
+        "source": "lane14",
+        "destination": "nb1_14",
+        "um": 186.048
+      },
+      {
+        "source": "nb1_14",
+        "destination": "nb2_14",
+        "um": 146.208
+      },
+      {
+        "source": "front3",
+        "destination": "stin15",
+        "um": 331.176
+      },
+      {
+        "source": "stin15",
+        "destination": "lane15",
+        "um": 294.084
+      },
+      {
+        "source": "lane15",
+        "destination": "stk15",
+        "um": 458.928
+      },
+      {
+        "source": "stk15",
+        "destination": "ktree",
+        "um": 409.164
+      },
+      {
+        "source": "lane15",
+        "destination": "nb1_15",
+        "um": 186.048
+      },
+      {
+        "source": "nb1_15",
+        "destination": "nb2_15",
+        "um": 97.608
+      },
+      {
+        "source": "ktree",
+        "destination": "score",
+        "um": 114.804
+      },
+      {
+        "source": "score",
+        "destination": "ktree",
+        "um": 165.444
+      },
+      {
+        "source": "front0",
+        "destination": "score",
+        "um": 337.536
+      },
+      {
+        "source": "front1",
+        "destination": "score",
+        "um": 202.632
+      },
+      {
+        "source": "front2",
+        "destination": "score",
+        "um": 289.128
+      },
+      {
+        "source": "front3",
+        "destination": "score",
+        "um": 154.224
+      }
+    ],
+    "worst_internal_edge": {
+      "source": "front1",
+      "destination": "stin5",
+      "um": 463.944
+    },
+    "conflicts": [],
+    "unresolved": "Die input/output pin grants, stage1/score placement, clock track legality and native signoff remain separate obligations.",
+    "slot_outline_um": [
+      1079.976,
+      492.456
+    ],
+    "placement_keepouts": {},
+    "stage2_continuous_lower_bound": {
+      "minimum_um": 452.412,
+      "xy": [
+        500.3639999999999,
+        -264.6
+      ],
+      "orient": "MX",
+      "domain": "below",
+      "worst": {
+        "bit": "e_b[15]->front3.e_in[15]",
+        "um": 452.412,
+        "source_corner": [
+          521.8919999999999,
+          -262.41600000000005
+        ],
+        "destination_corner": [
+          653.4,
+          58.488
+        ]
+      },
+      "certificate": {
+        "signs": [
+          [
+            -1,
+            -1
+          ],
+          [
+            -1,
+            1
+          ],
+          [
+            1,
+            -1
+          ],
+          [
+            1,
+            1
+          ]
+        ],
+        "constants": [
+          688.1759999999999,
+          874.488,
+          -312.55199999999996,
+          -124.36800000000005
+        ],
+        "bounds_um": [
+          -129.6,
+          1187.976,
+          -280.8,
+          -264.6
+        ],
+        "inequality_duals": [
+          -0.5,
+          -0.0,
+          -0.5,
+          -0.0
+        ],
+        "lower_bound_duals": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "upper_bound_duals": [
+          0.0,
+          -1.0,
+          0.0
+        ]
+      }
+    }
+  },
+  "repacked_inside_stage2_actual_leaf_plan": {
+    "admitted": true,
+    "scope": "All86 actual leaf rectangles retained; fourfronts,ktree,score and displaced stations rehomed. Every internal data/reset incident bit uses actual routed LEF rectangle corners.",
+    "moves": [
+      {
+        "child": "stin10",
+        "xy": [
+          567.0,
+          135.0
+        ],
+        "incident_max_um": 261.912
+      },
+      {
+        "child": "stin11",
+        "xy": [
+          691.2,
+          54.0
+        ],
+        "incident_max_um": 263.76
+      },
+      {
+        "child": "stin2",
+        "xy": [
+          351.0,
+          356.4
+        ],
+        "incident_max_um": 436.944
+      },
+      {
+        "child": "stin5",
+        "xy": [
+          216.0,
+          5.4
+        ],
+        "incident_max_um": 445.944
+      },
+      {
+        "child": "stin6",
+        "xy": [
+          351.0,
+          27.0
+        ],
+        "incident_max_um": 274.944
+      },
+      {
+        "child": "stin7",
+        "xy": [
+          696.6,
+          334.8
+        ],
+        "incident_max_um": 424.344
+      },
+      {
+        "child": "stin8",
+        "xy": [
+          351.0,
+          264.6
+        ],
+        "incident_max_um": 283.512
+      },
+      {
+        "child": "stin9",
+        "xy": [
+          351.0,
+          405.0
+        ],
+        "incident_max_um": 404.544
+      },
+      {
+        "child": "stk0",
+        "xy": [
+          351.0,
+          75.6
+        ],
+        "incident_max_um": 245.58
+      },
+      {
+        "child": "stk3",
+        "xy": [
+          351.0,
+          205.2
+        ],
+        "incident_max_um": 147.54
+      },
+      {
+        "child": "stk4",
+        "xy": [
+          523.8,
+          264.6
+        ],
+        "incident_max_um": 234.108
+      },
+      {
+        "child": "stk6",
+        "xy": [
+          653.4,
+          178.2
+        ],
+        "incident_max_um": 339.432
+      },
+      {
+        "child": "stk7",
+        "xy": [
+          351.0,
+          453.6
+        ],
+        "incident_max_um": 336.804
+      },
+      {
+        "child": "stk8",
+        "xy": [
+          523.8,
+          356.4
+        ],
+        "incident_max_um": 335.892
+      },
+      {
+        "child": "nb1_0",
+        "xy": [
+          556.2,
+          102.6
+        ],
+        "incident_max_um": 416.604
+      },
+      {
+        "child": "nb1_1",
+        "xy": [
+          469.8,
+          340.2
+        ],
+        "incident_max_um": 386.124
+      },
+      {
+        "child": "nb1_4",
+        "xy": [
+          556.2,
+          189.0
+        ],
+        "incident_max_um": 308.604
+      }
+    ],
+    "initial_conflicts": [
+      [
+        "front3",
+        "stin10"
+      ],
+      [
+        "ktree",
+        "stin7"
+      ],
+      [
+        "ktree",
+        "nb1_1"
+      ],
+      [
+        "ktree",
+        "stk4"
+      ],
+      [
+        "ktree",
+        "stin6"
+      ],
+      [
+        "ktree",
+        "stk6"
+      ],
+      [
+        "ktree",
+        "stk0"
+      ],
+      [
+        "ktree",
+        "nb1_0"
+      ],
+      [
+        "ktree",
+        "stk3"
+      ],
+      [
+        "score",
+        "stk8"
+      ],
+      [
+        "score",
+        "stin11"
+      ],
+      [
+        "stk7",
+        "u_t2"
+      ],
+      [
+        "stin9",
+        "u_t2"
+      ],
+      [
+        "nb1_4",
+        "u_t2"
+      ],
+      [
+        "stin8",
+        "u_t2"
+      ]
+    ],
+    "children": {
+      "front0": [
+        388.8,
+        5.4,
+        129.6,
+        43.2
+      ],
+      "front1": [
+        556.2,
+        5.4,
+        129.6,
+        43.2
+      ],
+      "front2": [
+        388.8,
+        54.0,
+        129.6,
+        43.2
+      ],
+      "front3": [
+        556.2,
+        54.0,
+        129.6,
+        43.2
+      ],
+      "ktree": [
+        351.0,
+        102.6,
+        151.2,
+        97.2
+      ],
+      "score": [
+        604.8,
+        151.2,
+        43.2,
+        43.2
+      ],
+      "stin2": [
+        351.0,
+        356.4,
+        32.4,
+        43.2
+      ],
+      "stk2": [
+        178.2,
+        151.2,
+        32.4,
+        21.6
+      ],
+      "nb1_2": [
+        432.0,
+        340.2,
+        32.4,
+        10.8
+      ],
+      "nb2_2": [
+        696.6,
+        216.0,
+        32.4,
+        10.8
+      ],
+      "lane2": [
+        43.2,
+        356.4,
+        129.6,
+        129.6
+      ],
+      "stin5": [
+        216.0,
+        5.4,
+        32.4,
+        43.2
+      ],
+      "stk5": [
+        351.0,
+        237.6,
+        32.4,
+        21.6
+      ],
+      "nb1_5": [
+        545.4,
+        340.2,
+        32.4,
+        10.8
+      ],
+      "nb2_5": [
+        869.4,
+        340.2,
+        32.4,
+        10.8
+      ],
+      "lane5": [
+        216.0,
+        356.4,
+        129.6,
+        129.6
+      ],
+      "stin7": [
+        696.6,
+        334.8,
+        32.4,
+        43.2
+      ],
+      "stk7": [
+        351.0,
+        453.6,
+        32.4,
+        21.6
+      ],
+      "nb1_7": [
+        696.6,
+        383.4,
+        32.4,
+        10.8
+      ],
+      "nb2_7": [
+        869.4,
+        291.6,
+        32.4,
+        10.8
+      ],
+      "lane7": [
+        388.8,
+        356.4,
+        129.6,
+        129.6
+      ],
+      "stin9": [
+        351.0,
+        405.0,
+        32.4,
+        43.2
+      ],
+      "stk9": [
+        523.8,
+        297.0,
+        32.4,
+        21.6
+      ],
+      "nb1_9": [
+        766.8,
+        340.2,
+        32.4,
+        10.8
+      ],
+      "nb2_9": [
+        966.6,
+        340.2,
+        32.4,
+        10.8
+      ],
+      "lane9": [
+        561.6000000000001,
+        356.4,
+        129.6,
+        129.6
+      ],
+      "stin12": [
+        696.6,
+        167.4,
+        32.4,
+        43.2
+      ],
+      "stk12": [
+        523.8,
+        394.2,
+        32.4,
+        21.6
+      ],
+      "nb1_12": [
+        869.4,
+        356.4,
+        32.4,
+        10.8
+      ],
+      "nb2_12": [
+        1004.4,
+        340.2,
+        32.4,
+        10.8
+      ],
+      "lane12": [
+        734.4000000000001,
+        356.4,
+        129.6,
+        129.6
+      ],
+      "stin15": [
+        869.4,
+        140.4,
+        32.4,
+        43.2
+      ],
+      "stk15": [
+        696.6,
+        291.6,
+        32.4,
+        21.6
+      ],
+      "nb1_15": [
+        869.4,
+        421.2,
+        32.4,
+        10.8
+      ],
+      "nb2_15": [
+        918.0,
+        340.2,
+        32.4,
+        10.8
+      ],
+      "lane15": [
+        907.2,
+        356.4,
+        129.6,
+        129.6
+      ],
+      "stin1": [
+        178.2,
+        189.0,
+        32.4,
+        43.2
+      ],
+      "stk1": [
+        351.0,
+        329.4,
+        32.4,
+        21.6
+      ],
+      "nb1_1": [
+        469.8,
+        340.2,
+        32.4,
+        10.8
+      ],
+      "nb2_1": [
+        734.4,
+        189.0,
+        32.4,
+        10.8
+      ],
+      "lane1": [
+        43.2,
+        205.2,
+        129.6,
+        129.6
+      ],
+      "stin4": [
+        178.2,
+        70.2,
+        32.4,
+        43.2
+      ],
+      "stk4": [
+        523.8,
+        264.6,
+        32.4,
+        21.6
+      ],
+      "nb1_4": [
+        556.2,
+        189.0,
+        32.4,
+        10.8
+      ],
+      "nb2_4": [
+        810.0,
+        189.0,
+        32.4,
+        10.8
+      ],
+      "lane4": [
+        216.0,
+        205.2,
+        129.6,
+        129.6
+      ],
+      "stin6": [
+        351.0,
+        27.0,
+        32.4,
+        43.2
+      ],
+      "stk6": [
+        653.4,
+        178.2,
+        32.4,
+        21.6
+      ],
+      "nb1_6": [
+        696.6,
+        270.0,
+        32.4,
+        10.8
+      ],
+      "nb2_6": [
+        869.4,
+        237.6,
+        32.4,
+        10.8
+      ],
+      "lane6": [
+        388.8,
+        205.2,
+        129.6,
+        129.6
+      ],
+      "stin8": [
+        351.0,
+        264.6,
+        32.4,
+        43.2
+      ],
+      "stk8": [
+        523.8,
+        356.4,
+        32.4,
+        21.6
+      ],
+      "nb1_8": [
+        772.2,
+        189.0,
+        32.4,
+        10.8
+      ],
+      "nb2_8": [
+        928.8,
+        189.0,
+        32.4,
+        10.8
+      ],
+      "lane8": [
+        561.6000000000001,
+        205.2,
+        129.6,
+        129.6
+      ],
+      "stin11": [
+        691.2,
+        54.0,
+        32.4,
+        43.2
+      ],
+      "stk11": [
+        685.8,
+        140.4,
+        32.4,
+        21.6
+      ],
+      "nb1_11": [
+        874.8,
+        189.0,
+        32.4,
+        10.8
+      ],
+      "nb2_11": [
+        1015.2,
+        189.0,
+        32.4,
+        10.8
+      ],
+      "lane11": [
+        734.4000000000001,
+        205.2,
+        129.6,
+        129.6
+      ],
+      "stin14": [
+        869.4,
+        48.6,
+        32.4,
+        43.2
+      ],
+      "stk14": [
+        696.6,
+        232.2,
+        32.4,
+        21.6
+      ],
+      "nb1_14": [
+        869.4,
+        270.0,
+        32.4,
+        10.8
+      ],
+      "nb2_14": [
+        966.6,
+        189.0,
+        32.4,
+        10.8
+      ],
+      "lane14": [
+        907.2,
+        205.2,
+        129.6,
+        129.6
+      ],
+      "stin0": [
+        75.6,
+        5.4,
+        32.4,
+        43.2
+      ],
+      "stk0": [
+        351.0,
+        75.6,
+        32.4,
+        21.6
+      ],
+      "nb1_0": [
+        556.2,
+        102.6,
+        32.4,
+        10.8
+      ],
+      "nb2_0": [
+        869.4,
+        205.2,
+        32.4,
+        10.8
+      ],
+      "lane0": [
+        43.2,
+        54.0,
+        129.6,
+        129.6
+      ],
+      "stin3": [
+        178.2,
+        21.6,
+        32.4,
+        43.2
+      ],
+      "stk3": [
+        351.0,
+        205.2,
+        32.4,
+        21.6
+      ],
+      "nb1_3": [
+        583.2,
+        118.8,
+        32.4,
+        10.8
+      ],
+      "nb2_3": [
+        869.4,
+        124.2,
+        32.4,
+        10.8
+      ],
+      "lane3": [
+        216.0,
+        54.0,
+        129.6,
+        129.6
+      ],
+      "stin10": [
+        567.0,
+        135.0,
+        32.4,
+        43.2
+      ],
+      "stk10": [
+        626.4,
+        118.8,
+        32.4,
+        21.6
+      ],
+      "nb1_10": [
+        869.4,
+        221.4,
+        32.4,
+        10.8
+      ],
+      "nb2_10": [
+        869.4,
+        253.8,
+        32.4,
+        10.8
+      ],
+      "lane10": [
+        734.4000000000001,
+        54.0,
+        129.6,
+        129.6
+      ],
+      "stin13": [
+        799.2,
+        5.4,
+        32.4,
+        43.2
+      ],
+      "stk13": [
+        696.6,
+        102.6,
+        32.4,
+        21.6
+      ],
+      "nb1_13": [
+        999.0,
+        37.8,
+        32.4,
+        10.8
+      ],
+      "nb2_13": [
+        1036.8,
+        37.8,
+        32.4,
+        10.8
+      ],
+      "lane13": [
+        907.2,
+        54.0,
+        129.6,
+        129.6
+      ],
+      "u_t2": [
+        529.2,
+        0.0,
+        21.6,
+        259.2
+      ]
+    },
+    "internal_edges": [
+      {
+        "source": "front0",
+        "destination": "stin0",
+        "um": 339.624
+      },
+      {
+        "source": "stin0",
+        "destination": "lane0",
+        "um": 175.944
+      },
+      {
+        "source": "lane0",
+        "destination": "stk0",
+        "um": 245.58
+      },
+      {
+        "source": "stk0",
+        "destination": "ktree",
+        "um": 210.96
+      },
+      {
+        "source": "lane0",
+        "destination": "nb1_0",
+        "um": 416.604
+      },
+      {
+        "source": "nb1_0",
+        "destination": "nb2_0",
+        "um": 383.808
+      },
+      {
+        "source": "front0",
+        "destination": "stin1",
+        "um": 409.944
+      },
+      {
+        "source": "stin1",
+        "destination": "lane1",
+        "um": 246.144
+      },
+      {
+        "source": "lane1",
+        "destination": "stk1",
+        "um": 293.34
+      },
+      {
+        "source": "stk1",
+        "destination": "ktree",
+        "um": 212.028
+      },
+      {
+        "source": "lane1",
+        "destination": "nb1_1",
+        "um": 386.124
+      },
+      {
+        "source": "nb1_1",
+        "destination": "nb2_1",
+        "um": 383.808
+      },
+      {
+        "source": "front0",
+        "destination": "stin2",
+        "um": 436.944
+      },
+      {
+        "source": "stin2",
+        "destination": "lane2",
+        "um": 402.744
+      },
+      {
+        "source": "lane2",
+        "destination": "stk2",
+        "um": 299.58
+      },
+      {
+        "source": "stk2",
+        "destination": "ktree",
+        "um": 303.648
+      },
+      {
+        "source": "lane2",
+        "destination": "nb1_2",
+        "um": 357.204
+      },
+      {
+        "source": "nb1_2",
+        "destination": "nb2_2",
+        "um": 356.808
+      },
+      {
+        "source": "front0",
+        "destination": "stin3",
+        "um": 318.024
+      },
+      {
+        "source": "stin3",
+        "destination": "lane3",
+        "um": 110.484
+      },
+      {
+        "source": "lane3",
+        "destination": "stk3",
+        "um": 147.54
+      },
+      {
+        "source": "stk3",
+        "destination": "ktree",
+        "um": 88.02
+      },
+      {
+        "source": "lane3",
+        "destination": "nb1_3",
+        "um": 256.524
+      },
+      {
+        "source": "nb1_3",
+        "destination": "nb2_3",
+        "um": 259.608
+      },
+      {
+        "source": "front1",
+        "destination": "stin4",
+        "um": 426.144
+      },
+      {
+        "source": "stin4",
+        "destination": "lane4",
+        "um": 213.084
+      },
+      {
+        "source": "lane4",
+        "destination": "stk4",
+        "um": 228.54
+      },
+      {
+        "source": "stk4",
+        "destination": "ktree",
+        "um": 234.108
+      },
+      {
+        "source": "lane4",
+        "destination": "nb1_4",
+        "um": 308.604
+      },
+      {
+        "source": "nb1_4",
+        "destination": "nb2_4",
+        "um": 221.808
+      },
+      {
+        "source": "front1",
+        "destination": "stin5",
+        "um": 399.024
+      },
+      {
+        "source": "stin5",
+        "destination": "lane5",
+        "um": 445.944
+      },
+      {
+        "source": "lane5",
+        "destination": "stk5",
+        "um": 213.18
+      },
+      {
+        "source": "stk5",
+        "destination": "ktree",
+        "um": 120.612
+      },
+      {
+        "source": "lane5",
+        "destination": "nb1_5",
+        "um": 297.804
+      },
+      {
+        "source": "nb1_5",
+        "destination": "nb2_5",
+        "um": 292.008
+      },
+      {
+        "source": "front1",
+        "destination": "stin6",
+        "um": 274.944
+      },
+      {
+        "source": "stin6",
+        "destination": "lane6",
+        "um": 256.284
+      },
+      {
+        "source": "lane6",
+        "destination": "stk6",
+        "um": 250.98
+      },
+      {
+        "source": "stk6",
+        "destination": "ktree",
+        "um": 339.432
+      },
+      {
+        "source": "lane6",
+        "destination": "nb1_6",
+        "um": 197.124
+      },
+      {
+        "source": "nb1_6",
+        "destination": "nb2_6",
+        "um": 173.208
+      },
+      {
+        "source": "front1",
+        "destination": "stin7",
+        "um": 368.976
+      },
+      {
+        "source": "stin7",
+        "destination": "lane7",
+        "um": 424.344
+      },
+      {
+        "source": "lane7",
+        "destination": "stk7",
+        "um": 220.296
+      },
+      {
+        "source": "stk7",
+        "destination": "ktree",
+        "um": 336.804
+      },
+      {
+        "source": "lane7",
+        "destination": "nb1_7",
+        "um": 233.004
+      },
+      {
+        "source": "nb1_7",
+        "destination": "nb2_7",
+        "um": 232.608
+      },
+      {
+        "source": "front2",
+        "destination": "stin8",
+        "um": 231.744
+      },
+      {
+        "source": "stin8",
+        "destination": "lane8",
+        "um": 283.512
+      },
+      {
+        "source": "lane8",
+        "destination": "stk8",
+        "um": 274.296
+      },
+      {
+        "source": "stk8",
+        "destination": "ktree",
+        "um": 335.892
+      },
+      {
+        "source": "lane8",
+        "destination": "nb1_8",
+        "um": 179.004
+      },
+      {
+        "source": "nb1_8",
+        "destination": "nb2_8",
+        "um": 124.608
+      },
+      {
+        "source": "front2",
+        "destination": "stin9",
+        "um": 404.544
+      },
+      {
+        "source": "stin9",
+        "destination": "lane9",
+        "um": 272.712
+      },
+      {
+        "source": "lane9",
+        "destination": "stk9",
+        "um": 280.728
+      },
+      {
+        "source": "stk9",
+        "destination": "ktree",
+        "um": 273.42
+      },
+      {
+        "source": "lane9",
+        "destination": "nb1_9",
+        "um": 173.604
+      },
+      {
+        "source": "nb1_9",
+        "destination": "nb2_9",
+        "um": 167.808
+      },
+      {
+        "source": "front2",
+        "destination": "stin10",
+        "um": 190.776
+      },
+      {
+        "source": "stin10",
+        "destination": "lane10",
+        "um": 261.912
+      },
+      {
+        "source": "lane10",
+        "destination": "stk10",
+        "um": 258.096
+      },
+      {
+        "source": "stk10",
+        "destination": "ktree",
+        "um": 346.488
+      },
+      {
+        "source": "lane10",
+        "destination": "nb1_10",
+        "um": 126.924
+      },
+      {
+        "source": "nb1_10",
+        "destination": "nb2_10",
+        "um": 64.824
+      },
+      {
+        "source": "front2",
+        "destination": "stin11",
+        "um": 263.76
+      },
+      {
+        "source": "stin11",
+        "destination": "lane11",
+        "um": 234.684
+      },
+      {
+        "source": "lane11",
+        "destination": "stk11",
+        "um": 296.928
+      },
+      {
+        "source": "stk11",
+        "destination": "ktree",
+        "um": 378.144
+      },
+      {
+        "source": "lane11",
+        "destination": "nb1_11",
+        "um": 108.804
+      },
+      {
+        "source": "nb1_11",
+        "destination": "nb2_11",
+        "um": 108.408
+      },
+      {
+        "source": "front3",
+        "destination": "stin12",
+        "um": 250.176
+      },
+      {
+        "source": "stin12",
+        "destination": "lane12",
+        "um": 267.084
+      },
+      {
+        "source": "lane12",
+        "destination": "stk12",
+        "um": 356.328
+      },
+      {
+        "source": "stk12",
+        "destination": "ktree",
+        "um": 347.58
+      },
+      {
+        "source": "lane12",
+        "destination": "nb1_12",
+        "um": 87.204
+      },
+      {
+        "source": "nb1_12",
+        "destination": "nb2_12",
+        "um": 119.208
+      },
+      {
+        "source": "front3",
+        "destination": "stin13",
+        "um": 317.76
+      },
+      {
+        "source": "stin13",
+        "destination": "lane13",
+        "um": 196.884
+      },
+      {
+        "source": "lane13",
+        "destination": "stk13",
+        "um": 345.528
+      },
+      {
+        "source": "stk13",
+        "destination": "ktree",
+        "um": 432.888
+      },
+      {
+        "source": "lane13",
+        "destination": "nb1_13",
+        "um": 135.528
+      },
+      {
+        "source": "nb1_13",
+        "destination": "nb2_13",
+        "um": 5.808
+      },
+      {
+        "source": "front3",
+        "destination": "stin14",
+        "um": 312.36
+      },
+      {
+        "source": "stin14",
+        "destination": "lane14",
+        "um": 234.684
+      },
+      {
+        "source": "lane14",
+        "destination": "stk14",
+        "um": 367.128
+      },
+      {
+        "source": "stk14",
+        "destination": "ktree",
+        "um": 390.636
+      },
+      {
+        "source": "lane14",
+        "destination": "nb1_14",
+        "um": 186.048
+      },
+      {
+        "source": "nb1_14",
+        "destination": "nb2_14",
+        "um": 146.208
+      },
+      {
+        "source": "front3",
+        "destination": "stin15",
+        "um": 298.776
+      },
+      {
+        "source": "stin15",
+        "destination": "lane15",
+        "um": 294.084
+      },
+      {
+        "source": "lane15",
+        "destination": "stk15",
+        "um": 458.928
+      },
+      {
+        "source": "stk15",
+        "destination": "ktree",
+        "um": 446.964
+      },
+      {
+        "source": "lane15",
+        "destination": "nb1_15",
+        "um": 186.048
+      },
+      {
+        "source": "nb1_15",
+        "destination": "nb2_15",
+        "um": 97.608
+      },
+      {
+        "source": "ktree",
+        "destination": "score",
+        "um": 206.604
+      },
+      {
+        "source": "score",
+        "destination": "ktree",
+        "um": 257.244
+      },
+      {
+        "source": "front0",
+        "destination": "score",
+        "um": 391.536
+      },
+      {
+        "source": "front1",
+        "destination": "score",
+        "um": 224.232
+      },
+      {
+        "source": "front2",
+        "destination": "score",
+        "um": 343.128
+      },
+      {
+        "source": "front3",
+        "destination": "score",
+        "um": 175.824
+      }
+    ],
+    "worst_internal_edge": {
+      "source": "lane15",
+      "destination": "stk15",
+      "um": 458.928
+    },
+    "conflicts": [],
+    "unresolved": "Die input/output pin grants, stage1/score placement, clock track legality and native signoff remain separate obligations.",
+    "slot_outline_um": [
+      1079.976,
+      492.456
+    ],
+    "placement_keepouts": {},
+    "stage2": {
+      "cell": "u_t2",
+      "master": "qkh_head_tstage",
+      "xy": [
+        529.2,
+        0.0
+      ],
+      "orient": "MX",
+      "worst": {
+        "bit": "ti_b[0]->front0.q_data_in[0]",
+        "um": 404.832,
+        "source_corner": [
+          550.8720000000001,
+          257.03999999999996
+        ],
+        "destination_corner": [
+          388.8,
+          14.280000000000001
+        ]
+      },
+      "clock_rectangles": [
+        [
+          529.128,
+          129.552
+        ],
+        [
+          529.128,
+          129.528
+        ],
+        [
+          529.272,
+          129.552
+        ],
+        [
+          529.272,
+          129.528
+        ]
+      ]
+    },
+    "child_orientations": {
+      "front0": "R0",
+      "front1": "R0",
+      "front2": "R0",
+      "front3": "R0",
+      "ktree": "R0",
+      "score": "R0",
+      "stin2": "R0",
+      "stk2": "R0",
+      "nb1_2": "R0",
+      "nb2_2": "R0",
+      "lane2": "R0",
+      "stin5": "R0",
+      "stk5": "R0",
+      "nb1_5": "R0",
+      "nb2_5": "R0",
+      "lane5": "R0",
+      "stin7": "R0",
+      "stk7": "R0",
+      "nb1_7": "R0",
+      "nb2_7": "R0",
+      "lane7": "R0",
+      "stin9": "R0",
+      "stk9": "R0",
+      "nb1_9": "R0",
+      "nb2_9": "R0",
+      "lane9": "R0",
+      "stin12": "R0",
+      "stk12": "R0",
+      "nb1_12": "R0",
+      "nb2_12": "R0",
+      "lane12": "R0",
+      "stin15": "R0",
+      "stk15": "R0",
+      "nb1_15": "R0",
+      "nb2_15": "R0",
+      "lane15": "R0",
+      "stin1": "R0",
+      "stk1": "R0",
+      "nb1_1": "R0",
+      "nb2_1": "R0",
+      "lane1": "R0",
+      "stin4": "R0",
+      "stk4": "R0",
+      "nb1_4": "R0",
+      "nb2_4": "R0",
+      "lane4": "R0",
+      "stin6": "R0",
+      "stk6": "R0",
+      "nb1_6": "R0",
+      "nb2_6": "R0",
+      "lane6": "R0",
+      "stin8": "R0",
+      "stk8": "R0",
+      "nb1_8": "R0",
+      "nb2_8": "R0",
+      "lane8": "R0",
+      "stin11": "R0",
+      "stk11": "R0",
+      "nb1_11": "R0",
+      "nb2_11": "R0",
+      "lane11": "R0",
+      "stin14": "R0",
+      "stk14": "R0",
+      "nb1_14": "R0",
+      "nb2_14": "R0",
+      "lane14": "R0",
+      "stin0": "R0",
+      "stk0": "R0",
+      "nb1_0": "R0",
+      "nb2_0": "R0",
+      "lane0": "R0",
+      "stin3": "R0",
+      "stk3": "R0",
+      "nb1_3": "R0",
+      "nb2_3": "R0",
+      "lane3": "R0",
+      "stin10": "R0",
+      "stk10": "R0",
+      "nb1_10": "R0",
+      "nb2_10": "R0",
+      "lane10": "R0",
+      "stin13": "R0",
+      "stk13": "R0",
+      "nb1_13": "R0",
+      "nb2_13": "R0",
+      "lane13": "R0",
+      "u_t2": "MX"
+    },
+    "clock_pin_rectangles_local_um": {
+      "front0": [
+        [
+          388.8,
+          43.8
+        ],
+        [
+          388.8,
+          43.824
+        ],
+        [
+          388.992,
+          43.8
+        ],
+        [
+          388.992,
+          43.824
+        ]
+      ],
+      "front1": [
+        [
+          556.2,
+          43.8
+        ],
+        [
+          556.2,
+          43.824
+        ],
+        [
+          556.392,
+          43.8
+        ],
+        [
+          556.392,
+          43.824
+        ]
+      ],
+      "front2": [
+        [
+          388.8,
+          92.4
+        ],
+        [
+          388.8,
+          92.424
+        ],
+        [
+          388.992,
+          92.4
+        ],
+        [
+          388.992,
+          92.424
+        ]
+      ],
+      "front3": [
+        [
+          556.2,
+          92.4
+        ],
+        [
+          556.2,
+          92.424
+        ],
+        [
+          556.392,
+          92.4
+        ],
+        [
+          556.392,
+          92.424
+        ]
+      ],
+      "ktree": [
+        [
+          351.0,
+          174.744
+        ],
+        [
+          351.0,
+          174.768
+        ],
+        [
+          351.084,
+          174.744
+        ],
+        [
+          351.084,
+          174.768
+        ]
+      ],
+      "score": [
+        [
+          626.064,
+          151.2
+        ],
+        [
+          626.064,
+          151.284
+        ],
+        [
+          626.088,
+          151.2
+        ],
+        [
+          626.088,
+          151.284
+        ]
+      ],
+      "stin2": [
+        [
+          351.0,
+          378.0
+        ],
+        [
+          351.0,
+          378.024
+        ],
+        [
+          351.192,
+          378.0
+        ],
+        [
+          351.192,
+          378.024
+        ]
+      ],
+      "stk2": [
+        [
+          178.2,
+          162.0
+        ],
+        [
+          178.2,
+          162.024
+        ],
+        [
+          178.392,
+          162.0
+        ],
+        [
+          178.392,
+          162.024
+        ]
+      ],
+      "nb1_2": [
+        [
+          448.176,
+          350.808
+        ],
+        [
+          448.176,
+          351.0
+        ],
+        [
+          448.2,
+          350.808
+        ],
+        [
+          448.2,
+          351.0
+        ],
+        [
+          448.176,
+          344.60499999999996
+        ],
+        [
+          448.176,
+          350.84
+        ],
+        [
+          448.2,
+          344.60499999999996
+        ],
+        [
+          448.2,
+          350.84
+        ]
+      ],
+      "nb2_2": [
+        [
+          712.7760000000001,
+          226.608
+        ],
+        [
+          712.7760000000001,
+          226.8
+        ],
+        [
+          712.8000000000001,
+          226.608
+        ],
+        [
+          712.8000000000001,
+          226.8
+        ],
+        [
+          712.7760000000001,
+          220.405
+        ],
+        [
+          712.7760000000001,
+          226.64
+        ],
+        [
+          712.8000000000001,
+          220.405
+        ],
+        [
+          712.8000000000001,
+          226.64
+        ]
+      ],
+      "lane2": [
+        [
+          43.2,
+          423.84
+        ],
+        [
+          43.2,
+          423.864
+        ],
+        [
+          43.284000000000006,
+          423.84
+        ],
+        [
+          43.284000000000006,
+          423.864
+        ]
+      ],
+      "stin5": [
+        [
+          216.0,
+          27.0
+        ],
+        [
+          216.0,
+          27.024
+        ],
+        [
+          216.192,
+          27.0
+        ],
+        [
+          216.192,
+          27.024
+        ]
+      ],
+      "stk5": [
+        [
+          351.0,
+          248.4
+        ],
+        [
+          351.0,
+          248.424
+        ],
+        [
+          351.192,
+          248.4
+        ],
+        [
+          351.192,
+          248.424
+        ]
+      ],
+      "nb1_5": [
+        [
+          561.576,
+          350.808
+        ],
+        [
+          561.576,
+          351.0
+        ],
+        [
+          561.6,
+          350.808
+        ],
+        [
+          561.6,
+          351.0
+        ],
+        [
+          561.576,
+          344.60499999999996
+        ],
+        [
+          561.576,
+          350.84
+        ],
+        [
+          561.6,
+          344.60499999999996
+        ],
+        [
+          561.6,
+          350.84
+        ]
+      ],
+      "nb2_5": [
+        [
+          885.576,
+          350.808
+        ],
+        [
+          885.576,
+          351.0
+        ],
+        [
+          885.6,
+          350.808
+        ],
+        [
+          885.6,
+          351.0
+        ],
+        [
+          885.576,
+          344.60499999999996
+        ],
+        [
+          885.576,
+          350.84
+        ],
+        [
+          885.6,
+          344.60499999999996
+        ],
+        [
+          885.6,
+          350.84
+        ]
+      ],
+      "lane5": [
+        [
+          216.0,
+          423.84
+        ],
+        [
+          216.0,
+          423.864
+        ],
+        [
+          216.084,
+          423.84
+        ],
+        [
+          216.084,
+          423.864
+        ]
+      ],
+      "stin7": [
+        [
+          696.6,
+          356.40000000000003
+        ],
+        [
+          696.6,
+          356.42400000000004
+        ],
+        [
+          696.792,
+          356.40000000000003
+        ],
+        [
+          696.792,
+          356.42400000000004
+        ]
+      ],
+      "stk7": [
+        [
+          351.0,
+          464.40000000000003
+        ],
+        [
+          351.0,
+          464.42400000000004
+        ],
+        [
+          351.192,
+          464.40000000000003
+        ],
+        [
+          351.192,
+          464.42400000000004
+        ]
+      ],
+      "nb1_7": [
+        [
+          712.7760000000001,
+          394.008
+        ],
+        [
+          712.7760000000001,
+          394.2
+        ],
+        [
+          712.8000000000001,
+          394.008
+        ],
+        [
+          712.8000000000001,
+          394.2
+        ],
+        [
+          712.7760000000001,
+          387.80499999999995
+        ],
+        [
+          712.7760000000001,
+          394.03999999999996
+        ],
+        [
+          712.8000000000001,
+          387.80499999999995
+        ],
+        [
+          712.8000000000001,
+          394.03999999999996
+        ]
+      ],
+      "nb2_7": [
+        [
+          885.576,
+          302.208
+        ],
+        [
+          885.576,
+          302.40000000000003
+        ],
+        [
+          885.6,
+          302.208
+        ],
+        [
+          885.6,
+          302.40000000000003
+        ],
+        [
+          885.576,
+          296.005
+        ],
+        [
+          885.576,
+          302.24
+        ],
+        [
+          885.6,
+          296.005
+        ],
+        [
+          885.6,
+          302.24
+        ]
+      ],
+      "lane7": [
+        [
+          388.8,
+          423.84
+        ],
+        [
+          388.8,
+          423.864
+        ],
+        [
+          388.884,
+          423.84
+        ],
+        [
+          388.884,
+          423.864
+        ]
+      ],
+      "stin9": [
+        [
+          351.0,
+          426.6
+        ],
+        [
+          351.0,
+          426.624
+        ],
+        [
+          351.192,
+          426.6
+        ],
+        [
+          351.192,
+          426.624
+        ]
+      ],
+      "stk9": [
+        [
+          523.8,
+          307.8
+        ],
+        [
+          523.8,
+          307.824
+        ],
+        [
+          523.992,
+          307.8
+        ],
+        [
+          523.992,
+          307.824
+        ]
+      ],
+      "nb1_9": [
+        [
+          782.976,
+          350.808
+        ],
+        [
+          782.976,
+          351.0
+        ],
+        [
+          783.0,
+          350.808
+        ],
+        [
+          783.0,
+          351.0
+        ],
+        [
+          782.976,
+          344.60499999999996
+        ],
+        [
+          782.976,
+          350.84
+        ],
+        [
+          783.0,
+          344.60499999999996
+        ],
+        [
+          783.0,
+          350.84
+        ]
+      ],
+      "nb2_9": [
+        [
+          982.7760000000001,
+          350.808
+        ],
+        [
+          982.7760000000001,
+          351.0
+        ],
+        [
+          982.8000000000001,
+          350.808
+        ],
+        [
+          982.8000000000001,
+          351.0
+        ],
+        [
+          982.7760000000001,
+          344.60499999999996
+        ],
+        [
+          982.7760000000001,
+          350.84
+        ],
+        [
+          982.8000000000001,
+          344.60499999999996
+        ],
+        [
+          982.8000000000001,
+          350.84
+        ]
+      ],
+      "lane9": [
+        [
+          561.6000000000001,
+          423.84
+        ],
+        [
+          561.6000000000001,
+          423.864
+        ],
+        [
+          561.6840000000001,
+          423.84
+        ],
+        [
+          561.6840000000001,
+          423.864
+        ]
+      ],
+      "stin12": [
+        [
+          696.6,
+          189.0
+        ],
+        [
+          696.6,
+          189.024
+        ],
+        [
+          696.792,
+          189.0
+        ],
+        [
+          696.792,
+          189.024
+        ]
+      ],
+      "stk12": [
+        [
+          523.8,
+          405.0
+        ],
+        [
+          523.8,
+          405.024
+        ],
+        [
+          523.992,
+          405.0
+        ],
+        [
+          523.992,
+          405.024
+        ]
+      ],
+      "nb1_12": [
+        [
+          885.576,
+          367.008
+        ],
+        [
+          885.576,
+          367.2
+        ],
+        [
+          885.6,
+          367.008
+        ],
+        [
+          885.6,
+          367.2
+        ],
+        [
+          885.576,
+          360.80499999999995
+        ],
+        [
+          885.576,
+          367.03999999999996
+        ],
+        [
+          885.6,
+          360.80499999999995
+        ],
+        [
+          885.6,
+          367.03999999999996
+        ]
+      ],
+      "nb2_12": [
+        [
+          1020.576,
+          350.808
+        ],
+        [
+          1020.576,
+          351.0
+        ],
+        [
+          1020.6,
+          350.808
+        ],
+        [
+          1020.6,
+          351.0
+        ],
+        [
+          1020.576,
+          344.60499999999996
+        ],
+        [
+          1020.576,
+          350.84
+        ],
+        [
+          1020.6,
+          344.60499999999996
+        ],
+        [
+          1020.6,
+          350.84
+        ]
+      ],
+      "lane12": [
+        [
+          734.4000000000001,
+          423.84
+        ],
+        [
+          734.4000000000001,
+          423.864
+        ],
+        [
+          734.484,
+          423.84
+        ],
+        [
+          734.484,
+          423.864
+        ]
+      ],
+      "stin15": [
+        [
+          869.4,
+          162.0
+        ],
+        [
+          869.4,
+          162.024
+        ],
+        [
+          869.592,
+          162.0
+        ],
+        [
+          869.592,
+          162.024
+        ]
+      ],
+      "stk15": [
+        [
+          696.6,
+          302.40000000000003
+        ],
+        [
+          696.6,
+          302.42400000000004
+        ],
+        [
+          696.792,
+          302.40000000000003
+        ],
+        [
+          696.792,
+          302.42400000000004
+        ]
+      ],
+      "nb1_15": [
+        [
+          885.576,
+          431.808
+        ],
+        [
+          885.576,
+          432.0
+        ],
+        [
+          885.6,
+          431.808
+        ],
+        [
+          885.6,
+          432.0
+        ],
+        [
+          885.576,
+          425.60499999999996
+        ],
+        [
+          885.576,
+          431.84
+        ],
+        [
+          885.6,
+          425.60499999999996
+        ],
+        [
+          885.6,
+          431.84
+        ]
+      ],
+      "nb2_15": [
+        [
+          934.176,
+          350.808
+        ],
+        [
+          934.176,
+          351.0
+        ],
+        [
+          934.2,
+          350.808
+        ],
+        [
+          934.2,
+          351.0
+        ],
+        [
+          934.176,
+          344.60499999999996
+        ],
+        [
+          934.176,
+          350.84
+        ],
+        [
+          934.2,
+          344.60499999999996
+        ],
+        [
+          934.2,
+          350.84
+        ]
+      ],
+      "lane15": [
+        [
+          907.2,
+          423.84
+        ],
+        [
+          907.2,
+          423.864
+        ],
+        [
+          907.284,
+          423.84
+        ],
+        [
+          907.284,
+          423.864
+        ]
+      ],
+      "stin1": [
+        [
+          178.2,
+          210.6
+        ],
+        [
+          178.2,
+          210.624
+        ],
+        [
+          178.392,
+          210.6
+        ],
+        [
+          178.392,
+          210.624
+        ]
+      ],
+      "stk1": [
+        [
+          351.0,
+          340.2
+        ],
+        [
+          351.0,
+          340.224
+        ],
+        [
+          351.192,
+          340.2
+        ],
+        [
+          351.192,
+          340.224
+        ]
+      ],
+      "nb1_1": [
+        [
+          485.976,
+          350.808
+        ],
+        [
+          485.976,
+          351.0
+        ],
+        [
+          486.0,
+          350.808
+        ],
+        [
+          486.0,
+          351.0
+        ],
+        [
+          485.976,
+          344.60499999999996
+        ],
+        [
+          485.976,
+          350.84
+        ],
+        [
+          486.0,
+          344.60499999999996
+        ],
+        [
+          486.0,
+          350.84
+        ]
+      ],
+      "nb2_1": [
+        [
+          750.576,
+          199.608
+        ],
+        [
+          750.576,
+          199.8
+        ],
+        [
+          750.6,
+          199.608
+        ],
+        [
+          750.6,
+          199.8
+        ],
+        [
+          750.576,
+          193.405
+        ],
+        [
+          750.576,
+          199.64
+        ],
+        [
+          750.6,
+          193.405
+        ],
+        [
+          750.6,
+          199.64
+        ]
+      ],
+      "lane1": [
+        [
+          43.2,
+          272.64
+        ],
+        [
+          43.2,
+          272.664
+        ],
+        [
+          43.284000000000006,
+          272.64
+        ],
+        [
+          43.284000000000006,
+          272.664
+        ]
+      ],
+      "stin4": [
+        [
+          178.2,
+          91.80000000000001
+        ],
+        [
+          178.2,
+          91.824
+        ],
+        [
+          178.392,
+          91.80000000000001
+        ],
+        [
+          178.392,
+          91.824
+        ]
+      ],
+      "stk4": [
+        [
+          523.8,
+          275.40000000000003
+        ],
+        [
+          523.8,
+          275.42400000000004
+        ],
+        [
+          523.992,
+          275.40000000000003
+        ],
+        [
+          523.992,
+          275.42400000000004
+        ]
+      ],
+      "nb1_4": [
+        [
+          572.3760000000001,
+          199.608
+        ],
+        [
+          572.3760000000001,
+          199.8
+        ],
+        [
+          572.4000000000001,
+          199.608
+        ],
+        [
+          572.4000000000001,
+          199.8
+        ],
+        [
+          572.3760000000001,
+          193.405
+        ],
+        [
+          572.3760000000001,
+          199.64
+        ],
+        [
+          572.4000000000001,
+          193.405
+        ],
+        [
+          572.4000000000001,
+          199.64
+        ]
+      ],
+      "nb2_4": [
+        [
+          826.176,
+          199.608
+        ],
+        [
+          826.176,
+          199.8
+        ],
+        [
+          826.2,
+          199.608
+        ],
+        [
+          826.2,
+          199.8
+        ],
+        [
+          826.176,
+          193.405
+        ],
+        [
+          826.176,
+          199.64
+        ],
+        [
+          826.2,
+          193.405
+        ],
+        [
+          826.2,
+          199.64
+        ]
+      ],
+      "lane4": [
+        [
+          216.0,
+          272.64
+        ],
+        [
+          216.0,
+          272.664
+        ],
+        [
+          216.084,
+          272.64
+        ],
+        [
+          216.084,
+          272.664
+        ]
+      ],
+      "stin6": [
+        [
+          351.0,
+          48.6
+        ],
+        [
+          351.0,
+          48.623999999999995
+        ],
+        [
+          351.192,
+          48.6
+        ],
+        [
+          351.192,
+          48.623999999999995
+        ]
+      ],
+      "stk6": [
+        [
+          653.4,
+          189.0
+        ],
+        [
+          653.4,
+          189.024
+        ],
+        [
+          653.592,
+          189.0
+        ],
+        [
+          653.592,
+          189.024
+        ]
+      ],
+      "nb1_6": [
+        [
+          712.7760000000001,
+          280.608
+        ],
+        [
+          712.7760000000001,
+          280.8
+        ],
+        [
+          712.8000000000001,
+          280.608
+        ],
+        [
+          712.8000000000001,
+          280.8
+        ],
+        [
+          712.7760000000001,
+          274.405
+        ],
+        [
+          712.7760000000001,
+          280.64
+        ],
+        [
+          712.8000000000001,
+          274.405
+        ],
+        [
+          712.8000000000001,
+          280.64
+        ]
+      ],
+      "nb2_6": [
+        [
+          885.576,
+          248.208
+        ],
+        [
+          885.576,
+          248.4
+        ],
+        [
+          885.6,
+          248.208
+        ],
+        [
+          885.6,
+          248.4
+        ],
+        [
+          885.576,
+          242.005
+        ],
+        [
+          885.576,
+          248.24
+        ],
+        [
+          885.6,
+          242.005
+        ],
+        [
+          885.6,
+          248.24
+        ]
+      ],
+      "lane6": [
+        [
+          388.8,
+          272.64
+        ],
+        [
+          388.8,
+          272.664
+        ],
+        [
+          388.884,
+          272.64
+        ],
+        [
+          388.884,
+          272.664
+        ]
+      ],
+      "stin8": [
+        [
+          351.0,
+          286.20000000000005
+        ],
+        [
+          351.0,
+          286.22400000000005
+        ],
+        [
+          351.192,
+          286.20000000000005
+        ],
+        [
+          351.192,
+          286.22400000000005
+        ]
+      ],
+      "stk8": [
+        [
+          523.8,
+          367.2
+        ],
+        [
+          523.8,
+          367.224
+        ],
+        [
+          523.992,
+          367.2
+        ],
+        [
+          523.992,
+          367.224
+        ]
+      ],
+      "nb1_8": [
+        [
+          788.3760000000001,
+          199.608
+        ],
+        [
+          788.3760000000001,
+          199.8
+        ],
+        [
+          788.4000000000001,
+          199.608
+        ],
+        [
+          788.4000000000001,
+          199.8
+        ],
+        [
+          788.3760000000001,
+          193.405
+        ],
+        [
+          788.3760000000001,
+          199.64
+        ],
+        [
+          788.4000000000001,
+          193.405
+        ],
+        [
+          788.4000000000001,
+          199.64
+        ]
+      ],
+      "nb2_8": [
+        [
+          944.976,
+          199.608
+        ],
+        [
+          944.976,
+          199.8
+        ],
+        [
+          945.0,
+          199.608
+        ],
+        [
+          945.0,
+          199.8
+        ],
+        [
+          944.976,
+          193.405
+        ],
+        [
+          944.976,
+          199.64
+        ],
+        [
+          945.0,
+          193.405
+        ],
+        [
+          945.0,
+          199.64
+        ]
+      ],
+      "lane8": [
+        [
+          561.6000000000001,
+          272.64
+        ],
+        [
+          561.6000000000001,
+          272.664
+        ],
+        [
+          561.6840000000001,
+          272.64
+        ],
+        [
+          561.6840000000001,
+          272.664
+        ]
+      ],
+      "stin11": [
+        [
+          691.2,
+          75.6
+        ],
+        [
+          691.2,
+          75.624
+        ],
+        [
+          691.392,
+          75.6
+        ],
+        [
+          691.392,
+          75.624
+        ]
+      ],
+      "stk11": [
+        [
+          685.8,
+          151.20000000000002
+        ],
+        [
+          685.8,
+          151.22400000000002
+        ],
+        [
+          685.992,
+          151.20000000000002
+        ],
+        [
+          685.992,
+          151.22400000000002
+        ]
+      ],
+      "nb1_11": [
+        [
+          890.976,
+          199.608
+        ],
+        [
+          890.976,
+          199.8
+        ],
+        [
+          891.0,
+          199.608
+        ],
+        [
+          891.0,
+          199.8
+        ],
+        [
+          890.976,
+          193.405
+        ],
+        [
+          890.976,
+          199.64
+        ],
+        [
+          891.0,
+          193.405
+        ],
+        [
+          891.0,
+          199.64
+        ]
+      ],
+      "nb2_11": [
+        [
+          1031.376,
+          199.608
+        ],
+        [
+          1031.376,
+          199.8
+        ],
+        [
+          1031.4,
+          199.608
+        ],
+        [
+          1031.4,
+          199.8
+        ],
+        [
+          1031.376,
+          193.405
+        ],
+        [
+          1031.376,
+          199.64
+        ],
+        [
+          1031.4,
+          193.405
+        ],
+        [
+          1031.4,
+          199.64
+        ]
+      ],
+      "lane11": [
+        [
+          734.4000000000001,
+          272.64
+        ],
+        [
+          734.4000000000001,
+          272.664
+        ],
+        [
+          734.484,
+          272.64
+        ],
+        [
+          734.484,
+          272.664
+        ]
+      ],
+      "stin14": [
+        [
+          869.4,
+          70.2
+        ],
+        [
+          869.4,
+          70.224
+        ],
+        [
+          869.592,
+          70.2
+        ],
+        [
+          869.592,
+          70.224
+        ]
+      ],
+      "stk14": [
+        [
+          696.6,
+          243.0
+        ],
+        [
+          696.6,
+          243.024
+        ],
+        [
+          696.792,
+          243.0
+        ],
+        [
+          696.792,
+          243.024
+        ]
+      ],
+      "nb1_14": [
+        [
+          885.576,
+          280.608
+        ],
+        [
+          885.576,
+          280.8
+        ],
+        [
+          885.6,
+          280.608
+        ],
+        [
+          885.6,
+          280.8
+        ],
+        [
+          885.576,
+          274.405
+        ],
+        [
+          885.576,
+          280.64
+        ],
+        [
+          885.6,
+          274.405
+        ],
+        [
+          885.6,
+          280.64
+        ]
+      ],
+      "nb2_14": [
+        [
+          982.7760000000001,
+          199.608
+        ],
+        [
+          982.7760000000001,
+          199.8
+        ],
+        [
+          982.8000000000001,
+          199.608
+        ],
+        [
+          982.8000000000001,
+          199.8
+        ],
+        [
+          982.7760000000001,
+          193.405
+        ],
+        [
+          982.7760000000001,
+          199.64
+        ],
+        [
+          982.8000000000001,
+          193.405
+        ],
+        [
+          982.8000000000001,
+          199.64
+        ]
+      ],
+      "lane14": [
+        [
+          907.2,
+          272.64
+        ],
+        [
+          907.2,
+          272.664
+        ],
+        [
+          907.284,
+          272.64
+        ],
+        [
+          907.284,
+          272.664
+        ]
+      ],
+      "stin0": [
+        [
+          75.6,
+          27.0
+        ],
+        [
+          75.6,
+          27.024
+        ],
+        [
+          75.79199999999999,
+          27.0
+        ],
+        [
+          75.79199999999999,
+          27.024
+        ]
+      ],
+      "stk0": [
+        [
+          351.0,
+          86.39999999999999
+        ],
+        [
+          351.0,
+          86.42399999999999
+        ],
+        [
+          351.192,
+          86.39999999999999
+        ],
+        [
+          351.192,
+          86.42399999999999
+        ]
+      ],
+      "nb1_0": [
+        [
+          572.3760000000001,
+          113.208
+        ],
+        [
+          572.3760000000001,
+          113.39999999999999
+        ],
+        [
+          572.4000000000001,
+          113.208
+        ],
+        [
+          572.4000000000001,
+          113.39999999999999
+        ],
+        [
+          572.3760000000001,
+          107.005
+        ],
+        [
+          572.3760000000001,
+          113.24
+        ],
+        [
+          572.4000000000001,
+          107.005
+        ],
+        [
+          572.4000000000001,
+          113.24
+        ]
+      ],
+      "nb2_0": [
+        [
+          885.576,
+          215.808
+        ],
+        [
+          885.576,
+          216.0
+        ],
+        [
+          885.6,
+          215.808
+        ],
+        [
+          885.6,
+          216.0
+        ],
+        [
+          885.576,
+          209.605
+        ],
+        [
+          885.576,
+          215.83999999999997
+        ],
+        [
+          885.6,
+          209.605
+        ],
+        [
+          885.6,
+          215.83999999999997
+        ]
+      ],
+      "lane0": [
+        [
+          43.2,
+          121.44
+        ],
+        [
+          43.2,
+          121.464
+        ],
+        [
+          43.284000000000006,
+          121.44
+        ],
+        [
+          43.284000000000006,
+          121.464
+        ]
+      ],
+      "stin3": [
+        [
+          178.2,
+          43.2
+        ],
+        [
+          178.2,
+          43.224000000000004
+        ],
+        [
+          178.392,
+          43.2
+        ],
+        [
+          178.392,
+          43.224000000000004
+        ]
+      ],
+      "stk3": [
+        [
+          351.0,
+          216.0
+        ],
+        [
+          351.0,
+          216.024
+        ],
+        [
+          351.192,
+          216.0
+        ],
+        [
+          351.192,
+          216.024
+        ]
+      ],
+      "nb1_3": [
+        [
+          599.3760000000001,
+          129.408
+        ],
+        [
+          599.3760000000001,
+          129.6
+        ],
+        [
+          599.4000000000001,
+          129.408
+        ],
+        [
+          599.4000000000001,
+          129.6
+        ],
+        [
+          599.3760000000001,
+          123.205
+        ],
+        [
+          599.3760000000001,
+          129.44
+        ],
+        [
+          599.4000000000001,
+          123.205
+        ],
+        [
+          599.4000000000001,
+          129.44
+        ]
+      ],
+      "nb2_3": [
+        [
+          885.576,
+          134.808
+        ],
+        [
+          885.576,
+          135.0
+        ],
+        [
+          885.6,
+          134.808
+        ],
+        [
+          885.6,
+          135.0
+        ],
+        [
+          885.576,
+          128.605
+        ],
+        [
+          885.576,
+          134.84
+        ],
+        [
+          885.6,
+          128.605
+        ],
+        [
+          885.6,
+          134.84
+        ]
+      ],
+      "lane3": [
+        [
+          216.0,
+          121.44
+        ],
+        [
+          216.0,
+          121.464
+        ],
+        [
+          216.084,
+          121.44
+        ],
+        [
+          216.084,
+          121.464
+        ]
+      ],
+      "stin10": [
+        [
+          567.0,
+          156.6
+        ],
+        [
+          567.0,
+          156.624
+        ],
+        [
+          567.192,
+          156.6
+        ],
+        [
+          567.192,
+          156.624
+        ]
+      ],
+      "stk10": [
+        [
+          626.4,
+          129.6
+        ],
+        [
+          626.4,
+          129.624
+        ],
+        [
+          626.592,
+          129.6
+        ],
+        [
+          626.592,
+          129.624
+        ]
+      ],
+      "nb1_10": [
+        [
+          885.576,
+          232.008
+        ],
+        [
+          885.576,
+          232.20000000000002
+        ],
+        [
+          885.6,
+          232.008
+        ],
+        [
+          885.6,
+          232.20000000000002
+        ],
+        [
+          885.576,
+          225.805
+        ],
+        [
+          885.576,
+          232.04000000000002
+        ],
+        [
+          885.6,
+          225.805
+        ],
+        [
+          885.6,
+          232.04000000000002
+        ]
+      ],
+      "nb2_10": [
+        [
+          885.576,
+          264.408
+        ],
+        [
+          885.576,
+          264.6
+        ],
+        [
+          885.6,
+          264.408
+        ],
+        [
+          885.6,
+          264.6
+        ],
+        [
+          885.576,
+          258.205
+        ],
+        [
+          885.576,
+          264.44
+        ],
+        [
+          885.6,
+          258.205
+        ],
+        [
+          885.6,
+          264.44
+        ]
+      ],
+      "lane10": [
+        [
+          734.4000000000001,
+          121.44
+        ],
+        [
+          734.4000000000001,
+          121.464
+        ],
+        [
+          734.484,
+          121.44
+        ],
+        [
+          734.484,
+          121.464
+        ]
+      ],
+      "stin13": [
+        [
+          799.2,
+          27.0
+        ],
+        [
+          799.2,
+          27.024
+        ],
+        [
+          799.392,
+          27.0
+        ],
+        [
+          799.392,
+          27.024
+        ]
+      ],
+      "stk13": [
+        [
+          696.6,
+          113.39999999999999
+        ],
+        [
+          696.6,
+          113.42399999999999
+        ],
+        [
+          696.792,
+          113.39999999999999
+        ],
+        [
+          696.792,
+          113.42399999999999
+        ]
+      ],
+      "nb1_13": [
+        [
+          1015.176,
+          48.408
+        ],
+        [
+          1015.176,
+          48.599999999999994
+        ],
+        [
+          1015.2,
+          48.408
+        ],
+        [
+          1015.2,
+          48.599999999999994
+        ],
+        [
+          1015.176,
+          42.205
+        ],
+        [
+          1015.176,
+          48.44
+        ],
+        [
+          1015.2,
+          42.205
+        ],
+        [
+          1015.2,
+          48.44
+        ]
+      ],
+      "nb2_13": [
+        [
+          1052.9759999999999,
+          48.408
+        ],
+        [
+          1052.9759999999999,
+          48.599999999999994
+        ],
+        [
+          1053.0,
+          48.408
+        ],
+        [
+          1053.0,
+          48.599999999999994
+        ],
+        [
+          1052.9759999999999,
+          42.205
+        ],
+        [
+          1052.9759999999999,
+          48.44
+        ],
+        [
+          1053.0,
+          42.205
+        ],
+        [
+          1053.0,
+          48.44
+        ]
+      ],
+      "lane13": [
+        [
+          907.2,
+          121.44
+        ],
+        [
+          907.2,
+          121.464
+        ],
+        [
+          907.284,
+          121.44
+        ],
+        [
+          907.284,
+          121.464
+        ]
+      ],
+      "u_t2": [
+        [
+          529.128,
+          129.552
+        ],
+        [
+          529.128,
+          129.528
+        ],
+        [
+          529.272,
+          129.552
+        ],
+        [
+          529.272,
+          129.528
+        ]
+      ]
+    }
+  },
+  "widened54_actual_leaf_plan": {
+    "admitted": true,
+    "scope": "All86 actual leaf rectangles retained; fourfronts,ktree,score and displaced stations rehomed. Every internal data/reset incident bit uses actual routed LEF rectangle corners.",
+    "moves": [
+      {
+        "child": "stk12",
+        "xy": [
+          750.6,
+          318.6
+        ],
+        "incident_max_um": 477.18
+      },
+      {
+        "child": "stk10",
+        "xy": [
+          621.0,
+          118.8
+        ],
+        "incident_max_um": 319.488
+      },
+      {
+        "child": "stk9",
+        "xy": [
+          351.0,
+          405.0
+        ],
+        "incident_max_um": 399.528
+      },
+      {
+        "child": "stk7",
+        "xy": [
+          351.0,
+          356.4
+        ],
+        "incident_max_um": 261.204
+      },
+      {
+        "child": "stk6",
+        "xy": [
+          351.0,
+          264.6
+        ],
+        "incident_max_um": 182.496
+      },
+      {
+        "child": "stk4",
+        "xy": [
+          351.0,
+          205.2
+        ],
+        "incident_max_um": 109.716
+      },
+      {
+        "child": "stk3",
+        "xy": [
+          351.0,
+          75.6
+        ],
+        "incident_max_um": 228.144
+      },
+      {
+        "child": "stk0",
+        "xy": [
+          351.0,
+          48.6
+        ],
+        "incident_max_um": 272.58
+      },
+      {
+        "child": "stin10",
+        "xy": [
+          745.2,
+          54.0
+        ],
+        "incident_max_um": 350.16
+      },
+      {
+        "child": "stin9",
+        "xy": [
+          351.0,
+          432.0
+        ],
+        "incident_max_um": 431.544
+      },
+      {
+        "child": "stin8",
+        "xy": [
+          745.2,
+          5.4
+        ],
+        "incident_max_um": 463.56
+      },
+      {
+        "child": "stin7",
+        "xy": [
+          750.6,
+          399.6
+        ],
+        "incident_max_um": 419.472
+      },
+      {
+        "child": "stin6",
+        "xy": [
+          313.2,
+          5.4
+        ],
+        "incident_max_um": 436.824
+      },
+      {
+        "child": "stin5",
+        "xy": [
+          243.0,
+          5.4
+        ],
+        "incident_max_um": 474.624
+      },
+      {
+        "child": "stin2",
+        "xy": [
+          37.8,
+          5.4
+        ],
+        "incident_max_um": 442.224
+      },
+      {
+        "child": "nb1_0",
+        "xy": [
+          610.2,
+          102.6
+        ],
+        "incident_max_um": 470.604
+      },
+      {
+        "child": "nb1_1",
+        "xy": [
+          496.8,
+          340.2
+        ],
+        "incident_max_um": 413.124
+      },
+      {
+        "child": "nb1_3",
+        "xy": [
+          610.2,
+          183.6
+        ],
+        "incident_max_um": 348.324
+      },
+      {
+        "child": "nb1_4",
+        "xy": [
+          621.0,
+          340.2
+        ],
+        "incident_max_um": 364.524
+      },
+      {
+        "child": "nb1_5",
+        "xy": [
+          658.8,
+          340.2
+        ],
+        "incident_max_um": 411.204
+      }
+    ],
+    "initial_conflicts": [
+      [
+        "front1",
+        "stin10"
+      ],
+      [
+        "ktree",
+        "stin7"
+      ],
+      [
+        "ktree",
+        "nb1_1"
+      ],
+      [
+        "ktree",
+        "stk4"
+      ],
+      [
+        "ktree",
+        "nb1_4"
+      ],
+      [
+        "ktree",
+        "stin6"
+      ],
+      [
+        "ktree",
+        "stk6"
+      ],
+      [
+        "ktree",
+        "stk0"
+      ],
+      [
+        "ktree",
+        "nb1_0"
+      ],
+      [
+        "ktree",
+        "stk3"
+      ],
+      [
+        "score",
+        "nb1_3"
+      ],
+      [
+        "score",
+        "stin10"
+      ],
+      [
+        "score",
+        "stk10"
+      ],
+      [
+        "stk7",
+        "u_t2"
+      ],
+      [
+        "stin9",
+        "u_t2"
+      ],
+      [
+        "nb1_4",
+        "u_t2"
+      ],
+      [
+        "stin8",
+        "u_t2"
+      ]
+    ],
+    "children": {
+      "front0": [
+        388.8,
+        5.4,
+        129.6,
+        43.2
+      ],
+      "front1": [
+        610.2,
+        54.0,
+        129.6,
+        43.2
+      ],
+      "front2": [
+        388.8,
+        54.0,
+        129.6,
+        43.2
+      ],
+      "front3": [
+        610.2,
+        5.4,
+        129.6,
+        43.2
+      ],
+      "ktree": [
+        372.6,
+        102.6,
+        151.2,
+        97.2
+      ],
+      "score": [
+        658.8,
+        102.6,
+        43.2,
+        43.2
+      ],
+      "stin2": [
+        37.8,
+        5.4,
+        32.4,
+        43.2
+      ],
+      "stk2": [
+        178.2,
+        151.2,
+        32.4,
+        21.6
+      ],
+      "nb1_2": [
+        432.0,
+        340.2,
+        32.4,
+        10.8
+      ],
+      "nb2_2": [
+        750.6,
+        216.0,
+        32.4,
+        10.8
+      ],
+      "lane2": [
+        43.2,
+        356.4,
+        129.6,
+        129.6
+      ],
+      "stin5": [
+        243.0,
+        5.4,
+        32.4,
+        43.2
+      ],
+      "stk5": [
+        351.0,
+        237.6,
+        32.4,
+        21.6
+      ],
+      "nb1_5": [
+        658.8,
+        340.2,
+        32.4,
+        10.8
+      ],
+      "nb2_5": [
+        923.4,
+        340.2,
+        32.4,
+        10.8
+      ],
+      "lane5": [
+        216.0,
+        356.4,
+        129.6,
+        129.6
+      ],
+      "stin7": [
+        750.6,
+        399.6,
+        32.4,
+        43.2
+      ],
+      "stk7": [
+        351.0,
+        356.4,
+        32.4,
+        21.6
+      ],
+      "nb1_7": [
+        750.6,
+        383.4,
+        32.4,
+        10.8
+      ],
+      "nb2_7": [
+        923.4,
+        291.6,
+        32.4,
+        10.8
+      ],
+      "lane7": [
+        388.8,
+        356.4,
+        129.6,
+        129.6
+      ],
+      "stin9": [
+        351.0,
+        432.0,
+        32.4,
+        43.2
+      ],
+      "stk9": [
+        351.0,
+        405.0,
+        32.4,
+        21.6
+      ],
+      "nb1_9": [
+        820.8,
+        340.2,
+        32.4,
+        10.8
+      ],
+      "nb2_9": [
+        1020.6,
+        340.2,
+        32.4,
+        10.8
+      ],
+      "lane9": [
+        615.6000000000001,
+        356.4,
+        129.6,
+        129.6
+      ],
+      "stin12": [
+        750.6,
+        167.4,
+        32.4,
+        43.2
+      ],
+      "stk12": [
+        750.6,
+        318.6,
+        32.4,
+        21.6
+      ],
+      "nb1_12": [
+        923.4,
+        356.4,
+        32.4,
+        10.8
+      ],
+      "nb2_12": [
+        1058.4,
+        340.2,
+        32.4,
+        10.8
+      ],
+      "lane12": [
+        788.4000000000001,
+        356.4,
+        129.6,
+        129.6
+      ],
+      "stin15": [
+        923.4,
+        140.4,
+        32.4,
+        43.2
+      ],
+      "stk15": [
+        750.6,
+        291.6,
+        32.4,
+        21.6
+      ],
+      "nb1_15": [
+        923.4,
+        421.2,
+        32.4,
+        10.8
+      ],
+      "nb2_15": [
+        972.0,
+        340.2,
+        32.4,
+        10.8
+      ],
+      "lane15": [
+        961.2,
+        356.4,
+        129.6,
+        129.6
+      ],
+      "stin1": [
+        178.2,
+        189.0,
+        32.4,
+        43.2
+      ],
+      "stk1": [
+        351.0,
+        329.4,
+        32.4,
+        21.6
+      ],
+      "nb1_1": [
+        496.8,
+        340.2,
+        32.4,
+        10.8
+      ],
+      "nb2_1": [
+        788.4,
+        189.0,
+        32.4,
+        10.8
+      ],
+      "lane1": [
+        43.2,
+        205.2,
+        129.6,
+        129.6
+      ],
+      "stin4": [
+        178.2,
+        70.2,
+        32.4,
+        43.2
+      ],
+      "stk4": [
+        351.0,
+        205.2,
+        32.4,
+        21.6
+      ],
+      "nb1_4": [
+        621.0,
+        340.2,
+        32.4,
+        10.8
+      ],
+      "nb2_4": [
+        864.0,
+        189.0,
+        32.4,
+        10.8
+      ],
+      "lane4": [
+        216.0,
+        205.2,
+        129.6,
+        129.6
+      ],
+      "stin6": [
+        313.2,
+        5.4,
+        32.4,
+        43.2
+      ],
+      "stk6": [
+        351.0,
+        264.6,
+        32.4,
+        21.6
+      ],
+      "nb1_6": [
+        750.6,
+        270.0,
+        32.4,
+        10.8
+      ],
+      "nb2_6": [
+        923.4,
+        237.6,
+        32.4,
+        10.8
+      ],
+      "lane6": [
+        388.8,
+        205.2,
+        129.6,
+        129.6
+      ],
+      "stin8": [
+        745.2,
+        5.4,
+        32.4,
+        43.2
+      ],
+      "stk8": [
+        637.2,
+        156.6,
+        32.4,
+        21.6
+      ],
+      "nb1_8": [
+        826.2,
+        189.0,
+        32.4,
+        10.8
+      ],
+      "nb2_8": [
+        982.8,
+        189.0,
+        32.4,
+        10.8
+      ],
+      "lane8": [
+        615.6000000000001,
+        205.2,
+        129.6,
+        129.6
+      ],
+      "stin11": [
+        685.8,
+        151.2,
+        32.4,
+        43.2
+      ],
+      "stk11": [
+        739.8,
+        140.4,
+        32.4,
+        21.6
+      ],
+      "nb1_11": [
+        928.8,
+        189.0,
+        32.4,
+        10.8
+      ],
+      "nb2_11": [
+        1069.2,
+        189.0,
+        32.4,
+        10.8
+      ],
+      "lane11": [
+        788.4000000000001,
+        205.2,
+        129.6,
+        129.6
+      ],
+      "stin14": [
+        923.4,
+        48.6,
+        32.4,
+        43.2
+      ],
+      "stk14": [
+        750.6,
+        232.2,
+        32.4,
+        21.6
+      ],
+      "nb1_14": [
+        923.4,
+        270.0,
+        32.4,
+        10.8
+      ],
+      "nb2_14": [
+        1020.6,
+        189.0,
+        32.4,
+        10.8
+      ],
+      "lane14": [
+        961.2,
+        205.2,
+        129.6,
+        129.6
+      ],
+      "stin0": [
+        75.6,
+        5.4,
+        32.4,
+        43.2
+      ],
+      "stk0": [
+        351.0,
+        48.6,
+        32.4,
+        21.6
+      ],
+      "nb1_0": [
+        610.2,
+        102.6,
+        32.4,
+        10.8
+      ],
+      "nb2_0": [
+        923.4,
+        205.2,
+        32.4,
+        10.8
+      ],
+      "lane0": [
+        43.2,
+        54.0,
+        129.6,
+        129.6
+      ],
+      "stin3": [
+        178.2,
+        21.6,
+        32.4,
+        43.2
+      ],
+      "stk3": [
+        351.0,
+        75.6,
+        32.4,
+        21.6
+      ],
+      "nb1_3": [
+        610.2,
+        183.6,
+        32.4,
+        10.8
+      ],
+      "nb2_3": [
+        923.4,
+        124.2,
+        32.4,
+        10.8
+      ],
+      "lane3": [
+        216.0,
+        54.0,
+        129.6,
+        129.6
+      ],
+      "stin10": [
+        745.2,
+        54.0,
+        32.4,
+        43.2
+      ],
+      "stk10": [
+        621.0,
+        118.8,
+        32.4,
+        21.6
+      ],
+      "nb1_10": [
+        923.4,
+        221.4,
+        32.4,
+        10.8
+      ],
+      "nb2_10": [
+        923.4,
+        253.8,
+        32.4,
+        10.8
+      ],
+      "lane10": [
+        788.4000000000001,
+        54.0,
+        129.6,
+        129.6
+      ],
+      "stin13": [
+        853.2,
+        5.4,
+        32.4,
+        43.2
+      ],
+      "stk13": [
+        750.6,
+        102.6,
+        32.4,
+        21.6
+      ],
+      "nb1_13": [
+        1053.0,
+        37.8,
+        32.4,
+        10.8
+      ],
+      "nb2_13": [
+        1090.8,
+        37.8,
+        32.4,
+        10.8
+      ],
+      "lane13": [
+        961.2,
+        54.0,
+        129.6,
+        129.6
+      ],
+      "u_t2": [
+        529.2,
+        0.0,
+        21.6,
+        259.2
+      ]
+    },
+    "internal_edges": [
+      {
+        "source": "front0",
+        "destination": "stin0",
+        "um": 339.624
+      },
+      {
+        "source": "stin0",
+        "destination": "lane0",
+        "um": 175.944
+      },
+      {
+        "source": "lane0",
+        "destination": "stk0",
+        "um": 272.58
+      },
+      {
+        "source": "stk0",
+        "destination": "ktree",
+        "um": 259.56
+      },
+      {
+        "source": "lane0",
+        "destination": "nb1_0",
+        "um": 470.604
+      },
+      {
+        "source": "nb1_0",
+        "destination": "nb2_0",
+        "um": 383.808
+      },
+      {
+        "source": "front0",
+        "destination": "stin1",
+        "um": 409.944
+      },
+      {
+        "source": "stin1",
+        "destination": "lane1",
+        "um": 246.144
+      },
+      {
+        "source": "lane1",
+        "destination": "stk1",
+        "um": 293.34
+      },
+      {
+        "source": "stk1",
+        "destination": "ktree",
+        "um": 233.628
+      },
+      {
+        "source": "lane1",
+        "destination": "nb1_1",
+        "um": 413.124
+      },
+      {
+        "source": "nb1_1",
+        "destination": "nb2_1",
+        "um": 410.808
+      },
+      {
+        "source": "front0",
+        "destination": "stin2",
+        "um": 442.224
+      },
+      {
+        "source": "stin2",
+        "destination": "lane2",
+        "um": 440.544
+      },
+      {
+        "source": "lane2",
+        "destination": "stk2",
+        "um": 299.58
+      },
+      {
+        "source": "stk2",
+        "destination": "ktree",
+        "um": 325.248
+      },
+      {
+        "source": "lane2",
+        "destination": "nb1_2",
+        "um": 357.204
+      },
+      {
+        "source": "nb1_2",
+        "destination": "nb2_2",
+        "um": 410.808
+      },
+      {
+        "source": "front0",
+        "destination": "stin3",
+        "um": 318.024
+      },
+      {
+        "source": "stin3",
+        "destination": "lane3",
+        "um": 110.484
+      },
+      {
+        "source": "lane3",
+        "destination": "stk3",
+        "um": 72.78
+      },
+      {
+        "source": "stk3",
+        "destination": "ktree",
+        "um": 228.144
+      },
+      {
+        "source": "lane3",
+        "destination": "nb1_3",
+        "um": 348.324
+      },
+      {
+        "source": "nb1_3",
+        "destination": "nb2_3",
+        "um": 340.608
+      },
+      {
+        "source": "front1",
+        "destination": "stin4",
+        "um": 442.224
+      },
+      {
+        "source": "stin4",
+        "destination": "lane4",
+        "um": 213.084
+      },
+      {
+        "source": "lane4",
+        "destination": "stk4",
+        "um": 94.38
+      },
+      {
+        "source": "stk4",
+        "destination": "ktree",
+        "um": 109.716
+      },
+      {
+        "source": "lane4",
+        "destination": "nb1_4",
+        "um": 364.524
+      },
+      {
+        "source": "nb1_4",
+        "destination": "nb2_4",
+        "um": 362.208
+      },
+      {
+        "source": "front1",
+        "destination": "stin5",
+        "um": 474.624
+      },
+      {
+        "source": "stin5",
+        "destination": "lane5",
+        "um": 472.944
+      },
+      {
+        "source": "lane5",
+        "destination": "stk5",
+        "um": 213.18
+      },
+      {
+        "source": "stk5",
+        "destination": "ktree",
+        "um": 142.212
+      },
+      {
+        "source": "lane5",
+        "destination": "nb1_5",
+        "um": 411.204
+      },
+      {
+        "source": "nb1_5",
+        "destination": "nb2_5",
+        "um": 232.608
+      },
+      {
+        "source": "front1",
+        "destination": "stin6",
+        "um": 436.824
+      },
+      {
+        "source": "stin6",
+        "destination": "lane6",
+        "um": 315.684
+      },
+      {
+        "source": "lane6",
+        "destination": "stk6",
+        "um": 182.496
+      },
+      {
+        "source": "stk6",
+        "destination": "ktree",
+        "um": 169.308
+      },
+      {
+        "source": "lane6",
+        "destination": "nb1_6",
+        "um": 251.124
+      },
+      {
+        "source": "nb1_6",
+        "destination": "nb2_6",
+        "um": 173.208
+      },
+      {
+        "source": "front1",
+        "destination": "stin7",
+        "um": 385.176
+      },
+      {
+        "source": "stin7",
+        "destination": "lane7",
+        "um": 419.472
+      },
+      {
+        "source": "lane7",
+        "destination": "stk7",
+        "um": 221.328
+      },
+      {
+        "source": "stk7",
+        "destination": "ktree",
+        "um": 261.204
+      },
+      {
+        "source": "lane7",
+        "destination": "nb1_7",
+        "um": 287.004
+      },
+      {
+        "source": "nb1_7",
+        "destination": "nb2_7",
+        "um": 232.608
+      },
+      {
+        "source": "front2",
+        "destination": "stin8",
+        "um": 463.56
+      },
+      {
+        "source": "stin8",
+        "destination": "lane8",
+        "um": 424.344
+      },
+      {
+        "source": "lane8",
+        "destination": "stk8",
+        "um": 210.528
+      },
+      {
+        "source": "stk8",
+        "destination": "ktree",
+        "um": 314.016
+      },
+      {
+        "source": "lane8",
+        "destination": "nb1_8",
+        "um": 179.004
+      },
+      {
+        "source": "nb1_8",
+        "destination": "nb2_8",
+        "um": 124.608
+      },
+      {
+        "source": "front2",
+        "destination": "stin9",
+        "um": 431.544
+      },
+      {
+        "source": "stin9",
+        "destination": "lane9",
+        "um": 353.712
+      },
+      {
+        "source": "lane9",
+        "destination": "stk9",
+        "um": 399.528
+      },
+      {
+        "source": "stk9",
+        "destination": "ktree",
+        "um": 309.996
+      },
+      {
+        "source": "lane9",
+        "destination": "nb1_9",
+        "um": 173.604
+      },
+      {
+        "source": "nb1_9",
+        "destination": "nb2_9",
+        "um": 167.808
+      },
+      {
+        "source": "front2",
+        "destination": "stin10",
+        "um": 350.16
+      },
+      {
+        "source": "stin10",
+        "destination": "lane10",
+        "um": 83.484
+      },
+      {
+        "source": "lane10",
+        "destination": "stk10",
+        "um": 317.496
+      },
+      {
+        "source": "stk10",
+        "destination": "ktree",
+        "um": 319.488
+      },
+      {
+        "source": "lane10",
+        "destination": "nb1_10",
+        "um": 126.924
+      },
+      {
+        "source": "nb1_10",
+        "destination": "nb2_10",
+        "um": 64.824
+      },
+      {
+        "source": "front2",
+        "destination": "stin11",
+        "um": 293.376
+      },
+      {
+        "source": "stin11",
+        "destination": "lane11",
+        "um": 196.884
+      },
+      {
+        "source": "lane11",
+        "destination": "stk11",
+        "um": 296.928
+      },
+      {
+        "source": "stk11",
+        "destination": "ktree",
+        "um": 410.544
+      },
+      {
+        "source": "lane11",
+        "destination": "nb1_11",
+        "um": 108.804
+      },
+      {
+        "source": "nb1_11",
+        "destination": "nb2_11",
+        "um": 108.408
+      },
+      {
+        "source": "front3",
+        "destination": "stin12",
+        "um": 298.776
+      },
+      {
+        "source": "stin12",
+        "destination": "lane12",
+        "um": 267.084
+      },
+      {
+        "source": "lane12",
+        "destination": "stk12",
+        "um": 259.128
+      },
+      {
+        "source": "stk12",
+        "destination": "ktree",
+        "um": 477.18
+      },
+      {
+        "source": "lane12",
+        "destination": "nb1_12",
+        "um": 87.204
+      },
+      {
+        "source": "nb1_12",
+        "destination": "nb2_12",
+        "um": 119.208
+      },
+      {
+        "source": "front3",
+        "destination": "stin13",
+        "um": 269.16
+      },
+      {
+        "source": "stin13",
+        "destination": "lane13",
+        "um": 196.884
+      },
+      {
+        "source": "lane13",
+        "destination": "stk13",
+        "um": 345.528
+      },
+      {
+        "source": "stk13",
+        "destination": "ktree",
+        "um": 465.288
+      },
+      {
+        "source": "lane13",
+        "destination": "nb1_13",
+        "um": 135.528
+      },
+      {
+        "source": "nb1_13",
+        "destination": "nb2_13",
+        "um": 5.808
+      },
+      {
+        "source": "front3",
+        "destination": "stin14",
+        "um": 287.976
+      },
+      {
+        "source": "stin14",
+        "destination": "lane14",
+        "um": 234.684
+      },
+      {
+        "source": "lane14",
+        "destination": "stk14",
+        "um": 367.128
+      },
+      {
+        "source": "stk14",
+        "destination": "ktree",
+        "um": 423.036
+      },
+      {
+        "source": "lane14",
+        "destination": "nb1_14",
+        "um": 186.048
+      },
+      {
+        "source": "nb1_14",
+        "destination": "nb2_14",
+        "um": 146.208
+      },
+      {
+        "source": "front3",
+        "destination": "stin15",
+        "um": 347.376
+      },
+      {
+        "source": "stin15",
+        "destination": "lane15",
+        "um": 294.084
+      },
+      {
+        "source": "lane15",
+        "destination": "stk15",
+        "um": 458.928
+      },
+      {
+        "source": "stk15",
+        "destination": "ktree",
+        "um": 479.364
+      },
+      {
+        "source": "lane15",
+        "destination": "nb1_15",
+        "um": 186.048
+      },
+      {
+        "source": "nb1_15",
+        "destination": "nb2_15",
+        "um": 97.608
+      },
+      {
+        "source": "ktree",
+        "destination": "score",
+        "um": 190.404
+      },
+      {
+        "source": "score",
+        "destination": "ktree",
+        "um": 338.244
+      },
+      {
+        "source": "front0",
+        "destination": "score",
+        "um": 396.936
+      },
+      {
+        "source": "front1",
+        "destination": "score",
+        "um": 127.032
+      },
+      {
+        "source": "front2",
+        "destination": "score",
+        "um": 348.528
+      },
+      {
+        "source": "front3",
+        "destination": "score",
+        "um": 175.824
+      }
+    ],
+    "worst_internal_edge": {
+      "source": "stk15",
+      "destination": "ktree",
+      "um": 479.364
+    },
+    "conflicts": [],
+    "unresolved": "Die input/output pin grants, stage1/score placement, clock track legality and native signoff remain separate obligations.",
+    "slot_outline_um": [
+      1133.976,
+      492.456
+    ],
+    "placement_keepouts": {
+      "two_T1_channel": [
+        556.2,
+        0.0,
+        48.6,
+        492.456
+      ]
+    },
+    "stage2": {
+      "cell": "u_t2",
+      "master": "qkh_head_tstage",
+      "xy": [
+        529.2,
+        0.0
+      ],
+      "orient": "MX",
+      "worst": {
+        "bit": "ti_b[1]->front3.q_data_in[1]",
+        "um": 431.688,
+        "source_corner": [
+          550.7280000000001,
+          256.896
+        ],
+        "destination_corner": [
+          739.8000000000001,
+          14.280000000000001
+        ]
+      },
+      "clock_rectangles": [
+        [
+          529.128,
+          129.552
+        ],
+        [
+          529.128,
+          129.528
+        ],
+        [
+          529.272,
+          129.552
+        ],
+        [
+          529.272,
+          129.528
+        ]
+      ]
+    },
+    "child_orientations": {
+      "front0": "R0",
+      "front1": "R0",
+      "front2": "R0",
+      "front3": "R0",
+      "ktree": "R0",
+      "score": "R0",
+      "stin2": "R0",
+      "stk2": "R0",
+      "nb1_2": "R0",
+      "nb2_2": "R0",
+      "lane2": "R0",
+      "stin5": "R0",
+      "stk5": "R0",
+      "nb1_5": "R0",
+      "nb2_5": "R0",
+      "lane5": "R0",
+      "stin7": "R0",
+      "stk7": "R0",
+      "nb1_7": "R0",
+      "nb2_7": "R0",
+      "lane7": "R0",
+      "stin9": "R0",
+      "stk9": "R0",
+      "nb1_9": "R0",
+      "nb2_9": "R0",
+      "lane9": "R0",
+      "stin12": "R0",
+      "stk12": "R0",
+      "nb1_12": "R0",
+      "nb2_12": "R0",
+      "lane12": "R0",
+      "stin15": "R0",
+      "stk15": "R0",
+      "nb1_15": "R0",
+      "nb2_15": "R0",
+      "lane15": "R0",
+      "stin1": "R0",
+      "stk1": "R0",
+      "nb1_1": "R0",
+      "nb2_1": "R0",
+      "lane1": "R0",
+      "stin4": "R0",
+      "stk4": "R0",
+      "nb1_4": "R0",
+      "nb2_4": "R0",
+      "lane4": "R0",
+      "stin6": "R0",
+      "stk6": "R0",
+      "nb1_6": "R0",
+      "nb2_6": "R0",
+      "lane6": "R0",
+      "stin8": "R0",
+      "stk8": "R0",
+      "nb1_8": "R0",
+      "nb2_8": "R0",
+      "lane8": "R0",
+      "stin11": "R0",
+      "stk11": "R0",
+      "nb1_11": "R0",
+      "nb2_11": "R0",
+      "lane11": "R0",
+      "stin14": "R0",
+      "stk14": "R0",
+      "nb1_14": "R0",
+      "nb2_14": "R0",
+      "lane14": "R0",
+      "stin0": "R0",
+      "stk0": "R0",
+      "nb1_0": "R0",
+      "nb2_0": "R0",
+      "lane0": "R0",
+      "stin3": "R0",
+      "stk3": "R0",
+      "nb1_3": "R0",
+      "nb2_3": "R0",
+      "lane3": "R0",
+      "stin10": "R0",
+      "stk10": "R0",
+      "nb1_10": "R0",
+      "nb2_10": "R0",
+      "lane10": "R0",
+      "stin13": "R0",
+      "stk13": "R0",
+      "nb1_13": "R0",
+      "nb2_13": "R0",
+      "lane13": "R0",
+      "u_t2": "MX"
+    },
+    "clock_pin_rectangles_local_um": {
+      "front0": [
+        [
+          388.8,
+          43.8
+        ],
+        [
+          388.8,
+          43.824
+        ],
+        [
+          388.992,
+          43.8
+        ],
+        [
+          388.992,
+          43.824
+        ]
+      ],
+      "front1": [
+        [
+          610.2,
+          92.4
+        ],
+        [
+          610.2,
+          92.424
+        ],
+        [
+          610.392,
+          92.4
+        ],
+        [
+          610.392,
+          92.424
+        ]
+      ],
+      "front2": [
+        [
+          388.8,
+          92.4
+        ],
+        [
+          388.8,
+          92.424
+        ],
+        [
+          388.992,
+          92.4
+        ],
+        [
+          388.992,
+          92.424
+        ]
+      ],
+      "front3": [
+        [
+          610.2,
+          43.8
+        ],
+        [
+          610.2,
+          43.824
+        ],
+        [
+          610.392,
+          43.8
+        ],
+        [
+          610.392,
+          43.824
+        ]
+      ],
+      "ktree": [
+        [
+          372.6,
+          174.744
+        ],
+        [
+          372.6,
+          174.768
+        ],
+        [
+          372.684,
+          174.744
+        ],
+        [
+          372.684,
+          174.768
+        ]
+      ],
+      "score": [
+        [
+          680.064,
+          102.6
+        ],
+        [
+          680.064,
+          102.684
+        ],
+        [
+          680.088,
+          102.6
+        ],
+        [
+          680.088,
+          102.684
+        ]
+      ],
+      "stin2": [
+        [
+          37.8,
+          27.0
+        ],
+        [
+          37.8,
+          27.024
+        ],
+        [
+          37.992,
+          27.0
+        ],
+        [
+          37.992,
+          27.024
+        ]
+      ],
+      "stk2": [
+        [
+          178.2,
+          162.0
+        ],
+        [
+          178.2,
+          162.024
+        ],
+        [
+          178.392,
+          162.0
+        ],
+        [
+          178.392,
+          162.024
+        ]
+      ],
+      "nb1_2": [
+        [
+          448.176,
+          350.808
+        ],
+        [
+          448.176,
+          351.0
+        ],
+        [
+          448.2,
+          350.808
+        ],
+        [
+          448.2,
+          351.0
+        ],
+        [
+          448.176,
+          344.60499999999996
+        ],
+        [
+          448.176,
+          350.84
+        ],
+        [
+          448.2,
+          344.60499999999996
+        ],
+        [
+          448.2,
+          350.84
+        ]
+      ],
+      "nb2_2": [
+        [
+          766.7760000000001,
+          226.608
+        ],
+        [
+          766.7760000000001,
+          226.8
+        ],
+        [
+          766.8000000000001,
+          226.608
+        ],
+        [
+          766.8000000000001,
+          226.8
+        ],
+        [
+          766.7760000000001,
+          220.405
+        ],
+        [
+          766.7760000000001,
+          226.64
+        ],
+        [
+          766.8000000000001,
+          220.405
+        ],
+        [
+          766.8000000000001,
+          226.64
+        ]
+      ],
+      "lane2": [
+        [
+          43.2,
+          423.84
+        ],
+        [
+          43.2,
+          423.864
+        ],
+        [
+          43.284000000000006,
+          423.84
+        ],
+        [
+          43.284000000000006,
+          423.864
+        ]
+      ],
+      "stin5": [
+        [
+          243.0,
+          27.0
+        ],
+        [
+          243.0,
+          27.024
+        ],
+        [
+          243.192,
+          27.0
+        ],
+        [
+          243.192,
+          27.024
+        ]
+      ],
+      "stk5": [
+        [
+          351.0,
+          248.4
+        ],
+        [
+          351.0,
+          248.424
+        ],
+        [
+          351.192,
+          248.4
+        ],
+        [
+          351.192,
+          248.424
+        ]
+      ],
+      "nb1_5": [
+        [
+          674.976,
+          350.808
+        ],
+        [
+          674.976,
+          351.0
+        ],
+        [
+          675.0,
+          350.808
+        ],
+        [
+          675.0,
+          351.0
+        ],
+        [
+          674.976,
+          344.60499999999996
+        ],
+        [
+          674.976,
+          350.84
+        ],
+        [
+          675.0,
+          344.60499999999996
+        ],
+        [
+          675.0,
+          350.84
+        ]
+      ],
+      "nb2_5": [
+        [
+          939.576,
+          350.808
+        ],
+        [
+          939.576,
+          351.0
+        ],
+        [
+          939.6,
+          350.808
+        ],
+        [
+          939.6,
+          351.0
+        ],
+        [
+          939.576,
+          344.60499999999996
+        ],
+        [
+          939.576,
+          350.84
+        ],
+        [
+          939.6,
+          344.60499999999996
+        ],
+        [
+          939.6,
+          350.84
+        ]
+      ],
+      "lane5": [
+        [
+          216.0,
+          423.84
+        ],
+        [
+          216.0,
+          423.864
+        ],
+        [
+          216.084,
+          423.84
+        ],
+        [
+          216.084,
+          423.864
+        ]
+      ],
+      "stin7": [
+        [
+          750.6,
+          421.20000000000005
+        ],
+        [
+          750.6,
+          421.22400000000005
+        ],
+        [
+          750.792,
+          421.20000000000005
+        ],
+        [
+          750.792,
+          421.22400000000005
+        ]
+      ],
+      "stk7": [
+        [
+          351.0,
+          367.2
+        ],
+        [
+          351.0,
+          367.224
+        ],
+        [
+          351.192,
+          367.2
+        ],
+        [
+          351.192,
+          367.224
+        ]
+      ],
+      "nb1_7": [
+        [
+          766.7760000000001,
+          394.008
+        ],
+        [
+          766.7760000000001,
+          394.2
+        ],
+        [
+          766.8000000000001,
+          394.008
+        ],
+        [
+          766.8000000000001,
+          394.2
+        ],
+        [
+          766.7760000000001,
+          387.80499999999995
+        ],
+        [
+          766.7760000000001,
+          394.03999999999996
+        ],
+        [
+          766.8000000000001,
+          387.80499999999995
+        ],
+        [
+          766.8000000000001,
+          394.03999999999996
+        ]
+      ],
+      "nb2_7": [
+        [
+          939.576,
+          302.208
+        ],
+        [
+          939.576,
+          302.40000000000003
+        ],
+        [
+          939.6,
+          302.208
+        ],
+        [
+          939.6,
+          302.40000000000003
+        ],
+        [
+          939.576,
+          296.005
+        ],
+        [
+          939.576,
+          302.24
+        ],
+        [
+          939.6,
+          296.005
+        ],
+        [
+          939.6,
+          302.24
+        ]
+      ],
+      "lane7": [
+        [
+          388.8,
+          423.84
+        ],
+        [
+          388.8,
+          423.864
+        ],
+        [
+          388.884,
+          423.84
+        ],
+        [
+          388.884,
+          423.864
+        ]
+      ],
+      "stin9": [
+        [
+          351.0,
+          453.6
+        ],
+        [
+          351.0,
+          453.624
+        ],
+        [
+          351.192,
+          453.6
+        ],
+        [
+          351.192,
+          453.624
+        ]
+      ],
+      "stk9": [
+        [
+          351.0,
+          415.8
+        ],
+        [
+          351.0,
+          415.824
+        ],
+        [
+          351.192,
+          415.8
+        ],
+        [
+          351.192,
+          415.824
+        ]
+      ],
+      "nb1_9": [
+        [
+          836.976,
+          350.808
+        ],
+        [
+          836.976,
+          351.0
+        ],
+        [
+          837.0,
+          350.808
+        ],
+        [
+          837.0,
+          351.0
+        ],
+        [
+          836.976,
+          344.60499999999996
+        ],
+        [
+          836.976,
+          350.84
+        ],
+        [
+          837.0,
+          344.60499999999996
+        ],
+        [
+          837.0,
+          350.84
+        ]
+      ],
+      "nb2_9": [
+        [
+          1036.776,
+          350.808
+        ],
+        [
+          1036.776,
+          351.0
+        ],
+        [
+          1036.8,
+          350.808
+        ],
+        [
+          1036.8,
+          351.0
+        ],
+        [
+          1036.776,
+          344.60499999999996
+        ],
+        [
+          1036.776,
+          350.84
+        ],
+        [
+          1036.8,
+          344.60499999999996
+        ],
+        [
+          1036.8,
+          350.84
+        ]
+      ],
+      "lane9": [
+        [
+          615.6000000000001,
+          423.84
+        ],
+        [
+          615.6000000000001,
+          423.864
+        ],
+        [
+          615.6840000000001,
+          423.84
+        ],
+        [
+          615.6840000000001,
+          423.864
+        ]
+      ],
+      "stin12": [
+        [
+          750.6,
+          189.0
+        ],
+        [
+          750.6,
+          189.024
+        ],
+        [
+          750.792,
+          189.0
+        ],
+        [
+          750.792,
+          189.024
+        ]
+      ],
+      "stk12": [
+        [
+          750.6,
+          329.40000000000003
+        ],
+        [
+          750.6,
+          329.42400000000004
+        ],
+        [
+          750.792,
+          329.40000000000003
+        ],
+        [
+          750.792,
+          329.42400000000004
+        ]
+      ],
+      "nb1_12": [
+        [
+          939.576,
+          367.008
+        ],
+        [
+          939.576,
+          367.2
+        ],
+        [
+          939.6,
+          367.008
+        ],
+        [
+          939.6,
+          367.2
+        ],
+        [
+          939.576,
+          360.80499999999995
+        ],
+        [
+          939.576,
+          367.03999999999996
+        ],
+        [
+          939.6,
+          360.80499999999995
+        ],
+        [
+          939.6,
+          367.03999999999996
+        ]
+      ],
+      "nb2_12": [
+        [
+          1074.576,
+          350.808
+        ],
+        [
+          1074.576,
+          351.0
+        ],
+        [
+          1074.6000000000001,
+          350.808
+        ],
+        [
+          1074.6000000000001,
+          351.0
+        ],
+        [
+          1074.576,
+          344.60499999999996
+        ],
+        [
+          1074.576,
+          350.84
+        ],
+        [
+          1074.6000000000001,
+          344.60499999999996
+        ],
+        [
+          1074.6000000000001,
+          350.84
+        ]
+      ],
+      "lane12": [
+        [
+          788.4000000000001,
+          423.84
+        ],
+        [
+          788.4000000000001,
+          423.864
+        ],
+        [
+          788.484,
+          423.84
+        ],
+        [
+          788.484,
+          423.864
+        ]
+      ],
+      "stin15": [
+        [
+          923.4,
+          162.0
+        ],
+        [
+          923.4,
+          162.024
+        ],
+        [
+          923.592,
+          162.0
+        ],
+        [
+          923.592,
+          162.024
+        ]
+      ],
+      "stk15": [
+        [
+          750.6,
+          302.40000000000003
+        ],
+        [
+          750.6,
+          302.42400000000004
+        ],
+        [
+          750.792,
+          302.40000000000003
+        ],
+        [
+          750.792,
+          302.42400000000004
+        ]
+      ],
+      "nb1_15": [
+        [
+          939.576,
+          431.808
+        ],
+        [
+          939.576,
+          432.0
+        ],
+        [
+          939.6,
+          431.808
+        ],
+        [
+          939.6,
+          432.0
+        ],
+        [
+          939.576,
+          425.60499999999996
+        ],
+        [
+          939.576,
+          431.84
+        ],
+        [
+          939.6,
+          425.60499999999996
+        ],
+        [
+          939.6,
+          431.84
+        ]
+      ],
+      "nb2_15": [
+        [
+          988.176,
+          350.808
+        ],
+        [
+          988.176,
+          351.0
+        ],
+        [
+          988.2,
+          350.808
+        ],
+        [
+          988.2,
+          351.0
+        ],
+        [
+          988.176,
+          344.60499999999996
+        ],
+        [
+          988.176,
+          350.84
+        ],
+        [
+          988.2,
+          344.60499999999996
+        ],
+        [
+          988.2,
+          350.84
+        ]
+      ],
+      "lane15": [
+        [
+          961.2,
+          423.84
+        ],
+        [
+          961.2,
+          423.864
+        ],
+        [
+          961.284,
+          423.84
+        ],
+        [
+          961.284,
+          423.864
+        ]
+      ],
+      "stin1": [
+        [
+          178.2,
+          210.6
+        ],
+        [
+          178.2,
+          210.624
+        ],
+        [
+          178.392,
+          210.6
+        ],
+        [
+          178.392,
+          210.624
+        ]
+      ],
+      "stk1": [
+        [
+          351.0,
+          340.2
+        ],
+        [
+          351.0,
+          340.224
+        ],
+        [
+          351.192,
+          340.2
+        ],
+        [
+          351.192,
+          340.224
+        ]
+      ],
+      "nb1_1": [
+        [
+          512.976,
+          350.808
+        ],
+        [
+          512.976,
+          351.0
+        ],
+        [
+          513.0,
+          350.808
+        ],
+        [
+          513.0,
+          351.0
+        ],
+        [
+          512.976,
+          344.60499999999996
+        ],
+        [
+          512.976,
+          350.84
+        ],
+        [
+          513.0,
+          344.60499999999996
+        ],
+        [
+          513.0,
+          350.84
+        ]
+      ],
+      "nb2_1": [
+        [
+          804.576,
+          199.608
+        ],
+        [
+          804.576,
+          199.8
+        ],
+        [
+          804.6,
+          199.608
+        ],
+        [
+          804.6,
+          199.8
+        ],
+        [
+          804.576,
+          193.405
+        ],
+        [
+          804.576,
+          199.64
+        ],
+        [
+          804.6,
+          193.405
+        ],
+        [
+          804.6,
+          199.64
+        ]
+      ],
+      "lane1": [
+        [
+          43.2,
+          272.64
+        ],
+        [
+          43.2,
+          272.664
+        ],
+        [
+          43.284000000000006,
+          272.64
+        ],
+        [
+          43.284000000000006,
+          272.664
+        ]
+      ],
+      "stin4": [
+        [
+          178.2,
+          91.80000000000001
+        ],
+        [
+          178.2,
+          91.824
+        ],
+        [
+          178.392,
+          91.80000000000001
+        ],
+        [
+          178.392,
+          91.824
+        ]
+      ],
+      "stk4": [
+        [
+          351.0,
+          216.0
+        ],
+        [
+          351.0,
+          216.024
+        ],
+        [
+          351.192,
+          216.0
+        ],
+        [
+          351.192,
+          216.024
+        ]
+      ],
+      "nb1_4": [
+        [
+          637.176,
+          350.808
+        ],
+        [
+          637.176,
+          351.0
+        ],
+        [
+          637.2,
+          350.808
+        ],
+        [
+          637.2,
+          351.0
+        ],
+        [
+          637.176,
+          344.60499999999996
+        ],
+        [
+          637.176,
+          350.84
+        ],
+        [
+          637.2,
+          344.60499999999996
+        ],
+        [
+          637.2,
+          350.84
+        ]
+      ],
+      "nb2_4": [
+        [
+          880.176,
+          199.608
+        ],
+        [
+          880.176,
+          199.8
+        ],
+        [
+          880.2,
+          199.608
+        ],
+        [
+          880.2,
+          199.8
+        ],
+        [
+          880.176,
+          193.405
+        ],
+        [
+          880.176,
+          199.64
+        ],
+        [
+          880.2,
+          193.405
+        ],
+        [
+          880.2,
+          199.64
+        ]
+      ],
+      "lane4": [
+        [
+          216.0,
+          272.64
+        ],
+        [
+          216.0,
+          272.664
+        ],
+        [
+          216.084,
+          272.64
+        ],
+        [
+          216.084,
+          272.664
+        ]
+      ],
+      "stin6": [
+        [
+          313.2,
+          27.0
+        ],
+        [
+          313.2,
+          27.024
+        ],
+        [
+          313.392,
+          27.0
+        ],
+        [
+          313.392,
+          27.024
+        ]
+      ],
+      "stk6": [
+        [
+          351.0,
+          275.40000000000003
+        ],
+        [
+          351.0,
+          275.42400000000004
+        ],
+        [
+          351.192,
+          275.40000000000003
+        ],
+        [
+          351.192,
+          275.42400000000004
+        ]
+      ],
+      "nb1_6": [
+        [
+          766.7760000000001,
+          280.608
+        ],
+        [
+          766.7760000000001,
+          280.8
+        ],
+        [
+          766.8000000000001,
+          280.608
+        ],
+        [
+          766.8000000000001,
+          280.8
+        ],
+        [
+          766.7760000000001,
+          274.405
+        ],
+        [
+          766.7760000000001,
+          280.64
+        ],
+        [
+          766.8000000000001,
+          274.405
+        ],
+        [
+          766.8000000000001,
+          280.64
+        ]
+      ],
+      "nb2_6": [
+        [
+          939.576,
+          248.208
+        ],
+        [
+          939.576,
+          248.4
+        ],
+        [
+          939.6,
+          248.208
+        ],
+        [
+          939.6,
+          248.4
+        ],
+        [
+          939.576,
+          242.005
+        ],
+        [
+          939.576,
+          248.24
+        ],
+        [
+          939.6,
+          242.005
+        ],
+        [
+          939.6,
+          248.24
+        ]
+      ],
+      "lane6": [
+        [
+          388.8,
+          272.64
+        ],
+        [
+          388.8,
+          272.664
+        ],
+        [
+          388.884,
+          272.64
+        ],
+        [
+          388.884,
+          272.664
+        ]
+      ],
+      "stin8": [
+        [
+          745.2,
+          27.0
+        ],
+        [
+          745.2,
+          27.024
+        ],
+        [
+          745.392,
+          27.0
+        ],
+        [
+          745.392,
+          27.024
+        ]
+      ],
+      "stk8": [
+        [
+          637.2,
+          167.4
+        ],
+        [
+          637.2,
+          167.424
+        ],
+        [
+          637.392,
+          167.4
+        ],
+        [
+          637.392,
+          167.424
+        ]
+      ],
+      "nb1_8": [
+        [
+          842.3760000000001,
+          199.608
+        ],
+        [
+          842.3760000000001,
+          199.8
+        ],
+        [
+          842.4000000000001,
+          199.608
+        ],
+        [
+          842.4000000000001,
+          199.8
+        ],
+        [
+          842.3760000000001,
+          193.405
+        ],
+        [
+          842.3760000000001,
+          199.64
+        ],
+        [
+          842.4000000000001,
+          193.405
+        ],
+        [
+          842.4000000000001,
+          199.64
+        ]
+      ],
+      "nb2_8": [
+        [
+          998.976,
+          199.608
+        ],
+        [
+          998.976,
+          199.8
+        ],
+        [
+          999.0,
+          199.608
+        ],
+        [
+          999.0,
+          199.8
+        ],
+        [
+          998.976,
+          193.405
+        ],
+        [
+          998.976,
+          199.64
+        ],
+        [
+          999.0,
+          193.405
+        ],
+        [
+          999.0,
+          199.64
+        ]
+      ],
+      "lane8": [
+        [
+          615.6000000000001,
+          272.64
+        ],
+        [
+          615.6000000000001,
+          272.664
+        ],
+        [
+          615.6840000000001,
+          272.64
+        ],
+        [
+          615.6840000000001,
+          272.664
+        ]
+      ],
+      "stin11": [
+        [
+          685.8,
+          172.79999999999998
+        ],
+        [
+          685.8,
+          172.82399999999998
+        ],
+        [
+          685.992,
+          172.79999999999998
+        ],
+        [
+          685.992,
+          172.82399999999998
+        ]
+      ],
+      "stk11": [
+        [
+          739.8,
+          151.20000000000002
+        ],
+        [
+          739.8,
+          151.22400000000002
+        ],
+        [
+          739.992,
+          151.20000000000002
+        ],
+        [
+          739.992,
+          151.22400000000002
+        ]
+      ],
+      "nb1_11": [
+        [
+          944.976,
+          199.608
+        ],
+        [
+          944.976,
+          199.8
+        ],
+        [
+          945.0,
+          199.608
+        ],
+        [
+          945.0,
+          199.8
+        ],
+        [
+          944.976,
+          193.405
+        ],
+        [
+          944.976,
+          199.64
+        ],
+        [
+          945.0,
+          193.405
+        ],
+        [
+          945.0,
+          199.64
+        ]
+      ],
+      "nb2_11": [
+        [
+          1085.376,
+          199.608
+        ],
+        [
+          1085.376,
+          199.8
+        ],
+        [
+          1085.4,
+          199.608
+        ],
+        [
+          1085.4,
+          199.8
+        ],
+        [
+          1085.376,
+          193.405
+        ],
+        [
+          1085.376,
+          199.64
+        ],
+        [
+          1085.4,
+          193.405
+        ],
+        [
+          1085.4,
+          199.64
+        ]
+      ],
+      "lane11": [
+        [
+          788.4000000000001,
+          272.64
+        ],
+        [
+          788.4000000000001,
+          272.664
+        ],
+        [
+          788.484,
+          272.64
+        ],
+        [
+          788.484,
+          272.664
+        ]
+      ],
+      "stin14": [
+        [
+          923.4,
+          70.2
+        ],
+        [
+          923.4,
+          70.224
+        ],
+        [
+          923.592,
+          70.2
+        ],
+        [
+          923.592,
+          70.224
+        ]
+      ],
+      "stk14": [
+        [
+          750.6,
+          243.0
+        ],
+        [
+          750.6,
+          243.024
+        ],
+        [
+          750.792,
+          243.0
+        ],
+        [
+          750.792,
+          243.024
+        ]
+      ],
+      "nb1_14": [
+        [
+          939.576,
+          280.608
+        ],
+        [
+          939.576,
+          280.8
+        ],
+        [
+          939.6,
+          280.608
+        ],
+        [
+          939.6,
+          280.8
+        ],
+        [
+          939.576,
+          274.405
+        ],
+        [
+          939.576,
+          280.64
+        ],
+        [
+          939.6,
+          274.405
+        ],
+        [
+          939.6,
+          280.64
+        ]
+      ],
+      "nb2_14": [
+        [
+          1036.776,
+          199.608
+        ],
+        [
+          1036.776,
+          199.8
+        ],
+        [
+          1036.8,
+          199.608
+        ],
+        [
+          1036.8,
+          199.8
+        ],
+        [
+          1036.776,
+          193.405
+        ],
+        [
+          1036.776,
+          199.64
+        ],
+        [
+          1036.8,
+          193.405
+        ],
+        [
+          1036.8,
+          199.64
+        ]
+      ],
+      "lane14": [
+        [
+          961.2,
+          272.64
+        ],
+        [
+          961.2,
+          272.664
+        ],
+        [
+          961.284,
+          272.64
+        ],
+        [
+          961.284,
+          272.664
+        ]
+      ],
+      "stin0": [
+        [
+          75.6,
+          27.0
+        ],
+        [
+          75.6,
+          27.024
+        ],
+        [
+          75.79199999999999,
+          27.0
+        ],
+        [
+          75.79199999999999,
+          27.024
+        ]
+      ],
+      "stk0": [
+        [
+          351.0,
+          59.400000000000006
+        ],
+        [
+          351.0,
+          59.424
+        ],
+        [
+          351.192,
+          59.400000000000006
+        ],
+        [
+          351.192,
+          59.424
+        ]
+      ],
+      "nb1_0": [
+        [
+          626.3760000000001,
+          113.208
+        ],
+        [
+          626.3760000000001,
+          113.39999999999999
+        ],
+        [
+          626.4000000000001,
+          113.208
+        ],
+        [
+          626.4000000000001,
+          113.39999999999999
+        ],
+        [
+          626.3760000000001,
+          107.005
+        ],
+        [
+          626.3760000000001,
+          113.24
+        ],
+        [
+          626.4000000000001,
+          107.005
+        ],
+        [
+          626.4000000000001,
+          113.24
+        ]
+      ],
+      "nb2_0": [
+        [
+          939.576,
+          215.808
+        ],
+        [
+          939.576,
+          216.0
+        ],
+        [
+          939.6,
+          215.808
+        ],
+        [
+          939.6,
+          216.0
+        ],
+        [
+          939.576,
+          209.605
+        ],
+        [
+          939.576,
+          215.83999999999997
+        ],
+        [
+          939.6,
+          209.605
+        ],
+        [
+          939.6,
+          215.83999999999997
+        ]
+      ],
+      "lane0": [
+        [
+          43.2,
+          121.44
+        ],
+        [
+          43.2,
+          121.464
+        ],
+        [
+          43.284000000000006,
+          121.44
+        ],
+        [
+          43.284000000000006,
+          121.464
+        ]
+      ],
+      "stin3": [
+        [
+          178.2,
+          43.2
+        ],
+        [
+          178.2,
+          43.224000000000004
+        ],
+        [
+          178.392,
+          43.2
+        ],
+        [
+          178.392,
+          43.224000000000004
+        ]
+      ],
+      "stk3": [
+        [
+          351.0,
+          86.39999999999999
+        ],
+        [
+          351.0,
+          86.42399999999999
+        ],
+        [
+          351.192,
+          86.39999999999999
+        ],
+        [
+          351.192,
+          86.42399999999999
+        ]
+      ],
+      "nb1_3": [
+        [
+          626.3760000000001,
+          194.208
+        ],
+        [
+          626.3760000000001,
+          194.4
+        ],
+        [
+          626.4000000000001,
+          194.208
+        ],
+        [
+          626.4000000000001,
+          194.4
+        ],
+        [
+          626.3760000000001,
+          188.005
+        ],
+        [
+          626.3760000000001,
+          194.24
+        ],
+        [
+          626.4000000000001,
+          188.005
+        ],
+        [
+          626.4000000000001,
+          194.24
+        ]
+      ],
+      "nb2_3": [
+        [
+          939.576,
+          134.808
+        ],
+        [
+          939.576,
+          135.0
+        ],
+        [
+          939.6,
+          134.808
+        ],
+        [
+          939.6,
+          135.0
+        ],
+        [
+          939.576,
+          128.605
+        ],
+        [
+          939.576,
+          134.84
+        ],
+        [
+          939.6,
+          128.605
+        ],
+        [
+          939.6,
+          134.84
+        ]
+      ],
+      "lane3": [
+        [
+          216.0,
+          121.44
+        ],
+        [
+          216.0,
+          121.464
+        ],
+        [
+          216.084,
+          121.44
+        ],
+        [
+          216.084,
+          121.464
+        ]
+      ],
+      "stin10": [
+        [
+          745.2,
+          75.6
+        ],
+        [
+          745.2,
+          75.624
+        ],
+        [
+          745.392,
+          75.6
+        ],
+        [
+          745.392,
+          75.624
+        ]
+      ],
+      "stk10": [
+        [
+          621.0,
+          129.6
+        ],
+        [
+          621.0,
+          129.624
+        ],
+        [
+          621.192,
+          129.6
+        ],
+        [
+          621.192,
+          129.624
+        ]
+      ],
+      "nb1_10": [
+        [
+          939.576,
+          232.008
+        ],
+        [
+          939.576,
+          232.20000000000002
+        ],
+        [
+          939.6,
+          232.008
+        ],
+        [
+          939.6,
+          232.20000000000002
+        ],
+        [
+          939.576,
+          225.805
+        ],
+        [
+          939.576,
+          232.04000000000002
+        ],
+        [
+          939.6,
+          225.805
+        ],
+        [
+          939.6,
+          232.04000000000002
+        ]
+      ],
+      "nb2_10": [
+        [
+          939.576,
+          264.408
+        ],
+        [
+          939.576,
+          264.6
+        ],
+        [
+          939.6,
+          264.408
+        ],
+        [
+          939.6,
+          264.6
+        ],
+        [
+          939.576,
+          258.205
+        ],
+        [
+          939.576,
+          264.44
+        ],
+        [
+          939.6,
+          258.205
+        ],
+        [
+          939.6,
+          264.44
+        ]
+      ],
+      "lane10": [
+        [
+          788.4000000000001,
+          121.44
+        ],
+        [
+          788.4000000000001,
+          121.464
+        ],
+        [
+          788.484,
+          121.44
+        ],
+        [
+          788.484,
+          121.464
+        ]
+      ],
+      "stin13": [
+        [
+          853.2,
+          27.0
+        ],
+        [
+          853.2,
+          27.024
+        ],
+        [
+          853.392,
+          27.0
+        ],
+        [
+          853.392,
+          27.024
+        ]
+      ],
+      "stk13": [
+        [
+          750.6,
+          113.39999999999999
+        ],
+        [
+          750.6,
+          113.42399999999999
+        ],
+        [
+          750.792,
+          113.39999999999999
+        ],
+        [
+          750.792,
+          113.42399999999999
+        ]
+      ],
+      "nb1_13": [
+        [
+          1069.176,
+          48.408
+        ],
+        [
+          1069.176,
+          48.599999999999994
+        ],
+        [
+          1069.2,
+          48.408
+        ],
+        [
+          1069.2,
+          48.599999999999994
+        ],
+        [
+          1069.176,
+          42.205
+        ],
+        [
+          1069.176,
+          48.44
+        ],
+        [
+          1069.2,
+          42.205
+        ],
+        [
+          1069.2,
+          48.44
+        ]
+      ],
+      "nb2_13": [
+        [
+          1106.9759999999999,
+          48.408
+        ],
+        [
+          1106.9759999999999,
+          48.599999999999994
+        ],
+        [
+          1107.0,
+          48.408
+        ],
+        [
+          1107.0,
+          48.599999999999994
+        ],
+        [
+          1106.9759999999999,
+          42.205
+        ],
+        [
+          1106.9759999999999,
+          48.44
+        ],
+        [
+          1107.0,
+          42.205
+        ],
+        [
+          1107.0,
+          48.44
+        ]
+      ],
+      "lane13": [
+        [
+          961.2,
+          121.44
+        ],
+        [
+          961.2,
+          121.464
+        ],
+        [
+          961.284,
+          121.44
+        ],
+        [
+          961.284,
+          121.464
+        ]
+      ],
+      "u_t2": [
+        [
+          529.128,
+          129.552
+        ],
+        [
+          529.128,
+          129.528
+        ],
+        [
+          529.272,
+          129.552
+        ],
+        [
+          529.272,
+          129.528
+        ]
+      ]
+    }
+  },
+  "structural_fallback": {
+    "front_quarters_2x2": {
+      "front0": [
+        324,
+        5.4,
+        129.6,
+        43.2
+      ],
+      "front1": [
+        459,
+        5.4,
+        129.6,
+        43.2
+      ],
+      "front2": [
+        324,
+        54.0,
+        129.6,
+        43.2
+      ],
+      "front3": [
+        459,
+        54.0,
+        129.6,
+        43.2
+      ]
+    },
+    "actual_pin_lower_bound": {
+      "minimum_um": 452.412,
+      "xy": [
+        435.56399999999996,
+        -264.6
+      ],
+      "orient": "MX",
+      "domain": "below",
+      "worst": {
+        "bit": "e_b[15]->front3.e_in[15]",
+        "um": 452.412,
+        "source_corner": [
+          457.092,
+          -262.41600000000005
+        ],
+        "destination_corner": [
+          588.6,
+          58.488
+        ]
+      },
+      "certificate": {
+        "signs": [
+          [
+            -1,
+            -1
+          ],
+          [
+            -1,
+            1
+          ],
+          [
+            1,
+            -1
+          ],
+          [
+            1,
+            1
+          ]
+        ],
+        "constants": [
+          623.376,
+          809.6880000000001,
+          -247.752,
+          -59.567999999999984
+        ],
+        "bounds_um": [
+          -129.6,
+          1187.976,
+          -280.8,
+          -264.6
+        ],
+        "inequality_duals": [
+          -0.5,
+          -0.0,
+          -0.5,
+          -0.0
+        ],
+        "lower_bound_duals": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "upper_bound_duals": [
+          0.0,
+          -1.0,
+          0.0
+        ]
+      }
+    },
+    "existing_child_conflicts": [
+      [
+        "front2",
+        "ktree"
+      ],
+      [
+        "front2",
+        "stk0"
+      ],
+      [
+        "front2",
+        "lane3"
+      ],
+      [
+        "front3",
+        "ktree"
+      ],
+      [
+        "front3",
+        "score"
+      ]
+    ],
+    "admitted": false,
+    "reason": "Actual matched-bit distance can improve, but these connected children must really be rehomed and their actual-bit internal hops reverified. No area grant, stage1/score closure or clock legality has been established."
+  },
+  "stage1_contract": "One tstage PER HEAD beside ECTL C, not one shared fanout launch. Its1575 input bits actually originate from A(row lower512), B(row upper512 plus c/lt), C(q519 and e16); all three source views must be audited.",
+  "return_contract": "Staged s_a={sc_d32,sc_f,g_f}; ECTL s={g_f,sc_f,sc_d32}. Wire permutation required; identity bus wiring is incorrect.",
+  "qualification_limits": [
+    "R0/MX/MY/R180 physical pin track legality still requires real die pin grid replay.",
+    "Inherited r4 plan contains proposed pins/region bounds for some old leaves; this result only audits added-stage to actual routed front pins.",
+    "No stage1/score site or128-head die grant is admitted unless the mandatory stage2 domain passes."
+  ],
+  "die_projection": {
+    "input": "/tmp/codex-kv142-plan-bits-1103/insts.json",
+    "sha256": "9e22cb100a3c6d20eec727275272b6b56cd580d45fa9d866443f47543b48e37b",
+    "head_count": 128,
+    "orientations": {
+      "R0": 32,
+      "MX": 32,
+      "MY": 32,
+      "R180": 32
+    },
+    "required_added_leaves": 384,
+    "required_added_clock_entries": 384,
+    "total_added_leaf_area_um2": 1492992.0,
+    "admitted": false,
+    "reason": "Repacked stage2 fits all128 unchanged head parent rectangles. Per-head firststage/score sites, endpoint reach and physical clock/pin grid admission remain open.",
+    "stage2_inside_existing_head_count": 128,
+    "stage2_placements_file": "stage2_die_placements.json"
+  },
+  "validation": {
+    "signed_plane_vs_direct_all_matched_bit_rectangles": [
+      {
+        "orient": "R0",
+        "xy": [
+          0.0,
+          0.0
+        ],
+        "fast_um": 976.224,
+        "direct_um": 976.224
+      },
+      {
+        "orient": "R0",
+        "xy": [
+          459.0,
+          0.0
+        ],
+        "fast_um": 517.224,
+        "direct_um": 517.224
+      },
+      {
+        "orient": "R0",
+        "xy": [
+          464.4,
+          -264.6
+        ],
+        "fast_um": 546.816,
+        "direct_um": 546.816
+      },
+      {
+        "orient": "MX",
+        "xy": [
+          0.0,
+          0.0
+        ],
+        "fast_um": 971.688,
+        "direct_um": 971.688
+      },
+      {
+        "orient": "MX",
+        "xy": [
+          459.0,
+          0.0
+        ],
+        "fast_um": 512.688,
+        "direct_um": 512.688
+      },
+      {
+        "orient": "MX",
+        "xy": [
+          464.4,
+          -264.6
+        ],
+        "fast_um": 540.648,
+        "direct_um": 540.648
+      },
+      {
+        "orient": "MY",
+        "xy": [
+          0.0,
+          0.0
+        ],
+        "fast_um": 997.824,
+        "direct_um": 997.824
+      },
+      {
+        "orient": "MY",
+        "xy": [
+          459.0,
+          0.0
+        ],
+        "fast_um": 538.824,
+        "direct_um": 538.824
+      },
+      {
+        "orient": "MY",
+        "xy": [
+          464.4,
+          -264.6
+        ],
+        "fast_um": 562.872,
+        "direct_um": 562.872
+      },
+      {
+        "orient": "R180",
+        "xy": [
+          0.0,
+          0.0
+        ],
+        "fast_um": 993.288,
+        "direct_um": 993.288
+      },
+      {
+        "orient": "R180",
+        "xy": [
+          459.0,
+          0.0
+        ],
+        "fast_um": 534.288,
+        "direct_um": 534.288
+      },
+      {
+        "orient": "R180",
+        "xy": [
+          464.4,
+          -264.6
+        ],
+        "fast_um": 558.576,
+        "direct_um": 558.576
+      }
+    ],
+    "source_stage_rtl_binding": {
+      "tstage": {
+        "matches_current": true,
+        "sha256": "fc99193d8427b0e5abf4c4af7fa89b4851474bb24957f24a03d5f235f551143b",
+        "gate_manifest_sha256": "25b0722f359936c681160afcb6844c0b1cc136fc8ae887fa7ae798b2e8051409"
+      },
+      "sstage": {
+        "matches_current": true,
+        "sha256": "fc99193d8427b0e5abf4c4af7fa89b4851474bb24957f24a03d5f235f551143b",
+        "gate_manifest_sha256": "26d7cfacf93ae519d47cc0a61d9920ab10738489ac7a8ac4c348774f5b200a08"
+      }
+    }
+  }
+}
