@@ -1481,6 +1481,11 @@ def _receipt_params(rel):
 def die_master_params(m):
     used = {it.master for it in m['insts']}
     out = {}
+    if VM_NATIVE_CANDIDATE:
+        if 'dsfd_sp_vm' not in used:
+            raise ValueError('--vm-native-candidate needs an actual dsfd_sp_vm instance')
+        out['dsfd_sp_vm'] = dict(vm_native_candidate_params(),
+                                _source='explicit --vm-native-candidate; source construction only, not physical qualification')
     for mst, rel in BOUND_VIEW_RECEIPTS.items():
         if mst in used:
             out[mst] = dict(_receipt_params(rel), _source=rel)
@@ -1500,6 +1505,18 @@ def die_master_params(m):
         # TA-10: the PQ q element's loader handshake (ef / go_tag) is the PQ 1 loader (tb_ot_s81_cfg7_seq.sv PQ 1)
         out['ot_s81_cfg7_seq'] = dict(PQ=1, _source='q element %s carries go_tag / sh_free / bank_free' % real_lef(Q_LEF)['name'])
     return out
+
+
+def vm_native_candidate_params():
+    """Fail closed unless the actual wrapper exposes the proven candidate ABI."""
+    import die_port_bind as DPB
+    source = ROOT / 'rtl/dsrom_sys/s81_ph/vm/dsfd_sp_vm_static.sv'
+    modules = DPB.parse_modules(DPB.preprocess(source.read_text(), {}), str(source))
+    wrappers = [md for md in modules if md.name == 'dsfd_sp_vm']
+    requested = dict(READ_PIPE=4, CAP_PIPE=2, WSCATTER_PIPE=1)
+    if len(wrappers) != 1 or not set(requested).issubset(wrappers[0].params):
+        raise ValueError('--vm-native-candidate requires actual READ_PIPE/CAP_PIPE/WSCATTER_PIPE wrapper parameters')
+    return requested
 
 
 # ------------------------------------------------------------------------------------------------ power model
@@ -5514,6 +5531,7 @@ STATIC_HC_TAG = ('collective', 'hc_s', 32, 't_hc_tag', 'y_tag')
 STATIC_COLLECTIVE_MASTER = 'dsfd_sp_collective_static_c'
 STATIC_COLLECTIVE_RTL = 'rtl/dsrom_sys/s81_static_collective/dsfd_sp_collective_static_c.sv'
 STATIC_COLLECTIVE = False       # --static-collective: swap the hub collective master (RTL must be on the source tree)
+VM_NATIVE_CANDIDATE = False    # explicit4/2/1 source construction; default remains actual RTL0/0/0
 PIN_OVERRIDES = None            # --pin-overrides (S-DIE r11 10-15): adopted GEO-S face re-assignments, see load_pin_overrides
 PIN_OVERRIDES_APPLIED = {}
 
@@ -10084,6 +10102,7 @@ def die_options(ap):
                     'compiler command edge (manifest define DSFD_SUHC_STATIC_ISSUE); the void VM -> SU / HC t_inp nets leave')
     ap.add_argument('--static-seams', action='store_true', help='S-DIE r11 2026-10-15: static VM<->collective seam (t_vm 2204, t_crq 15, t_crs 513), drop vm.t_collective/tcs credit and hc_s.y_rdy, add collective.t_hc_tag -> hc_s.y_tag')
     ap.add_argument('--static-collective', action='store_true', help='swap the hub collective to dsfd_sp_collective_static_c (needs its RTL in the tree)')
+    ap.add_argument('--vm-native-candidate', action='store_true', help='explicit source candidate dsfd_sp_vm READ_PIPE4/CAP_PIPE2/WSCATTER_PIPE1; requires actual wrapper parameters; no physical/native qualification inheritance')
     ap.add_argument('--mix4-slot', help='X,Y,W,H um: Engram MIX4 home reservation (screen)')
     ap.add_argument('--lkck-wire', action='store_true', help='link forwarded-clock feedthrough as die-top wire (no dsfd_lkck)')
     ap.add_argument('--stn70-split', action='store_true', help='dsfd_stn*_70xK -> K x dsfd_stn*_70x1')
@@ -10121,6 +10140,10 @@ def apply_options(a):
     global STATIC_SEAMS, STATIC_COLLECTIVE, MIX4_SLOT
     STATIC_SEAMS = bool(getattr(a, 'static_seams', False) or getattr(a, 'static_coll', False))
     STATIC_COLLECTIVE = bool(getattr(a, 'static_collective', False) or getattr(a, 'static_coll', False))
+    global VM_NATIVE_CANDIDATE
+    VM_NATIVE_CANDIDATE = bool(getattr(a, 'vm_native_candidate', False))
+    if VM_NATIVE_CANDIDATE:
+        vm_native_candidate_params()
     global SUHC_STATIC_ISSUE, BF_X2_STATIC, LSW, BF_STATIC_PROG, BF_X2_PAIR
     BF_STATIC_PROG = bool(getattr(a, 'bf_static_prog', False))
     SUHC_STATIC_ISSUE = bool(getattr(a, 'suhc_static_issue', False))
