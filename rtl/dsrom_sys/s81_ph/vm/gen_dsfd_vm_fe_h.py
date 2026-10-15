@@ -296,6 +296,10 @@ module dsfd_vm_fcc (
     output reg  [1:0]    rn_o
 );
     localparam integer CCA = `VMFE_CCA;
+    // This CLOSED ctrl leaf retains its legacy full-row interface. True commit
+    // metadata uses a separately qualified native variant, never these constants.
+    localparam integer WCOMMIT=0;
+    wire [15:0] vwm=16'hffff; wire [7:0] vwt=8'd0; wire vready;
     wire clk = ck[0];
     reg rn; wire rns;
     (* keep = 1 *) reg [1:0] rn_k;
@@ -641,7 +645,7 @@ PARENT = r"""// ================================================================
 // carrying its non-constant bits (table at the relay masters); the constants are TIED at the dsfd_vm_fsr pins here.
 // Reset tree (parent wiring only, re-routable without touching a leaf): fcn.rn_o -> fld, fcc, fcw, fxs 0..3;
 // fld -> flt 0 -> .. -> flt 9; bundle source -> relay(b, slice 0, 0) -> stage chain / slice chain; relay -> fsr.
-module dsfd_vm_fe_h (
+module dsfd_vm_fe_h #(parameter integer BANK_XOR=0) (
     input  wire [0:0]    ck,
     input  wire [0:0]    rst,
     input  wire [0:0]    cks,
@@ -763,7 +767,7 @@ module dsfd_vm_fe_h (
             end
         end
 @B4@@B5@        // hard child, unchanged: pin flop + out flop; the constant fields and i_rf[2:0] are ties
-        dsfd_vm_fsr u_fr (.ck(ck[0]), .rn(xr0[(4*0 + gs)*R + R - 1]),
+        dsfd_vm_fsr_bank #(.BANK_XOR(BANK_XOR)) u_fr (.ck(ck[0]), .rn(xr0[(4*0 + gs)*R + R - 1]),
             .i_v(fi_v[28*gs +: 28]), .i_we(fi_we[28*gs +: 28]), .i_row(fi_row[392*gs +: 392]), .i_mask(fi_m[112*gs +: 112]),
             .i_d(fi_d[3584*gs +: 3584]), .i_rf({fi_rf[gs], 3'b000}),
             .o_v(m_v[28*gs +: 28]), .o_we(m_we[28*gs +: 28]), .o_row(m_row[392*gs +: 392]),
@@ -778,7 +782,7 @@ def reset_ack_interfaces(text):
     text = '`ifdef OT_SPVM_RESET_ACK\n`include "dsfd_vm_reset_ack.svh"\n`endif\n' + text
     def modify(name, ports, body='', transform=None):
         nonlocal text
-        a=text.index('module '+name+' (');b=text.index('endmodule',a);part=text[a:b]
+        a=text.index('module '+name+' ');b=text.index('endmodule',a);part=text[a:b]
         i=part.index('\n);');part=part[:i]+'\n`ifdef OT_SPVM_RESET_ACK\n    , '+ports+'\n`endif'+part[i:]
         if transform:part=transform(part)
         part+='`ifdef OT_SPVM_RESET_ACK\n'+body+'`endif\n' if body else ''

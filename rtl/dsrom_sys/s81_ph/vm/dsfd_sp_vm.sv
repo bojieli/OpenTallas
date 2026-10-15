@@ -474,6 +474,7 @@ endmodule
 // ================================================================================================ front end
 module dsfd_vm_fe #(
     parameter integer WCOMMIT = 0,
+    parameter integer BANK_XOR = 0,
     parameter integer NS = 4,           // bit-sliced memory columns (128 b each)
     parameter integer VF = 13,          // WFC kit link stations (dsfd_vm_wfc_ep VF / VR)
     parameter integer VR = 13,
@@ -1004,12 +1005,19 @@ module dsfd_vm_fe #(
                 localparam integer LL = (gp - CP) / 4, SG = (gp - CP) % 4, LG = CP + 4 * gsl + LL;
                 localparam [1:0] S2 = SG;
                 assign cv_s[gp] = c_vv[LG]; assign cw_s[gp] = c_we[LG];
-                assign cr_s[gp*RA +: RA] = {c_row[LG*RA + 4 +: RA - 4], c_row[LG*RA +: 2], S2};   // c_row[1:0] = gid[1:0] = L2 when valid
+                wire [RA-1:0] capture_row = {c_row[LG*RA + 4 +: RA - 4], c_row[LG*RA +: 2], S2};
+                assign cr_s[gp*RA +: RA] = {capture_row[13:5],capture_row[4:0] ^ (BANK_XOR ? {capture_row[7:5],2'b00} : 5'd0)};   // c_row[1:0] = gid[1:0] = L2 when valid
                 assign cm_s[4*gp +: 4] = c_m[LG*16 + 4*SG +: 4];
                 assign cd_s[128*gp +: 128] = c_dd[LG*512 + 128*SG +: 128];
             end else begin : g_n
 `endif
-            assign cv_s[gp] = c_vv[gp]; assign cw_s[gp] = c_we[gp]; assign cr_s[gp*RA +: RA] = c_row[gp*RA +: RA];
+            assign cv_s[gp] = c_vv[gp]; assign cw_s[gp] = c_we[gp]; wire [RA-1:0] logical_row = c_row[gp*RA +: RA];
+`ifdef OT_VM_BANK_XOR_MUT_WRITE_ONLY
+            wire do_hash = BANK_XOR && c_we[gp];
+`else
+            wire do_hash = BANK_XOR;
+`endif
+            assign cr_s[gp*RA +: RA] = {logical_row[13:5],logical_row[4:0] ^ (do_hash ? {logical_row[7:5],2'b00} : 5'd0)};
             assign cm_s[4*gp +: 4] = c_m[gp*16 + 4*gsl +: 4];
             assign cd_s[128*gp +: 128] = c_dd[gp*512 + 128*gsl +: 128];
 `ifdef OT_SPVM_SLOC
@@ -1299,6 +1307,39 @@ module dsfd_vm_fsr (
         if (!rn_q) begin v1 <= 28'd0; o_v <= 28'd0; end else begin v1 <= i_v; o_v <= v1; end
         we1 <= i_we; row1 <= i_row; m1 <= i_mask; d1 <= i_d;
         o_we <= we1; o_row <= row1; o_mask <= m1; o_d <= d1;
+        o_rf <= i_rf;
+    end
+`ifdef OT_SPVM_RESET_ACK
+    dsfd_vm_reset_ack u_reset_ack (.clk(ck), .request_n(reset_epoch_n), .local_release(rn_q), .consumer_live(1'b1), .ack(rst_ack));
+`endif
+endmodule
+
+// New real pin-registered leaf variant; CLOSED dsfd_vm_fsr remains unchanged.
+module dsfd_vm_fsr_xor (
+    input  wire          ck,
+    input  wire          rn,
+    input  wire [27:0]   i_v,  input wire [27:0]  i_we, input wire [391:0] i_row, input wire [111:0] i_mask,
+    input  wire [3583:0] i_d,  input wire [3:0]   i_rf,
+    output reg  [27:0]   o_v,  output reg [27:0]  o_we, output reg [391:0] o_row, output reg [111:0] o_mask,
+    output reg  [3583:0] o_d,  output reg [3:0]   o_rf
+`ifdef OT_SPVM_RESET_ACK
+    , input wire reset_epoch_n, output wire rst_ack
+`endif
+);
+    reg rn_q;
+    reg [27:0] v1, we1; reg [391:0] row1; reg [111:0] m1; reg [3583:0] d1;
+    always @(posedge ck) begin
+        rn_q <= rn;
+        if (!rn_q) begin v1 <= 28'd0; o_v <= 28'd0; end else begin v1 <= i_v; o_v <= v1; end
+        we1 <= i_we; row1 <= i_row; m1 <= i_mask; d1 <= i_d;
+        o_we <= we1; o_mask <= m1; o_d <= d1;
+        for(integer p=0;p<28;p=p+1)begin
+`ifdef OT_VM_BANK_XOR_MUT_WRITE_ONLY
+            o_row[14*p+:14]<={row1[14*p+5+:9],row1[14*p+:5] ^ (we1[p] ? {row1[14*p+5+:3],2'b00} : 5'd0)};
+`else
+            o_row[14*p+:14]<={row1[14*p+5+:9],row1[14*p+:5] ^ {row1[14*p+5+:3],2'b00}};
+`endif
+        end
         o_rf <= i_rf;
     end
 `ifdef OT_SPVM_RESET_ACK
@@ -1896,6 +1937,7 @@ endmodule
 // NPR 8), BE.  The die places the FE, the 16 tiles and the BE by abutment (physical/s81_ph_views/vm_master/).
 module dsfd_sp_vm_m #(
     parameter integer WCOMMIT = 0,
+    parameter integer BANK_XOR = 0,
     parameter integer NS = 4, parameter integer NSTG = 2, parameter integer QD = 4, parameter integer MACRO = 1,
     parameter integer VF = 13, parameter integer VR = 13, parameter integer NSLOT = 4, parameter integer P2D = 40,
     parameter integer CQD = 4, parameter integer LA = 12, parameter integer LTO = 16,
@@ -1958,7 +2000,7 @@ module dsfd_sp_vm_m #(
     wire [NS*NP-1:0] fmv, fmwe; wire [NS*NP*RA-1:0] fmrow; wire [NS*NP*4-1:0] fmm; wire [NS*NP*128-1:0] fmd;
     wire [NS*4-1:0] fmrf; wire [15:0] f_flt;
     wire [0:0] f_swg, f_srg, f_dv, f_cwv; wire [52:0] f_ks; wire [7:0] f_dt; wire [2:0] f_cts; wire [9:0] f_cwd; wire [NSLOT-1:0] f_rdy;
-    dsfd_vm_fe #(.WCOMMIT(WCOMMIT), .NS(NS), .VF(VF), .VR(VR), .NSLOT(NSLOT), .P2D(P2D), .CQD(CQD), .LA(LA), .LTO(LTO), .NSVC(NSVC), .LD(LD),
+    dsfd_vm_fe #(.BANK_XOR(BANK_XOR), .WCOMMIT(WCOMMIT), .NS(NS), .VF(VF), .VR(VR), .NSLOT(NSLOT), .P2D(P2D), .CQD(CQD), .LA(LA), .LTO(LTO), .NSVC(NSVC), .LD(LD),
                  .NLP(NLP), .LMACRO(LMACRO), .FRL(FRL), .KD(FKD), .LAL(FLAL), .LGL(FLGL), .LDL(FLDL), .DVR(FDVR), .LVX(FLVX), .XRT(FXRT), .CCA(WCOMMIT ? 1 : FCCA)) u_fe (
         .ck(ck), .rst(rst), .cks(cks), .rss(rss), .f_swv(f_swv), .f_swd(f_swd), .t_swg(f_swg), .f_srv(f_srv), .f_srd(f_srd),
         .t_srg(f_srg), .t_ks(f_ks), .f_cap(f_cap), .vwe(vwe), .vwa(vwa), .vwd(vwd), .vre(vre), .vra(vra), .vready(vready), .vwm(vwm), .vwt(vwt), .m_wtag(mtag),
@@ -1972,7 +2014,7 @@ module dsfd_sp_vm_m #(
     wire [NS*NP-1:0] hmv, hmwe; wire [NS*NP*RA-1:0] hmrow; wire [NS*NP*4-1:0] hmm; wire [NS*NP*128-1:0] hmd;
     wire [NS*4-1:0] hmrf; wire [15:0] h_flt;
     wire [0:0] h_swg, h_srg, h_dv, h_cwv; wire [52:0] h_ks; wire [7:0] h_dt; wire [2:0] h_cts; wire [9:0] h_cwd; wire [3:0] h_rdy;
-    dsfd_vm_fe_h u_feh (
+    dsfd_vm_fe_h #(.BANK_XOR(BANK_XOR)) u_feh (
         .ck(ck), .rst(rst), .cks(cks), .rss(rss), .f_swv(f_swv), .f_swd(f_swd), .t_swg(h_swg), .f_srv(f_srv), .f_srd(f_srd),
         .t_srg(h_srg), .t_ks(h_ks), .f_cap(f_cap), .vwe(vwe), .vwa(vwa), .vwd(vwd), .vre(vre), .vra(vra),
         .cv(cv), .cd(cd), .dv(h_dv), .dt(h_dt), .f_svc(f_svc), .f_coll(f_coll), .t_cts(h_cts), .f_sel(f_sel), .f_col(f_col), .f_hc(f_hc),
@@ -1984,6 +2026,7 @@ module dsfd_sp_vm_m #(
         );
 `endif
 `ifdef OT_SPVM_FE_H_SUBST
+    initial if(WCOMMIT)$error("native FE true commit/tag hierarchy still requires its explicit leaf variant");
     assign mv = hmv; assign mwe = hmwe; assign mrow = hmrow; assign mm = hmm; assign md = hmd; assign mrf = hmrf;
     assign fe_flt = h_flt; assign t_swg = h_swg; assign t_srg = h_srg; assign t_ks = h_ks; assign dv = h_dv; assign dt = h_dt;
     assign t_cts = h_cts; assign c_wv = h_cwv; assign c_wd = h_cwd; assign t_rdy = h_rdy;
@@ -2077,4 +2120,26 @@ module dsfd_sp_vm_m #(
         assign vwv=1'b0; assign vack_tag=0; assign vack_mask=0;
     end endgenerate
 
+endmodule
+
+module dsfd_vm_fsr_bank #(parameter integer BANK_XOR=0) (
+    input  wire          ck,
+    input  wire          rn,
+    input  wire [27:0]   i_v,  input wire [27:0]  i_we, input wire [391:0] i_row, input wire [111:0] i_mask,
+    input  wire [3583:0] i_d,  input wire [3:0]   i_rf,
+    output wire  [27:0]   o_v,  output wire [27:0]  o_we, output wire [391:0] o_row, output wire [111:0] o_mask,
+    output wire  [3583:0] o_d,  output wire [3:0]   o_rf
+`ifdef OT_SPVM_RESET_ACK
+    , input wire reset_epoch_n, output wire rst_ack
+`endif
+);
+ generate if(BANK_XOR)begin:g_x dsfd_vm_fsr_xor u_native(.ck(ck), .rn(rn), .i_v(i_v), .i_we(i_we), .i_row(i_row), .i_mask(i_mask), .i_d(i_d), .i_rf(i_rf), .o_v(o_v), .o_we(o_we), .o_row(o_row), .o_mask(o_mask), .o_d(o_d), .o_rf(o_rf)
+`ifdef OT_SPVM_RESET_ACK
+, .reset_epoch_n(reset_epoch_n),.rst_ack(rst_ack)
+`endif
+);end else begin:g_n dsfd_vm_fsr u_native(.ck(ck), .rn(rn), .i_v(i_v), .i_we(i_we), .i_row(i_row), .i_mask(i_mask), .i_d(i_d), .i_rf(i_rf), .o_v(o_v), .o_we(o_we), .o_row(o_row), .o_mask(o_mask), .o_d(o_d), .o_rf(o_rf)
+`ifdef OT_SPVM_RESET_ACK
+, .reset_epoch_n(reset_epoch_n),.rst_ack(rst_ack)
+`endif
+);end endgenerate
 endmodule
