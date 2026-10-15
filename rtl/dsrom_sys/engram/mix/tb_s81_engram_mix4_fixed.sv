@@ -6,7 +6,7 @@
 // It measures the command-pin -> done-pin latency in issuer age units and checks the compiled done row
 // fires exactly on the completion (issuer fault code 8 = done absent/late, 6 = early). Exact BF16 output
 // of all four copies is checked as in the component bench. Descriptor row = the compiled arg (+desc=).
-module tb_s81_engram_mix4_fixed #(parameter MUT=0);
+module tb_s81_engram_mix4_fixed #(parameter MUT=0, HLAYOUT=1);
  reg clk=0;always #1 clk=~clk;
  integer cyc=0;always @(posedge clk)cyc<=cyc+1;
  reg [63:0] cfg[0:0];reg rst=0;wire [8:0] done;wire [1:0] st;wire [19:0] rq;wire [279:0] addr;
@@ -20,7 +20,7 @@ module tb_s81_engram_mix4_fixed #(parameter MUT=0);
   .job_rdy(),.busy(),.job_done(),.job_kdone(),.done_slot(),.kit_tok(),.cmd_v(cv),.cmd_d(cd),
   .engine_available({2'b0,st[1],10'b0}),.dn_v({2'b0,done[8],10'b0}),.dn_tag({16'b0,done[7:0],80'b0}),
   .fault(is_fault),.fault_code(is_code),.st_jobs(),.st_cmds(),.phase(phase));
- dsfd_engram_mix4_c #(.MUT(MUT)) dut({133{clk}},rst,{cv[10],cd[840+:84]},done,st,1'b1,rq,addr,rv,rd,wv,wa,mask,wd);
+ dsfd_engram_mix4_c #(.MUT(MUT),.HLAYOUT(HLAYOUT)) dut({133{clk}},rst,{cv[10],cd[840+:84]},done,st,1'b1,rq,addr,rv,rd,wv,wa,mask,wd);
  reg [1023:0] hm[0:639],km[0:639],wm[0:639],vm[0:159],ym[0:639];reg [511:0] mem[0:16383];
  string dir;integer i,j,l,m,bad=0,writes=0,reads=0,desc=11880;
  integer cmd_cyc=-1,done_cyc=-1,job_age0=-1,fault_cyc=-1,fault_code=0,mix_fault_cyc=-1;
@@ -43,7 +43,7 @@ module tb_s81_engram_mix4_fixed #(parameter MUT=0);
   $readmemh({dir,"/cfg.mem"},cfg);$readmemh({dir,"/h.mem"},hm);$readmemh({dir,"/k.mem"},km);$readmemh({dir,"/w.mem"},wm);$readmemh({dir,"/v.mem"},vm);$readmemh({dir,"/y.mem"},ym);
   $readmemh({dir,"/mix_program.mem"},pm);
   for(i=0;i<640;i=i+1)begin
-   for(j=0;j<32;j=j+1)mem[256+i][16*j+:16]=hm[i][32*j+16+:16];
+   for(j=0;j<32;j=j+1)if(HLAYOUT)mem[256+i][16*j+:16]=hm[160*(j%4)+(8*i+j/4)/32][32*((8*i+j/4)%32)+16+:16];else mem[256+i][16*j+:16]=hm[i][32*j+16+:16];
    mem[2048+2*i]=km[i][0+:512];mem[2049+2*i]=km[i][512+:512];
    mem[4096+2*i]=wm[i][0+:512];mem[4097+2*i]=wm[i][512+:512];
   end
@@ -54,7 +54,7 @@ module tb_s81_engram_mix4_fixed #(parameter MUT=0);
   while(cyc<1010)@(negedge clk);
   for(i=0;i<8;i=i+1)begin pv=1;pa=pm[i][34:28];pd=pm[i][27:0];@(negedge clk);pv=0;@(negedge clk);end
   while(cyc<1250+4000)@(negedge clk);
-  for(i=0;i<640;i=i+1)for(j=0;j<32;j=j+1)if(mem[256+i][16*j+:16]!==ym[i][32*j+16+:16])bad=bad+1;
+  for(i=0;i<640;i=i+1)for(j=0;j<32;j=j+1)if(mem[256+i][16*j+:16]!==(HLAYOUT?ym[160*(j%4)+(8*i+j/4)/32][32*((8*i+j/4)%32)+16+:16]:ym[i][32*j+16+:16]))bad=bad+1;
   $display("MIX4_FIXED cmd_pin_cycle=%0d done_pin_cycle=%0d cmd_to_done=%0d job_age0_cycle=%0d done_age=%0d compiled_done=%0d issuer_fault=%0d code=%0d at %0d mix_fault=%0d writes=%0d reads=%0d bad_words=%0d",
    cmd_cyc,done_cyc,done_cyc-cmd_cyc,job_age0,done_cyc-job_age0,iss.mem[0][75:52],is_fault,fault_code,fault_cyc,st[0],writes,reads,bad);
   if(is_fault||st[0]||bad||writes!=640||reads!=4161||done_cyc<0)$fatal(1,"MIX4_FIXED FAIL");
