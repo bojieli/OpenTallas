@@ -579,7 +579,24 @@ def global_stages(insts,repacked,leafs,ectl_leafs,channel_lanes=False,timing=Non
                 source,destination=label.split('->');child,pin=destination.split('.',1)
                 t2pairs.append((label,points(hname+'/u_t2',leafs['tstage'],source),points(hname+'/'+child,leafs['front'],pin),reach('tstage',source,'front',pin)))
             wt=witness(t2pairs,(0,0));t2check=dict(admitted=wt['effective_um']<=LIMIT,worst=wt,scope='Actual globally snapped source and destination LEF corners for this head')
-        results.append(dict(head=hname,ectl=group,producer_capture=capture_checks,gather_capture=gather_check,score2_capture=score2_check,stage2_front=t2check,tstage0=t0,tstage1=t,sstage1=s))
+        internal=None
+        if gather_homes:
+            edge_results=[];recovery=[]
+            for (source,dest),bits in internal_edges().items():
+                sk,dk=child_kind(source),child_kind(dest);pairs=[]
+                for sp,dp in bits:
+                    if dp=='rst_n':
+                        recovery.append(dict(source=source+'.'+sp,target=dest+'.'+dp,qualified=False,
+                            obligation='Actual async reset recovery/removal and flush distribution, not a data setup path'))
+                        continue
+                    pairs.append((source+'.'+sp+'->'+dest+'.'+dp,points(hname+'/'+source,leafs[sk],sp),
+                        points(hname+'/'+dest,leafs[dk],dp),reach(sk,sp,dk,dp)))
+                if pairs:
+                    wi=witness(pairs,(0,0));edge_results.append(dict(source=source,target=dest,matched_bits=len(pairs),admitted=wi['effective_um']<=LIMIT,worst=wi))
+            internal=dict(admitted=all(e['admitted']for e in edge_results),matched_bits=sum(e['matched_bits']for e in edge_results),
+                failed_edges=sum(not e['admitted']for e in edge_results),edges=edge_results,async_reset_obligations=recovery,
+                scope='All source-exact existing rawR4 internal data edges after actual globally snapped hard child origins; clocks and async recovery remain separate obligations')
+        results.append(dict(head=hname,ectl=group,producer_capture=capture_checks,gather_capture=gather_check,score2_capture=score2_check,stage2_front=t2check,raw_head_internal=internal,tstage0=t0,tstage1=t,sstage1=s))
     t2sites=[]
     for n,(box,o)in byname.items():
         if n.endswith('/u_t2'):
@@ -808,7 +825,7 @@ def main():
                     for field in ('xy','size_um','orient'):assert home[field]==expected_by[home['name']][field],('Stale N4 home',home['name'],field)
             paths['gather']=args.gather_lef.resolve()
             assert lef(paths['gather'])[0]==(324,21.6),'Actual gather outline changed'
-        native_paths={**{k:paths[k]for k in ('tstage','sstage','score','front')},**ectl_paths,**({'chunk':paths['chunk']}if chunk_homes else {}),**({'gather':paths['gather']}if gather_homes else {})}
+        native_paths={**{k:paths[k]for k in (('tstage','sstage','score','front','stin','stk','nb','lane','ktree')if args.n4 else ('tstage','sstage','score','front'))},**ectl_paths,**({'chunk':paths['chunk']}if chunk_homes else {}),**({'gather':paths['gather']}if gather_homes else {})}
         timing=None
         if args.native_timing:
             import sys
@@ -825,7 +842,7 @@ def main():
         import head_placement_lattice as lattice
         placement_paths={**{k:paths[k]for k in ('tstage','sstage','score','front','stin','stk','nb','lane','ktree')},**ectl_paths}
         placement_macros={k:lattice.lef(str(p))for k,p in placement_paths.items()}if args.n4 else None
-        leaf_keys=['tstage','sstage','score','front']+(['chunk']if chunk_homes else [])+(['gather']if gather_homes else [])
+        leaf_keys=['tstage','sstage','score','front']+(['stin','stk','nb','lane','ktree']if args.n4 else [])+(['chunk']if chunk_homes else [])+(['gather']if gather_homes else [])
         global_result=global_stages(insts,chosen,{k:lef(paths[k])for k in leaf_keys},ectl_leafs,args.widen54,timing,args.n3,args.head_limit,chunk_homes,gather_homes,score_homes,placement_macros)
         if args.n4:
             global_result['native_LEF_sha256']={str(p):hashlib.sha256(p.read_bytes()).hexdigest()for p in native_paths.values()}

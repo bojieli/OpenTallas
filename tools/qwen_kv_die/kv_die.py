@@ -1624,6 +1624,20 @@ def _relays(m):
                 return FIRST_REACH.get(bid.rsplit('_', 2)[0], PIN_REACH)
             return PIN_REACH
 
+        def place_station(qx,qy,idx,orient='R0'):
+            nm = f'rly_{bid}_{st_["k"]}'
+            it = F.Inst(nm, mst, qx, qy, fw - SHAVE, fh - SHAVE, orient, kind='relay', region='relay')
+            m['insts'].append(it)
+            by[nm] = it                       # v1.4.2: a tree's next-level chain starts at this relay
+            rly_ends[nm] = (tree_meta[bid]['rdrv'] if bid in tree_meta else a, b)   # tree: the HOST's trunk
+            for gx in range(int(it.x // G), int((it.x + fw) // G) + 1):
+                for gy in range(int(it.y // G), int((it.y + fh) // G) + 1):
+                    r_ = (it.x, it.y, it.x + fw, it.y + fh)
+                    rocc.setdefault((gx, gy), []).append(r_)
+                    cells_added.append(((gx, gy), r_))
+            nb.append((f'{bid}__r{st_["k"]}' if st_['k'] else bid, cl, bits, [st_['prev_ep'], (nm, 'a')]))
+            st_.update(prev_ep=(nm, 'b'), prev_pt=(it.x if orient=='MY'else it.x+it.w, it.y+it.h/2), idx0=idx, k=st_['k'] + 1)
+
         def chain_():
             path_ = st_['path']
             while remaining_() > (TREE_LAST if bid in tree_meta else reach_()):
@@ -1663,19 +1677,7 @@ def _relays(m):
                     raise ValueError(f'kv die relays: no spot for {bid} stage {st_["k"]} after path index {idx0_}'
                                      f' at {path_[idx0_] if idx0_ < len(path_) else None} (ends {a}.{pa} -> {b}.{pb};'
                                      f' path {len(path_)} cells, remaining {remaining_():.0f} um, wide {st_.get("wide")}, src {ctr_dbg(a, pa)} dst {ctr_dbg(b, pb)})')
-                nm = f'rly_{bid}_{st_["k"]}'
-                it = F.Inst(nm, mst, got[0], got[1], fw - SHAVE, fh - SHAVE, 'R0', kind='relay', region='relay')
-                m['insts'].append(it)
-                by[nm] = it                       # v1.4.2: a tree's next-level chain starts at this relay
-                rly_ends[nm] = (tree_meta[bid]['rdrv'] if bid in tree_meta else a, b)   # tree: the HOST's trunk
-                for gx in range(int(it.x // G), int((it.x + fw) // G) + 1):
-                    for gy in range(int(it.y // G), int((it.y + fh) // G) + 1):
-                        r_ = (it.x, it.y, it.x + fw, it.y + fh)
-                        rocc.setdefault((gx, gy), []).append(r_)
-                        cells_added.append(((gx, gy), r_))
-                nb.append((f'{bid}__r{st_["k"]}' if st_['k'] else bid, cl, bits, [st_['prev_ep'], (nm, 'a')]))
-                st_.update(prev_ep=(nm, 'b'), prev_pt=(it.x + it.w, it.y + it.h / 2), idx0=got[2], k=st_['k'] + 1)
-
+                place_station(got[0],got[1],got[2])
         def rollback_():
             for it_ in m['insts'][mark[1]:]:
                 rly_ends.pop(it_.name, None)
@@ -1691,6 +1693,38 @@ def _relays(m):
                 break
             except ValueError:
                 if attempt or not m['geo'].get('split'):
+                    if m.get('head_source_bands') and bid not in tree_meta:
+                        # A BFS wire corridor may lack enough room for relay
+                        # bodies. Reconstruct the entire chain with legal body
+                        # stations, keeping all legacy and new-frame guards.
+                        rollback_()
+                        source,target=fixed_pin(a,pa),fixed_pin(b,pb)
+                        def project(point,it):
+                            return (min(max(point[0],it.x),it.x+it.w),min(max(point[1],it.y),it.y+it.h))
+                        if source is None and target is not None:source=project(target,by[a])
+                        if target is None and source is not None:target=project(source,by[b])
+                        if source is not None and target is not None:
+                            import channel_detour as CD
+                            actual=m['insts']+m.get('placement_keepouts',[])
+                            wires=[];bodies=[]
+                            for obstacle in actual:
+                                is_relay=obstacle.master.startswith('qkd_rly')
+                                shave=SHAVE if is_relay else 0.
+                                box=(obstacle.x,obstacle.y,obstacle.x+obstacle.w+shave,obstacle.y+obstacle.h+shave)
+                                wires.append(box)
+                                guard=0. if is_relay else (5.4 if obstacle.name in exact_reservations else 21.6)-4.32
+                                bodies.append((box[0]-guard,box[1]-guard,box[2]+guard,box[3]+guard))
+                            result=CD.route(source,target,wires,(Wd,Hd),fw,fh,GRID/2,PIN_REACH-1,
+                                first_reach=min(reach_(),PIN_REACH-1),gap=4.32,body_obstacles=bodies)
+                            if result:
+                                for station in result['stages']:
+                                    place_station(station['x'],station['y'],0,station['orient'])
+                                m.setdefault('station_detours',[]).append(dict(bus=bid,source=source,target=target,
+                                    actual_stages=len(result['stages']),first_reach_um=min(FIRST_REACH.get(bid.rsplit('_',2)[0],PIN_REACH),PIN_REACH-1),
+                                    reach_um=PIN_REACH-1,legacy_frame_guard_um=21.6,reservation_guard_um=5.4,relay_guard_um=4.32,
+                                    proof=result,static_calendar_qualified=False))
+                                m['head_source_bands']['station_detours']=m['station_detours']
+                                break
                     if m.get('head_source_bands'):
                         # Save an explicit partial-construction refusal. Original
                         # buses and incomplete new chains are never a die plan.

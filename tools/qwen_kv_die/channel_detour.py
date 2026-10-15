@@ -10,22 +10,25 @@ import math
 
 
 def route(source, target, obstacles, outline, width, height, grid, reach,
-          first_reach=None, gap=4.32):
+          first_reach=None, gap=4.32, body_obstacles=None):
     first_reach = reach if first_reach is None else first_reach
     eps = 1e-6
     cell = max(grid, width, height)
-    index = {}
-    for number, rect in enumerate(obstacles):
-        for x in range(math.floor(rect[0]/cell),math.floor(rect[2]/cell)+1):
-            for y in range(math.floor(rect[1]/cell),math.floor(rect[3]/cell)+1):
-                index.setdefault((x,y),set()).add(number)
-
-    def nearby(rect):
-        result = set()
-        for x in range(math.floor(rect[0]/cell),math.floor(rect[2]/cell)+1):
-            for y in range(math.floor(rect[1]/cell),math.floor(rect[3]/cell)+1):
-                result.update(index.get((x,y),()))
-        return (obstacles[i] for i in result)
+    def spatial(rectangles):
+        index={}
+        for number, rect in enumerate(rectangles):
+            for x in range(math.floor(rect[0]/cell),math.floor(rect[2]/cell)+1):
+                for y in range(math.floor(rect[1]/cell),math.floor(rect[3]/cell)+1):
+                    index.setdefault((x,y),set()).add(number)
+        def query(rect):
+            result=set()
+            for x in range(math.floor(rect[0]/cell),math.floor(rect[2]/cell)+1):
+                for y in range(math.floor(rect[1]/cell),math.floor(rect[3]/cell)+1):
+                    result.update(index.get((x,y),()))
+            return (rectangles[i]for i in result)
+        return query
+    nearby=spatial(obstacles)
+    body_nearby=nearby if body_obstacles is None else spatial(body_obstacles)
 
     def intersects(a,b):
         return min(a[2],b[2])-max(a[0],b[0])>eps and min(a[3],b[3])-max(a[1],b[1])>eps
@@ -59,7 +62,7 @@ def route(source, target, obstacles, outline, width, height, grid, reach,
             r=rect(node);expanded=(r[0]-gap,r[1]-gap,r[2]+gap,r[3]+gap)
             free_cache[key]=(expanded[0]>=0 and expanded[1]>=0 and
                 expanded[2]<=outline[0] and expanded[3]<=outline[1] and
-                not any(intersects(expanded,b)for b in nearby(expanded)))
+                not any(intersects(expanded,b)for b in body_nearby(expanded)))
         return free_cache[key]
     def pins(node):
         r=rect(node);y=(r[1]+r[3])/2

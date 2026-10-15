@@ -27,6 +27,15 @@ class DetourTest(unittest.TestCase):
                 else:
                     self.assertFalse(40<a[1]<160 and min(max(a[0],b[0]),100)>max(min(a[0],b[0]),40))
 
+    def test_wire_channel_does_not_waive_relay_body_guard(self):
+        obstacle=(40.,0.,100.,140.)
+        arguments=((110.,80.),(20.,80.),[obstacle],(200.,200.),8.,8.,10.,45.)
+        self.assertIsNotNone(channel_detour.route(*arguments,gap=1.))
+        # The same wire corridor exists, but the enlarged physical guard leaves
+        # less than a relay body at the north boundary. It must be refused.
+        self.assertIsNone(channel_detour.route(*arguments,gap=1.,
+            body_obstacles=[(40.,0.,100.,195.)]))
+
     def test_sealed_channel_is_refused(self):
         result=channel_detour.route((100.,80.),(20.,80.),[(40.,0.,100.,200.)],
             (200.,200.),8.,8.,10.,45.,gap=1.)
