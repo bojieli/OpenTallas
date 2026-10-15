@@ -41,6 +41,6 @@ for n,pp in pins.items():assert [b for b,p in sorted(pp)]==list(range(widths[n][
 out=R/'physical/s81_vm_return_bank8_1015';out.mkdir(parents=True,exist_ok=True)
 (out/'pins.tcl').write_text('\n'.join(txt)+'\n')
 rep=dict(schema='opentallas.s81.assigned_pins.v1',master=mod.name,parameters=dict(DW=128,LANE=0),outline_um=[W,H],ports=ports,clock_entries={'stream':['ck']},reset_entries=['rst_n'],source=str(src.relative_to(R)),source_sha256=hashlib.sha256(src.read_bytes()).hexdigest(),port_bits=sum(q['bits'] for q in widths.values()),checks=stats,scope='SOURCE_BOUND_NATIVE_CANDIDATE_NOT_PHYSICAL_CLOSURE',open=['route/CTS/TT/FF/DRC','all actual bank/lane/output peer wire lengths and aggregate cuts','parent releaseprepare clock and schedule integration'])
-assert rep['port_bits']==2183,rep['port_bits']
+assert rep['port_bits']==2218,rep['port_bits']
 (out/'pins.json').write_text(json.dumps(rep,indent=1)+'\n')
 print(json.dumps(dict(port_bits=rep['port_bits'],checks=stats,source_sha256=rep['source_sha256'])))

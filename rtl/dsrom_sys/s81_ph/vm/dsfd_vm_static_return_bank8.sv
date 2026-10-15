@@ -9,8 +9,8 @@ module dsfd_vm_static_return_bank8 #(parameter integer DW=128, parameter integer
  input wire [7:0] i_v,input wire [63:0] i_tag,input wire [8*DW-1:0] i_data,
  input wire release_v,input wire [2:0] release_group,input wire [7:0] release_mask,
  input wire prepare_v,input wire [2:0] prepare_group,input wire [7:0] prepare_mask,
- input wire [19:0] peer_token,
- output reg [4:0] completion_token,
+ input wire [47:0] peer_token,
+ output reg [11:0] completion_token,
  output reg [7:0] o_v,output reg [8*DW-1:0] o_data,
  output reg [2:0] o_group,output reg fault
 );
@@ -24,7 +24,7 @@ module dsfd_vm_static_return_bank8 #(parameter integer DW=128, parameter integer
  wire [15:0] hit;
  reg [7:0] prepared_mask;
  reg [7:0] prepared_parity;
- reg bad,complete,prepare_complete;
+ reg bad,complete;reg [7:0] prepare_complete;
  integer j,idx,s,p;
  always @*begin
   complete=1;
@@ -32,7 +32,7 @@ module dsfd_vm_static_return_bank8 #(parameter integer DW=128, parameter integer
 `ifdef OT_VM_RETURN_BANK8_MUT_LOCAL
    if(p==LANE)
 `endif
-   if(!peer_token[5*p+4] || peer_token[5*p+1+:3]!=release_group || !peer_token[5*p])complete=0;
+   if(!peer_token[12*p+11] || peer_token[12*p+8+:3]!=release_group || peer_token[12*p+:8]!=8'hff)complete=0;
   end
   if(prepared_mask!=release_mask)complete=0;
   used=0;bad=0;
@@ -45,9 +45,9 @@ module dsfd_vm_static_return_bank8 #(parameter integer DW=128, parameter integer
    if(occupied[idx] || used[idx])bad=1;
    used[idx]=1;
   end
-  prepare_complete=1;
+  prepare_complete=8'hff;
   for(s=0;s<8;s=s+1)if(prepare_mask[s])begin
-   if(!(prepare_group[0] ? prepare_ok[8+s] : prepare_ok[s]))prepare_complete=0;
+   prepare_complete[s]=prepare_group[0] ? prepare_ok[8+s] : prepare_ok[s];
   end
  end
  always @(posedge ck or negedge rn)begin
@@ -67,7 +67,7 @@ module dsfd_vm_static_return_bank8 #(parameter integer DW=128, parameter integer
  generate for(row=0;row<8;row=row+1)begin:row_output
   always @(posedge ck)begin
    if(prepare_v && prepare_mask[row])prepared_parity[row]<=prepare_group[0];
-   if(completion_token[4] && prepared_mask[row])
+   if(completion_token[11] && prepared_mask[row])
     o_data[DW*row+:DW]<=data[8*prepared_parity[row]+row];
   end
  end endgenerate

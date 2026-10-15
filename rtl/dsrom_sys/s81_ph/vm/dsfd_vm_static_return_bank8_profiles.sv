@@ -6,8 +6,8 @@ module dsfd_vm_static_return_bank8_l0(
  input wire [7:0] i_v,input wire [63:0] i_tag,input wire [1023:0] i_data,
  input wire release_v,input wire [2:0] release_group,input wire [7:0] release_mask,
  input wire prepare_v,input wire [2:0] prepare_group,input wire [7:0] prepare_mask,
- input wire [19:0] peer_token,
- output wire [4:0] completion_token,
+ input wire [47:0] peer_token,
+ output wire [11:0] completion_token,
  output wire [7:0] o_v,output wire [1023:0] o_data,
  output wire [2:0] o_group,output wire fault
 );
@@ -35,8 +35,8 @@ module dsfd_vm_static_return_bank8_l1(
  input wire [7:0] i_v,input wire [63:0] i_tag,input wire [1023:0] i_data,
  input wire release_v,input wire [2:0] release_group,input wire [7:0] release_mask,
  input wire prepare_v,input wire [2:0] prepare_group,input wire [7:0] prepare_mask,
- input wire [19:0] peer_token,
- output wire [4:0] completion_token,
+ input wire [47:0] peer_token,
+ output wire [11:0] completion_token,
  output wire [7:0] o_v,output wire [1023:0] o_data,
  output wire [2:0] o_group,output wire fault
 );
@@ -64,8 +64,8 @@ module dsfd_vm_static_return_bank8_l2(
  input wire [7:0] i_v,input wire [63:0] i_tag,input wire [1023:0] i_data,
  input wire release_v,input wire [2:0] release_group,input wire [7:0] release_mask,
  input wire prepare_v,input wire [2:0] prepare_group,input wire [7:0] prepare_mask,
- input wire [19:0] peer_token,
- output wire [4:0] completion_token,
+ input wire [47:0] peer_token,
+ output wire [11:0] completion_token,
  output wire [7:0] o_v,output wire [1023:0] o_data,
  output wire [2:0] o_group,output wire fault
 );
@@ -93,8 +93,8 @@ module dsfd_vm_static_return_bank8_l3(
  input wire [7:0] i_v,input wire [63:0] i_tag,input wire [1023:0] i_data,
  input wire release_v,input wire [2:0] release_group,input wire [7:0] release_mask,
  input wire prepare_v,input wire [2:0] prepare_group,input wire [7:0] prepare_mask,
- input wire [19:0] peer_token,
- output wire [4:0] completion_token,
+ input wire [47:0] peer_token,
+ output wire [11:0] completion_token,
  output wire [7:0] o_v,output wire [1023:0] o_data,
  output wire [2:0] o_group,output wire fault
 );
