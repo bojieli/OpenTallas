@@ -24,5 +24,22 @@
     "Rearrange fields/strip and independent wider DVM head rows",
     "Recover real central-spine or height area using complete current source hardware inventory",
     "Present explicit system trade if physical reticle/budget cannot be met; no silent waiver"
-  ]
+  ],
+  "structural_46_column_candidate": {
+    "scope": "Topology exploration only; hardware homes and connections not yet assigned",
+    "mainfield_columns": 46,
+    "rows": 16,
+    "mainfield_tile_capacity": 736,
+    "required_rehomed_tiles": 32,
+    "new_pitch_um": 554.688,
+    "die_width_delta_um": 445.824,
+    "conditional_die_area_mm2": 852.278686,
+    "rehomed_tile_outline_area_mm2": 22.240206,
+    "additional_hardware": [
+      "DVM stations and heads, real memory strips",
+      "Clock/reset entries and compiler-consistent relay channels",
+      "Actual reduction tree cohort wiring preserving order"
+    ],
+    "qualification": false
+  }
 }
