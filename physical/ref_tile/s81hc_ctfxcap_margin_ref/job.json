@@ -1,13 +1,13 @@
 {
- "name": "s81hc_ctfxcap_margin_ref-margin1-COMMIT",
+ "name": "s81hc_ctfxcap_margin_ref-native-margin-granted1-COMMIT",
  "block": "ot_s81_hc_ctfx_cap",
  "ref_tile": true,
- "owner": "Codex:S-NORM",
+ "owner": "Codex:S81-NORM-PHYSICAL",
  "purpose": "Production serial HC owns every local broadcast register in its physical strip; no region-wrapper flops.",
  "threads": 8,
  "peak_ram_gb": 24,
  "source": {
-  "branch": "claude/s81-norm-tree-1014",
+  "branch": "codex/s81-norm-physical-1015",
   "commit": "COMMIT"
  },
  "stages": {
@@ -93,7 +93,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/s81hc_ctfxcap_margin_ref/s81hc_ctfxcap_margin_ref-margin1-COMMIT"
+   "to": "results/rtl/ref_tile/s81hc_ctfxcap_margin_ref/s81hc_ctfxcap_margin_ref-native-margin-granted1-COMMIT"
   }
  ],
  "cycles_added": 0,
@@ -107,6 +107,6 @@
  "hold_merge": "Actual canonical die capture slot/pin/peer geometry and native TTFFDRC0 qualification pending",
  "reroute_reason": {
   "kind": "slot_change",
-  "slot_change_request": "Proposed51.84um capture height +25.92um percth;S-DIE actual parent/source/hop integration pending. No publication/adoption before grant."
+  "slot_change_request": "MIX4 2026-10-15 explicit independent CAP leaf route grant after actual CTS/native pin audit; body576.72x51.84, v21 candidate exactpins. Parent has81/1 actualstation overlaps and is NOTadopted; native clocks/pin/PG/TTFFDRC stillrequired."
  }
 }

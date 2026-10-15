@@ -66,9 +66,9 @@
   "macro_halo_um": 5.4
  },
  "job": {
-  "owner": "Codex:S-NORM",
-  "branch": "claude/s81-norm-tree-1014",
-  "tag": "margin1",
+  "owner": "Codex:S81-NORM-PHYSICAL",
+  "branch": "codex/s81-norm-physical-1015",
+  "tag": "native-margin-granted1",
   "purpose": "Production serial HC owns every local broadcast register in its physical strip; no region-wrapper flops.",
   "no_bench_reason": "bit-exactness is gated on the HC slab composition bench (tools/s81_suhc/hc_gate.py NG256 HIER=2 m0 PASS + m1 FAIL, NG64 m0 PASS + m3 FAIL) at the kit commit; the tile alone has no golden",
   "views_to": "physical/ref_tile/s81hc_ctfxcap_margin_ref/views",
@@ -101,7 +101,7 @@
   "hold_merge": "Actual canonical die capture slot/pin/peer geometry and native TTFFDRC0 qualification pending",
   "reroute_reason": {
    "kind": "slot_change",
-   "slot_change_request": "Proposed51.84um capture height +25.92um percth;S-DIE actual parent/source/hop integration pending. No publication/adoption before grant."
+   "slot_change_request": "MIX4 2026-10-15 explicit independent CAP leaf route grant after actual CTS/native pin audit; body576.72x51.84, v21 candidate exactpins. Parent has81/1 actualstation overlaps and is NOTadopted; native clocks/pin/PG/TTFFDRC stillrequired."
   }
  },
  "params": {},
@@ -124,5 +124,5 @@
   "file": "physical/s81_die_pins/v21_hc_capture_margin_candidate/ot_s81_hc_ctfx_cap.json",
   "source": "proposed structural height margin, actual die parent integration pending"
  },
- "slot_change_request": "Proposed51.84um capture height +25.92um percth;S-DIE actual parent/source/hop integration pending. No publication/adoption before grant."
+ "slot_change_request": "MIX4 2026-10-15 explicit independent CAP leaf route grant after actual CTS/native pin audit; body576.72x51.84, v21 candidate exactpins. Parent has81/1 actualstation overlaps and is NOTadopted; native clocks/pin/PG/TTFFDRC stillrequired."
 }
