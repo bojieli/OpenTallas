@@ -9,7 +9,7 @@
       "module": "dsfd_sp_su_h"
     },
     "cp_parent": {
-      "commit": "ee2f297d2f1b282bd325b50e5fb6b85fcda2307c",
+      "commit": "4d138828a630b478b1135a46adc64e4181c50445",
       "path": "rtl/dsrom_sys/s81_suhc/ot_s81_su_cp.sv",
       "sha256": "49946dc3086d60686045d469dc1bb37387eb9e89f31ae2ee8e02dc846196d5c5",
       "module": "ot_s81_su_cp_h"
@@ -7948,7 +7948,7 @@
       "module": "ot_s81_su_cp_ctl",
       "count": 1,
       "source": {
-        "commit": "ee2f297d2f1b282bd325b50e5fb6b85fcda2307c",
+        "commit": "4d138828a630b478b1135a46adc64e4181c50445",
         "path": "rtl/dsrom_sys/s81_suhc/ot_s81_su_cp.sv",
         "sha256": "49946dc3086d60686045d469dc1bb37387eb9e89f31ae2ee8e02dc846196d5c5",
         "module": "ot_s81_su_cp_ctl"
@@ -7972,7 +7972,7 @@
       "module": "ot_s81_su_cp_lane",
       "count": 4,
       "source": {
-        "commit": "ee2f297d2f1b282bd325b50e5fb6b85fcda2307c",
+        "commit": "4d138828a630b478b1135a46adc64e4181c50445",
         "path": "rtl/dsrom_sys/s81_suhc/ot_s81_su_cp.sv",
         "sha256": "49946dc3086d60686045d469dc1bb37387eb9e89f31ae2ee8e02dc846196d5c5",
         "module": "ot_s81_su_cp_lane"
@@ -7996,7 +7996,7 @@
       "module": "ot_sram_1r1w_128x256_m1_r2c2",
       "count": 2,
       "source": {
-        "commit": "ee2f297d2f1b282bd325b50e5fb6b85fcda2307c",
+        "commit": "4d138828a630b478b1135a46adc64e4181c50445",
         "path": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v",
         "sha256": "d9801653d16576f40306c1fb1d01928e88e7371a3897b616e31d3e3df917cb2d",
         "module": "ot_sram_1r1w_128x256_m1_r2c2"
@@ -8032,9 +8032,9 @@
       "module": "ot_s81_su_cp_vm",
       "count": 1,
       "source": {
-        "commit": "ee2f297d2f1b282bd325b50e5fb6b85fcda2307c",
+        "commit": "4d138828a630b478b1135a46adc64e4181c50445",
         "path": "rtl/dsrom_sys/s81_suhc/ot_s81_su_cp_vm.sv",
-        "sha256": "5b0ebcf9a54a72b2de29a4308630926e4385d1bbff730c9ffbe305a280db2db5",
+        "sha256": "898f906496359644a7eddbd83940246cd8142a7d294d2fab19c0074b95ce7861",
         "module": "ot_s81_su_cp_vm"
       },
       "proposed_home": "CP VM descriptor/capture/row-assembly owner",

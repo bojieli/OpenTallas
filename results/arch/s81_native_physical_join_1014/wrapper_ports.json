@@ -14,8 +14,8 @@
         "E4M3": 1
       },
       "port_bits": {
-        "clk": 1,
-        "rst_in": 1,
+        "ck": 1,
+        "rst": 1,
         "i_v": 1,
         "i_x": 1024,
         "i_ob": 14,
@@ -25,6 +25,19 @@
         "o_m": 16,
         "o_d": 512,
         "o_fault": 1
+      },
+      "core_to_wrapper_pin": {
+        "clk": "ck",
+        "rst_in": "rst",
+        "i_v": "i_v",
+        "i_x": "i_x",
+        "i_ob": "i_ob",
+        "i_block": "i_block",
+        "o_v": "o_v",
+        "o_a": "o_a",
+        "o_m": "o_m",
+        "o_d": "o_d",
+        "o_fault": "o_fault"
       },
       "verdict": "PASS"
     },
@@ -35,8 +48,8 @@
         "E4M3": 0
       },
       "port_bits": {
-        "clk": 1,
-        "rst_in": 1,
+        "ck": 1,
+        "rst": 1,
         "i_v": 1,
         "i_x": 1024,
         "i_ob": 14,
@@ -47,6 +60,19 @@
         "o_d": 512,
         "o_fault": 1
       },
+      "core_to_wrapper_pin": {
+        "clk": "ck",
+        "rst_in": "rst",
+        "i_v": "i_v",
+        "i_x": "i_x",
+        "i_ob": "i_ob",
+        "i_block": "i_block",
+        "o_v": "o_v",
+        "o_a": "o_a",
+        "o_m": "o_m",
+        "o_d": "o_d",
+        "o_fault": "o_fault"
+      },
       "verdict": "PASS"
     },
     {
@@ -54,8 +80,8 @@
       "core": "ot_s81_su_cn_norm_write",
       "parameters": {},
       "port_bits": {
-        "clk": 1,
-        "rst_in": 1,
+        "ck": 1,
+        "rst": 1,
         "i_v": 1,
         "i_x": 512,
         "i_ob": 14,
@@ -63,6 +89,17 @@
         "o_v": 1,
         "o_a": 14,
         "o_d": 512
+      },
+      "core_to_wrapper_pin": {
+        "clk": "ck",
+        "rst_in": "rst",
+        "i_v": "i_v",
+        "i_x": "i_x",
+        "i_ob": "i_ob",
+        "i_block": "i_block",
+        "o_v": "o_v",
+        "o_a": "o_a",
+        "o_d": "o_d"
       },
       "verdict": "PASS"
     },
@@ -74,8 +111,8 @@
         "LA": 4
       },
       "port_bits": {
-        "clk": 1,
-        "rst_in": 1,
+        "ck": 1,
+        "rst": 1,
         "i_go": 1,
         "p_v": 8,
         "p_p": 8,
@@ -84,6 +121,18 @@
         "s_p": 1,
         "s_d": 32,
         "o_f": 1
+      },
+      "core_to_wrapper_pin": {
+        "clk": "ck",
+        "rst_in": "rst",
+        "i_go": "i_go",
+        "p_v": "p_v",
+        "p_p": "p_p",
+        "p_d": "p_d",
+        "s_v": "s_v",
+        "s_p": "s_p",
+        "s_d": "s_d",
+        "o_f": "o_f"
       },
       "verdict": "PASS"
     },
@@ -98,8 +147,8 @@
         "LA": 4
       },
       "port_bits": {
-        "clk": 1,
-        "rst_in": 1,
+        "ck": 1,
+        "rst": 1,
         "i_go": 1,
         "i_eps": 32,
         "p_v": 2,
@@ -109,6 +158,19 @@
         "r_v": 1,
         "r_d": 32,
         "o_f": 1
+      },
+      "core_to_wrapper_pin": {
+        "clk": "ck",
+        "rst_in": "rst",
+        "i_go": "i_go",
+        "i_eps": "i_eps",
+        "p_v": "p_v",
+        "p_p": "p_p",
+        "p_d": "p_d",
+        "p_f": "p_f",
+        "r_v": "r_v",
+        "r_d": "r_d",
+        "o_f": "o_f"
       },
       "verdict": "PASS"
     }

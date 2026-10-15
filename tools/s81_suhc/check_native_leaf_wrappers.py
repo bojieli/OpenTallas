@@ -50,10 +50,10 @@ def check(rev):
             cb=integer(cw,env)+1 if cw is not None else 1
             wb=integer(ww,{})+1 if ww is not None else 1
             assert cd==wd and cb==wb,(top,name,cd,cb,wd,wb)
-            counts[name]=cb
+            counts[wp]=cb
         assert pins['ck']==('input',None) and pins['rst']==('input',None),top
         assert not any(token in T.strip_comments(body) for token in ['always','reg ','logic ']),top
-        report.append(dict(top=top,core=core,parameters=env,port_bits=counts,verdict='PASS'))
+        report.append(dict(top=top,core=core,parameters=env,port_bits=counts,core_to_wrapper_pin=connected,verdict='PASS'))
     return dict(schema='opentallas.s81.native-leaf-wrappers.v1',source_revision=rev,
                 source_sha256={p:sha(blob(rev,p)) for p in paths},wrappers=report,
                 qualification_scope='named port, width, scalar clock/reset, and no added state only')

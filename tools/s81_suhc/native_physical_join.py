@@ -171,7 +171,7 @@ def build(cn_rev,cp_rev):
 
 def main():
     ap=argparse.ArgumentParser(description=__doc__)
-    ap.add_argument('--cn-source',default='5f2fa2ea2');ap.add_argument('--cp-source',default='ee2f297d2')
+    ap.add_argument('--cn-source',default='5f2fa2ea2');ap.add_argument('--cp-source',default='4d138828a')
     ap.add_argument('--out',type=Path,required=True);ap.add_argument('--strict',action='store_true');a=ap.parse_args()
     d=build(a.cn_source,a.cp_source);a.out.parent.mkdir(parents=True,exist_ok=True)
     a.out.write_text(json.dumps(d,indent=2)+'\n')
