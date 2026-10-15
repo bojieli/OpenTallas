@@ -1,0 +1,112 @@
+{
+ "name": "hbm_su_static_reduce_1015",
+ "top": "ot_hbm_su_reduce_static",
+ "kind": "tile",
+ "sources": [
+  "rtl/hbm_accel/generic/adapters/static_su/reduction/ot_hbm_su_reduce_static.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "params": {
+  "AW": 10
+ },
+ "pins": {
+  "N": [
+   "clk",
+   "rst_n"
+  ],
+  "W": [
+   "cmd_valid",
+   "cmd_op",
+   "cmd_a",
+   "cmd_b",
+   "cmd_dst",
+   "operand_fp32",
+   "cmd_tag"
+  ],
+  "E": [
+   "scalar_valid",
+   "scalar_tag",
+   "scalar_fp32",
+   "scalar_bf16",
+   "fault"
+  ]
+ },
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 2
+  }
+ ],
+ "layer_cap": "M5",
+ "route": {
+  "pd": 0.5,
+  "threads": 4,
+  "peak_ram_gb": 24,
+  "period_ps": 1111.111111,
+  "pin_h": "M4",
+  "pin_v": "M3 M5",
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "orfs_vars": {
+  "OT_MEG_DEPTH_UM": "2.4"
+ },
+ "recipe": 2,
+ "job": {
+  "owner": "Claude:H-ELEM-B",
+  "branch": "claude/hbm-elemb-su-1015",
+  "tag": "r0",
+  "purpose": "Static SU reducer (one per quarter core of ot_hbm_su_static_top): fixed compiler commands LOAD/ADD_EXT/ADD_TREE/MAX_EXT/MAX_TREE/EXPORT, two coherent 128x256 scratch SRAMs (A/B reads), LAT6 FP32 adder, commit issue+7, II 1; exact component proof c3973 (80 scalars, H16 T128/T640 + global csum, mutants FAIL). Serial 1111 ps clock. First route.",
+  "views_to": "physical/ref_tile/hbm_su_static_reduce_1015/views",
+  "record_to": "results/arch/hbm_su_f2_static_1014/reduction/physical",
+  "benches": [
+   {
+    "name": "reduce_suite",
+    "cmd": "bash tools/hbm_static/su_reduce_run.sh {RUN}/bench/red",
+    "expect": "pass",
+    "pass_regex": "SU_REDUCE SUITE PASS",
+    "min_count_regex": "scalars=(\\d+)",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "reduce_mutant_phase",
+    "cmd": "bash tools/hbm_static/su_reduce_run.sh {RUN}/bench/redm > /dev/null && {RUN}/bench/redm/obj/Vot_hbm_su_reduce_static {RUN}/bench/redm/base phase",
+    "expect": "fail",
+    "fail_regex": "FAIL",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ]
+ },
+ "outline": {
+  "w": 216.0,
+  "h": 151.2
+ },
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ }
+}
