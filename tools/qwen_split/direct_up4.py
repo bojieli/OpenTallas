@@ -6,10 +6,52 @@ partition wires: the netlist and LEF writers join them onto real RTL port bits.
 from pathlib import Path
 import copy
 import os
+import hashlib
+import json
 
-MASTER = 'ot_qfd_band_upper'
+ROOT = Path(__file__).resolve().parents[2]
+MASTER = 'qfd_band_upper_tp8'
+SOURCE = 'rtl/qwen_split/qfd_band_upper_tp8.sv'
+IMPLEMENTATION = 'ot_qfd_band_upper'
+IMPLEMENTATION_SOURCE = 'rtl/qwen_sys/lane_band_20261008/ot_qfd_band_lanes.sv'
+IMPLEMENTATION_SPEC = 'physical/ref_tile/qfd_tt_up4_leafr/spec.json'
 PARAMS = dict(NL=4, NB=3, LNK=0, DLY=1, TREE_LAT=7, TCUT=7, LG=12, RPIN=1)
 VIEW = 'physical/ref_tile/qfd_tt_up4_tp8/views/ot_qfd_band_upper'
+
+
+def source_contract(wrapper=None, root=None):
+    """Prove the parameter-free source names the existing exact TP8 implementation."""
+    from die_port_bind import parse_modules, parse_die
+    from qwen_split.source_pin_plan import rtl_ports
+    root = Path(root or ROOT)
+    wrapper = Path(wrapper or root / SOURCE)
+    mods = [m for m in parse_modules(wrapper.read_text(), str(wrapper)) if m.name == MASTER]
+    if len(mods) != 1 or mods[0].params:
+        raise ValueError('TP8 source wrapper must have no elaboration parameters')
+    insts = parse_die(wrapper, MASTER)[3]
+    fixed = dict(PARAMS, MUT=0)
+    if len(insts) != 1 or insts[0][0] != IMPLEMENTATION or insts[0][2] != {k:str(v) for k,v in fixed.items()}:
+        raise ValueError('TP8 source wrapper does not fix the exact implementation parameters')
+    original = next(m for m in parse_modules((root/IMPLEMENTATION_SOURCE).read_text(), IMPLEMENTATION_SOURCE)
+                    if m.name == IMPLEMENTATION)
+    widths = {p:(original.width(p, original.env(fixed)), original.ports[p][0]) for p in original.order}
+    actual = rtl_ports(wrapper, MASTER)
+    if actual != widths:
+        raise ValueError('TP8 source wrapper differs from specialized implementation ABI')
+    if insts[0][3] != {p:p for p in actual}:
+        raise ValueError('TP8 source wrapper must preserve every numeric port identity')
+    spec = json.loads((root/IMPLEMENTATION_SPEC).read_text())
+    if spec['params'] != PARAMS:
+        raise ValueError('TP8 source wrapper differs from native implementation recipe')
+    return dict(master=MASTER, source=SOURCE, implementation_master=IMPLEMENTATION,
+                source_sha256=hashlib.sha256(wrapper.read_bytes()).hexdigest(),
+                implementation_source=IMPLEMENTATION_SOURCE,
+                implementation_source_sha256=hashlib.sha256((root/IMPLEMENTATION_SOURCE).read_bytes()).hexdigest(),
+                implementation_params=fixed, implementation_spec=IMPLEMENTATION_SPEC,
+                implementation_spec_sha256=hashlib.sha256((root/IMPLEMENTATION_SPEC).read_bytes()).hexdigest(),
+                source_ports={p:dict(bits=w,direction=d) for p,(w,d) in widths.items()},
+                parameter_equality=True, wrapper_parameters={}, added_logic=False,
+                physical_view=VIEW, new_closure_claim=False)
 
 
 def joins():
@@ -30,6 +72,7 @@ def joins():
 
 
 def apply(v, m):
+    contract=source_contract()
     by={i.name:i for i in m['insts']}
     parent=by['tt_up4_0']
     proposal=None
@@ -118,12 +161,14 @@ def apply(v, m):
     j=m.setdefault('port_join',{})
     for name,parts in joins().items():
         j.setdefault(name,{}).update(parts)
-    m.setdefault('master_params',{})[MASTER]=dict(PARAMS)
+    # Plain macro netlists use this parameter-free specialized source.
+    # The implementation parameters live inside its actual RTL, never a sidecar.
+    m.setdefault('master_params',{}).pop(MASTER,None)
     # Equal path ages are a real compiler contract, not an assumed fanout.
     for b in range(3):
         m.setdefault('relay_equal_groups',{})[f'up4_pword_{b}']=[f'pword_{b}_l{l}' for l in range(4)]+[f'pword_{b}_v{l}' for l in range(4)]
     m.setdefault('relay_equal_groups',{})['up4_return']=[f'tt_ty_l{l}' for l in range(4)]+['tt_ty_uv']
-    m['direct_up4']=dict(master=MASTER,view=VIEW,params=PARAMS,
+    m['direct_up4']=dict(master=MASTER,view=VIEW,params=PARAMS, source_contract=contract,
         leaves=[dict(name=i.name,x=i.x,y=i.y,w=i.w,h=i.h) for i in leaves],
         added_data_edges=0,retired_parent_pin_edges=2,
         control_stations=[dict(name=a.name,x=a.x,y=a.y,master=a.master) for a in anchors],
@@ -168,7 +213,23 @@ def install_leaf_master(M, model, Master, view):
     w,h,P=view
     if (w,h)!=(64.8,205.2):
         raise ValueError(f'upper-tree leaf changed outline: {w}/{h}')
-    q=Master(MASTER,w,h,5,'Direct real CLOSED four-lane upper-tree leaf; independent clock entry')
+    contract=source_contract()
+    required={p if v['bits']==1 else f'{p}[{b}]'
+              for p,v in contract['source_ports'].items() for b in range(v['bits'])}
+    missing=required-set(P)
+    unexpected=set(P)-required-{'VDD','VSS'}
+    if missing or unexpected:
+        raise ValueError(f'TP8 physical alias differs from actual numeric source pins: missing {sorted(missing)[:5]}, unexpected {sorted(unexpected)[:5]}')
+    model['direct_up4']['physical_alias']=dict(
+        master=MASTER, implementation_master=IMPLEMENTATION, view=VIEW,
+        pin_count=len(required), numeric_pin_equality=True, parameter_equality=True,
+        source_contract=contract,
+        view_pin_sha256=hashlib.sha256(json.dumps({p:P[p] for p in sorted(required)},sort_keys=True).encode()).hexdigest(),
+        published_view_files_sha256={p.name:hashlib.sha256(p.read_bytes()).hexdigest()
+                                    for p in sorted((ROOT/VIEW).glob('*')) if p.suffix in ('.lef','.lib')},
+        new_closure_claim=False,
+        scope='explicit identity alias of existing view; numeric pins and fixed parameters equal, source/view bytes unchanged')
+    q=Master(MASTER,w,h,5,'Explicit TP8 source alias of existing native four-lane view; independent clock entry')
     parts={p:(p,list(range(n))) for p,n in [('pw',384),('pw_v',3),('lf',3),('tt_ty',384),('clk',1),('rst_n',1),('fault',1)]}
     for p in ('pw','pw_v','lf'):
         parts.pop(p)

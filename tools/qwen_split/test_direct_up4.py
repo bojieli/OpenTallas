@@ -33,7 +33,9 @@ class DirectUpperWires(unittest.TestCase):
                 self.assertEqual(e[1:],[(f'tt_up4_leaf{l}','clk') for l in range(4)]+[('up4_sel_station','ck')])
         self.assertTrue(all(len(e)==2 for b,c,n,e in m['buses'] if b.startswith(('pword_','tt_lf'))))
         self.assertEqual(r['added_data_edges'],0)
-        self.assertEqual(m['master_params'][U.MASTER]['RPIN'],1)
+        self.assertNotIn(U.MASTER,m['master_params'])
+        self.assertTrue(r['source_contract']['parameter_equality'])
+        self.assertEqual(r['source_contract']['implementation_params']['RPIN'],1)
         fault=[e for b,c,n,e in m['buses'] if b.startswith('o4_upf_l')]
         self.assertEqual(fault, [[(f'tt_up4_leaf{l}','fault'),('tt_ctlm',f'uf_l{l}')] for l in range(4)])
 
@@ -97,6 +99,63 @@ class DirectUpperWires(unittest.TestCase):
         m=model();m['buses']=[b for b in m['buses'] if b[0]!='pword_2']
         with self.assertRaisesRegex(ValueError,'missing upper parent buses'):
             U.apply(None,m)
+
+
+    def test_specialized_source_has_exact_native_profile_and_pin_abi(self):
+        import re
+        c=U.source_contract()
+        self.assertEqual(U.MASTER,'qfd_band_upper_tp8')
+        expected={'clk':1,'rst_n':1,'pw':384,'pw_v':3,'lf':3,'sel_e':13,
+                  'tv_e':13,'tt_ty':384,'tt_use':1,'tt_v':1,'fault':1}
+        self.assertEqual({p:v['bits'] for p,v in c['source_ports'].items()},expected)
+        self.assertEqual(c['implementation_params'],dict(NL=4,NB=3,LNK=0,DLY=1,TREE_LAT=7,TCUT=7,LG=12,RPIN=1,MUT=0))
+        self.assertEqual(c['wrapper_parameters'],{})
+        self.assertFalse(c['new_closure_claim'])
+        lef=U.ROOT/U.VIEW/'ot_qfd_band_upper.lef'
+        pins=set(re.findall(r'^  PIN (\S+)',lef.read_text(),re.M))-{'VDD','VSS'}
+        want={p if n==1 else f'{p}[{b}]' for p,n in expected.items() for b in range(n)}
+        self.assertEqual(pins,want)
+        self.assertEqual(len(pins),805)
+
+    def test_source_parameter_width_and_connection_mutants_are_refused(self):
+        import tempfile
+        text=(U.ROOT/U.SOURCE).read_text()
+        for before,after in [('.RPIN(1)','.RPIN(0)'),('[383:0] pw','[384:0] pw'),
+                             ('.pw(pw)','.pw(tt_ty)'),('.DLY(1)','.DLY(2)')]:
+            with self.subTest(mutant=before),tempfile.TemporaryDirectory() as d:
+                p=Path(d)/'mutant.sv';p.write_text(text.replace(before,after))
+                with self.assertRaises(ValueError):U.source_contract(p)
+
+    def test_physical_alias_reuses_every_original_numeric_pin(self):
+        import hashlib
+        class Master:
+            def __init__(self,name,w,h,*args):
+                self.name,self.w,self.h=name,w,h
+                self.ports={};self.order=[]
+            def face(self,p,n,f,L,z,*args):
+                self.ports[p]=('face',n,f,L,z,1)
+                self.order.append(p)
+        c=U.source_contract()
+        pins={p if v['bits']==1 else f'{p}[{b}]':('W','M4',.1+len(p)+b*.048)
+              for p,v in c['source_ports'].items() for b in range(v['bits'])}
+        before={p.name:hashlib.sha256(p.read_bytes()).hexdigest()
+                for p in (U.ROOT/U.VIEW).glob('*') if p.suffix in ('.lef','.lib')}
+        m=model();U.apply(None,m);masters={}
+        U.install_leaf_master(masters,m,Master,(64.8,205.2,pins))
+        receipt=m['direct_up4']['physical_alias']
+        self.assertTrue(receipt['numeric_pin_equality'])
+        self.assertEqual(receipt['published_view_files_sha256'],before)
+        self.assertEqual(receipt['pin_count'],805)
+        self.assertFalse(receipt['new_closure_claim'])
+        q=masters[U.MASTER]
+        for alias,(real,bits) in U.joins()[U.MASTER].items():
+            names=[real if c['source_ports'][real]['bits']==1 else f'{real}[{b}]' for b in bits]
+            self.assertEqual(q.ports[alias][4],[pins[n][2] for n in names])
+        self.assertEqual(before,{p.name:hashlib.sha256(p.read_bytes()).hexdigest()
+                for p in (U.ROOT/U.VIEW).glob('*') if p.suffix in ('.lef','.lib')})
+        del pins['pw[1]']
+        with self.assertRaisesRegex(ValueError,'numeric source pins'):
+            U.install_leaf_master({},m,Master,(64.8,205.2,pins))
 
 
 if __name__=='__main__':unittest.main()
