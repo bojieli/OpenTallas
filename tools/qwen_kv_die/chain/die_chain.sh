@@ -23,8 +23,16 @@ if [ "$DIE" = kv ]; then
   [ -f "$C/qkd_kv_relays.sv" ] && BIND_ARGS+=(--relay-rtl "$C/qkd_kv_relays.sv")
   [ -f "$R/expand.json" ] && BIND_ARGS+=(--expanded "$R/expand.json")
   python3 "$SRC/tools/qwen_kv_die/die_port_bind_kv.py" "${BIND_ARGS[@]}" > "$R/bind_launch.log" 2>&1 || {
-    say "NATIVE PORT BIND FAIL ($R/bind_launch.log): no die job launched"
-    exit 1
+    # OT_BIND_DIAGNOSTIC=1 (kvsys lead r5 2026-10-14, same convention as the S81 old-source pathfinding chains): the
+    # strict audit still runs and its FAIL is stamped on every STATUS line; the run is die-timing PATHFINDING only,
+    # never a die result, never a contract release, never native evidence. Default stays: refuse.
+    if [ "${OT_BIND_DIAGNOSTIC:-0}" = 1 ]; then
+      say "NATIVE PORT BIND FAIL ($R/bind_launch.log): DIAGNOSTIC PATHFINDING ONLY -- NOT A DIE RESULT, NOT RELEASE"
+      echo "PORT_BIND_FAIL_DIAGNOSTIC_ONLY" > "$R/NOT_A_DIE_RESULT"
+    else
+      say "NATIVE PORT BIND FAIL ($R/bind_launch.log): no die job launched"
+      exit 1
+    fi
   }
 fi
 # OT_FROM=grt resumes on a case whose real case + PDN already passed (floorplan_pdn.odb present; logs re-checked)
