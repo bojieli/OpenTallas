@@ -3,17 +3,21 @@ module tb_s81_pq_command_endpoint;
 `ifndef ENDPOINT_MUT
 `define ENDPOINT_MUT 0
 `endif
+`ifndef ENDPOINT_PHW
+`define ENDPOINT_PHW 9
+`endif
+ localparam PHW=`ENDPOINT_PHW,NATIVE_BITS=81+PHW;
  reg ck=0,rst_n=0;always #5 ck=~ck;
  reg pw_v=0,job_v=0;reg[6:0]pw_a=0;reg[27:0]pw_d=0;reg[35:0]desc_pw=0;
  wire[12:0]cv;wire[1091:0]cd;wire[8:0]done;wire[1:0]st;
- wire[91:0]f_iss;reg[38:0]t_iss=3;wire sealed,fault,busy,jdone;wire[1:0]phase;
+ wire[NATIVE_BITS+1:0]f_iss;reg[38:0]t_iss=3;wire sealed,fault,busy,jdone;wire[1:0]phase;
  wire[12:0]dv={12'd0,done[8]};wire[103:0]dt={96'd0,done[7:0]};
  ot_s81_fixed_issue #(.STAGE(7),.ENG_PRESENT(1))issuer(
  .clk(ck),.rst_n(rst_n),.pw_v(pw_v),.pw_a(pw_a),.pw_d(pw_d),.prog_len(8'd128),
  .job_v(job_v),.job_user(10'd37),.job_pos(21'd1048575),.job_tok(21'd21946),
  .busy(busy),.job_done(jdone),.cmd_v(cv),.cmd_d(cd),.engine_available({12'd0,st[1]}),
  .dn_v(dv),.dn_tag(dt),.fault(fault),.phase(phase));
- ot_s81_pq_command_endpoint #(.MUT(`ENDPOINT_MUT))endpoint(
+ ot_s81_pq_command_endpoint #(.MUT(`ENDPOINT_MUT),.PHW(PHW))endpoint(
  .ck(ck),.rst_n(rst_n),.c_cmd({cv[0],cd[83:0]}),.f_desc_pw(desc_pw),.t_iss(t_iss),
  .f_iss(f_iss),.c_done(done),.c_st(st),.image_sealed(sealed));
  reg[34:0]program_words[0:385];reg[35:0]descs[0:21];
@@ -21,7 +25,7 @@ module tb_s81_pq_command_endpoint;
  reg fault_seen=0;
  integer cmd_tick=-1,expected_done=-1,expected_go=-1;
  integer pq_age[0:3];integer next_native_tag=0,z;reg[7:0]due_tags[0:3999];reg due_valid[0:3999];
- reg[7:0]expected_tag;reg[89:0]expected_fields;
+ reg[7:0]expected_tag;reg[NATIVE_BITS-1:0]expected_fields;
  initial begin
   if($value$plusargs("mode=%d",mode))begin end
   $readmemh("program.hex",program_words);$readmemh("descriptor.hex",descs);$readmemh("fields.hex",expected_fields_mem);
@@ -43,7 +47,7 @@ module tb_s81_pq_command_endpoint;
   if((mode==0&&(fault||st[0]))||(mode!=0&&(!fault||!st[0])))$fatal(1,"fault expectation mode%0d",mode);
   $display("PASS actual PW issuer->PQ endpoint mode%0d commands%0d GO%0d done%0d END%0d fixedGO1 fixedDone12 fourtags",mode,commands,gos,completions,ends);$finish;
  end
- reg[89:0]expected_fields_mem[0:0];
+ reg[NATIVE_BITS-1:0]expected_fields_mem[0:0];
  // Declared PQ status boundary model, not arithmetic/core timing evidence.
  // It is driven by the true hardware-produced f_iss GO, never a bench f_iss.
  always @(posedge ck)begin
@@ -67,7 +71,7 @@ module tb_s81_pq_command_endpoint;
    cmd_tick=tick;expected_go=tick+1;expected_done=tick+13;expected_tag={cd[83],cd[6:0]};due_valid[expected_done]=1;due_tags[expected_done]=expected_tag;commands=commands+1;
   end
   if(f_iss[0])begin
-   if(tick!=expected_go||f_iss[90:1]!=expected_fields)$fatal(1,"actual descriptor/GO mismatch");gos=gos+1;
+   if(tick!=expected_go||f_iss[NATIVE_BITS:1]!=expected_fields)$fatal(1,"actual descriptor/GO mismatch");gos=gos+1;
   end
   if(done[8])begin
    if(!due_valid[tick]||done[7:0]!=due_tags[tick])$fatal(1,"fixed completion/tag moved");completions=completions+1;

@@ -7,15 +7,16 @@
 // Page7 address0: {seal1,reserved16,length8}. BEGIN revokes the old image;
 // SEAL scans every row in NDesc fixed edges, independent of row contents.
 module ot_s81_pq_command_endpoint #(
- parameter integer NDESC=64,MUT=0
+ parameter integer NDESC=64,MUT=0,PHW=9,
+ parameter integer NATIVE_BITS=81+PHW,DESC_BITS=NATIVE_BITS+26
 )(input wire ck,rst_n,input wire[84:0]c_cmd,
  input wire[35:0]f_desc_pw,input wire[38:0]t_iss,
- output wire[91:0]f_iss,output reg[8:0]c_done,output wire[1:0]c_st,
+ output wire[NATIVE_BITS+1:0]f_iss,output reg[8:0]c_done,output wire[1:0]c_st,
  output wire image_sealed);
- reg[115:0]mem[0:NDESC-1];reg[4:0]loaded[0:NDESC-1];
+ reg[DESC_BITS-1:0]mem[0:NDESC-1];reg[4:0]loaded[0:NDESC-1];
  reg[7:0]length_q,scan;reg begun,sealed,scanning,scan_bad;
  reg fault,go_q;reg[3:0]active;reg[7:0]command_tag[0:3];
- reg[89:0]native_fields;reg[23:0]age[0:3],duration[0:3];
+ reg[NATIVE_BITS-1:0]native_fields;reg[23:0]age[0:3],duration[0:3];
  wire pw_v=f_desc_pw[35];wire[6:0]addr=f_desc_pw[34:28];
  wire[2:0]page=f_desc_pw[27:25];wire[23:0]payload=f_desc_pw[23:0];
  wire valid_command=c_cmd[84];wire[23:0]arg=c_cmd[30:7];
@@ -42,7 +43,7 @@ module ot_s81_pq_command_endpoint #(
      end else begin
       scanning<=1;sealed<=0;scan<=0;scan_bad<=!begun||length_q!=payload[7:0];
      end
-    end else if(!begun||addr>=length_q||page>=5||f_desc_pw[24]||(page==4&&payload[23:20]!=0))begin fault<=1;sealed<=0;end
+    end else if(!begun||addr>=length_q||page>=5||f_desc_pw[24]||(page==4&&(payload >> (DESC_BITS-96))!=0))begin fault<=1;sealed<=0;end
     else begin
      sealed<=0;
      case(page)
@@ -50,25 +51,25 @@ module ot_s81_pq_command_endpoint #(
       1:mem[addr][47:24]<=payload;
       2:mem[addr][71:48]<=payload;
       3:mem[addr][95:72]<=payload;
-      4:mem[addr][115:96]<=payload[19:0];
+      4:mem[addr][DESC_BITS-1:96]<=payload[DESC_BITS-97:0];
      endcase
      loaded[addr][page]<=1;
     end
    end
    if(scanning)begin
     bad=scan_bad;
-    if(scan<length_q&&(loaded[scan]!=5'b11111||mem[scan][113:90]<3))bad=1;
+    if(scan<length_q&&(loaded[scan]!=5'b11111||mem[scan][NATIVE_BITS+23:NATIVE_BITS]<3))bad=1;
     scan_bad<=bad;
     if(scan==NDESC-1)begin scanning<=0;sealed<=!bad&&!fault;if(bad)fault<=1;end
     else scan<=scan+1'b1;
    end
    if(valid_command)begin
-    selected_tag=arg<length_q?mem[arg][115:114]:2'd0;
+    selected_tag=arg<length_q?mem[arg][NATIVE_BITS+25:NATIVE_BITS+24]:2'd0;
     // Compiler selects the real native tag. No search for a free slot.
     if(!sealed||pw_v||arg>=length_q||active[selected_tag])fault<=1;
     else begin
      active[selected_tag]<=1;go_q<=1;age[selected_tag]<=0;
-     native_fields<=mem[arg][89:0];duration[selected_tag]<=mem[arg][113:90];
+     native_fields<=mem[arg][NATIVE_BITS-1:0];duration[selected_tag]<=mem[arg][NATIVE_BITS+23:NATIVE_BITS];
      command_tag[selected_tag]<={c_cmd[83],c_cmd[6:0]};
      if(!t_iss[0])fault<=1;
     end

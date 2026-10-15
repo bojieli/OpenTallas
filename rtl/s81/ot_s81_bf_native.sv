@@ -72,6 +72,8 @@ module ot_s81_bf_native #(
     // block ot_s81_bf_front (pin registers + ot_v41_bf_front_core) and two ot_v41_bf_col blocks with registered
     // abutted boundaries (tools/s81/gen_bf_hier.py); the columns run one cycle behind the front (partials +1 cycle).
     parameter integer HCOL = 0,
+    // Uniform fixed egress stage per column face; +1 cycle, no scheduling feedback.
+    parameter integer CPIN = 0,
     // PINLAT (BF-PINCLK 2026-10-09, default 0; requires PINREG): a lockup latch, transparent while clk is LOW, between each
     // pin-capture data register and the element.  Routed full-rate dbs miss FF hold on g_pin.r_* -> u_elem b_* (pin group
     // ungated, capture on the deeper ICG-gated eclk tree: 1,407 endpoints, -37 ps).  Through the latch the element sees
@@ -308,14 +310,33 @@ module ot_s81_bf_native #(
             .c_so_row(c_so_row), .c_so_idx(c_so_idx), .c_so_n(c_so_n), .c_qy_bkf(c_qy_bkf));
         genvar cm;
         for (cm = 0; cm < NB; cm = cm + 1) begin : g_col
+            localparam integer CW = 1+14+3+CTW+2*256+2*10+1+2*5*NSEG+16*NSEG;
+            wire [CW-1:0] seam_i, seam_o;
+            wire [1-1:0] p_issue;
+            wire [14-1:0] p_a_ctr;
+            wire [1-1:0] p_i1_v;
+            wire [1-1:0] p_i1_bk;
+            wire [1-1:0] p_i1_bf;
+            wire [CTW-1:0] p_i1_t;
+            wire [256-1:0] p_i2x_q0;
+            wire [10-1:0] p_i2x_e0;
+            wire [256-1:0] p_i2x_q1;
+            wire [10-1:0] p_i2x_e1;
+            wire [1-1:0] p_ze_d;
+            wire [5*NSEG-1:0] p_so_idx;
+            wire [5*NSEG-1:0] p_so_n;
+            wire [16*NSEG-1:0] p_so_row;
+            assign seam_i = {c_issue, c_a_ctr, c_i1_v, c_i1_bk, c_i1_bf, c_i1_t, c_i2x_q0, c_i2x_e0, c_i2x_q1, c_i2x_e1, c_ze_d, c_so_idx, c_so_n, c_so_row[16*NSEG*cm +: 16*NSEG]};
+            assign {p_issue, p_a_ctr, p_i1_v, p_i1_bk, p_i1_bf, p_i1_t, p_i2x_q0, p_i2x_e0, p_i2x_q1, p_i2x_e1, p_ze_d, p_so_idx, p_so_n, p_so_row} = seam_o;
+            ot_s81_bf_seam #(.W(CW), .PIPE(CPIN)) u_seam (.clk(clk), .rst_n(rst_n), .d(seam_i), .q(seam_o));
             ot_v41_bf_col #(.NSEG(NSEG), .NCH(NCH), .XF(XF), .LV(LV), .BF16(BF16), .NCHB(NCHB), .NB(NB), .MTP(MTP),
                 .EARLY(EARLY), .CG(CG), .DRAIN(RDRAIN), .FAST(FAST), .CUT(CUT), .PP(PP), .FRONT_PAR(FRONT_PAR), .BP(BP),
                 .QTIMING_FIX(1), .QPIPE(1), .QP_XS(1), .QP_CAP(0), .QP_P1(1), .QP_CSAM(10), .QZ(1), .QZ_NS(8), .QZ_NE(4),
                 .QY(1), .QX(10), .QBF(RECUT), .QZE(QZE), .TCG(TCG), .BXST(BXST), .FXST(FXST), .GRADUAL_RNE(GRADUAL_RNE),
                 .INSTANCE(INSTANCE), .MB(cm)) u_col (
-                .clk(eclk), .rst_n_pin(rst_n), .ze_d(c_ze_d), .issue(c_issue), .a_ctr(c_a_ctr), .i1_v(c_i1_v), .i1_bk(c_i1_bk),
-                .i1_bf(c_i1_bf), .i1_t(c_i1_t), .i2x_q0(c_i2x_q0), .i2x_e0(c_i2x_e0), .i2x_q1(c_i2x_q1), .i2x_e1(c_i2x_e1),
-                .so_row(c_so_row[16*NSEG*cm +: 16*NSEG]), .so_idx(c_so_idx), .so_n(c_so_n),
+                .clk(eclk), .rst_n_pin(rst_n), .ze_d(p_ze_d), .issue(p_issue), .a_ctr(p_a_ctr), .i1_v(p_i1_v), .i1_bk(p_i1_bk),
+                .i1_bf(p_i1_bf), .i1_t(p_i1_t), .i2x_q0(p_i2x_q0), .i2x_e0(p_i2x_e0), .i2x_q1(p_i2x_q1), .i2x_e1(p_i2x_e1),
+                .so_row(p_so_row), .so_idx(p_so_idx), .so_n(p_so_n),
                 .pv(pv_e[cm]), .pval(pval_e[32*cm +: 32]), .prow(prow_e[16*cm +: 16]), .pseg(pseg_e[5*cm +: 5]),
                 .pnseg(pnseg_e[5*cm +: 5]), .perr(perr_e[cm]), .ppos(ppos_e[3*cm +: 3]), .qy_bkf(c_qy_bkf[cm]));
         end
