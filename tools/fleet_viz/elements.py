@@ -42,6 +42,7 @@ metrics) fetched over ssh in the background and cached in <state>/element_area.j
 import collections, datetime, glob, json, os, pathlib, re, subprocess, threading, time
 import flow_state
 import die_contracts
+import master_identity
 
 T0 = datetime.datetime.fromisoformat('2026-10-07T20:45:00-07:00').timestamp()   # option-B (TT) switch
 LIVE = {'QUEUED', 'SYNC', 'READY', 'RUNNING', 'ECO', 'ECO_RESULT', 'ECO_INSTALL', 'SUMMARY', 'MIGRATING'}
@@ -539,14 +540,27 @@ class Elements:
         dsum, dsrc = self.apply_contracts(rows) if hasattr(self, 'contracts') else ({}, None)
         flow = self.flow.annotate(rows, groups, TARGETS)   # r['flow'] / flow_label / die_used / m5_reroute
         rows.sort(key=lambda r: (TARGETS.index(r['target']), CATS.index(r['category']), r['element']))
+        independent, integration, identity = (master_identity.classify(rows, self.contracts.repo)
+            if hasattr(self, 'contracts') else (rows, [], {}))
+        # Die headers use the same independent-master scope as the default list.
+        for design, summary in dsum.items():
+            summary['integration_records'] = sum(any(d['design'] == design for d in (r.get('dies') or [])) for r in integration)
+            count = collections.Counter()
+            for r in independent:
+                if not any(d['design'] == design for d in (r.get('dies') or [])): continue
+                category = r['category']
+                count['closed' if category.startswith('closed') else ('superseded' if category == 'superseded' else BUCKET.get(category, 'failed'))] += 1
+            for k in ('closed', 'superseded', 'in_flight', 'failed', 'not_started'): summary[k] = count[k]
+            summary['open'] = sum(count[k] for k in ('in_flight', 'failed', 'not_started'))
+            summary['total'] = summary['closed'] + summary['open']
         summ = collections.defaultdict(lambda: collections.Counter())
         tsum = collections.defaultdict(lambda: collections.Counter())
-        for r in rows:
+        for r in independent:
             summ[r['target']][r['category']] += 1
             if r['category'].startswith('closed'):
                 tsum[r['target']][(r.get('throughput') or {}).get('status') or 'NO_BUDGET_ROW'] += 1
         self.desc.save()
-        return dict(t=time.time(), rows=rows, cats=CATS, targets=TARGETS, flow=flow,
+        return dict(t=time.time(), rows=rows, independent_rows=independent, integration_rows=integration, master_identity=identity, cats=CATS, targets=TARGETS, flow=flow,
                     summary={t: dict(summ[t]) for t in TARGETS if t in summ},
                     throughput_summary={t: dict(tsum[t]) for t in TARGETS if t in tsum},
                     designs=dsum, contracts=dsrc,
@@ -805,7 +819,9 @@ class Elements:
         if safe:
             return dict(t=d['t'], safe=True, cats=CATS, targets=TARGETS, summary=d['summary'], flow=d.get('flow'),
                         designs=d.get('designs'), v=v)
-        return dict(d, rows=[public(r) for r in d['rows']], v=v)
+        return dict(d, rows=[public(r) for r in d['rows']],
+                    independent_rows=[public(r) for r in d.get('independent_rows', d['rows'])],
+                    integration_rows=[public(r) for r in d.get('integration_rows', [])], v=v)
 
     # ---- markdown
     def write_md(self, d):
@@ -826,7 +842,7 @@ class Elements:
                 L.append('| %s | %s | %d | %d | %d | %d | %d | %d |' % (s['label'], _md(s['revision']), s['closed'], s['open'],
                          s['in_flight'], s['failed'], s['not_started'], s['superseded']))
         for t in TARGETS:
-            rs = [r for r in d['rows'] if r['target'] == t]
+            rs = [r for r in d.get('independent_rows', d['rows']) if r['target'] == t]
             if not rs: continue
             L += ['', '## %s (%d)' % (t, len(rs)), '',
                   '| element | status | throughput | what it is | qualification | TT | FF | SS | DRC | die µm² | util | jobs live/failed/total | closed | latest |',
@@ -843,6 +859,11 @@ class Elements:
                     datetime.datetime.fromtimestamp(r['closed_t']).strftime('%m-%d %H:%M') if r['closed_t'] else '',
                     _md(('%s %s: %s' % (datetime.datetime.fromtimestamp(r['latest']['t']).strftime('%m-%d %H:%M'), r['latest']['status'],
                                           r['latest']['text']))[:140]) if r['latest'] else ''))
+        if d.get('integration_rows'):
+            L += ['', '## Integration backlog (excluded from independent-master closure counts)', '']
+            for r in d['integration_rows']:
+                L.append('- %s: %s; %s. Evidence: %s' % (r['element'], r['category'], r['integration_status'],
+                         ', '.join(r['identity_evidence'].get('evidence', []))))
         try:
             self.md_path.parent.mkdir(parents=True, exist_ok=True)
             tmp = self.md_path.with_suffix('.tmp'); tmp.write_text('\n'.join(L) + '\n'); tmp.replace(self.md_path)
@@ -850,13 +871,14 @@ class Elements:
             self.log('elements md: %s' % e)
 
 def public(r):
-    return {k: v for k, v in r.items() if not k.startswith('_')}
+    return {k: ([public(x) for x in v] if k == 'replica_records' else public(v) if k == 'candidate_component_record' else v)
+            for k, v in r.items() if not k.startswith('_')}
 
 def change_key(d):
     """What makes an element snapshot worth recording now (not the per-minute latest-event churn)."""
-    return hash(tuple((r['element'], r['category'], r['live'], r['failed'], r['jobs'], r['best']['job'], r.get('contract'),
+    return hash((tuple((r['element'], r['category'], r['live'], r['failed'], r['jobs'], r['best']['job'], r.get('contract'),
                        json.dumps(r.get('evidence_history', []), sort_keys=True),
-                       (r.get('throughput') or {}).get('status'), (r.get('throughput') or {}).get('ratio')) for r in d['rows']))
+                       (r.get('throughput') or {}).get('status'), (r.get('throughput') or {}).get('ratio')) for r in d['rows']), json.dumps(d.get('master_identity', {}), sort_keys=True)))
 
 def honest_throughput(v):
     """Registry honesty (owner 2026-10-13, el1013-rule-enforcement): a unit with a price but no measured production

@@ -1,0 +1,19 @@
+OpenROAD 26Q3-1510-g6cb3f2b704
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /src/physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.lef, created 1 library cells
+[WARNING STA-0450] virtual clock core_clk can not be propagated.
+[WARNING STA-0450] virtual clock core_clk can not be propagated.
+[WARNING STA-0450] virtual clock core_clk can not be propagated.
+OT_DIRECT_MACRO ACCESSOR source_sha256=61aaf3f8c874867d13acbca9ef2f8d861a8217793d5b3605318886f8fd9f5777 executable_sha256=21eda99eeae7eccb22ca64ad28949c08a6c01dcece3ccb23e2206d635f8d2846 module_sha256=b3221367ae6d71774163a505c69426a7ccd4b817b5c989460e5860b145a6dfe9 compiler=g++ (Ubuntu 11.4.0-1ubuntu1~22.04.3) 11.4.0
+OT_DIRECT_MACRO RAW_LIBERTY_PIN tt ca -> u_0/clk wire=0.0 library=ot_sram_1r1w_32x546_m1_tt/ot_sram_1r1w_32x546_m1 (internal arcs retained)
+OT_DIRECT_MACRO RAW_LIBERTY_PIN tt cb -> u_1/clk wire=0.0 library=ot_sram_1r1w_32x546_m1_tt/ot_sram_1r1w_32x546_m1 (internal arcs retained)
+SCENE_BINDING_PASS_tt
+OT_DIRECT_MACRO RAW_LIBERTY_PIN ff ca -> u_0/clk wire=0.0 library=ot_sram_1r1w_32x546_m1_ff/ot_sram_1r1w_32x546_m1 (internal arcs retained)
+OT_DIRECT_MACRO RAW_LIBERTY_PIN ff cb -> u_1/clk wire=0.0 library=ot_sram_1r1w_32x546_m1_ff/ot_sram_1r1w_32x546_m1 (internal arcs retained)
+SCENE_BINDING_PASS_ff
+OT_DIRECT_MACRO RAW_LIBERTY_PIN ss ca -> u_0/clk wire=0.0 library=ot_sram_1r1w_32x546_m1_ss/ot_sram_1r1w_32x546_m1 (internal arcs retained)
+OT_DIRECT_MACRO RAW_LIBERTY_PIN ss cb -> u_1/clk wire=0.0 library=ot_sram_1r1w_32x546_m1_ss/ot_sram_1r1w_32x546_m1 (internal arcs retained)
+SCENE_BINDING_PASS_ss

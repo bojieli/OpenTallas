@@ -270,13 +270,14 @@ footer{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;color:v
   </section>
 
   <section class="panel elems" id="elPanel" hidden>
-    <div class="ptitle"><span>Elements · per-block closure status</span><b id="elNow"></b></div>
+    <div class="ptitle"><span>Elements · independent master closure</span><b id="elNow"></b></div>
     <div class="sumwrap"><table class="esum" id="elSum"></table></div>
     <div class="ctl" id="elCtl">
       <select id="eTgt"><option value="">all targets</option></select>
       <span id="eSt"></span>
       <input id="eTxt" placeholder="filter element / description / job / event" type="search">
       <label><input type="checkbox" id="eGrp" checked> group by target</label>
+      <label><input type="checkbox" id="eIntegration"> integration backlog</label>
     </div>
     <div class="tblwrap" id="elWrap"><table class="jt" id="elTable"><thead><tr id="eHead"></tr></thead><tbody id="eBody"></tbody></table></div>
   </section>
@@ -953,7 +954,7 @@ function renderElements() {
   sh += '<tr><td><b>all</b></td>' + cats.map(c => `<td class="${tot[c] && !SAFE ? 'c' : ''}" data-t="" data-c="${esc(c)}"><b>${tot[c] || '·'}</b></td>`).join('') + `<td><b>${all}</b></td></tr>`;
   setHTML($('elSum'), sh);
   const closed = cats.filter(c => c.startsWith('closed')).reduce((a, c) => a + (tot[c] || 0), 0);
-  setText($('elNow'), `${closed} of ${all} closed · ${all - closed} open` + ([...NOCOUNT].some(c => tot[c]) ? ` (not counted: ${[...NOCOUNT].filter(c => tot[c]).map(c => tot[c] + ' ' + c).join(', ')})` : '') + ` · as of ${ago(ED.t)}`);
+  setText($('elNow'), `${closed} of ${all} closed · ${all - closed} open` + ([...NOCOUNT].some(c => tot[c]) ? ` (not counted: ${[...NOCOUNT].filter(c => tot[c]).map(c => tot[c] + ' ' + c).join(', ')})` : '') + ` · ${(ED.integration_rows || []).length} integration records separate · as of ${ago(ED.t)}`);
   const rowsOK = !SAFE && ED.rows;
   for (const id of ['elCtl', 'elWrap']) if ($(id).hidden !== !rowsOK) $(id).hidden = !rowsOK;
   if (!rowsOK) return;
@@ -961,12 +962,13 @@ function renderElements() {
   if (EF.knownCats) { for (const c of cats) if (!EF.knownCats.includes(c) && !EF.sts.includes(c)) EF.sts.push(c); }
   else if (!EF.sts.includes('implementation recorded (no physical job)')) EF.sts.push('implementation recorded (no physical job)');
   EF.knownCats = cats.slice();
-  const cnt = {}; ED.rows.forEach(r => cnt[r.category] = (cnt[r.category] || 0) + 1);
+  const displayRows = $('eIntegration').checked ? (ED.integration_rows || []) : (ED.independent_rows || ED.rows);
+  const cnt = {}; displayRows.forEach(r => cnt[r.category] = (cnt[r.category] || 0) + 1);
   setHTML($('eSt'), cats.filter(c => cnt[c]).map(c => `<span class="chip ${EF.sts.includes(c) ? 'on' : ''}" data-s="${esc(c)}" style="${EF.sts.includes(c) ? 'background:' + ECOL[c] : ''}">${esc(c)} ${cnt[c]}</span>`).join(' '));
   const sel = $('eTgt'); if (sel.options.length - 1 !== tg.length) sel.innerHTML = '<option value="">all targets</option>' + tg.map(t => `<option>${esc(t)}</option>`).join('');
   if (sel.value !== EF.tgt) sel.value = EF.tgt; $('eGrp').checked = EF.grp; if (document.activeElement !== $('eTxt')) $('eTxt').value = EF.txt;
   const tx = EF.txt.toLowerCase();
-  const rows = ED.rows.map(r => Object.assign({}, r, {tt: r.best.tt, ff: r.best.ff, ss: r.best.ss, drc: r.best.drc, die: r.area && r.area.die, util: r.area && r.area.util,
+  const rows = displayRows.map(r => Object.assign({}, r, {tt: r.best.tt, ff: r.best.ff, ss: r.best.ss, drc: r.best.drc, die: r.area && r.area.die, util: r.area && r.area.util,
     qualification: elementQualification(r.qualification), lt: r.latest ? r.latest.t : 0, cix: cats.indexOf(r.category), dietxt: dieText(r)}));
   const vis = rows.filter(r => EF.sts.includes(r.category) && (!EF.tgt || r.target === EF.tgt) &&
     (!tx || [r.element, r.variants.join(' '), r.purpose, r.category, r.qualification, r.best.job, r.owner, r.dietxt, r.latest && r.latest.text].join(' ').toLowerCase().includes(tx)));
@@ -984,8 +986,8 @@ function renderElements() {
     }
     const b = r.best, lt = r.latest;
     const tip = `best job ${b.job || '-'} (${b.corner || '-'} line), source ${b.source_commit || 'unrecorded'}` + (r.via ? ` · via ${r.via}` : '') + (r.superseded ? ` · superseded by ${r.superseded.by}: ${r.superseded.reason}` : '') + (r.revoked ? (r.revoked.reason ? ` · revoked: ${r.revoked.reason} · re-timed FF ${r.revoked.ff ?? '-'} ps (${Object.entries(r.revoked.jobs || {}).map(([k, v]) => k + ' ' + v).join(', ')})` : ` · revoked ${r.revoked.verdict || ''} TT link budget ${r.revoked.tt_lb ?? ''}`) : '') + ` · owner ${r.owner}`;
-    items.push(['e|' + r.target + '|' + r.element, `<tr class="el" style="--c:${ECOL[r.category]}"><td class="enm" title="${esc(r.variants.length ? 'variants: ' + r.variants.join(', ') : r.element)}; open its Chip Explorer card"><a class="xl" href="/explorer#element=${encodeURIComponent(r.element)}">${esc(r.element)}</a>${r.variants.length ? ` <small>+${r.variants.length}</small>` : ''}</td>` +
-      `<td class="est"><span class="st" style="background:${ECOL[r.category]}" title="${esc(tip)}">${esc(r.category)}</span></td><td class="pu" title="${esc(r.dietxt + (r.native ? ' · native check ' + nativeText(r) : '') + (r.contract ? ' · ' + r.contract : ''))}"><div>${esc(r.dietxt)}</div></td><td class="pu" title="${esc(r.purpose)}"><div>${esc(r.purpose)}</div></td>` +
+    items.push(['e|' + r.target + '|' + r.element, `<tr class="el" style="--c:${ECOL[r.category]}"><td class="enm" title="${esc(r.variants.length ? 'variants: ' + r.variants.join(', ') : r.element)}; open its Chip Explorer card"><a class="xl" href="/explorer#element=${encodeURIComponent(r.element)}">${esc(r.element)}</a>${r.replica_aliases ? ` <small title="${esc(r.replica_aliases.join(', '))}">${r.replica_records.length} aliases, one master</small>` : ''}${r.variants.length ? ` <small>+${r.variants.length}</small>` : ''}</td>` +
+      `<td class="est"><span class="st" style="background:${ECOL[r.category]}" title="${esc(tip)}">${esc(r.category)}</span></td><td class="pu" title="${esc(r.dietxt + (r.native ? ' · native check ' + nativeText(r) : '') + (r.contract ? ' · ' + r.contract : ''))}"><div>${esc(r.dietxt)}</div></td><td class="pu" title="${esc(r.purpose)}"><div>${esc(r.purpose)}${r.integration_status ? ' · ' + esc(r.integration_status) : ''}</div></td>` +
       `<td class="${ecls(b.tt)}">${esgn(b.tt)}</td><td class="${ecls(b.ff)}">${esgn(b.ff)}</td><td class="en" style="color:var(--dim)">${esgn(b.ss)}</td>` +
       `<td class="${b.drc == null ? 'en' : b.drc ? 'en eneg' : 'en'}">${b.drc ?? ''}</td><td class="en">${r.die == null ? '' : Math.round(r.die).toLocaleString('en-US')}</td>` +
       `<td class="en">${r.util == null ? '' : Math.round(r.util * 100) + '%'}</td><td class="en">${r.live || ''}</td><td class="en">${r.failed || ''}</td><td class="en">${r.jobs}</td>` +
@@ -1009,6 +1011,7 @@ $('eTxt').oninput = e => { EF.txt = e.target.value; renderElements(); };
 $('eSt').onclick = e => { const s = e.target.dataset && e.target.dataset.s; if (!s) return; EF.sts = EF.sts.includes(s) ? EF.sts.filter(x => x !== s) : EF.sts.concat(s); renderElements(); };
 $('eHead').onclick = e => { const c = e.target.dataset && e.target.dataset.c; if (!c) return; if (EF.sort === c) EF.dir = -EF.dir; else { EF.sort = c; EF.dir = ['lt', 'closed_t', 'tt', 'ff', 'ss', 'die', 'util', 'live', 'failed', 'jobs'].includes(c) ? -1 : 1; } renderElements(); };
 $('dieSum').onclick = e => { const sp = e.target.closest('span.d'); if (!sp || !ED || !ED.designs) return; const s = ED.designs[sp.dataset.k]; EF.tgt = s.target; EF.txt = s.label.replace(/ die$/, ''); EF.sts = ED.cats.filter(c => !c.startsWith('closed') && c !== 'superseded'); renderElements(); $('elWrap').scrollIntoView({behavior: 'smooth', block: 'start'}); };
+$('eIntegration').onchange = renderElements;
 $('elSum').onclick = e => { const td = e.target.closest('td.c'); if (!td) return; EF.sts = [td.dataset.c]; EF.tgt = td.dataset.t; renderElements(); $('elWrap').scrollIntoView({behavior: 'smooth', block: 'start'}); };
 if (!REPLAY) pollElements();
 

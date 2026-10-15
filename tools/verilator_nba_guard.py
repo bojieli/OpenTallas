@@ -61,6 +61,45 @@ def _assign_split(stmt: str):
     return None
 
 
+def _outer(expr: str) -> str:
+    expr = re.sub(r'\s+', '', expr)
+    while expr.startswith('(') and _balanced(expr, 0, '(', ')') == len(expr):
+        expr = expr[1:-1]
+    return expr
+
+
+def _preserves_exact_word(lhs: str, rhs: str) -> bool:
+    """Recognise only X[word] | one_hot / X[word] & ~one_hot bit updates.
+
+    Exact indexed-word identity matters: X[other_word] is a real dependency.
+    This is only a candidate; the resolved RTL must also prove its NBA value
+    never reads X. Whole-word RTL accumulations must remain findings.
+    """
+    word = _outer(lhs)
+    if '[' not in word or not word.endswith(']'):
+        return False
+    expr = _outer(rhs)
+    depth = 0
+    for k, c in enumerate(expr):
+        if c in '([':
+            depth += 1
+        elif c in ')]':
+            depth -= 1
+        elif depth == 0 and c in '|&' and expr[k:k + 2] not in ('||', '&&'):
+            a, b = _outer(expr[:k]), _outer(expr[k + 1:])
+            mask = b if a == word else (a if b == word else None)
+            if mask is None:
+                continue
+            if c == '&':
+                if not mask.startswith('~'):
+                    continue
+                mask = _outer(mask[1:])
+            # No arithmetic, OR-of-masks or target-dependent mask is exempted.
+            if re.fullmatch(r'(?:\(IData\))?\(?(?:0x0*1|1)[uUlL]*\)?<<\(.+\)', mask):
+                return True
+    return False
+
+
 def _functions(text: str):
     """Yield (name, body) for each top-level function definition."""
     for m in FUNC.finditer(text):
@@ -118,7 +157,8 @@ def scan(obj_dir: str) -> dict:
                     if reads >= 1:
                         findings.append(dict(file=os.path.relpath(path, obj_dir), function=fname, var=var,
                                              counter=sorted(counters),
-                                             statement=' '.join(stmt.split())[:600]))
+                                             statement=' '.join(stmt.split())[:600],
+                                             preserve_word_candidate=(reads == 1 and _preserves_exact_word(lhs, rhs))))
     # A blocking prefix loop (``p[i] = p[i-1] ^ x``) has the same C++ shape. Separate it with the actual
     # Verilog sources Verilator recorded (__verFiles.dat): only a variable the RTL writes with ``<=`` is
     # an in-place NBA miscompile. Unreadable sources keep the finding (fail closed).
@@ -129,7 +169,7 @@ def scan(obj_dir: str) -> dict:
             h = re.match(r'(?:module|interface|program)\s+(?:automatic\s+|static\s+)?(\w+)', m.group(0))
             if h:
                 modules.setdefault(h.group(1), []).append(m.group(0))
-    kept, blocking = [], 0
+    kept, blocking, independent = [], 0, 0
     for f in findings:
         parts = [re.sub(r'__BRA__.*$', '', x).replace('__PVT__', '') for x in f['var'].split('__DOT__')]
         if parts[-1].startswith('__V'):
@@ -137,13 +177,16 @@ def scan(obj_dir: str) -> dict:
         if missing or not sources:
             f['source_check'] = 'UNAVAILABLE'
         elif _nba_in_rtl(modules, parts):
+            if f['preserve_word_candidate'] and _independent_nba_value(modules, parts):
+                independent += 1
+                continue
             f['source_check'] = 'NBA_IN_RTL'
         else:
             blocking += 1
             continue
         kept.append(f)
     return dict(obj_dir=obj_dir, loops_checked=loops, findings=kept, blocking_loops_excluded=blocking,
-                sources_read=len(sources), sources_missing=missing)
+                sources_read=len(sources), sources_missing=missing, independent_bit_updates_excluded=independent)
 
 
 MODULE = re.compile(r'\b(?:module|interface|program)\b.*?\b(?:endmodule|endinterface|endprogram)\b', re.S)
@@ -204,6 +247,25 @@ def _nba_in_rtl(modules: dict, parts: list) -> bool:
     if owners is None:  # unresolved path: any module that declares the variable (conservative)
         owners = [t for texts in modules.values() for t in texts]
     return any(_nba_in_scope(m, name, parent) for m in owners)
+
+def _independent_nba_value(modules: dict, parts: list) -> bool:
+    """Require resolved RTL and all NBA writes to have a target-independent value.
+
+    This prevents mistaking ``word <= word | mask`` for an independent packed
+    bit update. Unresolved hierarchy stays fail-closed; no global-name guess.
+    """
+    owners = _resolve(modules, parts)
+    if owners is None:
+        return False
+    name, parent = parts[-1], parts[-2] if len(parts) > 1 else ''
+    writes = []
+    assignment = re.compile(r'(?:^|;|\bbegin\b|\belse\b|\)|:)\s*' + re.escape(name)
+                            + r'\s*(?:\[[^;=]*\]\s*)*<=([^;]*);', re.M)
+    for text in owners:
+        scope = _named_block(text, parent) if parent else None
+        writes.extend(assignment.findall(scope if scope is not None else text))
+    return bool(writes) and all(not re.search(r'\b' + re.escape(name) + r'\b', value) for value in writes)
+
 
 def _strip_comments(text: str) -> str:
     """Drop // and /* */ comments (keeping strings) so module/always scanning sees only code."""
