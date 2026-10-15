@@ -14,6 +14,7 @@ import os
 from pathlib import Path
 import re
 import subprocess
+import shutil
 
 IMAGE="openroad/orfs:asap7lock"
 TOP="qkd_host_root_pt"
@@ -55,9 +56,10 @@ def report(out,plan,manifest,scale):
             clocks[clk_names.get(bits[0],str(bits[0]))]+=1;flops[typ]+=1
         elif typ.startswith("$_DLATCH"):latches[typ]+=1
     stdareas={}
-    for name,block in cell_blocks((out/"lib/all.lib").read_text())[1]:
-        area=re.search(r"\barea\s*:\s*([0-9.eE+-]+)\s*;",block)
-        if area:stdareas[name]=float(area.group(1))
+    for path in sorted((out/"lib").glob("*_RVT_TT_*.lib")):
+        for name,block in cell_blocks(path.read_text())[1]:
+            area=re.search(r"\barea\s*:\s*([0-9.eE+-]+)\s*;",block)
+            if area:stdareas[name]=float(area.group(1))
     macroareas={};macrocounts={}
     for macro in manifest["physical_macros"]:
         name=macro["module"]
@@ -91,6 +93,7 @@ def main():
     ap.add_argument("--coordinator-lock",type=Path)
     ap.add_argument("--stdlib-area-scale-to-um2",type=float,default=1.0)
     ap.add_argument("--execute",action="store_true");ap.add_argument("--inside-container",action="store_true")
+    ap.add_argument("--resume-from-run",type=Path,help="reuse source-manifest-matched generic.json and successful frontend/guard receipts")
     a=ap.parse_args();plan=a.plan.resolve();out=a.out.resolve()
     def guard():
         if a.coordinator_lock and json.loads(a.coordinator_lock.read_text())["owner"]!="codex":raise RuntimeError("COORD changed")
@@ -112,11 +115,16 @@ def main():
             guard();probe=subprocess.run(["docker","image","inspect","--format","{{.Id}}",IMAGE],capture_output=True,text=True)
             if probe.returncode or not probe.stdout.strip().startswith("sha256:"):raise RuntimeError("cannot pin actual ORFS image ID")
             image=probe.stdout.strip()
-        command=["docker","run","--rm","--cpus=2","--memory=60g","-e","OMP_NUM_THREADS=2",
-            "-v",str(plan)+":/plan:ro","-v",str(out)+":/out","-v",str(Path(__file__).resolve())+":/host_root_run.py:ro",
+        inner=["python3","/host_root_run.py","--inside-container","--plan","/plan","--out","/out",
+               "--stdlib-area-scale-to-um2",str(a.stdlib_area_scale_to_um2)]
+        mounts=["-v",str(plan)+":/plan:ro","-v",str(out)+":/out",
+                "-v",str(Path(__file__).resolve())+":/host_root_run.py:ro"]
+        if a.resume_from_run:
+            mounts += ["-v",str(a.resume_from_run.resolve())+":/retained:ro"]
+            inner += ["--resume-from-run","/retained"]
+        command=["docker","run","--rm","--cpus=2","--memory=60g","-e","OMP_NUM_THREADS=2",*mounts,
             "-w","/plan",image,"bash","-lc",
-            'source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; exec python3 /host_root_run.py --inside-container --plan /plan --out /out --stdlib-area-scale-to-um2 "$1"',
-            "host_root_run",str(a.stdlib_area_scale_to_um2)]
+            'source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; exec "$@"',"host_root_run",*inner]
         write(out/"run_plan.json",json.dumps(dict(command=command,runner_sha256=sha(Path(__file__).read_bytes()),
             source_manifest_sha256=sha((plan/"manifest.json").read_bytes()),admission_gib=64,docker_gib=60,threads=2,executed=a.execute),indent=2)+"\n")
         if a.execute:
@@ -131,9 +139,9 @@ def main():
         path=libroot/("asap7sc7p5t_"+stem+".lib")
         raw=path.read_bytes() if path.exists() else gzip.decompress(Path(str(path)+".gz").read_bytes())
         libraries.append(raw.decode());write(out/"lib"/(stem+".lib"),raw.decode())
-    header,first=cell_blocks(libraries[0]);prefix=header[:header.index(first[0][1])]
-    combined=prefix+"\n"+"\n".join(block for text in libraries for _,block in cell_blocks(text)[1])+"\n}\n"
-    write(out/"lib/all.lib",combined)
+    # Match tools/qwen_o4_cluster_synth.py: ABC consumes each canonical
+    # combinational library separately. Keep every library's own templates;
+    # sequential cells belong to dfflibmap, physical SRAMs to stat/area only.
     write(out/"lib/seq.lib",libraries[-1])
     rtl=[str(plan/"src"/p) for p in manifest["files_sha256"] if p.endswith((".sv",".v"))]
     for path in [*rtl,str(out)]:
@@ -141,24 +149,48 @@ def main():
     read="read_verilog -defer -sv -DSYNTHESIS "+" ".join(rtl)+"\n"
     params=" ".join(f"-chparam {k} {v}" for k,v in manifest["parameters"].items())
     front=read+f"hierarchy -check -top {TOP} {params}\n"
-    write(out/"frontend.ys",front)
-    p=run(["yosys","-Q","-T","-s",str(out/"frontend.ys")],out/"frontend.log")
-    if p.returncode:raise RuntimeError("strict deferred actual root frontend failed")
-    # Derive the ACTUAL native-engine source at invalid native geometries.
-    negatives=[]
-    for name,qp,kv in [("wrong_qpipe",1,2),("wrong_kvhmax",2,8)]:
-        script=read+f"hierarchy -check -top qkd_host_native_engine -chparam NATIVE_ROWS 1 -chparam HDMAX 128 -chparam QPIPE {qp} -chparam KVHMAX {kv}\n"
-        write(out/(name+".ys"),script)
-        p=run(["yosys","-Q","-T","-s",str(out/(name+".ys"))],out/(name+".log"))
-        log=p.stdout+p.stderr
-        guard_failure=("native ingest requires full32-macro QPIPE2 provider" in log or
-            re.search(r"qkd_host_native_engine\.sv:133[^\n]*\$(?:fatal|error)",log) is not None)
-        if p.returncode==0 or not guard_failure:
-            raise RuntimeError("actual native source guard negative did not fail specifically")
-        negatives.append(dict(case=name,exit_code=p.returncode,log_sha256=sha(log.encode())))
-    write(out/"source_guard_negatives.json",json.dumps(negatives,indent=2)+"\n")
-    stats=" ".join("-liberty "+str(plan/"src"/m["tt_liberty"]) for m in manifest["physical_macros"])
-    script=front+f"synth -top {TOP} -flatten\nwrite_json {out}/generic.json\n"+f"dfflibmap -liberty {out}/lib/seq.lib\nabc -liberty {out}/lib/all.lib\nopt_clean\ncheck\nwrite_json {out}/mapped.json\n"+f"tee -o {out}/mapped.stat stat -liberty {out}/lib/all.lib {stats}\n"
+    if a.resume_from_run:
+        retained=a.resume_from_run.resolve()
+        prior=json.loads((retained/"run_plan.json").read_text())
+        if not prior.get("executed") or prior["source_manifest_sha256"]!=sha((plan/"manifest.json").read_bytes()):
+            raise ValueError("retained generic source manifest mismatch")
+        negatives=json.loads((retained/"source_guard_negatives.json").read_text())
+        if {n['case'] for n in negatives}!={'wrong_qpipe','wrong_kvhmax'} or any(n['exit_code']==0 for n in negatives):
+            raise ValueError("retained actual native source guard refusals required")
+        generic=retained/"generic.json"
+        if TOP not in json.loads(generic.read_text())['modules']:
+            raise ValueError("retained generic lacks actual HOST root")
+        guard();shutil.copyfile(generic,out/"generic.json")
+        write(out/"source_guard_negatives.json",json.dumps(negatives,indent=2)+"\n")
+        write(out/"resume.json",json.dumps(dict(retained_generic_sha256=sha(generic.read_bytes()),
+            source_manifest_sha256=sha((plan/"manifest.json").read_bytes()),
+            retained_run_plan_sha256=sha((retained/"run_plan.json").read_bytes()),
+            mode="mapping only; no RTL read or full synth repeated"),indent=2)+"\n")
+    else:
+        write(out/"frontend.ys",front)
+        p=run(["yosys","-Q","-T","-s",str(out/"frontend.ys")],out/"frontend.log")
+        if p.returncode:raise RuntimeError("strict deferred actual root frontend failed")
+        # Derive the ACTUAL native-engine source at invalid native geometries.
+        negatives=[]
+        for name,qp,kv in [("wrong_qpipe",1,2),("wrong_kvhmax",2,8)]:
+            script=read+f"hierarchy -check -top qkd_host_native_engine -chparam NATIVE_ROWS 1 -chparam HDMAX 128 -chparam QPIPE {qp} -chparam KVHMAX {kv}\n"
+            write(out/(name+".ys"),script)
+            p=run(["yosys","-Q","-T","-s",str(out/(name+".ys"))],out/(name+".log"))
+            log=p.stdout+p.stderr
+            guard_failure=("native ingest requires full32-macro QPIPE2 provider" in log or
+                re.search(r"qkd_host_native_engine\.sv:133[^\n]*\$(?:fatal|error)",log) is not None)
+            if p.returncode==0 or not guard_failure:
+                raise RuntimeError("actual native source guard negative did not fail specifically")
+            negatives.append(dict(case=name,exit_code=p.returncode,log_sha256=sha(log.encode())))
+        write(out/"source_guard_negatives.json",json.dumps(negatives,indent=2)+"\n")
+        write(out/"generic.ys",front+f"synth -top {TOP} -flatten\nwrite_json {out}/generic.json\n")
+        p=run(["yosys","-Q","-T","-s",str(out/"generic.ys")],out/"generic.log")
+        if p.returncode:raise RuntimeError("actual generic synthesis failed")
+    statlibs=[str(out/"lib"/(stem+".lib")) for stem in stems]
+    statlibs += [str(plan/"src"/m["tt_liberty"]) for m in manifest["physical_macros"]]
+    stats=" ".join("-liberty "+path for path in statlibs)
+    comb=" ".join("-liberty "+str(out/"lib"/(stem+".lib")) for stem in stems[:-1])
+    script=f"read_json {out}/generic.json\ndfflibmap -liberty {out}/lib/seq.lib\nabc {comb}\nopt_clean\ncheck\nwrite_json {out}/mapped.json\ntee -o {out}/mapped.stat stat {stats}\n"
     write(out/"mapped.ys",script)
     p=run(["yosys","-Q","-T","-s",str(out/"mapped.ys")],out/"mapped.log")
     if p.returncode:raise RuntimeError("actual mapped synthesis failed")
