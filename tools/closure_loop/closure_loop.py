@@ -6766,9 +6766,46 @@ try:
     src_ok = bool(a.get("src_commit")) and open(os.path.join(R, "src", "SOURCE_COMMIT")).read().strip() == a["src_commit"]
 except OSError:
     pass
+def snap_commit(tp):
+    try:
+        return open(os.path.join(tp, "SOURCE_COMMIT")).read().strip()
+    except OSError:
+        return ""
+def trim_snapshot(tp):
+    # disk-1015: a git snapshot (src/, bench_src_a*/) at the job's commit is re-created by git archive; a receipt that
+    # names a file or sub-directory inside it keeps THAT path, not the whole 4-5 GB tree (the old whole-tree keep left
+    # ~590 GB of snapshots on AGIdock); a receipt naming the snapshot root itself is satisfied by SOURCE_COMMIT
+    keep = [r for r in hard if r.startswith(tp + "/")]
+    kdirs = [r for r in keep if os.path.isdir(r) and not os.path.islink(r)]
+    kfiles = set(keep) | {os.path.join(tp, "SOURCE_COMMIT")}
+    b = 0
+    for dp, dn, fn in os.walk(tp):
+        if any(dp == k or dp.startswith(k + "/") for k in kdirs):
+            dn[:] = []
+            continue
+        for f in fn:
+            p = os.path.join(dp, f)
+            if p not in kfiles:
+                b += rm_file(p)
+    if APPLY:
+        for dp, dn, fn in os.walk(tp, topdown=False):
+            if dp != tp:
+                try:
+                    os.rmdir(dp)
+                except OSError:
+                    pass
+        with open(os.path.join(tp, "TRIMMED_SOURCE_SNAPSHOT"), "w") as f:
+            f.write("source snapshot trimmed by deep release; git archive %s re-creates it; receipt paths kept\n" % a["src_commit"])
+    return b
 for top in sorted(os.listdir(R)):
     tp = os.path.join(R, top)
-    if not os.path.isdir(tp) or os.path.islink(tp) or prot(tp) or anc(tp):
+    if not os.path.isdir(tp) or os.path.islink(tp):
+        continue
+    snap = top == "src" or top.startswith("bench_src")
+    if prot(tp) or anc(tp):
+        if snap and mode in ("closed", "fail") and a.get("src_commit") and snap_commit(tp) == a["src_commit"] \
+                and not os.path.exists(os.path.join(tp, ".keep")):
+            freed += trim_snapshot(tp)
         continue
     if top == "src" and mode in ("closed", "fail") and src_ok:
         freed += rm_tree(tp)
@@ -7103,6 +7140,69 @@ def release_deep(jobs, now=None):
             event(j, f"deep release ({mode}, {m.group(1)} MB): kept {kept}, receipt-referenced paths, logs/reports/json")
             save_job(j)
     return n
+
+
+def snapshot_trim(jobs, limit=200, now=None):
+    """SNAPSHOT-TRIM (disk-1015): AGIdock fell to 18 GB free with ~590 GB of src/ + bench_src_a*/ git snapshots left in
+    deep-released run dirs -- DEEP_RELEASE_PY kept a whole 4-5 GB snapshot whenever one main receipt named a single
+    file inside it (signoff.sdc, a bench gate script) or the snapshot root.  Deep release now keeps only the named paths;
+    this pass re-applies the same DEEP_RELEASE_PY, at the recorded mode, to jobs deep-released before that fix.  Run by
+    the hourly cron guard (`closure_loop.py snapshot-trim`) and safe to repeat: every deep-release guard is re-checked
+    (live process, sibling jobs sharing the run dir, receipt refs, .keep, collect-crash retention, source mismatch)."""
+    closed = closed_blocks(jobs)
+    sources = release_source_index(jobs)
+    hosts = {h["name"] for h in hosts_table()}
+    shared = {}
+    for x in jobs:
+        if x.get("run") and x.get("host"):
+            shared.setdefault((x["host"], x["run"].rstrip("/")), []).append(x)
+    ev = _main_evidence()
+    if not ev:
+        return 0, 0
+    n = freed = 0
+    for x in jobs:
+        dr = x.get("deep_released") or {}
+        if n >= limit or not dr or x.get("snapshot_trimmed") or dr.get("mode") not in ("closed", "fail") \
+                or x.get("host") not in hosts or x["status"] not in TERMINAL:
+            continue
+        probe = dict(x, deep_released=None)
+        if deep_release_mode(probe, closed, ev, now) != dr["mode"] or source_mismatch_retained(x, sources) \
+                or helper_provenance_retained(x):
+            continue
+        run = x["run"].rstrip("/")
+        if any(y["status"] not in TERMINAL or _terminal_age_h(y, now) < DEEP_RELEASE_AGE_H
+               for y in shared.get((x["host"], run), [])):
+            continue
+        with job_lock(x["name"]):
+            j = load_job(x["name"])
+            if j.get("snapshot_trimmed") or j["status"] not in TERMINAL:
+                continue
+            commit = j.get("commit_full") or (j["spec"].get("source") or {}).get("commit") or ""
+            if commit and subprocess.run(["git", "-C", str(REPO), "cat-file", "-e", commit + "^{commit}"],
+                                         capture_output=True, timeout=60).returncode != 0:
+                commit = ""
+            if not commit:
+                continue
+            mode = dr["mode"]
+            arg = dict(run=run, mode=mode, src_commit=commit, refs=[r for r in ev["refs"] if r.startswith(run + "/")],
+                       final_dirs=[(j.get("metrics") or {}).get("orfs_dir")] if mode == "closed" and (j.get("metrics") or {}).get("orfs_dir") else [])
+            r = ssh(j["host"], f"OT_DR={shlex.quote(json.dumps(arg))} python3 - <<'DRPY'\n{DEEP_RELEASE_PY}\nDRPY\n", timeout=1800)
+            n += 1
+            m = re.search(r"DEEP_FREED (\d+)", r.stdout)
+            if r.returncode != 0 or not m:
+                continue
+            j["snapshot_trimmed"] = dict(at=now_iso(), freed_mb=int(m.group(1)))
+            event(j, f"snapshot trim ({mode}, {m.group(1)} MB): src/bench_src snapshots cut to receipt-referenced paths")
+            save_job(j)
+            freed += int(m.group(1))
+    return n, freed
+
+
+def cmd_snapshot_trim(a):
+    n, freed = snapshot_trim(all_jobs(), limit=a.limit)
+    msg = f"SNAPSHOT-TRIM: {n} run dirs visited, {freed / 1024:.1f} GB freed"
+    log(msg)
+    print(msg)
 
 
 # ------------------------------------------------------------------------------------------------ AUTO-REACT / READY_NEXT
@@ -8612,6 +8712,8 @@ def main():
     er = sub.add_parser("recover-eco-overlays"); er.add_argument("name")
     el = sub.add_parser("recover-export-lint"); el.add_argument("name")
     mg = sub.add_parser("migrate"); mg.add_argument("name"); mg.add_argument("host")
+    st = sub.add_parser("snapshot-trim", help="hourly guard: cut src/bench_src snapshots of deep-released jobs to receipt paths")
+    st.add_argument("--limit", type=int, default=200)
     a = ap.parse_args()
     if a.cmd == "daemon":
         cmd_daemon(a)
@@ -8648,6 +8750,8 @@ def main():
         cmd_recover_export_lint(a)
     elif a.cmd == "restore-cancelled":
         cmd_restore_cancelled(a)
+    elif a.cmd == "snapshot-trim":
+        cmd_snapshot_trim(a)
     elif a.cmd == "migrate":     # executed by the daemon at its next tick (no race with the job's poller)
         (STATE / "migrate_requests").mkdir(parents=True, exist_ok=True)
         (STATE / "migrate_requests" / f"{a.name}.json").write_text(json.dumps(dict(name=a.name, host=a.host)))

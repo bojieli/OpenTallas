@@ -1,0 +1,70 @@
+{
+ "summary": {
+  "shape": "ds640",
+  "seed": 1015,
+  "mut": "kv1",
+  "T_window": 128,
+  "T_compressed": 512,
+  "pv_run_chunks": 4,
+  "ops": 2,
+  "passed": 0,
+  "wall_s": 89.6,
+  "qk_span_max": 298,
+  "qk_lines_max": 80,
+  "pv_span_max": 380,
+  "pv_lines_max": 128,
+  "verdict": "FAIL"
+ },
+ "ops": [
+  {
+   "name": "qk_sm0",
+   "kind": "qk",
+   "kv4": 0,
+   "rows": 20,
+   "rc": 0,
+   "fault": false,
+   "cycles": {
+    "rows": 20,
+    "qk": 1,
+    "kv4": 0,
+    "lines": 80,
+    "first_in": 21,
+    "last_in": 155,
+    "last_out": 319,
+    "span": 298,
+    "beats": 160,
+    "first_beat": 76,
+    "last_beat": 263
+   },
+   "results": 20,
+   "expected": 20,
+   "mismatches": 2,
+   "pass": false
+  },
+  {
+   "name": "pv_sm0",
+   "kind": "pv",
+   "kv4": 0,
+   "rows": 32,
+   "rc": 0,
+   "fault": false,
+   "cycles": {
+    "rows": 32,
+    "qk": 0,
+    "kv4": 0,
+    "lines": 128,
+    "first_in": 45,
+    "last_in": 265,
+    "last_out": 425,
+    "span": 380,
+    "beats": 256,
+    "first_beat": 100,
+    "last_beat": 355
+   },
+   "results": 512,
+   "expected": 512,
+   "mismatches": 480,
+   "pass": false
+  }
+ ]
+}
