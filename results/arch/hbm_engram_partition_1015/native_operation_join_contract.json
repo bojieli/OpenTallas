@@ -1,0 +1,157 @@
+{
+  "schema": "opentallas.hbm.engram.native_operation_join_contract.v1",
+  "status": "typed_successor_integration_in_progress",
+  "operation": "ENGRAM_FETCH_ROWS8_GATHER_DECODE",
+  "released_table_rows": [
+    384006168,
+    384016682
+  ],
+  "row_bytes": 288,
+  "table_bytes": 221190580800,
+  "layer_home_ranks": {
+    "1": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "14": [
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15
+    ]
+  },
+  "consumer_candidate_rank": {
+    "1": 8,
+    "14": 16
+  },
+  "host": {
+    "fetch_target": 124,
+    "collective_targets": [
+      120,
+      121,
+      122,
+      123
+    ],
+    "fetch_encoding": "raw_engram_fetch7x32",
+    "meaningful_bits": 224,
+    "words": 128,
+    "operations_per_word": 7,
+    "maximum_ops": 896,
+    "active_descriptor_guard_core_edges": 130,
+    "disable_descriptor": [
+      0,
+      0,
+      0
+    ],
+    "disable_guard_core_edges": 2,
+    "global_launch": "actual loader LCP[71] via global C10; all configured targets participate",
+    "token": "runtime producer input CID17/valid/first, never programme immediate",
+    "four_VM_whole_token_image_available": false,
+    "full_host_bootstrap_qualified": false
+  },
+  "memory": {
+    "maximum_released_columns_per_home": 4,
+    "physical_address": "TABLE_BASE96GiB + home-local row*288; native mapper stack3 XOR PC/bank/row/column",
+    "frontend": "36 mapped request flops, BEGIN/END CDC64x48, independent stable-row groups per PC, fair retained-head response arbitration",
+    "controller_ownership": "one common read32 bank/refresh owner per rank/stack/PC shared among all clients; no private duplicated Engram controller",
+    "controller_shared_client_reservation_bound": false,
+    "external_read_return_HBM_edges": 23,
+    "sample_fetch_core_edges": 8228,
+    "universally_admitted_fetch_core_edges": null,
+    "original_performance_contract_waived": false,
+    "known_common_source_gap": "old c664/r14 allows samebank PRE/RD overlap under another gapped profile; singular-family repair/reproof pending",
+    "staging_SRAMs_per_home": 2,
+    "staging_macro_bits": 32768,
+    "epoch_banks": 1,
+    "overlap_rule": "next EPOCH after every prior home COLL read; ping-pong SRAM needed if whole-token throughput requires overlap"
+  },
+  "source_read": {
+    "input": [
+      "local_read_v",
+      "local_read_slot2",
+      "local_read_sector4"
+    ],
+    "response_age_core_edges": 3,
+    "output": [
+      "slot_response_v",
+      "slot_response_present",
+      "slot_response_row5",
+      "slot_response_sector4",
+      "raw_v",
+      "raw_data256"
+    ],
+    "absent_slot": "metadata present0 at +3; raw_v0 and no unwritten SRAM access"
+  },
+  "collective": {
+    "native_packet_bits": 545,
+    "fields": [
+      "valid1",
+      "dst8",
+      "globalhome8",
+      "index16",
+      "payload512"
+    ],
+    "index": "5*original_column+chunk",
+    "chunks": 5,
+    "tail": "chunk4 low256=sector8; high256zero",
+    "physical_reservations_per_operation": 160,
+    "actual_payloads_for24rows": 120,
+    "absent": "inner present0 application NOP consumes outer physical/sequence reservation; native successor codec/control proof pending",
+    "all_token_template_qualified": false,
+    "full96rank_broadcast_qualified": false
+  },
+  "decode": {
+    "module": "ot_hbm_engram_row_store_decode",
+    "consumer_DECODE_ENABLE": 1,
+    "read_order": "sector8 scales first, then0..7 code sectors for each original row",
+    "output": "out_v,row5,block3,data512 (32BF16 lanes)",
+    "response_age_core_edges": 3,
+    "blocks_per_row": 8,
+    "numerical_component_qualified": true,
+    "architectural_WKV_consumer_module": null,
+    "architectural_consumer_join_qualified": false
+  },
+  "hardware": {
+    "frontend_logical_FF_by_clock_per_home": {
+      "core_clk": 3426,
+      "hbm_clk": 3246
+    },
+    "frontend_inventory_excludes": [
+      "common read32 controller",
+      "32 response SRAMs/stack",
+      "two staging SRAMs/home"
+    ],
+    "physical_clock_route_qualified": false,
+    "protected_state_qualified": false
+  },
+  "qualification": {
+    "exact_released_numerical_memory_histories": true,
+    "actual_programme_to_L1_memory": true,
+    "actual_programme_test_FETCH_EDGES_parameter": 2624,
+    "production_programme_default_FETCH_EDGES": 18944,
+    "universal_address_REF_phase_calendar": false,
+    "full_collective_decode_WKV": false,
+    "whole_layer": false,
+    "released_throughput": false,
+    "physical": false
+  },
+  "source_sha256": {
+    "rtl/hbm_accel/engram_static_20261015/ot_hbm_engram_fetch_program.sv": "b6492ec5c60a92098ce5448e41da1ef86b77295fc67bb4c05ebd5e17c7715031",
+    "rtl/hbm_accel/engram_static_20261015/ot_hbm_engram_hash_home_native.sv": "23bdc9cc444b51b85bf0b7c353998cc4394cce6a73d843d973e2c98327f68f78",
+    "rtl/hbm_accel/engram_static_20261015/ot_hbm_engram_home_dispatch.sv": "1132b94038342443ba24380f1a1e697ebb8c7aa7c2fea231d2e83a991f8a94f9",
+    "rtl/hbm_accel/engram_static_20261015/ot_hbm_engram_home_fetch_grouped.sv": "7489252bf3122cdce08fc4b6f59a50a66d6898ac4c3064512ec3f4c43df101c4",
+    "rtl/hbm_accel/engram_static_20261015/ot_hbm_engram_row_store_decode.sv": "e450c13fee2e85d1c5099f225875af1914075ba7154894c5b50659e46505df2d",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_native_sector_pipeline_stack.sv": "e64cfb071eb16aca278f75bb0a5bdba6793b8fb74e4928c1a5d217f87697e65d",
+    "rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc.sv": "36ab8140f3a9f14d4098729f79f5091f1e67156409997dc2d6276387a23315c8"
+  }
+}
