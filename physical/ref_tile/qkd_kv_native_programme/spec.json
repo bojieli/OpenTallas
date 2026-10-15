@@ -7,9 +7,7 @@
  ],
  "params": {},
  "clock_port": "ck",
- "reset_ports": [
-  "rst_n"
- ],
+ "reset_ports": [],
  "outline": {
   "w": 86.4,
   "h": 194.4,
@@ -62,14 +60,14 @@
  },
  "slot_change_request": "Exact candidate grant5838d364e, home4579.2,23371.2; parent producer/data reach/drain adoption held.",
  "job": {
-  "owner": "Codex:qwen_elements_1103",
-  "branch": "codex/qwen-elements-1103",
-  "tag": "p1",
+  "owner": "Claude:q15_compute_elem",
+  "branch": "claude/q15-kvprog-1015",
+  "tag": "p2",
   "purpose": "Final reset_v4 fixed native writer programme component only; +1 reset-release/start capture, output slotshift0. Parent production join held.",
   "benches": [
    {
     "name": "all36_two_tokens",
-    "cmd": "bash tools/qwen_static_kv/bench_native_programme_leaf.sh {RUN}/bench/programme_exact 0",
+    "cmd": "bash tools/qwen_static_kv/bench_native_programme_leaf_v2.sh {RUN}/bench/programme_exact 0",
     "expect": "pass",
     "pass_regex": "PASS programme\\+native_writer all36 two_tokens",
     "threads": 1,
@@ -80,7 +78,7 @@
    },
    {
     "name": "actual_slot_mutant",
-    "cmd": "bash tools/qwen_static_kv/bench_native_programme_leaf.sh {RUN}/bench/programme_mutant 1",
+    "cmd": "bash tools/qwen_static_kv/bench_native_programme_leaf_v2.sh {RUN}/bench/programme_mutant 1",
     "expect": "fail",
     "fail_regex": "OBSERVED_FAIL_native_programme_MUT1",
     "threads": 1,
@@ -91,12 +89,14 @@
    }
   ],
   "extra_paths": [
-   "tools/qwen_static_kv/bench_native_programme_leaf.sh",
-   "results/rtl/qwen_native_kv_programme_1103/leaf_package_v1",
+   "tools/qwen_static_kv/bench_native_programme_leaf_v2.sh",
+   "results/rtl/qwen_native_kv_programme_1103/leaf_package_v2",
    "results/arch/qwen_split_1014/kvsys_v1_4_2/programme_grant"
   ],
   "views_to": "physical/ref_tile/qkd_kv_native_programme/views",
-  "record_to": "results/rtl/ref_tile/qkd_kv_native_programme"
+  "record_to": "results/rtl/ref_tile/qkd_kv_native_programme",
+  "cycles_added": 0,
+  "structural_change": "p2 successor of p1-ecfd152ef (NEEDS_RTL TT -55.12 / FF -4.04, 512 violating D). Setup: (1) boot-table write registered once (one-hot stage/word + data, lands one edge after accept) - p1 fanned accept_cfg/cfg_stage/cfg_word decode out to 5,760 table enables; (2) the cfg_word==4 ordering check reads shadow copies of the stage's words 0-3 instead of a 36-way table mux (p1 cfg_stage -> fault 21 levels); (3) slot compare cycle == t-1 with t-1 registered and the root row read one edge after the accepted start (p1 cycle+1 adder + 32-bit equality -> slot flops; stage_p -> 36-way mux -> t at start). Exact: boot check enforces t0 >= 4, so no match is possible before the new tm* are valid; the ld edge is gated. Hold: rst_n -> reset_pin_n async RESETN removal (-4.04) -> rst_n is now a synchronous data pin flop with the standard input hold pad (reset_ports [] so inhold covers it); reset assertion one edge later, release unchanged. 0 data/slot cycles added. Bench: leaf_package_v2 (v1 + p2 producer) all36 two_tokens PASS (1,152 cases / 4,608 slots), MUT1 observed FAIL (14 errors)."
  },
  "macros": [],
  "children": [],
