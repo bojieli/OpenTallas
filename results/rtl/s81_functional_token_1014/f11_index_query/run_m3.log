@@ -1,0 +1,4 @@
+IQ words=1 bad=0 fault=1 first=10 last=10 elapsed=0
+[160000] %Fatal: tb_s81_su_iq.sv:36: Assertion failed in tb_s81_su_iq: IQ FAIL
+%Error: /srv/opentallas-scratch/codex/s81-su-missing-v2/rtl/dsrom_sys/s81_suhc/test/tb_s81_su_iq.sv:36: Verilog $stop
+Aborting...

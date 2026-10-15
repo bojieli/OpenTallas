@@ -34,6 +34,25 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
 
 
+def s81_index_query_provider_model():
+    """Native32x128 index-query preparation before the actual SVC type4 port."""
+    return dict(schema="opentallas.s81.index-query-provider.v1", heads=32, head_dim=128,
+        source="released checkpoint index_n_heads32/index_head_dim128; per-rank replicated producer trace still required",
+        immutable_field_projection_price_cycles=93.0,
+        input_calendar="head h at start+2*h, packed BF16 query128 and BF16 weights_proj scalar",
+        arithmetic="RoPE last64, FP4 UE8M0 block32, weights_proj BF16 -> scale1/64 -> BF16",
+        reused_engines=dict(qr_row16=4,actquant_f12_fp4=4),
+        boundary_bytes_per_cycle=dict(input_peak=258,input_average=129,service_output_peak=64),
+        service_frame=dict(type=4,header_words=1,payload_words=64,head_order="natural0..31"),
+        fixed_pipeline_estimate=dict(rope=14,quant=20,first_payload_pin=34,last_payload_pin=97),
+        estimate_scope="not measured; actual field release, memory, relay and service-load calendars must compose",
+        physical=dict(clock_roots=12,frame_metadata_hold_bits=48,
+            first_half_delay="2 mapped64x512 SRAMs,14cycles",
+            quant_wait="XSRAM1,2 mapped64x512 SRAMs per32element block",
+            outlines="native physical join owner assigns",route_admissible=False),
+        no_dynamic_reschedule=True)
+
+
 def s81_cn_ik_shared_kv_model(s_rd=16, s_wr=16):
     """F11 functional successor: share the existing512-lane KV norm bank.
 
