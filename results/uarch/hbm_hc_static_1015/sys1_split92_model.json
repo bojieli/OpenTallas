@@ -1,0 +1,70 @@
+{
+  "scope": "92root actual source partition successor BEFORE leaf proof freeze and composition",
+  "source_parent": "2168cf365",
+  "physical_leaf_owner": "/root/h_hc_physical",
+  "one_engine_per_die": true,
+  "clock_roots": {
+    "weight_quarter": 32,
+    "residual_half": 16,
+    "bank_control": 8,
+    "parameterless_LG8_MAC": 32,
+    "command_descriptor": 1,
+    "reduction_raw_write": 1,
+    "scalar_projection_tail": 1,
+    "Sinkhorn": 1
+  },
+  "total_minimum": 92,
+  "SRAMs": {
+    "weights": 64,
+    "residuals": 16,
+    "programme": 2,
+    "native_prefetch": 128,
+    "native_external_VM": 96,
+    "native_command_response": 128
+  },
+  "FF_delta_per_bank": "approximately870; leafactualcensus pending",
+  "weight_quarter_straps": "expectedbank3+expectedquarter2 staticcaptured, one reusablemaster",
+  "memory_bandwidth_B_per_cycle": {
+    "bank_weight_reads": 128,
+    "bank_residual_reads": 64,
+    "native_weight_staging_total": 128,
+    "allbank_residual_write": 512
+  },
+  "boundary_bits_per_bank_cycle": {
+    "AP": 278,
+    "partial_sum": 1024,
+    "descriptor": 40,
+    "weight_to_MAC": 1024,
+    "residual_to_MAC": 512
+  },
+  "write_delta": {
+    "residual": 1,
+    "weight_aperture": 0
+  },
+  "residual_write_n": "pin register atn, actual SRAM write atn+1",
+  "read_latency": "TML3 unchanged, exact composed proof pending",
+  "candidate_SYS_LAT": 86,
+  "candidate_raw_result_ages": [
+    322,
+    482,
+    642,
+    802,
+    962,
+    1122,
+    1282,
+    1442
+  ],
+  "candidate_periods": {
+    "6": 1133,
+    "8": 1453
+  },
+  "single_user_latency_delta": "one extra residuallanding writeedge before earliest rowlaunch; frozen fixture has priced preload gap, canonicalallocator must reserve it",
+  "routing_tracks_capacity": "OPEN actual pin/reach/cut grant; no prior500x1020slot timinggrant",
+  "area_fit": "OPEN nativeCTS/hardenedmaster dimensions+census required",
+  "qualification": {
+    "functional": false,
+    "physical": false,
+    "native_whole_kernel": false
+  },
+  "clock_phases": "all roots synchronous, independent physical insertion/reach SS/FF proofrequired; functionalbench equalphase only"
+}
