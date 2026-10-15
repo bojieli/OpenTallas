@@ -28,6 +28,7 @@ Called at the end of before_relays (after _tp8b_kv), i.e. on the final placement
 Emission (masters / LEF / netlist): port kind 'pins' (explicit positions), PORT_SPLIT (a die bundle = several view ports,
 LSB first), TIES (constants: straps, chain ends, tap_r), PHY pin groups ('*dfi:<group>').
 """
+import json
 import math
 import copy
 import re
@@ -172,6 +173,7 @@ SPLIT = {
     # closed qkd_kvwq_ctl_bin-sl1-ecdaf6345 (rtl/physical/ot_qwen_kv_slot_wrappers.sv)
     'qkd_kvwq_ctl_bin': dict(kvn=[('kvn_d', 1047), ('kvn_cr', 1)]),
     'qfd_seq_su': dict(cd=[('cd_d', 547), ('cd_cr', 1)]),
+    'ot_qfd_x3_mux_native': dict(x3=[('x3_d', 512), ('x3_tag', 11), ('x3_v', 1)]),   # v1.3 x3 mux, x3 bundle LSB first
     'qfd_su_cbuf_g': dict(ck=[('clk', 1)], fa=[('f_re', 8), ('f_addr', 192), ('f_stage', 6)],
         fq=[('f_q', 512), ('f_fault', 1)], ctl=[('stage', 6), ('tok_start', 1), ('tpos', 18)],
         rdy=[('st_rdy', 1), ('st_rdy_stage', 6), ('fault', 1), ('fault_code', 2)],
@@ -623,7 +625,8 @@ def apply(v, m, G):
     B = [(b, 'reset' if b in ('rst_seq', 'rst_seq_ctlm', 'rst_fwd_s') else c, n, e) for b, c, n, e in B]
     field = [(i.name, 'rst_n') for i in m['insts'] if i.master in STATIONS or i.master == 'qfd_tile_nk']
     spine = [(i.name, 'rst_n') for i in m['insts'] if i.master in ('qfd_sp_res_ser', 'qfd_tt_up4', 'qfd_crom_g',
-                                                                    'qfd_su_cbuf_g')]
+                                                                    'qfd_su_cbuf_g')
+             or (SPLIT_COMPUTE and i.master.startswith('qfd_port_tiles_'))]   # v1.3: static slab RTL has rst_n
     B += [('rst_field', 'reset', 1, [('rstseq_rom', 'rso_f')] + field),
           ('rst_spine', 'reset', 1, [('rstseq_rom', 'rso_s')] + spine)]
     rec['reset'] = dict(rst_field=len(field), rst_spine=len(spine), leaves=(['rstseq'] if pll is not None else []) + ['rstseq_rom'])
@@ -1637,8 +1640,52 @@ def _wrap(v, m, G, peers):
                     band.ports[pn]=sp[:-1]+(2,)
                 band.order = list(dict.fromkeys(band.order + ['b0','lnk']))
                 band.obs_top = 7  # actual native cluster signalsM2-M7/PGM7, not a leaf-only M6 draft
+            # v1.3 (compute lead r4): the tile parents' clock entries at their CLOSED children's measured clock-pin XY
+            # (results/arch/qwen_compute_child_clocks_1014/entries.json, same form as the band leaves above), not 15
+            # coincident centre pins; every master's port order de-duplicated (a port listed twice wrote its pins twice)
+            if SPLIT_COMPUTE:
+                ej = Path(__file__).resolve().parents[2] / 'results/arch/qwen_compute_child_clocks_1014/entries.json'
+                ents = json.loads(ej.read_text())['masters'] if ej.exists() else {}
+                for tn in ('qfd_tile_nk', 'qfd_tile_nl'):
+                    tm = M.get(tn)
+                    if tm is None or tn not in ents:
+                        continue
+                    for pn, ch in ents[tn]['children'].items():
+                        if pn in tm.ports or pn in tm.order:
+                            _sn = lambda z: round(0.012 + round((z - 0.012) / 0.048) * 0.048, 4)   # M5 / M4 track lattice
+                            tm.ports[pn] = ('xy', 1, 'M5', [(_sn(ch['at'][0]), _sn(ch['at'][1]))], 1)
+                            if pn not in tm.order:
+                                tm.order.append(pn)
+                # the x tap keeps its OFFICIAL pin plan (f757 / c15 preflight, the DVM kit physical/ref_tile/qfd_xs_tap
+                # is gated on it): the C16 auto-face pass put gi / xpf on top of sw (221 overlapping M4 pins)
+                tj = Path(__file__).resolve().parents[2] / 'results/arch/qwen_split_compute_1014/c15_preflight/qfd_xs_tap.json'
+                tq = M.get('qfd_xs_tap')
+                if tq is not None and tj.exists():
+                    for pn, rec_ in json.loads(tj.read_text())['ports'].items():
+                        if pn not in tq.ports and pn not in tq.order:
+                            continue
+                        lo_, hi_ = rec_['range_um']
+                        n_ = rec_['bits']
+                        pos_ = [round(lo_ + (hi_ - lo_) * j / (n_ - 1), 4) for j in range(n_)] if n_ > 1 else [lo_]
+                        tq.ports[pn] = ('pins', n_, rec_['face'], rec_['layer'], pos_, 1)
+                if any(i.master == 'ot_qfd_x3_mux_native' for i in model['insts']):
+                    xm = Master('ot_qfd_x3_mux_native', 129.6, 129.6, 5, 'static x3 mux (kit qfd_x3_mux_nativer, CLOSED)')
+                    xm.face('q', 524, 'W', 'M4', 64.8, 2)
+                    xm.face('x3', 524, 'E', 'M4', 64.8, 2)
+                    xm.ports['ck'] = ('pins', 1, 'N', 'M5', [V4.snap(40.0)], 1)
+                    xm.ports['rst_n'] = ('pins', 1, 'N', 'M5', [V4.snap(50.0)], 1)
+                    xm.order += ['ck', 'rst_n']
+                    M['ot_qfd_x3_mux_native'] = xm
+            if SPLIT_COMPUTE:
+                from qwen_split.source_pin_plan import apply as source_pin_plan
+                source_pin_plan(M)
+            for mst_ in M.values():
+                mst_.order[:] = list(dict.fromkeys(mst_.order))
 
     v.V5_FINAL_MASTERS = final
+    # split compute C17: band_lanes may be placed MX (band 0 stack mirrored); its clock pins are the closed native view's
+    # real pins set in final(), so the generic mirror clock-pin relocation must not run for it
+    v.MIRROR_CK_FINAL = ('qfd_sp_band_lanes',) if SPLIT_COMPUTE else ()
 
     def port_widths(model, k=1):
         w = base_pw(model, k)
@@ -1785,12 +1832,14 @@ def _wrap(v, m, G, peers):
             if byi[inst].master in tie_self and (byi[inst].master, port) in sys.modules['compute_spine'].STRAP_PORTS:
                 # v1.2: every strap bit from the instance's own TIEHI / TIELO outputs (MSB first)
                 hi, lo = f'tih_{inst}', f'til_{inst}'
-                conns[inst].append(f'.{port}({{' + ', '.join(hi if (val >> b) & 1 else lo for b in range(bits - 1, -1, -1)) + '})')
+                conns[inst].append(f'.{port}({{' + ', '.join(f'{hi}[0]' if (val >> b) & 1 else f'{lo}[0]' for b in range(bits - 1, -1, -1)) + '})')
                 tied.add(inst)
             else:
                 conns[inst].append(f".{port}({bits}'h{val:x})")
         for inst in sorted(tied):
-            conns[inst] += [f'.tie_hi(tih_{inst})', f'.tie_lo(til_{inst})']
+            conns[inst] += [f'.tie_hi(tih_{inst}[0])', f'.tie_lo(til_{inst}[0])']
+            V.append(f'  wire [0:0] tih_{inst};')
+            V.append(f'  wire [0:0] til_{inst};')
         for inst, d in phyb.items():
             for b, bits_ in sorted(d.items()):
                 hi = max(bits_)
