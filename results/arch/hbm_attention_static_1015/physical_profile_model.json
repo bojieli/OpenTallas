@@ -36,5 +36,17 @@
     "ActualregisteredPSrow producer storage/source allocation and finalnativeprogramme",
     "FullH16TD32NL2FPL6FML8 exact golden+mutant proof",
     "Actualcontroller/gather/staging footprint and physicalclosure"
-  ]
+  ],
+  "staging_memory": {
+    "row_lanes": 2,
+    "words_per_lane_required": 320,
+    "slices_per_lane": 17,
+    "macro": "ot_sram_1r1w_1024x256_m2_r2c2",
+    "macro_count": 34,
+    "allocated_bits": 8912896,
+    "useful_payload_bits": 2713600,
+    "latency_edges": 1,
+    "physical_fit_qualified": false,
+    "reason": "Inherited 256-row macro helper cannot represent T640/NL2; no depth truncation allowed."
+  }
 }

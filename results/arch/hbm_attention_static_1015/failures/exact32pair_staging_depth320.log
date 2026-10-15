@@ -1,0 +1,39 @@
+make: Entering directory '/srv/opentallas-scratch/codex/hbm-att-physical-profile-f5cf/full_gate/obj'
+make[1]: Entering directory '/srv/opentallas-scratch/codex/hbm-att-physical-profile-f5cf'
+/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator -f /srv/opentallas-scratch/codex/hbm-att-physical-profile-f5cf/full_gate/obj/Vot_hdc_v41x_attn_staging_d__hierMkArgs.f
+make[1]: Entering directory '/srv/opentallas-scratch/codex/hbm-att-physical-profile-f5cf'
+/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator -f /srv/opentallas-scratch/codex/hbm-att-physical-profile-f5cf/full_gate/obj/Vot_hdc_v41x_qaddf_6__hierMkArgs.f
+make[1]: Entering directory '/srv/opentallas-scratch/codex/hbm-att-physical-profile-f5cf'
+/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator -f /srv/opentallas-scratch/codex/hbm-att-physical-profile-f5cf/full_gate/obj/Vot_hdc_v41x_attn_merge_s_6__hierMkArgs.f
+make[1]: Entering directory '/srv/opentallas-scratch/codex/hbm-att-physical-profile-f5cf'
+/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator -f /srv/opentallas-scratch/codex/hbm-att-physical-profile-f5cf/full_gate/obj/Vot_hdc_v41x_qaddf_6__hierMkArgs.f
+%Error: rtl/hdc/v41x/ot_hdc_v41x_attn_staging.sv:35:67: Replication value of < 0 or X/Z not legal (IEEE 1800-2023 11.4.12.1): '32'hffffffff'
+                                                      : ... note: In instance 'ot_hdc_v41x_attn_staging'
+   35 |                     .clk(clk), .r_ce_in(1'b1), .r_addr_in({{(8-AW){1'b0}}, rd_addr}),
+      |                                                                   ^
+        ... See the manual at https://verilator.org/verilator_doc.html?v=5.050 for more assistance.
+%Error: rtl/hdc/v41x/ot_hdc_v41x_attn_staging.sv:37:60: Replication value of < 0 or X/Z not legal (IEEE 1800-2023 11.4.12.1): '32'hffffffff'
+                                                      : ... note: In instance 'ot_hdc_v41x_attn_staging'
+   37 |                     .w_ce_in(wr_en[l]), .w_addr_in({{(8-AW){1'b0}}, wr_addr}),
+      |                                                            ^
+%Error: Exiting due to 2 error(s)
+make[1]: *** [/srv/opentallas-scratch/codex/hbm-att-physical-profile-f5cf/full_gate/obj/Vtb_hbm_attn_physical_calendar_hier.mk:48: hier_launch_verilator] Error 1
+make[1]: Leaving directory '/srv/opentallas-scratch/codex/hbm-att-physical-profile-f5cf'
+make: *** [Vtb_hbm_attn_physical_calendar_hier.mk:57: Vot_hdc_v41x_attn_staging_d/Vot_hdc_v41x_attn_staging_d.mk] Error 2
+make: *** Waiting for unfinished jobs....
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 3.070 MB sources in 76 modules, into 0.440 MB in 8 C++ files needing 0.001 MB
+- Verilator: Walltime 0.111 s (elab=0.025, cvt=0.057, bld=0.000); cpu 0.111 s on 1 threads; allocated 54.383 MB
+make[1]: Leaving directory '/srv/opentallas-scratch/codex/hbm-att-physical-profile-f5cf'
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 3.070 MB sources in 76 modules, into 0.440 MB in 8 C++ files needing 0.001 MB
+- Verilator: Walltime 0.147 s (elab=0.035, cvt=0.075, bld=0.000); cpu 0.144 s on 1 threads; allocated 54.383 MB
+make[1]: Leaving directory '/srv/opentallas-scratch/codex/hbm-att-physical-profile-f5cf'
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 3.070 MB sources in 76 modules, into 45.013 MB in 55 C++ files needing 0.013 MB
+- Verilator: Walltime 10.349 s (elab=0.145, cvt=9.677, bld=0.000); cpu 10.349 s on 1 threads; allocated 1012.383 MB
+make[1]: Leaving directory '/srv/opentallas-scratch/codex/hbm-att-physical-profile-f5cf'
+make: Leaving directory '/srv/opentallas-scratch/codex/hbm-att-physical-profile-f5cf/full_gate/obj'
+%Error: make -C /srv/opentallas-scratch/codex/hbm-att-physical-profile-f5cf/full_gate/obj -f Vtb_hbm_attn_physical_calendar_hier.mk  -j 4  hier_build exited with 2
+        ... See the manual at https://verilator.org/verilator_doc.html?v=5.050 for more assistance.
+%Error: Command Failed ulimit -s unlimited 2>/dev/null; exec /home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator_bin --binary --timing --hierarchical -O1 -j 4 -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD --unroll-count 1 --unroll-limit 131072 --output-split 20000 --output-split-cfuncs 1000 --top-module tb_hbm_attn_physical_calendar --Mdir /srv/opentallas-scratch/codex/hbm-att-physical-profile-f5cf/full_gate/obj -o sim tools/hbm_static_attention/physical_hierarchy.vlt rtl/hdc/v41x/static/ot_hdc_v41x_attn_physical_calendar.sv rtl/hdc/v41x/static/ot_hbm_attn_physical_event_program.sv rtl/hdc/v41x/ot_hdc_v41x_attn_s.sv rtl/hdc/v41x/ot_hdc_v41x_attn.sv rtl/hdc/v41x/ot_hdc_v41x_attn_tile.sv rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv rtl/hdc/v41x/ot_hdc_v41x_kreg.sv rtl/hdc/v41x/ot_hdc_v41x_attn_staging.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_fp32_f12.sv rtl/hdc/v41x/ot_dsrom_su_add6.sv physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v rtl/test/hbm_accel/generic/tb_hbm_attn_physical_calendar.sv
