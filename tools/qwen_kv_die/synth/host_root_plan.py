@@ -110,7 +110,7 @@ def main():
         area=None, frame_fit=None,
         qualification="No area, physical fit, clock, timing or native parent qualification claim.")
     if a.lint:
-        command=[a.verilator,"--lint-only","-Wno-fatal","--top-module",TOP,
+        command=[a.verilator,"--lint-only","-Wno-fatal","--timescale","1ns/1ps","--top-module",TOP,
             *[f"-G{key}={value}" for key,value in PARAMS.items()],
             *[str(out/p) for p in rtl]]
         p=call(command)
