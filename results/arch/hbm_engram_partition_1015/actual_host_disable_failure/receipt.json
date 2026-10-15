@@ -1,0 +1,10 @@
+{
+  "schema": "opentallas.hbm.engram.actual_host_disable_failure.v1",
+  "status": "actual_source_defect",
+  "actual_host_source_sha256": "d64f4d37cede73a6fed44e59c7cd83b6cee8c21d6ea22d4828905f96c92a05c6",
+  "central_fragment": "F20=124,F28=0,F2c=0",
+  "source_rejection": "F2c unconditionally rejects loops0 or limit<=base, so source-owned target124 disable never reaches fetch controller",
+  "owner": "h_vm",
+  "fix_required": "Narrow actual host decoder exception for target124,base0,limit0,loops0 only; retain all other targets/ranges",
+  "scope": "Active native six-word SRAM initialization passes before actual disable transport failure. Whole four-VM/kernel launch remains unavailable."
+}

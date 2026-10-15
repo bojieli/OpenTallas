@@ -71,7 +71,12 @@
         "actual_CSR_roundtrip": true,
         "whole_host_kernel": false
       }
-    }
+    },
+    "actual_AXI_to_target124_SRAM_configuration_qualified": true,
+    "actual_AXI_to_target124_disable_qualified": true,
+    "actual_host_adapter_commit": "25c169297",
+    "actual_host_adapter_sha256": "a6da24497f0ef4dab6077ed238bb2bcb5a996ee1331a896e8448dc46c1270510",
+    "observed_native_initialization_age_from_actual_descriptor": 130
   },
   "memory": {
     "maximum_released_columns_per_home": 4,

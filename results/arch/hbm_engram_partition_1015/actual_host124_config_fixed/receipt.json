@@ -1,0 +1,25 @@
+{
+  "schema": "opentallas.hbm.engram.actual_host_config.v1",
+  "status": "pass",
+  "runs": [
+    {
+      "name": "baseline",
+      "returncode": 0,
+      "output": "ACTIVE target124 six-word SRAM scan passed age130\nPASS actual central CSR fragment\u2192AXI target124\u2192SRAM scan six256words age130 disable retained; unconfigured fourVM global launch blocked\n/srv/opentallas-scratch/codex/hbm-engram-repartition-1015-pipeline/actual_host124_config_fixed/tb.sv:109: $finish called at 230417851 (1fs)"
+    },
+    {
+      "name": "actual_host_payload_bit4_mutant",
+      "returncode": 1,
+      "output": "FATAL: /srv/opentallas-scratch/codex/hbm-engram-repartition-1015-pipeline/actual_host124_config_fixed/tb.sv:18: actual host124 frame packing/address\n       Time: 17917681  Scope: tb.tick"
+    }
+  ],
+  "central_source_sha256": {
+    "tools/hbm_static/host_program_image.py": "4e2be1703950755830a1b7febceafb1c7996f89cdf07d0af6e33d736d23d9a5f",
+    "tools/hbm_static/program_registry.py": "078be4431096d7e9a9b033a40e728d630c72f271848732b4c62ab6a534360f2d",
+    "results/arch/hbm_vm_calendar_1015/program_target_map.json": "be215271cf36e0c7ade4b21a6ce3df9b8ad5b1723b3e9be87bc2ece1dc615f55"
+  },
+  "fragment_sha256": "5dd2e34c8dfb52c01b1795cfdee55859e061ffc14443383921efae737675680a",
+  "actual_host_source_sha256": "a6da24497f0ef4dab6077ed238bb2bcb5a996ee1331a896e8448dc46c1270510",
+  "actual_fetch_source_sha256": "b6492ec5c60a92098ce5448e41da1ef86b77295fc67bb4c05ebd5e17c7715031",
+  "scope": "Actual external host AXI writes and real adapter\u2192native124 SRAM initialization/disable. No invented VM calendars; real host rejects global launch because all four actual VM descriptors are absent. Loader C10 execution/architectural kernel remains open."
+}

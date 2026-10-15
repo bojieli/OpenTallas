@@ -1,0 +1,318 @@
+{
+  "active": {
+    "schema": "opentallas.hbm.actual-host-program-fragment.v1",
+    "axi_writes": [
+      {
+        "address": 3872,
+        "data": 124
+      },
+      {
+        "address": 3876,
+        "data": 1
+      },
+      {
+        "address": 3876,
+        "data": 2
+      },
+      {
+        "address": 3876,
+        "data": 0
+      },
+      {
+        "address": 3876,
+        "data": 0
+      },
+      {
+        "address": 3876,
+        "data": 0
+      },
+      {
+        "address": 3876,
+        "data": 0
+      },
+      {
+        "address": 3876,
+        "data": 0
+      },
+      {
+        "address": 3876,
+        "data": 0
+      },
+      {
+        "address": 3872,
+        "data": 380
+      },
+      {
+        "address": 3876,
+        "data": 0
+      },
+      {
+        "address": 3876,
+        "data": 0
+      },
+      {
+        "address": 3876,
+        "data": 0
+      },
+      {
+        "address": 3876,
+        "data": 0
+      },
+      {
+        "address": 3876,
+        "data": 0
+      },
+      {
+        "address": 3876,
+        "data": 0
+      },
+      {
+        "address": 3876,
+        "data": 0
+      },
+      {
+        "address": 3876,
+        "data": 0
+      },
+      {
+        "address": 3872,
+        "data": 636
+      },
+      {
+        "address": 3876,
+        "data": 0
+      },
+      {
+        "address": 3876,
+        "data": 0
+      },
+      {
+        "address": 3876,
+        "data": 0
+      },
+      {
+        "address": 3876,
+        "data": 0
+      },
+      {
+        "address": 3876,
+        "data": 0
+      },
+      {
+        "address": 3876,
+        "data": 0
+      },
+      {
+        "address": 3876,
+        "data": 0
+      },
+      {
+        "address": 3876,
+        "data": 0
+      },
+      {
+        "address": 3872,
+        "data": 892
+      },
+      {
+        "address": 3876,
+        "data": 0
+      },
+      {
+        "address": 3876,
+        "data": 0
+      },
+      {
+        "address": 3876,
+        "data": 0
+      },
+      {
+        "address": 3876,
+        "data": 0
+      },
+      {
+        "address": 3876,
+        "data": 0
+      },
+      {
+        "address": 3876,
+        "data": 0
+      },
+      {
+        "address": 3876,
+        "data": 0
+      },
+      {
+        "address": 3876,
+        "data": 0
+      },
+      {
+        "address": 3872,
+        "data": 1148
+      },
+      {
+        "address": 3876,
+        "data": 0
+      },
+      {
+        "address": 3876,
+        "data": 0
+      },
+      {
+        "address": 3876,
+        "data": 0
+      },
+      {
+        "address": 3876,
+        "data": 0
+      },
+      {
+        "address": 3876,
+        "data": 0
+      },
+      {
+        "address": 3876,
+        "data": 0
+      },
+      {
+        "address": 3876,
+        "data": 0
+      },
+      {
+        "address": 3876,
+        "data": 0
+      },
+      {
+        "address": 3872,
+        "data": 1404
+      },
+      {
+        "address": 3876,
+        "data": 0
+      },
+      {
+        "address": 3876,
+        "data": 0
+      },
+      {
+        "address": 3876,
+        "data": 0
+      },
+      {
+        "address": 3876,
+        "data": 0
+      },
+      {
+        "address": 3876,
+        "data": 0
+      },
+      {
+        "address": 3876,
+        "data": 3
+      },
+      {
+        "address": 3876,
+        "data": 0
+      },
+      {
+        "address": 3876,
+        "data": 0
+      },
+      {
+        "idle_core_edges": 2,
+        "reason": "actual raw programme final-word commit before descriptor"
+      },
+      {
+        "address": 3880,
+        "data": 172032
+      },
+      {
+        "address": 3884,
+        "data": 1
+      }
+    ],
+    "launch_guard_core_edges": 130,
+    "target_manifest": {
+      "target": 124,
+      "encoding": "raw_engram_fetch7x32",
+      "payload_bits": 224,
+      "transport_bits": 256,
+      "words": 6,
+      "start": {
+        "base": 0,
+        "limit": 42,
+        "loops": 1
+      },
+      "source": "ot_hbm_engram_fetch_program",
+      "native_op_pc_bits": 10,
+      "native_profile": null,
+      "native_banks": null
+    }
+  },
+  "disabled": {
+    "schema": "opentallas.hbm.actual-host-program-fragment.v1",
+    "axi_writes": [
+      {
+        "address": 3872,
+        "data": 124
+      },
+      {
+        "address": 3880,
+        "data": 0
+      },
+      {
+        "address": 3884,
+        "data": 0
+      }
+    ],
+    "launch_guard_core_edges": 2,
+    "target_manifest": {
+      "target": 124,
+      "encoding": "raw_engram_fetch7x32",
+      "disabled": true,
+      "source": "ot_hbm_engram_fetch_program"
+    }
+  },
+  "central_source_sha256": {
+    "tools/hbm_static/host_program_image.py": "4e2be1703950755830a1b7febceafb1c7996f89cdf07d0af6e33d736d23d9a5f",
+    "tools/hbm_static/program_registry.py": "078be4431096d7e9a9b033a40e728d630c72f271848732b4c62ab6a534360f2d",
+    "results/arch/hbm_vm_calendar_1015/program_target_map.json": "be215271cf36e0c7ade4b21a6ce3df9b8ad5b1723b3e9be87bc2ece1dc615f55"
+  },
+  "actual_image": {
+    "target": 124,
+    "encoding": "raw_engram_fetch7x32",
+    "programme": {
+      "start": {
+        "base": 0,
+        "limit": 42,
+        "loops": 1
+      },
+      "configuration_writes": [
+        {
+          "addr": 0,
+          "data": "0000000000000000000000000000000000000000000000000000000200000001"
+        },
+        {
+          "addr": 1,
+          "data": "0000000000000000000000000000000000000000000000000000000000000000"
+        },
+        {
+          "addr": 2,
+          "data": "0000000000000000000000000000000000000000000000000000000000000000"
+        },
+        {
+          "addr": 3,
+          "data": "0000000000000000000000000000000000000000000000000000000000000000"
+        },
+        {
+          "addr": 4,
+          "data": "0000000000000000000000000000000000000000000000000000000000000000"
+        },
+        {
+          "addr": 5,
+          "data": "0000000000000000000000030000000000000000000000000000000000000000"
+        }
+      ]
+    }
+  }
+}
