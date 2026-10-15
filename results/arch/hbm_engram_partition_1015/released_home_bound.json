@@ -1,0 +1,710 @@
+{
+  "schema": "opentallas.hbm.engram.released_home_bound.v1",
+  "status": "pass",
+  "homes_per_layer": 8,
+  "rows_per_token": 24,
+  "max_rows_per_home": 4,
+  "method": "Each of24 hash columns emits exactly one residue+offset inside its own released prime interval; a home intersects atmost4 intervals. This counts all possible row addresses, not sampled histories.",
+  "layers": [
+    {
+      "layer": 1,
+      "columns": [
+        {
+          "column": 0,
+          "begin": 0,
+          "end": 16000057
+        },
+        {
+          "column": 1,
+          "begin": 16000057,
+          "end": 32000136
+        },
+        {
+          "column": 2,
+          "begin": 32000136,
+          "end": 48000217
+        },
+        {
+          "column": 3,
+          "begin": 48000217,
+          "end": 64000314
+        },
+        {
+          "column": 4,
+          "begin": 64000314,
+          "end": 80000435
+        },
+        {
+          "column": 5,
+          "begin": 80000435,
+          "end": 96000564
+        },
+        {
+          "column": 6,
+          "begin": 96000564,
+          "end": 112000697
+        },
+        {
+          "column": 7,
+          "begin": 112000697,
+          "end": 128000880
+        },
+        {
+          "column": 8,
+          "begin": 128000880,
+          "end": 144001069
+        },
+        {
+          "column": 9,
+          "begin": 144001069,
+          "end": 160001276
+        },
+        {
+          "column": 10,
+          "begin": 160001276,
+          "end": 176001487
+        },
+        {
+          "column": 11,
+          "begin": 176001487,
+          "end": 192001740
+        },
+        {
+          "column": 12,
+          "begin": 192001740,
+          "end": 208002017
+        },
+        {
+          "column": 13,
+          "begin": 208002017,
+          "end": 224002306
+        },
+        {
+          "column": 14,
+          "begin": 224002306,
+          "end": 240002613
+        },
+        {
+          "column": 15,
+          "begin": 240002613,
+          "end": 256002934
+        },
+        {
+          "column": 16,
+          "begin": 256002934,
+          "end": 272003273
+        },
+        {
+          "column": 17,
+          "begin": 272003273,
+          "end": 288003654
+        },
+        {
+          "column": 18,
+          "begin": 288003654,
+          "end": 304004047
+        },
+        {
+          "column": 19,
+          "begin": 304004047,
+          "end": 320004446
+        },
+        {
+          "column": 20,
+          "begin": 320004446,
+          "end": 336004849
+        },
+        {
+          "column": 21,
+          "begin": 336004849,
+          "end": 352005258
+        },
+        {
+          "column": 22,
+          "begin": 352005258,
+          "end": 368005705
+        },
+        {
+          "column": 23,
+          "begin": 368005705,
+          "end": 384006168
+        }
+      ],
+      "homes": [
+        {
+          "rank": 0,
+          "begin": 0,
+          "end": 48000771,
+          "possible_columns": [
+            {
+              "column": 0,
+              "begin": 0,
+              "end": 16000057
+            },
+            {
+              "column": 1,
+              "begin": 16000057,
+              "end": 32000136
+            },
+            {
+              "column": 2,
+              "begin": 32000136,
+              "end": 48000217
+            },
+            {
+              "column": 3,
+              "begin": 48000217,
+              "end": 48000771
+            }
+          ],
+          "max_rows": 4
+        },
+        {
+          "rank": 1,
+          "begin": 48000771,
+          "end": 96001542,
+          "possible_columns": [
+            {
+              "column": 3,
+              "begin": 48000771,
+              "end": 64000314
+            },
+            {
+              "column": 4,
+              "begin": 64000314,
+              "end": 80000435
+            },
+            {
+              "column": 5,
+              "begin": 80000435,
+              "end": 96000564
+            },
+            {
+              "column": 6,
+              "begin": 96000564,
+              "end": 96001542
+            }
+          ],
+          "max_rows": 4
+        },
+        {
+          "rank": 2,
+          "begin": 96001542,
+          "end": 144002313,
+          "possible_columns": [
+            {
+              "column": 6,
+              "begin": 96001542,
+              "end": 112000697
+            },
+            {
+              "column": 7,
+              "begin": 112000697,
+              "end": 128000880
+            },
+            {
+              "column": 8,
+              "begin": 128000880,
+              "end": 144001069
+            },
+            {
+              "column": 9,
+              "begin": 144001069,
+              "end": 144002313
+            }
+          ],
+          "max_rows": 4
+        },
+        {
+          "rank": 3,
+          "begin": 144002313,
+          "end": 192003084,
+          "possible_columns": [
+            {
+              "column": 9,
+              "begin": 144002313,
+              "end": 160001276
+            },
+            {
+              "column": 10,
+              "begin": 160001276,
+              "end": 176001487
+            },
+            {
+              "column": 11,
+              "begin": 176001487,
+              "end": 192001740
+            },
+            {
+              "column": 12,
+              "begin": 192001740,
+              "end": 192003084
+            }
+          ],
+          "max_rows": 4
+        },
+        {
+          "rank": 4,
+          "begin": 192003084,
+          "end": 240003855,
+          "possible_columns": [
+            {
+              "column": 12,
+              "begin": 192003084,
+              "end": 208002017
+            },
+            {
+              "column": 13,
+              "begin": 208002017,
+              "end": 224002306
+            },
+            {
+              "column": 14,
+              "begin": 224002306,
+              "end": 240002613
+            },
+            {
+              "column": 15,
+              "begin": 240002613,
+              "end": 240003855
+            }
+          ],
+          "max_rows": 4
+        },
+        {
+          "rank": 5,
+          "begin": 240003855,
+          "end": 288004626,
+          "possible_columns": [
+            {
+              "column": 15,
+              "begin": 240003855,
+              "end": 256002934
+            },
+            {
+              "column": 16,
+              "begin": 256002934,
+              "end": 272003273
+            },
+            {
+              "column": 17,
+              "begin": 272003273,
+              "end": 288003654
+            },
+            {
+              "column": 18,
+              "begin": 288003654,
+              "end": 288004626
+            }
+          ],
+          "max_rows": 4
+        },
+        {
+          "rank": 6,
+          "begin": 288004626,
+          "end": 336005397,
+          "possible_columns": [
+            {
+              "column": 18,
+              "begin": 288004626,
+              "end": 304004047
+            },
+            {
+              "column": 19,
+              "begin": 304004047,
+              "end": 320004446
+            },
+            {
+              "column": 20,
+              "begin": 320004446,
+              "end": 336004849
+            },
+            {
+              "column": 21,
+              "begin": 336004849,
+              "end": 336005397
+            }
+          ],
+          "max_rows": 4
+        },
+        {
+          "rank": 7,
+          "begin": 336005397,
+          "end": 384006168,
+          "possible_columns": [
+            {
+              "column": 21,
+              "begin": 336005397,
+              "end": 352005258
+            },
+            {
+              "column": 22,
+              "begin": 352005258,
+              "end": 368005705
+            },
+            {
+              "column": 23,
+              "begin": 368005705,
+              "end": 384006168
+            }
+          ],
+          "max_rows": 3
+        }
+      ]
+    },
+    {
+      "layer": 14,
+      "columns": [
+        {
+          "column": 0,
+          "begin": 0,
+          "end": 16000477
+        },
+        {
+          "column": 1,
+          "begin": 16000477,
+          "end": 32000964
+        },
+        {
+          "column": 2,
+          "begin": 32000964,
+          "end": 48001463
+        },
+        {
+          "column": 3,
+          "begin": 48001463,
+          "end": 64001970
+        },
+        {
+          "column": 4,
+          "begin": 64001970,
+          "end": 80002481
+        },
+        {
+          "column": 5,
+          "begin": 80002481,
+          "end": 96003054
+        },
+        {
+          "column": 6,
+          "begin": 96003054,
+          "end": 112003663
+        },
+        {
+          "column": 7,
+          "begin": 112003663,
+          "end": 128004290
+        },
+        {
+          "column": 8,
+          "begin": 128004290,
+          "end": 144004957
+        },
+        {
+          "column": 9,
+          "begin": 144004957,
+          "end": 160005626
+        },
+        {
+          "column": 10,
+          "begin": 160005626,
+          "end": 176006319
+        },
+        {
+          "column": 11,
+          "begin": 176006319,
+          "end": 192007016
+        },
+        {
+          "column": 12,
+          "begin": 192007016,
+          "end": 208007727
+        },
+        {
+          "column": 13,
+          "begin": 208007727,
+          "end": 224008456
+        },
+        {
+          "column": 14,
+          "begin": 224008456,
+          "end": 240009215
+        },
+        {
+          "column": 15,
+          "begin": 240009215,
+          "end": 256009984
+        },
+        {
+          "column": 16,
+          "begin": 256009984,
+          "end": 272010765
+        },
+        {
+          "column": 17,
+          "begin": 272010765,
+          "end": 288011564
+        },
+        {
+          "column": 18,
+          "begin": 288011564,
+          "end": 304012377
+        },
+        {
+          "column": 19,
+          "begin": 304012377,
+          "end": 320013196
+        },
+        {
+          "column": 20,
+          "begin": 320013196,
+          "end": 336014037
+        },
+        {
+          "column": 21,
+          "begin": 336014037,
+          "end": 352014914
+        },
+        {
+          "column": 22,
+          "begin": 352014914,
+          "end": 368015793
+        },
+        {
+          "column": 23,
+          "begin": 368015793,
+          "end": 384016682
+        }
+      ],
+      "homes": [
+        {
+          "rank": 8,
+          "begin": 0,
+          "end": 48002086,
+          "possible_columns": [
+            {
+              "column": 0,
+              "begin": 0,
+              "end": 16000477
+            },
+            {
+              "column": 1,
+              "begin": 16000477,
+              "end": 32000964
+            },
+            {
+              "column": 2,
+              "begin": 32000964,
+              "end": 48001463
+            },
+            {
+              "column": 3,
+              "begin": 48001463,
+              "end": 48002086
+            }
+          ],
+          "max_rows": 4
+        },
+        {
+          "rank": 9,
+          "begin": 48002086,
+          "end": 96004172,
+          "possible_columns": [
+            {
+              "column": 3,
+              "begin": 48002086,
+              "end": 64001970
+            },
+            {
+              "column": 4,
+              "begin": 64001970,
+              "end": 80002481
+            },
+            {
+              "column": 5,
+              "begin": 80002481,
+              "end": 96003054
+            },
+            {
+              "column": 6,
+              "begin": 96003054,
+              "end": 96004172
+            }
+          ],
+          "max_rows": 4
+        },
+        {
+          "rank": 10,
+          "begin": 96004172,
+          "end": 144006258,
+          "possible_columns": [
+            {
+              "column": 6,
+              "begin": 96004172,
+              "end": 112003663
+            },
+            {
+              "column": 7,
+              "begin": 112003663,
+              "end": 128004290
+            },
+            {
+              "column": 8,
+              "begin": 128004290,
+              "end": 144004957
+            },
+            {
+              "column": 9,
+              "begin": 144004957,
+              "end": 144006258
+            }
+          ],
+          "max_rows": 4
+        },
+        {
+          "rank": 11,
+          "begin": 144006258,
+          "end": 192008344,
+          "possible_columns": [
+            {
+              "column": 9,
+              "begin": 144006258,
+              "end": 160005626
+            },
+            {
+              "column": 10,
+              "begin": 160005626,
+              "end": 176006319
+            },
+            {
+              "column": 11,
+              "begin": 176006319,
+              "end": 192007016
+            },
+            {
+              "column": 12,
+              "begin": 192007016,
+              "end": 192008344
+            }
+          ],
+          "max_rows": 4
+        },
+        {
+          "rank": 12,
+          "begin": 192008344,
+          "end": 240010430,
+          "possible_columns": [
+            {
+              "column": 12,
+              "begin": 192008344,
+              "end": 208007727
+            },
+            {
+              "column": 13,
+              "begin": 208007727,
+              "end": 224008456
+            },
+            {
+              "column": 14,
+              "begin": 224008456,
+              "end": 240009215
+            },
+            {
+              "column": 15,
+              "begin": 240009215,
+              "end": 240010430
+            }
+          ],
+          "max_rows": 4
+        },
+        {
+          "rank": 13,
+          "begin": 240010430,
+          "end": 288012516,
+          "possible_columns": [
+            {
+              "column": 15,
+              "begin": 240010430,
+              "end": 256009984
+            },
+            {
+              "column": 16,
+              "begin": 256009984,
+              "end": 272010765
+            },
+            {
+              "column": 17,
+              "begin": 272010765,
+              "end": 288011564
+            },
+            {
+              "column": 18,
+              "begin": 288011564,
+              "end": 288012516
+            }
+          ],
+          "max_rows": 4
+        },
+        {
+          "rank": 14,
+          "begin": 288012516,
+          "end": 336014602,
+          "possible_columns": [
+            {
+              "column": 18,
+              "begin": 288012516,
+              "end": 304012377
+            },
+            {
+              "column": 19,
+              "begin": 304012377,
+              "end": 320013196
+            },
+            {
+              "column": 20,
+              "begin": 320013196,
+              "end": 336014037
+            },
+            {
+              "column": 21,
+              "begin": 336014037,
+              "end": 336014602
+            }
+          ],
+          "max_rows": 4
+        },
+        {
+          "rank": 15,
+          "begin": 336014602,
+          "end": 384016682,
+          "possible_columns": [
+            {
+              "column": 21,
+              "begin": 336014602,
+              "end": 352014914
+            },
+            {
+              "column": 22,
+              "begin": 352014914,
+              "end": 368015793
+            },
+            {
+              "column": 23,
+              "begin": 368015793,
+              "end": 384016682
+            }
+          ],
+          "max_rows": 3
+        }
+      ]
+    }
+  ],
+  "source_sha256": {
+    "tools/hbm_engram_hash_home_bound.py": "b77b44ad820779d9e45a2d6cda996f826834e8270d1e593040844f69e3511f77",
+    "tools/hbm_engram_partition.py": "c3b25669328800f14949c1b27937bb26758470e7967f9327dd3e033eeb61e2d8",
+    "tools/hdc_v41_engram_shipped.py": "09827bf166bc9fb1d82adb2ca7808c64af4a07fecf2347d2206320b952d2902f",
+    "rtl/hdc/v41/ot_hdc_engram_tables_shipped_pkg.sv": "743063fbfc402bda039919cfe0de959980ac5f1fa3999474503dc70060342989",
+    "rtl/hdc/v41/ot_hdc_engram_hash_shipped.sv": "86749dce384ec65ec1ac3dd99e34848161c1ddc8931b69ee3c5688c953fb4a98"
+  },
+  "claim": "Source-address bound only, not formal sequential RTL or physical/performance qualification"
+}
