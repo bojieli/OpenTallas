@@ -10,18 +10,32 @@ def apply(text):
     text = text.replace(param, param + '\n    parameter integer STATIC_PROGRAM = 0,', 1)
     anchor = '    output wire         busy,\n'
     assert anchor in text
-    text = text.replace(anchor, '    input wire [37:0] f_prog, // fixed core-edge programme, pin->issue +1 edge\n' + anchor, 1)
+    text = text.replace(anchor, '    input wire io_clk, // independent physical pin/seam clock root\n    input wire [37:0] f_prog, // fixed core-edge programme, pin->issue +1 edge\n' + anchor, 1)
     end = text.index('\n);\n', text.index('module ot_s81_bf_front #(')) + 4
     text = text[:end] + '''
     // Keep all programme fields together at the physical face. The core samples
     // the previous registered word; no ready/busy/clock-enable participates.
+    wire pin_clk = (STATIC_PROGRAM != 0) ? io_clk : clk;
     (* keep = 1 *) reg [37:0] programme_pin_q;
     generate if (STATIC_PROGRAM != 0) begin : g_static_programme_pin
-        always @(posedge clk or negedge rst_n)
+        always @(posedge pin_clk or negedge rst_n)
             if (!rst_n) programme_pin_q <= 38'd0;
             else programme_pin_q <= f_prog;
     end endgenerate
 ''' + text[end:]
+    pin_start = text.index('    if (PINREG != 0) begin : g_pin')
+    pin_end = text.index('    end else begin : g_nopin', pin_start)
+    pins = text[pin_start:pin_end]
+    # HALF0 is the actual full-rate production front. Static programme does
+    # not share a clock root with its arithmetic; fixed parameter selection
+    # eliminates clock muxes at elaboration.
+    pins = pins.replace('posedge clk', 'posedge pin_clk')
+    pins = pins.replace('posedge pclk', 'posedge pin_clk')
+    pins = pins.replace('if (!pclk)', 'if (!pin_clk)')
+    pins = pins.replace('always_latch if (!clk)', 'always_latch if (!pin_clk)')
+    text = text[:pin_start] + pins + text[pin_end:]
+    text = text.replace('(.clk(clk), .rst_n(rst_n),\n            .d({c_issue',
+                        '(.clk(pin_clk), .rst_n(rst_n),\n            .d({c_issue')
     start = text.index('        ot_v41_bf_front_core #(')
     end = text.index('));', start) + 3
     inst = text[start:end]

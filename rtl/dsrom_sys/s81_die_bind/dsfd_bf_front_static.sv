@@ -16,7 +16,8 @@ module dsfd_bf_front_static #(parameter INSTANCE = "") (
     input  wire [0:0] ck,
     input  wire [0:0] rs,
     input  wire [1067:0] xb,
-    input wire [37:0] f_prog
+    input wire [37:0] f_prog,
+    input wire io_clk
 );
     wire w_busy;
     wire [13:0] w_c0_a_ctr;
@@ -3357,6 +3358,7 @@ module dsfd_bf_front_static #(parameter INSTANCE = "") (
         .xs_sv(w_xs_sv),
         .xs_v(w_xs_v),
         .hph(),
-        .f_prog(f_prog));
+        .f_prog(f_prog),
+        .io_clk(io_clk));
     /* verilator lint_on PINCONNECTEMPTY */
 endmodule

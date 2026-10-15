@@ -61,6 +61,7 @@ def render(die, rtl, groups, dirs, params, extra_params, note):
         decl.append(f'    {"input " if dirs[port] == "in" else "output"} wire [{w - 1}:0] {port}')
     if die == 'dsfd_bf_front_static':
         decl.append('    input wire [37:0] f_prog')
+        decl.append('    input wire io_clk')
     L.append(',\n'.join(decl))
     L.append(');')
     for b in sorted(widths):
@@ -88,7 +89,7 @@ def render(die, rtl, groups, dirs, params, extra_params, note):
     ps = ', '.join(f'.{k}({v})' for k, v in list(params.items()) + [(n, n) for n in pnames])
     conns = [f'.{b}(w_{b})' for b in sorted(widths)] + [f'.{o}()' for o in OPEN_OUT.get(rtl, [])]
     if die == 'dsfd_bf_front_static':
-        conns.append('.f_prog(f_prog)')
+        conns.extend(['.f_prog(f_prog)', '.io_clk(io_clk)'])
     L.append('    /* verilator lint_off PINCONNECTEMPTY */')
     L.append(f'    {rtl} #({ps}) u_view (')
     L.append('        ' + ',\n        '.join(conns) + ');')

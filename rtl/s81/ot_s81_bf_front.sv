@@ -137,6 +137,7 @@ module ot_s81_bf_front #(
     output wire [5*NSEG-1:0] c1_so_idx,
     output wire [5*NSEG-1:0] c1_so_n,
     input  wire [1:0]    c_qy_bkf_in,     // the two columns' registered fault ORs
+    input wire io_clk, // independent physical pin/seam clock root
     input wire [37:0] f_prog, // fixed core-edge programme, pin->issue +1 edge
     output wire         busy,
     output wire         fault,
@@ -145,9 +146,10 @@ module ot_s81_bf_front #(
 
     // Keep all programme fields together at the physical face. The core samples
     // the previous registered word; no ready/busy/clock-enable participates.
+    wire pin_clk = (STATIC_PROGRAM != 0) ? io_clk : clk;
     (* keep = 1 *) reg [37:0] programme_pin_q;
     generate if (STATIC_PROGRAM != 0) begin : g_static_programme_pin
-        always @(posedge clk or negedge rst_n)
+        always @(posedge pin_clk or negedge rst_n)
             if (!rst_n) programme_pin_q <= 38'd0;
             else programme_pin_q <= f_prog;
     end endgenerate
@@ -230,13 +232,13 @@ module ot_s81_bf_front #(
         reg [3:0] r_xb_sv;
         reg [31:0] r_xb_u;
         reg [1023:0] r_xb_d;
-        always @(posedge clk or negedge rst_n)
+        always @(posedge pin_clk or negedge rst_n)
             if (!rst_n) begin r_busy <= 1'b0; r_fault <= 1'b0; end
             else begin r_busy <= busy_e; r_fault <= fault_e; end
-        always @(posedge pclk or negedge rst_n)
+        always @(posedge pin_clk or negedge rst_n)
             if (!rst_n) begin r_cfg_v <= 1'b0; r_go <= 1'b0; r_xs_v <= 1'b0; r_xb_v <= 1'b0; end
             else begin r_cfg_v <= cfg_v; r_go <= go; r_xs_v <= xs_v; r_xb_v <= xb_v; end
-        always @(posedge pclk) begin
+        always @(posedge pin_clk) begin
             r_cfg_a <= cfg_a;
             r_cfg_d <= cfg_d;
             r_go_bf <= go_bf;
@@ -258,7 +260,7 @@ module ot_s81_bf_front #(
         reg [7:0] r_lxs_p; reg [2:0] r_lxs_b; reg [1:0] r_lxs_sv; reg [255:0] r_lxs_q0, r_lxs_q1; reg [9:0] r_lxs_e0, r_lxs_e1;
         reg [2:0] r_lxs_pos, r_lxb_pos, r_lxb_b; reg [3:0] r_lxb_sv; reg [31:0] r_lxb_u; reg [1023:0] r_lxb_d;
         if (PINLAT != 0) begin : g_lat
-            always_latch if (!clk) begin
+            always_latch if (!pin_clk) begin
                 r_lxs_p = r_xs_p; r_lxs_b = r_xs_b; r_lxs_sv = r_xs_sv; r_lxs_q0 = r_xs_q0; r_lxs_e0 = r_xs_e0;
                 r_lxs_q1 = r_xs_q1; r_lxs_e1 = r_xs_e1; r_lxs_pos = r_xs_pos; r_lxb_pos = r_xb_pos; r_lxb_b = r_xb_b;
                 r_lxb_sv = r_xb_sv; r_lxb_u = r_xb_u;
@@ -350,9 +352,9 @@ module ot_s81_bf_front #(
             .c_so_row(c_so_row), .c_so_idx(c_so_idx), .c_so_n(c_so_n), .c_qy_bkf(c_qy_bkf));
         // Independent pin registers on both column faces, fixed +CPIN cycle.
         localparam integer CW = 1+14+3+CTW+2*256+2*10+1+2*5*NSEG+16*NSEG;
-        ot_s81_bf_seam #(.W(CW), .PIPE(CPIN)) u_seam0 (.clk(clk), .rst_n(rst_n),
+        ot_s81_bf_seam #(.W(CW), .PIPE(CPIN)) u_seam0 (.clk(pin_clk), .rst_n(rst_n),
             .d({c_issue, c_a_ctr, c_i1_v, c_i1_bk, c_i1_bf, c_i1_t, c_i2x_q0, c_i2x_e0, c_i2x_q1, c_i2x_e1, c_ze_d, c_so_idx, c_so_n, c_so_row[16*NSEG*0 +: 16*NSEG]}), .q({c0_issue, c0_a_ctr, c0_i1_v, c0_i1_bk, c0_i1_bf, c0_i1_t, c0_i2x_q0, c0_i2x_e0, c0_i2x_q1, c0_i2x_e1, c0_ze_d, c0_so_idx, c0_so_n, c0_so_row}));
-        ot_s81_bf_seam #(.W(CW), .PIPE(CPIN)) u_seam1 (.clk(clk), .rst_n(rst_n),
+        ot_s81_bf_seam #(.W(CW), .PIPE(CPIN)) u_seam1 (.clk(pin_clk), .rst_n(rst_n),
             .d({c_issue, c_a_ctr, c_i1_v, c_i1_bk, c_i1_bf, c_i1_t, c_i2x_q0, c_i2x_e0, c_i2x_q1, c_i2x_e1, c_ze_d, c_so_idx, c_so_n, c_so_row[16*NSEG*1 +: 16*NSEG]}), .q({c1_issue, c1_a_ctr, c1_i1_v, c1_i1_bk, c1_i1_bf, c1_i1_t, c1_i2x_q0, c1_i2x_e0, c1_i2x_q1, c1_i2x_e1, c1_ze_d, c1_so_idx, c1_so_n, c1_so_row}));
         assign c_qy_bkf = c_qy_bkf_in;
         assign pv_e = '0; assign pval_e = '0; assign prow_e = '0; assign pseg_e = '0; assign pnseg_e = '0; assign perr_e = '0; assign ppos_e = '0;
