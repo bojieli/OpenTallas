@@ -1,0 +1,239 @@
+ot-run: ot-epyc1tb     skipped: load hold: load1 > 1.5 x cores
+ot-run: ot-epyc4       skipped: load hold: load1 > 1.5 x cores
+ot-run: ot-pve1        skipped: load hold: load1 > 1.5 x cores
+ot-run: ot-agidock128  admits   -28 GB (avail 67, growth 33, headroom 24, waiters 2/48 GB) load 12/64 running 7 disk 21 GB 
+ot-run: -> ot-agidock128 (will queue: admits -28 GB < 2 GB)
+ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-3910169-1792059980 after 0 s
+
+-- Running command `read_verilog -sv ot_qwen_bf16_round_high16.sv prove_round_high16.sv; prep -top prove_round_high16; flatten; sat -verify -prove exact 1 -show-inputs' --
+
+1. Executing Verilog-2005 frontend: ot_qwen_bf16_round_high16.sv
+Parsing SystemVerilog input from `ot_qwen_bf16_round_high16.sv' to AST representation.
+Generating RTLIL representation for module `\ot_qwen_bf16_round_high16'.
+Successfully finished Verilog frontend.
+
+2. Executing Verilog-2005 frontend: prove_round_high16.sv
+Parsing SystemVerilog input from `prove_round_high16.sv' to AST representation.
+Generating RTLIL representation for module `\prove_round_high16'.
+Successfully finished Verilog frontend.
+
+3. Executing PREP pass.
+
+3.1. Executing HIERARCHY pass (managing design hierarchy).
+
+3.1.1. Analyzing design hierarchy..
+Top module:  \prove_round_high16
+Used module:     \ot_qwen_bf16_round_high16
+
+3.1.2. Analyzing design hierarchy..
+Top module:  \prove_round_high16
+Used module:     \ot_qwen_bf16_round_high16
+Removed 0 unused modules.
+
+3.2. Executing PROC pass (convert processes to netlists).
+
+3.2.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+3.2.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Removed a total of 0 dead cases.
+
+3.2.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 0 redundant assignments.
+Promoted 0 assignments to connections.
+
+3.2.4. Executing PROC_INIT pass (extract init attributes).
+
+3.2.5. Executing PROC_ARST pass (detect async resets in processes).
+
+3.2.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+
+3.2.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+
+3.2.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+
+3.2.9. Executing PROC_DFF pass (convert process syncs to FFs).
+
+3.2.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+3.2.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+3.2.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module prove_round_high16.
+Optimizing module ot_qwen_bf16_round_high16.
+
+3.3. Executing FUTURE pass.
+
+3.4. Executing OPT_EXPR pass (perform const folding).
+Optimizing module prove_round_high16.
+Optimizing module ot_qwen_bf16_round_high16.
+
+3.5. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \prove_round_high16..
+Finding unused cells or wires in module \ot_qwen_bf16_round_high16..
+Removed 0 unused cells and 4 unused wires.
+<suppressed ~2 debug messages>
+
+3.6. Executing CHECK pass (checking for obvious problems).
+Checking module ot_qwen_bf16_round_high16...
+Checking module prove_round_high16...
+Found and reported 0 problems.
+
+3.7. Executing OPT pass (performing simple optimizations).
+
+3.7.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_qwen_bf16_round_high16.
+Optimizing module prove_round_high16.
+
+3.7.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_qwen_bf16_round_high16'.
+Finding identical cells in module `\prove_round_high16'.
+Removed a total of 0 cells.
+
+3.7.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_qwen_bf16_round_high16..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module \prove_round_high16..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Removed 0 multiplexer ports.
+
+3.7.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_qwen_bf16_round_high16.
+  Optimizing cells in module \prove_round_high16.
+Performed a total of 0 changes.
+
+3.7.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_qwen_bf16_round_high16'.
+Finding identical cells in module `\prove_round_high16'.
+Removed a total of 0 cells.
+
+3.7.6. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_qwen_bf16_round_high16..
+Finding unused cells or wires in module \prove_round_high16..
+
+3.7.7. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_qwen_bf16_round_high16.
+Optimizing module prove_round_high16.
+
+3.7.8. Finished OPT passes. (There is nothing left to do.)
+
+3.8. Executing WREDUCE pass (reducing word size of cells).
+Removed top 15 bits (of 16) from port B of cell ot_qwen_bf16_round_high16.$add$ot_qwen_bf16_round_high16.sv:6$4 ($add).
+Removed top 17 bits (of 32) from port B of cell prove_round_high16.$add$prove_round_high16.sv:2$5 ($add).
+Removed top 31 bits (of 32) from port B of cell prove_round_high16.$add$prove_round_high16.sv:2$6 ($add).
+
+3.9. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_qwen_bf16_round_high16..
+Finding unused cells or wires in module \prove_round_high16..
+
+3.10. Executing MEMORY_COLLECT pass (generating $mem cells).
+
+3.11. Executing OPT pass (performing simple optimizations).
+
+3.11.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_qwen_bf16_round_high16.
+Optimizing module prove_round_high16.
+
+3.11.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_qwen_bf16_round_high16'.
+Finding identical cells in module `\prove_round_high16'.
+Removed a total of 0 cells.
+
+3.11.3. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_qwen_bf16_round_high16..
+Finding unused cells or wires in module \prove_round_high16..
+
+3.11.4. Finished fast OPT passes.
+
+3.12. Printing statistics.
+
+=== ot_qwen_bf16_round_high16 ===
+
+   Number of wires:                  5
+   Number of wire bits:             51
+   Number of public wires:           3
+   Number of public wire bits:      49
+   Number of ports:                  2
+   Number of port bits:             48
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                  4
+     $add                            1
+     $and                            1
+     $or                             1
+     $reduce_or                      1
+
+=== prove_round_high16 ===
+
+   Number of wires:                  5
+   Number of wire bits:            113
+   Number of public wires:           4
+   Number of public wire bits:      81
+   Number of ports:                  2
+   Number of port bits:             33
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                  4
+     $add                            2
+     $eq                             1
+     ot_qwen_bf16_round_high16       1
+
+=== design hierarchy ===
+
+   prove_round_high16                1
+     ot_qwen_bf16_round_high16       1
+
+   Number of wires:                 10
+   Number of wire bits:            164
+   Number of public wires:           7
+   Number of public wire bits:     130
+   Number of ports:                  4
+   Number of port bits:             81
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                  7
+     $add                            3
+     $and                            1
+     $eq                             1
+     $or                             1
+     $reduce_or                      1
+
+3.13. Executing CHECK pass (checking for obvious problems).
+Checking module ot_qwen_bf16_round_high16...
+Checking module prove_round_high16...
+Found and reported 0 problems.
+
+4. Executing FLATTEN pass (flatten design).
+Deleting now unused module ot_qwen_bf16_round_high16.
+<suppressed ~1 debug messages>
+
+5. Executing SAT pass (solving SAT problems in the circuit).
+
+Setting up SAT problem:
+Final constraint equation: { } = { }
+Imported 8 cells to SAT database.
+Import proof-constraint: \exact = 1'1
+Final proof equation: \exact = 1'1
+Import show expression: \x
+
+Solving problem with 863 variables and 2350 clauses..
+SAT proof finished - no model found: SUCCESS!
+
+                  /$$$$$$      /$$$$$$$$     /$$$$$$$    
+                 /$$__  $$    | $$_____/    | $$__  $$   
+                | $$  \ $$    | $$          | $$  \ $$   
+                | $$  | $$    | $$$$$       | $$  | $$   
+                | $$  | $$    | $$__/       | $$  | $$   
+                | $$/$$ $$    | $$          | $$  | $$   
+                |  $$$$$$/ /$$| $$$$$$$$ /$$| $$$$$$$//$$
+                 \____ $$$|__/|________/|__/|_______/|__/
+                       \__/                              
+
+ot-run: RAN on ot-agidock128 (unit oth-ubuntu-3910169-1792059980): exit 0

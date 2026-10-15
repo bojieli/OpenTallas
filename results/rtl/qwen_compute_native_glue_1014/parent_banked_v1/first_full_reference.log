@@ -1,0 +1,12 @@
+ot-run: ot-epyc1tb     skipped: load hold: load1 > 1.5 x cores
+ot-run: ot-epyc4       skipped: load hold: load1 > 1.5 x cores
+ot-run: ot-pve1        skipped: load hold: load1 > 1.5 x cores
+ot-run: ot-agidock128  admits    47 GB (avail 73, growth 11, headroom 24, waiters 0/0 GB) load 6/64 running 4 disk 21 GB 
+ot-run: -> ot-agidock128
+ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-3904494-1792059573 after 0 s
+PASS actual full old-parent staged-reference vs58bank TX198 checks3499 output264 node438 nonzero264
+- physical/qwen_tile_glue_banks_1015/tb_parent_banked.sv:36: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 36us; walltime 43.350 s; speed 835.024 ns/s
+- Verilator: cpu 43.352 s on 1 threads; alloced 522 MB
+ot-run: RAN on ot-agidock128 (unit oth-ubuntu-3904494-1792059573): exit 0

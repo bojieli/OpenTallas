@@ -1,0 +1,10 @@
+ot-run: ot-epyc1tb     skipped: load hold: load1 > 1.5 x cores
+ot-run: ot-epyc4       skipped: load hold: load1 > 1.5 x cores
+ot-run: ot-pve1        skipped: load hold: load1 > 1.5 x cores
+ot-run: ot-agidock128  admits    37 GB (avail 74, growth 23, headroom 24, waiters 0/0 GB) load 5/64 running 4 disk 22 GB 
+ot-run: -> ot-agidock128
+ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-3898827-1792059286 after 0 s
+- V e r i l a t i o n   R e p o r t: Verilator 5.032 2025-01-01 rev (Debian 5.032-1)
+- Verilator: Built from 6.786 MB sources in 94 modules, into 2.065 MB in 8 C++ files needing 0.000 MB
+- Verilator: Walltime 1.055 s (elab=0.162, cvt=0.775, bld=0.000); cpu 1.055 s on 1 threads; alloced 77.516 MB
+ot-run: RAN on ot-agidock128 (unit oth-ubuntu-3898827-1792059286): exit 0
