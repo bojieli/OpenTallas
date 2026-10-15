@@ -1,0 +1,23 @@
+{
+  "rule": "HANDOFF0az2026-10-15T07:28:45-07:00: variable-timingHBM-backedKVboundary must elastic buffer, thenblockready\u2192fixedinternalslots",
+  "qualification": "DIAGNOSTIC COMPONENT ONLY; NOT ADOPTABLE AS WHOLE HBM BOUNDARY",
+  "source_sha256": {
+    "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_calendar.sv": "082820cd49a595fba0b349252170a9bfbe7e91182f2d9fc81f7ed14a21d69a61",
+    "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_slots.sv": "07f2fa4171ec1ed9a4071381ed892d6ce0cba77183a137e96cf98e8980e9acf2",
+    "rtl/physical/ot_qkd_kv_static_writer_native.sv": "4b418173896271e8c7b53464cbf7236701c9b93f6410b7ee8dc2ade0157e3c16"
+  },
+  "actual_return_calendar": "reserved_rd\u21924commandedges+23HBMRL+5correctededges\u2192compiled_hbm_put",
+  "return_ring_behavior": "compiled_hbm_put advancesproducer ring regardless actualcontroller_co[0]; expected_put advancesconsumer regardless publication, mismatches fault but neverstall",
+  "missing_proof": "No actual hierarchy and source join proves an elastic FIFO/block-ready adapter absorbs off-die/controller variabletiming before these fixed slots",
+  "writer_scope": "internal formatter with fixedintent es outputs; actualelasticcontroller ingress capacity/worstcasevariableHBM service not proven here",
+  "physical_repairs": "return per-domainactualclockreference; writeroneasyncassert/syncreleasepinFF beforeregionalreset; neither repairs boundaryprotocol",
+  "existing_inhand_jobs": [
+    "qkd_static_kv_return_slots_r1-r2-b45d90301",
+    "qkd_kv_static_writer_native_r1-r4-3b9e625b5"
+  ],
+  "next_options": [
+    "Implement/prove actual elastic controller/return buffering that emits block-ready, then issue internalfixed-slot programme for bufferedblock; measureactualcapacity/calendar/edges",
+    "Prove exact actualcontroller/PHYprotocol and instantiatedbuffering already absorbvariableoffdietiming and exposefixed block service; do not inferfrom componentstrictRL23stimulus"
+  ],
+  "root_instruction": "Preserveinhanddiagnosticroutes; no wholeboundaryadoption/fixedHBMcalendar acceptedsourcepub untilresolved. No ownergoaldecision needed."
+}
