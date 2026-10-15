@@ -56,14 +56,17 @@ module tb_hgi_hc_checkpoint_native_sys1_mtp_static #(parameter integer COMMAND_N
     always @*begin
         xwave=0;raw_read=0;
         fill_q=0;
-        if(state==1)for(integer b=0;b<8;b=b+1)begin:fillsector
+        for(integer b=0;b<8;b=b+1)begin:fillsector
             integer sector,sid,position,chunk,word_,lane;
             reg [255:0] data;
+            sector=0;sid=0;position=0;chunk=0;word_=0;lane=0;data=0;
+            if(state==1)begin
             sector=fill*8+b;sid=(sector>>13)&3;position=sector/2560;chunk=sector%2560;
             word_=position*80+chunk/32;lane=chunk%32;
             for(integer j=0;j<8;j=j+1)data[j*32+:32]={xm[(j*640+word_)*32+lane],16'd0};
             if(mutate&&sector==0)data[31:0]=32'h3f800000;
             fill_q[(sid*8+b)*281+:281]={1'b1,16'(sector),data,8'hff};
+            end
         end
         if(state==3)for(integer p=0;p<8;p=p+1)
             if(p<npos&&(age==ssbase+160*p||age==rowbase+160*p))raw_read=1;
@@ -112,8 +115,8 @@ module tb_hgi_hc_checkpoint_native_sys1_mtp_static #(parameter integer COMMAND_N
             end
             for(genvar b=0;b<8;b=b+1)assign localq[b*17+:17]={2==2&&vm_rq[b*17+16]&&vm_rq[b*17+13+:2]==sid,vm_rq[b*17+:16]};
             ot_hbm_vm_lg_static_tap #(.READ_RETURN(10+4*2),.WRITE_RETURN(7+4*2)) tap(
-                .clk(clk),.rst_n(rst_n),.local_rq(localq),.far_rq(2==2?136'd0:nrq[(2+1)*136+:136]),
-                .local_wq(result_localwq),.far_wq(2==2?2248'd0:nwq[(2+1)*2248+:2248]),
+                .clk(clk),.rst_n(rst_n),.local_rq(localq),.far_rq(136'd0),
+                .local_wq(result_localwq),.far_wq(2248'd0),
                 .local_read({8{2==2}}),.local_write(result_localselect),.near_rq(nrq[(2)*136+:136]),.near_wq(nwq[(2)*2248+:2248]),
                 .near_rr(2==0?bankrr:frr[(2-1)*2056+:2056]),.near_w_done(2==0?bankdone:fd[(2-1)*8+:8]),
                 .local_rr(lrr[(2)*2056+:2056]),.far_rr(frr[(2)*2056+:2056]),.local_w_done(ld[(2)*8+:8]),.far_w_done(fd[(2)*8+:8]),.fault(tapfault[sid*3+2]));

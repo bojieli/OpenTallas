@@ -130,12 +130,18 @@ def main():
     if os.environ.get('HC_SYS1_PREPARE_ONLY')=='1':
         print('HC_SYS1_PREPARED_NOT_RUN source/fixtures pinned; actual engine verdict required before launch',flush=True)
         return
+    # Generate first, inspect structural diagnostics, then compile C++ only
+    # after that check passes. Keep both phases in the original raw log.
     with (run/'build.log').open('w') as log:
-        subprocess.run(['verilator','--cc','--exe','--build','-j',str(build_threads),'-O1','-Wno-fatal','-Wno-WIDTH','-Wno-TIMESCALEMOD',
+        subprocess.run(['verilator','--cc','--exe','-j',str(build_threads),'-O1','-Wno-fatal','-Wno-WIDTH','-Wno-TIMESCALEMOD',
             f'-GCOMMAND_NATIVE={command_native}','--output-split','10000','--top-module','tb_hgi_hc_checkpoint_native_sys1_mtp_static','-Mdir',str(run/'obj'),*[str(ROOT/f) for f in files]],
             cwd=run,stdout=log,stderr=subprocess.STDOUT,check=True)
     build_log=(run/'build.log').read_text()
     receipt['structural_warning_analysis']=analyze_structural_warnings(build_log)
+    (run/'structural_warnings.json').write_text(json.dumps(receipt['structural_warning_analysis'],indent=2)+'\n')
+    with (run/'build.log').open('a') as log:
+        subprocess.run(['make','-C',str(run/'obj'),'-f','Vtb_hgi_hc_checkpoint_native_sys1_mtp_static.mk','-j',str(build_threads)],
+            cwd=run,stdout=log,stderr=subprocess.STDOUT,check=True)
     exe=run/'obj/Vtb_hgi_hc_checkpoint_native_sys1_mtp_static'
     from concurrent.futures import ThreadPoolExecutor
     def simulate(item):
