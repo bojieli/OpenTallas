@@ -19,22 +19,29 @@ BENCH = [dict(name='mix4_exact_L01', cmd=f'python3 tools/s81_engram_mix/gate.py 
               expect='pass', threads=16, peak_ram_gb=48, needs=['verilator'], pass_regex='PASS native Engram MIX4'),
          dict(name='mix4_mut1_key', cmd=f'python3 tools/s81_engram_mix/gate.py --mix4 --fp rtl --snap {FIX} --mut 1 --out {{RUN}}/mix4_m1',
               expect='fail', threads=16, peak_ram_gb=48, needs=['verilator'], fail_regex='FAIL [0-9]+ words')]
-COPIES = dict(mul4=8, chunk8=12, add8=4, norm=2, sum=3, signed_sqrt=1, sigmoid=1)
+COPIES = dict(mul4=8, chunk8=12, add8=4, norm=2, sum=3, signed_sqrt=1, sigmoid=1, shell=1, control=1, rly=1)
+# the three non-arithmetic cluster leaves (tools/s81/engram_mix4_leaf_pins_v21.py): (suffix, master, clock, reset, extra sources, why)
+EXTRA = [('shell', 'ot_s81_engram_mixq_shell', 'ck', 'rst', ['rtl/dsrom_sys/engram/mix/dsfd_engram_mix4_c.sv'],
+          'pin-limited (7,585 ports): N face = top/VM side, S face = 4 column groups at the 186.84 um mul4/add8 pitch'),
+         ('control', 'ot_s81_engram_mix_control', 'clk', 'arst_n', [], 'scalar-row control root, mapped 1,960 um2 -> util ~0.5'),
+         ('rly', 'ot_s81_engram_rly', 'clk', 'arst_n', [], 'pin-limited relay leaf (212 ports), one stage each way mid-cluster')]
 
 
 def main():
     rec = json.loads((PINS / 'receipt.json').read_text())
-    for m in rec['masters']:
-        name = m['master']; suf = name.replace('ot_s81_engram_', ''); W, H = m['outline_um']
-        pj = json.loads((PINS / f'{name}.json').read_text())
+    rows = [(m['master'].replace('ot_s81_engram_', ''), m['master'], 'clk', 'arst_n', [],
+             f'v21 die-tool outline right-sized from the ORFS-synthesised area {m["orfs_synth_area_um2"]} um2 (util {m["util"]})') for m in rec['masters']]
+    rows += EXTRA
+    for suf, name, ck, rs, xsrc, why in rows:
+        pj = json.loads((PINS / f'{name}.json').read_text()); W, H = pj['outline_um']
         faces = {'N': [], 'S': [], 'W': [], 'E': []}
         for p, v in pj['ports'].items():
             faces[v['per_bit'][0][0]].append(p)
-        spec = dict(name=f's81engm_{suf}', kind='tile', top=name, sources=SRCS, params={}, clock_port='clk', reset_ports=['arst_n'],
+        spec = dict(name=f's81engm_{suf}', kind='tile', top=name, sources=SRCS + xsrc, params={}, clock_port=ck, reset_ports=[rs],
                     outline=dict(w=W, h=H, exact=True), util=0.5, layer_cap='M5', recipe=2, pins=faces,
                     io_tcl=f'physical/s81_die_pins/v21_engram_arithmetic/{name}.tcl',
                     route=dict(pd=0.5, threads=8, peak_ram_gb=16, pin_v='M3 M5', pin_h='M4', pin_min_tracks=1, hold_margin_ns=0.03, macro_halo_um=5.4),
-                    why_floorplan=f'v21 die-tool outline right-sized from the ORFS-synthesised area {m["orfs_synth_area_um2"]} um2 (util {m["util"]}); one clock root per leaf (<=11,519 sinks); {COPIES[suf]} copies per cluster x 4 clusters',
+                    why_floorplan=f'{why}; one clock root per leaf (<=11,519 sinks); {COPIES[suf]} per cluster x 4 clusters',
                     structural_change='Engram MIX4 physical hierarchy (S-ELEM-C 2026-10-15): every arithmetic root of ot_s81_engram_mix is a hardened leaf master, hardened once and replicated; inputs registered at the S pins, outputs launched from registers at the N pins (no added cycle: the leaves are the unchanged exact arithmetic RTL).',
                     job=dict(owner='Claude:s81-surx-engram-1015', branch='claude/s81-mix4-phys-1015', tag='v21',
                              purpose=f'S81 Engram MIX4 arithmetic leaf {name} on v21 die-tool pins', benches=BENCH,

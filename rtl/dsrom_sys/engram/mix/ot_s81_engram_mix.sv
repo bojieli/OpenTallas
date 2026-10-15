@@ -19,25 +19,29 @@ module ot_s81_engram_mix #(parameter integer N=32, D=5120, LM=5, LA=4, MUT=0)(
  wire g_v;
  wire [31:0] a_gate,g_x,gy;wire [63:0] norm_rstd;
  wire [7:0] mvalid,mfault,add_copy;wire [3:0] avalid,af;wire [1023:0] hd,kd,dot,oy;
- // Physical hierarchy (S-ELEM-C 2026-10-15, results/arch/s81_mix4_phys_plan_1015): the scalar row (control, gate,
- // norms) sits above the reduction rows, ~925 um from the add8 row and ~805 um from the mul4 / add8 status bits.
- // Those two edges cross ONE registered relay leaf (ot_s81_engram_rly, on the control's root): a_gate is held from
- // eg_valid until the next go, >= VM_LAT + 3 cycles before the first ADD issue, so the relay costs no cycle; the
- // status bits only feed the control's fixed-calendar checks, whose reference lines are lengthened by RLY.  The
- // chunk8 / sum valids are taken from the mul4 of their own column (mvalid[2c]; all mul4 run in lockstep and the
- // control checks it), not one mvalid[0] broadcast across the cluster.
- localparam integer RLY=1;
- wire [7:0] mvalid_r,mfault_r,add_copy_r;wire [3:0] avalid_r,af_r;wire [31:0] a_gate_r;
- ot_s81_engram_rly relay(clk,arst_n,a_gate,{mvalid,mfault,add_copy,avalid,af},a_gate_r,{mvalid_r,mfault_r,add_copy_r,avalid_r,af_r});
+ // Physical hierarchy (S-ELEM-C 2026-10-15, MIX4 home 771 x 3229, results/arch/s81_mix4_phys_plan_1015): rows N->S
+ // shell | add8 | mul4 | mul4 | chunk8 | chunk8+sum | norm/gate/control/sum.  The scalar row is ~470-620 um from the
+ // shell, add8 and mul4 rows, so every signal between them crosses ONE registered relay leaf (ot_s81_engram_rly, own
+ // clock entry on the control's root, mid-cluster):
+ //   toward the control: go, phase, in_v, copy, scale (shell) and the mul4 / add8 valid, fault and copy bits;
+ //   toward the shell / add8: gate_v, gate_copy, fault (to the shell) and a_gate (to add8).
+ // The control's reference lines (in_v -> mvalid / avalid) see both sides delayed by the same stage, so its checks are
+ // unchanged; gate_v reaches the shell one cycle later (ADD issue +1 cycle); a_gate is held from eg_valid until the
+ // next go, >= VM_LAT + 3 cycles before add8 uses it (0 cycles).  The chunk8 / sum valids are taken from the mul4 of
+ // their own column (mvalid[2c]; all mul4 run in lockstep, the control checks it), not one mvalid[0] broadcast.
+ wire [7:0] mvalid_r,mfault_r,add_copy_r;wire [3:0] avalid_r,af_r;wire [31:0] a_gate_r,scale_r;wire go_r,phase_r,in_v_r;wire [1:0] copy_r;
+ wire gate_v_c,fault_c;wire [1:0] gate_copy_c;
+ ot_s81_engram_rly relay(clk,arst_n,{mvalid,mfault,add_copy,avalid,af,go,phase,in_v,copy,scale},{a_gate,gate_v_c,gate_copy_c,fault_c},
+  {mvalid_r,mfault_r,add_copy_r,avalid_r,af_r,go_r,phase_r,in_v_r,copy_r,scale_r},{a_gate_r,gate_v,gate_copy,fault});
  wire [1:0] nv,nf;wire eg_valid;wire [1:0] g_fault;wire [383:0] chunk_sums;wire [11:0] chunk_fault,chunk_valid;wire [2:0] rv,rf;wire [31:0] rhh,rkk,rdd;
- ot_s81_engram_mix_control #(.N(N),.D(D),.LM(LM),.LA(LA),.MUT(MUT),.RLY(RLY)) control(
-  .clk(clk),.arst_n(arst_n),.go(go),.phase(phase),.in_v(in_v),.copy(copy),.scale(scale),
-  .gate_v(gate_v),.gate_copy(gate_copy),.gate(gate),.hh(hh),.kk(kk),.dd(dd),.fault(fault),
+ ot_s81_engram_mix_control #(.N(N),.D(D),.LM(LM),.LA(LA),.MUT(MUT)) control(
+  .clk(clk),.arst_n(arst_n),.go(go_r),.phase(phase_r),.in_v(in_v_r),.copy(copy_r),.scale(scale_r),
+  .gate_v(gate_v_c),.gate_copy(gate_copy_c),.gate(gate),.hh(hh),.kk(kk),.dd(dd),.fault(fault_c),
   .g_v(g_v),.a_gate(a_gate),.g_x(g_x),
   .mvalid(mvalid_r),.mfault(mfault_r),.avalid(avalid_r),.af(af_r),.add_copy(add_copy_r),.nv(nv),.nf(nf),.norm_rstd(norm_rstd),.eg_valid(eg_valid),.g_fault(g_fault),.gy(gy),.rv(rv),.rf(rf),.rhh(rhh),.rkk(rkk),.rdd(rdd));
- ot_s81_engram_sum #(.N(N),.D(D),.LA(LA)) hsum(ck_leaf[23],arst_n,go,mvalid[2],rv[0],rhh,rf[0],chunk_sums[0+:128],chunk_fault[0+:4],chunk_valid[0+:4]);
- ot_s81_engram_sum #(.N(N),.D(D),.LA(LA)) ksum(ck_leaf[24],arst_n,go,mvalid[2],rv[1],rkk,rf[1],chunk_sums[128+:128],chunk_fault[4+:4],chunk_valid[4+:4]);
- ot_s81_engram_sum #(.N(N),.D(D),.LA(LA)) dsum(ck_leaf[25],arst_n,go,mvalid[4],rv[2],rdd,rf[2],chunk_sums[256+:128],chunk_fault[8+:4],chunk_valid[8+:4]);
+ ot_s81_engram_sum #(.N(N),.D(D),.LA(LA)) hsum(ck_leaf[23],arst_n,go_r,mvalid[2],rv[0],rhh,rf[0],chunk_sums[0+:128],chunk_fault[0+:4],chunk_valid[0+:4]);
+ ot_s81_engram_sum #(.N(N),.D(D),.LA(LA)) ksum(ck_leaf[24],arst_n,go_r,mvalid[2],rv[1],rkk,rf[1],chunk_sums[128+:128],chunk_fault[4+:4],chunk_valid[4+:4]);
+ ot_s81_engram_sum #(.N(N),.D(D),.LA(LA)) dsum(ck_leaf[25],arst_n,go_r,mvalid[4],rv[2],rdd,rf[2],chunk_sums[256+:128],chunk_fault[8+:4],chunk_valid[8+:4]);
  genvar group,r,c;
  generate for(group=0;group<8;group=group+1)begin:g_mult
   ot_s81_engram_mul4 #(.LM(LM),.MUT(MUT)) leaf(ck_leaf[(group%2)?(26+group/2):(group/2)],arst_n,in_v,phase,
@@ -137,17 +141,24 @@ module ot_s81_engram_sum #(parameter integer N=32,D=5120,LA=4)(
  output reg vo,output reg [31:0] y,output reg fault,
  input wire [N/8*32-1:0] chunks,input wire [N/8-1:0] chunk_fault,chunk_valid);
  wire rst_n;ot_s81_engram_reset root_reset(clk,arst_n,rst_n);
+ // Input pin registers (S-ELEM-C 2026-10-15): the routed leaf without them captured the chunk8 results through the
+ // first adder (native capture 504 ps > 190).  Every input is registered once, so the whole leaf calendar shifts by
+ // one cycle together (go, v, chunks, faults, valids); MIX4 772 -> 773 cycles.
+ reg go_q,v_q;reg [N/8*32-1:0] chunks_q;reg [N/8-1:0] chunk_fault_q,chunk_valid_q;
+ always @(posedge clk or negedge rst_n)if(!rst_n)begin go_q<=0;v_q<=0;chunk_valid_q<=0;chunk_fault_q<=0;end
+ else begin go_q<=go;v_q<=v;chunk_valid_q<=chunk_valid;chunk_fault_q<=chunk_fault;end
+ always @(posedge clk)chunks_q<=chunks;
  localparam integer NC=N/8,LT=$clog2(NC),NV=D/N,NP=1<<$clog2(NV),DS=1+(8+LT)*LA;
  reg [$clog2(NV)-1:0] idx;
- always @(posedge clk or negedge rst_n) if(!rst_n) idx<=0;else if(go)idx<=0;else if(v)idx<=idx+1;
- wire [DS:0] vd; ot_hdc_vline #(.D(DS)) vp(clk,rst_n,v,vd);
+ always @(posedge clk or negedge rst_n) if(!rst_n) idx<=0;else if(go_q)idx<=0;else if(v_q)idx<=idx+1;
+ wire [DS:0] vd; ot_hdc_vline #(.D(DS)) vp(clk,rst_n,v_q,vd);
  wire [$clog2(NV)-1:0] si;
  ot_hdc_delay #(.W($clog2(NV)),.D(DS)) ip(clk,rst_n,idx,si);
  wire [31:0] tv[0:LT][0:NC-1];wire [NC-1:0] cf;wire [NC-1:0] tf[0:LT];
- assign cf=chunk_fault;
+ assign cf=chunk_fault_q;
  genvar c,k;
  generate for(c=0;c<NC;c=c+1)begin:chunks_root
-  assign tv[0][c]=chunks[32*c+:32];
+  assign tv[0][c]=chunks_q[32*c+:32];
  end
  for(k=0;k<=LT;k=k+1)begin:tree
   if(k==0)assign tf[k]=0;else begin
@@ -164,7 +175,7 @@ module ot_s81_engram_sum #(parameter integer N=32,D=5120,LA=4)(
  localparam integer TL=$clog2(NP);
  reg pad;reg [TL:0] pi;
  always @(posedge clk or negedge rst_n)if(!rst_n)begin pad<=0;pi<=0;end
- else if(go)begin pad<=0;pi<=0;end
+ else if(go_q)begin pad<=0;pi<=0;end
  else if(vd[DS]&&si==NV-1)begin pad<=NV<NP;pi<=NV;end
  else if(pad)begin pi<=pi+1;if(pi==NP-1)pad<=0;end
  wire [31:0] val[0:TL];wire pulse[0:TL];wire [TL:0] index[0:TL];wire [TL-1:0] ff;
@@ -178,14 +189,14 @@ module ot_s81_engram_sum #(parameter integer N=32,D=5120,LA=4)(
   ot_hdc_delay #(.W(TL+1),.D(LA)) ip(clk,rst_n,index[n]>>1,next_index);
   ot_dsrom_qadd #(.LAT(LA)) ad(clk,rst_n,fire,left,val[n],val[n+1],ff[n]);
   always @(posedge clk or negedge rst_n)if(!rst_n)have<=0;
-  else if(go)have<=0;else if(pulse[n])have<=!index[n][0];
+  else if(go_q)have<=0;else if(pulse[n])have<=!index[n][0];
   always @(posedge clk)if(pulse[n]&&!index[n][0])left<=val[n];
   assign pulse[n+1]=av[LA];assign index[n+1]=next_index;
  end endgenerate
- always @(posedge clk or negedge rst_n)if(!rst_n)vo<=0;else vo<=pulse[TL]&&!go;
- always @(posedge clk)if(pulse[TL]&&!go)y<=val[TL];
+ always @(posedge clk or negedge rst_n)if(!rst_n)vo<=0;else vo<=pulse[TL]&&!go_q;
+ always @(posedge clk)if(pulse[TL]&&!go_q)y<=val[TL];
  reg ft;integer i;
- always @*begin ft=|cf||(|ff)||chunk_valid!={NC{vd[1+8*LA]}};for(i=0;i<=LT;i=i+1)ft=ft||(|tf[i]);end
+ always @*begin ft=|cf||(|ff)||chunk_valid_q!={NC{vd[1+8*LA]}};for(i=0;i<=LT;i=i+1)ft=ft||(|tf[i]);end
  always @(posedge clk or negedge rst_n)if(!rst_n)fault<=0;else if(ft)fault<=1;
 endmodule
 
@@ -333,11 +344,13 @@ module ot_s81_engram_add8 #(parameter integer LM=5,LA=4)(
  ot_hdc_delay #(.W(2),.D(LM+LA+2)) copy_line(clk,rn,copy,copy_out);
 endmodule
 
-// Registered relay leaf (S-ELEM-C 2026-10-15): one stage each way between the control row and the mul4 / add8 rows,
-// on the control's clock root (own leaf, own clock entry).  Data/valid only; reset releases on its own root.
-module ot_s81_engram_rly(input wire clk,arst_n,input wire [31:0] gate_i,input wire [31:0] st_i,
- output reg [31:0] gate_o,output reg [31:0] st_o);
+// Registered relay leaf (S-ELEM-C 2026-10-15): one stage each way between the scalar row and the shell / add8 /
+// mul4 rows, on the control's clock root (own leaf, own clock entry).  Reset releases on its own root.
+module ot_s81_engram_rly(input wire clk,arst_n,input wire [68:0] up_i,input wire [35:0] dn_i,
+ output reg [68:0] up_o,output reg [35:0] dn_o);
  wire rn;ot_s81_engram_reset reset_leaf(clk,arst_n,rn);
- always @(posedge clk)gate_o<=gate_i;
- always @(posedge clk or negedge rn)if(!rn)st_o<=0;else st_o<=st_i;
+ // up: {mvalid 8, mfault 8, add_copy 8, avalid 4, af 4, go, phase, in_v, copy 2, scale 32}; dn: {a_gate 32, gate_v, gate_copy 2, fault}
+ always @(posedge clk or negedge rn)if(!rn)begin up_o[68:37]<=0;up_o[36:32]<=0;dn_o[3:0]<=0;end
+ else begin up_o[68:32]<=up_i[68:32];dn_o[3:0]<=dn_i[3:0];end
+ always @(posedge clk)begin up_o[31:0]<=up_i[31:0];dn_o[35:4]<=dn_i[35:4];end
 endmodule
