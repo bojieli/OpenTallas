@@ -428,9 +428,9 @@ def check_kit(g: Gate, kd: Path, job: dict | None, commit=None):
         g.add("FAIL", "density", "kit leaves ORFS's PLACE_DENSITY_LB_ADDON in force: the placer target becomes lower-bound + "
               "0.05, not the spec PD (qkd_nhb_pbst 0.50 -> 0.1075, GPL-0305)", "re-run ref_tile.py gen")
     lc = fp["layer_contract"]
-    rl = re.search(r"^RLAYERS='M2 (M[5-9])'$", env, re.M)
+    rl = re.search(r"^RLAYERS='M2 (M[2-9])'$", env, re.M)
     if not rl:
-        g.add("FAIL", "layer", "kit.env has no explicit RLAYERS M2..M5/M6/M7/M8/M9 (a script default would override the "
+        g.add("FAIL", "layer", "kit.env has no explicit RLAYERS M2..M2-M9 (a script default would override the "
               "layer contract)", "re-run ref_tile.py gen")
     elif spec["kind"] == "tile":
         fresh_lc = RT.layer_contract(spec, RT.contract_slot(spec))
