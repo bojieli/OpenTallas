@@ -49,6 +49,25 @@ from su_program_inventory import decode  # noqa: E402
 # RED_DEP = dependent reduction interval 8 (reduction component) -- the tree depth applied to it is a MODEL.
 VM_RD, VM_WR, LS_WR, LS_RD, ARITH, RED_DEP = 10, 7, 1, 2, 23, 8
 SLICE_WORDS = 1 << 16
+# SFU / divider / scalar-side schedule (static lane ot_hbm_su_static_lane.sv, KIND by local lane: global lane 0 FULL,
+# local lanes 0..31 of every quarter SFU, 32..127 LIGHT -> 32 SFU lanes per quarter, ONE scalar-side lane).
+# Insertion-line depths (lane localparams, MLAT/ALAT = 3/3 baseline): divider at M1 19 (replaces the 3-deep M1),
+# S stage exp 49, sigmoid/SiLU 71, rsqrt 37, sqrt 31, sqrt(softplus) 162, Engram gate 104.  The scalar-side totals
+# 23 + S (RSQRT 60, SQRT 54, SPSQRT 185, EGATE 127, DIVIMM+RSQRT 76) are MEASURED by the actual scalar component
+# (h_hc_sfu 1a291c29e); exp / sigmoid / SiLU / divider in the 32 SFU lanes are RTL depths, not yet benched at N512.
+# Exit-order (checkpoint) rule of the insertion lines: an issue may not leave the pipe before the issue before it.
+SFU_LANES_PER_Q, SIDE_FNS = 32, (2, 3, 6, 7)
+
+
+def depths(mlat=3, alat=3):
+    d_exp = 7 * mlat + 8 * alat + 4
+    d_sig = d_exp + alat + 19
+    return dict(arith=ARITH + 5 * (mlat - 3), div_extra=19 - mlat,
+                s={0: 0, 1: d_exp, 2: 1 + 9 * mlat + 3 * alat, 3: 31, 4: d_sig, 5: d_sig,
+                   6: d_exp + 11 * mlat + 10 * alat + 50, 7: 1 + 31 + 1 + d_sig})
+
+
+DEPTHS = depths()
 
 
 def accesses(raw, rot=0):
@@ -64,6 +83,12 @@ def accesses(raw, rot=0):
         needed.add('D')
     if sut['a_ind']:
         raise ValueError('runtime lane gather needs its real index/read calendar')
+    div = sut['m1'] in (4, 5)
+    side = sut['sfu'] in SIDE_FNS
+    cls = 'side' if side else 'sfu' if (sut['sfu'] or div) else 'light'
+    lat = DEPTHS['arith'] + (DEPTHS['div_extra'] if div else 0) + DEPTHS['s'][sut['sfu']]
+    if side:
+        rot = 0                                       # the scalar side is global lane 0 = quarter 0
     slot = min(512, 1 << (max(ni, 8 if sut['red'] else 1) - 1).bit_length())
     per = 512 // slot
     positions = [(o, 0) for o in range(0, no, per)] if ni <= 512 else [(o, i) for o in range(no) for i in range(0, ni, 512)]
@@ -75,11 +100,18 @@ def accesses(raw, rot=0):
                 raise ValueError('nonVM tensor needs its actual native producer')
             roles[name] = md
     issues = []
+    # a LIGHT issue covers 512 positions (128 per quarter); an SFU/divider issue covers the 32 SFU lanes of each
+    # quarter, i.e. sub-issue s of the same 512-position block takes positions 128q + 32s + j (same per-quarter VM
+    # layout as the LIGHT records around it); a scalar-side issue is one position on global lane 0.
+    subs = 512 if side else 4 if cls == 'sfu' else 1
     for outer, inner in positions:
+      for sub in range(subs):
         q_reads = [[] for _ in range(4)]
         q_writes = [[] for _ in range(4)]
         rows = set()
         for lane in range(512):
+            if (side and lane != sub) or (cls == 'sfu' and (lane % 128) // SFU_LANES_PER_Q != sub):
+                continue
             if ni <= 512:
                 o, i = outer + lane // slot, lane % slot
                 if i >= ni or o >= no:
@@ -88,7 +120,8 @@ def accesses(raw, rot=0):
                 o, i = outer, inner + lane
                 if i >= ni:
                     continue
-            q = (lane // 128 + rot) % 4                 # compiler-chosen executing quarter (rotation)
+            q = 0 if side else (lane // 128 + rot) % 4   # compiler-chosen executing quarter (rotation)
+            plane = 0 if side else lane % SFU_LANES_PER_Q if cls == 'sfu' else lane % 128   # physical local lane
             rows.add(o)
             for name, md in roles.items():
                 if name == 'R':
@@ -99,10 +132,11 @@ def accesses(raw, rot=0):
                 if name == 'O':
                     q_writes[q].append(w)
                 else:
-                    q_reads[q].append((name, lane % 128, w))
+                    q_reads[q].append((name, plane, w))
                     if name == 'A' and sut['c_pair']:
-                        q_reads[q].append((name + 'p', lane % 128, w ^ 1))
-        issues.append(dict(reads=q_reads, writes=q_writes, rows=sorted(rows)))
+                        q_reads[q].append((name + 'p', plane, w ^ 1))
+        if rows:
+            issues.append(dict(reads=q_reads, writes=q_writes, rows=sorted(rows)))
     red = []
     if 'R' in roles:
         md = roles['R']
@@ -111,7 +145,8 @@ def accesses(raw, rot=0):
     for w in [x for iss in issues for q in iss['reads'] for _, _, x in q] + [x for iss in issues for q in iss['writes'] for x in q] + red:
         if not 0 <= w < 1 << 18:
             raise ValueError('tensor exceeds real 2^18-word store')
-    return dict(unit=unit, ni=ni, no=no, slot=slot, red=bool(sut['red']), sut=sut, issues=issues, red_words=red, rot=rot)
+    return dict(unit=unit, ni=ni, no=no, slot=slot, red=bool(sut['red']), sut=sut, issues=issues, red_words=red, rot=rot,
+                cls=cls, lat=lat)
 
 
 def canonical_trace(design, ds_program):
@@ -136,19 +171,25 @@ def canonical_trace(design, ds_program):
         r = recs[k]
         if r.unit == 'CTL' or layer != 0:
             continue
-        writes, unknown = set(), False
+        writes, reads, unknown = set(), set(), False
         for name, md in r.desc.items():
-            if name not in 'OR' or md.space != 'VM':
+            if md.space != 'VM':
                 continue
             if getattr(md, 'indexed', 0) or getattr(md, 'dyn_sel', 0) or getattr(md, 'dyn_mul', 0):
-                unknown = True                    # runtime address: invalidates every local copy
+                if name in 'OR':
+                    unknown = True                # runtime address: invalidates every local copy
                 continue
             ist = 0 if md.ibcast else (md.istride or 1)
+            dst = writes if name in 'OR' else reads
             for o in range(max(1, md.m)):
                 for i in range(max(1, md.n)):
-                    writes.add(md.base + o * md.stride + i * ist)
+                    dst.add(md.base + o * md.stride + i * ist)
         out.append((r.unit, r.tag, writes, unknown))
+        READS.append(reads)
     return out
+
+
+READS = []                                        # per trace entry: static VM words the dispatch reads (map only)
 
 
 def compile_design(vectors, trace):
@@ -227,8 +268,9 @@ def compile_design(vectors, trace):
     # partner (a ^ 1) is formed by the lane hardware from A and is not a separate stream.
     affine_fail = 0
     affine_where = set()
+    lane_bases = defaultdict(list)                    # (record, role, quarter) -> [(issue, base, terms)]
     for k, r in enumerate(recs):
-        for iss in r['issues']:
+        for g, iss in enumerate(r['issues']):
             for q in range(4):
                 by = defaultdict(dict)
                 for role, lane, w in iss['reads'][q]:
@@ -246,6 +288,7 @@ def compile_design(vectors, trace):
                        any(p != base + sum(term[kbit] for kbit in range(7) if lane >> kbit & 1) for lane, p in pts.items()):
                         affine_fail += 1
                         affine_where.add((cases[k]['tag'], role, q))
+                    lane_bases[(k, role, q)].append((g, base, [term.get(kbit, 0) for kbit in range(7)]))
     # ---- calendar
     events = []                                       # (edge, kind, quarter, bank, sector, mask, record)
     local = [set() for _ in range(4)]                 # words valid in each quarter's local store (1 MiB = whole VM)
@@ -266,6 +309,8 @@ def compile_design(vectors, trace):
     rfree = [0] * 32
     wfree = [0] * 32
     last_issue = -1
+    last_exit = -1
+    wready = [dict() for _ in range(4)]               # (quarter) word -> edge it is valid in the local store
     invalidated = 0
     for k, r in enumerate(recs):
         tk = index[cases[k]['tag']]
@@ -289,6 +334,7 @@ def compile_design(vectors, trace):
             rfree = [start] * 32
             wfree = [start] * 32
             last_issue = start - 1
+            last_exit = start - 1
         first = None
         staged = [set() for _ in range(4)]
         last_done = start
@@ -300,10 +346,12 @@ def compile_design(vectors, trace):
                 need = defaultdict(int)
                 for _, _, w in iss['reads'][q]:
                     if w in staged[q]:
+                        ready = max(ready, wready[q].get(w, start))
                         continue
                     if w in local[q]:
                         reuse_words += 1
                         staged[q].add(w)
+                        ready = max(ready, wready[q].get(w, start))   # data dependence on the producing issue
                         continue
                     p = phys[w][q]
                     need[p >> 3] |= 1 << (p & 7)
@@ -316,14 +364,19 @@ def compile_design(vectors, trace):
                     events.append((e, 'R', q, s_ & 7, s_, 0xff, k))
                     first = e if first is None else min(first, e)
                     ready = max(ready, e + VM_RD + LS_WR)
-            fire = max(last_issue + 1, ready)
+                    for x in inv[(q, s_)]:
+                        if x >= 0:
+                            wready[q][x] = e + VM_RD + LS_WR
+            fire = max(last_issue + 1, ready, last_exit - r['lat'] + 1)   # insertion-line exit order
             first = fire if first is None else min(first, fire)
             last_issue = fire
-            out = fire + ARITH + LS_RD
+            last_exit = fire + r['lat']
+            out = fire + r['lat'] + LS_RD
             wsec = [defaultdict(int) for _ in range(4)]
             for q in range(4):
                 for w in iss['writes'][q]:
                     local[q].add(w)
+                    wready[q][w] = fire + r['lat'] + LS_WR
                     if (k, q, w) in elide_drain:
                         elided += 1
                         continue
@@ -331,6 +384,7 @@ def compile_design(vectors, trace):
                         p = phys[w][qq]
                         wsec[qq][p >> 3] |= 1 << (p & 7)
                         local[qq].add(w)
+                        wready[qq][w] = fire + r['lat'] + LS_WR + (qq != q)
             for q in range(4):
                 for s_, m in sorted(wsec[q].items()):
                     b = q * 8 + (s_ & 7)
@@ -340,12 +394,14 @@ def compile_design(vectors, trace):
                     events.append((e, 'W', q, s_ & 7, s_, m, k))
                     last_done = max(last_done, e + VM_WR)
             for o in iss['rows']:
-                red_rows_done[o] = fire + ARITH
+                red_rows_done[o] = fire + r['lat']
         if r['red_words']:
             # MODEL: csum8 frontier, ceil(log2(ceil(n/8))) dependent levels + 1 F2 quarter level after the last issue
             levels = max(1, math.ceil(math.log2(max(1, math.ceil(r['ni'] / 8))))) + 1
-            done = max(red_rows_done.values()) + levels * RED_DEP + LS_RD
-            for w in r['red_words']:
+            whole = len(r['red_words']) == 1
+            for row, w in enumerate(r['red_words']):
+                # per row: its last issue + the tree (a whole/tree reduction waits for every row)
+                done = (max(red_rows_done.values()) if whole else red_rows_done[row]) + levels * RED_DEP + LS_RD
                 for q in home[w]:                     # root result broadcast to every demanding slice
                     p = phys[w][q]
                     s_ = p >> 3
@@ -356,22 +412,125 @@ def compile_design(vectors, trace):
                     events.append((e, 'W', q, s_ & 7, s_, 1 << (p & 7), k))
                     last_done = max(last_done, e + VM_WR)
                     local[q].add(w)
+                    wready[q][w] = done + 1
         for q in range(4):
             local[q] |= staged[q]
-        end = max(last_done, last_issue + ARITH)
+        end = max(last_done, last_exit)
         own = end - first
         inc = end - t_end if adjacent[k] else own
         t_end = max(t_end, end)
-        rows.append(dict(tag=cases[k]['tag'], priced=cases[k]['priced'], issues=len(r['issues']),
+        rows.append(dict(tag=cases[k]['tag'], priced=cases[k]['priced'], issues=len(r['issues']), lane_class=r['cls'],
+                         issue_to_local_store=r['lat'],
                          stage_sectors=nread, drain_sectors=nwrite, reused_words=reuse_words, elided_drain_words=elided,
                          adjacent_to_predecessor=adjacent[k], first_edge=first, end_edge=end, own_edges=own,
                          edges=max(inc, 0), over_price=max(inc, 0) > cases[k]['priced'],
                          reduction_tail_model=bool(r['red_words'])))
     return dict(records=rows, events=events, phys=phys, home=home, inv=inv, used=used, conflicts=conflicts,
+                recs=recs, cases=cases, readq=readq, writeq=writeq, redw=redw, bcast_out=bcast_out,
+                lane_bases=lane_bases, fixture_at=fixture_at, index=index,
                 affine_fail=affine_fail, affine_where=sorted(affine_where),
                 replicated_words=sum(1 for h in home.values() if len(h) > 1), invalidated_local_words=invalidated,
                 broadcast_written_words=len(bcast_out), rotations=[r['rot'] for r in recs],
                 total=dict(priced=sum(x['priced'] for x in rows), edges=sum(x['edges'] for x in rows)))
+
+
+def address_map(res, trace, design, program_sha):
+    """Hand-off to the whole-kernel VM allocator (h_vm) and the non-SU producers/consumers.
+
+    One entry per maximal run of logical VM words that (a) are consecutive both logically and in the slice, and (b) are
+    touched by the same SU record roles.  The run's home is slice q = SID q (native global word q*65536 + p, sector
+    word>>3, bank sector[2:0]); a word demanded by several quarters has one copy per quarter (replica).  writer:
+    'SU.O q' (elementwise, quarter q), 'SU.R root->all' (reduction result broadcast), 'SU.bcast' (scalar output to every
+    reading slice), or the non-SU dispatches of the canonical layer-0 trace that write it (they must write every copy
+    in this layout).  consumers: the non-SU dispatches that read it (they must read this layout).  The SU per-record
+    control image is the per-quarter lane base + 7 per-lane-bit terms (the static SU's ld_c form) per issue."""
+    cases, recs, phys, home = res['cases'], res['recs'], res['phys'], res['home']
+    touch = defaultdict(set)
+    for k, r in enumerate(recs):
+        for iss in r['issues']:
+            for q in range(4):
+                for role, _, w in iss['reads'][q]:
+                    touch[w].add(f"{cases[k]['tag']}.{role.rstrip('p')}")
+                for w in iss['writes'][q]:
+                    touch[w].add(f"{cases[k]['tag']}.O")
+        for w in r['red_words']:
+            touch[w].add(f"{cases[k]['tag']}.R")
+    su_trace = {res['index'][c['tag']] for c in cases}
+    ext_w, ext_r = defaultdict(set), defaultdict(set)
+    for n, (unit, tag, writes, _) in enumerate(trace):
+        if n in su_trace:
+            continue
+        for w in writes & set(home):
+            ext_w[w].add(f'{unit}:{tag}')
+        for w in READS[n] & set(home):
+            ext_r[w].add(f'{unit}:{tag}')
+    runs = []
+    for q in range(4):
+        cur = None
+        for w in sorted(w for w, h in home.items() if q in h):
+            p = phys[w][q]
+            if w in res['redw']:
+                wr = 'SU.R root->all'
+            elif w in res['bcast_out']:
+                wr = 'SU.bcast'
+            elif res['writeq'].get(w):
+                wr = 'SU.O q%d' % min(res['writeq'][w])
+            else:
+                wr = None
+            key = (tuple(sorted(touch[w])), wr, tuple(sorted(ext_w[w])), tuple(sorted(ext_r[w])), len(home[w]) > 1)
+            if cur and key == cur['_key'] and w == cur['logical_word_end'] and p == cur['_pend']:
+                cur['logical_word_end'] += 1
+                cur['_pend'] += 1
+                continue
+            cur = dict(_key=key, _pend=p + 1, quarter=q, sid=q, logical_word_begin=w, logical_word_end=w + 1,
+                       slice_word_begin=p, global_word_begin=q * SLICE_WORDS + p, first_sector=(q << 13) | (p >> 3),
+                       first_bank=(p >> 3) & 7, replica=len(home[w]) > 1, su_roles=list(key[0]),
+                       su_writer=wr, external_writers=list(key[2]), external_readers=list(key[3]))
+            runs.append(cur)
+    for r in runs:
+        r.pop('_key')
+        r['words'] = r.pop('_pend') - r['slice_word_begin']
+    def compact(lst):
+        gs = [g for g, _, _ in lst]
+        bs = [b for _, b, _ in lst]
+        ts = {tuple(t) for _, _, t in lst}
+        step = bs[1] - bs[0] if len(bs) > 1 else 0
+        affine = gs == list(range(len(gs))) and all(bs[i] == bs[0] + i * step for i in range(len(bs)))
+        out = dict(issues=len(lst), lane_bit_terms=list(ts.pop()) if len(ts) == 1 else [t for _, _, t in lst])
+        if affine:
+            out.update(base=bs[0], issue_step=step)
+        else:
+            out.update(issue_bases=[[g, b] for g, b, _ in lst])
+        return out
+    records = []
+    for k, r in enumerate(recs):
+        roles = defaultdict(dict)
+        for (kk, role, q), lst in res['lane_bases'].items():
+            if kk == k:
+                roles[role][f'q{q}'] = compact(lst)
+        records.append(dict(record=k, tag=cases[k]['tag'], canonical_roles=cases[k].get('roles'), rotation=r['rot'],
+                            per_quarter_read_bases=roles))
+    obligations = defaultdict(lambda: dict(write_runs=0, write_words=0, read_runs=0, read_words=0))
+    for r in runs:
+        for u in r['external_writers']:
+            o = obligations[u.split(':')[0].replace('SU', 'SU(not in fixture set)')]
+            o['write_runs'] += 1
+            o['write_words'] += r['words']
+        for u in r['external_readers']:
+            o = obligations[u.split(':')[0].replace('SU', 'SU(not in fixture set)')]
+            o['read_runs'] += 1
+            o['read_words'] += r['words']
+    return dict(schema='opentallas.hbm.su_f2_address_map.v1', tool='tools/hbm_static/su_f2_spread.py --map',
+                design=design, program_sha256=program_sha, qualification=False,
+                authority=('compiler placement proposal from H-ELEM-B; the whole-kernel VM allocator (h_vm) owns final '
+                           'addresses. This is a VERSIONED RELOCATION of the canonical SID-major layout: it must be '
+                           'adopted with every producer/consumer listed (no mixing with frozen literals).'),
+                geometry=dict(quarters=4, slice_words=SLICE_WORDS, global_word='q*65536 + slice_word',
+                              sector='global_word>>3 (sector[14:13] = SID = quarter)', bank='sector[2:0]'),
+                slice_words_used=res['used'], replicated_words=res['replicated_words'],
+                cross_quarter_conflict_words=len(res['conflicts']),
+                producer_consumer_obligations=dict(sorted(obligations.items())),
+                runs=runs, records=records)
 
 
 def chains(rows):
@@ -437,13 +596,18 @@ def main():
     ap.add_argument('--ds-program', default=str(ROOT / 'results/arch/hgi_programs_20261010/inputs/ds_rank0_program.json'))
     ap.add_argument('--out', type=Path, required=True)
     ap.add_argument('--vehicle', help='write the RTL vehicle images with this path stem')
+    ap.add_argument('--mlat', type=int, choices=[3, 4], default=3, help='lane multiplier latency build (3 baseline, 4 = LAT4)')
+    ap.add_argument('--map', type=Path, help='write the per-quarter address map hand-off (h_vm allocator + producers)')
     a = ap.parse_args()
+    DEPTHS.update(depths(a.mlat))
     trace = canonical_trace(a.design, a.ds_program)
     res = compile_design(a.vectors, trace)
     report = dict(schema='opentallas.hbm.su_f2_spread.v1', tool='tools/hbm_static/su_f2_spread.py',
                   design=a.design, qualification=False,
                   kind='compiler placement + static transport calendar; transport re-executed on RTL by the vehicle',
-                  constants=dict(VM_RD=VM_RD, VM_WR=VM_WR, LS_WR=LS_WR, LS_RD=LS_RD, ARITH=ARITH, RED_DEP=RED_DEP),
+                  constants=dict(VM_RD=VM_RD, VM_WR=VM_WR, LS_WR=LS_WR, LS_RD=LS_RD, ARITH=DEPTHS['arith'], RED_DEP=RED_DEP,
+                                 MLAT=a.mlat, ALAT=3, DIV_EXTRA=DEPTHS['div_extra'], S_DEPTH=DEPTHS['s'],
+                                 SFU_LANES_PER_QUARTER=SFU_LANES_PER_Q, SCALAR_SIDE_LANES=1),
                   inputs={p.name: hashlib.sha256(p.read_bytes()).hexdigest() for p in sorted(a.vectors.iterdir())
                           if p.name in ('su_rec.mem', 'su_prod.json')},
                   slice_words_used=res['used'], replicated_words=res['replicated_words'],
@@ -461,6 +625,12 @@ def main():
               f"{'  OVER' if x['over_price'] else ''}")
     print(a.design, report['total'], 'slices', res['used'], 'replicated', res['replicated_words'],
           'conflicts', len(res['conflicts']), 'affine_fail', res['affine_fail'])
+    if a.map:
+        prog = (ROOT / 'tools/hgi_unitrate/su_prod_vec.py') if a.design == 'qwen' else Path(a.ds_program)
+        m = address_map(res, trace, a.design, {str(prog.resolve().relative_to(ROOT)) if prog.resolve().is_relative_to(ROOT) else str(prog): hashlib.sha256(prog.read_bytes()).hexdigest()})
+        a.map.parent.mkdir(parents=True, exist_ok=True)
+        a.map.write_text(json.dumps(m, indent=1) + '\n')
+        print('address map', a.map, 'runs', len(m['runs']), 'obligations', {u: (o['write_words'], o['read_words']) for u, o in m['producer_consumer_obligations'].items()})
     if a.vehicle:
         npre, nev, win = emit_vehicle(res, a.vehicle)
         report['vehicle_transport_windows'] = {res['records'][k]['tag'] + f'#{k}': list(v) for k, v in sorted(win.items())}

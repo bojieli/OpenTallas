@@ -6,7 +6,11 @@ module ot_hgi_coll_park_queue #(
     parameter integer DEL   = 4,
     parameter integer PWT   = 545,
     parameter integer MACRO = 2,        // ot_fifo_sram_fwft MACRO: 2 = ot_sram_1r1w_128x256 (PPK / DEL <= 128)
-    parameter integer MUT_PARK = 0      // bench mutant: 1 = bank index ignored (every lane writes bank 0)
+    parameter integer MUT_PARK = 0,     // bench mutant: 1 = bank index ignored (every lane writes bank 0)
+    // PSTAGE 1 (A4 2026-10-14, Q1 wg1-3767878c8 TT -62.14 / al1-42a8b643a TT -81.99: pin flop r_v -> bank decode ->
+    // ~400 um push / bypass broadcast over the bank row -> ESL slice enables): each bank registers its decoded push and
+    // write word next to the bank (one more park edge; drain order and capacity unchanged).  0 = the closed Q0/Q2/Q3 form.
+    parameter integer PSTAGE = 0
 ) (
     input  wire                         clk,
     input  wire                         rst_n,
@@ -62,7 +66,16 @@ module ot_hgi_coll_park_queue #(
                     if (r_v[k] && r_q[k] == QB'(QID) && r_s[k] == b[SB-1:0]) begin push = 1'b1; wd = wd | r_d[k]; end
             end
             wire bpop = ld && hb == b[SB-1:0];
-            ot_coll_park_fifo #(.W(PWT), .DEPTH(BD), .MACRO(MACRO), .ESL(32)) u_f (.clk(clk), .rst_n(rn[0]), .push(push), .wdata(wd),
+            wire bpush; wire [PWT-1:0] bwd;
+            if (PSTAGE != 0) begin : g_ps
+                reg ps_v; reg [PWT-1:0] ps_d;
+                always @(posedge clk or negedge rn[0]) if (!rn[0]) ps_v <= 1'b0; else ps_v <= push;
+                always @(posedge clk) ps_d <= wd;
+                assign bpush = ps_v; assign bwd = ps_d;
+            end else begin : g_nps
+                assign bpush = push; assign bwd = wd;
+            end
+            ot_coll_park_fifo #(.W(PWT), .DEPTH(BD), .MACRO(MACRO), .ESL(32)) u_f (.clk(clk), .rst_n(rn[0]), .push(bpush), .wdata(bwd),
                 .pop(bpop), .hv(b_hv[b]), .head(b_hd[b]), .ovf(b_ovf[b]));
         end
         // registered queue head: (re)load when empty or popped last edge, from the head bank's FWFT head

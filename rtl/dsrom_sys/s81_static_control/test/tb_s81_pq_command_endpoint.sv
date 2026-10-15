@@ -35,6 +35,8 @@ module tb_s81_pq_command_endpoint;
   expected_fields=expected_fields_mem[0];
   for(z=0;z<4000;z=z+1)begin due_valid[z]=0;due_tags[z]=0;end
   repeat(4)@(negedge ck);rst_n=1;
+  // PINREG: the endpoint reset relay releases 3 edges after the port (initialization-only contract for the PW writer)
+  if(PINREG!=0)repeat(3)@(negedge ck);
   for(i=0;i<22;i=i+1)begin @(negedge ck);desc_pw=descs[i]|36'h800000000;end
   @(negedge ck);desc_pw=0;
   for(i=0;i<386;i=i+1)begin

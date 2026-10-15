@@ -159,7 +159,20 @@ class Physical(unittest.TestCase):
             extra=',rst_n' if mutant in ('async_reset','async_reset_data') else ''
             src={'tie':'tc','tie_port':'req','tie_reg':'z1'}.get(mutant)
             tie=(',th','\nwire tc;TIEHIx1_ASAP7_75t_R t0 (.H(tc));BUFx2_ASAP7_75t_R b0 (.A('+src+'),.Y(th));') if src else ('','')
-            (w/'t.v').write_text('module top(input ck_req,ck_rsp,req,rsp'+extra+',output qo,zo'+tie[0]+');\n'+cells+tie[1]+'\nassign qo=q0;assign zo=z0;endmodule\n')
+            # Multi-input gate of constants is constant; one live input is not.
+            gate={'tie_gate':'tl','tie_gate_port':'req'}.get(mutant)
+            if gate:tie=(',th','\nwire tc,tl;TIEHIx1_ASAP7_75t_R t0 (.H(tc));TIELOx1_ASAP7_75t_R t1 (.L(tl));NAND2xp33_ASAP7_75t_R g0 (.A(tc),.B('+gate+'),.Y(th));')
+            # Input-side constant: a register D fed by a buffered tie (Engram/K0 style).
+            if mutant=='constant_data':
+                cells=cells.replace('DFFHQNx1_ASAP7_75t_R s3 (.CLK(ck_rsp),.D(rsp),.QN(z3));',
+                    'wire kl,kd;TIELOx1_ASAP7_75t_R t2 (.L(kl));BUFx2_ASAP7_75t_R b2 (.A(kl),.Y(kd));DFFHQNx1_ASAP7_75t_R s3 (.CLK(ck_rsp),.D(kd),.QN(z3));')
+                assert '.D(kd)' in cells
+            constant_case=mutant in ('constant','constant_nonconstant','constant_case_analysis')
+            if constant_case:
+                source='req' if mutant!='constant' else 'tie_zero'
+                cells+='\nTIELOx1_ASAP7_75t_R arbitrary_name(.L(tie_zero));\n'
+                cells+=f'BUFx2_ASAP7_75t_R preserved_buffer(.A({source}),.Y(zo));\n'
+            (w/'t.v').write_text('module top(input ck_req,ck_rsp,req,rsp'+extra+',output qo,zo'+tie[0]+');\n'+cells+tie[1]+'\nassign qo=q0;'+('' if constant_case else 'assign zo=z0;')+'endmodule\n')
             (w/'clocks.tcl').write_text(CE.clocks(s,s['route'].get('period_ps',833.333)))
             (w/'entry.tcl').write_text('set ::ot_ce_require_wire 1\n'+CE.generate(s,ROOT))
             flow=r'''
@@ -215,6 +228,9 @@ if {"NULL" ni [get_lib_cells -of_objects [get_cells physical_tap]]} {error "fixt
                 flow=flow.replace('source /w/entry.tcl','create_clock -name unexpected_alias -period 833.333\nsource /w/entry.tcl',1)
             if mutant in ('related_cut','related_pll_cut'):
                 flow=flow.replace('source /w/entry.tcl','set_false_path -from [get_clocks ot_entry_0] -to [get_clocks ot_entry_1]\nsource /w/entry.tcl',1)
+            if mutant=='constant_case_analysis':
+                flow=flow.replace('source /w/entry.tcl','set_case_analysis 0 [get_ports req]\nsource /w/entry.tcl',1)
+            flow='try {\n'+flow+'\n} on error {message options} {puts stderr [dict get $options -errorinfo];exit 1}\n'
             (w/'run.tcl').write_text(flow)
             p=subprocess.run(['docker','run','--rm','-v',f'{w}:/w','-v',f'{ROOT}:/src:ro','-v',f'{w}:/src/{kd}:ro',IMAGE,OR,'-no_init','-exit','/w/run.tcl'],capture_output=True,text=True,timeout=60)
             output=p.stdout+p.stderr
@@ -255,11 +271,28 @@ if {"NULL" ni [get_lib_cells -of_objects [get_cells physical_tap]]} {error "fixt
             for x,y in zip(a[1:],b[1:]):self.assertAlmostEqual(float(x),float(y),places=8)
     def test_die_strap_tie_output_is_constant_not_a_domain(self):
         rc,out=self.run_flow('tie');self.assertEqual(rc,0,out[-8000:])
-        self.assertIn('OT_MULTI_ROOT constant output th <- BUFx2_ASAP7_75t_R',out)
+        self.assertIn('OT_MULTI_ROOT LIBERTY_CONSTANT th -> th',out)
         # A buffered port passthrough still fails closed; a buffered other-domain register is refused by name.
         rc,out=self.run_flow('tie_port');self.assertNotEqual(rc,0,out[-8000:])
         rc,out=self.run_flow('tie_reg');self.assertNotEqual(rc,0,out[-8000:])
         self.assertIn('output th has wrong or unregistered source domain',out)
+
+    def test_liberty_function_gate_of_constants_and_live_input(self):
+        rc,out=self.run_flow('tie_gate');self.assertEqual(rc,0,out[-8000:])
+        self.assertIn('LIBERTY_CONSTANT',out)
+        rc,out=self.run_flow('tie_gate_port');self.assertNotEqual(rc,0,out[-8000:])
+        self.assertIn('output th has wrong or unregistered source domain',out)
+
+    def test_input_side_constant_register_data(self):
+        rc,out=self.run_flow('constant_data');self.assertEqual(rc,0,out[-8000:])
+        self.assertIn('OWNERSHIP PASS',out)
+
+    def test_actual_liberty_constant_output_and_nonconstant_mutants(self):
+        rc,out=self.run_flow('constant',generated=True);self.assertEqual(rc,0,out[-8000:])
+        self.assertIn('LIBERTY_CONSTANT',out)
+        for mutant in ('constant_nonconstant','constant_case_analysis'):
+            rc,out=self.run_flow(mutant);self.assertNotEqual(rc,0,out[-5000:])
+            self.assertIn('wrong or unregistered source domain',out)
 
     def test_generated_hooks_with_actual_lef_only_tap(self):
         rc,out=self.run_flow('physical_tap',generated=True);self.assertEqual(rc,0,out[-8000:])

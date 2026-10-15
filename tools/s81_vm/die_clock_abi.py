@@ -36,9 +36,10 @@ VIEWS = {
     'ck_mem_relay_rsp_t': ('dsfd_vm_static_relay128_b4|b8', 'ck_rsp', 'dsfd_vm_static_relay128_b4_native_cb|dsfd_vm_static_relay128_b8_native_cb'),
     'ck_mem_wcapture_t': ('dsfd_vm_static_write_capture128(E|W)', 'ck', 'dsfd_vm_direct_capture_e_native|dsfd_vm_direct_capture_w_native'),
     'ck_mem_wscatter_t': ('dsfd_vm_static_scatter_b8_out(B0|B8|B16|B24)', 'ck', 'dsfd_vm_direct_scatter_b0_native|dsfd_vm_direct_scatter_b8_native|dsfd_vm_direct_scatter_b16_native|dsfd_vm_direct_scatter_b24_native'),
-    'ck_mem_fsr_t': ('dsfd_vm_static_fsr_b0', 'ck', 'dsfd_vm_static_fsr_b0_native_1015_r1'),
-    'ck_read_data_t': ('dsfd_vm_static_read_q0|q1', 'ck', 'dsfd_vm_static_read_q0_native_1015_r1|dsfd_vm_static_read_q1_native_1015_r1'),
-    'ck_read_valid_t': ('dsfd_vm_static_read_v0', 'ck', 'dsfd_vm_static_read_v0_native_1015_r1'),
+    'ck_cap_control_s': ('dsfd_vm_static_cap_ctl', 'ck', 'dsfd_vm_static_cap_ctl_1015_r1'),
+    'ck_mem_fsr_t': ('dsfd_vm_static_fsr_b0..b3', 'ck', 'dsfd_vm_static_fsr_b0_native_1015_r1|dsfd_vm_static_fsr_b1_native_1015_r1|dsfd_vm_static_fsr_b2_native_1015_r1|dsfd_vm_static_fsr_b3_native_1015_r1'),
+    'ck_read_data_t': ('dsfd_vm_static_read_q0..q7', 'ck', 'dsfd_vm_static_read_q0_native_1015_r1|dsfd_vm_static_read_q1_native_1015_r1|dsfd_vm_static_read_q2_native_1015_r1|dsfd_vm_static_read_q3_native_1015_r1|dsfd_vm_static_read_q4_native_1015_r1|dsfd_vm_static_read_q5_native_1015_r1|dsfd_vm_static_read_q6_native_1015_r1|dsfd_vm_static_read_q7_native_1015_r1'),
+    'ck_read_valid_t': ('dsfd_vm_static_read_v0..v7', 'ck', 'dsfd_vm_static_read_v0_native_1015_r1|dsfd_vm_static_read_v1_native_1015_r1|dsfd_vm_static_read_v2_native_1015_r1|dsfd_vm_static_read_v3_native_1015_r1|dsfd_vm_static_read_v4_native_1015_r1|dsfd_vm_static_read_v5_native_1015_r1|dsfd_vm_static_read_v6_native_1015_r1|dsfd_vm_static_read_v7_native_1015_r1'),
 }
 
 

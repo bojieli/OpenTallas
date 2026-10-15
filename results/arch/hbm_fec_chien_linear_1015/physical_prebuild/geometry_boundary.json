@@ -1,0 +1,27 @@
+{
+  "status": "NO_AUTHORITATIVE_CURRENT_SLOT_OR_PIN_CAPACITY_GRANT",
+  "reporting_owners": [
+    "geometry_hbm",
+    "h_die"
+  ],
+  "checked_contract": "H-DIE v15 source_contract/contract.json",
+  "contract_instances": 68,
+  "HOST_SerDes_FEC_instances": 0,
+  "legacy_geometry_not_a_grant": {
+    "east_strip_um": 864,
+    "hs_slab_um": [
+      594.408,
+      16824.216
+    ],
+    "old_host_um": [
+      260.808,
+      1652.424
+    ]
+  },
+  "current_joined_profile": "ot_hbm_core_fec_frame_static_correction_link / actual512PMA",
+  "current_physical_clock_inputs": 23,
+  "native_endpoints_TX6_RX2": "caller-owned; state excluded from frame-link top",
+  "actual_available_outline": "MISSING",
+  "actual_face_pins_and_track_capacity": "UNMEASURED",
+  "physical_qualified": false
+}

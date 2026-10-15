@@ -1,0 +1,15 @@
+read_verilog -sv /srv/opentallas-scratch/codex/fec-chien-linear-1015/pma-static-words-source-v1/ot_hbm_pma_block_gearbox_static_words.sv
+read_verilog -sv /srv/opentallas-scratch/codex/fec-chien-linear-1015/pma-static-words-source-v1/ot_hbm_pma_static_words_census12.sv
+hierarchy -check -top ot_hbm_pma_static_words_census12
+proc
+flatten
+opt
+memory_map
+opt
+check -assert
+write_json /srv/opentallas-scratch/codex/fec-chien-linear-1015/pma_static_words_mapper_0/generic_netlist.json
+techmap
+opt
+check -assert
+stat
+write_json /srv/opentallas-scratch/codex/fec-chien-linear-1015/pma_static_words_mapper_0/bit_netlist.json

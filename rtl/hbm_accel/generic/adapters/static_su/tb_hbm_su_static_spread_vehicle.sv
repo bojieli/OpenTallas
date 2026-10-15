@@ -8,24 +8,33 @@
 // (c) every write is done exactly +7, (d) per-record VM transport windows equal the compiler's, (e) the final image
 // read back from every touched sector equals the compiler's final image. Preload and readback are unmeasured.
 // MUT_PG=1: port groups drop the per-quarter spread (SID bits) -> must FAIL. MUT_LG=1: LG write-mux mutant -> FAIL.
+// The LG local read/write selects come from the VM calendar programme image (cal_rd/cal_wr, set from the compiled
+// calendar events), never from the SU ports. MUT_CAL=1: the calendar omits one SU read slot (quarter 1) -> FAIL.
 module tb_hbm_su_static_spread_vehicle;
- parameter integer MUT_PG=0,MUT_LG=0,MAXPRE=32768,MAXEV=32768,MAXREC=64;
+ parameter integer MUT_PG=0,MUT_LG=0,MUT_CAL=0,MAXPRE=32768,MAXEV=32768,MAXREC=64;
+ // SW/SE (QID 0/1) carry the fifth port group; its bank map is the die lead's (BANK_GROUP); this test map gives bank 7 its own group
+ parameter [31:0] SWSE_BANK_GROUP=32'h4322_1100;
  localparam integer RR=10,WR=7;
  reg clk=0;always #5 clk=~clk;
  reg rst_n=0;
  reg [8*17-1:0] su_rq[0:3];reg [8*281-1:0] su_wq[0:3];
+ reg [7:0] cal_rd[0:3],cal_wr[0:3];integer cal_cut=0;
  wire [8*257-1:0] su_rr[0:3];wire [7:0] su_w_done[0:3];
- wire [3:0] pg_fault[0:3];wire [7:0] lg_fault[0:3];
+ wire [4:0] pg_fault[0:3];wire [7:0] lg_fault[0:3];
  wire [32*18-1:0] status;
  for(genvar q=0;q<4;q=q+1)begin:g_q
-  wire [8*17-1:0] lrq,nrq;wire [8*281-1:0] lwq,nwq;wire [7:0] lrd,lwr,ndone,ldone;
+  wire [8*17-1:0] lrq,nrq;wire [8*281-1:0] lwq,nwq;wire [7:0] ndone,ldone;
   wire [8*257-1:0] nrr,lrr;
-  ot_hbm_su_static_vm_ports #(.QID(q),.READ_RETURN(RR),.WRITE_RETURN(WR),.MUT(MUT_PG)) ports(
-   .pg_clk({4{clk}}),.rst_n(rst_n),.su_rq(su_rq[q]),.su_wq(su_wq[q]),.su_rr(su_rr[q]),.su_w_done(su_w_done[q]),
-   .lg_rq(lrq),.lg_wq(lwq),.lg_read(lrd),.lg_write(lwr),.lg_rr(lrr),.lg_w_done(ldone),.fault(pg_fault[q]));
+  localparam integer NPG=(q<2)?5:4;
+  wire [NPG-1:0] pf;
+  assign pg_fault[q]=5'(pf);
+  ot_hbm_su_static_vm_ports #(.QID(q),.READ_RETURN(RR),.WRITE_RETURN(WR),.MUT(MUT_PG),.NPG(NPG),
+   .BANK_GROUP((q<2)?SWSE_BANK_GROUP:32'h3322_1100)) ports(
+   .pg_clk({NPG{clk}}),.rst_n(rst_n),.su_rq(su_rq[q]),.su_wq(su_wq[q]),.su_rr(su_rr[q]),.su_w_done(su_w_done[q]),
+   .lg_rq(lrq),.lg_wq(lwq),.lg_rr(lrr),.lg_w_done(ldone),.fault(pf));
   ot_hbm_vm_lg_static_split #(.READ_RETURN(RR),.WRITE_RETURN(WR),.MUT(MUT_LG)) lg(
    .clk({8{clk}}),.rst_n(rst_n),.local_rq(lrq),.far_rq(136'd0),.local_wq(lwq),.far_wq(2248'd0),
-   .local_read(lrd),.local_write(lwr),.near_rq(nrq),.near_wq(nwq),.near_rr(nrr),.near_w_done(ndone),
+   .local_read(cal_rd[q]),.local_write(cal_wr[q]),.near_rq(nrq),.near_wq(nwq),.near_rr(nrr),.near_w_done(ndone),
    .local_rr(lrr),.far_rr(),.local_w_done(ldone),.far_w_done(),.bank_fault(lg_fault[q]));
   for(genvar b=0;b<8;b=b+1)begin:g_b
    wire [3*257-1:0] rr3;
@@ -44,18 +53,19 @@ module tb_hbm_su_static_spread_vehicle;
  reg exp_r[0:63][0:31];reg exp_w[0:63][0:31];reg [255:0] exp_d[0:63][0:31];reg [7:0] exp_k[0:63][0:31];
  reg [31:0] first_seen[0:MAXREC-1],last_seen[0:MAXREC-1];
  integer t0=-1;reg measuring=0,checking=1;
- task clear;begin for(q=0;q<4;q=q+1)begin su_rq[q]=0;su_wq[q]=0;end end endtask
+ task clear;begin for(q=0;q<4;q=q+1)begin su_rq[q]=0;su_wq[q]=0;cal_rd[q]=0;cal_wr[q]=0;end end endtask
  // drive one sector request for the edge being prepared (request sampled at the coming posedge = 'cycle')
  task put(input reg w,input integer qq,input reg[15:0] sec,input reg[7:0] m,input reg[255:0] d,input integer k,input reg chk);
   integer bb;begin
    bb=sec[2:0];
    if(w)begin
     if(su_wq[qq][bb*281+280])begin $display("ERR double write q%0d b%0d edge %0d",qq,bb,cycle);errors=errors+1;end
-    su_wq[qq][bb*281+:281]={1'b1,sec,d,m};
+    su_wq[qq][bb*281+:281]={1'b1,sec,d,m};cal_wr[qq][bb]=1'b1;
     exp_w[(cycle+WR)%64][qq*8+bb]=1;exp_k[(cycle+WR)%64][qq*8+bb]=8'(k);
    end else begin
     if(su_rq[qq][bb*17+16])begin $display("ERR double read q%0d b%0d edge %0d",qq,bb,cycle);errors=errors+1;end
     su_rq[qq][bb*17+:17]={1'b1,sec};
+    if(MUT_CAL!=0&&qq==1&&cal_cut==0&&chk)cal_cut=1;else cal_rd[qq][bb]=1'b1;
     exp_r[(cycle+RR)%64][qq*8+bb]=chk;exp_d[(cycle+RR)%64][qq*8+bb]=d;exp_k[(cycle+RR)%64][qq*8+bb]=8'(k);
     if(!chk)exp_r[(cycle+RR)%64][qq*8+bb]=1'b1;
    end
@@ -150,7 +160,7 @@ module tb_hbm_su_static_spread_vehicle;
    if(first_seen[k]!==win[k][63:32]||last_seen[k]!==win[k][31:0])begin $display("ERR record %0d window",k);errors=errors+1;end
   end
   if(errors)$fatal(1,"SU_SPREAD_VEHICLE FAIL errors=%0d reads=%0d writes=%0d",errors,reads,writes);
-  $display("SU_SPREAD_VEHICLE PASS preload=%0d events=%0d records=%0d reads=%0d writes=%0d calendar_edges=%0d quarters=4 port_groups=16 lg_leaves=32 banks=32 srams=96",
+  $display("SU_SPREAD_VEHICLE PASS preload=%0d events=%0d records=%0d reads=%0d writes=%0d calendar_edges=%0d quarters=4 port_groups=18(SW/SE 5) lg_leaves=32 banks=32 srams=96",
            npre,nev,nrec,reads,writes,ev[nev-1][327:296]+1);
   $finish;
  end

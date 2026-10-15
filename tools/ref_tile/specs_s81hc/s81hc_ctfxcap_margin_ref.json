@@ -1,0 +1,128 @@
+{
+ "name": "s81hc_ctfxcap_margin_ref",
+ "top": "ot_s81_hc_ctfx_cap",
+ "kind": "tile",
+ "sources": [
+  "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_cth.sv",
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/hdc/ot_hdc_fp32_f12.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv",
+  "rtl/dsrom_sys/s81_suhc/ot_s81_hc_core.sv",
+  "rtl/dsrom_sys/s81_suhc/dsfd_sp_hc.sv",
+  "rtl/dsrom_sys/s81_ctrl/ot_s81_engine_adapter.sv",
+  "rtl/lib/ot_async_fifo.sv",
+  "rtl/lib/ot_reset_sync.sv",
+  "rtl/lib/ot_skid_buffer.sv",
+  "rtl/hdc/v41x/ot_dsrom_su_hcpost.sv",
+  "rtl/hdc/v41x/ot_dsrom_su_add6.sv",
+  "rtl/hdc/v41x/ot_dsrom_su_norm.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/hdc/ot_hdc_sfu.sv",
+  "rtl/hdc/ot_hdc_fpu.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+  "rtl/proto/ot_fp32_add_rne_pipe.sv",
+  "rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
+  "rtl/hdc/v41/ot_hdc_fsqrt.sv",
+  "rtl/hdc/v41/ot_hdc_fdiv.sv",
+  "rtl/hdc/v41/ot_hdc_softplus.sv",
+  "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv",
+  "rtl/hdc/v41/ot_hdc_actquant.sv",
+  "rtl/hdc/v41x/ot_dsrom_aq12.sv",
+  "rtl/hdc/v41x/ot_dsrom_divc.sv"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [],
+ "outline": {
+  "w": 576.72,
+  "h": 51.84
+ },
+ "why_floorplan": "Actual full FF hold repair causes117-122%local density at original25.92um height; doubled51.84um outline/core47.52 restores measured55.45%local density margin without numeric/cycle/pin-x/SDC changes.",
+ "macros": [],
+ "pins": {
+  "W": [
+   "clk"
+  ],
+  "N": [
+   "fd_in",
+   "fv_in",
+   "rst_in"
+  ],
+  "S": [
+   "fdx",
+   "fv",
+   "fv_local",
+   "fdx_local"
+  ]
+ },
+ "refglob": "*",
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "job": {
+  "owner": "Codex:S-NORM",
+  "branch": "claude/s81-norm-tree-1014",
+  "tag": "margin1",
+  "purpose": "Production serial HC owns every local broadcast register in its physical strip; no region-wrapper flops.",
+  "no_bench_reason": "bit-exactness is gated on the HC slab composition bench (tools/s81_suhc/hc_gate.py NG256 HIER=2 m0 PASS + m1 FAIL, NG64 m0 PASS + m3 FAIL) at the kit commit; the tile alone has no golden",
+  "views_to": "physical/ref_tile/s81hc_ctfxcap_margin_ref/views",
+  "record_to": "results/rtl/ref_tile/s81hc_ctfxcap_margin_ref",
+  "structural_change": "Actual full FF hold repair causes117-122%local density at original25.92um height; doubled51.84um outline/core47.52 restores measured55.45%local density margin without numeric/cycle/pin-x/SDC changes.",
+  "benches": [
+   {
+    "name": "owned_serial_exact",
+    "cmd": "bash tools/s81_suhc/hc_owned_bench.sh {RUN}/bench/owned_serial_exact 0 ",
+    "expect": "pass",
+    "threads": 16,
+    "peak_ram_gb": 40,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^RUN ng256_dpi_m0_a0_hier3tail_cp1_cs6_ls1_pipe40 pass$"
+   },
+   {
+    "name": "owned_serial_local_mut",
+    "cmd": "bash tools/s81_suhc/hc_owned_bench.sh {RUN}/bench/owned_serial_local_mut 0 ot_s81_hc_ctfx_cap",
+    "expect": "fail",
+    "threads": 16,
+    "peak_ram_gb": 40,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^RUN ng256_dpi_m0_a0_hier3tail_cp1_cs6_ls1_pipe40_tm-ot_s81_hc_ctfx_cap fail$"
+   }
+  ],
+  "hold_merge": "Actual canonical die capture slot/pin/peer geometry and native TTFFDRC0 qualification pending",
+  "reroute_reason": {
+   "kind": "slot_change",
+   "slot_change_request": "Proposed51.84um capture height +25.92um percth;S-DIE actual parent/source/hop integration pending. No publication/adoption before grant."
+  }
+ },
+ "params": {},
+ "children": [],
+ "inter": [],
+ "recipe": 2,
+ "inhold": true,
+ "outhold": false,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB1xp67_ASAP7_75t_R"
+ },
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": false
+ },
+ "io_tcl": "physical/s81_die_pins/v21_hc_capture_margin_candidate/ot_s81_hc_ctfx_cap.tcl",
+ "assigned_pins": {
+  "file": "physical/s81_die_pins/v21_hc_capture_margin_candidate/ot_s81_hc_ctfx_cap.json",
+  "source": "proposed structural height margin, actual die parent integration pending"
+ },
+ "slot_change_request": "Proposed51.84um capture height +25.92um percth;S-DIE actual parent/source/hop integration pending. No publication/adoption before grant."
+}
