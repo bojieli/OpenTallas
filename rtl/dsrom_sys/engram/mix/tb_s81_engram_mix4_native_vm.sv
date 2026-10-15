@@ -1,7 +1,7 @@
 `timescale 1ns/1ps
 // External fixture -> real SU preload -> MIX4 -> real VM128SRAM -> SU readback.
 // All reference arrays below are testbench stimuli/scoreboards; none drive a DUT response.
-module tb_s81_engram_mix4_native_vm #(parameter MUT=0, WRITE_COMMIT_LAT=11);
+module tb_s81_engram_mix4_native_vm #(parameter MUT=0, WSCATTER_PIPE=1, WRITE_COMMIT_LAT=12);
  localparam READ_PIPE=4, RL=16, MAXC=40000;
  // VM latency convention (S-ELEM-C 10-15, 7beb fault at cy961 = 'lost descriptor reply': dtag[VM_LAT+1] arrived one
  // edge before the registered return). RL counts from the edge that SAMPLES the request pin to the edge after which the
@@ -41,7 +41,7 @@ module tb_s81_engram_mix4_native_vm #(parameter MUT=0, WRITE_COMMIT_LAT=11);
         assign cld[512*cl +: 512] = cvm[551*cl+31 +: 512];
     end endgenerate
     wire vm_fault;
-    dsfd_vm_static_core #(.READ_PIPE(READ_PIPE)) dut (.cks(ck), .rss(rss),
+    dsfd_vm_static_core #(.READ_PIPE(READ_PIPE),.WSCATTER_PIPE(WSCATTER_PIPE)) dut (.cks(ck), .rss(rss),
         .ck_read_data({64{ck}}), .ck_read_valid({8{ck}}), .rst_read_data_n({64{rss}}), .rst_read_valid_n({8{rss}}),
         .ck_rsched(ck), .ck_seq(ck), .ck_landing(ck),
         .ck_mem_fsr({16{ck}}), .ck_mem_return({16{ck}}), .ck_mem_bank({128{ck}}),
@@ -96,7 +96,7 @@ module tb_s81_engram_mix4_native_vm #(parameter MUT=0, WRITE_COMMIT_LAT=11);
    // Baseline PIPE0 source pin P -> macro write-enable P+9 -> relayed cm_v P+11.
    for(integer k=0;k<128;k=k+1)if(raw_v[k])begin
     raw_slice=k/32;raw_row=(integer'(raw_a[9*k+:9])<<5)|((k%32)^((raw_a[9*k+:9]&7)<<2));
-    if(wc[raw_row]<0 || cy-(wc[raw_row]-WRITE_COMMIT_LAT)!=9 || raw_slices[raw_row][raw_slice] ||
+    if(wc[raw_row]<0 || cy-(wc[raw_row]-WRITE_COMMIT_LAT)!=(9+WSCATTER_PIPE) || raw_slices[raw_row][raw_slice] ||
        raw_m[4*k+:4]!==4'hf || raw_t[8*k+:8]!==wt[raw_row])
      $fatal(1,"raw SRAM write timing/mask/tag mismatch row=%0d cy=%0d source=%0d",raw_row,cy,wc[raw_row]-WRITE_COMMIT_LAT);
     raw_slices[raw_row][raw_slice]=1;rawcommits=rawcommits+1;
@@ -187,6 +187,6 @@ module tb_s81_engram_mix4_native_vm #(parameter MUT=0, WRITE_COMMIT_LAT=11);
   for(i=0;i<640;i=i+1)begin @(negedge ck);#0.01;su_rqv=1;su_rq[0+:14]=256+i;end
   @(negedge ck);#0.01;su_rqv=0;repeat(50)@(negedge ck);
   if(writes!=640||readbacks!=640)$fatal(1,"repeat/readback count");
-  $display("PASS MIX4_NATIVE_VM128 RL16 raw_write9 commit_return11 RS5 exact20480 writes640 reads4161 preloads3521 readbacks640 rawcommits=%0d returnedcommits=%0d write_span=%0d..%0d cycles=%0d",rawcommits,commits,first_w-start,last_w-start,elapsed);$finish;
+  $display("PASS MIX4_NATIVE_VM128 RL16 raw_write10 commit_return12 RS5 exact20480 writes640 reads4161 preloads3521 readbacks640 rawcommits=%0d returnedcommits=%0d write_span=%0d..%0d cycles=%0d",rawcommits,commits,first_w-start,last_w-start,elapsed);$finish;
  end
 endmodule

@@ -38,7 +38,7 @@ def main():
     p.add_argument('--execute',action='store_true');p.add_argument('--lint-only',action='store_true')
     p.add_argument('--variants',nargs='+',choices=VARIANTS,default=list(VARIANTS))
     p.add_argument('--reuse-base-objects',action='store_true',help='Deep-copy completed base build as an incremental build seed; every variant still rebuilds and runs')
-    p.add_argument('--jobs',type=int,default=1);p.add_argument('--coordinator-lock',type=Path,default=LOCK)
+    p.add_argument('--jobs',type=int,default=1);p.add_argument('--define',action='append',default=[]);p.add_argument('--write-scatter-pipe',type=int,choices=(0,1),default=1);p.add_argument('--coordinator-lock',type=Path,default=LOCK)
     p.add_argument('--verilator',default=str(Path.home()/'.local/opentallas-tools/verilator-5.050/bin/verilator'))
     a=p.parse_args();LOCK=a.coordinator_lock;coordinator()
     root=a.source_root.resolve();out=a.out.resolve();fixture=a.fixture_dir.resolve()
@@ -50,11 +50,11 @@ def main():
         if not (fixture/f'{name}.mem').is_file():raise SystemExit(f'Missing CPU fixture {name}.mem')
     manifest={'schema':'opentallas.s81.engram.native-vm-plan.v1','scope':'Native RTL arithmetic, READ_PIPE4 VM with 128 functional SRAM models; external SU preload and SRAM readback',
         'source_sha256':{str(x):sha(x) for x in src},'fixture_sha256':{x.name:sha(x) for x in fixture.glob('*.mem')},
-        'read_latency_elapsed_edges':16,'returned_commit_latency_elapsed_edges':11,'rs':5,
+        'read_latency_elapsed_edges':16,'returned_commit_latency_elapsed_edges':11+a.write_scatter_pipe,'rs':5,
         'expected':dict(mix_reads=4161,mix_writes=640,answers=20480,preload_rows=3521,su_readback_rows=640),'variants':{},'executed':False}
     for name in a.variants:
         mut,defines=VARIANTS[name];obj=out/f'obj_{name}'
-        cmd=[a.verilator,'--lint-only' if a.lint_only else '--binary','--timing','-O1','-Wno-fatal','--top-module',TOP,'--Mdir',str(obj),'-j',str(a.jobs),'-MAKEFLAGS','OPT_FAST=-O0 OPT_SLOW=-O0 OPT_GLOBAL=-O0',f'-GMUT={mut}','-GWRITE_COMMIT_LAT=11',*[f'+define+{d}' for d in defines],*map(str,src)]
+        cmd=[a.verilator,'--lint-only' if a.lint_only else '--binary','--timing','-O1','-Wno-fatal','--top-module',TOP,'--Mdir',str(obj),'-j',str(a.jobs),'-MAKEFLAGS','OPT_FAST=-O0 OPT_SLOW=-O0 OPT_GLOBAL=-O0',f'-GMUT={mut}',f'-GWSCATTER_PIPE={a.write_scatter_pipe}',f'-GWRITE_COMMIT_LAT={11+a.write_scatter_pipe}',*[f'+define+{d}' for d in defines+a.define],*map(str,src)]
         manifest['variants'][name]={'build':cmd,'run':[str(obj/f'V{TOP}'),f'+dir={fixture}'],'expected_pass':name=='base'}
     coordinator();out.mkdir(parents=True,exist_ok=True)
     (out/'native_vm_manifest.json').write_text(json.dumps(manifest,indent=2)+'\n')
