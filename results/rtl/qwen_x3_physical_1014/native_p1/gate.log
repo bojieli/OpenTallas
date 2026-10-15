@@ -1,0 +1,29 @@
+GATE_SOURCE_ARCHIVE_SHA256=60afd84d89e905c518519014f3d636ccd7a3c9b66f4366a59634ccf1de50c7d4
+GATE_TOOL_IMAGE_ID=sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29 GATE_TOOL_IMAGE_DIGESTS=["openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29"]
+GATE_TOOL_CTS_MACRO_CLUSTER=
+GATE_FLOW_RC=0 GATE_FLOW_S=22
+GATE_IOP_RC=0
+GATE_DUMP_RC=0
+GATE_TB textbook_lint: WARN ot_qfd_x3_mux_native cells 13,405 flops 3,776 depth 250.1 ps util 0.1262 reach 0.0 um (0.2 s)
+GATE_TB textbook_lint: INFO clock_roots max_root_sinks=3776 root=port:ck rule=PASS: 3,776 sinks on the largest root <= 15,000; no measured clock tree (no --cts gate evidence)
+GATE_TB textbook_lint: WARN util_channel: utilisation 12.6% outside 45%-65% (std 1981 + macro 0 um2 in 15695 um2): shrink the outline (long wires / sparse placement)
+GATE_PORTS {"ck": [1, false], "rst_n": [1, false], "q": [null, true], "kvn_v": [1, false], "kvn_d": [null, true], "kvn_tag": [null, true], "slot_v": [1, false], "slot_q": [1, false], "x3_v": [1, false], "x3_d": [null, true], "x3_tag": [null, true], "fault": [1, false]}
+GATE_AREA    Chip area for top module '\ot_qfd_x3_mux_native': 1980.007740
+GATE_CTS_RC=0
+GATE_GPLD global_placement -density 0.5 -pad_left 0 -pad_right 0 -routability_driven -timing_driven -force_center_initial_place -min_phi_coef 0.95 -max_phi_coef 1.05
+GATE_GPLD [INFO GPL-0023] Placement target density:       0.5000
+GATE_CK_RC=0
+GATE_CK ss insertion all 231.1..261.4 ps (spread 30.3), boundary mean 248.4; tt insertion all 177.2..204.1 ps (spread 26.9), boundary mean 192.0; ff insertion all 144.1..170.6 ps (spread 26.5), boundary mean 157.7; macro_clk flag False
+GATE_CK_DOMAIN {"source": "ck", "clock": "core_clk", "tt": {"boundary": {"n": 1680, "mean": 192.0, "min": 181.1, "max": 204.1}, "all": {"n": 3772, "mean": 188.9, "min": 177.2, "max": 204.1}, "errors": [], "macros": null, "macro_libs": 0}}
+GATE_PC constraints signoff /src/physical/ref_tile/qfd_x3_mux_native/signoff.sdc (TT placement RC; diagnostic)
+GATE_PC reg->out      171 paths, worst slack 177.2 ps (e.g. fault)
+GATE_PC in->reg        66 paths, worst slack 202.4 ps (e.g. slice[1].u/qw$_DFFE_PN0P_/RESETN)
+GATE_PC reg->reg      129 paths, worst slack 260.7 ps (e.g. slice[0].u/qf[0][54]$_DFFE_PP_/D)
+GATE_PC setup WNS 1.7722384670904034e-10 hold WNS 2.8098315341118507e-11
+GATE_DONE
+
+--- stderr
+ot-run: ot-epyc4       admits   116 GB (avail 353, growth 189, headroom 48, waiters 0/0 GB) load 30/128 running 17 disk 589 GB 
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-9866-1792036514 after 0 s
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-9866-1792036514): exit 0
