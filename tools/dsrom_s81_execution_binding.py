@@ -190,8 +190,8 @@ class CanonicalS81Execution:
             expert_ids_by_node=expert_ids_by_node, include_fields=include_fields,
             endpoint_map=endpoint_map, fragment_endpoints=fragment_endpoints)
 
-    def emit_stage(self, stage, rank, out):
-        return self.stage_join.emit_stage(stage, rank, out)
+    def emit_stage(self, stage, rank, out, *, native_cfg7=False):
+        return self.stage_join.emit_stage(stage, rank, out, native_cfg7=native_cfg7)
 
     def emit_nonfield_run(self, nodes, stage, rank, out):
         """Emit one consecutive literal source run on the caller's actual die.

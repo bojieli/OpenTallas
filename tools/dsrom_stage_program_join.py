@@ -243,7 +243,7 @@ class StageProgramJoin:
         resolved = source_execution.resolve(node, rank, expert_ids=expert_ids)
         return self.dispatch(resolved, source['instruction'], encode=encode)
 
-    def emit_stage(self, stage, rank, out):
+    def emit_stage(self, stage, rank, out, *, native_cfg7=False):
         """Write the actual host's spine_keys.hex/e<pair>.cfg.hex initializer ABI.
 
         All2417 pair files are emitted; known inactive pair/phase words are
@@ -253,17 +253,30 @@ class StageProgramJoin:
         """
         out = Path(out)
         keys = self.keys(stage, rank)
+        rows = self.by_stage[stage]
+        require(not native_cfg7 or rows, 'no FIELD phases on this provider-only stage')
         out.mkdir(parents=True, exist_ok=False)
         (out/'spine_keys.hex').write_text(''.join(f'{key:08x}\n' for key in keys))
-        rows = self.by_stage[stage]
+        allocation_digest = digest([r['matrix_sha256'] for r in rows])
+        cfg7_images = []
         for pair in range(self.pairs):
-            with (out/f'e{pair}.cfg.hex').open('x') as stream:
+            cfg_path = out/f'e{pair}.cfg.hex'
+            with cfg_path.open('x') as stream:
                 for row in rows:
                     if rank not in row['owners']:
                         words = (0,)*25  # explicit allocated nonowner phase
                     else:
                         words = [self.cfg(stage, rank, pair, row['phase']*25+w) for w in range(25)]
                     stream.writelines(f'{word:012x}\n' for word in words)
+            if native_cfg7:
+                from s81_static_control.field_cfg7_image import emit, sha
+                image = emit(cfg_path, out/f'e{pair}.cfg7', phase_count=len(rows),
+                    PHW=self.stage_map['PHW_required_by_stage'][stage],
+                    source_binding=dict(stage=stage, rank=rank, pair=pair,
+                        cfg_sha256=sha(cfg_path),
+                        source_allocation_digest=allocation_digest,
+                        native_CFG_function_source='tools/dsrom_full_owner_compiler.py:phase_cfg'))
+                cfg7_images.append(dict(pair=pair, images=image['images']))
             # Streaming emitter memory stays bounded to this pair's source CFG.
             self._cfg_cache.clear()
         receipt = dict(stage=stage, rank=rank, pairs=self.pairs, source_phases=len(rows),
@@ -271,9 +284,14 @@ class StageProgramJoin:
                        cfg_words_per_pair=25*len(rows), key_words=len(keys),
                        physical_owner_nonexecuting_phases=[r['phase'] for r in rows
                              if rank not in r['owners']],
-                       source_allocation_digest=digest([r['matrix_sha256'] for r in rows]),
+                       source_allocation_digest=allocation_digest,
                        source_initializers_bound=True, native_execution_qualified=False,
                        physical_qualified=False, composed_latency=None)
+        if native_cfg7:
+            receipt['native_CFG_storage'] = dict(abi='opentallas.s81.cfg7-native.v1',
+                macros_per_pair=7, macro='ot_rom_4096x72_m8',
+                physical_macro_count=7*self.pairs, pairs=cfg7_images,
+                static_sequencer_execution_qualified=False)
         (out/'binding.json').write_text(json.dumps(receipt, indent=2, sort_keys=True)+'\n')
         return receipt
 
@@ -345,11 +363,14 @@ def main():
     parser.add_argument('--stage', type=int, required=True)
     parser.add_argument('--rank', type=int, required=True)
     parser.add_argument('--out', type=Path, required=True)
+    parser.add_argument('--native-cfg7', action='store_true',
+                        help='also emit all seven native physical CFG masks for every pair')
     args = parser.parse_args()
     join = StageProgramJoin.from_files(args.matrix_map, args.stage_map,
                                       matrix_sha256=args.matrix_sha256,
                                       stage_map_sha256=args.stage_map_sha256)
-    print(json.dumps(join.emit_stage(args.stage, args.rank, args.out), sort_keys=True))
+    print(json.dumps(join.emit_stage(args.stage, args.rank, args.out,
+                                    native_cfg7=args.native_cfg7), sort_keys=True))
 
 
 if __name__ == '__main__':
