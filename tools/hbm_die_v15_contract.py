@@ -212,6 +212,19 @@ def generate(out):
             evidence_scope='actual dual-clock sector-mapped components; not instantiated by this die inventory',
             modules=component_contract['modules'],clocks=component_contract['clocks'],
             qualified=False,remaining=component_contract['fail_closed_requirements'])
+    native_headers_path=ROOT/'physical/hbm_accel_die_views/svc/v15/native_headers.json'
+    native_headers=None
+    if native_headers_path.exists():
+        native_headers=json.loads(native_headers_path.read_text())
+        for top,rec in native_headers['modules'].items():
+            actual=views.L.parse_module(rec['source'],top,rec.get('params',{}))['ports']
+            expected={p:(r['direction'],r['bits']) for p,r in rec['ports'].items()}
+            assert actual==expected,(top,'native service header drift')
+            assert hashlib.sha256((ROOT/rec['source']).read_bytes()).hexdigest()==rec['sha256'],(top,'native service source drift')
+        native_headers=dict(path=str(native_headers_path.relative_to(ROOT)),
+            sha256=hashlib.sha256(native_headers_path.read_bytes()).hexdigest(),
+            evidence_scope='actual factored successor components; full production physical composition remains missing',
+            **native_headers)
     placement_groups=[]
     for q in ('SW','SE','NW','NE'):
         chain=['hb_vms_'+q]+[f'lg_{q}_{stage}' for stage in range(3)]
@@ -242,7 +255,7 @@ def generate(out):
                 abi_sha256=hashlib.sha256(abi_path.read_bytes()).hexdigest(),
                 instances=modules,known_actual_edges=edges,clock_roots=roots,placement_groups=placement_groups,
                 registered_station_masters=generated,logical_constant_requests=logical_constants,unbound_ports=unresolved,
-                tested_boundary_components=component_contract,
+                tested_boundary_components=component_contract,native_service_component_headers=native_headers,
                 boundary_gaps=['actual dual-clock components exist; full die band/PHY/client composition is absent',
                                'actual full production-shape mapped PHY address/endian/PC striping proof required',
                                'historical PC leaf rejected for address/clock semantics; actual block CDC replacement required'],
