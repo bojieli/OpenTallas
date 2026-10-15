@@ -6,17 +6,17 @@
  "die": [
   0,
   0,
-  228.96,
-  228.96
+  170.64,
+  170.64
  ],
  "core": [
   2.16,
   2.16,
-  226.8,
-  226.8
+  168.48,
+  168.48
  ],
- "why": "util 0.6 of std 30000 + macros 0 um2",
- "std_area_um2": 30000,
+ "why": "util 0.55 of std 15000 + macros 0 um2",
+ "std_area_um2": 15000,
  "layer_contract": {
   "children": {},
   "pg_layer": "M5",
@@ -47,7 +47,8 @@
  "blocks": [],
  "findings": [],
  "referenced": [
-  "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_rxt.sv",
+  "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_rxh.sv",
+  "rtl/dsrom_sys/s81_suhc/ot_s81_su_rw.sv",
   "rtl/dsrom_sys/s81_suhc/ot_s81_su_rx.sv",
   "rtl/hdc/v41x/ot_hdc_v41x_spshort.sv",
   "rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
@@ -60,7 +61,8 @@
   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
   "rtl/hdc/ot_hdc_prefix.sv",
   "rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv",
-  "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_rxh.sv",
+  "rtl/hdc/v41x/ot_dsrom_su_fdiv_f12.sv",
+  "rtl/hdc/v41x/ot_dsrom_su_f12.sv",
   "physical/ref_tile/s81su_rxqr_ref/kit.env",
   "physical/ref_tile/s81su_rxqr_ref/clock.sdc",
   "physical/ref_tile/s81su_rxqr_ref/signoff.sdc",
