@@ -97,7 +97,7 @@ def main():
         if p in OUT:
             L.append(f" wire [{n * W[p] - 1}:0] {p}_ref;")
     L.append(f" wire [{n - 1}:0] want_rst;")
-    L.append(f" {mod} dut(.clk_pc({{{n}{{clk}}}}),.rst_n(rst_n)," + ",".join(f".{p}({p})" for p in W) + ");")
+    L.append(f" {mod} dut(" + "".join(f".clk_pc{k}(clk)," for k in range(n)) + ".rst_n(rst_n)," + ",".join(f".{p}({p})" for p in W) + ");")
     for k in range(n):
         sl = lambda p: f"[{k * W[p]} +: {W[p]}]"
         r = lambda p: (f"{p}_ref" if p in OUT else p) + sl(p)
@@ -143,7 +143,7 @@ endmodule""")
         if p not in OUT and p != "bank_owned":
             val = "{%d{1'b1}}" % (n * W[p]) if p == "open_v" else ("{%d{7'd1}}" % n if p == "open_count" else "0")
             L.append(f" wire [{n * W[p] - 1}:0] {p}={val};")
-    L.append(f" {mod} dut(.clk_pc(clk_pc),.rst_n(rst_n)," + ",".join(f".{p}({p})" for p in W if p in INP) + ",.bank_owned(bank_owned)"
+    L.append(f" {mod} dut(" + "".join(f".clk_pc{k}(clk_pc[{k}])," for k in range(n)) + ".rst_n(rst_n)," + ",".join(f".{p}({p})" for p in W if p in INP) + ",.bank_owned(bank_owned)"
              + "".join(f",.{p}()" for p in OUT if p != "bank_owned") + ");")
     L.append(f""" initial begin
   for(k=0;k<{n};k=k+1) begin

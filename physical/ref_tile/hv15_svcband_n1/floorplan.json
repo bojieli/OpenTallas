@@ -1,0 +1,150 @@
+{
+ "schema": "opentallas.ref_tile.floorplan.v1",
+ "name": "hv15_svcband_n1",
+ "top": "hfd_svc_v15_SE_s8",
+ "kind": "cluster",
+ "die": [
+  0,
+  0,
+  1036.8,
+  399.6
+ ],
+ "core": [
+  2.16,
+  2.16,
+  1034.6399999999999,
+  397.44
+ ],
+ "why": "spec outline (exact: the closed view's sub-slot)",
+ "std_area_um2": null,
+ "layer_contract": {
+  "children": {
+   "ot_hbm_svc_static_pc": "M5"
+  },
+  "pg_layer": "M7",
+  "rlayers": [
+   "M2",
+   "M7"
+  ],
+  "strap_layer": "M8"
+ },
+ "pins": {
+  "N": [
+   "clk_pc0",
+   "rst_n",
+   "open_v",
+   "open_bank",
+   "open_epoch",
+   "open_count",
+   "fill_v",
+   "fill_bank",
+   "fill_epoch",
+   "fill_slot",
+   "fill_data",
+   "read_v",
+   "read_bank",
+   "read_epoch",
+   "read_slot",
+   "out_v",
+   "out_data",
+   "retire_v",
+   "retire_bank",
+   "retire_epoch",
+   "cmd_v",
+   "cmd_write",
+   "cmd_bank",
+   "cmd_epoch",
+   "cmd_addr",
+   "cmd_step",
+   "block_ready",
+   "bank_owned",
+   "busy",
+   "done",
+   "fault"
+  ],
+  "S": [
+   "k_v",
+   "k_rdy",
+   "k_addr",
+   "k_len",
+   "k_tag",
+   "k_we",
+   "k_wdata",
+   "k_wstrb",
+   "k_wr_done",
+   "kr_v",
+   "kr_rdy",
+   "kr_tag",
+   "kr_beat",
+   "kr_data"
+  ]
+ },
+ "clock_port": "clk_pc0",
+ "clock_ports": [
+  "clk_pc0"
+ ],
+ "blocks": [
+  {
+   "kind": "child",
+   "view": "physical/ref_tile/hv15_svc_pc/views/ot_hbm_svc_static_pc",
+   "master": "ot_hbm_svc_static_pc",
+   "inst": "u_pc31",
+   "idx": 0,
+   "x": 449.28,
+   "y": 144.72,
+   "w": 140.4,
+   "h": 112.32,
+   "orient": "R0",
+   "offtrack": 0
+  }
+ ],
+ "findings": [
+  [
+   "WARN",
+   "macro_grid",
+   "ot_hbm_svc_static_pc#0: origin (449.28, 144.72) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ]
+ ],
+ "referenced": [
+  "physical/hbm_accel_die_views/svc/v15/rtl/hfd_svc_v15_SE_s8.sv",
+  "physical/ref_tile/hv15_svcband_n1/kit.env",
+  "physical/ref_tile/hv15_svcband_n1/clock.sdc",
+  "physical/ref_tile/hv15_svcband_n1/signoff.sdc",
+  "physical/ref_tile/hv15_svcband_n1/pdn.tcl",
+  "physical/ref_tile/hv15_svcband_n1/pre_cts.tcl",
+  "physical/ref_tile/hv15_svcband_n1/post_cts.tcl",
+  "physical/ref_tile/hv15_svcband_n1/post_grt.tcl",
+  "physical/ref_tile/hv15_svcband_n1/pre_drt.tcl",
+  "physical/ref_tile/hv15_svcband_n1/pre_fill.tcl",
+  "physical/ref_tile/hv15_svcband_n1/post_fill.tcl",
+  "physical/ref_tile/hv15_svcband_n1/pre_grt.tcl",
+  "physical/ref_tile/hv15_svcband_n1/post_drt.tcl",
+  "tools/ref_tile/ref_route.sh",
+  "physical/qwen_die_masters/io_ref_skew.sdc",
+  "physical/qwen_die_masters/io_plain.sdc",
+  "physical/qwen_die_masters/repair_budget.tcl",
+  "physical/qwen_die_masters/pre_cts_skew.tcl",
+  "physical/qwen_die_masters/pre_ref_skew.tcl",
+  "physical/qwen_die_masters/post_plain.tcl",
+  "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
+  "physical/common_flow/grt_macro_top_layer.tcl",
+  "physical/qwen_die_masters/io_flop_at_pins.tcl",
+  "physical/qwen_die_masters/out_flop_release.tcl",
+  "physical/dsrom_window_source/leaf_iohold.tcl",
+  "physical/dsrom_window_source/leaf_inhold_release.tcl",
+  "physical/dsrom_window_source/leaf_inhold.tcl",
+  "physical/dsrom_window_source/leaf_inhold_release.tcl",
+  "physical/ref_tile/hv15_svcband_n1/pre_gpl.tcl",
+  "physical/ref_tile/hv15_svcband_n1/pre_dpl.tcl",
+  "physical/common_flow/pin_reg_split.tcl",
+  "physical/common_flow/clock_entries.tcl",
+  "physical/ref_tile/hv15_svcband_n1/clock_entry.sdc",
+  "physical/ref_tile/hv15_svc_pc/views/ot_hbm_svc_static_pc/insertion.json",
+  "physical/ref_tile/hv15_svc_pc/views/ot_hbm_svc_static_pc/ot_hbm_svc_static_pc.lef",
+  "physical/ref_tile/hv15_svc_pc/views/ot_hbm_svc_static_pc/ot_hbm_svc_static_pc_ss.lib",
+  "physical/ref_tile/hv15_svc_pc/views/ot_hbm_svc_static_pc/ot_hbm_svc_static_pc_ff.lib",
+  "physical/ref_tile/hv15_svc_pc/views/ot_hbm_svc_static_pc/ot_hbm_svc_static_pc_tt.lib",
+  "physical/ref_tile/hv15_svcband_n1/place.tcl"
+ ]
+}

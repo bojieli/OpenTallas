@@ -2,7 +2,7 @@
 # v15.1 service band master (wires-only hfd_svc_v15_<q>_s<k>: N physical PCs) vs N stand-alone ot_hbm_svc_static_pc,
 # lockstep, per-lane directed-random protocol drivers, every output bit every cycle, every lane non-vacuous.
 #  MUT=0 exact; MUT=1 lane-0 fill slot wired off by one (fill_slot ^ 1); MUT=2 lanes 0/1 read slot swapped
-#  (N=1: lane-0 read epoch bit 0 inverted); MUT=3 per-PC clock entries collapsed onto clk_pc[0] (N>=2).
+#  (N=1: lane-0 read epoch bit 0 inverted); MUT=3 per-PC clock entries collapsed onto clk_pc0 (N>=2).
 #  Before the lockstep run: per-PC clock ownership (a pulse on clk_pc[k] alone opens a bank in PC k only).  HBM-V15-HARDEN 10-15
 set -euo pipefail
 out=${1:?out}; mut=${2:-0}; band=${3:?band module}; cyc=${CYCLES:-20000}; mkdir -p "$out"
@@ -30,7 +30,7 @@ PY
  ;;
  3) python3 - "$out/band.sv" <<'PY'
 import re,sys;p=sys.argv[1];t=open(p).read()
-t2=re.sub(r"\.clk\(clk_pc\[\d+\]\)",".clk(clk_pc[0])",t);open(p,'w').write(t2)
+t2=re.sub(r"\.clk\(clk_pc\d+\)",".clk(clk_pc0)",t);open(p,'w').write(t2)
 PY
  ;;
 esac

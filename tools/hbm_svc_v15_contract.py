@@ -44,12 +44,13 @@ def digest(path):
 
 def band_ports(pcs, ports):
     """band port table: PC fields packed per slot, rst_n shared, and the PC clock replaced by one clock entry per PC
-    (clk_pc[slot], H-DIE v15 top-down grant 7aa4a2686 per_pc_root_request: the svcPC native audit failed with one band
+    (scalar clk_pc<slot>, H-DIE v15 top-down grant 7aa4a2686 per_pc_root_request: the svcPC native audit failed with one band
     clock, L408.99/C508.02/spread104.7)"""
     out = {}
     for port, (direction, width) in ports.items():
         if port == 'clk':
-            out['clk_pc'] = (direction, len(pcs))
+            for slot in range(len(pcs)):
+                out[f'clk_pc{slot}'] = (direction, 1)
         else:
             out[port] = (direction, width if port == 'rst_n' else width * len(pcs))
     return out
@@ -72,7 +73,7 @@ def wrapper_source(name, pcs, ports):
         joins = []
         for port, (_, width) in ports.items():
             if port == 'clk':   # H-DIE grant 7aa4a2686: one clock entry per PC (own CTS root, insertion <= 300 ps)
-                expr = 'clk_pc' if len(pcs) == 1 else f'clk_pc[{slot}]'
+                expr = f'clk_pc{slot}'
             else:
                 expr = port if port == 'rst_n' or len(pcs) == 1 else (
                     f'{port}[{slot}]' if width == 1 else f'{port}[{slot * width} +: {width}]')

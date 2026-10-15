@@ -3,7 +3,10 @@
 // Historical service joins and shared PHY signals remain unbound.
 // Local slot -> physical PC: 28, 29, 30, 31
 module hfd_svc_v15_SW_s7 (
-    input wire [3:0] clk_pc,
+    input wire clk_pc0,
+    input wire clk_pc1,
+    input wire clk_pc2,
+    input wire clk_pc3,
     input wire rst_n,
     input wire [3:0] open_v,
     input wire [3:0] open_bank,
@@ -50,7 +53,7 @@ module hfd_svc_v15_SW_s7 (
     input wire [1023:0] kr_data
 );
     ot_hbm_svc_static_pc u_pc28 (
-        .clk(clk_pc[0]),
+        .clk(clk_pc0),
         .rst_n(rst_n),
         .open_v(open_v[0]),
         .open_bank(open_bank[0]),
@@ -97,7 +100,7 @@ module hfd_svc_v15_SW_s7 (
         .kr_data(kr_data[0 +: 256])
     );
     ot_hbm_svc_static_pc u_pc29 (
-        .clk(clk_pc[1]),
+        .clk(clk_pc1),
         .rst_n(rst_n),
         .open_v(open_v[1]),
         .open_bank(open_bank[1]),
@@ -144,7 +147,7 @@ module hfd_svc_v15_SW_s7 (
         .kr_data(kr_data[256 +: 256])
     );
     ot_hbm_svc_static_pc u_pc30 (
-        .clk(clk_pc[2]),
+        .clk(clk_pc2),
         .rst_n(rst_n),
         .open_v(open_v[2]),
         .open_bank(open_bank[2]),
@@ -191,7 +194,7 @@ module hfd_svc_v15_SW_s7 (
         .kr_data(kr_data[512 +: 256])
     );
     ot_hbm_svc_static_pc u_pc31 (
-        .clk(clk_pc[3]),
+        .clk(clk_pc3),
         .rst_n(rst_n),
         .open_v(open_v[3]),
         .open_bank(open_bank[3]),
