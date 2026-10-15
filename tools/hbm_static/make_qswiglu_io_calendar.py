@@ -6,7 +6,6 @@ qualification. Payloads are actual data addresses/slots, no fixture result data.
 """
 from pathlib import Path
 import sys,json
-from sfu_program_pages import encode_planes
 F=[('prefetch_v',8),('prefetch_scalar',8),('prefetch_sector',128),('prefetch_group',16),
    ('prefetch_local_addr',120),('prefetch_word',24),('scalar_addr',96),('scalar_enable',4),
    ('drain_v',2),('drain_addr',30),('drain_vm_sector',32),('drain_round_bf16',2),('arith_start',1)]
