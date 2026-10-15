@@ -1,0 +1,185 @@
+{
+ "name": "dsfd_vm_static_relay128_b4_native_cb",
+ "top": "dsfd_vm_static_relay128_b4",
+ "kind": "tile",
+ "sources": [
+  "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_relay128.sv",
+  "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_relay128_b4.sv"
+ ],
+ "clock_port": "ck_req",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 129.6,
+  "h": 129.6,
+  "exact": true
+ },
+ "pins": {
+  "N": [
+   "i_rv",
+   "i_wv",
+   "i_ra",
+   "i_wa",
+   "i_rt",
+   "i_wt",
+   "i_wm",
+   "i_wd"
+  ],
+  "S": [
+   "o_rv",
+   "o_wv",
+   "o_ra",
+   "o_wa",
+   "o_rt",
+   "o_wt",
+   "o_wm",
+   "o_wd"
+  ],
+  "E": [
+   "o_sv",
+   "o_cv",
+   "o_sd",
+   "o_st",
+   "o_ct",
+   "o_ca",
+   "o_cm"
+  ],
+  "W": [
+   "ck_req",
+   "ck_rsp",
+   "rst_n",
+   "i_sv",
+   "i_cv",
+   "i_sd",
+   "i_st",
+   "i_ct",
+   "i_ca",
+   "i_cm"
+  ]
+ },
+ "macros": [],
+ "io_tcl": "physical/s81_die_pins/v20_vm_static_transport_options/dsfd_vm_static_relay128_b4.tcl",
+ "route": {
+  "pd": 0.4,
+  "threads": 8,
+  "peak_ram_gb": 8,
+  "hold_margin_ns": 0.03
+ },
+ "recipe": 2,
+ "structural_change": "COMPOSED-BUDGET relay (S81 VM owner, 2026-10-15): the closed native_option relay launches 256-371 ps flop->pin (DFFHQNx1 QN 106 + INVx1 123 + unconditional FIRM outhold BUF-HB2-BUF 140 ps, probe o_sd[321]) against a 0.2T outside budget, so 27,344 of 83,712 composed bank/quarter/bridge bits fail TT (min -109.5 ps). The composed hold race is already carried by the receivers' measured input pads (FF hold -56..-94 ps) + the 100 ps H1 reserve, so the unconditional output hold stage is removed (route hold repair keeps the child's own 50+25 ps sender min) and every output domain takes a composition-derived 0.6T outside budget (launch <= ~196 ps at sign-off, <= ~133 ps at the 770 ps route). Same RTL, pins, outline, two roots, zero cycles.",
+ "slot_change_request": {
+  "contract": "S81 staticVM local-group option",
+  "version": "cd1242953",
+  "why": "physical perbank split:32b4quarters+16b8bridges preserve2stages but close83,712localbitreachvsoldb8/b16unreachable"
+ },
+ "job": {
+  "owner": "Claude:S81 VM owner",
+  "branch": "claude/s81-vm-r10-relay-1015",
+  "tag": "cb1",
+  "extra_paths": [
+   "rtl/dsrom_sys/s81_ph/vm",
+   "tools/s81_vm",
+   "tools/s81_vm_transport_sizing",
+   "physical/s81_die_pins/v20_vm_static_transport_options"
+  ],
+  "purpose": "Composed-budget re-close of the static VM relay: launch <= native pin budget so the 83,712-bit bank/quarter/bridge hops close at TT with the closed bank; same RTL/pins/outline/roots, zero cycles",
+  "benches": [
+   {
+    "name": "exact_relay",
+    "cmd": "bash tools/s81_vm/static_relay_gate.sh {RUN}/bench/relay 4 base",
+    "expect": "pass",
+    "pass_regex": "TB_VM_RELAY PASS banks 4 cycles 1000 bitchecks",
+    "min_count_regex": "bitchecks (\\d+)",
+    "threads": 1,
+    "peak_ram_gb": 1,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "mutant_relay",
+    "cmd": "bash tools/s81_vm/static_relay_gate.sh {RUN}/bench/relay_mut 4 mutant",
+    "expect": "fail",
+    "fail_regex": "TB_VM_RELAY FAIL banks 4 cycles 1000 bad 1000",
+    "threads": 1,
+    "peak_ram_gb": 1,
+    "needs": [
+     "iverilog"
+    ]
+   }
+  ]
+ },
+ "clock": "multiple_cts_roots",
+ "clock_ports": [
+  "ck_req",
+  "ck_rsp"
+ ],
+ "clock_entry_domains": {
+  "core": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_req"
+   ],
+   "inputs": [
+    "i_rv",
+    "i_wv",
+    "i_ra",
+    "i_wa",
+    "i_rt",
+    "i_wt",
+    "i_wm",
+    "i_wd",
+    "rst_n"
+   ],
+   "outputs": [
+    "o_rv",
+    "o_wv",
+    "o_ra",
+    "o_wa",
+    "o_rt",
+    "o_wt",
+    "o_wm",
+    "o_wd"
+   ],
+   "io_budget": {
+    "out": 0.6
+   }
+  },
+  "response": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_rsp"
+   ],
+   "inputs": [
+    "i_sv",
+    "i_cv",
+    "i_sd",
+    "i_st",
+    "i_ct",
+    "i_ca",
+    "i_cm"
+   ],
+   "outputs": [
+    "o_sv",
+    "o_cv",
+    "o_sd",
+    "o_st",
+    "o_ct",
+    "o_ca",
+    "o_cm"
+   ],
+   "io_budget": {
+    "out": 0.6
+   }
+  }
+ },
+ "outhold": false,
+ "reroute_reason": "composed native hop table (results/physical/s81_vm_static_ownership_1015/routed_local_hops.json) names this master's outputs: launch residual >220 ps on every output bit; structural IO-budget correction, not a retry"
+}
