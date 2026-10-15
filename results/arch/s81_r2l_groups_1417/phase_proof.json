@@ -1,0 +1,23 @@
+{
+ "at": "2026-10-15T14:36:35.425357-07:00",
+ "scope": "512-bit every-edge exact against actual original full-width r2l master; 7 divider phase offsets x4 epochs; actual group7 mapping mutant fails",
+ "normal_edges_added_measured": 0,
+ "sha256": {
+  "rtl/dsrom_sys/s81_static_net/ot_s81_r2l_groups64.sv": "ac6edd298425e0e44525ac68a8280a8d91ca5001c593cbc9658efb15828eeeff",
+  "rtl/dsrom_sys/s81_static_net/test/tb_r2l_groups64.sv": "a6da48cf52ae64c57021966b687d1f84b2d7108e2cb8230357d7e3818a35b271",
+  "rtl/dsrom_sys/s81_static_net/ot_s81_static_ratio_cross.sv": "903dc08ddfcd60522b33cc6a090d94dba8a39e6f79c492b413c67a614964da4a",
+  "rtl/dsrom_sys/s81_static_net/gen/dsfd_r2l_vr_512x1__hcol.sv": "aabe2b83710c1f6503b2d1fb78f4adf320666cf73a910cefc81eac2206e8946a",
+  "tools/s81_static_net/run_r2l_groups64_gate.sh": "a34fe54211b58e2f624aa2d6c95aa8c5acccae146c3fcd4bf240c82bd13062c7"
+ },
+ "logs": {
+  "mapping_mutant.log": "MISMATCH phase0 epoch0 got2892f1e23125e3c457586fc8ceb8df917d71bf22daeb7e4575defc8a2bb5f914b76bf2294edfe4527dbfc8a4db77914976e722922dc64524bb8c8a49571114927 expected35d21bf24bac37e477586fc8ceb8df917d71bf22daeb7e4575defc8a2bb5f914b76bf2294edfe4527dbfc8a4db77914976e722922dc64524bb8c8a49571114927\nMISMATCH phase0 epoch0 got30497bca809af795e243c78864878f10c90f1e21921e3c4304347886e868f10dd0d1e21b81abc437e357886fc6af10df8d5e21bf1abc437e157086fceae90df93 expected2892f1e23125e3c44243c78864878f10c90f1e21921e3c4304347886e868f10dd0d1e21b81abc437e357886fc6af10df8d5e21bf1abc437e157086fceae90df93\nFATAL: rtl/dsrom_sys/s81_static_net/test/tb_r2l_groups64.sv:26: R2L_GROUPS_FAIL checks=3982 errors=3982\n       Time: 4579216 Scope: tb_r2l_groups64\n",
+  "p5.log": "R2L_GROUPS_PASS checks=3985 epochs=4 phase=5 zero_added_edges=1\n",
+  "p0.log": "R2L_GROUPS_PASS checks=3982 epochs=4 phase=0 zero_added_edges=1\n",
+  "p9.log": "R2L_GROUPS_PASS checks=3982 epochs=4 phase=9 zero_added_edges=1\n",
+  "p3.log": "R2L_GROUPS_PASS checks=3985 epochs=4 phase=3 zero_added_edges=1\n",
+  "p1.log": "R2L_GROUPS_PASS checks=3985 epochs=4 phase=1 zero_added_edges=1\n",
+  "p7.log": "R2L_GROUPS_PASS checks=3982 epochs=4 phase=7 zero_added_edges=1\n",
+  "p11.log": "R2L_GROUPS_PASS checks=3982 epochs=4 phase=11 zero_added_edges=1\n"
+ },
+ "register_area_clock_census": "OPEN until actual same-source synthesis; physical pins/17-root grant OPEN"
+}
