@@ -1,0 +1,1160 @@
+{
+  "name": "qfd_tile_nl_banked_v2",
+  "top": "qfd_tile_nl_banked_v2",
+  "kind": "cluster",
+  "clock": "hybrid_entries",
+  "clock_port": "ck",
+  "clock_ports": [
+    "ck",
+    "ck_bank[0]",
+    "ck_bank[1]",
+    "ck_bank[2]",
+    "ck_bank[3]",
+    "ck_bank[4]",
+    "ck_bank[5]",
+    "ck_bank[6]",
+    "ck_bank[7]",
+    "ck_bank[8]",
+    "ck_bank[9]",
+    "ck_bank[10]",
+    "ck_bank[11]",
+    "ck_bank[12]",
+    "ck_bank[13]",
+    "ck_bank[14]",
+    "ck_bank[15]",
+    "ck_bank[16]",
+    "ck_bank[17]",
+    "ck_bank[18]",
+    "ck_bank[19]",
+    "ck_bank[20]",
+    "ck_bank[21]",
+    "ck_bank[22]",
+    "ck_bank[23]",
+    "ck_bank[24]",
+    "ck_bank[25]",
+    "ck_bank[26]",
+    "ck_bank[27]",
+    "ck_bank[28]",
+    "ck_bank[29]",
+    "ck_bank[30]",
+    "ck_bank[31]",
+    "ck_bank[32]",
+    "ck_bank[33]",
+    "ck_bank[34]",
+    "ck_bank[35]",
+    "ck_bank[36]",
+    "ck_bank[37]",
+    "ck_bank[38]",
+    "ck_bank[39]",
+    "ck_bank[40]",
+    "ck_bank[41]",
+    "ck_bank[42]",
+    "ck_bank[43]",
+    "ck_bank[44]",
+    "ck_bank[45]",
+    "ck_bank[46]",
+    "ck_bank[47]",
+    "ck_bank[48]",
+    "ck_bank[49]",
+    "ck_bank[50]",
+    "ck_bank[51]",
+    "ck_bank[52]",
+    "ck_reset[0]",
+    "ck_reset[1]",
+    "ck_reset[2]",
+    "ck_reset[3]",
+    "ck_reset[4]",
+    "ck_reset[5]",
+    "ck_reset[6]",
+    "ck_reset[7]",
+    "ck_reset[8]",
+    "ck_reset[9]",
+    "ck_reset[10]",
+    "ck_child[0]",
+    "ck_child[1]",
+    "ck_child[2]",
+    "ck_child[3]",
+    "ck_child[4]",
+    "ck_child[5]",
+    "ck_child[6]",
+    "ck_child[7]",
+    "ck_child[8]",
+    "ck_child[9]",
+    "ck_child[10]",
+    "ck_child[11]",
+    "ck_child[12]"
+  ],
+  "clock_cts_roots": [
+    "ck"
+  ],
+  "required_hybrid_roots": {
+    "standard_cell_cts": [
+      "ck"
+    ],
+    "hard_child_entry": {
+      "ck_bank[0]": "strap/clk",
+      "ck_bank[1]": "rqr_south_0/clk",
+      "ck_bank[2]": "rqr_south_1/clk",
+      "ck_bank[3]": "rqr_south_2/clk",
+      "ck_bank[4]": "rqr_south_3/clk",
+      "ck_bank[5]": "rqr_north_0/clk",
+      "ck_bank[6]": "rqr_north_1/clk",
+      "ck_bank[7]": "rqr_north_2/clk",
+      "ck_bank[8]": "rqr_north_3/clk",
+      "ck_bank[9]": "mq_wrom_0/clk",
+      "ck_bank[10]": "mq_wrom_1/clk",
+      "ck_bank[11]": "mq_wrom_2/clk",
+      "ck_bank[12]": "mq_wrom_3/clk",
+      "ck_bank[13]": "xdelay_0/clk",
+      "ck_bank[14]": "xdelay_1/clk",
+      "ck_bank[15]": "xdelay_2/clk",
+      "ck_bank[16]": "xdelay_3/clk",
+      "ck_bank[17]": "xdelay_4/clk",
+      "ck_bank[18]": "xdelay_5/clk",
+      "ck_bank[19]": "xdelay_6/clk",
+      "ck_bank[20]": "xdelay_7/clk",
+      "ck_bank[21]": "tx0_r0_lo/clk",
+      "ck_bank[22]": "tx0_r1_lo/clk",
+      "ck_bank[23]": "tx1_r0_lo/clk",
+      "ck_bank[24]": "tx1_r1_lo/clk",
+      "ck_bank[25]": "tx2_r0_lo/clk",
+      "ck_bank[26]": "tx2_r1_lo/clk",
+      "ck_bank[27]": "tx3_r0_lo/clk",
+      "ck_bank[28]": "tx3_r1_lo/clk",
+      "ck_bank[29]": "tx4_r0_lo/clk",
+      "ck_bank[30]": "tx4_r1_lo/clk",
+      "ck_bank[31]": "tx5_r0_lo/clk",
+      "ck_bank[32]": "tx5_r1_lo/clk",
+      "ck_bank[33]": "tx6_r0_lo/clk",
+      "ck_bank[34]": "tx6_r1_lo/clk",
+      "ck_bank[35]": "tx7_r0_lo/clk",
+      "ck_bank[36]": "tx7_r1_lo/clk",
+      "ck_bank[37]": "to_reg/clk",
+      "ck_bank[38]": "face_t_out/clk",
+      "ck_bank[39]": "face_tap/clk",
+      "ck_bank[40]": "s2_word_0/clk",
+      "ck_bank[41]": "s2_word_1/clk",
+      "ck_bank[42]": "node_stage_t_out/clk",
+      "ck_bank[43]": "return_south_0/clk",
+      "ck_bank[44]": "return_south_1/clk",
+      "ck_bank[45]": "return_south_2/clk",
+      "ck_bank[46]": "return_south_3/clk",
+      "ck_bank[47]": "return_north_0/clk",
+      "ck_bank[48]": "return_north_1/clk",
+      "ck_bank[49]": "return_north_2/clk",
+      "ck_bank[50]": "return_north_3/clk",
+      "ck_bank[51]": "xdelay_extra/clk",
+      "ck_bank[52]": "s2_x_full/clk",
+      "ck_reset[0]": "reset_root/clk",
+      "ck_reset[1]": "reset_mid_w/clk",
+      "ck_reset[2]": "reset_mid_e/clk",
+      "ck_reset[3]": "reset_mid_high/clk",
+      "ck_reset[4]": "reset_branch_w_low/clk",
+      "ck_reset[5]": "reset_branch_w_mid/clk",
+      "ck_reset[6]": "reset_branch_w_high0/clk",
+      "ck_reset[7]": "reset_branch_w_high1/clk",
+      "ck_reset[8]": "reset_branch_e_low/clk",
+      "ck_reset[9]": "reset_branch_e_mid/clk",
+      "ck_reset[10]": "reset_branch_e_high/clk",
+      "ck_child[0]": "u_logic.g_rom_pipe.g_rph.g_rb[0].g_hd.u_rp/clk",
+      "ck_child[1]": "u_logic.g_rom_pipe.g_rph.g_rb[1].g_hd.u_rp/clk",
+      "ck_child[2]": "u_logic.g_rom_pipe.g_rph.g_rb[2].g_hd.u_rp/clk",
+      "ck_child[3]": "u_logic.g_rom_pipe.g_rph.g_rb[3].g_hd.u_rp/clk",
+      "ck_child[4]": "u_logic.g_rom_pipe.g_rph.g_rb[4].g_hd.u_rp/clk",
+      "ck_child[5]": "u_logic.u_me.g_hier.g_sl[0].g_hd.u_lh/clk",
+      "ck_child[6]": "u_logic.u_me.g_hier.g_sl[1].g_hd.u_lh/clk",
+      "ck_child[7]": "u_logic.u_me.g_hier.g_sl[2].g_hd.u_lh/clk",
+      "ck_child[8]": "u_logic.u_me.g_hier.g_sl[3].g_hd.u_lh/clk",
+      "ck_child[9]": "u_logic.u_me.g_hier.g_sl[4].g_hd.u_lh/clk",
+      "ck_child[10]": "u_logic.u_me.g_hier.g_sl[5].g_hd.u_lh/clk",
+      "ck_child[11]": "u_logic.u_me.g_hier.g_sl[6].g_hd.u_lh/clk",
+      "ck_child[12]": "u_logic.u_me.g_hier.g_sl[7].g_hd.u_lh/clk"
+    }
+  },
+  "sources": [
+    "rtl/physical/ot_qwen_rom_tile_die.sv",
+    "rtl/hdc/kv/ot_qwen_kv_land_merge.sv",
+    "rtl/hdc/ot_hdc_fpu.sv",
+    "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+    "rtl/hdc/ot_hdc_fastfp.sv",
+    "rtl/hdc/ot_hdc_delay.sv",
+    "rtl/hdc/ot_hdc_sfu.sv",
+    "rtl/hdc/ot_hdc_matvec.sv",
+    "rtl/hdc/ot_qwen_me_array_w12.sv",
+    "rtl/hdc/ot_qwen_rom_tile_w12.sv",
+    "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+    "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+    "rtl/hdc/ot_hdc_prefix.sv",
+    "rtl/hdc/ot_qwen_w12_matvec.sv",
+    "rtl/hdc/ot_qwen_w12_arith.sv",
+    "rtl/proto/ot_fp32_add_rne_pipe.sv",
+    "rtl/hdc/ot_hdc_fp32_add_lat_nr.sv",
+    "rtl/physical/ot_qwen_rom_tile_nk.sv",
+    "physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8_bb.v",
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v",
+    "rtl/physical/bb/ot_qwen_tile_rpair_bb.v",
+    "rtl/physical/bb/ot_qwen_tile_lsl_fp1_bb.v",
+    "rtl/qwen_sys/tile_parent_banked_20261015/ot_qwen_w12_matvec_part_banked_v1.sv",
+    "rtl/qwen_sys/tile_parent_nl_banked_20261015/ot_qwen_rom_tile_logic_nl_banked_v1.sv",
+    "rtl/qwen_sys/tile_parent_nl_banked_20261015/qfd_tile_nl_banked_v2.sv",
+    "rtl/qwen_sys/tile_glue_banks_20261015/ot_qwen_tx198.sv",
+    "physical/qwen_tile_glue_banks_1015/parent_banks_bb.v"
+  ],
+  "defines": [
+    "OT_QWEN_LSL_FP1"
+  ],
+  "params": {},
+  "children": [
+    {
+      "view": "physical/ref_tile/ot_qwen_tile_rpair/views/ot_qwen_tile_rpair",
+      "count": 1,
+      "inst": "u_logic.g_rom_pipe.g_rph.g_rb[3].g_hd.u_rp",
+      "at": [
+        22.464,
+        23.76
+      ],
+      "at_exact": true,
+      "orient": "R0"
+    },
+    {
+      "view": "physical/ref_tile/ot_qwen_tile_rpair/views/ot_qwen_tile_rpair",
+      "count": 1,
+      "inst": "u_logic.g_rom_pipe.g_rph.g_rb[4].g_hd.u_rp",
+      "at": [
+        22.464,
+        174.96
+      ],
+      "at_exact": true,
+      "orient": "R0"
+    },
+    {
+      "view": "physical/ref_tile/ot_qwen_tile_rpair/views/ot_qwen_tile_rpair",
+      "count": 1,
+      "inst": "u_logic.g_rom_pipe.g_rph.g_rb[0].g_hd.u_rp",
+      "at": [
+        22.464,
+        952.776
+      ],
+      "at_exact": true,
+      "orient": "MX"
+    },
+    {
+      "view": "physical/ref_tile/ot_qwen_tile_rpair/views/ot_qwen_tile_rpair",
+      "count": 1,
+      "inst": "u_logic.g_rom_pipe.g_rph.g_rb[1].g_hd.u_rp",
+      "at": [
+        22.464,
+        1108.296
+      ],
+      "at_exact": true,
+      "orient": "MX"
+    },
+    {
+      "view": "physical/ref_tile/ot_qwen_tile_rpair/views/ot_qwen_tile_rpair",
+      "count": 1,
+      "inst": "u_logic.g_rom_pipe.g_rph.g_rb[2].g_hd.u_rp",
+      "at": [
+        22.464,
+        1259.496
+      ],
+      "at_exact": true,
+      "orient": "MX"
+    },
+    {
+      "view": "physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1",
+      "count": 1,
+      "inst": "u_logic.u_me.g_hier.g_sl[0].g_hd.u_lh",
+      "at": [
+        103.68,
+        330.432
+      ],
+      "at_exact": true,
+      "orient": "MY"
+    },
+    {
+      "view": "physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1",
+      "count": 1,
+      "inst": "u_logic.u_me.g_hier.g_sl[4].g_hd.u_lh",
+      "at": [
+        265.68,
+        330.432
+      ],
+      "at_exact": true,
+      "orient": "R0"
+    },
+    {
+      "view": "physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1",
+      "count": 1,
+      "inst": "u_logic.u_me.g_hier.g_sl[1].g_hd.u_lh",
+      "at": [
+        103.68,
+        482.496
+      ],
+      "at_exact": true,
+      "orient": "MY"
+    },
+    {
+      "view": "physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1",
+      "count": 1,
+      "inst": "u_logic.u_me.g_hier.g_sl[5].g_hd.u_lh",
+      "at": [
+        265.68,
+        482.496
+      ],
+      "at_exact": true,
+      "orient": "R0"
+    },
+    {
+      "view": "physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1",
+      "count": 1,
+      "inst": "u_logic.u_me.g_hier.g_sl[2].g_hd.u_lh",
+      "at": [
+        103.68,
+        634.56
+      ],
+      "at_exact": true,
+      "orient": "MY"
+    },
+    {
+      "view": "physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1",
+      "count": 1,
+      "inst": "u_logic.u_me.g_hier.g_sl[6].g_hd.u_lh",
+      "at": [
+        265.68,
+        634.56
+      ],
+      "at_exact": true,
+      "orient": "R0"
+    },
+    {
+      "view": "physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1",
+      "count": 1,
+      "inst": "u_logic.u_me.g_hier.g_sl[3].g_hd.u_lh",
+      "at": [
+        103.68,
+        786.432
+      ],
+      "at_exact": true,
+      "orient": "MY"
+    },
+    {
+      "view": "physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1",
+      "count": 1,
+      "inst": "u_logic.u_me.g_hier.g_sl[7].g_hd.u_lh",
+      "at": [
+        265.68,
+        786.432
+      ],
+      "at_exact": true,
+      "orient": "R0"
+    },
+    {
+      "view": "physical/ref_tile/qkh_packet_v16/views/qkh_packet_v16",
+      "count": 1,
+      "inst": "strap",
+      "at": [
+        425.52,
+        1017.6
+      ],
+      "at_exact": true,
+      "orient": "R0"
+    },
+    {
+      "view": "physical/ref_tile/qkh_packet_h256/views/qkh_packet_h256",
+      "count": 1,
+      "inst": "rqr_south_0",
+      "at": [
+        25.92,
+        1087.776
+      ],
+      "at_exact": true,
+      "orient": "R0"
+    },
+    {
+      "view": "physical/ref_tile/qkh_packet_h256/views/qkh_packet_h256",
+      "count": 1,
+      "inst": "rqr_south_1",
+      "at": [
+        96.144,
+        1087.776
+      ],
+      "at_exact": true,
+      "orient": "R0"
+    },
+    {
+      "view": "physical/ref_tile/qkh_packet_h256/views/qkh_packet_h256",
+      "count": 1,
+      "inst": "rqr_south_2",
+      "at": [
+        166.32,
+        1087.776
+      ],
+      "at_exact": true,
+      "orient": "R0"
+    },
+    {
+      "view": "physical/ref_tile/qkh_packet_h256/views/qkh_packet_h256",
+      "count": 1,
+      "inst": "rqr_south_3",
+      "at": [
+        236.544,
+        1087.776
+      ],
+      "at_exact": true,
+      "orient": "R0"
+    },
+    {
+      "view": "physical/ref_tile/qkh_packet_h256/views/qkh_packet_h256",
+      "count": 1,
+      "inst": "rqr_north_0",
+      "at": [
+        25.92,
+        309.984
+      ],
+      "at_exact": true,
+      "orient": "R0"
+    },
+    {
+      "view": "physical/ref_tile/qkh_packet_h256/views/qkh_packet_h256",
+      "count": 1,
+      "inst": "rqr_north_1",
+      "at": [
+        96.144,
+        309.984
+      ],
+      "at_exact": true,
+      "orient": "R0"
+    },
+    {
+      "view": "physical/ref_tile/qkh_packet_h256/views/qkh_packet_h256",
+      "count": 1,
+      "inst": "rqr_north_2",
+      "at": [
+        166.32,
+        309.984
+      ],
+      "at_exact": true,
+      "orient": "R0"
+    },
+    {
+      "view": "physical/ref_tile/qkh_packet_h256/views/qkh_packet_h256",
+      "count": 1,
+      "inst": "rqr_north_3",
+      "at": [
+        236.544,
+        309.984
+      ],
+      "at_exact": true,
+      "orient": "R0"
+    },
+    {
+      "view": "physical/ref_tile/qkh_packet_h256/views/qkh_packet_h256",
+      "count": 1,
+      "inst": "mq_wrom_0",
+      "at": [
+        33.504,
+        532.224
+      ],
+      "at_exact": true,
+      "orient": "R0"
+    },
+    {
+      "view": "physical/ref_tile/qkh_packet_v256/views/qkh_packet_v256",
+      "count": 1,
+      "inst": "mq_wrom_1",
+      "at": [
+        38.88,
+        827.088
+      ],
+      "at_exact": true,
+      "orient": "R0"
+    },
+    {
+      "view": "physical/ref_tile/qkh_packet_v256/views/qkh_packet_v256",
+      "count": 1,
+      "inst": "mq_wrom_2",
+      "at": [
+        229.632,
+        715.392
+      ],
+      "at_exact": true,
+      "orient": "R0"
+    },
+    {
+      "view": "physical/ref_tile/qkh_packet_v256/views/qkh_packet_v256",
+      "count": 1,
+      "inst": "mq_wrom_3",
+      "at": [
+        208.896,
+        715.392
+      ],
+      "at_exact": true,
+      "orient": "R0"
+    },
+    {
+      "view": "physical/ref_tile/qkh_packet_v256/views/qkh_packet_v256",
+      "count": 1,
+      "inst": "xdelay_0",
+      "at": [
+        461.184,
+        260.304
+      ],
+      "at_exact": true,
+      "orient": "R0"
+    },
+    {
+      "view": "physical/ref_tile/qkh_packet_h256/views/qkh_packet_h256",
+      "count": 1,
+      "inst": "xdelay_1",
+      "at": [
+        384.48,
+        309.984
+      ],
+      "at_exact": true,
+      "orient": "R0"
+    },
+    {
+      "view": "physical/ref_tile/qkh_packet_h256/views/qkh_packet_h256",
+      "count": 1,
+      "inst": "xdelay_2",
+      "at": [
+        338.928,
+        289.44
+      ],
+      "at_exact": true,
+      "orient": "R0"
+    },
+    {
+      "view": "physical/ref_tile/qkh_packet_v256/views/qkh_packet_v256",
+      "count": 1,
+      "inst": "xdelay_3",
+      "at": [
+        425.52,
+        239.76
+      ],
+      "at_exact": true,
+      "orient": "R0"
+    },
+    {
+      "view": "physical/ref_tile/qkh_packet_h256/views/qkh_packet_h256",
+      "count": 1,
+      "inst": "xdelay_4",
+      "at": [
+        25.92,
+        476.304
+      ],
+      "at_exact": true,
+      "orient": "R0"
+    },
+    {
+      "view": "physical/ref_tile/qkh_packet_h256/views/qkh_packet_h256",
+      "count": 1,
+      "inst": "xdelay_5",
+      "at": [
+        306.72,
+        309.984
+      ],
+      "at_exact": true,
+      "orient": "R0"
+    },
+    {
+      "view": "physical/ref_tile/qkh_packet_h256/views/qkh_packet_h256",
+      "count": 1,
+      "inst": "xdelay_6",
+      "at": [
+        33.504,
+        496.8
+      ],
+      "at_exact": true,
+      "orient": "R0"
+    },
+    {
+      "view": "physical/ref_tile/qkh_packet_v256/views/qkh_packet_v256",
+      "count": 1,
+      "inst": "xdelay_7",
+      "at": [
+        11.904,
+        330.48
+      ],
+      "at_exact": true,
+      "orient": "R0"
+    },
+    {
+      "view": "physical/ref_tile/qkh_packet_v256/views/qkh_packet_v256",
+      "count": 1,
+      "inst": "tx0_r0_lo",
+      "at": [
+        5.424,
+        444.768
+      ],
+      "at_exact": true,
+      "orient": "R0"
+    },
+    {
+      "view": "physical/ref_tile/qkh_packet_v256/views/qkh_packet_v256",
+      "count": 1,
+      "inst": "tx0_r1_lo",
+      "at": [
+        59.424,
+        330.48
+      ],
+      "at_exact": true,
+      "orient": "R0"
+    },
+    {
+      "view": "physical/ref_tile/qkh_packet_v256/views/qkh_packet_v256",
+      "count": 1,
+      "inst": "tx1_r0_lo",
+      "at": [
+        59.424,
+        552.768
+      ],
+      "at_exact": true,
+      "orient": "R0"
+    },
+    {
+      "view": "physical/ref_tile/qkh_packet_v256/views/qkh_packet_v256",
+      "count": 1,
+      "inst": "tx1_r1_lo",
+      "at": [
+        59.424,
+        400.704
+      ],
+      "at_exact": true,
+      "orient": "R0"
+    },
+    {
+      "view": "physical/ref_tile/qkh_packet_v256/views/qkh_packet_v256",
+      "count": 1,
+      "inst": "tx2_r0_lo",
+      "at": [
+        59.424,
+        634.608
+      ],
+      "at_exact": true,
+      "orient": "R0"
+    },
+    {
+      "view": "physical/ref_tile/qkh_packet_v256/views/qkh_packet_v256",
+      "count": 1,
+      "inst": "tx2_r1_lo",
+      "at": [
+        59.424,
+        786.48
+      ],
+      "at_exact": true,
+      "orient": "R0"
+    },
+    {
+      "view": "physical/ref_tile/qkh_packet_v256/views/qkh_packet_v256",
+      "count": 1,
+      "inst": "tx3_r0_lo",
+      "at": [
+        59.424,
+        704.832
+      ],
+      "at_exact": true,
+      "orient": "R0"
+    },
+    {
+      "view": "physical/ref_tile/qkh_packet_v256/views/qkh_packet_v256",
+      "count": 1,
+      "inst": "tx3_r1_lo",
+      "at": [
+        59.424,
+        856.656
+      ],
+      "at_exact": true,
+      "orient": "R0"
+    },
+    {
+      "view": "physical/ref_tile/qkh_packet_v256/views/qkh_packet_v256",
+      "count": 1,
+      "inst": "tx4_r0_lo",
+      "at": [
+        425.52,
+        482.544
+      ],
+      "at_exact": true,
+      "orient": "R0"
+    },
+    {
+      "view": "physical/ref_tile/qkh_packet_v256/views/qkh_packet_v256",
+      "count": 1,
+      "inst": "tx4_r1_lo",
+      "at": [
+        425.52,
+        330.48
+      ],
+      "at_exact": true,
+      "orient": "R0"
+    },
+    {
+      "view": "physical/ref_tile/qkh_packet_v256/views/qkh_packet_v256",
+      "count": 1,
+      "inst": "tx5_r0_lo",
+      "at": [
+        425.52,
+        552.768
+      ],
+      "at_exact": true,
+      "orient": "R0"
+    },
+    {
+      "view": "physical/ref_tile/qkh_packet_v256/views/qkh_packet_v256",
+      "count": 1,
+      "inst": "tx5_r1_lo",
+      "at": [
+        425.52,
+        400.704
+      ],
+      "at_exact": true,
+      "orient": "R0"
+    },
+    {
+      "view": "physical/ref_tile/qkh_packet_v256/views/qkh_packet_v256",
+      "count": 1,
+      "inst": "tx6_r0_lo",
+      "at": [
+        209.088,
+        786.48
+      ],
+      "at_exact": true,
+      "orient": "R0"
+    },
+    {
+      "view": "physical/ref_tile/qkh_packet_v256/views/qkh_packet_v256",
+      "count": 1,
+      "inst": "tx6_r1_lo",
+      "at": [
+        425.52,
+        786.48
+      ],
+      "at_exact": true,
+      "orient": "R0"
+    },
+    {
+      "view": "physical/ref_tile/qkh_packet_v256/views/qkh_packet_v256",
+      "count": 1,
+      "inst": "tx7_r0_lo",
+      "at": [
+        425.52,
+        704.832
+      ],
+      "at_exact": true,
+      "orient": "R0"
+    },
+    {
+      "view": "physical/ref_tile/qkh_packet_v256/views/qkh_packet_v256",
+      "count": 1,
+      "inst": "tx7_r1_lo",
+      "at": [
+        425.52,
+        856.656
+      ],
+      "at_exact": true,
+      "orient": "R0"
+    },
+    {
+      "view": "physical/ref_tile/qwen_glue_w514/views/qwen_glue_w514",
+      "count": 1,
+      "inst": "face_t_out",
+      "at": [
+        5.4,
+        699.84
+      ],
+      "at_exact": true,
+      "orient": "R0"
+    },
+    {
+      "view": "physical/ref_tile/qwen_glue_v508/views/qwen_glue_v508",
+      "count": 1,
+      "inst": "face_tap",
+      "at": [
+        454.68,
+        654.912
+      ],
+      "at_exact": true,
+      "orient": "MY"
+    },
+    {
+      "view": "physical/ref_tile/qwen_glue_v514/views/qwen_glue_v514",
+      "count": 1,
+      "inst": "s2_word_0",
+      "at": [
+        209.088,
+        485.808
+      ],
+      "at_exact": true,
+      "orient": "R0"
+    },
+    {
+      "view": "physical/ref_tile/qwen_glue_v514/views/qwen_glue_v514",
+      "count": 1,
+      "inst": "s2_word_1",
+      "at": [
+        236.112,
+        485.808
+      ],
+      "at_exact": true,
+      "orient": "R0"
+    },
+    {
+      "view": "physical/ref_tile/qwen_glue_v514/views/qwen_glue_v514",
+      "count": 1,
+      "inst": "node_stage_t_out",
+      "at": [
+        236.112,
+        786.48
+      ],
+      "at_exact": true,
+      "orient": "R0"
+    },
+    {
+      "view": "physical/ref_tile/qkh_packet_h256/views/qkh_packet_h256",
+      "count": 1,
+      "inst": "return_south_0",
+      "at": [
+        25.92,
+        932.256
+      ],
+      "at_exact": true,
+      "orient": "R0"
+    },
+    {
+      "view": "physical/ref_tile/qkh_packet_h256/views/qkh_packet_h256",
+      "count": 1,
+      "inst": "return_south_1",
+      "at": [
+        96.144,
+        932.256
+      ],
+      "at_exact": true,
+      "orient": "R0"
+    },
+    {
+      "view": "physical/ref_tile/qkh_packet_h256/views/qkh_packet_h256",
+      "count": 1,
+      "inst": "return_south_2",
+      "at": [
+        166.32,
+        932.256
+      ],
+      "at_exact": true,
+      "orient": "R0"
+    },
+    {
+      "view": "physical/ref_tile/qkh_packet_h256/views/qkh_packet_h256",
+      "count": 1,
+      "inst": "return_south_3",
+      "at": [
+        236.544,
+        932.256
+      ],
+      "at_exact": true,
+      "orient": "R0"
+    },
+    {
+      "view": "physical/ref_tile/qkh_packet_v256/views/qkh_packet_v256",
+      "count": 1,
+      "inst": "return_north_0",
+      "at": [
+        5.424,
+        514.944
+      ],
+      "at_exact": true,
+      "orient": "R0"
+    },
+    {
+      "view": "physical/ref_tile/qkh_packet_v256/views/qkh_packet_v256",
+      "count": 1,
+      "inst": "return_north_1",
+      "at": [
+        32.4,
+        400.704
+      ],
+      "at_exact": true,
+      "orient": "R0"
+    },
+    {
+      "view": "physical/ref_tile/qkh_packet_v256/views/qkh_packet_v256",
+      "count": 1,
+      "inst": "return_north_2",
+      "at": [
+        236.544,
+        330.48
+      ],
+      "at_exact": true,
+      "orient": "R0"
+    },
+    {
+      "view": "physical/ref_tile/qkh_packet_v256/views/qkh_packet_v256",
+      "count": 1,
+      "inst": "return_north_3",
+      "at": [
+        236.544,
+        400.704
+      ],
+      "at_exact": true,
+      "orient": "R0"
+    },
+    {
+      "view": "physical/ref_tile/qkh_packet_v256/views/qkh_packet_v256",
+      "count": 1,
+      "inst": "xdelay_extra",
+      "at": [
+        32.4,
+        330.48
+      ],
+      "at_exact": true,
+      "orient": "R0"
+    },
+    {
+      "view": "physical/ref_tile/qkh_packet_v256/views/qkh_packet_v256",
+      "count": 1,
+      "inst": "s2_x_full",
+      "at": [
+        79.92,
+        552.768
+      ],
+      "at_exact": true,
+      "orient": "R0"
+    },
+    {
+      "view": "physical/ref_tile/qkh_packet_v16/views/qkh_packet_v16",
+      "count": 1,
+      "inst": "reset_root",
+      "at": [
+        425.52,
+        641.952
+      ],
+      "at_exact": true,
+      "orient": "R0"
+    },
+    {
+      "view": "physical/ref_tile/qkh_packet_v16/views/qkh_packet_v16",
+      "count": 1,
+      "inst": "reset_mid_w",
+      "at": [
+        32.4,
+        605.664
+      ],
+      "at_exact": true,
+      "orient": "R0"
+    },
+    {
+      "view": "physical/ref_tile/qkh_packet_v16/views/qkh_packet_v16",
+      "count": 1,
+      "inst": "reset_mid_e",
+      "at": [
+        452.544,
+        622.944
+      ],
+      "at_exact": true,
+      "orient": "R0"
+    },
+    {
+      "view": "physical/ref_tile/qkh_packet_v16/views/qkh_packet_v16",
+      "count": 1,
+      "inst": "reset_mid_high",
+      "at": [
+        340.224,
+        957.12
+      ],
+      "at_exact": true,
+      "orient": "R0"
+    },
+    {
+      "view": "physical/ref_tile/qkh_packet_v16/views/qkh_packet_v16",
+      "count": 1,
+      "inst": "reset_branch_w_low",
+      "at": [
+        5.424,
+        400.704
+      ],
+      "at_exact": true,
+      "orient": "R0"
+    },
+    {
+      "view": "physical/ref_tile/qkh_packet_v16/views/qkh_packet_v16",
+      "count": 1,
+      "inst": "reset_branch_w_mid",
+      "at": [
+        25.92,
+        552.768
+      ],
+      "at_exact": true,
+      "orient": "R0"
+    },
+    {
+      "view": "physical/ref_tile/qkh_packet_v16/views/qkh_packet_v16",
+      "count": 1,
+      "inst": "reset_branch_w_high0",
+      "at": [
+        5.424,
+        837.216
+      ],
+      "at_exact": true,
+      "orient": "R0"
+    },
+    {
+      "view": "physical/ref_tile/qkh_packet_v16/views/qkh_packet_v16",
+      "count": 1,
+      "inst": "reset_branch_w_high1",
+      "at": [
+        5.424,
+        897.264
+      ],
+      "at_exact": true,
+      "orient": "R0"
+    },
+    {
+      "view": "physical/ref_tile/qkh_packet_v16/views/qkh_packet_v16",
+      "count": 1,
+      "inst": "reset_branch_e_low",
+      "at": [
+        372.624,
+        383.424
+      ],
+      "at_exact": true,
+      "orient": "R0"
+    },
+    {
+      "view": "physical/ref_tile/qkh_packet_v16/views/qkh_packet_v16",
+      "count": 1,
+      "inst": "reset_branch_e_high",
+      "at": [
+        340.224,
+        1297.296
+      ],
+      "at_exact": true,
+      "orient": "R0"
+    },
+    {
+      "view": "physical/ref_tile/qkh_packet_v16/views/qkh_packet_v16",
+      "count": 1,
+      "inst": "reset_branch_e_mid",
+      "at": [
+        372.624,
+        880.848
+      ],
+      "at_exact": true,
+      "orient": "R0"
+    },
+    {
+      "view": "physical/ref_tile/qwen_glue_v514/views/qwen_glue_v514",
+      "count": 1,
+      "inst": "to_reg",
+      "at": [
+        398.52,
+        629.856
+      ],
+      "at_exact": true,
+      "orient": "MY"
+    }
+  ],
+  "macros": [],
+  "outline": {
+    "w": 481.68,
+    "h": 1400.22,
+    "exact": true
+  },
+  "pins": {
+    "W": [
+      "t_out"
+    ],
+    "E": [
+      "tap",
+      "tile_id",
+      "tie_hi",
+      "tie_lo",
+      "rst_n"
+    ],
+    "ANY": [
+      "ck_bank",
+      "ck_reset",
+      "ck_child",
+      "ck"
+    ]
+  },
+  "pin_ranges": {},
+  "io_tcl": "physical/ref_tile/qfd_tile_nl_banked_v2/assigned_pins.tcl",
+  "reset_ports": [
+    "rst_n"
+  ],
+  "child_lattice_um": 0.216,
+  "layer_cap": "M7",
+  "recipe": 2,
+  "keep_pin_regs": true,
+  "pin_reg_split": true,
+  "inhold": true,
+  "outhold": true,
+  "io_flop_at_pins": {
+    "cols": 8
+  },
+  "route": {
+    "pd": 0.5,
+    "threads": 8,
+    "peak_ram_gb": 32,
+    "hold_margin_ns": 0.03,
+    "macro_halo_um": 5.4
+  },
+  "refglob": "*",
+  "inter": [],
+  "structural_change": "Old flat NL (14,006 sinks one glue root, boundary R 991 ps, spread 182 ps, TT -299 RPAIR2->south RQR) replaced by the NK banked local clock-root partition: 53 independent CLOSED data banks (to_reg = the TOREG edge as a bank), 11 three-edge reset roots, 13 unchanged CLOSED children; ROM return +1 / xdelay9 / TX198 shared with NK; t_out age identical to NK. Channels < 20 um blocked, repair buffers off macros. v2: PM-H-S face_t_out=qwen_glue_w514 at (5.4,699.84), t_out on TB slots 705.132+0.192k.",
+  "job": {
+    "owner": "Claude:q_compute_elem r13 NL helper",
+    "branch": "claude/q15-nl-banked",
+    "tag": "nl53pm",
+    "purpose": "NL PM-H-S v2: qwen_glue_w514 t_out face on the interleaved TB slots; otherwise NL banked v1",
+    "extra_paths": [
+      "physical/qwen_tile_glue_banks_1015",
+      "rtl/qwen_sys/tile_parent_banked_20261015",
+      "rtl/qwen_sys/tile_parent_nl_banked_20261015",
+      "results/rtl/qwen_compute_native_glue_1014/parent_nl_banked_v1",
+      "physical/common_flow"
+    ],
+    "views_to": "physical/ref_tile/qfd_tile_nl_banked_v2/views",
+    "record_to": "results/rtl/ref_tile/qfd_tile_nl_banked_v2",
+    "cycles_added": 2,
+    "benches": [
+      {
+        "name": "lint",
+        "expect": "pass",
+        "threads": 1,
+        "peak_ram_gb": 4,
+        "needs": [
+          "verilator"
+        ],
+        "cmd": "verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -DSYNTHESIS -DOT_QWEN_LSL_FP1 --top-module qfd_tile_nl_banked_v2 rtl/physical/ot_qwen_rom_tile_die.sv rtl/hdc/kv/ot_qwen_kv_land_merge.sv rtl/hdc/ot_hdc_fpu.sv rtl/hdc/ot_hdc_fp32_mul_pipe.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_sfu.sv rtl/hdc/ot_hdc_matvec.sv rtl/hdc/ot_qwen_me_array_w12.sv rtl/hdc/ot_qwen_rom_tile_w12.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_fp32_mul_lat.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_qwen_w12_matvec.sv rtl/hdc/ot_qwen_w12_arith.sv rtl/proto/ot_fp32_add_rne_pipe.sv rtl/hdc/ot_hdc_fp32_add_lat_nr.sv rtl/physical/ot_qwen_rom_tile_nk.sv physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8_bb.v physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v rtl/physical/bb/ot_qwen_tile_rpair_bb.v rtl/physical/bb/ot_qwen_tile_lsl_fp1_bb.v rtl/qwen_sys/tile_parent_banked_20261015/ot_qwen_w12_matvec_part_banked_v1.sv rtl/qwen_sys/tile_parent_nl_banked_20261015/ot_qwen_rom_tile_logic_nl_banked_v1.sv rtl/qwen_sys/tile_parent_nl_banked_20261015/qfd_tile_nl_banked_v2.sv rtl/qwen_sys/tile_glue_banks_20261015/ot_qwen_tx198.sv physical/qwen_tile_glue_banks_1015/parent_banks_bb.v && echo lint-ok"
+      },
+      {
+        "name": "actual_parent_source_oracle",
+        "expect": "pass",
+        "threads": 1,
+        "peak_ram_gb": 1,
+        "cmd": "python3 physical/qwen_tile_glue_banks_1015/verify_parent_receipt_nl.py",
+        "pass_regex": "^PASS exact real NL parent numerical receipt"
+      }
+    ],
+    "hold_merge": "PROBE like NK bp58c: sub-20um channels are hard-blocked by macro_channel_block.tcl but ref_tile floorplan_checks does not yet credit blocked channels; merge only after that rule/tool decision and native gates"
+  },
+  "abut_plan": {
+    "channel_um": 5.328,
+    "edge_um": 2.0,
+    "why": "HELD diagnostic probe (as NK banked): channels < 20 um are BLOCKED by physical/common_flow/macro_channel_block.tcl (textbook util_channel remedy \"or block the channel\"), measured by the route; no rule exception"
+  },
+  "orfs_vars": {
+    "OT_OFLOP_HARD_FACE_AUDIT": "/src/physical/qwen_tile_glue_banks_1015/hard_face_binding_nl_v2.tcl",
+    "POST_IO_PLACEMENT_TCL": "physical/common_flow/macro_channel_block.tcl",
+    "POST_RESIZE_TCL": "physical/common_flow/post_resize_relocate.tcl",
+    "OT_CHANNEL_BLOCK_UM": "20",
+    "OT_ROW_MIN_UM": "6"
+  },
+  "reroute_reason": {
+    "kind": "rtl_change",
+    "source": "rtl/qwen_sys/tile_parent_nl_banked_20261015/qfd_tile_nl_banked_v2.sv",
+    "cell": "qfd_tile_nl_banked_v1",
+    "why": "new banked source (local clock roots); no prior route of this cell"
+  }
+}
