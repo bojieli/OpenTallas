@@ -108,18 +108,45 @@ def rebank_audit():
     return dict(records=3,word_checks=reads,macro_word_writes=writes,write_banks_per_beat=128,read_banks_per_edge=64,commit_edges_per_record=128,dimension_omission_mutant_rejected=True,native_RTL_qualification=False)
 
 def svg(cases,path):
-    scale=min(900/max(c['outline_um'][0] for c in cases),440/max(c['outline_um'][1] for c in cases)); out=[f'<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="{len(cases)*530+60}">','<rect width="100%" height="100%" fill="white"/>','<text x="15" y="22" font-size="16">Canonical ATT macro regrouping: real macro inventories; same scale; incomplete system candidates</text>']
-    colors={'quad':'#d58a32','PVbank':'#d2518a','query':'#4c8ac0','staging':'#57a777','programme':'#956fc0'}
-    for i,c in enumerate(cases):
-        y0=65+i*530; W,H=c['outline_um'];r=c['PV_affinity_screen'];out.append(f'<text x="15" y="{y0-12}" font-size="14">{c["name"]}: {W:.1f} × {H:.1f} µm; PV affinity {r["sum_over_16beats_bit_um"]/1e6:.2f} M bit-µm; worst {r["max_source_to_bank_manhattan_um"]:.0f} µm</text>');out.append(f'<rect x="15" y="{y0}" width="{W*scale}" height="{H*scale}" fill="#fafafa" stroke="black"/>')
-        for n,b in c['blocks'].items():
-            x=15+b['x']*scale;y=y0+b['y']*scale;w=b['w']*scale;h=b['h']*scale
-            out.append(f'<rect x="{x}" y="{y}" width="{w}" height="{h}" fill="{colors[b["role"]]}" stroke="white" stroke-width=".3"><title>{n} {b["role"]} R0</title></rect>')
-            if b['role']=='quad':out.append(f'<text x="{x+1}" y="{y+8}" font-size="6">{n}</text>')
-    out.append('<text x="15" y="'+str(len(cases)*530+45)+'" font-size="12">Orange:128 realquads; pink:128/2048 PVbanks; blue:64 query; green:34 staging; purple:1 programme. Clocks/selection/VM/PHY missing.</text></svg>');Path(path).write_text('\n'.join(out))
+    scale=.052;pw,ph=650,690;out=['<svg xmlns="http://www.w3.org/2000/svg" width="1320" height="1300" viewBox="0 0 1320 1300">', '<rect width="100%" height="100%" fill="white"/>','<style>text {font-family:Arial,sans-serif} .small {font-size:11px} .axis {font-size:10px;fill:#555}</style>', '<text x="20" y="26" font-size="20" font-weight="bold">HBM attention: structural regrouping of actual macro inventory</text>', '<text x="20" y="48" font-size="13">All panels share physical scale. PV-only comparison; full die, outside connections and clocks remain unresolved.</text>']
+    colors={'quad':'#dc9d52','PVbank':'#d04e8a','query':'#4c8ac0','staging':'#57a777','programme':'#956fc0'}
+    titles={'tile_major':'A. Tile-major: current bank architecture', 'head_major':'B. Head-major: current bank architecture','bank_affinity':'C. Eight complete bank-affinity groups','tile_local_rebank':'D. Tile-local storage: larger structural alternative'}
+    # Place the two meaningful alternatives alongside the tile-major comparison;
+    # head-major is included as an explicit poor-PV-locality comparison.
+    ordered=[cases[0],cases[2],cases[1],cases[3]]
+    for i,c in enumerate(ordered):
+        px=20+(i%2)*pw;py=82+(i//2)*470;x0=px+30;y0=py+94
+        W,H=c['outline_um'];r=c['PV_affinity_screen'];bs=c['blocks']
+        out += [f'<rect x="{px}" y="{py}" width="630" height="{455 if i<2 else 675}" rx="5" fill="#fff" stroke="#bbb"/>',f'<text x="{px+12}" y="{py+23}" font-size="16" font-weight="bold">{titles[c["name"]]}</text>',f'<text x="{px+12}" y="{py+44}" font-size="12">{c["PV_bank_count"]} PV SRAMs; envelope {c["envelope_mm2"]:.2f} mm²; {W:.0f} × {H:.0f} µm</text>',f'<text x="{px+12}" y="{py+63}" font-size="12">PV affinity {r["sum_over_16beats_bit_um"]/1e6:.1f} M bit-µm; worst {r["max_source_to_bank_manhattan_um"]:.0f} µm</text>']
+        if c['name']=='tile_local_rebank':out.append(f'<text x="{px+12}" y="{py+81}" font-size="12" fill="#a52e65">+1920 real SRAMs / +2.052 mm² macro area; new RTL required</text>')
+        out.append(f'<rect x="{x0}" y="{y0}" width="{W*scale}" height="{H*scale}" fill="#fafafa" stroke="#333"/>')
+        for n,b in bs.items():
+            x=x0+b['x']*scale;y=y0+(H-b['y']-b['h'])*scale;w=b['w']*scale;h=b['h']*scale
+            out.append(f'<rect x="{x:.3f}" y="{y:.3f}" width="{w:.3f}" height="{h:.3f}" fill="{colors[b["role"]]}" stroke="white" stroke-width=".35"><title>{n}: {b["role"]}, {b["w"]}×{b["h"]} µm, R0, origin {b["x"]},{b["y"]}</title></rect>')
+            if b['role']=='quad':out.append(f'<text x="{x+1:.3f}" y="{y+8:.3f}" font-size="6.5">{n}</text>')
+        for v in range(0,int(W)+1,2000):
+            xx=x0+v*scale;yy=y0+H*scale
+            out.append(f'<path d="M{xx},{yy} v5" stroke="#555"/><text x="{xx-5}" y="{yy+17}" class="axis">{v}</text>')
+        for v in range(0,int(H)+1,2000):
+            yy=y0+(H-v)*scale
+            out.append(f'<path d="M{x0-5},{yy} h5" stroke="#555"/><text x="{x0-27}" y="{yy+3}" class="axis">{v}</text>')
+        out.append(f'<text x="{x0+W*scale+4}" y="{y0+H*scale+17}" class="axis">µm</text>')
+        # Same source/head/phase examples in each arrangement. These lines are
+        # representative geometric affinities, not routes or additional nets.
+        for j,(t,head,dim) in enumerate([(0,0,0),(0,0,4),(4,0,0),(8,0,0),(12,0,0)]):
+            a=0;l=0;src=bs[f'q{t}_{a}'];dst=bs[f'b{(t*16+dim)*4+head//4 if c["name"]=="tile_local_rebank" else bank(t,head,dim)}']
+            qp=lef_cached_q['pins']['oy[0]'];mp=lef_cached_m['pins']['wd_in[0]'];sx=x0+(src['x']+qp[0])*scale;sy=y0+(H-src['y']-qp[1])*scale;dx=x0+(dst['x']+mp[0])*scale;dy=y0+(H-dst['y']-mp[1])*scale
+            color=['#225ec0','#cb2525','#225ec0','#225ec0','#225ec0'][j]
+            out.append(f'<path d="M{sx:.2f},{sy:.2f} H{dx:.2f} V{dy:.2f}" fill="none" stroke="{color}" stroke-width="1.4" opacity=".85"><title>Representative PV affinity: tile{t}, head{head}, dimensionphase{dim}; actual source and SRAM input pin centres, not a routed path</title></path><circle cx="{sx:.2f}" cy="{sy:.2f}" r="2" fill="{color}"/><circle cx="{dx:.2f}" cy="{dy:.2f}" r="2" fill="{color}"/>')
+        note_y=y0+H*scale+45;note_x=px+12
+        if c['name']=='head_major':note_y=y0+60;note_x=x0+W*scale+15
+        out += [f'<text x="{note_x}" y="{note_y}" class="small">NE VM RG3 query / WG1 output: homes TBD.</text>', f'<text x="{note_x}" y="{note_y+16}" class="small">KV / PHY / clocks outside; no route claim.</text>']
+    out += ['<rect x="20" y="1271" width="12" height="12" fill="#dc9d52"/><text x="38" y="1282" class="small">128 quads</text>', '<rect x="135" y="1271" width="12" height="12" fill="#d04e8a"/><text x="153" y="1282" class="small">PV banks</text>','<rect x="244" y="1271" width="12" height="12" fill="#4c8ac0"/><text x="262" y="1282" class="small">64 query</text>','<rect x="349" y="1271" width="12" height="12" fill="#57a777"/><text x="367" y="1282" class="small">34 KV staging</text>','<rect x="485" y="1271" width="12" height="12" fill="#956fc0"/><text x="503" y="1282" class="small">1 programme</text>','<path d="M620,1278 h35" stroke="#225ec0" stroke-width="2"/><text x="665" y="1282" class="small">Representative PV pin affinities; not routes</text>','<path d="M1010,1278 h104" stroke="black" stroke-width="3"/><text x="1122" y="1282" class="small">2000 µm</text>','</svg>'];Path(path).write_text('\n'.join(out))
+
 
 def main():
     p=argparse.ArgumentParser();p.add_argument('--root',default='.');p.add_argument('--out',required=True);a=p.parse_args();root=Path(a.root);q,m,st=[lef(root/x) for x in [QUAD,MEM,STAGE]];out=Path(a.out);out.mkdir(parents=True,exist_ok=True)
+    global lef_cached_q,lef_cached_m;lef_cached_q=q;lef_cached_m=m
     cases=[candidate(k,q,m,st) for k in ['tile_major','head_major','bank_affinity','tile_local_rebank']]
     r=dict(rebank_model_audit=rebank_audit(),schema='opentallas.hbm.system_geometry.structural_candidates.v1',physical_view_inputs=[{k:v for k,v in d.items() if k!='pins'} for d in [q,m,st]],inventory=dict(quads=128,PVbanks=128,query=64,staging=34,programme=1),candidates=cases,limitations=['This is a structural floorplan precursor, not the full HBM die.','PV affinity screen uses real source oy pins and memory wd_in pins; selection mux/capture/registered pipeline are absent. It is an optimistic adjacency metric, not actual routed/netlist wirelength.','One fullH16 engine:32logicaltiles, proposed logicaltile=physicalpair; exact assignment still needs source binding.','Canonical NE VM WG1 output and RG3 query, KV multi-stack source/PHY, all SM/SU/IDX/COLL/clock children must enter the common graph before adoption.','tile_local_rebank is an explicit larger-memory successor, not canonical source; 2048 banks, epoch-only address, requires new RTL, clocks and compiler/consumer proof.','Query64/staging34/programme1 shelves retain all hardware counts but their connectivity is not optimized here.','No native/timing/cut/clock/PG/pin-access qualification; no performance estimate.'])
     (out/'candidates.json').write_text(json.dumps(r,indent=2)+'\n');svg(cases,out/'candidates.svg');print(json.dumps([{k:c[k] for k in ['name','outline_um','envelope_mm2','PV_affinity_screen']} for c in cases]))
