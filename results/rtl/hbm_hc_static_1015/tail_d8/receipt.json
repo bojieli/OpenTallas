@@ -1,0 +1,41 @@
+{
+  "scope": "actual HC tail component fixed-calendar; not physical/native whole-chip qualification",
+  "source_sha256": {
+    "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_tail_static.sv": "2c46f5896bf69561d0b3c4d3e08dd8c7a67bdaf03297559a9de17be7e5984c69",
+    "rtl/hdc/ot_hdc_fastfp.sv": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643",
+    "rtl/hdc/ot_hdc_fastfp_lat.sv": "e09be17358e95ebcfe64c2ecc01090410ec81542e737fc96207244cc134f5cbc",
+    "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+    "rtl/hdc/ot_hdc_sfu.sv": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923",
+    "rtl/hdc/v41x/ot_hdc_v41x_hcp.sv": "a719521c87012ec5117e6b92f2089ade75b1a6faf727193543b758cf3ee8989f",
+    "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv": "804cf233a0e051d0d72fb3cf1a8b11d3e8c65bdbab3d8f664d98c07ae7c8797b",
+    "rtl/hdc/v41/ot_hdc_fdiv.sv": "0b8e4d7d680d7ca77cff139fe8f51b649c56cbc185560af767530895438eac25",
+    "rtl/hdc/v41/ot_hdc_sinkhorn.sv": "ba413bc2e2295ad66de4f187bf8b8476242bda002e9199f073783fd2432dfd90",
+    "rtl/hdc/v41/ot_hdc_sk_arith.sv": "aa99d671592f8f3896f09e368d544a6e3f380e184e7b0cde994bb809c32642a3",
+    "rtl/hdc/v41/ot_hdc_sk_recip_rom.sv": "8a25d38991d44354c6701683019adfcdbf1e520874b72a40810b2aecde876142",
+    "rtl/test/tb_hgi_hc_tail_static.sv": "c8470a4406cc78da1034cce6f807121ad7d395a7a61a26b6db2310bb36dc9d4d",
+    "rtl/test/hgi_hc_tail_static_harness.cpp": "4801cd52432da7af8d56886344d1447cdbc41c62eb584aacf4bda3a6ab82d65c",
+    "tools/hdc_golden.py": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6",
+    "tools/hdc_golden_v41.py": "1bf8f3dd95228cabb0b717ea96d0b2ec903c88d0c85c5834a56c5fc8466373d4",
+    "tools/rtl_hgi_hc_tail_static_gate.py": "6d51672833e7c0b23e6474b855262cac92391bfbda8d3620531b9d0bc06aadde"
+  },
+  "fixture_sha256": {
+    "tail_exp.mem": "926bc1f8a6d4688dee9954da5a2e503d3ac297607714c074798f3326459cb636",
+    "tail_base.mem": "2d3eb5d50b3d75d853f89b28fefd16ba86c04f7db9e04076c17c4b5ef794572b",
+    "tail_scale.mem": "f6ef63cdfe5311e37917284787ba419eaa137fe1e25b3f9f35bebac6c56d7da0",
+    "tail_mix.mem": "edd3ff0a4e746b41e688c1ac25eb16310a4be6baf82cf3a5ee9f0f2f39e65911"
+  },
+  "cases": 16,
+  "words_per_case": 24,
+  "sink_clock_divisor": 7,
+  "sink_launch_age": 217,
+  "sink_capture_age": 506,
+  "result_age": 507,
+  "exact": {
+    "exit_code": 0,
+    "log_sha256": "9f4c065bbaa6f62d621b5a87bbf9e8b415fba7394cd330147a9fff9a29f10cc7"
+  },
+  "mutant": {
+    "exit_code": -6,
+    "log_sha256": "aed4b885e5439ef061467d3775427498f03d06b030eb31c91adb38f7a7647baa"
+  }
+}

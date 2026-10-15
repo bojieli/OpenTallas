@@ -20,6 +20,9 @@ module ot_hgi_hc_engine_static #(
     input wire row_launch,row_raw_read,row_weight_slot,
     input wire [4:0] row_id,
     input wire [31:0] norm_eps,
+    input wire gathered_mix_v,
+    input wire [4:0] gathered_mix_row,
+    input wire [31:0] gathered_mix_data,
     input wire tail_launch,sink_launch,sink_capture,
     input wire [767:0] bases,
     input wire [95:0] scales,
@@ -87,6 +90,14 @@ module ot_hgi_hc_engine_static #(
             if(row_result_v)begin
                 if(tag>=24)own_fault<=1;
                 else begin mixes[tag*32+:32]<=row_result;have[tag]<=1;end
+            end
+            if(gathered_mix_v)begin
+                if(gathered_mix_row>=24)own_fault<=1;
+                else begin
+                    mixes[gathered_mix_row*32+:32]<=gathered_mix_data;
+                    have[gathered_mix_row]<=1;
+                end
+                if(row_result_v&&tag==gathered_mix_row)own_fault<=1;
             end
             if(tail_launch&&have!=24'hffffff)own_fault<=1;
             if(x_wave_v)begin
