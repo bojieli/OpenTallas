@@ -36,6 +36,12 @@ class DependencyCensusTest(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'fully generic mapped'):
             census(module)
 
+    def test_yosys_scope_metadata_does_not_change_hardware_census(self):
+        module = self.mapped('b')
+        expected = census(module)
+        module['cells']['scope'] = dict(type='$scopeinfo', connections={})
+        self.assertEqual(census(module), expected)
+
 
 if __name__ == '__main__':
     unittest.main()

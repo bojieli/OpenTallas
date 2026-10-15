@@ -26,6 +26,8 @@ def census(module):
     sequential_bits = 0
     for cell in module.get('cells', {}).values():
         kind = cell['type']
+        if kind == '$scopeinfo' and not cell.get('connections'):
+            continue  # Yosys 0.68 source/hierarchy metadata, not hardware.
         if not kind.startswith('$_'):
             raise ValueError('not a fully generic mapped cell: ' + kind)
         seq = bool(re.match(r'^\$_(?:DFF|SDFF|DFFE|SDFFE|SDFFCE|DFFSR|DLATCH|SR)', kind))
@@ -85,6 +87,7 @@ def main():
     ap.add_argument('--yosys', default=str(Path.home() / '.local/opentallas-tools/yosys-0.68/bin/yosys'))
     ap.add_argument('--half', choices=['a', 'b'], required=True)
     ap.add_argument('--column', type=int, choices=range(4), required=True)
+    ap.add_argument('--reuse-mapped', action='store_true', help='Analyze an existing map only after its exact generated inputs and script match')
     a = ap.parse_args()
     root = a.root.resolve()
     out = a.out.resolve()
@@ -103,7 +106,6 @@ def main():
     b = sfu.index('module ot_hdc_vline')
     support += '\n' + sfu[b:sfu.index('endmodule', b) + 9]
     support += '\n' + '\n'.join(extract(n) for n in ('ot_s81_hc_ctq', 'ot_s81_hc_ctrs', 'ot_s81_hc_ctra', 'ot_s81_hc_ctrb'))
-    (out / 'reference.sv').write_text(support)
     original = (root / sources[1]).read_text()
     top = 'ot_s81_hc_ctr' + a.half + '_column'
     match = re.search(r'module\s+' + top + r'\s*#\((.*?)\)\s*\(', original, re.S)
@@ -112,11 +114,17 @@ def main():
         header, n = re.subn(name + r'\s*=\s*\w+', name + ' = ' + str(value), header)
         assert n == 1
     specialized = original[:match.start(1)] + header + original[match.end(1):]
-    (out / 'specialized.sv').write_text(specialized)
     script = 'read_verilog -sv reference.sv specialized.sv; hierarchy -top ' + top + '; proc; flatten; synth -top ' + top + ' -noabc; write_json mapped.json\n'
-    (out / 'census.ys').write_text(script)
-    with (out / 'yosys.log').open('w') as log:
-        subprocess.run([a.yosys, '-s', 'census.ys'], cwd=out, stdout=log, stderr=subprocess.STDOUT, check=True)
+    generated = {'reference.sv': support, 'specialized.sv': specialized, 'census.ys': script}
+    if a.reuse_mapped:
+        for path, expected in generated.items():
+            assert (out / path).read_text() == expected, 'stale mapped input: ' + path
+        assert 'End of script.' in (out / 'yosys.log').read_text(), 'original synthesis did not finish'
+    else:
+        for path, expected in generated.items():
+            (out / path).write_text(expected)
+        with (out / 'yosys.log').open('w') as log:
+            subprocess.run([a.yosys, '-s', 'census.ys'], cwd=out, stdout=log, stderr=subprocess.STDOUT, check=True)
     mapped = json.loads((out / 'mapped.json').read_text())
     result = census(mapped['modules'][top])
     result.update(top=top, params=dict(NG=256, D=5120, NCOL=3, GS=8, S_RD=2, S_RT=4, ML=5, AL=4, READ_STAGE=1, CHAIN_STEP=6, COLUMN=a.column),
