@@ -1,0 +1,727 @@
+`timescale 1ns/1ps
+`default_nettype none
+// Whole512-bit VM egress, opt-in L13. Wires-only composition of64data and8valid hard leaves.
+// Input release slot data/metadata is the actual current P+11 return interface.
+// Parent supplies every child clock independently; no scalar clock aliases here.
+module dsfd_vm_static_read_router(
+ input wire[63:0] ck_data,input wire[7:0] ck_valid,input wire rst_n,
+ input wire[16383:0] slot_data,input wire[127:0] slot_valid,
+ input wire[17:0] n_expected,input wire[89:0] n_slot,
+ input wire[11:0] aux_expected,input wire[19:0] mx_expected,input wire[99:0] mx_slot,
+ output wire[9215:0] n_data,output wire[17:0] n_valid,
+ output wire[2047:0] pq_data,output wire pq_valid,
+ output wire[4095:0] x_data,output wire[7:0] x_valid,
+ output wire[10239:0] mx_data,output wire[19:0] mx_valid,output wire[7:0] fault);
+ wire[511:0] su1_peer_data;wire[7:0] su1_peer_valid;
+ wire[7:0] exp0;wire[39:0] sel0;wire[15:0] low0;
+ wire[63:0] pv0;wire[7:0] bad0;wire[7:0] valid0;
+ assign exp0[0]=n_expected[0];assign sel0[0+:5]=n_slot[0+:5];assign low0[0+:2]=sel0[0+:2];
+ assign exp0[1]=n_expected[1];assign sel0[5+:5]=n_slot[5+:5];assign low0[2+:2]=sel0[5+:2];
+ assign exp0[2]=n_expected[2];assign sel0[10+:5]=n_slot[10+:5];assign low0[4+:2]=sel0[10+:2];
+ assign exp0[3]=n_expected[3];assign sel0[15+:5]=n_slot[15+:5];assign low0[6+:2]=sel0[15+:2];
+ assign exp0[4]=mx_expected[0];assign sel0[20+:5]=mx_slot[0+:5];assign low0[8+:2]=sel0[20+:2];
+ assign exp0[5]=mx_expected[1];assign sel0[25+:5]=mx_slot[5+:5];assign low0[10+:2]=sel0[25+:2];
+ assign exp0[6]=mx_expected[2];assign sel0[30+:5]=mx_slot[10+:5];assign low0[12+:2]=sel0[30+:2];
+ assign exp0[7]=mx_expected[3];assign sel0[35+:5]=mx_slot[15+:5];assign low0[14+:2]=sel0[35+:2];
+ wire[511:0] dout0;
+ dsfd_vm_static_read_q0 d0(.ck(ck_data[0]),.rst_n(rst_n),.i_data({slot_data[1536+:64],slot_data[1024+:64],slot_data[512+:64],slot_data[0+:64]}),.i_valid({slot_valid[3],slot_valid[2],slot_valid[1],slot_valid[0]}),.i_sel({low0[14+:2],low0[12+:2],low0[10+:2],low0[8+:2],low0[2+:2],low0[0+:2]}),.i_expected(exp0),.i_su1_group(n_slot[7]),
+ .i_peer_data(su1_peer_data[0+:64]),.i_peer_valid(su1_peer_valid[0]),.o_partial_valid(pv0[0+:8]),.o_data(dout0),.fault(bad0[0]));
+ assign n_data[0+:64]=dout0[0+:64];
+ assign n_data[512+:64]=dout0[64+:64];
+ assign n_data[1024+:64]=dout0[128+:64];
+ assign n_data[1536+:64]=dout0[192+:64];
+ assign mx_data[0+:64]=dout0[256+:64];
+ assign mx_data[512+:64]=dout0[320+:64];
+ assign mx_data[1024+:64]=dout0[384+:64];
+ assign mx_data[1536+:64]=dout0[448+:64];
+ wire[511:0] dout1;
+ dsfd_vm_static_read_q0 d1(.ck(ck_data[1]),.rst_n(rst_n),.i_data({slot_data[1600+:64],slot_data[1088+:64],slot_data[576+:64],slot_data[64+:64]}),.i_valid({slot_valid[3],slot_valid[2],slot_valid[1],slot_valid[0]}),.i_sel({low0[14+:2],low0[12+:2],low0[10+:2],low0[8+:2],low0[2+:2],low0[0+:2]}),.i_expected(exp0),.i_su1_group(n_slot[7]),
+ .i_peer_data(su1_peer_data[64+:64]),.i_peer_valid(su1_peer_valid[1]),.o_partial_valid(pv0[8+:8]),.o_data(dout1),.fault(bad0[1]));
+ assign n_data[64+:64]=dout1[0+:64];
+ assign n_data[576+:64]=dout1[64+:64];
+ assign n_data[1088+:64]=dout1[128+:64];
+ assign n_data[1600+:64]=dout1[192+:64];
+ assign mx_data[64+:64]=dout1[256+:64];
+ assign mx_data[576+:64]=dout1[320+:64];
+ assign mx_data[1088+:64]=dout1[384+:64];
+ assign mx_data[1600+:64]=dout1[448+:64];
+ wire[511:0] dout2;
+ dsfd_vm_static_read_q0 d2(.ck(ck_data[2]),.rst_n(rst_n),.i_data({slot_data[1664+:64],slot_data[1152+:64],slot_data[640+:64],slot_data[128+:64]}),.i_valid({slot_valid[35],slot_valid[34],slot_valid[33],slot_valid[32]}),.i_sel({low0[14+:2],low0[12+:2],low0[10+:2],low0[8+:2],low0[2+:2],low0[0+:2]}),.i_expected(exp0),.i_su1_group(n_slot[7]),
+ .i_peer_data(su1_peer_data[128+:64]),.i_peer_valid(su1_peer_valid[2]),.o_partial_valid(pv0[16+:8]),.o_data(dout2),.fault(bad0[2]));
+ assign n_data[128+:64]=dout2[0+:64];
+ assign n_data[640+:64]=dout2[64+:64];
+ assign n_data[1152+:64]=dout2[128+:64];
+ assign n_data[1664+:64]=dout2[192+:64];
+ assign mx_data[128+:64]=dout2[256+:64];
+ assign mx_data[640+:64]=dout2[320+:64];
+ assign mx_data[1152+:64]=dout2[384+:64];
+ assign mx_data[1664+:64]=dout2[448+:64];
+ wire[511:0] dout3;
+ dsfd_vm_static_read_q0 d3(.ck(ck_data[3]),.rst_n(rst_n),.i_data({slot_data[1728+:64],slot_data[1216+:64],slot_data[704+:64],slot_data[192+:64]}),.i_valid({slot_valid[35],slot_valid[34],slot_valid[33],slot_valid[32]}),.i_sel({low0[14+:2],low0[12+:2],low0[10+:2],low0[8+:2],low0[2+:2],low0[0+:2]}),.i_expected(exp0),.i_su1_group(n_slot[7]),
+ .i_peer_data(su1_peer_data[192+:64]),.i_peer_valid(su1_peer_valid[3]),.o_partial_valid(pv0[24+:8]),.o_data(dout3),.fault(bad0[3]));
+ assign n_data[192+:64]=dout3[0+:64];
+ assign n_data[704+:64]=dout3[64+:64];
+ assign n_data[1216+:64]=dout3[128+:64];
+ assign n_data[1728+:64]=dout3[192+:64];
+ assign mx_data[192+:64]=dout3[256+:64];
+ assign mx_data[704+:64]=dout3[320+:64];
+ assign mx_data[1216+:64]=dout3[384+:64];
+ assign mx_data[1728+:64]=dout3[448+:64];
+ wire[511:0] dout4;
+ dsfd_vm_static_read_q0 d4(.ck(ck_data[4]),.rst_n(rst_n),.i_data({slot_data[1792+:64],slot_data[1280+:64],slot_data[768+:64],slot_data[256+:64]}),.i_valid({slot_valid[67],slot_valid[66],slot_valid[65],slot_valid[64]}),.i_sel({low0[14+:2],low0[12+:2],low0[10+:2],low0[8+:2],low0[2+:2],low0[0+:2]}),.i_expected(exp0),.i_su1_group(n_slot[7]),
+ .i_peer_data(su1_peer_data[256+:64]),.i_peer_valid(su1_peer_valid[4]),.o_partial_valid(pv0[32+:8]),.o_data(dout4),.fault(bad0[4]));
+ assign n_data[256+:64]=dout4[0+:64];
+ assign n_data[768+:64]=dout4[64+:64];
+ assign n_data[1280+:64]=dout4[128+:64];
+ assign n_data[1792+:64]=dout4[192+:64];
+ assign mx_data[256+:64]=dout4[256+:64];
+ assign mx_data[768+:64]=dout4[320+:64];
+ assign mx_data[1280+:64]=dout4[384+:64];
+ assign mx_data[1792+:64]=dout4[448+:64];
+ wire[511:0] dout5;
+ dsfd_vm_static_read_q0 d5(.ck(ck_data[5]),.rst_n(rst_n),.i_data({slot_data[1856+:64],slot_data[1344+:64],slot_data[832+:64],slot_data[320+:64]}),.i_valid({slot_valid[67],slot_valid[66],slot_valid[65],slot_valid[64]}),.i_sel({low0[14+:2],low0[12+:2],low0[10+:2],low0[8+:2],low0[2+:2],low0[0+:2]}),.i_expected(exp0),.i_su1_group(n_slot[7]),
+ .i_peer_data(su1_peer_data[320+:64]),.i_peer_valid(su1_peer_valid[5]),.o_partial_valid(pv0[40+:8]),.o_data(dout5),.fault(bad0[5]));
+ assign n_data[320+:64]=dout5[0+:64];
+ assign n_data[832+:64]=dout5[64+:64];
+ assign n_data[1344+:64]=dout5[128+:64];
+ assign n_data[1856+:64]=dout5[192+:64];
+ assign mx_data[320+:64]=dout5[256+:64];
+ assign mx_data[832+:64]=dout5[320+:64];
+ assign mx_data[1344+:64]=dout5[384+:64];
+ assign mx_data[1856+:64]=dout5[448+:64];
+ wire[511:0] dout6;
+ dsfd_vm_static_read_q0 d6(.ck(ck_data[6]),.rst_n(rst_n),.i_data({slot_data[1920+:64],slot_data[1408+:64],slot_data[896+:64],slot_data[384+:64]}),.i_valid({slot_valid[99],slot_valid[98],slot_valid[97],slot_valid[96]}),.i_sel({low0[14+:2],low0[12+:2],low0[10+:2],low0[8+:2],low0[2+:2],low0[0+:2]}),.i_expected(exp0),.i_su1_group(n_slot[7]),
+ .i_peer_data(su1_peer_data[384+:64]),.i_peer_valid(su1_peer_valid[6]),.o_partial_valid(pv0[48+:8]),.o_data(dout6),.fault(bad0[6]));
+ assign n_data[384+:64]=dout6[0+:64];
+ assign n_data[896+:64]=dout6[64+:64];
+ assign n_data[1408+:64]=dout6[128+:64];
+ assign n_data[1920+:64]=dout6[192+:64];
+ assign mx_data[384+:64]=dout6[256+:64];
+ assign mx_data[896+:64]=dout6[320+:64];
+ assign mx_data[1408+:64]=dout6[384+:64];
+ assign mx_data[1920+:64]=dout6[448+:64];
+ wire[511:0] dout7;
+ dsfd_vm_static_read_q0 d7(.ck(ck_data[7]),.rst_n(rst_n),.i_data({slot_data[1984+:64],slot_data[1472+:64],slot_data[960+:64],slot_data[448+:64]}),.i_valid({slot_valid[99],slot_valid[98],slot_valid[97],slot_valid[96]}),.i_sel({low0[14+:2],low0[12+:2],low0[10+:2],low0[8+:2],low0[2+:2],low0[0+:2]}),.i_expected(exp0),.i_su1_group(n_slot[7]),
+ .i_peer_data(su1_peer_data[448+:64]),.i_peer_valid(su1_peer_valid[7]),.o_partial_valid(pv0[56+:8]),.o_data(dout7),.fault(bad0[7]));
+ assign n_data[448+:64]=dout7[0+:64];
+ assign n_data[960+:64]=dout7[64+:64];
+ assign n_data[1472+:64]=dout7[128+:64];
+ assign n_data[1984+:64]=dout7[192+:64];
+ assign mx_data[448+:64]=dout7[256+:64];
+ assign mx_data[960+:64]=dout7[320+:64];
+ assign mx_data[1472+:64]=dout7[384+:64];
+ assign mx_data[1984+:64]=dout7[448+:64];
+ dsfd_vm_static_read_v0 v0(.ck(ck_valid[0]),.rst_n(rst_n),.i_expected(exp0),.i_slot(sel0),.i_partial_valid(pv0),.i_peer_valid(su1_peer_valid),.i_fault(bad0),.o_valid(valid0),.fault(fault[0]));
+ assign n_valid[0]=valid0[0];
+ assign n_valid[1]=valid0[1];
+ assign n_valid[2]=valid0[2];
+ assign n_valid[3]=valid0[3];
+ assign mx_valid[0]=valid0[4];
+ assign mx_valid[1]=valid0[5];
+ assign mx_valid[2]=valid0[6];
+ assign mx_valid[3]=valid0[7];
+ wire[8:0] exp1;wire[44:0] sel1;wire[17:0] low1;
+ wire[71:0] pv1;wire[7:0] bad1;wire[7:0] valid1;
+ assign exp1[0]=n_expected[1];assign sel1[0+:5]=n_slot[5+:5];assign low1[0+:2]=sel1[0+:2];
+ assign exp1[1]=n_expected[4];assign sel1[5+:5]=n_slot[20+:5];assign low1[2+:2]=sel1[5+:2];
+ assign exp1[2]=n_expected[5];assign sel1[10+:5]=n_slot[25+:5];assign low1[4+:2]=sel1[10+:2];
+ assign exp1[3]=n_expected[6];assign sel1[15+:5]=n_slot[30+:5];assign low1[6+:2]=sel1[15+:2];
+ assign exp1[4]=n_expected[7];assign sel1[20+:5]=n_slot[35+:5];assign low1[8+:2]=sel1[20+:2];
+ assign exp1[5]=mx_expected[4];assign sel1[25+:5]=mx_slot[20+:5];assign low1[10+:2]=sel1[25+:2];
+ assign exp1[6]=mx_expected[5];assign sel1[30+:5]=mx_slot[25+:5];assign low1[12+:2]=sel1[30+:2];
+ assign exp1[7]=mx_expected[6];assign sel1[35+:5]=mx_slot[30+:5];assign low1[14+:2]=sel1[35+:2];
+ assign exp1[8]=mx_expected[7];assign sel1[40+:5]=mx_slot[35+:5];assign low1[16+:2]=sel1[40+:2];
+ wire[511:0] dout8;
+ dsfd_vm_static_read_q1 d8(.ck(ck_data[8]),.rst_n(rst_n),.i_data({slot_data[3584+:64],slot_data[3072+:64],slot_data[2560+:64],slot_data[2048+:64]}),.i_valid({slot_valid[7],slot_valid[6],slot_valid[5],slot_valid[4]}),.i_sel({low1[16+:2],low1[14+:2],low1[12+:2],low1[10+:2],low1[0+:2]}),.i_expected(exp1),.i_su1_group(n_slot[7]),
+ .o_peer_data(su1_peer_data[0+:64]),.o_peer_valid(su1_peer_valid[0]),.o_partial_valid(pv1[0+:9]),.o_data(dout8),.fault(bad1[0]));
+ assign n_data[2048+:64]=dout8[0+:64];
+ assign n_data[2560+:64]=dout8[64+:64];
+ assign n_data[3072+:64]=dout8[128+:64];
+ assign n_data[3584+:64]=dout8[192+:64];
+ assign mx_data[2048+:64]=dout8[256+:64];
+ assign mx_data[2560+:64]=dout8[320+:64];
+ assign mx_data[3072+:64]=dout8[384+:64];
+ assign mx_data[3584+:64]=dout8[448+:64];
+ wire[511:0] dout9;
+ dsfd_vm_static_read_q1 d9(.ck(ck_data[9]),.rst_n(rst_n),.i_data({slot_data[3648+:64],slot_data[3136+:64],slot_data[2624+:64],slot_data[2112+:64]}),.i_valid({slot_valid[7],slot_valid[6],slot_valid[5],slot_valid[4]}),.i_sel({low1[16+:2],low1[14+:2],low1[12+:2],low1[10+:2],low1[0+:2]}),.i_expected(exp1),.i_su1_group(n_slot[7]),
+ .o_peer_data(su1_peer_data[64+:64]),.o_peer_valid(su1_peer_valid[1]),.o_partial_valid(pv1[9+:9]),.o_data(dout9),.fault(bad1[1]));
+ assign n_data[2112+:64]=dout9[0+:64];
+ assign n_data[2624+:64]=dout9[64+:64];
+ assign n_data[3136+:64]=dout9[128+:64];
+ assign n_data[3648+:64]=dout9[192+:64];
+ assign mx_data[2112+:64]=dout9[256+:64];
+ assign mx_data[2624+:64]=dout9[320+:64];
+ assign mx_data[3136+:64]=dout9[384+:64];
+ assign mx_data[3648+:64]=dout9[448+:64];
+ wire[511:0] dout10;
+ dsfd_vm_static_read_q1 d10(.ck(ck_data[10]),.rst_n(rst_n),.i_data({slot_data[3712+:64],slot_data[3200+:64],slot_data[2688+:64],slot_data[2176+:64]}),.i_valid({slot_valid[39],slot_valid[38],slot_valid[37],slot_valid[36]}),.i_sel({low1[16+:2],low1[14+:2],low1[12+:2],low1[10+:2],low1[0+:2]}),.i_expected(exp1),.i_su1_group(n_slot[7]),
+ .o_peer_data(su1_peer_data[128+:64]),.o_peer_valid(su1_peer_valid[2]),.o_partial_valid(pv1[18+:9]),.o_data(dout10),.fault(bad1[2]));
+ assign n_data[2176+:64]=dout10[0+:64];
+ assign n_data[2688+:64]=dout10[64+:64];
+ assign n_data[3200+:64]=dout10[128+:64];
+ assign n_data[3712+:64]=dout10[192+:64];
+ assign mx_data[2176+:64]=dout10[256+:64];
+ assign mx_data[2688+:64]=dout10[320+:64];
+ assign mx_data[3200+:64]=dout10[384+:64];
+ assign mx_data[3712+:64]=dout10[448+:64];
+ wire[511:0] dout11;
+ dsfd_vm_static_read_q1 d11(.ck(ck_data[11]),.rst_n(rst_n),.i_data({slot_data[3776+:64],slot_data[3264+:64],slot_data[2752+:64],slot_data[2240+:64]}),.i_valid({slot_valid[39],slot_valid[38],slot_valid[37],slot_valid[36]}),.i_sel({low1[16+:2],low1[14+:2],low1[12+:2],low1[10+:2],low1[0+:2]}),.i_expected(exp1),.i_su1_group(n_slot[7]),
+ .o_peer_data(su1_peer_data[192+:64]),.o_peer_valid(su1_peer_valid[3]),.o_partial_valid(pv1[27+:9]),.o_data(dout11),.fault(bad1[3]));
+ assign n_data[2240+:64]=dout11[0+:64];
+ assign n_data[2752+:64]=dout11[64+:64];
+ assign n_data[3264+:64]=dout11[128+:64];
+ assign n_data[3776+:64]=dout11[192+:64];
+ assign mx_data[2240+:64]=dout11[256+:64];
+ assign mx_data[2752+:64]=dout11[320+:64];
+ assign mx_data[3264+:64]=dout11[384+:64];
+ assign mx_data[3776+:64]=dout11[448+:64];
+ wire[511:0] dout12;
+ dsfd_vm_static_read_q1 d12(.ck(ck_data[12]),.rst_n(rst_n),.i_data({slot_data[3840+:64],slot_data[3328+:64],slot_data[2816+:64],slot_data[2304+:64]}),.i_valid({slot_valid[71],slot_valid[70],slot_valid[69],slot_valid[68]}),.i_sel({low1[16+:2],low1[14+:2],low1[12+:2],low1[10+:2],low1[0+:2]}),.i_expected(exp1),.i_su1_group(n_slot[7]),
+ .o_peer_data(su1_peer_data[256+:64]),.o_peer_valid(su1_peer_valid[4]),.o_partial_valid(pv1[36+:9]),.o_data(dout12),.fault(bad1[4]));
+ assign n_data[2304+:64]=dout12[0+:64];
+ assign n_data[2816+:64]=dout12[64+:64];
+ assign n_data[3328+:64]=dout12[128+:64];
+ assign n_data[3840+:64]=dout12[192+:64];
+ assign mx_data[2304+:64]=dout12[256+:64];
+ assign mx_data[2816+:64]=dout12[320+:64];
+ assign mx_data[3328+:64]=dout12[384+:64];
+ assign mx_data[3840+:64]=dout12[448+:64];
+ wire[511:0] dout13;
+ dsfd_vm_static_read_q1 d13(.ck(ck_data[13]),.rst_n(rst_n),.i_data({slot_data[3904+:64],slot_data[3392+:64],slot_data[2880+:64],slot_data[2368+:64]}),.i_valid({slot_valid[71],slot_valid[70],slot_valid[69],slot_valid[68]}),.i_sel({low1[16+:2],low1[14+:2],low1[12+:2],low1[10+:2],low1[0+:2]}),.i_expected(exp1),.i_su1_group(n_slot[7]),
+ .o_peer_data(su1_peer_data[320+:64]),.o_peer_valid(su1_peer_valid[5]),.o_partial_valid(pv1[45+:9]),.o_data(dout13),.fault(bad1[5]));
+ assign n_data[2368+:64]=dout13[0+:64];
+ assign n_data[2880+:64]=dout13[64+:64];
+ assign n_data[3392+:64]=dout13[128+:64];
+ assign n_data[3904+:64]=dout13[192+:64];
+ assign mx_data[2368+:64]=dout13[256+:64];
+ assign mx_data[2880+:64]=dout13[320+:64];
+ assign mx_data[3392+:64]=dout13[384+:64];
+ assign mx_data[3904+:64]=dout13[448+:64];
+ wire[511:0] dout14;
+ dsfd_vm_static_read_q1 d14(.ck(ck_data[14]),.rst_n(rst_n),.i_data({slot_data[3968+:64],slot_data[3456+:64],slot_data[2944+:64],slot_data[2432+:64]}),.i_valid({slot_valid[103],slot_valid[102],slot_valid[101],slot_valid[100]}),.i_sel({low1[16+:2],low1[14+:2],low1[12+:2],low1[10+:2],low1[0+:2]}),.i_expected(exp1),.i_su1_group(n_slot[7]),
+ .o_peer_data(su1_peer_data[384+:64]),.o_peer_valid(su1_peer_valid[6]),.o_partial_valid(pv1[54+:9]),.o_data(dout14),.fault(bad1[6]));
+ assign n_data[2432+:64]=dout14[0+:64];
+ assign n_data[2944+:64]=dout14[64+:64];
+ assign n_data[3456+:64]=dout14[128+:64];
+ assign n_data[3968+:64]=dout14[192+:64];
+ assign mx_data[2432+:64]=dout14[256+:64];
+ assign mx_data[2944+:64]=dout14[320+:64];
+ assign mx_data[3456+:64]=dout14[384+:64];
+ assign mx_data[3968+:64]=dout14[448+:64];
+ wire[511:0] dout15;
+ dsfd_vm_static_read_q1 d15(.ck(ck_data[15]),.rst_n(rst_n),.i_data({slot_data[4032+:64],slot_data[3520+:64],slot_data[3008+:64],slot_data[2496+:64]}),.i_valid({slot_valid[103],slot_valid[102],slot_valid[101],slot_valid[100]}),.i_sel({low1[16+:2],low1[14+:2],low1[12+:2],low1[10+:2],low1[0+:2]}),.i_expected(exp1),.i_su1_group(n_slot[7]),
+ .o_peer_data(su1_peer_data[448+:64]),.o_peer_valid(su1_peer_valid[7]),.o_partial_valid(pv1[63+:9]),.o_data(dout15),.fault(bad1[7]));
+ assign n_data[2496+:64]=dout15[0+:64];
+ assign n_data[3008+:64]=dout15[64+:64];
+ assign n_data[3520+:64]=dout15[128+:64];
+ assign n_data[4032+:64]=dout15[192+:64];
+ assign mx_data[2496+:64]=dout15[256+:64];
+ assign mx_data[3008+:64]=dout15[320+:64];
+ assign mx_data[3520+:64]=dout15[384+:64];
+ assign mx_data[4032+:64]=dout15[448+:64];
+ dsfd_vm_static_read_v1 v1(.ck(ck_valid[1]),.rst_n(rst_n),.i_expected(exp1),.i_slot(sel1),.i_partial_valid(pv1),.i_fault(bad1),.o_valid(valid1),.fault(fault[1]));
+ assign n_valid[4]=valid1[0];
+ assign n_valid[5]=valid1[1];
+ assign n_valid[6]=valid1[2];
+ assign n_valid[7]=valid1[3];
+ assign mx_valid[4]=valid1[4];
+ assign mx_valid[5]=valid1[5];
+ assign mx_valid[6]=valid1[6];
+ assign mx_valid[7]=valid1[7];
+ wire[7:0] exp2;wire[39:0] sel2;wire[15:0] low2;
+ wire[63:0] pv2;wire[7:0] bad2;wire[7:0] valid2;
+ assign exp2[0]=n_expected[8];assign sel2[0+:5]=n_slot[40+:5];assign low2[0+:2]=sel2[0+:2];
+ assign exp2[1]=n_expected[9];assign sel2[5+:5]=n_slot[45+:5];assign low2[2+:2]=sel2[5+:2];
+ assign exp2[2]=n_expected[10];assign sel2[10+:5]=n_slot[50+:5];assign low2[4+:2]=sel2[10+:2];
+ assign exp2[3]=n_expected[11];assign sel2[15+:5]=n_slot[55+:5];assign low2[6+:2]=sel2[15+:2];
+ assign exp2[4]=mx_expected[8];assign sel2[20+:5]=mx_slot[40+:5];assign low2[8+:2]=sel2[20+:2];
+ assign exp2[5]=mx_expected[9];assign sel2[25+:5]=mx_slot[45+:5];assign low2[10+:2]=sel2[25+:2];
+ assign exp2[6]=mx_expected[10];assign sel2[30+:5]=mx_slot[50+:5];assign low2[12+:2]=sel2[30+:2];
+ assign exp2[7]=mx_expected[11];assign sel2[35+:5]=mx_slot[55+:5];assign low2[14+:2]=sel2[35+:2];
+ wire[511:0] dout16;
+ dsfd_vm_static_read_q2 d16(.ck(ck_data[16]),.rst_n(rst_n),.i_data({slot_data[5632+:64],slot_data[5120+:64],slot_data[4608+:64],slot_data[4096+:64]}),.i_valid({slot_valid[11],slot_valid[10],slot_valid[9],slot_valid[8]}),.i_sel({low2[14+:2],low2[12+:2],low2[10+:2],low2[8+:2]}),.i_expected(exp2),
+ .o_partial_valid(pv2[0+:8]),.o_data(dout16),.fault(bad2[0]));
+ assign n_data[4096+:64]=dout16[0+:64];
+ assign n_data[4608+:64]=dout16[64+:64];
+ assign n_data[5120+:64]=dout16[128+:64];
+ assign n_data[5632+:64]=dout16[192+:64];
+ assign mx_data[4096+:64]=dout16[256+:64];
+ assign mx_data[4608+:64]=dout16[320+:64];
+ assign mx_data[5120+:64]=dout16[384+:64];
+ assign mx_data[5632+:64]=dout16[448+:64];
+ wire[511:0] dout17;
+ dsfd_vm_static_read_q2 d17(.ck(ck_data[17]),.rst_n(rst_n),.i_data({slot_data[5696+:64],slot_data[5184+:64],slot_data[4672+:64],slot_data[4160+:64]}),.i_valid({slot_valid[11],slot_valid[10],slot_valid[9],slot_valid[8]}),.i_sel({low2[14+:2],low2[12+:2],low2[10+:2],low2[8+:2]}),.i_expected(exp2),
+ .o_partial_valid(pv2[8+:8]),.o_data(dout17),.fault(bad2[1]));
+ assign n_data[4160+:64]=dout17[0+:64];
+ assign n_data[4672+:64]=dout17[64+:64];
+ assign n_data[5184+:64]=dout17[128+:64];
+ assign n_data[5696+:64]=dout17[192+:64];
+ assign mx_data[4160+:64]=dout17[256+:64];
+ assign mx_data[4672+:64]=dout17[320+:64];
+ assign mx_data[5184+:64]=dout17[384+:64];
+ assign mx_data[5696+:64]=dout17[448+:64];
+ wire[511:0] dout18;
+ dsfd_vm_static_read_q2 d18(.ck(ck_data[18]),.rst_n(rst_n),.i_data({slot_data[5760+:64],slot_data[5248+:64],slot_data[4736+:64],slot_data[4224+:64]}),.i_valid({slot_valid[43],slot_valid[42],slot_valid[41],slot_valid[40]}),.i_sel({low2[14+:2],low2[12+:2],low2[10+:2],low2[8+:2]}),.i_expected(exp2),
+ .o_partial_valid(pv2[16+:8]),.o_data(dout18),.fault(bad2[2]));
+ assign n_data[4224+:64]=dout18[0+:64];
+ assign n_data[4736+:64]=dout18[64+:64];
+ assign n_data[5248+:64]=dout18[128+:64];
+ assign n_data[5760+:64]=dout18[192+:64];
+ assign mx_data[4224+:64]=dout18[256+:64];
+ assign mx_data[4736+:64]=dout18[320+:64];
+ assign mx_data[5248+:64]=dout18[384+:64];
+ assign mx_data[5760+:64]=dout18[448+:64];
+ wire[511:0] dout19;
+ dsfd_vm_static_read_q2 d19(.ck(ck_data[19]),.rst_n(rst_n),.i_data({slot_data[5824+:64],slot_data[5312+:64],slot_data[4800+:64],slot_data[4288+:64]}),.i_valid({slot_valid[43],slot_valid[42],slot_valid[41],slot_valid[40]}),.i_sel({low2[14+:2],low2[12+:2],low2[10+:2],low2[8+:2]}),.i_expected(exp2),
+ .o_partial_valid(pv2[24+:8]),.o_data(dout19),.fault(bad2[3]));
+ assign n_data[4288+:64]=dout19[0+:64];
+ assign n_data[4800+:64]=dout19[64+:64];
+ assign n_data[5312+:64]=dout19[128+:64];
+ assign n_data[5824+:64]=dout19[192+:64];
+ assign mx_data[4288+:64]=dout19[256+:64];
+ assign mx_data[4800+:64]=dout19[320+:64];
+ assign mx_data[5312+:64]=dout19[384+:64];
+ assign mx_data[5824+:64]=dout19[448+:64];
+ wire[511:0] dout20;
+ dsfd_vm_static_read_q2 d20(.ck(ck_data[20]),.rst_n(rst_n),.i_data({slot_data[5888+:64],slot_data[5376+:64],slot_data[4864+:64],slot_data[4352+:64]}),.i_valid({slot_valid[75],slot_valid[74],slot_valid[73],slot_valid[72]}),.i_sel({low2[14+:2],low2[12+:2],low2[10+:2],low2[8+:2]}),.i_expected(exp2),
+ .o_partial_valid(pv2[32+:8]),.o_data(dout20),.fault(bad2[4]));
+ assign n_data[4352+:64]=dout20[0+:64];
+ assign n_data[4864+:64]=dout20[64+:64];
+ assign n_data[5376+:64]=dout20[128+:64];
+ assign n_data[5888+:64]=dout20[192+:64];
+ assign mx_data[4352+:64]=dout20[256+:64];
+ assign mx_data[4864+:64]=dout20[320+:64];
+ assign mx_data[5376+:64]=dout20[384+:64];
+ assign mx_data[5888+:64]=dout20[448+:64];
+ wire[511:0] dout21;
+ dsfd_vm_static_read_q2 d21(.ck(ck_data[21]),.rst_n(rst_n),.i_data({slot_data[5952+:64],slot_data[5440+:64],slot_data[4928+:64],slot_data[4416+:64]}),.i_valid({slot_valid[75],slot_valid[74],slot_valid[73],slot_valid[72]}),.i_sel({low2[14+:2],low2[12+:2],low2[10+:2],low2[8+:2]}),.i_expected(exp2),
+ .o_partial_valid(pv2[40+:8]),.o_data(dout21),.fault(bad2[5]));
+ assign n_data[4416+:64]=dout21[0+:64];
+ assign n_data[4928+:64]=dout21[64+:64];
+ assign n_data[5440+:64]=dout21[128+:64];
+ assign n_data[5952+:64]=dout21[192+:64];
+ assign mx_data[4416+:64]=dout21[256+:64];
+ assign mx_data[4928+:64]=dout21[320+:64];
+ assign mx_data[5440+:64]=dout21[384+:64];
+ assign mx_data[5952+:64]=dout21[448+:64];
+ wire[511:0] dout22;
+ dsfd_vm_static_read_q2 d22(.ck(ck_data[22]),.rst_n(rst_n),.i_data({slot_data[6016+:64],slot_data[5504+:64],slot_data[4992+:64],slot_data[4480+:64]}),.i_valid({slot_valid[107],slot_valid[106],slot_valid[105],slot_valid[104]}),.i_sel({low2[14+:2],low2[12+:2],low2[10+:2],low2[8+:2]}),.i_expected(exp2),
+ .o_partial_valid(pv2[48+:8]),.o_data(dout22),.fault(bad2[6]));
+ assign n_data[4480+:64]=dout22[0+:64];
+ assign n_data[4992+:64]=dout22[64+:64];
+ assign n_data[5504+:64]=dout22[128+:64];
+ assign n_data[6016+:64]=dout22[192+:64];
+ assign mx_data[4480+:64]=dout22[256+:64];
+ assign mx_data[4992+:64]=dout22[320+:64];
+ assign mx_data[5504+:64]=dout22[384+:64];
+ assign mx_data[6016+:64]=dout22[448+:64];
+ wire[511:0] dout23;
+ dsfd_vm_static_read_q2 d23(.ck(ck_data[23]),.rst_n(rst_n),.i_data({slot_data[6080+:64],slot_data[5568+:64],slot_data[5056+:64],slot_data[4544+:64]}),.i_valid({slot_valid[107],slot_valid[106],slot_valid[105],slot_valid[104]}),.i_sel({low2[14+:2],low2[12+:2],low2[10+:2],low2[8+:2]}),.i_expected(exp2),
+ .o_partial_valid(pv2[56+:8]),.o_data(dout23),.fault(bad2[7]));
+ assign n_data[4544+:64]=dout23[0+:64];
+ assign n_data[5056+:64]=dout23[64+:64];
+ assign n_data[5568+:64]=dout23[128+:64];
+ assign n_data[6080+:64]=dout23[192+:64];
+ assign mx_data[4544+:64]=dout23[256+:64];
+ assign mx_data[5056+:64]=dout23[320+:64];
+ assign mx_data[5568+:64]=dout23[384+:64];
+ assign mx_data[6080+:64]=dout23[448+:64];
+ dsfd_vm_static_read_v2 v2(.ck(ck_valid[2]),.rst_n(rst_n),.i_expected(exp2),.i_slot(sel2),.i_partial_valid(pv2),.i_fault(bad2),.o_valid(valid2),.fault(fault[2]));
+ assign n_valid[8]=valid2[0];
+ assign n_valid[9]=valid2[1];
+ assign n_valid[10]=valid2[2];
+ assign n_valid[11]=valid2[3];
+ assign mx_valid[8]=valid2[4];
+ assign mx_valid[9]=valid2[5];
+ assign mx_valid[10]=valid2[6];
+ assign mx_valid[11]=valid2[7];
+ wire[7:0] exp3;wire[39:0] sel3;wire[15:0] low3;
+ wire[63:0] pv3;wire[7:0] bad3;wire[7:0] valid3;
+ assign exp3[0]=n_expected[12];assign sel3[0+:5]=n_slot[60+:5];assign low3[0+:2]=sel3[0+:2];
+ assign exp3[1]=n_expected[13];assign sel3[5+:5]=n_slot[65+:5];assign low3[2+:2]=sel3[5+:2];
+ assign exp3[2]=n_expected[14];assign sel3[10+:5]=n_slot[70+:5];assign low3[4+:2]=sel3[10+:2];
+ assign exp3[3]=n_expected[15];assign sel3[15+:5]=n_slot[75+:5];assign low3[6+:2]=sel3[15+:2];
+ assign exp3[4]=mx_expected[12];assign sel3[20+:5]=mx_slot[60+:5];assign low3[8+:2]=sel3[20+:2];
+ assign exp3[5]=mx_expected[13];assign sel3[25+:5]=mx_slot[65+:5];assign low3[10+:2]=sel3[25+:2];
+ assign exp3[6]=mx_expected[14];assign sel3[30+:5]=mx_slot[70+:5];assign low3[12+:2]=sel3[30+:2];
+ assign exp3[7]=mx_expected[15];assign sel3[35+:5]=mx_slot[75+:5];assign low3[14+:2]=sel3[35+:2];
+ wire[511:0] dout24;
+ dsfd_vm_static_read_q3 d24(.ck(ck_data[24]),.rst_n(rst_n),.i_data({slot_data[7680+:64],slot_data[7168+:64],slot_data[6656+:64],slot_data[6144+:64]}),.i_valid({slot_valid[15],slot_valid[14],slot_valid[13],slot_valid[12]}),.i_sel({low3[14+:2],low3[12+:2],low3[10+:2],low3[8+:2]}),.i_expected(exp3),
+ .o_partial_valid(pv3[0+:8]),.o_data(dout24),.fault(bad3[0]));
+ assign n_data[6144+:64]=dout24[0+:64];
+ assign n_data[6656+:64]=dout24[64+:64];
+ assign n_data[7168+:64]=dout24[128+:64];
+ assign n_data[7680+:64]=dout24[192+:64];
+ assign mx_data[6144+:64]=dout24[256+:64];
+ assign mx_data[6656+:64]=dout24[320+:64];
+ assign mx_data[7168+:64]=dout24[384+:64];
+ assign mx_data[7680+:64]=dout24[448+:64];
+ wire[511:0] dout25;
+ dsfd_vm_static_read_q3 d25(.ck(ck_data[25]),.rst_n(rst_n),.i_data({slot_data[7744+:64],slot_data[7232+:64],slot_data[6720+:64],slot_data[6208+:64]}),.i_valid({slot_valid[15],slot_valid[14],slot_valid[13],slot_valid[12]}),.i_sel({low3[14+:2],low3[12+:2],low3[10+:2],low3[8+:2]}),.i_expected(exp3),
+ .o_partial_valid(pv3[8+:8]),.o_data(dout25),.fault(bad3[1]));
+ assign n_data[6208+:64]=dout25[0+:64];
+ assign n_data[6720+:64]=dout25[64+:64];
+ assign n_data[7232+:64]=dout25[128+:64];
+ assign n_data[7744+:64]=dout25[192+:64];
+ assign mx_data[6208+:64]=dout25[256+:64];
+ assign mx_data[6720+:64]=dout25[320+:64];
+ assign mx_data[7232+:64]=dout25[384+:64];
+ assign mx_data[7744+:64]=dout25[448+:64];
+ wire[511:0] dout26;
+ dsfd_vm_static_read_q3 d26(.ck(ck_data[26]),.rst_n(rst_n),.i_data({slot_data[7808+:64],slot_data[7296+:64],slot_data[6784+:64],slot_data[6272+:64]}),.i_valid({slot_valid[47],slot_valid[46],slot_valid[45],slot_valid[44]}),.i_sel({low3[14+:2],low3[12+:2],low3[10+:2],low3[8+:2]}),.i_expected(exp3),
+ .o_partial_valid(pv3[16+:8]),.o_data(dout26),.fault(bad3[2]));
+ assign n_data[6272+:64]=dout26[0+:64];
+ assign n_data[6784+:64]=dout26[64+:64];
+ assign n_data[7296+:64]=dout26[128+:64];
+ assign n_data[7808+:64]=dout26[192+:64];
+ assign mx_data[6272+:64]=dout26[256+:64];
+ assign mx_data[6784+:64]=dout26[320+:64];
+ assign mx_data[7296+:64]=dout26[384+:64];
+ assign mx_data[7808+:64]=dout26[448+:64];
+ wire[511:0] dout27;
+ dsfd_vm_static_read_q3 d27(.ck(ck_data[27]),.rst_n(rst_n),.i_data({slot_data[7872+:64],slot_data[7360+:64],slot_data[6848+:64],slot_data[6336+:64]}),.i_valid({slot_valid[47],slot_valid[46],slot_valid[45],slot_valid[44]}),.i_sel({low3[14+:2],low3[12+:2],low3[10+:2],low3[8+:2]}),.i_expected(exp3),
+ .o_partial_valid(pv3[24+:8]),.o_data(dout27),.fault(bad3[3]));
+ assign n_data[6336+:64]=dout27[0+:64];
+ assign n_data[6848+:64]=dout27[64+:64];
+ assign n_data[7360+:64]=dout27[128+:64];
+ assign n_data[7872+:64]=dout27[192+:64];
+ assign mx_data[6336+:64]=dout27[256+:64];
+ assign mx_data[6848+:64]=dout27[320+:64];
+ assign mx_data[7360+:64]=dout27[384+:64];
+ assign mx_data[7872+:64]=dout27[448+:64];
+ wire[511:0] dout28;
+ dsfd_vm_static_read_q3 d28(.ck(ck_data[28]),.rst_n(rst_n),.i_data({slot_data[7936+:64],slot_data[7424+:64],slot_data[6912+:64],slot_data[6400+:64]}),.i_valid({slot_valid[79],slot_valid[78],slot_valid[77],slot_valid[76]}),.i_sel({low3[14+:2],low3[12+:2],low3[10+:2],low3[8+:2]}),.i_expected(exp3),
+ .o_partial_valid(pv3[32+:8]),.o_data(dout28),.fault(bad3[4]));
+ assign n_data[6400+:64]=dout28[0+:64];
+ assign n_data[6912+:64]=dout28[64+:64];
+ assign n_data[7424+:64]=dout28[128+:64];
+ assign n_data[7936+:64]=dout28[192+:64];
+ assign mx_data[6400+:64]=dout28[256+:64];
+ assign mx_data[6912+:64]=dout28[320+:64];
+ assign mx_data[7424+:64]=dout28[384+:64];
+ assign mx_data[7936+:64]=dout28[448+:64];
+ wire[511:0] dout29;
+ dsfd_vm_static_read_q3 d29(.ck(ck_data[29]),.rst_n(rst_n),.i_data({slot_data[8000+:64],slot_data[7488+:64],slot_data[6976+:64],slot_data[6464+:64]}),.i_valid({slot_valid[79],slot_valid[78],slot_valid[77],slot_valid[76]}),.i_sel({low3[14+:2],low3[12+:2],low3[10+:2],low3[8+:2]}),.i_expected(exp3),
+ .o_partial_valid(pv3[40+:8]),.o_data(dout29),.fault(bad3[5]));
+ assign n_data[6464+:64]=dout29[0+:64];
+ assign n_data[6976+:64]=dout29[64+:64];
+ assign n_data[7488+:64]=dout29[128+:64];
+ assign n_data[8000+:64]=dout29[192+:64];
+ assign mx_data[6464+:64]=dout29[256+:64];
+ assign mx_data[6976+:64]=dout29[320+:64];
+ assign mx_data[7488+:64]=dout29[384+:64];
+ assign mx_data[8000+:64]=dout29[448+:64];
+ wire[511:0] dout30;
+ dsfd_vm_static_read_q3 d30(.ck(ck_data[30]),.rst_n(rst_n),.i_data({slot_data[8064+:64],slot_data[7552+:64],slot_data[7040+:64],slot_data[6528+:64]}),.i_valid({slot_valid[111],slot_valid[110],slot_valid[109],slot_valid[108]}),.i_sel({low3[14+:2],low3[12+:2],low3[10+:2],low3[8+:2]}),.i_expected(exp3),
+ .o_partial_valid(pv3[48+:8]),.o_data(dout30),.fault(bad3[6]));
+ assign n_data[6528+:64]=dout30[0+:64];
+ assign n_data[7040+:64]=dout30[64+:64];
+ assign n_data[7552+:64]=dout30[128+:64];
+ assign n_data[8064+:64]=dout30[192+:64];
+ assign mx_data[6528+:64]=dout30[256+:64];
+ assign mx_data[7040+:64]=dout30[320+:64];
+ assign mx_data[7552+:64]=dout30[384+:64];
+ assign mx_data[8064+:64]=dout30[448+:64];
+ wire[511:0] dout31;
+ dsfd_vm_static_read_q3 d31(.ck(ck_data[31]),.rst_n(rst_n),.i_data({slot_data[8128+:64],slot_data[7616+:64],slot_data[7104+:64],slot_data[6592+:64]}),.i_valid({slot_valid[111],slot_valid[110],slot_valid[109],slot_valid[108]}),.i_sel({low3[14+:2],low3[12+:2],low3[10+:2],low3[8+:2]}),.i_expected(exp3),
+ .o_partial_valid(pv3[56+:8]),.o_data(dout31),.fault(bad3[7]));
+ assign n_data[6592+:64]=dout31[0+:64];
+ assign n_data[7104+:64]=dout31[64+:64];
+ assign n_data[7616+:64]=dout31[128+:64];
+ assign n_data[8128+:64]=dout31[192+:64];
+ assign mx_data[6592+:64]=dout31[256+:64];
+ assign mx_data[7104+:64]=dout31[320+:64];
+ assign mx_data[7616+:64]=dout31[384+:64];
+ assign mx_data[8128+:64]=dout31[448+:64];
+ dsfd_vm_static_read_v3 v3(.ck(ck_valid[3]),.rst_n(rst_n),.i_expected(exp3),.i_slot(sel3),.i_partial_valid(pv3),.i_fault(bad3),.o_valid(valid3),.fault(fault[3]));
+ assign n_valid[12]=valid3[0];
+ assign n_valid[13]=valid3[1];
+ assign n_valid[14]=valid3[2];
+ assign n_valid[15]=valid3[3];
+ assign mx_valid[12]=valid3[4];
+ assign mx_valid[13]=valid3[5];
+ assign mx_valid[14]=valid3[6];
+ assign mx_valid[15]=valid3[7];
+ wire[1:0] exp4;wire[9:0] sel4;wire[3:0] low4;
+ wire[15:0] pv4;wire[7:0] bad4;wire[1:0] valid4;
+ assign exp4[0]=n_expected[16];assign sel4[0+:5]=n_slot[80+:5];assign low4[0+:2]=sel4[0+:2];
+ assign exp4[1]=n_expected[17];assign sel4[5+:5]=n_slot[85+:5];assign low4[2+:2]=sel4[5+:2];
+ wire[127:0] dout32;
+ dsfd_vm_static_read_q4 d32(.ck(ck_data[32]),.rst_n(rst_n),.i_data({slot_data[9728+:64],slot_data[9216+:64],slot_data[8704+:64],slot_data[8192+:64]}),.i_valid({slot_valid[19],slot_valid[18],slot_valid[17],slot_valid[16]}),.i_sel({low4[2+:2],low4[0+:2]}),.i_expected(exp4),
+ .o_partial_valid(pv4[0+:2]),.o_data(dout32),.fault(bad4[0]));
+ assign n_data[8192+:64]=dout32[0+:64];
+ assign n_data[8704+:64]=dout32[64+:64];
+ wire[127:0] dout33;
+ dsfd_vm_static_read_q4 d33(.ck(ck_data[33]),.rst_n(rst_n),.i_data({slot_data[9792+:64],slot_data[9280+:64],slot_data[8768+:64],slot_data[8256+:64]}),.i_valid({slot_valid[19],slot_valid[18],slot_valid[17],slot_valid[16]}),.i_sel({low4[2+:2],low4[0+:2]}),.i_expected(exp4),
+ .o_partial_valid(pv4[2+:2]),.o_data(dout33),.fault(bad4[1]));
+ assign n_data[8256+:64]=dout33[0+:64];
+ assign n_data[8768+:64]=dout33[64+:64];
+ wire[127:0] dout34;
+ dsfd_vm_static_read_q4 d34(.ck(ck_data[34]),.rst_n(rst_n),.i_data({slot_data[9856+:64],slot_data[9344+:64],slot_data[8832+:64],slot_data[8320+:64]}),.i_valid({slot_valid[51],slot_valid[50],slot_valid[49],slot_valid[48]}),.i_sel({low4[2+:2],low4[0+:2]}),.i_expected(exp4),
+ .o_partial_valid(pv4[4+:2]),.o_data(dout34),.fault(bad4[2]));
+ assign n_data[8320+:64]=dout34[0+:64];
+ assign n_data[8832+:64]=dout34[64+:64];
+ wire[127:0] dout35;
+ dsfd_vm_static_read_q4 d35(.ck(ck_data[35]),.rst_n(rst_n),.i_data({slot_data[9920+:64],slot_data[9408+:64],slot_data[8896+:64],slot_data[8384+:64]}),.i_valid({slot_valid[51],slot_valid[50],slot_valid[49],slot_valid[48]}),.i_sel({low4[2+:2],low4[0+:2]}),.i_expected(exp4),
+ .o_partial_valid(pv4[6+:2]),.o_data(dout35),.fault(bad4[3]));
+ assign n_data[8384+:64]=dout35[0+:64];
+ assign n_data[8896+:64]=dout35[64+:64];
+ wire[127:0] dout36;
+ dsfd_vm_static_read_q4 d36(.ck(ck_data[36]),.rst_n(rst_n),.i_data({slot_data[9984+:64],slot_data[9472+:64],slot_data[8960+:64],slot_data[8448+:64]}),.i_valid({slot_valid[83],slot_valid[82],slot_valid[81],slot_valid[80]}),.i_sel({low4[2+:2],low4[0+:2]}),.i_expected(exp4),
+ .o_partial_valid(pv4[8+:2]),.o_data(dout36),.fault(bad4[4]));
+ assign n_data[8448+:64]=dout36[0+:64];
+ assign n_data[8960+:64]=dout36[64+:64];
+ wire[127:0] dout37;
+ dsfd_vm_static_read_q4 d37(.ck(ck_data[37]),.rst_n(rst_n),.i_data({slot_data[10048+:64],slot_data[9536+:64],slot_data[9024+:64],slot_data[8512+:64]}),.i_valid({slot_valid[83],slot_valid[82],slot_valid[81],slot_valid[80]}),.i_sel({low4[2+:2],low4[0+:2]}),.i_expected(exp4),
+ .o_partial_valid(pv4[10+:2]),.o_data(dout37),.fault(bad4[5]));
+ assign n_data[8512+:64]=dout37[0+:64];
+ assign n_data[9024+:64]=dout37[64+:64];
+ wire[127:0] dout38;
+ dsfd_vm_static_read_q4 d38(.ck(ck_data[38]),.rst_n(rst_n),.i_data({slot_data[10112+:64],slot_data[9600+:64],slot_data[9088+:64],slot_data[8576+:64]}),.i_valid({slot_valid[115],slot_valid[114],slot_valid[113],slot_valid[112]}),.i_sel({low4[2+:2],low4[0+:2]}),.i_expected(exp4),
+ .o_partial_valid(pv4[12+:2]),.o_data(dout38),.fault(bad4[6]));
+ assign n_data[8576+:64]=dout38[0+:64];
+ assign n_data[9088+:64]=dout38[64+:64];
+ wire[127:0] dout39;
+ dsfd_vm_static_read_q4 d39(.ck(ck_data[39]),.rst_n(rst_n),.i_data({slot_data[10176+:64],slot_data[9664+:64],slot_data[9152+:64],slot_data[8640+:64]}),.i_valid({slot_valid[115],slot_valid[114],slot_valid[113],slot_valid[112]}),.i_sel({low4[2+:2],low4[0+:2]}),.i_expected(exp4),
+ .o_partial_valid(pv4[14+:2]),.o_data(dout39),.fault(bad4[7]));
+ assign n_data[8640+:64]=dout39[0+:64];
+ assign n_data[9152+:64]=dout39[64+:64];
+ dsfd_vm_static_read_v4 v4(.ck(ck_valid[4]),.rst_n(rst_n),.i_expected(exp4),.i_slot(sel4),.i_partial_valid(pv4),.i_fault(bad4),.o_valid(valid4),.fault(fault[4]));
+ assign n_valid[16]=valid4[0];
+ assign n_valid[17]=valid4[1];
+ wire[7:0] exp5;wire[39:0] sel5;wire[15:0] low5;
+ wire[63:0] pv5;wire[7:0] bad5;wire[4:0] valid5;
+ assign exp5[0]=aux_expected[0];assign sel5[0+:5]=5'd20;assign low5[0+:2]=sel5[0+:2];
+ assign exp5[1]=aux_expected[1];assign sel5[5+:5]=5'd21;assign low5[2+:2]=sel5[5+:2];
+ assign exp5[2]=aux_expected[2];assign sel5[10+:5]=5'd22;assign low5[4+:2]=sel5[10+:2];
+ assign exp5[3]=aux_expected[3];assign sel5[15+:5]=5'd23;assign low5[6+:2]=sel5[15+:2];
+ assign exp5[4]=mx_expected[16];assign sel5[20+:5]=mx_slot[80+:5];assign low5[8+:2]=sel5[20+:2];
+ assign exp5[5]=mx_expected[17];assign sel5[25+:5]=mx_slot[85+:5];assign low5[10+:2]=sel5[25+:2];
+ assign exp5[6]=mx_expected[18];assign sel5[30+:5]=mx_slot[90+:5];assign low5[12+:2]=sel5[30+:2];
+ assign exp5[7]=mx_expected[19];assign sel5[35+:5]=mx_slot[95+:5];assign low5[14+:2]=sel5[35+:2];
+ wire[511:0] dout40;
+ dsfd_vm_static_read_q5 d40(.ck(ck_data[40]),.rst_n(rst_n),.i_data({slot_data[11776+:64],slot_data[11264+:64],slot_data[10752+:64],slot_data[10240+:64]}),.i_valid({slot_valid[23],slot_valid[22],slot_valid[21],slot_valid[20]}),.i_sel({low5[14+:2],low5[12+:2],low5[10+:2],low5[8+:2]}),.i_expected(exp5),
+ .o_partial_valid(pv5[0+:8]),.o_data(dout40),.fault(bad5[0]));
+ assign pq_data[0+:64]=dout40[0+:64];
+ assign pq_data[512+:64]=dout40[64+:64];
+ assign pq_data[1024+:64]=dout40[128+:64];
+ assign pq_data[1536+:64]=dout40[192+:64];
+ assign mx_data[8192+:64]=dout40[256+:64];
+ assign mx_data[8704+:64]=dout40[320+:64];
+ assign mx_data[9216+:64]=dout40[384+:64];
+ assign mx_data[9728+:64]=dout40[448+:64];
+ wire[511:0] dout41;
+ dsfd_vm_static_read_q5 d41(.ck(ck_data[41]),.rst_n(rst_n),.i_data({slot_data[11840+:64],slot_data[11328+:64],slot_data[10816+:64],slot_data[10304+:64]}),.i_valid({slot_valid[23],slot_valid[22],slot_valid[21],slot_valid[20]}),.i_sel({low5[14+:2],low5[12+:2],low5[10+:2],low5[8+:2]}),.i_expected(exp5),
+ .o_partial_valid(pv5[8+:8]),.o_data(dout41),.fault(bad5[1]));
+ assign pq_data[64+:64]=dout41[0+:64];
+ assign pq_data[576+:64]=dout41[64+:64];
+ assign pq_data[1088+:64]=dout41[128+:64];
+ assign pq_data[1600+:64]=dout41[192+:64];
+ assign mx_data[8256+:64]=dout41[256+:64];
+ assign mx_data[8768+:64]=dout41[320+:64];
+ assign mx_data[9280+:64]=dout41[384+:64];
+ assign mx_data[9792+:64]=dout41[448+:64];
+ wire[511:0] dout42;
+ dsfd_vm_static_read_q5 d42(.ck(ck_data[42]),.rst_n(rst_n),.i_data({slot_data[11904+:64],slot_data[11392+:64],slot_data[10880+:64],slot_data[10368+:64]}),.i_valid({slot_valid[55],slot_valid[54],slot_valid[53],slot_valid[52]}),.i_sel({low5[14+:2],low5[12+:2],low5[10+:2],low5[8+:2]}),.i_expected(exp5),
+ .o_partial_valid(pv5[16+:8]),.o_data(dout42),.fault(bad5[2]));
+ assign pq_data[128+:64]=dout42[0+:64];
+ assign pq_data[640+:64]=dout42[64+:64];
+ assign pq_data[1152+:64]=dout42[128+:64];
+ assign pq_data[1664+:64]=dout42[192+:64];
+ assign mx_data[8320+:64]=dout42[256+:64];
+ assign mx_data[8832+:64]=dout42[320+:64];
+ assign mx_data[9344+:64]=dout42[384+:64];
+ assign mx_data[9856+:64]=dout42[448+:64];
+ wire[511:0] dout43;
+ dsfd_vm_static_read_q5 d43(.ck(ck_data[43]),.rst_n(rst_n),.i_data({slot_data[11968+:64],slot_data[11456+:64],slot_data[10944+:64],slot_data[10432+:64]}),.i_valid({slot_valid[55],slot_valid[54],slot_valid[53],slot_valid[52]}),.i_sel({low5[14+:2],low5[12+:2],low5[10+:2],low5[8+:2]}),.i_expected(exp5),
+ .o_partial_valid(pv5[24+:8]),.o_data(dout43),.fault(bad5[3]));
+ assign pq_data[192+:64]=dout43[0+:64];
+ assign pq_data[704+:64]=dout43[64+:64];
+ assign pq_data[1216+:64]=dout43[128+:64];
+ assign pq_data[1728+:64]=dout43[192+:64];
+ assign mx_data[8384+:64]=dout43[256+:64];
+ assign mx_data[8896+:64]=dout43[320+:64];
+ assign mx_data[9408+:64]=dout43[384+:64];
+ assign mx_data[9920+:64]=dout43[448+:64];
+ wire[511:0] dout44;
+ dsfd_vm_static_read_q5 d44(.ck(ck_data[44]),.rst_n(rst_n),.i_data({slot_data[12032+:64],slot_data[11520+:64],slot_data[11008+:64],slot_data[10496+:64]}),.i_valid({slot_valid[87],slot_valid[86],slot_valid[85],slot_valid[84]}),.i_sel({low5[14+:2],low5[12+:2],low5[10+:2],low5[8+:2]}),.i_expected(exp5),
+ .o_partial_valid(pv5[32+:8]),.o_data(dout44),.fault(bad5[4]));
+ assign pq_data[256+:64]=dout44[0+:64];
+ assign pq_data[768+:64]=dout44[64+:64];
+ assign pq_data[1280+:64]=dout44[128+:64];
+ assign pq_data[1792+:64]=dout44[192+:64];
+ assign mx_data[8448+:64]=dout44[256+:64];
+ assign mx_data[8960+:64]=dout44[320+:64];
+ assign mx_data[9472+:64]=dout44[384+:64];
+ assign mx_data[9984+:64]=dout44[448+:64];
+ wire[511:0] dout45;
+ dsfd_vm_static_read_q5 d45(.ck(ck_data[45]),.rst_n(rst_n),.i_data({slot_data[12096+:64],slot_data[11584+:64],slot_data[11072+:64],slot_data[10560+:64]}),.i_valid({slot_valid[87],slot_valid[86],slot_valid[85],slot_valid[84]}),.i_sel({low5[14+:2],low5[12+:2],low5[10+:2],low5[8+:2]}),.i_expected(exp5),
+ .o_partial_valid(pv5[40+:8]),.o_data(dout45),.fault(bad5[5]));
+ assign pq_data[320+:64]=dout45[0+:64];
+ assign pq_data[832+:64]=dout45[64+:64];
+ assign pq_data[1344+:64]=dout45[128+:64];
+ assign pq_data[1856+:64]=dout45[192+:64];
+ assign mx_data[8512+:64]=dout45[256+:64];
+ assign mx_data[9024+:64]=dout45[320+:64];
+ assign mx_data[9536+:64]=dout45[384+:64];
+ assign mx_data[10048+:64]=dout45[448+:64];
+ wire[511:0] dout46;
+ dsfd_vm_static_read_q5 d46(.ck(ck_data[46]),.rst_n(rst_n),.i_data({slot_data[12160+:64],slot_data[11648+:64],slot_data[11136+:64],slot_data[10624+:64]}),.i_valid({slot_valid[119],slot_valid[118],slot_valid[117],slot_valid[116]}),.i_sel({low5[14+:2],low5[12+:2],low5[10+:2],low5[8+:2]}),.i_expected(exp5),
+ .o_partial_valid(pv5[48+:8]),.o_data(dout46),.fault(bad5[6]));
+ assign pq_data[384+:64]=dout46[0+:64];
+ assign pq_data[896+:64]=dout46[64+:64];
+ assign pq_data[1408+:64]=dout46[128+:64];
+ assign pq_data[1920+:64]=dout46[192+:64];
+ assign mx_data[8576+:64]=dout46[256+:64];
+ assign mx_data[9088+:64]=dout46[320+:64];
+ assign mx_data[9600+:64]=dout46[384+:64];
+ assign mx_data[10112+:64]=dout46[448+:64];
+ wire[511:0] dout47;
+ dsfd_vm_static_read_q5 d47(.ck(ck_data[47]),.rst_n(rst_n),.i_data({slot_data[12224+:64],slot_data[11712+:64],slot_data[11200+:64],slot_data[10688+:64]}),.i_valid({slot_valid[119],slot_valid[118],slot_valid[117],slot_valid[116]}),.i_sel({low5[14+:2],low5[12+:2],low5[10+:2],low5[8+:2]}),.i_expected(exp5),
+ .o_partial_valid(pv5[56+:8]),.o_data(dout47),.fault(bad5[7]));
+ assign pq_data[448+:64]=dout47[0+:64];
+ assign pq_data[960+:64]=dout47[64+:64];
+ assign pq_data[1472+:64]=dout47[128+:64];
+ assign pq_data[1984+:64]=dout47[192+:64];
+ assign mx_data[8640+:64]=dout47[256+:64];
+ assign mx_data[9152+:64]=dout47[320+:64];
+ assign mx_data[9664+:64]=dout47[384+:64];
+ assign mx_data[10176+:64]=dout47[448+:64];
+ dsfd_vm_static_read_v5 v5(.ck(ck_valid[5]),.rst_n(rst_n),.i_expected(exp5),.i_slot(sel5),.i_partial_valid(pv5),.i_fault(bad5),.o_valid(valid5),.fault(fault[5]));
+ assign pq_valid=valid5[0];assign mx_valid[19:16]=valid5[4:1];
+ wire[3:0] exp6;wire[19:0] sel6;wire[7:0] low6;
+ wire[31:0] pv6;wire[7:0] bad6;wire[3:0] valid6;
+ assign exp6[0]=aux_expected[4];assign sel6[0+:5]=5'd24;assign low6[0+:2]=sel6[0+:2];
+ assign exp6[1]=aux_expected[5];assign sel6[5+:5]=5'd25;assign low6[2+:2]=sel6[5+:2];
+ assign exp6[2]=aux_expected[6];assign sel6[10+:5]=5'd26;assign low6[4+:2]=sel6[10+:2];
+ assign exp6[3]=aux_expected[7];assign sel6[15+:5]=5'd27;assign low6[6+:2]=sel6[15+:2];
+ wire[255:0] dout48;
+ dsfd_vm_static_read_q6 d48(.ck(ck_data[48]),.rst_n(rst_n),.i_data({slot_data[13824+:64],slot_data[13312+:64],slot_data[12800+:64],slot_data[12288+:64]}),.i_valid({slot_valid[27],slot_valid[26],slot_valid[25],slot_valid[24]}),.i_expected(exp6),
+ .o_partial_valid(pv6[0+:4]),.o_data(dout48),.fault(bad6[0]));
+ assign x_data[0+:64]=dout48[0+:64];
+ assign x_data[512+:64]=dout48[64+:64];
+ assign x_data[1024+:64]=dout48[128+:64];
+ assign x_data[1536+:64]=dout48[192+:64];
+ wire[255:0] dout49;
+ dsfd_vm_static_read_q6 d49(.ck(ck_data[49]),.rst_n(rst_n),.i_data({slot_data[13888+:64],slot_data[13376+:64],slot_data[12864+:64],slot_data[12352+:64]}),.i_valid({slot_valid[27],slot_valid[26],slot_valid[25],slot_valid[24]}),.i_expected(exp6),
+ .o_partial_valid(pv6[4+:4]),.o_data(dout49),.fault(bad6[1]));
+ assign x_data[64+:64]=dout49[0+:64];
+ assign x_data[576+:64]=dout49[64+:64];
+ assign x_data[1088+:64]=dout49[128+:64];
+ assign x_data[1600+:64]=dout49[192+:64];
+ wire[255:0] dout50;
+ dsfd_vm_static_read_q6 d50(.ck(ck_data[50]),.rst_n(rst_n),.i_data({slot_data[13952+:64],slot_data[13440+:64],slot_data[12928+:64],slot_data[12416+:64]}),.i_valid({slot_valid[59],slot_valid[58],slot_valid[57],slot_valid[56]}),.i_expected(exp6),
+ .o_partial_valid(pv6[8+:4]),.o_data(dout50),.fault(bad6[2]));
+ assign x_data[128+:64]=dout50[0+:64];
+ assign x_data[640+:64]=dout50[64+:64];
+ assign x_data[1152+:64]=dout50[128+:64];
+ assign x_data[1664+:64]=dout50[192+:64];
+ wire[255:0] dout51;
+ dsfd_vm_static_read_q6 d51(.ck(ck_data[51]),.rst_n(rst_n),.i_data({slot_data[14016+:64],slot_data[13504+:64],slot_data[12992+:64],slot_data[12480+:64]}),.i_valid({slot_valid[59],slot_valid[58],slot_valid[57],slot_valid[56]}),.i_expected(exp6),
+ .o_partial_valid(pv6[12+:4]),.o_data(dout51),.fault(bad6[3]));
+ assign x_data[192+:64]=dout51[0+:64];
+ assign x_data[704+:64]=dout51[64+:64];
+ assign x_data[1216+:64]=dout51[128+:64];
+ assign x_data[1728+:64]=dout51[192+:64];
+ wire[255:0] dout52;
+ dsfd_vm_static_read_q6 d52(.ck(ck_data[52]),.rst_n(rst_n),.i_data({slot_data[14080+:64],slot_data[13568+:64],slot_data[13056+:64],slot_data[12544+:64]}),.i_valid({slot_valid[91],slot_valid[90],slot_valid[89],slot_valid[88]}),.i_expected(exp6),
+ .o_partial_valid(pv6[16+:4]),.o_data(dout52),.fault(bad6[4]));
+ assign x_data[256+:64]=dout52[0+:64];
+ assign x_data[768+:64]=dout52[64+:64];
+ assign x_data[1280+:64]=dout52[128+:64];
+ assign x_data[1792+:64]=dout52[192+:64];
+ wire[255:0] dout53;
+ dsfd_vm_static_read_q6 d53(.ck(ck_data[53]),.rst_n(rst_n),.i_data({slot_data[14144+:64],slot_data[13632+:64],slot_data[13120+:64],slot_data[12608+:64]}),.i_valid({slot_valid[91],slot_valid[90],slot_valid[89],slot_valid[88]}),.i_expected(exp6),
+ .o_partial_valid(pv6[20+:4]),.o_data(dout53),.fault(bad6[5]));
+ assign x_data[320+:64]=dout53[0+:64];
+ assign x_data[832+:64]=dout53[64+:64];
+ assign x_data[1344+:64]=dout53[128+:64];
+ assign x_data[1856+:64]=dout53[192+:64];
+ wire[255:0] dout54;
+ dsfd_vm_static_read_q6 d54(.ck(ck_data[54]),.rst_n(rst_n),.i_data({slot_data[14208+:64],slot_data[13696+:64],slot_data[13184+:64],slot_data[12672+:64]}),.i_valid({slot_valid[123],slot_valid[122],slot_valid[121],slot_valid[120]}),.i_expected(exp6),
+ .o_partial_valid(pv6[24+:4]),.o_data(dout54),.fault(bad6[6]));
+ assign x_data[384+:64]=dout54[0+:64];
+ assign x_data[896+:64]=dout54[64+:64];
+ assign x_data[1408+:64]=dout54[128+:64];
+ assign x_data[1920+:64]=dout54[192+:64];
+ wire[255:0] dout55;
+ dsfd_vm_static_read_q6 d55(.ck(ck_data[55]),.rst_n(rst_n),.i_data({slot_data[14272+:64],slot_data[13760+:64],slot_data[13248+:64],slot_data[12736+:64]}),.i_valid({slot_valid[123],slot_valid[122],slot_valid[121],slot_valid[120]}),.i_expected(exp6),
+ .o_partial_valid(pv6[28+:4]),.o_data(dout55),.fault(bad6[7]));
+ assign x_data[448+:64]=dout55[0+:64];
+ assign x_data[960+:64]=dout55[64+:64];
+ assign x_data[1472+:64]=dout55[128+:64];
+ assign x_data[1984+:64]=dout55[192+:64];
+ dsfd_vm_static_read_v6 v6(.ck(ck_valid[6]),.rst_n(rst_n),.i_expected(exp6),.i_slot(sel6),.i_partial_valid(pv6),.i_fault(bad6),.o_valid(valid6),.fault(fault[6]));
+ assign x_valid[0]=valid6[0];
+ assign x_valid[1]=valid6[1];
+ assign x_valid[2]=valid6[2];
+ assign x_valid[3]=valid6[3];
+ wire[3:0] exp7;wire[19:0] sel7;wire[7:0] low7;
+ wire[31:0] pv7;wire[7:0] bad7;wire[3:0] valid7;
+ assign exp7[0]=aux_expected[8];assign sel7[0+:5]=5'd28;assign low7[0+:2]=sel7[0+:2];
+ assign exp7[1]=aux_expected[9];assign sel7[5+:5]=5'd29;assign low7[2+:2]=sel7[5+:2];
+ assign exp7[2]=aux_expected[10];assign sel7[10+:5]=5'd30;assign low7[4+:2]=sel7[10+:2];
+ assign exp7[3]=aux_expected[11];assign sel7[15+:5]=5'd31;assign low7[6+:2]=sel7[15+:2];
+ wire[255:0] dout56;
+ dsfd_vm_static_read_q7 d56(.ck(ck_data[56]),.rst_n(rst_n),.i_data({slot_data[15872+:64],slot_data[15360+:64],slot_data[14848+:64],slot_data[14336+:64]}),.i_valid({slot_valid[31],slot_valid[30],slot_valid[29],slot_valid[28]}),.i_expected(exp7),
+ .o_partial_valid(pv7[0+:4]),.o_data(dout56),.fault(bad7[0]));
+ assign x_data[2048+:64]=dout56[0+:64];
+ assign x_data[2560+:64]=dout56[64+:64];
+ assign x_data[3072+:64]=dout56[128+:64];
+ assign x_data[3584+:64]=dout56[192+:64];
+ wire[255:0] dout57;
+ dsfd_vm_static_read_q7 d57(.ck(ck_data[57]),.rst_n(rst_n),.i_data({slot_data[15936+:64],slot_data[15424+:64],slot_data[14912+:64],slot_data[14400+:64]}),.i_valid({slot_valid[31],slot_valid[30],slot_valid[29],slot_valid[28]}),.i_expected(exp7),
+ .o_partial_valid(pv7[4+:4]),.o_data(dout57),.fault(bad7[1]));
+ assign x_data[2112+:64]=dout57[0+:64];
+ assign x_data[2624+:64]=dout57[64+:64];
+ assign x_data[3136+:64]=dout57[128+:64];
+ assign x_data[3648+:64]=dout57[192+:64];
+ wire[255:0] dout58;
+ dsfd_vm_static_read_q7 d58(.ck(ck_data[58]),.rst_n(rst_n),.i_data({slot_data[16000+:64],slot_data[15488+:64],slot_data[14976+:64],slot_data[14464+:64]}),.i_valid({slot_valid[63],slot_valid[62],slot_valid[61],slot_valid[60]}),.i_expected(exp7),
+ .o_partial_valid(pv7[8+:4]),.o_data(dout58),.fault(bad7[2]));
+ assign x_data[2176+:64]=dout58[0+:64];
+ assign x_data[2688+:64]=dout58[64+:64];
+ assign x_data[3200+:64]=dout58[128+:64];
+ assign x_data[3712+:64]=dout58[192+:64];
+ wire[255:0] dout59;
+ dsfd_vm_static_read_q7 d59(.ck(ck_data[59]),.rst_n(rst_n),.i_data({slot_data[16064+:64],slot_data[15552+:64],slot_data[15040+:64],slot_data[14528+:64]}),.i_valid({slot_valid[63],slot_valid[62],slot_valid[61],slot_valid[60]}),.i_expected(exp7),
+ .o_partial_valid(pv7[12+:4]),.o_data(dout59),.fault(bad7[3]));
+ assign x_data[2240+:64]=dout59[0+:64];
+ assign x_data[2752+:64]=dout59[64+:64];
+ assign x_data[3264+:64]=dout59[128+:64];
+ assign x_data[3776+:64]=dout59[192+:64];
+ wire[255:0] dout60;
+ dsfd_vm_static_read_q7 d60(.ck(ck_data[60]),.rst_n(rst_n),.i_data({slot_data[16128+:64],slot_data[15616+:64],slot_data[15104+:64],slot_data[14592+:64]}),.i_valid({slot_valid[95],slot_valid[94],slot_valid[93],slot_valid[92]}),.i_expected(exp7),
+ .o_partial_valid(pv7[16+:4]),.o_data(dout60),.fault(bad7[4]));
+ assign x_data[2304+:64]=dout60[0+:64];
+ assign x_data[2816+:64]=dout60[64+:64];
+ assign x_data[3328+:64]=dout60[128+:64];
+ assign x_data[3840+:64]=dout60[192+:64];
+ wire[255:0] dout61;
+ dsfd_vm_static_read_q7 d61(.ck(ck_data[61]),.rst_n(rst_n),.i_data({slot_data[16192+:64],slot_data[15680+:64],slot_data[15168+:64],slot_data[14656+:64]}),.i_valid({slot_valid[95],slot_valid[94],slot_valid[93],slot_valid[92]}),.i_expected(exp7),
+ .o_partial_valid(pv7[20+:4]),.o_data(dout61),.fault(bad7[5]));
+ assign x_data[2368+:64]=dout61[0+:64];
+ assign x_data[2880+:64]=dout61[64+:64];
+ assign x_data[3392+:64]=dout61[128+:64];
+ assign x_data[3904+:64]=dout61[192+:64];
+ wire[255:0] dout62;
+ dsfd_vm_static_read_q7 d62(.ck(ck_data[62]),.rst_n(rst_n),.i_data({slot_data[16256+:64],slot_data[15744+:64],slot_data[15232+:64],slot_data[14720+:64]}),.i_valid({slot_valid[127],slot_valid[126],slot_valid[125],slot_valid[124]}),.i_expected(exp7),
+ .o_partial_valid(pv7[24+:4]),.o_data(dout62),.fault(bad7[6]));
+ assign x_data[2432+:64]=dout62[0+:64];
+ assign x_data[2944+:64]=dout62[64+:64];
+ assign x_data[3456+:64]=dout62[128+:64];
+ assign x_data[3968+:64]=dout62[192+:64];
+ wire[255:0] dout63;
+ dsfd_vm_static_read_q7 d63(.ck(ck_data[63]),.rst_n(rst_n),.i_data({slot_data[16320+:64],slot_data[15808+:64],slot_data[15296+:64],slot_data[14784+:64]}),.i_valid({slot_valid[127],slot_valid[126],slot_valid[125],slot_valid[124]}),.i_expected(exp7),
+ .o_partial_valid(pv7[28+:4]),.o_data(dout63),.fault(bad7[7]));
+ assign x_data[2496+:64]=dout63[0+:64];
+ assign x_data[3008+:64]=dout63[64+:64];
+ assign x_data[3520+:64]=dout63[128+:64];
+ assign x_data[4032+:64]=dout63[192+:64];
+ dsfd_vm_static_read_v7 v7(.ck(ck_valid[7]),.rst_n(rst_n),.i_expected(exp7),.i_slot(sel7),.i_partial_valid(pv7),.i_fault(bad7),.o_valid(valid7),.fault(fault[7]));
+ assign x_valid[4]=valid7[0];
+ assign x_valid[5]=valid7[1];
+ assign x_valid[6]=valid7[2];
+ assign x_valid[7]=valid7[3];
+endmodule
+`default_nettype wire
