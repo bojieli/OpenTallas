@@ -1,0 +1,121 @@
+{
+  "scope": "ActualcanonicaloperationbindingsatrawSCcomponentboundary, notfullnativekernel",
+  "source_commit": "b63651aa6",
+  "arithmetic_proof_commit": "55d489945",
+  "actual_epoch_proof_commit": "af60a9829",
+  "canonical_source_sha256": "5ad0bdab07f3b99fad6ad119896a830d9bb2fa33efb678df35c0874854d56e0f",
+  "full_configuration": {
+    "head_dim": 512,
+    "scale_bits": "3d3504f3",
+    "H": 16,
+    "T": [
+      128,
+      640
+    ]
+  },
+  "operations": [
+    {
+      "canonical_record": "attend.max",
+      "source_location": "Lower.attend, ds_native.py:1068",
+      "logical_input": "SC FP32 fromactualQK (notjoined)",
+      "logical_output": "MB FP32/head",
+      "hardware_path": [
+        "ot_hgi_sfu_scheduled_engine M1_AIMM3 imm1=3d3504f3 co_rnd0",
+        "actualoutputSRAM toactualVM scaledSC",
+        "ot_hbm_p_reduce_ingress_static eightmappedSRAM",
+        "ot_hbm_su_reduce_static MAX_EXT3/MAX_TREE5",
+        "ot_hbm_p_scalar_publish_static MBmaskedwrite"
+      ],
+      "opcode": {
+        "m1": 3,
+        "red": 2,
+        "red_whole": 1
+      },
+      "scalar_tag": "2*head"
+    },
+    {
+      "canonical_record": "attend.exp_sum",
+      "source_location": "Lower.attend, ds_native.py:1070",
+      "logical_input": "SC FP32 andactualMB FP32",
+      "logical_output": [
+        "E FP32 unrounded",
+        "SE FP32 goldencsum8/head"
+      ],
+      "hardware_path": [
+        "actualMB VM scalarfetch throughLG14 toaddress-tagged Bregister",
+        "ot_hgi_sfu_scheduled_engine M1_AIMM3 AD_NEGB3 SFU_EXP1 co_rnd0",
+        "actualoutputSRAM toactualEVM",
+        "ot_hbm_p_reduce_ingress_static actualEread sample-major",
+        "ot_hbm_su_reduce_static sequential8 sums then oneglobalzero-paddedpairwisetree",
+        "ot_hbm_p_scalar_publish_static SEmaskedwrite"
+      ],
+      "opcode": {
+        "m1": 3,
+        "ad": 3,
+        "sfu": 1,
+        "rnd": 0,
+        "red": 1,
+        "red_whole": 1
+      },
+      "scalar_tag": "2*head+1"
+    },
+    {
+      "canonical_record": "attend.bf16_p",
+      "source_location": "Lower.attend, ds_native.py:1073",
+      "logical_input": "sameactualunroundedE",
+      "logical_output": "EB expandedBF16/head, unnormalized",
+      "hardware_path": [
+        "reuseactualSFUoutputSRAM holdingE, afterrawEVMpublication",
+        "ot_hgi_sfu_vm_static_bridge actualBF16RNEdrain flag1",
+        "actualEBVMwritefullsectors"
+      ],
+      "fusion": "reuseactualoutputSRAMinsteadofVMreread; bothE/EBarebitcheckedagainstcanonicalMachine",
+      "opcode": {
+        "rnd": 1
+      }
+    }
+  ],
+  "actual_producer_stamps": {
+    "128": {
+      "head": 0,
+      "epoch0": "sampledio_start_v, actualafteredgepins; notglobaltokenepoch",
+      "last_product_commits": {
+        "scaled_SC": 131,
+        "MB": 341,
+        "raw_E": 555,
+        "EB": 564,
+        "SE": 781
+      },
+      "first_safe_P_consumer_local_capture": 565,
+      "first_safe_DEN_consumer_local_capture": 782,
+      "WQ_to_DONE_edges": 12,
+      "all_ack_errors": 0
+    },
+    "640": {
+      "head": 0,
+      "epoch0": "sampledio_start_v, actualafteredgepins; notglobaltokenepoch",
+      "last_product_commits": {
+        "scaled_SC": 227,
+        "MB": 957,
+        "raw_E": 1235,
+        "EB": 1276,
+        "SE": 2205
+      },
+      "first_safe_P_consumer_local_capture": 1277,
+      "first_safe_DEN_consumer_local_capture": 2206,
+      "WQ_to_DONE_edges": 12,
+      "all_ack_errors": 0
+    }
+  },
+  "normal_execution": "actualprotectedSRAMprogramme, compilerfixedcycles, nocredit/ready/backpressure",
+  "external_boundary": [
+    "rawSC actualQKproducerunjoined",
+    "actualPconsumer/PVunjoined",
+    "canonicalSID/aperture/globalprogrammeunbound"
+  ],
+  "component_directed_qualified": true,
+  "canonical_H16_gate": "RUNNING_same_unit_oth-ubuntu-3881884-1792058486",
+  "production_qualified": false,
+  "physical_qualified": false,
+  "native_whole_kernel_qualified": false
+}
