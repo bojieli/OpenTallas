@@ -1,0 +1,31 @@
+{
+  "scope": "actual25word decoder/PW fixed INTERNAL issue mechanism with declared engine endpoint stimuli; selected TP8 parent elaboration and mapped program SRAM; not native layer/physical qualification",
+  "program_sha256": "cc5bc8fc17d4068ac9a49e8bf79f34e74350d56d114dd7fe5cde433d2ac82796",
+  "source_program": "results/arch/qwen_tp8_native_dispatch_1014/token_source_plan/layer_candidate_program.hex",
+  "counts": {
+    "SU": 17,
+    "END": 3
+  },
+  "production_timing": false,
+  "native_qualified": false,
+  "selected_dense_parent_elaboration_exit": 0,
+  "actual_PW_DW_receipts": "PW76/DW69 bothD1 from consumed macro/desc_mem writes, ledgerjoin pending independent owner",
+  "clock_entries": [
+    "ck",
+    "ck_sched"
+  ],
+  "source_sha256": {
+    "rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_su_static.sv": "27bf02049fee338352c78e1dc534e2ea0e8639d0f383a2265cab13015b271475",
+    "rtl/qwen_sys/static_schedule_20261014/ot_qfd_seq_su_bi_static.sv": "d6bfd28b4ff9e6795e76a23fc370fe94bad32d4bf6a6141cd66ddfba1f4a220d",
+    "rtl/qwen_split/qfd_seq_su_static.sv": "1a17a32b51bdc6ac051bab4afd482459429dbbf92888802d3b819930ee1b376a"
+  },
+  "dependencies": [
+    "q_control dense-image PW consumer+image_ready ABI",
+    "qkd_program_commit.sv aa32c507f"
+  ],
+  "remaining": [
+    "actual fullstage program+real math/VM/native service+collective composition",
+    "native pin/phase/reset/timing/cost",
+    "actual receiver ledger integration"
+  ]
+}
