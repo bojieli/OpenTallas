@@ -224,10 +224,12 @@ endmodule
                     (dest/'mutant_actual_macro_address.log').write_text(macro_mutant_output)
 
     def test_rtl_calendar7_exact_and_clock_mutant(self):
-        self.run_rtl(fixture(raw=True),'calendar7_exact',partitioned=True)
+        request=fixture(raw=True)
+        self.run_rtl(request,'calendar7_exact',partitioned=True)
         for family in ('rom','output'):
             for index in range(3):
                 self.run_rtl(fixture(raw=True),'calendar7_clock_mutant',partitioned=True,clock_mutant=(family,index))
+        print('PASS calendar7 actual3ROM controls=%d replay_edges=%d clock_mutants=6'%(CONTROL_BITS,2*len(request['cycles'])))
 
     def test_rtl_gather_and_raw_fields(self):self.run_rtl(fixture(raw=True),'gather_raw',True)
     def test_rtl_actual_2400cycle_page(self):self.run_rtl(fixture_page(),'page2400_twojobs')

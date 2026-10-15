@@ -1,0 +1,342 @@
+{
+  "name": "s81coll_calendar7",
+  "top": "s81_static_calendar_controller7",
+  "kind": "tile",
+  "sources": [
+    "rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller7.sv",
+    "rtl/lib/ot_rst_relay.sv"
+  ],
+  "params": {
+    "CYCLES": 4096
+  },
+  "clock_port": "clk",
+  "reset_ports": [
+    "rst_n"
+  ],
+  "outline": {
+    "w": 237.6,
+    "h": 291.6
+  },
+  "pins": {
+    "W": [
+      "clk",
+      "rst_n",
+      "c_cmd",
+      "c_done",
+      "c_st",
+      "datapath_fault",
+      "busy",
+      "clk_rom"
+    ],
+    "E": [
+      "read_slot",
+      "read_row",
+      "issue_slot",
+      "tag",
+      "seq",
+      "last",
+      "rankmask",
+      "commit_slot",
+      "commit_tag",
+      "commit_seq",
+      "commit_last",
+      "commit_rankmask",
+      "commit_rows",
+      "tx_beat_slot",
+      "tx_phase",
+      "tx_frame_slot",
+      "rx_beat_slot",
+      "rx_phase",
+      "rx_frame_slot",
+      "channel_tx_slot",
+      "channel_tx_kind",
+      "channel_tx_seq",
+      "channel_tx_last",
+      "channel_rx_slot",
+      "channel_rx_kind",
+      "channel_rx_seq",
+      "channel_rx_last",
+      "channel_tx_beat_slot",
+      "channel_tx_frame_slot",
+      "channel_tx_phase",
+      "channel_rx_beat_slot",
+      "channel_rx_frame_slot",
+      "channel_rx_phase",
+      "hc_reduce_slot",
+      "hc_write_slot",
+      "hc_word_index",
+      "hc_expect_seq",
+      "hc_expect_last",
+      "hc_emit_slot",
+      "hc_emit_tag",
+      "commit_gather",
+      "raw_capture_payload_slot",
+      "raw_capture_meta_slot",
+      "raw_rx_write_slot",
+      "raw_rx_payload_row",
+      "raw_rx_meta_row",
+      "raw_rx_tag",
+      "hc_assemble_slot",
+      "clk_outputs"
+    ],
+    "N": [],
+    "S": []
+  },
+  "layer_cap": "M5",
+  "recipe": 2,
+  "route": {
+    "pd": 0.5,
+    "threads": 16,
+    "peak_ram_gb": 32,
+    "pin_v": "M3 M5",
+    "hold_margin_ns": 0.03,
+    "macro_halo_um": 5.4
+  },
+  "macros": [
+    {
+      "view": "physical/asap7_memory_macros/ot_rom_4096x266_m8",
+      "count": 1,
+      "inst": "*ROM_BANK?0?*u_rom",
+      "at": [
+        43.2,
+        24.84
+      ],
+      "orient": "R0"
+    },
+    {
+      "view": "physical/asap7_memory_macros/ot_rom_4096x266_m8",
+      "count": 1,
+      "inst": "*ROM_BANK?1?*u_rom",
+      "at": [
+        43.2,
+        111.24000000000001
+      ],
+      "orient": "R0"
+    },
+    {
+      "view": "physical/asap7_memory_macros/ot_rom_4096x266_m8",
+      "count": 1,
+      "inst": "*ROM_BANK?2?*u_rom",
+      "at": [
+        43.2,
+        197.64000000000001
+      ],
+      "orient": "R0"
+    }
+  ],
+  "io_flop_at_pins": {
+    "cols": 4,
+    "allow_none": true
+  },
+  "inhold": true,
+  "outhold": true,
+  "keep_pin_regs": true,
+  "pin_reg_split": true,
+  "hold_pad": {
+    "cell": "HB2xp67_ASAP7_75t_R"
+  },
+  "structural_change": "Measured predecessor single tree118.4ps spread with three ROMs spanning291.6um. Seven real clock entries own state/command,3ROM,3output groups183/143/142bits; immutable568 data/reset/originalclock pins plus6 new top-downpins, each phi-R separately measured. Four real local reset relays add3 initialization-only edges. External fault pin capture adds1 fault diagnosis edge. No normal data/compute stages, source program rows, macro capacity or workload changed. Exact actual3ROM component and six stopped-clock mutants pass; no die/native qualification inherited.",
+  "slot_change_request": {
+    "name": "s81coll-calendar7-v22-candidate",
+    "outline": [
+      237.6,
+      291.6
+    ],
+    "source": "physical/s81_die_pins/v22_calendar7_candidate/assignment_receipt.json",
+    "why": "Same provisional calendar outline; six new explicit clock pins, exact original568pins retained; native7clock CTS required before die adoption."
+  },
+  "job": {
+    "owner": "Codex:s81-pq-coll-0802",
+    "branch": "claude/s81-elemB-coll-1015",
+    "tag": "c1",
+    "purpose": "S81 static collective calendar controller leaf",
+    "benches": [
+      {
+        "name": "calendar7_exact_and_six_clock_mutants",
+        "cmd": "cd tools/s81_static_collective && python3 -m unittest test_controller_image.Check.test_rtl_calendar7_exact_and_clock_mutant",
+        "expect": "pass",
+        "threads": 4,
+        "peak_ram_gb": 8,
+        "needs": [
+          "iverilog",
+          "vvp"
+        ],
+        "pass_regex": "PASS calendar7 actual3ROM",
+        "min_count_regex": "controls=([0-9]+)"
+      }
+    ],
+    "views_to": "physical/ref_tile/s81coll_calendar7/views",
+    "record_to": "results/rtl/ref_tile/s81coll_calendar7",
+    "extra_paths": [
+      "rtl/dsrom_sys",
+      "rtl/hdc",
+      "rtl/link",
+      "tools/s81_static_collective",
+      "tools/s81_vm",
+      "tools/s81_static_control",
+      "physical/asap7_memory_macros/ot_rom_4096x266_m8",
+      "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
+      "physical/s81_static_collective_proposal_1014",
+      "rtl/lib/ot_rst_relay.sv",
+      "physical/s81_die_pins/v22_calendar7_candidate"
+    ]
+  },
+  "clock": "multiple_cts_roots",
+  "clock_ports": [
+    "clk",
+    "clk_rom[0]",
+    "clk_rom[1]",
+    "clk_rom[2]",
+    "clk_outputs[0]",
+    "clk_outputs[1]",
+    "clk_outputs[2]"
+  ],
+  "clock_data_paths": "related_same_frequency",
+  "clock_relationship": {
+    "kind": "same_pll_fixed_phase",
+    "ratio": [
+      1,
+      1
+    ],
+    "phase_ps": 0
+  },
+  "clock_entry_domains": {
+    "core": {
+      "ratio": [
+        1,
+        1
+      ],
+      "ports": [
+        "clk"
+      ],
+      "inputs": [
+        "rst_n",
+        "c_cmd",
+        "datapath_fault"
+      ],
+      "outputs": [
+        "c_done",
+        "c_st",
+        "busy"
+      ]
+    },
+    "rom0": {
+      "ratio": [
+        1,
+        1
+      ],
+      "ports": [
+        "clk_rom[0]"
+      ],
+      "inputs": [],
+      "outputs": []
+    },
+    "rom1": {
+      "ratio": [
+        1,
+        1
+      ],
+      "ports": [
+        "clk_rom[1]"
+      ],
+      "inputs": [],
+      "outputs": []
+    },
+    "rom2": {
+      "ratio": [
+        1,
+        1
+      ],
+      "ports": [
+        "clk_rom[2]"
+      ],
+      "inputs": [],
+      "outputs": []
+    },
+    "outputs0": {
+      "ratio": [
+        1,
+        1
+      ],
+      "ports": [
+        "clk_outputs[0]"
+      ],
+      "inputs": [],
+      "outputs": [
+        "read_slot",
+        "read_row",
+        "issue_slot",
+        "tag",
+        "seq",
+        "last",
+        "rankmask",
+        "commit_slot",
+        "commit_tag",
+        "commit_seq",
+        "commit_last",
+        "commit_rankmask",
+        "commit_rows"
+      ]
+    },
+    "outputs1": {
+      "ratio": [
+        1,
+        1
+      ],
+      "ports": [
+        "clk_outputs[1]"
+      ],
+      "inputs": [],
+      "outputs": [
+        "tx_beat_slot",
+        "tx_phase",
+        "tx_frame_slot",
+        "rx_beat_slot",
+        "rx_phase",
+        "rx_frame_slot",
+        "channel_tx_slot",
+        "channel_tx_kind",
+        "channel_tx_seq",
+        "channel_tx_last",
+        "channel_rx_slot",
+        "channel_rx_kind",
+        "channel_rx_seq"
+      ]
+    },
+    "outputs2": {
+      "ratio": [
+        1,
+        1
+      ],
+      "ports": [
+        "clk_outputs[2]"
+      ],
+      "inputs": [],
+      "outputs": [
+        "channel_rx_last",
+        "channel_tx_beat_slot",
+        "channel_tx_frame_slot",
+        "channel_tx_phase",
+        "channel_rx_beat_slot",
+        "channel_rx_frame_slot",
+        "channel_rx_phase",
+        "hc_reduce_slot",
+        "hc_write_slot",
+        "hc_word_index",
+        "hc_expect_seq",
+        "hc_expect_last",
+        "hc_emit_slot",
+        "hc_emit_tag",
+        "commit_gather",
+        "raw_capture_payload_slot",
+        "raw_capture_meta_slot",
+        "raw_rx_write_slot",
+        "raw_rx_payload_row",
+        "raw_rx_meta_row",
+        "raw_rx_tag",
+        "hc_assemble_slot"
+      ]
+    }
+  },
+  "io_tcl": "physical/s81_die_pins/v22_calendar7_candidate/s81_static_calendar_controller7.tcl"
+}

@@ -2,9 +2,9 @@
   "base_sha256": "ed584619c336e8340155d839eb0f119c115146b32a4fc83b3d3d68b8c5554490",
   "source": "rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller7.sv",
   "source_sha256": {
-    "tools/s81_static_collective/build_calendar7.py": "f994d65aecd4aa460f1aa15e50b394c9e466094a7d1a8631afb88c43beefbfb8",
+    "tools/s81_static_collective/build_calendar7.py": "912e18a579fb0b5c058e00a0281e7e00afd414d8bddcc6910c09a69e6e690ae9",
     "rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller7.sv": "082ed2d5c528b6e4fb48936e279c434a20c41e297ad028f847bf0b62657f2d62",
-    "tools/s81_static_collective/test_controller_image.py": "05abc8e17cdb6a19456101f6f19179f6089c9d01c7989950cd0497711d4a834b",
+    "tools/s81_static_collective/test_controller_image.py": "7a323c886db8ab857ae6ab2c001adba895ef642b88bdb5aab8be00dfee167683",
     "rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller.sv": "ed584619c336e8340155d839eb0f119c115146b32a4fc83b3d3d68b8c5554490",
     "tools/s81_static_collective/controller_image.py": "09c13d1b75f7076313866a5418bb73a16a48968cb85ca9a91682fdb0d7ba7947",
     "physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8.v": "a26eebf06605ae3e9bca8d25c6d979a95553ea03ddc5e82cacd3192bf811a16b",
@@ -96,7 +96,7 @@
   "qualification": false,
   "proof": {
     "host": "ot-agidock128",
-    "unit": "oth-ubuntu-382113-1792077883",
+    "unit": "oth-ubuntu-384797-1792078044",
     "terminal_exit": 0,
     "command": "python3 -m unittest test_controller_image.Check.test_rtl_calendar7_exact_and_clock_mutant",
     "positive": "All468 registered controls and completion/status compared to compiled actual3ROM image over two complete30-edge replays, including raw channel fields and descriptor/calendar/missingimage/oversize faults.",
@@ -111,6 +111,9 @@
     "negative_result": "All six actual DUT clock disconnections cause the exact functional gate to fail.",
     "scope": "Related-clock, equal phase component proof; no physical/native/die/calendar production qualification.",
     "initialization": "Four actual per-root reset relays release3edges after external reset, before the same compiled command timeline starts.",
-    "external_fault": "External datapath_fault is pin-captured; verified no immediate fault then exact next-edge fault/output suppression. Fault-only +1 edge, no normal calendar change."
-  }
+    "external_fault": "External datapath_fault is pin-captured; verified no immediate fault then exact next-edge fault/output suppression. Fault-only +1 edge, no normal calendar change.",
+    "observed_stdout": "PASS calendar7 actual3ROM controls=468 replay_edges=60 clock_mutants=6"
+  },
+  "added_reset_registers": 12,
+  "added_fault_registers": 1
 }

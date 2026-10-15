@@ -53,6 +53,6 @@ def generate():
     census=dict(base_sha256=digest,source=str(out.relative_to(ROOT)),source_sha256=hashlib.sha256(out.read_bytes()).hexdigest(),
                 clocks=['clk']+['clk_rom['+str(i)+']' for i in range(3)]+['clk_outputs['+str(i)+']' for i in range(3)],
                 output_groups=[dict(clock='clk_outputs['+str(i)+']',bits=sum(w for _,w,_ in fields),ports=[n for n,_,_ in fields]) for i,fields in enumerate(groups)],
-                added_data_edges=0,added_data_registers=0,reset_relays=4,initialization_release_extra_edges=3,fault_input_capture_extra_edges=1,rom_macros=3,qualification=False)
+                added_data_edges=0,added_data_registers=0,reset_relays=4,added_reset_registers=12,added_fault_registers=1,initialization_release_extra_edges=3,fault_input_capture_extra_edges=1,rom_macros=3,qualification=False)
     return census
 if __name__=='__main__':print(json.dumps(generate(),indent=2))
