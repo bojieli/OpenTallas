@@ -1,0 +1,26 @@
+{
+ "main_test_source": "c3d44471d",
+ "same_main_consumed_files_at": "319bd88a0",
+ "main_consumed_sha256": {
+  "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp4_ic.sv": "45f1c7560f6bedfd90694341e2c847a4abd19ce939fda3ec8f9a688cc9e403f6",
+  "tools/hbm_v15_harden/bench_dma_vp4_ic.sh": "f6e98759559a60a41569aab55c9b8d4cb1fb5fa2a1e2f8871daa965c8b9f276c",
+  "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_cursor.sv": "94d11ea3de92716d3c6ec0d39b3994dea82ac410fe5ca57a7ac9e32d10abe2c6",
+  "rtl/hbm_accel/generic/peers/static/tb_dma_back_vp4_banks_equiv.sv": "61fb48ca200b02d56da1a36120fa704e50298cba2a0beb82881c01cb081ad758",
+  "rtl/hbm_accel/generic/peers/static/tb_dma_back_static.sv": "c3f106c58a47a4100994c294fe3f484c247a1605c59562337915aa56bd341c93",
+  "rtl/hbm_accel/generic/peers/static/ot_hgi_b2_swap_disp_static.sv": "2243368018b446800675a95b66f9e95c5b3fcd3342e2144e30d311bfeabed91d",
+  "rtl/hbm_accel/generic/peers/static/ot_hgi_b2_swap_grp_static.sv": "18465fe413130b592b7f53849cfd3cad8a9a94f51c54da8308f593d83a82af94",
+  "rtl/hbm_accel/generic/vm/static/ot_vms_bank_static.sv": "7b2e2fbafead30cbabc427303bb339da070645637af9d1a69f0dbdaa0a88ee53",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": "d9801653d16576f40306c1fb1d01928e88e7371a3897b616e31d3e3df917cb2d",
+  "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v": "6530a2ef457f260a942e067b556ff55d75f931350af5807cfd6b05cd5e1ff380",
+  "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": "dba769863f502de28853a78ac30544a406c7cb66fd3249019ef9fa5a5b73e36e"
+ },
+ "aux_test_source": "319bd88a0",
+ "production": "actual32VM/96VMmacros+32landingmacros=128 actual onchip functionalmodels; MAIN+MIRROR each2561exactsectors173firstcommandfence;postedsourceoverwrite andfixedWBtimelineassertionsPASS",
+ "equivalence": "31cases20valid11invalid,1921checks6790beatsPASS; cursor reference ONLYnewminimumissue/drain11 contractchanged",
+ "mutants": "actualstride/truncatedrange/landingaddress mutants allrc1; invalid-descriptortimingotherwisevalid11 so checksisolated",
+ "aux": "26reset/responsefaultchecks+64clockownershipchecks+2clockmutantsPASS; clockbench isnotmemorythroughputqualification",
+ "actual_SRAM_trace": "everyactuallandingSRAMwrite/readcommandobserved; minimumread-after-last-write1edge; fullpayloadanswersfromactualSRAMmodels",
+ "physical_cost": "bank+272declaredFF and+1read/writeSRAMserviceedge; controller+23prefetchstateFF; extraSRAM0; clockcount9perparentunchanged",
+ "compiler_cost": "VMissue1earlier, readcommand2early, PREdescriptor3earlierthanflat/+1earlierthanvp4; minissue/drain11; ONLY thisboundedproductionWBdrain/fenceunchanged173",
+ "gates": "physicalCTS/route/nativeETM andcurrentH-DIEchildslots/parentfullfit/wholecompileradoptionOPEN; notnativequalified"
+}

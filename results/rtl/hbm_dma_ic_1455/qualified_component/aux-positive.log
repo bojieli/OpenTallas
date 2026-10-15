@@ -1,0 +1,10 @@
+DMA_BANK_CLOCK_OWNERSHIP PASS checks=64 banks=8
+proof/clock.sv:82: $finish called at 27000 (1ps)
+IC_SRAM_TRACE tb_dma_vp4_banks_clock.dut.L[0].u_bank writes=0 reads=0 min_raw_edges=2147483647
+IC_SRAM_TRACE tb_dma_vp4_banks_clock.dut.L[1].u_bank writes=0 reads=0 min_raw_edges=2147483647
+IC_SRAM_TRACE tb_dma_vp4_banks_clock.dut.L[2].u_bank writes=0 reads=0 min_raw_edges=2147483647
+IC_SRAM_TRACE tb_dma_vp4_banks_clock.dut.L[3].u_bank writes=0 reads=0 min_raw_edges=2147483647
+IC_SRAM_TRACE tb_dma_vp4_banks_clock.dut.L[4].u_bank writes=0 reads=0 min_raw_edges=2147483647
+IC_SRAM_TRACE tb_dma_vp4_banks_clock.dut.L[5].u_bank writes=0 reads=0 min_raw_edges=2147483647
+IC_SRAM_TRACE tb_dma_vp4_banks_clock.dut.L[6].u_bank writes=0 reads=0 min_raw_edges=2147483647
+IC_SRAM_TRACE tb_dma_vp4_banks_clock.dut.L[7].u_bank writes=0 reads=0 min_raw_edges=2147483647

@@ -1,0 +1,40 @@
+ot-run: ot-epyc1tb     admits   434 GB (avail 661, growth 74, headroom 64, waiters 0/0 GB) load 37/128 running 15 disk 222 GB 
+ot-run: ot-epyc4       admits   233 GB (avail 459, growth 160, headroom 48, waiters 0/0 GB) load 140/128 running 34 disk 316 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/hbm-dma-input-capture-1455/aux319
+ot-run: ot-agidock128  admits    36 GB (avail 72, growth 31, headroom 24, waiters 0/0 GB) load 9/64 running 9 disk 28 GB 
+ot-run: -> ot-epyc1tb
+ot-heavy: admitted on ot-epyc1tb as oth-ubuntu-2816716-1792102225 after 0 s
+DMA_NATIVE_FAULT_PASS banks=8 checks=26 reset_release_edges=2 malformed_response_fault_extra_edges=1 normal_execution_extra_edges=0
+proof/fault.sv:23: $finish called at 550000 (1ps)
+DMA_BANK_CLOCK_OWNERSHIP PASS checks=64 banks=8
+proof/clock.sv:82: $finish called at 27000 (1ps)
+IC_SRAM_TRACE tb_dma_vp4_banks_clock.dut.L[0].u_bank writes=0 reads=0 min_raw_edges=2147483647
+IC_SRAM_TRACE tb_dma_vp4_banks_clock.dut.L[1].u_bank writes=0 reads=0 min_raw_edges=2147483647
+IC_SRAM_TRACE tb_dma_vp4_banks_clock.dut.L[2].u_bank writes=0 reads=0 min_raw_edges=2147483647
+IC_SRAM_TRACE tb_dma_vp4_banks_clock.dut.L[3].u_bank writes=0 reads=0 min_raw_edges=2147483647
+IC_SRAM_TRACE tb_dma_vp4_banks_clock.dut.L[4].u_bank writes=0 reads=0 min_raw_edges=2147483647
+IC_SRAM_TRACE tb_dma_vp4_banks_clock.dut.L[5].u_bank writes=0 reads=0 min_raw_edges=2147483647
+IC_SRAM_TRACE tb_dma_vp4_banks_clock.dut.L[6].u_bank writes=0 reads=0 min_raw_edges=2147483647
+IC_SRAM_TRACE tb_dma_vp4_banks_clock.dut.L[7].u_bank writes=0 reads=0 min_raw_edges=2147483647
+FATAL: proof/clock.sv:11: clock ownership pulse0 bank0
+       Time: 6000  Scope: tb_dma_vp4_banks_clock
+IC_SRAM_TRACE tb_dma_vp4_banks_clock.dut.L[0].u_bank writes=0 reads=0 min_raw_edges=2147483647
+IC_SRAM_TRACE tb_dma_vp4_banks_clock.dut.L[1].u_bank writes=0 reads=0 min_raw_edges=2147483647
+IC_SRAM_TRACE tb_dma_vp4_banks_clock.dut.L[2].u_bank writes=0 reads=0 min_raw_edges=2147483647
+IC_SRAM_TRACE tb_dma_vp4_banks_clock.dut.L[3].u_bank writes=0 reads=0 min_raw_edges=2147483647
+IC_SRAM_TRACE tb_dma_vp4_banks_clock.dut.L[4].u_bank writes=0 reads=0 min_raw_edges=2147483647
+IC_SRAM_TRACE tb_dma_vp4_banks_clock.dut.L[5].u_bank writes=0 reads=0 min_raw_edges=2147483647
+IC_SRAM_TRACE tb_dma_vp4_banks_clock.dut.L[6].u_bank writes=0 reads=0 min_raw_edges=2147483647
+IC_SRAM_TRACE tb_dma_vp4_banks_clock.dut.L[7].u_bank writes=0 reads=0 min_raw_edges=2147483647
+FATAL: proof/clock.sv:11: clock ownership pulse0 bank0
+       Time: 6000  Scope: tb_dma_vp4_banks_clock
+IC_SRAM_TRACE tb_dma_vp4_banks_clock.dut.L[0].u_bank writes=0 reads=0 min_raw_edges=2147483647
+IC_SRAM_TRACE tb_dma_vp4_banks_clock.dut.L[1].u_bank writes=0 reads=0 min_raw_edges=2147483647
+IC_SRAM_TRACE tb_dma_vp4_banks_clock.dut.L[2].u_bank writes=0 reads=0 min_raw_edges=2147483647
+IC_SRAM_TRACE tb_dma_vp4_banks_clock.dut.L[3].u_bank writes=0 reads=0 min_raw_edges=2147483647
+IC_SRAM_TRACE tb_dma_vp4_banks_clock.dut.L[4].u_bank writes=0 reads=0 min_raw_edges=2147483647
+IC_SRAM_TRACE tb_dma_vp4_banks_clock.dut.L[5].u_bank writes=0 reads=0 min_raw_edges=2147483647
+IC_SRAM_TRACE tb_dma_vp4_banks_clock.dut.L[6].u_bank writes=0 reads=0 min_raw_edges=2147483647
+IC_SRAM_TRACE tb_dma_vp4_banks_clock.dut.L[7].u_bank writes=0 reads=0 min_raw_edges=2147483647
+DMA_IC_AUX_PASS checks=26 clock_checks=64 clock_mutants=2
+ot-run: RAN on ot-epyc1tb (unit oth-ubuntu-2816716-1792102225): exit 0
