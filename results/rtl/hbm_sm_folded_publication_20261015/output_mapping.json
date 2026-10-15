@@ -1,0 +1,31 @@
+{
+  "schema": "sm-folded-pv-publication-address-v1",
+  "source_sha256": {
+    "rtl/hbm_accel/sm/attn/ot_hbm_sm_attn_leafh.sv": "eff74553f322dd20cf38d3f33b454bb2575e88d06204941f9ac4830fdba86764",
+    "rtl/hbm_accel/sm/attn/ot_hbm_sm_attn_be.sv": "d20a3375ba1cb8a33803a0e1bf967d920136155f777923082b1ac637c46f4024",
+    "rtl/hbm_accel/sm/static/ot_smh_static_front.sv": "834abe7fd14eabaa9eae4505c6361341234ab75c5c3e517003bb1c15afde30bd",
+    "rtl/hbm_accel/sm/attn/ot_hbm_accel_smh_attn.sv": "82f120983b0f5fd45dc35be957370255c7478424da9a5c83d11cb315ab26aef4"
+  },
+  "scope": "leaf word/tag mapping measured for all 8 columns and 4 row straps; BE/front mapping follows actual wires, pending native fullSM timing qualification",
+  "column": "c=2*head+half, head0..3, half0..1",
+  "leaf_selected_slot": "half",
+  "leaf_scalar_row": "64*half+16*leafrow+word",
+  "leaf_GVtag": "(scalar_row<<4)|8",
+  "BE_mode3": "own_y=selected scalar; own_row=GVtag[15:4]; no arithmetic; one simultaneous valid leaf required",
+  "front": "rdata[32*c+:32] is column c scalar; rrow is column0 row only, namely16*leafrow+word, beat0..63. Odd-column internal row prefix64 is not present in common rrow.",
+  "logical_word": "output lane2*head+half contains head[dim=rrow+64*half]",
+  "per_folded_block": {
+    "valid_beats": 64,
+    "bits_per_beat": 256,
+    "fp32_outputs": 512,
+    "query_heads": 4,
+    "dimensions_per_head": 128
+  },
+  "two_beat_512bit_landing": {
+    "packing": "even beat low256, following odd beat high256",
+    "address": "blockslot*32+floor((dim%64)/2)",
+    "word_index_32bit": "(dim%2)*8+2*head+floor(dim/64)",
+    "eight_contiguous_dims": "requires gathering from four 512-bit landing rows; a landing row contains four heads interleaved across two dimensions and both halves"
+  },
+  "identity": "blockslot, head group and epoch are compiler context; actual SM rrow has no block/head identity field"
+}

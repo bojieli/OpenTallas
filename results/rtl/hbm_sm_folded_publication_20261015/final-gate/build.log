@@ -1,0 +1,515 @@
+%Warning-SELRANGE: /tmp/sm-fold-leaf-d1e507311/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1543:1536 outside 1087:0
+                                                                                           : ... note: In instance 'tb_hbm_sm_folded_leaf.front.u_normal.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+                   ... For warning description see https://verilator.org/warn/SELRANGE?v=5.050
+                   ... Use "/* verilator lint_off SELRANGE */" and lint_on around source to disable this message.
+%Warning-SELRANGE: /tmp/sm-fold-leaf-d1e507311/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1551:1544 outside 1087:0
+                                                                                           : ... note: In instance 'tb_hbm_sm_folded_leaf.front.u_normal.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: /tmp/sm-fold-leaf-d1e507311/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1559:1552 outside 1087:0
+                                                                                           : ... note: In instance 'tb_hbm_sm_folded_leaf.front.u_normal.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: /tmp/sm-fold-leaf-d1e507311/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1567:1560 outside 1087:0
+                                                                                           : ... note: In instance 'tb_hbm_sm_folded_leaf.front.u_normal.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: /tmp/sm-fold-leaf-d1e507311/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1575:1568 outside 1087:0
+                                                                                           : ... note: In instance 'tb_hbm_sm_folded_leaf.front.u_normal.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: /tmp/sm-fold-leaf-d1e507311/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1583:1576 outside 1087:0
+                                                                                           : ... note: In instance 'tb_hbm_sm_folded_leaf.front.u_normal.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: /tmp/sm-fold-leaf-d1e507311/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1591:1584 outside 1087:0
+                                                                                           : ... note: In instance 'tb_hbm_sm_folded_leaf.front.u_normal.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: /tmp/sm-fold-leaf-d1e507311/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1599:1592 outside 1087:0
+                                                                                           : ... note: In instance 'tb_hbm_sm_folded_leaf.front.u_normal.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: /tmp/sm-fold-leaf-d1e507311/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1607:1600 outside 1087:0
+                                                                                           : ... note: In instance 'tb_hbm_sm_folded_leaf.front.u_normal.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: /tmp/sm-fold-leaf-d1e507311/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1615:1608 outside 1087:0
+                                                                                           : ... note: In instance 'tb_hbm_sm_folded_leaf.front.u_normal.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: /tmp/sm-fold-leaf-d1e507311/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1623:1616 outside 1087:0
+                                                                                           : ... note: In instance 'tb_hbm_sm_folded_leaf.front.u_normal.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: /tmp/sm-fold-leaf-d1e507311/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1631:1624 outside 1087:0
+                                                                                           : ... note: In instance 'tb_hbm_sm_folded_leaf.front.u_normal.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: /tmp/sm-fold-leaf-d1e507311/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1639:1632 outside 1087:0
+                                                                                           : ... note: In instance 'tb_hbm_sm_folded_leaf.front.u_normal.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: /tmp/sm-fold-leaf-d1e507311/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1647:1640 outside 1087:0
+                                                                                           : ... note: In instance 'tb_hbm_sm_folded_leaf.front.u_normal.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: /tmp/sm-fold-leaf-d1e507311/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1655:1648 outside 1087:0
+                                                                                           : ... note: In instance 'tb_hbm_sm_folded_leaf.front.u_normal.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: /tmp/sm-fold-leaf-d1e507311/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1663:1656 outside 1087:0
+                                                                                           : ... note: In instance 'tb_hbm_sm_folded_leaf.front.u_normal.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: /tmp/sm-fold-leaf-d1e507311/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1671:1664 outside 1087:0
+                                                                                           : ... note: In instance 'tb_hbm_sm_folded_leaf.front.u_normal.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: /tmp/sm-fold-leaf-d1e507311/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1679:1672 outside 1087:0
+                                                                                           : ... note: In instance 'tb_hbm_sm_folded_leaf.front.u_normal.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: /tmp/sm-fold-leaf-d1e507311/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1687:1680 outside 1087:0
+                                                                                           : ... note: In instance 'tb_hbm_sm_folded_leaf.front.u_normal.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: /tmp/sm-fold-leaf-d1e507311/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1695:1688 outside 1087:0
+                                                                                           : ... note: In instance 'tb_hbm_sm_folded_leaf.front.u_normal.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: /tmp/sm-fold-leaf-d1e507311/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1703:1696 outside 1087:0
+                                                                                           : ... note: In instance 'tb_hbm_sm_folded_leaf.front.u_normal.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: /tmp/sm-fold-leaf-d1e507311/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1711:1704 outside 1087:0
+                                                                                           : ... note: In instance 'tb_hbm_sm_folded_leaf.front.u_normal.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: /tmp/sm-fold-leaf-d1e507311/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1719:1712 outside 1087:0
+                                                                                           : ... note: In instance 'tb_hbm_sm_folded_leaf.front.u_normal.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: /tmp/sm-fold-leaf-d1e507311/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1727:1720 outside 1087:0
+                                                                                           : ... note: In instance 'tb_hbm_sm_folded_leaf.front.u_normal.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: /tmp/sm-fold-leaf-d1e507311/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1735:1728 outside 1087:0
+                                                                                           : ... note: In instance 'tb_hbm_sm_folded_leaf.front.u_normal.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: /tmp/sm-fold-leaf-d1e507311/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1743:1736 outside 1087:0
+                                                                                           : ... note: In instance 'tb_hbm_sm_folded_leaf.front.u_normal.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: /tmp/sm-fold-leaf-d1e507311/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1751:1744 outside 1087:0
+                                                                                           : ... note: In instance 'tb_hbm_sm_folded_leaf.front.u_normal.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: /tmp/sm-fold-leaf-d1e507311/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1759:1752 outside 1087:0
+                                                                                           : ... note: In instance 'tb_hbm_sm_folded_leaf.front.u_normal.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: /tmp/sm-fold-leaf-d1e507311/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1767:1760 outside 1087:0
+                                                                                           : ... note: In instance 'tb_hbm_sm_folded_leaf.front.u_normal.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: /tmp/sm-fold-leaf-d1e507311/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1775:1768 outside 1087:0
+                                                                                           : ... note: In instance 'tb_hbm_sm_folded_leaf.front.u_normal.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: /tmp/sm-fold-leaf-d1e507311/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1783:1776 outside 1087:0
+                                                                                           : ... note: In instance 'tb_hbm_sm_folded_leaf.front.u_normal.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: /tmp/sm-fold-leaf-d1e507311/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1791:1784 outside 1087:0
+                                                                                           : ... note: In instance 'tb_hbm_sm_folded_leaf.front.u_normal.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: /tmp/sm-fold-leaf-d1e507311/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1799:1792 outside 1087:0
+                                                                                           : ... note: In instance 'tb_hbm_sm_folded_leaf.front.u_normal.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: /tmp/sm-fold-leaf-d1e507311/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1807:1800 outside 1087:0
+                                                                                           : ... note: In instance 'tb_hbm_sm_folded_leaf.front.u_normal.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: /tmp/sm-fold-leaf-d1e507311/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1815:1808 outside 1087:0
+                                                                                           : ... note: In instance 'tb_hbm_sm_folded_leaf.front.u_normal.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: /tmp/sm-fold-leaf-d1e507311/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1823:1816 outside 1087:0
+                                                                                           : ... note: In instance 'tb_hbm_sm_folded_leaf.front.u_normal.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: /tmp/sm-fold-leaf-d1e507311/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1831:1824 outside 1087:0
+                                                                                           : ... note: In instance 'tb_hbm_sm_folded_leaf.front.u_normal.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: /tmp/sm-fold-leaf-d1e507311/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1839:1832 outside 1087:0
+                                                                                           : ... note: In instance 'tb_hbm_sm_folded_leaf.front.u_normal.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: /tmp/sm-fold-leaf-d1e507311/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1847:1840 outside 1087:0
+                                                                                           : ... note: In instance 'tb_hbm_sm_folded_leaf.front.u_normal.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: /tmp/sm-fold-leaf-d1e507311/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1855:1848 outside 1087:0
+                                                                                           : ... note: In instance 'tb_hbm_sm_folded_leaf.front.u_normal.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: /tmp/sm-fold-leaf-d1e507311/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1863:1856 outside 1087:0
+                                                                                           : ... note: In instance 'tb_hbm_sm_folded_leaf.front.u_normal.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: /tmp/sm-fold-leaf-d1e507311/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1871:1864 outside 1087:0
+                                                                                           : ... note: In instance 'tb_hbm_sm_folded_leaf.front.u_normal.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: /tmp/sm-fold-leaf-d1e507311/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1879:1872 outside 1087:0
+                                                                                           : ... note: In instance 'tb_hbm_sm_folded_leaf.front.u_normal.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: /tmp/sm-fold-leaf-d1e507311/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1887:1880 outside 1087:0
+                                                                                           : ... note: In instance 'tb_hbm_sm_folded_leaf.front.u_normal.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: /tmp/sm-fold-leaf-d1e507311/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1895:1888 outside 1087:0
+                                                                                           : ... note: In instance 'tb_hbm_sm_folded_leaf.front.u_normal.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: /tmp/sm-fold-leaf-d1e507311/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1903:1896 outside 1087:0
+                                                                                           : ... note: In instance 'tb_hbm_sm_folded_leaf.front.u_normal.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: /tmp/sm-fold-leaf-d1e507311/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1911:1904 outside 1087:0
+                                                                                           : ... note: In instance 'tb_hbm_sm_folded_leaf.front.u_normal.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: /tmp/sm-fold-leaf-d1e507311/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1919:1912 outside 1087:0
+                                                                                           : ... note: In instance 'tb_hbm_sm_folded_leaf.front.u_normal.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: /tmp/sm-fold-leaf-d1e507311/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1927:1920 outside 1087:0
+                                                                                           : ... note: In instance 'tb_hbm_sm_folded_leaf.front.u_normal.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: /tmp/sm-fold-leaf-d1e507311/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1935:1928 outside 1087:0
+                                                                                           : ... note: In instance 'tb_hbm_sm_folded_leaf.front.u_normal.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: /tmp/sm-fold-leaf-d1e507311/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1943:1936 outside 1087:0
+                                                                                           : ... note: In instance 'tb_hbm_sm_folded_leaf.front.u_normal.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: /tmp/sm-fold-leaf-d1e507311/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1951:1944 outside 1087:0
+                                                                                           : ... note: In instance 'tb_hbm_sm_folded_leaf.front.u_normal.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: /tmp/sm-fold-leaf-d1e507311/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1959:1952 outside 1087:0
+                                                                                           : ... note: In instance 'tb_hbm_sm_folded_leaf.front.u_normal.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: /tmp/sm-fold-leaf-d1e507311/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1967:1960 outside 1087:0
+                                                                                           : ... note: In instance 'tb_hbm_sm_folded_leaf.front.u_normal.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: /tmp/sm-fold-leaf-d1e507311/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1975:1968 outside 1087:0
+                                                                                           : ... note: In instance 'tb_hbm_sm_folded_leaf.front.u_normal.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: /tmp/sm-fold-leaf-d1e507311/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1983:1976 outside 1087:0
+                                                                                           : ... note: In instance 'tb_hbm_sm_folded_leaf.front.u_normal.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: /tmp/sm-fold-leaf-d1e507311/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1991:1984 outside 1087:0
+                                                                                           : ... note: In instance 'tb_hbm_sm_folded_leaf.front.u_normal.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: /tmp/sm-fold-leaf-d1e507311/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1999:1992 outside 1087:0
+                                                                                           : ... note: In instance 'tb_hbm_sm_folded_leaf.front.u_normal.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: /tmp/sm-fold-leaf-d1e507311/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 2007:2000 outside 1087:0
+                                                                                           : ... note: In instance 'tb_hbm_sm_folded_leaf.front.u_normal.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: /tmp/sm-fold-leaf-d1e507311/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 2015:2008 outside 1087:0
+                                                                                           : ... note: In instance 'tb_hbm_sm_folded_leaf.front.u_normal.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: /tmp/sm-fold-leaf-d1e507311/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 2023:2016 outside 1087:0
+                                                                                           : ... note: In instance 'tb_hbm_sm_folded_leaf.front.u_normal.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: /tmp/sm-fold-leaf-d1e507311/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 2031:2024 outside 1087:0
+                                                                                           : ... note: In instance 'tb_hbm_sm_folded_leaf.front.u_normal.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: /tmp/sm-fold-leaf-d1e507311/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 2039:2032 outside 1087:0
+                                                                                           : ... note: In instance 'tb_hbm_sm_folded_leaf.front.u_normal.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: /tmp/sm-fold-leaf-d1e507311/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 2047:2040 outside 1087:0
+                                                                                           : ... note: In instance 'tb_hbm_sm_folded_leaf.front.u_normal.u_be.u_u3'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: /tmp/sm-fold-leaf-d1e507311/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1095:1088 outside 1087:0
+                                                                                           : ... note: In instance 'tb_hbm_sm_folded_leaf.front.u_normal.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: /tmp/sm-fold-leaf-d1e507311/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1103:1096 outside 1087:0
+                                                                                           : ... note: In instance 'tb_hbm_sm_folded_leaf.front.u_normal.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: /tmp/sm-fold-leaf-d1e507311/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1111:1104 outside 1087:0
+                                                                                           : ... note: In instance 'tb_hbm_sm_folded_leaf.front.u_normal.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: /tmp/sm-fold-leaf-d1e507311/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1119:1112 outside 1087:0
+                                                                                           : ... note: In instance 'tb_hbm_sm_folded_leaf.front.u_normal.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: /tmp/sm-fold-leaf-d1e507311/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1127:1120 outside 1087:0
+                                                                                           : ... note: In instance 'tb_hbm_sm_folded_leaf.front.u_normal.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: /tmp/sm-fold-leaf-d1e507311/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1135:1128 outside 1087:0
+                                                                                           : ... note: In instance 'tb_hbm_sm_folded_leaf.front.u_normal.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: /tmp/sm-fold-leaf-d1e507311/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1143:1136 outside 1087:0
+                                                                                           : ... note: In instance 'tb_hbm_sm_folded_leaf.front.u_normal.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: /tmp/sm-fold-leaf-d1e507311/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1151:1144 outside 1087:0
+                                                                                           : ... note: In instance 'tb_hbm_sm_folded_leaf.front.u_normal.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: /tmp/sm-fold-leaf-d1e507311/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1159:1152 outside 1087:0
+                                                                                           : ... note: In instance 'tb_hbm_sm_folded_leaf.front.u_normal.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: /tmp/sm-fold-leaf-d1e507311/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1167:1160 outside 1087:0
+                                                                                           : ... note: In instance 'tb_hbm_sm_folded_leaf.front.u_normal.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: /tmp/sm-fold-leaf-d1e507311/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1175:1168 outside 1087:0
+                                                                                           : ... note: In instance 'tb_hbm_sm_folded_leaf.front.u_normal.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: /tmp/sm-fold-leaf-d1e507311/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1183:1176 outside 1087:0
+                                                                                           : ... note: In instance 'tb_hbm_sm_folded_leaf.front.u_normal.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: /tmp/sm-fold-leaf-d1e507311/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1191:1184 outside 1087:0
+                                                                                           : ... note: In instance 'tb_hbm_sm_folded_leaf.front.u_normal.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: /tmp/sm-fold-leaf-d1e507311/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1199:1192 outside 1087:0
+                                                                                           : ... note: In instance 'tb_hbm_sm_folded_leaf.front.u_normal.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: /tmp/sm-fold-leaf-d1e507311/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1207:1200 outside 1087:0
+                                                                                           : ... note: In instance 'tb_hbm_sm_folded_leaf.front.u_normal.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: /tmp/sm-fold-leaf-d1e507311/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1215:1208 outside 1087:0
+                                                                                           : ... note: In instance 'tb_hbm_sm_folded_leaf.front.u_normal.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: /tmp/sm-fold-leaf-d1e507311/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1223:1216 outside 1087:0
+                                                                                           : ... note: In instance 'tb_hbm_sm_folded_leaf.front.u_normal.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: /tmp/sm-fold-leaf-d1e507311/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1231:1224 outside 1087:0
+                                                                                           : ... note: In instance 'tb_hbm_sm_folded_leaf.front.u_normal.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: /tmp/sm-fold-leaf-d1e507311/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1239:1232 outside 1087:0
+                                                                                           : ... note: In instance 'tb_hbm_sm_folded_leaf.front.u_normal.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: /tmp/sm-fold-leaf-d1e507311/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1247:1240 outside 1087:0
+                                                                                           : ... note: In instance 'tb_hbm_sm_folded_leaf.front.u_normal.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: /tmp/sm-fold-leaf-d1e507311/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1255:1248 outside 1087:0
+                                                                                           : ... note: In instance 'tb_hbm_sm_folded_leaf.front.u_normal.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: /tmp/sm-fold-leaf-d1e507311/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1263:1256 outside 1087:0
+                                                                                           : ... note: In instance 'tb_hbm_sm_folded_leaf.front.u_normal.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: /tmp/sm-fold-leaf-d1e507311/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1271:1264 outside 1087:0
+                                                                                           : ... note: In instance 'tb_hbm_sm_folded_leaf.front.u_normal.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: /tmp/sm-fold-leaf-d1e507311/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1279:1272 outside 1087:0
+                                                                                           : ... note: In instance 'tb_hbm_sm_folded_leaf.front.u_normal.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: /tmp/sm-fold-leaf-d1e507311/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1287:1280 outside 1087:0
+                                                                                           : ... note: In instance 'tb_hbm_sm_folded_leaf.front.u_normal.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: /tmp/sm-fold-leaf-d1e507311/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1295:1288 outside 1087:0
+                                                                                           : ... note: In instance 'tb_hbm_sm_folded_leaf.front.u_normal.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: /tmp/sm-fold-leaf-d1e507311/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1303:1296 outside 1087:0
+                                                                                           : ... note: In instance 'tb_hbm_sm_folded_leaf.front.u_normal.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: /tmp/sm-fold-leaf-d1e507311/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1311:1304 outside 1087:0
+                                                                                           : ... note: In instance 'tb_hbm_sm_folded_leaf.front.u_normal.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: /tmp/sm-fold-leaf-d1e507311/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1319:1312 outside 1087:0
+                                                                                           : ... note: In instance 'tb_hbm_sm_folded_leaf.front.u_normal.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: /tmp/sm-fold-leaf-d1e507311/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1327:1320 outside 1087:0
+                                                                                           : ... note: In instance 'tb_hbm_sm_folded_leaf.front.u_normal.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: /tmp/sm-fold-leaf-d1e507311/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1335:1328 outside 1087:0
+                                                                                           : ... note: In instance 'tb_hbm_sm_folded_leaf.front.u_normal.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: /tmp/sm-fold-leaf-d1e507311/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1343:1336 outside 1087:0
+                                                                                           : ... note: In instance 'tb_hbm_sm_folded_leaf.front.u_normal.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: /tmp/sm-fold-leaf-d1e507311/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1351:1344 outside 1087:0
+                                                                                           : ... note: In instance 'tb_hbm_sm_folded_leaf.front.u_normal.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: /tmp/sm-fold-leaf-d1e507311/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1359:1352 outside 1087:0
+                                                                                           : ... note: In instance 'tb_hbm_sm_folded_leaf.front.u_normal.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: /tmp/sm-fold-leaf-d1e507311/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1367:1360 outside 1087:0
+                                                                                           : ... note: In instance 'tb_hbm_sm_folded_leaf.front.u_normal.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: /tmp/sm-fold-leaf-d1e507311/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1375:1368 outside 1087:0
+                                                                                           : ... note: In instance 'tb_hbm_sm_folded_leaf.front.u_normal.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: /tmp/sm-fold-leaf-d1e507311/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1383:1376 outside 1087:0
+                                                                                           : ... note: In instance 'tb_hbm_sm_folded_leaf.front.u_normal.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: /tmp/sm-fold-leaf-d1e507311/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1391:1384 outside 1087:0
+                                                                                           : ... note: In instance 'tb_hbm_sm_folded_leaf.front.u_normal.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: /tmp/sm-fold-leaf-d1e507311/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1399:1392 outside 1087:0
+                                                                                           : ... note: In instance 'tb_hbm_sm_folded_leaf.front.u_normal.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: /tmp/sm-fold-leaf-d1e507311/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1407:1400 outside 1087:0
+                                                                                           : ... note: In instance 'tb_hbm_sm_folded_leaf.front.u_normal.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: /tmp/sm-fold-leaf-d1e507311/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1415:1408 outside 1087:0
+                                                                                           : ... note: In instance 'tb_hbm_sm_folded_leaf.front.u_normal.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: /tmp/sm-fold-leaf-d1e507311/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1423:1416 outside 1087:0
+                                                                                           : ... note: In instance 'tb_hbm_sm_folded_leaf.front.u_normal.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: /tmp/sm-fold-leaf-d1e507311/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1431:1424 outside 1087:0
+                                                                                           : ... note: In instance 'tb_hbm_sm_folded_leaf.front.u_normal.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: /tmp/sm-fold-leaf-d1e507311/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1439:1432 outside 1087:0
+                                                                                           : ... note: In instance 'tb_hbm_sm_folded_leaf.front.u_normal.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: /tmp/sm-fold-leaf-d1e507311/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1447:1440 outside 1087:0
+                                                                                           : ... note: In instance 'tb_hbm_sm_folded_leaf.front.u_normal.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: /tmp/sm-fold-leaf-d1e507311/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1455:1448 outside 1087:0
+                                                                                           : ... note: In instance 'tb_hbm_sm_folded_leaf.front.u_normal.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: /tmp/sm-fold-leaf-d1e507311/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1463:1456 outside 1087:0
+                                                                                           : ... note: In instance 'tb_hbm_sm_folded_leaf.front.u_normal.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: /tmp/sm-fold-leaf-d1e507311/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1471:1464 outside 1087:0
+                                                                                           : ... note: In instance 'tb_hbm_sm_folded_leaf.front.u_normal.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: /tmp/sm-fold-leaf-d1e507311/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1479:1472 outside 1087:0
+                                                                                           : ... note: In instance 'tb_hbm_sm_folded_leaf.front.u_normal.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: /tmp/sm-fold-leaf-d1e507311/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1487:1480 outside 1087:0
+                                                                                           : ... note: In instance 'tb_hbm_sm_folded_leaf.front.u_normal.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: /tmp/sm-fold-leaf-d1e507311/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1495:1488 outside 1087:0
+                                                                                           : ... note: In instance 'tb_hbm_sm_folded_leaf.front.u_normal.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: /tmp/sm-fold-leaf-d1e507311/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1503:1496 outside 1087:0
+                                                                                           : ... note: In instance 'tb_hbm_sm_folded_leaf.front.u_normal.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: /tmp/sm-fold-leaf-d1e507311/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1511:1504 outside 1087:0
+                                                                                           : ... note: In instance 'tb_hbm_sm_folded_leaf.front.u_normal.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: /tmp/sm-fold-leaf-d1e507311/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1519:1512 outside 1087:0
+                                                                                           : ... note: In instance 'tb_hbm_sm_folded_leaf.front.u_normal.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: /tmp/sm-fold-leaf-d1e507311/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1527:1520 outside 1087:0
+                                                                                           : ... note: In instance 'tb_hbm_sm_folded_leaf.front.u_normal.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+%Warning-SELRANGE: /tmp/sm-fold-leaf-d1e507311/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1860:43: Selection index out of range: 1535:1528 outside 1087:0
+                                                                                           : ... note: In instance 'tb_hbm_sm_folded_leaf.front.u_normal.u_be.u_u2'
+ 1860 |             wire [7:0] fp8w = (J < 4) ? lw[256*J + 8*bb +: 8] : 8'd0;
+      |                                           ^
+make: Entering directory '/tmp/sm-fold-leaf-d1e507311/out/obj'
+g++  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -Os  -c -o f32add.o /tmp/sm-fold-leaf-d1e507311/rtl/hbm_accel/generic/collective/p2p/f32add.c
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -c -o verilated.o /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -c -o verilated_dpi.o /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_dpi.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -c -o verilated_timing.o /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_timing.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -c -o verilated_threads.o /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_threads.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -x c++-header Vtb_hbm_sm_folded_leaf__pch.h -o Vtb_hbm_sm_folded_leaf__pch.h.fast.gch
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -x c++-header Vtb_hbm_sm_folded_leaf__pch.h -o Vtb_hbm_sm_folded_leaf__pch.h.slow.gch
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_hbm_sm_folded_leaf__pch.h.fast -c Vtb_hbm_sm_folded_leaf_vm_classes_0.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_hbm_sm_folded_leaf__pch.h.fast -c Vtb_hbm_sm_folded_leaf_vm_classes_1.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_hbm_sm_folded_leaf__pch.h.fast -c Vtb_hbm_sm_folded_leaf_vm_classes_2.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_hbm_sm_folded_leaf__pch.h.fast -c Vtb_hbm_sm_folded_leaf_vm_classes_3.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_hbm_sm_folded_leaf__pch.h.fast -c Vtb_hbm_sm_folded_leaf__Dpi.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_hbm_sm_folded_leaf__pch.h.slow -c Vtb_hbm_sm_folded_leaf__ConstPool__0__Slow.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_hbm_sm_folded_leaf__pch.h.slow -c Vtb_hbm_sm_folded_leaf___024root__Slow.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_hbm_sm_folded_leaf__pch.h.slow -c Vtb_hbm_sm_folded_leaf___024root__0__Slow.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_hbm_sm_folded_leaf__pch.h.slow -c Vtb_hbm_sm_folded_leaf___024root__1__Slow.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_hbm_sm_folded_leaf__pch.h.slow -c Vtb_hbm_sm_folded_leaf___024root__2__Slow.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_hbm_sm_folded_leaf__pch.h.slow -c Vtb_hbm_sm_folded_leaf___024root__3__Slow.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_hbm_sm_folded_leaf__pch.h.slow -c Vtb_hbm_sm_folded_leaf___024root__4__Slow.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_hbm_sm_folded_leaf__pch.h.slow -c Vtb_hbm_sm_folded_leaf___024root__5__Slow.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_hbm_sm_folded_leaf__pch.h.slow -c Vtb_hbm_sm_folded_leaf___024root__6__Slow.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_hbm_sm_folded_leaf__pch.h.slow -c Vtb_hbm_sm_folded_leaf_ot_hbm_accel_smh_tcl__Slow.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_hbm_sm_folded_leaf__pch.h.slow -c Vtb_hbm_sm_folded_leaf_ot_hbm_accel_smh_tcl__0__Slow.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_hbm_sm_folded_leaf__pch.h.slow -c Vtb_hbm_sm_folded_leaf_ot_hbm_accel_smh_tcl__1__Slow.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_hbm_sm_folded_leaf__pch.h.slow -c Vtb_hbm_sm_folded_leaf_ot_hbm_accel_smh_tcl__2__Slow.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_hbm_sm_folded_leaf__pch.h.slow -c Vtb_hbm_sm_folded_leaf__Syms__Slow.cpp
+g++    f32add.o verilated.o verilated_dpi.o verilated_timing.o verilated_threads.o Vtb_hbm_sm_folded_leaf__ALL.a    -pthread -lpthread -latomic   -o Vtb_hbm_sm_folded_leaf
+rm Vtb_hbm_sm_folded_leaf__ALL.verilator_deplist.tmp
+make: Leaving directory '/tmp/sm-fold-leaf-d1e507311/out/obj'
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 6.980 MB sources in 135 modules, into 39.696 MB in 39 C++ files needing 0.042 MB
+- Verilator: Walltime 88.964 s (elab=0.732, cvt=17.089, bld=70.308); cpu 18.471 s on 4 threads; allocated 728.773 MB

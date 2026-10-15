@@ -1,0 +1,46 @@
+{
+  "schema": "sm-folded-publication-recovery-verdict-v1",
+  "verdict": "PASS_COMPONENT_ONLY",
+  "source_pin": "d1e507311",
+  "recovered_dirty_sources_byte_identical": true,
+  "actual_vehicle": "existing frontend command metadata -> existing XS -> existing BF16 column arithmetic -> actual pv_merge stack/fold -> leaf scalar publication; independent externally declared BF16 seed rows. All8 column and4 leafrow straps tested.",
+  "positive": {
+    "outputs": 512,
+    "data_and_GV_tags": "bit-exact",
+    "command_publication_cycle": 280,
+    "first_scalar_cycle_row0": 291,
+    "command_to_first_scalar_edges": 11,
+    "row_stagger_edges": 16,
+    "words_each_leaf": 16,
+    "returncode": 0
+  },
+  "negatives": [
+    {
+      "mutant": 1,
+      "expected_returncode": 1,
+      "single_expected_fatal": true,
+      "verdict": "REJECTED"
+    },
+    {
+      "mutant": 2,
+      "expected_returncode": 1,
+      "single_expected_fatal": true,
+      "verdict": "REJECTED"
+    }
+  ],
+  "binary_sha256": "35b7716cd385bbc6a5aecbe89917dc0e480dea6373f0cc11064b5c1a4fc57cd7",
+  "control_hex_sha256": "3d3228a32562aec24abf66fb50fbd511d6a748346acf1a14f4ee6d75cbdc13c2",
+  "admission": "OT_RUN_NO_LOAD_HOLD=1 ot-run --mem 8 --threads 4 automatically selected ot-epyc4; unit oth-ubuntu-1682882-1792100758 reported RAN exit0",
+  "resource_measurement": "Verilator allocated728.773MB, build88.964seconds, simulator9MB; 8GB reservation covers compiler/make processes",
+  "earlier_attempts": {
+    "initial-gate": "positive passed; negative finish fell through to unexpected count assertion; original overbroad receipt preserved, superseded by initial-gate-review.json",
+    "second-harness-fail": "positive passed; disable did not prevent late count assertions under Verilator; runner correctly returnedfailure; preserved unchanged"
+  },
+  "open": [
+    "inherited 4bf62695d fullSM elem1 probe and nativecolumn smoke2 still active at final snapshot; never restarted",
+    "fullSM RV/rrow/rdata publication timing is not established by this one-leaf vehicle",
+    "converter/HBM data-to-SM integration is not tested by externally seeded BF16 row inputs",
+    "new control/metadata physical cost, SS/FF timing and fullSM sustained throughput remain open"
+  ],
+  "output_mapping": "output_mapping.json separates measured leaf GVtag from actual BE/frontend wire-derived mapping and the required landing-to-contiguous-dimension transpose"
+}
