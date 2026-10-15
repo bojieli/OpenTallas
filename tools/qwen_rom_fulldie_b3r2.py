@@ -1223,7 +1223,7 @@ def _su_vm_bus(v, m, a_bits=None, q_bits=None):
 
     def masters(model, k=1, port_bits=None):
         out = base(model, k, port_bits)
-        s, q = out['qfd_sp_su64_sfu'], out['qfd_sp_vector_memory']
+        s, q = out['qfd_sp_su64_sfu'], (out.get('qfd_sp_vector_memory_par') or out['qfd_sp_vector_memory'])
         if model.get('native_control_contract'):
             # Native controller retired the legacy VM request/ready service.
             # These are unbound abstract pins, not a reusable physical view.
@@ -1320,7 +1320,7 @@ def _rtl_finish(v, m):
 
     def masters(model, k=1, port_bits=None):
         o = base(model, k, port_bits)
-        tt, vm, sq, su, em = (o['qfd_sp_tree_top'], o['qfd_sp_vector_memory'], o['qfd_sp_constants_sequencer'],
+        tt, vm, sq, su, em = (o['qfd_sp_tree_top'], (o.get('qfd_sp_vector_memory_par') or o['qfd_sp_vector_memory']), o['qfd_sp_constants_sequencer'],
                               o['qfd_sp_su64_sfu'], o.get('qfd_io_embedding_rom'))   # r21c: no embedding ROM
         for M_, gone in ((tt, ('md',)), (vm, ('em',)), (sq, ('ea', 'md'))):
             for pn in gone:
@@ -1537,7 +1537,7 @@ def _vm_me(v, m):
             # fault, ty: the split-11/12 return to band 0) face the band-lane blocks in W
             moves.append(('qfd_sp_tree_top', 'E', (), 'W', re.compile(r'^(bw|lc|lf)\d+$|^ty$')))
         for mn, f, keep, to, only in moves:
-            M_ = o[mn]
+            M_ = o.get('qfd_sp_vector_memory_par') if mn == 'qfd_sp_vector_memory' and 'qfd_sp_vector_memory_par' in o else o[mn]
             mv = [pn for pn, sp in M_.ports.items() if sp[0] == 'face' and sp[2] == f and pn not in keep
                   and (only is None or only.match(pn))]
             for pn in mv:
@@ -1559,7 +1559,7 @@ def _vm_me(v, m):
         for mn, ports in (('qfd_sp_band_lanes', ('c', 'f', 'pw', 'tt')), ('qfd_sp_res_ser', ('o', 'ok', 'cr'))):
             if mn not in o:
                 continue
-            M_ = o[mn]
+            M_ = o.get('qfd_sp_vector_memory_par') if mn == 'qfd_sp_vector_memory' and 'qfd_sp_vector_memory_par' in o else o[mn]
             xq = 40.0
             for pn in ports:
                 if pn in M_.ports:
@@ -4492,7 +4492,7 @@ def _r18_masters(v, m):
             hb.ports['ln'] = hb.ports['ln'][:4] + (hb.h * 0.81,) + hb.ports['ln'][5:]
         if 'lsw' in hb.ports:          # the split south leg runs in the channel east of the hub
             hb.ports['lsw'] = ('face', v.LINK_TRACKS, 'E', 'M4', hb.h * 0.08, 1)
-        vm = out['qfd_sp_vector_memory']
+        vm = (out.get('qfd_sp_vector_memory_par') or out['qfd_sp_vector_memory'])
         if 'em' in vm.ports:           # the embedding ROM is in the IO band to the north (left of the hub)
             vm.ports['em'] = ('face', v.IO_BITS, 'N', 'M5', vm.w * 0.2, 2)
         xf = None
