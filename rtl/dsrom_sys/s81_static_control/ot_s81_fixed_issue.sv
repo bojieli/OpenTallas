@@ -42,6 +42,7 @@ module ot_s81_fixed_issue #(
  integer i,s,e,n,op,slot,issued,max_done,end_count,kit_count;
  reg bad;reg[23:0]end_cycle,kit_cycle;reg[NENG-1:0]seen_cmd;
  reg[3:0]eng;reg[7:0]tag;
+ reg[NENG-1:0]legit_done;
 `ifndef SYNTHESIS
  initial begin
   if(NOPS<2||NOPS>128||NENG<1||NENG>13||STAGE<0||STAGE>127)$fatal(1,"invalid native S81 issuer shape");
@@ -51,13 +52,14 @@ module ot_s81_fixed_issue #(
   if(!rst_n)begin
    length_q<=0;phase_q<=0;start_phase_q<=0;begun<=0;sealed<=0;cfg_fault<=0;run_fault<=0;
    validating<=0;scan_index<=0;scan_native<=0;scan_bad<=0;scan_ends<=0;scan_kits<=0;scan_max_done<=0;scan_end_cycle<=0;scan_kit_cycle<=0;
-   active<=0;next_slot<=0;has_kit<=0;cmd_v<=0;cmd_d<=0;job_done<=0;job_kdone<=0;done_slot<=0;kit_tok<=0;
+   active<=0;next_slot<=0;has_kit<=0;job_done<=0;job_kdone<=0;done_slot<=0;kit_tok<=0;
    fault_code<=0;st_jobs<=0;st_cmds<=0;dv_q<=0;dt_q<=0;
    for(i=0;i<NOPS;i=i+1)loaded[i]<=0;
    for(s=0;s<2;s=s+1)begin users[s]<=0;positions[s]<=0;tokens[s]<=0;age[s]<=0;pending[s]<=0;end
   end else begin
    phase_q<=phase_q+1'b1;dv_q<=dn_v;dt_q<=dn_tag;
-   cmd_v<=0;job_done<=0;job_kdone<=0;seen_cmd=0;issued=0;
+   job_done<=0;job_kdone<=0;seen_cmd=0;legit_done=0;issued=0;
+   for(e=0;e<NENG;e=e+1)if(cmd_v[e])issued=issued+1;
    if(pw_v)begin
     if(busy||validating)begin cfg_fault<=1;if(fault_code==0)fault_code<=1;end
     else if(pw_d[27:26]==3)begin
@@ -116,36 +118,56 @@ module ot_s81_fixed_issue #(
      next_slot<=~next_slot;st_jobs<=st_jobs+1;
     end
    end
-   // Actual completion pins are captured once. Their arrival is checked one
-   // clock later against the original pin edge, never used as a start signal.
-   for(e=0;e<NENG;e=e+1)if(dv_q[e])begin
-    tag=dt_q[8*e+:8];slot=tag[7];op=tag[6:0];
-    if(op>=NOPS||!active[slot]||!pending[slot][op]||mem[op][27:24]!=e||age[slot]==0||mem[op][75:52]!=age[slot]-1'b1)begin
-     run_fault<=1;if(fault_code==0)fault_code<=6;
-    end else pending[slot][op]<=0;
-   end
+   // Completions are verified against fixed rows below; no dynamic
+   // op-indexed program read or completion-driven scheduling is required.
    for(s=0;s<2;s=s+1)if(active[s])begin
     age[s]<=age[s]+1'b1;
     if(age[s]==24'hffffff)begin run_fault<=1;if(fault_code==0)fault_code<=7;end
     for(i=0;i<NOPS;i=i+1)if(i<length_q)begin
      eng=mem[i][27:24];
      if(eng<14&&age[s]!=0&&mem[i][75:52]==age[s]-1'b1)begin
-      if(!dv_q[eng]||dt_q[8*eng+:8]!={1'(s),7'(i)})begin run_fault<=1;if(fault_code==0)fault_code<=8;end
+      if(!dv_q[eng]||dt_q[8*eng+:8]!={1'(s),7'(i)}||!pending[s][i])begin run_fault<=1;if(fault_code==0)fault_code<=8;end
+      else begin legit_done[eng]=1;pending[s][i]<=0;end
      end
      if(age[s]==mem[i][51:28]+((MUT==1&&eng<14)?24'd1:24'd0))begin
       if(eng==15)begin active[s]<=0;job_done<=1;done_slot<=1'(s);if(!has_kit)begin job_kdone<=1;kit_tok<=tokens[s];end end
       else if(eng==14)begin job_kdone<=1;kit_tok<=tokens[s];end
       else if(eng<NENG&&ENG_PRESENT[eng])begin
        if(seen_cmd[eng]||!engine_available[eng])begin run_fault<=1;if(fault_code==0)fault_code<=9;end
-       seen_cmd[eng]=1;issued=issued+1;cmd_v[eng]<=1;
-       cmd_d[84*eng+:84]<={1'(s),(MUT==2?10'd0:users[s]),positions[s],tokens[s],mem[i][23:0],7'(i)};
+       seen_cmd[eng]=1;
        pending[s][i]<=1;
       end else begin run_fault<=1;if(fault_code==0)fault_code<=10;end
      end
     end
    end
+   if(|(dv_q&~legit_done))begin run_fault<=1;if(fault_code==0)fault_code<=6;end
    st_cmds<=st_cmds+issued;
   end
  end
+ // A per-engine OR of compiler-exclusive events avoids a 256-row
+ // procedural priority chain. Multiple matches still fault above; their
+ // resulting payload is invalid and must be discarded with the job fault.
+ genvar ge;
+ generate for(ge=0;ge<NENG;ge=ge+1)begin:g_command
+  reg[30:0]a0,a1;reg h0,h1,m0,m1;integer j;
+  always @*begin
+   a0=0;a1=0;h0=0;h1=0;
+   m0=0;m1=0;
+   for(j=0;j<NOPS;j=j+1)begin
+    m0=j<length_q&&mem[j][27:24]==ge&&ENG_PRESENT[ge]&&active[0]&&age[0]==mem[j][51:28]+(MUT==1?24'd1:24'd0);
+    m1=j<length_q&&mem[j][27:24]==ge&&ENG_PRESENT[ge]&&active[1]&&age[1]==mem[j][51:28]+(MUT==1?24'd1:24'd0);
+    h0=h0|m0;h1=h1|m1;
+    a0=a0|({31{m0}}&{mem[j][23:0],7'(j)});a1=a1|({31{m1}}&{mem[j][23:0],7'(j)});
+   end
+  end
+  always @(posedge clk or negedge rst_n)begin
+   if(!rst_n)begin cmd_v[ge]<=0;cmd_d[84*ge+:84]<=0;end
+   else begin
+    cmd_v[ge]<=h0|h1;
+    cmd_d[84*ge+:84]<=({84{h0}}&{1'b0,(MUT==2?10'd0:users[0]),positions[0],tokens[0],a0})|
+                          ({84{h1}}&{1'b1,(MUT==2?10'd0:users[1]),positions[1],tokens[1],a1});
+   end
+  end
+ end endgenerate
 endmodule
 `default_nettype wire
