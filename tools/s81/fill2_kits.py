@@ -90,6 +90,28 @@ MASTERS = {
              "(slot change request)",
         benches=[("host_static_base", "base", "pass"), ("program_drop_mutant", "mut1", "fail"),
                  ("lane_fault_fold_mutant", "mut4", "fail")]),
+    "s81fill2_qbank_n": dict(
+        master="dsfd_qbank_N", top="dsfd_qbank_N", params={}, sources=["rtl/dsrom_sys/s81_fill2/gen19b/dsfd_qbank_N.sv"],
+        extra=["rtl/dsrom_sys/s81_fill2/gen19b", "tools/s81/fill2_relay_bench.py", PIN_DIR],
+        clock="ck", resets=["rs"], inst=1898, size="grow_depth", bits=128, alt_v=True,
+        bench_cmd="python3 tools/s81/fill2_relay_bench.py rtl/dsrom_sys/s81_fill2/gen19b/dsfd_qbank_N.sv dsfd_qbank_N {mode} {RUN}/bench_{mode}",
+        bench_tag="RELAY", bench_mode_in_pass=True,
+        what="q-bank relay row N of every q element (128 b registered once on ck, async reset rs; RTL = the GEN19b case glue "
+             "module byte-identical). Generator slot 60.456 x 6.456 leaves a 2.1-um core for 128 flops + recipe-2 input "
+             "hold cells: grown in depth only (N/S data faces, width kept); N/S pins alternate M5/M3 by index where the "
+             "face exceeds 10 b/um/layer (the die's --stn-pin-alt rule, S-DIE grant 10:35)",
+        benches=[("relay_exact", "pass", "pass"), ("payload_bit_mutant", "mut_payload", "fail"), ("no_reset_mutant", "mut_noreset", "fail")]),
+    "s81fill2_qbank_s": dict(
+        master="dsfd_qbank_S", top="dsfd_qbank_S", params={}, sources=["rtl/dsrom_sys/s81_fill2/gen19b/dsfd_qbank_S.sv"],
+        extra=["rtl/dsrom_sys/s81_fill2/gen19b", "tools/s81/fill2_relay_bench.py", PIN_DIR],
+        clock="ck", resets=["rs"], inst=1898, size="grow_depth", bits=604, alt_v=True,
+        bench_cmd="python3 tools/s81/fill2_relay_bench.py rtl/dsrom_sys/s81_fill2/gen19b/dsfd_qbank_S.sv dsfd_qbank_S {mode} {RUN}/bench_{mode}",
+        bench_tag="RELAY", bench_mode_in_pass=True,
+        what="q-bank relay row S of every q element (604 b registered once on ck, async reset rs; RTL = the GEN19b case glue "
+             "module byte-identical). Generator slot 60.456 x 6.456 leaves a 2.1-um core for 604 flops + recipe-2 input "
+             "hold cells: grown in depth only (N/S data faces, width kept); N/S pins alternate M5/M3 by index where the "
+             "face exceeds 10 b/um/layer (the die's --stn-pin-alt rule, S-DIE grant 10:35)",
+        benches=[("relay_exact", "pass", "pass"), ("payload_bit_mutant", "mut_payload", "fail"), ("no_reset_mutant", "mut_noreset", "fail")]),
     "s81fill2_cfg7_seq_bf": dict(
         master="ot_s81_cfg7_seq_bf", top="ot_s81_cfg7_seq_bf", params={}, sources=CFG7_SRC, extra=CFG7_EXTRA,
         clock="clk", resets=["rst_n"], inst=519,
@@ -206,11 +228,24 @@ def main() -> int:
         mac = lef_macro(lef, d['master'])
         if d.get('majority'):
             mac = majority(mac)
-        if d.get('size') == 'density':
+        if d.get('size') == 'grow_depth':
+            dw = snap(mac['w'])
+            need = d['bits'] * 0.6 / 0.55
+            dh = max(snap(mac['h']), snap(need / (dw - 2 * EDGE) + 2 * EDGE))
+        elif d.get('size') == 'density':
             dw, dh = density_outline(mac, d['std_um2'], [d['clock']] + d['resets'])
         else:
             dw, dh = snap(mac['w']), snap(mac['h'])
         pins, rep = spread(mac, dw, dh, d['clock'], d['resets'])
+        if d.get('alt_v'):
+            for f in 'NS':
+                if rep.get(f, {}).get('b_per_um', 0) > BPU:
+                    fp = sorted([p for p in pins if p['face'] == f and base(p['pin']) not in [d['clock']] + d['resets']],
+                                key=lambda p: p['x'])
+                    for k, p in enumerate(fp):
+                        p['layer'] = 'M3' if k % 2 else 'M5'
+                    rep[f]['alt_M3_M5'] = True
+                    rep[f]['b_per_um_per_layer'] = round(rep[f]['b_per_um'] / 2, 2)
         assert all(r['cut'] <= 0.6 for r in rep.values()), rep
         scalar = {base(p['pin']) for p in mac['pins'] if p['pin'].endswith('[0]')} - \
                  {base(p['pin']) for p in mac['pins'] if re.search(r'\[[1-9]\d*\]$', p['pin'])}
@@ -225,7 +260,8 @@ def main() -> int:
             faces.setdefault(p['face'], set()).add(base(p['pin']))
         (ROOT / PIN_DIR / f'{d["master"]}{"_pd" if d.get("size") == "density" and not d.get("majority") else ""}.tcl').write_text('\n'.join(tcl) + '\n')
         bsh, btag = d.get('bench', BENCH), d.get('bench_tag', 'CFG7')
-        benches = [{'name': bn, 'cmd': f'bash {bsh} {mode} {{RUN}}/bench_{mode}', 'expect': exp,
+        bcmd = d.get('bench_cmd', 'bash ' + bsh + ' {mode} {RUN}/bench_{mode}')
+        benches = [{'name': bn, 'cmd': bcmd.replace('{mode}', mode), 'expect': exp,
                     **({'pass_regex': f'{btag} BENCH PASS' + (f' {mode}' if btag == 'CFG7' or d.get('bench_mode_in_pass') else '')} if exp == 'pass' else {'fail_regex': f'{btag} BENCH FAIL {mode}'}),
                     'threads': 4, 'peak_ram_gb': 4, 'needs': ['verilator']} for bn, mode, exp in d['benches']]
         spec = {
@@ -236,6 +272,10 @@ def main() -> int:
             'io_tcl': f'{PIN_DIR}/{d["master"]}{"_pd" if d.get("size") == "density" and not d.get("majority") else ""}.tcl',
             'recipe': 2, 'outhold': False, **d.get('extra_spec', {}), **({'defines': d['defines']} if d.get('defines') else {}),
             'route': {'pd': 0.5, 'threads': 4, 'peak_ram_gb': 8, 'pin_h': 'M4', 'pin_v': 'M3 M5', 'm5_pg_pitch': 2.7},
+            **({'slot_change_request': {'reason': f'depth-only growth: {d["bits"]} relay flops + recipe-2 input hold '
+                                       f'cells (~0.6 um2/bit at util 0.55) exceed the generator slot core; width and the '
+                                       f'data-face order kept', 'outline': [dw, dh], 'generator_slot': [mac['w'], mac['h']]}}
+               if d.get('size') == 'grow_depth' else {}),
             **({'slot_change_request': {'reason': f'outline from pin density (<= {BPU} b/um/layer, face cut <= 0.6) and '
                                        f'content (~{d["std_um2"]} um2 std + recipe-2 cells at util ~0.5) instead of the '
                                        f'generator slot {mac["w"]} x {mac["h"]}', 'outline': [dw, dh],
