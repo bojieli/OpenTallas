@@ -1,0 +1,23 @@
+{
+  "cell": "ot_hgi_coll_park_q1",
+  "view": "/home/ubuntu/wt/hbm-smcompact-1014/physical/ref_tile/hgi_coll_park_q1_wg_ref/views/ot_hgi_coll_park_q1",
+  "lib_cell": "ot_hgi_coll_park_q1",
+  "insertion": true,
+  "ref_src": [
+    "insertion.json boundary mean"
+  ],
+  "R_ps": 599.5,
+  "spread_ps": 60.0,
+  "outputs": 550,
+  "inputs": 2202,
+  "launch_ps": 180.5,
+  "launch_pin": "hd[326]",
+  "capture_ps": 192.1,
+  "capture_pin": "pop",
+  "launch_over": 0,
+  "capture_over": 1,
+  "comb_pins": 0,
+  "comb_first": [],
+  "pass": false,
+  "fail_why": "capture 192.1 > 190 (1 pins)"
+}

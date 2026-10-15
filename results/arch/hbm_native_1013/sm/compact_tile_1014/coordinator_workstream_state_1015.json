@@ -1,6 +1,6 @@
 {
   "schema": "opentallas.smh.workstream_state.v1",
-  "collected_at": "2026-10-15T07:34:48.748221+00:00",
+  "collected_at": "2026-10-15T09:13:30.616536+00:00",
   "coordinator": "codex",
   "jobs": [
     {
@@ -39,14 +39,14 @@
     },
     {
       "job": "hgi_coll_park_q1_wg_ref-pstage4-5f0dd8dc1",
-      "status": "RUNNING",
+      "status": "CLOSED",
       "host": "ot-epyc1tb",
       "run": "/srv/opentallas/claude/closure-loop/hgi_coll_park_q1_wg_ref-pstage4-5f0dd8dc1",
       "stage": "route",
-      "finished_at": null,
-      "tt_ps": null,
-      "ff_ps": null,
-      "drc": null,
+      "finished_at": "2026-10-15T01:08:26-07:00",
+      "tt_ps": 30.65,
+      "ff_ps": 3.59,
+      "drc": 0,
       "ss_sensitivity_ps": null,
       "events": [
         "2026-10-15T00:06:34-07:00 bench track: launched bench_park_bankindex_mutant (bench_park_bankindex_mutant.a1b1) beside route",
@@ -56,14 +56,14 @@
     },
     {
       "job": "smh_tr_group_beat_w_ref-keep1-7ff908809",
-      "status": "RUNNING",
+      "status": "CLOSED",
       "host": "ot-epyc4",
       "run": "/srv/opentallas-scratch2/claude/closure-loop/smh_tr_group_beat_w_ref-keep1-7ff908809",
       "stage": "route",
-      "finished_at": null,
-      "tt_ps": null,
-      "ff_ps": null,
-      "drc": null,
+      "finished_at": "2026-10-15T00:53:29-07:00",
+      "tt_ps": 59.09,
+      "ff_ps": 21.27,
+      "drc": 0,
       "ss_sensitivity_ps": null,
       "events": [
         "2026-10-15T00:19:31-07:00 bench track: bench_group_exact PASS (rc=0) work: [('checks', 4087)]",
@@ -76,16 +76,17 @@
   "group_closed_records": {
     "row_e": "024b4fe0e",
     "beat_e": "a5009b725",
-    "row_w": "05ec0d136"
+    "row_w": "05ec0d136",
+    "beat_w": "2c5393f85"
   },
-  "native_group_pin_audit": "all three closed group views PASS; west beat pending actual closure",
+  "native_group_pin_audit": "row_w/row_e/beat_e PASS; beat_w FAIL launch227/capture463.1ps/spread82.4; source boundary repartition required",
   "scope": "CDC historical diagnostic components; static native producer/consumer contract remains separate",
   "actual_static_int8": {
     "source": "1ce966147",
     "evidence": "c454d62cd",
     "status": "componentPASS3723packed7446full1099outputs; actualsignandcalendar mutantsFAIL; defaultoff;notintegrated/physical"
   },
-  "production_programme_owner": "H-ELEM-A/static_sm_feed: actual83bit immutable operation/prefetch compiler and image binding across4PC; pending",
+  "production_programme_owner": "H-ELEM-A/static_sm_feed resumes actual mapped descriptor + native numerical join;520releasedrecords/13active19idle component source1e7975475; fullreservation/source joins remain open",
   "dense_packing": {
     "stage_walk_partial_source": "7c17a3940",
     "stage_walk_partial_mm2": 9.9612888704,
@@ -93,5 +94,6 @@
     "complete_4x4_with_external_retimes_source": "3300aa373",
     "complete_4x4_with_external_retimes_mm2": 11.1634862976,
     "adoption": "NONE; complete staticfront joint placement and native fullshape fit remain open"
-  }
+  },
+  "park_q1_native": "CLOSED f6b4ec71b TT30.65/FF3.59/DRC0; native pop capture192.1ps FAIL versus190; collective owner notified"
 }
