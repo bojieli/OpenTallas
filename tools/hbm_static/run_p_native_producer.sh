@@ -4,7 +4,7 @@ cd "$(dirname "$0")/../.."
 out=$(realpath -m "$1")
 mkdir -p "$out"
 mapfile -t sources < producer.sources.f
-"${VERILATOR:-$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator}" --binary --timing -O2 -j8 -CFLAGS -O0 -Wno-fatal -Wno-TIMESCALEMOD \
+"${VERILATOR:-$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator}" --binary --timing -O2 -j 8 -CFLAGS -O0 -Wno-fatal -Wno-TIMESCALEMOD \
  --top-module tb_hbm_p_native_producer_static --Mdir "$out/obj" "${sources[@]}" >"$out/build.log" 2>&1
 for rows in 128 640;do
  for head in $(seq -w 0 15);do
