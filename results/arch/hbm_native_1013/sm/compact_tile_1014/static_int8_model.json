@@ -29,8 +29,8 @@
   "tag_rule": "same 10-bit input tag on both output halves",
   "consumer_ready_constant": 1,
   "producer_ready": "observation/assertion only, absent from external ABI",
-  "register_bits_upper_bound": 2721,
-  "estimated_ff_area_um2_upper": 1031.47668,
+  "register_bits_upper_bound": 2722,
+  "estimated_ff_area_um2_upper": 1031.85576,
   "mux_cost": "64 lane 2:1 low/high byte selectors; actual source classify/encode logic unchanged",
   "control_fanout": 64,
   "clock_roots_per_replica": 1,
@@ -60,5 +60,12 @@
     "complete 32-SM geometry"
   ],
   "status": "MODEL_ONLY_NOT_PHYSICALLY_ADMITTED",
-  "default_off": true
+  "default_off": true,
+  "register_bound_breakdown": {
+    "actual_converter_high_codes": 512,
+    "classify_payload": 1088,
+    "output_payload": 1088,
+    "actual_converter_control": 4,
+    "tag_registers": 30
+  }
 }

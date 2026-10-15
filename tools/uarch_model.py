@@ -16227,7 +16227,7 @@ def hbm_smh_static_int8_model():
     Scales remain SU post-reduction state; fmt3 converter sidecars are zero.
     """
     width, height, guard, pitch = 216.0, 181.44, 8.0, .048
-    pins, register_upper = 1099, 2721
+    pins, register_upper = 1099, 2722
     return dict(
         schema="opentallas.smh.static-int8-model.v1",
         actual_source="rtl/hbm_accel/sm/ot_hbm_accel_int8_line.sv",
@@ -16245,6 +16245,9 @@ def hbm_smh_static_int8_model():
         tag_rule="same 10-bit input tag on both output halves",
         consumer_ready_constant=1, producer_ready="observation/assertion only, absent from external ABI",
         register_bits_upper_bound=register_upper,
+        register_bound_breakdown={"actual_converter_high_codes":512,
+                                  "classify_payload":1088,"output_payload":1088,
+                                  "actual_converter_control":4,"tag_registers":30},
         estimated_ff_area_um2_upper=register_upper*.37908,
         mux_cost="64 lane 2:1 low/high byte selectors; actual source classify/encode logic unchanged",
         control_fanout=64, clock_roots_per_replica=1,
