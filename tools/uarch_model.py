@@ -17319,3 +17319,45 @@ def hbm_host_static_ingress_model():
       area_slot_um=[432,432], slot_area_um2=186624,
       sink_bound='under700 source registers, no programme SRAM inside ingress; mapped area and CTS still required',
       scope='component ingress only; actual host packet/landing join, heterogeneous target adapters, all-ready reduction, fullchip binding and performance remain OPEN')
+
+
+def hbm_dma_input_capture_model_1015():
+    """DMA IC prototype: real command captures, fixed prefetch, no dynamic issue.
+
+    The 173-edge result is the actual 32-VM / 128-macro component programme.
+    It is not an adopted whole-chip compiler, die-fit or native-route result.
+    """
+    stacks, banks = 4, 8
+    bank_ff, ctl_ff = 16 + 256, 8 + 8 + 7
+    bank_w, bank_h, ctl_side = 140.4, 88.56, 75.6
+    return dict(schema='opentallas.hbm.dma_input_capture_model.v1',
+        source='ot_hgi_dma_back_static_vp4_ic.sv',
+        shape=dict(stacks=stacks,banks_per_stack=banks,landing_macros=stacks*banks,
+                   VM_banks=32,VM_macros=96,actual_production_macros=128),
+        computation=dict(MACs_per_cycle=0,MACs_per_byte=0,
+                         work='exact address/descriptor/control and real SRAM transfers'),
+        bandwidth=dict(II_edges=1,bank_read_bytes_per_edge=32,bank_write_bytes_per_edge=32,
+                       stack_payload_bytes_per_edge=banks*32,die_payload_bytes_per_edge=stacks*banks*32,
+                       stack_response_bits_per_edge=banks*257,stack_writeback_bits_per_edge=banks*289,
+                       bank_input_signal_bits=306,bank_output_signal_bits=289,
+                       boundary_width_change_bits=0,replicas=stacks*banks),
+        state=dict(added_FF_per_bank=bank_ff,added_FF_per_controller_declared=ctl_ff,
+                   added_FF_per_die_declared=stacks*(banks*bank_ff+ctl_ff),added_SRAM=0,
+                   added_muxes='read-mask and 7-bit slot registers per controller; no new boundary mux'),
+        calendar=dict(DESC_LAT=4,bank_read_service_added_edges=1,bank_write_commit_added_edges=1,
+                      controller_read_command_edges_before_SRAM_read=2,
+                      minimum_issue_to_drain_edges=11,VM_issue_advance_edges=1,
+                      PRE_command_advance_from_flat_edges=3,PRE_extra_command_lead_vs_vp4_edges=1,
+                      production_WB_drain_edges_changed=0,production_fence_edges_changed=0,
+                      measured_first_command_to_fence_edges=173,immutable_prior_component_edges=173,
+                      measured_sectors_each_MAIN_MIRROR=2561,measured_min_read_after_write_edges=1,
+                      producer_availability='actual VM prefill precedes command; issue advanced one edge only in this explicit programme',
+                      normal_execution='compiler-reserved cycles, no credits/backpressure/stalls'),
+        geometry=dict(proposed_bank_um=[bank_w,bank_h],proposed_controller_um=[ctl_side,ctl_side],
+                      raw_child_area_um2=round(banks*bank_w*bank_h+ctl_side*ctl_side,3),
+                      old_parent_um=[432,360.72],parent_fit='OPEN: actual child homes/pins/cuts/PG required',
+                      routing_tracks='OPEN: widths unchanged; new local FF-to-SRAM wires need actual GRT/DRC',
+                      channel_target_track_util=0.60,replica_clock_entries_per_parent=9,
+                      actual_clock_phase_delivery='OPEN: measured new leaf insertions and die phase compensation required'),
+        evidence='tools/hbm_v15_harden/bench_dma_vp4_ic.sh: actual RTL + mapped memory functional models',
+        status='PROTOTYPE_COMPONENT_MEASURED_NOT_NATIVE_OR_WHOLE_COMPILER_ADOPTED')

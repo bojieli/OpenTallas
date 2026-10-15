@@ -1,0 +1,77 @@
+{
+ "schema": "opentallas.hbm.dma_input_capture_model.v1",
+ "source": "ot_hgi_dma_back_static_vp4_ic.sv",
+ "shape": {
+  "stacks": 4,
+  "banks_per_stack": 8,
+  "landing_macros": 32,
+  "VM_banks": 32,
+  "VM_macros": 96,
+  "actual_production_macros": 128
+ },
+ "computation": {
+  "MACs_per_cycle": 0,
+  "MACs_per_byte": 0,
+  "work": "exact address/descriptor/control and real SRAM transfers"
+ },
+ "bandwidth": {
+  "II_edges": 1,
+  "bank_read_bytes_per_edge": 32,
+  "bank_write_bytes_per_edge": 32,
+  "stack_payload_bytes_per_edge": 256,
+  "die_payload_bytes_per_edge": 1024,
+  "stack_response_bits_per_edge": 2056,
+  "stack_writeback_bits_per_edge": 2312,
+  "bank_input_signal_bits": 306,
+  "bank_output_signal_bits": 289,
+  "boundary_width_change_bits": 0,
+  "replicas": 32
+ },
+ "state": {
+  "added_FF_per_bank": 272,
+  "added_FF_per_controller_declared": 23,
+  "added_FF_per_die_declared": 8796,
+  "added_SRAM": 0,
+  "added_muxes": "read-mask and 7-bit slot registers per controller; no new boundary mux"
+ },
+ "calendar": {
+  "DESC_LAT": 4,
+  "bank_read_service_added_edges": 1,
+  "bank_write_commit_added_edges": 1,
+  "controller_read_command_edges_before_SRAM_read": 2,
+  "minimum_issue_to_drain_edges": 11,
+  "VM_issue_advance_edges": 1,
+  "PRE_command_advance_from_flat_edges": 3,
+  "PRE_extra_command_lead_vs_vp4_edges": 1,
+  "production_WB_drain_edges_changed": 0,
+  "production_fence_edges_changed": 0,
+  "measured_first_command_to_fence_edges": 173,
+  "immutable_prior_component_edges": 173,
+  "measured_sectors_each_MAIN_MIRROR": 2561,
+  "measured_min_read_after_write_edges": 1,
+  "producer_availability": "actual VM prefill precedes command; issue advanced one edge only in this explicit programme",
+  "normal_execution": "compiler-reserved cycles, no credits/backpressure/stalls"
+ },
+ "geometry": {
+  "proposed_bank_um": [
+   140.4,
+   88.56
+  ],
+  "proposed_controller_um": [
+   75.6,
+   75.6
+  ],
+  "raw_child_area_um2": 105185.952,
+  "old_parent_um": [
+   432,
+   360.72
+  ],
+  "parent_fit": "OPEN: actual child homes/pins/cuts/PG required",
+  "routing_tracks": "OPEN: widths unchanged; new local FF-to-SRAM wires need actual GRT/DRC",
+  "channel_target_track_util": 0.6,
+  "replica_clock_entries_per_parent": 9,
+  "actual_clock_phase_delivery": "OPEN: measured new leaf insertions and die phase compensation required"
+ },
+ "evidence": "tools/hbm_v15_harden/bench_dma_vp4_ic.sh: actual RTL + mapped memory functional models",
+ "status": "PROTOTYPE_COMPONENT_MEASURED_NOT_NATIVE_OR_WHOLE_COMPILER_ADOPTED"
+}
