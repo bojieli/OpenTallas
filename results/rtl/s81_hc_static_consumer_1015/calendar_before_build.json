@@ -1,0 +1,49 @@
+{
+  "scope": "Model before actual HCPOST staticconsumer build; no nativequalification",
+  "production": {
+    "D": 5120,
+    "NG": 256,
+    "rows_per_POST": 20,
+    "row_width_bits": 8192,
+    "slots": 2,
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "macro_count_full_y": 32,
+    "row_capacity_per_macro": 128,
+    "allocated_rows": 40,
+    "row_address": "slot*20+compiler_row",
+    "per_cycle_write_bits": 8192,
+    "per_cycle_read_bits": 8192,
+    "boundary_bits_per_cycle": 8230
+  },
+  "fixed_calendar": {
+    "producer_hc_rows": 20,
+    "producer_row_spacing": 1,
+    "vm_read_latency_fast_edges": 12,
+    "vm_write_commit_base": 11,
+    "same_bank_prefix_max": 2,
+    "producer_tags": "Await exactregisteredtag32packingfromstaticcollective; mustnotinferfromgolden",
+    "read_latency": "rawSRAM1edge +consumerinputPIN1+outputPIN1=3edges measuredbenchrequired",
+    "runtime_ready": false,
+    "runtime_credit": false,
+    "late_or_missing": "faultsticky;request/outputcalendarneverstretches"
+  },
+  "arithmetic": "Keep actual ot_dsrom_su_hcpost, actual resident h/coefficient/gain memories; preserve goldenroundpoints/order; mappedmacro storage only",
+  "integration_scope": "Replace cseq ycredit +command-ready adapter and all3yFIFO stores with explicit compilerrow accesses; sourcelegacydefault preserved untilproductionpositive+mutant gates pass",
+  "open": [
+    "CanonicalHCtag32semantic",
+    "HCcommandtofirstreadcalendar andproducerall20rows latency",
+    "Actual SRAMretirement/reread lifetime",
+    "Diephysicalpins/46master closure",
+    "Canonical2417 programme/fieldproducer"
+  ],
+  "calendar_join": {
+    "module": "ot_s81_hc_y_calendar",
+    "WRITE_FIRST": 4,
+    "READ_FIRST": 8,
+    "status": "Localcomponentdefaults only; canonicalproducer33/31agecontractmustoverride",
+    "read_capture_lag_after_producer": 4,
+    "rows": 20,
+    "buffering": "actual32mappedSRAM,noFWFT/FIFO",
+    "done": "fixed READ_FIRST+ROWS+3 age; never waits onfault orout_v"
+  }
+}

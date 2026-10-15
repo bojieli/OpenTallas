@@ -1,0 +1,36 @@
+{
+  "scope": "Before-build actual HCPOST mappedmemory compute tile, component only",
+  "groups_per_tile": 4,
+  "production_groups": 256,
+  "replicas": 64,
+  "resident_h_bits_per_row": 256,
+  "collective_y_bits_per_row": 128,
+  "rows_per_slot": 20,
+  "slots": 2,
+  "actualmacros_per_tile": {
+    "ot_sram_1r1w_128x256_m1_r2c2": 2
+  },
+  "actualmacros_total": 128,
+  "arithmetic_per_tile_per_cycle": {
+    "fp32_multiply": 80,
+    "fp32_add": 64,
+    "BF16_RNE": 16
+  },
+  "boundary_bits_per_cycle": {
+    "load_h": 256,
+    "load_y": 128,
+    "coeff": 640,
+    "readcontrol": 38,
+    "result_h": 256
+  },
+  "arithmetic_source": "Actualot_dsrom_su_hcpost NG4 WIN0 WOUT0 ML5 AL4; unchangedIEEEroundpoints/reductionorder",
+  "fixedcalendar": "PINcapture+SRAM1+operandPIN1+actualarithmeticlatency measured; writebackcalendar frominputreadpulse delay, checkarithvo only. HloadvsPOSTwrite collisionfault neverarbitrates/stalls",
+  "qualification_open": [
+    "Nativepayloadfixtures",
+    "ActualwritebackLATmeasurement",
+    "TTmappedareaandclockroots/pinfit",
+    "Replica/controltransport",
+    "Nativeprogrammeproducerintegration",
+    "PhysicalSS/FF/DRC/phiR/clockdelivery"
+  ]
+}

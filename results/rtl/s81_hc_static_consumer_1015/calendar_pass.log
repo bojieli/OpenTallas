@@ -1,0 +1,6 @@
+HC_Y_CALENDAR calendar got20 first13 last32 done34 fault0 errors0
+HC_Y_CALENDAR PASS actual32SRAM 5120FP32words fixedwrite/read
+- rtl/dsrom_sys/s81_suhc/static/tb_s81_hc_y_calendar.sv:29: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 470ns; walltime 0.001 s; speed 467.530 us/s
+- Verilator: cpu 0.001 s on 1 threads; allocated 7 MB

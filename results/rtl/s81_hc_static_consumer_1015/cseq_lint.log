@@ -1,0 +1,73 @@
+%Warning-WIDTHTRUNC: rtl/dsrom_sys/s81_suhc/static/ot_s81_hc_cseq_static.sv:62:54: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'HALF' generates 32 bits.
+                                                                                 : ... note: In instance 'ot_s81_hc_cseq_static'
+   62 |     localparam integer PAD = HOP * (NP - L1) * (HALF ? 2 : 1);     
+      |                                                      ^
+                     ... For warning description see https://verilator.org/warn/WIDTHTRUNC?v=5.050
+                     ... Use "/* verilator lint_off WIDTHTRUNC */" and lint_on around source to disable this message.
+%Warning-WIDTHEXPAND: rtl/hdc/ot_hdc_fp32_f12.sv:247:23: Operator VAR 'CUTS' expects 32 bits on the Initial value, but Initial value's CONST '8'h6a' generates 8 bits.
+  247 |     parameter integer CUTS = 8'b01101010
+      |                       ^~~~
+                      ... For warning description see https://verilator.org/warn/WIDTHEXPAND?v=5.050
+                      ... Use "/* verilator lint_off WIDTHEXPAND */" and lint_on around source to disable this message.
+%Warning-WIDTHEXPAND: rtl/hdc/ot_hdc_fp32_f12.sv:58:23: Operator VAR 'CUTS' expects 32 bits on the Initial value, but Initial value's CONST '6'h2a' generates 6 bits.
+   58 |     parameter integer CUTS = 6'b101010
+      |                       ^~~~
+%Warning-WIDTHTRUNC: rtl/hdc/ot_hdc_fp32_f12.sv:43:14: Logical operator GENIF expects 1 bit on the If, but If's VARREF 'CUT' generates 32 bits.
+                                                     : ... note: In instance 'ot_s81_hc_cseq_static.u_rsq.g_nr[2].m_y...g_l5.u.u.u_k0'
+   43 |     generate if (CUT) begin : g_r
+      |              ^~
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_dsrom_divc.sv:131:20: Operator SUB expects 32 bits on the LHS, but LHS's VARREF 's4_eu' generates 11 bits.
+                                                          : ... note: In instance 'ot_s81_hc_cseq_static.u_div'
+  131 |         er = s4_eu - 11'sd49 - K + $signed({5'd0, lead});
+      |                    ^
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_dsrom_divc.sv:131:20: Operator SUB expects 32 bits on the RHS, but RHS's CONST '11'sh31' generates 11 bits.
+                                                          : ... note: In instance 'ot_s81_hc_cseq_static.u_div'
+  131 |         er = s4_eu - 11'sd49 - K + $signed({5'd0, lead});
+      |                    ^
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_dsrom_divc.sv:131:34: Operator ADD expects 32 bits on the RHS, but RHS's SIGNED generates 11 bits.
+                                                          : ... note: In instance 'ot_s81_hc_cseq_static.u_div'
+  131 |         er = s4_eu - 11'sd49 - K + $signed({5'd0, lead});
+      |                                  ^
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_dsrom_divc.sv:131:12: Operator ASSIGN expects 11 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                         : ... note: In instance 'ot_s81_hc_cseq_static.u_div'
+  131 |         er = s4_eu - 11'sd49 - K + $signed({5'd0, lead});
+      |            ^
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_suhc/static/ot_s81_hc_cseq_static.sv:173:26: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'ci' generates 16 bits.
+                                                                                   : ... note: In instance 'ot_s81_hc_cseq_static'
+  173 |             j_civ <= (ci == NV + 1);
+      |                          ^~
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_suhc/static/ot_s81_hc_cseq_static.sv:205:75: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'base' generates 14 bits.
+                                                                                   : ... note: In instance 'ot_s81_hc_cseq_static'
+  205 |                             rq_v[s] <= 1'b1; rq_row[14 * s +: 14] <= base + ci + s;
+      |                                                                           ^
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_suhc/static/ot_s81_hc_cseq_static.sv:205:75: Operator ADD expects 32 bits on the RHS, but RHS's VARREF 'ci' generates 16 bits.
+                                                                                   : ... note: In instance 'ot_s81_hc_cseq_static'
+  205 |                             rq_v[s] <= 1'b1; rq_row[14 * s +: 14] <= base + ci + s;
+      |                                                                           ^
+%Warning-WIDTHTRUNC: rtl/dsrom_sys/s81_suhc/static/ot_s81_hc_cseq_static.sv:205:67: Operator ASSIGNDLY expects 14 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                                                  : ... note: In instance 'ot_s81_hc_cseq_static'
+  205 |                             rq_v[s] <= 1'b1; rq_row[14 * s +: 14] <= base + ci + s;
+      |                                                                   ^~
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_suhc/static/ot_s81_hc_cseq_static.sv:204:32: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'ci' generates 16 bits.
+                                                                                   : ... note: In instance 'ot_s81_hc_cseq_static'
+  204 |                         if (ci + s < ((kind == K_HLOAD) ? HROWS : (kind == K_COEF) ? 2 : GROWS)) begin
+      |                                ^
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_suhc/static/ot_s81_hc_cseq_static.sv:207:30: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'ci' generates 16 bits.
+                                                                                   : ... note: In instance 'ot_s81_hc_cseq_static'
+  207 |                     ci <= ci + S_RD;
+      |                              ^
+%Warning-WIDTHTRUNC: rtl/dsrom_sys/s81_suhc/static/ot_s81_hc_cseq_static.sv:207:24: Operator ASSIGNDLY expects 16 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                                                  : ... note: In instance 'ot_s81_hc_cseq_static'
+  207 |                     ci <= ci + S_RD;
+      |                        ^~
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_suhc/static/ot_s81_hc_cseq_static.sv:221:32: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'cc' generates 16 bits.
+                                                                                   : ... note: In instance 'ot_s81_hc_cseq_static'
+  221 |                         if (cc == ((kind == K_HLOAD) ? HROWS : (kind == K_COEF) ? 2 : GROWS)) begin
+      |                                ^~
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_suhc/static/ot_s81_hc_cseq_static.sv:245:37: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'ci' generates 16 bits.
+                                                                                   : ... note: In instance 'ot_s81_hc_cseq_static'
+  245 |                     end else if (ci < NV + 1) begin
+      |                                     ^
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 14.218 MB sources in 154 modules, into 7.894 MB in 9 C++ files needing 0.000 MB
+- Verilator: Walltime 2.205 s (elab=0.161, cvt=1.814, bld=0.000); cpu 2.205 s on 1 threads; allocated 180.797 MB
