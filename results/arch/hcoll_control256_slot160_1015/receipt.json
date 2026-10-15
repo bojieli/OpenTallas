@@ -1,0 +1,61 @@
+{
+  "profile": "distinct local-slot160 successor,not frozen19bank selected120profile",
+  "issuer_source_commit": "79037c152",
+  "issuer_sha256": "25dcd51a52b5ff57aac1804725844f707db9d953a1e4895eaf3c3af4a3659bcc",
+  "issuer_RTL_changed": false,
+  "source_image_pins": "inputs.json (18raw+packedsha256),layer1/14compiler_manifest.json",
+  "shape": {
+    "actual_native_64x512_macros": 21,
+    "actual_capture_leaves": 21,
+    "clock_roots": 43,
+    "controller_root_FF_bound": 5344,
+    "capacity_controls": 2688,
+    "initialized_raw256frames_per_image": 2688,
+    "native512words_per_image": 1344,
+    "used_control_limit": 2569,
+    "unused_zero_padding": 119,
+    "nine_node_catalogue_macro_count": 189,
+    "nine_node_catalogue_clock_roots": 387
+  },
+  "config": "TARGET120/raw256,complete512pairs;descriptorbase0,limit2569,loops1;1344edgevalidscan/1346hostdescgap",
+  "row_semantics": "source/pkt/assembler row fields carrylocalslot0..3; globalrowcomesfromactualproducer/header; issuer transportsbits withoutinterpretingkernel semantics",
+  "positive": {
+    "full_capacity": [
+      2688,
+      2048
+    ],
+    "actual18images_each": [
+      2569,
+      1929
+    ],
+    "actual_controls_checked": 80964,
+    "synthetic_controls_checked": 4736,
+    "total_controls_checked": 85700,
+    "exact_bits": 21939200,
+    "first_output_after_raw_launch_capture": 6,
+    "next_consumer_capture": 7,
+    "sustained_controls_per_edge": 1,
+    "lastoperation": "donewithoddlastlowhalf,noextraupperoperation"
+  },
+  "protocol_fault_scenarios": 17,
+  "mutant_scope": "no new21bankmutant run requested; sameRTL prior19bank bitflip/halfswap mutant evidence preserved in hcoll_control256_1015 receipt",
+  "terminal_runs": [
+    {
+      "unit": "oth-ubuntu-3906682-1792059674",
+      "host": "ot-agidock128",
+      "exit": 0,
+      "scope": "21actualbanks fullcapacity+base640+17faults",
+      "admitted_memory_GB": 8
+    },
+    {
+      "unit": "oth-ubuntu-3907098-1792059712",
+      "host": "ot-agidock128",
+      "exit": 0,
+      "scope": "18real local-slot160images limit2569+base640",
+      "admitted_memory_GB": 4
+    }
+  ],
+  "memory_measurement": "simulatorreported7MB; buildcgrouppeaknotretained, no peakclaim",
+  "old19bank_evidence": "preservedunmodifiedunder results/arch/hcoll_control256_1015",
+  "qualification": "independentnativeissuer/programme-bittransport gate only; no actualnetwork/FEC/CDC/numericalkernel/WKV/physical/productionrate claim"
+}
