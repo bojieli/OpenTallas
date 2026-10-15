@@ -81,6 +81,8 @@ class Physical(unittest.TestCase):
                 s.update(clock_data_paths='related_same_frequency',clock_relationship=dict(kind='same_pll_fixed_phase',ratio=[1,1],phase_ps=0))
             if mutant=='related_wrong_input':
                 s['clock_entry_domains']['core']['inputs']=['rsp'];s['clock_entry_domains']['response']['inputs']=['req']
+            if mutant in ('async_reset','async_reset_data'):
+                s['clock_entry_domains']['core']['inputs'].append('rst_n');s['reset_ports']=['rst_n']
             if mutant=='declared_reset':s['reset_ports']=['req']
             if mutant=='wrong_input':
                 s['clock_entry_domains']['core']['inputs']=['rsp'];s['clock_entry_domains']['response']['inputs']=['req']
@@ -92,7 +94,13 @@ class Physical(unittest.TestCase):
                 (w/'signoff.sdc').write_text(RT.gen_signoff(s,'*','none_*'))
             cells='\n'.join(f'DFFHQNx1_ASAP7_75t_R r{i} (.CLK(ck_req),.D({"z0" if mutant.startswith("related") and i==1 else "req"}),.QN(q{i}));' for i in range(16))
             cells+='\n'+'\n'.join(f'DFFHQNx1_ASAP7_75t_R s{i} (.CLK(ck_rsp),.D({"q0" if mutant=="cross_data" or mutant.startswith("related") and i==0 else "rsp"}),.QN(z{i}));' for i in range(4))
-            (w/'t.v').write_text('module top(input ck_req,ck_rsp,req,rsp,output qo,zo);\n'+cells+'\nassign qo=q0;assign zo=z0;endmodule\n')
+            if mutant in ('async_reset','async_reset_data'):
+                cells=cells.replace('DFFHQNx1_ASAP7_75t_R r0 (.CLK(ck_req),.D(req),.QN(q0));',
+                    'DFFASRHQNx1_ASAP7_75t_R r0 (.CLK(ck_req),.D(req),.RESETN(rst_n),.SETN(1\'b1),.QN(q0));')
+                cells=cells.replace('DFFHQNx1_ASAP7_75t_R s0 (.CLK(ck_rsp),.D(rsp),.QN(z0));',
+                    'DFFASRHQNx1_ASAP7_75t_R s0 (.CLK(ck_rsp),.D('+('rst_n' if mutant=='async_reset_data' else 'rsp')+'),.RESETN(rst_n),.SETN(1\'b1),.QN(z0));')
+            extra=',rst_n' if mutant in ('async_reset','async_reset_data') else ''
+            (w/'t.v').write_text('module top(input ck_req,ck_rsp,req,rsp'+extra+',output qo,zo);\n'+cells+'\nassign qo=q0;assign zo=z0;endmodule\n')
             (w/'clocks.tcl').write_text(CE.clocks(s,833.333))
             (w/'entry.tcl').write_text('set ::ot_ce_require_wire 1\n'+CE.generate(s,ROOT))
             flow=r'''
@@ -148,6 +156,12 @@ puts "MULTI_ROOT_RESULT PASS"
         for a,b in zip(refs[:2],refs[2:]):
             self.assertEqual(a[0],b[0])
             for x,y in zip(a[1:],b[1:]):self.assertAlmostEqual(float(x),float(y),places=8)
+    def test_actual_liberty_shared_async_reset_and_data_mutant(self):
+        rc,out=self.run_flow('async_reset',generated=True);self.assertEqual(rc,0,out[-8000:])
+        self.assertIn('async_control_pins=4',out)
+        rc,out=self.run_flow('async_reset_data');self.assertNotEqual(rc,0,out[-8000:])
+        self.assertIn('input rst_n has wrong domain',out)
+
     def test_explicit_related_crossings_keep_both_sta_directions(self):
         rc,out=self.run_flow('related',generated=True);self.assertEqual(rc,0,out[-8000:])
         for pair in ['core -> response','response -> core']:
