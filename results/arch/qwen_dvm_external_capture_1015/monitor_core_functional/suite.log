@@ -1,0 +1,10 @@
+ot-run: ot-epyc4       admits   657 GB (avail 884, growth 87, headroom 48, waiters 0/0 GB) load 34/128 running 18 disk 430 GB 
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-2044175-1792063204 after 0 s
+PASS external capture leaf checks=129 good=128 invalid=1 same_read_age=1 fill_II=1 burst_words=128 payload_bytes_per_edge=128
+rtl/qwen_sys/dvm_extcap_20261015/tb_qfd_xs_leaf_capture.sv:87: $finish called at 1392100 (1ps)
+PASS external capture early fill rejected
+rtl/qwen_sys/dvm_extcap_20261015/tb_qfd_xs_leaf_capture.sv:55: $finish called at 20100 (1ps)
+PASS external capture dropped-clock epoch fault detected
+rtl/qwen_sys/dvm_extcap_20261015/tb_qfd_xs_leaf_capture.sv:32: $finish called at 60000 (1ps)
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-2044175-1792063204): exit 0

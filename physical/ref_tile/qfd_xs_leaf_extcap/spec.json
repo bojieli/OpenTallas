@@ -47,12 +47,15 @@
    "r_p",
    "q_v",
    "q",
-   "q_bad"
+   "q_bad",
+   "fault"
   ],
   "W": [
    "w_d",
    "clk",
-   "rst_n"
+   "rst_n",
+   "wd0_flags",
+   "wd1_flags"
   ]
  },
  "route": {
@@ -168,6 +171,18 @@
   "rst_n": [
    82.5,
    83.5
+  ],
+  "wd0_flags": [
+   77.2,
+   78
+  ],
+  "wd1_flags": [
+   159.8,
+   160.8
+  ],
+  "fault": [
+   56,
+   56.5
   ]
  },
  "pin_source": "chain faces N / S on identical ranges (abutted leaf-to-leaf, the same bit at the same x); read bus on E at the low-y end (R0 in the N chain, MX in the S chain: the end nearest the column head, read hop <= ~440 um to the far leaf)",
@@ -175,9 +190,54 @@
  "job": {
   "owner": "Codex:q_dvm",
   "branch": "claude/qwen-dvm-1014",
-  "tag": "xe1",
+  "tag": "xe2",
   "purpose": "Actual externalWDcapture successor core, preserve128B/edge and existingtwoedgefill",
-  "benches": [],
+  "benches": [
+   {
+    "name": "extcap_fullwidth",
+    "cmd": "bash physical/qwen_dvm_extcap_1015/bench_leaf.sh {RUN}/bench/extcap_fullwidth 0 normal",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 1,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "^PASS external capture leaf checks=129"
+   },
+   {
+    "name": "extcap_bypass_mutant",
+    "cmd": "bash physical/qwen_dvm_extcap_1015/bench_leaf.sh {RUN}/bench/extcap_bypass_mutant 1 normal",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 1,
+    "needs": [
+     "iverilog"
+    ],
+    "fail_regex": "FAIL external capture forwarding age/bits"
+   },
+   {
+    "name": "extcap_reset_window",
+    "cmd": "bash physical/qwen_dvm_extcap_1015/bench_leaf.sh {RUN}/bench/extcap_reset_window 0 early",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 1,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "^PASS external capture early fill rejected"
+   },
+   {
+    "name": "extcap_dropped_clock",
+    "cmd": "bash physical/qwen_dvm_extcap_1015/bench_leaf.sh {RUN}/bench/extcap_dropped_clock 0 drop_clock",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 1,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "^PASS external capture dropped-clock epoch fault detected"
+   }
+  ],
   "extra_paths": [
    "rtl/hdc",
    "rtl/proto",
@@ -185,7 +245,8 @@
    "rtl/qwen_sys/dvm_extcap_20261015",
    "rtl/qwen_sys/head_staging_20261015",
    "rtl/qwen_sys/tile_glue_banks_20261015",
-   "rtl/lib"
+   "rtl/lib",
+   "physical/qwen_dvm_extcap_1015"
   ],
   "views_to": "physical/ref_tile/qfd_xs_leaf_extcap/views",
   "record_to": "results/rtl/ref_tile/qfd_xs_leaf_extcap"
@@ -205,8 +266,9 @@
  "hold_pad": {
   "cell": "HB2xp67_ASAP7_75t_R"
  },
- "structural_change": "Externalize EXISTING1024b WDcapture into two actual qwen_glue_v514 masters outside64.8storestrip. Core WD PI is alreadycaptured; nativecore hasnoWDcaptureFF and pin_reg_split disabled to prevent silentlyrecloning them. RAWmetadata146bits stillcapturesedge1; bankstore and existingpd/WOforwardedge2. Externalmastertwoextra roots and3edge resetrelease/firstcapture4; parentsticky earlyfill/epochfault. LeafWDATA512lowY3.036..76.620/high85.452..159.036; bankphysicalorder[0,2,4,6,1,3,5,7] groupssharedwordhalves, no globalS1024WDcapture/restoreplane. Exactnativepin/hold/OBS/cut/CTS proof required, no rate/edge/clockwaiver; homes+parentphase unqualified.",
+ "structural_change": "Externalize EXISTING1024b WDcapture into two actual qwen_glue_v514 masters outside64.8storestrip. Core WD PI is alreadycaptured; nativecore hasnoWDcaptureFF and pin_reg_split disabled to prevent silentlyrecloning them. RAWmetadata146bits stillcapturesedge1; bankstore and existingpd/WOforwardedge2. Externalmastertwoextra roots and3edge resetrelease/firstcapture4; parentsticky earlyfill/epochfault. LeafWDATA512lowY3.036..76.620/high85.452..159.036; bankphysicalorder[0,2,4,6,1,3,5,7] groupssharedwordhalves, no globalS1024WDcapture/restoreplane. Exactnativepin/hold/OBS/cut/CTS proof required, no rate/edge/clockwaiver; homes+parentphase unqualified. Five monitorFF insidehardcore,4GWflaginputs+stickyfault. io_tcl overridesgenericPPL; all2444ports explicitlyassigned. FirstpartialWDonlyplan failed185actualoverlaps/native; thisplan importsONLYunchangedportcoordinatesfromactual64.8x162IO, notoldtiming. WD/flagsW,faultE. Actualphase/native/cuts stillrequired.",
  "pin_hook_before_flops": [
+  "physical/ref_tile/qfd_xs_leaf_extcap/check_pin_plan.tcl",
   "physical/ref_tile/qfd_xs_leaf_extcap/local_banks.tcl"
  ],
  "orfs_vars": {
@@ -215,5 +277,5 @@
  "pre_cts_extra": [
   "physical/ref_tile/qfd_xs_leaf_extcap/rebind_before_cts.tcl"
  ],
- "io_tcl": "physical/ref_tile/qfd_xs_leaf_extcap/assigned_data_pins.tcl"
+ "io_tcl": "physical/ref_tile/qfd_xs_leaf_extcap/assigned_pins.tcl"
 }

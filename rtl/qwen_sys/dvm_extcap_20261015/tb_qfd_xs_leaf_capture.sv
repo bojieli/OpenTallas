@@ -17,6 +17,9 @@ module tb_qfd_xs_leaf_capture;
  ot_qfd_xs_leaf #(.BANK_PIPE(0)) ref_leaf
   (.clk,.rst_n,.w_v,.w_ep,.w_off,.w_m,.w_d,.w_ctl,.c_v,.c_ep,
    .r_v,.r_t,.r_ep,.r_p,.q_v(fv),.q(fq),.q_bad(fb));
+ reg suppress_capture1=0;
+ wire capture1_clk=clk&&!suppress_capture1;
+ always @(negedge clk)suppress_capture1<=$test$plusargs("drop_clock")&&(age==25);
  wire fault,wo_v,wo_ep,co_v,co_ep;
  wire [5:0] wo_off;wire [63:0]wo_m;wire[1023:0]wo_d;wire[71:0]wo_ctl;
  reg[1169:0]fill1=0,fill2=0;integer fillchecks=0,age=0;
@@ -26,12 +29,13 @@ module tb_qfd_xs_leaf_capture;
   fill2<=fill1;
  end
  always @(negedge clk)if(rst_n&&age>8&&EARLY==0)begin
+  if($test$plusargs("drop_clock")&&fault)begin $display("PASS external capture dropped-clock epoch fault detected");$finish;end
   if({co_ep,co_v,wo_ctl,wo_d,wo_m,wo_off,wo_ep,wo_v}!==fill2)$fatal(1,"FAIL external capture forwarding age/bits check=%0d",fillchecks);
   if(fault)$fatal(1,"FAIL external capture protocol fault");
   fillchecks=fillchecks+1;
  end
  qfd_xs_leaf_capture_parent #(.MUT(MUT)) dut
-  (.clk,.clk_wd0(clk),.clk_wd1(clk),.rst_n,.w_v,.w_ep,.w_off,.w_m,.w_d,.w_ctl,.c_v,.c_ep,
+  (.clk,.clk_wd0(clk),.clk_wd1(capture1_clk),.rst_n,.w_v,.w_ep,.w_off,.w_m,.w_d,.w_ctl,.c_v,.c_ep,
    .r_v,.r_t,.r_ep,.r_p,.q_v(bv),.q(bq),.q_bad(bb),.fault,
    .wo_v,.wo_ep,.wo_off,.wo_m,.wo_d,.wo_ctl,.co_v,.co_ep);
  reg pv=0,pb=0;reg [63:0] pq=0;

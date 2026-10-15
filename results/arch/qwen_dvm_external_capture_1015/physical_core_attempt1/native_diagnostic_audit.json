@@ -1,0 +1,24 @@
+{
+  "cell": "qfd_xs_leaf_extcap",
+  "view": "codex-dvm12",
+  "lib_cell": "qfd_xs_leaf_extcap",
+  "insertion": true,
+  "ref_src": [
+    "insertion.json boundary mean"
+  ],
+  "R_ps": 183.2,
+  "spread_ps": 43.4,
+  "outputs": 1218,
+  "inputs": 1202,
+  "launch_ps": 292.6,
+  "launch_pin": "q_v",
+  "capture_ps": 352.8,
+  "capture_pin": "r_t",
+  "launch_over": 1207,
+  "capture_over": 96,
+  "comb_pins": 0,
+  "comb_first": [],
+  "pass": false,
+  "fail_why": "launch 292.6 > 220 (1207 pins); capture 352.8 > 190 (96 pins)",
+  "diagnostic_only": true
+}

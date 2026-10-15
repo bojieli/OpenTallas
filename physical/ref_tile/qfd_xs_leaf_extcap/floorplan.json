@@ -55,12 +55,15 @@
    "r_p",
    "q_v",
    "q",
-   "q_bad"
+   "q_bad",
+   "fault"
   ],
   "W": [
    "w_d",
    "clk",
-   "rst_n"
+   "rst_n",
+   "wd0_flags",
+   "wd1_flags"
   ]
  },
  "clock_port": "clk",
@@ -74,6 +77,7 @@
   "rtl/qwen_sys/head_staging_20261015/ot_qkh_packet_stage.sv",
   "rtl/qwen_sys/tile_glue_banks_20261015/qwen_glue_face_masters.sv",
   "physical/ref_tile/qfd_xs_leaf_extcap/rebind_before_cts.tcl",
+  "physical/ref_tile/qfd_xs_leaf_extcap/check_pin_plan.tcl",
   "physical/ref_tile/qfd_xs_leaf_extcap/local_banks.tcl",
   "physical/ref_tile/qfd_xs_leaf_extcap/kit.env",
   "physical/ref_tile/qfd_xs_leaf_extcap/clock.sdc",
@@ -96,7 +100,7 @@
   "physical/qwen_die_masters/post_plain.tcl",
   "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
   "physical/common_flow/grt_macro_top_layer.tcl",
-  "physical/ref_tile/qfd_xs_leaf_extcap/assigned_data_pins.tcl",
+  "physical/ref_tile/qfd_xs_leaf_extcap/assigned_pins.tcl",
   "physical/qwen_die_masters/io_flop_at_pins.tcl",
   "physical/qwen_die_masters/out_flop_release.tcl",
   "physical/dsrom_window_source/leaf_iohold.tcl",

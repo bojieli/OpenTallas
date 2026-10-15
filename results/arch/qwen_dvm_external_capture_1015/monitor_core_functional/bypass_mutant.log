@@ -1,0 +1,8 @@
+ot-run: ot-epyc1tb     admits   546 GB (avail 772, growth 42, headroom 64, waiters 0/0 GB) load 47/128 running 12 disk 984 GB 
+ot-run: ot-epyc4       admits   588 GB (avail 815, growth 81, headroom 48, waiters 0/0 GB) load 52/128 running 19 disk 440 GB 
+ot-run: -> ot-epyc1tb
+ot-heavy: admitted on ot-epyc1tb as oth-ubuntu-1293023-1792062207 after 0 s
+[28000] %Fatal: tb_qfd_xs_leaf_capture.sv:29: Assertion failed in tb_qfd_xs_leaf_capture: FAIL external capture forwarding age/bits check=2
+%Error: rtl/qwen_sys/dvm_extcap_20261015/tb_qfd_xs_leaf_capture.sv:29: Verilog $stop
+Aborting...
+ot-run: RAN on ot-epyc1tb (unit oth-ubuntu-1293023-1792062207): exit 1
