@@ -23,16 +23,16 @@ module tb_hgi_hc_residual_vm_static;
         .clk(clk),.rst_n(rst_n),.launch(launch),.npos(4'd8),.base_sector(16'd0),
         .local_rq(rq),.local_read(rd),.local_rr(rr),.x_wave_v(wavev),.x_wave_word(word_),.x_wave(wave),.done(done),.fault(fault));
     for(genvar sid=0;sid<4;sid=sid+1)begin:quadrant
-        wire [135:0] nrq[0:2];wire [2247:0] nwq[0:2];
-        wire [2055:0] lrr[0:2],frr[0:2];wire [7:0] ld[0:2],fd[0:2];
+        wire [407:0] nrq;wire [6743:0] nwq;
+        wire [6167:0] lrr,frr;wire [23:0] ld,fd;
         wire [2055:0] bankrr;wire [7:0] bankdone;
-        assign responses[sid*2056+:2056]=lrr[2];
+        assign responses[sid*2056+:2056]=lrr[(2)*2056+:2056];
         for(genvar b=0;b<8;b=b+1)begin:bank
             wire [770:0] r;
             assign bankrr[b*257+:257]=r[0+:257];
             ot_vms_bank_static #(.RG(3),.WG(1)) mem(.clk(clk),.rst_n(rst_n),.bid(3'(b)),.sid(2'(sid)),
                 .rslot_v(1'b1),.rslot(2'd0),.wslot_v(1'b1),.wslot(3'd5),
-                .rq({34'd0,nrq[0][b*17+:17]}),.rr(r),.wq(nwq[0][b*281+:281]),.wq_done(bankdone[b]),
+                .rq({34'd0,nrq[b*17+:17]}),.rr(r),.wq(nwq[b*281+:281]),.wq_done(bankdone[b]),
                 .dq(fill_q[(sid*8+b)*281+:281]),.dq_done(),.kq(281'd0),.kq_done(),.xq(276'd0),.xq_done(),.xq2(276'd0),.xq2_done(),
                 .eg(),.pq(285'd0),.pr(),.status(status[(sid*8+b)*18+:18]));
         end
@@ -40,11 +40,11 @@ module tb_hgi_hc_residual_vm_static;
             wire [135:0] localq;
             for(genvar b=0;b<8;b=b+1)assign localq[b*17+:17]={st==2&&rq[b*17+16]&&rq[b*17+13+:2]==sid,rq[b*17+:16]};
             ot_hbm_vm_lg_static_tap #(.READ_RETURN(10+4*st),.WRITE_RETURN(7+4*st)) tap(
-                .clk(clk),.rst_n(rst_n),.local_rq(localq),.far_rq(st==2?136'd0:nrq[st+1]),
-                .local_wq(2248'd0),.far_wq(st==2?2248'd0:nwq[st+1]),
-                .local_read({8{st==2}}),.local_write(8'd0),.near_rq(nrq[st]),.near_wq(nwq[st]),
-                .near_rr(st==0?bankrr:frr[st-1]),.near_w_done(st==0?bankdone:fd[st-1]),
-                .local_rr(lrr[st]),.far_rr(frr[st]),.local_w_done(ld[st]),.far_w_done(fd[st]),.fault(tapfault[sid*3+st]));
+                .clk(clk),.rst_n(rst_n),.local_rq(localq),.far_rq(st==2?136'd0:nrq[(st+1)*136+:136]),
+                .local_wq(2248'd0),.far_wq(st==2?2248'd0:nwq[(st+1)*2248+:2248]),
+                .local_read({8{st==2}}),.local_write(8'd0),.near_rq(nrq[(st)*136+:136]),.near_wq(nwq[(st)*2248+:2248]),
+                .near_rr(st==0?bankrr:frr[(st-1)*2056+:2056]),.near_w_done(st==0?bankdone:fd[(st-1)*8+:8]),
+                .local_rr(lrr[(st)*2056+:2056]),.far_rr(frr[(st)*2056+:2056]),.local_w_done(ld[(st)*8+:8]),.far_w_done(fd[(st)*8+:8]),.fault(tapfault[sid*3+st]));
         end
     end
     for(genvar b=0;b<8;b=b+1)assign rr[b*257+:257]=responses[b*257+:257]|responses[2056+b*257+:257]|responses[4112+b*257+:257]|responses[6168+b*257+:257];
