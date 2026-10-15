@@ -81,6 +81,55 @@ endmodule
 '''
 
 
+BIT_UPDATE = r'''
+module bit_update(input wire clk, input wire [127:0] set_bits, clear_bits, output wire [127:0] q);
+  reg [127:0] zv /* verilator public_flat_rw */;
+  assign q = zv;
+  integer i;
+  initial zv = 0;
+  always @(posedge clk) for(i=0;i<128;i=i+1) begin
+    if (set_bits[i]) zv[i] <= 1'b1;
+    else if (clear_bits[i]) zv[i] <= 1'b0;
+  end
+endmodule
+module tb;
+  reg clk=0; reg [127:0] set_bits=0,clear_bits=0, expected=0;
+  wire [127:0] zv;
+  bit_update dut(.clk(clk), .set_bits(set_bits), .clear_bits(clear_bits), .q(zv));
+  always #5 clk=~clk;
+  initial begin
+    for(integer c=0;c<12;c=c+1) begin
+      @(negedge clk);
+      set_bits = 128'h16429adcbffedabe62894790398216ad ^ (128'h12345678123456789abcdef09abcdef0 << c);
+      clear_bits = 128'hffeeddccbbaa00991122334455667788 >> c;
+      expected = (expected | set_bits) & ~(clear_bits & ~set_bits);
+      @(posedge clk); #1;
+      if(zv !== expected) $fatal(1,"BIT_UPDATE_MISMATCH");
+    end
+    $display("RESULT 12"); $finish;
+  end
+endmodule
+'''
+
+
+# Nested NBA loops: the INNER loop's blocking index (``i = 1U + i``, header ``i <= 7``) lands in the outer
+# loop's statements; it is a loop counter, not an in-place NBA target (fleet FPs qadd u_rnd.i, coll-park q).
+NESTED = r'''
+module tb;
+  reg clk=0; integer cyc=0; reg [7:0] m [0:3]; integer k, i; reg [31:0] chk=0;
+  initial for (k = 0; k < 4; k = k + 1) m[k] = 8'd0;
+  always #5 clk=~clk;
+  always @(posedge clk) begin
+    for (k = 0; k < 4; k = k + 1)
+      for (i = 0; i <= 7; i = i + 1) m[k][i] <= cyc[0] ^ i[0] ^ k[0];
+    chk <= chk + m[cyc%4];
+    cyc <= cyc + 1;
+    if (cyc==10) begin $display("RESULT %0d", chk); $finish; end
+  end
+endmodule
+'''
+
+
 @unittest.skipUnless(REAL.exists(), 'Verilator 5.050 fleet install required')
 class Guard(unittest.TestCase):
     def build(self, w, src, flags, front=None):
@@ -126,6 +175,18 @@ class Guard(unittest.TestCase):
             self.assertEqual(r['findings'], [])
             self.assertEqual(r['blocking_loops_excluded'], 1)
 
+    def test_nested_inner_loop_counter_is_not_flagged(self):
+        results = []
+        for flags in (['--unroll-count', '1'], []):
+            with tempfile.TemporaryDirectory() as d:
+                w = Path(d)
+                p = self.build(w, NESTED, flags)
+                self.assertEqual(p.returncode, 0, p.stderr[-3000:])
+                results.append(self.sim(w))
+                r = G.scan(str(w / 'obj'))
+                self.assertEqual(r['findings'], [], G.summarize(r))
+        self.assertEqual(results[0], results[1])
+
     def test_value_without_loop_carried_read_is_not_flagged(self):
         with tempfile.TemporaryDirectory() as d:
             w = Path(d)
@@ -149,6 +210,42 @@ class Guard(unittest.TestCase):
                 if rc:
                     self.assertIn('VERILATOR_NBA_GUARD FAIL', p.stderr)
                 self.assertTrue((w / 'objf').is_dir())
+
+    def test_independent_bit_set_clear_preserves_only_its_exact_word(self):
+        with tempfile.TemporaryDirectory() as d:
+            w = Path(d)
+            p = self.build(w, BIT_UPDATE, ['--unroll-count', '1'])
+            self.assertEqual(p.returncode, 0, p.stderr[-3000:])
+            self.assertEqual(self.sim(w), 12)
+            r = G.scan(str(w / 'obj'))
+            self.assertGreater(r['independent_bit_updates_excluded'], 0)
+            self.assertEqual(r['findings'], [], G.summarize(r))
+
+    def test_preserve_match_is_exact_and_requires_independent_rtl_value(self):
+        lhs = 'vlSelfRef.tb__DOT__zv[i >> 5U]'
+        bit = '((IData)(1U) << (i & 31U))'
+        self.assertTrue(G._preserves_exact_word(lhs, '(' + lhs + ' | ' + bit + ')'))
+        self.assertTrue(G._preserves_exact_word(lhs, '(' + lhs + ' & ~' + bit + ')'))
+        self.assertFalse(G._preserves_exact_word(lhs, '(vlSelfRef.tb__DOT__zv[j >> 5U] | ' + bit + ')'))
+        self.assertFalse(G._preserves_exact_word(lhs, '(' + lhs + ' + ' + bit + ')'))
+        # constant-masked part-select insert and width-cast scalar bit set (fleet s81 SU ua_q / h0 shapes)
+        ua = 'vlSelfRef.tb__DOT__ua_q[0U]'
+        self.assertTrue(G._preserves_exact_word(ua, '((0xffffc000U & ' + ua + ') | (IData)(vlSelfRef.tb__DOT__rx_a))'))
+        self.assertFalse(G._preserves_exact_word(ua, '((0xffffc000U & ' + ua + ') | vlSelfRef.tb__DOT__ua_q[1U])'))
+        self.assertFalse(G._preserves_exact_word(ua, '((0xffffc000U & ' + ua + ') + vlSelfRef.tb__DOT__rx_a)'))
+        h0 = 'vlSelfRef.tb__DOT__h0'
+        self.assertTrue(G._preserves_exact_word(h0, '((IData)(' + h0 + ') | (0x00ffU & ((IData)(1U) << (7U & e))))'))
+        self.assertFalse(G._preserves_exact_word(h0, '((IData)(' + h0 + ') | (' + h0 + ' >> 1U))'))
+        parts = ['tb', 'zv']
+        independent = {'tb': ["module tb; reg [127:0] zv; always @(posedge clk) if (s[i]) zv[i] <= 1'b1; endmodule"]}
+        dependent = {'tb': ["module tb; reg [127:0] zv; always @(posedge clk) zv[i] <= zv[i-1]; endmodule"]}
+        word_or = {'tb': ["module tb; reg [31:0] zv [0:1]; always @(posedge clk) zv[0] <= zv[0] | mask; endmodule"]}
+        self.assertTrue(G._independent_nba_value(independent, parts))
+        self.assertFalse(G._independent_nba_value(dependent, parts))
+        self.assertFalse(G._independent_nba_value(word_or, parts))
+        self.assertFalse(G._independent_nba_value(independent, ['missing', 'zv']))
+        mixed = {'tb': ["module tb; reg [127:0] zv; always @(posedge clk) begin\n zv[i] <= 1'b1; if (c) begin\n zv[j] <= zv[j-1]; end end endmodule"]}
+        self.assertFalse(G._independent_nba_value(mixed, parts))
 
     def test_no_model_modes_and_unreadable_sources(self):
         self.assertIsNone(W.model_dir(['--lint-only', 'x.sv'], Path('/tmp')))

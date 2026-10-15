@@ -5,9 +5,9 @@
 // pr143 replays locally on fixed cycles; the HC broadcast station carries
 // START only. Every physical rank receives its own authorized class8 image. All
 // simultaneous rawhc pulses consume one credit; source_cr follows seven copies.
-module qkd_host_control_packet_observed #(parameter T_LINK=200000,T_HBM=200000,WDOG=1<<22,HC_MUT=0,PROMPT_MUT=0,PROMPT_BIND_LATENCY=4,ENABLE_SERVICE=0,ENABLE_TOKEN=0,TOKEN_MUT=0)(
+module qkd_host_control_packet_observed #(parameter T_LINK=200000,T_HBM=200000,WDOG=1<<22,HC_MUT=0,PROMPT_MUT=0,PROMPT_BIND_LATENCY=4,ENABLE_SERVICE=0,ENABLE_TOKEN=0,TOKEN_MUT=0,NL=6)(
  input wire ck_host,ck_csr,ck_rst,ck_ctl,ck_prompt,
- input wire[2:0]die_id,input wire por_n,input wire[5:0]link_up,
+ input wire[2:0]die_id,input wire por_n,input wire[NL-1:0]link_up,
  input wire[7:0]transport_fault,physical_fault,input wire crom_fault,input wire[142:0]pr,
  output wire irq,host_rst_n,link_rst_n,hbm_rst_n,boot_go,die_rst_n,sys_ready,
  output wire[31:0]fault_src,
@@ -92,7 +92,7 @@ wire  m_wlast;
 wire  m_bvalid;
 wire  m_bready;
 wire [1:0] m_bresp;
-qkd_host_control_prompt_observed #(.T_LINK(T_LINK),.T_HBM(T_HBM),.WDOG(WDOG),.PROMPT_MUT(PROMPT_MUT),.PROMPT_BIND_LATENCY(PROMPT_BIND_LATENCY),.ENABLE_SERVICE(ENABLE_SERVICE))u_control(.peer_reset_request(peer_reset_request),.cq_commit_v(cq_commit_v),.cq_client_tag(cq_client_tag),.cq_slot(cq_slot),.cq_pos(cq_pos),.cq_token(cq_token),.cq_kind(cq_kind),.cq_status(cq_status),.step_issue_v(step_issue_v),.step_client_tag(step_client_tag),.step_slot(step_slot),.step_pos(step_pos),.host_idle(host_idle),.host_observer_fault(host_observer_fault),.step_retire_v(step_retire_v),.step_retire_cq(step_retire_cq),.step_retire_client_tag(step_retire_client_tag),.step_retire_slot(step_retire_slot),.step_retire_pos(step_retire_pos),.step_retire_token(step_retire_token),
+qkd_host_control_prompt_observed #(.NL(NL),.T_LINK(T_LINK),.T_HBM(T_HBM),.WDOG(WDOG),.PROMPT_MUT(PROMPT_MUT),.PROMPT_BIND_LATENCY(PROMPT_BIND_LATENCY),.ENABLE_SERVICE(ENABLE_SERVICE))u_control(.peer_reset_request(peer_reset_request),.cq_commit_v(cq_commit_v),.cq_client_tag(cq_client_tag),.cq_slot(cq_slot),.cq_pos(cq_pos),.cq_token(cq_token),.cq_kind(cq_kind),.cq_status(cq_status),.step_issue_v(step_issue_v),.step_client_tag(step_client_tag),.step_slot(step_slot),.step_pos(step_pos),.host_idle(host_idle),.host_observer_fault(host_observer_fault),.step_retire_v(step_retire_v),.step_retire_cq(step_retire_cq),.step_retire_client_tag(step_retire_client_tag),.step_retire_slot(step_retire_slot),.step_retire_pos(step_retire_pos),.step_retire_token(step_retire_token),
 .package_abort(package_abort),.begin_tx_cr(begin_cr),.begin_tx_available(ctrl_begin_available),.pending_ack8(pending_ack8),.service_epoch8(service_epoch8),.service_fault(service_abort),.ingest_permission(ingest_permission),
 .begin_v(begin_v),.begin_epoch(begin_epoch),.begin_available(begin_available),.begin_fault(begin_fault),.epoch_busy(epoch_busy),.startup_allowed(startup_allowed),
 .service_abort(service_abort),.service_ready(service_ready),.service_ready8(service_ready8),.service_diag_raw(service_diag_raw),.service_status(service_status),

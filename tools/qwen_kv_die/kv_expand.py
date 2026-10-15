@@ -30,6 +30,7 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / 'tools'))
 sys.path.insert(0, str(ROOT / 'tools' / 'qwen_kv_die'))
 import kv_die as K  # noqa: E402
+from binding_order import sliced_order
 
 CORNERS = ('tt', 'ff', 'ss')
 RT = 'physical/ref_tile'
@@ -43,6 +44,7 @@ VIEWS = dict(
     ot_qkh_ktree=f'{RT}/ot_qkh_ktree_m5/views/ot_qkh_ktree',
     ot_qkh_head_score4_native=f'{RT}/qkh_r4_score4_1014/views/ot_qkh_head_score4_native',
     qkd_ectl_a_tp8_direct=f'{RT}/qkd_ectl_a_tp8_direct/views/qkd_ectl_a_tp8_direct',
+    qkd_ectl_a_tp8_epoch_direct=f'{RT}/qkd_ectl_a_tp8_direct/views/qkd_ectl_a_tp8_epoch_direct',
     qkd_ectl_b_tp8_direct=f'{RT}/qkd_ectl_b_tp8_direct/views/qkd_ectl_b_tp8_direct',
     qkd_ectl_c_tp8_direct=f'{RT}/qkd_ectl_c_tp8_direct/views/qkd_ectl_c_tp8_direct',
     qkd_ctrl_pc=f'{RT}/qkd_ctrl_pc/views/qkd_ctrl_pc',
@@ -54,6 +56,7 @@ RTL = dict(ot_qkh_head_frontq_native=f'{SR}/ot_qkh_head_native_r4.sv', ot_qkh_he
            ot_qkh_head_nb_native=f'{SR}/ot_qkh_head_native_r3.sv', ot_qkh_lane8='rtl/hdc/nearhbm/ot_qkh_subtiles.sv',
            ot_qkh_ktree='rtl/hdc/nearhbm/ot_qkh_subtiles.sv',
            **{f'qkd_ectl_{x}_tp8_direct': f'{SR}/qkd_ectl_native_direct_tp8.sv' for x in 'abc'},
+           qkd_ectl_a_tp8_epoch_direct=f'{SR}/qkd_ectl_a_tp8_epoch_direct.sv',
            qkd_ctrl_pc='rtl/qwen_sys/kv_die_20261009/qkd_ctrl_strip.sv', qkd_ctrl_kc='rtl/qwen_sys/kv_die_20261009/qkd_ctrl_strip.sv')
 FLIP = dict(R0=(0, 0), MX=(0, 1), MY=(1, 0), R180=(1, 1))
 ORIENT = {v: k for k, v in FLIP.items()}
@@ -220,7 +223,7 @@ def die_to_rtl(master, die_ports, rtl_w):
         seq = []
         for rp in b['ports'][base]:
             seq += [(rp, i) for i in range(rtl_w[rp])]
-        order = [base] + sorted(d for d in dps if d != base) if base in dps else sorted(dps)
+        order = sliced_order(base, dps)
         k = 0
         for d in order:
             n = die_ports[d]

@@ -125,6 +125,25 @@ def verdict_section(tcl_text):
     return sec
 
 
+def export_corner_sequence(sequence, corner):
+    """Replay constraints with ownership metadata matching the linked Liberty."""
+    if corner not in ("ss", "tt", "ff"):
+        raise VerdictError("unsupported export corner")
+    out = []
+    seen = False
+    for line in sequence:
+        if line.startswith("set ::ot_ce_corner "):
+            if not re.fullmatch(r"set ::ot_ce_corner (?:ss|tt|ff|\{(?:ss|tt|ff)\})", line):
+                raise VerdictError("unrecognized explicit clock-entry corner selector")
+            line = f"set ::ot_ce_corner {corner}"
+            seen = True
+        out.append(line)
+    if not seen:
+        at = next((i + 1 for i, line in enumerate(out) if line.startswith("read_db ")), 0)
+        out.insert(at, f"set ::ot_ce_corner {corner}")
+    return out
+
+
 def section_files(sec):
     """[(command, container path)] of the files a section reads"""
     return [tuple(l.split()[:2]) for l in sec if re.match(r"(read_db|read_sdc|read_spef|source) /", l)]
@@ -382,7 +401,7 @@ def main():
         lefs = [f"read_lef {PLAT}/lef/asap7sc7p5t_28_{VT[v][1]}_1x_220121a.lef" for v in vts]
         lefs += [f"read_lef /mv{i}/{n}.lef" for i, n in mv]
         if vd is not None:
-            # the verdict's own constraint section, verbatim (SS / TT = the setup session, FF = the hold session)
+            # Verdict constraints: SS/TT use setup, FF uses hold; only corner ownership metadata is retagged.
             seq, mode = list(vd["sec"]["ff" if c == "ff" else "ss"]), "verdict"
         elif jb is not None:
             seq, mode = list(jb["seq"]["ff" if c == "ff" else "ss"]), "job_replay"
@@ -398,6 +417,7 @@ def main():
             # must be loaded before it evaluates clock arrivals.
             seq, mode = [f"read_db /in/{rel}/6_final.odb", f"read_spef /in/{rel}/6_final.spef", f"read_sdc {sdc}",
                          "set_propagated_clock [all_clocks]"], "legacy"
+        seq = export_corner_sequence(seq, c)
         rec["sdc_sequence"][c] = dict(mode=mode, tcl=seq)
         audit = []
         if strict:

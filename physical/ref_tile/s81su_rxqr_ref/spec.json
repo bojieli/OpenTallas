@@ -1,0 +1,95 @@
+{
+ "name": "s81su_rxqr_ref",
+ "top": "dsfd_su_t_rxqr",
+ "kind": "tile",
+ "sources": [
+  "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_rxh.sv",
+  "rtl/dsrom_sys/s81_suhc/ot_s81_su_rw.sv",
+  "rtl/dsrom_sys/s81_suhc/ot_s81_su_rx.sv",
+  "rtl/hdc/v41x/ot_hdc_v41x_spshort.sv",
+  "rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/hdc/ot_hdc_sfu.sv",
+  "rtl/hdc/v41x/ot_dsrom_su_norm.sv",
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/hdc/ot_hdc_fp32_f12.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv",
+  "rtl/hdc/v41x/ot_dsrom_su_fdiv_f12.sv",
+  "rtl/hdc/v41x/ot_dsrom_su_f12.sv"
+ ],
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst"
+ ],
+ "util": 0.55,
+ "pins": {
+  "W": [
+   "ck",
+   "rst",
+   "i_v",
+   "i_x",
+   "i_c",
+   "i_s"
+  ],
+  "E": [
+   "o_v",
+   "o_y",
+   "o_f"
+  ]
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 16,
+  "peak_ram_gb": 64,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "aspect": 1.0,
+ "recipe": 2,
+ "job": {
+  "owner": "Claude:S-ELEM-C",
+  "branch": "claude/s81-surx-engram-1015",
+  "tag": "g2",
+  "purpose": "S81 SU rx cluster QR leaf (8 lanes RoPE, BF16 out), x4 in the cluster",
+  "views_to": "physical/ref_tile/s81su_rxqr_ref/views",
+  "record_to": "results/rtl/ref_tile/s81su_rxqr_ref",
+  "benches": [
+   {
+    "name": "rxh_eq_exact",
+    "expect": "pass",
+    "threads": 16,
+    "peak_ram_gb": 24,
+    "pass_regex": "x0 s2 RXH_EQ PASS shadow_fail=0",
+    "cmd": "export PATH=/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin:$PATH; NJOB=48 XLIST=0 RAW=1 bash tools/s81_suhc/rxh_eq_gate.sh {RUN}/bench/eq0 \"1 2\""
+   },
+   {
+    "name": "rxh_eq_mut3",
+    "expect": "fail",
+    "threads": 16,
+    "peak_ram_gb": 24,
+    "fail_regex": "x3 s1 RXH_EQ FAIL",
+    "cmd": "export PATH=/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin:$PATH; NJOB=48 XLIST=3 RAW=1 bash tools/s81_suhc/rxh_eq_gate.sh {RUN}/bench/eq3 \"1\""
+   }
+  ]
+ },
+ "std_area_um2": 15000,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "params": {},
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "structural_change": "S-ELEM-C 10-15 g2: unchanged QR leaf RTL re-gated on the v2 cluster source set (g1 gate 11,905 sinks CTS 325.6/48.1 r2r +113, util 27% -> resized to synthesized 14,957 um2 at 0.55)"
+}

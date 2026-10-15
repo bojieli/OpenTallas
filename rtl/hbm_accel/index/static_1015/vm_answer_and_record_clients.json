@@ -44,11 +44,13 @@
     "why": "VM-source moves are on read group 1 (ot_hgi_dma_back_static); VM-destination writes arrive on the service delivery dq. The historical mover's VM packet path (ot_hgi_dma_mover, 4 in flight) has no static successor; if VM->VM copies need a write port, reuse the idx record timing above, else remove."
    },
    "argmax": {
-    "status": "NEEDED - no static successor yet (MTP)",
-    "why": "ARGMAX.LOCAL writes O {value,id} to VM through its packet client (ot_hgi_argmax_record); MTP is required. Successor = the closed argmax engine fed by the SU reduce stream + one fixed-slot cq write on the idx-record timing above (one sector, ack W+12). Owner: MTP/argmax (s_mtp)."
+    "status": "BOUND (new static successor)",
+    "successor": "rtl/hbm_accel/generic/ot_hbm_argmax_static.sv: closed ot_hgi_argmax18_m (LP8) unchanged; VM rows read 1 sector/edge on SW read group 4 via the 3-owner share; STREAM beats on compiler edges (no am_rdy); O {value,id} two fixed-slot cq writes on SW record client 0, ack W+12; engine latency measured 14 and checked",
+    "evidence": "rtl/test/hbm_idx_static/run_argmax_static.sh on hfd_hgi_vms_static_SW: 6 seeds x 29 records PASS, MUT1-3 killed",
+    "measured_vs_price": "DS ARGMAX.LOCAL price 142.7 cycles/token (1 record); static LP8: VM 2048-word row 298 edges G..done (2.09x), STREAM 1024 words 161 edges. Over 1.10x: ledger candidate (~+155 cycles/token, est <0.1% e2e) or LP16 (2 sectors/edge, new engine build ~1.2x)"
    }
   },
-  "proposal": "SW NC 7 -> 3 (argmax, dma pending owner, idx) or 2 if DMA confirms; hub CW 3 -> 2 bits. h_vm regenerates hfd_hgi_vms_static_SW; H-DIE updates the v15 contract."
+  "proposal": "SW NC 7 -> 3 (argmax, idx, dma pending owner) or 2; read group 4 owners: INDEX, TOPK, ARGMAX (ot_hbm_idx_vm_share_static)."
  },
  "qualification": false
 }

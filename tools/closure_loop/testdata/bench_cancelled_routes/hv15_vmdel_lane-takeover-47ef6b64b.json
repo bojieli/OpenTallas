@@ -1,0 +1,86 @@
+{
+  "name": "hv15_vmdel_lane-takeover-47ef6b64b",
+  "status": "NEEDS_RTL",
+  "reason": "bench_exact expected PASS but rc=0",
+  "stage_idx": 4,
+  "stage_key": "route",
+  "stage_tag": "route.a1",
+  "attempt": 1,
+  "retries_used": 0,
+  "bench_par": true,
+  "benches": {
+    "bench_lint": {
+      "expect": "pass",
+      "rc": 0,
+      "ok": true,
+      "tail": "- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050\n- Verilator: Built from 0.079 MB sources in 5 modules, into 0.002 MB in 3 C++ files needing 0.000 MB\n- Verilator: Walltime 0.008 s (elab=0.001, cvt=0.004, bld=0.000); cpu 0.008 s on 1 threads; allocated 33.387 MB\nlint-ok\n",
+      "track": "parallel"
+    },
+    "bench_exact": {
+      "expect": "pass",
+      "rc": 0,
+      "ok": false,
+      "tail": "STATIC_VM_DELIVERY PASS sectors=2048 slots=256 II=1 dq_bits=2248 aperture_fault=1\nrtl/hbm_accel/loader/service_native/tb_hbm_svc_static_vm_delivery.sv:39: $finish called at 3237000 (1ps)\nrtl/hbm_accel/loader/service_native/split/tb_hbm_svc_vmdel_split_equiv.sv:69: $finish called at 40000000 (1ps)\nrtl/hbm_accel/loader/service_native/split/tb_hbm_svc_vmdel_split_equiv.sv:69: $finish called at 40000000 (1ps)\nDELIVERY_SPLIT_BENCH PASS mut=0\n",
+      "track": "parallel"
+    }
+  },
+  "btrack": {
+    "bench_lint": {
+      "state": "done",
+      "tag": "bench_lint.a1b1",
+      "host": "ot-epyc4",
+      "run": "/srv/opentallas-scratch2/claude/closure-loop/hv15_vmdel_lane-takeover-47ef6b64b",
+      "n": 1,
+      "started": "2026-10-15T08:05:26-07:00",
+      "stage_source": "/srv/opentallas-scratch2/claude/closure-loop/hv15_vmdel_lane-takeover-47ef6b64b/bench_src_a1"
+    },
+    "bench_exact": {
+      "state": "done",
+      "tag": "bench_exact.a1b1",
+      "host": "ot-epyc4",
+      "run": "/srv/opentallas-scratch2/claude/closure-loop/hv15_vmdel_lane-takeover-47ef6b64b",
+      "n": 1,
+      "started": "2026-10-15T08:05:57-07:00",
+      "stage_source": "/srv/opentallas-scratch2/claude/closure-loop/hv15_vmdel_lane-takeover-47ef6b64b/bench_src_a1",
+      "wd_checked": 1792076790.4535952
+    }
+  },
+  "textbook_seen": {},
+  "events": [
+    "2026-10-15T08:04:38-07:00 ingested from /tmp/claude-review-20261003/closure_jobs/hv15_vmdel_lane-takeover-47ef6b64b.json",
+    "2026-10-15T08:04:39-07:00 MACRO_GRID WARN (refuse): MACRO_GRID WARN: physical/ref_tile/hv15_vmdel_lane/pre_gpl.tcl: not evaluated (INHOLD: HB2xp67_ASAP7_75t_R missing)",
+    "2026-10-15T08:04:41-07:00 CLOCK-RULE at submit: 644 sinks on the largest root <= 15,000; measured TT insertion 295.7 ps, leaf spread 105.6 ps",
+    "2026-10-15T08:04:41-07:00 ref gate PASS: pre-route gate PASS",
+    "2026-10-15T08:04:48-07:00 benches run in parallel with calibrate/route (4 benches; spec bench_first opts out)",
+    "2026-10-15T08:05:18-07:00 git-mirror sync 47ef6b64bf9e via upstream in 1s + extract 16s; 3833 views / 6.4 GB hard-linked from the host view store",
+    "2026-10-15T08:05:23-07:00 source 47ef6b64bf9e synced to ot-epyc4:/srv/opentallas-scratch2/claude/closure-loop/hv15_vmdel_lane-takeover-47ef6b64b/src",
+    "2026-10-15T08:05:26-07:00 bench track: launched bench_lint (bench_lint.a1b1) beside None",
+    "2026-10-15T08:05:39-07:00 launched route (attempt 1) on ot-epyc4",
+    "2026-10-15T08:05:54-07:00 bench track: bench_lint PASS (rc=0) WARN: pass log has no count line (set min_count_regex)",
+    "2026-10-15T08:05:57-07:00 bench track: launched bench_exact (bench_exact.a1b1) beside route",
+    "2026-10-15T08:09:42-07:00 bench failed: stopped route (route.a1)",
+    "2026-10-15T08:09:42-07:00 NEEDS_RTL: bench_exact expected PASS but rc=0",
+    "2026-10-15T08:12:34-07:00 auto-react: no recipe; structural fix needed (noted in hbm-phys-1010.log)"
+  ],
+  "created": "2026-10-15T08:04:38-07:00",
+  "finished_at": "2026-10-15T08:09:42-07:00",
+  "spec": {
+    "block": "ot_hbm_svc_vmdel_lane",
+    "stages": {
+      "bench": [
+        {
+          "name": "lint"
+        },
+        {
+          "name": "exact"
+        },
+        {
+          "name": "mutant1"
+        },
+        {
+          "name": "mutant2"
+        }
+      ]
+    }
+  }
+}

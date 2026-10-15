@@ -69,8 +69,8 @@
   "benches_from": "tools/s81_suhc/hc_owned_nt_benches.json",
   "owner": "Claude:S-NORM",
   "branch": "claude/s81-norm-tree-1014",
-  "tag": "s2-granted",
-  "structural_change": "New LOCAL_SPLIT relay master (RTL e5c3f968d): the ctfx_nt local re-register on its own pin faces; 0 cycles.",
+  "tag": "s4-straight",
+  "structural_change": "v23 straight relay (220c62a71): fdx_local at the fdx x of the same bit wherever the 8 CLOSED CTPL stay <= 499.8 um (302 bits moved, max 46.8 um lateral; cut 82 vs v22 737; s3 native launch 288 on 202 laterally-displaced outputs). rst_in capture flop no longer pinned at the W pin (it sat on the earliest clock branch: capture 234.3); single clock root over the 115-um flop window. 0 cycles, 0 area.",
   "no_bench_reason": "bit-exactness is gated on the HC slab composition with dsfd_sp_hc NTREE 1 (tools/s81_suhc/hc_ntree_bench.sh: NG 256 production shape exact PASS + mutant 3 FAIL; tools/s81_suhc/hc_gate.py --ntree 1 NG 256 exact 0/1940 x3 + per-tile mutants); the tile alone has no golden",
   "purpose": "el1014-s81-norm-tree LOCAL_SPLIT: fdx_local relay strip",
   "views_to": "physical/ref_tile/s81hc_ctflnt_ref/views",
@@ -89,8 +89,12 @@
    }
   ],
   "reroute_reason": {
-   "kind": "rtl_change",
-   "fix": "New LOCAL_SPLIT relay master (RTL e5c3f968d): the ctfx_nt local re-register on its own pin faces; 0 cycles."
+   "kind": "pin_register",
+   "source": "record dd8cae478 native audit launch 288.0 (fdx_local[693], 202 pins) / capture 234.3 (rst_in)",
+   "cell": "ot_s81_hc_ctfl_nt",
+   "launch_ps": 288.0,
+   "capture_ps": 234.3,
+   "fix": "v23 straight relay (220c62a71): fdx_local at the fdx x of the same bit wherever the 8 CLOSED CTPL stay <= 499.8 um (302 bits moved, max 46.8 um lateral; cut 82 vs v22 737; s3 native launch 288 on 202 laterally-displaced outputs). rst_in capture flop no longer pinned at the W pin (it sat on the earliest clock branch: capture 234.3); single clock root over the 115-um flop window. 0 cycles, 0 area."
   }
  },
  "params": {},
@@ -112,10 +116,17 @@
  "boundary_tcl": [
   "physical/common_flow/hold_pad_hb4.tcl"
  ],
- "io_tcl": "physical/s81_die_pins/v22_hc_local_split/ot_s81_hc_ctfl_nt.tcl",
+ "io_tcl": "physical/s81_die_pins/v23_hc_norm_straight_candidate/ot_s81_hc_ctfl_nt.tcl",
  "assigned_pins": {
-  "file": "physical/s81_die_pins/v22_hc_local_split/ot_s81_hc_ctfl_nt.json",
-  "source": "S81 die lead r11 grant main 5c3c7fd7a / bb1b07c55 (tools/s81/hc_local_split_pins.py)",
-  "layout": "physical/s81_die_pins/v22_hc_local_split/layout.json"
+  "file": "physical/s81_die_pins/v23_hc_norm_straight_candidate/ot_s81_hc_ctfl_nt.json",
+  "source": "S-NORM v23 candidate 220c62a71",
+  "layout": "physical/s81_die_pins/v23_hc_norm_straight_candidate/report.json"
+ },
+ "orfs_vars": {
+  "OT_OFLOP_PORT_RE": "^f"
+ },
+ "slot_change_request": {
+  "file": "results/rtl/s81_layer_tput_1013/norm_tree_1014/native_closure_1014/v23_straight/request.json",
+  "note": "S-NORM v23 straight fd/fv chain candidate (tools/s81/hc_norm_straight_pins.py, 220c62a71): pins differ from the v22 grant; request posted to S-DIE el1011-s81die.log"
  }
 }

@@ -5,7 +5,7 @@ import json
 from pathlib import Path
 import tempfile
 import unittest
-from compile_calendar import compile_program, schedule_jobs, issuer_done_row, ROOT
+from compile_calendar import compile_program, schedule_jobs, issuer_done_row, ROOT, PIPELINE_ABI
 
 
 class CompileTest(unittest.TestCase):
@@ -27,7 +27,8 @@ class CompileTest(unittest.TestCase):
                         tag=0,duration_cycles=10,phase_period_stream=1,start_phase_stream=0,evidence=self.evidence,
                         accesses=[dict(kind=kind,tensor='q',row_offset=0,slot=0,issue_cycle=1,ingress_cycle=2,
                                        bank_enqueue_cycle=2,service_cycle=3,deadline_cycle=8,
-                                       **({'commit_cycle':4} if kind=='write' else {'response_cycle':4}))])
+                                       **({'commit_cycle':4} if kind=='write' else {'response_cycle':4}))],
+                        **({'pipeline_abi':dict(PIPELINE_ABI[eng])} if eng in PIPELINE_ABI else {}))
         self.binding = dict(stage='S000',tensors={'q':dict(base_row=256,nrows=1,source='native_job',producer='field',
                                                         consumers=['su'],evidence=self.evidence)},
                             jobs={'field':job('fld','write'),'su':job('su','read')})
@@ -117,6 +118,20 @@ class CompileTest(unittest.TestCase):
         with self.assertRaises(ValueError): schedule_jobs(self.program,self.binding)
         self.binding['jobs']['su']['pipeline_abi']=dict(PIPELINE_ABI['hc'])
         self.assertTrue(self.run_compile()['dispatch_eligible'])
+
+    def test_sa2x2rp_floorplan_stages_require_remeasured_durations(self):
+        # SA_2x2_RP: SU-VM link +3 relay edges, field round trip 140 -> 118: old measurements are refused
+        self.assertEqual(PIPELINE_ABI['su']['vm_link_relay_extra_edges'],3)
+        self.assertEqual(PIPELINE_ABI['fld']['field_round_trip_cycles'],118)
+        for name,key,old in [('su','vm_link_relay_extra_edges',0),('field','field_round_trip_cycles',140)]:
+            good=self.binding['jobs'][name]['pipeline_abi']
+            self.binding['jobs'][name]['pipeline_abi']=dict(good,**{key:old})
+            self.assertFalse(self.run_compile()['dispatch_eligible'])
+            with self.assertRaises(ValueError): schedule_jobs(self.program,self.binding)
+            del self.binding['jobs'][name]['pipeline_abi']
+            self.assertFalse(self.run_compile()['dispatch_eligible'])
+            self.binding['jobs'][name]['pipeline_abi']=good
+            self.assertTrue(self.run_compile()['dispatch_eligible'])
 
     def test_clock_phase_mismatch_rejected(self):
         self.binding['jobs']['su']['phase_period_stream']=4

@@ -413,7 +413,8 @@ def claim_ram(spec):
     return sized_ram(spec, spec.get("peak_ram_gb", 32))
 
 
-def sized_ram(spec, ram):
+def measured_peak_gb(spec):
+    """Largest recorded actual process peak for this block class, or zero if unknown."""
     p = Path(__file__).resolve().parent / "measured_peaks.json"
     try:
         mt = p.stat().st_mtime
@@ -422,7 +423,12 @@ def sized_ram(spec, ram):
         m = _MEASURED_PEAKS[1].get(measured_block(spec.get("name", "")))
         peak = float(m["peak_gb"]) if m else 0
     except (OSError, ValueError, KeyError, TypeError, AttributeError):
-        return ram
+        return 0
+    return peak if math.isfinite(peak) and peak > 0 else 0
+
+
+def sized_ram(spec, ram):
+    peak = measured_peak_gb(spec)
     if spec.get("measured_ram", True) is False or peak <= 0 or not isinstance(ram, (int, float)) or ram < 2 * peak:
         return ram
     return math.ceil(max(1.25 * peak, peak + 4))
@@ -935,9 +941,96 @@ STRUCTURE_REPEAT_MAX = 2
 HOLD_RERUN_RE = re.compile(r"-hs(-[a-z0-9]{1,4})?$")
 
 
+def _only_serial_bench_failed(j):
+    """Require retained launch evidence that no physical stage was attempted.
+
+    Missing/truncated history, retries, parallel tracks and mixed physical/bench
+    failures remain counted. A bench failure can abort a route already in flight.
+    """
+    spec = j.get("spec") or {}
+    if (spec.get("bench_first") is not True or j.get("bench_par") is not False
+            or j.get("attempt") != 1 or j.get("retries_used") != 0):
+        return False
+    events = j.get("events")
+    if (not isinstance(events, list) or not events
+            or " ingested from " not in str(events[0])):
+        return False  # event() retains only the last 60: absence is not evidence
+    if any(j.get(k) for k in ("btrack", "ctrack", "crashes", "metrics", "eco", "eco_history")):
+        return False
+    idx = j.get("stage_idx")
+    benches = (spec.get("stages") or {}).get("bench")
+    if not isinstance(benches, list) or type(idx) is not int or not 0 <= idx < len(benches):
+        return False
+    key = bench_key(benches[idx].get("name", ""))
+    receipt = (j.get("benches") or {}).get(key) or {}
+    if (j.get("stage_key") != key or j.get("stage_tag") != f"{key}.a1"
+            or receipt.get("ok") is not False or receipt.get("track") is not None
+            or "rc" not in receipt
+            or not _bench_reason_is(j.get("reason"), key, receipt)):
+        return False
+    launches = [str(e).split(" launched ", 1)[1] for e in events if " launched " in str(e)]
+    if not launches or not any(e.startswith(f"{key} (attempt 1) on ") for e in launches):
+        return False
+    allowed = {bench_key(b.get("name", "")) for b in benches[:idx + 1]}
+    return (all(e.split(" ", 1)[0] in allowed and " (attempt 1) on " in e for e in launches)
+            and not any(re.search(r"\b(?:route|calibrate|signoff|eco)[.-]a?\d|launched (?:route|calibrate|signoff)\b",
+                                  str(e)) for e in events))
+
+
+
+def _bench_reason_is(reason, key, receipt):
+    """The bench verdict reason, with or without the bench_why() cause suffix."""
+    base = f"{key} expected {str(receipt.get('expect')).upper()} but rc={receipt['rc']}"
+    reason = str(reason or "")
+    return reason == base or reason.startswith(base + " (")
+
+
+def _bench_cancelled_physical_track(j):
+    """Only a witnessed bench-caused cancellation, with no physical failure record.
+
+    This does not erase route attempts or release route-key accounting. In-flight
+    work stopped by a wrong bench verdict is distinct from a failed physical run.
+    """
+    if (j.get("bench_par") is not True or j.get("attempt") != 1
+            or j.get("retries_used") != 0 or j.get("stage_key") != "route"
+            or j.get("stage_tag") != "route.a1" or j.get("textbook_seen") != {}):
+        return False
+    if any(j.get(k) for k in ("metrics", "early_fail", "crashes", "eco", "eco_history", "ctrack")):
+        return False
+    events = j.get("events")
+    if (not isinstance(events, list) or not events
+            or " ingested from " not in str(events[0])):
+        return False
+    why = str(j.get("reason") or "")
+    failed = []
+    for key, receipt in (j.get("benches") or {}).items():
+        if (receipt.get("ok") is False and receipt.get("track") == "parallel" and "rc" in receipt
+                and _bench_reason_is(why, key, receipt)):
+            failed.append(key)
+    if len(failed) != 1:
+        return False
+    key = failed[0]
+    entry = (j.get("btrack") or {}).get(key) or {}
+    declared = {bench_key(b.get("name", "")) for b in (j.get("spec", {}).get("stages", {}).get("bench") or [])}
+    if key not in declared or entry.get("state") != "done" or entry.get("tag") != f"{key}.a1b1":
+        return False
+    # Full retained history must show launch -> successful orchestrator stop ->
+    # this bench verdict, without any failed/completed physical-track event.
+    launch = [i for i, e in enumerate(events) if " launched route (attempt 1) on " in str(e)]
+    stop = [i for i, e in enumerate(events) if str(e).endswith(" bench failed: stopped route (route.a1)")]
+    terminal = [i for i, e in enumerate(events) if str(e).endswith(f" NEEDS_RTL: {why}")]
+    if len(launch) != 1 or len(stop) != 1 or len(terminal) != 1 or not launch[0] < stop[0] < terminal[0]:
+        return False
+    bad = re.compile(r"EARLY_FAIL|route crashed|route failed|route done|route rc=|could not stop|HOLD-STOP|"
+                     r"launched (?:calibrate|signoff)|(?:route|calibrate) \(attempt [2-9]")
+    return not any(bad.search(str(e)) for e in events)
+
+
 def terminal_route_failure(j):
     st, why = j.get("status"), str(j.get("reason") or "")
-    if st == "NEEDS_RTL" or st in EARLY_FAIL:
+    if st == "NEEDS_RTL":
+        return not (_only_serial_bench_failed(j) or _bench_cancelled_physical_track(j))
+    if st in EARLY_FAIL:
         return True
     return st == "NEEDS_HUMAN" and why.startswith("route crashed") and "LOST:" not in why[:80]
 
@@ -3103,6 +3196,11 @@ def launch_stage(j, st, cmd):
         # calibrate runs in parallel: the IO SDC the calibrate stage would have generated is made here from the
         # assumed (or, on a re-route, measured) insertion in calib.env
         cmd = f"( {j['ctrack']['sdc_cmd']} ) || exit 5\n" + cmd
+    if j.get("export_lint_recovery") and st["key"] == "collect":
+        from export_lint_recovery import stage_script
+        before, after = stage_script(j["export_lint_recovery"], j.get("stage_source", j["run"] + "/src"))
+        env += before
+        cmd = f"( {cmd} )\n_ot_export_rc=$?\n{after}exit $_ot_export_rc\n"
     cmd = tt_overlay_fallback(cmd)
     body = f"#!/bin/bash\n# closure-loop {j['name']} stage {st['key']} attempt {j['attempt']}\nset -o pipefail\n{env}{subst(cmd, j)}\n"
     run = j["run"]
@@ -3167,6 +3265,22 @@ def bench_outcome(j, st, rc, ok_extra=True):
     return expected_fail_seen(st, rc, full)
 
 
+def bench_why(j, st, rc, ok_extra=True):
+    """Why a bench with expect PASS was judged not passed, for the verdict reason.  rc=0 alone read as 'expected PASS
+    but rc=0' (5 jobs 2026-10-15: pass_regex not matching the bench's actual verdict line, or a min_count_regex the
+    bench never prints) and was triaged as a flow bug."""
+    if st.get("expect") != "pass" or rc != 0:
+        return ""
+    if not ok_extra:
+        return " (ok check failed)"
+    note = (j.get("bench_work") or {}).get(st["key"], "")
+    if note.startswith("vacuous"):
+        return f" ({note})"
+    if st.get("pass_regex"):
+        return f" (pass_regex {st['pass_regex']!r} not matched in the bench log)"
+    return ""
+
+
 def expected_fail_seen(st, rc, full):
     """expect FAIL (negative control): the log's own verdict decides, regardless of rc -- a mutant bench that prints
     FAIL but exits 0 was read as "expected FAIL but rc=0" (LOOP-GAPS 2026-10-08).  With fail_regex: it must match (a
@@ -3198,8 +3312,19 @@ def bench_work(log, min_count_regex=None):
     return True, f"work: {m[:6]}"
 
 
+# A stage cmd that sends its tool output to its own file ('... > {RUN}/record/route/export.log 2>&1', every ref_tile
+# collect) leaves cl/<tag>.log empty: 14 S81 fill collects went NEEDS_HUMAN 'collect crashed twice (rc=1)' on 2026-10-15
+# with an empty tail and no first error, while export.log held the child_lint FAIL.  Tail those redirect targets too.
+REDIRECT_LOG_RE = re.compile(r"(?<![<>&0-9])>\s*([^\s;&|<>]+)\s+2>&1")
+
+
+def stage_logs(j, st):
+    logs = list(st.get("logs", [])) + [m for m in REDIRECT_LOG_RE.findall(st.get("cmd") or "") if m not in st.get("logs", [])]
+    return [subst(x, j) for x in logs]
+
+
 def stage_tail(j, st, n=40):
-    extra = " ".join(subst(x, j) for x in st.get("logs", []))
+    extra = " ".join(stage_logs(j, st))
     r = ssh(j["host"], f"tail -n {n} {j['run']}/cl/{j['stage_tag']}.log 2>/dev/null; for f in {extra}; do "
                        f"[ -f \"$f\" ] && tail -n {n} \"$f\"; done; true", timeout=60)
     return r.stdout
@@ -3586,6 +3711,8 @@ def publish(j, metrics):
                        checks=j.get("checks", {}), submit_checks=j.get("submit_checks"), calibration=j.get("calibration"), route_overlay_plan=j.get("route_overlay_plan"), cycles_added=spec.get("cycles_added"), status="CLOSED",
                        closed_at=now_iso(), job_spec=spec, io_budget=(j.get("rebudget") or {}).get("rb") or "link_budget_consistent (fixed split)",
                        rebudget=j.get("rebudget"))
+        if j.get("export_lint_recovery"):
+            verdict["export_lint_recovery"] = j["export_lint_recovery"]
         (cwt / rec_dir / "verdict.json").write_text(json.dumps(verdict, indent=1) + "\n")
         git("add", "--sparse", "--", *tos, cwd=cwt)
         staged = sh(["git", "-C", str(cwt), "diff", "--cached", "--name-only"], timeout=120).stdout.split()
@@ -4434,7 +4561,7 @@ def bench_track(j, fleet, stl):
         j["benches"][k] = dict(expect=st["expect"], rc=rc, ok=passed, tail=tail[-600:], track="parallel")
         if not passed:
             stop_main_for_bench(j)
-            finish(j, "NEEDS_RTL", f"{k} expected {st['expect'].upper()} but rc={rc}",
+            finish(j, "NEEDS_RTL", f"{k} expected {st['expect'].upper()} but rc={rc}{bench_why(j, st, rc, ok_extra)}",
                    f"NEEDS_RTL: bench {k} expected {st['expect'].upper()}, got rc={rc} (parallel track; route stopped)\n" +
                    "\n".join(tail.strip().splitlines()[-5:]))
             return False
@@ -4667,7 +4794,7 @@ IOREF_SDC = "physical/common_flow/io_ref_routed.sdc"
 # FLOW-FIX-0410 2026-10-09: io_ref_routed.sdc reads the ACTIVE-edge insertion (sinks behind an odd clock inversion were
 # T/2 late).  The version is part of the routed_ioref cache key, so ioref-rejudge / a verdict re-STA under the new rule
 # instead of returning a re-STA cached under the old one.
-IOREF_VERSION = "ae0410"
+IOREF_VERSION = "ae0410-cecorner-1015"
 
 
 def routed_ioref(j, m):
@@ -5073,7 +5200,7 @@ def step(j, fleet):
             passed = bench_outcome(j, st, rc, ok_extra)
             j["benches"][st["key"]] = dict(expect=st["expect"], rc=rc, ok=passed, tail=tail[-600:])
             if not passed:
-                finish(j, "NEEDS_RTL", f"{st['key']} expected {st['expect'].upper()} but rc={rc}",
+                finish(j, "NEEDS_RTL", f"{st['key']} expected {st['expect'].upper()} but rc={rc}{bench_why(j, st, rc, ok_extra)}",
                        f"NEEDS_RTL: bench {st['key']} expected {st['expect'].upper()}, got rc={rc}\n" +
                        "\n".join(tail.strip().splitlines()[-5:]))
                 return
@@ -5704,13 +5831,29 @@ def eco_post_sdcs(j, m, what="ECO"):
     return post_sdcs
 
 
+def hold_eco_resources(j):
+    """Size from the completed route and recorded block class, with an 8 GB ECO floor.
+
+    Small retained routes need not claim the old universal 32 GB (and 200 GB
+    disk floor). Larger or unknown routes keep at least that legacy request;
+    no ECO may underclaim its effective route request or a known class peak.
+    """
+    route = next((st for st in stage_list(j["spec"]) if st["kind"] == "route"), None)
+    route_ram = route["ram"] if route else claim_ram(j["spec"])
+    peak = measured_peak_gb(j["spec"])
+    measured = math.ceil(max(1.25 * peak, peak + 4)) if peak else 0
+    ram = math.ceil(max(8, route_ram, measured))
+    return 8, max(32, ram) if ram > LIGHT_STAGE_RAM_GB else ram
+
+
 def start_hold_eco(j, fleet, m):
     rb, ob = eco_paths(j, m)
     if not rb:
         return False
-    ok, why = fleet.fits(j["host"], 8, 32)
+    threads, ram = hold_eco_resources(j)
+    ok, why = fleet.fits(j["host"], threads, ram)
     if not ok:
-        event(j, f"hold ECO waiting for capacity: {why}")
+        event(j, f"hold ECO waiting for capacity ({threads} threads / {ram} GB): {why}")
         return True            # stays at the verdict stage; the next tick retries
     v, he = j["spec"].get("verdict", {}), j["spec"].get("hold_eco") or {}
     # rev 2 (2026-10-07): post-route hold goal +18 (coordinator: die-context margin over the +15 line), endpoint filter, sign-off-exact constraints per corner,
@@ -5720,7 +5863,7 @@ def start_hold_eco(j, fleet, m):
           f"HM={he.get('hold_margin_ps', 18)} SM={he.get('setup_margin_ps', 40)} FILT={he.get('setup_filter_ps', 40)} " \
           f"PASSES={he.get('passes', 2)} RESAWARE={int(he.get('resistance_aware', True))} HOLDCELLS={int(he.get('hold_cells', True))} " \
           f"ACC_SS={SS_MIN} ACC_FF={FF_MIN} SETUP_LIB={SETUP_LIB} KEEPCLK={he.get('keep_clock', 0)} BUF={he.get('max_buffer_percent', 30)} " \
-          f"MACROS={shlex.quote(' '.join(verdict_macros(j)))} THREADS=8"
+          f"MACROS={shlex.quote(' '.join(verdict_macros(j)))} THREADS={threads}"
     keepwires = bool(he.get("keep_wires") or j.get("auto_react_keepwires"))
     if keepwires:
         # LOOP-AUTO class a: narrow re-route -- every net the ECO did not touch keeps its detailed wires (hold_eco.sh
@@ -5752,9 +5895,9 @@ def start_hold_eco(j, fleet, m):
     ship_helpers(j["host"], j["run"], j)
     j["eco"] = dict(tried=True, rb=rb, ob=ob, out=out, post_sdc=post_sdcs, sdc_name=m.get("sdc_name") or "6_final.sdc",
                     setup_post_sdc=list(m.get("setup_post_sdc") or []), pre=dict(ss_ps=m["ss_ps"], ff_ps=m["ff_ps"]), started=now_iso(),
-                    keepwires=keepwires)
-    st = dict(key="hold_eco", kind="hold_eco", threads=8, ram=32)
-    launch_token = fleet.reserve_launch(j["host"], 8, 32)
+                    keepwires=keepwires, resources=dict(threads=threads, ram=ram))
+    st = dict(key="hold_eco", kind="hold_eco", threads=threads, ram=ram)
+    launch_token = fleet.reserve_launch(j["host"], threads, ram)
     try:
         launch_stage(j, st, cmd)
     finally:
@@ -6724,6 +6867,17 @@ def closure_on_main(j, ev):
     return j["name"] in ev["files"] or j["name"] in ev["recs"]
 
 
+def collect_crash_after_closed_verdict(j):
+    """ROOT 2026-10-15 (peer review 11:00): a route that finished and was judged CLOSED, then stopped NEEDS_HUMAN in
+    collect / export / record (30 S81 fill routes, collect crashed twice on a child_lint bug; 17 run dirs were released
+    or deleted before the lint fix), is evidence awaiting re-collection (retry --at collect): never deep-released while
+    it stays there.  Cancelling the job or a successful re-collect ends the retention."""
+    if j.get("status") != "NEEDS_HUMAN" or j.get("stage_key") not in ("collect", "export", "record"):
+        return False
+    ev = " ".join(j.get("events") or [])
+    return "route done (rc=0)" in ev and "-> CLOSED" in ev
+
+
 def deep_release_mode(j, closed, ev, now=None):
     """closed | fail | nearmiss | None (keep) for one job (DEEP RELEASE)"""
     if j.get("deep_released") or not j.get("host") or not j.get("run") or j["status"] not in TERMINAL:
@@ -6739,6 +6893,8 @@ def deep_release_mode(j, closed, ev, now=None):
             return "closed" if closure_on_main(j, ev) else None
         return "fail"                                   # revoked closure: a failure on its element
     if j["status"] not in DEEP_RELEASE_FAIL:
+        return None
+    if collect_crash_after_closed_verdict(j):
         return None
     if near_miss(j, closed) or (j.get("near_miss_retained") and j["spec"].get("block") not in closed):
         return "nearmiss"
@@ -8376,6 +8532,28 @@ def cmd_recover_eco_overlays(a):
 
 
 @locked_job_command
+def cmd_recover_export_lint(a):
+    """Attach an explicit main-pinned lint-only recovery, leaving retry to the operator."""
+    import base64
+    from export_lint_recovery import eligible
+    j = load_job(a.name)
+    eligible(j)
+    head = _ovl_head()
+    rel = "tools/hier_contract/child_lint.py"
+    data = subprocess.run(["git", "-C", str(REPO), "show", f"{head}:{rel}"],
+                          capture_output=True, check=True).stdout
+    request = dict(job=j, helper_commit=head, helper_b64=base64.b64encode(data).decode(),
+                   helper_sha256=hashlib.sha256(data).hexdigest(),
+                   guard_b64=base64.b64encode((HERE / "export_lint_recovery.py").read_bytes()).decode())
+    r = ssh(j["host"], "python3 - prepare " + shlex.quote(json.dumps(request)),
+            input=(HERE / "export_lint_recovery.py").read_text(), timeout=120, check=True)
+    j["export_lint_recovery"] = dict(json.loads(r.stdout), requested=now_iso())
+    event(j, f"explicit collect-only lint recovery pinned to main {head}; frozen helpers and route retained")
+    save_job(j)
+    print(json.dumps(j["export_lint_recovery"]))
+
+
+@locked_job_command
 def cmd_restore_cancelled(a):
     """Recover pre-lock cancellation lost to a stale save. Never stop remote work."""
     j = load_job(a.name)
@@ -8432,6 +8610,7 @@ def main():
     ks.add_argument("--orfs")
     rc = sub.add_parser("restore-cancelled"); rc.add_argument("name")
     er = sub.add_parser("recover-eco-overlays"); er.add_argument("name")
+    el = sub.add_parser("recover-export-lint"); el.add_argument("name")
     mg = sub.add_parser("migrate"); mg.add_argument("name"); mg.add_argument("host")
     a = ap.parse_args()
     if a.cmd == "daemon":
@@ -8465,6 +8644,8 @@ def main():
         cmd_hold_stop(a)
     elif a.cmd == "recover-eco-overlays":
         cmd_recover_eco_overlays(a)
+    elif a.cmd == "recover-export-lint":
+        cmd_recover_export_lint(a)
     elif a.cmd == "restore-cancelled":
         cmd_restore_cancelled(a)
     elif a.cmd == "migrate":     # executed by the daemon at its next tick (no race with the job's poller)

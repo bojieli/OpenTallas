@@ -1,0 +1,366 @@
+{
+ "name": "qfd_xcol_w_rq",
+ "top": "qfd_xcol_w",
+ "kind": "tile",
+ "sources": [
+  "rtl/qwen_sys/dvm_20261014/ot_qfd_xslice_slots.sv",
+  "rtl/qwen_sys/dvm_20261014/ot_qfd_xslice.sv",
+  "rtl/hdc/ot_hdc_delay.sv"
+ ],
+ "params": {
+  "REQ_PIPE": 1
+ },
+ "clock_port": "ck0",
+ "clock_ports": [
+  "ck0",
+  "ck1",
+  "ck2",
+  "ck3",
+  "ck4",
+  "ck5",
+  "ck6",
+  "ck7",
+  "ck8"
+ ],
+ "clock": "multiple_cts_roots",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 64.8,
+  "h": 1434.24,
+  "exact": true
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 16,
+  "peak_ram_gb": 64,
+  "pin_h": "M4",
+  "pin_v": "M3 M5",
+  "hold_margin_ns": 0.03,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M3 M5"
+  }
+ },
+ "pins": {
+  "W": [
+   "n_d",
+   "fault",
+   "w_d",
+   "ck0",
+   "ck1",
+   "ck2",
+   "ck3",
+   "ck4",
+   "ck5",
+   "ck6",
+   "ck7",
+   "ck8",
+   "rst_n"
+  ],
+  "E": [
+   "e_d",
+   "s_d",
+   "tids",
+   "fault_i",
+   "tie_hi",
+   "tie_lo"
+  ],
+  "N": [],
+  "S": []
+ },
+ "pin_ranges": {
+  "w_d": [
+   500.0,
+   750.0
+  ],
+  "n_d": [
+   760.0,
+   834.0
+  ],
+  "fault": [
+   836.0,
+   836.5
+  ],
+  "rst_n": [
+   757.0,
+   757.5
+  ],
+  "e_d": [
+   500.0,
+   750.0
+  ],
+  "s_d": [
+   420.0,
+   494.0
+  ],
+  "tids": [
+   760.0,
+   797.0
+  ],
+  "fault_i": [
+   799.0,
+   799.5
+  ],
+  "tie_hi": [
+   800.0,
+   800.3
+  ],
+  "tie_lo": [
+   800.5,
+   800.8
+  ],
+  "ck0": [
+   754.512,
+   755.112
+  ],
+  "ck1": [
+   950.112,
+   950.712
+  ],
+  "ck2": [
+   1086.192,
+   1086.792
+  ],
+  "ck3": [
+   1222.272,
+   1222.872
+  ],
+  "ck4": [
+   1358.352,
+   1358.952
+  ],
+  "ck5": [
+   483.528,
+   484.128
+  ],
+  "ck6": [
+   347.448,
+   348.048
+  ],
+  "ck7": [
+   211.368,
+   211.968
+  ],
+  "ck8": [
+   75.288,
+   75.888
+  ]
+ },
+ "pin_source": "FLAT COLUMN (Q-DVM 2026-10-15 structural directive): head + 8 leaves hardened ONCE as one master with no internal hard faces; die-facing ports only (head-row words W/E spread over 250 um = 0.16 um/pin, corridor words 74 um, ck0..ck8 at the published entry XY). Proposed to the compute die lead; die tool re-assigns.",
+ "slot_change_request": "el1014-qwen-dvm-build.log / el1014-qwen-split-compute.log 2026-10-15 Q-DVM: qfd_xcol_e/w stays ONE instance per column in the approved 64.8 x 1434.24 slot with scalar ck0..ck8 (C12 contract), but is a single flat hard master instead of a head + 8-leaf stack: removes the eight 1170-bit leaf faces (1170 pins on 64.8 um = 0.77 of the M3+M5 2-track pin slots, above the 0.55-0.60 cut rule; xl6/xl8/xh5 GRT congestion, xe2 setup -419 ps on N-face output paths). Head-row W/E pins respread over 250 um (die pin file to follow).",
+ "job": {
+  "owner": "Claude:el1014-qwen-dvm-build",
+  "branch": "claude/qwen-dvm-1014",
+  "tag": "xwrq1",
+  "purpose": "STRUCTURAL candidate (gate3 measured core->leaf read-request slack -304..-97 ps: head lr_* drives the far leaf ~650 um in ONE edge): REQ_PIPE=1 relays the read-request bus once (x read DX 10->11, +1 edge, compiler-visible via QD/DX/BD; exact bench PASS, HEAD_MUT3 FAIL). Qwen TP8 DVM column as ONE flat hard master (structural directive 2026-10-15: tiny-clearance column needs a real pin/cut fix): qfd_xcol_w = head (ck0) + 4 N + 4 S leaves (ck1..8), each its own CTS root (multiple_cts_roots), no internal hard faces; RTL unchanged vs main (priced DX10 latency, ledger row VM.XREAD 1.028 % proposed).",
+  "benches": [
+   {
+    "name": "native_core_exact",
+    "cmd": "bash rtl/qwen_sys/dvm_20261014/run_dvm.sh {RUN}/bench/core tb_qfd_xdvm_prod -GNATIVE_AFFINE=1 -GSTATIC_SCHEDULE=1 -GNW=18 -GNCOL=4 -GNLAYER=1 -GNRAND=6 -GREQ_PIPE=1",
+    "expect": "pass",
+    "pass_regex": "^PASS xdvm_prod",
+    "threads": 16,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "native_wrapper_composition",
+    "cmd": "bash tools/qwen_tp8/vm_replay_xcol_bench.sh {RUN}/bench/xcol -GREQ_PIPE=1",
+    "expect": "pass",
+    "pass_regex": "^PASS vm_replay_xcol",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "native_wrapper_composition_macro",
+    "cmd": "bash tools/qwen_tp8/vm_replay_xcol_bench.sh {RUN}/bench/xcolm -GMEM=1 -GREQ_PIPE=1",
+    "expect": "pass",
+    "pass_regex": "^PASS vm_replay_xcol",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "native_core_head_window_w_plus_1",
+    "cmd": "bash rtl/qwen_sys/dvm_20261014/run_dvm.sh {RUN}/bench/hm7 tb_qfd_xdvm_prod -GNATIVE_AFFINE=1 -GSTATIC_SCHEDULE=1 -GNW=18 -GNCOL=4 -GNLAYER=1 -GNRAND=6 -GHEAD_MUT=7 -GREQ_PIPE=1",
+    "expect": "fail",
+    "pass_regex": "^PASS xdvm_prod",
+    "threads": 16,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "native_wrapper_head_wrong_station",
+    "cmd": "bash tools/qwen_tp8/vm_replay_xcol_bench.sh {RUN}/bench/xh3 -GHEAD_MUT=3 -GREQ_PIPE=1",
+    "expect": "fail",
+    "pass_regex": "^PASS vm_replay_xcol",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ],
+  "extra_paths": [
+   "rtl/hdc",
+   "rtl/proto",
+   "rtl/qwen_sys",
+   "rtl/physical",
+   "rtl/qwen_split",
+   "tools/qwen_tp8/vm_replay_xcol_bench.sh",
+   "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2"
+  ],
+  "views_to": "physical/ref_tile/qfd_xcol_w_rq/views",
+  "record_to": "results/rtl/ref_tile/qfd_xcol_w_rq"
+ },
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "recipe": 2,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "clock_entry_domains": {
+  "core": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck0"
+   ],
+   "inputs": [
+    "e_d",
+    "tids",
+    "fault_i",
+    "rst_n"
+   ],
+   "outputs": [
+    "w_d",
+    "n_d",
+    "s_d",
+    "fault",
+    "tie_hi",
+    "tie_lo"
+   ]
+  },
+  "leaf1": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck1"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "leaf2": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck2"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "leaf3": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck3"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "leaf4": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck4"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "leaf5": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck5"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "leaf6": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck6"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "leaf7": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck7"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "leaf8": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck8"
+   ],
+   "inputs": [],
+   "outputs": []
+  }
+ },
+ "clock_data_paths": "related_same_frequency",
+ "clock_relationship": {
+  "kind": "same_pll_fixed_phase",
+  "ratio": [
+   1,
+   1
+  ],
+  "phase_ps": 0
+ }
+}

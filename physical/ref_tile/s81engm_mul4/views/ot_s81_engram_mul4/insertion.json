@@ -1,0 +1,184 @@
+{
+ "schema": "opentallas.closure_loop.ck_insertion.v1",
+ "base": "/srv/opentallas-scratch2/claude/closure-loop/s81engm_mul4-v21-bf044b7f6/routes/s81engm_mul4_v21_bf044b7f6/work/orfs/results/asap7/opentallas_ot_s81_engram_mul4_asap7_ref_s81engm_mul4_v21_bf044b7f6/base",
+ "db": "6_final.odb",
+ "sdc": "6_final.sdc",
+ "clock": "core_clk",
+ "parasitics": "spef",
+ "raw_source": true,
+ "ss": {
+  "boundary": {
+   "n": 765,
+   "mean": 359.8,
+   "min": 333.4,
+   "max": 380.1
+  },
+  "all": {
+   "n": 9396,
+   "mean": 328.4,
+   "min": 305.4,
+   "max": 380.1
+  },
+  "errors": [],
+  "macros": null,
+  "macro_libs": 0
+ },
+ "tt": {
+  "boundary": {
+   "n": 765,
+   "mean": 291.5,
+   "min": 262.4,
+   "max": 312.6
+  },
+  "all": {
+   "n": 9396,
+   "mean": 262.9,
+   "min": 240.4,
+   "max": 312.6
+  },
+  "errors": [],
+  "macros": null,
+  "macro_libs": 0
+ },
+ "ff": {
+  "boundary": {
+   "n": 765,
+   "mean": 248.6,
+   "min": 218.9,
+   "max": 269.5
+  },
+  "all": {
+   "n": 9396,
+   "mean": 221.5,
+   "min": 198.7,
+   "max": 269.5
+  },
+  "errors": [],
+  "macros": null,
+  "macro_libs": 0
+ },
+ "route_corner": null,
+ "macro_clk": {
+  "n": 0,
+  "slew_ps": 120.0,
+  "late_ps": 30.0,
+  "flag": false,
+  "outliers": []
+ },
+ "env": {
+  "CK_SS_MEAN": 360,
+  "CK_SS_ALL_MEAN": 328,
+  "CK_SS_MIN": 333,
+  "CK_SS_ALL_MIN": 305,
+  "CK_SS_MAX": 380,
+  "CK_SS_ALL_MAX": 380,
+  "CK_TT_MEAN": 292,
+  "CK_TT_ALL_MEAN": 263,
+  "CK_TT_MIN": 262,
+  "CK_TT_ALL_MIN": 240,
+  "CK_TT_MAX": 313,
+  "CK_TT_ALL_MAX": 313,
+  "CK_FF_MEAN": 249,
+  "CK_FF_ALL_MEAN": 222,
+  "CK_FF_MIN": 219,
+  "CK_FF_ALL_MIN": 199,
+  "CK_FF_MAX": 270,
+  "CK_FF_ALL_MAX": 270,
+  "CK_ROUTE_REF": "SS"
+ },
+ "lib_clock_pin": "clk",
+ "clock_mapping_basis": "6_final.sdc create_clock -name core_clk [get_ports {clk}]",
+ "clock_measurements": {
+  "clk": {
+   "schema": "opentallas.closure_loop.ck_insertion.v1",
+   "base": "/srv/opentallas-scratch2/claude/closure-loop/s81engm_mul4-v21-bf044b7f6/routes/s81engm_mul4_v21_bf044b7f6/work/orfs/results/asap7/opentallas_ot_s81_engram_mul4_asap7_ref_s81engm_mul4_v21_bf044b7f6/base",
+   "db": "6_final.odb",
+   "sdc": "6_final.sdc",
+   "clock": "core_clk",
+   "parasitics": "spef",
+   "raw_source": true,
+   "ss": {
+    "boundary": {
+     "n": 765,
+     "mean": 359.8,
+     "min": 333.4,
+     "max": 380.1
+    },
+    "all": {
+     "n": 9396,
+     "mean": 328.4,
+     "min": 305.4,
+     "max": 380.1
+    },
+    "errors": [],
+    "macros": null,
+    "macro_libs": 0
+   },
+   "tt": {
+    "boundary": {
+     "n": 765,
+     "mean": 291.5,
+     "min": 262.4,
+     "max": 312.6
+    },
+    "all": {
+     "n": 9396,
+     "mean": 262.9,
+     "min": 240.4,
+     "max": 312.6
+    },
+    "errors": [],
+    "macros": null,
+    "macro_libs": 0
+   },
+   "ff": {
+    "boundary": {
+     "n": 765,
+     "mean": 248.6,
+     "min": 218.9,
+     "max": 269.5
+    },
+    "all": {
+     "n": 9396,
+     "mean": 221.5,
+     "min": 198.7,
+     "max": 269.5
+    },
+    "errors": [],
+    "macros": null,
+    "macro_libs": 0
+   },
+   "route_corner": null,
+   "macro_clk": {
+    "n": 0,
+    "slew_ps": 120.0,
+    "late_ps": 30.0,
+    "flag": false,
+    "outliers": []
+   },
+   "env": {
+    "CK_SS_MEAN": 360,
+    "CK_SS_ALL_MEAN": 328,
+    "CK_SS_MIN": 333,
+    "CK_SS_ALL_MIN": 305,
+    "CK_SS_MAX": 380,
+    "CK_SS_ALL_MAX": 380,
+    "CK_TT_MEAN": 292,
+    "CK_TT_ALL_MEAN": 263,
+    "CK_TT_MIN": 262,
+    "CK_TT_ALL_MIN": 240,
+    "CK_TT_MAX": 313,
+    "CK_TT_ALL_MAX": 313,
+    "CK_FF_MEAN": 249,
+    "CK_FF_ALL_MEAN": 222,
+    "CK_FF_MIN": 219,
+    "CK_FF_ALL_MIN": 199,
+    "CK_FF_MAX": 270,
+    "CK_FF_ALL_MAX": 270,
+    "CK_ROUTE_REF": "SS"
+   },
+   "lib_clock_pin": "clk",
+   "clock_mapping_basis": "6_final.sdc create_clock -name core_clk [get_ports {clk}]"
+  }
+ }
+}

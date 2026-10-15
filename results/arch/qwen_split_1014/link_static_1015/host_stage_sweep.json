@@ -1,0 +1,70 @@
+{
+ "tool": "tools/qwen_split/d2d_link_calendar.py --txl 6 --phy 5 --profile program --host-stages N",
+ "qualified": false,
+ "finding": "HOST relay stages do not change the link calendar spans (2190 layer / 2684 token run / 246329 through L35); they consume the KV-die embedding fetch budget (terminal result at KV HOST 17+N, first embedding send fixed at 196): N=57 leaves 122 cycles (102 ns) for the HBM-backed embedding row, N=3 leaves 176. Production image still requires the KV lead measured N (fail-closed).",
+ "rows": [
+  {
+   "host_stages": 0,
+   "layer_run_span": 2190,
+   "token_run_span": 2684,
+   "token_cycles_through_L35": 246329,
+   "result_at_kv_host": 17,
+   "first_emb_send": 196,
+   "embedding_fetch_budget_cycles": 179
+  },
+  {
+   "host_stages": 2,
+   "layer_run_span": 2190,
+   "token_run_span": 2684,
+   "token_cycles_through_L35": 246329,
+   "result_at_kv_host": 19,
+   "first_emb_send": 196,
+   "embedding_fetch_budget_cycles": 177
+  },
+  {
+   "host_stages": 4,
+   "layer_run_span": 2190,
+   "token_run_span": 2684,
+   "token_cycles_through_L35": 246329,
+   "result_at_kv_host": 21,
+   "first_emb_send": 196,
+   "embedding_fetch_budget_cycles": 175
+  },
+  {
+   "host_stages": 8,
+   "layer_run_span": 2190,
+   "token_run_span": 2684,
+   "token_cycles_through_L35": 246329,
+   "result_at_kv_host": 25,
+   "first_emb_send": 196,
+   "embedding_fetch_budget_cycles": 171
+  },
+  {
+   "host_stages": 16,
+   "layer_run_span": 2190,
+   "token_run_span": 2684,
+   "token_cycles_through_L35": 246329,
+   "result_at_kv_host": 33,
+   "first_emb_send": 196,
+   "embedding_fetch_budget_cycles": 163
+  },
+  {
+   "host_stages": 32,
+   "layer_run_span": 2190,
+   "token_run_span": 2684,
+   "token_cycles_through_L35": 246329,
+   "result_at_kv_host": 49,
+   "first_emb_send": 196,
+   "embedding_fetch_budget_cycles": 147
+  },
+  {
+   "host_stages": 57,
+   "layer_run_span": 2190,
+   "token_run_span": 2684,
+   "token_cycles_through_L35": 246329,
+   "result_at_kv_host": 74,
+   "first_emb_send": 196,
+   "embedding_fetch_budget_cycles": 122
+  }
+ ]
+}

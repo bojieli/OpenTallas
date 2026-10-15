@@ -1,0 +1,43 @@
+{
+  "source_logic_commit": "db8fea5da",
+  "original_input_ODB": "ot-epyc4:/srv/opentallas-scratch/claude/ref_gate/qfd_xs_leaf_banked-20261015-030737/routes/gate/work/orfs/qroot_preCTS_check.odb",
+  "added_FF": 0,
+  "added_cycles": 0,
+  "fill_bytes_per_cycle": 128,
+  "fill_II": 1,
+  "capture_restore_only": {
+    "actual_capture_FF": 1024,
+    "restore_INV": 1024,
+    "area_um2": 343.38816,
+    "bbox_util": 0.31452991,
+    "region_um": [
+      2.16,
+      5.4,
+      58.32,
+      24.84
+    ],
+    "negotiation_exec": 20501,
+    "negotiation_terminal": "FAIL_DPL0033",
+    "diamond_exec": 12755,
+    "diamond_terminal": "FAIL_564_PLACEMENT_FAILURES"
+  },
+  "integrated_S": {
+    "actual_capture_FF": 1170,
+    "actual_S_resident_cells": 5943,
+    "actual_area_um2": 731.05578,
+    "region_um": [
+      2.16,
+      2.16,
+      62.64,
+      24.84
+    ],
+    "bbox_util": 0.53296131,
+    "exec": 54706,
+    "terminal": "FAIL_DPL0016_OT_IHDRV00587"
+  },
+  "conclusion": "Bounding-box area sufficiency does not prove legal-row or pin/hold capacity. Need complete S pinhold/capture/restore/read-control allocation with actual row/blockage and displacement analysis. No unchanged re-gate.",
+  "clock_relaxed": false,
+  "physical_qualification": false,
+  "route_admitted": false,
+  "ledger_changed": false
+}

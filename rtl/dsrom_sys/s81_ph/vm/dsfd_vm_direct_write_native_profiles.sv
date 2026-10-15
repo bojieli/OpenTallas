@@ -35,7 +35,7 @@ dsfd_vm_static_write_capture128 u_leaf (
  .o_tag(o_tag)
 );
 endmodule
-module dsfd_vm_static_scatter_b8_out_B8(
+module dsfd_vm_static_scatter_b8_out_B8 #(parameter integer PIPE=0) (
  input wire ck,
  input wire rst_n,
  input wire [7:0] i_v,
@@ -52,7 +52,7 @@ module dsfd_vm_static_scatter_b8_out_B8(
  output wire [63:0] o_tag,
  output wire fault
 );
-dsfd_vm_static_scatter_b8_out #(.BANK_BASE(8)) u_leaf (
+dsfd_vm_static_scatter_b8_out #(.BANK_BASE(8),.PIPE(PIPE)) u_leaf (
  .ck(ck),
  .rst_n(rst_n),
  .i_v(i_v),
@@ -70,7 +70,7 @@ dsfd_vm_static_scatter_b8_out #(.BANK_BASE(8)) u_leaf (
  .fault(fault)
 );
 endmodule
-module dsfd_vm_static_scatter_b8_out_B16(
+module dsfd_vm_static_scatter_b8_out_B16 #(parameter integer PIPE=0) (
  input wire ck,
  input wire rst_n,
  input wire [7:0] i_v,
@@ -87,7 +87,7 @@ module dsfd_vm_static_scatter_b8_out_B16(
  output wire [63:0] o_tag,
  output wire fault
 );
-dsfd_vm_static_scatter_b8_out #(.BANK_BASE(16)) u_leaf (
+dsfd_vm_static_scatter_b8_out #(.BANK_BASE(16),.PIPE(PIPE)) u_leaf (
  .ck(ck),
  .rst_n(rst_n),
  .i_v(i_v),
@@ -105,7 +105,7 @@ dsfd_vm_static_scatter_b8_out #(.BANK_BASE(16)) u_leaf (
  .fault(fault)
 );
 endmodule
-module dsfd_vm_static_scatter_b8_out_B24(
+module dsfd_vm_static_scatter_b8_out_B24 #(parameter integer PIPE=0) (
  input wire ck,
  input wire rst_n,
  input wire [7:0] i_v,
@@ -122,7 +122,7 @@ module dsfd_vm_static_scatter_b8_out_B24(
  output wire [63:0] o_tag,
  output wire fault
 );
-dsfd_vm_static_scatter_b8_out #(.BANK_BASE(24)) u_leaf (
+dsfd_vm_static_scatter_b8_out #(.BANK_BASE(24),.PIPE(PIPE)) u_leaf (
  .ck(ck),
  .rst_n(rst_n),
  .i_v(i_v),

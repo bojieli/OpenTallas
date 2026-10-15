@@ -1,0 +1,37 @@
+ERR bank status 800020000800020000800020000800020000800020000800020000800020000800020000800020000800020000800020000800020000800020000800020000800020000800020000
+RECORD 0 window measured 0..98 = 98 edges, compiler 0..98
+RECORD 1 window measured 177..184 = 7 edges, compiler 177..184
+RECORD 2 window measured 98..213 = 115 edges, compiler 98..213
+RECORD 3 window measured 213..289 = 76 edges, compiler 213..289
+RECORD 4 window measured 362..369 = 7 edges, compiler 362..369
+RECORD 5 window measured 369..414 = 45 edges, compiler 369..414
+RECORD 6 window measured 371..437 = 66 edges, compiler 371..437
+RECORD 7 window measured 437..481 = 44 edges, compiler 437..481
+RECORD 8 window measured 481..591 = 110 edges, compiler 481..591
+RECORD 9 window measured 659..737 = 78 edges, compiler 659..737
+RECORD 10 window measured 686..741 = 55 edges, compiler 686..741
+RECORD 11 window measured 741..834 = 93 edges, compiler 741..834
+RECORD 12 window measured 741..877 = 136 edges, compiler 741..877
+RECORD 13 window measured 894..901 = 7 edges, compiler 894..901
+RECORD 14 window measured 901..1024 = 123 edges, compiler 901..1024
+RECORD 15 window measured 1024..1232 = 208 edges, compiler 1024..1232
+RECORD 16 window measured 1232..1355 = 123 edges, compiler 1232..1355
+RECORD 17 window measured 1312..1367 = 55 edges, compiler 1312..1367
+RECORD 18 window measured 1367..1410 = 43 edges, compiler 1367..1410
+RECORD 19 window measured 1404..1411 = 7 edges, compiler 1404..1411
+RECORD 20 window measured 1405..1412 = 7 edges, compiler 1405..1412
+RECORD 21 window measured 1437..1444 = 7 edges, compiler 1437..1444
+RECORD 22 window measured 1438..1445 = 7 edges, compiler 1438..1445
+RECORD 23 window measured 1470..1477 = 7 edges, compiler 1470..1477
+RECORD 24 window measured 1502..1509 = 7 edges, compiler 1502..1509
+RECORD 25 window measured 1550..1557 = 7 edges, compiler 1550..1557
+RECORD 26 window measured 1582..1589 = 7 edges, compiler 1582..1589
+RECORD 27 window measured 1623..1630 = 7 edges, compiler 1623..1630
+RECORD 28 window measured 1557..1728 = 171 edges, compiler 1557..1728
+RECORD 29 window measured 1728..1772 = 44 edges, compiler 1728..1772
+RECORD 30 window measured 1772..1816 = 44 edges, compiler 1772..1816
+RECORD 31 window measured 1816..1827 = 11 edges, compiler 1816..1827
+RECORD 32 window measured 1817..1884 = 67 edges, compiler 1817..1884
+FATAL: /home/ubuntu/wt/hbm-elemb-sfu-1015/rtl/hbm_accel/generic/adapters/static_su/tb_hbm_su_static_spread_vehicle.sv:164: SU_SPREAD_VEHICLE FAIL errors=1 reads=12620 writes=12281
+       Time: 24040000 Scope: tb_hbm_su_static_spread_vehicle
+exit=1

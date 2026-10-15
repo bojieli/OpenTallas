@@ -14,6 +14,12 @@
 //   +mode 0 base (expect no fault); 1 four sources on one bank (lane >= 3); 2 drain collision; 3 PQ misaligned;
 //   4 P2RD native op; 5 duplicate read bank (FSR); 6 MIX and SU on one logical port -- each must raise ITS fault source.
 module tb_dsfd_vm_static_core;
+`ifdef OT_VM_NATIVE_WSCATTER
+    localparam integer WSCATTER_PIPE=1;
+`else
+    localparam integer WSCATTER_PIPE=0;
+`endif
+    localparam integer WRITE_COMMIT_AGE=11+WSCATTER_PIPE;
     // landing commit age (edges from the row's pin edge): 2 with the native pin stage (dsfd_vm_static_landing PINREG=1, F8
     // 2026-10-15), 1 for the r1 PINREG=0 reference.  The compiler's LARM row-commit constant follows the same value.
 `ifdef OT_VM_LANDING_PINREG0
@@ -21,7 +27,9 @@ module tb_dsfd_vm_static_core;
 `else
     localparam integer LAND_AGE = 2;
 `endif
-`ifdef OT_VM_NATIVE_READ_PINREG
+`ifdef OT_VM_NATIVE_READ_L16
+    localparam integer READ_PIPE=4;     // + pin-registered rsched / return lanes (L16)
+`elsif OT_VM_NATIVE_READ_PINREG
     localparam integer READ_PIPE=2;
 `elsif OT_VM_NATIVE_READ
     localparam integer READ_PIPE=1;
@@ -63,10 +71,10 @@ module tb_dsfd_vm_static_core;
         assign cld[512*cl +: 512] = cvm[551*cl+31 +: 512];
     end endgenerate
     wire vm_fault;
-    dsfd_vm_static_core #(.READ_PIPE(READ_PIPE)) dut (.cks(ck), .rss(rss),
+    dsfd_vm_static_core #(.READ_PIPE(READ_PIPE), .WSCATTER_PIPE(WSCATTER_PIPE)) dut (.cks(ck), .rss(rss),
         .ck_read_data({64{ck}}), .ck_read_valid({8{ck}}), .rst_read_data_n({64{rss}}), .rst_read_valid_n({8{rss}}),
         .ck_rsched(ck), .ck_seq(ck), .ck_landing(ck),
-        .ck_mem_fsr({16{ck}}), .ck_mem_return({4{ck}}), .ck_mem_bank({128{ck}}),
+        .ck_mem_fsr({16{ck}}), .ck_mem_return({16{ck}}), .ck_mem_bank({128{ck}}),
         .ck_mem_wcapture({128{ck}}), .ck_mem_wscatter({16{ck}}),
         .ck_mem_relay_req({48{ck}}), .ck_mem_relay_rsp({48{ck}}),
         .ck_write_control(ck), .ck_write_header(ck), .ck_write_payload({4{ck}}),
@@ -83,8 +91,8 @@ module tb_dsfd_vm_static_core;
         .f_mx_wqv(mx_wqv), .f_mx_wq(mx_wq), .f_mx_wqm(mx_wqm), .f_mx_wqd(mx_wqd),
         .l_v(l_v), .l_d(l_d), .cp_v(16'd0), .cp_row(224'd0), .cp_m(256'd0), .cp_d(8192'd0), .cl_t(clt), .cl_v(clv), .cl_row(clr), .cl_m(clm), .cl_d(cld), .wf_v(1'b0), .wf_row(14'd0), .wf_d(512'd0), .x_al(3'd0), .x_hdr(9'd0), .edge_f(3'd0), .vm_fault(vm_fault));
 
-    localparam integer RL = 12+READ_PIPE, DL = 6;      // Exact elapsed edges from command/read sampling to output.
-    integer cy = 0, bad = 0, mode = 0, seed = 1, nreads = 4000, K = -1, commits = 0, reads = 0, rows_checked = 0;
+    localparam integer RL = 12+READ_PIPE, DL = 7;      // Exact elapsed edges from command/read sampling to output.
+    integer cy = 0, bad = 0, mode = 0, seed = 1, nreads = 4000, K = WRITE_COMMIT_AGE, commits = 0, reads = 0, rows_checked = 0;
     integer dones = 0, pqreads = 0, cmds = 0, mxreads = 0, mxwrites = 0, fault_seen = 0;
     reg [7:0] ver [0:16383];                 // stimulus version of each row (value function input)
     integer exp_c [0:16383]; reg [3:0] exp_sl [0:16383]; reg [15:0] exp_m [0:16383];
@@ -114,7 +122,6 @@ module tb_dsfd_vm_static_core;
         for (p = 0; p < 128; p = p + 1) if (dut.cm_v[p]) begin
             s = p / 32; b = p % 32; a = dut.cm_a[9*p +: 9];
             row = {a, 5'(b) ^ {a[2:0], 2'b00}};
-            if (K < 0 && exp_c[row] >= 0) K = cy - exp_c[row];
             if (exp_c[row] < 0 || cy - exp_c[row] != K || exp_sl[row][s] || dut.cm_m[4*p +: 4] !== exp_m[row][4*s +: 4]) begin
                 bad = bad + 1; if (bad < 10) $display("COMMIT MISMATCH cy %0d row %0d slice %0d exp_c %0d K %0d", cy, row, s, exp_c[row], K);
             end
@@ -191,7 +198,7 @@ module tb_dsfd_vm_static_core;
             end
             // CHECK of slot 0 after every row 0..1023 commit was observed (they end at W edge 64; CHECK after edge 1024 + 40)
             repeat (40) step;
-            if (K < 0) begin bad = bad + 1; $display("NO COMMIT OBSERVED"); end
+            if (commits == 0) begin bad = bad + 1; $display("NO COMMIT OBSERVED"); end
             step; cmd({3'd0, 1'b0, 10'h3FF, 10'h3FF}); chk_pin = cy;
             repeat (12) step;
             if (!t_inp_su || c_st[0]) begin bad = bad + 1; $display("CHECK did not verify: inp %b st %b", t_inp_su, c_st); end

@@ -1,0 +1,25 @@
+# dsfd_m2l_vc_8x1__he_hcSW: die generator pin centres (gen19b pins.lef); outline 17.28 x 17.28 (slot 15.528 x 17.256 rounded up to the 2.16-um lattice; N / E pins follow their face)
+place_pin -pin_name {ck} -layer M5 -location {7.644000 0.144000} -force_to_die_boundary
+place_pin -pin_name {rs} -layer M5 -location {7.836000 0.144000} -force_to_die_boundary
+place_pin -pin_name {o[0]} -layer M5 -location {7.500000 17.136000} -force_to_die_boundary
+place_pin -pin_name {o[1]} -layer M5 -location {7.548000 17.136000} -force_to_die_boundary
+place_pin -pin_name {o[2]} -layer M5 -location {7.596000 17.136000} -force_to_die_boundary
+place_pin -pin_name {o[3]} -layer M5 -location {7.644000 17.136000} -force_to_die_boundary
+place_pin -pin_name {o[4]} -layer M5 -location {7.692000 17.136000} -force_to_die_boundary
+place_pin -pin_name {o[5]} -layer M5 -location {7.740000 17.136000} -force_to_die_boundary
+place_pin -pin_name {o[6]} -layer M5 -location {7.788000 17.136000} -force_to_die_boundary
+place_pin -pin_name {o[7]} -layer M5 -location {7.836000 17.136000} -force_to_die_boundary
+place_pin -pin_name {o[8]} -layer M5 -location {7.884000 17.136000} -force_to_die_boundary
+place_pin -pin_name {o[9]} -layer M5 -location {7.932000 17.136000} -force_to_die_boundary
+place_pin -pin_name {o[10]} -layer M5 -location {7.980000 17.136000} -force_to_die_boundary
+place_pin -pin_name {di0[0]} -layer M4 -location {0.144000 8.316000} -force_to_die_boundary
+place_pin -pin_name {di0[1]} -layer M4 -location {0.144000 8.364000} -force_to_die_boundary
+place_pin -pin_name {di0[2]} -layer M4 -location {0.144000 8.412000} -force_to_die_boundary
+place_pin -pin_name {di0[3]} -layer M4 -location {0.144000 8.460000} -force_to_die_boundary
+place_pin -pin_name {di0[4]} -layer M4 -location {0.144000 8.508000} -force_to_die_boundary
+place_pin -pin_name {di0[5]} -layer M4 -location {0.144000 8.556000} -force_to_die_boundary
+place_pin -pin_name {di0[6]} -layer M4 -location {0.144000 8.604000} -force_to_die_boundary
+place_pin -pin_name {di0[7]} -layer M4 -location {0.144000 8.652000} -force_to_die_boundary
+place_pin -pin_name {di0[8]} -layer M4 -location {0.144000 8.700000} -force_to_die_boundary
+place_pin -pin_name {di0[9]} -layer M4 -location {0.144000 8.748000} -force_to_die_boundary
+place_pin -pin_name {fi0} -layer M4 -location {0.144000 8.940000} -force_to_die_boundary

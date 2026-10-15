@@ -27,10 +27,10 @@
 // +define+DSFD_SP_VM_MIX4 once the die wires the MIX4 slot (no die net today: without the define the core's MIX
 // inputs are held idle and its outputs unread, the MIX function is absent from this die revision, not stubbed).
 // ---------------------------------------------------------------------------------------------------------------
-module dsfd_sp_vm #(parameter integer CAP_PIPE=0, parameter integer READ_PIPE=0) (
+module dsfd_sp_vm #(parameter integer CAP_PIPE=0, parameter integer READ_PIPE=0, parameter integer WSCATTER_PIPE=0) (
     input  wire          ck_core_t, ck_rsched_t, ck_seq_t, ck_landing_t,
     input  wire [15:0]   ck_mem_fsr_t,
-    input  wire [3:0]    ck_mem_return_t,
+    input  wire [15:0]   ck_mem_return_t,
     input  wire [127:0]  ck_mem_bank_t, ck_mem_wcapture_t,
     input  wire [15:0]   ck_mem_wscatter_t,
     input  wire [47:0]   ck_mem_relay_req_t, ck_mem_relay_rsp_t,
@@ -115,7 +115,7 @@ module dsfd_sp_vm #(parameter integer CAP_PIPE=0, parameter integer READ_PIPE=0)
         .w_v(cl_v), .w_row(cl_row), .w_d(cl_d), .w_m(cl_m), .w_t(cl_t),
         .t_gather(t_gather), .f_xgo(f_xgo), .qSW(qSW), .qSWs(qSWs), .fault(xio_f));
     // edge faults -> engine 12 legacy-fault input (c_st[0]); serial levels registered once in the stream domain (seq tile)
-    dsfd_vm_static_core #(.READ_PIPE(READ_PIPE)) u_core (.cks(ck_core_t), .rss(rss_core_t),
+    dsfd_vm_static_core #(.READ_PIPE(READ_PIPE), .WSCATTER_PIPE(WSCATTER_PIPE)) u_core (.cks(ck_core_t), .rss(rss_core_t),
         .rst_rsched_n(rss_rsched_t), .rst_seq_n(rss_seq_t), .rst_landing_n(rss_landing_t),
         .rst_mem_fsr_n(rss_mem_fsr_t), .rst_mem_return_n(rss_mem_return_t), .rst_mem_bank_n(rss_mem_bank_t),
         .rst_mem_wcapture_n(rss_mem_wcapture_t), .rst_mem_wscatter_n(rss_mem_wscatter_t), .rst_mem_relay_n(rss_mem_relay_t),

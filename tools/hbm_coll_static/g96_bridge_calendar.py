@@ -24,8 +24,12 @@ def topology():
     return edges
 
 class Compiler:
-    def __init__(self,relay_edges=0,interleave=False,local_retime=False):
+    def __init__(self,relay_edges=0,interleave=False,local_retime=False,elastic_edges=0,tx_extra=0,rx_extra=0):
         self.local_retime=local_retime;self.interleave=interleave;self.r=Resources(defer_replay=True);self.gb={};self.bridge=[];self.rx=[];self.relay_edges=relay_edges
+        # HANDOFF 0az (owner 10-15 07:28): a cross-die hop keeps link-level flow control. Pricing model: the receiving
+        # die reads its elastic RX buffer `elastic_edges` after the fixed-flight arrival (block-ready margin, compiler
+        # reserved); tx_extra/rx_extra add endpoint pipeline stages (V4 TX6/RX2 = 1/1 over the TX5/RX1 baseline).
+        self.elastic_edges=elastic_edges;self.tx_extra=tx_extra;self.rx_extra=rx_extra
         self.links=collections.defaultdict(list)
         for x in topology():self.links[x['src']].append(x)
         self.undo=[]
@@ -66,13 +70,13 @@ class Compiler:
         write=self.bridge_route(a,lq,p,rail,rail,capture+3,identity)
         box=self.gb.setdefault(key,Gearbox(tx_edges=5,insert_holes=True))
         def attempt(extra):
-            read=accept-6
+            read=accept-6-self.tx_extra
             r.replay_use(key,seq,write,read)
             r.reserve(f'd{b}q{p}.rxrail{dr}',receive-1,(seq,identity))
             r.reserve(f'd{b}q{p}.rxseq{dr}',receive-2,seq)
             r.edges.append(dict(id=identity,src=a,dst=b,q=p,logical_q=lq,rail=rail,dst_rail=dr,capture=capture,write=write,read=read,slot=seq%64,seq=seq,gearbox_ordinal=j,accept=accept,receive=receive))
             # All endpoint RX first traverses the source quarter's actual RX mux.
-            localcap=self.rxface(b,p,dr,receive+1,False,identity)
+            localcap=self.rxface(b,p,dr,receive+1+self.elastic_edges+self.rx_extra,False,identity)
             if p==lq:
                 if prepare:prepare(b,localcap,2+dr)
                 return localcap,2+dr
@@ -86,7 +90,7 @@ class Compiler:
         for extra in range(512 if self.local_retime and prepare else 1):
             mark=len(r.txlog);marks=(len(r.edges),len(r.qroutes),len(self.bridge),len(self.rx));j=None
             try:
-                j,accept,receive,seq=box.reserve_after(write+10+extra,identity,write)
+                j,accept,receive,seq=box.reserve_after(write+10+self.tx_extra+extra,identity,write)
                 result=attempt(extra)
                 self.undo.append((box,j))
                 return result
@@ -215,16 +219,16 @@ def bridge_words(full):
     return result
 
 def main():
-    p=argparse.ArgumentParser();p.add_argument('out',type=pathlib.Path);p.add_argument('--layout',type=pathlib.Path,required=True);p.add_argument('--relay-edges',type=int,default=0);p.add_argument('--interleave-groups',action='store_true');p.add_argument('--local-retime',action='store_true');a=p.parse_args()
+    p=argparse.ArgumentParser();p.add_argument('out',type=pathlib.Path);p.add_argument('--layout',type=pathlib.Path,required=True);p.add_argument('--relay-edges',type=int,default=0);p.add_argument('--interleave-groups',action='store_true');p.add_argument('--local-retime',action='store_true');p.add_argument('--elastic-edges',type=int,default=0);p.add_argument('--tx-extra',type=int,default=0);p.add_argument('--rx-extra',type=int,default=0);a=p.parse_args()
     if a.relay_edges<0:raise ValueError('negative relay stages')
     a.out.mkdir(parents=True,exist_ok=True)
-    full=Compiler(a.relay_edges,a.interleave_groups,a.local_retime).compile();words,summary=lower_expanded(full,json.loads(a.layout.read_text()));full['expanded_program_summary']=summary
+    full=Compiler(a.relay_edges,a.interleave_groups,a.local_retime,a.elastic_edges,a.tx_extra,a.rx_extra).compile();words,summary=lower_expanded(full,json.loads(a.layout.read_text()));full['expanded_program_summary']=summary
     bw=bridge_words(full)
     for name,code in [('expanded_uops',words),('expanded_bridge',bw)]:
         with (a.out/(name+'.jsonl')).open('w') as f:
             for owner,events in sorted(code.items()):
                 for c,w in sorted(events.items()):f.write(json.dumps(dict(owner=owner,cycle=c,word=hex(w)))+'\n')
     (a.out/'calendar.json').write_text(json.dumps(full)+'\n')
-    receipt=dict(operation=operation(),cycles=full['cycles'],ratio=full['ratio'],within_110percent=full['within_110percent'],physical_links=len(topology()),candidate_offsets=OFFSETS,rank_diameter=4,bridge_source='d72069aec',relay_edges=a.relay_edges,interleave_groups=a.interleave_groups,local_retime=a.local_retime,physical='All port/package/FEC/clock/geometry bindings unqualified; zero relay is a lower bound only',program='Native V2 expanded1536 and separate actual49/30-bit bridge commands; actual extra catalog/issuer integration and64-row compression absent',sources=dict(parent='cc6d946ad',endpoint='cc12ab88a TX5/RX1',transport='359252cc2'),counts={k:len(full[k]) for k in ['arithmetic','publications','qroutes','transport_hops','bridge','rx_faces']})
+    receipt=dict(operation=operation(),cycles=full['cycles'],ratio=full['ratio'],within_110percent=full['within_110percent'],physical_links=len(topology()),candidate_offsets=OFFSETS,rank_diameter=4,bridge_source='d72069aec',relay_edges=a.relay_edges,interleave_groups=a.interleave_groups,local_retime=a.local_retime,elastic_edges=a.elastic_edges,tx_extra=a.tx_extra,rx_extra=a.rx_extra,physical='All port/package/FEC/clock/geometry bindings unqualified; zero relay is a lower bound only',program='Native V2 expanded1536 and separate actual49/30-bit bridge commands; actual extra catalog/issuer integration and64-row compression absent',sources=dict(parent='cc6d946ad',endpoint='cc12ab88a TX5/RX1',transport='359252cc2'),counts={k:len(full[k]) for k in ['arithmetic','publications','qroutes','transport_hops','bridge','rx_faces']})
     (a.out/'model.json').write_text(json.dumps(receipt,indent=2)+'\n');print(json.dumps(receipt,indent=2))
 if __name__=='__main__':main()

@@ -61,6 +61,55 @@ def _assign_split(stmt: str):
     return None
 
 
+def _outer(expr: str) -> str:
+    expr = re.sub(r'\s+', '', expr)
+    while expr.startswith('(') and _balanced(expr, 0, '(', ')') == len(expr):
+        expr = expr[1:-1]
+    return expr
+
+
+def _top_split(expr: str, op: str):
+    """Yield (left, right) for every top-level single ``op`` ('|' or '&', not '||'/'&&') in expr."""
+    depth = 0
+    for k, c in enumerate(expr):
+        if c in '([':
+            depth += 1
+        elif c in ')]':
+            depth -= 1
+        elif depth == 0 and c == op and expr[k:k + 2] != op * 2 and (k == 0 or expr[k - 1] != op):
+            yield _outer(expr[:k]), _outer(expr[k + 1:])
+
+
+def _preserves_exact_word(lhs: str, rhs: str) -> bool:
+    """Recognise only bit/field inserts that read the target's EXACT word to keep its other bits:
+    ``W | v``, ``W & m``, ``(m & W) | v`` / ``(W & m) | v`` (constant- or ``~``-masked part-select insert,
+    ``ua_q[0] = (0xffffc000 & ua_q[0]) | rx_a``), where W is the written word (X[word] or a scalar X)
+    and the mask m and inserted value v do not read X.
+
+    Exact word identity matters: X[other_word] is a real dependency.  Arithmetic never qualifies.
+    This is only a candidate; the resolved RTL must also prove its NBA value never reads X, so a
+    whole-word RTL accumulation (``x <= x | m``) remains a finding.
+    """
+    word = _outer(re.sub(r'\((?:CData|SData|IData|QData|EData)\)', '', lhs))
+    m = re.match(r'vlSelf(?:Ref\.|->)(\w+)', word)
+    if not m or (('[' in word) and not word.endswith(']')):
+        return False
+    target = re.compile(r'\bvlSelf(?:Ref\.|->)' + re.escape(m.group(1)) + r'\b')
+
+    def kept(x):  # the exact word, optionally under a target-free AND mask
+        if x == word:
+            return True
+        return any((a == word and not target.search(b)) or (b == word and not target.search(a))
+                   for a, b in _top_split(x, '&'))
+
+    expr = _outer(re.sub(r'\((?:CData|SData|IData|QData|EData)\)', '', rhs))  # width casts: same word
+    for a, b in _top_split(expr, '|'):
+        if (kept(a) and not target.search(b)) or (kept(b) and not target.search(a)):
+            return True
+    return any((a == word and not target.search(b)) or (b == word and not target.search(a))
+               for a, b in _top_split(expr, '&'))
+
+
 def _functions(text: str):
     """Yield (name, body) for each top-level function definition."""
     for m in FUNC.finditer(text):
@@ -97,6 +146,11 @@ def scan(obj_dir: str) -> dict:
                     continue
                 loop = body[brace + 1:_balanced(body, brace, '{', '}') - 1]
                 loops += 1
+                # A NESTED loop's own counter (``i = 1U + i`` of an inner for) is split into this loop's
+                # statements too; it is a blocking loop index, never an NBA target (qadd u_rnd.i, coll-park q).
+                for inner in WHILE.finditer(loop):
+                    ip = loop.index('(', inner.start())
+                    counters.update(SELF.findall(loop[ip:_balanced(loop, ip, '(', ')')]))
                 for stmt in loop.split(';'):
                     # Control-flow braces (if/else blocks) precede the assignment; expressions carry none.
                     parts = _assign_split(re.split(r'[{}]', stmt)[-1])
@@ -113,11 +167,13 @@ def scan(obj_dir: str) -> dict:
                     # bits; Verilator legitimately skips the shadow when nothing reads X after the write. The
                     # miscompile is a loop-CARRIED read: the inserted value itself reads X (r[i] <= r[i-1]).
                     reads = len(re.findall(r'\bvlSelf(?:Ref\.|->)' + re.escape(var) + r'\b', rhs))
-                    if re.match(r'\s*\(+\s*~', rhs):
+                    if re.match(r'[\s(]*~', rhs):
                         reads -= 1
                     if reads >= 1:
                         findings.append(dict(file=os.path.relpath(path, obj_dir), function=fname, var=var,
-                                             counter=sorted(counters)))
+                                             counter=sorted(counters),
+                                             statement=' '.join(stmt.split())[:600],
+                                             preserve_word_candidate=(reads == 1 and _preserves_exact_word(lhs, rhs))))
     # A blocking prefix loop (``p[i] = p[i-1] ^ x``) has the same C++ shape. Separate it with the actual
     # Verilog sources Verilator recorded (__verFiles.dat): only a variable the RTL writes with ``<=`` is
     # an in-place NBA miscompile. Unreadable sources keep the finding (fail closed).
@@ -128,23 +184,39 @@ def scan(obj_dir: str) -> dict:
             h = re.match(r'(?:module|interface|program)\s+(?:automatic\s+|static\s+)?(\w+)', m.group(0))
             if h:
                 modules.setdefault(h.group(1), []).append(m.group(0))
-    kept, blocking = [], 0
+    # ``define MACRO module_name``: an instance whose module is a macro (```OT_S81PH_CE_INST #(..) u_ce (``)
+    for s in sources:
+        for d in re.finditer(r'^[ \t]*`define[ \t]+(\w+)[ \t]+(\w+)[ \t]*$', s, re.M):
+            modules.setdefault(DEFINES, []).append(d.group(1) + ' ' + d.group(2))
+    kept, blocking, independent = [], 0, 0
     for f in findings:
         parts = [re.sub(r'__BRA__.*$', '', x).replace('__PVT__', '') for x in f['var'].split('__DOT__')]
         if parts[-1].startswith('__V'):
             continue
+        if parts[0] not in modules:
+            # Hierarchical/per-module classes (``Vtb_x_ot_nhb_zh__0.cpp``, ``..._ot_s81_su_qnt__DepSet_h..``) name
+            # members relative to THAT module: prefix the longest module name the generated file is named after.
+            base = os.path.basename(f['file'])
+            owner = max((m for m in modules if m != DEFINES and re.search(r'_' + re.escape(m) + r'__', base)),
+                        key=len, default=None)
+            if owner:
+                parts = [owner] + parts
         if missing or not sources:
             f['source_check'] = 'UNAVAILABLE'
         elif _nba_in_rtl(modules, parts):
+            if f['preserve_word_candidate'] and _independent_nba_value(modules, parts):
+                independent += 1
+                continue
             f['source_check'] = 'NBA_IN_RTL'
         else:
             blocking += 1
             continue
         kept.append(f)
     return dict(obj_dir=obj_dir, loops_checked=loops, findings=kept, blocking_loops_excluded=blocking,
-                sources_read=len(sources), sources_missing=missing)
+                sources_read=len(sources), sources_missing=missing, independent_bit_updates_excluded=independent)
 
 
+DEFINES = '`define'  # key of the macro -> module-name table inside the modules map (not a module name)
 MODULE = re.compile(r'\b(?:module|interface|program)\b.*?\b(?:endmodule|endinterface|endprogram)\b', re.S)
 
 
@@ -167,11 +239,28 @@ def _nba_in_scope(module: str, name: str, parent: str) -> bool:
     # Statement position only (line start, ';', begin/else, ')' of if/for, ':' of a case item), so a
     # ``<=`` comparison inside an expression is not taken for a non-blocking write.
     nba = re.compile(r'(?:^|;|\bbegin\b|\belse\b|\)|:)[ \t]*' + re.escape(name) + r'\s*(?:\[[^;=]*\]\s*)*<=', re.M)
+    # ``for (i = 0; i <= W; ...)``: the header's '; i <=' is a comparison, not a statement.
+    module = _blank_for_headers(module)
     block = _named_block(module, parent) if parent else None
     if block is not None:
         return bool(nba.search(block))
     decl = re.compile(r'\b(?:reg|logic|bit|integer|int|wire|var)\b[^;]*\b' + re.escape(name) + r'\b')
     return bool(decl.search(module) and nba.search(module))
+
+
+def _blank_for_headers(text: str) -> str:
+    """Replace the inside of every ``for ( ... )`` header by spaces (balanced parentheses kept)."""
+    out, pos = [], 0
+    for m in re.finditer(r'\bfor\s*\(', text):
+        if m.start() < pos:
+            continue
+        p = m.end() - 1
+        e = _balanced(text, p, '(', ')')
+        out.append(text[pos:p + 1])
+        out.append(re.sub(r'[^\n]', ' ', text[p + 1:e - 1]))
+        pos = e - 1
+    out.append(text[pos:])
+    return ''.join(out)
 
 
 def _resolve(modules: dict, parts: list):
@@ -181,17 +270,22 @@ def _resolve(modules: dict, parts: list):
     if not cur:
         return None
     for comp in parts[1:-1]:
-        nxt = None
+        nxt = []
         for text in cur:
             if re.search(r'\bbegin\s*:\s*' + re.escape(comp) + r'\b', text):
-                nxt = cur
-                break
-            m = re.search(r'\b(\w+)\s*(?:#\s*\((?:[^()]|\((?:[^()]|\([^()]*\))*\))*\))?\s*\b' + re.escape(comp)
-                          + r'\s*(?:\[[^\]]*\]\s*)?\(', text)
-            if m and m.group(1) in modules:
-                nxt = modules[m.group(1)]
-                break
-        if nxt is None:
+                nxt.append(text)
+                continue
+            # parameters as #(...) or a macro (``ot_hbm_accel_smh_fc_bc `OT_FC_BCP u_bc (``); EVERY instance of that
+            # name counts (generate if/else branches may instantiate different modules under one name)
+            for m in re.finditer(r'(`?\b\w+)\s*(?:#\s*\((?:[^()]|\((?:[^()]|\([^()]*\))*\))*\)|`\w+(?:\s*\([^()]*\))?)?\s*\b'
+                                 + re.escape(comp) + r'\s*(?:\[[^\]]*\]\s*)?\(', text):
+                mod = m.group(1)
+                names = ([d.split()[1] for d in modules.get(DEFINES, ()) if d.split()[0] == mod[1:]]
+                         if mod.startswith('`') else [mod])
+                for t in (t for n in names for t in modules.get(n, ())):
+                    if t not in nxt:
+                        nxt.append(t)
+        if not nxt:
             return None
         cur = nxt
     return cur
@@ -201,8 +295,27 @@ def _nba_in_rtl(modules: dict, parts: list) -> bool:
     name, parent = parts[-1], (parts[-2] if len(parts) > 1 else '')
     owners = _resolve(modules, parts)
     if owners is None:  # unresolved path: any module that declares the variable (conservative)
-        owners = [t for texts in modules.values() for t in texts]
+        owners = [t for k, texts in modules.items() if k != DEFINES for t in texts]
     return any(_nba_in_scope(m, name, parent) for m in owners)
+
+def _independent_nba_value(modules: dict, parts: list) -> bool:
+    """Require resolved RTL and all NBA writes to have a target-independent value.
+
+    This prevents mistaking ``word <= word | mask`` for an independent packed
+    bit update. Unresolved hierarchy stays fail-closed; no global-name guess.
+    """
+    owners = _resolve(modules, parts)
+    if owners is None:
+        return False
+    name, parent = parts[-1], parts[-2] if len(parts) > 1 else ''
+    writes = []
+    assignment = re.compile(r'(?:^|;|\bbegin\b|\belse\b|\)|:)\s*' + re.escape(name)
+                            + r'\s*(?:\[[^;=]*\]\s*)*<=([^;]*);', re.M)
+    for text in owners:
+        scope = _named_block(text, parent) if parent else None
+        writes.extend(assignment.findall(scope if scope is not None else text))
+    return bool(writes) and all(not re.search(r'\b' + re.escape(name) + r'\b', value) for value in writes)
+
 
 def _strip_comments(text: str) -> str:
     """Drop // and /* */ comments (keeping strings) so module/always scanning sees only code."""

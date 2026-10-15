@@ -55,6 +55,17 @@ def build(base):
     lay['outline']['h'] = round(lay['outline']['h'] + GROW, 3)
     lay['note'] = (lay.get('note', '') + ' | v22: ctra/ctrb strips -> 4 return-column leaves each (IDLE-S); merge '
                    'register (rv_delay, clk_merge) must live in column 0 of A (no cth glue).')
+    c['hbm_flow_boundary'] = dict(
+        rule='OWNER 10-14 18:59 + HANDOFF 0az (10-15): credit-free on die; the HBM stack / PHY (HBM-backed KV cache and '
+             'any other HBM/PHY) keeps an elastic buffer / link-level flow control; after "buffer block ready" '
+             'everything is fixed-slot',
+        elastic_side=dict(instances=['phy_SW (ot_hbm3e_phy_v41x_aw30_e8p5)', 'ctrl_SW (dsfd_ctrl)', 'svc_SW (dsfd_svc_c)'],
+                          ports=['phy.k_rdy', 'phy.kr_rdy', 'phy.w_rdy', 'phy.wr_rdy', 'phy.w_room'],
+                          buffer='svc_SW native ingress staging (sub_layouts.dsfd_svc_c_native_ingress): one ready per '
+                                 'buffer block, compiler prefetch / double-buffer ahead'),
+        fixed_slot_side='every svc_SW -> VM/selector/collector/SU/HC transfer and all other die nets',
+        audit='tools/s81/flow_control_seams.py: GEN17 die.v FAIL (vm.tcs, hc_s.y_rdy, collective.f_hc_yr); '
+              'GEN18p pass0 PASS (5 PHY boundary ports only); glue: 169 meso FIFO r_rdy tied 1')
     c['version'] = 22
     c['v22_hc_return_columns'] = rec
     c['changelog'].append('v22 candidate: HC four-column return (ctra 4x144.18x30.24, ctrb 4x144.18x25.92), cth +12.96, '

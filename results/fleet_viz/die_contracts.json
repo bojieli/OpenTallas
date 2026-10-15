@@ -1,0 +1,461 @@
+{
+ "schema": "opentallas.fleet_viz.die_contracts.v1",
+ "doc": "Current die contracts the fleet-viz element registry derives its element list from (tools/fleet_viz/die_contracts.py, registry-sync 2026-10-15). Die leads: when a contract revision lands, point the sources here at it and record replacements in 'retire' with the log/contract evidence. 'complete': true = every element of the design's target that is in no current contract is shown superseded (with these contracts as evidence); false = the contract does not yet enumerate the whole die, so unlisted rows keep their loop state and are flagged 'not in current contract'.",
+ "designs": [
+  {
+   "design": "qwen_compute",
+   "label": "Qwen compute die",
+   "target": "Qwen ROM",
+   "revision": "C19 / wide27 (PM-H-S blocked, chain runs without it) on contract v1.3 + static successors",
+   "lead": "Q-COMPUTE-DIE",
+   "log": "el1014-qwen-split-compute.log",
+   "doc": "results/arch/qwen_split_compute_1014/CONTRACT.md",
+   "complete": true,
+   "sources": [
+    {
+     "kind": "port_bind",
+     "path": "results/arch/qwen_split_compute_1014/c13_smoke/port_bind.json",
+     "macro": "^(ot_qkvd_ucie_x64_phy|qfd_ckbump)$",
+     "evidence": "die chain port-bind (c13 smoke; latest committed compute bind)"
+    },
+    {
+     "kind": "json_keys",
+     "path": "results/arch/qwen_split_compute_1014/c17_source_pins/INDEX.json",
+     "evidence": "C17 source pin contract"
+    },
+    {
+     "kind": "json_field",
+     "path": "results/arch/qwen_split_compute_1014/native_join_957/actual_join.json",
+     "at": "nodes",
+     "field": "top",
+     "skip": [
+      "qfd_sp_su64_sfu_glue_entries",
+      "qkd_embedding_static_core_provider"
+     ],
+     "evidence": "native compute join 957 (actual source nodes)"
+    }
+   ],
+   "add": [
+    {
+     "element": "qfd_tt_ctlm_static_s",
+     "evidence": "el1014-qwen-split-compute.log 2026-10-15 02:08 COLLECT: real static controller replaces historical qfd_tt_ctlm"
+    },
+    {
+     "element": "qfd_d2d_static",
+     "evidence": "el1015-qwen-link.log / compute log 07:16 Q-LINK: static D2D link ends on main c43263b31 replace qfd_d2d_rom"
+    },
+    {
+     "element": "qfd_io_collective_static",
+     "evidence": "Q-COLL static IO set (el1014-qwen-coll-io.log); superseded_elements.json qfd_io_collective -> qfd_io_collective_static"
+    },
+    {
+     "element": "qfd_io_xfifo_static",
+     "evidence": "CONTRACT.md static CDC twelve-leaf composition (static_cdc/qfd_io_xfifo_static.json)"
+    },
+    {
+     "element": "qfd_static_ch546",
+     "parent": "qfd_io_xfifo_static",
+     "role": "leaf",
+     "evidence": "static_cdc/qfd_static_ch546.json"
+    },
+    {
+     "element": "qfd_io_ucie_static",
+     "evidence": "Q-COLL static IO set (qfd_io_ucie_static)"
+    },
+    {
+     "element": "qfd_io_serdes_static",
+     "evidence": "Q-COLL static IO set (qfd_io_serdes_static x3)"
+    },
+    {
+     "element": "qfd_ucie_gearbox_r10",
+     "evidence": "compute log 2026-10-15 05:39/07:16 Q-COLL r10 ABI: gearbox becomes its own hard leaf beside ot_qfd_ucie_x64_phy (slot requested)"
+    },
+    {
+     "element": "ot_qfd_x3_mux_native",
+     "evidence": "CONTRACT.md static Q/KVN mux successor (static_x3/ot_qfd_x3_mux_native.json)"
+    },
+    {
+     "element": "qfd_vm_qcommit",
+     "parent": "qfd_sp_vector_memory",
+     "role": "leaf",
+     "evidence": "CONTRACT.md VM raw consume observers (vm_rawcommit/qfd_vm_qcommit.json)"
+    }
+   ],
+   "retire": [
+    {
+     "elements": [
+      "qfd_tt_ctlm"
+     ],
+     "by": "qfd_tt_ctlm_static_s",
+     "evidence": "el1014-qwen-split-compute.log 2026-10-15 02:08 COLLECT (actual static controller; obsolete tt_xd/xr removed)"
+    },
+    {
+     "elements": [
+      "qfd_d2d_rom"
+     ],
+     "by": "qfd_d2d_static",
+     "evidence": "Q-LINK 2026-10-15 07:16 (main c43263b31): replace qfd_d2d_rom by qfd_d2d_static"
+    },
+    {
+     "elements": [
+      "qfd_io_collective"
+     ],
+     "by": "qfd_io_collective_static",
+     "evidence": "Q-COLL static IO; credit-based IO historical under owner rule 0ah"
+    },
+    {
+     "elements": [
+      "qfd_io_xfifo"
+     ],
+     "by": "qfd_io_xfifo_static",
+     "evidence": "CONTRACT.md static CDC composition"
+    },
+    {
+     "elements": [
+      "qfd_io_ucie"
+     ],
+     "by": "qfd_io_ucie_static",
+     "evidence": "Q-COLL static IO set"
+    },
+    {
+     "elements": [
+      "qfd_io_serdes"
+     ],
+     "by": "qfd_io_serdes_static",
+     "evidence": "Q-COLL static IO set"
+    }
+   ],
+   "streams": [
+    [
+     "^(qfd_(xc|xh|xs_|vm_|sp_vector)|ot_qfd_x)",
+     "Q-DVM"
+    ],
+    [
+     "^(qfd_(io_|static_ch|ucie)|ot_coll|qfd_collective)",
+     "Q-COLL"
+    ],
+    [
+     "^qfd_(d2d|ckbump|clkrx|rst)",
+     "Q-LINK"
+    ],
+    [
+     "^(qfd_|ot_q)",
+     "Q-COMPUTE-ELEM"
+    ]
+   ]
+  },
+  {
+   "design": "qwen_kvsys",
+   "label": "Qwen KV/system die",
+   "target": "Qwen ROM",
+   "revision": "v1.3 bind (kvs6s) + v1.4 HOST partition / static D2D",
+   "lead": "Q-KVSYS-DIE",
+   "log": "el1014-qwen-split-kvsys.log",
+   "doc": "results/arch/qwen_split_1014/CONTRACT_KVSYS.md",
+   "complete": true,
+   "sources": [
+    {
+     "kind": "port_bind",
+     "path": "results/arch/qwen_split_1014/kvsys_v1_3_candidate/port_bind.json",
+     "evidence": "KV die v1.3 port-bind (kvs6 case)"
+    },
+    {
+     "kind": "json_keys",
+     "path": "results/arch/qwen_split_1014/kvsys_v1_3_candidate/static_io/contract.json",
+     "at": "masters",
+     "evidence": "v1.3 static IO slot contract"
+    },
+    {
+     "kind": "json_keys",
+     "path": "results/arch/qwen_split_1014/kvsys_v1_2/contract.json",
+     "at": "slots",
+     "macro": "(phy|ckbump)",
+     "evidence": "KV die contract v1.2 slots"
+    }
+   ],
+   "add": [
+    {
+     "element": "qkd_host_root_pt",
+     "evidence": "kvsys v1.4 host_partition.json: HOST = root core + 128 per-PC slices"
+    },
+    {
+     "element": "qkd_host_pc_slice",
+     "parent": "qkd_host_root_pt",
+     "role": "leaf",
+     "evidence": "kvsys v1.4 host_partition.json (128 per-PC slices beside each controller/landing pair)"
+    },
+    {
+     "element": "qkd_d2d_static",
+     "evidence": "Q-LINK 2026-10-15 07:16 (main c43263b31): replace qkd_d2d/qkd_lnk by qkd_d2d_static"
+    },
+    {
+     "element": "qkd_embedding_static_core_provider",
+     "evidence": "native compute join 957 'embed' node (KV-die embedding provider)"
+    }
+   ],
+   "retire": [
+    {
+     "elements": [
+      "qkd_host"
+     ],
+     "by": "qkd_host_root_pt + qkd_host_pc_slice",
+     "evidence": "kvsys v1.4 host_partition.json; v1.3 bind marks qkd_host STUB"
+    },
+    {
+     "elements": [
+      "qkd_d2d",
+      "qkd_lnk"
+     ],
+     "by": "qkd_d2d_static",
+     "evidence": "Q-LINK 2026-10-15 07:16; kvsys log 06:40 (qkd_d2d/qkd_lnk credit-based, historical under 0ah)"
+    }
+   ],
+   "streams": [
+    [
+     "^qkd_(d2d|lnk|pll|ckbump)",
+     "Q-LINK"
+    ],
+    [
+     "^qkd_host",
+     "Q-KVSYS-DIE"
+    ],
+    [
+     "^(qkd_|ot_qkh_|ot_qkvd_)",
+     "Q-KVSYS-ELEM"
+    ]
+   ]
+  },
+  {
+   "design": "s81",
+   "label": "S81 (DeepSeek ROM) die",
+   "target": "DeepSeek ROM",
+   "revision": "v20 contract + v21 GEN18 candidate (GEN18c static seams/collective, S-BIND bind5)",
+   "lead": "S-DIE",
+   "log": "el1011-s81die.log",
+   "doc": "results/arch/hier_contract_1011/s81_v21_gen18.json",
+   "complete": true,
+   "sources": [
+    {
+     "kind": "port_bind",
+     "path": "results/arch/s81_canonical_bind_1015/sbind_static_1015/bind5/port_bind.json",
+     "macro": "^(ot_hbm3e_phy|ot_pdie_|ot_rom_|ot_v41_rom_elem)",
+     "evidence": "S-BIND bind5 = GEN18 construction pass0 with --static-coll (current die netlist)"
+    },
+    {
+     "kind": "hier_slots",
+     "path": "results/arch/hier_contract_1011/s81_v21_gen18.json",
+     "at": "slots",
+     "macro": "^(ot_hbm3e_phy|ot_pdie_|ot_rom_|ot_v41_rom_elem)",
+     "evidence": "S81 hier contract v21 (GEN18) slots"
+    },
+    {
+     "kind": "json_field",
+     "path": "results/arch/hier_contract_1011/s81_v21_gen18.json",
+     "at": "relay_masters.masters",
+     "field": "master",
+     "rtl_field": "none",
+     "evidence": "S81 v21 relay masters"
+    },
+    {
+     "kind": "filelist",
+     "path": "physical/s81_die_rtl/layer1.f",
+     "macro": "^(ot_hbm3e_phy|ot_pdie_|ot_rom_|ot_v41_rom_elem|ot_sram_|ot_rf_)",
+     "evidence": "canonical layer1.f (die RTL manifest)"
+    }
+   ],
+   "add": [
+    {
+     "element": "dsfd_vm_seq_static",
+     "parent": "dsfd_sp_vm",
+     "role": "leaf",
+     "evidence": "static VM (dsfd_sp_vm_static) sequencer, rtl/dsrom_sys/s81_ph/vm/dsfd_vm_seq_static.sv"
+    },
+    {
+     "element": "dsfd_engram_mix4_c",
+     "evidence": "el1011-s81die.log 2026-10-15 06:30 MIX4 HOME (--mix4-slot; replaces the refused VM-E band)"
+    }
+   ],
+   "retire": [
+    {
+     "elements": [
+      "dsfd_sp_collective_c",
+      "dsfd_coll_cbf",
+      "dsfd_coll_cbq",
+      "dsfd_coll_cbq0",
+      "dsfd_coll_cbr",
+      "dsfd_coll_ces0",
+      "dsfd_coll_cesn",
+      "dsfd_coll_ct",
+      "dsfd_coll_lane_w"
+     ],
+     "by": "dsfd_sp_collective_static_c",
+     "evidence": "s81_v21_gen18.json v21_gen18.static_seams + el1011-s81die.log GEN18c (--static-collective; bind5 has no credit collective masters)"
+    },
+    {
+     "elements": [
+      "dsfd_engram_mix_c"
+     ],
+     "by": "dsfd_engram_mix4_c",
+     "evidence": "el1011-s81die.log 2026-10-15 06:30 MIX4 home"
+    }
+   ],
+   "streams": [
+    [
+     "engram|_rx|surx",
+     "S-ELEM-C"
+    ],
+    [
+     "^(dsfd_(sp_vm|vm_|cfifo|sp_capture|capt)|ot_s81_vm)",
+     "S-ELEM-A"
+    ],
+    [
+     "gath",
+     "S-GATHER"
+    ],
+    [
+     "^ot_s81_hc_ct|norm",
+     "S-NORM"
+    ],
+    [
+     "^(dsfd_(rly|hstn|stnh|sstn|l2r|m2l|r2l|xstg|node|qbank|rstg|lkck)|dsfd_.*__)",
+     "S-DIE"
+    ],
+    [
+     "^(dsfd_|ot_s81_|ot_p2h_|ot_mtp_)",
+     "S-ELEM-B"
+    ]
+   ]
+  },
+  {
+   "design": "hbm",
+   "label": "HBM accelerator die",
+   "target": "HBM accelerator",
+   "revision": "v15.1 source contract (+ v14 die masters carried until re-contracted)",
+   "lead": "H-DIE",
+   "log": "el1011-hbmdie.log",
+   "doc": "results/arch/hbm_die_v15/source_contract_v151/contract.json",
+   "complete": false,
+   "note": "v15.1 enumerates the static VM/service/COLL/IDX/SFU/DMA region only; SM, attention halves, LK EP, host/serdes still come from the v14 die (port_bind_glue26d), many without die-name RTL, so their closed leaves cannot be proven out of contract: unlisted HBM rows keep their loop state.",
+   "sources": [
+    {
+     "kind": "json_field",
+     "path": "results/arch/hbm_die_v15/source_contract_v151/contract.json",
+     "at": "instances",
+     "field": "master",
+     "macro": "^ot_hbm3e_phy",
+     "evidence": "HBM v15.1 source contract instances"
+    },
+    {
+     "kind": "json_field",
+     "path": "results/arch/hbm_die_v15/source_contract_v151/contract.json",
+     "at": "registered_station_masters",
+     "field": "master",
+     "rtl_field": "none",
+     "evidence": "v15.1 registered station masters"
+    },
+    {
+     "kind": "registry",
+     "path": "results/fleet_viz/element_registry/hbm_v15_die_masters_20261015.json",
+     "macro": "^ot_hbm3e_phy",
+     "evidence": "HBM-V15-HARDEN v15.1 masters + hierarchy (el1015-hbm-v15-harden.log)"
+    },
+    {
+     "kind": "text_table",
+     "path": "results/arch/hbm_die_v14/station_emit_audit_1014/port_bind_glue26d.txt",
+     "macro": "^(ot_hbm3e_phy|ot_pdie_|ot_hbm_host_phy)",
+     "evidence": "v14 die masters (glue26d port-bind), carried"
+    }
+   ],
+   "retire": [
+    {
+     "elements": [
+      "hfd_hgi_vms_NE",
+      "hfd_hgi_vms_NW",
+      "hfd_hgi_vms_SE",
+      "hfd_hgi_vms_SW",
+      "hfd_vm_ne",
+      "hfd_vm_nw",
+      "hfd_vm_se",
+      "hfd_vm_sw"
+     ],
+     "by": "hfd_hgi_vms_static_{NE,NW,SE,SW} (v15.1 VM slices)",
+     "evidence": "HBM v15.1 source contract"
+    },
+    {
+     "elements": [
+      "hfd_svc_SE_s0",
+      "hfd_svc_SE_s1",
+      "hfd_svc_SE_s2",
+      "hfd_svc_SE_s3",
+      "hfd_svc_SE_s4",
+      "hfd_svc_SE_s5",
+      "hfd_svc_SE_s6",
+      "hfd_svc_SE_s7",
+      "hfd_svc_SE_s8",
+      "hfd_svc_SW_s0",
+      "hfd_svc_SW_s1",
+      "hfd_svc_SW_s2",
+      "hfd_svc_SW_s3",
+      "hfd_svc_SW_s4",
+      "hfd_svc_SW_s5",
+      "hfd_svc_SW_s6",
+      "hfd_svc_SW_s7"
+     ],
+     "by": "hfd_svc_v15_* (v15.1 service bands)",
+     "evidence": "HBM v15.1 source contract (service_qualification_rejections: SERVICE_BAND_SOURCE_UNBOUND for the historical bands)"
+    },
+    {
+     "elements": [
+      "hfd_coll_q2",
+      "hfd_coll_q3"
+     ],
+     "by": "ot_hfd_coll_q2_static / ot_hfd_coll_q3_static",
+     "evidence": "HBM v15.1 source contract; owner 10-14 23:16 H-COLL fixed slots"
+    },
+    {
+     "elements": [
+      "hfd_hgi_idx"
+     ],
+     "by": "ot_hbm_idx_scheduled_static",
+     "evidence": "HBM v15.1 source contract"
+    },
+    {
+     "elements": [
+      "ot_hgi_dma_back"
+     ],
+     "by": "ot_hgi_dma_back_static",
+     "evidence": "HBM v15.1 source contract"
+    },
+    {
+     "elements": [
+      "hfd_sfu"
+     ],
+     "by": "ot_hgi_sfu_scheduled_engine",
+     "evidence": "HBM v15.1 source contract"
+    }
+   ],
+   "streams": [
+    [
+     "coll|pring",
+     "H-COLL"
+    ],
+    [
+     "idx",
+     "H-IDX"
+    ],
+    [
+     "attn|quant",
+     "H-ATTQ"
+    ],
+    [
+     "^(hfd_hgi_vm|hfd_svc|ot_vms|ot_hbm_vm|ot_hbm_svc|hfd_sm|hfd_lk|ot_hgi_dma|hfd_vm_)",
+     "H-ELEM-A"
+    ],
+    [
+     "sfu|_su_|hfd_su",
+     "H-ELEM-B"
+    ]
+   ]
+  }
+ ]
+}

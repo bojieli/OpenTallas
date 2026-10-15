@@ -1,0 +1,146 @@
+{
+ "name": "dsfd_vm_direct_scatter_b24_native_cb4b",
+ "top": "dsfd_vm_static_scatter_b8_out_B24",
+ "kind": "tile",
+ "sources": [
+  "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_scatter_b8_out.sv",
+  "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_direct_write_native_profiles.sv",
+  "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_write_capture128.sv"
+ ],
+ "clock": "cts",
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 172.8,
+  "h": 86.4,
+  "exact": true
+ },
+ "pins": {
+  "N": [
+   "i_v",
+   "i_we",
+   "i_row",
+   "i_mask",
+   "i_data",
+   "i_tag"
+  ],
+  "S": [
+   "o_v",
+   "o_we",
+   "o_addr",
+   "o_mask",
+   "o_data",
+   "o_tag"
+  ],
+  "E": [],
+  "W": [
+   "ck",
+   "rst_n",
+   "fault"
+  ]
+ },
+ "io_tcl": "physical/s81_die_pins/v20_vm_direct_write/dsfd_vm_static_scatter_b8_out.tcl",
+ "params": {
+  "PIPE": 1
+ },
+ "layer_cap": "M5",
+ "macros": [],
+ "route": {
+  "pd": 0.4,
+  "threads": 4,
+  "peak_ram_gb": 8,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "cts_sink": {
+   "size": 24,
+   "diameter_um": 30,
+   "extra": "-distance_between_buffers 15"
+  }
+ },
+ "recipe": 2,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R",
+  "out_cell": "HB1xp67_ASAP7_75t_R"
+ },
+ "structural_change": "cb4 = cb3 kit (pins/outline/root/clustered CTS/HB1 out + HB2 in pads) + PIPE=1: every input pin-registered, the bank-hit compare and o_v gating run flop-to-flop in a second stage. cb3 routed views CLOSED (b0/b16/b24) but native capture FAILED only on i_row hash pins (191.2/206.1/194.6 ps > 190, 2/12/5 pins: pin -> XOR/AND compare -> o_v); b8 cb3 TT -6.55/FF -7.48. Plain pin-flop inputs are 117-158 ps in the same views. Cost: +1 write edge (scatter -> bank), +~1,250 FF per tile; componentprofilebenchpasses atPIPE1; productionparentPIPE0mustexplicitlyoptin+prove128SRAMfixedcalendar beforeadoption; compiler write calendar must take +1. cb4b: identical kit, fresh job (cb4 job froze an unverifiable helper overlay at intake: NEEDS_HUMAN FROZEN_HELPER_OVERLAY, no compute spent, data deleted).",
+ "slot_change_request": {
+  "contract": "S81 static VM direct q8 native option",
+  "version": "30421c7c5/a60002977/eaca93a88",
+  "why": "Actual assigned pins/registered endpoint geometry; representativeE/B0 only, production parent nativephase/cut/calendar stillopen"
+ },
+ "job": {
+  "owner": "claude:S-ELEM-A S81 VM owner",
+  "branch": "claude/s81-vm-elema-1015",
+  "tag": "pipe4",
+  "purpose": "Composed-budget native re-close of the direct-write scatter: native pin audit launch<=220/capture<=190 with exact/mutant benches; same RTL/pins/outline/2 stages",
+  "extra_paths": [
+   "physical/s81_die_pins/v20_vm_direct_write",
+   "physical/s81_vm_direct_write_native_1015",
+   "rtl/dsrom_sys/s81_ph/test",
+   "rtl/dsrom_sys/s81_ph/vm",
+   "tools/s81_vm",
+   "tools/s81_vm_direct_write"
+  ],
+  "benches": [
+   {
+    "name": "exact_actual_scatter_b24",
+    "cmd": "python3 tools/s81_vm_direct_write/profile_bench.py --pipe 1 --profile scatter_b24 --out {RUN}/bench/scatter_b24",
+    "expect": "pass",
+    "pass_regex": "PROFILE_WRITE_PASS records 8000",
+    "min_count_regex": "records (\\d+)",
+    "threads": 1,
+    "peak_ram_gb": 1,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "mutant_actual_scatter_b24",
+    "cmd": "python3 tools/s81_vm_direct_write/profile_bench.py --pipe 1 --profile scatter_b24 --mutant --out {RUN}/bench/scatter_b24_mut",
+    "expect": "fail",
+    "fail_regex": "PROFILE_WRITE_FAIL records 8000",
+    "min_count_regex": "records (\\d+)",
+    "threads": 1,
+    "peak_ram_gb": 1,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "mutant_actual_scatter_valid",
+    "cmd": "PIPE=1 bash tools/s81_vm_direct_write/bench.sh {RUN}/bench/scatter_valid scatter valid 2",
+    "expect": "fail",
+    "fail_regex": "TB_VM_DIRECT_SCATTER FAIL mode 2 checks 1003 bad",
+    "min_count_regex": "checks (\\d+)",
+    "threads": 1,
+    "peak_ram_gb": 1,
+    "needs": [
+     "iverilog"
+    ]
+   }
+  ],
+  "cycles_added": 1
+ },
+ "children": [],
+ "inter": [],
+ "io_budget": {
+  "in": 0.55,
+  "out": 0.55
+ },
+ "reroute_reason": {
+  "kind": "rtl_change",
+  "cell": "dsfd_vm_static_scatter_b8_out_B24",
+  "source": "cb3 native audit (codex/closure-record-*_cb-cb3-da7a5b863 views: capture over on i_row only)",
+  "fix": "pin stage + flop-to-flop compare (PIPE=1), +1 write edge"
+ }
+}

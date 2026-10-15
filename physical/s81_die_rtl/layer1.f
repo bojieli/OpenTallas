@@ -139,6 +139,12 @@ rtl/dsrom_sys/s81_ph/coll/ot_s81ph_ckbuf.sv
 rtl/dsrom_sys/s81_ph/ot_s81ph_coll_rstc.sv
 rtl/dsrom_sys/s81_ph/ot_s81_pll_bb.sv
 rtl/dsrom_sys/s81_static_collective/s81_static_vm_boundary.sv
+# S-BIND r6 2026-10-15: static host face (completion pulses queued for the compiled host tx slot) and the static layer-die
+# host master dsfd_host_c (+DSFD_HOST_C_STATIC: no t_cr / h_crn credit bits, f_collective 515 / t_collective 77, lane
+# faults f_lf); gates tools/s81_static_collective/run_slab_gate.sh, rtl/dsrom_sys/s81_ingest/test/run_host_c_static_gate.sh
+rtl/dsrom_sys/s81_static_collective/s81_static_host_queue.sv
++define+DSFD_HOST_C_STATIC
+rtl/dsrom_sys/s81_ingest/dsfd_host_c.sv
 
 # S-BIND 2026-10-15 --suhc-static-issue: SU / HC endpoints issue on the compiler command edge (no f_inp die pin)
 +define+DSFD_SUHC_STATIC_ISSUE
@@ -151,3 +157,10 @@ rtl/dsrom_sys/s81_suhc/dsfd_sp_hc.sv
 +define+DSFD_PQ_STATIC_X2
 rtl/dsrom_sys/s81_die_bind/ot_s81_static_lane_cross.sv
 rtl/dsrom_sys/s81_die_bind/ot_s81_static_column_ingress.sv
+
+# S-BIND 2026-10-15 --bf-static-prog: static BF front (compiled programme f_prog 38 + io_clk) and the BF sequencer with
+# the programme producer (descriptor in the cfg ROM spare columns); gates: tools/s81/bf_txn_bench.py --die-pair
+# --static-prog 0 (real BF bench, TXN MATCH, mutants), rtl/v41die/test/run_cfg7_bfp_gate.sh
+rtl/dsrom_sys/s81_die_bind/dsfd_bf_front_static.sv
+rtl/v41die/ot_s81_cfg7_seq_bfp.sv
+rtl/dsrom_sys/s81_die_bind/ot_s81_bf_prog_seq.sv
