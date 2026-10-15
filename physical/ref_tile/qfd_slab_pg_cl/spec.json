@@ -254,10 +254,12 @@
   "record_to": "results/rtl/ref_tile/qfd_slab_pg_cl",
   "notes": "r3b gate --cts 10-13 18:40 (ot-epyc1tb): WARN 0 fail (16 child-lint (f)/(h) WARNs of the pre-pocket-fix child views); parent 6,761 sinks on the spine, std 4,136 um2 (util 57 % counting the children); WEAK POINT measured pre-route: spine leaf arrival 1,657.7..1,770.6 ps (spread 112.9), TT insertion all 1,260.6..1,771.3 ps (spread 510.7 with the children's own trees), reg->out -1,207 ps against the un-referenced IO (o_data), hold WNS -1,281 ps.  If the route fails on clock / hold (as coll_tp8_rt2 and qfd_io_collective_rt did), the next step is structural, NOT a re-route: the 6.7k parent flops into a hardened core leaf (own root) and a wires-only parent."
  },
- "structural_change": "r9 cl3: cl2's parent clock tree measured TT insertion 1,260.6..1,771.3 ps (spread 510) at the pre-route gate with the count-bisection spine over 6,761 parent sinks + 8 hardened children; cl3 = symmetric insertion-aware spine (OT_SPINE_SYM=1: children tap early by their own insertion R, col pr4 R 500 / lanes R 119), reg->reg hold margin 30 ps / boundary 5 ps (route.io_hold_margin_ns). Children: col = qfd_slab_pg_col_pr-pr4-418bfb8f4 (native PASS), lanes = qfd_slab_pg_lanes-l1-ec5f7bb16 (native PASS TT/FF).",
+ "structural_change": "r9 cl3: cl2's parent clock tree measured TT insertion 1,260.6..1,771.3 ps (spread 510) at the pre-route gate with the count-bisection spine over 6,761 parent sinks + 8 hardened children; cl3 = symmetric insertion-aware spine with tree-shared pads (OT_SPINE_SYM=1 + OT_SPINE_TREE_PAD=1 + SAFE_BALANCE; first cl3 gate with leaf pads only: 20,237 pad cells, spread 711 -> 97 -> 188 diverging; children tap early by their own insertion R, col pr4 R 500 / lanes R 119), reg->reg hold margin 30 ps / boundary 5 ps (route.io_hold_margin_ns). Children: col = qfd_slab_pg_col_pr-pr4-418bfb8f4 (native PASS), lanes = qfd_slab_pg_lanes-l1-ec5f7bb16 (native PASS TT/FF).",
  "slot_change_request": "r3b 10-13: one port group = 4 closed ROM-column tiles 324 x 216 + 4 closed lane tiles 71.28^2 = 300,259 um2 of hard children: it cannot sit in the 777.576 x 455.76 TP4 slab outline (354,388 um2). Cluster outline 777.6 x 691.2 (cols 2 x 2, lower row R0 / upper row MX so all four m5 faces meet the lane row in the 172.8-um middle band). The six qfd_port_tiles_* slots (777.576 x 1,840.296, 8 groups each) must become regions of 8 such clusters (777.6 x 5,529.6) or the column tile must be re-cut: packing table in el1011-qwen-tp8.log.",
  "orfs_vars": {
-  "OT_SPINE_SYM": "1"
+  "OT_SPINE_SYM": "1",
+  "OT_SPINE_TREE_PAD": "1",
+  "OT_SPINE_SAFE_BALANCE": "1"
  },
  "recipe": 2,
  "macros": [],
