@@ -3,22 +3,28 @@
 // Every consumer still sees stage 3. B no longer captures and launches at opposite faces on one flop.
 // Fresh native TP8 leaf masters. Historical qkd_ectl_a/b/c views remain on their frozen profile.
 // Each native leaf fixes HEADS=1 / Q_FP32=1 independently of global simulation defines.
-module qkd_ectl_a_tp8_direct (
+module qkd_ectl_a_tp8_direct #(parameter integer EPOCH = 0) (
     input  wire          ck,
     input  wire          rst_n,
     input  wire [4:0]    cfg,            // {e 3, s 2} strap
-    output wire [15:0]   rq,             // W: {req_t 13, req_g, req_v, req_valid}
+    output wire [15+EPOCH:0] rq,             // W: {req_t 13, req_g, req_v, req_valid}
     input  wire [1024:0] rs,             // W: {rsp_data 1024, rsp_valid}
     output wire [511:0]  t0_row,         // S / N: row bits [511:0] for the two head-tile pairs
     output wire [511:0]  t1_row,
     input  wire [51:0]   x_i,            // E: stage-2 control word directly from C
     output wire [512:0]  rs_o           // E seam: {row bits [1023:512] 512, rsp_valid}, E-face flops (stage 2), to B and C
 );
+    wire epoch;
+    `ifdef KVD_ECTL_EPOCH_MUT
+    if (EPOCH != 0) assign rq[16] = ~epoch;
+`else
+    if (EPOCH != 0) assign rq[16] = epoch;
+`endif
     ot_qkd_ectl_part #(.PART(1), .HEADS(1), .Q_FP32(1)) u (.clk(ck), .rst_n(rst_n), .cfg_s(cfg[1:0]), .cfg_e(cfg[4:2]),
         .start_in(1'b0), .T_in(14'd0), .cyc8_in(3'd0), .q_valid_in(1'b0), .q_beat_in(6'd0), .q_data_in(512'd0),
         .exp_done(32'd0), .nb_cr(1'b0), .er_data(64'd0), .er_valid(), .er_addr(), .sc_valid(), .sc_addr(), .sc_data(),
         .lmax(), .lmax_any(), .nb_valid(), .nb_beat(), .nb_g(), .nb_gam(), .k_done(), .v_done(), .fault(), .ev_k_first(),
-        .ev_v_first(), .req_valid(rq[0]), .req_v(rq[1]), .req_g(rq[2]), .req_t(rq[15:3]), .rsp_valid_in(rs[0]),
+        .ev_v_first(), .req_epoch(epoch), .req_valid(rq[0]), .req_v(rq[1]), .req_g(rq[2]), .req_t(rq[15:3]), .rsp_valid_in(rs[0]),
         .rsp_data_in(rs[1024:1]), .x_i(x_i), .x_o(), .rsv_i(1'b0), .rsv_o(rs_o[0]), .rvm_i(1'b0), .rvm_o(), .rsd_i(512'd0), .rsd_o(rs_o[512:1]),
         .t0_c(), .t1_c(), .t0_row(t0_row), .t1_row(t1_row), .t0_e(), .t1_e(), .t0_lt(), .t1_lt(), .t0_qv(), .t1_qv(),
         .t0_qb(), .t1_qb(), .t0_qd(), .t1_qd(), .ts0_sc(64'd0), .ts1_sc(64'd0), .ts0_sf(2'd0), .ts1_sf(2'd0),

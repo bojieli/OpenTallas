@@ -112,6 +112,7 @@ module ot_qkd_ectl_part #(
     output reg                  ev_k_first,
     output reg                  ev_v_first,
     // W face (leaf A)
+    output wire                 req_epoch,          // alternating layer identity at the request pin
     output wire                 req_valid,
     output wire                 req_v,
     output wire                 req_g,
@@ -376,6 +377,17 @@ module ot_qkd_ectl_part #(
         (* keep_hierarchy *) ot_nhb_repr_h #(.W(1)) u_v (.clk(clk), .rst_n(rc), .d(rqv_s[gq]), .q(rqv_s[gq + 1]));
         (* keep_hierarchy *) ot_nhb_rep_h #(.W(15)) u_d (.clk(clk), .d(rqd_s[15*gq +: 15]), .q(rqd_s[15*(gq + 1) +: 15]));
     end endgenerate
+    // First start after reset is layer zero (even); NL=36 preserves parity at the token wrap.
+    reg layer_epoch;
+    always @(posedge clk or negedge rc)
+        if (!rc) layer_epoch <= 1'b1;
+        else if (start) layer_epoch <= ~layer_epoch;
+    wire [RQD:0] epoch_s;
+    assign epoch_s[0] = layer_epoch;
+    for (genvar ep = 0; ep < RQD; ep = ep + 1) begin : g_epoch
+        (* keep_hierarchy *) ot_nhb_rep_h #(.W(1)) u_ep (.clk(clk), .d(epoch_s[ep]), .q(epoch_s[ep+1]));
+    end
+    assign req_epoch = epoch_s[RQD];
     assign req_valid = rqv_s[RQD];
     assign {req_v, req_g, req_t} = rqd_s[15*RQD +: 15];
 

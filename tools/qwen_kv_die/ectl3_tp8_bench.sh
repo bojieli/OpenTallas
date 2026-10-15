@@ -10,6 +10,8 @@ V=${VERILATOR:-$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator}; [ -
 DEF="+define+KVD_ECTL_SLOT +define+KVD_HEADS=1 +define+KVD_Q_FP32=1"; [ -n "$MUT" ] && DEF="$DEF +define+KVD_ECTL3_MUT_$MUT"
 EXTRA=""; if [ "${SPLIT_CLOCK:-0}" = 1 ]; then DEF="$DEF +define+KVD_ECTL_SPLIT_CLOCK"; EXTRA="rtl/qwen_sys/split_20261014/qkd_ectl3_s.sv rtl/qwen_sys/split_20261014/qkd_ectl_native_tp8.sv"; fi
 if [ "${ECTL_DIRECT:-0}" = 1 ]; then DEF="$DEF +define+KVD_ECTL_DIRECT"; EXTRA="$EXTRA rtl/qwen_sys/split_20261014/qkd_ectl3_direct_s.sv rtl/qwen_sys/split_20261014/qkd_ectl_native_direct_tp8.sv"; fi
+[ "${ECTL_EPOCH:-0}" = 1 ] && DEF="$DEF +define+KVD_ECTL_EPOCH"
+[ "${EPOCH_MUT:-0}" = 1 ] && DEF="$DEF +define+KVD_ECTL_EPOCH_MUT"
 N=ectl3${MUT:+_$MUT}
 $V --binary --timing -j 4 -O2 -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN --x-assign 0 --x-initial 0 $DEF \
   -GS=${S:-1} -GE=${E:-3} -GNL=${NL:-4} --top-module tb_qkd_ectl3 -Mdir "$OUT/obj_$N" \
