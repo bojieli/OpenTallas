@@ -1,0 +1,174 @@
+{
+  "schema": "opentallas.qwen-c19-output-collision.v1",
+  "observed_at": "2026-10-15T18:38:30.845235+00:00",
+  "processes": [
+    {
+      "pid": 3174970,
+      "label": "superseded_orphan",
+      "argv": "python3 tools/qwen_tp8/relay_data_run.py ../out --case ",
+      "stat": "3174970 (python3) R 1 3174951 3174951 0 -1 4194304 7682613 140 27 0 1804002 1078 0 0 20 0 64 0 39658388 3471020032 158406 18446744073709551615 4333568 8024065 140722234165024 0 0 0 0 16781312 2 0 0 0 17 96 0 0 0 0 0 11038136 11672456 400064512 140722234170467 140722234170522 140722234170522 140722234171367 0\n",
+      "cwd": "/srv/opentallas-scratch/claude/qwen-split-compute/c19/src",
+      "cwd_inode": 158248013,
+      "relevant_OT_flags": {
+        "OT_TP8_SPLIT": "compute",
+        "OT_SPLIT_PMHS": "0",
+        "OT_SPLIT_TREE_INTERLEAVE": "0",
+        "OT_SPLIT_TREE_HOSTS": "dp",
+        "OT_SPLIT_STACK": "seamw",
+        "OT_SPLIT_REPACK": "1",
+        "OT_SPLIT_BAND1_FLIP": "1",
+        "OT_RELAY_GATE": "warn",
+        "OT_RESET_GATE": "warn",
+        "OT_PIN_ALIGN_GATE": "warn",
+        "OT_RELAY_DUMP": "../dump.json"
+      },
+      "unit": "oth-ubuntu-3174952-1792071113.scope",
+      "admission": {
+        "meta.": "64 run.sh:&&\n",
+        "res.": "oth-ubuntu-3174952-1792071113 5\n",
+        "use.": "0\n"
+      },
+      "unit_state": "ActiveState=active\nMemoryCurrent=688635904\nMemoryMax=68719476736\n",
+      "fds": [
+        {
+          "fd": "0",
+          "target": "pipe:[93981822]",
+          "inode": 93981822,
+          "device": 16,
+          "size": 0,
+          "mode": 4096
+        },
+        {
+          "fd": "1",
+          "target": "/srv/opentallas-scratch/claude/qwen-split-compute/c19/out.log (deleted)",
+          "inode": 158205044,
+          "device": 66311,
+          "size": 0,
+          "mode": 32768,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "fd": "2",
+          "target": "/srv/opentallas-scratch/claude/qwen-split-compute/c19/out.log (deleted)",
+          "inode": 158205044,
+          "device": 66311,
+          "size": 0,
+          "mode": 32768,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "fd": "3",
+          "target": "/usr/lib/x86_64-linux-gnu/libffi.so.8.2.0",
+          "inode": 27158676,
+          "device": 2304,
+          "size": 64184,
+          "mode": 32768
+        }
+      ],
+      "descendants": "    PID    PPID COMMAND\n"
+    },
+    {
+      "pid": 3247862,
+      "label": "tracked",
+      "argv": "python3 tools/qwen_tp8/relay_data_run.py ../out --case ",
+      "stat": "3247862 (python3) R 3247861 3247791 3247791 0 -1 4194304 7182273 142 0 0 1741473 1093 0 0 20 0 64 0 39732682 3402596352 140655 18446744073709551615 4333568 8024065 140735389080544 0 0 0 0 16781312 2 0 0 0 17 83 0 0 0 0 0 11038136 11672456 99733504 140735389084771 140735389084826 140735389084826 140735389085671 0\n",
+      "cwd": "/srv/opentallas-scratch/claude/qwen-split-compute/c19/src",
+      "cwd_inode": 158248013,
+      "relevant_OT_flags": {
+        "OT_TP8_SPLIT": "compute",
+        "OT_SPLIT_PMHS": "0",
+        "OT_SPLIT_TREE_INTERLEAVE": "0",
+        "OT_SPLIT_TREE_HOSTS": "dp",
+        "OT_SPLIT_STACK": "seamw",
+        "OT_SPLIT_REPACK": "1",
+        "OT_SPLIT_BAND1_FLIP": "1",
+        "OT_RELAY_GATE": "warn",
+        "OT_RESET_GATE": "warn",
+        "OT_PIN_ALIGN_GATE": "warn",
+        "OT_RELAY_DUMP": "../dump.json"
+      },
+      "unit": "oth-ubuntu-3247792-1792071856.scope",
+      "admission": {
+        "meta.": "64 run.sh:&&\n",
+        "res.": "oth-ubuntu-3247792-1792071856 5\n",
+        "use.": "0\n"
+      },
+      "unit_state": "ActiveState=active\nMemoryCurrent=617828352\nMemoryMax=68719476736\n",
+      "fds": [
+        {
+          "fd": "0",
+          "target": "pipe:[94210175]",
+          "inode": 94210175,
+          "device": 16,
+          "size": 0,
+          "mode": 4096
+        },
+        {
+          "fd": "1",
+          "target": "/srv/opentallas-scratch/claude/qwen-split-compute/c19/out.log",
+          "inode": 158205047,
+          "device": 66311,
+          "size": 0,
+          "mode": 32768,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "fd": "2",
+          "target": "/srv/opentallas-scratch/claude/qwen-split-compute/c19/out.log",
+          "inode": 158205047,
+          "device": 66311,
+          "size": 0,
+          "mode": 32768,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "fd": "3",
+          "target": "/usr/lib/x86_64-linux-gnu/libffi.so.8.2.0",
+          "inode": 27158676,
+          "device": 2304,
+          "size": 64184,
+          "mode": 32768
+        }
+      ],
+      "descendants": "    PID    PPID COMMAND\n"
+    }
+  ],
+  "current_source_artifacts": [
+    {
+      "path": "/srv/opentallas-scratch/claude/qwen-split-compute/c19/src/SOURCE_COMMIT",
+      "size": 10,
+      "mtime_ns": 1792071850891505776,
+      "sha256": "3cae06e82854fd1e104c147dddffa2e719d186ed61b994968f8ac200c1d656bb"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/qwen-split-compute/c19/src/tools/qwen_tp8/relay_data_run.py",
+      "size": 12415,
+      "mtime_ns": 1792071803000000000,
+      "sha256": "5989e3b8fb03181cf40bea594d79c4e7a86947bae9fa1b71d0f14d9473ae54d9"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/qwen-split-compute/c19/src/tools/qwen_split/compute_spine.py",
+      "size": 42045,
+      "mtime_ns": 1792071803000000000,
+      "sha256": "d26e62c29f11d12afb839fbac9550c6327f73bb6665028535eaff5b320d865dd"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/qwen-split-compute/c19/src/tools/qwen_kv_die/tp8b_v5.py",
+      "size": 111853,
+      "mtime_ns": 1792071803000000000,
+      "sha256": "e7a6d4ca9562d451a7a778dd2c68752aa9ac059b90be0f70891b1c66e9ec8ee1"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/qwen-split-compute/c19/out.log",
+      "size": 0,
+      "mtime_ns": 1792071856460170481,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "out_files": [],
+  "source_identity_equal": false,
+  "reason": "Source files replaced at06:43 after orphan06:31 and before tracked06:44; old loaded source cannot be proven. Orphan has no independent output and deleted empty log.",
+  "authoritative_pid": 3247862,
+  "shared_outputs_potentially_contaminated": true,
+  "required_final_validation": "Tracked source fingerprints, actual final outputs, geometry/cut/reach/binding and subsequent route/STA; shared artifacts alone are insufficient."
+}

@@ -1,0 +1,22 @@
+{
+  "host": "ot-epyc1tb",
+  "path": "/srv/opentallas-scratch/codex/qwen-c21-face-pin-1103/attempt2",
+  "source_base": "59fb67ed5 immutable C21 source",
+  "patch": "minimal9f59a033b geometry hunk only",
+  "profile": {
+    "PMHS": 0,
+    "interleave": 0,
+    "relay_skip": true
+  },
+  "verdict": "PA PASS; no route or STA",
+  "sha256": {
+    "src/tools/qwen_split/direct_up4.py": "92888b0e2b6e50313da37160d65ed982739fd30555636119f20b1187f8326b2d",
+    "src/tools/qwen_split/static_link_bind.py": "50c142a9adcc4c5147ad8299f2a55ca5bbfad1c3c49ef022f9b250531fb33435",
+    "src/tools/qwen_kv_die/tp8b_v5.py": "6d2b779ba5f1ca3c9b7c77e0dd0fde7de59d7928c486cc0c15a1f0ae677a51c8",
+    "src/tools/qwen_split/compute_spine.py": "03a3a8bfa79f6b9624e7e6c948a7b806e6249ad59ef92d14c3f80cc3e07411ef",
+    "out/case/floorplan.odb": "d29268d21be1510eada4ee745fd51447cfa26d48b4ceffb5391ecef5d5c94c51",
+    "out/case/elements.lef": "a0a24275622a60249e492adb7e4ce70c1141a2dc4810dba3465d28add3a2f458",
+    "out/case/die.v": "aacb231b75cb33cf3b0f4cd6e4bc127d52c75f1212724aaeb20a5b333f82bab2",
+    "out/case/run.tcl": "bdc6bd2608b0b82ad95efb9ef870ce53bcfb76681e2ddfffb3029ac8fd603a56"
+  }
+}

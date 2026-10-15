@@ -1,0 +1,611 @@
+{
+ "schema": "opentallas.qwen-tp8.bind-real.v1",
+ "case": "../out/case",
+ "masters": 34,
+ "masters_bound": 8,
+ "instances": 1636,
+ "instances_bound": 793,
+ "relays_and_reset_repeaters": 3,
+ "refused": {},
+ "no_view": [
+  "ot_qkvd_ucie_x64_phy",
+  "qfd_ckbump",
+  "qfd_clkrx",
+  "qfd_collective_static_io_production",
+  "qfd_d2d_static",
+  "qfd_native59_compute_service",
+  "qfd_port_tiles_0",
+  "qfd_port_tiles_0_f1",
+  "qfd_port_tiles_1",
+  "qfd_port_tiles_1_f1",
+  "qfd_port_tiles_2",
+  "qfd_port_tiles_2_f1",
+  "qfd_rstseq",
+  "qfd_rstsync",
+  "qfd_seq_su_static",
+  "qfd_sigbump",
+  "qfd_sp_band_lanes",
+  "qfd_sp_res_ser",
+  "qfd_sp_su64_sfu",
+  "qfd_sp_vector_memory",
+  "qfd_tile_nk",
+  "qfd_tile_nl",
+  "qfd_tt_ctlm_static_s",
+  "qfd_xcol_e",
+  "qfd_xcol_w",
+  "qkd_embedding_static_core_provider"
+ ],
+ "open_inputs": {},
+ "lib_list": [
+  "/srv/opentallas-scratch/codex/qwen-c21-face-pin-1103/attempt2/out/case/bound_views/qfd_crom_g/qfd_crom_g_ff.lib",
+  "/srv/opentallas-scratch/codex/qwen-c21-face-pin-1103/attempt2/out/case/bound_views/qfd_crom_g/qfd_crom_g_ss.lib",
+  "/srv/opentallas-scratch/codex/qwen-c21-face-pin-1103/attempt2/out/case/bound_views/qfd_crom_g/qfd_crom_g_tt.lib",
+  "/srv/opentallas-scratch/codex/qwen-c21-face-pin-1103/attempt2/out/case/bound_views/qfd_su_cbuf_g/qfd_su_cbuf_g_ff.lib",
+  "/srv/opentallas-scratch/codex/qwen-c21-face-pin-1103/attempt2/out/case/bound_views/qfd_su_cbuf_g/qfd_su_cbuf_g_ss.lib",
+  "/srv/opentallas-scratch/codex/qwen-c21-face-pin-1103/attempt2/out/case/bound_views/qfd_su_cbuf_g/qfd_su_cbuf_g_tt.lib",
+  "physical/qwen_missing_phy/ot_qfd_serdes_112g_x12_phy_s597/ot_qfd_serdes_112g_x12_phy_s597_ff.lib",
+  "physical/qwen_missing_phy/ot_qfd_serdes_112g_x12_phy_s597/ot_qfd_serdes_112g_x12_phy_s597_ss.lib",
+  "physical/qwen_missing_phy/ot_qfd_serdes_112g_x12_phy_s597/ot_qfd_serdes_112g_x12_phy_s597_tt.lib",
+  "physical/qwen_missing_phy/tp8_1013/ot_qfd_ucie_x64_phy/ot_qfd_ucie_x64_phy_ff.lib",
+  "physical/qwen_missing_phy/tp8_1013/ot_qfd_ucie_x64_phy/ot_qfd_ucie_x64_phy_ss.lib",
+  "physical/qwen_missing_phy/tp8_1013/ot_qfd_ucie_x64_phy/ot_qfd_ucie_x64_phy_tt.lib",
+  "physical/ref_tile/qfd_tt_up4_tp8/views/ot_qfd_band_upper/ot_qfd_band_upper_ff.lib",
+  "physical/ref_tile/qfd_tt_up4_tp8/views/ot_qfd_band_upper/ot_qfd_band_upper_ss.lib",
+  "physical/ref_tile/qfd_tt_up4_tp8/views/ot_qfd_band_upper/ot_qfd_band_upper_tt.lib",
+  "physical/ref_tile/qfd_xcst_n/views/qfd_xcst_n/qfd_xcst_n_ff.lib",
+  "physical/ref_tile/qfd_xcst_n/views/qfd_xcst_n/qfd_xcst_n_ss.lib",
+  "physical/ref_tile/qfd_xcst_n/views/qfd_xcst_n/qfd_xcst_n_tt.lib",
+  "physical/ref_tile/qfd_xcst_s/views/qfd_xcst_s/qfd_xcst_s_ff.lib",
+  "physical/ref_tile/qfd_xcst_s/views/qfd_xcst_s/qfd_xcst_s_ss.lib",
+  "physical/ref_tile/qfd_xcst_s/views/qfd_xcst_s/qfd_xcst_s_tt.lib",
+  "physical/ref_tile/qfd_xs_tap/views/qfd_xs_tap/qfd_xs_tap_ff.lib",
+  "physical/ref_tile/qfd_xs_tap/views/qfd_xs_tap/qfd_xs_tap_ss.lib",
+  "physical/ref_tile/qfd_xs_tap/views/qfd_xs_tap/qfd_xs_tap_tt.lib"
+ ],
+ "masters_detail": {
+  "ot_qfd_band_upper": {
+   "instances": 4,
+   "bound": true,
+   "view": "physical/ref_tile/qfd_tt_up4_tp8/views/ot_qfd_band_upper",
+   "size_case": [
+    64.8,
+    205.2
+   ],
+   "size_view": [
+    64.8,
+    205.2
+   ],
+   "pins": 10,
+   "inputs_without_die_net": [],
+   "outputs_without_die_net": [
+    "fault"
+   ],
+   "die_bus_narrower_than_view": [],
+   "pin_centroid_move_um": [
+    [
+     0.54,
+     "rst_n"
+    ],
+    [
+     0.48,
+     "clk"
+    ],
+    [
+     0.14,
+     "tv_e"
+    ],
+    [
+     0.14,
+     "sel_e"
+    ]
+   ],
+   "pin_layer_changes": [],
+   "libs": {
+    "tt": "physical/ref_tile/qfd_tt_up4_tp8/views/ot_qfd_band_upper/ot_qfd_band_upper_tt.lib",
+    "ff": "physical/ref_tile/qfd_tt_up4_tp8/views/ot_qfd_band_upper/ot_qfd_band_upper_ff.lib",
+    "ss": "physical/ref_tile/qfd_tt_up4_tp8/views/ot_qfd_band_upper/ot_qfd_band_upper_ss.lib"
+   },
+   "insertion": true,
+   "pg_layers": [
+    "M5"
+   ]
+  },
+  "ot_qfd_serdes_112g_x12_phy_s597": {
+   "instances": 3,
+   "bound": true,
+   "view": "physical/qwen_missing_phy/ot_qfd_serdes_112g_x12_phy_s597",
+   "size_case": [
+    2320.056,
+    1563.57
+   ],
+   "size_view": [
+    2320.056,
+    1563.57
+   ],
+   "pins": 7,
+   "inputs_without_die_net": [],
+   "outputs_without_die_net": [],
+   "die_bus_narrower_than_view": [],
+   "pin_centroid_move_um": [
+    [
+     0.0,
+     "tx_v"
+    ],
+    [
+     0.0,
+     "tx_up"
+    ],
+    [
+     0.0,
+     "tx_flit"
+    ],
+    [
+     0.0,
+     "rx_v"
+    ]
+   ],
+   "pin_layer_changes": [],
+   "libs": {
+    "tt": "physical/qwen_missing_phy/ot_qfd_serdes_112g_x12_phy_s597/ot_qfd_serdes_112g_x12_phy_s597_tt.lib",
+    "ff": "physical/qwen_missing_phy/ot_qfd_serdes_112g_x12_phy_s597/ot_qfd_serdes_112g_x12_phy_s597_ff.lib",
+    "ss": "physical/qwen_missing_phy/ot_qfd_serdes_112g_x12_phy_s597/ot_qfd_serdes_112g_x12_phy_s597_ss.lib"
+   },
+   "insertion": false,
+   "pg_layers": [
+    "M4"
+   ]
+  },
+  "ot_qfd_ucie_x64_phy": {
+   "instances": 1,
+   "bound": true,
+   "view": "physical/qwen_missing_phy/tp8_1013/ot_qfd_ucie_x64_phy",
+   "size_case": [
+    777.6,
+    777.6
+   ],
+   "size_view": [
+    777.6,
+    777.6
+   ],
+   "pins": 7,
+   "inputs_without_die_net": [],
+   "outputs_without_die_net": [],
+   "die_bus_narrower_than_view": [],
+   "pin_centroid_move_um": [
+    [
+     0.0,
+     "tx_v"
+    ],
+    [
+     0.0,
+     "tx_up"
+    ],
+    [
+     0.0,
+     "tx_flit"
+    ],
+    [
+     0.0,
+     "rx_v"
+    ]
+   ],
+   "pin_layer_changes": [],
+   "libs": {
+    "tt": "physical/qwen_missing_phy/tp8_1013/ot_qfd_ucie_x64_phy/ot_qfd_ucie_x64_phy_tt.lib",
+    "ff": "physical/qwen_missing_phy/tp8_1013/ot_qfd_ucie_x64_phy/ot_qfd_ucie_x64_phy_ff.lib",
+    "ss": "physical/qwen_missing_phy/tp8_1013/ot_qfd_ucie_x64_phy/ot_qfd_ucie_x64_phy_ss.lib"
+   },
+   "insertion": false,
+   "pg_layers": [
+    "M4"
+   ]
+  },
+  "ot_qkvd_ucie_x64_phy": {
+   "instances": 1,
+   "bound": false,
+   "reason": "no view by this name"
+  },
+  "qfd_ckbump": {
+   "instances": 1,
+   "bound": false,
+   "reason": "no view by this name"
+  },
+  "qfd_clkrx": {
+   "instances": 1,
+   "bound": false,
+   "reason": "no view by this name"
+  },
+  "qfd_collective_static_io_production": {
+   "instances": 1,
+   "bound": false,
+   "reason": "no view by this name"
+  },
+  "qfd_crom_g": {
+   "instances": 8,
+   "bound": true,
+   "alias_provenance": {
+    "source_sha256": {
+     "ot_qfd_crom_gr.lef": "3f77a3ea8547eae52e00782769933a383f096b8561d22b7991dd8fcc4eaa7889",
+     "ot_qfd_crom_gr_tt.lib": "ad4145725af16c70e688ad019f42a66427a165ceb355406b73adebc2b8bd3ecc",
+     "ot_qfd_crom_gr_ff.lib": "63a99d2462e4be816c68052df8f790d67b49073e6df4b4c1795acb158151833e",
+     "ot_qfd_crom_gr_ss.lib": "ac42dc933cb9db0a45d2ea36c330411ac43a8edd4db8a455f00c79c39385f818",
+     "insertion.json": "78e2d176d6f01c17573be580fbe529c9dec78302076f71a5a661e448516fc187"
+    },
+    "source_master": "ot_qfd_crom_gr",
+    "slot_master": "qfd_crom_g",
+    "source_view": "physical/ref_tile/qfd_crom_g_m5/views/ot_qfd_crom_gr",
+    "pin_mapping": "identity, all pins including clk",
+    "liberty_corners": [
+     "tt",
+     "ff",
+     "ss"
+    ],
+    "insertion": "unchanged from closed source"
+   },
+   "view": "/srv/opentallas-scratch/codex/qwen-c21-face-pin-1103/attempt2/out/case/bound_views/qfd_crom_g",
+   "size_case": [
+    194.376,
+    550.776
+   ],
+   "size_view": [
+    194.4,
+    550.8
+   ],
+   "pins": 8,
+   "inputs_without_die_net": [],
+   "outputs_without_die_net": [
+    "fault_code"
+   ],
+   "die_bus_narrower_than_view": [],
+   "pin_centroid_move_um": [
+    [
+     0.08,
+     "rst_n"
+    ],
+    [
+     0.08,
+     "fault"
+    ],
+    [
+     0.08,
+     "crom_stage"
+    ],
+    [
+     0.08,
+     "crom_re"
+    ]
+   ],
+   "pin_layer_changes": [],
+   "libs": {
+    "tt": "/srv/opentallas-scratch/codex/qwen-c21-face-pin-1103/attempt2/out/case/bound_views/qfd_crom_g/qfd_crom_g_tt.lib",
+    "ff": "/srv/opentallas-scratch/codex/qwen-c21-face-pin-1103/attempt2/out/case/bound_views/qfd_crom_g/qfd_crom_g_ff.lib",
+    "ss": "/srv/opentallas-scratch/codex/qwen-c21-face-pin-1103/attempt2/out/case/bound_views/qfd_crom_g/qfd_crom_g_ss.lib"
+   },
+   "insertion": true,
+   "pg_layers": [
+    "M5"
+   ]
+  },
+  "qfd_d2d_static": {
+   "instances": 1,
+   "bound": false,
+   "reason": "no view by this name"
+  },
+  "qfd_native59_compute_service": {
+   "instances": 1,
+   "bound": false,
+   "reason": "no view by this name"
+  },
+  "qfd_port_tiles_0": {
+   "instances": 1,
+   "bound": false,
+   "reason": "no view by this name"
+  },
+  "qfd_port_tiles_0_f1": {
+   "instances": 1,
+   "bound": false,
+   "reason": "no view by this name"
+  },
+  "qfd_port_tiles_1": {
+   "instances": 1,
+   "bound": false,
+   "reason": "no view by this name"
+  },
+  "qfd_port_tiles_1_f1": {
+   "instances": 1,
+   "bound": false,
+   "reason": "no view by this name"
+  },
+  "qfd_port_tiles_2": {
+   "instances": 1,
+   "bound": false,
+   "reason": "no view by this name"
+  },
+  "qfd_port_tiles_2_f1": {
+   "instances": 1,
+   "bound": false,
+   "reason": "no view by this name"
+  },
+  "qfd_rstseq": {
+   "instances": 1,
+   "bound": false,
+   "reason": "no view by this name"
+  },
+  "qfd_rstsync": {
+   "instances": 1,
+   "bound": false,
+   "reason": "no view by this name"
+  },
+  "qfd_seq_su_static": {
+   "instances": 1,
+   "bound": false,
+   "reason": "no view by this name"
+  },
+  "qfd_sigbump": {
+   "instances": 2,
+   "bound": false,
+   "reason": "no view by this name"
+  },
+  "qfd_sp_band_lanes": {
+   "instances": 3,
+   "bound": false,
+   "reason": "no view by this name"
+  },
+  "qfd_sp_res_ser": {
+   "instances": 3,
+   "bound": false,
+   "reason": "no view by this name"
+  },
+  "qfd_sp_su64_sfu": {
+   "instances": 1,
+   "bound": false,
+   "reason": "no view by this name"
+  },
+  "qfd_sp_vector_memory": {
+   "instances": 1,
+   "bound": false,
+   "reason": "no view by this name"
+  },
+  "qfd_su_cbuf_g": {
+   "instances": 8,
+   "bound": true,
+   "alias_provenance": {
+    "source_sha256": {
+     "ot_qfd_su_cbuf_g.lef": "6e99834e5c37400dd659a808d3209851ef2f630b7d1d31c40a1aae29d62982da",
+     "ot_qfd_su_cbuf_g_tt.lib": "d6b0f7ce257d1b90ca9a781588a588c0281c37159ec5f821aabe704eb909078e",
+     "ot_qfd_su_cbuf_g_ff.lib": "f23ef0b6c4a38a68964197e7bdb1032249c0357c506bb801af3d6e832cb5294c",
+     "ot_qfd_su_cbuf_g_ss.lib": "8d1e1a6f0af61b3f3b4a84099aa2dc76d29172f504c74f5b77213911d8da2151",
+     "insertion.json": "44b68cdac8bfb8dfdffb9ffdfdb5e2cd87b8efa1339d64a3f5f3a734b84dba11"
+    },
+    "source_master": "ot_qfd_su_cbuf_g",
+    "slot_master": "qfd_su_cbuf_g",
+    "source_view": "physical/ref_tile/qfd_su_cbuf_g_m5/views/ot_qfd_su_cbuf_g",
+    "pin_mapping": "identity, all pins including clk",
+    "liberty_corners": [
+     "tt",
+     "ff",
+     "ss"
+    ],
+    "insertion": "unchanged from closed source"
+   },
+   "view": "/srv/opentallas-scratch/codex/qwen-c21-face-pin-1103/attempt2/out/case/bound_views/qfd_su_cbuf_g",
+   "size_case": [
+    194.376,
+    215.976
+   ],
+   "size_view": [
+    194.376,
+    215.976
+   ],
+   "pins": 20,
+   "inputs_without_die_net": [],
+   "outputs_without_die_net": [],
+   "die_bus_narrower_than_view": [],
+   "pin_centroid_move_um": [
+    [
+     0.05,
+     "tpos"
+    ],
+    [
+     0.05,
+     "tok_start"
+    ],
+    [
+     0.05,
+     "stage"
+    ],
+    [
+     0.05,
+     "st_rdy_stage"
+    ]
+   ],
+   "pin_layer_changes": [],
+   "libs": {
+    "tt": "/srv/opentallas-scratch/codex/qwen-c21-face-pin-1103/attempt2/out/case/bound_views/qfd_su_cbuf_g/qfd_su_cbuf_g_tt.lib",
+    "ff": "/srv/opentallas-scratch/codex/qwen-c21-face-pin-1103/attempt2/out/case/bound_views/qfd_su_cbuf_g/qfd_su_cbuf_g_ff.lib",
+    "ss": "/srv/opentallas-scratch/codex/qwen-c21-face-pin-1103/attempt2/out/case/bound_views/qfd_su_cbuf_g/qfd_su_cbuf_g_ss.lib"
+   },
+   "insertion": true,
+   "pg_layers": [
+    "M5"
+   ]
+  },
+  "qfd_tile_nk": {
+   "instances": 720,
+   "bound": false,
+   "reason": "no view by this name"
+  },
+  "qfd_tile_nl": {
+   "instances": 48,
+   "bound": false,
+   "reason": "no view by this name"
+  },
+  "qfd_tt_ctlm_static_s": {
+   "instances": 1,
+   "bound": false,
+   "reason": "no view by this name"
+  },
+  "qfd_xcol_e": {
+   "instances": 24,
+   "bound": false,
+   "reason": "no view by this name"
+  },
+  "qfd_xcol_w": {
+   "instances": 24,
+   "bound": false,
+   "reason": "no view by this name"
+  },
+  "qfd_xcst_n": {
+   "instances": 384,
+   "bound": true,
+   "view": "physical/ref_tile/qfd_xcst_n/views/qfd_xcst_n",
+   "size_case": [
+    52.68,
+    103.656
+   ],
+   "size_view": [
+    52.68,
+    103.656
+   ],
+   "pins": 8,
+   "inputs_without_die_net": [],
+   "outputs_without_die_net": [],
+   "die_bus_narrower_than_view": [],
+   "pin_centroid_move_um": [
+    [
+     106.68,
+     "tie_lo"
+    ],
+    [
+     105.82,
+     "tie_hi"
+    ],
+    [
+     104.35,
+     "sidx"
+    ],
+    [
+     0.54,
+     "b_d"
+    ]
+   ],
+   "pin_layer_changes": [
+    "a_d M5 -> M3/M5",
+    "b_d M5 -> M3/M5",
+    "sidx M4 -> M3/M5",
+    "tie_hi M4 -> M3",
+    "tie_lo M4 -> M3"
+   ],
+   "libs": {
+    "tt": "physical/ref_tile/qfd_xcst_n/views/qfd_xcst_n/qfd_xcst_n_tt.lib",
+    "ff": "physical/ref_tile/qfd_xcst_n/views/qfd_xcst_n/qfd_xcst_n_ff.lib",
+    "ss": "physical/ref_tile/qfd_xcst_n/views/qfd_xcst_n/qfd_xcst_n_ss.lib"
+   },
+   "insertion": true,
+   "pg_layers": [
+    "M5"
+   ]
+  },
+  "qfd_xcst_s": {
+   "instances": 384,
+   "bound": true,
+   "view": "physical/ref_tile/qfd_xcst_s/views/qfd_xcst_s",
+   "size_case": [
+    52.68,
+    103.656
+   ],
+   "size_view": [
+    52.68,
+    103.656
+   ],
+   "pins": 8,
+   "inputs_without_die_net": [],
+   "outputs_without_die_net": [],
+   "die_bus_narrower_than_view": [],
+   "pin_centroid_move_um": [
+    [
+     106.68,
+     "tie_lo"
+    ],
+    [
+     105.82,
+     "tie_hi"
+    ],
+    [
+     104.35,
+     "sidx"
+    ],
+    [
+     0.44,
+     "tap_d"
+    ]
+   ],
+   "pin_layer_changes": [
+    "a_d M5 -> M3/M5",
+    "b_d M5 -> M3/M5",
+    "sidx M4 -> M3/M5",
+    "tie_hi M4 -> M3",
+    "tie_lo M4 -> M3"
+   ],
+   "libs": {
+    "tt": "physical/ref_tile/qfd_xcst_s/views/qfd_xcst_s/qfd_xcst_s_tt.lib",
+    "ff": "physical/ref_tile/qfd_xcst_s/views/qfd_xcst_s/qfd_xcst_s_ff.lib",
+    "ss": "physical/ref_tile/qfd_xcst_s/views/qfd_xcst_s/qfd_xcst_s_ss.lib"
+   },
+   "insertion": true,
+   "pg_layers": [
+    "M5"
+   ]
+  },
+  "qfd_xs_tap": {
+   "instances": 1,
+   "bound": true,
+   "view": "physical/ref_tile/qfd_xs_tap/views/qfd_xs_tap",
+   "size_case": [
+    216.0,
+    216.0
+   ],
+   "size_view": [
+    216.0,
+    216.0
+   ],
+   "pins": 11,
+   "inputs_without_die_net": [],
+   "outputs_without_die_net": [],
+   "die_bus_narrower_than_view": [],
+   "pin_centroid_move_um": [
+    [
+     23.83,
+     "xpf"
+    ],
+    [
+     22.42,
+     "he_d"
+    ],
+    [
+     15.96,
+     "gi"
+    ],
+    [
+     7.97,
+     "fault"
+    ]
+   ],
+   "pin_layer_changes": [],
+   "libs": {
+    "tt": "physical/ref_tile/qfd_xs_tap/views/qfd_xs_tap/qfd_xs_tap_tt.lib",
+    "ff": "physical/ref_tile/qfd_xs_tap/views/qfd_xs_tap/qfd_xs_tap_ff.lib",
+    "ss": "physical/ref_tile/qfd_xs_tap/views/qfd_xs_tap/qfd_xs_tap_ss.lib"
+   },
+   "insertion": true,
+   "pg_layers": [
+    "M5"
+   ]
+  },
+  "qkd_embedding_static_core_provider": {
+   "instances": 1,
+   "bound": false,
+   "reason": "no view by this name"
+  }
+ }
+}

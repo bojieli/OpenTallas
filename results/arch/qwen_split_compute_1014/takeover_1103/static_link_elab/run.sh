@@ -1,0 +1,7 @@
+#!/bin/bash
+set -euo pipefail
+cd /srv/opentallas-scratch/codex/qwen-static-link-elab-1103
+iverilog -g2012 -s qwen_static_link_port_contract -o good.vvp good.sv rtl/qwen_sys/split_20261014/ot_qwen_crc_parallel.sv rtl/qwen_sys/split_20261014/ot_qwen_static_slot_link.sv rtl/qwen_sys/split_20261014/ot_qkvd_d2d_llr.sv rtl/qwen_sys/split_20261014/qkd_native_attention_record.sv rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_static.sv rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_services.sv rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_dies.sv rtl/qwen_split/qfd_kvn_static_transport.sv physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v > good.log 2>&1
+if iverilog -g2012 -s qwen_static_link_port_contract -o bad.vvp bad.sv rtl/qwen_sys/split_20261014/ot_qwen_crc_parallel.sv rtl/qwen_sys/split_20261014/ot_qwen_static_slot_link.sv rtl/qwen_sys/split_20261014/ot_qkvd_d2d_llr.sv rtl/qwen_sys/split_20261014/qkd_native_attention_record.sv rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_static.sv rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_services.sv rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_dies.sv rtl/qwen_split/qfd_kvn_static_transport.sv physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v > bad.log 2>&1; then echo STALE_RX_PORT_MUTANT_ESCAPED; exit 1; fi
+grep -q 'native_rx_payload.*not a port' bad.log
+printf '%s\n' STATIC_LINK_ACTUAL_HIERARCHY_PASS STALE_RX_PORT_MUTANT_REJECTED > STATUS.log
