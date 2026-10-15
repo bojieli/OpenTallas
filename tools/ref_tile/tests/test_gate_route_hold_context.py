@@ -29,3 +29,13 @@ class RouteHoldParity(unittest.TestCase):
   self.assertNotIn('link_budget_hook.tcl',d['OT_CTS_FIX_HOOKS']);self.assertEqual(d['HM'],'0.03');self.assertEqual(d['OT_ROUTE_HOLD_CORNERS'],'mm')
  def test_missing_insertion_marker_fails_closed(self):
   with self.assertRaises(ValueError):G.gate_route_hold_context('changed',self.spec(),'kit')
+
+ def test_hybrid_tile_native_boundary_and_cluster_budget_remain_distinct(self):
+  tile=self.spec(clock='hybrid_entries');d=self.executed(tile)
+  cmd=R.gen_job(tile,'physical/ref_tile/sample','deadbeef',[])['stages']['route']['cmd']
+  self.assertNotIn('link_budget_hook.tcl',d['OT_CTS_FIX_HOOKS']);self.assertNotIn('link_budget_hook.tcl',cmd)
+  self.assertEqual(len(d['OT_CTS_FIX_HOOKS'].split()),2)
+  cluster=self.spec(clock='hybrid_entries',kind='cluster');d=self.executed(cluster)
+  cmd=R.gen_job(cluster,'physical/ref_tile/sample','deadbeef',[])['stages']['route']['cmd']
+  self.assertIn('link_budget_hook.tcl',d['OT_CTS_FIX_HOOKS']);self.assertIn('link_budget_hook.tcl',cmd)
+  self.assertEqual(len(d['OT_CTS_FIX_HOOKS'].split()),3)
