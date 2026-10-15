@@ -84,6 +84,20 @@ def ordered_leaves(nodes):
     return [nodes[k][s][3][0] for k in sorted(nodes) if k[0] == 0 for s in 'ab']
 
 
+def ordered_expression(nodes):
+    """Exact FP expression, including ordered A/B operands at every node.
+
+    Equality is stronger than random numerical sampling: it preserves the
+    complete arithmetic composition for every possible leaf bit pattern.
+    """
+    values = {}
+    for (lv,idx),ab in sorted(nodes.items()):
+        root=ab['a'][3][1]
+        if root!=ab['b'][3][1]:raise ValueError('node A/B destinations differ')
+        values[root]=tuple(ab[s][3][0] if lv==0 else values[ab[s][3][0]] for s in 'ab')
+    return values[root]
+
+
 def score(nodes, xy, sink, pitch=490.0):
     def h(a, b):
         return max(1, math.ceil((abs(xy[a][0]-xy[b][0])+abs(xy[a][1]-xy[b][1]))/pitch))
@@ -124,9 +138,12 @@ def candidate(d, pitch=490.0):
                 replace[bus] = [src,target]
                 new[(lv,idx)][side] = (bus,cls,bits,[src,target])
         replace[f'bword_{b}'] = [best.root,sinks[b]]
+        old_expr=ordered_expression(nodes)
+        if ordered_expression(new)!=old_expr:raise ValueError('arithmetic order changed')
         records.append(dict(block=b, baseline=score(nodes,xy,sinks[b],pitch),
                             candidate=score(new,xy,sinks[b],pitch), hosts=[list(x) for x in best.hosts],
-                            unused=best.unused, ordered_leaves=leaves))
+                            unused=best.unused, ordered_leaves=leaves,
+                            ordered_expression_sha256=hashlib.sha256(json.dumps(old_expr).encode()).hexdigest()))
     nd = dict(d, buses=[(b,c,n,replace.get(b,eps)) for b,c,n,eps in d['buses']])
     report = dict(schema='opentallas.qwen.exact-order-tree-hosts.v1',pitch_um=pitch,blocks=records,
                   baseline_max=max(x['baseline']['tree_to_slab_stages'] for x in records),
