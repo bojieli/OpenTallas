@@ -25,7 +25,7 @@
     "period_ps": 1024,
     "entries": "one per PC HBM domain plus command leaf; actual CDC/pin launch/capture required",
     "frequency_mhz": 976.5625,
-    "source": "rtl/qwen_sys/split_20261014/qkd_pll_analog_model.sv HBM_PS=1024; actual static controller HCLK=1024ps. Domain hbm_976p6 names MHz."
+    "source": "rtl/qwen_sys/split_20261014/qkd_pll_analog_model.sv HBM_HALF=0.512ns; actual static controller HCLK=1024ps. Domain hbm_976p6 names MHz."
   },
   "groups": [
     {
