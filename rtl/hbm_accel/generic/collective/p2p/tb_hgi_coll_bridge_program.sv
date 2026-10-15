@@ -12,14 +12,16 @@ module tb_hgi_coll_bridge_program;
   .desc_v(dv),.desc_base(base),.desc_limit(limit),.desc_loops(loops),.launch_v(lv),.program_active(active),
   .configured(configured),.init_busy(init_busy),.busy(busy),.done(done),.fault(fault),
   .control_v(control_v),.control(control),.control_cycle(pc));
+ reg [511:0] image[0:WORDS-1];bit use_image=0;string image_path;integer image_length=0;
  integer cycle=0;always @(posedge clk)cycle<=cycle+1;
  function automatic [48:0] operation(input integer p);
   reg [48:0] d;
+  if(use_image)return image[p/10][(p%10)*49+:49];
   d=(49'h1ac4072fd3e99 ^ (49'(p)*49'h139b4712f35));
   return QID==0?d:{19'b0,d[29:0]};
  endfunction
  function automatic [511:0] word_(input integer w);
-  reg [511:0] d;d=0;
+  reg [511:0] d;if(use_image)return image[w];d=0;
   for(integer i=0;i<10;i=i+1)d[i*49+:49]=operation(w*10+i);
   return d;
  endfunction
@@ -55,6 +57,8 @@ module tb_hgi_coll_bridge_program;
  integer scenario=0;
  initial begin
   if($value$plusargs("fault=%d",scenario))begin end
+  if($value$plusargs("image=%s",image_path))begin use_image=1;$readmemh(image_path,image);end
+  if($value$plusargs("length=%d",image_length))limit=13'(image_length);
   repeat(4)@(negedge clk);rst_n=1;
   if(scenario!=0)begin
    case(scenario)
@@ -86,7 +90,7 @@ module tb_hgi_coll_bridge_program;
   target=8'(60+QID);frame(WORDS,0);idle(3);target=8'(56+QID);
   for(integer w=0;w<WORDS;w=w+1)word_program(w);
   descriptor();if(!configured)$fatal(1,"notconfigured afterfixedvalidation");execute();
-  if(NBANKS>1)begin base=640;descriptor();execute();end
+  if(NBANKS>1 && limit>640)begin base=640;descriptor();execute();end
   $display("BRIDGE_PROGRAM PASS actual_macro_count=%0d capacity=%0d exact_control_bits=49",NBANKS,CAPACITY);$finish;
  end
 endmodule
