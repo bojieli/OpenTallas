@@ -1,0 +1,14 @@
+PASS all36stages/all8192positions identities294912 sectors2359296 inverse-map/raw256/fullmask/TAG59/gen2/exactslots
+/srv/opentallas-scratch2/claude/qkv-native-fix-0816/src/rtl/test/qwen_static_kv/tb_qkd_kv_static_writer_native.sv:82: $finish called at 4128782000 (1ps)
+OBSERVED_FAIL MUT1 BAD0 errors2 fault0
+/srv/opentallas-scratch2/claude/qkv-native-fix-0816/src/rtl/test/qwen_static_kv/tb_qkd_kv_static_writer_native.sv:77: $finish called at 28000 (1ps)
+OBSERVED_FAIL MUT2 BAD0 errors272 fault0
+/srv/opentallas-scratch2/claude/qkv-native-fix-0816/src/rtl/test/qwen_static_kv/tb_qkd_kv_static_writer_native.sv:77: $finish called at 28000 (1ps)
+FATAL: /srv/opentallas-scratch2/claude/qkv-native-fix-0816/src/rtl/test/qwen_static_kv/tb_qkd_kv_static_writer_native.sv:29: omitted semantic field mismatch
+       Time: 20000  Scope: tb_qkd_kv_static_writer_native
+OBSERVED_FAIL MUT4 BAD0 errors8 fault0
+/srv/opentallas-scratch2/claude/qkv-native-fix-0816/src/rtl/test/qwen_static_kv/tb_qkd_kv_static_writer_native.sv:77: $finish called at 28000 (1ps)
+OBSERVED_FAIL MUT5 BAD0 errors2 fault0
+/srv/opentallas-scratch2/claude/qkv-native-fix-0816/src/rtl/test/qwen_static_kv/tb_qkd_kv_static_writer_native.sv:77: $finish called at 28000 (1ps)
+OBSERVED_FAIL MUT6 BAD0 errors16 fault0
+/srv/opentallas-scratch2/claude/qkv-native-fix-0816/src/rtl/test/qwen_static_kv/tb_qkd_kv_static_writer_native.sv:77: $finish called at 28000 (1ps)

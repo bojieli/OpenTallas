@@ -1,0 +1,32 @@
+{
+  "cell": "qfd_slab_reg512",
+  "view": "physical/ref_tile/qfd_slab_reg512/views/qfd_slab_reg512",
+  "lib_cell": "qfd_slab_reg512",
+  "insertion": true,
+  "ref_src": [
+    "insertion.json boundary mean"
+  ],
+  "R_ps": 81.3,
+  "spread_ps": 7.7,
+  "outputs": 512,
+  "inputs": 512,
+  "launch_ps": 178.5,
+  "launch_pin": "q[429]",
+  "capture_ps": 125.7,
+  "capture_pin": "d[236]",
+  "launch_over": 0,
+  "capture_over": 0,
+  "comb_pins": 0,
+  "comb_first": [],
+  "pass": true,
+  "fail_why": "",
+  "job": "qfd_slab_reg512-rb2-24c3c465c",
+  "published_commit": "7716424b7",
+  "source_sha256": {
+    "physical/ref_tile/qfd_slab_reg512/views/qfd_slab_reg512/insertion.json": "5fa7c2fecc73b770221a71adfe58e05572c8147dc9e41b69cf1ae3357ea0c1d8",
+    "physical/ref_tile/qfd_slab_reg512/views/qfd_slab_reg512/qfd_slab_reg512_tt.lib": "8d3ee01bb2c4368dea3970ed4609e4a1280c7e85e080e560a8cd1ddf478e971c"
+  },
+  "tt_setup_ps": 338.16,
+  "ff_hold_ps": 26.76,
+  "drc": 0
+}

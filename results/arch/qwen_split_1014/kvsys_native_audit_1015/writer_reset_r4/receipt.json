@@ -1,0 +1,18 @@
+{
+  "unit": "oth-ubuntu-4138207-1792077292",
+  "host": "ot-epyc4",
+  "status": "PASS",
+  "native_data_oracle": "all36stages/all8192positions physicaltrimmedface vsactual writer source and independent inverse address/data check",
+  "mutants": "six arithmetic/address/field mutants observed plus missing-reset-pin stage rejected at edge3",
+  "reset": "two epochs release exactly4 edges; asynchronous assertion preserved",
+  "normal_cycles_added": 0,
+  "boot_release_edges": 4,
+  "source_sha256": {
+    "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+    "rtl/physical/ot_qkd_kv_static_writer_native.sv": "4b418173896271e8c7b53464cbf7236701c9b93f6410b7ee8dc2ade0157e3c16",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_static_writer.sv": "53ca5402473ba845bc7683a58ce35b4d6fe2a9d1131f97ac0a59dbab5abb32f6",
+    "rtl/test/qwen_static_kv/tb_qkd_kv_static_writer_native.sv": "aaccbf27862d65ba2d457c2294cfe86b2cf15e99429ee910139dc84ff07acac4",
+    "rtl/test/qwen_static_kv/tb_native_writer_reset_pin.sv": "addea22dcc1b8967108369f5ba8481a2ed6c0322fd6eb97f4d7eb0aa9a20da1c"
+  },
+  "physical_qualification": false
+}
