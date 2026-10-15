@@ -22,8 +22,10 @@
     "entries": "one per actual child, phi-R needs measured insertion.json"
   },
   "hbm_clock": {
-    "period_ps": 976.6,
-    "entries": "one per PC HBM domain plus command leaf; actual CDC/pin launch/capture required"
+    "period_ps": 1024,
+    "entries": "one per PC HBM domain plus command leaf; actual CDC/pin launch/capture required",
+    "frequency_mhz": 976.5625,
+    "source": "rtl/qwen_sys/split_20261014/qkd_pll_analog_model.sv HBM_PS=1024; actual static controller HCLK=1024ps. Domain hbm_976p6 names MHz."
   },
   "groups": [
     {
