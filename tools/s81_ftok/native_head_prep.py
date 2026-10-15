@@ -31,7 +31,7 @@ def sha(p):
 
 def read_f32(p, count):
     words = [int(x, 16) for x in Path(p).read_text().split()]
-    if len(words) != count or any(x > 0xffffffff for x in words):
+    if len(words) != count or any(not 0 <= x <= 0xffffffff for x in words):
         raise ValueError(f'{p}: expected {count} binary32 words')
     return np.array(words, np.uint32).view(np.float32)
 
