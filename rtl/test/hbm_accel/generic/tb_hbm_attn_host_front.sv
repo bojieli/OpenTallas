@@ -53,16 +53,20 @@ module tb_hbm_attn_host_front;
         .c_bvalid(1'b0),.c_bready(),.c_arvalid(),.c_arready(1'b1),.c_araddr(),
         .c_rvalid(1'b0),.c_rready(),.c_rdata(32'd0),.lcp(lcp_full),.cpl(230'd0),
         .m_req_v(),.m_req_rdy(1'b1),.m_req_addr(),.m_req_len(),.m_rsp_v(1'b0),.m_rsp_data(256'd0),.fault(loader_fault));
+    wire[7:0]ne_rslot_v,ne_wslot_v;wire[23:0]ne_rslot,ne_wslot;
     genvar Q;
     generate for(Q=0;Q<4;Q=Q+1)begin:g_programme
-        ot_vms_calendar_static #(.W(202)) prog(
-            .clk(clk),.rst_n(rst_n),.cfg_we(cfg_we[Q]),.cfg_addr(cfg_addr[Q*10+:10]),
-            .cfg_data(cfg_data[Q*256+:256]),
-            .start_v(start_v[Q]),.start_base(start_base[Q*10+:10]),.start_limit(start_limit[Q*11+:11]),.start_loops(start_loops[Q*16+:16]),
-            .calendar(calendar[Q*202+:202]),.calendar_v(calendar_v[Q]),.ordinal(ordinal[Q*32+:32]),
-            .active(program_active[Q]),.done(program_done[Q]),.fault(program_fault[Q]));
+      if(Q==3)begin:actual_NE
+       hfd_hgi_vm_calendar_NE prog(.clk(clk),.rst_n(rst_n),.cfg_we(cfg_we[Q]),.cfg_addr(cfg_addr[Q*10+:10]),.cfg_data(cfg_data[Q*256+:256]),
+        .start_v(start_v[Q]),.start_base(start_base[Q*10+:10]),.start_limit(start_limit[Q*11+:11]),.start_loops(start_loops[Q*16+:16]),
+        .calendar_v(calendar_v[Q]),.active(program_active[Q]),.done(program_done[Q]),.fault(program_fault[Q]),
+        .rslot_v(ne_rslot_v),.rslot(ne_rslot),.wslot_v(ne_wslot_v),.wslot(ne_wslot));
+      end else begin:idle_other_quadrants
+       ot_vms_calendar_static #(.W(202))prog(.clk(clk),.rst_n(rst_n),.cfg_we(cfg_we[Q]),.cfg_addr(cfg_addr[Q*10+:10]),.cfg_data(cfg_data[Q*256+:256]),
+        .start_v(start_v[Q]),.start_base(start_base[Q*10+:10]),.start_limit(start_limit[Q*11+:11]),.start_loops(start_loops[Q*16+:16]),
+        .calendar(),.calendar_v(calendar_v[Q]),.ordinal(),.active(program_active[Q]),.done(program_done[Q]),.fault(program_fault[Q]));
+      end
     end endgenerate
-
     wire att_active,att_done;
     ot_hbm_attn_host_program_front dut(.clk(clk),.rst_n(rst_n),
       .cfg_v(ext_cfg_v),.cfg_target(ext_target),.cfg_addr(ext_cfg_addr),.cfg_data(ext_cfg_data),
@@ -75,16 +79,17 @@ module tb_hbm_attn_host_front;
   wire[3*281-1:0]awq={562'd0,(preload?pwq[b*281+:281]:281'd0)};
   wire[7*257-1:0]arr;
   ot_vms_bank_static #(.RG(7),.WG(3))bank(.clk(clk),.rst_n(rst_n),.bid(3'(b)),.sid(2'd0),
-   .rslot_v(!preload&&rq[b*17+16]),.rslot(3'd3),.wslot_v(preload&&pwq[b*281+280]),.wslot(3'd0),
+   .rslot_v(!preload&&ne_rslot_v[b]),.rslot(ne_rslot[b*3+:3]),.wslot_v(preload&&pwq[b*281+280]),.wslot(3'd0),
    .rq(arq),.rr(arr),.wq(awq),.wq_done(),.dq(281'd0),.dq_done(),.kq(281'd0),.kq_done(),
    .xq(276'd0),.xq_done(),.xq2(276'd0),.xq2_done(),.eg(),.pq(285'd0),.pr(),.status(status[b*18+:18]));
   assign rr[b*257+:257]=arr[3*257+:257];
  end
  function automatic[15:0]word(input integer ep,h,e);word=16'h3b00+16'(ep*4096+h*131+e*3);endfunction
- reg[222:0]cfg[0:255],outer[0:255];reg[6:0]cal[0:255];integer mut=0,profile=0,selected_profile=0,checked=0,heads=0,seen=0,eventcycles=0;
+ reg[222:0]cfg[0:255],outer[0:255],necal[0:399];reg[6:0]cal[0:255];integer mut=0,profile=0,selected_profile=0,checked=0,heads=0,seen=0,eventcycles=0;
  integer ep,h,s,b,w,i;string dir,fn;reg active=0;
  always @(posedge clk)if(active)begin
   if(fault||host_fault||loader_fault||(|program_fault))$fatal(1,"ATT_FRONT source/calendar fault");
+  for(integer bb=0;bb<8;bb++)if(!preload&&rq[bb*17+16]&&(ne_rslot_v[bb]!=1||ne_rslot[bb*3+:3]!=3))$fatal(1,"ATT_FRONT actual NE calendar/request mismatch");
   for(integer bb=0;bb<8;bb++)if(status[bb*18+17])$fatal(1,"ATT_FRONT bank fault");
   if(valid)begin
    if(events!==cal[phase])$fatal(1,"ATT_FRONT wrong actual event profile/phase%0d",phase);
@@ -119,15 +124,21 @@ module tb_hbm_attn_host_front;
   end
   @(negedge clk);pwq=0;repeat(8)@(negedge clk);preload=0;
   $readmemh({dir,"/config.hex"},cfg);
-  // Keep actual four VM programme descriptors live, using resident one-word NOP
-  // calendars in this query-specific component. No idealized launch pulse.
-  for(integer qq=0;qq<4;qq++)begin
-   write32(12'hf00,32'(qq));word_=0;word_[255:240]=16'hc7a1;
-   for(integer ww=0;ww<8;ww++)write32(12'hf04,word_[ww*32+:32]);
-   write32(12'hf08,32'(1<<10));write32(12'hf0c,1);
-  end
   for(profile=selected_profile;profile<selected_profile+1;profile++)begin
    fn=$sformatf("%s/outer%0d.hex",dir,profile);$readmemh(fn,outer);fn=$sformatf("%s/event%0d.hex",dir,profile);$readmemh(fn,cal);
+   fn=$sformatf("%s/ne%0d.hex",dir,profile);$readmemh(fn,necal);
+   // Actual independently compiled NE programme selects RG3 at fixed absolute
+   // bank edges. Other quadrants are explicitly isolated NOPs in this component.
+   for(integer qq=0;qq<4;qq++)begin
+    write32(12'hf00,32'(qq));
+    for(integer pc=0;pc<(qq==3?400:1);pc++)begin
+     word_=0;word_[255:240]=16'hc7a1;word_[233:224]=10'(pc);
+     if(qq==3)word_[222:0]=necal[pc];
+     if(mut==3&&qq==3&&pc==186)word_[41]=~word_[41];
+     for(integer ww=0;ww<8;ww++)write32(12'hf04,word_[ww*32+:32]);
+    end
+    write32(12'hf08,32'((qq==3?400:1)<<10));write32(12'hf0c,1);
+   end
    heads=0;seen=0;active=1;
    write32(12'hf20,49);
    for(i=0;i<182+(profile%2?1:138);i++)begin
@@ -143,6 +154,6 @@ module tb_hbm_attn_host_front;
    if(seen!=1||heads!=(profile%2?0:16))$fatal(1,"ATT_FRONT event/head accounting profile%0d seen%0d heads%0d",profile,seen,heads);
    $display("ATT_FRONT_PROFILE PASS profile%0d heads%0d",profile,heads);active=0;
   end
-  $display("PASS ATT_HOST_PROGRAM_QUERY_FRONT cold_boot_profiles=1 words=%0d event_cycles=%0d native_RG=3 native_RG_total=7 real_query_macros=64 actual_VM_macros=24 actual_programme_macros=6 real_AXI_loaderCP_target=49",checked,eventcycles);$finish;
+  $display("PASS ATT_HOST_PROGRAM_QUERY_FRONT cold_boot_profiles=1 words=%0d event_cycles=%0d native_RG=3 native_RG_total=7 real_query_macros=64 actual_VM_macros=24 actual_programme_macros=6 real_AXI_loaderCP_target=49 actual_NE_programme_selectors=1",checked,eventcycles);$finish;
  end
 endmodule
