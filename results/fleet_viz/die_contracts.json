@@ -148,7 +148,7 @@
    "design": "qwen_kvsys",
    "label": "Qwen KV/system die",
    "target": "Qwen ROM",
-   "revision": "v1.3 bind (kvs6s) + v1.4 HOST partition / static D2D",
+   "revision": "v1.4.1 bind (kvs7c, HOST north + v1.4 HOST partition) + static IO / static D2D successors; v1.4.2 in progress",
    "lead": "Q-KVSYS-DIE",
    "log": "el1014-qwen-split-kvsys.log",
    "doc": "results/arch/qwen_split_1014/CONTRACT_KVSYS.md",
@@ -156,8 +156,12 @@
    "sources": [
     {
      "kind": "port_bind",
-     "path": "results/arch/qwen_split_1014/kvsys_v1_3_candidate/port_bind.json",
-     "evidence": "KV die v1.3 port-bind (kvs6 case)"
+     "path": "results/arch/qwen_split_1014/kvsys_v1_4_1/port_bind.json",
+     "skip": [
+      "qkd_d2ds"
+     ],
+     "macro": "(phy|ckbump|pllm|fwdbump)",
+     "evidence": "KV die v1.4.1 port-bind (kvs7c case; qkd_d2ds = qkd_d2d_static, listed by add)"
     },
     {
      "kind": "json_keys",
@@ -167,23 +171,16 @@
     },
     {
      "kind": "json_keys",
-     "path": "results/arch/qwen_split_1014/kvsys_v1_2/contract.json",
+     "path": "results/arch/qwen_split_1014/kvsys_v1_4_1/contract.json",
      "at": "slots",
-     "macro": "(phy|ckbump)",
-     "evidence": "KV die contract v1.2 slots"
+     "skip": [
+      "qkd_d2ds"
+     ],
+     "macro": "(phy|ckbump|pllm|fwdbump)",
+     "evidence": "KV die contract v1.4.1 slots"
     }
    ],
    "add": [
-    {
-     "element": "qkd_host_root_pt",
-     "evidence": "kvsys v1.4 host_partition.json: HOST = root core + 128 per-PC slices"
-    },
-    {
-     "element": "qkd_host_pc_slice",
-     "parent": "qkd_host_root_pt",
-     "role": "leaf",
-     "evidence": "kvsys v1.4 host_partition.json (128 per-PC slices beside each controller/landing pair)"
-    },
     {
      "element": "qkd_d2d_static",
      "evidence": "Q-LINK 2026-10-15 07:16 (main c43263b31): replace qkd_d2d/qkd_lnk by qkd_d2d_static"
@@ -208,6 +205,56 @@
      ],
      "by": "qkd_d2d_static",
      "evidence": "Q-LINK 2026-10-15 07:16; kvsys log 06:40 (qkd_d2d/qkd_lnk credit-based, historical under 0ah)"
+    },
+    {
+     "elements": [
+      "qkd_ctrl",
+      "qkd_ctrl_n"
+     ],
+     "by": "qkd_ctrl_kc + qkd_ctrl_pc (closed leaves bound directly by the die)",
+     "evidence": "FILL-Q 2026-10-15 (el1015-fill-qwen.log): absent from the KV die v1.4.1 bind/contract (results/arch/qwen_split_1014/kvsys_v1_4_1/{port_bind,contract}.json, kvs7c); v1.2 strip frames"
+    },
+    {
+     "elements": [
+      "qkd_rhead"
+     ],
+     "by": "ot_qkh_head_{frontq,stin,stk,nb,score4}_native + ot_qkh_lane8 + ot_qkh_ktree (native head leaves bound directly)",
+     "evidence": "FILL-Q 2026-10-15 (el1015-fill-qwen.log): absent from the KV die v1.4.1 bind/contract (results/arch/qwen_split_1014/kvsys_v1_4_1/{port_bind,contract}.json, kvs7c)"
+    },
+    {
+     "elements": [
+      "qkd_pll"
+     ],
+     "by": "qkd_pllm (qkd_pll_analog_model hard PLL model)",
+     "evidence": "FILL-Q 2026-10-15 (el1015-fill-qwen.log): absent from the KV die v1.4.1 bind/contract (results/arch/qwen_split_1014/kvsys_v1_4_1/{port_bind,contract}.json, kvs7c)"
+    },
+    {
+     "elements": [
+      "qkd_host_root_pt"
+     ],
+     "by": "qkd_host_rt (die master of RTL module qkd_host_root_pt)",
+     "evidence": "FILL-Q 2026-10-15 (el1015-fill-qwen.log): absent from the KV die v1.4.1 bind/contract (results/arch/qwen_split_1014/kvsys_v1_4_1/{port_bind,contract}.json, kvs7c); v1.4 HOST partition"
+    },
+    {
+     "elements": [
+      "qkd_host_pc_slice"
+     ],
+     "by": "qkd_hslice + qkd_hslice_dn (die masters of qkd_host_pc_slice_die, S/N views)",
+     "evidence": "FILL-Q 2026-10-15 (el1015-fill-qwen.log): absent from the KV die v1.4.1 bind/contract (results/arch/qwen_split_1014/kvsys_v1_4_1/{port_bind,contract}.json, kvs7c); v1.4 HOST partition"
+    },
+    {
+     "elements": [
+      "qkd_rly_10",
+      "qkd_rly_16",
+      "qkd_rly_182",
+      "qkd_rly_27",
+      "qkd_rly_513",
+      "qkd_rly_530",
+      "qkd_rly_625",
+      "qkd_rly_783"
+     ],
+     "by": "v1.4.1 relay width classes (qkd_rly_1/2/13/17/21/32/33/36/93/284/289/291/293/520/521/540/563/1025/1048/2089; per-case kv_relays.py)",
+     "evidence": "FILL-Q 2026-10-15 (el1015-fill-qwen.log): absent from the KV die v1.4.1 bind/contract (results/arch/qwen_split_1014/kvsys_v1_4_1/{port_bind,contract}.json, kvs7c); relay classes regenerate per die case"
     }
    ],
    "streams": [
