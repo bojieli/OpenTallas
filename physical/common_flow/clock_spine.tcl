@@ -305,8 +305,8 @@ proc ot_sp_emit {n innet px py} {
   lassign [dict get $::ot_sp_pos $n] nx ny
   lassign [ot_sp_path $px $py $nx $ny] pts len
   set net $innet; set k 0
-  foreach p $pts { lassign [ot_sp_buf "clkbuf_sp_${n}_r[incr k]" {*}$p $net] net }
-  lassign [ot_sp_buf "clkbuf_sp_${n}" $nx $ny $net] onet lx ly
+  foreach p $pts { lassign [ot_sp_buf "${::ot_sp_prefix}${n}_r[incr k]" {*}$p $net] net }
+  lassign [ot_sp_buf "${::ot_sp_prefix}${n}" $nx $ny $net] onet lx ly
   if {[dict exists $::ot_sp_kids $n]} {
     foreach c [dict get $::ot_sp_kids $n] { ot_sp_emit $c $onet $lx $ly }
   } else {
@@ -322,7 +322,7 @@ proc ot_sp_checkpoint {} {
   set inputs [dict create]
   # every node that can carry pads (leaves; all tree nodes under OT_SPINE_TREE_PAD)
   foreach n [dict keys $::ot_sp_npad] {
-    set b [$::ot_sp_blk findInst "clkbuf_sp_${n}"]
+    set b [$::ot_sp_blk findInst "${::ot_sp_prefix}${n}"]
     if {$b eq "NULL"} continue
     dict set inputs $n [[$b findITerm $::ot_sp_in] getNet]
   }
@@ -330,7 +330,7 @@ proc ot_sp_checkpoint {} {
 }
 proc ot_sp_restore {saved} {
   dict for {n net} [dict get $saved inputs] {
-    set b [$::ot_sp_blk findInst "clkbuf_sp_${n}"]
+    set b [$::ot_sp_blk findInst "${::ot_sp_prefix}${n}"]
     set p [$b findITerm $::ot_sp_in]
     $p disconnect; $p connect $net
   }
@@ -364,14 +364,14 @@ proc ot_sp_keep_best {a} {
 
 # insert `count` pad buffers in front of leaf n's buffer (between its driver net and its A pin)
 proc ot_sp_pad {n count} {
-  set lb [$::ot_sp_blk findInst "clkbuf_sp_${n}"]
+  set lb [$::ot_sp_blk findInst "${::ot_sp_prefix}${n}"]
   set ait [$lb findITerm $::ot_sp_in]
   set net [$ait getNet]
   set loc [$lb getLocation]; lassign $loc lx ly
   $ait disconnect
   set p [dict get $::ot_sp_npad $n]
   for {set i 0} {$i < $count} {incr i} {
-    lassign [ot_sp_buf "clkbuf_sp_${n}_p[incr p]" $lx $ly $net $::ot_sp_pm] net
+    lassign [ot_sp_buf "${::ot_sp_prefix}${n}_p[incr p]" $lx $ly $net $::ot_sp_pm] net
   }
   dict set ::ot_sp_npad $n $p
   $ait connect $net
@@ -423,12 +423,14 @@ proc ot_sp_leaf_arrivals {} {
   return $a
 }
 
-proc ot_clock_spine {} {
+proc ot_clock_spine {{requested_port ""} {prefix clkbuf_sp_}} {
+  set ::ot_sp_prefix $prefix
   set ::ot_sp_blk [ord::get_db_block]
   set blk $::ot_sp_blk
   set ::ot_sp_dbu [$blk getDbUnitsPerMicron]
   set u $::ot_sp_dbu
-  set port [ot_sp_env OT_SPINE_PORT {ck[0]}]
+  set port $requested_port
+  if {$port eq ""} { set port [ot_sp_env OT_SPINE_PORT {ck[0]}] }
   set bt [$blk findBTerm $port]
   # s81-spwfc 2026-10-13: a [0:0] clock port stays "ck[0]" in a wires-only cluster netlist and becomes "ck" in a
   # flattened leaf; ref_tile passes the base name.  Try the other spelling before giving up (s81sp_capc_cl gate:
@@ -674,11 +676,43 @@ proc ot_clock_spine {} {
   return 1
 }
 
+# OT_SPINE_PORTS=ck,ckd builds each independent clock with the same measured
+# balancing flow. A rest-only TritonCTS tree has no native boundary spread
+# guarantee (qfd_coll_xfifo_native n13 CK:169 ps while CKD spine:29 ps).
+# Each domain owns unique instance/net names; occupancy is rebuilt after each
+# spine, so later domains preserve all earlier FIRM cell footprints.
+# The ordinary one-port path retains its original cell names and topology.
+proc ot_clock_spines {} {
+  set ports [string map {, " "} [ot_sp_env OT_SPINE_PORTS ""]]
+  set ::ot_sp_ports {}; set ::ot_sp_all_insts {}
+  if {![llength $ports]} {
+    if {![ot_clock_spine]} { return 0 }
+    set ::ot_sp_ports [list $::ot_sp_port]
+    set ::ot_sp_all_insts $::ot_sp_insts
+    return 1
+  }
+  if {[llength [lsort -unique $ports]] != [llength $ports]} {
+    error "OT_SPINE_PORTS: duplicate clock port"
+  }
+  set index 0
+  foreach port $ports {
+    if {![ot_clock_spine $port "clkbuf_sp_d[incr index]_"]} {
+      error "OT_SPINE_PORTS: requested port $port has no clock sinks"
+    }
+    if {[lsearch -exact $::ot_sp_ports $::ot_sp_port] >= 0} {
+      error "OT_SPINE_PORTS: two requested names resolve to $::ot_sp_port"
+    }
+    lappend ::ot_sp_ports $::ot_sp_port
+    lappend ::ot_sp_all_insts {*}$::ot_sp_insts
+  }
+  return 1
+}
+
 if {[info procs clock_tree_synthesis] ne "" && [info procs ot_spine_cts_orig] eq ""} {
   rename clock_tree_synthesis ot_spine_cts_orig
   proc clock_tree_synthesis {args} {
     if {[ot_sp_env OT_SPINE 1] eq "0"} { return [ot_spine_cts_orig {*}$args] }
-    if {![ot_clock_spine]} { return [ot_spine_cts_orig {*}$args] }
+    if {![ot_clock_spines]} { return [ot_spine_cts_orig {*}$args] }
     # the spine owns this port's whole clock network; TritonCTS runs only on request (other clock ports: OT_SPINE_CTS_REST=1)
     if {[ot_sp_env OT_SPINE_CTS_REST 0] eq "1"} {
       # el1014-root-macro-edge 2026-10-14 (qfd_coll_xfifo_native n13 gate): called without -clk_nets, TritonCTS finds
@@ -703,9 +737,11 @@ if {[info procs clock_tree_synthesis] ne "" && [info procs ot_spine_cts_orig] eq
 proc ot_sp_rest_nets {} {
   set blk [ord::get_db_block]
   set ::ot_sp_spine_nets [list]
-  set bt [$blk findBTerm $::ot_sp_port]
-  if {$bt ne "NULL" && $bt ne ""} { lappend ::ot_sp_spine_nets [[$bt getNet] getName] }
-  foreach b $::ot_sp_insts { set n [[$b findITerm $::ot_sp_out] getNet]; if {$n ne "NULL"} { lappend ::ot_sp_spine_nets [$n getName] } }
+  foreach port $::ot_sp_ports {
+    set bt [$blk findBTerm $port]
+    if {$bt ne "NULL" && $bt ne ""} { lappend ::ot_sp_spine_nets [[$bt getNet] getName] }
+  }
+  foreach b $::ot_sp_all_insts { set n [[$b findITerm $::ot_sp_out] getNet]; if {$n ne "NULL"} { lappend ::ot_sp_spine_nets [$n getName] } }
   set out {}
   foreach c [all_clocks] {
     if {[get_property $c is_generated]} continue

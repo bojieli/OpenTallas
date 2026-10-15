@@ -117,8 +117,11 @@ def main(argv=None):
     ap.add_argument('--split', action='store_true', help='the split KV/system die bindings (kv_die._set_geometry(True))')
     ap.add_argument('--relay-rtl', help='v1.2: the generated relay RTL (tools/qwen_kv_die/kv_relays.py); its modules bind '
                                         'the qkd_rly_* masters (else they stay class RELAY = stub)')
+    ap.add_argument('--expanded', help='v1.3: RUN/expand.json of kv_expand.py; its die-placed leaves bind their own RTL '
+                                        'module by name (identity port map: die port = RTL port)')
     a = ap.parse_args(argv)
     K._set_geometry(a.split)
+    EXP = json.loads(Path(a.expanded).read_text())['leaves'] if a.expanded else {}
     rtxt = Path(a.relay_rtl).read_text() if a.relay_rtl else None
     wires, insts = parse_die(a.die_v)
     rep = {}
@@ -143,6 +146,19 @@ def main(argv=None):
                          width_or_missing=bad, die_ports_not_bound=[], rtl_inputs_unconnected=miss, rtl_outputs_unread=[])
         elif mst.startswith('qkd_rly'):
             r.update(cls='RELAY', note='die-top relay register: only a generated lint stub module exists (no RTL relay master)')
+        elif mst in EXP:
+            f = ROOT / EXP[mst]['rtl']
+            params, ports = header(f.read_text(errors='replace'), mst)
+            if ports is None:
+                r.update(cls='STUB', note=f'die-placed leaf: module {mst} not found in {EXP[mst]["rtl"]}')
+            else:
+                rw = {p: evalw(w, params or {}) for p, (d, w) in ports.items()}
+                bad = [dict(die_port=p_, die=w_, rtl=rw.get(p_)) for p_, w_ in dp.items() if rw.get(p_) != w_]
+                unin = sorted(p for p, (d, _) in ports.items() if p not in dp and d == 'input')
+                unout = sorted(p for p, (d, _) in ports.items() if p not in dp and d == 'output')
+                r.update(cls='REAL' if not bad and not unin else 'MISMATCH', module=mst, file=EXP[mst]['rtl'],
+                         note='die-placed CLOSED leaf (kv_expand.py), view ' + EXP[mst]['view'], width_or_missing=bad,
+                         die_ports_not_bound=[], rtl_inputs_unconnected=unin, rtl_outputs_unread=unout)
         elif mst not in K.BINDINGS:
             r.update(cls='STUB', note=K.FRAME_ONLY.get(mst) or K.RTL.get(mst) or 'no RTL binding')
         else:
