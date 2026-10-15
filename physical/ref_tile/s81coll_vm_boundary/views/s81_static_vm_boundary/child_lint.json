@@ -1,0 +1,76 @@
+{
+ "schema": "opentallas.hier_contract.child_lint.v1",
+ "lef": "/srv/opentallas/claude/closure-loop/s81coll_vm_boundary-b6-4ed5ce369/record/views/s81_static_vm_boundary/s81_static_vm_boundary.lef",
+ "verdict": "PASS",
+ "fails": [],
+ "warns": [
+  "(f) face-pin access: 6051 of 6614 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. clk M5 (4.656,237.349), hc_expect_last M5 (4.656,237.349), hc_expect_seq[0] M5 (4.656,237.349))"
+ ],
+ "summary": "s81_static_vm_boundary 151.2 x 237.6: PG M5 VDD 28 stripes (96% spread, 100% cov) / VSS 28 stripes (96% spread, 100% cov); strap M6; face pins 6614 blocked-above 0 blocked-same 0; clock clk insertion 279 ps; pockets M5 0 (closed)",
+ "info": {
+  "cell": "s81_static_vm_boundary",
+  "W": 151.2,
+  "H": 237.6,
+  "pg": {
+   "nets": {
+    "VDD": {
+     "top_layer": "M5",
+     "stripes": 28,
+     "dir": "V",
+     "spread": 0.964,
+     "coverage": 1.0,
+     "shapes_on_top": 28
+    },
+    "VSS": {
+     "top_layer": "M5",
+     "stripes": 28,
+     "dir": "V",
+     "spread": 0.964,
+     "coverage": 1.0,
+     "shapes_on_top": 28
+    }
+   },
+   "top_layer": "M5",
+   "ok": true,
+   "why": []
+  },
+  "pg_layer": "M5",
+  "strap_layer": "M6",
+  "cap": null,
+  "face": {
+   "face_pins": 6614,
+   "blocked_above": 0,
+   "covered_below": 320,
+   "examples": [],
+   "blocked_same": 0,
+   "same_examples": [],
+   "band_same": 6051,
+   "band_examples": [
+    "clk M5 (4.656,237.349)",
+    "hc_expect_last M5 (4.656,237.349)",
+    "hc_expect_seq[0] M5 (4.656,237.349)",
+    "hc_expect_seq[10] M5 (4.656,237.349)",
+    "hc_expect_seq[12] M5 (4.656,237.349)",
+    "hc_expect_seq[14] M5 (4.656,237.349)"
+   ]
+  },
+  "clock_insertion": {
+   "clk": {
+    "max_ps": 278.82,
+    "min_ps": 190.58
+   }
+  },
+  "pockets": {
+   "layer": "M5",
+   "d_um": 1.536,
+   "marker": {
+    "layer": "M5",
+    "d_um": 1.536,
+    "added": 969
+   },
+   "count": 0,
+   "area_um2": 0,
+   "examples": []
+  }
+ }
+}
