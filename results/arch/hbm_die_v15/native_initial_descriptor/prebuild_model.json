@@ -1,0 +1,25 @@
+{
+  "status": "PREBUILD_OPT_IN_CANDIDATE_NOT_QUALIFIED",
+  "baseline_commit": "66ebfa6d1",
+  "operation": "On initial IDLE accept only, present incoming realrow directly to actual controller descriptor handshake. If dr accepts, enter RUN immediately. Subsequent row changes retain descriptor/stale-bank drain sequence. No data/response/refresh shortcut.",
+  "parameter_defaults": {
+    "FAST_IDLE_DESC": 0,
+    "AQ_ROW_LEASE": 0
+  },
+  "state_FF_delta": 0,
+  "SRAM_delta": 0,
+  "clock_root_delta": 0,
+  "logic_delta": "32x19bit2:1descriptorrowmux, descriptorvalid/selectgates andnextstatechoice; existingaccept/drcombinationalpathsneedphysicalmeasurement",
+  "expected_latency_change": "Eliminate initial DESC and DRAIN owner bubbles only when actual initial descriptor handshake succeeds; up to2HBMedges, no performancepass prediction",
+  "immutable_limits_HBM_cycles": {
+    "640": 84.7,
+    "2048": 134.2
+  },
+  "correctness_required": [
+    "initialdescriptorrowequalsactualincomingrow",
+    "dr0keepsrequestfornormalDESCpath",
+    "subsequentrowchange stillwaitsrealoldbankdrain",
+    "canonicalRL23strictoracle exact640/2048bothphases",
+    "optoutcontrolmatchesbaseline135.09/135.91;immutablegatesunchanged"
+  ]
+}
