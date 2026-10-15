@@ -82,4 +82,5 @@ def install_master(M,model,Master):
                'S':(z-.012,0,z+.012,.192),'N':(z-.012,q.h-.192,z+.012,q.h)}[f]
             rects.append((p if n==1 else f'{p}[{k}]',L,r))
     partition_master(q,model['port_join'][MASTER],rects)
+    M.pop('qfd_tt_ctlm',None)  # retired abstract cannot contaminate pin/case validation
     M[MASTER]=q
