@@ -111,7 +111,9 @@ def main():
     if manifest["status"]!="PASS_VERILATOR_HIERARCHY_ONLY":raise ValueError("actual Verilator hierarchy proof required")
     for path,digest in manifest["files_sha256"].items():
         if sha((plan/"src"/path).read_bytes())!=digest:raise ValueError("source bytes changed: "+path)
-    if len(manifest["physical_macros"])!=4:raise ValueError("all four real physical macro views required")
+    # every macro the plan stages (host_root_plan.MACROS: 4 + the program loader's 1RW 256x64 since kvsys r8) must be present
+    if len(manifest["physical_macros"])<5 or any(not m.get("blackbox") or not m.get("tt_liberty") for m in manifest["physical_macros"]):
+        raise ValueError("all real physical macro views (incl. the program-loader SRAM) required")
     if a.stdlib_area_scale_to_um2<=0:raise ValueError("positive explicit standard area scale required")
     if a.report_only:
         receipt=json.loads((out/"run_plan.json").read_text())
