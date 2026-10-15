@@ -78,7 +78,6 @@
   "TT_setup_WNS_ps": -37.1968011947,
   "setup_path_example": "bank.ce[4] D",
   "TT_reset_WNS_ps": 12.3,
-  "FF_hold_WNS_ps": 28.1652201561,
   "actual_pin_audit": {
     "scope": "actual signal BTerm PORT rectangles, requested actual ODB routingtrack indices, and both VDD/VSS PG contact projections",
     "actual_sha256": "7b0ff94060ab8d8205ac0d5703267cdab50f6ae38e1f61c1c901da36bf3292f3",
@@ -120,5 +119,7 @@
     "missing_or_multiple_rectangles": [],
     "pass": true
   },
-  "next": "Share measured structural onehot decode/clock-repair architecture withstatic_hub; apply toversionedRG6onlyafterfunctionalgate andfrozenrecipe. No unchangedphysicalretry; oldRG7sourcecandidatef691 distinct/notadopted."
+  "next": "Share measured structural onehot decode/clock-repair architecture withstatic_hub; apply toversionedRG6onlyafterfunctionalgate andfrozenrecipe. No unchangedphysicalretry; oldRG7sourcecandidatef691 distinct/notadopted.",
+  "TT_min_hold_WNS_ps": 28.1652201561,
+  "hold_scope": "path_classes.tcl TT-min diagnostic; independent FF hold signoff not performed in this gate"
 }

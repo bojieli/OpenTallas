@@ -13,11 +13,6 @@
       "bits": 1
     },
     {
-      "name": "",
-      "direction": "input",
-      "bits": 1
-    },
-    {
       "name": "clk_aq_core",
       "direction": "input",
       "bits": 2
@@ -33,19 +28,14 @@
       "bits": 2
     },
     {
-      "name": "",
-      "direction": "input",
-      "bits": 2
-    },
-    {
       "name": "clk_code",
       "direction": "input",
       "bits": 4
     },
     {
-      "name": "input",
+      "name": "rst_n",
       "direction": "input",
-      "bits": 4
+      "bits": 1
     },
     {
       "name": "cfg_v",
@@ -53,17 +43,12 @@
       "bits": 1
     },
     {
-      "name": "input",
+      "name": "cfg_target",
       "direction": "input",
-      "bits": 1
+      "bits": 8
     },
     {
       "name": "cfg_addr",
-      "direction": "input",
-      "bits": 12
-    },
-    {
-      "name": "",
       "direction": "input",
       "bits": 12
     },
@@ -73,9 +58,9 @@
       "bits": 256
     },
     {
-      "name": "input",
+      "name": "desc_v",
       "direction": "input",
-      "bits": 256
+      "bits": 1
     },
     {
       "name": "desc_base",
@@ -83,9 +68,9 @@
       "bits": 12
     },
     {
-      "name": "input",
+      "name": "desc_limit",
       "direction": "input",
-      "bits": 12
+      "bits": 13
     },
     {
       "name": "desc_loops",
@@ -93,9 +78,9 @@
       "bits": 16
     },
     {
-      "name": "input",
+      "name": "launch_v",
       "direction": "input",
-      "bits": 16
+      "bits": 1
     },
     {
       "name": "rq",
@@ -103,9 +88,9 @@
       "bits": 136
     },
     {
-      "name": "input",
-      "direction": "output",
-      "bits": 136
+      "name": "rr",
+      "direction": "input",
+      "bits": 2056
     },
     {
       "name": "xw_en",
@@ -113,17 +98,17 @@
       "bits": 1
     },
     {
-      "name": "output",
+      "name": "xw_addr",
       "direction": "output",
-      "bits": 1
+      "bits": 7
+    },
+    {
+      "name": "xw_grp",
+      "direction": "output",
+      "bits": 7
     },
     {
       "name": "xw_data",
-      "direction": "output",
-      "bits": 2048
-    },
-    {
-      "name": "",
       "direction": "output",
       "bits": 2048
     },
@@ -176,5 +161,5 @@
     "rtl/hbm_accel/generic/peers/static_activation/ot_hbm_sm_activation_programmed_static.sv": "ec34c06e91ee8aaf7410059060c1647415abde2cad1baa1ada056a16aa4a99f4",
     "rtl/hbm_accel/generic/peers/static_activation/ot_hbm_sm_activation_static.sv": "898fa8adb255f6d699837e80d77825df4565a241aef07e9499650769d716483b"
   },
-  "status": "Written source; actualnativeVM/AQ/programme/SRAM golden/mutants gate pending; decodedhostboundaryinminimumcomponent, actualAXIintegrationseparate"
+  "status": "Actual native VM/AQ/programme/code SRAM component PASS (4a0a19b8c): 520 exact beats. Full original SM arithmetic join and actual AXI integration remain separate; physical clocks/pins unqualified."
 }
