@@ -5,13 +5,13 @@ module tb_static_channels;
  reg rst_n=0;
  reg [4:0] tx_slot=0,rx_slot=0;
  reg [9:0] tx_kind=0,rx_kind=0;
- reg vm_tx_valid=0;reg [2:0] vm_tx_channel=0;
+ reg vm_tx_last=0;reg vm_tx_valid=0;reg [2:0] vm_tx_channel=0;
  reg [551:0] vm_tx_payload=0;
  reg [513:0] wfc_tx=0;
  reg host_tx_valid=0;reg [10:0] host_status=0;reg [64:0] host_completion=0;
- wire [4:0] lane_tx_valid;wire [2759:0] lane_tx_payload;
- reg [4:0] lane_rx_valid=0;reg [2759:0] lane_rx_payload=0;
- wire vm_rx_valid;wire [2:0] vm_rx_channel;wire [551:0] vm_rx_payload;
+ wire [4:0] lane_tx_last;wire [4:0] lane_tx_valid;wire [2759:0] lane_tx_payload;
+ reg [4:0] lane_rx_last=0;reg [4:0] lane_rx_valid=0;reg [2759:0] lane_rx_payload=0;
+ wire vm_rx_last;wire vm_rx_valid;wire [2:0] vm_rx_channel;wire [551:0] vm_rx_payload;
  wire [513:0] wfc_rx;wire [515:0] host_rx;wire fault;
  dsfd_coll_static_channels #(.MUT(MUT)) dut(.*);
  integer c,k,i;reg [551:0] expected;reg [551:0] stim;
@@ -28,7 +28,7 @@ module tb_static_channels;
    clear_inputs();
    for(i=0;i<552;i=i+1) stim[i]=((i*7+c*13+k*11)%17)<8;
    tx_slot[c]=1;rx_slot[c]=1;tx_kind[c*2+:2]=k;rx_kind[c*2+:2]=k;
-   lane_rx_valid[c]=1;lane_rx_payload[c*552+:552]=stim;
+   vm_tx_last=~stim[551];lane_rx_last[c]=~stim[551];lane_rx_valid[c]=1;lane_rx_payload[c*552+:552]=stim;
    case(k)
    0:begin vm_tx_valid=1;vm_tx_channel=c;vm_tx_payload=stim;expected=stim;end
    1:begin wfc_tx={stim[551],stim[511:0],1'b1};expected={stim[551],39'b0,stim[511:0]};end
@@ -38,8 +38,8 @@ module tb_static_channels;
    step();
    if(fault||lane_tx_valid!==tx_slot||lane_tx_payload[c*552+:552]!==expected) $fatal(1,"tx payload/calendar lane%0d kind%0d",c,k);
    case(k)
-   0:if(!vm_rx_valid||vm_rx_channel!==c||vm_rx_payload!==stim) $fatal(1,"vm receive");
-   1:if(wfc_rx!=={stim[551],stim[511:0],1'b1}) $fatal(1,"WFC receive");
+   0:if(!vm_rx_valid||vm_rx_channel!==c||vm_rx_payload!==stim||vm_rx_last!==~stim[551]) $fatal(1,"vm receive");
+   1:if(wfc_rx!=={~stim[551],stim[511:0],1'b1}) $fatal(1,"WFC receive");
    2:if(host_rx!=={stim[514:0],1'b1}) $fatal(1,"host receive");
    endcase
    @(negedge clk);
