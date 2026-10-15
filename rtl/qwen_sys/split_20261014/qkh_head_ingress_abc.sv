@@ -10,16 +10,18 @@ endmodule
 module qkh_head_ingress_abc #(parameter integer MUT=0)
  (input wire ck_a,ck_b,ck_c,input wire [1558:0] ti_a,input wire [15:0] e_a,
   output wire [1558:0] ti_b,output wire [15:0] e_b);
- wire [511:0] ar;
- wire [527:0] bc;
+ wire [534:0] ar;
+ wire [534:0] bc;
  wire [534:0] cq;
+ // One physical535-bit master reused3times; A23/B7 explicit padding bits are
+ // still actual hardened flops. Only those pad outputs are discarded.
  // A: lower512 row bits. B: c4 + upper512 row + lt12. C: epoch16 + q519.
- qkh_head_chunk_stage #(.W(512)) u_a(.ck(ck_a),.a(ti_a[1042:531]),.b(ar));
- qkh_head_chunk_stage #(.W(528)) u_b(.ck(ck_b),.a({ti_a[1558:1043],ti_a[530:519]}),.b(bc));
+ qkh_head_chunk_stage #(.W(535)) u_a(.ck(ck_a),.a({23'b0,ti_a[1042:531]}),.b(ar));
+ qkh_head_chunk_stage #(.W(535)) u_b(.ck(ck_b),.a({7'b0,ti_a[1558:1043],ti_a[530:519]}),.b(bc));
  qkh_head_chunk_stage #(.W(535)) u_c(.ck(ck_c),.a({e_a,ti_a[518:0]}),.b(cq));
  assign ti_b[1558:1555]=bc[527:524];
- assign ti_b[1554:1043]=(MUT==31)?ar:bc[523:12];
- assign ti_b[1042:531]=(MUT==31)?bc[523:12]:ar;
+ assign ti_b[1554:1043]=(MUT==31)?ar[511:0]:bc[523:12];
+ assign ti_b[1042:531]=(MUT==31)?bc[523:12]:ar[511:0];
  assign ti_b[530:519]=(MUT==32)?ti_a[530:519]:bc[11:0];
  assign ti_b[518:0]=cq[518:0];
  assign e_b=(MUT==33)?e_a:cq[534:519];
