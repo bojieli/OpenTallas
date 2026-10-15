@@ -25,10 +25,12 @@ FIELDS = [('read_slot',1),('read_row',14),('issue_slot',1),('tag',32),
  ('raw_rx_write_slot',1),('raw_rx_payload_row',14),('raw_rx_meta_row',14),('raw_rx_tag',8),
  ('hc_assemble_slot',1)]
 CONTROL_BITS=sum(w for _,w in FIELDS)
-# control, expected command pulse84, done pulse9, final cycle, validity marker.
-ROM_BITS=CONTROL_BITS+85+9+2
-ABI='opentallas.s81.collective-fixed-edge-rom.v2'
-LATENCIES=dict(control_rom_synchronous_read_edges=1,control_rom_idle_prefetch_edges=1,controller_command_register_edges=1,controller_output_register_edges=1,vm_request_to_issue_edges=14,issue_to_gather_edges=11,
+# control, expected command pulse84, done pulse9, next-row-final lookahead, final cycle, validity marker.
+# v3: the controller captures the macro output in a register (macro clk->q leaves no room for decode); the macro reads
+# one row ahead, and the lookahead bit L(r)=final(next(r)) names the address of the row after next without macro-q logic.
+ROM_BITS=CONTROL_BITS+85+9+3
+ABI='opentallas.s81.collective-fixed-edge-rom.v3'
+LATENCIES=dict(control_rom_synchronous_read_edges=1,control_rom_idle_prefetch_edges=1,control_rom_output_capture_edges_hidden_by_prefetch=1,control_rom_initialization_extra_edges=1,controller_command_register_edges=1,controller_output_register_edges=1,vm_request_to_issue_edges=14,issue_to_gather_edges=11,
                gather_to_vm_source_edges=2,hc_reduce_to_write_edges=19,
                vm_boundary_pin_capture_edges=1,hc_reduce_to_write_control_edges=18,
                commit_control_to_vm_pin_edges=4,hc_write_control_to_vm_pin_edges=3,
@@ -210,8 +212,10 @@ def compile_image(request,root):
         elif c['done_tag']!=0: raise ValueError('nonzero idle completion tag')
         if type(c['done_tag'])is not int or not 0<=c['done_tag']<256: raise ValueError('done tag')
         cmd=(v<<84)|c['cmd84'];done=(d<<8)|c['done_tag']
+        final=lambda e:int(e==len(cycles)-1)
+        lookahead=final(edge+1 if edge<len(cycles)-1 else 0)
         words.append(control|(cmd<<CONTROL_BITS)|(done<<(CONTROL_BITS+85))|
-                     (int(edge==len(cycles)-1)<<(CONTROL_BITS+94))|(1<<(ROM_BITS-1)))
+                     (lookahead<<(CONTROL_BITS+94))|(final(edge)<<(CONTROL_BITS+95))|(1<<(ROM_BITS-1)))
     if source_queue or pending: raise ValueError('unfinished message/completion')
     if assembly_owner is not None or raw_payload_loaded or raw_meta_loaded: raise ValueError('unfinished finite operand capture')
     for edge,owner in commits.items():

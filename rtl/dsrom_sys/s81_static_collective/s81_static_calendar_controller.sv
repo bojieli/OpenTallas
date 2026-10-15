@@ -1,12 +1,16 @@
 `timescale 1ns/1ps
-// ROM ABI opentallas.s81.collective-fixed-edge-rom.v2: CB468/RW564.
+// ROM ABI opentallas.s81.collective-fixed-edge-rom.v3: CB468/RW565 (v3 adds the next-row-final lookahead bit RW-3).
 // Fixed compiler calendar engine3 endpoint, single stream clock domain.
 // ROM consumes one row per edge, never waits for data, credits or completion.
 // c_cmd is pin-registered (+1 edge). First matching captured command starts row0; each later pulse must match its named edge.
 // Every row carries a valid marker, including idle rows. Empty/missing ROM
 // and CYCLES outside1..4096 fail closed; no generic-array or page-size fallback.
 // refuses commands. Arrival faults fail-stop; they never retime the calendar.
-// All control outputs and c_done are one-edge pin registers from the ROM, priced by the image compiler.
+// All control outputs and c_done are one-edge pin registers from the captured ROM row, priced by the image compiler.
+// v3 macro-output capture: the macro q (585-609 ps TT clk->q of 833 ps) lands in entry_q through one capture mux and
+// no other logic; every decision (command compare, enable, cursor, fault, done) and the ROM address are computed from
+// registers. The macro reads one row ahead of entry_q (prefetch), so normal calendar edges are unchanged; the ROM
+// address of the row after next uses the compiler lookahead bit L(r)=final(next(r)). Initialization +1 edge.
 // ROM must be rebuilt for changed physical flight, clock phase or service price.
 module s81_static_calendar_controller #(
  parameter ROM_FILE="", parameter integer CYCLES=1,
@@ -65,7 +69,7 @@ module s81_static_calendar_controller #(
  output reg hc_assemble_slot,
  output wire busy
 );
- localparam integer CB=468,RW=564;
+ localparam integer CB=468,RW=565;
  // Physical immutable controlpage: three actual4096x266 macros in width.
  // Macro q is synchronous, one enabled edge; row0 is fetched during idle,
  // overlapping the existing command pin register. Every active edge consumes
@@ -87,34 +91,50 @@ module s81_static_calendar_controller #(
 `endif
    u_rom(.clk(clk),.ce_in(macro_enable),.addr_in(macro_addr),.rd_out(macro_data[bank*266+:266]));
  end endgenerate
- reg rom_valid_q;
+ // Initialization (exceptional, once per reset): edge0 macro samples row0 and the address register moves to row1;
+ // edge1 captures row0 into entry_q while the macro samples row1. Ready after edge1.
+ reg [1:0] init_q;
  always @(posedge clk or negedge rst_n)begin
-  if(!rst_n)rom_valid_q<=0;else rom_valid_q<=macro_enable;
+  if(!rst_n)init_q<=0;else if(macro_enable && init_q!=2'd2)init_q<=init_q+2'd1;
  end
+ wire rom_valid_q=init_q==2'd2;
+ reg [11:0] rom_addr_q;
  reg [84:0] c_cmd_q;
  always @(posedge clk or negedge rst_n)begin
   if(!rst_n)c_cmd_q<=0;else c_cmd_q<=c_cmd;
  end
  reg active,fault,online;reg [AW-1:0] cursor;
- wire [RW-1:0] entry=macro_data[RW-1:0];
  wire running=active || c_cmd_q[84];
+ // Macro-output capture stage: idle holds row0 (the macro already shows row next(row0)); every running edge consumes
+ // entry_q and captures the prefetched row. Select is register-derived; the q path carries only this mux.
+ wire entry_cap=!rom_valid_q || running;
+ reg [RW-1:0] entry_q;
+ always @(posedge clk) if(entry_cap) entry_q<=macro_data[RW-1:0];
+ wire [RW-1:0] entry=entry_q;
  wire [84:0] expected=entry[CB+:85];
  wire descriptor_bad=c_cmd_q[84] && (c_cmd_q[30:24]!=0 || c_cmd_q[22:7]==0 || c_cmd_q[22:7]>16'd1024);
  // Idle payload bits need not be zero on external pulse buses.
  wire command_bad=(c_cmd_q[84]!=expected[84]) ||
                   (c_cmd_q[84] && c_cmd_q[83:0]!=expected[83:0]);
- wire row_bad=!CONFIGURED || !rom_valid_q || !entry[RW-1] || descriptor_bad || command_bad;
+ // A final row0 (single-row page) is never emitted by the compiler (completion follows the start edge); refuse it.
+ wire row_bad=!CONFIGURED || !rom_valid_q || !entry[RW-1] || descriptor_bad || command_bad || (!active && entry[RW-2]);
  // Fetch progression depends only on the fixed calendar cursor/final bit;
  // command/data mismatches fault the controller without retiming a read.
- wire [AW-1:0] current_row=active ? cursor:{AW{1'b0}};
  // OT_S81_COLL_CAL_MUT_ROW (negative control): the macro reads the row after the named one.
 `ifdef OT_S81_COLL_CAL_MUT_ROW
  assign macro_addr=macro_addr_n+12'd1;
 `else
  assign macro_addr=macro_addr_n;
 `endif
- assign macro_addr_n=running && !entry[RW-2] && int'(current_row)<CYCLES-1 ?
-                   12'(int'(current_row)+1):12'd0;
+ // rom_addr_q is the row the macro shows = next(entry row). On a running edge the macro must sample the row after it,
+ // next(next(entry row)), named by the entry row's lookahead bit: register-only logic (12-bit increment + select).
+ wire [11:0] addr_advance=(entry[RW-3] || int'(rom_addr_q)>=CYCLES-1) ? 12'd0:rom_addr_q+12'd1;
+ assign macro_addr_n=(rom_valid_q && running) ? addr_advance:rom_addr_q;
+ always @(posedge clk or negedge rst_n)begin
+  if(!rst_n)rom_addr_q<=0;
+  else if(macro_enable && init_q==2'd0)rom_addr_q<=CYCLES>1 ? 12'd1:12'd0;
+  else if(rom_valid_q)rom_addr_q<=macro_addr_n;
+ end
  wire enabled=rst_n && running && !fault && !datapath_fault && !row_bad;
  assign busy=active;
  assign c_st={online,fault};

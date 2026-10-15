@@ -222,7 +222,7 @@
    },
    {
     "name": "slab_calendar_row_mutant",
-    "cmd": "bash tools/s81_static_collective/run_slab_gate.sh {RUN}/slab_mutant 2 1",
+    "cmd": "bash tools/s81_static_collective/run_slab_gate.sh {RUN}/slab_mutant 3 1",
     "expect": "fail",
     "threads": 16,
     "peak_ram_gb": 24,

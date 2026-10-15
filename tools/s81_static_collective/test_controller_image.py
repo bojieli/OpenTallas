@@ -143,7 +143,7 @@ module tb;
  CONNECTIONS,.busy(busy));
  s81_static_calendar_controller blank(.clk(clk),.rst_n(rst_n),.c_cmd(c_cmd),.c_done(blank_done),.c_st(blank_st),.datapath_fault(1'b0));
  s81_static_calendar_controller #(.ROM_FILE("CALENDAR"),.CYCLES(4097)) oversize(.clk(clk),.rst_n(rst_n),.c_cmd(c_cmd),.c_done(oversize_done),.c_st(oversize_st),.datapath_fault(1'b0));
- task reset;begin @(negedge clk);rst_n=0;c_cmd=0;@(negedge clk);rst_n=1;end endtask
+ task reset;begin @(negedge clk);rst_n=0;c_cmd=0;@(negedge clk);rst_n=1;@(negedge clk);end endtask
  integer e;reg[84:0]word;
  initial begin
  $readmemh("CALENDAR",plan);word=plan[0][CB+:85];reset();
@@ -163,7 +163,7 @@ module tb;
  if(!st[0] || observed || done)$fatal(1,"bad descriptor not refused");
  reset();c_cmd=word;@(posedge clk);#1;@(negedge clk);c_cmd=word;@(posedge clk);#1;@(negedge clk);c_cmd=0;@(posedge clk);#1;
  if(!st[0] || done)$fatal(1,"unexpected pulse not refused");
- $display("PASS v2 controller all468registered controls actual3ROM twopage-replays fixededge done descriptor/calendar/missingimage/oversize fault");$finish;
+ $display("PASS v3 controller all468registered controls actual3ROM twopage-replays fixededge done descriptor/calendar/missingimage/oversize fault");$finish;
  end
 endmodule
 '''.replace('CONNECTIONS',','.join(connections)).replace('CALENDAR',str(p/'calendar.mem')).replace('CB',str(CONTROL_BITS)).replace('RW',str(ROM_BITS)).replace('N',str(n))
@@ -179,7 +179,7 @@ endmodule
                     if family=='rom':romclocks=stopped
                     else:outclocks=stopped
                 tb=tb.replace('.clk(clk),','.clk(clk),.clk_rom('+romclocks+'),.clk_outputs('+outclocks+'),')
-                tb=tb.replace('rst_n=1;end endtask','rst_n=1;repeat(3)@(negedge clk);end endtask')
+                tb=tb.replace('rst_n=1;@(negedge clk);end endtask','rst_n=1;repeat(4)@(negedge clk);end endtask')
                 tb=tb.replace("reg rst_n=0;", "reg fault_input=0;reg rst_n=0;")
                 tb=tb.replace(".datapath_fault(1'b0)",".datapath_fault(fault_input)")
                 fault_check="""reset();c_cmd=word;@(posedge clk);#1;@(negedge clk);c_cmd=0;fault_input=1;
@@ -187,7 +187,7 @@ endmodule
  @(negedge clk);fault_input=0;@(posedge clk);#1;
  if(!st[0] || observed || done)$fatal(1,"captured external fault not applied on exact next edge");
  """
-                tb=tb.replace('$display("PASS v2 controller',fault_check+'$display("PASS v2 controller')
+                tb=tb.replace('$display("PASS v3 controller',fault_check+'$display("PASS v3 controller')
             (p/'tb.sv').write_text(tb)
             subprocess.run(['iverilog','-g2012','-s','tb','-o',str(p/'sim'),str(selected_rtl),*([str(ROOT/'rtl/lib/ot_rst_relay.sv')] if partitioned else []),str(macro),str(p/'tb.sv')],check=True,capture_output=False)
             if clock_mutant:
@@ -197,7 +197,7 @@ endmodule
                 print('PASS calendar7 stopped-clock mutant rejected',clock_mutant)
                 return
             output=subprocess.run(['vvp',str(p/'sim')],check=True,capture_output=True,text=True).stdout
-            self.assertIn('PASS v2 controller',output)
+            self.assertIn('PASS v3 controller',output)
             mutant_output=None;macro_mutant_output=None
             if mutate:
                 mutant=selected_rtl.read_text().replace('raw_rx_tag<=enabled ?', 'raw_rx_tag<=1\'b0 ?')
@@ -212,6 +212,20 @@ endmodule
                 result=subprocess.run(['vvp',str(p/'macro_mut')],capture_output=True,text=True)
                 self.assertNotEqual(result.returncode,0);self.assertIn('control slot mismatch 1',result.stdout)
                 macro_mutant_output=result.stdout+result.stderr
+                # v3 lookahead negative control. With CYCLES equal to the image length the overrun guard alone wraps the
+                # address, so this check uses a page longer than the image (rows past the end carry marker0): the base
+                # must still pass and ignoring L(r)=final(next(r)) must fail.
+                marker='.CYCLES('+str(n)+')) dut('
+                self.assertEqual(tb.count(marker),1)
+                (p/'tb_long.sv').write_text(tb.replace(marker,'.CYCLES('+str(n+8)+')) dut('))
+                subprocess.run(['iverilog','-g2012','-s','tb','-o',str(p/'long'),str(selected_rtl),str(macro),str(p/'tb_long.sv')],check=True,capture_output=False)
+                self.assertIn('PASS v3 controller',subprocess.run(['vvp',str(p/'long')],check=True,capture_output=True,text=True).stdout)
+                no_lookahead=selected_rtl.read_text().replace("(entry[RW-3] ||","(1'b0 ||")
+                self.assertNotEqual(no_lookahead,selected_rtl.read_text());(p/'look_mut.sv').write_text(no_lookahead)
+                subprocess.run(['iverilog','-g2012','-s','tb','-o',str(p/'look_mut'),str(p/'look_mut.sv'),str(macro),str(p/'tb_long.sv')],check=True,capture_output=False)
+                result=subprocess.run(['vvp',str(p/'look_mut')],capture_output=True,text=True)
+                self.assertNotEqual(result.returncode,0);self.assertRegex(result.stdout,'control slot mismatch|unexpected configured fault|done timing')
+                print('PASS long-page base; lookahead mutant rejected:',result.stdout.strip().splitlines()[0])
             if os.environ.get('S81_CONTROLLER_EVIDENCE'):
                 dest=Path(os.environ['S81_CONTROLLER_EVIDENCE']);dest.mkdir(parents=True,exist_ok=True)
                 (dest/(name+'.mem')).write_bytes((p/'calendar.mem').read_bytes())
