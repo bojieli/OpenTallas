@@ -1,0 +1,12 @@
+{
+  "top": "$paramod$54a7f5a6925e0bf17d35fea08276a08b05ab1333\\ot_hbm_svc_prefetch_block_cdc",
+  "root_sequential_bits": {
+    "hbm_clk": 21136,
+    "stream_clk": 4690
+  },
+  "SRAM_clock_pins_additional": {
+    "ot_sram_1r1w_128x256_m1_r2c2": 32
+  },
+  "unresolved": [],
+  "counts_are": "optimized generic sequential bits before technology mapping/clock gating, not CTS sinks or timing"
+}

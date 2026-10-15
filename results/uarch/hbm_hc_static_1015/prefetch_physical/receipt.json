@@ -1,0 +1,51 @@
+{
+  "schema": "opentallas.hc.prefetch.physical-census-receipt.v1",
+  "command": "ot-run --mem8 --threads1 --dir /srv/opentallas-scratch/claude/codex-hc-prefetch-physical-1015 -- bash run.sh",
+  "terminal": "ot-run: RAN on ot-agidock128 (unit oth-ubuntu-3934240-1792061338): exit0",
+  "inputs": {
+    "cdc.sv": {
+      "ref": "21a5201c6fd5f88be9a71cf86a8f670403fc13f2",
+      "path": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_block_cdc.sv",
+      "sha256": "4c5d6dd620e17a11d36e9217bdcba492cd2e2fe4d595343f2fd957d9fc6376fb"
+    },
+    "fifo.sv": {
+      "ref": "e98d76186dbcdd4c0220c7985d9b03ed27c4365a",
+      "path": "rtl/lib/ot_async_fifo.sv",
+      "sha256": "e091268202e1c6bcc18c8eb83304730c5a29bc10e0a6c52a4dcfc19c177e882e"
+    },
+    "reset.sv": {
+      "ref": "e98d76186dbcdd4c0220c7985d9b03ed27c4365a",
+      "path": "rtl/lib/ot_reset_sync.sv",
+      "sha256": "489e493c19aa1260853031fee35c14ea3394ae62ff6853cf7ea407cb8fb78bbd"
+    },
+    "macro.lib": {
+      "ref": "e98d76186dbcdd4c0220c7985d9b03ed27c4365a",
+      "path": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_tt.lib",
+      "sha256": "c39f42e739c93c5809d82fdc12d41cbb3ddfc6ab43fba192e542e347a7f6ea94"
+    }
+  },
+  "outputs": {
+    "census.json": {
+      "bytes": 53154423,
+      "sha256": "e51d51e34388f681107748e796f4515d3832ee2d6e2666e37c4f011c6c9c1ddc",
+      "location": "ot-agidock128:/srv/opentallas-scratch/claude/codex-hc-prefetch-physical-1015/census.json"
+    },
+    "yosys.log": {
+      "bytes": 2958582,
+      "sha256": "6589176adab03b4bc4085dc781916a2cc81ee6f5d7f9aa43e97693205002f143",
+      "location": "ot-agidock128:/srv/opentallas-scratch/claude/codex-hc-prefetch-physical-1015/yosys.log"
+    }
+  },
+  "counts_file": "root_counts.json",
+  "limits": "Source-exact optimized generic sequential bits after SRAM blackboxing and FIFO memory_mapping, not technology mapping, CTS, routing or actual full-composition count. No source changes. Bulk netlist/log preserved remotely.",
+  "remote_input_and_output_checksums_verified": {
+    "cdc.sv": "4c5d6dd620e17a11d36e9217bdcba492cd2e2fe4d595343f2fd957d9fc6376fb",
+    "fifo.sv": "e091268202e1c6bcc18c8eb83304730c5a29bc10e0a6c52a4dcfc19c177e882e",
+    "reset.sv": "489e493c19aa1260853031fee35c14ea3394ae62ff6853cf7ea407cb8fb78bbd",
+    "macro.lib": "c39f42e739c93c5809d82fdc12d41cbb3ddfc6ab43fba192e542e347a7f6ea94",
+    "census.ys": "083f6b24b090a6f8afbeabe881d2ebeb240972121a1b795fc1953378b9dba37f",
+    "run.sh": "6ec97a0f34a1dec49093dccf23658d2a70a0a0ad6e9730408ebbcfc245d2bac4",
+    "census.json": "e51d51e34388f681107748e796f4515d3832ee2d6e2666e37c4f011c6c9c1ddc",
+    "yosys.log": "6589176adab03b4bc4085dc781916a2cc81ee6f5d7f9aa43e97693205002f143"
+  }
+}

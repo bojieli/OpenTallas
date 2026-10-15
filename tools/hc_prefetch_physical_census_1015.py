@@ -7,6 +7,10 @@ from pathlib import Path
 
 def census(data, top):
     mods=data['modules']; roots=collections.Counter(); macros=collections.Counter(); unresolved=[]
+    if top not in mods:
+        candidates=[n for n,m in mods.items() if n.endswith('\\'+top) and int(str(m.get('attributes',{}).get('top','0')),2)==1]
+        if len(candidates)!=1: raise ValueError(f'No unique elaborated top for {top}: {candidates}')
+        top=candidates[0]
     def walk(name, mapping, path):
         mod=mods[name]
         def bit(b): return mapping.get(b, f'{path}:{b}') if isinstance(b,int) else b

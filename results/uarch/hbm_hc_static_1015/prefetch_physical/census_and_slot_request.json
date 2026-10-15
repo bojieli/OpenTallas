@@ -32,7 +32,7 @@
       "sha256": "7e14e88870dd131e8f558970dc7929175d1a76fd0317bfd24e0a71587d7419ae"
     }
   },
-  "status": "SOURCE_CENSUS_RUNNING_NO_ROUTE",
+  "status": "SOURCE_EXACT_OPTIMIZED_CENSUS_TERMINAL_ROOT_SPLIT_REQUIRED",
   "resources": [
     {
       "master": "ot_hbm_svc_prefetch_block_cdc",
@@ -103,7 +103,28 @@
       422.496,
       414.72
     ],
-    "grid_covers": "SRAM+halo only; no logic/routing/pins/clock/PDN allowance or slot fit claim"
+    "grid_covers": "SRAM+halo only; no logic/routing/pins/clock/PDN allowance or slot fit claim",
+    "view_selection_status": "UNASSIGNED: legacy actualbenchview pinned below; V2 differs and geometry must grant future physical view",
+    "views": [
+      {
+        "path": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.lef",
+        "sha256": "bb0024665e7323656008a9f4df35efe56fd6ca1cdef9ce4c8d2f9676fefb0227",
+        "size_um": [
+          94.824,
+          41.04
+        ],
+        "symmetry": "X Y R90"
+      },
+      {
+        "path": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.lef",
+        "sha256": "86f2608011f6d5903bea0aad4da167ff9d9bf120d23508d10b69db450a816eaf",
+        "size_um": [
+          94.824,
+          41.064
+        ],
+        "symmetry": "X Y"
+      }
+    ]
   },
   "common_native_controller": {
     "master": "ot_hbm_svc_native_sector_owned_stack",
@@ -131,7 +152,9 @@
     "host": "ot-agidock128",
     "scope": "oth-ubuntu-3934240-1792061338.scope",
     "remote": "/srv/opentallas-scratch/claude/codex-hc-prefetch-physical-1015",
-    "purpose": "Production-param generic optimized clock sequential-bit census; no ABC/CTS/route"
+    "purpose": "Production-param generic optimized clock sequential-bit census; no ABC/CTS/route",
+    "terminal_exit": 0,
+    "state": "TERMINAL"
   },
   "physical_qualified": false,
   "boundary_ownership": {
@@ -233,6 +256,61 @@
       "k_v/k_addr/k_tag are combinational source owner mux outputs at helper boundary",
       "kr_rdy is combinational response owner match/FIFO availability output",
       "Controller inputs/outputs may be co-hardened with owner leaf or need registered source-exact successor; no pinreg waiver from functional bench"
+    ]
+  },
+  "actual_census": {
+    "helper_instances": 4,
+    "per_helper_optimized_generic_sequential_bits": {
+      "hbm_clk": 21136,
+      "stream_clk": 4690
+    },
+    "per_helper_stream_SRAM_clock_pins_additional": 32,
+    "whole4helper_generic_state_bits": {
+      "hbm_clk": 84544,
+      "stream_clk": 18760
+    },
+    "classification": "Clock bit counts after source-exact hierarchy/proc/opt/memory_map/opt. Generic sequential bits, NOT technology/CTS sink or signoff timing measurement. Source alone proves monolithic helper HBM root exceeds15000; no CTS allowed without split/exception gate.",
+    "unresolved_memories_or_clock_pins": 0
+  },
+  "controller_cohardening_request": {
+    "status": "REQUESTED_NOT_GRANTED",
+    "owner": "/root/h_die/service_native/service_band_inventory",
+    "baseline_master": "ot_hbm_svc_native_pc_census",
+    "baseline_source": "physical/hbm_accel_die_views/svc/native_pc_340cfd747/rtl/native_pc.sv",
+    "baseline_source_sha256": "61f9f0876da04a4f11215de3fa335cc78740bd3d24e3f4eb0a7526227ab425cc",
+    "slot_contract": "native_PC_340cfd747.json",
+    "outline_um": [
+      259.2,
+      345.6
+    ],
+    "orientation": "R0",
+    "clock_period_ps": 1024,
+    "pins": {
+      "W_native_K_kr": 622,
+      "E_physical_row_col_dram_fault": 586,
+      "N_clk_rst": 2
+    },
+    "peer_reported_baseline_FF": {
+      "census": 13649,
+      "mapped": 13617,
+      "SRAM_clock_pins": 1
+    },
+    "HC_source_owner_FF_per_PC": 368,
+    "conservative_combined_FF_plus_SRAM_pin": 14018,
+    "mapped_baseline_plus_unmapped_HC_owner_plus_SRAM_pin": 13986,
+    "remaining_source_census_control_FF_outside_owner_tables_per_stack": 272,
+    "keep_separate": "Each284x4responseFIFO memory1136bits plus pointers requires own actual leaf/root; do not add to PC root",
+    "source_pin_defects_from_peer_gate": [
+      "17-level k_len to unposted path",
+      "301 reg-to-output bits beyond3levels",
+      "k_rdy and col_v/we/data are combinational at actual boundary"
+    ],
+    "baseline_gate": "peer reports source/pin/PG terminal WARN0fail, noCTS/route; this is NOT a source-exact HC cohardening proof",
+    "adoption_requires": [
+      "Geometry grant for actual combined source",
+      "Successor functional proof preserving owner identity and fixed655 calendar",
+      "Mapped root count and fanout on combined source",
+      "Actual pinreg/CTS/insertion/corner timing evidence"
     ]
   }
 }
