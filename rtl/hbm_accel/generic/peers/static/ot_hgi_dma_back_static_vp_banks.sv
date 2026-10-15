@@ -273,8 +273,11 @@ module ot_hgi_dma_back_landing_bank (
     reg wd_valid;
     wire [255:0] macro_data;
     assign wd={wd_valid,wd_payload};
-    always @(posedge clk or negedge rst_n)
-        if(!rst_n)wd_valid<=0;else wd_valid<=output_en;
+    // Native launch fix (H-HARDEN 10-15): the routed bank launched wd[288] at 252.2 ps (> 220) from the only
+    // asynchronous-reset flop; every other output launches <= 220. The valid bit is now a plain flop with the reset
+    // folded into its D input (rst_n & output_en): same value at every clock edge while the clock runs through reset
+    // (output_en is the controller's async-reset output_mask_q), no cycle, SRAM or schedule change.
+    always @(posedge clk) wd_valid<=rst_n&output_en;
     always @(posedge clk)begin
         rr_data_q<=rr_data;
         capture<=macro_data;
