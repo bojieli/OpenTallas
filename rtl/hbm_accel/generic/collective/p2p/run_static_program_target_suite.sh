@@ -15,5 +15,5 @@ if grep -Eq '%Warning-(MULTIDRIVEN|LATCH|UNOPTFLAT)' "$OUT/positive/build.log";t
  echo 'PROGRAM_JOIN structural lint warning';exit 1
 fi
 grep '^PROGRAM_JOIN' "$OUT/positive/run.log"
-for scenario in $(seq 1 18);do grep '^PROGRAM_JOIN FAULT PASS' "$OUT/positive/fault-$scenario.log";done
+for scenario in $(seq 1 20);do grep '^PROGRAM_JOIN FAULT PASS' "$OUT/positive/fault-$scenario.log";done
 echo "PROGRAM_JOIN MUTANT PASS intended_data_rejection exit=$rc"

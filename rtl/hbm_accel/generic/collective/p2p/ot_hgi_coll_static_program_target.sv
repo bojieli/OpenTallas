@@ -10,6 +10,9 @@
 // issuer metadata retains32bit loop counts. Unsupported loops fault.
 // Fresh reset is required to install a different programme. Writes to complete
 // rows, partial row changes, launch before completion, and active writes fault.
+// Descriptor validation scans64 rows on fixed edges. Reserve66edges from
+// descriptor capture to global launch. Every next/target remains in range;
+// descriptor last row must contain nativehalt. No runtime ready handshake.
 module ot_hgi_coll_static_program_target #(
     parameter [7:0] TARGET=8'd52,
     parameter integer MUT_DATA=0
@@ -48,27 +51,38 @@ module ot_hgi_coll_static_program_target #(
     reg [6:0] seen;
     reg [5:0] row;
     reg [63:0] loaded;
+    reg [13:0] flow[0:63]; // {halt,has_repeat,targetPC6,nextPC6}
+    reg checking,check_bad;
+    reg [5:0] check_row;
     reg draining;
     reg [5:0] step;
     reg [5:0] base;
     reg [6:0] limit;
-    reg all_loaded;
-    always @* begin
-        all_loaded=1'b1;
-        for(integer i=0;i<64;i=i+1)
-            if(i>=base && i<limit && !loaded[i])all_loaded=1'b0;
-    end
+    wire in_range={1'b0,check_row}>=base && {1'b0,check_row}<limit;
+    wire [13:0] f=flow[check_row];
+    wire row_bad=in_range && (!loaded[check_row] ||
+        (!f[13] && (f[5:0]<base || {1'b0,f[5:0]}>=limit ||
+          (f[12] && (f[11:6]<base || {1'b0,f[11:6]}>=limit)))) ||
+        ({1'b0,check_row}==limit-1'b1 && !f[13]));
     wire occupied=program_active || issuer_busy || issuer_start;
     always @(posedge clk or negedge rst_n)begin
         if(!rst_n)begin
             cv<=0;dv<=0;lv<=0;issuer_cfg<=0;issuer_start<=0;
             issuer_start_pc<=0;configured<=0;init_busy<=0;fault<=0;
             seen<=0;loaded<=0;row<=0;draining<=0;step<=0;
-            base<=0;limit<=0;
+            base<=0;limit<=0;checking<=0;check_bad<=0;check_row<=0;
         end else begin
             cv<=cfg_v;dv<=desc_v;lv<=launch_v;
             issuer_cfg<=0;issuer_start<=0;
             if(issuer_fault)fault<=1;
+            if(checking)begin
+                if(row_bad)check_bad<=1;
+                if(check_row==63)begin
+                    checking<=0;init_busy<=0;
+                    if(check_bad || row_bad)fault<=1;
+                    else if(!fault)configured<=1;
+                end else check_row<=check_row+1'b1;
+            end
             if(issuer_uop_v && (!configured || issuer_uop_pc<base || {1'b0,issuer_uop_pc}>=limit))fault<=1;
             if(draining)begin
                 if(step<51)begin
@@ -82,26 +96,32 @@ module ot_hgi_coll_static_program_target #(
                 end else step<=step+1'b1;
             end
             if(cv && target_q==TARGET)begin
-                if(occupied || lv || draining || fault || dv || addr_q[11:9]!=0 ||
+                if(occupied || lv || draining || checking || fault || dv || addr_q[11:9]!=0 ||
                    addr_q[2:0]==7 || loaded[addr_q[8:3]] ||
                    (seen!=0 && row!=addr_q[8:3]) || seen[addr_q[2:0]] ||
                    (addr_q[2:0]==6 && (data_q[255:64]!=0 || data_q[63:51]!=0)))fault<=1;
                 else begin
                     row<=addr_q[8:3];seen[addr_q[2:0]]<=1;init_busy<=1;
-                    if(addr_q[2:0]==6)metadata<=data_q[63:0];
+                    if(addr_q[2:0]==6)begin
+                        metadata<=data_q[63:0];
+                        flow[addr_q[8:3]]<={data_q[44],|data_q[43:12],data_q[11:0]};
+                    end
                     else assembly[addr_q[2:0]*256+:256]<=data_q;
                     if((seen | (7'b1<<addr_q[2:0]))==7'h7f)begin draining<=1;step<=0;end
                 end
             end
             if(dv && target_q==TARGET)begin
-                if(occupied || lv || draining || seen!=0 || fault || cv ||
+                if(occupied || lv || draining || checking || seen!=0 || fault || cv ||
                    base_q>=64 || limit_q>64 || limit_q<={1'b0,base_q} || loops_q!=1)fault<=1;
-                else begin base<=base_q[5:0];limit<=limit_q[6:0];configured<=1;end
+                else begin
+                    base<=base_q[5:0];limit<=limit_q[6:0];configured<=0;
+                    checking<=1;check_row<=0;check_bad<=0;init_busy<=1;
+                end
             end
             if(lv && configured)begin
-                if(occupied || draining || seen!=0 || fault || cv || dv || !all_loaded)fault<=1;
+                if(occupied || draining || checking || seen!=0 || fault || cv || dv)fault<=1;
                 else begin issuer_start<=1;issuer_start_pc<=base;end
-            end else if(lv && (seen!=0 || draining))fault<=1;
+            end else if(lv && (seen!=0 || draining || checking))fault<=1;
         end
     end
 endmodule

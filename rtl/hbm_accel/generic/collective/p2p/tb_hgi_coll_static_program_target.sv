@@ -45,7 +45,7 @@ module tb_hgi_coll_static_program_target;
     endtask
     task automatic descriptor;
         @(negedge clk);cv=0;dv=1;
-        idle(3);
+        idle(66);
     endtask
     task automatic row_program(input integer r);
         integer last_edge;
@@ -105,14 +105,22 @@ module tb_hgi_coll_static_program_target;
                 12:begin row_program(0);send_frame(0,0);end
                 13:begin
                     for(integer r=0;r<64;r=r+1)row_program(r);
-                    limit=1;descriptor();@(negedge clk);lv=1;
-                    idle(8);
-                    if(issuer_fault)$fatal(1,"runtime limit checker confounded by issuer fault");
+                    limit=1;descriptor();
+                    if(configured || busy || issuer_fault)$fatal(1,"out-of-range metadata escaped prelaunch check");
                 end
                 14:begin send_frame(0,0);descriptor();end
                 15:begin descriptor();send_frame(0,0);lv=1;end
                 16:begin limit=0;descriptor();end
                 17:begin send_frame(0,6);frame[192]=1;end
+                19:begin
+                    for(integer r=0;r<64;r=r+1)row_program(r);
+                    @(negedge clk);dv=1;idle(2);@(negedge clk);lv=1;
+                end
+                20:begin
+                    // Range is closed, but descriptor final row31 lacks halt.
+                    for(integer r=0;r<32;r=r+1)row_program(r);
+                    limit=32;descriptor();
+                end
                 18:begin
                     for(integer r=0;r<64;r=r+1)row_program(r);
                     descriptor();@(negedge clk);lv=1;idle(8);

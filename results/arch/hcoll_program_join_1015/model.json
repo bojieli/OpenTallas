@@ -13,6 +13,10 @@
   "host_launch_to_issuer_start_edges": 2,
   "host_launch_to_first_uop_edges": 5,
   "host_next_row_frame_gap_edges": 55,
+  "descriptor_validation_scan_edges": 64,
+  "host_descriptor_to_launch_gap_edges": 66,
+  "metadata_flow_storage_bits": 896,
+  "metadata_rule": "every nonhalt next and active repeat target within descriptor; lastrow must halt",
   "descriptor_units": "instructions; base<limit<=64; loops must equal1; native metadata32b loops retained",
   "fixed_execution_uops_per_cycle": 1,
   "execution_extra_cycles": 2,
@@ -32,7 +36,7 @@
     "issuer_start": 7,
     "issuer_status_inputs": 9
   },
-  "assembler_register_upper_bound": 2600,
+  "assembler_register_upper_bound": 3600,
   "issuer_control_register_bits": 7639,
   "separate_clock_roots": {
     "assembler": 1,
