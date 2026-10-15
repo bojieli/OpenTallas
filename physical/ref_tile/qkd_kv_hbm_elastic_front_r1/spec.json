@@ -62,7 +62,7 @@
   "benches": [
    {
     "name": "elastic_boundary_parent_proof",
-    "cmd": "JOBS=2 bash tools/qwen_static_kv/run_kv_hbm_elastic_boundary.sh {RUN}/bench/exact",
+    "cmd": "BUILD_SERIAL=1 JOBS=2 bash tools/qwen_static_kv/run_kv_hbm_elastic_boundary.sh {RUN}/bench/exact",
     "expect": "pass",
     "pass_regex": "^PASS 0az elastic boundary",
     "threads": 2,
