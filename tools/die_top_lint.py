@@ -532,19 +532,21 @@ def real_blocks(die, m=None):
                              params=prm, ports=pm['ports'], binding=lay)
         if V.get('sm_native_abi'):
             # H-DIE 10-14: the die SM is the native hierarchical SM ot_hbm_accel_smh (production parameters); the control
-            # leaf is the record's per-SM ABI from source (ot_hgi_sm_record sm_cmd 106 b, bit 0 = start, then sm_ret
-            # 4 b {start_ready, d_ready, arrive, fault}); the result leaf has no fault bit (it rides the control leaf);
+            # leaf is the record's per-SM ABI from source (ot_hgi_sm_record sm_cmd 106 b, bit 0 = start, the record's
+            # sm_cg_en (OT_SMH_CG wake, production define), then sm_ret 4 b {start_ready, d_ready, arrive, fault}); the
+            # result leaf has no fault bit (it rides the control leaf);
             # busy / released are SM outputs with no RTL consumer (left open, never tied)
             f = 'rtl/hbm_accel/sm/ot_hbm_accel_smh.sv'
-            pm = parse_module(f, 'ot_hbm_accel_smh', {})
+            dfn = {d_: '' for d_ in json.loads((ROOT / 'results/arch/hbm_native_1013/sm/component.json').read_text())['defines']}
+            pm = parse_module(f, 'ot_hbm_accel_smh', {}, dfn)
             lay = dict(d=['rsp_v'] + _bus('rsp_tag', 10) + _bus('rsp_data', 1088),
                        q=['req_v'] + _bus('req_addr', 32) + _bus('req_tag', 10) + ['req_ready'],
                        x=SM_LAYOUT['x'], r=['rv'] + _bus('rrow', 12) + _bus('rdata', 256),
                        c=['start'] + _bus('op_rows', 13) + _bus('op_c', 16) + _bus('op_g', 8) + ['op_gs'] + _bus('op_fmt', 2)
                          + _bus('op_xb', 7) + ['d_valid'] + _bus('d_base', 32) + _bus('d_lines', 24) + ['release_in']
-                         + ['start_ready', 'd_ready', 'arrive', 'fault'],
+                         + ['cg_en'] + ['start_ready', 'd_ready', 'arrive', 'fault'],
                        ck=['clk'], rst=['rst_n'])
-            assert len(lay['c']) == 110 and len(lay['r']) == 269 and len(lay['d']) == 1099 and len(lay['q']) == 44
+            assert len(lay['c']) == 111 and len(lay['r']) == 269 and len(lay['d']) == 1099 and len(lay['q']) == 44
             out['hfd_sm'] = dict(module='ot_hbm_accel_smh', file=f, kind='RTL (native hierarchical SM; record ABI control '
                                  'leaf)', params={}, ports=pm['ports'], binding=lay)
     if die == 'hbm' and V.get('native_indexer'):
@@ -1014,14 +1016,14 @@ def dirs_hbm_base(bid, cls, bits, eps, j, port, V):
     if cls in ('weight_req', 'control_leaf', 'phy_dfi'):
         if any(CUR_M['_by'][i].master in CUR_M['_real'] for i, _ in eps):
             return 'complement'
-        if cls == 'control_leaf' and V.get('sm_native_abi') and bits == 110:
-            return flow(j, 110, 106)     # H-DIE 10-14: record ABI leaf, 106 down from the cdist side, 4 SM returns up
+        if cls == 'control_leaf' and V.get('sm_native_abi') and bits == 111:
+            return flow(j, 111, 107)     # H-DIE 10-14: record ABI leaf, 106 + cg_en down from the cdist side, 4 returns up
         return [(0, bits, 'out' if j == 0 else 'in')]       # r15 rq_chain: station -> station, SM side upstream
     if cls == 'control' and V.get('sm_native_abi'):
-        # H-DIE 10-14: per SM 110 b = the record ABI (ot_hgi_sm_record sm_cmd 106 down, sm_ret 4 up)
+        # H-DIE 10-14: per SM 111 b = the record ABI (ot_hgi_sm_record sm_cmd 106 + sm_cg_en down, sm_ret 4 up)
         seg = []
-        for s_ in range(bits // 110):
-            seg += [(a + s_ * 110, b + s_ * 110, d) for a, b, d in flow(j, 110, 106)]
+        for s_ in range(bits // 111):
+            seg += [(a + s_ * 111, b + s_ * 111, d) for a, b, d in flow(j, 111, 107)]
         return seg
     if cls == 'control':
         w = H.W_CTL + (H.W_DESC if V.get('sm_desc') else 0)

@@ -5550,9 +5550,10 @@ def buses(m):
         # H-DIE 10-14 (SM ABI root handed to H-DIE): the control leaf is the record's per-SM ABI, read from source
         # (rtl/hbm_accel/generic/adapters/ot_hgi_sm_record.sv sm_cmd / sm_ret, CW = 106): 106 b down {start, op_rows 13,
         # op_c 16, op_g 8, op_gs, op_fmt 2, op_xb 7, d_valid, d_base 32, d_lines 24, release_in} + 4 b up {start_ready,
-        # d_ready, arrive, fault} = 110 b (the 112-b setting carried 2 invented down bits); the SM's single fault pin
-        # rides the control leaf to its only RTL consumer, so the result leaf is rv / rrow 12 / rdata 256 = 269 b
-        wctl, ctl_up, wres = 110, 4, W_RES - 1
+        # d_ready, arrive, fault} + the record's sm_cg_en (production OT_SMH_CG wake input of every SM) = 111 b (the
+        # 112-b setting carried invented bits); the SM's single fault pin rides the control leaf to its only RTL
+        # consumer, so the result leaf is rv / rrow 12 / rdata 256 = 269 b
+        wctl, ctl_up, wres = 111, 4, W_RES - 1
     wline = W_LINE - 1 if V.get('sm_rtl_w') else W_LINE              # r15: no rsp_ready pin
     wreq = 44 if V.get('sm_rtl_w') else W_REQ
 
@@ -8003,7 +8004,7 @@ def r25gq_v14():
         reset is staged down the same tree."""
     v = r25gq_v13()
     v['p2p'] = True
-    # H-DIE 10-14: SM die master = native ot_hbm_accel_smh, control leaf = the record ABI (110 b), result leaf 269 b
+    # H-DIE 10-14: SM die master = native ot_hbm_accel_smh, control leaf = the record ABI (111 b), result leaf 269 b
     v['sm_native_abi'] = True
     v['fwd_master_split'] = True
     # the attention -> SU chains tr_SW0 / tr_SW1 ran through the SW COLL slot: re-placed around it, SU pins unchanged
