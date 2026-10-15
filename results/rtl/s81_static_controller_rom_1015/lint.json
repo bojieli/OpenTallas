@@ -1,0 +1,14 @@
+{
+  "command": [
+    "verilator",
+    "--lint-only",
+    "-Wno-fatal",
+    "--top-module",
+    "s81_static_calendar_controller",
+    "rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller.sv",
+    "physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8.v"
+  ],
+  "returncode": 0,
+  "stdout": "",
+  "stderr": "%Warning-WIDTH: rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller.sv:73:21: Operator VAR 'CONFIGURED' expects 32 bits on the Initial value, but Initial value's LOGAND generates 1 bits.\n                                                                                           : ... In instance s81_static_calendar_controller\n   73 |  localparam integer CONFIGURED=(ROM_FILE!=\"\") && CYCLES>=1 && CYCLES<=4096;\n      |                     ^~~~~~~~~~\n                ... Use \"/* verilator lint_off WIDTH */\" and lint_on around source to disable this message.\n%Warning-WIDTH: rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller.sv:76:26: Logical Operator LOGAND expects 1 bit on the RHS, but RHS's VARREF 'CONFIGURED' generates 32 bits.\n                                                                                           : ... In instance s81_static_calendar_controller\n   76 |  wire macro_enable=rst_n && CONFIGURED;\n      |                          ^~\n%Warning-WIDTH: rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller.sv:101:15: Logical Operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'CONFIGURED' generates 32 bits.\n                                                                                            : ... In instance s81_static_calendar_controller\n  101 |  wire row_bad=!CONFIGURED || !rom_valid_q || !entry[RW-1] || descriptor_bad || command_bad;\n      |               ^\n%Warning-WIDTH: rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller.sv:161:23: Logical Operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'CONFIGURED' generates 32 bits.\n                                                                                            : ... In instance s81_static_calendar_controller\n  161 |    online<=CONFIGURED && rom_valid_q && entry[RW-1];\n      |                       ^~\n"
+}
