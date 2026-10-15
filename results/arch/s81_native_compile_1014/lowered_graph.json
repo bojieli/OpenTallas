@@ -2717,7 +2717,7 @@
         "mode": 1,
         "records_per_rank": 28,
         "total_output_rows": 112,
-        "scope": "WQ_A plus WKV subtransport only",
+        "scope": "WQ_A, WKV and actual compressor branches",
         "additional_compressor_transport_unresolved": false,
         "arg24": 65564,
         "payload": "320 WQ_A FP32 and128 WKV FP32 words perrank",
@@ -3322,7 +3322,17 @@
       "native_binding": null,
       "duration_cycles": null,
       "fixed_service_contract": null,
-      "dispatch_eligible": false
+      "dispatch_eligible": false,
+      "required_transport": {
+        "mode": 1,
+        "records_per_rank": 6,
+        "total_output_rows": 24,
+        "arg24": 65542,
+        "payload": "96 native RA FP32 scores perrank",
+        "destination_base_row": 5169,
+        "historical_fixture_records_per_rank": 4,
+        "historical_fixture_timing_usable": false
+      }
     },
     {
       "id": "L0.ffn.bias",
@@ -3771,7 +3781,7 @@
         "mode": 1,
         "records_per_rank": 28,
         "total_output_rows": 112,
-        "scope": "WQ_A plus WKV subtransport only",
+        "scope": "WQ_A, WKV and actual compressor branches",
         "additional_compressor_transport_unresolved": false,
         "arg24": 65564,
         "payload": "320 WQ_A FP32 and128 WKV FP32 words perrank",
@@ -4376,7 +4386,17 @@
       "native_binding": null,
       "duration_cycles": null,
       "fixed_service_contract": null,
-      "dispatch_eligible": false
+      "dispatch_eligible": false,
+      "required_transport": {
+        "mode": 1,
+        "records_per_rank": 6,
+        "total_output_rows": 24,
+        "arg24": 65542,
+        "payload": "96 native RA FP32 scores perrank",
+        "destination_base_row": 5169,
+        "historical_fixture_records_per_rank": 4,
+        "historical_fixture_timing_usable": false
+      }
     },
     {
       "id": "L1.ffn.bias",
@@ -4758,11 +4778,11 @@
       "dispatch_eligible": false,
       "required_transport": {
         "mode": 1,
-        "records_per_rank": 28,
-        "total_output_rows": 112,
-        "scope": "WQ_A plus WKV subtransport only",
-        "additional_compressor_transport_unresolved": true,
-        "arg24": 65564,
+        "records_per_rank": 44,
+        "total_output_rows": 176,
+        "scope": "WQ_A, WKV and actual compressor branches",
+        "additional_compressor_transport_unresolved": false,
+        "arg24": 65580,
         "payload": "320 WQ_A FP32 and128 WKV FP32 words perrank",
         "required_owner": "S81 native collective integration",
         "historical_fixture_records_per_rank": 12,
@@ -4824,6 +4844,14 @@
       "duration_cycles": null,
       "fixed_service_contract": null,
       "dispatch_eligible": false,
+      "persistent_state_requirement": {
+        "cache": "CP",
+        "physical_groups": 1,
+        "slots_per_group": 2,
+        "context_bits": 32,
+        "native_first_slot_producer": null,
+        "required": "actual previous-token K/sc native store or retained-VM restore; explicit context lifetime and pool commit fence; no golden initialization or implicit multiuser capacity"
+      },
       "source_evidence": [
         {
           "path": "rtl/dsrom_sys/s81_suhc/hier/dsfd_sp_su_h.sv",
@@ -5648,7 +5676,17 @@
       "native_binding": null,
       "duration_cycles": null,
       "fixed_service_contract": null,
-      "dispatch_eligible": false
+      "dispatch_eligible": false,
+      "required_transport": {
+        "mode": 1,
+        "records_per_rank": 6,
+        "total_output_rows": 24,
+        "arg24": 65542,
+        "payload": "96 native RA FP32 scores perrank",
+        "destination_base_row": 5169,
+        "historical_fixture_records_per_rank": 4,
+        "historical_fixture_timing_usable": false
+      }
     },
     {
       "id": "L2.ffn.bias",
@@ -6032,7 +6070,7 @@
         "mode": 1,
         "records_per_rank": 28,
         "total_output_rows": 112,
-        "scope": "WQ_A plus WKV subtransport only",
+        "scope": "WQ_A, WKV and actual compressor branches",
         "additional_compressor_transport_unresolved": false,
         "arg24": 65564,
         "payload": "320 WQ_A FP32 and128 WKV FP32 words perrank",
@@ -6637,7 +6675,17 @@
       "native_binding": null,
       "duration_cycles": null,
       "fixed_service_contract": null,
-      "dispatch_eligible": false
+      "dispatch_eligible": false,
+      "required_transport": {
+        "mode": 1,
+        "records_per_rank": 6,
+        "total_output_rows": 24,
+        "arg24": 65542,
+        "payload": "96 native RA FP32 scores perrank",
+        "destination_base_row": 5169,
+        "historical_fixture_records_per_rank": 4,
+        "historical_fixture_timing_usable": false
+      }
     },
     {
       "id": "L3.ffn.bias",
@@ -7021,7 +7069,7 @@
         "mode": 1,
         "records_per_rank": 28,
         "total_output_rows": 112,
-        "scope": "WQ_A plus WKV subtransport only",
+        "scope": "WQ_A, WKV and actual compressor branches",
         "additional_compressor_transport_unresolved": false,
         "arg24": 65564,
         "payload": "320 WQ_A FP32 and128 WKV FP32 words perrank",
@@ -7642,7 +7690,17 @@
       "native_binding": null,
       "duration_cycles": null,
       "fixed_service_contract": null,
-      "dispatch_eligible": false
+      "dispatch_eligible": false,
+      "required_transport": {
+        "mode": 1,
+        "records_per_rank": 6,
+        "total_output_rows": 24,
+        "arg24": 65542,
+        "payload": "96 native RA FP32 scores perrank",
+        "destination_base_row": 5169,
+        "historical_fixture_records_per_rank": 4,
+        "historical_fixture_timing_usable": false
+      }
     },
     {
       "id": "L4.ffn.bias",
@@ -8026,7 +8084,7 @@
         "mode": 1,
         "records_per_rank": 28,
         "total_output_rows": 112,
-        "scope": "WQ_A plus WKV subtransport only",
+        "scope": "WQ_A, WKV and actual compressor branches",
         "additional_compressor_transport_unresolved": false,
         "arg24": 65564,
         "payload": "320 WQ_A FP32 and128 WKV FP32 words perrank",
@@ -8634,7 +8692,17 @@
       "native_binding": null,
       "duration_cycles": null,
       "fixed_service_contract": null,
-      "dispatch_eligible": false
+      "dispatch_eligible": false,
+      "required_transport": {
+        "mode": 1,
+        "records_per_rank": 6,
+        "total_output_rows": 24,
+        "arg24": 65542,
+        "payload": "96 native RA FP32 scores perrank",
+        "destination_base_row": 5169,
+        "historical_fixture_records_per_rank": 4,
+        "historical_fixture_timing_usable": false
+      }
     },
     {
       "id": "L5.ffn.bias",
@@ -9018,7 +9086,7 @@
         "mode": 1,
         "records_per_rank": 28,
         "total_output_rows": 112,
-        "scope": "WQ_A plus WKV subtransport only",
+        "scope": "WQ_A, WKV and actual compressor branches",
         "additional_compressor_transport_unresolved": false,
         "arg24": 65564,
         "payload": "320 WQ_A FP32 and128 WKV FP32 words perrank",
@@ -9639,7 +9707,17 @@
       "native_binding": null,
       "duration_cycles": null,
       "fixed_service_contract": null,
-      "dispatch_eligible": false
+      "dispatch_eligible": false,
+      "required_transport": {
+        "mode": 1,
+        "records_per_rank": 6,
+        "total_output_rows": 24,
+        "arg24": 65542,
+        "payload": "96 native RA FP32 scores perrank",
+        "destination_base_row": 5169,
+        "historical_fixture_records_per_rank": 4,
+        "historical_fixture_timing_usable": false
+      }
     },
     {
       "id": "L6.ffn.bias",
@@ -10023,7 +10101,7 @@
         "mode": 1,
         "records_per_rank": 28,
         "total_output_rows": 112,
-        "scope": "WQ_A plus WKV subtransport only",
+        "scope": "WQ_A, WKV and actual compressor branches",
         "additional_compressor_transport_unresolved": false,
         "arg24": 65564,
         "payload": "320 WQ_A FP32 and128 WKV FP32 words perrank",
@@ -10612,7 +10690,17 @@
       "native_binding": null,
       "duration_cycles": null,
       "fixed_service_contract": null,
-      "dispatch_eligible": false
+      "dispatch_eligible": false,
+      "required_transport": {
+        "mode": 1,
+        "records_per_rank": 6,
+        "total_output_rows": 24,
+        "arg24": 65542,
+        "payload": "96 native RA FP32 scores perrank",
+        "destination_base_row": 5169,
+        "historical_fixture_records_per_rank": 4,
+        "historical_fixture_timing_usable": false
+      }
     },
     {
       "id": "L7.ffn.bias",
@@ -10994,11 +11082,11 @@
       "dispatch_eligible": false,
       "required_transport": {
         "mode": 1,
-        "records_per_rank": 28,
-        "total_output_rows": 112,
-        "scope": "WQ_A plus WKV subtransport only",
-        "additional_compressor_transport_unresolved": true,
-        "arg24": 65564,
+        "records_per_rank": 44,
+        "total_output_rows": 176,
+        "scope": "WQ_A, WKV and actual compressor branches",
+        "additional_compressor_transport_unresolved": false,
+        "arg24": 65580,
         "payload": "320 WQ_A FP32 and128 WKV FP32 words perrank",
         "required_owner": "S81 native collective integration",
         "historical_fixture_records_per_rank": 12,
@@ -11060,6 +11148,14 @@
       "duration_cycles": null,
       "fixed_service_contract": null,
       "dispatch_eligible": false,
+      "persistent_state_requirement": {
+        "cache": "CP",
+        "physical_groups": 1,
+        "slots_per_group": 2,
+        "context_bits": 32,
+        "native_first_slot_producer": null,
+        "required": "actual previous-token K/sc native store or retained-VM restore; explicit context lifetime and pool commit fence; no golden initialization or implicit multiuser capacity"
+      },
       "source_evidence": [
         {
           "path": "rtl/dsrom_sys/s81_suhc/hier/dsfd_sp_su_h.sv",
@@ -11887,7 +11983,17 @@
       "native_binding": null,
       "duration_cycles": null,
       "fixed_service_contract": null,
-      "dispatch_eligible": false
+      "dispatch_eligible": false,
+      "required_transport": {
+        "mode": 1,
+        "records_per_rank": 6,
+        "total_output_rows": 24,
+        "arg24": 65542,
+        "payload": "96 native RA FP32 scores perrank",
+        "destination_base_row": 5169,
+        "historical_fixture_records_per_rank": 4,
+        "historical_fixture_timing_usable": false
+      }
     },
     {
       "id": "L8.ffn.bias",
@@ -12271,7 +12377,7 @@
         "mode": 1,
         "records_per_rank": 28,
         "total_output_rows": 112,
-        "scope": "WQ_A plus WKV subtransport only",
+        "scope": "WQ_A, WKV and actual compressor branches",
         "additional_compressor_transport_unresolved": false,
         "arg24": 65564,
         "payload": "320 WQ_A FP32 and128 WKV FP32 words perrank",
@@ -12879,7 +12985,17 @@
       "native_binding": null,
       "duration_cycles": null,
       "fixed_service_contract": null,
-      "dispatch_eligible": false
+      "dispatch_eligible": false,
+      "required_transport": {
+        "mode": 1,
+        "records_per_rank": 6,
+        "total_output_rows": 24,
+        "arg24": 65542,
+        "payload": "96 native RA FP32 scores perrank",
+        "destination_base_row": 5169,
+        "historical_fixture_records_per_rank": 4,
+        "historical_fixture_timing_usable": false
+      }
     },
     {
       "id": "L9.ffn.bias",
@@ -13263,7 +13379,7 @@
         "mode": 1,
         "records_per_rank": 28,
         "total_output_rows": 112,
-        "scope": "WQ_A plus WKV subtransport only",
+        "scope": "WQ_A, WKV and actual compressor branches",
         "additional_compressor_transport_unresolved": false,
         "arg24": 65564,
         "payload": "320 WQ_A FP32 and128 WKV FP32 words perrank",
@@ -13871,7 +13987,17 @@
       "native_binding": null,
       "duration_cycles": null,
       "fixed_service_contract": null,
-      "dispatch_eligible": false
+      "dispatch_eligible": false,
+      "required_transport": {
+        "mode": 1,
+        "records_per_rank": 6,
+        "total_output_rows": 24,
+        "arg24": 65542,
+        "payload": "96 native RA FP32 scores perrank",
+        "destination_base_row": 5169,
+        "historical_fixture_records_per_rank": 4,
+        "historical_fixture_timing_usable": false
+      }
     },
     {
       "id": "L10.ffn.bias",
@@ -14255,7 +14381,7 @@
         "mode": 1,
         "records_per_rank": 28,
         "total_output_rows": 112,
-        "scope": "WQ_A plus WKV subtransport only",
+        "scope": "WQ_A, WKV and actual compressor branches",
         "additional_compressor_transport_unresolved": false,
         "arg24": 65564,
         "payload": "320 WQ_A FP32 and128 WKV FP32 words perrank",
@@ -14876,7 +15002,17 @@
       "native_binding": null,
       "duration_cycles": null,
       "fixed_service_contract": null,
-      "dispatch_eligible": false
+      "dispatch_eligible": false,
+      "required_transport": {
+        "mode": 1,
+        "records_per_rank": 6,
+        "total_output_rows": 24,
+        "arg24": 65542,
+        "payload": "96 native RA FP32 scores perrank",
+        "destination_base_row": 5169,
+        "historical_fixture_records_per_rank": 4,
+        "historical_fixture_timing_usable": false
+      }
     },
     {
       "id": "L11.ffn.bias",
@@ -15260,7 +15396,7 @@
         "mode": 1,
         "records_per_rank": 28,
         "total_output_rows": 112,
-        "scope": "WQ_A plus WKV subtransport only",
+        "scope": "WQ_A, WKV and actual compressor branches",
         "additional_compressor_transport_unresolved": false,
         "arg24": 65564,
         "payload": "320 WQ_A FP32 and128 WKV FP32 words perrank",
@@ -15868,7 +16004,17 @@
       "native_binding": null,
       "duration_cycles": null,
       "fixed_service_contract": null,
-      "dispatch_eligible": false
+      "dispatch_eligible": false,
+      "required_transport": {
+        "mode": 1,
+        "records_per_rank": 6,
+        "total_output_rows": 24,
+        "arg24": 65542,
+        "payload": "96 native RA FP32 scores perrank",
+        "destination_base_row": 5169,
+        "historical_fixture_records_per_rank": 4,
+        "historical_fixture_timing_usable": false
+      }
     },
     {
       "id": "L12.ffn.bias",
@@ -16252,7 +16398,7 @@
         "mode": 1,
         "records_per_rank": 28,
         "total_output_rows": 112,
-        "scope": "WQ_A plus WKV subtransport only",
+        "scope": "WQ_A, WKV and actual compressor branches",
         "additional_compressor_transport_unresolved": false,
         "arg24": 65564,
         "payload": "320 WQ_A FP32 and128 WKV FP32 words perrank",
@@ -16860,7 +17006,17 @@
       "native_binding": null,
       "duration_cycles": null,
       "fixed_service_contract": null,
-      "dispatch_eligible": false
+      "dispatch_eligible": false,
+      "required_transport": {
+        "mode": 1,
+        "records_per_rank": 6,
+        "total_output_rows": 24,
+        "arg24": 65542,
+        "payload": "96 native RA FP32 scores perrank",
+        "destination_base_row": 5169,
+        "historical_fixture_records_per_rank": 4,
+        "historical_fixture_timing_usable": false
+      }
     },
     {
       "id": "L13.ffn.bias",
@@ -17307,11 +17463,11 @@
       "dispatch_eligible": false,
       "required_transport": {
         "mode": 1,
-        "records_per_rank": 28,
-        "total_output_rows": 112,
-        "scope": "WQ_A plus WKV subtransport only",
-        "additional_compressor_transport_unresolved": true,
-        "arg24": 65564,
+        "records_per_rank": 44,
+        "total_output_rows": 176,
+        "scope": "WQ_A, WKV and actual compressor branches",
+        "additional_compressor_transport_unresolved": false,
+        "arg24": 65580,
         "payload": "320 WQ_A FP32 and128 WKV FP32 words perrank",
         "required_owner": "S81 native collective integration",
         "historical_fixture_records_per_rank": 12,
@@ -17373,6 +17529,14 @@
       "duration_cycles": null,
       "fixed_service_contract": null,
       "dispatch_eligible": false,
+      "persistent_state_requirement": {
+        "cache": "CP",
+        "physical_groups": 1,
+        "slots_per_group": 2,
+        "context_bits": 32,
+        "native_first_slot_producer": null,
+        "required": "actual previous-token K/sc native store or retained-VM restore; explicit context lifetime and pool commit fence; no golden initialization or implicit multiuser capacity"
+      },
       "source_evidence": [
         {
           "path": "rtl/dsrom_sys/s81_suhc/hier/dsfd_sp_su_h.sv",
@@ -18181,7 +18345,17 @@
       "native_binding": null,
       "duration_cycles": null,
       "fixed_service_contract": null,
-      "dispatch_eligible": false
+      "dispatch_eligible": false,
+      "required_transport": {
+        "mode": 1,
+        "records_per_rank": 6,
+        "total_output_rows": 24,
+        "arg24": 65542,
+        "payload": "96 native RA FP32 scores perrank",
+        "destination_base_row": 5169,
+        "historical_fixture_records_per_rank": 4,
+        "historical_fixture_timing_usable": false
+      }
     },
     {
       "id": "L14.ffn.bias",
@@ -18565,7 +18739,7 @@
         "mode": 1,
         "records_per_rank": 28,
         "total_output_rows": 112,
-        "scope": "WQ_A plus WKV subtransport only",
+        "scope": "WQ_A, WKV and actual compressor branches",
         "additional_compressor_transport_unresolved": false,
         "arg24": 65564,
         "payload": "320 WQ_A FP32 and128 WKV FP32 words perrank",
@@ -19186,7 +19360,17 @@
       "native_binding": null,
       "duration_cycles": null,
       "fixed_service_contract": null,
-      "dispatch_eligible": false
+      "dispatch_eligible": false,
+      "required_transport": {
+        "mode": 1,
+        "records_per_rank": 6,
+        "total_output_rows": 24,
+        "arg24": 65542,
+        "payload": "96 native RA FP32 scores perrank",
+        "destination_base_row": 5169,
+        "historical_fixture_records_per_rank": 4,
+        "historical_fixture_timing_usable": false
+      }
     },
     {
       "id": "L15.ffn.bias",
@@ -19570,7 +19754,7 @@
         "mode": 1,
         "records_per_rank": 28,
         "total_output_rows": 112,
-        "scope": "WQ_A plus WKV subtransport only",
+        "scope": "WQ_A, WKV and actual compressor branches",
         "additional_compressor_transport_unresolved": false,
         "arg24": 65564,
         "payload": "320 WQ_A FP32 and128 WKV FP32 words perrank",
@@ -20175,7 +20359,17 @@
       "native_binding": null,
       "duration_cycles": null,
       "fixed_service_contract": null,
-      "dispatch_eligible": false
+      "dispatch_eligible": false,
+      "required_transport": {
+        "mode": 1,
+        "records_per_rank": 6,
+        "total_output_rows": 24,
+        "arg24": 65542,
+        "payload": "96 native RA FP32 scores perrank",
+        "destination_base_row": 5169,
+        "historical_fixture_records_per_rank": 4,
+        "historical_fixture_timing_usable": false
+      }
     },
     {
       "id": "L16.ffn.bias",
@@ -20559,7 +20753,7 @@
         "mode": 1,
         "records_per_rank": 28,
         "total_output_rows": 112,
-        "scope": "WQ_A plus WKV subtransport only",
+        "scope": "WQ_A, WKV and actual compressor branches",
         "additional_compressor_transport_unresolved": false,
         "arg24": 65564,
         "payload": "320 WQ_A FP32 and128 WKV FP32 words perrank",
@@ -21183,7 +21377,17 @@
       "native_binding": null,
       "duration_cycles": null,
       "fixed_service_contract": null,
-      "dispatch_eligible": false
+      "dispatch_eligible": false,
+      "required_transport": {
+        "mode": 1,
+        "records_per_rank": 6,
+        "total_output_rows": 24,
+        "arg24": 65542,
+        "payload": "96 native RA FP32 scores perrank",
+        "destination_base_row": 5169,
+        "historical_fixture_records_per_rank": 4,
+        "historical_fixture_timing_usable": false
+      }
     },
     {
       "id": "L17.ffn.bias",
@@ -21567,7 +21771,7 @@
         "mode": 1,
         "records_per_rank": 28,
         "total_output_rows": 112,
-        "scope": "WQ_A plus WKV subtransport only",
+        "scope": "WQ_A, WKV and actual compressor branches",
         "additional_compressor_transport_unresolved": false,
         "arg24": 65564,
         "payload": "320 WQ_A FP32 and128 WKV FP32 words perrank",
@@ -22172,7 +22376,17 @@
       "native_binding": null,
       "duration_cycles": null,
       "fixed_service_contract": null,
-      "dispatch_eligible": false
+      "dispatch_eligible": false,
+      "required_transport": {
+        "mode": 1,
+        "records_per_rank": 6,
+        "total_output_rows": 24,
+        "arg24": 65542,
+        "payload": "96 native RA FP32 scores perrank",
+        "destination_base_row": 5169,
+        "historical_fixture_records_per_rank": 4,
+        "historical_fixture_timing_usable": false
+      }
     },
     {
       "id": "L18.ffn.bias",
@@ -22556,7 +22770,7 @@
         "mode": 1,
         "records_per_rank": 28,
         "total_output_rows": 112,
-        "scope": "WQ_A plus WKV subtransport only",
+        "scope": "WQ_A, WKV and actual compressor branches",
         "additional_compressor_transport_unresolved": false,
         "arg24": 65564,
         "payload": "320 WQ_A FP32 and128 WKV FP32 words perrank",
@@ -23161,7 +23375,17 @@
       "native_binding": null,
       "duration_cycles": null,
       "fixed_service_contract": null,
-      "dispatch_eligible": false
+      "dispatch_eligible": false,
+      "required_transport": {
+        "mode": 1,
+        "records_per_rank": 6,
+        "total_output_rows": 24,
+        "arg24": 65542,
+        "payload": "96 native RA FP32 scores perrank",
+        "destination_base_row": 5169,
+        "historical_fixture_records_per_rank": 4,
+        "historical_fixture_timing_usable": false
+      }
     },
     {
       "id": "L19.ffn.bias",
@@ -23543,11 +23767,11 @@
       "dispatch_eligible": false,
       "required_transport": {
         "mode": 1,
-        "records_per_rank": 28,
-        "total_output_rows": 112,
-        "scope": "WQ_A plus WKV subtransport only",
-        "additional_compressor_transport_unresolved": true,
-        "arg24": 65564,
+        "records_per_rank": 36,
+        "total_output_rows": 144,
+        "scope": "WQ_A, WKV and actual compressor branches",
+        "additional_compressor_transport_unresolved": false,
+        "arg24": 65572,
         "payload": "320 WQ_A FP32 and128 WKV FP32 words perrank",
         "required_owner": "S81 native collective integration",
         "historical_fixture_records_per_rank": 12,
@@ -24434,7 +24658,17 @@
       "native_binding": null,
       "duration_cycles": null,
       "fixed_service_contract": null,
-      "dispatch_eligible": false
+      "dispatch_eligible": false,
+      "required_transport": {
+        "mode": 1,
+        "records_per_rank": 6,
+        "total_output_rows": 24,
+        "arg24": 65542,
+        "payload": "96 native RA FP32 scores perrank",
+        "destination_base_row": 5169,
+        "historical_fixture_records_per_rank": 4,
+        "historical_fixture_timing_usable": false
+      }
     },
     {
       "id": "L20.ffn.bias",
@@ -24818,7 +25052,7 @@
         "mode": 1,
         "records_per_rank": 28,
         "total_output_rows": 112,
-        "scope": "WQ_A plus WKV subtransport only",
+        "scope": "WQ_A, WKV and actual compressor branches",
         "additional_compressor_transport_unresolved": false,
         "arg24": 65564,
         "payload": "320 WQ_A FP32 and128 WKV FP32 words perrank",
@@ -25426,7 +25660,17 @@
       "native_binding": null,
       "duration_cycles": null,
       "fixed_service_contract": null,
-      "dispatch_eligible": false
+      "dispatch_eligible": false,
+      "required_transport": {
+        "mode": 1,
+        "records_per_rank": 6,
+        "total_output_rows": 24,
+        "arg24": 65542,
+        "payload": "96 native RA FP32 scores perrank",
+        "destination_base_row": 5169,
+        "historical_fixture_records_per_rank": 4,
+        "historical_fixture_timing_usable": false
+      }
     },
     {
       "id": "L21.ffn.bias",
@@ -25810,7 +26054,7 @@
         "mode": 1,
         "records_per_rank": 28,
         "total_output_rows": 112,
-        "scope": "WQ_A plus WKV subtransport only",
+        "scope": "WQ_A, WKV and actual compressor branches",
         "additional_compressor_transport_unresolved": false,
         "arg24": 65564,
         "payload": "320 WQ_A FP32 and128 WKV FP32 words perrank",
@@ -26431,7 +26675,17 @@
       "native_binding": null,
       "duration_cycles": null,
       "fixed_service_contract": null,
-      "dispatch_eligible": false
+      "dispatch_eligible": false,
+      "required_transport": {
+        "mode": 1,
+        "records_per_rank": 6,
+        "total_output_rows": 24,
+        "arg24": 65542,
+        "payload": "96 native RA FP32 scores perrank",
+        "destination_base_row": 5169,
+        "historical_fixture_records_per_rank": 4,
+        "historical_fixture_timing_usable": false
+      }
     },
     {
       "id": "L22.ffn.bias",
@@ -26815,7 +27069,7 @@
         "mode": 1,
         "records_per_rank": 28,
         "total_output_rows": 112,
-        "scope": "WQ_A plus WKV subtransport only",
+        "scope": "WQ_A, WKV and actual compressor branches",
         "additional_compressor_transport_unresolved": false,
         "arg24": 65564,
         "payload": "320 WQ_A FP32 and128 WKV FP32 words perrank",
@@ -27404,7 +27658,17 @@
       "native_binding": null,
       "duration_cycles": null,
       "fixed_service_contract": null,
-      "dispatch_eligible": false
+      "dispatch_eligible": false,
+      "required_transport": {
+        "mode": 1,
+        "records_per_rank": 6,
+        "total_output_rows": 24,
+        "arg24": 65542,
+        "payload": "96 native RA FP32 scores perrank",
+        "destination_base_row": 5169,
+        "historical_fixture_records_per_rank": 4,
+        "historical_fixture_timing_usable": false
+      }
     },
     {
       "id": "L23.ffn.bias",
@@ -27788,7 +28052,7 @@
         "mode": 1,
         "records_per_rank": 28,
         "total_output_rows": 112,
-        "scope": "WQ_A plus WKV subtransport only",
+        "scope": "WQ_A, WKV and actual compressor branches",
         "additional_compressor_transport_unresolved": false,
         "arg24": 65564,
         "payload": "320 WQ_A FP32 and128 WKV FP32 words perrank",
@@ -28542,7 +28806,17 @@
       "native_binding": null,
       "duration_cycles": null,
       "fixed_service_contract": null,
-      "dispatch_eligible": false
+      "dispatch_eligible": false,
+      "required_transport": {
+        "mode": 1,
+        "records_per_rank": 6,
+        "total_output_rows": 24,
+        "arg24": 65542,
+        "payload": "96 native RA FP32 scores perrank",
+        "destination_base_row": 5169,
+        "historical_fixture_records_per_rank": 4,
+        "historical_fixture_timing_usable": false
+      }
     },
     {
       "id": "L24.ffn.bias",
@@ -28926,7 +29200,7 @@
         "mode": 1,
         "records_per_rank": 28,
         "total_output_rows": 112,
-        "scope": "WQ_A plus WKV subtransport only",
+        "scope": "WQ_A, WKV and actual compressor branches",
         "additional_compressor_transport_unresolved": false,
         "arg24": 65564,
         "payload": "320 WQ_A FP32 and128 WKV FP32 words perrank",
@@ -29534,7 +29808,17 @@
       "native_binding": null,
       "duration_cycles": null,
       "fixed_service_contract": null,
-      "dispatch_eligible": false
+      "dispatch_eligible": false,
+      "required_transport": {
+        "mode": 1,
+        "records_per_rank": 6,
+        "total_output_rows": 24,
+        "arg24": 65542,
+        "payload": "96 native RA FP32 scores perrank",
+        "destination_base_row": 5169,
+        "historical_fixture_records_per_rank": 4,
+        "historical_fixture_timing_usable": false
+      }
     },
     {
       "id": "L25.ffn.bias",
@@ -29918,7 +30202,7 @@
         "mode": 1,
         "records_per_rank": 28,
         "total_output_rows": 112,
-        "scope": "WQ_A plus WKV subtransport only",
+        "scope": "WQ_A, WKV and actual compressor branches",
         "additional_compressor_transport_unresolved": false,
         "arg24": 65564,
         "payload": "320 WQ_A FP32 and128 WKV FP32 words perrank",
@@ -30539,7 +30823,17 @@
       "native_binding": null,
       "duration_cycles": null,
       "fixed_service_contract": null,
-      "dispatch_eligible": false
+      "dispatch_eligible": false,
+      "required_transport": {
+        "mode": 1,
+        "records_per_rank": 6,
+        "total_output_rows": 24,
+        "arg24": 65542,
+        "payload": "96 native RA FP32 scores perrank",
+        "destination_base_row": 5169,
+        "historical_fixture_records_per_rank": 4,
+        "historical_fixture_timing_usable": false
+      }
     },
     {
       "id": "L26.ffn.bias",
@@ -30923,7 +31217,7 @@
         "mode": 1,
         "records_per_rank": 28,
         "total_output_rows": 112,
-        "scope": "WQ_A plus WKV subtransport only",
+        "scope": "WQ_A, WKV and actual compressor branches",
         "additional_compressor_transport_unresolved": false,
         "arg24": 65564,
         "payload": "320 WQ_A FP32 and128 WKV FP32 words perrank",
@@ -31512,7 +31806,17 @@
       "native_binding": null,
       "duration_cycles": null,
       "fixed_service_contract": null,
-      "dispatch_eligible": false
+      "dispatch_eligible": false,
+      "required_transport": {
+        "mode": 1,
+        "records_per_rank": 6,
+        "total_output_rows": 24,
+        "arg24": 65542,
+        "payload": "96 native RA FP32 scores perrank",
+        "destination_base_row": 5169,
+        "historical_fixture_records_per_rank": 4,
+        "historical_fixture_timing_usable": false
+      }
     },
     {
       "id": "L27.ffn.bias",
@@ -31896,7 +32200,7 @@
         "mode": 1,
         "records_per_rank": 28,
         "total_output_rows": 112,
-        "scope": "WQ_A plus WKV subtransport only",
+        "scope": "WQ_A, WKV and actual compressor branches",
         "additional_compressor_transport_unresolved": false,
         "arg24": 65564,
         "payload": "320 WQ_A FP32 and128 WKV FP32 words perrank",
@@ -32653,7 +32957,17 @@
       "native_binding": null,
       "duration_cycles": null,
       "fixed_service_contract": null,
-      "dispatch_eligible": false
+      "dispatch_eligible": false,
+      "required_transport": {
+        "mode": 1,
+        "records_per_rank": 6,
+        "total_output_rows": 24,
+        "arg24": 65542,
+        "payload": "96 native RA FP32 scores perrank",
+        "destination_base_row": 5169,
+        "historical_fixture_records_per_rank": 4,
+        "historical_fixture_timing_usable": false
+      }
     },
     {
       "id": "L28.ffn.bias",
@@ -33037,7 +33351,7 @@
         "mode": 1,
         "records_per_rank": 28,
         "total_output_rows": 112,
-        "scope": "WQ_A plus WKV subtransport only",
+        "scope": "WQ_A, WKV and actual compressor branches",
         "additional_compressor_transport_unresolved": false,
         "arg24": 65564,
         "payload": "320 WQ_A FP32 and128 WKV FP32 words perrank",
@@ -33642,7 +33956,17 @@
       "native_binding": null,
       "duration_cycles": null,
       "fixed_service_contract": null,
-      "dispatch_eligible": false
+      "dispatch_eligible": false,
+      "required_transport": {
+        "mode": 1,
+        "records_per_rank": 6,
+        "total_output_rows": 24,
+        "arg24": 65542,
+        "payload": "96 native RA FP32 scores perrank",
+        "destination_base_row": 5169,
+        "historical_fixture_records_per_rank": 4,
+        "historical_fixture_timing_usable": false
+      }
     },
     {
       "id": "L29.ffn.bias",
@@ -34026,7 +34350,7 @@
         "mode": 1,
         "records_per_rank": 28,
         "total_output_rows": 112,
-        "scope": "WQ_A plus WKV subtransport only",
+        "scope": "WQ_A, WKV and actual compressor branches",
         "additional_compressor_transport_unresolved": false,
         "arg24": 65564,
         "payload": "320 WQ_A FP32 and128 WKV FP32 words perrank",
@@ -34631,7 +34955,17 @@
       "native_binding": null,
       "duration_cycles": null,
       "fixed_service_contract": null,
-      "dispatch_eligible": false
+      "dispatch_eligible": false,
+      "required_transport": {
+        "mode": 1,
+        "records_per_rank": 6,
+        "total_output_rows": 24,
+        "arg24": 65542,
+        "payload": "96 native RA FP32 scores perrank",
+        "destination_base_row": 5169,
+        "historical_fixture_records_per_rank": 4,
+        "historical_fixture_timing_usable": false
+      }
     },
     {
       "id": "L30.ffn.bias",
@@ -35015,7 +35349,7 @@
         "mode": 1,
         "records_per_rank": 28,
         "total_output_rows": 112,
-        "scope": "WQ_A plus WKV subtransport only",
+        "scope": "WQ_A, WKV and actual compressor branches",
         "additional_compressor_transport_unresolved": false,
         "arg24": 65564,
         "payload": "320 WQ_A FP32 and128 WKV FP32 words perrank",
@@ -35620,7 +35954,17 @@
       "native_binding": null,
       "duration_cycles": null,
       "fixed_service_contract": null,
-      "dispatch_eligible": false
+      "dispatch_eligible": false,
+      "required_transport": {
+        "mode": 1,
+        "records_per_rank": 6,
+        "total_output_rows": 24,
+        "arg24": 65542,
+        "payload": "96 native RA FP32 scores perrank",
+        "destination_base_row": 5169,
+        "historical_fixture_records_per_rank": 4,
+        "historical_fixture_timing_usable": false
+      }
     },
     {
       "id": "L31.ffn.bias",
@@ -36004,7 +36348,7 @@
         "mode": 1,
         "records_per_rank": 28,
         "total_output_rows": 112,
-        "scope": "WQ_A plus WKV subtransport only",
+        "scope": "WQ_A, WKV and actual compressor branches",
         "additional_compressor_transport_unresolved": false,
         "arg24": 65564,
         "payload": "320 WQ_A FP32 and128 WKV FP32 words perrank",
@@ -36745,7 +37089,17 @@
       "native_binding": null,
       "duration_cycles": null,
       "fixed_service_contract": null,
-      "dispatch_eligible": false
+      "dispatch_eligible": false,
+      "required_transport": {
+        "mode": 1,
+        "records_per_rank": 6,
+        "total_output_rows": 24,
+        "arg24": 65542,
+        "payload": "96 native RA FP32 scores perrank",
+        "destination_base_row": 5169,
+        "historical_fixture_records_per_rank": 4,
+        "historical_fixture_timing_usable": false
+      }
     },
     {
       "id": "L32.ffn.bias",
@@ -37129,7 +37483,7 @@
         "mode": 1,
         "records_per_rank": 28,
         "total_output_rows": 112,
-        "scope": "WQ_A plus WKV subtransport only",
+        "scope": "WQ_A, WKV and actual compressor branches",
         "additional_compressor_transport_unresolved": false,
         "arg24": 65564,
         "payload": "320 WQ_A FP32 and128 WKV FP32 words perrank",
@@ -37750,7 +38104,17 @@
       "native_binding": null,
       "duration_cycles": null,
       "fixed_service_contract": null,
-      "dispatch_eligible": false
+      "dispatch_eligible": false,
+      "required_transport": {
+        "mode": 1,
+        "records_per_rank": 6,
+        "total_output_rows": 24,
+        "arg24": 65542,
+        "payload": "96 native RA FP32 scores perrank",
+        "destination_base_row": 5169,
+        "historical_fixture_records_per_rank": 4,
+        "historical_fixture_timing_usable": false
+      }
     },
     {
       "id": "L33.ffn.bias",
@@ -38134,7 +38498,7 @@
         "mode": 1,
         "records_per_rank": 28,
         "total_output_rows": 112,
-        "scope": "WQ_A plus WKV subtransport only",
+        "scope": "WQ_A, WKV and actual compressor branches",
         "additional_compressor_transport_unresolved": false,
         "arg24": 65564,
         "payload": "320 WQ_A FP32 and128 WKV FP32 words perrank",
@@ -38739,7 +39103,17 @@
       "native_binding": null,
       "duration_cycles": null,
       "fixed_service_contract": null,
-      "dispatch_eligible": false
+      "dispatch_eligible": false,
+      "required_transport": {
+        "mode": 1,
+        "records_per_rank": 6,
+        "total_output_rows": 24,
+        "arg24": 65542,
+        "payload": "96 native RA FP32 scores perrank",
+        "destination_base_row": 5169,
+        "historical_fixture_records_per_rank": 4,
+        "historical_fixture_timing_usable": false
+      }
     },
     {
       "id": "L34.ffn.bias",
@@ -39123,7 +39497,7 @@
         "mode": 1,
         "records_per_rank": 28,
         "total_output_rows": 112,
-        "scope": "WQ_A plus WKV subtransport only",
+        "scope": "WQ_A, WKV and actual compressor branches",
         "additional_compressor_transport_unresolved": false,
         "arg24": 65564,
         "payload": "320 WQ_A FP32 and128 WKV FP32 words perrank",
@@ -39728,7 +40102,17 @@
       "native_binding": null,
       "duration_cycles": null,
       "fixed_service_contract": null,
-      "dispatch_eligible": false
+      "dispatch_eligible": false,
+      "required_transport": {
+        "mode": 1,
+        "records_per_rank": 6,
+        "total_output_rows": 24,
+        "arg24": 65542,
+        "payload": "96 native RA FP32 scores perrank",
+        "destination_base_row": 5169,
+        "historical_fixture_records_per_rank": 4,
+        "historical_fixture_timing_usable": false
+      }
     },
     {
       "id": "L35.ffn.bias",
@@ -40112,7 +40496,7 @@
         "mode": 1,
         "records_per_rank": 28,
         "total_output_rows": 112,
-        "scope": "WQ_A plus WKV subtransport only",
+        "scope": "WQ_A, WKV and actual compressor branches",
         "additional_compressor_transport_unresolved": false,
         "arg24": 65564,
         "payload": "320 WQ_A FP32 and128 WKV FP32 words perrank",
@@ -40853,7 +41237,17 @@
       "native_binding": null,
       "duration_cycles": null,
       "fixed_service_contract": null,
-      "dispatch_eligible": false
+      "dispatch_eligible": false,
+      "required_transport": {
+        "mode": 1,
+        "records_per_rank": 6,
+        "total_output_rows": 24,
+        "arg24": 65542,
+        "payload": "96 native RA FP32 scores perrank",
+        "destination_base_row": 5169,
+        "historical_fixture_records_per_rank": 4,
+        "historical_fixture_timing_usable": false
+      }
     },
     {
       "id": "L36.ffn.bias",
@@ -41237,7 +41631,7 @@
         "mode": 1,
         "records_per_rank": 28,
         "total_output_rows": 112,
-        "scope": "WQ_A plus WKV subtransport only",
+        "scope": "WQ_A, WKV and actual compressor branches",
         "additional_compressor_transport_unresolved": false,
         "arg24": 65564,
         "payload": "320 WQ_A FP32 and128 WKV FP32 words perrank",
@@ -41858,7 +42252,17 @@
       "native_binding": null,
       "duration_cycles": null,
       "fixed_service_contract": null,
-      "dispatch_eligible": false
+      "dispatch_eligible": false,
+      "required_transport": {
+        "mode": 1,
+        "records_per_rank": 6,
+        "total_output_rows": 24,
+        "arg24": 65542,
+        "payload": "96 native RA FP32 scores perrank",
+        "destination_base_row": 5169,
+        "historical_fixture_records_per_rank": 4,
+        "historical_fixture_timing_usable": false
+      }
     },
     {
       "id": "L37.ffn.bias",
@@ -42242,7 +42646,7 @@
         "mode": 1,
         "records_per_rank": 28,
         "total_output_rows": 112,
-        "scope": "WQ_A plus WKV subtransport only",
+        "scope": "WQ_A, WKV and actual compressor branches",
         "additional_compressor_transport_unresolved": false,
         "arg24": 65564,
         "payload": "320 WQ_A FP32 and128 WKV FP32 words perrank",
@@ -42847,7 +43251,17 @@
       "native_binding": null,
       "duration_cycles": null,
       "fixed_service_contract": null,
-      "dispatch_eligible": false
+      "dispatch_eligible": false,
+      "required_transport": {
+        "mode": 1,
+        "records_per_rank": 6,
+        "total_output_rows": 24,
+        "arg24": 65542,
+        "payload": "96 native RA FP32 scores perrank",
+        "destination_base_row": 5169,
+        "historical_fixture_records_per_rank": 4,
+        "historical_fixture_timing_usable": false
+      }
     },
     {
       "id": "L38.ffn.bias",
@@ -43231,7 +43645,7 @@
         "mode": 1,
         "records_per_rank": 28,
         "total_output_rows": 112,
-        "scope": "WQ_A plus WKV subtransport only",
+        "scope": "WQ_A, WKV and actual compressor branches",
         "additional_compressor_transport_unresolved": false,
         "arg24": 65564,
         "payload": "320 WQ_A FP32 and128 WKV FP32 words perrank",
@@ -43823,7 +44237,17 @@
       "native_binding": null,
       "duration_cycles": null,
       "fixed_service_contract": null,
-      "dispatch_eligible": false
+      "dispatch_eligible": false,
+      "required_transport": {
+        "mode": 1,
+        "records_per_rank": 6,
+        "total_output_rows": 24,
+        "arg24": 65542,
+        "payload": "96 native RA FP32 scores perrank",
+        "destination_base_row": 5169,
+        "historical_fixture_records_per_rank": 4,
+        "historical_fixture_timing_usable": false
+      }
     },
     {
       "id": "L39.ffn.bias",
