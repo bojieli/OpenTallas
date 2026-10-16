@@ -288,7 +288,7 @@ def emit_tail(a, C, G, P, out, slots, W0, region, leaves, nets, used, edges_in, 
     if a.die_clock and a.die_clock_mode == 'explicit':
         import die_clock_tree as dct
         ck = slots[a.ckgen]
-        root_xy = (ck['origin']['x'] + ck['outline']['w'] / 2, ck['origin']['y'] + ck['outline']['h'] / 2)
+        root_xy = dct.ckgen_pin_xy(ck, 'pll_hbm')      # the hbm die tree starts at the ckgen pll_hbm output pin
         vxy = {m: lef_xy(next(VIEWS[m]['dir'].glob('*.lef'))) for m in VIEWS}
         sinks = []
         for l, v in leaves.items():
@@ -440,7 +440,8 @@ puts OT_DONE
 '''
     if a.die_clock:
         ck = slots[a.ckgen]
-        cx = ck['origin']['x'] + ck['outline']['w'] / 2; cy = ck['origin']['y'] + ck['outline']['h'] / 2
+        import die_clock_tree as dct
+        cx, cy = dct.ckgen_pin_xy(ck, 'pll_hbm')       # die clock port at the ckgen pll_hbm output pin
         region_kinds = ('phy', 'pc')
         blk = []
         for n, b in sorted(P.items()):

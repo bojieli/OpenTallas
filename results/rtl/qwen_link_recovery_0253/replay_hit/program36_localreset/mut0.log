@@ -1,0 +1,8 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/codex/qkd_replay_hit_0253/src
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/codex/qkd_replay_hit_0253/src
+ot-run: ot-agidock128  admits    53 GB (avail 95, growth 48, headroom 24, waiters 0/0 GB) load 20/64 running 11 disk 359 GB 
+ot-run: -> ot-agidock128
+ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-1193542-1792147513 after 1 s
+frames C->S 1188 S->C 1188 kvn 144 results 36 host-checks 36 normal-epoch faults 0 errors 0
+D2D_PROGRAM_PASS
+ot-run: RAN on ot-agidock128 (unit oth-ubuntu-1193542-1792147513): exit 0

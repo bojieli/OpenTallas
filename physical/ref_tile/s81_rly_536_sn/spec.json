@@ -1,0 +1,99 @@
+{
+ "pin_regs": {
+  "enable": false,
+  "reason": "OWNER RULE 19:50 opt-out (coordinator APPROVED 2026-10-15): this relay IS one flip-flop per bit between its input and output pins (ot_s81_rly: i -> r -> o, no logic); a flow pin register would add a second stage per bit and a cycle the die calendar does not price"
+ },
+ "name": "s81_rly_536_sn",
+ "top": "dsfd_rly_536_SN",
+ "kind": "tile",
+ "sources": [
+  "rtl/dsrom_sys/s81_glue/ot_s81_rly.sv",
+  "rtl/dsrom_sys/s81_glue/dsfd_rly_masters_536.sv"
+ ],
+ "params": {},
+ "clock_port": "ck",
+ "reset_ports": [
+  "rs"
+ ],
+ "outline": {
+  "w": 56.16,
+  "h": 56.16
+ },
+ "macros": [],
+ "pins": {
+  "N": [
+   "o"
+  ],
+  "S": [
+   "i"
+  ],
+  "E": [
+   "ck",
+   "rs"
+  ]
+ },
+ "outhold": false,
+ "route": {
+  "pd": 0.45,
+  "threads": 4,
+  "peak_ram_gb": 8,
+  "pin_h": "M4",
+  "pin_v": "M3 M5",
+  "m5_pg_pitch": 2.7,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "job": {
+  "owner": "Codex:s81-net-fill",
+  "branch": "claude/el1015-snetfill-2215",
+  "tag": "rs1s56",
+  "purpose": "S81 full-shape536-bit service relay standard; realphysicalpinband/clock/resetclosure beforedieadoption; same productionone-edge536-bitworkload, explicit+1resetinitreleaseedge",
+  "benches": [
+   {
+    "name": "exact_words",
+    "cmd": "bash rtl/dsrom_sys/s81_glue/test/bench_rly.sh pass dsfd_rly_536_SN 536 {RUN}/bench_p 1",
+    "expect": "pass",
+    "pass_regex": "RLY_BENCH PASS 0 errors in 20000 words",
+    "threads": 2,
+    "peak_ram_gb": 4
+   },
+   {
+    "name": "neg_bit0_mutant",
+    "cmd": "bash rtl/dsrom_sys/s81_glue/test/bench_rly.sh mut dsfd_rly_536_SN 536 {RUN}/bench_m 1",
+    "expect": "fail",
+    "fail_regex": "RLY_BENCH FAIL",
+    "threads": 2,
+    "peak_ram_gb": 4
+   },
+   {
+    "name": "reset_register_bypass_mutant",
+    "cmd": "bash rtl/dsrom_sys/s81_glue/test/bench_rly.sh rsmut dsfd_rly_536_SN 536 {RUN}/bench_r 1",
+    "expect": "fail",
+    "fail_regex": "RLY_BENCH FAIL",
+    "threads": 2,
+    "peak_ram_gb": 4
+   }
+  ],
+  "views_to": "physical/ref_tile/s81_rly_536_sn/views",
+  "record_to": "results/rtl/ref_tile/s81_rly_536_sn",
+  "extra_paths": [
+   "rtl/dsrom_sys/s81_glue",
+   "physical/s81_die_pins/rly536_s56"
+  ]
+ },
+ "inhold": true,
+ "recipe": 2,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "structural_change": "S-DIE explicit56.16um square structural536 standard grant2026-10-16: old31.080x32.376 face cut~.83 cannot hold536pins; twoM4trackspacing(.096) needs51.456um+4.32margin, hence56.16square. NS pinsalternateM3/M5; W/E M4 2tracks; no syntheticoutputholdband. RealRSREG1 resetpinregister localizes536sinkreset: asyncassert unchanged, +1initialresetreleaseedge and0productiondataedges. Source-bind/bootstrapcalendar must carry this; no productionbackpressure. 1119instances area1.126->3.529mm2, +2.403mm2 beforediehomeintegration. Actualcurrentdieplacement/cuts/PGtracks/hops remainunqualified.",
+ "io_tcl": "physical/s81_die_pins/rly536_s56/dsfd_rly_536_SN.tcl",
+ "children": [],
+ "inter": []
+}

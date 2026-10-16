@@ -1,0 +1,11 @@
+ot-heavy: request 48G is charged 25G (class 'gate.py' measured peak 16.4G, n=34+0 proved); the cap stays 48G
+ot-heavy: admitted on regular-crane as oth-ubuntu-3435245-1792161562 after 0 s
+BAD row=0 word=0
+BAD row=0 word=1
+BAD row=0 word=2
+BAD row=0 word=3
+[1646000] %Fatal: tb_s81_engram_mix4_banded.sv:69: Assertion failed in tb_s81_engram_mix4_banded: FAIL 20471 words
+%Error: /srv/opentallas-scratch/claude/s81-mix4-parent-0600/src/rtl/dsrom_sys/engram/mix/tb_s81_engram_mix4_banded.sv:69: Verilog $stop
+Aborting...
+
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-3435245-1792161562): exit 1

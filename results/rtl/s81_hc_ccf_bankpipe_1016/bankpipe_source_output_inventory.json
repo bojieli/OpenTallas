@@ -1,0 +1,50 @@
+{
+  "schema": "opentallas.ccf.bankpipe.source_output_inventory.v1",
+  "source": "b9cb68868",
+  "scope": "RTL proc+opt source-only childboundary outputregister inventory, NOT native physical220/190 proof",
+  "leafs": {
+    "g_bank[0].u_b": {
+      "output_bit_counts": {
+        "registered": 514
+      },
+      "nonregistered_nonconstant_ports": []
+    },
+    "g_bank[1].u_b": {
+      "output_bit_counts": {
+        "registered": 514
+      },
+      "nonregistered_nonconstant_ports": []
+    },
+    "g_bank[2].u_b": {
+      "output_bit_counts": {
+        "registered": 514
+      },
+      "nonregistered_nonconstant_ports": []
+    },
+    "g_bank[3].u_b": {
+      "output_bit_counts": {
+        "registered": 514
+      },
+      "nonregistered_nonconstant_ports": []
+    },
+    "g_bank[4].u_b": {
+      "output_bit_counts": {
+        "registered": 514
+      },
+      "nonregistered_nonconstant_ports": []
+    },
+    "u_n": {
+      "output_bit_counts": {
+        "registered": 3697
+      },
+      "nonregistered_nonconstant_ports": []
+    },
+    "u_s": {
+      "output_bit_counts": {
+        "registered": 2673,
+        "constant_0": 256
+      },
+      "nonregistered_nonconstant_ports": []
+    }
+  }
+}

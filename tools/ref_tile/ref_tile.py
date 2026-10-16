@@ -258,6 +258,17 @@ def hold_pad_vars(s: dict) -> list:
         if not re.fullmatch(r"HB[1-4]xp67_ASAP7_75t_[RLS]L?", str(sc)):
             raise SpecError(f"spec: hold_pad.strong_cell {sc!r} is not an ASAP7 HB hold cell")
         out += [f"--orfs-var OT_HOLD_PAD_STRONG_RE={shq(sp)}", f"--orfs-var OT_HOLD_PAD_STRONG_MASTER={sc}"]
+        # "strong_stages" (S-ELEM-PQ 10-16): strong OUTPUT pads in series (leaf_iohold), for a measured R2O deficit larger
+        # than one HB4 step (~8 ps FF over HB3).  Default 1: kits unchanged.
+        ns = hp.get("strong_stages", 1)
+        if not isinstance(ns, int) or not 1 <= ns <= 3:
+            raise SpecError("spec: hold_pad.strong_stages must be an integer 1..3")
+        if ns > 1:
+            if not s.get("outhold"):
+                raise SpecError("spec: hold_pad.strong_stages needs outhold")
+            out.append(f"--orfs-var OT_HOLD_PAD_STRONG_STAGES={ns}")
+    elif "strong_stages" in hp:
+        raise SpecError("spec: hold_pad.strong_stages needs strong_ports")
     return out
 
 

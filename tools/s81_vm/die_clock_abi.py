@@ -126,12 +126,18 @@ VIEWS_A2F = {
     'ck_xio_fault_s': ('ot_s81_vm_fault_x34_s_w1 (same master as WFC)', 's_ck', 'ot_s81_vm_fault_x34_s_w1_native_1016_r1'),
     'ck_xio_fault_t': ('ot_s81_vm_fault_x34_t_w1 (same master as WFC)', 't_ck', 'ot_s81_vm_fault_x34_t_w1_native_1016_r1'),
     'ck_xio_fault_join_t': ('dsfd_vm_xio_fault_join', 'ck', 'dsfd_vm_xio_fault_join_native_1016_r2'),
+    # S-VM-X34 10-16: u_xsw = ot_s81_vm_x34_sw2 (two W514 halves h0/h1 on root [2]); one W514 master per side for all three
+    'ck_landing_x34_s': ('ot_s81_vm_x34_s W514 (u_xsel, u_xcol, u_xsw.h0, u_xsw.h1)', 's_ck', 'ot_s81_vm_x34_s_w514_1015_f4'),
+    'ck_landing_x34_t': ('ot_s81_vm_x34_t W514 (u_xsel, u_xcol, u_xsw.h0, u_xsw.h1)', 't_ck', 'ot_s81_vm_x34_t_w514_1015_f4'),
+    'ck_xio_return_t': ('dsfd_vm_xio_return r3 (plain pin capture, cycle-identical to r2)', 'ck', 'dsfd_vm_xio_return_native_1016_r3'),
 }
 DISPOSITION_A2F = {
+    'ck_landing_x34_s': ('BOUND', 'W1026 u_xsw (native launch FAIL n1 234.5 / n3 233.9 ps) split into two closed native-PASS W514 '
+                         'halves (L211.2/C171.9/sp22.5); bit-identical, zero cycles (S-VM-X34 10-16)'),
     'ck_landing_t': ('BOUND_NATIVE_COMPONENT', 'Five native source-identical hard leaves adopted in A2F source; data age2/II1, diagnostic flags +2 edges; full new parent gate PASS bc297977c; die binding still required'),
     'ck_wfc_return_t': ('FIX_IN_FLIGHT', 'dsfd_vm_wfc_return RESPONSE_PAD 2: r2 gate WARN (194.4x324, util 5 %, W clock 150 um from sinks) not routed; right-sized r3 kit in flight (S-VM 10-16)'),
     'ck_write_control_t': ('BOUND', 'A2-F front control4 roots (s81_a2f_control4_resetlocal r3, routed CLOSED, native PASS)'),
-    'ck_xio_return_t': ('FIX_IN_FLIGHT', 'dsfd_vm_xio_return r2 routed CLOSED TT+119.18/FF+16.74 but routed native FAIL capture 220.0 ps on e_v[0]; structural r3 in flight (S-VM 10-16)'),
+    'ck_xio_return_t': ('BOUND', 'r3 routed CLOSED TT+196.13/FF+20.91/DRC0, routed native L184.3/C154.2/sp38.5 PASS; r3==r2 every output every cycle (tools/s81_vm/xio_return_r3_equiv_gate.sh)'),
 }
 for _k in ('ck_rsched_t', 'ck_write_header_t', 'ck_write_payload_t', 'ck_write_fault_t', 'ck_write_summary_t', 'ck_mem_native_diag_t',
            'ck_cap_fault_s', 'ck_cap_fault_t', 'ck_wfc_control_t', 'ck_wfc_fault_s', 'ck_wfc_fault_t', 'ck_wfc_fault_x34_s',

@@ -1,0 +1,257 @@
+{
+  "schema": "opentallas.s81.hc_current_prebuild.v1",
+  "source_main": "2435b4f3acf0625532389322e8c1997293fd0538",
+  "scope": "candidate only; current legacy diagnostic and explicit compiler-calendar source join; no die adoption",
+  "shape": {
+    "NG": 256,
+    "D": 5120,
+    "S_RD": 2,
+    "S_RT": 4,
+    "RF": 5,
+    "RW": 2,
+    "HALF": 1,
+    "RLY": 2,
+    "DW": 6,
+    "RET_EXTRA": 1,
+    "CCF_BP": 3
+  },
+  "actual_children": 20,
+  "serial_roots": 20,
+  "extra_legacy_controller_roots": 1,
+  "static_controller_clock": "same serial root as sequencer; controller/serial crossing requires actual fixed phase bridge externally",
+  "boundary_payload_bits_per_cycle": {
+    "VM_read": 1024,
+    "VM_write": 2172,
+    "Y_in": 2560,
+    "centre_forward": 2927,
+    "centre_return": 2164
+  },
+  "communication": "full existing arithmetic, same FP rounding/order and data stages; static controller replacement has explicit tagged row/completion/scalar calendar input, no readiness scheduling",
+  "area_status": "actual leaf outlines in proposed tallpack; static sequencer, trimmed forward pad and bank successor are not physically qualified",
+  "tallpack": {
+    "schema": "opentallas.s81.hc_comb_tallpack_request.v1",
+    "by": "S-ENGRAM+NORM helper HC-COMB-2 2026-10-16",
+    "outline_um": [
+      575.992,
+      943.52
+    ],
+    "children": [
+      {
+        "name": "u_cf.u_s",
+        "x": 0,
+        "y": 0,
+        "w": 492.48,
+        "h": 34.56,
+        "group": "ccf"
+      },
+      {
+        "name": "u_cf.g_bank[0].u_b",
+        "x": 0,
+        "y": 54.56,
+        "w": 216.0,
+        "h": 125.28,
+        "group": "ccf"
+      },
+      {
+        "name": "u_cf.g_bank[1].u_b",
+        "x": 236.0,
+        "y": 54.56,
+        "w": 216.0,
+        "h": 125.28,
+        "group": "ccf"
+      },
+      {
+        "name": "g_aq[3].u_caq",
+        "x": 460.0,
+        "y": 54.56,
+        "w": 114.48,
+        "h": 114.48,
+        "group": "caq"
+      },
+      {
+        "name": "u_cf.g_bank[2].u_b",
+        "x": 0,
+        "y": 199.84,
+        "w": 216.0,
+        "h": 125.28,
+        "group": "ccf"
+      },
+      {
+        "name": "u_cf.g_bank[3].u_b",
+        "x": 236.0,
+        "y": 199.84,
+        "w": 216.0,
+        "h": 125.28,
+        "group": "ccf"
+      },
+      {
+        "name": "g_aq[1].u_caq",
+        "x": 460.0,
+        "y": 199.84,
+        "w": 114.48,
+        "h": 114.48,
+        "group": "caq"
+      },
+      {
+        "name": "u_cf.g_bank[4].u_b",
+        "x": 0,
+        "y": 345.12,
+        "w": 216.0,
+        "h": 125.28,
+        "group": "ccf"
+      },
+      {
+        "name": "g_aq[2].u_caq",
+        "x": 236.0,
+        "y": 345.12,
+        "w": 114.48,
+        "h": 114.48,
+        "group": "caq"
+      },
+      {
+        "name": "g_aq[0].u_caq",
+        "x": 358.48,
+        "y": 345.12,
+        "w": 114.48,
+        "h": 114.48,
+        "group": "caq"
+      },
+      {
+        "name": "u_cf.u_n",
+        "x": 0,
+        "y": 490.4,
+        "w": 492.48,
+        "h": 34.56,
+        "group": "ccf"
+      },
+      {
+        "name": "u_pd.u_r6",
+        "x": 0,
+        "y": 544.96,
+        "w": 138.24,
+        "h": 99.36,
+        "group": "pad"
+      },
+      {
+        "name": "u_pd.u_f5r1(f3r1)",
+        "x": 145.917,
+        "y": 544.96,
+        "w": 138.24,
+        "h": 99.36,
+        "group": "pad"
+      },
+      {
+        "name": "u_pd.u_f8",
+        "x": 291.835,
+        "y": 544.96,
+        "w": 138.24,
+        "h": 49.68,
+        "group": "pad"
+      },
+      {
+        "name": "u_cr.g_meta.u_m",
+        "x": 291.835,
+        "y": 598.96,
+        "w": 138.24,
+        "h": 15.12,
+        "group": "pad"
+      },
+      {
+        "name": "u_pd.u_r5",
+        "x": 437.752,
+        "y": 544.96,
+        "w": 138.24,
+        "h": 99.36,
+        "group": "pad"
+      },
+      {
+        "name": "u_rx",
+        "x": 0,
+        "y": 664.32,
+        "w": 110.16,
+        "h": 69.12,
+        "group": "other"
+      },
+      {
+        "name": "u_cr.u_core",
+        "x": 0,
+        "y": 753.44,
+        "w": 151.2,
+        "h": 190.08,
+        "group": "other"
+      },
+      {
+        "name": "u_nt",
+        "x": 159.84,
+        "y": 753.44,
+        "w": 181.44,
+        "h": 181.44,
+        "group": "other"
+      },
+      {
+        "name": "u_seq",
+        "x": 349.92,
+        "y": 753.44,
+        "w": 190.08,
+        "h": 190.08,
+        "group": "other"
+      }
+    ],
+    "overlaps": [],
+    "outside": [],
+    "fill": 0.694,
+    "v23": {
+      "comb_origin": [
+        619.92,
+        7581.6
+      ],
+      "comb_top": 8525.12,
+      "cpin_now": [
+        8498.32,
+        8698.32
+      ],
+      "cpin_move_to_bottom": 8545.12,
+      "cpin_top_after": 8745.12,
+      "hc_s_top_local": 9130.32
+    },
+    "v19": {
+      "comb_origin": [
+        619.92,
+        7408.8
+      ],
+      "comb_top": 8352.32,
+      "cpin_now": [
+        8325.52,
+        8525.52
+      ],
+      "cpin_move_to_bottom": 8372.32,
+      "cpin_top_after": 8572.32,
+      "hc_s_top_local": 8633.52
+    }
+  },
+  "capacity_status": "all incident pins/relay/cuts/clocks remain open, <=0.60 required; rectangular nonoverlap is insufficient",
+  "latency_status": "CCF_PINREG +3 public edges offset by3 forward pad edges; existing NG256 diagnostic proof only; current static all-kind/clocked composition unmeasured",
+  "added_static_control_input_bits": 165,
+  "root_partition_status": "CCF seven roots measured max4975 FF in earlier source; actual updated current20 all-root census required",
+  "physical_gates": {
+    "TT_setup_ps": 0,
+    "FF_hold_ps": 0,
+    "DRC": 0
+  },
+  "sources": {
+    "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_comb.sv": "73209624bb432b4c29e8a5c49482de1621f7f85ea1b4f120a0c8a8bb017ff2cb",
+    "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_pad_split.sv": "974a6f37e1825ba319dcb7cba2a58197a9035016dfda22920d9926b10ec4d5d0",
+    "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_ccf_bankpipe.sv": "c5fc59bad4739dd6693c2f464228c64b810cde5cfc6fa330a2299534a9cab68b"
+  },
+  "static_pin_transport": {
+    "source": "actual cpin register transport, shared serial input domain",
+    "new_data_ff": 165,
+    "new_external_terminals": 330,
+    "existing_credit_counter_ff_removed": 9,
+    "credit_backpressure": "none; Y acceptance is scheduled event regardless pop/occupancy; capacity faults remain consumers responsibility",
+    "command_boundary_edges": 1,
+    "Y_boundary_edges": 1,
+    "clock_roots": 1,
+    "physical_view": "unbuilt; legacy cpin two-root view not inheritable"
+  }
+}
