@@ -1,0 +1,19 @@
+{
+  "schema": "opentallas.writer_v6_gate_receipt.v1",
+  "variant": "north_body",
+  "source_commit": "310ab8d39b806c8ff50c8a1e47a7d5da5dcb3d5d",
+  "gate_result": "physical/ref_tile/hcoll_vmwrite_static_v6_roots/gate_result.json",
+  "scope": "pre-route CTS placement diagnostic; not routed or native qualification",
+  "placement_tt_setup_ps": -121.5301193013829,
+  "placement_tt_hold_ps": 44.3807490757564,
+  "body_R_ps": 319.9,
+  "body_all_max_ps": 356.5,
+  "body_all_spread_ps": 61.8,
+  "images_inspected": [
+    "floorplan",
+    "post-CTS density"
+  ],
+  "observations": "Sparse body with crowded boundary edges. Gate clock PASS is a sink-count rule; R and native budgets remain independent. Preserve this useful first diagnostic; no route submitted.",
+  "routed_native_qualification": "OPEN",
+  "adoption": "NONE"
+}
