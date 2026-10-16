@@ -7,6 +7,7 @@
    "width_um": 1036.8,
    "sms": 1,
    "leaves": "closed",
+   "attention": false,
    "half_um": [
     328.32,
     387.912
@@ -24,7 +25,27 @@
   {
    "width_um": 1036.8,
    "sms": 1,
+   "leaves": "closed",
+   "attention": true,
+   "half_um": [
+    328.32,
+    487.272
+   ],
+   "halves_per_row": 2,
+   "rows": 16,
+   "spine_um": 216.0,
+   "front_band_um": 743.8,
+   "height_um": 8907.4,
+   "area_per_sm_mm2": 9.235,
+   "sm32_mm2": 295.5,
+   "content_fill": 0.239,
+   "leaf_outline_fill": 0.411
+  },
+  {
+   "width_um": 1036.8,
+   "sms": 1,
    "leaves": "d62",
+   "attention": false,
    "half_um": [
     328.32,
     362.904
@@ -40,9 +61,67 @@
    "leaf_outline_fill": 0.402
   },
   {
+   "width_um": 1036.8,
+   "sms": 1,
+   "leaves": "d62",
+   "attention": true,
+   "half_um": [
+    328.32,
+    462.264
+   ],
+   "halves_per_row": 2,
+   "rows": 16,
+   "spine_um": 216.0,
+   "front_band_um": 743.8,
+   "height_um": 8507.2,
+   "area_per_sm_mm2": 8.82,
+   "sm32_mm2": 282.2,
+   "content_fill": 0.251,
+   "leaf_outline_fill": 0.403
+  },
+  {
+   "width_um": 1036.8,
+   "sms": 1,
+   "leaves": "d70",
+   "attention": false,
+   "half_um": [
+    328.32,
+    353.904
+   ],
+   "halves_per_row": 2,
+   "rows": 16,
+   "spine_um": 216.0,
+   "front_band_um": 713.6,
+   "height_um": 6743.3,
+   "area_per_sm_mm2": 6.991,
+   "sm32_mm2": 223.7,
+   "content_fill": 0.316,
+   "leaf_outline_fill": 0.396
+  },
+  {
+   "width_um": 1036.8,
+   "sms": 1,
+   "leaves": "d70",
+   "attention": true,
+   "half_um": [
+    328.32,
+    453.264
+   ],
+   "halves_per_row": 2,
+   "rows": 16,
+   "spine_um": 216.0,
+   "front_band_um": 743.8,
+   "height_um": 8363.2,
+   "area_per_sm_mm2": 8.671,
+   "sm32_mm2": 277.5,
+   "content_fill": 0.255,
+   "leaf_outline_fill": 0.398
+  },
+  {
    "width_um": 2073.6,
    "sms": 2,
    "leaves": "closed",
+   "attention": false,
    "half_um": [
     328.32,
     387.912
@@ -60,7 +139,27 @@
   {
    "width_um": 2073.6,
    "sms": 2,
+   "leaves": "closed",
+   "attention": true,
+   "half_um": [
+    328.32,
+    487.272
+   ],
+   "halves_per_row": 5,
+   "rows": 13,
+   "spine_um": 216.0,
+   "front_band_um": 743.8,
+   "height_um": 7380.7,
+   "area_per_sm_mm2": 7.652,
+   "sm32_mm2": 244.9,
+   "content_fill": 0.289,
+   "leaf_outline_fill": 0.496
+  },
+  {
+   "width_um": 2073.6,
+   "sms": 2,
    "leaves": "d62",
+   "attention": false,
    "half_um": [
     328.32,
     362.904
@@ -74,6 +173,101 @@
    "sm32_mm2": 190.2,
    "content_fill": 0.372,
    "leaf_outline_fill": 0.483
+  },
+  {
+   "width_um": 2073.6,
+   "sms": 2,
+   "leaves": "d62",
+   "attention": true,
+   "half_um": [
+    328.32,
+    462.264
+   ],
+   "halves_per_row": 5,
+   "rows": 13,
+   "spine_um": 216.0,
+   "front_band_um": 743.8,
+   "height_um": 7055.6,
+   "area_per_sm_mm2": 7.315,
+   "sm32_mm2": 234.1,
+   "content_fill": 0.302,
+   "leaf_outline_fill": 0.486
+  },
+  {
+   "width_um": 2073.6,
+   "sms": 2,
+   "leaves": "d70",
+   "attention": false,
+   "half_um": [
+    328.32,
+    353.904
+   ],
+   "halves_per_row": 5,
+   "rows": 13,
+   "spine_um": 216.0,
+   "front_band_um": 713.6,
+   "height_um": 5616.8,
+   "area_per_sm_mm2": 5.823,
+   "sm32_mm2": 186.4,
+   "content_fill": 0.379,
+   "leaf_outline_fill": 0.475
+  },
+  {
+   "width_um": 2073.6,
+   "sms": 2,
+   "leaves": "d70",
+   "attention": true,
+   "half_um": [
+    328.32,
+    453.264
+   ],
+   "halves_per_row": 5,
+   "rows": 13,
+   "spine_um": 216.0,
+   "front_band_um": 743.8,
+   "height_um": 6938.6,
+   "area_per_sm_mm2": 7.194,
+   "sm32_mm2": 230.2,
+   "content_fill": 0.307,
+   "leaf_outline_fill": 0.479
+  },
+  {
+   "width_um": 1036.8,
+   "sms": 1,
+   "leaves": "d70n",
+   "attention": false,
+   "half_um": [
+    306.72,
+    353.904
+   ],
+   "halves_per_row": 3,
+   "rows": 11,
+   "spine_um": 0.0,
+   "front_band_um": 713.6,
+   "height_um": 4865.7,
+   "area_per_sm_mm2": 5.045,
+   "sm32_mm2": 161.4,
+   "content_fill": 0.438,
+   "leaf_outline_fill": 0.549
+  },
+  {
+   "width_um": 1036.8,
+   "sms": 1,
+   "leaves": "d70n",
+   "attention": true,
+   "half_um": [
+    306.72,
+    453.264
+   ],
+   "halves_per_row": 3,
+   "rows": 11,
+   "spine_um": 0.0,
+   "front_band_um": 743.8,
+   "height_um": 5988.9,
+   "area_per_sm_mm2": 6.209,
+   "sm32_mm2": 198.7,
+   "content_fill": 0.356,
+   "leaf_outline_fill": 0.555
   }
  ]
 }

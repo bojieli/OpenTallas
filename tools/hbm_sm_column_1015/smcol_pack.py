@@ -15,14 +15,25 @@ import matplotlib.pyplot as plt
 from matplotlib.patches import Rectangle
 
 G = 21.6
-LEAF = {"closed": {"xs": (302.4, 155.544), "tcl": (86.4, 120.024), "tct": (194.4, 69.144), "bdc": (112.32, 142.56)},
+LEAF = {"d70n": {"xs": (302.4, 155.544), "tcl": (86.4, 97.92), "tct": (194.4, 57.24), "bdc": (90.72, 125.64)},  # (c): bdc narrowed so a half is 306.7 wide (3 per 1036.8 row)
+        "d70": {"xs": (302.4, 155.544), "tcl": (86.4, 97.92), "tct": (194.4, 57.24), "bdc": (112.32, 101.52)},
+        "closed": {"xs": (302.4, 155.544), "tcl": (86.4, 120.024), "tct": (194.4, 69.144), "bdc": (112.32, 142.56)},
         "d62": {"xs": (302.4, 155.544), "tcl": (86.4, 108.0), "tct": (194.4, 56.16), "bdc": (112.32, 116.64)}}
 FRONT_MM2 = 0.43
 BE_MM2 = 8 * 319.68 * 77.76 / 1e6
 CONTENT_MM2 = 2.21
 
 
-def half(L):
+ATT = {"pv": (171.288, 77.76), "pvadd": (113.4, 70.2)}   # per leaf-half: 1 x 64x512 PV merge stack + 16 FP32 merge adders (~5.6k um2 std at ~70 %)
+ATT_FRONT_MM2 = 2 * 171.288 * 77.76 / 1e6                 # 2 x 64x512 converter wave buffers per SM (front)
+
+
+def half(L, att=False):
+    if att:
+        w0, h0, k0 = half(L)
+        y = h0 + G
+        kids = k0 + [("pv", 0, y, *ATT["pv"]), ("pvadd", ATT["pv"][0] + G, y, *ATT["pvadd"])]
+        return round(max(w0, ATT["pv"][0] + G + ATT["pvadd"][0]), 3), round(y + max(ATT["pv"][1], ATT["pvadd"][1]), 3), kids
     tw = max(2 * L["tcl"][0] + G, L["tct"][0])
     th = L["tcl"][1] + G + L["tct"][1]
     w = max(L["xs"][0], tw + G + L["bdc"][0])
@@ -32,14 +43,14 @@ def half(L):
     return round(w, 3), round(h, 3), kids
 
 
-def plan(width, n_sm, leaves, spine=345.6):
-    w, h, kids = half(LEAF[leaves])
+def plan(width, n_sm, leaves, spine=345.6, att=False):
+    w, h, kids = half(LEAF[leaves], att)
     per_row = int((width - spine - G) // (w + G))
     halves = 32 * n_sm
     rows = -(-halves // per_row)
-    front_h = round((FRONT_MM2 + BE_MM2) * n_sm * 1e6 / width / 0.85, 1)   # front + 8 BE band on the S face
+    front_h = round((FRONT_MM2 + BE_MM2 + (ATT_FRONT_MM2 if att else 0)) * n_sm * 1e6 / width / 0.85, 1)   # front + 8 BE band on the S face
     H = round(front_h + G + rows * (h + G), 1)
-    return dict(width_um=width, sms=n_sm, leaves=leaves, half_um=[w, h], halves_per_row=per_row, rows=rows,
+    return dict(width_um=width, sms=n_sm, leaves=leaves, attention=att, half_um=[w, h], halves_per_row=per_row, rows=rows,
                 spine_um=spine, front_band_um=front_h, height_um=H, area_per_sm_mm2=round(width * H / 1e6 / n_sm, 3),
                 sm32_mm2=round(32 * width * H / 1e6 / n_sm, 1), content_fill=round(CONTENT_MM2 * n_sm / (width * H / 1e6), 3),
                 leaf_outline_fill=round(halves * sum(a * b for k, x, y, a, b in kids) / (width * H), 3)), kids
@@ -53,7 +64,7 @@ def draw(p, kids, out):
     hw, hh = p["half_um"]; per = p["halves_per_row"]; sx = per // 2 * (hw + G)
     ax.add_patch(Rectangle((sx, p["front_band_um"] + G), p["spine_um"], H - p["front_band_um"] - G, color="#f6e7b0"))
     ax.text(sx + 5, H - 60, "spine: transport + BE", fontsize=5, rotation=90)
-    col = {"xs": "#6a8fb5", "tcl": "#8cc1b8", "tct": "#74b06a", "bdc": "#f0a050"}
+    col = {"xs": "#6a8fb5", "tcl": "#8cc1b8", "tct": "#74b06a", "bdc": "#f0a050", "pv": "#9a9aa8", "pvadd": "#e07a7a"}
     n = 0
     for r in range(p["rows"]):
         y0 = p["front_band_um"] + G + r * (hh + G)
@@ -72,12 +83,13 @@ def draw(p, kids, out):
 def main():
     out = Path(sys.argv[1] if len(sys.argv) > 1 else "results/arch/hbm_sm_column_1015"); out.mkdir(parents=True, exist_ok=True)
     rec = []
-    for width, n, spine in ((1036.8, 1, 216.0), (2073.6, 2, 216.0)):
-        for lv in ("closed", "d62"):
-            p, kids = plan(width, n, lv, spine)
-            rec.append(p)
-            draw(p, kids, out / f"smcol_{int(width)}_{lv}.png")
-            print(json.dumps(p))
+    for width, n, spine in ((1036.8, 1, 216.0), (2073.6, 2, 216.0), (1036.8, 1, 0.0)):
+        for lv in (("closed", "d62", "d70") if spine else ("d70n",)):
+            for att in (False, True):
+                p, kids = plan(width, n, lv, spine, att)
+                rec.append(p)
+                draw(p, kids, out / f"smcol_{int(width)}_s{int(spine)}_{lv}{'_att' if att else ''}.png")
+                print(json.dumps({k: p[k] for k in ("width_um", "sms", "leaves", "attention", "spine_um", "half_um", "halves_per_row", "rows", "height_um", "area_per_sm_mm2", "sm32_mm2")}))
     (out / "smcol_pack.json").write_text(json.dumps({"schema": "opentallas.hbm.sm_column_pack.v1", "agent": "Claude H-SM",
                                                      "date": "2026-10-15", "plans": rec}, indent=1) + "\n")
 
