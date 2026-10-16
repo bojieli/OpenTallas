@@ -1,0 +1,24 @@
+{
+ "cell": "hfd_hgi_vm_calendar_f20",
+ "view": "physical/ref_tile/hv16_vm_cal_f20_ww/views/hfd_hgi_vm_calendar_f20",
+ "lib_cell": "hfd_hgi_vm_calendar_f20",
+ "insertion": true,
+ "ref_src": [
+  "insertion.json boundary mean",
+  "lib midrange"
+ ],
+ "R_ps": 231.2,
+ "spread_ps": 34.8,
+ "outputs": 225,
+ "inputs": 329,
+ "launch_ps": 189.7,
+ "launch_pin": "response_seq[0]",
+ "capture_ps": 175.0,
+ "capture_pin": "cfg_data[107]",
+ "launch_over": 0,
+ "capture_over": 0,
+ "comb_pins": 0,
+ "comb_first": [],
+ "pass": true,
+ "fail_why": ""
+}
