@@ -25,6 +25,9 @@ module ot_s81_ingest_visibility_fence #(parameter integer ENABLE=0,PROTECT=0,PIP
   assign fault=0;assign landed_debug=0;
   always @(*)begin in_cr=0;out_v=0;out_d=0;end
  end else begin:g_on
+  // declared before the OT_S81_HOST_PHASESAFE seams that read them (Yosys rejects the forward reference)
+  reg[31:0] commits,snapshot;reg commit_p,snapshot_p,req;
+  reg ack_host,ac1,ac2;reg fc;
 `ifdef OT_S81_HOST_PHASESAFE
   wire rn_c,rn_h;
   ot_reset_sync rs_c(.clk(ck),.async_rst_n(rst_n),.sync_rst_n(rn_c));
@@ -38,8 +41,6 @@ module ot_s81_ingest_visibility_fence #(parameter integer ENABLE=0,PROTECT=0,PIP
   wire ack_seam=ack_host,req_seam=req,fc_seam=fc;
   wire [31:0]snapshot_seam=snapshot;
 `endif
-  reg[31:0] commits,snapshot;reg commit_p,snapshot_p,req;
-  reg ack_host,ac1,ac2;reg fc;
   wire[32:0] add={1'b0,commits}+ack_n;
   always @(posedge ck or negedge rn_c)begin
    if(!rn_c)begin commits<=0;snapshot<=0;commit_p<=0;snapshot_p<=0;req<=0;ac1<=0;ac2<=0;fc<=0;end
