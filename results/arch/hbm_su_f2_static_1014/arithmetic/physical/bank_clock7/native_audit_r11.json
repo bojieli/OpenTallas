@@ -1,0 +1,29 @@
+{
+ "cell": "ot_hbm_su_static_bank6_clock_physical",
+ "view": "physical/ref_tile/hbm_su_static_bank6_clock7_1015/views/ot_hbm_su_static_bank6_clock_physical",
+ "lib_cell": "ot_hbm_su_static_bank6_clock_physical",
+ "insertion": true,
+ "ref_src": [
+  "insertion.json boundary mean",
+  "lib midrange"
+ ],
+ "R_ps": 173.6,
+ "spread_ps": 45.2,
+ "outputs": 198,
+ "inputs": 103,
+ "launch_ps": 180.3,
+ "launch_pin": "read_data[60]",
+ "capture_ps": 121.2,
+ "capture_pin": "write_data[5]",
+ "launch_over": 0,
+ "capture_over": 0,
+ "comb_pins": 0,
+ "comb_first": [],
+ "pass": true,
+ "fail_why": "",
+ "job": "hbm_su_static_bank6_clock7_1015-r11-f86d487d1",
+ "record": "9705395b3",
+ "tool": "tools/hier_contract/native_pin_audit.py audit_one (TT ETM of the record view, R = insertion.json boundary mean)",
+ "audited": "2026-10-16T00:50-07:00 Claude H-SU",
+ "layout_looked": "routed floorplan.png + density.png from the route dir, LOOKED (Read) 00:30"
+}
