@@ -5678,8 +5678,10 @@ def buses_r8(m):
                     bus(f'hr_{half}{t}_o', 'local', ncol * (CRET + 1) + 2, [(endb.name, 'o'), (ga.name, f'r{half}{t}')])
     # ---------------- scan services <-> VM, band links, selector / collector -> VM
     _svc_chains(m, CH8, P, cor, end_spec, hub_block)
-    # ---------------- links: collective <-> link macros
-    _link_chains(m, CH8, P, cor, end_spec, hub_block, rowl)
+    # In a shared SU|VM/link street, allocate native hub pin landings first.
+    # Later links retain every occupancy and reach check; no placement is waived.
+    if not HUB_FIRST_STATIONS:
+        _link_chains(m, CH8, P, cor, end_spec, hub_block, rowl)
     # ---------------- hub-internal buses (adjacent slabs, direct)
     hb = hub
     for a_, b_, bits, pa, pb in (('vm', 'su_s', 1024, 't_su_s', 'f_vm'), ('vm', 'su_n', 1024, 't_su_n', 'f_vm'),
@@ -5735,6 +5737,8 @@ def buses_r8(m):
                            reach_um=SER_STAGE_UM if ser_ else None)
         else:
             bus(f'hb_{a_}_{b_}', 'hub', bits, [(hb[a_].name, pa), (hb[b_].name, pb)])
+    if HUB_FIRST_STATIONS:
+        _link_chains(m, CH8, P, cor, end_spec, hub_block, rowl)
     # ---------------- PHY / controller / service
     npins = len(real_ports_r8()[real_lef(PHY_LEF)['name']]['dfi'])
     for st, ph in m['phys'].items():
@@ -5932,6 +5936,7 @@ HOP_FIX = False                 # --hop-fix (S81-RERUN v6, default off): station
                                 #   measured pin anchor to pin anchor on a first build (budget sheets 2026-10-06)
 HOP_PLAN = None                 # {(drv inst, drv port, load inst, load port): (L um, (dx, dy), (lx, ly))}
 VM_FACE_MM2 = None              # --vm-face-mm2 (v9e): minimum VM slab area on every die (layer die 2.6599)
+HUB_FIRST_STATIONS = False     # candidate native hub landings before shared-street links
 PIN_RELAY = False               # --pin-relay (OWNER rule 1, 2026-10-07): a relay station abutting every hardened-block pin
 PIN_SEG = 100.0                 #   on die interfaces (last segment <= 100 um)
 PIN_NEED = False                # --pin-need (hbmdie-1011, compact199): a column net's relay count / path end at a q element
@@ -11971,6 +11976,8 @@ def die_options(ap):
     ap.add_argument('--static-collective', action='store_true', help='swap the hub collective to dsfd_sp_collective_static_c (needs its RTL in the tree)')
     ap.add_argument('--pqcnt-lef-pins', action='store_true', help='S-DIE-WFC 2026-10-16 (c26j): bound --pq-cnt count leaves '
                     '(ot_s81_pq_rwbc15 / rwbc2) take their assigned-port pin rectangles from the bound LEF verbatim')
+    ap.add_argument('--hub-first-stations', action='store_true', help='candidate allocation order: native hub chains '
+                    'before shared-street link stations; unchanged occupancy and reach checks')
     ap.add_argument('--wfc-return256', action='store_true', help='S-DIE-WFC 2026-10-16 (c26j): dsfd_sp_vm WFC_RETURN256 1 '
                     '(u_wfc.u_ret = return256 lo/hi + native valid diag, S-VM 6136ed704): ck/rss_wfc_return_t 1 -> 3 roots')
     ap.add_argument('--vm-native-candidate', action='store_true', help='explicit source candidate dsfd_sp_vm READ_PIPE4/CAP_PIPE2/WSCATTER_PIPE1; requires actual wrapper parameters; no physical/native qualification inheritance')
@@ -12021,6 +12028,8 @@ def apply_options(a):
     VM_NATIVE_CANDIDATE = bool(getattr(a, 'vm_native_candidate', False))
     if VM_NATIVE_CANDIDATE:
         vm_native_candidate_params()
+    global HUB_FIRST_STATIONS
+    HUB_FIRST_STATIONS = bool(getattr(a, 'hub_first_stations', False))
     global WFC_RETURN256, PQCNT_LEF_PINS
     PQCNT_LEF_PINS = bool(getattr(a, 'pqcnt_lef_pins', False))
     WFC_RETURN256 = bool(getattr(a, 'wfc_return256', False))
