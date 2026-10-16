@@ -422,5 +422,9 @@
   "clk_cap"
  ],
  "slot_change_request": "H-HARDEN 0030 el1015-hbm-v15-harden.log 2026-10-16: calendar_* (x4) typed clock pins on the W face: clk_mem [24.48,24.576] (raw SRAM entry, 22.9 um from macro clk pin), clk [43.536,43.632], clk_cap [43.632,43.728]; the rest of the W run recentred 0.048 um down; outline/E/S unchanged. Structural fix of native FAIL hv15_vm_cal_u-compact2330-24eeb93bb (W capture root vs E/S body root).",
- "reroute_reason": "structural: closed hv15_vm_cal_u-compact2330-24eeb93bb FAILS the native pin audit (launch 222.0 ps/4 pins, capture 206.2 ps/16 cfg_data pins, boundary spread 92.8 ps; results/rtl/hbm_harden_2330/calendar_native.json). Measured routed arrivals: W capture rung mean 288.9 ps vs E outputs 220.2 ps on one root. RTL changes the clock structure (clk_cap capture root, clk_mem raw SRAM entry); logic and normal edges unchanged."
+ "reroute_reason": {
+  "kind": "rtl_change",
+  "why": "structural: closed hv15_vm_cal_u-compact2330-24eeb93bb FAILS the native pin audit (launch 222.0 ps/4 pins, capture 206.2 ps/16 cfg_data pins, boundary spread 92.8 ps; results/rtl/hbm_harden_2330/calendar_native.json). Measured routed arrivals: W capture rung mean 288.9 ps vs E outputs 220.2 ps on one root. RTL changes the clock structure (clk_cap capture root, clk_mem raw SRAM entry); logic and normal edges unchanged.",
+  "source": "results/rtl/hbm_harden_2330/calendar_native.json"
+ }
 }
