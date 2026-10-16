@@ -191,7 +191,7 @@ module ot_qfd_sp_vector_memory_bv #(
     parameter integer RETURN_LEAVES = 0, // opt-in: existing E6/E7/E8 registers in 32 standard bit-plane leaves per copy
     parameter integer RETURN_CLOCKS = 0, // 1: independent return_ck pin per leaf; 0: component equivalence on clk
     // Q-VMWB 0030: 1 = the resetless region relays (u_id RV, u_rr / u_sr RO, u_rb) built from the CLOSED 256-bit register
-    // master qvm_data256_native (padded; D>1 chains fold through the same tiles), zero added edges.  Needs RV 1, RO 1, VMT 1.
+    // master qvm_data256_native (padded; D>1 chains fold through the same tiles), zero added edges.  Needs VMT 1 (any RV / RO).
     parameter integer RELAY_TILES = 0,
     parameter integer RELAY_NCK = 1,     // relay tile clock entries (RETURN_CLOCKS 1); must equal the elaborated count
     parameter integer NATIVE_BANKS = 0   // Q-VMWB 2026-10-15: native storage successors in every region (ot_qfd_vm_region_nx)
@@ -343,8 +343,8 @@ module ot_qfd_sp_vector_memory_bv #(
     localparam integer RT_SR = (NSU*NSB*512*RO + 255) / 256;
     localparam integer RT_G = RT_ID + RT_RR + RT_SR;
     localparam integer RT_ALL = NG*RT_G + (LNRB*(RV + RO + 3 + TLR) + 255) / 256;
-    if (RELAY_TILES != 0 && (VMT == 0 || RV != 1 || RO != 1)) begin : g_relay_bad
-        initial $fatal(1, "ot_qfd_sp_vector_memory_bv RELAY_TILES: needs VMT 1, RV 1, RO 1");
+    if (RELAY_TILES != 0 && VMT == 0) begin : g_relay_bad
+        initial $fatal(1, "ot_qfd_sp_vector_memory_bv RELAY_TILES: needs VMT 1");
     end
     if (RELAY_TILES != 0 && RETURN_CLOCKS != 0 && RELAY_NCK != RT_ALL) begin : g_relay_nck
         initial $fatal(1, "ot_qfd_sp_vector_memory_bv RELAY_NCK %0d != %0d relay tiles", RELAY_NCK, RT_ALL);
