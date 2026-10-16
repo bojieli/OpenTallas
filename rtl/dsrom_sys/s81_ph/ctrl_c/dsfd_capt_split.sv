@@ -378,30 +378,21 @@ module dsfd_capt_g2_dualho #(
 `endif
 endmodule
 
+// dsfd_capt_status_dual (S-VM-CAPT-STATUS 2026-10-16, DECISION B): wrapper of two single-clock hard leaves, no
+// logic and no clock tree of its own.  The intra-leaf ot_ratio_cdc_fifo (split1016 / split1016b: FF hold -81 ps on
+// its 1-tick 4:3 arcs, hold repair stalled) is replaced by the fixed-phase 3-bank transfer of
+// ctrl_c/dsfd_capt_status_x43.sv: dsfd_capt_status_x43_t (ck: f_sn sampled at stream index 0 / 2 / 3 into banks)
+// and dsfd_capt_status_x43_s (ckv: fixed-edge bank read into t_st).  Same ports; rst / rsv are now the die's
+// EPOCH resets (released on the common 3:4 epoch edge 0, the x34 / x43 startup contract) instead of raw resets
+// synchronised in the leaf.  Latency and sample rule: header of dsfd_capt_status_x43.sv.
 module dsfd_capt_status_dual (
     input wire [0:0] ck, rst, ckv, rsv,
     input wire [63:0] f_sn,
     output wire [63:0] t_st
 );
-    localparam integer LOCAL_CTRL = 1;
-    reg [1:0] rst_s, rv_s;
-    always @(posedge ck[0] or negedge rst[0]) if (!rst[0]) rst_s <= 2'b00; else rst_s <= {rst_s[0], 1'b1};
-    always @(posedge ckv[0] or negedge rsv[0]) if (!rsv[0]) rv_s <= 2'b00; else rv_s <= {rv_s[0], 1'b1};
-    (* keep *) reg [1:0] rst_h, rsv_h;
-    always @(posedge ck[0] or negedge rst_s[1]) if (!rst_s[1]) rst_h <= 2'b00; else rst_h <= 2'b11;
-    always @(posedge ckv[0] or negedge rv_s[1]) if (!rv_s[1]) rsv_h <= 2'b00; else rsv_h <= 2'b11;
-    reg [63:0] snq;
-    always @(posedge ck[0]) snq <= f_sn;
-    wire s_v; wire [63:0] s_d;
-    ot_ratio_cdc_fifo #(.W(64), .DEPTH(2), .LOCAL_CTRL(LOCAL_CTRL)) u_s (.wclk(ck[0]), .wrst_n(rst_h[1]), .w_v(1'b1), .w_rdy(), .w_d(snq),
-        .rclk(ckv[0]), .rrst_n(rsv_h[1]), .r_v(s_v), .r_rdy(1'b1), .r_d(s_d), .w_live(), .r_live());
-    reg [63:0] stq;
-    always @(posedge ckv[0] or negedge rsv_h[1]) if (!rsv_h[1]) stq <= 64'd0; else if (s_v) stq <= s_d;
-`ifdef S81PH_CAPS_MUT_STATUS
-    assign t_st = stq ^ 64'd8; // deliberately corrupt the externally consumed fault bit
-`else
-    assign t_st = stq;
-`endif
+    wire [63:0] b0, b2, b3; wire [2:0] bp; wire mk;
+    dsfd_capt_status_x43_t u_t (.ck(ck), .rst(rst), .f_sn(f_sn), .b0(b0), .b2(b2), .b3(b3), .bpar(bp), .t_mark(mk));
+    dsfd_capt_status_x43_s u_s (.ckv(ckv), .rsv(rsv), .b0(b0), .b2(b2), .b3(b3), .bpar(bp), .t_mark(mk), .t_st(t_st));
 endmodule
 
 module dsfd_capt_rly_31_EW (
