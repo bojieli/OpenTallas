@@ -12,12 +12,12 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 MODEL_PATH = "physical/s81_die_pins/host_sd_sliced_1016/host_split_model.json"
-MODEL_SHA256 = "8fd5f5f055b9ceab6bd237f20b56c4540189af20a039e444eb98dbfd42adcfca"
+MODEL_SHA256 = "d45f8df17bc4d50d87752f33632a672c75fb4353f39d02b1547a52a49c4d428e"
 GRAPH_HASHES = {
     "whole_host_graph.json": "b6a0be8b29798015bc6ace03954385cf3582fa0778c2a1d35e2bcc2d6dd564dc",
     "source_graph.json": "5319cf20dd2f5818987e06949c11b8121f2a750b71c9a88a232ed8de0cf8113a",
 }
-SOURCE_COMMIT = "8d21f3ddd3ddafffd1188c1ad9ecfc3d1a49e6f5"
+SOURCE_COMMIT = "1f346477b1bdab17bdcf9b942d9f3b08c03d775a"
 
 
 def read_pinned(path, digest):
