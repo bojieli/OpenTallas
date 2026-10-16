@@ -11,7 +11,7 @@ module qkd_static_k_issuer #(parameter integer RESPONSE_LAT=0, parameter integer
  output reg [15:0] req_epoch,output reg [5:0] req_layer,
  input wire rsp_valid,input wire [1023:0] rsp_data,input wire [13:0] rsp_t,
  input wire rsp_v,input wire [15:0] rsp_epoch,input wire [5:0] rsp_layer,
- output reg [1024:0] rs,output reg fault
+ output reg [1024:0] rs,output reg fault,output reg idle_issuer
 );
  initial if(RESPONSE_LAT<1) $fatal(1,"RESPONSE_LAT requires measured positive edge latency");
  (* keep *) reg rn;
@@ -53,4 +53,11 @@ module qkd_static_k_issuer #(parameter integer RESPONSE_LAT=0, parameter integer
    if(bad_rq || (go_q&&((|ev)||req_valid||rq[0])) || (rv_q&&!vv_q)!=ev[RESPONSE_LAT] ||
       (rv_q&&!vv_q&&returned!=ident[RESPONSE_LAT]))fault<=1;
   end
+ // Registered observation of the actual pending calendar and boundary valids.
+ // active is a latched epoch marker, not outstanding debt. Shared V also keeps
+ // this boundary busy until its real response pipeline clears.
+ always @(posedge ck or negedge rn)
+  if(!rn)idle_issuer<=0;
+  else idle_issuer<=!fault && !bad_rq && !kgo && !go_q && !rq[0] &&
+   !req_valid && !(|ev) && !rsp_valid && !rv_q && !rs[0];
 endmodule
