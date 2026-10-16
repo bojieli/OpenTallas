@@ -501,15 +501,45 @@ BOUND_TOL = SHAVE + 1e-6
 BOUND_ORIENTS = ('R0', 'MY', 'MX', 'R180')
 
 
-def bound_view_orientation_contract(view):
+def bound_view_orientation_contract(view, master=None):
     """Declared transforms of this hash-verified LEF, within placer support.
 
     No SYMMETRY declares R0 only. A placer accepting MY/MX is not evidence that
     an individual hard macro permits those transforms. This does not add any
     physical symmetry or qualify mirrored clock/PG/native timing invariants.
     """
-    match = re.search(r'^\s*SYMMETRY\s+([^;]+);', view['text'], re.M)
-    symmetry = match.group(1).split() if match else []
+    lines = view['text'].splitlines()
+    macros = [(j, z.group(1)) for j, line in enumerate(lines)
+              if (z := re.fullmatch(r'\s*MACRO\s+(\S+)\s*', line))]
+    errors, symmetry = [], []
+    targets = [(j, name) for j, name in macros if master is None or name == master]
+    if len(targets) != 1:
+        errors.append(f'expected exactly one verified MACRO {master!r}, found {len(targets)}')
+    else:
+        start, name = targets[0]
+        next_macro = next((j for j, _ in macros if j > start), len(lines))
+        end = next((j for j in range(start + 1, next_macro)
+                    if lines[j].strip() == f'END {name}'), None)
+        if end is None:
+            errors.append(f'MACRO {name} has no matching END')
+        else:
+            declarations = []
+            for line in lines[start + 1:end]:
+                line = line.strip()
+                if re.match(r'^(PIN|OBS)\b', line):
+                    break
+                if re.match(r'^SYMMETRY\b', line):
+                    declarations.append(line)
+            if len(declarations) > 1:
+                errors.append('duplicate MACRO-header SYMMETRY declarations')
+            elif declarations:
+                match = re.fullmatch(r'SYMMETRY\s+([^;]+)\s*;\s*', declarations[0])
+                if match is None:
+                    errors.append('malformed MACRO-header SYMMETRY declaration')
+                else:
+                    symmetry = match.group(1).split()
+                    if not symmetry or set(symmetry) - {'X', 'Y', 'R90'} or len(symmetry) != len(set(symmetry)):
+                        errors.append(f'unknown or duplicate SYMMETRY tokens {symmetry}')
     legal = {'R0'}
     if 'X' in symmetry:
         legal.add('MX')
@@ -521,8 +551,9 @@ def bound_view_orientation_contract(view):
         legal.update(('R90', 'R180', 'R270'))
         if 'X' in symmetry or 'Y' in symmetry:
             legal.update(('MX', 'MY', 'MXR90', 'MYR90'))
-    return dict(symmetry=symmetry, declared=sorted(legal),
-                supported=[o for o in BOUND_ORIENTS if o in legal])
+    return dict(symmetry=symmetry, declared=sorted(legal) if not errors else [],
+                supported=[o for o in BOUND_ORIENTS if o in legal] if not errors else [],
+                errors=errors)
 
 
 def apply_view_binding(m, pdir):
@@ -534,7 +565,7 @@ def apply_view_binding(m, pdir):
         return m['bound_views']
     bv = bound_views()
     rec = {}
-    if bv and os.environ.get('OT_S81_VIEW_BINDING_SKIP_MISFIT') == '1':
+    if os.environ.get('OT_S81_VIEW_BINDING_SKIP_MISFIT') == '1':
         # S-DIE 2026-10-16 (pathfinding trials, ROOT: bind every closed view): a master whose real view does not fit
         # its die slot (pin names / directions, non-R0 instance, outline larger than the generated slot) is NOT bound
         # and is listed in m['view_binding_misfits'] for its owner; nothing is relaxed for the masters that do bind
@@ -548,7 +579,7 @@ def apply_view_binding(m, pdir):
             why = bound_view_pin_faults(mst, v, pdir.get(mst, {}))[:4]
             if mst in REAL_FILES:
                 why.append('constant-bound hard macro')
-            orientation = bound_view_orientation_contract(v)
+            orientation = bound_view_orientation_contract(v, mst)
             nr = [dict(instance=i.name, orient=i.orient) for i in its if i.orient not in orientation['supported']]
             if nr:
                 why.append(f'{len(nr)} instance(s) outside literal LEF orientation contract '
@@ -593,10 +624,11 @@ def apply_view_binding(m, pdir):
             r_ = rec[it.master] = dict(lef=v['lef'], libs={c: v[c] for c in ('tt', 'ff', 'ss')}, size_um=[v['w'], v['h']],
                                        generated_slot_um=[round(it.w, 3), round(it.h, 3)], instances=0,
                                        binding_scope=v.get('binding_scope', 'QUALIFIED'))
-        orientation = bound_view_orientation_contract(v)
+        orientation = bound_view_orientation_contract(v, it.master)
         if it.orient not in orientation['supported']:
             raise SystemExit(f'VIEW_BINDING: {it.master} instance {it.name} is {it.orient}: literal LEF '
                              f'SYMMETRY {orientation["symmetry"]} permits {orientation["supported"]} '
+                             f'(parse errors: {orientation["errors"]}); '
                              'within placer support; no physical symmetry may be inferred')
         r_['orientation_contract'] = orientation
         if v['w'] > it.w + BOUND_TOL or v['h'] > it.h + BOUND_TOL:
