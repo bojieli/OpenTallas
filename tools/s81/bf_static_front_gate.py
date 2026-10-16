@@ -23,6 +23,7 @@ MUTANTS = {
     'programme_register_bypass': ('define', 'BF_PROG_MUTANT_CORE_BYPASS', ''),
     'control_latch_go_lost': ('define', 'BF_CTL_LAT_MUTANT_GO', ''),
     'read_pointer_copy_stall': ('define', 'BF_FRD_MUTANT_COPY', ''),
+    'seam_lockup_bit_flip': ('define', 'BF_SEAM_LK_MUTANT', ''),
     'cpin_register_bypass': (MASTER, '.CPIN(1)', '.CPIN(0)'),
     'address_check_removed': (CORE, 'prog_addr_pin != a_ctr ||', "1'b0 ||"),
     'pinlat_payload_lsb_loss': ('define', 'PINLAT_MUTANT_B0', ''),

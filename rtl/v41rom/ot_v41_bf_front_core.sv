@@ -268,6 +268,13 @@ module ot_v41_bf_front_core #(
     input  wire          prog_half_pin,
     input  wire [$clog2(NCH)-1:0] prog_chain_pin
 );
+    // fclk: free-running core clock below one always-enabled ICG (static programme), same depth as gclk.
+    wire fclk;
+    if (STATIC_PROGRAM != 0) begin : g_fcg
+        ot_hdc_cg u_fcg (.clk(clk), .en(1'b1), .gclk(fclk));
+    end else begin : g_nofcg
+        assign fclk = clk;
+    end
     // ---------------- QPIPE boundary (see the header) --------------------------------------------------------
     wire         rst_n, cfg_v, go, go_bf, xs_v, xb_v;
     wire [4:0]   cfg_a;
@@ -287,19 +294,19 @@ module ot_v41_bf_front_core #(
         // local reset: asserted with rst_n_pin, released on the clock edge after it (the parent's reset is
         // synchronous to clk, so one flop is a synchroniser; rst_n is then a register, not a primary input)
         (* keep, dont_touch = "true" *) reg rst_q;
-        always @(posedge clk or negedge rst_n_pin) if (!rst_n_pin) rst_q <= 1'b0; else rst_q <= 1'b1;
+        always @(posedge fclk or negedge rst_n_pin) if (!rst_n_pin) rst_q <= 1'b0; else rst_q <= 1'b1;
         assign rst_n = rst_q;
         reg b_go, b_cfg_v, b_go_bf;
         reg [NSEG-1:0] b_cdec;          // QY: cfg_v_pin && cfg_a_pin == NSEG + c, registered with b_cfg_a
-        always @(posedge clk or negedge rst_n_pin)
+        always @(posedge fclk or negedge rst_n_pin)
             if (!rst_n_pin) b_cdec <= '0;
             else for (int c = 0; c < NSEG; c++) b_cdec[c] <= cfg_v_pin && cfg_a_pin == 5'(NSEG + c);
         assign qy_cdec = b_cdec;
         reg [4:0] b_cfg_a; reg [47:0] b_cfg_d;
-        always @(posedge clk or negedge rst_n_pin)
+        always @(posedge fclk or negedge rst_n_pin)
             if (!rst_n_pin) begin b_go <= 1'b0; b_cfg_v <= 1'b0; end
             else begin b_go <= go_pin; b_cfg_v <= cfg_v_pin; end
-        always @(posedge clk) begin b_cfg_a <= cfg_a_pin; b_cfg_d <= cfg_d_pin; b_go_bf <= go_bf_pin; end
+        always @(posedge fclk) begin b_cfg_a <= cfg_a_pin; b_cfg_d <= cfg_d_pin; b_go_bf <= go_bf_pin; end
         assign go = b_go; assign cfg_v = b_cfg_v; assign cfg_a = b_cfg_a; assign cfg_d = b_cfg_d; assign go_bf = b_go_bf;
         if (QP_XS != 0) begin : g_bx
             reg b_xs_v, b_xb_v;
@@ -368,10 +375,10 @@ module ot_v41_bf_front_core #(
         reg [4:0] r_cfg_a; reg [47:0] r_cfg_d; reg [7:0] r_xs_p; reg [2:0] r_xs_b, r_xs_pos, r_xb_pos, r_xb_b;
         reg [1:0] r_xs_sv; reg [255:0] r_xs_q0, r_xs_q1; reg [9:0] r_xs_e0, r_xs_e1; reg [3:0] r_xb_sv;
         reg [31:0] r_xb_u; reg [1023:0] r_xb_d;
-        always @(posedge clk or negedge rst_n)
+        always @(posedge fclk or negedge rst_n)
             if (!rst_n) begin r_cfg_v <= 1'b0; r_go <= 1'b0; end
             else begin r_cfg_v <= cfg_v; r_go <= go; end
-        always @(posedge clk) begin r_cfg_a <= cfg_a; r_cfg_d <= cfg_d; r_go_bf <= go_bf; end
+        always @(posedge fclk) begin r_cfg_a <= cfg_a; r_cfg_d <= cfg_d; r_go_bf <= go_bf; end
         always @(posedge gclk or negedge rst_n)
             if (!rst_n) begin r_xs_v <= 1'b0; r_xb_v <= 1'b0; end
             else begin r_xs_v <= xs_v; r_xb_v <= xb_v; end
@@ -385,9 +392,9 @@ module ot_v41_bf_front_core #(
         assign cfg_v_e = cfg_v; assign cfg_a_e = cfg_a; assign cfg_d_e = cfg_d; assign go_e = r_go; assign go_bf_e = r_go_bf;
         if (QX >= 7) begin : g_gok
             // Z11d: r_go -> nB[31] -3.8 ps through a 7 / 22 / 15 / 21-load buffer tree (slews 110-150 ps)
-            ot_v41_kreg #(.W(1), .AR(1)) u_gn (.clk(clk), .arst_n(rst_n), .d(go), .q(go_en));
-            ot_v41_kreg #(.W(1), .AR(1)) u_gw (.clk(clk), .arst_n(rst_n), .d(go), .q(go_ew));
-            ot_v41_kreg #(.W(1), .AR(1)) u_gm (.clk(clk), .arst_n(rst_n), .d(go), .q(go_em));
+            ot_v41_kreg #(.W(1), .AR(1)) u_gn (.clk(fclk), .arst_n(rst_n), .d(go), .q(go_en));
+            ot_v41_kreg #(.W(1), .AR(1)) u_gw (.clk(fclk), .arst_n(rst_n), .d(go), .q(go_ew));
+            ot_v41_kreg #(.W(1), .AR(1)) u_gm (.clk(fclk), .arst_n(rst_n), .d(go), .q(go_em));
         end else begin : g_ngok
             assign go_en = r_go; assign go_ew = r_go; assign go_em = r_go;
         end
@@ -410,7 +417,7 @@ module ot_v41_bf_front_core #(
     // tree, BF16 tree), so the last partial has left and pv is low again before the clock stops.
     wire walk_busy;
     reg [7:0] drain;
-    always @(posedge clk or negedge rst_n)
+    always @(posedge fclk or negedge rst_n)
         if (!rst_n) drain <= 8'd0;
         else if (go_e || walk_busy) drain <= DRAIN[7:0];
         else if (drain != 8'd0) drain <= drain - 8'd1;
@@ -421,7 +428,7 @@ module ot_v41_bf_front_core #(
     if (QTIMING_FIX != 0) begin : g_qt_cg
         // en_r(t) == go_e(t) || drain(t) != 0 (go_e = r_go = go delayed when FAST, else go itself)
         (* keep *) reg en_r;
-        always @(posedge clk or negedge rst_n)
+        always @(posedge fclk or negedge rst_n)
             if (!rst_n) en_r <= 1'b0;
 `ifdef QT_MUTANT_CG
             else en_r <= ((FAST != 0) ? go : 1'b0) || go_e || walk_busy || drain > 8'd2;   // negative control
@@ -443,7 +450,7 @@ module ot_v41_bf_front_core #(
     wire cg_en_q;
     if (QK != 0) begin : g_qext
         reg [QK:0] ext;                 // ext[QK] is unused (keeps the shift legal at QK = 1)
-        always @(posedge clk or negedge rst_n)
+        always @(posedge fclk or negedge rst_n)
             if (!rst_n) ext <= '0;
             else ext <= {ext[QK-1:0], cg_en};
         assign cg_en_q = cg_en || (|ext[QK-1:0]);
@@ -531,7 +538,7 @@ module ot_v41_bf_front_core #(
     reg [2:0]  qlast;               // sub-blocks - 1
     reg [2:0]  plast;               // positions - 1 (MTP)
     reg [13:0] pbase;               // PP: the phase's first word in issue order (even); bank = index[0]
-    always @(posedge clk) if (cfg_v_e) begin
+    always @(posedge fclk) if (cfg_v_e) begin
         if ({27'd0, cfg_a_e} < NSEG) begin
             s_row[cfg_a_e[SW-1:0]]  <= cfg_d_e[15:0];
             s_idx[cfg_a_e[SW-1:0]]  <= cfg_d_e[20:16];
@@ -569,11 +576,11 @@ module ot_v41_bf_front_core #(
         reg [5*QK+4:0] dca;
         reg [48*QK+47:0] dcd;
         // no reset, like the configuration registers themselves (a write during reset still lands)
-        always @(posedge clk) begin dcv <= {dcv[QK-1:0], cfg_v_e}; dca <= {dca[5*QK-1:0], cfg_a_e}; dcd <= {dcd[48*QK-1:0], cfg_d_e}; end
+        always @(posedge fclk) begin dcv <= {dcv[QK-1:0], cfg_v_e}; dca <= {dca[5*QK-1:0], cfg_a_e}; dcd <= {dcd[48*QK-1:0], cfg_d_e}; end
         wire        qv_ = dcv[QK-1];
         wire [4:0]  qa_ = dca[5*QK-1 -: 5];
         wire [47:0] qd_ = dcd[48*QK-1 -: 48];
-        always @(posedge clk) if (qv_) begin
+        always @(posedge fclk) if (qv_) begin
             if ({27'd0, qa_} < NSEG) begin
                 so_row[qa_[SW-1:0]] <= qd_[15:0]; so_idx[qa_[SW-1:0]] <= qd_[20:16]; so_n[qa_[SW-1:0]] <= qd_[25:21];
             end else if ({27'd0, qa_} > 2 * NSEG)
@@ -865,8 +872,8 @@ module ot_v41_bf_front_core #(
     reg [8:0] ce_, hq_, hb_;
     integer bf;
     reg [8:0] cend_r [0:NSEG-1];
-    always @(posedge clk) for (bf = 0; bf < NSEG; bf = bf + 1) cend_r[bf] <= {1'b0, c_u0[bf]} + {2'd0, c_nu[bf]};
-    always @(posedge clk) begin
+    always @(posedge fclk) for (bf = 0; bf < NSEG; bf = bf + 1) cend_r[bf] <= {1'b0, c_u0[bf]} + {2'd0, c_nu[bf]};
+    always @(posedge fclk) begin
         for (bf = 0; bf < NSEG; bf = bf + 1) begin
             ce_ = cend_r[bf];
             hq_ = (ce_ < {1'b0, c_u0[bf]} + 9'd8) ? ce_ : {1'b0, c_u0[bf]} + 9'd8;
@@ -880,7 +887,7 @@ module ot_v41_bf_front_core #(
     reg [6:0] tot0_r, tot1_r;
     reg [4:0] tq_r [0:3];
     reg [4:0] tb_r [0:3];
-    always @(posedge clk) begin
+    always @(posedge fclk) begin
         for (bf = 0; bf < 4; bf = bf + 1) begin
             tq_r[bf] <= ((c_v[2*bf] && !c_bf[2*bf]) ? {1'b0, glq_r[2*bf]} : 5'd0)
                       + ((c_v[2*bf+1] && !c_bf[2*bf+1]) ? {1'b0, glq_r[2*bf+1]} : 5'd0);
@@ -1098,7 +1105,29 @@ module ot_v41_bf_front_core #(
     // A programmed issue is unconditional. The original issue predicate is
     // retained only for legacy operation and as a static contract checker.
     wire issue_available = w_run && f_cnt != 0 && !((QX >= 5) ? hazard_r : hazard) && !pp_block && !(BP != 0 && bp_hold != 3'd0);
-    wire issue = (STATIC_PROGRAM != 0) ? prog_issue_pin : issue_available;
+    // Programme word registered on the core clock (latched io_clk pin word -> core flop), +1 edge vs the pin flop;
+    // the producer emits one edge earlier (ot_s81_bf_prog_seq DELTA -1).
+    reg [1-1:0] prog_issue_q;
+    reg [14-1:0] prog_addr_q;
+    reg [15-1:0] prog_operand_q;
+    reg [$clog2(NSEG)-1:0] prog_segment_q;
+    reg [1-1:0] prog_half_q;
+    reg [$clog2(NCH)-1:0] prog_chain_q;
+    always @(posedge fclk or negedge rst_n)
+        if (!rst_n) begin prog_issue_q <= '0; prog_addr_q <= '0; prog_operand_q <= '0; prog_segment_q <= '0; prog_half_q <= '0; prog_chain_q <= '0; end
+        else begin prog_issue_q <= prog_issue_pin; prog_addr_q <= prog_addr_pin; prog_operand_q <= prog_operand_pin; prog_segment_q <= prog_segment_pin; prog_half_q <= prog_half_pin; prog_chain_q <= prog_chain_pin; end
+`ifdef BF_PROG_MUTANT_CORE_BYPASS
+    localparam integer BYP = 1;                       // negative control: programme one edge early
+`else
+    localparam integer BYP = 0;
+`endif
+    wire [1-1:0] prog_issue_u = (BYP != 0) ? prog_issue_pin : prog_issue_q;
+    wire [14-1:0] prog_addr_u = (BYP != 0) ? prog_addr_pin : prog_addr_q;
+    wire [15-1:0] prog_operand_u = (BYP != 0) ? prog_operand_pin : prog_operand_q;
+    wire [$clog2(NSEG)-1:0] prog_segment_u = (BYP != 0) ? prog_segment_pin : prog_segment_q;
+    wire [1-1:0] prog_half_u = (BYP != 0) ? prog_half_pin : prog_half_q;
+    wire [$clog2(NCH)-1:0] prog_chain_u = (BYP != 0) ? prog_chain_pin : prog_chain_q;
+    wire issue = (STATIC_PROGRAM != 0) ? prog_issue_u : issue_available;
     wire pop = issue && w_cls_last;
     reg ffault_dynamic;
     reg programme_fault;
@@ -1108,28 +1137,28 @@ module ot_v41_bf_front_core #(
     wire [7:0] programme_unit = c_u0[w_c] + 8'(w_uabs);
     wire [14:0] programme_operand = {fam, w_pos, w_b, programme_unit};
     wire programme_bad = !issue_available || go_e ||
-        prog_addr_pin != a_ctr || prog_operand_pin != programme_operand ||
-        prog_segment_pin != w_s || prog_half_pin != w_h ||
-        prog_chain_pin != w_cnt || rd_id != programme_operand;
+        prog_addr_u != a_ctr || prog_operand_u != programme_operand ||
+        prog_segment_u != w_s || prog_half_u != w_h ||
+        prog_chain_u != w_cnt || rd_id != programme_operand;
     // Free clock: even a stray programme strobe while the ICG is closed is
     // diagnosed. Fault state cannot gate any issue or walker/retire enable.
-    always @(posedge clk or negedge rst_n)
+    always @(posedge fclk or negedge rst_n)
         if (!rst_n) programme_fault <= 1'b0;
-        else if (STATIC_PROGRAM != 0 && prog_issue_pin && programme_bad)
+        else if (STATIC_PROGRAM != 0 && prog_issue_u && programme_bad)
             programme_fault <= 1'b1;
 `ifdef OT_BF_ISSUE_TRACE
     // S-BIND 2026-10-15 measurement probe (simulation only): the compiled BF programme of this core = every free-clock
     // edge's issue and the identity a static programme must present (pin->consume ages added by the producer).
     integer tr_fd = 0, tr_cyc = 0, tr_go = -1;
     initial tr_fd = $fopen("bf_issue_trace.txt", "w");
-    always @(posedge clk) begin
+    always @(posedge fclk) begin
         tr_cyc = tr_cyc + 1;
         if (tr_fd != 0 && go) begin tr_go = tr_cyc; $fwrite(tr_fd, "G %0d %0d %0d\n", tr_cyc, go_bf, tr_go); end
         if (tr_fd != 0 && issue_available)
             $fwrite(tr_fd, "I %0d %0d %0d %0d %0d %0d %0d %0d\n", tr_cyc, tr_cyc - tr_go, a_ctr, programme_operand, w_s, w_h, w_cnt, go_bf);
-        if (tr_fd != 0 && STATIC_PROGRAM != 0 && prog_issue_pin)
-            $fwrite(tr_fd, "P %0d %0d %0d %0d %0d %0d %0d %0d bad=%0d avail=%0d\n", tr_cyc, tr_cyc - tr_go, prog_addr_pin, prog_operand_pin,
-                    prog_segment_pin, prog_half_pin, prog_chain_pin, go_bf, programme_bad, issue_available);
+        if (tr_fd != 0 && STATIC_PROGRAM != 0 && prog_issue_u)
+            $fwrite(tr_fd, "P %0d %0d %0d %0d %0d %0d %0d %0d bad=%0d avail=%0d\n", tr_cyc, tr_cyc - tr_go, prog_addr_u, prog_operand_u,
+                    prog_segment_u, prog_half_u, prog_chain_u, go_bf, programme_bad, issue_available);
     end
 `endif
     wire [NB-1:0] bk_fault;
@@ -1139,14 +1168,14 @@ module ot_v41_bf_front_core #(
     wire busy_c;
     if (QK != 0) begin : g_qo
         reg [QK:0] busy_d, ff_d;
-        always @(posedge clk or negedge rst_n)
+        always @(posedge fclk or negedge rst_n)
             if (!rst_n) begin busy_d <= '0; ff_d <= '0; end
             else begin busy_d <= {busy_d[QK-1:0], busy_c}; ff_d <= {ff_d[QK-1:0], ffault}; end
         assign busy = busy_d[QK-1];
         if (QY != 0) begin : g_qyf
             // fault port from a register: ff_d one more stage, the halves' registered ORs (bk_fault_r), then the OR
             reg ffq, fq;
-            always @(posedge clk or negedge rst_n)
+            always @(posedge fclk or negedge rst_n)
                 if (!rst_n) begin ffq <= 1'b0; fq <= 1'b0; end
                 else begin ffq <= ff_d[QK-1]; fq <= ffq | (|qy_bkf); end
             assign fault = fq;
@@ -1359,7 +1388,7 @@ module ot_v41_bf_front_core #(
         qx_sf_fp = 4'd0;
         for (int k = 0; k < NSEG; k++) qx_sf_fp = qx_sf_fp | ({4{qx_ohfp[k]}} & qx_sfl(c_s0[k]));
     end
-    always @(posedge clk) begin qx_sf_fr <= qx_sf_fp; qx_sf_lr <= qx_sf_l; end
+    always @(posedge fclk) begin qx_sf_fr <= qx_sf_fp; qx_sf_lr <= qx_sf_l; end
 `ifdef QP_CHECK
     always @(negedge clk) if (QX >= 10 && rst_n && ((go_e && qx_sf_fr !== qx_sf_f) || (w_restart && qx_sf_lr !== qx_sf_l))) begin
         $display("QX_CHECK FAIL: registered go / restart flag candidates %b/%b != %b/%b at %t", qx_sf_fr, qx_sf_lr,

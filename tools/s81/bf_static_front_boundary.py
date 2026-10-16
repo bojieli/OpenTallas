@@ -27,19 +27,12 @@ def apply(text):
     // column clock). Every io_clk -> ck crossing is register -> lockup latch (transparent while io_clk is low) ->
     // register with no fan-out in between, so its hold margin is ~T/2 by construction instead of buffers on every
     // core endpoint. The programme used to fan from programme_pin_q straight into the issue cone (thousands of core
-    // endpoints); it now lands in programme_core_q (core clock) first: +1 edge, absorbed by the producer
-    // (ot_s81_bf_prog_seq DELTA -1: the compiled issue edges relative to go are unchanged).
+    // endpoints); it now lands in the core's own programme register (u_front prog_*_q on the core clock fclk)
+    // first: +1 edge, absorbed by the producer (ot_s81_bf_prog_seq DELTA -1: issue edges vs go unchanged).
+    // Core -> io_clk crossings (the CPIN seams) pass one shared lockup-latch bank transparent while clk is low.
     reg [37:0] programme_lat;
-    (* keep = 1 *) reg [37:0] programme_core_q;
     generate if (STATIC_PROGRAM != 0) begin : g_static_programme_core
         always_latch if (!pin_clk) programme_lat = programme_pin_q;
-        always @(posedge clk or negedge rst_n)
-            if (!rst_n) programme_core_q <= 38'd0;
-`ifdef BF_PROG_MUTANT_CORE_BYPASS
-            else programme_core_q <= f_prog;                // negative control: programme one edge early
-`else
-            else programme_core_q <= programme_lat;
-`endif
     end endgenerate
 ''' + text[end:]
     pin_start = text.index('    if (PINREG != 0) begin : g_pin')
@@ -78,14 +71,42 @@ def apply(text):
     text = text[:pin_start] + pins + text[pin_end:]
     text = text.replace('(.clk(clk), .rst_n(rst_n),\n            .d({c_issue',
                         '(.clk(pin_clk), .rst_n(rst_n),\n            .d({c_issue')
+    # core -> seam: one shared lockup-latch bank on the core root (transparent while clk is low) feeds both faces'
+    # seam registers (static only).
+    seam_anchor = '        localparam integer CW = 1+14+3+CTW+2*256+2*10+1+2*5*NSEG+16*NSEG;\n'
+    assert text.count(seam_anchor) == 1
+    lat = (seam_anchor +
+           '        localparam integer CLW = 1+14+3+CTW+2*256+2*10+1+2*5*NSEG+16*NB*NSEG;\n'
+           '        wire [CLW-1:0] c_raw = {c_issue, c_a_ctr, c_i1_v, c_i1_bk, c_i1_bf, c_i1_t, c_i2x_q0, c_i2x_e0, c_i2x_q1, c_i2x_e1, c_ze_d, c_so_idx, c_so_n, c_so_row};\n'
+           '        reg [CLW-1:0] c_lk;\n'
+           '        if (STATIC_PROGRAM != 0) begin : g_seam_lk\n'
+           '`ifdef BF_SEAM_LK_MUTANT\n'
+           "            always_latch if (!clk) c_lk = c_raw ^ {{(CLW-1){1'b0}}, 1'b1};   // negative control: one latched bit flipped\n"
+           '`else\n'
+           '            always_latch if (!clk) c_lk = c_raw;\n'
+           '`endif\n'
+           '        end else begin : g_seam_nolk\n'
+           '            always @* c_lk = c_raw;\n'
+           '        end\n'
+           '        wire c_issue_l, c_i1_v_l, c_i1_bk_l, c_i1_bf_l, c_ze_d_l; wire [13:0] c_a_ctr_l; wire [CTW-1:0] c_i1_t_l;\n'
+           '        wire [255:0] c_i2x_q0_l, c_i2x_q1_l; wire [9:0] c_i2x_e0_l, c_i2x_e1_l; wire [5*NSEG-1:0] c_so_idx_l, c_so_n_l;\n'
+           '        wire [16*NB*NSEG-1:0] c_so_row_l;\n'
+           '        assign {c_issue_l, c_a_ctr_l, c_i1_v_l, c_i1_bk_l, c_i1_bf_l, c_i1_t_l, c_i2x_q0_l, c_i2x_e0_l, c_i2x_q1_l, c_i2x_e1_l, c_ze_d_l, c_so_idx_l, c_so_n_l, c_so_row_l} = c_lk;\n')
+    text = text.replace(seam_anchor, lat, 1)
+    a = text.index(lat) + len(lat); b = text.index('assign c_qy_bkf = c_qy_bkf_in;', a)
+    seg = text[a:b]
+    for s in ('c_issue', 'c_a_ctr', 'c_i1_v', 'c_i1_bk', 'c_i1_bf', 'c_i1_t', 'c_i2x_q0', 'c_i2x_e0', 'c_i2x_q1', 'c_i2x_e1', 'c_ze_d', 'c_so_idx', 'c_so_n'):
+        seg = seg.replace('{' + s + ', ', '{' + s + '_l, ').replace(', ' + s + ', ', ', ' + s + '_l, ')
+    seg = seg.replace('c_so_row[16*NSEG*', 'c_so_row_l[16*NSEG*')
+    text = text[:a] + seg + text[b:]
     start = text.index('        ot_v41_bf_front_core #(')
     end = text.index('));', start) + 3
     inst = text[start:end]
     anchor = '.INSTANCE(INSTANCE)) u_front ('
     assert anchor in inst
     inst = inst.replace(anchor, '.INSTANCE(INSTANCE), .STATIC_PROGRAM(STATIC_PROGRAM)) u_front (', 1)
-    inst = inst.replace('            .clk(eclk),', '''            .prog_issue_pin(programme_core_q[0]), .prog_addr_pin(programme_core_q[14:1]),
-            .prog_operand_pin(programme_core_q[29:15]), .prog_segment_pin(programme_core_q[32:30]),
-            .prog_half_pin(programme_core_q[33]), .prog_chain_pin(programme_core_q[37:34]),
+    inst = inst.replace('            .clk(eclk),', '''            .prog_issue_pin(programme_lat[0]), .prog_addr_pin(programme_lat[14:1]),
+            .prog_operand_pin(programme_lat[29:15]), .prog_segment_pin(programme_lat[32:30]),
+            .prog_half_pin(programme_lat[33]), .prog_chain_pin(programme_lat[37:34]),
             .clk(eclk),''', 1)
     return text[:start] + inst + text[end:]

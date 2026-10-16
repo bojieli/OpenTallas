@@ -158,19 +158,12 @@ module ot_s81_bf_front #(
     // column clock). Every io_clk -> ck crossing is register -> lockup latch (transparent while io_clk is low) ->
     // register with no fan-out in between, so its hold margin is ~T/2 by construction instead of buffers on every
     // core endpoint. The programme used to fan from programme_pin_q straight into the issue cone (thousands of core
-    // endpoints); it now lands in programme_core_q (core clock) first: +1 edge, absorbed by the producer
-    // (ot_s81_bf_prog_seq DELTA -1: the compiled issue edges relative to go are unchanged).
+    // endpoints); it now lands in the core's own programme register (u_front prog_*_q on the core clock fclk)
+    // first: +1 edge, absorbed by the producer (ot_s81_bf_prog_seq DELTA -1: issue edges vs go unchanged).
+    // Core -> io_clk crossings (the CPIN seams) pass one shared lockup-latch bank transparent while clk is low.
     reg [37:0] programme_lat;
-    (* keep = 1 *) reg [37:0] programme_core_q;
     generate if (STATIC_PROGRAM != 0) begin : g_static_programme_core
         always_latch if (!pin_clk) programme_lat = programme_pin_q;
-        always @(posedge clk or negedge rst_n)
-            if (!rst_n) programme_core_q <= 38'd0;
-`ifdef BF_PROG_MUTANT_CORE_BYPASS
-            else programme_core_q <= f_prog;                // negative control: programme one edge early
-`else
-            else programme_core_q <= programme_lat;
-`endif
     end endgenerate
     // bf-arch: the partial outputs leave from the hardened columns, not from this block
     wire [NB-1:0] pv; wire [32*NB-1:0] pval; wire [16*NB-1:0] prow; wire [5*NB-1:0] pseg, pnseg; wire [NB-1:0] perr;
@@ -375,9 +368,9 @@ module ot_s81_bf_front #(
             .EARLY(EARLY), .CG(CG), .DRAIN(RDRAIN), .FAST(FAST), .CUT(CUT), .PP(PP), .FRONT_PAR(FRONT_PAR), .BP(BP),
             .QTIMING_FIX(1), .QPIPE(1), .QP_XS(1), .QP_CAP(0), .QP_P1(1), .QP_CSAM(10), .QZ(1), .QZ_NS(8), .QZ_NE(4),
             .QY(1), .QX(10), .QBF(RECUT), .QZE(QZE), .TCG(TCG), .BXST(BXST), .FXST(FXST), .GRADUAL_RNE(GRADUAL_RNE), .INSTANCE(INSTANCE), .STATIC_PROGRAM(STATIC_PROGRAM)) u_front (
-            .prog_issue_pin(programme_core_q[0]), .prog_addr_pin(programme_core_q[14:1]),
-            .prog_operand_pin(programme_core_q[29:15]), .prog_segment_pin(programme_core_q[32:30]),
-            .prog_half_pin(programme_core_q[33]), .prog_chain_pin(programme_core_q[37:34]),
+            .prog_issue_pin(programme_lat[0]), .prog_addr_pin(programme_lat[14:1]),
+            .prog_operand_pin(programme_lat[29:15]), .prog_segment_pin(programme_lat[32:30]),
+            .prog_half_pin(programme_lat[33]), .prog_chain_pin(programme_lat[37:34]),
             .clk(eclk), .rst_n_pin(rst_n), .cfg_v_pin(cfg_v_i), .cfg_a_pin(cfg_a_i), .cfg_d_pin(cfg_d_i), .go_pin(go_i),
             .go_bf_pin(go_bf_i), .xs_v_pin(xs_v_i), .xs_p_pin(xs_p_i), .xs_b_pin(xs_b_i), .xs_sv_pin(xs_sv_i),
             .xs_q0_pin(xs_q0_i), .xs_e0_pin(xs_e0_i), .xs_q1_pin(xs_q1_i), .xs_e1_pin(xs_e1_i), .xs_pos_pin(xs_pos_i),
@@ -389,10 +382,26 @@ module ot_s81_bf_front #(
             .c_so_row(c_so_row), .c_so_idx(c_so_idx), .c_so_n(c_so_n), .c_qy_bkf(c_qy_bkf));
         // Independent pin registers on both column faces, fixed +CPIN cycle.
         localparam integer CW = 1+14+3+CTW+2*256+2*10+1+2*5*NSEG+16*NSEG;
+        localparam integer CLW = 1+14+3+CTW+2*256+2*10+1+2*5*NSEG+16*NB*NSEG;
+        wire [CLW-1:0] c_raw = {c_issue, c_a_ctr, c_i1_v, c_i1_bk, c_i1_bf, c_i1_t, c_i2x_q0, c_i2x_e0, c_i2x_q1, c_i2x_e1, c_ze_d, c_so_idx, c_so_n, c_so_row};
+        reg [CLW-1:0] c_lk;
+        if (STATIC_PROGRAM != 0) begin : g_seam_lk
+`ifdef BF_SEAM_LK_MUTANT
+            always_latch if (!clk) c_lk = c_raw ^ {{(CLW-1){1'b0}}, 1'b1};   // negative control: one latched bit flipped
+`else
+            always_latch if (!clk) c_lk = c_raw;
+`endif
+        end else begin : g_seam_nolk
+            always @* c_lk = c_raw;
+        end
+        wire c_issue_l, c_i1_v_l, c_i1_bk_l, c_i1_bf_l, c_ze_d_l; wire [13:0] c_a_ctr_l; wire [CTW-1:0] c_i1_t_l;
+        wire [255:0] c_i2x_q0_l, c_i2x_q1_l; wire [9:0] c_i2x_e0_l, c_i2x_e1_l; wire [5*NSEG-1:0] c_so_idx_l, c_so_n_l;
+        wire [16*NB*NSEG-1:0] c_so_row_l;
+        assign {c_issue_l, c_a_ctr_l, c_i1_v_l, c_i1_bk_l, c_i1_bf_l, c_i1_t_l, c_i2x_q0_l, c_i2x_e0_l, c_i2x_q1_l, c_i2x_e1_l, c_ze_d_l, c_so_idx_l, c_so_n_l, c_so_row_l} = c_lk;
         ot_s81_bf_seam #(.W(CW), .PIPE(CPIN)) u_seam0 (.clk(pin_clk), .rst_n(rst_n),
-            .d({c_issue, c_a_ctr, c_i1_v, c_i1_bk, c_i1_bf, c_i1_t, c_i2x_q0, c_i2x_e0, c_i2x_q1, c_i2x_e1, c_ze_d, c_so_idx, c_so_n, c_so_row[16*NSEG*0 +: 16*NSEG]}), .q({c0_issue, c0_a_ctr, c0_i1_v, c0_i1_bk, c0_i1_bf, c0_i1_t, c0_i2x_q0, c0_i2x_e0, c0_i2x_q1, c0_i2x_e1, c0_ze_d, c0_so_idx, c0_so_n, c0_so_row}));
+            .d({c_issue_l, c_a_ctr_l, c_i1_v_l, c_i1_bk_l, c_i1_bf_l, c_i1_t_l, c_i2x_q0_l, c_i2x_e0_l, c_i2x_q1_l, c_i2x_e1_l, c_ze_d_l, c_so_idx_l, c_so_n_l, c_so_row_l[16*NSEG*0 +: 16*NSEG]}), .q({c0_issue, c0_a_ctr, c0_i1_v, c0_i1_bk, c0_i1_bf, c0_i1_t, c0_i2x_q0, c0_i2x_e0, c0_i2x_q1, c0_i2x_e1, c0_ze_d, c0_so_idx, c0_so_n, c0_so_row}));
         ot_s81_bf_seam #(.W(CW), .PIPE(CPIN)) u_seam1 (.clk(pin_clk), .rst_n(rst_n),
-            .d({c_issue, c_a_ctr, c_i1_v, c_i1_bk, c_i1_bf, c_i1_t, c_i2x_q0, c_i2x_e0, c_i2x_q1, c_i2x_e1, c_ze_d, c_so_idx, c_so_n, c_so_row[16*NSEG*1 +: 16*NSEG]}), .q({c1_issue, c1_a_ctr, c1_i1_v, c1_i1_bk, c1_i1_bf, c1_i1_t, c1_i2x_q0, c1_i2x_e0, c1_i2x_q1, c1_i2x_e1, c1_ze_d, c1_so_idx, c1_so_n, c1_so_row}));
+            .d({c_issue_l, c_a_ctr_l, c_i1_v_l, c_i1_bk_l, c_i1_bf_l, c_i1_t_l, c_i2x_q0_l, c_i2x_e0_l, c_i2x_q1_l, c_i2x_e1_l, c_ze_d_l, c_so_idx_l, c_so_n_l, c_so_row_l[16*NSEG*1 +: 16*NSEG]}), .q({c1_issue, c1_a_ctr, c1_i1_v, c1_i1_bk, c1_i1_bf, c1_i1_t, c1_i2x_q0, c1_i2x_e0, c1_i2x_q1, c1_i2x_e1, c1_ze_d, c1_so_idx, c1_so_n, c1_so_row}));
         assign c_qy_bkf = c_qy_bkf_in;
         assign pv_e = '0; assign pval_e = '0; assign prow_e = '0; assign pseg_e = '0; assign pnseg_e = '0; assign perr_e = '0; assign ppos_e = '0;
 `ifndef SYNTHESIS

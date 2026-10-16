@@ -62,7 +62,7 @@ def transform(fc):
                 f_q0[f_wr + bpre[bk]] <= xbd[256*bk +: 256];
                 f_identity[f_wr + bpre[bk]] <= {1'b1, b_identity_pb, b_identity_units[8*bk +: 8]};
             end''')
-    return transform_frd(fc)
+    return transform_fclk(transform_frd(fc))
 
 
 def transform_frd(fc):
@@ -117,4 +117,52 @@ def transform_frd(fc):
     end
     // QPIPE: the FP8 half select is applied one stage later (i1 holds both slices and the select)
     reg i1_uh;""")
+    return fc
+
+
+def transform_fclk(fc):
+    """BF clock-structure pass 2 (2026-10-15, route s81bf_front_static_clk-c2 EARLY_FAIL_HOLD): in the static
+    programme every free-clock core register sits below one always-enabled ICG (u_fcg), the same gating depth as
+    the gated core (u_cg clones), so free -> gated core paths stop crossing a ~90 ps two-level tree imbalance
+    (hi0q_r 236.8 ps -> b_hi 329.1 ps). The ICG enable registers (u_z, u_ze) and the ICGs stay on the root clock.
+    The programme word is registered here on that clock (was programme_core_q in the front, on the root)."""
+    import re
+
+    def replace(old, new, cnt=1):
+        nonlocal fc
+        assert fc.count(old) == cnt, (old, fc.count(old))
+        fc = fc.replace(old, new)
+
+    replace("    input  wire [$clog2(NCH)-1:0] prog_chain_pin\n);\n", """    input  wire [$clog2(NCH)-1:0] prog_chain_pin
+);
+    // fclk: free-running core clock below one always-enabled ICG (static programme), same depth as gclk.
+    wire fclk;
+    if (STATIC_PROGRAM != 0) begin : g_fcg
+        ot_hdc_cg u_fcg (.clk(clk), .en(1'b1), .gclk(fclk));
+    end else begin : g_nofcg
+        assign fclk = clk;
+    end
+""")
+    head, body = fc.split('    wire fclk;\n', 1)
+    body = body.replace('posedge clk ', 'posedge fclk ').replace('posedge clk)', 'posedge fclk)')
+    for k in ('u_gn', 'u_gw', 'u_gm'):
+        body = body.replace(f'{k} (.clk(clk)', f'{k} (.clk(fclk)')
+    fc = head + '    wire fclk;\n' + body
+    # programme register (+1 edge, was in the front)
+    anchor = '    wire issue = (STATIC_PROGRAM != 0) ? prog_issue_pin : issue_available;'
+    names = [('issue', '1'), ('addr', '14'), ('operand', '15'), ('segment', '$clog2(NSEG)'), ('half', '1'), ('chain', '$clog2(NCH)')]
+    decl = ''.join(f'    reg [{w}-1:0] prog_{n}_q;\n' for n, w in names)
+    regs = ' '.join(f'prog_{n}_q <= prog_{n}_pin;' for n, w in names)
+    zero = ' '.join(f"prog_{n}_q <= '0;" for n, w in names)
+    sel = ''.join(f'    wire [{w}-1:0] prog_{n}_u = (BYP != 0) ? prog_{n}_pin : prog_{n}_q;\n' for n, w in names)
+    blk = ('    // Programme word registered on the core clock (latched io_clk pin word -> core flop), +1 edge vs the pin flop;\n'
+           '    // the producer emits one edge earlier (ot_s81_bf_prog_seq DELTA -1).\n' + decl +
+           '    always @(posedge fclk or negedge rst_n)\n'
+           f'        if (!rst_n) begin {zero} end\n'
+           f'        else begin {regs} end\n'
+           '`ifdef BF_PROG_MUTANT_CORE_BYPASS\n    localparam integer BYP = 1;                       // negative control: programme one edge early\n'
+           '`else\n    localparam integer BYP = 0;\n`endif\n' + sel)
+    replace(anchor, blk + anchor)
+    i = fc.index(anchor) + len(anchor)
+    fc = fc[:i - len(anchor)] + re.sub(r'prog_(issue|addr|operand|segment|half|chain)_pin', r'prog_\1_u', fc[i - len(anchor):])
     return fc
