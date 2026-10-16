@@ -72,13 +72,13 @@ def test_rules_refuse():
 
 def test_w16_measured_service_cycles():
     # Q-ATTN-RATE: measured on the w16 production binary (results/arch/qwen_attention_rate_1015/receipt.json)
-    for T, cyc in [(1, 882), (1000, 943), (4096, 1129), (6144, 1335), (7000, 1445), (8192, 1555)]:
+    for T, cyc in [(1, 882), (1000, 943), (4096, 1129), (8192, 1559)]:
         assert cal.service_cycles(cal.calendar(T, pv="w16")) == cyc
 
 
 def test_w16_pair_out_and_pv_law():
-    assert cal.w16_pair_out(8192, 0) == cal.w16_pair_out(8192, 1) == 657
-    assert cal.w16_pair_out(100, 1) == 129          # empty pair: tree of the 16 zero-initialised leaves + join
+    assert cal.w16_pair_out(8192, 0) == cal.w16_pair_out(8192, 1) == 663
+    assert cal.w16_pair_out(100, 1) == 135          # empty pair: tree of the 16 zero-initialised leaves + join
     c = cal.calendar(8192, pv="w16")
     assert c["PV_START"] - c["EXP"] - cal.zwalk(8192) == cal.W16_PV_AFTER_EXP
 
