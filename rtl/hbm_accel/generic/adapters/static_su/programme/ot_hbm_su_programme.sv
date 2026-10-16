@@ -6,20 +6,24 @@ module ot_hbm_su_programme_mem #(
 )(input logic clk, input logic [BANKS-1:0] clk_macro, input logic ren, input logic [15:0] addr,
   input logic cfg_we, input logic [15:0] cfg_bank, input logic [6:0] cfg_row,
   input logic [255:0] cfg_data, output logic [255:0] data);
-  wire [255:0] q [0:BANKS-1];
+  wire [256*BANKS-1:0] q;
   logic [8:0] select_q;
   always_ff @(posedge clk) if (ren) select_q <= addr[15:7];
+  integer mux_bank;
   always_comb begin
     data='0;
-    for(integer k=0;k<BANKS;k=k+1) if(select_q==k) data=q[k];
+    for(mux_bank=0;mux_bank<BANKS;mux_bank=mux_bank+1) if(select_q==mux_bank) data=q[256*mux_bank+:256];
   end
-  for(genvar k=0;k<BANKS;k=k+1) begin:g
+  genvar bank;
+  generate for(bank=0;bank<BANKS;bank=bank+1) begin:g
+    wire [255:0] bank_q;
+    assign q[256*bank+:256]=bank_q;
     ot_sram_1r1w_128x256_m1_r2c2 mem(
-      .clk(clk_macro[k]), .r_ce_in(ren && addr[15:7]==k), .r_addr_in(addr[6:0]), .rd_out(q[k]),
-      .w_ce_in(cfg_we && cfg_bank==BASE+k), .w_addr_in(cfg_row),
+      .clk(clk_macro[bank]), .r_ce_in(ren && addr[15:7]==bank), .r_addr_in(addr[6:0]), .rd_out(bank_q),
+      .w_ce_in(cfg_we && cfg_bank==BASE+bank), .w_addr_in(cfg_row),
       .wd_in(cfg_data), .w_mask_in({256{1'b1}}),
       .rr_en(2'b0), .rr_addr(14'b0), .cr_en(2'b0), .cr_sel(16'b0));
-  end
+  end endgenerate
 endmodule
 
 module ot_hbm_su_programme #(
@@ -39,11 +43,11 @@ module ot_hbm_su_programme #(
   output logic [15:0] edge_index,
   output logic [LINE_BITS-1:0] command);
   function automatic integer dict_base(input integer c);
-    integer v;
+    integer v,k;
     begin
       v=INDEX_GROUPS*INDEX_BANKS;
-      for(integer k=0;k<c;k=k+1) v=v+DICT_BANKS[32*k+:32];
-      return v;
+      for(k=0;k<c;k=k+1) v=v+DICT_BANKS[32*k+:32];
+      dict_base=v;
     end
   endfunction
   localparam integer TOTAL_BANKS=dict_base(COLS);
@@ -64,16 +68,18 @@ module ot_hbm_su_programme #(
   end endgenerate
   wire [COLS*256-1:0] templates;
   wire write_enable=cfg_we && !busy && cfg_bank<TOTAL_BANKS;
-  for(genvar g=0;g<INDEX_GROUPS;g=g+1) begin:ix
+  genvar g,c;
+  generate for(g=0;g<INDEX_GROUPS;g=g+1) begin:ix
     ot_hbm_su_programme_mem #(.BANKS(INDEX_BANKS),.BASE(g*INDEX_BANKS)) mem(
       .clk(clk),.clk_macro(clk_macro[g*INDEX_BANKS+:INDEX_BANKS]),.ren(issue),.addr(pc >> INDEX_SHIFT),.cfg_we(write_enable),.cfg_bank(cfg_bank),
       .cfg_row(cfg_row),.cfg_data(cfg_data),.data(index_rows[g*256+:256]));
   end
-  for(genvar c=0;c<COLS;c=c+1) begin:dt
+  for(c=0;c<COLS;c=c+1) begin:dt
     ot_hbm_su_programme_mem #(.BANKS(DICT_BANKS[32*c+:32]),.BASE(dict_base(c))) mem(
       .clk(clk),.clk_macro(clk_macro[dict_base(c)+:DICT_BANKS[32*c+:32]]),.ren(v1),.addr(indices[c*16+:16]),.cfg_we(write_enable),.cfg_bank(cfg_bank),
       .cfg_row(cfg_row),.cfg_data(cfg_data),.data(templates[c*256+:256]));
   end
+  endgenerate
   // Start sampled at S; first command/valid presented after S+3 and sampled
   // by a downstream sequential consumer at S+4. Subsequent lines every edge.
   always_ff @(posedge clk) begin
