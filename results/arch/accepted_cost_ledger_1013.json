@@ -43,6 +43,39 @@
   },
   {
    "design": "qwen_rom",
+   "unit": "ATTN.NATIVE_STATIC service (QK+softmax+PV+finalize, T=8192, minimal per-context calendar; link/landing excluded => lower bound)",
+   "group": "ATTN.NATIVE",
+   "measured": 5362.0,
+   "price": 1816.0,
+   "unit_of_measure": "cycles",
+   "unit_ratio": 2.9526,
+   "e2e_loss_pct": 33.853,
+   "binding_workload": "ar",
+   "per_workload": {
+    "ar": {
+     "model": "token-path longest path",
+     "base_cycles": 249431.0,
+     "cycles": 377087.0,
+     "added_cycles": 127656.0,
+     "runs_per_token": 36,
+     "critical_runs": 36,
+     "overlapped_runs": 0,
+     "other_price_nodes_skipped": 0,
+     "naive_added_cycles": 127656.0,
+     "wave_positions": 0,
+     "wave_added_cycles_per_position": 0.0,
+     "e2e_loss_pct": 33.853
+    }
+   },
+   "within_unit_limit": false,
+   "evidence": "results/arch/qwen_attention_native_calendar_1015/receipt.json",
+   "evidence_grade": "committed_bench",
+   "date": "2026-10-15",
+   "status": "proposed",
+   "note": "Q-VMWB 2026-10-15 (coordinator request): priced attn_kv 1816 cyc/layer at P8191 (results/arch/qwen_kv_die_20261009/reprice.json, incl. link step) vs measured static native attention service 5362 cyc at T=8192 (zfix production binary, 53/53 contexts exact; T=1 882, 1000 1425, 4096 3066). Delta 3546 added to every critical attn_kv node; the measured figure excludes the KV link/landing stages, so the loss is a LOWER BOUND. Dominant term: PV pairs stream 1 V row/cycle each (pair out = 590 + T/2 = 4686 at T=8192) vs the priced rate -> needs a structural PV/V-stream redesign (wider PV or more pairs), not acceptance."
+  },
+  {
+   "design": "qwen_rom",
    "unit": "DIE.RELAY (r21 die relay stations as wire-stage counts: BD 41->77, TWS 38->93, ORD 7->10, link 339->365; increment a layer)",
    "group": "DIE.RELAY",
    "measured": 613.0,
@@ -203,7 +236,8 @@
    "evidence_grade": "committed_bench",
    "date": "2026-10-15",
    "status": "proposed",
-   "note": "Q-VMWB 2026-10-15: successor of train24 (+1,445 cyc/layer, 15.6%); price = Q-ATTN r3 unconstrained-face reference (last capture + D + 25); measured = tb_vmwb actual ctl + 24 ports + qfd_res_train_issue + 3 x qfd_res_train_par + real VM PAR_RB=1 (bench edge -1 for the rq register); PC1 qkv lands 11 cycles before the reference (no credit taken). PC11 charged to attn_kv (conservative)."
+   "note": "Q-VMWB 2026-10-15: successor of train24 (+1,445 cyc/layer, 15.6%); price = Q-ATTN r3 unconstrained-face reference (last capture + D + 25); measured = tb_vmwb actual ctl + 24 ports + qfd_res_train_issue + 3 x qfd_res_train_par + real VM PAR_RB=1 (bench edge -1 for the rq register); PC1 qkv lands 11 cycles before the reference (no credit taken). PC11 charged to attn_kv (conservative).   | 2026-10-15 18:45 PT coordinator ACCEPTED the VM.RESULT_WB successor (group ~2.1% e2e); this row is within 1.10x so it QUALIFIES without an acceptance (tool refuses accept by rule); basis measured receipt results/arch/qwen_split_compute_1014/vmwb_1015/receipt.json",
+   "share_basis": "measured"
   },
   {
    "design": "qwen_rom",
@@ -236,7 +270,8 @@
    "evidence_grade": "committed_bench",
    "date": "2026-10-15",
    "status": "proposed",
-   "note": "Q-VMWB 2026-10-15: successor of train24 (+1,445 cyc/layer, 15.6%); price = Q-ATTN r3 unconstrained-face reference (last capture + D + 25); measured = tb_vmwb actual ctl + 24 ports + qfd_res_train_issue + 3 x qfd_res_train_par + real VM PAR_RB=1 (bench edge -1 for the rq register); PC1 qkv lands 11 cycles before the reference (no credit taken). PC11 charged to attn_kv (conservative)."
+   "note": "Q-VMWB 2026-10-15: successor of train24 (+1,445 cyc/layer, 15.6%); price = Q-ATTN r3 unconstrained-face reference (last capture + D + 25); measured = tb_vmwb actual ctl + 24 ports + qfd_res_train_issue + 3 x qfd_res_train_par + real VM PAR_RB=1 (bench edge -1 for the rq register); PC1 qkv lands 11 cycles before the reference (no credit taken). PC11 charged to attn_kv (conservative).   | 2026-10-15 18:45 PT coordinator ACCEPTED the VM.RESULT_WB successor (group ~2.1% e2e); this row is within 1.10x so it QUALIFIES without an acceptance (tool refuses accept by rule); basis measured receipt results/arch/qwen_split_compute_1014/vmwb_1015/receipt.json",
+   "share_basis": "measured"
   },
   {
    "design": "qwen_rom",
@@ -269,7 +304,8 @@
    "evidence_grade": "committed_bench",
    "date": "2026-10-15",
    "status": "proposed",
-   "note": "Q-VMWB 2026-10-15: successor of train24 (+1,445 cyc/layer, 15.6%); price = Q-ATTN r3 unconstrained-face reference (last capture + D + 25); measured = tb_vmwb actual ctl + 24 ports + qfd_res_train_issue + 3 x qfd_res_train_par + real VM PAR_RB=1 (bench edge -1 for the rq register); PC1 qkv lands 11 cycles before the reference (no credit taken). PC11 charged to attn_kv (conservative)."
+   "note": "Q-VMWB 2026-10-15: successor of train24 (+1,445 cyc/layer, 15.6%); price = Q-ATTN r3 unconstrained-face reference (last capture + D + 25); measured = tb_vmwb actual ctl + 24 ports + qfd_res_train_issue + 3 x qfd_res_train_par + real VM PAR_RB=1 (bench edge -1 for the rq register); PC1 qkv lands 11 cycles before the reference (no credit taken). PC11 charged to attn_kv (conservative).   | 2026-10-15 18:45 PT coordinator ACCEPTED the VM.RESULT_WB successor (group ~2.1% e2e); this row is within 1.10x so it QUALIFIES without an acceptance (tool refuses accept by rule); basis measured receipt results/arch/qwen_split_compute_1014/vmwb_1015/receipt.json",
+   "share_basis": "measured"
   },
   {
    "design": "qwen_rom",
@@ -301,8 +337,10 @@
    "evidence": "results/arch/qwen_split_compute_1014/vmwb_1015/receipt.json",
    "evidence_grade": "committed_bench",
    "date": "2026-10-15",
-   "status": "proposed",
-   "note": "Q-VMWB 2026-10-15: successor of train24 (+1,445 cyc/layer, 15.6%); price = Q-ATTN r3 unconstrained-face reference (last capture + D + 25); measured = tb_vmwb actual ctl + 24 ports + qfd_res_train_issue + 3 x qfd_res_train_par + real VM PAR_RB=1 (bench edge -1 for the rq register); PC1 qkv lands 11 cycles before the reference (no credit taken). PC11 charged to attn_kv (conservative)."
+   "status": "accepted",
+   "note": "Q-VMWB 2026-10-15: successor of train24 (+1,445 cyc/layer, 15.6%); price = Q-ATTN r3 unconstrained-face reference (last capture + D + 25); measured = tb_vmwb actual ctl + 24 ports + qfd_res_train_issue + 3 x qfd_res_train_par + real VM PAR_RB=1 (bench edge -1 for the rq register); PC1 qkv lands 11 cycles before the reference (no credit taken). PC11 charged to attn_kv (conservative).",
+   "accepted_date": "2026-10-15",
+   "acceptance_note": "Coordinator 2026-10-15 ~18:40 PT: ACCEPTED (VM.RESULT_WB group ~2.09-2.12% e2e, each row <=5%); basis measured receipt results/arch/qwen_split_compute_1014/vmwb_1015/receipt.json (tb_vmwb actual ctl+24 ports+issuer+3 band serializers+real VM PAR_RB=1, 5 PCs exact, mutants fail; Codex audit 81 checks)"
   },
   {
    "design": "qwen_rom",
@@ -1334,13 +1372,13 @@
  ],
  "totals": {
   "qwen_rom": {
-   "accepted_pct": 0.477,
-   "proposed_pct": 4.331,
-   "accepted_plus_proposed_pct": 4.808,
+   "accepted_pct": 1.065,
+   "proposed_pct": 38.184,
+   "accepted_plus_proposed_pct": 39.249,
    "limit_pct": 15.0,
-   "accepted_rows": 3,
+   "accepted_rows": 4,
    "proposed_rows": 7,
-   "headroom_pct": 14.523,
+   "headroom_pct": 13.935,
    "owner_exception_rows": 0,
    "over_limit_by_owner_exception": false
   },
