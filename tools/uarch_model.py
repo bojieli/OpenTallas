@@ -17342,13 +17342,14 @@ QWEN_VM_RETURN_RO6_1016 = dict(return_ro=6, old_return_ro=1,
     source_radius_lower_bound_um=2697.84, nominal_segment_um=400,
     relay_tiles=849, extra_relay_tiles=560, relay_area_um2=1140795.1872,
     normal_latency_delta_cycles=5, su_vl=19, row_read_rl=18,
+    status="Historical pin0 component candidate; explicit input-pin successor has SU_VL20",
     full_shape_sram_unchanged=True, physical_qualified=False, compiler_adopted=False)
 
 # Compute-die provisional LOCAL pin-bound leaves (not a global parent grant).
 QWEN_VM_LOCAL_RETURN_LEAVES_1016 = dict(
-    return_plane=dict(instances=96, ff_bits=336, signal_pins=397, outline_um=(64.8,64.8)),
+    return_plane=dict(instances=96, ff_bits=668, signal_pins=397, outline_um=(64.8,64.8)),
     read_control_ro6=dict(instances=3, ff_bits=699, signal_pins=306, outline_um=(64.8,64.8)),
-    total_outline_mm2=0.41570496, added_normal_edges=0, hard_memory_macros=0,
+    total_outline_mm2=0.41570496, added_normal_edges=dict(SU_return=1,read_control=0), hard_memory_macros=0,
     pins="W data / E outputs, S control and centered clock; M4 side faces and PG-excluded M5 S contacts",
     cell_area_status="Unmapped; actual CTS/native220/190/80 and route required",
     global_parent_homes_adopted=False, physical_qualified=False)
