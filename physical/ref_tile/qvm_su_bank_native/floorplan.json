@@ -7,13 +7,13 @@
   0,
   0,
   371.52,
-  224.64
+  241.92
  ],
  "core": [
   2.16,
   2.16,
   369.35999999999996,
-  222.48
+  239.76
  ],
  "why": "spec outline",
  "std_area_um2": 0,
@@ -102,7 +102,7 @@
    "inst": "u_ctrl",
    "idx": 0,
    "x": 25.92,
-   "y": 99.36,
+   "y": 190.08,
    "w": 17.28,
    "h": 21.6,
    "orient": "R0",
@@ -128,7 +128,7 @@
    "inst": "u_in_hi",
    "idx": 0,
    "x": 25.92,
-   "y": 142.56,
+   "y": 116.64,
    "w": 25.92,
    "h": 51.84,
    "orient": "R0",
@@ -191,7 +191,7 @@
   [
    "WARN",
    "macro_grid",
-   "qvm_su_bank_ctrl_native#0: origin (25.92, 99.36) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "qvm_su_bank_ctrl_native#0: origin (25.92, 190.08) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
    "build the child on the common lattice"
   ],
   [
@@ -203,7 +203,7 @@
   [
    "WARN",
    "macro_grid",
-   "qvm_data256_native#0: origin (25.92, 142.56) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "qvm_data256_native#0: origin (25.92, 116.64) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
    "build the child on the common lattice"
   ],
   [

@@ -35,14 +35,14 @@ set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_1024x256_m2_r2c2 {u_hi}]
 $i setOrient R180; $i setLocation [expr {round(73.44 * $dbu)}] [expr {round(116.64 * $dbu)}]; $i setPlacementStatus FIRM
 puts "REF_TILE place: [$i getName] ot_sram_1r1w_1024x256_m2_r2c2 at 73.44 116.64 R180"
 set i [ot_ref_pick $ot_ref_by qvm_su_bank_ctrl_native {u_ctrl}]
-$i setOrient R0; $i setLocation [expr {round(25.92 * $dbu)}] [expr {round(99.36 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] qvm_su_bank_ctrl_native at 25.92 99.36 R0"
+$i setOrient R0; $i setLocation [expr {round(25.92 * $dbu)}] [expr {round(190.08 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qvm_su_bank_ctrl_native at 25.92 190.08 R0"
 set i [ot_ref_pick $ot_ref_by qvm_data256_native {u_in_lo}]
 $i setOrient R0; $i setLocation [expr {round(25.92 * $dbu)}] [expr {round(25.92 * $dbu)}]; $i setPlacementStatus FIRM
 puts "REF_TILE place: [$i getName] qvm_data256_native at 25.92 25.92 R0"
 set i [ot_ref_pick $ot_ref_by qvm_data256_native {u_in_hi}]
-$i setOrient R0; $i setLocation [expr {round(25.92 * $dbu)}] [expr {round(142.56 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] qvm_data256_native at 25.92 142.56 R0"
+$i setOrient R0; $i setLocation [expr {round(25.92 * $dbu)}] [expr {round(116.64 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qvm_data256_native at 25.92 116.64 R0"
 set i [ot_ref_pick $ot_ref_by qvm_data256_native {u_cap_lo}]
 $i setOrient R0; $i setLocation [expr {round(272.16 * $dbu)}] [expr {round(25.92 * $dbu)}]; $i setPlacementStatus FIRM
 puts "REF_TILE place: [$i getName] qvm_data256_native at 272.16 25.92 R0"
