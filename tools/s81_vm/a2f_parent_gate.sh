@@ -1,5 +1,5 @@
 #!/bin/bash
-# A2-F / hop-1 VM parent gate (S-VM-RTL 2026-10-16).  Usage: a2f_parent_gate.sh SRCDIR OUTDIR
+# A2-F / hop-1 VM parent gate (S-VM-RTL 2026-10-16; S-VM-X34 2026-10-16: u_xsw = ot_s81_vm_x34_sw2, two W514 halves).  Usage: a2f_parent_gate.sh SRCDIR OUTDIR
 # SRCDIR is a pinned FLAT source snapshot (git show <rev>:<path> of every file in FILES_* below).  Run on an admitted
 # ot-run host.  Verilator only (two 128-SRAM VMs per differential binary).
 #   diff_h1_w1  s1 s2 s3   tb_dsfd_vm_a2f_diff  A2-F hop-1 core vs legacy core WSCATTER_PIPE 1 (profile s81_vm_r4_c2_w1)
@@ -8,6 +8,8 @@
 #   mut_lane / mut_commit / mut_rel   DUT mutants on diff_h1_w1: wrong lane, dropped commit, missing hop-1 edge: must FAIL
 #   par_a2f     tb_dsfd_sp_vm_a2f (S-FUNC master program) on dsfd_sp_vm_a2f READ_PIPE 4 CAP_PIPE 2 HOP1 1: seeds 1 2,
 #               fault witnesses 1..8; mutants capword / wfcpair / x43phase must FAIL
+#   x34sw2      tb_ot_s81_vm_x34_sw2_diff: W1026 x34 vs sw2 (two W514) every stream edge, seeds 1 2 3 mode 0, modes 1 2
+#               (late resets: identical faults); mutants x34sw2_swap / x34sw2_drop must FAIL
 #   par_legacy  tb_dsfd_sp_vm_static on the legacy dsfd_sp_vm (same snapshot, READ_PIPE 4 CAP_PIPE 2 WSCATTER_PIPE 1): seeds 1 2
 set -uo pipefail
 S=${1:?source}; O=${2:?output}; mkdir -p "$O"
@@ -25,7 +27,8 @@ build() {  # name top files defines...
   echo "BUILT $name"
 }
 DIFF="$COMMON $LEGACY $A2F tb_dsfd_vm_a2f_diff.sv"
-PAR="$COMMON $A2F dsfd_sp_vm_a2f.sv tb_dsfd_sp_vm_a2f.sv"
+PAR="$COMMON ot_s81_vm_x34_sw2.sv $A2F dsfd_sp_vm_a2f.sv tb_dsfd_sp_vm_a2f.sv"
+XSW="ot_s81_vm_x34.sv ot_s81_vm_x34_sw2.sv tb_ot_s81_vm_x34_sw2_diff.sv"
 PLEG="$COMMON $LEGACY dsfd_sp_vm_static.sv tb_dsfd_sp_vm_static.sv"
 # A full differential Verilator frontend measured 3.76 GB. Eleven overlapping frontends/compiler pools
 # exceeded a 32 GB cgroup; bound the build working set without dropping any configuration or mutant.
@@ -52,6 +55,9 @@ queue_build par_capword  tb_dsfd_sp_vm_a2f "$PAR" $NATIVE +define+OT_VM_CAPL_MUT
 queue_build par_wfcpair  tb_dsfd_sp_vm_a2f "$PAR" $NATIVE +define+OT_VM_WFC_MUT_PAIR
 queue_build par_x43phase tb_dsfd_sp_vm_a2f "$PAR" $NATIVE +define+OT_VM_X43_MUT_PHASE
 queue_build par_legacy tb_dsfd_sp_vm_static "$PLEG" $NATIVE +define+OT_VM_NATIVE_WSCATTER
+queue_build x34sw2      tb_ot_s81_vm_x34_sw2_diff "$XSW"
+queue_build x34sw2_swap tb_ot_s81_vm_x34_sw2_diff "$XSW" +define+OT_VM_X34SPLIT_MUT_SWAP
+queue_build x34sw2_drop tb_ot_s81_vm_x34_sw2_diff "$XSW" +define+OT_VM_X34SPLIT_MUT_DROP
 flush_builds
 [ $bfail = 0 ] || { echo 'A2F_GATE FAIL (build)'; exit 2; }
 # ---- runs (all in parallel)
@@ -64,6 +70,9 @@ for m in lane commit rel; do run mut_$m mut_$m +seed=1 +nmix=600; done
 for s in 1 2; do run par_a2f_s$s par_a2f +mode=0 +seed=$s; run par_legacy_s$s par_legacy +mode=0 +seed=$s; done
 for m in 1 2 3 4 5 6 7 8; do run par_a2f_m$m par_a2f +mode=$m; done
 for m in capword wfcpair x43phase; do run par_$m par_$m +mode=0 +seed=1; done
+for s in 1 2 3; do run x34sw2_s$s x34sw2 +mode=0 +seed=$s; done
+for m in 1 2; do run x34sw2_m$m x34sw2 +mode=$m +seed=1; done
+for m in swap drop; do run x34sw2_$m x34sw2_$m +mode=0 +seed=1; done
 for k in "${!RUN[@]}"; do wait "${RUN[$k]}"; done
 bad=0
 chk() { if grep -q "$2" "$O/$1.log"; then echo "PASS $1"; else echo "FAIL $1"; tail -8 "$O/$1.log"; bad=1; fi; }
@@ -74,6 +83,9 @@ for m in lane commit rel; do chk mut_$m '^TB_A2F_DIFF FAIL$'; done
 for s in 1 2; do chk par_a2f_s$s '^TB_SPVM PASS mode 0$'; chk par_legacy_s$s '^TB_SPVM PASS mode 0$'; done
 for m in 1 2 3 4 5 6 7 8; do chk par_a2f_m$m "^TB_SPVM PASS mode $m "; done
 for m in capword wfcpair x43phase; do chk par_$m '^TB_SPVM FAIL mode 0$'; done
-grep -h '^TB_A2F_DIFF LAT\|^TB_A2F_DIFF RESULT\|^TB_SPVM RESULT' "$O"/*.log | sort | uniq -c
+for s in 1 2 3; do chk x34sw2_s$s '^TB_X34SW2 PASS mode 0$'; done
+for m in 1 2; do chk x34sw2_m$m "^TB_X34SW2 PASS mode $m\$"; done
+for m in swap drop; do chk x34sw2_$m '^TB_X34SW2 FAIL mode 0$'; done
+grep -h '^TB_A2F_DIFF LAT\|^TB_A2F_DIFF RESULT\|^TB_SPVM RESULT\|^TB_X34SW2 RESULT' "$O"/*.log | sort | uniq -c
 [ $bad = 0 ] && echo 'A2F_GATE PASS' || echo 'A2F_GATE FAIL'
 exit $bad

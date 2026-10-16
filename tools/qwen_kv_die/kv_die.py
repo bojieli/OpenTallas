@@ -486,8 +486,34 @@ def _host_rt_v14(b):
     return b
 
 
+# Q-KVSYS-DIE 2026-10-16 (OT_KV_DCAL=1, default off): the KV link calendar sequencer qkd_d2d_cal_seq_pin (CLOSED view
+# physical/ref_tile/qkd_d2d_cal_seq_pin_ep3, Q-LINK/Codex 3365a45b8 + fbc4a2e0d) drives the static D2D end's cfg loader /
+# cal_start / cal_seg (6 of the 23 strict-bind open inputs); epoch_go <- the end's own fwd_epoch, halt <- epoch_abort,
+# reload <- the HOST root's program_begin_v (a new program image begins: the calendar image restarts).  KV AUTO: no tok_go.
+DCAL = __import__('os').environ.get('OT_KV_DCAL', '0') == '1'
+DCAL_FILE = 'rtl/qwen_sys/d2d_static_20261015/qkd_d2d_cal_seq_pin.sv'
+DCAL_CFG = ['cfg_tx_we', 'cfg_rx_we', 'cfg_addr', 'cfg_data', 'cal_start', 'cal_seg']
+DCAL_WH = (18.792, 28.08)
+
+
+def dcal_binding():
+    return dict(module='qkd_d2d_cal_seq_pin', file=DCAL_FILE, parameters=dict(EP_SKEW=3, GO_OFS=0),
+                ports=dict(ck=['ck'], rst_n=['rst_n'], cal=list(DCAL_CFG), ego=['epoch_go'], hlt=['halt'], rld=['reload']),
+                sliced={}, classed={})
+
+
+def _d2ds_binding_dcal():
+    b = d2ds_binding()
+    if DCAL:
+        b['ports'].update(cal=list(DCAL_CFG), eab=['epoch_abort'])
+    return b
+
+
 BINDINGS.update(qkd_host_rt=_host_rt_v14(host_rt_binding()), qkd_hslice=slice_die_binding(), qkd_pllm=pll_model_binding(),
-                qkd_d2ds=d2ds_binding())
+                qkd_d2ds=_d2ds_binding_dcal())
+if DCAL:
+    BINDINGS.update(qkd_dcal=dcal_binding())
+    RTL.update(qkd_dcal=DCAL_FILE)
 RTL.update(qkd_d2ds=D2DS_FILE)
 RTL.update(qkd_host_rt=HOST_RT_FILE, qkd_hslice=SLICE_DIE_FILE)
 # v1.4.1 HOST-north: the N stacks' slices = the same RTL under a second physical view with swapped chain faces
@@ -1418,7 +1444,8 @@ def _host_v14_buses(m):
     add(('rst_die', 'reset', 1, [('host', 'die_rst_n')] + list(dict.fromkeys(die_l))))
     add(('rst_hbm', 'reset', 1, [('host', 'hbm_rst_n')] + list(dict.fromkeys(hbm_l)) + [(s, 'hbm_rst_n') for s in slices]))
     link_l = [e for e in link_l if e[0] != 'lnk' and e != ('ucie_rom', 'rst_n')]     # ucie rst_n = the d2d end's phy_rst_n
-    add(('rst_link', 'reset', 1, [('host', 'link_rst_n')] + list(dict.fromkeys(link_l))))
+    add(('rst_link', 'reset', 1, [('host', 'link_rst_n')] + list(dict.fromkeys(link_l)) +
+         ([('dcal', 'rst_n')] if DCAL and any(i.name == 'dcal' for i in m['insts']) else [])))
     add(('rst_host', 'reset', 1, [('host', 'host_rst_n')] + [(s, 'host_rst_n') for s in slices]))
     # v1.4.1 HOST-north: the N stacks' chain head is their slot 31 (their top = the HOST row) and the chain runs slot 31 ->
     # slot 0; the S stacks keep slot 0 (die bottom: reached down the free centre column; the slice column has no free
@@ -1509,6 +1536,22 @@ def _d2ds_swap(m):
         m['insts'].append(it)
         add((f'h{p_}', 'kv_oneway', 1, [('d2d_kv', p_), (n_, 'a')]))
     m.setdefault('extra_conns', {})['d2d_kv'] = ['.serdes_up(n_host_fdi[0])']     # SerDes tx_up (fdi bit 0) also feeds link_up[1]
+    if DCAL:
+        # OT_KV_DCAL: the calendar sequencer sits one channel E of the D2D frame, level with the frame centre (the relays
+        # are planned after, around it); its cfg / cal word is a 42-bit abutting-distance spine_local bus
+        d_ = by['d2d_kv']
+        w_, h_ = up(DCAL_WH[0] + SHAVE, GX), up(DCAL_WH[1] + SHAVE, GY)       # frame on the grid, >= the real view
+        it = F.Inst('dcal', 'qkd_dcal', up(d_.x + d_.w + 21.6, GX), up(d_.y + d_.h / 2 - h_ / 2, GY), w_ - SHAVE, h_ - SHAVE,
+                    'R0', kind='ctl', region='io')
+        m['insts'].append(it)
+        add(('dcal_cfg', 'spine_local', 1 + 1 + 6 + 32 + 1 + 1, [('dcal', 'cal'), ('d2d_kv', 'cal')]))
+        add(('dcal_hlt', 'spine_local', 1, [('d2d_kv', 'eab'), ('dcal', 'hlt')]))
+        add(('dcal_rld', 'kv_oneway', 1, [('host', 'program_begin_v'), ('dcal', 'rld')]))
+        for i_, (bid, cl, bits, eps) in enumerate(B):
+            if bid == 'clk_core_c':
+                B[i_] = (bid, cl, bits, list(eps) + [('dcal', 'ck')])
+        # epoch_go taps the end's fwd_epoch die net at its source (the bump chain keeps its relays and its one driver)
+        m.setdefault('extra_conns', {})['dcal'] = ['.ego(n_hfwd_epoch)']
 
 
 def _centre(it, port=None):
@@ -2277,6 +2320,8 @@ def masters(m, k=1, port_bits=None):
         _split_pins(M, m)
     if 'qkd_d2ds' in M and 'serdes_up' not in M['qkd_d2ds'].ports:
         M['qkd_d2ds'].area('serdes_up', 1, round(M['qkd_d2ds'].w / 2, 3), round(M['qkd_d2ds'].h / 2 - 9.6, 3), 1)   # v1.4 extra_conns tap
+    if 'qkd_dcal' in M and 'ego' not in M['qkd_dcal'].ports:
+        M['qkd_dcal'].face('ego', 1, 'W', 'M4', round(M['qkd_dcal'].h / 2, 3), 1)      # OT_KV_DCAL extra_conns tap
     for mst in list(M):
         if mst not in used and mst not in sizes:
             M.pop(mst)
