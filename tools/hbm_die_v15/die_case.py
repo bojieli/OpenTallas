@@ -72,13 +72,24 @@ def ports_of_lib(lib):
     return out
 
 
+def entry_cap(lib, ff=2.0):
+    """SYNTH ETM (ideal clocks, no tile CTS): its clock pin carries the raw sum of every flop clock pin (e.g. 6.5 pF on the
+    controller leaf).  A hardened tile presents one clock-entry buffer: model that (ff fF) so the die tree sees the entry
+    it will drive.  The tile-internal insertion is NOT in a SYNTH view (labelled in the manifest)."""
+    t = Path(lib).read_text()
+    t2, n = re.subn(r'(pin\("?[\w\[\]]+"?\)\s*\{\s*direction\s*:\s*input\s*;\s*clock\s*:\s*true\s*;\s*capacitance\s*:\s*)[\d.]+',
+                    lambda m: m.group(1) + f'{ff:.4f}', t)
+    Path(lib).write_text(t2)
+    return n
+
+
 def synth_lef(name, w, h, pins, path):
     """Abstract of a SYNTH view: real outline, pins at the given (face, lo, hi) spans, every bit on a track (M5 N/S at
     x = 0.012 + 0.048 k, M4 E/W at y = 0.012 + 0.048 k), OBS M1..M5 (the die routes M6+ over it, M4/M5 in channels)."""
     L = ['VERSION 5.7 ;', 'BUSBITCHARS "[]" ;', 'DIVIDERCHAR "/" ;', f'MACRO {name}', '  CLASS BLOCK ;',
          f'  FOREIGN {name} 0 0 ;', f'  SIZE {w:.3f} BY {h:.3f} ;', '  SYMMETRY X Y ;']
     used = defaultdict(set)
-    for (pn, d, face, lo, hi, nb) in pins:
+    for (pn, d, face, lo, hi, nb, base, bus) in pins:
         ln = (hi - lo)
         for k in range(nb):
             pos = lo + (k + 0.5) * ln / nb
@@ -87,7 +98,7 @@ def synth_lef(name, w, h, pins, path):
                 tr += 1
             used[face].add(tr)
             c = 0.012 + 0.048 * tr
-            bit = f'{pn}[{k}]' if nb > 1 or pn.endswith(']') else pn
+            bit = f'{pn}[{base + k}]' if bus else pn
             if face in ('N', 'S'):
                 assert 0 < c < w, (name, pn, face, c, w)
                 y0, y1 = (h - 0.192, h) if face == 'N' else (0, 0.192)
@@ -114,26 +125,29 @@ def face_pins(ports, faces, w, h):
         x = 0.05 * L
         for p in plist:
             d, nb = ports[p]
-            out.append((p, d, f, x, x + nb * step, nb))
+            out.append((p, d, f, x, x + nb * step, nb, 0, nb > 1))
             x += nb * step
     return out
 
 
 def grant_pins(slot, ports):
     """pins for synth_lef from a v6 grant slot (pins: [{name 'p[hi:lo]', face, span_um}])."""
-    out = []
+    out, extra = [], []
+    cover = defaultdict(int)
     for g in slot['pins']:
         m = re.fullmatch(r'(\w+)(?:\[(\d+):(\d+)\])?', g['name'])
         p = m.group(1)
-        nb = (int(m.group(2)) - int(m.group(3)) + 1) if m.group(2) else 1
-        assert p in ports, (slot['name'], p)
-        assert nb == ports[p][1], (slot['name'], p, nb, ports[p])
+        if p not in ports:
+            extra.append(p); continue
+        hi_b, lo_b = (int(m.group(2)), int(m.group(3))) if m.group(2) else (0, 0)
+        nb = hi_b - lo_b + 1
+        cover[p] += nb
         lo, hi = g['span_um']
         if hi - lo < nb * 0.048:     # a grant span shorter than its bits on one track pitch: centre-widen
             c = (lo + hi) / 2; lo, hi = c - nb * 0.024, c + nb * 0.024
-        out.append((p, ports[p][0], g['face'], lo, hi, nb))
-    missing = sorted(set(ports) - {o[0] for o in out})
-    return out, missing
+        out.append((p, ports[p][0], g['face'], lo, hi, nb, lo_b, ports[p][1] > 1))
+    bad = {p: (cover.get(p, 0), w) for p, (d, w) in ports.items() if cover.get(p, 0) != w}
+    return out, bad, extra
 
 
 def rect_of(x, y, w, h, o, px, py):
@@ -174,6 +188,9 @@ def main():
         shutil.copy(next(cv.glob(f'*_{c}.lib')), vd / f'{CTL_M}_{c}.lib')
     lefs = list(cv.glob('*.lef'))
     ctl_ports = ports_of_lib(vd / f'{CTL_M}_tt.lib')
+    ecap = {}
+    if 'SYNTH' in a.ctrl_kind:
+        ecap[CTL_M] = [entry_cap(vd / f'{CTL_M}_{c}.lib') for c in ('tt', 'ff')]
     if lefs:
         shutil.copy(lefs[0], vd / f'{CTL_M}.lef')
     else:
@@ -185,6 +202,7 @@ def main():
     for c in ('tt', 'ff'):
         shutil.copy(next(fv.glob(f'*_synth_{c}.lib')), vd / f'{SVG_M}_{c}.lib')
     svg_ports = ports_of_lib(vd / f'{SVG_M}_tt.lib')
+    ecap[SVG_M] = [entry_cap(vd / f'{SVG_M}_{c}.lib') for c in ('tt', 'ff')]
     fw, fh = a.feed_wh
     kport = ['k_v', 'k_rdy', 'k_addr', 'k_len', 'k_tag', 'k_we', 'k_wdata', 'k_wstrb', 'k_wr_done', 'kr_v', 'kr_rdy',
              'kr_tag', 'kr_beat', 'kr_data']
@@ -199,9 +217,11 @@ def main():
     for c in ('tt', 'ff'):
         shutil.copy(next(sv.glob(f'*_synth_{c}.lib')), vd / f'{SM_M}_{c}.lib')
     sm_ports = ports_of_lib(vd / f'{SM_M}_tt.lib')
+    ecap[SM_M] = [entry_cap(vd / f'{SM_M}_{c}.lib') for c in ('tt', 'ff')]
     s0 = slots['sm_SW0']
-    pins, miss = grant_pins(s0, sm_ports)
-    assert not miss, ('SM ports without a grant pin', miss)
+    pins, miss, extra = grant_pins(s0, sm_ports)
+    assert not miss, ('SM ports whose grant pins do not cover the view port', miss)
+    kinds['sm_grant_ports_absent_in_view'] = extra
     synth_lef(SM_M, s0['outline']['w'], s0['outline']['h'], pins, vd / f'{SM_M}.lef')
     kinds[SM_M] = 'SYNTH (hierarchical mapped netlist ETM, -DOT_SMH_FC_HIER; outline + pins = v6 grant)'
     vpins = {m: lef_pins(vd / f'{m}.lef') for m in (PHY_M, CTL_M, SVG_M, SM_M)}
@@ -502,7 +522,8 @@ echo $? > $D/out/run.exit
                 open_pins[v['m']][re.sub(r'\[\d+\]$', '', p)] += 1
     man = dict(schema='opentallas.hbm_v15.die_case.v1', region='service_engine+SM (whole HBM->SM datapath)', die_um=[W, H],
                grants=str(GRANTS.relative_to(ROOT)), grants_version=G['version'], plan=str(PLAN.relative_to(ROOT)),
-               views=kinds, instances={m: sum(1 for v in leaves.values() if v['m'] == m) for m in ms},
+               views=kinds, synth_clock_entry=dict(rule='SYNTH ETM clock pins re-capped to one 2 fF entry buffer; tile '
+                                                     'insertion not included (no tile CTS yet)', pins_recapped=ecap), instances={m: sum(1 for v in leaves.values() if v['m'] == m) for m in ms},
                signal_nets=len(nets), clock_domains={d: dict(period_ps=PERIOD[d], sinks=sum(len(x) for x in clkpins[d].values()),
                                                              insts=len(clkpins[d])) for d in clkpins},
                die_clock_trees={d: t['model'] for d, t in trees.items()},
