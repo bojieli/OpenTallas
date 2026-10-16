@@ -1,0 +1,40 @@
+{
+  "schema": "opentallas.s81.held-slot-grant.v1",
+  "status": "HELD_CANDIDATE_SLOT_ONLY",
+  "master": "dsfd_stage_seq_static_c9",
+  "source_commit": "80f117b3b93a1fcf913f419e27be54ffbbc23c0f",
+  "outline_um": [
+    302.4,
+    129.6
+  ],
+  "parameters": {
+    "NOPS": 128,
+    "STAGE": 0
+  },
+  "source_hashes": {
+    "rtl/dsrom_sys/s81_static_control/dsfd_stage_seq_static_c9.sv": "34c0e02d2ceb7792666a1daaf031d67314aa3c49842a91560f4f370ce3f868ae",
+    "rtl/dsrom_sys/s81_static_control/dsfd_stage_seq_static_c.sv": "3fc9e5cd96970d49788e9a5a06fce3a31fb4984baa8cd505ad49084ada338521",
+    "rtl/dsrom_sys/s81_static_control/ot_s81_fixed_issue.sv": "6e35ef2e2319a1bcfe400bdec3381ff697ab5d172261a21f24105d6ce972cd8a",
+    "rtl/dsrom_sys/s81_static_control/ot_s81_fixed_mailbox.sv": "e9629558b211dd2000ebb8970f87176d0648a00e3da2195201bbd135539412b7",
+    "rtl/dsrom_sys/s81_static_control/ot_s81_pq_boot_control.sv": "32ecceb7c7d91cb541d1d25c8cd2ee1a4be83b1a1c0eed0031502bc53d4fb747",
+    "rtl/dsrom_sys/s81_ingest/dsfd_host_c.sv": "372906ce26858c67ec4a22facd20a55351ed31413cf1a42b86aebabc749d294b"
+  },
+  "pins": {
+    "json": "physical/s81_die_pins/pq_producer_c9_h1296_2118/dsfd_stage_seq_static_c9.json",
+    "json_sha256": "44f52a48c293510700ca79a53b8f05d7974e474b024ab3cba85f632716d383a1",
+    "tcl": "physical/s81_die_pins/pq_producer_c9_h1296_2118/dsfd_stage_seq_static_c9.tcl",
+    "tcl_sha256": "3a07797225fb53f06f3efa2d1e89c715870df46b56eeb532c2e0b944cd4787f0",
+    "pin_count": 1223,
+    "north_y_moved_pins": 283,
+    "other_pin_coordinates_unchanged": 940
+  },
+  "previous_tcl_sha256": "f0d7bb81fe9fbdf63b030492def3e9661287356abfb543cd3e89798456859be0",
+  "reason": "Measured n1 util66percent at108um; height129.6 targets55percent. n2 old Tcl still used N y108 and force_to_die_boundary: new exact N edge removes ambiguous nearest-edge placement.",
+  "physical_view_inheritance": false,
+  "native_qualified": false,
+  "adopted_in_die": false,
+  "required": [
+    "Re-kit against these exact pins and129.6 outline, fresh source-pinned CTS/bench/mutant/TT/FF/DRC0",
+    "Source-current c9 host/PQ producer transport/calendar binding and native audits before die adoption"
+  ]
+}
