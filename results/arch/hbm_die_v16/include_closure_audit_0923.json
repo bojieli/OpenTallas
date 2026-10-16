@@ -1,0 +1,224 @@
+{
+ "schema": "opentallas.hbm.source_include_closure_audit.v1",
+ "status": "SOURCE_BYTES_ONLY_NOT_NATIVE_QUALIFICATION",
+ "compatible_snapshot": "0dc313220",
+ "fetch_guard_commit": "4572c8e3d",
+ "receipts": [
+  {
+   "cell": "hfd_hgi_vm_calendar_f20",
+   "metadata_sha256": "3aef4bddfca3a6118bcaff65a58eb926e037c0845743b17dd06e070d6a76d2a6",
+   "actual_top": "v16w_hfd_hgi_vm_calendar_f20"
+  },
+  {
+   "cell": "hfd_hgi_vms_static_NE",
+   "metadata_sha256": "983c35339ecebeb21f88b5f9c6c8862593010d90836d270e7e6960ed1da5b095",
+   "actual_top": "v16w_hfd_hgi_vms_static_NE"
+  },
+  {
+   "cell": "hfd_hgi_vms_static_NW",
+   "metadata_sha256": "fc21880fd7198a2025570e741569d73be153b74bdeefbc8a0599bf3333f3ddda",
+   "actual_top": "v16w_hfd_hgi_vms_static_NW"
+  },
+  {
+   "cell": "hfd_hgi_vms_static_SE",
+   "metadata_sha256": "782c56fdf34c18d66725d33dd1636d582318035fb7301c6748f915c38af18f7c",
+   "actual_top": "v16w_hfd_hgi_vms_static_SE"
+  },
+  {
+   "cell": "hfd_hgi_vms_static_SW",
+   "metadata_sha256": "eb354ccc93f24284f8154f01099e3f0adbd81f5f36cd30f64432bbd83011cd65",
+   "actual_top": "v16w_hfd_hgi_vms_static_SW"
+  },
+  {
+   "cell": "ot_hbm_accel_smh_attn",
+   "metadata_sha256": "6bf91e9bdeeb01f36856ebeb7a6844090595551b36893c9d3c7a743b3f7b5c47",
+   "actual_top": "v16w_ot_hbm_accel_smh_attn"
+  },
+  {
+   "cell": "ot_hbm_argmax_static_sw_vm",
+   "metadata_sha256": "dbbc6db5bb2d845c849bc17bae75a9f2b40998852dc617b38a8bceaa962e85e6",
+   "actual_top": "v16w_ot_hbm_argmax_static_sw_vm"
+  },
+  {
+   "cell": "ot_hbm_hc_eng_static",
+   "metadata_sha256": "c2851674f7c1c40b563b611f0f330c29681b2f77cd12a9797f638058f3fd5273",
+   "actual_top": "v16w_ot_hbm_hc_eng_static"
+  },
+  {
+   "cell": "ot_hbm_hc_q_static",
+   "metadata_sha256": "aed41972e8212476b661c4dd209887f98ce5fdb71859d9468012cb399ad004de",
+   "actual_top": "v16w_ot_hbm_hc_q_static"
+  },
+  {
+   "cell": "ot_hbm_host_landing256",
+   "metadata_sha256": "17725f4311493164b93adcaf1db9545e5ea93f4e1a6288dc273f1e8bd6fcf4de",
+   "actual_top": "v16w_ot_hbm_host_landing256"
+  },
+  {
+   "cell": "ot_hbm_host_packet_static",
+   "metadata_sha256": "509ef31ea3f44e24e1b6c74d1b5c16556aa27a3482bc6e703c07bb6003874c63",
+   "actual_top": "v16w_ot_hbm_host_packet_static"
+  },
+  {
+   "cell": "ot_hbm_host_phy_adapt",
+   "metadata_sha256": "5cd9c831350902058920ef5ab31740380fe24780a2c62eee476e9a1bf232b9b0",
+   "actual_top": "v16w_ot_hbm_host_phy_adapt"
+  },
+  {
+   "cell": "ot_hbm_lk_ep",
+   "metadata_sha256": "9a8b8c6d8c7f0d3292d7ec690437135f59734b7ab25397efbdc7d85884f14f12",
+   "actual_top": "v16w_ot_hbm_lk_ep"
+  },
+  {
+   "cell": "ot_hbm_sm_vm_wr_q_t",
+   "metadata_sha256": "55d0af7c5fdee3dc6f9066603a7c4ec49139478fb1e8003a0fca4fb65ba8245b",
+   "actual_top": "v16w_ot_hbm_sm_vm_wr_q_t"
+  },
+  {
+   "cell": "ot_hbm_static_cfg_collar__pv0",
+   "metadata_sha256": "630ec2c9ae481f88841dcd8e318e5b2f20bc3f780f417168446bf7479b247dc6",
+   "actual_top": "v16w_ot_hbm_static_cfg_collar__pv0"
+  },
+  {
+   "cell": "ot_hbm_static_cfg_collar__pv1",
+   "metadata_sha256": "8180593d0e91044f37cc8b9b8e0859c687246178dd7b5aadc84f4d0c90982ab1",
+   "actual_top": "v16w_ot_hbm_static_cfg_collar__pv1"
+  },
+  {
+   "cell": "ot_hbm_static_cfg_collar__pv2",
+   "metadata_sha256": "ca4afa70fb2f2ad5831ab1696704b16c82f6fb1598e7adf271e8040389cab506",
+   "actual_top": "v16w_ot_hbm_static_cfg_collar__pv2"
+  },
+  {
+   "cell": "ot_hbm_status_join",
+   "metadata_sha256": "a21f8984d3417e67f42875eebbd6d022ed988ef15a8510088b57b9bf4ff2e4bb",
+   "actual_top": "v16w_ot_hbm_status_join"
+  },
+  {
+   "cell": "ot_hbm_su_bridge_release",
+   "metadata_sha256": "7d7005510d69582ea2916daad5c0592804120927cb781c64df54ec6139772c71",
+   "actual_top": "v16w_ot_hbm_su_bridge_release"
+  },
+  {
+   "cell": "ot_hbm_su_programme",
+   "metadata_sha256": "5ba1bf99dd214df379043dc0db313ac9a2aa0e5e56b3d6365304884ea6739cf5",
+   "actual_top": "v16w_ot_hbm_su_programme"
+  },
+  {
+   "cell": "ot_hbm_su_static_cxport",
+   "metadata_sha256": "312c30cab0607d0dc683fff66548c6c6263fc9351f3d252c750ab8ae1a5d7329",
+   "actual_top": "v16w_ot_hbm_su_static_cxport"
+  },
+  {
+   "cell": "ot_hbm_su_static_pgslice",
+   "metadata_sha256": "2ed1eb1cd1d33c96f3106da8cf94e0044fda29b34c2f7d7a9fe7423a0d8468db",
+   "actual_top": "v16w_ot_hbm_su_static_pgslice"
+  },
+  {
+   "cell": "ot_hbm_su_static_qcore",
+   "metadata_sha256": "04ba7d400a36ea6ae708d21062c0d63469a303345b20fa4204650c8e709f26bf",
+   "actual_top": "v16w_ot_hbm_su_static_qcore"
+  },
+  {
+   "cell": "ot_hbm_su_static_sfustore",
+   "metadata_sha256": "34232a20e146a944c9c70f2ccd48e2b9f295ce51079f4462027f48ebf30544a8",
+   "actual_top": "v16w_ot_hbm_su_static_sfustore"
+  },
+  {
+   "cell": "ot_hbm_svc_pc_ctrl_leaf",
+   "metadata_sha256": "a50258a0e43c58cc1d623c0a314827a63244b3e6c4d174bbe19577a842da8bf2",
+   "actual_top": "v16w_ot_hbm_svc_pc_ctrl_leaf"
+  },
+  {
+   "cell": "ot_hbm_svc_sm_group",
+   "metadata_sha256": "faafdb479aeaf2e41029d2493733b2f8170902e6c95c5c371eee7c1468393097",
+   "actual_top": "v16w_ot_hbm_svc_sm_group"
+  },
+  {
+   "cell": "ot_hbm_svc_stack_fault",
+   "metadata_sha256": "c831fda8d18886a40ac1fe3fe3e25a19a45573116f8cc29ca27a0f874c9c948c",
+   "actual_top": "v16w_ot_hbm_svc_stack_fault"
+  },
+  {
+   "cell": "ot_hbm_svc_vm_kshare",
+   "metadata_sha256": "e65ef43681c8e8dd7457284e09ae6e0cc8b0bef6ebd0c56977baecdb58d30def",
+   "actual_top": "v16w_ot_hbm_svc_vm_kshare"
+  },
+  {
+   "cell": "ot_hbm_svc_wb_kport",
+   "metadata_sha256": "2568b7d86fd12dcea7f4ad9139d7456513ee17bba89dab9c7a8b101bbff02826",
+   "actual_top": "v16w_ot_hbm_svc_wb_kport"
+  },
+  {
+   "cell": "ot_hbm_vm_lg_static_bank",
+   "metadata_sha256": "809e95bd55ce9a83ee25fd86ddf94a5a5f795d69e20732d5716f8fcd81e9d6db",
+   "actual_top": "v16w_ot_hbm_vm_lg_static_bank"
+  },
+  {
+   "cell": "ot_hbm_vm_lg_static_bank_term",
+   "metadata_sha256": "11da6e78ed9063dfb3be8e8f3c1b02c5bff3e9d5cb88202be16716c6a931517d",
+   "actual_top": "v16w_ot_hbm_vm_lg_static_bank_term"
+  },
+  {
+   "cell": "ot_hbm_xp_aq_tree13_fmt",
+   "metadata_sha256": "a57d9fbb0421aa804338a148069c886f92385aba41dcf9d8554f0ad7b5141e0a",
+   "actual_top": "v16w_ot_hbm_xp_aq_tree13_fmt"
+  },
+  {
+   "cell": "ot_hfd_coll_q2_static_host_v4",
+   "metadata_sha256": "fdfc51d4380d1d8e8df2fe5d29eac6fa826703309ba6c7e110c54699ad86406e",
+   "actual_top": "v16w_ot_hfd_coll_q2_static_host_v4"
+  },
+  {
+   "cell": "ot_hfd_coll_q3_static_host_v4",
+   "metadata_sha256": "69931565742d9d82c4b8e7e82bcecc9d15287afe1cd2e7694ae7034c36ad1ba7",
+   "actual_top": "v16w_ot_hfd_coll_q3_static_host_v4"
+  },
+  {
+   "cell": "ot_hgi_coll_inj_idx_join",
+   "metadata_sha256": "51ab05a174f2c2377e8753916cd87855d6b621b383127189e49a934bbee32fe2",
+   "actual_top": "v16w_ot_hgi_coll_inj_idx_join"
+  },
+  {
+   "cell": "ot_hgi_dma_back_static_vp4_banks_cp",
+   "metadata_sha256": "0bb7de5281b5e6d2f989ee0b7bb9660280f6ffe3baef76c80829b4be5b47f368",
+   "actual_top": "v16w_ot_hgi_dma_back_static_vp4_banks_cp"
+  },
+  {
+   "cell": "ot_hgi_qdq_host_static",
+   "metadata_sha256": "228203aed6c00e270f4105c52fc7d495abfe15398e70a8988aba4bc87e310290",
+   "actual_top": "v16w_ot_hgi_qdq_host_static"
+  },
+  {
+   "cell": "ot_hgi_sfu_core_split",
+   "metadata_sha256": "4d774c5238b24144e6bad290a0f632a04594b5303300d9667c66ecef8676a3e3",
+   "actual_top": "v16w_ot_hgi_sfu_core_split"
+  },
+  {
+   "cell": "ot_hgi_sfu_programme_store",
+   "metadata_sha256": "89bd45f9d0755bf206fe7567cb9d4475a1de9401618c53cae13bb958aa1975e3",
+   "actual_top": "v16w_ot_hgi_sfu_programme_store"
+  },
+  {
+   "cell": "ot_hgi_sm_xload_cl2_ctlw",
+   "metadata_sha256": "85890e77f2b8b42a2ca96b9c7b81f325e9faa0f0122fbeb942bcb870d358bd51",
+   "actual_top": "v16w_ot_hgi_sm_xload_cl2_ctlw"
+  },
+  {
+   "cell": "ot_pdie_ucie",
+   "metadata_sha256": "c5f3676075a25af7010c9c1e58269890a551482f2fea6329ed4e094aea78ce19",
+   "actual_top": "v16w_ot_pdie_ucie"
+  },
+  {
+   "cell": "ot_static_cmd_target",
+   "metadata_sha256": "aa123c832bd31ba80aadd1537c718651874ac2e90dbc70ddd2bc464baf6705e0",
+   "actual_top": "v16w_ot_static_cmd_target"
+  }
+ ],
+ "unique_git_source_files": 209,
+ "included_headers": {
+  "rtl/common/ot_secded_cols.svh": "e6f149761d76bd0464dfb63781259e5b9f0bbb423f0f11ac465869955d0759c0"
+ },
+ "review": "42 fetched receipts all source hashes rechecked against current frozen snapshot and local exact wrappers. Recursive include scan found lk_ep SECDED columns; refreshed exact source-admitted receipt includes its header. Pending SerDes consumes gf1024 header and must pass new recursive include guard when terminal. IDX/SerDes remain live; no duplicate synthesis.",
+ "receipt_count": 42
+}
