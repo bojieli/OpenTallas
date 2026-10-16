@@ -1,5 +1,5 @@
 {
- "name": "ot_qwen_tile_romleaf-a0-COMMIT",
+ "name": "ot_qwen_tile_romleaf-a0-HEAD",
  "block": "ot_qwen_tile_romleaf",
  "ref_tile": true,
  "owner": "Codex:Q-ROMLEAF1552",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 16,
  "source": {
   "branch": "codex/qwen-romleaf-1552",
-  "commit": "COMMIT"
+  "commit": "HEAD"
  },
  "stages": {
   "bench": [
@@ -95,7 +95,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/ot_qwen_tile_romleaf/ot_qwen_tile_romleaf-a0-COMMIT"
+   "to": "results/rtl/ref_tile/ot_qwen_tile_romleaf/ot_qwen_tile_romleaf-a0-HEAD"
   }
  ],
  "cycles_added": 0,
