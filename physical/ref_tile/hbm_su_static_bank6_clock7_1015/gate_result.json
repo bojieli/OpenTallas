@@ -2,13 +2,13 @@
  "schema": "opentallas.ref_tile.gate_result.v2",
  "kit": "hbm_su_static_bank6_clock7_1015",
  "verdict": "WARN",
- "generated": "2026-10-15T22:46:39-0700",
+ "generated": "2026-10-15T23:01:40-0700",
  "host": "ot-epyc1tb",
  "cts": true,
  "commit": null,
  "source_binding": {
   "schema": "opentallas.ref_tile.source_snapshot.v1",
-  "start_commit": "7e1fe720b65f552c40852c61b101400cba6c34df",
+  "start_commit": "ed7ee33258cf5e474a08757811fc5e661507e2ac",
   "commit": null,
   "identity": "exact_content_snapshot",
   "daemon_tree": "/home/ubuntu/wt-claude-closure-daemon-1010",
@@ -21,8 +21,8 @@
    "tools/orfs_hold_mm.tcl",
    "tools/textbook_lint.py"
   ],
-  "archive_sha256": "91e3919a7ccbe601c338df93948c381bfc0466f9e053327a9db43069343ffe4e",
-  "manifest_sha256": "822b8cbec45b240324e0fca5e28cfebefb0f7f4cb201ff23f6d3e54f38841322",
+  "archive_sha256": "55ad38418de94354546e41f329e1c8da39732fdf2d5e221650e5100c7c138ff5",
+  "manifest_sha256": "c000510fc49e04cfe09b836afc1d4053c06fd6a18ecb740b5fb957a2159c01b7",
   "files": [
    {
     "path": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.json",
@@ -165,6 +165,14 @@
     "kind": "file",
     "sha256": "714d28eeea112f820044e3c11a32ece53a76e44fc3fb54b1ce8fa87cb1619a74",
     "git_blob": "601cdc0c3a9fafb123d288ebaf9dfcc4c0960e44",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "physical/common_flow/grt183_resume.tcl",
+    "kind": "file",
+    "sha256": "50d43e568486b97feb7896397e525bfbf1c9779e820f622fb0870c35864f853d",
+    "git_blob": "9cb1c3b2c4d22e833a95cedb1097b65688dfd9de",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -6075,8 +6083,8 @@
    {
     "path": "physical/qwen_die_masters/io_flop_at_pins.tcl",
     "kind": "file",
-    "sha256": "faab5dc8a12bdcd359c32773e976a9a4d200279983f058e8f7ecfb3b23ae5850",
-    "git_blob": "60cc633b7b5524766750e5c92291d1d051e92742",
+    "sha256": "fd57e8617b08d7c039cabb63c4cdaf7a52fab5b9bd63717441d83bda888ef26a",
+    "git_blob": "09e4879787fd8da142087be659db57a51336ea3e",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -32075,8 +32083,8 @@
    {
     "path": "rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_kind0_lat4_leaf1_physical.sv",
     "kind": "file",
-    "sha256": "b0a7cfb742f64c2f56b671e7a7cf27ca6adf401f71a27c8ec449273cb6bf423b",
-    "git_blob": "3ad7637adcc96b9aab75784e4380c4acf1f02064",
+    "sha256": "8b6772acfe60d3704448d805dce58769365f483df23a35e7b2cb4d186773dc12",
+    "git_blob": "ca1d26dfa31ed020f4cb38d8621fd449f68ea6b2",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -32115,8 +32123,8 @@
    {
     "path": "rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_lane_pinreg.sv",
     "kind": "file",
-    "sha256": "7d3f49b3114eb0f41b15b43e1091819b73229f07db7a3b56ce7828e667cea42d",
-    "git_blob": "f368df4aae524ba461a44ac8f22fa65ab243001a",
+    "sha256": "00d43c502abb3d308c359c1d82bf053233113c62a83562e8adbf9efb7a9aa6ea",
+    "git_blob": "9682814db1696c1ea186f7b0aa75cc5dff51d8a1",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -46051,8 +46059,8 @@
    {
     "path": "rtl/hdc/nearhbm/ot_qwen_tp8_pv_wide_pair.sv",
     "kind": "file",
-    "sha256": "9b198d1978aa8606967d1d2837c531328cecb7ab1803c4b68739ebbbd9f36e9c",
-    "git_blob": "959a988313b023da304fba2f9ab7139655e0824c",
+    "sha256": "14c2bd3f6c5cb62af29bd1e31e3fd21b0f9bca75dc33351d28b6696aa326596c",
+    "git_blob": "ae3eb9c478f2ccd3e4a1c638c52d6ebe603c3007",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -50939,8 +50947,8 @@
    {
     "path": "rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc_strap.sv",
     "kind": "file",
-    "sha256": "2ff521bb3ed5af69e9b7115ebe00c8e70b9b6f24233392809921e4d9518b96de",
-    "git_blob": "f3d161fb1b391046f9247f3cf2109f6990aad016",
+    "sha256": "719476979ec0b5810378d413c9d87be0ff034ac67bbbc7421417a7d85c645223",
+    "git_blob": "329b06049b99a44c2d9542db3f83c869728e7935",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -63595,8 +63603,8 @@
    {
     "path": "rtl/test/nearhbm/tb_qwen_tp8_pv_wide_pair.sv",
     "kind": "file",
-    "sha256": "1d9e245136cef9246fc1837aef1dc0dcd37cfcd454160c1ad0371123df2fd6ab",
-    "git_blob": "36b5a3af4b414d0689e0ea8d684a46eaa54b1eb2",
+    "sha256": "805dbe5189257a56c0c5dba86791aafbed160696e67310aded9252af71a68425",
+    "git_blob": "747172c324d71fcd9dcd825fa4676c6b706fa3f8",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -78867,8 +78875,8 @@
    {
     "path": "tools/closure_loop/closure_loop.py",
     "kind": "file",
-    "sha256": "8a05c94e4e0f994abf45e4361c141c93050fa9a4aaa4d25059572bbd16426778",
-    "git_blob": "e44e329d2574ebf3d1b87c7a9e9e20f71f43921f",
+    "sha256": "fd75c38aecc7a59655d34422285cde9dbc3b35b36c94089cb88caea9123341fd",
+    "git_blob": "da84500ae63ead2762b119e5d3c7ad1d1657e46e",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -82171,8 +82179,8 @@
    {
     "path": "tools/closure_loop/test_src_release.py",
     "kind": "file",
-    "sha256": "0388f36568b080ef0f1d9be01a08ab3772a685e7336a929600f8aff73646bb58",
-    "git_blob": "1e5595c244ab5767b470108fb3ea82b4b66d91cc",
+    "sha256": "cdd65ab29bbb7edda908a475a299a7053e0a1fcc2f4c02f272e09311ceacbf8b",
+    "git_blob": "9f7d1096944a26421f312292aea9419185c3d07d",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -82251,8 +82259,8 @@
    {
     "path": "tools/closure_loop/test_stuckscan.py",
     "kind": "file",
-    "sha256": "4c6fe2c9000a86a4b1df93c4ba6ef4b91f4c97650730a3cd3b1ece3e245f1aa5",
-    "git_blob": "3d4f15621bd89abab95bd8ffea54fd573b8570d3",
+    "sha256": "dfab8b56608437d617249cdc63335e93790c27af70b9c5b761ecd7a6591b148a",
+    "git_blob": "a8ff5df0fc5d27163a1beea984be0091b8eb9619",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -94763,8 +94771,8 @@
    {
     "path": "tools/hbm_die_v15/die_case.py",
     "kind": "file",
-    "sha256": "44ace634fd49ab68cc60c9a5ffce84ebef93ce575b0b554404f172cf6d970528",
-    "git_blob": "a914ff080fa3b13a7bedc45ad97099065a106e43",
+    "sha256": "90eb7c96cd36f4f8285083421c7c0d7a55f25747b01538457c4337b6d1107d5a",
+    "git_blob": "ee40d62b813c16a9fd0bb49d34a99bf59ec9a1e7",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -94931,8 +94939,8 @@
    {
     "path": "tools/hbm_die_v15/plan_grt.py",
     "kind": "file",
-    "sha256": "47a1afc384ca885b177f1b1bbbd8d0fcaba332daf0afd93961ec60e12e4cfa0a",
-    "git_blob": "c8badc414b7b3c2a89336325d8ded042857f23ce",
+    "sha256": "8e4fd27c9b6b6adcbeaf142b5acd033c9858cb839f5b0186c783d6070af0bde5",
+    "git_blob": "a6bb3eeb8827a08e1ede9a4992ffa7690b41e963",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -95147,8 +95155,8 @@
    {
     "path": "tools/hbm_die_v15/vm_bank_resize_grant_2210.py",
     "kind": "file",
-    "sha256": "e64ef188f87e1142ff63992c0c45cb6e229cb9ed0155890a5af7f660bc7728b8",
-    "git_blob": "a9e4a043e1cf74c6042500d581b0e23bb13016e2",
+    "sha256": "56b591d17c9e8d71f444d786b6ac231269467e2cfe120a24e6fcd425073b1710",
+    "git_blob": "54a110659da35640663a0bab0386bbeea720c5eb",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -105883,8 +105891,8 @@
    {
     "path": "tools/qwen_attention_native/rate_1015/pv_pair_bench.sh",
     "kind": "file",
-    "sha256": "1ac19f1acc11db8fddf80277409106c8b5e73ba578aaf908b36e6050e02c9cef",
-    "git_blob": "0012cdf3b7c4f9d913f9c811bd3f593d8382af6a",
+    "sha256": "e9c5f9dfce7346388979f875acddb322ce2a02e9d49a2d0166dfeca969bb8f2c",
+    "git_blob": "220d0d51af542c3103f9b85832403f35837ae368",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -109011,8 +109019,8 @@
    {
     "path": "tools/qwen_kv_die/kv_die.py",
     "kind": "file",
-    "sha256": "01651e9b56fa4906414ed5f13f4f8bf11863f8f8c8f5592e190ae311835a1929",
-    "git_blob": "c7d62fa8af276956830e0317483aac68c47831d0",
+    "sha256": "4e2c12786f1cbd7b83c09469651180dc9f46ec7ccc80f119bcf698b59a7e0fb2",
+    "git_blob": "22a4d2d6b5cc588450993e54ba6338ec907124ea",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -109027,8 +109035,8 @@
    {
     "path": "tools/qwen_kv_die/kv_expand.py",
     "kind": "file",
-    "sha256": "64ab910c4458e494459cfbdb23728ef17b2779ff085c47b1d612a7c23d156d92",
-    "git_blob": "d8e059c520ac2fc62fdeb5d342c44ccf44b883c5",
+    "sha256": "dbaf0208fb1b215543fa052a91c4c2038919eface8e8f0c50ddf181999b5f505",
+    "git_blob": "4368cd1e542509e43e03765ae22dce8a3c987b8e",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -115107,8 +115115,8 @@
    {
     "path": "tools/qwen_static_schedule/attention.py",
     "kind": "file",
-    "sha256": "734f94e1fa0d94415c9fef75e9b03a567d9c6f9d0ce04613f23bf28a06b7bfa7",
-    "git_blob": "b0d1bea979ad6fe6bd79a10f66786f3dbb865e1b",
+    "sha256": "13d184a3c9eed21f0efe44acaecf33dac4b14daee6580a43ef1a9ca48437596f",
+    "git_blob": "00cea9be7bb338a707233d71d8a45c4b1eafb5dd",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -115155,8 +115163,8 @@
    {
     "path": "tools/qwen_static_schedule/kv_calendar.py",
     "kind": "file",
-    "sha256": "5daf1d30bcf55d093286dffd806c6e3928411a666b4ffb580a00dbc55f8bce1b",
-    "git_blob": "b7c1d9c555da586b8cfdc829686a0d2a6afccdce",
+    "sha256": "55a8496fb3795b49c526172341846dd47e76f73d73e65d5aba2d0b3195a86a87",
+    "git_blob": "31f7e9d5220c005e6466bc55e4fffd6a4602cbf0",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -115203,8 +115211,8 @@
    {
     "path": "tools/qwen_static_schedule/test_attention.py",
     "kind": "file",
-    "sha256": "dae4b82faf3ebd804599574b8612f3393d71d3358e33686bc07c5b14ba7bf324",
-    "git_blob": "9825a2e0636f250890d94d5e5820aabdebbfb375",
+    "sha256": "25db9d6a4fa1cbadb291c3810de0ec3f0fa6b0f8015f6f90c6f4cbcc46dd6ac1",
+    "git_blob": "b3ca5e9c3c435e7f5af1c16ff50d95cda78fbf7b",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -115227,8 +115235,8 @@
    {
     "path": "tools/qwen_static_schedule/test_kv_calendar.py",
     "kind": "file",
-    "sha256": "df0ea64955f9b332666afd2a8dc117b0d4a03f87c04c80f1d54d616bdd2e7e4a",
-    "git_blob": "7854c448b3bb9f7c2f5b588c4311087ebe270245",
+    "sha256": "b50355d1bed099ff0152a6e2d175d8c3bc4aa67a0c52bf1257ed270173d5aabb",
+    "git_blob": "a209bbc53f79898a6e7eb1d7197c7b73a419c46d",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -117107,8 +117115,8 @@
    {
     "path": "tools/ref_tile/pre_route_gate.py",
     "kind": "file",
-    "sha256": "1d147b7d43c14f1a7fa64d485e940aa9fda87b29166398900b9c305960b19225",
-    "git_blob": "29dc78a32ade6e17a78dac31c37bb5c02461c771",
+    "sha256": "954dd187b5dadb6ade262c9a04dfb5acc1668260037f0c31e433eb02a0e31e9c",
+    "git_blob": "39e2c072f14a713cc153e56774ce9f614acc5b22",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -126121,6 +126129,14 @@
     "matches_provenance_commit": true
    },
    {
+    "path": "tools/ref_tile/tests/test_gate_step_cap.py",
+    "kind": "file",
+    "sha256": "90cbc3ee3b6061697a74f5c09cd7a78debbbe5fdf4f32f24f51ff1e6f3dc30e1",
+    "git_blob": "d51347bee1d19ad1484615965b42c766f3b6a6ea",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
     "path": "tools/ref_tile/tests/test_hrow_shared_intake.py",
     "kind": "file",
     "sha256": "f23423fae23d01e5936924ea6199dc837545a47b6dfe1a450e9da3eee0fa7e21",
@@ -126203,8 +126219,8 @@
    {
     "path": "tools/ref_tile/tests/test_source_binding.py",
     "kind": "file",
-    "sha256": "e38030ec4f11380a3da7caa524b38521a5eb88b1576003b91663ae08e057a191",
-    "git_blob": "6943ddf9dd65388507964f71389757fc6cfec6e3",
+    "sha256": "fa6598ea6a2913db5474799b69b0f064782966f9c63b25e10024eee0240adaa9",
+    "git_blob": "19a92f4e57d5b50eb1694c1ef46b78a4bb931525",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -128739,8 +128755,8 @@
    {
     "path": "tools/run_abi3_physical.py",
     "kind": "file",
-    "sha256": "f2026367b4892ab9cf846a8e3b2d3edd653f833845c9fc83d3ead26bca94507c",
-    "git_blob": "48acd8ce3c186ed55b4d1611a691783d72331ed2",
+    "sha256": "05d652f6399f6d25b24b82b59658003dbfbc759065ad6331391b7592f3908a95",
+    "git_blob": "474e3f498a46eec93ba58060bf5879975db4a6d7",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -131089,6 +131105,22 @@
     "matches_provenance_commit": true
    },
    {
+    "path": "tools/s81/aggro_render.py",
+    "kind": "file",
+    "sha256": "3cf88810fdc7859627b842e0d191a49cb1a1ca38829fe074243a6bf0b4b965b2",
+    "git_blob": "13918e2359b87fa1ca7fc9efd0057e2d126a0a6f",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "tools/s81/aggro_summary.py",
+    "kind": "file",
+    "sha256": "c043c25b2f872df126d0f5af1c1d41bdc5eceff2a641429b7b22df4f9d52ac28",
+    "git_blob": "abde38d3869a5ca1ca61997a775ade9ba332195a",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
     "path": "tools/s81/assemble_views.py",
     "kind": "file",
     "sha256": "30cb197dfe040ae55a2805a1140f6f4aee77f37c4a5fa3ae7ccd832eb638559b",
@@ -132249,10 +132281,34 @@
     "matches_provenance_commit": true
    },
    {
+    "path": "tools/s81/hub_grt_screen.py",
+    "kind": "file",
+    "sha256": "6a0846ad015d6fac296a81798bb3c7fcf071074354036943eda02d3fce810dec",
+    "git_blob": "2709bb1ef362aac84622c9d0e754ceff7818e7cc",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "tools/s81/hub_shape_sweep.py",
+    "kind": "file",
+    "sha256": "30b17ff3d1aaf33751708ab0287332ba64b7092cd346dca3dc65a6688f28ddf3",
+    "git_blob": "84e1966d3141356ce105102d745e89b87775a0ff",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
     "path": "tools/s81/hub_stage_count.py",
     "kind": "file",
     "sha256": "13b8cbfc77e0803341fdb0289a519d25ee16599cf6122d1b564eff3170ae4f0d",
     "git_blob": "5db73247e0d2c212d1202031702026236e0d1dd0",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "tools/s81/hub_vm_centred.py",
+    "kind": "file",
+    "sha256": "0203e7663145766abbc2eeaa482b1271ae521773dd60bd8fd6aeca90263ef4b1",
+    "git_blob": "a06320c26df46f9ccba61ca95a80ef9357ce3ddf",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -139565,6 +139621,14 @@
     "kind": "file",
     "sha256": "7f1d4e9435013b4af93eaec8c533d68bed1d3cc3c055745c45caeb7f541ecb9d",
     "git_blob": "f062584e1208ca1561f547fa26b3208d21c1d8d6",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "tools/test_grt183_resume.py",
+    "kind": "file",
+    "sha256": "cc174e0651970eaed06ea8f9de943508443c6f352c56c7d2b23037719ba811f9",
+    "git_blob": "16ed67b34c8b2cc92b4aa397aba14ded77398f54",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -149475,14 +149539,14 @@
   ],
   "disk_admission": {
    "reserve_gb": 20,
-   "archive_bytes": 141551287,
-   "unpacked_bytes": 881926144,
+   "archive_bytes": 141592212,
+   "unpacked_bytes": 882089984,
    "pick_gb": 22,
    "runtime_gb": 22
   },
   "route_overlay_plan": {
    "schema": "opentallas.closure_loop.helper_overlay_plan.v1",
-   "origin_main": "7e1fe720b65f552c40852c61b101400cba6c34df",
+   "origin_main": "ed7ee33258cf5e474a08757811fc5e661507e2ac",
    "content_sha256": "b873e508ec51bece19736a0e3daf6b4989d55604d196f9d441b427a33e4fc148",
    "files": [
     {
@@ -149858,7 +149922,7 @@
   "consumed": {
    "schema": "opentallas.ref_tile.gate_consumed.v1",
    "basis": "staged archive closure at gate time",
-   "count": 91,
+   "count": 92,
    "paths": [
     "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.json",
     "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.lef",
@@ -149870,6 +149934,7 @@
     "physical/common_flow/anchor_row_packing.tcl",
     "physical/common_flow/clock_entries.tcl",
     "physical/common_flow/edge_sliver_block.tcl",
+    "physical/common_flow/grt183_resume.tcl",
     "physical/common_flow/grt_macro_top_layer.tcl",
     "physical/common_flow/macro_cts_cluster.tcl",
     "physical/common_flow/macro_edge_via_guard.tcl",
@@ -149963,6 +150028,7 @@
     "physical/common_flow/anchor_row_packing.tcl": "bb65beb33a4caf5e7c562e080147aa7d267f7840b8ac52cb363ad806661e5058",
     "physical/common_flow/clock_entries.tcl": "3447711b8f6e4eafa9a2c781d6e1fad3e32854505f16fc64385beb78692b1ff5",
     "physical/common_flow/edge_sliver_block.tcl": "714d28eeea112f820044e3c11a32ece53a76e44fc3fb54b1ce8fa87cb1619a74",
+    "physical/common_flow/grt183_resume.tcl": "50d43e568486b97feb7896397e525bfbf1c9779e820f622fb0870c35864f853d",
     "physical/common_flow/grt_macro_top_layer.tcl": "dfd76e540035bce859d8f2f303996390abe276f20bc1057c28d5781a87982389",
     "physical/common_flow/macro_cts_cluster.tcl": "a7af2ec6314ea96d71c966704e0ecae1f9dc3715a6519063fe151c0d1ebac798",
     "physical/common_flow/macro_edge_via_guard.tcl": "77da9386c19093d20e9e4831a5787263b34330fb58e42c00550ba3afb32c704a",
@@ -149973,7 +150039,7 @@
     "physical/dsrom_window_source/leaf_inhold_release.tcl": "b23f84f7837858dec963dab8f2e3d88074946f2d9e007319c1c302c5a36fb3a0",
     "physical/dsrom_window_source/leaf_iohold.tcl": "cf3b8c355b37762a48d3d73fa0dfe96710f5b68a09a85519b85fa77c8e14b76d",
     "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl": "7df42ae115d95482949474513b4b6f4803268a7e66d2319d1507438a24ac6db8",
-    "physical/qwen_die_masters/io_flop_at_pins.tcl": "faab5dc8a12bdcd359c32773e976a9a4d200279983f058e8f7ecfb3b23ae5850",
+    "physical/qwen_die_masters/io_flop_at_pins.tcl": "fd57e8617b08d7c039cabb63c4cdaf7a52fab5b9bd63717441d83bda888ef26a",
     "physical/qwen_die_masters/io_plain.sdc": "5d5ab3c62e5b7327a9479511f7ee25178a181fd51305b863f684f11c7b17f7db",
     "physical/qwen_die_masters/io_ref_skew.sdc": "2afa78be67a72e9eacabcaeaebe1cb996e266e6fde2f4e9df91fd256a52b9aca",
     "physical/qwen_die_masters/out_flop_release.tcl": "b7c6e0fa3168727ccf9347d1d2dbf2118c5f9519f8475b6630e22cf71fb6fd9c",
@@ -150040,23 +150106,23 @@
     "tools/ref_tile/path_classes.tcl": "47d06c968afc42e5773c9490bab1c13d02d042fc7221f32bf9c76ce4efc54f73",
     "tools/ref_tile/ref_route.sh": "c1a6880be495c76907b4e116c6f31c5383eebecf66992e2368e08debf6fd9a40",
     "tools/ref_tile/signal_layer_audit.tcl": "4303011a36908eeec918f96b399a9fe9145563e3b1e71c79673a6099f6e09a7b",
-    "tools/run_abi3_physical.py": "f2026367b4892ab9cf846a8e3b2d3edd653f833845c9fc83d3ead26bca94507c",
+    "tools/run_abi3_physical.py": "05d652f6399f6d25b24b82b59658003dbfbc759065ad6331391b7592f3908a95",
     "tools/textbook_lint.py": "cfe6ea4687e4c4afe180909445d7ff10b18b8202b1bd4e2af259a9a42d2e76af",
     "tools/w18/corner_sta.py": "7801f467617d68c7e8a3f906e5415c8913de77188a6af30dbfe835fc28b05fd1",
     "tools/w18/corner_sta_ref.py": "bd70080bbbd23db830914e4b52682c086b4de5cc9adc6873a026c260099419fa"
    },
-   "digest": "634dd88e77e13dc1c41b361599e467489924a7f35d9323288b1a1176fed50f50"
+   "digest": "62112b3e6773fd7aa8a28eb4c1fd9d1170567d833db63e70c4a0e4f605f7b398"
   },
-  "captured": "2026-10-15T22:41:23-0700",
+  "captured": "2026-10-15T22:57:09-0700",
   "route_hold_context": {
    "HM": "0.03",
    "OT_ROUTE_HOLD_CORNERS": "mm",
    "OT_MM_FF_SDC": "physical/ref_tile/hbm_su_static_bank6_clock7_1015/signoff.sdc"
   },
-  "remote_script_sha256": "601a985675fea188ec7a40fa02c2f8b60ee4728ca103be12ea0bf779f586eff3",
+  "remote_script_sha256": "c35c83c719e42c024c90c8d48e081acb4f66313bfee922de76da97b48ecc78b7",
   "tool_image_requested": "openroad/orfs:latest",
   "remote_host": "ot-epyc1tb",
-  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/hbm_su_static_bank6_clock7_1015-20261015-224002",
+  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/hbm_su_static_bank6_clock7_1015-20261015-225557",
   "remote_archive_verified": true,
   "runtime_tool_provenance": [
    "GATE_TOOL_IMAGE_ID=sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29 GATE_TOOL_IMAGE_DIGESTS=[\"openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29\"]",
