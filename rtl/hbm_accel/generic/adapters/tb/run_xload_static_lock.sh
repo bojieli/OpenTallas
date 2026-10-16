@@ -13,7 +13,10 @@ if [[ ${XLOAD_CL2:-0} == 1 ]];then MASK_FLAGS+=(-DXLOAD_CL2);fi
 F20_SRCS=()
 # XLOAD_RD_LAT=7: VM model + every x-load unit at the nat2 bank read latency (H-SM 10-16; default 6)
 if [[ -n ${XLOAD_RD_LAT:-} ]];then MASK_FLAGS+=(-DXLOAD_RD_LAT=$XLOAD_RD_LAT);fi
+# XLOAD_XQL=1 (H-SM 10-16, needs XLOAD_F20): the quadrant-local x read (4 pair clusters, tree depth XQL_T) locked to cl2f
+# at +XQL_T; XQL_MUT 1 drop pair 1 write / 2 skew pair 2 by one edge / 3 swap pair 3 quarter read words (must FAIL)
 if [[ ${XLOAD_F20:-0} == 1 ]];then MASK_FLAGS+=(-DXLOAD_F20 -DXLOAD_CL2);F20_SRCS=(rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv rtl/hbm_accel/host_static_20261015/ot_hbm_host_static_ingress.sv);fi
+if [[ ${XLOAD_XQL:-0} == 1 ]];then MASK_FLAGS+=(-DXLOAD_XQL -DXQL_T=${XQL_T:-2} -DXQL_MUT=${XQL_MUT:-0});F20_SRCS+=(rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_xql.sv);fi
 verilator --binary --timing -Wno-fatal -Wno-lint -Wno-style -j 8 "${MASK_FLAGS[@]}" ${MUT:+-D$MUT} --top-module tb_xload_static_lock --Mdir "$B" \
   rtl/lib/ot_rst_relay.sv rtl/hbm_accel/generic/peers/ot_hgi_sm_xload.sv rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static.sv rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl.sv rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv "${F20_SRCS[@]}" physical/hbm_xp_aq_tree13_1014/ot_hbm_xp_aq_tree13.sv physical/hbm_xp_aq_tree13_1014/ot_hbm_xp_aq_scale13.sv \
   rtl/hbm_accel/generic/vm/ot_hgi_vm_unit.sv rtl/link/ot_fifo_sram_fwft.sv rtl/hbm_accel/generic/vm/ot_hgi_vm_core.sv \
