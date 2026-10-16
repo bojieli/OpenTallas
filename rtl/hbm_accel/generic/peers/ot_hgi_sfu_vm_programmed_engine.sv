@@ -52,7 +52,7 @@ module ot_hgi_sfu_vm_programmed_engine #(
  wire [1:0] drain_result_v;
  wire bridge_fault,engine_fault;
  ot_hgi_sfu_vm_static_bridge #(.LWB(LWB)) u_vm(
- .clk(clk),.rst_n(rst_n),.prefetch_v(prefetch_v),.prefetch_sector(prefetch_sector),.prefetch_group(prefetch_group),
+ .clk(clk),.rst_n(rst_n),.clk_lg({4{clk}}),.rst_lg_n({4{rst_n}}),.prefetch_v(prefetch_v),.prefetch_sector(prefetch_sector),.prefetch_group(prefetch_group),
  .prefetch_local_addr(prefetch_local_addr),.prefetch_scalar(prefetch_scalar),.prefetch_word(prefetch_word),.scalar_addr(scalar_addr),
  .local_rq(local_rq),.local_rr(local_rr),.local_wq(local_wq),.local_w_done(local_w_done),
  .stage_v(stage_v),.stage_group(stage_group),.stage_addr(stage_addr),.stage_mask(stage_mask),.stage_data(stage_data),

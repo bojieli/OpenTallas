@@ -16,12 +16,13 @@ ROOT = Path(__file__).resolve().parents[1]
 VM_SOURCE = 'rtl/hbm_accel/generic/vm/static/hfd_hgi_vms_static.sv'
 DELIVERY = 'rtl/hbm_accel/loader/service_native/ot_hbm_svc_static_vm_delivery.sv'
 LG_SOURCE = 'rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_split.sv'
+LG_TERMINAL_SOURCE = 'rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_split_term.sv'
 # Real static VM clients (fixed compiler cycles, no credit/ready). Each binds only
 # where its source documents the exact VM face it was built and benched against.
 SFU_SOURCE = 'rtl/hbm_accel/generic/peers/ot_hgi_sfu_scheduled_engine.sv'      # LG mid tap 14/11
 DBK_SOURCE = 'rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static.sv'    # direct RG, bank n+1/n+7
-IDX_SOURCE = 'rtl/hbm_accel/index/ot_hbm_idx_client_static.sv'                 # H-IDX 40e9f801e: INDEX+TOPK, RG4 + record client 4
-ARGMAX_SOURCE = 'rtl/hbm_accel/generic/ot_hbm_argmax_static.sv'                # H-IDX 815c87b41: static ARGMAX.LOCAL (MTP), record client 0
+IDX_SOURCE = 'rtl/hbm_accel/index/ot_hbm_idx_client_static_sw.sv'              # compile-time SID0; genuine static implementation, no die SID input
+ARGMAX_SOURCE = 'rtl/hbm_accel/generic/ot_hbm_argmax_static_sw.sv'             # compile-time SID0 ARGMAX; new source identity, no old-view alias
 QUANT_SOURCE = 'rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_host_static.sv'       # H-ATTQ 07:47: QUANT host top on NW RG 'quant' / WG 'quant'
 # ATTENTION: H-ATTQ verdict 2026-10-15T07:47 under owner 10:30/10:45/10:55 = ADOPT B (QK/PV on SM engines at SM 1.0x +
 # SU softmax). Dedicated ATT tiles, attention RG/WG, ATT LG groups and the PV return are DROPPED from v15.
@@ -126,7 +127,10 @@ def generate(out):
             for stage in range(3):
                 # Adopted physical successor (23d5fd409/7da6141d7): eight independently
                 # clocked bank leaves, same edge/phase and latency as the logical tap.
-                module(f'lg_{q}_{stage}',LG_SOURCE,'ot_hbm_vm_lg_static_split',
+                # The final tap has no fourth producer. Bind the genuine terminal
+                # RTL, rather than invent far request zeros at a physical input.
+                module(f'lg_{q}_{stage}',LG_TERMINAL_SOURCE if stage == 2 else LG_SOURCE,
+                       'ot_hbm_vm_lg_static_split_term' if stage == 2 else 'ot_hbm_vm_lg_static_split',
                        dict(READ_RETURN=10+4*stage,WRITE_RETURN=7+4*stage))
     status_source='rtl/hbm_accel/generic/vm/static/ot_vms_status4_static.sv'
     if (ROOT/status_source).exists():module('vm_status4',status_source,'ot_vms_status4_static')
@@ -140,8 +144,8 @@ def generate(out):
         # port groups like NW/NE (not 5): NPG 4, BANK_GROUP 0x33221100 in every quadrant.
         module('hb_su_'+q,SU_SOURCE,'ot_hbm_su_static_vm_ports',dict(QID=SID.index(q),READ_RETURN=10,WRITE_RETURN=7,
                NPG=4,BANK_GROUP=0x33221100))
-    module('hb_idx',IDX_SOURCE,'ot_hbm_idx_client_static')
-    module('hb_argmax',ARGMAX_SOURCE,'ot_hbm_argmax_static')
+    module('hb_idx',IDX_SOURCE,'ot_hbm_idx_client_static_sw')
+    module('hb_argmax',ARGMAX_SOURCE,'ot_hbm_argmax_static_sw')
     module('hb_quant_NW',QUANT_SOURCE,'ot_hgi_qdq_host_static',dict(RL=7,WC=4,COMPACT=1))
     edges=[]; connected=set(); parts={}; logical_constants=[]
     def edge(name,src,dst):
@@ -184,11 +188,8 @@ def generate(out):
                     edge(tap+'_rr',(near,'far_rr'),(tap,'near_rr'))
                     edge(tap+'_wdone',(near,'far_w_done'),(tap,'near_w_done'))
                 if stage==2:
-                    for port in ('far_rq','far_wq'):
-                        logical_constants.append(dict(sink=[tap,port],bits=modules[tap]['ports'][port]['bits'],
-                            value=0,reason='actual three-tap topology termination; no fourth producer',
-                            physical_tie_cells_qualified=False))
-                        connected.add((tap,port))
+                    assert not set(('far_rq','far_wq','far_rr','far_w_done')).intersection(modules[tap]['ports']), \
+                        (tap,'terminal RTL must not retain phantom fourth-station ports')
         if 'vm_status4' in modules:
             # Source ABI sid order SW,SE,NW,NE; do not confuse with ring order.
             index=('SW','SE','NW','NE').index(q)
@@ -236,9 +237,7 @@ def generate(out):
     c=abi['clients']['SW']['records'].index('idx')
     slice_edge('idx_cq',('hb_idx','cq',0),('hb_vms_SW','cq',338*c),338)
     slice_edge('idx_cr',('hb_vms_SW','cr',274*c),('hb_idx','cr',0),274)
-    logical_constants.append(dict(sink=['hb_idx','sid'],bits=2,value=0,
-        reason='INDEX operand face reads the SW slice (sid order SW,SE,NW,NE)',physical_tie_cells_qualified=False))
-    connected.add(('hb_idx','sid'))
+    assert 'sid' not in modules['hb_idx']['ports'], 'SW-only source must not expose runtime SID'
     # ARGMAX (H-IDX 815c87b41): reads through the IDX share (third compiler-booked owner of SW RG4),
     # O {value,id} on SW record client 'argmax'. sid = SW declared constant.
     # cq_seq remains an explicit duplicate output: VM client_seq is calendar-owned.
@@ -248,9 +247,7 @@ def generate(out):
     c=abi['clients']['SW']['records'].index('argmax')
     slice_edge('argmax_cq',('hb_argmax','cq',0),('hb_vms_SW','cq',338*c),338)
     slice_edge('argmax_cr',('hb_vms_SW','cr',274*c),('hb_argmax','cr',0),274)
-    logical_constants.append(dict(sink=['hb_argmax','sid'],bits=2,value=0,
-        reason='ARGMAX reads/writes the SW slice (sid order SW,SE,NW,NE)',physical_tie_cells_qualified=False))
-    connected.add(('hb_argmax','sid'))
+    assert 'sid' not in modules['hb_argmax']['ports'], 'SW-only ARGMAX must not expose runtime SID'
     # QUANT host top (H-ATTQ 07:47:59, PASS HGI_QDQ_COMPACT_NATIVE_HOST_NW RG4_WG2): NW read group / write group 'quant'.
     g=abi['clients']['NW']['read'].index('quant');w=abi['clients']['NW']['write'].index('quant')
     slice_edge('quant_vm_rq',('hb_quant_NW','rq',0),('hb_vms_NW','rq',136*g),136)

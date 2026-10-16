@@ -1,0 +1,48 @@
+ot-run: load hold: every qualifying host has load1 > 1.5 x cores (ot-pve1 60/28); waiting
+ot-run: ot-epyc1tb     admits -1095 GB (avail 522, growth 142, headroom 64, waiters 4/1390 GB) load 153/128 running 28 disk 220 GB 
+ot-run: ot-epyc4       admits  -186 GB (avail 311, growth 152, headroom 48, waiters 1/270 GB) load 120/128 running 36 disk 368 GB 
+ot-run: ot-pve1        admits   166 GB (avail 213, growth 22, headroom 32, waiters 0/0 GB) load 51/28 running 11 disk 1216 GB 
+ot-run: ot-agidock128  admits   -52 GB (avail 58, growth 62, headroom 24, waiters 2/24 GB) load 35/64 running 14 disk 166 GB 
+ot-run: -> ot-pve1
+ot-heavy: admitted on ot-pve1 as oth-ubuntu-1656714-1792096415 after 0 s
+cmd 14 fmt 1 P 4 K 576 xb 29 done 1/1 beats 56 span 77
+cmd 15 BD streaming: 128 beats on the model edges (0 off), last beat at command + 377
+cmd 15 fmt 2 P 5 K 2240 xb 41 done 1/1 beats 128 span 343
+cmd 16 BD streaming: 56 beats on the model edges (0 off), last beat at command + 107
+cmd 16 fmt 1 P 4 K 128 xb 71 done 1/1 beats 56 span 77
+cmd 17 BD streaming: 48 beats on the model edges (0 off), last beat at command + 170
+cmd 17 fmt 2 P 1 K 4352 xb 95 done 1/1 beats 48 span 136
+cmd 18 BD streaming: 32 beats on the model edges (0 off), last beat at command + 90
+cmd 18 fmt 1 P 1 K 1344 xb 42 done 1/1 beats 32 span 60
+cmd 19 BD streaming: 128 beats on the model edges (0 off), last beat at command + 377
+cmd 19 fmt 2 P 5 K 3296 xb 76 done 1/1 beats 128 span 343
+cmd 20 BD streaming: 336 beats on the model edges (0 off), last beat at command + 507
+cmd 20 fmt 1 P 4 K 5408 xb 27 done 1/1 beats 336 span 477
+cmd 21 BD streaming: 48 beats on the model edges (0 off), last beat at command + 170
+cmd 21 fmt 2 P 1 K 5536 xb 90 done 1/1 beats 48 span 136
+cmd 22 BD streaming: 208 beats on the model edges (0 off), last beat at command + 314
+cmd 22 fmt 1 P 8 K 1568 xb 86 done 1/1 beats 208 span 284
+cmd 23 BD streaming: 32 beats on the model edges (0 off), last beat at command + 122
+cmd 23 fmt 2 P 1 K 4064 xb 96 done 1/1 beats 32 span 88
+XLOAD_STATIC_LOCK PASS
+cmd 14 fmt 1 P 4 K 576 xb 29 done 1/1 beats 56 span 77
+cmd 15 BD streaming: 128 beats on the model edges (0 off), last beat at command + 377
+cmd 15 fmt 2 P 5 K 2240 xb 41 done 1/1 beats 128 span 343
+cmd 16 BD streaming: 56 beats on the model edges (0 off), last beat at command + 107
+cmd 16 fmt 1 P 4 K 128 xb 71 done 1/1 beats 56 span 77
+cmd 17 BD streaming: 48 beats on the model edges (0 off), last beat at command + 170
+cmd 17 fmt 2 P 1 K 4352 xb 95 done 1/1 beats 48 span 136
+cmd 18 BD streaming: 32 beats on the model edges (0 off), last beat at command + 90
+cmd 18 fmt 1 P 1 K 1344 xb 42 done 1/1 beats 32 span 60
+cmd 19 BD streaming: 128 beats on the model edges (0 off), last beat at command + 377
+cmd 19 fmt 2 P 5 K 3296 xb 76 done 1/1 beats 128 span 343
+cmd 20 BD streaming: 336 beats on the model edges (0 off), last beat at command + 507
+cmd 20 fmt 1 P 4 K 5408 xb 27 done 1/1 beats 336 span 477
+cmd 21 BD streaming: 48 beats on the model edges (0 off), last beat at command + 170
+cmd 21 fmt 2 P 1 K 5536 xb 90 done 1/1 beats 48 span 136
+cmd 22 BD streaming: 208 beats on the model edges (0 off), last beat at command + 314
+cmd 22 fmt 1 P 8 K 1568 xb 86 done 1/1 beats 208 span 284
+cmd 23 BD streaming: 32 beats on the model edges (0 off), last beat at command + 122
+cmd 23 fmt 2 P 1 K 4064 xb 96 done 1/1 beats 32 span 88
+XLOAD_STATIC_LOCK FAIL 1432
+ot-run: RAN on ot-pve1 (unit oth-ubuntu-1656714-1792096415): exit 0

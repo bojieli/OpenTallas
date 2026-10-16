@@ -16,9 +16,6 @@
  "pins": {
   "N": [
    "clk",
-   "clk_macro0",
-   "clk_macro1",
-   "clk_macro2",
    "clk_macro3",
    "clk_macro4",
    "clk_macro5",
@@ -34,6 +31,11 @@
   "E": [
    "read_data",
    "read_return"
+  ],
+  "S": [
+   "clk_macro0",
+   "clk_macro1",
+   "clk_macro2"
   ]
  },
  "macros": [
@@ -117,10 +119,10 @@
   "macro_halo_um": 5.4
  },
  "job": {
-  "owner": "Codex:/root/hbm_su_sm_1103/su_physical_inventory",
-  "branch": "codex/hbm-su-physical-1103",
-  "tag": "r2",
-  "purpose": "Candidate structural per-macro clocks: six distinct provider roots plus one boundary-register root. Previous bank r1 CTS insertion316.9ps/spread92.5ps/slew229.8ps, two SRAMs sharing clocknets. Actual one source per macro, no added data edge/retiming. Serial1111.111111ps unchanged. No route/replication qualification before physical slot/pins and TTsetup FFhold DRC0 nativeclock checks. Native CTS attempt1 rejected mixed raw-macro CTS roots; corrected explicit hybrid policy: six actual raw SRAM pin references plus one CTS root, no macro pin on a CTS source. Word-select flops remain on the existing register root.",
+  "owner": "Claude:H-ELEM-B",
+  "branch": "claude/hbm-elemb-su-1015",
+  "tag": "r4",
+  "purpose": "Candidate structural per-macro clocks: six distinct provider roots plus one boundary-register root. Previous bank r1 CTS insertion316.9ps/spread92.5ps/slew229.8ps, two SRAMs sharing clocknets. Actual one source per macro, no added data edge/retiming. Serial1111.111111ps unchanged. No route/replication qualification before physical slot/pins and TTsetup FFhold DRC0 nativeclock checks. Native CTS attempt1 rejected mixed raw-macro CTS roots; corrected explicit hybrid policy: six actual raw SRAM pin references plus one CTS root, no macro pin on a CTS source. Word-select flops remain on the existing register root. r3 (H-ELEM-B, coordinator 12:24): the r2 CTS measured raw macro clock slew 417.5 ps because all seven clock pins were clustered on the N face; each raw macro clock pin now sits over its own macro column on the face nearest its row (bottom row 0-2 on S, top row 3-5 on N, 20 um ranges at the macro column centres); register root clk + rst_n stay on N. No RTL change. r4 (H-SU 10-15 17:50): r3 gate WARN 0 fail but register-root TT insertion 234.5-275.5 ps (H-tree 6 buffer levels from an unconstrained N-face clk pin) > native launch 220: clk pin pinned at the N-face centre (140-160 um, beside clk_macro4) so the H-tree trunk starts over the sink centroid. No RTL change.",
   "views_to": "physical/ref_tile/hbm_su_static_bank6_clock7_1015/views",
   "record_to": "results/arch/hbm_su_f2_static_1014/arithmetic/physical/bank_clock7",
   "benches": [
@@ -275,6 +277,36 @@
  "clock_cts_roots": [
   "clk"
  ],
+ "pin_ranges": {
+  "clk_macro0": [
+   59.86,
+   79.86
+  ],
+  "clk_macro1": [
+   174.78,
+   194.78
+  ],
+  "clk_macro2": [
+   289.69,
+   309.69
+  ],
+  "clk_macro3": [
+   59.86,
+   79.86
+  ],
+  "clk_macro4": [
+   174.78,
+   194.78
+  ],
+  "clk_macro5": [
+   289.69,
+   309.69
+  ],
+  "clk": [
+   140.0,
+   160.0
+  ]
+ },
  "params": {},
  "children": [],
  "inter": [],

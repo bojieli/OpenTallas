@@ -20,7 +20,19 @@
           "bits": 4,
           "direction": "output"
         },
-        "clk": {
+        "clk_pc0": {
+          "bits": 1,
+          "direction": "input"
+        },
+        "clk_pc1": {
+          "bits": 1,
+          "direction": "input"
+        },
+        "clk_pc2": {
+          "bits": 1,
+          "direction": "input"
+        },
+        "clk_pc3": {
           "bits": 1,
           "direction": "input"
         },
@@ -189,7 +201,7 @@
           "direction": "input"
         }
       },
-      "sha256": "20b710f0a51875fc4b516f5c1c10df70c1a6b1817f95a089236e264de69f8e90",
+      "sha256": "31cda896cc7988d072d8f198b4e09aef181e9eef1c0b4db01084023de8207411",
       "source": "physical/hbm_accel_die_views/svc/v15/rtl/hfd_svc_v15_SE_s0.sv",
       "status": "actual_pc_leaf_wrapper_external_joins_unbound"
     },
@@ -214,7 +226,23 @@
           "bits": 5,
           "direction": "output"
         },
-        "clk": {
+        "clk_pc0": {
+          "bits": 1,
+          "direction": "input"
+        },
+        "clk_pc1": {
+          "bits": 1,
+          "direction": "input"
+        },
+        "clk_pc2": {
+          "bits": 1,
+          "direction": "input"
+        },
+        "clk_pc3": {
+          "bits": 1,
+          "direction": "input"
+        },
+        "clk_pc4": {
           "bits": 1,
           "direction": "input"
         },
@@ -383,7 +411,7 @@
           "direction": "input"
         }
       },
-      "sha256": "4e1dec026a859f36ae798dacb7f0e60aac2099535a49969cc282f4517b6a1428",
+      "sha256": "fbc4be4a0c030095d7a0c6559301aa982f51d17e10b71d256a00a4a9e535c92f",
       "source": "physical/hbm_accel_die_views/svc/v15/rtl/hfd_svc_v15_SE_s1.sv",
       "status": "actual_pc_leaf_wrapper_external_joins_unbound"
     },
@@ -407,7 +435,19 @@
           "bits": 4,
           "direction": "output"
         },
-        "clk": {
+        "clk_pc0": {
+          "bits": 1,
+          "direction": "input"
+        },
+        "clk_pc1": {
+          "bits": 1,
+          "direction": "input"
+        },
+        "clk_pc2": {
+          "bits": 1,
+          "direction": "input"
+        },
+        "clk_pc3": {
           "bits": 1,
           "direction": "input"
         },
@@ -576,7 +616,7 @@
           "direction": "input"
         }
       },
-      "sha256": "6bee17244e78ffbde71592c33e0e24386621ba84aa3e319831a1879d0e80f651",
+      "sha256": "d2ede3a254e5a0996eb3fc7df5caf1159b80a36f8fe28f80fd5569a1c87aa557",
       "source": "physical/hbm_accel_die_views/svc/v15/rtl/hfd_svc_v15_SE_s2.sv",
       "status": "actual_pc_leaf_wrapper_external_joins_unbound"
     },
@@ -601,7 +641,23 @@
           "bits": 5,
           "direction": "output"
         },
-        "clk": {
+        "clk_pc0": {
+          "bits": 1,
+          "direction": "input"
+        },
+        "clk_pc1": {
+          "bits": 1,
+          "direction": "input"
+        },
+        "clk_pc2": {
+          "bits": 1,
+          "direction": "input"
+        },
+        "clk_pc3": {
+          "bits": 1,
+          "direction": "input"
+        },
+        "clk_pc4": {
           "bits": 1,
           "direction": "input"
         },
@@ -770,7 +826,7 @@
           "direction": "input"
         }
       },
-      "sha256": "056cc532fc8abae5fb120a617373275af8c96ba2ec989f18be1caae641254102",
+      "sha256": "54d769dec1d14d80faf27f3b423fdee3a21d244a63ecf8b7aa5956a5bf3e7c8f",
       "source": "physical/hbm_accel_die_views/svc/v15/rtl/hfd_svc_v15_SE_s3.sv",
       "status": "actual_pc_leaf_wrapper_external_joins_unbound"
     },
@@ -794,7 +850,19 @@
           "bits": 4,
           "direction": "output"
         },
-        "clk": {
+        "clk_pc0": {
+          "bits": 1,
+          "direction": "input"
+        },
+        "clk_pc1": {
+          "bits": 1,
+          "direction": "input"
+        },
+        "clk_pc2": {
+          "bits": 1,
+          "direction": "input"
+        },
+        "clk_pc3": {
           "bits": 1,
           "direction": "input"
         },
@@ -963,7 +1031,7 @@
           "direction": "input"
         }
       },
-      "sha256": "f49addb8d37fb2e5882f7f8fdaa1d7993675a8708afa7f7f69c4dacd130d6324",
+      "sha256": "1e5e2c4083ecdf494c08198ae07d73124e89f01f08fae68f132e402bf1faef2f",
       "source": "physical/hbm_accel_die_views/svc/v15/rtl/hfd_svc_v15_SE_s4.sv",
       "status": "actual_pc_leaf_wrapper_external_joins_unbound"
     },
@@ -987,7 +1055,19 @@
           "bits": 4,
           "direction": "output"
         },
-        "clk": {
+        "clk_pc0": {
+          "bits": 1,
+          "direction": "input"
+        },
+        "clk_pc1": {
+          "bits": 1,
+          "direction": "input"
+        },
+        "clk_pc2": {
+          "bits": 1,
+          "direction": "input"
+        },
+        "clk_pc3": {
           "bits": 1,
           "direction": "input"
         },
@@ -1156,7 +1236,7 @@
           "direction": "input"
         }
       },
-      "sha256": "40c9930bc909a65940988e223053f13e72eb765432c9b6603cb55ae6b075cc9d",
+      "sha256": "82c1276397a197a00f885f2f1c8779004d1c22c875b2c2348086e745323986f1",
       "source": "physical/hbm_accel_die_views/svc/v15/rtl/hfd_svc_v15_SE_s5.sv",
       "status": "actual_pc_leaf_wrapper_external_joins_unbound"
     },
@@ -1179,7 +1259,15 @@
           "bits": 3,
           "direction": "output"
         },
-        "clk": {
+        "clk_pc0": {
+          "bits": 1,
+          "direction": "input"
+        },
+        "clk_pc1": {
+          "bits": 1,
+          "direction": "input"
+        },
+        "clk_pc2": {
           "bits": 1,
           "direction": "input"
         },
@@ -1348,7 +1436,7 @@
           "direction": "input"
         }
       },
-      "sha256": "59d1f6f7577c9947564a080e2dd73c577cc58fc3a6964902c2a2b113e80174c9",
+      "sha256": "b70d487ad1ed7c04f1d793b007bce5aa942c4f0149145624433cd79c8932f488",
       "source": "physical/hbm_accel_die_views/svc/v15/rtl/hfd_svc_v15_SE_s6.sv",
       "status": "actual_pc_leaf_wrapper_external_joins_unbound"
     },
@@ -1370,7 +1458,11 @@
           "bits": 2,
           "direction": "output"
         },
-        "clk": {
+        "clk_pc0": {
+          "bits": 1,
+          "direction": "input"
+        },
+        "clk_pc1": {
           "bits": 1,
           "direction": "input"
         },
@@ -1539,7 +1631,7 @@
           "direction": "input"
         }
       },
-      "sha256": "1969bcc181be1bdc5f14b31fed1d639a771e89ab158d0aa81a32da206c7f92b0",
+      "sha256": "3512683e0faab883b13ec1aa576a2f6ba709f9aab208be2af75cef461bde4aa2",
       "source": "physical/hbm_accel_die_views/svc/v15/rtl/hfd_svc_v15_SE_s7.sv",
       "status": "actual_pc_leaf_wrapper_external_joins_unbound"
     },
@@ -1560,7 +1652,7 @@
           "bits": 1,
           "direction": "output"
         },
-        "clk": {
+        "clk_pc0": {
           "bits": 1,
           "direction": "input"
         },
@@ -1729,7 +1821,7 @@
           "direction": "input"
         }
       },
-      "sha256": "a1b8cc939e38874c2a765aeb739eaac4c4f3fc4f00925aeb436757a16c5b60b5",
+      "sha256": "12720c1ad5da541946db015e3e49ee9b98f608875654af510b32e49629b73c74",
       "source": "physical/hbm_accel_die_views/svc/v15/rtl/hfd_svc_v15_SE_s8.sv",
       "status": "actual_pc_leaf_wrapper_external_joins_unbound"
     },
@@ -1753,7 +1845,19 @@
           "bits": 4,
           "direction": "output"
         },
-        "clk": {
+        "clk_pc0": {
+          "bits": 1,
+          "direction": "input"
+        },
+        "clk_pc1": {
+          "bits": 1,
+          "direction": "input"
+        },
+        "clk_pc2": {
+          "bits": 1,
+          "direction": "input"
+        },
+        "clk_pc3": {
           "bits": 1,
           "direction": "input"
         },
@@ -1922,7 +2026,7 @@
           "direction": "input"
         }
       },
-      "sha256": "0a473b1752b06da44388404c78fec7e5a32a5eaf9069f244c50535c8f46b5b6b",
+      "sha256": "df2c50b4428fb83b6e2a76358ddf9673143abaee50ebc41743ef6d79820fb045",
       "source": "physical/hbm_accel_die_views/svc/v15/rtl/hfd_svc_v15_SW_s0.sv",
       "status": "actual_pc_leaf_wrapper_external_joins_unbound"
     },
@@ -1947,7 +2051,23 @@
           "bits": 5,
           "direction": "output"
         },
-        "clk": {
+        "clk_pc0": {
+          "bits": 1,
+          "direction": "input"
+        },
+        "clk_pc1": {
+          "bits": 1,
+          "direction": "input"
+        },
+        "clk_pc2": {
+          "bits": 1,
+          "direction": "input"
+        },
+        "clk_pc3": {
+          "bits": 1,
+          "direction": "input"
+        },
+        "clk_pc4": {
           "bits": 1,
           "direction": "input"
         },
@@ -2116,7 +2236,7 @@
           "direction": "input"
         }
       },
-      "sha256": "e6e7de14ab7a62eb8735930f58fad678c53b7d0e1136005ccf59a59a6e8029e4",
+      "sha256": "b254710f11bf970dc35db5e3651941b175429afd8274633fba8c6fbb478e8fec",
       "source": "physical/hbm_accel_die_views/svc/v15/rtl/hfd_svc_v15_SW_s1.sv",
       "status": "actual_pc_leaf_wrapper_external_joins_unbound"
     },
@@ -2140,7 +2260,19 @@
           "bits": 4,
           "direction": "output"
         },
-        "clk": {
+        "clk_pc0": {
+          "bits": 1,
+          "direction": "input"
+        },
+        "clk_pc1": {
+          "bits": 1,
+          "direction": "input"
+        },
+        "clk_pc2": {
+          "bits": 1,
+          "direction": "input"
+        },
+        "clk_pc3": {
           "bits": 1,
           "direction": "input"
         },
@@ -2309,7 +2441,7 @@
           "direction": "input"
         }
       },
-      "sha256": "145fc9957e011461b3761ab17c0e29cfaf9306162f8c2c534b7f0f9a9ea50cef",
+      "sha256": "5408bc6b6038e94114ca630d98bcde40d323ba4251736b3d64831c6244c4561d",
       "source": "physical/hbm_accel_die_views/svc/v15/rtl/hfd_svc_v15_SW_s2.sv",
       "status": "actual_pc_leaf_wrapper_external_joins_unbound"
     },
@@ -2333,7 +2465,19 @@
           "bits": 4,
           "direction": "output"
         },
-        "clk": {
+        "clk_pc0": {
+          "bits": 1,
+          "direction": "input"
+        },
+        "clk_pc1": {
+          "bits": 1,
+          "direction": "input"
+        },
+        "clk_pc2": {
+          "bits": 1,
+          "direction": "input"
+        },
+        "clk_pc3": {
           "bits": 1,
           "direction": "input"
         },
@@ -2502,7 +2646,7 @@
           "direction": "input"
         }
       },
-      "sha256": "59509a1fbca16fc9c3d83ab912253009f55db8d2f896398cff1aae9cc937c233",
+      "sha256": "858b455fa8501cace223983ef37fc37c76925da57fda5eb05f4875c368051a29",
       "source": "physical/hbm_accel_die_views/svc/v15/rtl/hfd_svc_v15_SW_s3.sv",
       "status": "actual_pc_leaf_wrapper_external_joins_unbound"
     },
@@ -2525,7 +2669,15 @@
           "bits": 3,
           "direction": "output"
         },
-        "clk": {
+        "clk_pc0": {
+          "bits": 1,
+          "direction": "input"
+        },
+        "clk_pc1": {
+          "bits": 1,
+          "direction": "input"
+        },
+        "clk_pc2": {
           "bits": 1,
           "direction": "input"
         },
@@ -2694,7 +2846,7 @@
           "direction": "input"
         }
       },
-      "sha256": "7a3f8684d3f1ceac83feed5a31b184d6ad07df644f6185565606fd72ff071846",
+      "sha256": "0b63f6404de67420d67e19855a8c839363b19d5bf949e58767723cbcff05e863",
       "source": "physical/hbm_accel_die_views/svc/v15/rtl/hfd_svc_v15_SW_s4.sv",
       "status": "actual_pc_leaf_wrapper_external_joins_unbound"
     },
@@ -2718,7 +2870,19 @@
           "bits": 4,
           "direction": "output"
         },
-        "clk": {
+        "clk_pc0": {
+          "bits": 1,
+          "direction": "input"
+        },
+        "clk_pc1": {
+          "bits": 1,
+          "direction": "input"
+        },
+        "clk_pc2": {
+          "bits": 1,
+          "direction": "input"
+        },
+        "clk_pc3": {
           "bits": 1,
           "direction": "input"
         },
@@ -2887,7 +3051,7 @@
           "direction": "input"
         }
       },
-      "sha256": "38123ee176f28dbaf712ebe82cd07848bfb551eb08baf8535d7c86a57196bc05",
+      "sha256": "5e5a33ca13f482b588f39e7e6bfdcce7deb86b64db6990bc0ee9205b1fe21b86",
       "source": "physical/hbm_accel_die_views/svc/v15/rtl/hfd_svc_v15_SW_s5.sv",
       "status": "actual_pc_leaf_wrapper_external_joins_unbound"
     },
@@ -2911,7 +3075,19 @@
           "bits": 4,
           "direction": "output"
         },
-        "clk": {
+        "clk_pc0": {
+          "bits": 1,
+          "direction": "input"
+        },
+        "clk_pc1": {
+          "bits": 1,
+          "direction": "input"
+        },
+        "clk_pc2": {
+          "bits": 1,
+          "direction": "input"
+        },
+        "clk_pc3": {
           "bits": 1,
           "direction": "input"
         },
@@ -3080,7 +3256,7 @@
           "direction": "input"
         }
       },
-      "sha256": "959dc48cad64ce40193a66f0711810b0e99ba19ee5eac13ec201235733e8b961",
+      "sha256": "19cca7840dbe856c5579d5ff0cf9464885d865f9fd9d80a4e9427acb9a2b3eaf",
       "source": "physical/hbm_accel_die_views/svc/v15/rtl/hfd_svc_v15_SW_s6.sv",
       "status": "actual_pc_leaf_wrapper_external_joins_unbound"
     },
@@ -3104,7 +3280,19 @@
           "bits": 4,
           "direction": "output"
         },
-        "clk": {
+        "clk_pc0": {
+          "bits": 1,
+          "direction": "input"
+        },
+        "clk_pc1": {
+          "bits": 1,
+          "direction": "input"
+        },
+        "clk_pc2": {
+          "bits": 1,
+          "direction": "input"
+        },
+        "clk_pc3": {
           "bits": 1,
           "direction": "input"
         },
@@ -3273,7 +3461,7 @@
           "direction": "input"
         }
       },
-      "sha256": "5983359cbeda37131da1071d8e22711e1d0171a274e0e562367285ffe5bf283b",
+      "sha256": "a356c3e3ba26eaa591194874c44b4fae9fffc61ab0a11492992dc463b3d78a9d",
       "source": "physical/hbm_accel_die_views/svc/v15/rtl/hfd_svc_v15_SW_s7.sv",
       "status": "actual_pc_leaf_wrapper_external_joins_unbound"
     },
@@ -3460,7 +3648,7 @@
           "direction": "input"
         }
       },
-      "sha256": "cd805d0891cd70c8d1ba94d16ce86f6654bfcb975101f9719932c094eb532585",
+      "sha256": "c8fc0f734883cb419a6854d3aa90205785deeb08f9b3490dd67b54cbfe2b6d5b",
       "source": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_static_pc.sv",
       "status": "source_port_table_only_not_endpoint_binding"
     }
@@ -49324,28 +49512,28 @@
     "physical/hbm_accel_die_views/svc/split_psn/hfd_svc_SW_s6/ports.json": "8b836e5dcc26c4f34d616435828bfaa7b521a51baaddccad2155e0d4870cab1f",
     "physical/hbm_accel_die_views/svc/split_psn/hfd_svc_SW_s7/ports.json": "01b3d6443b3690ee6681f00a87bf76c5e664701ad20e94474270a3fa004eca9c",
     "physical/hbm_accel_die_views/svc/split_psn/split.json": "b10dba25d53641da2e5cb13f90b9077ddfb2c7720f7d5174dd21aed8c1db77a9",
-    "physical/hbm_accel_die_views/svc/v15/rtl/hfd_svc_v15_SE_s0.sv": "20b710f0a51875fc4b516f5c1c10df70c1a6b1817f95a089236e264de69f8e90",
-    "physical/hbm_accel_die_views/svc/v15/rtl/hfd_svc_v15_SE_s1.sv": "4e1dec026a859f36ae798dacb7f0e60aac2099535a49969cc282f4517b6a1428",
-    "physical/hbm_accel_die_views/svc/v15/rtl/hfd_svc_v15_SE_s2.sv": "6bee17244e78ffbde71592c33e0e24386621ba84aa3e319831a1879d0e80f651",
-    "physical/hbm_accel_die_views/svc/v15/rtl/hfd_svc_v15_SE_s3.sv": "056cc532fc8abae5fb120a617373275af8c96ba2ec989f18be1caae641254102",
-    "physical/hbm_accel_die_views/svc/v15/rtl/hfd_svc_v15_SE_s4.sv": "f49addb8d37fb2e5882f7f8fdaa1d7993675a8708afa7f7f69c4dacd130d6324",
-    "physical/hbm_accel_die_views/svc/v15/rtl/hfd_svc_v15_SE_s5.sv": "40c9930bc909a65940988e223053f13e72eb765432c9b6603cb55ae6b075cc9d",
-    "physical/hbm_accel_die_views/svc/v15/rtl/hfd_svc_v15_SE_s6.sv": "59d1f6f7577c9947564a080e2dd73c577cc58fc3a6964902c2a2b113e80174c9",
-    "physical/hbm_accel_die_views/svc/v15/rtl/hfd_svc_v15_SE_s7.sv": "1969bcc181be1bdc5f14b31fed1d639a771e89ab158d0aa81a32da206c7f92b0",
-    "physical/hbm_accel_die_views/svc/v15/rtl/hfd_svc_v15_SE_s8.sv": "a1b8cc939e38874c2a765aeb739eaac4c4f3fc4f00925aeb436757a16c5b60b5",
-    "physical/hbm_accel_die_views/svc/v15/rtl/hfd_svc_v15_SW_s0.sv": "0a473b1752b06da44388404c78fec7e5a32a5eaf9069f244c50535c8f46b5b6b",
-    "physical/hbm_accel_die_views/svc/v15/rtl/hfd_svc_v15_SW_s1.sv": "e6e7de14ab7a62eb8735930f58fad678c53b7d0e1136005ccf59a59a6e8029e4",
-    "physical/hbm_accel_die_views/svc/v15/rtl/hfd_svc_v15_SW_s2.sv": "145fc9957e011461b3761ab17c0e29cfaf9306162f8c2c534b7f0f9a9ea50cef",
-    "physical/hbm_accel_die_views/svc/v15/rtl/hfd_svc_v15_SW_s3.sv": "59509a1fbca16fc9c3d83ab912253009f55db8d2f896398cff1aae9cc937c233",
-    "physical/hbm_accel_die_views/svc/v15/rtl/hfd_svc_v15_SW_s4.sv": "7a3f8684d3f1ceac83feed5a31b184d6ad07df644f6185565606fd72ff071846",
-    "physical/hbm_accel_die_views/svc/v15/rtl/hfd_svc_v15_SW_s5.sv": "38123ee176f28dbaf712ebe82cd07848bfb551eb08baf8535d7c86a57196bc05",
-    "physical/hbm_accel_die_views/svc/v15/rtl/hfd_svc_v15_SW_s6.sv": "959dc48cad64ce40193a66f0711810b0e99ba19ee5eac13ec201235733e8b961",
-    "physical/hbm_accel_die_views/svc/v15/rtl/hfd_svc_v15_SW_s7.sv": "5983359cbeda37131da1071d8e22711e1d0171a274e0e562367285ffe5bf283b",
-    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_static_pc.sv": "cd805d0891cd70c8d1ba94d16ce86f6654bfcb975101f9719932c094eb532585",
+    "physical/hbm_accel_die_views/svc/v15/rtl/hfd_svc_v15_SE_s0.sv": "31cda896cc7988d072d8f198b4e09aef181e9eef1c0b4db01084023de8207411",
+    "physical/hbm_accel_die_views/svc/v15/rtl/hfd_svc_v15_SE_s1.sv": "fbc4be4a0c030095d7a0c6559301aa982f51d17e10b71d256a00a4a9e535c92f",
+    "physical/hbm_accel_die_views/svc/v15/rtl/hfd_svc_v15_SE_s2.sv": "d2ede3a254e5a0996eb3fc7df5caf1159b80a36f8fe28f80fd5569a1c87aa557",
+    "physical/hbm_accel_die_views/svc/v15/rtl/hfd_svc_v15_SE_s3.sv": "54d769dec1d14d80faf27f3b423fdee3a21d244a63ecf8b7aa5956a5bf3e7c8f",
+    "physical/hbm_accel_die_views/svc/v15/rtl/hfd_svc_v15_SE_s4.sv": "1e5e2c4083ecdf494c08198ae07d73124e89f01f08fae68f132e402bf1faef2f",
+    "physical/hbm_accel_die_views/svc/v15/rtl/hfd_svc_v15_SE_s5.sv": "82c1276397a197a00f885f2f1c8779004d1c22c875b2c2348086e745323986f1",
+    "physical/hbm_accel_die_views/svc/v15/rtl/hfd_svc_v15_SE_s6.sv": "b70d487ad1ed7c04f1d793b007bce5aa942c4f0149145624433cd79c8932f488",
+    "physical/hbm_accel_die_views/svc/v15/rtl/hfd_svc_v15_SE_s7.sv": "3512683e0faab883b13ec1aa576a2f6ba709f9aab208be2af75cef461bde4aa2",
+    "physical/hbm_accel_die_views/svc/v15/rtl/hfd_svc_v15_SE_s8.sv": "12720c1ad5da541946db015e3e49ee9b98f608875654af510b32e49629b73c74",
+    "physical/hbm_accel_die_views/svc/v15/rtl/hfd_svc_v15_SW_s0.sv": "df2c50b4428fb83b6e2a76358ddf9673143abaee50ebc41743ef6d79820fb045",
+    "physical/hbm_accel_die_views/svc/v15/rtl/hfd_svc_v15_SW_s1.sv": "b254710f11bf970dc35db5e3651941b175429afd8274633fba8c6fbb478e8fec",
+    "physical/hbm_accel_die_views/svc/v15/rtl/hfd_svc_v15_SW_s2.sv": "5408bc6b6038e94114ca630d98bcde40d323ba4251736b3d64831c6244c4561d",
+    "physical/hbm_accel_die_views/svc/v15/rtl/hfd_svc_v15_SW_s3.sv": "858b455fa8501cace223983ef37fc37c76925da57fda5eb05f4875c368051a29",
+    "physical/hbm_accel_die_views/svc/v15/rtl/hfd_svc_v15_SW_s4.sv": "0b63f6404de67420d67e19855a8c839363b19d5bf949e58767723cbcff05e863",
+    "physical/hbm_accel_die_views/svc/v15/rtl/hfd_svc_v15_SW_s5.sv": "5e5a33ca13f482b588f39e7e6bfdcce7deb86b64db6990bc0ee9205b1fe21b86",
+    "physical/hbm_accel_die_views/svc/v15/rtl/hfd_svc_v15_SW_s6.sv": "19cca7840dbe856c5579d5ff0cf9464885d865f9fd9d80a4e9427acb9a2b3eaf",
+    "physical/hbm_accel_die_views/svc/v15/rtl/hfd_svc_v15_SW_s7.sv": "a356c3e3ba26eaa591194874c44b4fae9fffc61ab0a11492992dc463b3d78a9d",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_static_pc.sv": "c8fc0f734883cb419a6854d3aa90205785deeb08f9b3490dd67b54cbfe2b6d5b",
     "tools/die_top_lint.py": "44eadc840a6e912abc60295d90ce11c98e9e7bca891a0ba851ab2c0b0d0a925d",
-    "tools/dsrom_s81_fulldie.py": "d9338644688593041c5540ebc9b94d7658698782a0269199259c07d55b4c32f0",
+    "tools/dsrom_s81_fulldie.py": "0194a7a445a740344c6a85f5eefc9e5587661a92f5efdf2c1d70ef654d6125b3",
     "tools/hbm_accel_die_fp.py": "0b52b4a2411019fb1ef74fdb3c6deab17bafae24fd840f9e13bca8c73bd1dc6c",
     "tools/hbm_die_views.py": "7270745d89518b0228720786cb0f2840838b3e9596f39fac1ff3d91dbc3da532",
-    "tools/hbm_svc_v15_contract.py": "fd573c87a1ddad31c8b3d3d97748939bab29bd64944ba7d8dfef26428ef7d9fd"
+    "tools/hbm_svc_v15_contract.py": "3ce0cc8b9cb3d8b7acb125be9a6dec1c8ecc5285b14039d1966c02d683b74b18"
   }
 }

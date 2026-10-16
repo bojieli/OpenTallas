@@ -141,6 +141,25 @@ class ScriptTests(unittest.TestCase):
         self.assertIn("bench_src_a1/rtl/b.sv", left)
         self.assertIn("src/rtl/a.sv", left)
 
+    def test_ref_inside_matching_snapshot_keeps_only_that_path(self):
+        # disk-1015: one receipt naming a file in src/ (or the src root) used to keep the whole 4-5 GB snapshot
+        (self.R / "src/rtl/b.sv").write_text("y")
+        (self.R / "bench_src_a1/SOURCE_COMMIT").write_text("abc123\n")
+        self.files += ["src/rtl/b.sv", "bench_src_a1/SOURCE_COMMIT"]
+        for mode in ("closed", "fail"):
+            left = self.run_mode(mode, refs=["src", "src/rtl/a.sv", "bench_src_a1/rtl/b.sv"])
+            self.assertIn("src/rtl/a.sv", left)
+            self.assertNotIn("src/rtl/b.sv", left)
+            self.assertIn("src/SOURCE_COMMIT", left)
+            self.assertIn("bench_src_a1/rtl/b.sv", left)
+            self.assertTrue((self.R / "src/TRIMMED_SOURCE_SNAPSHOT").exists())
+
+    def test_ref_inside_snapshot_of_other_commit_keeps_it_whole(self):
+        left = self.run_mode("closed", src_commit="other", refs=["src/rtl/a.sv"])
+        self.assertIn("src/rtl/a.sv", left)
+        left = self.run_mode("nearmiss", refs=["src/rtl/a.sv"])
+        self.assertIn("src/SOURCE_COMMIT", left)
+
     def test_generic_ref_keeps_finals_in_closed_mode(self):
         left = self.run_mode("closed", refs=["cl/eco/pass2/orfs"])
         self.assertIn("cl/eco/pass2/orfs/results/asap7/d/base/6_final.odb", left)

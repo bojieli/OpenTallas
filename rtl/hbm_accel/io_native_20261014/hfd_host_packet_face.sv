@@ -3,6 +3,7 @@
 // h[405:0] loader->host; h[786:406] host->loader, no spare/tied bits.
 module hfd_host_packet_face #(parameter integer MUT=0)(
  input wire clk,rst_n,inout wire[786:0]h,
+ input wire[1:0]s_bresp,
  input wire rx_valid,input wire[511:0]rx_packet,output wire rx_ready,
  output wire tx_valid,output wire[511:0]tx_packet,input wire tx_ready,
  output wire protocol_fault);
@@ -15,6 +16,7 @@ ot_hbm_host_packet #(.MUT(MUT)) u_controller(.clk(clk),.rst_n(rst_n),.rx_valid(r
 .s_wdata(h[451:420]),
 .s_wstrb(h[455:452]),
 .s_bvalid(h[2]),
+.s_bresp(s_bresp),
 .s_bready(h[456]),
 .s_arvalid(h[457]),
 .s_arready(h[3]),

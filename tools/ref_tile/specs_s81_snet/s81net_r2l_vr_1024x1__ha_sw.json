@@ -15,7 +15,7 @@
  ],
  "outline": {
   "w": 112.32,
-  "h": 112.32,
+  "h": 174.96,
   "exact": true
  },
  "layer_cap": "M5",
@@ -42,14 +42,14 @@
   "pin_v": "M3 M5",
   "m5_pg_pitch": 2.7
  },
- "structural_change": "S-NET dsfd_r2l_vr_1024x1__ha_SW (1 die instance(s)): the ot_meso_fifo (trained placement + CREDITS) / ot_ratio_cdc_fifo (ready + DOWN/WAIT/RUN handshake) crossing is replaced by ot_s81_static_ratio_cross (fixed source-edge map, compiled bubble phase), owner static-schedule rule 10-14 18:59; same ports and lane formats, {fault, live} folded as before; RTL = the case glue module rendered by the generator (module sha256 308091d17eb9c416, glue db43fe8fec3ba6e8); pins at the generator centres (gen19b).",
+ "structural_change": "S-NET dsfd_r2l_vr_1024x1__ha_SW (1 die instance(s)): the ot_meso_fifo (trained placement + CREDITS) / ot_ratio_cdc_fifo (ready + DOWN/WAIT/RUN handshake) crossing is replaced by ot_s81_static_ratio_cross (fixed source-edge map, compiled bubble phase), owner static-schedule rule 10-14 18:59; same ports and lane formats, {fault, live} folded as before; RTL = the case glue module rendered by the generator (module sha256 308091d17eb9c416, glue db43fe8fec3ba6e8); pins at the generator centres (gen19b). | n3 sizing: std 6930 um2 -> util <= 0.55, faces at cut <= 0.6 (outline 112.32 x 174.96 vs generator slot 112.296 x 112.296); pins spread evenly per face (spread_face_pins.py, clock at face centre), no output hold pads (die receivers carry input hold stages) | n5 (2026-10-15 17:40): n3 route TT -46.69 ps = negedge marker pin flop dq0[0] gating 4,104 bank write enables (half-cycle, buffered fanout) -> ot_s81_static_ratio_cross WRN=1: bank/ident writes not gated by the marker (wc held at 0 before release; identity checks unchanged); no latency change",
  "reroute_reason": {
   "kind": "rtl_change"
  },
  "job": {
   "owner": "Claude:s81-net",
   "branch": "claude/el1015-s81-net-static",
-  "tag": "n2",
+  "tag": "n5",
   "purpose": "S81 S-NET static-schedule redesign: dsfd_r2l_vr_1024x1__ha_SW (1 replicas, hardened once): exact bench + observed failing mutants; recipe 2, M5 cap, generator pins",
   "views_to": "physical/ref_tile/s81net_r2l_vr_1024x1__ha_sw/views",
   "record_to": "results/rtl/ref_tile/s81net_r2l_vr_1024x1__ha_sw",
@@ -87,5 +87,17 @@
   "physical/s81_static_net/hend/dsfd_r2l_vr_1024x1__ha_SW_boundary.tcl"
  ],
  "inhold": true,
- "outhold": true
+ "outhold": false,
+ "slot_change_request": {
+  "reason": "S-NET n3: measured std area / pin cut",
+  "outline": [
+   112.32,
+   174.96
+  ],
+  "generator_slot": [
+   112.296,
+   112.296
+  ],
+  "pins": "physical/s81_die_pins/snet_gen19b/dsfd_r2l_vr_1024x1__ha_SW.tcl"
+ }
 }

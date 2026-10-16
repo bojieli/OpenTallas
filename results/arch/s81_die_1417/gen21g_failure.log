@@ -1,0 +1,27 @@
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch/codex/s81-die-1417/src/tools/s81/capture_die_model.py", line 62, in <module>
+    raise SystemExit(main())
+                     ~~~~^^
+  File "/srv/opentallas-scratch/codex/s81-die-1417/src/tools/s81/capture_die_model.py", line 58, in main
+    return generator.main(['real', *shlex.split(recipe.read_text()), '--cfifo-colck', '--work', str(args.work)])
+           ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/srv/opentallas-scratch/codex/s81-die-1417/src/tools/dsrom_s81_fulldie.py", line 10801, in main
+    m = build()
+  File "/srv/opentallas-scratch/codex/s81-die-1417/src/tools/dsrom_s81_fulldie.py", line 582, in build
+    return build_r8(variant)
+  File "/srv/opentallas-scratch/codex/s81-die-1417/src/tools/dsrom_s81_fulldie.py", line 3965, in build_r8
+    m0 = build_r8(variant)
+  File "/srv/opentallas-scratch/codex/s81-die-1417/src/tools/dsrom_s81_fulldie.py", line 4713, in build_r8
+    buses_r8(m)
+    ~~~~~~~~^^^
+  File "/srv/opentallas-scratch/codex/s81-die-1417/src/tools/dsrom_s81_fulldie.py", line 5109, in buses_r8
+    canonical_trunks(sys.modules[__name__], m, CH8, cor, starts, ga, end_spec, hub_block, bus)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/srv/opentallas-scratch/codex/s81-die-1417/src/tools/s81/canonical_layout.py", line 341, in trunks
+    path=G._dedup(path+[(path[-1][0],dst[1]),dst]);active=advance(f'{prefix}_hub',path,active)
+                                                          ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/srv/opentallas-scratch/codex/s81-die-1417/src/tools/s81/canonical_layout.py", line 305, in advance
+    stages=CH.run(name,[G.CRET+2]*len(ordered),path,allowed,src,forced=[G._poly_len(path)])
+  File "/srv/opentallas-scratch/codex/s81-die-1417/src/tools/dsrom_s81_fulldie.py", line 3828, in run
+    raise RuntimeError(f'chain {name}: no station spot near s={target:.0f} of {L:.0f} ({cx:.0f}, {cy:.0f})')
+RuntimeError: chain crE2_W0_hub: no station spot near s=1600 of 5895 (14242, 16526)

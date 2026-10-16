@@ -1,0 +1,304 @@
+{
+  "schema": "opentallas.vm.source_specialized_identity.v1",
+  "source_provenance": [
+    "rtl/hbm_accel/generic/vm/static/hfd_hgi_vms_static.sv literal SID0/1/2/3",
+    "rtl/hbm_accel/generic/vm/static/ot_vms_slice_static.sv .bid(3'(b)),.sid(sid)"
+  ],
+  "core": "rtl/hbm_accel/generic/vm/static/ot_vms_bank_static_identity.sv",
+  "core_sha256": "6a48b137b8fa97dbf7b5868fd473ac11d1609d8da524d3a998925d20f2f9b827",
+  "identity_ports": [],
+  "clock_ports": [
+    "clk"
+  ],
+  "status": "32 distinct source master names; actualphysicalviews/productionbinding OPEN",
+  "masters": [
+    {
+      "top": "hfd_vms_bank_identity_q0_b0",
+      "sid": 0,
+      "bid": 0,
+      "rg": 5,
+      "wg": 1,
+      "source": "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_identity_q0_b0.sv",
+      "sha256": "2fdf987b2d58e0ea40b46ea981370a0828f590afbaa20cfba28020a0f4535d9c"
+    },
+    {
+      "top": "hfd_vms_bank_identity_q0_b1",
+      "sid": 0,
+      "bid": 1,
+      "rg": 5,
+      "wg": 1,
+      "source": "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_identity_q0_b1.sv",
+      "sha256": "5e6a80d45d56438ab7e49485063a8746a75da21270f761469b08e80356b5d879"
+    },
+    {
+      "top": "hfd_vms_bank_identity_q0_b2",
+      "sid": 0,
+      "bid": 2,
+      "rg": 5,
+      "wg": 1,
+      "source": "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_identity_q0_b2.sv",
+      "sha256": "b2bbee0cb1dc38f12ca6f0f789914e5e788e4f322f747f4992a1bc32ee7b31b2"
+    },
+    {
+      "top": "hfd_vms_bank_identity_q0_b3",
+      "sid": 0,
+      "bid": 3,
+      "rg": 5,
+      "wg": 1,
+      "source": "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_identity_q0_b3.sv",
+      "sha256": "168050446992ec1e6341a29dfa7edb4c435c933c5b13da51817c74f42524d023"
+    },
+    {
+      "top": "hfd_vms_bank_identity_q0_b4",
+      "sid": 0,
+      "bid": 4,
+      "rg": 5,
+      "wg": 1,
+      "source": "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_identity_q0_b4.sv",
+      "sha256": "ebd41da54274a25c7b03cbdea628d9249a2d462a96efb5bf48367aef3b498167"
+    },
+    {
+      "top": "hfd_vms_bank_identity_q0_b5",
+      "sid": 0,
+      "bid": 5,
+      "rg": 5,
+      "wg": 1,
+      "source": "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_identity_q0_b5.sv",
+      "sha256": "8d0158cb5dd60a7e9eee21644d5ca32b2cbd35c19fddbbd12d420cfbc9550543"
+    },
+    {
+      "top": "hfd_vms_bank_identity_q0_b6",
+      "sid": 0,
+      "bid": 6,
+      "rg": 5,
+      "wg": 1,
+      "source": "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_identity_q0_b6.sv",
+      "sha256": "39638030a627f0e93a0f4451dfa899448a67474de3156722e32b9f64b0b5cff0"
+    },
+    {
+      "top": "hfd_vms_bank_identity_q0_b7",
+      "sid": 0,
+      "bid": 7,
+      "rg": 5,
+      "wg": 1,
+      "source": "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_identity_q0_b7.sv",
+      "sha256": "b5b07ba92641c159a78fad5b67013815a304696858bed86f8fe87aff907dd3f8"
+    },
+    {
+      "top": "hfd_vms_bank_identity_q1_b0",
+      "sid": 1,
+      "bid": 0,
+      "rg": 4,
+      "wg": 1,
+      "source": "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_identity_q1_b0.sv",
+      "sha256": "372c3c10749ccc039a46983f3429e5c6c987e64539bc4399b55d69ac5184fd1e"
+    },
+    {
+      "top": "hfd_vms_bank_identity_q1_b1",
+      "sid": 1,
+      "bid": 1,
+      "rg": 4,
+      "wg": 1,
+      "source": "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_identity_q1_b1.sv",
+      "sha256": "7c1e0e474071ca88ff245b277bbb7f8f37c8206f6579fc436fa7421aeb2e4857"
+    },
+    {
+      "top": "hfd_vms_bank_identity_q1_b2",
+      "sid": 1,
+      "bid": 2,
+      "rg": 4,
+      "wg": 1,
+      "source": "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_identity_q1_b2.sv",
+      "sha256": "67bb845ac5d333508c2b1b99e0ea645f0b4a65cdea5c5236b5c63603f0043a42"
+    },
+    {
+      "top": "hfd_vms_bank_identity_q1_b3",
+      "sid": 1,
+      "bid": 3,
+      "rg": 4,
+      "wg": 1,
+      "source": "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_identity_q1_b3.sv",
+      "sha256": "03683402ed1eb9d82e72d6959e8cb7ade3f2cc4a116954b48f43ebbf908e823a"
+    },
+    {
+      "top": "hfd_vms_bank_identity_q1_b4",
+      "sid": 1,
+      "bid": 4,
+      "rg": 4,
+      "wg": 1,
+      "source": "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_identity_q1_b4.sv",
+      "sha256": "8f4bb8559a26f6dc3649eb0cd6b0c12e479f1ddc6ada8b117b473e261f83e85b"
+    },
+    {
+      "top": "hfd_vms_bank_identity_q1_b5",
+      "sid": 1,
+      "bid": 5,
+      "rg": 4,
+      "wg": 1,
+      "source": "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_identity_q1_b5.sv",
+      "sha256": "4c0a2b02e72c83e70813eed3febe76e7c82955b974d85ac0cbb90b3df4c386ee"
+    },
+    {
+      "top": "hfd_vms_bank_identity_q1_b6",
+      "sid": 1,
+      "bid": 6,
+      "rg": 4,
+      "wg": 1,
+      "source": "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_identity_q1_b6.sv",
+      "sha256": "f3657a959fa1f7219bc625e7cc90d0ce861936320f4053ea4adf75530b2d35a5"
+    },
+    {
+      "top": "hfd_vms_bank_identity_q1_b7",
+      "sid": 1,
+      "bid": 7,
+      "rg": 4,
+      "wg": 1,
+      "source": "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_identity_q1_b7.sv",
+      "sha256": "e9e0f968143ed73d3e6b38078fb97700d401e0f59e54f429a75f3b7be72434c7"
+    },
+    {
+      "top": "hfd_vms_bank_identity_q2_b0",
+      "sid": 2,
+      "bid": 0,
+      "rg": 6,
+      "wg": 3,
+      "source": "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_identity_q2_b0.sv",
+      "sha256": "e57da2afb5cd555a644e2c6677eb523cdc551840d41c1ad54d6aefcf7f2e31fc"
+    },
+    {
+      "top": "hfd_vms_bank_identity_q2_b1",
+      "sid": 2,
+      "bid": 1,
+      "rg": 6,
+      "wg": 3,
+      "source": "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_identity_q2_b1.sv",
+      "sha256": "9eca30ea4eb945bac23c40e35e29a579461023b80d11f4b8c154c8452ea0fd6f"
+    },
+    {
+      "top": "hfd_vms_bank_identity_q2_b2",
+      "sid": 2,
+      "bid": 2,
+      "rg": 6,
+      "wg": 3,
+      "source": "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_identity_q2_b2.sv",
+      "sha256": "effcd7752a9ab7010f10d271c2a94cc89380f5719a723782d229444c4acefd82"
+    },
+    {
+      "top": "hfd_vms_bank_identity_q2_b3",
+      "sid": 2,
+      "bid": 3,
+      "rg": 6,
+      "wg": 3,
+      "source": "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_identity_q2_b3.sv",
+      "sha256": "cf8832e726058e9df3485c8cf3ca40929c12dde8a2a2881237250b09d3e90f4a"
+    },
+    {
+      "top": "hfd_vms_bank_identity_q2_b4",
+      "sid": 2,
+      "bid": 4,
+      "rg": 6,
+      "wg": 3,
+      "source": "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_identity_q2_b4.sv",
+      "sha256": "92f2e18543e8d56b754a56b5a7f81c2a28c9617f3fbde0f4f77d31165830d5c3"
+    },
+    {
+      "top": "hfd_vms_bank_identity_q2_b5",
+      "sid": 2,
+      "bid": 5,
+      "rg": 6,
+      "wg": 3,
+      "source": "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_identity_q2_b5.sv",
+      "sha256": "b521e38509c6945e51ecce5e8f28d84a96074441b1ae18e26f3002e1d7f8cc45"
+    },
+    {
+      "top": "hfd_vms_bank_identity_q2_b6",
+      "sid": 2,
+      "bid": 6,
+      "rg": 6,
+      "wg": 3,
+      "source": "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_identity_q2_b6.sv",
+      "sha256": "3b70bd097b152f34c29f1c40c9e01b968db0918dc2e17cef0317c9837b7a16af"
+    },
+    {
+      "top": "hfd_vms_bank_identity_q2_b7",
+      "sid": 2,
+      "bid": 7,
+      "rg": 6,
+      "wg": 3,
+      "source": "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_identity_q2_b7.sv",
+      "sha256": "ce3da3cbbafe842c5e1df758d1298ca69f2571b219433e55bc3bbee388e490d1"
+    },
+    {
+      "top": "hfd_vms_bank_identity_q3_b0",
+      "sid": 3,
+      "bid": 0,
+      "rg": 6,
+      "wg": 3,
+      "source": "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_identity_q3_b0.sv",
+      "sha256": "c9f5767a4eb02d4f16678e6b20bdcc16162a57c60123d0229c0b4afd25029691"
+    },
+    {
+      "top": "hfd_vms_bank_identity_q3_b1",
+      "sid": 3,
+      "bid": 1,
+      "rg": 6,
+      "wg": 3,
+      "source": "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_identity_q3_b1.sv",
+      "sha256": "bd9cd64f46d97f4d769001ca4b094b5ab070e637d7f8b64723987511a5c467c2"
+    },
+    {
+      "top": "hfd_vms_bank_identity_q3_b2",
+      "sid": 3,
+      "bid": 2,
+      "rg": 6,
+      "wg": 3,
+      "source": "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_identity_q3_b2.sv",
+      "sha256": "a95ebbe413b88fe0dc9f5cdb3e636123762ccdc523e09365f313569a703201ca"
+    },
+    {
+      "top": "hfd_vms_bank_identity_q3_b3",
+      "sid": 3,
+      "bid": 3,
+      "rg": 6,
+      "wg": 3,
+      "source": "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_identity_q3_b3.sv",
+      "sha256": "4e8dba9829b5c4df0bca9180feb170b799bdab383e91db5d3abba44ddcf319dc"
+    },
+    {
+      "top": "hfd_vms_bank_identity_q3_b4",
+      "sid": 3,
+      "bid": 4,
+      "rg": 6,
+      "wg": 3,
+      "source": "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_identity_q3_b4.sv",
+      "sha256": "c80f87315e085f73e49aa246134f8dbbe5bfa5214d870b8ec024df4a5703ad19"
+    },
+    {
+      "top": "hfd_vms_bank_identity_q3_b5",
+      "sid": 3,
+      "bid": 5,
+      "rg": 6,
+      "wg": 3,
+      "source": "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_identity_q3_b5.sv",
+      "sha256": "d16d11f1b0dc01cbe57028ba591445e693fdd958b0c43bc1104e93b1dd732546"
+    },
+    {
+      "top": "hfd_vms_bank_identity_q3_b6",
+      "sid": 3,
+      "bid": 6,
+      "rg": 6,
+      "wg": 3,
+      "source": "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_identity_q3_b6.sv",
+      "sha256": "ec0337a123bee046f2454d3d501f12f25f5cef35e857911fe605119fabc5a24d"
+    },
+    {
+      "top": "hfd_vms_bank_identity_q3_b7",
+      "sid": 3,
+      "bid": 7,
+      "rg": 6,
+      "wg": 3,
+      "source": "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_identity_q3_b7.sv",
+      "sha256": "95b2af9d70b909faf5a5dcdc2a0f00d3b51a0257a9051aaef87a2c0457a43053"
+    }
+  ]
+}

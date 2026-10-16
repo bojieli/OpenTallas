@@ -25,9 +25,16 @@
 // Two waves (8 banks x 16 words of the 8 x 64x512 1R1W macros = real mapped SRAM): the realigner fills one wave while
 // the reader drains the other.  Line demand: KV8 3.9 lines / 8 beats, KV4 2.1 lines / 8 beats.
 //
-// HEAD DIM 128 (cfg_h128, Qwen3 GQA on HBM; KV = per-element FP8 E4M3, the writer stores UE8M0 127 = scale 1):
-//   SM-KV8-128 row = ONE line: byte [16t + j] (t 0..7, j 0..15) = E4M3 code of dim 8j + t; bytes 128..131 = UE8M0 of the
-//   4 blocks of 32 dims (lane j's block j/4).
+// HEAD DIM 128 (cfg_h128, Qwen3 GQA on HBM; KV = per-element FP8 E4M3, no scale: tools/hgi_sim/qwen_compiler.py kv_append
+//   fp8_encode, value = the E4M3 code's value):
+//   STANDARD 128-B ROW (H-SM-ATT r2 2026-10-15; replaces the 136-B one-row-a-line SM-KV8-128 layout): bytes 0..127 = E4M3
+//   codes in dim order, rows back to back in the SM's own stack (a 136-B line carries 1 1/16 rows; 256 rows = 241 lines,
+//   not 256).  The same qword realigner cuts the stream into 16-qword rows; the emitted row is permuted once in wires
+//   (P[16t + j] = byte 8j + t) and written exactly as the old one-row line was, with the fixed scale UE8M0 127.
+//   Row ORDER in the stack is the writer's row-granular address map (no byte permutation): PV streams need rows
+//   round-robin over the 4 token streams (stored row 4k + u = token 32u + k of the 128-token block: the DMA append
+//   address rotates POS[6:0] left by 2); QK reads the same stored order and the compiler gives each score its position
+//   address (inverse rotation) at publication.
 //   QK (4 ROWS A BEAT): ring slot s of a wave holds rows 4s..4s+3, lanes 16q + j = row 4s + q, dim 8j + t: each SM sub-row
 //      (leaf q) scores its own row and the back end's 4-leaf combine is bypassed.  The wave buffer is written TRANSPOSED
 //      BY STEP: line r goes to the 8 banks at once (bank t <- the line's 16 bytes of step t, 128-bit segment r % 4, word
@@ -89,19 +96,19 @@ module ot_hbm_sm_kv_line #(
     // ---- 512-dim rows: qword realigner ----
     reg  [96*64-1:0] bb;                 // pending bytes of the line stream, oldest at bit 0
     reg  [6:0]       fill;               // qwords in bb
-    wire [6:0]       rqw = wf4 ? 7'd36 : 7'd66;            // qwords of the next row (KV4 288 B / KV8 528 B)
-    wire             emit = act && !h128 && (wleft != 13'd0) && !full[wb] && (fill >= rqw);
+    wire [6:0]       rqw = h128 ? 7'd16 : wf4 ? 7'd36 : 7'd66;  // qwords of the next row (128 B / KV4 288 B / KV8 528 B)
+    wire             emit = act && (wleft != 13'd0) && !full[wb] && (fill >= rqw);
     wire [6:0]       fill_e = fill - (emit ? rqw : 7'd0);
     wire             room = ({1'b0, fill_e} + 8'd17 <= 8'd96);
-    assign s_ready = act && (wleft != 13'd0) && (h128 ? !full[wb] : room);
+    assign s_ready = act && (wleft != 13'd0) && room;
     wire wacc = s_valid && s_ready;
-    wire wrow_end = h128 ? wacc : emit;
+    wire wrow_end = emit;
     wire wwave_end = wrow_end && ({1'b0, wr} == wn - 6'd1);
     wire [66*64-1:0] row = bb[66*64-1:0];
     reg  [96*64-1:0] bb_n;
     always @(*) begin
-        bb_n = emit ? (wf4 ? (bb >> (36*64)) : (bb >> (66*64))) : bb;
-        if (wacc && !h128) bb_n[fill_e*64 +: 1088] = s_data;
+        bb_n = emit ? (h128 ? (bb >> (16*64)) : wf4 ? (bb >> (36*64)) : (bb >> (66*64))) : bb;
+        if (wacc) bb_n[fill_e*64 +: 1088] = s_data;
     end
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
@@ -112,7 +119,7 @@ module ot_hbm_sm_kv_line #(
                 wb <= 1'b0; wr <= 5'd0; wl <= 2'd0; wleft <= cfg_rows; wri <= 13'd0; fill <= 7'd0;
                 wn <= (cfg_rows > ((cfg_h128 && cfg_qk) ? 13'd32 : 13'd8)) ? ((cfg_h128 && cfg_qk) ? 6'd32 : 6'd8) : cfg_rows[5:0];
             end else begin
-                if (!h128) fill <= fill_e + (wacc ? 7'd17 : 7'd0);
+                fill <= fill_e + (wacc ? 7'd17 : 7'd0);
                 if (wrow_end) begin
                     wr <= wr + 5'd1;
                     wleft <= wleft - 13'd1;
@@ -131,11 +138,11 @@ module ot_hbm_sm_kv_line #(
     end
     always @(posedge clk) begin
         bb <= bb_n;
-        if (emit) begin
+        if (emit && !h128) begin
             sc[{wb, wr[2:0]}] <= wf4 ? row[8*256 +: 256] : {128'd0, row[8*512 +: 128]};
             rf[{wb, wr[2:0]}] <= wf4;
         end
-        if (wacc && h128) sc1[{wb, wr}] <= s_data[1055:1024];
+        if (emit && h128) sc1[{wb, wr}] <= {4{8'd127}};
     end
     // ---------------- wave buffer: eight 64x512 1R1W macros ----------------
     //   512-dim rows: bank t word {0, 0, wave, row} = beat t of the row (written from the realigner in one edge)
@@ -144,7 +151,14 @@ module ot_hbm_sm_kv_line #(
     reg  [5:0] raddr;
     reg        rce;
     wire [4095:0] rdat;
-    genvar k, jw;
+    // head dim 128: the standard row permuted to the step-major byte order (P[16t + j] = code of dim 8j + t)
+    wire [1023:0] p128;
+    genvar k, jw, pt, pj;
+    generate for (pt = 0; pt < 8; pt = pt + 1) begin : g_pt
+        for (pj = 0; pj < 16; pj = pj + 1) begin : g_pj
+            assign p128[8*(16*pt + pj) +: 8] = row[8*(8*pj + pt) +: 8];
+        end
+    end endgenerate
     generate for (k = 0; k < 8; k = k + 1) begin : g_bank
         wire [511:0] bw8, bw4;           // beat k of the 512-dim row being emitted, KV8 / KV4
         for (jw = 0; jw < 64; jw = jw + 1) begin : g_w
@@ -152,10 +166,10 @@ module ot_hbm_sm_kv_line #(
             assign bw4[4*jw +: 4] = row[8*(4*jw + k/2) + 4*(k%2) +: 4];
         end
         assign bw4[511:256] = 256'd0;
-        wire        we = emit || (wacc && (tq || (h128 && k < 2)));
-        wire [5:0]  wa = emit ? {2'b00, wb, wr[2:0]} : tq ? {2'b00, wb, wr[4:2]} : {wb, wr[2:0], 2'b00};
-        wire [511:0] wd = emit ? (wf4 ? bw4 : bw8) : tq ? {4{s_data[128*k +: 128]}} : s_data[512*(k % 2) +: 512];
-        wire [511:0] wm = (tq && !emit) ? ({384'd0, {128{1'b1}}} << (128 * wr[1:0])) : {512{1'b1}};
+        wire        we = emit && (!h128 || tq || k < 2);
+        wire [5:0]  wa = !h128 ? {2'b00, wb, wr[2:0]} : tq ? {2'b00, wb, wr[4:2]} : {wb, wr[2:0], 2'b00};
+        wire [511:0] wd = !h128 ? (wf4 ? bw4 : bw8) : tq ? {4{p128[128*k +: 128]}} : p128[512*(k % 2) +: 512];
+        wire [511:0] wm = tq ? ({384'd0, {128{1'b1}}} << (128 * wr[1:0])) : {512{1'b1}};
         ot_sram_1r1w_64x512_m1_r2c2 u_b (.clk(clk), .r_ce_in(rce), .r_addr_in(raddr), .rd_out(rdat[512*k +: 512]),
             .w_ce_in(we), .w_addr_in(wa), .wd_in(wd), .w_mask_in(wm),
             .rr_en(2'b00), .rr_addr(12'd0), .cr_en(2'b00), .cr_sel(18'd0));

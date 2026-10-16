@@ -112,7 +112,12 @@ def apply(model):
             kept.append((b, c, n, es))
             continue
         inside = [node_of.get(i) for i, _ in es]
-        legacy = any(k in ports and p.lstrip('*') not in ports[k] and k != 'io' for (i, p), k in zip(es, inside))
+        # Existing source-backed aliases (e.g. upper-leaf fault -> TT uf[k])
+        # are real ports. Resolve them before deciding an old bus is obsolete.
+        existing_aliases = model.get('port_join', {})
+        legacy = any(k in ports and existing_aliases.get(by[i].master, {}).get(
+            p.lstrip('*'), (p.lstrip('*'), None))[0] not in ports[k] and k != 'io'
+            for (i, p), k in zip(es, inside))
         if (all(k is not None for k in inside) and any(k in OWNED for k in inside)) or legacy:
             if 'io' in inside and b.startswith(('coll_', 'ucie_', 'serdes')):
                 if b in ('coll_cd', 'coll_cc'):
@@ -262,6 +267,16 @@ def peer_map(model):
 def assign_pins(M, model, Master, inst, mst, src, peers, partition_master):
     """Top-down pins of one NEW unclosed parent from its RTL port list, each port on the face toward its peers."""
     if True:
+        orientation = getattr(inst, 'orient', 'R0')
+        if orientation not in ('R0', 'MX', 'MY', 'R180'):
+            raise ValueError(f'{mst}: unsupported pin-assignment orientation {orientation}')
+        conflicts = [i.name for i in model.get('insts', [])
+                     if i.name != inst.name and i.master == mst and
+                     (getattr(i, 'orient', 'R0') != orientation or
+                      (i.w, i.h) != (inst.w, inst.h))]
+        if conflicts:
+            raise ValueError(f'{mst}: incompatible shared-master orientation/outline; '
+                             f'clone physical masters for {inst.name} and {conflicts}')
         rp = rtl_ports(ROOT / src, mst)
         q = Master(mst, inst.w, inst.h, 7, f'actual source ABI ({src}); NEW assigned unclosed parent')
         aliases = model.get('port_join', {}).get(mst, {})
@@ -312,6 +327,27 @@ def assign_pins(M, model, Master, inst, mst, src, peers, partition_master):
                 n = die_ports[p][0]
                 z0 = round(.012 + round((start - .012) / pitch) * pitch, 4)
                 pos[p] = (f, 'M5' if f in 'NS' else 'M4', [round(z0 + pitch * b, 4) for b in range(n)])
+        # Wishes and group packing above are in die coordinates.  Invert the
+        # instance transform for EVERY bit before emitting master-local pins.
+        # Transforming only the face/centre would reverse a mirrored bus.
+        if orientation != 'R0':
+            local = {}
+            for p, (face, layer, zs) in pos.items():
+                f = face
+                if orientation in ('MX', 'R180'):
+                    f = {'N': 'S', 'S': 'N'}.get(f, f)
+                if orientation in ('MY', 'R180'):
+                    f = {'E': 'W', 'W': 'E'}.get(f, f)
+                reverse = ((face in 'NS' and orientation in ('MY', 'R180')) or
+                           (face in 'EW' and orientation in ('MX', 'R180')))
+                length = inst.w if face in 'NS' else inst.h
+                local[p] = (f, layer, [round(length-z, 4) for z in zs] if reverse else zs)
+            pos = local
+            model.setdefault('assigned_pin_orientation_corrections', {})[mst] = dict(
+                instance=inst.name, orientation=orientation,
+                kind='slot_change', scope='new unclosed native parent only',
+                reason='inverse die-to-master pin transform, preserving numeric bit identity',
+                physical_qualification=False)
         rects = []
         for p, (n, real) in die_ports.items():
             f, L_, zs = pos[p]

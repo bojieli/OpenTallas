@@ -92,6 +92,26 @@ proc ot_mm_scene_shim {on} {
     rename ::report_clock_latency {}; rename ::ot_mm_orig_report_clock_latency ::report_clock_latency
   }
 }
+# FF sign-off SDCs can recreate a real root at the sign-off period after the
+# copied route SDC created its link-budget virtual clock at the route period.
+# These virtual clocks represent that exact root, so keep their periods equal.
+# Recreating the existing clock updates its waveform in place; IO constraints,
+# latency and uncertainty remain attached. Other virtual/window clocks stay put.
+proc ot_mm_sync_link_periods {} {
+  foreach c [all_clocks] {
+    set vn [get_full_name $c]
+    if {![regexp {^ot_lb_v_(.+)$} $vn -> rn] || [llength [get_property $c sources]]} continue
+    set rc [get_clocks -quiet $rn]
+    if {[llength $rc] != 1 || ![llength [get_property $rc sources]]} continue
+    set vt [get_property $c period]
+    set rt [get_property $rc period]
+    if {abs($vt - $rt) > 0.000001} {
+      set wave [lmap edge [$c waveform] {expr {$edge / [$c period] * $rt}}]
+      create_clock -name $vn -period $rt -waveform $wave
+      puts "OT_HOLD_MM virtual period: $vn $vt -> $rt (reference $rn)"
+    }
+  }
+}
 proc ot_mm_sync {} {
   if {![info exists ::ot_mm_active] || $::ot_mm_stage ni {3_place.sdc 4_cts.sdc}} { return }
   set f $::env(RESULTS_DIR)/ot_mm_ss_[clock clicks].sdc
@@ -126,6 +146,7 @@ proc ot_mm_sync {} {
   if {!$ot_mm_ioref_read && [file exists $ot_mm_ioref_file]} {
     puts "OT_HOLD_MM: ff mode reads $ot_mm_ioref_file (loop default, appended last)"; read_sdc $ot_mm_ioref_file
   }
+  ot_mm_sync_link_periods
   ot_mm_scene_shim 0
   set_false_path -setup -from [all_clocks]
   set_mode ss

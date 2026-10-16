@@ -14,8 +14,15 @@ module tb_xload_static_lock;
     localparam integer MS = 2;
 `elsif MUT3
     localparam integer MS = 3;
+`elsif MUT4
+    localparam integer MS = 4;
 `else
     localparam integer MS = 0;
+`endif
+`ifdef XLOAD_LOCAL_MASK_REGS
+    localparam integer LM=1;
+`else
+    localparam integer LM=0;
 `endif
     reg clk = 0; always #1 clk = ~clk;
     reg rst_n = 0; integer seed = 3, errors = 0, cyc = 0; always @(posedge clk) cyc <= cyc + 1;
@@ -30,7 +37,13 @@ module tb_xload_static_lock;
         .rg_req(), .rg_gnt(1'b0), .wrq(), .wrq_cr(32'd0), .wrr({32*257{1'b0}}));
     ot_hgi_vm_unit #(.NC(5)) va (.clk(clk), .rst_n(rst_n), .cq({tq, qa}), .cr({tra, ra}), .status());
     wire [8*17-1:0] rq; reg [8*257-1:0] rr;
-    ot_hgi_sm_xload_static #(.RD_LAT(RD_LAT), .MUT(MS)) ub (.clk(clk), .rst_n(rst_n), .x_v(xs_v), .x_base(x_base), .x_n(x_n),
+`ifdef XLOAD_CLOCK_LEAVES
+    // five related phase-0 roots of the clock-leaf successor, all from the die clock (local mask capture built in)
+    ot_hgi_sm_xload_static_cl #(.RD_LAT(RD_LAT), .MUT(MS)) ub (.clk(clk), .clk_bf(clk), .clk_qlo(clk), .clk_qhi(clk), .clk_bd(clk),
+        .rst_n(rst_n), .x_v(xs_v), .x_base(x_base), .x_n(x_n),
+`else
+    ot_hgi_sm_xload_static #(.RD_LAT(RD_LAT), .MUT(MS), .LOCAL_MASK_REGS(LM)) ub (.clk(clk), .rst_n(rst_n), .x_v(xs_v), .x_base(x_base), .x_n(x_n),
+`endif
         .x_p(x_p), .x_stride(x_stride), .x_space(2'd1), .x_fmt(x_fmt), .x_xb(x_xb), .x_busy(busy_b), .x_done(done_b),
         .x_fault(f_b), .xw_en(en_b), .xw_last(last_b), .xw_addr(ad_b), .xw_grp(gr_b), .xw_data(d_b), .rq(rq), .rr(rr));
     // ---- static VM read group model (declared boundary): word memory mirrored from the VM unit writes
@@ -55,9 +68,21 @@ module tb_xload_static_lock;
     // ---- x-store write maps
     reg [2047:0] ma [0:16383]; reg [2047:0] mb [0:16383]; reg [16383:0] wa, wb;
     integer first_b, last_bc, nbeats_b;
+    integer be_cyc [0:4095]; reg [6:0] be_ad [0:4095]; reg [6:0] be_gr [0:4095];
+    // block-dot streaming emission model (= tools/hbm_sm_xload_static_timing.py): pair (k, b) decided at
+    // E = max(k WB + n(b), E_prev + 2) after the tpair origin; beat (k, b, a) on the xw pins at command + CBD + E + a
+    localparam integer CBD = 27;
+    function automatic integer nall(input integer lav, input integer bb);
+        integer p2, j2; nall = 0;
+        for (p2 = 0; p2 < 8; p2 = p2 + 1) for (j2 = 0; j2 < lav; j2 = j2 + 1)
+            if (p2 * 3152 + 266 * j2 < 2048 * (bb + 1)) nall = nall + 1;
+    endfunction
+    integer mk, mb2, ma2, me, mprev, mn, mwb, mla, mgtp, mi, bd_bad;
     always @(posedge clk) begin
         if (en_a) begin ma[{ad_a, gr_a}] <= d_a; wa[{ad_a, gr_a}] <= 1'b1; end
-        if (en_b) begin mb[{ad_b, gr_b}] <= d_b; wb[{ad_b, gr_b}] <= 1'b1; nbeats_b = nbeats_b + 1;
+        if (en_b) begin mb[{ad_b, gr_b}] <= d_b; wb[{ad_b, gr_b}] <= 1'b1;
+                        if (nbeats_b < 4096) begin be_cyc[nbeats_b] = cyc; be_ad[nbeats_b] = ad_b; be_gr[nbeats_b] = gr_b; end
+                        nbeats_b = nbeats_b + 1;
                         if (first_b < 0) first_b = cyc; last_bc = cyc; end
     end
     task automatic vm_w(input [31:0] word, input [31:0] data);
@@ -92,6 +117,24 @@ module tb_xload_static_lock;
                 $display("ERR cmd %0d static beats %0d span %0d expected %0d contiguous", c, nbeats_b, last_bc - first_b + 1, exp_beats);
                 errors = errors + 1; end
             if (c == 0) $display("static first beat at command + %0d edges (model %0d)", first_b - t0, exp_first);
+            if (x_fmt != 0) begin
+                mla = (x_fmt == 2) ? 8 : 4; mwb = ((x_p * mla > 2 * nb_e) ? x_p * mla : 2 * nb_e) + 4; mgtp = gn_e * 4;
+                mprev = -1000000; mi = 0; bd_bad = 0;
+                for (mk = 0; mk < mgtp; mk = mk + 1) for (mb2 = 0; mb2 < nb_e; mb2 = mb2 + 1) begin
+                    mn = nall(mla, mb2); if (mn > x_p * mla) mn = x_p * mla;
+                    me = mk * mwb + mn; if (me < mprev + 2) me = mprev + 2; mprev = me;
+                    for (ma2 = 0; ma2 < 2; ma2 = ma2 + 1) begin
+                        if (mi >= nbeats_b || be_cyc[mi] != t0 + CBD + me + ma2 || be_gr[mi] != 7'(mb2) ||
+                            be_ad[mi] != 7'(((mk % 64) * 2 + ma2) + x_xb)) begin
+                            if (bd_bad < 3) $display("ERR cmd %0d BD beat %0d (k %0d b %0d a %0d) at %0d grp %0d addr %0d, model edge %0d", c, mi, mk, mb2, ma2,
+                                                     (mi < nbeats_b) ? be_cyc[mi] - t0 : -1, be_gr[mi], be_ad[mi], CBD + me + ma2);
+                            bd_bad = bd_bad + 1; end
+                        mi = mi + 1;
+                    end
+                end
+                if (bd_bad) errors = errors + 1;
+                $display("cmd %0d BD streaming: %0d beats on the model edges (%0d off), last beat at command + %0d", c, mi, bd_bad, last_bc - t0);
+            end
             for (k = 0; k < 16384; k = k + 1) if (wa[k] || wb[k]) if (wa[k] !== wb[k] || ma[k] !== mb[k]) begin
                 if (errors < 5) $display("ERR cmd %0d P %0d K %0d write %0d differs (%b %b)", c, x_p, x_n, k, wa[k], wb[k]);
                 errors = errors + 1; end

@@ -25,13 +25,14 @@
   "physical/asap7_memory_macros_v2/ot_hbm3e_phy_v41x_aw30_e8p5/ot_hbm3e_phy_v41x_aw30_e8p5_bb.v": "2b3a1d2d452bef84ac4e732012f9df5a40cfc216bee2fabeb344fcbd65812631",
   "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_static.sv": "132f4636b012cd6a9d084ec00a9ed545190c0f30179917efe656658405b22999",
   "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_split.sv": "7530908d1cccb63586654d293cf5e073995ed2e31b70f8ae89173d0b371e7123",
+  "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_split_term.sv": "535499a9426194b4d29fd0df34134375d96e2ea6927e78d5f477a4f5b48682ed",
   "rtl/hbm_accel/generic/vm/static/ot_vms_status4_static.sv": "6ddcdcd4f3c56c56b27130cc0fa25a636fa1de1dc194c0732e537e77ad0d85a5",
   "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q_static.sv": "43c4a6baf9e40d9d67043dd044e0848ba6c59433ecdd02788084a3c270704607",
   "rtl/hbm_accel/generic/peers/ot_hgi_sfu_scheduled_engine.sv": "fd3c9a703e8de821595e38468f608b97337932aa34f2d8529189ced1102cd991",
   "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static.sv": "11389d87c141c8a0e3c4ba3c1e5f0c2cafd88dce2c48f16c2e4d2356c2ffbf5f",
-  "rtl/hbm_accel/generic/adapters/static_su/ot_hbm_su_static_vm_ports.sv": "f350efb7601bb9f2a96a6ded4a0c48e0a629188867b801d30c450fa569bfdeee",
-  "rtl/hbm_accel/index/ot_hbm_idx_client_static.sv": "039f3f6a2d325d95a744d0b68ad4b516dd4d6719c1dd89e7b1c548598122f0f0",
-  "rtl/hbm_accel/generic/ot_hbm_argmax_static.sv": "d71e27266e8044c1a7b0b4d3bc2dc3a06ed063ce0cb11f21658697d4995f1936",
+  "rtl/hbm_accel/generic/adapters/static_su/ot_hbm_su_static_vm_ports.sv": "00eb5cdc33808a02dbb7a1c9ea272ff6a266521117851ee8ab598581902200ff",
+  "rtl/hbm_accel/index/ot_hbm_idx_client_static_sw.sv": "bfd1189181c2d49065fbc9d1be4f01c5b1793a52766a74504578bc96c1d4cc54",
+  "rtl/hbm_accel/generic/ot_hbm_argmax_static_sw.sv": "3b0691384597890d7f154ba6cf4015c8d71a20528f0a30cddcfb1f497c89e6bb",
   "rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_host_static.sv": "73dc5bb8b3c72ff2e193602251d2cd719a5f691d5bd1faef5e5fd32e8de35bea"
  },
  "dependency_inventory_sha256": {
@@ -39,10 +40,14 @@
   "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_static.sv": "132f4636b012cd6a9d084ec00a9ed545190c0f30179917efe656658405b22999",
   "rtl/hbm_accel/generic/vm/static/hfd_hgi_vms_static.sv": "d42e083d5f7680cc6be3ae634cea0b1daf1834f6290eb5a2b6e74a97b569a03c",
   "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv": "31acf6679c2fcd95c2abd3897daae041710f7c7a5f318d9d2e1f8541c8b377a4",
+  "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank_term.sv": "a531865c61e55476aef9b13ccbff4d8389ae33f6a836edc95d1e33f5502f1245",
   "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_split.sv": "7530908d1cccb63586654d293cf5e073995ed2e31b70f8ae89173d0b371e7123",
+  "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_split_term.sv": "535499a9426194b4d29fd0df34134375d96e2ea6927e78d5f477a4f5b48682ed",
   "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_tap.sv": "cc7c0d00ead994fb66360a00da7acd4b70e8a2f9f6e2a3b8013a9672d1ab29de",
   "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv": "0c31136198128d00d69f24795e53c38764e790a5db4cad1ebd261ab0f2b67e3d",
   "rtl/hbm_accel/generic/vm/static/ot_vms_bank_static.sv": "7b2e2fbafead30cbabc427303bb339da070645637af9d1a69f0dbdaa0a88ee53",
+  "rtl/hbm_accel/generic/vm/static/ot_vms_bank_static_wdecode_ft.sv": "1c85d85f92a74549989495a63a2cdd2f18fbe8886ca150a6013f65c9415d0e56",
+  "rtl/hbm_accel/generic/vm/static/ot_vms_bank_static_wdecode_vs.sv": "fa11aa02a599737eddb963e8dc24534d65b5eabb81ecd44cdb43459e582899aa",
   "rtl/hbm_accel/generic/vm/static/ot_vms_calendar_host_static.sv": "d64f4d37cede73a6fed44e59c7cd83b6cee8c21d6ea22d4828905f96c92a05c6",
   "rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv": "2a3f380c413bef2676087338d00d18cf869562e9bb611fc93c13251f3fb3f197",
   "rtl/hbm_accel/generic/vm/static/ot_vms_hub_static.sv": "364b6a3601b5042344513810a4fb6de6f25259c2de7d386d630b62fc807b5cf9",
@@ -55,7 +60,7 @@
   "rtl/hbm_accel/generic/vm/static/tb_hbm_staging_vm_static.sv": "4975081f837606e6caf542f6e91dbe1b107e95db3fd2f7b75df18380235e6c52",
   "rtl/hbm_accel/generic/vm/static/tb_hbm_vm_allgroups_static.sv": "380cd3e4df1f21f0d7bffcd3f9f0ca36b34b6f6aa09ceba08768be3b3041b51f",
   "rtl/hbm_accel/generic/vm/static/tb_hbm_vm_lg_static_programmed.sv": "e26ae1c68e2ed51583cb83334cb9a9b2505f55ae1fc1e76a77ee70bb1dc6ab69",
-  "rtl/hbm_accel/generic/vm/static/tb_hbm_vm_lg_static_split.sv": "0f9c3ab1d6fc57f87931f1764b908327888712c924d6208de2a593f0f1ac345e",
+  "rtl/hbm_accel/generic/vm/static/tb_hbm_vm_lg_static_split.sv": "a8141e6187f947479d61ead03402d00b34ff2d690e7dbfb90b1f1d5e5f71dec0",
   "rtl/hbm_accel/generic/vm/static/tb_hbm_vm_lg_static_tap.sv": "bfe752230540a8c78a87a0e88e9154d858ef691019d2eb575b5a2e6df96f04fb",
   "rtl/hbm_accel/generic/vm/static/tb_vms_calendar_static.sv": "8797ed5a60353b3757136359bc4c62260dafad83515f5c8e29c9a7c024371867",
   "rtl/hbm_accel/generic/vm/static/tb_vms_hub_static.sv": "987e4a7b71283cbad704c0df8a2422e4099419101495883354c98edf1fa96515",
@@ -8387,8 +8392,8 @@
    }
   },
   "lg_SW_2": {
-   "master": "ot_hbm_vm_lg_static_split",
-   "source": "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_split.sv",
+   "master": "ot_hbm_vm_lg_static_split_term",
+   "source": "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_split_term.sv",
    "params": {
     "READ_RETURN": 18,
     "WRITE_RETURN": 15
@@ -8406,15 +8411,7 @@
      "direction": "input",
      "bits": 136
     },
-    "far_rq": {
-     "direction": "input",
-     "bits": 136
-    },
     "local_wq": {
-     "direction": "input",
-     "bits": 2248
-    },
-    "far_wq": {
      "direction": "input",
      "bits": 2248
     },
@@ -8446,15 +8443,7 @@
      "direction": "output",
      "bits": 2056
     },
-    "far_rr": {
-     "direction": "output",
-     "bits": 2056
-    },
     "local_w_done": {
-     "direction": "output",
-     "bits": 8
-    },
-    "far_w_done": {
      "direction": "output",
      "bits": 8
     },
@@ -8752,8 +8741,8 @@
    }
   },
   "lg_SE_2": {
-   "master": "ot_hbm_vm_lg_static_split",
-   "source": "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_split.sv",
+   "master": "ot_hbm_vm_lg_static_split_term",
+   "source": "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_split_term.sv",
    "params": {
     "READ_RETURN": 18,
     "WRITE_RETURN": 15
@@ -8771,15 +8760,7 @@
      "direction": "input",
      "bits": 136
     },
-    "far_rq": {
-     "direction": "input",
-     "bits": 136
-    },
     "local_wq": {
-     "direction": "input",
-     "bits": 2248
-    },
-    "far_wq": {
      "direction": "input",
      "bits": 2248
     },
@@ -8811,15 +8792,7 @@
      "direction": "output",
      "bits": 2056
     },
-    "far_rr": {
-     "direction": "output",
-     "bits": 2056
-    },
     "local_w_done": {
-     "direction": "output",
-     "bits": 8
-    },
-    "far_w_done": {
      "direction": "output",
      "bits": 8
     },
@@ -9117,8 +9090,8 @@
    }
   },
   "lg_NW_2": {
-   "master": "ot_hbm_vm_lg_static_split",
-   "source": "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_split.sv",
+   "master": "ot_hbm_vm_lg_static_split_term",
+   "source": "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_split_term.sv",
    "params": {
     "READ_RETURN": 18,
     "WRITE_RETURN": 15
@@ -9136,15 +9109,7 @@
      "direction": "input",
      "bits": 136
     },
-    "far_rq": {
-     "direction": "input",
-     "bits": 136
-    },
     "local_wq": {
-     "direction": "input",
-     "bits": 2248
-    },
-    "far_wq": {
      "direction": "input",
      "bits": 2248
     },
@@ -9176,15 +9141,7 @@
      "direction": "output",
      "bits": 2056
     },
-    "far_rr": {
-     "direction": "output",
-     "bits": 2056
-    },
     "local_w_done": {
-     "direction": "output",
-     "bits": 8
-    },
-    "far_w_done": {
      "direction": "output",
      "bits": 8
     },
@@ -9482,8 +9439,8 @@
    }
   },
   "lg_NE_2": {
-   "master": "ot_hbm_vm_lg_static_split",
-   "source": "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_split.sv",
+   "master": "ot_hbm_vm_lg_static_split_term",
+   "source": "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_split_term.sv",
    "params": {
     "READ_RETURN": 18,
     "WRITE_RETURN": 15
@@ -9501,15 +9458,7 @@
      "direction": "input",
      "bits": 136
     },
-    "far_rq": {
-     "direction": "input",
-     "bits": 136
-    },
     "local_wq": {
-     "direction": "input",
-     "bits": 2248
-    },
-    "far_wq": {
      "direction": "input",
      "bits": 2248
     },
@@ -9541,15 +9490,7 @@
      "direction": "output",
      "bits": 2056
     },
-    "far_rr": {
-     "direction": "output",
-     "bits": 2056
-    },
     "local_w_done": {
-     "direction": "output",
-     "bits": 8
-    },
-    "far_w_done": {
      "direction": "output",
      "bits": 8
     },
@@ -11731,8 +11672,8 @@
    }
   },
   "hb_idx": {
-   "master": "ot_hbm_idx_client_static",
-   "source": "rtl/hbm_accel/index/ot_hbm_idx_client_static.sv",
+   "master": "ot_hbm_idx_client_static_sw",
+   "source": "rtl/hbm_accel/index/ot_hbm_idx_client_static_sw.sv",
    "params": {},
    "ports": {
     "clk_program": {
@@ -11838,10 +11779,6 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
-    },
-    "sid": {
-     "direction": "input",
-     "bits": 2
     },
     "weight_sector": {
      "direction": "input",
@@ -12006,8 +11943,8 @@
    }
   },
   "hb_argmax": {
-   "master": "ot_hbm_argmax_static",
-   "source": "rtl/hbm_accel/generic/ot_hbm_argmax_static.sv",
+   "master": "ot_hbm_argmax_static_sw",
+   "source": "rtl/hbm_accel/generic/ot_hbm_argmax_static_sw.sv",
    "params": {},
    "ports": {
     "clk": {
@@ -12017,10 +11954,6 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
-    },
-    "sid": {
-     "direction": "input",
-     "bits": 2
     },
     "die_id": {
      "direction": "input",
@@ -53983,108 +53916,7 @@
    "bench_qualified": true
   }
  ],
- "logical_constant_requests": [
-  {
-   "sink": [
-    "lg_SW_2",
-    "far_rq"
-   ],
-   "bits": 136,
-   "value": 0,
-   "reason": "actual three-tap topology termination; no fourth producer",
-   "physical_tie_cells_qualified": false
-  },
-  {
-   "sink": [
-    "lg_SW_2",
-    "far_wq"
-   ],
-   "bits": 2248,
-   "value": 0,
-   "reason": "actual three-tap topology termination; no fourth producer",
-   "physical_tie_cells_qualified": false
-  },
-  {
-   "sink": [
-    "lg_SE_2",
-    "far_rq"
-   ],
-   "bits": 136,
-   "value": 0,
-   "reason": "actual three-tap topology termination; no fourth producer",
-   "physical_tie_cells_qualified": false
-  },
-  {
-   "sink": [
-    "lg_SE_2",
-    "far_wq"
-   ],
-   "bits": 2248,
-   "value": 0,
-   "reason": "actual three-tap topology termination; no fourth producer",
-   "physical_tie_cells_qualified": false
-  },
-  {
-   "sink": [
-    "lg_NW_2",
-    "far_rq"
-   ],
-   "bits": 136,
-   "value": 0,
-   "reason": "actual three-tap topology termination; no fourth producer",
-   "physical_tie_cells_qualified": false
-  },
-  {
-   "sink": [
-    "lg_NW_2",
-    "far_wq"
-   ],
-   "bits": 2248,
-   "value": 0,
-   "reason": "actual three-tap topology termination; no fourth producer",
-   "physical_tie_cells_qualified": false
-  },
-  {
-   "sink": [
-    "lg_NE_2",
-    "far_rq"
-   ],
-   "bits": 136,
-   "value": 0,
-   "reason": "actual three-tap topology termination; no fourth producer",
-   "physical_tie_cells_qualified": false
-  },
-  {
-   "sink": [
-    "lg_NE_2",
-    "far_wq"
-   ],
-   "bits": 2248,
-   "value": 0,
-   "reason": "actual three-tap topology termination; no fourth producer",
-   "physical_tie_cells_qualified": false
-  },
-  {
-   "sink": [
-    "hb_idx",
-    "sid"
-   ],
-   "bits": 2,
-   "value": 0,
-   "reason": "INDEX operand face reads the SW slice (sid order SW,SE,NW,NE)",
-   "physical_tie_cells_qualified": false
-  },
-  {
-   "sink": [
-    "hb_argmax",
-    "sid"
-   ],
-   "bits": 2,
-   "value": 0,
-   "reason": "ARGMAX reads/writes the SW slice (sid order SW,SE,NW,NE)",
-   "physical_tie_cells_qualified": false
-  }
- ],
+ "logical_constant_requests": [],
  "unbound_ports": [
   {
    "instance": "hb_vms_SW",
@@ -72696,39 +72528,7 @@
   },
   {
    "instance": "lg_SW_2",
-   "port": "far_rr",
-   "direction": "output",
-   "bits": 2056,
-   "required_owner": "actual VM programme SRAM calendar issuer",
-   "bound_bits": 0,
-   "unbound_bits": 2056,
-   "unbound_ranges_half_open": [
-    [
-     0,
-     2056
-    ]
-   ],
-   "status": "UNBOUND_FAIL"
-  },
-  {
-   "instance": "lg_SW_2",
    "port": "local_w_done",
-   "direction": "output",
-   "bits": 8,
-   "required_owner": "actual VM programme SRAM calendar issuer",
-   "bound_bits": 0,
-   "unbound_bits": 8,
-   "unbound_ranges_half_open": [
-    [
-     0,
-     8
-    ]
-   ],
-   "status": "UNBOUND_FAIL"
-  },
-  {
-   "instance": "lg_SW_2",
-   "port": "far_w_done",
    "direction": "output",
    "bits": 8,
    "required_owner": "actual VM programme SRAM calendar issuer",
@@ -73032,39 +72832,7 @@
   },
   {
    "instance": "lg_SE_2",
-   "port": "far_rr",
-   "direction": "output",
-   "bits": 2056,
-   "required_owner": "actual VM programme SRAM calendar issuer",
-   "bound_bits": 0,
-   "unbound_bits": 2056,
-   "unbound_ranges_half_open": [
-    [
-     0,
-     2056
-    ]
-   ],
-   "status": "UNBOUND_FAIL"
-  },
-  {
-   "instance": "lg_SE_2",
    "port": "local_w_done",
-   "direction": "output",
-   "bits": 8,
-   "required_owner": "actual VM programme SRAM calendar issuer",
-   "bound_bits": 0,
-   "unbound_bits": 8,
-   "unbound_ranges_half_open": [
-    [
-     0,
-     8
-    ]
-   ],
-   "status": "UNBOUND_FAIL"
-  },
-  {
-   "instance": "lg_SE_2",
-   "port": "far_w_done",
    "direction": "output",
    "bits": 8,
    "required_owner": "actual VM programme SRAM calendar issuer",
@@ -73368,39 +73136,7 @@
   },
   {
    "instance": "lg_NW_2",
-   "port": "far_rr",
-   "direction": "output",
-   "bits": 2056,
-   "required_owner": "actual VM programme SRAM calendar issuer",
-   "bound_bits": 0,
-   "unbound_bits": 2056,
-   "unbound_ranges_half_open": [
-    [
-     0,
-     2056
-    ]
-   ],
-   "status": "UNBOUND_FAIL"
-  },
-  {
-   "instance": "lg_NW_2",
    "port": "local_w_done",
-   "direction": "output",
-   "bits": 8,
-   "required_owner": "actual VM programme SRAM calendar issuer",
-   "bound_bits": 0,
-   "unbound_bits": 8,
-   "unbound_ranges_half_open": [
-    [
-     0,
-     8
-    ]
-   ],
-   "status": "UNBOUND_FAIL"
-  },
-  {
-   "instance": "lg_NW_2",
-   "port": "far_w_done",
    "direction": "output",
    "bits": 8,
    "required_owner": "actual VM programme SRAM calendar issuer",
@@ -73704,39 +73440,7 @@
   },
   {
    "instance": "lg_NE_2",
-   "port": "far_rr",
-   "direction": "output",
-   "bits": 2056,
-   "required_owner": "actual VM programme SRAM calendar issuer",
-   "bound_bits": 0,
-   "unbound_bits": 2056,
-   "unbound_ranges_half_open": [
-    [
-     0,
-     2056
-    ]
-   ],
-   "status": "UNBOUND_FAIL"
-  },
-  {
-   "instance": "lg_NE_2",
    "port": "local_w_done",
-   "direction": "output",
-   "bits": 8,
-   "required_owner": "actual VM programme SRAM calendar issuer",
-   "bound_bits": 0,
-   "unbound_bits": 8,
-   "unbound_ranges_half_open": [
-    [
-     0,
-     8
-    ]
-   ],
-   "status": "UNBOUND_FAIL"
-  },
-  {
-   "instance": "lg_NE_2",
-   "port": "far_w_done",
    "direction": "output",
    "bits": 8,
    "required_owner": "actual VM programme SRAM calendar issuer",
@@ -80780,7 +80484,7 @@
   "actual mapped PHY address/endian/PC striping proof required",
   "historical PC leaf rejected for address/clock semantics; actual block CDC replacement required"
  ],
- "unbound_count": 1668,
+ "unbound_count": 1660,
  "pin_only_placeholder_count": 0,
  "legacy_failures_disposition": "77 legacy station failures remain historical; v15 validates actual source ports independently",
  "qualification": {

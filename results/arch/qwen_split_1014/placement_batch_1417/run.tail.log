@@ -1,0 +1,8 @@
+OT_MTS_PLACE u997 qkd_rly_t1 R0 requested (1870.000, 1220.000) placed (1870.020, 1220.400)
+OT_MTS_PLACE u998 qkd_rly_t1 R0 requested (1920.000, 1220.000) placed (1920.024, 1220.400)
+OT_MTS_PLACE u999 qkd_rly_t1 R0 requested (1970.000, 1220.000) placed (1969.974, 1220.400)
+OT_MACRO_TRACK_ASSERT PASS label=cached_same_geometry macros=1000 pins_checked=3000 offtrack=0 max_offset_nm=0.0 no_track_grid=0
+OT_MTS_PLACE u0 qkd_rly_t1 R0 requested (20.000, 20.000) placed (19.980, 19.440)
+OT_MTS_PLACE u0 qkd_rly_t1 R0 requested (20.000, 20.000) placed (19.980, 19.440)
+OT_MTS_PLACE u0 qkd_rly_t1 R0 requested (20.000, 20.000) placed (19.980, 19.440)
+OT_BULK_PLACEMENT_PASS count=1000 exact=1 slow_ms=12585 fast_ms=236

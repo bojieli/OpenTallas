@@ -650,6 +650,17 @@ def place(v, m, G):
         if os.environ.get('OT_SPLIT_STATIC_LINK', '1') != '0':
             from qwen_split.static_link_bind import apply as static_link_apply
             rec['static_link_bind'] = static_link_apply(m)
+        # Q-ATTN r3 (2026-10-15): band result serializer = static train24 banks (legacy res_ser rq bit order was wrong)
+        if os.environ.get('OT_SPLIT_RES_TRAIN', '1') != '0':
+            from qwen_split.res_train_bind import apply as res_train_apply
+            rec['res_train_bind'] = res_train_apply(m)
+    # Freeze pre-pin source identity: later master installation adds derived pin receipts.
+    from qwen_split.gfp_homes import source_fingerprint
+    m['gfp_source_fingerprint'] = source_fingerprint(m)
+    # Source-pinned complete block placement; subsequent pins, relays, clocks and cuts use these homes.
+    if os.environ.get('OT_SPLIT_HOMES'):
+        from qwen_split.gfp_homes import apply as gfp_homes_apply
+        rec['gfp_homes'] = gfp_homes_apply(m, os.environ['OT_SPLIT_HOMES'])
     if os.environ.get('OT_SPLIT_DUMP'):
         ins = [dict(n=i.name, m=i.master, x=i.x, y=i.y, w=i.w, h=i.h, o=i.orient) for i in m['insts']]
         bus = [dict(b=b_, c=c_, n=n_, e=[list(x) for x in e_]) for b_, c_, n_, e_ in m.get('buses', [])]

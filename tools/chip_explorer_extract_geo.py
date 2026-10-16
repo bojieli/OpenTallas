@@ -60,7 +60,7 @@ def qkind(ms):
     return 'other'
 items=[]
 for ln in open('/tmp/qdie17/r17b_pdn/place.tcl'):
-    mm=re.match(r'ot_mts::place \[\$_blk findInst (\S+)\] ([\d.]+) ([\d.]+) (\S+)',ln)
+    mm=re.search(r'findInst (\S+)\]\s+([\d.]+)\s+([\d.]+)\s+(\w+)',ln)
     if not mm: continue
     n=mm.group(1); ms=mast[n]; w,h=lef[ms]
     if mm.group(4) in ('R90','R270','MXR90','MYR90'): w,h=h,w
