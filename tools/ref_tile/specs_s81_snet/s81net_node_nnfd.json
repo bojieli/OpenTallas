@@ -14,7 +14,7 @@
   "rst_n"
  ],
  "outline": {
-  "w": 86.4,
+  "w": 43.2,
   "h": 77.76,
   "exact": true
  },
@@ -34,7 +34,7 @@
    "o"
   ]
  },
- "io_tcl": "physical/s81_die_pins/snet_gen19b/dsfd_node_NNfd.tcl",
+ "io_tcl": "physical/s81_die_pins/snet_node43/dsfd_node_NNfd.tcl",
  "recipe": 2,
  "route": {
   "pd": 0.5,
@@ -44,20 +44,21 @@
   "pin_v": "M3 M5",
   "m5_pg_pitch": 2.7
  },
- "structural_change": "S-NET static return node dsfd_node_NNfd (1024 die instances): the ot_v41_retn_w17w10 wrapper (D=64 x 2 queues, WAIT-timeout forwarding, older-side-first / yield-to-add arbitration) is replaced by ot_s81_retn_static (owner static-schedule rule 10-14 18:59): sibling window WIN=2, every output at edge early+WIN+8, no queue/timeout/priority/ready; compiler model tools/s81/static_return_calendar.py; same die ports and leaf packing; RTL = the case glue module rendered by the generator (module sha256 eb7133700c0b82e9, glue db43fe8fec3ba6e8); pins at the generator centres (gen19b). | n5 (2026-10-15 17:40): n2 routes TT -798/-801/-2034 ps (port -> norm -> sibling match -> parent norm -> adder stage 1, depth 1,615 ps) -> ot_s81_retn_static r2: P1 port register, P2 normalised-tag register, P3 issue register, parent norm moved to the side-band output; uniform +3 edges (exit = early + WIN + 10 + RST, static_return_calendar.py PIPE_C = 10)",
+ "structural_change": "S-NET static return node dsfd_node_NNfd (1024 die instances): the ot_v41_retn_w17w10 wrapper (D=64 x 2 queues, WAIT-timeout forwarding, older-side-first / yield-to-add arbitration) is replaced by ot_s81_retn_static (owner static-schedule rule 10-14 18:59): sibling window WIN=2, every output at edge early+WIN+8, no queue/timeout/priority/ready; compiler model tools/s81/static_return_calendar.py; same die ports and leaf packing; RTL = the case glue module rendered by the generator (module sha256 eb7133700c0b82e9, glue db43fe8fec3ba6e8); pins at the generator centres (gen19b). | n5 (2026-10-15 17:40): n2 routes TT -798/-801/-2034 ps (port -> norm -> sibling match -> parent norm -> adder stage 1, depth 1,615 ps) -> ot_s81_retn_static r2: P1 port register, P2 normalised-tag register, P3 issue register, parent norm moved to the side-band output; uniform +3 edges (exit = early + WIN + 10 + RST, static_return_calendar.py PIPE_C = 10) | n6 (S-NET+FILL 2026-10-15 22:40): native audit of the CLOSED n5 views fails ONLY rst_n capture (LLd 267.7 / LLfd 207.3 / LLfu 246.4 / NNfd 242.7 / NNfu 191.9 ps > 190: the port fans out to every async-reset flop) -> rst_n drives ONE reset pin register rn (async assert, release +1 edge, initialization mode only, no data edge); every node flop resets from rn (generator --node-rstreg). Node-strip re-cut (tile fill audit 354b5bb2e, node content 1,517 um2 std vs 6,718 um2 slot = 22.5 % fill): outline 86.4 -> 43.2 x 77.76 (util ~0.53 core), pins physical/s81_die_pins/snet_node43 (W face unchanged, N/S x - 21.6, clk/rst_n E-face centre); 4,706 die instances -> -15.8 mm2 node area, -19.7 mm2/die with the 51.84-um strip",
  "reroute_reason": {
-  "kind": "rtl_change"
+  "kind": "rtl_change",
+  "why": "reset pin register rn (native rst_n capture fail of the CLOSED n5 view) + node-strip re-cut 86.4 -> 43.2 um"
  },
  "job": {
-  "owner": "Claude:s81-net",
-  "branch": "claude/el1015-s81-net-static",
-  "tag": "n5",
-  "purpose": "S81 S-NET static-schedule redesign: dsfd_node_NNfd (1024 replicas, hardened once): exact bench + observed failing mutants; recipe 2, M5 cap, generator pins",
+  "owner": "Claude:s81-net-fill",
+  "branch": "claude/el1015-snetfill-2215",
+  "tag": "n6",
+  "purpose": "S81 S-NET static-schedule redesign: dsfd_node_NNfd (1024 replicas, hardened once): exact bench + observed failing mutants; recipe 2, M5 cap, n6 reset pin register + 43.2-um node strip",
   "views_to": "physical/ref_tile/s81net_node_nnfd/views",
   "record_to": "results/rtl/ref_tile/s81net_node_nnfd",
   "extra_paths": [
    "rtl/dsrom_sys/s81_static_net/gen",
-   "physical/s81_die_pins/snet_gen19b",
+   "physical/s81_die_pins/snet_node43",
    "rtl/v41rom",
    "rtl/proto",
    "rtl/hdc",
@@ -89,7 +90,19 @@
     "fail_regex": "GATE MUTANT .*REJECTED",
     "threads": 2,
     "peak_ram_gb": 4
+   },
+   {
+    "name": "node_reset_mutant",
+    "cmd": "bash tools/s81_static_net/bench_node_master.sh mut_rst dsfd_node_NNfd rtl/dsrom_sys/s81_static_net/gen/dsfd_node_NNfd.sv {RUN}/node_mr",
+    "expect": "fail",
+    "fail_regex": "GATE MUTANT .*REJECTED",
+    "threads": 2,
+    "peak_ram_gb": 4
    }
   ]
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "OWNER RULE 19:50 opt-out: the RTL registers its own boundary -- every input at the P1 port register (ot_s81_retn_static r2) and every output at the RST output stage / fr flop, rst_n at the n6 reset pin register; a flow pin register would add a second stage the static return calendar (PIPE_C) does not price"
  }
 }

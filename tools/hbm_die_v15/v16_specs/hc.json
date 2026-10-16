@@ -1,0 +1,3405 @@
+{
+ "region": "hc",
+ "author": "Claude H-NETLIST sub-agent hc (2026-10-15)",
+ "basis_commit": "c458a8176",
+ "instances": [
+  {
+   "name": "hc_tgt_SW",
+   "master": "ot_static_program_target",
+   "source": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv",
+   "params": {
+    "TARGET": "8'd108",
+    "PCW": 10
+   },
+   "slot": null,
+   "owner": "HC owner (H-NETLIST hc)",
+   "note": "F20 programme target 108 of the static HC quadrant client hc_SW (HC target range 108..111 = SW,SE,NW,NE); host_cp_ingress TARGET_MASK must admit 108"
+  },
+  {
+   "name": "hc_SW",
+   "master": "ot_hbm_hc_q_static",
+   "source": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv",
+   "params": {
+    "MUT": 0
+   },
+   "slot": null,
+   "owner": "HC owner (H-NETLIST hc)",
+   "note": "static HC quadrant LG client: residual reader + gathered-mix reader + result store (codex/hc-static-engine-1014 leaves) issued by a programme SRAM; pin-registered; fixed latency residual capture issue+23, gather phase 23, write-done +19 (bench tb_hbm_hc_q_static PASS + 4 mutants). No die slot yet: plan puts the HC core at port group 0 (compact660_v5 links hc_<q>k>hc_<q>0 HC_CORE)."
+  },
+  {
+   "name": "hc_SW0",
+   "master": "ot_hgi_sfu_lg_pair_leaf",
+   "source": "rtl/hbm_accel/generic/peers/ot_hgi_sfu_lg_pair_leaf.sv",
+   "params": {},
+   "slot": "hc_SW0",
+   "owner": "HC owner (H-NETLIST hc)",
+   "note": "HC bank-pair LG boundary leaf for banks 0,1 of lg_SW_2 (generic one-edge register pair leaf reused from SFU; engine_lg_port_group_rule)"
+  },
+  {
+   "name": "hc_SW1",
+   "master": "ot_hgi_sfu_lg_pair_leaf",
+   "source": "rtl/hbm_accel/generic/peers/ot_hgi_sfu_lg_pair_leaf.sv",
+   "params": {},
+   "slot": "hc_SW1",
+   "owner": "HC owner (H-NETLIST hc)",
+   "note": "HC bank-pair LG boundary leaf for banks 2,3 of lg_SW_2 (generic one-edge register pair leaf reused from SFU; engine_lg_port_group_rule)"
+  },
+  {
+   "name": "hc_SW2",
+   "master": "ot_hgi_sfu_lg_pair_leaf",
+   "source": "rtl/hbm_accel/generic/peers/ot_hgi_sfu_lg_pair_leaf.sv",
+   "params": {},
+   "slot": "hc_SW2",
+   "owner": "HC owner (H-NETLIST hc)",
+   "note": "HC bank-pair LG boundary leaf for banks 4,5 of lg_SW_2 (generic one-edge register pair leaf reused from SFU; engine_lg_port_group_rule)"
+  },
+  {
+   "name": "hc_SW3",
+   "master": "ot_hgi_sfu_lg_pair_leaf",
+   "source": "rtl/hbm_accel/generic/peers/ot_hgi_sfu_lg_pair_leaf.sv",
+   "params": {},
+   "slot": "hc_SW3",
+   "owner": "HC owner (H-NETLIST hc)",
+   "note": "HC bank-pair LG boundary leaf for banks 6,7 of lg_SW_2 (generic one-edge register pair leaf reused from SFU; engine_lg_port_group_rule)"
+  },
+  {
+   "name": "hc_tgt_SE",
+   "master": "ot_static_program_target",
+   "source": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv",
+   "params": {
+    "TARGET": "8'd109",
+    "PCW": 10
+   },
+   "slot": null,
+   "owner": "HC owner (H-NETLIST hc)",
+   "note": "F20 programme target 109 of the static HC quadrant client hc_SE (HC target range 108..111 = SW,SE,NW,NE); host_cp_ingress TARGET_MASK must admit 109"
+  },
+  {
+   "name": "hc_SE",
+   "master": "ot_hbm_hc_q_static",
+   "source": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv",
+   "params": {
+    "MUT": 0
+   },
+   "slot": null,
+   "owner": "HC owner (H-NETLIST hc)",
+   "note": "static HC quadrant LG client: residual reader + gathered-mix reader + result store (codex/hc-static-engine-1014 leaves) issued by a programme SRAM; pin-registered; fixed latency residual capture issue+23, gather phase 23, write-done +19 (bench tb_hbm_hc_q_static PASS + 4 mutants). No die slot yet: plan puts the HC core at port group 0 (compact660_v5 links hc_<q>k>hc_<q>0 HC_CORE)."
+  },
+  {
+   "name": "hc_SE0",
+   "master": "ot_hgi_sfu_lg_pair_leaf",
+   "source": "rtl/hbm_accel/generic/peers/ot_hgi_sfu_lg_pair_leaf.sv",
+   "params": {},
+   "slot": "hc_SE0",
+   "owner": "HC owner (H-NETLIST hc)",
+   "note": "HC bank-pair LG boundary leaf for banks 0,1 of lg_SE_2 (generic one-edge register pair leaf reused from SFU; engine_lg_port_group_rule)"
+  },
+  {
+   "name": "hc_SE1",
+   "master": "ot_hgi_sfu_lg_pair_leaf",
+   "source": "rtl/hbm_accel/generic/peers/ot_hgi_sfu_lg_pair_leaf.sv",
+   "params": {},
+   "slot": "hc_SE1",
+   "owner": "HC owner (H-NETLIST hc)",
+   "note": "HC bank-pair LG boundary leaf for banks 2,3 of lg_SE_2 (generic one-edge register pair leaf reused from SFU; engine_lg_port_group_rule)"
+  },
+  {
+   "name": "hc_SE2",
+   "master": "ot_hgi_sfu_lg_pair_leaf",
+   "source": "rtl/hbm_accel/generic/peers/ot_hgi_sfu_lg_pair_leaf.sv",
+   "params": {},
+   "slot": "hc_SE2",
+   "owner": "HC owner (H-NETLIST hc)",
+   "note": "HC bank-pair LG boundary leaf for banks 4,5 of lg_SE_2 (generic one-edge register pair leaf reused from SFU; engine_lg_port_group_rule)"
+  },
+  {
+   "name": "hc_SE3",
+   "master": "ot_hgi_sfu_lg_pair_leaf",
+   "source": "rtl/hbm_accel/generic/peers/ot_hgi_sfu_lg_pair_leaf.sv",
+   "params": {},
+   "slot": "hc_SE3",
+   "owner": "HC owner (H-NETLIST hc)",
+   "note": "HC bank-pair LG boundary leaf for banks 6,7 of lg_SE_2 (generic one-edge register pair leaf reused from SFU; engine_lg_port_group_rule)"
+  },
+  {
+   "name": "hc_tgt_NW",
+   "master": "ot_static_program_target",
+   "source": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv",
+   "params": {
+    "TARGET": "8'd110",
+    "PCW": 10
+   },
+   "slot": null,
+   "owner": "HC owner (H-NETLIST hc)",
+   "note": "F20 programme target 110 of the static HC quadrant client hc_NW (HC target range 108..111 = SW,SE,NW,NE); host_cp_ingress TARGET_MASK must admit 110"
+  },
+  {
+   "name": "hc_NW",
+   "master": "ot_hbm_hc_q_static",
+   "source": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv",
+   "params": {
+    "MUT": 0
+   },
+   "slot": null,
+   "owner": "HC owner (H-NETLIST hc)",
+   "note": "static HC quadrant LG client: residual reader + gathered-mix reader + result store (codex/hc-static-engine-1014 leaves) issued by a programme SRAM; pin-registered; fixed latency residual capture issue+23, gather phase 23, write-done +19 (bench tb_hbm_hc_q_static PASS + 4 mutants). No die slot yet: plan puts the HC core at port group 0 (compact660_v5 links hc_<q>k>hc_<q>0 HC_CORE)."
+  },
+  {
+   "name": "hc_NW0",
+   "master": "ot_hgi_sfu_lg_pair_leaf",
+   "source": "rtl/hbm_accel/generic/peers/ot_hgi_sfu_lg_pair_leaf.sv",
+   "params": {},
+   "slot": "hc_NW0",
+   "owner": "HC owner (H-NETLIST hc)",
+   "note": "HC bank-pair LG boundary leaf for banks 0,1 of lg_NW_2 (generic one-edge register pair leaf reused from SFU; engine_lg_port_group_rule)"
+  },
+  {
+   "name": "hc_NW1",
+   "master": "ot_hgi_sfu_lg_pair_leaf",
+   "source": "rtl/hbm_accel/generic/peers/ot_hgi_sfu_lg_pair_leaf.sv",
+   "params": {},
+   "slot": "hc_NW1",
+   "owner": "HC owner (H-NETLIST hc)",
+   "note": "HC bank-pair LG boundary leaf for banks 2,3 of lg_NW_2 (generic one-edge register pair leaf reused from SFU; engine_lg_port_group_rule)"
+  },
+  {
+   "name": "hc_NW2",
+   "master": "ot_hgi_sfu_lg_pair_leaf",
+   "source": "rtl/hbm_accel/generic/peers/ot_hgi_sfu_lg_pair_leaf.sv",
+   "params": {},
+   "slot": "hc_NW2",
+   "owner": "HC owner (H-NETLIST hc)",
+   "note": "HC bank-pair LG boundary leaf for banks 4,5 of lg_NW_2 (generic one-edge register pair leaf reused from SFU; engine_lg_port_group_rule)"
+  },
+  {
+   "name": "hc_NW3",
+   "master": "ot_hgi_sfu_lg_pair_leaf",
+   "source": "rtl/hbm_accel/generic/peers/ot_hgi_sfu_lg_pair_leaf.sv",
+   "params": {},
+   "slot": "hc_NW3",
+   "owner": "HC owner (H-NETLIST hc)",
+   "note": "HC bank-pair LG boundary leaf for banks 6,7 of lg_NW_2 (generic one-edge register pair leaf reused from SFU; engine_lg_port_group_rule)"
+  },
+  {
+   "name": "hc_tgt_NE",
+   "master": "ot_static_program_target",
+   "source": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv",
+   "params": {
+    "TARGET": "8'd111",
+    "PCW": 10
+   },
+   "slot": null,
+   "owner": "HC owner (H-NETLIST hc)",
+   "note": "F20 programme target 111 of the static HC quadrant client hc_NE (HC target range 108..111 = SW,SE,NW,NE); host_cp_ingress TARGET_MASK must admit 111"
+  },
+  {
+   "name": "hc_NE",
+   "master": "ot_hbm_hc_q_static",
+   "source": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv",
+   "params": {
+    "MUT": 0
+   },
+   "slot": null,
+   "owner": "HC owner (H-NETLIST hc)",
+   "note": "static HC quadrant LG client: residual reader + gathered-mix reader + result store (codex/hc-static-engine-1014 leaves) issued by a programme SRAM; pin-registered; fixed latency residual capture issue+23, gather phase 23, write-done +19 (bench tb_hbm_hc_q_static PASS + 4 mutants). No die slot yet: plan puts the HC core at port group 0 (compact660_v5 links hc_<q>k>hc_<q>0 HC_CORE)."
+  },
+  {
+   "name": "hc_NE0",
+   "master": "ot_hgi_sfu_lg_pair_leaf",
+   "source": "rtl/hbm_accel/generic/peers/ot_hgi_sfu_lg_pair_leaf.sv",
+   "params": {},
+   "slot": "hc_NE0",
+   "owner": "HC owner (H-NETLIST hc)",
+   "note": "HC bank-pair LG boundary leaf for banks 0,1 of lg_NE_2 (generic one-edge register pair leaf reused from SFU; engine_lg_port_group_rule)"
+  },
+  {
+   "name": "hc_NE1",
+   "master": "ot_hgi_sfu_lg_pair_leaf",
+   "source": "rtl/hbm_accel/generic/peers/ot_hgi_sfu_lg_pair_leaf.sv",
+   "params": {},
+   "slot": "hc_NE1",
+   "owner": "HC owner (H-NETLIST hc)",
+   "note": "HC bank-pair LG boundary leaf for banks 2,3 of lg_NE_2 (generic one-edge register pair leaf reused from SFU; engine_lg_port_group_rule)"
+  },
+  {
+   "name": "hc_NE2",
+   "master": "ot_hgi_sfu_lg_pair_leaf",
+   "source": "rtl/hbm_accel/generic/peers/ot_hgi_sfu_lg_pair_leaf.sv",
+   "params": {},
+   "slot": "hc_NE2",
+   "owner": "HC owner (H-NETLIST hc)",
+   "note": "HC bank-pair LG boundary leaf for banks 4,5 of lg_NE_2 (generic one-edge register pair leaf reused from SFU; engine_lg_port_group_rule)"
+  },
+  {
+   "name": "hc_NE3",
+   "master": "ot_hgi_sfu_lg_pair_leaf",
+   "source": "rtl/hbm_accel/generic/peers/ot_hgi_sfu_lg_pair_leaf.sv",
+   "params": {},
+   "slot": "hc_NE3",
+   "owner": "HC owner (H-NETLIST hc)",
+   "note": "HC bank-pair LG boundary leaf for banks 6,7 of lg_NE_2 (generic one-edge register pair leaf reused from SFU; engine_lg_port_group_rule)"
+  }
+ ],
+ "retire_v15": [],
+ "edges": [
+  {
+   "src": [
+    "hc_SW",
+    "lg_rq",
+    0,
+    34
+   ],
+   "dst": [
+    "hc_SW0",
+    "c_rq"
+   ],
+   "bits": 34,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv header (pair k <-> banks 2k,2k+1: rq[34k+:34] wq[562k+:562] rr[514k+:514] w_done[2k+:2]); ot_hgi_sfu_lg_pair_leaf.sv; tap ot_hbm_vm_lg_static_split_term #(18,15); bench rtl/test/tb_hbm_hc_q_static.sv"
+  },
+  {
+   "src": [
+    "hc_SW",
+    "lg_wq",
+    0,
+    562
+   ],
+   "dst": [
+    "hc_SW0",
+    "c_wq"
+   ],
+   "bits": 562,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv header (pair k <-> banks 2k,2k+1: rq[34k+:34] wq[562k+:562] rr[514k+:514] w_done[2k+:2]); ot_hgi_sfu_lg_pair_leaf.sv; tap ot_hbm_vm_lg_static_split_term #(18,15); bench rtl/test/tb_hbm_hc_q_static.sv"
+  },
+  {
+   "src": [
+    "hc_SW0",
+    "c_rr"
+   ],
+   "dst": [
+    "hc_SW",
+    "lg_rr",
+    0,
+    514
+   ],
+   "bits": 514,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv header (pair k <-> banks 2k,2k+1: rq[34k+:34] wq[562k+:562] rr[514k+:514] w_done[2k+:2]); ot_hgi_sfu_lg_pair_leaf.sv; tap ot_hbm_vm_lg_static_split_term #(18,15); bench rtl/test/tb_hbm_hc_q_static.sv"
+  },
+  {
+   "src": [
+    "hc_SW0",
+    "c_w_done"
+   ],
+   "dst": [
+    "hc_SW",
+    "lg_w_done",
+    0,
+    2
+   ],
+   "bits": 2,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv header (pair k <-> banks 2k,2k+1: rq[34k+:34] wq[562k+:562] rr[514k+:514] w_done[2k+:2]); ot_hgi_sfu_lg_pair_leaf.sv; tap ot_hbm_vm_lg_static_split_term #(18,15); bench rtl/test/tb_hbm_hc_q_static.sv"
+  },
+  {
+   "src": [
+    "hc_SW0",
+    "lg_rq"
+   ],
+   "dst": [
+    "lg_SW_2",
+    "local_rq",
+    0,
+    34
+   ],
+   "bits": 34,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv header (pair k <-> banks 2k,2k+1: rq[34k+:34] wq[562k+:562] rr[514k+:514] w_done[2k+:2]); ot_hgi_sfu_lg_pair_leaf.sv; tap ot_hbm_vm_lg_static_split_term #(18,15); bench rtl/test/tb_hbm_hc_q_static.sv"
+  },
+  {
+   "src": [
+    "hc_SW0",
+    "lg_wq"
+   ],
+   "dst": [
+    "lg_SW_2",
+    "local_wq",
+    0,
+    562
+   ],
+   "bits": 562,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv header (pair k <-> banks 2k,2k+1: rq[34k+:34] wq[562k+:562] rr[514k+:514] w_done[2k+:2]); ot_hgi_sfu_lg_pair_leaf.sv; tap ot_hbm_vm_lg_static_split_term #(18,15); bench rtl/test/tb_hbm_hc_q_static.sv"
+  },
+  {
+   "src": [
+    "lg_SW_2",
+    "local_rr",
+    0,
+    514
+   ],
+   "dst": [
+    "hc_SW0",
+    "lg_rr"
+   ],
+   "bits": 514,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv header (pair k <-> banks 2k,2k+1: rq[34k+:34] wq[562k+:562] rr[514k+:514] w_done[2k+:2]); ot_hgi_sfu_lg_pair_leaf.sv; tap ot_hbm_vm_lg_static_split_term #(18,15); bench rtl/test/tb_hbm_hc_q_static.sv"
+  },
+  {
+   "src": [
+    "lg_SW_2",
+    "local_w_done",
+    0,
+    2
+   ],
+   "dst": [
+    "hc_SW0",
+    "lg_w_done"
+   ],
+   "bits": 2,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv header (pair k <-> banks 2k,2k+1: rq[34k+:34] wq[562k+:562] rr[514k+:514] w_done[2k+:2]); ot_hgi_sfu_lg_pair_leaf.sv; tap ot_hbm_vm_lg_static_split_term #(18,15); bench rtl/test/tb_hbm_hc_q_static.sv"
+  },
+  {
+   "src": [
+    "hc_SW",
+    "lg_rq",
+    34,
+    68
+   ],
+   "dst": [
+    "hc_SW1",
+    "c_rq"
+   ],
+   "bits": 34,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv header (pair k <-> banks 2k,2k+1: rq[34k+:34] wq[562k+:562] rr[514k+:514] w_done[2k+:2]); ot_hgi_sfu_lg_pair_leaf.sv; tap ot_hbm_vm_lg_static_split_term #(18,15); bench rtl/test/tb_hbm_hc_q_static.sv"
+  },
+  {
+   "src": [
+    "hc_SW",
+    "lg_wq",
+    562,
+    1124
+   ],
+   "dst": [
+    "hc_SW1",
+    "c_wq"
+   ],
+   "bits": 562,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv header (pair k <-> banks 2k,2k+1: rq[34k+:34] wq[562k+:562] rr[514k+:514] w_done[2k+:2]); ot_hgi_sfu_lg_pair_leaf.sv; tap ot_hbm_vm_lg_static_split_term #(18,15); bench rtl/test/tb_hbm_hc_q_static.sv"
+  },
+  {
+   "src": [
+    "hc_SW1",
+    "c_rr"
+   ],
+   "dst": [
+    "hc_SW",
+    "lg_rr",
+    514,
+    1028
+   ],
+   "bits": 514,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv header (pair k <-> banks 2k,2k+1: rq[34k+:34] wq[562k+:562] rr[514k+:514] w_done[2k+:2]); ot_hgi_sfu_lg_pair_leaf.sv; tap ot_hbm_vm_lg_static_split_term #(18,15); bench rtl/test/tb_hbm_hc_q_static.sv"
+  },
+  {
+   "src": [
+    "hc_SW1",
+    "c_w_done"
+   ],
+   "dst": [
+    "hc_SW",
+    "lg_w_done",
+    2,
+    4
+   ],
+   "bits": 2,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv header (pair k <-> banks 2k,2k+1: rq[34k+:34] wq[562k+:562] rr[514k+:514] w_done[2k+:2]); ot_hgi_sfu_lg_pair_leaf.sv; tap ot_hbm_vm_lg_static_split_term #(18,15); bench rtl/test/tb_hbm_hc_q_static.sv"
+  },
+  {
+   "src": [
+    "hc_SW1",
+    "lg_rq"
+   ],
+   "dst": [
+    "lg_SW_2",
+    "local_rq",
+    34,
+    68
+   ],
+   "bits": 34,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv header (pair k <-> banks 2k,2k+1: rq[34k+:34] wq[562k+:562] rr[514k+:514] w_done[2k+:2]); ot_hgi_sfu_lg_pair_leaf.sv; tap ot_hbm_vm_lg_static_split_term #(18,15); bench rtl/test/tb_hbm_hc_q_static.sv"
+  },
+  {
+   "src": [
+    "hc_SW1",
+    "lg_wq"
+   ],
+   "dst": [
+    "lg_SW_2",
+    "local_wq",
+    562,
+    1124
+   ],
+   "bits": 562,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv header (pair k <-> banks 2k,2k+1: rq[34k+:34] wq[562k+:562] rr[514k+:514] w_done[2k+:2]); ot_hgi_sfu_lg_pair_leaf.sv; tap ot_hbm_vm_lg_static_split_term #(18,15); bench rtl/test/tb_hbm_hc_q_static.sv"
+  },
+  {
+   "src": [
+    "lg_SW_2",
+    "local_rr",
+    514,
+    1028
+   ],
+   "dst": [
+    "hc_SW1",
+    "lg_rr"
+   ],
+   "bits": 514,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv header (pair k <-> banks 2k,2k+1: rq[34k+:34] wq[562k+:562] rr[514k+:514] w_done[2k+:2]); ot_hgi_sfu_lg_pair_leaf.sv; tap ot_hbm_vm_lg_static_split_term #(18,15); bench rtl/test/tb_hbm_hc_q_static.sv"
+  },
+  {
+   "src": [
+    "lg_SW_2",
+    "local_w_done",
+    2,
+    4
+   ],
+   "dst": [
+    "hc_SW1",
+    "lg_w_done"
+   ],
+   "bits": 2,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv header (pair k <-> banks 2k,2k+1: rq[34k+:34] wq[562k+:562] rr[514k+:514] w_done[2k+:2]); ot_hgi_sfu_lg_pair_leaf.sv; tap ot_hbm_vm_lg_static_split_term #(18,15); bench rtl/test/tb_hbm_hc_q_static.sv"
+  },
+  {
+   "src": [
+    "hc_SW",
+    "lg_rq",
+    68,
+    102
+   ],
+   "dst": [
+    "hc_SW2",
+    "c_rq"
+   ],
+   "bits": 34,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv header (pair k <-> banks 2k,2k+1: rq[34k+:34] wq[562k+:562] rr[514k+:514] w_done[2k+:2]); ot_hgi_sfu_lg_pair_leaf.sv; tap ot_hbm_vm_lg_static_split_term #(18,15); bench rtl/test/tb_hbm_hc_q_static.sv"
+  },
+  {
+   "src": [
+    "hc_SW",
+    "lg_wq",
+    1124,
+    1686
+   ],
+   "dst": [
+    "hc_SW2",
+    "c_wq"
+   ],
+   "bits": 562,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv header (pair k <-> banks 2k,2k+1: rq[34k+:34] wq[562k+:562] rr[514k+:514] w_done[2k+:2]); ot_hgi_sfu_lg_pair_leaf.sv; tap ot_hbm_vm_lg_static_split_term #(18,15); bench rtl/test/tb_hbm_hc_q_static.sv"
+  },
+  {
+   "src": [
+    "hc_SW2",
+    "c_rr"
+   ],
+   "dst": [
+    "hc_SW",
+    "lg_rr",
+    1028,
+    1542
+   ],
+   "bits": 514,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv header (pair k <-> banks 2k,2k+1: rq[34k+:34] wq[562k+:562] rr[514k+:514] w_done[2k+:2]); ot_hgi_sfu_lg_pair_leaf.sv; tap ot_hbm_vm_lg_static_split_term #(18,15); bench rtl/test/tb_hbm_hc_q_static.sv"
+  },
+  {
+   "src": [
+    "hc_SW2",
+    "c_w_done"
+   ],
+   "dst": [
+    "hc_SW",
+    "lg_w_done",
+    4,
+    6
+   ],
+   "bits": 2,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv header (pair k <-> banks 2k,2k+1: rq[34k+:34] wq[562k+:562] rr[514k+:514] w_done[2k+:2]); ot_hgi_sfu_lg_pair_leaf.sv; tap ot_hbm_vm_lg_static_split_term #(18,15); bench rtl/test/tb_hbm_hc_q_static.sv"
+  },
+  {
+   "src": [
+    "hc_SW2",
+    "lg_rq"
+   ],
+   "dst": [
+    "lg_SW_2",
+    "local_rq",
+    68,
+    102
+   ],
+   "bits": 34,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv header (pair k <-> banks 2k,2k+1: rq[34k+:34] wq[562k+:562] rr[514k+:514] w_done[2k+:2]); ot_hgi_sfu_lg_pair_leaf.sv; tap ot_hbm_vm_lg_static_split_term #(18,15); bench rtl/test/tb_hbm_hc_q_static.sv"
+  },
+  {
+   "src": [
+    "hc_SW2",
+    "lg_wq"
+   ],
+   "dst": [
+    "lg_SW_2",
+    "local_wq",
+    1124,
+    1686
+   ],
+   "bits": 562,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv header (pair k <-> banks 2k,2k+1: rq[34k+:34] wq[562k+:562] rr[514k+:514] w_done[2k+:2]); ot_hgi_sfu_lg_pair_leaf.sv; tap ot_hbm_vm_lg_static_split_term #(18,15); bench rtl/test/tb_hbm_hc_q_static.sv"
+  },
+  {
+   "src": [
+    "lg_SW_2",
+    "local_rr",
+    1028,
+    1542
+   ],
+   "dst": [
+    "hc_SW2",
+    "lg_rr"
+   ],
+   "bits": 514,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv header (pair k <-> banks 2k,2k+1: rq[34k+:34] wq[562k+:562] rr[514k+:514] w_done[2k+:2]); ot_hgi_sfu_lg_pair_leaf.sv; tap ot_hbm_vm_lg_static_split_term #(18,15); bench rtl/test/tb_hbm_hc_q_static.sv"
+  },
+  {
+   "src": [
+    "lg_SW_2",
+    "local_w_done",
+    4,
+    6
+   ],
+   "dst": [
+    "hc_SW2",
+    "lg_w_done"
+   ],
+   "bits": 2,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv header (pair k <-> banks 2k,2k+1: rq[34k+:34] wq[562k+:562] rr[514k+:514] w_done[2k+:2]); ot_hgi_sfu_lg_pair_leaf.sv; tap ot_hbm_vm_lg_static_split_term #(18,15); bench rtl/test/tb_hbm_hc_q_static.sv"
+  },
+  {
+   "src": [
+    "hc_SW",
+    "lg_rq",
+    102,
+    136
+   ],
+   "dst": [
+    "hc_SW3",
+    "c_rq"
+   ],
+   "bits": 34,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv header (pair k <-> banks 2k,2k+1: rq[34k+:34] wq[562k+:562] rr[514k+:514] w_done[2k+:2]); ot_hgi_sfu_lg_pair_leaf.sv; tap ot_hbm_vm_lg_static_split_term #(18,15); bench rtl/test/tb_hbm_hc_q_static.sv"
+  },
+  {
+   "src": [
+    "hc_SW",
+    "lg_wq",
+    1686,
+    2248
+   ],
+   "dst": [
+    "hc_SW3",
+    "c_wq"
+   ],
+   "bits": 562,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv header (pair k <-> banks 2k,2k+1: rq[34k+:34] wq[562k+:562] rr[514k+:514] w_done[2k+:2]); ot_hgi_sfu_lg_pair_leaf.sv; tap ot_hbm_vm_lg_static_split_term #(18,15); bench rtl/test/tb_hbm_hc_q_static.sv"
+  },
+  {
+   "src": [
+    "hc_SW3",
+    "c_rr"
+   ],
+   "dst": [
+    "hc_SW",
+    "lg_rr",
+    1542,
+    2056
+   ],
+   "bits": 514,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv header (pair k <-> banks 2k,2k+1: rq[34k+:34] wq[562k+:562] rr[514k+:514] w_done[2k+:2]); ot_hgi_sfu_lg_pair_leaf.sv; tap ot_hbm_vm_lg_static_split_term #(18,15); bench rtl/test/tb_hbm_hc_q_static.sv"
+  },
+  {
+   "src": [
+    "hc_SW3",
+    "c_w_done"
+   ],
+   "dst": [
+    "hc_SW",
+    "lg_w_done",
+    6,
+    8
+   ],
+   "bits": 2,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv header (pair k <-> banks 2k,2k+1: rq[34k+:34] wq[562k+:562] rr[514k+:514] w_done[2k+:2]); ot_hgi_sfu_lg_pair_leaf.sv; tap ot_hbm_vm_lg_static_split_term #(18,15); bench rtl/test/tb_hbm_hc_q_static.sv"
+  },
+  {
+   "src": [
+    "hc_SW3",
+    "lg_rq"
+   ],
+   "dst": [
+    "lg_SW_2",
+    "local_rq",
+    102,
+    136
+   ],
+   "bits": 34,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv header (pair k <-> banks 2k,2k+1: rq[34k+:34] wq[562k+:562] rr[514k+:514] w_done[2k+:2]); ot_hgi_sfu_lg_pair_leaf.sv; tap ot_hbm_vm_lg_static_split_term #(18,15); bench rtl/test/tb_hbm_hc_q_static.sv"
+  },
+  {
+   "src": [
+    "hc_SW3",
+    "lg_wq"
+   ],
+   "dst": [
+    "lg_SW_2",
+    "local_wq",
+    1686,
+    2248
+   ],
+   "bits": 562,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv header (pair k <-> banks 2k,2k+1: rq[34k+:34] wq[562k+:562] rr[514k+:514] w_done[2k+:2]); ot_hgi_sfu_lg_pair_leaf.sv; tap ot_hbm_vm_lg_static_split_term #(18,15); bench rtl/test/tb_hbm_hc_q_static.sv"
+  },
+  {
+   "src": [
+    "lg_SW_2",
+    "local_rr",
+    1542,
+    2056
+   ],
+   "dst": [
+    "hc_SW3",
+    "lg_rr"
+   ],
+   "bits": 514,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv header (pair k <-> banks 2k,2k+1: rq[34k+:34] wq[562k+:562] rr[514k+:514] w_done[2k+:2]); ot_hgi_sfu_lg_pair_leaf.sv; tap ot_hbm_vm_lg_static_split_term #(18,15); bench rtl/test/tb_hbm_hc_q_static.sv"
+  },
+  {
+   "src": [
+    "lg_SW_2",
+    "local_w_done",
+    6,
+    8
+   ],
+   "dst": [
+    "hc_SW3",
+    "lg_w_done"
+   ],
+   "bits": 2,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv header (pair k <-> banks 2k,2k+1: rq[34k+:34] wq[562k+:562] rr[514k+:514] w_done[2k+:2]); ot_hgi_sfu_lg_pair_leaf.sv; tap ot_hbm_vm_lg_static_split_term #(18,15); bench rtl/test/tb_hbm_hc_q_static.sv"
+  },
+  {
+   "src": [
+    "host_cp_ingress",
+    "cfg_v"
+   ],
+   "dst": [
+    "hc_tgt_SW",
+    "cfg_v"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv (F20 broadcast consumer, as host_cp_ingress -> target 48); bench rtl/test/tb_hbm_hc_q_static.sv loads/launches hc via TARGET 108"
+  },
+  {
+   "src": [
+    "host_cp_ingress",
+    "cfg_target"
+   ],
+   "dst": [
+    "hc_tgt_SW",
+    "cfg_target"
+   ],
+   "bits": 8,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv (F20 broadcast consumer, as host_cp_ingress -> target 48); bench rtl/test/tb_hbm_hc_q_static.sv loads/launches hc via TARGET 108"
+  },
+  {
+   "src": [
+    "host_cp_ingress",
+    "cfg_addr"
+   ],
+   "dst": [
+    "hc_tgt_SW",
+    "cfg_addr"
+   ],
+   "bits": 12,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv (F20 broadcast consumer, as host_cp_ingress -> target 48); bench rtl/test/tb_hbm_hc_q_static.sv loads/launches hc via TARGET 108"
+  },
+  {
+   "src": [
+    "host_cp_ingress",
+    "cfg_data"
+   ],
+   "dst": [
+    "hc_tgt_SW",
+    "cfg_data"
+   ],
+   "bits": 256,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv (F20 broadcast consumer, as host_cp_ingress -> target 48); bench rtl/test/tb_hbm_hc_q_static.sv loads/launches hc via TARGET 108"
+  },
+  {
+   "src": [
+    "host_cp_ingress",
+    "desc_v"
+   ],
+   "dst": [
+    "hc_tgt_SW",
+    "desc_v"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv (F20 broadcast consumer, as host_cp_ingress -> target 48); bench rtl/test/tb_hbm_hc_q_static.sv loads/launches hc via TARGET 108"
+  },
+  {
+   "src": [
+    "host_cp_ingress",
+    "desc_base"
+   ],
+   "dst": [
+    "hc_tgt_SW",
+    "desc_base"
+   ],
+   "bits": 12,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv (F20 broadcast consumer, as host_cp_ingress -> target 48); bench rtl/test/tb_hbm_hc_q_static.sv loads/launches hc via TARGET 108"
+  },
+  {
+   "src": [
+    "host_cp_ingress",
+    "desc_limit"
+   ],
+   "dst": [
+    "hc_tgt_SW",
+    "desc_limit"
+   ],
+   "bits": 13,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv (F20 broadcast consumer, as host_cp_ingress -> target 48); bench rtl/test/tb_hbm_hc_q_static.sv loads/launches hc via TARGET 108"
+  },
+  {
+   "src": [
+    "host_cp_ingress",
+    "desc_loops"
+   ],
+   "dst": [
+    "hc_tgt_SW",
+    "desc_loops"
+   ],
+   "bits": 16,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv (F20 broadcast consumer, as host_cp_ingress -> target 48); bench rtl/test/tb_hbm_hc_q_static.sv loads/launches hc via TARGET 108"
+  },
+  {
+   "src": [
+    "host_cp_ingress",
+    "launch_v"
+   ],
+   "dst": [
+    "hc_tgt_SW",
+    "launch_v"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv (F20 broadcast consumer, as host_cp_ingress -> target 48); bench rtl/test/tb_hbm_hc_q_static.sv loads/launches hc via TARGET 108"
+  },
+  {
+   "src": [
+    "hc_SW",
+    "program_active"
+   ],
+   "dst": [
+    "hc_tgt_SW",
+    "program_active"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv (F20 broadcast consumer, as host_cp_ingress -> target 48); bench rtl/test/tb_hbm_hc_q_static.sv loads/launches hc via TARGET 108"
+  },
+  {
+   "src": [
+    "hc_tgt_SW",
+    "program_cfg_we"
+   ],
+   "dst": [
+    "hc_SW",
+    "cfg_we"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv (F20 broadcast consumer, as host_cp_ingress -> target 48); bench rtl/test/tb_hbm_hc_q_static.sv loads/launches hc via TARGET 108"
+  },
+  {
+   "src": [
+    "hc_tgt_SW",
+    "program_cfg_addr"
+   ],
+   "dst": [
+    "hc_SW",
+    "cfg_addr"
+   ],
+   "bits": 10,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv (F20 broadcast consumer, as host_cp_ingress -> target 48); bench rtl/test/tb_hbm_hc_q_static.sv loads/launches hc via TARGET 108"
+  },
+  {
+   "src": [
+    "hc_tgt_SW",
+    "program_cfg_data"
+   ],
+   "dst": [
+    "hc_SW",
+    "cfg_data"
+   ],
+   "bits": 256,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv (F20 broadcast consumer, as host_cp_ingress -> target 48); bench rtl/test/tb_hbm_hc_q_static.sv loads/launches hc via TARGET 108"
+  },
+  {
+   "src": [
+    "hc_tgt_SW",
+    "program_start_v"
+   ],
+   "dst": [
+    "hc_SW",
+    "start_v"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv (F20 broadcast consumer, as host_cp_ingress -> target 48); bench rtl/test/tb_hbm_hc_q_static.sv loads/launches hc via TARGET 108"
+  },
+  {
+   "src": [
+    "hc_tgt_SW",
+    "program_start_base"
+   ],
+   "dst": [
+    "hc_SW",
+    "start_base"
+   ],
+   "bits": 10,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv (F20 broadcast consumer, as host_cp_ingress -> target 48); bench rtl/test/tb_hbm_hc_q_static.sv loads/launches hc via TARGET 108"
+  },
+  {
+   "src": [
+    "hc_tgt_SW",
+    "program_start_limit"
+   ],
+   "dst": [
+    "hc_SW",
+    "start_limit"
+   ],
+   "bits": 11,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv (F20 broadcast consumer, as host_cp_ingress -> target 48); bench rtl/test/tb_hbm_hc_q_static.sv loads/launches hc via TARGET 108"
+  },
+  {
+   "src": [
+    "hc_tgt_SW",
+    "program_start_loops"
+   ],
+   "dst": [
+    "hc_SW",
+    "start_loops"
+   ],
+   "bits": 16,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv (F20 broadcast consumer, as host_cp_ingress -> target 48); bench rtl/test/tb_hbm_hc_q_static.sv loads/launches hc via TARGET 108"
+  },
+  {
+   "src": [
+    "hc_SE",
+    "lg_rq",
+    0,
+    34
+   ],
+   "dst": [
+    "hc_SE0",
+    "c_rq"
+   ],
+   "bits": 34,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv header (pair k <-> banks 2k,2k+1: rq[34k+:34] wq[562k+:562] rr[514k+:514] w_done[2k+:2]); ot_hgi_sfu_lg_pair_leaf.sv; tap ot_hbm_vm_lg_static_split_term #(18,15); bench rtl/test/tb_hbm_hc_q_static.sv"
+  },
+  {
+   "src": [
+    "hc_SE",
+    "lg_wq",
+    0,
+    562
+   ],
+   "dst": [
+    "hc_SE0",
+    "c_wq"
+   ],
+   "bits": 562,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv header (pair k <-> banks 2k,2k+1: rq[34k+:34] wq[562k+:562] rr[514k+:514] w_done[2k+:2]); ot_hgi_sfu_lg_pair_leaf.sv; tap ot_hbm_vm_lg_static_split_term #(18,15); bench rtl/test/tb_hbm_hc_q_static.sv"
+  },
+  {
+   "src": [
+    "hc_SE0",
+    "c_rr"
+   ],
+   "dst": [
+    "hc_SE",
+    "lg_rr",
+    0,
+    514
+   ],
+   "bits": 514,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv header (pair k <-> banks 2k,2k+1: rq[34k+:34] wq[562k+:562] rr[514k+:514] w_done[2k+:2]); ot_hgi_sfu_lg_pair_leaf.sv; tap ot_hbm_vm_lg_static_split_term #(18,15); bench rtl/test/tb_hbm_hc_q_static.sv"
+  },
+  {
+   "src": [
+    "hc_SE0",
+    "c_w_done"
+   ],
+   "dst": [
+    "hc_SE",
+    "lg_w_done",
+    0,
+    2
+   ],
+   "bits": 2,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv header (pair k <-> banks 2k,2k+1: rq[34k+:34] wq[562k+:562] rr[514k+:514] w_done[2k+:2]); ot_hgi_sfu_lg_pair_leaf.sv; tap ot_hbm_vm_lg_static_split_term #(18,15); bench rtl/test/tb_hbm_hc_q_static.sv"
+  },
+  {
+   "src": [
+    "hc_SE0",
+    "lg_rq"
+   ],
+   "dst": [
+    "lg_SE_2",
+    "local_rq",
+    0,
+    34
+   ],
+   "bits": 34,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv header (pair k <-> banks 2k,2k+1: rq[34k+:34] wq[562k+:562] rr[514k+:514] w_done[2k+:2]); ot_hgi_sfu_lg_pair_leaf.sv; tap ot_hbm_vm_lg_static_split_term #(18,15); bench rtl/test/tb_hbm_hc_q_static.sv"
+  },
+  {
+   "src": [
+    "hc_SE0",
+    "lg_wq"
+   ],
+   "dst": [
+    "lg_SE_2",
+    "local_wq",
+    0,
+    562
+   ],
+   "bits": 562,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv header (pair k <-> banks 2k,2k+1: rq[34k+:34] wq[562k+:562] rr[514k+:514] w_done[2k+:2]); ot_hgi_sfu_lg_pair_leaf.sv; tap ot_hbm_vm_lg_static_split_term #(18,15); bench rtl/test/tb_hbm_hc_q_static.sv"
+  },
+  {
+   "src": [
+    "lg_SE_2",
+    "local_rr",
+    0,
+    514
+   ],
+   "dst": [
+    "hc_SE0",
+    "lg_rr"
+   ],
+   "bits": 514,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv header (pair k <-> banks 2k,2k+1: rq[34k+:34] wq[562k+:562] rr[514k+:514] w_done[2k+:2]); ot_hgi_sfu_lg_pair_leaf.sv; tap ot_hbm_vm_lg_static_split_term #(18,15); bench rtl/test/tb_hbm_hc_q_static.sv"
+  },
+  {
+   "src": [
+    "lg_SE_2",
+    "local_w_done",
+    0,
+    2
+   ],
+   "dst": [
+    "hc_SE0",
+    "lg_w_done"
+   ],
+   "bits": 2,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv header (pair k <-> banks 2k,2k+1: rq[34k+:34] wq[562k+:562] rr[514k+:514] w_done[2k+:2]); ot_hgi_sfu_lg_pair_leaf.sv; tap ot_hbm_vm_lg_static_split_term #(18,15); bench rtl/test/tb_hbm_hc_q_static.sv"
+  },
+  {
+   "src": [
+    "hc_SE",
+    "lg_rq",
+    34,
+    68
+   ],
+   "dst": [
+    "hc_SE1",
+    "c_rq"
+   ],
+   "bits": 34,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv header (pair k <-> banks 2k,2k+1: rq[34k+:34] wq[562k+:562] rr[514k+:514] w_done[2k+:2]); ot_hgi_sfu_lg_pair_leaf.sv; tap ot_hbm_vm_lg_static_split_term #(18,15); bench rtl/test/tb_hbm_hc_q_static.sv"
+  },
+  {
+   "src": [
+    "hc_SE",
+    "lg_wq",
+    562,
+    1124
+   ],
+   "dst": [
+    "hc_SE1",
+    "c_wq"
+   ],
+   "bits": 562,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv header (pair k <-> banks 2k,2k+1: rq[34k+:34] wq[562k+:562] rr[514k+:514] w_done[2k+:2]); ot_hgi_sfu_lg_pair_leaf.sv; tap ot_hbm_vm_lg_static_split_term #(18,15); bench rtl/test/tb_hbm_hc_q_static.sv"
+  },
+  {
+   "src": [
+    "hc_SE1",
+    "c_rr"
+   ],
+   "dst": [
+    "hc_SE",
+    "lg_rr",
+    514,
+    1028
+   ],
+   "bits": 514,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv header (pair k <-> banks 2k,2k+1: rq[34k+:34] wq[562k+:562] rr[514k+:514] w_done[2k+:2]); ot_hgi_sfu_lg_pair_leaf.sv; tap ot_hbm_vm_lg_static_split_term #(18,15); bench rtl/test/tb_hbm_hc_q_static.sv"
+  },
+  {
+   "src": [
+    "hc_SE1",
+    "c_w_done"
+   ],
+   "dst": [
+    "hc_SE",
+    "lg_w_done",
+    2,
+    4
+   ],
+   "bits": 2,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv header (pair k <-> banks 2k,2k+1: rq[34k+:34] wq[562k+:562] rr[514k+:514] w_done[2k+:2]); ot_hgi_sfu_lg_pair_leaf.sv; tap ot_hbm_vm_lg_static_split_term #(18,15); bench rtl/test/tb_hbm_hc_q_static.sv"
+  },
+  {
+   "src": [
+    "hc_SE1",
+    "lg_rq"
+   ],
+   "dst": [
+    "lg_SE_2",
+    "local_rq",
+    34,
+    68
+   ],
+   "bits": 34,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv header (pair k <-> banks 2k,2k+1: rq[34k+:34] wq[562k+:562] rr[514k+:514] w_done[2k+:2]); ot_hgi_sfu_lg_pair_leaf.sv; tap ot_hbm_vm_lg_static_split_term #(18,15); bench rtl/test/tb_hbm_hc_q_static.sv"
+  },
+  {
+   "src": [
+    "hc_SE1",
+    "lg_wq"
+   ],
+   "dst": [
+    "lg_SE_2",
+    "local_wq",
+    562,
+    1124
+   ],
+   "bits": 562,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv header (pair k <-> banks 2k,2k+1: rq[34k+:34] wq[562k+:562] rr[514k+:514] w_done[2k+:2]); ot_hgi_sfu_lg_pair_leaf.sv; tap ot_hbm_vm_lg_static_split_term #(18,15); bench rtl/test/tb_hbm_hc_q_static.sv"
+  },
+  {
+   "src": [
+    "lg_SE_2",
+    "local_rr",
+    514,
+    1028
+   ],
+   "dst": [
+    "hc_SE1",
+    "lg_rr"
+   ],
+   "bits": 514,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv header (pair k <-> banks 2k,2k+1: rq[34k+:34] wq[562k+:562] rr[514k+:514] w_done[2k+:2]); ot_hgi_sfu_lg_pair_leaf.sv; tap ot_hbm_vm_lg_static_split_term #(18,15); bench rtl/test/tb_hbm_hc_q_static.sv"
+  },
+  {
+   "src": [
+    "lg_SE_2",
+    "local_w_done",
+    2,
+    4
+   ],
+   "dst": [
+    "hc_SE1",
+    "lg_w_done"
+   ],
+   "bits": 2,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv header (pair k <-> banks 2k,2k+1: rq[34k+:34] wq[562k+:562] rr[514k+:514] w_done[2k+:2]); ot_hgi_sfu_lg_pair_leaf.sv; tap ot_hbm_vm_lg_static_split_term #(18,15); bench rtl/test/tb_hbm_hc_q_static.sv"
+  },
+  {
+   "src": [
+    "hc_SE",
+    "lg_rq",
+    68,
+    102
+   ],
+   "dst": [
+    "hc_SE2",
+    "c_rq"
+   ],
+   "bits": 34,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv header (pair k <-> banks 2k,2k+1: rq[34k+:34] wq[562k+:562] rr[514k+:514] w_done[2k+:2]); ot_hgi_sfu_lg_pair_leaf.sv; tap ot_hbm_vm_lg_static_split_term #(18,15); bench rtl/test/tb_hbm_hc_q_static.sv"
+  },
+  {
+   "src": [
+    "hc_SE",
+    "lg_wq",
+    1124,
+    1686
+   ],
+   "dst": [
+    "hc_SE2",
+    "c_wq"
+   ],
+   "bits": 562,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv header (pair k <-> banks 2k,2k+1: rq[34k+:34] wq[562k+:562] rr[514k+:514] w_done[2k+:2]); ot_hgi_sfu_lg_pair_leaf.sv; tap ot_hbm_vm_lg_static_split_term #(18,15); bench rtl/test/tb_hbm_hc_q_static.sv"
+  },
+  {
+   "src": [
+    "hc_SE2",
+    "c_rr"
+   ],
+   "dst": [
+    "hc_SE",
+    "lg_rr",
+    1028,
+    1542
+   ],
+   "bits": 514,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv header (pair k <-> banks 2k,2k+1: rq[34k+:34] wq[562k+:562] rr[514k+:514] w_done[2k+:2]); ot_hgi_sfu_lg_pair_leaf.sv; tap ot_hbm_vm_lg_static_split_term #(18,15); bench rtl/test/tb_hbm_hc_q_static.sv"
+  },
+  {
+   "src": [
+    "hc_SE2",
+    "c_w_done"
+   ],
+   "dst": [
+    "hc_SE",
+    "lg_w_done",
+    4,
+    6
+   ],
+   "bits": 2,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv header (pair k <-> banks 2k,2k+1: rq[34k+:34] wq[562k+:562] rr[514k+:514] w_done[2k+:2]); ot_hgi_sfu_lg_pair_leaf.sv; tap ot_hbm_vm_lg_static_split_term #(18,15); bench rtl/test/tb_hbm_hc_q_static.sv"
+  },
+  {
+   "src": [
+    "hc_SE2",
+    "lg_rq"
+   ],
+   "dst": [
+    "lg_SE_2",
+    "local_rq",
+    68,
+    102
+   ],
+   "bits": 34,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv header (pair k <-> banks 2k,2k+1: rq[34k+:34] wq[562k+:562] rr[514k+:514] w_done[2k+:2]); ot_hgi_sfu_lg_pair_leaf.sv; tap ot_hbm_vm_lg_static_split_term #(18,15); bench rtl/test/tb_hbm_hc_q_static.sv"
+  },
+  {
+   "src": [
+    "hc_SE2",
+    "lg_wq"
+   ],
+   "dst": [
+    "lg_SE_2",
+    "local_wq",
+    1124,
+    1686
+   ],
+   "bits": 562,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv header (pair k <-> banks 2k,2k+1: rq[34k+:34] wq[562k+:562] rr[514k+:514] w_done[2k+:2]); ot_hgi_sfu_lg_pair_leaf.sv; tap ot_hbm_vm_lg_static_split_term #(18,15); bench rtl/test/tb_hbm_hc_q_static.sv"
+  },
+  {
+   "src": [
+    "lg_SE_2",
+    "local_rr",
+    1028,
+    1542
+   ],
+   "dst": [
+    "hc_SE2",
+    "lg_rr"
+   ],
+   "bits": 514,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv header (pair k <-> banks 2k,2k+1: rq[34k+:34] wq[562k+:562] rr[514k+:514] w_done[2k+:2]); ot_hgi_sfu_lg_pair_leaf.sv; tap ot_hbm_vm_lg_static_split_term #(18,15); bench rtl/test/tb_hbm_hc_q_static.sv"
+  },
+  {
+   "src": [
+    "lg_SE_2",
+    "local_w_done",
+    4,
+    6
+   ],
+   "dst": [
+    "hc_SE2",
+    "lg_w_done"
+   ],
+   "bits": 2,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv header (pair k <-> banks 2k,2k+1: rq[34k+:34] wq[562k+:562] rr[514k+:514] w_done[2k+:2]); ot_hgi_sfu_lg_pair_leaf.sv; tap ot_hbm_vm_lg_static_split_term #(18,15); bench rtl/test/tb_hbm_hc_q_static.sv"
+  },
+  {
+   "src": [
+    "hc_SE",
+    "lg_rq",
+    102,
+    136
+   ],
+   "dst": [
+    "hc_SE3",
+    "c_rq"
+   ],
+   "bits": 34,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv header (pair k <-> banks 2k,2k+1: rq[34k+:34] wq[562k+:562] rr[514k+:514] w_done[2k+:2]); ot_hgi_sfu_lg_pair_leaf.sv; tap ot_hbm_vm_lg_static_split_term #(18,15); bench rtl/test/tb_hbm_hc_q_static.sv"
+  },
+  {
+   "src": [
+    "hc_SE",
+    "lg_wq",
+    1686,
+    2248
+   ],
+   "dst": [
+    "hc_SE3",
+    "c_wq"
+   ],
+   "bits": 562,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv header (pair k <-> banks 2k,2k+1: rq[34k+:34] wq[562k+:562] rr[514k+:514] w_done[2k+:2]); ot_hgi_sfu_lg_pair_leaf.sv; tap ot_hbm_vm_lg_static_split_term #(18,15); bench rtl/test/tb_hbm_hc_q_static.sv"
+  },
+  {
+   "src": [
+    "hc_SE3",
+    "c_rr"
+   ],
+   "dst": [
+    "hc_SE",
+    "lg_rr",
+    1542,
+    2056
+   ],
+   "bits": 514,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv header (pair k <-> banks 2k,2k+1: rq[34k+:34] wq[562k+:562] rr[514k+:514] w_done[2k+:2]); ot_hgi_sfu_lg_pair_leaf.sv; tap ot_hbm_vm_lg_static_split_term #(18,15); bench rtl/test/tb_hbm_hc_q_static.sv"
+  },
+  {
+   "src": [
+    "hc_SE3",
+    "c_w_done"
+   ],
+   "dst": [
+    "hc_SE",
+    "lg_w_done",
+    6,
+    8
+   ],
+   "bits": 2,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv header (pair k <-> banks 2k,2k+1: rq[34k+:34] wq[562k+:562] rr[514k+:514] w_done[2k+:2]); ot_hgi_sfu_lg_pair_leaf.sv; tap ot_hbm_vm_lg_static_split_term #(18,15); bench rtl/test/tb_hbm_hc_q_static.sv"
+  },
+  {
+   "src": [
+    "hc_SE3",
+    "lg_rq"
+   ],
+   "dst": [
+    "lg_SE_2",
+    "local_rq",
+    102,
+    136
+   ],
+   "bits": 34,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv header (pair k <-> banks 2k,2k+1: rq[34k+:34] wq[562k+:562] rr[514k+:514] w_done[2k+:2]); ot_hgi_sfu_lg_pair_leaf.sv; tap ot_hbm_vm_lg_static_split_term #(18,15); bench rtl/test/tb_hbm_hc_q_static.sv"
+  },
+  {
+   "src": [
+    "hc_SE3",
+    "lg_wq"
+   ],
+   "dst": [
+    "lg_SE_2",
+    "local_wq",
+    1686,
+    2248
+   ],
+   "bits": 562,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv header (pair k <-> banks 2k,2k+1: rq[34k+:34] wq[562k+:562] rr[514k+:514] w_done[2k+:2]); ot_hgi_sfu_lg_pair_leaf.sv; tap ot_hbm_vm_lg_static_split_term #(18,15); bench rtl/test/tb_hbm_hc_q_static.sv"
+  },
+  {
+   "src": [
+    "lg_SE_2",
+    "local_rr",
+    1542,
+    2056
+   ],
+   "dst": [
+    "hc_SE3",
+    "lg_rr"
+   ],
+   "bits": 514,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv header (pair k <-> banks 2k,2k+1: rq[34k+:34] wq[562k+:562] rr[514k+:514] w_done[2k+:2]); ot_hgi_sfu_lg_pair_leaf.sv; tap ot_hbm_vm_lg_static_split_term #(18,15); bench rtl/test/tb_hbm_hc_q_static.sv"
+  },
+  {
+   "src": [
+    "lg_SE_2",
+    "local_w_done",
+    6,
+    8
+   ],
+   "dst": [
+    "hc_SE3",
+    "lg_w_done"
+   ],
+   "bits": 2,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv header (pair k <-> banks 2k,2k+1: rq[34k+:34] wq[562k+:562] rr[514k+:514] w_done[2k+:2]); ot_hgi_sfu_lg_pair_leaf.sv; tap ot_hbm_vm_lg_static_split_term #(18,15); bench rtl/test/tb_hbm_hc_q_static.sv"
+  },
+  {
+   "src": [
+    "host_cp_ingress",
+    "cfg_v"
+   ],
+   "dst": [
+    "hc_tgt_SE",
+    "cfg_v"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv (F20 broadcast consumer, as host_cp_ingress -> target 48); bench rtl/test/tb_hbm_hc_q_static.sv loads/launches hc via TARGET 108"
+  },
+  {
+   "src": [
+    "host_cp_ingress",
+    "cfg_target"
+   ],
+   "dst": [
+    "hc_tgt_SE",
+    "cfg_target"
+   ],
+   "bits": 8,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv (F20 broadcast consumer, as host_cp_ingress -> target 48); bench rtl/test/tb_hbm_hc_q_static.sv loads/launches hc via TARGET 108"
+  },
+  {
+   "src": [
+    "host_cp_ingress",
+    "cfg_addr"
+   ],
+   "dst": [
+    "hc_tgt_SE",
+    "cfg_addr"
+   ],
+   "bits": 12,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv (F20 broadcast consumer, as host_cp_ingress -> target 48); bench rtl/test/tb_hbm_hc_q_static.sv loads/launches hc via TARGET 108"
+  },
+  {
+   "src": [
+    "host_cp_ingress",
+    "cfg_data"
+   ],
+   "dst": [
+    "hc_tgt_SE",
+    "cfg_data"
+   ],
+   "bits": 256,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv (F20 broadcast consumer, as host_cp_ingress -> target 48); bench rtl/test/tb_hbm_hc_q_static.sv loads/launches hc via TARGET 108"
+  },
+  {
+   "src": [
+    "host_cp_ingress",
+    "desc_v"
+   ],
+   "dst": [
+    "hc_tgt_SE",
+    "desc_v"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv (F20 broadcast consumer, as host_cp_ingress -> target 48); bench rtl/test/tb_hbm_hc_q_static.sv loads/launches hc via TARGET 108"
+  },
+  {
+   "src": [
+    "host_cp_ingress",
+    "desc_base"
+   ],
+   "dst": [
+    "hc_tgt_SE",
+    "desc_base"
+   ],
+   "bits": 12,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv (F20 broadcast consumer, as host_cp_ingress -> target 48); bench rtl/test/tb_hbm_hc_q_static.sv loads/launches hc via TARGET 108"
+  },
+  {
+   "src": [
+    "host_cp_ingress",
+    "desc_limit"
+   ],
+   "dst": [
+    "hc_tgt_SE",
+    "desc_limit"
+   ],
+   "bits": 13,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv (F20 broadcast consumer, as host_cp_ingress -> target 48); bench rtl/test/tb_hbm_hc_q_static.sv loads/launches hc via TARGET 108"
+  },
+  {
+   "src": [
+    "host_cp_ingress",
+    "desc_loops"
+   ],
+   "dst": [
+    "hc_tgt_SE",
+    "desc_loops"
+   ],
+   "bits": 16,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv (F20 broadcast consumer, as host_cp_ingress -> target 48); bench rtl/test/tb_hbm_hc_q_static.sv loads/launches hc via TARGET 108"
+  },
+  {
+   "src": [
+    "host_cp_ingress",
+    "launch_v"
+   ],
+   "dst": [
+    "hc_tgt_SE",
+    "launch_v"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv (F20 broadcast consumer, as host_cp_ingress -> target 48); bench rtl/test/tb_hbm_hc_q_static.sv loads/launches hc via TARGET 108"
+  },
+  {
+   "src": [
+    "hc_SE",
+    "program_active"
+   ],
+   "dst": [
+    "hc_tgt_SE",
+    "program_active"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv (F20 broadcast consumer, as host_cp_ingress -> target 48); bench rtl/test/tb_hbm_hc_q_static.sv loads/launches hc via TARGET 108"
+  },
+  {
+   "src": [
+    "hc_tgt_SE",
+    "program_cfg_we"
+   ],
+   "dst": [
+    "hc_SE",
+    "cfg_we"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv (F20 broadcast consumer, as host_cp_ingress -> target 48); bench rtl/test/tb_hbm_hc_q_static.sv loads/launches hc via TARGET 108"
+  },
+  {
+   "src": [
+    "hc_tgt_SE",
+    "program_cfg_addr"
+   ],
+   "dst": [
+    "hc_SE",
+    "cfg_addr"
+   ],
+   "bits": 10,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv (F20 broadcast consumer, as host_cp_ingress -> target 48); bench rtl/test/tb_hbm_hc_q_static.sv loads/launches hc via TARGET 108"
+  },
+  {
+   "src": [
+    "hc_tgt_SE",
+    "program_cfg_data"
+   ],
+   "dst": [
+    "hc_SE",
+    "cfg_data"
+   ],
+   "bits": 256,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv (F20 broadcast consumer, as host_cp_ingress -> target 48); bench rtl/test/tb_hbm_hc_q_static.sv loads/launches hc via TARGET 108"
+  },
+  {
+   "src": [
+    "hc_tgt_SE",
+    "program_start_v"
+   ],
+   "dst": [
+    "hc_SE",
+    "start_v"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv (F20 broadcast consumer, as host_cp_ingress -> target 48); bench rtl/test/tb_hbm_hc_q_static.sv loads/launches hc via TARGET 108"
+  },
+  {
+   "src": [
+    "hc_tgt_SE",
+    "program_start_base"
+   ],
+   "dst": [
+    "hc_SE",
+    "start_base"
+   ],
+   "bits": 10,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv (F20 broadcast consumer, as host_cp_ingress -> target 48); bench rtl/test/tb_hbm_hc_q_static.sv loads/launches hc via TARGET 108"
+  },
+  {
+   "src": [
+    "hc_tgt_SE",
+    "program_start_limit"
+   ],
+   "dst": [
+    "hc_SE",
+    "start_limit"
+   ],
+   "bits": 11,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv (F20 broadcast consumer, as host_cp_ingress -> target 48); bench rtl/test/tb_hbm_hc_q_static.sv loads/launches hc via TARGET 108"
+  },
+  {
+   "src": [
+    "hc_tgt_SE",
+    "program_start_loops"
+   ],
+   "dst": [
+    "hc_SE",
+    "start_loops"
+   ],
+   "bits": 16,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv (F20 broadcast consumer, as host_cp_ingress -> target 48); bench rtl/test/tb_hbm_hc_q_static.sv loads/launches hc via TARGET 108"
+  },
+  {
+   "src": [
+    "hc_NW",
+    "lg_rq",
+    0,
+    34
+   ],
+   "dst": [
+    "hc_NW0",
+    "c_rq"
+   ],
+   "bits": 34,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv header (pair k <-> banks 2k,2k+1: rq[34k+:34] wq[562k+:562] rr[514k+:514] w_done[2k+:2]); ot_hgi_sfu_lg_pair_leaf.sv; tap ot_hbm_vm_lg_static_split_term #(18,15); bench rtl/test/tb_hbm_hc_q_static.sv"
+  },
+  {
+   "src": [
+    "hc_NW",
+    "lg_wq",
+    0,
+    562
+   ],
+   "dst": [
+    "hc_NW0",
+    "c_wq"
+   ],
+   "bits": 562,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv header (pair k <-> banks 2k,2k+1: rq[34k+:34] wq[562k+:562] rr[514k+:514] w_done[2k+:2]); ot_hgi_sfu_lg_pair_leaf.sv; tap ot_hbm_vm_lg_static_split_term #(18,15); bench rtl/test/tb_hbm_hc_q_static.sv"
+  },
+  {
+   "src": [
+    "hc_NW0",
+    "c_rr"
+   ],
+   "dst": [
+    "hc_NW",
+    "lg_rr",
+    0,
+    514
+   ],
+   "bits": 514,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv header (pair k <-> banks 2k,2k+1: rq[34k+:34] wq[562k+:562] rr[514k+:514] w_done[2k+:2]); ot_hgi_sfu_lg_pair_leaf.sv; tap ot_hbm_vm_lg_static_split_term #(18,15); bench rtl/test/tb_hbm_hc_q_static.sv"
+  },
+  {
+   "src": [
+    "hc_NW0",
+    "c_w_done"
+   ],
+   "dst": [
+    "hc_NW",
+    "lg_w_done",
+    0,
+    2
+   ],
+   "bits": 2,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv header (pair k <-> banks 2k,2k+1: rq[34k+:34] wq[562k+:562] rr[514k+:514] w_done[2k+:2]); ot_hgi_sfu_lg_pair_leaf.sv; tap ot_hbm_vm_lg_static_split_term #(18,15); bench rtl/test/tb_hbm_hc_q_static.sv"
+  },
+  {
+   "src": [
+    "hc_NW0",
+    "lg_rq"
+   ],
+   "dst": [
+    "lg_NW_2",
+    "local_rq",
+    0,
+    34
+   ],
+   "bits": 34,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv header (pair k <-> banks 2k,2k+1: rq[34k+:34] wq[562k+:562] rr[514k+:514] w_done[2k+:2]); ot_hgi_sfu_lg_pair_leaf.sv; tap ot_hbm_vm_lg_static_split_term #(18,15); bench rtl/test/tb_hbm_hc_q_static.sv"
+  },
+  {
+   "src": [
+    "hc_NW0",
+    "lg_wq"
+   ],
+   "dst": [
+    "lg_NW_2",
+    "local_wq",
+    0,
+    562
+   ],
+   "bits": 562,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv header (pair k <-> banks 2k,2k+1: rq[34k+:34] wq[562k+:562] rr[514k+:514] w_done[2k+:2]); ot_hgi_sfu_lg_pair_leaf.sv; tap ot_hbm_vm_lg_static_split_term #(18,15); bench rtl/test/tb_hbm_hc_q_static.sv"
+  },
+  {
+   "src": [
+    "lg_NW_2",
+    "local_rr",
+    0,
+    514
+   ],
+   "dst": [
+    "hc_NW0",
+    "lg_rr"
+   ],
+   "bits": 514,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv header (pair k <-> banks 2k,2k+1: rq[34k+:34] wq[562k+:562] rr[514k+:514] w_done[2k+:2]); ot_hgi_sfu_lg_pair_leaf.sv; tap ot_hbm_vm_lg_static_split_term #(18,15); bench rtl/test/tb_hbm_hc_q_static.sv"
+  },
+  {
+   "src": [
+    "lg_NW_2",
+    "local_w_done",
+    0,
+    2
+   ],
+   "dst": [
+    "hc_NW0",
+    "lg_w_done"
+   ],
+   "bits": 2,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv header (pair k <-> banks 2k,2k+1: rq[34k+:34] wq[562k+:562] rr[514k+:514] w_done[2k+:2]); ot_hgi_sfu_lg_pair_leaf.sv; tap ot_hbm_vm_lg_static_split_term #(18,15); bench rtl/test/tb_hbm_hc_q_static.sv"
+  },
+  {
+   "src": [
+    "hc_NW",
+    "lg_rq",
+    34,
+    68
+   ],
+   "dst": [
+    "hc_NW1",
+    "c_rq"
+   ],
+   "bits": 34,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv header (pair k <-> banks 2k,2k+1: rq[34k+:34] wq[562k+:562] rr[514k+:514] w_done[2k+:2]); ot_hgi_sfu_lg_pair_leaf.sv; tap ot_hbm_vm_lg_static_split_term #(18,15); bench rtl/test/tb_hbm_hc_q_static.sv"
+  },
+  {
+   "src": [
+    "hc_NW",
+    "lg_wq",
+    562,
+    1124
+   ],
+   "dst": [
+    "hc_NW1",
+    "c_wq"
+   ],
+   "bits": 562,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv header (pair k <-> banks 2k,2k+1: rq[34k+:34] wq[562k+:562] rr[514k+:514] w_done[2k+:2]); ot_hgi_sfu_lg_pair_leaf.sv; tap ot_hbm_vm_lg_static_split_term #(18,15); bench rtl/test/tb_hbm_hc_q_static.sv"
+  },
+  {
+   "src": [
+    "hc_NW1",
+    "c_rr"
+   ],
+   "dst": [
+    "hc_NW",
+    "lg_rr",
+    514,
+    1028
+   ],
+   "bits": 514,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv header (pair k <-> banks 2k,2k+1: rq[34k+:34] wq[562k+:562] rr[514k+:514] w_done[2k+:2]); ot_hgi_sfu_lg_pair_leaf.sv; tap ot_hbm_vm_lg_static_split_term #(18,15); bench rtl/test/tb_hbm_hc_q_static.sv"
+  },
+  {
+   "src": [
+    "hc_NW1",
+    "c_w_done"
+   ],
+   "dst": [
+    "hc_NW",
+    "lg_w_done",
+    2,
+    4
+   ],
+   "bits": 2,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv header (pair k <-> banks 2k,2k+1: rq[34k+:34] wq[562k+:562] rr[514k+:514] w_done[2k+:2]); ot_hgi_sfu_lg_pair_leaf.sv; tap ot_hbm_vm_lg_static_split_term #(18,15); bench rtl/test/tb_hbm_hc_q_static.sv"
+  },
+  {
+   "src": [
+    "hc_NW1",
+    "lg_rq"
+   ],
+   "dst": [
+    "lg_NW_2",
+    "local_rq",
+    34,
+    68
+   ],
+   "bits": 34,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv header (pair k <-> banks 2k,2k+1: rq[34k+:34] wq[562k+:562] rr[514k+:514] w_done[2k+:2]); ot_hgi_sfu_lg_pair_leaf.sv; tap ot_hbm_vm_lg_static_split_term #(18,15); bench rtl/test/tb_hbm_hc_q_static.sv"
+  },
+  {
+   "src": [
+    "hc_NW1",
+    "lg_wq"
+   ],
+   "dst": [
+    "lg_NW_2",
+    "local_wq",
+    562,
+    1124
+   ],
+   "bits": 562,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv header (pair k <-> banks 2k,2k+1: rq[34k+:34] wq[562k+:562] rr[514k+:514] w_done[2k+:2]); ot_hgi_sfu_lg_pair_leaf.sv; tap ot_hbm_vm_lg_static_split_term #(18,15); bench rtl/test/tb_hbm_hc_q_static.sv"
+  },
+  {
+   "src": [
+    "lg_NW_2",
+    "local_rr",
+    514,
+    1028
+   ],
+   "dst": [
+    "hc_NW1",
+    "lg_rr"
+   ],
+   "bits": 514,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv header (pair k <-> banks 2k,2k+1: rq[34k+:34] wq[562k+:562] rr[514k+:514] w_done[2k+:2]); ot_hgi_sfu_lg_pair_leaf.sv; tap ot_hbm_vm_lg_static_split_term #(18,15); bench rtl/test/tb_hbm_hc_q_static.sv"
+  },
+  {
+   "src": [
+    "lg_NW_2",
+    "local_w_done",
+    2,
+    4
+   ],
+   "dst": [
+    "hc_NW1",
+    "lg_w_done"
+   ],
+   "bits": 2,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv header (pair k <-> banks 2k,2k+1: rq[34k+:34] wq[562k+:562] rr[514k+:514] w_done[2k+:2]); ot_hgi_sfu_lg_pair_leaf.sv; tap ot_hbm_vm_lg_static_split_term #(18,15); bench rtl/test/tb_hbm_hc_q_static.sv"
+  },
+  {
+   "src": [
+    "hc_NW",
+    "lg_rq",
+    68,
+    102
+   ],
+   "dst": [
+    "hc_NW2",
+    "c_rq"
+   ],
+   "bits": 34,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv header (pair k <-> banks 2k,2k+1: rq[34k+:34] wq[562k+:562] rr[514k+:514] w_done[2k+:2]); ot_hgi_sfu_lg_pair_leaf.sv; tap ot_hbm_vm_lg_static_split_term #(18,15); bench rtl/test/tb_hbm_hc_q_static.sv"
+  },
+  {
+   "src": [
+    "hc_NW",
+    "lg_wq",
+    1124,
+    1686
+   ],
+   "dst": [
+    "hc_NW2",
+    "c_wq"
+   ],
+   "bits": 562,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv header (pair k <-> banks 2k,2k+1: rq[34k+:34] wq[562k+:562] rr[514k+:514] w_done[2k+:2]); ot_hgi_sfu_lg_pair_leaf.sv; tap ot_hbm_vm_lg_static_split_term #(18,15); bench rtl/test/tb_hbm_hc_q_static.sv"
+  },
+  {
+   "src": [
+    "hc_NW2",
+    "c_rr"
+   ],
+   "dst": [
+    "hc_NW",
+    "lg_rr",
+    1028,
+    1542
+   ],
+   "bits": 514,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv header (pair k <-> banks 2k,2k+1: rq[34k+:34] wq[562k+:562] rr[514k+:514] w_done[2k+:2]); ot_hgi_sfu_lg_pair_leaf.sv; tap ot_hbm_vm_lg_static_split_term #(18,15); bench rtl/test/tb_hbm_hc_q_static.sv"
+  },
+  {
+   "src": [
+    "hc_NW2",
+    "c_w_done"
+   ],
+   "dst": [
+    "hc_NW",
+    "lg_w_done",
+    4,
+    6
+   ],
+   "bits": 2,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv header (pair k <-> banks 2k,2k+1: rq[34k+:34] wq[562k+:562] rr[514k+:514] w_done[2k+:2]); ot_hgi_sfu_lg_pair_leaf.sv; tap ot_hbm_vm_lg_static_split_term #(18,15); bench rtl/test/tb_hbm_hc_q_static.sv"
+  },
+  {
+   "src": [
+    "hc_NW2",
+    "lg_rq"
+   ],
+   "dst": [
+    "lg_NW_2",
+    "local_rq",
+    68,
+    102
+   ],
+   "bits": 34,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv header (pair k <-> banks 2k,2k+1: rq[34k+:34] wq[562k+:562] rr[514k+:514] w_done[2k+:2]); ot_hgi_sfu_lg_pair_leaf.sv; tap ot_hbm_vm_lg_static_split_term #(18,15); bench rtl/test/tb_hbm_hc_q_static.sv"
+  },
+  {
+   "src": [
+    "hc_NW2",
+    "lg_wq"
+   ],
+   "dst": [
+    "lg_NW_2",
+    "local_wq",
+    1124,
+    1686
+   ],
+   "bits": 562,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv header (pair k <-> banks 2k,2k+1: rq[34k+:34] wq[562k+:562] rr[514k+:514] w_done[2k+:2]); ot_hgi_sfu_lg_pair_leaf.sv; tap ot_hbm_vm_lg_static_split_term #(18,15); bench rtl/test/tb_hbm_hc_q_static.sv"
+  },
+  {
+   "src": [
+    "lg_NW_2",
+    "local_rr",
+    1028,
+    1542
+   ],
+   "dst": [
+    "hc_NW2",
+    "lg_rr"
+   ],
+   "bits": 514,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv header (pair k <-> banks 2k,2k+1: rq[34k+:34] wq[562k+:562] rr[514k+:514] w_done[2k+:2]); ot_hgi_sfu_lg_pair_leaf.sv; tap ot_hbm_vm_lg_static_split_term #(18,15); bench rtl/test/tb_hbm_hc_q_static.sv"
+  },
+  {
+   "src": [
+    "lg_NW_2",
+    "local_w_done",
+    4,
+    6
+   ],
+   "dst": [
+    "hc_NW2",
+    "lg_w_done"
+   ],
+   "bits": 2,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv header (pair k <-> banks 2k,2k+1: rq[34k+:34] wq[562k+:562] rr[514k+:514] w_done[2k+:2]); ot_hgi_sfu_lg_pair_leaf.sv; tap ot_hbm_vm_lg_static_split_term #(18,15); bench rtl/test/tb_hbm_hc_q_static.sv"
+  },
+  {
+   "src": [
+    "hc_NW",
+    "lg_rq",
+    102,
+    136
+   ],
+   "dst": [
+    "hc_NW3",
+    "c_rq"
+   ],
+   "bits": 34,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv header (pair k <-> banks 2k,2k+1: rq[34k+:34] wq[562k+:562] rr[514k+:514] w_done[2k+:2]); ot_hgi_sfu_lg_pair_leaf.sv; tap ot_hbm_vm_lg_static_split_term #(18,15); bench rtl/test/tb_hbm_hc_q_static.sv"
+  },
+  {
+   "src": [
+    "hc_NW",
+    "lg_wq",
+    1686,
+    2248
+   ],
+   "dst": [
+    "hc_NW3",
+    "c_wq"
+   ],
+   "bits": 562,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv header (pair k <-> banks 2k,2k+1: rq[34k+:34] wq[562k+:562] rr[514k+:514] w_done[2k+:2]); ot_hgi_sfu_lg_pair_leaf.sv; tap ot_hbm_vm_lg_static_split_term #(18,15); bench rtl/test/tb_hbm_hc_q_static.sv"
+  },
+  {
+   "src": [
+    "hc_NW3",
+    "c_rr"
+   ],
+   "dst": [
+    "hc_NW",
+    "lg_rr",
+    1542,
+    2056
+   ],
+   "bits": 514,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv header (pair k <-> banks 2k,2k+1: rq[34k+:34] wq[562k+:562] rr[514k+:514] w_done[2k+:2]); ot_hgi_sfu_lg_pair_leaf.sv; tap ot_hbm_vm_lg_static_split_term #(18,15); bench rtl/test/tb_hbm_hc_q_static.sv"
+  },
+  {
+   "src": [
+    "hc_NW3",
+    "c_w_done"
+   ],
+   "dst": [
+    "hc_NW",
+    "lg_w_done",
+    6,
+    8
+   ],
+   "bits": 2,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv header (pair k <-> banks 2k,2k+1: rq[34k+:34] wq[562k+:562] rr[514k+:514] w_done[2k+:2]); ot_hgi_sfu_lg_pair_leaf.sv; tap ot_hbm_vm_lg_static_split_term #(18,15); bench rtl/test/tb_hbm_hc_q_static.sv"
+  },
+  {
+   "src": [
+    "hc_NW3",
+    "lg_rq"
+   ],
+   "dst": [
+    "lg_NW_2",
+    "local_rq",
+    102,
+    136
+   ],
+   "bits": 34,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv header (pair k <-> banks 2k,2k+1: rq[34k+:34] wq[562k+:562] rr[514k+:514] w_done[2k+:2]); ot_hgi_sfu_lg_pair_leaf.sv; tap ot_hbm_vm_lg_static_split_term #(18,15); bench rtl/test/tb_hbm_hc_q_static.sv"
+  },
+  {
+   "src": [
+    "hc_NW3",
+    "lg_wq"
+   ],
+   "dst": [
+    "lg_NW_2",
+    "local_wq",
+    1686,
+    2248
+   ],
+   "bits": 562,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv header (pair k <-> banks 2k,2k+1: rq[34k+:34] wq[562k+:562] rr[514k+:514] w_done[2k+:2]); ot_hgi_sfu_lg_pair_leaf.sv; tap ot_hbm_vm_lg_static_split_term #(18,15); bench rtl/test/tb_hbm_hc_q_static.sv"
+  },
+  {
+   "src": [
+    "lg_NW_2",
+    "local_rr",
+    1542,
+    2056
+   ],
+   "dst": [
+    "hc_NW3",
+    "lg_rr"
+   ],
+   "bits": 514,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv header (pair k <-> banks 2k,2k+1: rq[34k+:34] wq[562k+:562] rr[514k+:514] w_done[2k+:2]); ot_hgi_sfu_lg_pair_leaf.sv; tap ot_hbm_vm_lg_static_split_term #(18,15); bench rtl/test/tb_hbm_hc_q_static.sv"
+  },
+  {
+   "src": [
+    "lg_NW_2",
+    "local_w_done",
+    6,
+    8
+   ],
+   "dst": [
+    "hc_NW3",
+    "lg_w_done"
+   ],
+   "bits": 2,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv header (pair k <-> banks 2k,2k+1: rq[34k+:34] wq[562k+:562] rr[514k+:514] w_done[2k+:2]); ot_hgi_sfu_lg_pair_leaf.sv; tap ot_hbm_vm_lg_static_split_term #(18,15); bench rtl/test/tb_hbm_hc_q_static.sv"
+  },
+  {
+   "src": [
+    "host_cp_ingress",
+    "cfg_v"
+   ],
+   "dst": [
+    "hc_tgt_NW",
+    "cfg_v"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv (F20 broadcast consumer, as host_cp_ingress -> target 48); bench rtl/test/tb_hbm_hc_q_static.sv loads/launches hc via TARGET 108"
+  },
+  {
+   "src": [
+    "host_cp_ingress",
+    "cfg_target"
+   ],
+   "dst": [
+    "hc_tgt_NW",
+    "cfg_target"
+   ],
+   "bits": 8,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv (F20 broadcast consumer, as host_cp_ingress -> target 48); bench rtl/test/tb_hbm_hc_q_static.sv loads/launches hc via TARGET 108"
+  },
+  {
+   "src": [
+    "host_cp_ingress",
+    "cfg_addr"
+   ],
+   "dst": [
+    "hc_tgt_NW",
+    "cfg_addr"
+   ],
+   "bits": 12,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv (F20 broadcast consumer, as host_cp_ingress -> target 48); bench rtl/test/tb_hbm_hc_q_static.sv loads/launches hc via TARGET 108"
+  },
+  {
+   "src": [
+    "host_cp_ingress",
+    "cfg_data"
+   ],
+   "dst": [
+    "hc_tgt_NW",
+    "cfg_data"
+   ],
+   "bits": 256,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv (F20 broadcast consumer, as host_cp_ingress -> target 48); bench rtl/test/tb_hbm_hc_q_static.sv loads/launches hc via TARGET 108"
+  },
+  {
+   "src": [
+    "host_cp_ingress",
+    "desc_v"
+   ],
+   "dst": [
+    "hc_tgt_NW",
+    "desc_v"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv (F20 broadcast consumer, as host_cp_ingress -> target 48); bench rtl/test/tb_hbm_hc_q_static.sv loads/launches hc via TARGET 108"
+  },
+  {
+   "src": [
+    "host_cp_ingress",
+    "desc_base"
+   ],
+   "dst": [
+    "hc_tgt_NW",
+    "desc_base"
+   ],
+   "bits": 12,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv (F20 broadcast consumer, as host_cp_ingress -> target 48); bench rtl/test/tb_hbm_hc_q_static.sv loads/launches hc via TARGET 108"
+  },
+  {
+   "src": [
+    "host_cp_ingress",
+    "desc_limit"
+   ],
+   "dst": [
+    "hc_tgt_NW",
+    "desc_limit"
+   ],
+   "bits": 13,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv (F20 broadcast consumer, as host_cp_ingress -> target 48); bench rtl/test/tb_hbm_hc_q_static.sv loads/launches hc via TARGET 108"
+  },
+  {
+   "src": [
+    "host_cp_ingress",
+    "desc_loops"
+   ],
+   "dst": [
+    "hc_tgt_NW",
+    "desc_loops"
+   ],
+   "bits": 16,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv (F20 broadcast consumer, as host_cp_ingress -> target 48); bench rtl/test/tb_hbm_hc_q_static.sv loads/launches hc via TARGET 108"
+  },
+  {
+   "src": [
+    "host_cp_ingress",
+    "launch_v"
+   ],
+   "dst": [
+    "hc_tgt_NW",
+    "launch_v"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv (F20 broadcast consumer, as host_cp_ingress -> target 48); bench rtl/test/tb_hbm_hc_q_static.sv loads/launches hc via TARGET 108"
+  },
+  {
+   "src": [
+    "hc_NW",
+    "program_active"
+   ],
+   "dst": [
+    "hc_tgt_NW",
+    "program_active"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv (F20 broadcast consumer, as host_cp_ingress -> target 48); bench rtl/test/tb_hbm_hc_q_static.sv loads/launches hc via TARGET 108"
+  },
+  {
+   "src": [
+    "hc_tgt_NW",
+    "program_cfg_we"
+   ],
+   "dst": [
+    "hc_NW",
+    "cfg_we"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv (F20 broadcast consumer, as host_cp_ingress -> target 48); bench rtl/test/tb_hbm_hc_q_static.sv loads/launches hc via TARGET 108"
+  },
+  {
+   "src": [
+    "hc_tgt_NW",
+    "program_cfg_addr"
+   ],
+   "dst": [
+    "hc_NW",
+    "cfg_addr"
+   ],
+   "bits": 10,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv (F20 broadcast consumer, as host_cp_ingress -> target 48); bench rtl/test/tb_hbm_hc_q_static.sv loads/launches hc via TARGET 108"
+  },
+  {
+   "src": [
+    "hc_tgt_NW",
+    "program_cfg_data"
+   ],
+   "dst": [
+    "hc_NW",
+    "cfg_data"
+   ],
+   "bits": 256,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv (F20 broadcast consumer, as host_cp_ingress -> target 48); bench rtl/test/tb_hbm_hc_q_static.sv loads/launches hc via TARGET 108"
+  },
+  {
+   "src": [
+    "hc_tgt_NW",
+    "program_start_v"
+   ],
+   "dst": [
+    "hc_NW",
+    "start_v"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv (F20 broadcast consumer, as host_cp_ingress -> target 48); bench rtl/test/tb_hbm_hc_q_static.sv loads/launches hc via TARGET 108"
+  },
+  {
+   "src": [
+    "hc_tgt_NW",
+    "program_start_base"
+   ],
+   "dst": [
+    "hc_NW",
+    "start_base"
+   ],
+   "bits": 10,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv (F20 broadcast consumer, as host_cp_ingress -> target 48); bench rtl/test/tb_hbm_hc_q_static.sv loads/launches hc via TARGET 108"
+  },
+  {
+   "src": [
+    "hc_tgt_NW",
+    "program_start_limit"
+   ],
+   "dst": [
+    "hc_NW",
+    "start_limit"
+   ],
+   "bits": 11,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv (F20 broadcast consumer, as host_cp_ingress -> target 48); bench rtl/test/tb_hbm_hc_q_static.sv loads/launches hc via TARGET 108"
+  },
+  {
+   "src": [
+    "hc_tgt_NW",
+    "program_start_loops"
+   ],
+   "dst": [
+    "hc_NW",
+    "start_loops"
+   ],
+   "bits": 16,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv (F20 broadcast consumer, as host_cp_ingress -> target 48); bench rtl/test/tb_hbm_hc_q_static.sv loads/launches hc via TARGET 108"
+  },
+  {
+   "src": [
+    "hc_NE",
+    "lg_rq",
+    0,
+    34
+   ],
+   "dst": [
+    "hc_NE0",
+    "c_rq"
+   ],
+   "bits": 34,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv header (pair k <-> banks 2k,2k+1: rq[34k+:34] wq[562k+:562] rr[514k+:514] w_done[2k+:2]); ot_hgi_sfu_lg_pair_leaf.sv; tap ot_hbm_vm_lg_static_split_term #(18,15); bench rtl/test/tb_hbm_hc_q_static.sv"
+  },
+  {
+   "src": [
+    "hc_NE",
+    "lg_wq",
+    0,
+    562
+   ],
+   "dst": [
+    "hc_NE0",
+    "c_wq"
+   ],
+   "bits": 562,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv header (pair k <-> banks 2k,2k+1: rq[34k+:34] wq[562k+:562] rr[514k+:514] w_done[2k+:2]); ot_hgi_sfu_lg_pair_leaf.sv; tap ot_hbm_vm_lg_static_split_term #(18,15); bench rtl/test/tb_hbm_hc_q_static.sv"
+  },
+  {
+   "src": [
+    "hc_NE0",
+    "c_rr"
+   ],
+   "dst": [
+    "hc_NE",
+    "lg_rr",
+    0,
+    514
+   ],
+   "bits": 514,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv header (pair k <-> banks 2k,2k+1: rq[34k+:34] wq[562k+:562] rr[514k+:514] w_done[2k+:2]); ot_hgi_sfu_lg_pair_leaf.sv; tap ot_hbm_vm_lg_static_split_term #(18,15); bench rtl/test/tb_hbm_hc_q_static.sv"
+  },
+  {
+   "src": [
+    "hc_NE0",
+    "c_w_done"
+   ],
+   "dst": [
+    "hc_NE",
+    "lg_w_done",
+    0,
+    2
+   ],
+   "bits": 2,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv header (pair k <-> banks 2k,2k+1: rq[34k+:34] wq[562k+:562] rr[514k+:514] w_done[2k+:2]); ot_hgi_sfu_lg_pair_leaf.sv; tap ot_hbm_vm_lg_static_split_term #(18,15); bench rtl/test/tb_hbm_hc_q_static.sv"
+  },
+  {
+   "src": [
+    "hc_NE0",
+    "lg_rq"
+   ],
+   "dst": [
+    "lg_NE_2",
+    "local_rq",
+    0,
+    34
+   ],
+   "bits": 34,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv header (pair k <-> banks 2k,2k+1: rq[34k+:34] wq[562k+:562] rr[514k+:514] w_done[2k+:2]); ot_hgi_sfu_lg_pair_leaf.sv; tap ot_hbm_vm_lg_static_split_term #(18,15); bench rtl/test/tb_hbm_hc_q_static.sv"
+  },
+  {
+   "src": [
+    "hc_NE0",
+    "lg_wq"
+   ],
+   "dst": [
+    "lg_NE_2",
+    "local_wq",
+    0,
+    562
+   ],
+   "bits": 562,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv header (pair k <-> banks 2k,2k+1: rq[34k+:34] wq[562k+:562] rr[514k+:514] w_done[2k+:2]); ot_hgi_sfu_lg_pair_leaf.sv; tap ot_hbm_vm_lg_static_split_term #(18,15); bench rtl/test/tb_hbm_hc_q_static.sv"
+  },
+  {
+   "src": [
+    "lg_NE_2",
+    "local_rr",
+    0,
+    514
+   ],
+   "dst": [
+    "hc_NE0",
+    "lg_rr"
+   ],
+   "bits": 514,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv header (pair k <-> banks 2k,2k+1: rq[34k+:34] wq[562k+:562] rr[514k+:514] w_done[2k+:2]); ot_hgi_sfu_lg_pair_leaf.sv; tap ot_hbm_vm_lg_static_split_term #(18,15); bench rtl/test/tb_hbm_hc_q_static.sv"
+  },
+  {
+   "src": [
+    "lg_NE_2",
+    "local_w_done",
+    0,
+    2
+   ],
+   "dst": [
+    "hc_NE0",
+    "lg_w_done"
+   ],
+   "bits": 2,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv header (pair k <-> banks 2k,2k+1: rq[34k+:34] wq[562k+:562] rr[514k+:514] w_done[2k+:2]); ot_hgi_sfu_lg_pair_leaf.sv; tap ot_hbm_vm_lg_static_split_term #(18,15); bench rtl/test/tb_hbm_hc_q_static.sv"
+  },
+  {
+   "src": [
+    "hc_NE",
+    "lg_rq",
+    34,
+    68
+   ],
+   "dst": [
+    "hc_NE1",
+    "c_rq"
+   ],
+   "bits": 34,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv header (pair k <-> banks 2k,2k+1: rq[34k+:34] wq[562k+:562] rr[514k+:514] w_done[2k+:2]); ot_hgi_sfu_lg_pair_leaf.sv; tap ot_hbm_vm_lg_static_split_term #(18,15); bench rtl/test/tb_hbm_hc_q_static.sv"
+  },
+  {
+   "src": [
+    "hc_NE",
+    "lg_wq",
+    562,
+    1124
+   ],
+   "dst": [
+    "hc_NE1",
+    "c_wq"
+   ],
+   "bits": 562,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv header (pair k <-> banks 2k,2k+1: rq[34k+:34] wq[562k+:562] rr[514k+:514] w_done[2k+:2]); ot_hgi_sfu_lg_pair_leaf.sv; tap ot_hbm_vm_lg_static_split_term #(18,15); bench rtl/test/tb_hbm_hc_q_static.sv"
+  },
+  {
+   "src": [
+    "hc_NE1",
+    "c_rr"
+   ],
+   "dst": [
+    "hc_NE",
+    "lg_rr",
+    514,
+    1028
+   ],
+   "bits": 514,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv header (pair k <-> banks 2k,2k+1: rq[34k+:34] wq[562k+:562] rr[514k+:514] w_done[2k+:2]); ot_hgi_sfu_lg_pair_leaf.sv; tap ot_hbm_vm_lg_static_split_term #(18,15); bench rtl/test/tb_hbm_hc_q_static.sv"
+  },
+  {
+   "src": [
+    "hc_NE1",
+    "c_w_done"
+   ],
+   "dst": [
+    "hc_NE",
+    "lg_w_done",
+    2,
+    4
+   ],
+   "bits": 2,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv header (pair k <-> banks 2k,2k+1: rq[34k+:34] wq[562k+:562] rr[514k+:514] w_done[2k+:2]); ot_hgi_sfu_lg_pair_leaf.sv; tap ot_hbm_vm_lg_static_split_term #(18,15); bench rtl/test/tb_hbm_hc_q_static.sv"
+  },
+  {
+   "src": [
+    "hc_NE1",
+    "lg_rq"
+   ],
+   "dst": [
+    "lg_NE_2",
+    "local_rq",
+    34,
+    68
+   ],
+   "bits": 34,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv header (pair k <-> banks 2k,2k+1: rq[34k+:34] wq[562k+:562] rr[514k+:514] w_done[2k+:2]); ot_hgi_sfu_lg_pair_leaf.sv; tap ot_hbm_vm_lg_static_split_term #(18,15); bench rtl/test/tb_hbm_hc_q_static.sv"
+  },
+  {
+   "src": [
+    "hc_NE1",
+    "lg_wq"
+   ],
+   "dst": [
+    "lg_NE_2",
+    "local_wq",
+    562,
+    1124
+   ],
+   "bits": 562,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv header (pair k <-> banks 2k,2k+1: rq[34k+:34] wq[562k+:562] rr[514k+:514] w_done[2k+:2]); ot_hgi_sfu_lg_pair_leaf.sv; tap ot_hbm_vm_lg_static_split_term #(18,15); bench rtl/test/tb_hbm_hc_q_static.sv"
+  },
+  {
+   "src": [
+    "lg_NE_2",
+    "local_rr",
+    514,
+    1028
+   ],
+   "dst": [
+    "hc_NE1",
+    "lg_rr"
+   ],
+   "bits": 514,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv header (pair k <-> banks 2k,2k+1: rq[34k+:34] wq[562k+:562] rr[514k+:514] w_done[2k+:2]); ot_hgi_sfu_lg_pair_leaf.sv; tap ot_hbm_vm_lg_static_split_term #(18,15); bench rtl/test/tb_hbm_hc_q_static.sv"
+  },
+  {
+   "src": [
+    "lg_NE_2",
+    "local_w_done",
+    2,
+    4
+   ],
+   "dst": [
+    "hc_NE1",
+    "lg_w_done"
+   ],
+   "bits": 2,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv header (pair k <-> banks 2k,2k+1: rq[34k+:34] wq[562k+:562] rr[514k+:514] w_done[2k+:2]); ot_hgi_sfu_lg_pair_leaf.sv; tap ot_hbm_vm_lg_static_split_term #(18,15); bench rtl/test/tb_hbm_hc_q_static.sv"
+  },
+  {
+   "src": [
+    "hc_NE",
+    "lg_rq",
+    68,
+    102
+   ],
+   "dst": [
+    "hc_NE2",
+    "c_rq"
+   ],
+   "bits": 34,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv header (pair k <-> banks 2k,2k+1: rq[34k+:34] wq[562k+:562] rr[514k+:514] w_done[2k+:2]); ot_hgi_sfu_lg_pair_leaf.sv; tap ot_hbm_vm_lg_static_split_term #(18,15); bench rtl/test/tb_hbm_hc_q_static.sv"
+  },
+  {
+   "src": [
+    "hc_NE",
+    "lg_wq",
+    1124,
+    1686
+   ],
+   "dst": [
+    "hc_NE2",
+    "c_wq"
+   ],
+   "bits": 562,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv header (pair k <-> banks 2k,2k+1: rq[34k+:34] wq[562k+:562] rr[514k+:514] w_done[2k+:2]); ot_hgi_sfu_lg_pair_leaf.sv; tap ot_hbm_vm_lg_static_split_term #(18,15); bench rtl/test/tb_hbm_hc_q_static.sv"
+  },
+  {
+   "src": [
+    "hc_NE2",
+    "c_rr"
+   ],
+   "dst": [
+    "hc_NE",
+    "lg_rr",
+    1028,
+    1542
+   ],
+   "bits": 514,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv header (pair k <-> banks 2k,2k+1: rq[34k+:34] wq[562k+:562] rr[514k+:514] w_done[2k+:2]); ot_hgi_sfu_lg_pair_leaf.sv; tap ot_hbm_vm_lg_static_split_term #(18,15); bench rtl/test/tb_hbm_hc_q_static.sv"
+  },
+  {
+   "src": [
+    "hc_NE2",
+    "c_w_done"
+   ],
+   "dst": [
+    "hc_NE",
+    "lg_w_done",
+    4,
+    6
+   ],
+   "bits": 2,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv header (pair k <-> banks 2k,2k+1: rq[34k+:34] wq[562k+:562] rr[514k+:514] w_done[2k+:2]); ot_hgi_sfu_lg_pair_leaf.sv; tap ot_hbm_vm_lg_static_split_term #(18,15); bench rtl/test/tb_hbm_hc_q_static.sv"
+  },
+  {
+   "src": [
+    "hc_NE2",
+    "lg_rq"
+   ],
+   "dst": [
+    "lg_NE_2",
+    "local_rq",
+    68,
+    102
+   ],
+   "bits": 34,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv header (pair k <-> banks 2k,2k+1: rq[34k+:34] wq[562k+:562] rr[514k+:514] w_done[2k+:2]); ot_hgi_sfu_lg_pair_leaf.sv; tap ot_hbm_vm_lg_static_split_term #(18,15); bench rtl/test/tb_hbm_hc_q_static.sv"
+  },
+  {
+   "src": [
+    "hc_NE2",
+    "lg_wq"
+   ],
+   "dst": [
+    "lg_NE_2",
+    "local_wq",
+    1124,
+    1686
+   ],
+   "bits": 562,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv header (pair k <-> banks 2k,2k+1: rq[34k+:34] wq[562k+:562] rr[514k+:514] w_done[2k+:2]); ot_hgi_sfu_lg_pair_leaf.sv; tap ot_hbm_vm_lg_static_split_term #(18,15); bench rtl/test/tb_hbm_hc_q_static.sv"
+  },
+  {
+   "src": [
+    "lg_NE_2",
+    "local_rr",
+    1028,
+    1542
+   ],
+   "dst": [
+    "hc_NE2",
+    "lg_rr"
+   ],
+   "bits": 514,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv header (pair k <-> banks 2k,2k+1: rq[34k+:34] wq[562k+:562] rr[514k+:514] w_done[2k+:2]); ot_hgi_sfu_lg_pair_leaf.sv; tap ot_hbm_vm_lg_static_split_term #(18,15); bench rtl/test/tb_hbm_hc_q_static.sv"
+  },
+  {
+   "src": [
+    "lg_NE_2",
+    "local_w_done",
+    4,
+    6
+   ],
+   "dst": [
+    "hc_NE2",
+    "lg_w_done"
+   ],
+   "bits": 2,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv header (pair k <-> banks 2k,2k+1: rq[34k+:34] wq[562k+:562] rr[514k+:514] w_done[2k+:2]); ot_hgi_sfu_lg_pair_leaf.sv; tap ot_hbm_vm_lg_static_split_term #(18,15); bench rtl/test/tb_hbm_hc_q_static.sv"
+  },
+  {
+   "src": [
+    "hc_NE",
+    "lg_rq",
+    102,
+    136
+   ],
+   "dst": [
+    "hc_NE3",
+    "c_rq"
+   ],
+   "bits": 34,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv header (pair k <-> banks 2k,2k+1: rq[34k+:34] wq[562k+:562] rr[514k+:514] w_done[2k+:2]); ot_hgi_sfu_lg_pair_leaf.sv; tap ot_hbm_vm_lg_static_split_term #(18,15); bench rtl/test/tb_hbm_hc_q_static.sv"
+  },
+  {
+   "src": [
+    "hc_NE",
+    "lg_wq",
+    1686,
+    2248
+   ],
+   "dst": [
+    "hc_NE3",
+    "c_wq"
+   ],
+   "bits": 562,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv header (pair k <-> banks 2k,2k+1: rq[34k+:34] wq[562k+:562] rr[514k+:514] w_done[2k+:2]); ot_hgi_sfu_lg_pair_leaf.sv; tap ot_hbm_vm_lg_static_split_term #(18,15); bench rtl/test/tb_hbm_hc_q_static.sv"
+  },
+  {
+   "src": [
+    "hc_NE3",
+    "c_rr"
+   ],
+   "dst": [
+    "hc_NE",
+    "lg_rr",
+    1542,
+    2056
+   ],
+   "bits": 514,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv header (pair k <-> banks 2k,2k+1: rq[34k+:34] wq[562k+:562] rr[514k+:514] w_done[2k+:2]); ot_hgi_sfu_lg_pair_leaf.sv; tap ot_hbm_vm_lg_static_split_term #(18,15); bench rtl/test/tb_hbm_hc_q_static.sv"
+  },
+  {
+   "src": [
+    "hc_NE3",
+    "c_w_done"
+   ],
+   "dst": [
+    "hc_NE",
+    "lg_w_done",
+    6,
+    8
+   ],
+   "bits": 2,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv header (pair k <-> banks 2k,2k+1: rq[34k+:34] wq[562k+:562] rr[514k+:514] w_done[2k+:2]); ot_hgi_sfu_lg_pair_leaf.sv; tap ot_hbm_vm_lg_static_split_term #(18,15); bench rtl/test/tb_hbm_hc_q_static.sv"
+  },
+  {
+   "src": [
+    "hc_NE3",
+    "lg_rq"
+   ],
+   "dst": [
+    "lg_NE_2",
+    "local_rq",
+    102,
+    136
+   ],
+   "bits": 34,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv header (pair k <-> banks 2k,2k+1: rq[34k+:34] wq[562k+:562] rr[514k+:514] w_done[2k+:2]); ot_hgi_sfu_lg_pair_leaf.sv; tap ot_hbm_vm_lg_static_split_term #(18,15); bench rtl/test/tb_hbm_hc_q_static.sv"
+  },
+  {
+   "src": [
+    "hc_NE3",
+    "lg_wq"
+   ],
+   "dst": [
+    "lg_NE_2",
+    "local_wq",
+    1686,
+    2248
+   ],
+   "bits": 562,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv header (pair k <-> banks 2k,2k+1: rq[34k+:34] wq[562k+:562] rr[514k+:514] w_done[2k+:2]); ot_hgi_sfu_lg_pair_leaf.sv; tap ot_hbm_vm_lg_static_split_term #(18,15); bench rtl/test/tb_hbm_hc_q_static.sv"
+  },
+  {
+   "src": [
+    "lg_NE_2",
+    "local_rr",
+    1542,
+    2056
+   ],
+   "dst": [
+    "hc_NE3",
+    "lg_rr"
+   ],
+   "bits": 514,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv header (pair k <-> banks 2k,2k+1: rq[34k+:34] wq[562k+:562] rr[514k+:514] w_done[2k+:2]); ot_hgi_sfu_lg_pair_leaf.sv; tap ot_hbm_vm_lg_static_split_term #(18,15); bench rtl/test/tb_hbm_hc_q_static.sv"
+  },
+  {
+   "src": [
+    "lg_NE_2",
+    "local_w_done",
+    6,
+    8
+   ],
+   "dst": [
+    "hc_NE3",
+    "lg_w_done"
+   ],
+   "bits": 2,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv header (pair k <-> banks 2k,2k+1: rq[34k+:34] wq[562k+:562] rr[514k+:514] w_done[2k+:2]); ot_hgi_sfu_lg_pair_leaf.sv; tap ot_hbm_vm_lg_static_split_term #(18,15); bench rtl/test/tb_hbm_hc_q_static.sv"
+  },
+  {
+   "src": [
+    "host_cp_ingress",
+    "cfg_v"
+   ],
+   "dst": [
+    "hc_tgt_NE",
+    "cfg_v"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv (F20 broadcast consumer, as host_cp_ingress -> target 48); bench rtl/test/tb_hbm_hc_q_static.sv loads/launches hc via TARGET 108"
+  },
+  {
+   "src": [
+    "host_cp_ingress",
+    "cfg_target"
+   ],
+   "dst": [
+    "hc_tgt_NE",
+    "cfg_target"
+   ],
+   "bits": 8,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv (F20 broadcast consumer, as host_cp_ingress -> target 48); bench rtl/test/tb_hbm_hc_q_static.sv loads/launches hc via TARGET 108"
+  },
+  {
+   "src": [
+    "host_cp_ingress",
+    "cfg_addr"
+   ],
+   "dst": [
+    "hc_tgt_NE",
+    "cfg_addr"
+   ],
+   "bits": 12,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv (F20 broadcast consumer, as host_cp_ingress -> target 48); bench rtl/test/tb_hbm_hc_q_static.sv loads/launches hc via TARGET 108"
+  },
+  {
+   "src": [
+    "host_cp_ingress",
+    "cfg_data"
+   ],
+   "dst": [
+    "hc_tgt_NE",
+    "cfg_data"
+   ],
+   "bits": 256,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv (F20 broadcast consumer, as host_cp_ingress -> target 48); bench rtl/test/tb_hbm_hc_q_static.sv loads/launches hc via TARGET 108"
+  },
+  {
+   "src": [
+    "host_cp_ingress",
+    "desc_v"
+   ],
+   "dst": [
+    "hc_tgt_NE",
+    "desc_v"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv (F20 broadcast consumer, as host_cp_ingress -> target 48); bench rtl/test/tb_hbm_hc_q_static.sv loads/launches hc via TARGET 108"
+  },
+  {
+   "src": [
+    "host_cp_ingress",
+    "desc_base"
+   ],
+   "dst": [
+    "hc_tgt_NE",
+    "desc_base"
+   ],
+   "bits": 12,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv (F20 broadcast consumer, as host_cp_ingress -> target 48); bench rtl/test/tb_hbm_hc_q_static.sv loads/launches hc via TARGET 108"
+  },
+  {
+   "src": [
+    "host_cp_ingress",
+    "desc_limit"
+   ],
+   "dst": [
+    "hc_tgt_NE",
+    "desc_limit"
+   ],
+   "bits": 13,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv (F20 broadcast consumer, as host_cp_ingress -> target 48); bench rtl/test/tb_hbm_hc_q_static.sv loads/launches hc via TARGET 108"
+  },
+  {
+   "src": [
+    "host_cp_ingress",
+    "desc_loops"
+   ],
+   "dst": [
+    "hc_tgt_NE",
+    "desc_loops"
+   ],
+   "bits": 16,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv (F20 broadcast consumer, as host_cp_ingress -> target 48); bench rtl/test/tb_hbm_hc_q_static.sv loads/launches hc via TARGET 108"
+  },
+  {
+   "src": [
+    "host_cp_ingress",
+    "launch_v"
+   ],
+   "dst": [
+    "hc_tgt_NE",
+    "launch_v"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv (F20 broadcast consumer, as host_cp_ingress -> target 48); bench rtl/test/tb_hbm_hc_q_static.sv loads/launches hc via TARGET 108"
+  },
+  {
+   "src": [
+    "hc_NE",
+    "program_active"
+   ],
+   "dst": [
+    "hc_tgt_NE",
+    "program_active"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv (F20 broadcast consumer, as host_cp_ingress -> target 48); bench rtl/test/tb_hbm_hc_q_static.sv loads/launches hc via TARGET 108"
+  },
+  {
+   "src": [
+    "hc_tgt_NE",
+    "program_cfg_we"
+   ],
+   "dst": [
+    "hc_NE",
+    "cfg_we"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv (F20 broadcast consumer, as host_cp_ingress -> target 48); bench rtl/test/tb_hbm_hc_q_static.sv loads/launches hc via TARGET 108"
+  },
+  {
+   "src": [
+    "hc_tgt_NE",
+    "program_cfg_addr"
+   ],
+   "dst": [
+    "hc_NE",
+    "cfg_addr"
+   ],
+   "bits": 10,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv (F20 broadcast consumer, as host_cp_ingress -> target 48); bench rtl/test/tb_hbm_hc_q_static.sv loads/launches hc via TARGET 108"
+  },
+  {
+   "src": [
+    "hc_tgt_NE",
+    "program_cfg_data"
+   ],
+   "dst": [
+    "hc_NE",
+    "cfg_data"
+   ],
+   "bits": 256,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv (F20 broadcast consumer, as host_cp_ingress -> target 48); bench rtl/test/tb_hbm_hc_q_static.sv loads/launches hc via TARGET 108"
+  },
+  {
+   "src": [
+    "hc_tgt_NE",
+    "program_start_v"
+   ],
+   "dst": [
+    "hc_NE",
+    "start_v"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv (F20 broadcast consumer, as host_cp_ingress -> target 48); bench rtl/test/tb_hbm_hc_q_static.sv loads/launches hc via TARGET 108"
+  },
+  {
+   "src": [
+    "hc_tgt_NE",
+    "program_start_base"
+   ],
+   "dst": [
+    "hc_NE",
+    "start_base"
+   ],
+   "bits": 10,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv (F20 broadcast consumer, as host_cp_ingress -> target 48); bench rtl/test/tb_hbm_hc_q_static.sv loads/launches hc via TARGET 108"
+  },
+  {
+   "src": [
+    "hc_tgt_NE",
+    "program_start_limit"
+   ],
+   "dst": [
+    "hc_NE",
+    "start_limit"
+   ],
+   "bits": 11,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv (F20 broadcast consumer, as host_cp_ingress -> target 48); bench rtl/test/tb_hbm_hc_q_static.sv loads/launches hc via TARGET 108"
+  },
+  {
+   "src": [
+    "hc_tgt_NE",
+    "program_start_loops"
+   ],
+   "dst": [
+    "hc_NE",
+    "start_loops"
+   ],
+   "bits": 16,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv (F20 broadcast consumer, as host_cp_ingress -> target 48); bench rtl/test/tb_hbm_hc_q_static.sv loads/launches hc via TARGET 108"
+  }
+ ],
+ "drop_v15_edges": [],
+ "clocks": [
+  {
+   "inst": "hc_SW0",
+   "port": "clk",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "hc_SW0",
+   "port": "rst_n",
+   "domain": "stream",
+   "kind": "reset"
+  },
+  {
+   "inst": "hc_SW1",
+   "port": "clk",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "hc_SW1",
+   "port": "rst_n",
+   "domain": "stream",
+   "kind": "reset"
+  },
+  {
+   "inst": "hc_SW2",
+   "port": "clk",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "hc_SW2",
+   "port": "rst_n",
+   "domain": "stream",
+   "kind": "reset"
+  },
+  {
+   "inst": "hc_SW3",
+   "port": "clk",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "hc_SW3",
+   "port": "rst_n",
+   "domain": "stream",
+   "kind": "reset"
+  },
+  {
+   "inst": "hc_tgt_SW",
+   "port": "clk",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "hc_tgt_SW",
+   "port": "rst_n",
+   "domain": "stream",
+   "kind": "reset"
+  },
+  {
+   "inst": "hc_SW",
+   "port": "clk",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "hc_SW",
+   "port": "rst_n",
+   "domain": "stream",
+   "kind": "reset"
+  },
+  {
+   "inst": "hc_SE0",
+   "port": "clk",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "hc_SE0",
+   "port": "rst_n",
+   "domain": "stream",
+   "kind": "reset"
+  },
+  {
+   "inst": "hc_SE1",
+   "port": "clk",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "hc_SE1",
+   "port": "rst_n",
+   "domain": "stream",
+   "kind": "reset"
+  },
+  {
+   "inst": "hc_SE2",
+   "port": "clk",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "hc_SE2",
+   "port": "rst_n",
+   "domain": "stream",
+   "kind": "reset"
+  },
+  {
+   "inst": "hc_SE3",
+   "port": "clk",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "hc_SE3",
+   "port": "rst_n",
+   "domain": "stream",
+   "kind": "reset"
+  },
+  {
+   "inst": "hc_tgt_SE",
+   "port": "clk",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "hc_tgt_SE",
+   "port": "rst_n",
+   "domain": "stream",
+   "kind": "reset"
+  },
+  {
+   "inst": "hc_SE",
+   "port": "clk",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "hc_SE",
+   "port": "rst_n",
+   "domain": "stream",
+   "kind": "reset"
+  },
+  {
+   "inst": "hc_NW0",
+   "port": "clk",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "hc_NW0",
+   "port": "rst_n",
+   "domain": "stream",
+   "kind": "reset"
+  },
+  {
+   "inst": "hc_NW1",
+   "port": "clk",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "hc_NW1",
+   "port": "rst_n",
+   "domain": "stream",
+   "kind": "reset"
+  },
+  {
+   "inst": "hc_NW2",
+   "port": "clk",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "hc_NW2",
+   "port": "rst_n",
+   "domain": "stream",
+   "kind": "reset"
+  },
+  {
+   "inst": "hc_NW3",
+   "port": "clk",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "hc_NW3",
+   "port": "rst_n",
+   "domain": "stream",
+   "kind": "reset"
+  },
+  {
+   "inst": "hc_tgt_NW",
+   "port": "clk",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "hc_tgt_NW",
+   "port": "rst_n",
+   "domain": "stream",
+   "kind": "reset"
+  },
+  {
+   "inst": "hc_NW",
+   "port": "clk",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "hc_NW",
+   "port": "rst_n",
+   "domain": "stream",
+   "kind": "reset"
+  },
+  {
+   "inst": "hc_NE0",
+   "port": "clk",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "hc_NE0",
+   "port": "rst_n",
+   "domain": "stream",
+   "kind": "reset"
+  },
+  {
+   "inst": "hc_NE1",
+   "port": "clk",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "hc_NE1",
+   "port": "rst_n",
+   "domain": "stream",
+   "kind": "reset"
+  },
+  {
+   "inst": "hc_NE2",
+   "port": "clk",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "hc_NE2",
+   "port": "rst_n",
+   "domain": "stream",
+   "kind": "reset"
+  },
+  {
+   "inst": "hc_NE3",
+   "port": "clk",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "hc_NE3",
+   "port": "rst_n",
+   "domain": "stream",
+   "kind": "reset"
+  },
+  {
+   "inst": "hc_tgt_NE",
+   "port": "clk",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "hc_tgt_NE",
+   "port": "rst_n",
+   "domain": "stream",
+   "kind": "reset"
+  },
+  {
+   "inst": "hc_NE",
+   "port": "clk",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "hc_NE",
+   "port": "rst_n",
+   "domain": "stream",
+   "kind": "reset"
+  }
+ ],
+ "straps": [],
+ "gaps": [
+  {
+   "id": "G-HC-ENG",
+   "owner": "HC owner (engine) / H-DIE",
+   "missing_rtl": "the single static HC engine hc_eng (projection W32/K20480 + Sinkhorn tail, 64 weight + 16 residual SRAM, programme SRAM; codex/hc-static-engine-1014 a35449ada ot_hgi_hc_programmed_sys1_split_mtp_static + weight prefetch on codex/hc-weight-prefetch-1015) is not on main; it is the producer of the per-quadrant tail result (result_v, result_position[3], result[768] = 24 FP32) that hc_<q> stores to VM. Its residual input is hc_<q>.x_wave (8192 b every 4 edges) and gathered mixes, both open outputs here.",
+   "affects": [
+    [
+     "hc_SW",
+     "result_v"
+    ],
+    [
+     "hc_SW",
+     "result_position"
+    ],
+    [
+     "hc_SW",
+     "result"
+    ],
+    [
+     "hc_SE",
+     "result_v"
+    ],
+    [
+     "hc_SE",
+     "result_position"
+    ],
+    [
+     "hc_SE",
+     "result"
+    ],
+    [
+     "hc_NW",
+     "result_v"
+    ],
+    [
+     "hc_NW",
+     "result_position"
+    ],
+    [
+     "hc_NW",
+     "result"
+    ],
+    [
+     "hc_NE",
+     "result_v"
+    ],
+    [
+     "hc_NE",
+     "result_position"
+    ],
+    [
+     "hc_NE",
+     "result"
+    ]
+   ],
+   "note": "Binding needs (a) the engine merged to main, (b) a 4:1 quadrant select of x_wave/gathered mix at the engine (programme-phase owned) or a K-split per-quadrant projection (architecture question), (c) its 128 HBM prefetch K-ports shared with the SM service PCs (G-VM-HBM-PATH owner), (d) bases[768]/scales[96] loader. hc_<q> status outputs residual_done/gather_done/program_done/fault unconsumed (status join owner)."
+  }
+ ],
+ "notes": [
+  "Closes G-HC (lg_<q>_2 local_rq/local_wq, 8 ports / 9,536 bits): the far HC tap is driven by a static HC quadrant client hc_<q> (new master ot_hbm_hc_q_static x4) through 16 bank-pair pin-register leaves hc_<q><k> (existing ot_hgi_sfu_lg_pair_leaf). lg_<q>_2 local_rr/local_w_done are now consumed. local_read/local_write stay driven by calendar_<q>; the compiler programmes calendar_<q> and hc_<q> on the same edges (the tap faults on any disagreement).",
+  "Programme: hc_<q> owns a 1024x256 programme SRAM (ot_vms_calendar_static W79), loaded and launched by hc_tgt_<q> = ot_static_program_target TARGET 108..111 from host_cp_ingress (F20). TARGET_MASK of host_cp_ingress must admit 108..111 (cp owner).",
+  "Fixed added latency vs the codex direct-tap engine: +1 output pin, +1 pair leaf, +1 pair leaf return, +1 input pin => residual capture 23 (was 19), gathered response phase 23 (was 19), write-done 19 edges after the store output edge."
+ ]
+}

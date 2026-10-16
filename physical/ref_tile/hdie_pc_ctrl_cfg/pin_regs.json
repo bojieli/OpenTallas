@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_hbm_svc_pc_ctrl_leaf_cfg",
+ "enable": false,
+ "reason": "the RTL registers its boundary itself (OREG: every PHY command output from a flop; KREG: K request in a 2-entry pin skid, k_rdy from a register; KRREG: K response from a 2-entry skid; RREG: PHY return valid+data captured at the pin; pc_id/refresh_reload straps captured in pc_id_q/refresh_reload_q). Flow pin registers would add a cycle inside the elastic K ready/valid handshake (HBM-stack boundary, owner 10-14) and overflow the skids."
+}

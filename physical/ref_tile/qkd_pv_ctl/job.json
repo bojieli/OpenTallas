@@ -1,5 +1,5 @@
 {
- "name": "qkd_pv_ctl-r2-COMMIT",
+ "name": "qkd_pv_ctl-r4-COMMIT",
  "block": "ot_qwen_tp8_pv_wide_ctl",
  "ref_tile": true,
  "owner": "Claude:Q-ATTN-RATE (el1015-qwen-attn.log)",
@@ -113,7 +113,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qkd_pv_ctl/qkd_pv_ctl-r2-COMMIT"
+   "to": "results/rtl/ref_tile/qkd_pv_ctl/qkd_pv_ctl-r4-COMMIT"
   }
  ],
  "cycles_added": 0,

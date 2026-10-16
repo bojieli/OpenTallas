@@ -12,9 +12,9 @@ mkdir -p "$out"
 python3 tools/hbm_die_v15/svc_capacity_images_1705.py --stack "$stack" --rows 64 --out "$out/images" > "$out/images.log"
 if [ "$mut" = 1 ]; then
   sed 's/response_identity\[response_wp\]<=pending_identity\[pending_rp\]/response_identity[response_wp]<=pending_identity[pending_rp+5'"'"'d1]/' \
-    $d/ot_hbm_svc_pc_ctrl_leaf.sv > "$out/leaf_mut.sv"
-  cmp -s "$out/leaf_mut.sv" $d/ot_hbm_svc_pc_ctrl_leaf.sv && { echo 'mutant not applied'; exit 3; }
-  export LEAF_SRC="$out/leaf_mut.sv"
+    $d/ot_hbm_svc_pc_ctrl_leaf_cfg.sv > "$out/leaf_mut.sv"
+  cmp -s "$out/leaf_mut.sv" $d/ot_hbm_svc_pc_ctrl_leaf_cfg.sv && { echo 'mutant not applied'; exit 3; }
+  export CFG_LEAF_SRC="$out/leaf_mut.sv"
 fi
 bash $d/run_ctrl_leaves.sh run_sm_stack_capacity.sh "$out/run" "$out/images" "$stack" 64
 grep "SM_STACK_CAPACITY PASS" "$out/run/positive.log"

@@ -1,0 +1,31 @@
+{
+ "cell": "ot_s81_hc_ctfl_nt",
+ "view": "physical/ref_tile/s81hc_ctflnt_ref/views/ot_s81_hc_ctfl_nt",
+ "lib_cell": "ot_s81_hc_ctfl_nt",
+ "insertion": true,
+ "ref_src": [
+  "insertion.json boundary mean"
+ ],
+ "R_ps": 99.6,
+ "spread_ps": 15.5,
+ "outputs": 1135,
+ "inputs": 1136,
+ "launch_ps": 189.2,
+ "launch_pin": "fdx_local[735]",
+ "capture_ps": 143.5,
+ "capture_pin": "fdx[964]",
+ "launch_over": 0,
+ "capture_over": 0,
+ "comb_pins": 0,
+ "comb_first": [],
+ "pass": true,
+ "fail_why": "",
+ "job": "s81hc_ctflnt_ref-s6-nohb4-COMMIT-16fc576b0",
+ "record": "d8cd9ad37",
+ "budgets": {
+  "launch_ps": 220,
+  "capture_ps": 190,
+  "spread_ps": 80
+ },
+ "tool": "tools/hier_contract/native_pin_audit.py audit_one on the record views"
+}

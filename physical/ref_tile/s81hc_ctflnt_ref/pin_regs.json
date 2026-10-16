@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_s81_hc_ctfl_nt",
+ "enable": false,
+ "reason": "Existing CLOSED pure one-stage relay has actual input/output data and valid flops shared across facing N/S pins, kept and anchored. This physical hold-cell repair preserves actual RTL stage count; adding a generic wrapper would change3stages and the fixed calendar. Routed native phi-R and explicit pin flop distance remain mandatory."
+}

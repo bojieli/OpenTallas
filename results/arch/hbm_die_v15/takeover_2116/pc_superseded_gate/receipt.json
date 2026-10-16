@@ -1,0 +1,20 @@
+{
+ "status": "SUPERSEDED diagnostic, stopped by its owner; not a route",
+ "source_commit": "6f5a65703",
+ "run": "/srv/opentallas-scratch/claude/ref_gate/hdie_pc_ctrl-20261015-212707",
+ "host": "ot-epyc4",
+ "diagnosis": {
+  "flops": 15218,
+  "clock_sinks": 15219,
+  "primary_input_paths_over3levels": 1027,
+  "worst_input": "dram_rvalid -> response_identity (7levels)",
+  "output_hold_worst_ps": -30.322,
+  "hold_iterations_over": 11000,
+  "hold_buffers_over": 12000,
+  "endpoint": "kr_data[54] (previous kr_data[48])"
+ },
+ "action": "Stopped only own container1255a6c37e55 after preserving small textbook/hold evidence; raw unclosed data removed; no inherited jobs touched.",
+ "successor": "3f8752b58:257PHYcaptureFF/+1HBMedge plus true registered-head/tail K/KR skids with0FIFOedgechange",
+ "successor_service_proof": "Real32controllers/8SMs/64rows/8epochs PASS andearly/residency/missingimages rejected;69.5833055nssteady",
+ "qualification": false
+}

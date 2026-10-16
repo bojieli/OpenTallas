@@ -2,7 +2,7 @@
 module tb_dma_vp4_banks_clock;
 reg clk=0,rst_n=0;reg[7:0]clkb=0;reg[2055:0]rr=0;
 wire[2311:0]wd;
-ot_hgi_dma_back_static_vp4_banks dut(.clk(clk),.clk_bank(clkb),.rst_n(rst_n),.cycle(32'd0),.mv_v(1'b0),.mv(227'd0),.issue_at(32'd0),.drain_at(32'd0),.mv_wb_bank(1'b0),.mv_wb_epoch(16'd0),.rr(rr),.wb_ready(1'b1),.wa(12'd0),.wd(wd));
+ot_hgi_dma_back_static_vp4_banks dut(.clk(clk),.clk_bank(clkb),.rst_n(rst_n),.stk(2'd0),.cycle(32'd0),.mv_v(1'b0),.mv(227'd0),.issue_at(32'd0),.drain_at(32'd0),.mv_wb_bank(1'b0),.mv_wb_epoch(16'd0),.rr(rr),.wb_ready(1'b1),.wa(12'd0),.wd(wd));
 reg[255:0]expected[0:7];integer checks=0;
 initial begin
 #1;clkb=255;#1;clkb=0;#1;rst_n=1;

@@ -1,0 +1,118 @@
+{
+  "schema": "opentallas.s81.c5-schedule-audit.v1",
+  "physical_allocator": {
+    "stages": 89,
+    "rank_dies": 356,
+    "pairs_per_die": 1973,
+    "bf_per_die": 424,
+    "roots": 128,
+    "placements": 46719,
+    "capacity_pass": true,
+    "layer_last_stage": {
+      "1": 2,
+      "2": 4,
+      "3": 6,
+      "4": 8,
+      "5": 11,
+      "6": 13,
+      "7": 15,
+      "8": 17,
+      "9": 19,
+      "10": 22,
+      "11": 24,
+      "12": 26,
+      "13": 28,
+      "14": 31,
+      "15": 33,
+      "16": 35,
+      "17": 37,
+      "18": 39,
+      "19": 42,
+      "20": 44,
+      "21": 46,
+      "22": 48,
+      "23": 51,
+      "24": 53,
+      "25": 55,
+      "26": 57,
+      "27": 59,
+      "28": 62,
+      "29": 64,
+      "30": 66,
+      "31": 68,
+      "32": 70,
+      "33": 73,
+      "34": 75,
+      "35": 77,
+      "36": 79,
+      "37": 82,
+      "38": 84,
+      "39": 86,
+      "40": 88
+    },
+    "scan_service_homes": {
+      "2": 4,
+      "8": 17,
+      "14": 31,
+      "20": 44,
+      "24": 53,
+      "28": 62,
+      "32": 71,
+      "36": 80
+    }
+  },
+  "executable_programs": {
+    "count": 59,
+    "source": "results/rtl/s81_ctrl_20261008/programs",
+    "matches_89_stage_allocator": false,
+    "note": "Historical 59 groups; no 89-stage native operator recut is present."
+  },
+  "rate_screen": {
+    "grade": "MODEL_ONLY_HOP_DELTA",
+    "anchor_stages": 81,
+    "target_stages": 89,
+    "added_hops": 8,
+    "added_stream_cycles": 8048.285714285715,
+    "added_us": 6.706904761904762,
+    "headline_anchor_tok_s": {
+      "ar": 1447.7,
+      "mtp": 4238.4
+    },
+    "rates": {
+      "ar": {
+        "hop_only_tok_s": 1433.7786033120442,
+        "existing_accepted_rows_sensitivity_tok_s": 1137.744450045993,
+        "existing_accepted_and_proposed_sensitivity_tok_s": 1119.5420725247757,
+        "workload_factor": {
+          "accepted": 0.7935286852640924,
+          "proposed": 0.9840013479999999
+        }
+      },
+      "mtp": {
+        "hop_only_tok_s": 4209.627419123748,
+        "existing_accepted_rows_sensitivity_tok_s": 3469.721251464347,
+        "existing_accepted_and_proposed_sensitivity_tok_s": 3421.3402355514886,
+        "workload_factor": {
+          "accepted": 0.8242347614190009,
+          "proposed": 0.986056224
+        }
+      }
+    },
+    "caveat": "Multiplying existing per-workload ledger losses is a sensitivity only; overlap, changed stage boundaries, relay placement, and native service profiles are unresolved. No row or price changes."
+  },
+  "blocking": [
+    "Recut actual operator graph and source-pinned issue/return allocations onto all 89 stages.",
+    "Produce owned native durations and actual VM service reservations for every emitted job.",
+    "Measure A2-F service and physical relay counts; 900 um planning reach is not measured.",
+    "Integrate HC capture +1 serial edge only after complete parent calendar measurement.",
+    "Close physical pin, clock, route, and full native program composition."
+  ],
+  "native_qualified": false,
+  "executable_dispatch_eligible": false,
+  "sources": {
+    "results/arch/s81_rom_trade_1015/alloc/p1973s89/inventory.json": "f215df68e4bbbb145f4bd54861b4f6741b03f3b66a9c320f959d1408ccc08655",
+    "results/arch/s81_rom_trade_1015/alloc/p1973s89/stage_map.json": "4b492c8a8254ca31f175c448d3aa9a501d307324b8e708eb9ce69d690a5f9e17",
+    "results/arch/s81_rom_trade_1015/alloc/p1973s89/mapping_verdict.json": "114ea9814718a7491d53d8c7ba43b14af69d22a2e6d80cd34f2e17c9db52a61c",
+    "results/arch/accepted_cost_ledger_1013.json": "9c43c441f58e454d9bd24fac59317ce44a3caab1874f88e2d2a1a24151dc49a2"
+  }
+}

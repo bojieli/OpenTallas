@@ -1,0 +1,12 @@
+{
+ "schema": "opentallas.hbm.su_multirate_native.receipt.v1",
+ "owner": "Claude H-SU 2026-10-15 (source claude/hsu-k0r2-1705 9457f0943)",
+ "verdict": "PASS whole-SU native multirate composition with pin-registered lanes (PIN_REG=1, owner rule 19:50; component/RTL, not physical)",
+ "configuration": {"MLAT": 4, "ALAT": 3, "LEAF": 1, "RF_RELAY": 36, "PIN_REG": 1, "serial_MHz": 900, "stream_MHz": 1200, "ratio": "3:4 related", "lane": "ot_hbm_su_static_lane_pinreg (every input and output registered at the lane pin, FETCH_EXTRA+2)"},
+ "shape": {"lanes": 512, "store_SRAMs": 3072, "native_VM_banks": 32, "VM_SRAMs": 96, "programme_SRAMs": 308, "serial_edges": 7120, "stream_edges": 9495, "reads": 32768, "writes": 135184, "scalars": 9},
+ "cost_vs_mr1": {"serial_edges": "7,116 -> 7,120 (+4)", "stream_edges": "9,489 -> 9,495 (+6)", "lane_write_reducer": "+4 edges", "requests": "+2 edges", "note": "su_top_compile --pin-reg schedules them; no runtime credit/ready"},
+ "run": {"host": "ot-epyc1tb", "build": "Verilator 5.050 hierarchical, walltime 4,362 s, 134.9 GB", "positive": "positive.log, sim 5,845 s, 666 MB", "endpoints": "endpoints.json"},
+ "mutants_same_binary": {"DATA": 14, "ADDR": 6172, "RF": 1500, "RED": 4102, "CAL": 20829, "EPOCH": 191828, "all": "SU_NATIVE_MULTIRATE_TOP FAIL rc=1"},
+ "source_binding": "sources.sha256 of the run = tree 9457f0943. On main two files differ: ot_hbm_su_static_pinned_bank.sv and ot_hbm_su_static_pgslice.sv carry the later bank r7 change (1f63b21c7: RD_ROOT parameter default 0, pgslice wires clk_rd to the same clk_bank) -- with RD_ROOT=0 the read-side registers use clk, so the composed netlist is behaviourally identical; the bank r10 parameters (WS_RD/PIN_RST) default 0 likewise.",
+ "not_claimed": ["physical clock delivery / phase-epoch reset qualification", "full fit", "canonical production layer coverage", "throughput qualification", "physical kind0 r2 leaf route"]
+}

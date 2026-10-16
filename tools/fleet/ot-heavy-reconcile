@@ -588,9 +588,49 @@ def gate(mem, argv):
     b = books(rows, total, avail, table)
     head, floor = headroom(), floor_gb(total)
     can = admissible(total, avail, b, head, floor)
-    print(f"{'OK' if can >= res else 'NO'} {res} {cls} | need {res} GB, admissible {can:.0f} GB: available {avail:.0f} GB, "
+    ok = can >= res
+    held = die_hold(total, can, head, floor, table) if ok and os.environ.get("OT_HEAVY_PRIO") != "die" else 0
+    if held and can - res < held:
+        ok, note = False, (note + "; " if note else "") + f"DIE-FIRST: {held:.0f} GB held for a waiting die trial"
+    print(f"{'OK' if ok else 'NO'} {res} {cls} | need {res} GB, admissible {can:.0f} GB: available {avail:.0f} GB, "
           f"growth charged {b['grow']:.0f} GB, young {b['young']:.0f} GB, headroom {head} GB, real floor {floor:.0f} GB"
           + (f"; {note}" if note else ""))
+
+
+def prio_waiters(table, skip=()):
+    """DIE-FIRST (owner 2026-10-15 23:50: die-level trials iterate back to back and get admission priority on the
+    large-memory hosts): waiting ot-heavy processes started with OT_HEAVY_PRIO=die (ot-run --priority die), as
+    [(start_ticks, charge_gb)], oldest first"""
+    out = []
+    for p in os.listdir("/proc"):
+        if not p.isdigit() or int(p) in skip:
+            continue
+        a = rd(f"/proc/{p}/cmdline").split("\0")[:-1]
+        if not (len(a) > 3 and a[1:2] == ["/usr/local/bin/ot-heavy"] and "--mem" in a[:8] and "--" in a):
+            continue
+        if "OT_HEAVY_PRIO=die" not in rd(f"/proc/{p}/environ").split("\0"):
+            continue
+        m = int(a[a.index("--mem") + 1])
+        try:
+            start = int(rd(f"/proc/{p}/stat").rsplit(")", 1)[1].split()[19])
+        except (IndexError, ValueError):
+            start = 0
+        out.append((start, (admit_size(m, classify(a[a.index("--") + 1:]), table) or [m])[0]))
+    return sorted(out)
+
+
+def die_hold(total, can, head, floor, table):
+    """GB a non-die request must leave free: the oldest waiting die trial's charge, when it could ever start here
+    (charge <= RAM - floor - headroom) and cannot start now (else it is admitted on its next 20 s attempt)"""
+    me = {os.getpid(), os.getppid()}
+    try:
+        me.add(int(rd(f"/proc/{os.getppid()}/stat").rsplit(")", 1)[1].split()[1]))
+    except (IndexError, ValueError):
+        pass
+    for _, charge in prio_waiters(table, skip=me):
+        if charge <= total - floor - head:
+            return charge
+    return 0
 
 
 def waiters(table):

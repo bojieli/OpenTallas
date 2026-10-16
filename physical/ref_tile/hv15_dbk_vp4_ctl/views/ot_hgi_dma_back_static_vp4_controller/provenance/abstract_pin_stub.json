@@ -1,0 +1,131 @@
+{
+  "schema": 1,
+  "kind": "abstract_pin_stub",
+  "status": "PASS",
+  "input": {
+    "path": "provenance/raw/ot_hgi_dma_back_static_vp4_controller.lef",
+    "sha256": "e709ec28845411b7495e084f2620b2f2d988506ed5db06e2e55d1b098509beb5"
+  },
+  "output": {
+    "path": "ot_hgi_dma_back_static_vp4_controller.lef",
+    "sha256": "0172fc88657e38d08b933fe1b06ccf34fdb0b1962502e248d3dbbc0aa77c0bba"
+  },
+  "helper": {
+    "path": "tools/hier_contract/abstract_pin_stub.py",
+    "sha256": "c3cae85e3aa1a8da5374284fe57418b2230ceb208aa76eff4567c6993bbe0c05",
+    "source_commit": "08fa61de35a18788108ca1427de3473533f58b14",
+    "retained_copy": "provenance/helper/abstract_pin_stub.py"
+  },
+  "environment": {
+    "OT_OBS_CLOSE": null,
+    "OT_OBS_CLOSE_UM": null
+  },
+  "command": [
+    "python3",
+    "provenance/helper/abstract_pin_stub.py",
+    "provenance/raw/ot_hgi_dma_back_static_vp4_controller.lef",
+    "ot_hgi_dma_back_static_vp4_controller.lef"
+  ],
+  "returncode": 0,
+  "stdout": "pinstub: 0 OBS rects moved into 0 pins: ; pockets: 396 OBS rects added on M5 (gaps < 1.536 um between own-layer obstacles)\n",
+  "stderr": "",
+  "invariants": {
+    "macro_outline": "PASS",
+    "pin_names_directions_uses": "PASS",
+    "original_pin_rectangles_retained": "PASS"
+  },
+  "child_lint": {
+    "schema": "opentallas.hier_contract.child_lint.v1",
+    "lef": "/home/ubuntu/wt/hnl-harden-2210/physical/ref_tile/hv15_dbk_vp4_ctl/views/ot_hgi_dma_back_static_vp4_controller/ot_hgi_dma_back_static_vp4_controller.lef",
+    "verdict": "PASS",
+    "fails": [],
+    "warns": [],
+    "summary": "ot_hgi_dma_back_static_vp4_controller 69.12 x 69.12: PG M5 VDD 12 stripes (86% spread, 100% cov) / VSS 12 stripes (86% spread, 100% cov); strap M6; face pins 873 blocked-above 0 blocked-same 0; clock clk insertion 145 ps; pockets M5 0 (closed)",
+    "info": {
+      "cell": "ot_hgi_dma_back_static_vp4_controller",
+      "W": 69.12,
+      "H": 69.12,
+      "pg": {
+        "nets": {
+          "VDD": {
+            "top_layer": "M5",
+            "stripes": 12,
+            "dir": "V",
+            "spread": 0.859,
+            "coverage": 1.0,
+            "shapes_on_top": 12
+          },
+          "VSS": {
+            "top_layer": "M5",
+            "stripes": 12,
+            "dir": "V",
+            "spread": 0.859,
+            "coverage": 1.0,
+            "shapes_on_top": 12
+          }
+        },
+        "top_layer": "M5",
+        "ok": true,
+        "why": []
+      },
+      "pg_layer": "M5",
+      "strap_layer": "M6",
+      "cap": null,
+      "face": {
+        "face_pins": 873,
+        "blocked_above": 0,
+        "covered_below": 74,
+        "examples": [],
+        "blocked_same": 0,
+        "same_examples": [],
+        "band_same": 0,
+        "band_examples": []
+      },
+      "clock_insertion": {
+        "clk": {
+          "max_ps": 144.51,
+          "min_ps": 113.86
+        }
+      },
+      "pockets": {
+        "layer": "M5",
+        "d_um": 1.536,
+        "marker": {
+          "layer": "M5",
+          "d_um": 1.536,
+          "added": 396
+        },
+        "count": 0,
+        "area_um2": 0,
+        "examples": []
+      }
+    }
+  },
+  "replay": {
+    "historical": true,
+    "job": "hv15_dbk_vp4_ctl-st1-08fa61de3",
+    "source_commit": "08fa61de35a18788108ca1427de3473533f58b14",
+    "published_record_commit": "bba478bcb4fb0c021103ee2a0ce266f6e31045b8",
+    "orfs_dir": "/srv/opentallas/claude/closure-loop/hv15_dbk_vp4_ctl-st1-08fa61de3/routes/hv15_dbk_vp4_ctl_st1_08fa61de3/work/orfs",
+    "raw_export_tcl": "provenance/reconstruction/raw.tcl",
+    "raw_export_tcl_sha256": "f1a75084cbbb390fac022d5a3ca43d9d7b0531fa1f6ecddb852ddf55b58fff02",
+    "environment_basis": "Reconstruction replay cleared both options; original process environment was not recorded. Exact published output hash is reproduced.",
+    "raw_matches_original_manifest": true,
+    "final_matches_published_export": true,
+    "all_published_files_verified": {
+      "ot_hgi_dma_back_static_vp4_controller.lef": "0172fc88657e38d08b933fe1b06ccf34fdb0b1962502e248d3dbbc0aa77c0bba",
+      "ot_hgi_dma_back_static_vp4_controller_tt.lib": "ebc5f9796fd668d71a4964fee291e5c40c9f27448d071fd2d356c4eebc956541",
+      "ot_hgi_dma_back_static_vp4_controller_ff.lib": "2006926ce44b3dca31e6c1fd136f4333ca781f7b91d289dbdb279a14f27b8f1d",
+      "ot_hgi_dma_back_static_vp4_controller_ss.lib": "66b74bcebd0da4d048cb3c5ab1c55b6b0095ca149d3150b283d450b69e62016a",
+      "abstract.json": "e25c09bf810f35d8a51143ffcfd23f5cbb2a62e0448bc60e6b79e3967d54e250",
+      "insertion.json": "7a68d53ee4eab00ed5f9ad6bd3a1a918f691a6bfbeb0ac336796c05d6b877643",
+      "child_lint.json": "d4e8815a0da0375ef5ba0a042a58f01188b704ad1398851060cea338bb9c811e"
+    },
+    "admission": {
+      "host": "ot-epyc1tb",
+      "unit": "oth-ubuntu-2022311-1792134582",
+      "memory_gb": 4,
+      "threads": 1
+    }
+  }
+}

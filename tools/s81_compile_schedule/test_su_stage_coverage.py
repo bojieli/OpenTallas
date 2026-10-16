@@ -14,6 +14,15 @@ class CoverageTests(unittest.TestCase):
         self.assertIsNone(r['stage_rank_records'][8]['actual_binding'])
         self.assertFalse(r['historical_59_programs_are_canonical_coverage'])
         with self.assertRaisesRegex(ValueError,'incomplete'):S.require_executable(r)
+    def test_allocator89_requires_all356_rank_dies(self):
+        st=stages();st['PHW_required_by_stage']=[10]*89
+        st['rank_dies']=[dict(stage=s,rank=r,die_id=4*s+r) for s in range(89) for r in range(4)]
+        r=S.export(st,[],[])
+        self.assertEqual((r['physical_stages'],r['physical_rank_dies']),(89,356))
+        self.assertEqual(r['unbound_stage_rank_records'],356)
+        st['rank_dies'].pop()
+        with self.assertRaisesRegex(ValueError,'complete allocator'):S.export(st,[],[])
+
     def test_providerhome_is_never_SUhome(self):
         with self.assertRaisesRegex(ValueError,'HE/CROM'):
             S.export(stages(),[],[],[dict(stage=0,rank=0,die_id=0,provider_home=0)])

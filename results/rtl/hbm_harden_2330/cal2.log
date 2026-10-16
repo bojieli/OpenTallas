@@ -1,0 +1,6 @@
+CAL_UNIVERSAL_STIM SW words=40 loops=3 edges=120 W=187 superset=OK
+WARNING: rtl/hbm_accel/generic/vm/static/tb_vm_calendar_universal.sv:29: $readmemh(cfg.hex): Not enough words in the file for the requested range [0:1023].
+WARNING: rtl/hbm_accel/generic/vm/static/tb_vm_calendar_universal.sv:29: $readmemh(expect.hex): Not enough words in the file for the requested range [0:65535].
+FATAL: rtl/hbm_accel/generic/vm/static/tb_vm_calendar_universal.sv:43: CALUNI word mismatch edge 0 got 00000000000030c2d80a60cae13b5047700401ee647b473 exp 00000000000030c2d80a60cae13b5047600803ee647b473
+       Time: 596000  Scope: tb_vm_calendar_universal.$ivl_for_loop1
+CALUNI FAIL quadrant SW

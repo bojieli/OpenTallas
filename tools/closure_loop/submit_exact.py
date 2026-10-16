@@ -64,7 +64,10 @@ def consumed_paths(spec):
 def move_spec(spec, commit):
     """spec at a new source commit; the conventional '-<commit>' name suffix follows it"""
     c9 = commit[:9]
-    spec = json.loads(json.dumps(spec))
+    # a kit job.json written by `ref_tile.py gen` carries the literal placeholder COMMIT in its name and record paths
+    # ("<name>-<tag>-COMMIT"): resolve it to the commit (S-NET+FILL 2026-10-15: five node jobs reached the daemon as
+    # "...-n6-COMMIT-<c9>" with record paths ending in "-COMMIT")
+    spec = json.loads(re.sub(r'-COMMIT(?=["/])', '-' + c9, json.dumps(spec)))
     spec.setdefault("source", {})["commit"] = c9
     m = SUFFIX.search(spec["name"])
     spec["name"] = (spec["name"][:m.start()] if m else spec["name"]) + "-" + c9
@@ -73,7 +76,9 @@ def move_spec(spec, commit):
 
 def dirty(root, commit, paths):
     """(uncommitted, differs-from-commit) consumed paths"""
-    unc = [ln.split(None, 1)[1] for ln in git(root, "status", "--porcelain", "--", *paths).splitlines() if ln.strip()]
+    # gate_layout/ (pre_route_gate layout PNGs) is never shipped nor gate-bound: an untracked copy is not a dirty kit
+    unc = [ln.split(None, 1)[1] for ln in git(root, "status", "--porcelain", "--", *paths).splitlines()
+           if ln.strip() and not (ln.startswith("??") and "/gate_layout/" in "/" + ln.split(None, 1)[1])]
     head = git(root, "rev-parse", "HEAD")
     diff = git(root, "diff", "--name-only", commit, head, "--", *paths).splitlines() if not head.startswith(commit) else []
     return unc, [d for d in diff if d]

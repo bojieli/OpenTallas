@@ -237,7 +237,15 @@
   "leaf": "ot_qwen_tp8_pv_slice_t (kit physical/ref_tile/qkd_pv_slice) x 512/die: one bank x 16-dim x head, 4 x ot_sram_1r1w_32x128_m1, every port registered",
   "join": "ot_qwen_tp8_pv_join_t (qkd_pv_join) x 64/die",
   "control": "ot_qwen_tp8_pv_wide_ctl (qkd_pv_ctl) x 2/die, pair_id strap",
-  "column": "ot_qwen_tp8_pv_col wires only (die may bind the leaves directly)"
+  "column": "ot_qwen_tp8_pv_col wires only (die may bind the leaves directly)",
+  "tile_area_um2": {
+   "slice": 29859.840000000004,
+   "join": 29859.840000000004,
+   "ctl": 1866.2400000000002,
+   "per_pair_mm2": 8.602,
+   "per_die_mm2": 17.203,
+   "note": "hard-tile footprint 8.60 mm2 per pair vs granted slot 1,080 x 7,344 = 7.93 mm2: slot must grow (Q-KVSYS-DIE)"
+  }
  },
  "history_r2_4c026e895": {
   "service_8192": 1559,
@@ -261,5 +269,12 @@
    "runs": "g3s2_hxk_*/h13full.out"
   },
   "rule": "ECTL HXK = r4 head 8 + G3S2 stages 5 = 13"
+ },
+ "rtl_r4_f26f4a157": {
+  "change": "physical-kit RTL fixes, no cycle change: ctl/vrow per-PORT constant-index loops (no automatic decls; ORFS yosys failed), ctl pair_id strap registered, join operand-select decoded one edge ahead and registered per lane (16 kept copies, was one 3,299-load net); tb fails closed on missing vectors",
+  "service_g3s2_hxk13": "61/61 runs byte-identical to 43acc8bf1 (sorted md5 c980e513...): 53/53 contexts EXACT, 8 negatives fail as before; T=8192 service 1566",
+  "pair_bench": "pair0 T 1/100/1000/8192 + pair1 T 1/129/2049/8192 EXACT (out_age 169..665 unchanged); join-order mutant FAIL 115 words",
+  "evidence": "results/arch/qwen_attention_rate_1015/runs_r4_f26f4a157/",
+  "gates": "pre_route_gate --remote --cts at f26f4a157: qkd_pv_slice WARN 0 fail (util 0.53, TT insertion 236-300.5 ps / spread 64.2, 14,860 sinks), qkd_pv_join WARN 0 fail (util 0.38 pin-bound 4,621 pins, 15,265 sinks allowed by measured 251.3 ps / 45.9 ps), qkd_pv_ctl WARN 0 fail (43.2 x 43.2, 647 sinks)"
  }
 }

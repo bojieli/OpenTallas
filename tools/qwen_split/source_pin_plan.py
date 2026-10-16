@@ -53,7 +53,53 @@ def on_track(layer, xy, w=None, h=None):
     return (round(v[0], 4), round(v[1], 4))
 
 
+NL_DROP = ('n_a', 'n_b', 'n_y', 'ck_node')
+
+
+def tile_grant():
+    """OT_SPLIT_TILE_GRANT=<held_grant.json> (Q-COMPUTE-DIE 2026-10-15, owner 20:35 re-pack): the re-packed 64-lane tile
+    (Q-TILE45 kit, e.g. physical/ref_tile/qfd_tile_nk_rp2_45_a2/held_grant.json) replaces the 449.28 x 1442.88 slot.  The
+    grant's outline and every pin (data windows granted by the die lead, 45 clock entries) are used as-is; the node-less
+    tile takes the same pins minus n_a / n_b / n_y / ck_node."""
+    path = os.environ.get('OT_SPLIT_TILE_GRANT', '').strip()
+    if not path:
+        return None
+    g = json.loads((ROOT / path if not os.path.isabs(path) else Path(path)).read_text())
+    if len(g['home_um']) != 2 or sum(1 for p in g['pins'] if p['clock']) != 45:
+        raise ValueError('OT_SPLIT_TILE_GRANT: need an outline and 45 clock entries')
+    return g
+
+
+def grant_clocks(name):
+    g = tile_grant()
+    if g is None:
+        return None
+    return [c for c in g['clocks'] if not (name == 'qfd_tile_nl' and c in NL_DROP)]
+
+
+def apply_tile_grant(q, g):
+    q.w, q.h = g['home_um']
+    by = {}
+    for p in g['pins']:
+        base = p['name'].split('[')[0]
+        if q.name == 'qfd_tile_nl' and base in NL_DROP:
+            continue
+        idx = int(p['name'].split('[')[1][:-1]) if '[' in p['name'] else 0
+        by.setdefault(base, []).append((idx, p))
+    q.ports, q.order = {}, []
+    for base, ps in by.items():
+        ps.sort()
+        faces = {p['face'] for _, p in ps}; layers = {p['layer'] for _, p in ps}
+        if len(faces) != 1 or len(layers) != 1 or [i for i, _ in ps] != list(range(len(ps))):
+            raise ValueError(f'OT_SPLIT_TILE_GRANT: {q.name}.{base} not one face/layer/contiguous')
+        q.ports[base] = ('pins', len(ps), faces.pop(), layers.pop(), [p['coordinate_um'] for _, p in ps], 1)
+        q.order.append(base)
+
+
 def apply_tile(q, entries):
+    g = tile_grant()
+    if g is not None:
+        return apply_tile_grant(q, g)
     q.w, q.h = 449.28, 1442.88  # actual parent-kit outline, never legacy SHAVE
     ports = rtl_ports(ROOT / 'rtl/physical/qfd_tile_nk_slot.sv', q.name)
     old = q.ports

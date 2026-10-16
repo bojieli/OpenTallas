@@ -81,8 +81,8 @@
  },
  "job": {
   "owner": "Claude:S-ELEM-PQ",
-  "branch": "claude/s81-elempq-1705",
-  "tag": "p9-pinload-1705",
+  "branch": "claude/s81-pq-headpc-p10",
+  "tag": "p10-wcap-elaunch",
   "purpose": "S81 PQ QB pipelined head (metadata in head), canonical +2 QB pipeline",
   "benches": [
    {
@@ -108,20 +108,20 @@
     ]
    },
    {
-    "name": "p9_equiv_vs_p8",
-    "cmd": "mkdir -p {RUN}/p9eq && iverilog -g2012 -s tb_s81_pq_headpc_p9_equiv -o {RUN}/p9eq/e.vvp rtl/test/dsrom_sys/tb_s81_pq_headpc_p9_equiv.sv rtl/test/dsrom_sys/ot_s81_pq_qb_headpc_native_p8ref.sv rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_qb_pinread_native.sv physical/s81_pq_hier/pinned/rtl/ot_rst_relay.sv && vvp {RUN}/p9eq/e.vvp",
+    "name": "p10_equiv_vs_p9_plus1",
+    "cmd": "mkdir -p {RUN}/p10eq && iverilog -g2012 -s tb_s81_pq_headpc_p10_equiv -o {RUN}/p10eq/e.vvp rtl/test/dsrom_sys/tb_s81_pq_headpc_p10_equiv.sv rtl/test/dsrom_sys/ot_s81_pq_qb_headpc_native_p9ref.sv rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_qb_pinread_native.sv physical/s81_pq_hier/pinned/rtl/ot_rst_relay.sv && vvp {RUN}/p10eq/e.vvp",
     "expect": "pass",
     "threads": 1,
     "peak_ram_gb": 4,
     "needs": [
      "iverilog"
     ],
-    "pass_regex": "PQ_HEADPC_P9_EQUIV PASS",
+    "pass_regex": "PQ_HEADPC_P10_EQUIV PASS",
     "min_count_regex": "checked_bits=([0-9]+)"
    },
    {
     "name": "mutant_r0c_early",
-    "cmd": "mkdir -p {RUN}/p9mut && iverilog -g2012 -s tb_s81_pq_headpc_p9_equiv -DOT_S81_PQ_HEADPC_MUT_R0C -o {RUN}/p9mut/m.vvp rtl/test/dsrom_sys/tb_s81_pq_headpc_p9_equiv.sv rtl/test/dsrom_sys/ot_s81_pq_qb_headpc_native_p8ref.sv rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_qb_pinread_native.sv physical/s81_pq_hier/pinned/rtl/ot_rst_relay.sv && vvp {RUN}/p9mut/m.vvp",
+    "cmd": "mkdir -p {RUN}/p10mut && iverilog -g2012 -s tb_s81_pq_headpc_p10_equiv -DOT_S81_PQ_HEADPC_MUT_R0C -o {RUN}/p10mut/m.vvp rtl/test/dsrom_sys/tb_s81_pq_headpc_p10_equiv.sv rtl/test/dsrom_sys/ot_s81_pq_qb_headpc_native_p9ref.sv rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_qb_pinread_native.sv physical/s81_pq_hier/pinned/rtl/ot_rst_relay.sv && vvp {RUN}/p10mut/m.vvp",
     "expect": "fail",
     "threads": 1,
     "peak_ram_gb": 4,
@@ -144,12 +144,12 @@
    "rtl/test/dsrom_sys/tb_s81_pq_qb_pinread.sv",
    "rtl/test/dsrom_sys/tb_s81_pq_headpc_pin_capture.sv",
    "tools/s81/pq_qb_pinread_bench.sh",
-   "rtl/test/dsrom_sys/tb_s81_pq_headpc_p9_equiv.sv",
-   "rtl/test/dsrom_sys/ot_s81_pq_qb_headpc_native_p8ref.sv"
+   "rtl/test/dsrom_sys/tb_s81_pq_headpc_p10_equiv.sv",
+   "rtl/test/dsrom_sys/ot_s81_pq_qb_headpc_native_p9ref.sv"
   ],
   "reroute_reason": {
    "kind": "rtl_change",
-   "why": "P8 native capture FAIL 21 head input pins <=244.6 ps; P9 single capture flop per input pin (r0c from i0, rq decoded at output), 0 cycles"
+   "why": "P9 CLOSED (2f0cf4367) native FAIL: rq0/rq1 launch 321-333 ps (decoded after flops), h_b captures 191-221 ps (i0/i1 flops were both W-face capture and E-face launch, 142.56 um apart). P10: W capture flops i0w/i1w/gates/consume_1 + E launch flops i0/i1/rq0/rq1 (rq registered); +1 head read edge (read_latency_delta 3 -> 4), every head pin registered at its face; same outline/pins."
   }
  },
  "defines": [

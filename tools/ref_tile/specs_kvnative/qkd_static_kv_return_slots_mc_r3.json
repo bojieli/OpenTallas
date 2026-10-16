@@ -1,0 +1,127 @@
+{
+  "name": "qkd_static_kv_return_slots_mc_r3",
+  "top": "qkd_static_kv_return_slots_mc",
+  "kind": "tile",
+  "sources": [
+    "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_slots_mc.sv"
+  ],
+  "params": {
+    "DEPTH": 64
+  },
+  "clock_port": "ck",
+  "reset_ports": [
+    "hrst",
+    "rsi"
+  ],
+  "outline": {
+    "w": 194.4,
+    "h": 216,
+    "exact": true
+  },
+  "pins": {
+    "W": [
+      "controller_co",
+      "controller_epoch",
+      "compiled_hbm_put"
+    ],
+    "E": [
+      "expected_put",
+      "expected_sector",
+      "expected_epoch",
+      "expected_layer",
+      "actual_valid",
+      "actual_sector",
+      "actual_epoch",
+      "actual_layer",
+      "actual_data",
+      "fault_hbm",
+      "fault_core"
+    ],
+    "S": [
+      "pll_hbm",
+      "ck",
+      "hrst",
+      "rsi",
+      "pll_hbm_data"
+    ],
+    "N": [
+      "idle_hbm",
+      "idle_core"
+    ]
+  },
+  "io_tcl": "results/arch/qwen_split_1014/static_memory_mc_grant_2330/qkd_static_kv_return_slots_mc_r3.tcl",
+  "layer_cap": "M5",
+  "sdc_extra": [
+    "physical/qwen_kv_die_native_static_pins/qkd_static_kv_return_slots_mc_r3.sdc"
+  ],
+  "route": {
+    "pd": 0.52,
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "pin_balance": {
+      "group_max": 1
+    },
+    "hold_margin_ns": 0.03,
+    "macro_halo_um": 5.4
+  },
+  "slot_change_request": "Official local pin grant d61fc4215; candidate only. Whole-die static boundary homes and integration remain open.",
+  "job": {
+    "owner": "Codex:Q-KV-2330",
+    "branch": "codex/qwen-kv-2330",
+    "tag": "mc3",
+    "purpose": "Four actual independent phase-aligned pll_hbm_data storage roots: fixed bit slices replace a single >15k storage root; no clock gating, no timing exception between same-phase roots, no normal-cycle delta. Front width259.2 removes measured66.4% utilization failure.",
+    "benches": [
+      {
+        "name": "return_slots_exact_two_phases_and_mutants",
+        "cmd": "DEPTH=64 bash tools/qwen_static_kv/run_return_slots_mc_gate.sh {RUN}/bench/exact",
+        "expect": "pass",
+        "pass_regex": "^PASS native return slots",
+        "threads": 2,
+        "peak_ram_gb": 4,
+        "needs": [
+          "verilator"
+        ]
+      },
+      {
+        "name": "return_slots_mutant_read_addr_strict",
+        "cmd": "mkdir -p {RUN}/bench/mut && verilator --binary --timing -j 2 -Wno-fatal +define+OT_KV_RETURN_MUT_READ_ADDR -GDEPTH=64 --top-module tb_static_return_slots_mc --Mdir {RUN}/bench/mut/obj rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_slots_mc.sv rtl/test/qwen_static_kv/tb_static_return_slots_mc.sv > {RUN}/bench/mut/build.log 2>&1 && {RUN}/bench/mut/obj/Vtb_static_return_slots_mc +faultmode=0",
+        "expect": "fail",
+        "threads": 2,
+        "peak_ram_gb": 4,
+        "needs": [
+          "verilator"
+        ]
+      }
+    ],
+    "extra_paths": [
+      "physical/qwen_kv_die_native_static_pins",
+      "results/arch/qwen_split_1014/kvsys_v1_3_candidate/static_io",
+      "results/arch/qwen_split_1014/kvsys_v1_4_3_design/static_io",
+      "rtl/test/qwen_static_kv",
+      "tools/qwen_static_kv",
+      "results/arch/qwen_split_1014/static_memory_mc_grant_2330"
+    ],
+    "views_to": "physical/ref_tile/qkd_static_kv_return_slots_mc_r3/views",
+    "record_to": "results/rtl/ref_tile/qkd_static_kv_return_slots_mc_r3"
+  },
+  "macros": [],
+  "children": [],
+  "inter": [],
+  "recipe": 3,
+  "io_flop_at_pins": {
+    "cols": 4,
+    "allow_none": true
+  },
+  "inhold": true,
+  "outhold": true,
+  "keep_pin_regs": true,
+  "pin_reg_split": true,
+  "hold_pad": {
+    "cell": "HB2xp67_ASAP7_75t_R"
+  },
+  "structural_change": "Four actual independent phase-aligned pll_hbm_data storage roots: fixed bit slices replace a single >15k storage root; no clock gating, no timing exception between same-phase roots, no normal-cycle delta. Front width259.2 removes measured66.4% utilization failure.",
+  "pin_regs": {
+    "enable": false,
+    "reason": "Actual RTL captures the data boundary in each original domain; explicit four phase-aligned storage clock inputs split sink count without any normal-cycle delta. The component production bench accounts every existing register. Clock/reset ports are domain controls."
+  }
+}

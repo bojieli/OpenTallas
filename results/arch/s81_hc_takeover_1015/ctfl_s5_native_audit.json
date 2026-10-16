@@ -1,0 +1,836 @@
+{
+ "job": "s81hc_ctflnt_ref-s5-centre-7babf39ca",
+ "cell": "ot_s81_hc_ctfl_nt",
+ "source": "7babf39ca",
+ "closure": "CLOSED TT +270.34 / FF +25.05 ps DRC 0; SS sensitivity +144.78 ps | record claude/s81-norm-tree-1014 146fba949 (19 files) | AUTO-MERGED into main e4821ef39",
+ "worst_launch": [
+  "fdx_local[869]",
+  242.78080000000003
+ ],
+ "worst_capture": [
+  "fdx[657]",
+  169.732
+ ],
+ "spreads": {
+  "clk": 20.299999999999997
+ },
+ "violations": [
+  {
+   "pin": "fdx_local[1113]",
+   "dir": "output",
+   "launch": 220.83484,
+   "capture": null,
+   "clocks": [
+    "clk"
+   ],
+   "comb": []
+  },
+  {
+   "pin": "fdx_local[1110]",
+   "dir": "output",
+   "launch": 228.71415,
+   "capture": null,
+   "clocks": [
+    "clk"
+   ],
+   "comb": []
+  },
+  {
+   "pin": "fdx_local[1108]",
+   "dir": "output",
+   "launch": 224.49677,
+   "capture": null,
+   "clocks": [
+    "clk"
+   ],
+   "comb": []
+  },
+  {
+   "pin": "fdx_local[1105]",
+   "dir": "output",
+   "launch": 225.63889000000003,
+   "capture": null,
+   "clocks": [
+    "clk"
+   ],
+   "comb": []
+  },
+  {
+   "pin": "fdx_local[1100]",
+   "dir": "output",
+   "launch": 238.89088,
+   "capture": null,
+   "clocks": [
+    "clk"
+   ],
+   "comb": []
+  },
+  {
+   "pin": "fdx_local[1094]",
+   "dir": "output",
+   "launch": 220.73844,
+   "capture": null,
+   "clocks": [
+    "clk"
+   ],
+   "comb": []
+  },
+  {
+   "pin": "fdx_local[1092]",
+   "dir": "output",
+   "launch": 227.32586999999998,
+   "capture": null,
+   "clocks": [
+    "clk"
+   ],
+   "comb": []
+  },
+  {
+   "pin": "fdx_local[1074]",
+   "dir": "output",
+   "launch": 225.27473,
+   "capture": null,
+   "clocks": [
+    "clk"
+   ],
+   "comb": []
+  },
+  {
+   "pin": "fdx_local[1020]",
+   "dir": "output",
+   "launch": 229.06906999999998,
+   "capture": null,
+   "clocks": [
+    "clk"
+   ],
+   "comb": []
+  },
+  {
+   "pin": "fdx_local[1014]",
+   "dir": "output",
+   "launch": 233.76435,
+   "capture": null,
+   "clocks": [
+    "clk"
+   ],
+   "comb": []
+  },
+  {
+   "pin": "fdx_local[1006]",
+   "dir": "output",
+   "launch": 234.3783,
+   "capture": null,
+   "clocks": [
+    "clk"
+   ],
+   "comb": []
+  },
+  {
+   "pin": "fdx_local[1005]",
+   "dir": "output",
+   "launch": 236.11285999999998,
+   "capture": null,
+   "clocks": [
+    "clk"
+   ],
+   "comb": []
+  },
+  {
+   "pin": "fdx_local[1000]",
+   "dir": "output",
+   "launch": 231.14976,
+   "capture": null,
+   "clocks": [
+    "clk"
+   ],
+   "comb": []
+  },
+  {
+   "pin": "fdx_local[998]",
+   "dir": "output",
+   "launch": 233.92847000000003,
+   "capture": null,
+   "clocks": [
+    "clk"
+   ],
+   "comb": []
+  },
+  {
+   "pin": "fdx_local[997]",
+   "dir": "output",
+   "launch": 220.32249,
+   "capture": null,
+   "clocks": [
+    "clk"
+   ],
+   "comb": []
+  },
+  {
+   "pin": "fdx_local[996]",
+   "dir": "output",
+   "launch": 236.09869999999998,
+   "capture": null,
+   "clocks": [
+    "clk"
+   ],
+   "comb": []
+  },
+  {
+   "pin": "fdx_local[994]",
+   "dir": "output",
+   "launch": 237.36802000000003,
+   "capture": null,
+   "clocks": [
+    "clk"
+   ],
+   "comb": []
+  },
+  {
+   "pin": "fdx_local[993]",
+   "dir": "output",
+   "launch": 222.78678,
+   "capture": null,
+   "clocks": [
+    "clk"
+   ],
+   "comb": []
+  },
+  {
+   "pin": "fdx_local[979]",
+   "dir": "output",
+   "launch": 234.28068,
+   "capture": null,
+   "clocks": [
+    "clk"
+   ],
+   "comb": []
+  },
+  {
+   "pin": "fdx_local[959]",
+   "dir": "output",
+   "launch": 233.91642,
+   "capture": null,
+   "clocks": [
+    "clk"
+   ],
+   "comb": []
+  },
+  {
+   "pin": "fdx_local[889]",
+   "dir": "output",
+   "launch": 229.69514,
+   "capture": null,
+   "clocks": [
+    "clk"
+   ],
+   "comb": []
+  },
+  {
+   "pin": "fdx_local[884]",
+   "dir": "output",
+   "launch": 222.09189,
+   "capture": null,
+   "clocks": [
+    "clk"
+   ],
+   "comb": []
+  },
+  {
+   "pin": "fdx_local[883]",
+   "dir": "output",
+   "launch": 229.14307,
+   "capture": null,
+   "clocks": [
+    "clk"
+   ],
+   "comb": []
+  },
+  {
+   "pin": "fdx_local[879]",
+   "dir": "output",
+   "launch": 222.19379,
+   "capture": null,
+   "clocks": [
+    "clk"
+   ],
+   "comb": []
+  },
+  {
+   "pin": "fdx_local[875]",
+   "dir": "output",
+   "launch": 238.08033000000003,
+   "capture": null,
+   "clocks": [
+    "clk"
+   ],
+   "comb": []
+  },
+  {
+   "pin": "fdx_local[872]",
+   "dir": "output",
+   "launch": 239.91706000000002,
+   "capture": null,
+   "clocks": [
+    "clk"
+   ],
+   "comb": []
+  },
+  {
+   "pin": "fdx_local[869]",
+   "dir": "output",
+   "launch": 242.78080000000003,
+   "capture": null,
+   "clocks": [
+    "clk"
+   ],
+   "comb": []
+  },
+  {
+   "pin": "fdx_local[860]",
+   "dir": "output",
+   "launch": 222.10627000000002,
+   "capture": null,
+   "clocks": [
+    "clk"
+   ],
+   "comb": []
+  },
+  {
+   "pin": "fdx_local[821]",
+   "dir": "output",
+   "launch": 232.03531,
+   "capture": null,
+   "clocks": [
+    "clk"
+   ],
+   "comb": []
+  },
+  {
+   "pin": "fdx_local[792]",
+   "dir": "output",
+   "launch": 230.71106999999998,
+   "capture": null,
+   "clocks": [
+    "clk"
+   ],
+   "comb": []
+  },
+  {
+   "pin": "fdx_local[727]",
+   "dir": "output",
+   "launch": 221.24702,
+   "capture": null,
+   "clocks": [
+    "clk"
+   ],
+   "comb": []
+  },
+  {
+   "pin": "fdx_local[724]",
+   "dir": "output",
+   "launch": 225.21,
+   "capture": null,
+   "clocks": [
+    "clk"
+   ],
+   "comb": []
+  },
+  {
+   "pin": "fdx_local[723]",
+   "dir": "output",
+   "launch": 223.88059,
+   "capture": null,
+   "clocks": [
+    "clk"
+   ],
+   "comb": []
+  },
+  {
+   "pin": "fdx_local[713]",
+   "dir": "output",
+   "launch": 225.58289,
+   "capture": null,
+   "clocks": [
+    "clk"
+   ],
+   "comb": []
+  },
+  {
+   "pin": "fdx_local[703]",
+   "dir": "output",
+   "launch": 222.32172,
+   "capture": null,
+   "clocks": [
+    "clk"
+   ],
+   "comb": []
+  },
+  {
+   "pin": "fdx_local[680]",
+   "dir": "output",
+   "launch": 225.68174000000002,
+   "capture": null,
+   "clocks": [
+    "clk"
+   ],
+   "comb": []
+  },
+  {
+   "pin": "fdx_local[664]",
+   "dir": "output",
+   "launch": 228.56302000000002,
+   "capture": null,
+   "clocks": [
+    "clk"
+   ],
+   "comb": []
+  },
+  {
+   "pin": "fdx_local[639]",
+   "dir": "output",
+   "launch": 232.91266,
+   "capture": null,
+   "clocks": [
+    "clk"
+   ],
+   "comb": []
+  },
+  {
+   "pin": "fdx_local[598]",
+   "dir": "output",
+   "launch": 226.44694,
+   "capture": null,
+   "clocks": [
+    "clk"
+   ],
+   "comb": []
+  },
+  {
+   "pin": "fdx_local[591]",
+   "dir": "output",
+   "launch": 221.14457000000002,
+   "capture": null,
+   "clocks": [
+    "clk"
+   ],
+   "comb": []
+  },
+  {
+   "pin": "fdx_local[584]",
+   "dir": "output",
+   "launch": 223.80814,
+   "capture": null,
+   "clocks": [
+    "clk"
+   ],
+   "comb": []
+  },
+  {
+   "pin": "fdx_local[582]",
+   "dir": "output",
+   "launch": 223.47208000000003,
+   "capture": null,
+   "clocks": [
+    "clk"
+   ],
+   "comb": []
+  },
+  {
+   "pin": "fdx_local[576]",
+   "dir": "output",
+   "launch": 230.28965000000002,
+   "capture": null,
+   "clocks": [
+    "clk"
+   ],
+   "comb": []
+  },
+  {
+   "pin": "fdx_local[563]",
+   "dir": "output",
+   "launch": 227.99866,
+   "capture": null,
+   "clocks": [
+    "clk"
+   ],
+   "comb": []
+  },
+  {
+   "pin": "fdx_local[560]",
+   "dir": "output",
+   "launch": 222.89493000000002,
+   "capture": null,
+   "clocks": [
+    "clk"
+   ],
+   "comb": []
+  },
+  {
+   "pin": "fdx_local[540]",
+   "dir": "output",
+   "launch": 225.5517,
+   "capture": null,
+   "clocks": [
+    "clk"
+   ],
+   "comb": []
+  },
+  {
+   "pin": "fdx_local[539]",
+   "dir": "output",
+   "launch": 220.74998000000002,
+   "capture": null,
+   "clocks": [
+    "clk"
+   ],
+   "comb": []
+  },
+  {
+   "pin": "fdx_local[526]",
+   "dir": "output",
+   "launch": 220.56913,
+   "capture": null,
+   "clocks": [
+    "clk"
+   ],
+   "comb": []
+  },
+  {
+   "pin": "fdx_local[518]",
+   "dir": "output",
+   "launch": 222.41886000000002,
+   "capture": null,
+   "clocks": [
+    "clk"
+   ],
+   "comb": []
+  },
+  {
+   "pin": "fdx_local[503]",
+   "dir": "output",
+   "launch": 232.32657000000003,
+   "capture": null,
+   "clocks": [
+    "clk"
+   ],
+   "comb": []
+  },
+  {
+   "pin": "fdx_local[502]",
+   "dir": "output",
+   "launch": 224.57593,
+   "capture": null,
+   "clocks": [
+    "clk"
+   ],
+   "comb": []
+  },
+  {
+   "pin": "fdx_local[459]",
+   "dir": "output",
+   "launch": 221.25467999999998,
+   "capture": null,
+   "clocks": [
+    "clk"
+   ],
+   "comb": []
+  },
+  {
+   "pin": "fdx_local[415]",
+   "dir": "output",
+   "launch": 233.49363000000002,
+   "capture": null,
+   "clocks": [
+    "clk"
+   ],
+   "comb": []
+  },
+  {
+   "pin": "fdx_local[400]",
+   "dir": "output",
+   "launch": 227.32345999999998,
+   "capture": null,
+   "clocks": [
+    "clk"
+   ],
+   "comb": []
+  },
+  {
+   "pin": "fdx_local[397]",
+   "dir": "output",
+   "launch": 231.87647,
+   "capture": null,
+   "clocks": [
+    "clk"
+   ],
+   "comb": []
+  },
+  {
+   "pin": "fdx_local[293]",
+   "dir": "output",
+   "launch": 232.38340000000002,
+   "capture": null,
+   "clocks": [
+    "clk"
+   ],
+   "comb": []
+  },
+  {
+   "pin": "fdx_local[283]",
+   "dir": "output",
+   "launch": 220.22507,
+   "capture": null,
+   "clocks": [
+    "clk"
+   ],
+   "comb": []
+  },
+  {
+   "pin": "fdx_local[263]",
+   "dir": "output",
+   "launch": 222.14918000000003,
+   "capture": null,
+   "clocks": [
+    "clk"
+   ],
+   "comb": []
+  },
+  {
+   "pin": "fdx_local[254]",
+   "dir": "output",
+   "launch": 223.80524,
+   "capture": null,
+   "clocks": [
+    "clk"
+   ],
+   "comb": []
+  },
+  {
+   "pin": "fdx_local[237]",
+   "dir": "output",
+   "launch": 221.62208,
+   "capture": null,
+   "clocks": [
+    "clk"
+   ],
+   "comb": []
+  },
+  {
+   "pin": "fdx_local[233]",
+   "dir": "output",
+   "launch": 221.29911,
+   "capture": null,
+   "clocks": [
+    "clk"
+   ],
+   "comb": []
+  },
+  {
+   "pin": "fdx_local[230]",
+   "dir": "output",
+   "launch": 224.52662,
+   "capture": null,
+   "clocks": [
+    "clk"
+   ],
+   "comb": []
+  },
+  {
+   "pin": "fdx_local[226]",
+   "dir": "output",
+   "launch": 220.50071,
+   "capture": null,
+   "clocks": [
+    "clk"
+   ],
+   "comb": []
+  },
+  {
+   "pin": "fdx_local[221]",
+   "dir": "output",
+   "launch": 221.34135,
+   "capture": null,
+   "clocks": [
+    "clk"
+   ],
+   "comb": []
+  },
+  {
+   "pin": "fdx_local[205]",
+   "dir": "output",
+   "launch": 220.60117,
+   "capture": null,
+   "clocks": [
+    "clk"
+   ],
+   "comb": []
+  },
+  {
+   "pin": "fdx_local[180]",
+   "dir": "output",
+   "launch": 234.29905,
+   "capture": null,
+   "clocks": [
+    "clk"
+   ],
+   "comb": []
+  },
+  {
+   "pin": "fdx_local[175]",
+   "dir": "output",
+   "launch": 223.44602,
+   "capture": null,
+   "clocks": [
+    "clk"
+   ],
+   "comb": []
+  },
+  {
+   "pin": "fdx_local[162]",
+   "dir": "output",
+   "launch": 234.41019000000003,
+   "capture": null,
+   "clocks": [
+    "clk"
+   ],
+   "comb": []
+  },
+  {
+   "pin": "fdx_local[153]",
+   "dir": "output",
+   "launch": 226.70414000000002,
+   "capture": null,
+   "clocks": [
+    "clk"
+   ],
+   "comb": []
+  },
+  {
+   "pin": "fdx_local[147]",
+   "dir": "output",
+   "launch": 222.90528000000003,
+   "capture": null,
+   "clocks": [
+    "clk"
+   ],
+   "comb": []
+  },
+  {
+   "pin": "fdx_local[138]",
+   "dir": "output",
+   "launch": 220.70743000000002,
+   "capture": null,
+   "clocks": [
+    "clk"
+   ],
+   "comb": []
+  },
+  {
+   "pin": "fdx_local[137]",
+   "dir": "output",
+   "launch": 220.15763,
+   "capture": null,
+   "clocks": [
+    "clk"
+   ],
+   "comb": []
+  },
+  {
+   "pin": "fdx_local[133]",
+   "dir": "output",
+   "launch": 220.21268,
+   "capture": null,
+   "clocks": [
+    "clk"
+   ],
+   "comb": []
+  },
+  {
+   "pin": "fdx_local[124]",
+   "dir": "output",
+   "launch": 227.19047000000003,
+   "capture": null,
+   "clocks": [
+    "clk"
+   ],
+   "comb": []
+  },
+  {
+   "pin": "fdx_local[120]",
+   "dir": "output",
+   "launch": 232.00037,
+   "capture": null,
+   "clocks": [
+    "clk"
+   ],
+   "comb": []
+  },
+  {
+   "pin": "fdx_local[112]",
+   "dir": "output",
+   "launch": 232.54526,
+   "capture": null,
+   "clocks": [
+    "clk"
+   ],
+   "comb": []
+  },
+  {
+   "pin": "fdx_local[106]",
+   "dir": "output",
+   "launch": 232.00718000000003,
+   "capture": null,
+   "clocks": [
+    "clk"
+   ],
+   "comb": []
+  },
+  {
+   "pin": "fdx_local[94]",
+   "dir": "output",
+   "launch": 220.48984,
+   "capture": null,
+   "clocks": [
+    "clk"
+   ],
+   "comb": []
+  },
+  {
+   "pin": "fdx_local[91]",
+   "dir": "output",
+   "launch": 227.09711000000001,
+   "capture": null,
+   "clocks": [
+    "clk"
+   ],
+   "comb": []
+  },
+  {
+   "pin": "fdx_local[54]",
+   "dir": "output",
+   "launch": 230.77534,
+   "capture": null,
+   "clocks": [
+    "clk"
+   ],
+   "comb": []
+  }
+ ],
+ "passed": false,
+ "source_sha256": {
+  "ot_s81_hc_ctfl_nt_tt.lib": "0c073b133177930219495df955724e1f97bda312b0f6105931cae6ad837e9d8e",
+  "insertion.json": "3679a10876ad52f80c59a3adfa2439292df01947950b494a54b0170a75832a07"
+ },
+ "references": {
+  "clk": {
+   "rise": 103.6,
+   "fall": 110.80794999999999,
+   "min": 87.88705,
+   "max": 114.05537,
+   "src": "insertion.json boundary mean",
+   "bmin": 93.8,
+   "bmax": 114.1,
+   "n": 1136
+  }
+ }
+}

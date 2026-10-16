@@ -2033,6 +2033,86 @@ def apply_cts_fix_hooks(config: list[str], case: Path) -> list[str]:
     return kept
 
 
+GRT183_HOOK = "physical/common_flow/grt183_resume.tcl"
+
+
+def apply_grt183_hook(config: list[str], case: Path) -> list[str]:
+    """GRT183-RESUME (ROOT 2026-10-15; physical/common_flow/grt183_resume.tcl): PRE_GLOBAL_ROUTE_TCL becomes
+    hooks/pre_grt_ot_grt183.tcl, which sources the block's own PRE_GLOBAL_ROUTE hook (if any) and then the resume hook.
+    Inert unless an incremental GRT-0183 kills stage 5_1_grt (see orfs_make).  OT_GRT183_RESUME=0 opts out."""
+    if os.environ.get("OT_GRT183_RESUME", "1") == "0" or not (ROOT / GRT183_HOOK).is_file():
+        return config
+    hooks_dir = case / "hooks"
+    hooks_dir.mkdir(exist_ok=True)
+    orig, kept = None, []
+    for line in config:
+        m = re.match(r"\s*export\s+PRE_GLOBAL_ROUTE_TCL\s*=\s*(.*)$", line)
+        if m:
+            orig = m.group(1).strip()
+            continue
+        kept.append(line)
+    if orig == "/work/hooks/pre_grt_ot_grt183.tcl":     # already applied (a re-generated config): never chain to itself
+        return config
+    shutil.copy2(ROOT / GRT183_HOOK, hooks_dir / "ot_grt183_resume.tcl")
+    body = ["# Written by tools/run_abi3_physical.py (GRT183-RESUME): resume hook first (records the stage's input "
+            "obstructions), then the block's own hook.", "source /work/hooks/ot_grt183_resume.tcl"]
+    if orig:
+        body.append(f"source {orig}")
+    (hooks_dir / "pre_grt_ot_grt183.tcl").write_text("\n".join(body) + "\n", encoding="utf-8")
+    kept.append("export PRE_GLOBAL_ROUTE_TCL = /work/hooks/pre_grt_ot_grt183.tcl")
+    return kept
+
+
+def _grt183_copy(src: Path, dst: Path) -> None:
+    """copy2 into a fresh file renamed over dst: ORFS outputs are root-owned (docker), so utime on them fails."""
+    tmp = dst.with_name(dst.name + ".grt183.tmp")
+    shutil.copy2(src, tmp)
+    os.replace(tmp, dst)
+
+
+def grt183_resume_prepare(results_dir: Path, logs_dir: Path, case: Path, log_name: str) -> dict | None:
+    """After a failed ORFS make: if stage 5_1_grt saved a GRT183 resume design (and no resume was used yet), stage it
+    as the 5_1_grt input for ONE fresh-process re-run.  The original 4_cts.odb is kept aside (restored afterwards by
+    grt183_resume_restore); the failed attempt's logs are kept.  Returns the receipt, or None when not applicable."""
+    resume = results_dir / "5_1_grt.grt183_resume.odb"
+    marker = results_dir / "5_1_grt.grt183_recovered.json"
+    log = logs_dir / "5_1_grt.log"
+    if marker.exists() or not resume.is_file() or not log.is_file():
+        return None
+    text = log.read_text(encoding="utf-8", errors="replace")
+    if "OT_GRT183_RESUME_SAVED" not in text or "GRT-0183" not in text:
+        return None
+    cts = results_dir / "4_cts.odb"
+    kept_cts = results_dir / "4_cts.pre_grt183.odb"
+    _grt183_copy(cts, kept_cts)
+    _grt183_copy(log, logs_dir / "5_1_grt.grt183_attempt1.log")
+    if (case / log_name).is_file():
+        _grt183_copy(case / log_name, case / (log_name + ".grt183_attempt1"))
+    failed = [ln for ln in text.splitlines() if "GRT-0183" in ln or "OT_GRT183_RESUME_SAVED" in ln][:6]
+    receipt = {
+        "schema": "opentallas.grt183_resume.v1",
+        "reason": "incremental GRT-0183 inside 5_1_grt repair; same-process recovery is unsafe (measured), so stage "
+                  "5_1_grt re-runs once in a fresh process from the saved resized design with every repair re-run",
+        "attempt1_log": "logs/5_1_grt.grt183_attempt1.log",
+        "attempt1_lines": failed,
+        "cts_odb_sha256": sha256_file(cts),
+        "resume_odb_sha256": sha256_file(resume),
+    }
+    _grt183_copy(resume, cts)
+    marker.write_text(json.dumps(receipt, indent=1) + "\n", encoding="utf-8")
+    print("GRT183-RESUME: " + json.dumps({k: receipt[k] for k in ("cts_odb_sha256", "resume_odb_sha256")}),
+          file=sys.stderr)
+    return receipt
+
+
+def grt183_resume_restore(results_dir: Path) -> None:
+    """Put the original CTS database back (4_cts.odb readers downstream see the real CTS result)."""
+    kept_cts = results_dir / "4_cts.pre_grt183.odb"
+    if kept_cts.is_file():
+        _grt183_copy(kept_cts, results_dir / "4_cts.odb")
+        kept_cts.unlink()
+
+
 def io_constraints_tcl(pin_regions: list[dict[str, str]], exhaustive: bool = False,
                        die_area_um: list[float] | None = None) -> str:
     """set_io_pin_constraint per region; ports are matched by Tcl regexp on the
@@ -2541,6 +2621,7 @@ def run_pnr(
     if endpoint_netlist:
         config.append("export SYNTH_NETLIST_FILES = /work/w11_endpoint_mapped.v")
     config = apply_cts_fix_hooks(config, case)
+    config = apply_grt183_hook(config, case)
     config = ot_tt_lib_override(config)
     (case / "config.mk").write_text("\n".join(config) + "\n", encoding="utf-8")
     if floorplan and floorplan.get("pin_regions"):
@@ -2574,6 +2655,15 @@ def run_pnr(
         (case / log_name).write_text(
             (completed.stdout or "") + (completed.stderr or ""), encoding="utf-8"
         )
+        if completed.returncode and not goal.startswith("-o "):
+            rdir = case / "results" / platform_name / nickname / "base"
+            if grt183_resume_prepare(rdir, case / "logs" / platform_name / nickname / "base", case, log_name):
+                # GRT183-RESUME: one fresh-process re-run of 5_1_grt (and the rest of the goal) from the saved design
+                try:
+                    completed = orfs_make(f"-o /work/results/{platform_name}/{nickname}/base/4_cts.odb " + goal,
+                                          log_name, timeout)
+                finally:
+                    grt183_resume_restore(rdir)
         return completed
 
     results_dir = case / "results" / platform_name / nickname / "base"
@@ -2710,6 +2800,9 @@ def run_pnr(
         if key.endswith("__flow__errors__count")
     }
     metrics["flow_error_counts"] = flow_errors
+    g183 = results_dir / "5_1_grt.grt183_recovered.json"
+    if g183.is_file():   # GRT183-RESUME receipt: stage 5_1_grt re-ran once in a fresh process from the resized design
+        metrics["grt183_resume"] = json.loads(g183.read_text(encoding="utf-8"))
     try:
         from orfs_hold_mm import tolerate_flow_errors as _ot_tol  # FLOW-HOLD: RSZ-0060 in a completed mm repair
         flow_errors = _ot_tol(flow_errors, logs_dir)

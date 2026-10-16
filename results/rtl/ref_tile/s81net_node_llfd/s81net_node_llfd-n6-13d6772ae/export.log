@@ -1,0 +1,4 @@
+{"name": "dsfd_node_LLfd", "ok": true, "checked": true, "files": {"dsfd_node_LLfd.lef": "4e99369fb962b1e5af044ba4c9d39225319e0b76059d1f526189a6080af5adfd", "dsfd_node_LLfd_ff.lib": "c56fc19bd3268dc4a10eadb1f9b2bd42a8537b8cde6e0f8ffd9e1a1239d375cd", "dsfd_node_LLfd_ss.lib": "9de6ffdc85cf8c4cb5df36124640d1dabe9e350f0a74b90ca385fcc14d78cd74", "dsfd_node_LLfd_tt.lib": "edeff2bcf997c1cc099f2b2cb1959a3907835311121a4934ad138b1bc33ce80e"}}
+CK_SS_MEAN=145 CK_SS_ALL_MEAN=141 CK_SS_MIN=141 CK_SS_ALL_MIN=133 CK_SS_MAX=148 CK_SS_ALL_MAX=148 CK_TT_MEAN=108 CK_TT_ALL_MEAN=105 CK_TT_MIN=104 CK_TT_ALL_MIN=97 CK_TT_MAX=112 CK_TT_ALL_MAX=112 CK_FF_MEAN=88 CK_FF_ALL_MEAN=84 CK_FF_MIN=84 CK_FF_ALL_MIN=76 CK_FF_MAX=91 CK_FF_ALL_MAX=92 CK_ROUTE_REF=SS
+pinstub: 5 OBS rects moved into 4 pins: clk[0], fi[0], fo[0], rst_n[0]; pockets: 244 OBS rects added on M5 (gaps < 1.536 um between own-layer obstacles)
+REF_TILE export dsfd_node_LLfd: views rc=0 child_lint PASS 

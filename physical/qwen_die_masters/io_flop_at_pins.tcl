@@ -463,8 +463,10 @@ if {[file exists $ot_pack_record]} {
 # OpenSTA's source evaluates each line and leaves info script empty; retain
 # the mounted source root there. Tcl's builtin source supplies the real path
 # for standalone OpenDB clients, including the placement regression fixture.
+# HOOK-COPY 2026-10-15 (ROOT): route flows copy this file into /work/hooks/, where [info script]/../common_flow does
+# not exist (smh_tile_rp3 crashed twice in global_place); the mounted /src copy wins whenever it exists.
 set ot_anchor_script /src/physical/common_flow/anchor_row_packing.tcl
-if {[info script] ne ""} {
+if {![file exists $ot_anchor_script] && [info script] ne ""} {
   set ot_anchor_script [file join [file dirname [info script]] .. common_flow anchor_row_packing.tcl]
 }
 source $ot_anchor_script

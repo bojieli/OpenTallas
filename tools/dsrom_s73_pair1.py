@@ -92,13 +92,13 @@ def physical_address(m,rank,row,k):
                 ordered_K_range=[e,e+length],ROM_ECC=False,
                 owner_result_multicast_required=owner!=rank,conversion=m['conversion'])
 
-def mapping(out,reference_unsplit=False,stages=73,pairs=2682,bf=576,regions=None):
+def mapping(out,reference_unsplit=False,stages=73,pairs=2682,bf=576,regions=None,homes_override=None):
     headers=C.load_headers(ROOT/'results/uarch/dsrom_fixed4096_owner_compiler_20261002/inputs/tensor_headers.jsonl.gz')
     pools=[RaggedPool(pairs,bf,balance_raw=not reference_unsplit,regions=regions) for _ in range(stages)]
     decls=[C.declarations(headers,L) for L in range(40)]
     providers=[];homes={};covered=set()
     for L,(_,cs,he,_,names) in enumerate(decls):
-        home=L*stages//40;homes[L]=home;covered.update(names)
+        home=homes_override[L] if homes_override else L*stages//40;homes[L]=home;covered.update(names)
         hw=sum(x['rows']*math.ceil(x['K']/64) for x in he)
         cw=math.ceil(sum(x['elements'] for x in cs)/8)
         for kind,ds,words,banks in [('HE',he,hw,8),('CROM',cs,cw,1)]:
@@ -175,7 +175,21 @@ def mapping(out,reference_unsplit=False,stages=73,pairs=2682,bf=576,regions=None
          no_RTL_PnR_inference=True,W1_RD=4,W1_RD_measured=False,
          blocking=['Auxiliary shipped weights need priced physical owners','Ragged region assignment must join W1 generator','W3 service home and per-die KV demand join','W4 disjoint replacement ledger and rectangles','Actual descriptor PHW/address and golden exactness gates','Loaded SS/FF timing and routing-layer check'])
     save(out/'mapping_verdict.json',result)
+    save(out/'home_order_check.json',home_order(out,homes,stages))
     return result
+
+def home_order(out,homes,stages):
+    """Static pipeline order: a layer's HE/CROM providers (hc_pre, norms, q/kv norm, sink, gate bias) are read
+    before its first dense matrix (wq_a / wkv), so the provider home must be the stage holding the layer's
+    first dense matrix.  A home after that stage needs a backward hop (illegal in the forward stage pipeline)."""
+    first={}
+    for line in gzip.open(out/'matrix_map.jsonl.gz','rt'):
+        m=json.loads(line)
+        if m.get('expert') is None and m['stage'] is not None:
+            first[m['layer']]=min(first.get(m['layer'],stages),m['stage'])
+    bad={L:dict(home=homes[L],first_dense_stage=first[L]) for L in sorted(first) if homes[L]!=first[L]}
+    return dict(schema='opentallas.dsrom.provider-home-order.v1',home_at_first_dense_stage_PASS=not bad,
+                violations=bad,first_dense_stage={L:first[L] for L in sorted(first)})
 
 def main():
     ap=argparse.ArgumentParser();ap.add_argument('--out',type=Path,required=True)
@@ -183,8 +197,13 @@ def main():
     ap.add_argument('--stages',type=int,default=73);ap.add_argument('--pairs',type=int,default=2682)
     ap.add_argument('--bf',type=int,default=576)
     ap.add_argument('--regions-json',type=Path,help='ragged roots: JSON list of 128 [pairs, bf] (sum = --pairs / --bf)')
+    ap.add_argument('--homes-from',type=Path,help='home_order_check.json of a previous run: home every layer\'s providers '
+                    'on its first dense stage (fixed point: the check of this run must PASS)')
     a=ap.parse_args()
     regions=json.loads(a.regions_json.read_text()) if a.regions_json else None
     a.out.mkdir(parents=True,exist_ok=False)
-    mapping(a.out,a.reference_unsplit,a.stages,a.pairs,a.bf,regions)
+    homes=None
+    if a.homes_from:
+        homes={int(L):s for L,s in json.loads(a.homes_from.read_text())['first_dense_stage'].items()}
+    mapping(a.out,a.reference_unsplit,a.stages,a.pairs,a.bf,regions,homes)
 if __name__=='__main__':main()

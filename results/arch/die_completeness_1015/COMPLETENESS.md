@@ -1,4 +1,4 @@
-# Die completeness, 2026-10-15 20:23 PDT
+# Die completeness, 2026-10-15 22:23 PDT
 
 Measured inventory per die (tools/die_completeness.py). Every number comes from a bind record, the element registry, a native pin audit of the committed view, or a die-run log; the source of each is listed. Re-run daily.
 
@@ -7,8 +7,8 @@ Measured inventory per die (tools/die_completeness.py). Every number comes from 
 | die | netlist instances | distinct masters | non-real-RTL instances | instances without a closed view | open inputs (ports) | netlist masters closed+native PASS | netlist masters not closed+native | contract masters absent | remaining work units | masters left after DEDUPE ph-1 rebinds |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
 | Qwen compute die | 1,638 | 37 | 0 | 840 | 71 | 4 | 28 | 10 | **118** | 32 of 37 |
-| Qwen KV/system die | 19,738 | 53 | 132 | 8,231 | 27 | 12 | 35 | 4 | **76** | 16 of 39 |
-| S81 (DeepSeek ROM) die | 81,423 | 221 | 0 | 9,111 | 7 | 148 | 68 | 40 | **139** | 78 of 92 |
+| Qwen KV/system die | 19,342 | 58 | 132 | 7,707 | 25 | 13 | 39 | 4 | **78** | 20 of 43 |
+| S81 (DeepSeek ROM) die | 84,387 | 255 | 0 | 8,836 | 7 | 151 | 99 | 38 | **167** | 108 of 122 |
 | HBM accelerator die | 83 | 39 | 0 | 74 | 1,070 (= exposed inputs; 1,660 unresolved ports incl. outputs) | 1 | 37 | 16 | **1,139** | 44 of 53 |
 
 Remaining work units = masters not closed + native PASS (netlist and contract-absent, hard macros excluded) + placeholders to replace (non-real-RTL masters + contract masters absent from the netlist) + inputs to bind (unconnected input ports + width mismatches + die ports missing in RTL). A contract master absent from the netlist counts once to close it (unless already closed + native PASS) and once to integrate it. HBM additionally carries its exposed input ports and unresolved source ports, listed per die below.
@@ -35,8 +35,8 @@ Netlist / bind: `ot-epyc4:/srv/opentallas-scratch/claude/qwen-split-compute/c23s
 
 | run | time | measured | last event |
 |---|---|---|---|
-| `ot-epyc4:/srv/opentallas-scratch/claude/qwen-split-compute/c23s/chain/STATUS.log` | 2026-10-15 20:05 PDT | src 711ec663b; GEN 6,385 inst | 2026-10-15 20:05:01 real case: OT_LEGAL instances=6385 overlaps=0 outside=0 OT_ASSERT PASS OT_PA DONE  |
-| `repo:results/arch/qwen_split_compute_1014/c16s_terminal/STATUS.log` | 2026-10-15 01:46 PDT | src 675166521; GEN 1,630 inst; GRT overflow 0 | 2026-10-15 01:19:59 STA ff:  |
+| `ot-epyc4:/srv/opentallas-scratch/claude/qwen-split-compute/c23s/chain/STATUS.log` | 2026-10-15 20:39 PDT | src 711ec663b; GEN 6,385 inst | 2026-10-15 20:39:27 PDN PG OPEN -- DIAGNOSTIC ONLY (GRT/STA continue): islands by class: io_serdes=3 up4_sel_s |
+| `repo:results/arch/qwen_split_compute_1014/c16s_terminal/STATUS.log` | 2026-10-15 01:43 PDT | src 675166521; GEN 1,630 inst; GRT overflow 0 | 2026-10-15 01:19:59 STA ff:  |
 
 <details><summary>Masters not closed + native PASS</summary>
 
@@ -47,7 +47,7 @@ Netlist / bind: `ot-epyc4:/srv/opentallas-scratch/claude/qwen-split-compute/c23s
 | qfd_su_cbuf_g | 8 | closed, native unmeasured | closed (TT era) | Q-COMPUTE-ELEM | NO_VIEW |  |  |
 | qfd_sp_band_lanes | 3 | closed, native unmeasured | closed (TT era) | Q-COMPUTE-ELEM | NO_VIEW |  |  |
 | qfd_tile_nk | 768 | routed-failed | flow failure (no live job) | Q-COMPUTE-ELEM | flow failure (no live job); 2 failed job(s) | n_a, n_b |  |
-| qfd_d2d_static | 1 | routed-failed | needs redesign (no live job) | Q-LINK | needs redesign (no live job); 3 failed job(s) | admit_ready, cal_seg, cal_start, cfg_addr, cfg_data, cfg_rx_we, cfg_tx_we, colle |  |
+| qfd_d2d_static | 1 | routed-failed | needs redesign (no live job) | Q-LINK | needs redesign (no live job); 5 failed job(s) | admit_ready, cal_seg, cal_start, cfg_addr, cfg_data, cfg_rx_we, cfg_tx_we, colle |  |
 | qfd_sp_su64_sfu | 1 | routed-failed | flow failure (no live job) | Q-COMPUTE-ELEM | flow failure (no live job); 1 failed job(s) | fill_begin, fill_epoch, fill_token, preload_data, preload_epoch, preload_scale,  |  |
 | qfd_xcol_e | 24 | RTL only (no route yet) | not started (open) | Q-DVM | 0 of 3 contract leaves closed |  | ph1: STANDARD (route once) |
 | qfd_xcol_w | 24 | RTL only (no route yet) | not started (open) | Q-DVM | 0 of 3 contract leaves closed |  | ph1: REPLACE by qfd_xcol_e mirrored (MX/MY), the second copy |
@@ -95,25 +95,25 @@ Unknowns: no die-level TT/FF STA exists for the current netlist | 3 closed maste
 ## Qwen KV/system die (Q-KVSYS-DIE)
 
 Contract: v1.4.1 bind (kvs7c, HOST north + v1.4 HOST partition) + static IO / static D2D successors; v1.4.2 in progress (complete=True).
-Netlist / bind: `ot-epyc1tb:/srv/opentallas-scratch/claude/qwen-kvsys/kvs8-codex-1338/port_bind_launch.json` (2026-10-15 19:14 PDT, opentallas.qwen_kv_die_port_bind.v1), die.v `/srv/opentallas-scratch/claude/qwen-kvsys/kvs8-codex-1338/case_kv/die.v`.
+Netlist / bind: `ot-epyc1tb:/srv/opentallas-scratch/claude/qwen-kvsys/kvs10-v143p/port_bind_launch.json` (2026-10-15 22:18 PDT, opentallas.qwen_kv_die_port_bind.v1), die.v `/srv/opentallas-scratch/claude/qwen-kvsys/kvs10-v143p/case_kv/die.v`.
 
 | item | value |
 |---|---|
-| (1) instances / distinct masters | 19,738 / 53 |
+| (1) instances / distinct masters | 19,342 / 58 |
 | bind verdict | FAIL (not the strict v2 bind) |
 | (2) non-real-RTL masters (stub / unbound / mismatch / model not allowed) | 6 masters, 132 inst - qkd_d2ds x1 (mismatch), qkd_embgw x1 (mismatch), qkd_host_rt x1 (mismatch), qkd_hslice x64 (mismatch), qkd_hslice_dn x64 (mismatch), qkd_seq x1 (mismatch) |
-| (2) masters / instances with no closed view (die must window them) | 31 / 8,231 |
-| (2) latest die run on real views | 15 masters / 11,496 inst (of 19,738); `ot-epyc1tb:/srv/opentallas-scratch/claude/qwen-kvsys/kvs8/classify_kvs8.json` |
-| (3) unconnected input ports / width mismatches / die ports not in RTL | 27 / 0 / 0 (on 6 masters) |
-| (4) masters by view state | closed + native PASS 12; closed, native FAIL 4; parent: leaves closed, not hardened 3; RTL only (no route yet) 28; hard macro / PHY (allowed model) 6 |
+| (2) masters / instances with no closed view (die must window them) | 34 / 7,707 |
+| (2) latest die run on real views | 15 masters / 11,496 inst (of 19,342); `ot-epyc1tb:/srv/opentallas-scratch/claude/qwen-kvsys/kvs8/classify_kvs8.json` |
+| (3) unconnected input ports / width mismatches / die ports not in RTL | 25 / 0 / 0 (on 6 masters) |
+| (4) masters by view state | closed + native PASS 13; closed, native FAIL 5; parent: leaves closed, not hardened 3; RTL only (no route yet) 31; hard macro / PHY (allowed model) 6 |
 | (5) contract masters absent from the netlist | 4: qkd_d2d_static (routed-failed), qkd_embedding_static_core_provider (RTL only (no route yet)), qkd_kv_static_writer_native (closed, native FAIL), qkd_static_kv_return_slots (closed, native FAIL) |
-| remaining work units | **76** = 39 masters not closed+native (35 in netlist + 4 absent) + 10 placeholders + 27 inputs; DEDUPE phase-1 rebinds to closed standards (GEN work, no route) cover 23 of the masters |
+| remaining work units | **78** = 43 masters not closed+native (39 in netlist + 4 absent) + 10 placeholders + 25 inputs; DEDUPE phase-1 rebinds to closed standards (GEN work, no route) cover 23 of the masters |
 
 (6) Die-level runs (newest first):
 
 | run | time | measured | last event |
 |---|---|---|---|
-| `ot-epyc1tb:/srv/opentallas-scratch/claude/qwen-kvsys/kvs8-codex-1338/STATUS.log` | 2026-10-15 19:14 PDT | src eaa29a4be; GEN 27,810 inst | 2026-10-15 19:14:41 PDN FLOW FIX 2 (main 5b9c813fa): die-top tie rows + M1/M2 followpins (8072 ties placed on  |
+| `ot-epyc1tb:/srv/opentallas-scratch/claude/qwen-kvsys/kvs10-v143p/STATUS.log` | 2026-10-15 22:18 PDT | src 5f554a767 |  |
 | `ot-epyc1tb:/srv/opentallas-scratch/claude/qwen-kvsys/kvs8/STATUS.log` | 2026-10-15 15:36 PDT | src 390b51430; GEN 27,810 inst; GRT overflow 0; TT WNS -1762.84 ps; FF setup -1574.60; FF hold -80.60 ps; PDN SKIPPED (diagnostic) | 2026-10-15 15:36:37 STA ff: tns max -56830016.00 wns max -1574.60 worst slack min -80.60  |
 
 <details><summary>Masters not closed + native PASS</summary>
@@ -123,35 +123,39 @@ Netlist / bind: `ot-epyc1tb:/srv/opentallas-scratch/claude/qwen-kvsys/kvs8-codex
 | ot_qkh_lane8 | 2048 | closed, native FAIL | closed (TT era) | Q-KVSYS-ELEM | launch 233.12933 > 220 (30 pins) |  |  |
 | qkd_cdc_wleaf | 128 | closed, native FAIL | closed (TT era) | Q-KVSYS-ELEM | capture 396.96114 > 190 (1 pins) |  |  |
 | qkd_ctrl_pc | 128 | closed, native FAIL | closed (TT era) | Q-KVSYS-ELEM | launch 273.1797 > 220 (27 pins) |  |  |
+| qkd_ectl_a_tp8_epoch_direct | 32 | closed, native FAIL | closed (TT era) | Q-KVSYS-ELEM | capture 220.98393 > 190 (913 pins) |  |  |
 | qkd_embgw | 1 | closed, native FAIL | closed (TT era) | Q-KVSYS-ELEM | launch 311.96606 > 220 (1072 pins) | r_ea |  |
 | qkd_ahub | 1 | parent: leaves closed, not hardened | not started (open) | Q-KVSYS-ELEM | 5 of 5 contract leaves closed |  |  |
-| qkd_host_rt | 1 | parent: leaves closed, not hardened | not started (open) | Q-KVSYS-DIE | 3 of 3 contract leaves closed | ctrl_completion_fault, engine_admit_ready, physical_fault |  |
+| qkd_host_rt | 1 | parent: leaves closed, not hardened | not started (open) | Q-KVSYS-DIE | 3 of 3 contract leaves closed | ctrl_completion_fault |  |
 | qkd_seq | 1 | parent: leaves closed, not hardened | not started (open) | Q-KVSYS-ELEM | 3 of 3 contract leaves closed | r_kvd, r_sd, r_x3_d, t_ar_cr |  |
-| qkd_rly_t1 | 5245 | RTL only (no route yet) | - | - | no registry row |  |  |
+| qkd_rly_t1 | 4126 | RTL only (no route yet) | - | - | no registry row |  |  |
 | qkd_rly_32 | 936 | RTL only (no route yet) | not started (open) | Q-KVSYS-ELEM | no closure-loop job yet |  | ph1: REPLACE by replica 1 x hbfd_rly_48_<flow> |
-| qkd_rly_1 | 439 | RTL only (no route yet) | not started (open) | Q-KVSYS-ELEM | no closure-loop job yet |  | ph1: REPLACE by replica 1 x hbfd_rly_48_<flow> |
-| qkd_rly_1025 | 221 | RTL only (no route yet) | not started (open) | Q-KVSYS-ELEM | no closure-loop job yet |  | ph1: REPLACE by replica 1 x hbfd_rly_1136_<flow> |
-| qkd_rly_17 | 214 | RTL only (no route yet) | not started (open) | Q-KVSYS-ELEM | no closure-loop job yet |  | ph1: REPLACE by replica 1 x hbfd_rly_48_<flow> |
+| qkd_rly_1 | 451 | RTL only (no route yet) | not started (open) | Q-KVSYS-ELEM | no closure-loop job yet |  | ph1: REPLACE by replica 1 x hbfd_rly_48_<flow> |
+| qkd_hgs | 320 | RTL only (no route yet) | - | - | no registry row |  |  |
+| qkd_rly_17 | 244 | RTL only (no route yet) | not started (open) | Q-KVSYS-ELEM | no closure-loop job yet |  | ph1: REPLACE by replica 1 x hbfd_rly_48_<flow> |
+| qkd_rly_1025 | 242 | RTL only (no route yet) | not started (open) | Q-KVSYS-ELEM | no closure-loop job yet |  | ph1: REPLACE by replica 1 x hbfd_rly_1136_<flow> |
+| qkd_hss | 192 | RTL only (no route yet) | - | - | no registry row |  |  |
 | qkd_rly_33 | 161 | RTL only (no route yet) | not started (open) | Q-KVSYS-ELEM | no closure-loop job yet |  | ph1: REPLACE by replica 1 x hbfd_rly_48_<flow> |
-| qkd_rly_291 | 155 | RTL only (no route yet) | not started (open) | Q-KVSYS-ELEM | no closure-loop job yet |  | ph1: REPLACE by replica 1 x hbfd_rly_304_<flow> |
-| qkd_rly_293 | 124 | RTL only (no route yet) | not started (open) | Q-KVSYS-ELEM | no closure-loop job yet |  | ph1: REPLACE by replica 1 x hbfd_rly_304_<flow> |
-| qkd_rly_2 | 118 | RTL only (no route yet) | not started (open) | Q-KVSYS-ELEM | no closure-loop job yet |  | ph1: REPLACE by replica 1 x hbfd_rly_48_<flow> |
+| qkd_rly_291 | 154 | RTL only (no route yet) | not started (open) | Q-KVSYS-ELEM | no closure-loop job yet |  | ph1: REPLACE by replica 1 x hbfd_rly_304_<flow> |
+| qkd_rly_293 | 123 | RTL only (no route yet) | not started (open) | Q-KVSYS-ELEM | no closure-loop job yet |  | ph1: REPLACE by replica 1 x hbfd_rly_304_<flow> |
+| qkd_rly_2 | 119 | RTL only (no route yet) | not started (open) | Q-KVSYS-ELEM | no closure-loop job yet |  | ph1: REPLACE by replica 1 x hbfd_rly_48_<flow> |
 | qkd_rly_289 | 85 | RTL only (no route yet) | not started (open) | Q-KVSYS-ELEM | no closure-loop job yet |  | ph1: REPLACE by replica 1 x hbfd_rly_304_<flow> |
 | qkd_rly_521 | 85 | RTL only (no route yet) | not started (open) | Q-KVSYS-ELEM | no closure-loop job yet |  | ph1: REPLACE by replica 1 x hbfd_rly_624_<flow> |
 | qkd_rly_1048 | 81 | RTL only (no route yet) | not started (open) | Q-KVSYS-ELEM | no closure-loop job yet |  | ph1: REPLACE by replica 1 x hbfd_rly_1136_<flow> |
-| qkd_rly_540 | 73 | RTL only (no route yet) | not started (open) | Q-KVSYS-ELEM | no closure-loop job yet |  | ph1: REPLACE by replica 1 x hbfd_rly_624_<flow> |
+| qkd_rly_540 | 66 | RTL only (no route yet) | not started (open) | Q-KVSYS-ELEM | no closure-loop job yet |  | ph1: REPLACE by replica 1 x hbfd_rly_624_<flow> |
 | qkd_hslice | 64 | RTL only (no route yet) | not started (open) | Q-KVSYS-ELEM | no closure-loop job yet | ctrl_completion_v, ctrl_completion_we | ph1: STANDARD (route once) |
 | qkd_hslice_dn | 64 | RTL only (no route yet) | not started (open) | Q-KVSYS-ELEM | no closure-loop job yet | ctrl_completion_v, ctrl_completion_we | ph1: REPLACE by qkd_hslice mirrored (MX/MY), the second copy |
 | qkd_rly_2089 | 61 | RTL only (no route yet) | not started (open) | Q-KVSYS-ELEM | no closure-loop job yet |  | ph1: REPLACE by replica 2 x hbfd_rly_1136_<flow> |
-| qkd_rly_36 | 26 | RTL only (no route yet) | not started (open) | Q-KVSYS-ELEM | no closure-loop job yet |  | ph1: REPLACE by replica 1 x hbfd_rly_48_<flow> |
-| qkd_rly_563 | 26 | RTL only (no route yet) | not started (open) | Q-KVSYS-ELEM | no closure-loop job yet |  | ph1: REPLACE by replica 1 x hbfd_rly_624_<flow> |
+| qkd_rst_region | 50 | RTL only (no route yet) | - | - | no registry row |  |  |
 | qkd_rly_520 | 24 | RTL only (no route yet) | not started (open) | Q-KVSYS-ELEM | no closure-loop job yet |  | ph1: REPLACE by replica 1 x hbfd_rly_624_<flow> |
+| qkd_rly_563 | 16 | RTL only (no route yet) | not started (open) | Q-KVSYS-ELEM | no closure-loop job yet |  | ph1: REPLACE by replica 1 x hbfd_rly_624_<flow> |
+| qkd_rly_36 | 13 | RTL only (no route yet) | not started (open) | Q-KVSYS-ELEM | no closure-loop job yet |  | ph1: REPLACE by replica 1 x hbfd_rly_48_<flow> |
 | qkd_rly_21 | 12 | RTL only (no route yet) | not started (open) | Q-KVSYS-ELEM | no closure-loop job yet |  | ph1: REPLACE by replica 1 x hbfd_rly_48_<flow> |
+| qkd_rly_13 | 3 | RTL only (no route yet) | not started (open) | Q-KVSYS-ELEM | no closure-loop job yet |  | ph1: REPLACE by replica 1 x hbfd_rly_48_<flow> |
 | qkd_astk | 2 | RTL only (no route yet) | not started (open) | Q-KVSYS-ELEM | 13 of 14 contract leaves closed |  | ph1: STANDARD (route once) |
 | qkd_astk_n | 2 | RTL only (no route yet) | not started (open) | Q-KVSYS-ELEM | 13 of 14 contract leaves closed |  | ph1: REPLACE by qkd_astk mirrored (MX/MY), the second copy n |
 | qkd_land | 2 | RTL only (no route yet) | not started (open) | Q-KVSYS-ELEM | 13 of 14 contract leaves closed |  | ph1: STANDARD (route once) |
 | qkd_land_n | 2 | RTL only (no route yet) | not started (open) | Q-KVSYS-ELEM | 13 of 14 contract leaves closed |  | ph1: REPLACE by qkd_land mirrored (MX/MY), the second copy n |
-| qkd_rly_13 | 2 | RTL only (no route yet) | not started (open) | Q-KVSYS-ELEM | no closure-loop job yet |  | ph1: REPLACE by replica 1 x hbfd_rly_48_<flow> |
 | qkd_rly_284 | 2 | RTL only (no route yet) | not started (open) | Q-KVSYS-ELEM | no closure-loop job yet |  | ph1: REPLACE by replica 1 x hbfd_rly_304_<flow> |
 | qkd_d2ds | 1 | RTL only (no route yet) | - | - | no registry row | att_tx_payload, att_tx_v, cal_seg, cal_start, cfg_addr, cfg_data, cfg_rx_we, cfg |  |
 | qkd_rly_93 | 1 | RTL only (no route yet) | not started (open) | Q-KVSYS-ELEM | no closure-loop job yet |  | ph1: REPLACE by replica 1 x hbfd_rly_136_<flow> |
@@ -162,7 +166,7 @@ Netlist / bind: `ot-epyc1tb:/srv/opentallas-scratch/claude/qwen-kvsys/kvs8-codex
 
 | master | state | registry | owner | detail |
 |---|---|---|---|---|
-| qkd_d2d_static | routed-failed | failed, re-running | Q-LINK | failed, re-running; 2 failed job(s) |
+| qkd_d2d_static | routed-failed | needs redesign (no live job) | Q-LINK | needs redesign (no live job); 3 failed job(s) |
 | qkd_embedding_static_core_provider | RTL only (no route yet) | not started (open) | Q-KVSYS-ELEM | no closure-loop job yet |
 | qkd_kv_static_writer_native | closed, native FAIL | closed (TT era) | Q-KVSYS-ELEM | capture 268.01032 > 190 (1 pins) |
 | qkd_static_kv_return_slots | closed, native FAIL | closed (TT era) | Q-KVSYS-ELEM | launch 268.77205 > 220 (290 pins) |
@@ -174,59 +178,58 @@ Unknowns: the strict die_port_bind.py v2 check (undriven / multi-driven net bits
 ## S81 (DeepSeek ROM) die (S-DIE)
 
 Contract: v20 contract + v21 GEN18 candidate (GEN18c static seams/collective, S-BIND bind5) (complete=True).
-Netlist / bind: `ot-epyc4:/srv/opentallas-scratch/claude/s81-die-r10/bind21/port_bind.json` (2026-10-15 14:02 PDT, opentallas.die_port_bind.v2), die.v `/srv/opentallas-scratch/claude/s81-die-r10/bind21/gen/construction_pass0_die.v`.
+Netlist / bind: `ot-epyc4:/srv/opentallas-scratch/claude/s81-die-iter/c21h/port_bind.json` (2026-10-15 20:40 PDT, opentallas.die_port_bind.v2), die.v `/srv/opentallas-scratch/claude/s81-die-iter/c21h/nl/die.v`.
 
 | item | value |
 |---|---|
-| (1) instances / distinct masters | 81,423 / 221 |
+| (1) instances / distinct masters | 84,387 / 255 |
 | bind verdict | FAIL (strict die_port_bind v2) |
 | (2) non-real-RTL masters (stub / unbound / mismatch / model not allowed) | 0 masters, 0 inst  |
-| (2) masters / instances with no closed view (die must window them) | 48 / 9,111 |
+| (2) masters / instances with no closed view (die must window them) | 79 / 8,836 |
 | (2) latest die run on real views | 18 masters / 31,916 inst (of 84,387); `ot-epyc4:/srv/opentallas-scratch/claude/s81-die-iter/c21h/STATUS.log` |
 | (3) unconnected input ports / width mismatches / die ports not in RTL | 7 / 0 / 0 (on 2 masters) |
 | (3) undriven / multi-driven net bits, stub masters, unbound masters | 0 / 0 / 0 / 0 |
-| (4) masters by view state | closed + native PASS 148; closed, native FAIL 19; closed, native unmeasured 1; routed-failed 3; parent: leaves closed, not hardened 9; RTL only (no route yet) 26; superseded but in netlist 10; hard macro / PHY (allowed model) 5 |
-| (5) contract masters absent from the netlist | 40: dsfd_bf_front (RTL only (no route yet)), dsfd_engram_c (closed, native unmeasured), dsfd_engram_mix4_c (parent: leaves closed, not hardened), dsfd_hstnv_761 (closed + native PASS), dsfd_l2r_vr_564x1__hx_E (closed + native PASS), dsfd_l2r_vr_564x1__hx_W (closed + native PASS), dsfd_mtp_hrow_cbe (closed, native FAIL), dsfd_mtp_hrow_cbw (closed, native FAIL), dsfd_mtp_hrow_hub (closed, native FAIL), dsfd_mtp_hrow_ing (closed + native PASS), dsfd_rly_1_WE (closed + native PASS), dsfd_rly_266_SN (closed, native FAIL), dsfd_rly_266_WE (closed, native FAIL), dsfd_rly_283_SN (closed, native FAIL) ... |
-| remaining work units | **139** = 92 masters not closed+native (68 in netlist + 24 absent) + 40 placeholders + 7 inputs; DEDUPE phase-1 rebinds to closed standards (GEN work, no route) cover 14 of the masters |
+| (4) masters by view state | closed + native PASS 151; closed, native FAIL 19; closed, native unmeasured 1; routed-failed 2; parent: leaves closed, not hardened 9; RTL only (no route yet) 58; superseded but in netlist 10; hard macro / PHY (allowed model) 5 |
+| (5) contract masters absent from the netlist | 38: dsfd_bf_front (RTL only (no route yet)), dsfd_engram_c (closed, native unmeasured), dsfd_engram_mix4_c (parent: leaves closed, not hardened), dsfd_l2r_vr_564x1__hx_E (closed + native PASS), dsfd_l2r_vr_564x1__hx_W (closed + native PASS), dsfd_mtp_hrow_cbe (closed, native FAIL), dsfd_mtp_hrow_cbw (closed, native FAIL), dsfd_mtp_hrow_hub (closed, native FAIL), dsfd_mtp_hrow_ing (closed + native PASS), dsfd_rly_1_WE (closed + native PASS), dsfd_rly_266_SN (closed, native FAIL), dsfd_rly_266_WE (closed, native FAIL), dsfd_rly_283_SN (closed, native FAIL), dsfd_rly_283_WE (closed, native FAIL) ... |
+| remaining work units | **167** = 122 masters not closed+native (99 in netlist + 23 absent) + 38 placeholders + 7 inputs; DEDUPE phase-1 rebinds to closed standards (GEN work, no route) cover 14 of the masters |
 
 (6) Die-level runs (newest first):
 
 | run | time | measured | last event |
 |---|---|---|---|
+| `ot-epyc4:/srv/opentallas-scratch/claude/s81-die-iter/c21h/STATUS.log` | 2026-10-15 22:02 PDT | src aa9e7cfae; GEN 84,387 inst | 2026-10-16T05:02:20 PLACE rc=0 |
+| `ot-epyc4:/srv/opentallas-scratch/claude/s81-die-iter/c18/STATUS.log` | 2026-10-15 21:25 PDT | src d8072c747 | 2026-10-16T04:25:09 GEN_FAIL  |
 | `ot-epyc4:/srv/opentallas-scratch/claude/s81-die-iter/c19b/STATUS.log` | 2026-10-15 19:53 PDT | src d8072c747; GEN 80,654 inst | 2026-10-16T02:47:35 PLACE_FAIL |
-| `ot-epyc4:/srv/opentallas-scratch/claude/s81-die-iter/c21h/STATUS.log` | 2026-10-15 19:32 PDT | src aa9e7cfae; GEN 84,387 inst | 2026-10-16T02:32:24 PLACE rc=137 |
 | `ot-epyc4:/srv/opentallas-scratch/claude/s81-die-iter/c19b/DIAG_STATUS.log` | 2026-10-15 17:44 PDT | GEN 80,654 inst | 2026-10-16T00:44:16 DIAG_PLACE_OK |
 | `ot-epyc4:/srv/opentallas-scratch/claude/s81-die-iter/c21/STATUS.log` | 2026-10-15 14:41 PDT | src f22723676 | 2026-10-15T21:41:39 GEN_FAIL  |
-| `ot-epyc4:/srv/opentallas-scratch/claude/s81-die-iter/c18/STATUS.log` | 2026-10-15 07:41 PDT | src d8072c747 |  |
-| `ot-epyc4:/srv/opentallas-scratch/claude/s81-die-iter/c19b/grt_p/grt.log` | 2026-10-15 20:00 PDT | GRT RUNNING (extra iteration 3/12) | GRT log |
-| `ot-epyc4:/srv/opentallas-scratch/claude/s81-die-iter/c8p/grt/grt.log` | 2026-10-14 10:28 PDT | GRT overflow 0 | GRT log |
+| `ot-epyc4:/srv/opentallas-scratch/claude/s81-die-iter/c21h/grt/grt.log` | 2026-10-15 22:16 PDT | GRT RUNNING (extra iteration 3/12) | GRT log |
+| `ot-epyc4:/srv/opentallas-scratch/claude/s81-die-iter/c19b/grt_p/grt.log` | 2026-10-15 22:01 PDT | GRT RUNNING (extra iteration 7/12) | GRT log |
 
 <details><summary>Masters not closed + native PASS</summary>
 
 | master | inst | state | registry | owner | detail | open inputs | DEDUPE |
 |---|---:|---|---|---|---|---|---|
-| dsfd_rly_63_WE | 8278 | closed, native FAIL | closed (TT era) | S-DIE | capture 198.8976 > 190 (1 pins) |  | ph0: STANDARD (keep, replicate) |
-| dsfd_rly_63_WS | 5181 | closed, native FAIL | closed (TT era) | S-DIE | launch 220.61793 > 220 (1 pins) |  | ph0: STANDARD (keep, replicate) |
+| dsfd_rly_63_WE | 8471 | closed, native FAIL | closed (TT era) | S-DIE | capture 198.8976 > 190 (1 pins) |  | ph0: STANDARD (keep, replicate) |
+| dsfd_rly_63_WS | 5538 | closed, native FAIL | closed (TT era) | S-DIE | launch 220.61793 > 220 (1 pins) |  | ph0: STANDARD (keep, replicate) |
 | dsfd_qbank_S | 1898 | closed, native FAIL | closed (TT era) | S-DIE | launch 222.07801 > 220 (2 pins); capture 303.47967 > 190 (1 pins) |  |  |
 | ot_s81_cfg7_seq | 1898 | closed, native FAIL | closed (TT era) | S-ELEM-B | launch 221.58581 > 220 (3 pins); capture 300.55874 > 190 (189 pins); 20 combinational pins |  |  |
-| dsfd_rly_266_EW | 1491 | closed, native FAIL | closed (TT era) | S-DIE | launch 237.41262 > 220 (126 pins); capture 271.72626 > 190 (1 pins) |  | ph1: REBIND NOW to 1 x dsfd_rly_283_EW |
-| dsfd_rly_283_EW | 1491 | closed, native FAIL | closed (TT era) | S-DIE | launch 243.32915 > 220 (132 pins); capture 293.90512 > 190 (1 pins) |  | ph0: STANDARD (keep, replicate) |
+| dsfd_rly_266_EW | 1521 | closed, native FAIL | closed (TT era) | S-DIE | launch 237.41262 > 220 (126 pins); capture 271.72626 > 190 (1 pins) |  | ph1: REBIND NOW to 1 x dsfd_rly_283_EW |
+| dsfd_rly_283_EW | 1521 | closed, native FAIL | closed (TT era) | S-DIE | launch 243.32915 > 220 (132 pins); capture 293.90512 > 190 (1 pins) |  | ph0: STANDARD (keep, replicate) |
 | dsfd_node_LLfd | 1265 | closed, native FAIL | closed (TT era) | S-DIE | capture 207.34828 > 190 (1 pins) |  | ph1: REBIND NOW to dsfd_node_LLfu (identical RTL) |
 | dsfd_node_NNfu | 1265 | closed, native FAIL | closed (TT era) | S-DIE | capture 191.90194 > 190 (1 pins) |  | ph0: CANONICAL (keep, replicate) |
 | dsfd_node_LLfu | 1024 | closed, native FAIL | closed (TT era) | S-DIE | capture 246.41196 > 190 (1 pins) |  | ph0: CANONICAL (keep, replicate) |
 | dsfd_node_NNfd | 1024 | closed, native FAIL | closed (TT era) | S-DIE | capture 242.6733 > 190 (1 pins) |  | ph1: REBIND NOW to dsfd_node_NNfu (identical RTL) |
-| dsfd_rly_63_SE | 839 | closed, native FAIL | closed (TT era) | S-DIE | capture 216.96895 > 190 (1 pins) |  | ph0: STANDARD (keep, replicate) |
-| dsfd_rly_63_WN | 838 | closed, native FAIL | closed (TT era) | S-DIE | launch 223.74778 > 220 (2 pins) |  | ph0: STANDARD (keep, replicate) |
-| dsfd_rly_66_EW | 227 | closed, native FAIL | closed (TT era) | S-DIE | capture 200.14293 > 190 (1 pins) |  | ph1: REBIND NOW to 1 x dsfd_rly_68_EW |
-| dsfd_rly_66_ES | 132 | closed, native FAIL | closed (TT era) | S-DIE | capture 243.78442 > 190 (1 pins) |  | ph0: STANDARD (keep, replicate) |
+| dsfd_rly_63_WN | 993 | closed, native FAIL | closed (TT era) | S-DIE | launch 223.74778 > 220 (2 pins) |  | ph0: STANDARD (keep, replicate) |
+| dsfd_rly_63_SE | 636 | closed, native FAIL | closed (TT era) | S-DIE | capture 216.96895 > 190 (1 pins) |  | ph0: STANDARD (keep, replicate) |
+| dsfd_rly_66_EW | 236 | closed, native FAIL | closed (TT era) | S-DIE | capture 200.14293 > 190 (1 pins) |  | ph1: REBIND NOW to 1 x dsfd_rly_68_EW |
 | dsfd_cfifo | 128 | closed, native FAIL | closed (TT era) | S-ELEM-A | launch 263.29628 > 220 (252 pins); capture 205.69189 > 190 (1 pins) |  |  |
 | dsfd_node_LLd | 128 | closed, native FAIL | closed (TT era) | S-DIE | capture 267.72869 > 190 (1 pins) |  |  |
+| dsfd_rly_66_ES | 127 | closed, native FAIL | closed (TT era) | S-DIE | capture 243.78442 > 190 (1 pins) |  | ph0: STANDARD (keep, replicate) |
+| dsfd_rly_66_WS | 9 | closed, native FAIL | closed (TT era) | S-DIE | capture 195.00153 > 190 (1 pins) |  | ph0: STANDARD (keep, replicate) |
 | dsfd_xstg_515 | 2 | closed, native FAIL | closed (TT era) | S-DIE | capture 355.9881 > 190 (515 pins) |  |  |
 | dsfd_m2l_vr_68x11__hr_E4 | 1 | closed, native FAIL | closed (TT era) | S-DIE | launch 380.2777 > 220 (13 pins); capture 485.08003 > 190 (22 pins) |  | ph1: REBIND NOW to dsfd_m2l_vr_68x11__hr_W1 (identical RTL) |
-| dsfd_r2l_vr_1024x1__ha_SW | 1 | closed, native FAIL | closed (TT era) | S-DIE | capture 397.99082 > 190 (2 pins) |  |  |
-| dsfd_hstnh_515 | 10 | closed, native unmeasured | closed (TT era) | S-DIE | NO_VIEW |  | ph0: KEEP (different RTL body from the family generator; not |
-| dsfd_stnv_566x1 | 808 | routed-failed | failed, re-running | S-ELEM-B | failed, re-running; 5 failed job(s) |  | ph0: KEEP (different RTL body from the family generator; not |
-| dsfd_bf_front_static | 519 | routed-failed | failed, re-running | S-ELEM-B | failed, re-running; 2 failed job(s) |  |  |
+| dsfd_hstnh_515 | 16 | closed, native unmeasured | closed (TT era) | S-DIE | NO_VIEW |  | ph0: KEEP (different RTL body from the family generator; not |
+| dsfd_bf_front_static | 519 | routed-failed | needs redesign (no live job) | S-ELEM-B | needs redesign (no live job); 3 failed job(s) |  |  |
 | dsfd_host_c | 1 | routed-failed | needs redesign (no live job) | S-ELEM-B | needs redesign (no live job); 1 failed job(s) |  |  |
 | dsfd_bk_collector_c1 | 1 | parent: leaves closed, not hardened | not started (open) | S-ELEM-B | 2 of 2 contract leaves closed |  |  |
 | dsfd_ctrl | 1 | parent: leaves closed, not hardened | not started (open) | S-ELEM-B | 2 of 2 contract leaves closed |  |  |
@@ -238,27 +241,59 @@ Netlist / bind: `ot-epyc4:/srv/opentallas-scratch/claude/s81-die-r10/bind21/port
 | dsfd_svc_c | 1 | parent: leaves closed, not hardened | not started (open) | S-ELEM-B | 10 of 10 contract leaves closed |  |  |
 | dsfd_wfc_stg | 1 | parent: leaves closed, not hardened | not started (open) | S-ELEM-B | 3 of 3 contract leaves closed |  |  |
 | dsfd_bf_col | 1038 | RTL only (no route yet) | not started (open) | S-ELEM-B | no closure-loop job yet |  |  |
-| dsfd_stnv_538x1 | 808 | RTL only (no route yet) | - | - | no registry row |  |  |
+| dsfd_stnv_538x1 | 932 | RTL only (no route yet) | - | - | no registry row |  |  |
+| dsfd_rly_536_SN | 898 | RTL only (no route yet) | - | - | no registry row |  |  |
 | dsfd_sstn_e0e1c0c1si_x2 | 746 | RTL only (no route yet) | - | - | no registry row |  |  |
-| dsfd_stnh_538x1 | 560 | RTL only (no route yet) | - | - | no registry row |  |  |
+| dsfd_stnh_538x1 | 628 | RTL only (no route yet) | - | - | no registry row |  |  |
 | dsfd_rly_38_WN | 519 | RTL only (no route yet) | - | - | no registry row |  |  |
 | ot_s81_cfg7_seq_bfp | 519 | RTL only (no route yet) | - | - | no registry row |  |  |
 | dsfd_sstn_e0c0si_x2 | 476 | RTL only (no route yet) | - | - | no registry row |  |  |
-| dsfd_rly_536_SN | 442 | RTL only (no route yet) | - | - | no registry row |  |  |
-| dsfd_rly_536_EN | 407 | RTL only (no route yet) | - | - | no registry row |  |  |
 | dsfd_rly_536_SW | 403 | RTL only (no route yet) | - | - | no registry row |  |  |
 | dsfd_sstn_e0e1c0c1sinf_x2 | 99 | RTL only (no route yet) | - | - | no registry row |  |  |
+| dsfd_rly_536_EN | 79 | RTL only (no route yet) | - | - | no registry row |  |  |
 | dsfd_hstnh_17 | 76 | RTL only (no route yet) | - | - | no registry row |  |  |
+| dsfd_rly_15_WE | 73 | RTL only (no route yet) | - | - | no registry row |  |  |
 | dsfd_hstnv_17 | 69 | RTL only (no route yet) | - | - | no registry row |  |  |
+| dsfd_rly_63_EW | 44 | RTL only (no route yet) | - | - | no registry row |  |  |
+| dsfd_hstnh_16 | 31 | RTL only (no route yet) | - | - | no registry row |  |  |
 | dsfd_sstn_e0c0_x2 | 30 | RTL only (no route yet) | - | - | no registry row |  |  |
 | dsfd_sstn_e0c0sinf_x2 | 29 | RTL only (no route yet) | - | - | no registry row |  |  |
-| dsfd_rly_66_WE | 25 | RTL only (no route yet) | - | - | no registry row |  |  |
+| dsfd_rly_66_WE | 26 | RTL only (no route yet) | - | - | no registry row |  |  |
+| dsfd_hstnh_3056 | 11 | RTL only (no route yet) | - | - | no registry row |  |  |
+| dsfd_hstnh_2164 | 10 | RTL only (no route yet) | - | - | no registry row |  |  |
+| dsfd_hstnv_1 | 8 | RTL only (no route yet) | - | - | no registry row |  |  |
 | ot_s81_pq_rwbc15 | 8 | RTL only (no route yet) | - | - | no registry row |  |  |
+| dsfd_hstnv_12 | 5 | RTL only (no route yet) | - | - | no registry row |  |  |
+| dsfd_hstnv_48 | 5 | RTL only (no route yet) | - | - | no registry row |  |  |
 | ot_s81_pq_rwbc2 | 4 | RTL only (no route yet) | - | - | no registry row |  |  |
+| dsfd_hstnv_16 | 2 | RTL only (no route yet) | - | - | no registry row |  |  |
 | dsfd_bk_selector_c1 | 1 | RTL only (no route yet) | not started (open) | S-ELEM-B | 3 of 4 contract leaves closed |  |  |
+| dsfd_hstnh_1027 | 1 | RTL only (no route yet) | - | - | no registry row |  |  |
+| dsfd_hstnh_138_sp10 | 1 | RTL only (no route yet) | - | - | no registry row |  |  |
+| dsfd_hstnh_138_sp3 | 1 | RTL only (no route yet) | - | - | no registry row |  |  |
+| dsfd_hstnh_207_sp13 | 1 | RTL only (no route yet) | - | - | no registry row |  |  |
+| dsfd_hstnh_207_sp2 | 1 | RTL only (no route yet) | - | - | no registry row |  |  |
+| dsfd_hstnh_276_sp0 | 1 | RTL only (no route yet) | - | - | no registry row |  |  |
+| dsfd_hstnh_276_sp1 | 1 | RTL only (no route yet) | - | - | no registry row |  |  |
+| dsfd_hstnh_276_sp11 | 1 | RTL only (no route yet) | - | - | no registry row |  |  |
+| dsfd_hstnh_276_sp12 | 1 | RTL only (no route yet) | - | - | no registry row |  |  |
+| dsfd_hstnh_276_sp4 | 1 | RTL only (no route yet) | - | - | no registry row |  |  |
+| dsfd_hstnh_276_sp5 | 1 | RTL only (no route yet) | - | - | no registry row |  |  |
+| dsfd_hstnh_276_sp8 | 1 | RTL only (no route yet) | - | - | no registry row |  |  |
+| dsfd_hstnh_276_sp9 | 1 | RTL only (no route yet) | - | - | no registry row |  |  |
+| dsfd_hstnh_292 | 1 | RTL only (no route yet) | - | - | no registry row |  |  |
+| dsfd_hstnh_2_sp6 | 1 | RTL only (no route yet) | - | - | no registry row |  |  |
+| dsfd_hstnh_3 | 1 | RTL only (no route yet) | - | - | no registry row |  |  |
+| dsfd_hstnh_512 | 1 | RTL only (no route yet) | - | - | no registry row |  |  |
+| dsfd_hstnh_69_sp7 | 1 | RTL only (no route yet) | - | - | no registry row |  |  |
+| dsfd_hstnh_84 | 1 | RTL only (no route yet) | - | - | no registry row |  |  |
+| dsfd_hstnv_292 | 1 | RTL only (no route yet) | - | - | no registry row |  |  |
+| dsfd_hstnv_692 | 1 | RTL only (no route yet) | - | - | no registry row |  |  |
+| dsfd_hstnv_84 | 1 | RTL only (no route yet) | - | - | no registry row |  |  |
 | dsfd_l2r_vr_1100x1__hx_E | 1 | RTL only (no route yet) | - | - | no registry row |  |  |
 | dsfd_l2r_vr_1100x1__hx_W | 1 | RTL only (no route yet) | - | - | no registry row |  |  |
 | dsfd_lkck_EE | 1 | RTL only (no route yet) | - | - | no registry row |  |  |
+| dsfd_rly_15_NE | 1 | RTL only (no route yet) | - | - | no registry row |  |  |
 | dsfd_sp_hc_c | 1 | RTL only (no route yet) | not started (open) | S-ELEM-B | 19 of 27 contract leaves closed |  |  |
 | dsfd_sp_hc_t | 1 | RTL only (no route yet) | not started (open) | S-ELEM-B | 16 of 20 contract leaves closed |  |  |
 | dsfd_sp_su_c | 1 | RTL only (no route yet) | not started (open) | S-ELEM-B | 15 of 18 contract leaves closed |  |  |
@@ -283,7 +318,6 @@ Netlist / bind: `ot-epyc4:/srv/opentallas-scratch/claude/s81-die-r10/bind21/port
 | dsfd_bf_front | RTL only (no route yet) | not started (open) | S-ELEM-B | no closure-loop job yet |
 | dsfd_engram_c | closed, native unmeasured | closed (TT era) | S-ELEM-C | NO_VIEW |
 | dsfd_engram_mix4_c | parent: leaves closed, not hardened | not started (open) | S-ELEM-C | 11 of 11 contract leaves closed |
-| dsfd_hstnv_761 | closed + native PASS | closed (TT era) | S-DIE | launch 170.0 / capture 132.3 |
 | dsfd_l2r_vr_564x1__hx_E | closed + native PASS | closed (TT era) | S-DIE | launch 99.3 / capture 120.2 |
 | dsfd_l2r_vr_564x1__hx_W | closed + native PASS | closed (TT era) | S-DIE | launch 98.5 / capture 117.2 |
 | dsfd_mtp_hrow_cbe | closed, native FAIL | closed (TT era) | S-ELEM-B | launch 398.99666 > 220 (971 pins); capture 505.86272 > 190 (870 pins) |
@@ -297,7 +331,6 @@ Netlist / bind: `ot-epyc4:/srv/opentallas-scratch/claude/s81-die-r10/bind21/port
 | dsfd_rly_283_WE | closed, native FAIL | closed (TT era) | S-DIE | launch 222.74221 > 220 (7 pins); capture 235.91917 > 190 (1 pins) |
 | dsfd_rly_2_SN | closed + native PASS | closed (TT era) | S-DIE | launch 196.2 / capture 78.4 |
 | dsfd_rly_54_EW | closed + native PASS | closed (TT era) | S-DIE | launch 218.4 / capture 165.9 |
-| dsfd_rly_66_WS | closed, native FAIL | closed (TT era) | S-DIE | capture 195.00153 > 190 (1 pins) |
 | dsfd_rly_68_EW | closed + native PASS | closed (TT era) | S-DIE | launch 219.8 / capture 160.6 |
 | dsfd_sstn_e0c0 | closed + native PASS | closed (TT era) | S-DIE | launch 181.5 / capture 182.9 |
 | dsfd_sstn_e0c0si | closed + native PASS | closed (TT era) | S-DIE | launch 180.4 / capture 177.7 |
@@ -365,7 +398,7 @@ Netlist / bind: `repo:results/arch/hbm_die_v15/source_contract/contract.json` (6
 | hfd_hgi_vm_calendar_SE | 1 | closed, native FAIL | closed (TT era) | HBM-V15-HARDEN | capture 228.95632 > 190 (1 pins) | calendar_SE.cfg_we[1b], calendar_SE.cfg_addr[10b], calendar_SE.cfg_data[256b], c | ph0: CANONICAL (keep, replicate) |
 | hfd_hgi_vm_calendar_SW | 1 | closed, native FAIL | closed (TT era) | HBM-V15-HARDEN | capture 268.06103 > 190 (1 pins) | calendar_SW.cfg_we[1b], calendar_SW.cfg_addr[10b], calendar_SW.cfg_data[256b], c |  |
 | ot_hgi_sfu_scheduled_engine | 4 | parent: leaves closed, not hardened | not started (open) | HBM-V15-HARDEN | 2 of 2 contract leaves closed | hb_sfu_SW.rst_lane_n[16b], hb_sfu_SW.rst_map_n[16b], hb_sfu_SW.cfg_we[1b], hb_sf |  |
-| hfd_ckgen | 1 | parent: leaves closed, not hardened | not started (open) | HBM-V15-HARDEN | 1 of 1 contract leaves closed |  |  |
+| hfd_ckgen | 1 | parent: leaves closed, not hardened | not started (open) | HBM-V15-HARDEN | 2 of 2 contract leaves closed |  |  |
 | ot_hbm_vm_lg_static_split | 8 | RTL only (no route yet) | not started (open) | H-ELEM-A | no closure-loop job yet |  |  |
 | ot_hbm_su_static_vm_ports | 4 | RTL only (no route yet) | not started (open) | H-ELEM-B | no closure-loop job yet | hb_su_SW.su_rq[136b], hb_su_SW.su_wq[2248b], hb_su_SE.su_rq[136b], hb_su_SE.su_w |  |
 | ot_hbm_svc_static_vm_delivery | 4 | RTL only (no route yet) | not started (open) | HBM-V15-HARDEN | no closure-loop job yet | delivery_SW.begin_v[1b], delivery_SW.begin_bank[1b], delivery_SW.begin_epoch[16b |  |
@@ -385,10 +418,10 @@ Netlist / bind: `repo:results/arch/hbm_die_v15/source_contract/contract.json` (6
 | hfd_svc_v15_SW_s5 | 2 | RTL only (no route yet) | - | - | no registry row | svc_SW_s5.open_v[4b], svc_SW_s5.open_bank[4b], svc_SW_s5.open_epoch[64b], svc_SW |  |
 | hfd_svc_v15_SW_s6 | 2 | RTL only (no route yet) | - | - | no registry row | svc_SW_s6.open_v[4b], svc_SW_s6.open_bank[4b], svc_SW_s6.open_epoch[64b], svc_SW |  |
 | hfd_svc_v15_SW_s7 | 2 | RTL only (no route yet) | - | - | no registry row | svc_SW_s7.open_v[4b], svc_SW_s7.open_bank[4b], svc_SW_s7.open_epoch[64b], svc_SW |  |
-| hfd_hgi_vms_static_NE | 1 | RTL only (no route yet) | not started (open) | H-ELEM-A | no closure-loop job yet | hb_vms_NE.rq[408b], hb_vms_NE.wq[4496b] | ph1: STANDARD (route once, replicate) |
-| hfd_hgi_vms_static_NW | 1 | RTL only (no route yet) | not started (open) | H-ELEM-A | no closure-loop job yet | hb_vms_NW.cq[1352b], hb_vms_NW.rq[272b], hb_vms_NW.wq[2248b] | ph1: MERGE into the family master (no route of its own); NOT |
-| hfd_hgi_vms_static_SE | 1 | RTL only (no route yet) | not started (open) | H-ELEM-A | no closure-loop job yet | hb_vms_SE.rq[136b] | ph1: MERGE into the family master (no route of its own); NOT |
-| hfd_hgi_vms_static_SW | 1 | RTL only (no route yet) | not started (open) | H-ELEM-A | no closure-loop job yet | hb_vms_SW.cq[338b], hb_vms_SW.rq[136b] | ph1: MERGE into the family master (no route of its own); NOT |
+| hfd_hgi_vms_static_NE | 1 | RTL only (no route yet) | not started (open) | H-ELEM-A | 0 of 4 contract leaves closed | hb_vms_NE.rq[408b], hb_vms_NE.wq[4496b] | ph1: STANDARD (route once, replicate) |
+| hfd_hgi_vms_static_NW | 1 | RTL only (no route yet) | not started (open) | H-ELEM-A | 0 of 4 contract leaves closed | hb_vms_NW.cq[1352b], hb_vms_NW.rq[272b], hb_vms_NW.wq[2248b] | ph1: MERGE into the family master (no route of its own); NOT |
+| hfd_hgi_vms_static_SE | 1 | RTL only (no route yet) | not started (open) | H-ELEM-A | 0 of 4 contract leaves closed | hb_vms_SE.rq[136b] | ph1: MERGE into the family master (no route of its own); NOT |
+| hfd_hgi_vms_static_SW | 1 | RTL only (no route yet) | not started (open) | H-ELEM-A | 0 of 4 contract leaves closed | hb_vms_SW.cq[338b], hb_vms_SW.rq[136b] | ph1: MERGE into the family master (no route of its own); NOT |
 | ot_hbm_argmax_static_sw | 1 | RTL only (no route yet) | - | - | no registry row | hb_argmax.die_id[8b], hb_argmax.go[1b], hb_argmax.mode[1b], hb_argmax.imm_a[18b] |  |
 | ot_hbm_idx_client_static_sw | 1 | RTL only (no route yet) | - | - | no registry row | hb_idx.program_we[1b], hb_idx.program_addr[8b], hb_idx.program_data[256b], hb_id |  |
 | ot_hfd_coll_q3_static | 1 | RTL only (no route yet) | not started (open) | H-COLL | 2 of 3 contract leaves closed | hb_coll_SW.qid[2b], hb_coll_SW.hgi_start[1b], hb_coll_SW.hgi_start_pc[6b], hb_co |  |

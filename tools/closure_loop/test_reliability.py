@@ -145,6 +145,25 @@ class ReliabilityTests(unittest.TestCase):
         saved = save.call_args.args[0]
         self.assertEqual((saved["name"], saved["status"], saved["stage_idx"]), ("available", "READY", 1))
 
+    def test_unreadable_bench_on_retired_host_consumes_retry_once(self):
+        job = dict(name="retired", status="NEEDS_RTL", spec={}, host="ot-epyc3",
+                   reason="bench_exact expected PASS but rc=0", stage_tag="bench_exact.a1")
+        cl.save_job(copy.deepcopy(job))
+        stage = dict(key="bench_exact", expect="pass")
+        with patch.object(cl, "stage_list", return_value=[stage]), \
+             patch.object(cl, "hosts_table", return_value=[dict(name="ot-epyc1tb")]), \
+             patch.object(cl, "bench_outcome", side_effect=RuntimeError("unreadable")), \
+             patch.object(cl, "log") as log, patch.object(cl, "event"):
+            cl.reevaluate_benches([job])
+        log.assert_not_called()
+        saved = cl.load_job("retired")
+        self.assertEqual(saved["status"], "NEEDS_RTL")
+        self.assertIn("bench-log-retry-20261007", saved["fix_requeued"])
+        with patch.object(cl, "stage_list", return_value=[stage]), \
+             patch.object(cl, "bench_outcome") as outcome:
+            cl.reevaluate_benches([saved])
+        outcome.assert_not_called()
+
     def test_cancel_survives_stale_save_and_new_worker(self):
         stale = copy.deepcopy(self.j)
         with patch.object(cl, "ledger"), patch.object(cl, "experiment"):

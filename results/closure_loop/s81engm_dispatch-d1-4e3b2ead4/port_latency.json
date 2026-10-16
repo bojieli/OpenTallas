@@ -1,0 +1,79 @@
+{
+  "evidence": {
+    "ot_pin_regs.tsv": "9accbf669f4c67b89e2dce573c4d3e1b6ddb49d42bb9d5799e0fbcd006612ef6",
+    "ot_pin_regs_wrapper.v": "63d30055b21fe0c99718ccbae9c0689b81e56d650996a4fa94858b5da2d61131"
+  },
+  "job": "s81engm_dispatch-d1-4e3b2ead4",
+  "ports": {
+    "c_cmd": {
+      "dir": "input",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 85
+    },
+    "c_done": {
+      "dir": "output",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 9
+    },
+    "c_st": {
+      "dir": "output",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 2
+    },
+    "ck": {
+      "dir": "input",
+      "reason": "clock",
+      "register_edges": 0,
+      "width": 1
+    },
+    "f_lk_done": {
+      "dir": "input",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 9
+    },
+    "f_lk_st": {
+      "dir": "input",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 2
+    },
+    "f_mix_done": {
+      "dir": "input",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 9
+    },
+    "f_mix_st": {
+      "dir": "input",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 2
+    },
+    "rst": {
+      "dir": "input",
+      "reason": "reset",
+      "register_edges": 0,
+      "width": 1
+    },
+    "t_lk_cmd": {
+      "dir": "output",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 85
+    },
+    "t_mix_cmd": {
+      "dir": "output",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 85
+    }
+  },
+  "schema": "opentallas.ref_tile.port_latency.v1",
+  "scope": "Additional generic wrapper edges only; core RTL stages remain in measured core duration; no physical qualification",
+  "source_commit": "4e3b2ead49c6e46d70926e0c1cba3ab0d889d07e",
+  "top": "ot_s81_engram_dispatch"
+}

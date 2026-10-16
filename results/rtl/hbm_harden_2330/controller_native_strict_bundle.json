@@ -1,0 +1,49 @@
+{
+  "cell": "ot_hgi_dma_back_static_vp4_controller",
+  "view": "physical/ref_tile/hv15_dbk_vp4_ctl/views/ot_hgi_dma_back_static_vp4_controller",
+  "lib_cell": "ot_hgi_dma_back_static_vp4_controller",
+  "insertion": true,
+  "ref_src": [
+    "insertion.json boundary mean"
+  ],
+  "R_ps": 132.2,
+  "spread_ps": 14.8,
+  "outputs": 483,
+  "inputs": 365,
+  "launch_ps": 195.1,
+  "launch_pin": "bank_read_addr[13]",
+  "capture_ps": 144.0,
+  "capture_pin": "mv[56]",
+  "launch_over": 0,
+  "capture_over": 0,
+  "comb_pins": 0,
+  "comb_first": [],
+  "pass": true,
+  "fail_why": "",
+  "view_sha256": {
+    "export_tt.tcl": "f3f7e55095e3d67e7181f262a627129b74dd39bd441ab11fbae1566721ff5e92",
+    "ot_hgi_dma_back_static_vp4_controller_ss.lib": "66b74bcebd0da4d048cb3c5ab1c55b6b0095ca149d3150b283d450b69e62016a",
+    "abstract.json": "5b5d698072075801deee1fad00ee3feca25bdcf2e8e8f12a375741651ce72f33",
+    "ot_hgi_dma_back_static_vp4_controller_ff.lib": "2006926ce44b3dca31e6c1fd136f4333ca781f7b91d289dbdb279a14f27b8f1d",
+    "export_ff.tcl": "fe8e66b84d728e0476f47c490c77508787a9ad35e7337b84238c83700da48fb2",
+    "insertion.json": "7a68d53ee4eab00ed5f9ad6bd3a1a918f691a6bfbeb0ac336796c05d6b877643",
+    "export_tt.log": "18a0f58c17d7c19be75d0c341493f2ff66100418176d45ac860bfdebc816bb7c",
+    "export_ss.log": "68ddae7675ee28053277ad652a568bb8409f237ebb909aceca11d264241bef11",
+    "ot_hgi_dma_back_static_vp4_controller.lef": "0172fc88657e38d08b933fe1b06ccf34fdb0b1962502e248d3dbbc0aa77c0bba",
+    "export_ff.log": "8837aff00b57c54a7ac58e63f84b5b284df9c8b37bfbb3c4ac88430ff3b174a5",
+    "export_ss.tcl": "2e4a02c376408a32a6dde909a6dc1e0687d681aeebb45e64988fd4c54ee6d357",
+    "ot_hgi_dma_back_static_vp4_controller_tt.lib": "ebc5f9796fd668d71a4964fee291e5c40c9f27448d071fd2d356c4eebc956541",
+    "child_lint.json": "d4e8815a0da0375ef5ba0a042a58f01188b704ad1398851060cea338bb9c811e"
+  },
+  "export_provenance_sha256": "ae38a5a6077691011614018f8235929466c2ee21870058d920082e6743b74171",
+  "raw_manifest_sha256": "e25c09bf810f35d8a51143ffcfd23f5cbb2a62e0448bc60e6b79e3967d54e250",
+  "routed": {
+    "record_commit": "bba478bcb4fb0c021103ee2a0ce266f6e31045b8",
+    "job": "hv15_dbk_vp4_ctl-st1-08fa61de3",
+    "tt_setup_ps": 9.95,
+    "ff_hold_ps": 24.88,
+    "drc": 0,
+    "ss_sensitivity_ps": -379.5
+  },
+  "qualification_scope": "Strict immutable controller leaf bundle and native boundaries only; no parent PG/hop/clock or full-die qualification."
+}

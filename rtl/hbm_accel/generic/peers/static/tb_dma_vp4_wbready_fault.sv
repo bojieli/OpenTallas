@@ -12,7 +12,7 @@ module tb_dma_vp4_wbready_fault;
  for(genvar b=0;b<8;b=b+1)begin:R assign rr[b*257+:257]={response_v[b][6],256'd0};end
  ot_hgi_dma_back_static_cursor ref_i(.clk(clk),.rst_n(rst_n),.cycle(cycle),.mv_v(dv[4]),.mv(dm[4]),.issue_at(di[4]),.drain_at(dd[4]),
   .mv_wb_bank(1'b0),.mv_wb_epoch(16'd0),.mv_fault(fa),.rq(rqa),.rr(rr),.wb_ready(wbr),.wa(12'd0));
- ot_hgi_dma_back_static_vp4_controller dut(.clk(clk),.rst_n(rst_n),.cycle_in(cycle),.mv_v(mv_v),.mv(mv),.issue_at(issue_at),.drain_at(drain_at),
+ ot_hgi_dma_back_static_vp4_controller dut(.clk(clk),.rst_n(rst_n),.stk(2'd0),.cycle_in(cycle),.mv_v(mv_v),.mv(mv),.issue_at(issue_at),.drain_at(drain_at),
   .mv_wb_bank(1'b0),.mv_wb_epoch(16'd0),.mv_fault(fb),.rr_valid_i({rr[7*257+256],rr[6*257+256],rr[5*257+256],rr[4*257+256],rr[3*257+256],rr[2*257+256],rr[1*257+256],rr[256]}),.wb_ready(wbr),.wa(12'd0));
  integer ta=-1,tb=-1,checks=0;
  always @(negedge clk)if(rst_n)begin if(fa&&ta<0)ta=cycle;if(fb&&tb<0)tb=cycle;end

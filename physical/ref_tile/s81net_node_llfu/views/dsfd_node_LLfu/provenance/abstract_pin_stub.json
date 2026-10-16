@@ -1,0 +1,125 @@
+{
+  "schema": 1,
+  "kind": "abstract_pin_stub",
+  "status": "PASS",
+  "input": {
+    "path": "provenance/raw/dsfd_node_LLfu.lef",
+    "sha256": "d2b6640e9eede6d744419d0ced1e4cf658717d0b454825953996593a4f521993"
+  },
+  "output": {
+    "path": "dsfd_node_LLfu.lef",
+    "sha256": "84978cc504e61e7901fafb58e7c7299fe4226163ea9f05b1dad69fd14b948724"
+  },
+  "helper": {
+    "path": "tools/hier_contract/abstract_pin_stub.py",
+    "sha256": "c3cae85e3aa1a8da5374284fe57418b2230ceb208aa76eff4567c6993bbe0c05",
+    "source_commit": "13d6772ae387c217bf87ed30ccc19c899e804fef",
+    "retained_copy": "provenance/helper/abstract_pin_stub.py"
+  },
+  "environment": {
+    "OT_OBS_CLOSE": null,
+    "OT_OBS_CLOSE_UM": null
+  },
+  "command": [
+    "python3",
+    "provenance/helper/abstract_pin_stub.py",
+    "provenance/raw/dsfd_node_LLfu.lef",
+    "dsfd_node_LLfu.lef"
+  ],
+  "returncode": 0,
+  "stdout": "pinstub: 5 OBS rects moved into 4 pins: clk[0], fi[0], fo[0], rst_n[0]; pockets: 219 OBS rects added on M5 (gaps < 1.536 um between own-layer obstacles)\n",
+  "stderr": "",
+  "invariants": {
+    "macro_outline": "PASS",
+    "pin_names_directions_uses": "PASS",
+    "original_pin_rectangles_retained": "PASS"
+  },
+  "child_lint": {
+    "schema": "opentallas.hier_contract.child_lint.v1",
+    "lef": "/srv/opentallas-scratch2/claude/closure-loop/s81net_node_llfu-n6-13d6772ae/record/views/dsfd_node_LLfu/dsfd_node_LLfu.lef",
+    "verdict": "PASS",
+    "fails": [],
+    "warns": [],
+    "summary": "dsfd_node_LLfu 43.2 x 77.76: PG M5 VDD 15 stripes (88% spread, 100% cov) / VSS 15 stripes (88% spread, 100% cov); strap M6; face pins 196 blocked-above 0 blocked-same 0; clock clk[0] insertion 130 ps; pockets M5 0 (closed)",
+    "info": {
+      "cell": "dsfd_node_LLfu",
+      "W": 43.2,
+      "H": 77.76,
+      "pg": {
+        "nets": {
+          "VDD": {
+            "top_layer": "M5",
+            "stripes": 15,
+            "dir": "V",
+            "spread": 0.875,
+            "coverage": 1.0,
+            "shapes_on_top": 15
+          },
+          "VSS": {
+            "top_layer": "M5",
+            "stripes": 15,
+            "dir": "V",
+            "spread": 0.875,
+            "coverage": 1.0,
+            "shapes_on_top": 15
+          }
+        },
+        "top_layer": "M5",
+        "ok": true,
+        "why": []
+      },
+      "pg_layer": "M5",
+      "strap_layer": "M6",
+      "cap": null,
+      "face": {
+        "face_pins": 196,
+        "blocked_above": 0,
+        "covered_below": 23,
+        "examples": [],
+        "blocked_same": 0,
+        "same_examples": [],
+        "band_same": 0,
+        "band_examples": []
+      },
+      "clock_insertion": {
+        "clk[0]": {
+          "max_ps": 129.98,
+          "min_ps": 86.32
+        }
+      },
+      "pockets": {
+        "layer": "M5",
+        "d_um": 1.536,
+        "marker": {
+          "layer": "M5",
+          "d_um": 1.536,
+          "added": 219
+        },
+        "count": 0,
+        "area_um2": 0,
+        "examples": []
+      }
+    }
+  },
+  "replay": {
+    "historical": true,
+    "job": "s81net_node_llfu-n6-13d6772ae",
+    "source_commit": "13d6772ae387c217bf87ed30ccc19c899e804fef",
+    "published_record_commit": "e8b49c5edd6bfa03f4bfe256652060bed3aa7b54",
+    "orfs_dir": "/srv/opentallas-scratch2/claude/closure-loop/s81net_node_llfu-n6-13d6772ae/routes/s81net_node_llfu_n6_13d6772ae/work/orfs",
+    "raw_export_tcl": "provenance/reconstruction/raw.tcl",
+    "raw_export_tcl_sha256": "0846a594346a905b9e9f27cdd0ce84b9d2dcdf005add2e3217537bc14147b087",
+    "environment_basis": "Reconstruction replay cleared both options; original process environment was not recorded. Exact published output hash is reproduced.",
+    "raw_matches_original_manifest": true,
+    "final_matches_published_export": true,
+    "all_published_files_verified": {
+      "dsfd_node_LLfu.lef": "84978cc504e61e7901fafb58e7c7299fe4226163ea9f05b1dad69fd14b948724",
+      "dsfd_node_LLfu_tt.lib": "8261189a34d605eb675d6ba3b062b2827ee87759a7f1662fecbacb34305afde9",
+      "dsfd_node_LLfu_ff.lib": "6e773d86ff075ec3247785a6be5ce4d990a08f1f482d36d937883f707b12e996",
+      "dsfd_node_LLfu_ss.lib": "a78f1d51eca60c93f7024187ca0b6ec48b46887c94ad4a3cf14804720b1a1af2",
+      "abstract.json": "ba5f3c9925fa8863c9dd7b710180713e2d3e555e80f8ee00607d8590a0a4123d",
+      "insertion.json": "3a805f9ff95958111ad3377c7eb704f552982bd38aad2c0956324cd02b25c482",
+      "child_lint.json": "864da12531a5d93ea72c7b3c73b088c7358cc59697e81d37c90ab624c00c0825"
+    }
+  }
+}

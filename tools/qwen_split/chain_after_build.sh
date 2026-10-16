@@ -25,6 +25,11 @@ if [ "$PDN_REV" = r7 ] || [ "$PDN_REV" = r8 ]; then
 # grid reaches them (PDN-0006); their PG hookup is the PHY IP integration, recorded open (OT_PGCHECK reports it)
   python3 tools/qwen_split/pdn_regroup.py $R/case_r22k --skip-prefix rly_ $UP4SKIP --skip-prefix io_serdes --skip-prefix io_ucie --pos ../out/rom_tp8b.json --out pdn.tcl $TIE_LOCAL > $R/pdn_$PDN_REV.json || { echo pdn regroup failed; exit 10; }
 fi
+# Binding supplies the actual modeled PHY masters, and regroup writes the final
+# PDN grid. Apply the explicit contract here, before run.tcl creates any ODB.
+if [ "${OT_ASSUMED_PHY_PG_ACCESS:-0}" = 1 ]; then
+  python3 tools/phy_pg/apply_case.py $R/case_r22k --ack-assumed-phy-contract > $R/assumed_phy_pg_apply.json || exit 11
+fi
 # owner no-stub gate (08:05): the chain still runs for the die timing diagnosis, but its result is labelled by this verdict
 bash tools/qwen_split/port_bind_compute.sh $R/case_r22k/die.v $R/port_bind > $R/port_bind.line 2>&1; pb=$?
 echo "$(date '+%F %T %Z') port-bind (no stubs): $(cat $R/port_bind.line) rc=$pb" >> $R/STATUS.log

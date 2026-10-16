@@ -1,0 +1,7058 @@
+{
+ "region": "cp2",
+ "author": "Claude H-NETLIST sub-agent cp2 (host face + programme targets + status)",
+ "basis_commit": "4b43cd77c",
+ "instances": [
+  {
+   "name": "col_su",
+   "master": "ot_hbm_static_cfg_collar",
+   "source": "rtl/hbm_accel/host_static_20261015/ot_hbm_static_cfg_collar.sv",
+   "params": {
+    "PAGE_W": 12,
+    "NS": 1,
+    "NPR": 1,
+    "NREC": 0,
+    "NGO": 1,
+    "NB": 2,
+    "NF": 1,
+    "XSER": 1
+   },
+   "slot": null,
+   "owner": "host owner (H-NETLIST cp2)",
+   "note": "F20 target 112. SU programme (ot_hbm_su_programme su_prog): linear row L=bank*128+row (bank=L[22:7], row=L[6:0]) via 12-b pages, so the 16-b bank / 7-b row ABI is fully representable on ONE target id; length16 = operand row 0 [15:0]; serial 3:4 domain behind the in-collar rational crossing. Pin-registered: cfg->write 2 edges, launch->start 2 edges (XSER: + crossing 2-3 serial edges, phase-fixed under the common epoch)."
+  },
+  {
+   "name": "col_sfu_SW",
+   "master": "ot_hbm_static_cfg_collar",
+   "source": "rtl/hbm_accel/host_static_20261015/ot_hbm_static_cfg_collar.sv",
+   "params": {
+    "PAGE_W": 3,
+    "NS": 2,
+    "NPR": 1,
+    "NREC": 0,
+    "NGO": 1,
+    "NB": 2,
+    "NF": 1,
+    "XSER": 0
+   },
+   "slot": null,
+   "owner": "host owner (H-NETLIST cp2)",
+   "note": "F20 target 116. SFU SW (sfucore_SW): space0 = arithmetic programme {stripe3,addr11}, space1 = IO calendar {stripe2,addr11}; operand row 0 = start base/limit/loops [38:0] and io_start base/limit/loops [77:39]; io_start_v = launch (the IO calendar starts the arithmetic programme itself). Pin-registered: cfg->write 2 edges, launch->start 2 edges (XSER: + crossing 2-3 serial edges, phase-fixed under the common epoch)."
+  },
+  {
+   "name": "col_sfu_SE",
+   "master": "ot_hbm_static_cfg_collar",
+   "source": "rtl/hbm_accel/host_static_20261015/ot_hbm_static_cfg_collar.sv",
+   "params": {
+    "PAGE_W": 3,
+    "NS": 2,
+    "NPR": 1,
+    "NREC": 0,
+    "NGO": 1,
+    "NB": 2,
+    "NF": 1,
+    "XSER": 0
+   },
+   "slot": null,
+   "owner": "host owner (H-NETLIST cp2)",
+   "note": "F20 target 117. SFU SE (sfucore_SE): space0 = arithmetic programme {stripe3,addr11}, space1 = IO calendar {stripe2,addr11}; operand row 0 = start base/limit/loops [38:0] and io_start base/limit/loops [77:39]; io_start_v = launch (the IO calendar starts the arithmetic programme itself). Pin-registered: cfg->write 2 edges, launch->start 2 edges (XSER: + crossing 2-3 serial edges, phase-fixed under the common epoch)."
+  },
+  {
+   "name": "col_sfu_NW",
+   "master": "ot_hbm_static_cfg_collar",
+   "source": "rtl/hbm_accel/host_static_20261015/ot_hbm_static_cfg_collar.sv",
+   "params": {
+    "PAGE_W": 3,
+    "NS": 2,
+    "NPR": 1,
+    "NREC": 0,
+    "NGO": 1,
+    "NB": 2,
+    "NF": 1,
+    "XSER": 0
+   },
+   "slot": null,
+   "owner": "host owner (H-NETLIST cp2)",
+   "note": "F20 target 118. SFU NW (sfucore_NW): space0 = arithmetic programme {stripe3,addr11}, space1 = IO calendar {stripe2,addr11}; operand row 0 = start base/limit/loops [38:0] and io_start base/limit/loops [77:39]; io_start_v = launch (the IO calendar starts the arithmetic programme itself). Pin-registered: cfg->write 2 edges, launch->start 2 edges (XSER: + crossing 2-3 serial edges, phase-fixed under the common epoch)."
+  },
+  {
+   "name": "col_sfu_NE",
+   "master": "ot_hbm_static_cfg_collar",
+   "source": "rtl/hbm_accel/host_static_20261015/ot_hbm_static_cfg_collar.sv",
+   "params": {
+    "PAGE_W": 3,
+    "NS": 2,
+    "NPR": 1,
+    "NREC": 0,
+    "NGO": 1,
+    "NB": 2,
+    "NF": 1,
+    "XSER": 0
+   },
+   "slot": null,
+   "owner": "host owner (H-NETLIST cp2)",
+   "note": "F20 target 119. SFU NE (sfucore_NE): space0 = arithmetic programme {stripe3,addr11}, space1 = IO calendar {stripe2,addr11}; operand row 0 = start base/limit/loops [38:0] and io_start base/limit/loops [77:39]; io_start_v = launch (the IO calendar starts the arithmetic programme itself). Pin-registered: cfg->write 2 edges, launch->start 2 edges (XSER: + crossing 2-3 serial edges, phase-fixed under the common epoch)."
+  },
+  {
+   "name": "col_idx",
+   "master": "ot_hbm_static_cfg_collar",
+   "source": "rtl/hbm_accel/host_static_20261015/ot_hbm_static_cfg_collar.sv",
+   "params": {
+    "PAGE_W": 1,
+    "NS": 1,
+    "NPR": 6,
+    "NREC": 8,
+    "NGO": 2,
+    "NB": 2,
+    "NF": 4,
+    "XSER": 0
+   },
+   "slot": null,
+   "owner": "host owner (H-NETLIST cp2)",
+   "note": "F20 target 120. IDX + TOPK + ARGMAX.LOCAL of the SW slice (hb_idx, hb_argmax): space0 = IDX programme (addr8); operand rows 0..5 = length/sectors/rank/gbase/nkeys/keep/die_id + keep_bitmap; record rows = TOPK descriptors (go[0]) and ARGMAX records (go[1]) on compiler offsets. ARGMAX shares this collar (target 121 not used): one launch domain, one SW slice, one fewer tile. Pin-registered: cfg->write 2 edges, launch->start 2 edges (XSER: + crossing 2-3 serial edges, phase-fixed under the common epoch)."
+  },
+  {
+   "name": "host_phy",
+   "master": "ot_hbm_host_phy_adapt",
+   "source": "rtl/hbm_accel/host_static_20261015/ot_hbm_host_phy_adapt.sv",
+   "params": {},
+   "slot": "host_N",
+   "owner": "host owner (H-NETLIST cp2)",
+   "note": "endpoint 487-b word <-> 512-b UCIe beat framer (reserved lanes zero / checked), PHY status, host session pin flop; +1 edge each way on the elastic host link"
+  },
+  {
+   "name": "host_status",
+   "master": "ot_hbm_status_join",
+   "source": "rtl/hbm_accel/host_static_20261015/ot_hbm_status_join.sv",
+   "params": {
+    "NT": 67,
+    "NF": 100,
+    "NH": 6,
+    "TGTS": "536'h878685846f6e6d6c6b6a696867666564636261605f5e5d5c5b5a595857565554535251504f4e4d4c4b4a494847464544434241403b3a39387877767574703736353430"
+   },
+   "slot": "host_cp_ingress",
+   "owner": "host owner (H-NETLIST cp2)",
+   "note": "All67 actual admitted host targets: participation-filtered ready, active and fault from real collars/calendars. Existing pin-registered parameterised master; no dynamic production scheduling. Physical closure remains open."
+  }
+ ],
+ "edges": [
+  {
+   "src": [
+    "host_cp_ingress",
+    "cfg_v"
+   ],
+   "dst": [
+    "col_su",
+    "cfg_v"
+   ],
+   "clock": "stream",
+   "basis": "static ingress F20 broadcast (ot_hbm_host_static_ingress)"
+  },
+  {
+   "src": [
+    "host_cp_ingress",
+    "cfg_target"
+   ],
+   "dst": [
+    "col_su",
+    "cfg_target"
+   ],
+   "clock": "stream",
+   "basis": "static ingress F20 broadcast (ot_hbm_host_static_ingress)"
+  },
+  {
+   "src": [
+    "host_cp_ingress",
+    "cfg_addr"
+   ],
+   "dst": [
+    "col_su",
+    "cfg_addr"
+   ],
+   "clock": "stream",
+   "basis": "static ingress F20 broadcast (ot_hbm_host_static_ingress)"
+  },
+  {
+   "src": [
+    "host_cp_ingress",
+    "cfg_data"
+   ],
+   "dst": [
+    "col_su",
+    "cfg_data"
+   ],
+   "clock": "stream",
+   "basis": "static ingress F20 broadcast (ot_hbm_host_static_ingress)"
+  },
+  {
+   "src": [
+    "host_cp_ingress",
+    "desc_v"
+   ],
+   "dst": [
+    "col_su",
+    "desc_v"
+   ],
+   "clock": "stream",
+   "basis": "static ingress F20 broadcast (ot_hbm_host_static_ingress)"
+  },
+  {
+   "src": [
+    "host_cp_ingress",
+    "launch_v"
+   ],
+   "dst": [
+    "col_su",
+    "launch_v"
+   ],
+   "clock": "stream",
+   "basis": "static ingress F20 broadcast (ot_hbm_host_static_ingress)"
+  },
+  {
+   "src": [
+    "host_cp_ingress",
+    "cfg_v"
+   ],
+   "dst": [
+    "col_sfu_SW",
+    "cfg_v"
+   ],
+   "clock": "stream",
+   "basis": "static ingress F20 broadcast (ot_hbm_host_static_ingress)"
+  },
+  {
+   "src": [
+    "host_cp_ingress",
+    "cfg_target"
+   ],
+   "dst": [
+    "col_sfu_SW",
+    "cfg_target"
+   ],
+   "clock": "stream",
+   "basis": "static ingress F20 broadcast (ot_hbm_host_static_ingress)"
+  },
+  {
+   "src": [
+    "host_cp_ingress",
+    "cfg_addr"
+   ],
+   "dst": [
+    "col_sfu_SW",
+    "cfg_addr"
+   ],
+   "clock": "stream",
+   "basis": "static ingress F20 broadcast (ot_hbm_host_static_ingress)"
+  },
+  {
+   "src": [
+    "host_cp_ingress",
+    "cfg_data"
+   ],
+   "dst": [
+    "col_sfu_SW",
+    "cfg_data"
+   ],
+   "clock": "stream",
+   "basis": "static ingress F20 broadcast (ot_hbm_host_static_ingress)"
+  },
+  {
+   "src": [
+    "host_cp_ingress",
+    "desc_v"
+   ],
+   "dst": [
+    "col_sfu_SW",
+    "desc_v"
+   ],
+   "clock": "stream",
+   "basis": "static ingress F20 broadcast (ot_hbm_host_static_ingress)"
+  },
+  {
+   "src": [
+    "host_cp_ingress",
+    "launch_v"
+   ],
+   "dst": [
+    "col_sfu_SW",
+    "launch_v"
+   ],
+   "clock": "stream",
+   "basis": "static ingress F20 broadcast (ot_hbm_host_static_ingress)"
+  },
+  {
+   "src": [
+    "host_cp_ingress",
+    "cfg_v"
+   ],
+   "dst": [
+    "col_sfu_SE",
+    "cfg_v"
+   ],
+   "clock": "stream",
+   "basis": "static ingress F20 broadcast (ot_hbm_host_static_ingress)"
+  },
+  {
+   "src": [
+    "host_cp_ingress",
+    "cfg_target"
+   ],
+   "dst": [
+    "col_sfu_SE",
+    "cfg_target"
+   ],
+   "clock": "stream",
+   "basis": "static ingress F20 broadcast (ot_hbm_host_static_ingress)"
+  },
+  {
+   "src": [
+    "host_cp_ingress",
+    "cfg_addr"
+   ],
+   "dst": [
+    "col_sfu_SE",
+    "cfg_addr"
+   ],
+   "clock": "stream",
+   "basis": "static ingress F20 broadcast (ot_hbm_host_static_ingress)"
+  },
+  {
+   "src": [
+    "host_cp_ingress",
+    "cfg_data"
+   ],
+   "dst": [
+    "col_sfu_SE",
+    "cfg_data"
+   ],
+   "clock": "stream",
+   "basis": "static ingress F20 broadcast (ot_hbm_host_static_ingress)"
+  },
+  {
+   "src": [
+    "host_cp_ingress",
+    "desc_v"
+   ],
+   "dst": [
+    "col_sfu_SE",
+    "desc_v"
+   ],
+   "clock": "stream",
+   "basis": "static ingress F20 broadcast (ot_hbm_host_static_ingress)"
+  },
+  {
+   "src": [
+    "host_cp_ingress",
+    "launch_v"
+   ],
+   "dst": [
+    "col_sfu_SE",
+    "launch_v"
+   ],
+   "clock": "stream",
+   "basis": "static ingress F20 broadcast (ot_hbm_host_static_ingress)"
+  },
+  {
+   "src": [
+    "host_cp_ingress",
+    "cfg_v"
+   ],
+   "dst": [
+    "col_sfu_NW",
+    "cfg_v"
+   ],
+   "clock": "stream",
+   "basis": "static ingress F20 broadcast (ot_hbm_host_static_ingress)"
+  },
+  {
+   "src": [
+    "host_cp_ingress",
+    "cfg_target"
+   ],
+   "dst": [
+    "col_sfu_NW",
+    "cfg_target"
+   ],
+   "clock": "stream",
+   "basis": "static ingress F20 broadcast (ot_hbm_host_static_ingress)"
+  },
+  {
+   "src": [
+    "host_cp_ingress",
+    "cfg_addr"
+   ],
+   "dst": [
+    "col_sfu_NW",
+    "cfg_addr"
+   ],
+   "clock": "stream",
+   "basis": "static ingress F20 broadcast (ot_hbm_host_static_ingress)"
+  },
+  {
+   "src": [
+    "host_cp_ingress",
+    "cfg_data"
+   ],
+   "dst": [
+    "col_sfu_NW",
+    "cfg_data"
+   ],
+   "clock": "stream",
+   "basis": "static ingress F20 broadcast (ot_hbm_host_static_ingress)"
+  },
+  {
+   "src": [
+    "host_cp_ingress",
+    "desc_v"
+   ],
+   "dst": [
+    "col_sfu_NW",
+    "desc_v"
+   ],
+   "clock": "stream",
+   "basis": "static ingress F20 broadcast (ot_hbm_host_static_ingress)"
+  },
+  {
+   "src": [
+    "host_cp_ingress",
+    "launch_v"
+   ],
+   "dst": [
+    "col_sfu_NW",
+    "launch_v"
+   ],
+   "clock": "stream",
+   "basis": "static ingress F20 broadcast (ot_hbm_host_static_ingress)"
+  },
+  {
+   "src": [
+    "host_cp_ingress",
+    "cfg_v"
+   ],
+   "dst": [
+    "col_sfu_NE",
+    "cfg_v"
+   ],
+   "clock": "stream",
+   "basis": "static ingress F20 broadcast (ot_hbm_host_static_ingress)"
+  },
+  {
+   "src": [
+    "host_cp_ingress",
+    "cfg_target"
+   ],
+   "dst": [
+    "col_sfu_NE",
+    "cfg_target"
+   ],
+   "clock": "stream",
+   "basis": "static ingress F20 broadcast (ot_hbm_host_static_ingress)"
+  },
+  {
+   "src": [
+    "host_cp_ingress",
+    "cfg_addr"
+   ],
+   "dst": [
+    "col_sfu_NE",
+    "cfg_addr"
+   ],
+   "clock": "stream",
+   "basis": "static ingress F20 broadcast (ot_hbm_host_static_ingress)"
+  },
+  {
+   "src": [
+    "host_cp_ingress",
+    "cfg_data"
+   ],
+   "dst": [
+    "col_sfu_NE",
+    "cfg_data"
+   ],
+   "clock": "stream",
+   "basis": "static ingress F20 broadcast (ot_hbm_host_static_ingress)"
+  },
+  {
+   "src": [
+    "host_cp_ingress",
+    "desc_v"
+   ],
+   "dst": [
+    "col_sfu_NE",
+    "desc_v"
+   ],
+   "clock": "stream",
+   "basis": "static ingress F20 broadcast (ot_hbm_host_static_ingress)"
+  },
+  {
+   "src": [
+    "host_cp_ingress",
+    "launch_v"
+   ],
+   "dst": [
+    "col_sfu_NE",
+    "launch_v"
+   ],
+   "clock": "stream",
+   "basis": "static ingress F20 broadcast (ot_hbm_host_static_ingress)"
+  },
+  {
+   "src": [
+    "host_cp_ingress",
+    "cfg_v"
+   ],
+   "dst": [
+    "col_idx",
+    "cfg_v"
+   ],
+   "clock": "stream",
+   "basis": "static ingress F20 broadcast (ot_hbm_host_static_ingress)"
+  },
+  {
+   "src": [
+    "host_cp_ingress",
+    "cfg_target"
+   ],
+   "dst": [
+    "col_idx",
+    "cfg_target"
+   ],
+   "clock": "stream",
+   "basis": "static ingress F20 broadcast (ot_hbm_host_static_ingress)"
+  },
+  {
+   "src": [
+    "host_cp_ingress",
+    "cfg_addr"
+   ],
+   "dst": [
+    "col_idx",
+    "cfg_addr"
+   ],
+   "clock": "stream",
+   "basis": "static ingress F20 broadcast (ot_hbm_host_static_ingress)"
+  },
+  {
+   "src": [
+    "host_cp_ingress",
+    "cfg_data"
+   ],
+   "dst": [
+    "col_idx",
+    "cfg_data"
+   ],
+   "clock": "stream",
+   "basis": "static ingress F20 broadcast (ot_hbm_host_static_ingress)"
+  },
+  {
+   "src": [
+    "host_cp_ingress",
+    "desc_v"
+   ],
+   "dst": [
+    "col_idx",
+    "desc_v"
+   ],
+   "clock": "stream",
+   "basis": "static ingress F20 broadcast (ot_hbm_host_static_ingress)"
+  },
+  {
+   "src": [
+    "host_cp_ingress",
+    "launch_v"
+   ],
+   "dst": [
+    "col_idx",
+    "launch_v"
+   ],
+   "clock": "stream",
+   "basis": "static ingress F20 broadcast (ot_hbm_host_static_ingress)"
+  },
+  {
+   "src": [
+    "col_su",
+    "pw_we",
+    0,
+    1
+   ],
+   "dst": [
+    "su_prog",
+    "cfg_we"
+   ],
+   "clock": "serial",
+   "basis": "cp2 collar ABI (ot_hbm_static_cfg_collar.sv header)",
+   "bits": 1
+  },
+  {
+   "src": [
+    "col_su",
+    "pw_addr",
+    7,
+    23
+   ],
+   "dst": [
+    "su_prog",
+    "cfg_bank"
+   ],
+   "clock": "serial",
+   "basis": "cp2 collar ABI (ot_hbm_static_cfg_collar.sv header)",
+   "bits": 16
+  },
+  {
+   "src": [
+    "col_su",
+    "pw_addr",
+    0,
+    7
+   ],
+   "dst": [
+    "su_prog",
+    "cfg_row"
+   ],
+   "clock": "serial",
+   "basis": "cp2 collar ABI (ot_hbm_static_cfg_collar.sv header)",
+   "bits": 7
+  },
+  {
+   "src": [
+    "col_su",
+    "pw_data",
+    0,
+    256
+   ],
+   "dst": [
+    "su_prog",
+    "cfg_data"
+   ],
+   "clock": "serial",
+   "basis": "cp2 collar ABI (ot_hbm_static_cfg_collar.sv header)",
+   "bits": 256
+  },
+  {
+   "src": [
+    "col_su",
+    "start_v",
+    0,
+    1
+   ],
+   "dst": [
+    "su_prog",
+    "start"
+   ],
+   "clock": "serial",
+   "basis": "cp2 collar ABI (ot_hbm_static_cfg_collar.sv header)",
+   "bits": 1
+  },
+  {
+   "src": [
+    "col_su",
+    "prm",
+    0,
+    16
+   ],
+   "dst": [
+    "su_prog",
+    "length"
+   ],
+   "clock": "serial",
+   "basis": "cp2 collar ABI (ot_hbm_static_cfg_collar.sv header)",
+   "bits": 16
+  },
+  {
+   "src": [
+    "su_prog",
+    "busy",
+    0,
+    1
+   ],
+   "dst": [
+    "col_su",
+    "c_busy",
+    0,
+    1
+   ],
+   "clock": "serial",
+   "basis": "status",
+   "bits": 1
+  },
+  {
+   "src": [
+    "su_prog",
+    "valid",
+    0,
+    1
+   ],
+   "dst": [
+    "col_su",
+    "c_busy",
+    1,
+    2
+   ],
+   "clock": "serial",
+   "basis": "status",
+   "bits": 1
+  },
+  {
+   "src": [
+    "su_prog",
+    "done",
+    0,
+    1
+   ],
+   "dst": [
+    "col_su",
+    "c_done"
+   ],
+   "clock": "serial",
+   "basis": "status",
+   "bits": 1
+  },
+  {
+   "src": [
+    "su_prog",
+    "fault",
+    0,
+    1
+   ],
+   "dst": [
+    "col_su",
+    "c_fault"
+   ],
+   "clock": "serial",
+   "basis": "status",
+   "bits": 1
+  },
+  {
+   "src": [
+    "col_sfu_SW",
+    "pw_we",
+    0,
+    1
+   ],
+   "dst": [
+    "sfucore_SW",
+    "cfg_we"
+   ],
+   "clock": "stream",
+   "basis": "cp2 collar ABI (ot_hbm_static_cfg_collar.sv header)",
+   "bits": 1
+  },
+  {
+   "src": [
+    "col_sfu_SW",
+    "pw_addr",
+    11,
+    14
+   ],
+   "dst": [
+    "sfucore_SW",
+    "cfg_stripe"
+   ],
+   "clock": "stream",
+   "basis": "cp2 collar ABI (ot_hbm_static_cfg_collar.sv header)",
+   "bits": 3
+  },
+  {
+   "src": [
+    "col_sfu_SW",
+    "pw_addr",
+    0,
+    11
+   ],
+   "dst": [
+    "sfucore_SW",
+    "cfg_addr"
+   ],
+   "clock": "stream",
+   "basis": "cp2 collar ABI (ot_hbm_static_cfg_collar.sv header)",
+   "bits": 11
+  },
+  {
+   "src": [
+    "col_sfu_SW",
+    "pw_data",
+    0,
+    256
+   ],
+   "dst": [
+    "sfucore_SW",
+    "cfg_data"
+   ],
+   "clock": "stream",
+   "basis": "cp2 collar ABI (ot_hbm_static_cfg_collar.sv header)",
+   "bits": 256
+  },
+  {
+   "src": [
+    "col_sfu_SW",
+    "prm",
+    0,
+    11
+   ],
+   "dst": [
+    "sfucore_SW",
+    "start_base"
+   ],
+   "clock": "stream",
+   "basis": "cp2 collar ABI (ot_hbm_static_cfg_collar.sv header)",
+   "bits": 11
+  },
+  {
+   "src": [
+    "col_sfu_SW",
+    "prm",
+    11,
+    23
+   ],
+   "dst": [
+    "sfucore_SW",
+    "start_limit"
+   ],
+   "clock": "stream",
+   "basis": "cp2 collar ABI (ot_hbm_static_cfg_collar.sv header)",
+   "bits": 12
+  },
+  {
+   "src": [
+    "col_sfu_SW",
+    "prm",
+    23,
+    39
+   ],
+   "dst": [
+    "sfucore_SW",
+    "start_loops"
+   ],
+   "clock": "stream",
+   "basis": "cp2 collar ABI (ot_hbm_static_cfg_collar.sv header)",
+   "bits": 16
+  },
+  {
+   "src": [
+    "col_sfu_SW",
+    "pw_we",
+    1,
+    2
+   ],
+   "dst": [
+    "sfucore_SW",
+    "io_cfg_we"
+   ],
+   "clock": "stream",
+   "basis": "cp2 collar ABI (ot_hbm_static_cfg_collar.sv header)",
+   "bits": 1
+  },
+  {
+   "src": [
+    "col_sfu_SW",
+    "pw_addr",
+    11,
+    13
+   ],
+   "dst": [
+    "sfucore_SW",
+    "io_cfg_stripe"
+   ],
+   "clock": "stream",
+   "basis": "cp2 collar ABI (ot_hbm_static_cfg_collar.sv header)",
+   "bits": 2
+  },
+  {
+   "src": [
+    "col_sfu_SW",
+    "pw_addr",
+    0,
+    11
+   ],
+   "dst": [
+    "sfucore_SW",
+    "io_cfg_addr"
+   ],
+   "clock": "stream",
+   "basis": "cp2 collar ABI (ot_hbm_static_cfg_collar.sv header)",
+   "bits": 11
+  },
+  {
+   "src": [
+    "col_sfu_SW",
+    "pw_data",
+    0,
+    256
+   ],
+   "dst": [
+    "sfucore_SW",
+    "io_cfg_data"
+   ],
+   "clock": "stream",
+   "basis": "cp2 collar ABI (ot_hbm_static_cfg_collar.sv header)",
+   "bits": 256
+  },
+  {
+   "src": [
+    "col_sfu_SW",
+    "start_v",
+    0,
+    1
+   ],
+   "dst": [
+    "sfucore_SW",
+    "io_start_v"
+   ],
+   "clock": "stream",
+   "basis": "cp2 collar ABI (ot_hbm_static_cfg_collar.sv header)",
+   "bits": 1
+  },
+  {
+   "src": [
+    "col_sfu_SW",
+    "prm",
+    39,
+    50
+   ],
+   "dst": [
+    "sfucore_SW",
+    "io_start_base"
+   ],
+   "clock": "stream",
+   "basis": "cp2 collar ABI (ot_hbm_static_cfg_collar.sv header)",
+   "bits": 11
+  },
+  {
+   "src": [
+    "col_sfu_SW",
+    "prm",
+    50,
+    62
+   ],
+   "dst": [
+    "sfucore_SW",
+    "io_start_limit"
+   ],
+   "clock": "stream",
+   "basis": "cp2 collar ABI (ot_hbm_static_cfg_collar.sv header)",
+   "bits": 12
+  },
+  {
+   "src": [
+    "col_sfu_SW",
+    "prm",
+    62,
+    78
+   ],
+   "dst": [
+    "sfucore_SW",
+    "io_start_loops"
+   ],
+   "clock": "stream",
+   "basis": "cp2 collar ABI (ot_hbm_static_cfg_collar.sv header)",
+   "bits": 16
+  },
+  {
+   "src": [
+    "sfucore_SW",
+    "programme_active",
+    0,
+    1
+   ],
+   "dst": [
+    "col_sfu_SW",
+    "c_busy",
+    0,
+    1
+   ],
+   "clock": "stream",
+   "basis": "status",
+   "bits": 1
+  },
+  {
+   "src": [
+    "sfucore_SW",
+    "io_active",
+    0,
+    1
+   ],
+   "dst": [
+    "col_sfu_SW",
+    "c_busy",
+    1,
+    2
+   ],
+   "clock": "stream",
+   "basis": "status",
+   "bits": 1
+  },
+  {
+   "src": [
+    "sfucore_SW",
+    "io_done",
+    0,
+    1
+   ],
+   "dst": [
+    "col_sfu_SW",
+    "c_done"
+   ],
+   "clock": "stream",
+   "basis": "status",
+   "bits": 1
+  },
+  {
+   "src": [
+    "sfucore_SW",
+    "fault",
+    0,
+    1
+   ],
+   "dst": [
+    "col_sfu_SW",
+    "c_fault"
+   ],
+   "clock": "stream",
+   "basis": "status",
+   "bits": 1
+  },
+  {
+   "src": [
+    "col_sfu_SE",
+    "pw_we",
+    0,
+    1
+   ],
+   "dst": [
+    "sfucore_SE",
+    "cfg_we"
+   ],
+   "clock": "stream",
+   "basis": "cp2 collar ABI (ot_hbm_static_cfg_collar.sv header)",
+   "bits": 1
+  },
+  {
+   "src": [
+    "col_sfu_SE",
+    "pw_addr",
+    11,
+    14
+   ],
+   "dst": [
+    "sfucore_SE",
+    "cfg_stripe"
+   ],
+   "clock": "stream",
+   "basis": "cp2 collar ABI (ot_hbm_static_cfg_collar.sv header)",
+   "bits": 3
+  },
+  {
+   "src": [
+    "col_sfu_SE",
+    "pw_addr",
+    0,
+    11
+   ],
+   "dst": [
+    "sfucore_SE",
+    "cfg_addr"
+   ],
+   "clock": "stream",
+   "basis": "cp2 collar ABI (ot_hbm_static_cfg_collar.sv header)",
+   "bits": 11
+  },
+  {
+   "src": [
+    "col_sfu_SE",
+    "pw_data",
+    0,
+    256
+   ],
+   "dst": [
+    "sfucore_SE",
+    "cfg_data"
+   ],
+   "clock": "stream",
+   "basis": "cp2 collar ABI (ot_hbm_static_cfg_collar.sv header)",
+   "bits": 256
+  },
+  {
+   "src": [
+    "col_sfu_SE",
+    "prm",
+    0,
+    11
+   ],
+   "dst": [
+    "sfucore_SE",
+    "start_base"
+   ],
+   "clock": "stream",
+   "basis": "cp2 collar ABI (ot_hbm_static_cfg_collar.sv header)",
+   "bits": 11
+  },
+  {
+   "src": [
+    "col_sfu_SE",
+    "prm",
+    11,
+    23
+   ],
+   "dst": [
+    "sfucore_SE",
+    "start_limit"
+   ],
+   "clock": "stream",
+   "basis": "cp2 collar ABI (ot_hbm_static_cfg_collar.sv header)",
+   "bits": 12
+  },
+  {
+   "src": [
+    "col_sfu_SE",
+    "prm",
+    23,
+    39
+   ],
+   "dst": [
+    "sfucore_SE",
+    "start_loops"
+   ],
+   "clock": "stream",
+   "basis": "cp2 collar ABI (ot_hbm_static_cfg_collar.sv header)",
+   "bits": 16
+  },
+  {
+   "src": [
+    "col_sfu_SE",
+    "pw_we",
+    1,
+    2
+   ],
+   "dst": [
+    "sfucore_SE",
+    "io_cfg_we"
+   ],
+   "clock": "stream",
+   "basis": "cp2 collar ABI (ot_hbm_static_cfg_collar.sv header)",
+   "bits": 1
+  },
+  {
+   "src": [
+    "col_sfu_SE",
+    "pw_addr",
+    11,
+    13
+   ],
+   "dst": [
+    "sfucore_SE",
+    "io_cfg_stripe"
+   ],
+   "clock": "stream",
+   "basis": "cp2 collar ABI (ot_hbm_static_cfg_collar.sv header)",
+   "bits": 2
+  },
+  {
+   "src": [
+    "col_sfu_SE",
+    "pw_addr",
+    0,
+    11
+   ],
+   "dst": [
+    "sfucore_SE",
+    "io_cfg_addr"
+   ],
+   "clock": "stream",
+   "basis": "cp2 collar ABI (ot_hbm_static_cfg_collar.sv header)",
+   "bits": 11
+  },
+  {
+   "src": [
+    "col_sfu_SE",
+    "pw_data",
+    0,
+    256
+   ],
+   "dst": [
+    "sfucore_SE",
+    "io_cfg_data"
+   ],
+   "clock": "stream",
+   "basis": "cp2 collar ABI (ot_hbm_static_cfg_collar.sv header)",
+   "bits": 256
+  },
+  {
+   "src": [
+    "col_sfu_SE",
+    "start_v",
+    0,
+    1
+   ],
+   "dst": [
+    "sfucore_SE",
+    "io_start_v"
+   ],
+   "clock": "stream",
+   "basis": "cp2 collar ABI (ot_hbm_static_cfg_collar.sv header)",
+   "bits": 1
+  },
+  {
+   "src": [
+    "col_sfu_SE",
+    "prm",
+    39,
+    50
+   ],
+   "dst": [
+    "sfucore_SE",
+    "io_start_base"
+   ],
+   "clock": "stream",
+   "basis": "cp2 collar ABI (ot_hbm_static_cfg_collar.sv header)",
+   "bits": 11
+  },
+  {
+   "src": [
+    "col_sfu_SE",
+    "prm",
+    50,
+    62
+   ],
+   "dst": [
+    "sfucore_SE",
+    "io_start_limit"
+   ],
+   "clock": "stream",
+   "basis": "cp2 collar ABI (ot_hbm_static_cfg_collar.sv header)",
+   "bits": 12
+  },
+  {
+   "src": [
+    "col_sfu_SE",
+    "prm",
+    62,
+    78
+   ],
+   "dst": [
+    "sfucore_SE",
+    "io_start_loops"
+   ],
+   "clock": "stream",
+   "basis": "cp2 collar ABI (ot_hbm_static_cfg_collar.sv header)",
+   "bits": 16
+  },
+  {
+   "src": [
+    "sfucore_SE",
+    "programme_active",
+    0,
+    1
+   ],
+   "dst": [
+    "col_sfu_SE",
+    "c_busy",
+    0,
+    1
+   ],
+   "clock": "stream",
+   "basis": "status",
+   "bits": 1
+  },
+  {
+   "src": [
+    "sfucore_SE",
+    "io_active",
+    0,
+    1
+   ],
+   "dst": [
+    "col_sfu_SE",
+    "c_busy",
+    1,
+    2
+   ],
+   "clock": "stream",
+   "basis": "status",
+   "bits": 1
+  },
+  {
+   "src": [
+    "sfucore_SE",
+    "io_done",
+    0,
+    1
+   ],
+   "dst": [
+    "col_sfu_SE",
+    "c_done"
+   ],
+   "clock": "stream",
+   "basis": "status",
+   "bits": 1
+  },
+  {
+   "src": [
+    "sfucore_SE",
+    "fault",
+    0,
+    1
+   ],
+   "dst": [
+    "col_sfu_SE",
+    "c_fault"
+   ],
+   "clock": "stream",
+   "basis": "status",
+   "bits": 1
+  },
+  {
+   "src": [
+    "col_sfu_NW",
+    "pw_we",
+    0,
+    1
+   ],
+   "dst": [
+    "sfucore_NW",
+    "cfg_we"
+   ],
+   "clock": "stream",
+   "basis": "cp2 collar ABI (ot_hbm_static_cfg_collar.sv header)",
+   "bits": 1
+  },
+  {
+   "src": [
+    "col_sfu_NW",
+    "pw_addr",
+    11,
+    14
+   ],
+   "dst": [
+    "sfucore_NW",
+    "cfg_stripe"
+   ],
+   "clock": "stream",
+   "basis": "cp2 collar ABI (ot_hbm_static_cfg_collar.sv header)",
+   "bits": 3
+  },
+  {
+   "src": [
+    "col_sfu_NW",
+    "pw_addr",
+    0,
+    11
+   ],
+   "dst": [
+    "sfucore_NW",
+    "cfg_addr"
+   ],
+   "clock": "stream",
+   "basis": "cp2 collar ABI (ot_hbm_static_cfg_collar.sv header)",
+   "bits": 11
+  },
+  {
+   "src": [
+    "col_sfu_NW",
+    "pw_data",
+    0,
+    256
+   ],
+   "dst": [
+    "sfucore_NW",
+    "cfg_data"
+   ],
+   "clock": "stream",
+   "basis": "cp2 collar ABI (ot_hbm_static_cfg_collar.sv header)",
+   "bits": 256
+  },
+  {
+   "src": [
+    "col_sfu_NW",
+    "prm",
+    0,
+    11
+   ],
+   "dst": [
+    "sfucore_NW",
+    "start_base"
+   ],
+   "clock": "stream",
+   "basis": "cp2 collar ABI (ot_hbm_static_cfg_collar.sv header)",
+   "bits": 11
+  },
+  {
+   "src": [
+    "col_sfu_NW",
+    "prm",
+    11,
+    23
+   ],
+   "dst": [
+    "sfucore_NW",
+    "start_limit"
+   ],
+   "clock": "stream",
+   "basis": "cp2 collar ABI (ot_hbm_static_cfg_collar.sv header)",
+   "bits": 12
+  },
+  {
+   "src": [
+    "col_sfu_NW",
+    "prm",
+    23,
+    39
+   ],
+   "dst": [
+    "sfucore_NW",
+    "start_loops"
+   ],
+   "clock": "stream",
+   "basis": "cp2 collar ABI (ot_hbm_static_cfg_collar.sv header)",
+   "bits": 16
+  },
+  {
+   "src": [
+    "col_sfu_NW",
+    "pw_we",
+    1,
+    2
+   ],
+   "dst": [
+    "sfucore_NW",
+    "io_cfg_we"
+   ],
+   "clock": "stream",
+   "basis": "cp2 collar ABI (ot_hbm_static_cfg_collar.sv header)",
+   "bits": 1
+  },
+  {
+   "src": [
+    "col_sfu_NW",
+    "pw_addr",
+    11,
+    13
+   ],
+   "dst": [
+    "sfucore_NW",
+    "io_cfg_stripe"
+   ],
+   "clock": "stream",
+   "basis": "cp2 collar ABI (ot_hbm_static_cfg_collar.sv header)",
+   "bits": 2
+  },
+  {
+   "src": [
+    "col_sfu_NW",
+    "pw_addr",
+    0,
+    11
+   ],
+   "dst": [
+    "sfucore_NW",
+    "io_cfg_addr"
+   ],
+   "clock": "stream",
+   "basis": "cp2 collar ABI (ot_hbm_static_cfg_collar.sv header)",
+   "bits": 11
+  },
+  {
+   "src": [
+    "col_sfu_NW",
+    "pw_data",
+    0,
+    256
+   ],
+   "dst": [
+    "sfucore_NW",
+    "io_cfg_data"
+   ],
+   "clock": "stream",
+   "basis": "cp2 collar ABI (ot_hbm_static_cfg_collar.sv header)",
+   "bits": 256
+  },
+  {
+   "src": [
+    "col_sfu_NW",
+    "start_v",
+    0,
+    1
+   ],
+   "dst": [
+    "sfucore_NW",
+    "io_start_v"
+   ],
+   "clock": "stream",
+   "basis": "cp2 collar ABI (ot_hbm_static_cfg_collar.sv header)",
+   "bits": 1
+  },
+  {
+   "src": [
+    "col_sfu_NW",
+    "prm",
+    39,
+    50
+   ],
+   "dst": [
+    "sfucore_NW",
+    "io_start_base"
+   ],
+   "clock": "stream",
+   "basis": "cp2 collar ABI (ot_hbm_static_cfg_collar.sv header)",
+   "bits": 11
+  },
+  {
+   "src": [
+    "col_sfu_NW",
+    "prm",
+    50,
+    62
+   ],
+   "dst": [
+    "sfucore_NW",
+    "io_start_limit"
+   ],
+   "clock": "stream",
+   "basis": "cp2 collar ABI (ot_hbm_static_cfg_collar.sv header)",
+   "bits": 12
+  },
+  {
+   "src": [
+    "col_sfu_NW",
+    "prm",
+    62,
+    78
+   ],
+   "dst": [
+    "sfucore_NW",
+    "io_start_loops"
+   ],
+   "clock": "stream",
+   "basis": "cp2 collar ABI (ot_hbm_static_cfg_collar.sv header)",
+   "bits": 16
+  },
+  {
+   "src": [
+    "sfucore_NW",
+    "programme_active",
+    0,
+    1
+   ],
+   "dst": [
+    "col_sfu_NW",
+    "c_busy",
+    0,
+    1
+   ],
+   "clock": "stream",
+   "basis": "status",
+   "bits": 1
+  },
+  {
+   "src": [
+    "sfucore_NW",
+    "io_active",
+    0,
+    1
+   ],
+   "dst": [
+    "col_sfu_NW",
+    "c_busy",
+    1,
+    2
+   ],
+   "clock": "stream",
+   "basis": "status",
+   "bits": 1
+  },
+  {
+   "src": [
+    "sfucore_NW",
+    "io_done",
+    0,
+    1
+   ],
+   "dst": [
+    "col_sfu_NW",
+    "c_done"
+   ],
+   "clock": "stream",
+   "basis": "status",
+   "bits": 1
+  },
+  {
+   "src": [
+    "sfucore_NW",
+    "fault",
+    0,
+    1
+   ],
+   "dst": [
+    "col_sfu_NW",
+    "c_fault"
+   ],
+   "clock": "stream",
+   "basis": "status",
+   "bits": 1
+  },
+  {
+   "src": [
+    "col_sfu_NE",
+    "pw_we",
+    0,
+    1
+   ],
+   "dst": [
+    "sfucore_NE",
+    "cfg_we"
+   ],
+   "clock": "stream",
+   "basis": "cp2 collar ABI (ot_hbm_static_cfg_collar.sv header)",
+   "bits": 1
+  },
+  {
+   "src": [
+    "col_sfu_NE",
+    "pw_addr",
+    11,
+    14
+   ],
+   "dst": [
+    "sfucore_NE",
+    "cfg_stripe"
+   ],
+   "clock": "stream",
+   "basis": "cp2 collar ABI (ot_hbm_static_cfg_collar.sv header)",
+   "bits": 3
+  },
+  {
+   "src": [
+    "col_sfu_NE",
+    "pw_addr",
+    0,
+    11
+   ],
+   "dst": [
+    "sfucore_NE",
+    "cfg_addr"
+   ],
+   "clock": "stream",
+   "basis": "cp2 collar ABI (ot_hbm_static_cfg_collar.sv header)",
+   "bits": 11
+  },
+  {
+   "src": [
+    "col_sfu_NE",
+    "pw_data",
+    0,
+    256
+   ],
+   "dst": [
+    "sfucore_NE",
+    "cfg_data"
+   ],
+   "clock": "stream",
+   "basis": "cp2 collar ABI (ot_hbm_static_cfg_collar.sv header)",
+   "bits": 256
+  },
+  {
+   "src": [
+    "col_sfu_NE",
+    "prm",
+    0,
+    11
+   ],
+   "dst": [
+    "sfucore_NE",
+    "start_base"
+   ],
+   "clock": "stream",
+   "basis": "cp2 collar ABI (ot_hbm_static_cfg_collar.sv header)",
+   "bits": 11
+  },
+  {
+   "src": [
+    "col_sfu_NE",
+    "prm",
+    11,
+    23
+   ],
+   "dst": [
+    "sfucore_NE",
+    "start_limit"
+   ],
+   "clock": "stream",
+   "basis": "cp2 collar ABI (ot_hbm_static_cfg_collar.sv header)",
+   "bits": 12
+  },
+  {
+   "src": [
+    "col_sfu_NE",
+    "prm",
+    23,
+    39
+   ],
+   "dst": [
+    "sfucore_NE",
+    "start_loops"
+   ],
+   "clock": "stream",
+   "basis": "cp2 collar ABI (ot_hbm_static_cfg_collar.sv header)",
+   "bits": 16
+  },
+  {
+   "src": [
+    "col_sfu_NE",
+    "pw_we",
+    1,
+    2
+   ],
+   "dst": [
+    "sfucore_NE",
+    "io_cfg_we"
+   ],
+   "clock": "stream",
+   "basis": "cp2 collar ABI (ot_hbm_static_cfg_collar.sv header)",
+   "bits": 1
+  },
+  {
+   "src": [
+    "col_sfu_NE",
+    "pw_addr",
+    11,
+    13
+   ],
+   "dst": [
+    "sfucore_NE",
+    "io_cfg_stripe"
+   ],
+   "clock": "stream",
+   "basis": "cp2 collar ABI (ot_hbm_static_cfg_collar.sv header)",
+   "bits": 2
+  },
+  {
+   "src": [
+    "col_sfu_NE",
+    "pw_addr",
+    0,
+    11
+   ],
+   "dst": [
+    "sfucore_NE",
+    "io_cfg_addr"
+   ],
+   "clock": "stream",
+   "basis": "cp2 collar ABI (ot_hbm_static_cfg_collar.sv header)",
+   "bits": 11
+  },
+  {
+   "src": [
+    "col_sfu_NE",
+    "pw_data",
+    0,
+    256
+   ],
+   "dst": [
+    "sfucore_NE",
+    "io_cfg_data"
+   ],
+   "clock": "stream",
+   "basis": "cp2 collar ABI (ot_hbm_static_cfg_collar.sv header)",
+   "bits": 256
+  },
+  {
+   "src": [
+    "col_sfu_NE",
+    "start_v",
+    0,
+    1
+   ],
+   "dst": [
+    "sfucore_NE",
+    "io_start_v"
+   ],
+   "clock": "stream",
+   "basis": "cp2 collar ABI (ot_hbm_static_cfg_collar.sv header)",
+   "bits": 1
+  },
+  {
+   "src": [
+    "col_sfu_NE",
+    "prm",
+    39,
+    50
+   ],
+   "dst": [
+    "sfucore_NE",
+    "io_start_base"
+   ],
+   "clock": "stream",
+   "basis": "cp2 collar ABI (ot_hbm_static_cfg_collar.sv header)",
+   "bits": 11
+  },
+  {
+   "src": [
+    "col_sfu_NE",
+    "prm",
+    50,
+    62
+   ],
+   "dst": [
+    "sfucore_NE",
+    "io_start_limit"
+   ],
+   "clock": "stream",
+   "basis": "cp2 collar ABI (ot_hbm_static_cfg_collar.sv header)",
+   "bits": 12
+  },
+  {
+   "src": [
+    "col_sfu_NE",
+    "prm",
+    62,
+    78
+   ],
+   "dst": [
+    "sfucore_NE",
+    "io_start_loops"
+   ],
+   "clock": "stream",
+   "basis": "cp2 collar ABI (ot_hbm_static_cfg_collar.sv header)",
+   "bits": 16
+  },
+  {
+   "src": [
+    "sfucore_NE",
+    "programme_active",
+    0,
+    1
+   ],
+   "dst": [
+    "col_sfu_NE",
+    "c_busy",
+    0,
+    1
+   ],
+   "clock": "stream",
+   "basis": "status",
+   "bits": 1
+  },
+  {
+   "src": [
+    "sfucore_NE",
+    "io_active",
+    0,
+    1
+   ],
+   "dst": [
+    "col_sfu_NE",
+    "c_busy",
+    1,
+    2
+   ],
+   "clock": "stream",
+   "basis": "status",
+   "bits": 1
+  },
+  {
+   "src": [
+    "sfucore_NE",
+    "io_done",
+    0,
+    1
+   ],
+   "dst": [
+    "col_sfu_NE",
+    "c_done"
+   ],
+   "clock": "stream",
+   "basis": "status",
+   "bits": 1
+  },
+  {
+   "src": [
+    "sfucore_NE",
+    "fault",
+    0,
+    1
+   ],
+   "dst": [
+    "col_sfu_NE",
+    "c_fault"
+   ],
+   "clock": "stream",
+   "basis": "status",
+   "bits": 1
+  },
+  {
+   "src": [
+    "col_idx",
+    "pw_we",
+    0,
+    1
+   ],
+   "dst": [
+    "hb_idx",
+    "program_we"
+   ],
+   "clock": "stream",
+   "basis": "cp2 collar ABI (ot_hbm_static_cfg_collar.sv header)",
+   "bits": 1
+  },
+  {
+   "src": [
+    "col_idx",
+    "pw_addr",
+    0,
+    8
+   ],
+   "dst": [
+    "hb_idx",
+    "program_addr"
+   ],
+   "clock": "stream",
+   "basis": "cp2 collar ABI (ot_hbm_static_cfg_collar.sv header)",
+   "bits": 8
+  },
+  {
+   "src": [
+    "col_idx",
+    "pw_data",
+    0,
+    256
+   ],
+   "dst": [
+    "hb_idx",
+    "program_data"
+   ],
+   "clock": "stream",
+   "basis": "cp2 collar ABI (ot_hbm_static_cfg_collar.sv header)",
+   "bits": 256
+  },
+  {
+   "src": [
+    "col_idx",
+    "start_v",
+    0,
+    1
+   ],
+   "dst": [
+    "hb_idx",
+    "start"
+   ],
+   "clock": "stream",
+   "basis": "cp2 collar ABI (ot_hbm_static_cfg_collar.sv header)",
+   "bits": 1
+  },
+  {
+   "src": [
+    "col_idx",
+    "prm",
+    0,
+    12
+   ],
+   "dst": [
+    "hb_idx",
+    "length"
+   ],
+   "clock": "stream",
+   "basis": "cp2 collar ABI (ot_hbm_static_cfg_collar.sv header)",
+   "bits": 12
+  },
+  {
+   "src": [
+    "col_idx",
+    "prm",
+    12,
+    28
+   ],
+   "dst": [
+    "hb_idx",
+    "weight_sector"
+   ],
+   "clock": "stream",
+   "basis": "cp2 collar ABI (ot_hbm_static_cfg_collar.sv header)",
+   "bits": 16
+  },
+  {
+   "src": [
+    "col_idx",
+    "prm",
+    28,
+    44
+   ],
+   "dst": [
+    "hb_idx",
+    "query_sector"
+   ],
+   "clock": "stream",
+   "basis": "cp2 collar ABI (ot_hbm_static_cfg_collar.sv header)",
+   "bits": 16
+  },
+  {
+   "src": [
+    "col_idx",
+    "prm",
+    44,
+    51
+   ],
+   "dst": [
+    "hb_idx",
+    "rank"
+   ],
+   "clock": "stream",
+   "basis": "cp2 collar ABI (ot_hbm_static_cfg_collar.sv header)",
+   "bits": 7
+  },
+  {
+   "src": [
+    "col_idx",
+    "prm",
+    51,
+    59
+   ],
+   "dst": [
+    "hb_idx",
+    "gbase"
+   ],
+   "clock": "stream",
+   "basis": "cp2 collar ABI (ot_hbm_static_cfg_collar.sv header)",
+   "bits": 8
+  },
+  {
+   "src": [
+    "col_idx",
+    "prm",
+    59,
+    73
+   ],
+   "dst": [
+    "hb_idx",
+    "nkeys"
+   ],
+   "clock": "stream",
+   "basis": "cp2 collar ABI (ot_hbm_static_cfg_collar.sv header)",
+   "bits": 14
+  },
+  {
+   "src": [
+    "col_idx",
+    "prm",
+    73,
+    74
+   ],
+   "dst": [
+    "hb_idx",
+    "keep_en"
+   ],
+   "clock": "stream",
+   "basis": "cp2 collar ABI (ot_hbm_static_cfg_collar.sv header)",
+   "bits": 1
+  },
+  {
+   "src": [
+    "col_idx",
+    "prm",
+    82,
+    1450
+   ],
+   "dst": [
+    "hb_idx",
+    "keep_bitmap"
+   ],
+   "clock": "stream",
+   "basis": "cp2 collar ABI (ot_hbm_static_cfg_collar.sv header)",
+   "bits": 1368
+  },
+  {
+   "src": [
+    "col_idx",
+    "go",
+    0,
+    1
+   ],
+   "dst": [
+    "hb_idx",
+    "topk_go"
+   ],
+   "clock": "stream",
+   "basis": "cp2 collar ABI (ot_hbm_static_cfg_collar.sv header)",
+   "bits": 1
+  },
+  {
+   "src": [
+    "col_idx",
+    "rec",
+    0,
+    4
+   ],
+   "dst": [
+    "hb_idx",
+    "topk_k"
+   ],
+   "clock": "stream",
+   "basis": "cp2 collar ABI (ot_hbm_static_cfg_collar.sv header)",
+   "bits": 4
+  },
+  {
+   "src": [
+    "col_idx",
+    "rec",
+    4,
+    5
+   ],
+   "dst": [
+    "hb_idx",
+    "topk_order"
+   ],
+   "clock": "stream",
+   "basis": "cp2 collar ABI (ot_hbm_static_cfg_collar.sv header)",
+   "bits": 1
+  },
+  {
+   "src": [
+    "col_idx",
+    "rec",
+    5,
+    25
+   ],
+   "dst": [
+    "hb_idx",
+    "topk_n"
+   ],
+   "clock": "stream",
+   "basis": "cp2 collar ABI (ot_hbm_static_cfg_collar.sv header)",
+   "bits": 20
+  },
+  {
+   "src": [
+    "col_idx",
+    "rec",
+    25,
+    45
+   ],
+   "dst": [
+    "hb_idx",
+    "topk_m"
+   ],
+   "clock": "stream",
+   "basis": "cp2 collar ABI (ot_hbm_static_cfg_collar.sv header)",
+   "bits": 20
+  },
+  {
+   "src": [
+    "col_idx",
+    "rec",
+    45,
+    46
+   ],
+   "dst": [
+    "hb_idx",
+    "topk_a_mirror"
+   ],
+   "clock": "stream",
+   "basis": "cp2 collar ABI (ot_hbm_static_cfg_collar.sv header)",
+   "bits": 1
+  },
+  {
+   "src": [
+    "col_idx",
+    "rec",
+    46,
+    64
+   ],
+   "dst": [
+    "hb_idx",
+    "topk_a_base"
+   ],
+   "clock": "stream",
+   "basis": "cp2 collar ABI (ot_hbm_static_cfg_collar.sv header)",
+   "bits": 18
+  },
+  {
+   "src": [
+    "col_idx",
+    "rec",
+    64,
+    82
+   ],
+   "dst": [
+    "hb_idx",
+    "topk_a_str"
+   ],
+   "clock": "stream",
+   "basis": "cp2 collar ABI (ot_hbm_static_cfg_collar.sv header)",
+   "bits": 18
+  },
+  {
+   "src": [
+    "col_idx",
+    "rec",
+    82,
+    83
+   ],
+   "dst": [
+    "hb_idx",
+    "topk_o_mirror"
+   ],
+   "clock": "stream",
+   "basis": "cp2 collar ABI (ot_hbm_static_cfg_collar.sv header)",
+   "bits": 1
+  },
+  {
+   "src": [
+    "col_idx",
+    "rec",
+    83,
+    101
+   ],
+   "dst": [
+    "hb_idx",
+    "topk_o_base"
+   ],
+   "clock": "stream",
+   "basis": "cp2 collar ABI (ot_hbm_static_cfg_collar.sv header)",
+   "bits": 18
+  },
+  {
+   "src": [
+    "col_idx",
+    "rec",
+    101,
+    119
+   ],
+   "dst": [
+    "hb_idx",
+    "topk_o_str"
+   ],
+   "clock": "stream",
+   "basis": "cp2 collar ABI (ot_hbm_static_cfg_collar.sv header)",
+   "bits": 18
+  },
+  {
+   "src": [
+    "col_idx",
+    "rec",
+    119,
+    120
+   ],
+   "dst": [
+    "hb_idx",
+    "topk_has_r"
+   ],
+   "clock": "stream",
+   "basis": "cp2 collar ABI (ot_hbm_static_cfg_collar.sv header)",
+   "bits": 1
+  },
+  {
+   "src": [
+    "col_idx",
+    "rec",
+    120,
+    138
+   ],
+   "dst": [
+    "hb_idx",
+    "topk_r_base"
+   ],
+   "clock": "stream",
+   "basis": "cp2 collar ABI (ot_hbm_static_cfg_collar.sv header)",
+   "bits": 18
+  },
+  {
+   "src": [
+    "col_idx",
+    "rec",
+    138,
+    156
+   ],
+   "dst": [
+    "hb_idx",
+    "topk_r_str"
+   ],
+   "clock": "stream",
+   "basis": "cp2 collar ABI (ot_hbm_static_cfg_collar.sv header)",
+   "bits": 18
+  },
+  {
+   "src": [
+    "col_idx",
+    "go",
+    1,
+    2
+   ],
+   "dst": [
+    "hb_argmax",
+    "go"
+   ],
+   "clock": "stream",
+   "basis": "cp2 collar ABI (ot_hbm_static_cfg_collar.sv header); die_id = host-configured die rank (operand row 0 [81:74]), same row as IDX rank",
+   "bits": 1
+  },
+  {
+   "src": [
+    "col_idx",
+    "rec",
+    0,
+    1
+   ],
+   "dst": [
+    "hb_argmax",
+    "mode"
+   ],
+   "clock": "stream",
+   "basis": "cp2 collar ABI (ot_hbm_static_cfg_collar.sv header); die_id = host-configured die rank (operand row 0 [81:74]), same row as IDX rank",
+   "bits": 1
+  },
+  {
+   "src": [
+    "col_idx",
+    "rec",
+    1,
+    19
+   ],
+   "dst": [
+    "hb_argmax",
+    "imm_a"
+   ],
+   "clock": "stream",
+   "basis": "cp2 collar ABI (ot_hbm_static_cfg_collar.sv header); die_id = host-configured die rank (operand row 0 [81:74]), same row as IDX rank",
+   "bits": 18
+  },
+  {
+   "src": [
+    "col_idx",
+    "rec",
+    19,
+    20
+   ],
+   "dst": [
+    "hb_argmax",
+    "a_mirror"
+   ],
+   "clock": "stream",
+   "basis": "cp2 collar ABI (ot_hbm_static_cfg_collar.sv header); die_id = host-configured die rank (operand row 0 [81:74]), same row as IDX rank",
+   "bits": 1
+  },
+  {
+   "src": [
+    "col_idx",
+    "rec",
+    20,
+    38
+   ],
+   "dst": [
+    "hb_argmax",
+    "a_base"
+   ],
+   "clock": "stream",
+   "basis": "cp2 collar ABI (ot_hbm_static_cfg_collar.sv header); die_id = host-configured die rank (operand row 0 [81:74]), same row as IDX rank",
+   "bits": 18
+  },
+  {
+   "src": [
+    "col_idx",
+    "rec",
+    38,
+    56
+   ],
+   "dst": [
+    "hb_argmax",
+    "n"
+   ],
+   "clock": "stream",
+   "basis": "cp2 collar ABI (ot_hbm_static_cfg_collar.sv header); die_id = host-configured die rank (operand row 0 [81:74]), same row as IDX rank",
+   "bits": 18
+  },
+  {
+   "src": [
+    "col_idx",
+    "rec",
+    56,
+    74
+   ],
+   "dst": [
+    "hb_argmax",
+    "o_base"
+   ],
+   "clock": "stream",
+   "basis": "cp2 collar ABI (ot_hbm_static_cfg_collar.sv header); die_id = host-configured die rank (operand row 0 [81:74]), same row as IDX rank",
+   "bits": 18
+  },
+  {
+   "src": [
+    "col_idx",
+    "rec",
+    74,
+    90
+   ],
+   "dst": [
+    "hb_argmax",
+    "o_is"
+   ],
+   "clock": "stream",
+   "basis": "cp2 collar ABI (ot_hbm_static_cfg_collar.sv header); die_id = host-configured die rank (operand row 0 [81:74]), same row as IDX rank",
+   "bits": 16
+  },
+  {
+   "src": [
+    "col_idx",
+    "prm",
+    74,
+    82
+   ],
+   "dst": [
+    "hb_argmax",
+    "die_id"
+   ],
+   "clock": "stream",
+   "basis": "cp2 collar ABI (ot_hbm_static_cfg_collar.sv header); die_id = host-configured die rank (operand row 0 [81:74]), same row as IDX rank",
+   "bits": 8
+  },
+  {
+   "src": [
+    "hb_idx",
+    "topk_busy",
+    0,
+    1
+   ],
+   "dst": [
+    "col_idx",
+    "c_busy",
+    0,
+    1
+   ],
+   "clock": "stream",
+   "basis": "status",
+   "bits": 1
+  },
+  {
+   "src": [
+    "hb_argmax",
+    "busy",
+    0,
+    1
+   ],
+   "dst": [
+    "col_idx",
+    "c_busy",
+    1,
+    2
+   ],
+   "clock": "stream",
+   "basis": "status",
+   "bits": 1
+  },
+  {
+   "src": [
+    "hb_idx",
+    "done",
+    0,
+    1
+   ],
+   "dst": [
+    "col_idx",
+    "c_done"
+   ],
+   "clock": "stream",
+   "basis": "status",
+   "bits": 1
+  },
+  {
+   "src": [
+    "hb_idx",
+    "fault",
+    0,
+    1
+   ],
+   "dst": [
+    "col_idx",
+    "c_fault",
+    0,
+    1
+   ],
+   "clock": "stream",
+   "basis": "status",
+   "bits": 1
+  },
+  {
+   "src": [
+    "hb_idx",
+    "topk_fault",
+    0,
+    1
+   ],
+   "dst": [
+    "col_idx",
+    "c_fault",
+    1,
+    2
+   ],
+   "clock": "stream",
+   "basis": "status",
+   "bits": 1
+  },
+  {
+   "src": [
+    "hb_idx",
+    "share_fault",
+    0,
+    1
+   ],
+   "dst": [
+    "col_idx",
+    "c_fault",
+    2,
+    3
+   ],
+   "clock": "stream",
+   "basis": "status",
+   "bits": 1
+  },
+  {
+   "src": [
+    "hb_argmax",
+    "fault",
+    0,
+    1
+   ],
+   "dst": [
+    "col_idx",
+    "c_fault",
+    3,
+    4
+   ],
+   "clock": "stream",
+   "basis": "status",
+   "bits": 1
+  },
+  {
+   "src": [
+    "host_cp_ep",
+    "x_tx",
+    0,
+    487
+   ],
+   "dst": [
+    "host_phy",
+    "ep_tx"
+   ],
+   "clock": "stream",
+   "basis": "endpoint PHY word (was direct to host_N.tx[486:0])",
+   "bits": 487
+  },
+  {
+   "src": [
+    "host_phy",
+    "phy_tx",
+    0,
+    512
+   ],
+   "dst": [
+    "host_N",
+    "tx"
+   ],
+   "clock": "stream",
+   "basis": "framed UCIe beat, reserved lanes [511:487] from the framer flop",
+   "bits": 512
+  },
+  {
+   "src": [
+    "host_N",
+    "rx",
+    0,
+    512
+   ],
+   "dst": [
+    "host_phy",
+    "phy_rx"
+   ],
+   "clock": "stream",
+   "basis": "UCIe RX beat",
+   "bits": 512
+  },
+  {
+   "src": [
+    "host_N",
+    "st",
+    0,
+    2
+   ],
+   "dst": [
+    "host_phy",
+    "phy_st"
+   ],
+   "clock": "stream",
+   "basis": "PHY status {live, rate-match fault}",
+   "bits": 2
+  },
+  {
+   "src": [
+    "host_phy",
+    "ep_rx",
+    0,
+    487
+   ],
+   "dst": [
+    "host_cp_ep",
+    "x_rx"
+   ],
+   "clock": "stream",
+   "basis": "endpoint RX word",
+   "bits": 487
+  },
+  {
+   "src": [
+    "host_phy",
+    "session",
+    0,
+    24
+   ],
+   "dst": [
+    "host_cp_ep_face",
+    "f_lk_rx",
+    547,
+    571
+   ],
+   "clock": "stream",
+   "basis": "host link session id (pin flop of the strap pads)",
+   "bits": 24
+  },
+  {
+   "src": [
+    "host_cp_ingress",
+    "cfg_v"
+   ],
+   "dst": [
+    "host_status",
+    "cfg_v"
+   ],
+   "clock": "stream",
+   "basis": "broadcast snoop for participation"
+  },
+  {
+   "src": [
+    "host_cp_ingress",
+    "desc_v"
+   ],
+   "dst": [
+    "host_status",
+    "desc_v"
+   ],
+   "clock": "stream",
+   "basis": "broadcast snoop for participation"
+  },
+  {
+   "src": [
+    "host_cp_ingress",
+    "launch_v"
+   ],
+   "dst": [
+    "host_status",
+    "launch_v"
+   ],
+   "clock": "stream",
+   "basis": "broadcast snoop for participation"
+  },
+  {
+   "src": [
+    "host_cp_ingress",
+    "cfg_target"
+   ],
+   "dst": [
+    "host_status",
+    "cfg_target"
+   ],
+   "clock": "stream",
+   "basis": "broadcast snoop for participation"
+  },
+  {
+   "src": [
+    "hb_quant_NW",
+    "configured",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_ready",
+    0,
+    1
+   ],
+   "clock": "stream",
+   "basis": "target 48 readiness",
+   "bits": 1
+  },
+  {
+   "src": [
+    "hb_quant_NW",
+    "program_active",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_active",
+    0,
+    1
+   ],
+   "clock": "stream",
+   "basis": "target 48 active",
+   "bits": 1
+  },
+  {
+   "src": [
+    "hb_coll_SW",
+    "program_configured",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_ready",
+    1,
+    2
+   ],
+   "clock": "stream",
+   "basis": "target 52 readiness",
+   "bits": 1
+  },
+  {
+   "src": [
+    "hb_coll_SW",
+    "hgi_busy",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_active",
+    1,
+    2
+   ],
+   "clock": "stream",
+   "basis": "target 52 active",
+   "bits": 1
+  },
+  {
+   "src": [
+    "hb_coll_SE",
+    "program_configured",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_ready",
+    2,
+    3
+   ],
+   "clock": "stream",
+   "basis": "target 53 readiness",
+   "bits": 1
+  },
+  {
+   "src": [
+    "hb_coll_SE",
+    "hgi_busy",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_active",
+    2,
+    3
+   ],
+   "clock": "stream",
+   "basis": "target 53 active",
+   "bits": 1
+  },
+  {
+   "src": [
+    "hb_coll_NW",
+    "program_configured",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_ready",
+    3,
+    4
+   ],
+   "clock": "stream",
+   "basis": "target 54 readiness",
+   "bits": 1
+  },
+  {
+   "src": [
+    "hb_coll_NW",
+    "hgi_busy",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_active",
+    3,
+    4
+   ],
+   "clock": "stream",
+   "basis": "target 54 active",
+   "bits": 1
+  },
+  {
+   "src": [
+    "hb_coll_NE",
+    "program_configured",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_ready",
+    4,
+    5
+   ],
+   "clock": "stream",
+   "basis": "target 55 readiness",
+   "bits": 1
+  },
+  {
+   "src": [
+    "hb_coll_NE",
+    "hgi_busy",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_active",
+    4,
+    5
+   ],
+   "clock": "stream",
+   "basis": "target 55 active",
+   "bits": 1
+  },
+  {
+   "src": [
+    "col_su",
+    "ready",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_ready",
+    5,
+    6
+   ],
+   "clock": "stream",
+   "basis": "target 112 readiness",
+   "bits": 1
+  },
+  {
+   "src": [
+    "col_su",
+    "active",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_active",
+    5,
+    6
+   ],
+   "clock": "stream",
+   "basis": "target 112 active",
+   "bits": 1
+  },
+  {
+   "src": [
+    "col_sfu_SW",
+    "ready",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_ready",
+    6,
+    7
+   ],
+   "clock": "stream",
+   "basis": "target 116 readiness",
+   "bits": 1
+  },
+  {
+   "src": [
+    "col_sfu_SW",
+    "active",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_active",
+    6,
+    7
+   ],
+   "clock": "stream",
+   "basis": "target 116 active",
+   "bits": 1
+  },
+  {
+   "src": [
+    "col_sfu_SE",
+    "ready",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_ready",
+    7,
+    8
+   ],
+   "clock": "stream",
+   "basis": "target 117 readiness",
+   "bits": 1
+  },
+  {
+   "src": [
+    "col_sfu_SE",
+    "active",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_active",
+    7,
+    8
+   ],
+   "clock": "stream",
+   "basis": "target 117 active",
+   "bits": 1
+  },
+  {
+   "src": [
+    "col_sfu_NW",
+    "ready",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_ready",
+    8,
+    9
+   ],
+   "clock": "stream",
+   "basis": "target 118 readiness",
+   "bits": 1
+  },
+  {
+   "src": [
+    "col_sfu_NW",
+    "active",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_active",
+    8,
+    9
+   ],
+   "clock": "stream",
+   "basis": "target 118 active",
+   "bits": 1
+  },
+  {
+   "src": [
+    "col_sfu_NE",
+    "ready",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_ready",
+    9,
+    10
+   ],
+   "clock": "stream",
+   "basis": "target 119 readiness",
+   "bits": 1
+  },
+  {
+   "src": [
+    "col_sfu_NE",
+    "active",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_active",
+    9,
+    10
+   ],
+   "clock": "stream",
+   "basis": "target 119 active",
+   "bits": 1
+  },
+  {
+   "src": [
+    "col_idx",
+    "ready",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_ready",
+    10,
+    11
+   ],
+   "clock": "stream",
+   "basis": "target 120 readiness",
+   "bits": 1
+  },
+  {
+   "src": [
+    "col_idx",
+    "active",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_active",
+    10,
+    11
+   ],
+   "clock": "stream",
+   "basis": "target 120 active",
+   "bits": 1
+  },
+  {
+   "src": [
+    "hb_quant_NW",
+    "fault",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_fault",
+    0,
+    1
+   ],
+   "clock": "stream",
+   "basis": "target fault",
+   "bits": 1
+  },
+  {
+   "src": [
+    "hb_coll_SW",
+    "program_fault",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_fault",
+    1,
+    2
+   ],
+   "clock": "stream",
+   "basis": "target fault",
+   "bits": 1
+  },
+  {
+   "src": [
+    "hb_coll_SW",
+    "hgi_fault",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_fault",
+    2,
+    3
+   ],
+   "clock": "stream",
+   "basis": "target fault",
+   "bits": 1
+  },
+  {
+   "src": [
+    "hb_coll_SW",
+    "fault",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_fault",
+    3,
+    4
+   ],
+   "clock": "stream",
+   "basis": "target fault",
+   "bits": 1
+  },
+  {
+   "src": [
+    "hb_coll_SE",
+    "program_fault",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_fault",
+    4,
+    5
+   ],
+   "clock": "stream",
+   "basis": "target fault",
+   "bits": 1
+  },
+  {
+   "src": [
+    "hb_coll_SE",
+    "hgi_fault",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_fault",
+    5,
+    6
+   ],
+   "clock": "stream",
+   "basis": "target fault",
+   "bits": 1
+  },
+  {
+   "src": [
+    "hb_coll_SE",
+    "fault",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_fault",
+    6,
+    7
+   ],
+   "clock": "stream",
+   "basis": "target fault",
+   "bits": 1
+  },
+  {
+   "src": [
+    "hb_coll_NW",
+    "program_fault",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_fault",
+    7,
+    8
+   ],
+   "clock": "stream",
+   "basis": "target fault",
+   "bits": 1
+  },
+  {
+   "src": [
+    "hb_coll_NW",
+    "hgi_fault",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_fault",
+    8,
+    9
+   ],
+   "clock": "stream",
+   "basis": "target fault",
+   "bits": 1
+  },
+  {
+   "src": [
+    "hb_coll_NW",
+    "fault",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_fault",
+    9,
+    10
+   ],
+   "clock": "stream",
+   "basis": "target fault",
+   "bits": 1
+  },
+  {
+   "src": [
+    "hb_coll_NE",
+    "program_fault",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_fault",
+    10,
+    11
+   ],
+   "clock": "stream",
+   "basis": "target fault",
+   "bits": 1
+  },
+  {
+   "src": [
+    "hb_coll_NE",
+    "hgi_fault",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_fault",
+    11,
+    12
+   ],
+   "clock": "stream",
+   "basis": "target fault",
+   "bits": 1
+  },
+  {
+   "src": [
+    "hb_coll_NE",
+    "fault",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_fault",
+    12,
+    13
+   ],
+   "clock": "stream",
+   "basis": "target fault",
+   "bits": 1
+  },
+  {
+   "src": [
+    "col_su",
+    "fault",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_fault",
+    13,
+    14
+   ],
+   "clock": "stream",
+   "basis": "target fault",
+   "bits": 1
+  },
+  {
+   "src": [
+    "col_sfu_SW",
+    "fault",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_fault",
+    14,
+    15
+   ],
+   "clock": "stream",
+   "basis": "target fault",
+   "bits": 1
+  },
+  {
+   "src": [
+    "col_sfu_SE",
+    "fault",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_fault",
+    15,
+    16
+   ],
+   "clock": "stream",
+   "basis": "target fault",
+   "bits": 1
+  },
+  {
+   "src": [
+    "col_sfu_NW",
+    "fault",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_fault",
+    16,
+    17
+   ],
+   "clock": "stream",
+   "basis": "target fault",
+   "bits": 1
+  },
+  {
+   "src": [
+    "col_sfu_NE",
+    "fault",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_fault",
+    17,
+    18
+   ],
+   "clock": "stream",
+   "basis": "target fault",
+   "bits": 1
+  },
+  {
+   "src": [
+    "col_idx",
+    "fault",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_fault",
+    18,
+    19
+   ],
+   "clock": "stream",
+   "basis": "target fault",
+   "bits": 1
+  },
+  {
+   "src": [
+    "host_cp_ingress",
+    "fault",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "h_fault",
+    0,
+    1
+   ],
+   "clock": "stream",
+   "basis": "host link fault",
+   "bits": 1
+  },
+  {
+   "src": [
+    "host_cp_packet",
+    "protocol_fault",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "h_fault",
+    1,
+    2
+   ],
+   "clock": "stream",
+   "basis": "host link fault",
+   "bits": 1
+  },
+  {
+   "src": [
+    "host_cp_landing",
+    "fault",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "h_fault",
+    2,
+    3
+   ],
+   "clock": "stream",
+   "basis": "host link fault",
+   "bits": 1
+  },
+  {
+   "src": [
+    "host_cp_ep_face",
+    "f_lk_tx",
+    547,
+    548
+   ],
+   "dst": [
+    "host_status",
+    "h_fault",
+    3,
+    4
+   ],
+   "clock": "stream",
+   "basis": "host link fault",
+   "bits": 1
+  },
+  {
+   "src": [
+    "host_phy",
+    "pad_fault",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "h_fault",
+    4,
+    5
+   ],
+   "clock": "stream",
+   "basis": "host link fault",
+   "bits": 1
+  },
+  {
+   "src": [
+    "host_phy",
+    "phy_fault",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "h_fault",
+    5,
+    6
+   ],
+   "clock": "stream",
+   "basis": "host link fault",
+   "bits": 1
+  },
+  {
+   "src": [
+    "host_status",
+    "block_ready",
+    0,
+    1
+   ],
+   "dst": [
+    "host_cp_ingress",
+    "block_ready"
+   ],
+   "clock": "stream",
+   "basis": "G-HOST-READY",
+   "bits": 1
+  },
+  {
+   "src": [
+    "host_status",
+    "program_active",
+    0,
+    1
+   ],
+   "dst": [
+    "host_cp_ingress",
+    "program_active"
+   ],
+   "clock": "stream",
+   "basis": "G-HOST-READY",
+   "bits": 1
+  },
+  {
+   "src": [
+    "host_status",
+    "program_fault",
+    0,
+    1
+   ],
+   "dst": [
+    "host_cp_ingress",
+    "program_fault"
+   ],
+   "clock": "stream",
+   "basis": "G-HOST-READY",
+   "bits": 1
+  },
+  {
+   "src": [
+    "host_status",
+    "die_fault",
+    0,
+    1
+   ],
+   "dst": [
+    "host_cp_packet",
+    "fault"
+   ],
+   "clock": "stream",
+   "basis": "G-STATUS: die fault -> host status packet",
+   "bits": 1
+  },
+  {
+   "src": [
+    "host_status",
+    "irq",
+    0,
+    1
+   ],
+   "dst": [
+    "host_cp_packet",
+    "irq"
+   ],
+   "clock": "stream",
+   "basis": "G-STATUS: programme complete -> host status packet",
+   "bits": 1
+  },
+  {
+   "src": [
+    "host_cp_packet",
+    "f_send",
+    0,
+    1
+   ],
+   "dst": [
+    "host_cp_ep_face",
+    "f_lk_rx",
+    0,
+    1
+   ],
+   "clock": "stream",
+   "basis": "G-HOST-TXCREDIT: credit-gated send",
+   "bits": 1
+  },
+  {
+   "src": [
+    "host_cp_packet",
+    "f_flit",
+    0,
+    545
+   ],
+   "dst": [
+    "host_cp_ep_face",
+    "f_lk_rx",
+    1,
+    546
+   ],
+   "clock": "stream",
+   "basis": "G-HOST-PAD: full 545-b flit (reserved header from the packet flop)",
+   "bits": 545
+  },
+  {
+   "src": [
+    "host_cp_ep_face",
+    "f_lk_tx",
+    546,
+    547
+   ],
+   "dst": [
+    "host_cp_packet",
+    "t_cr"
+   ],
+   "clock": "stream",
+   "basis": "endpoint transmit credit return",
+   "bits": 1
+  },
+  {
+   "src": [
+    "cp_fill_SW",
+    "configured",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_ready",
+    11,
+    12
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET56 real collar/calendar status; static install/launch interlock only"
+  },
+  {
+   "src": [
+    "vmfc_SW",
+    "active",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_active",
+    11,
+    12
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET56 real collar/calendar status; static install/launch interlock only"
+  },
+  {
+   "src": [
+    "cp_fill_SW",
+    "fault",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_fault",
+    19,
+    20
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET56 actual sticky fault to host status"
+  },
+  {
+   "src": [
+    "vmfc_SW",
+    "fault",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_fault",
+    20,
+    21
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET56 actual sticky fault to host status"
+  },
+  {
+   "src": [
+    "cp_fill_SE",
+    "configured",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_ready",
+    12,
+    13
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET57 real collar/calendar status; static install/launch interlock only"
+  },
+  {
+   "src": [
+    "vmfc_SE",
+    "active",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_active",
+    12,
+    13
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET57 real collar/calendar status; static install/launch interlock only"
+  },
+  {
+   "src": [
+    "cp_fill_SE",
+    "fault",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_fault",
+    21,
+    22
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET57 actual sticky fault to host status"
+  },
+  {
+   "src": [
+    "vmfc_SE",
+    "fault",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_fault",
+    22,
+    23
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET57 actual sticky fault to host status"
+  },
+  {
+   "src": [
+    "cp_fill_NW",
+    "configured",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_ready",
+    13,
+    14
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET58 real collar/calendar status; static install/launch interlock only"
+  },
+  {
+   "src": [
+    "vmfc_NW",
+    "active",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_active",
+    13,
+    14
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET58 real collar/calendar status; static install/launch interlock only"
+  },
+  {
+   "src": [
+    "cp_fill_NW",
+    "fault",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_fault",
+    23,
+    24
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET58 actual sticky fault to host status"
+  },
+  {
+   "src": [
+    "vmfc_NW",
+    "fault",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_fault",
+    24,
+    25
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET58 actual sticky fault to host status"
+  },
+  {
+   "src": [
+    "cp_fill_NE",
+    "configured",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_ready",
+    14,
+    15
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET59 real collar/calendar status; static install/launch interlock only"
+  },
+  {
+   "src": [
+    "vmfc_NE",
+    "active",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_active",
+    14,
+    15
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET59 real collar/calendar status; static install/launch interlock only"
+  },
+  {
+   "src": [
+    "cp_fill_NE",
+    "fault",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_fault",
+    25,
+    26
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET59 actual sticky fault to host status"
+  },
+  {
+   "src": [
+    "vmfc_NE",
+    "fault",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_fault",
+    26,
+    27
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET59 actual sticky fault to host status"
+  },
+  {
+   "src": [
+    "cp_svg_SW0",
+    "configured",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_ready",
+    15,
+    16
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET64 real collar/calendar status; static install/launch interlock only"
+  },
+  {
+   "src": [
+    "cp_svg_SW0",
+    "active",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_active",
+    15,
+    16
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET64 real collar/calendar status; static install/launch interlock only"
+  },
+  {
+   "src": [
+    "cp_svg_SW0",
+    "fault",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_fault",
+    27,
+    28
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET64 actual sticky fault to host status"
+  },
+  {
+   "src": [
+    "cp_svg_SW1",
+    "configured",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_ready",
+    16,
+    17
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET65 real collar/calendar status; static install/launch interlock only"
+  },
+  {
+   "src": [
+    "cp_svg_SW1",
+    "active",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_active",
+    16,
+    17
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET65 real collar/calendar status; static install/launch interlock only"
+  },
+  {
+   "src": [
+    "cp_svg_SW1",
+    "fault",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_fault",
+    28,
+    29
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET65 actual sticky fault to host status"
+  },
+  {
+   "src": [
+    "cp_svg_SW2",
+    "configured",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_ready",
+    17,
+    18
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET66 real collar/calendar status; static install/launch interlock only"
+  },
+  {
+   "src": [
+    "cp_svg_SW2",
+    "active",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_active",
+    17,
+    18
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET66 real collar/calendar status; static install/launch interlock only"
+  },
+  {
+   "src": [
+    "cp_svg_SW2",
+    "fault",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_fault",
+    29,
+    30
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET66 actual sticky fault to host status"
+  },
+  {
+   "src": [
+    "cp_svg_SW3",
+    "configured",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_ready",
+    18,
+    19
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET67 real collar/calendar status; static install/launch interlock only"
+  },
+  {
+   "src": [
+    "cp_svg_SW3",
+    "active",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_active",
+    18,
+    19
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET67 real collar/calendar status; static install/launch interlock only"
+  },
+  {
+   "src": [
+    "cp_svg_SW3",
+    "fault",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_fault",
+    30,
+    31
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET67 actual sticky fault to host status"
+  },
+  {
+   "src": [
+    "cp_svg_SW4",
+    "configured",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_ready",
+    19,
+    20
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET68 real collar/calendar status; static install/launch interlock only"
+  },
+  {
+   "src": [
+    "cp_svg_SW4",
+    "active",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_active",
+    19,
+    20
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET68 real collar/calendar status; static install/launch interlock only"
+  },
+  {
+   "src": [
+    "cp_svg_SW4",
+    "fault",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_fault",
+    31,
+    32
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET68 actual sticky fault to host status"
+  },
+  {
+   "src": [
+    "cp_svg_SW5",
+    "configured",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_ready",
+    20,
+    21
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET69 real collar/calendar status; static install/launch interlock only"
+  },
+  {
+   "src": [
+    "cp_svg_SW5",
+    "active",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_active",
+    20,
+    21
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET69 real collar/calendar status; static install/launch interlock only"
+  },
+  {
+   "src": [
+    "cp_svg_SW5",
+    "fault",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_fault",
+    32,
+    33
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET69 actual sticky fault to host status"
+  },
+  {
+   "src": [
+    "cp_svg_SW6",
+    "configured",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_ready",
+    21,
+    22
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET70 real collar/calendar status; static install/launch interlock only"
+  },
+  {
+   "src": [
+    "cp_svg_SW6",
+    "active",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_active",
+    21,
+    22
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET70 real collar/calendar status; static install/launch interlock only"
+  },
+  {
+   "src": [
+    "cp_svg_SW6",
+    "fault",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_fault",
+    33,
+    34
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET70 actual sticky fault to host status"
+  },
+  {
+   "src": [
+    "cp_svg_SW7",
+    "configured",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_ready",
+    22,
+    23
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET71 real collar/calendar status; static install/launch interlock only"
+  },
+  {
+   "src": [
+    "cp_svg_SW7",
+    "active",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_active",
+    22,
+    23
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET71 real collar/calendar status; static install/launch interlock only"
+  },
+  {
+   "src": [
+    "cp_svg_SW7",
+    "fault",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_fault",
+    34,
+    35
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET71 actual sticky fault to host status"
+  },
+  {
+   "src": [
+    "cp_svg_SE0",
+    "configured",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_ready",
+    23,
+    24
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET72 real collar/calendar status; static install/launch interlock only"
+  },
+  {
+   "src": [
+    "cp_svg_SE0",
+    "active",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_active",
+    23,
+    24
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET72 real collar/calendar status; static install/launch interlock only"
+  },
+  {
+   "src": [
+    "cp_svg_SE0",
+    "fault",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_fault",
+    35,
+    36
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET72 actual sticky fault to host status"
+  },
+  {
+   "src": [
+    "cp_svg_SE1",
+    "configured",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_ready",
+    24,
+    25
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET73 real collar/calendar status; static install/launch interlock only"
+  },
+  {
+   "src": [
+    "cp_svg_SE1",
+    "active",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_active",
+    24,
+    25
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET73 real collar/calendar status; static install/launch interlock only"
+  },
+  {
+   "src": [
+    "cp_svg_SE1",
+    "fault",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_fault",
+    36,
+    37
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET73 actual sticky fault to host status"
+  },
+  {
+   "src": [
+    "cp_svg_SE2",
+    "configured",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_ready",
+    25,
+    26
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET74 real collar/calendar status; static install/launch interlock only"
+  },
+  {
+   "src": [
+    "cp_svg_SE2",
+    "active",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_active",
+    25,
+    26
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET74 real collar/calendar status; static install/launch interlock only"
+  },
+  {
+   "src": [
+    "cp_svg_SE2",
+    "fault",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_fault",
+    37,
+    38
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET74 actual sticky fault to host status"
+  },
+  {
+   "src": [
+    "cp_svg_SE3",
+    "configured",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_ready",
+    26,
+    27
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET75 real collar/calendar status; static install/launch interlock only"
+  },
+  {
+   "src": [
+    "cp_svg_SE3",
+    "active",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_active",
+    26,
+    27
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET75 real collar/calendar status; static install/launch interlock only"
+  },
+  {
+   "src": [
+    "cp_svg_SE3",
+    "fault",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_fault",
+    38,
+    39
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET75 actual sticky fault to host status"
+  },
+  {
+   "src": [
+    "cp_svg_SE4",
+    "configured",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_ready",
+    27,
+    28
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET76 real collar/calendar status; static install/launch interlock only"
+  },
+  {
+   "src": [
+    "cp_svg_SE4",
+    "active",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_active",
+    27,
+    28
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET76 real collar/calendar status; static install/launch interlock only"
+  },
+  {
+   "src": [
+    "cp_svg_SE4",
+    "fault",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_fault",
+    39,
+    40
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET76 actual sticky fault to host status"
+  },
+  {
+   "src": [
+    "cp_svg_SE5",
+    "configured",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_ready",
+    28,
+    29
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET77 real collar/calendar status; static install/launch interlock only"
+  },
+  {
+   "src": [
+    "cp_svg_SE5",
+    "active",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_active",
+    28,
+    29
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET77 real collar/calendar status; static install/launch interlock only"
+  },
+  {
+   "src": [
+    "cp_svg_SE5",
+    "fault",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_fault",
+    40,
+    41
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET77 actual sticky fault to host status"
+  },
+  {
+   "src": [
+    "cp_svg_SE6",
+    "configured",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_ready",
+    29,
+    30
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET78 real collar/calendar status; static install/launch interlock only"
+  },
+  {
+   "src": [
+    "cp_svg_SE6",
+    "active",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_active",
+    29,
+    30
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET78 real collar/calendar status; static install/launch interlock only"
+  },
+  {
+   "src": [
+    "cp_svg_SE6",
+    "fault",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_fault",
+    41,
+    42
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET78 actual sticky fault to host status"
+  },
+  {
+   "src": [
+    "cp_svg_SE7",
+    "configured",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_ready",
+    30,
+    31
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET79 real collar/calendar status; static install/launch interlock only"
+  },
+  {
+   "src": [
+    "cp_svg_SE7",
+    "active",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_active",
+    30,
+    31
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET79 real collar/calendar status; static install/launch interlock only"
+  },
+  {
+   "src": [
+    "cp_svg_SE7",
+    "fault",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_fault",
+    42,
+    43
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET79 actual sticky fault to host status"
+  },
+  {
+   "src": [
+    "cp_svg_NW0",
+    "configured",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_ready",
+    31,
+    32
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET80 real collar/calendar status; static install/launch interlock only"
+  },
+  {
+   "src": [
+    "cp_svg_NW0",
+    "active",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_active",
+    31,
+    32
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET80 real collar/calendar status; static install/launch interlock only"
+  },
+  {
+   "src": [
+    "cp_svg_NW0",
+    "fault",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_fault",
+    43,
+    44
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET80 actual sticky fault to host status"
+  },
+  {
+   "src": [
+    "cp_svg_NW1",
+    "configured",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_ready",
+    32,
+    33
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET81 real collar/calendar status; static install/launch interlock only"
+  },
+  {
+   "src": [
+    "cp_svg_NW1",
+    "active",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_active",
+    32,
+    33
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET81 real collar/calendar status; static install/launch interlock only"
+  },
+  {
+   "src": [
+    "cp_svg_NW1",
+    "fault",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_fault",
+    44,
+    45
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET81 actual sticky fault to host status"
+  },
+  {
+   "src": [
+    "cp_svg_NW2",
+    "configured",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_ready",
+    33,
+    34
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET82 real collar/calendar status; static install/launch interlock only"
+  },
+  {
+   "src": [
+    "cp_svg_NW2",
+    "active",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_active",
+    33,
+    34
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET82 real collar/calendar status; static install/launch interlock only"
+  },
+  {
+   "src": [
+    "cp_svg_NW2",
+    "fault",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_fault",
+    45,
+    46
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET82 actual sticky fault to host status"
+  },
+  {
+   "src": [
+    "cp_svg_NW3",
+    "configured",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_ready",
+    34,
+    35
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET83 real collar/calendar status; static install/launch interlock only"
+  },
+  {
+   "src": [
+    "cp_svg_NW3",
+    "active",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_active",
+    34,
+    35
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET83 real collar/calendar status; static install/launch interlock only"
+  },
+  {
+   "src": [
+    "cp_svg_NW3",
+    "fault",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_fault",
+    46,
+    47
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET83 actual sticky fault to host status"
+  },
+  {
+   "src": [
+    "cp_svg_NW4",
+    "configured",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_ready",
+    35,
+    36
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET84 real collar/calendar status; static install/launch interlock only"
+  },
+  {
+   "src": [
+    "cp_svg_NW4",
+    "active",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_active",
+    35,
+    36
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET84 real collar/calendar status; static install/launch interlock only"
+  },
+  {
+   "src": [
+    "cp_svg_NW4",
+    "fault",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_fault",
+    47,
+    48
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET84 actual sticky fault to host status"
+  },
+  {
+   "src": [
+    "cp_svg_NW5",
+    "configured",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_ready",
+    36,
+    37
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET85 real collar/calendar status; static install/launch interlock only"
+  },
+  {
+   "src": [
+    "cp_svg_NW5",
+    "active",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_active",
+    36,
+    37
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET85 real collar/calendar status; static install/launch interlock only"
+  },
+  {
+   "src": [
+    "cp_svg_NW5",
+    "fault",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_fault",
+    48,
+    49
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET85 actual sticky fault to host status"
+  },
+  {
+   "src": [
+    "cp_svg_NW6",
+    "configured",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_ready",
+    37,
+    38
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET86 real collar/calendar status; static install/launch interlock only"
+  },
+  {
+   "src": [
+    "cp_svg_NW6",
+    "active",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_active",
+    37,
+    38
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET86 real collar/calendar status; static install/launch interlock only"
+  },
+  {
+   "src": [
+    "cp_svg_NW6",
+    "fault",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_fault",
+    49,
+    50
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET86 actual sticky fault to host status"
+  },
+  {
+   "src": [
+    "cp_svg_NW7",
+    "configured",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_ready",
+    38,
+    39
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET87 real collar/calendar status; static install/launch interlock only"
+  },
+  {
+   "src": [
+    "cp_svg_NW7",
+    "active",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_active",
+    38,
+    39
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET87 real collar/calendar status; static install/launch interlock only"
+  },
+  {
+   "src": [
+    "cp_svg_NW7",
+    "fault",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_fault",
+    50,
+    51
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET87 actual sticky fault to host status"
+  },
+  {
+   "src": [
+    "cp_svg_NE0",
+    "configured",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_ready",
+    39,
+    40
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET88 real collar/calendar status; static install/launch interlock only"
+  },
+  {
+   "src": [
+    "cp_svg_NE0",
+    "active",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_active",
+    39,
+    40
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET88 real collar/calendar status; static install/launch interlock only"
+  },
+  {
+   "src": [
+    "cp_svg_NE0",
+    "fault",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_fault",
+    51,
+    52
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET88 actual sticky fault to host status"
+  },
+  {
+   "src": [
+    "cp_svg_NE1",
+    "configured",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_ready",
+    40,
+    41
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET89 real collar/calendar status; static install/launch interlock only"
+  },
+  {
+   "src": [
+    "cp_svg_NE1",
+    "active",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_active",
+    40,
+    41
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET89 real collar/calendar status; static install/launch interlock only"
+  },
+  {
+   "src": [
+    "cp_svg_NE1",
+    "fault",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_fault",
+    52,
+    53
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET89 actual sticky fault to host status"
+  },
+  {
+   "src": [
+    "cp_svg_NE2",
+    "configured",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_ready",
+    41,
+    42
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET90 real collar/calendar status; static install/launch interlock only"
+  },
+  {
+   "src": [
+    "cp_svg_NE2",
+    "active",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_active",
+    41,
+    42
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET90 real collar/calendar status; static install/launch interlock only"
+  },
+  {
+   "src": [
+    "cp_svg_NE2",
+    "fault",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_fault",
+    53,
+    54
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET90 actual sticky fault to host status"
+  },
+  {
+   "src": [
+    "cp_svg_NE3",
+    "configured",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_ready",
+    42,
+    43
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET91 real collar/calendar status; static install/launch interlock only"
+  },
+  {
+   "src": [
+    "cp_svg_NE3",
+    "active",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_active",
+    42,
+    43
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET91 real collar/calendar status; static install/launch interlock only"
+  },
+  {
+   "src": [
+    "cp_svg_NE3",
+    "fault",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_fault",
+    54,
+    55
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET91 actual sticky fault to host status"
+  },
+  {
+   "src": [
+    "cp_svg_NE4",
+    "configured",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_ready",
+    43,
+    44
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET92 real collar/calendar status; static install/launch interlock only"
+  },
+  {
+   "src": [
+    "cp_svg_NE4",
+    "active",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_active",
+    43,
+    44
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET92 real collar/calendar status; static install/launch interlock only"
+  },
+  {
+   "src": [
+    "cp_svg_NE4",
+    "fault",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_fault",
+    55,
+    56
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET92 actual sticky fault to host status"
+  },
+  {
+   "src": [
+    "cp_svg_NE5",
+    "configured",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_ready",
+    44,
+    45
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET93 real collar/calendar status; static install/launch interlock only"
+  },
+  {
+   "src": [
+    "cp_svg_NE5",
+    "active",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_active",
+    44,
+    45
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET93 real collar/calendar status; static install/launch interlock only"
+  },
+  {
+   "src": [
+    "cp_svg_NE5",
+    "fault",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_fault",
+    56,
+    57
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET93 actual sticky fault to host status"
+  },
+  {
+   "src": [
+    "cp_svg_NE6",
+    "configured",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_ready",
+    45,
+    46
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET94 real collar/calendar status; static install/launch interlock only"
+  },
+  {
+   "src": [
+    "cp_svg_NE6",
+    "active",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_active",
+    45,
+    46
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET94 real collar/calendar status; static install/launch interlock only"
+  },
+  {
+   "src": [
+    "cp_svg_NE6",
+    "fault",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_fault",
+    57,
+    58
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET94 actual sticky fault to host status"
+  },
+  {
+   "src": [
+    "cp_svg_NE7",
+    "configured",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_ready",
+    46,
+    47
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET95 real collar/calendar status; static install/launch interlock only"
+  },
+  {
+   "src": [
+    "cp_svg_NE7",
+    "active",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_active",
+    46,
+    47
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET95 real collar/calendar status; static install/launch interlock only"
+  },
+  {
+   "src": [
+    "cp_svg_NE7",
+    "fault",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_fault",
+    58,
+    59
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET95 actual sticky fault to host status"
+  },
+  {
+   "src": [
+    "cp_cal_SW",
+    "configured",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_ready",
+    47,
+    48
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET96 real collar/calendar status; static install/launch interlock only"
+  },
+  {
+   "src": [
+    "calendar_SW",
+    "active",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_active",
+    47,
+    48
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET96 real collar/calendar status; static install/launch interlock only"
+  },
+  {
+   "src": [
+    "cp_cal_SW",
+    "fault",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_fault",
+    59,
+    60
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET96 actual sticky fault to host status"
+  },
+  {
+   "src": [
+    "calendar_SW",
+    "fault",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_fault",
+    60,
+    61
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET96 actual sticky fault to host status"
+  },
+  {
+   "src": [
+    "cp_cal_SE",
+    "configured",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_ready",
+    48,
+    49
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET97 real collar/calendar status; static install/launch interlock only"
+  },
+  {
+   "src": [
+    "calendar_SE",
+    "active",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_active",
+    48,
+    49
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET97 real collar/calendar status; static install/launch interlock only"
+  },
+  {
+   "src": [
+    "cp_cal_SE",
+    "fault",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_fault",
+    61,
+    62
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET97 actual sticky fault to host status"
+  },
+  {
+   "src": [
+    "calendar_SE",
+    "fault",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_fault",
+    62,
+    63
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET97 actual sticky fault to host status"
+  },
+  {
+   "src": [
+    "cp_cal_NW",
+    "configured",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_ready",
+    49,
+    50
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET98 real collar/calendar status; static install/launch interlock only"
+  },
+  {
+   "src": [
+    "calendar_NW",
+    "active",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_active",
+    49,
+    50
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET98 real collar/calendar status; static install/launch interlock only"
+  },
+  {
+   "src": [
+    "cp_cal_NW",
+    "fault",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_fault",
+    63,
+    64
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET98 actual sticky fault to host status"
+  },
+  {
+   "src": [
+    "calendar_NW",
+    "fault",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_fault",
+    64,
+    65
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET98 actual sticky fault to host status"
+  },
+  {
+   "src": [
+    "cp_cal_NE",
+    "configured",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_ready",
+    50,
+    51
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET99 real collar/calendar status; static install/launch interlock only"
+  },
+  {
+   "src": [
+    "calendar_NE",
+    "active",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_active",
+    50,
+    51
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET99 real collar/calendar status; static install/launch interlock only"
+  },
+  {
+   "src": [
+    "cp_cal_NE",
+    "fault",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_fault",
+    65,
+    66
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET99 actual sticky fault to host status"
+  },
+  {
+   "src": [
+    "calendar_NE",
+    "fault",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_fault",
+    66,
+    67
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET99 actual sticky fault to host status"
+  },
+  {
+   "src": [
+    "cp_xl_SW",
+    "configured",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_ready",
+    51,
+    52
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET100 real collar/calendar status; static install/launch interlock only"
+  },
+  {
+   "src": [
+    "cp_xl_SW",
+    "active",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_active",
+    51,
+    52
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET100 real collar/calendar status; static install/launch interlock only"
+  },
+  {
+   "src": [
+    "cp_xl_SW",
+    "fault",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_fault",
+    67,
+    68
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET100 actual sticky fault to host status"
+  },
+  {
+   "src": [
+    "cp_xl_SE",
+    "configured",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_ready",
+    52,
+    53
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET101 real collar/calendar status; static install/launch interlock only"
+  },
+  {
+   "src": [
+    "cp_xl_SE",
+    "active",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_active",
+    52,
+    53
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET101 real collar/calendar status; static install/launch interlock only"
+  },
+  {
+   "src": [
+    "cp_xl_SE",
+    "fault",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_fault",
+    68,
+    69
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET101 actual sticky fault to host status"
+  },
+  {
+   "src": [
+    "cp_xl_NW",
+    "configured",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_ready",
+    53,
+    54
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET102 real collar/calendar status; static install/launch interlock only"
+  },
+  {
+   "src": [
+    "cp_xl_NW",
+    "active",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_active",
+    53,
+    54
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET102 real collar/calendar status; static install/launch interlock only"
+  },
+  {
+   "src": [
+    "cp_xl_NW",
+    "fault",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_fault",
+    69,
+    70
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET102 actual sticky fault to host status"
+  },
+  {
+   "src": [
+    "cp_xl_NE",
+    "configured",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_ready",
+    54,
+    55
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET103 real collar/calendar status; static install/launch interlock only"
+  },
+  {
+   "src": [
+    "cp_xl_NE",
+    "active",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_active",
+    54,
+    55
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET103 real collar/calendar status; static install/launch interlock only"
+  },
+  {
+   "src": [
+    "cp_xl_NE",
+    "fault",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_fault",
+    70,
+    71
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET103 actual sticky fault to host status"
+  },
+  {
+   "src": [
+    "cp_dma_SW",
+    "configured",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_ready",
+    55,
+    56
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET104 real collar/calendar status; static install/launch interlock only"
+  },
+  {
+   "src": [
+    "cp_dma_SW",
+    "active",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_active",
+    55,
+    56
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET104 real collar/calendar status; static install/launch interlock only"
+  },
+  {
+   "src": [
+    "cp_dma_SW",
+    "fault",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_fault",
+    71,
+    72
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET104 actual sticky fault to host status"
+  },
+  {
+   "src": [
+    "cp_dma_SE",
+    "configured",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_ready",
+    56,
+    57
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET105 real collar/calendar status; static install/launch interlock only"
+  },
+  {
+   "src": [
+    "cp_dma_SE",
+    "active",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_active",
+    56,
+    57
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET105 real collar/calendar status; static install/launch interlock only"
+  },
+  {
+   "src": [
+    "cp_dma_SE",
+    "fault",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_fault",
+    72,
+    73
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET105 actual sticky fault to host status"
+  },
+  {
+   "src": [
+    "cp_dma_NW",
+    "configured",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_ready",
+    57,
+    58
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET106 real collar/calendar status; static install/launch interlock only"
+  },
+  {
+   "src": [
+    "cp_dma_NW",
+    "active",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_active",
+    57,
+    58
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET106 real collar/calendar status; static install/launch interlock only"
+  },
+  {
+   "src": [
+    "cp_dma_NW",
+    "fault",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_fault",
+    73,
+    74
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET106 actual sticky fault to host status"
+  },
+  {
+   "src": [
+    "cp_dma_NE",
+    "configured",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_ready",
+    58,
+    59
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET107 real collar/calendar status; static install/launch interlock only"
+  },
+  {
+   "src": [
+    "cp_dma_NE",
+    "active",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_active",
+    58,
+    59
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET107 real collar/calendar status; static install/launch interlock only"
+  },
+  {
+   "src": [
+    "cp_dma_NE",
+    "fault",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_fault",
+    74,
+    75
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET107 actual sticky fault to host status"
+  },
+  {
+   "src": [
+    "hc_tgt_SW",
+    "configured",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_ready",
+    59,
+    60
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET108 real collar/calendar status; static install/launch interlock only"
+  },
+  {
+   "src": [
+    "hc_SW",
+    "program_active",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_active",
+    59,
+    60
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET108 real collar/calendar status; static install/launch interlock only"
+  },
+  {
+   "src": [
+    "hc_tgt_SW",
+    "fault",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_fault",
+    75,
+    76
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET108 actual sticky fault to host status"
+  },
+  {
+   "src": [
+    "hc_SW",
+    "fault",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_fault",
+    76,
+    77
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET108 actual sticky fault to host status"
+  },
+  {
+   "src": [
+    "hc_tgt_SE",
+    "configured",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_ready",
+    60,
+    61
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET109 real collar/calendar status; static install/launch interlock only"
+  },
+  {
+   "src": [
+    "hc_SE",
+    "program_active",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_active",
+    60,
+    61
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET109 real collar/calendar status; static install/launch interlock only"
+  },
+  {
+   "src": [
+    "hc_tgt_SE",
+    "fault",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_fault",
+    77,
+    78
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET109 actual sticky fault to host status"
+  },
+  {
+   "src": [
+    "hc_SE",
+    "fault",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_fault",
+    78,
+    79
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET109 actual sticky fault to host status"
+  },
+  {
+   "src": [
+    "hc_tgt_NW",
+    "configured",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_ready",
+    61,
+    62
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET110 real collar/calendar status; static install/launch interlock only"
+  },
+  {
+   "src": [
+    "hc_NW",
+    "program_active",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_active",
+    61,
+    62
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET110 real collar/calendar status; static install/launch interlock only"
+  },
+  {
+   "src": [
+    "hc_tgt_NW",
+    "fault",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_fault",
+    79,
+    80
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET110 actual sticky fault to host status"
+  },
+  {
+   "src": [
+    "hc_NW",
+    "fault",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_fault",
+    80,
+    81
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET110 actual sticky fault to host status"
+  },
+  {
+   "src": [
+    "hc_tgt_NE",
+    "configured",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_ready",
+    62,
+    63
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET111 real collar/calendar status; static install/launch interlock only"
+  },
+  {
+   "src": [
+    "hc_NE",
+    "program_active",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_active",
+    62,
+    63
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET111 real collar/calendar status; static install/launch interlock only"
+  },
+  {
+   "src": [
+    "hc_tgt_NE",
+    "fault",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_fault",
+    81,
+    82
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET111 actual sticky fault to host status"
+  },
+  {
+   "src": [
+    "hc_NE",
+    "fault",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_fault",
+    82,
+    83
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET111 actual sticky fault to host status"
+  },
+  {
+   "src": [
+    "cp_ep_SW",
+    "configured",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_ready",
+    63,
+    64
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET132 real collar/calendar status; static install/launch interlock only"
+  },
+  {
+   "src": [
+    "epcal_SW",
+    "active",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_active",
+    63,
+    64
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET132 real collar/calendar status; static install/launch interlock only"
+  },
+  {
+   "src": [
+    "cp_ep_SW",
+    "fault",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_fault",
+    83,
+    84
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET132 actual sticky fault to host status"
+  },
+  {
+   "src": [
+    "epcal_SW",
+    "fault",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_fault",
+    84,
+    85
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET132 actual sticky fault to host status"
+  },
+  {
+   "src": [
+    "ep_S0",
+    "fault",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_fault",
+    85,
+    86
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET132 actual sticky fault to host status"
+  },
+  {
+   "src": [
+    "ep_S1",
+    "fault",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_fault",
+    86,
+    87
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET132 actual sticky fault to host status"
+  },
+  {
+   "src": [
+    "ep_S2",
+    "fault",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_fault",
+    87,
+    88
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET132 actual sticky fault to host status"
+  },
+  {
+   "src": [
+    "cp_ep_SE",
+    "configured",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_ready",
+    64,
+    65
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET133 real collar/calendar status; static install/launch interlock only"
+  },
+  {
+   "src": [
+    "epcal_SE",
+    "active",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_active",
+    64,
+    65
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET133 real collar/calendar status; static install/launch interlock only"
+  },
+  {
+   "src": [
+    "cp_ep_SE",
+    "fault",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_fault",
+    88,
+    89
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET133 actual sticky fault to host status"
+  },
+  {
+   "src": [
+    "epcal_SE",
+    "fault",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_fault",
+    89,
+    90
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET133 actual sticky fault to host status"
+  },
+  {
+   "src": [
+    "ep_S3",
+    "fault",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_fault",
+    90,
+    91
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET133 actual sticky fault to host status"
+  },
+  {
+   "src": [
+    "ep_S4",
+    "fault",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_fault",
+    91,
+    92
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET133 actual sticky fault to host status"
+  },
+  {
+   "src": [
+    "cp_ep_NW",
+    "configured",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_ready",
+    65,
+    66
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET134 real collar/calendar status; static install/launch interlock only"
+  },
+  {
+   "src": [
+    "epcal_NW",
+    "active",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_active",
+    65,
+    66
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET134 real collar/calendar status; static install/launch interlock only"
+  },
+  {
+   "src": [
+    "cp_ep_NW",
+    "fault",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_fault",
+    92,
+    93
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET134 actual sticky fault to host status"
+  },
+  {
+   "src": [
+    "epcal_NW",
+    "fault",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_fault",
+    93,
+    94
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET134 actual sticky fault to host status"
+  },
+  {
+   "src": [
+    "ep_N0",
+    "fault",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_fault",
+    94,
+    95
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET134 actual sticky fault to host status"
+  },
+  {
+   "src": [
+    "ep_N1",
+    "fault",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_fault",
+    95,
+    96
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET134 actual sticky fault to host status"
+  },
+  {
+   "src": [
+    "cp_ep_NE",
+    "configured",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_ready",
+    66,
+    67
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET135 real collar/calendar status; static install/launch interlock only"
+  },
+  {
+   "src": [
+    "epcal_NE",
+    "active",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_active",
+    66,
+    67
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET135 real collar/calendar status; static install/launch interlock only"
+  },
+  {
+   "src": [
+    "cp_ep_NE",
+    "fault",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_fault",
+    96,
+    97
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET135 actual sticky fault to host status"
+  },
+  {
+   "src": [
+    "epcal_NE",
+    "fault",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_fault",
+    97,
+    98
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET135 actual sticky fault to host status"
+  },
+  {
+   "src": [
+    "ep_N2",
+    "fault",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_fault",
+    98,
+    99
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET135 actual sticky fault to host status"
+  },
+  {
+   "src": [
+    "ep_N3",
+    "fault",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_fault",
+    99,
+    100
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET135 actual sticky fault to host status"
+  }
+ ],
+ "clocks": [
+  {
+   "inst": "col_su",
+   "port": "clk",
+   "domain": "serial",
+   "kind": "clock"
+  },
+  {
+   "inst": "col_su",
+   "port": "clk_in",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "col_su",
+   "port": "rst_n",
+   "domain": "serial",
+   "kind": "reset"
+  },
+  {
+   "inst": "col_sfu_SW",
+   "port": "clk",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "col_sfu_SW",
+   "port": "clk_in",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "col_sfu_SW",
+   "port": "rst_n",
+   "domain": "stream",
+   "kind": "reset"
+  },
+  {
+   "inst": "col_sfu_SE",
+   "port": "clk",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "col_sfu_SE",
+   "port": "clk_in",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "col_sfu_SE",
+   "port": "rst_n",
+   "domain": "stream",
+   "kind": "reset"
+  },
+  {
+   "inst": "col_sfu_NW",
+   "port": "clk",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "col_sfu_NW",
+   "port": "clk_in",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "col_sfu_NW",
+   "port": "rst_n",
+   "domain": "stream",
+   "kind": "reset"
+  },
+  {
+   "inst": "col_sfu_NE",
+   "port": "clk",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "col_sfu_NE",
+   "port": "clk_in",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "col_sfu_NE",
+   "port": "rst_n",
+   "domain": "stream",
+   "kind": "reset"
+  },
+  {
+   "inst": "col_idx",
+   "port": "clk",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "col_idx",
+   "port": "clk_in",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "col_idx",
+   "port": "rst_n",
+   "domain": "stream",
+   "kind": "reset"
+  },
+  {
+   "inst": "host_phy",
+   "port": "clk",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "host_phy",
+   "port": "rst_n",
+   "domain": "stream",
+   "kind": "reset"
+  },
+  {
+   "inst": "host_status",
+   "port": "clk",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "host_status",
+   "port": "rst_n",
+   "domain": "stream",
+   "kind": "reset"
+  }
+ ],
+ "straps": [
+  {
+   "inst": "col_su",
+   "port": "tgt",
+   "value": 112,
+   "reason": "identity: F20 target id 112 of this collar instance"
+  },
+  {
+   "inst": "col_sfu_SW",
+   "port": "tgt",
+   "value": 116,
+   "reason": "identity: F20 target id 116 of this collar instance"
+  },
+  {
+   "inst": "col_sfu_SE",
+   "port": "tgt",
+   "value": 117,
+   "reason": "identity: F20 target id 117 of this collar instance"
+  },
+  {
+   "inst": "col_sfu_NW",
+   "port": "tgt",
+   "value": 118,
+   "reason": "identity: F20 target id 118 of this collar instance"
+  },
+  {
+   "inst": "col_sfu_NE",
+   "port": "tgt",
+   "value": 119,
+   "reason": "identity: F20 target id 119 of this collar instance"
+  },
+  {
+   "inst": "col_idx",
+   "port": "tgt",
+   "value": 120,
+   "reason": "identity: F20 target id 120 of this collar instance"
+  }
+ ],
+ "gaps": [
+  {
+   "id": "G-HOST-SESSION",
+   "owner": "H-DIE (die pins) + host owner",
+   "missing_rtl": "die strap pads: host_phy.session_pad[23:0] is the host link session id (off-die sideband, agreed by both link ends before any configuration can cross the link). Needs DIE_PIN entry (ot_hbm_host_phy_adapt, ^session_pad$) in full_die_v16.py (parent/VMSM-owned generator).",
+   "affects": [
+    [
+     "host_phy",
+     "session_pad"
+    ]
+   ],
+   "note": "closes when the generator declares the pad; no on-die producer is possible"
+  }
+ ],
+ "notes": [
+  "ingress TARGET_MASK (host_misc) admits 48, 52..55, 64..107 (cp1), 112, 116..120",
+  "collar row map: 0x000 programme (sequential per space), 0x800 operand rows, 0xC00 record rows, 0xE00 space/page select, 0xE01 install need + wait-done"
+ ]
+}

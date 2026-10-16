@@ -28,7 +28,7 @@ module tb_dma_back_vp4_banks_equiv;
  .rq(rqa),.rr(rr),.wb_reserve_v(reservea),.wb_reserve_bank(banka),.wb_fill_bank(fillbanka),
  .wb_reserve_epoch(epocha),.wb_fill_epoch(fillepocha),.wb_reserve_sectors(sectorsa),.wb_reserve_base(basea),
  .wb_fill_start(filla),.wb_ready(1'b1),.wd(wda),.wa(wa));
- ot_hgi_dma_back_static_vp4_banks dut( .clk(clk),.clk_bank({8{clk}}),.rst_n(rst_n),.cycle(cycle),.mv_v(mv_v),.mv(mv),.issue_at(issue_at),.drain_at(drain_at),
+ ot_hgi_dma_back_static_vp4_banks dut( .clk(clk),.clk_bank({8{clk}}),.rst_n(rst_n),.stk(2'd0),.cycle(cycle),.mv_v(mv_v),.mv(mv),.issue_at(issue_at),.drain_at(drain_at),
  .mv_wb_bank(1'b0),.mv_wb_epoch(16'h1234),.mv_src(srcb),.mv_done(doneb),.mv_fault(faultb),.quiet(quietb),.busy(busyb),
  .rq(rqb),.rr(rr),.wb_reserve_v(reserveb),.wb_reserve_bank(bankb),.wb_fill_bank(fillbankb),
  .wb_reserve_epoch(epochb),.wb_fill_epoch(fillepochb),.wb_reserve_sectors(sectorsb),.wb_reserve_base(baseb),

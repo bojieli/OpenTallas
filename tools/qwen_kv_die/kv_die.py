@@ -205,9 +205,18 @@ SPLIT_HEAD_FT = (1080.0, 508.68)
 # (middle closes: no route astk_WN -> seq; top apron: HOST tree corners at y ~24.0 mm; taller pitch 432-864: slice chains
 # corner at x 1501) -> needs a smaller band (T1n into the near head's channel) or a die height step with the HOST apron.
 V143B = __import__('os').environ.get('OT_KV_V143B', '0') == '1'
-V143_ROW = 43.2 if V143B else 28.08
-V143_GAP = 21.6 if V143B else 6.48
-V143_BAND_LO, V143_BAND_HI = (195.48, 194.4) if V143B else (119.88, 118.8)
+# v1.4.3c (Q-KVSYS-DIE 2026-10-15 22:50, OT_KV_V143C=1): SIDE-BY-SIDE band.  The two G stages of a pair sit next to each
+# other in ONE row under the ECTL (G_near x 54, G_far x 405: 27-um gap), T1n | T2n | S1n | S2n in a second row (T1n at the
+# head column's edge x -216, T2n 135, S1n 480.6, S2n 540), rows at 43.2 pitch = 21.6-um gaps everywhere (>= the 20-um
+# sliver rule) and the band SHRINKS (2 rows instead of 4: 111.24 / 108.0 vs 119.88 / 118.8; LO keeps the 1.08 GY residue).  The words no longer stack
+# in one 324-um column (window screen hot spots of v1.4.3: tp x2 + tg in the G column).  Measured matched-bit worst hops
+# (actual closed LEF pins, tools/qwen_kv_die/v143_feasibility.py primitives): ECTL->G_n 469.3, ECTL->G_f 479.2,
+# G_n->T1n 291.6, T1n->T2n 372.6, T2n->near fronts 479.6, G_f->T1f 432.0, score->S1n 215.7, S1n->S2n 37.1, S2n->ECTL 110.9
+# (all <= 500; v1.4.3: 285.9 / 314.0 / 34.6 / 125.3 / 436.4 / 337.0).  Far T2f / S1f band (5.4-um gaps) unchanged.
+V143C = __import__('os').environ.get('OT_KV_V143C', '0') == '1'
+V143_ROW = 43.2 if (V143B or V143C) else 28.08
+V143_GAP = 21.6 if (V143B or V143C) else 6.48
+V143_BAND_LO, V143_BAND_HI = (195.48, 194.4) if V143B else ((111.24, 108.0) if V143C else (119.88, 118.8))
 V143_NF_LO, V143_NF_HI = (64.8, 65.88) if V143B else (32.4, 33.48)
 V143_X = (dict(g=226.8, t1n=-54.0, t2n=108.0, t2f=108.0, s1n=486.0, s2n=556.2, s1f=486.0) if V143B else
           dict(g=226.8, t1n=226.8, t2n=108.0, t2f=108.0, s1n=437.4, s2n=556.2, s1f=437.4))   # ECTL-local x (R0 ECTL)
@@ -1097,12 +1106,20 @@ def _v143_stages(add, se, cx, ey, col):
         add(f'hst_{se}_{name}', mst, round(x, 4), round(y, 4), w - SHAVE, h - SHAVE, o, 'head_stage', 'attn')
     for lower, near, far in ((True, 1, 0), (False, 2, 3)):
         row = (lambda k: cy - V143_ROW * k) if lower else (lambda k: cy + ECTL[1] + V143_GAP + V143_ROW * (k - 1))
-        put(f'{near}_g', 'qkd_hgs', V143_X['g'], row(1), lower)
-        put(f'{far}_g', 'qkd_hgs', V143_X['g'], row(2), lower)
-        put(f'{near}_t1', 'qkd_hgs', V143_X['t1n'], row(3), lower)
-        put(f'{near}_s2', 'qkd_hss', V143_X['s2n'], row(3), lower)
-        put(f'{near}_t2', 'qkd_hgs', V143_X['t2n'], row(4), lower)
-        put(f'{near}_s1', 'qkd_hss', V143_X['s1n'], row(4), lower)
+        if V143C:
+            put(f'{near}_g', 'qkd_hgs', 54.0, row(1), lower)
+            put(f'{far}_g', 'qkd_hgs', 405.0, row(1), lower)
+            put(f'{near}_t1', 'qkd_hgs', -216.0, row(2), lower)
+            put(f'{near}_t2', 'qkd_hgs', 135.0, row(2), lower)
+            put(f'{near}_s1', 'qkd_hss', 480.6, row(2), lower)
+            put(f'{near}_s2', 'qkd_hss', 540.0, row(2), lower)
+        else:
+            put(f'{near}_g', 'qkd_hgs', V143_X['g'], row(1), lower)
+            put(f'{far}_g', 'qkd_hgs', V143_X['g'], row(2), lower)
+            put(f'{near}_t1', 'qkd_hgs', V143_X['t1n'], row(3), lower)
+            put(f'{near}_s2', 'qkd_hss', V143_X['s2n'], row(3), lower)
+            put(f'{near}_t2', 'qkd_hgs', V143_X['t2n'], row(4), lower)
+            put(f'{near}_s1', 'qkd_hss', V143_X['s1n'], row(4), lower)
         if lower:
             yf = ey + HEAD[1] + (21.6 if V143B else 5.4)              # far head 0 top + gap
         else:

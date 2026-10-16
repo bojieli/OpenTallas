@@ -1,0 +1,125 @@
+{
+  "schema": 1,
+  "kind": "abstract_pin_stub",
+  "status": "PASS",
+  "input": {
+    "path": "provenance/raw/dsfd_stnv_566x1.lef",
+    "sha256": "e7ec67963c2025716c21f854b614cae52b659273deccaba61a2e36b0d331a777"
+  },
+  "output": {
+    "path": "dsfd_stnv_566x1.lef",
+    "sha256": "e3f3bbbeeb364ae240e7af99378dabb17a201131f264b3576a4f9e71dd3b6940"
+  },
+  "helper": {
+    "path": "tools/hier_contract/abstract_pin_stub.py",
+    "sha256": "c3cae85e3aa1a8da5374284fe57418b2230ceb208aa76eff4567c6993bbe0c05",
+    "source_commit": "cb219000e4030cccd15411824fa3540d31e3bcf1",
+    "retained_copy": "provenance/helper/abstract_pin_stub.py"
+  },
+  "environment": {
+    "OT_OBS_CLOSE": null,
+    "OT_OBS_CLOSE_UM": null
+  },
+  "command": [
+    "python3",
+    "provenance/helper/abstract_pin_stub.py",
+    "provenance/raw/dsfd_stnv_566x1.lef",
+    "dsfd_stnv_566x1.lef"
+  ],
+  "returncode": 0,
+  "stdout": "pinstub: 3 OBS rects moved into 3 pins: do0[158], do0[182], do0[234]; pockets: 98 OBS rects added on M5 (gaps < 1.536 um between own-layer obstacles)\n",
+  "stderr": "",
+  "invariants": {
+    "macro_outline": "PASS",
+    "pin_names_directions_uses": "PASS",
+    "original_pin_rectangles_retained": "PASS"
+  },
+  "child_lint": {
+    "schema": "opentallas.hier_contract.child_lint.v1",
+    "lef": "/srv/opentallas-scratch2/claude/closure-loop/s81fill_stnv_566x1-f9-cb219000e/record/views/dsfd_stnv_566x1/dsfd_stnv_566x1.lef",
+    "verdict": "PASS",
+    "fails": [],
+    "warns": [],
+    "summary": "dsfd_stnv_566x1 77.76 x 19.44: PG M5 VDD 28 stripes (94% spread, 100% cov) / VSS 28 stripes (94% spread, 100% cov); strap M6; face pins 1135 blocked-above 0 blocked-same 0; clock fi0[0] insertion 91 ps; pockets M5 0 (closed)",
+    "info": {
+      "cell": "dsfd_stnv_566x1",
+      "W": 77.76,
+      "H": 19.44,
+      "pg": {
+        "nets": {
+          "VDD": {
+            "top_layer": "M5",
+            "stripes": 28,
+            "dir": "V",
+            "spread": 0.937,
+            "coverage": 1.0,
+            "shapes_on_top": 28
+          },
+          "VSS": {
+            "top_layer": "M5",
+            "stripes": 28,
+            "dir": "V",
+            "spread": 0.938,
+            "coverage": 1.0,
+            "shapes_on_top": 28
+          }
+        },
+        "top_layer": "M5",
+        "ok": true,
+        "why": []
+      },
+      "pg_layer": "M5",
+      "strap_layer": "M6",
+      "cap": null,
+      "face": {
+        "face_pins": 1135,
+        "blocked_above": 0,
+        "covered_below": 11,
+        "examples": [],
+        "blocked_same": 0,
+        "same_examples": [],
+        "band_same": 0,
+        "band_examples": []
+      },
+      "clock_insertion": {
+        "fi0[0]": {
+          "max_ps": 90.77,
+          "min_ps": 70.55
+        }
+      },
+      "pockets": {
+        "layer": "M5",
+        "d_um": 1.536,
+        "marker": {
+          "layer": "M5",
+          "d_um": 1.536,
+          "added": 98
+        },
+        "count": 0,
+        "area_um2": 0,
+        "examples": []
+      }
+    }
+  },
+  "replay": {
+    "historical": true,
+    "job": "s81fill_stnv_566x1-f9-cb219000e",
+    "source_commit": "cb219000e4030cccd15411824fa3540d31e3bcf1",
+    "published_record_commit": "4d66a5b26d8995a832e451fe22ab25a0d19cd8ac",
+    "orfs_dir": "/srv/opentallas-scratch2/claude/closure-loop/s81fill_stnv_566x1-f9-cb219000e/routes/s81fill_stnv_566x1_f9_cb219000e/work/orfs",
+    "raw_export_tcl": "provenance/reconstruction/raw.tcl",
+    "raw_export_tcl_sha256": "91d623fa30279a4dc0aa6294942d56db426bc184cbe4c47236fcfa2910bca07c",
+    "environment_basis": "Reconstruction replay cleared both options; original process environment was not recorded. Exact published output hash is reproduced.",
+    "raw_matches_original_manifest": true,
+    "final_matches_published_export": true,
+    "all_published_files_verified": {
+      "dsfd_stnv_566x1.lef": "e3f3bbbeeb364ae240e7af99378dabb17a201131f264b3576a4f9e71dd3b6940",
+      "dsfd_stnv_566x1_tt.lib": "7a2ba875f5304b2262b4e16cfd5297af62db0c11ebc0ca07af6130ccf7670ad5",
+      "dsfd_stnv_566x1_ff.lib": "0d6e347bdc39a7bee3728aa16a9e424baff9589bed83d97477ad552b810eb5ab",
+      "dsfd_stnv_566x1_ss.lib": "e8fa87909f569b85ad704aecb338be2005bc1edefa95acd0ed7c821891826539",
+      "abstract.json": "4e0a7e9d3c05cd2283a28ad2cff45a3f2a3794d18614e97f8eb1ac912ab1feff",
+      "insertion.json": "7713ee51ac31d59832e343c07ac3bcf073d3912e6832cdcaef487b56ef9fa8c4",
+      "child_lint.json": "0ab01c74e4dcc4c68dc4d3acd8a63e641163d94c0c290df4b7a7459566bbce70"
+    }
+  }
+}

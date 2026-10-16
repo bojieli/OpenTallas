@@ -29,6 +29,7 @@ def main():
     ap.add_argument('--pins', required=True); ap.add_argument('--placement', required=True)
     ap.add_argument('--die', nargs=2, type=float, required=True); ap.add_argument('--tech', required=True)
     ap.add_argument('--out', required=True); ap.add_argument('--k', type=int, default=16)
+    ap.add_argument('--obs-high', action='append', default=[], help='PREFIX:L1,L2 also blocks layers L1,L2 over every block whose name starts with PREFIX (e.g. sm_:M8,M9 = a cluster M8/M9 grant)')
     a = ap.parse_args()
     D = json.load(open(a.pins)); P = json.load(open(a.placement))
     W, H = a.die
@@ -80,7 +81,8 @@ def main():
         for nm, lay, r in pins[b]:
             L += [f'  PIN {nm}', '    DIRECTION INOUT ;', '    USE SIGNAL ;', '    PORT', f'      LAYER {lay} ;',
                   f'        RECT {r[0]:.3f} {r[1]:.3f} {r[2]:.3f} {r[3]:.3f} ;', '    END', f'  END {nm}']
-        L += ['  OBS'] + [x for m in ('M1', 'M2', 'M3', 'M4', 'M5') for x in (f'    LAYER {m} ;', f'      RECT 0 0 {w:.3f} {h:.3f} ;')] + ['  END', f'END M_{b}']
+        hi = [l for spec in a.obs_high for pre, ls in [spec.split(':')] if b.startswith(pre) for l in ls.split(',')]
+        L += ['  OBS'] + [x for m in ('M1', 'M2', 'M3', 'M4', 'M5', *hi) for x in (f'    LAYER {m} ;', f'      RECT 0 0 {w:.3f} {h:.3f} ;')] + ['  END', f'END M_{b}']
     L.append('END LIBRARY')
     (out / 'elements.lef').write_text('\n'.join(L) + '\n')
     # netlist

@@ -65,10 +65,10 @@
  },
  "job": {
   "benches_from": "tools/s81_suhc/hc_owned_nt_benches.json",
-  "owner": "Claude:S-NORM",
-  "branch": "claude/s81-norm-tree-1014",
-  "tag": "s5-centre",
-  "structural_change": "v24 (S-NORM): s4 straight native launch 232.2 (139 pins) / rst_in capture 257.9 with R 188.4, spread 60.8 from a W-corner clock root; clk at the N-face centre x 286.04 over the 115-um flop window, rst_in at the S-face centre (abuts ctfn.rst_c), rr pinned again. 0 cycles.",
+  "owner": "Codex:S81-HC-takeover",
+  "branch": "codex/s81-hc-takeover-2116",
+  "tag": "s6-nohb4",
+  "structural_change": "Remove hold_pad_hb4.tcl from the existing single-root CTFL kit: s5 routed launch fails80pins to242.78ps with capture169.73 and spread20.3; HB4 output padding is the same actual defect class measured and repaired by ctfn_nt n3 (249.8->208.5). Keep exact RTL, all pins/outline/clocks and FF hold constraints/margins; automatic legal hold repair remains mandatory. No floorplan tuning or cycle change.",
   "no_bench_reason": "bit-exactness is gated on the HC slab composition with dsfd_sp_hc NTREE 1 (tools/s81_suhc/hc_ntree_bench.sh: NG 256 production shape exact PASS + mutant 3 FAIL; tools/s81_suhc/hc_gate.py --ntree 1 NG 256 exact 0/1940 x3 + per-tile mutants); the tile alone has no golden",
   "purpose": "el1014-s81-norm-tree LOCAL_SPLIT: fdx_local relay strip",
   "views_to": "physical/ref_tile/s81hc_ctflnt_ref/views",
@@ -88,12 +88,13 @@
   ],
   "reroute_reason": {
    "kind": "pin_register",
-   "source": "results/rtl/s81_layer_tput_1013/norm_tree_1014/native_closure_1014/v24_spread/ctfl_s4_native_audit.json",
+   "source": "results/arch/s81_hc_takeover_1015/ctfl_s5_native_audit.json",
    "cell": "ot_s81_hc_ctfl_nt",
-   "launch_ps": 232.2,
-   "capture_ps": 257.9,
-   "fix": "v24 (S-NORM): s4 straight native launch 232.2 (139 pins) / rst_in capture 257.9 with R 188.4, spread 60.8 from a W-corner clock root; clk at the N-face centre x 286.04 over the 115-um flop window, rst_in at the S-face centre (abuts ctfn.rst_c), rr pinned again. 0 cycles."
-  }
+   "launch_ps": 242.7808,
+   "capture_ps": 169.732,
+   "fix": "Remove hold_pad_hb4.tcl from the existing single-root CTFL kit: s5 routed launch fails80pins to242.78ps with capture169.73 and spread20.3; HB4 output padding is the same actual defect class measured and repaired by ctfn_nt n3 (249.8->208.5). Keep exact RTL, all pins/outline/clocks and FF hold constraints/margins; automatic legal hold repair remains mandatory. No floorplan tuning or cycle change."
+  },
+  "hold_merge": "Held v25 NT coherent set only; full parent/native/source/cost gates remain required."
  },
  "params": {},
  "children": [],
@@ -111,9 +112,6 @@
   "cell": "HB1xp67_ASAP7_75t_R",
   "basis": "Native routed phi-R audit: output lead/HB2/buffer plus capture pad exceed 220/190ps; remove the fixed output pad and use HB1 at input pins, retaining all MIN constraints and automatic hold repair."
  },
- "boundary_tcl": [
-  "physical/common_flow/hold_pad_hb4.tcl"
- ],
  "io_tcl": "physical/s81_die_pins/v24_hc_norm_spread_candidate/ot_s81_hc_ctfl_nt.tcl",
  "assigned_pins": {
   "file": "physical/s81_die_pins/v24_hc_norm_spread_candidate/ot_s81_hc_ctfl_nt.json",
@@ -121,5 +119,9 @@
   "layout": "physical/s81_die_pins/v24_hc_norm_spread_candidate/report.json"
  },
  "orfs_vars": {},
- "slot_change_request": "S-NORM v24 spread candidate (tools/s81/hc_norm_straight_pins.py --spread): even fd pitch 0.197 um (5.6 b/um), clk/reset at the N-face centre; request posted to S-DIE el1011-s81die.log 2026-10-15"
+ "slot_change_request": "S-NORM v24 spread candidate (tools/s81/hc_norm_straight_pins.py --spread): even fd pitch 0.197 um (5.6 b/um), clk/reset at the N-face centre; request posted to S-DIE el1011-s81die.log 2026-10-15",
+ "pin_regs": {
+  "enable": false,
+  "reason": "Existing CLOSED pure one-stage relay has actual input/output data and valid flops shared across facing N/S pins, kept and anchored. This physical hold-cell repair preserves actual RTL stage count; adding a generic wrapper would change3stages and the fixed calendar. Routed native phi-R and explicit pin flop distance remain mandatory."
+ }
 }

@@ -478,6 +478,50 @@ def check_pin_regs(g: Gate, kd: Path, spec: dict, now=None):
           "for a new kit), or record \"pin_regs\": {\"enable\": false, \"reason\": \"...\"}")
 
 
+def check_port_latency(g: Gate, kd: Path, spec: dict, out: str, commit=None, now=None):
+    """PORT-LATENCY (ROOT 2215): a kit that inserts pin registers (kit.env OT_PIN_REGS=1) must leave the elaborated
+    per-port table of its synthesis (ot_pin_regs.tsv + wrapper); it is exported here with tools/ref_tile/port_latency.py
+    (g.port_latency -> gate_result.json "port_latency") so the per-port stages are visible before the route.  A missing or
+    malformed table is a WARN until PIN_REGS_FAIL_AFTER, then a FAIL: the compilers would otherwise see no stages."""
+    import base64
+    import datetime as dt
+    import tempfile
+    import zlib
+    try:
+        env = (kd / "kit.env").read_text()
+    except OSError:
+        return
+    if "--orfs-var OT_PIN_REGS=1" not in env:
+        return
+    late = (now or dt.datetime.now().astimezone()) >= dt.datetime.fromisoformat(PIN_REGS_FAIL_AFTER)
+    sev = "FAIL" if late else "WARN"
+    m = re.search(r"^GATE_PIN_REGS_B64 (\S+) (\S+)\s*$", out, re.M)
+    if not m:
+        g.add(sev, "port_latency", "kit inserts pin registers (OT_PIN_REGS=1) but synthesis left no ot_pin_regs.tsv / "
+              "ot_pin_regs_wrapper.v: the compilers would see no per-port stages",
+              "check that physical/common_flow/ot_keep_regs.tcl sourced ot_pin_regs.tcl in 1_synth (OT_PIN_REGS line in the log)")
+        return
+    sys.path.insert(0, str(ROOT / "tools/ref_tile"))
+    import port_latency as PL
+    with tempfile.TemporaryDirectory() as td:
+        tab, wrap = Path(td) / "ot_pin_regs.tsv", Path(td) / "ot_pin_regs_wrapper.v"
+        tab.write_bytes(zlib.decompress(base64.b64decode(m.group(1))))
+        wrap.write_bytes(zlib.decompress(base64.b64decode(m.group(2))))
+        src = commit if commit and re.fullmatch(r"[0-9a-f]{40}", str(commit)) else "0" * 40
+        try:
+            rep = PL.export(tab, wrap, spec["top"], src)
+        except ValueError as ex:
+            g.add(sev, "port_latency", f"elaborated pin-register table rejected: {ex}", "fix ot_pin_regs.tcl output / the kit")
+            return
+    if src != commit:
+        rep["source_commit"] = None
+        rep["source_note"] = f"gate snapshot {commit}: not a git commit; the route's CLOSED record carries the bound report"
+    g.port_latency = rep
+    regs = {d: sum(1 for p in rep["ports"].values() if p["dir"] == d and p["register_edges"]) for d in ("input", "output")}
+    g.add("INFO", "port_latency", f"elaborated pin registers: {regs['input']} input / {regs['output']} output ports +1 edge; "
+          f"{sum(1 for p in rep['ports'].values() if not p['register_edges'])} ports pass through (clock/reset/excluded/inout)")
+
+
 def check_kit(g: Gate, kd: Path, job: dict | None, commit=None):
     stale = stale_multi_root_sdcs(kd)
     if stale:
@@ -597,6 +641,10 @@ def check_kit(g: Gate, kd: Path, job: dict | None, commit=None):
     return spec
 
 
+# GATE STEP CAP (ROOT 2026-10-15): seconds one capped gate step (CTS run, trial GRT) may take before it is a stall
+GATE_STEP_CAP_S = int(os.environ.get("OT_GATE_STEP_CAP_S", "14400"))
+
+
 # --------------------------------------------------------------------------------------------- remote
 REMOTE_SH = r"""set -uo pipefail
 R={R}; mkdir -p $R/src $R/bin
@@ -612,6 +660,15 @@ for e in ${{PATH//:/ }}; do if [ -x "$e/docker" ] && ! [ "$e/docker" -ef "$0" ];
   exec "$e/docker" "$@"; fi; done; exit 127
 EOS
 chmod +x $R/bin/docker; export PATH=$R/bin:$PATH
+# GATE STEP CAP (ROOT 2026-10-15): a CTS / trial-GRT step that has not finished in {STEP_CAP} s is a stall (a 15 h
+# dsfd_vm_write_dispatch_b24 gate sat in the DPL negotiation legalizer at 150k illegal cells after repair_design tripled
+# the instance count); kill the named container and report GATE_STALL instead of holding a fleet slot for days
+ot_capped() {{  # ot_capped NAME docker run --name NAME ...
+  local n=$1 t0=$(date +%s) rc; shift
+  timeout -k 60 {STEP_CAP} "$@"; rc=$?
+  if [ $(( $(date +%s) - t0 )) -ge {STEP_CAP} ]; then docker kill "$n" >/dev/null 2>&1; echo "GATE_STALL $n exceeded {STEP_CAP} s"; fi
+  return $rc
+}}
 docker image inspect --format 'GATE_TOOL_IMAGE_ID={{{{.Id}}}} GATE_TOOL_IMAGE_DIGESTS={{{{json .RepoDigests}}}}' {IMG} 2>/dev/null
 printf 'GATE_TOOL_CTS_MACRO_CLUSTER=%s\n' "${{OT_CTS_MACRO_CLUSTER:-}}"
 cd $R/src && echo {COMMIT} > SOURCE_COMMIT
@@ -648,8 +705,11 @@ if m:
 print("GATE_PORTS "+json.dumps(ports))
 EOP
 grep -h "Chip area\|chip area" $C/reports/asap7/*/base/synth_stat.txt 2>/dev/null | tail -1 | sed 's/^/GATE_AREA /'
+# PORT-LATENCY (ROOT 2215): the elaborated pin-register table + wrapper of this synthesis (ot_pin_regs.tcl) come back for
+# tools/ref_tile/port_latency.py; the closure loop records the same export from the route at CLOSE for the compilers
+[ -s $B/ot_pin_regs.tsv ] && [ -s $B/ot_pin_regs_wrapper.v ] && python3 -c "import zlib,base64,sys;print('GATE_PIN_REGS_B64 '+' '.join(base64.b64encode(zlib.compress(open(f,'rb').read(),9)).decode() for f in sys.argv[1:]))" $B/ot_pin_regs.tsv $B/ot_pin_regs_wrapper.v
 if [ "{CTS}" = 1 ]; then
-  docker run --rm -v $R/src:/src:ro -v $C:/work -w /OpenROAD-flow-scripts/flow {IMG} bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; python3 /src/tools/orfs_hold_mm.py /OpenROAD-flow-scripts/flow/scripts >/dev/null && make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base cts" > $R/cts.log 2>&1; echo "GATE_CTS_RC=$?"
+  ot_capped gate_cts_${{R##*/}} docker run --rm --name gate_cts_${{R##*/}} -v $R/src:/src:ro -v $C:/work -w /OpenROAD-flow-scripts/flow {IMG} bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; python3 /src/tools/orfs_hold_mm.py /OpenROAD-flow-scripts/flow/scripts >/dev/null && make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base cts" > $R/cts.log 2>&1; echo "GATE_CTS_RC=$?"
   grep -h "\[ERROR" $R/cts.log | head -3 | sed 's/^/GATE_CTSERR /'
   grep -h "^OT_SPINE iter\|^REF_TILE spine" $R/cts.log | tail -2 | sed 's/^/GATE_SPINE /'
   grep -h "OT_SPINE done port" $R/cts.log $C/logs/asap7/*/base/4_1_cts.log 2>/dev/null | head -1 | sed 's/^/GATE_SPINE_DONE /'
@@ -664,7 +724,7 @@ fi
 # TRIAL ROUTE (owner rule 20:45 10-15): parent / cluster kits (hardened children or >= 4 macros) place + global-route
 # here (no detailed route): overflow, per-layer usage and the congestion hotspots come back; overflow > 0 refuses the kit
 if [ "{TRIAL}" = 1 ]; then
-  docker run --rm -v $R/src:/src:ro -v $C:/work -w /OpenROAD-flow-scripts/flow {IMG} bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; python3 /src/tools/orfs_hold_mm.py /OpenROAD-flow-scripts/flow/scripts >/dev/null && make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base GLOBAL_ROUTE_ARGS='-allow_congestion -verbose' GENERATE_ARTIFACTS_ON_FAILURE=1 grt" > $R/grt.log 2>&1; echo "GATE_GRT_RC=$?"
+  ot_capped gate_grt_${{R##*/}} docker run --rm --name gate_grt_${{R##*/}} -v $R/src:/src:ro -v $C:/work -w /OpenROAD-flow-scripts/flow {IMG} bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; python3 /src/tools/orfs_hold_mm.py /OpenROAD-flow-scripts/flow/scripts >/dev/null && make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base GLOBAL_ROUTE_ARGS='-allow_congestion -verbose' GENERATE_ARTIFACTS_ON_FAILURE=1 grt" > $R/grt.log 2>&1; echo "GATE_GRT_RC=$?"
   GL=$(ls $C/logs/asap7/*/base/5_1_grt.log 2>/dev/null | head -1)
   [ -n "$GL" ] && grep -E "^(M[0-9]+|Total) +[0-9]+ +[0-9]+ +[0-9.]+%" $GL | tail -12 | sed 's/^/GATE_GRT_LAYER /'
   [ -n "$GL" ] && grep -hE "GRT-0116|Total overflow|overflow" $GL | tail -3 | sed 's/^/GATE_GRT_NOTE /'
@@ -900,7 +960,7 @@ def remote(g: Gate, kd: Path, spec: dict, host: str, cap: int, mem: int, cts: bo
     sh = REMOTE_SH.format(R=R, COMMIT=commit, CAP=(cap if cap > 0 else "unlimited"), KIT=kd.relative_to(ROOT), IMG="openroad/orfs:latest",
                           RC=",".join(GATE_REFUSE), TOP=spec["top"], CTS=1 if cts else 0, PGM=PF.ROUTE_PIN_GROUP_MAX,
                           TRIAL=1 if is_parent_kit(spec) else 0, CLKS=",".join(RT.clock_ports(spec)),
-                          CLK=spec["clock_port"], ARCHIVE_SHA256=binding["archive_sha256"])   # ck_insertion (9f48f5ed8): --clock = clock name or its source port; the default 'ck' failed every kit whose port is 'clk'
+                          CLK=spec["clock_port"], ARCHIVE_SHA256=binding["archive_sha256"], STEP_CAP=GATE_STEP_CAP_S)   # ck_insertion (9f48f5ed8): --clock = clock name or its source port; the default 'ck' failed every kit whose port is 'clk'
     sh = gate_route_clock_hooks(sh, spec)
     sh = gate_route_hold_context(sh, spec, str(kd.relative_to(ROOT)))
     binding["route_hold_context"] = RT.route_hold_context(spec, str(kd.relative_to(ROOT)))
@@ -1116,6 +1176,7 @@ def analyse_remote(g: Gate, kd: Path, spec: dict, out: str, cts: bool, binding: 
         sev = "INFO" if RT.UTIL_LO <= u <= RT.UTIL_HI + 0.05 else ("FAIL" if u > 0.70 else "WARN")
         g.add(sev, "util", f"synthesized std area {area:.0f} um2 + macros {mac:.0f} in core {core:.0f}: util {u:.0%}",
               f"set \"std_area_um2\": {area:.0f} and drop 'outline' (gen sizes to util 0.52)" if sev != "INFO" else "")
+    check_port_latency(g, kd, spec, out, binding.get("commit"))
     for line in re.findall(r"^GATE_TB (.*)$", out, re.M):
         if line.startswith("TEXTBOOK_LINT:"):
             continue
@@ -1129,6 +1190,10 @@ def analyse_remote(g: Gate, kd: Path, spec: dict, out: str, cts: bool, binding: 
             g.add("INFO", "textbook", line[len("textbook_lint: "):][:300])
             continue
         g.add("FAIL" if tag == "REFUSE" else "WARN", f"textbook.{chk}", msg[:500], TEXTBOOK_FIX.get(chk, ""))
+    for stall in re.findall(r"^GATE_STALL (.*)$", out, re.M):
+        g.add("FAIL", "gate_stall", f"{stall[:200]} (step cap; repair/legalizer blow-up or GRT stall)",
+              "read the remote cts.log / grt.log tail: the route would stall the same way; reduce density / fix the "
+              "floorplan or the repair_design fan-out cause before routing")
     if cts and kv.get("GATE_CTS_RC") not in (None, "0"):
         g.add("FAIL", "cts_run", "placement / CTS of the kit failed: " + "; ".join(re.findall(r"^GATE_CTSERR (.*)$", out, re.M))[:500],
               "the route would fail the same way (DPL-0033 / GPL-0305 / CTS-*): fix the floorplan / density before routing")
@@ -1398,6 +1463,8 @@ def write_gate_result(g: Gate, kd: Path, cts: bool, host: str):
            "generated": time.strftime("%Y-%m-%dT%H:%M:%S%z"), "host": getattr(g, "remote_host", host), "cts": bool(cts),
            "commit": g.source_binding.get("commit"), "source_binding": g.source_binding,
            "clock": g.clock, "items": [i for i in g.items if i["severity"] != "INFO"][:40]}
+    if getattr(g, "port_latency", None):
+        out["port_latency"] = g.port_latency
     previous = kd / CLOCK_RESULT
     if previous.exists():
         import hashlib

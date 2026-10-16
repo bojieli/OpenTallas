@@ -14,6 +14,9 @@
 // E; the core picks slice (lane[5:4]) or the RF class-4 word (osel) and registers operand + command at E+1; the reducer
 // samples at E+2 (its issue), scalar valid held E+11.. (issue + 9, reducer r3 registered ingress + SRAM-operand stages). tag[8] = write RF word tag[7:0] (through the top's
 // relay routes, which return to this replica's write port rf_w* like every other replica).
+// Die ports (H-NETLIST 2026-10-15): rf_drain_cmd = slice-0 port-0 vmw_cmd[38:37] (the drain decode moved here from the
+// quarter composition) and red_rf_v = red_sv && red_tag[8] (the RF relay head valid, moved here from the top), so
+// the die composition carries wires only. Function and edges unchanged.
 // Checks (FAULT): two RF writers on one bank in one edge; class-5 address not sector aligned; an RF-source drain without
 // the class-5 read one edge earlier; reducer fault.
 // ---------------------------------------------------------------------------------------------------------------------
@@ -22,15 +25,19 @@ module ot_hbm_su_static_qcore #(parameter integer MUT=0)(
  input wire clk_ctl,clk_red,rst_n,
  input wire [6*9-1:0] rf_rd_cmd,
  input wire [73:0] red_cmd,
- input wire rf_drain_now,                     // slice 0 port 0 vmw command is a valid src-1 (RF) drain at this edge
+ input wire [1:0] rf_drain_cmd,               // slice 0 port 0 vmw_cmd[38:37] = {v, src1}: a valid RF (src 1) drain at
+                                              // this edge when both are set (decoded here: no AND in the composition)
  input wire [4*32-1:0] slice_x,
  input wire [3:0] rf_wv, input wire [4*8-1:0] rf_wa, input wire [4*32-1:0] rf_wd,
  output reg [4*32-1:0] rf_bword,
  output reg [4*9-1:0] rf_bcmd,
  output reg [255:0] rf_dsec,
  output wire red_sv, output wire [31:0] red_tag, output wire [31:0] red_x,
+ output wire red_rf_v,                        // RF-relay head valid = red_sv && red_tag[8] (the scalar writes RF word
+                                              // red_tag[7:0]); same edge as red_sv/red_tag/red_x
  output reg fault
 );
+ wire rf_drain_now=rf_drain_cmd[1]&&(rf_drain_cmd[0]||MUT==16);   // MUT 16 (bench): src bit ignored
  wire [64*6-1:0] rf_rv; wire [64*6*2-1:0] rf_ra; wire [64*6*32-1:0] rf_q;
  wire [63:0] rf_wvb; wire [64*2-1:0] rf_wab; wire [64*32-1:0] rf_wdb; wire [63:0] rf_wconf;
  for(genvar bb=0;bb<64;bb=bb+1)begin:g_rfb
@@ -84,6 +91,7 @@ module ot_hbm_su_static_qcore #(parameter integer MUT=0)(
  ot_hbm_su_reduce_static #(.AW(10)) u_red(.clk(clk_red),.rst_n(rst_n),.cmd_valid(rc_v),.cmd_op(rc_op),.cmd_a(rc_a),
   .cmd_b(rc_b),.cmd_dst(rc_d),.operand_fp32(rc_x),.cmd_tag(rc_tag),.scalar_valid(red_sv),.scalar_tag(red_tag),
   .scalar_fp32(red_x),.scalar_bf16(),.fault(red_fault));
+ assign red_rf_v=red_sv&&(red_tag[8]||MUT==32);                    // MUT 32 (bench): tag[8] ignored
  always @(posedge clk_ctl or negedge rst_n)
   if(!rst_n)fault<=1'b0; else if((|rf_wconf)||dbad||red_fault)fault<=1'b1;
 endmodule

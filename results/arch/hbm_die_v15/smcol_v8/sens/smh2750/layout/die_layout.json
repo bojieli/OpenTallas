@@ -1,0 +1,13 @@
+{
+ "blocks": 195,
+ "buses": 637,
+ "bus_bits": 365380,
+ "max_stages": 42,
+ "grt": null,
+ "note": "",
+ "stage_model": "ceil(manhattan/500 um) - 1 where the plan gives none",
+ "images": {
+  "floorplan": "results/arch/hbm_die_v15/smcol_v8/sens/smh2750/layout/die_floorplan.png",
+  "buses": "results/arch/hbm_die_v15/smcol_v8/sens/smh2750/layout/die_buses.png"
+ }
+}

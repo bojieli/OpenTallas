@@ -1,0 +1,50 @@
+{
+  "cell": "dsfd_rly_283_WE",
+  "view": "physical/ref_tile/s81_rly_283_we/views/dsfd_rly_283_WE",
+  "job": "s81_rly_283_we-r4-1480fbbb1",
+  "host": "ot-epyc1tb",
+  "run": "/srv/opentallas/claude/closure-loop/s81_rly_283_we-r4-1480fbbb1",
+  "record_commit": "ae6ea64dceb2249e0cbfb70a7ea9d4689d74d74c",
+  "source_commit": "1480fbbb1574d66e3f9668b3c005556f3d6ce8c7",
+  "orfs_dir": "/srv/opentallas/claude/closure-loop/s81_rly_283_we-r4-1480fbbb1/routes/s81_rly_283_we_r4_1480fbbb1/work/orfs",
+  "mismatches": [
+    "dsfd_rly_283_WE.lef"
+  ],
+  "raw_lef_expected": "df378b5cbf37acbb3edaabd1ffde27c0e9baa45e2e3c4a14e1ae6f7a29bcc0b3",
+  "image": "openroad/orfs:latest",
+  "published_hashes": {
+    "dsfd_rly_283_WE.lef": "f3d128d9788119f11178c80460c9e7bd55b5f2aa54fae232df19538eec9f674d",
+    "dsfd_rly_283_WE_tt.lib": "7974312d7f07025b9d40d81a028c33859fb611624932e754722074eb1095f3e1",
+    "dsfd_rly_283_WE_ff.lib": "4db4fe4d93a85c38851242f6779769de76f3c95ce1226f594fedebe14e396382",
+    "dsfd_rly_283_WE_ss.lib": "a9f78a4307fcf0d4c70a0ef9d7db6aa67459c37c780d88dfa1942925f357560d",
+    "abstract.json": "c003b9b03234c745c825f50fab0448772609ff3f2f0f33ebc9e39979d8d85b04",
+    "insertion.json": "a13ffa341fae2a3b001f017262d07f5a2d01d292999d89e359199f75743eab82",
+    "child_lint.json": "1e7dedbdf3cac7c85fef2efe16d3b66cc86122ca63892b8f5331f6f3e3bb06a0"
+  },
+  "passed": true,
+  "raw_sha256": "df378b5cbf37acbb3edaabd1ffde27c0e9baa45e2e3c4a14e1ae6f7a29bcc0b3",
+  "final_sha256": "f3d128d9788119f11178c80460c9e7bd55b5f2aa54fae232df19538eec9f674d",
+  "helper_sha256": "c3cae85e3aa1a8da5374284fe57418b2230ceb208aa76eff4567c6993bbe0c05",
+  "environment": {
+    "OT_OBS_CLOSE": null,
+    "OT_OBS_CLOSE_UM": null
+  },
+  "environment_basis": "Reconstruction replay cleared both options; original process environment was not recorded. Exact published output hash is reproduced.",
+  "invariants": {
+    "macro_name_unchanged": true,
+    "outline_unchanged": true,
+    "signal_pin_names_unchanged": true,
+    "original_signal_pin_rectangles_retained": true,
+    "power_pin_rectangles_unchanged": true
+  },
+  "processor_summary": "pinstub: 0 OBS rects moved into 0 pins: ; pockets: 50 OBS rects added on M5 (gaps < 1.536 um between own-layer obstacles)",
+  "published_files_verified": {
+    "dsfd_rly_283_WE.lef": true,
+    "dsfd_rly_283_WE_tt.lib": true,
+    "dsfd_rly_283_WE_ff.lib": true,
+    "dsfd_rly_283_WE_ss.lib": true,
+    "abstract.json": true,
+    "insertion.json": true,
+    "child_lint.json": true
+  }
+}

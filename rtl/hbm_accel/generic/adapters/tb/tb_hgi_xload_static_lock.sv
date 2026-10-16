@@ -16,6 +16,8 @@ module tb_xload_static_lock;
     localparam integer MS = 3;
 `elsif MUT4
     localparam integer MS = 4;
+`elsif MUT5
+    localparam integer MS = 5;   // cl2d: ring controls sent on the old (late) edge -> pin-registered ring writes one edge late
 `else
     localparam integer MS = 0;
 `endif
@@ -40,7 +42,7 @@ module tb_xload_static_lock;
 `ifdef XLOAD_CL2
     // H-SM 2026-10-15: the hardened-leaf cluster successor (ot_hgi_sm_xload_static_cl2) is the unit under the lock;
     // the flat clock-leaf cl runs beside it on the same stimulus and every output must match on every cycle.
-    ot_hgi_sm_xload_static_cl2 #(.RD_LAT(RD_LAT), .MUT(MS)) ub (.clk(clk), .clk_bf(clk), .clk_qlo(clk), .clk_qhi(clk), .clk_bd(clk),
+    ot_hgi_sm_xload_static_cl2 #(.RD_LAT(RD_LAT), .MUT(MS)) ub (.clk(clk), .clk_eg(clk), .clk_bf({4{clk}}), .clk_qlo(clk), .clk_qhi(clk), .clk_bd(clk),
         .rst_n(rst_n), .x_v(xs_v), .x_base(x_base), .x_n(x_n),
 `elsif XLOAD_CLOCK_LEAVES
     // five related phase-0 roots of the clock-leaf successor, all from the die clock (local mask capture built in)

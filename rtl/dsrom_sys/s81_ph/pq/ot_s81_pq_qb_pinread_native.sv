@@ -1,4 +1,10 @@
 `timescale 1ns/1ps
+// P10 (S-ELEM-PQ 2026-10-15): separate W-face capture and E-face launch flops for the head read index.
+// P9 native audit (record 2f0cf4367): i0/i1 were both the W-face h_b capture and the E-face i0/i1 launch (142.56 um
+// apart) and rq0/rq1 were decoded after them (launch 321-333 ps, captures 191-221 ps): unsatisfiable by placement.
+// Now h_b*/hw_sv/consume land in W capture flops (i0w/i1w/gates/consume_1), and i0/i1/rq0/rq1 are E launch flops
+// loaded from them: +1 head read edge (read_latency_delta 3 -> 4; the metadata path keeps its P9 timing and the
+// valid/select/metadata alignment line grows by one stage). Every head pin is registered at its face.
 // P5 candidate: capture all1024 incoming bank-data bits before4:1selection.
 // Matching valid/select/metadata stage adds exactly1normal read edge; original P4 source stays intact.
 module ot_s81_pq_qb_headpc_native (
@@ -12,10 +18,10 @@ module ot_s81_pq_qb_headpc_native (
  // Per-bank read enables share the registered index edge. P9: decoded from the pin-capture flops
  // (consume_1, gates, i0/i1 bank bits) at the output instead of from the pins, same edge, so every
  // head input pin loads one capture flop (P8 native audit: h_b*/consume/hw_sv captures up to 244.6 ps).
- output wire[3:0] rq0,rq1,
+ output reg[3:0] rq0,rq1,
  output reg[255:0] hq0,hq1,output reg[9:0] he0,he1,output wire fault
 );
-    reg [1:0] gates; reg consume_1;
+    reg [1:0] gates; reg consume_1; reg [15:0] i0w, i1w;
     // Reset: region 0 = index/enable/pipe control, regions 1..4 = the written[] bits of bank 0..3 (96 each).
     // The 6,144 metadata flops carry no reset (gate p1: one relay drove 8,103 loads through the meta enables).
     wire [4:0] rst_l;
@@ -46,18 +52,21 @@ module ot_s81_pq_qb_headpc_native (
         end
     end
     always @(posedge clk or negedge rst_l[0])
-        if (!rst_l[0]) begin i0 <= 0; i1 <= 0; gates <= 0; consume_1 <= 0; end
-        else begin i0 <= h_b0; i1 <= h_b1; gates <= hw_sv; consume_1 <= consume; end
-    assign rq0 = {4{consume_1 & gates[0]}} & (4'b1 << {i0[3], i0[0]});
-    assign rq1 = {4{consume_1 & gates[1]}} & (4'b1 << {i1[3], i1[0]});
-    wire [1:0] bank0 = {i0[3], i0[0]}, bank1 = {i1[3], i1[0]};
-    wire [6:0] row0 = {i0[8:4], i0[2:1]}, row1 = {i1[8:4], i1[2:1]};
+        if (!rst_l[0]) begin i0w <= 0; i1w <= 0; gates <= 0; consume_1 <= 0; i0 <= 0; i1 <= 0; rq0 <= 0; rq1 <= 0; end
+        else begin
+            i0w <= h_b0; i1w <= h_b1; gates <= hw_sv; consume_1 <= consume;          // W-face capture
+            i0 <= i0w; i1 <= i1w;                                                     // E-face launch (+1)
+            rq0 <= {4{consume_1 & gates[0]}} & (4'b1 << {i0w[3], i0w[0]});
+            rq1 <= {4{consume_1 & gates[1]}} & (4'b1 << {i1w[3], i1w[0]});
+        end
+    wire [1:0] bank0 = {i0w[3], i0w[0]}, bank1 = {i1w[3], i1w[0]};
+    wire [6:0] row0 = {i0w[8:4], i0w[2:1]}, row1 = {i1w[8:4], i1w[2:1]};
     // Mutable metadata belongs beside the head read-index registers. Each bank
     // still has exactly 96 rows, with exponent/parity/written = 16 bits/row.
     reg [15:0] meta [0:3][0:95];
     wire [95:0] written [0:3];
-    reg [1:0] selected0[0:3], selected1[0:3], valid[0:3];
-    reg [15:0] m0[0:3],m1[0:3];
+    reg [1:0] selected0[0:4], selected1[0:4], valid[0:4];
+    reg [15:0] m0[0:4],m1[0:4];
     reg sticky,check0,check1;
     reg [4:0] expected0,expected1;
     integer k,j;
@@ -123,21 +132,21 @@ module ot_s81_pq_qb_headpc_native (
     always @(posedge clk or negedge rst_l[0]) begin
       if(!rst_l[0]) begin
         sticky<=0;check0<=0;check1<=0;
-        for(j=0;j<4;j=j+1) begin valid[j]<=0;selected0[j]<=0;selected1[j]<=0; end
+        for(j=0;j<5;j=j+1) begin valid[j]<=0;selected0[j]<=0;selected1[j]<=0; end
       end else begin
         selected0[0]<=bank0; selected1[0]<=bank1;
         valid[0]<=gates & {2{consume_1}};
         // P9: the per-bank read is one edge later (r0c from i0), so the bank select lands in m*[2] with
         // selected*[1]; m*[1] is no longer a stage. m*[3] holds the same row on the same edge as P8.
         m0[2]<=mb0_q[selected0[1]]; m1[2]<=mb1_q[selected1[1]];
-        for(j=1;j<4;j=j+1) begin
+        for(j=1;j<5;j=j+1) begin
           selected0[j]<=selected0[j-1];selected1[j]<=selected1[j-1];
           valid[j]<=valid[j-1];
           if(j>2) begin m0[j]<=m0[j-1];m1[j]<=m1[j-1]; end
         end
-        check0<=valid[3][0];check1<=valid[3][1];
-        expected0<=m0[3][14:10];expected1<=m1[3][14:10];
-        if((valid[3][0]&&!m0[3][15]) || (valid[3][1]&&!m1[3][15])) sticky<=1;
+        check0<=valid[4][0];check1<=valid[4][1];
+        expected0<=m0[4][14:10];expected1<=m1[4][14:10];
+        if((valid[4][0]&&!m0[4][15]) || (valid[4][1]&&!m1[4][15])) sticky<=1;
         if(check0 && expected0!={^he0,^hq0[255:192],^hq0[191:128],^hq0[127:64],^hq0[63:0]}) sticky<=1;
         if(check1 && expected1!={^he1,^hq1[255:192],^hq1[191:128],^hq1[127:64],^hq1[63:0]}) sticky<=1;
       end
@@ -152,19 +161,19 @@ module ot_s81_pq_qb_headpc_native (
     assign selected_data=rd_data_q;
 `endif
     always @(posedge clk) begin
-      hq0<=valid[3][0] ? selected_data[256*selected0[3]+:256] : 256'd0;
+      hq0<=valid[4][0] ? selected_data[256*selected0[4]+:256] : 256'd0;
 `ifdef OT_S81_PQ_QB_HEAD_MUT
-      hq1<=valid[3][1] ? selected_data[256*selected0[3]+:256] : 256'd0;
+      hq1<=valid[4][1] ? selected_data[256*selected0[4]+:256] : 256'd0;
 `else
-      hq1<=valid[3][1] ? selected_data[256*selected1[3]+:256] : 256'd0;
+      hq1<=valid[4][1] ? selected_data[256*selected1[4]+:256] : 256'd0;
 `endif
-      he0<=valid[3][0] ? m0[3][9:0] : 10'd0;
-      he1<=valid[3][1] ? m1[3][9:0] : 10'd0;
+      he0<=valid[4][0] ? m0[4][9:0] : 10'd0;
+      he1<=valid[4][1] ? m1[4][9:0] : 10'd0;
     end
 `ifndef SYNTHESIS
     always @(posedge clk) if(rst_l[0]) begin
-      if(consume_1&&gates[0]&&i0>=384) $fatal(1,"QB q0 index beyond production storage");
-      if(consume_1&&gates[1]&&i1>=384) $fatal(1,"QB q1 index beyond production storage");
+      if(consume_1&&gates[0]&&i0w>=384) $fatal(1,"QB q0 index beyond production storage");
+      if(consume_1&&gates[1]&&i1w>=384) $fatal(1,"QB q1 index beyond production storage");
       if(aqi[9]&&(aqi[8:1]>=192||aqi[1])) $fatal(1,"QB write pair outside legal loader protocol");
     end
 `endif

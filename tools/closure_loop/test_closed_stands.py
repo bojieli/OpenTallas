@@ -159,6 +159,26 @@ class Gate(unittest.TestCase):
         self.assertIn("die_window, not slot_change", r["message"])
 
     # ---------------------------------------------------------------- pin_register
+    def test_pin_wrapper_changes_are_actual_rtl_changes(self):
+        path = 'physical/ref_tile/t/kit.env'
+        old = "\nEXTRA=(--orfs-var OT_PIN_REGS=1 --orfs-var OT_PIN_REGS_CLOCK=ck --orfs-var OT_PIN_REGS_EXCLUDE='^(di0|rs)$')\n"
+        new = old.replace('(di0|rs)', '(di0|fi0|rs)')
+        self.r.c['a'*36][path] += old
+        self.r.c['bbbbbbbbb'][path] += new
+        result = self.run_(spec(reroute_reason=dict(kind='rtl_change')))
+        self.assertEqual(result['verdict'], 'PASS')
+        self.assertIn('pin-wrapper RTL generation differs', result['message'])
+        # Purely physical knobs and disabled wrapper exclusions remain SAME.
+        self.r.c['bbbbbbbbb'][path] = self.r.c['a'*36][path] + 'HM=0.05\n'
+        self.assertEqual(self.run_(spec(reroute_reason=dict(kind='rtl_change')))['verdict'], 'REFUSE')
+        self.r.c['a'*36][path] = KIT.format(w=512, fw=17.28, pv='M5', rl='M2 M5') + old.replace('REGS=1', 'REGS=0')
+        self.r.c['bbbbbbbbb'][path] = KIT.format(w=512, fw=17.28, pv='M5', rl='M2 M5') + new.replace('REGS=1', 'REGS=0')
+        self.assertEqual(self.run_(spec(reroute_reason=dict(kind='rtl_change')))['verdict'], 'REFUSE')
+
+    def test_dynamic_or_unreadable_wrapper_is_not_verified_change(self):
+        self.assertIsNone(CS.pin_wrapper_args("EXTRA=(--orfs-var OT_PIN_REGS=1 --orfs-var OT_PIN_REGS_CLOCK=$CLOCK)\n"))
+        self.assertIsNone(CS.pin_wrapper_args("EXTRA+=('--orfs-var OT_PIN_REGS=1')\n"))
+
     def test_pin_register(self):
         ok = {"kind": "pin_register", "source": "results/arch/cuts.json", "cell": "dsfd_su_t_ctl", "pair_cost_ps": 766.1,
               "fix": "kit recipe 2: pin flops and hold stages FIRM at the pins"}

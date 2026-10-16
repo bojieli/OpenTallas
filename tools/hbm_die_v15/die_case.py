@@ -595,7 +595,7 @@ set_wire_rc -signal -layer M6
 set_routing_layers -signal M4-M9 -clock M7-M9
 set_global_routing_layer_adjustment M4-M5 0.30
 set_global_routing_layer_adjustment M6-M9 0.146
-{REPEAT}
+{{REPEAT}}
 set t0 [clock seconds]
 global_route -congestion_iterations 30 -allow_congestion -verbose -congestion_report_file /work/out/grt_congestion.rpt
 puts "OT_GRT_S [expr {{[clock seconds]-$t0}}]"
