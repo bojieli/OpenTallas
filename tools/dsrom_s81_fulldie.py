@@ -8077,7 +8077,14 @@ def _svc_chains(m, CH8, P, cor, end_spec, hub_block):
         bx = blk.x + blk.w / 2 + 300.0
         by_ = blk.y + blk.h if name == 'sel' else blk.y
         endpoint = (he.x + he.w / 2, he.y + he.h / 2)
-        path = _wide_vm_band_path(m, cor, name, (bx, by_), endpoint, yo)
+        if vmc_hub():
+            # The C5 service floor is not the vmc SU|VM channel.  Derive
+            # this relocated band-to-VM connection from its actual end faces
+            # rather than retaining C5's intermediate point inside the SU.
+            path = _vmc_route(m, (bx, by_), 'N' if name == 'sel' else 'S',
+                              endpoint, 'S', skip=(blk.name, he.name))
+        else:
+            path = _wide_vm_band_path(m, cor, name, (bx, by_), endpoint, yo)
         if path is None:
             path = [(bx, by_), (bx, yo), (vch_x(m, name), yo),
                     (vch_x(m, name), endpoint[1]), endpoint]
