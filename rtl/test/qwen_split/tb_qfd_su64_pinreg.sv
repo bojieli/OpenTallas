@@ -158,8 +158,10 @@ module tb_qfd_su64_pinreg;
             repeat (80) @(negedge clk);
         end else begin
             for (n = 0; n < 3; n = n + 1) begin
-                cp = {7'd16 + n, 24'h00a000 + 24'd4096*n, 24'h002000 + 24'd2048*n, 1'b1}; @(negedge clk); cp = 0; copies = copies + 1;
+                // sized fields: an integer n would widen the concat (beats=0 -> copy fault, no beats)
+                cp = {7'(16 + n), 24'(24'h00a000 + 4096*n), 24'(24'h002000 + 2048*n), 1'b1}; @(negedge clk); cp = 0; copies = copies + 1;
                 repeat (120) @(negedge clk);
+                if (nr0 != 16 || nw0 != 16) bad("copy beats != 16 (stimulus)");
                 if (nr1 != nr0 || nw1 != nw0) bad("copy beat counts");
                 if (fr1 - fr0 != 2) bad("copy read edge (+2)");
                 if (fw1 - fw0 != 3) bad("copy write edge (+3)");
