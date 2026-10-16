@@ -36,6 +36,10 @@
 // parity at its read; the marker must be sampled high by serial edge 2 only.  A slip sets a sticky fault that is
 // OR-ed into status bit 3 (the capture fault bit: cfault | proto_fault | g_fault), which t_cd[10] carries to the
 // field sequencer.  With aligned resets it never fires, so t_st[3] is unchanged.
+// PIN REGISTERS (S leaf): every input (b0 / b2 / b3 / bpar) is captured unconditionally at EVERY serial edge into its
+// own flop (sh0 / sh2 / sh3 / bq), and the fixed-edge select works on those flops.  Zero added latency: each bank's
+// first serial edge strictly after its write (b0: tick 4, b2: 8, b3: 12) precedes its fixed read edge (8 / 12 / 16),
+// and the next write (12 / 18 / 21) follows it.  The cross-root arcs stay pin -> flop (setup >= 2 ticks).
 // Reset: stq holds 0 until the first written bank is read (serial edge 2 of the first epoch).
 // Mutants: S81PH_CAPS_MUT_STATUS (t_st[3] inverted, the externally consumed fault bit, as the old leaf);
 //          DSFD_CAPT_STX43_MUT_PHASE (the n = 3 bank is read at serial edge 0, with the n = 2 bank's slot).
@@ -83,6 +87,8 @@ module dsfd_capt_status_x43_s (
     // sp = index of the last serial edge (2 at reset: the next edge is epoch edge 0)
     reg [1:0] sp; reg se; reg warm; reg mk; reg flt;
     reg [63:0] stq;
+    reg [63:0] sh0, sh2, sh3; reg [2:0] bq;               // input pin registers, loaded at every serial edge
+    always @(posedge ckv[0]) begin sh0 <= b0; sh2 <= b2; sh3 <= b3; bq <= bpar; end
     wire [1:0] sn = (sp == 2'd2) ? 2'd0 : sp + 2'd1;   // serial edge index of THIS edge
     always @(posedge ckv[0] or negedge rsv[0])
         if (!rsv[0]) begin sp <= 2'd2; se <= 1'b0; warm <= 1'b0; mk <= 1'b0; flt <= 1'b0; end
@@ -93,9 +99,9 @@ module dsfd_capt_status_x43_s (
             // previous edge's sample: at serial edge 0 it must be 1, else 0.
             if (warm && mk != (sn == 2'd0)) flt <= 1'b1;
             case (sn)
-                2'd0: begin se <= ~se; if (warm && bpar[1] != se) flt <= 1'b1; end
-                2'd1: begin warm <= 1'b1; if (warm && bpar[2] != ~se) flt <= 1'b1; end
-                default: if (warm && bpar[0] != se) flt <= 1'b1;
+                2'd0: begin se <= ~se; if (warm && bq[1] != se) flt <= 1'b1; end
+                2'd1: begin warm <= 1'b1; if (warm && bq[2] != ~se) flt <= 1'b1; end
+                default: if (warm && bq[0] != se) flt <= 1'b1;
             endcase
         end
     // the bank read at this edge (fixed by sn); bit 3 also carries the sticky alignment fault
@@ -103,13 +109,13 @@ module dsfd_capt_status_x43_s (
     always @(*)
         case (sn)
 `ifdef DSFD_CAPT_STX43_MUT_PHASE
-            2'd0: rd = b3;
-            2'd1: rd = b2;
+            2'd0: rd = sh3;
+            2'd1: rd = sh2;
 `else
-            2'd0: rd = b2;
-            2'd1: rd = b3;
+            2'd0: rd = sh2;
+            2'd1: rd = sh3;
 `endif
-            default: rd = b0;
+            default: rd = sh0;
         endcase
     always @(posedge ckv[0] or negedge rsv[0])
         if (!rsv[0]) stq <= 64'd0;
