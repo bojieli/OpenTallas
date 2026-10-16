@@ -42,7 +42,8 @@
   "whole_48column_parent": "Native static production-shape RTL full48column benchmark running; final physical real-view parent remains NOT_PROVED",
   "end_to_end_price_ratio": "<=1 edge per program (<0.01%); see measured_cost",
   "invalid_reduced_prod": "FAIL markers cyc27..,629663errors caused unsupported literal production split9/8 under incorrect SMIN4/SMAX7 reducedprofile; exit0isNOTpass, negative preserved",
-  "native_static36_baseline_rpp0": "PASS same source/profile with -GLEAF_READ_PIN_PIPE=0: DX=10 ops=150 cycles=20976 element_checks=57655296 dvm_minus_ref_edges=1 (E4 unit 2549945, Q-DVM+LINK 2026-10-16 06:50)"
+  "native_static36_baseline_rpp0": "PASS same source/profile with -GLEAF_READ_PIN_PIPE=0: DX=10 ops=150 cycles=20976 element_checks=57655296 dvm_minus_ref_edges=1 (E4 unit 2549945, Q-DVM+LINK 2026-10-16 06:50)",
+  "native_static36_rpp1_fill1": "PASS LEAF_READ_PIN_PIPE=1 LEAF_FILL_PIPE=1: DX=14 ops=150 cycles=20976 element_checks=57655296 dvm_minus_ref_edges=5 (E4 unit 2923447)"
  },
  "gaps": [
   "Current original leaf CTS rawgeometry0FAIL but native diagnostic FAIL r_v234.95/r_t228.41 and two outputs221.56/220.84ps",
@@ -56,6 +57,11 @@
    "delta": 1
   },
   "interpretation": "the read-pin capture adds exactly one edge to the DVM-vs-central-x offset of the whole static 36-layer production program (fixed schedule shift, not per-op); total program cycles 20958 vs 20976 differ only through the random op mix (element checks differ), so the e2e cost is <= 1 cycle per 36-layer program (< 0.01%), far inside the 1.10x/5% ledger rule",
-  "measured_by": "Q-DVM+LINK (Claude) 2026-10-16"
+  "measured_by": "Q-DVM+LINK (Claude) 2026-10-16",
+  "fill_pipe": {
+   "dvm_minus_ref_edges": 5,
+   "delta_vs_read_pin_only": 3,
+   "interpretation": "+3 program edges (FILL_LEAD +3 over the 4-leaf chain), < 0.02% of a 36-layer program"
+  }
  }
 }
