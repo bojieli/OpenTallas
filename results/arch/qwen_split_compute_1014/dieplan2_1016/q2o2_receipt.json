@@ -1,0 +1,14 @@
+{
+ "schema": "opentallas.qwen.dieplan-receipt.v1",
+ "stream": "Q-COMPUTE-DIE / Q-DIEPLAN2r",
+ "date": "2026-10-16",
+ "candidate": "q2o2d (owner 5-column layout on the b2 graph): homes q2o2d-homes.json, grant q2o2d_grant.json",
+ "generator": "mk_dieplan3.py qcd_owner2d_t950-homes.json q2o2d-homes.json --tt-above --embed-west --embed-gap 43.2 --seq-dy 0 --xs-dy 540.0; mk_q2o2_grant.py q2o2d-homes.json <SU kit assigned_pins.json> <seq_su pins> <xs_tap pins> q2o2d_grant.json 240.576",
+ "graph": "b2 physical trial (OT_SPLIT_B2=1 OT_SPLIT_B2_PHYSICAL_TRIAL=1 OT_SPLIT_B2_COMPACT_SELECTOR=1), PHYSICAL_TRIAL_ONLY_NOT_FUNCTIONAL (b2_graph sidecar)",
+ "source_trial": "EPYC4 /srv/opentallas-scratch/claude/qwen-split-compute/q2o2/src = claude/q-dieplan2-1016 7d4af03b7 (overlay hash-verified)",
+ "relay_skip": {"worst_cut": 0.564, "lines_over_060": 0, "pin_align": {"FAIL": 0}, "strict_port_bind": "PASS 39 masters / 1666 instances", "bitmm": 1552399, "ideal_stage_sum": 10046, "ideal_max_chain": 33, "die_mm2": 585.9, "relay_clock_probe": "11 serial_0p9 buses -> clk_coll, 0 unresolved"},
+ "su_kit": {"plan": "physical/ref_tile/qfd_sp_su64_sfu_pr/assigned_pins.json (claude/qelem-suc-1016 1a97d234d..36ddfb340)", "consumed": "346 interior M7 clocks, S face va/vq (mirrored onto the VM), E face, N face as published", "die_side_deltas": {"seq group (acc..si) on the W face": "moved down 240.576 um (to 166.2..518.2) so it faces the 518-um seq_su in the SU-W/VM-N corner", "xsw": "the closed xs_tap view's sw column (M4, 2137 x 0.096 um, SU-local 545.436..750.492); kit xsw (126 um M4+M6) cannot face it with jog <= 36 um"}, "origin": "8.64 lattice (15232.32, 7439.04)", "PINREG": "1 inside the hardened SU macro (die netlist instance is the black box)"},
+ "pngs_viewed": ["q2o2d_readout.png", "q2o2pre_b2base_readout.png"],
+ "full_trial": "E4 q2o2/gen_then_chain.sh (ot-heavy unit oth-ubuntu-2425896-1792185828): FULL relay GEN -> chain (strict bind gate, PDN r8, GRT 12, TT/FF/SS, readout, die clock check)",
+ "explorer": "qwen_q2o2d_owner2_b2 (candidate of qwen_r2h5, token_designs qwen_rom)"
+}
