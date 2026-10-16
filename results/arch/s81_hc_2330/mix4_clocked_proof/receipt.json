@@ -2,7 +2,6 @@
  "status": "COMPONENT_EXACT_PASS_NATIVE_FP_RTL",
  "source_commit": "85e95731c",
  "source_manifest_sha256": "797b528c86228dc34bae5767438fa5020d4d2349e39ca2cbe2b8be2dbce9146e",
- "all_source_hashes_match_current": true,
  "full_shape": {
   "copies": 4,
   "words_per_copy": 5120,
@@ -38,5 +37,7 @@
   "Component boundary proof only; ideal declared VM does not qualify integrated memory service",
   "Full physical station/top ingress partition/pins/clock and parent route open",
   "Compiler/static native all-layer integration open"
- ]
+ ],
+ "all_source_hashes_matched_at_receipt_creation": true,
+ "historical_scope": "189clock candidate source85e95731c;193clock successor has separate required proof"
 }
