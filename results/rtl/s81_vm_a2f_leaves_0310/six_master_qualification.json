@@ -1,6 +1,6 @@
 {
   "schema": "opentallas.s81.a2f-six-master-qualification.v1",
-  "scope": "Standalone physical masters and candidate payload33 front only. Final production16-root parent ABI, mapped-memory proof, joined geometry and die signoff are parent-owned and pending.",
+  "scope": "Six standalone physical masters are qualified/reused by exact source identity; candidate payload33 front proofs complete. Final production16-root parent ABI, mapped-memory proof, production absolute-epoch policy, joined geometry and die signoff remain coordinator-owned and pending.",
   "source_commit": "371ccbe0adc259a57dc1f658765548e149300179",
   "masters": [
     {
@@ -119,7 +119,7 @@
     },
     {
       "master": "s81_a2_w0_payload33",
-      "kind": "new partitioned payload master, routed qualification pending",
+      "kind": "new closed and native-qualified partitioned payload master",
       "replaces": "s81_a2_w0_payload",
       "instances": 16,
       "source": "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_a2f_payload33.sv",
@@ -128,7 +128,35 @@
       "job_source": "371ccbe0a",
       "proof_receipt": "results/rtl/s81_vm_a2f_leaves_0310/payload33/component_proof.json",
       "CTS_diagnostic_receipt": "results/rtl/s81_vm_a2f_leaves_0310/payload33/cts_final_legalize/native_audit.json",
-      "physical_status": "QUEUED; not routed native qualified"
+      "physical_status": "CLOSED including routed-insertion re-STA; TT+51.41ps/FF+6.89ps/DRC0",
+      "qualification_receipt": "results/rtl/s81_vm_a2f_leaves_0310/payload33_qualification.json",
+      "native": {
+        "cell": "s81_a2_w0_payload33",
+        "view": "physical/ref_tile/s81_a2_w0_payload33_native_0330_r1/views/s81_a2_w0_payload33",
+        "lib_cell": "s81_a2_w0_payload33",
+        "insertion": true,
+        "ref_src": [
+          "insertion.json boundary mean"
+        ],
+        "R_ps": 240.5,
+        "spread_ps": 37.6,
+        "outputs": 1752,
+        "inputs": 1750,
+        "launch_ps": 162.7,
+        "launch_pin": "o_data[92]",
+        "capture_ps": 155.3,
+        "capture_pin": "i_data[51]",
+        "launch_over": 0,
+        "capture_over": 0,
+        "comb_pins": 0,
+        "comb_first": [],
+        "pass": true,
+        "fail_why": "",
+        "audit_input_artifact": "/home/ubuntu/artifacts/s81-vm-parent-leaves-0310/payload33_closed/views/s81_a2_w0_payload33"
+      },
+      "strict_M5": "PASS",
+      "immutable_RAW": "original manifest SHA matched",
+      "legal_face_capacity_receipt": "results/rtl/s81_vm_a2f_leaves_0310/payload33/legal_face_capacity.json"
     }
   ]
 }
