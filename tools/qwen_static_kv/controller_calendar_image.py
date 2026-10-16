@@ -30,6 +30,7 @@ class Run:
         return (self.edge-2)|(self.count<<16)|((self.burst-1)<<26)|(self.gap<<30)|(self.command<<38)|(self.mask<<81)|(int(self.layer_row)<<84)|(int(self.static_read)<<85)
 
 def compile_image(runs,deadline=65535,capacity=16):
+    if type(capacity)is not int or not 1<=capacity<=16:raise ValueError('actual hardware supports capacity 1..16')
     if len(runs)>capacity:raise ValueError('run image exceeds real leaf capacity')
     events={}
     for r in runs:
