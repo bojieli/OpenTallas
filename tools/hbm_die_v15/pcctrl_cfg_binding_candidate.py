@@ -10,6 +10,7 @@ from __future__ import annotations
 import argparse
 import collections
 import copy
+import gzip
 import hashlib
 import json
 from pathlib import Path
@@ -168,6 +169,8 @@ def main():
     ap.add_argument('--out', type=Path, required=True)
     args = ap.parse_args()
     data = args.contract.read_bytes()
+    if args.contract.suffix == '.gz':
+        data = gzip.decompress(data)
     candidate, binding, probe = build(json.loads(data), sha(data), args.rtl_commit, args.source_commit)
     args.out.mkdir(parents=True, exist_ok=True)
     for name, value in [('candidate_contract.json', candidate), ('binding.json', binding)]:
