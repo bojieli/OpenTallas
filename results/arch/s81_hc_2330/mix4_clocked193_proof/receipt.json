@@ -1,0 +1,36 @@
+{
+ "status": "ACTUAL_FULL_SHAPE_COMPONENT_PASS",
+ "source_commit": "b4ca1edc9",
+ "source_count": 32,
+ "all_source_hashes_match_pinned_commit": true,
+ "arithmetic": "All target FP RTL, declared external VM test boundary",
+ "copies": 4,
+ "exact_words": 20480,
+ "writes": 640,
+ "reads": 4161,
+ "fixed_cycles": 810,
+ "write_span": [
+  639,
+  798
+ ],
+ "normal_cycle_delta": 0,
+ "clock_entries": 193,
+ "clock_entries_detail": {
+  "top": 1,
+  "cluster": 152,
+  "RS5_station": 40
+ },
+ "mutant": {
+  "parameter": 23,
+  "actual_change": "Stopped only the real inner relay clock of every copy cluster; all arithmetic remains actual RTL",
+  "observed": "DUT cannot complete; real testbench timeout atcycle10001, compiled/simulated successfully",
+  "rejected": true
+ },
+ "other_evidence": "Prior189entry numericalkeymutant20108mismatches and primitive stoppedstationclock8182mismatches remain historical mechanism evidence",
+ "scope_limits": [
+  "No full native memory-service/layer qualification from declared boundary memory",
+  "Actual top ingress clocks must still be partitioned/localized",
+  "All parent/pin/cut/PG/trialGRT and clockdelivery nativeclosure open",
+  "Keep fixedRS5 calendar pending actual perbit path proof"
+ ]
+}

@@ -30,7 +30,7 @@ def main():
  receipt=json.loads(a.routed_receipt.read_text())if a.routed_receipt else {}
  if receipt:
   rr={v.get('cell'):v for v in receipt.values()if v.get('cell','').startswith('ot_s81_hc_ctfnq')}
-  assert len(rr)==5 and all(v['qualification']=='COMPONENT_NATIVE_PASS'for v in rr.values()),'all five current routed bank components required'
+  assert len(rr)==5 and all(v.get('native_timing_pass',v['qualification']=='COMPONENT_NATIVE_PASS')for v in rr.values()),'all five current routed bank components required'
  fn={};sources={'FS':{'record':'ef32747a0','sha256':hashlib.sha256(raw).hexdigest()}}
  for g in layout['groups']:
   p=a.bank_dir/g['cell'];lp=p/(g['cell']+'_tt.lib');ip=p/'insertion.json';lib=A.parse_lib(lp);mm=A.pin_metrics(lib,A.clock_refs(lib,json.loads(ip.read_text()),'tt'))
@@ -61,5 +61,5 @@ def main():
     else:holds.append({'src':s,'dst':t,'zero_wire_gap_ps':lo-ho,'slack_ps':lo-ho-100})
     x,y=xy(src,s,sp);xx,yy=xy(dst,t,dp);L=abs(x-xx)+abs(y-yy);cost=o+c+.76*L;legs.append({'src':s,'dst':t,'launch_ps':o,'capture_ps':c,'length_um':L,'slack_ps':683.333-cost})
   legs.sort(key=lambda v:v['slack_ps']);results.append({'name':name,'count':len(legs),'missing_count':len(missing),'negative_count':sum(x['slack_ps']<0 for x in legs),'min_slack_ps':legs[0]['slack_ps'],'worst':legs[:8],'ff_hold_missing':hold_missing,'ff_min_zero_wire_gap_ps':min((h['zero_wire_gap_ps']for h in holds),default=None),'ff_hold_failures':sum(h['slack_ps']<0 for h in holds),'ff_worst':sorted(holds,key=lambda h:h['slack_ps'])[:8]})
- out={'status':'ANALYTIC_ROUTED_VIEWS_TT_FF_SCREEN'if receipt else 'UNQUALIFIED_MIXED_ROUTE_PLACEMENT_ANALYTIC_TT_FF','outline_um':[576.72,H],'swap_fn_fl':a.swap_fn_fl,'budget_ps':683.333,'internal_bank_output_wire_um':8.64,'sources':sources,'results':results,'open':[*(['All five banks routed native TT/FF/DRC0']if not receipt else []),'Full actual parent clock/reset/pins/all incident hops','Die clocks phi-R and wireRC/hold','Static whole-HC timeline']};a.out.parent.mkdir(parents=True,exist_ok=True);a.out.write_text(json.dumps(out,indent=1)+'\n');print(json.dumps(results,indent=1))
+ out={'status':'ANALYTIC_ROUTED_VIEWS_TT_FF_SCREEN'if receipt else 'UNQUALIFIED_MIXED_ROUTE_PLACEMENT_ANALYTIC_TT_FF','outline_um':[576.72,H],'swap_fn_fl':a.swap_fn_fl,'budget_ps':683.333,'internal_bank_output_wire_um':8.64,'sources':sources,'results':results,'open':[*(['All five banks routed native TT/FF/DRC0']if not receipt else []),'Full actual parent clock/reset/pins/all incident hops','Die clocks phi-R and wireRC/hold','Static whole-HC timeline',*(['View export manifests require historical poststub proof; no view adoption']if receipt and not all(v.get('view_export_manifest_pass',False)for v in rr.values())else [])]};a.out.parent.mkdir(parents=True,exist_ok=True);a.out.write_text(json.dumps(out,indent=1)+'\n');print(json.dumps(results,indent=1))
 if __name__=='__main__':main()

@@ -1,0 +1,16 @@
+ot-run: ot-epyc1tb     skipped: no /srv/opentallas-scratch2/claude/closure-loop/s81hc_ctfxsnt_ref-s5-dlpin-fence-COMMIT-85e95731c
+ot-run: ot-epyc4       admits   265 GB (avail 492, growth 160, headroom 48, waiters 0/0 GB) load 41/128 running 15 disk 2197 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch2/claude/closure-loop/s81hc_ctfxsnt_ref-s5-dlpin-fence-COMMIT-85e95731c
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch2/claude/closure-loop/s81hc_ctfxsnt_ref-s5-dlpin-fence-COMMIT-85e95731c
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-3717943-1792134502 after 0 s
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 1 thread(s).
+UNUSED_INPUT_ZERO_LOAD name=fv_in[5] iterms=0
+UNUSED_INPUT_ZERO_LOAD name=tid[7] iterms=0
+UNUSED_INPUT_ZERO_LOAD name=tid[6] iterms=0
+XS_UNUSED_INPUT_PROOF_PASS ports=3
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-3717943-1792134502): exit 0

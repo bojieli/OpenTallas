@@ -1,0 +1,22 @@
+{
+ "cell": "ot_s81_hc_ctfxs_nt",
+ "record": "6789fb5272d42ae11998b6cfd5059ec5391ddad3",
+ "source_commit": "85e95731c",
+ "rtl_path": "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_ntree.sv",
+ "rtl_sha256": "056c436d639a844e4bd02f74b2ed31f9486560b25e159dd6eec8545d1abd9364",
+ "mapped_odb_sha256": "ad442cb894da089ddab5799012e0480bc241275e24f525d05de84fc9e62ed603",
+ "mapped_zero_load_proof": "proof.log",
+ "proof_log_sha256": "634c25fda74d1b36692f7bb027c508bb5eec5dacda7e224c0113b38a28850424",
+ "proof_tcl_sha256": "0a681de0e621d931e9be6038a8fc9272f96855836e271165b75ad97b5d5d4dee",
+ "unused": {
+  "fv_in[5]": "S_RD2: fv <= {fv_in[6],ul_out[32],fv_in[4:0]}; incoming bus r valid bit5 replaced by actual northward r-lane valid",
+  "tid[6]": "Only tid[0] and tid[5:1] are read by actual ctfx_nt2 farq/oct registers",
+  "tid[7]": "Only tid[0] and tid[5:1] are read by actual ctfx_nt2 farq/oct registers"
+ },
+ "actual_mapped_iterm_loads": {
+  "fv_in[5]": 0,
+  "tid[6]": 0,
+  "tid[7]": 0
+ },
+ "status": "SOURCE_AND_ACTUAL_MAPPED_ZERO_LOAD_PASS"
+}

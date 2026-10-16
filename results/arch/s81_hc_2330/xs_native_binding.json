@@ -1,0 +1,26 @@
+{
+ "status": "NATIVE_TIMING_PASS_EXPORT_MANIFEST_PENDING",
+ "record": "6789fb5272d42ae11998b6cfd5059ec5391ddad3",
+ "source": "85e95731c",
+ "required_RTL_fix": "8ce8c2234",
+ "view": "physical/ref_tile/s81hc_ctfxsnt_ref/views/ot_s81_hc_ctfxs_nt",
+ "production_parent_adoption": false,
+ "composed_component_proof": "xs_s5_composed_proof/receipt.json",
+ "actual_unused_input_proof": "xs_s5_unused/receipt.json",
+ "native_audit": "component_native_audits.json",
+ "tt_ps": 282.3,
+ "ff_ps": 8.85,
+ "drc": 0,
+ "launch_ps": 185.70730999999998,
+ "capture_ps": 164.81551,
+ "clock_spreads_ps": {
+  "clk": 31.999999999999986,
+  "clk_l": 21.30000000000001
+ },
+ "ff_min_delay_gap_ps": 144.86782,
+ "open": [
+  "Historical poststub export manifest reconstruction, no blind reseal",
+  "Full parent every-incident pins/clocks/PG/routing",
+  "All-on-chip full native numerical HC composition and fixed calendar"
+ ]
+}

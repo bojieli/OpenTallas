@@ -1,5 +1,5 @@
 {
- "status": "HELD_COMPONENT_CANDIDATE_193_PENDING_FULL_PROOF",
+ "status": "HELD_COMPONENT_CANDIDATE_193_EXACT_PASS",
  "source_sha256": {
   "rtl/dsrom_sys/engram/mix/dsfd_engram_mix4_c.sv": "1a8942fae37c34219719e11a3c22f5556c13e13abb05d24e15a465703a4256d4",
   "rtl/dsrom_sys/engram/mix/dsfd_engram_mix4_clocked_candidate.sv": "9dfd5a489699ce0a2467a84f1dc0d21d2b152556b1948243216513a060b842c0"
@@ -18,12 +18,12 @@
  "arithmetic_changed": false,
  "proof": "clocked relay positive49092 comparisons across D0..5 and17 resets; stopped first station clock mutant8182 mismatches",
  "open": [
-  "Reprove193entryfullcomponent and stopped inner control relay clock",
   "Top ingress/control clock localization and mapped sink census",
   "Real leaf placement/pins/cuts/all incident hops",
   "Physical CTS TT/FF/DRC and clock delivery",
   "Compiler fixed-calendar full native composition"
  ],
  "inner_control_relay_roots_added": 4,
- "prior_189_component_proof": "results/arch/s81_hc_2330/mix4_clocked_proof/receipt.json"
+ "prior_189_component_proof": "results/arch/s81_hc_2330/mix4_clocked_proof/receipt.json",
+ "full_component_proof": "results/arch/s81_hc_2330/mix4_clocked193_proof/receipt.json"
 }

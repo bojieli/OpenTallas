@@ -1,0 +1,11 @@
+ot-run: ot-epyc1tb     admits   606 GB (avail 832, growth 51, headroom 64, waiters 0/0 GB) load 64/128 running 14 disk 446 GB 
+ot-run: ot-epyc4       admits   511 GB (avail 738, growth 68, headroom 48, waiters 0/0 GB) load 59/128 running 15 disk 753 GB 
+ot-run: ot-pve1        admits   172 GB (avail 219, growth 8, headroom 32, waiters 0/0 GB) load 17/28 running 4 disk 1350 GB 
+ot-run: ot-agidock128  admits    69 GB (avail 102, growth 33, headroom 24, waiters 0/0 GB) load 23/64 running 7 disk 393 GB 
+ot-run: -> ot-agidock128
+ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-429192-1792133956 after 0 s
+[20003000] %Fatal: tb_s81_engram_mix4_clocked.sv:36: Assertion failed in tb_s81_engram_mix4_clocked: timeout
+%Error: /srv/opentallas-scratch/codex/s81-mix4-clocked-2330/run193_23/src/rtl/dsrom_sys/engram/mix/tb_s81_engram_mix4_clocked.sv:36: Verilog $stop
+Aborting...
+
+ot-run: RAN on ot-agidock128 (unit oth-ubuntu-429192-1792133956): exit 1
