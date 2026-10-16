@@ -1,7 +1,7 @@
 {
   "schema": "opentallas.qwen.vm-local-leaf-candidate.v1",
   "name": "return_plane",
-  "top": "ot_qfd_vm_su_return_plane",
+  "top": "qvm_return_plane_pin_native",
   "params": {
     "ELEMS": 177808,
     "AW": 24,
@@ -14,7 +14,7 @@
     64.8
   ],
   "replicas": 96,
-  "source_ff_bits": 336,
+  "source_ff_bits": 668,
   "signal_pins": 397,
   "clock_pin": [
     32.412,
@@ -22,7 +22,8 @@
   ],
   "layer_cap": "M5",
   "source_sha256": {
-    "rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv": "7b04314ab42961f0eb3b935dd0fe6e7fcec3fa09ee118c021d55672c795da778"
+    "rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv": "fc1d26d7dae09e3cfed77a7e54be4cdcc9f92c60a38dc465af34f44b9efbee4f",
+    "rtl/qwen_sys/vm_native_physical_20261015/qvm_return_plane_pin_native.sv": "1c53a28830258087b801c3be4989c4b3b5576c41481cf38758213de9a025f1a2"
   },
   "pins": [
     {
