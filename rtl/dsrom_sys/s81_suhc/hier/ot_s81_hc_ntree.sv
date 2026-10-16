@@ -49,7 +49,8 @@
 // entries (phi - R per root); every register keeps its cycle, so the function is unchanged.  ot_s81_hc_ctfx_nt below is
 // the one-clock wrapper (clk_l = clk) for the old masters / benches.
 module ot_s81_hc_ctfx_nt2 #(
-    parameter integer NG = 256, D = 5120, S_RD = 2, ML = 5, AL = 4, CHAIN_STEP = AL, LOCAL_EPOCH = 1
+    parameter integer NG = 256, D = 5120, S_RD = 2, ML = 5, AL = 4, CHAIN_STEP = AL, LOCAL_EPOCH = 1,
+    parameter integer DL_PIN = 0
 ) (
     input  wire               clk,
     input  wire               clk_l,
@@ -124,17 +125,45 @@ module ot_s81_hc_ctfx_nt2 #(
     reg       farq;
     reg [4:0] oct;
     always @(posedge clk_l) begin farq <= tid[0]; oct <= tid[5:1]; end
-    always @(posedge clk_l or negedge rst_n)
-        if (!rst_n) dl_out <= 0;
-        else begin : mrg
-            reg [DLW-1:0] o;
-            o = dl_in;
-            if (vs[DS] && farq) begin
-                if (o[SW * oct[0]]) o[DLW-1] = 1'b1;
-                o[SW * oct[0] +: SW] = {cs, si[2:0], oct, 1'b1};
+    // DL_PIN = 1 (S-ENGRAM+NORM 2210, owner rule 10-15 19:50 "register every input at its pin"): s3 native capture
+    // FAILED on 49 lane pins (dl_in 33 up to 219.6 ps, cs 16 up to 203.7): each N-face dl_in bit fed a merge mux and the
+    // slot-valid bits also fed the collision OR, so the FF-hold pads sat in series with two or three logic levels.  Now
+    // every dl_in bit is captured by one pin register (no logic), and the two slot selects are registers decoded one
+    // cycle early from the ctq valid line (vs[DS-1] -> vs[DS]), so a cs bit sees one AND-OR level to its flop.  The far
+    // half-tile's own partial still enters dl_out in the cycle ctra latches it (the bottom's NT_K is unchanged); a
+    // partial that passes through this strip arrives one cycle later per half-tile it crosses (the lane is collision-
+    // checked by its sticky fault bit, and every arrival stays before the far tile's own).
+    generate if (DL_PIN) begin : g_dl_pin
+        reg [DLW-1:0] dq;
+        reg           m0, m1;
+        always @(posedge clk_l or negedge rst_n)
+            if (!rst_n) begin dq <= 0; m0 <= 1'b0; m1 <= 1'b0; end
+            else begin
+                dq <= dl_in;
+                m0 <= vs[DS-1] && farq && !oct[0];
+                m1 <= vs[DS-1] && farq &&  oct[0];
             end
-            dl_out <= o;
-        end
+        wire [SW-1:0] mw = {cs, si[2:0], oct, 1'b1};
+        always @(posedge clk_l or negedge rst_n)
+            if (!rst_n) dl_out <= 0;
+            else begin
+                dl_out[0 +: SW]  <= m0 ? mw : dq[0 +: SW];
+                dl_out[SW +: SW] <= m1 ? mw : dq[SW +: SW];
+                dl_out[DLW-1]    <= dq[DLW-1] | (m0 & dq[0]) | (m1 & dq[SW]);
+            end
+    end else begin : g_dl_comb
+        always @(posedge clk_l or negedge rst_n)
+            if (!rst_n) dl_out <= 0;
+            else begin : mrg
+                reg [DLW-1:0] o;
+                o = dl_in;
+                if (vs[DS] && farq) begin
+                    if (o[SW * oct[0]]) o[DLW-1] = 1'b1;
+                    o[SW * oct[0] +: SW] = {cs, si[2:0], oct, 1'b1};
+                end
+                dl_out <= o;
+            end
+    end endgenerate
 endmodule
 
 module ot_s81_hc_ctfx_nt #(
@@ -193,7 +222,7 @@ module ot_s81_hc_ctfxs_nt #(
     localparam integer O_D = 5 + S_RD * 16 + 20 + 6 + 8 + 32 + 1, FXW = O_D + S_RD * 512, DLW = 2 * 137 + 1;
     wire [S_RD+4:0] fv_local_nc;
     wire [FXW-1:0]  fdx_local_nc;
-    ot_s81_hc_ctfx_nt2 #(.NG(NG), .D(D), .S_RD(S_RD), .ML(ML), .AL(AL), .CHAIN_STEP(CHAIN_STEP), .LOCAL_EPOCH(1)) u_x (
+    ot_s81_hc_ctfx_nt2 #(.NG(NG), .D(D), .S_RD(S_RD), .ML(ML), .AL(AL), .CHAIN_STEP(CHAIN_STEP), .LOCAL_EPOCH(1), .DL_PIN(1)) u_x (
         .clk(clk), .clk_l(clk_l), .rst_in(rst_in), .fv_in(fv_in), .fd_in(fd_in), .fv(fv), .fdx(fdx), .fv_local(fv_local_nc),
         .fdx_local(fdx_local_nc), .tid(tid), .cs_n(cs_n), .cs_s(cs_s), .dl_in(dl_in), .dl_out(dl_out), .ul_in(ul_in),
         .ul_out(ul_out));

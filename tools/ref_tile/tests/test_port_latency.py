@@ -63,5 +63,59 @@ source [lindex $argv 1]
                 export(table, path/'ot_pin_regs_wrapper.v', 'example', '1'*40)
 
 
+    def test_gate_exports_synthesis_table_and_fails_closed_after_warn_window(self):
+        import base64
+        import datetime as dt
+        import zlib
+        import pre_route_gate as G
+        with tempfile.TemporaryDirectory() as td:
+            path = Path(td)
+            subprocess.run(['tclsh', '/dev/stdin', td, str(ROOT / 'physical/common_flow/ot_pin_regs.tcl')],
+                           input=GATE_STUB, text=True, check=True, capture_output=True)
+            (path/'kit.env').write_text('EXTRA=(--orfs-var OT_PIN_REGS=1 --orfs-var OT_PIN_REGS_CLOCK=ck)\n')
+            enc = lambda f: base64.b64encode(zlib.compress((path/f).read_bytes())).decode()
+            out = 'GATE_PIN_REGS_B64 %s %s\n' % (enc('ot_pin_regs.tsv'), enc('ot_pin_regs_wrapper.v'))
+            g = G.Gate()
+            G.check_port_latency(g, path, dict(top='example'), out, 'b' * 40)
+            self.assertEqual(g.verdict, 'PASS')
+            self.assertEqual(g.port_latency['source_commit'], 'b' * 40)
+            self.assertEqual(g.port_latency['ports']['done']['register_edges'], 1)
+            early = dt.datetime.fromisoformat('2026-10-16T00:00:00-07:00')
+            late = dt.datetime.fromisoformat('2026-10-17T00:00:00-07:00')
+            g = G.Gate()
+            G.check_port_latency(g, path, dict(top='example'), 'no table\n', 'b' * 40, now=early)
+            self.assertEqual(g.verdict, 'WARN')
+            g = G.Gate()
+            G.check_port_latency(g, path, dict(top='example'), 'no table\n', 'b' * 40, now=late)
+            self.assertEqual(g.verdict, 'FAIL')
+            (path/'kit.env').write_text('EXTRA=()\n')
+            g = G.Gate()
+            G.check_port_latency(g, path, dict(top='example'), 'no table\n', 'b' * 40, now=late)
+            self.assertEqual(g.items, [])
+
+    def test_gate_remote_script_formats(self):
+        import pre_route_gate as G
+        self.assertIn('GATE_PIN_REGS_B64', G.REMOTE_SH)
+        G.REMOTE_SH.format(R='r', COMMIT='c', CAP=1, KIT='k', IMG='i', RC='x', TOP='t', CTS=0, PGM=32, TRIAL=0,
+                           CLKS='ck', CLK='ck', ARCHIVE_SHA256='s', STEP_CAP=1)
+
+
+GATE_STUB = '''
+set ::env(DESIGN_NAME) example
+set ::env(OT_PIN_REGS_CLOCK) ck
+set ::env(RESULTS_DIR) [lindex $argv 0]
+proc yosys {args} {
+ if {[lindex $args 0] eq "tee"} {
+  set f [open [lindex $args 3] w]
+  puts $f {input [0:0] ck
+input [7:0] cmd
+output [0:0] done}
+  close $f
+ }
+}
+source [lindex $argv 1]
+'''
+
+
 if __name__ == '__main__':
     unittest.main()

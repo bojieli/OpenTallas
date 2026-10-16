@@ -123,23 +123,47 @@ module ot_qwen_tp8_pv_join_t #(parameter integer MUT=0, J_LAT=7)(
  wire[511:0] tb[0:7];
  genvar g;
  generate for(g=0;g<8;g=g+1)begin:g_t assign tb[g]=t_r[512*g+:512]; end endgenerate
- reg jrun;reg[4:0] jage;reg[511:0] xr,yr,ja,jb;reg jissue;
+ reg jrun;reg[4:0] jage;reg[511:0] xr,yr;wire[511:0] ja,jb;
  wire[511:0] jy;wire[15:0] jv;wire[31:0] jerr;
+ // Operand-select slot, decoded ONE edge ahead from the next (jrun, jage) and registered once PER LANE (kept copies):
+ // the shared jage decode drove all 1,024 operand-mux bits (3,299 loads, gate 21:06); each copy now drives one lane's
+ // 64 mux bits + its adder issue. Slot codes: 1..4 = L5 pairs, 5 = (xr,jy) at J_LAT+1 / J_LAT+3, 6 = (yr,jy) at 2J_LAT+3.
+ wire nrun=go_r?1'b1:(jrun&&jage!=5'(J_OUT));
+ wire[4:0] nage=go_r?5'd0:(jrun?jage+5'd1:jage);
+ reg[2:0] nsel;
  always @*begin
-  ja=0;jb=0;jissue=0;
-  if(jrun)case(jage)
-   5'd0:begin jissue=1;ja=tb[0];jb=(MUT==1)?tb[2]:tb[1];end
-   5'd1:begin jissue=1;ja=(MUT==1)?tb[1]:tb[2];jb=tb[3];end
-   5'd2:begin jissue=1;ja=tb[4];jb=tb[5];end
-   5'd3:begin jissue=1;ja=tb[6];jb=tb[7];end
-   5'(J_LAT+1):begin jissue=1;ja=xr;jb=jy;end
-   5'(J_LAT+3):begin jissue=1;ja=xr;jb=jy;end
-   5'(2*J_LAT+3):begin jissue=1;ja=yr;jb=jy;end
+  nsel=3'd0;
+  if(nrun)case(nage)
+   5'd0:nsel=3'd1;
+   5'd1:nsel=3'd2;
+   5'd2:nsel=3'd3;
+   5'd3:nsel=3'd4;
+   5'(J_LAT+1):nsel=3'd5;
+   5'(J_LAT+3):nsel=3'd5;
+   5'(2*J_LAT+3):nsel=3'd6;
    default:;
   endcase
  end
+ wire[15:0] jissue;
  generate for(g=0;g<16;g=g+1)begin:g_join
-  ot_hdc_fp32_add_lat #(.LAT(J_LAT),.DRST(0)) u_add(.clk(clk),.rst_n(rst_n),.valid_in(jissue),
+  (* keep = "true", dont_touch = "true" *) reg[2:0] js;
+  always @(posedge clk or negedge rst_n)if(!rst_n)js<=3'd0;else js<=nsel;
+  assign jissue[g]=js!=3'd0;
+  reg[31:0] la,lb;
+  always @*begin
+   la=32'd0;lb=32'd0;
+   case(js)
+    3'd1:begin la=tb[0][32*g+:32];lb=(MUT==1)?tb[2][32*g+:32]:tb[1][32*g+:32];end
+    3'd2:begin la=(MUT==1)?tb[1][32*g+:32]:tb[2][32*g+:32];lb=tb[3][32*g+:32];end
+    3'd3:begin la=tb[4][32*g+:32];lb=tb[5][32*g+:32];end
+    3'd4:begin la=tb[6][32*g+:32];lb=tb[7][32*g+:32];end
+    3'd5:begin la=xr[32*g+:32];lb=jy[32*g+:32];end
+    3'd6:begin la=yr[32*g+:32];lb=jy[32*g+:32];end
+    default:;
+   endcase
+  end
+  assign ja[32*g+:32]=la;assign jb[32*g+:32]=lb;
+  ot_hdc_fp32_add_lat #(.LAT(J_LAT),.DRST(0)) u_add(.clk(clk),.rst_n(rst_n),.valid_in(jissue[g]),
    .a(ja[32*g+:32]),.b(jb[32*g+:32]),.y(jy[32*g+:32]),.err(jerr[2*g+:2]),.valid_out(jv[g]));
  end endgenerate
  wire jexp=jrun&&(jage==J_LAT||jage==J_LAT+1||jage==J_LAT+2||jage==J_LAT+3||jage==2*J_LAT+1||jage==2*J_LAT+3||jage==J_OUT);
@@ -179,6 +203,8 @@ module ot_qwen_tp8_pv_wide_ctl #(parameter integer FIRST_INPUT_AGE=20)(
  localparam integer COL_LAT=JGO+3+3*7+3+1;      // JOIN -> column y_valid: + cmd reg, join pin reg, jrun start, J_OUT 24, y reg
  // ---- input pin registers ----
  reg start_r;reg[13:0] ctx_r;reg[15:0] epoch_r;reg[7:0] iv_r;reg[111:0] it_r;reg[127:0] ie_r;reg[31:0] cv_r,cf_r;
+ reg pid;                                         // pair_id strap, registered (constant; the gate saw pair_id -> wage 15 levels)
+ always @(posedge clk)pid<=pair_id;
  always @(posedge clk or negedge rst_n)
   if(!rst_n)begin start_r<=0;iv_r<=0;cv_r<=0;cf_r<=0;end
   else begin start_r<=start;iv_r<=in_valid;cv_r<=col_valid;cf_r<=col_fault;end
@@ -195,24 +221,26 @@ module ot_qwen_tp8_pv_wide_ctl #(parameter integer FIRST_INPUT_AGE=20)(
  wire next_window=(state==FEED)&&pa+16'd1>=16'(FIRSTI)&&qn<nq;
  wire[11:0] rn=qn[15:4];wire[3:0] an=qn[3:0];
  reg[7:0] exp_take,pexp_v;reg[13:0] pexp_t[0:7];
- integer l;
+ integer l,wn,wt,wp;                          // loop temporaries (blocking, combinational only; no automatic decls for yosys)
  always @*begin
-  exp_take=0;pexp_v=0;
+  exp_take=0;pexp_v=0;wn=0;wt=0;wp=0;
   for(l=0;l<8;l=l+1)pexp_t[l]=0;
-  for(l=0;l<8;l=l+1)begin
-   automatic integer n=int'(rc)-(l>>2);
-   automatic integer t=256*n+128*int'(pair_id)+16*l+int'(ac);
-   automatic integer port=4*(n&1)+(l&3);
-   if(chk_window&&n>=0&&t<int'(lim))begin pexp_v[port]=1'b1;pexp_t[port]=14'(t);end
+  // per PORT (constant index): port wp carries bank l = (wp&3) + 4h of step n = rc - h with n&1 == wp>>2, i.e.
+  // h = (rc ^ (wp>>2)) & 1 -- the same (bank, step) -> port map as before, without a runtime-indexed write
+  for(wp=0;wp<8;wp=wp+1)begin
+   l=(wp&3)+4*((int'(rc)^(wp>>2))&1);
+   wn=int'(rc)-(l>>2);
+   wt=256*wn+128*int'(pid)+16*l+int'(ac);
+   if(chk_window&&wn>=0&&wt<int'(lim))begin pexp_v[wp]=1'b1;pexp_t[wp]=14'(wt);end
   end
   for(l=0;l<8;l=l+1)begin
-   automatic integer n=int'(rn)-(l>>2);
-   automatic integer t=256*n+128*int'(pair_id)+16*l+int'(an);
-   if(next_window&&n>=0&&t<int'(lim))exp_take[l]=1'b1;
+   wn=int'(rn)-(l>>2);
+   wt=256*wn+128*int'(pid)+16*l+int'(an);
+   if(next_window&&wn>=0&&wt<int'(lim))exp_take[l]=1'b1;
   end
  end
  wire[7:0] rq;wire[111:0] rqt;
- ot_qwen_tp8_vrow_wide u_req(.clk(clk),.rst_n(rst_n),.pair_id(pair_id),.start(start_r),.context_len(ctx_r),
+ ot_qwen_tp8_vrow_wide u_req(.clk(clk),.rst_n(rst_n),.pair_id(pid),.start(start_r),.context_len(ctx_r),
   .req_valid(rq),.req_t(rqt),.fault());
  always @(posedge clk or negedge rst_n)if(!rst_n)req_valid<=0;else req_valid<=rq;
  always @(posedge clk)req_t<=rqt;
@@ -253,7 +281,7 @@ module ot_qwen_tp8_pv_wide_ctl #(parameter integer FIRST_INPUT_AGE=20)(
    case(state)
     IDLE:if(start_r)begin
      ep<=epoch_r;lim<=ctx_r;age<=0;
-     nq<=(ctx_r>14'(128*int'(pair_id)))?16'(16*(((int'(ctx_r)-128*int'(pair_id)+255)>>8)+1)):16'd0;
+     nq<=(ctx_r>14'(128*int'(pid)))?16'(16*(((int'(ctx_r)-128*int'(pid)+255)>>8)+1)):16'd0;
      if(ctx_r==0||ctx_r>8192)flt<=1;else state<=FEED;
     end
     FEED:if(pa>=16'(FIRSTI)+nq-16'd1&&pa>=16'd16)begin state<=DRAIN;drain_left<=12;end
@@ -284,14 +312,14 @@ module ot_qwen_tp8_vrow_wide (
  output reg[7:0] req_valid,output reg[111:0] req_t,output reg fault
 );
  reg active;reg[15:0] q;reg[15:0] nq;reg[13:0] lim;
- integer l;
+ integer l,wn,wt,wp;                          // loop temporaries (blocking, combinational only; no automatic decls for yosys)
  always @*begin
-  req_valid=0;req_t=0;
-  if(active&&q<nq)for(l=0;l<8;l=l+1)begin
-   automatic integer n=int'(q>>4)-(l>>2);
-   automatic integer t=256*n+128*int'(pair_id)+16*l+int'(q&15);
-   automatic integer port=4*(n&1)+(l&3);
-   if(n>=0&&t<int'(lim))begin req_valid[port]=1'b1;req_t[14*port+:14]=14'(t);end
+  req_valid=0;req_t=0;wn=0;wt=0;wp=0;
+  if(active&&q<nq)for(wp=0;wp<8;wp=wp+1)begin      // per PORT, constant index (see ot_qwen_tp8_pv_wide_ctl)
+   l=(wp&3)+4*((int'(q>>4)^(wp>>2))&1);
+   wn=int'(q>>4)-(l>>2);
+   wt=256*wn+128*int'(pair_id)+16*l+int'(q&15);
+   if(wn>=0&&wt<int'(lim))begin req_valid[wp]=1'b1;req_t[14*wp+:14]=14'(wt);end
   end
  end
  always @(posedge clk or negedge rst_n)
