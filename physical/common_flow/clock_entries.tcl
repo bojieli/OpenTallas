@@ -42,8 +42,7 @@ if {[info procs clock_tree_synthesis] ne "" && [info procs ot_ce_cts_orig] eq ""
             # pin with the root's registers.  Hard children (::ot_ce_counts) never qualify.
             if {$inst ne "NULL" && [[$inst getMaster] isBlock] && [info exists ::ot_ce_soft_root_macros]
                 && [[$inst getMaster] getName] in $::ot_ce_soft_root_macros
-                && !([info exists ::ot_ce_counts] && [dict exists $::ot_ce_counts [[$inst getMaster] getName]])
-                && [get_property [get_lib_pins -of_objects $pin] is_clock]} {
+                && !([info exists ::ot_ce_counts] && [dict exists $::ot_ce_counts [[$inst getMaster] getName]])} {
               incr ot_ce_soft_macro_sinks
               continue
             }
