@@ -2,7 +2,7 @@
 """Diagnostic only: exact post-CTS placement ETM pin metrics, no routed qualification."""
 import collections,gzip,hashlib,json,re,sys
 from pathlib import Path
-sys.path.insert(0,'/home/ubuntu/wt/hnl-harden-2210/tools/hier_contract')
+sys.path.insert(0,str(Path(__file__).resolve().parents[4]/'tools/hier_contract'))
 import pinreg_audit as PA
 p=Path(__file__).resolve().parent
 records={}; slacks={}

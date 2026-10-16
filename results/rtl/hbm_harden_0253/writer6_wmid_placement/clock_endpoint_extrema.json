@@ -1,0 +1,802 @@
+{
+  "clk_bank0": {
+    "all": {
+      "n": 281,
+      "mean": 77.79955053024912,
+      "min": {
+        "clock": "ot_entry_8",
+        "source": "clk_bank0",
+        "pin": "core.kq[205]$_DFF_P_/CLK",
+        "boundary": "1",
+        "arrival_ps": "76.4645",
+        "x_dbu": "96876",
+        "y_dbu": "39150",
+        "master": "DFFHQNx1_ASAP7_75t_R"
+      },
+      "max": {
+        "clock": "ot_entry_8",
+        "source": "clk_bank0",
+        "pin": "core.kq[3]$_DFF_P_/CLK",
+        "boundary": "1",
+        "arrival_ps": "78.962982",
+        "x_dbu": "95148",
+        "y_dbu": "5940",
+        "master": "DFFHQNx1_ASAP7_75t_R"
+      }
+    },
+    "boundary": {
+      "n": 281,
+      "mean": 77.79955053024912,
+      "min": {
+        "clock": "ot_entry_8",
+        "source": "clk_bank0",
+        "pin": "core.kq[205]$_DFF_P_/CLK",
+        "boundary": "1",
+        "arrival_ps": "76.4645",
+        "x_dbu": "96876",
+        "y_dbu": "39150",
+        "master": "DFFHQNx1_ASAP7_75t_R"
+      },
+      "max": {
+        "clock": "ot_entry_8",
+        "source": "clk_bank0",
+        "pin": "core.kq[3]$_DFF_P_/CLK",
+        "boundary": "1",
+        "arrival_ps": "78.962982",
+        "x_dbu": "95148",
+        "y_dbu": "5940",
+        "master": "DFFHQNx1_ASAP7_75t_R"
+      }
+    }
+  },
+  "clk_bank1": {
+    "all": {
+      "n": 281,
+      "mean": 77.52123449110329,
+      "min": {
+        "clock": "ot_entry_9",
+        "source": "clk_bank1",
+        "pin": "core.kq[492]$_DFF_P_/CLK",
+        "boundary": "1",
+        "arrival_ps": "76.008369",
+        "x_dbu": "98388",
+        "y_dbu": "87210",
+        "master": "DFFHQNx1_ASAP7_75t_R"
+      },
+      "max": {
+        "clock": "ot_entry_9",
+        "source": "clk_bank1",
+        "pin": "core.kq[466]$_DFF_P_/CLK",
+        "boundary": "1",
+        "arrival_ps": "78.925377",
+        "x_dbu": "95580",
+        "y_dbu": "83430",
+        "master": "DFFHQNx1_ASAP7_75t_R"
+      }
+    },
+    "boundary": {
+      "n": 281,
+      "mean": 77.52123449110329,
+      "min": {
+        "clock": "ot_entry_9",
+        "source": "clk_bank1",
+        "pin": "core.kq[492]$_DFF_P_/CLK",
+        "boundary": "1",
+        "arrival_ps": "76.008369",
+        "x_dbu": "98388",
+        "y_dbu": "87210",
+        "master": "DFFHQNx1_ASAP7_75t_R"
+      },
+      "max": {
+        "clock": "ot_entry_9",
+        "source": "clk_bank1",
+        "pin": "core.kq[466]$_DFF_P_/CLK",
+        "boundary": "1",
+        "arrival_ps": "78.925377",
+        "x_dbu": "95580",
+        "y_dbu": "83430",
+        "master": "DFFHQNx1_ASAP7_75t_R"
+      }
+    }
+  },
+  "clk_bank2": {
+    "all": {
+      "n": 281,
+      "mean": 77.64722060142348,
+      "min": {
+        "clock": "ot_entry_10",
+        "source": "clk_bank2",
+        "pin": "core.kq[640]$_DFF_P_/CLK",
+        "boundary": "1",
+        "arrival_ps": "75.949554",
+        "x_dbu": "98064",
+        "y_dbu": "112590",
+        "master": "DFFHQNx1_ASAP7_75t_R"
+      },
+      "max": {
+        "clock": "ot_entry_10",
+        "source": "clk_bank2",
+        "pin": "core.kq[687]$_DFF_P_/CLK",
+        "boundary": "1",
+        "arrival_ps": "78.925308",
+        "x_dbu": "94338",
+        "y_dbu": "120150",
+        "master": "DFFHQNx1_ASAP7_75t_R"
+      }
+    },
+    "boundary": {
+      "n": 281,
+      "mean": 77.64722060142348,
+      "min": {
+        "clock": "ot_entry_10",
+        "source": "clk_bank2",
+        "pin": "core.kq[640]$_DFF_P_/CLK",
+        "boundary": "1",
+        "arrival_ps": "75.949554",
+        "x_dbu": "98064",
+        "y_dbu": "112590",
+        "master": "DFFHQNx1_ASAP7_75t_R"
+      },
+      "max": {
+        "clock": "ot_entry_10",
+        "source": "clk_bank2",
+        "pin": "core.kq[687]$_DFF_P_/CLK",
+        "boundary": "1",
+        "arrival_ps": "78.925308",
+        "x_dbu": "94338",
+        "y_dbu": "120150",
+        "master": "DFFHQNx1_ASAP7_75t_R"
+      }
+    }
+  },
+  "clk_bank3": {
+    "all": {
+      "n": 281,
+      "mean": 77.56846396085407,
+      "min": {
+        "clock": "ot_entry_11",
+        "source": "clk_bank3",
+        "pin": "core.kq[968]$_DFF_P_/CLK",
+        "boundary": "1",
+        "arrival_ps": "76.261032",
+        "x_dbu": "97362",
+        "y_dbu": "167400",
+        "master": "DFFHQNx1_ASAP7_75t_R"
+      },
+      "max": {
+        "clock": "ot_entry_11",
+        "source": "clk_bank3",
+        "pin": "core.kq[984]$_DFF_P_/CLK",
+        "boundary": "1",
+        "arrival_ps": "78.547981",
+        "x_dbu": "97902",
+        "y_dbu": "170370",
+        "master": "DFFHQNx1_ASAP7_75t_R"
+      }
+    },
+    "boundary": {
+      "n": 281,
+      "mean": 77.56846396085407,
+      "min": {
+        "clock": "ot_entry_11",
+        "source": "clk_bank3",
+        "pin": "core.kq[968]$_DFF_P_/CLK",
+        "boundary": "1",
+        "arrival_ps": "76.261032",
+        "x_dbu": "97362",
+        "y_dbu": "167400",
+        "master": "DFFHQNx1_ASAP7_75t_R"
+      },
+      "max": {
+        "clock": "ot_entry_11",
+        "source": "clk_bank3",
+        "pin": "core.kq[984]$_DFF_P_/CLK",
+        "boundary": "1",
+        "arrival_ps": "78.547981",
+        "x_dbu": "97902",
+        "y_dbu": "170370",
+        "master": "DFFHQNx1_ASAP7_75t_R"
+      }
+    }
+  },
+  "clk_bank4": {
+    "all": {
+      "n": 281,
+      "mean": 77.47584370106767,
+      "min": {
+        "clock": "ot_entry_12",
+        "source": "clk_bank4",
+        "pin": "core.kq[1232]$_DFF_P_/CLK",
+        "boundary": "1",
+        "arrival_ps": "75.609497",
+        "x_dbu": "98496",
+        "y_dbu": "211950",
+        "master": "DFFHQNx1_ASAP7_75t_R"
+      },
+      "max": {
+        "clock": "ot_entry_12",
+        "source": "clk_bank4",
+        "pin": "core.kq[1278]$_DFF_P_/CLK",
+        "boundary": "1",
+        "arrival_ps": "79.22184",
+        "x_dbu": "96336",
+        "y_dbu": "220320",
+        "master": "DFFHQNx1_ASAP7_75t_R"
+      }
+    },
+    "boundary": {
+      "n": 281,
+      "mean": 77.47584370106767,
+      "min": {
+        "clock": "ot_entry_12",
+        "source": "clk_bank4",
+        "pin": "core.kq[1232]$_DFF_P_/CLK",
+        "boundary": "1",
+        "arrival_ps": "75.609497",
+        "x_dbu": "98496",
+        "y_dbu": "211950",
+        "master": "DFFHQNx1_ASAP7_75t_R"
+      },
+      "max": {
+        "clock": "ot_entry_12",
+        "source": "clk_bank4",
+        "pin": "core.kq[1278]$_DFF_P_/CLK",
+        "boundary": "1",
+        "arrival_ps": "79.22184",
+        "x_dbu": "96336",
+        "y_dbu": "220320",
+        "master": "DFFHQNx1_ASAP7_75t_R"
+      }
+    }
+  },
+  "clk_bank5": {
+    "all": {
+      "n": 281,
+      "mean": 77.44184840569396,
+      "min": {
+        "clock": "ot_entry_13",
+        "source": "clk_bank5",
+        "pin": "core.kq[1493]$_DFF_P_/CLK",
+        "boundary": "1",
+        "arrival_ps": "75.895912",
+        "x_dbu": "97308",
+        "y_dbu": "256230",
+        "master": "DFFHQNx1_ASAP7_75t_R"
+      },
+      "max": {
+        "clock": "ot_entry_13",
+        "source": "clk_bank5",
+        "pin": "core.kq[1592]$_DFF_P_/CLK",
+        "boundary": "1",
+        "arrival_ps": "78.868713",
+        "x_dbu": "97632",
+        "y_dbu": "273240",
+        "master": "DFFHQNx1_ASAP7_75t_R"
+      }
+    },
+    "boundary": {
+      "n": 281,
+      "mean": 77.44184840569396,
+      "min": {
+        "clock": "ot_entry_13",
+        "source": "clk_bank5",
+        "pin": "core.kq[1493]$_DFF_P_/CLK",
+        "boundary": "1",
+        "arrival_ps": "75.895912",
+        "x_dbu": "97308",
+        "y_dbu": "256230",
+        "master": "DFFHQNx1_ASAP7_75t_R"
+      },
+      "max": {
+        "clock": "ot_entry_13",
+        "source": "clk_bank5",
+        "pin": "core.kq[1592]$_DFF_P_/CLK",
+        "boundary": "1",
+        "arrival_ps": "78.868713",
+        "x_dbu": "97632",
+        "y_dbu": "273240",
+        "master": "DFFHQNx1_ASAP7_75t_R"
+      }
+    }
+  },
+  "clk_bank6": {
+    "all": {
+      "n": 281,
+      "mean": 77.41713336298933,
+      "min": {
+        "clock": "ot_entry_14",
+        "source": "clk_bank6",
+        "pin": "core.kq[1772]$_DFF_P_/CLK",
+        "boundary": "1",
+        "arrival_ps": "75.725227",
+        "x_dbu": "97578",
+        "y_dbu": "303480",
+        "master": "DFFHQNx1_ASAP7_75t_R"
+      },
+      "max": {
+        "clock": "ot_entry_14",
+        "source": "clk_bank6",
+        "pin": "core.kq[1687]$_DFF_P_/CLK",
+        "boundary": "1",
+        "arrival_ps": "78.888878",
+        "x_dbu": "95580",
+        "y_dbu": "289170",
+        "master": "DFFHQNx1_ASAP7_75t_R"
+      }
+    },
+    "boundary": {
+      "n": 281,
+      "mean": 77.41713336298933,
+      "min": {
+        "clock": "ot_entry_14",
+        "source": "clk_bank6",
+        "pin": "core.kq[1772]$_DFF_P_/CLK",
+        "boundary": "1",
+        "arrival_ps": "75.725227",
+        "x_dbu": "97578",
+        "y_dbu": "303480",
+        "master": "DFFHQNx1_ASAP7_75t_R"
+      },
+      "max": {
+        "clock": "ot_entry_14",
+        "source": "clk_bank6",
+        "pin": "core.kq[1687]$_DFF_P_/CLK",
+        "boundary": "1",
+        "arrival_ps": "78.888878",
+        "x_dbu": "95580",
+        "y_dbu": "289170",
+        "master": "DFFHQNx1_ASAP7_75t_R"
+      }
+    }
+  },
+  "clk_bank7": {
+    "all": {
+      "n": 281,
+      "mean": 77.59655886120996,
+      "min": {
+        "clock": "ot_entry_15",
+        "source": "clk_bank7",
+        "pin": "core.kq[2165]$_DFF_P_/CLK",
+        "boundary": "1",
+        "arrival_ps": "75.842903",
+        "x_dbu": "96984",
+        "y_dbu": "369630",
+        "master": "DFFHQNx1_ASAP7_75t_R"
+      },
+      "max": {
+        "clock": "ot_entry_15",
+        "source": "clk_bank7",
+        "pin": "core.kq[2247]$_SDFF_PP1_/CLK",
+        "boundary": "1",
+        "arrival_ps": "79.415672",
+        "x_dbu": "95904",
+        "y_dbu": "383400",
+        "master": "DFFHQNx1_ASAP7_75t_R"
+      }
+    },
+    "boundary": {
+      "n": 281,
+      "mean": 77.59655886120996,
+      "min": {
+        "clock": "ot_entry_15",
+        "source": "clk_bank7",
+        "pin": "core.kq[2165]$_DFF_P_/CLK",
+        "boundary": "1",
+        "arrival_ps": "75.842903",
+        "x_dbu": "96984",
+        "y_dbu": "369630",
+        "master": "DFFHQNx1_ASAP7_75t_R"
+      },
+      "max": {
+        "clock": "ot_entry_15",
+        "source": "clk_bank7",
+        "pin": "core.kq[2247]$_SDFF_PP1_/CLK",
+        "boundary": "1",
+        "arrival_ps": "79.415672",
+        "x_dbu": "95904",
+        "y_dbu": "383400",
+        "master": "DFFHQNx1_ASAP7_75t_R"
+      }
+    }
+  },
+  "clk_body": {
+    "all": {
+      "n": 4169,
+      "mean": 240.09374807579647,
+      "min": {
+        "clock": "ot_entry_0",
+        "source": "clk_body",
+        "pin": "core.pay_lo[960]$_DFF_P_/CLK",
+        "boundary": "0",
+        "arrival_ps": "216.984924",
+        "x_dbu": "71712",
+        "y_dbu": "322110",
+        "master": "DFFHQNx2_ASAP7_75t_R"
+      },
+      "max": {
+        "clock": "ot_entry_0",
+        "source": "clk_body",
+        "pin": "core.sec_lo[31]$_DFF_P_/CLK",
+        "boundary": "0",
+        "arrival_ps": "271.667633",
+        "x_dbu": "17280",
+        "y_dbu": "23220",
+        "master": "DFFHQNx2_ASAP7_75t_R"
+      }
+    },
+    "boundary": {
+      "n": 6,
+      "mean": 238.45117716666664,
+      "min": {
+        "clock": "ot_entry_0",
+        "source": "clk_body",
+        "pin": "core.launch_done[3]$_DFF_PN0_/CLK",
+        "boundary": "1",
+        "arrival_ps": "238.287247",
+        "x_dbu": "94122",
+        "y_dbu": "384210",
+        "master": "DFFASRHQNx1_ASAP7_75t_R"
+      },
+      "max": {
+        "clock": "ot_entry_0",
+        "source": "clk_body",
+        "pin": "core.launch_done[4]$_DFF_PN0_/CLK",
+        "boundary": "1",
+        "arrival_ps": "238.547211",
+        "x_dbu": "97794",
+        "y_dbu": "385830",
+        "master": "DFFASRHQNx1_ASAP7_75t_R"
+      }
+    }
+  },
+  "clk_meta": {
+    "all": {
+      "n": 49,
+      "mean": 54.3353676122449,
+      "min": {
+        "clock": "ot_entry_1",
+        "source": "clk_meta",
+        "pin": "core.sv_q[4]$_DFF_PN0_/CLK",
+        "boundary": "1",
+        "arrival_ps": "52.336594",
+        "x_dbu": "28404",
+        "y_dbu": "384480",
+        "master": "DFFASRHQNx1_ASAP7_75t_R"
+      },
+      "max": {
+        "clock": "ot_entry_1",
+        "source": "clk_meta",
+        "pin": "core.vm_q$_DFF_P_/CLK",
+        "boundary": "1",
+        "arrival_ps": "55.81189",
+        "x_dbu": "4320",
+        "y_dbu": "384480",
+        "master": "DFFHQNx2_ASAP7_75t_R"
+      }
+    },
+    "boundary": {
+      "n": 49,
+      "mean": 54.3353676122449,
+      "min": {
+        "clock": "ot_entry_1",
+        "source": "clk_meta",
+        "pin": "core.sv_q[4]$_DFF_PN0_/CLK",
+        "boundary": "1",
+        "arrival_ps": "52.336594",
+        "x_dbu": "28404",
+        "y_dbu": "384480",
+        "master": "DFFASRHQNx1_ASAP7_75t_R"
+      },
+      "max": {
+        "clock": "ot_entry_1",
+        "source": "clk_meta",
+        "pin": "core.vm_q$_DFF_P_/CLK",
+        "boundary": "1",
+        "arrival_ps": "55.81189",
+        "x_dbu": "4320",
+        "y_dbu": "384480",
+        "master": "DFFHQNx2_ASAP7_75t_R"
+      }
+    }
+  },
+  "clk_rgx_ctrl": {
+    "all": {
+      "n": 164,
+      "mean": 76.4962725487805,
+      "min": {
+        "clock": "ot_entry_2",
+        "source": "clk_rgx_ctrl",
+        "pin": "core.a0[107]$_DFF_P_/CLK",
+        "boundary": "1",
+        "arrival_ps": "75.030586",
+        "x_dbu": "5778",
+        "y_dbu": "23760",
+        "master": "DFFHQNx1_ASAP7_75t_R"
+      },
+      "max": {
+        "clock": "ot_entry_2",
+        "source": "clk_rgx_ctrl",
+        "pin": "core.v0[3]$_DFF_PN0_/CLK",
+        "boundary": "1",
+        "arrival_ps": "77.453453",
+        "x_dbu": "9126",
+        "y_dbu": "6210",
+        "master": "DFFASRHQNx1_ASAP7_75t_R"
+      }
+    },
+    "boundary": {
+      "n": 164,
+      "mean": 76.4962725487805,
+      "min": {
+        "clock": "ot_entry_2",
+        "source": "clk_rgx_ctrl",
+        "pin": "core.a0[107]$_DFF_P_/CLK",
+        "boundary": "1",
+        "arrival_ps": "75.030586",
+        "x_dbu": "5778",
+        "y_dbu": "23760",
+        "master": "DFFHQNx1_ASAP7_75t_R"
+      },
+      "max": {
+        "clock": "ot_entry_2",
+        "source": "clk_rgx_ctrl",
+        "pin": "core.v0[3]$_DFF_PN0_/CLK",
+        "boundary": "1",
+        "arrival_ps": "77.453453",
+        "x_dbu": "9126",
+        "y_dbu": "6210",
+        "master": "DFFASRHQNx1_ASAP7_75t_R"
+      }
+    }
+  },
+  "clk_rgx_data0": {
+    "all": {
+      "n": 512,
+      "mean": 87.14380740234381,
+      "min": {
+        "clock": "ot_entry_4",
+        "source": "clk_rgx_data0",
+        "pin": "core.d0[187]$_DFF_P_/CLK",
+        "boundary": "1",
+        "arrival_ps": "82.938362",
+        "x_dbu": "8262",
+        "y_dbu": "65070",
+        "master": "DFFHQNx1_ASAP7_75t_R"
+      },
+      "max": {
+        "clock": "ot_entry_4",
+        "source": "clk_rgx_data0",
+        "pin": "core.d0[389]$_DFF_P_/CLK",
+        "boundary": "1",
+        "arrival_ps": "93.866653",
+        "x_dbu": "2862",
+        "y_dbu": "97470",
+        "master": "DFFHQNx1_ASAP7_75t_R"
+      }
+    },
+    "boundary": {
+      "n": 512,
+      "mean": 87.14380740234381,
+      "min": {
+        "clock": "ot_entry_4",
+        "source": "clk_rgx_data0",
+        "pin": "core.d0[187]$_DFF_P_/CLK",
+        "boundary": "1",
+        "arrival_ps": "82.938362",
+        "x_dbu": "8262",
+        "y_dbu": "65070",
+        "master": "DFFHQNx1_ASAP7_75t_R"
+      },
+      "max": {
+        "clock": "ot_entry_4",
+        "source": "clk_rgx_data0",
+        "pin": "core.d0[389]$_DFF_P_/CLK",
+        "boundary": "1",
+        "arrival_ps": "93.866653",
+        "x_dbu": "2862",
+        "y_dbu": "97470",
+        "master": "DFFHQNx1_ASAP7_75t_R"
+      }
+    }
+  },
+  "clk_rgx_data1": {
+    "all": {
+      "n": 512,
+      "mean": 87.14244792773437,
+      "min": {
+        "clock": "ot_entry_5",
+        "source": "clk_rgx_data1",
+        "pin": "core.d0[652]$_DFF_P_/CLK",
+        "boundary": "1",
+        "arrival_ps": "83.178368",
+        "x_dbu": "4644",
+        "y_dbu": "145260",
+        "master": "DFFHQNx1_ASAP7_75t_R"
+      },
+      "max": {
+        "clock": "ot_entry_5",
+        "source": "clk_rgx_data1",
+        "pin": "core.d0[909]$_DFF_P_/CLK",
+        "boundary": "1",
+        "arrival_ps": "90.678711",
+        "x_dbu": "3132",
+        "y_dbu": "188730",
+        "master": "DFFHQNx1_ASAP7_75t_R"
+      }
+    },
+    "boundary": {
+      "n": 512,
+      "mean": 87.14244792773437,
+      "min": {
+        "clock": "ot_entry_5",
+        "source": "clk_rgx_data1",
+        "pin": "core.d0[652]$_DFF_P_/CLK",
+        "boundary": "1",
+        "arrival_ps": "83.178368",
+        "x_dbu": "4644",
+        "y_dbu": "145260",
+        "master": "DFFHQNx1_ASAP7_75t_R"
+      },
+      "max": {
+        "clock": "ot_entry_5",
+        "source": "clk_rgx_data1",
+        "pin": "core.d0[909]$_DFF_P_/CLK",
+        "boundary": "1",
+        "arrival_ps": "90.678711",
+        "x_dbu": "3132",
+        "y_dbu": "188730",
+        "master": "DFFHQNx1_ASAP7_75t_R"
+      }
+    }
+  },
+  "clk_rgx_data2": {
+    "all": {
+      "n": 512,
+      "mean": 87.29616908593765,
+      "min": {
+        "clock": "ot_entry_6",
+        "source": "clk_rgx_data2",
+        "pin": "core.d0[1379]$_DFF_P_/CLK",
+        "boundary": "1",
+        "arrival_ps": "83.162292",
+        "x_dbu": "7776",
+        "y_dbu": "269730",
+        "master": "DFFHQNx1_ASAP7_75t_R"
+      },
+      "max": {
+        "clock": "ot_entry_6",
+        "source": "clk_rgx_data2",
+        "pin": "core.d0[1166]$_DFF_P_/CLK",
+        "boundary": "1",
+        "arrival_ps": "90.821869",
+        "x_dbu": "6858",
+        "y_dbu": "232200",
+        "master": "DFFHQNx1_ASAP7_75t_R"
+      }
+    },
+    "boundary": {
+      "n": 512,
+      "mean": 87.29616908593765,
+      "min": {
+        "clock": "ot_entry_6",
+        "source": "clk_rgx_data2",
+        "pin": "core.d0[1379]$_DFF_P_/CLK",
+        "boundary": "1",
+        "arrival_ps": "83.162292",
+        "x_dbu": "7776",
+        "y_dbu": "269730",
+        "master": "DFFHQNx1_ASAP7_75t_R"
+      },
+      "max": {
+        "clock": "ot_entry_6",
+        "source": "clk_rgx_data2",
+        "pin": "core.d0[1166]$_DFF_P_/CLK",
+        "boundary": "1",
+        "arrival_ps": "90.821869",
+        "x_dbu": "6858",
+        "y_dbu": "232200",
+        "master": "DFFHQNx1_ASAP7_75t_R"
+      }
+    }
+  },
+  "clk_rgx_data3": {
+    "all": {
+      "n": 512,
+      "mean": 86.04403509570317,
+      "min": {
+        "clock": "ot_entry_7",
+        "source": "clk_rgx_data3",
+        "pin": "core.d0[1890]$_DFF_P_/CLK",
+        "boundary": "1",
+        "arrival_ps": "82.929024",
+        "x_dbu": "6102",
+        "y_dbu": "356940",
+        "master": "DFFHQNx2_ASAP7_75t_R"
+      },
+      "max": {
+        "clock": "ot_entry_7",
+        "source": "clk_rgx_data3",
+        "pin": "core.d0[1718]$_DFF_P_/CLK",
+        "boundary": "1",
+        "arrival_ps": "89.573212",
+        "x_dbu": "6102",
+        "y_dbu": "327780",
+        "master": "DFFHQNx1_ASAP7_75t_R"
+      }
+    },
+    "boundary": {
+      "n": 512,
+      "mean": 86.04403509570317,
+      "min": {
+        "clock": "ot_entry_7",
+        "source": "clk_rgx_data3",
+        "pin": "core.d0[1890]$_DFF_P_/CLK",
+        "boundary": "1",
+        "arrival_ps": "82.929024",
+        "x_dbu": "6102",
+        "y_dbu": "356940",
+        "master": "DFFHQNx2_ASAP7_75t_R"
+      },
+      "max": {
+        "clock": "ot_entry_7",
+        "source": "clk_rgx_data3",
+        "pin": "core.d0[1718]$_DFF_P_/CLK",
+        "boundary": "1",
+        "arrival_ps": "89.573212",
+        "x_dbu": "6102",
+        "y_dbu": "327780",
+        "master": "DFFHQNx1_ASAP7_75t_R"
+      }
+    }
+  },
+  "clk_tkw": {
+    "all": {
+      "n": 569,
+      "mean": 88.50686449560628,
+      "min": {
+        "clock": "ot_entry_3",
+        "source": "clk_tkw",
+        "pin": "core.d0[2205]$_DFF_P_/CLK",
+        "boundary": "1",
+        "arrival_ps": "84.305229",
+        "x_dbu": "31428",
+        "y_dbu": "5940",
+        "master": "DFFHQNx2_ASAP7_75t_R"
+      },
+      "max": {
+        "clock": "ot_entry_3",
+        "source": "clk_tkw",
+        "pin": "core.d0[2328]$_DFF_P_/CLK",
+        "boundary": "1",
+        "arrival_ps": "93.841652",
+        "x_dbu": "52002",
+        "y_dbu": "3240",
+        "master": "DFFHQNx1_ASAP7_75t_R"
+      }
+    },
+    "boundary": {
+      "n": 569,
+      "mean": 88.50686449560628,
+      "min": {
+        "clock": "ot_entry_3",
+        "source": "clk_tkw",
+        "pin": "core.d0[2205]$_DFF_P_/CLK",
+        "boundary": "1",
+        "arrival_ps": "84.305229",
+        "x_dbu": "31428",
+        "y_dbu": "5940",
+        "master": "DFFHQNx2_ASAP7_75t_R"
+      },
+      "max": {
+        "clock": "ot_entry_3",
+        "source": "clk_tkw",
+        "pin": "core.d0[2328]$_DFF_P_/CLK",
+        "boundary": "1",
+        "arrival_ps": "93.841652",
+        "x_dbu": "52002",
+        "y_dbu": "3240",
+        "master": "DFFHQNx1_ASAP7_75t_R"
+      }
+    }
+  }
+}
