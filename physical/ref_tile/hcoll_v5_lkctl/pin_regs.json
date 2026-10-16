@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_hgi_coll_capture_ctl_e",
+ "enable": false,
+ "reason": "RTL owns its pin registers: ot_hgi_coll_static_capture_ctl captures every external input before any guard fork and launches every output from a flop (closed hcoll_capture_ctl); the only added logic is the V4 parent's 8-bit epoch select ahead of that capture. An extra recipe-3 cycle would break the host_v4 lockstep edge contract."
+}
