@@ -1,0 +1,22 @@
+{
+ "schema": "opentallas.hbm.native-view-admission.v1",
+ "scope": "Explicit audited HBM masters only; historical diagnostic views stay available but are never promoted by generic CLOSED status.",
+ "masters": {
+  "ot_hgi_sm_xload_cl2_bdring": {
+   "adopt": false,
+   "qualification": "NATIVE_FAIL",
+   "view": "physical/ref_tile/hgi_sm_xl2_bdring/views/ot_hgi_sm_xload_cl2_bdring",
+   "source": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv",
+   "source_sha256": "dbc7226f2359d65738572ed96cd75bdfed234691eda2200d6989dc8bf15823cf",
+   "view_sha256": {
+    "ot_hgi_sm_xload_cl2_bdring.lef": "03a80eb70375ea1f11774480f26a7841e6667407f876cd3b9a20f7031eab0925",
+    "ot_hgi_sm_xload_cl2_bdring_tt.lib": "9e8bb7118fed6fe05af21235d751558049cc647e504dc7520ac8bb167b440d40",
+    "ot_hgi_sm_xload_cl2_bdring_ff.lib": "36a11dbb8b6b1c48c682ddcae19cace9a0ee189455c323971302f84acb067554",
+    "insertion.json": "0d0eef3d67f5fbda1416d4b743ee195bae8cc9b3ef6656f34312199644956afc"
+   },
+   "receipt": "results/arch/hbm_die_v15/takeover_2116/bdring_native/audit.json",
+   "reason": "launch 392.87788 > 220 (30 pins); capture 511.66664 > 190 (18 pins)",
+   "release": "Explicit source/view exact root-real-view native qualification required before setting adopt=true."
+  }
+ }
+}
