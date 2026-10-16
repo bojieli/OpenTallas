@@ -1,0 +1,377 @@
+{
+  "scope": "component_only_actual_RTL_and_mapped_VM; no_die_or_token_rate_qualification",
+  "rows": 6,
+  "source_commit": "b120ba371041cf9cd6a853c5deb01b3861e5c43d",
+  "source_sha256": {
+    "rtl/hbm_accel/generic/peers/ot_hgi_hc_eng_ll.sv": "6c158e8001e9f093568dcc3f7a1b2cda8f7c6900257edf35ccb6b02bd9cceac0",
+    "rtl/hbm_accel/generic/adapters/ot_hgi_fused_record.sv": "02f5d9c0cc0add3855c03b61bc157c85a54c4cdc01c6219228b78aa0283cf8a5",
+    "rtl/hbm_accel/generic/adapters/tb/tb_hgi_fused_unit.sv": "fe44e6a4f058612c3236dc9b5ff987fdb881167c9029606cfdfa7adb9f6c0953",
+    "tools/hgi_adapters/fused_bench.py": "219e62957b042047ef4ec8a1b23314cf42b832df4fab4cb16df767e4196416db"
+  },
+  "baseline": {
+    "target_case": 2,
+    "cases": {
+      "0": [
+        0,
+        0,
+        1,
+        0,
+        20484,
+        0,
+        5120,
+        0,
+        2560
+      ],
+      "1": [
+        0,
+        1,
+        1,
+        20484,
+        25620,
+        5120,
+        20480,
+        2560,
+        0
+      ],
+      "2": [
+        0,
+        2,
+        6,
+        46104,
+        122904,
+        25600,
+        30720,
+        2560,
+        2560
+      ]
+    },
+    "measured": {
+      "0": {
+        "records": 1,
+        "cycles": 466,
+        "engine_cycles": 453,
+        "mover_cycles": 0
+      },
+      "1": {
+        "records": 1,
+        "cycles": 212,
+        "engine_cycles": 199,
+        "mover_cycles": 0
+      },
+      "2": {
+        "records": 6,
+        "cycles": 2788,
+        "engine_cycles": 2720,
+        "mover_cycles": 0
+      }
+    },
+    "log_sha256": "59a12c3f3a89d99d63067e09e70a3acd9a2b694ea62cb6e74e7adf91c8bffcd6",
+    "image_counts": {
+      "NREC": 19,
+      "NCASE": 14,
+      "NVMI": 169008,
+      "NVME": 56320,
+      "NHBM": 5120
+    },
+    "image_sha256": {
+      "fu_vmi.mem": "3287451ca155369c2763f96b9c45bcf5f1ebb7a2da719ba2a237ee28b69f2da4",
+      "fu_vme.mem": "1938ab8d42fadf2a06c2e001ca075fcc448412755017c8003ebd09ecce7f7d86",
+      "fu_hbm.mem": "d8099161972a6f4e0b9cf6eb9e256e82c92e4c4465b942bf008983ed70be1bcb",
+      "fu_rec.mem": "581d0a408757228761d566f880a9c55f161c792ee1ae0460a2a856e7fb5aea73",
+      "fu_case.mem": "548a39ad6c8b4627b4c9d9c9bb45b0880372e27503da1be5957f607cd1c15ac4",
+      "fu_exp.mem": "58884444fb639556ba2b079628c94bf6595ab6b4efb30783cbcc7315e47b432c",
+      "fu_sizes.svh": "7fbbdfbe53243a369cfe2236f97b232b13d5d8c36abe1be4d6a80ba3925a1a05"
+    }
+  },
+  "candidate": {
+    "target_case": 2,
+    "cases": {
+      "0": [
+        0,
+        0,
+        1,
+        0,
+        20484,
+        0,
+        5120,
+        0,
+        2560
+      ],
+      "1": [
+        0,
+        1,
+        1,
+        20484,
+        25620,
+        5120,
+        20480,
+        2560,
+        0
+      ],
+      "2": [
+        0,
+        2,
+        1,
+        46104,
+        122904,
+        25600,
+        30720,
+        2560,
+        2560
+      ]
+    },
+    "measured": {
+      "0": {
+        "records": 1,
+        "cycles": 466,
+        "engine_cycles": 453,
+        "mover_cycles": 0
+      },
+      "1": {
+        "records": 1,
+        "cycles": 212,
+        "engine_cycles": 199,
+        "mover_cycles": 0
+      },
+      "2": {
+        "records": 1,
+        "cycles": 1451,
+        "engine_cycles": 1438,
+        "mover_cycles": 0
+      }
+    },
+    "log_sha256": "38f6e675318bc12c732fecb0e15781f0d96309222a2e2b338f07fe020736bc76",
+    "image_counts": {
+      "NREC": 14,
+      "NCASE": 14,
+      "NVMI": 169008,
+      "NVME": 56320,
+      "NHBM": 5120
+    },
+    "image_sha256": {
+      "fu_vmi.mem": "3287451ca155369c2763f96b9c45bcf5f1ebb7a2da719ba2a237ee28b69f2da4",
+      "fu_vme.mem": "1938ab8d42fadf2a06c2e001ca075fcc448412755017c8003ebd09ecce7f7d86",
+      "fu_hbm.mem": "d8099161972a6f4e0b9cf6eb9e256e82c92e4c4465b942bf008983ed70be1bcb",
+      "fu_rec.mem": "1d92392419320a79abd95ee71663ba4017b8623ed270038302c6a6ee3c77813a",
+      "fu_case.mem": "33d6ec78aa72ca2681d41d3e73df3a8c8064eaf77cb6a273a28d7cc9aac6965e",
+      "fu_exp.mem": "62fa1104ce220b0d82d7b3736f601bd5178bc015c06623e8aa4f7ba6cfe5f67b",
+      "fu_sizes.svh": "fe19a3670859fe824b072148b203e25c62fe2da80335e7696194a355a51fe1db"
+    }
+  },
+  "mutant": {
+    "target_case": 2,
+    "cases": {
+      "0": [
+        0,
+        0,
+        1,
+        0,
+        20484,
+        0,
+        5120,
+        0,
+        2560
+      ],
+      "1": [
+        0,
+        1,
+        1,
+        20484,
+        25620,
+        5120,
+        20480,
+        2560,
+        0
+      ],
+      "2": [
+        0,
+        2,
+        1,
+        46104,
+        122904,
+        25600,
+        30720,
+        2560,
+        2560
+      ]
+    },
+    "measured": {
+      "0": {
+        "records": 1,
+        "cycles": 466,
+        "engine_cycles": 453,
+        "mover_cycles": 0
+      },
+      "1": {
+        "records": 1,
+        "cycles": 212,
+        "engine_cycles": 199,
+        "mover_cycles": 0
+      },
+      "2": {
+        "records": 1,
+        "cycles": 1451,
+        "engine_cycles": 1438,
+        "mover_cycles": 0
+      }
+    },
+    "log_sha256": "bed3e20ae39c99ac15dc257ab544ac76af5e10820a7d98cf5232978750b849ef",
+    "image_counts": {
+      "NREC": 14,
+      "NCASE": 14,
+      "NVMI": 169008,
+      "NVME": 56320,
+      "NHBM": 5120
+    },
+    "image_sha256": {
+      "fu_vmi.mem": "3287451ca155369c2763f96b9c45bcf5f1ebb7a2da719ba2a237ee28b69f2da4",
+      "fu_vme.mem": "1938ab8d42fadf2a06c2e001ca075fcc448412755017c8003ebd09ecce7f7d86",
+      "fu_hbm.mem": "d8099161972a6f4e0b9cf6eb9e256e82c92e4c4465b942bf008983ed70be1bcb",
+      "fu_rec.mem": "1d92392419320a79abd95ee71663ba4017b8623ed270038302c6a6ee3c77813a",
+      "fu_case.mem": "33d6ec78aa72ca2681d41d3e73df3a8c8064eaf77cb6a273a28d7cc9aac6965e",
+      "fu_exp.mem": "62fa1104ce220b0d82d7b3736f601bd5178bc015c06623e8aa4f7ba6cfe5f67b",
+      "fu_sizes.svh": "fe19a3670859fe824b072148b203e25c62fe2da80335e7696194a355a51fe1db"
+    }
+  },
+  "serial_cycles": 2788,
+  "row_cycles": 1451,
+  "row_average_cycles": 241.83333333333334,
+  "measured_latency_ratio": 0.5204447632711621,
+  "saved_cycles": 1337,
+  "note": "Average row latency is not steady-state II. End-to-end measured schedule remains required.",
+  "executed_rtl_commit": "8fe5d18bda2b1c0f1d32682ebbddfc380b4a867e",
+  "source_commit_note": "Receipt generator HEAD includes later evidence-only edits; the four executed-source SHA256 values match the immutable remote source and 8fe5d18bd.",
+  "execution": {
+    "host": "ot-epyc1tb",
+    "request_mem_gb": 96,
+    "threads": 24,
+    "verilator": "5.050",
+    "defines": "+WIDE +UN=64 +UM=16 +KLAT=40 +HLL +LANE_LOAD; candidate adds +HTRACE; mutant HCE=6 otherwise HCE=0",
+    "units": [
+      "oth-ubuntu-1799919-1792132617",
+      "oth-ubuntu-1800031-1792132623",
+      "oth-ubuntu-1800102-1792132629"
+    ],
+    "simulation_exit_codes": [
+      0,
+      0,
+      0
+    ],
+    "exit_code_warning": "The bench $finish returns zero even for mutant FAIL. Strict explicit verdict/numeric/image checks passed."
+  },
+  "p6_fixed_event_trace": {
+    "top rsqrt": {
+      "cycles": [
+        1865,
+        2185,
+        2265,
+        2523,
+        2603,
+        2861
+      ],
+      "gaps": [
+        320,
+        80,
+        258,
+        80,
+        258
+      ]
+    },
+    "lane0 RSTD": {
+      "cycles": [
+        1878,
+        2198,
+        2278,
+        2536,
+        2616,
+        2874
+      ],
+      "gaps": [
+        320,
+        80,
+        258,
+        80,
+        258
+      ]
+    },
+    "lane0 y": {
+      "cycles": [
+        1908,
+        2216,
+        2296,
+        2554,
+        2634,
+        2892
+      ],
+      "gaps": [
+        308,
+        80,
+        258,
+        80,
+        258
+      ]
+    },
+    "top ss": {
+      "cycles": [
+        1785,
+        2105,
+        2185,
+        2443,
+        2523,
+        2781
+      ],
+      "gaps": [
+        320,
+        80,
+        258,
+        80,
+        258
+      ]
+    },
+    "rec_done": {
+      "cycles": [
+        2937
+      ],
+      "gaps": []
+    }
+  },
+  "p6_event_scope": "Six full rows in one actual job. Output row starts have unequal deterministic gaps; row_average_cycles is NOT steady-state II. Two-job restart measurement is separate.",
+  "mutant_numerical_mismatches": 25521,
+  "remote_artifact_sha256": {
+    "/srv/opentallas-scratch/claude/hbm-mtp2-1015/wt/rtl/hbm_accel/generic/peers/ot_hgi_hc_eng_ll.sv": "6c158e8001e9f093568dcc3f7a1b2cda8f7c6900257edf35ccb6b02bd9cceac0",
+    "/srv/opentallas-scratch/claude/hbm-mtp2-1015/wt/rtl/hbm_accel/generic/adapters/ot_hgi_fused_record.sv": "02f5d9c0cc0add3855c03b61bc157c85a54c4cdc01c6219228b78aa0283cf8a5",
+    "/srv/opentallas-scratch/claude/hbm-mtp2-1015/wt/rtl/hbm_accel/generic/adapters/tb/tb_hgi_fused_unit.sv": "fe44e6a4f058612c3236dc9b5ff987fdb881167c9029606cfdfa7adb9f6c0953",
+    "/srv/opentallas-scratch/claude/hbm-mtp2-1015/wt/tools/hgi_adapters/fused_bench.py": "219e62957b042047ef4ec8a1b23314cf42b832df4fab4cb16df767e4196416db",
+    "/srv/opentallas-scratch/claude/hbm-mtp2-1015/fu/rowsA96/obj/Vtb_hgi_fused_unit": "9caad1eb6b3b03ac0dc335212999ef513476203bdcde6fcb902671dfa8bb7c2e",
+    "/srv/opentallas-scratch/claude/hbm-mtp2-1015/fu/rowsA96/build.log": "2e9ee5c34e5f307e2d61f189557b2c2e635b182b854fd85ab94853d9ba5066d5",
+    "/srv/opentallas-scratch/claude/hbm-mtp2-1015/fu/recsB96/obj/Vtb_hgi_fused_unit": "2af1712637b574ba5680e51e5b4b26ebac830a26a81adb22871b162576a0a86b",
+    "/srv/opentallas-scratch/claude/hbm-mtp2-1015/fu/recsB96/build.log": "097161365d6a2f6d5042ec748564cb91f6e08859d3a31e05bd3f5d76d9c8d8a5",
+    "/srv/opentallas-scratch/claude/hbm-mtp2-1015/fu/rowsM696/obj/Vtb_hgi_fused_unit": "f424623e01e5e7be28cedeed0003516e312ba58a30e47c5976c6ae831f1b78dc",
+    "/srv/opentallas-scratch/claude/hbm-mtp2-1015/fu/rowsM696/build.log": "7f1962f0885c5818eb8578eba3cb340aa3e97217199143b1bf30a3db761174a4"
+  },
+  "full_vectors_archive": "/home/ubuntu/artifacts/hbm-mtp-2330/{rowsA96,recsB96,rowsM696}/vec (source-generated images, exact hashes above); original remote directories retained",
+  "restart": {
+    "scope": "two consecutive identical P6 jobs on the same unchanged binary and actual mapped VM; final readback checks second job; first job numerically qualified in separate single-job run",
+    "rec_accept_cycles": [
+      1488,
+      2937
+    ],
+    "rec_done_cycles": [
+      2937,
+      4385
+    ],
+    "accept_II_cycles": 1449,
+    "completion_gap_cycles": 1448,
+    "two_job_cycles": 2899,
+    "log_sha256": "b869fbde38a0ab6fefdfb6767d5ff38e35b4bef6c1f596d10bf9bc89e87073cb",
+    "simulation_request": "2GB/1thread",
+    "unit": "oth-ubuntu-2033358-1792134652",
+    "note": "Observed event deltas differ by one cycle at first-job boundary. Compiler must reserve safe 1451 cycles/job until full static composition proves a tighter interval."
+  },
+  "qualification_limits": [
+    "Legal P6 programme component PASS only; no full-token native proof",
+    "Advertised B.m=1 descriptor validation was missing in source8fe5d18bd; guard successor and invalid-descriptor negative are required",
+    "No changed LL physical view, clock-root qualification or parent area fit",
+    "No full MTP end-to-end token-rate measurement"
+  ]
+}

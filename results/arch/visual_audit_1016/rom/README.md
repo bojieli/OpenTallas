@@ -78,5 +78,6 @@ Classes: P1 pin face points away from its consumer; P2 pins crowded on one edge 
 | S81H-10 | 3 | s81 | s81_a2f_field16 / s81_a2f_meta26 (VM a2f, supers | S-VM | P4 | Already structurally handled by the 4-way field4/control4 split (field4 r3c GRT overflow 0). Do not re-submit field16/meta26; delete the run data per the failed-job rule. |
 | S81H-11 | 3 | s81 | ot_s81_engram_dispatch (S81 engram) | S-ENGRAM+NORM | P5,P2 | Shrink to ~45x45 um (fill ~0.3), or spread the N bus over >=40 um and align the W/E groups so the islands merge. |
 | S81H-12 | 3 | s81 | dsfd_ctrl (leaf dsfd_ctrl_pc) | S-ELEM-PQ | P5 | Shrink height 248->~140 um (fill ~0.25); N/S pin pitch is unaffected. |
+| S81H-13 | 2 | s81 | dsfd_vm_static_bank128_e_m4_v20 | S-VM | P6,P5 | Clock at NW corner while 338 flops cluster on lower W/E faces; util 34%: clock to S-face centre, outline ~220x55 um or full-height pins. |
 
 Continuous: owners' next images are re-inspected as they post (see HANDOFF 0bs VIS-ROM).

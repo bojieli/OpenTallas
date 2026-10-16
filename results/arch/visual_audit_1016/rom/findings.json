@@ -5,10 +5,10 @@
  "order": "owner 2026-10-16 ~01:00 PT: crowding and pin positioning problems must be fixed",
  "scope": "ROM dies (Qwen compute, Qwen KV/system, DeepSeek S81): every master not closed+native PASS in results/arch/die_completeness_1015/completeness.json plus newer successors, and the latest die runs/plans",
  "counts": {
-  "findings": 55,
+  "findings": 56,
   "by_severity": {
    "1": 12,
-   "2": 30,
+   "2": 31,
    "3": 13
   }
  },
@@ -1257,7 +1257,8 @@
    "images_local": [
     "/tmp/visrom/s81/img/a2f_field4_r3c_floorplan.png",
     "/tmp/visrom/s81/img/a2f_field4_r3c_density.png"
-   ]
+   ],
+   "status_1016_0130": "S-VM: -28.7 ps was the cancelled arg2 variant (density 0.35); r2 failed outputs only (-10.52); r3c already moves clock SW->W-face centre; next kit splits i_sel W+S if input hold stays tight (needs S-DIE pin grant)."
   },
   {
    "id": "S81H-09",
@@ -1290,7 +1291,8 @@
    "images_local": [
     "/tmp/visrom/s81/img/a2f_control4_r3_placement.png",
     "/tmp/visrom/s81/img/a2f_control4_r3_density.png"
-   ]
+   ],
+   "status_1016_0130": "S-VM: closed, stands; narrower outline queued as a re-pack item (needs S-DIE slot change)."
   },
   {
    "id": "S81H-10",
@@ -2139,6 +2141,38 @@
     "die/img/s81_c21h_floorplan.png",
     "die/img/s81_c21h_buses.png"
    ]
+  },
+  {
+   "id": "S81H-13",
+   "die": "s81",
+   "master": "dsfd_vm_static_bank128_e_m4_v20 (VM bank, single SRAM)",
+   "level": "tile",
+   "owner": "S-VM",
+   "job": "dsfd_vm_static_bank128_e_m4_v20-bke1-2fe24dc01 (gate 2026-10-16 00:55)",
+   "host_run": "local gate kit /home/ubuntu/wt/s81-vm-widehub-2210/physical/ref_tile/dsfd_vm_static_bank128_e_m4_v20",
+   "images_committed": [
+    "img/S81H-13__bank128_e_m4_v20_density.png",
+    "img/S81H-13__bank128_e_m4_v20_floorplan.png"
+   ],
+   "images_local": [],
+   "see": "220.3x75.6 um, one 512x128 SRAM centred; all 409 pins on the LOWER half of the W and E faces, the 338 flops form two clusters there (E cluster red), clock enters the NW top corner, ~20 um empty band above the SRAM and the whole centre empty.",
+   "numbers": {
+    "outline_um": [
+     220.3,
+     75.6
+    ],
+    "pins": 409,
+    "flops": 338,
+    "util_lint": 0.344,
+    "fill": 0.318,
+    "clock": "NW corner"
+   },
+   "classes": [
+    "P6",
+    "P5"
+   ],
+   "fix": "Clock entry at the S-face centre (between the two flop clusters, equal reach to both); drop the empty top band (outline ~220x55 um -> util ~47%), or spread W/E pins over the full face height so the clusters relax.",
+   "severity": 2
   }
  ],
  "no_image": [
