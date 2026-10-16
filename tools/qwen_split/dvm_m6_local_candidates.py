@@ -38,7 +38,7 @@ def build():
         s['job'].update(branch='codex/qwen-link-recovery-0253',tag='m6a',views_to=kd+'/views',record_to='results/rtl/ref_tile/'+name)
         d=root/kd;d.mkdir(parents=True,exist_ok=True)
         (d/'spec.json').write_text(json.dumps(s,indent=1)+'\n');(d/'contact_request.json').write_text(json.dumps({'master':s['top'],'outline':s['outline'],'qualified':False,'parent_track_grant':False,'ports':assignments},indent=1)+'\n')
-        t=['source /src/physical/common_flow/assigned_pin_exact.tcl']
+        t=[(root/'physical/common_flow/assigned_pin_exact.tcl').read_text().rstrip()]
         for n,a in assignments.items():t.append(f"ot_assigned_pin_exact {{{n}}} {a['layer']} {a['face']} {a['center_um']:.6f}")
         (d/'assigned_pins.tcl').write_text('\n'.join(t)+'\n');out.append((name,len(expected),sum(a['layer']=='M6' for a in assignments.values())))
     return out

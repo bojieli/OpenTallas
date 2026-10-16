@@ -3,7 +3,7 @@ import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 from matplotlib.patches import Rectangle
-root=pathlib.Path('/home/ubuntu/wt/codex-qwen-link-recovery-0253');out=root/'results/rtl/qwen_link_recovery_0253'
+root=pathlib.Path(__file__).resolve().parents[3];out=root/'results/rtl/qwen_link_recovery_0253'
 for name in ['qfd_xs_leaf_m6_138','qfd_xhead_e_m6_138','qfd_xhead_w_m6_138']:
  d=json.load(open(root/'physical/ref_tile'/name/'contact_request.json'));w,h=d['outline']['w'],d['outline']['h'];fig,axs=plt.subplots(1,3,figsize=(13,9),gridspec_kw={'width_ratios':[1.7,1,1]});ax=axs[0]
  ax.add_patch(Rectangle((0,0),w,h,fill=False,color='black'));counts=collections.Counter();colors={'M3':'#008080','M4':'#537acf','M5':'#ad5e00','M6':'#b51f3b'}
