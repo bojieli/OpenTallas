@@ -692,8 +692,8 @@ foreach row $s81_ep_rows {
  odb::dbBox_create $bp $layer [expr {round($x0*$s81_ep_dbu)}] [expr {round($y0*$s81_ep_dbu)}] [expr {round($x1*$s81_ep_dbu)}] [expr {round($y1*$s81_ep_dbu)}]
  incr s81_ep_count
 }
-if {$s81_ep_count!=675} {error "S81_NATIVE_IO exact pin count $s81_ep_count differs675"}
+if {$s81_ep_count!=674} {error "S81_NATIVE_IO exact pin count $s81_ep_count differs674"}
 foreach bt [$s81_ep_block getBTerms] {if {[$bt getSigType] in {POWER GROUND} && ![llength [$bt getBPins]]} {error "S81_NATIVE_IO lost actual PG contact"}}
-puts "S81_NATIVE_IO actual rectangles675 original662 new_clock13 PG_preserved"
+puts "S81_NATIVE_IO actual rectangles674 roots14 PG_preserved"
 orfs_write_db $::env(RESULTS_DIR)/3_2_place_iop.odb
 write_pin_placement $::env(RESULTS_DIR)/3_2_place_iop.tcl
