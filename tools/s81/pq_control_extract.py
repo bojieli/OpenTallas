@@ -108,8 +108,25 @@ def main():
     group_cells={name for name in top['cells'] if any(name.endswith(g) for g in group_names)}
     if len(groups)!=2:raise ValueError('Both extracted groups must remain actual children')
     if set(top['cells'])!=set(retained)|group_cells:raise ValueError('Unowned parent cells remain after partition')
-    if len(partition['modules'][groups['ot_s81_pq_control_joint']]['cells'])!=len(controls):raise ValueError('Control cell conservation failed')
-    if len(partition['modules'][groups['ot_s81_pq_lane_joint']]['cells'])!=len(lanes):raise ValueError('Lane cell conservation failed')
+    actual_control=partition['modules'][groups['ot_s81_pq_control_joint']]['cells']
+    actual_lane=partition['modules'][groups['ot_s81_pq_lane_joint']]['cells']
+    if set(actual_control)-set(controls) or set(actual_lane)-set(lanes):raise ValueError('Unexpected extracted cells')
+    dead=(set(controls)-set(actual_control))|(set(lanes)-set(actual_lane))
+    # submod drops kept public prefix carry gates with no observable fanout.
+    # Prove the ENTIRE removed cone is combinational and isolated from every
+    # surviving cell input and every original external output; never permit
+    # a register, macro, consumed bit or producer result to disappear.
+    observable={b for port in flat['modules']['dsfd_sp_pq_produced']['ports'].values() if port['direction']=='output' for b in port['bits'] if isinstance(b,int)}
+    for name,cell in cells.items():
+        if name in dead:continue
+        for port,bits in cell['connections'].items():
+            if cell['port_directions'][port]=='input':observable.update(b for b in bits if isinstance(b,int))
+    for name in dead:
+        cell=cells[name]
+        if cell['type'] not in ('$and','$or'):raise ValueError('Non-carry cell removed: '+name)
+        output={b for port,bits in cell['connections'].items() if cell['port_directions'][port]=='output' for b in bits if isinstance(b,int)}
+        if output & observable:raise ValueError('Observable logic removed: '+name)
+
     selected=['dsfd_sp_pq_joint_candidate',*groups]
     export='read_json '+str((a.out/'partition.json').resolve())+'; '
     export+=''.join('rename '+actual+' '+logical+'; ' for logical,actual in groups.items())
@@ -120,7 +137,8 @@ def main():
                  yosys_version=subprocess.check_output([a.yosys,'-V'],text=True).strip(),
                  hierarchy_sha256=hashlib.sha256(a.hierarchy.read_bytes()).hexdigest(),
                  physical_elaboration_transforms=transforms,source_sha256=h['source_sha256'],defines=h['defines'],blackbox_datapath_modules=blackboxes,
-                 moved_control_cells=len(controls),moved_lane_cells=len(lanes),retained_hard_leaf_instances=len(retained),
+                 moved_control_cells=len(actual_control),moved_lane_cells=len(actual_lane),retained_hard_leaf_instances=len(retained),
+                 unobservable_cleanup=dict(cells=sorted(dead),count=len(dead),types=sorted({cells[n]['type'] for n in dead}),proof='Every removed cell is AND/OR carry logic; its outputs feed only other removed cells and no surviving input or external output. No sequential state or memory removed.'),
                  candidate_sha256=hashlib.sha256((a.out/'candidate.v').read_bytes()).hexdigest(),
                  native_qualified=False,physical_adopted=False)
     (a.out/'receipt.json').write_text(json.dumps(receipt,indent=2)+'\n')
