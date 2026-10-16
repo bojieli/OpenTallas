@@ -1343,12 +1343,17 @@ def pin_rects(mst, k, wmap):
     return out
 
 
-def lef_text(mst, k, wmap):
+STN_PIN_PITCH2 = False          # --stn-pin-pitch2 (VIS-ROM S81F-10): one-lane forwarded station pins at 2 tracks
+LEF_PIN_DIR = False             # --lef-pin-dir (S-DIE-RELAYFACE 10-16): INPUT / OUTPUT from the die netlist, not INOUT
+
+
+def lef_text(mst, k, wmap, pdir=None):
     L = [f'# tools/dsrom_s81_fulldie.py abstract: {mst.note}', f'MACRO {mst.name}', '  CLASS BLOCK ;',
          f'  FOREIGN {mst.name} 0 0 ;', f'  SIZE {mst.w:.3f} BY {mst.h:.3f} ;', '  SYMMETRY X Y ;']
     pins = pin_rects(mst, k, wmap)
     for nm, layer, (a, b, c_, d) in pins:
-        L += [f'  PIN {nm}', '    DIRECTION INOUT ;', '    USE SIGNAL ;', '    PORT', f'      LAYER {layer} ;',
+        dir_ = (pdir or {}).get(nm.split('[')[0], ('inout',))[0].upper()
+        L += [f'  PIN {nm}', f'    DIRECTION {dir_} ;', '    USE SIGNAL ;', '    PORT', f'      LAYER {layer} ;',
               f'        RECT {a:.3f} {b:.3f} {c_:.3f} {d:.3f} ;', '    END', f'  END {nm}']
     L.append('  OBS')
     for i in range(1, mst.obs_top + 1):
@@ -1393,7 +1398,7 @@ def write_lefs(m, k, path):
         for p in mst.order:
             if wmap[p] == 0:
                 wmap[p] = 0
-        t, n = lef_text(mst, k, wmap)
+        t, n = lef_text(mst, k, wmap, (m.get('pdir') or {}).get(name) if LEF_PIN_DIR else None)
         txt.append(t)
         npins += n
     Path(path).write_text('VERSION 5.8 ;\nBUSBITCHARS "[]" ;\nDIVIDERCHAR "/" ;\n' + '\n'.join(txt) + 'END LIBRARY\n')
@@ -1950,6 +1955,17 @@ def case_real(m, work):
     pin_align_gate(m, [(work / f).read_text() for f in ('elements.lef', 'q_elem.lef', 'cfg.lef', 'phy.lef', 'serdes.lef',
                                                          'ucie.lef', 'head_a.lef', 'head_b.lef', 'bound_views.lef')
                        if (work / f).exists()], work / 'pin_align.json')
+    if os.environ.get('OT_RELAY_FACE_AUDIT', '1') != '0':
+        # S-DIE-RELAYFACE 2026-10-16: per relay / node master, input and output bundles whose peer pin sits behind the
+        # pin face (tools/s81/relay_face_audit.py) + column reset terminals; --rly-face-pins / --col-reset-tree records
+        sys.path.insert(0, str(ROOT / 'tools' / 's81'))
+        import relay_face_audit as RFA
+        ra = RFA.audit(m['insts'], m['buses'], [(work / f).read_text() for f in (
+            'elements.lef', 'q_elem.lef', 'cfg.lef', 'phy.lef', 'serdes.lef', 'ucie.lef', 'head_a.lef', 'head_b.lef',
+            'bound_views.lef') if (work / f).exists()], top=0)
+        ra.update(rly_face_pins=m.get('rly_face_pins'), col_reset_tree=m.get('col_reset_tree'))
+        (work / 'relay_face_audit.json').write_text(json.dumps(ra, indent=1) + '\n')
+        print(RFA.line(ra), flush=True)
     if HOP_GATE_UM:
         # s81-die v14 (2026-10-12): hard hop gate before PLACE / GRT (c3: -17.7 ns TT on 2.3 mm unbuffered hub hops;
         # c5: a 1,025 um svc_SW.rv -> ctrl_SW.rd hop) -- every data bit, pin to pin, from the LEFs written above
@@ -5456,6 +5472,8 @@ def buses_r8(m):
         _hop_fix(m, P)
     if RELAY_PROGRESS:
         _relay_progress_fix(m, P)
+    if COL_RESET_TREE and ALIGN_EXT[0]:
+        _col_reset_tree(m, P)            # --col-reset-tree G: registered equal-depth column reset tree
     if LANE_EQUAL:
         _go_retap(m)
     if CTRL_SLAB and HOP_PLAN:
@@ -7164,6 +7182,364 @@ def _col_relays(m, P):
                                      ('rt_', 'xa_', 'xb_', 'cc_', 'qt_', 'es_', 'ss_', 'so_', 'nf_', 'cfg_', 'go_', 'rr_')})
 
 
+# ---------------------------------------------------------------------------------- relay faces from pin positions
+# --rly-face-pins (S-DIE-RELAYFACE 2026-10-16, VIS-ROM S81F-01/06/07/08): the hop-fix / column relays took their faces
+# from the driver / load INSTANCE CENTRES (fc() above) and, when driver and load lay on the same side, forced the out
+# face to the opposite face (`if fo == fi: fo = opposite`); --x-site-pair forced E->W.  c21h: dsfd_rly_283_EW /
+# 266_EW in face E with every driver (slot station xa / xb) WEST of it (1,521 / 1,521 input bundles wrap, 835 k bits),
+# 21 % of their outputs face away; 63_EW / 63_SN / 66_WE / 15_WE outputs 100 % away (up to 697 um behind the face).
+# This pass (finalize_r8, after the glue masters are named and before views bind) re-chooses EVERY relay's (in, out)
+# face pair from PIN positions: the driver's output pin and the loads' input pins (bound view LEF pins, hard-macro LEF
+# pins, die-assigned pins, else the generated master's face rule), the candidate's own pins from its bound view when
+# it has one.  Cost = pin-to-pin Manhattan + 2 x the distance a peer sits BEHIND the face (the wrap), driver plus the
+# worst load.  Candidates are the closed (view-bound) masters of the relay's width when it has any (S-NET+FILL owns
+# relay masters: no new kit is made here); a better non-closed variant (incl. a U master: in and out on one face) is
+# recorded in m['rly_face_pins']['kit_requests'] for the master owner.  Three passes settle relay -> relay chains.
+RLY_FACE_PINS = False
+_RFP_OPP = dict(N='S', S='N', E='W', W='E')
+_RFP_NRM = dict(E=(1.0, 0.0), W=(-1.0, 0.0), N=(0.0, 1.0), S=(0.0, -1.0))
+_RFP_BV = {}
+_RFP_RE = re.compile(r'dsfd_rly_(\d+)_([NSEW])([NSEW])$')
+
+
+def _rfp_orient(orient, x, y, f, w, h):
+    """master-frame (x, y, face) -> instance frame under orient (w, h: master outline)"""
+    if orient in ('MY', 'R180'):
+        x, f = w - x, {'E': 'W', 'W': 'E'}.get(f, f)
+    if orient in ('MX', 'R180'):
+        y, f = h - y, {'N': 'S', 'S': 'N'}.get(f, f)
+    return x, y, f
+
+
+def _rfp_bv_local(mst, base):
+    """(x, y, face, w, h) of a bound view's pins of port `base` in its own frame (centroid, majority face), or None"""
+    k_ = (mst, base)
+    if k_ not in _RFP_BV:
+        res = None
+        v = bound_views().get(mst)
+        if v is not None:
+            if mst not in _RFP_BV:
+                sys.path.insert(0, str(ROOT / 'tools' / 'hier_contract'))
+                import pin_align as PA_
+                _RFP_BV[mst] = PA_.read_pins([v['text']]).get(mst, (v['w'], v['h'], {}))
+            w_, h_, pp = _RFP_BV[mst]
+            q = [p_ for n_, p_ in pp.items() if n_ == base or re.fullmatch(re.escape(base) + r'\[\d+\]', n_)]
+            if q:
+                fs = defaultdict(int)
+                for p_ in q:
+                    fs[p_[2]] += 1
+                res = (sum(p_[0] for p_ in q) / len(q), sum(p_[1] for p_ in q) / len(q), max(fs, key=fs.get), w_, h_)
+        _RFP_BV[k_] = res
+    return _RFP_BV[k_]
+
+
+def _rfp_face_mid(w, h, f):
+    return dict(E=(w, h / 2), W=(0.0, h / 2), N=(w / 2, h), S=(w / 2, 0.0))[f]
+
+
+def _rfp_kind_face(it, base):
+    """the generated master's face of port `base` by its _faces_r8 rule (master frame), or None"""
+    mst, k = it.master, it.kind
+    if k == 'sstn':
+        return 'S' if base in ('xai', 'xbi', 'x2i', 'cci', 'qt', 'so') else 'W' if base in ('ck', 'rs') else \
+            'E' if base == 'nf' else 'N'
+    if k == 'hstn':
+        h_ = mst.startswith('dsfd_hstnh')
+        return ('W' if h_ else 'S') if base == 'di' else ('E' if h_ else 'N') if base == 'dq' else None
+    if k == 'stn':
+        h_ = mst.startswith('dsfd_stnh')
+        return ('W' if h_ else 'S') if base[:2] in ('di', 'fi') else ('E' if h_ else 'N') if base[:2] in ('do', 'fo') else None
+    if k == 'qbank':
+        ef = 'N' if mst.endswith('_S') else 'S'
+        return ef if base[:2] in ('o_', 'e_') else _RFP_OPP[ef] if base[:2] in ('i_', 'd_') else 'W'
+    if k == 'node' and mst.startswith('dsfd_node_') and len(mst) >= 12:
+        la, lb, up_ = mst[10] == 'L', mst[11] == 'L', mst.endswith('u')
+        if base in ('a', 'b'):
+            return 'W' if (la if base == 'a' else lb) else ('S' if base == 'a' else 'N')
+        return dict(fo='S', fi='N', o='N' if up_ else 'S').get(base)
+    return None
+
+
+def _rfp_pin(m, it, port, faces, lpt):
+    """die (x, y) of instance it's `port` before the glue pins are laid: a relay at its (current) faces (its bound
+    view's pins when that master is bound), a bound view's / hard macro's LEF pins, die-assigned pins, the generated
+    master's face rule, else the centre"""
+    base = pslice(port)[0]
+    if it.name in faces:
+        bits, (fi, fo) = faces[it.name]
+        f = fi if base == 'i' else fo if base == 'o' else None
+        if f is not None:
+            bv = _rfp_bv_local(f'dsfd_rly_{bits}_{fi}{fo}', base)
+            if bv is not None:
+                return (it.x + bv[0], it.y + bv[1])
+            x_, y_ = _rfp_face_mid(it.w, it.h, f)
+            return (it.x + x_, it.y + y_)
+    if it.master in REAL_FILES:
+        p_ = lpt(it.name, port) if lpt is not None else None
+        if p_ is not None:
+            return p_
+        if it.kind == 'q':
+            p_ = _q_pin_pt(it, port)
+            if p_ is not None:
+                return p_
+    bv = _rfp_bv_local(it.master, base)
+    if bv is not None:
+        x_, y_, _f = _rfp_orient(it.orient, bv[0], bv[1], bv[2], bv[3], bv[4])
+        return (it.x + x_, it.y + y_)
+    rec = _assigned_record(it.master)
+    spec = (rec or {}).get('ports', {}).get(base)
+    if spec:
+        cs = spec.get('per_bit')
+        if cs is None:
+            at = spec['at']
+            cs = [[spec['face'], spec.get('layer'), at[0] + i * at[1] if spec.get('uniform') else at[i]]
+                  for i in range(spec['bits'] if spec.get('uniform') else len(at))]
+        if cs:
+            pts = [{'N': (c_[2], it.h), 'S': (c_[2], 0.0), 'E': (it.w, c_[2]), 'W': (0.0, c_[2])}[c_[0]] for c_ in cs]
+            x_, y_ = sum(p_[0] for p_ in pts) / len(pts), sum(p_[1] for p_ in pts) / len(pts)
+            x_, y_, _f = _rfp_orient(it.orient, x_, y_, cs[0][0], it.w, it.h)
+            return (it.x + x_, it.y + y_)
+    f = _rfp_kind_face(it, base)
+    if f is not None:
+        x_, y_ = _rfp_face_mid(it.w, it.h, f)
+        x_, y_, _f = _rfp_orient(it.orient, x_, y_, f, it.w, it.h)
+        return (it.x + x_, it.y + y_)
+    return (it.x + it.w / 2, it.y + it.h / 2)
+
+
+def _rfp_cost(it, bits, fi, fo, d, loads):
+    """(cost, worst behind um) of relay `it` with faces fi -> fo: driver point d, load points"""
+    def pt(f, base):
+        bv = _rfp_bv_local(f'dsfd_rly_{bits}_{fi}{fo}', base)
+        if bv is not None:
+            return (it.x + bv[0], it.y + bv[1])
+        x_, y_ = _rfp_face_mid(it.w, it.h, f)
+        return (it.x + x_, it.y + y_)
+    pi, po = pt(fi, 'i'), pt(fo, 'o')
+    ni, no = _RFP_NRM[fi], _RFP_NRM[fo]
+    bi = max(0.0, -((d[0] - pi[0]) * ni[0] + (d[1] - pi[1]) * ni[1]))
+    eu = lambda a, b: math.hypot(a[0] - b[0], a[1] - b[1])      # 1 % Euclidean: a straight hop beats an equal-length L
+    c = _mh(d, pi) + 2.0 * bi + 0.01 * eu(d, pi)
+    wb, co = bi, 0.0
+    for q in loads:
+        bo = max(0.0, -((q[0] - po[0]) * no[0] + (q[1] - po[1]) * no[1]))
+        co = max(co, _mh(po, q) + 2.0 * bo + 0.01 * eu(po, q))
+        wb = max(wb, bo)
+    return c + co, wb
+
+
+def _relay_faces_by_pins(m, passes=3):
+    """--rly-face-pins: re-choose every relay instance's (in, out) faces from pin positions (see the block comment)"""
+    by = {it.name: it for it in m['insts']}
+    drv, lds = {}, defaultdict(list)
+    for bid, cls, bits, eps in m['buses']:
+        for e in eps[1:]:
+            if e[0] in by and pslice(e[1])[0] == 'i':
+                drv[e[0]] = eps[0]
+        if eps[0][0] in by and pslice(eps[0][1])[0] == 'o':
+            lds[eps[0][0]] += [e for e in eps[1:] if e[0] in by]
+    faces = {}
+    for it in m['insts']:
+        mm = _RFP_RE.fullmatch(it.master) if it.kind == 'rly' else None
+        if mm and it.name in drv and lds.get(it.name):
+            faces[it.name] = (int(mm.group(1)), (mm.group(2), mm.group(3)))
+    if not faces:
+        return
+    bv = bound_views()
+    closed = defaultdict(set)
+    for mst in bv:
+        mm = _RFP_RE.fullmatch(mst)
+        if mm:
+            closed[int(mm.group(1))].add((mm.group(2), mm.group(3)))
+    allf = [(a, b) for a in 'NSEW' for b in 'NSEW']
+    lpt = _lint_pin_pt(m)
+    before = {n_: f_[1] for n_, f_ in faces.items()}
+    kit = defaultdict(lambda: dict(instances=0, gain_um=0.0))
+    for p_ in range(passes):
+        changed = 0
+        for n_, (bits, cur) in sorted(faces.items()):
+            it = by[n_]
+            d = _rfp_pin(m, by[drv[n_][0]], drv[n_][1], faces, lpt) if drv[n_][0] in by else (it.x, it.y)
+            loads = [_rfp_pin(m, by[e[0]], e[1], faces, lpt) for e in lds[n_]]
+            cand = sorted(closed.get(bits) or [(a, b) for a, b in allf if a != b])
+            score = {c_: _rfp_cost(it, bits, c_[0], c_[1], d, loads) for c_ in cand}
+            best = min(cand, key=lambda c_: (score[c_][0] - (0.5 if c_ == cur else 0.0), c_))
+            if best != cur:
+                faces[n_] = (bits, best)
+                changed += 1
+        if not changed:
+            break
+    for n_, (bits, cur) in sorted(faces.items()):
+        # a better variant outside the closed set (U masters included): a kit request for the relay master owner
+        it = by[n_]
+        d = _rfp_pin(m, by[drv[n_][0]], drv[n_][1], faces, lpt) if drv[n_][0] in by else (it.x, it.y)
+        loads = [_rfp_pin(m, by[e[0]], e[1], faces, lpt) for e in lds[n_]]
+        free = min(allf, key=lambda c_: (_rfp_cost(it, bits, c_[0], c_[1], d, loads)[0], c_))
+        gain = _rfp_cost(it, bits, cur[0], cur[1], d, loads)[0] - _rfp_cost(it, bits, free[0], free[1], d, loads)[0]
+        if free != cur and gain > 20.0:
+            k_ = kit[f'dsfd_rly_{bits}_{free[0]}{free[1]}']
+            k_['instances'] += 1
+            k_['gain_um'] = round(max(k_['gain_um'], gain), 1)
+    moves = defaultdict(int)
+    for n_, (bits, (fi, fo)) in faces.items():
+        it = by[n_]
+        old = it.master
+        it.master = f'dsfd_rly_{bits}_{fi}{fo}'
+        RLY_FACES[it.master] = (fi, fo)
+        if before[n_] != (fi, fo):
+            moves[f'{old} -> {it.master}'] += 1
+    nonclosed = defaultdict(int)
+    for n_, (bits, f_) in faces.items():
+        if closed.get(bits) is not None and f_ not in closed[bits] or not closed.get(bits):
+            nonclosed[by[n_].master] += 1
+    m['rly_face_pins'] = dict(relays=len(faces), changed=sum(moves.values()), passes=p_ + 1,
+                              moves=dict(sorted(moves.items(), key=lambda kv: -kv[1])),
+                              not_closed=dict(sorted(nonclosed.items())),
+                              kit_requests=dict(sorted(kit.items(), key=lambda kv: -kv[1]['instances'])))
+    print('OT_RLY_FACE_PINS relays %d changed %d passes %d not-closed masters %d kit requests %d' % (
+        len(faces), sum(moves.values()), p_ + 1, len(nonclosed), len(kit)), file=sys.stderr)
+
+
+# ------------------------------------------------------------------------------- registered column reset tree
+# --col-reset-tree G (S-DIE-RELAYFACE 2026-10-16, VIS-ROM D-S81-02): n_rs_col_<c> was ONE net per column from the
+# column FIFO's rs to every element / station / relay of the column (c21h: 444-450 terminals, up to 4.1 mm).  The reset
+# is active low, asserted asynchronously and released synchronously (ot_s81_rly: posedge ck or negedge rs).  The tree
+# is built from standard 1-bit relay masters wired as reset pipeline stages: i AND rs both on the upstream reset, so
+# an assertion passes through every stage at once (async clear) and a release passes one stage per column clock.
+# Recursive median bisection of the column's sinks (longer axis) until a group has <= G sinks (and, with
+# --col-reset-span, a half-perimeter <= that span); one stage register per tree node at its sinks' centroid; every edge longer than the
+# column reach (BANK_RULE_UM) takes series stages, and every edge of one tree LEVEL takes the same number, so EVERY sink
+# sees the same number of stages: the whole column leaves reset on one cycle (static schedule: a fixed, known release
+# latency, recorded per column in m['col_reset_tree']).  The stage registers are column-clock sinks (ck_col_<c>).
+COL_RESET_TREE = 0              # built on the final build only (ALIGN_EXT[0]): the hop-plan passes never see its registers
+COL_RESET_SPAN_UM = 0.0           # --col-reset-span UM: also split a leaf group wider than UM (0: count only)
+
+
+def _col_reset_tree(m, P):
+    by = {it.name: it for it in m['insts']}
+    cen = lambda it: (it.x + it.w / 2, it.y + it.h / 2)
+    # stage registers stay inside the column's own field region (frame_<c>): the hub / corridor stations placed later
+    # keep every site they had (first c26 trial: a corridor station found no box after the tree took field-edge sites)
+    frect = {r_['name']: r_['rect'] for r_ in m['regions'] if r_.get('kind') == 'field'}
+    ckb = {b[0]: i for i, b in enumerate(m['buses']) if b[1] == 'col_clock'}
+    w_, h_ = relay_dims(1, True)
+    G = int(COL_RESET_TREE)
+    rec, new = {}, []
+    for i, (bid, cls, bits, eps) in enumerate(list(m['buses'])):
+        if cls != 'col_reset' or len(eps) - 1 <= G:
+            continue
+        r = bid.rsplit('_', 1)[-1]
+        ck = ckb.get(f'ck_col_{r}')
+        root = eps[0]
+        if ck is None or root[0] not in by:
+            continue
+        sinks = [e for e in eps[1:] if e[0] in by]
+        pos = {e: cen(by[e[0]]) for e in sinks}
+
+        def split(grp):
+            xs, ys = [pos[e][0] for e in grp], [pos[e][1] for e in grp]
+            if len(grp) <= G and (not COL_RESET_SPAN_UM or (max(xs) - min(xs)) + (max(ys) - min(ys)) <= COL_RESET_SPAN_UM) \
+                    or len(grp) < 2:
+                return dict(sinks=grp)
+            ax = 0 if max(xs) - min(xs) >= max(ys) - min(ys) else 1
+            s = sorted(grp, key=lambda e: (pos[e][ax], pos[e][1 - ax]))
+            k = len(s) // 2
+            return dict(kids=[split(s[:k]), split(s[k:])])
+        tree = split(sinks)
+
+        def depth(t):
+            return 1 + max(depth(c) for c in t['kids']) if 'kids' in t else 1
+        D = depth(tree)
+
+        def pad(t, d):          # every leaf at depth D: a short branch continues as single-child nodes
+            if 'kids' in t:
+                t['kids'] = [pad(c, d + 1) for c in t['kids']]
+                return t
+            if d < D:
+                return dict(kids=[pad(dict(sinks=t['sinks']), d + 1)])
+            return t
+        tree = pad(tree, 1)
+
+        def members(t):
+            return t['sinks'] if 'sinks' in t else [e for c in t['kids'] for e in members(c)]
+
+        def centroid(t):
+            ms = members(t)
+            return (sum(pos[e][0] for e in ms) / len(ms), sum(pos[e][1] for e in ms) / len(ms))
+        # series stages per level: the longest parent -> child centroid hop of that level over the column reach
+        lvl_len = defaultdict(float)
+
+        def walk(t, pt, lv):
+            c_ = centroid(t)
+            lvl_len[lv] = max(lvl_len[lv], _mh(pt, c_))
+            for c in t.get('kids', []):
+                walk(c, c_, lv + 1)
+        walk(tree, cen(by[root[0]]), 0)
+        reach = BANK_RULE_UM
+        extra = {lv: max(0, math.ceil(L_ / reach - 1e-9) - 1) for lv, L_ in lvl_len.items()}
+        nreg = [0]
+        fails = []
+
+        def stage(pt, prev, tag):
+            allowed = [frect[f'frame_{r}']] if f'frame_{r}' in frect else \
+                [rr for rr in frect.values() if rr[0] <= pt[0] <= rr[2] and rr[1] <= pt[1] <= rr[3]]
+            pt = (min(max(pt[0], allowed[0][0] + w_), allowed[0][2] - w_), min(max(pt[1], allowed[0][1] + h_), allowed[0][3] - h_)) \
+                if allowed else pt
+            pl = None
+            for sp_, rw_ in ((72.0, 10), (200.0, 16), (400.0, 40)):
+                pl = P.near(pt[0], pt[1], w_, h_, allowed, prev=prev, reach=reach, span=sp_, rows=rw_)
+                if pl is not None:
+                    break
+            if pl is None:
+                pl = P.near(pt[0], pt[1], w_, h_, allowed, prev=None, span=1600.0, rows=160)
+                fails.append(tag)
+            assert pl, ('--col-reset-tree: no site', bid, tag)
+            nm = f'z_rs{r}_{nreg[0]}'
+            nreg[0] += 1
+            it = P.add(Inst(nm, 'dsfd_rly_1_WE', pl[0], pl[1], w_, h_, kind='rly', region=f'frame_{r}',
+                            power_w=FLOP_CLK_W * 1.5))
+            RLY_FACES.setdefault('dsfd_rly_1_WE', ('W', 'E'))      # standard closed 1-bit master; --rly-face-pins refines
+            by[nm] = it
+            return it
+
+        def build(t, src, lv):
+            """src = (inst, port) driving this node's reset; returns nothing (nets appended to `new`)"""
+            c_ = centroid(t)
+            p0 = cen(by[src[0]])
+            cur = src
+            n_ex = extra.get(lv, 0)
+            for j in range(n_ex):          # series stages on the hop (equal count for the whole level)
+                f_ = (j + 1) / (n_ex + 1)
+                pt = (p0[0] + (c_[0] - p0[0]) * f_, p0[1] + (c_[1] - p0[1]) * f_)
+                it = stage(pt, cen(by[cur[0]]), f'L{lv}s{j}')
+                new.append((f'{bid}_z{it.name}', 'col_reset', 1, [cur, (it.name, 'i'), (it.name, 'rs')]))
+                m['buses'][ck] = (m['buses'][ck][0], 'col_clock', 1, m['buses'][ck][3] + [(it.name, 'ck')])
+                cur = (it.name, 'o')
+            it = stage(c_, cen(by[cur[0]]), f'L{lv}')
+            new.append((f'{bid}_z{it.name}', 'col_reset', 1, [cur, (it.name, 'i'), (it.name, 'rs')]))
+            m['buses'][ck] = (m['buses'][ck][0], 'col_clock', 1, m['buses'][ck][3] + [(it.name, 'ck')])
+            if 'kids' in t:
+                for c in t['kids']:
+                    build(c, (it.name, 'o'), lv + 1)
+            else:
+                new.append((f'{bid}_l{it.name}', 'col_reset', 1, [(it.name, 'o')] + list(t['sinks'])))
+        build(tree, root, 0)
+        m['buses'][i] = (bid, cls, bits, [root])       # emptied: the tree nets carry the column reset
+        stages = D + sum(extra.get(lv, 0) for lv in range(D))
+        rec[bid] = dict(sinks=len(sinks), registers=nreg[0], depth=stages, max_fanout=max(
+            [len(b[3]) - 1 for b in new if b[0].startswith(bid + '_')] + [0]), unreached=fails[:4])
+    if not rec:
+        return
+    m['buses'][:] = [b for b in m['buses'] if not (b[1] == 'col_reset' and len(b[3]) == 1)] + new
+    m['col_reset_tree'] = dict(fanout_limit=G, span_um=COL_RESET_SPAN_UM, columns=rec,
+                               registers=sum(v['registers'] for v in rec.values()),
+                               max_terminals=max(v['max_fanout'] for v in rec.values()) + 1,
+                               release_stages=sorted({v['depth'] for v in rec.values()}))
+    print('OT_COL_RESET_TREE columns %d registers %d max terminals/net %d release stages %s' % (
+        len(rec), m['col_reset_tree']['registers'], m['col_reset_tree']['max_terminals'],
+        m['col_reset_tree']['release_stages']), file=sys.stderr)
+
+
 def _split_far_pins(Bk, pb, bits, gap_um=200.0):
     """r5 2026-10-14 (gather hop gate, el1013-s81-gather.log 11:21 answer (a)): the die-assigned pins of Bk.pb as one
     run plus a trailing group whose pins sit > gap_um along the face from the run (gather rW*/rE* [N-2:N-1] = trunk
@@ -8792,6 +9168,8 @@ def finalize_r8(m):
             py = max((by_[e[0]].y for e in par), default=0.0)
             it.master = 'dsfd_node_%s%s%s%s' % ('L' if u['a'][1] == LEAF else 'N', 'L' if u['b'][1] == LEAF else 'N',
                                                 'f' if 'fi' in u else '', 'u' if py > it.y else 'd')
+    if RLY_FACE_PINS and ALIGN_EXT[0]:
+        _relay_faces_by_pins(m)          # --rly-face-pins: relay faces from driver / load PIN positions
     pdir = defaultdict(dict)
     real_ = set(real_ports()) if RTL_BIND else set()
     for it in m['insts']:
@@ -9290,6 +9668,11 @@ def _abut_relay_fix(m, it, ports, face):
             continue
         sp = _view_pin_span(m, o, 'i')
         c_, pt_ = ((sp[0] + sp[1]) / 2, sp[2]) if sp else (o.w / 2, 1)
+        w_ = bits * 0.048 * pt_
+        if not (w_ / 2 + 0.2 <= o.x + c_ - it.x <= it.w - w_ / 2 - 0.2):
+            # S-DIE-RELAYFACE 10-16: a relay beside the station (--x-site-pair site E of it) whose pin face looks at the
+            # station's N face from past its end: the station keeps its packed group (b2 trial: xb at 187 > 172.8 um)
+            continue
         out[p_] = (o.x + c_ - it.x, pt_)
     return out
 
@@ -9632,8 +10015,25 @@ def _faces_r8(m, Mx, it, ports):
         n = len([p_ for p_ in ports if p_.startswith('fi')])
         ins = [x for j in range(n) for x in ((f'fi{j}', 1), (f'di{j}', ports[f'di{j}'][1]))]
         outs = [x for j in range(n) for x in ((f'fo{j}', 1), (f'do{j}', ports[f'do{j}'][1]))]
-        _lay(Mx, 'W' if horiz else 'S', ins, 'M4' if horiz else 'M5', gap=0.0)
-        _lay(Mx, 'E' if horiz else 'N', outs, 'M4' if horiz else 'M5', gap=0.0)
+        L_, b_ = (Mx.h if horiz else Mx.w), (ports['di0'][1] if n == 1 else 0)
+        if STN_PIN_PITCH2 and n == 1 and _LAY_K[0] == 1 and (b_ + 1) * 0.096 + 0.8 <= L_:
+            # --stn-pin-pitch2 (VIS-ROM S81F-10, S-NET+FILL ask 10-16): a one-lane forwarded station (stnh / stnv_86x1,
+            # the 70x1 rebinds) put fi0 + di0 (87 pins) on EVERY track of a 4.3-um window: the clock + data pins take
+            # every 2nd track instead, one uniform 0.096-um pitch window centred on the face (fi0 first), the same on
+            # the in and the out face, so a straight chain stays straight; the abutting link-end ports follow (hend)
+            off_, p_ = TRK['M4' if horiz else 'M5']
+            snap_ = lambda v: off_ + round((v - off_) / p_) * p_          # on the layer's track grid
+            x0_ = snap_(snap_(L_ / 2) - b_ * 0.048)                         # middle pin on the track nearest the face centre
+            for f_, (pc_, _1), (pd_, _b) in (('W' if horiz else 'S', ins[0], ins[1]), ('E' if horiz else 'N', outs[0], outs[1])):
+                Mx.face(pc_, 1, f_, 'M4' if horiz else 'M5', x0_ + 0.048, 2)                  # fi0 / fo0 at x0
+                Mx.face(pd_, b_, f_, 'M4' if horiz else 'M5', x0_ + 0.096 + b_ * 0.048, 2)    # di0 / do0 from x0 + 0.096
+            m.setdefault('stn_pin_pitch2', {})[mst] = dict(face_um=round(L_, 3), clock_pin=round(x0_, 3),
+                                                          data_first=round(x0_ + 0.096, 3),
+                                                          data_last=round(x0_ + 0.096 * b_, 3), pitch=0.096,
+                                                          bits=b_, faces=('WE' if horiz else 'SN'))
+        else:
+            _lay(Mx, 'W' if horiz else 'S', ins, 'M4' if horiz else 'M5', gap=0.0)
+            _lay(Mx, 'E' if horiz else 'N', outs, 'M4' if horiz else 'M5', gap=0.0)
     elif kind == 'lkck':     # forwarded-clock relay: in toward its driver, out toward the macro ck pin
         for p_, f_, at in (('fi', mst[-2], 2.16), ('fo', mst[-1], 6.48)):
             Mx.face(p_, 1, f_, 'M5' if f_ in 'NS' else 'M4', at, 1)
@@ -9769,12 +10169,15 @@ def _faces_r8(m, Mx, it, ports):
                 for p1_, b1_ in lst:
                     pe_ = {i_ for _b, _c, _w, eps_ in m['_nets_of'].get((it.name, p1_), []) for i_, _q in eps_
                            if i_ != it.name and i_ in m['_by']}
+                    # --stn-pin-pitch2: a port whose peers are all pitch-2 one-lane stations takes their pitch (in or out)
+                    pt2_ = 2 if STN_PIN_PITCH2 and pe_ and all(m['_by'][i_].master in m.get('stn_pin_pitch2', {})
+                                                               for i_ in pe_) else 1
                     if b1_ >= 64 and pe_ and all(m['_by'][i_].kind in ('hstn', 'stn', 'xstg') for i_ in pe_) and \
-                            ports[p1_][0] == 'output':
-                        bw_ = b1_ * 0.048
+                            (ports[p1_][0] == 'output' or pt2_ == 2):
+                        bw_ = b1_ * 0.048 * pt2_
                         c_ = min(max(_peer_pos(m, it, p1_, f), bw_ / 2 + 0.4), L - bw_ / 2 - 0.4)
-                        if all(abs(c_ - c2_) >= (bw_ + ports[q_][1] * 0.048) / 2 + 0.3 for q_, (c2_, _p) in fx_.items()):
-                            fx_[p1_] = (c_, 1)
+                        if all(abs(c_ - c2_) >= (bw_ + ports[q_][1] * 0.048 * p2_) / 2 + 0.3 for q_, (c2_, p2_) in fx_.items()):
+                            fx_[p1_] = (c_, pt2_)
                 if fx_ and len(fx_) < len(lst):
                     try:
                         _lay_fixed(Mx, f, lst, 'M4' if f in 'EW' else 'M5', 1, fx_, gap=0.144)
@@ -9784,7 +10187,7 @@ def _faces_r8(m, Mx, it, ports):
                             del Mx.ports[q_]; Mx.order.remove(q_)
                 elif fx_:
                     (p1_, (c_, _p)), = fx_.items()
-                    Mx.face(p1_, ports[p1_][1], f, 'M4' if f in 'EW' else 'M5', c_, 1)
+                    Mx.face(p1_, ports[p1_][1], f, 'M4' if f in 'EW' else 'M5', c_, _p)
                     continue
             _lay(Mx, f, lst, 'M4' if f in 'EW' else 'M5', gap=0.0)
     elif kind == 'bf' and BF_HIER:   # dsfd_bf_front: x stream N, control S, column interfaces W / E (abutted)
@@ -10892,6 +11295,17 @@ def die_options(ap):
                     'adopt with a regenerated pin set')
     ap.add_argument('--wfc-priced', action='store_true', help='contract v16: WFC kit die pins of the PRICED kit (RD2 1: '
                     't_srd 31, f_srq 1026; t_ft 4 to the host fault collector)')
+    ap.add_argument('--rly-face-pins', action='store_true', help='S-DIE-RELAYFACE 10-16 (VIS-ROM S81F-01/06/07/08): every '
+                    'relay takes its (in, out) faces from driver / load PIN positions (closed masters of its width only; '
+                    'better non-closed variants are recorded as kit requests), not from instance centres')
+    ap.add_argument('--col-reset-tree', type=int, default=0, metavar='G', help='S-DIE-RELAYFACE 10-16 (VIS-ROM D-S81-02): '
+                    'registered equal-depth column reset tree, <= G sinks per stage register (1-bit relay masters)')
+    ap.add_argument('--col-reset-span', type=float, default=0.0, help='--col-reset-tree: also split leaf groups wider than this half-perimeter (um; 0 = count only)')
+    ap.add_argument('--stn-pin-pitch2', action='store_true', help='VIS-ROM S81F-10 (S-NET+FILL 10-16): one-lane forwarded '
+                    'stations (stnh/stnv_86x1) lay fi0 + di0 / fo0 + do0 at a uniform 2-track (0.096 um) pitch centred on '
+                    'the face; the abutting link-end ports take the same pitch')
+    ap.add_argument('--lef-pin-dir', action='store_true', help='S-DIE-RELAYFACE 10-16 (VIS-ROM D-S81-02): generated '
+                    'abstracts declare DIRECTION INPUT / OUTPUT from the die netlist (were all INOUT)')
     ap.add_argument('--rly-face-reach', type=float, default=0.0, help='s81-die v16: the last column relay of a net takes '
                     'the out face nearest its worst load when the default face centre is > UM from a load pin (straight '
                     'master kept: in face opposite)')
@@ -11259,6 +11673,12 @@ def apply_options(a):
     global RLY_FACE_REACH, RLY_REAL_DIMS
     RLY_REAL_DIMS = bool(getattr(a, "rly_real_dims", False))
     RLY_FACE_REACH = float(getattr(a, 'rly_face_reach', 0.0) or 0.0)
+    global RLY_FACE_PINS, COL_RESET_TREE, COL_RESET_SPAN_UM, LEF_PIN_DIR, STN_PIN_PITCH2
+    STN_PIN_PITCH2 = bool(getattr(a, 'stn_pin_pitch2', False))
+    RLY_FACE_PINS = bool(getattr(a, 'rly_face_pins', False))
+    COL_RESET_TREE = int(getattr(a, 'col_reset_tree', 0) or 0)
+    COL_RESET_SPAN_UM = float(getattr(a, 'col_reset_span', 0.0) or 0.0)
+    LEF_PIN_DIR = bool(getattr(a, 'lef_pin_dir', False))
     HOP_GATE_UM = getattr(a, 'hop_gate', None)
     CTRL_SVC_ALIGN = bool(getattr(a, 'ctrl_svc_align', False))
     FWD_IFACE = bool(getattr(a, 'fwd_iface', False))
