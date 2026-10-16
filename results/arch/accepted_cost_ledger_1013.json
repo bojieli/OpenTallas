@@ -410,6 +410,20 @@
      "wave_positions": 0,
      "wave_added_cycles_per_position": 0.0,
      "e2e_loss_pct": 0.14
+    },
+    "mtp": {
+     "model": "token-path longest path",
+     "base_cycles": 1177516.1,
+     "cycles": 1178924.1,
+     "added_cycles": 1408.0,
+     "runs_per_token": 312,
+     "critical_runs": 312,
+     "overlapped_runs": 0,
+     "other_price_nodes_skipped": 0,
+     "naive_added_cycles": 1248.0,
+     "wave_positions": 5,
+     "wave_added_cycles_per_position": 32.0,
+     "e2e_loss_pct": 0.119
     }
    },
    "within_unit_limit": true,
