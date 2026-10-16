@@ -61,6 +61,30 @@ def patch(scripts: Path, helper: str) -> dict:
     return out
 
 
+# The detailed optimizer can create off-site cells after ordinary legalization
+# (Q-TILE45 r5: NK33/NL3 cells, almost all one DBU before a fence edge).
+# Run ordinary legalization after the final optimizer/mirroring mutation, before
+# the original mandatory placement check. No errors or checks are suppressed.
+FINAL_DPL_ANCHOR = ('  log_cmd optimize_mirroring\n\n'
+                    '  utl::info FLW 12 "Placement violations [check_placement -verbose]."')
+FINAL_DPL_BLOCK = ('  log_cmd optimize_mirroring\n\n'
+                   '  puts "OT_FINAL_DPL: ordinary legalization after final optimizer/mirroring"\n'
+                   '  log_cmd detailed_placement {*}$dpl_args\n\n'
+                   '  utl::info FLW 12 "Placement violations [check_placement -verbose]."')
+
+
+def patch_final_dpl(scripts: Path) -> str:
+    """Fail closed unless the final mutation/check sequence is exactly recognized."""
+    target = scripts / "detail_place.tcl"
+    text = target.read_text()
+    if text.count(FINAL_DPL_BLOCK) == 1:
+        return "already patched"
+    if "OT_FINAL_DPL" in text or text.count(FINAL_DPL_ANCHOR) != 1:
+        raise SystemExit("orfs_hold_mm: final legalization anchor not found exactly once in detail_place.tcl; refusing")
+    target.write_text(text.replace(FINAL_DPL_ANCHOR, FINAL_DPL_BLOCK, 1))
+    return "patched"
+
+
 STAGE_LOGS = {"cts": ["4_1_cts.log"], "globalroute": ["5_1_grt.log"]}
 
 
@@ -176,6 +200,7 @@ def patch_abc_no_dch(scripts: Path, env=None) -> str:
 
 
 if __name__ == "__main__":
+    print("orfs_hold_mm: final legalization", patch_final_dpl(Path(sys.argv[1])))
     print("orfs_hold_mm:", json.dumps(patch(Path(sys.argv[1]), sys.argv[2] if len(sys.argv) > 2 else "/src/tools/orfs_hold_mm.tcl")))
     try:
         print("orfs_hold_mm: abc no-dch", patch_abc_no_dch(Path(sys.argv[1])))
