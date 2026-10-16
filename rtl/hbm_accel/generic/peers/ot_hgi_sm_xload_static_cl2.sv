@@ -588,33 +588,37 @@ module ot_hgi_sm_xload_cl2_bfq (
     //     enable/select flops, which are idle until the ctl issues after its own release);
     // (2) the write-mask pair is ONE pin register each (was 8 per-macro copies 250 um from the W pins), driving the
     //     macros' mask pins through its buffer tree: same edge as wp_d/wp_ce, so every macro sees the same write.
+    // cl2d (native audit of CLOSED cl2c TT +77.02/FF +13.11: capture 260.5 ps on 537 c_d pins, boundary clock spread
+    // 120.8 ps): every c_d bit fed TWO per-macro flops (wp_d lo/hi copies) and wa/r_a/wce fed 8 per-macro copies, so
+    // io_flop_at_pins (pin + ONE flop D) left them unanchored, placed at the macros up to ~230 um from the pins.  Now
+    // every input has exactly ONE pin register (c_d -> cdq, wa -> wa_q, r_a -> ra_q, wce -> wce_q; r_ce[t] already one),
+    // which drives the macro pins directly through its buffer tree: same edges (they replace wp_d / wp_a / rp_a / wp_ce).
     wire [0:0] rn_l;
     ot_rst_relay #(.REGIONS(1), .SYNC_STAGES(2), .TREE_STAGES(1)) u_rst (.clk(clk), .rst_n_in(rst_n), .rst_n(rn_l));
     (* keep = 1 *) reg mask_hi, mask_lo;
     always @(posedge clk) begin mask_hi <= mhi; mask_lo <= mlo; end
+    (* keep = 1 *) reg [1023:0] cdq; (* keep = 1 *) reg [6:0] wa_q, ra_q;
+    always @(posedge clk) begin cdq <= c_d; wa_q <= wa; ra_q <= r_a; end
+    (* keep = 1 *) reg wce_q;
+    always @(posedge clk or negedge rn_l[0]) if (!rn_l[0]) wce_q <= 1'b0; else wce_q <= wce;
     wire [255:0] cap [0:7];
     genvar gt;
     generate for (gt = 0; gt < 8; gt = gt + 1) begin : g_t
-        (* keep = 1 *) reg rp_ce; (* keep = 1 *) reg [6:0] rp_a; reg rp_sel;
-        (* keep = 1 *) reg wp_ce; (* keep = 1 *) reg [6:0] wp_a; reg [255:0] wp_d;
+        (* keep = 1 *) reg rp_ce; reg rp_sel;
+        wire [255:0] wp_d = {cdq[gt*128 +: 128], cdq[gt*128 +: 128]};   // c_d[(t 8 + l) 16 +: 16] -> lane l, both halves
         wire [255:0] wp_m = {{128{mask_hi}}, {128{mask_lo}}};
         reg [255:0] cq;
         wire [255:0] rd;
         always @(posedge clk or negedge rn_l[0]) begin
-            if (!rn_l[0]) begin rp_ce <= 1'b0; rp_sel <= 1'b0; wp_ce <= 1'b0; end
-            else begin rp_ce <= r_ce[gt]; rp_sel <= rp_ce; wp_ce <= wce; end
+            if (!rn_l[0]) begin rp_ce <= 1'b0; rp_sel <= 1'b0; end
+            else begin rp_ce <= r_ce[gt]; rp_sel <= rp_ce; end
         end
         always @(posedge clk) begin
-            rp_a <= r_a; wp_a <= wa;
-            for (integer l = 0; l < 8; l = l + 1) begin
-                wp_d[16*l +: 16] <= c_d[(gt*8 + l)*16 +: 16];
-                wp_d[128 + 16*l +: 16] <= c_d[(gt*8 + l)*16 +: 16];
-            end
             cq <= rd & {256{rp_sel}};
         end
         ot_sram_1r1w_128x256_m1_r2c2 u_m (.clk(clk),
-            .r_ce_in(rp_ce), .r_addr_in(rp_a), .rd_out(rd),
-            .w_ce_in(wp_ce), .w_addr_in(wp_a), .wd_in(wp_d), .w_mask_in(wp_m),
+            .r_ce_in(rp_ce), .r_addr_in(ra_q), .rd_out(rd),
+            .w_ce_in(wce_q), .w_addr_in(wa_q), .wd_in(wp_d), .w_mask_in(wp_m),
             .rr_en(2'b00), .rr_addr(14'd0), .cr_en(2'b00), .cr_sel(16'd0));
         assign cap[gt] = cq;
     end endgenerate
