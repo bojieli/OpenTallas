@@ -51,7 +51,16 @@ def sha(p: Path) -> str:
 
 def job_of(abstract: dict) -> str | None:
     m = re.search(r"/closure-loop/([^/]+)/", abstract.get("orfs_dir", ""))
-    return m.group(1) if m else None
+    if m:
+        return m.group(1)
+    # closed-archive re-export (tools/tt_views/view_export.py job replay, --require-check): the export ran on a restored
+    # copy of the closed run, so orfs_dir is the restore dir; the job is the one whose verdict the export reproduced
+    # (verdict.check ok against verdict.job's record) -- the same job-state gates then apply to that CLOSED job
+    v = abstract.get("verdict") if isinstance(abstract.get("verdict"), dict) else {}
+    chk = v.get("check") or {}
+    if v.get("job") and all((chk.get(c) or {}).get("ok") for c in ("tt", "ff")):
+        return v["job"]
+    return None
 
 
 def verdict_ok(reason: str):
