@@ -21,6 +21,8 @@ initial begin
   rst_n=(cyc>=30 && cyc%137!=0);re0=(cyc%5!=0);re1=cyc%2;
   a0=24'((cyc*7919)%190000);a1=a0+((cyc%11==0)?7:((cyc%3==0)?0:1));
   if(cyc%19==0)a1=a0-1;
+  // Asynchronous reset clears valid state when rst_n falls, before the next edge.
+  if(!rst_n)begin pv=0;qv=0;end
   @(posedge ck);
   for(i=16;i>0;i=i-1)begin vs[i]=vs[i-1];ss[i]=ss[i-1];as_[i]=as_[i-1];end
   vs[0]=qv;ss[0]=qs;as_[0]=24'(qa);
