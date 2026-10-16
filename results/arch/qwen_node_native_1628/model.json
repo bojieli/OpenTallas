@@ -30,5 +30,10 @@
   "throughput_ratio": 1.0,
   "token_latency_delta_edges": 0,
   "source": "results/arch/qwen_node_native_1628/closed_node_native.json",
-  "placement_note": "TOREG flops share E-side input and W-side output: no extra pipeline stage; output pad delay correction preserves input capture stage"
+  "placement_note": "TOREG flops share E-side input and W-side output: no extra pipeline stage; output pad delay correction preserves input capture stage",
+  "baseline_mapped_flops": 12102,
+  "candidate_mapped_flops": 12102,
+  "measured_physical_flop_clones": 0,
+  "dedicated_output_pin_flops": 1027,
+  "flop_count_evidence": "results/arch/qwen_node_native_1628/mapped_count.json"
 }
