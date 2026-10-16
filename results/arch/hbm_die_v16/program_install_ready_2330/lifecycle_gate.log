@@ -1,0 +1,8 @@
+TARGET_PARTICIPATION PASS case=-1 sequential targets, consumed descriptor, write disarm, invalid replacement and collisions
+OLDSOURCE_CASE0 rc=1: FATAL: /home/ubuntu/wt/hnetlist-1015/rtl/hbm_accel/host_static_20261015/tb_hbm_target_participation.sv:35: sequential target replay counts 2/1/2/1
+OLDSOURCE_CASE1 rc=1: FATAL: /home/ubuntu/wt/hnetlist-1015/rtl/hbm_accel/host_static_20261015/tb_hbm_target_participation.sv:27: unsafe launch counts 1/0/1/0
+OLDSOURCE_CASE2 rc=1: FATAL: /home/ubuntu/wt/hnetlist-1015/rtl/hbm_accel/host_static_20261015/tb_hbm_target_participation.sv:28: descriptor remains armed 0101
+OLDSOURCE_CASE3 rc=1: FATAL: /home/ubuntu/wt/hnetlist-1015/rtl/hbm_accel/host_static_20261015/tb_hbm_target_participation.sv:27: unsafe launch counts 1/0/1/0
+OLDSOURCE_CASE4 rc=1: FATAL: /home/ubuntu/wt/hnetlist-1015/rtl/hbm_accel/host_static_20261015/tb_hbm_target_participation.sv:27: unsafe launch counts 1/0/1/0
+OLDSOURCE_CASE5 rc=1: FATAL: /home/ubuntu/wt/hnetlist-1015/rtl/hbm_accel/host_static_20261015/tb_hbm_target_participation.sv:27: unsafe launch counts 1/0/1/0
+TARGET_PARTICIPATION_GATE PASS current sixcases, oldsource rejects allsix
