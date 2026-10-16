@@ -10,7 +10,7 @@ for master,v in j['leaf_views'].items():
   if m:=re.search(r'\bLAYER\s+(\w+)',line):layer=m[1]
   if m:=re.search(r'\bRECT\s+([\d.e+-]+)\s+([\d.e+-]+)\s+([\d.e+-]+)\s+([\d.e+-]+)',line):rr.append((layer,*map(float,m.groups())))
  obs[master]=rr
-modules=json.loads((O/'cluster_graph.json').read_text())['modules'];cells=next(v['cells']for v in modules.values()if v.get('attributes',{}).get('top')=='00000000000000000000000000000001')
+modules=json.loads((O/'cluster_graph.json').read_text())['modules'];cells=next(v['cells']for v in modules.values()if v.get('attributes',{}).get('top') in [1,'1','00000000000000000000000000000001'])
 rows=[]
 for axis,layer,dim in [('x','M4',1),('y','M5',0)]:
  extent=q['outline_um'][dim];tracks=[.012+.048*i for i in range(math.ceil(extent/.048))if .012+.048*i<extent]
