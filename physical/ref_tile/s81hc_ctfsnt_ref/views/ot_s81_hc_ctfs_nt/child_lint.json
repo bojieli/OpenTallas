@@ -1,16 +1,14 @@
 {
  "schema": "opentallas.hier_contract.child_lint.v1",
- "lef": "/srv/opentallas/claude/closure-loop/s81hc_ctfsnt_ref-v5-spread-1da74f562/record/views/ot_s81_hc_ctfs_nt/ot_s81_hc_ctfs_nt.lef",
+ "lef": "/srv/opentallas-scratch2/claude/closure-loop/s81hc_ctfsnt_ref-v6-ysh-pd35sc-COMMIT-3f4973a01/record/views/ot_s81_hc_ctfs_nt/ot_s81_hc_ctfs_nt.lef",
  "verdict": "PASS",
  "fails": [],
- "warns": [
-  "(f) face-pin access: 6473 of 6473 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. clk M3 (286.020,25.819), rst_in M3 (286.020,25.819), dl_in[0] M5 (40.032,23.783))"
- ],
- "summary": "ot_s81_hc_ctfs_nt 576.72 x 25.92: PG M5 VDD 106 stripes (98% spread, 100% cov) / VSS 106 stripes (98% spread, 100% cov); strap M6; face pins 6473 blocked-above 0 blocked-same 0; clock clk insertion 319 ps; pockets M5 0 (closed)",
+ "warns": [],
+ "summary": "ot_s81_hc_ctfs_nt 576.72 x 51.84: PG M5 VDD 106 stripes (98% spread, 100% cov) / VSS 106 stripes (98% spread, 100% cov); strap M6; face pins 6473 blocked-above 0 blocked-same 0; clock clk insertion 322 ps; pockets M5 0 (closed)",
  "info": {
   "cell": "ot_s81_hc_ctfs_nt",
   "W": 576.72,
-  "H": 25.92,
+  "H": 51.84,
   "pg": {
    "nets": {
     "VDD": {
@@ -40,24 +38,17 @@
   "face": {
    "face_pins": 6473,
    "blocked_above": 0,
-   "covered_below": 69,
+   "covered_below": 330,
    "examples": [],
    "blocked_same": 0,
    "same_examples": [],
-   "band_same": 6473,
-   "band_examples": [
-    "clk M3 (286.020,25.819)",
-    "rst_in M3 (286.020,25.819)",
-    "dl_in[0] M5 (40.032,23.783)",
-    "dl_in[100] M5 (40.032,23.783)",
-    "dl_in[101] M5 (40.032,23.783)",
-    "dl_in[102] M5 (40.032,23.783)"
-   ]
+   "band_same": 0,
+   "band_examples": []
   },
   "clock_insertion": {
    "clk": {
-    "max_ps": 318.78,
-    "min_ps": 238.01
+    "max_ps": 322.31,
+    "min_ps": 229.12
    }
   },
   "pockets": {
@@ -66,7 +57,7 @@
    "marker": {
     "layer": "M5",
     "d_um": 1.536,
-    "added": 1576
+    "added": 1616
    },
    "count": 0,
    "area_um2": 0,
