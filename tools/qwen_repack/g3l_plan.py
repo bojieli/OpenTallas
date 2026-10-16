@@ -33,9 +33,15 @@ SLOTS = {
 }
 
 
-def build(nl):
+VARIANTS = {'l': dict(W=522.72, H=907.2, DX=43.2, R1=527.80), 't': dict(W=457.92, H=950.4, DX=0.0, R1=571.00)}
+
+
+def build(nl, v='l'):
+    global W, H, DX, R1, COLX
+    W, H, DX, R1 = (VARIANTS[v][k] for k in ('W', 'H', 'DX', 'R1'))
+    COLX = {'A': 22.464 + DX, 'B': 168.048 + DX, 'C': 313.632 + DX}
     src = 'qfd_tile_nl_rp2_g3' if nl else 'qfd_tile_nk_rp2_g3'
-    name = src + 'l'
+    name = src + v
     s = json.loads((ROOT / 'tools/ref_tile/specs_q_tile_repack' / (src + '.json')).read_text())
     grant = json.loads((ROOT / 'physical/ref_tile' / src / 'held_grant.json').read_text())
     tm = G.rom_tm()
@@ -72,7 +78,7 @@ def build(nl):
     regions = {
         'ck_rn': [hole, [g1[0], g1[1], hole[0], g1[3]], [hole[2], g1[1], g1[2], g1[3]]],
         'ck_rs': [g2, nband],
-        'ck': [[round(335.016 + DX, 3), 342.6, round(435.456 + DX, 3), 507.6]],
+        'ck': [[round(335.016 + DX, 3), 342.6, round(435.456 + DX, 3), round(R1 - 20.0, 3) if not DX else 507.6]],
     }
     faces = [c for c in s['clock_cts_roots'] if c.startswith('ck_fa')]
     for f in faces:
@@ -118,13 +124,13 @@ def build(nl):
     place('ck_rs', 'E', (g2[1] + g2[3]) / 2)
     out = ROOT / 'physical/ref_tile' / name
     out.mkdir(parents=True, exist_ok=True)
-    (out / 'assigned_pins.tcl').write_text('# Q-TILE45 r6 g3L: 522.72 x 907.2; data pins as a2 (E face on the new edge); soft entries at their fences.\n'
+    (out / 'assigned_pins.tcl').write_text(f'# Q-TILE45 r6 g3{v.upper()}: {W} x {H}; data pins as a2 (E face on the new edge); soft entries at their fences.\n'
                                           + ''.join('place_pin -pin_name {%s} -layer %s -location {%.3f %.3f}\n' % (p['name'], p['layer'], *p['xy_um']) for p in pins))
     (out / 'regions.tcl').write_text('# Q-TILE45 r6 g3L fences. No timing exceptions.\nset q45_max_sinks 15000\nset q45_boxes [dict create]\nset q45_why [dict create]\n'
                                      + ''.join('dict set q45_why %s {%s}\n' % (c, w) for c, w in why.items())
                                      + ''.join('dict set q45_boxes %s {%s}\n' % (n, ' '.join('{%s}' % ' '.join(map(str, b)) for b in r)) for n, r in regions.items())
                                      + 'source /src/tools/qwen_repack/localize45.tcl\n')
-    g = dict(grant, state='HELD structural candidate (Q-TILE45 r6 g3L 522.72x907.2); physical proof required', home_um=[W, H],
+    g = dict(grant, state=f'HELD structural candidate (Q-TILE45 r6 g3{v.upper()} {W}x{H}); physical proof required', home_um=[W, H],
              pins=pins, regions=regions, rom_rows=[[m['inst'], m['at'], m['orient']] for m in macros])
     (out / 'held_grant.json').write_text(json.dumps(g, indent=1) + '\n')
     s['name'] = name
@@ -132,12 +138,12 @@ def build(nl):
     s['io_tcl'] = f'physical/ref_tile/{name}/assigned_pins.tcl'
     s['pin_hook_before_flops'] = [f'physical/ref_tile/{name}/regions.tcl']
     s['pins'] = {f: sorted(set(p['name'].split('[')[0] for p in pins if p['face'] == f)) for f in 'WENS' if any(p['face'] == f for p in pins)}
-    s['structural_change'] = s['structural_change'].replace('Same outline', 'Outline 522.72 x 907.2 (W +43.2 glue band, E +21.6, two 43.2 um ROM read gutters: every ROM face opens into a gutter; north group gutter 1 + col-B hole, south group gutter 2 + N band); same')
-    s['slot_change_request'] = s['slot_change_request'].replace('keeps 457.92 x 820.8 and its data pins', '-> 522.72 x 907.2 (owner 07:30 grow-to-close), data pins same y, E face on the new edge')
-    s['job'].update(views_to=f'physical/ref_tile/{name}/views', record_to=f'results/rtl/ref_tile/{name}', purpose=s['structural_change'], tag='g3l')
+    s['structural_change'] = s['structural_change'].replace('Same outline', (f'Outline {W} x {H} (' + ('W +43.2 glue band, E +21.6, ' if DX else '43.2 um glue band above the LSL row, ') + 'two 43.2 um ROM read gutters: every ROM face opens into a gutter; north group gutter 1 + col-B hole, south group gutter 2 + N band); same'))
+    s['slot_change_request'] = s['slot_change_request'].replace('keeps 457.92 x 820.8 and its data pins', f'-> {W} x {H} (owner 07:30 grow-to-close), data pins same y, E face on the new edge')
+    s['job'].update(views_to=f'physical/ref_tile/{name}/views', record_to=f'results/rtl/ref_tile/{name}', purpose=s['structural_change'], tag='g3'+v)
     (ROOT / 'tools/ref_tile/specs_q_tile_repack' / (name + '.json')).write_text(json.dumps(s, indent=1) + '\n')
     print(f'G3L_PLAN_PASS {name} {W}x{H} rows={rows} regions={json.dumps(regions)}')
 
 
 if __name__ == '__main__':
-    build(nl='--nl' in sys.argv[1:])
+    build(nl='--nl' in sys.argv[1:], v='t' if '--tall' in sys.argv[1:] else 'l')
