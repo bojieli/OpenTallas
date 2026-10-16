@@ -20,7 +20,7 @@
  "reset_ports": [],
  "outline": {
   "w": 162.0,
-  "h": 345.6
+  "h": 518.4
  },
  "layer_cap": "M5",
  "macros": [
@@ -45,9 +45,9 @@
    "orient": "R0"
   },
   {
-   "view": "physical/qkd_astk_strip/macros/ot_sram_1r1w_64x128_m1_r2c2",
+   "view": "physical/qkd_astk_strip/macros/ot_sram_1r1w_256x128_m1_r2c2",
    "count": 1,
-   "inst": "*u_e2",
+   "inst": "*u_sc0",
    "at": [
     52.704,
     110.16
@@ -57,20 +57,20 @@
   {
    "view": "physical/qkd_astk_strip/macros/ot_sram_1r1w_64x128_m1_r2c2",
    "count": 1,
-   "inst": "*u_e3",
+   "inst": "*u_e2",
    "at": [
     52.704,
-    153.36
+    363.96
    ],
    "orient": "R0"
   },
   {
-   "view": "physical/qkd_astk_strip/macros/ot_sram_1r1w_256x128_m1_r2c2",
+   "view": "physical/qkd_astk_strip/macros/ot_sram_1r1w_64x128_m1_r2c2",
    "count": 1,
-   "inst": "*u_sc0",
+   "inst": "*u_e3",
    "at": [
     52.704,
-    196.56
+    408.24
    ],
    "orient": "R0"
   },
@@ -80,7 +80,7 @@
    "inst": "*u_sc1",
    "at": [
     52.704,
-    259.2
+    452.52
    ],
    "orient": "R0"
   }
@@ -205,56 +205,56 @@
    56.1
   ],
   "so": [
-   8,
-   50
+   8.0,
+   107.88
   ],
   "si": [
-   54,
-   116
+   111.88,
+   260.87
   ],
   "xa": [
-   120,
-   146
+   264.87,
+   326.91
   ],
   "xe": [
-   150,
-   164
+   330.9,
+   362.86
   ],
   "xi": [
-   168,
-   194
+   366.86,
+   429.61
   ],
   "xo": [
-   198,
-   224
+   433.61,
+   496.35
   ],
   "cr": [
-   228,
-   228.4
+   500.35,
+   500.75
   ],
   "sq": [
-   230,
-   231.5
+   504.75,
+   505.93
   ],
   "rst_n": [
-   234,
-   234.4
+   509.93,
+   510.33
   ],
   "qi": [
-   8,
-   64
+   8.0,
+   124.98
   ],
   "ri": [
-   68,
-   119
+   128.98,
+   235.73
   ],
   "zi": [
-   123,
-   187
+   239.73,
+   372.87
   ],
   "zo": [
-   191,
-   255
+   376.87,
+   510.0
   ]
  },
  "route": {
@@ -272,9 +272,9 @@
  "recipe": 2,
  "slot_change_request": "el1013-qwen-kvstrips 2026-10-13 (table in el1011-qwen-tp8.log): qwen_rom_tp8 strip slots astk_<q> (cells qkd_astk / qkd_astk_n, 220.296 x 7,817.016; ot_qwen_nearhbm_attn_stack_h minus its engines: a 409,684-flop P.V bank with 8 x 16,384 b of staged nodes across one cut, an 8-write x 8-read score memory, 4 exp units of ~15.6k flops an engine) are replaced by two 162 um columns of hardened leaves a strip: per row (two engines) and column 8 x qkd_astk_pv (162 x 103.68; a level-4 cell and the row's second-level cell at every head), 1 x qkd_astk_ep (162 x 345.6, the column's engine slice with 2 x ot_sram_1r1w_256x128 + 4 x ot_sram_1r1w_64x128, 57 um macros compiled for it: physical/qkd_astk_strip/macros) and 4 x qkd_astk_ex (162 x 149.04, one head's exp pipe); at the hub end 4 x qkd_astk_zn (86.4 x 86.4) and 1 x qkd_astk_ctl (216 x 64.8).  NEEDS: (1) the engine slots renumbered so that row r holds engine 2 r on the W and 2 r + 1 on the E, rows counted from the end away from the hub (the golden tree pairs engines (0,1) (2,3) (4,5) (6,7); today engine e faces e + 4); (2) the head's nb[1023:0] split by kk slot: kk mod 4 < 2 to the X cell (W column), >= 2 to the Y cell (E column), bit 32 (4 (m / 2) + 2 c + m % 2) of the head to bit 32 m of the cell; (3) so[421:412] of each qkd_ectl also to the two tree cells of heads 1 and 2 of its side (near cells; the far cells take nco / ndo); (4) ap is 565 b (pv_done 2 added), aq / lt / am unchanged; the command bus (572 b), the e-row bus (522 b), the chunk chain (651 b) and the return chain (267 b) run between the slices on die relay stations (M7 over the leaves: 2,012 of 3,442 tracks = 0.58); the tree's lanes (1,344 pins a column face on M3 + M5) run leaf to leaf by abutment; (5) WIDTH: ASTK_W 220.32 -> 324.0 (two 162 um columns) and +237.6 um at the hub end for qkd_astk_zn / qkd_astk_ctl: the synthesized cells (tree cell 8,655 um2, exp head 12,535 um2, slice 6,024 um2 + 9,771 um2 of macros) do not fit two 108 um columns of a 1,954.8 um engine row below util 0.65 and a 108 um face cannot take the lanes' 1,344 pins at 2-track pitch on M3 + M5 next to the PG (the frame was sized for one flat block at 0.50); at 162 um a row is 8 x 103.68 + 345.6 + 4 x 149.04 = 1,771 of 1,954.8 um; (6) hub-to-S stacks: the same leaves flipped MX, rows counted from the other end.",
  "job": {
-  "owner": "Claude:el1014-qwen-kvsys-elements",
-  "branch": "claude/qwen-kvsys-strip-1014",
-  "tag": "ks3",
+  "owner": "Claude:Q-KVSYS-STRIP",
+  "branch": "claude/qkvsys-strip",
+  "tag": "ks5",
   "purpose": "Qwen ROM TP8 (track B) aggregator strip: one row engine's stack slice qkd_astk_ep (8 a strip): the qkd_ectl port (so / si), the engine's scores (2 x 256x128, one a pass, by {k, gam}), its e rows (4 x 64x128, one 512-b row a chunk), the chunk chain's adder stage (the golden's sequential chunk sum walks the slices j = 0..7, token-aligned), M, the command / e-row bus taps, the return chain (score count, running maximum), the column's lanes.  ~11.7k sinks.",
   "extra_paths": [
    "configs/hardware",
@@ -322,7 +322,7 @@
    }
   ]
  },
- "structural_change": "ks1 EARLY_FAIL_HOLD (-26.8 ps at the W-face strap pin flop sq_q[3], on a 66-ps-late last-level H-tree net of a tree rooted at the NE corner, x 160): the clock pin moves to N x 55.6-56.1 (above the macro column's W edge, between the ui/uo and do_/di lanes; no abutment lane moved); kit on recipe-2 pin defaults >= 36de4b87f (native pin budget). --cts gate ks2b (ot-epyc4): hold WNS +22.6 ps, setup +10.7, insertion 410.7 / spread 96.9 (ks1 438.8 / 109.1).",
+ "structural_change": "ks5 (Q-KVSYS-STRIP, VIS-ROM D-QK-02: qkd_astk_seg needs this leaf closed): ks4 EARLY_FAIL_CONGESTION (GRT-0116) is the floorplan, not the clock: the six SRAMs (OBS M1-M4) stood as one 55-um column over y 23.8-301 of the 345.6-um tile, so every W<->E bit (so/si/x* 1,999 W, qi/ri/zi/zo 2,396 E, 10.2 pins/um on M4 over y 8-255) had only the five ~21-um macro gaps for its horizontal M2/M4 routes. ks5: outline 162 x 518.4 (+172.8 um height, inside the segment row pitch: 2,177.28 -> 2,350.08 of 2,419.2), the SRAMs split into two 3-macro bands at the S and N ends (y 23.8-152.3 and 364.0-494.6, same x column 52.7, >= 20 um from every face) leaving a 212-um macro-free middle for the W<->E traffic, the W/E pins spread over y 8-510 (W 4.0, E 4.8 pins/um on M4). RTL, lanes (x), clock pin and pin registers unchanged. Clock: the ks4 spine with macro leaves (OT_SPINE_PORT ck + OT_SPINE_MACRO_LEAF; ks4 4_1_cts hold reached -1.6 ps vs ks3 -41.8) kept.",
  "children": [],
  "inter": [],
  "io_flop_at_pins": {
@@ -335,5 +335,9 @@
  "pin_reg_split": true,
  "hold_pad": {
   "cell": "HB2xp67_ASAP7_75t_R"
- }
+ },
+ "fill_reason": {
+  "pin_bound": "the 162-um width is the segment column (every astk leaf is 162 wide, lanes leaf to leaf at fixed x); the height is set by routing, not cells: 4,395 registered W/E pins need >= 500 um of face at <= 5 pins/um on M4, and the six SRAMs (OBS M1-M4) must leave a macro-free W<->E corridor; cells + macros fill ~21%"
+ },
+ "clock": "spine"
 }
