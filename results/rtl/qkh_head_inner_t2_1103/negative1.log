@@ -1,0 +1,12 @@
+HEAD_NATIVE_MISMATCH cycle=277 sc=00000000/bea6b34f sf=0/0 gf=0/0 nb_equal=1
+HEAD_NATIVE_MISMATCH cycle=278 sc=bea6b34f/00000000 sf=0/0 gf=0/0 nb_equal=1
+HEAD_NATIVE_MISMATCH cycle=285 sc=00000000/bea6b34f sf=0/0 gf=0/0 nb_equal=1
+HEAD_NATIVE_MISMATCH cycle=286 sc=bea6b34f/00000000 sf=0/0 gf=0/0 nb_equal=1
+HEAD_NATIVE_MISMATCH cycle=293 sc=00000000/bea6b34f sf=0/0 gf=0/0 nb_equal=1
+HEAD_NATIVE_MISMATCH cycle=294 sc=bea6b34f/00000000 sf=0/0 gf=0/0 nb_equal=0
+HEAD_NATIVE_MISMATCH cycle=295 sc=00000000/3f8c01d4 sf=0/0 gf=0/0 nb_equal=0
+HEAD_NATIVE_MISMATCH cycle=296 sc=3f8c01d4/00000000 sf=0/0 gf=0/0 nb_equal=0
+HEAD_NATIVE_FAIL checks=3515 errors=1745
+[3728000] %Fatal: tb_qkh_head_inner_t2.sv:102: Assertion failed in tb_qkh_head_inner_t2
+%Error: rtl/test/qwen_split/tb_qkh_head_inner_t2.sv:102: Verilog $stop
+Aborting...

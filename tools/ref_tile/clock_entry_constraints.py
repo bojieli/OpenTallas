@@ -7,6 +7,7 @@ import json
 import math
 import re
 import sys
+from fractions import Fraction
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'hier_contract'))
@@ -23,8 +24,8 @@ def signoff_period(spec):
     """Opt-in leaf signoff period; all existing profiles retain their ABI."""
     route = spec.get('route', {})
     value = route.get('signoff_period_ps', 833.333)
-    if 'signoff_period_ps' in route and spec.get('clock') != 'multiple_cts_roots':
-        raise ValueError('signoff_period_ps requires multiple_cts_roots leaf timing ownership')
+    if 'signoff_period_ps' in route and not native_leaf(spec):
+        raise ValueError('signoff_period_ps requires native leaf timing ownership (multiple_cts_roots or hybrid_entries tile)')
     if isinstance(value, bool) or not isinstance(value, (int, float)) or not math.isfinite(value) or value <= 0:
         raise ValueError('signoff_period_ps must be finite and positive')
     if 'signoff_period_ps' in route:
@@ -49,15 +50,53 @@ def related_data(spec):
         if relationship != dict(kind='same_pll_fixed_phase', ratio=[4, 3], phase_ps=0):
             raise ValueError('related_pll_ratio leaf datapaths require explicit same_pll_fixed_phase ratio4/3 phase0 relationship')
         return True
+    if policy == 'related_pll_dividers':
+        pll_divider_ratios(spec)
+        return True
     if policy != 'related_same_frequency' or relationship != dict(kind='same_pll_fixed_phase', ratio=[1, 1], phase_ps=0):
         raise ValueError('related leaf datapaths require explicit same_pll_fixed_phase ratio1/1 phase0 relationship')
     return True
 
 
+def pll_divider_ratios(spec):
+    """Explicit phase-zero /3, /4 and /12 roots of the same 3.6 GHz PLL.
+
+    The /12 epoch bank removes a direct 3:4 data crossing structurally.
+    Every declared path still receives ordinary setup and hold analysis.
+    A different divider, phase or frequency needs its own reviewed contract.
+    """
+    relationship = spec.get('clock_relationship') or {}
+    if not isinstance(relationship, dict):
+        raise ValueError('PLL clock relationship must be an explicit object')
+    declared = spec.get('clock_entry_domains')
+    dividers = relationship.get('vco_dividers')
+    if (set(relationship) != {'kind', 'phase_ps', 'vco_dividers'}
+            or relationship.get('kind') != 'same_pll_fixed_phase'
+            or relationship.get('phase_ps') != 0
+            or not isinstance(declared, dict) or not isinstance(dividers, dict)
+            or set(dividers) != set(declared) or 'core' not in dividers
+            or any(type(v) is not int or v not in (3, 4, 12) for v in dividers.values())):
+        raise ValueError('related_pll_dividers requires exact phase0 /3,/4,/12 PLL divider ownership for every domain')
+    expected_period = 833.333 * dividers['core'] / 3
+    if abs(signoff_period(spec) - expected_period) > 0.001:
+        raise ValueError('PLL divider signoff period must preserve the actual 3.6 GHz VCO frequency')
+    ratios = {}
+    for name, divider in dividers.items():
+        ratio = Fraction(divider, dividers['core'])
+        ratios[name] = [ratio.numerator, ratio.denominator]
+        if not isinstance(declared[name], dict) or declared[name].get('ratio') != ratios[name]:
+            raise ValueError(f'PLL divider ratio mismatch for {name}')
+    return ratios
+
+
+def native_leaf(spec):
+    return spec.get("clock") == "multiple_cts_roots" or (spec.get("kind") == "tile" and spec.get("clock") == "hybrid_entries")
+
+
 def domains(spec):
     """Explicit related PLL /3 and /4 clock domains. No exception policy."""
     declared = spec.get('clock_entry_domains')
-    leaf = spec.get('clock') == 'multiple_cts_roots'
+    leaf = native_leaf(spec)
     if leaf:
         signoff_period(spec)
         related_data(spec)
@@ -68,6 +107,9 @@ def domains(spec):
                              inputs=['*'], outputs=['*'])}
     if not isinstance(declared, dict) or 'core' not in declared:
         raise ValueError('entries: explicit domains require core ratio1/1')
+    divided = spec.get('clock_data_paths') == 'related_pll_dividers'
+    if divided:
+        pll_divider_ratios(spec)
     owners = {}
     out = {}
     for name, data in declared.items():
@@ -76,10 +118,10 @@ def domains(spec):
         if set(data) - {'ratio', 'ports', 'inputs', 'outputs', 'io_budget'}:
             raise ValueError('entries: unsupported domain policy (no clock exceptions)')
         ratio = data.get('ratio')
-        if ratio not in ([1, 1], [4, 3]):
+        if not divided and ratio not in ([1, 1], [4, 3]):
             raise ValueError('entries: only related CK1/1 and CKV4/3 are supported')
         pll = leaf and spec.get('clock_data_paths') == 'related_pll_ratio'
-        if leaf and (ratio != [1, 1] and not (pll and ratio == [4, 3] and name != 'core') or len(data.get('ports', [])) != 1):
+        if leaf and (ratio != [1, 1] and not (divided or pll and ratio == [4, 3] and name != 'core') or len(data.get('ports', [])) != 1):
             raise ValueError('multiple_cts_roots requires one actual related phase0 root per domain '
                              '(samefrequency, or a non-core 4/3 domain under related_pll_ratio)')
         if name == 'core' and ratio != [1, 1]:
@@ -208,12 +250,12 @@ def generate(spec, root):
         out_row = '' if fout == 0.2 else " io_budget_out_ps " + str(round(period * fout, 3))
         domain_rows.append("{" + name + "} {clock " + virtual_clock(name) + " io_budget_ps " + str(round(period * fin, 3)) + out_row + " inputs {" + patterns(d["inputs"]) + "} outputs {" + patterns(d["outputs"]) + "}}")
         owner_rows.extend(f"{{{p}}} {{{name}}}" for p in d['ports'])
-    body = LEAF_BODY if spec.get('clock') == 'multiple_cts_roots' else BODY
+    body = LEAF_BODY if native_leaf(spec) else BODY
     if direct['entries']:
         body = direct_body(body, direct)
     return (f'# OT_CLOCK_ENTRY_DOMAIN_API_VERSION {ENTRY_DOMAIN_API_VERSION}\n'
             '# AUTO clock entries: bound insertion.json boundary refs; no ETM arc modification.\n'
-            + (('set ::ot_ce_leaf_roots 1\nset ::ot_ce_related_data ' + str(int(related_data(spec))) + '\n') if spec.get('clock') == 'multiple_cts_roots' else '') +
+            + (('set ::ot_ce_leaf_roots 1\nset ::ot_ce_related_data ' + str(int(related_data(spec))) + '\n') if native_leaf(spec) else '') +
             'set ::ot_ce_refs [dict create ' + ' '.join(rows) + ']\n'
             'set ::ot_ce_counts [dict create ' + ' '.join(f'{{{m}}} {n}' for m, n in counts.items()) + ']\n'
             'set ::ot_ce_domains [dict create ' + ' '.join(domain_rows) + ']\n'
@@ -321,6 +363,20 @@ proc ot_ce_apply {} {
   # Wires-only parents have no CTS tree to set this flag for us.
   # Ideal clocks silently report zero network arrival despite real entry wires.
   set_propagated_clock [get_clocks ot_entry_*]
+  # Before CTS, a standard-cell root is still one unbuffered high-fanout
+  # net. Propagating that net invents multi-ns skew and clock-pin slew;
+  # its delay is not the tree that CTS will build. Keep only these declared
+  # CTS roots ideal during the explicit pre-CTS diagnostic. Raw macro and
+  # hardened-child entries retain actual entry-wire propagation. Routed
+  # require-wire checks always propagate and measure every physical root.
+  if {[info exists ::ot_ref_pre_cts] && $::ot_ref_pre_cts &&
+      (![info exists ::ot_ce_require_wire] || !$::ot_ce_require_wire)} {
+    foreach name $::ot_ce_cts_roots {
+      set clock [get_clocks ot_entry_[lsearch -exact $::ot_ce_ports $name]]
+      unset_propagated_clock $clock
+      puts "OT_ENTRIES PRE_CTS_IDEAL_CTS_ROOT $name"
+    }
+  }
   set sources {}; set names {}
   foreach c [get_clocks ot_entry_*] {
     foreach p [get_property $c sources] { lappend sources $p; lappend names [get_full_name $p] }
@@ -602,7 +658,7 @@ proc ot_ce_leaf_ownership {inputs outputs} {
   foreach c [all_clocks] {lappend actual [get_full_name $c]}
   if {[lsort $actual] ne [lsort $expected]} {error "OT_MULTI_ROOT: undeclared clock alias or relationship"}
   set cells {}; set clocks {}; set crossing_pairs {}; set domain_roots {}
-  foreach root $::ot_ce_cts_roots {
+  foreach root $::ot_ce_ports {
     set domain [dict get $::ot_ce_source_domains $root]
     dict set domain_roots $domain $root
     set clock [get_clocks ot_entry_[lsearch -exact $::ot_ce_ports $root]]
@@ -686,6 +742,15 @@ proc ot_ce_leaf_ownership {inputs outputs} {
     }
     foreach kind {max min} {
       set paths [find_timing_paths -from $from -to $to -path_delay $kind -group_path_count 1 -endpoint_path_count 1]
+      if {![llength $paths] && [info exists ::env(OT_HOLD_MM)] && $::env(OT_HOLD_MM) eq "1" &&
+          ![info exists ::ot_mm_active]} {
+        # Multi-mode route/gate (tools/orfs_hold_mm.tcl): this SDC is being read into mode ss BEFORE any scene is
+        # defined, so the unscened default scene has no clocks and no path can be found yet.  The crossing population
+        # above is structural (actual fanin) and unchanged; the finite-path proof runs strictly in every single-scene
+        # read (non-MM stages, corner_sta / sign-off), which carries the timing claim.
+        puts "OT_MULTI_ROOT RELATED_PATH_DEFERRED $source_domain -> $target_domain $kind (multi-mode read before scene definition; strict at sign-off)"
+        continue
+      }
       if {![llength $paths] || ![ot_ce_finite [get_property [lindex $paths 0] slack]]} {
         error "OT_MULTI_ROOT: related crossing lacks actual finite $kind STA path $source_domain -> $target_domain"
       }
@@ -751,9 +816,17 @@ def direct_body(body, direct):
     # A parent with only direct raw SRAMs has no routed ETM master from which
     # to identify the current scene; use its actual linked SRAM libraries too.
     marker = '    if {![dict exists $::ot_ce_counts $master]} continue'
-    if body.count(marker) != 2:
-        raise ValueError('clock entry corner body changed; revalidate direct macro extension')
-    body = body.replace(marker, '    if {![dict exists $::ot_ce_counts $master] && $master ni $::ot_ce_direct_masters} continue', 1)
+    if 'proc ot_ce_leaf_ownership ' in body:
+        # The native-leaf corner census already covers every actual sequential
+        # clock sink, including raw memories; do not narrow it to macro masters.
+        if body.count(marker) != 1:
+            raise ValueError('native leaf corner body changed; revalidate direct macro extension')
+    else:
+        if body.count(marker) != 2:
+            raise ValueError('clock entry corner body changed; revalidate direct macro extension')
+        body = body.replace(marker, '    if {![dict exists $::ot_ce_counts $master] && $master ni $::ot_ce_direct_masters} continue', 1)
+    body = body.replace('if {[dict exists $::ot_ce_counts $master]} { error "OT_HYBRID: CTS root',
+                        'if {[dict exists $::ot_ce_counts $master] || $master in $::ot_ce_direct_masters} { error "OT_HYBRID: CTS root')
     masters = sorted({e['master'] for e in direct['entries']})
     return ('set ::ot_ce_direct_masters {' + ' '.join(masters) + '}\n'
             + direct['bindings_tcl'] + body)

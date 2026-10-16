@@ -1,0 +1,33 @@
+{
+  "source_commit": "f18ce5e70",
+  "host": "ot-epyc1tb",
+  "unit": "oth-ubuntu-429730-1792049701",
+  "status": "PASS component only",
+  "profiles": 4,
+  "query_heads": 32,
+  "query_words": 16384,
+  "RG": 7,
+  "actual_read_group": 3,
+  "event_cycles": 459,
+  "actual_query_macros": 64,
+  "actual_vm_macros": 24,
+  "actual_programme_macros": 1,
+  "two_mutants_detected": true,
+  "source_sha256": {
+    "rtl/hdc/v41x/static/ot_hbm_attn_program_query_front.sv": "8a091daa9cd1965b2a052175a53c741ef315b5a0b93b7d89746dd91f81abd243",
+    "rtl/hdc/v41x/static/ot_hbm_attn_program_consumer.sv": "99535c9cc0c70fb3dfcedbb33fee802b9b2e841ab2797b07d97adb2dc9adaa45",
+    "rtl/hdc/v41x/static/ot_hbm_attn_event_program.sv": "68cfa747ef5d56c1799bb22b640e4110aee94cc99982f5023dc09860242415f3",
+    "rtl/hdc/v41x/static/ot_hbm_attn_query_prefetch.sv": "25c294bddb7940f57c7ff85667198aeec7759a63ab18402b9b90a900e59ab882",
+    "rtl/hbm_accel/generic/vm/static/ot_vms_bank_static.sv": "7828d619da2fd2462cf0253b78c074dad1171e6ca77799bfc21f22987ed72237",
+    "rtl/test/hbm_accel/generic/tb_hbm_attn_program_query_front.sv": "006eaede3e4f283f479c26cd0530c3b9abcbf3edadf42f2bfa1b8a723565b488",
+    "tools/hbm_attention_static_calendar.py": "b16726cd60017b6edd6093cb9905a0c73b0489379eb0100b34844e0ea9292a22",
+    "tools/hbm_static_attention/prepare_front.py": "9e37c45453da81f2dc9ee828cb1507767dbd89f2e026884032baac300af2bd1d",
+    "tools/hbm_static_attention/run_front.sh": "adc15b9d25632807e1ce27286aa7616ef99809875a94d0b61a811161a47c7a5a"
+  },
+  "remaining": [
+    "Host/CPtarget49join not part of this component proof",
+    "FullH16 arithmetic/calendar proof OOM at200GB; hierarchicalcompile next",
+    "PSrow/P producer/outputdrain native joins and fullprogramme",
+    "Mapped footprint clock roots/pins/cut/GRT/STA unqualified"
+  ]
+}

@@ -1,0 +1,237 @@
+{
+ "name": "qkd_hslice",
+ "top": "qkd_host_pc_slice_die",
+ "kind": "tile",
+ "sources": [
+  "rtl/qwen_sys/split_20261014/qkd_host_pc_slice_die.sv",
+  "rtl/qwen_sys/split_20261014/qkd_host_pc_slice.sv",
+  "rtl/qwen_sys/split_20261014/qkd_hbm_boot_static_completion.sv",
+  "rtl/qwen_sys/split_20261014/qkd_hbm_boot_static.sv",
+  "rtl/qwen_sys/split_20261014/qkd_hbm_boot_pc.sv",
+  "rtl/qwen_sys/split_20261014/qkd_static_completion_ownerdemux.sv",
+  "rtl/qwen_sys/host_20261013/qkd_host_ingest_station.sv",
+  "rtl/qwen_sys/host_20261013/qkd_host_static_pc_emback.sv"
+ ],
+ "params": {},
+ "clock": "multiple_cts_roots",
+ "clock_port": "ck_station",
+ "clock_ports": [
+  "ck_station",
+  "ck_static",
+  "ck_boot",
+  "ck_boot_test"
+ ],
+ "clock_data_paths": "related_same_frequency",
+ "clock_relationship": {
+  "kind": "same_pll_fixed_phase",
+  "ratio": [
+   1,
+   1
+  ],
+  "phase_ps": 0
+ },
+ "clock_entry_domains": {
+  "core": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_station"
+   ],
+   "inputs": [
+    "host_rst_n",
+    "lpc",
+    "fi",
+    "ci",
+    "ai",
+    "fault_i",
+    "ski"
+   ],
+   "outputs": [
+    "fo",
+    "co",
+    "ao",
+    "fault_o",
+    "sko"
+   ]
+  },
+  "static": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_static"
+   ],
+   "inputs": [
+    "land_es"
+   ],
+   "outputs": [
+    "land_er"
+   ]
+  },
+  "boot": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_boot"
+   ],
+   "inputs": [
+    "hbm_rst_n",
+    "bgi",
+    "ctrl_er",
+    "ctrl_completion_v",
+    "ctrl_completion_we",
+    "sdi",
+    "soi",
+    "sfi"
+   ],
+   "outputs": [
+    "bgo",
+    "ctrl_es",
+    "sdo",
+    "soo",
+    "sfo"
+   ]
+  },
+  "test": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_boot_test"
+   ],
+   "inputs": [],
+   "outputs": []
+  }
+ },
+ "reset_ports": [
+  "host_rst_n",
+  "hbm_rst_n"
+ ],
+ "outline": {
+  "w": 129.576,
+  "h": 345.576,
+  "exact": true
+ },
+ "pins": {
+  "N": [
+   "fo",
+   "ci",
+   "ai",
+   "fault_i",
+   "ski",
+   "sdi",
+   "soi",
+   "sfi",
+   "bgo"
+  ],
+  "S": [
+   "fi",
+   "co",
+   "ao",
+   "fault_o",
+   "sko",
+   "sdo",
+   "soo",
+   "sfo",
+   "bgi"
+  ],
+  "E": [
+   "land_es",
+   "land_er",
+   "ck_boot",
+   "ck_boot_test",
+   "ctrl_completion_v",
+   "ctrl_completion_we"
+  ],
+  "W": [
+   "ctrl_es",
+   "ctrl_er",
+   "ck_static",
+   "ck_station",
+   "hbm_rst_n",
+   "host_rst_n",
+   "lpc"
+  ]
+ },
+ "io_tcl": "results/arch/qwen_split_1014/kvsys_v1_4_2/pins/qkd_hslice.tcl",
+ "layer_cap": "M5",
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "period_ps": 833.334,
+  "signoff_period_ps": 833.334,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "recipe": 2,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "inhold": true,
+ "outhold": true,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": false
+ },
+ "structural_change": "Exact v1.4.2 per-bit reach-safe pitch6 W/E grant (all571596 stack-local bits <=498.696um), M5 pitch4 chain pins. Capture static lpc at station entry before boot status consumers: one strap initialization edge, no normal data/control latency. Four synchronous CORE833.334 roots; no clock exceptions. Boot pin captured once before related test-root consumers; uniform+1 boot-start edge accepted, existing1edge bgo chain unchanged.",
+ "slot_change_request": "results/arch/qwen_split_1014/kvsys_v1_4_2/pins/qkd_hslice.json",
+ "job": {
+  "owner": "Claude:el1015-fill-qwen",
+  "branch": "claude/el1015-fillq-1015",
+  "tag": "v142",
+  "cycles_added": 0,
+  "purpose": "Source-exact HOST per-PC slice physical proof; full parent remains unqualified (FILL-Q 10-15: Codex aa0c50c21 boot-pin capture candidate, v1.4.2 pins 233825580)",
+  "extra_paths": [
+   "tools/qwen_kv_die/run_host_slice_leaf_bench.sh",
+   "rtl/test/qwen_split/tb_host_pc_slice_die_pin_capture.sv",
+   "results/arch/qwen_split_1014/kvsys_v1_4_2/pins"
+  ],
+  "benches": [
+   {
+    "name": "host_slice_32_exact",
+    "cmd": "bash tools/qwen_kv_die/run_host_slice_leaf_bench.sh {RUN}/bench/exact 0",
+    "expect": "pass",
+    "pass_regex": "^PASS slice die wrapper: 32 slots",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "host_slice_lpc_mutant",
+    "cmd": "bash tools/qwen_kv_die/run_host_slice_leaf_bench.sh {RUN}/bench/mutant 1",
+    "expect": "fail",
+    "fail_regex": "FAIL slice die wrapper",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "host_slice_missing_boot_capture_mutant",
+    "cmd": "bash tools/qwen_kv_die/run_host_slice_leaf_bench.sh {RUN}/bench/missing_boot_capture 2",
+    "expect": "fail",
+    "fail_regex": "boot capture age",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ]
+   }
+  ]
+ },
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ }
+}

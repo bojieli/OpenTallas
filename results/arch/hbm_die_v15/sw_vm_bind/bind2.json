@@ -1,21 +1,21 @@
 {
  "schema": "opentallas.die_port_bind.v2",
- "die_v": "/tmp/hd/sub2/hbm_v15_sw_vm.v",
+ "die_v": "results/arch/hbm_die_v15/sw_vm_bind/hbm_v15_sw_vm.v",
  "top": "hbm_v15_sw_vm",
  "verdict": "FAIL",
  "failing": [
   "input_tied"
  ],
  "summary": {
-  "masters": 10,
-  "instances": 12,
+  "masters": 11,
+  "instances": 13,
   "unbound_masters": 0,
   "stub_masters": 0,
   "ambiguous_masters": 0,
   "port_not_in_rtl": 0,
   "width_mismatch": 0,
   "input_unconnected": 0,
-  "input_tied": 3,
+  "input_tied": 4,
   "unparsed_connections": 0,
   "undriven_net_bits": 0,
   "multi_driven_net_bits": 0,
@@ -66,13 +66,38 @@
    "width_mismatch": {},
    "unparsed_conn": []
   },
-  "ot_hbm_idx_scheduled_static": {
+  "ot_hbm_argmax_static": {
    "verdict": "FAIL",
    "fails": [
     "INPUT_TIED"
    ],
    "instances": 1,
-   "rtl": "rtl/hbm_accel/index/ot_hbm_idx_scheduled_static.sv",
+   "rtl": "rtl/hbm_accel/generic/ot_hbm_argmax_static.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "hb_argmax"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [
+    "sid"
+   ],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "ot_hbm_idx_client_static": {
+   "verdict": "FAIL",
+   "fails": [
+    "INPUT_TIED"
+   ],
+   "instances": 1,
+   "rtl": "rtl/hbm_accel/index/ot_hbm_idx_client_static.sv",
    "kind": "real",
    "ambiguous_defs": null,
    "examples": [
@@ -102,7 +127,7 @@
     "hb_su_SW"
    ],
    "param_sets": {
-    "{\"QID\": \"0\", \"READ_RETURN\": \"10\", \"WRITE_RETURN\": \"7\"}": 1
+    "{\"BANK_GROUP\": \"857870592\", \"NPG\": \"4\", \"QID\": \"0\", \"READ_RETURN\": \"10\", \"WRITE_RETURN\": \"7\"}": 1
    },
    "die_port_not_in_rtl": [],
    "input_unconnected": [],
@@ -254,13 +279,52 @@
  "multi_driven_nets": {},
  "top_assigns": [],
  "params_not_in_rtl": [],
- "die_sha256": "f42facef4a26392f84d2e3691f653afd6937235ea1dea3e762efa40cf9644c15",
+ "die_sha256": "b83625ec6e4119e7f503cddff8a901821bca594fed9bfceed7d79442b6a5f20d",
  "straps_declared": [],
  "params_file": null,
  "rtl_roots": [
   "rtl",
-  "physical/asap7_memory_macros",
-  "physical/asap7_memory_macros_v2"
+  "physical/hbm_accel_die_views/att_su_relay/rtl",
+  "physical/hbm_accel_die_views/attn_tile/rtl",
+  "physical/hbm_accel_die_views/barrier/rtl",
+  "physical/hbm_accel_die_views/cmdproc/rtl",
+  "physical/hbm_accel_die_views/cmdproc_hgi/rtl",
+  "physical/hbm_accel_die_views/cmdproc_hgi_am/rtl",
+  "physical/hbm_accel_die_views/coll/rtl",
+  "physical/hbm_accel_die_views/coll_hgi/rtl",
+  "physical/hbm_accel_die_views/coll_r25gq/rtl",
+  "physical/hbm_accel_die_views/hc/rtl",
+  "physical/hbm_accel_die_views/hc_eng_hgi/rtl",
+  "physical/hbm_accel_die_views/hc_hgi/rtl",
+  "physical/hbm_accel_die_views/hcp/rtl",
+  "physical/hbm_accel_die_views/hgi_idx/rtl",
+  "physical/hbm_accel_die_views/hgi_idx_native/rtl",
+  "physical/hbm_accel_die_views/hgi_vm/rtl",
+  "physical/hbm_accel_die_views/hgi_vm2/rtl",
+  "physical/hbm_accel_die_views/hgi_vm3/rtl",
+  "physical/hbm_accel_die_views/hgi_vm4/rtl",
+  "physical/hbm_accel_die_views/hgi_vm5/rtl",
+  "physical/hbm_accel_die_views/index/rtl",
+  "physical/hbm_accel_die_views/index_q/rtl",
+  "physical/hbm_accel_die_views/loader/rtl",
+  "physical/hbm_accel_die_views/loader_hgi/rtl",
+  "physical/hbm_accel_die_views/loader_hgi_dma/rtl",
+  "physical/hbm_accel_die_views/quant/rtl",
+  "physical/hbm_accel_die_views/quant_hgi/rtl",
+  "physical/hbm_accel_die_views/router/rtl",
+  "physical/hbm_accel_die_views/router_hgi/rtl",
+  "physical/hbm_accel_die_views/sfu/rtl",
+  "physical/hbm_accel_die_views/sfu_hgi/rtl",
+  "physical/hbm_accel_die_views/stations/rtl",
+  "physical/hbm_accel_die_views/su/rtl",
+  "physical/hbm_accel_die_views/su_hgi/rtl",
+  "physical/hbm_accel_die_views/svc/rtl",
+  "physical/hbm_accel_die_views/svc/v15/rtl",
+  "physical/hbm_accel_die_views/vm/cp/rtl",
+  "physical/hbm_accel_die_views/vm/rtl",
+  "physical/hbm_cp_mtp_native/rtl",
+  "physical/hbm_generic/argmax18/rtl",
+  "physical/hbm_mtp/rtl"
  ],
  "rtl_files": [],
  "defines": []

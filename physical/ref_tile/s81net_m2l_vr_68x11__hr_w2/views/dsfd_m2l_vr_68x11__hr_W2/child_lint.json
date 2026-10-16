@@ -1,0 +1,120 @@
+{
+ "schema": "opentallas.hier_contract.child_lint.v1",
+ "lef": "/srv/opentallas-scratch/claude/closure-loop/s81net_m2l_vr_68x11__hr_w2-n3-f8139a4c7/record/views/dsfd_m2l_vr_68x11__hr_W2/dsfd_m2l_vr_68x11__hr_W2.lef",
+ "verdict": "PASS",
+ "fails": [],
+ "warns": [
+  "(f) face-pin access: 1262 of 1544 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. di10[0] M3 (4.464,157.435), di10[10] M3 (4.464,157.435), di10[12] M3 (4.464,157.435))"
+ ],
+ "summary": "dsfd_m2l_vr_68x11__hr_W2 157.68 x 157.68: PG M5 VDD 57 stripes (96% spread, 100% cov) / VSS 57 stripes (96% spread, 100% cov); strap M6; face pins 1544 blocked-above 0 blocked-same 0; clock ck[0] insertion 233 ps; clock fi0[0] insertion 144 ps; clock fi1[0] insertion 124 ps; clock fi10[0] insertion 131 ps; clock fi2[0] insertion 157 ps; clock fi3[0] insertion 134 ps; clock fi4[0] insertion 150 ps; clock fi5[0] insertion 124 ps; clock fi6[0] insertion 123 ps; clock fi7[0] insertion 108 ps; clock fi8[0] insertion 107 ps; clock fi9[0] insertion 113 ps; pockets M5 0 (closed)",
+ "info": {
+  "cell": "dsfd_m2l_vr_68x11__hr_W2",
+  "W": 157.68,
+  "H": 157.68,
+  "pg": {
+   "nets": {
+    "VDD": {
+     "top_layer": "M5",
+     "stripes": 57,
+     "dir": "V",
+     "spread": 0.959,
+     "coverage": 1.0,
+     "shapes_on_top": 57
+    },
+    "VSS": {
+     "top_layer": "M5",
+     "stripes": 57,
+     "dir": "V",
+     "spread": 0.959,
+     "coverage": 1.0,
+     "shapes_on_top": 57
+    }
+   },
+   "top_layer": "M5",
+   "ok": true,
+   "why": []
+  },
+  "pg_layer": "M5",
+  "strap_layer": "M6",
+  "cap": null,
+  "face": {
+   "face_pins": 1544,
+   "blocked_above": 0,
+   "covered_below": 0,
+   "examples": [],
+   "blocked_same": 0,
+   "same_examples": [],
+   "band_same": 1262,
+   "band_examples": [
+    "di10[0] M3 (4.464,157.435)",
+    "di10[10] M3 (4.464,157.435)",
+    "di10[12] M3 (4.464,157.435)",
+    "di10[14] M3 (4.464,157.435)",
+    "di10[16] M3 (4.464,157.435)",
+    "di10[18] M3 (4.464,157.435)"
+   ]
+  },
+  "clock_insertion": {
+   "ck[0]": {
+    "max_ps": 232.61,
+    "min_ps": 169.53
+   },
+   "fi0[0]": {
+    "max_ps": 144.19,
+    "min_ps": 118.23
+   },
+   "fi1[0]": {
+    "max_ps": 123.86,
+    "min_ps": 95.21
+   },
+   "fi10[0]": {
+    "max_ps": 130.53,
+    "min_ps": 105.85
+   },
+   "fi2[0]": {
+    "max_ps": 157.01,
+    "min_ps": 127.07
+   },
+   "fi3[0]": {
+    "max_ps": 133.96,
+    "min_ps": 105.1
+   },
+   "fi4[0]": {
+    "max_ps": 150.27,
+    "min_ps": 111.95
+   },
+   "fi5[0]": {
+    "max_ps": 124.28,
+    "min_ps": 95.74
+   },
+   "fi6[0]": {
+    "max_ps": 123.12,
+    "min_ps": 98.23
+   },
+   "fi7[0]": {
+    "max_ps": 108.3,
+    "min_ps": 89.16
+   },
+   "fi8[0]": {
+    "max_ps": 107.2,
+    "min_ps": 85.55
+   },
+   "fi9[0]": {
+    "max_ps": 112.9,
+    "min_ps": 89.96
+   }
+  },
+  "pockets": {
+   "layer": "M5",
+   "d_um": 1.536,
+   "marker": {
+    "layer": "M5",
+    "d_um": 1.536,
+    "added": 1687
+   },
+   "count": 0,
+   "area_um2": 0,
+   "examples": []
+  }
+ }
+}

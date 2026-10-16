@@ -1,0 +1,185 @@
+{
+ "name": "s81hc_ctfxsnt_ref",
+ "top": "ot_s81_hc_ctfxs_nt",
+ "kind": "tile",
+ "sources": [
+  "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_ntree.sv",
+  "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_cth.sv",
+  "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_stree.sv",
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/hdc/ot_hdc_fp32_f12.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv",
+  "rtl/dsrom_sys/s81_suhc/ot_s81_hc_core.sv",
+  "rtl/dsrom_sys/s81_suhc/dsfd_sp_hc.sv",
+  "rtl/dsrom_sys/s81_ctrl/ot_s81_engine_adapter.sv",
+  "rtl/lib/ot_async_fifo.sv",
+  "rtl/lib/ot_reset_sync.sv",
+  "rtl/lib/ot_skid_buffer.sv",
+  "rtl/hdc/v41x/ot_dsrom_su_hcpost.sv",
+  "rtl/hdc/v41x/ot_dsrom_su_add6.sv",
+  "rtl/hdc/v41x/ot_dsrom_su_norm.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/hdc/ot_hdc_sfu.sv",
+  "rtl/hdc/ot_hdc_fpu.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+  "rtl/proto/ot_fp32_add_rne_pipe.sv",
+  "rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
+  "rtl/hdc/v41/ot_hdc_fsqrt.sv",
+  "rtl/hdc/v41/ot_hdc_fdiv.sv",
+  "rtl/hdc/v41/ot_hdc_softplus.sv",
+  "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv",
+  "rtl/hdc/v41/ot_hdc_actquant.sv",
+  "rtl/hdc/v41x/ot_dsrom_aq12.sv",
+  "rtl/hdc/v41x/ot_dsrom_divc.sv"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [],
+ "outline": {
+  "w": 576.72,
+  "h": 25.92
+ },
+ "why_floorplan": "drop-in for the closed ctfx centre strip (576.72 x 12.96, cth_nt sub-layout row y 365.04): ctfx's 1,135 pin flops + the scale lane pin flop (33) + the partial lane pin flop / merge (275) + a ctq replica; ~1,500 pins per N/S face over the full width | r2 2026-10-14: h 12.96 -> 25.92: at 12.96 (core 8.64 um, 32 rows) the recipe-2 pin flops + pin hold stages of both ~1,500-2,200-pin N/S faces leave no legal rows (CTS gate DPL-0033: 3,462 fixed cells, 7,900 site-alignment / 445 overlap violations at 36.6% overall util); the passing sibling ctfs_nt is 25.92. Slot change requested from the S81 die lead (cth_nt sub-layout).",
+ "macros": [],
+ "pins": {
+  "N": [
+   "fd_in",
+   "fv_in",
+   "rst_in",
+   "dl_in",
+   "ul_out",
+   "cs_n",
+   "tid",
+   "clk",
+   "clk_l"
+  ],
+  "S": [
+   "fdx",
+   "fv",
+   "dl_out",
+   "ul_in",
+   "cs_s"
+  ]
+ },
+ "refglob": "*",
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "job": {
+  "benches_from": "tools/s81_suhc/hc_owned_nt_benches.json",
+  "owner": "Claude:S-NORM",
+  "branch": "claude/s81-norm-tree-1014",
+  "tag": "s2-2root",
+  "structural_change": "TWO CTS ROOTS + straight feed-through (S-NORM 2026-10-15): s1 routed native FAIL (R 271.9, spread 65.7; capture cs 283 / dl_in 226 / ul_in 227 / fd_in 219, launch fdx 236.5): one root over two disjoint sink clusters (NORM lanes x 40-86, data rows x 227-342) gives every single-flop feed-through the whole-tile spread. clk_l now clocks the lane registers (rr, ul_out, dl_out, farq/oct, ctq replica), clk the data rows (fv, fdx); each root has its own boundary R (phi - R per entry). fd_in / fv_in re-pinned at the fdx / fv x of the same bit (v23: internal cut 129 -> 0, max lateral 83.8 -> 0). Same registers and cycles (RTL: clock ports only); crossing hooks (clock_split, local_clock_tap, capture_driver_size) dropped.",
+  "no_bench_reason": "bit-exactness is gated on the HC slab composition with dsfd_sp_hc NTREE 1 (tools/s81_suhc/hc_ntree_bench.sh: NG 256 production shape exact PASS + mutant 3 FAIL; tools/s81_suhc/hc_gate.py --ntree 1 NG 256 exact 0/1940 x3 + per-tile mutants); the tile alone has no golden",
+  "purpose": "el1014-s81-norm-tree: ctfx_nt broadcast source without the local re-register (LOCAL_SPLIT 1)",
+  "views_to": "physical/ref_tile/s81hc_ctfxsnt_ref/views",
+  "record_to": "results/rtl/ref_tile/s81hc_ctfxsnt_ref",
+  "benches": [
+   {
+    "name": "hc_ntree_tmut_ot_s81_hc_ctfxs_nt",
+    "cmd": "bash tools/s81_suhc/hc_owned_bench.sh {RUN}/bench/nt_tm 1 ot_s81_hc_ctfxs_nt",
+    "expect": "fail",
+    "fail_regex": "^RUN ng256_dpi_m0_a0_hier3tail_cp1_cs6_ls1_pipe40_nt67_tm-ot_s81_hc_ctfxs_nt fail$",
+    "threads": 16,
+    "peak_ram_gb": 40,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ],
+  "reroute_reason": {
+   "kind": "pin_register",
+   "source": "results/rtl/s81_layer_tput_1013/norm_tree_1014/native_closure_1014/v24_spread/ctfxs_s1_native_audit.json",
+   "cell": "ot_s81_hc_ctfxs_nt",
+   "launch_ps": 236.5,
+   "capture_ps": 283.3,
+   "fix": "TWO CTS ROOTS + straight feed-through (S-NORM 2026-10-15): s1 routed native FAIL (R 271.9, spread 65.7; capture cs 283 / dl_in 226 / ul_in 227 / fd_in 219, launch fdx 236.5): one root over two disjoint sink clusters (NORM lanes x 40-86, data rows x 227-342) gives every single-flop feed-through the whole-tile spread. clk_l now clocks the lane registers (rr, ul_out, dl_out, farq/oct, ctq replica), clk the data rows (fv, fdx); each root has its own boundary R (phi - R per entry). fd_in / fv_in re-pinned at the fdx / fv x of the same bit (v23: internal cut 129 -> 0, max lateral 83.8 -> 0). Same registers and cycles (RTL: clock ports only); crossing hooks (clock_split, local_clock_tap, capture_driver_size) dropped. clk at the N-face centre x 286.04, clk_l at the lanes x 68.2 (M3)."
+  }
+ },
+ "params": {
+  "CHAIN_STEP": 6
+ },
+ "children": [],
+ "inter": [],
+ "recipe": 2,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": false,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB1xp67_ASAP7_75t_R",
+  "basis": "Native routed phi-R audit: output lead/HB2/buffer plus capture pad exceed 220/190ps; remove the fixed output pad and use HB1 at input pins, retaining all MIN constraints and automatic hold repair."
+ },
+ "io_tcl": "physical/s81_die_pins/v24_hc_norm_spread_candidate/ot_s81_hc_ctfxs_nt.tcl",
+ "assigned_pins": {
+  "file": "physical/s81_die_pins/v24_hc_norm_spread_candidate/ot_s81_hc_ctfxs_nt.json",
+  "source": "S-NORM v24 candidate",
+  "layout": "physical/s81_die_pins/v24_hc_norm_spread_candidate/report.json"
+ },
+ "slot_change_request": "S-NORM v24 spread candidate (tools/s81/hc_norm_straight_pins.py --spread): even fd pitch 0.197 um (5.6 b/um), clk/reset at the N-face centre; request posted to S-DIE el1011-s81die.log 2026-10-15",
+ "clock": "multiple_cts_roots",
+ "clock_ports": [
+  "clk",
+  "clk_l"
+ ],
+ "clock_entry_domains": {
+  "core": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk"
+   ],
+   "inputs": [
+    "fd_in",
+    "fv_in"
+   ],
+   "outputs": [
+    "fdx",
+    "fv"
+   ]
+  },
+  "lane": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_l"
+   ],
+   "inputs": [
+    "rst_in",
+    "tid",
+    "dl_in",
+    "ul_in",
+    "cs_n",
+    "cs_s"
+   ],
+   "outputs": [
+    "dl_out",
+    "ul_out"
+   ]
+  }
+ },
+ "clock_data_paths": "related_same_frequency",
+ "clock_relationship": {
+  "kind": "same_pll_fixed_phase",
+  "ratio": [
+   1,
+   1
+  ],
+  "phase_ps": 0
+ }
+}

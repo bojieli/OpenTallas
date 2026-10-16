@@ -1,0 +1,9 @@
+PASS all36stages/all8192positions identities294912 sectors2359296 inverse-map/raw256/fullmask/TAG59/gen2/exactslots
+OBSERVED_FAIL MUT1 BAD0 errors2 fault0
+OBSERVED_FAIL MUT2 BAD0 errors272 fault0
+FATAL: /home/ubuntu/wt/kvsys-el-r5/rtl/test/qwen_static_kv/tb_qkd_kv_static_writer_native.sv:29: omitted semantic field mismatch
+       Time: 12000 Scope: tb_qkd_kv_static_writer_native
+OBSERVED_FAIL MUT4 BAD0 errors8 fault0
+OBSERVED_FAIL MUT5 BAD0 errors2 fault0
+OBSERVED_FAIL MUT6 BAD0 errors16 fault0
+rc=0

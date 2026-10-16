@@ -1,0 +1,13 @@
+LoadState=loaded
+ActiveState=failed
+SubState=failed
+Result=oom-kill
+OOMPolicy=stop
+ControlGroup=
+MemoryPeak=171798691840
+MemoryMax=171798691840
+MemorySwapMax=0
+2026-10-15T00:10:07-07:00 regular-crane systemd[3813]: Started oth-ubuntu-1122149-1792048206.scope - [systemd-run] /usr/bin/bash rtl/hbm_accel/generic/collective/p2p/run_native_allgather.sh /tmp/hcoll-native-allgather-1015 /tmp/hcoll-allgather-native-src-1015/results/arch/hbm_p2p_1014/native_allgather_1015/program.
+2026-10-15T00:21:55-07:00 regular-crane systemd[3813]: oth-ubuntu-1122149-1792048206.scope: The kernel OOM killer killed some processes in this unit.
+2026-10-15T00:22:03-07:00 regular-crane systemd[3813]: oth-ubuntu-1122149-1792048206.scope: Failed with result 'oom-kill'.
+2026-10-15T00:22:03-07:00 regular-crane systemd[3813]: oth-ubuntu-1122149-1792048206.scope: Consumed 19min 5.988s CPU time over 11min 56.599s wall clock time, 160G memory peak.

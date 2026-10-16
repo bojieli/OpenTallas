@@ -1,0 +1,53 @@
+{
+  "base_commit": "c3fc1a4a2a9fe2722ba5f9e7bf938a8802c3c381",
+  "source_sha256": {
+    "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+    "rtl/hdc/ot_hdc_fastfp.sv": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643",
+    "rtl/hdc/ot_hdc_fp32_add_lat.sv": "f5e88cfcd8ce4809826eccf77fa8b83bc1ef14b430964dcf01cef70f70577b30",
+    "rtl/hdc/ot_hdc_fp32_mul_lat.sv": "ddc4c3bfb4f22788534148049bf381d469053ff5b54c6197548636a3f4aac8e3",
+    "rtl/hdc/ot_hdc_fp32_mul_pipe.sv": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204",
+    "rtl/hdc/ot_hdc_fpu.sv": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110",
+    "rtl/hdc/ot_hdc_prefix.sv": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+    "rtl/hdc/ot_hdc_sfu.sv": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923",
+    "rtl/hdc/ot_qwen_me_spine_h_w12.sv": "115ab6d4c95c6a9fa31b680149634584267fad646f0f661df9c5799c59b9cdd3",
+    "rtl/hdc/ot_qwen_w12_arith.sv": "e62270cd204e14875b025c824c0a1d26f1a9e046ec1ef0a57467ac22f43e9726",
+    "rtl/hdc/ot_qwen_w12_matvec.sv": "113f17dddbb3986b714cd4e7df04856c9675aa2affea34774b5cf56888b842a5",
+    "rtl/qwen_split/qfd_res_ser_static.sv": "69e27fd15d15e8177566910c9b30097aadcd0e74e0dfb8949fa5fa64a2dda19b"
+  },
+  "program_sha256": "cc5bc8fc17d4068ac9a49e8bf79f34e74350d56d114dd7fe5cde433d2ac82796",
+  "pc": 1,
+  "instruction_word": "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000112000001000008000000000000200002000601001000000001000008000040000000000400008180000001",
+  "scope": "Actual fullshape controller p_v/p_f -> real soft-multiply spport -> static serializer; declared synthetic tree/scale boundary inputs. No slab macro, physical, arithmetic, native layer or throughput qualification.",
+  "mutant": "Actual ot_qwen_me_spport_w12 o_ov1 producer marker replaced by zero; must fail eight-capture expectation",
+  "status": "ACTUAL_DUT_POSITIVE_AND_MISSING_MARKER_MUTANT_PASS",
+  "actual_producer_positive": {
+    "host": "ot-agidock128",
+    "unit": "oth-ubuntu-923480-1792088233",
+    "captures": [
+      296,
+      297,
+      298,
+      299,
+      300,
+      301,
+      302,
+      303
+    ],
+    "addresses": [
+      768,
+      769,
+      770,
+      771,
+      772,
+      773,
+      774,
+      775
+    ],
+    "mask": "ffff",
+    "count": 8,
+    "min_gap": 1,
+    "static_serializer_fault": 1,
+    "terminal_marker": "PASS actual_ctl_port_train count=8 min_gap=1 serializer_fault=1",
+    "mutant": "Actual producer marker forcedzero; explicit eight-capture expectation rejects count0/gap999/fault0"
+  }
+}

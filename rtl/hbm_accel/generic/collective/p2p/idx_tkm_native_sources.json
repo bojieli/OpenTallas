@@ -1,0 +1,16 @@
+{
+  "schema": "hcoll.idx_tkm.native_sources.v1",
+  "INDEX_revision": "39e0af759",
+  "selector_selected_scan_edges": 171,
+  "producer_first_launch_edge": 833,
+  "input_SHA256": {
+    "ot_sram_1r1w_64x512_m1_r2c2.v": "d4533939f695944bebd6a63a086e3771846bc0c379af52720de8974fee504145",
+    "ot_hbm_idx_topk_link_static.sv": "acf1b5aaef1b103a2bd540497a6f4890353b4feed7d54e9d8cac503d6eb6ef92",
+    "ot_hbm_idx_selector_static.sv": "41cf529b5f30e8d6446ac8e7070a3e4b6514a45eacbb65c6bb91512fd9df66b2",
+    "ot_sram_1r1w_256x256_m2_r2c2.v": "312006d550f75c240846e561301d908e38fe45707bb7fcbf38d9b78ff019bf2d"
+  },
+  "native_TKM_snapshot": {
+    "RTL_git_blob": "37ae51157804121460a5fe02863eecac368a9b12",
+    "scope": "typed API/timing inspection only; publisher runtime qualification and object reuse pending"
+  }
+}

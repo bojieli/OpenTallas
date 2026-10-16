@@ -1,0 +1,15 @@
+ot-run: ot-epyc1tb     admits   256 GB (avail 559, growth 238, headroom 64, waiters 2/900 GB) load 172/128 running 73 disk 674 GB 
+ot-run: ot-epyc4       admits    83 GB (avail 309, growth 146, headroom 48, waiters 1/270 GB) load 120/128 running 32 disk 755 GB 
+ot-run: ot-pve1        skipped: load hold: load1 > 1.5 x cores
+ot-run: ot-agidock128  admits    24 GB (avail 56, growth 35, headroom 24, waiters 0/0 GB) load 39/64 running 13 disk 151 GB 
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-1458702-1792096756 after 0 s
+STATIC VMWRITE PASS checked=77 full_bank_cycles=23 RGX=4x512 TKW=568 low=C+1 high=C+2
+/tmp/hcoll-writer-decode-1339/rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_static_vmwrite.sv:105: $finish called at 1136000 (1ps)
+FATAL: /tmp/hcoll-writer-decode-1339/rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_static_vmwrite.sv:66: payload/latency bank 0
+       Time: 66000  Scope: tb_hgi_coll_static_vmwrite.tick
+mutant 1 rejected as required
+FATAL: /tmp/hcoll-writer-decode-1339/rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_static_vmwrite.sv:88: extra reserved resource undetected
+       Time: 666000  Scope: tb_hgi_coll_static_vmwrite
+mutant 2 rejected as required
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-1458702-1792096756): exit 0

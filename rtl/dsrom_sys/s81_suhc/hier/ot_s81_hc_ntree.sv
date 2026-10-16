@@ -44,10 +44,15 @@
 //      half (tid[0]) of an octet merges its 4-bank chunk sum cs into slot (octet & 1) in the cycle ctra latches it
 //      (vs[DS] of a ctq replica on the same local epoch).  A slot already full sets the fault bit.
 // ---------------------------------------------------------------------------------------------------------------------
-module ot_s81_hc_ctfx_nt #(
+// Two-clock body (S-NORM 2026-10-15, ctfxs_nt TWO CTS ROOTS): clk = the data rows (fd_in -> fdx, fv), clk_l = the NORM
+// lanes (dl / ul / cs merge, tid, the ctq replica, the reset pin capture).  Both are the same die clock delivered at two
+// entries (phi - R per root); every register keeps its cycle, so the function is unchanged.  ot_s81_hc_ctfx_nt below is
+// the one-clock wrapper (clk_l = clk) for the old masters / benches.
+module ot_s81_hc_ctfx_nt2 #(
     parameter integer NG = 256, D = 5120, S_RD = 2, ML = 5, AL = 4, CHAIN_STEP = AL, LOCAL_EPOCH = 1
 ) (
     input  wire               clk,
+    input  wire               clk_l,
     input  wire               rst_in,
     input  wire [S_RD+4:0]    fv_in,
     input  wire [FXW-1:0]     fd_in,
@@ -67,11 +72,14 @@ module ot_s81_hc_ctfx_nt #(
                        O_NV = O_NG + 6, O_R = O_NV + 8, O_HS = O_R + 32, O_D = O_HS + 1, FXW = O_D + S_RD * 512;
     localparam integer SW = 137, DLW = 2 * SW + 1, DS = ML + 7 * CHAIN_STEP;
     reg rr;
-    always @(posedge clk) rr <= rst_in;
+    always @(posedge clk_l) rr <= rst_in;
     wire rst_n = rr;
     always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin fv <= 0; ul_out <= 0; end
-        else begin fv <= {fv_in[S_RD+4], ul_out[32], fv_in[S_RD+2:0]}; ul_out <= ul_in; end
+        if (!rst_n) fv <= 0;
+        else fv <= {fv_in[S_RD+4], ul_out[32], fv_in[S_RD+2:0]};
+    always @(posedge clk_l or negedge rst_n)
+        if (!rst_n) ul_out <= 0;
+        else ul_out <= ul_in;
     always @(posedge clk) begin
         fdx <= fd_in;
         if (ul_out[32]) fdx[O_R +: 32] <= ul_out[31:0];
@@ -81,8 +89,9 @@ module ot_s81_hc_ctfx_nt #(
     generate if (LOCAL_EPOCH) begin : g_local_capture
         reg [S_RD+4:0] v;
         reg [FXW-1:0] d;
-        always @(posedge clk or negedge rst_in)
-            if (!rst_in) v <= 0; else v <= fv;
+        // reset by the pin capture rr (rst_in's only load; cycle-identical epoch, see ot_s81_hc_ctfx_cap)
+        always @(posedge clk or negedge rst_n)
+            if (!rst_n) v <= 0; else v <= fv;
         always @(posedge clk) d <= fdx;
         assign fv_local = v;
         assign fdx_local = d;
@@ -96,8 +105,8 @@ module ot_s81_hc_ctfx_nt #(
     generate if (LOCAL_EPOCH) begin : g_le
         reg [S_RD+4:0] v;
         reg [O_D-1:0]  c;
-        always @(posedge clk or negedge rst_n) if (!rst_n) v <= 0; else v <= fv;
-        always @(posedge clk) c <= fdx[O_D-1:0];
+        always @(posedge clk_l or negedge rst_n) if (!rst_n) v <= 0; else v <= fv;
+        always @(posedge clk_l) c <= fdx[O_D-1:0];
         assign fvl = v; assign fcl = c;
     end else begin : g_nle
         assign fvl = fv; assign fcl = fdx[O_D-1:0];
@@ -108,14 +117,14 @@ module ot_s81_hc_ctfx_nt #(
     wire [DS:0] vs;
     wire [2*ML+1:0] vy;
     wire [31:0] rh;
-    ot_s81_hc_ctq #(.NG(NG), .D(D), .S_RD(S_RD), .ML(ML), .AL(AL), .CHAIN_STEP(CHAIN_STEP)) u_q (.clk(clk), .rst_n(rst_n),
+    ot_s81_hc_ctq #(.NG(NG), .D(D), .S_RD(S_RD), .ML(ML), .AL(AL), .CHAIN_STEP(CHAIN_STEP)) u_q (.clk(clk_l), .rst_n(rst_n),
         .fv(fvl), .fdx({{(FXW - O_D){1'b0}}, fcl}), .n_hs(n_hs), .n_cs(n_cs), .n_gs(n_gs), .mx_v(mx_v), .x_v(x_v),
         .xi(xi), .vs(vs), .si(si), .rh(rh), .sc_i(sc_i), .b_v(b_v), .vy(vy), .wi(wi), .yi(yi));
     wire [127:0] cs = {cs_s, cs_n};
     reg       farq;
     reg [4:0] oct;
-    always @(posedge clk) begin farq <= tid[0]; oct <= tid[5:1]; end
-    always @(posedge clk or negedge rst_n)
+    always @(posedge clk_l) begin farq <= tid[0]; oct <= tid[5:1]; end
+    always @(posedge clk_l or negedge rst_n)
         if (!rst_n) dl_out <= 0;
         else begin : mrg
             reg [DLW-1:0] o;
@@ -126,6 +135,86 @@ module ot_s81_hc_ctfx_nt #(
             end
             dl_out <= o;
         end
+endmodule
+
+module ot_s81_hc_ctfx_nt #(
+    parameter integer NG = 256, D = 5120, S_RD = 2, ML = 5, AL = 4, CHAIN_STEP = AL, LOCAL_EPOCH = 1
+) (
+    input  wire               clk,
+    input  wire               rst_in,
+    input  wire [S_RD+4:0]    fv_in,
+    input  wire [FXW-1:0]     fd_in,
+    output wire [S_RD+4:0]    fv,
+    output wire [FXW-1:0]     fdx,
+    output wire [S_RD+4:0]    fv_local,
+    output wire [FXW-1:0]     fdx_local,
+    input  wire [7:0]         tid,
+    input  wire [63:0]        cs_n,
+    input  wire [63:0]        cs_s,
+    input  wire [DLW-1:0]     dl_in,
+    output wire [DLW-1:0]     dl_out,
+    input  wire [32:0]        ul_in,
+    output wire [32:0]        ul_out
+);
+    localparam integer O_D = 5 + S_RD * 16 + 20 + 6 + 8 + 32 + 1, FXW = O_D + S_RD * 512, DLW = 2 * 137 + 1;
+    ot_s81_hc_ctfx_nt2 #(.NG(NG), .D(D), .S_RD(S_RD), .ML(ML), .AL(AL), .CHAIN_STEP(CHAIN_STEP), .LOCAL_EPOCH(LOCAL_EPOCH)) u_x (
+        .clk(clk), .clk_l(clk), .rst_in(rst_in), .fv_in(fv_in), .fd_in(fd_in), .fv(fv), .fdx(fdx), .fv_local(fv_local),
+        .fdx_local(fdx_local), .tid(tid), .cs_n(cs_n), .cs_s(cs_s), .dl_in(dl_in), .dl_out(dl_out), .ul_in(ul_in),
+        .ul_out(ul_out));
+endmodule
+
+// ---------------------------------------------------------------------------------------------------------------------
+// LOCAL SPLIT (S-NORM 2026-10-15, cth_nt LOCAL_SPLIT 1): the measured ctfx_nt S face carries THREE 1,128-bit registered
+// boundaries in one 115-um pin span (fdx M5 + fdx_local M3 out, fd_in N): every routed attempt overflowed GRT there (v5
+// BUFx2 pads 26,013, v6 HB4 pads 6,874 overflow, all inside x 227-343 / y 0-11).  The fdx_local re-register (d / v of
+// g_local_capture) is the SAME register moved into its own strip, so the pin span of each strip carries one bus per face:
+//   ot_s81_hc_ctfxs_nt = ot_s81_hc_ctfx_nt without the local outputs (synthesis drops d / v; the ctq replica stays);
+//   ot_s81_hc_ctfl_nt  = fv_local / fdx_local <= fv / fdx, reset from its own rst_in pin capture (rst_c + 1 = the old rr).
+// Cycle-identical (same register count on every path, 0 added cycles); costs one 1,135-bit strip of area.
+// ---------------------------------------------------------------------------------------------------------------------
+module ot_s81_hc_ctfxs_nt #(
+    parameter integer NG = 256, D = 5120, S_RD = 2, ML = 5, AL = 4, CHAIN_STEP = AL
+) (
+    input  wire               clk,
+    input  wire               clk_l,             // NORM lane root (two CTS roots, S-NORM 2026-10-15)
+    input  wire               rst_in,
+    input  wire [S_RD+4:0]    fv_in,
+    input  wire [FXW-1:0]     fd_in,
+    output wire [S_RD+4:0]    fv,
+    output wire [FXW-1:0]     fdx,
+    input  wire [7:0]         tid,
+    input  wire [63:0]        cs_n,
+    input  wire [63:0]        cs_s,
+    input  wire [DLW-1:0]     dl_in,
+    output wire [DLW-1:0]     dl_out,
+    input  wire [32:0]        ul_in,
+    output wire [32:0]        ul_out
+);
+    localparam integer O_D = 5 + S_RD * 16 + 20 + 6 + 8 + 32 + 1, FXW = O_D + S_RD * 512, DLW = 2 * 137 + 1;
+    wire [S_RD+4:0] fv_local_nc;
+    wire [FXW-1:0]  fdx_local_nc;
+    ot_s81_hc_ctfx_nt2 #(.NG(NG), .D(D), .S_RD(S_RD), .ML(ML), .AL(AL), .CHAIN_STEP(CHAIN_STEP), .LOCAL_EPOCH(1)) u_x (
+        .clk(clk), .clk_l(clk_l), .rst_in(rst_in), .fv_in(fv_in), .fd_in(fd_in), .fv(fv), .fdx(fdx), .fv_local(fv_local_nc),
+        .fdx_local(fdx_local_nc), .tid(tid), .cs_n(cs_n), .cs_s(cs_s), .dl_in(dl_in), .dl_out(dl_out), .ul_in(ul_in),
+        .ul_out(ul_out));
+endmodule
+
+module ot_s81_hc_ctfl_nt #(
+    parameter integer S_RD = 2
+) (
+    input  wire               clk,
+    input  wire               rst_in,
+    input  wire [S_RD+4:0]    fv,
+    input  wire [FXW-1:0]     fdx,
+    output reg  [S_RD+4:0]    fv_local,
+    output reg  [FXW-1:0]     fdx_local
+);
+    localparam integer O_D = 5 + S_RD * 16 + 20 + 6 + 8 + 32 + 1, FXW = O_D + S_RD * 512;
+    reg rr;
+    always @(posedge clk) rr <= rst_in;
+    always @(posedge clk or negedge rr)
+        if (!rr) fv_local <= 0; else fv_local <= fv;
+    always @(posedge clk) fdx_local <= fdx;
 endmodule
 
 // ---------------------------------------------------------------------------------------------------------------------
@@ -643,7 +732,7 @@ endmodule
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_s81_hc_cth_nt #(
     parameter integer NG = 256, D = 5120, NCOL = 3, GS = 8, S_RD = 2, S_RT = 4, WIN = 2, WOUT = 2, ML = 5, AL = 4,
-    parameter integer RLY = 2, CNL_PIN = 0, CHAIN_STEP = AL, LANE_SPECIALIZE = 0
+    parameter integer RLY = 2, CNL_PIN = 0, CHAIN_STEP = AL, LANE_SPECIALIZE = 0, LOCAL_SPLIT = 1
 ) (
     input  wire                       clk,
     input  wire                       rst_in,
@@ -720,9 +809,17 @@ module ot_s81_hc_cth_nt #(
         .clk(clk), .rst_in(rst_in), .rst_c(rst_c), .fv_in(fv_in), .fd_in(fd_in), .fvm(fvm), .fdm(fdm));
     wire [DLW-1:0] dl_m;
     wire [32:0]    ul_m;
-    ot_s81_hc_ctfx_nt #(.NG(NG), .D(D), .S_RD(S_RD), .ML(ML), .AL(AL), .CHAIN_STEP(CHAIN_STEP), .LOCAL_EPOCH(CNL_PIN)) u_fx (
-        .clk(clk), .rst_in(rst_c), .fv_in(fv_in), .fd_in(fd_in[FXW-1:0]), .fv(fv), .fdx(fdx), .fv_local(fv_local), .fdx_local(fdx_local),
-        .tid(tid), .cs_n(cs[63:0]), .cs_s(cs[127:64]), .dl_in(dl_in), .dl_out(dl_m), .ul_in(ul_m), .ul_out(ul_out));
+    generate if (LOCAL_SPLIT && CNL_PIN) begin : g_fxs
+        ot_s81_hc_ctfxs_nt #(.NG(NG), .D(D), .S_RD(S_RD), .ML(ML), .AL(AL), .CHAIN_STEP(CHAIN_STEP)) u_fx (
+            .clk(clk), .clk_l(clk), .rst_in(rst_c), .fv_in(fv_in), .fd_in(fd_in[FXW-1:0]), .fv(fv), .fdx(fdx),
+            .tid(tid), .cs_n(cs[63:0]), .cs_s(cs[127:64]), .dl_in(dl_in), .dl_out(dl_m), .ul_in(ul_m), .ul_out(ul_out));
+        ot_s81_hc_ctfl_nt #(.S_RD(S_RD)) u_fl (
+            .clk(clk), .rst_in(rst_c), .fv(fv), .fdx(fdx), .fv_local(fv_local), .fdx_local(fdx_local));
+    end else begin : g_fx
+        ot_s81_hc_ctfx_nt #(.NG(NG), .D(D), .S_RD(S_RD), .ML(ML), .AL(AL), .CHAIN_STEP(CHAIN_STEP), .LOCAL_EPOCH(CNL_PIN)) u_fx (
+            .clk(clk), .rst_in(rst_c), .fv_in(fv_in), .fd_in(fd_in[FXW-1:0]), .fv(fv), .fdx(fdx), .fv_local(fv_local), .fdx_local(fdx_local),
+            .tid(tid), .cs_n(cs[63:0]), .cs_s(cs[127:64]), .dl_in(dl_in), .dl_out(dl_m), .ul_in(ul_m), .ul_out(ul_out));
+    end endgenerate
     ot_s81_hc_ctfs_nt #(.NG(NG), .D(D), .NCOL(NCOL), .GS(GS), .S_RD(S_RD), .RLY(RLY)) u_fs (
         .clk(clk), .rst_in(rst_c), .rst_out(rst_out), .fvm(fvm), .fdm(fdm), .fv_out(fv_out), .fd_out(fd_out),
         .dl_in(dl_m), .dl_out(dl_out), .ul_in(ul_in), .ul_out(ul_m));

@@ -1,0 +1,97 @@
+{
+  "schema": "opentallas.hcoll.selected-storage-successors.v1",
+  "status": "Selected hierarchy source proof only; logical PARK storage requirement remains OPEN",
+  "parent_sources": {
+    "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q_static.sv": {
+      "sha256": "43c4a6baf9e40d9d67043dd044e0848ba6c59433ecdd02788084a3c270704607",
+      "historical_PARK_reference_count": 0
+    },
+    "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q_static_v2.sv": {
+      "sha256": "d199ad158db31f6493c3b6e4f4b514390b7f389c5c0471b344fe3d44bcb5f37e",
+      "historical_PARK_reference_count": 0
+    },
+    "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q_static_v3.sv": {
+      "sha256": "392bb8c72b4832bccb76b83d9350e30cd640f2d453dc8159b82829e45446d86e",
+      "historical_PARK_reference_count": 0
+    },
+    "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q_static_v4.sv": {
+      "sha256": "6cef562b51a4050a09f73d93a7497c6980138e58363de6aa450e66ecd519fd9b",
+      "historical_PARK_reference_count": 0
+    }
+  },
+  "historical": {
+    "module": "ot_hgi_coll_park_q1",
+    "closed_record": "f6b4ec71b",
+    "native_pop_capture_ps": 192.1,
+    "capture_limit_ps": 190,
+    "action": "Preserve CLOSED history and failed native audit; do not reroute unused selected-hierarchy master"
+  },
+  "successors": [
+    {
+      "function": "Input landing and fixed inter-die forwarding retention",
+      "actual_modules": [
+        "ot_hgi_coll_static_link_capture",
+        "ot_hgi_coll_static_pinreg_store"
+      ],
+      "capacity": "64 replay slots per rail; four actual 64x512 SRAM macros per rail",
+      "owner": "/root/h_collective/static_link_sequence",
+      "evidence": "results/arch/hcoll_fec_endpoint_1015/receipt.json",
+      "next_gate": "Actual core/FEC/PHY512 clock crossings and native selected transport; physical controller/store child views and pin reach",
+      "qualified": false
+    },
+    {
+      "function": "Scheduled landing and fanout between local clients",
+      "actual_modules": [
+        "ot_hgi_coll_qslots"
+      ],
+      "capacity": "One captured flit per source and registered sink; no implicit 512-flit elastic queue",
+      "owner": "/root/h_collective",
+      "evidence": "results/arch/hbm_p2p_1014/q_static_v2_1015/receipt.json",
+      "next_gate": "Actual selected producer/consumer joins, per-child physical views, production throughput",
+      "qualified": false
+    },
+    {
+      "function": "Partial-vector retention for exact group reductions",
+      "actual_modules": [
+        "ot_hgi_coll_reduce_static"
+      ],
+      "capacity": "16 tags across 16 FP32 lanes, with explicit load/read/add/publication reservations",
+      "owner": "/root/h_collective/static_ring",
+      "evidence": "results/arch/hcoll_g96_calendar_1015/bridge/local_retime/independent_audit.json",
+      "next_gate": "Real control-program storage, final transport/relay calendar and actual native operation",
+      "qualified": false
+    },
+    {
+      "function": "TOPK candidate and output retention",
+      "actual_modules": [
+        "ot_hgi_coll_tkm_static"
+      ],
+      "capacity": "32 native PT64 tiles plus two actual staging SRAM buffers; full shape depends on n/k/group",
+      "owner": "/root/publisher",
+      "evidence": "results/arch/hbm_p2p_1014/idx_tkm_join_1015/receipt.json",
+      "next_gate": "Reuse preserved KMAX2048 build to execute actual INDEX producer through native TKM and output commits",
+      "qualified": false
+    },
+    {
+      "function": "Final addressed vector retention",
+      "actual_modules": [
+        "ot_hgi_coll_static_vmwrite"
+      ],
+      "capacity": "Eight actual VM sector banks; 24 native SRAM macros in the proved selected VM composition",
+      "owner": "/root/h_vm",
+      "evidence": "results/arch/hbm_p2p_1014/native_vm_1015",
+      "next_gate": "Actual distributed placement/calendar and final consumer visibility",
+      "qualified": false
+    },
+    {
+      "function": "SU-delivered output storage and later operand production",
+      "actual_modules": [],
+      "capacity": "Actual native SU store/producer ABI remains a separate required join",
+      "owner": "/root/h_elements_b",
+      "evidence": null,
+      "next_gate": "Connect actual native SU result storage and source generation; declared INJLAT12 stimulus is insufficient",
+      "qualified": false
+    }
+  ],
+  "qualification": "No logical requirement is retired until the connected production successor passes exactness, physical and throughput gates"
+}

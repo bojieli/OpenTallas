@@ -1,0 +1,36 @@
+{
+  "verdict": "PASS",
+  "scope": "Actual full128SRAM readport calendar, READ_PIPE4 with WSCATTER_PIPE1 core",
+  "method": "Read-only observer linked to existing immutable corearchive. Immediately before every actual posedge, sample all128 bank rvq/raq (rvq directly wires SRAM r_ce_in). Reconstruct logicalrow+slice; require exact per-cycle multiset equal to external expected output tables indexed at cy-7+16. Expand every expectedrow into4requiredslices.",
+  "fixed_specification": {
+    "pin_to_macro_read_edges": 7,
+    "pin_to_external_return_edges": 16,
+    "table_index_at_macro_cycle": "cy+9",
+    "latency_learned": false,
+    "dynamic_relabel": false
+  },
+  "covered_expected_tables": [
+    "rv_exp/rr_exp (18nativeports)",
+    "mx_exp/mx_row (20MIXports)",
+    "cr_exp/cr_row (collective)",
+    "pq_exp/pq_row (4rowPQreturn)"
+  ],
+  "actual_macro_read_ports": 103244,
+  "expected_macro_read_ports": 103244,
+  "logical_rows": 25811,
+  "compared_nonempty_cycles": 1750,
+  "mismatch_cycles": 0,
+  "core_result": "PASS mode0 cycles3210 commits69696 K12 reads19745 pq514 mix_reads4010 mix_writes1000 rows_checked25811 bad0",
+  "admission": {
+    "host": "ot-agidock128",
+    "GB": 1,
+    "threads": 1,
+    "unit": "oth-ubuntu-974978-1792089517",
+    "actual_exit": 0
+  },
+  "compiled_package": "ot-agidock128:/srv/opentallas-scratch/codex/s81-vm-scatter-pipe-1103/out/scatter1",
+  "limits": [
+    "Functional calendar observation only, no physical timing qualification.",
+    "Read occurs on actual macro r_ce edge. Same-edge SRAM read-before-write semantics remain defined by original macro source; this observer does not alter them."
+  ]
+}

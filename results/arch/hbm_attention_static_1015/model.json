@@ -1,0 +1,112 @@
+{
+  "schema": "opentallas.hbm_attention.static_model.v1",
+  "heads": 16,
+  "dim": 512,
+  "row_lanes": 4,
+  "engine": "actual ot_hdc_v41x_attn arithmetic, PHYS0, SRAM_MACRO1",
+  "controller": "absolute compiler events job/q/kv/p/fill/qk/pv; no ready/credits",
+  "query_source": "actual FP32 VM sectors upper16 extraction, unchanged precision",
+  "VM_group": "NE RG3 of RG7; 8banks rq17/rr257; n+6 response, n+7 capture plus unqualified physical stations",
+  "query_prefetch_edges": 128,
+  "query_prefetch_bytes": 32768,
+  "query_gather": {
+    "macros": 64,
+    "master": "ot_sram_1r1w_32x128_m1",
+    "depth": 32,
+    "width": 128,
+    "banks": 2,
+    "heads_per_bank": 16,
+    "useful_bytes": 32768,
+    "macro_area_um2": 68401.42848,
+    "read_edges": 1
+  },
+  "staging": {
+    "macros": 68,
+    "master": "ot_sram_1r1w_256x256_m2_r2c2",
+    "row_payload_bits": 4240,
+    "rows": 640
+  },
+  "traffic": {
+    "query_VM_payload_bits_per_edge": 2048,
+    "query_head_bits": 8192,
+    "PS_packed_rows_bits_per_edge": 16960,
+    "probability_word_bits": 1024
+  },
+  "clock_period_ps": 833.333,
+  "price_immutable": {
+    "128": 147.144,
+    "640": 339.144
+  },
+  "calendar_shapes": [
+    {
+      "H": 16,
+      "D": 512,
+      "TD": 64,
+      "NL": 4,
+      "T": 128,
+      "mode": "qk",
+      "last_issue_cycle": 48,
+      "issue_period": 49
+    },
+    {
+      "H": 16,
+      "D": 512,
+      "TD": 64,
+      "NL": 4,
+      "T": 128,
+      "mode": "pv",
+      "last_issue_cycle": 50,
+      "issue_period": 51
+    },
+    {
+      "H": 16,
+      "D": 512,
+      "TD": 64,
+      "NL": 4,
+      "T": 640,
+      "mode": "qk",
+      "last_issue_cycle": 176,
+      "issue_period": 177
+    },
+    {
+      "H": 16,
+      "D": 512,
+      "TD": 64,
+      "NL": 4,
+      "T": 640,
+      "mode": "pv",
+      "last_issue_cycle": 181,
+      "issue_period": 182
+    }
+  ],
+  "service_bound": "max(query-prefetch phase, actual engine issue period, real PS staging fill) plus allocated source/boundary schedule; numerical/throughput unverified",
+  "qualification": false,
+  "remaining": [
+    "ActualKV8HBM17sector row bandwidth vsservice8sector/edge; no priorpricequalification",
+    "Measured full H16 arithmetic + actual mapped staging/gather proof",
+    "Actual PS producer burst/allocation; no hypothetical wide VM row port",
+    "Native programme SRAM image/VM request schedule and physical station edges",
+    "Actual controller/gather mapped footprint, clock-root census, slot and route",
+    "Actual score/PV VM output drain/commit schedule"
+  ],
+  "PS_source_bandwidth_audit": {
+    "format": "Actual legacy KV8 row D512 code512B + trailing scale-sector32B, internalpacked16x265bits=528B",
+    "source_bytes_per_row": 544,
+    "service_candidate_delivery_sectors_per_edge": 8,
+    "source_bytes_per_edge": 256,
+    "source_cycles_per_record": {
+      "128": 272,
+      "640": 1360
+    },
+    "immutable_attention_price": {
+      "128": 147.144,
+      "640": 339.144
+    },
+    "service_ratio_without_overlap_or_more_ports": {
+      "128": 1.848529331811015,
+      "640": 4.010096006416154
+    },
+    "status": "FAIL if this single8sector drain is allocated toATT at sustainedrecordrate; actualPSallocation unproven",
+    "required": "Actualsource landing/PSproducer and fixedslots; compile acrossrecordprefetch or widerindependentports withrealbuffer/cut/clock/area, no fictionalVMwideport"
+  }
+}

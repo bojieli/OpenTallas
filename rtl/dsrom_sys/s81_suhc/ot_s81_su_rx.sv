@@ -84,7 +84,11 @@ module ot_s81_su_rxe #(
     wire [RAL-1:0]    ra_vo, ra_f;
     generate
         for (l = 0; l < RAL; l = l + 1) begin : g_ra
-            ot_hdc_v41x_softplus_s #(.PCUT(1)) u (.clk(clk), .rst_n(rst_n), .v(iss_a), .x(arow[32 * (RAL * sub + l) +: 32]),
+            // decoded constant-index slices (no runtime-indexed part-select: yosys SHARE stall at synthesis)
+            wire [31:0] xl = (SUB == 1) ? arow[32 * l +: 32] :
+                             (sub == 2'd0) ? arow[32 * l +: 32] : (sub == 2'd1) ? arow[32 * (RAL + l) +: 32] :
+                             (sub == 2'd2) ? arow[32 * ((2 * RAL + l) % 16) +: 32] : arow[32 * ((3 * RAL + l) % 16) +: 32];
+            ot_hdc_v41x_softplus_s #(.PCUT(1)) u (.clk(clk), .rst_n(rst_n), .v(iss_a), .x(xl),
                 .sp(ra_sp[32 * l +: 32]), .r(ra_r[32 * l +: 32]), .vo(ra_vo[l]), .fault(ra_f[l]));
         end
     endgenerate
@@ -103,8 +107,8 @@ module ot_s81_su_rxe #(
     end
     always @(posedge clk)
         if (ra_vo[0])
-            for (g = 0; g < RAL; g = g + 1)
-                ra_row[32 * (RAL * ra_so + g) +: 32] <= (MUT == 1) ? ra_sp[32 * g +: 32] : ra_r[32 * g +: 32];
+            for (g = 0; g < 16; g = g + 1)          // constant-index slices: sub-beat g / RAL lands at its lanes
+                if (g / RAL == ra_so) ra_row[32 * g +: 32] <= (MUT == 1) ? ra_sp[32 * (g % RAL) +: 32] : ra_r[32 * (g % RAL) +: 32];
 
     // ------------------------------------------------------------------ RB: scores + bias, 16 lanes
     wire iss_b = i_v && i_k == 2'd1;
@@ -139,8 +143,12 @@ module ot_s81_su_rxe #(
             wire [511:0] yr; wire [15:0] fr;
             for (l = 0; l < 16; l = l + 1) begin : g_qr
                 localparam integer ODD = l % 2;
-                wire [4:0]  kk = {jr, 3'd0} + (l / 2);
-                wire [31:0] cc = cos_t[32 * kk +: 32], sn = sin_t[32 * kk +: 32];
+                // rope coefficient of row jr, pair l / 2: a 4-way select of constant slices (no runtime part-select)
+                localparam integer P = l / 2;
+                wire [31:0] cc = (jr == 2'd0) ? cos_t[32 * P +: 32] : (jr == 2'd1) ? cos_t[32 * (8 + P) +: 32] :
+                                 (jr == 2'd2) ? cos_t[32 * (16 + P) +: 32] : cos_t[32 * (24 + P) +: 32];
+                wire [31:0] sn = (jr == 2'd0) ? sin_t[32 * P +: 32] : (jr == 2'd1) ? sin_t[32 * (8 + P) +: 32] :
+                                 (jr == 2'd2) ? sin_t[32 * (16 + P) +: 32] : sin_t[32 * (24 + P) +: 32];
                 wire [31:0] mine = xr[32 * l +: 32], pair = xr[32 * (ODD ? l - 1 : l + 1) +: 32];
                 // forward: a' = a*c + (-(b*s)), b' = b*c + a*s; MUT 3: the inverse (a*c + b*s, b*c - a*s)
                 wire [31:0] sg = ((ODD != 0) ^ (MUT == 3)) ? sn : {~sn[31], sn[30:0]};

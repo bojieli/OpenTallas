@@ -31,7 +31,14 @@ HARD_PHY = {'ot_hbm3e_phy': 'HBM3E PHY analog (digital layer = HBM controller qk
             # v1.2: the clock / reset forwarding bump pair to the compute die is two pad cells (no logic; the compute
             # side's receiver qfd_clkrx / reset synchroniser are its digital layer)
             'qkd_ckbump': 'clock / reset forwarding bump pair to the compute die: pad cells, no logic (by design)',
+            'qkd_fwdbump': 'v1.4 forwarded bump to the compute die (epoch strobe / link reset): pad cell, no logic (by design)',
             'qkd_hbm3e_phy_pc': 'HBM3E PHY analog, PHY only (v1.2): per-PC DFI po / pi; digital layer = qkd_ctrl_pc x32 (REAL)'}
+
+
+HARD_PORT_RTL = {
+    'ot_qkvd_ucie_x64_phy': 'physical/qwen_kv_die_phy/ot_qkvd_ucie_x64_phy/ot_qkvd_ucie_x64_phy_bb.v',
+    'ot_qfd_serdes_112g_x12_phy': 'physical/qwen_missing_phy/ot_qfd_serdes_112g_x12_phy/ot_qfd_serdes_112g_x12_phy_bb.v',
+}
 
 
 def header(text, mod):
@@ -114,6 +121,7 @@ def main(argv=None):
     ap = argparse.ArgumentParser()
     ap.add_argument('die_v')
     ap.add_argument('--out', required=True)
+    ap.add_argument('--strict', action='store_true', help='fail when a die master has a stub, relay placeholder, or port mismatch')
     ap.add_argument('--split', action='store_true', help='the split KV/system die bindings (kv_die._set_geometry(True))')
     ap.add_argument('--relay-rtl', help='v1.2: the generated relay RTL (tools/qwen_kv_die/kv_relays.py); its modules bind '
                                         'the qkd_rly_* masters (else they stay class RELAY = stub)')
@@ -129,10 +137,27 @@ def main(argv=None):
     for mst, inst, conns in insts:
         by_m[mst].append((inst, conns))
     for mst, lst in sorted(by_m.items()):
-        dp = die_ports(lst[0][1], wires)
+        # representative = the instance with the most bound ports (a chain TAIL may leave its chain outputs unread;
+        # with v1.4.1 HOST-north the N stacks' tail is slot 0 = the first instance in name order)
+        dp = max((die_ports(c_, wires) for _i, c_ in lst), key=len)
         r = dict(n_instances=len(lst), die_ports=len(dp))
         if mst in HARD_PHY:
             r.update(cls='HARD_PHY', note=HARD_PHY[mst])
+            if mst in HARD_PORT_RTL:
+                f = ROOT / HARD_PORT_RTL[mst]
+                params, ports = header(f.read_text(), mst)
+                if ports is None:
+                    r.update(cls='STUB', file=HARD_PORT_RTL[mst], note='hard macro has no declared native ports')
+                else:
+                    rw = {p: evalw(w, params or {}) for p, (d, w) in ports.items()}
+                    bad = [dict(die_port=p, die=w, rtl=rw.get(p)) for p,w in dp.items() if rw.get(p) != w]
+                    unin = sorted(p for p,(d,_) in ports.items() if d == 'input' and p not in dp)
+                    unout = sorted(p for p,(d,_) in ports.items() if d == 'output' and p not in dp)
+                    r.update(cls='HARD_PHY' if not bad and not unin and not unout else 'MISMATCH',
+                             module=mst, file=HARD_PORT_RTL[mst], width_or_missing=bad,
+                             die_ports_not_bound=sorted(set(dp)-set(ports)), rtl_inputs_unconnected=unin,
+                             rtl_outputs_unread=unout)
+
         elif mst.startswith('qkd_rly') and rtxt is not None:
             _, ports = header(rtxt, mst)
             if ports is None:
@@ -177,7 +202,11 @@ def main(argv=None):
                     if miss:
                         bad.append(dict(die_port=d_, rtl_missing=miss))
                         continue
-                    base_bits[d_] = sum((rw[p] or 0) for p in rps)
+                    unknown = [p for p in rps if rw[p] is None]
+                    if unknown:
+                        bad.append(dict(die_port=d_, unresolved_rtl_widths=unknown))
+                        continue
+                    base_bits[d_] = sum(rw[p] for p in rps)
                 sliced = b.get('sliced') or {}
                 groups = defaultdict(int)
                 for d_, w in dp.items():
@@ -195,6 +224,32 @@ def main(argv=None):
                 cls = 'REAL' if not bad and not nobind and not unin else 'MISMATCH'
                 r.update(cls=cls, module=b['module'], file=b['file'], width_or_missing=bad, die_ports_not_bound=nobind,
                          rtl_inputs_unconnected=unin, rtl_outputs_unread=unout)
+        # Every instance must have the same resolved port layout as the audited
+        # representative. A single malformed instance cannot hide behind a master census.
+        output_ports = set()
+        if mst in K.BINDINGS:
+            bm = K.BINDINGS[mst]
+            pf = ROOT / bm['file']
+            _, pp = header(pf.read_text(), bm['module']) if pf.exists() else (None, None)
+            if pp:
+                output_ports = {d for d, ps in bm['ports'].items() if all(p in pp and pp[p][0] == 'output' for p in ps)}
+        elif mst in EXP and ports is not None:
+            output_ports = {p for p,(d,_) in ports.items() if d == 'output'}
+        divergent = []
+        for i,c in lst:
+            di = die_ports(c, wires)
+            # A terminal chain's output may be unread. Inputs, unknown ports and
+            # every connected width must still match the audited RTL exactly.
+            differences = {p for p in set(di) | set(dp) if di.get(p) != dp.get(p)}
+            if any(p not in output_ports or p in di for p in differences):
+                divergent.append(dict(instance=i, die_ports=di))
+        if divergent:
+            r['instance_port_mismatches'] = divergent
+            r['cls'] = 'MISMATCH'
+            r.setdefault('width_or_missing', []).append(dict(instance_layouts=len(divergent)))
+            r.setdefault('die_ports_not_bound', [])
+            r.setdefault('rtl_inputs_unconnected', [])
+            r.setdefault('rtl_outputs_unread', [])
         rep[mst] = r
     summ = defaultdict(lambda: [0, 0])
     for v in rep.values():
@@ -209,7 +264,7 @@ def main(argv=None):
             extra = f" bad={len(v['width_or_missing'])} unbound={len(v['die_ports_not_bound'])} in_unconn={len(v['rtl_inputs_unconnected'])}"
         print(f"{v['cls']:9s} {k:28s} x{v['n_instances']:<5d}{extra}")
     print(json.dumps(out['summary']))
-    return 0
+    return int(a.strict and any(v['cls'] not in ('REAL', 'HARD_PHY') for v in rep.values()))
 
 
 if __name__ == '__main__':

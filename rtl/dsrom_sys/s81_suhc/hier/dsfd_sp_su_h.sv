@@ -690,9 +690,11 @@ module dsfd_sp_su_h #(
             if (RXH != 0) begin : g_head
                 // spine-head tile: tap = stop 0's down register, write slot merged at stop 0 (rx_*); its own stop
                 // here relays the spines only
-                ot_s81_su_rxt #(.S_RD(S_RD), .LM(LM), .LA(LA), .XMUT(XMUT), .QW(2)) u_rxt (
-                    .clk(sk), .rst_in(rst[0]), .dn_st_i(dst[0]), .dn_kind_i(dkd[0]), .dn_jid_i(dji[0]), .dn_v_i(dv[0]),
-                    .dn_d_i(dd[0]), .o_v(rx_v), .o_a(rx_a), .o_m(rx_m), .o_d(rx_d), .o_v2(rx_v2), .o_a2(rx_a2), .o_d2(rx_d2),
+                // taps read slots 0..4 only (QR: 5 parameter rows on slots 0..4; operand pairs on slots 0 / 1): the
+                // hardened tile dsfd_su_t_rx carries 5 x 512 b of down tap, not S_RD x 512
+                ot_s81_su_rxh #(.S_RD(5), .LM(LM), .LA(LA), .XMUT(XMUT)) u_rxt (
+                    .clk(sk), .rst_in(rst[0]), .dn_st_i(dst[0]), .dn_kind_i(dkd[0]), .dn_jid_i(dji[0]), .dn_v_i(dv[0][4:0]),
+                    .dn_d_i(dd[0][5 * 512 - 1:0]), .o_v(rx_v), .o_a(rx_a), .o_m(rx_m), .o_d(rx_d), .o_v2(rx_v2), .o_a2(rx_a2), .o_d2(rx_d2),
                     .o_fu(rx_fu), .o_fo(rx_fo),
                     .o_alive(rx_alive), .o_den(), .o_rdy(), .o_rjid());
                 assign o_v = 1'b0; assign o_a = 0; assign o_m = 0; assign o_d = 0;

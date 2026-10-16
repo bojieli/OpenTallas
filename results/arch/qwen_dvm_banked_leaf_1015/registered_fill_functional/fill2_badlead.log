@@ -1,0 +1,28 @@
+ot-run: ot-epyc1tb     admits   403 GB (avail 630, growth 76, headroom 64, waiters 0/0 GB) load 47/128 running 15 disk 961 GB 
+ot-run: ot-epyc4       admits   539 GB (avail 766, growth 100, headroom 48, waiters 0/0 GB) load 41/128 running 20 disk 500 GB 
+ot-run: ot-pve1        skipped: load hold: load1 > 1.5 x cores
+ot-run: ot-agidock128  skipped: load hold: load1 > 1.5 x cores
+ot-run: -> ot-epyc1tb
+ot-heavy: admitted on ot-epyc1tb as oth-ubuntu-747809-1792056532 after 0 s
+FAIL cyc=782 x_fault
+FAIL cyc=783 x_fault
+FAIL cyc=784 x_fault
+FAIL cyc=785 x_fault
+FAIL cyc=785 tile 60 element 0 ref bfcdb278 (operand bfcd) dvm 3eb50000
+FAIL cyc=785 tile 61 element 0 ref 3ebee581 (operand 3ebe) dvm 40a80000
+FAIL cyc=785 tile 62 element 0 ref 3e3a33ee (operand 3e3a) dvm 3eb50000
+FAIL cyc=785 tile 63 element 0 ref 3e088000 (operand 3e08) dvm 40a80000
+FAIL cyc=786 x_fault
+FAIL cyc=786 tile 60 element 0 ref bfcdb278 (operand bfcd) dvm 3eb50000
+FAIL cyc=786 tile 61 element 0 ref 3ebee581 (operand 3ebe) dvm 40a80000
+FAIL cyc=786 tile 62 element 0 ref 3e3a33ee (operand 3e3a) dvm 3eb50000
+FAIL cyc=786 tile 63 element 0 ref 3e088000 (operand 3e08) dvm 40a80000
+FAIL cyc=787 x_fault
+FAIL cyc=787 tile 60 element 0 ref bfcdb278 (operand bfcd) dvm 3eb50000
+FAIL cyc=787 tile 61 element 0 ref 3ebee581 (operand 3ebe) dvm 40a80000
+FAIL cyc=787 tile 62 element 0 ref 3e3a33ee (operand 3e3a) dvm 3eb50000
+FAIL cyc=787 tile 63 element 0 ref 3e088000 (operand 3e08) dvm 40a80000
+FAIL cyc=788 x_fault
+FAIL cyc=788 tile 60 element 0 ref bfcdb278 (operand bfcd) dvm 3eb50000
+FAIL errors=939 checks=159744
+ot-run: RAN on ot-epyc1tb (unit oth-ubuntu-747809-1792056532): exit 0

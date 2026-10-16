@@ -1,0 +1,43 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+ASSIGNED_PIN_TRACK_GRID layer=M4 axis=Y first_dbu=12 next_dbu=60 last_dbu=365004 count=7605 units=1000 spacing_dbu=24
+ASSIGNED_PIN_TRACK_GRID layer=M5 axis=X first_dbu=12 next_dbu=60 last_dbu=356364 count=7425 units=1000 spacing_dbu=24
+[INFO PPL-0070] Pin clk placed at (178.24um, 365.00um) instead of (178.24um, 365.04um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin clk placed at (178.28um, 365.00um) instead of (178.24um, 365.04um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin clk placed at (178.19um, 365.00um) instead of (178.24um, 365.04um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin dq[0] placed at (97.88um, 0.04um) instead of (97.88um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin dq[0] placed at (97.93um, 0.04um) instead of (97.89um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin dq[0] placed at (97.84um, 0.04um) instead of (97.88um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin dq[100] placed at (126.68um, 0.04um) instead of (126.68um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin dq[100] placed at (126.73um, 0.04um) instead of (126.69um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin dq[100] placed at (126.64um, 0.04um) instead of (126.68um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin dq[101] placed at (126.97um, 0.04um) instead of (126.97um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin dq[101] placed at (127.02um, 0.04um) instead of (126.97um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin dq[101] placed at (126.92um, 0.04um) instead of (126.97um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin eg[0] placed at (356.36um, 235.55um) instead of (356.40um, 235.55um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin eg[0] placed at (356.36um, 235.60um) instead of (356.40um, 235.55um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin eg[0] placed at (356.36um, 235.50um) instead of (356.40um, 235.55um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin eg[100] placed at (356.36um, 273.95um) instead of (356.40um, 273.95um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin eg[100] placed at (356.36um, 274.00um) instead of (356.40um, 273.95um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin eg[100] placed at (356.36um, 273.90um) instead of (356.40um, 273.95um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin eg[101] placed at (356.36um, 274.33um) instead of (356.40um, 274.33um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin eg[101] placed at (356.36um, 274.38um) instead of (356.40um, 274.33um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin eg[101] placed at (356.36um, 274.28um) instead of (356.40um, 274.33um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin kq[0] placed at (181.55um, 365.00um) instead of (181.55um, 365.04um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin kq[0] placed at (181.60um, 365.00um) instead of (181.55um, 365.04um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin kq[0] placed at (181.50um, 365.00um) instead of (181.55um, 365.04um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin kq[100] placed at (239.15um, 365.00um) instead of (239.15um, 365.04um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin kq[100] placed at (239.20um, 365.00um) instead of (239.15um, 365.04um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin kq[100] placed at (239.10um, 365.00um) instead of (239.15um, 365.04um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin rq0[0] placed at (0.04um, 22.81um) instead of (0.00um, 22.81um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin rq0[0] placed at (0.04um, 22.86um) instead of (0.00um, 22.81um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin rq0[0] placed at (0.04um, 22.76um) instead of (0.00um, 22.81um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin rq0[10] placed at (0.04um, 26.65um) instead of (0.00um, 26.65um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin rq0[10] placed at (0.04um, 26.70um) instead of (0.00um, 26.65um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin rq0[10] placed at (0.04um, 26.60um) instead of (0.00um, 26.65um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin rq0[11] placed at (0.04um, 27.04um) instead of (0.00um, 27.04um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin rq0[11] placed at (0.04um, 27.08um) instead of (0.00um, 27.04um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin rq0[11] placed at (0.04um, 26.99um) instead of (0.00um, 27.04um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+ASSIGNED_PIN_EXACT_TEST PASS checked=12 faces=N 3 S 3 E 3 W 3 illegal_requests_snapped=12 first_legal_target_displacements=0 cached_seed_displacements=12 negative_guards=13 unplaced_seed_cases=12

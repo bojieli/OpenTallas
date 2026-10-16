@@ -28,13 +28,13 @@
   "SCALAR_SIDE_LANES": 1
  },
  "inputs": {
-  "su_prod.json": "c09ea046040badec47e0459279e9faffc9e22ee8986a287163321367b699109c",
+  "su_prod.json": "b79385b054987f6760fca2188b8a5597eaab686532221c15fcd3073088a5db0b",
   "su_rec.mem": "e411062d8970d6572dc75a8251c1f51bd8bf939970915204dd6e764ce77bd818"
  },
  "slice_words_used": [
-  14077,
-  12752,
-  12432,
+  14845,
+  12368,
+  12048,
   11824
  ],
  "replicated_words": 964,
@@ -191,9 +191,9 @@
    ],
    "priced": 60.0,
    "first": 1213,
-   "end": 1260,
-   "edges": 47,
-   "ratio": 0.783
+   "end": 1268,
+   "edges": 55,
+   "ratio": 0.917
   },
   {
    "tags": [
@@ -203,8 +203,8 @@
     "route.gather3"
    ],
    "priced": 240.0,
-   "first": 1260,
-   "end": 1295,
+   "first": 1268,
+   "end": 1303,
    "edges": 35,
    "ratio": 0.146
   },
@@ -215,8 +215,8 @@
     "route.total"
    ],
    "priced": 235.0,
-   "first": 1295,
-   "end": 1368,
+   "first": 1303,
+   "end": 1376,
    "edges": 73,
    "ratio": 0.311
   },
@@ -225,8 +225,8 @@
     "route.den"
    ],
    "priced": 60.0,
-   "first": 1368,
-   "end": 1400,
+   "first": 1376,
+   "end": 1408,
    "edges": 32,
    "ratio": 0.533
   },
@@ -235,8 +235,8 @@
     "route.weights"
    ],
    "priced": 75.0,
-   "first": 1400,
-   "end": 1449,
+   "first": 1408,
+   "end": 1457,
    "edges": 49,
    "ratio": 0.653
   },
@@ -245,8 +245,8 @@
     "swiglu"
    ],
    "priced": 181.0,
-   "first": 1449,
-   "end": 1566,
+   "first": 1457,
+   "end": 1574,
    "edges": 117,
    "ratio": 0.646
   },
@@ -255,8 +255,8 @@
     "moe_sum.0"
    ],
    "priced": 60.0,
-   "first": 1566,
-   "end": 1610,
+   "first": 1574,
+   "end": 1618,
    "edges": 44,
    "ratio": 0.733
   },
@@ -265,8 +265,8 @@
     "moe_sum.2"
    ],
    "priced": 60.0,
-   "first": 1610,
-   "end": 1654,
+   "first": 1618,
+   "end": 1662,
    "edges": 44,
    "ratio": 0.733
   },
@@ -276,8 +276,8 @@
     "moe_sum.6"
    ],
    "priced": 120.0,
-   "first": 1654,
-   "end": 1722,
+   "first": 1662,
+   "end": 1730,
    "edges": 68,
    "ratio": 0.567
   },
@@ -286,8 +286,8 @@
     "ffn.res_copy"
    ],
    "priced": 99.0,
-   "first": 1722,
-   "end": 1845,
+   "first": 1730,
+   "end": 1853,
    "edges": 123,
    "ratio": 1.242
   },
@@ -296,8 +296,8 @@
     "pre <- ffn mix pre"
    ],
    "priced": 60.0,
-   "first": 1845,
-   "end": 1888,
+   "first": 1853,
+   "end": 1896,
    "edges": 43,
    "ratio": 0.717
   }
@@ -308,6 +308,7 @@
    "priced": 165.0,
    "issues": 4,
    "lane_class": "light",
+   "pinned_sw": false,
    "issue_to_local_store": 23,
    "stage_sectors": 160,
    "drain_sectors": 1,
@@ -326,6 +327,7 @@
    "priced": 152.0,
    "issues": 1,
    "lane_class": "side",
+   "pinned_sw": false,
    "issue_to_local_store": 76,
    "stage_sectors": 0,
    "drain_sectors": 4,
@@ -344,6 +346,7 @@
    "priced": 62.0,
    "issues": 3,
    "lane_class": "light",
+   "pinned_sw": false,
    "issue_to_local_store": 23,
    "stage_sectors": 272,
    "drain_sectors": 160,
@@ -362,6 +365,7 @@
    "priced": 151.0,
    "issues": 1,
    "lane_class": "light",
+   "pinned_sw": false,
    "issue_to_local_store": 23,
    "stage_sectors": 64,
    "drain_sectors": 1,
@@ -380,6 +384,7 @@
    "priced": 152.0,
    "issues": 1,
    "lane_class": "side",
+   "pinned_sw": false,
    "issue_to_local_store": 76,
    "stage_sectors": 0,
    "drain_sectors": 4,
@@ -398,6 +403,7 @@
    "priced": 60.0,
    "issues": 1,
    "lane_class": "light",
+   "pinned_sw": false,
    "issue_to_local_store": 23,
    "stage_sectors": 64,
    "drain_sectors": 56,
@@ -416,6 +422,7 @@
    "priced": 60.0,
    "issues": 1,
    "lane_class": "light",
+   "pinned_sw": false,
    "issue_to_local_store": 23,
    "stage_sectors": 8,
    "drain_sectors": 8,
@@ -434,6 +441,7 @@
    "priced": 60.0,
    "issues": 1,
    "lane_class": "light",
+   "pinned_sw": false,
    "issue_to_local_store": 23,
    "stage_sectors": 16,
    "drain_sectors": 8,
@@ -452,6 +460,7 @@
    "priced": 139.0,
    "issues": 1,
    "lane_class": "light",
+   "pinned_sw": false,
    "issue_to_local_store": 23,
    "stage_sectors": 16,
    "drain_sectors": 1,
@@ -470,6 +479,7 @@
    "priced": 233.0,
    "issues": 4,
    "lane_class": "sfu",
+   "pinned_sw": false,
    "issue_to_local_store": 72,
    "stage_sectors": 0,
    "drain_sectors": 17,
@@ -488,6 +498,7 @@
    "priced": 60.0,
    "issues": 1,
    "lane_class": "light",
+   "pinned_sw": false,
    "issue_to_local_store": 23,
    "stage_sectors": 0,
    "drain_sectors": 16,
@@ -506,6 +517,7 @@
    "priced": 154.0,
    "issues": 1,
    "lane_class": "sfu",
+   "pinned_sw": false,
    "issue_to_local_store": 72,
    "stage_sectors": 1,
    "drain_sectors": 4,
@@ -524,6 +536,7 @@
    "priced": 76.0,
    "issues": 4,
    "lane_class": "sfu",
+   "pinned_sw": false,
    "issue_to_local_store": 39,
    "stage_sectors": 64,
    "drain_sectors": 56,
@@ -542,6 +555,7 @@
    "priced": 60.0,
    "issues": 1,
    "lane_class": "light",
+   "pinned_sw": false,
    "issue_to_local_store": 23,
    "stage_sectors": 0,
    "drain_sectors": 8,
@@ -560,6 +574,7 @@
    "priced": 99.0,
    "issues": 40,
    "lane_class": "light",
+   "pinned_sw": false,
    "issue_to_local_store": 23,
    "stage_sectors": 2560,
    "drain_sectors": 2560,
@@ -578,6 +593,7 @@
    "priced": 339.0,
    "issues": 4,
    "lane_class": "side",
+   "pinned_sw": false,
    "issue_to_local_store": 185,
    "stage_sectors": 1,
    "drain_sectors": 4,
@@ -594,8 +610,9 @@
   {
    "tag": "route.scores_bias",
    "priced": 60.0,
-   "issues": 1,
+   "issues": 3,
    "lane_class": "light",
+   "pinned_sw": true,
    "issue_to_local_store": 23,
    "stage_sectors": 96,
    "drain_sectors": 48,
@@ -603,9 +620,9 @@
    "elided_drain_words": 0,
    "adjacent_to_predecessor": false,
    "first_edge": 1213,
-   "end_edge": 1260,
-   "own_edges": 47,
-   "edges": 47,
+   "end_edge": 1268,
+   "own_edges": 55,
+   "edges": 55,
    "over_price": false,
    "reduction_tail_model": false
   },
@@ -614,14 +631,15 @@
    "priced": 60.0,
    "issues": 1,
    "lane_class": "light",
+   "pinned_sw": false,
    "issue_to_local_store": 23,
    "stage_sectors": 0,
    "drain_sectors": 1,
    "reused_words": 1,
    "elided_drain_words": 0,
    "adjacent_to_predecessor": false,
-   "first_edge": 1260,
-   "end_edge": 1292,
+   "first_edge": 1268,
+   "end_edge": 1300,
    "own_edges": 32,
    "edges": 32,
    "over_price": false,
@@ -632,14 +650,15 @@
    "priced": 60.0,
    "issues": 1,
    "lane_class": "light",
+   "pinned_sw": false,
    "issue_to_local_store": 23,
    "stage_sectors": 0,
    "drain_sectors": 1,
    "reused_words": 1,
    "elided_drain_words": 0,
    "adjacent_to_predecessor": true,
-   "first_edge": 1261,
-   "end_edge": 1293,
+   "first_edge": 1269,
+   "end_edge": 1301,
    "own_edges": 32,
    "edges": 1,
    "over_price": false,
@@ -650,14 +669,15 @@
    "priced": 60.0,
    "issues": 1,
    "lane_class": "light",
+   "pinned_sw": false,
    "issue_to_local_store": 23,
    "stage_sectors": 0,
    "drain_sectors": 1,
    "reused_words": 1,
    "elided_drain_words": 0,
    "adjacent_to_predecessor": true,
-   "first_edge": 1262,
-   "end_edge": 1294,
+   "first_edge": 1270,
+   "end_edge": 1302,
    "own_edges": 32,
    "edges": 1,
    "over_price": false,
@@ -668,14 +688,15 @@
    "priced": 60.0,
    "issues": 1,
    "lane_class": "light",
+   "pinned_sw": false,
    "issue_to_local_store": 23,
    "stage_sectors": 0,
    "drain_sectors": 1,
    "reused_words": 1,
    "elided_drain_words": 0,
    "adjacent_to_predecessor": true,
-   "first_edge": 1263,
-   "end_edge": 1295,
+   "first_edge": 1271,
+   "end_edge": 1303,
    "own_edges": 32,
    "edges": 1,
    "over_price": false,
@@ -686,14 +707,15 @@
    "priced": 60.0,
    "issues": 1,
    "lane_class": "light",
+   "pinned_sw": false,
    "issue_to_local_store": 23,
    "stage_sectors": 0,
    "drain_sectors": 1,
    "reused_words": 1,
    "elided_drain_words": 0,
    "adjacent_to_predecessor": false,
-   "first_edge": 1295,
-   "end_edge": 1327,
+   "first_edge": 1303,
+   "end_edge": 1335,
    "own_edges": 32,
    "edges": 32,
    "over_price": false,
@@ -704,14 +726,15 @@
    "priced": 60.0,
    "issues": 1,
    "lane_class": "light",
+   "pinned_sw": false,
    "issue_to_local_store": 23,
    "stage_sectors": 0,
    "drain_sectors": 1,
    "reused_words": 1,
    "elided_drain_words": 0,
    "adjacent_to_predecessor": true,
-   "first_edge": 1296,
-   "end_edge": 1328,
+   "first_edge": 1304,
+   "end_edge": 1336,
    "own_edges": 32,
    "edges": 1,
    "over_price": false,
@@ -722,14 +745,15 @@
    "priced": 115.0,
    "issues": 1,
    "lane_class": "light",
+   "pinned_sw": false,
    "issue_to_local_store": 23,
    "stage_sectors": 0,
    "drain_sectors": 1,
    "reused_words": 6,
    "elided_drain_words": 0,
    "adjacent_to_predecessor": true,
-   "first_edge": 1320,
-   "end_edge": 1368,
+   "first_edge": 1328,
+   "end_edge": 1376,
    "own_edges": 48,
    "edges": 40,
    "over_price": false,
@@ -740,14 +764,15 @@
    "priced": 60.0,
    "issues": 1,
    "lane_class": "light",
+   "pinned_sw": false,
    "issue_to_local_store": 23,
    "stage_sectors": 0,
    "drain_sectors": 1,
    "reused_words": 1,
    "elided_drain_words": 0,
    "adjacent_to_predecessor": false,
-   "first_edge": 1368,
-   "end_edge": 1400,
+   "first_edge": 1376,
+   "end_edge": 1408,
    "own_edges": 32,
    "edges": 32,
    "over_price": false,
@@ -758,14 +783,15 @@
    "priced": 75.0,
    "issues": 1,
    "lane_class": "sfu",
+   "pinned_sw": false,
    "issue_to_local_store": 39,
    "stage_sectors": 0,
    "drain_sectors": 2,
    "reused_words": 7,
    "elided_drain_words": 0,
    "adjacent_to_predecessor": false,
-   "first_edge": 1400,
-   "end_edge": 1449,
+   "first_edge": 1408,
+   "end_edge": 1457,
    "own_edges": 49,
    "edges": 49,
    "over_price": false,
@@ -776,14 +802,15 @@
    "priced": 181.0,
    "issues": 4,
    "lane_class": "sfu",
+   "pinned_sw": false,
    "issue_to_local_store": 94,
    "stage_sectors": 43,
    "drain_sectors": 21,
    "reused_words": 6,
    "elided_drain_words": 0,
    "adjacent_to_predecessor": false,
-   "first_edge": 1449,
-   "end_edge": 1566,
+   "first_edge": 1457,
+   "end_edge": 1574,
    "own_edges": 117,
    "edges": 117,
    "over_price": false,
@@ -794,14 +821,15 @@
    "priced": 60.0,
    "issues": 1,
    "lane_class": "light",
+   "pinned_sw": false,
    "issue_to_local_store": 23,
    "stage_sectors": 14,
    "drain_sectors": 7,
    "reused_words": 0,
    "elided_drain_words": 0,
    "adjacent_to_predecessor": false,
-   "first_edge": 1566,
-   "end_edge": 1610,
+   "first_edge": 1574,
+   "end_edge": 1618,
    "own_edges": 44,
    "edges": 44,
    "over_price": false,
@@ -812,14 +840,15 @@
    "priced": 60.0,
    "issues": 1,
    "lane_class": "light",
+   "pinned_sw": false,
    "issue_to_local_store": 23,
    "stage_sectors": 14,
    "drain_sectors": 7,
    "reused_words": 53,
    "elided_drain_words": 0,
    "adjacent_to_predecessor": false,
-   "first_edge": 1610,
-   "end_edge": 1654,
+   "first_edge": 1618,
+   "end_edge": 1662,
    "own_edges": 44,
    "edges": 44,
    "over_price": false,
@@ -830,14 +859,15 @@
    "priced": 60.0,
    "issues": 1,
    "lane_class": "light",
+   "pinned_sw": false,
    "issue_to_local_store": 23,
    "stage_sectors": 14,
    "drain_sectors": 0,
    "reused_words": 53,
    "elided_drain_words": 53,
    "adjacent_to_predecessor": false,
-   "first_edge": 1654,
-   "end_edge": 1689,
+   "first_edge": 1662,
+   "end_edge": 1697,
    "own_edges": 35,
    "edges": 35,
    "over_price": false,
@@ -848,14 +878,15 @@
    "priced": 60.0,
    "issues": 1,
    "lane_class": "light",
+   "pinned_sw": false,
    "issue_to_local_store": 23,
    "stage_sectors": 7,
    "drain_sectors": 7,
    "reused_words": 53,
    "elided_drain_words": 0,
    "adjacent_to_predecessor": true,
-   "first_edge": 1655,
-   "end_edge": 1722,
+   "first_edge": 1663,
+   "end_edge": 1730,
    "own_edges": 67,
    "edges": 33,
    "over_price": false,
@@ -866,14 +897,15 @@
    "priced": 99.0,
    "issues": 40,
    "lane_class": "light",
+   "pinned_sw": false,
    "issue_to_local_store": 23,
    "stage_sectors": 2560,
    "drain_sectors": 2560,
    "reused_words": 0,
    "elided_drain_words": 0,
    "adjacent_to_predecessor": false,
-   "first_edge": 1722,
-   "end_edge": 1845,
+   "first_edge": 1730,
+   "end_edge": 1853,
    "own_edges": 123,
    "edges": 123,
    "over_price": true,
@@ -884,14 +916,15 @@
    "priced": 60.0,
    "issues": 1,
    "lane_class": "light",
+   "pinned_sw": false,
    "issue_to_local_store": 23,
    "stage_sectors": 1,
    "drain_sectors": 1,
    "reused_words": 0,
    "elided_drain_words": 0,
    "adjacent_to_predecessor": false,
-   "first_edge": 1845,
-   "end_edge": 1888,
+   "first_edge": 1853,
+   "end_edge": 1896,
    "own_edges": 43,
    "edges": 43,
    "over_price": false,
@@ -900,8 +933,8 @@
  ],
  "total": {
   "priced": 3272.0,
-  "edges": 1888,
-  "ratio": 0.577
+  "edges": 1896,
+  "ratio": 0.579
  },
  "vehicle_transport_windows": {
   "q_norm.ss#0": [
@@ -970,71 +1003,71 @@
   ],
   "route.scores_bias#16": [
    1213,
-   1260
+   1268
   ],
   "route.gather0#17": [
-   1285,
-   1292
+   1293,
+   1300
   ],
   "route.gather1#18": [
-   1286,
-   1293
+   1294,
+   1301
   ],
   "route.gather2#19": [
-   1287,
-   1294
+   1295,
+   1302
   ],
   "route.gather3#20": [
-   1288,
-   1295
+   1296,
+   1303
   ],
   "route.gather4#21": [
-   1320,
-   1327
+   1328,
+   1335
   ],
   "route.gather5#22": [
-   1321,
-   1328
+   1329,
+   1336
   ],
   "route.total#23": [
-   1361,
-   1368
+   1369,
+   1376
   ],
   "route.den#24": [
-   1393,
-   1400
+   1401,
+   1408
   ],
   "route.weights#25": [
-   1442,
-   1449
+   1450,
+   1457
   ],
   "swiglu#26": [
-   1449,
-   1566
+   1457,
+   1574
   ],
   "moe_sum.0#27": [
-   1566,
-   1610
+   1574,
+   1618
   ],
   "moe_sum.2#28": [
-   1610,
-   1654
+   1618,
+   1662
   ],
   "moe_sum.4#29": [
-   1654,
-   1665
+   1662,
+   1673
   ],
   "moe_sum.6#30": [
-   1655,
-   1722
+   1663,
+   1730
   ],
   "ffn.res_copy#31": [
-   1722,
-   1845
+   1730,
+   1853
   ],
   "pre <- ffn mix pre#32": [
-   1845,
-   1888
+   1853,
+   1896
   ]
  }
 }

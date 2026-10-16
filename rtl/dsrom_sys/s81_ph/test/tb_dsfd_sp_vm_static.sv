@@ -14,14 +14,18 @@
 // 4 unsupported LARM7, 5 aux lane collision, 6 WFC range, 7 WFC pair lane,
 // 8 capture alignment. Each requires its named sticky fault AND top-level c_st[0].
 module tb_dsfd_sp_vm_static;
-`ifdef OT_VM_NATIVE_READ_PINREG
+`ifdef OT_VM_NATIVE_READ_L16
+    localparam integer READ_PIPE=4;     // + pin-registered rsched / return lanes (L16)
+`elsif OT_VM_NATIVE_READ_PINREG
     localparam integer READ_PIPE=2;
 `elsif OT_VM_NATIVE_READ
     localparam integer READ_PIPE=1;
 `else
     localparam integer READ_PIPE=0;
 `endif
-`ifdef OT_VM_NATIVE_CAP
+`ifdef OT_VM_NATIVE_CAP_PINREG
+    localparam integer CAP_PIPE=2;
+`elsif OT_VM_NATIVE_CAP
     localparam integer CAP_PIPE=1;
 `else
     localparam integer CAP_PIPE=0;
@@ -39,10 +43,10 @@ module tb_dsfd_sp_vm_static;
     reg [2203:0] fcol = 0; reg [14:0] crq = 0; wire [512:0] crs;
     reg [514:0] sel = 0, col = 0; reg [1026:0] asw = 0;
     wire [511:0] tgat; reg [10:0] xgo = 0; wire [512:0] qsw; reg [2:0] qsws = 3'b011;
-    dsfd_sp_vm #(.CAP_PIPE(CAP_PIPE), .READ_PIPE(READ_PIPE)) dut (.cks(t_ck), .rss(rss),
+    dsfd_sp_vm #(.CAP_PIPE(CAP_PIPE), .READ_PIPE(READ_PIPE)) dut (
         .ck_read_data_t({64{t_ck}}), .ck_read_valid_t({8{t_ck}}), .rss_read_data_t({64{rss}}), .rss_read_valid_t({8{rss}}),
         .ck_core_t(t_ck), .ck_rsched_t(t_ck), .ck_seq_t(t_ck), .ck_landing_t(t_ck),
-        .ck_mem_fsr_t({16{t_ck}}), .ck_mem_return_t({4{t_ck}}), .ck_mem_bank_t({128{t_ck}}),
+        .ck_mem_fsr_t({16{t_ck}}), .ck_mem_return_t({16{t_ck}}), .ck_mem_bank_t({128{t_ck}}),
         .ck_mem_wcapture_t({128{t_ck}}), .ck_mem_wscatter_t({16{t_ck}}),
         .ck_mem_relay_req_t({48{t_ck}}), .ck_mem_relay_rsp_t({48{t_ck}}),
         .ck_write_control_t(t_ck), .ck_write_header_t(t_ck), .ck_write_payload_t({4{t_ck}}),
@@ -97,7 +101,7 @@ module tb_dsfd_sp_vm_static;
     endfunction
     integer cmd_row = 0;
     task issue(input [2:0] code, input [20:0] op);
-        begin c_cmd = mkcmd(code, op, 7'(cmd_row)); e_dn[tk + 1 + 6] = {1'b1, 1'b0, 7'(cmd_row)}; cmd_row = cmd_row + 1; end
+        begin c_cmd = mkcmd(code, op, 7'(cmd_row)); e_dn[tk + 1 + 7] = {1'b1, 1'b0, 7'(cmd_row)}; cmd_row = cmd_row + 1; end
     endtask
     task stream(input integer dest, input integer base, input integer n);
         integer k, I, E; reg [511:0] d;
@@ -106,7 +110,7 @@ module tb_dsfd_sp_vm_static;
             issue(3'd4, {1'b0, 1'(dest), 14'(base), 5'(n - 1)});
             I = E + 3;
             for (k = 0; k < n; k = k + 1) begin
-                while (I % 4 == (2-READ_PIPE)) I = I + 1;
+                while (I % 4 == ((2-READ_PIPE)%4+4)%4) I = I + 1;
                 d = mem[base + k];
                 if (dest == 0) e_q[x43_serial(I + 15+READ_PIPE)] = {d, 1'b1};
                 else e_g[x43_serial(I + 15+READ_PIPE)] = {d[510:0], 1'b1};

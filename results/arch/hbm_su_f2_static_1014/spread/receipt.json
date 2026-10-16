@@ -5,10 +5,10 @@
  "qualification": false,
  "status": "PASS compiler per-quarter VM spread + operand reuse + data-dependence + actual SFU/divider/scalar-side lane schedule; static VM transport re-executed exactly on RTL (Qwen 24,560 / DS 11,544 sector events, mutants FAIL); NOT whole-SU qualification",
  "sources_sha256": {
-  "tools/hbm_static/su_f2_spread.py": "a2333c72cf0a3629765328771da1d75b12b3a747f721ceb4af05eb5b68ca68d7",
-  "tools/hbm_static/su_spread_vehicle_run.sh": "a366ebafb4b95fd0fc2a363b8b1f0b6efddb5abf4b55d3aecfd2a0fb49fb1ca3",
-  "rtl/hbm_accel/generic/adapters/static_su/ot_hbm_su_static_vm_ports.sv": "977e12fdd31a080540285ad9807f4987de61742207ede098ca510dbff5d4a701",
-  "rtl/hbm_accel/generic/adapters/static_su/tb_hbm_su_static_spread_vehicle.sv": "9e20e105f7a9542492969372d91d658535c3e0cc217c31822bc8b7a7c4e43072",
+  "tools/hbm_static/su_f2_spread.py": "41d794d55d597b41c2b180efad0621523beb8f5f07d931d8add1eb1f0364aca0",
+  "tools/hbm_static/su_spread_vehicle_run.sh": "89ddaea3ed422dca6791725eb0de2dcfbbb1467ee4336cfd78b18911579fadfa",
+  "rtl/hbm_accel/generic/adapters/static_su/ot_hbm_su_static_vm_ports.sv": "0dfabc97c63b91db654c393c8f8f79fb6fdc8b9a72087b589e825ea5465f81c9",
+  "rtl/hbm_accel/generic/adapters/static_su/tb_hbm_su_static_spread_vehicle.sv": "e046d49d089a29ed8edc3efeebe0c4030021a036e72cb993dfac22cf210e4482",
   "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv": "31acf6679c2fcd95c2abd3897daae041710f7c7a5f318d9d2e1f8541c8b377a4",
   "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_split.sv": "7530908d1cccb63586654d293cf5e073995ed2e31b70f8ae89173d0b371e7123",
   "rtl/hbm_accel/generic/vm/static/ot_vms_bank_static.sv": "7b2e2fbafead30cbabc427303bb339da070645637af9d1a69f0dbdaa0a88ee53",
@@ -19,7 +19,8 @@
  "vehicle": "4 quarters x ot_hbm_su_static_vm_ports (4 bank-pair port groups, GEO-H f5d89a0a8) -> ot_hbm_vm_lg_static_split SU station (RD 10 / WR 7) -> 32 ot_vms_bank_static -> 96 ot_sram_1r1w_1024x256 models; zero faults, every read +10 exact data, every write done +7, per-record transport windows == compiler, final image readback exact",
  "mutants": {
   "MUT_PG (port groups drop the per-quarter spread SID)": "FAIL both designs",
-  "MUT_LG (LG write payload mux)": "FAIL both designs"
+  "MUT_LG (LG write payload mux)": "FAIL both designs",
+  "MUT_CAL": "VM calendar programme omits one SU read slot (quarter 1) -> FAIL both designs (return phase + missing read)"
  },
  "results": {
   "qwen": {
@@ -334,9 +335,6 @@
   "canonical whole-kernel VM allocator (h_vm) owns final addresses; this pass supplies the SU map"
  ],
  "open": [
-  "whole-SU arithmetic join at full512 LAT4: relaunched 160 GB ot-epyc1tb unit oth-ubuntu-2152482-1792069222 (same immutable source /tmp/hbm-su-arithmetic-lat4-leaf1-1015/source, run160)",
-  "Qwen SFU lane count vs price (64 SFU lanes/quarter or ledger) -- coordinator",
-  "N512 bench of exp / SiLU / divider in the 32 SFU lanes (calendar uses RTL depths)",
   "producer-side layout adoption by h_vm allocator + SM/ATT/COLL/DMA/FUSED/HC/IDX",
   "5th port group on SW/SE: bit definition from H-DIE",
   "physical: static bank route at 833 (H-VM)"
@@ -508,8 +506,8 @@
  "address_map_handoff": {
   "files": {
    "address_map_qwen.json": "d2f46ebdd044d07a0c16838410686e8d75c81dee1a27b23d68b7d1a5b9fc11d2",
-   "address_map_deepseek.json": "1ba1a3dda11e0c43daf9dc2ba33ec4bebfd088b4bd4fd7f7d21dcd66aa6c32a2",
-   "address_map_deepseek_g25.json": "33a29f7a658b9257bddc3baa20d19e88a9d5ae6a9165d52a2f27127d2fe1454e"
+   "address_map_deepseek.json": "862a1a81011f39253fb9814e91094301a9167540a1714f30927c3ad86fa1aeb9",
+   "address_map_deepseek_g25.json": "f398f2bd70ef5038e7fa70e621c7e66d6637f12e5dd3a3de3b80feb10592b28a"
   },
   "schema": "opentallas.hbm.su_f2_address_map.v1: runs (logical word range -> quarter/SID, slice word, global word, first sector/bank, replica, SU roles, SU writer, external writer/reader dispatches) + per-record per-quarter lane base/issue step/7 lane-bit terms + producer/consumer obligations",
   "g25_crosscheck": "address_map_deepseek_g25 built on the frozen G25 rank-0 programme (sha 43c1652f...) that h_vm 284d8fa0e binds: 91 SU role extents lie inside the allocator static extents, 0 mismatches; 6 route.gather*.A are runtime-indexed in the allocator (fixture-resolved here: NOT final addresses)",
@@ -572,5 +570,82 @@
    }
   },
   "authority": "VERSIONED relocation of the canonical SID-major layout; h_vm owns final addresses; must be adopted with all listed producers/consumers or not at all"
+ },
+ "rev_1015_0700": {
+  "select_ownership": "coordinator 10-15 (main 517963b2f): LG near-tap read/write selects driven ONLY by the VM calendar programme; ot_hbm_su_static_vm_ports no longer has lg_read/lg_write outputs; the vehicle drives local_read/local_write from the compiled calendar image (cal_rd/cal_wr); an off-calendar SU request faults at its return check",
+  "port_groups": "per-bank leaves clocked by pg_clk[BANK_GROUP[b]]; NPG 4 (pairs, default map 0x33221100) on NW/NE, NPG 5 on SW/SE with the die lead map; vehicle exercises SW/SE NPG 5 with TEST map 0x43221100 (bank 7 own group) pending H-DIE geometry",
+  "vehicle": "PASS Qwen 24,560 / DS 11,544 events; MUT_PG, MUT_LG, MUT_CAL FAIL both designs"
+ },
+ "rev_1015_sw_idx": {
+  "request": "H-IDX (main 40e9f801e): IDX reads only the SW VM slice -> route.scores_bias must be in SW",
+  "change": "compiler: any SU record whose output an SW-only reader (IDX) reads runs entirely on quarter 0 (SID 0 = SW), 128 positions/issue; SW-only words get an SID 0 home; a write of an SW-only word outside quarter 0 is refused. DS route.scores_bias: 384 words now at SW slice (global word 88128.., quarter 0), 3 issues, 55/60 edges.",
+  "totals": {
+   "deepseek": {
+    "priced": 3272.0,
+    "edges": 1896,
+    "ratio": 0.579
+   },
+   "deepseek_lat4": {
+    "priced": 3272.0,
+    "edges": 2094,
+    "ratio": 0.64
+   },
+   "deepseek_g25": {
+    "priced": 3272.0,
+    "edges": 1847,
+    "ratio": 0.564
+   },
+   "qwen": {
+    "priced": 1668.0,
+    "edges": 1795,
+    "ratio": 1.076
+   },
+   "qwen_lat4": {
+    "priced": 1668.0,
+    "edges": 1858,
+    "ratio": 1.114
+   }
+  },
+  "vehicle": "PASS Qwen 24,560 / DS 11,544 events; PG, LG, CAL mutants FAIL"
+ },
+ "rev_1015_sfu_ledger": {
+  "date": "2026-10-15T09:20-07:00",
+  "sfu_bench": "full512 SFU-lane bench (arithmetic/sfu_lanes_lat4, sfu_lanes_m3): measured EXP/SIGM/SILU/DIV depths equal the calendar depths() at MLAT 3 and 4 -> the calendar SFU/divider terms are now MEASURED, not RTL-read",
+  "arithmetic_join": "run160 full512 LAT4 (MLAT4/ALAT3/LEAF1) PASS: 31 cases 1,015,808 outputs, issue->output 28 = calendar ARITH at LAT4, II 1, mutants FAIL",
+  "qwen_lat4": {
+   "priced": 1668.0,
+   "edges": 1858,
+   "ratio": 1.114,
+   "e2e_loss_pct": 0.543,
+   "model": "tools/throughput/accepted_cost.py compute r25gq --op SU.VOP --price 1668 --measured 1858 --workload qwen_ar (S2 schedule base 1,113,294 -> 1,119,374.8 cycles)"
+  },
+  "decision": "coordinator: keep 32 SFU lanes/quarter; 0.543 % <= 1.5 % threshold -> ledger row proposed (r25gq SU.VOP group), no 64-lane build",
+  "still_model": "reduction tail (softmax.max 88 edges) and ARITH applied to not-yet-lowered op classes (pv_normalize); producer-side layout adoption open"
+ },
+ "rev_1015_swse_group5": {
+  "map": "SW/SE NPG 5 BANK_GROUP 0x43322110 = groups [0],[1,2],[3,4],[5,6],[7] from GEO-H LG_local_engine_reach_{current,B}.json (min groups within 500 um, every plan, SW and SE); replaces provisional 0x43221100",
+  "vehicle": "PASS Qwen 24,560 / DS 11,544 events, PG/LG/CAL mutants FAIL (both designs)",
+  "contract": "H-DIE to set BANK_GROUP 0x43322110 for hb_su_SW/SE (and QUANT_SW) in v15.x"
+ },
+ "rev_1015_attention_sm": {
+  "interface": "attention_sm_interface.json (tools/hbm_static/su_attention_sm_interface.py)",
+  "summary": "SU records/calendar unchanged under attention-on-SM; SC/P/PV position i lives only in slice (i mod 512)//128 (checked word by word, 0 replica); Qwen GQA heads co-located; DS T640 rule gives 256/128/128/128 rows (1.6x SM rows on q0), T128 all on q0 -> balanced-tail SU lowering proposed (reducer is scratch-addressed so the golden sum tree stays bit-exact); PV needs a 4-quadrant reduce-scatter (H-COLL/SM)"
+ },
+ "rev_1015_scores_bias": "SW-only placement (9505d6569) satisfies H-IDX: route.scores_bias.O 384 words exist only in SW, sole reader IDX; no replica needed elsewhere, so no REPL write set (a cross-quarter mirror write path does not exist in the static SU and would cost more than the 55/60-edge quarter-0 record)",
+ "rev_1015_npg4_adopted": {
+  "date": "2026-10-15T09:35:05-07:00",
+  "decision": "HBM floorplan T_band2__npg4_s5 ADOPTED (GLOBAL-FP-H main 952c5933c, coordinator 09:35 PT 10-15): every quadrant incl. SW/SE uses 4 bank-pair port groups, BANK_GROUP 0x33221100; rev_1015_swse_group5 (NPG 5, 0x43322110) SUPERSEDED (with it the adopted plan worst cut is 0.636 vs 0.556)",
+  "change": "ot_hbm_su_static_vm_ports header + vehicle SWSE_NPG=4 / SWSE_BANK_GROUP=0x33221100 (5-group map reachable only by -P override); no logic change in the module (NPG/BANK_GROUP stay parameters)",
+  "sources_sha256": {
+   "rtl/hbm_accel/generic/adapters/static_su/ot_hbm_su_static_vm_ports.sv": "00eb5cdc33808a02dbb7a1c9ea272ff6a266521117851ee8ab598581902200ff",
+   "rtl/hbm_accel/generic/adapters/static_su/tb_hbm_su_static_spread_vehicle.sv": "2ededd61c1ef0d184473ae76ef659ed0196ee5431d85686ba2e4abbb5d7f6378"
+  },
+  "results": {
+   "qwen": "PASS 24,560 events, port_groups 16 (SW/SE 4), all reads +10 exact, writes +7, windows == compiler",
+   "deepseek": "PASS 11,544 events, port_groups 16",
+   "mutants": "MUT_PG / MUT_LG / MUT_CAL FAIL on both designs"
+  },
+  "command": "tools/hbm_static/su_spread_vehicle_run.sh <scratch>",
+  "die_contract": "H-DIE: tools/hbm_die_v15_contract.py still instantiates hb_su_SW/SE with NPG=5 BANK_GROUP=0x43221100 -> set NPG=4, BANK_GROUP=0x33221100 (asked in el1011-hbmdie.log)"
  }
 }

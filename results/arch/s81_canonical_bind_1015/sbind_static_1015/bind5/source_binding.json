@@ -1,0 +1,21 @@
+{
+ "inputs": {
+  "physical/s81_die_views/q_elem_qs5f_efs/q_elem.lef.gz": "1dee3342360ceb7f83ee668a00e521a464703b5f4d573341f0f3cc546f8fc098",
+  "results/arch/hier_contract_1011/s81_v20_hc_up.json": "57454319f0b9a0f71595b864392510905e079ba0ce13f8fe5144810bc2880225",
+  "results/physical/die_iter_1012/s81/canonical_gen_1015/capacity_service_gap_broad_reroot_E.json": "ef91a10712e3a585ed51124db7733fb81aa4a3e936ab5def312b516dd585ea6d"
+ },
+ "contract": {
+  "path": "results/arch/hier_contract_1011/s81_v20_hc_up.json",
+  "sha256": "57454319f0b9a0f71595b864392510905e079ba0ce13f8fe5144810bc2880225",
+  "version": 20,
+  "updated": "2026-10-14 PM PT (s81 die lead r6, Claude)"
+ },
+ "source_manifest_sha256": "15cf8247da64ca88247f7ed9f004567c666bc2e6543627183b881467f468c0e9",
+ "source_check": {
+  "verdict": "PASS",
+  "required_mismatch": [],
+  "drift_count": 0,
+  "drift_first": [],
+  "contract_drift": []
+ }
+}

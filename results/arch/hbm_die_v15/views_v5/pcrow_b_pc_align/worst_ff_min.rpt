@@ -1,0 +1,146 @@
+[WARNING STA-0168] unknown field nets.
+Startpoint: svc_NW_s2__u_pc9 (rising edge-triggered flip-flop clocked by hbm)
+Endpoint: phy_NW (rising edge-triggered flip-flop clocked by hbm)
+Path Group: hbm
+Path Type: min
+Corner: ff
+
+Fanout     Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------------
+                  0.00    0.00    0.00   clock hbm (rise edge)
+                          0.00    0.00   clock network delay (ideal)
+                  0.00    0.00    0.00 ^ svc_NW_s2__u_pc9/clk (ot_hbm_svc_static_pc)
+     1    4.49   16.72  105.02  105.02 ^ svc_NW_s2__u_pc9/k_tag[10] (ot_hbm_svc_static_pc)
+                 16.95    0.80  105.82 ^ phy_NW/k_tag[163] (ot_hbm3e_phy_v41x_aw30_e8p5)
+                                105.82   data arrival time
+
+                  0.00    0.00    0.00   clock hbm (rise edge)
+                          0.00    0.00   clock network delay (ideal)
+                         25.00   25.00   clock uncertainty
+                          0.00   25.00   clock reconvergence pessimism
+                                 25.00 ^ phy_NW/clk (ot_hbm3e_phy_v41x_aw30_e8p5)
+                         23.57   48.57   library hold time
+                                 48.57   data required time
+-----------------------------------------------------------------------------
+                                 48.57   data required time
+                               -105.82   data arrival time
+-----------------------------------------------------------------------------
+                                 57.25   slack (MET)
+
+
+Startpoint: svc_NW_s6__u_pc27 (rising edge-triggered flip-flop clocked by hbm)
+Endpoint: phy_NW (rising edge-triggered flip-flop clocked by hbm)
+Path Group: hbm
+Path Type: min
+Corner: ff
+
+Fanout     Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------------
+                  0.00    0.00    0.00   clock hbm (rise edge)
+                          0.00    0.00   clock network delay (ideal)
+                  0.00    0.00    0.00 ^ svc_NW_s6__u_pc27/clk (ot_hbm_svc_static_pc)
+     1    4.49   16.72  105.02  105.02 ^ svc_NW_s6__u_pc27/k_tag[10] (ot_hbm_svc_static_pc)
+                 16.95    0.80  105.82 ^ phy_NW/k_tag[469] (ot_hbm3e_phy_v41x_aw30_e8p5)
+                                105.82   data arrival time
+
+                  0.00    0.00    0.00   clock hbm (rise edge)
+                          0.00    0.00   clock network delay (ideal)
+                         25.00   25.00   clock uncertainty
+                          0.00   25.00   clock reconvergence pessimism
+                                 25.00 ^ phy_NW/clk (ot_hbm3e_phy_v41x_aw30_e8p5)
+                         23.57   48.57   library hold time
+                                 48.57   data required time
+-----------------------------------------------------------------------------
+                                 48.57   data required time
+                               -105.82   data arrival time
+-----------------------------------------------------------------------------
+                                 57.25   slack (MET)
+
+
+Startpoint: svc_NW_s7__u_pc29 (rising edge-triggered flip-flop clocked by hbm)
+Endpoint: phy_NW (rising edge-triggered flip-flop clocked by hbm)
+Path Group: hbm
+Path Type: min
+Corner: ff
+
+Fanout     Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------------
+                  0.00    0.00    0.00   clock hbm (rise edge)
+                          0.00    0.00   clock network delay (ideal)
+                  0.00    0.00    0.00 ^ svc_NW_s7__u_pc29/clk (ot_hbm_svc_static_pc)
+     1    4.50   16.74  105.02  105.02 ^ svc_NW_s7__u_pc29/k_tag[10] (ot_hbm_svc_static_pc)
+                 16.97    0.81  105.83 ^ phy_NW/k_tag[503] (ot_hbm3e_phy_v41x_aw30_e8p5)
+                                105.83   data arrival time
+
+                  0.00    0.00    0.00   clock hbm (rise edge)
+                          0.00    0.00   clock network delay (ideal)
+                         25.00   25.00   clock uncertainty
+                          0.00   25.00   clock reconvergence pessimism
+                                 25.00 ^ phy_NW/clk (ot_hbm3e_phy_v41x_aw30_e8p5)
+                         23.57   48.57   library hold time
+                                 48.57   data required time
+-----------------------------------------------------------------------------
+                                 48.57   data required time
+                               -105.83   data arrival time
+-----------------------------------------------------------------------------
+                                 57.26   slack (MET)
+
+
+Startpoint: svc_NW_s5__u_pc20 (rising edge-triggered flip-flop clocked by hbm)
+Endpoint: phy_NW (rising edge-triggered flip-flop clocked by hbm)
+Path Group: hbm
+Path Type: min
+Corner: ff
+
+Fanout     Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------------
+                  0.00    0.00    0.00   clock hbm (rise edge)
+                          0.00    0.00   clock network delay (ideal)
+                  0.00    0.00    0.00 ^ svc_NW_s5__u_pc20/clk (ot_hbm_svc_static_pc)
+     1    4.50   16.74  105.02  105.02 ^ svc_NW_s5__u_pc20/k_tag[10] (ot_hbm_svc_static_pc)
+                 16.97    0.81  105.83 ^ phy_NW/k_tag[350] (ot_hbm3e_phy_v41x_aw30_e8p5)
+                                105.83   data arrival time
+
+                  0.00    0.00    0.00   clock hbm (rise edge)
+                          0.00    0.00   clock network delay (ideal)
+                         25.00   25.00   clock uncertainty
+                          0.00   25.00   clock reconvergence pessimism
+                                 25.00 ^ phy_NW/clk (ot_hbm3e_phy_v41x_aw30_e8p5)
+                         23.57   48.57   library hold time
+                                 48.57   data required time
+-----------------------------------------------------------------------------
+                                 48.57   data required time
+                               -105.83   data arrival time
+-----------------------------------------------------------------------------
+                                 57.26   slack (MET)
+
+
+Startpoint: svc_NW_s2__u_pc11 (rising edge-triggered flip-flop clocked by hbm)
+Endpoint: phy_NW (rising edge-triggered flip-flop clocked by hbm)
+Path Group: hbm
+Path Type: min
+Corner: ff
+
+Fanout     Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------------
+                  0.00    0.00    0.00   clock hbm (rise edge)
+                          0.00    0.00   clock network delay (ideal)
+                  0.00    0.00    0.00 ^ svc_NW_s2__u_pc11/clk (ot_hbm_svc_static_pc)
+     1    4.50   16.74  105.02  105.02 ^ svc_NW_s2__u_pc11/k_tag[10] (ot_hbm_svc_static_pc)
+                 16.97    0.81  105.83 ^ phy_NW/k_tag[197] (ot_hbm3e_phy_v41x_aw30_e8p5)
+                                105.83   data arrival time
+
+                  0.00    0.00    0.00   clock hbm (rise edge)
+                          0.00    0.00   clock network delay (ideal)
+                         25.00   25.00   clock uncertainty
+                          0.00   25.00   clock reconvergence pessimism
+                                 25.00 ^ phy_NW/clk (ot_hbm3e_phy_v41x_aw30_e8p5)
+                         23.57   48.57   library hold time
+                                 48.57   data required time
+-----------------------------------------------------------------------------
+                                 48.57   data required time
+                               -105.83   data arrival time
+-----------------------------------------------------------------------------
+                                 57.26   slack (MET)
+
+

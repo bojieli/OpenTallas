@@ -1,0 +1,31 @@
+{
+ "schema": "opentallas.qwen.kvsys142.verification.v1",
+ "source_pin_grant_commit": "233825580",
+ "generator_before_case_admission_sha256": "4f168395461fdf7cb3b96b2191e118d18636d11e72a0d80c177b96a9d2745c09",
+ "plan_result": {
+  "die_mm2": 265.5,
+  "instances": 3411,
+  "fill": 0.6151,
+  "overlap": 0,
+  "outside": 0,
+  "stacklocal_bits": 571596,
+  "stacklocal_hops": 2204,
+  "worst_um": 498.696,
+  "violations": 0,
+  "unmeasured": 0
+ },
+ "repaired_failure": {
+  "previous_grant": "a75d2c824",
+  "old_bus_center_worst_um": 498.5,
+  "exact_pin_bit_worst_um": 524.736,
+  "buses_over_500": 256,
+  "fix": "retain actual strip centre levels and spread at six M4 tracks/bit"
+ },
+ "not_claimed": [
+  "native leaf timing",
+  "current parent binding",
+  "all-real die views",
+  "die GRT/TT/FF signoff"
+ ],
+ "next": "new source-bound hslice/dn gates and actual leaf views; source-real HBM boundary/calendar producers; actual head-stage layout"
+}

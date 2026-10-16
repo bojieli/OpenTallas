@@ -34,6 +34,16 @@ def ps(v):
     return round(f * 1e12, 2) if abs(f) < 1e-3 else round(f, 2)
 
 
+def tt_setup_text(text):
+    """Keep explicit clock-entry corner ownership aligned with actual TT libs."""
+    text = re.sub(r"_(R|L|SL)VT_SS_nldm", r"_\1VT_TT_nldm", text).replace("_ss.lib", "_tt.lib")
+    text = text.replace('puts "OT_CORNER ss"', 'puts "OT_CORNER tt"')
+    # The strict raw-SRAM checker validates the actual linked Liberty scene.
+    # Translating the libraries without this generated setter leaves it
+    # expecting SS in a genuinely TT session (and correctly refusing it).
+    return re.sub(r"(?m)^set ::ot_ce_corner (?:ss|\{ss\})$", "set ::ot_ce_corner tt", text)
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--orfs", type=Path, required=True)
@@ -99,8 +109,7 @@ def main():
         out[k:k] = census
         text = "\n".join(out) + "\n"
         if corner == "ss":
-            text = re.sub(r"_(R|L|SL)VT_SS_nldm", r"_\1VT_TT_nldm", text).replace("_ss.lib", "_tt.lib")
-            text = text.replace('puts "OT_CORNER ss"', 'puts "OT_CORNER tt"')
+            text = tt_setup_text(text)
         tcl = d / f"meas_{corner}.tcl"
         tcl.write_text(text)
         r = subprocess.run(["timeout", "5400", "docker", "run", "--rm", "-v", f"{a.orfs}:/work:ro", "-v", f"{a.src}:/src:ro",

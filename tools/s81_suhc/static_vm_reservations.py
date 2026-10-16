@@ -14,6 +14,9 @@ from fractions import Fraction
 import json
 import hashlib
 from pathlib import Path
+import sys
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import vm_service_profile as VSP  # noqa: E402
 
 
 def bank_of(row: int, contract: dict) -> int:
@@ -78,6 +81,9 @@ def check(schedule: dict, contract: dict, source_root: Path | None = None) -> di
                         invalid.append('stale_1r1w_source_evidence')
             except (KeyError, TypeError, OSError):
                 invalid.append('invalid_1r1w_source_evidence')
+    # opt-in exact service profile (selected native VM 4/2/W1 etc.): absent = legacy minima behaviour unchanged
+    profile, profile_bad = VSP.resolve(contract, source_root)
+    invalid += profile_bad
     if invalid:
         return dict(status='fail', violations=[dict(kind='invalid_contract', fields=invalid)], qualified=False, events=0)
     def when(cycle, domain):
@@ -125,6 +131,15 @@ def check(schedule: dict, contract: dict, source_root: Path | None = None) -> di
             error('retire_before_issue', event=eid)
         if retire > deadline:
             error('missed_fixed_deadline', event=eid, actual=retire_cycle, deadline=event['deadline_cycle'])
+        if profile is not None:
+            errors.extend(VSP.check_event(profile, dict(event, id=eid)))
+            # Port occupancy and visibility must name the SAME physical macro
+            # edge. Otherwise a caller can hide a real bank collision by moving
+            # service_cycle while leaving a correct raw_cycle on the event.
+            raw_cycle = event.get('raw_cycle')
+            if type(raw_cycle) is int and raw_cycle >= 0 and service != when(raw_cycle, 'stream'):
+                error('profile_service_raw_edge_mismatch', event=eid,
+                      service_cycle=event['service_cycle'], raw_cycle=raw_cycle)
         bank = bank_of(event['row'], contract)
         bank_use[(event['service_cycle'], bank)].append(eid)
         if 'bank_enqueue_cycle' not in event:
@@ -249,7 +264,10 @@ def check(schedule: dict, contract: dict, source_root: Path | None = None) -> di
             error('missing_dependency_retirement', producer=producer, consumer=consumer); continue
         if p['row'] != c['row']:
             error('dependency_row_mismatch', producer=producer, consumer=consumer)
-        if when(c['service_cycle'], 'vm') < when(p['commit_cycle'], 'stream'):
+        if profile is not None:
+            # raw macro edges decide visibility; the returned commit (commit_cycle) is the producer-done fence only
+            errors.extend(VSP.check_dependency(profile, p, c))
+        elif when(c['service_cycle'], 'vm') < when(p['commit_cycle'], 'stream'):
             error('consume_before_commit', producer=producer, consumer=consumer)
         elif (ports is not None and contract.get('same_address_policy') == 'read_before_write'
               and when(c['service_cycle'], 'vm') == when(p['commit_cycle'], 'stream')
@@ -270,7 +288,7 @@ def check(schedule: dict, contract: dict, source_root: Path | None = None) -> di
             error('missing_response_group_timing', group=group); continue
         if len({x['response_cycle'] for x in members}) != 1:
             error('response_group_split', group=group)
-    measured = contract.get('measured_native_bounds') is True
+    measured = profile is not None or contract.get('measured_native_bounds') is True
     coverage = all(schedule.get(x) for x in ('events', 'jobs')) and (schedule.get('trace_complete') is True or schedule.get('complete_actual_trace') is True)
     gaps = {'missing_reservation', 'missing_slot_capacity', 'missing_client_capacity',
             'missing_job_boundary', 'missing_producer_done', 'missing_dependency_retirement',
@@ -279,7 +297,7 @@ def check(schedule: dict, contract: dict, source_root: Path | None = None) -> di
     contradictory = any(x['kind'] not in gaps for x in errors)
     status = 'fail' if contradictory else 'pass' if not errors and measured and coverage else 'incomplete'
     return dict(status=status, qualified=False, events=len(schedule.get('events', [])), violations=errors,
-                slot_peaks=peaks, bank_queue_peaks=bank_peaks, bank_mapping=contract.get('bank_mapping', 'rowmod'), measured_native_bounds=measured, trace_complete=coverage,
+                slot_peaks=peaks, bank_queue_peaks=bank_peaks, vm_service_profile=(contract.get('vm_service_profile') or {}).get('name'), bank_mapping=contract.get('bank_mapping', 'rowmod'), measured_native_bounds=measured, trace_complete=coverage,
                 note='Static reservation check only; native RTL, die timing and performance gates remain required.')
 
 

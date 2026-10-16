@@ -313,8 +313,12 @@ module ot_s81_hc_ctfx_cap #(parameter integer S_RD = 2) (
     always @(posedge clk) rr <= rst_in;
     always @(posedge clk or negedge rr) if (!rr) fv <= 0; else fv <= fv_in;
     always @(posedge clk) fdx <= fd_in;
-    // Match the former region register's reset epoch exactly: incoming rst_c, not rr.
-    always @(posedge clk or negedge rst_in) if (!rst_in) fv_local <= 0; else fv_local <= fv;
+    // Former region register's reset epoch, rst_in's ONLY load is the pin capture rr (S-NORM 10-14 22:30).  History:
+    // async on rst_in = 7 rst_in->RESETN removal arcs (FF -41.4, unrepairable, ctfxcap v3 EARLY_FAIL_HOLD); sync on
+    // rst_in = 8 scattered D-side loads behind AND gates (native capture 212.9 > 190).  Async on rr is cycle-identical
+    // at every sampled edge: entry clears right after the edge rr falls (rst_in seen low there), exit releases on the
+    // edge after (fv is held 0 by the same rr until then) -- reset lockstep bench exact vs the immutable reference.
+    always @(posedge clk or negedge rr) if (!rr) fv_local <= 0; else fv_local <= fv;
     always @(posedge clk) fdx_local <= fdx;
 endmodule
 

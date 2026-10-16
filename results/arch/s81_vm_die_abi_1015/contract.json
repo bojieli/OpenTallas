@@ -8,7 +8,8 @@
   "count": 40,
   "status": {
    "RETIRED_STATIC": 4,
-   "BOUND_IN_SOURCE": 35,
+   "MISSING": 2,
+   "BOUND_IN_SOURCE": 33,
    "WIDTH_CHANGED_STATIC": 1
   },
   "ports": {
@@ -23,12 +24,12 @@
     "in_source": false
    },
    "cks": {
-    "status": "BOUND_IN_SOURCE",
-    "bits": 1
+    "status": "MISSING",
+    "bits": null
    },
    "rss": {
-    "status": "BOUND_IN_SOURCE",
-    "bits": 1
+    "status": "MISSING",
+    "bits": null
    },
    "c_cmd": {
     "status": "BOUND_IN_SOURCE",
@@ -363,10 +364,19 @@
    "dir": "input",
    "bits": 1,
    "domain": "serial",
-   "master": null,
-   "child_pin": null,
-   "routed_R": null,
-   "delivery": "OPEN: no closed native view; parent leaf/CTS root pending"
+   "master": "dsfd_vm_static_cap_ctl",
+   "child_pin": "ck",
+   "routed_R": [
+    {
+     "kit": "dsfd_vm_static_cap_ctl_1015_r1",
+     "R_tt_ps": 47.0,
+     "min": 46.4,
+     "max": 47.6,
+     "n": 9,
+     "native_pin_audit": "PASS"
+    }
+   ],
+   "delivery": "phi - wire - R per root (R from the bound routed view)"
   },
   "ck_cap_lane_s": {
    "dir": "input",
@@ -624,71 +634,71 @@
    "dir": "input",
    "bits": 64,
    "domain": "stream",
-   "master": "dsfd_vm_static_read_q0..q7",
+   "master": "dsfd_vm_static_read_q0..q7_p (READ_PIPE 2)",
    "child_pin": "ck",
    "routed_R": [
     {
-     "kit": "dsfd_vm_static_read_q0_native_1015_r1",
-     "R_tt_ps": 197.0,
-     "min": 187.1,
-     "max": 212.3,
-     "n": 1036,
-     "native_pin_audit": "FAIL: capture 316.1 > 190 (284 pins)"
-    },
-    {
-     "kit": "dsfd_vm_static_read_q1_native_1015_r1",
-     "R_tt_ps": 199.6,
-     "min": 189.6,
-     "max": 214.4,
-     "n": 1102,
-     "native_pin_audit": "FAIL: capture 320.7 > 190 (280 pins)"
-    },
-    {
-     "kit": "dsfd_vm_static_read_q2_native_1015_r1",
-     "R_tt_ps": 186.8,
-     "min": 170.6,
-     "max": 220.8,
-     "n": 1036,
-     "native_pin_audit": "FAIL: capture 306.5 > 190 (245 pins)"
-    },
-    {
-     "kit": "dsfd_vm_static_read_q3_native_1015_r1",
-     "R_tt_ps": 186.8,
-     "min": 170.6,
-     "max": 220.8,
-     "n": 1036,
-     "native_pin_audit": "FAIL: capture 306.5 > 190 (245 pins)"
-    },
-    {
-     "kit": "dsfd_vm_static_read_q4_native_1015_r1",
-     "R_tt_ps": 104.5,
-     "min": 100.0,
-     "max": 109.5,
-     "n": 262,
-     "native_pin_audit": "FAIL: capture 260.3 > 190 (8 pins)"
-    },
-    {
-     "kit": "dsfd_vm_static_read_q5_native_1015_r1",
-     "R_tt_ps": 186.8,
-     "min": 170.6,
-     "max": 220.8,
-     "n": 1036,
-     "native_pin_audit": "FAIL: capture 306.5 > 190 (245 pins)"
-    },
-    {
-     "kit": "dsfd_vm_static_read_q6_native_1015_r1",
-     "R_tt_ps": 123.1,
-     "min": 114.5,
-     "max": 130.5,
-     "n": 520,
+     "kit": "dsfd_vm_static_read_q0_p_native_1015_p2",
+     "R_tt_ps": 201.4,
+     "min": 193.4,
+     "max": 210.8,
+     "n": 805,
      "native_pin_audit": "PASS"
     },
     {
-     "kit": "dsfd_vm_static_read_q7_native_1015_r1",
-     "R_tt_ps": 123.1,
-     "min": 114.5,
-     "max": 130.5,
-     "n": 520,
+     "kit": "dsfd_vm_static_read_q1_p_native_1015_p1",
+     "R_tt_ps": 203.3,
+     "min": 192.8,
+     "max": 217.5,
+     "n": 869,
+     "native_pin_audit": "PASS"
+    },
+    {
+     "kit": "dsfd_vm_static_read_q2_p_native_1015_p1",
+     "R_tt_ps": 191.6,
+     "min": 172.7,
+     "max": 215.0,
+     "n": 799,
+     "native_pin_audit": "PASS"
+    },
+    {
+     "kit": "dsfd_vm_static_read_q3_p_native_1015_p1",
+     "R_tt_ps": 191.6,
+     "min": 172.7,
+     "max": 215.0,
+     "n": 799,
+     "native_pin_audit": "PASS"
+    },
+    {
+     "kit": "dsfd_vm_static_read_q4_p_native_1015_p1",
+     "R_tt_ps": 123.0,
+     "min": 109.0,
+     "max": 136.4,
+     "n": 399,
+     "native_pin_audit": "PASS"
+    },
+    {
+     "kit": "dsfd_vm_static_read_q5_p_native_1015_p1",
+     "R_tt_ps": 191.6,
+     "min": 172.7,
+     "max": 215.0,
+     "n": 799,
+     "native_pin_audit": "PASS"
+    },
+    {
+     "kit": "dsfd_vm_static_read_q6_p_native_1015_p1",
+     "R_tt_ps": 128.4,
+     "min": 109.7,
+     "max": 138.0,
+     "n": 527,
+     "native_pin_audit": "PASS"
+    },
+    {
+     "kit": "dsfd_vm_static_read_q7_p_native_1015_p1",
+     "R_tt_ps": 128.4,
+     "min": 109.7,
+     "max": 138.0,
+     "n": 527,
      "native_pin_audit": "PASS"
     }
    ],
@@ -698,72 +708,72 @@
    "dir": "input",
    "bits": 8,
    "domain": "stream",
-   "master": "dsfd_vm_static_read_v0..v7",
+   "master": "dsfd_vm_static_read_v0..v7_p (READ_PIPE 2)",
    "child_pin": "ck",
    "routed_R": [
     {
-     "kit": "dsfd_vm_static_read_v0_native_1015_r1",
-     "R_tt_ps": 42.1,
-     "min": 41.0,
-     "max": 42.9,
-     "n": 21,
-     "native_pin_audit": "FAIL: capture 276.4 > 190 (80 pins)"
+     "kit": "dsfd_vm_static_read_v0_p_native_1015_p2",
+     "R_tt_ps": 87.6,
+     "min": 77.6,
+     "max": 100.2,
+     "n": 171,
+     "native_pin_audit": "PASS"
     },
     {
-     "kit": "dsfd_vm_static_read_v1_native_1015_r1",
-     "R_tt_ps": 41.7,
-     "min": 40.5,
-     "max": 42.4,
-     "n": 22,
-     "native_pin_audit": "FAIL: capture 284.3 > 190 (79 pins)"
+     "kit": "dsfd_vm_static_read_v1_p_native_1015_p2",
+     "R_tt_ps": 82.0,
+     "min": 78.4,
+     "max": 86.6,
+     "n": 175,
+     "native_pin_audit": "PASS"
     },
     {
-     "kit": "dsfd_vm_static_read_v2_native_1015_r1",
-     "R_tt_ps": 41.3,
-     "min": 40.1,
-     "max": 42.0,
-     "n": 21,
-     "native_pin_audit": "FAIL: capture 279.3 > 190 (67 pins)"
+     "kit": "dsfd_vm_static_read_v2_p_native_1015_p2",
+     "R_tt_ps": 74.7,
+     "min": 70.6,
+     "max": 78.5,
+     "n": 147,
+     "native_pin_audit": "PASS"
     },
     {
-     "kit": "dsfd_vm_static_read_v3_native_1015_r1",
-     "R_tt_ps": 41.5,
-     "min": 40.1,
-     "max": 42.5,
-     "n": 21,
-     "native_pin_audit": "FAIL: capture 287.8 > 190 (73 pins)"
+     "kit": "dsfd_vm_static_read_v3_p_native_1015_p2",
+     "R_tt_ps": 74.4,
+     "min": 68.9,
+     "max": 78.6,
+     "n": 147,
+     "native_pin_audit": "PASS"
     },
     {
-     "kit": "dsfd_vm_static_read_v4_native_1015_r1",
-     "R_tt_ps": 38.8,
-     "min": 38.2,
-     "max": 39.1,
-     "n": 9,
-     "native_pin_audit": "FAIL: capture 220.3 > 190 (9 pins)"
+     "kit": "dsfd_vm_static_read_v4_p_native_1015_p2",
+     "R_tt_ps": 53.9,
+     "min": 52.9,
+     "max": 55.4,
+     "n": 57,
+     "native_pin_audit": "PASS"
     },
     {
-     "kit": "dsfd_vm_static_read_v5_native_1015_r1",
-     "R_tt_ps": 40.9,
-     "min": 40.3,
-     "max": 41.3,
-     "n": 18,
-     "native_pin_audit": "FAIL: capture 270.2 > 190 (76 pins)"
+     "kit": "dsfd_vm_static_read_v5_p_native_1015_p2",
+     "R_tt_ps": 77.2,
+     "min": 67.3,
+     "max": 86.4,
+     "n": 144,
+     "native_pin_audit": "PASS"
     },
     {
-     "kit": "dsfd_vm_static_read_v6_native_1015_r1",
-     "R_tt_ps": 39.6,
-     "min": 38.3,
-     "max": 40.6,
-     "n": 13,
-     "native_pin_audit": "FAIL: capture 225.8 > 190 (40 pins)"
+     "kit": "dsfd_vm_static_read_v6_p_native_1015_p2",
+     "R_tt_ps": 70.7,
+     "min": 65.3,
+     "max": 75.9,
+     "n": 87,
+     "native_pin_audit": "PASS"
     },
     {
-     "kit": "dsfd_vm_static_read_v7_native_1015_r1",
-     "R_tt_ps": 39.9,
-     "min": 39.1,
-     "max": 40.4,
-     "n": 13,
-     "native_pin_audit": "FAIL: capture 221.7 > 190 (39 pins)"
+     "kit": "dsfd_vm_static_read_v7_p_native_1015_p2",
+     "R_tt_ps": 71.4,
+     "min": 66.4,
+     "max": 76.5,
+     "n": 87,
+     "native_pin_audit": "PASS"
     }
    ],
    "delivery": "phi - wire - R per root (R from the bound routed view)"
@@ -920,23 +930,9 @@
    "child_pin": null,
    "routed_R": null,
    "delivery": "OPEN: no closed native view; parent leaf/CTS root pending"
-  },
-  "cks": {
-   "dir": "input",
-   "bits": 1,
-   "domain": "stream",
-   "master": null,
-   "child_pin": null,
-   "routed_R": null,
-   "delivery": "OPEN: no closed native view; parent leaf/CTS root pending"
   }
  },
  "reset_entries": {
-  "rss": {
-   "dir": "input",
-   "bits": 1,
-   "domain": "stream"
-  },
   "rss_cap_x34_t": {
    "dir": "input",
    "bits": 16,
@@ -1099,12 +1095,12 @@
   }
  },
  "counts": {
-  "ports": 112,
+  "ports": 110,
   "functional": 44,
-  "clock_ports": 35,
-  "clock_bits": 682,
-  "reset_ports": 33,
-  "reset_bits": 618
+  "clock_ports": 34,
+  "clock_bits": 681,
+  "reset_ports": 32,
+  "reset_bits": 617
  },
  "generator_requirements": [
   "drop RTL_HUB_EXTRA vm->collective t_collective 592 / tcs 3 (no RTL port, backpressure-era)",

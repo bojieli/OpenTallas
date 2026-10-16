@@ -48,7 +48,9 @@
    "fvm",
    "fdm",
    "dl_in",
-   "ul_out"
+   "ul_out",
+   "clk",
+   "rst_in"
   ],
   "S": [
    "fv_out",
@@ -56,10 +58,6 @@
    "rst_out",
    "dl_out",
    "ul_in"
-  ],
-  "W": [
-   "clk",
-   "rst_in"
   ]
  },
  "refglob": "*",
@@ -74,8 +72,8 @@
   "benches_from": "tools/s81_suhc/hc_ntree_benches.json",
   "owner": "Claude:el1014-s81-norm-tree",
   "branch": "claude/s81-norm-tree-1014",
-  "tag": "v1",
-  "structural_change": "NORM tree variant r2: ctfs_nt also relays the scale lane (ctrn_nt dropped, closed ctrn reused)",
+  "tag": "v5-spread",
+  "structural_change": "v24 SPREAD (S-NORM): v4 straight relay GRT-0116 1,175 overflow (M3 807 / M5 311 over x 225-575) = 9.8 bits/um of stacked N->S relays in the 115-um ctfxs window; one even pitch 0.197 um (5.6 bits/um) over the whole usable width for ctfs/ctfn (bits 0..1127 in the central block, ctfs->ctfxs seam <= 410.4 um), clk + rst_in at the N-face centre (x 286.04, was the W corner), no fixed output hold pad, HB1 inputs, K4 clock clusters. 0 cycles, same RTL.",
   "no_bench_reason": "bit-exactness is gated on the HC slab composition with dsfd_sp_hc NTREE 1 (tools/s81_suhc/hc_ntree_bench.sh: NG 256 production shape exact PASS + mutant 3 FAIL; tools/s81_suhc/hc_gate.py --ntree 1 NG 256 exact 0/1940 x3 + per-tile mutants); the tile alone has no golden",
   "purpose": "el1014-s81-norm-tree (owner 10-14 ~06:55: NORM tree = PARALLEL default-off variant with NEW master names; replaces the serial-chain HC NORM only when all variant tiles close and the composition is exact): ot_s81_hc_ctfs_nt: the forward relay/out strip + the partial lane relay",
   "views_to": "physical/ref_tile/s81hc_ctfsnt_ref/views",
@@ -92,7 +90,17 @@
      "verilator"
     ]
    }
-  ]
+  ],
+  "reroute_reason": {
+   "kind": "die_window",
+   "slot": "cth_nt ctfs (ctfn/ctfs_nt fd/fdm seam)",
+   "grt_overflow": 2450,
+   "source": "results/rtl/s81_layer_tput_1013/norm_tree_1014/native_closure_1014/fdm_span_1015/ctfn_np2_grt_window.json",
+   "evidence": [
+    "results/rtl/s81_layer_tput_1013/norm_tree_1014/native_closure_1014/v24_spread/request.json"
+   ],
+   "fix": "v24 SPREAD (S-NORM): v4 straight relay GRT-0116 1,175 overflow (M3 807 / M5 311 over x 225-575) = 9.8 bits/um of stacked N->S relays in the 115-um ctfxs window; one even pitch 0.197 um (5.6 bits/um) over the whole usable width for ctfs/ctfn (bits 0..1127 in the central block, ctfs->ctfxs seam <= 410.4 um), clk + rst_in at the N-face centre (x 286.04, was the W corner), no fixed output hold pad, HB1 inputs, K4 clock clusters. 0 cycles, same RTL."
+  }
  },
  "params": {},
  "children": [],
@@ -104,16 +112,24 @@
   "allow_none": true
  },
  "inhold": true,
- "outhold": true,
+ "outhold": false,
  "keep_pin_regs": true,
  "pin_reg_split": true,
  "hold_pad": {
-  "cell": "HB2xp67_ASAP7_75t_R"
+  "cell": "HB1xp67_ASAP7_75t_R",
+  "basis": "no fixed output pad, HB1 input pads (native launch/capture; S-ELEM-B shared fix)"
  },
- "io_tcl": "physical/s81_die_pins/v19_ntree/ot_s81_hc_ctfs_nt.tcl",
+ "io_tcl": "physical/s81_die_pins/v24_hc_norm_spread_candidate/ot_s81_hc_ctfs_nt.tcl",
  "assigned_pins": {
-  "file": "physical/s81_die_pins/v19_ntree/ot_s81_hc_ctfs_nt.json",
-  "source": "S81 die lead r5 tools/s81/hc_ntree_pins.py (d46f94fbb, el1011-s81dieit), top-down per-bit",
-  "layout": "physical/s81_die_pins/v19_ntree/layout.json"
+  "file": "physical/s81_die_pins/v24_hc_norm_spread_candidate/ot_s81_hc_ctfs_nt.json",
+  "source": "S-NORM v24 candidate",
+  "layout": "physical/s81_die_pins/v24_hc_norm_spread_candidate/report.json"
+ },
+ "slot_change_request": "S-NORM v24 spread candidate (tools/s81/hc_norm_straight_pins.py --spread): even fd pitch 0.197 um (5.6 b/um), clk/reset at the N-face centre; request posted to S-DIE el1011-s81die.log 2026-10-15",
+ "pre_cts_extra": [
+  "physical/common_flow/clock_split_x.tcl"
+ ],
+ "orfs_vars": {
+  "OT_CKS_K": "4"
  }
 }

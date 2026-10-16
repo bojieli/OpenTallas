@@ -1,0 +1,915 @@
+{
+ "schema": "opentallas.qwen.dvm.actual_bank_placement.v1",
+ "odb": "/work/results/asap7/opentallas_qfd_xs_leaf_extcap_asap7_ref_gate/base/4_1_cts.odb",
+ "die_um": [
+  0.0,
+  0.0,
+  64.8,
+  162.0
+ ],
+ "routing_layer_adjustment": 0.25,
+ "adjustment_source": "Actual ORFS ASAP7 platform config.mk default0.25; override must match run config",
+ "clock_pin_boxes": [
+  {
+   "pin": "clk",
+   "layer": "M4",
+   "box_um": [
+    0.0,
+    156.048,
+    0.084,
+    156.072
+   ]
+  }
+ ],
+ "actual_cell_area_um2": 4862.473740002181,
+ "actual_flop_count": 6090,
+ "regions": [
+  {
+   "name": "dvm_local_bank_0",
+   "box_um": [
+    6.48,
+    24.84,
+    58.32,
+    37.8
+   ],
+   "cells": 3218,
+   "cell_area_um2": 403.77852,
+   "outside": []
+  },
+  {
+   "name": "dvm_local_bank_1",
+   "box_um": [
+    6.48,
+    81.0,
+    58.32,
+    93.96
+   ],
+   "cells": 3181,
+   "cell_area_um2": 402.43716,
+   "outside": []
+  },
+  {
+   "name": "dvm_local_bank_2",
+   "box_um": [
+    6.48,
+    38.88,
+    58.32,
+    51.84
+   ],
+   "cells": 3201,
+   "cell_area_um2": 402.80166,
+   "outside": []
+  },
+  {
+   "name": "dvm_local_bank_3",
+   "box_um": [
+    6.48,
+    95.04,
+    58.32,
+    108.0
+   ],
+   "cells": 3190,
+   "cell_area_um2": 403.5015,
+   "outside": []
+  },
+  {
+   "name": "dvm_local_bank_4",
+   "box_um": [
+    6.48,
+    52.92,
+    58.32,
+    65.88
+   ],
+   "cells": 3221,
+   "cell_area_um2": 404.11386,
+   "outside": []
+  },
+  {
+   "name": "dvm_local_bank_5",
+   "box_um": [
+    6.48,
+    109.08,
+    58.32,
+    122.04
+   ],
+   "cells": 3170,
+   "cell_area_um2": 401.27076,
+   "outside": []
+  },
+  {
+   "name": "dvm_local_bank_6",
+   "box_um": [
+    6.48,
+    66.96,
+    58.32,
+    79.92
+   ],
+   "cells": 3198,
+   "cell_area_um2": 402.4809,
+   "outside": []
+  },
+  {
+   "name": "dvm_local_bank_7",
+   "box_um": [
+    6.48,
+    123.12,
+    58.32,
+    136.08
+   ],
+   "cells": 3177,
+   "cell_area_um2": 402.17472,
+   "outside": []
+  }
+ ],
+ "placed_data_cones": [
+  {
+   "bank": 0,
+   "roots": 17,
+   "actual_cone_cells": 1683,
+   "outside": [],
+   "shared": []
+  },
+  {
+   "bank": 1,
+   "roots": 17,
+   "actual_cone_cells": 1686,
+   "outside": [],
+   "shared": []
+  },
+  {
+   "bank": 2,
+   "roots": 17,
+   "actual_cone_cells": 1685,
+   "outside": [],
+   "shared": []
+  },
+  {
+   "bank": 3,
+   "roots": 17,
+   "actual_cone_cells": 1687,
+   "outside": [],
+   "shared": []
+  },
+  {
+   "bank": 4,
+   "roots": 17,
+   "actual_cone_cells": 1687,
+   "outside": [],
+   "shared": []
+  },
+  {
+   "bank": 5,
+   "roots": 17,
+   "actual_cone_cells": 1685,
+   "outside": [],
+   "shared": []
+  },
+  {
+   "bank": 6,
+   "roots": 17,
+   "actual_cone_cells": 1684,
+   "outside": [],
+   "shared": []
+  },
+  {
+   "bank": 7,
+   "roots": 17,
+   "actual_cone_cells": 1683,
+   "outside": [],
+   "shared": []
+  }
+ ],
+ "local_bank_cuts": [
+  {
+   "bank": "dvm_local_bank_0",
+   "vertical_cut_horizontal_tracks_raw": 607,
+   "vertical_cut_bbox_demand": 239,
+   "horizontal_cut_vertical_tracks_raw": 2520,
+   "horizontal_cut_bbox_demand": 656,
+   "vertical_cut_bbox_util": 0.39373970345963755,
+   "horizontal_cut_bbox_util": 0.26031746031746034
+  },
+  {
+   "bank": "dvm_local_bank_1",
+   "vertical_cut_horizontal_tracks_raw": 607,
+   "vertical_cut_bbox_demand": 252,
+   "horizontal_cut_vertical_tracks_raw": 2520,
+   "horizontal_cut_bbox_demand": 881,
+   "vertical_cut_bbox_util": 0.41515650741350907,
+   "horizontal_cut_bbox_util": 0.3496031746031746
+  },
+  {
+   "bank": "dvm_local_bank_2",
+   "vertical_cut_horizontal_tracks_raw": 607,
+   "vertical_cut_bbox_demand": 230,
+   "horizontal_cut_vertical_tracks_raw": 2520,
+   "horizontal_cut_bbox_demand": 874,
+   "vertical_cut_bbox_util": 0.37891268533772654,
+   "horizontal_cut_bbox_util": 0.3468253968253968
+  },
+  {
+   "bank": "dvm_local_bank_3",
+   "vertical_cut_horizontal_tracks_raw": 607,
+   "vertical_cut_bbox_demand": 233,
+   "horizontal_cut_vertical_tracks_raw": 2520,
+   "horizontal_cut_bbox_demand": 860,
+   "vertical_cut_bbox_util": 0.38385502471169686,
+   "horizontal_cut_bbox_util": 0.3412698412698413
+  },
+  {
+   "bank": "dvm_local_bank_4",
+   "vertical_cut_horizontal_tracks_raw": 607,
+   "vertical_cut_bbox_demand": 202,
+   "horizontal_cut_vertical_tracks_raw": 2520,
+   "horizontal_cut_bbox_demand": 857,
+   "vertical_cut_bbox_util": 0.33278418451400327,
+   "horizontal_cut_bbox_util": 0.3400793650793651
+  },
+  {
+   "bank": "dvm_local_bank_5",
+   "vertical_cut_horizontal_tracks_raw": 607,
+   "vertical_cut_bbox_demand": 239,
+   "horizontal_cut_vertical_tracks_raw": 2520,
+   "horizontal_cut_bbox_demand": 859,
+   "vertical_cut_bbox_util": 0.39373970345963755,
+   "horizontal_cut_bbox_util": 0.3408730158730159
+  },
+  {
+   "bank": "dvm_local_bank_6",
+   "vertical_cut_horizontal_tracks_raw": 607,
+   "vertical_cut_bbox_demand": 237,
+   "horizontal_cut_vertical_tracks_raw": 2520,
+   "horizontal_cut_bbox_demand": 890,
+   "vertical_cut_bbox_util": 0.3904448105436573,
+   "horizontal_cut_bbox_util": 0.3531746031746032
+  },
+  {
+   "bank": "dvm_local_bank_7",
+   "vertical_cut_horizontal_tracks_raw": 607,
+   "vertical_cut_bbox_demand": 223,
+   "horizontal_cut_vertical_tracks_raw": 2520,
+   "horizontal_cut_bbox_demand": 661,
+   "vertical_cut_bbox_util": 0.3673805601317957,
+   "horizontal_cut_bbox_util": 0.2623015873015873
+  }
+ ],
+ "horizontal_tracks": {
+  "M2": 4199,
+  "M4": 3375
+ },
+ "tracks": {
+  "M3": 1800,
+  "M5": 1350
+ },
+ "cuts": [
+  {
+   "y_um": 31.32,
+   "placed_net_crossing_lower_bound": 959,
+   "available_vertical_tracks": 3054,
+   "blocked_tracks": {
+    "M3": 36,
+    "M5": 60
+   },
+   "lower_bound_util": 0.3140144073346431,
+   "derated_available_vertical_tracks": 2290.5,
+   "lower_bound_util_derated": 0.41868587644619076,
+   "largest_names": [
+    "_0010_",
+    "_0138_",
+    "_0144_",
+    "_0268_",
+    "_0573_",
+    "_0784_",
+    "_0785_",
+    "_1534_",
+    "_1600_",
+    "_1606_",
+    "_1791_",
+    "u_leaf.g_t\\[0\\].g_banked.g_bank\\[0\\].u_bank/net5237"
+   ]
+  },
+  {
+   "y_um": 38.34,
+   "placed_net_crossing_lower_bound": 995,
+   "available_vertical_tracks": 3054,
+   "blocked_tracks": {
+    "M3": 36,
+    "M5": 60
+   },
+   "lower_bound_util": 0.3258022265880812,
+   "derated_available_vertical_tracks": 2290.5,
+   "lower_bound_util_derated": 0.4344029687841083,
+   "largest_names": [
+    "_0010_",
+    "_0157_",
+    "_0268_",
+    "_0270_",
+    "_0418_",
+    "_0591_",
+    "_0593_",
+    "_0594_",
+    "_0600_",
+    "_0601_",
+    "_0611_",
+    "_0617_"
+   ]
+  },
+  {
+   "y_um": 45.36,
+   "placed_net_crossing_lower_bound": 1294,
+   "available_vertical_tracks": 3054,
+   "blocked_tracks": {
+    "M3": 36,
+    "M5": 60
+   },
+   "lower_bound_util": 0.42370661427635886,
+   "derated_available_vertical_tracks": 2290.5,
+   "lower_bound_util_derated": 0.5649421523684784,
+   "largest_names": [
+    "_0143_",
+    "_0150_",
+    "_0268_",
+    "_0418_",
+    "_0442_",
+    "_0447_",
+    "_0612_",
+    "_0722_",
+    "_0736_",
+    "_0742_",
+    "_0744_",
+    "_0745_"
+   ]
+  },
+  {
+   "y_um": 52.38,
+   "placed_net_crossing_lower_bound": 1107,
+   "available_vertical_tracks": 3054,
+   "blocked_tracks": {
+    "M3": 36,
+    "M5": 60
+   },
+   "lower_bound_util": 0.362475442043222,
+   "derated_available_vertical_tracks": 2290.5,
+   "lower_bound_util_derated": 0.48330058939096265,
+   "largest_names": [
+    "_0000_",
+    "_0001_",
+    "_0004_",
+    "_0005_",
+    "_0271_",
+    "_0291_",
+    "_0294_",
+    "_0299_",
+    "_0340_",
+    "_0405_",
+    "_0422_",
+    "_0437_"
+   ]
+  },
+  {
+   "y_um": 59.4,
+   "placed_net_crossing_lower_bound": 1418,
+   "available_vertical_tracks": 3054,
+   "blocked_tracks": {
+    "M3": 36,
+    "M5": 60
+   },
+   "lower_bound_util": 0.46430910281597904,
+   "derated_available_vertical_tracks": 2290.5,
+   "lower_bound_util_derated": 0.6190788037546388,
+   "largest_names": [
+    "_0035_",
+    "_0051_",
+    "_0271_",
+    "_0340_",
+    "_0342_",
+    "_0406_",
+    "_0408_",
+    "_0440_",
+    "_0482_",
+    "_0497_",
+    "_0895_",
+    "_0897_"
+   ]
+  },
+  {
+   "y_um": 66.41999999999999,
+   "placed_net_crossing_lower_bound": 1361,
+   "available_vertical_tracks": 3054,
+   "blocked_tracks": {
+    "M3": 36,
+    "M5": 60
+   },
+   "lower_bound_util": 0.44564505566470203,
+   "derated_available_vertical_tracks": 2290.5,
+   "lower_bound_util_derated": 0.594193407552936,
+   "largest_names": [
+    "_0080_",
+    "_0196_",
+    "_0259_",
+    "_0271_",
+    "_0272_",
+    "_0278_",
+    "_0280_",
+    "_0284_",
+    "_0286_",
+    "_0293_",
+    "_0302_",
+    "_0340_"
+   ]
+  },
+  {
+   "y_um": 73.44,
+   "placed_net_crossing_lower_bound": 1615,
+   "available_vertical_tracks": 3054,
+   "blocked_tracks": {
+    "M3": 36,
+    "M5": 60
+   },
+   "lower_bound_util": 0.528814669286182,
+   "derated_available_vertical_tracks": 2290.5,
+   "lower_bound_util_derated": 0.7050862257149094,
+   "largest_names": [
+    "_0069_",
+    "_0084_",
+    "_0244_",
+    "_0272_",
+    "_0276_",
+    "_0285_",
+    "_0342_",
+    "_0368_",
+    "_0383_",
+    "_0470_",
+    "_0486_",
+    "_0502_"
+   ]
+  },
+  {
+   "y_um": 80.46000000000001,
+   "placed_net_crossing_lower_bound": 1456,
+   "available_vertical_tracks": 3054,
+   "blocked_tracks": {
+    "M3": 36,
+    "M5": 60
+   },
+   "lower_bound_util": 0.4767518009168304,
+   "derated_available_vertical_tracks": 2290.5,
+   "lower_bound_util_derated": 0.6356690678891072,
+   "largest_names": [
+    "_0016_",
+    "_0134_",
+    "_0191_",
+    "_0199_",
+    "_0228_",
+    "_0238_",
+    "_0248_",
+    "_0252_",
+    "_0253_",
+    "_0256_",
+    "_0257_",
+    "_0258_"
+   ]
+  },
+  {
+   "y_um": 87.47999999999999,
+   "placed_net_crossing_lower_bound": 1642,
+   "available_vertical_tracks": 3054,
+   "blocked_tracks": {
+    "M3": 36,
+    "M5": 60
+   },
+   "lower_bound_util": 0.5376555337262606,
+   "derated_available_vertical_tracks": 2290.5,
+   "lower_bound_util_derated": 0.7168740449683475,
+   "largest_names": [
+    "_0016_",
+    "_0101_",
+    "_0129_",
+    "_0194_",
+    "_0195_",
+    "_0217_",
+    "_0246_",
+    "_0250_",
+    "_0251_",
+    "_0303_",
+    "_0316_",
+    "_0335_"
+   ]
+  },
+  {
+   "y_um": 94.5,
+   "placed_net_crossing_lower_bound": 1365,
+   "available_vertical_tracks": 3054,
+   "blocked_tracks": {
+    "M3": 36,
+    "M5": 60
+   },
+   "lower_bound_util": 0.44695481335952847,
+   "derated_available_vertical_tracks": 2290.5,
+   "lower_bound_util_derated": 0.595939751146038,
+   "largest_names": [
+    "_0122_",
+    "_0125_",
+    "_0240_",
+    "_0246_",
+    "_0250_",
+    "_0308_",
+    "_0310_",
+    "_0328_",
+    "_0332_",
+    "_0334_",
+    "_0371_",
+    "_0376_"
+   ]
+  },
+  {
+   "y_um": 101.52000000000001,
+   "placed_net_crossing_lower_bound": 1476,
+   "available_vertical_tracks": 3054,
+   "blocked_tracks": {
+    "M3": 36,
+    "M5": 60
+   },
+   "lower_bound_util": 0.48330058939096265,
+   "derated_available_vertical_tracks": 2290.5,
+   "lower_bound_util_derated": 0.6444007858546169,
+   "largest_names": [
+    "_0212_",
+    "_0222_",
+    "_0937_",
+    "_0951_",
+    "_0953_",
+    "_1104_",
+    "_1179_",
+    "_1195_",
+    "_1212_",
+    "_1218_",
+    "_1228_",
+    "_1230_"
+   ]
+  },
+  {
+   "y_um": 108.53999999999999,
+   "placed_net_crossing_lower_bound": 1140,
+   "available_vertical_tracks": 3054,
+   "blocked_tracks": {
+    "M3": 36,
+    "M5": 60
+   },
+   "lower_bound_util": 0.37328094302554027,
+   "derated_available_vertical_tracks": 2290.5,
+   "lower_bound_util_derated": 0.4977079240340537,
+   "largest_names": [
+    "_0064_",
+    "_0215_",
+    "_0232_",
+    "_0237_",
+    "_0938_",
+    "_0954_",
+    "_0997_",
+    "_1005_",
+    "_1034_",
+    "_1038_",
+    "_1073_",
+    "_1085_"
+   ]
+  },
+  {
+   "y_um": 115.56,
+   "placed_net_crossing_lower_bound": 1346,
+   "available_vertical_tracks": 3054,
+   "blocked_tracks": {
+    "M3": 36,
+    "M5": 60
+   },
+   "lower_bound_util": 0.4407334643091028,
+   "derated_available_vertical_tracks": 2290.5,
+   "lower_bound_util_derated": 0.5876446190788037,
+   "largest_names": [
+    "_0008_",
+    "_0023_",
+    "_0242_",
+    "_0994_",
+    "_0995_",
+    "_1001_",
+    "_1004_",
+    "_1030_",
+    "_1035_",
+    "_1076_",
+    "_1298_",
+    "_1299_"
+   ]
+  },
+  {
+   "y_um": 122.58000000000001,
+   "placed_net_crossing_lower_bound": 1015,
+   "available_vertical_tracks": 3054,
+   "blocked_tracks": {
+    "M3": 36,
+    "M5": 60
+   },
+   "lower_bound_util": 0.3323510150622135,
+   "derated_available_vertical_tracks": 2290.5,
+   "lower_bound_util_derated": 0.443134686749618,
+   "largest_names": [
+    "_0031_",
+    "_0091_",
+    "_0995_",
+    "_1023_",
+    "_1030_",
+    "_1044_",
+    "_1061_",
+    "_1077_",
+    "_1078_",
+    "_1079_",
+    "_1081_",
+    "_1362_"
+   ]
+  },
+  {
+   "y_um": 129.60000000000002,
+   "placed_net_crossing_lower_bound": 1003,
+   "available_vertical_tracks": 3054,
+   "blocked_tracks": {
+    "M3": 36,
+    "M5": 60
+   },
+   "lower_bound_util": 0.3284217419777341,
+   "derated_available_vertical_tracks": 2290.5,
+   "lower_bound_util_derated": 0.43789565597031216,
+   "largest_names": [
+    "_0107_",
+    "_1012_",
+    "_1014_",
+    "_1046_",
+    "_1047_",
+    "_1050_",
+    "_1051_",
+    "_1052_",
+    "_1443_",
+    "_1620_",
+    "_1637_",
+    "_1729_"
+   ]
+  }
+ ],
+ "pin_box_count": 2463,
+ "pin_overlaps": [
+  [
+   "w_ctl[18]",
+   "w_d[472]",
+   "M4"
+  ],
+  [
+   "w_ctl[1]",
+   "w_d[506]",
+   "M4"
+  ],
+  [
+   "w_ctl[21]",
+   "w_d[362]",
+   "M4"
+  ],
+  [
+   "w_ctl[26]",
+   "w_d[80]",
+   "M4"
+  ],
+  [
+   "w_ctl[28]",
+   "w_d[953]",
+   "M4"
+  ],
+  [
+   "w_ctl[29]",
+   "w_d[927]",
+   "M4"
+  ],
+  [
+   "w_ctl[37]",
+   "w_d[607]",
+   "M4"
+  ],
+  [
+   "w_ctl[3]",
+   "w_d[482]",
+   "M4"
+  ],
+  [
+   "w_ctl[41]",
+   "w_d[753]",
+   "M4"
+  ],
+  [
+   "w_ctl[43]",
+   "w_d[711]",
+   "M4"
+  ],
+  [
+   "w_ctl[44]",
+   "w_d[781]",
+   "M4"
+  ],
+  [
+   "w_ctl[50]",
+   "w_d[627]",
+   "M4"
+  ],
+  [
+   "w_ctl[53]",
+   "w_d[809]",
+   "M4"
+  ],
+  [
+   "w_ctl[56]",
+   "w_d[747]",
+   "M4"
+  ],
+  [
+   "w_ctl[69]",
+   "w_d[631]",
+   "M4"
+  ],
+  [
+   "w_d[100]",
+   "wo_d[734]",
+   "M4"
+  ],
+  [
+   "w_d[108]",
+   "wo_d[725]",
+   "M4"
+  ],
+  [
+   "w_d[116]",
+   "wo_d[723]",
+   "M4"
+  ],
+  [
+   "w_d[124]",
+   "wo_d[722]",
+   "M4"
+  ],
+  [
+   "w_d[132]",
+   "wo_d[724]",
+   "M4"
+  ],
+  [
+   "w_d[142]",
+   "wo_d[705]",
+   "M4"
+  ],
+  [
+   "w_d[150]",
+   "wo_d[719]",
+   "M4"
+  ],
+  [
+   "w_d[164]",
+   "wo_d[620]",
+   "M4"
+  ],
+  [
+   "w_d[166]",
+   "wo_d[618]",
+   "M4"
+  ],
+  [
+   "w_d[172]",
+   "wo_d[615]",
+   "M4"
+  ],
+  [
+   "w_d[174]",
+   "wo_d[617]",
+   "M4"
+  ],
+  [
+   "w_d[176]",
+   "wo_d[616]",
+   "M4"
+  ],
+  [
+   "w_d[180]",
+   "wo_d[614]",
+   "M4"
+  ],
+  [
+   "w_d[184]",
+   "wo_d[609]",
+   "M4"
+  ],
+  [
+   "w_d[190]",
+   "wo_d[639]",
+   "M4"
+  ],
+  [
+   "w_d[192]",
+   "wo_d[630]",
+   "M4"
+  ],
+  [
+   "w_d[194]",
+   "wo_d[641]",
+   "M4"
+  ],
+  [
+   "w_d[196]",
+   "wo_d[634]",
+   "M4"
+  ],
+  [
+   "w_d[198]",
+   "wo_d[624]",
+   "M4"
+  ],
+  [
+   "w_d[212]",
+   "wo_d[661]",
+   "M4"
+  ],
+  [
+   "w_d[214]",
+   "wo_d[657]",
+   "M4"
+  ],
+  [
+   "w_d[220]",
+   "wo_d[663]",
+   "M4"
+  ],
+  [
+   "w_d[222]",
+   "wo_d[656]",
+   "M4"
+  ],
+  [
+   "w_d[228]",
+   "wo_d[658]",
+   "M4"
+  ],
+  [
+   "w_d[234]",
+   "wo_d[660]",
+   "M4"
+  ],
+  [
+   "w_d[236]",
+   "wo_d[659]",
+   "M4"
+  ],
+  [
+   "w_d[250]",
+   "wo_d[697]",
+   "M4"
+  ],
+  [
+   "w_d[252]",
+   "wo_d[690]",
+   "M4"
+  ],
+  [
+   "w_d[264]",
+   "wo_d[587]",
+   "M4"
+  ],
+  [
+   "w_d[268]",
+   "wo_d[691]",
+   "M4"
+  ],
+  [
+   "w_d[274]",
+   "wo_d[700]",
+   "M4"
+  ],
+  [
+   "w_d[282]",
+   "wo_d[692]",
+   "M4"
+  ],
+  [
+   "w_d[284]",
+   "wo_d[584]",
+   "M4"
+  ],
+  [
+   "w_d[288]",
+   "wo_d[702]",
+   "M4"
+  ],
+  [
+   "w_d[290]",
+   "wo_d[703]",
+   "M4"
+  ]
+ ],
+ "placement_screen_pass": false,
+ "fail": [
+  "185 distinct signal pin box overlaps"
+ ],
+ "route_admitted": false,
+ "limits": "Actual placed cut demand is a lower bound; detailed via access and actual global-route congestion remain required. No routed OBS/export qualification."
+}

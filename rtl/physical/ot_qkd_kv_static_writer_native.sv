@@ -19,7 +19,9 @@ module qkd_kv_static_writer_native #(parameter integer MUT = 0) (
     output wire [28:0] expected_address,
     output wire fault, output wire [7:0] fault_code
 );
-    qkd_kv_static_writer #(.MUT(MUT)) u_writer (
+    // r3: RST_RELAY=1 -> 12 regional reset relays (rst_n port loads only the relay flops);
+    // first word slot >= 3 edges after rst_n release (compiler boot schedule).
+    qkd_kv_static_writer #(.MUT(MUT), .RST_RELAY(1)) u_writer (
         .ck(ck),
         .rst_n(rst_n),
         .word_valid(word_valid),

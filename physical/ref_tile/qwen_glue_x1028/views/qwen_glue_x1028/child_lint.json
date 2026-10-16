@@ -1,0 +1,71 @@
+{
+ "schema": "opentallas.hier_contract.child_lint.v1",
+ "lef": "/srv/opentallas/claude/closure-loop/qwen_glue_x1028-pm1-de14003b5/record/views/qwen_glue_x1028/qwen_glue_x1028.lef",
+ "verdict": "PASS",
+ "fails": [],
+ "warns": [],
+ "summary": "qwen_glue_x1028 28.08 x 105.84: PG M5 VDD 9 stripes (77% spread, 100% cov) / VSS 9 stripes (77% spread, 100% cov); strap M6; face pins 0 blocked-above 0 blocked-same 0; clock clk_i insertion 108 ps; clock clk_o insertion 113 ps; pockets M5 0 (closed)",
+ "info": {
+  "cell": "qwen_glue_x1028",
+  "W": 28.08,
+  "H": 105.84,
+  "pg": {
+   "nets": {
+    "VDD": {
+     "top_layer": "M5",
+     "stripes": 9,
+     "dir": "V",
+     "spread": 0.769,
+     "coverage": 1.0,
+     "shapes_on_top": 9
+    },
+    "VSS": {
+     "top_layer": "M5",
+     "stripes": 9,
+     "dir": "V",
+     "spread": 0.769,
+     "coverage": 1.0,
+     "shapes_on_top": 9
+    }
+   },
+   "top_layer": "M5",
+   "ok": true,
+   "why": []
+  },
+  "pg_layer": "M5",
+  "strap_layer": "M6",
+  "cap": null,
+  "face": {
+   "face_pins": 0,
+   "blocked_above": 0,
+   "covered_below": 0,
+   "examples": [],
+   "blocked_same": 0,
+   "same_examples": [],
+   "band_same": 0,
+   "band_examples": []
+  },
+  "clock_insertion": {
+   "clk_i": {
+    "max_ps": 108.5,
+    "min_ps": 87.91
+   },
+   "clk_o": {
+    "max_ps": 113.39,
+    "min_ps": 93.11
+   }
+  },
+  "pockets": {
+   "layer": "M5",
+   "d_um": 1.536,
+   "marker": {
+    "layer": "M5",
+    "d_um": 1.536,
+    "added": 184
+   },
+   "count": 0,
+   "area_um2": 0,
+   "examples": []
+  }
+ }
+}

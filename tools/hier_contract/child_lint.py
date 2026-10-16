@@ -7,6 +7,8 @@ A parent may only be submitted when every hard child it instantiates passes this
                  below the PG layer is normal and allowed.
   (b) pg         VDD and VSS each have full-length stripes (>= 90% of the macro span) on ONE common top layer;
                  reports stripe count, spread across the macro and coverage (full-stripe share of top-layer PG metal).
+                 A stripe crossing every standard-cell row (the M1 row region, itself within one row of the 2.16-um
+                 insets) also counts: off-lattice outlines lose up to one row to quantisation (S81 fill 10-15).
   (c) strap      no OBS and no signal-pin shape on the parent strap layer or above (preamble UPDATE 3, PDN-0233/0232) and
                  no signal pin above the cap.  Cap (2026-10-12 layer contract): --cap, else the contract slot's
                  layer_cap (new routes, M5 default / M6 granted) or view_cap (the closed view's own recorded cap, valid
@@ -49,6 +51,9 @@ AREA_FRAC = 0.90          # (a) bloat threshold and (b) full-stripe span fractio
 MIN_STRIPES = 2           # (b) per net
 EPS_UM = 0.001            # 1 DBU: LEF microns are decimal, floats are not (43.2-um tile, 2.16-um insets: 38.88 < 0.9*43.2 in floats)
 EDGE_INSET_UM = 2.16      # (b) ref_tile stops PG stripes this far short of each edge; a stripe reaching within the inset of both edges is full-length (thin tiles < 43.2 um failed the 90% rule: ctfx 12.96 um tall = 67%)
+ROW_QUANT_UM = 0.27      # (b) one ASAP7 cell row: the PDN core (rows) of an outline that is not a multiple of the row/PG lattice
+                         # ends up to one row short of the 2.16-um inset (S81 fill dsfd_hstnh_112 17.256 um tall: rows and
+                         # stripes 2.151..14.859/14.873, 0.237 um short at the top) -- see row_span() / check_pg
 MIN_SPREAD = 0.50         # (b) first..last full stripe must span this fraction of the perpendicular dimension
 INSERTION_TOL_PS = 100.0  # (g)
 EPS = 0.0015              # um: boundary touch tolerance
@@ -153,9 +158,32 @@ def _overlaps(r, rects) -> bool:
     return any(q[1] < x1 - 1e-6 and q[3] > x0 + 1e-6 and q[2] < y1 - 1e-6 and q[4] > y0 + 1e-6 for q in rects)
 
 
+def row_span(m: dict):
+    """(x0, y0, x1, y1) of the standard-cell row region = bbox of the M1 OBS (the cell-row blockage every routed-tile
+    abstract carries below the PG layer), or None when the abstract has no M1 OBS"""
+    r1 = [r for r in m["obs"] if r[0] == "M1"]
+    if not r1:
+        return None
+    return (min(r[1] for r in r1), min(r[2] for r in r1), max(r[3] for r in r1), max(r[4] for r in r1))
+
+
 # ---------------------------------------------------------------------------------------------------------- checks
 def check_pg(m: dict) -> dict:
+    """(b).  A stripe is full-length when it spans >= 90% of the macro or reaches within EDGE_INSET_UM of both edges, OR
+    -- the physical criterion those proxies stand for -- it crosses EVERY standard-cell row (covers the whole M1 row
+    region along its direction) and that row region itself reaches within EDGE_INSET_UM + ROW_QUANT_UM of both edges
+    (row quantisation of an off-lattice outline, never a shrunken core).  Such a stripe connects every row's follow-pin
+    rails, which is what the parent's strap needs; a stripe that misses a row still fails."""
     W, H = m["W"], m["H"]
+    rs = row_span(m)
+    def rows_ok(a0, a1, span):
+        return a0 <= EDGE_INSET_UM + ROW_QUANT_UM + EPS_UM and a1 >= span - EDGE_INSET_UM - ROW_QUANT_UM - EPS_UM
+    def crosses_rows(r, horiz):
+        if rs is None:
+            return False
+        if horiz:
+            return rows_ok(rs[0], rs[2], W) and r[1] <= rs[0] + EPS_UM and r[3] >= rs[2] - EPS_UM
+        return rows_ok(rs[1], rs[3], H) and r[2] <= rs[1] + EPS_UM and r[4] >= rs[3] - EPS_UM
     nets = {n: p for n, p in m["pins"].items() if is_pg(n, p)}
     rec = {"nets": {}, "top_layer": None, "ok": True, "why": []}
     if not nets:
@@ -169,8 +197,10 @@ def check_pg(m: dict) -> dict:
     rec["top_layer"] = f"M{top}" if top else None
     for n, p in sorted(nets.items()):
         sh = [r for r in p["rects"] if metal(r[0]) == top]
-        full_h = [r for r in sh if (r[3] - r[1]) + EPS_UM >= min(AREA_FRAC * W, W - 2 * EDGE_INSET_UM)]       # horizontal stripes across the width
-        full_v = [r for r in sh if (r[4] - r[2]) + EPS_UM >= min(AREA_FRAC * H, H - 2 * EDGE_INSET_UM)]
+        full_h = [r for r in sh if (r[3] - r[1]) + EPS_UM >= min(AREA_FRAC * W, W - 2 * EDGE_INSET_UM)
+                  or (r[3] - r[1]) > (r[4] - r[2]) and crosses_rows(r, True)]       # horizontal stripes across the width
+        full_v = [r for r in sh if (r[4] - r[2]) + EPS_UM >= min(AREA_FRAC * H, H - 2 * EDGE_INSET_UM)
+                  or (r[4] - r[2]) > (r[3] - r[1]) and crosses_rows(r, False)]
         full, horiz = (full_h, True) if len(full_h) >= len(full_v) else (full_v, False)
         area = sum((r[3] - r[1]) * (r[4] - r[2]) for r in sh) or 1.0
         cov = sum((r[3] - r[1]) * (r[4] - r[2]) for r in full) / area

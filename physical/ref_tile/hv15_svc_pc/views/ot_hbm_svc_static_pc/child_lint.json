@@ -1,0 +1,76 @@
+{
+ "schema": "opentallas.hier_contract.child_lint.v1",
+ "lef": "/srv/opentallas/claude/closure-loop/hv15_svc_pc-takeover-47ef6b64b/record/views/ot_hbm_svc_static_pc/ot_hbm_svc_static_pc.lef",
+ "verdict": "PASS",
+ "fails": [],
+ "warns": [
+  "(f) face-pin access: 1314 of 1314 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. bank_owned[0] M4 (140.281,36.624), bank_owned[1] M4 (140.281,36.624), block_ready[0] M4 (140.281,36.624))"
+ ],
+ "summary": "ot_hbm_svc_static_pc 140.4 x 112.32: PG M5 VDD 26 stripes (96% spread, 100% cov) / VSS 26 stripes (96% spread, 100% cov); strap M6; face pins 1314 blocked-above 0 blocked-same 0; clock clk insertion 286 ps; pockets M5 0 (closed)",
+ "info": {
+  "cell": "ot_hbm_svc_static_pc",
+  "W": 140.4,
+  "H": 112.32,
+  "pg": {
+   "nets": {
+    "VDD": {
+     "top_layer": "M5",
+     "stripes": 26,
+     "dir": "V",
+     "spread": 0.962,
+     "coverage": 1.0,
+     "shapes_on_top": 26
+    },
+    "VSS": {
+     "top_layer": "M5",
+     "stripes": 26,
+     "dir": "V",
+     "spread": 0.962,
+     "coverage": 1.0,
+     "shapes_on_top": 26
+    }
+   },
+   "top_layer": "M5",
+   "ok": true,
+   "why": []
+  },
+  "pg_layer": "M5",
+  "strap_layer": "M6",
+  "cap": null,
+  "face": {
+   "face_pins": 1314,
+   "blocked_above": 0,
+   "covered_below": 441,
+   "examples": [],
+   "blocked_same": 0,
+   "same_examples": [],
+   "band_same": 1314,
+   "band_examples": [
+    "bank_owned[0] M4 (140.281,36.624)",
+    "bank_owned[1] M4 (140.281,36.624)",
+    "block_ready[0] M4 (140.281,36.624)",
+    "block_ready[1] M4 (140.281,36.624)",
+    "busy M4 (140.281,36.624)",
+    "done M4 (140.281,36.624)"
+   ]
+  },
+  "clock_insertion": {
+   "clk": {
+    "max_ps": 286.36,
+    "min_ps": 160.03
+   }
+  },
+  "pockets": {
+   "layer": "M5",
+   "d_um": 1.536,
+   "marker": {
+    "layer": "M5",
+    "d_um": 1.536,
+    "added": 129
+   },
+   "count": 0,
+   "area_um2": 0,
+   "examples": []
+  }
+ }
+}

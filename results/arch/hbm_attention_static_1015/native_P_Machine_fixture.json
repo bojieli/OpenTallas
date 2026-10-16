@@ -1,0 +1,42 @@
+{
+  "qualification": false,
+  "boundary": "Explicit golden QK score image used by live numerical HG1 proof; not actual RTL score-producer qualification",
+  "input_sha256": "89a20b47ab2e3f8b9ddf62feef9b663232963eb4835ff82d51611bf64b1221f9",
+  "config_sha256": "2e84f45cf1dac8c7fcbb200e96667d4b913275690668ed496f24c7747207a809",
+  "head_dim": 512,
+  "scale_fp32_hex": "3d3504f3",
+  "H": 16,
+  "T": [
+    128,
+    640
+  ],
+  "arith": "Actual hgi_sim.machine.u_su_vop SFU_EXP and RED_SUM from Machine; no replacement polynomial",
+  "VM_fixture_word_bases": {
+    "SC": 0,
+    "MB": 1024,
+    "E": 2048,
+    "SE": 4096,
+    "EB": 8192
+  },
+  "native_allocation": false,
+  "output_sha256": {
+    "SE128.hex": "e5894b408be467c364e0df8ec48bec0c2b1be11c4348c8d0e71ca4a761d57ae8",
+    "SC640.hex": "ca10973aafe3eb14e4c0b9105a1c15ab94de4c98de7474c326367c986d07feb2",
+    "EB128.hex": "6f28bf0a019c2c9e143a641c0ed5c7abba124a2ff2dbc3b7bf461627b4da04b3",
+    "EB640.hex": "edfbd4e27ea5b71c00200d44d91a85c2780e2745f6946e22535bcf369b622941",
+    "SC128.hex": "8a8f2a940397e0634e84f7e3f19a8e2582826ca4ec8dd7d62b6fcdabc112d3b0",
+    "E128.hex": "665a5c960566f7b47e34fd7de3d3228f3dc5a424b6be540ece4008bae45d4d9a",
+    "MB640.hex": "4cf919f5f3a0c872ec7c551d01a5a6fdbcdebd23160bf88d0ba7a374b1fdc424",
+    "SE640.hex": "e5894b408be467c364e0df8ec48bec0c2b1be11c4348c8d0e71ca4a761d57ae8",
+    "MB128.hex": "44cfac6e803b4e72e799cbe117d6cdc972d2452a23bbb9ad2a128d2c8a793dd6",
+    "E640.hex": "7098d4e5f0387d9b883b716b282a9fb72338e47c87a419c9e5338e444c4e1f3c"
+  },
+  "source_sha256": {
+    "tools/hgi_sim/machine.py": "3afa99805a7ca0fdf0a006f84b73802f074646599f5046a23a1a8cd2e7788877",
+    "tools/hgi_sim/lib.py": "e7d93d2e27664b4a867569fd6f9c36b83993fcae4dbd7c8cddcbd5037b0f14ca",
+    "tools/hdc_golden.py": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6",
+    "tools/hgi_sim/ds_native.py": "127598c96f67e21e3de6a176d4749bc30b2a45ba17675c7ee5a1b91ff57558ad",
+    "tools/hbm_static_attention/prepare_native_P_fixture.py": "10940967383fdab31ae98be1a8432dff6913894161cfb41d29f2118f83d62030"
+  },
+  "generator_source_commit": "adf0ef9d5"
+}

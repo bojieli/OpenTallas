@@ -1,0 +1,86 @@
+{
+ "schema": "opentallas.ref_tile.floorplan.v1",
+ "name": "s81net_l2r_vc_84x1__hs_c4_svcj",
+ "top": "dsfd_l2r_vc_84x1__hs_c4_svcj",
+ "kind": "tile",
+ "die": [
+  0,
+  0,
+  30.24,
+  30.24
+ ],
+ "core": [
+  2.16,
+  2.16,
+  28.08,
+  28.08
+ ],
+ "why": "spec outline (exact: the closed view's sub-slot)",
+ "std_area_um2": null,
+ "layer_contract": {
+  "children": {},
+  "pg_layer": "M5",
+  "rlayers": [
+   "M2",
+   "M5"
+  ],
+  "strap_layer": "M6",
+  "layer_cap": "M5",
+  "cap_basis": "contract"
+ },
+ "pins": {
+  "N": [
+   "st"
+  ],
+  "S": [
+   "ck",
+   "cks",
+   "i",
+   "rs",
+   "rss"
+  ],
+  "W": [
+   "fo",
+   "od"
+  ]
+ },
+ "clock_port": "ck",
+ "blocks": [],
+ "findings": [],
+ "referenced": [
+  "rtl/dsrom_sys/s81_die_bind/ot_s81_static_lane_cross.sv",
+  "rtl/dsrom_sys/s81_static_net/ot_s81_static_lane_end.sv",
+  "rtl/dsrom_sys/s81_static_net/ot_s81_static_ratio_cross.sv",
+  "rtl/dsrom_sys/s81_static_net/gen/dsfd_l2r_vc_84x1__hs_c4_svcj.sv",
+  "physical/s81_static_net/hend/dsfd_l2r_vc_84x1__hs_c4_svcj_boundary.tcl",
+  "physical/ref_tile/s81net_l2r_vc_84x1__hs_c4_svcj/kit.env",
+  "physical/ref_tile/s81net_l2r_vc_84x1__hs_c4_svcj/clock.sdc",
+  "physical/ref_tile/s81net_l2r_vc_84x1__hs_c4_svcj/signoff.sdc",
+  "physical/ref_tile/s81net_l2r_vc_84x1__hs_c4_svcj/pdn.tcl",
+  "physical/ref_tile/s81net_l2r_vc_84x1__hs_c4_svcj/pre_cts.tcl",
+  "physical/ref_tile/s81net_l2r_vc_84x1__hs_c4_svcj/post_cts.tcl",
+  "physical/ref_tile/s81net_l2r_vc_84x1__hs_c4_svcj/post_grt.tcl",
+  "physical/ref_tile/s81net_l2r_vc_84x1__hs_c4_svcj/pre_drt.tcl",
+  "physical/ref_tile/s81net_l2r_vc_84x1__hs_c4_svcj/pre_fill.tcl",
+  "physical/ref_tile/s81net_l2r_vc_84x1__hs_c4_svcj/post_fill.tcl",
+  "physical/ref_tile/s81net_l2r_vc_84x1__hs_c4_svcj/pre_grt.tcl",
+  "physical/ref_tile/s81net_l2r_vc_84x1__hs_c4_svcj/post_drt.tcl",
+  "tools/ref_tile/ref_route.sh",
+  "physical/qwen_die_masters/io_ref_skew.sdc",
+  "physical/qwen_die_masters/io_plain.sdc",
+  "physical/qwen_die_masters/repair_budget.tcl",
+  "physical/qwen_die_masters/pre_cts_skew.tcl",
+  "physical/qwen_die_masters/pre_ref_skew.tcl",
+  "physical/qwen_die_masters/post_plain.tcl",
+  "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
+  "physical/common_flow/grt_macro_top_layer.tcl",
+  "physical/s81_die_pins/snet_gen19b/dsfd_l2r_vc_84x1__hs_c4_svcj.tcl",
+  "physical/qwen_die_masters/io_flop_at_pins.tcl",
+  "physical/qwen_die_masters/out_flop_release.tcl",
+  "physical/dsrom_window_source/leaf_inhold.tcl",
+  "physical/dsrom_window_source/leaf_inhold_release.tcl",
+  "physical/ref_tile/s81net_l2r_vc_84x1__hs_c4_svcj/pre_gpl.tcl",
+  "physical/ref_tile/s81net_l2r_vc_84x1__hs_c4_svcj/pre_dpl.tcl",
+  "physical/common_flow/pin_reg_split.tcl"
+ ]
+}

@@ -66,6 +66,32 @@ def abacus(groups, lo, hi):
     return out
 
 
+def pack_face(rows, lo, hi, reorder):
+    """rows (in base position order, each dict(width, desired, w, anchored)) -> new starts.
+    Anchored rows (pins without a data edge: clock/reset/exempt) are IMMOVABLE obstacles at their base start
+    (= desired): movable rows are packed (abacus) only inside the free interval between their neighbouring anchors
+    and never cross one; --reorder permutes rows inside one interval only.  (GEO-S 2026-10-15: the earlier version
+    let abacus clusters drag anchored rows while their pins stayed put, so moved slices could land on them.)"""
+    out = [None] * len(rows)
+    seg, left = [], lo
+    def flush(right):
+        if not seg:
+            return
+        idx = sorted(seg, key=lambda i: rows[i]['desired']) if reorder else list(seg)
+        new = abacus([rows[i] for i in idx], left, right)
+        for i, x in zip(idx, new):
+            out[i] = x
+    for i, r in enumerate(rows):
+        if r.get('anchored'):
+            flush(r['desired'])
+            out[i] = r['desired']
+            seg, left = [], r['desired'] + r['width']
+        else:
+            seg.append(i)
+    flush(hi)
+    return out
+
+
 def run(plan_path, lef_path, out_path, iters, only=None):
     plan = json.loads(G.read(plan_path))
     hubs = {r[0] for r in plan['insts'] if len(r) > 7 and r[7] == 'hub'}
@@ -145,11 +171,8 @@ def run(plan_path, lef_path, out_path, iters, only=None):
                     w = sum(s['w'] for s in g['m'])
                     t = 0.0 if anchored else sum(s['w'] * s['t'] for s in g['m']) / w
                     rows.append(dict(start=g['lo0'], width=g['hi0'] - g['lo0'], desired=g['lo0'] + t,
-                                     w=ANCHOR_W if anchored else w))
-                if REORDER:                                # permit slice-order swaps: pack in desired order
-                    order = sorted(range(len(rows)), key=lambda i: rows[i]['desired'])
-                    rows = [rows[i] for i in order]; groups = [groups[i] for i in order]
-                new = abacus(rows, flo, fhi)
+                                     w=ANCHOR_W if anchored else w, anchored=anchored))
+                new = pack_face(rows, flo, fhi, REORDER)    # anchors immovable; reorder within anchor intervals
                 for g, x in zip(groups, new):
                     for s in g['m']:
                         if s['port'] is not None:

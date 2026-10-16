@@ -57,6 +57,14 @@ SLICE_WORDS = 1 << 16
 # (h_hc_sfu 1a291c29e); exp / sigmoid / SiLU / divider in the 32 SFU lanes are RTL depths, not yet benched at N512.
 # Exit-order (checkpoint) rule of the insertion lines: an issue may not leave the pipe before the issue before it.
 SFU_LANES_PER_Q, SIDE_FNS = 32, (2, 3, 6, 7)
+SW_ONLY_READERS = ('IDX',)                        # units whose VM face reads only SID 0 (SW)
+# BALANCED TAIL (H-ELEM-B 10-15, DS T640): a row longer than 512 positions whose last block is partial (640 = 512 + 128)
+# issues that tail block on TAIL/4 lanes of EVERY quarter (tail position 512k + (TAIL/4) q + j -> lane 128 q + j) instead
+# of the first TAIL lanes (all on quarter 0). Per-quarter lane bases are affine (base + q * TAIL/4), the SFU sub-issue
+# walk already covers 32 lanes per quarter, and the reducer is scratch-addressed, so the golden reduction order is
+# unchanged; the SM side gets 160/160/160/160 KV rows per quadrant instead of 256/128/128/128.
+BALANCED_TAIL = False
+DS_LAYER = 0
 
 
 def depths(mlat=3, alat=3):
@@ -70,7 +78,7 @@ def depths(mlat=3, alat=3):
 DEPTHS = depths()
 
 
-def accesses(raw, rot=0):
+def accesses(raw, rot=0, pin0=False):
     """Per issue, per quarter: read words (with role) and elementwise-written words; reduction words."""
     dispatch, unit, sut, desc = decode(raw)
     ni, no = dispatch['n'][0], desc['A'].m
@@ -103,14 +111,23 @@ def accesses(raw, rot=0):
     # a LIGHT issue covers 512 positions (128 per quarter); an SFU/divider issue covers the 32 SFU lanes of each
     # quarter, i.e. sub-issue s of the same 512-position block takes positions 128q + 32s + j (same per-quarter VM
     # layout as the LIGHT records around it); a scalar-side issue is one position on global lane 0.
-    subs = 512 if side else 4 if cls == 'sfu' else 1
+    # pin0: the record's output is read by a unit that sees ONLY the SW slice (IDX, H-IDX 40e9f801e): the whole
+    # record runs on quarter 0 (SID 0 = SW), 128 positions (32 for SFU ops) per issue, so its output lands in SW.
+    if side:
+        subs = list(range(512))
+    else:
+        subs = [(a, c) for a in (range(4) if pin0 else [None]) for c in (range(4) if cls == 'sfu' else [None])]
     for outer, inner in positions:
-      for sub in range(subs):
+      for sub in subs:
         q_reads = [[] for _ in range(4)]
         q_writes = [[] for _ in range(4)]
         rows = set()
         for lane in range(512):
-            if (side and lane != sub) or (cls == 'sfu' and (lane % 128) // SFU_LANES_PER_Q != sub):
+            if side:
+                if lane != sub:
+                    continue
+            elif (sub[0] is not None and lane // 128 != sub[0]) or \
+                    (sub[1] is not None and (lane % 128) // SFU_LANES_PER_Q != sub[1]):
                 continue
             if ni <= 512:
                 o, i = outer + lane // slot, lane % slot
@@ -118,9 +135,15 @@ def accesses(raw, rot=0):
                     continue
             else:
                 o, i = outer, inner + lane
+                tail = ni - inner
+                if BALANCED_TAIL and tail < 512 and tail % 4 == 0:
+                    tq = tail // 4
+                    if lane % 128 >= tq:
+                        continue
+                    i = inner + (lane // 128) * tq + lane % 128
                 if i >= ni:
                     continue
-            q = 0 if side else (lane // 128 + rot) % 4   # compiler-chosen executing quarter (rotation)
+            q = 0 if (side or pin0) else (lane // 128 + rot) % 4   # compiler-chosen executing quarter (rotation)
             plane = 0 if side else lane % SFU_LANES_PER_Q if cls == 'sfu' else lane % 128   # physical local lane
             rows.add(o)
             for name, md in roles.items():
@@ -146,7 +169,7 @@ def accesses(raw, rot=0):
         if not 0 <= w < 1 << 18:
             raise ValueError('tensor exceeds real 2^18-word store')
     return dict(unit=unit, ni=ni, no=no, slot=slot, red=bool(sut['red']), sut=sut, issues=issues, red_words=red, rot=rot,
-                cls=cls, lat=lat)
+                cls=cls, lat=lat, pin0=pin0)
 
 
 def canonical_trace(design, ds_program):
@@ -161,7 +184,7 @@ def canonical_trace(design, ds_program):
         from hgi_sim.records import decode_one
         dd = json.loads(Path(ds_program).read_text())
         recs = []
-        for x in dd['layers'][0]['records']:
+        for x in dd['layers'][DS_LAYER]['records']:
             r, _ = decode_one(bytes.fromhex(x['hex']), 0)
             r.tag = x['tag']
             recs.append(r)
@@ -198,11 +221,18 @@ def compile_design(vectors, trace):
     cases = manifest['cases']
     # quarter rotation: each record runs on the quarters that already hold the words it reads (greedy, program
     # order); e.g. a 64-element rope tail of a 512-element norm output runs on quarter 3, where the norm wrote it.
+    # words read by a unit that sees only the SW slice (SID 0): IDX reads only SW (H-IDX, main 40e9f801e)
+    sw_only = set()
+    for n, (unit, _, _, _) in enumerate(trace):
+        if unit in SW_ONLY_READERS:
+            sw_only |= READS[n]
     recs, owner = [], {}
     for b in raw:
+        probe = accesses(b, 0)
+        pin0 = any(w in sw_only for iss in probe['issues'] for q in range(4) for w in iss['writes'][q])
         best = None
-        for rot in range(4):
-            cand = accesses(b, rot)
+        for rot in ([0] if pin0 else range(4)):
+            cand = accesses(b, rot, pin0)
             score = sum(1 for iss in cand['issues'] for q in range(4) for _, _, w in iss['reads'][q] if owner.get(w) == q)
             if best is None or score > best[0]:
                 best = (score, cand)
@@ -243,7 +273,12 @@ def compile_design(vectors, trace):
     home = {}
     for w in set(readq) | set(writeq) | redw:
         h = readq[w] | writeq[w]
+        if w in sw_only:
+            h = h | {0}                               # an SW-only external reader needs the SID 0 copy
         home[w] = sorted(h) if h else [0]            # a reduction result nobody in the SU reads: root slice 0
+    sw_conflict = sorted(w for w in sw_only & set(writeq) if 0 not in writeq[w] and w not in bcast_out)
+    if sw_conflict:
+        raise SystemExit(f'{len(sw_conflict)} SW-only words written outside quarter 0')
     # ---- per-slice packing in logical order, new sector at each logical run break
     phys = defaultdict(dict)                          # w -> {q: physical word in slice q}
     used = [0] * 4
@@ -419,7 +454,7 @@ def compile_design(vectors, trace):
         own = end - first
         inc = end - t_end if adjacent[k] else own
         t_end = max(t_end, end)
-        rows.append(dict(tag=cases[k]['tag'], priced=cases[k]['priced'], issues=len(r['issues']), lane_class=r['cls'],
+        rows.append(dict(tag=cases[k]['tag'], priced=cases[k]['priced'], issues=len(r['issues']), lane_class=r['cls'], pinned_sw=r['pin0'],
                          issue_to_local_store=r['lat'],
                          stage_sectors=nread, drain_sectors=nwrite, reused_words=reuse_words, elided_drain_words=elided,
                          adjacent_to_predecessor=adjacent[k], first_edge=first, end_edge=end, own_edges=own,
@@ -598,12 +633,16 @@ def main():
     ap.add_argument('--vehicle', help='write the RTL vehicle images with this path stem')
     ap.add_argument('--mlat', type=int, choices=[3, 4], default=3, help='lane multiplier latency build (3 baseline, 4 = LAT4)')
     ap.add_argument('--map', type=Path, help='write the per-quarter address map hand-off (h_vm allocator + producers)')
+    ap.add_argument('--ds-layer', type=int, default=0, help='DeepSeek program layer (0 T128 window; 3 T640 sparse)')
+    ap.add_argument('--balanced-tail', action='store_true', help='issue a partial last 512-block on TAIL/4 lanes of every quarter')
     a = ap.parse_args()
+    global BALANCED_TAIL, DS_LAYER
+    BALANCED_TAIL, DS_LAYER = a.balanced_tail, a.ds_layer
     DEPTHS.update(depths(a.mlat))
     trace = canonical_trace(a.design, a.ds_program)
     res = compile_design(a.vectors, trace)
     report = dict(schema='opentallas.hbm.su_f2_spread.v1', tool='tools/hbm_static/su_f2_spread.py',
-                  design=a.design, qualification=False,
+                  design=a.design, qualification=False, ds_layer=a.ds_layer, balanced_tail=a.balanced_tail,
                   kind='compiler placement + static transport calendar; transport re-executed on RTL by the vehicle',
                   constants=dict(VM_RD=VM_RD, VM_WR=VM_WR, LS_WR=LS_WR, LS_RD=LS_RD, ARITH=DEPTHS['arith'], RED_DEP=RED_DEP,
                                  MLAT=a.mlat, ALAT=3, DIV_EXTRA=DEPTHS['div_extra'], S_DEPTH=DEPTHS['s'],

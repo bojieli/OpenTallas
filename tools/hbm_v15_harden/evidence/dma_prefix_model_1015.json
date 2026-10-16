@@ -1,0 +1,17 @@
+{
+ "schema": "opentallas.uarch.local_structural_change.v1",
+ "top": "ot_hgi_dma_back_static_vp4_controller",
+ "reason": "vp4 actual CTS repeated setup -56.675 ps / 599 endpoints, worst pending_sectors D, two serial 32-bit add/sub carry chains",
+ "structural_change": "32-bit carry-save 3:2 compression then five-level parallel-prefix sum with explicit subtract carry-in",
+ "added_flops": 0,
+ "added_sram": 0,
+ "added_cycles": 0,
+ "external_bits_per_cycle": "unchanged",
+ "clock_period_ps": 833.333,
+ "compiler_calendar": "unchanged DESC_LAT4, absolute issue/drain/data/fence edges identical",
+ "prior_mapped_sink_count": 2859,
+ "area_and_timing": "new mapped synthesis and physical gate required; prefix logic may increase local combinational area",
+ "arithmetic_checks": 32896,
+ "carry_in_mutant_errors": 32896,
+ "qualification": "local arithmetic proof plus actual full-controller/32VM/128SRAM production bench; no routed/native whole die claim"
+}

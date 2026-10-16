@@ -20,6 +20,9 @@ physical/asap7_memory_macros_v2/ot_rom_4096x72_m8/ot_rom_4096x72_m8.v
 # WFC stage kit: the hardened cluster of the PRICED kit (dsfd_wfc_stg_cl) under the die master name, with the hop
 # endpoint (engine 7)
 +define+DSFD_WFC_STG_CL_DIE
+# STATIC die form (S-VM F7 2026-10-15): no t_lir / f_lor grant pins; static RX / TX message buffers, TX on the
+# compiler's reserved edges (last RX arrival + TX_OFF); gate tools/dsrom_wfc_static_bench.py
++define+DSFD_WFC_STG_STATIC
 rtl/dsrom_sys/mtp/dsfd_wfc_stg_cl.sv
 +libdir+physical/s81_ph_views/mtp/macros
 # BF pair (x512): the CLOSED compact199 views under their die names (tools/s81/gen_bf_die_wrappers.py: die bit i = the
@@ -42,6 +45,9 @@ rtl/dsrom_sys/s81_static_control/ot_s81_fixed_mailbox.sv
 # PQ's pinned-only modules come from its pinned tree; the repo copies of the shared float modules are supersets whose
 # default parameters are the pinned behaviour (el1011-q-sp: L = 3 = the original adders), so they serve both.
 +define+OT_PQ_ROM_PORTS
+# S-DIE r2 2026-10-15 (S-ELEM-B dc28161fa): stream ROM = 4 die macros pqrom2a..d (ra2 12 shared, rc2[3:0], rq2[191:0]);
+# select = ot_s81_pq_stream_rom4_sel inside dsfd_sp_pq_n (gates results/rtl/s81_pq_rom4_bind_1015); generator pq_rom4() reads this
++define+DSFD_PQ_ROM4
 rtl/dsrom_sys/s81_die_bind/dsfd_sp_pq_n.sv
 rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_core_native.sv
 rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_ctl_native.sv
@@ -90,3 +96,74 @@ rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_cap_leaf.sv
 rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_cap.sv
 rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_wfc.sv
 rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_xio.sv
+
+# S-BIND 2026-10-15: remaining static VM s2 source closure (tools/s81_vm/static_master_gate.sh file list)
+rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_fsr_bank8.sv
+rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_fsr_quartets.sv
+rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_read_leaf.sv
+rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_read_quartets.sv
+rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_read_valid.sv
+rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_read_valid_quartets.sv
+rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_read_router.sv
+rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_write_capture128.sv
+rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_scatter_b8_out.sv
+rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_scatter_lane.sv
+rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_relay128_b8.sv
+rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_relay128_b4.sv
+rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_w0.sv
+rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_wcontrol.sv
+rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl_pipe.sv
+
+# S-BIND 2026-10-15 --static-coll: static collective die master dsfd_sp_collective_static_c and its closure
+# (physical/s81_static_collective_proposal_1014/fullslab_module_manifest.json on codex/s81-static-collective-1014 @574f05810;
+# all 25 source hashes verified)
+rtl/dsrom_sys/s81_static_collective/dsfd_sp_collective_static_c.sv
+rtl/dsrom_sys/s81_static_collective/s81_static_collective_slab.sv
+rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller.sv
+rtl/dsrom_sys/s81_static_collective/s81_static_fmt1_rank_dynamic_clocked.sv
+rtl/dsrom_sys/s81_static_collective/s81_static_fmt1_core_dynamic.sv
+rtl/dsrom_sys/s81_static_collective/s81_static_fmt1_lane_dynamic.sv
+rtl/dsrom_sys/s81_static_collective/s81_static_fmt1_codec_dynamic.sv
+rtl/dsrom_sys/s81_static_collective/s81_static_tp4_endpoint_dynamic.sv
+rtl/dsrom_sys/s81_static_collective/s81_static_fmt1_gearbox.sv
+rtl/dsrom_sys/s81_static_collective/s81_static_fmt1_channels_clocked.sv
+rtl/dsrom_sys/s81_static_collective/s81_static_raw_fmt1_lane.sv
+rtl/dsrom_sys/s81_static_collective/s81_static_raw_fmt1_codec.sv
+rtl/dsrom_sys/s81_static_collective/s81_static_raw_vm_rows.sv
+rtl/dsrom_sys/s81_ph/coll/dsfd_coll_static_channels.sv
+rtl/dsrom_sys/s81_static_hc/s81_static_hc_reduce.sv
+rtl/dsrom_sys/s81_static_hc/s81_static_hc_assemble.sv
+rtl/dsrom_sys/s81_ph/ot_s81ph_fp32_add_rne_preexp.sv
+rtl/hdc/ot_hdc_prefix.sv
+rtl/link/ot_link_crc32.sv
+physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8.v
+rtl/dsrom_sys/s81_ph/coll/dsfd_coll_ck.sv
+rtl/dsrom_sys/s81_ph/coll/ot_s81ph_ckbuf.sv
+rtl/dsrom_sys/s81_ph/ot_s81ph_coll_rstc.sv
+rtl/dsrom_sys/s81_ph/ot_s81_pll_bb.sv
+rtl/dsrom_sys/s81_static_collective/s81_static_vm_boundary.sv
+# S-BIND r6 2026-10-15: static host face (completion pulses queued for the compiled host tx slot) and the static layer-die
+# host master dsfd_host_c (+DSFD_HOST_C_STATIC: no t_cr / h_crn credit bits, f_collective 515 / t_collective 77, lane
+# faults f_lf); gates tools/s81_static_collective/run_slab_gate.sh, rtl/dsrom_sys/s81_ingest/test/run_host_c_static_gate.sh
+rtl/dsrom_sys/s81_static_collective/s81_static_host_queue.sv
++define+DSFD_HOST_C_STATIC
+rtl/dsrom_sys/s81_ingest/dsfd_host_c.sv
+
+# S-BIND 2026-10-15 --suhc-static-issue: SU / HC endpoints issue on the compiler command edge (no f_inp die pin)
++define+DSFD_SUHC_STATIC_ISSUE
+rtl/dsrom_sys/s81_suhc/dsfd_sp_su_c.sv
+rtl/dsrom_sys/s81_suhc/dsfd_sp_hc_c.sv
+rtl/dsrom_sys/s81_suhc/dsfd_sp_hc.sv
+
+# S-BIND 2026-10-15 --bf-x2-static: one packed static x lane word xw/xe[1100:0] {x2 536 | legacy 564 | v} from the PQ
+# lane encoder (dsfd_pq_lx), column entry ot_s81_static_column_ingress (glue dsfd_cfifo), BF xb from the lane
++define+DSFD_PQ_STATIC_X2
+rtl/dsrom_sys/s81_die_bind/ot_s81_static_lane_cross.sv
+rtl/dsrom_sys/s81_die_bind/ot_s81_static_column_ingress.sv
+
+# S-BIND 2026-10-15 --bf-static-prog: static BF front (compiled programme f_prog 38 + io_clk) and the BF sequencer with
+# the programme producer (descriptor in the cfg ROM spare columns); gates: tools/s81/bf_txn_bench.py --die-pair
+# --static-prog 0 (real BF bench, TXN MATCH, mutants), rtl/v41die/test/run_cfg7_bfp_gate.sh
+rtl/dsrom_sys/s81_die_bind/dsfd_bf_front_static.sv
+rtl/v41die/ot_s81_cfg7_seq_bfp.sv
+rtl/dsrom_sys/s81_die_bind/ot_s81_bf_prog_seq.sv

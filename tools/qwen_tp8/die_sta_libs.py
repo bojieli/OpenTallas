@@ -26,6 +26,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 import qwen_die_element_lib as E   # noqa: E402
 from hier_contract.pinreg_audit import parse_lib, clock_refs
+from die_port_bind import parse_die, expr_bits
 
 HARD = {'ot_hbm3e_phy': 'physical/asap7_memory_macros_v2_ew/ot_hbm3e_phy'}
 PERIOD = dict(stream=833.333, serial=833.333 * 4.0 / 3.0, ucie=833.333, serdes=833.333)
@@ -33,6 +34,8 @@ PERIOD = dict(stream=833.333, serial=833.333 * 4.0 / 3.0, ucie=833.333, serdes=8
 
 def domain(net):
     n = net[2:] if net.startswith('n_') else net
+    if n == 'clk_coll_blk':
+        return 'coll_blk'
     m = re.match(r'clk_hbm_(\w+?)(?:__.*)?$', n)
     if m:
         return 'hclk_' + m.group(1)
@@ -58,24 +61,35 @@ def measured_clock_refs(lib_path, insertion_path, corner):
     return result
 
 
-def assumed_clock_refs(master, ports, physical_ports=None):
+def assumed_clock_refs(master, ports, physical_ports=None, clock_ports=None):
     """Use the exact generated Liberty/LEF names, including one-bit buses.
 
     The die Verilog connects .ck(net), but a generated LEF may expose ck[0].
     E.write_lib deliberately preserves that spelling; clock delivery must too.
     """
+    selected = [p for p in ports if p in E.CLOCKS or p in (clock_ports or {}).get(master, ())]
     if physical_ports is not None:
-        missing=[p for p in ports if p in E.CLOCKS and p not in physical_ports]
+        missing=[p for p in selected if p not in physical_ports]
         if missing:
             raise ValueError(f'{master}: clock inputs missing from generated physical LEF: {missing}')
-    return {(f'{p}[0]' if (master, p) in E.IDX else p): 0.0
-            for p in ports if p in E.CLOCKS}
+    refs = {}
+    for p in selected:
+        width = (physical_ports or {}).get(p, 1)
+        for k in range(width):
+            refs[f'{p}[{k}]' if width > 1 or (master, p) in E.IDX else p] = 0.0
+    return refs
 
 
-def clock_tcl(doms, leaves, corner):
+def clock_tcl(doms, leaves, corner, periods=None, related_domains=()):
     # Each domain has related shallow / earlier-tap clock objects. Separate
     # domains remain asynchronous; no exception is created between levels.
     # Source latency shifts the boundary while propagated ETMs retain insertion.
+    if periods is not None:
+        missing = set(doms) - set(periods)
+        if missing:
+            raise ValueError(f'missing source clock periods: {sorted(missing)}')
+        if any(not math.isfinite(periods[d]) or periods[d] <= 0 for d in doms):
+            raise ValueError('invalid source clock period')
     lines = ['# DOMS ' + ' '.join(sorted(doms)), '# INSERTION_COMPENSATED ' + corner,
              '# OWNER_CLOCK_BUDGET v1', 'set_cmd_units -time ps', 'set ot_clock_bound 0']
     domain_clocks = {}
@@ -93,7 +107,7 @@ def clock_tcl(doms, leaves, corner):
                 lines += [f'set p [get_pins -quiet {{{pin}}}]',
                           f'if {{[llength $p] != 1}} {{ error "clock boundary pin missing or ambiguous: {pin}" }}',
                           'lappend ot_pins [lindex $p 0]']
-            lines.append(f'create_clock -name {name} -period {PERIOD.get(d, 1024.0):.6f} $ot_pins')
+            lines.append(f'create_clock -name {name} -period {(periods[d] if periods is not None else PERIOD.get(d, 1024.0)):.6f} $ot_pins')
             for pin, master, libpin in group:
                 r = leaves[master][corner][libpin]
                 lines += [f'set_clock_latency -source -clock [get_clocks {name}] {-r:.6f} [get_pins {{{pin}}}]',
@@ -106,12 +120,61 @@ def clock_tcl(doms, leaves, corner):
                 lines += [f'# BUDGET {lname} -> {cname}: setup 60 + skew {skew:g} ps; hold H1 100 ps',
                           f'set_clock_uncertainty -setup {60.0 + skew:.6f} -from [get_clocks {lname}] -to [get_clocks {cname}]',
                           f'set_clock_uncertainty -hold 100.000000 -from [get_clocks {lname}] -to [get_clocks {cname}]']
-    if len(domain_clocks) > 1:
+    # Preserve every relation explicitly declared by the source programme.
+    # An asynchronous group is permitted only between independent groups.
+    groups = []
+    remaining = set(domain_clocks)
+    for related in related_domains:
+        ds = remaining.intersection(related)
+        if ds:
+            groups.append(sorted(ds))
+            remaining -= ds
+    groups.extend([d] for d in sorted(remaining))
+    for group in groups:
+        for launch in group:
+            for capture in group:
+                if launch == capture:
+                    continue
+                for lname in domain_clocks[launch]:
+                    for cname in domain_clocks[capture]:
+                        skew = 150.0 if lname.endswith('__early') or cname.endswith('__early') else 90.0
+                        lines += [f'set_clock_uncertainty -setup {60+skew:.6f} -from [get_clocks {lname}] -to [get_clocks {cname}]',
+                                  f'set_clock_uncertainty -hold 100.000000 -from [get_clocks {lname}] -to [get_clocks {cname}]']
+    if len(groups) > 1:
         lines.append('set_clock_groups -asynchronous ' + ' '.join(
-            '-group [get_clocks {' + ' '.join(names) + '}]' for names in domain_clocks.values()))
+            '-group [get_clocks {' + ' '.join(name for d in group for name in domain_clocks[d]) + '}]' for group in groups))
     lines += ['set_propagated_clock [all_clocks]',
               f'puts "OT_COMPENSATED_CLOCK corner={corner} bound=$ot_clock_bound"']
     return '\n'.join(lines) + '\n'
+
+
+def clock_connections(path, dirs, leaves, clock_ports=None):
+    """Resolve scalar and concatenated vector clock nets at actual physical bits."""
+    nets, _, _, instances = parse_die(path)
+    drivers, sinks, pins = {}, set(), {}
+    for master, inst, _, connections in instances:
+        for port, expression in connections.items():
+            refs = leaves.get(master, {}).get('tt', {})
+            hits = [p for p in refs if re.sub(r'\[\d+\]$', '', p) == port]
+            is_clock = port in E.CLOCKS or port in (clock_ports or {}).get(master, ()) or hits
+            bits = expr_bits(expression, nets)
+            if is_clock:
+                if not bits or any(net in ('CONST', 'Z', 'UNDECL') for net, _ in bits):
+                    raise ValueError(f'{inst}/{port}: missing or non-net clock connection')
+                if len(hits) != len(bits):
+                    raise ValueError(f'{inst}/{port}: {len(bits)} connected clock bits but {len(hits)} physical clock references')
+                for pin in hits:
+                    match = re.search(r'\[(\d+)\]$', pin)
+                    k = int(match.group(1)) if match else 0
+                    net, bit = bits[len(bits)-1-k]
+                    if nets[net][0] != 1 or bit != 0:
+                        raise ValueError(f'{inst}/{pin}: clock trunk must be a scalar declared net')
+                    sinks.add(net)
+                    pins.setdefault(net, []).append((inst, master, pin))
+            elif dirs.get(master, {}).get(port) == 'output' and port.startswith('pll'):
+                if bits and len(bits) == 1 and bits[0][0] in nets:
+                    drivers.setdefault(bits[0][0], []).append(f'{inst}/{port}')
+    return drivers, sinks, pins
 
 
 def main():
@@ -125,6 +188,11 @@ def main():
     out.mkdir(parents=True, exist_ok=True)
     bind = json.loads(Path(a.bind).read_text())
     dirs = json.loads((case / 'port_dirs.json').read_text())
+    contract_path = case / 'clock_contract.json'
+    contract = json.loads(contract_path.read_text()) if contract_path.exists() else {}
+    declared_clocks = contract.get('clock_ports', {})
+    if 'qfd_collective_static_io_production' in dirs and not contract:
+        raise ValueError('static production collective requires a source clock contract; legacy clock inference is incomplete')
     views = dict(real={}, hard_macro={}, assumed=[])
     skip = set()
     leaves = {}
@@ -138,6 +206,16 @@ def main():
         vd = vd if vd.is_absolute() else root / vd
         if set(libs) != {'tt', 'ff', 'ss'}:
             raise ValueError(f'{mst}: real view requires actual TT, FF, SS Liberty, got {sorted(libs)}')
+        sheet = vd / f'{mst}.json'
+        if sheet.exists() and str(json.loads(sheet.read_text()).get('schema', '')).startswith(
+                'opentallas.qwen-missing.link-phy-abstract'):
+            # licensed link-PHY hard macro (tools/qwen_missing/link_phy_gen.py): its Liberty IS the boundary model
+            # (registered FDI pins, ASSUMED timing); there is no routed clock tree to measure, as for HARD
+            for c, rel in libs.items():
+                shutil.copy(root / rel, out / f'qfd_etm_{mst}_{c}.lib')
+            views['hard_macro'][mst] = str(r['view'])
+            skip.add(mst)
+            continue
         leaves[mst] = {c: measured_clock_refs(root / libs[c], vd / 'insertion.json', c) for c in ('tt', 'ff', 'ss')}
         for c, rel in libs.items():
             shutil.copy(root / rel, out / f'qfd_etm_{mst}_{c}.lib')
@@ -158,51 +236,35 @@ def main():
     lef = {k: q for k, q in lef.items() if k not in skip}
     stubs = {mst: {p: [d, 0, set()] for p, d in ports.items()} for mst, ports in dirs.items()}
     for corner in ('tt', 'ff', 'ss'):
-        E.write_lib(corner, lef, stubs, out / f'qfd_elements_{corner}.lib')
+        E.write_lib(corner, lef, stubs, out / f'qfd_elements_{corner}.lib', clock_ports=declared_clocks)
     views['assumed'] = sorted(lef)
     views['assumed_clock_insertion'] = {m: 'ideal zero-insertion assumption, no measured boundary evidence'
                                        for m in dirs if m not in leaves}
-    # ---- clock sources: the output pins that drive a net with a clock pin on it
-    txt = (case / 'die.v').read_text()
-    drv, sinks, sink_pins = {}, set(), {}
-    for m in re.finditer(r'^\s+(\w+) (\S+) \((.*?)\);', txt, re.M):
-        mst, inst, body = m.group(1), m.group(2), m.group(3)
-        if mst in ('wire', 'module'):
-            continue
-        for p in re.finditer(r'\.(\S+?)\(([^(){}]*)\)', body):
-            port, net = p.group(1).lstrip('\\').strip(), p.group(2).strip()
-            if not net or "'" in net:
-                continue
-            real_clocks = leaves.get(mst, {}).get('tt', {})
-            if port in E.CLOCKS or any(re.sub(r'\[\d+\]$', '', p) == port for p in real_clocks):
-                sinks.add(net)
-                sink_pins.setdefault(net, []).append((inst, mst, port))
-            elif dirs.get(mst, {}).get(port) == 'output' and (port.startswith('pll') or net.startswith('n_clk')):
-                drv.setdefault(net, []).append(f'{inst}/{port}')
+    # All source-declared clocks, including vector ports, require one actual
+    # physical reference per connected bit before any STA can be launched.
+    for mst, ports in dirs.items():
+        if mst not in leaves:
+            leaves[mst] = {c: assumed_clock_refs(mst, ports, all_physical_ports.get(mst, {}), declared_clocks)
+                           for c in ('tt', 'ff', 'ss')}
+    drv, sinks, sink_pins = clock_connections(case / 'die.v', dirs, leaves, declared_clocks)
     doms = {}
     for net in sorted(sinks):
         for pin in drv.get(net, []):
             doms.setdefault(domain(net), []).append(pin)
     undriven = sorted(n for n in sinks if n not in drv)
-    # Unbound generated elements remain explicit ideal single-flop assumptions.
-    # Bound views are never assigned zero insertion when evidence is missing.
-    for mst, ports in dirs.items():
-        if mst not in leaves:
-            leaves[mst] = {c: assumed_clock_refs(mst, ports, all_physical_ports.get(mst, {})) for c in ('tt', 'ff', 'ss')}
     leaf_doms = {}
     for net in sorted(sinks):
-        for inst, mst, port in sink_pins[net]:
-            refs = leaves.get(mst, {}).get('tt', {})
-            hits = [p for p in refs if p == port or re.sub(r'\[\d+\]$', '', p) == port]
-            if not hits:
-                raise ValueError(f'{inst}/{port}: no Liberty clock pin / boundary reference for {mst}')
-            for pin in hits:
-                leaf_doms.setdefault(domain(net), []).append((f'{inst}/{pin}', mst, pin))
+        for inst, mst, pin in sink_pins[net]:
+            leaf_doms.setdefault(domain(net), []).append((f'{inst}/{pin}', mst, pin))
+    if contract and undriven:
+        raise ValueError(f'source-declared clock nets without drivers: {undriven}')
+    periods = contract.get('periods_ps')
+    related = contract.get('related_domains', ())
     for c in ('tt', 'ff', 'ss'):
-        (out / f'clocks_{c}.tcl').write_text(clock_tcl(leaf_doms, leaves, c))
+        (out / f'clocks_{c}.tcl').write_text(clock_tcl(leaf_doms, leaves, c, periods, related))
     # Existing callers naming clocks.tcl are redirected by sta_tcl.py per corner.
-    (out / 'clocks.tcl').write_text(clock_tcl(leaf_doms, leaves, 'tt'))
-    views.update(schema='opentallas.qwen-tp8.die-sta-libs.v1', clocks={d: len(p) for d, p in leaf_doms.items()},
+    (out / 'clocks.tcl').write_text(clock_tcl(leaf_doms, leaves, 'tt', periods, related))
+    views.update(source_clock_contract=contract, schema='opentallas.qwen-tp8.die-sta-libs.v1', clocks={d: len(p) for d, p in leaf_doms.items()},
                  clock_source_drivers={d: len(set(p)) for d, p in doms.items()},
                  clock_nets=len(sinks), clock_nets_without_driver=undriven[:40],
                  clock_delivery='phi - measured boundary mean, per corner; ideal planned delivery at leaf pins',
