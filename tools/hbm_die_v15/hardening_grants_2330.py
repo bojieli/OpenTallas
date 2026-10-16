@@ -86,7 +86,7 @@ def main():
     for q in ('SW', 'SE', 'NW', 'NE'):
         name = 'calendar_' + q
         reserved = plan['vmh_' + q]
-        w, h = 220.32, 177.12
+        w, h = 220.32, 116.64
         # Dedicated lower-left home inside the existing VM-hub planning box;
         # other hub children are still unplaced and must fit around this home.
         x = reserved['x'] + 20
@@ -106,7 +106,8 @@ def main():
             signal_max_layer='M5', layer_cap='M5', params={},
             clock_entry=dict(port='clk', face='W', layer='M4'), pins=[],
             planning_group='vmh_' + q, qualified=False,
-            notes='Source universal W187; candidate slot only. Fresh view, host '
+            notes='Source universal W187; compact candidate slot only (174.744x70.488 SRAM, '
+                'at least20um edge channels, target51.9% total fill). Fresh view, host '
                 'programming, complete hub packing, incident pin hops and native '
                 'die timing remain OPEN. Universal output low slices are explicit in consumers.')
         assert x + w + 20 <= reserved['x'] + reserved['w']
