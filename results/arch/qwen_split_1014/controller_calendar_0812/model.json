@@ -33,5 +33,31 @@
   "qualification": "component only; native controller JEDEC+write+refresh and full36 event image remain open",
   "calendar_measured_synth_area_um2": 1431,
   "calendar_measured_source_flops": 2099,
-  "calendar_expected_utilization": 0.49791065416065416
+  "calendar_expected_utilization": 0.49791065416065416,
+  "controller_e1_measured_std_area_um2": 13062.7,
+  "controller_e1_observed_setup_stall_ps": -183.091,
+  "controller_e2_outline_um": [
+    129.6,
+    216
+  ],
+  "controller_e2_estimated_core_utilization": 0.49257388317892786,
+  "drain_pipe_export_extra_edges": 2,
+  "drain_pipe_extra_state_bits": 6,
+  "drain_pipe_traffic_latency_delta": 0,
+  "controller_e2_area_mm2_die": 3.5831807999999996,
+  "paired_group_proposal": {
+    "calendar": [
+      30.24,
+      244.08,
+      64.8,
+      51.84
+    ],
+    "controller": [
+      116.64,
+      162,
+      129.6,
+      216
+    ],
+    "scope": "local slot dimension/home proposal only; requires actual pins/nativepair/wholegraph allocator"
+  }
 }

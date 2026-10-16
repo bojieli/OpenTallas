@@ -18,6 +18,7 @@ def prepare(out):
     p=out/'source/rtl/test/qwen_static_kv/tb_kv_hbm_elastic_boundary.sv'
     text=p.read_text().replace('wire predicted_raw,predicted_corrected;',
       'wire [1:0] idle_core,idle_hbm,drain_fault_core,drain_fault_hbm;\n wire predicted_raw,predicted_corrected;')
+    text=text.replace('qkd_ctrl_pc_host_static #(', 'qkd_ctrl_pc_host_static #(.DRAIN_PIPE(1),')
     text=text.replace('.completion_fault(cf[g]));',
       '.completion_fault(cf[g]),.idle_core(idle_core[g]),.idle_hbm(idle_hbm[g]),.drain_fault_core(drain_fault_core[g]),.drain_fault_hbm(drain_fault_hbm[g]));')
     # Independent boundary scoreboard: external accepted descriptors, physical
@@ -58,7 +59,7 @@ def execute(out):
     sources=[str(p) for p in sorted((out/'source').rglob('*.sv'))]
     variants={'production':good,
       'missing_host_read_debt':good.replace('drain_desc==0&&drain_reads==0&&drain_credits==0','drain_desc==0&&drain_credits==0'),
-      'missing_kv_debt':good.replace('ctl_phase_idle&&t_empty&&raw_out==0&&drain_kv==0','ctl_phase_idle')}
+      'missing_kv_debt':good.replace('ctl_phase_idle&&t_empty&&raw_out==0&&drain_kv==0','ctl_phase_idle').replace('hgo&&ctl_phase_idle&&t_empty&&hbm_debt_zero_q&&\n          (&hbm_quiet_q)&&!hbm_drain_activity','hgo&&ctl_phase_idle')}
     receipt={'scope':'COMPONENT_ONLY actual controller, pcport/ECC, front and ring; die bind/adoption remains OPEN','cases':[]}
     for name,source in variants.items():
       controller.write_text(source)
