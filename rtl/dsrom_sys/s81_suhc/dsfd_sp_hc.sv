@@ -26,8 +26,7 @@ module dsfd_sp_hc #(
     // unchanged); 1 = half-octets ot_s81_hc_cth_nt + the bottom region ot_s81_hc_cnbot (HIER, HALF, TAIL_SPLIT 0 / 2).
     // NT_K: the bottom collectors' fire offset after the vector beat leaves the far tile (cycles).
     // RETCOL (HC-COLUMN 10-16, NTREE only): half-octets ot_s81_hc_cth_ntc = four-column return + per-column ctrn_col
-    // slices, the chain carried as per-column bundles inside the slab (ports unchanged); the chain start takes one
-    // entry register so every row's shifted engine (y-beat stage) stays aligned: bank requests +1, return +1 per chain.
+    // slices, the chain carried as per-column bundles inside the slab (ports unchanged); y-beat / cs relays: y returns +1.
     parameter integer NTREE = 0, NT_K = 67, RETCOL = 0
 ) (
     output wire [TFW-1:0] t_tf0, t_tf1, t_tf2,
@@ -232,9 +231,7 @@ module dsfd_sp_hc #(
             wire [RVW-1:0]   rv_last, rv_start = (c == 0) ? {nt_flt, {(S_RT + 2){1'b0}}} : {RVW{1'b0}};
             wire [RDW-1:0]   rd_last;
             if (HALF && NTREE && RETCOL) begin : g_rce
-                reg [RVW-1:0] rv_q;                       // chain-entry register (keeps the shifted rows aligned)
-                always @(posedge sk) rv_q <= rv_start;
-                ot_s81_hc_rb_flat2cols #(.S_RT(S_RT)) u_f2c (.rv(rv_q), .rd({RDW{1'b0}}), .rb(rb_start));
+                ot_s81_hc_rb_flat2cols #(.S_RT(S_RT)) u_f2c (.rv(rv_start), .rd({RDW{1'b0}}), .rb(rb_start));
                 ot_s81_hc_rb_cols2flat #(.S_RT(S_RT)) u_c2f (.rb(rbo[0]), .rv(rv_last), .rd(rd_last));
             end else begin : g_rcn
                 assign rb_start = '0; assign rv_last = rvo[0]; assign rd_last = rdo[0];
@@ -353,7 +350,7 @@ module dsfd_sp_hc #(
             localparam integer NH=(LC<HEAD_ROWS)?LC:HEAD_ROWS;
             wire [127:0] cy;
             ot_s81_hc_chain_segment #(.NG(NG),.D(D),.NCOL(NCOL),.GS(GS),.S_RD(S_RD),.S_RT(S_RT),
-                .WIN(WIN),.WOUT(WOUT),.ML(ML),.AL(AL),.RLY(RLY),.CNL_PIN(CNL_PIN),.CHAIN_STEP(CHAIN_STEP),.LANE_SPECIALIZE(LANE_SPECIALIZE),.BC(BC),.LC(LC),.START(0),.COUNT(NH),.NTREE(NTREE),.RETCOL(RETCOL),.RET_ENTRY_REG(0)) u_head (
+                .WIN(WIN),.WOUT(WOUT),.ML(ML),.AL(AL),.RLY(RLY),.CNL_PIN(CNL_PIN),.CHAIN_STEP(CHAIN_STEP),.LANE_SPECIALIZE(LANE_SPECIALIZE),.BC(BC),.LC(LC),.START(0),.COUNT(NH),.NTREE(NTREE),.RETCOL(RETCOL)) u_head (
                 .sk(sk),.rst_in(ch_rst[c]),.fv_in(ch_fv[c*FVW+:FVW]),.fd_in(ch_fd[c*FDW+:FDW]),.cy_in(128'd0),
                 .rv_in(sr[c*TRW+RDW+:RVW]),.rd_in(sr[c*TRW+:RDW]),
                 .rst_out(sf[c*TFW+128+FDW+FVW]),.fv_out(sf[c*TFW+128+FDW+:FVW]),
@@ -402,8 +399,7 @@ endmodule
 module ot_s81_hc_chain_segment #(
     parameter integer NG=256,D=5120,NCOL=3,GS=8,S_RD=2,S_RT=4,WIN=2,WOUT=2,ML=5,AL=4,RLY=2,
     parameter integer BC=0,LC=22,START=0,COUNT=10,CNL_PIN=0,CHAIN_STEP=AL,LANE_SPECIALIZE=0,NTREE=0,
-    parameter integer RETCOL=0,RET_ENTRY_REG=0,   // RETCOL: cth_ntc rows, flat chain ports converted at the ends;
-                                                  // RET_ENTRY_REG: this segment's rv/rd input is the chain start
+    parameter integer RETCOL=0,                   // RETCOL: cth_ntc rows, flat chain ports converted at the ends
     parameter integer FVW=S_RD+5, RVW=S_RT+4, NTW=2*137+1,
     parameter integer FDW=(72+16*S_RD)+((S_RD*512>((NG/GS+NCOL-1)/NCOL)*GS*32)?S_RD*512:((NG/GS+NCOL-1)/NCOL)*GS*32),
     parameter integer RDW=S_RT+24*S_RT+8+512*S_RT
@@ -430,13 +426,7 @@ module ot_s81_hc_chain_segment #(
             wire [RDW-1:0]   rd_last;
             if (NTREE && RETCOL) begin : g_rce
                 wire [RVW-1:0] rv_e; wire [RDW-1:0] rd_e;
-                if (RET_ENTRY_REG) begin : g_reg
-                    reg [RVW-1:0] rv_q; reg [RDW-1:0] rd_q;
-                    always @(posedge sk) begin rv_q <= rv_in; rd_q <= rd_in; end
-                    assign rv_e = rv_q; assign rd_e = rd_q;
-                end else begin : g_wire
-                    assign rv_e = rv_in; assign rd_e = rd_in;
-                end
+                assign rv_e = rv_in; assign rd_e = rd_in;
                 ot_s81_hc_rb_flat2cols #(.S_RT(S_RT)) u_f2c (.rv(rv_e), .rd(rd_e), .rb(rb_entry));
                 ot_s81_hc_rb_cols2flat #(.S_RT(S_RT)) u_c2f (.rb(rbo[0]), .rv(rv_last), .rd(rd_last));
             end else begin : g_rcn
@@ -494,13 +484,7 @@ module ot_s81_hc_chain_segment #(
             end
     end else begin : g_empty
         assign {rst_out,fv_out,fd_out,cy_out}={rst_in,fv_in,fd_in,cy_in};
-        if (NTREE && RETCOL && RET_ENTRY_REG) begin : g_ereg   // an empty chain-start segment still owns the entry stage
-            reg [RVW-1:0] rv_q; reg [RDW-1:0] rd_q;
-            always @(posedge sk) begin rv_q <= rv_in; rd_q <= rd_in; end
-            assign rv_out=rv_q; assign rd_out=rd_q;
-        end else begin : g_wire
-            assign rv_out=rv_in; assign rd_out=rd_in;
-        end
+        assign rv_out=rv_in; assign rd_out=rd_in;
         assign dl_out=dl_in; assign ul_out=ul_in;
     end endgenerate
 endmodule
@@ -551,7 +535,7 @@ module dsfd_sp_hc_t_nt #(
         wire [FVW-1:0] fvf;
         wire [FDW-1:0] fdf;
         ot_s81_hc_chain_segment #(.NG(NG),.D(D),.NCOL(NCOL),.GS(GS),.S_RD(S_RD),.S_RT(S_RT),
-            .WIN(WIN),.WOUT(WOUT),.ML(ML),.AL(AL),.RLY(RLY),.CNL_PIN(CNL_PIN),.CHAIN_STEP(CHAIN_STEP),.LANE_SPECIALIZE(LANE_SPECIALIZE),.BC(BC),.LC(LC),.START(NH),.COUNT(LC-NH),.NTREE(NTREE),.RETCOL(RETCOL),.RET_ENTRY_REG(1)) u_tail (
+            .WIN(WIN),.WOUT(WOUT),.ML(ML),.AL(AL),.RLY(RLY),.CNL_PIN(CNL_PIN),.CHAIN_STEP(CHAIN_STEP),.LANE_SPECIALIZE(LANE_SPECIALIZE),.BC(BC),.LC(LC),.START(NH),.COUNT(LC-NH),.NTREE(NTREE),.RETCOL(RETCOL)) u_tail (
             .sk(ck),.rst_in(sf[c*TFW+128+FDW+FVW]),.fv_in(sf[c*TFW+128+FDW+:FVW]),
             .fd_in(sf[c*TFW+128+:FDW]),.cy_in(sf[c*TFW+:128]),
             .rv_in((NTREE && c==0) ? {nt_flt,{(S_RT+2){1'b0}}} : {RVW{1'b0}}),.rd_in({RDW{1'b0}}),

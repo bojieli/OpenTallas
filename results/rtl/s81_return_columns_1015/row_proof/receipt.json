@@ -1,14 +1,12 @@
 {
  "status": "PASS",
- "scope": "two-row return chain (columns YB_STAGE 1 PAYLOAD_STAGE 0 + ctrn_col slices) vs cth_nt monolithic ctra/ctrb/ctrn; component chain only, not full HC / token",
+ "scope": "two-row return chain (ret_column leaves YB_STAGE 1 PAYLOAD_STAGE 0 + ctrn_col slices) vs cth_nt monolithic ctra/ctrb/ctrn at Y_LAG/CS_LAG 1; component chain only, the system calendar is checked by the exact HC gate",
  "cycles": 3000,
- "added_return_cycles_per_chain": 1,
- "added_request_cycles": 1,
- "added_cycles_per_row": 0,
+ "calendar": "y returns +1 (y beat captured one cycle later, Y_LAG), cs captured +1 (CS_LAG); requests, h returns and the chain unchanged",
  "sources_sha256": {
-  "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_return_columns.sv": "fefa77576e22684c1cc3609e7aa4bad7d82e045f62c3aeb1316021e46f5a9174",
-  "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_cth_ntc.sv": "28218cb2a3b334823cd92f36ceed379e6d0d82f76df88aff613ebd58286dd4fc",
-  "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_cth.sv": "b57419f09edc3bdec1d9bcdc0c0137747df59837eb20b1a1cf2aa3367e16d81f"
+  "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_return_columns.sv": "0d0cdc17806c72ea7614b35832eb459312fb59cb5e7f6615c550b8f73b966e7a",
+  "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_cth_ntc.sv": "36a660f5cb34cfe1cfb87215f6c5b09b4083b0df2b1e2dc5b779d8dc8503a32d",
+  "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_cth.sv": "81dcac95f95ae0b97cc0bd549624a5188c194c807cc5d5b7159c979ae6b977e3"
  },
  "results": [
   {
@@ -42,12 +40,11 @@
    "log": "cs_relay_skipped.log"
   },
   {
-   "variant": "no_entry_register",
+   "variant": "unrelayed_own_y",
    "returncode": 1,
    "expected": true,
-   "log": "no_entry_register.log"
+   "log": "unrelayed_own_y.log"
   }
  ],
- "ot_run": "oth-ubuntu-3369988-1792161176 ot-epyc4",
- "dut_leaf": "ot_s81_hc_ret_column x4 (one leaf per column = ctra+ctrb column) + ot_s81_hc_ctrn_col x4"
+ "ot_run": "oth-ubuntu-3469250-1792161760 ot-epyc4"
 }

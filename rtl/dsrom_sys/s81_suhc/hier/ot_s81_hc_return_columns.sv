@@ -1,9 +1,9 @@
 // YB_STAGE 1 (HC-COLUMN 10-16, coordinator-approved): the y beat (16 b per ctnl lane tile) is relayed one cycle inside
-// ctra column c (its own x-column's four ctnl tiles, yb_loc -> yb_fwd) so no y join leaves its 144 um column + one
-// neighbour hop; every fv-domain input (rst_in, tid, last, fv, fdx, cs, flags) gets a matching pin register, so the whole
-// engine runs exactly one cycle later. rd_in / rv_in / hrq stay unregistered: in the chain they already arrive one cycle
-// later (far-tile origination and the bank round trip shift with the engine), so the return gains +1 fixed cycle once
-// per HC chain, bank requests +1. Default 0 = the 82424ff85 successor unchanged.
+// ctra column c (its own x-column's four ctnl tiles, yb_loc -> yb_fwd, peers + ctrb read the relays) and cs (the ctnl
+// column-3 accumulators) one cycle by COLUMN 3; the engine captures both one cycle later (ot_s81_hc_ctrs Y_LAG / CS_LAG).
+// Nothing else moves: requests, h returns and the chain keep their cycles; y returns originate +1.  (An earlier
+// whole-engine shift moved the bank requests +1 and FAILED the exact HC gate: 170 / 1940 rows.)  Default 0 = the 82424ff85
+// successor unchanged.
 // Four actual local return engines, each with a distinct clock entry and registered payload pins.
 // Return data/valid gain exactly one fixed cycle. Bank requests retain the original epoch.
 // BF16 y dependencies remain real and cross columns; this is not claimed as a free transpose.
@@ -62,14 +62,9 @@ module ot_s81_hc_ctra_column #(
     wire              e_hnz_n, e_hnz_s, e_pflt_n, e_pflt_s;
     wire [8*16-1:0]   e_yb_n, e_yb_s;
     generate if(YB_STAGE) begin : g_ybstage
-        reg rst_q, last_q, hov_q, hnz_nq, hnz_sq, pflt_nq, pflt_sq;
-        reg [7:0] tid_q; reg [S_RD+4:0] fv_q; reg [O_D-1:0] fdx_q; reg [4*32-1:0] cs_q; reg [1:0] nflt_nq, nflt_sq;
-        reg [63:0] yb_r;
-        always @(posedge clk) begin
-            rst_q<=rst_in; tid_q<=tid; last_q<=last; fv_q<=fv; fdx_q<=fdx; cs_q<=cs; hov_q<=hov_d;
-            nflt_nq<=nflt_n; nflt_sq<=nflt_s; hnz_nq<=hnz_n; hnz_sq<=hnz_s; pflt_nq<=pflt_n; pflt_sq<=pflt_s;
-            yb_r<=yb_loc;
-        end
+        // only the y beat and cs take a relay; the engine captures both one cycle later (ctrs Y_LAG / CS_LAG)
+        reg [63:0] yb_r; reg [4*32-1:0] cs_q; reg hov_q;
+        always @(posedge clk) begin yb_r<=yb_loc; cs_q<=cs; hov_q<=hov_d; end
         assign yb_fwd=yb_r;
         wire [255:0] yb_all;
         for(genvar n=0;n<16;n=n+1) begin : g_yb
@@ -81,11 +76,13 @@ module ot_s81_hc_ctra_column #(
             end
         end
         assign {e_yb_s,e_yb_n}=yb_all;
-        assign e_rst=rst_q; assign e_tid=tid_q; assign e_last=last_q; assign e_fv=fv_q; assign e_fdx=fdx_q;
-        // cs / hov_d: one relay per row (no second register in the consuming column), same +1 as every fv-domain pin
+        assign e_rst=rst_in; assign e_tid=tid; assign e_last=last; assign e_fv=fv; assign e_fdx=fdx;
         assign e_cs=(COLUMN==3) ? cs_q : cs_rel;   assign cs_fwd=(COLUMN==3) ? cs_q : '0;
-        assign e_hov=(COLUMN==0) ? hov_q : hov_rel; assign hov_fwd=(COLUMN==0) ? hov_q : 1'b0; assign e_nflt_n=nflt_nq; assign e_nflt_s=nflt_sq; assign e_hnz_n=hnz_nq; assign e_hnz_s=hnz_sq;
-        assign e_pflt_n=pflt_nq; assign e_pflt_s=pflt_sq;
+        // hov_d only reaches rvm's overflow flag, which COLUMN 0 owns (its slice carries the row's valid); the
+        // relayed copy keeps the other columns' (unused) flag inputs driven without a long join
+        assign e_hov=hov_d; assign hov_fwd=(COLUMN==0) ? hov_q : 1'b0;
+        assign e_nflt_n=nflt_n; assign e_nflt_s=nflt_s; assign e_hnz_n=hnz_n; assign e_hnz_s=hnz_s;
+        assign e_pflt_n=pflt_n; assign e_pflt_s=pflt_s;
     end else begin : g_direct
         assign yb_fwd='0; assign cs_fwd='0; assign hov_fwd=1'b0;
         assign e_rst=rst_in; assign e_tid=tid; assign e_last=last; assign e_fv=fv; assign e_fdx=fdx; assign e_cs=cs;
@@ -99,7 +96,7 @@ module ot_s81_hc_ctra_column #(
     // per-column ctrn slice takes its column's own rvm (identical in all four columns).  PAYLOAD_STAGE 0 (the row form,
     // ot_s81_hc_retrow): no extra output register -- rvm / header / payload are the engine's own registers (flags ORed
     // from registers of the same edge), so a column is cycle-identical to the monolithic ctra / ctrb strip.
-    generate if(COLUMN==0 || YB_STAGE) begin : g_merge
+    generate if(COLUMN==0) begin : g_merge
         reg rr_merge;
         reg [S_RT+3:0] rv_delay;
         always @(posedge clk) rr_merge<=e_rst;
@@ -150,7 +147,7 @@ module ot_s81_hc_ctra_column #(
     end else begin : g_hdr_direct
         assign header_delay=rd_full[P_D-1:0];
     end endgenerate
-    ot_s81_hc_ctra #(.NG(NG),.D(D),.NCOL(NCOL),.GS(GS),.S_RD(S_RD),.S_RT(S_RT),.ML(ML),.AL(AL),.CHAIN_STEP(CHAIN_STEP),.READ_STAGE(READ_STAGE)) u (
+    ot_s81_hc_ctra #(.NG(NG),.D(D),.NCOL(NCOL),.GS(GS),.S_RD(S_RD),.S_RT(S_RT),.ML(ML),.AL(AL),.CHAIN_STEP(CHAIN_STEP),.READ_STAGE(READ_STAGE),.Y_LAG(YB_STAGE),.CS_LAG(YB_STAGE)) u (
         .clk(clk),
         .rst_in(e_rst),
         .tid(e_tid),
@@ -368,14 +365,7 @@ module ot_s81_hc_ctrb_column #(
     localparam integer WB = 512 * SH + 128;
 
     initial if(S_RT!=4 || COLUMN<0 || COLUMN>3) $fatal(1,"return column requires S_RT4 and column0..3");
-    wire e_rst, e_last; wire [7:0] e_tid; wire [S_RD+4:0] e_fv; wire [O_D-1:0] e_fdx;
-    generate if(YB_STAGE) begin : g_ybstage
-        reg rst_q, last_q; reg [7:0] tid_q; reg [S_RD+4:0] fv_q; reg [O_D-1:0] fdx_q;
-        always @(posedge clk) begin rst_q<=rst_in; tid_q<=tid; last_q<=last; fv_q<=fv; fdx_q<=fdx; end
-        assign e_rst=rst_q; assign e_tid=tid_q; assign e_last=last_q; assign e_fv=fv_q; assign e_fdx=fdx_q;
-    end else begin : g_direct
-        assign e_rst=rst_in; assign e_tid=tid; assign e_last=last; assign e_fv=fv; assign e_fdx=fdx;
-    end endgenerate
+    wire e_rst=rst_in, e_last=last; wire [7:0] e_tid=tid; wire [S_RD+4:0] e_fv=fv; wire [O_D-1:0] e_fdx=fdx;
     wire [512*SH-1:0] rd_full;
     wire [8*64*SH-1:0] hr_n, hr_s;
     wire [WB-1:0] rd_same, rd_shift, rd_bound;
@@ -394,7 +384,7 @@ module ot_s81_hc_ctrb_column #(
         assign hr_n[64*SH*lane +:64*SH] = (lane%4==COLUMN) ? hrq_n[64*SH*(lane/4) +:64*SH] : '0;
         assign hr_s[64*SH*lane +:64*SH] = (lane%4==COLUMN) ? hrq_s[64*SH*(lane/4) +:64*SH] : '0;
     end endgenerate
-    ot_s81_hc_ctrb #(.NG(NG),.D(D),.NCOL(NCOL),.GS(GS),.S_RD(S_RD),.S_RT(S_RT),.ML(ML),.AL(AL),.CHAIN_STEP(CHAIN_STEP),.READ_STAGE(READ_STAGE)) u (
+    ot_s81_hc_ctrb #(.NG(NG),.D(D),.NCOL(NCOL),.GS(GS),.S_RD(S_RD),.S_RT(S_RT),.ML(ML),.AL(AL),.CHAIN_STEP(CHAIN_STEP),.READ_STAGE(READ_STAGE),.Y_LAG(YB_STAGE),.CS_LAG(0)) u (
         .clk(clk),
         .rst_in(e_rst),
         .tid(e_tid),

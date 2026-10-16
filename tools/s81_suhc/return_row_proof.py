@@ -1,15 +1,14 @@
 #!/usr/bin/env python3
-"""Two-row exact delayed equivalence of the column return row (HC-COLUMN 10-16, option A).
+"""Two-row exact equivalence of the column return row (HC-COLUMN 10-16, option A, y-beat / cs relay).
 
-Reference row = the cth_nt return path verbatim: monolithic ot_s81_hc_ctra + ot_s81_hc_ctrb + ot_s81_hc_ctrn (RLY 2), the
-hrq / yb / flag wiring copied from ot_s81_hc_cth_nt.  DUT row = ot_s81_hc_retrow (ot_s81_hc_ret_column x4 = ctra+ctrb column leaf YB_STAGE 1
-PAYLOAD_STAGE 0, + ctrn_col x4), chained through the per-column bundles; the chain enters through ot_s81_hc_rb_flat2cols
-behind one register (the chain-entry stage that keeps a slab's external chain input aligned with the shifted engines) and
-leaves through ot_s81_hc_rb_cols2flat.  Every fv-domain input (rst, tid, last, fv, fdx, cs, yb, flags) drives both at x(t);
-each DUT row's hrq is x(t-1) (the bank round trip follows the shifted request).  PASS = DUT chain output == reference
-output one cycle later and every DUT row's per-column requests == the reference row's requests one cycle later, 3000
-cycles incl. a mid-run reset.  Mutants: partner column (c+1 instead of c+2), header copy from a peer slice, missing
-chain-entry register, slices not replicating the partner ctrb chunk.  Runs on ot-run only.
+Reference row = the cth_nt return path verbatim (monolithic ot_s81_hc_ctra / ctrb / ctrn, RLY 2, wiring copied from
+ot_s81_hc_cth_nt) built with ctrs Y_LAG 1 / CS_LAG 1 and fed the y beat and cs one cycle late (the relay modelled in the
+bench).  DUT row = ot_s81_hc_retrow (ot_s81_hc_ret_column_c0..3 = ctra+ctrb column leaf YB_STAGE 1 PAYLOAD_STAGE 0, +
+ot_s81_hc_ctrn_col_e/_w slices) chained through the per-column bundles, the raw y beat / cs at its pins (relayed inside).
+Every other input is identical.  PASS = the two-row chain output (cols2flat) and every per-column request equal the
+reference in the same cycle, 3000 cycles incl. a mid-run reset.  Mutants: partner column c+1, header copy from a peer,
+unrelayed own y lanes, cs not relayed, slices not replicating the partner ctrb chunk.
+Runs on ot-run only.
 """
 import argparse, hashlib, json, subprocess, shutil
 from pathlib import Path
@@ -40,7 +39,7 @@ module ref_row(input wire clk, input wire rst_c, input wire [7:0] tid, input wir
   end endgenerate
   wire [15:0] rq_q; wire hs_run; wire [15:0] hs_c; wire [15:0] rq_c1, rq_c2, rq_c3; wire hr1,hr2,hr3; wire [15:0] hc1,hc2,hc3;
   wire [7:0] hov_d = {7'd0, hov0};
-  ot_s81_hc_ctra #(.NG(256),.D(5120),.NCOL(3),.GS(8),.S_RD(2),.S_RT(4),.ML(5),.AL(4),.CHAIN_STEP(6),.READ_STAGE(1)) u_ra (
+  ot_s81_hc_ctra #(.NG(256),.D(5120),.NCOL(3),.GS(8),.S_RD(2),.S_RT(4),.ML(5),.AL(4),.CHAIN_STEP(6),.READ_STAGE(1),.Y_LAG(1),.CS_LAG(1)) u_ra (
     .clk(clk), .rst_in(rst_c), .tid(tid), .last(last), .fv(fv_local), .fdx(fdx_local), .rv_in(rv_in),
     .rd_in(rd_in[WA-1:0]), .rvm(rvm), .rdm(rdm[WA-1:0]), .rq_q(rq_q), .hs_run(hs_run), .hs_c(hs_c),
     .rq_q_c1(rq_c1), .rq_q_c2(rq_c2), .rq_q_c3(rq_c3), .hs_run_c1(hr1), .hs_run_c2(hr2), .hs_run_c3(hr3),
@@ -49,7 +48,7 @@ module ref_row(input wire clk, input wire rst_c, input wire [7:0] tid, input wir
     .nflt_n(nflt[7:0]), .nflt_s(nflt[15:8]), .hov_d(hov_d[0]),
     .hnz_n({hnz_d[6], hnz_d[4], hnz_d[2], hnz_d[0]}), .hnz_s({hnz_d[7], hnz_d[5], hnz_d[3], hnz_d[1]}),
     .pflt_n({pflt_d[6], pflt_d[4], pflt_d[2], pflt_d[0]}), .pflt_s({pflt_d[7], pflt_d[5], pflt_d[3], pflt_d[1]}));
-  ot_s81_hc_ctrb #(.NG(256),.D(5120),.NCOL(3),.GS(8),.S_RD(2),.S_RT(4),.ML(5),.AL(4),.CHAIN_STEP(6),.READ_STAGE(1)) u_rb (
+  ot_s81_hc_ctrb #(.NG(256),.D(5120),.NCOL(3),.GS(8),.S_RD(2),.S_RT(4),.ML(5),.AL(4),.CHAIN_STEP(6),.READ_STAGE(1),.Y_LAG(1),.CS_LAG(0)) u_rb (
     .clk(clk), .rst_in(rst_c), .tid(tid), .last(last), .fv(fv_local), .fdx(fdx_local), .rv_in(rv_in),
     .rdh_in(rd_in[P_D-1:0]), .rdd_in(rd_in[RDW-1 -: 512 * SH + 128]), .rdm(rdm[RDW-1 -: 512 * SH]),
     .hrq_n(hqb_n), .hrq_s(hqb_s), .yb_n(yb[0 +: 128]), .yb_s(yb[128 +: 128]));
@@ -67,29 +66,29 @@ bench='''module check;
   reg clk=0; reg [31:0] rng=32'h2545F491; integer cycle,j,k;
   reg rst; reg [7:0] tid1,tid2; reg last1,last2; reg [6:0] fv1,fv2; reg [103:0] fdx1,fdx2;
   reg [7:0] rv_x; reg [2155:0] rd_x; reg [7:0] rv_xd; reg [2155:0] rd_xd;
-  reg [4095:0] hrq1,hrq2,hrq1d,hrq2d; reg [255:0] yb1,yb2; reg [127:0] cs1,cs2; reg [15:0] nf1,nf2; reg hov1,hov2; reg [7:0] hz1,hz2,pf1,pf2;
+  reg [4095:0] hrq1,hrq2; reg [255:0] yb1,yb2,yb1d,yb2d; reg [127:0] cs1d,cs2d; reg [127:0] cs1,cs2; reg [15:0] nf1,nf2; reg hov1,hov2; reg [7:0] hz1,hz2,pf1,pf2;
   wire [7:0] r1_rv, r2_rv; wire [2155:0] r1_rd, r2_rd;
   wire [15:0] r1q0,r1q1,r1q2,r1q3,r2q0,r2q1,r2q2,r2q3,r1h0,r1h1,r1h2,r1h3,r2h0,r2h1,r2h2,r2h3; wire [3:0] r1hr,r2hr;
   ref_row ref1(.clk(clk),.rst_c(rst),.tid(tid1),.last(last1),.fv_local(fv1),.fdx_local(fdx1),.rv_in(rv_x),.rd_in(rd_x),.rv_out(r1_rv),.rd_out(r1_rd),
-    .rq0(r1q0),.rq1(r1q1),.rq2(r1q2),.rq3(r1q3),.hs_run_c(r1hr),.hs0(r1h0),.hs1(r1h1),.hs2(r1h2),.hs3(r1h3),.hrq(hrq1),.yb(yb1),.cs(cs1),.nflt(nf1),.hov0(hov1),.hnz_d(hz1),.pflt_d(pf1));
+    .rq0(r1q0),.rq1(r1q1),.rq2(r1q2),.rq3(r1q3),.hs_run_c(r1hr),.hs0(r1h0),.hs1(r1h1),.hs2(r1h2),.hs3(r1h3),.hrq(hrq1),.yb(yb1d),.cs(cs1d),.nflt(nf1),.hov0(hov1),.hnz_d(hz1),.pflt_d(pf1));
   ref_row ref2(.clk(clk),.rst_c(rst),.tid(tid2),.last(last2),.fv_local(fv2),.fdx_local(fdx2),.rv_in(r1_rv),.rd_in(r1_rd),.rv_out(r2_rv),.rd_out(r2_rd),
-    .rq0(r2q0),.rq1(r2q1),.rq2(r2q2),.rq3(r2q3),.hs_run_c(r2hr),.hs0(r2h0),.hs1(r2h1),.hs2(r2h2),.hs3(r2h3),.hrq(hrq2),.yb(yb2),.cs(cs2),.nflt(nf2),.hov0(hov2),.hnz_d(hz2),.pflt_d(pf2));
+    .rq0(r2q0),.rq1(r2q1),.rq2(r2q2),.rq3(r2q3),.hs_run_c(r2hr),.hs0(r2h0),.hs1(r2h1),.hs2(r2h2),.hs3(r2h3),.hrq(hrq2),.yb(yb2d),.cs(cs2d),.nflt(nf2),.hov0(hov2),.hnz_d(hz2),.pflt_d(pf2));
   localparam integer RBW=1140;
   wire [4*RBW-1:0] b0, b1, b2; wire [7:0] d_rv; wire [2155:0] d_rd;
   wire [15:0] d1q0,d1q1,d1q2,d1q3,d2q0,d2q1,d2q2,d2q3,d1h0,d1h1,d1h2,d1h3,d2h0,d2h1,d2h2,d2h3; wire [3:0] d1hr,d2hr;
-  ot_s81_hc_rb_flat2cols #(.S_RT(4)) f2c(.rv(rv_xd),.rd(rd_xd),.rb(b0));
+  ot_s81_hc_rb_flat2cols #(.S_RT(4)) f2c(.rv(rv_x),.rd(rd_x),.rb(b0));
   ot_s81_hc_retrow #(.CHAIN_STEP(6),.READ_STAGE(1)) dut1(.clk(clk),.rst_in(rst),.tid(tid1),.last(last1),.fv(fv1),.fdx(fdx1),.rb_in(b0),.rb_out(b1),
     .rq_q0(d1q0),.rq_q1(d1q1),.rq_q2(d1q2),.rq_q3(d1q3),.hs_run_c(d1hr),.hs_c0(d1h0),.hs_c1(d1h1),.hs_c2(d1h2),.hs_c3(d1h3),
-    .hrq(hrq1d),.yb(yb1),.cs(cs1),.nflt(nf1),.hov_d(hov1),.hnz_d(hz1),.pflt_d(pf1));
+    .hrq(hrq1),.yb(yb1),.cs(cs1),.nflt(nf1),.hov_d(hov1),.hnz_d(hz1),.pflt_d(pf1));
   ot_s81_hc_retrow #(.CHAIN_STEP(6),.READ_STAGE(1)) dut2(.clk(clk),.rst_in(rst),.tid(tid2),.last(last2),.fv(fv2),.fdx(fdx2),.rb_in(b1),.rb_out(b2),
     .rq_q0(d2q0),.rq_q1(d2q1),.rq_q2(d2q2),.rq_q3(d2q3),.hs_run_c(d2hr),.hs_c0(d2h0),.hs_c1(d2h1),.hs_c2(d2h2),.hs_c3(d2h3),
-    .hrq(hrq2d),.yb(yb2),.cs(cs2),.nflt(nf2),.hov_d(hov2),.hnz_d(hz2),.pflt_d(pf2));
+    .hrq(hrq2),.yb(yb2),.cs(cs2),.nflt(nf2),.hov_d(hov2),.hnz_d(hz2),.pflt_d(pf2));
   ot_s81_hc_rb_cols2flat #(.S_RT(4)) c2f(.rb(b2),.rv(d_rv),.rd(d_rd));
   reg [7:0] p_rv; reg [2155:0] p_rd; reg [15:0] p1q0,p1q1,p1q2,p1q3,p2q0,p2q1,p2q2,p2q3,p1h0,p1h1,p1h2,p1h3,p2h0,p2h1,p2h2,p2h3; reg [3:0] p1hr,p2hr;
   task automatic rnd(inout reg [31:0] s); begin s=s^(s<<13); s=s^(s>>17); s=s^(s<<5); end endtask
   `define RB(v) for(j=0;j<$bits(v);j=j+1) begin rnd(rng); v[j]=rng[0]; end
   initial begin
-    rst=0; rv_x=0; rd_x=0; rv_xd=0; rd_xd=0; hrq1d=0; hrq2d=0;
+    rst=0; rv_x=0; rd_x=0; yb1d=0; yb2d=0; cs1d=0; cs2d=0;
     for(cycle=0;cycle<3000;cycle=cycle+1) begin
       clk=0; #1;
       rst=(cycle>=6 && !(cycle>=1500 && cycle<1504));
@@ -102,12 +101,12 @@ bench='''module check;
       rv_x=0; rv_x[4]=(cycle%13==0); rv_x[5]=(cycle%17==0);
       for(j=0;j<4;j=j+1) begin rd_x[4+8*j +:8]=(cycle+j)%5; rd_x[4+32+16*j +:16]=(cycle+j)%640; end
       rd_x[4+96 +:8]=cycle%5;
+      #1; clk=1;
+      yb1d<=yb1; yb2d<=yb2; cs1d<=cs1; cs2d<=cs2;
+      #1;
       p_rv=r2_rv; p_rd=r2_rd;
       p1q0=r1q0;p1q1=r1q1;p1q2=r1q2;p1q3=r1q3;p2q0=r2q0;p2q1=r2q1;p2q2=r2q2;p2q3=r2q3;p1hr=r1hr;p2hr=r2hr;
       p1h0=r1h0;p1h1=r1h1;p1h2=r1h2;p1h3=r1h3;p2h0=r2h0;p2h1=r2h1;p2h2=r2h2;p2h3=r2h3;
-      #1; clk=1;
-      rv_xd<=rv_x; rd_xd<=rd_x; hrq1d<=hrq1; hrq2d<=hrq2;
-      #1;
       if(cycle>16 && !(cycle>=1500 && cycle<1516)) begin
         if(d_rv!==p_rv) $fatal(1,"rv mismatch cycle=%0d",cycle);
         if(d_rd!==p_rd) $fatal(1,"rd mismatch cycle=%0d",cycle);
@@ -115,26 +114,25 @@ bench='''module check;
         if({d1hr,d2hr,d1h0,d1h1,d1h2,d1h3,d2h0,d2h1,d2h2,d2h3}!=={p1hr,p2hr,p1h0,p1h1,p1h2,p1h3,p2h0,p2h1,p2h2,p2h3}) $fatal(1,"hs mismatch cycle=%0d",cycle);
       end
     end
-    $display("PASS row 3000 cycles two-row chain output and all per-column requests exact one cycle later");
+    $display("PASS row 3000 cycles two-row chain output and all per-column requests exact (same cycle)");
     $finish;
   end
 endmodule
 '''
 (out/'check.sv').write_text(bench)
 MUT={'positive':[],
- 'partner_c1':[('localparam integer B = RBW * c, PC = (c + 2) % 4;','localparam integer B = RBW * c, PC = (c + 1) % 4;'),('localparam integer PC = (COLUMN + 2) % 4;','localparam integer PC = (COLUMN + 1) % 4;')],
+ 'partner_c1':[('localparam integer B = RBW * c, PC = (c + 2) % 4;','localparam integer B = RBW * c, PC = (c + 1) % 4;'),('PC = (COLUMN + 2) % 4,','PC = (COLUMN + 1) % 4,')],
  'header_from_peer':[('.rv_c(rvm), .hdr_c(hdr),','.rv_c(rvm), .hdr_c(g_col[(c + 1) % 4].hdr ^ {107\'d0, g_col[(c + 1) % 4].rvm[0]}),')],
  'no_par_ctrb':[(".a_par(g_col[PC].a_rdm), .b_par(g_col[PC].b_rdm),",".a_par(g_col[PC].a_rdm), .b_par(b_rdm),")],
- 'cs_relay_skipped':[('.cs_in(c == 3 ? cs : cs_net), .cs_rel(cs_net),','.cs_in(c == 3 ? cs : cs_net), .cs_rel(cs),')]}
+ 'cs_relay_skipped':[('.cs_in(c == 3 ? cs : cs_net), .cs_fwd(csf),','.cs_in(cs), .cs_fwd(csf),')],
+ 'unrelayed_own_y':[('assign yb_all[16*n +:16]=yb_r[16*K +:16];','assign yb_all[16*n +:16]=yb_loc[16*K +:16];')]}
 res=[]
 verilator=shutil.which('verilator') or str(Path.home()/'.local/opentallas-tools/verilator-5.050/bin/verilator')
-variants=list(MUT)+['no_entry_register']
+variants=list(MUT)
 for v in variants:
     x=dut_src; b=bench
     for o,n in MUT.get(v,[]):
         assert o in x,(v,o); x=x.replace(o,n)
-    if v=='no_entry_register':
-        o='.rv(rv_xd),.rd(rd_xd)'; assert o in b; b=b.replace(o,'.rv(rv_x),.rd(rd_x)')
     (out/f'{v}.sv').write_text(x); (out/f'check_{v}.sv').write_text(b)
     build=out/('obj_'+v); log=out/(v+'.log')
     with log.open('w') as f:
@@ -144,7 +142,7 @@ for v in variants:
     ok=(run.returncode==0)==(v=='positive'); res.append(dict(variant=v,returncode=run.returncode,expected=ok,log=log.name))
     shutil.rmtree(build,ignore_errors=True)
     if not ok: raise SystemExit('UNEXPECTED VERDICT '+str(log))
-rec={'status':'PASS','scope':'two-row return chain (columns YB_STAGE 1 PAYLOAD_STAGE 0 + ctrn_col slices) vs cth_nt monolithic ctra/ctrb/ctrn; component chain only, not full HC / token',
-     'cycles':3000,'added_return_cycles_per_chain':1,'added_request_cycles':1,'added_cycles_per_row':0,
+rec={'status':'PASS','scope':'two-row return chain (ret_column leaves YB_STAGE 1 PAYLOAD_STAGE 0 + ctrn_col slices) vs cth_nt monolithic ctra/ctrb/ctrn at Y_LAG/CS_LAG 1; component chain only, the system calendar is checked by the exact HC gate',
+     'cycles':3000,'calendar':'y returns +1 (y beat captured one cycle later, Y_LAG), cs captured +1 (CS_LAG); requests, h returns and the chain unchanged',
      'sources_sha256':{p:hashlib.sha256((r/p).read_bytes()).hexdigest() for p in ['rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_return_columns.sv','rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_cth_ntc.sv','rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_cth.sv']},'results':res}
 (out/'receipt.json').write_text(json.dumps(rec,indent=1)+'\n'); print(json.dumps(rec))

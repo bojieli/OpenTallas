@@ -871,7 +871,8 @@ endmodule
 // the one cross-slot stage (wire only); rd_out at the N face abuts the previous slot's S face.  Same registers as the
 // single strip ctr: pin, origination, merge, RLY - 2 relays, out.
 module ot_s81_hc_ctrs #(
-    parameter integer NG = 256, D = 5120, NCOL = 3, GS = 8, S_RD = 2, S_RT = 4, ML = 5, AL = 4, CHAIN_STEP = AL, READ_STAGE = 0
+    parameter integer NG = 256, D = 5120, NCOL = 3, GS = 8, S_RD = 2, S_RT = 4, ML = 5, AL = 4, CHAIN_STEP = AL, READ_STAGE = 0,
+    parameter integer Y_LAG = 0, CS_LAG = 0    // HC-COLUMN 10-16: y beat / cs arrive through a one-cycle relay (capture one cycle later)
 ) (
     input  wire                   clk,
     input  wire                   rst_in,
@@ -918,16 +919,30 @@ module ot_s81_hc_ctrs #(
         .b_v(b_v), .vy(vy), .wi(wi), .yi(yi));
     integer s, k, qd, q;
     reg [127:0] psb [0:NV-1];
-    always @(posedge clk) if (vs[DS]) psb[si] <= cs;
+    // CS_LAG / Y_LAG: the capture strobe and index wait one register for the relayed operand (same buffer, same reads)
+    wire vs_w, vy_w; wire [7:0] si_w, yi_w;
+    generate if (CS_LAG) begin : g_csl
+        reg v; reg [7:0] i; always @(posedge clk) begin v <= vs[DS]; i <= si; end
+        assign vs_w = v; assign si_w = i;
+    end else begin : g_csn
+        assign vs_w = vs[DS]; assign si_w = si;
+    end endgenerate
+    generate if (Y_LAG) begin : g_yl
+        reg v; reg [7:0] i; always @(posedge clk) begin v <= vy[DY]; i <= yi; end
+        assign vy_w = v; assign yi_w = i;
+    end else begin : g_yn
+        assign vy_w = vy[DY]; assign yi_w = yi;
+    end endgenerate
+    always @(posedge clk) if (vs_w) psb[si_w] <= cs;
     reg [NT*16-1:0] ybuf [0:NV-1];
-    always @(posedge clk) if (vy[DY]) ybuf[yi] <= yb;
+    always @(posedge clk) if (vy_w) ybuf[yi_w] <= yb;
 
     // far tile: return slot origination (ot_s81_hc_ctile)
     reg        po_v;  reg [7:0] po_i;
     always @(posedge clk or negedge rst_n) if (!rst_n) po_v <= 1'b0; else po_v <= vs[DS] && lq;
     always @(posedge clk) po_i <= si;
     reg  y_d1;
-    always @(posedge clk or negedge rst_n) if (!rst_n) y_d1 <= 1'b0; else y_d1 <= vy[DY];
+    always @(posedge clk or negedge rst_n) if (!rst_n) y_d1 <= 1'b0; else y_d1 <= vy_w;
     reg [7:0]  oq_rdy, o_v;
     reg [15:0] o_r;
     reg  [S_RT-1:0]    g_v, g_t;
@@ -1044,7 +1059,8 @@ endmodule
 // the far tile's 128-bit psb insert shifts into its first slot.  fdx: only the control word (bits < O_D) is read.
 // Lanes n < 8 (rows above the band) drive the *_n ports on the N face, n >= 8 the *_s ports on the S face.
 module ot_s81_hc_ctra #(
-    parameter integer NG = 256, D = 5120, NCOL = 3, GS = 8, S_RD = 2, S_RT = 4, ML = 5, AL = 4, CHAIN_STEP = AL, READ_STAGE = 0
+    parameter integer NG = 256, D = 5120, NCOL = 3, GS = 8, S_RD = 2, S_RT = 4, ML = 5, AL = 4, CHAIN_STEP = AL, READ_STAGE = 0,
+    parameter integer Y_LAG = 0, CS_LAG = 0    // HC-COLUMN 10-16: y beat / cs arrive through a one-cycle relay (capture one cycle later)
 ) (
     input  wire                   clk,
     input  wire                   rst_in,
@@ -1084,7 +1100,7 @@ module ot_s81_hc_ctra #(
     end endgenerate
     wire [7:0] hnz = {hnz_s[3], hnz_n[3], hnz_s[2], hnz_n[2], hnz_s[1], hnz_n[1], hnz_s[0], hnz_n[0]};
     wire [7:0] pfl = {pflt_s[3], pflt_n[3], pflt_s[2], pflt_n[2], pflt_s[1], pflt_n[1], pflt_s[0], pflt_n[0]};
-    ot_s81_hc_ctrs #(.NG(NG), .D(D), .NCOL(NCOL), .GS(GS), .S_RD(S_RD), .S_RT(S_RT), .ML(ML), .AL(AL), .CHAIN_STEP(CHAIN_STEP), .READ_STAGE(READ_STAGE)) u (
+    ot_s81_hc_ctrs #(.NG(NG), .D(D), .NCOL(NCOL), .GS(GS), .S_RD(S_RD), .S_RT(S_RT), .ML(ML), .AL(AL), .CHAIN_STEP(CHAIN_STEP), .READ_STAGE(READ_STAGE), .Y_LAG(Y_LAG), .CS_LAG(CS_LAG)) u (
         .clk(clk), .rst_in(rst_in), .tid(tid), .last(last), .fv(fv), .fdx({{(FXW - O_D){1'b0}}, fdx}),
         .rv_in(rv_in), .rd_in({{(RDW - WA){1'b0}}, rd_in}), .rvm(rvm), .rdm(rdm_w), .rq_q(rq_q), .hs_run(hs_run),
         .hs_c(hs_c), .hrq(hrq), .yb({yb_s, yb_n}), .cs(cs), .nflt({nflt_s, nflt_n}), .hov_d(hov_d), .hnz_d(hnz),
@@ -1104,7 +1120,8 @@ module ot_s81_hc_ctra #(
 endmodule
 
 module ot_s81_hc_ctrb #(
-    parameter integer NG = 256, D = 5120, NCOL = 3, GS = 8, S_RD = 2, S_RT = 4, ML = 5, AL = 4, CHAIN_STEP = AL, READ_STAGE = 0
+    parameter integer NG = 256, D = 5120, NCOL = 3, GS = 8, S_RD = 2, S_RT = 4, ML = 5, AL = 4, CHAIN_STEP = AL, READ_STAGE = 0,
+    parameter integer Y_LAG = 0, CS_LAG = 0    // HC-COLUMN 10-16: y beat / cs arrive through a one-cycle relay (capture one cycle later)
 ) (
     input  wire                   clk,
     input  wire                   rst_in,
@@ -1133,7 +1150,7 @@ module ot_s81_hc_ctrb #(
             assign hrq[64 * S_RT * (n + 8) + 64 * (q + SH) +: 64] = hrq_s[64 * (SH * n + q) +: 64];
         end
     end endgenerate
-    ot_s81_hc_ctrs #(.NG(NG), .D(D), .NCOL(NCOL), .GS(GS), .S_RD(S_RD), .S_RT(S_RT), .ML(ML), .AL(AL), .CHAIN_STEP(CHAIN_STEP), .READ_STAGE(READ_STAGE)) u (
+    ot_s81_hc_ctrs #(.NG(NG), .D(D), .NCOL(NCOL), .GS(GS), .S_RD(S_RD), .S_RT(S_RT), .ML(ML), .AL(AL), .CHAIN_STEP(CHAIN_STEP), .READ_STAGE(READ_STAGE), .Y_LAG(Y_LAG), .CS_LAG(CS_LAG)) u (
         .clk(clk), .rst_in(rst_in), .tid(tid), .last(last), .fv(fv), .fdx({{(FXW - O_D){1'b0}}, fdx}),
         .rv_in(rv_in), .rd_in({rdd_in, {(512 * SH - 128){1'b0}}, rdh_in}), .rvm(), .rdm(rdm_w), .rq_q(), .hs_run(),
         .hs_c(), .hrq(hrq), .yb({yb_s, yb_n}), .cs(128'd0), .nflt(16'd0), .hov_d(1'b0), .hnz_d(8'd0), .pflt_d(8'd0));
