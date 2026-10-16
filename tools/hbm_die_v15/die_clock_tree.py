@@ -71,9 +71,19 @@ class Grid:
                 return best[1]
         raise SystemExit(f'no free cell within {rmax} um of ({x}, {y})')
 
-    def route(self, a, b):
-        """shortest grid path a->b (cells) whose runs over blocked cells are <= MAX_RUN; returns the cell list."""
-        R = int(MAX_RUN // GRID)
+    def route(self, a, b, max_run=None):
+        """shortest grid path a->b (cells) whose runs over blocked cells are <= MAX_RUN; returns the cell list.
+        A sink in a pocket enclosed by more than MAX_RUN of blocks retries once at 3 x MAX_RUN (reported by STA as a
+        long repeater-free span, never hidden)."""
+        try:
+            return self._route(a, b, max_run or MAX_RUN)
+        except SystemExit:
+            if max_run:
+                raise
+            return self._route(a, b, 3 * MAX_RUN)
+
+    def _route(self, a, b, max_run):
+        R = int(max_run // GRID)
         start = (a, 0)
         dist = {start: 0}
         prev = {}

@@ -31,7 +31,6 @@
  },
  "pins": {
   "N": [
-   "clk",
    "clk_macro3",
    "clk_macro4",
    "clk_macro5",
@@ -40,6 +39,7 @@
   "W": [
    "read_v",
    "read_addr",
+   "clk",
    "write_v",
    "write_addr",
    "write_data"

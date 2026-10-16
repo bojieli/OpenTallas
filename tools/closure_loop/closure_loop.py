@@ -5327,6 +5327,14 @@ def step(j, fleet):
             elif rc != 0 or not ok_extra:
                 return crash(j, st, fleet, f"rc={rc}{'' if ok_extra else ' ok-check failed: ' + okout.strip()[-200:]}")
             event(j, f"{st['key']} done (rc={rc})")
+            if st["kind"] == "route":
+                # LAYOUT IMAGES (owner rule 20:45 10-15): ref_route.sh renders floorplan / density / congestion PNGs
+                # beside the route; the paths go into the job record so the owner LOOKS at them with the verdict
+                r = ssh(j["host"], f"ls {j['run']}/routes/*/layout/*.png 2>/dev/null", timeout=60)
+                pngs = [x for x in (r.stdout or "").split() if x.endswith(".png")]
+                if pngs:
+                    j["layout_images"] = {"host": j["host"], "paths": pngs}
+                    event(j, f"LAYOUT images ({j['host']}): " + " ".join(pngs))
             if st["kind"] == "calibrate":
                 r = ssh(j["host"], f"cat {j['run']}/cl/calib.json", timeout=60)
                 if r.returncode == 255:

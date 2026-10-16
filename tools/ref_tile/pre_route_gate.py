@@ -630,6 +630,13 @@ docker run --rm -v $R/src:/src:ro -v $C:/work -w /OpenROAD-flow-scripts/flow {IM
 grep -hE "\[ERROR" $R/iop.log | head -4 | sed 's/^/GATE_FLOWERR /'
 printf 'read_db /work/%s/3_2_place_iop.odb\nsource /src/tools/fp_margin_lint.tcl\not_fp_lint_dump /work/gate_dump.json\nexit\n' $NB > $C/gate_dump.tcl
 docker run --rm -v $R/src:/src:ro -v $C:/work {IMG} /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -no_init -exit /work/gate_dump.tcl > $R/dump.log 2>&1; echo "GATE_DUMP_RC=$?"
+# LAYOUT IMAGES (owner rule 20:45 10-15): the floorplan the route starts from (macros, pins, PG) -> PNG on the gate side
+ot_layout() {{  # ot_layout ODB TAG: tools/ref_tile/layout_dump.tcl on the odb, json back as one zlib+base64 line
+  printf 'read_db /work/%s\nsource /src/tools/ref_tile/layout_dump.tcl\nexit\n' "$1" > $C/gate_layout_$2.tcl
+  docker run --rm -e OT_LAYOUT_OUT=/work/gate_layout_$2.json -e OT_LAYOUT_CLOCKS={CLKS} -e OT_LAYOUT_TOP={TOP} -v $R/src:/src:ro -v $C:/work {IMG} /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -no_init -exit /work/gate_layout_$2.tcl > $R/layout_$2.log 2>&1
+  [ -s $C/gate_layout_$2.json ] && python3 -c "import zlib,base64,sys;print('GATE_LAYOUT_B64 '+sys.argv[2]+' '+base64.b64encode(zlib.compress(open(sys.argv[1],'rb').read(),9)).decode())" $C/gate_layout_$2.json $2
+}}
+ot_layout $NB/3_2_place_iop.odb floorplan
 python3 tools/textbook_lint.py check --netlist $B/1_2_yosys.v --dump $C/gate_dump.json --out $R/textbook.json --mode refuse --refuse-checks {RC} | sed 's/^/GATE_TB /'
 python3 - $B/1_2_yosys.v {TOP} <<'EOP'
 import re,sys,json
@@ -652,6 +659,18 @@ if [ "{CTS}" = 1 ]; then
   python3 -c "import json;d=json.load(open('$R/ck.json'));[print('GATE_CK_DOMAIN '+json.dumps({{'source':pin,'clock':r.get('clock'),'tt':r.get('tt')}})) for pin,r in d.get('clock_measurements',{{}}).items()]" 2>/dev/null
   docker run --rm -e OT_GATE_SIGNOFF_SDC=/src/{KIT}/signoff.sdc -v $R/src:/src:ro -v $C:/work {IMG} /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -no_init -exit /src/tools/ref_tile/path_classes.tcl > $R/pc.log 2>&1
   grep "^GATE_PC" $R/pc.log
+  ot_layout $NB/4_1_cts.odb placed
+fi
+# TRIAL ROUTE (owner rule 20:45 10-15): parent / cluster kits (hardened children or >= 4 macros) place + global-route
+# here (no detailed route): overflow, per-layer usage and the congestion hotspots come back; overflow > 0 refuses the kit
+if [ "{TRIAL}" = 1 ]; then
+  docker run --rm -v $R/src:/src:ro -v $C:/work -w /OpenROAD-flow-scripts/flow {IMG} bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; python3 /src/tools/orfs_hold_mm.py /OpenROAD-flow-scripts/flow/scripts >/dev/null && make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base GLOBAL_ROUTE_ARGS='-allow_congestion -verbose' GENERATE_ARTIFACTS_ON_FAILURE=1 grt" > $R/grt.log 2>&1; echo "GATE_GRT_RC=$?"
+  GL=$(ls $C/logs/asap7/*/base/5_1_grt.log 2>/dev/null | head -1)
+  [ -n "$GL" ] && grep -E "^(M[0-9]+|Total) +[0-9]+ +[0-9]+ +[0-9.]+%" $GL | tail -12 | sed 's/^/GATE_GRT_LAYER /'
+  [ -n "$GL" ] && grep -hE "GRT-0116|Total overflow|overflow" $GL | tail -3 | sed 's/^/GATE_GRT_NOTE /'
+  CR=$(ls $C/reports/asap7/*/base/congestion.rpt 2>/dev/null | head -1)
+  [ -n "$CR" ] && python3 -c "import zlib,base64,sys;print('GATE_CONG_B64 '+base64.b64encode(zlib.compress(open(sys.argv[1],'rb').read()[:20000000],9)).decode())" $CR
+  ot_layout $NB/5_1_grt.odb placed
 fi
 echo GATE_DONE
 """
@@ -672,6 +691,7 @@ def ship_tar(paths, overlay_payloads=None, overlay_modes=None):
             if src.exists():
                 tf.add(str(src), arcname=p, filter=lambda ti: None if ("/views/" in ti.name and ti.name.endswith(".gds"))
                        or "__pycache__" in ti.name or "source_binding_history" in Path(ti.name).parts
+                       or "gate_layout" in Path(ti.name).parts
                        or Path(ti.name).name in SB.EXCLUDED else ti)
         for h in SHIP_HELPERS:      # the loop's shipped flow helpers win over the snapshot's copies
             f = DAEMON_TREE / h
@@ -879,6 +899,7 @@ def remote(g: Gate, kd: Path, spec: dict, host: str, cap: int, mem: int, cts: bo
     commit = binding["commit"] or "snapshot-sha256:" + binding["manifest_sha256"]
     sh = REMOTE_SH.format(R=R, COMMIT=commit, CAP=(cap if cap > 0 else "unlimited"), KIT=kd.relative_to(ROOT), IMG="openroad/orfs:latest",
                           RC=",".join(GATE_REFUSE), TOP=spec["top"], CTS=1 if cts else 0, PGM=PF.ROUTE_PIN_GROUP_MAX,
+                          TRIAL=1 if is_parent_kit(spec) else 0, CLKS=",".join(RT.clock_ports(spec)),
                           CLK=spec["clock_port"], ARCHIVE_SHA256=binding["archive_sha256"])   # ck_insertion (9f48f5ed8): --clock = clock name or its source port; the default 'ck' failed every kit whose port is 'clk'
     sh = gate_route_clock_hooks(sh, spec)
     sh = gate_route_hold_context(sh, spec, str(kd.relative_to(ROOT)))
@@ -935,6 +956,105 @@ def remote(g: Gate, kd: Path, spec: dict, host: str, cap: int, mem: int, cts: bo
     g.remote_host = host
     g.add("INFO", "remote", f"remote log {logp}; host dir {host}:{R}")
     analyse_remote(g, kd, spec, out, cts, binding, cap, host, round(time.time() - t0), local_snapshot)
+    gate_layout(g, kd, spec, out)
+
+
+FILL_WARN, FILL_FAIL = 0.50, 0.35       # OWNER RULE 20:45 PT 10-15 (parent / cluster kits)
+
+
+def is_parent_kit(spec: dict) -> bool:
+    """a parent / cluster kit: kind cluster, hardened children, or >= 4 hard macros"""
+    return spec.get("kind") == "cluster" or bool(spec.get("children")) or len(spec.get("macros") or []) >= 4
+
+
+def pin_demand(d: dict) -> list:
+    """per face: pins, occupied span of the face (first..last pin), edge length -- pin-bound evidence"""
+    X0, Y0, X1, Y1 = d["die"]
+    faces = {"S": [], "N": [], "W": [], "E": []}
+    for name, layer, a, b, c, e in d.get("pins", []):
+        cx, cy = (a + c) / 2, (b + e) / 2
+        dist = {"S": cy - Y0, "N": Y1 - cy, "W": cx - X0, "E": X1 - cx}
+        f = min(dist, key=dist.get)
+        faces[f].append(cx if f in "SN" else cy)
+    out = []
+    for f, v in faces.items():
+        edge = (X1 - X0) if f in "SN" else (Y1 - Y0)
+        span = (max(v) - min(v)) if len(v) > 1 else 0.0
+        out.append({"face": f, "pins": len(v), "span_um": round(span, 1), "edge_um": round(edge, 1),
+                    "occupancy": round(span / edge, 3) if edge else 0.0})
+    return out
+
+
+def gate_layout(g: Gate, kd: Path, spec: dict, out: str):
+    """LAYOUT IMAGES + FILL + TRIAL ROUTE (OWNER RULE 20:45 PT 2026-10-15): render the gate's layout dumps to PNG in
+    <kit>/gate_layout/ (floorplan, post-place density, GRT congestion), judge fill of parent / cluster kits and the
+    trial global route's overflow.  Element owners LOOK at the PNGs (AGENT_PREAMBLE 'LOOK AT THE LAYOUT')."""
+    import base64
+    import zlib
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    import layout_png as LP
+    dumps = {}
+    for tag, b64 in re.findall(r"^GATE_LAYOUT_B64 (\S+) (\S+)$", out, re.M):
+        try:
+            dumps[tag] = json.loads(zlib.decompress(base64.b64decode(b64)))
+        except Exception as ex:  # noqa: BLE001
+            g.add("WARN", "layout_images", f"layout dump {tag} unreadable: {type(ex).__name__}")
+    od = kd / "gate_layout"
+    imgs = {}
+    title = spec.get("name", kd.name)
+    if "floorplan" in dumps:
+        imgs["floorplan"], _ = LP.render_floorplan(dumps["floorplan"], od / "floorplan.png", f"{title} floorplan (gate)")
+    pl = dumps.get("placed")
+    if pl:
+        imgs["density"] = LP.render_grid(pl, "density", od / "density.png", f"{title} post-place density (gate)",
+                                         "std-cell area / bin area: blue 0, green 0.5, red 1.0+ ; grey = macros")
+    m = re.search(r"^GATE_CONG_B64 (\S+)$", out, re.M)
+    if m and pl:
+        try:
+            pl = dict(pl, congestion=LP.congestion_grid(pl, zlib.decompress(base64.b64decode(m.group(1))).decode(errors="replace")))
+            imgs["congestion"] = LP.render_grid(pl, "congestion", od / "congestion.png", f"{title} GRT congestion (gate trial)",
+                                                f"{pl['congestion']['markers']} congested gcells (red = most)")
+        except Exception as ex:  # noqa: BLE001
+            g.add("WARN", "layout_images", f"congestion report unreadable: {type(ex).__name__}")
+    if imgs:
+        g.add("INFO", "layout_images", "LOOK at these before submitting: " + "; ".join(f"{k} {p}" for k, p in imgs.items() if p))
+        g.layout_images = {k: p for k, p in imgs.items() if p}
+    elif dumps == {} and "GATE_DONE" in out:
+        g.add("WARN", "layout_images", "the gate produced no layout dump (layout_dump.tcl); see the remote layout_*.log")
+    parent = is_parent_kit(spec)
+    fpd = dumps.get("floorplan")
+    if parent and fpd:
+        st = fpd.get("stats", {})
+        fill = float(st.get("fill") or 0.0)
+        pd = pin_demand(fpd)
+        dem = ", ".join(f"{x['face']} {x['pins']} pins over {x['span_um']}/{x['edge_um']} um ({x['occupancy']:.0%})" for x in pd)
+        reason = str((spec.get("fill_reason") or {}).get("pin_bound", "")).strip()
+        msg = (f"fill {fill:.0%} = (hard macros {st.get('block_area')} + synthesized std cells {st.get('std_area')}) / "
+               f"outline {st.get('die_area')} um2; pin demand per face: {dem}")
+        if fill < FILL_FAIL and not reason:
+            g.add("FAIL", "fill", msg + f" (< {FILL_FAIL:.0%})", "shrink the outline / regroup the macros, or record "
+                  "\"fill_reason\": {\"pin_bound\": \"<why the perimeter, not the area, sets the outline>\"} if the pin "
+                  "demand above shows the edges are full")
+        elif fill < FILL_WARN:
+            g.add("WARN", "fill", msg + (f" (pin-bound: {reason})" if reason else f" (< {FILL_WARN:.0%})"))
+        else:
+            g.add("INFO", "fill", msg)
+    if parent and "GATE_GRT_RC=" in out:
+        rows = re.findall(r"^GATE_GRT_LAYER (\S+) +(\d+) +(\d+) +([\d.]+)%\s+(\d+) */ *(\d+) */ *(\d+)", out, re.M)
+        tot = [r for r in rows if r[0] == "Total"]
+        lay = [r for r in rows if r[0] != "Total"]
+        worst = max(lay, key=lambda r: float(r[3]), default=None)
+        ovf = int(tot[-1][6]) if tot else None
+        note = (f"trial GRT: total overflow {ovf}" + (f"; worst layer {worst[0]} {worst[3]}% used" if worst else "")
+                + (f"; congestion map {imgs.get('congestion')}" if imgs.get("congestion") else ""))
+        if ovf is None:
+            g.add("FAIL", "trial_route", "trial global route produced no congestion table (GATE_GRT_RC="
+                  + re.search(r"GATE_GRT_RC=(\S+)", out).group(1) + ")", "read the remote grt.log")
+        elif ovf > 0:
+            g.add("FAIL", "trial_route", note, "regroup macros / widen the congested channels / move pins to their "
+                  "consumers; look at congestion.png and density.png")
+        else:
+            g.add("INFO", "trial_route", note)
 
 
 def analyse_remote(g: Gate, kd: Path, spec: dict, out: str, cts: bool, binding: dict,
