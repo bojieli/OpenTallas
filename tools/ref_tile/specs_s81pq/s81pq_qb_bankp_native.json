@@ -68,14 +68,14 @@
  "defines": [
   "OT_PQ_ROM_PORTS"
  ],
- "structural_change": "NEW master (S-ELEM-PQ/LEGACY 2026-10-16, ROOT GAP 1): ot_s81_pq_qb_bankp_native is the QB SRAM bank of the canonical PQ hierarchy (OT_PQ_QB_PIPE + OT_PQ_QB_PHYS_SPLIT, tools/s81/pq_native_hierarchy.py), x4 in both ot_s81_pq_qb_pipe_native and ot_s81_pq_qb_pinread_native (P10 headpc); it had no kit. Same 142.56x86.4 footprint and S aq_q / N rd / W control faces as the legacy bank0..3 slot (no new footprint); one 128x256 1R1W SRAM; every pin registered in RTL (capture + output register = the canonical +2).",
+ "structural_change": "NEW master (S-ELEM-PQ/LEGACY 2026-10-16, ROOT GAP 1): ot_s81_pq_qb_bankp_native is the QB SRAM bank of the canonical PQ hierarchy (OT_PQ_QB_PIPE + OT_PQ_QB_PHYS_SPLIT, tools/s81/pq_native_hierarchy.py), x4 in both ot_s81_pq_qb_pipe_native and ot_s81_pq_qb_pinread_native (P10 headpc); it had no kit. Same 142.56x86.4 footprint and S aq_q / N rd / W control faces as the legacy bank0..3 slot (no new footprint); one 128x256 1R1W SRAM; every pin registered in RTL (capture + output register = the canonical +2). | b2: b1 gate (038cb3a78) floorplan showed rd packed into ~15 um at the N-W corner, aq_q in two corner clusters on S and clk near the SW corner -> explicit even per-face spread (spread_face_pins.py; clk at the W-face centre). Util 37% WARN kept on purpose: the outline is set by the 94.8x41.1 SRAM plus the 20 um macro channels to the two wide pin faces (N rd 256, S aq_q 512); it is the existing legacy bank0..3 die slot (drop-in, no new footprint).",
  "params": {},
  "children": [],
  "inter": [],
  "job": {
   "owner": "Claude:S-ELEM-PQ/LEGACY",
   "branch": "claude/pq-bankp-0125",
-  "tag": "b1",
+  "tag": "b2",
   "purpose": "S81 PQ QB pipelined SRAM bank (x4), canonical +2 QB pipeline",
   "benches": [
    {
@@ -114,5 +114,6 @@
    "tools/s81",
    "tools/s81_static_control"
   ]
- }
+ },
+ "io_tcl": "physical/ref_tile_specs/s81pq_native/s81pq_qb_bankp_native_spread_pins.tcl"
 }
