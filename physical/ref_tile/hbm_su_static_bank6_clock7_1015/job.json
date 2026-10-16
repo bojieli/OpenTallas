@@ -1,5 +1,5 @@
 {
- "name": "hbm_su_static_bank6_clock7_1015-r4-COMMIT",
+ "name": "hbm_su_static_bank6_clock7_1015-r4-be2a05f4d",
  "block": "ot_hbm_su_static_bank6_clock_physical",
  "ref_tile": true,
  "owner": "Claude:H-ELEM-B",
@@ -7,8 +7,8 @@
  "threads": 4,
  "peak_ram_gb": 24,
  "source": {
-  "branch": "claude/hbm-elemb-su-1015",
-  "commit": "COMMIT"
+  "branch": "main",
+  "commit": "be2a05f4d"
  },
  "stages": {
   "bench": [
@@ -107,7 +107,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/arch/hbm_su_f2_static_1014/arithmetic/physical/bank_clock7/hbm_su_static_bank6_clock7_1015-r4-COMMIT"
+   "to": "results/arch/hbm_su_f2_static_1014/arithmetic/physical/bank_clock7/hbm_su_static_bank6_clock7_1015-r4-be2a05f4d"
   }
  ],
  "cycles_added": 0,
