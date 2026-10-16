@@ -378,7 +378,12 @@ module ot_hdc_kv_ingest #(
             for(i=1;i<8;i=i+1)host_addr_add32_prefix[4*i+:4]=q[5*i+:4]+{3'd0,g3[i-1]};
         end
     endfunction
-    wire [AW-1:0] host_rows_addr=(AW<=32)?host_addr_add32_prefix(u_raddr,{27'd0,st_sec}):(u_raddr+st_sec);
+    // ONECLK o3 (S-ELEM-PQ/HOST 2026-10-16, o2 gate TT -161.6 ps st_sec -> u_ox.mem[*][287] 21 levels): with APIPE >= 2
+    // the ROWS write address is a register ap_rcur == u_raddr + st_sec: loaded with a2_raddr on every !ap_ok edge (the
+    // same edges that load ap_raddr; st_sec is 0 whenever ap_ok is 0) and incremented on exactly the st_sec+1 edges.
+    reg  [31:0] ap_rcur;
+    wire [AW-1:0] host_rows_addr=(AW<=32&&APIPE>=2)?ap_rcur:
+                                 (AW<=32)?host_addr_add32_prefix(u_raddr,{27'd0,st_sec}):(u_raddr+st_sec);
     // ONECLK (S-ELEM-PQ/HOST 2026-10-16, o1 gate TT -161.9 ps st_ph -> u_ox.mem 20 levels): with APIPE >= 2 the key /
     // scale addresses are needed only as base+0 / base+1 (key: st_ph 0/1; scale: st_ph 3/4), so stage B also registers
     // base+1 (ap_kcode1 / ap_kscal1) and st_ph only selects. Bit-identical (all-input SAT), zero cycles.
@@ -750,6 +755,15 @@ module ot_hdc_kv_ingest #(
         end
         else begin ap_raddr <= s_raddr; ap_kcode <= k_code; ap_kscal <= k_scal; ap_mine <= s_mine; end
     end
+`ifdef OT_S81_HOST_ADDR_PREFIX
+    always @(posedge clk)
+        if (!ap_ok) ap_rcur <= a2_raddr;
+`ifdef OT_ING_MUT_RCUR
+        else if (st_go && st_mode == M_ROWS && !st_row_end && u_mine) ap_rcur <= ap_rcur + 32'd2;   // mutant: wrong sector stride
+`else
+        else if (st_go && st_mode == M_ROWS && !st_row_end && u_mine) ap_rcur <= ap_rcur + 32'd1;
+`endif
+`endif
     // =============================================================================
     // QPIPE QKV path (see the parameter): input I0 / I1 / bank write, per-lane banks, drain E1 / E2 into an output FIFO
     // =============================================================================

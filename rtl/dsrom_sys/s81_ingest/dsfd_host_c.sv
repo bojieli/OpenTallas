@@ -91,8 +91,18 @@ module dsfd_host_c #(parameter integer NS = 1, KVS = 1, ENG = -1, MUT = 0, PWD =
     // conditioned only by its own clock. Never drive cross-root reset pins
     // from another root's conditioned reset.
     wire pwrn,pwrrn;
+`ifdef OT_S81_HOST_ONECLK
+    // ONECLK o3 (S-ELEM-PQ/HOST 2026-10-16, o2 gate TT recovery -207.4 ps rst/rsv -> pw_wrs/pw_rrs RESETN): the raw
+    // ports reached the OTHER root's synchronizer through their IO budget (457 ps) inside a 278 ps fixed-phase 4:3
+    // window. Each raw assertion still clears both sides at once (rn / rvn are cleared asynchronously by their own
+    // port), but every RELEASE now launches from a flop of its own root (rq[1] on ck, rvq[1] on ckv), so the cross-root
+    // recovery arc is flop -> AND -> RESETN only. Release is later by the two own-root sync edges; no runtime path.
+    ot_reset_sync pw_wrs(.clk(ck),.async_rst_n(rn&&rvn),.sync_rst_n(pwrn));
+    ot_reset_sync pw_rrs(.clk(ckv),.async_rst_n(rn&&rvn),.sync_rst_n(pwrrn));
+`else
     ot_reset_sync pw_wrs(.clk(ck),.async_rst_n(rst&&rsv),.sync_rst_n(pwrn));
     ot_reset_sync pw_rrs(.clk(ckv),.async_rst_n(rst&&rsv),.sync_rst_n(pwrrn));
+`endif
 `else
     wire pwrn=rn,pwrrn=rvn;
 `endif

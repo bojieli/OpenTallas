@@ -1,0 +1,20 @@
+GATE INFO pin_regs: pin registers opted out: RTL registers every data pin on its declared root: inputs fi (f_collective), hc_q (hc), ss1 (f_sseq_st), wf (f_wfc_ft), lf_pins (f_lf); outputs to (t_collective), hw, t_sseq_pw / t_pq_pw / t_sseq_plen (ckv). A generic single-clock wrapper would mis-clock the ckv outputs and add a duplicate stage.
+GATE INFO layer: tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)
+GATE FAIL source_binding: gate-executed daemon overlay changed: tools/fp_margin_lint.py  -> FIX: regenerate a fresh gate for the changed route source/tools
+GATE INFO source_binding: NEW staged remeasurement: all original staged bytes, script and CTS artifacts rehashed; original archive stdout unavailable
+GATE INFO remote: reused verified original netlist, floorplan and CTS state on ot-agidock128; only measurement commands executed anew
+GATE INFO util: synthesized std area 17214 um2 + macros 0 in core 32995: util 52%
+GATE INFO textbook: WARN dsfd_host_c cells 133,803 flops 24,314 depth 795.2 ps util 0.5233 reach 0.0 um (4.0 s)
+GATE WARN textbook.clock_domain: clock root port ck: 23,565 flops > 15,000 on one root (+0 ICGs, 0 macro clock pins; e.g. boot_bad_sync[0]$_DFF_PN0_): split into hierarchical sub-blocks (hardened elements with their own CTS) or a clock mesh / H-tree spine  -> FIX: hardened sub-tiles with local roots and registered seams (kind cluster), <= ~15k sinks / 600 um a root
+GATE WARN textbook.high_fanout: reset u_h.host.u_hi.u_rsc.reset_pipe[1]$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R): 998 loads (992 flops, e.g. u_h.host.u_hi.csr_seam$_DFFE_PN0P_) > 256: register it and replicate per region (rtl/lib/ot_rst_relay.sv: one relay copy per region)  -> FIX: no reset on datapath registers; replicate enables / selects / pointer bits per region (<= ~256 loads)
+GATE WARN textbook.logic_depth: reg->reg stage u_h.host.u_hi.u_eng.st_sec[0]$_DFF_PN0_ -> u_h.host.u_hi.u_ox.mem[0][287]$_DFFE_PP_/D: ~795 ps estimated (21 logic levels) > 600 ps: pipeline / restructure the stage  -> FIX: pipeline to ~700 ps a stage: trees, 2-3 rungs for wide compare / mux / arbitration
+GATE INFO cts_calibration: ss insertion all 341.2..377.9 ps (spread 36.7), boundary mean 356.6; tt insertion all 255.7..287.8 ps (spread 32.1), boundary mean 269.8; ff insertion all 205.6..235.3 ps (spread 29.7), boundary mean 218.9; macro_clk flag False
+GATE INFO density: effective global-placement target density 0.500 vs spec PD 0.50
+GATE INFO path_classes: constraints signoff /src/physical/ref_tile/dsfd_host_c_oneclk_1016/signoff.sdc (TT placement RC; diagnostic)
+GATE INFO path_classes: in->reg         4 paths, worst slack -207.4 ps (e.g. pw_wrs.reset_pipe[1]$_DFF_PN0_/RESETN)
+GATE INFO path_classes: reg->reg     1010 paths, worst slack -161.6 ps (e.g. u_h.host.u_hi.u_ox.mem[1][287]$_DFFE_PP_/D)
+GATE INFO path_classes: reg->out      380 paths, worst slack 339.5 ps (e.g. t_collective[4])
+GATE INFO path_classes: setup WNS -2.0739931994029348e-10 hold WNS 4.321745739055416e-11
+GATE INFO clock_rule: root port:ck: 23,565 sinks on one clock root > 15,000, allowed by evidence: measured TT insertion 287.8 ps, leaf spread 32.1 ps (<= 300 ps / <= 80 ps)
+PRE_ROUTE_GATE: FAIL (1 fail, 3 warn)
+GATE: dsfd_host_c_oneclk_1016/gate_result.json written (exact staged source binding; commit it with the kit)

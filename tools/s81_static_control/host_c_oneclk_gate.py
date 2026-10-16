@@ -161,6 +161,9 @@ def main():
         run(exe, f'{case}_{mname}', np_arg, False, 'HOST_ONECLK FAIL', cd)
         exe = build('tb_host_c_oneclk', ROOT / TB, 0, f'{case}_csr_leak', swap={SRC[0]: badhc})
         run(exe, f'{case}_csr_leak', np_arg, False, 'HOST_ONECLK FAIL', cd)
+        if case == 'rows':   # o3: the registered ROWS address ap_rcur advanced by a wrong sector stride
+            exe = build('tb_host_c_oneclk', ROOT / TB, 0, 'rows_rcur', extra=('-DOT_ING_MUT_RCUR',))
+            run(exe, 'rows_rcur', np_arg, False, 'HOST_ONECLK FAIL', cd)
     boot = (ROOT / BOOT_TB).read_text().replace('.ck_ingest({ck,ck}),', '')
     assert '.ck_ingest' not in boot
     btb = out / 'tb_host_boot300_oneclk.sv'; btb.write_text(boot)

@@ -1,0 +1,3 @@
+HOST_ONECLK BOOT word=0 kind=0 dut_edge=111 ref_edge=113 delta_ckv=-2
+HOST_ONECLK BOOT word=1 kind=1 dut_edge=135 ref_edge=137 delta_ckv=-2
+HOST_ONECLK PASS exact_calendar=59989 real_packets=1093 sectors=544 completions=1 boot_words=2 boot_delta_ckv=-2..-2
