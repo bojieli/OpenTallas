@@ -409,17 +409,21 @@ module ot_hgi_sm_xload_cl2_ctl #(
             if (p2 * XC + 266 * j2 < 2048 * (bb + 1)) nall = nall + 1;
     endfunction
     reg be_on; reg [9:0] ek; reg ea; reg [6:0] eb2;
-    reg [7:0] need;
-    always @* begin
-        need = 8'd0;
+    // cl2e (ctl cl2d TT -92.5: la/lane_en flop -> need table lookup -> wc >= need -> bd_em -> eb2 next state -> one-hot
+    // decode -> bsel, ~8 levels + 400 ps of wire): need(eb2) and (eb2 == nb - 1) are REGISTERED one edge ahead from
+    // the next-state eb2 and the next-state la/pla/nb, so bd_em and the one-hot decode see plain flops.  Same values on
+    // every edge (need_q == need(eb2), eb2_last == (eb2 == nb - 1)); no edge added.
+    function automatic [7:0] need_of(input [6:0] b, input [3:0] l, input [7:0] pl);
+        need_of = 8'd0;
         for (integer x = 0; x < NBQ; x = x + 1)
-            if (eb2 == 7'(x)) need = (la == 4'd8) ? 8'(nall(8, x)) : 8'(nall(4, x));
-        if (need > pla) need = pla;
-        if (MUT == 2 && need != 8'd0) need = need - 8'd1;
-    end
-    wire pair_rdy = (ek < wk) || ({1'b0, wc} >= need);
+            if (b == 7'(x)) need_of = (l == 4'd8) ? 8'(nall(8, x)) : 8'(nall(4, x));
+        if (need_of > pl) need_of = pl;
+        if (MUT == 2 && need_of != 8'd0) need_of = need_of - 8'd1;
+    endfunction
+    reg [7:0] need_q; reg eb2_last;
+    wire pair_rdy = (ek < wk) || ({1'b0, wc} >= need_q);
     wire bd_em = be_on && (ea || pair_rdy);
-    wire bd_tail = bd_em && ea && eb2 == nb - 7'd1;
+    wire bd_tail = bd_em && ea && eb2_last;
     always @(posedge clk or negedge rn) begin
         if (!rn) be_on <= 1'b0;
         else begin
@@ -436,12 +440,16 @@ module ot_hgi_sm_xload_cl2_ctl #(
         else if (bd_em) begin
             ea_n = ~ea;
             if (ea) begin
-                if (eb2 == nb - 7'd1) begin eb2_n = 7'd0; ek_n = ek + 10'd1; end else eb2_n = eb2 + 7'd1;
+                if (eb2_last) begin eb2_n = 7'd0; ek_n = ek + 10'd1; end else eb2_n = eb2 + 7'd1;
             end
         end
     end
+    wire [3:0] la_nx = start_bd ? la_c : la;
+    wire [7:0] pla_nx = start_bd ? pla_c : pla;
+    wire [6:0] nb_nx = start ? nb_c : nb;
     always @(posedge clk) begin
         ea <= ea_n; eb2 <= eb2_n; ek <= ek_n;
+        need_q <= need_of(eb2_n, la_nx, pla_nx); eb2_last <= (eb2_n == nb_nx - 7'd1);
         for (integer x = 0; x < NBQ; x = x + 1) begin
             bsel[x] <= !ea_n && eb2_n == 7'(x); bsel[NBQ + x] <= ea_n && eb2_n == 7'(x);
         end
