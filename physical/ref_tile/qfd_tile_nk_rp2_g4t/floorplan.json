@@ -577,6 +577,9 @@
   "physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1/ot_qwen_tile_lsl_fp1_ss.lib",
   "physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1/ot_qwen_tile_lsl_fp1_ff.lib",
   "physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1/ot_qwen_tile_lsl_fp1_tt.lib",
-  "physical/ref_tile/qfd_tile_nk_rp2_g4t/place.tcl"
+  "physical/ref_tile/qfd_tile_nk_rp2_g4t/place.tcl",
+  "tools/ref_tile/raw_macro_clocks.py",
+  "physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8_ff.lib",
+  "physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8_tt.lib"
  ]
 }

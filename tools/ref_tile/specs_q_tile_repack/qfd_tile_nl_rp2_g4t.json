@@ -449,5 +449,57 @@
  ],
  "pre_dpl_extra": [
   "tools/qwen_repack/reconcile_sink_owners.tcl"
- ]
+ ],
+ "soft_root_macro_bindings": {
+  "u_g.u_tile.u_tile.g_col[0].g_bank[3].u_rom": {
+   "master": "ot_rom_4096x266_m8",
+   "clock_pin": "clk",
+   "root": "ck_rp3"
+  },
+  "u_g.u_tile.u_tile.g_col[1].g_bank[3].u_rom": {
+   "master": "ot_rom_4096x266_m8",
+   "clock_pin": "clk",
+   "root": "ck_rp8"
+  },
+  "u_g.u_tile.u_tile.g_col[0].g_bank[4].u_rom": {
+   "master": "ot_rom_4096x266_m8",
+   "clock_pin": "clk",
+   "root": "ck_rp4"
+  },
+  "u_g.u_tile.u_tile.g_col[1].g_bank[4].u_rom": {
+   "master": "ot_rom_4096x266_m8",
+   "clock_pin": "clk",
+   "root": "ck_rp9"
+  },
+  "u_g.u_tile.u_tile.g_col[0].g_bank[0].u_rom": {
+   "master": "ot_rom_4096x266_m8",
+   "clock_pin": "clk",
+   "root": "ck_rp0"
+  },
+  "u_g.u_tile.u_tile.g_col[0].g_bank[2].u_rom": {
+   "master": "ot_rom_4096x266_m8",
+   "clock_pin": "clk",
+   "root": "ck_rp2"
+  },
+  "u_g.u_tile.u_tile.g_col[1].g_bank[0].u_rom": {
+   "master": "ot_rom_4096x266_m8",
+   "clock_pin": "clk",
+   "root": "ck_rp5"
+  },
+  "u_g.u_tile.u_tile.g_col[0].g_bank[1].u_rom": {
+   "master": "ot_rom_4096x266_m8",
+   "clock_pin": "clk",
+   "root": "ck_rp1"
+  },
+  "u_g.u_tile.u_tile.g_col[1].g_bank[2].u_rom": {
+   "master": "ot_rom_4096x266_m8",
+   "clock_pin": "clk",
+   "root": "ck_rp7"
+  },
+  "u_g.u_tile.u_tile.g_col[1].g_bank[1].u_rom": {
+   "master": "ot_rom_4096x266_m8",
+   "clock_pin": "clk",
+   "root": "ck_rp6"
+  }
+ }
 }
