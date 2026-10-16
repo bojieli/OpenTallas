@@ -169,7 +169,7 @@
    "s13"
   ]
  },
- "io_tcl": "physical/s81_die_pins/pq_producer_c9_h108_1417/dsfd_stage_seq_static_c9.tcl",
+ "io_tcl": "physical/s81_die_pins/pq_producer_c9_h1296_2118/dsfd_stage_seq_static_c9.tcl",
  "recipe": 2,
  "outhold": false,
  "inhold": true,
@@ -191,19 +191,20 @@
  },
  "slot_change_request": {
   "contract": "S81 PQ producer explicit source-bound leaf grant",
-  "version": "18ea77d79",
-  "source": "physical/s81_die_pins/pq_producer_c9_h108_1417/grant.json",
+  "version": "c9-h1296-2118",
+  "source": "physical/s81_die_pins/pq_producer_c9_h1296_2118/grant.json",
   "outline": [
    302.4,
-   108
+   129.6
   ],
-  "why": "C9 actual14982.7um2 std with48.5% insetmargin; HOST splitrealrootmax9293FF, exact1223/993 top-down pins; no c8/oldHOST view or parentfit inheritance."
+  "why": "Held die-owned successor grant;283 N pins moved to actual129.6 edge;940 unchanged; no native/view inheritance.",
+  "grant_commit": "27eeb499e0c4daec83dc0c2ff4db95ec7e1ed424"
  },
- "structural_change": "True engine13 c9 and actual host CSR0x12 boot source. All14 native engines preserve identities0..12; no credits or ready issue. Fixed initial prime plus compiled fixed re-prime enables repeatedjobs. Host one23124FF root replaced by real ingest-host9279, ingest-core9293, core4556 and serial118 roots. C9 actual mapped12401 core/378 serial. All new interfaces are explicit. Leaf native CTS/TT setup/FF hold/DRC0 and actual die-stage compiler binding remain unqualified. | n2 (S-ELEM-PQ 10-15): outline 302.4x108 -> 302.4x129.6 (n1 route FLOORPLAN_MARGIN util 66%: std 20,396 um2 -> ~54.6%); issuer fault_code resolved from registered per-code event flags one edge later and engine availability checked against the per-engine issue set after the row loop (n1 lint: age->fault_code 40 levels / ~1,444 ps, s7->fault_code 39 levels). run_fault/cfg_fault and all issue/KIT/END edges unchanged.",
+ "structural_change": "True engine13 c9 and actual host CSR0x12 boot source. All14 native engines preserve identities0..12; no credits or ready issue. Fixed initial prime plus compiled fixed re-prime enables repeatedjobs. Host one23124FF root replaced by real ingest-host9279, ingest-core9293, core4556 and serial118 roots. C9 actual mapped12401 core/378 serial. All new interfaces are explicit. Leaf native CTS/TT setup/FF hold/DRC0 and actual die-stage compiler binding remain unqualified. | n2 (S-ELEM-PQ 10-15): outline 302.4x108 -> 302.4x129.6 (n1 route FLOORPLAN_MARGIN util 66%: std 20,396 um2 -> ~54.6%); issuer fault_code resolved from registered per-code event flags one edge later and engine availability checked against the per-engine issue set after the row loop (n1 lint: age->fault_code 40 levels / ~1,444 ps, s7->fault_code 39 levels). run_fault/cfg_fault and all issue/KIT/END edges unchanged. | n3-pinfix: die owner grant27eeb499e assigns actual283 N pins at129.6 edge; preceding n2 Tcl still108. All1223 names/order/layers and other940 positions preserved; actual NOPS128/STAGE0 unchanged, no native view inherited.",
  "job": {
-  "owner": "Claude:S-ELEM-PQ",
-  "branch": "claude/s81-pq-producer-kits-1705",
-  "tag": "n1",
+  "owner": "Codex:S-ELEM-PQ",
+  "branch": "claude/s81-bf-clk-1825",
+  "tag": "n3-pinfix",
   "purpose": "Actual PQ sequencer and host producer native leaf candidate; real128-row stage0 mapped RTL, fixed3:4 relationship and exacttyped18ea pins, full actual HOST/FIFO/c9/PQ/mapped-memory positive and actual source mutants.",
   "views_to": "physical/ref_tile/dsfd_stage_seq_static_c9_pq_native_1425/views",
   "record_to": "results/rtl/ref_tile/dsfd_stage_seq_static_c9_pq_native_1425",
@@ -217,7 +218,8 @@
    "physical/s81_pq_hier/pinned",
    "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
    "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
-   "physical/rom_host_ingest/rtl"
+   "physical/rom_host_ingest/rtl",
+   "physical/s81_die_pins/pq_producer_c9_h1296_2118"
   ],
   "benches": [
    {
