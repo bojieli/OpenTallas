@@ -6,10 +6,20 @@ import sys
 import tempfile
 import unittest
 
-from v16_fetch import REMOTE_PY, check_direct_master, check_sources
+from v16_fetch import REMOTE_PY, check_direct_master, check_sources, check_etm_signature
 
 
 class FetchAdmission(unittest.TestCase):
+    def test_actual_liberty_cell_and_ports_are_checked(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            p = Path(tmp) / 'model.lib'
+            p.write_text('library(model) {\n cell("wrapper") {\n pin(clk) { direction : input; }\n }}\n')
+            check_etm_signature(p, 'wrapper', {'clk': ('input', 1)})
+            with self.assertRaisesRegex(ValueError, 'Wrong actual ETM cell'):
+                check_etm_signature(p, 'default', {'clk': ('input', 1)})
+            with self.assertRaisesRegex(ValueError, 'ports differ'):
+                check_etm_signature(p, 'wrapper', {'clk': ('input', 1), 'missing': ('output', 8)})
+
     def test_ignored_wrapper_is_rejected(self):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp); d = root / 'syn' / 'cell'; d.mkdir(parents=True)

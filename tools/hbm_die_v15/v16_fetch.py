@@ -6,7 +6,7 @@ _bb.v), host, remote}.  Finds each cell on whichever fleet host built it.
 
     v16_fetch.py --views VIEWS_DIR [--remote-root DIR] [--commit SHA]
 """
-import argparse, hashlib, json, shlex, subprocess
+import argparse, hashlib, json, re, shlex, subprocess
 from pathlib import Path
 
 HOSTS = ['ot-epyc4', 'ot-agidock128']   # ot-epyc1tb retired 10-16 (its reusable views were copied to ot-epyc4)
@@ -133,6 +133,15 @@ def check_direct_master(entry, meta, expected_ports, actual_ports):
         raise ValueError('Direct-master defines, parameter overrides or elaboration/mapping recipe differ')
 
 
+def check_etm_signature(path, top, expected_ports):
+    from die_case import ports_of_lib
+    cells = re.findall(r'\bcell\s*\(\s*"?([^"\s)]+)"?\s*\)', Path(path).read_text())
+    if cells != [top]:
+        raise ValueError(f'Wrong actual ETM cell in {path}: {cells}, expected {top}')
+    if ports_of_lib(path) != expected_ports:
+        raise ValueError(f'Actual ETM ports differ from frozen contract: {path}')
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument('--views', required=True)
@@ -147,7 +156,7 @@ def main():
     src = f'{a.remote_root}/src_{build_commit}'
     expected_src = f'{a.remote_root}/src_{a.commit}'
     contract = json.loads(subprocess.check_output(['git', '-C', str(Path(__file__).resolve().parents[2]),
-                                                  'show', f'{a.commit}:results/arch/hbm_die_v16/contract.json'])) if a.allow_direct_master else None
+                                                  'show', f'{a.commit}:results/arch/hbm_die_v16/contract.json']))
     found = {}
     for h in HOSTS:
         out = subprocess.run(['ssh', h, f'cd {a.remote_root}/syn 2>/dev/null && ls -d */ | tr -d /'], capture_output=True,
@@ -185,6 +194,10 @@ def main():
         # a failed transfer must not publish a receipt for incomplete views.
         subprocess.run(['rsync', '-az', *[f'{h}:{a.remote_root}/syn/{c}/{f}' for f in files], str(dst) + '/'],
                        check=True)
+        rep = contract['instances'][V[c]['representative']]
+        expected_ports = {p: (d['direction'], d['bits']) for p, d in rep['ports'].items()}
+        for corner in ('tt', 'ff'):
+            check_etm_signature(dst / f'{w}_synth_{corner}.lib', w, expected_ports)
         if direct:
             from die_case import ports_of_lib
             rep = contract['instances'][V[c]['representative']]
