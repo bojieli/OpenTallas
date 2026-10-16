@@ -1,5 +1,5 @@
 {
-  "collected_at": "2026-10-16T16:09:09.516714-07:00",
+  "collected_at": "2026-10-16T16:28:45.077228-07:00",
   "scope": "Current source integration and actual job inventory; no whole-die qualification",
   "jobs": [
     {
@@ -20,8 +20,8 @@
       "stage": "GEN active",
       "host": "ot-epyc4",
       "pid": 608051,
-      "cpu_percent": 98.2,
-      "rss_kb": 2085684,
+      "cpu_percent": 98.4,
+      "rss_kb": 2027676,
       "source": "954b89dd5",
       "progress": "15:50:57 logfile mtime",
       "TT_ps": null,
@@ -33,8 +33,8 @@
       "stage": "netlist GEN active before strict port bind",
       "host": "ot-epyc4",
       "pid": 1836584,
-      "cpu_percent": 99.4,
-      "rss_kb": 2012240,
+      "cpu_percent": 99.5,
+      "rss_kb": 2012384,
       "source": "79ab53db9+guard+status+contacts",
       "TT_ps": null,
       "FF_ps": null,
@@ -78,13 +78,28 @@
     },
     {
       "name": "c26k2_capture_hubfirst",
-      "stage": "corrected GEN submitted",
+      "stage": "GEN terminal",
       "local_session": 48829,
       "memory_gb": 4,
       "threads": 1,
       "source": "2305beec7",
       "fix": "preserves shared clock/reset trunks and all86 literal capture entries",
-      "root": "/srv/opentallas-scratch/codex/s81-die-1552/c26k2_capture_hubfirst"
+      "root": "/srv/opentallas-scratch/codex/s81-die-1552/c26k2_capture_hubfirst",
+      "rc": 1,
+      "cause": "Wrong imported module root through symlink resolved old capture importer; dependency staging corrected in c26k3"
+    },
+    {
+      "name": "c26k3_capture_hubfirst",
+      "stage": "GEN terminal",
+      "source": "3f21ae39b",
+      "host": "ot-epyc4",
+      "unit": "oth-ubuntu-3064067-1792192451",
+      "rc": 1,
+      "ended_at": "2026-10-16T16:19:28-07:00",
+      "cause": "SSTN split unsupported absent base output",
+      "classification": "station source ABI versus incident output census",
+      "structural_progress": "Capture expansion and shared scalar clocks passed; later station transform refused",
+      "output_preserved": true
     }
   ],
   "failure_classes": {
@@ -105,7 +120,9 @@
     "internal_max_um": 499.428,
     "max_native_launch_ps": 219.8,
     "max_native_capture_ps": 183.3,
-    "die_import": "implemented opt-in; actual corrected GEN in flight, no die qualification"
+    "die_import": "implemented opt-in; actual corrected GEN in flight, no die qualification",
+    "baseline_analytical_setup_misses": 50,
+    "candidate4": "Separate packet capture_rehome_1552/candidate4_packet.json.gz; all joins screened, stream minimum planning setup +20.00185 ps; no routed qualification"
   },
   "ready_commits": [
     "e62c33597",
@@ -116,14 +133,18 @@
     "cf2ef3aa6",
     "ddd5beb39",
     "154f9132e",
-    "2305beec7"
+    "2305beec7",
+    "3f21ae39b",
+    "6b5c67e8e",
+    "87662ca38"
   ],
   "preserved": "No existing job killed, duplicated, or overwritten. Geometry adoption awaits owner Explorer review.",
-  "validation": "15 focused tests pass: exact contact ABI, full70-leaf native view binding, shared clock/reset preservation, atomic negative controls, blocked-street allocation, progress guards",
-  "epoch_reset_source_finding": "dsfd_coll_ck/ot_s81ph_coll_rstc releases stream/serial64/72refclk edges; this does not prove common3:4epoch. PLL behavioral model free-runs oscillators and cannot establish warm divider epoch. Additive source-bound reset interface work in flight.",
+  "validation": "17 focused tests pass; all 70 packet local children R0; mixed local orientation and inserted internal stages rejected",
+  "epoch_reset_source_finding": "Legacy reset66/74 refclk edges including two synchronizer stages; common3:4 epoch unproven. Conditional coordinator proposal requires absent real source interface.",
   "visual_inspection": {
     "image": "capture_actual_homes.png",
     "sha256": "729a1d667fcef4de6d7fa53e63653ec45347bf0ba399ba5963d71beb1e6530b3",
-    "finding": "Two regular rows; t/s seams abut, t elevated10.8um; DONE relay moved clear; no visible overlaps. Global die incident cuts and routing still unmeasured."
+    "finding": "Two regular rows; t/s seams abut, t elevated10.8um; DONE relay moved clear; no visible overlaps. Global die incident cuts and routing still unmeasured.",
+    "candidate4": "Personally viewed candidate4_homes.png: five red rehomes clear native outlines, separated station landings, no visible overlap; exact bounds/overlap/gap checks zero."
   }
 }
