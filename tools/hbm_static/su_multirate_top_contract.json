@@ -1,0 +1,136 @@
+{
+  "schema": "opentallas.hbm.su_multirate_top.source_contract.v1",
+  "qualified": false,
+  "implementation_candidate": true,
+  "default_parameter": {
+    "MULTIRATE": 0
+  },
+  "candidate_parameter": {
+    "MULTIRATE": 1,
+    "READ_RETURN": 10,
+    "WRITE_RETURN": 7
+  },
+  "source_top": "ot_hbm_su_static_top",
+  "new_port": {
+    "name": "bridge_rst_n",
+    "width": 1,
+    "meaning": "common phase epoch reset; distinct from global provisioning/lane reset rst_n"
+  },
+  "domains": {
+    "serial": {
+      "hz": 900000000,
+      "tick_period": 4,
+      "roots": [
+        "clk_ctl[15:0]",
+        "clk_lane[4095:0]",
+        "clk_insert[2047:0]",
+        "clk_bcast[63:0]",
+        "clk_bank[511:0]",
+        "clk_bank_macro[3071:0]",
+        "clk_rf[255:0]",
+        "clk_core[3:0]",
+        "clk_red[3:0]",
+        "clk_side[5:0]",
+        "clk_relay[3:0]"
+      ],
+      "programme_bits": 9688
+    },
+    "stream": {
+      "hz": 1200000000,
+      "tick_period": 3,
+      "roots": [
+        "pg_clk[15:0]",
+        "native VM/LG bank clocks",
+        "stream programme clocks"
+      ],
+      "programme_bits": 64
+    }
+  },
+  "phase": {
+    "quantum_ps": "2500/9",
+    "epoch_ticks": 12,
+    "request_register": "j=ceil((4n+4)/3)",
+    "lg_capture": "j+1",
+    "serial_read_present": "n+12",
+    "serial_done_present": "n+10",
+    "read_store_fill_commit": "request n+15",
+    "stream_leaf_read": 10,
+    "stream_leaf_write": 7,
+    "physical_PLL_phase_reset_qualified": false,
+    "source": "504a1472d and 8d84467a0 component proof; not whole-top proof"
+  },
+  "programme": {
+    "serial_edges": 7116,
+    "serial_macros": 301,
+    "serial_bits": 9863168,
+    "serial_config_transactions": 34420,
+    "stream_edges": 9489,
+    "stream_macros": 76,
+    "stream_bits": 2490368,
+    "stream_config_transactions": 9493,
+    "total_macros": 377,
+    "total_bits": 12353536,
+    "evidence": "su_programme_native measured generic lossless lowering; source-pinned manifests to accompany integration",
+    "both_programmes_start": "respective domain epoch edge -4; command0 consumed commonE0",
+    "global_reset": "rst_n may be released for configuration and VM preload; bridge_rst_n remains low through programme priming",
+    "bridge_reset": "release before commonE0 rising serial/stream edge; all phase counters see E0 as phase0"
+  },
+  "state": {
+    "ports": 32,
+    "bridge_payload_bits_per_port": 2780,
+    "bridge_phase_valid_fault_bits_per_port": 49,
+    "total_bridge_source_bits": 90528,
+    "fill_metadata_added_bits": 704,
+    "total_added_source_register_bits": 91232,
+    "added_serial_bits_per_group": 2912,
+    "added_stream_bits_per_group": 2746,
+    "qualification": "Source declarations only, not mapped cell area or measured CTS sinks"
+  },
+  "macro": {
+    "master": "ot_sram_1r1w_128x256_m1_r2c2",
+    "width_um": 94.824,
+    "height_um": 41.04,
+    "total_377_macro_area_um2": 1467124.51392,
+    "lef_sha256": "bb0024665e7323656008a9f4df35efe56fd6ca1cdef9ce4c8d2f9676fefb0227"
+  },
+  "schedule": {
+    "last_fill_request_serial": 1023,
+    "new_fill_commit_serial": 1038,
+    "first_op_load_serial": 1040,
+    "fill_to_first_op_margin_serial": 2,
+    "arithmetic_and_scalar_events": "unchanged serial expected events; actual full integration required",
+    "VM_write_events": "old serial LG-write edge s -> new event(s).lg_issue stream edge; no observed-request calendar generation"
+  },
+  "blockers": [
+    "Whole512 two-plane hardware positive/mutant proof pending; no fullshape job authorized before a5 sameclock terminal/cache collection.",
+    "Physical phase establishment/clock compensation and two-plane startup epoch unproven.",
+    "Macro and source-register counts do not establish outline/pin/CTS or die closure.",
+    "Programme boot/configuration and max(serial work end, stream acknowledgements) must remain separate measured endpoints."
+  ],
+  "whole_top_macro_inventory": {
+    "store": 3072,
+    "reduction": 8,
+    "native_VM": 96,
+    "programme": 377,
+    "total": 3553
+  },
+  "production_programme": {
+    "canonical_operations": 45,
+    "supported": 28,
+    "unsupported": 17,
+    "qualified": false
+  },
+  "completion_observations": {
+    "lane_input_strobe": "not SRAM completion",
+    "store_commit": "all512 u_bank.w_pin at actual SRAM clock edge",
+    "RF_commit": "all256 RF bank wv_pin",
+    "fullshape_receipt": "pending; no measured cycle/adoption claim"
+  },
+  "checkpoint_validation": {
+    "shell_syntax": "PASS",
+    "python_syntax": "PASS",
+    "native_runner_prepare": "PASS serial7116 stream9489",
+    "full_numeric": "PENDING; existing a5 sameclock job remains live",
+    "source_diff_check": "PASS excluding original raw log whitespace"
+  }
+}

@@ -6,17 +6,17 @@
  "die": [
   0,
   0,
-  15.12,
-  15.12
+  21.6,
+  21.6
  ],
  "core": [
   2.16,
   2.16,
-  12.959999999999999,
-  12.959999999999999
+  19.44,
+  19.44
  ],
- "why": "util 0.52 of std 40 + macros 0 um2",
- "std_area_um2": 40,
+ "why": "spec outline (exact: the closed view's sub-slot)",
+ "std_area_um2": null,
  "layer_contract": {
   "children": {},
   "pg_layer": "M5",
@@ -40,14 +40,7 @@
  },
  "clock_port": "ck",
  "blocks": [],
- "findings": [
-  [
-   "WARN",
-   "util",
-   "utilisation 34% outside 45%-60% (std 40 + macro 0 in core 117 um2)",
-   "resize the outline to util 0.50-0.55 (drop 'outline', set util)"
-  ]
- ],
+ "findings": [],
  "referenced": [
   "rtl/hbm_accel/control/hfd_ckgen.sv",
   "rtl/hbm_accel/control/ot_hbm_pll_bb.sv",
