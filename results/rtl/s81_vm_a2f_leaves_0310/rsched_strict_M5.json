@@ -1,0 +1,67 @@
+{
+ "schema": "opentallas.hier_contract.child_lint.v1",
+ "lef": "/home/ubuntu/artifacts/s81-vm-parent-leaves-0310/rsched_closed/views/dsfd_vm_a2f_rsched_p/dsfd_vm_a2f_rsched_p.lef",
+ "verdict": "PASS",
+ "fails": [],
+ "warns": [],
+ "summary": "dsfd_vm_a2f_rsched_p 117.72 x 117.72: PG M5 VDD 21 stripes (92% spread, 100% cov) / VSS 21 stripes (92% spread, 100% cov); strap M6; face pins 2028 blocked-above 0 blocked-same 0; clock ck insertion 251 ps; pockets M5 0 (closed)",
+ "info": {
+  "cell": "dsfd_vm_a2f_rsched_p",
+  "W": 117.72,
+  "H": 117.72,
+  "pg": {
+   "nets": {
+    "VDD": {
+     "top_layer": "M5",
+     "stripes": 21,
+     "dir": "V",
+     "spread": 0.917,
+     "coverage": 1.0,
+     "shapes_on_top": 21
+    },
+    "VSS": {
+     "top_layer": "M5",
+     "stripes": 21,
+     "dir": "V",
+     "spread": 0.917,
+     "coverage": 1.0,
+     "shapes_on_top": 21
+    }
+   },
+   "top_layer": "M5",
+   "ok": true,
+   "why": []
+  },
+  "pg_layer": "M5",
+  "strap_layer": "M6",
+  "cap": "M5",
+  "face": {
+   "face_pins": 2028,
+   "blocked_above": 0,
+   "covered_below": 20,
+   "examples": [],
+   "blocked_same": 0,
+   "same_examples": [],
+   "band_same": 0,
+   "band_examples": []
+  },
+  "clock_insertion": {
+   "ck": {
+    "max_ps": 251.42,
+    "min_ps": 184.33
+   }
+  },
+  "pockets": {
+   "layer": "M5",
+   "d_um": 1.536,
+   "marker": {
+    "layer": "M5",
+    "d_um": 1.536,
+    "added": 459
+   },
+   "count": 0,
+   "area_um2": 0,
+   "examples": []
+  }
+ }
+}
