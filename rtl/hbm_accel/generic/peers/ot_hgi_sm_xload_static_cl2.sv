@@ -383,14 +383,18 @@ module ot_hgi_sm_xload_cl2_ctl #(
         else begin qo_lo_c <= qo_lo; qo_hi_c <= qo_hi; qf_lo_c <= qf_lo; qf_hi_c <= qf_hi; qtl_d <= qtl; end
     assign bd_fault = (qo_lo_c && qf_lo_c) || (qo_hi_c && qf_hi_c) || (qtl_d[9] && (qtl_d[1] != qo_lo_c || qtl_d[0] != qo_hi_c));
     reg wv_b;
+    // cl2d: the ring write controls leave ONE edge early (lookahead on the fixed tag delay line, qt[QL-2] = next qtl) so
+    // the bdring leaf can capture them in pin registers on the same edge as its quantiser words wr_lo/wr_hi (native
+    // capture: r_wsel/zlo/zhi no longer gate the 32 x 266 ring storage straight from the pins).  Ring write edge unchanged.
+    wire [9:0] qtn = (MUT == 5) ? qtl : qt[QL-2];   // MUT 5: no lookahead (must FAIL the lock bench)
     always @(posedge clk or negedge rn)
         if (!rn) begin wv_b <= 1'b0; r_wsel <= 16'd0; end
         else begin
             wv_b <= qtl[9];
             for (integer s = 0; s < 16; s = s + 1)
-                r_wsel[s] <= qtl[9] && {qtl[5], qtl[4:2] ^ ((MUT == 3) ? 3'd1 : 3'd0)} == 4'(s);
+                r_wsel[s] <= qtn[9] && {qtn[5], qtn[4:2] ^ ((MUT == 3) ? 3'd1 : 3'd0)} == 4'(s);
         end
-    always @(posedge clk) begin zlo <= qtl[1]; zhi <= qtl[0]; end
+    always @(posedge clk) begin zlo <= qtn[1]; zhi <= qtn[0]; end
     reg [6:0] wc; reg [9:0] wk;
     always @(posedge clk) begin
         if (start_bd) begin wc <= 7'd0; wk <= 10'd0; end
@@ -493,21 +497,28 @@ module ot_hgi_sm_xload_cl2_bfq (
     input  wire [6:0]         r_a,
     output reg  [255:0]       rwq
 );
+    // cl2c (native audit of CLOSED cl2b TT +79.64/FF +12.38: capture rst_n 416.8 ps, mlo 200.2, mhi 194.3):
+    // (1) rst_n enters a local reset relay at its pin (async assert, 3-edge synchronous release; resets only the
+    //     enable/select flops, which are idle until the ctl issues after its own release);
+    // (2) the write-mask pair is ONE pin register each (was 8 per-macro copies 250 um from the W pins), driving the
+    //     macros' mask pins through its buffer tree: same edge as wp_d/wp_ce, so every macro sees the same write.
+    wire [0:0] rn_l;
+    ot_rst_relay #(.REGIONS(1), .SYNC_STAGES(2), .TREE_STAGES(1)) u_rst (.clk(clk), .rst_n_in(rst_n), .rst_n(rn_l));
+    (* keep = 1 *) reg mask_hi, mask_lo;
+    always @(posedge clk) begin mask_hi <= mhi; mask_lo <= mlo; end
     wire [255:0] cap [0:7];
     genvar gt;
     generate for (gt = 0; gt < 8; gt = gt + 1) begin : g_t
         (* keep = 1 *) reg rp_ce; (* keep = 1 *) reg [6:0] rp_a; reg rp_sel;
         (* keep = 1 *) reg wp_ce; (* keep = 1 *) reg [6:0] wp_a; reg [255:0] wp_d;
-        (* keep = 1 *) reg mask_hi, mask_lo;
         wire [255:0] wp_m = {{128{mask_hi}}, {128{mask_lo}}};
         reg [255:0] cq;
         wire [255:0] rd;
-        always @(posedge clk or negedge rst_n) begin
-            if (!rst_n) begin rp_ce <= 1'b0; rp_sel <= 1'b0; wp_ce <= 1'b0; end
+        always @(posedge clk or negedge rn_l[0]) begin
+            if (!rn_l[0]) begin rp_ce <= 1'b0; rp_sel <= 1'b0; wp_ce <= 1'b0; end
             else begin rp_ce <= r_ce[gt]; rp_sel <= rp_ce; wp_ce <= wce; end
         end
         always @(posedge clk) begin
-            mask_hi <= mhi; mask_lo <= mlo;
             rp_a <= r_a; wp_a <= wa;
             for (integer l = 0; l < 8; l = l + 1) begin
                 wp_d[16*l +: 16] <= c_d[(gt*8 + l)*16 +: 16];
@@ -549,14 +560,21 @@ module ot_hgi_sm_xload_cl2_bdring #(
     reg [PMAX*8-1:0] lane_en;              // local copy (command constant; refreshed every edge)
     always @(posedge clk) lane_en <= lane_en_i;
     reg [265:0] wr_lo, wr_hi;              // quantiser words registered at the pins (cl's wd edge)
-    always @(posedge clk) begin wr_lo <= {qe_lo, qq_lo}; wr_hi <= {qe_hi, qq_hi}; end
-    wire [265:0] wd_lo = zlo ? wr_lo : 266'd0, wd_hi = zhi ? wr_hi : 266'd0;
+    // cl2d: ring controls registered at the pins on the SAME edge as wr_lo/wr_hi (ctl sends them one edge early);
+    // one enable copy per parity (532 loads each), no pin-to-storage gating left.
+    reg [15:0] wsel_q [0:1];
+    reg        zlo_q, zhi_q;
+    always @(posedge clk) begin
+        wr_lo <= {qe_lo, qq_lo}; wr_hi <= {qe_hi, qq_hi};
+        wsel_q[0] <= r_wsel; wsel_q[1] <= r_wsel; zlo_q <= zlo; zhi_q <= zhi;
+    end
+    wire [265:0] wd_lo = zlo_q ? wr_lo : 266'd0, wd_hi = zhi_q ? wr_hi : 266'd0;
     wire [265:0] ring [0:1][0:15];
     genvar gpa, gsl;
     generate for (gpa = 0; gpa < 2; gpa = gpa + 1) begin : g_rp
         for (gsl = 0; gsl < 16; gsl = gsl + 1) begin : g_rs
             reg [265:0] w;
-            always @(posedge clk) if (r_wsel[gsl]) w <= (gpa == 0) ? wd_lo : wd_hi;
+            always @(posedge clk) if (wsel_q[gpa][gsl]) w <= (gpa == 0) ? wd_lo : wd_hi;
             assign ring[gpa][gsl] = w;
         end
     end endgenerate
@@ -603,7 +621,8 @@ module ot_hgi_sm_xload_static_cl2 #(
     parameter integer MUT    = 0
 ) (
     input  wire               clk,
-    input  wire               clk_bf,
+    input  wire               clk_eg,    // cl2d: ctl egress root (rw / BD-beat capture, beat select, xw pins), related phase 0
+    input  wire [3:0]         clk_bf,    // cl2d: one die clock entry per BF quarter leaf (was one scalar collapsing 4 roots)
     input  wire               clk_qlo,
     input  wire               clk_qhi,
     input  wire               clk_bd,
@@ -633,7 +652,7 @@ module ot_hgi_sm_xload_static_cl2 #(
     wire [2047:0] l_d; wire qv_lo, qv_hi, qo_lo, qo_hi, qf_lo, qf_hi; wire [255:0] qq_lo, qq_hi; wire signed [9:0] qe_lo, qe_hi;
     wire [15:0] r_wsel; wire zlo, zhi; wire [2*((PMAX*3152+2047)/2048)-1:0] bsel; wire [PMAX*8-1:0] lane_en; wire [2047:0] bq_d;
     ot_hgi_sm_xload_cl2_ctl #(.PMAX(PMAX), .RD_LAT(RD_LAT), .MUT(MUT)) u_ctl (
-        .clk(clk), .clk_eg(clk), .rst_n(rst_n), .x_v(x_v), .x_base(x_base), .x_n(x_n), .x_p(x_p), .x_stride(x_stride), .x_space(x_space),
+        .clk(clk), .clk_eg(clk_eg), .rst_n(rst_n), .x_v(x_v), .x_base(x_base), .x_n(x_n), .x_p(x_p), .x_stride(x_stride), .x_space(x_space),
         .x_fmt(x_fmt), .x_xb(x_xb), .x_busy(x_busy), .x_done(x_done), .x_fault(x_fault), .xw_en(xw_en), .xw_last(xw_last),
         .xw_addr(xw_addr), .xw_grp(xw_grp), .xw_data(xw_data), .rq(rq), .rr(rr), .rn_o(rn),
         .c_d(c_d), .c_wce(c_wce), .c_mhi(c_mhi), .c_mlo(c_mlo), .c_wa(c_wa), .r_ce(r_ce), .r_a(r_a), .rwq(rwq),
@@ -641,7 +660,7 @@ module ot_hgi_sm_xload_static_cl2 #(
         .r_wsel(r_wsel), .zlo(zlo), .zhi(zhi), .bsel(bsel), .lane_en(lane_en), .bq_d(bq_d));
     genvar gq;
     generate for (gq = 0; gq < 4; gq = gq + 1) begin : g_q
-        ot_hgi_sm_xload_cl2_bfq u_bfq (.clk(clk_bf), .rst_n(rn), .c_d(c_d), .wce(c_wce[gq]), .mhi(c_mhi), .mlo(c_mlo),
+        ot_hgi_sm_xload_cl2_bfq u_bfq (.clk(clk_bf[gq]), .rst_n(rn), .c_d(c_d), .wce(c_wce[gq]), .mhi(c_mhi), .mlo(c_mlo),
             .wa(c_wa), .r_ce(r_ce), .r_a(r_a), .rwq(rwq[256*gq +: 256]));
     end endgenerate
     ot_hbm_xp_aq_tree13 u_aq_lo (.clk(clk_qlo), .rst_n(rn), .v(qv_lo), .fp4(1'b0), .x(l_d[1023:0]), .vo(qo_lo), .q(qq_lo),

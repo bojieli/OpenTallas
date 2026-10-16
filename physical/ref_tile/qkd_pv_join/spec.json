@@ -19,8 +19,8 @@
   "rst_n"
  ],
  "outline": {
-  "w": 216.0,
-  "h": 216.0
+  "w": 172.8,
+  "h": 172.8
  },
  "layer_cap": "M5",
  "macros": [],
@@ -61,7 +61,7 @@
  "job": {
   "owner": "Claude:Q-ATTN-RATE (el1015-qwen-attn.log)",
   "branch": "claude/q-attn-rate-1015",
-  "tag": "r2",
+  "tag": "r4",
   "purpose": "P.V column join tile of ot_qwen_tp8_attention_native_service_w16 (KV/system die).",
   "benches": [
    {
@@ -122,5 +122,6 @@
  "pin_reg_split": true,
  "hold_pad": {
   "cell": "HB2xp67_ASAP7_75t_R"
- }
+ },
+ "io_tcl": "physical/ref_tile/qkd_pv_join/io_spread.tcl"
 }
