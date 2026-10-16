@@ -17,6 +17,9 @@ set ::lcf_site [[lindex [$::lcf_blk getRows] 0] getSite]
 set ::lcf_sw [$::lcf_site getWidth]
 set ::lcf_cx [$::lcf_core xMin]
 set ::lcf_r [odb::dbRegion_create $::lcf_blk "ctfxs_lane_ctq"]
+# s4c: EXCLUSIVE (DEF FENCE): the band holds only the fenced registers.  s4b (default INCLUSIVE) legalized three
+# non-member inverters 1 dbu inside the band's right edge (DPL-0006 site alignment, x 165.995 vs edge 165.996).
+$::lcf_r setRegionType EXCLUSIVE
 set ::lcf_bx0 [expr {$::lcf_cx + int(ceil((round($::lcf_x0*$::lcf_dbu) - $::lcf_cx) / double($::lcf_sw))) * $::lcf_sw}]
 set ::lcf_bx1 [expr {$::lcf_cx + int(floor((round($::lcf_x1*$::lcf_dbu) - $::lcf_cx) / double($::lcf_sw))) * $::lcf_sw}]
 odb::dbBox_create $::lcf_r $::lcf_bx0 [$::lcf_core yMin] $::lcf_bx1 [$::lcf_core yMax]

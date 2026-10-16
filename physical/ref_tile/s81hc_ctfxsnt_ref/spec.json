@@ -75,7 +75,7 @@
   "benches_from": "tools/s81_suhc/hc_owned_nt_benches.json",
   "owner": "Claude:S-ELEM-PQ",
   "branch": "claude/s81-elempq-2210",
-  "tag": "s4b-lanefence",
+  "tag": "s4c-lanefence",
   "structural_change": "s4 lane-root compaction (measured cause of s3 CLOSED d8e5e1a77 native FAIL capture 264.15 ps / 436 lane pins): clk_l had 616 sinks over x 0..300 um because the ctq replica (u_q delay lines, 205 sinks + fcl/fvl) was placed by wirelength at the data rows (x 175..300) while the lane pin flops sit at x 8..118 -> leaf buffers 82..120 ps, lane insertion 113.9..191.1 (spread 77), 3..6 hold buffers on every lane input (hold reference = boundary min 113.9 vs local up to 191) and R-local deviation. Fence every named ctq-replica register into x 121..166 (beside the lane pins, between cs_* and fd_in): clk_l tree spans x 8..166. Geometry only: same RTL, registers, cycles, outline and pins; core root unchanged (native PASS).",
   "no_bench_reason": "bit-exactness is gated on the HC slab composition with dsfd_sp_hc NTREE 1 (tools/s81_suhc/hc_ntree_bench.sh: NG 256 production shape exact PASS + mutant 3 FAIL; tools/s81_suhc/hc_gate.py --ntree 1 NG 256 exact 0/1940 x3 + per-tile mutants); the tile alone has no golden",
   "purpose": "el1014-s81-norm-tree: ctfx_nt broadcast source without the local re-register (LOCAL_SPLIT 1)",
