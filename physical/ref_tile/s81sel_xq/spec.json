@@ -1,0 +1,109 @@
+{
+ "name": "s81sel_xq",
+ "top": "dsfd_selt_xq",
+ "kind": "tile",
+ "sources": [
+  "rtl/dsrom_sys/s81_ph/ctrl_c/dsfd_bk_selector_c1.sv"
+ ],
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst"
+ ],
+ "outline": {
+  "w": 388.8,
+  "h": 34.56
+ },
+ "pins": {
+  "S": [
+   "i_sw"
+  ],
+  "N": [
+   "o_lanes"
+  ],
+  "W": [
+   "ck",
+   "rst"
+  ]
+ },
+ "layer_cap": "M5",
+ "recipe": 2,
+ "pin_regs": {
+  "enable": false,
+  "reason": "Source registers both boundaries: input pin flop p <= i_sw and o_lanes are flops; wrapper registers would add a cycle beyond the proven +1 SW-lane cost."
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 4,
+  "peak_ram_gb": 8,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "pin_balance": {
+   "group_max": 32
+  }
+ },
+ "job": {
+  "owner": "Claude:S-ELEM-PQ",
+  "branch": "claude/s81-seltxq-1016",
+  "tag": "x3",
+  "purpose": "Harden dsfd_selt_xq (absent-quarter synthesiser, the open leaf of dsfd_bk_selector_c1 on the 1-stack S81 die); closure-first, removes the bk_selector_c1 stand-in once the parent binds it.",
+  "benches": [
+   {
+    "name": "sel_c1_exact_vs_4lane_ref",
+    "cmd": "bash rtl/dsrom_sys/s81_ph/test/run_sel_c1_gate.sh . {RUN}/sel",
+    "expect": "pass",
+    "pass_regex": "SEL_C1_GATE PASS",
+    "threads": 16,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "sel_c1_qslot_collision_mutant",
+    "cmd": "bash rtl/dsrom_sys/s81_ph/test/run_sel_c1_gate.sh . {RUN}/selm mut",
+    "expect": "fail",
+    "fail_regex": "SEL_C1_GATE FAIL",
+    "threads": 16,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ],
+  "extra_paths": [
+   "rtl/dsrom_sys",
+   "rtl/hdc",
+   "rtl/lib",
+   "rtl/common",
+   "physical/s81_die_rtl",
+   "tools/die_port_bind.py"
+  ],
+  "views_to": "physical/ref_tile/s81sel_xq/views",
+  "record_to": "results/rtl/ref_tile/s81sel_xq"
+ },
+ "pin_ranges": {
+  "o_lanes": [
+   10.8,
+   378.0
+  ],
+  "i_sw": [
+   10.8,
+   102.6
+  ]
+ },
+ "params": {},
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ }
+}

@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "dsfd_selt_xq",
+ "enable": false,
+ "reason": "Source registers both boundaries: input pin flop p <= i_sw and o_lanes are flops; wrapper registers would add a cycle beyond the proven +1 SW-lane cost."
+}
