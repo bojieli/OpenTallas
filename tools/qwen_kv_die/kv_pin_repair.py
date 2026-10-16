@@ -24,7 +24,8 @@ def repair(K, m):
         if __import__('os').environ.get('OT_KV_RLY_STD', '0') == '1':
             import kv_rly_std as RS          # Q-KVSYS-RLY: the relay-standard row (default off: unchanged)
             width, height, _ = RS.layout(bits, RS.frame_rev(bid))
-            width, height = width + K.SHAVE, height + K.SHAVE
+            width, height = width + K.SHAVE, max(height + K.SHAVE, bits * .048 + 4 if bits > 512 else 0.0)
+            height = K.up(height, K.GY) if height > RS.STD[528][1] + K.SHAVE else height
         initial_ap = ap
         chain, staged, previous = [], [], (a,pa)
         # Several registered stages are necessary for a long fault-chain return.

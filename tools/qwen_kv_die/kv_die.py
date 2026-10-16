@@ -1703,7 +1703,10 @@ def _relays(m):
             # in the netlist pass; default off = the per-width frames above, unchanged
             import kv_rly_std as RS
             fw, fh, _ = RS.layout(bits, RS.frame_rev(bid))
-            fw, fh = fw + SHAVE, fh + SHAVE
+            # the pre-expansion frame abstract still draws the whole word on one M4 face (pitch 1): a word over
+            # 82.08 um of M4 (qkd_rly_2089 only) keeps today's frame height around the 82.08-um replica row
+            fw, fh = fw + SHAVE, max(fh + SHAVE, span if bits > 512 else 0.0)
+            fh = up(fh, GY) if fh > RS.STD[528][1] + SHAVE else fh
 
         def near_d(r0, r1):
             # nearest-point Manhattan distance between two rectangles (x0, y0, x1, y1)

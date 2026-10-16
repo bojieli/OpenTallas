@@ -7,8 +7,8 @@ replicas of FOUR hardened standards (rtl/qwen_sys/kv_rly_std_20261016/qkd_rlys.s
 
     qkd_rlys_1    10.8  x 10.8 um     1 b   (reset / boot tree hops qkd_rly_t1, 1-bit words, reverse bits)
     qkd_rlys_36   10.8  x 10.8 um    36 b
-    qkd_rlys_296  12.96 x 47.52 um  296 b
-    qkd_rlys_528  12.96 x 82.08 um  528 b   (face <= 86.4 um = a 129.6-um relay channel minus 2 x 21.6-um block keep-outs)
+    qkd_rlys_296  21.6  x 47.52 um  296 b
+    qkd_rlys_528  21.6  x 82.08 um  528 b   (face <= 86.4 um = a 129.6-um relay channel minus 2 x 21.6-um block keep-outs)
 
 all W/E pins on M4 at 3 tracks (<= 6.94 pins/um, rule <= 8 pins/um/layer), one flop a bit, no reset, 1 cycle a stage (the
 die plan's relay_stages are unchanged).  A stage of W bits (F forward, R reverse) = replicas(F) + R x qkd_rlys_1 placed as a
@@ -35,14 +35,14 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 RT = 'physical/ref_tile'
 RTL = 'rtl/qwen_sys/kv_rly_std_20261016/qkd_rlys.sv'
-STD = {1: (10.8, 10.8), 36: (10.8, 10.8), 296: (12.96, 47.52), 528: (12.96, 82.08)}
+STD = {1: (10.8, 10.8), 36: (10.8, 10.8), 296: (21.6, 47.52), 528: (21.6, 82.08)}
 REPLICA_GAP = 10.8
 GY = 2.16
 CORNERS = ('tt', 'ff', 'ss')
 FLIP = dict(R0=(0, 0), MX=(0, 1), MY=(1, 0), R180=(1, 1))
 # buses whose die direction model carries reverse bits (kvs11-v143c relays.json: kvn 1048 / hb 284 / emf 289 / emr 521, one
 # bit each): their frames reserve one qkd_rlys_1 slot; the netlist pass refuses a relay with more reverse bits than reserved
-REV_BUS = re.compile(r'^(kvn|hb|emf|emr)_')
+REV_BUS = re.compile(r'^(kvn|hb|emf|emr)(?:_|$)')
 # replica choice: minimum (outline area + PAD_COST per tied bit + INST_COST per instance), at most 5 replicas
 PAD_COST, INST_COST = 1.0, 60.0
 
@@ -184,6 +184,9 @@ def main(argv=None):
         if not fits and not a.dry_run:
             raise ValueError(f'{inst}: frame {frame} of {mst} cannot hold the standard row {fw_} x {fh_} um '
                              f'(generate the case with OT_KV_RLY_STD=1; reverse slots reserved for {REV_BUS.pattern})')
+        # a frame taller than the row (qkd_rly_2089: its pre-expansion abstract keeps the whole word on one M4 face)
+        # centres the row on the frame's pin height
+        oy = math.floor(max(0.0, frame[1] - fh_) / 2 / GY + 1e-9) * GY if fits else 0.0
         fwd = [i for i in range(W) if i not in set(rv)]
         k_f, k_r = 0, 0
         for j, (s, dx, dy, role) in enumerate(reps):
@@ -206,7 +209,7 @@ def main(argv=None):
             new_lines.append(f'  {name(s)} {nm} (.ck({conns["ck"]}), .a({pack(ain)}), .b({pack(bout)}));')
             # a mirrored frame (kv_pin_repair.py relays are MY: a on the E face) mirrors the row and every replica
             px = fw_ - dx - STD[s][0] if flx else dx
-            py = fh_ - dy - STD[s][1] if fly else dy
+            py = oy + (fh_ - dy - STD[s][1] if fly else dy)
             add_place.append(f'ot_mts::place [$_blk findInst {nm}] {fx + px:.3f} {fy + py:.3f} {fo}')
             used_std[s] += 1
             rep['totals']['pad_bits'] += ain.count('0')

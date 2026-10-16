@@ -2,57 +2,16 @@
  "schema": "opentallas.qwen_kv_rly_std_variants.v1",
  "date": "2026-10-16",
  "owner": "Claude:Q-KVSYS-DIE (worker Q-KVSYS-RLY)",
- "source_die": "ot-epyc1tb:/srv/opentallas-scratch/claude/qwen-kvsys/kvs11-v143c/case_kv/die.v (SOURCE_COMMIT 0a7391147), relays.json",
+ "source_die": "ot-epyc1tb:/srv/opentallas-scratch/claude/qwen-kvsys/kvs11-v143c/case_kv/die.v (SOURCE_COMMIT 0a7391147) + relays.json",
  "rules": {
-  "pin_density": "<= 8 pins/um per layer (VIS-ROM QKV-04); M4 at 3 tracks = 6.94 pins/um; M5 tile cap (M6 pins need an unproven die-lead m6_pin_grant, not used)",
+  "pin_density": "<= 8 pins/um per layer (VIS-ROM QKV-04): W/E pins on M4 at 3 tracks = 6.94 pins/um under the M5 tile cap (M6 pins need a die-lead m6_pin_grant whose flow has no closed master yet: not used)",
   "channel_fit": "relay face <= 86.4 um = 129.6-um relay channel (kv_die CHAN) - 2 x 21.6-um block keep-out (kv_die _relays free bgap)",
-  "hbm_standards": "hbfd_rly_48/304/624/1136: ports ck/rs/i/o with async active-low reset (KV relays have none: rs can only be a non-pad tie-high or a new reset net), pins M4 at 2 tracks = 8.8-9.9 pins/um (> 8); 624/1136 faces 95/168 um at a compliant pitch exceed the 86.4-um channel -> not reused"
+  "width": "21.6 um for 296/528 (gate 1 at 12.96 um: oflop WARN, pin flops + hold stages need 8.1 of 8.6 um core behind each face; same width as the closed hbfd_rly_1136_ew)",
+  "hbm_standards": "hbfd_rly_48/304/624/1136 not reused: ports ck/rs/i/o with async active-low reset (KV relays are reset-free: rs could only be tied HIGH, which die_port_bind PADS refuses, or a new reset net to every relay); pins M4 at 2 tracks = 8.8-9.9 pins/um (> 8); at a compliant 3-track pitch 624/1136 need 95/168-um faces > the 86.4-um channel"
  },
- "selection": "1/36/296/528: least area (2.293 mm2 vs 5.864 now) with 4 masters; pads 27,132 bits (vs 64-94k for the other 4-5 class sets except 1/32/296/528 which needs a 5th master and +176 instances)",
- "cost_model": "per relay stage: min(outline area + 1 um2 per tied pad bit + 60 um2 per replica), <= 5 replicas; reverse bits ride their own 1-b standard",
+ "selection": "1/36/296/528: 4 masters, least area among 4-master sets (3.226 mm2 vs 5.864 mm2 today), 27,132 declared pad bits (1/36/296/568: 68,264; HBM widths 1/48/304/624/1136: 94,316 and faces over the channel); 1/32/296/528 cuts pads to 22,026 but needs a 5th master and +176 instances",
+ "cost_model": "per relay stage: min(outline area + 1 um2 per tied pad bit + 60 um2 per replica), <= 5 replicas; a reverse bit rides its own qkd_rlys_1 (b -> a)",
  "options": [
-  {
-   "label": "HBM widths 1/48/304/624/1136 (M4 3 tracks)",
-   "classes": {
-    "1": {
-     "w": 10.8,
-     "h": 10.8,
-     "pins_per_um_layer": 0.15,
-     "fits_86um": true
-    },
-    "48": {
-     "w": 10.8,
-     "h": 12.96,
-     "pins_per_um_layer": 5.56,
-     "fits_86um": true
-    },
-    "304": {
-     "w": 12.96,
-     "h": 49.68,
-     "pins_per_um_layer": 6.7,
-     "fits_86um": true
-    },
-    "624": {
-     "w": 12.96,
-     "h": 95.04,
-     "pins_per_um_layer": 6.88,
-     "fits_86um": false
-    },
-    "1136": {
-     "w": 12.96,
-     "h": 168.48,
-     "pins_per_um_layer": 6.92,
-     "fits_86um": false
-    }
-   },
-   "totals": {
-    "inst_now": 8276,
-    "inst_new": 8710,
-    "area_now": 5.864,
-    "area_new": 2.397,
-    "pads": 94316
-   }
-  },
   {
    "label": "1/36/296/568",
    "classes": {
@@ -69,13 +28,13 @@
      "fits_86um": true
     },
     "296": {
-     "w": 12.96,
+     "w": 21.6,
      "h": 47.52,
      "pins_per_um_layer": 6.85,
      "fits_86um": true
     },
     "568": {
-     "w": 12.96,
+     "w": 21.6,
      "h": 86.4,
      "pins_per_um_layer": 6.92,
      "fits_86um": true
@@ -85,7 +44,7 @@
     "inst_now": 8276,
     "inst_new": 9050,
     "area_now": 5.864,
-    "area_new": 2.345,
+    "area_new": 3.319,
     "pads": 68264
    }
   },
@@ -105,13 +64,13 @@
      "fits_86um": true
     },
     "296": {
-     "w": 12.96,
+     "w": 21.6,
      "h": 47.52,
      "pins_per_um_layer": 6.85,
      "fits_86um": true
     },
     "528": {
-     "w": 12.96,
+     "w": 21.6,
      "h": 82.08,
      "pins_per_um_layer": 6.79,
      "fits_86um": true
@@ -121,7 +80,7 @@
     "inst_now": 8276,
     "inst_new": 9133,
     "area_now": 5.864,
-    "area_new": 2.293,
+    "area_new": 3.226,
     "pads": 27132
    }
   },
@@ -141,13 +100,13 @@
      "fits_86um": true
     },
     "304": {
-     "w": 12.96,
+     "w": 21.6,
      "h": 49.68,
      "pins_per_um_layer": 6.7,
      "fits_86um": true
     },
     "528": {
-     "w": 12.96,
+     "w": 21.6,
      "h": 82.08,
      "pins_per_um_layer": 6.79,
      "fits_86um": true
@@ -157,7 +116,7 @@
     "inst_now": 8276,
     "inst_new": 9133,
     "area_now": 5.864,
-    "area_new": 2.303,
+    "area_new": 3.243,
     "pads": 30068
    }
   },
@@ -177,13 +136,13 @@
      "fits_86um": true
     },
     "304": {
-     "w": 12.96,
+     "w": 21.6,
      "h": 49.68,
      "pins_per_um_layer": 6.7,
      "fits_86um": true
     },
     "528": {
-     "w": 12.96,
+     "w": 21.6,
      "h": 82.08,
      "pins_per_um_layer": 6.79,
      "fits_86um": true
@@ -193,7 +152,7 @@
     "inst_now": 8276,
     "inst_new": 9132,
     "area_now": 5.864,
-    "area_new": 2.34,
+    "area_new": 3.279,
     "pads": 48704
    }
   },
@@ -213,7 +172,7 @@
      "fits_86um": true
     },
     "528": {
-     "w": 12.96,
+     "w": 21.6,
      "h": 82.08,
      "pins_per_um_layer": 6.79,
      "fits_86um": true
@@ -223,7 +182,7 @@
     "inst_now": 8276,
     "inst_new": 9133,
     "area_now": 5.864,
-    "area_new": 2.458,
+    "area_new": 3.5,
     "pads": 112276
    }
   },
@@ -243,13 +202,13 @@
      "fits_86um": true
     },
     "296": {
-     "w": 12.96,
+     "w": 21.6,
      "h": 47.52,
      "pins_per_um_layer": 6.85,
      "fits_86um": true
     },
     "528": {
-     "w": 12.96,
+     "w": 21.6,
      "h": 82.08,
      "pins_per_um_layer": 6.79,
      "fits_86um": true
@@ -259,7 +218,7 @@
     "inst_now": 8276,
     "inst_new": 9309,
     "area_now": 5.864,
-    "area_new": 2.315,
+    "area_new": 3.249,
     "pads": 22026
    }
   },
@@ -279,13 +238,13 @@
      "fits_86um": true
     },
     "176": {
-     "w": 12.96,
+     "w": 21.6,
      "h": 30.24,
      "pins_per_um_layer": 6.79,
      "fits_86um": true
     },
     "528": {
-     "w": 12.96,
+     "w": 21.6,
      "h": 82.08,
      "pins_per_um_layer": 6.79,
      "fits_86um": true
@@ -293,10 +252,10 @@
    },
    "totals": {
     "inst_now": 8276,
-    "inst_new": 9498,
+    "inst_new": 10599,
     "area_now": 5.864,
-    "area_new": 2.355,
-    "pads": 47752
+    "area_new": 3.26,
+    "pads": 35868
    }
   }
  ],
@@ -315,13 +274,13 @@
     "fits_86um": true
    },
    "296": {
-    "w": 12.96,
+    "w": 21.6,
     "h": 47.52,
     "pins_per_um_layer": 6.85,
     "fits_86um": true
    },
    "528": {
-    "w": 12.96,
+    "w": 21.6,
     "h": 82.08,
     "pins_per_um_layer": 6.79,
     "fits_86um": true
@@ -331,7 +290,7 @@
    "inst_now": 8276,
    "inst_new": 9133,
    "area_now": 5.864,
-   "area_new": 2.293,
+   "area_new": 3.226,
    "pads": 27132
   },
   "mapping": [
@@ -402,7 +361,7 @@
     ],
     "now_pins_per_um_M4": 20.5,
     "now_um2": 2844.7,
-    "new_um2": 2127.5
+    "new_um2": 3545.9
    },
    {
     "master": "qkd_rly_17",
@@ -453,7 +412,7 @@
     ],
     "now_pins_per_um_M4": 11.1,
     "now_um2": 1593.0,
-    "new_um2": 615.9
+    "new_um2": 1026.4
    },
    {
     "master": "qkd_rly_293",
@@ -470,7 +429,7 @@
     ],
     "now_pins_per_um_M4": 11.2,
     "now_um2": 1593.0,
-    "new_um2": 615.9
+    "new_um2": 1026.4
    },
    {
     "master": "qkd_rly_2",
@@ -505,7 +464,7 @@
     ],
     "now_pins_per_um_M4": 11.0,
     "now_um2": 1593.0,
-    "new_um2": 732.5
+    "new_um2": 1143.1
    },
    {
     "master": "qkd_rly_521",
@@ -523,7 +482,7 @@
     ],
     "now_pins_per_um_M4": 19.9,
     "now_um2": 1593.0,
-    "new_um2": 1180.4
+    "new_um2": 1889.6
    },
    {
     "master": "qkd_rly_1048",
@@ -542,7 +501,7 @@
     ],
     "now_pins_per_um_M4": 20.1,
     "now_um2": 2958.5,
-    "new_um2": 2244.2
+    "new_um2": 3662.5
    },
    {
     "master": "qkd_rly_540",
@@ -560,7 +519,7 @@
     ],
     "now_pins_per_um_M4": 20.6,
     "now_um2": 1593.0,
-    "new_um2": 1180.4
+    "new_um2": 1889.6
    },
    {
     "master": "qkd_rly_2089",
@@ -580,7 +539,7 @@
     ],
     "now_pins_per_um_M4": 20.5,
     "now_um2": 5575.7,
-    "new_um2": 4255.0
+    "new_um2": 7091.7
    },
    {
     "master": "qkd_rly_520",
@@ -597,7 +556,7 @@
     ],
     "now_pins_per_um_M4": 19.8,
     "now_um2": 1593.0,
-    "new_um2": 1063.8
+    "new_um2": 1772.9
    },
    {
     "master": "qkd_rly_563",
@@ -615,7 +574,7 @@
     ],
     "now_pins_per_um_M4": 19.8,
     "now_um2": 1706.8,
-    "new_um2": 1180.4
+    "new_um2": 1889.6
    },
    {
     "master": "qkd_rly_36",
@@ -684,7 +643,7 @@
     ],
     "now_pins_per_um_M4": 10.8,
     "now_um2": 1593.0,
-    "new_um2": 732.5
+    "new_um2": 1143.1
    },
    {
     "master": "qkd_rly_93",
