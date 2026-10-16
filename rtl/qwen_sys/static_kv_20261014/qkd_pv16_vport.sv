@@ -25,13 +25,19 @@ module qkd_pv16_vport #(parameter integer MUT = 0) (
     output reg [511:0] out_v_lo, output reg [511:0] out_v_hi,     // V row dims 0-63 (quarters 0-1) / 64-127 (2-3)
     output reg fault
 );
+    // ---- reset captured at its pin (r2: r1's routed rst_n -> async-clear fanout measured capture 203.2 ps > 190):
+    // one flop, synchronous capture; internal state uses the local copy.  Cold release is one edge later; the
+    // production slot timeline is unchanged (the compiler's first slot is >= 2 edges after release).
+    (* keep *) reg rst_q;
+    always @(posedge ck) rst_q <= rst_n;
+    wire rn = rst_q;
     // ---- input pin registers (every port registered) ----
     reg slot_q, sel_q;
     reg [7:0] v_q;
     reg [8*14-1:0] t_q;
     reg [8*256-1:0] d_q;
-    always @(posedge ck or negedge rst_n)
-        if (!rst_n) begin slot_q <= 1'b0; v_q <= 8'b0; end
+    always @(posedge ck or negedge rn)
+        if (!rn) begin slot_q <= 1'b0; v_q <= 8'b0; end
         else begin slot_q <= slot; v_q <= {in_v1, in_v0}; end
     always @(posedge ck) begin sel_q <= sel ^ ((MUT == 1) ? 1'b1 : 1'b0); t_q <= {in_t1, in_t0}; d_q <= {in_d1, in_d0}; end
 
@@ -47,8 +53,8 @@ module qkd_pv16_vport #(parameter integer MUT = 0) (
     wire bad = slot_q ? (gv != 4'hf || ov != 4'h0 || !tags_eq || !own) : (|v_q);
 
     // ---- output pin registers ----
-    always @(posedge ck or negedge rst_n)
-        if (!rst_n) begin out_valid <= 1'b0; fault <= 1'b0; end
+    always @(posedge ck or negedge rn)
+        if (!rn) begin out_valid <= 1'b0; fault <= 1'b0; end
         else begin out_valid <= slot_q; if (bad) fault <= 1'b1; end
     always @(posedge ck) begin out_t <= t0; {out_v_hi, out_v_lo} <= row; end
 endmodule

@@ -2,12 +2,12 @@
  "name": "qkd_static_kv_return_slots_mc_r3-mc3-COMMIT",
  "block": "qkd_static_kv_return_slots_mc",
  "ref_tile": true,
- "owner": "Codex:Q-KV-2330",
+ "owner": "Claude:Q-ELEM-0030",
  "purpose": "Four actual independent phase-aligned pll_hbm_data storage roots: fixed bit slices replace a single >15k storage root; no clock gating, no timing exception between same-phase roots, no normal-cycle delta. Front width259.2 removes measured66.4% utilization failure.",
  "threads": 8,
  "peak_ram_gb": 24,
  "source": {
-  "branch": "codex/qwen-kv-2330",
+  "branch": "claude/qelem-ectl-a-2215",
   "commit": "COMMIT",
   "extra_paths": [
    "physical/qwen_kv_die_native_static_pins",

@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_s81_hc_cseq",
+ "enable": false,
+ "reason": "ot_s81_hc_cseq RTL registers every port at the pin (header: output flops w_fv/w_fd/e_fv/e_fd/c_fv/c_fd and the pin-tile status; inputs captured by inp_q / cv_q / cd_q / rs_v.. seam flops; cck-domain n_cmd_* / n_done_* on cck flops). Measured cause of the 88 launch misses: synthesis merged the three equal forward copies w_fd / e_fd / c_fd (<= fd) into one flop driving W, E and S pins, and state outputs (fault, base, f_q, ngo, n_ypop) also load internal logic. keep_pin_regs + pin_reg_split restore one dedicated flop per pin anchored at its face (0 cycles); a second register would add +1 to the lockstep forward bus (FP, exact register counts) and would need a per-clock split (cck / sk)."
+}
