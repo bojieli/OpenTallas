@@ -3689,10 +3689,12 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
     m['tp8_tree_pads'] = dict(buses=len(pad_done) + len(pre_pads), relays=sum(pad_done.values()) + sum(
         len(f) for f in pre_pads.values()), reserved_columns=len(pre_pads), walked=len(pad_done))
     # ---- emit relays and hops
+    from qwen_split.relay_clock import assigned_clock
     for idx, pl in sorted(plans.items()):
         bid, cl, bits, eps = pl['bid'], pl['cl'], pl['bits'], pl['eps']
         link = cl in ('link_spine', 'link_channel')
         dom = next((by[x].domain for x, _ in eps if by[x].domain != 'cdc'), 'stream_1p2')
+        assigned_ck = assigned_clock(m, bid, cl)
         pts = [pl['P0']] + [(f[0] + f[2] / 2, f[1] + f[3] / 2) for f in pl['frames']] + [pl['P1']]
         prev, hops, rhops = eps[0], [], []
         for k, (x0, y0, w, h) in enumerate(pl['frames']):
@@ -3717,6 +3719,8 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
                 rhops.append((rhop, cl, 1, [(nm, 'a_r'), rprev]))
             if link:
                 fck_new.append((f'fck_{hop}', 'clock_trunk', 1, [(prev[0], f'fck_{prev[1]}'), (nm, 'fck_a')]))
+            elif assigned_ck is not None:
+                ck_add.setdefault(assigned_ck, []).append((nm, 'ck'))
             elif dom == 'stream_1p2':
                 ck_add.setdefault(f'clk_r{region_of(ccx, ccy)}', []).append((nm, 'ck'))
             else:
