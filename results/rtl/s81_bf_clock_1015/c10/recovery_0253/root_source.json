@@ -1,0 +1,28 @@
+{
+  "status": "SOURCE_ONLY_NOT_PHYSICAL_CLOSURE",
+  "cycles_added": 0,
+  "clock_contract": "10 same-PLL833.333ps phase0 roots; physical leaf delivery phi-R individually; ordinary synchronous timing on every cross-root path",
+  "inputs": {
+    "rtl/v41rom/ot_v41_bf_col.sv": "0364d57adda8738f4aec1437a710dcd079ea0ee81dcbb3e341076ba717673f3a",
+    "rtl/v41rom/ot_v41_bf16_lanes3.sv": "7c86e27d32bc247cf14f26a1616be2cecd214732cabcca10313f0a7c02aa21fb",
+    "rtl/dsrom_sys/s81_die_bind/dsfd_bf_col.sv": "2dc852a281fca190fbfe3ac029ebf67e192340edf66c28e3d7d540e7b00041f3"
+  },
+  "outputs": {
+    "rtl/v41rom/ot_v41_bf16_lanes3_roots.sv": "7685e04cd0aacdd3559ce8a43f1e2be5478638cce2d6d4b46d4632dd33e95d38",
+    "rtl/v41rom/ot_v41_bf_col_roots.sv": "ba86c41845a6101be2d406a06d4e2548ee2e5cc91b0983bb2769158dd69e463b",
+    "rtl/dsrom_sys/s81_die_bind/dsfd_bf_col_roots.sv": "7a8dc0f1973982ca6b859dc59e2ebf9a2ad1ab89ad182f0eacd4597c597f2a76"
+  },
+  "physical_leaf_status": "Root plumbing complete. Extraction/hardening and boundary channel/capture/launch proof still required. No footprint proposed before measured area/cuts.",
+  "roots": [
+    "ck: boundary/memory/input relays",
+    "leaf_ck[0]: FP4 term0+chain0+pair",
+    "leaf_ck[1]: FP4 term1+chain1",
+    "leaf_ck[2]: segment reduction/output",
+    "leaf_ck[3]: BF16 lanes0..3",
+    "leaf_ck[4]: BF16 lanes4..7",
+    "leaf_ck[5]: BF16 lanes8..11",
+    "leaf_ck[6]: BF16 lanes12..15",
+    "leaf_ck[7]: BF16 pairwise level0",
+    "leaf_ck[8]: BF16 pairwise levels1..3"
+  ]
+}
