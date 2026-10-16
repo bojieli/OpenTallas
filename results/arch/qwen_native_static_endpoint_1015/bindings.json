@@ -1,11 +1,97 @@
 {
   "top": "qkd_native_attention_programme",
   "operations": [
-    {"operation": "HOST identity capture and compiler control load", "module": "qkd_native_attention_programme", "source": "rtl/qwen_sys/split_20261014/qkd_native_attention_programme.sv", "inputs": ["issue", "authority_valid", "authority_epoch[15:0]", "authority_token[17:0]", "authority_position[17:0]", "authority_stage[5:0]", "fused_program_capability", "compiled_calendar[175:0]", "compiled_rx_cmd[15:0]", "compiled_tx_first[15:0]", "compiled_end[15:0]"], "memory": "registers only; no programme RAM", "missing_producer": "HOST/compiler loader and issue/run are not yet die-bound"},
-    {"operation": "fixed PC11 native59 descriptor and tag generation", "module": "qkd_native59_descriptor_producer", "source": "rtl/qwen_sys/split_20261014/qkd_native59_descriptor_producer.sv", "outputs": ["descriptor_valid", "descriptor[379:0]", "tag[58:0]", "fault"], "memory": "fixed RTL constant plus identity registers"},
-    {"operation": "source descriptor and independent authority validation", "module": "qkd_native59_command_guard", "source": "rtl/qwen_sys/split_20261014/qkd_native59_command_guard.sv", "outputs": ["accepted", "native_position[17:0]", "native_epoch[15:0]", "native_layer[5:0]", "fault"], "memory": "registers"},
-    {"operation": "static CMD/Q/result/status calendar and resource checks", "module": "qkd_native_attention_static_ctl", "source": "rtl/qwen_sys/split_20261014/qkd_native_attention_static_ctl.sv", "inputs": ["run", "tx_slot", "tx_slot_kind[3:0]", "tx_slot_beat[4:0]", "request_ready", "result_valid", "result_beat[4:0]", "result_data[511:0]", "result_epoch[15:0]", "result_layer[5:0]", "result_done", "service_fault"], "memory": "one 512-bit Q pipeline register, no result queue", "outputs": ["request_valid", "request_calendar[175:0]", "q_valid", "q_beat[4:0]", "q_data[511:0]", "result_reserved", "busy", "fault"], "missing_producer": "actual native service must drive all service inputs"},
-    {"operation": "typed link records", "module": "qkd_native_attention_record", "source": "rtl/qwen_sys/split_20261014/qkd_native_attention_record.sv", "inputs": ["rx_event", "rx_payload[547:0]"], "outputs": ["tx_valid", "tx_payload[547:0]"], "memory": "record pin registers", "missing_producer": "qkd_d2d_static electrical face still needs die binding"}
+    {
+      "operation": "HOST identity capture and compiler control load",
+      "module": "qkd_native_attention_programme",
+      "source": "rtl/qwen_sys/split_20261014/qkd_native_attention_programme.sv",
+      "inputs": [
+        "issue",
+        "authority_valid",
+        "authority_epoch[15:0]",
+        "authority_token[17:0]",
+        "authority_position[17:0]",
+        "authority_stage[5:0]",
+        "fused_program_capability",
+        "compiled_calendar[175:0]",
+        "compiled_rx_cmd[15:0]",
+        "compiled_tx_first[15:0]",
+        "compiled_end[15:0]"
+      ],
+      "memory": "registers only; no programme RAM",
+      "missing_producer": "HOST/compiler loader and issue/run are not yet die-bound"
+    },
+    {
+      "operation": "fixed PC11 native59 descriptor and tag generation",
+      "module": "qkd_native59_descriptor_producer",
+      "source": "rtl/qwen_sys/split_20261014/qkd_native59_descriptor_producer.sv",
+      "outputs": [
+        "descriptor_valid",
+        "descriptor[379:0]",
+        "tag[58:0]",
+        "fault"
+      ],
+      "memory": "fixed RTL constant plus identity registers"
+    },
+    {
+      "operation": "source descriptor and independent authority validation",
+      "module": "qkd_native59_command_guard",
+      "source": "rtl/qwen_sys/split_20261014/qkd_native59_command_guard.sv",
+      "outputs": [
+        "accepted",
+        "native_position[17:0]",
+        "native_epoch[15:0]",
+        "native_layer[5:0]",
+        "fault"
+      ],
+      "memory": "registers"
+    },
+    {
+      "operation": "static CMD/Q/result/status calendar and resource checks",
+      "module": "qkd_native_attention_static_ctl",
+      "source": "rtl/qwen_sys/split_20261014/qkd_native_attention_static_ctl.sv",
+      "inputs": [
+        "run",
+        "tx_slot",
+        "tx_slot_kind[3:0]",
+        "tx_slot_beat[4:0]",
+        "request_ready",
+        "result_valid",
+        "result_beat[4:0]",
+        "result_data[511:0]",
+        "result_epoch[15:0]",
+        "result_layer[5:0]",
+        "result_done",
+        "service_fault"
+      ],
+      "memory": "one 512-bit Q pipeline register, no result queue",
+      "outputs": [
+        "request_valid",
+        "request_calendar[175:0]",
+        "q_valid",
+        "q_beat[4:0]",
+        "q_data[511:0]",
+        "result_reserved",
+        "busy",
+        "fault"
+      ],
+      "missing_producer": "actual native service must drive all service inputs"
+    },
+    {
+      "operation": "typed link records",
+      "module": "qkd_native_attention_record",
+      "source": "rtl/qwen_sys/split_20261014/qkd_native_attention_record.sv",
+      "inputs": [
+        "rx_event",
+        "rx_payload[547:0]"
+      ],
+      "outputs": [
+        "tx_valid",
+        "tx_payload[547:0]"
+      ],
+      "memory": "record pin registers",
+      "missing_producer": "qkd_d2d_static electrical face still needs die binding"
+    }
   ],
   "unbound_service": {
     "module": "ot_qwen_tp8_attention_native_service_w16",
@@ -16,5 +102,19 @@
   },
   "physical": "No assigned die slot, pin file or per-root physical phase. No physical run authorized by this component evidence.",
   "native_full_layer": false,
-  "native_full_token": false
+  "native_full_token": false,
+  "source_composed_endpoint": {
+    "top": "qkd_native_attention_endpoint",
+    "source": "rtl/qwen_sys/split_20261014/qkd_native_attention_endpoint.sv",
+    "service": "ot_qwen_tp8_attention_native_service_w16_g3s2",
+    "service_source": "rtl/qwen_sys/split_20261014/qkd_native_attention_service_g3s2_gen.sv",
+    "source_generator": "tools/qwen_kv_die/gen_native_endpoint_service.py",
+    "head_source": "actual ot_qkh_head_native_r4 Q_FP32=1 with actual qkh G/T1/T2/S1/S2",
+    "ECTL_HXK": 13,
+    "ROW_RETURN_LAT": 21,
+    "QK_ISSUE_AGE": 34,
+    "memory": "actual canonical mapped ASTK/EP/PV functional models; K/V rows enter explicit off-chip boundary ports",
+    "elaboration": "pending actual-source lint",
+    "exact_numerical_gate": "pending actual integrated source component bench"
+  }
 }
