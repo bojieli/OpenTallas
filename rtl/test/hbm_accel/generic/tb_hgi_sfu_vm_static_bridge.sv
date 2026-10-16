@@ -2,6 +2,11 @@
 module tb_hgi_sfu_vm_static_bridge;
  localparam LWB=15;
  reg clk=0;always #0.416667 clk=~clk;
+ wire [3:0] clk_lg;
+ for(genvar g=0;g<4;g++)begin:lg_root
+  // Separate clock nets permit a real missing-group-root negative control.
+  assign clk_lg[g]=clk && !($test$plusargs("MUT_LG_CLOCK") && g==1 && rst_n);
+ end
  reg rst_n=0,init=0;
  reg [7:0] pf_v=0,pf_scalar=0;
  reg [127:0] pf_sec=0;
@@ -24,7 +29,7 @@ module tb_hgi_sfu_vm_static_bridge;
  wire [511:0] dd;wire [1:0] drv;
  wire [143:0] bs;
  function automatic [31:0] value(input integer a);value=32'h3e000000+32'(a*7);endfunction
- ot_hgi_sfu_vm_static_bridge dut(.clk(clk),.rst_n(rst_n),.prefetch_v(pf_v),.prefetch_sector(pf_sec),.prefetch_group(pf_group),
+ ot_hgi_sfu_vm_static_bridge dut(.clk(clk),.rst_n(rst_n),.clk_lg(clk_lg),.rst_lg_n({4{rst_n}}),.prefetch_v(pf_v),.prefetch_sector(pf_sec),.prefetch_group(pf_group),
  .prefetch_local_addr(pf_addr),.prefetch_scalar(pf_scalar),.prefetch_word(24'd0),.scalar_addr(96'd0),
  .local_rq(rq),.local_rr(bridge_rr),.stage_v(sv),.stage_group(sg),.stage_addr(sa),.stage_data(sd),.stage_mask(sm),
  .scalar_load(sl),.scalar_load_addr(sla),.scalar_data(sld),

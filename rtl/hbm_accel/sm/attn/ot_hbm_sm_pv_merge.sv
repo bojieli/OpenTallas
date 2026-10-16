@@ -6,6 +6,14 @@
 // the same modulo8 barrel, RNE adders and real64x512 stack as the proven tcpv.
 // The production hierarchical caller reuses CLOSED tcl halves and provides ev
 // at closed tct's LL=16 boundary. The flat component caller retains LL=12.
+//
+// FOLD (H-SM-ATT r2 2026-10-15, in-SM PV stream merge for head dim 128): a compiler-fixed fold request (fold_start, fold_a,
+// fold_b) adds the finished level-7 node of entry fold_b into entry fold_a's (a <- a + b, one RNE add a lane on the SAME
+// 16 merge adders).  Request cycle F reads {a,7}, F+1 reads {b,7}, the add issues at F+2 and the sum is written to {a,7}
+// at F+2+ALAT.  Qwen: entries 2u+h hold token stream u's node of dim half h; folds (0,2)(4,6)(1,3)(5,7) then (0,4)(1,5)
+// give ((s0+s1)+(s2+s3)) = the pairwise node of the 16 chunks of the 128-token block, exactly the golden order.
+// Every illegal request (entry not finished, pending write, merge or publication active, port collision) is a sticky
+// fault; nothing waits.  MUT 4 = the fold reads entry b in place of a (b + b: bench negative control).
 module ot_hbm_sm_pv_merge #(
     parameter integer L=16, IL=8, TAGW=16, ALAT=7, LV=4, MUT=0, PUBLISH=0
 )(
@@ -25,13 +33,23 @@ module ot_hbm_sm_pv_merge #(
     output reg [31:0] pub_data,
     output reg [3:0] pub_word,
     output reg [2:0] pub_out_slot,
-    output reg [TAGW-1:0] pub_tag
+    output reg [TAGW-1:0] pub_tag,
+    input wire fold_start,
+    input wire [2:0] fold_a,
+    input wire [2:0] fold_b
 );
     initial if (L!=16 || IL!=8 || ALAT!=7 || LV<1 || LV>8 || TAGW<6)
         $fatal(1,"PV merge requires16lanes,8slots,LAT7,LV1..8,TAGW>=6");
     initial if(PUBLISH && LV>7)$fatal(1,"publication reserves unused stack level7");
     genvar l;
     wire publish_request=PUBLISH ? pub_start : 1'b0;
+    wire fold_request=PUBLISH ? fold_start : 1'b0;
+    reg fd0,fd1;                                       // fold read of b, add issue
+    reg [2:0] fa0,fb0,fa1;
+    reg [511:0] fold_a_data;
+    reg [ALAT:0] fw_v;                                 // fold sum in flight (bit k: issued k cycles ago)
+    reg [2:0] fw_a [0:ALAT];
+    wire fold_write=fw_v[ALAT-1];                      // the add issued ALAT cycles ago: my holds its sum this cycle
     wire finish;
     wire [2:0] finish_slot;
     wire [5:0] stack_read_addr;
@@ -75,10 +93,10 @@ module ot_hbm_sm_pv_merge #(
     wire [2:0] r = bp;
     assign finish=e_busy[r] && e_fl[r] && !(e_k[r]<LV) && !ev;
     assign finish_slot=e_tag[r][2:0];
-    assign stack_read_addr=publish_request ? {pub_slot,3'd7} : sr_a;
-    assign stack_write_en=sw_ce || (PUBLISH && finish);
-    assign stack_write_addr=(PUBLISH && finish) ? {finish_slot,3'd7} : sw_a;
-    assign stack_write_data=(PUBLISH && finish) ? vreg : sw_d;
+    assign stack_read_addr=publish_request ? {pub_slot,3'd7} : fold_request ? {((MUT==4) ? fold_b : fold_a),3'd7} : fd0 ? {fb0,3'd7} : sr_a;
+    assign stack_write_en=sw_ce || (PUBLISH && finish) || fold_write;
+    assign stack_write_addr=fold_write ? {fw_a[ALAT-1],3'd7} : (PUBLISH && finish) ? {finish_slot,3'd7} : sw_a;
+    assign stack_write_data=fold_write ? my : (PUBLISH && finish) ? vreg : sw_d;
 
     wire       ev_first = tag_d[TAGW-2], ev_last = tag_d[TAGW-3];
     wire [7:0] ev_c = ev_first ? 8'd0 : e_n[r][7:0];
@@ -86,7 +104,8 @@ module ot_hbm_sm_pv_merge #(
     always @(*) begin
         mv = 1'b0; ma = {L*32{1'b0}}; mb = {L*32{1'b0}};
         sw_ce = 1'b0; sw_a = {r, 3'd0}; sw_d = sum;
-        if (ev) begin
+        if (fd1) begin mv = 1'b1; ma = fold_a_data; mb = st_rd; end
+        else if (ev) begin
             if (ev_c[0]) begin mv = 1'b1; ma = st_rd; mb = sum; end
             else begin sw_ce = 1'b1; sw_a = {r, 3'd0}; sw_d = sum; end
         end else if (e_busy[r] && !e_fl[r]) begin
@@ -130,6 +149,34 @@ module ot_hbm_sm_pv_merge #(
     // Macro read -> buffer capture -> first scalar is exactly2edges. Requests
     // at word14 prefetch the next node without a gap or another memory macro.
     reg [7:0] node_valid;
+    reg [7:0] node_pending;                           // fold sum not yet written back
+    reg fold_fault;
+    integer fk;
+    always @(posedge clk or negedge rst_n)
+        if(!rst_n)begin fd0<=0;fd1<=0;fw_v<=0;fold_fault<=0;node_pending<=0;end
+        else begin
+            fd0<=fold_request;fd1<=fd0;
+            fw_v<={fw_v[ALAT-1:0],fd1};
+            if(fold_request)begin
+                fa0<=fold_a;fb0<=fold_b;
+                if(!node_valid[fold_a] || !node_valid[fold_b] || node_pending[fold_a] || node_pending[fold_b] ||
+                   fold_a==fold_b || ev || (|e_busy) || publish_request || pub_d0 || pub_d1 || pub_active || fd0)fold_fault<=1;
+                node_pending[fold_a]<=1'b1;
+            end
+            if(fd0)fa1<=fa0;
+            if(fd1 && (ev || (|e_busy)))fold_fault<=1;
+            if(fold_write)begin
+                node_pending[fw_a[ALAT-1]]<=1'b0;
+                if(sw_ce || (PUBLISH && finish))fold_fault<=1;
+            end
+            if(publish_request && node_pending[pub_slot])fold_fault<=1;
+            if(ev && (|node_pending))fold_fault<=1;
+        end
+    always @(posedge clk)begin
+        if(fd0)fold_a_data<=st_rd;
+        fw_a[0]<=fa1;
+        for(fk=1;fk<=ALAT;fk=fk+1)fw_a[fk]<=fw_a[fk-1];
+    end
     reg [TAGW-1:0] node_tag[0:7];
     reg pub_d0,pub_d1,pub_active,pub_fault;
     reg [2:0] slot0,slot1;
@@ -144,6 +191,7 @@ module ot_hbm_sm_pv_merge #(
             pub_d0<=publish_request;pub_d1<=pub_d0;
             pub_v<=pub_d1 || pub_active;
             if(PUBLISH && ev && ev_first)node_valid[tag_d[2:0]]<=0;
+            if(fold_request)node_valid[fold_b]<=0;      // b is consumed by the fold
             if(PUBLISH && finish)begin
                 node_valid[finish_slot]<=1;node_tag[finish_slot]<=e_tag[r];
                 if(sw_ce)pub_fault<=1;
@@ -164,6 +212,6 @@ module ot_hbm_sm_pv_merge #(
                 else word_next<=word_next+1;
             end
         end
-    assign fault = m_fault | pub_fault;
+    assign fault = m_fault | pub_fault | fold_fault;
 endmodule
 `default_nettype wire

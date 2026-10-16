@@ -18,7 +18,16 @@ relays get no macro grid.  The core M8 / M9 lattice runs over them either way (t
 core stripes), so GRT resources are unchanged; only the relays' M7 -> M8 vias are missing: check_power_grid reports
 the relays as islands (a recorded PDN scope item, not a timing input).
 
-    python3 tools/qwen_split/pdn_regroup.py CASE_DIR [--p8 8.64] [--out pdn_r6.tcl] [--skip-prefix rly_]
+r8 (`--tie-local`, Q-COMPUTE-DIE 2026-10-15): the die top's only standard cells are the strap tie cells (C21sa: 4,747,
+93 % of them on the three band-lane tt straps).  The die-wide M1/M2 followpin + M3..M7 ladder written for them
+(native_stdcell_pg_lines, 58533b5a0) put 96,064 full-width rows and 4.32/8.64-um stripes over the whole 841 mm2 die:
+C19s / C21sa PDNs were killed by the 420 GiB cgroup after 4 h 47 / 2 h 57, still inserting the core grid.  r8 drops the
+die-wide M3..M7 ladder; die_tie_rows.tcl (run before pdn.tcl) rebuilds rows only around the die-top cells (moving a
+cell whose rails would sit under an opposite-net core M8 stripe or whose row segment misses a VDD/VSS M9 stripe) and
+the M2 followpins stack straight onto the core M9 stripes ({M2 M9}).  Fixture: 5 ties, check_power_grid VDD/VSS PASS,
+M8 phase verified against the written stripes.  Every cell keeps literal M1 contact (die_constant_pg_check.tcl).
+
+    python3 tools/qwen_split/pdn_regroup.py CASE_DIR [--p8 8.64] [--out pdn_r6.tcl] [--skip-prefix rly_] [--tie-local]
 reads CASE_DIR/pdn.tcl + CASE_DIR/floorplan_placed.def, writes CASE_DIR/<out> and prints a JSON summary.
 """
 import argparse, json, re
@@ -44,7 +53,38 @@ def placed(def_path):
     return pos
 
 
-def regroup(case, p8, out, skip_prefix=(), pos_json=None):
+LADDER = re.compile(r'^add_pdn_(stripe -grid core -layer M[3-7] |connect -grid core -layers \{M[2-7] M[3-8]\})')
+
+
+def tie_local(case, lines, p8):
+    """r8: strip the die-wide stdcell ladder, stack the followpins onto M9, run die_tie_rows.tcl before pdn.tcl."""
+    case = Path(case)
+    m9 = [l for l in lines if l.startswith('add_pdn_stripe -grid core -layer M9')]
+    if len(m9) != 1:
+        raise SystemExit('r8: expected one core M9 stripe line')
+    p9 = float(re.search(r'-pitch ([0-9.]+)', m9[0]).group(1))
+    w9 = float(re.search(r'-width ([0-9.]+)', m9[0]).group(1))
+    if not any('-layer M2 -width .018 -followpins' in l for l in lines):
+        return lines, None                      # no die-top stdcell rails in this case: nothing to localize
+    dropped = [l for l in lines if LADDER.match(l)]
+    keep = [l for l in lines if not LADDER.match(l)]
+    i = next(k for k, l in enumerate(keep) if l.startswith('add_pdn_connect -grid core -layers {M1 M2}'))
+    keep.insert(i + 1, 'add_pdn_connect -grid core -layers {M2 M9}')
+    run = case / 'run_pdn.tcl'
+    t = run.read_text()
+    if 'ot_tie_rows' not in t:
+        a = 'mem read\n'
+        b = 'source /work/pdn.tcl; pdngen;'
+        if a not in t or b not in t:
+            raise SystemExit('r8: run_pdn.tcl hooks not found')
+        t = t.replace(a, a + f'source /work/die_tie_rows.tcl\not_tie_rows {p8:.3f} 0.48 {p9:.3f} {w9:.3f}\nmem tie_rows\n', 1)
+        t = t.replace(b, b + f' ot_tie_rows_verify {p8:.3f} 0.48;', 1)
+        run.write_text(t)
+    (case / 'die_tie_rows.tcl').write_text((Path(__file__).parent / 'die_tie_rows.tcl').read_text())
+    return keep, dict(dropped_ladder_lines=len(dropped), m9_pitch=p9, m9_width=w9)
+
+
+def regroup(case, p8, out, skip_prefix=(), pos_json=None, tie_local_pg=False):
     case = Path(case)
     src = (case / 'pdn.tcl').read_text().split('\n')
     if pos_json:      # before the real case has placed the die: the build's own instance origins (rom_tp8b.json)
@@ -84,6 +124,9 @@ def regroup(case, p8, out, skip_prefix=(), pos_json=None):
             groups.setdefault(round((-pos[n][1]) % p8, 3) % round(p8, 3), []).append(n)
     if missing:
         raise SystemExit(f'{len(missing)} grid instances not in the placed DEF, e.g. {missing[:3]}')
+    r8 = None
+    if tie_local_pg:
+        head, r8 = tie_local(case, head, p8)
     L = list(head)
     for j, (off, names) in enumerate(sorted(groups.items())):
         g = f'pg_m8_{j}'
@@ -96,7 +139,7 @@ def regroup(case, p8, out, skip_prefix=(), pos_json=None):
     (case / out).write_text('\n'.join(L) + '\n')
     return dict(case=str(case), out=out, p8=p8, m8_grids_before=len(m8), m8_grids_after=len(groups),
                 m5_grids=len(m5), instances=sum(len(v) for v in groups.values()), skipped_no_macro_grid=skipped,
-                skip_prefix=list(skip_prefix),
+                skip_prefix=list(skip_prefix), r8_tie_local=r8,
                 phases={str(k): len(v) for k, v in sorted(groups.items())})
 
 
@@ -108,5 +151,7 @@ if __name__ == '__main__':
     ap.add_argument('--skip-prefix', action='append', default=[],
                     help='instances (name prefix) that get NO macro grid (r7: rly_ -- see the module note)')
     ap.add_argument('--pos', help='instance origins from the build (OUT/rom_tp8b.json) instead of the placed DEF')
+    ap.add_argument('--tie-local', action='store_true',
+                    help='r8: die-top stdcell PG only around the cells (die_tie_rows.tcl), no die-wide M3..M7 ladder')
     a = ap.parse_args()
-    print(json.dumps(regroup(a.case, a.p8, a.out, a.skip_prefix, a.pos)))
+    print(json.dumps(regroup(a.case, a.p8, a.out, a.skip_prefix, a.pos, a.tie_local)))

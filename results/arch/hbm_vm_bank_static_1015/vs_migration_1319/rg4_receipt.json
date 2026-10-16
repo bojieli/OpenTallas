@@ -1,0 +1,25 @@
+{
+  "scope": "source-exact migrated CTS gate only; not detailed route/native boundary closure",
+  "gate": "vms_bank_vs_rg4wg1_1015",
+  "source_start_commit": "b5140c202",
+  "actual_host": "ot-agidock128",
+  "original_host": "ot-pve1",
+  "same_frozen_run_path": "/srv/opentallas-scratch/claude/ref_gate/vms_bank_vs_rg4wg1_1015-20261015-124031",
+  "archive_sha256": "320656c52d032768a7d6892872a07afb7dc05bb42d677b42158ea06955f1597f",
+  "gate_verdict": "WARN,0FAIL; currentsourcebinding verified by recover_gate_result.py",
+  "placement_diagnostic": {
+    "TT_setup_ps": -86.808338,
+    "hold_ps": 23.006264,
+    "failing_regreg_paths": 382,
+    "worst_endpoint": "bank.eg_v D"
+  },
+  "clock": {
+    "textbook_root_sinks": 4772,
+    "actual_TT_clock_population": 6063,
+    "TT_all_min_ps": 743.6,
+    "TT_all_max_ps": 774.6,
+    "TT_spread_ps": 31.0,
+    "TT_boundary_mean_ps": 756.3
+  },
+  "next": "Classify actual eg_v path before structural successor; no clock/TT/FF/native gate relaxation. Current die child window still needs explicit binding. Original source gate cannot qualify changed source."
+}
