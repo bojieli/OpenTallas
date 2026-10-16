@@ -34,11 +34,11 @@ PROFILES = {
         read_raw=7, read_return=16, write_raw=10, write_return=12, max_lane=2,
         receipts=['results/rtl/s81_vm_raw_read_calendar_20261015/record.json',
                   'results/rtl/s81_vm_scatter_pipe1_raw_20261015/record.json',
-                  'results/rtl/s81_vm_master_current_scatter_20261016/record.json']),
+                  'results/rtl/s81_vm_master_current_scatter_bc297977c/record.json']),
     's81_vm_r4_c2_w0': dict(
         rtl_tuple={'READ_PIPE': 4, 'CAP_PIPE': 2, 'WSCATTER_PIPE': 0},
         read_raw=7, read_return=16, write_raw=9, write_return=11, max_lane=2,
-        receipts=['results/rtl/s81_vm_master_current_scatter_20261016/record.json']),
+        receipts=['results/rtl/s81_vm_master_current_scatter_bc297977c/record.json']),
 }
 # The A2-F measurement embeds its exact staged-source manifest in the immutable
 # parent receipt. Keep legacy profiles attached to their original measurement.
@@ -53,13 +53,16 @@ PROFILES['s81_vm_a2f_hop1_r4_c2_w1'] = dict(
     read_raw=6, read_return=14, write_raw=11, write_return=12, max_lane=2,
     receipts=[A2F_RECEIPT], embedded_manifest='source_sha256')
 
+# 2026-10-16 ~07:00 S-FUNC: re-measured again on bc297977c (XIO leaves 2222002d4/643419d7d, wfc_ctl r2-r5, capture
+# diagnostic split, parent/tb witness paths): full master gate PASS both WSCATTER_PIPE, same markers/calendar; the
+# 20261016 (89c48ea9d) receipt is kept as historical evidence.
 # 2026-10-16 S-FUNC: re-measured on 89c48ea9d (WFC ctl leaf 60bbca547 changed a boundary file; same calendar, same
 # markers, all 8 fault witnesses + 3 mutants); the 20261015 receipt (36732083b) is kept as historical evidence.
 # These measurements are immutable evidence, rather than caller-provided
 # claims about the current checkout. A changed measurement needs a reviewed
 # new profile; evidence_for() cannot create a new measurement by rehashing RTL.
-MEASURED_MANIFEST = 'results/rtl/s81_vm_master_current_scatter_20261016/source_manifest.json'
-MEASURED_ARTIFACT_SHA256 = {'results/rtl/s81_vm_master_current_scatter_20261016/source_manifest.json': 'c3f3ff9d16e48057297a3172312921d339ba916800a35b5aea4388e280d25ed3', 'results/rtl/s81_vm_raw_read_calendar_20261015/record.json': 'aa3e5047b8261c0a0b87142f19fbc5634029fab94ad60ddd7b0b131c747c7b51', 'results/rtl/s81_vm_scatter_pipe1_raw_20261015/record.json': '6f4e4b93032c35ab6f9d9a34de018bd5acd8bbbb8531d979ba3ed3e11a66f057', 'results/rtl/s81_vm_master_current_scatter_20261016/record.json': '637e49209a4c6e6ccb572afd5d1c2ecd3e60a58aac2c9444e868c8224d250b72'}
+MEASURED_MANIFEST = 'results/rtl/s81_vm_master_current_scatter_bc297977c/source_manifest.json'
+MEASURED_ARTIFACT_SHA256 = {'results/rtl/s81_vm_master_current_scatter_bc297977c/source_manifest.json': '8e307608e750bacac8b4d1f7fcff346c2b6d3f4dbc1e8ef223c0c7ac74a4b1ee', 'results/rtl/s81_vm_raw_read_calendar_20261015/record.json': 'aa3e5047b8261c0a0b87142f19fbc5634029fab94ad60ddd7b0b131c747c7b51', 'results/rtl/s81_vm_scatter_pipe1_raw_20261015/record.json': '6f4e4b93032c35ab6f9d9a34de018bd5acd8bbbb8531d979ba3ed3e11a66f057', 'results/rtl/s81_vm_master_current_scatter_bc297977c/record.json': 'bd0b6020dfcd47bf0b2fc2ec352a1f66b7ff3cb700aff07236cc076c9f31cf67'}
 # The profile starts at read pins / core write-source pins. The serial CDC
 # adapter's reset implementation lies outside that boundary; its own fixed
 # phase, startup and physical proof remain separate. The testbench is evidence
