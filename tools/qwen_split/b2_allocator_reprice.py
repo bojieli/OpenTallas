@@ -98,7 +98,7 @@ def main():
         # Wider/taller upper outlines must find real free homes, not overlap peers.
         obs=[i for i in m['insts']if i.name not in targets]
         for l in range(NUP):
-            u=copy.copy(by[f'tt_up4_leaf{l%4}']);u.name=f'tt_up4_leaf{l}';u.y+=(l//4)*226.8;u.master=um;u.w,u.h=86.4,(205.2 if a.production else 410.4)
+            u=copy.copy(by[f'tt_up4_leaf{l%4}']);u.name=f'tt_up4_leaf{l}';u.x+=(l%4)*43.2 if a.production else 0;u.y+=(l//4)*226.8;u.master=um;u.w,u.h=86.4,(205.2 if a.production else 410.4)
             home=None
             for radius in range(160):
                 for dy in range(-radius,radius+1):
