@@ -20,6 +20,7 @@ FILES = ['tests/s81/tb_bf_static_front.sv', MASTER, FRONT,
          'rtl/v41rom/ot_v41_rom_elem_w10.sv', 'rtl/v41rom/ot_v41_kreg.sv',
          'rtl/common/ot_prefix.sv', 'rtl/hdc/ot_hdc_cg.sv']
 MUTANTS = {
+    'fault_pin_capture_bypass': (CORE, 'assign qy_pin = q;', 'assign qy_pin = c_qy_bkf;'),
     'programme_register_bypass': ('define', 'BF_PROG_MUTANT_CORE_BYPASS', ''),
     'control_latch_go_lost': ('define', 'BF_CTL_LAT_MUTANT_GO', ''),
     'read_pointer_copy_stall': ('define', 'BF_FRD_MUTANT_COPY', ''),

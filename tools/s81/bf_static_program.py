@@ -62,6 +62,8 @@ def transform(fc):
                 f_q0[f_wr + bpre[bk]] <= xbd[256*bk +: 256];
                 f_identity[f_wr + bpre[bk]] <= {1'b1, b_identity_pb, b_identity_units[8*bk +: 8]};
             end''')
+    fc = fc.replace('    assign bk_fault = c_qy_bkf; assign qy_bkf = c_qy_bkf;', '    // Dedicated capture at each column-return fault pin. Diagnostic latency +1 edge;\n    // the compiler-owned issue calendar and data/operand stages are unchanged.\n    wire [NB-1:0] qy_pin;\n    if (STATIC_PROGRAM != 0) begin : g_qy_pin\n        reg [NB-1:0] q;\n        always @(posedge fclk) q <= c_qy_bkf;\n        assign qy_pin = q;\n    end else begin : g_qy_direct\n        assign qy_pin = c_qy_bkf;\n    end\n    assign bk_fault = qy_pin; assign qy_bkf = qy_pin;')
+    fc = fc.replace('    wire [NB-1:0] bk_fault;', '`ifdef OT_BF_ISSUE_TRACE\n    // S-BIND 2026-10-15 measurement probe (simulation only): the compiled BF programme of this core = every free-clock\n    // edge\'s issue and the identity a static programme must present (pin->consume ages added by the producer).\n    integer tr_fd = 0, tr_cyc = 0, tr_go = -1;\n    initial tr_fd = $fopen("bf_issue_trace.txt", "w");\n    always @(posedge fclk) begin\n        tr_cyc = tr_cyc + 1;\n        if (tr_fd != 0 && go) begin tr_go = tr_cyc; $fwrite(tr_fd, "G %0d %0d %0d\\n", tr_cyc, go_bf, tr_go); end\n        if (tr_fd != 0 && issue_available)\n            $fwrite(tr_fd, "I %0d %0d %0d %0d %0d %0d %0d %0d\\n", tr_cyc, tr_cyc - tr_go, a_ctr, programme_operand, w_s, w_h, w_cnt, go_bf);\n        if (tr_fd != 0 && STATIC_PROGRAM != 0 && prog_issue_u)\n            $fwrite(tr_fd, "P %0d %0d %0d %0d %0d %0d %0d %0d bad=%0d avail=%0d\\n", tr_cyc, tr_cyc - tr_go, prog_addr_u, prog_operand_u,\n                    prog_segment_u, prog_half_u, prog_chain_u, go_bf, programme_bad, issue_available);\n    end\n`endif\n    wire [NB-1:0] bk_fault;')
     return transform_fclk(transform_frd(fc))
 
 
@@ -148,11 +150,12 @@ def transform_fclk(fc):
         assign fclk = clk;
     end
 """)
-    head, body = fc.split('    wire fclk;\n', 1)
+    clock_body_anchor = '    wire         rst_n, cfg_v, go, go_bf, xs_v, xb_v;'
+    head, body = fc.split(clock_body_anchor, 1)
     body = body.replace('posedge clk ', 'posedge fclk ').replace('posedge clk)', 'posedge fclk)')
     for k in ('u_gn', 'u_gw', 'u_gm'):
         body = body.replace(f'{k} (.clk(clk)', f'{k} (.clk(fclk)')
-    fc = head + '    wire fclk;\n' + body
+    fc = head + clock_body_anchor + body
     # programme register (+1 edge, was in the front)
     anchor = '    wire issue = (STATIC_PROGRAM != 0) ? prog_issue_pin : issue_available;'
     names = [('issue', '1'), ('addr', '14'), ('operand', '15'), ('segment', '$clog2(NSEG)'), ('half', '1'), ('chain', '$clog2(NCH)')]

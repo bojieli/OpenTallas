@@ -1633,7 +1633,17 @@ module ot_v41_bf_front_core #(
     for (cs = 0; cs < NSEG; cs = cs + 1) begin : g_csi
         assign c_so_idx[5*cs +: 5] = so_idx[cs]; assign c_so_n[5*cs +: 5] = so_n[cs];
     end
-    assign bk_fault = c_qy_bkf; assign qy_bkf = c_qy_bkf;
+    // Dedicated capture at each column-return fault pin. Diagnostic latency +1 edge;
+    // the compiler-owned issue calendar and data/operand stages are unchanged.
+    wire [NB-1:0] qy_pin;
+    if (STATIC_PROGRAM != 0) begin : g_qy_pin
+        reg [NB-1:0] q;
+        always @(posedge fclk) q <= c_qy_bkf;
+        assign qy_pin = q;
+    end else begin : g_qy_direct
+        assign qy_pin = c_qy_bkf;
+    end
+    assign bk_fault = qy_pin; assign qy_bkf = qy_pin;
     assign pv = '0; assign pval = '0; assign prow = '0; assign pseg = '0; assign pnseg = '0; assign perr = '0; assign ppos = '0;
     assign busy_c = w_run | i1_v | i2_v | drain != 8'd0;
     assign walk_busy = w_run | n_run | bn_run | i1_v | i2_v | (BP != 0 && bp_hold != 3'd0);

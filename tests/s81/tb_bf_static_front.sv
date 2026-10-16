@@ -5,7 +5,7 @@
 module tb_bf_static_front;
   reg clk=0; always #5 clk=~clk;
   wire io_clk=clk;
-  reg rst=0,cv=0,go=0,bv=0,pi=0;
+  reg rst=0,cv=0,go=0,bv=0,pi=0,qy0=0,qy1=0;
   reg [4:0] ca=0;reg [47:0] cd=0;reg [2:0] bb=0;reg [31:0] bu=0;
   reg [1023:0] bd=0;
   reg [13:0] pa=0;reg [14:0] po=0;reg [3:0] pc=0;
@@ -13,7 +13,7 @@ module tb_bf_static_front;
   wire [37:0] prog={pc,1'b0,3'd0,po,pa,pi};
   genvar m;
   for(m=0;m<3;m=m+1) begin:g
-    dsfd_bf_front_static dut(.ck(clk),.io_clk(io_clk),.rs(rst),.qy0(1'b0),.qy1(1'b0),
+    dsfd_bf_front_static dut(.ck(clk),.io_clk(io_clk),.rs(rst),.qy0(qy0),.qy1(qy1),
       .x0(283'd0),.x1(266'd0),.go(go),.cfg({cv,cd,ca}),
       .xb({bd,bu,4'hf,bb,(bv && m!=1),3'd0,1'b1}),
       .f_prog(prog ^ (m==2 ? 38'd2:38'd0)),.c0(c0[m]),.c1(c1[m]),.st(st[m]));
@@ -74,6 +74,19 @@ module tb_bf_static_front;
     if(n!=64)$fatal(1,"missing public issues %d",n);
     if(st[0][1] !== 1'b0 || st[1][1] !== 1'b1 || st[2][1] !== 1'b1)
       $fatal(1,"public sticky fault qualification %b/%b/%b",st[0],st[1],st[2]);
+    // Each column-return fault is captured at its own face, then the existing
+    // fault OR and boundary status stages. A one-edge pulse exits exactly +3.
+    for(integer q=0;q<2;q=q+1) begin
+      if(q==0) qy0=1; else qy1=1;
+      tick(); qy0=0;qy1=0;
+      if(st[0][1] !== 1'b0)$fatal(1,"fault pin capture first edge shifted");
+      tick();
+      if(st[0][1] !== 1'b0)$fatal(1,"fault pin capture bypass or early status");
+      tick();
+      if(st[0][1] !== 1'b1)$fatal(1,"fault pin capture missing or late status");
+      tick();
+      if(st[0][1] !== 1'b0)$fatal(1,"fault pin capture pulse width shifted");
+    end
     $display("PASS actual BF static die front:64 public-pin slots, fixed pin+programme+CPIN ages; dropped payload and address mutant fault without schedule shifts");
     $finish;
   end

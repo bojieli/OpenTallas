@@ -109,4 +109,6 @@ def apply(text):
             .prog_operand_pin(programme_lat[29:15]), .prog_segment_pin(programme_lat[32:30]),
             .prog_half_pin(programme_lat[33]), .prog_chain_pin(programme_lat[37:34]),
             .clk(eclk),''', 1)
-    return text[:start] + inst + text[end:]
+    text = text[:start] + inst + text[end:]
+    assert text.count("        always @(posedge pin_clk or negedge rst_n)\n            if (!rst_n) begin r_busy <= 1'b0; r_fault <= 1'b0; end\n            else begin r_busy <= busy_e; r_fault <= fault_e; end\n") == 1
+    return text.replace("        always @(posedge pin_clk or negedge rst_n)\n            if (!rst_n) begin r_busy <= 1'b0; r_fault <= 1'b0; end\n            else begin r_busy <= busy_e; r_fault <= fault_e; end\n", "        // Core -> boundary status uses the same physical lockup protection as\n        // the payload seams. The destination-low latch preserves sampled edges.\n        wire busy_pin_d, fault_pin_d;\n        if (STATIC_PROGRAM != 0) begin : g_static_status_lockup\n            reg busy_l, fault_l;\n            always_latch if (!pin_clk) begin busy_l <= busy_e; fault_l <= fault_e; end\n            assign busy_pin_d = busy_l;\n            assign fault_pin_d = fault_l;\n        end else begin : g_status_direct\n            assign busy_pin_d = busy_e;\n            assign fault_pin_d = fault_e;\n        end\n        always @(posedge pin_clk or negedge rst_n)\n            if (!rst_n) begin r_busy <= 1'b0; r_fault <= 1'b0; end\n            else begin r_busy <= busy_pin_d; r_fault <= fault_pin_d; end\n")
