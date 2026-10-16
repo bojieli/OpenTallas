@@ -7704,11 +7704,44 @@ def _vmc_path(m, A, pa, Bk, pb):
     class _Pt:   # a zero-size peer at a fixed end point (aligns the free face with the assigned one)
         def __init__(s_, p_):
             s_.x, s_.y, s_.w, s_.h = p_[0], p_[1], 0.0, 0.0
+    fixa, fixb = ea is not None, eb is not None
     if ea is None:
         ea = HR_.endpoint(A, pa, None, _Pt(eb[1]) if eb else Bk)
     if eb is None:
         eb = HR_.endpoint(Bk, pb, None, _Pt(ea[1]))
-    return _vmc_route(m, ea[1], ea[0], eb[1], eb[0])
+    bx_ = _vmc_boxes(m)
+    die_ = (0.0, 0.0, DIE[0], DIE[1])
+    p_ = HR_.route(ea[1], ea[0], eb[1], eb[0], bx_, die_, narrow=False)
+    if p_ is None and not (fixa and fixb):
+        # S-DIE 0030 10-16 (pf17 capture.t_cd -> gather.f_cd: the facing N/S seam is filled by the pq-cnt row; VM.t_crs ->
+        # collective.f_crs: the facing point is behind a link landing): a free (generator-laid) end tries other points
+        # of its face and the block's other faces; a route through a real channel (>= 2 x WIDE_CLR) is preferred over a
+        # slit; shortest wins; assigned ends never move
+        def pts_(it, f_, toward):
+            out_ = [(f_, HR_.face_point(it, f_, None, toward))]
+            span = it.w if f_ in 'NS' else it.h
+            out_ += [(f_, HR_.face_point(it, f_, 20.0 + (span - 40.0) * k_ / 8.0)) for k_ in range(9)]
+            return out_
+        for narrow_ in (False, True):
+            best = None
+            for fa_ in ((ea[0],) if fixa else 'NSEW'):
+                for fb_ in ((eb[0],) if fixb else 'NSEW'):
+                    ca_ = [ea] if fixa else pts_(A, fa_, _Pt(eb[1]) if fixb else Bk)
+                    for (fa2, pa_) in ca_:
+                        cb_ = [eb] if fixb else pts_(Bk, fb_, _Pt(pa_))
+                        for (fb2, pb_) in cb_:
+                            if best is not None and abs(pa_[0] - pb_[0]) + abs(pa_[1] - pb_[1]) >= _poly_len(best):
+                                continue
+                            q_ = HR_.route(pa_, fa2, pb_, fb2, bx_, die_, narrow=narrow_)
+                            if q_ is not None and (best is None or _poly_len(q_) < _poly_len(best)):
+                                best = q_
+            if best is not None:
+                p_ = best
+                break
+    if p_ is None:
+        p_ = HR_.route(ea[1], ea[0], eb[1], eb[0], bx_, die_, narrow=True)
+    assert p_ is not None, ('vmc: no route', ea[1], ea[0], eb[1], eb[0])
+    return p_
 
 
 def s14_span(half):

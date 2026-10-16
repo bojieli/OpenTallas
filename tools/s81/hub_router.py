@@ -221,7 +221,7 @@ def _astar(a, b, boxes, die):
     return _dedup(ac + cells[1:] + list(reversed(bc))[1:])
 
 
-def route(a, fa, b, fb, boxes, die, skip=()):
+def route(a, fa, b, fb, boxes, die, skip=(), narrow=True):
     """orthogonal polyline from face point a (face fa) to face point b (face fb) avoiding boxes"""
     def inside(p):
         return any(x < p[0] < x + w and y < p[1] < y + h for n, x, y, w, h in boxes if n not in skip)
@@ -245,9 +245,109 @@ def route(a, fa, b, fb, boxes, die, skip=()):
         if not path_hits(c, boxes, skip):
             return c
     mid = _astar(sa, sb, [bx for bx in boxes if bx[0] not in skip], die)
-    if mid is None:
+    if mid is not None:
+        # Anchor connectors were checked before A*: never move a raster endpoint
+        # through the source macro while stitching its exact physical face.
+        out = _dedup([a] + mid + [b])
+        if not path_hits(out, boxes, skip):
+            return out
+    # S-DIE 0030 10-16 (pf17: sseq E-face pins 5.6 um from a station column, VM->collective seam behind link landings):
+    # the 43.2-um raster cannot see slits; route on the exact Hanan grid of the obstacle edges (+- CLR) instead
+    return hanan_route(a, fa, b, fb, [bx for bx in boxes if bx[0] not in skip], die, narrow=narrow)
+
+
+CLR = 2.16           # Hanan-grid clearance from every obstacle edge, end blocks included (um)
+
+
+def hanan_route(a, fa, b, fb, boxes, die, clr=CLR, narrow=True):
+    """exact orthogonal route on the Hanan grid of obstacle edges +- clr (turn-penalised Dijkstra), windows grown
+    300 / 900 / WINDOW um around the endpoints; the first leg leaves a along fa and the last enters b against fb.
+    None when no legal path exists in the largest window."""
+    import numpy as np
+    for c_ in ((WIDE_CLR, clr) if narrow else (WIDE_CLR,)):         # a real channel first (wide buses), the slit-level clearance only when none exists
+        out = _hanan_once(a, fa, b, fb, boxes, die, c_)
+        if out is not None:
+            return out
+    return None
+
+
+WIDE_CLR = 10.8      # ~900 bits on two layers at the 0.048-um pin pitch fit between two obstacles 21.6 um apart
+
+
+def _hanan_once(a, fa, b, fb, boxes, die, clr):
+    import numpy as np
+    a0, b0 = a, b
+    a, b = _stub(a0, fa, clr + 0.5), _stub(b0, fb, clr + 0.5)
+    if any(x < p[0] < x + w and y < p[1] < y + h for p in (a, b) for _, x, y, w, h in boxes):
         return None
-    # Anchor connectors were checked before A*: never move a raster endpoint
-    # through the source macro while stitching its exact physical face.
-    out = _dedup([a] + mid + [b])
-    return out if not path_hits(out, boxes, skip) else None
+    for win in (300.0, 900.0, WINDOW):
+        x0 = max(die[0], min(a[0], b[0]) - win); x1 = min(die[2], max(a[0], b[0]) + win)
+        y0 = max(die[1], min(a[1], b[1]) - win); y1 = min(die[3], max(a[1], b[1]) + win)
+        bx = [(x - clr, y - clr, x + w + clr, y + h + clr) for _, x, y, w, h in boxes
+              if x + w > x0 and x < x1 and y + h > y0 and y < y1]
+        xs = sorted({round(v, 3) for v in [a[0], b[0], x0, x1] + [r[0] for r in bx] + [r[2] for r in bx] if x0 <= v <= x1})
+        ys = sorted({round(v, 3) for v in [a[1], b[1], y0, y1] + [r[1] for r in bx] + [r[3] for r in bx] if y0 <= v <= y1})
+        X, Y = np.array(xs), np.array(ys)
+        nx, ny = len(xs), len(ys)
+        node = np.zeros((nx, ny), bool)      # node strictly inside an expanded box
+        eh = np.zeros((max(nx - 1, 1), ny), bool)   # edge (i,j)-(i+1,j) crosses an expanded box interior
+        ev = np.zeros((nx, max(ny - 1, 1)), bool)
+        mx, my = (X[:-1] + X[1:]) / 2, (Y[:-1] + Y[1:]) / 2
+        for r in bx:
+            ix = (X > r[0] + 1e-4) & (X < r[2] - 1e-4); iy = (Y > r[1] + 1e-4) & (Y < r[3] - 1e-4)
+            jx = (mx > r[0]) & (mx < r[2]); jy = (my > r[1]) & (my < r[3])
+            node[np.ix_(ix, iy)] = True
+            eh[np.ix_(jx, iy)] = True
+            ev[np.ix_(ix, jy)] = True
+        ia, ja = xs.index(round(a[0], 3)), ys.index(round(a[1], 3))
+        ib, jb = xs.index(round(b[0], 3)), ys.index(round(b[1], 3))
+        D = {'E': (1, 0), 'W': (-1, 0), 'N': (0, 1), 'S': (0, -1)}
+        dl = list(D.values())
+        d0 = dl.index(D[fa])
+        dend = dl.index({'E': (-1, 0), 'W': (1, 0), 'N': (0, -1), 'S': (0, 1)}[fb])
+        tc = 4 * PITCH                        # one turn costs ~170 um of wire
+        INF = float('inf')
+        dist = {(ia, ja, d0): 0.0}
+        prev = {}
+        q = [(0.0, ia, ja, d0)]
+        end = None
+        while q:
+            g, i, j, d = heapq.heappop(q)
+            if g > dist.get((i, j, d), INF):
+                continue
+            if (i, j) == (ib, jb) and d == dend:
+                end = (i, j, d)
+                break
+            for nd, (di, dj) in enumerate(dl):
+                if (di, dj) == (-dl[d][0], -dl[d][1]):
+                    continue
+                ii, jj = i + di, j + dj
+                if not (0 <= ii < nx and 0 <= jj < ny):
+                    continue
+                if di:
+                    if eh[min(i, ii), j]:
+                        continue
+                    ln = abs(xs[ii] - xs[i])
+                else:
+                    if ev[i, min(j, jj)]:
+                        continue
+                    ln = abs(ys[jj] - ys[j])
+                if node[ii, jj] and (ii, jj) != (ib, jb):
+                    continue
+                ng = g + ln + (tc if nd != d else 0.0)
+                k = (ii, jj, nd)
+                if ng < dist.get(k, INF):
+                    dist[k] = ng
+                    prev[k] = (i, j, d)
+                    heapq.heappush(q, (ng, ii, jj, nd))
+        if end is None:
+            continue
+        pts = []
+        k = end
+        while k is not None:
+            pts.append((xs[k[0]], ys[k[1]]))
+            k = prev.get(k)
+        out = _dedup([a0] + pts[::-1] + [b0])
+        if not path_hits(out, boxes):
+            return out
+    return None

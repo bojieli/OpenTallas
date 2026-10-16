@@ -11,6 +11,14 @@ export's job (~/.local/state/closure_loop/jobs/<job>.json):
   bench    no expect-pass bench failed and no expect-fail bench passed
   current  the job is the latest CLOSED export of that master (newest finished_at); older views are listed, not bound
 
+POST-STUB LINEAGE (--poststub-same-commit, S-DIE 0030 10-16): the closure loop's child-lint gate rewrites the exported LEF in
+place with tools/hier_contract/abstract_pin_stub.py AFTER the export recorded its hashes (closure_loop.py pin_stub_fix), so
+the LEF on disk legitimately differs from abstract.json's raw record.  Such a master binds (lineage POSTSTUB_SAME_COMMIT,
+still DIAGNOSTIC_CLOSED) only when every other gate passes AND: the three corner libs ARE the recorded files, the LEF,
+the libs and abstract.json were last written by ONE git commit (one export bundle, never a newer LEF over an older
+record), the LEF is a fixed point of abstract_pin_stub (it is the post-processed form) and its MACRO / signal pin set
+equals the TT liberty's cell / pin set.  Exact raw-replay recovery (export_manifest_0010) supersedes this lineage.
+
 It never relaxes a gate: native launch/capture/spread audits and production-throughput qualification stay owed per tile
 and are listed as open in the table ('native_open'). Rows use DIAGNOSTIC_CLOSED and require
 OT_S81_DIAGNOSTIC_CLOSED_VIEWS=1, so a trial cannot promote them to native QUALIFIED.  The generator still refuses any binding whose pins / outline /
@@ -26,6 +34,8 @@ import glob
 import hashlib
 import json
 import re
+import subprocess
+import sys
 from view_binding import export_fix
 from pathlib import Path
 
@@ -56,10 +66,79 @@ def verdict_ok(reason: str):
     return True, f"TT +{t} / FF +{f} / DRC 0"
 
 
+_LAST = None
+
+
+def last_commits(paths):
+    """{path: commit sha} of the last commit that wrote each view file (one git log over physical/ref_tile views)"""
+    global _LAST
+    if _LAST is None:
+        _LAST = {}
+        out = subprocess.run(["git", "-C", str(ROOT), "log", "--format=C %H", "--name-only", "--",
+                              "physical/ref_tile/*/views/*/abstract.json", "physical/ref_tile/*/views/*/*.lef",
+                              "physical/ref_tile/*/views/*/*.lib"], capture_output=True, text=True, check=True).stdout
+        cur = None
+        for ln in out.split("\n"):
+            if ln.startswith("C "):
+                cur = ln[2:].strip()
+            elif ln and ln not in _LAST:
+                _LAST[ln] = cur
+    return [_LAST.get(p) for p in paths]
+
+
+def poststub_lineage(master, d: Path, rec: dict):
+    """(ok, why) of the POST-STUB lineage for an export whose only export_fix fault is the LEF hash"""
+    sys.path.insert(0, str(ROOT / "tools/hier_contract"))
+    import abstract_pin_stub as aps
+    rel = d.relative_to(ROOT)
+    files = rec.get("files") or {}
+    for c in ("tt", "ff", "ss"):
+        f = d / f"{master}_{c}.lib"
+        if files.get(f.name) != sha(f):
+            return False, f"{f.name} is not the recorded file"
+    cs = last_commits([f"{rel}/abstract.json", f"{rel}/{master}.lef"] + [f"{rel}/{master}_{c}.lib" for c in ("tt", "ff", "ss")])
+    if None in cs or len(set(cs)) != 1:
+        return False, f"view files last written by different commits {sorted(set(map(str, cs)))[:3]}"
+    lef = (d / f"{master}.lef").read_text()
+    try:
+        out, _msg = aps.process(lef)
+    except Exception as e:  # noqa: BLE001
+        return False, f"abstract_pin_stub failed on the LEF: {e}"
+    if out != lef:
+        return False, "LEF is not a fixed point of abstract_pin_stub (not the post-processed export)"
+    macros = re.findall(r"^MACRO (\S+)", lef, re.M)
+    if macros != [master]:
+        return False, f"LEF MACRO {macros}"
+    lpins = set()
+    for pm in re.finditer(r"\n\s*PIN (\S+)\s*\n(.*?)\n\s*END \1", lef, re.S):
+        if not re.search(r"USE\s+(POWER|GROUND)", pm.group(2)):
+            lpins.add(pm.group(1))
+    lib = (d / f"{master}_tt.lib").read_text(errors="ignore")
+    if not re.search(r"^\s*cell\s*\(\s*\"?" + re.escape(master) + r"\"?\s*\)", lib, re.M):
+        return False, "TT liberty has no cell of the master"
+    bus = {}
+    for bm in re.finditer(r"^\s*bus\s*\(\s*\"?(\S+?)\"?\s*\)\s*\{(.*?)\n\s*bus_type\s*:\s*\"?(\S+?)\"?\s*;", lib, re.M | re.S):
+        bus[bm.group(1)] = bm.group(3)
+    tpins = set(re.findall(r"^\s*pin\s*\(\s*\"?([^\s\"\)]+)\"?\s*\)", lib, re.M))
+    types = {tm.group(1): (int(tm.group(2)), int(tm.group(3))) for tm in re.finditer(
+        r"type\s*\(\s*\"?(\S+?)\"?\s*\)\s*\{[^}]*?bit_from\s*:\s*(\d+)\s*;[^}]*?bit_to\s*:\s*(\d+)\s*;", lib, re.S)}
+    for b, ty in bus.items():
+        if ty in types:
+            lo, hi = sorted(types[ty])
+            tpins |= {f"{b}[{i}]" for i in range(lo, hi + 1)}
+    tpins = {p.replace("\\", "") for p in tpins}
+    miss = sorted(lpins - tpins)
+    if miss:
+        return False, f"{len(miss)} LEF signal pins absent from the TT liberty, e.g. {miss[:3]}"
+    return True, "POSTSTUB_SAME_COMMIT " + cs[0][:12]
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--out", required=True)
     ap.add_argument("--jobs", default=str(JOBS))
+    ap.add_argument("--poststub-same-commit", action="store_true",
+                    help="accept the closure loop's in-place abstract_pin_stub LEF rewrite under the POST-STUB lineage rules")
     ap.add_argument("--exclude-master", action="append", default=[], help="Known functional/native defect: do not bind this master even diagnostically")
     a = ap.parse_args()
     cands = {}
@@ -99,6 +178,13 @@ def main():
         # Reuse the strict export identity gate: all bound ETMs must replay
         # their verdict SDC and match the files recorded by that export.
         ok_export, export_why = export_fix(dict(master=master, export_dir=str(rel)))
+        lineage = "EXACT_EXPORT"
+        if not ok_export and a.poststub_same_commit and export_why == f"{master}.lef on disk is not the file the verdict-replay export recorded":
+            ok_ps, ps_why = poststub_lineage(master, d, rec)
+            if ok_ps:
+                ok_export, lineage = True, ps_why
+            else:
+                export_why += f"; post-stub lineage refused: {ps_why}"
         if not ok_export:
             why.append(export_why)
         files = {}
@@ -111,7 +197,7 @@ def main():
         for c, cr in (rec.get("corners") or {}).items():
             if cr.get("returncode") not in (0, None) or cr.get("done") is False:
                 why.append(f"export {c} rc {cr.get('returncode')}")
-        entry = dict(export_dir=str(rel), job=job, files=files,
+        entry = dict(export_dir=str(rel), job=job, files=files, lineage=lineage,
                      finished_at=(jd or {}).get("finished_at") or (jd or {}).get("updated"),
                      closure=verdict_ok((jd or {}).get("reason", ""))[1])
         if why:
@@ -123,7 +209,7 @@ def main():
         es.sort(key=lambda e: str(e.get("finished_at") or ""), reverse=True)
         best = es[0]
         bound[master] = dict(verdict="DIAGNOSTIC_CLOSED", export_dir=best["export_dir"], job=best["job"], files=best["files"],
-                             closure=best["closure"], gate="closed+export+lint+bench+current (view_binding_closed.py)",
+                             closure=best["closure"], lineage=best.get("lineage", "EXACT_EXPORT"), gate="closed+export+lint+bench+current (view_binding_closed.py)",
                              native_open="tile native launch/capture/spread audit and production-throughput bench stay "
                                          "with the tile owner; this binding is the die-context view, not qualification")
         if len(es) > 1:
