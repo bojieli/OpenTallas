@@ -52,7 +52,7 @@ def main():
     from matplotlib.collections import LineCollection
     fig,axes=plt.subplots(1,2,figsize=(16,7),gridspec_kw={'width_ratios':[1.4,1]})
     ax=axes[0];cw=450.144;gap=1.188;fx=cw+gap;rx=fx+116.64+gap
-    for x,w,label in [(0,cw,'Column data-face assignment\n10-root clock ABI/homes OPEN'),(fx,116.64,'Five-root\nfront'),(rx,cw,'Mirrored column data-face\n10-root clock ABI/homes OPEN')]:
+    for x,w,label in [(0,cw,'Historical column outline\nE data assignment; new leaf homes OPEN'),(fx,116.64,'Five-root\nfront'),(rx,cw,'Historical column outline\nW-facing R0 view REQUIRED; no MY grant')]:
         ax.add_patch(Rectangle((x,0),w,198.72,fill=False));ax.text(x+w/2,145,label,ha='center',fontsize=9)
     seam=[]
     for n,p in pins.items():
@@ -60,7 +60,7 @@ def main():
         if n.startswith('c1['):seam.append([(fx+116.64,p['y']),(rx,p['y'])])
     assert len(seam)==1552
     ax.add_collection(LineCollection(seam,colors='tab:blue',linewidths=.3))
-    ax.set(xlim=(-10,rx+cw+10),ylim=(-15,215),xlabel='absolute assembly x (um)',ylabel='y (um)',title='Actual 776-bit peers on both seams; straight data assignment')
+    ax.set(xlim=(-10,rx+cw+10),ylim=(-15,215),xlabel='historical assembly context x (um)',ylabel='y (um)',title='Two requested 776-bit data-face relations; new parent layouts OPEN')
     ax.set_aspect('equal')
     ax=axes[1];ax.add_patch(Rectangle((0,0),116.64,198.72,fill=False))
     clocks=['ck','io_clk','io_n','io_w','io_e']
