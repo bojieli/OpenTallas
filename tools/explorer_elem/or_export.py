@@ -59,7 +59,7 @@ def mod_path(name):
     n = clean(name)
     if TOOL_NAME.match(n): return None
     parts = n.split('.')
-    if len(parts) < 2: return None
+    if len(parts) < 2: return '(top)' if '$_' in n else None   # a yosys register of the top module itself
     return '.'.join(parts[:-1][:10])
 
 

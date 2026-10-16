@@ -76,7 +76,7 @@ def main():
     c = cfg(a.config)
     top = c['DESIGN_NAME']; files = c['VERILOG_FILES'].split(); defs = c.get('VERILOG_DEFINES', '').split()
     tp = c.get('VERILOG_TOP_PARAMS', '').split(); params = list(zip(tp[0::2], tp[1::2]))
-    ys = ['read_verilog -sv %s %s' % (' '.join(defs), ' '.join(files)),
+    ys = ['read_verilog -defer -sv %s %s' % (' '.join(defs), ' '.join(files)),
           'hierarchy -top %s %s' % (top, ' '.join('-chparam %s %s' % kv for kv in params)),
           'proc', 'write_json /out/rtl_yosys.json']
     (out / 'rtl.ys').write_text('\n'.join(ys) + '\n')
@@ -84,6 +84,10 @@ def main():
         cmd = ['ot-heavy', '--mem', str(a.mem), '--', 'docker', 'run', '--rm', '--memory', '%dg' % a.mem, '--user', '%d:%d' % (os.getuid(), os.getgid()),
                '-v', '%s:/src:ro' % a.src, '-v', '%s:/out' % out, a.image, YOSYS, '-q', '-l', '/out/yosys.log', '-s', '/out/rtl.ys']
         r = subprocess.run(cmd, capture_output=True, text=True)
+        if r.returncode and '-defer' in ys[0]:      # ORFS reads with -defer; a few designs elaborate only without it
+            ys[0] = ys[0].replace('read_verilog -defer -sv', 'read_verilog -sv')
+            (out / 'rtl.ys').write_text('\n'.join(ys) + '\n')
+            r = subprocess.run(cmd, capture_output=True, text=True)
         if r.returncode: sys.exit('yosys failed: %s\n%s' % (r.stderr[-2000:], (out / 'yosys.log').read_text()[-2000:] if (out / 'yosys.log').exists() else ''))
     Y = json.loads((out / 'rtl_yosys.json').read_text())['modules']
     srcroot = pathlib.Path(a.src)
