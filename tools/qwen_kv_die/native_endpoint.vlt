@@ -1,0 +1,15 @@
+`verilator_config
+// Real RTL hierarchy cuts; no model/substitute boundary.
+hier_block -module "qkd_native_attention_programme"
+hier_block -module "ot_qwen_tp8_attention_native_stack_w4_g3s2_cp"
+hier_block -module "qkd_ectl3_epoch_direct_s"
+hier_block -module "qkd_astk_ctl_tp8_cal"
+hier_block -module "qkd_astk_ep_cal"
+hier_block -module "qkd_astk_ex"
+hier_block -module "qkd_astk_zn"
+hier_block -module "qkd_astk_native_er_service_w"
+hier_block -module "ot_qkh_head_native_r4"
+hier_block -module "ot_qwen_tp8_pv16_slice"
+hier_block -module "ot_qwen_tp8_pv_join16_static_cal"
+hier_block -module "ot_nhb_zh"
+hier_block -module "ot_qkh_recip_leaf"
