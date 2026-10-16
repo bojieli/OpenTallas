@@ -68,16 +68,15 @@ reg io_cfg_we=0,io_start_v=0;
  .vi_q(512'd0),.fault(fault));
  // ===================== H-SU 2026-10-16: lockstep equivalence of the physical split =====================
  // ot_hgi_sfu_programme_store (sfus slot) + ot_hgi_sfu_core_split (sfucore slot) receive the SAME host cfg/start
- // as the reference engine and the reference engine's VM/gather returns delayed by exactly D=3 edges; every core
- // output must equal the reference output delayed by D, every store status output the reference delayed by 2,
+ // as the reference engine; the core's LG return pins (local_rr/w_done) get the reference returns delayed by 2 and
+ // its gather return vi_q delayed by D=3. Core outputs: local_rq/wq and ro_v/x (pin-registered) = reference delayed
+ // by D+1, vi/kv = reference delayed by D; store status = reference delayed by 2,
  // on every edge of the whole canonical invocation (open-loop lockstep: valid for any time-invariant environment).
-`ifdef SFU_LG_R
- `define SREF dut.u_core
- localparam integer EQ_LG=1+`SFU_LG_R;
-`else
- `define SREF dut
- localparam integer EQ_LG=0;
+`ifndef SFU_LG_R
+ initial $fatal(1,"tb_hgi_sfu_split_equiv needs SFU_LG_R (reference = split engine R, core LG_PATH = R, core bridge R+1)");
 `endif
+ `define SREF dut.u_core
+ localparam integer EQ_LG=`SFU_LG_R;
  localparam integer D=3;
  wire [470:0] s_io;
  wire [1741:0] s_ctl;
@@ -106,13 +105,17 @@ reg io_cfg_we=0,io_start_v=0;
  ot_hgi_sfu_core_split #(.LG_PATH(EQ_LG)) eq_core(.clk(clk),.rst_n(rst_n),.clk_lg(clk_lg),.rst_lg_n({4{rst_n}}),
   .clk_lane({16{clk}}),.clk_map({16{clk}}),.rst_lane_n({16{rst_n}}),.rst_map_n({16{rst_n}}),
   .io_word(s_io),.compiler_control(s_ctl),
-  .local_rq(c_rq),.local_rr(rr_d[D-1]),.local_wq(c_wq),.local_w_done(wd_d[D-1]),
+  .local_rq(c_rq),.local_rr(rr_d[D-2]),.local_wq(c_wq),.local_w_done(wd_d[D-2]),
   .vi_re(c_vire),.vi_addr(c_viaddr),.vi_q(vq_d[D-1]),.ro_v(c_rov),.kv_we(c_kvwe),.ro_x(c_rox),.kv_wdata(c_kvwdata),
   .kv_waddr(c_kvwaddr),.fault(s_cfault));
- localparam integer OW=136+2248+16+384+16+512+16+384+512;
+ localparam integer LW=136+2248+16+512;
+ wire [LW-1:0] ref_l={`SREF.local_rq,`SREF.local_wq,`SREF.ro_v,`SREF.ro_x};
+ wire [LW-1:0] cut_l={c_rq,c_wq,c_rov,c_rox};
+ reg [LW-1:0] ref_ld[0:D];
+ localparam integer OW=16+384+16+384+512;
  localparam integer SW=1+1+32+1+1+32;
- wire [OW-1:0] ref_o={`SREF.local_rq,`SREF.local_wq,`SREF.vi_re,`SREF.vi_addr,`SREF.ro_v,`SREF.ro_x,`SREF.kv_we,`SREF.kv_waddr,`SREF.kv_wdata};
- wire [OW-1:0] cut_o={c_rq,c_wq,c_vire,c_viaddr,c_rov,c_rox,c_kvwe,c_kvwaddr,c_kvwdata};
+ wire [OW-1:0] ref_o={`SREF.vi_re,`SREF.vi_addr,`SREF.kv_we,`SREF.kv_waddr,`SREF.kv_wdata};
+ wire [OW-1:0] cut_o={c_vire,c_viaddr,c_kvwe,c_kvwaddr,c_kvwdata};
  wire [SW-1:0] ref_s={`SREF.programme_active,`SREF.programme_done,`SREF.programme_ordinal,`SREF.io_active,`SREF.io_done,`SREF.io_ordinal};
  wire [SW-1:0] cut_s={s_pact,s_pdone,s_pord,s_ioact,s_iodone,s_ioord};
  reg [OW-1:0] ref_od[0:D-1];
@@ -121,14 +124,15 @@ reg io_cfg_we=0,io_start_v=0;
  always @(posedge clk)eq_up<=rst_n?eq_up+1:0;
  always @(posedge clk)begin
   ref_od[0]<=ref_o;for(integer k=1;k<D;k++)ref_od[k]<=ref_od[k-1];
+  ref_ld[0]<=ref_l;for(integer k=1;k<=D;k++)ref_ld[k]<=ref_ld[k-1];
   ref_sd[0]<=ref_s;ref_sd[1]<=ref_sd[0];
  end
  always @(negedge clk)if(eq_up>D+2)begin
   eq_edges++;
-  if(|ref_od[D-1])eq_active++;
-  if(cut_o!==ref_od[D-1]||cut_s!==ref_sd[1])begin
+  if(|ref_od[D-1]||(|ref_ld[D]))eq_active++;
+  if(cut_o!==ref_od[D-1]||cut_l!==ref_ld[D]||cut_s!==ref_sd[1])begin
    eq_mism++;
-   if(eq_mism<=4)$display("SFU_SPLIT_EQUIV_MISMATCH edge=%0d out=%0d status=%0d",eq_edges,cut_o!==ref_od[D-1],cut_s!==ref_sd[1]);
+   if(eq_mism<=4)$display("SFU_SPLIT_EQUIV_MISMATCH edge=%0d out=%0d lg_ro=%0d status=%0d",eq_edges,cut_o!==ref_od[D-1],cut_l!==ref_ld[D],cut_s!==ref_sd[1]);
   end
   if(s_sfault||s_cfault)$fatal(1,"SFU_SPLIT_FAULT store=%0d core=%0d",s_sfault,s_cfault);
  end
