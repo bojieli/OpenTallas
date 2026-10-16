@@ -16,6 +16,7 @@ module qfd_tt_ctlm_head_static_rk #(
     // f3e3d6b6f: feb TT +95.26 after fbb post-CTS -537 on st -> load -> hq_fill -> 1,024-b hq enable).
     // HQ2 = 2: bench negative control (FQ_HEAD 3: a third fill overwrites an unread head word).
     parameter integer DENSE_IMAGE=1,
+    parameter integer SREG = 0,   // h8: registered calendar 'scheduled' (exact, 0 edges)
     parameter integer PSRAM = 1, parameter integer PMUT = 0, parameter integer HQ2 = 1,
     parameter integer MEREG = 3,  // el1011-q-seq: registered engine clock enable (ctlm_mereg)
     parameter integer RRG = 1,    // el1011-q-seq: replicated tile reset (ctlm_rrg)
@@ -233,7 +234,7 @@ module qfd_tt_ctlm_head_static_rk #(
       else if(q_pw_v && q_pw_addr==1017) schedule_stage<=q_pw_data[17:12];
     // ck_sched and clk are independently entered, compiler phase-matched roots.
     // Candidate is sampled at the real decoder issue phase; there is no wait.
-    ot_qwen_fixed_issue_pw #(.DENSE_IMAGE(DENSE_IMAGE),.OWN(1)) u_fixed_issue (
+    ot_qwen_fixed_issue_pw #(.DENSE_IMAGE(DENSE_IMAGE),.OWN(1),.SREG(SREG)) u_fixed_issue (
       .clk(ck_sched),.rst_n(rsv[1]),.pw_v(q_pw_v),.pw_addr(q_pw_addr),.pw_data(q_pw_data),
       .start(q_h_start && q_prog_base==0),.stage(schedule_stage),
       .candidate_v(candidate_v),.candidate_pc(q_prog_base+candidate_pc),.candidate_unit(candidate_unit),

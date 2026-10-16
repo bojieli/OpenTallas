@@ -7,7 +7,8 @@
 module ot_qwen_fixed_issue_dense_pw #(
  parameter integer OWN=1,
  parameter integer DEPTH=(OWN==1)?8:20,
- parameter integer BASE=(OWN==1)?976:984
+ parameter integer BASE=(OWN==1)?976:984,
+ parameter integer SREG=0
 )(
  input wire clk,input wire rst_n,
  input wire pw_v,input wire [9:0]pw_addr,input wire[63:0]pw_data,
@@ -80,7 +81,7 @@ module ot_qwen_fixed_issue_dense_pw #(
    if(start&&(!sealed||meta_q[17:12]!=stage))cfg_fault<=1;
   end
  end
- ot_qwen_fixed_issue #(.ROW_AW(RAW),.OWN(OWN))u_issue(
+ ot_qwen_fixed_issue #(.ROW_AW(RAW),.OWN(OWN),.SREG(SREG))u_issue(
  .clk(clk),.rst_n(rst_n),.start(start),.stop_cycle(stop_q),.slot_re(read_en),.slot_addr(read_addr),.slot_q(q),
  .candidate_v(candidate_v),.candidate_pc(candidate_pc),.candidate_unit(candidate_unit),.available(available),.end_ok(end_ok),.cp_available(cp_available),
  .issue_v(issue_v),.end_v(end_v),.cp_v(cp_v),.cp_index(cp_index),.issue_pc(issue_pc),.issue_unit(issue_unit),.active(active),.done(done),.cycle(cycle),.fault(core_fault));

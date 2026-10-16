@@ -14,7 +14,7 @@
 // h6 (Q-ELEM-TTH 2026-10-16, RSTN=1): rst_n drove ~481 async-clear flops directly (reset pins are excluded from the
 // pin registers; scale-leaf tc1 class: native rst_n capture 357 ps). Now rst_n -> one ot_qfd_rst_stn flop at the pin
 // -> the leaf-internal reset rsl (assert asynchronous, release one ck_head edge later; no data/command edge changes).
-module ot_qfd_tt_ctlm_static_hr #(parameter integer CMDREG = 1, parameter integer RSTN = 1) (
+module ot_qfd_tt_ctlm_static_hr #(parameter integer CMDREG = 1, parameter integer RSTN = 1, parameter integer SREG = 1) (
     input wire [94:0] rom_ret_i,
     input wire cp_active,output wire [55:0] cp,
     output wire me_image_ready,output wire [75:0] program_obs,
@@ -92,7 +92,7 @@ module ot_qfd_tt_ctlm_static_hr #(parameter integer CMDREG = 1, parameter intege
     ot_qfd_native_cmd_route u_native_route (
       .clk(ck_head),.rst_n(rsl),.cmd(cmd),.rom_ret(rom_ret),.native_ret(native_ret),
       .rom_cmd(local_rom_cmd),.native_cmd(native_cmd),.ret(ret));
-    qfd_tt_ctlm_head_static_rk u_head (
+    qfd_tt_ctlm_head_static_rk #(.SREG(SREG)) u_head (
         .me_observe(me_observe),.cp_active(cp_active),.cp(cp),
         .me_image_ready(me_image_ready),.program_obs(program_obs),
         .layer_context_v(layer_context_v),.native_tok(native_tok),.native_pos(native_pos),

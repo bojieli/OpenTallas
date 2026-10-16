@@ -11,7 +11,12 @@
 // and retain source command packing, arithmetic, and numeric folding state.
 module ot_qwen_fixed_issue #(
     parameter integer ROW_AW=12,
-    parameter integer OWN=1
+    parameter integer OWN=1,
+    // SREG=1 (opt-in, TT head h8): 'scheduled' comes from a register loaded with the
+    // exact next-state value of active && head_v && cycle==head[31:0]; bit-identical
+    // to SREG=0 every cycle (0 edges), but the 32-bit compare no longer feeds the
+    // controller fan-out in the same cycle.
+    parameter integer SREG=0
 )(
     input wire clk, input wire rst_n,
     input wire start, input wire [31:0] stop_cycle,
@@ -33,7 +38,9 @@ module ot_qwen_fixed_issue #(
     reg pending;
     reg [ROW_AW-1:0] pending_index;
     reg second_read;
-    wire scheduled=active && head_v && cycle==head[31:0];
+    wire scheduled_c=active && head_v && cycle==head[31:0];
+    reg  sched_q;
+    wire scheduled=(SREG!=0) ? sched_q : scheduled_c;
     assign issue_unit=head[45:44];
     assign issue_pc=head[43:32];
     assign issue_v=scheduled && head[45:44]==OWN;
@@ -42,6 +49,35 @@ module ot_qwen_fixed_issue #(
     wire next_from_rom=pending && pending_index==index+1'b1;
     wire next_present=tail_v || next_from_rom;
     wire [46:0] next_row=next_from_rom ? slot_q : tail;
+    // Exact next-state of active/cycle/head_v/head[31:0] (mirrors the always block).
+    reg        active_n, head_v_n;
+    reg [31:0] cycle_n, head_lo_n;
+    always @* begin
+      active_n=active; head_v_n=head_v; cycle_n=cycle; head_lo_n=head[31:0];
+      if(start && !active) begin
+        active_n=1'b1; cycle_n=32'd0; head_v_n=1'b0;
+      end else if(active) begin
+        cycle_n=cycle+1'b1;
+        if(pending && pending_index==index) begin head_lo_n=slot_q[31:0]; head_v_n=1'b1; end
+        if(scheduled) begin
+          if(head[46]) begin active_n=1'b0; head_v_n=1'b0; end
+          else begin head_lo_n=next_row[31:0]; head_v_n=next_present; end
+        end
+        if(cycle==stop_q) active_n=1'b0;
+        if(&cycle) active_n=1'b0;
+      end
+    end
+    always @(posedge clk or negedge rst_n)
+      if(!rst_n) sched_q<=1'b0;
+`ifdef OT_SREG_MUT
+      else sched_q<=active_n && head_v_n && cycle==head_lo_n;   // negative control: stale cycle
+`else
+      else sched_q<=active_n && head_v_n && cycle_n==head_lo_n;
+`endif
+`ifndef SYNTHESIS
+    always @(posedge clk) if(SREG!=0 && rst_n && sched_q!==scheduled_c)
+      $fatal(1, "OT_SREG_MISMATCH t=%0t sched_q=%b ref=%b", $time, sched_q, scheduled_c);
+`endif
     assign slot_re=(start && !active) || (active && second_read) || (scheduled && !head[46] && !(next_present && next_row[46]));
     assign slot_addr=(start && !active) ? {ROW_AW{1'b0}} :
                      second_read ? {{(ROW_AW-1){1'b0}},1'b1} : index+2'd2;
