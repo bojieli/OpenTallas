@@ -1,11 +1,11 @@
 {
- "status": "PROPOSED_FOR_DIE_ADOPTION",
+ "status": "NARROW_CANDIDATE_FOR_DIE_ADOPTION",
  "master": "ot_hgi_sfu_lg_pair_leaf",
  "params": {
   "PIN_RST": 1
  },
  "outline_um": [
-  43.2,
+  21.6,
   129.6
  ],
  "reservation_um": [
@@ -13361,13 +13361,13 @@
    "port": "clk",
    "face": "N",
    "layer": "M5",
-   "centre_um": 21.612
+   "centre_um": 10.812
   },
   {
    "port": "rst_n",
    "face": "N",
    "layer": "M5",
-   "centre_um": 21.804
+   "centre_um": 11.004
   }
  ],
  "bit_order": "ascending RTL index follows ascending face coordinate",
@@ -13375,7 +13375,7 @@
   "pin": "clk",
   "face": "N",
   "layer": "M5",
-  "offset_um": 21.612
+  "offset_um": 10.812
  },
  "registers": {
   "c_to_lg": 596,
@@ -13454,5 +13454,15 @@
   "signal_min_clearance_um": 0.024,
   "actual_ODB_PG_validation": "PENDING gate; arithmetic template only"
  },
- "source_sha256": "59502d11c80c75c8002a2f016e4d7e42ce56233d62f785899385c9753e1cbb2e"
+ "source_sha256": "59502d11c80c75c8002a2f016e4d7e42ce56233d62f785899385c9753e1cbb2e",
+ "prior_width43_cts": {
+  "commit": "a62be42dc",
+  "std_um2": 374,
+  "flops": 1113,
+  "insertion_tt_ps": 123.8,
+  "spread_tt_ps": 16.8,
+  "setup_ps": 321.3,
+  "hold_ps": 48.75,
+  "route_submitted": false
+ }
 }

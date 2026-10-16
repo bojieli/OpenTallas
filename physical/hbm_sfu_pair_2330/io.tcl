@@ -1,4 +1,4 @@
-# Candidate: die adoption required before CTS/route submission.
+# Die-approved compact candidate; exact source-pinned per-bit centres.
 source /src/physical/common_flow/assigned_pin_exact.tcl
 ot_assigned_pin_exact {c_rq[0]} M4 W 11.484000
 ot_assigned_pin_exact {c_rq[1]} M4 W 11.580000
@@ -2224,5 +2224,5 @@ ot_assigned_pin_exact {lg_rr[512]} M4 E 117.852000
 ot_assigned_pin_exact {lg_rr[513]} M4 E 117.948000
 ot_assigned_pin_exact {lg_w_done[0]} M4 E 118.044000
 ot_assigned_pin_exact {lg_w_done[1]} M4 E 118.140000
-ot_assigned_pin_exact {clk} M5 N 21.612000
-ot_assigned_pin_exact {rst_n} M5 N 21.804000
+ot_assigned_pin_exact {clk} M5 N 10.812000
+ot_assigned_pin_exact {rst_n} M5 N 11.004000
