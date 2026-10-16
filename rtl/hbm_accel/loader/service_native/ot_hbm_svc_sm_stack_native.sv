@@ -1,7 +1,7 @@
 `default_nettype none
 // Source-native digital HBM controller and eight actual SM service groups.
 // ONLY row/column DRAM signals cross the modeled off-chip boundary.
-module ot_hbm_svc_sm_stack_native #(parameter[1:0]STACK=0,parameter integer DECOUPLE=1,OVERLAP=1) (
+module ot_hbm_svc_sm_stack_native #(parameter[1:0]STACK=0,parameter integer DECOUPLE=1,OVERLAP=1,LBANKS=4) (
  input wire [7:0] stream_clk,
  input wire [7:0] stream_rst_n,
  input wire [7:0] hbm_clk,
@@ -14,15 +14,15 @@ module ot_hbm_svc_sm_stack_native #(parameter[1:0]STACK=0,parameter integer DECO
  input wire [255:0] reserve_base,
  input wire [119:0] reserve_row_base,
  input wire [95:0] reserve_total,
- input wire [7:0] reserve_bank,
+ input wire [15:0] reserve_bank,
  input wire [127:0] reserve_epoch,
  input wire [55:0] reserve_rows,
  input wire [79:0] reserve_tag_base,
- output wire [15:0] block_ready,
+ output wire [31:0] block_ready,
  output wire [15:0] cache_ready,
  output wire [15:0] cache_owned,
  input wire [7:0] start_v,
- input wire [7:0] start_bank,
+ input wire [15:0] start_bank,
  input wire [127:0] start_epoch,
  input wire [7:0] program_cfg_we,
  input wire [79:0] program_cfg_addr,
@@ -74,7 +74,7 @@ module ot_hbm_svc_sm_stack_native #(parameter[1:0]STACK=0,parameter integer DECO
  wire [31:0] k_wr_done;
  wire [543:0] kr_tag;
  wire [31:0] k_v;
- ot_hbm_svc_sm_stack_programmed #(.STACK(STACK),.DECOUPLE(DECOUPLE),.OVERLAP(OVERLAP)) sm_groups (
+ ot_hbm_svc_sm_stack_programmed #(.STACK(STACK),.DECOUPLE(DECOUPLE),.OVERLAP(OVERLAP),.LBANKS(LBANKS)) sm_groups (
   .stream_clk(stream_clk),
   .stream_rst_n(stream_rst_n),
   .hbm_clk(hbm_clk),
