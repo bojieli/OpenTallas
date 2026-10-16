@@ -59,8 +59,19 @@ def generate():
              'fresh component behavioral equivalence/mutants, CTS/native/TTsetup/FFhold/DRC0 and parent GRT/STA'])
 
 def main():
-    ap=argparse.ArgumentParser();ap.add_argument('--out',required=True);a=ap.parse_args();r=generate()
+    ap=argparse.ArgumentParser();ap.add_argument('--out',required=True);ap.add_argument('--origins',required=True);a=ap.parse_args();r=generate()
     r['source_rtl_sha256']={p:S.digest(p) for p in ['rtl/qwen_sys/dvm_20261014/ot_qfd_xslice.sv','rtl/qwen_sys/dvm_20261014/ot_qfd_xslice_slots.sv']}
+    homes=json.loads(Path(a.origins).read_text());requests={}
+    for name,h in homes['homes'].items():
+        origin=round(h['x']*1000);slots=S.available(origin%64,('M7',))
+        selected=[slots[((2*i+1)*len(slots))//400][0]+origin for i in range(200)]
+        assert len(set(selected))==200 and all((x-16)%64==0 for x in selected)
+        requests[name]=dict(global_M7_x_nm=selected,available_slots=len(slots),cut=200/len(slots),
+                            required_seam_y_um=[round(h['y']+y,3) for y in [136.08,272.16,408.24,544.32,889.92,1026,1162.08,1298.16]],
+                            requested_seam_band_y_um=[-43.2,43.2])
+    r['parent_M7_track_requests']=requests
+    r['source_homes_fixture_sha256']=S.digest(a.origins)
+    r['parent_M7_candidate_cut']=max(v['cut'] for v in requests.values())
     Path(a.out).write_text(json.dumps(r,indent=2)+'\n')
-    print(json.dumps({k:v for k,v in r.items() if k not in ['NS_contacts','M6_aliases']},indent=2))
+    print(json.dumps({k:v for k,v in r.items() if k not in ['NS_contacts','M6_aliases','parent_M7_track_requests']},indent=2))
 if __name__=='__main__':main()
