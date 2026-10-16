@@ -14,10 +14,10 @@
   "raw_prediction_from_reservation_hbm": 27,
   "proposed_calendar_slot_um": [
     64.8,
-    86.4
+    51.84
   ],
   "calendar_slot_status": "NEEDS_ACTUAL_SYNTH_AREA_AND_DIE_HOME_GRANT",
-  "calendar_area_mm2_die": 0.71663616,
+  "calendar_area_mm2_die": 0.42998169599999997,
   "controller_outline_um": [
     246.24,
     302.4
@@ -30,5 +30,8 @@
   "controller_new_area_mm2": 9.531260928,
   "controller_historical_area_mm2": 5.446434816000001,
   "cost": "Two producer pin edges explicit, control image compiled earlier; no runtime delay. Full token cost awaits actual schedule.",
-  "qualification": "component only; native controller JEDEC+write+refresh and full36 event image remain open"
+  "qualification": "component only; native controller JEDEC+write+refresh and full36 event image remain open",
+  "calendar_measured_synth_area_um2": 1431,
+  "calendar_measured_source_flops": 2099,
+  "calendar_expected_utilization": 0.49791065416065416
 }

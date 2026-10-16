@@ -17,7 +17,7 @@
  ],
  "outline": {
   "w": 64.8,
-  "h": 86.4,
+  "h": 51.84,
   "exact": true
  },
  "layer_cap": "M5",
@@ -62,7 +62,7 @@
   "enable": false,
   "reason": "Actual input captures and output registers; fixed producer two pin edges are compiled. No wrapper edges permitted."
  },
- "slot_change_request": "Q-KVSYS-DIE v1.5 local dimensional candidate64.8x86.4 perPC128: inside spare129.6um row height; actual homes/pins/nativepair remain open.",
+ "slot_change_request": "Q-KVSYS-DIE v1.5 dimensional grant64.8x51.84 perPC128: measured1431um2 std area/2099sinks, fits spare129.6um perPC height; source-bound final CTS/native audit and exact homes/partner pins remain required.",
  "structural_change": "2048-bit compressed run image replaces unbounded event replay: burst/gap timing gives512 read reservations plus commands in6 descriptors, one fixed calendar perPC. Boot seal prohibits live rewrites.",
  "job": {
   "owner": "Codex:Q-KVSYS-DIE",
@@ -99,6 +99,7 @@
    }
   ]
  },
+ "std_area_um2": 1431,
  "children": [],
  "inter": [],
  "io_flop_at_pins": {
