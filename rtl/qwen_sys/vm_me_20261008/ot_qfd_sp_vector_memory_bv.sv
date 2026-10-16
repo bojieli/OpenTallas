@@ -1986,12 +1986,32 @@ module ot_qfd_vm_write_register_t #(parameter integer CW=27)(
  output wire [CW-1:0] qctrl);
  qvm_data256_native u_lo(.clk(ck[0]),.d(data[255:0]),.q(qdata[255:0]));
  qvm_data256_native u_hi(.clk(ck[1]),.d(data[511:256]),.q(qdata[511:256]));
- ot_qfd_vm_write_control_t #(.W(CW)) u_control(.clk(ck[2]),.rst_n(rst_n),
-     .we(we),.d(ctrl),.qwe(qwe),.q(qctrl));
+ // the two production widths bind the hardened control tiles (defined below)
+ generate if (CW == 27) begin : g_c27
+     qvm_wctl27 u_control(.clk(ck[2]),.rst_n(rst_n),.we(we),.d(ctrl),.qwe(qwe),.q(qctrl));
+ end else if (CW == 26) begin : g_c26
+     qvm_wctl26 u_control(.clk(ck[2]),.rst_n(rst_n),.we(we),.d(ctrl),.qwe(qwe),.q(qctrl));
+ end else begin : g_cw
+     ot_qfd_vm_write_control_t #(.W(CW)) u_control(.clk(ck[2]),.rst_n(rst_n),
+         .we(we),.d(ctrl),.qwe(qwe),.q(qctrl));
+ end endgenerate
 endmodule
 module ot_qfd_vm_write_control_t #(parameter integer W=27)(
  input wire clk,rst_n,we,input wire [W-1:0] d,
  output reg qwe,output reg [W-1:0] q);
  always @(posedge clk or negedge rst_n) if(!rst_n) qwe<=1'b0;else qwe<=we;
  always @(posedge clk) q<=d;
+endmodule
+// Q-VMWB 2026-10-16: E3 per-bank write-control register as two hardened tiles (fewest masters for the two control
+// widths the VM has): qvm_wctl27 = row bank {src[2:0], line[7:0], mask[15:0]} (64 instances), qvm_wctl26 = SU replica
+// bank {line[9:0], mask[15:0]} (16 instances).  Behaviour is exactly ot_qfd_vm_write_control_t: the write flag is
+// async-reset, the control word captures every edge (no enable, no reset), 0 added cycles.  Every input lands on
+// its flop and every output is a flop (the tile IS one register stage).
+module qvm_wctl27(input wire clk, rst_n, we, input wire [26:0] d, output reg qwe, output reg [26:0] q);
+    always @(posedge clk or negedge rst_n) if (!rst_n) qwe <= 1'b0; else qwe <= we;
+    always @(posedge clk) q <= d;
+endmodule
+module qvm_wctl26(input wire clk, rst_n, we, input wire [25:0] d, output reg qwe, output reg [25:0] q);
+    always @(posedge clk or negedge rst_n) if (!rst_n) qwe <= 1'b0; else qwe <= we;
+    always @(posedge clk) q <= d;
 endmodule

@@ -1,0 +1,106 @@
+{
+ "name": "qvm_wctl27",
+ "top": "qvm_wctl27",
+ "kind": "tile",
+ "sources": [
+  "rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv"
+ ],
+ "params": {},
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 17.28,
+  "h": 21.6
+ },
+ "layer_cap": "M5",
+ "macros": [],
+ "pins": {
+  "W": [
+   "clk",
+   "rst_n",
+   "we",
+   "d"
+  ],
+  "E": [
+   "qwe",
+   "q"
+  ]
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 4,
+  "peak_ram_gb": 8,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "recipe": 3,
+ "purpose": "Q-VMWB 2026-10-16: E3 VM per-bank write-control register (Codex 044c11ad8 composition, merged): qvm_wctl27 = row bank {src,line[7:0],mask} x 64 instances; with the 160 reused CLOSED qvm_data256_native it takes the E3 write state (40,960 + 2,160 FF) out of the VM parent. One register stage, 0 cycles.",
+ "job": {
+  "owner": "Claude:Q-ATTN-RATE",
+  "branch": "claude/q-vmwb-0030",
+  "tag": "w1",
+  "purpose": "Q-VMWB 2026-10-16: E3 VM per-bank write-control register (Codex 044c11ad8 composition, merged): qvm_wctl27 = row bank {src,line[7:0],mask} x 64 instances; with the 160 reused CLOSED qvm_data256_native it takes the E3 write state (40,960 + 2,160 FF) out of the VM parent. One register stage, 0 cycles.",
+  "benches": [
+   {
+    "name": "exact",
+    "cmd": "mkdir -p {RUN}/bench && iverilog -g2012 -P tb_qvm_wctl.W=27 -P tb_qvm_wctl.MUT=0 -s tb_qvm_wctl -o {RUN}/bench/m0.vvp rtl/test/qwen_vm_residual/tb_qvm_wctl.sv rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv > {RUN}/bench/m0.build.log 2>&1; vvp -n {RUN}/bench/m0.vvp",
+    "expect": "pass",
+    "pass_regex": "^PASS qvm_wctl W=27",
+    "threads": 1,
+    "peak_ram_gb": 1,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "mut_wiring",
+    "cmd": "mkdir -p {RUN}/bench && iverilog -g2012 -P tb_qvm_wctl.W=27 -P tb_qvm_wctl.MUT=1 -s tb_qvm_wctl -o {RUN}/bench/m1.vvp rtl/test/qwen_vm_residual/tb_qvm_wctl.sv rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv > {RUN}/bench/m1.build.log 2>&1; vvp -n {RUN}/bench/m1.vvp",
+    "expect": "fail",
+    "pass_regex": "^PASS qvm_wctl",
+    "threads": 1,
+    "peak_ram_gb": 1,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "mut_we",
+    "cmd": "mkdir -p {RUN}/bench && iverilog -g2012 -P tb_qvm_wctl.W=27 -P tb_qvm_wctl.MUT=2 -s tb_qvm_wctl -o {RUN}/bench/m2.vvp rtl/test/qwen_vm_residual/tb_qvm_wctl.sv rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv > {RUN}/bench/m2.build.log 2>&1; vvp -n {RUN}/bench/m2.vvp",
+    "expect": "fail",
+    "pass_regex": "^PASS qvm_wctl",
+    "threads": 1,
+    "peak_ram_gb": 1,
+    "needs": [
+     "iverilog"
+    ]
+   }
+  ],
+  "extra_paths": [
+   "rtl/qwen_sys/vm_me_20261008",
+   "rtl/test/qwen_vm_residual"
+  ],
+  "views_to": "physical/ref_tile/qvm_wctl27/views",
+  "record_to": "results/rtl/ref_tile/qvm_wctl27"
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "the tile is one register stage: every input pin (we, d) lands on its flop, every output (qwe, q) is that flop"
+ },
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R",
+  "out_cell": "HB1xp67_ASAP7_75t_R"
+ },
+ "structural_change": "Q-VMWB 2026-10-16: E3 VM per-bank write-control register (Codex 044c11ad8 composition, merged): qvm_wctl27 = row bank {src,line[7:0],mask} x 64 instances; with the 160 reused CLOSED qvm_data256_native it takes the E3 write state (40,960 + 2,160 FF) out of the VM parent. One register stage, 0 cycles."
+}
