@@ -8,7 +8,7 @@
 // Event first pin edge = captured go edge + start + 2 (input/output pin FFs).
 // Every descriptor advances independently on absolute cycles; collisions fault
 // without delaying any following event. Image capacity is checked by compiler.
-module qkd_controller_context_calendar #(parameter integer CONTEXT_DESC=1,N=16, ROW0=64, MUT=0)(
+module qkd_controller_context_calendar #(parameter integer REFRESH_ROOTS=0,CONTEXT_DESC=1,N=16, ROW0=64, MUT=0)(
  input wire hck,rst_n,
  input wire cfg_we,input wire [4:0] cfg_addr,input wire [63:0] cfg_data,
  input wire seal,go,input wire [15:0] epoch,input wire [5:0] layer,
@@ -34,6 +34,18 @@ module qkd_controller_context_calendar #(parameter integer CONTEXT_DESC=1,N=16, 
  if(!rn)begin we_q<=0;seal_q<=0;go_q<=0;end
  else begin we_q<=cfg_we;seal_q<=seal;go_q<=go;end
  reg [127:0] image[0:N-1];reg [N-1:0] low_seen,high_seen;
+ reg [11:0] rr_phase;
+ always @(posedge hck or negedge rn)if(!rn)rr_phase<=0;else rr_phase<=rr_phase==12'd3775?12'd0:rr_phase+12'd1;
+ wire [15:0] root_wait[0:6];wire root_invalid;
+ assign root_wait[0]=0;
+ generate if(REFRESH_ROOTS!=0)begin:root_math
+ initial if(N!=16)$fatal(1,"refresh profile reserves descriptor15 in16-word image");
+ qkd_kv_refresh_roots roots(.now_phase(rr_phase),.due_phase(image[15][107:96]),.nk(nk),.nv(nv),.k0(k0),.kb(kb),.v_not_before(image[15][127:112]),
+ .kdesc(root_wait[1]),.kgo(root_wait[2]),.krd(root_wait[3]),.vdesc(root_wait[4]),.vgo(root_wait[5]),.vrd(root_wait[6]),.invalid(root_invalid));
+ end else begin
+ for(genvar r=1;r<7;r=r+1)assign root_wait[r]=0;
+ assign root_invalid=0;
+ end endgenerate
  reg sealed;reg [15:0] active_epoch;reg [18:0] active_row;
  reg [15:0] wait_q[0:N-1];reg [9:0] left_q[0:N-1];reg [3:0] burst_q[0:N-1];
  wire [N-1:0] fire,live;
@@ -87,8 +99,10 @@ module qkd_controller_context_calendar #(parameter integer CONTEXT_DESC=1,N=16, 
  else begin
  active_epoch<=epoch_q;active_row<=19'(ROW0)+{13'b0,layer_q};static_cmd_owner<=1;idle<=0;active_nk<=nk;active_nv<=nv;active_k0<=k0;active_kb<=kb;
  if(CONTEXT_DESC!=0 && (ctx_q==0 || ctx_q>8192))fault<=1;
+ if(REFRESH_ROOTS!=0 && (!image[15][108] || root_invalid))fault<=1;
  for(i=0;i<N;i=i+1)begin
- wait_q[i]<=image[i][15:0]+16'(MUT==1);left_q[i]<=CONTEXT_DESC!=0 && image[i][87:86]!=0 && !image[i][88] ? {1'b0,(image[i][87:86]==1?nk:nv)} : image[i][25:16];
+ wait_q[i]<=image[i][15:0]+16'(MUT==1)+(REFRESH_ROOTS!=0 && image[i][91:89]!=0 && image[i][91:89]<7 ? root_wait[image[i][91:89]]-16'd1 : 16'd0);
+ if(REFRESH_ROOTS!=0 && image[i][91:89]==7)fault<=1;left_q[i]<=CONTEXT_DESC!=0 && image[i][87:86]!=0 && !image[i][88] ? {1'b0,(image[i][87:86]==1?nk:nv)} : image[i][25:16];
  if(CONTEXT_DESC!=0 && (image[i][87:86]==3 || (image[i][88]&&image[i][87:86]==0)))fault<=1;burst_q[i]<=0;
  end
  end
