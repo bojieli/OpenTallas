@@ -51,5 +51,15 @@
     "over_500_um": 0,
     "scope": "buffer-to-buffer endpoints only; macro final legs and actual routed detours require propagated STA"
   },
-  "actual_image_inspected": "clock_sites_zoom.png: legal compact pad group below SM hard outline; no crossing or corner relocation"
+  "actual_image_inspected": "clock_sites_zoom.png: legal compact pad group below SM hard outline; no crossing or corner relocation",
+  "row_lattice_audit": {
+    "x_site_um": 0.054,
+    "y_row_um": 0.27,
+    "checked_cells": 23634,
+    "offsite": 0,
+    "offrow": 0,
+    "orientations": "R0 at even rows; MX at odd rows",
+    "source": "actual pinned ORFS initialize_floorplan probe; row_probe.log",
+    "row_probe_sha256": "fd639acee6256f4d0eab67ecfeba81631939fac3922fdcb5418944b123f2fa6e"
+  }
 }

@@ -16,6 +16,15 @@ SIZES = {'BUFx24_ASAP7_75t_R': (1.620, 0.270),
 XPITCH, YPITCH = 1.620, 0.270
 
 
+def orientation(y):
+    """Pinned initialize_floorplan rows start R0 at y=0, alternate MX/R0."""
+    row = round(y / YPITCH)
+    if abs(y - row * YPITCH) > 1e-6:
+        raise ValueError(f'Clock cell is not on the .270-um row lattice: {y}')
+    return 'R0' if row % 2 == 0 else 'MX'
+
+
+
 def allocate(trees, width, height, obstacles):
     """Mutate only buffer coordinates; preserve all cells, names and nets.
 
