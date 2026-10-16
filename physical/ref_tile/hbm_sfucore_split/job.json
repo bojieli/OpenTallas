@@ -1,5 +1,5 @@
 {
- "name": "hbm_sfucore_split-k1-COMMIT",
+ "name": "hbm_sfucore_split-k2-COMMIT",
  "block": "ot_hgi_sfu_core_split",
  "ref_tile": true,
  "owner": "Claude:H-SU/core-kit",
@@ -18,6 +18,29 @@
     "expect": "pass",
     "threads": 1,
     "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "split_equiv_r23",
+    "cmd": "OUT={RUN}/bench/r23 SFU_LG_R=23 bash tools/hbm_static/run_sfu_split_equiv.sh",
+    "expect": "pass",
+    "pass_regex": "SFU_SPLIT_GATE POSITIVE PASS",
+    "min_count_regex": "SFU_SPLIT_EQUIV PASS edges=(\\d+)",
+    "threads": 8,
+    "peak_ram_gb": 96,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "split_mutant_skip_pinreg",
+    "cmd": "OUT={RUN}/bench/skip EQ_MUT=skip bash tools/hbm_static/run_sfu_split_equiv.sh; cat {RUN}/bench/skip/run.log; exit 1",
+    "expect": "fail",
+    "fail_regex": "SFU_SPLIT_EQUIV (FAIL|_MISMATCH)",
+    "threads": 8,
+    "peak_ram_gb": 96,
     "needs": [
      "verilator"
     ]
@@ -74,7 +97,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/hbm_sfucore_split/hbm_sfucore_split-k1-COMMIT"
+   "to": "results/rtl/ref_tile/hbm_sfucore_split/hbm_sfucore_split-k2-COMMIT"
   }
  ],
  "cycles_added": 0,

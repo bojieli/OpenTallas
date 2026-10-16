@@ -1185,8 +1185,33 @@
  "job": {
   "owner": "Claude:H-SU/core-kit",
   "branch": "claude/hsu-corekit-0700",
-  "tag": "k1",
-  "purpose": "SFU core cluster parent sfucore_<q> (H-DIE grant 763.56x3580): 16 closed 216-wide ring3_rt lanes 3/row (cols 1-2 R0 W-pin channels, col 3 MY pins toward E/store), 80 operand SRAMs in 13 back-to-back pair rows + 1 pair, std column E; pin-registered local_*/ro_* (c32c6aa88)"
+  "tag": "k2",
+  "purpose": "SFU core cluster parent sfucore_<q> (H-DIE grant 763.56x3580): 16 closed 216-wide ring3_rt lanes 3/row (cols 1-2 R0 W-pin channels, col 3 MY pins toward E/store), 80 operand SRAMs in 13 back-to-back pair rows + 1 pair, std column E; pin-registered local_*/ro_* (c32c6aa88)",
+  "benches": [
+   {
+    "name": "split_equiv_r23",
+    "cmd": "OUT={RUN}/bench/r23 SFU_LG_R=23 bash tools/hbm_static/run_sfu_split_equiv.sh",
+    "expect": "pass",
+    "pass_regex": "SFU_SPLIT_GATE POSITIVE PASS",
+    "min_count_regex": "SFU_SPLIT_EQUIV PASS edges=(\\d+)",
+    "threads": 8,
+    "peak_ram_gb": 96,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "split_mutant_skip_pinreg",
+    "cmd": "OUT={RUN}/bench/skip EQ_MUT=skip bash tools/hbm_static/run_sfu_split_equiv.sh; cat {RUN}/bench/skip/run.log; exit 1",
+    "expect": "fail",
+    "fail_regex": "SFU_SPLIT_EQUIV (FAIL|_MISMATCH)",
+    "threads": 8,
+    "peak_ram_gb": 96,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ]
  },
  "inter": [],
  "io_flop_at_pins": {
