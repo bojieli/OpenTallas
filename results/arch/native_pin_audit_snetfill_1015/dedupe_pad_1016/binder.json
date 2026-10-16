@@ -553,7 +553,9 @@
    "pad_bits": {
     "di0": 134
    },
-   "output_open": [],
+   "output_open": [
+    "fn0"
+   ],
    "width_mismatch": {},
    "unparsed_conn": [],
    "duplicate_port": []
@@ -597,7 +599,7 @@
   "dsfd_stnv_566x1:di0:u28",
   "dsfd_stnv_566x1:di0:u29"
  ],
- "die_sha256": "6d85f2c6d5d724838d5d6172ca4ea57cc6935fd5ff91cc1337bfbcaa522ce7e3",
+ "die_sha256": "317537e8de7d33edd3770e34f6c8c61541c3a563b28defa09c5e696eba54e701",
  "straps_declared": [],
  "params_file": "/home/ubuntu/artifacts/s81-netfill-0811/padproof/die.v.params.json",
  "rtl_roots": [

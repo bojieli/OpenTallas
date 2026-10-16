@@ -1,0 +1,65 @@
+{
+  "schema": "opentallas.hbm_idx_vector_provenance.v1",
+  "source_snapshot": "/home/ubuntu/artifacts/hbm-idx-takeover-0811/src_8c0ab9b3c",
+  "source_commit": "8c0ab9b3c",
+  "generator_and_recursive_local_imports": [
+    {
+      "path": "tools/hbm_idx_die_bench.py",
+      "sha256": "6b4694210cb911eb3a3fc4afc9c7496c1e2ba7a8135f613f8986ca1a071b9f75",
+      "matches_compiled_source_commit": true
+    },
+    {
+      "path": "tools/hbm_idx_static_parent_vectors.py",
+      "sha256": "84f092a9b167fc253aa79f36b64ccb6afb1149aac6179927cac83d36768ffe56",
+      "matches_compiled_source_commit": true
+    },
+    {
+      "path": "tools/hdc_golden.py",
+      "sha256": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6",
+      "matches_compiled_source_commit": true
+    },
+    {
+      "path": "tools/hdc_golden_v41.py",
+      "sha256": "1bf8f3dd95228cabb0b717ea96d0b2ec903c88d0c85c5834a56c5fc8466373d4",
+      "matches_compiled_source_commit": true
+    },
+    {
+      "path": "tools/hdc_isa.py",
+      "sha256": "2009bf4312e43f405971f39e3fca747450d5467850e5a7f081781a2c0e3e6542",
+      "matches_compiled_source_commit": true
+    },
+    {
+      "path": "tools/rtl_hdc_v41x_idx_campaign.py",
+      "sha256": "febfb22eaad34dcabfc65cb481fd34cd1a1d9aad8fa7f6d5345f6c5e27c83bc9",
+      "matches_compiled_source_commit": true
+    }
+  ],
+  "consumed_vectors": [
+    {
+      "path": "gold.hex",
+      "sha256": "93538ddca9d3f94a383322d1f0875ecf811e721fab001a92f8bbe318ec37f1bb",
+      "bytes": 21856
+    },
+    {
+      "path": "keylines.hex",
+      "sha256": "92554fb8fddd6993e6f8d0632d5ea866b2e9880ba21fc74d5dd3e8a262df596c",
+      "bytes": 1503603
+    },
+    {
+      "path": "query.hex",
+      "sha256": "3006c854a67630c3ac918dc5603776d9e274fc2dc93e361216644abacede4217",
+      "bytes": 32896
+    },
+    {
+      "path": "scores.hex",
+      "sha256": "43306f0ec4d0a13dfe86b53df563bf1e08a9bc37ac30e128fb2259ad4061ac71",
+      "bytes": 54640
+    },
+    {
+      "path": "weights.hex",
+      "sha256": "fb889a0232522ae7de003b2ef8898424f8747d0d17924e8acf142059f0db907d",
+      "bytes": 129
+    }
+  ],
+  "external_libraries": "Original numpy/Python runtime version not recorded by historical generator. Exact consumed vector hashes preserved; no inference of new numerical scope."
+}

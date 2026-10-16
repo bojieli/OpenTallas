@@ -263,7 +263,7 @@
  "job": {
   "owner": "Claude H-SM",
   "branch": "claude/hbm-sm-attention-1015",
-  "tag": "strap5",
+  "tag": "strap6",
   "purpose": "Strap-identity quadrant master (coordinator decision per DEDUPE, 2026-10-15): bank / slice identity is a registered strap input (bid[2:0] / sid[1:0] pins, tied to die constants per instance, captured by pin flops), so the 8 banks of the quadrant use this ONE view; replaces the 8 literal-identity masters. Same data calendars and edges as identity2. Pins: identity2 r2 grant (actual tracks, PG-clear, explicit centres) + 5 strap pins on free N-face tracks beside the clock pair (proposal for H-DIE).",
   "structural_change": "Strap-identity quadrant master (coordinator decision per DEDUPE, 2026-10-15): bank / slice identity is a registered strap input (bid[2:0] / sid[1:0] pins, tied to die constants per instance, captured by pin flops), so the 8 banks of the quadrant use this ONE view; replaces the 8 literal-identity masters. Same data calendars and edges as identity2. Pins: identity2 r2 grant (actual tracks, PG-clear, explicit centres) + 5 strap pins on free N-face tracks beside the clock pair (proposal for H-DIE). strap4: H-DIE v4 270 x 270 slot (pin-perimeter bound; PG M6, pins M4 W/E, M5 N/S at 0.192/0.144 um), 3-array stack re-centred; SECDED flip mask on the D edge (strap3); write-leaf valids replicated at the pins per 32-b slice (q0 strap2 TT -149.91: dq_v -> 300 ps buffer tree -> write OR tree -> s1w_d). Same edges.",
   "extra_paths": [
@@ -314,7 +314,8 @@
  },
  "io_tcl": "physical/hbm_vm_strap_1015/q2/io.tcl",
  "orfs_vars": {
-  "POST_IO_PLACEMENT_TCL": "physical/hbm_vm_strap_1015/q2/post_iop.tcl"
+  "POST_IO_PLACEMENT_TCL": "physical/hbm_vm_strap_1015/q2/post_iop.tcl",
+  "OT_IOF_FOLLOW_AND": "1"
  },
  "pin_regs": {
   "enable": false,
@@ -323,5 +324,13 @@
  "floorplan_note": "q2 identity2 --cts gate failed GPL-0305 (NaN) twice with the generated 3-macro column (20 um macro-macro channels, 5.4 um halos -> 9.5 um cell rows between arrays; overflow stuck at 0.115 for 12k iterations). Structural: the three arrays (pins only on W/E faces) form one abutted N-S stack (pitch = array height + 0.024 um) centred in the core, so no narrow inter-array channel exists; two ~70 um N/S channels carry the cross traffic.",
  "pg_layer": "M6",
  "layer_cap_grant": "H-DIE 2210 v4: VM bank strap masters are pin-perimeter bound (270 x 270, ~1,260 b per face): PG moves to M6 so M5 pins need no stripe clearance; parent strap M7 (H-DIE 2210, H-SM proposal)",
- "structural_change": "strap5 (q2/q3 strap4 TT -111.27/FF -1.66, 63 endpoints all launched at write-leaf valid replicas lv_rep -> ~350 ps buffered 32-load mask net -> AND -> write OR tree -> s1w_d / eg pin clones): each write source's payload is zeroed at its pin capture by its own valid pin (D-side AND at the face); payload pin flops feed the OR tree directly; only the 12 decoded sector bits stay masked by the leaf pin-valid flop; lv_rep removed; packet gets a separate write-payload capture. Same edges; random-garbage 40k-cycle equivalence vs strap4 0 mismatches, unmasked-capture mutant 37,583 mismatches. "
+ "structural_change": "strap6: pin -> AND2(valid) -> DFF write captures anchored at their pins (io_flop_at_pins OT_IOF_FOLLOW_AND=1). strap5 (q2/q3 strap4 TT -111.27/FF -1.66, 63 endpoints all launched at write-leaf valid replicas lv_rep -> ~350 ps buffered 32-load mask net -> AND -> write OR tree -> s1w_d / eg pin clones): each write source's payload is zeroed at its pin capture by its own valid pin (D-side AND at the face); payload pin flops feed the OR tree directly; only the 12 decoded sector bits stay masked by the leaf pin-valid flop; lv_rep removed; packet gets a separate write-payload capture. Same edges; random-garbage 40k-cycle equivalence vs strap4 0 mismatches, unmasked-capture mutant 37,583 mismatches. ",
+ "reroute_reason": {
+  "kind": "pin_register",
+  "source": "results/hbm_sm_attention_1015/native_0030/vm_strap_q2_strap5_native.json",
+  "cell": "hfd_vms_bank_strap_q2",
+  "launch_ps": 195.8,
+  "capture_ps": 493.3,
+  "fix": "io_flop_at_pins OT_IOF_FOLLOW_AND=1 (main b11bbff49): the valid-masked pin captures (pin -> AND2 -> DFF, 818 pins) are anchored at their pins; strap5 RTL unchanged. q3 slot binds this q2 master (sid strap = 3; Codex dedupe proof 260ad52e6), so q3 is not re-routed."
+ }
 }

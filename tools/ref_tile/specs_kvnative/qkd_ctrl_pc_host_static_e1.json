@@ -1,0 +1,145 @@
+{
+  "name": "qkd_ctrl_pc_host_static_e1",
+  "top": "qkd_ctrl_pc_host_static",
+  "kind": "tile",
+  "sources": [
+    "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_emb_cdc.sv",
+    "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_write_observer.sv",
+    "rtl/qwen_sys/static_kv_20261014/qkd_ctrl_pc_host_static.sv",
+    "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_ctrl_pc_emb.sv",
+    "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv",
+    "rtl/qwen_sys/kv_die_20261009/ot_qkvd_kcmd_tap.sv",
+    "rtl/qwen_sys/emb_hbm_20261008/synth/ot_qfd_emb_pcport.sv",
+    "rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_cdc.sv",
+    "rtl/qwen_sys/host_20261013/qkd_host_static_pc.sv",
+    "rtl/lib/ot_async_fifo.sv",
+    "rtl/lib/ot_reset_sync.sv",
+    "rtl/qwen_sys/q5_20261009/synth/ot_qfd_kv_landing_ecc.sv"
+  ],
+  "params": {
+    "PROFILE": 0,
+    "ELASTIC": 1,
+    "RAW_WD": 256,
+    "TQD": 64
+  },
+  "clock_port": "ck",
+  "reset_ports": [],
+  "outline": {
+    "w": 246.24,
+    "h": 302.4,
+    "exact": true
+  },
+  "layer_cap": "M5",
+  "macros": [],
+  "pins": {
+    "W": [
+      "ci",
+      "co",
+      "es",
+      "er",
+      "hrst",
+      "rsi",
+      "pc",
+      "static_cmd_owner",
+      "static_cmd",
+      "reserved_rd",
+      "reserved_static_col",
+      "reserved_write_col",
+      "static_epoch",
+      "expected_raw_valid",
+      "cfg_stack",
+      "es_context",
+      "es_expected_valid",
+      "es_expected_identity",
+      "es_expected_address",
+      "es_expected_pc",
+      "es_expected_stack",
+      "native_commit_valid",
+      "native_commit_identity",
+      "native_commit_address",
+      "corrected_epoch",
+      "completion_v",
+      "completion_we",
+      "completion_fault",
+      "idle_core",
+      "idle_hbm",
+      "drain_fault_core",
+      "drain_fault_hbm"
+    ],
+    "E": [
+      "po",
+      "pi"
+    ],
+    "N": [
+      "ki",
+      "fo",
+      "pll_hbm",
+      "ck"
+    ],
+    "S": [
+      "ko",
+      "fi"
+    ]
+  },
+  "sdc_extra": [
+    "physical/qkd_ctrl_strip/qkd_ctrl_pc_host_static_hclk.sdc"
+  ],
+  "route": {
+    "pd": 0.5,
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "pin_balance": {
+      "group_max": 1,
+      "h": "M4",
+      "v": "M5"
+    }
+  },
+  "recipe": 3,
+  "slot_change_request": "Q-KVSYS-DIE 2026-10-16 static v1.5: use existing per-PC 247.512 x378 slot, leaf246.24x302.4 replaces246.24x172.8 credit-era tile within same slot; extra static/native-context pins and real persistent controller PROFILE0/ELASTIC1. No old view inheritance.",
+  "job": {
+    "owner": "Codex:Q-KVSYS-DIE",
+    "branch": "claude/qkvsys-lead-0600",
+    "tag": "e1",
+    "purpose": "Actual fixed-reservation persistent controller +64-entry in-order PHY tag capacity and off-chip elastic window. More height for actual native context/calendar pins; same footprint slot, both physical clocks retained.",
+    "extra_paths": [
+      "rtl/lib",
+      "rtl/qwen_sys/emb_hbm_20261008",
+      "rtl/qwen_sys/host_20261013",
+      "rtl/qwen_sys/kv_die_20261009",
+      "rtl/qwen_sys/q5_20261009",
+      "rtl/qwen_sys/static_kv_20261014",
+      "rtl/test/qwen_static_kv",
+      "tools/qwen_static_kv",
+      "physical/qkd_ctrl_strip"
+    ],
+    "benches": [
+      {
+        "name": "actual_elastic_controller_parent",
+        "cmd": "NBLK=16 RDEPTH=64 BUILD_SERIAL=1 JOBS=2 bash tools/qwen_static_kv/run_kv_hbm_elastic_boundary_mc.sh {RUN}/bench/actual",
+        "expect": "pass",
+        "pass_regex": "^PASS 0az elastic boundary",
+        "threads": 2,
+        "peak_ram_gb": 8,
+        "needs": [
+          "verilator"
+        ]
+      },
+      {
+        "name": "actual_elastic_controller_wrong_exact_mode",
+        "cmd": "mkdir -p {RUN}/bench/mut && PREP_ONLY=1 bash tools/qwen_static_kv/run_kv_hbm_elastic_boundary_mc.sh {RUN}/bench/mut && verilator --binary --timing -Wno-fatal -j 2 --top-module tb_kv_hbm_elastic_boundary_mc -GNBLK=16 -GRDEPTH=64 -GCTRL_ELASTIC=0 --Mdir {RUN}/bench/mut/obj $(find {RUN}/bench/mut/source -name '*.sv') > {RUN}/bench/mut/build.log 2>&1 && {RUN}/bench/mut/obj/Vtb_kv_hbm_elastic_boundary_mc +jit=16 +seed=2",
+        "expect": "fail",
+        "fail_regex": "OBSERVED_FAIL",
+        "threads": 2,
+        "peak_ram_gb": 8,
+        "needs": [
+          "verilator"
+        ]
+      }
+    ]
+  },
+  "structural_change": "Actual fixed-reservation persistent controller +64-entry in-order PHY tag capacity and off-chip elastic window. More height for actual native context/calendar pins; same footprint slot, both physical clocks retained.",
+  "pin_regs": {
+    "enable": false,
+    "reason": "Existing controller explicit boundary pin FFs; no extra wrapper edges permitted without compiler ABI update. Actual pre-route/native pin audit must reject remaining raw combinational input or output cones."
+  }
+}

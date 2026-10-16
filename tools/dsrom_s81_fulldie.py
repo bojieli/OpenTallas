@@ -6474,6 +6474,7 @@ MESO_D8 = False                 # --meso-d8 (v6, default off): meso FIFOs DEPTH 
 HC_XFACE = False                # --hc-xface (S81-RERUN v7, default off): hc_s <-> hc_n exchange face to face across
                                 #   the corridor inside the HC column (out of the VCH-edge lane)
 SEL_XSTG = False                # --sel-xstg (S81-RERUN v8, default off): d8g1 meso crossing stage (1.5 T arcs + low guard)
+RLY536_RSTREG = False           # --rly536-rstreg: canonical536 relay resetpinregister; +1bootstrapreleaseedge,0productionedges
 HEND_BOUND_FOOTPRINT = False    # --hend-bound-footprint: reserve each hub end's verified view outline before placement
 DEDUPE_PAD = None               # --dedupe-pad FILE: DEDUPE pad map (instances of FROM become the standard TO, spare bits padded)
                                 #   on the 8 end block -> selector / collector buses; +6 cycles
@@ -7738,6 +7739,7 @@ def _relay_faces_by_pins(m, passes=3):
 # sees the same number of stages: the whole column leaves reset on one cycle (static schedule: a fixed, known release
 # latency, recorded per column in m['col_reset_tree']).  The stage registers are column-clock sinks (ck_col_<c>).
 COL_RESET_TREE = 0              # built on the final build only (ALIGN_EXT[0]): the hop-plan passes never see its registers
+COL_RESET_STRICT = False         # opt-in: refuse unreachable tree stages and uncovered physical branches
 COL_RESET_SPAN_UM = 0.0           # --col-reset-span UM: also split a leaf group wider than UM (0: count only)
 
 
@@ -7752,14 +7754,18 @@ def _col_reset_tree(m, P):
     G = int(COL_RESET_TREE)
     rec, new = {}, []
     for i, (bid, cls, bits, eps) in enumerate(list(m['buses'])):
-        if cls != 'col_reset' or len(eps) - 1 <= G:
+        if cls != 'col_reset' or len(eps) < 2 or (not COL_RESET_STRICT and len(eps) - 1 <= G):
             continue
         r = bid.rsplit('_', 1)[-1]
         ck = ckb.get(f'ck_col_{r}')
         root = eps[0]
         if ck is None or root[0] not in by:
+            if COL_RESET_STRICT:
+                raise ValueError(f'--col-reset-strict: missing clock or driver for {bid}')
             continue
         sinks = [e for e in eps[1:] if e[0] in by]
+        if COL_RESET_STRICT and len(sinks) != len(eps) - 1:
+            raise ValueError(f'--col-reset-strict: unresolved reset sinks for {bid}')
         pos = {e: cen(by[e[0]]) for e in sinks}
 
         def split(grp):
@@ -7817,6 +7823,8 @@ def _col_reset_tree(m, P):
                 if pl is not None:
                     break
             if pl is None:
+                if COL_RESET_STRICT:
+                    raise ValueError(f'--col-reset-strict: unreachable stage {bid} {tag}; no raw branch emitted')
                 pl = P.near(pt[0], pt[1], w_, h_, allowed, prev=None, span=1600.0, rows=160)
                 fails.append(tag)
             assert pl, ('--col-reset-tree: no site', bid, tag)
@@ -7850,6 +7858,21 @@ def _col_reset_tree(m, P):
             else:
                 new.append((f'{bid}_l{it.name}', 'col_reset', 1, [(it.name, 'o')] + list(t['sinks'])))
         build(tree, root, 0)
+        if COL_RESET_STRICT:
+            # A conservative bound for ANY pin inside either placed macro. This
+            # is only a geometry rejection screen; exact pin/pair-budget and RDC
+            # evidence remains mandatory in tools/s81/reset_forest.py.
+            for nbid, _, _, endpoints in new:
+                if not nbid.startswith(bid + '_'):
+                    continue
+                a = by[endpoints[0][0]]
+                for endpoint in endpoints[1:]:
+                    z = by[endpoint[0]]
+                    far = max(abs(a.x - z.x - z.w), abs(a.x + a.w - z.x)) + \
+                          max(abs(a.y - z.y - z.h), abs(a.y + a.h - z.y))
+                    if far > min(500.0, reach) + 1e-6:
+                        raise ValueError(f'--col-reset-strict: branch {nbid} to {endpoint} '
+                                         f'pin-box upper bound {far:.3f}um exceeds reach')
         m['buses'][i] = (bid, cls, bits, [root])       # emptied: the tree nets carry the column reset
         stages = D + sum(extra.get(lv, 0) for lv in range(D))
         rec[bid] = dict(sinks=len(sinks), registers=nreg[0], depth=stages, max_fanout=max(
@@ -11051,6 +11074,18 @@ def _status_lane_glue(kind, fmt, ports):
     return b
 
 
+def rly536_reset_contract(m):
+    """Explicit static bootstrap requirement; physical generation alone does not qualify the compiler."""
+    if not RLY536_RSTREG:
+        return None
+    masters = sorted(k for k in m['pdir'] if re.fullmatch(r'dsfd_rly_536_[NSEW]{2}', k))
+    return dict(schema='s81-rly536-reset-contract-v1', masters=masters,
+                async_assert='immediate', release_edges_before_first_production=1,
+                normal_data_edges=1, added_normal_edges=0,
+                source='rtl/dsrom_sys/s81_glue/ot_s81_rly.sv', params=dict(W=536, RSREG=1),
+                compiler_bootstrap_qualification='OPEN: consumer must reserve and verify release edge before production')
+
+
 def glue_rtl(m):
     """Verilog of every generated glue master (structural over the real primitives ot_fwd_link_stage, ot_meso_fifo,
     ot_ratio_cdc_fifo, ot_v41_retn_w17w10)."""
@@ -11100,8 +11135,14 @@ def glue_rtl(m):
                     body.append(f'    assign {q_} = r_{p_[2:]};')
         elif mst.startswith('dsfd_rly'):
             w = ports['i'][1]
-            body.append(f'    reg [{w - 1}:0] r; always @(posedge ck[0] or negedge rs[0]) if (!rs[0]) r <= {w}\'d0; else r <= i;')
-            body.append('    assign o = r;')
+            if RLY536_RSTREG and re.fullmatch(r'dsfd_rly_536_[NSEW]{2}', mst):
+                assert w == 536, (mst, w)
+                # Physical canonical536 leaf: one resetpinregister releases before production starts.
+                # Asyncassert still immediate; firstreleaseedge holdsdatazero, subsequentedgescapturei.
+                body.append('    ot_s81_rly #(.W(536), .RSREG(1)) u (.ck(ck), .rs(rs), .i(i), .o(o));')
+            else:
+                body.append(f'    reg [{w - 1}:0] r; always @(posedge ck[0] or negedge rs[0]) if (!rs[0]) r <= {w}\'d0; else r <= i;')
+                body.append('    assign o = r;')
         elif mst.startswith('dsfd_xstg') and HEND_STATIC:
             w = ports['i'][1]
             body += ['    // S-NET --hend-static: end block (cw) -> band block (ck), same frequency, on the fixed calendar of',
@@ -11450,6 +11491,7 @@ def plan_record_r8(m):
                                                'rtl/common/ot_ratio_cdc_fifo.sv', 'rtl/v41die/ot_v41_retn_w17w10.sv')},
         die=dict(w_um=DIE[0], h_um=DIE[1], mm2=round(DIE[0] * DIE[1] / 1e6, 3)), variant=m['variant'],
         ctrl_model=m.get('ctrl_model'), ctrl_binding_shell_sha256=m.get('ctrl_binding_shell_sha256'),
+        **(dict(rly536_reset_contract=rly536_reset_contract(m)) if RLY536_RSTREG else {}),
         slot=dict(elem_frame_h_um=ELEM_FRAME_H, q_elem_frame_h_um=Q_ELEM_FRAME_H, frame_h_um=g['frame_h'], slot_h_um=g['slot_h'], slots_per_column=g['slots'],
                   capacity=capacity_report()),
         instances=dict(kinds), area_mm2_by_kind={k: round(v, 3) for k, v in area.items()},
@@ -11578,6 +11620,7 @@ def die_options(ap):
                     '(r3 GRT: hop relays 776-906 um from their load, TT -244 on ck_col relay paths)')
     ap.add_argument('--pin-relay', action='store_true', help='r9: relay station abutting every hardened-block pin on '
                     'die interfaces (last segment <= 100 um; needs --hop-fix; default off)')
+    ap.add_argument('--rly536-rstreg', action='store_true', help='canonical536-bit relay resetpinregister (536only): asyncassert unchanged, +1bootstrapreleaseedge, 0productionedges; requires statically scheduled reset release')
     ap.add_argument('--sstn-split-map', help='Exact source-pinned two-leaf SSTN role map; requires both real bound child views')
     ap.add_argument('--dedupe-pad', help='S-NET+FILL: DEDUPE pad map JSON (results/arch/tile_dedupe_1015/s81_pad_map_1016.json): '
                     'instances of FROM become the closed standard TO; spare inputs tied low (die.v.pads.json), spare outputs open')
@@ -11768,6 +11811,7 @@ def die_options(ap):
                     'better non-closed variants are recorded as kit requests), not from instance centres')
     ap.add_argument('--col-reset-tree', type=int, default=32, metavar='G', help='DEFAULT 32 since S-DIE 10-16 0600 (0 = one net per column, disabled). S-DIE-RELAYFACE 10-16 (VIS-ROM D-S81-02): '
                     'registered equal-depth column reset tree, <= G sinks per stage register (1-bit relay masters)')
+    ap.add_argument('--col-reset-strict', action='store_true', help='Opt-in placement rejection gate: abort on an unreachable reset stage or any branch whose full pin-box bound exceeds 500um. Does not qualify exact pins, pair timing or reset recovery/removal.')
     ap.add_argument('--col-reset-span', type=float, default=0.0, help='--col-reset-tree: also split leaf groups wider than this half-perimeter (um; 0 = count only)')
     ap.add_argument('--stn-pin-pitch2', action=argparse.BooleanOptionalAction, default=True, help='DEFAULT ON since S-DIE 10-16 0600 (--no-stn-pin-pitch2 to disable). VIS-ROM S81F-10 (S-NET+FILL 10-16): one-lane forwarded '
                     'stations (stnh/stnv_86x1) lay fi0 + di0 / fo0 + do0 at a uniform 2-track (0.096 um) pitch centred on '
@@ -11922,6 +11966,8 @@ def apply_options(a):
     SEL_XSTG = bool(getattr(a, 'sel_xstg', False))
     global HEND_BOUND_FOOTPRINT
     HEND_BOUND_FOOTPRINT = bool(getattr(a, 'hend_bound_footprint', False))
+    global RLY536_RSTREG
+    RLY536_RSTREG = bool(getattr(a, 'rly536_rstreg', False))
     global DEDUPE_PAD
     DEDUPE_PAD = None
     global SSTN_SPLIT_MAP
@@ -12165,11 +12211,14 @@ def apply_options(a):
     global RLY_FACE_REACH, RLY_REAL_DIMS
     RLY_REAL_DIMS = bool(getattr(a, "rly_real_dims", False))
     RLY_FACE_REACH = float(getattr(a, 'rly_face_reach', 0.0) or 0.0)
-    global RLY_FACE_PINS, COL_RESET_TREE, COL_RESET_SPAN_UM, LEF_PIN_DIR, STN_PIN_PITCH2
+    global RLY_FACE_PINS, COL_RESET_TREE, COL_RESET_SPAN_UM, COL_RESET_STRICT, LEF_PIN_DIR, STN_PIN_PITCH2
     STN_PIN_PITCH2 = bool(getattr(a, 'stn_pin_pitch2', True))
     RLY_FACE_PINS = bool(getattr(a, 'rly_face_pins', True))
     COL_RESET_TREE = int(getattr(a, 'col_reset_tree', 32) or 0)
     COL_RESET_SPAN_UM = float(getattr(a, 'col_reset_span', 0.0) or 0.0)
+    COL_RESET_STRICT = bool(getattr(a, 'col_reset_strict', False))
+    if COL_RESET_STRICT and (COL_RESET_TREE <= 0 or not COL_RESET_SPAN_UM or COL_RESET_SPAN_UM > 500):
+        raise ValueError('--col-reset-strict requires --col-reset-tree > 0 and 0 < --col-reset-span <= 500')
     LEF_PIN_DIR = bool(getattr(a, 'lef_pin_dir', True))
     HOP_GATE_UM = getattr(a, 'hop_gate', None)
     CTRL_SVC_ALIGN = bool(getattr(a, 'ctrl_svc_align', False))
@@ -12426,6 +12475,10 @@ def main(argv=None):
         write_netlist(m, 1, work / 'die.v')
         if GEN == 'r8':
             (work / 'die_glue.sv').write_text(glue_rtl(m))    # this case's glue masters (die_port_bind --rtl-file)
+            if RLY536_RSTREG:
+                (work / 'die_glue.reset_contract.json').write_text(json.dumps(rly536_reset_contract(m), indent=1) + '\n')
+            elif (work / 'die_glue.reset_contract.json').exists():
+                (work / 'die_glue.reset_contract.json').unlink()
         print(json.dumps(dict(die_v=str(work / 'die.v'), insts=len(m['insts']))))
     elif a.mode == 'real':
         print(json.dumps(case_real(m, work)))
