@@ -58,6 +58,12 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg #(
     end endgenerate
     reg [4:0]pc_id_q;reg [7:0]refresh_reload_q;
     always @(posedge clk)begin pc_id_q<=pc_id;refresh_reload_q<=refresh_reload;end
+    // pc_id_qq: second strap stage for the K legality compare (H-PCCTRL 2026-10-16).  pc_id_q is the pin register at the
+    // E-face strap pins; the measured H3 TT limiter was pc_id_q -> incoming_pc compare -> legal -> i_rdy -> K skid enable
+    // (-65.3 ps), led by the E-face wire.  The strap is a die constant held through reset (lrst_n releases 3 edges after
+    // rst_n), so the extra stage is equal to pc_id_q on every edge the controller runs; no cycle changes.
+    reg [4:0]pc_id_qq;
+    always @(posedge clk) pc_id_qq<=pc_id_q;
     wire i_v,i_we;wire[29:0]i_addr;wire[3:0]i_len;wire[16:0]i_tag;wire[255:0]i_wdata;wire[31:0]i_wstrb;
     wire i_rdy;
     reg[1:0]state;reg sticky;reg[18:0]active_row;reg[31:0]observed_open;
@@ -75,7 +81,7 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg #(
     wire[4:0]incoming_pc=incoming[6:2]^incoming[11:7]^incoming[16:12];
     wire[3:0]length=i_len;
     wire legal=length>=1 && length<=4 && (!i_we || length==1) &&
-        {1'b0,incoming[1:0]}+length<=4 && incoming_pc==pc_id_q && {1'b0,incoming}+length<=31'd703125000;
+        {1'b0,incoming[1:0]}+length<=4 && incoming_pc==pc_id_qq && {1'b0,incoming}+length<=31'd703125000;
     wire same_row=incoming_row==active_row;
     wire dr,wr,cv,cwe,caq;wire[4:0]cb,cc;
     wire[319:0]head={queue[rp],head_wdata},push={queue[ep],256'b0};
