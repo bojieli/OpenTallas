@@ -171,5 +171,5 @@ class Builder:
             else:
                 by[d_] = [n, d_, list(loads)]
         self.nets = list(by.values())
-        return dict(model_insertion_ps=round(d + top['d'], 1), leaves=len(leaves), buffers=len(self.bufs),
+        return dict(top=top['buf'], model_insertion_ps=round(d + top['d'], 1), leaves=len(leaves), buffers=len(self.bufs),
                     pads=sum(1 for b in self.bufs if b[1] == PAD))

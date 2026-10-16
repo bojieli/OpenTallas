@@ -9,6 +9,8 @@ writes nothing and exits 1 on any difference or unclassified file):
   * this script: the ten base split1016 specs (SPECS below);
   * tools/s81_ph/capx43_kits.py: dsfd_capt_x8x_{t,s}_{e,w}.json + their pin Tcl
     (DECISION B x8 leaves, incl. the recorded pin_regs opt-out);
+  * tools/s81_ph/capx43_status_kits.py: dsfd_capt_status_x43_{t,s}.json + their pin Tcl
+    (DECISION B status leaves, which dsfd_capt_split.sv's status_dual wrapper instantiates);
   * PRESERVED: successor specs derived by hand from a base spec at the listed
     commit; --check only requires them to exist.
 Pin Tcl of the base specs is the die lead's assigned input, not an output.
@@ -48,6 +50,8 @@ def outputs(pins_dir=PINS_DIR):
         for half in 'ts':
             tcl,faces=k.pins(side,half);top=f'dsfd_capt_x8x_{half}_{side}'
             out[k.PINS/(top+'.tcl')]=tcl;out[k.SPECS/(top+'.json')]=json.dumps(k.spec(side,half,faces),indent=1)+'\n'
+    import capx43_status_kits as ks
+    out.update(ks.outputs())
     return out
 
 def check():
