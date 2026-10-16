@@ -43,6 +43,19 @@ module ot_s81_fixed_issue #(
  reg bad;reg[23:0]end_cycle,kit_cycle;reg[NENG-1:0]seen_cmd;
  reg[3:0]eng;reg[7:0]tag;
  reg[NENG-1:0]legit_done;
+ // Completion tag decode (S-ELEM-PQ 10-15): the c9 gate's synthesis stalled (>2,700 s, yosys SHARE) on the per-row
+ // runtime part-select dt_q[8*eng+:8] unrolled over 2 slots x NOPS rows. Each engine's registered completion tag is
+ // decoded once to one-hot ({slot, op}); a row then needs only its own constant tag bit per engine, AND-OR'd by the
+ // row's engine one-hot. Same edge, same check (dv_q[eng] && tag == {s, op}).
+ wire[255:0]tag_oh[0:NENG-1];
+ genvar gto;
+ generate for(gto=0;gto<NENG;gto=gto+1)begin:g_tag_oh
+  assign tag_oh[gto]=dv_q[gto]?(256'd1<<dt_q[8*gto+:8]):256'd0;
+ end endgenerate
+ function automatic row_hit(input [3:0] e,input integer sl,input integer op);
+  integer k;
+  begin row_hit=1'b0;for(k=0;k<NENG;k=k+1)if(e==k)row_hit=row_hit|tag_oh[k][{sl[0],op[6:0]}];end
+ endfunction
 `ifndef SYNTHESIS
  initial begin
   if(NOPS<2||NOPS>128||NENG<1||NENG>14||STAGE<0||STAGE>127||OP_BASE<0||OP_BASE+NOPS>128)$fatal(1,"invalid native S81 issuer shape");
@@ -126,7 +139,7 @@ module ot_s81_fixed_issue #(
     for(i=0;i<NOPS;i=i+1)if(i<length_q)begin
      eng=mem[i][27:24];
      if(eng<14&&age[s]!=0&&mem[i][75:52]==age[s]-1'b1)begin
-      if(!dv_q[eng]||dt_q[8*eng+:8]!={1'(s),7'(i+OP_BASE)}||!pending[s][i])begin run_fault<=1;if(fault_code==0)fault_code<=8;end
+      if(!row_hit(eng,s,i+OP_BASE)||!pending[s][i])begin run_fault<=1;if(fault_code==0)fault_code<=8;end
       else begin legit_done[eng]=1;pending[s][i]<=0;end
      end
      if(age[s]==mem[i][51:28]+((MUT==1&&eng<14)?24'd1:24'd0))begin
