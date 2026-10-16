@@ -29,7 +29,7 @@
   {
    "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
    "count": 1,
-   "inst": "*u_rows*g_m?0?*u_s",
+   "inst": "*u_rows*g_macro?0?*u_s",
    "at": [
     22.464,
     43.2
@@ -39,7 +39,7 @@
   {
    "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
    "count": 1,
-   "inst": "*u_rows*g_m?1?*u_s",
+   "inst": "*u_rows*g_macro?1?*u_s",
    "at": [
     137.592,
     43.2
@@ -173,7 +173,7 @@
    "ot-epyc4",
    "ot-pve1"
   ],
-  "structural_change": "KV die v1.4.3 (G3S2 head stages, Q-KVSYS-DIE request 10-15 ~20:30): production parameters STATIC_QK 1, QK_ISSUE_AGE 34, ROW_RETURN_LAT 21, HXK 5 (head extra score latency in v1.4.3; was 8 in s8). RTL, outline, pins identical to qkd_ectl_b_tp8_direct. Leaf benches are the closed kit's exact/mutant benches (default-parameter control exactness, as s8); HXK 5 composition proof is the stack owner's."
+  "structural_change": "KV die v1.4.3 (G3S2 head stages, Q-KVSYS-DIE request 10-15 ~20:30): production parameters STATIC_QK 1, QK_ISSUE_AGE 34, ROW_RETURN_LAT 21, HXK 5 (head extra score latency in v1.4.3; was 8 in s8). RTL, outline, pins identical to qkd_ectl_b_tp8_direct. Leaf benches are the closed kit's exact/mutant benches (default-parameter control exactness, as s8); HXK 5 composition proof is the stack owner's. Macro instance patterns follow STATIC_QK=1: rows are ot_qkd_static_row_ring u_rows.g_macro[m].u_s (h5 attempt 1 failed macro_place: no g_m[*] instances)."
  },
  "boundary_tcl": [
   "physical/qwen_die_masters/sram_edge_guard.tcl"
