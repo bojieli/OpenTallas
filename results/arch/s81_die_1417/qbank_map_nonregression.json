@@ -1,0 +1,295 @@
+{
+  "scope": "actual current q-element LEF exact bank rectangle differential againstfa44c38ee; no die/route/STA qualification",
+  "lef": "physical/s81_die_views/q_elem_qs5f_efs/q_elem.lef.gz",
+  "lef_sha256": "1dee3342360ceb7f83ee668a00e521a464703b5f4d573341f0f3cc546f8fc098",
+  "cases": [
+    {
+      "pin_align": false,
+      "mirror": false,
+      "result": [
+        {
+          "variant": "before",
+          "calls": 21,
+          "seconds": 0.10834059491753578,
+          "insts": [
+            {
+              "name": "bs17",
+              "master": "dsfd_qbank_S",
+              "x": 413.856,
+              "y": 390.96,
+              "w": 60.455999999999996,
+              "h": 6.456,
+              "orient": "R0",
+              "kind": "qbank",
+              "region": "frame_0",
+              "domain": "stream_1p2",
+              "power_w": 0.0
+            },
+            {
+              "name": "bn17",
+              "master": "dsfd_qbank_N",
+              "x": 324.864,
+              "y": 624.24,
+              "w": 60.455999999999996,
+              "h": 6.456,
+              "orient": "R0",
+              "kind": "qbank",
+              "region": "frame_0",
+              "domain": "stream_1p2",
+              "power_w": 0.0
+            }
+          ]
+        },
+        {
+          "variant": "after",
+          "calls": 1,
+          "seconds": 0.0021982965990900993,
+          "insts": [
+            {
+              "name": "bs17",
+              "master": "dsfd_qbank_S",
+              "x": 413.856,
+              "y": 390.96,
+              "w": 60.455999999999996,
+              "h": 6.456,
+              "orient": "R0",
+              "kind": "qbank",
+              "region": "frame_0",
+              "domain": "stream_1p2",
+              "power_w": 0.0
+            },
+            {
+              "name": "bn17",
+              "master": "dsfd_qbank_N",
+              "x": 324.864,
+              "y": 624.24,
+              "w": 60.455999999999996,
+              "h": 6.456,
+              "orient": "R0",
+              "kind": "qbank",
+              "region": "frame_0",
+              "domain": "stream_1p2",
+              "power_w": 0.0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "pin_align": false,
+      "mirror": true,
+      "result": [
+        {
+          "variant": "before",
+          "calls": 21,
+          "seconds": 0.04579176567494869,
+          "insts": [
+            {
+              "name": "bs17",
+              "master": "dsfd_qbank_S",
+              "x": 435.888,
+              "y": 390.96,
+              "w": 60.455999999999996,
+              "h": 6.456,
+              "orient": "R0",
+              "kind": "qbank",
+              "region": "frame_0",
+              "domain": "stream_1p2",
+              "power_w": 0.0
+            },
+            {
+              "name": "bn17",
+              "master": "dsfd_qbank_N",
+              "x": 524.88,
+              "y": 624.24,
+              "w": 60.455999999999996,
+              "h": 6.456,
+              "orient": "R0",
+              "kind": "qbank",
+              "region": "frame_0",
+              "domain": "stream_1p2",
+              "power_w": 0.0
+            }
+          ]
+        },
+        {
+          "variant": "after",
+          "calls": 1,
+          "seconds": 0.0021462980657815933,
+          "insts": [
+            {
+              "name": "bs17",
+              "master": "dsfd_qbank_S",
+              "x": 435.888,
+              "y": 390.96,
+              "w": 60.455999999999996,
+              "h": 6.456,
+              "orient": "R0",
+              "kind": "qbank",
+              "region": "frame_0",
+              "domain": "stream_1p2",
+              "power_w": 0.0
+            },
+            {
+              "name": "bn17",
+              "master": "dsfd_qbank_N",
+              "x": 524.88,
+              "y": 624.24,
+              "w": 60.455999999999996,
+              "h": 6.456,
+              "orient": "R0",
+              "kind": "qbank",
+              "region": "frame_0",
+              "domain": "stream_1p2",
+              "power_w": 0.0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "pin_align": true,
+      "mirror": false,
+      "result": [
+        {
+          "variant": "before",
+          "calls": 28,
+          "seconds": 0.06124504376202822,
+          "insts": [
+            {
+              "name": "bs17",
+              "master": "dsfd_qbank_S",
+              "x": 425.088,
+              "y": 390.96,
+              "w": 60.455999999999996,
+              "h": 6.456,
+              "orient": "R0",
+              "kind": "qbank",
+              "region": "frame_0",
+              "domain": "stream_1p2",
+              "power_w": 0.0
+            },
+            {
+              "name": "bn17",
+              "master": "dsfd_qbank_N",
+              "x": 327.024,
+              "y": 624.24,
+              "w": 60.455999999999996,
+              "h": 6.456,
+              "orient": "R0",
+              "kind": "qbank",
+              "region": "frame_0",
+              "domain": "stream_1p2",
+              "power_w": 0.0
+            }
+          ]
+        },
+        {
+          "variant": "after",
+          "calls": 1,
+          "seconds": 0.0025735097005963326,
+          "insts": [
+            {
+              "name": "bs17",
+              "master": "dsfd_qbank_S",
+              "x": 425.088,
+              "y": 390.96,
+              "w": 60.455999999999996,
+              "h": 6.456,
+              "orient": "R0",
+              "kind": "qbank",
+              "region": "frame_0",
+              "domain": "stream_1p2",
+              "power_w": 0.0
+            },
+            {
+              "name": "bn17",
+              "master": "dsfd_qbank_N",
+              "x": 327.024,
+              "y": 624.24,
+              "w": 60.455999999999996,
+              "h": 6.456,
+              "orient": "R0",
+              "kind": "qbank",
+              "region": "frame_0",
+              "domain": "stream_1p2",
+              "power_w": 0.0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "pin_align": true,
+      "mirror": true,
+      "result": [
+        {
+          "variant": "before",
+          "calls": 28,
+          "seconds": 0.05951016861945391,
+          "insts": [
+            {
+              "name": "bs17",
+              "master": "dsfd_qbank_S",
+              "x": 425.088,
+              "y": 390.96,
+              "w": 60.455999999999996,
+              "h": 6.456,
+              "orient": "R0",
+              "kind": "qbank",
+              "region": "frame_0",
+              "domain": "stream_1p2",
+              "power_w": 0.0
+            },
+            {
+              "name": "bn17",
+              "master": "dsfd_qbank_N",
+              "x": 523.152,
+              "y": 624.24,
+              "w": 60.455999999999996,
+              "h": 6.456,
+              "orient": "R0",
+              "kind": "qbank",
+              "region": "frame_0",
+              "domain": "stream_1p2",
+              "power_w": 0.0
+            }
+          ]
+        },
+        {
+          "variant": "after",
+          "calls": 1,
+          "seconds": 0.002267414703965187,
+          "insts": [
+            {
+              "name": "bs17",
+              "master": "dsfd_qbank_S",
+              "x": 425.088,
+              "y": 390.96,
+              "w": 60.455999999999996,
+              "h": 6.456,
+              "orient": "R0",
+              "kind": "qbank",
+              "region": "frame_0",
+              "domain": "stream_1p2",
+              "power_w": 0.0
+            },
+            {
+              "name": "bn17",
+              "master": "dsfd_qbank_N",
+              "x": 523.152,
+              "y": 624.24,
+              "w": 60.455999999999996,
+              "h": 6.456,
+              "orient": "R0",
+              "kind": "qbank",
+              "region": "frame_0",
+              "domain": "stream_1p2",
+              "power_w": 0.0
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

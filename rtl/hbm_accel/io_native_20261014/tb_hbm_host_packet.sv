@@ -10,7 +10,7 @@ wire  s_wvalid;
 reg  s_wready=0;
 wire [31:0] s_wdata;
 wire [3:0] s_wstrb;
-reg  s_bvalid=0;
+reg  s_bvalid=0;reg[1:0]s_bresp=0;
 wire  s_bready;
 wire  s_arvalid;
 reg  s_arready=0;
@@ -151,9 +151,9 @@ assign h[403]=m_bready;
 assign m_bresp=h[786:785];
 assign h[404]=irq;
 assign h[405]=fault;
-hfd_host_packet_face #(.MUT(MUT==1?1:0))dut(.clk(clk),.rst_n(rst_n),.h(h),.rx_valid(rx_valid),.rx_packet(rx_packet),.rx_ready(rx_ready),.tx_valid(tx_valid),.tx_packet(tx_packet),.tx_ready(tx_ready),.protocol_fault(protocol_fault));
+hfd_host_packet_face #(.MUT(MUT==3?3:(MUT==1?1:0)))dut(.clk(clk),.rst_n(rst_n),.h(h),.s_bresp(s_bresp),.rx_valid(rx_valid),.rx_packet(rx_packet),.rx_ready(rx_ready),.tx_valid(tx_valid),.tx_packet(tx_packet),.tx_ready(tx_ready),.protocol_fault(protocol_fault));
 end else begin:g_direct
-ot_hbm_host_packet #(.MUT(MUT==1?1:0)) dut(.clk(clk),.rst_n(rst_n),.rx_valid(rx_valid),.rx_packet(rx_packet),.rx_ready(rx_ready),.tx_valid(tx_valid),.tx_packet(tx_packet),.tx_ready(tx_ready),.protocol_fault(protocol_fault),.s_awvalid(s_awvalid),.s_awready(s_awready),.s_awaddr(s_awaddr),.s_wvalid(s_wvalid),.s_wready(s_wready),.s_wdata(s_wdata),.s_wstrb(s_wstrb),.s_bvalid(s_bvalid),.s_bready(s_bready),.s_arvalid(s_arvalid),.s_arready(s_arready),.s_araddr(s_araddr),.s_rvalid(s_rvalid),.s_rready(s_rready),.s_rdata(s_rdata),.h_awvalid(h_awvalid),.h_awready(h_awready),.h_awaddr(h_awaddr),.h_wvalid(h_wvalid),.h_wready(h_wready),.h_wdata(h_wdata),.h_wstrb(h_wstrb),.h_bvalid(h_bvalid),.h_bready(h_bready),.h_arvalid(h_arvalid),.h_arready(h_arready),.h_araddr(h_araddr),.h_rvalid(h_rvalid),.h_rready(h_rready),.h_rdata(h_rdata),.h_dma_arvalid(h_dma_arvalid),.h_dma_arready(h_dma_arready),.h_dma_araddr(h_dma_araddr),.h_dma_rvalid(h_dma_rvalid),.h_dma_rready(h_dma_rready),.h_dma_rdata(h_dma_rdata),.h_dma_rresp(h_dma_rresp),.h_dma_rlast(h_dma_rlast),.h_dma_awvalid(h_dma_awvalid),.h_dma_awready(h_dma_awready),.h_dma_awaddr(h_dma_awaddr),.h_dma_wvalid(h_dma_wvalid),.h_dma_wready(h_dma_wready),.h_dma_wdata(h_dma_wdata),.h_dma_wstrb(h_dma_wstrb),.h_dma_bvalid(h_dma_bvalid),.h_dma_bready(h_dma_bready),.h_dma_bresp(h_dma_bresp),.m_arvalid(m_arvalid),.m_arready(m_arready),.m_araddr(m_araddr),.m_arlen(m_arlen),.m_arsize(m_arsize),.m_rvalid(m_rvalid),.m_rready(m_rready),.m_rdata(m_rdata),.m_rresp(m_rresp),.m_rlast(m_rlast),.m_awvalid(m_awvalid),.m_awready(m_awready),.m_awaddr(m_awaddr),.m_awlen(m_awlen),.m_awsize(m_awsize),.m_wvalid(m_wvalid),.m_wready(m_wready),.m_wdata(m_wdata),.m_wstrb(m_wstrb),.m_wlast(m_wlast),.m_bvalid(m_bvalid),.m_bready(m_bready),.m_bresp(m_bresp),.irq(irq),.fault(fault));
+ot_hbm_host_packet #(.MUT(MUT==3?3:(MUT==1?1:0))) dut(.clk(clk),.rst_n(rst_n),.rx_valid(rx_valid),.rx_packet(rx_packet),.rx_ready(rx_ready),.tx_valid(tx_valid),.tx_packet(tx_packet),.tx_ready(tx_ready),.protocol_fault(protocol_fault),.s_awvalid(s_awvalid),.s_awready(s_awready),.s_awaddr(s_awaddr),.s_wvalid(s_wvalid),.s_wready(s_wready),.s_wdata(s_wdata),.s_wstrb(s_wstrb),.s_bvalid(s_bvalid),.s_bresp(s_bresp),.s_bready(s_bready),.s_arvalid(s_arvalid),.s_arready(s_arready),.s_araddr(s_araddr),.s_rvalid(s_rvalid),.s_rready(s_rready),.s_rdata(s_rdata),.h_awvalid(h_awvalid),.h_awready(h_awready),.h_awaddr(h_awaddr),.h_wvalid(h_wvalid),.h_wready(h_wready),.h_wdata(h_wdata),.h_wstrb(h_wstrb),.h_bvalid(h_bvalid),.h_bready(h_bready),.h_arvalid(h_arvalid),.h_arready(h_arready),.h_araddr(h_araddr),.h_rvalid(h_rvalid),.h_rready(h_rready),.h_rdata(h_rdata),.h_dma_arvalid(h_dma_arvalid),.h_dma_arready(h_dma_arready),.h_dma_araddr(h_dma_araddr),.h_dma_rvalid(h_dma_rvalid),.h_dma_rready(h_dma_rready),.h_dma_rdata(h_dma_rdata),.h_dma_rresp(h_dma_rresp),.h_dma_rlast(h_dma_rlast),.h_dma_awvalid(h_dma_awvalid),.h_dma_awready(h_dma_awready),.h_dma_awaddr(h_dma_awaddr),.h_dma_wvalid(h_dma_wvalid),.h_dma_wready(h_dma_wready),.h_dma_wdata(h_dma_wdata),.h_dma_wstrb(h_dma_wstrb),.h_dma_bvalid(h_dma_bvalid),.h_dma_bready(h_dma_bready),.h_dma_bresp(h_dma_bresp),.m_arvalid(m_arvalid),.m_arready(m_arready),.m_araddr(m_araddr),.m_arlen(m_arlen),.m_arsize(m_arsize),.m_rvalid(m_rvalid),.m_rready(m_rready),.m_rdata(m_rdata),.m_rresp(m_rresp),.m_rlast(m_rlast),.m_awvalid(m_awvalid),.m_awready(m_awready),.m_awaddr(m_awaddr),.m_awlen(m_awlen),.m_awsize(m_awsize),.m_wvalid(m_wvalid),.m_wready(m_wready),.m_wdata(m_wdata),.m_wstrb(m_wstrb),.m_wlast(m_wlast),.m_bvalid(m_bvalid),.m_bready(m_bready),.m_bresp(m_bresp),.irq(irq),.fault(fault));
 end endgenerate
  task tick;begin #5;clk=1;#1;#4;clk=0;end endtask
  task check(input bit okay,input [255:0] label);begin checks=checks+1;if(!okay)begin errors=errors+1;$display("BAD %s iteration%0d",label,k);end end endtask
@@ -199,6 +199,18 @@ end endgenerate
  m_awaddr=64'h450000000+k*8;m_awvalid=1;tick;m_awvalid=0;tick;m_wdata=64'h9876543200000000+k;m_wstrb=8'he7;m_wvalid=1;tick;m_wvalid=0;
  take(8'h14,0,64'h450000000+k*8,64'h9876543200000000+k,8'he7);send(pkt(8'h94,0,0,0,0));check(m_bvalid && m_bresp==0,"host DMA B returned");m_bready=1;tick;m_bready=0;repeat(2)tick;
  check(protocol_fault===1'b0,"known normal protocol flags");
+ end
+ // Capture every AXI BRESP value. Live input changes after the handshake
+ // cannot corrupt a completion waiting behind an externally stalled packet.
+ for(k=0;k<4;k=k+1)begin
+ send(pkt(8'h01,16'(300+k),64'hf30,64'd1,8'hf));
+ s_awready=1;s_wready=1;tick;s_awready=0;s_wready=0;
+ s_bresp=2'(k);s_bvalid=1;tick;s_bvalid=0;s_bresp=2'(k^3);
+ waits=0;while(!tx_valid&&waits<30)begin tick;waits=waits+1;end
+ check(tx_valid&&tx_packet[7:0]==8'h81&&tx_packet[31:16]==300+k&&tx_packet[169:168]===2'(k),"BAR BRESP exact completion");
+ saved=tx_packet;repeat(4)begin tick;check(tx_valid&&tx_packet===saved,"BAR BRESP held completion");end
+ tx_ready=1;tick;tx_ready=0;
+ if(k!=0)check(protocol_fault,"BAR error sticky fault");
  end
  if(MUT==2)begin send(pkt(8'h01,0,0,0,0)^(512'd3<<8));check(protocol_fault===1'b0,"malformed version mutant rejected");end
  if(errors==0)$display("HBM_HOST_PACKET_PASS checks%0d transactions256 source_exact_ports73 bits787",checks);

@@ -16,6 +16,7 @@ module ot_hbm_host_packet #(parameter integer MUT=0)(
  output reg [31:0] s_wdata,
  output reg [3:0] s_wstrb,
  input wire  s_bvalid,
+ input wire [1:0] s_bresp,
  output reg  s_bready,
  output reg  s_arvalid,
  input wire  s_arready,
@@ -88,7 +89,7 @@ module ot_hbm_host_packet #(parameter integer MUT=0)(
  reg hb_aw,hb_w,md_aw,md_w,hb_req,hr_req,md_req,mr_req;
  reg [15:0] sb_id,sr_id,hdw_id,hdr_id;
  reg [63:0] hd_read_data;reg [1:0] hd_read_resp,hd_write_resp;reg hd_read_last;
- reg [31:0] s_read_data;
+ reg [31:0] s_read_data;reg [1:0] s_write_resp;
  reg [11:0] hb_addr,hr_addr;
  reg [31:0] hb_data;reg [3:0] hb_strb;
  reg [63:0] md_addr,mr_addr,md_data;reg [7:0] md_strb;
@@ -108,7 +109,7 @@ module ot_hbm_host_packet #(parameter integer MUT=0)(
  if(!rst_n)begin
   tx_valid<=0;tx_packet<=0;protocol_fault<=0;
   sbw<=0;sbr<=0;hdw<=0;hdr<=0;hbw<=0;hbr<=0;mdw<=0;mdr<=0;
-  sb_resp<=0;sr_resp<=0;hdw_resp<=0;hdr_resp<=0;
+  sb_resp<=0;sr_resp<=0;hdw_resp<=0;hdr_resp<=0;s_write_resp<=0;
   hb_aw<=0;hb_w<=0;md_aw<=0;md_w<=0;hb_req<=0;hr_req<=0;md_req<=0;mr_req<=0;
   status_pending<=0;last_status<=0;hb_sent<=0;hr_sent<=0;md_sent<=0;mr_sent<=0;
   s_awvalid<=0;s_wvalid<=0;s_bready<=0;s_arvalid<=0;s_rready<=0;
@@ -139,7 +140,7 @@ module ot_hbm_host_packet #(parameter integer MUT=0)(
   if(s_awvalid&&s_awready)s_awvalid<=0;
   if(s_wvalid&&s_wready)s_wvalid<=0;
   if(s_arvalid&&s_arready)s_arvalid<=0;
-  if(s_bvalid&&s_bready)begin s_bready<=0;sb_resp<=1;end
+  if(s_bvalid&&s_bready)begin s_bready<=0;sb_resp<=1;s_write_resp<=MUT==3?2'd0:s_bresp;if(s_bresp!=0)protocol_fault<=1;end
   if(s_rvalid&&s_rready)begin s_rready<=0;sr_resp<=1;s_read_data<=s_rdata;end
   if(h_dma_awvalid&&h_dma_awready)h_dma_awvalid<=0;
   if(h_dma_wvalid&&h_dma_wready)h_dma_wvalid<=0;
@@ -170,7 +171,7 @@ module ot_hbm_host_packet #(parameter integer MUT=0)(
   // service. They are never a replacement for compiler compute issue.
   if(!tx_valid||tx_ready)begin
    tx_valid<=1;
-   if(sb_resp)begin tx_packet<=packet(8'h81,sb_id,0,0,0,0,1);sb_resp<=0;sbw<=0;end
+   if(sb_resp)begin tx_packet<=packet(8'h81,sb_id,0,0,0,s_write_resp,1);sb_resp<=0;sbw<=0;end
    else if(sr_resp)begin tx_packet<=packet(8'h82,sr_id,0,{32'd0,s_read_data},0,0,1);sr_resp<=0;sbr<=0;end
    else if(hdr_resp)begin tx_packet<=packet(8'h83,hdr_id,0,hd_read_data,0,hd_read_resp,hd_read_last);hdr_resp<=0;hdr<=0;end
    else if(hdw_resp)begin tx_packet<=packet(8'h84,hdw_id,0,0,0,hd_write_resp,1);hdw_resp<=0;hdw<=0;end

@@ -1,0 +1,46 @@
+{
+  "cell": "ot_hbm_su_reduce_static",
+  "view": "physical/ref_tile/hbm_su_static_reduce_1015/views/ot_hbm_su_reduce_static",
+  "lib_cell": "ot_hbm_su_reduce_static",
+  "insertion": true,
+  "ref_src": [
+    "insertion.json boundary mean"
+  ],
+  "R_ps": 182.6,
+  "spread_ps": 33.2,
+  "outputs": 82,
+  "inputs": 99,
+  "launch_ps": 188.9,
+  "launch_pin": "scalar_tag[11]",
+  "capture_ps": 144.0,
+  "capture_pin": "operand_fp32[4]",
+  "launch_over": 0,
+  "capture_over": 0,
+  "comb_pins": 0,
+  "comb_first": [],
+  "pass": true,
+  "fail_why": "",
+  "ff_boundary": {
+    "min_launch_ps": 111.52394000000004,
+    "min_launch_pin": "scalar_tag[1]",
+    "max_hold_ps": -68.83677999999999,
+    "max_hold_pin": "cmd_tag[23]",
+    "worst_same_phase_hold_margin_ps": 180.36072000000001
+  },
+  "source_commit": "896d4f4ab",
+  "record_commit": "3a47a1867",
+  "route_job": "hbm_su_static_reduce_1015-r4-896d4f4ab",
+  "routed_tt_setup_ps": 154.98,
+  "routed_ff_hold_ps": 22.21,
+  "drc": 0,
+  "assigned_pin_check": {
+    "checked": 182,
+    "failures": [],
+    "power_ground_pins_excluded": [
+      "VDD",
+      "VSS"
+    ]
+  },
+  "rtl_sha256": "75b38ab7103ca40f4784e47559f70e659851f7184a18a05e43653336b03d0a32",
+  "scope": "Standalone reducer physical and native registered-pin qualification; fullSU related3:4/RF_RELAY36/wholecore fit/reset release and production e2e cost remain OPEN"
+}

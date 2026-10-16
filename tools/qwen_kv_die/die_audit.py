@@ -46,7 +46,7 @@ def main():
             pin = None
     pos = {}
     for ln in open(D + '/place.tcl'):
-        mm = re.match(r'ot_mts::place \[\$_blk findInst (\S+)\] ([\d.]+) ([\d.]+) (\S+)', ln)
+        mm = re.search(r'findInst (\S+)\]\s+([\d.]+)\s+([\d.]+)\s+(\w+)', ln)
         if mm:
             pos[mm.group(1)] = (float(mm.group(2)), float(mm.group(3)), mm.group(4))
     inst, netpins, width = {}, collections.defaultdict(list), {}
