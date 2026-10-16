@@ -80,8 +80,14 @@ def main():
     final += 'submod -name ot_s81_pq_lane_joint ' + selection(lanes) + ';\n'
     final += 'rename dsfd_sp_pq_produced dsfd_sp_pq_joint_candidate;\n'
     final += 'write_json ' + str((a.out/'partition.json').resolve()) + ';\n'
-    final += 'write_verilog -noattr ' + str((a.out/'candidate.v').resolve()) + ';\n'
     run(a.yosys, final, a.out/'partition')
+    partition=json.loads((a.out/'partition.json').read_text())
+    top=partition['modules']['dsfd_sp_pq_joint_candidate']
+    groups={name:cell['type'] for name,cell in top['cells'].items() if name in ('ot_s81_pq_control_joint','ot_s81_pq_lane_joint')}
+    if len(groups)!=2:raise ValueError('Both extracted groups must remain actual children')
+    selected=['dsfd_sp_pq_joint_candidate',*groups.values()]
+    export='read_json '+str((a.out/'partition.json').resolve())+'; select '+' '.join(selected)+'; write_verilog -selected -noattr '+str((a.out/'candidate.v').resolve())+';\n'
+    run(a.yosys,export,a.out/'export')
     receipt=dict(scope='Source partition only. Existing clocks/cycles unchanged; physical candidate unqualified.',
                  hierarchy_sha256=hashlib.sha256(a.hierarchy.read_bytes()).hexdigest(),
                  source_sha256=h['source_sha256'],defines=h['defines'],blackbox_datapath_modules=blackboxes,
