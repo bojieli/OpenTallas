@@ -86,7 +86,7 @@ def from_qwen(homes, graph, reach):
     return {"die": [0, 0, W, Hh], "blocks": blocks, "buses": _buses(blocks, links, reach)}
 
 
-def from_s81(plan_path, reach):
+def from_s81(plan_path, reach, hub_layout=None):
     p = json.loads(Path(plan_path).read_text())
     W, H = p.get("die_outline_um", [33000, 26000])
     blocks = [[b[0], b[1], b[2], b[1] + b[3], b[2] + b[4]] for b in p.get("hard_fixed_boxes", [])]
@@ -98,9 +98,38 @@ def from_s81(plan_path, reach):
         nxt = cols[i + 1]["x_um"] if i + 1 < len(cols) else c["x_um"] + 1100
         w = min(1100.0, max(200.0, (nxt - c["x_um"]) * 0.85))
         blocks.append([f"field_col{i}_r{c.get('roots')}", c["x_um"], c["y0_um"], c["x_um"] + w, c["y1_um"]])
+    if hub_layout:
+        # --s81-hub: the generator hub layout (tools/s81/wide_hub_layout.py) replaces the old hub boxes of the record
+        hl = json.loads(Path(hub_layout).read_text())
+        x0, x1 = p["wide_hub"]["hub_x_um"]
+        blocks = [b for b in blocks if b[0] not in hl["blocks"]]
+        for n, (x, y, w, h, *_r) in hl["blocks"].items():
+            blocks.append([n, x, y, x + w, y + h])
+        if hl.get("mix4_slot"):
+            x, y, w, h = hl["mix4_slot"]
+            blocks.append(["mix4", x, y, x + w, y + h])
+        wd = hl.get("wide", {})
+        for k in ("s14w", "s14e"):
+            if k in wd:
+                blocks.append([f"road_{k}", wd[k][0], 3214.0, wd[k][1], 22786.0])
+        if "x_vch" in wd:
+            blocks.append(["road_vch", wd["x_vch"], 3214.0, wd["x_vch"] + wd["vch"], 22786.0])
+        by = {b[0]: b for b in blocks}
+        links = [(a_, b_, n_, None) for a_, b_, n_ in S81_HUB_BUSES if a_ in by and b_ in by]
+        return {"die": [0, 0, W, H], "blocks": blocks, "buses": _buses(blocks, links, reach),
+                "note": "S81 wide-hub plan + generator hub layout; buses = the c21h die's hub buses (bits), stages = reach model"}
     return {"die": [0, 0, W, H], "blocks": blocks, "buses": [],
             "note": "S81 wide-hub plan: blocks only (the plan file carries no inter-block bus list; render the GEN die"
                     " dump with --dump for buses)"}
+
+
+# c21h (src22) die hub buses, bits per block pair (die.v n_hb_* nets)
+S81_HUB_BUSES = [("sp_capture", "sp_vm", 13376), ("sp_gather", "sp_capture", 6947), ("sp_hc_s", "sp_vm", 5402),
+                 ("sp_hc_s", "sp_hc_t", 9168), ("sp_collective", "sp_vm", 2219), ("sp_collective", "sp_hc_s", 8193),
+                 ("sp_vm", "sp_pq", 2069), ("sp_su_s", "sp_vm", 17128), ("sp_vm", "sp_wfc", 2647), ("sp_vm", "sp_gather", 523),
+                 ("sp_collective", "sp_host", 592), ("sp_collective", "sp_wfc", 1028), ("sp_sseq", "sp_vm", 96),
+                 ("sp_sseq", "sp_collective", 96), ("sp_sseq", "sp_su_s", 96), ("sp_sseq", "sp_hc_s", 96),
+                 ("sp_sseq", "sp_gather", 96), ("mix4", "sp_vm", 2048)]
 
 
 def from_dump(dump, reach):
@@ -118,12 +147,13 @@ def main(argv=None):
     src = ap.add_mutually_exclusive_group(required=True)
     src.add_argument("--hbm"); src.add_argument("--qwen"); src.add_argument("--s81"); src.add_argument("--dump")
     ap.add_argument("--graph", help="Qwen bus graph (insts/buses) for --qwen")
+    ap.add_argument("--s81-hub", help="S81 generator hub layout JSON (tools/s81/wide_hub_layout.py) for --s81")
     ap.add_argument("--reach", type=float, default=500.0)
     ap.add_argument("--out", required=True)
     ap.add_argument("--title", default="")
     a = ap.parse_args(argv)
     plan = (from_hbm(a.hbm, a.reach) if a.hbm else from_qwen(a.qwen, a.graph, a.reach) if a.qwen
-            else from_s81(a.s81, a.reach) if a.s81 else from_dump(a.dump, a.reach))
+            else from_s81(a.s81, a.reach, a.s81_hub) if a.s81 else from_dump(a.dump, a.reach))
     out = Path(a.out)
     out.mkdir(parents=True, exist_ok=True)
     imgs = LP.render_die(plan, out, a.title)
