@@ -20,6 +20,7 @@ one('ROOT=$(cd "$(dirname "$0")/../.." && pwd);', 'ROOT='+str(root)+';')
 one('"$ROOT/tools/s81_static_collective/tb_s81_static_collective_slab.sv"',
     '"$W/generated/dsfd_sp_collective_static_c7.sv" "$W/generated/s81_static_collective_slab7.sv" "$W/generated/tb_s81_static_collective_slab.sv"')
 one('-GMUT="$MUT"', '-GCALENDAR_CLOCK_MUT='+str(clock_mut)+' -GMUT="$MUT"')
+one('--out "$W" > fixture.json', '--out "$W" --vm-read-edges 18 > fixture.json')
 if clock_mut:
     one('MUT=${2:-0};', 'MUT=${2:-0}; MUTANT=1;')
 (work/'runner.sh').write_text(s)
