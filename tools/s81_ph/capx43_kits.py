@@ -116,7 +116,7 @@ def spec(side, half, faces):
          "expect": "pass", "pass_regex": "^CAPC_BENCH PASS cases=9$", "threads": 8, "peak_ram_gb": 16},
         {"name": "capture_split_mutant_drop1",
          "cmd": "bash tools/s81_ph/capc_split_bench.sh {RUN}/mut mut 'mix' S81PH_CAPX_MUT_DROP1",
-         "expect": "fail", "fail_regex": "CAPC_SEQ words=.*seq_mismatches=[1-9]", "threads": 8, "peak_ram_gb": 16},
+         "expect": "fail", "fail_regex": "mismatching_roots=[1-9][0-9]* RESULT FAIL CAPC_EQ mismatches=[1-9][0-9]*.*EQ_FAIL", "threads": 8, "peak_ram_gb": 16},
     ]
     return {
         "name": f"{top}_split1016x", "top": top, "kind": "tile", "sources": [SRC], "params": {},
