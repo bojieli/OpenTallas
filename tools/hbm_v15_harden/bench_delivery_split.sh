@@ -16,7 +16,7 @@ case "$mut" in
  1) sed -i 's/({256{out_group==2.d0}}&macro_data\[0+:256\])/({256{out_group==2\x27d0}}\&macro_data[256+:256])/' "$out/split.sv";;
  2) sed -i 's/\.r_addr_in({rb,rs})/.r_addr_in({rb,rs ^ 6\x27d1})/' "$out/split.sv";;
  3) sed -i 's/^  rst_s<=rst_n;/  rst_s<=rst_s2; rst_s2<=rst_n;/; s/^ reg rst_s;/ reg rst_s,rst_s2;/' "$out/split.sv";;  # v6: body reset released one edge late (two-stage rst_n capture)
- 4) sed -i 's/ wire full0_q=\&full0_p, full1_q=\&full1_p, pcbad_q=|pcbad_p;/ wire full0_q=\&full0_all, full1_q=\&full1_all, pcbad_q=|pcbad_all;/' "$out/split.sv";;  # v6: cross-lane status pin flops bypassed (status latency 1, not the reference 2)
+ 4) sed -i 's/^ wire full0_q=.*/ wire full0_q=status_live \&\& (\&full0_all), full1_q=status_live \&\& (\&full1_all), pcbad_q=status_live \&\& (|pcbad_all);/' "$out/split.sv";;  # v6: cross-lane status pin flops bypassed (status latency 1, not the reference 2)
 esac
 if [ "$mut" != 0 ]; then cmp -s "$out/split.sv" $sp && { echo 'mutant not applied'; exit 3; }; fi
 sed 's/module ot_hbm_svc_static_vm_delivery_split /module ot_hbm_svc_static_vm_delivery /' "$out/split.sv" > "$out/as_delivery.sv"

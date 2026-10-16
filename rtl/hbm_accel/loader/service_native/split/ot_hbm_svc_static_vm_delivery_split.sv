@@ -91,8 +91,13 @@ module ot_hbm_svc_vmdel_lane (
   if(!rst_s) begin block_ready<=0;busy<=0;fault<=0;dq[280]<=0; end
   else begin block_ready<=block_ready_c;busy<=busy_c;fault<=fault_c;dq[280]<=dq_c[280]; end
  always @(posedge clk) dq[279:0]<=dq_c[279:0];
- // cross-lane status: STATUS_LAT=2 (sender output flop + receiver pin flop), reduction after the pin flop
- wire full0_q=&full0_p, full1_q=&full1_p, pcbad_q=|pcbad_p;
+ // Flush the status loop before releasing it after reset. The plain capture
+ // flops can still contain the sender's pre-reset status on the body's reset
+ // edge; that stale fault must not be recirculated into the new image.
+ reg status_live;
+ always @(posedge clk) status_live<=rst_s;
+ // STATUS_LAT=2 (sender output flop + receiver pin flop), reduction after capture.
+ wire full0_q=status_live && (&full0_p), full1_q=status_live && (&full1_p), pcbad_q=status_live && (|pcbad_p);
  reg [1:0] owned; reg [15:0] epoch0,epoch1,base_q; reg running,bank_r,sticky,bad,out_v;
  reg [5:0] slot_q,out_slot; reg [1:0] group_q,out_group;
  wire landing_fault=sticky || pcbad_q;
