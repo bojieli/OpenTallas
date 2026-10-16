@@ -1,0 +1,41 @@
+{
+ "cell": "ot_hgi_sm_xload_cl2_bfq",
+ "view": "physical/ref_tile/hgi_sm_xl2_bfq/views/ot_hgi_sm_xload_cl2_bfq",
+ "lib_cell": "ot_hgi_sm_xload_cl2_bfq",
+ "insertion": true,
+ "ref_src": [
+  "insertion.json boundary mean"
+ ],
+ "R_ps": 353.2,
+ "spread_ps": 95.3,
+ "outputs": 256,
+ "inputs": 1050,
+ "launch_ps": 262.9,
+ "launch_pin": "rwq[115]",
+ "capture_ps": 222.1,
+ "capture_pin": "c_d[592]",
+ "launch_over": 75,
+ "capture_over": 612,
+ "comb_pins": 0,
+ "comb_first": [],
+ "pass": false,
+ "fail_why": "launch 262.87336 > 220 (75 pins); capture 222.06754 > 190 (612 pins)",
+ "job": "hgi_sm_xl2_bfq-cl2dh-4ccbe3242",
+ "record_commit": "1a54db273",
+ "main": "50326c046",
+ "closed": "TT +97.07 / FF +7.59 / DRC 0",
+ "tt_boundary_insertion": {
+  "n": 1308,
+  "mean": 353.2,
+  "min": 296.1,
+  "max": 391.4
+ },
+ "tt_all_insertion": {
+  "n": 3884,
+  "mean": 328.8,
+  "min": 277.7,
+  "max": 391.4
+ },
+ "audited_by": "Claude H-SM 1315",
+ "tool": "tools/hier_contract/native_pin_audit.py audit_one"
+}
