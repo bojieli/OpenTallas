@@ -1,6 +1,6 @@
 import unittest
 
-from case_reach import branches, multicast_relay_ages, xf
+from case_reach import branches, multicast_relay_ages, typed_clock_pins, xf
 
 
 class BranchReach(unittest.TestCase):
@@ -34,6 +34,13 @@ class BranchReach(unittest.TestCase):
         self.assertEqual(result['rows'][0]['min_relay_cycles'], 0)
         self.assertEqual(result['rows'][0]['max_relay_cycles'], 2)
         self.assertIn('UNPROVEN', result['rows'][0]['compiled_equal_age_calendar'])
+
+    def test_clock_abi_handles_signal_use_and_vector_clocks(self):
+        c = dict(instances={'tile': dict(ports={'clk': dict(bits=1), 'clk_rf': dict(bits=2), 'rst_n': dict(bits=1)})},
+                 clock_resets=[dict(instance='tile', port='clk', bits=1, kind='clock'),
+                               dict(instance='tile', port='clk_rf', bits=2, kind='clock'),
+                               dict(instance='tile', port='rst_n', bits=1, kind='reset')])
+        self.assertEqual(typed_clock_pins(c), {('tile', 'clk'), ('tile', 'clk_rf[0]'), ('tile', 'clk_rf[1]')})
 
 
 if __name__ == '__main__':
