@@ -1,0 +1,84 @@
+{
+ "schema": "opentallas.s81.vm-current-peer-screen-summary.v1",
+ "status": "PLANNING_ONLY_NOT_FIT_OR_NATIVE_PARENT_QUALIFICATION",
+ "primary_planning_outline_um": [
+  5037,
+  4600.8
+ ],
+ "actual_die_generated_outline_um": [
+  5036.664,
+  4600.776
+ ],
+ "outline_binding_open": "N capture row touches planning4600.8; actual smaller outline requires explicit grid/leaf/pin rebind. No inherited fit claim.",
+ "scenarios": {
+  "baseline": {
+   "sha256": "2c26424e8374579912c930aeac2d8f6d49928c1d94cb2d9e1393987ca840367f",
+   "legality": {
+    "spacing": 0,
+    "outside": 0
+   },
+   "cut": {
+    "worst_share": 0.624,
+    "edges_over_060": 23,
+    "leaf_links_over_500um": 107875
+   },
+   "native_parent": false
+  },
+  "hop1": {
+   "sha256": "b273248212b5d1b33dd5b58cd1c960aa144d1f366661dc4004ef87ce1aabdb0d",
+   "legality": {
+    "spacing": 0,
+    "outside": 0
+   },
+   "cut": {
+    "worst_share": 0.628,
+    "edges_over_060": 26,
+    "leaf_links_over_500um": 97587
+   },
+   "native_parent": false
+  },
+  "meta4": {
+   "sha256": "8ae30386e2d3c1b8748b3ee0721ccb28fccb61b71c86381901a2e94683b4cf07",
+   "legality": {
+    "spacing": 0,
+    "outside": 0
+   },
+   "cut": {
+    "worst_share": 0.613,
+    "edges_over_060": 24,
+    "leaf_links_over_500um": 107671
+   },
+   "native_parent": false
+  },
+  "meta4_reach_corrected": {
+   "sha256": "7e9db77118809b9e31f1dd9e77558465d07f8d25fc6e897683da1cc052c12c80",
+   "legality": {
+    "spacing": 0,
+    "outside": 0
+   },
+   "cut": {
+    "worst_share": null,
+    "edges_over_060": null,
+    "leaf_links_over_500um": null
+   },
+   "native_parent": false
+  }
+ },
+ "scope": [
+  "Source-bound current peer faces rather than stale nominalvmc2 clipping.",
+  "All53sources,128SRAMs,3slots and real-clock roots retained.",
+  "No production adoption or accepted performance row.",
+  "Threshold control4r3 is independently nativePASS; standardfield4 route stillholdECO."
+ ],
+ "price_correction": "field4 masters were missing from front class. b7d3e1ad8 corrects this; aeb356c5f fails closed on unobserved paths. Raw baseline/hop1/meta4 before corrected price receipt are historical understated planning numbers.",
+ "metadata_split": "Seven standardfield4 leaves replace each of4failedmeta26 masters;2padded bits per source/bank; +24leaves/+24frontroots,535leaves and169frontroots total. Full combined thresholdcontrol proof in flight.",
+ "source_hashes": {
+  "tools/s81_vm/a2f_hub_faces.py": "9cd602ff2c7faf91bada51a91c9566f0d3d14f09b5ae5263cfdc9ba557d6df52",
+  "tools/s81_vm/a2f_split4_route_plan.py": "282555a929989baf8d50de9f139f6b00de132df2b1022306458059dc6cfb0c71",
+  "tools/s81_vm/a2f_reach_price.py": "ef1a98ec671ca6e2a6da229474e660d87b5b74cf2b73ec33d502df6126dd364d",
+  "tools/s81_vm/area_a2f_split4m_gate.py": "ce99ce3c5fc63ccea04ce429c6d039a34954eb5a948530aed51aaedff6e18f7a",
+  "tools/s81_vm/area_a2f_split4_equiv_gate.py": "30413080d83d13a8c2f5e398b0965031328494e3c4ec152442f57b8cc8d17f45",
+  "tools/s81_vm/area_a2f_split4m_composed.sv": "02f9182a2b5f13f356541023418f615717fba0329799a3c5180d98bd26504f34"
+ },
+ "source_receipt_warning": "meta4.json price ran with pre-field4 classifier; source_tools/a2f_reach_price hash was captured after its import while that source was refreshed. Its cuts are unaffected (computed by a2_route_plan); use only separate corrected reach receipts for price. Original raw evidence preserved."
+}
