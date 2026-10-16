@@ -15,4 +15,6 @@ python3 tools/die_port_bind.py $OUT/die.v --top hbm_v16_die $EXTRA \
   --allow-model ot_hbm3e_phy_rc_e8p5 --allow-model ot_hbm_pll_bb --define OT_SMH_FC_HIER \
   --strap-file $OUT/straps.json --out $OUT/port_bind.json > $OUT/port_bind.log 2>&1
 tail -1 $OUT/port_bind.log
-python3 tools/hbm_die_v15/lint_v16.py $OUT --remote $HOST | tee $OUT/lint_summary.txt
+# Flat whole-die Verilator lint is OFF by default: measured 2026-10-15 22:27 at 364 GB RSS after 10 min on EPYC1 (killed,
+# never admitted via ot-run). Connectivity is the strict port-bind above; per-master elaboration is each owner's bench.
+if [ "${LINT:-0}" = 1 ]; then python3 tools/hbm_die_v15/lint_v16.py $OUT --remote $HOST | tee $OUT/lint_summary.txt; fi
