@@ -349,6 +349,43 @@ module ot_hdc_kv_ingest #(
     wire [31:0] u_kscal = (APIPE != 0) ? ap_kscal : k_scal;
     wire        u_mine  = (APIPE != 0) ? ap_mine  : s_mine;
     wire        ap_go   = (APIPE == 0) || ap_ok || st_mode == M_RAW;
+`ifdef OT_S81_HOST_ADDR_PREFIX
+    // HOST-only structural address carry groups. Each nibble computes a
+    // local sum; three prefix levels compute all carry-ins independently.
+    // Every operation remains unsigned modulo 2^32, with no stage/II change.
+    function automatic [31:0] host_addr_add32_prefix;
+        input [31:0] a,b;
+        reg [39:0] q;
+        reg [7:0] p0,g0,p1,g1,p2,g2,g3;
+        integer i;
+        begin
+            for(i=0;i<8;i=i+1)begin
+                q[5*i+:5]={1'b0,a[4*i+:4]}+{1'b0,b[4*i+:4]};
+                p0[i]=&(a[4*i+:4]^b[4*i+:4]);g0[i]=q[5*i+4];
+            end
+            for(i=0;i<8;i=i+1)begin
+                if(i>=1)begin p1[i]=p0[i]&p0[i-1];g1[i]=g0[i]|(p0[i]&g0[i-1]);end
+                else begin p1[i]=p0[i];g1[i]=g0[i];end
+            end
+            for(i=0;i<8;i=i+1)begin
+                if(i>=2)begin p2[i]=p1[i]&p1[i-2];g2[i]=g1[i]|(p1[i]&g1[i-2]);end
+                else begin p2[i]=p1[i];g2[i]=g1[i];end
+            end
+            for(i=0;i<8;i=i+1)begin
+                if(i>=4)g3[i]=g2[i]|(p2[i]&g2[i-4]);else g3[i]=g2[i];
+            end
+            host_addr_add32_prefix[3:0]=q[3:0];
+            for(i=1;i<8;i=i+1)host_addr_add32_prefix[4*i+:4]=q[5*i+:4]+{3'd0,g3[i-1]};
+        end
+    endfunction
+    wire [AW-1:0] host_rows_addr=(AW<=32)?host_addr_add32_prefix(u_raddr,{27'd0,st_sec}):(u_raddr+st_sec);
+    wire [AW-1:0] host_key_addr=(AW<=32)?host_addr_add32_prefix(u_kcode,{29'd0,st_ph}):(u_kcode+st_ph);
+    wire [AW-1:0] host_scale_addr=(AW<=32)?host_addr_add32_prefix(u_kscal,st_ph==3'd4 ? 32'd1 : 32'd0):(u_kscal+(st_ph==3'd4 ? 1:0));
+`else
+    wire [AW-1:0] host_rows_addr=u_raddr+st_sec;
+    wire [AW-1:0] host_key_addr=u_kcode+st_ph;
+    wire [AW-1:0] host_scale_addr=u_kscal+(st_ph==3'd4 ? 1:0);
+`endif
     // this cycle's stream step
     reg  [5:0]  st_pop;
     reg         st_wv, st_adv;
@@ -365,18 +402,18 @@ module ot_hdc_kv_ingest #(
                 M_ROWS: if (ra_n >= {3'd0, k_take}) begin
                     st_pop = k_take; st_adv = 1'b1; st_wv = u_mine;
                     st_wd = (k_take == 6'd32) ? ra_head : (ra_head & ~({256{1'b1}} << {k_take[4:0], 3'b000}));
-                    st_wa = u_raddr + st_sec;
+                    st_wa = host_rows_addr;
                 end
                 M_IKEY: begin
                     if (st_ph < 3'd2) begin
                         if (ra_n >= 9'd32) begin
-                            st_pop = 6'd32; st_adv = 1'b1; st_wv = u_mine; st_wd = ra_head; st_wa = u_kcode + st_ph;
+                            st_pop = 6'd32; st_adv = 1'b1; st_wv = u_mine; st_wd = ra_head; st_wa = host_key_addr;
                         end
                     end else if (st_ph == 3'd2) begin
                         if (ra_n >= 9'd4) begin st_pop = 6'd4; st_adv = 1'b1; end
                     end else begin
                         st_adv = 1'b1; st_wv = u_mine; st_wd = sc_acc[st_ph[0] ? 0 : 1];
-                        st_wa = u_kscal + (st_ph == 3'd4 ? 1 : 0);
+                        st_wa = host_scale_addr;
                     end
                 end
                 default: ;
@@ -631,10 +668,17 @@ module ot_hdc_kv_ingest #(
     reg         ap1_mine;
     wire [31:0] a2_sb    = ap1_gs >> 6;
     wire [5:0]  a2_q     = ap1_gs[5:0];
+`ifdef OT_S81_HOST_ADDR_PREFIX
+    wire [31:0] a2_blk=host_addr_add32_prefix(host_addr_add32_prefix(ap1_rbase,a2_sb<<11),a2_sb<<7);
+    wire [31:0] a2_raddr=host_addr_add32_prefix(ap1_rbase,ap1_local*ap1_pitch);
+    wire [31:0] a2_kcode=host_addr_add32_prefix(host_addr_add32_prefix(host_addr_add32_prefix(a2_blk,((32'd1+{28'd0,a2_q[5:2]})<<7)),({30'd0,a2_q[1:0]}<<5)),((ap1_row&32'd15)<<1));
+    wire [31:0] a2_kscal=host_addr_add32_prefix(a2_blk,({26'd0,a2_q}<<1));
+`else
     wire [31:0] a2_blk   = ap1_rbase + (a2_sb << 11) + (a2_sb << 7);
     wire [31:0] a2_raddr = ap1_rbase + ap1_local * ap1_pitch;
     wire [31:0] a2_kcode = a2_blk + ((32'd1 + {28'd0, a2_q[5:2]}) << 7) + ({30'd0, a2_q[1:0]} << 5) + ((ap1_row & 32'd15) << 1);
     wire [31:0] a2_kscal = a2_blk + ({26'd0, a2_q} << 1);
+`endif
     // APIPE 3: stage A0 (ap0_*) = the decomposition and descriptor fields; ap1_rbase = base + stack * stride from it
     reg         ap_ok0;
     reg  [31:0] ap0_base, ap0_stride, ap0_local, ap0_gs, ap0_row;
@@ -661,7 +705,12 @@ module ot_hdc_kv_ingest #(
     end
     always @(posedge clk) if (!ap_ok1) begin
         if (APIPE >= 3) begin
-            ap1_rbase <= ap0_base + (ap0_ringz ? ap0_stk * ap0_stride : 32'd0); ap1_local <= ap0_local; ap1_gs <= ap0_gs;
+`ifdef OT_S81_HOST_ADDR_PREFIX
+            ap1_rbase <= host_addr_add32_prefix(ap0_base,ap0_ringz?ap0_stk*ap0_stride:32'd0);
+`else
+            ap1_rbase <= ap0_base + (ap0_ringz ? ap0_stk * ap0_stride : 32'd0);
+`endif
+            ap1_local <= ap0_local; ap1_gs <= ap0_gs;
             ap1_row <= ap0_row; ap1_pitch <= ap0_pitch; ap1_mine <= ap0_mine;
         end else begin
             ap1_rbase <= s_rbase; ap1_local <= s_local; ap1_gs <= s_gs; ap1_row <= st_row; ap1_pitch <= s_pitch; ap1_mine <= s_mine;

@@ -1603,18 +1603,44 @@
   "physical/rom_host_ingest/rtl/dsfd_host.sv": "11da6bdc13e1df14c9eab9e4651d8161ed23ccf5342bff27263f7bcf1778e8ca",
   "rtl/hdc/ingest/ot_rom_host_ingest.sv": "7d6602326b8bddee7054df7fcb720d0406dac1ef6c5939b086546aa1d6222b40",
   "rtl/link/ot_link_afifo.sv": "fd295cdf0e41d47ebd9a231b4ee505bb21da72cae8efd2de35af96d123816a68",
-  "rtl/hdc/ingest/ot_hdc_kv_ingest.sv": "7518d90c50c3689821066dd59a10e9c7d67511129583e225c7bfa05f7b80b38b",
+  "rtl/hdc/ingest/ot_hdc_kv_ingest.sv": "a03f3b3c16fc2cef2a0e60c7bf64aef23bd365c0fc6a05d6c6b4ae6b487add61",
   "rtl/hdc/ingest/ot_hdc_ingest_fp8q.sv": "94e483c574be4ecf58c1d270dc83224a936a6ba11e1122bed967d52219330b32",
   "rtl/dsrom_sys/s81_ingest/dsfd_host_sd_sliced.sv": "f23ad311c9f4ef0f664639dd564eb06f096bf97d0fe0bf6c458bf3a3c1cdb69c",
   "rtl/dsrom_sys/s81_ingest/dsfd_host_c_sliced.sv": "cc55550c22633025e28d086d29ec28b1bcc9ff5f550c96f1784e519808bd3c39"
  },
  "full_HOST_proof": {
-  "record": "results/rtl/s81_host_recovery_1016/ack_pin/record.json",
-  "record_sha256": "953e2c01cfe8bd50dc2f03cc437fc1934a88179852875b143bc580643890d7c5",
-  "positive_emit_calendar": "results/rtl/s81_host_recovery_1016/ack_pin/emit_calendar_exact.tsv",
-  "positive_emit_calendar_sha256": "54dc358cc9bb3ef0736390cb8a419991f1bc7982f451f14fb6cd3edc1a3f8472",
-  "positive_rows": 544,
-  "scope": "Initialization ingress only; normal token schedule/throughput OPEN"
+  "record": "results/rtl/s81_host_recovery_1016/address_prefix/ikey_on/record.json",
+  "record_sha256": "8c0d1fa24f7035f8463327cb6d0fa4b801ac24279a1a809e3b6729b7ead29cad",
+  "source_sha256": {
+   "rtl/dsrom_sys/s81_ingest/dsfd_host_c.sv": "0d3da0d94bda2fb71284cdbaa1bba40d8f55a39c984c94339a9b86b25cf8a65b",
+   "rtl/lib/ot_async_fifo.sv": "22c5e15fc205c1585be1a3cf1cefa58550ddf546e3fe56945ec3282f276948bc",
+   "rtl/lib/ot_reset_sync.sv": "489e493c19aa1260853031fee35c14ea3394ae62ff6853cf7ea407cb8fb78bbd",
+   "rtl/dsrom_sys/s81_ingest/dsfd_host_sd.sv": "42fb60c08775f37b7ca35e90cd15f4a153fc584e11610f144204036a762bece8",
+   "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+   "rtl/dsrom_sys/s81_ingest/dsfd_host_native.sv": "6fbf6750c4d0418f6e9b2fbf430469e7ca9035c6e7a1b5242b2d35b4ffa3c214",
+   "rtl/dsrom_sys/s81_ingest/ot_s81_ingest_visibility_fence.sv": "33806f0009eb7c08ee56309b86aabaf4181478a29193a51474bddaa0ff662c40",
+   "rtl/dsrom_sys/s81_ctrl/ot_s81_secded.sv": "5c0c277ed07a50cd46d0738009187c836d3d4854e0d5b4eb23fb6ec3c7960c5d",
+   "physical/rom_host_ingest/rtl/dsfd_host.sv": "11da6bdc13e1df14c9eab9e4651d8161ed23ccf5342bff27263f7bcf1778e8ca",
+   "rtl/hdc/ingest/ot_rom_host_ingest.sv": "7d6602326b8bddee7054df7fcb720d0406dac1ef6c5939b086546aa1d6222b40",
+   "rtl/link/ot_link_afifo.sv": "fd295cdf0e41d47ebd9a231b4ee505bb21da72cae8efd2de35af96d123816a68",
+   "rtl/hdc/ingest/ot_hdc_kv_ingest.sv": "a03f3b3c16fc2cef2a0e60c7bf64aef23bd365c0fc6a05d6c6b4ae6b487add61",
+   "rtl/hdc/ingest/ot_hdc_ingest_fp8q.sv": "94e483c574be4ecf58c1d270dc83224a936a6ba11e1122bed967d52219330b32",
+   "rtl/dsrom_sys/s81_ingest/dsfd_host_sd_sliced.sv": "f23ad311c9f4ef0f664639dd564eb06f096bf97d0fe0bf6c458bf3a3c1cdb69c",
+   "rtl/dsrom_sys/s81_ingest/dsfd_host_c_sliced.sv": "cc55550c22633025e28d086d29ec28b1bcc9ff5f550c96f1784e519808bd3c39",
+   "tests/s81/tb_host_c_sliced_native.sv": "373e04715aeb95bd640f8122c354cb318c790d57a2ae84e30d559d48cb1dcb24",
+   "tests/s81/tb_host_boot300.sv": "6c566e6b552b3fdbd8a44344e5ccdc976a377750c76a52d9410c6623fee5fe92",
+   "tests/s81/tb_host_ack_pin.sv": "7d76af6875d9fb3a459029601d6baa3ee5ccd24c78ca6929012fbde3b4247c41"
+  },
+  "emit_calendar": "results/rtl/s81_host_recovery_1016/address_prefix/ikey_on/emit_calendar_exact.tsv",
+  "emit_calendar_sha256": "54dc358cc9bb3ef0736390cb8a419991f1bc7982f451f14fb6cd3edc1a3f8472",
+  "completion_calendar": "results/rtl/s81_host_recovery_1016/address_prefix/ikey_on/completion_calendar_exact.tsv",
+  "completion_calendar_sha256": "e8b9807c336b69faf74737070d8ce3f770ae9491f3e097615f6320e938ca9137",
+  "completion_rows": [
+   "35093\t0100090000000220"
+  ],
+  "case": "ikey",
+  "prefix": true,
+  "scope": "Initialization component only;60000 fixed boundary schedule; actual RTL plus declared ACKcapture reference stage"
  },
  "native_output_FIFO_selector": {
   "instance": "ingest.native_ingest.host.u_hi.u_ox",
@@ -1642,5 +1668,67 @@
   "general_completion_latency": "Must include ACKstage1 in fixedschedule; no generalzero-delta inference from existing handshake overlap in IKEY workload",
   "phase_proof": "6source phases,217/218samples each, midtraffic asyncreset including coincidence with writeedge; exact inputcapture/counter assertions",
   "negative": "Earlycount bypassFAIL fullHOST anddirectphasebench"
+ },
+ "native_address_prefix": {
+  "define": "OT_S81_HOST_ADDR_PREFIX",
+  "default": "OFF for other source consumers; explicit new HOST kit/bench selection only",
+  "source": "rtl/hdc/ingest/ot_hdc_kv_ingest.sv",
+  "source_sha256": "a03f3b3c16fc2cef2a0e60c7bf64aef23bd365c0fc6a05d6c6b4ae6b487add61",
+  "function": "host_addr_add32_prefix",
+  "representation": "8nibble local sums,3parallel group-prefix levels, local4bit carry increment; unsignedmodulo2^32",
+  "addresses": "ROWS sector, IKEY code/scale, APIPE3base and APIPE2/3 row/code/scale intermediates",
+  "AW_context": "Selected modulo32 forAW<=32; AW31truncates; AW>32stream uses original wider expression. Macro-off aliases retain originalAW context.",
+  "added_stored_bits": 0,
+  "added_service_edges": 0,
+  "SAT_record": "results/rtl/s81_host_recovery_1016/address_prefix/sat/record.json",
+  "SAT_record_sha256": "68ca7ffbb9515c851878ce00406c124ec2c36522065b4dd6e1ed0c7068d741cb",
+  "formal_scope": "All64inputbits plus actualsource-extracted selected/default stream aliases AW31/32/33/64; wrongcarrySAT modelFAIL",
+  "full_RTL_default_proof": "results/rtl/s81_host_recovery_1016/address_prefix/ikey_off/record.json",
+  "full_RTL_ROWS_proof": "results/rtl/s81_host_recovery_1016/address_prefix/rows_on/record.json",
+  "observed_actual_ROWS_wrongcarry_mutant": "External golden memory FAIL at fixed60000; both old/new RTL shared corrupted function so producercomparison alone could not establish correctness",
+  "mapped_area_and_depth": "PENDING current source synthesis; historicalbb4area/timing cannot transfer"
+ },
+ "ROWS_full_HOST_proof": {
+  "record": "results/rtl/s81_host_recovery_1016/address_prefix/rows_on/record.json",
+  "record_sha256": "f212e1fafc1de7b51b5771fd9ca976c84016395ba1cc7048ebd85362b3279fd4",
+  "source_sha256": {
+   "rtl/dsrom_sys/s81_ingest/dsfd_host_c.sv": "0d3da0d94bda2fb71284cdbaa1bba40d8f55a39c984c94339a9b86b25cf8a65b",
+   "rtl/lib/ot_async_fifo.sv": "22c5e15fc205c1585be1a3cf1cefa58550ddf546e3fe56945ec3282f276948bc",
+   "rtl/lib/ot_reset_sync.sv": "489e493c19aa1260853031fee35c14ea3394ae62ff6853cf7ea407cb8fb78bbd",
+   "rtl/dsrom_sys/s81_ingest/dsfd_host_sd.sv": "42fb60c08775f37b7ca35e90cd15f4a153fc584e11610f144204036a762bece8",
+   "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+   "rtl/dsrom_sys/s81_ingest/dsfd_host_native.sv": "6fbf6750c4d0418f6e9b2fbf430469e7ca9035c6e7a1b5242b2d35b4ffa3c214",
+   "rtl/dsrom_sys/s81_ingest/ot_s81_ingest_visibility_fence.sv": "33806f0009eb7c08ee56309b86aabaf4181478a29193a51474bddaa0ff662c40",
+   "rtl/dsrom_sys/s81_ctrl/ot_s81_secded.sv": "5c0c277ed07a50cd46d0738009187c836d3d4854e0d5b4eb23fb6ec3c7960c5d",
+   "physical/rom_host_ingest/rtl/dsfd_host.sv": "11da6bdc13e1df14c9eab9e4651d8161ed23ccf5342bff27263f7bcf1778e8ca",
+   "rtl/hdc/ingest/ot_rom_host_ingest.sv": "7d6602326b8bddee7054df7fcb720d0406dac1ef6c5939b086546aa1d6222b40",
+   "rtl/link/ot_link_afifo.sv": "fd295cdf0e41d47ebd9a231b4ee505bb21da72cae8efd2de35af96d123816a68",
+   "rtl/hdc/ingest/ot_hdc_kv_ingest.sv": "a03f3b3c16fc2cef2a0e60c7bf64aef23bd365c0fc6a05d6c6b4ae6b487add61",
+   "rtl/hdc/ingest/ot_hdc_ingest_fp8q.sv": "94e483c574be4ecf58c1d270dc83224a936a6ba11e1122bed967d52219330b32",
+   "rtl/dsrom_sys/s81_ingest/dsfd_host_sd_sliced.sv": "f23ad311c9f4ef0f664639dd564eb06f096bf97d0fe0bf6c458bf3a3c1cdb69c",
+   "rtl/dsrom_sys/s81_ingest/dsfd_host_c_sliced.sv": "cc55550c22633025e28d086d29ec28b1bcc9ff5f550c96f1784e519808bd3c39",
+   "tests/s81/tb_host_c_sliced_native.sv": "373e04715aeb95bd640f8122c354cb318c790d57a2ae84e30d559d48cb1dcb24",
+   "tests/s81/tb_host_boot300.sv": "6c566e6b552b3fdbd8a44344e5ccdc976a377750c76a52d9410c6623fee5fe92",
+   "tests/s81/tb_host_ack_pin.sv": "7d76af6875d9fb3a459029601d6baa3ee5ccd24c78ca6929012fbde3b4247c41"
+  },
+  "emit_calendar": "results/rtl/s81_host_recovery_1016/address_prefix/rows_on/emit_calendar_exact.tsv",
+  "emit_calendar_sha256": "0accf6854f66988cc3dc7a20634ab96bf7f253671e681c56a69a6d2d4b9f3a25",
+  "completion_calendar": "results/rtl/s81_host_recovery_1016/address_prefix/rows_on/completion_calendar_exact.tsv",
+  "completion_calendar_sha256": "6578b23cd33c4be3b73dc3ea0d59bcfef371f8e4d5e46e3daf390b99f0276818",
+  "completion_rows": [
+   "9501\t0100070000000090"
+  ],
+  "case": "rows",
+  "prefix": true,
+  "scope": "Initialization component only;60000 fixed boundary schedule; actual RTL plus declared ACKcapture reference stage"
+ },
+ "native_ACK_completion_timeline": {
+  "IKEY_observed_delta": 0,
+  "ROWS_observed_delta": 1,
+  "old_ROWS_edge": 9500,
+  "new_ROWS_edge": 9501,
+  "reference": "Actual legacy HOST plus the explicitly declared1edge inputACKregister; original baseline separatelypreserved",
+  "compiler_counter_edge_delta": 1,
+  "normal_token_schedule": "OPEN"
  }
 }

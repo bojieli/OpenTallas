@@ -1,0 +1,16 @@
+GATE INFO pin_regs: pin registers opted out: Actual declared-domain input capture/launch RTL owns every boundary; no generic single-clock wrapper across related roots. Pure-clock source lockups are inside the receiving hardened leaf, not parent result producers.
+GATE INFO layer: tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)
+GATE INFO oflop: E face 10.5 pins/um (f_collective, f_sseq_st, f_wfc_ft): recipe-2 hold stages take 3.52 um behind the face, the pin flops need gap 4.5 um and 6 columns (derived in the flow)
+GATE INFO oflop: W face 10.5 pins/um (native_host_word, native_oa, native_marker): recipe-2 hold stages take 3.52 um behind the face, the pin flops need gap 4.5 um and 6 columns (derived in the flow)
+GATE INFO remote: ot-run selected ot-agidock128 for 12 GB memory; disk pick 22 GiB, runtime 22 GiB includes 20 GiB work reserve plus snapshot staging
+GATE INFO source_binding: immutable shipping manifest /tmp/ref_gate_s81_host_ectl_local_20261016-035227.source_snapshot.json
+GATE INFO remote: remote log /tmp/ref_gate_s81_host_ectl_local_20261016-035227.log; host dir ot-agidock128:/srv/opentallas-scratch/claude/ref_gate/s81_host_ectl_local-20261016-035227
+GATE INFO remote: synth + floorplan + PDN OK on ot-agidock128 in 52 s (gate total 67 s)
+GATE WARN util: synthesized std area 1359 um2 + macros 0 in core 3648: util 37%  -> FIX: set "std_area_um2": 1359 and drop 'outline' (gen sizes to util 0.52)
+GATE INFO textbook: WARN dsfd_host_c_ectl cells 9,330 flops 2,540 depth 391.7 ps util 0.3752 reach 37.7 um (0.3 s)
+GATE WARN textbook.high_fanout: reset sd_control.rs.reset_pipe[1]$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R): 600 loads (9 flops, e.g. boot_bad_sync[0]$_DFF_PN0_) > 256: register it and replicate per region (rtl/lib/ot_rst_relay.sv: one relay copy per region)  -> FIX: no reset on datapath registers; replicate enables / selects / pointer bits per region (<= ~256 loads)
+GATE WARN textbook.util_channel: utilisation 37.5% outside 45%-65% (std 1369 + macro 0 um2 in 3648 um2): shrink the outline (long wires / sparse placement)  -> FIX: size the outline to util 0.50-0.55 with >= 20 um macro channels
+GATE FAIL clock_rule: multiple_cts_roots requires actual --cts measurement; actual per-root clock measurement coverage differs from clock_ports -- this gate ran without --cts (declared clock 'multiple_cts_roots' does not waive it)  -> FIX: hardened leaves with their own clock roots (kind cluster: each leaf <= 15,000 sinks, registered seams); a larger root needs `pre_route_gate.py <kit> --remote <host> --cts` evidence committed as <kit>/gate_result.json
+GATE INFO layout_images: LOOK at these before submitting: floorplan /home/ubuntu/wt/selempq-pq-2210/physical/ref_tile/s81_host_ectl_local/gate_layout/floorplan.png
+PRE_ROUTE_GATE: FAIL (1 fail, 3 warn)
+GATE: s81_host_ectl_local/gate_result.json written (exact staged source binding; commit it with the kit)

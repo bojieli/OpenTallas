@@ -1,0 +1,19 @@
+{
+ "original_HOST_source": "rtl/dsrom_sys/s81_ingest/dsfd_host_c.sv",
+ "original_HOST_source_sha256": "0d3da0d94bda2fb71284cdbaa1bba40d8f55a39c984c94339a9b86b25cf8a65b",
+ "original_component_modified": false,
+ "diagnostic_scope": "Completion comparison disabled solely to observe old/new edges; payload calendar/numerical and count checks remain. Not an unchanged-full-calendar pass.",
+ "old_completion_edge": 9500,
+ "new_ACKstage_completion_edge": 9501,
+ "edge_delta": 1,
+ "fixed_final_verification_edge": 60000,
+ "input_packets": 293,
+ "sectors": 144,
+ "native_completions": 1,
+ "calendar_encoding": "original raw historical escaped-tab file preserved byte-for-byte; current proof TSV uses ASCII9",
+ "files_sha256": {
+  "original_emit_calendar_raw.tsv": "0accf6854f66988cc3dc7a20634ab96bf7f253671e681c56a69a6d2d4b9f3a25",
+  "diagnostic_tb.sv": "34e2e5afe17453a2ba48cc40f0701311f27bafdd8304562fdc474a6c6b1659d9",
+  "actual_old_new_completion.log": "0dbad8f7fd18f59eb8276a8a8cb4b62a57824370ef418f7420db42db41d10f43"
+ }
+}

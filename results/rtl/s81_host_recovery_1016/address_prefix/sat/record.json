@@ -1,0 +1,26 @@
+{
+ "scope": "All-input unsigned32 modulo equivalence of the exact HOST carry function.",
+ "generator_sha256": "d89756f26a28baf98b728434e18013ad2a1398d83f6a8473db2f2bc0656dcad2",
+ "yosys_version": "Yosys 0.9 (git sha1 1979e0b)",
+ "source": "rtl/hdc/ingest/ot_hdc_kv_ingest.sv",
+ "source_sha256": "a03f3b3c16fc2cef2a0e60c7bf64aef23bd365c0fc6a05d6c6b4ae6b487add61",
+ "function_sha256": "ed6d42402327e6a25562057dbd3f5d5467d081dc4f1450d14ade024da27489b4",
+ "selected_define": "OT_S81_HOST_ADDR_PREFIX",
+ "default": "off; other vehicles/closed views unchanged",
+ "width_semantics": "unsigned32 modulo2^32, AW31 truncates, AW>32 stream expressions retain original wider evaluation",
+ "added_FF": 0,
+ "added_cycles": 0,
+ "cases": [
+  {
+   "case": "exact",
+   "exit": 0,
+   "log": "/tmp/codex-host-0253/prefix_sat_final/exact.log"
+  },
+  {
+   "case": "wrong_carry",
+   "exit": 1,
+   "log": "/tmp/codex-host-0253/prefix_sat_final/wrong_carry.log"
+  }
+ ],
+ "physical_qualification": "OPEN: actual mapped depth/area/route required"
+}

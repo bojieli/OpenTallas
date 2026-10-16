@@ -1,0 +1,52 @@
+{
+ "schema": "opentallas.s81.host_native_sizing.v1",
+ "source_commit": "bb4ea307a",
+ "qualification": "Historical preRCOPY/preACK/prePREFIX source SYNTH+FLOORPLAN only; both gateFAIL noCTS; no source transfer",
+ "source_sha256": {
+  "rtl/hdc/ingest/ot_rom_host_ingest.sv": "b7f28f505df5f0ad1cc472a6d181b81e5e554f8953e77f32ed1873d137860931",
+  "rtl/dsrom_sys/s81_ingest/dsfd_host_c_sliced.sv": "ad1727dee56f745d677bb94c302ee2296e9221f57b5be145bcf11efa1e4d1725"
+ },
+ "native_STD_um2": 14527.92024,
+ "ECTL_STD_um2": 1358.7102,
+ "native_roots": {
+  "ck_core": 10096,
+  "ck_host": 9351,
+  "ck_write": 745,
+  "ck_launch": 516
+ },
+ "primary_TT_path": {
+  "source": "native_ingest.host.u_hi.u_eng.st_sec[0]",
+  "target": "native_ingest.host.u_hi.u_ox.mem[13][287]/D",
+  "arrival_ps": 902.34,
+  "required_ps": 691.92,
+  "slack_ps": -210.42,
+  "stage": "2_floorplan, idealclock0, TTlibraries via WC override",
+  "cause": "32bit ripple address sum then FIFO write mux, not wire/clock insertion"
+ },
+ "other_cause_paths": [
+  "host_ack_n[0] -> commits[26] -60.81ps (sourceACKstage successor addresses boundary)",
+  "landed_debug[1] -> snap_lt_q -7.22ps (32bit comparator internal, separate actualtiming remains OPEN)"
+ ],
+ "actual_image_inspection": {
+  "paths": [
+   "results/rtl/s81_host_recovery_1016/native_sizing_bb4/ectl_floorplan.png",
+   "results/rtl/s81_host_recovery_1016/native_sizing_bb4/native_floorplan.png"
+  ],
+  "native": "R0399.6x77.76;1034pinrectangles/148M5PGstripes, no macros. E515bank aligned with ECTLW; Npairedclockentrycenter, Epairedentries. Empty preplace interior not density/CTS proof.",
+  "ectl": "R054x77.76;1388pinrectangles/20M5PGstripes, E/W515banks; sparse preplace, no macro.",
+  "direct_same_layer_signal_PG_overlap_count": 0,
+  "actual_clock_escape_parent_PG_cut_admission": "OPEN"
+ },
+ "files_sha256": {
+  "native_sizing_root_census.json": "110ecfff056d4c3a8319d1da08b68ec85cf565418190ee8cfe7f42618437623b",
+  "native_floorplan.png": "250af983000f51c7eb81956191793e48628fe345bd3e79b91fb6854d9f2c7013",
+  "ectl_floorplan.png": "d1fd6bc915b21c5494abb6a01bdd41342d7b3cc29c226cb9d4a2a2d0117f4bec",
+  "native_gate.log": "7c974b414e5f5b8da72b26b889b3b59d35eae9dd7752fcdbfb2475f91888712e",
+  "native_floorplan.json": "0aa8b3b03a56ae1b583c922af9356557dacc7ccbb73f815bfdce48c57748be79",
+  "ectl_gate_excerpt.json": "dca0b2c3548cb957bda6cf07df50799a9de952a234c53f57d21965cc5cb659a1",
+  "ectl_floorplan.json": "49d853c712e337b12cd1f2e8201cddc0a6232d451f2060c98cce296fe2910fbb",
+  "native_sizing_floorplan_final.rpt": "0693d3c595297ac9b1d3aa8ff27fed105437c3317e18015f8d2b9bbbdc11d957",
+  "ectl_gate.log": "94d22b7db22075db09d6f7a7a9852a70c9789eef0ea01a3100085bf9ab6d7510",
+  "native_gate_excerpt.json": "6c07ad2e342497ab03da4c8f5e3a924f6159e4c112c5005eee1e7a27e764582c"
+ }
+}
