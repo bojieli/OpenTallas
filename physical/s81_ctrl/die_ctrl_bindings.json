@@ -9,7 +9,9 @@
   "dsfd_stage_seq_c",
   "dsfd_stage_seq_c8",
   "dsfd_stage_seq_static_c",
-  "dsfd_stage_seq_static_c8"
+  "dsfd_stage_seq_static_c8",
+  "dsfd_stage_seq_static_c9",
+  "dsfd_stage_seq_static_c10"
  ],
  "engines": {
   "fld": {
@@ -73,9 +75,10 @@
   },
   "eng": {
    "masters": [
-    "dsfd_engram_c"
+    "dsfd_engram_c",
+    "dsfd_engram_mix4_c"
    ],
-   "note": "s81-svceng-1011 dsfd_engram_c (layer1e eng_SE); forwarded ctrl lanes. layer1 (non-home) dies have no eng slab"
+   "note": "s81-svceng-1011 dsfd_engram_c (layer1e eng_SE); forwarded ctrl lanes. layer1 (non-home) dies have no eng slab; S-DIE-NETLIST 2026-10-16: dsfd_engram_mix4_c (+DSFD_ENGRAM_STATIC_ISSUE, its ot_s81_slab_ep c_cmd/c_done/c_st) is engine 10 of a layer1 die that carries the MIX4 slot (generator --mix4-bind, sequencer dsfd_stage_seq_static_c10); a die without Engram lookup issues MIX descriptors only (arg[23] = 0: no dispatcher)"
   },
   "spare": {
    "masters": [],
@@ -87,6 +90,13 @@
    ],
    "port": 12,
    "note": "VM sequencer engine 12 of the STATIC issuer (owner 2026-10-14 18:59: no credits/backpressure): c_cmd 85 / c_done 9 (exact compiled done edge, tag {slot,row7}) / c_st 2 {available,fault} on stream cks/rss. RTL + exact bench owned by the VM stream; die port-bind mandatory."
+  },
+  "pq": {
+   "masters": [
+    "dsfd_sp_pq_produced"
+   ],
+   "port": 13,
+   "note": "S-DIE-NETLIST 2026-10-16 (S-ELEM-PQ main 59014b2c2, tools/s81_static_control/pq_producer_physical_request.json): PQ = engine 13 of dsfd_stage_seq_static_c9 / c10; dsfd_sp_pq_produced (ot_s81_pq_command_endpoint: c_cmd 85 / c_done 9 / c_st 2) produces the PQ issuer f_iss on the die; generator --pq-producer"
   }
  },
  "role_absent": {
@@ -162,5 +172,12 @@
     "note": "cfg ROM spare columns rd_out[71:48]: the 48-b cfg word uses columns 0..47 (tools/dsrom_s81_fulldie.py unbound_functional_pins / UNUSED_BY_DESIGN note; ROM ECC retired by the 2026-10-02 ROM reliability policy)"
    }
   }
+ },
+ "role_bound": {
+  "rule": "S-DIE-NETLIST 2026-10-16: engines a die kind's HARDWARE binds although the reference stage programs (results/rtl/s81_ctrl_20261008/programs, 10-08: before the PQ producer and MIX4) route no op to them; the gate checks their c/d/s binding exactly like a used engine and does not require them role-absent",
+  "layer1": [
+   "eng",
+   "pq"
+  ]
  }
 }

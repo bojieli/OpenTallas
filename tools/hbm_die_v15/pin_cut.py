@@ -8,7 +8,7 @@ import json,sys,math,collections
 import numpy as np
 from pathlib import Path
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]));import hbm_globalfp as F
-def run(pins, P, lanes=None, step=100.0, win=1000.0, detail_line=None):
+def run(pins, P, lanes=None, step=100.0, win=1000.0, detail_line=None, full=False):
     W,H=pins['die_outline_um']
     nx,ny=int(W//step)+1,int(H//step)+1
     V=np.zeros((nx,ny)); Hh=np.zeros((ny,nx))   # V[i,j]: bits crossing vertical line x=i*step within y-bin j
@@ -73,6 +73,9 @@ def run(pins, P, lanes=None, step=100.0, win=1000.0, detail_line=None):
              worst_h=dict(ratio=round(float(RH[ih]),3),y=ih[0]*step,x=[ih[1]*step,ih[1]*step+win]),
              lines_over_060=int((RV.max(1)>0.6).sum()+(RH.max(1)>0.6).sum()),
              windows_over_060=int((RV>0.6).sum()+(RH>0.6).sum()))
+    if full:   # H-DIE-V790: every window over 0.60 (axis, line um, window start um, ratio)
+        res['over_060']=[('v',i*step,j*step,round(float(RV[i,j]),3)) for i,j in zip(*np.where(RV>0.6))]+\
+                        [('h',i*step,j*step,round(float(RH[i,j]),3)) for i,j in zip(*np.where(RH>0.6))]
     return res, who
 if __name__=='__main__':
     pins=json.load(open(sys.argv[1])); P=json.load(open(sys.argv[2]))

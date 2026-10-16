@@ -22,6 +22,12 @@
 //               ingest start (quadrant q expects `count` waves every 4 edges, the first on the edge after the event
 //               edge + 1), gathered-mix window, projection launch, raw pop (calendar_pop), mix-clear, table fetch,
 //               tail launch (unit, position), emit (unit -> result pins of the quadrants in qmask).
+// COLLAR FOLD (H-DIE option A, 0600): the two F20 targets (ot_static_program_target TGT_PIN=1) are inside: programme
+// id = strap tgt, table id = tgt + 1 (die straps 164/165). Table rows carry the F20 row header in [255:224], so a
+// row holds 7 FP32 words [223:0]: set s = rows 4s..4s+3, base i at row i/7 word i%7 (i = 0..23), scale j at row 3
+// word 3+j. Exposes configured (programme target) and folds both target faults into fault.
+// X_WAVE LINK (0600): XW_BEATS=4 -> per quadrant 2,048-b beats (ot_hbm_hc_xw_rx_static, pin flops inside), the
+// reassembled wave is visible on the same edge as the BEATS=1 pin flop (compiler wave-landing constant unchanged).
 // STATIC: no ready, credit, grant or backpressure; every event is a programme time; a wave missing on its due edge, an
 // unsolicited wave, a wrong word index, a residual word with nonzero low half, a pop the core cannot honour, a tail
 // launch with any of its 24 mixes unwritten or an emit before the unit's fixed result edge raises fault.
@@ -32,25 +38,27 @@ module ot_hbm_hc_eng_static #(
     parameter integer K    = 20480,
     parameter [31:0]  NF   = 32'h46a00000,       // binary32(K)
     parameter integer DRLY = 1,                  // relay registers core <-> bank 0 / bank 7
+    parameter integer XW_BEATS = 4,              // x_wave link beats (1 = original 8,192-b form)
     parameter integer MUT  = 0
 )(
     input  wire           clk, rst_n,
-    // programme collar (ot_static_program_target, PCW 10)
-    input  wire           cfg_we,
-    input  wire [9:0]     cfg_addr,
+    // F20 programme bus (folded targets: programme id tgt, table id tgt + 1)
+    input  wire [7:0]     tgt,
+    input  wire           cfg_v,
+    input  wire [7:0]     cfg_target,
+    input  wire [11:0]    cfg_addr,
     input  wire [255:0]   cfg_data,
-    input  wire           start_v,
-    input  wire [9:0]     start_base,
-    input  wire [10:0]    start_limit,
-    input  wire [15:0]    start_loops,
-    // bases/scales table collar (a second ot_static_program_target: its programme-row writes)
-    input  wire           tbl_we,
-    input  wire [9:0]     tbl_addr,
-    input  wire [255:0]   tbl_data,
+    input  wire           desc_v,
+    input  wire [11:0]    desc_base,
+    input  wire [12:0]    desc_limit,
+    input  wire [15:0]    desc_loops,
+    input  wire           launch_v,
+    output wire           configured,
     // quadrant clients hc_<q> (q = 0..3 = SW, SE, NW, NE)
     input  wire [3:0]     x_wave_v,
     input  wire [39:0]    x_wave_word,
-    input  wire [32767:0] x_wave,
+    input  wire [4*8192/XW_BEATS-1:0] x_wave,
+    input  wire [7:0]     x_wave_beat,
     input  wire [3:0]     gathered_mix_v,
     input  wire [19:0]    gathered_mix_row,
     input  wire [11:0]    gathered_mix_pos,
@@ -67,22 +75,42 @@ module ot_hbm_hc_eng_static #(
     initial if (K % (8 * W) != 0 || R > 16 || WPR > 127) $fatal(1, "K must be a multiple of 2,048, <= 32,768");
 
     // ------------------------------------------------------------------ pin registers
-    reg [3:0] xv_q; reg [39:0] xw_q; reg [32767:0] xd_q;
-    reg [3:0] gv_q; reg [19:0] gr_q; reg [11:0] gp_q; reg [127:0] gd_q;
-    reg tbl_we_q; reg [9:0] tbl_addr_q; reg [255:0] tbl_data_q;
-    always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin xv_q <= 0; gv_q <= 0; tbl_we_q <= 0; end
-        else begin xv_q <= x_wave_v; gv_q <= gathered_mix_v; tbl_we_q <= tbl_we; end
-    always @(posedge clk) begin
-        xw_q <= x_wave_word; xd_q <= x_wave; gr_q <= gathered_mix_row; gp_q <= gathered_mix_pos;
-        gd_q <= gathered_mix_data; tbl_addr_q <= tbl_addr; tbl_data_q <= tbl_data;
+    wire [3:0] xv_q; wire [39:0] xw_q; wire [32767:0] xd_q; wire [3:0] rx_fault;
+    genvar gx;
+    for (gx = 0; gx < 4; gx = gx + 1) begin : g_rx
+        ot_hbm_hc_xw_rx_static #(.BEATS(XW_BEATS)) u_rx (.clk(clk), .rst_n(rst_n), .x_v(x_wave_v[gx]),
+            .x_beat(x_wave_beat[gx*2 +: 2]), .x_word(x_wave_word[gx*10 +: 10]),
+            .x_data(x_wave[gx*(8192/XW_BEATS) +: 8192/XW_BEATS]), .wave_v(xv_q[gx]), .wave_word(xw_q[gx*10 +: 10]),
+            .wave(xd_q[gx*8192 +: 8192]), .fault(rx_fault[gx]));
     end
+    reg [3:0] gv_q; reg [19:0] gr_q; reg [11:0] gp_q; reg [127:0] gd_q;
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) gv_q <= 0; else gv_q <= gathered_mix_v;
+    always @(posedge clk) begin
+        gr_q <= gathered_mix_row; gp_q <= gathered_mix_pos; gd_q <= gathered_mix_data;
+    end
+    // ------------------------------------------------------------------ folded F20 targets (pin flops inside)
+    wire cfg_we, start_v, tbl_we_q, ptgt_fault, ttgt_fault, seq_active;
+    wire [9:0] p_addr, start_base, tbl_addr_q; wire [255:0] p_data, tbl_data_q;
+    wire [10:0] start_limit; wire [15:0] start_loops;
+    ot_static_program_target #(.PCW(10), .TGT_PIN(1)) u_ptgt (.clk(clk), .rst_n(rst_n), .tgt(tgt), .cfg_v(cfg_v),
+        .cfg_target(cfg_target), .cfg_addr(cfg_addr), .cfg_data(cfg_data), .desc_v(desc_v), .desc_base(desc_base),
+        .desc_limit(desc_limit), .desc_loops(desc_loops), .launch_v(launch_v), .program_active(seq_active),
+        .program_cfg_we(cfg_we), .program_cfg_addr(p_addr), .program_cfg_data(p_data), .program_start_v(start_v),
+        .program_start_base(start_base), .program_start_limit(start_limit), .program_start_loops(start_loops),
+        .configured(configured), .fault(ptgt_fault));
+    // table target: only its row-write port has a consumer (a table is data; a launch on id tgt + 1 is never issued)
+    ot_static_program_target #(.PCW(10), .TGT_PIN(1)) u_ttgt (.clk(clk), .rst_n(rst_n), .tgt(tgt + 8'd1), .cfg_v(cfg_v),
+        .cfg_target(cfg_target), .cfg_addr(cfg_addr), .cfg_data(cfg_data), .desc_v(desc_v), .desc_base(desc_base),
+        .desc_limit(desc_limit), .desc_loops(desc_loops), .launch_v(launch_v), .program_active(seq_active),
+        .program_cfg_we(tbl_we_q), .program_cfg_addr(tbl_addr_q), .program_cfg_data(tbl_data_q), .program_start_v(),
+        .program_start_base(), .program_start_limit(), .program_start_loops(), .configured(), .fault(ttgt_fault));
 
     // ------------------------------------------------------------------ programme
     localparam integer EW = 124;
-    wire [EW-1:0] ev; wire ev_v; wire [19:0] ev_t; wire seq_active, seq_done, seq_fault;
-    ot_hbm_hc_eng_seq_static #(.W(EW)) u_seq (.clk(clk), .rst_n(rst_n), .cfg_we(cfg_we), .cfg_addr(cfg_addr),
-        .cfg_data(cfg_data), .start_v(start_v), .start_base(start_base), .start_limit(start_limit),
+    wire [EW-1:0] ev; wire ev_v; wire [19:0] ev_t; wire seq_done, seq_fault;
+    ot_hbm_hc_eng_seq_static #(.W(EW)) u_seq (.clk(clk), .rst_n(rst_n), .cfg_we(cfg_we), .cfg_addr(p_addr),
+        .cfg_data(p_data), .start_v(start_v), .start_base(start_base), .start_limit(start_limit),
         .start_loops(start_loops), .event_word(ev), .event_v(ev_v), .t(ev_t), .active(seq_active), .done(seq_done),
         .fault(seq_fault));
     wire        e_ing   = ev_v && ev[20];
@@ -242,7 +270,7 @@ module ot_hbm_hc_eng_static #(
     end
 
     // ------------------------------------------------------------------ bases/scales table
-    reg [2:0] tf_cnt; reg [6:0] tf_set; reg [1:0] tf_row_q; reg tf_rd_q; reg [1023:0] hold; reg tbl_fault;
+    reg [2:0] tf_cnt; reg [6:0] tf_set; reg [1:0] tf_row_q; reg tf_rd_q; reg [895:0] hold; reg tbl_fault;
     wire [255:0] tbl_rd;
     wire tf_rd = tf_cnt != 3'd0;
     wire [1:0] tf_row = 2'(4 - tf_cnt);
@@ -258,7 +286,9 @@ module ot_hbm_hc_eng_static #(
             if (tbl_we_q && seq_active) tbl_fault <= 1'b1;
         end
     end
-    always @(posedge clk) if (tf_rd_q) hold[tf_row_q*256 +: 256] <= tbl_rd;
+    always @(posedge clk) if (tf_rd_q) hold[tf_row_q*224 +: 224] <= tbl_rd[223:0];   // row payload (F20 header off)
+    // set layout: base i = row i/7 word i%7 = hold word i (i < 24); scale j = row 3 word 3 + j = hold word 24 + j
+    wire [767:0] t_bases = hold[767:0]; wire [95:0] t_scales = hold[863:768];
 
     // ------------------------------------------------------------------ tail units
     wire [1:0] tv, tfl; wire [1535:0] tres; reg [2:0] tpos [0:1]; reg [1:0] tready; reg tail_fault;
@@ -266,7 +296,7 @@ module ot_hbm_hc_eng_static #(
     for (gu = 0; gu < 2; gu = gu + 1) begin : g_tail
         wire go = e_tl && e_tunit == gu;
         ot_hbm_hc_tail_unit_static #(.MUT_PRE((MUT == 2 && gu == 0) ? 1 : 0)) u_t (.clk(clk), .rst_n(rst_n),
-            .launch(go), .mixes(mixes[e_tpos*768 +: 768]), .bases(hold[767:0]), .scales(hold[863:768]),
+            .launch(go), .mixes(mixes[e_tpos*768 +: 768]), .bases(t_bases), .scales(t_scales),
             .result_v(tv[gu]), .result(tres[gu*768 +: 768]), .fault(tfl[gu]));
     end
     always @(posedge clk or negedge rst_n) begin
@@ -295,7 +325,8 @@ module ot_hbm_hc_eng_static #(
         if (!rst_n) begin fault <= 0; program_active <= 0; program_done <= 0; end
         else begin
             program_active <= seq_active; program_done <= seq_done;
-            if (seq_fault || ing_fault || core_fault || mix_fault || tbl_fault || tail_fault || (|tfl)) fault <= 1'b1;
+            if (seq_fault || ing_fault || core_fault || mix_fault || tbl_fault || tail_fault || (|tfl) || (|rx_fault) ||
+                ptgt_fault || ttgt_fault) fault <= 1'b1;
         end
     end
 endmodule
