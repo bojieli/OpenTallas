@@ -31,8 +31,20 @@ DIM = T.DIM
 W, H = T.W, T.H
 Y_CH0, Y_XS0 = T.Y_CH0, T.Y_XS0
 CH_X = 380.16                    # E-margin station column (x 362.88-397.44 beside the leaves)
-NAME = "smh_tile_rp1"
+NAME = f"smh_tile_{T.VARIANT}"
 EG = [(k, inst, x, y, o) for k, inst, x, y, w, h, o in T.children()]
+# rp2: leaf 0 moves up by DY0; channel stations re-placed around the stacked landings (rp1 coordinate -> rp2)
+CHAN_RP2 = {(200.0, 600.0): (150.0, 670.0), (200.0, 520.0): (150.0, 560.0), (220, 700): (200, 780), (220, 680): (200, 760),
+            (100, 640): (100, 700), (215, 640): (215, 700), (220, 560): (220, 620), (200, 690): (120, 740)}
+
+
+def Y(x, y):
+    """rp1 station (x, y) -> this variant"""
+    if T.VARIANT == "rp1":
+        return x, y
+    if (x, y) in CHAN_RP2:
+        return CHAN_RP2[(x, y)]
+    return x, (round(y + T.DY0, 3) if y >= 734.4 else y)
 DEFINES = ["OT_SMH_CG_ENREG", "OT_SMH_XLK", "OT_FP_DATA_NORST", "OT_SMH_DRST0", "OT_SMH_RSTRELAY", "OT_SMH_RSTPIN", "OT_SMH_HIER",
            "OT_SMH_PTW_OHDLY", "OT_SMH_PINREG", "OT_SMH_XREL", "OT_SMH_PRODUCTION_SHAPE", "OT_SMH_COMPACT_PT",
            "OT_SMH_GROUP_TRANSPORT", "OT_SMH_WEST_SPLIT", "OT_SMH_TRANSPORT_KEEP"]
@@ -144,7 +156,7 @@ def spec(variant):
             "rst_n = the RSTPIN flop; cgi/cgo = the cg wake register), anchored by io_flop_at_pins.  A wrapper flop "
             "would add +1 cycle per tile hop on the 3,705-bit chain (x8 hops) and ~7.6k sinks (> 15k on one root).")},
         "route": {"pd": 0.5, "threads": 16, "peak_ram_gb": 96, "hold_delay": True},
-        "job": {"owner": "Claude:H-SM-REPACK", "branch": "claude/hbm-sm-repack-1015", "tag": "rp1",
+        "job": {"owner": "Claude:H-SM-REPACK", "branch": "claude/hbm-sm-repack-1015", "tag": T.VARIANT,
                 "structural_change": (
                     "H-SM-REPACK (TILE-FILL 354b5bb2e: hfd_sm frames 362 mm2 at 19.5 % fill): the SM tile re-packed "
                     "into a 388.8-um column.  (1) Leaves re-stacked N-S (xs | bdc+tct | tcl x2; leaf 1 MX about the "
@@ -155,7 +167,7 @@ def spec(variant):
                     "H cut 0.56); (4) no child gap under 20 um (min 21.6), every port registered at its pin by RTL. "
                     "Same RTL cycles (GROUP_TRANSPORT / WEST_SPLIT are the exact-bench-proven group bodies).  Outline "
                     "388.8 x 1,183.68 = 0.460 mm2 (cpt 0.627, r16 0.790): SM frame 9.03 vs 11.32 mm2."),
-                "purpose": ("[H-SM-REPACK rp1] smallest closable SM tile from closed children only (M7 cluster cap, "
+                "purpose": (f"[H-SM-REPACK {T.VARIANT}] " + ("A/B clock-safe twin of rp1: the N/S landings are the CLOSED ot_smh_tr_group_land master too (parent sinks ~10.4k), channel +138 um, tile 397.44 x 1,330.56.  " if T.VARIANT == "rp2" else "") + "smallest closable SM tile from closed children only (M7 cluster cap, "
                             "no new master): ot_hbm_accel_smh_tile_eg with 10 closed leaves + 2 closed beat_e transport "
                             "groups + tile cells; measures whether the re-packed SM frame (3,628.8 x 2,488.32) can be "
                             "built.  production NC8 active8 RMAX4096 TAGW16 native-default lockstep exactness plus "
@@ -322,6 +334,7 @@ def g_stations(variant):
              "}", "set gn 0"]
     tot = 0
     for name, rex, n, x, y, hx, hy in G_ST:
+        x, y = Y(x, y)
         x = station_x(variant, x)
         station_check(variant, name, x, y, hx, hy)
         lines += ["set gl {}",
@@ -351,8 +364,8 @@ def strap_regions(variant):
     # Five physical stages per leaf, kept on the gated cluster clock.
     # leaf 0: N margin -> above bdc0 -> xs0 | bdc0 gap (strap pins on the xs0 N face); leaf 1: N margin -> E margin ->
     # channel -> E margin -> bdc1 | xs1 gap (xs1 MX: strap pins on its S face)
-    points = [[(100,H-12),(60,1150),(120,1150),(190,925),(240,902)],
-              [(300,H-12),(CH_X,1010),(200,690),(CH_X,440),(240,288)]]
+    points = [[(100,1180.32),(60,1150),(120,1150),(190,925),(240,902)],
+              [(300,1180.32),(CH_X,1010),(200,690),(CH_X,440),(240,288)]]
     lines = ["# Generated fixed legal strap-stage stations: no child/clock/pin budget change.",
              "set ::sr_blk [ord::get_db_block]", "set ::sr_dbu [[ord::get_db_tech] getDbUnitsPerMicron]", "set sn 0",
              "proc sr_init {} {",
@@ -395,6 +408,7 @@ def strap_regions(variant):
              "  }; error \"STRAP_REGION register not found\"", "}"]
     for leaf, ps in enumerate(points):
         for stage, (x,y) in enumerate(ps):
+            x, y = Y(x, y)
             x = station_x(variant, x)
             name=f"strap_l{leaf}_s{stage}"
             station_check(variant, name, x, y)
@@ -408,12 +422,13 @@ def strap_regions(variant):
     # el1013-smh-r11: the reset tree's registers (ot_hbm_accel_smh_rst_tree) at fixed stations down the centre channel:
     # pin flop under the rst_n pin, one band station per stage, <= 340 um a hop (strap stations use x 365 at other y)
     # (x, y): pin flop under the rst_n pin, north leaf down the E margin, middle band in the channel, south leaf E margin
-    rst = {"p0": (232, H - 14), "n1": (CH_X, 1100), "n2": (CH_X, 1040), "n3": (CH_X, 980), "f_gn": (CH_X, 960),
+    rst = {"p0": (232, 1178.32), "n1": (CH_X, 1100), "n2": (CH_X, 1040), "n3": (CH_X, 980), "f_gn": (CH_X, 960),
            "f_lhn": (CH_X, 940), "t1": (CH_X, 860), "m2": (CH_X, 760), "m3": (220, 700), "f_gm": (220, 680),
            "f_ptw": (100, 640), "f_pte": (215, 640), "t2": (220, 560), "s3": (CH_X, 400), "f_gs": (CH_X, 360),
            "f_lhs": (CH_X, 340)}
     lines += ["set rn 0"]
     for reg, (x, y) in rst.items():
+        x, y = Y(x, y)
         x = station_x(variant, x)
         name = f"rst_{reg}"
         station_check(variant, name, x, y)
