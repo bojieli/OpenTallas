@@ -34,7 +34,7 @@ module ot_hgi_dma_back_static_vp4_banks #(
 );
     // Wires-only physical parent: nine compensated related clock entries.
     // Banks use identical source and parameters; address constants are resolved in controller registers.
-    wire [7:0] rr_valid_i,bank_read_en,bank_write_en,bank_output_en;
+    wire [7:0] rr_valid_i,bank_read_en,bank_output_en;
     wire [6:0] bank_read_slot,bank_write_slot;
     wire [255:0] bank_read_addr;
     ot_hgi_dma_back_static_vp4_controller #(.STK(STK),.QID(QID),.STACK_BYTES(STACK_BYTES),.MUT(MUT)) u_control(
@@ -67,7 +67,6 @@ module ot_hgi_dma_back_static_vp4_banks #(
         .bank_read_en(bank_read_en),
         .bank_read_slot(bank_read_slot),
         .bank_write_slot(bank_write_slot),
-        .bank_write_en(bank_write_en),
         .bank_output_en(bank_output_en),
         .bank_read_addr(bank_read_addr));
     for(genvar b=0;b<8;b=b+1)begin:L
@@ -75,7 +74,7 @@ module ot_hgi_dma_back_static_vp4_banks #(
         ot_hgi_dma_back_landing_bank u_bank(
             .clk(clk_bank[b]),.rst_n(rst_n),
             .read_en(bank_read_en[b]),.read_slot(bank_read_slot),
-            .write_en(bank_write_en[b]),.write_slot(bank_write_slot),.rr_data(rr[b*257+:256]),
+            .write_en(rr_valid_i[b]),.write_slot(bank_write_slot),.rr_data(rr[b*257+:256]),
             .read_addr(bank_read_addr[b*32+:32]),.output_en(bank_output_en[b]),.wd(wd[b*289+:289]));
     end
 endmodule
@@ -104,10 +103,26 @@ module ot_hgi_dma_back_static_vp4_controller #(
     input wire wb_ready,
     output reg [7:0] bank_read_en,
     output wire [6:0] bank_read_slot,bank_write_slot,
-    output wire [7:0] bank_write_en,bank_output_en,
+    output wire [7:0] bank_output_en,
     output reg [255:0] bank_read_addr,
     input wire [11:0] wa
 );
+    // Reset is exceptional initialization: async assertion, two fixed release
+    // edges, then normal compiler-scheduled commands. Only this two-flop leaf
+    // touches the external reset pin; no normal command or data cycle is added.
+    (* async_reg = "true" *) reg reset_meta,reset_ready;
+    always @(posedge clk or negedge rst_n)
+        if(!rst_n)begin reset_meta<=0;reset_ready<=0;end
+        else begin reset_meta<=1;reset_ready<=reset_meta;end
+    wire local_rst_n=reset_ready;
+    // A response-valid pin capture already supplies the landing write enables.
+    // Compare its captured value with the equally delayed expected mask; only
+    // malformed response fault reporting gains one edge, never execution stalls.
+    reg [7:0] expect_response_q;
+    reg response_check_q;
+    always @(posedge clk or negedge local_rst_n)
+        if(!local_rst_n)begin expect_response_q<=0;response_check_q<=0;end
+        else begin expect_response_q<=expect_mask[7];response_check_q<=1;end
     // Pin captures. Normal execution advances the absolute input cycle once per
     // related clock edge; this is checked, never used to reschedule execution.
     function automatic [31:0] inc32(input [31:0] x);
@@ -118,11 +133,11 @@ module ot_hgi_dma_back_static_vp4_controller #(
     wire [31:0] cycle=inc32(cycle_q);
     reg cycle_valid_q,wa_valid_q;reg [11:0] wa_q;
     always @(posedge clk)cycle_q<=cycle_in;
-    always @(posedge clk or negedge rst_n)
-        if(!rst_n)begin cycle_valid_q<=0;wa_valid_q<=0;wa_q<=0;end
+    always @(posedge clk or negedge local_rst_n)
+        if(!local_rst_n)begin cycle_valid_q<=0;wa_valid_q<=0;wa_q<=0;end
         else begin cycle_valid_q<=1;wa_valid_q<=1;wa_q<=wa;end
 `ifndef SYNTHESIS
-    always @(posedge clk)if(rst_n&&cycle_valid_q&&cycle_in!==cycle)
+    always @(posedge clk)if(local_rst_n&&cycle_valid_q&&cycle_in!==cycle)
         $fatal(1,"DMA absolute cycle did not advance by one");
 `endif
     // ---- descriptor pipeline (stage A capture, stage B products + static checks) ----
@@ -137,8 +152,9 @@ module ot_hgi_dma_back_static_vp4_controller #(
     reg [14:0] p_nchunk,q_nchunk;reg [7:0] p_rchunk,q_rchunk;
     reg [17:0] p_total,q_total;reg p_static_ok,q_static_ok;
     reg [18:0] b_vbase_end;reg [40:0] b_hbase_end;
-    always @(posedge clk or negedge rst_n)
-        if(!rst_n) begin a_v<=0;p_valid<=0;q_valid<=0;b_v<=0;end
+    reg [31:0] b_ci_m2,b_ci_m3,b_cd_m1,b_cd_m2,b_cd_m3,b_cd_m4,b_end_m2,b_end_m3;
+    always @(posedge clk or negedge local_rst_n)
+        if(!local_rst_n) begin a_v<=0;p_valid<=0;q_valid<=0;b_v<=0;end
         else begin a_v<=mv_v;p_valid<=a_v;q_valid<=p_valid;b_v<=q_valid;end
     always @(posedge clk) begin
         a_mv<=mv;a_ci<=issue_at;a_cd<=drain_at;a_cb<=mv_wb_bank;a_ce<=mv_wb_epoch;
@@ -170,38 +186,44 @@ module ot_hgi_dma_back_static_vp4_controller #(
         b_rchunk<=q_rchunk;b_nchunk<=q_nchunk;b_total<=q_total;b_static_ok<=q_static_ok;
         b_vbase_end<=19'(q_mv[21:5])+19'(q_mv[219:206]);
         b_hbase_end<={4'b0,q_mv[134:98]}+(41'(q_mv[219:206])<<2);
+        b_ci_m2<=q_ci-32'd2;b_ci_m3<=q_ci-32'd3;
+        b_cd_m1<=q_cd-32'd1;b_cd_m2<=q_cd-32'd2;b_cd_m3<=q_cd-32'd3;b_cd_m4<=q_cd-32'd4;
+        b_end_m2<=q_cd+32'(q_nchunk)-32'd1;b_end_m3<=q_cd+32'(q_nchunk)-32'd2;   // end_at = cd+nchunk+1
     end
-    reg [18:0] c_vend;reg [40:0] c_hend;
-    reg [40:0] c_vprod,c_hprod; reg [14:0] c_nchunk; reg [7:0] c_rchunk; reg [17:0] c_total; reg c_static_ok;
-    reg [31:0] next_issue,next_drain,next_drain_pre,fill_at,end_at;
+    // ---- registered schedule matches (H-HARDEN 10-15 r4) ----
+    // Every absolute-cycle event (issue, drain, pre-drain read, fill start, end) is a 1-bit register
+    // computed one edge ahead from the captured cycle and a pre-offset copy of its target, so no
+    // 32-bit cycle increment/compare sits in front of the wide enables. Exact under the input contract
+    // cycle_in(k)=cycle_in(k-1)+1 (checked above); identical issue/drain/fill/end/fault edges.
+    reg [31:0] c_ci_m2,c_cd_m1,c_cd_m2,c_cd_m3,c_end_m2;
+    reg c_ihit,c_dhit,c_phit,c_fhit,c_ehit,c_ilead_ok,c_lag_ok,c_vok,c_hok,c_nchunk_ok;
+    reg [40:0] c_hend_d;
+    reg [18:0] c_vend_d;
+    reg [14:0] c_nchunk; reg [7:0] c_rchunk; reg [17:0] c_total; reg c_static_ok;
+    reg [31:0] ni_m2,nd_m2,nd_m3,fa_m2,ea_m2;
+    reg m_issue,m_drain,m_pre,m_fill,m_end;
     reg [7:0] rq_v;reg [15:0] rq_payload[0:7];
-    reg cv,cb;reg [15:0] ce;reg [226:0] cm;reg [31:0] ci,cd;
-    reg [31:0] first_issue,first_drain;
+    reg cv,cb;reg [15:0] ce;reg [226:0] cm;
     reg [7:0] chunks,issue_index,drain_index,row_chunks,column;
     reg [17:0] row_sectors;
-    reg [19:0] total_sectors,landed;
+    reg [19:0] land_left;
     reg [16:0] row_vm,chunk_vm;
     reg [31:0] vm_stride;
     reg [36:0] row_hbm,chunk_hbm;
     reg [31:0] hbm_stride;
     // The compiler-ordered drain follows exactly the same row/column address recurrence as issue.
-    // Keep its own cursor instead of storing 128 x (32 address + 8 mask) FF bits and reading a wide mux.
-    // This preserves every valid issue/drain/output edge; adds no cycle, SRAM, arbitration or credit.
     reg [36:0] drain_row_hbm,drain_chunk_hbm;
     reg [7:0] drain_column;
     wire [7:0] drain_mask=(drain_column==row_chunks-1 && row_sectors[2:0]!=0)?
                               ((8'd1<<row_sectors[2:0])-1'b1):8'hff;
     reg [7:0] expect_mask[0:7];reg [6:0] expect_tag[0:7];
-    reg [7:0] rr_valid;reg [6:0] rr_tag;
+    reg [7:0] rr_valid;
     reg [7:0] read_mask_q,output_mask_q;
     reg dirty,src_sent;
-    // Counter consumes registered acknowledgements. Its value differs from the
-    // historical counter by exactly wa_q, so equality below preserves normal
-    // quiet/done edges without a runtime stall. Malformed over-ack fault reports
-    // one edge later; descriptor/protocol fault timing is otherwise unchanged.
-    // Carry-save compression plus a five-level prefix adder replaces the
-    // two serial carry chains on descriptor acceptance. Exact modulo-2^32;
-    // no state, latency, throughput, or compiler-calendar change.
+    // wb_ready is pin-captured; a not-ready landing at the first drain is an exceptional fault
+    // reported one edge later (normal execution unchanged).
+    reg wb_ready_q,first_drain_q;
+    // Counter consumes registered acknowledgements (exact modulo-2^32 carry-save + prefix add).
     function automatic [31:0] add_total_sub_ack(
         input [31:0] a, input [31:0] b, input [31:0] subtrahend);
         reg [31:0] inv_c, sum_bits, carry_bits, prop_bits, pref_p, pref_g;
@@ -223,7 +245,6 @@ module ot_hgi_dma_back_static_vp4_controller #(
                 end
                 pref_p=next_p; pref_g=next_g;
             end
-            // ~subtrahend requires a +1 carry-in for subtraction.
             carry_in = ((pref_g | pref_p) << 1) | 32'd1;
             add_total_sub_ack = prop_bits ^ carry_in;
         end
@@ -231,8 +252,10 @@ module ot_hgi_dma_back_static_vp4_controller #(
     reg [31:0] pending_sectors;
     reg [31:0] ack_base_q;
     wire observed_pending_zero=pending_sectors==32'(wa_q);
-    wire issue_slot=busy&&!cv&&issue_index<chunks&&cycle==next_issue;
-    wire drain_slot=busy&&!cv&&drain_index<chunks&&cycle==next_drain;
+    wire issue_slot=busy&&!cv&&issue_index<chunks&&m_issue;
+    wire drain_slot=busy&&!cv&&drain_index<chunks&&m_drain;
+    wire valid_move=c_static_ok&&c_vok&&c_nchunk_ok&&c_hok&&c_ilead_ok&&c_lag_ok;
+    wire reload=cv&&valid_move;
     reg [7:0] issue_mask;
     reg [15:0] issue_sec;
     always @* begin
@@ -243,32 +266,55 @@ module ot_hgi_dma_back_static_vp4_controller #(
         else issue_sec={1'b0,2'(QID),chunk_vm[15:3]};
     end
     assign bank_read_slot=drain_index[6:0];
-    assign bank_write_en=rr_valid;
-    assign bank_write_slot=rr_tag;
+    // Each landing bank pin-captures the raw response valid itself; its slot is this
+    // register one edge ahead, so the bank's write is on the same edge as before.
+    assign bank_write_slot=expect_tag[7];
     assign bank_output_en=output_mask_q;
     for(genvar b=0;b<8;b=b+1)begin:RQ
         assign rq[b*17+:17]={rq_v[b],rq_payload[b]};
     end
     always @(posedge clk) ack_base_q<=pending_sectors-32'(wa_q);
     always @(posedge clk) begin
-        cm<=b_mv;ci<=b_ci;cd<=b_cd;cb<=b_cb;ce<=b_ce;
-        c_vprod<=b_vprod;c_hprod<=b_hprod;c_nchunk<=b_nchunk;c_rchunk<=b_rchunk;c_total<=b_total;
+        cm<=b_mv;cb<=b_cb;ce<=b_ce;
+        c_nchunk<=b_nchunk;c_rchunk<=b_rchunk;c_total<=b_total;
         c_static_ok<=b_static_ok&&b_mv[44:22]==0&&b_vprod[40:17]==0;
-        c_vend<=b_vbase_end+19'(b_vprod[16:0]);
-        c_hend<=b_hbase_end+b_hprod;
-        rr_tag<=expect_tag[7];
+        // acceptance range terms evaluated one edge early from the same operands
+        c_vend_d=b_vbase_end+19'(b_vprod[16:0]);
+        c_hend_d=b_hbase_end+b_hprod;
+        c_vok<=(b_mv[44:5]<65536&&41'(c_vend_d)<=65536)||(b_mv[44:5]>=65536&&41'(c_vend_d)<=98304);
+        c_hok<=c_hend_d[40:37]==0&&c_hend_d[36:35]==2'(STK)&&{1'b0,c_hend_d[34:0]}<=STACK_BYTES;
+        c_nchunk_ok<=b_nchunk>0&&b_nchunk<=128;
+        c_ilead_ok<=$signed(b_ci_m2-cycle_q)>=1;            // ci-cycle(k)>=1, cycle(k)=cycle_q(k-1)+2
+        c_lag_ok<=$signed(b_cd-b_ci)>=10;
+        c_ihit<=cycle_q==b_ci_m3;                            // cycle(k)+1==ci
+        c_dhit<=cycle_q==b_cd_m3;                            // cycle(k)+1==cd
+        c_phit<=cycle_q==b_cd_m4;                            // cycle(k)+2==cd
+        c_fhit<=cycle_q==b_cd_m2;                            // cycle(k)+1==cd+1
+        c_ehit<=cycle_q==b_end_m3;                           // cycle(k)+1==cd+nchunk+1
+        c_ci_m2<=b_ci_m2;c_cd_m1<=b_cd_m1;c_cd_m2<=b_cd_m2;c_cd_m3<=b_cd_m3;c_end_m2<=b_end_m2;
         for(integer b=0;b<8;b=b+1)bank_read_addr[b*32+:32]<=drain_chunk_hbm[36:5]+32'(b)+((MUT==1&&b==1)?32'd1:32'd0);
         for(integer t=1;t<8;t=t+1)expect_tag[t]<=expect_tag[t-1];
         expect_tag[0]<=issue_index[6:0];
         for(integer b=0;b<8;b=b+1) rq_payload[b]<={issue_sec[15:3],3'(b)};
+        wb_ready_q<=wb_ready;
+        // match registers: value of each absolute-cycle comparison at the next edge
+        m_issue<=issue_slot?1'b1:reload?c_ihit:(cycle_q==ni_m2);
+        m_drain<=drain_slot?1'b1:reload?c_dhit:(cycle_q==nd_m2);
+        m_pre<=drain_slot?1'b0:reload?c_phit:(cycle_q==nd_m3);
+        m_fill<=reload?c_fhit:(cycle_q==fa_m2);
+        m_end<=reload?c_ehit:(cycle_q==ea_m2);
+        if(reload)begin ni_m2<=c_ci_m2;nd_m2<=c_cd_m2;nd_m3<=c_cd_m3;fa_m2<=c_cd_m1;ea_m2<=c_end_m2;end
+        else begin
+            if(issue_slot)ni_m2<=inc32(ni_m2);
+            if(drain_slot)begin nd_m2<=inc32(nd_m2);nd_m3<=inc32(nd_m3);end
+        end
     end
-    always @(posedge clk or negedge rst_n) begin:CONTROL
-        integer nsec,rchunk,nchunk,nland;
-        reg valid_move;reg [40:0] vend;reg [40:0] hend;
-        if(!rst_n)begin
+    always @(posedge clk or negedge local_rst_n) begin:CONTROL
+        integer nland;
+        if(!local_rst_n)begin
             cv<=0;busy<=0;quiet<=1;dirty<=0;src_sent<=0;mv_src<=0;mv_done<=0;mv_fault<=0;
             wb_reserve_v<=0;wb_reserve_sectors<=0;wb_reserve_base<=0;wb_fill_start<=0;wb_reserve_bank<=0;wb_fill_bank<=0;wb_reserve_epoch<=0;wb_fill_epoch<=0;bank_read_en<=0;read_mask_q<=0;output_mask_q<=0;rr_valid<=0;
-            issue_index<=0;drain_index<=0;chunks<=0;column<=0;landed<=0;
+            issue_index<=0;drain_index<=0;chunks<=0;column<=0;land_left<=0;first_drain_q<=0;
             pending_sectors<=0;
             for(integer t=0;t<8;t=t+1)expect_mask[t]<=0;
             for(integer b=0;b<8;b=b+1)begin rq_v[b]<=0;end
@@ -282,58 +328,51 @@ module ot_hgi_dma_back_static_vp4_controller #(
                             bank_read_en<=(8'd1<<row_sectors[2:0])-1'b1;
                         else bank_read_en<=8'hff;
                     end
-                end else if(cycle==next_drain_pre)bank_read_en<=drain_mask;
+                end else if(m_pre)bank_read_en<=drain_mask;
             end
-            wb_fill_start<=busy&&cycle==fill_at;
+            wb_fill_start<=busy&&m_fill;
             if(b_v&&(busy||cv))mv_fault<=1;
             for(integer t=1;t<8;t=t+1)expect_mask[t]<=expect_mask[t-1];
             expect_mask[0]<=issue_slot?issue_mask:8'd0;
             for(integer b=0;b<8;b=b+1)begin
                 rq_v[b]<=issue_slot&&issue_mask[b];
                 rr_valid[b]<=rr_valid_i[b];
-                if(rr_valid_i[b]!==expect_mask[7][b])mv_fault<=1;
+                if(response_check_q && rr_valid[b]!==expect_response_q[b])mv_fault<=1;
             end
             read_mask_q<=drain_slot?drain_mask:8'd0;
             output_mask_q<=read_mask_q;
             if(issue_slot)begin
-                issue_index<=issue_index+1'b1;next_issue<=next_issue+1;
+                issue_index<=issue_index+1'b1;
                 if(column==row_chunks-1)begin
                     column<=0;row_vm<=row_vm+17'(vm_stride);chunk_vm<=row_vm+17'(vm_stride);
                     row_hbm<=row_hbm+37'(hbm_stride);chunk_hbm<=row_hbm+37'(hbm_stride);
                 end else begin column<=column+1'b1;chunk_vm<=chunk_vm+17'd64;chunk_hbm<=chunk_hbm+37'd256;end
                 if(MUT==2&&issue_index+1==chunks)begin mv_src<=1;src_sent<=1;end
             end
+            first_drain_q<=drain_slot&&drain_index==0;
+            if(first_drain_q&&!wb_ready_q)mv_fault<=1;
             if(drain_slot)begin
-                drain_index<=drain_index+1'b1;next_drain<=inc32(next_drain);next_drain_pre<=inc32(next_drain_pre);
+                drain_index<=drain_index+1'b1;
                 if(drain_column==row_chunks-1)begin
                     drain_column<=0;drain_row_hbm<=drain_row_hbm+37'(hbm_stride);
                     drain_chunk_hbm<=drain_row_hbm+37'(hbm_stride);
                 end else begin drain_column<=drain_column+1'b1;drain_chunk_hbm<=drain_chunk_hbm+37'd256;end
-                if(drain_index==0&&!wb_ready)mv_fault<=1;
             end
-            if(busy&&cycle==end_at)busy<=0;
+            if(busy&&m_end)busy<=0;
+            // land_left = total_sectors - landed (mod 2^20): last landing when this edge's count equals it
             nland=0;for(integer b=0;b<8;b=b+1)nland=nland+int'(rr_valid[b]);
-            landed<=landed+20'(nland);
-            if(busy&&!src_sent&&nland!=0&&landed+20'(nland)==total_sectors)begin mv_src<=1;src_sent<=1;end
+            land_left<=land_left-20'(nland);
+            if(busy&&!src_sent&&nland!=0&&land_left==20'(nland))begin mv_src<=1;src_sent<=1;end
             pending_sectors<=pending_sectors-32'(wa_q);
             if(wa_valid_q&&32'(wa_q)>ack_base_q)mv_fault<=1;
             quiet<=!busy&&!cv&&!b_v&&observed_pending_zero;
             if(dirty&&!busy&&!cv&&!b_v&&observed_pending_zero)begin mv_done<=1;dirty<=0;end
             if(cv)begin
-                nsec=int'(cm[226:209]);rchunk=int'(c_rchunk);nchunk=int'(c_nchunk);
-                vend=41'(c_vend);
-                hend=c_hend;
-                valid_move=c_static_ok&&
-                    ((cm[44:5]<65536&&vend<=65536)||(cm[44:5]>=65536&&vend<=98304))&&
-                    nchunk>0&&nchunk<=128&&
-                    hend[40:37]==0&&hend[36:35]==2'(STK)&&{1'b0,hend[34:0]}<=STACK_BYTES&&
-                    $signed(ci-cycle)>=1&&$signed(cd-ci)>=10;
                 if(!valid_move)mv_fault<=1;
                 else begin
-                    busy<=1;dirty<=1;src_sent<=0;first_issue<=ci;first_drain<=cd;
-                    next_issue<=ci;next_drain<=cd;next_drain_pre<=cd-1;fill_at<=cd+1;end_at<=cd+32'(nchunk)+1;
-                    issue_index<=0;drain_index<=0;column<=0;chunks<=8'(nchunk);row_chunks<=8'(rchunk);
-                    row_sectors<=18'(nsec);total_sectors<=20'(c_total);landed<=0;
+                    busy<=1;dirty<=1;src_sent<=0;
+                    issue_index<=0;drain_index<=0;column<=0;chunks<=8'(c_nchunk);row_chunks<=c_rchunk;
+                    row_sectors<=18'(cm[226:209]);land_left<=20'(c_total);
                     row_vm<=cm[21:5];chunk_vm<=cm[21:5];vm_stride<=cm[76:45];
                     row_hbm<=cm[134:98];chunk_hbm<=cm[134:98];hbm_stride<=cm[169:138];
                     drain_row_hbm<=cm[134:98];drain_chunk_hbm<=cm[134:98];drain_column<=0;
