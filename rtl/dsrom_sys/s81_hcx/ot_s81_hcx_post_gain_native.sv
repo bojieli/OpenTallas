@@ -5,7 +5,7 @@
 // The mode is sampled on start, held through fixed completion and checked.
 // No availability, completion, credits or returned commits gate issue.
 module ot_s81_hcx_post_gain_native #(
- parameter integer RL=4,WL=4,MUT_POST=0,MUT_GAIN=0,PRE_FORWARD=0,MUT_PRE=0,
+ parameter integer RL=4,WL=4,MUT_POST=0,MUT_GAIN=0,
  parameter IMAGE="hcx_post"
 )(
  input wire clk,rst_n,start,gain_mode,gain_draft,ffn,
@@ -19,16 +19,13 @@ module ot_s81_hcx_post_gain_native #(
  output wire wq_v,output wire [13:0] wq_row,
  output wire [15:0] wq_mask,output wire [511:0] wq_d,
  input wire wq_commit,
- // Native pending-pre layer boundary. Required when PRE_FORWARD=1.
- input wire pre_in_v,input wire [127:0] pre_in_data,
- output wire pre_out_v,output wire [127:0] pre_out_data,
  output wire fault
 );
  reg active_gain,busy,join_fault;
  wire pdone,pfault,gdone,gfault,gbusy;
  wire pce,gce;wire[11:0]pa,ga;
  wire pv,gv,prv;wire[13:0]prow,grow,prrow;
- wire[15:0]pm,gm;wire[511:0]pdat,gdat,forwarded_pdat;wire pre_fault;
+ wire[15:0]pm,gm;wire[511:0]pdat,gdat;
  wire[287:0]pq;
  wire[255:0]rd={pq[216+:64],pq[144+:64],pq[72+:64],pq[0+:64]};
  // Selection follows the commanded owner, never a runtime request arbiter.
@@ -38,18 +35,9 @@ module ot_s81_hcx_post_gain_native #(
  assign wq_v=active_gain?gv:pv;
  assign wq_row=active_gain?grow:prow;
  assign wq_mask=active_gain?gm:pm;
- assign wq_d=active_gain?gdat:forwarded_pdat;
+ assign wq_d=active_gain?gdat:pdat;
  assign done=active_gain?gdone:pdone;
- assign fault=join_fault|pfault|gfault|pre_fault;
- generate if(PRE_FORWARD)begin:g_pre_forward
-  ot_s81_hcx_pre_forward #(.MUT_CURRENT_PRE(MUT_PRE))forwarder(
-   .clk(clk),.rst_n(rst_n),.incoming_v(pre_in_v),.incoming_pre(pre_in_data),
-   .start(start&&!gain_mode),.done(pdone),.coef_base_row(coef_base_row),
-   .i_v(pv),.i_row(prow),.i_mask(pm),.i_data(pdat),.o_data(forwarded_pdat),
-   .outgoing_v(pre_out_v),.outgoing_pre(pre_out_data),.fault(pre_fault));
- end else begin:g_legacy_pre
-  assign forwarded_pdat=pdat;assign pre_out_v=1'b0;assign pre_out_data=128'd0;assign pre_fault=1'b0;
- end endgenerate
+ assign fault=join_fault|pfault|gfault;
  ot_s81_hcx_post_native #(.RL(RL),.WL(WL),.MUT_POST(MUT_POST),.EXTERNAL_ROM(1))post(
   .clk(clk),.rst_n(rst_n),.start(start&&!gain_mode),.ffn(ffn),.raw_base_row(raw_base_row),.coef_base_row(coef_base_row),
   .layer_idx(layer_idx),.norm_eps(norm_eps),.compiled_cycles(compiled_cycles),.done(pdone),
