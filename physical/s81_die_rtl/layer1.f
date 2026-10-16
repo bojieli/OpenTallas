@@ -37,6 +37,12 @@ physical/asap7_memory_macros_v2/ot_rom_4096x274_m8/ot_rom_4096x274_m8.v
 # stage sequencer (--rtl-bind): the STATIC issuer (owner 2026-10-14 18:59: calendar-fixed issue, no credits); layer1
 # die name dsfd_stage_seq_static_c8 = engines 0..7 + VM engine 12 (gate rtl/dsrom_sys/s81_static_control/test/run_static_c8.sh)
 rtl/dsrom_sys/s81_static_control/dsfd_stage_seq_static_c8.sv
+# S-DIE-NETLIST 2026-10-16 (generator --pq-producer / --mix4-bind): the layer1 sequencer with the PQ issuer engine 13 and
+# its boot mailbox (dsfd_stage_seq_static_c9, S-ELEM-PQ main 59014b2c2) and with the Engram MIX4 engine 10 on top
+# (dsfd_stage_seq_static_c10, gate rtl/dsrom_sys/s81_static_control/test/run_static_c10.sh)
+rtl/dsrom_sys/s81_static_control/dsfd_stage_seq_static_c9.sv
+rtl/dsrom_sys/s81_static_control/dsfd_stage_seq_static_c10.sv
+rtl/dsrom_sys/s81_static_control/ot_s81_pq_boot_control.sv
 rtl/dsrom_sys/s81_static_control/dsfd_stage_seq_static_c.sv
 rtl/dsrom_sys/s81_static_control/ot_s81_fixed_issue.sv
 rtl/dsrom_sys/s81_static_control/ot_s81_fixed_mailbox.sv
@@ -49,6 +55,14 @@ rtl/dsrom_sys/s81_static_control/ot_s81_fixed_mailbox.sv
 # select = ot_s81_pq_stream_rom4_sel inside dsfd_sp_pq_n (gates results/rtl/s81_pq_rom4_bind_1015); generator pq_rom4() reads this
 +define+DSFD_PQ_ROM4
 rtl/dsrom_sys/s81_die_bind/dsfd_sp_pq_n.sv
+# S-DIE-NETLIST 2026-10-16 (--pq-producer): the PQ slot master dsfd_sp_pq_produced = the PQ command endpoint (engine 13
+# c_cmd -> the produced issuer f_iss, PHW10) + the calendar ROM reader (2 x ot_rom_4096x72_m8 children) + dsfd_sp_pq_n
+# with the static controller (OT_PQ_CTL_STATIC: calendar_v / calendar_action from the calendar ROM); gates
+# tools/s81/pq_canonical_pins_gate.py --produced / --sequenced (S-ELEM-PQ)
++define+OT_PQ_CTL_STATIC
+rtl/dsrom_sys/s81_die_bind/dsfd_sp_pq_produced.sv
+rtl/dsrom_sys/s81_static_control/ot_s81_pq_command_endpoint.sv
+rtl/dsrom_sys/s81_static_control/ot_s81_pq_calendar_rom.sv
 rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_core_native.sv
 rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_ctl_native.sv
 rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_ctl_fixed_native.sv
@@ -147,6 +161,8 @@ rtl/dsrom_sys/s81_static_collective/s81_static_vm_boundary.sv
 # faults f_lf); gates tools/s81_static_collective/run_slab_gate.sh, rtl/dsrom_sys/s81_ingest/test/run_host_c_static_gate.sh
 rtl/dsrom_sys/s81_static_collective/s81_static_host_queue.sv
 +define+DSFD_HOST_C_STATIC
+# S-DIE-NETLIST 2026-10-16 (--pq-producer): host CSR 0x12 PQ boot words t_pq_pw -> sequencer f_pq_pw; ingest roots ck_ingest[1:0]
++define+DSFD_HOST_PQ_BOOT
 rtl/dsrom_sys/s81_ingest/dsfd_host_c.sv
 
 # S-BIND 2026-10-15 --suhc-static-issue: SU / HC endpoints issue on the compiler command edge (no f_inp die pin)
@@ -167,3 +183,11 @@ rtl/dsrom_sys/s81_die_bind/ot_s81_static_column_ingress.sv
 rtl/dsrom_sys/s81_die_bind/dsfd_bf_front_static.sv
 rtl/v41die/ot_s81_cfg7_seq_bfp.sv
 rtl/dsrom_sys/s81_die_bind/ot_s81_bf_prog_seq.sv
+
+# S-DIE-NETLIST 2026-10-16 (--mix4-bind): Engram MIX4 parent on the VM MIX rows (DSFD_SP_VM_MIX4 above), static issue form
+# (S-ENGRAM main cf84e03b8: no f_inp; the compiled issue edge proves operand availability, late / missing VM rows fault);
+# command face = ot_s81_slab_ep on sequencer engine 10 (dsfd_stage_seq_static_c10)
++define+DSFD_ENGRAM_STATIC_ISSUE
+rtl/dsrom_sys/engram/mix/dsfd_engram_mix4_c.sv
+rtl/dsrom_sys/engram/mix/ot_s81_engram_mix.sv
+rtl/dsrom_sys/s81_ctrl/ot_s81_slab_ep.sv
