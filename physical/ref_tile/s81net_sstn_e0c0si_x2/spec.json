@@ -1,0 +1,136 @@
+{
+ "name": "s81net_sstn_e0c0si_x2",
+ "top": "dsfd_sstn_e0c0si_x2",
+ "kind": "tile",
+ "sources": [
+  "rtl/dsrom_sys/s81_static_net/gen/dsfd_sstn_e0c0si_x2.sv"
+ ],
+ "params": {},
+ "clock_port": "ck",
+ "reset_ports": [
+  "rs"
+ ],
+ "outline": {
+  "w": 172.8,
+  "h": 30.24,
+  "exact": true
+ },
+ "layer_cap": "M5",
+ "pins": {
+  "N": [
+   "c0",
+   "cc",
+   "e0",
+   "si",
+   "x2",
+   "xa",
+   "xb"
+  ],
+  "S": [
+   "cci",
+   "so",
+   "x2i",
+   "xai",
+   "xbi"
+  ],
+  "W": [
+   "ck",
+   "rs"
+  ]
+ },
+ "io_tcl": "physical/s81_die_pins/snet_c26b/dsfd_sstn_e0c0si_x2.tcl",
+ "recipe": 2,
+ "route": {
+  "pd": 0.5,
+  "threads": 4,
+  "peak_ram_gb": 8,
+  "pin_h": "M4",
+  "pin_v": "M3 M5",
+  "m5_pg_pitch": 2.7,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "structural_change": "S-NET dsfd_sstn_e0c0si_x2 (357 die instances): the reset-qualified valid is now a column-reset flop at the pin (--sstn-reg) instead of flop AND rs behind the output pin (logic after the output register); 0 cycles, same ports; full declared x2 payload/control checked at the rising edge, with lane/payload/reset/edge mutants; RTL = the case glue module rendered by the generator (module sha256 81db6a1c4f953d93, glue ab5e41fe55f2cc31); pins at the generator centres (c26b).",
+ "reroute_reason": {
+  "kind": "rtl_change"
+ },
+ "job": {
+  "owner": "Claude:s81-net-fill",
+  "branch": "claude/el1015-snetfill-2215",
+  "tag": "x1",
+  "purpose": "S81 S-NET static-schedule redesign: dsfd_sstn_e0c0si_x2 (357 replicas, hardened once): exact bench + observed failing mutants; recipe 2, M5 cap, generator pins",
+  "views_to": "physical/ref_tile/s81net_sstn_e0c0si_x2/views",
+  "record_to": "results/rtl/ref_tile/s81net_sstn_e0c0si_x2",
+  "extra_paths": [
+   "rtl/dsrom_sys/s81_static_net/gen",
+   "physical/s81_die_pins/snet_c26b/dsfd_sstn_e0c0si_x2.tcl",
+   "rtl/dsrom_sys/s81_static_net",
+   "tools/s81_static_net",
+   "rtl/dsrom_sys/s81_die_bind/dsfd_bf_front_static.sv"
+  ],
+  "benches": [
+   {
+    "name": "sstn_exact",
+    "cmd": "bash tools/s81_static_net/bench_sstn_master.sh pass dsfd_sstn_e0c0si_x2 rtl/dsrom_sys/s81_static_net/gen/dsfd_sstn_e0c0si_x2.sv {RUN}/sstn_pass",
+    "expect": "pass",
+    "pass_regex": "SSTN_REG_GATE PASS",
+    "threads": 1,
+    "peak_ram_gb": 2
+   },
+   {
+    "name": "sstn_noreset_mutant",
+    "cmd": "bash tools/s81_static_net/bench_sstn_master.sh mut_noreset dsfd_sstn_e0c0si_x2 rtl/dsrom_sys/s81_static_net/gen/dsfd_sstn_e0c0si_x2.sv {RUN}/sstn_mut",
+    "expect": "fail",
+    "fail_regex": "GATE MUTANT .*REJECTED",
+    "threads": 1,
+    "peak_ram_gb": 2
+   },
+   {
+    "name": "sstn_mut_x2_drop",
+    "cmd": "bash tools/s81_static_net/bench_sstn_master.sh mut_x2_drop dsfd_sstn_e0c0si_x2 rtl/dsrom_sys/s81_static_net/gen/dsfd_sstn_e0c0si_x2.sv {RUN}/sstn_mut_x2_drop",
+    "expect": "fail",
+    "fail_regex": "GATE MUTANT .*REJECTED",
+    "threads": 1,
+    "peak_ram_gb": 2
+   },
+   {
+    "name": "sstn_mut_x2_payload",
+    "cmd": "bash tools/s81_static_net/bench_sstn_master.sh mut_x2_payload dsfd_sstn_e0c0si_x2 rtl/dsrom_sys/s81_static_net/gen/dsfd_sstn_e0c0si_x2.sv {RUN}/sstn_mut_x2_payload",
+    "expect": "fail",
+    "fail_regex": "GATE MUTANT .*REJECTED",
+    "threads": 1,
+    "peak_ram_gb": 2
+   },
+   {
+    "name": "sstn_mut_x2_reset",
+    "cmd": "bash tools/s81_static_net/bench_sstn_master.sh mut_x2_reset dsfd_sstn_e0c0si_x2 rtl/dsrom_sys/s81_static_net/gen/dsfd_sstn_e0c0si_x2.sv {RUN}/sstn_mut_x2_reset",
+    "expect": "fail",
+    "fail_regex": "GATE MUTANT .*REJECTED",
+    "threads": 1,
+    "peak_ram_gb": 2
+   },
+   {
+    "name": "sstn_mut_x2_edge",
+    "cmd": "bash tools/s81_static_net/bench_sstn_master.sh mut_x2_edge dsfd_sstn_e0c0si_x2 rtl/dsrom_sys/s81_static_net/gen/dsfd_sstn_e0c0si_x2.sv {RUN}/sstn_mut_x2_edge",
+    "expect": "fail",
+    "fail_regex": "GATE MUTANT .*REJECTED",
+    "threads": 1,
+    "peak_ram_gb": 2
+   }
+  ]
+ },
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ }
+}
