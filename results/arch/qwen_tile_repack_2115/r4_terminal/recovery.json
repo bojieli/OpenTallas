@@ -1,0 +1,71 @@
+{
+  "schema": "qwen.held45.r5.recovery.v1",
+  "source_commit": "a7a08ca3c",
+  "predecessor": "e9ce9fd28",
+  "qualification": "NOT QUALIFIED; exact CTS/trial GRT pending",
+  "changes": [
+    "Remove eight narrow TX exclusive-placement fences; keep eight distinct clock roots",
+    "Move RQR1 bottom807.84um onto actual .27um row lattice"
+  ],
+  "same": {
+    "nk": {
+      "home_um": true,
+      "top": true,
+      "clocks": true,
+      "pins": true,
+      "assigned_pin_bytes_identical": true
+    },
+    "nl": {
+      "home_um": true,
+      "top": true,
+      "clocks": true,
+      "pins": true,
+      "assigned_pin_bytes_identical": true
+    }
+  },
+  "terminals": {
+    "nk": {
+      "source": "e9ce9fd28",
+      "gate_log": "q-tile45/gate_nk_e9ce9fd28.log",
+      "result": "FAIL before CTS/GRT",
+      "full_remote_cts_log_gzip": "nk_cts.log.gz",
+      "clock_measured": false,
+      "floorplan_png_inspected": true
+    },
+    "nl": {
+      "source": "e9ce9fd28",
+      "gate_log": "q-tile45/gate_nl_e9ce9fd28.log",
+      "result": "FAIL before CTS/GRT",
+      "full_remote_cts_log_gzip": "nl_cts.log.gz",
+      "clock_measured": false,
+      "floorplan_png_inspected": true
+    }
+  },
+  "rtl_changed_since_predecessor": [],
+  "live_r5": {
+    "nk": {
+      "session": 48572,
+      "unit": "otrun-ubuntu-1617097-144725953",
+      "remote_host": "ot-agidock128",
+      "remote_wrapper_pid": 986339,
+      "remote_dir": "/srv/opentallas-scratch/claude/ref_gate/qfd_tile_nk_rp2_45_a2-20261016-025738",
+      "manifest": "/tmp/ref_gate_qfd_tile_nk_rp2_45_a2_20261016-025738.source_snapshot.json",
+      "archive_sha256": "46848a227fe42390a9385433b3ab718c2dffb03d3f1ebe824c77ffec883cd2f0",
+      "start_commit": "a7a08ca3c14f4ac919fcd291240e74fec5fcdcec",
+      "local_log": "/home/ubuntu/claude-takeover-20261007/q-tile45/gate_nk_a7a08ca3c.log",
+      "status": "RUNNING synthesis observed; do not duplicate"
+    },
+    "nl": {
+      "session": 53950,
+      "unit": "otrun-ubuntu-1617337-144727844",
+      "remote_host": "ot-agidock128",
+      "remote_wrapper_pid": 986397,
+      "remote_dir": "/srv/opentallas-scratch/claude/ref_gate/qfd_tile_nl_rp2_45_a2-20261016-025733",
+      "manifest": "/tmp/ref_gate_qfd_tile_nl_rp2_45_a2_20261016-025733.source_snapshot.json",
+      "archive_sha256": "7b3c628e68b7473987d183adaf2482bc5982c2599fa6cf87f40cbe78707a44b1",
+      "start_commit": "a7a08ca3c14f4ac919fcd291240e74fec5fcdcec",
+      "local_log": "/home/ubuntu/claude-takeover-20261007/q-tile45/gate_nl_a7a08ca3c.log",
+      "status": "RUNNING synthesis observed; do not duplicate"
+    }
+  }
+}
