@@ -1,0 +1,139 @@
+{
+ "name": "hbm_qcore_s_pinrung_r1-s900-r1-COMMIT",
+ "block": "ot_hbm_su_static_qcore",
+ "ref_tile": true,
+ "owner": "Codex:H-QCORE-physical-1016",
+ "purpose": "Actual integrated S=a89a10d1f MUT0,COLLPORT1 qcore. 64 independently clocked flop RF banks (six bounded4word replicas), two real reducer128x256 SRAMs, clk_ctl and clk_red. Full component nativebench and negative controls; no whole-SU claim. Production serial900MHz, phi-R per actual root, no stage changes. Outline chosen from honest synthesis count; all source RF relay outputs/capture grouped N, RR/SFU E, slice W. PHYS_RF_INGRESS1 structural pin-rung relocation keeps normal production cycles exactly S; write-conflict fault status +1 edge. Default0 retains legacy source. Compact276.48square replaces inflated250x2671.92 target based on actual mapped37186.64um2.",
+ "threads": 8,
+ "peak_ram_gb": 32,
+ "source": {
+  "branch": "codex/xc-physical-1016",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "rtl/test/hbm_qcore_physical_1016",
+   "tools/hbm_die_v15"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_hbm_su_static_qcore #(.MUT(0), .COLLPORT(1), .PHYS_RF_INGRESS(1)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_qcore.sv rtl/hbm_accel/generic/adapters/static_su/register_file/ot_hbm_su_static_rf.sv rtl/hbm_accel/generic/adapters/static_su/reduction/ot_hbm_su_reduce_static.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_fastfp.sv physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "qcore_exact",
+    "cmd": "bash tools/hbm_die_v15/run_qcore_native_bench.sh 0 {RUN}/bench/qcore0",
+    "expect": "pass",
+    "pass_regex": "QCORE_NATIVE PASS",
+    "min_count_regex": "QCORE_NATIVE checks=(\\d+)",
+    "threads": 1,
+    "peak_ram_gb": 4
+   },
+   {
+    "name": "qcore_mut16",
+    "cmd": "bash tools/hbm_die_v15/run_qcore_native_bench.sh 16 {RUN}/bench/qcore16",
+    "expect": "fail",
+    "fail_regex": "QCORE_NATIVE FAIL",
+    "threads": 1,
+    "peak_ram_gb": 4
+   },
+   {
+    "name": "qcore_mut32",
+    "cmd": "bash tools/hbm_die_v15/run_qcore_native_bench.sh 32 {RUN}/bench/qcore32",
+    "expect": "fail",
+    "fail_regex": "QCORE_NATIVE FAIL",
+    "threads": 1,
+    "peak_ram_gb": 4
+   },
+   {
+    "name": "qcore_mut64",
+    "cmd": "bash tools/hbm_die_v15/run_qcore_native_bench.sh 64 {RUN}/bench/qcore64",
+    "expect": "fail",
+    "fail_regex": "QCORE_NATIVE FAIL",
+    "threads": 1,
+    "peak_ram_gb": 4
+   },
+   {
+    "name": "qcore_mut128",
+    "cmd": "bash tools/hbm_die_v15/run_qcore_native_bench.sh 128 {RUN}/bench/qcore128",
+    "expect": "fail",
+    "fail_regex": "QCORE_NATIVE FAIL",
+    "threads": 1,
+    "peak_ram_gb": 4
+   },
+   {
+    "name": "qcore_pin_rung_mut256",
+    "cmd": "bash tools/hbm_die_v15/run_qcore_native_bench.sh 256 {RUN}/bench/qcore256",
+    "expect": "fail",
+    "fail_regex": "QCORE_NATIVE FAIL",
+    "threads": 1,
+    "peak_ram_gb": 4
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/hbm_qcore_s_pinrung_r1/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/hbm_qcore_s_pinrung_r1/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 8,
+   "peak_ram_gb": 32
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/hbm_qcore_s_pinrung_r1 --out {RUN}/record/views/ot_hbm_su_static_qcore --macro-view physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2 > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/hbm_qcore_s_pinrung_r1/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/hbm_qcore_s_pinrung_r1/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/hbm_qcore_s_pinrung_r1/hbm_qcore_s_pinrung_r1-s900-r1-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "Relocate existing RF input rung before decode, bypass matching bank rung. Explicit normal edge equivalence vs preserved actual S core; write-conflict sticky status +1 edge only, no normal execution or bandwidth change. Compact276.48square uses actual37186.64um2 S synthesis rather than inflated250x2671.92 reserve."
+}

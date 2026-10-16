@@ -1,0 +1,80 @@
+{
+  "scope": "full qcore component only; no whole-SU, RF36 physical seam or die qualification",
+  "baseline": "a89a10d1f",
+  "baseline_params": {
+    "MUT": 0,
+    "COLLPORT": 1
+  },
+  "candidate_params": {
+    "MUT": 0,
+    "COLLPORT": 1,
+    "PHYS_RF_INGRESS": 1
+  },
+  "baseline_reference_preservation": "exact original S qcore and RF bytes, module/instance names only renamed; independently verified",
+  "baseline_source_sha256": {
+    "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_qcore.sv": "cb2d543c6577e2d7e5eed34d91b9fd685f1be5f2efdf65927186134b4d19ab15",
+    "rtl/hbm_accel/generic/adapters/static_su/register_file/ot_hbm_su_static_rf.sv": "9689c5640d72f23d411171e58b17680d1ee6a59e893271c8b0bf121fc98d2ca9"
+  },
+  "candidate_source_sha256": {
+    "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_qcore.sv": "1194a6944b039c205126cd9354f5ec147ea87b47555be79d50e0f950807e5e9b",
+    "rtl/hbm_accel/generic/adapters/static_su/register_file/ot_hbm_su_static_rf.sv": "5e3b4a744212cb2ab7c1b4f601419e248d22469009d742b7ee05111273db56a0"
+  },
+  "baseline_synthesis": {
+    "cells": 255516,
+    "flops": 38176,
+    "root_count": 66,
+    "rf_root_ff": 565,
+    "ctl_root_ff": 665,
+    "red_root_ff": 1351,
+    "red_macro_clock_pins": 2,
+    "mapped_area_um2": 37186.64,
+    "macros": 2,
+    "macro_master": "ot_sram_1r1w_128x256_m1_r2c2",
+    "macro_area_um2": 7783.15392,
+    "standard_area_um2": 29403.48608
+  },
+  "baseline_cause": {
+    "refusal": "rf_wa input to fault capture is10logic levels (>9)",
+    "rf_bank_write_capture": "rf_wa input to bank wd_pin has8logic levels",
+    "affected_endpoints_over3levels": 2269
+  },
+  "structural_fix": "Relocate existing RF raw command/write/RR capture to real top pins on clk_ctl; bypass corresponding postdecode bank ingress rung. No extra stage in normal production. Option off by default.",
+  "normal_latency": {
+    "rf_write_commit_edges": 1,
+    "rf_qcore_read_output_edges": 3,
+    "qcore_reducer_scalar_edges": 11,
+    "additional_production_edges": 0,
+    "exact_reference_edges": 1108,
+    "checks": 4514,
+    "rf_words": 1024,
+    "scalars": 7,
+    "guards": 5,
+    "timeline_edges": 1164
+  },
+  "exceptional_status": "Write-conflict sticky fault reports exactly one edge later than S; checked explicitly. Drain/reducer faults unchanged. No runtime rescheduling.",
+  "negative_control": {
+    "MUT256": "retains old bank input rung after raw pin capture; FAIL1217errors",
+    "other_mutants": "MUT16 drain source, MUT32 RF tag valid, MUT64 SFU operand, MUT128 RR bank order remain bound to route benches"
+  },
+  "physical_candidate": {
+    "outline_um": [
+      276.48,
+      276.48
+    ],
+    "source_S_macro_plus_std_core_fill": 0.502,
+    "old_reserve_um": [
+      250,
+      2671.92
+    ],
+    "clock_roots": 66,
+    "serial_period_ps": 1111.111,
+    "available_setup_budget_ps": 961.111,
+    "delivery": "phi minus actual per-root insertion",
+    "parent_proposed_SW_home_um": [
+      11528.48,
+      7673.84
+    ],
+    "boundary": "RF tuple N; RR/SFU E; slice W. RF raw capture now clk_ctl, followed by actual clk_ctl-to64RF commit paths at n+1."
+  },
+  "qualification": "UNQUALIFIED until real native physical gate and routed TT/FF/DRC; no inherited hard view"
+}

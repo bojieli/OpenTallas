@@ -1,0 +1,1084 @@
+{
+  "name": "hbm_qcore_s_pinrung_r1",
+  "top": "ot_hbm_su_static_qcore",
+  "kind": "tile",
+  "params": {
+    "MUT": 0,
+    "COLLPORT": 1,
+    "PHYS_RF_INGRESS": 1
+  },
+  "sources": [
+    "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_qcore.sv",
+    "rtl/hbm_accel/generic/adapters/static_su/register_file/ot_hbm_su_static_rf.sv",
+    "rtl/hbm_accel/generic/adapters/static_su/reduction/ot_hbm_su_reduce_static.sv",
+    "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+    "rtl/hdc/ot_hdc_prefix.sv",
+    "rtl/hdc/ot_hdc_fastfp.sv",
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v"
+  ],
+  "clock": "multiple_cts_roots",
+  "clock_ports": [
+    "clk_ctl",
+    "clk_red",
+    "clk_rf[0]",
+    "clk_rf[1]",
+    "clk_rf[2]",
+    "clk_rf[3]",
+    "clk_rf[4]",
+    "clk_rf[5]",
+    "clk_rf[6]",
+    "clk_rf[7]",
+    "clk_rf[8]",
+    "clk_rf[9]",
+    "clk_rf[10]",
+    "clk_rf[11]",
+    "clk_rf[12]",
+    "clk_rf[13]",
+    "clk_rf[14]",
+    "clk_rf[15]",
+    "clk_rf[16]",
+    "clk_rf[17]",
+    "clk_rf[18]",
+    "clk_rf[19]",
+    "clk_rf[20]",
+    "clk_rf[21]",
+    "clk_rf[22]",
+    "clk_rf[23]",
+    "clk_rf[24]",
+    "clk_rf[25]",
+    "clk_rf[26]",
+    "clk_rf[27]",
+    "clk_rf[28]",
+    "clk_rf[29]",
+    "clk_rf[30]",
+    "clk_rf[31]",
+    "clk_rf[32]",
+    "clk_rf[33]",
+    "clk_rf[34]",
+    "clk_rf[35]",
+    "clk_rf[36]",
+    "clk_rf[37]",
+    "clk_rf[38]",
+    "clk_rf[39]",
+    "clk_rf[40]",
+    "clk_rf[41]",
+    "clk_rf[42]",
+    "clk_rf[43]",
+    "clk_rf[44]",
+    "clk_rf[45]",
+    "clk_rf[46]",
+    "clk_rf[47]",
+    "clk_rf[48]",
+    "clk_rf[49]",
+    "clk_rf[50]",
+    "clk_rf[51]",
+    "clk_rf[52]",
+    "clk_rf[53]",
+    "clk_rf[54]",
+    "clk_rf[55]",
+    "clk_rf[56]",
+    "clk_rf[57]",
+    "clk_rf[58]",
+    "clk_rf[59]",
+    "clk_rf[60]",
+    "clk_rf[61]",
+    "clk_rf[62]",
+    "clk_rf[63]"
+  ],
+  "clock_port": "clk_ctl",
+  "reset_ports": [
+    "rst_n"
+  ],
+  "clock_entry_domains": {
+    "core": {
+      "ratio": [
+        1,
+        1
+      ],
+      "ports": [
+        "clk_ctl"
+      ],
+      "inputs": [
+        "rst_n",
+        "rf_rd_cmd",
+        "red_cmd",
+        "rf_drain_cmd",
+        "slice_x",
+        "rf_wv",
+        "rf_wa",
+        "rf_wd",
+        "rr_wv",
+        "rr_wa",
+        "rr_wd",
+        "sfu_x"
+      ],
+      "outputs": [
+        "rf_bword",
+        "rf_bcmd",
+        "rf_dsec",
+        "fault"
+      ]
+    },
+    "red": {
+      "ratio": [
+        1,
+        1
+      ],
+      "ports": [
+        "clk_red"
+      ],
+      "inputs": [],
+      "outputs": [
+        "red_sv",
+        "red_tag",
+        "red_x",
+        "red_rf_v"
+      ]
+    },
+    "rf0": {
+      "ratio": [
+        1,
+        1
+      ],
+      "ports": [
+        "clk_rf[0]"
+      ],
+      "inputs": [],
+      "outputs": []
+    },
+    "rf1": {
+      "ratio": [
+        1,
+        1
+      ],
+      "ports": [
+        "clk_rf[1]"
+      ],
+      "inputs": [],
+      "outputs": []
+    },
+    "rf2": {
+      "ratio": [
+        1,
+        1
+      ],
+      "ports": [
+        "clk_rf[2]"
+      ],
+      "inputs": [],
+      "outputs": []
+    },
+    "rf3": {
+      "ratio": [
+        1,
+        1
+      ],
+      "ports": [
+        "clk_rf[3]"
+      ],
+      "inputs": [],
+      "outputs": []
+    },
+    "rf4": {
+      "ratio": [
+        1,
+        1
+      ],
+      "ports": [
+        "clk_rf[4]"
+      ],
+      "inputs": [],
+      "outputs": []
+    },
+    "rf5": {
+      "ratio": [
+        1,
+        1
+      ],
+      "ports": [
+        "clk_rf[5]"
+      ],
+      "inputs": [],
+      "outputs": []
+    },
+    "rf6": {
+      "ratio": [
+        1,
+        1
+      ],
+      "ports": [
+        "clk_rf[6]"
+      ],
+      "inputs": [],
+      "outputs": []
+    },
+    "rf7": {
+      "ratio": [
+        1,
+        1
+      ],
+      "ports": [
+        "clk_rf[7]"
+      ],
+      "inputs": [],
+      "outputs": []
+    },
+    "rf8": {
+      "ratio": [
+        1,
+        1
+      ],
+      "ports": [
+        "clk_rf[8]"
+      ],
+      "inputs": [],
+      "outputs": []
+    },
+    "rf9": {
+      "ratio": [
+        1,
+        1
+      ],
+      "ports": [
+        "clk_rf[9]"
+      ],
+      "inputs": [],
+      "outputs": []
+    },
+    "rf10": {
+      "ratio": [
+        1,
+        1
+      ],
+      "ports": [
+        "clk_rf[10]"
+      ],
+      "inputs": [],
+      "outputs": []
+    },
+    "rf11": {
+      "ratio": [
+        1,
+        1
+      ],
+      "ports": [
+        "clk_rf[11]"
+      ],
+      "inputs": [],
+      "outputs": []
+    },
+    "rf12": {
+      "ratio": [
+        1,
+        1
+      ],
+      "ports": [
+        "clk_rf[12]"
+      ],
+      "inputs": [],
+      "outputs": []
+    },
+    "rf13": {
+      "ratio": [
+        1,
+        1
+      ],
+      "ports": [
+        "clk_rf[13]"
+      ],
+      "inputs": [],
+      "outputs": []
+    },
+    "rf14": {
+      "ratio": [
+        1,
+        1
+      ],
+      "ports": [
+        "clk_rf[14]"
+      ],
+      "inputs": [],
+      "outputs": []
+    },
+    "rf15": {
+      "ratio": [
+        1,
+        1
+      ],
+      "ports": [
+        "clk_rf[15]"
+      ],
+      "inputs": [],
+      "outputs": []
+    },
+    "rf16": {
+      "ratio": [
+        1,
+        1
+      ],
+      "ports": [
+        "clk_rf[16]"
+      ],
+      "inputs": [],
+      "outputs": []
+    },
+    "rf17": {
+      "ratio": [
+        1,
+        1
+      ],
+      "ports": [
+        "clk_rf[17]"
+      ],
+      "inputs": [],
+      "outputs": []
+    },
+    "rf18": {
+      "ratio": [
+        1,
+        1
+      ],
+      "ports": [
+        "clk_rf[18]"
+      ],
+      "inputs": [],
+      "outputs": []
+    },
+    "rf19": {
+      "ratio": [
+        1,
+        1
+      ],
+      "ports": [
+        "clk_rf[19]"
+      ],
+      "inputs": [],
+      "outputs": []
+    },
+    "rf20": {
+      "ratio": [
+        1,
+        1
+      ],
+      "ports": [
+        "clk_rf[20]"
+      ],
+      "inputs": [],
+      "outputs": []
+    },
+    "rf21": {
+      "ratio": [
+        1,
+        1
+      ],
+      "ports": [
+        "clk_rf[21]"
+      ],
+      "inputs": [],
+      "outputs": []
+    },
+    "rf22": {
+      "ratio": [
+        1,
+        1
+      ],
+      "ports": [
+        "clk_rf[22]"
+      ],
+      "inputs": [],
+      "outputs": []
+    },
+    "rf23": {
+      "ratio": [
+        1,
+        1
+      ],
+      "ports": [
+        "clk_rf[23]"
+      ],
+      "inputs": [],
+      "outputs": []
+    },
+    "rf24": {
+      "ratio": [
+        1,
+        1
+      ],
+      "ports": [
+        "clk_rf[24]"
+      ],
+      "inputs": [],
+      "outputs": []
+    },
+    "rf25": {
+      "ratio": [
+        1,
+        1
+      ],
+      "ports": [
+        "clk_rf[25]"
+      ],
+      "inputs": [],
+      "outputs": []
+    },
+    "rf26": {
+      "ratio": [
+        1,
+        1
+      ],
+      "ports": [
+        "clk_rf[26]"
+      ],
+      "inputs": [],
+      "outputs": []
+    },
+    "rf27": {
+      "ratio": [
+        1,
+        1
+      ],
+      "ports": [
+        "clk_rf[27]"
+      ],
+      "inputs": [],
+      "outputs": []
+    },
+    "rf28": {
+      "ratio": [
+        1,
+        1
+      ],
+      "ports": [
+        "clk_rf[28]"
+      ],
+      "inputs": [],
+      "outputs": []
+    },
+    "rf29": {
+      "ratio": [
+        1,
+        1
+      ],
+      "ports": [
+        "clk_rf[29]"
+      ],
+      "inputs": [],
+      "outputs": []
+    },
+    "rf30": {
+      "ratio": [
+        1,
+        1
+      ],
+      "ports": [
+        "clk_rf[30]"
+      ],
+      "inputs": [],
+      "outputs": []
+    },
+    "rf31": {
+      "ratio": [
+        1,
+        1
+      ],
+      "ports": [
+        "clk_rf[31]"
+      ],
+      "inputs": [],
+      "outputs": []
+    },
+    "rf32": {
+      "ratio": [
+        1,
+        1
+      ],
+      "ports": [
+        "clk_rf[32]"
+      ],
+      "inputs": [],
+      "outputs": []
+    },
+    "rf33": {
+      "ratio": [
+        1,
+        1
+      ],
+      "ports": [
+        "clk_rf[33]"
+      ],
+      "inputs": [],
+      "outputs": []
+    },
+    "rf34": {
+      "ratio": [
+        1,
+        1
+      ],
+      "ports": [
+        "clk_rf[34]"
+      ],
+      "inputs": [],
+      "outputs": []
+    },
+    "rf35": {
+      "ratio": [
+        1,
+        1
+      ],
+      "ports": [
+        "clk_rf[35]"
+      ],
+      "inputs": [],
+      "outputs": []
+    },
+    "rf36": {
+      "ratio": [
+        1,
+        1
+      ],
+      "ports": [
+        "clk_rf[36]"
+      ],
+      "inputs": [],
+      "outputs": []
+    },
+    "rf37": {
+      "ratio": [
+        1,
+        1
+      ],
+      "ports": [
+        "clk_rf[37]"
+      ],
+      "inputs": [],
+      "outputs": []
+    },
+    "rf38": {
+      "ratio": [
+        1,
+        1
+      ],
+      "ports": [
+        "clk_rf[38]"
+      ],
+      "inputs": [],
+      "outputs": []
+    },
+    "rf39": {
+      "ratio": [
+        1,
+        1
+      ],
+      "ports": [
+        "clk_rf[39]"
+      ],
+      "inputs": [],
+      "outputs": []
+    },
+    "rf40": {
+      "ratio": [
+        1,
+        1
+      ],
+      "ports": [
+        "clk_rf[40]"
+      ],
+      "inputs": [],
+      "outputs": []
+    },
+    "rf41": {
+      "ratio": [
+        1,
+        1
+      ],
+      "ports": [
+        "clk_rf[41]"
+      ],
+      "inputs": [],
+      "outputs": []
+    },
+    "rf42": {
+      "ratio": [
+        1,
+        1
+      ],
+      "ports": [
+        "clk_rf[42]"
+      ],
+      "inputs": [],
+      "outputs": []
+    },
+    "rf43": {
+      "ratio": [
+        1,
+        1
+      ],
+      "ports": [
+        "clk_rf[43]"
+      ],
+      "inputs": [],
+      "outputs": []
+    },
+    "rf44": {
+      "ratio": [
+        1,
+        1
+      ],
+      "ports": [
+        "clk_rf[44]"
+      ],
+      "inputs": [],
+      "outputs": []
+    },
+    "rf45": {
+      "ratio": [
+        1,
+        1
+      ],
+      "ports": [
+        "clk_rf[45]"
+      ],
+      "inputs": [],
+      "outputs": []
+    },
+    "rf46": {
+      "ratio": [
+        1,
+        1
+      ],
+      "ports": [
+        "clk_rf[46]"
+      ],
+      "inputs": [],
+      "outputs": []
+    },
+    "rf47": {
+      "ratio": [
+        1,
+        1
+      ],
+      "ports": [
+        "clk_rf[47]"
+      ],
+      "inputs": [],
+      "outputs": []
+    },
+    "rf48": {
+      "ratio": [
+        1,
+        1
+      ],
+      "ports": [
+        "clk_rf[48]"
+      ],
+      "inputs": [],
+      "outputs": []
+    },
+    "rf49": {
+      "ratio": [
+        1,
+        1
+      ],
+      "ports": [
+        "clk_rf[49]"
+      ],
+      "inputs": [],
+      "outputs": []
+    },
+    "rf50": {
+      "ratio": [
+        1,
+        1
+      ],
+      "ports": [
+        "clk_rf[50]"
+      ],
+      "inputs": [],
+      "outputs": []
+    },
+    "rf51": {
+      "ratio": [
+        1,
+        1
+      ],
+      "ports": [
+        "clk_rf[51]"
+      ],
+      "inputs": [],
+      "outputs": []
+    },
+    "rf52": {
+      "ratio": [
+        1,
+        1
+      ],
+      "ports": [
+        "clk_rf[52]"
+      ],
+      "inputs": [],
+      "outputs": []
+    },
+    "rf53": {
+      "ratio": [
+        1,
+        1
+      ],
+      "ports": [
+        "clk_rf[53]"
+      ],
+      "inputs": [],
+      "outputs": []
+    },
+    "rf54": {
+      "ratio": [
+        1,
+        1
+      ],
+      "ports": [
+        "clk_rf[54]"
+      ],
+      "inputs": [],
+      "outputs": []
+    },
+    "rf55": {
+      "ratio": [
+        1,
+        1
+      ],
+      "ports": [
+        "clk_rf[55]"
+      ],
+      "inputs": [],
+      "outputs": []
+    },
+    "rf56": {
+      "ratio": [
+        1,
+        1
+      ],
+      "ports": [
+        "clk_rf[56]"
+      ],
+      "inputs": [],
+      "outputs": []
+    },
+    "rf57": {
+      "ratio": [
+        1,
+        1
+      ],
+      "ports": [
+        "clk_rf[57]"
+      ],
+      "inputs": [],
+      "outputs": []
+    },
+    "rf58": {
+      "ratio": [
+        1,
+        1
+      ],
+      "ports": [
+        "clk_rf[58]"
+      ],
+      "inputs": [],
+      "outputs": []
+    },
+    "rf59": {
+      "ratio": [
+        1,
+        1
+      ],
+      "ports": [
+        "clk_rf[59]"
+      ],
+      "inputs": [],
+      "outputs": []
+    },
+    "rf60": {
+      "ratio": [
+        1,
+        1
+      ],
+      "ports": [
+        "clk_rf[60]"
+      ],
+      "inputs": [],
+      "outputs": []
+    },
+    "rf61": {
+      "ratio": [
+        1,
+        1
+      ],
+      "ports": [
+        "clk_rf[61]"
+      ],
+      "inputs": [],
+      "outputs": []
+    },
+    "rf62": {
+      "ratio": [
+        1,
+        1
+      ],
+      "ports": [
+        "clk_rf[62]"
+      ],
+      "inputs": [],
+      "outputs": []
+    },
+    "rf63": {
+      "ratio": [
+        1,
+        1
+      ],
+      "ports": [
+        "clk_rf[63]"
+      ],
+      "inputs": [],
+      "outputs": []
+    }
+  },
+  "clock_data_paths": "related_same_frequency",
+  "clock_relationship": {
+    "kind": "same_pll_fixed_phase",
+    "ratio": [
+      1,
+      1
+    ],
+    "phase_ps": 0
+  },
+  "pin_regs": {
+    "enable": false,
+    "reason": "The measured S source had10 input-to-fault logic levels and8 input-to-RF-capture levels. PHYS_RF_INGRESS=1 relocates the EXISTING bank ingress stage to raw RF/relay/RR pin flops and bypasses the bank rung, preserving normal commit n+1/read n+3 and scalar E+11. Native gate must measure all actual remaining endpoints; no extra wrapper stages or ideal ports."
+  },
+  "pins": {
+    "N": [
+      "rf_wv",
+      "rf_wa",
+      "rf_wd",
+      "red_sv",
+      "red_tag",
+      "red_x",
+      "red_rf_v",
+      "clk_red"
+    ],
+    "E": [
+      "clk_rf",
+      "rr_wv",
+      "rr_wa",
+      "rr_wd",
+      "sfu_x"
+    ],
+    "W": [
+      "rf_rd_cmd",
+      "red_cmd",
+      "rf_drain_cmd",
+      "slice_x",
+      "rf_bword",
+      "rf_bcmd",
+      "rf_dsec",
+      "fault",
+      "rst_n",
+      "clk_ctl"
+    ]
+  },
+  "layer_cap": "M5",
+  "route": {
+    "pd": 0.52,
+    "threads": 8,
+    "peak_ram_gb": 32,
+    "period_ps": 1051.111,
+    "signoff_period_ps": 1111.111,
+    "pin_balance": {
+      "group_max": 1,
+      "h": "M4",
+      "v": "M3 M5"
+    }
+  },
+  "job": {
+    "owner": "Codex:H-QCORE-physical-1016",
+    "branch": "codex/xc-physical-1016",
+    "tag": "s900-r1",
+    "purpose": "Actual integrated S=a89a10d1f MUT0,COLLPORT1 qcore. 64 independently clocked flop RF banks (six bounded4word replicas), two real reducer128x256 SRAMs, clk_ctl and clk_red. Full component nativebench and negative controls; no whole-SU claim. Production serial900MHz, phi-R per actual root, no stage changes. Outline chosen from honest synthesis count; all source RF relay outputs/capture grouped N, RR/SFU E, slice W. PHYS_RF_INGRESS1 structural pin-rung relocation keeps normal production cycles exactly S; write-conflict fault status +1 edge. Default0 retains legacy source. Compact276.48square replaces inflated250x2671.92 target based on actual mapped37186.64um2.",
+    "extra_paths": [
+      "rtl/test/hbm_qcore_physical_1016",
+      "tools/hbm_die_v15"
+    ],
+    "benches": [
+      {
+        "name": "qcore_exact",
+        "cmd": "bash tools/hbm_die_v15/run_qcore_native_bench.sh 0 {RUN}/bench/qcore0",
+        "expect": "pass",
+        "pass_regex": "QCORE_NATIVE PASS",
+        "min_count_regex": "QCORE_NATIVE checks=(\\d+)",
+        "threads": 1,
+        "peak_ram_gb": 4
+      },
+      {
+        "name": "qcore_mut16",
+        "cmd": "bash tools/hbm_die_v15/run_qcore_native_bench.sh 16 {RUN}/bench/qcore16",
+        "expect": "fail",
+        "fail_regex": "QCORE_NATIVE FAIL",
+        "threads": 1,
+        "peak_ram_gb": 4
+      },
+      {
+        "name": "qcore_mut32",
+        "cmd": "bash tools/hbm_die_v15/run_qcore_native_bench.sh 32 {RUN}/bench/qcore32",
+        "expect": "fail",
+        "fail_regex": "QCORE_NATIVE FAIL",
+        "threads": 1,
+        "peak_ram_gb": 4
+      },
+      {
+        "name": "qcore_mut64",
+        "cmd": "bash tools/hbm_die_v15/run_qcore_native_bench.sh 64 {RUN}/bench/qcore64",
+        "expect": "fail",
+        "fail_regex": "QCORE_NATIVE FAIL",
+        "threads": 1,
+        "peak_ram_gb": 4
+      },
+      {
+        "name": "qcore_mut128",
+        "cmd": "bash tools/hbm_die_v15/run_qcore_native_bench.sh 128 {RUN}/bench/qcore128",
+        "expect": "fail",
+        "fail_regex": "QCORE_NATIVE FAIL",
+        "threads": 1,
+        "peak_ram_gb": 4
+      },
+      {
+        "name": "qcore_pin_rung_mut256",
+        "cmd": "bash tools/hbm_die_v15/run_qcore_native_bench.sh 256 {RUN}/bench/qcore256",
+        "expect": "fail",
+        "fail_regex": "QCORE_NATIVE FAIL",
+        "threads": 1,
+        "peak_ram_gb": 4
+      }
+    ],
+    "views_to": "physical/ref_tile/hbm_qcore_s_pinrung_r1/views",
+    "record_to": "results/rtl/ref_tile/hbm_qcore_s_pinrung_r1"
+  },
+  "outline": {
+    "w": 276.48,
+    "h": 276.48,
+    "exact": true
+  },
+  "std_area_um2": 29403.48608,
+  "macros": [
+    {
+      "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+      "count": 1,
+      "at": [
+        25.92,
+        209.52
+      ],
+      "inst": "u_red.ma"
+    },
+    {
+      "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+      "count": 1,
+      "at": [
+        144.72,
+        209.52
+      ],
+      "inst": "u_red.mb"
+    }
+  ],
+  "pin_ranges": {
+    "rf_wv": [
+      5,
+      11.931
+    ],
+    "rf_wa": [
+      13.931,
+      48.585
+    ],
+    "rf_wd": [
+      50.585,
+      180.29
+    ],
+    "red_sv": [
+      182.29,
+      186.251
+    ],
+    "red_tag": [
+      188.251,
+      222.905
+    ],
+    "red_x": [
+      224.905,
+      259.559
+    ],
+    "red_rf_v": [
+      261.559,
+      265.52
+    ],
+    "clk_red": [
+      267.52,
+      271.48
+    ],
+    "clk_rf": [
+      5,
+      51.429
+    ],
+    "rr_wv": [
+      53.429,
+      56.201
+    ],
+    "rr_wa": [
+      58.201,
+      63.745
+    ],
+    "rr_wd": [
+      65.745,
+      245.226
+    ],
+    "sfu_x": [
+      247.226,
+      271.48
+    ],
+    "rf_rd_cmd": [
+      5,
+      24.92
+    ],
+    "red_cmd": [
+      26.92,
+      53.83
+    ],
+    "rf_drain_cmd": [
+      55.83,
+      57.578
+    ],
+    "slice_x": [
+      59.578,
+      105.359
+    ],
+    "rf_bword": [
+      107.359,
+      153.141
+    ],
+    "rf_bcmd": [
+      155.141,
+      168.771
+    ],
+    "rf_dsec": [
+      170.771,
+      261.286
+    ],
+    "fault": [
+      263.286,
+      264.684
+    ],
+    "rst_n": [
+      266.684,
+      268.082
+    ],
+    "clk_ctl": [
+      270.082,
+      271.48
+    ]
+  },
+  "structural_change": "Relocate existing RF input rung before decode, bypass matching bank rung. Explicit normal edge equivalence vs preserved actual S core; write-conflict sticky status +1 edge only, no normal execution or bandwidth change. Compact276.48square uses actual37186.64um2 S synthesis rather than inflated250x2671.92 reserve."
+}

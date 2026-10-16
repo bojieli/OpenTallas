@@ -1,7 +1,7 @@
 `timescale 1ns/1ps
 `default_nettype none
 module tb_qcore_native;
- parameter integer MUT=0;
+ parameter integer MUT=0,PHYS_RF_INGRESS=1;
  reg clk=0; always #5 clk=~clk;
  reg rst_n=0;
  reg [53:0] rf_rd_cmd=0;
@@ -14,11 +14,20 @@ module tb_qcore_native;
  reg rr_wv=0; reg[4:0]rr_wa=0; reg[255:0]rr_wd=0;reg[31:0]sfu_x=0;
  wire[127:0]rf_bword;wire[35:0]rf_bcmd;wire[255:0]rf_dsec;
  wire red_sv,red_rf_v,fault;wire[31:0]red_tag,red_x;
- ot_hbm_su_static_qcore #(.MUT(MUT),.COLLPORT(1)) dut(
+ ot_hbm_su_static_qcore #(.MUT(MUT),.COLLPORT(1),.PHYS_RF_INGRESS(PHYS_RF_INGRESS)) dut(
  .clk_rf({64{clk}}),.clk_ctl(clk),.clk_red(clk),.rst_n(rst_n),
  .rf_rd_cmd(rf_rd_cmd),.red_cmd(red_cmd),.rf_drain_cmd(rf_drain_cmd),.slice_x(slice_x),
  .rf_wv(rf_wv),.rf_wa(rf_wa),.rf_wd(rf_wd),.rf_bword(rf_bword),.rf_bcmd(rf_bcmd),.rf_dsec(rf_dsec),
  .red_sv(red_sv),.red_tag(red_tag),.red_x(red_x),.red_rf_v(red_rf_v),.rr_wv(rr_wv),.rr_wa(rr_wa),.rr_wd(rr_wd),.sfu_x(sfu_x),.fault(fault));
+ wire[127:0]ref_bw;wire[35:0]ref_bc;wire[255:0]ref_ds;
+ wire ref_sv,ref_rfv,ref_fault;wire[31:0]ref_tag,ref_x;
+ ot_hbm_su_static_qcore_S #(.MUT(0),.COLLPORT(1)) reference(
+ .clk_rf({64{clk}}),.clk_ctl(clk),.clk_red(clk),.rst_n(rst_n),
+ .rf_rd_cmd(rf_rd_cmd),.red_cmd(red_cmd),.rf_drain_cmd(rf_drain_cmd),.slice_x(slice_x),
+ .rf_wv(rf_wv),.rf_wa(rf_wa),.rf_wd(rf_wd),.rf_bword(ref_bw),.rf_bcmd(ref_bc),.rf_dsec(ref_ds),
+ .red_sv(ref_sv),.red_tag(ref_tag),.red_x(ref_x),.red_rf_v(ref_rfv),.rr_wv(rr_wv),.rr_wa(rr_wa),.rr_wd(rr_wd),.sfu_x(sfu_x),.fault(ref_fault));
+ reg compare_normal=1;
+ integer reference_edges=0;
  reg[31:0]model[0:255];reg exp_v[0:19999];reg[31:0]exp_x[0:19999],exp_tag[0:19999];
  integer cyc=0,checks=0,errors=0,rf_checks=0,scalar_checks=0,guard_checks=0;
  reg monitor=0;
@@ -27,6 +36,10 @@ module tb_qcore_native;
  task automatic tick;
  begin @(posedge clk);#1;cyc=cyc+1;
  if(monitor)begin
+  if(compare_normal)begin
+   ck({rf_bword,rf_bcmd,rf_dsec,red_sv,red_tag,red_x,red_rf_v,fault}==={ref_bw,ref_bc,ref_ds,ref_sv,ref_tag,ref_x,ref_rfv,ref_fault},"exact S source equivalence on normal production edge");
+   reference_edges=reference_edges+1;
+  end
   ck(red_sv===exp_v[cyc],$sformatf("scalar edge expected=%b got=%b",exp_v[cyc],red_sv));
   if(exp_v[cyc])begin
    ck(red_x===exp_x[cyc],$sformatf("scalar expected=%h got=%h",exp_x[cyc],red_x));
@@ -100,8 +113,9 @@ module tb_qcore_native;
  rf_drain_cmd=2'b10;tick();rf_drain_cmd=0;idle(2);ck(!fault,"non-RF drain skips class5 requirement");guard_checks=guard_checks+1;
  reset_core();rf_drain_cmd=2'b11;tick();rf_drain_cmd=0;idle(2);ck(fault,"RF drain without prefetch faults");guard_checks=guard_checks+1;
  reset_core();rf_rd_cmd[45+:9]={1'b1,8'd8};tick();rf_rd_cmd=0;rf_drain_cmd=2'b11;tick();rf_drain_cmd=0;idle(2);ck(!fault,"RF drain with exact prior prefetch is legal");guard_checks=guard_checks+1;
- reset_core();rf_wv=4'b0011;rf_wa=0;tick();rf_wv=0;idle(2);ck(fault,"two relay writers in one bank fault");guard_checks=guard_checks+1;
- reset_core();rf_wv=1;rf_wa=0;rr_wv=1;rr_wa=0;tick();rf_wv=0;rr_wv=0;idle(2);ck(fault,"relay and RR same bank conflict faults");guard_checks=guard_checks+1;
+ compare_normal=0;reset_core();rf_wv=4'b0011;rf_wa=0;tick();if(PHYS_RF_INGRESS)ck(ref_fault&&!fault,"write-conflict status exactly one edge later than S");rf_wv=0;tick();ck(fault,"write-conflict status arrives on the next exact edge");idle(1);ck(fault,"two relay writers in one bank fault");guard_checks=guard_checks+1;
+ reset_core();rf_wv=1;rf_wa=0;rr_wv=1;rr_wa=0;tick();if(PHYS_RF_INGRESS)ck(ref_fault&&!fault,"RR-conflict status exactly one edge later than S");rf_wv=0;rr_wv=0;tick();ck(fault,"RR-conflict status arrives on the next exact edge");idle(1);ck(fault,"relay and RR same bank conflict faults");guard_checks=guard_checks+1;
+ $display("QCORE_S_REFERENCE edges=%0d",reference_edges);
  $display("QCORE_NATIVE checks=%0d rf_words=%0d scalars=%0d guards=%0d cycles=%0d errors=%0d",checks,rf_checks,scalar_checks,guard_checks,cyc,errors);
  if(errors||rf_checks!=1024||scalar_checks!=7||guard_checks!=5)$fatal(1,"QCORE_NATIVE FAIL");
  $display("QCORE_NATIVE PASS");$finish;

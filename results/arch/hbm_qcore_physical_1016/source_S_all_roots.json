@@ -1,0 +1,476 @@
+{
+  "source_baseline": "a89a10d1f",
+  "params": {
+    "MUT": 0,
+    "COLLPORT": 1
+  },
+  "top": "ot_hbm_su_static_qcore",
+  "netlist_sha256": "7ab93bf2b6447df2ef12da487de794e899012cbbbae8771a7753c9ae3c9e4d5a",
+  "root_count": 66,
+  "roots": [
+    {
+      "root": "port:clk_ctl",
+      "ff": 665,
+      "icg": 0,
+      "macro_pins": 0,
+      "example": "bsel1[0][0]$_DFF_P_"
+    },
+    {
+      "root": "port:clk_red",
+      "ff": 1351,
+      "icg": 0,
+      "macro_pins": 2,
+      "example": "u_red.av[0]$_DFF_P_"
+    },
+    {
+      "root": "port:clk_rf[0]",
+      "ff": 565,
+      "icg": 0,
+      "macro_pins": 0,
+      "example": "u_rf.g_bank[0].u_bank.g_replica[0].v0[0]$_DFFE_PP_"
+    },
+    {
+      "root": "port:clk_rf[10]",
+      "ff": 565,
+      "icg": 0,
+      "macro_pins": 0,
+      "example": "u_rf.g_bank[10].u_bank.g_replica[5].v0[0]$_DFFE_PP_"
+    },
+    {
+      "root": "port:clk_rf[11]",
+      "ff": 565,
+      "icg": 0,
+      "macro_pins": 0,
+      "example": "u_rf.g_bank[11].u_bank.g_replica[3].v0[0]$_DFFE_PP_"
+    },
+    {
+      "root": "port:clk_rf[12]",
+      "ff": 565,
+      "icg": 0,
+      "macro_pins": 0,
+      "example": "u_rf.g_bank[12].u_bank.g_replica[0].v0[0]$_DFFE_PP_"
+    },
+    {
+      "root": "port:clk_rf[13]",
+      "ff": 565,
+      "icg": 0,
+      "macro_pins": 0,
+      "example": "u_rf.g_bank[13].u_bank.g_replica[0].v0[0]$_DFFE_PP_"
+    },
+    {
+      "root": "port:clk_rf[14]",
+      "ff": 565,
+      "icg": 0,
+      "macro_pins": 0,
+      "example": "u_rf.g_bank[14].u_bank.g_replica[0].v0[0]$_DFFE_PP_"
+    },
+    {
+      "root": "port:clk_rf[15]",
+      "ff": 565,
+      "icg": 0,
+      "macro_pins": 0,
+      "example": "u_rf.g_bank[15].u_bank.g_replica[4].v0[0]$_DFFE_PP_"
+    },
+    {
+      "root": "port:clk_rf[16]",
+      "ff": 565,
+      "icg": 0,
+      "macro_pins": 0,
+      "example": "u_rf.g_bank[16].u_bank.g_replica[0].v0[0]$_DFFE_PP_"
+    },
+    {
+      "root": "port:clk_rf[17]",
+      "ff": 565,
+      "icg": 0,
+      "macro_pins": 0,
+      "example": "u_rf.g_bank[17].u_bank.g_replica[0].v0[0]$_DFFE_PP_"
+    },
+    {
+      "root": "port:clk_rf[18]",
+      "ff": 565,
+      "icg": 0,
+      "macro_pins": 0,
+      "example": "u_rf.g_bank[18].u_bank.g_replica[0].v0[0]$_DFFE_PP_"
+    },
+    {
+      "root": "port:clk_rf[19]",
+      "ff": 565,
+      "icg": 0,
+      "macro_pins": 0,
+      "example": "u_rf.g_bank[19].u_bank.g_replica[0].v0[0]$_DFFE_PP_"
+    },
+    {
+      "root": "port:clk_rf[1]",
+      "ff": 565,
+      "icg": 0,
+      "macro_pins": 0,
+      "example": "u_rf.g_bank[1].u_bank.g_replica[0].v0[0]$_DFFE_PP_"
+    },
+    {
+      "root": "port:clk_rf[20]",
+      "ff": 565,
+      "icg": 0,
+      "macro_pins": 0,
+      "example": "u_rf.g_bank[20].u_bank.g_replica[0].v0[0]$_DFFE_PP_"
+    },
+    {
+      "root": "port:clk_rf[21]",
+      "ff": 565,
+      "icg": 0,
+      "macro_pins": 0,
+      "example": "u_rf.g_bank[21].u_bank.g_replica[0].v0[0]$_DFFE_PP_"
+    },
+    {
+      "root": "port:clk_rf[22]",
+      "ff": 565,
+      "icg": 0,
+      "macro_pins": 0,
+      "example": "u_rf.g_bank[22].u_bank.g_replica[0].v0[0]$_DFFE_PP_"
+    },
+    {
+      "root": "port:clk_rf[23]",
+      "ff": 565,
+      "icg": 0,
+      "macro_pins": 0,
+      "example": "u_rf.g_bank[23].u_bank.g_replica[0].v0[0]$_DFFE_PP_"
+    },
+    {
+      "root": "port:clk_rf[24]",
+      "ff": 565,
+      "icg": 0,
+      "macro_pins": 0,
+      "example": "u_rf.g_bank[24].u_bank.g_replica[0].v0[0]$_DFFE_PP_"
+    },
+    {
+      "root": "port:clk_rf[25]",
+      "ff": 565,
+      "icg": 0,
+      "macro_pins": 0,
+      "example": "u_rf.g_bank[25].u_bank.g_replica[0].v0[0]$_DFFE_PP_"
+    },
+    {
+      "root": "port:clk_rf[26]",
+      "ff": 565,
+      "icg": 0,
+      "macro_pins": 0,
+      "example": "u_rf.g_bank[26].u_bank.g_replica[0].v0[0]$_DFFE_PP_"
+    },
+    {
+      "root": "port:clk_rf[27]",
+      "ff": 565,
+      "icg": 0,
+      "macro_pins": 0,
+      "example": "u_rf.g_bank[27].u_bank.g_replica[0].v0[0]$_DFFE_PP_"
+    },
+    {
+      "root": "port:clk_rf[28]",
+      "ff": 565,
+      "icg": 0,
+      "macro_pins": 0,
+      "example": "u_rf.g_bank[28].u_bank.g_replica[0].v0[0]$_DFFE_PP_"
+    },
+    {
+      "root": "port:clk_rf[29]",
+      "ff": 565,
+      "icg": 0,
+      "macro_pins": 0,
+      "example": "u_rf.g_bank[29].u_bank.g_replica[0].v0[0]$_DFFE_PP_"
+    },
+    {
+      "root": "port:clk_rf[2]",
+      "ff": 565,
+      "icg": 0,
+      "macro_pins": 0,
+      "example": "u_rf.g_bank[2].u_bank.g_replica[0].v0[0]$_DFFE_PP_"
+    },
+    {
+      "root": "port:clk_rf[30]",
+      "ff": 565,
+      "icg": 0,
+      "macro_pins": 0,
+      "example": "u_rf.g_bank[30].u_bank.g_replica[0].v0[0]$_DFFE_PP_"
+    },
+    {
+      "root": "port:clk_rf[31]",
+      "ff": 565,
+      "icg": 0,
+      "macro_pins": 0,
+      "example": "u_rf.g_bank[31].u_bank.g_replica[0].v0[0]$_DFFE_PP_"
+    },
+    {
+      "root": "port:clk_rf[32]",
+      "ff": 565,
+      "icg": 0,
+      "macro_pins": 0,
+      "example": "u_rf.g_bank[32].u_bank.g_replica[0].v0[0]$_DFFE_PP_"
+    },
+    {
+      "root": "port:clk_rf[33]",
+      "ff": 565,
+      "icg": 0,
+      "macro_pins": 0,
+      "example": "u_rf.g_bank[33].u_bank.g_replica[0].v0[0]$_DFFE_PP_"
+    },
+    {
+      "root": "port:clk_rf[34]",
+      "ff": 565,
+      "icg": 0,
+      "macro_pins": 0,
+      "example": "u_rf.g_bank[34].u_bank.g_replica[0].v0[0]$_DFFE_PP_"
+    },
+    {
+      "root": "port:clk_rf[35]",
+      "ff": 565,
+      "icg": 0,
+      "macro_pins": 0,
+      "example": "u_rf.g_bank[35].u_bank.g_replica[0].v0[0]$_DFFE_PP_"
+    },
+    {
+      "root": "port:clk_rf[36]",
+      "ff": 565,
+      "icg": 0,
+      "macro_pins": 0,
+      "example": "u_rf.g_bank[36].u_bank.g_replica[0].v0[0]$_DFFE_PP_"
+    },
+    {
+      "root": "port:clk_rf[37]",
+      "ff": 565,
+      "icg": 0,
+      "macro_pins": 0,
+      "example": "u_rf.g_bank[37].u_bank.g_replica[0].v0[0]$_DFFE_PP_"
+    },
+    {
+      "root": "port:clk_rf[38]",
+      "ff": 565,
+      "icg": 0,
+      "macro_pins": 0,
+      "example": "u_rf.g_bank[38].u_bank.g_replica[0].v0[0]$_DFFE_PP_"
+    },
+    {
+      "root": "port:clk_rf[39]",
+      "ff": 565,
+      "icg": 0,
+      "macro_pins": 0,
+      "example": "u_rf.g_bank[39].u_bank.g_replica[0].v0[0]$_DFFE_PP_"
+    },
+    {
+      "root": "port:clk_rf[3]",
+      "ff": 565,
+      "icg": 0,
+      "macro_pins": 0,
+      "example": "u_rf.g_bank[3].u_bank.g_replica[5].v0[0]$_DFFE_PP_"
+    },
+    {
+      "root": "port:clk_rf[40]",
+      "ff": 565,
+      "icg": 0,
+      "macro_pins": 0,
+      "example": "u_rf.g_bank[40].u_bank.g_replica[0].v0[0]$_DFFE_PP_"
+    },
+    {
+      "root": "port:clk_rf[41]",
+      "ff": 565,
+      "icg": 0,
+      "macro_pins": 0,
+      "example": "u_rf.g_bank[41].u_bank.g_replica[0].v0[0]$_DFFE_PP_"
+    },
+    {
+      "root": "port:clk_rf[42]",
+      "ff": 565,
+      "icg": 0,
+      "macro_pins": 0,
+      "example": "u_rf.g_bank[42].u_bank.g_replica[0].v0[0]$_DFFE_PP_"
+    },
+    {
+      "root": "port:clk_rf[43]",
+      "ff": 565,
+      "icg": 0,
+      "macro_pins": 0,
+      "example": "u_rf.g_bank[43].u_bank.g_replica[0].v0[0]$_DFFE_PP_"
+    },
+    {
+      "root": "port:clk_rf[44]",
+      "ff": 565,
+      "icg": 0,
+      "macro_pins": 0,
+      "example": "u_rf.g_bank[44].u_bank.g_replica[0].v0[0]$_DFFE_PP_"
+    },
+    {
+      "root": "port:clk_rf[45]",
+      "ff": 565,
+      "icg": 0,
+      "macro_pins": 0,
+      "example": "u_rf.g_bank[45].u_bank.g_replica[0].v0[0]$_DFFE_PP_"
+    },
+    {
+      "root": "port:clk_rf[46]",
+      "ff": 565,
+      "icg": 0,
+      "macro_pins": 0,
+      "example": "u_rf.g_bank[46].u_bank.g_replica[0].v0[0]$_DFFE_PP_"
+    },
+    {
+      "root": "port:clk_rf[47]",
+      "ff": 565,
+      "icg": 0,
+      "macro_pins": 0,
+      "example": "u_rf.g_bank[47].u_bank.g_replica[0].v0[0]$_DFFE_PP_"
+    },
+    {
+      "root": "port:clk_rf[48]",
+      "ff": 565,
+      "icg": 0,
+      "macro_pins": 0,
+      "example": "u_rf.g_bank[48].u_bank.g_replica[0].v0[0]$_DFFE_PP_"
+    },
+    {
+      "root": "port:clk_rf[49]",
+      "ff": 565,
+      "icg": 0,
+      "macro_pins": 0,
+      "example": "u_rf.g_bank[49].u_bank.g_replica[0].v0[0]$_DFFE_PP_"
+    },
+    {
+      "root": "port:clk_rf[4]",
+      "ff": 565,
+      "icg": 0,
+      "macro_pins": 0,
+      "example": "u_rf.g_bank[4].u_bank.g_replica[5].v0[0]$_DFFE_PP_"
+    },
+    {
+      "root": "port:clk_rf[50]",
+      "ff": 565,
+      "icg": 0,
+      "macro_pins": 0,
+      "example": "u_rf.g_bank[50].u_bank.g_replica[0].v0[0]$_DFFE_PP_"
+    },
+    {
+      "root": "port:clk_rf[51]",
+      "ff": 565,
+      "icg": 0,
+      "macro_pins": 0,
+      "example": "u_rf.g_bank[51].u_bank.g_replica[0].v0[0]$_DFFE_PP_"
+    },
+    {
+      "root": "port:clk_rf[52]",
+      "ff": 565,
+      "icg": 0,
+      "macro_pins": 0,
+      "example": "u_rf.g_bank[52].u_bank.g_replica[0].v0[0]$_DFFE_PP_"
+    },
+    {
+      "root": "port:clk_rf[53]",
+      "ff": 565,
+      "icg": 0,
+      "macro_pins": 0,
+      "example": "u_rf.g_bank[53].u_bank.g_replica[0].v0[0]$_DFFE_PP_"
+    },
+    {
+      "root": "port:clk_rf[54]",
+      "ff": 565,
+      "icg": 0,
+      "macro_pins": 0,
+      "example": "u_rf.g_bank[54].u_bank.g_replica[0].v0[0]$_DFFE_PP_"
+    },
+    {
+      "root": "port:clk_rf[55]",
+      "ff": 565,
+      "icg": 0,
+      "macro_pins": 0,
+      "example": "u_rf.g_bank[55].u_bank.g_replica[0].v0[0]$_DFFE_PP_"
+    },
+    {
+      "root": "port:clk_rf[56]",
+      "ff": 565,
+      "icg": 0,
+      "macro_pins": 0,
+      "example": "u_rf.g_bank[56].u_bank.g_replica[0].v0[0]$_DFFE_PP_"
+    },
+    {
+      "root": "port:clk_rf[57]",
+      "ff": 565,
+      "icg": 0,
+      "macro_pins": 0,
+      "example": "u_rf.g_bank[57].u_bank.g_replica[0].v0[0]$_DFFE_PP_"
+    },
+    {
+      "root": "port:clk_rf[58]",
+      "ff": 565,
+      "icg": 0,
+      "macro_pins": 0,
+      "example": "u_rf.g_bank[58].u_bank.g_replica[0].v0[0]$_DFFE_PP_"
+    },
+    {
+      "root": "port:clk_rf[59]",
+      "ff": 565,
+      "icg": 0,
+      "macro_pins": 0,
+      "example": "u_rf.g_bank[59].u_bank.g_replica[0].v0[0]$_DFFE_PP_"
+    },
+    {
+      "root": "port:clk_rf[5]",
+      "ff": 565,
+      "icg": 0,
+      "macro_pins": 0,
+      "example": "u_rf.g_bank[5].u_bank.g_replica[5].v0[0]$_DFFE_PP_"
+    },
+    {
+      "root": "port:clk_rf[60]",
+      "ff": 565,
+      "icg": 0,
+      "macro_pins": 0,
+      "example": "u_rf.g_bank[60].u_bank.g_replica[0].v0[0]$_DFFE_PP_"
+    },
+    {
+      "root": "port:clk_rf[61]",
+      "ff": 565,
+      "icg": 0,
+      "macro_pins": 0,
+      "example": "u_rf.g_bank[61].u_bank.g_replica[0].v0[0]$_DFFE_PP_"
+    },
+    {
+      "root": "port:clk_rf[62]",
+      "ff": 565,
+      "icg": 0,
+      "macro_pins": 0,
+      "example": "u_rf.g_bank[62].u_bank.g_replica[0].v0[0]$_DFFE_PP_"
+    },
+    {
+      "root": "port:clk_rf[63]",
+      "ff": 565,
+      "icg": 0,
+      "macro_pins": 0,
+      "example": "u_rf.g_bank[63].u_bank.g_replica[0].v0[0]$_DFFE_PP_"
+    },
+    {
+      "root": "port:clk_rf[6]",
+      "ff": 565,
+      "icg": 0,
+      "macro_pins": 0,
+      "example": "u_rf.g_bank[6].u_bank.g_replica[5].v0[0]$_DFFE_PP_"
+    },
+    {
+      "root": "port:clk_rf[7]",
+      "ff": 565,
+      "icg": 0,
+      "macro_pins": 0,
+      "example": "u_rf.g_bank[7].u_bank.g_replica[5].v0[0]$_DFFE_PP_"
+    },
+    {
+      "root": "port:clk_rf[8]",
+      "ff": 565,
+      "icg": 0,
+      "macro_pins": 0,
+      "example": "u_rf.g_bank[8].u_bank.g_replica[5].v0[0]$_DFFE_PP_"
+    },
+    {
+      "root": "port:clk_rf[9]",
+      "ff": 565,
+      "icg": 0,
+      "macro_pins": 0,
+      "example": "u_rf.g_bank[9].u_bank.g_replica[5].v0[0]$_DFFE_PP_"
+    }
+  ],
+  "flops": 38176,
+  "macro_clock_pins": 2
+}
