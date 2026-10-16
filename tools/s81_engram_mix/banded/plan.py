@@ -34,14 +34,18 @@ def column(P, c, x0):
 
 def main():
     out = Path(sys.argv[1]); sw = float(sys.argv[2]) if len(sys.argv) > 2 else 302.4
+    lane23 = float(sys.argv[3]) if len(sys.argv) > 3 else LANE   # 21.6 = no E relay lane (rb[2], rb[3] in the spine)
+    lane01w = float(sys.argv[4]) if len(sys.argv) > 4 else LANE  # 21.6 = no W relay lane either
     P = {}
     x = 0.0; column(P, 0, x)
-    lane01 = x + COLW + G; x += COLW + LANE
+    lane01 = x + COLW + G; x += COLW + lane01w
     H = column(P, 1, x); s0 = x + COLW + G
     x = s0 + sw + G; column(P, 2, x)
-    lane23 = x + COLW + G; x += COLW + LANE; column(P, 3, x)
+    l23x = x + COLW + G; x += COLW + lane23; column(P, 3, x)
     W = x + COLW
-    for c, lx, y in ((0, lane01, 97.2), (1, lane01, 250.56), (2, lane23, 97.2), (3, lane23, 250.56)):
+    if lane01w < LANE:
+        lane01 = s0
+    for c, lx, y in ((0, lane01, 97.2), (1, lane01, 250.56), (2, l23x if lane23 >= LANE else s0 + sw - RW, 97.2), (3, l23x if lane23 >= LANE else s0 + sw - RW, 160.0)):
         P[f'band[{c}].rb'] = (lx, y)
     P['hsum'] = (s0, H - 99.36); P['ksum'] = (s0 + CW + G, H - 99.36)
     P['dsum'] = (s0, H - 99.36 - G - 99.36); P['control'] = (s0 + CW + G, H - 99.36 - G - 64.8)

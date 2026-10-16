@@ -10,14 +10,18 @@
 // r4 port ABI: each vport side is a landing group's rsp face {valid, v, t, data quad} (the landing rowctl merges the four
 // quarter PCs).  KINT=1 (default): every side that carries no V word on an edge carries a K response (v = 0, random
 // tag/data) -- the K traffic sharing the landing rsp bus; the vport must ignore it (VMUT=3 ignores the flag: FAIL).
+// r6: the port's word reaches the pair O edges later and carries the landing word's epoch (the pair checks it);
+// RL = 4 + WP + O + DQ + RT, FIRST_INPUT_AGE = RL + 1.
 // r5: the vport is the V issuer.  The pair's req_valid/req_t reach the port WP edges later (relay model); the port
 // sends each V get to group {lane, t[0]}; the landing model answers a get RT edges after the port's vq register with
 // the HEAD of that group's rings and checks the head is the requested row (a static stream never re-orders).
 module tb_qwen_pv16_vservice;
- parameter integer PAIR=0, MUT=0, VMUT=0, KINT=1, WP=2, RT=8, RL=19, LEAF_RESET_PIN=0, CTL_RESET_PIN=0;
+ parameter integer PAIR=0, MUT=0, VMUT=0, KINT=1, WP=2, O=0, DQ=5, RT=8, LEAF_RESET_PIN=0, CTL_RESET_PIN=0;
+ localparam integer RL=4+WP+O+DQ+RT;
  reg clk=0,rst_n=0;always #1 clk=~clk;
  reg start=0;integer CTX;string vec,mode;
- wire [7:0] in_valid;wire [8191:0] in_v;reg [511:0] in_e=0;wire [111:0] in_t;reg [127:0] in_epoch={8{16'd23}};
+ wire [7:0] in_valid;wire [8191:0] in_v;reg [511:0] in_e=0;wire [111:0] in_t;wire [127:0] in_epoch;
+ wire [7:0] vo_valid;wire [8191:0] vo_v;wire [111:0] vo_t;wire [127:0] vo_e;
  wire [7:0] req_valid;wire [111:0] req_t;wire out_valid,fault,busy;wire [16383:0] out_leaf;wire [15:0] out_epoch,out_age;
  ot_qwen_tp8_pv_wide_pair #(.PAIR(PAIR),.CTL_RESET_PIN(CTL_RESET_PIN),.LEAF_RESET_PIN(LEAF_RESET_PIN),.FIRST_INPUT_AGE(RL+1),.MUT(MUT)) u(
   .clk(clk),.rst_n(rst_n),.start(start),
@@ -25,16 +29,23 @@ module tb_qwen_pv16_vservice;
   .in_epoch(in_epoch),.req_valid(req_valid),.req_t(req_t),.out_valid(out_valid),.out_leaf(out_leaf),.out_epoch(out_epoch),
   .fault(fault),.busy(busy),.out_age(out_age));
  // ---- KV die: 8 V ports (stack PAIR lanes 0-3, stack PAIR+2 lanes 0-3) ----
- reg [7:0] p_prv=0;reg [111:0] p_prt=0;reg [15:0] p_val=0,p_vf=0;reg [16*14-1:0] p_t=0;reg [16*1024-1:0] p_d=0;integer kw=0;
+ reg [7:0] p_prv=0;reg [111:0] p_prt=0;reg [15:0] p_val=0,p_vf=0;reg [16*16-1:0] p_e=0;reg [16*14-1:0] p_t=0;reg [16*1024-1:0] p_d=0;integer kw=0;
  wire [7:0] vfault;wire [15:0] vqv;wire [16*14-1:0] vqt;
  genvar g;
  generate for(g=0;g<8;g=g+1)begin:g_port
-  qkd_pv16_vport #(.MUT(VMUT),.RL(RL),.WP(WP),.RT(RT)) u_vp(.ck(clk),.rst_n(rst_n),
+  qkd_pv16_vport #(.MUT(VMUT),.DQ(DQ),.RT(RT)) u_vp(.ck(clk),.rst_n(rst_n),
    .pr_valid(p_prv[g]),.pr_t(p_prt[14*g+:14]),
    .vq0_valid(vqv[2*g]),.vq0_t(vqt[14*(2*g)+:14]),.vq1_valid(vqv[2*g+1]),.vq1_t(vqt[14*(2*g+1)+:14]),
-   .in0_valid(p_val[2*g]),.in0_vflag(p_vf[2*g]),.in0_t(p_t[14*(2*g)+:14]),.in0_d(p_d[1024*(2*g)+:1024]),
-   .in1_valid(p_val[2*g+1]),.in1_vflag(p_vf[2*g+1]),.in1_t(p_t[14*(2*g+1)+:14]),.in1_d(p_d[1024*(2*g+1)+:1024]),
-   .out_valid(in_valid[g]),.out_t(in_t[14*g+:14]),.out_v_lo(in_v[1024*g+:512]),.out_v_hi(in_v[1024*g+512+:512]),.fault(vfault[g]));
+   .in0_valid(p_val[2*g]),.in0_vflag(p_vf[2*g]),.in0_t(p_t[14*(2*g)+:14]),.in0_epoch(p_e[16*(2*g)+:16]),.in0_d(p_d[1024*(2*g)+:1024]),
+   .in1_valid(p_val[2*g+1]),.in1_vflag(p_vf[2*g+1]),.in1_t(p_t[14*(2*g+1)+:14]),.in1_epoch(p_e[16*(2*g+1)+:16]),.in1_d(p_d[1024*(2*g+1)+:1024]),
+   .out_valid(vo_valid[g]),.out_t(vo_t[14*g+:14]),.out_epoch(vo_e[16*g+:16]),.out_v_lo(vo_v[1024*g+:512]),.out_v_hi(vo_v[1024*g+512+:512]),.fault(vfault[g]));
+  // port -> pair word relays (O edges)
+  if(O==0)begin:g_o0 assign in_valid[g]=vo_valid[g];assign in_t[14*g+:14]=vo_t[14*g+:14];assign in_epoch[16*g+:16]=vo_e[16*g+:16];assign in_v[1024*g+:1024]=vo_v[1024*g+:1024];end
+  else begin:g_o
+   reg [1054:0] ch[0:O-1];
+   always @(posedge clk)begin ch[0]<={vo_valid[g],vo_t[14*g+:14],vo_e[16*g+:16],vo_v[1024*g+:1024]};for(integer z=1;z<O;z=z+1)ch[z]<=ch[z-1];end
+   assign {in_valid[g],in_t[14*g+:14],in_epoch[16*g+:16],in_v[1024*g+:1024]}=ch[O-1];
+  end
  end endgenerate
  reg [1023:0] vr[0:8191];reg [63:0] er[0:8191];reg [31:0] gold[0:511];
  // rings: [port][group bit][quarter] FIFO of row ids in ordinal order (quarter rings of one group hold the same rows)
@@ -82,7 +93,7 @@ module tb_qwen_pv16_vservice;
  always @(negedge clk)if(rst_n)begin
   p_val=0;p_vf=0;
   for(i=0;i<16;i=i+1)if(rrp[i]!=rwp[i]&&rdue[i][rrp[i]%64]==cyc)begin
-   k=i>>1;gq=i&1;n=rtag[i][rrp[i]%64];rrp[i]=rrp[i]+1;p_val[i]=1;p_vf[i]=1;p_t[14*i+:14]=14'(n);
+   k=i>>1;gq=i&1;n=rtag[i][rrp[i]%64];rrp[i]=rrp[i]+1;p_val[i]=1;p_vf[i]=1;p_t[14*i+:14]=14'(n);p_e[16*i+:16]=16'd23;
    for(qq=0;qq<4;qq=qq+1)begin
     if(rhead[k][gq][qq]>=rlen[k][gq])begin $display("RING_EMPTY port%0d g%0d q%0d",k,gq,qq);errors=errors+1;end
     else begin
@@ -93,7 +104,7 @@ module tb_qwen_pv16_vservice;
    end
   end
   if(KINT)for(i=0;i<16;i=i+1)if(!p_val[i])begin   // K responses on every idle side
-   p_val[i]=1;p_vf[i]=0;p_t[14*i+:14]=14'($urandom);for(qq=0;qq<32;qq=qq+1)p_d[1024*i+32*qq+:32]=$urandom;kw=kw+1;
+   p_val[i]=1;p_vf[i]=0;p_t[14*i+:14]=14'($urandom);p_e[16*i+:16]=16'($urandom);for(qq=0;qq<32;qq=qq+1)p_d[1024*i+32*qq+:32]=$urandom;kw=kw+1;
   end
   // e is the ASTK service (not under test): presented with the port's word
   #0.25;for(k=0;k<8;k=k+1)if(in_valid[k])in_e[64*k+:64]=er[in_t[14*k+:14]];

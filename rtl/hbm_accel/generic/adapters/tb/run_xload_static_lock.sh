@@ -11,6 +11,8 @@ if [[ ${XLOAD_CLOCK_LEAVES:-0} == 1 ]];then MASK_FLAGS+=(-DXLOAD_CLOCK_LEAVES);f
 if [[ ${XLOAD_CL2:-0} == 1 ]];then MASK_FLAGS+=(-DXLOAD_CL2);fi
 # XLOAD_F20=1 (H-SM 2026-10-16): the ctlw die master (x-load issuer folded in) driven through the real host ingress
 F20_SRCS=()
+# XLOAD_RD_LAT=7: VM model + every x-load unit at the nat2 bank read latency (H-SM 10-16; default 6)
+if [[ -n ${XLOAD_RD_LAT:-} ]];then MASK_FLAGS+=(-DXLOAD_RD_LAT=$XLOAD_RD_LAT);fi
 if [[ ${XLOAD_F20:-0} == 1 ]];then MASK_FLAGS+=(-DXLOAD_F20 -DXLOAD_CL2);F20_SRCS=(rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv rtl/hbm_accel/host_static_20261015/ot_hbm_host_static_ingress.sv);fi
 verilator --binary --timing -Wno-fatal -Wno-lint -Wno-style -j 8 "${MASK_FLAGS[@]}" ${MUT:+-D$MUT} --top-module tb_xload_static_lock --Mdir "$B" \
   rtl/lib/ot_rst_relay.sv rtl/hbm_accel/generic/peers/ot_hgi_sm_xload.sv rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static.sv rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl.sv rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv "${F20_SRCS[@]}" physical/hbm_xp_aq_tree13_1014/ot_hbm_xp_aq_tree13.sv physical/hbm_xp_aq_tree13_1014/ot_hbm_xp_aq_scale13.sv \

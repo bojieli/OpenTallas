@@ -19311,6 +19311,7 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
   ot_hgi_sm_xload_cl2_ctlw #(.PMAX(8), .RD_LAT(6), .NR(32), .LEAD(8)) xl_SW_ctl (
     .clk(hb_ckgen__pll_stream[0]),
     .clk_eg(hb_ckgen__pll_stream[0]),
+    .clk_cal(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
     .tgt(8'd100),
     .cfg_v(host_cp_ingress__cfg_v[0]),
@@ -19442,6 +19443,7 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
   ot_hgi_sm_xload_cl2_ctlw #(.PMAX(8), .RD_LAT(6), .NR(32), .LEAD(8)) xl_SE_ctl (
     .clk(hb_ckgen__pll_stream[0]),
     .clk_eg(hb_ckgen__pll_stream[0]),
+    .clk_cal(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
     .tgt(8'd101),
     .cfg_v(host_cp_ingress__cfg_v[0]),
@@ -19573,6 +19575,7 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
   ot_hgi_sm_xload_cl2_ctlw #(.PMAX(8), .RD_LAT(6), .NR(32), .LEAD(8)) xl_NW_ctl (
     .clk(hb_ckgen__pll_stream[0]),
     .clk_eg(hb_ckgen__pll_stream[0]),
+    .clk_cal(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
     .tgt(8'd102),
     .cfg_v(host_cp_ingress__cfg_v[0]),
@@ -19704,6 +19707,7 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
   ot_hgi_sm_xload_cl2_ctlw #(.PMAX(8), .RD_LAT(6), .NR(32), .LEAD(8)) xl_NE_ctl (
     .clk(hb_ckgen__pll_stream[0]),
     .clk_eg(hb_ckgen__pll_stream[0]),
+    .clk_cal(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
     .tgt(8'd103),
     .cfg_v(host_cp_ingress__cfg_v[0]),

@@ -1,0 +1,201 @@
+{
+ "name": "dsfd_vm_wfc_return_hop1_native_1016_r4-valid2-COMMIT",
+ "block": "dsfd_vm_wfc_return",
+ "ref_tile": true,
+ "owner": "claude:S-VM-RET",
+ "purpose": "ACTUAL A2F HOP1/READ4 WFC profile RPE2: requestRLAT15/returnPAD2, source-pinned full WFC component gold and observed mutants; legacy17/0 view must not be inherited.",
+ "threads": 8,
+ "peak_ram_gb": 16,
+ "source": {
+  "branch": "claude/s81-vm-wfcret-0615",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "tools/s81_vm",
+   "rtl/dsrom_sys/s81_ph/vm",
+   "physical/s81_vm_ctl_native_1015",
+   "tools/s81_wfc_hop1",
+   "tools/s81_wfc_valid"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; dsfd_vm_wfc_return #(.RESPONSE_PAD(2)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_wfc.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "pipeline_epoch",
+    "cmd": "bash tools/s81_wfc_hop1/gate.sh {RUN}/pipeline",
+    "expect": "pass",
+    "pass_regex": "WFC_HOP1_PIPELINE_GATE PASS",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "ot_vm_wfc_ctl_mut_lane",
+    "cmd": "bash tools/s81_wfc_hop1/gate.sh {RUN}/OT_VM_WFC_CTL_MUT_LANE OT_VM_WFC_CTL_MUT_LANE",
+    "expect": "fail",
+    "fail_regex": "FATAL:",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "ot_vm_wfc_ctl_mut_fault",
+    "cmd": "bash tools/s81_wfc_hop1/gate.sh {RUN}/OT_VM_WFC_CTL_MUT_FAULT OT_VM_WFC_CTL_MUT_FAULT",
+    "expect": "fail",
+    "fail_regex": "FATAL:",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "ot_vm_wfc_ctl_mut_capture",
+    "cmd": "bash tools/s81_wfc_hop1/gate.sh {RUN}/OT_VM_WFC_CTL_MUT_CAPTURE OT_VM_WFC_CTL_MUT_CAPTURE",
+    "expect": "fail",
+    "fail_regex": "FATAL:",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "ot_vm_wfc_ctl_mut_cdc",
+    "cmd": "bash tools/s81_wfc_hop1/gate.sh {RUN}/OT_VM_WFC_CTL_MUT_CDC OT_VM_WFC_CTL_MUT_CDC",
+    "expect": "fail",
+    "fail_regex": "FATAL:",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "ot_vm_wfc_ctl_mut_epoch",
+    "cmd": "bash tools/s81_wfc_hop1/gate.sh {RUN}/OT_VM_WFC_CTL_MUT_EPOCH OT_VM_WFC_CTL_MUT_EPOCH",
+    "expect": "fail",
+    "fail_regex": "FATAL:",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "valid_gold",
+    "cmd": "bash tools/s81_wfc_valid/gate.sh {RUN}/valid_gold gold",
+    "expect": "pass",
+    "pass_regex": "WFC_VALID_EQUIVALENCE PASS",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "valid_drop_read",
+    "cmd": "bash tools/s81_wfc_valid/gate.sh {RUN}/valid_drop_read drop_read",
+    "expect": "fail",
+    "fail_regex": "FATAL:",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "valid_drop_write",
+    "cmd": "bash tools/s81_wfc_valid/gate.sh {RUN}/valid_drop_write drop_write",
+    "expect": "fail",
+    "fail_regex": "FATAL:",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "valid_idle_request",
+    "cmd": "bash tools/s81_wfc_valid/gate.sh {RUN}/valid_idle_request idle_request",
+    "expect": "fail",
+    "fail_regex": "FATAL:",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/dsfd_vm_wfc_return_hop1_native_1016_r4/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/dsfd_vm_wfc_return_hop1_native_1016_r4/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 8,
+   "peak_ram_gb": 16
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/dsfd_vm_wfc_return_hop1_native_1016_r4 --out {RUN}/record/views/dsfd_vm_wfc_return  > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/dsfd_vm_wfc_return_hop1_native_1016_r4/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": []
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/dsfd_vm_wfc_return_hop1_native_1016_r4/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/dsfd_vm_wfc_return_hop1_native_1016_r4/dsfd_vm_wfc_return_hop1_native_1016_r4-valid2-COMMIT"
+  }
+ ],
+ "cycles_added": 3,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "r4 (new kit; RTL 320d5b77d byte-identical). History: r2 194.4x324 gate WARN util 5%, W half empty, clock ~150 um from sinks (TT insertion 293.8 ps). r3 a77910722 86.4x151.2 (PPL ordered 32-pin groups, E M2+M4, N M3+M5; gate util 26%, TT insertion 174.9/spread 22.3 ps) routed to EARLY_FAIL_CONGESTION GRT-0116 at 5_1_grt: total usage only 32% (M2 41/M3 43/M4 19/M5 21%), overflow 2,016 in 867 gcells, max 4 over ~18 per gcell; hot windows = the E pin hold-stage band (x 79-83 um, y 20-60 and 85-150 um; srcs e_d + ot_inhold/ot_ihdrv nets, horizontal) and the N band (y 138-148 um; s_d + ot_outhold nets, horizontal), worst gcell at the NE corner where the E and N bands meet. Cause: PPL packs each 32-pin group at slot pitch and stacks both pin layers at the same y (~20 pins/um local, gaps elsewhere), 13.6 pins/um average on E. r4 fix: route.pin_balance (uniform place_pin, layer alternating every pin) and a larger outline. Gate trial at 108x259.2 (util 12%, E 3.96 pins/um/layer) REJECTED on its images: the logic (2,048-bit e_d capture -> lane512 mux -> r_q -> 4 pad stages -> N outputs) gathers toward the N face, so the bottom half of a tall E face carried only the pin flops with ~250 um wires up to the mux; SW 60% empty; TT insertion 233.9 / spread 56.6 ps. Chosen 108x172.8 (5 x 21.6, 8 x 21.6) = 18,662 um2 (r3 13,064, r2 62,986), std 3,183 um2 -> util ~17%: E 2,052 / 172.8 um = 11.9 pins/um face, uniform = 5.94 per layer M2/M4 (r3 PPL peak ~20 pins/um stacked -> -40%); N 1,028 / 108 um = 9.52 pins/um face = 4.76 per layer M3/M5 (r3 11.9 -> -20%). Bounded by the r3 gate trial at 129.6x151.2 (W 40% empty) on width and by the 259.2 trial on height. Clock: W-face centre (ck at 86.0-86.8 um of 172.8, rn adjacent, return_valid/lane just below, explicit pin_ranges), 108 um from the E pin column, <= 194 um Manhattan to any sink, never a corner. tq[1] sync-clear fan-out (~4.1k loads on r_q/pad) left in RTL (frozen, proven source); buffered by repair_design."
+}
