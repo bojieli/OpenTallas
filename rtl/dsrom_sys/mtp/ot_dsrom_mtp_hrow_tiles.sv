@@ -144,7 +144,8 @@ endmodule
 
 module dsfd_mtp_hrow_hub #(
     parameter integer USER_W = 10, parameter integer MAXU = 8, parameter integer RS = 16, parameter integer PB = 80,
-    parameter integer AW = 24, parameter integer FWD_Q = 6, parameter integer RET_Q = 6
+    parameter integer AW = 24, parameter integer FWD_Q = 6, parameter integer RET_Q = 6,
+    parameter integer LOCAL_GROUP_SLOTS = 0 // default-off exact same-edge local key/reset copies
 ) (
     input  wire            ck, rst,
     input  wire [AW:0]     f_vrq,              // seed client request {addr, valid}
@@ -242,12 +243,25 @@ module dsfd_mtp_hrow_hub #(
         if (take) begin hs_part <= l_part; hz_hs <= {l_u, l_pos[SB-1:0]}; end
     end
     wire clr_u = c_v && c_user < MAXU;
+    localparam integer LG = LOCAL_GROUP_SLOTS > 0 ? LOCAL_GROUP_SLOTS : NS;
+    localparam integer NG = NS / LG;
+    localparam integer GPH = NG / NR;
+    initial if (LOCAL_GROUP_SLOTS > 0 && (NS % LG != 0 || LG > NS/NR || NG % NR != 0))
+        $fatal(1,"hub local groups must divide each original reset half");
+    wire [NP*NG-1:0] rn_group;
     wire [NP*NR-1:0] rn_a;
     wire [NP-1:0] ok_n_p, ok_h_p, f0_p;
     genvar gp, gs, gr;
     generate
         for (gr = 0; gr < NP * NR; gr = gr + 1) begin : g_rs
-            ot_dsrom_mtp_rstsync u_rsa (.clk(clk), .rst_n_async(rst), .rst_n(rn_a[gr]));
+            if (LOCAL_GROUP_SLOTS == 0) begin:g_old
+                ot_dsrom_mtp_rstsync u_rsa (.clk(clk), .rst_n_async(rst), .rst_n(rn_a[gr]));
+            end else assign rn_a[gr]=rn_group[gr*GPH];
+        end
+        if (LOCAL_GROUP_SLOTS > 0) begin:g_group_rst
+            for(genvar gi=0;gi<NP*NG;gi=gi+1) begin:g_r
+                dsfd_mtp_hrow_group_rst u_rs(.ck(clk),.rst(rst),.rn(rn_group[gi]));
+            end
         end
         for (gp = 0; gp < NP; gp = gp + 1) begin : g_p
             reg [11:0] tag [0:NS-1];
@@ -256,7 +270,7 @@ module dsfd_mtp_hrow_hub #(
             wire          ev_w = ev_c[gp][EV-1];
             wire [SW-1:0] ev_s = ev_c[gp][12 +: SW];
             for (gs = 0; gs < NS; gs = gs + 1) begin : g_s
-                wire rn = rn_a[gp * NR + (gs * NR) / NS];
+                wire rn = LOCAL_GROUP_SLOTS > 0 ? rn_group[gp*NG+gs/LG] : rn_a[gp * NR + (gs * NR) / NS];
                 reg cmp_r, wg_r, rg_r, ld_r;
                 assign cmp[gs] = cmp_r; assign wg[gs] = wg_r; assign rg[gs] = rg_r; assign ld[gs] = ld_r;
                 wire hit = ev_v && ev_s == gs;
@@ -278,6 +292,8 @@ module dsfd_mtp_hrow_hub #(
                 if (!rn_a[gp * NR]) f0r <= 1'b0;
                 else if (ev_v && ev_w && ld[ev_s] && tag[ev_s][11:4] != ev_c[gp][11:4] && rg[ev_s] != wg[ev_s]) f0r <= 1'b1;
             always @(posedge clk) if (ev_v && ev_w) tag[ev_s] <= ev_c[gp][11:0];
+            wire okn,okh;
+            if (LOCAL_GROUP_SLOTS == 0) begin:g_lookup_old
             // per-part key copies: next skid head (hk*) and held entry (hs*)
             reg [SW-1:0] hk_s, hs_s; reg [7:0] hk_pos, hs_pos; reg [3:0] hk_ep, hs_ep;
             always @(posedge clk) begin
@@ -285,12 +301,42 @@ module dsfd_mtp_hrow_hub #(
                 if (take) begin hs_s <= {l_u, l_pos[SB-1:0]}; hs_pos <= l_pos; hs_ep <= l_ep; end
             end
 `ifdef OT_HROW_MUT_NOEPOCH
-            wire okn = cmp[hk_s] && tag[hk_s][11:4] == hk_pos;
-            wire okh = cmp[hs_s] && tag[hs_s][11:4] == hs_pos;
+            assign okn = cmp[hk_s] && tag[hk_s][11:4] == hk_pos;
+            assign okh = cmp[hs_s] && tag[hs_s][11:4] == hs_pos;
 `else
-            wire okn = cmp[hk_s] && tag[hk_s] == {hk_pos, hk_ep};
-            wire okh = cmp[hs_s] && tag[hs_s] == {hs_pos, hs_ep};
+            assign okn = cmp[hk_s] && tag[hk_s] == {hk_pos, hk_ep};
+            assign okh = cmp[hs_s] && tag[hs_s] == {hs_pos, hs_ep};
 `endif
+            end else begin:g_lookup_local
+                wire [NG-1:0] on,oh;
+                for(genvar gi=0;gi<NG;gi=gi+1) begin:g_group
+                    (* keep=1 *) reg [SW-1:0] hk_s,hs_s;
+                    (* keep=1 *) reg [7:0] hk_pos,hs_pos;
+                    (* keep=1 *) reg [3:0] hk_ep,hs_ep;
+                    always @(posedge clk) begin
+`ifdef OT_HROW_LOCAL_MUT_KEY_LATE
+                        hk_s <= {la[16 +: UB],la[8 +: SB]};
+`else
+                        hk_s <= {la_n[16 +: UB],la_n[8 +: SB]};
+`endif
+                        hk_pos <= la_n[15:8];hk_ep <= la_n[UB+16 +: 4];
+                        if(take)begin hs_s<={l_u,l_pos[SB-1:0]};hs_pos<=l_pos;hs_ep<=l_ep;end
+                    end
+                    wire [LG-1:0] sn,sh;
+                    for(genvar si=0;si<LG;si=si+1)begin:g_slot
+                        localparam integer SLOT=gi*LG+si;
+`ifdef OT_HROW_MUT_NOEPOCH
+                        assign sn[si]=cmp[SLOT] && hk_s==SW'(SLOT) && tag[SLOT][11:4]==hk_pos;
+                        assign sh[si]=cmp[SLOT] && hs_s==SW'(SLOT) && tag[SLOT][11:4]==hs_pos;
+`else
+                        assign sn[si]=cmp[SLOT] && hk_s==SW'(SLOT) && tag[SLOT]=={hk_pos,hk_ep};
+                        assign sh[si]=cmp[SLOT] && hs_s==SW'(SLOT) && tag[SLOT]=={hs_pos,hs_ep};
+`endif
+                    end
+                    assign on[gi]=|sn;assign oh[gi]=|sh;
+                end
+                assign okn=|on;assign okh=|oh;
+            end
 `ifdef OT_HROW_MUT_NOPART
             assign ok_n_p[gp] = okn || hk_part != gp;
             assign ok_h_p[gp] = okh || hs_part != gp;
@@ -345,7 +391,15 @@ module dsfd_mtp_hrow_hub #(
     wire q_live;
     dsfd_mtp_reset_ack #(.N(2)) u_ack_c(.clk(ck),.request_n(rst),.local_release({rn_c,q_live}),.consumer_live(q_live),.reset_initialized(1'b1),.ack(rst_ack[0]));
     for(genvar ai=0;ai<6;ai=ai+1) begin:g_ack_a
+      if(LOCAL_GROUP_SLOTS==0)begin:g_old
       dsfd_mtp_reset_ack u_ack(.clk(ck),.request_n(rst),.local_release(rn_a[ai]),.consumer_live(1'b1),.reset_initialized(1'b1),.ack(rst_ack[ai+1]));
+      end else begin:g_local
+`ifdef OT_HROW_LOCAL_MUT_RST_WITNESS
+        dsfd_mtp_reset_ack u_ack(.clk(ck),.request_n(rst),.local_release(rn_group[ai*GPH]),.consumer_live(1'b1),.reset_initialized(1'b1),.ack(rst_ack[ai+1]));
+`else
+        dsfd_mtp_reset_ack #(.N(GPH)) u_ack(.clk(ck),.request_n(rst),.local_release(rn_group[ai*GPH+:GPH]),.consumer_live(1'b1),.reset_initialized(1'b1),.ack(rst_ack[ai+1]));
+`endif
+      end
     end
 `endif
 endmodule
@@ -527,4 +581,12 @@ module dsfd_mtp_hrow_tc #(
         .ck(ck), .rst(rst), .f_vrq(f_vrq), .t_vrq(t_vrq), .t_vrs(t_vrs), .f_clr(f_clr), .t_flt(t_flt),
         .f_ev0(evh[0]), .f_ev1(evh[1]), .f_ev2(evh[2]), .f_if0(iflh[0]), .f_if1(iflh[1]), .f_if2(iflh[2]),
         .t_rc0(rc[0]), .t_rc1(rc[1]), .t_rc2(rc[2]), .f_pr0(pph[0]), .f_pr1(pph[1]), .f_pr2(pph[2]));
+endmodule
+
+// Kept state prevents equivalent two-edge regional conditioners merging into
+// a single high-fanout registered reset driver. Candidate-only instances.
+module dsfd_mtp_hrow_group_rst(input wire ck,rst,output wire rn);
+ (* keep=1 *) reg [1:0] s;
+ always @(posedge ck or negedge rst) if(!rst)s<=0;else s<={s[0],1'b1};
+ assign rn=s[1];
 endmodule

@@ -1,0 +1,30 @@
+{
+  "enable": {
+    "LOCAL_GROUP_SLOTS": 8,
+    "default": 0
+  },
+  "source_baseline": "066ec43c5",
+  "slot_groups": 48,
+  "key_capture": "Same source edge and same D/enable as original next/held copies; no cascade and zero added datapath stages",
+  "nominal_source_key_ff": {
+    "old": 114,
+    "new": 1824,
+    "added": 1710
+  },
+  "nominal_source_conditioner_ff": {
+    "old": 12,
+    "new": 96,
+    "added": 84
+  },
+  "nominal_added_ff": 1794,
+  "hub_ACK_nominal_ff": 14,
+  "previous_mapped_hub_ACK_ff": 4,
+  "new_mapped_ff": null,
+  "lookup": "Static eight-slot local comparisons and OR; next/held key each captured at original edges",
+  "reset": "Independent kept two-flop regional conditioners,32 slot-control asyncFF per region; ACK helper observes all8 regional RN states in each original half",
+  "clock_root_estimate": 13776,
+  "actual_clock_root_sinks": null,
+  "clock_reset_producers": null,
+  "area_fit": "OPEN same216sq reservation; physical placement, setup/hold, reset checks and per-pair budgets required",
+  "model_adoption": "REQUEST only; not repriced as adopted"
+}
