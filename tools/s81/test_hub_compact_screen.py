@@ -27,3 +27,24 @@ def test_cut_report_keeps_incident_flow_and_unrouted_demand(monkeypatch):
     assert result['routing_complete']
     assert result['hot_edges'][0]['bits'] == 500
     assert result['hot_edges'][0]['contributors'] == [dict(flow='a->b', bits=500)]
+
+
+def test_source_census_does_not_drop_unknown_or_multiterminal_demand():
+    def inst(n, kind='hub'):
+        return [n, 'master', kind, '', '', 0, 0, 100, 100, 'R0']
+    model = dict(insts=[inst('a'), inst('b'), inst('c'), inst('r', 'stn')], buses=[
+        ['clk', 'clock', 1, [['a', 'ck'], ['b', 'ck']]],
+        ['unknown', 'hub', 13, [['a', 'x'], ['missing', 'y']]],
+        ['ab', 'hub', 5, [['a', 'x'], ['b', 'y']]],
+        ['ar', 'hub', 7, [['a', 'x'], ['r', 'i']]],
+        ['rb', 'hub', 7, [['r', 'o'], ['b', 'y']]],
+        ['rc', 'hub', 7, [['r', 'o'], ['c', 'y']]],
+    ])
+    coverage = {}
+    screen.flows_of(model, coverage)
+    assert coverage['source_buses'] == 6
+    assert coverage['excluded_nondatapath_buses'] == 1
+    assert coverage['missing_endpoint_buses'][0]['bits'] == 13
+    assert coverage['eligible_buses'] == 4
+    assert sum(coverage[k] for k in ('transport_buses', 'direct_hub_buses', 'direct_other_buses')) == 4
+    assert coverage['unsupported_hub_components'][0]['hubs'] == ['a', 'b', 'c']

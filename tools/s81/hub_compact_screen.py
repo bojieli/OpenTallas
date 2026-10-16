@@ -60,7 +60,7 @@ def load(p):
     return json.loads(gzip.decompress(b) if str(p).endswith('.gz') else b)
 
 
-def flows_of(model):
+def flows_of(model, coverage=None):
     """contracted block-level flows of the model: p2p {(a, b): bits} and trees [(root, {frame: bits}, width)]"""
     ins = {i[0]: i for i in model['insts']}
 
@@ -80,7 +80,17 @@ def flows_of(model):
             par[x] = par[par[x]]
             x = par[x]
         return x
+    coverage = {} if coverage is None else coverage
+    coverage['source_buses'] = len(model['buses'])
+    coverage['excluded_nondatapath_buses'] = sum(b[1] in NONDATA for b in model['buses'])
+    coverage['missing_endpoint_buses'] = [dict(bus=b[0], bits=b[2], missing=[e[0] for e in b[3] if e[0] not in ins])
+        for b in model['buses'] if b[1] not in NONDATA and any(e[0] not in ins for e in b[3])]
     B = [b for b in model['buses'] if b[1] not in NONDATA and all(e[0] in ins for e in b[3])]
+    coverage['eligible_buses'] = len(B)
+    coverage['direct_other_buses'] = 0
+    coverage['transport_buses'] = 0
+    coverage['direct_hub_buses'] = 0
+    coverage['unsupported_hub_components'] = []
     for b in B:
         tr = [e[0] for e in b[3] if ins[e[0]][2] in TRANSPORT]
         for t in tr[1:]:
@@ -91,6 +101,7 @@ def flows_of(model):
         tr = [e[0] for e in b[3] if ins[e[0]][2] in TRANSPORT]
         real = [blk(e[0]) for e in b[3] if ins[e[0]][2] not in TRANSPORT]
         if tr:
+            coverage['transport_buses'] += 1
             c = comp[f(tr[0])]
             for r in real:
                 c['blocks'][r] += b[2]
@@ -99,8 +110,11 @@ def flows_of(model):
             rs = tuple(sorted(set(real)))
             if len(rs) == 2 and not any(r.startswith('F') for r in rs):
                 p2p[rs] += b[2]
+                coverage['direct_hub_buses'] += 1
+            else:
+                coverage['direct_other_buses'] += 1
     trees = []
-    for c in comp.values():
+    for component, c in comp.items():
         fr = {k: v for k, v in c['blocks'].items() if k.startswith('F')}
         hb = sorted(k for k in c['blocks'] if not k.startswith('F'))
         if fr and len(hb) == 1:
@@ -110,6 +124,16 @@ def flows_of(model):
                 for b in hb[i + 1:]:
                     if len(hb) == 2 or 'sp_sseq' in (a, b):
                         p2p[(a, b)] += c['w']
+            if len(hb) > 2:
+                coverage['unsupported_hub_components'].append(dict(component=component, hubs=hb,
+                    fields=fr, width=c['w'], reason='multiterminal component only sequencer pairs projected'))
+        elif hb:
+            coverage['unsupported_hub_components'].append(dict(component=component, hubs=hb,
+                fields=fr, width=c['w'], reason='no unique hub/field-tree or p2p projection'))
+    coverage['transport_components'] = len(comp)
+    coverage['p2p_demand_pairs'] = len(p2p)
+    coverage['p2p_demand_bits'] = sum(p2p.values())
+    coverage['field_tree_groups'] = len(trees)
     ports = {}
     for i in model['insts']:
         if i[2] == 'cfifo':
@@ -504,7 +528,8 @@ def main():
     ap.add_argument('--png-dir', type=Path)
     a = ap.parse_args()
     model = load(a.model)
-    p2p, trees, ports, mrects = flows_of(model)
+    coverage = {}
+    p2p, trees, ports, mrects = flows_of(model, coverage)
     res = {}
     for spec in a.layout:
         name, path = spec.split('=', 1)
@@ -513,6 +538,9 @@ def main():
         R, pr, tr, cong, util, gr = evaluate(mrects, p2p, trees, ports, L, hub_x)
         big = [r for r in pr if r['bits'] >= 500]
         res[name] = dict(layout=path, p2p=pr, trees=tr, congestion=cong,
+                         p2p_input_pairs=len(p2p), p2p_emitted_pairs=len(pr),
+                         p2p_unplaced=[dict(a=x, b=y, bits=bits) for (x,y), bits in p2p.items()
+                                       if x not in R or y not in R],
                          totals=dict(p2p_obstacle_failures=sum(not r['obstacle_free'] for r in pr),
                                      p2p_bit_mm=round(sum(r['bit_mm'] for r in pr)),
                                      tree_bit_mm=round(sum(r['bit_mm'] for r in tr)),
@@ -537,7 +565,7 @@ def main():
             print(n, t['root'], t['side'], t['leaves'], 'worst', t['worst_um'], t['worst_stages'], 'bit_mm', t['bit_mm'])
     a.out.parent.mkdir(parents=True, exist_ok=True)
     a.out.write_text(json.dumps(dict(schema='opentallas.s81.hub_compact_screen.v1', scope='PLANNING SCREEN (not GEN/GRT)',
-                                     model=str(a.model), hop_um=HOP, gcell_um=G, results=res), indent=1) + '\n')
+                                     model=str(a.model), coverage=coverage, hop_um=HOP, gcell_um=G, results=res), indent=1) + '\n')
 
 
 if __name__ == '__main__':
