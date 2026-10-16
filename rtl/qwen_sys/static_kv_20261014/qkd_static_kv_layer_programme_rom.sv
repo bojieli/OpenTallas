@@ -39,6 +39,7 @@ module qkd_static_kv_layer_programme_rom #(parameter integer MUT=0,parameter [36
  function automatic [31:0] root(input integer st,input integer w);
   root=ROOTS[(9*st+w)*32 +: 32];
  endfunction
+`ifndef SYNTHESIS
  // elaboration-time image check (the boot-loaded module's bad_row / seal rules)
  initial begin : img_check
   integer st,w;reg[36:0]sum;sum=0;
@@ -50,6 +51,7 @@ module qkd_static_kv_layer_programme_rom #(parameter integer MUT=0,parameter [36
   end
   if(sum>37'h0ffffffff||sum==0)$error("layer image: all36 duration");
  end
+`endif
  assign stage=(MUT==2)?(stage_q^6'd1):stage_q;
  assign layer=stage-6'd1;
  wire[5:0] rix=(MUT==4)?((index_q==6'd35)?6'd0:index_q+6'd1):index_q;
