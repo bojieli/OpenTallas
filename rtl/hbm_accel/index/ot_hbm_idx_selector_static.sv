@@ -4,7 +4,7 @@
 // Opcodes: 0idle,1clear frame,2ingest,3hist clear,4hist scan,5choose bin,
 // 6compact scan,7flush partial,8emit line. Every phase includes its fixed
 // memory drain edges. Bins scanned31..0,31..0,63..0 for passes0..2. Ingest fuses pass0 histogram.
-module ot_hbm_idx_selector_static #(parameter integer MUT=0)(
+module ot_hbm_idx_selector_static_core #(parameter integer MUT=0)(
  input wire clk_ctl,input wire [3:0] clk_q,input wire [11:0] clk_mem,
  input wire rst_n,input wire [3:0] op,input wire [1:0] pass,
  input wire [7:0] addr,input wire [9:0] k,
@@ -142,5 +142,39 @@ module ot_hbm_idx_selector_static #(parameter integer MUT=0)(
    end
   end
  end
+endmodule
+`default_nettype wire
+`default_nettype none
+// ---------------------------------------------------------------------------
+// PIN-REGISTERED TILE (OWNER RULE 19:50 PT 10-15, H-NETLIST/idxreg 2026-10-16): the die
+// master ot_hbm_idx_selector_static is this shell. Every data input and every output passes ONE kept
+// flop at the pin (clocks and rst_n pass through); the unchanged arithmetic/control is
+// ot_hbm_idx_selector_static_core. Latency: +1 edge on every input, +1 edge on every output; the IDX
+// calendar compiler (tools/hbm_idx_static_calendar.py, PIN table) schedules them.
+// Pin flops have no reset (as physical/common_flow/ot_pin_regs.tcl); the core is reset.
+// One data clock for every pin flop: clk_ctl (the die's typed control clock, E face); the core's clk_q[q]
+// quadrant roots and clk_mem[] SRAM entries are same-PLL phase-0 roots (related_same_frequency STA).
+module ot_hbm_idx_selector_static #(parameter integer MUT=0)(
+ input wire clk_ctl,input wire [3:0] clk_q,input wire [11:0] clk_mem,
+ input wire rst_n,input wire [3:0] op,input wire [1:0] pass,
+ input wire [7:0] addr,input wire [9:0] k,
+ input wire [2367:0] in_line,
+ output reg [3:0] out_v,output reg [2367:0] out_line,
+ output reg [15:0] threshold_observe,
+ output reg [3:0] selected_v,output reg [2367:0] selected_line,
+ output reg [55:0] selected_observe,
+ output reg fault
+);
+ (* keep *) reg [3:0] op_r;(* keep *) reg [1:0] pass_r;(* keep *) reg [7:0] addr_r;(* keep *) reg [9:0] k_r;
+ (* keep *) reg [2367:0] in_r;
+ wire [3:0] c_out_v,c_sel_v;wire [2367:0] c_out_line,c_sel_line;wire [15:0] c_thr;wire [55:0] c_obs;wire c_fault;
+ always @(posedge clk_ctl)begin
+  op_r<=op;pass_r<=pass;addr_r<=addr;k_r<=k;in_r<=in_line;
+  out_v<=c_out_v;out_line<=c_out_line;threshold_observe<=c_thr;
+  selected_v<=c_sel_v;selected_line<=c_sel_line;selected_observe<=c_obs;fault<=c_fault;
+ end
+ ot_hbm_idx_selector_static_core #(.MUT(MUT)) core(.clk_ctl(clk_ctl),.clk_q(clk_q),.clk_mem(clk_mem),.rst_n(rst_n),
+  .op(op_r),.pass(pass_r),.addr(addr_r),.k(k_r),.in_line(in_r),.out_v(c_out_v),.out_line(c_out_line),
+  .threshold_observe(c_thr),.selected_v(c_sel_v),.selected_line(c_sel_line),.selected_observe(c_obs),.fault(c_fault));
 endmodule
 `default_nettype wire
