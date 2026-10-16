@@ -7659,10 +7659,10 @@
  "m6_pin_grant": {
   "schema": "opentallas.m6_pin_grant.v1",
   "master": "qfd_xhead_e",
-  "granted_by": "Q-COMPUTE-DIE Codex coordinator 2026-10-16; refreshed by Q-DVM+LINK 2026-10-16 for the m6r/m6s source changes (LOCAL_RST/ONWARD_REG/LEAF_FILL_PIPE params, ot_rst_pipe source; port list, faces, spans and contacts identical)",
+  "granted_by": "Q-COMPUTE-DIE Codex coordinator 2026-10-16; refreshed by Q-DVM+LINK 2026-10-16 for the m6r/m6s/m6t source changes (LOCAL_RST/ONWARD_REG/LEAF_FILL_PIPE params, ot_rst_pipe source; port list, faces, spans and contacts identical)",
   "reason": "Source-bound local M6 PORT-only contacts split actual1170-bit seam pressure across faces; M5 signal/PG interior cap stands. Candidate leaf local64.8x138.24; heads64.8x345.6 R0 only. No parent M7/M9 reservation or whole-die geometry/timing qualification; actual routed DEF/vias/LEF/native220/190/80 gates required.",
-  "source_commit": "370aa047a54ebe3bc2bca874cddd9d646e3e8f2f",
-  "source_spec_sha256": "ce94de87c8ddc88581d09217fd62c7a16376e3a56afb033f8ae8d464631d1e4c",
+  "source_commit": "d6045728670853894a797619f43fae4e3757a89a",
+  "source_spec_sha256": "bd440542276140375e43b29e809976bfd60871a7a4ea8165b1687aefca5fe4fe",
   "ports": [
    {
     "name": "cs_wv",
