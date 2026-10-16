@@ -106,7 +106,7 @@
   "views_to": "physical/ref_tile/s81hc_retcol_c0_ref/views",
   "record_to": "results/rtl/ref_tile/s81hc_retcol_c0_ref",
   "hold_merge": "cth_ntc parent component: the parent kit binds it after every child closes with native PASS; exactness = two-row chain proof + exact HC gate (RETCOL)",
-  "no_bench_reason": "Exactness at row / slab level: results/rtl/s81_return_columns_1015/row_proof (two-row chain vs the cth_nt monolithic return, same cycle, 5 mutants) and the exact HC gate with RETCOL 1; a leaf-only bench cannot model the column-to-column y / cs relays."
+  "benched_by": "s81hc_ng256_retcol"
  },
  "params": {
   "CHAIN_STEP": 6,
