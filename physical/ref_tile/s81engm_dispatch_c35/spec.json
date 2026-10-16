@@ -1,0 +1,147 @@
+{
+ "kind": "tile",
+ "sources": [
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/hdc/ot_hdc_fp32_f12.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv",
+  "rtl/hdc/v41x/ot_dsrom_su_add6.sv",
+  "rtl/hdc/v41x/ot_dsrom_su_norm.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/hdc/ot_hdc_sfu.sv",
+  "rtl/hdc/ot_hdc_fpu.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+  "rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
+  "rtl/hdc/v41/ot_hdc_fsqrt.sv",
+  "rtl/hdc/v41/ot_hdc_fdiv.sv",
+  "rtl/hdc/v41/ot_hdc_softplus.sv",
+  "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv",
+  "rtl/hdc/v41/ot_hdc_actquant.sv",
+  "rtl/hdc/v41x/ot_dsrom_aq12.sv",
+  "rtl/hdc/v41x/ot_dsrom_divc.sv",
+  "rtl/hdc/v41x/ot_hdc_v41x_vec_side.sv",
+  "rtl/dsrom_sys/engram/mix/ot_s81_engram_mix.sv",
+  "rtl/dsrom_sys/engram/mix/ot_s81_engram_dispatch.sv"
+ ],
+ "params": {},
+ "util": 0.5,
+ "layer_cap": "M5",
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 16,
+  "pin_v": "M3 M5",
+  "pin_h": "M4",
+  "pin_min_tracks": 1,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "name": "s81engm_dispatch_c35",
+ "top": "ot_s81_engram_dispatch",
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst"
+ ],
+ "outline": {
+  "w": 34.56,
+  "h": 34.56,
+  "exact": true
+ },
+ "recipe": 3,
+ "pins": {
+  "N": [
+   "t_lk_cmd",
+   "f_lk_done",
+   "f_lk_st"
+  ],
+  "S": [
+   "ck",
+   "rst"
+  ],
+  "E": [
+   "c_cmd",
+   "c_done",
+   "c_st"
+  ],
+  "W": [
+   "t_mix_cmd",
+   "f_mix_done",
+   "f_mix_st"
+  ]
+ },
+ "io_tcl": "physical/s81_die_pins/v29_engram_dispatch_compact/ot_s81_engram_dispatch.tcl",
+ "why_floorplan": "compact candidate (VIS-ROM 10-16 finding S81H-11: v20 129.6x86.4 is 4.8% filled): 34.56x34.56 (~45% fill), same ports/faces/layers/pitch, pin runs centred; S-DIE re-binds on CLOSED",
+ "structural_change": "Outline-only shrink of the CLOSED s81engm_dispatch (d1-4e3b2ead4, same RTL): 11,197 -> 1,194 um2.",
+ "job": {
+  "owner": "Claude:s81-engnorm-2210",
+  "branch": "claude/s81-engnorm-2210",
+  "tag": "c1",
+  "purpose": "S81 Engram dispatcher compact outline 34.56x34.56 (v29 candidate pins)",
+  "benches": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_s81_engram_dispatch u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_fp32_f12.sv rtl/hdc/ot_hdc_fp32_mul_lat.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv rtl/hdc/v41x/ot_dsrom_su_add6.sv rtl/hdc/v41x/ot_dsrom_su_norm.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_sfu.sv rtl/hdc/ot_hdc_fpu.sv rtl/hdc/ot_hdc_fp32_mul_pipe.sv rtl/hdc/ot_hdc_fastfp_lat_f12.sv rtl/hdc/v41/ot_hdc_fsqrt.sv rtl/hdc/v41/ot_hdc_fdiv.sv rtl/hdc/v41/ot_hdc_softplus.sv rtl/hdc/v41x/ot_hdc_v41x_sfu.sv rtl/hdc/v41/ot_hdc_actquant.sv rtl/hdc/v41x/ot_dsrom_aq12.sv rtl/hdc/v41x/ot_dsrom_divc.sv rtl/hdc/v41x/ot_hdc_v41x_vec_side.sv rtl/dsrom_sys/engram/mix/ot_s81_engram_mix.sv rtl/dsrom_sys/engram/mix/ot_s81_engram_dispatch.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "dispatch_exact",
+    "cmd": "python3 tools/s81_engram_mix/dispatch_gate.py {RUN}/disp_m0 0",
+    "expect": "pass",
+    "pass_regex": "PASS dispatcher20 tags exact",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "dispatch_mut1_tag",
+    "cmd": "python3 tools/s81_engram_mix/dispatch_gate.py {RUN}/disp_m1 1",
+    "expect": "fail",
+    "fail_regex": "MIX tag/order mismatch",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ],
+  "views_to": "physical/ref_tile/s81engm_dispatch_c35/views",
+  "record_to": "results/rtl/ref_tile/s81engm_dispatch_c35",
+  "extra_paths": [
+   "physical/s81_die_pins/v21_engram_arithmetic",
+   "physical/s81_die_pins/v29_engram_dispatch_compact",
+   "results/rtl/s81_engram_mix_1014/fixtures",
+   "rtl/dsrom_sys",
+   "rtl/hdc",
+   "rtl/lib",
+   "tools/s81/engram_dispatch_pins_compact.py",
+   "tools/s81_engram_mix",
+   "tools/s81_suhc"
+  ]
+ },
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "pin_regs": {
+  "enable": true
+ },
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ }
+}
