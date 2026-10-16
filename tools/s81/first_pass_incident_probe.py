@@ -60,7 +60,9 @@ def main():
                 insts=[i.d() for i in m['insts']], buses=m['buses'],
                 pins={master + '|' + port: names for master, ports in rp.items() for port, names in ports.items()},
                 final_pin_placement=False, final_hop_placement=False,
-                warnings=['May contain partial failed diagnostic chains.',
+                relay_progress_applied=False, final_clock_reset_netlist=False,
+                warnings=['Stop is before relay-progress repair and final global clock/reset construction.',
+                          'May contain partial failed diagnostic chains.',
                           'Port-name mapping is not a native-view/actual-final-pin proof.',
                           'Never substitute this record for final GEN, native composition or signoff.'])
     with gzip.open(out / 'first_pass_plan.json.gz', 'wt') as f:
