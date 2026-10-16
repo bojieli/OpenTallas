@@ -11,8 +11,8 @@
   "rst_n"
  ],
  "outline": {
-  "w": 17.28,
-  "h": 21.6
+  "w": 12.96,
+  "h": 8.64
  },
  "layer_cap": "M5",
  "macros": [],
@@ -33,7 +33,8 @@
   "threads": 4,
   "peak_ram_gb": 8,
   "hold_margin_ns": 0.03,
-  "macro_halo_um": 5.4
+  "macro_halo_um": 5.4,
+  "m5_pg_pitch": 2.7
  },
  "recipe": 3,
  "purpose": "Q-VMWB 2026-10-16: E3 VM per-bank write-control register (Codex 044c11ad8 composition, merged): qvm_wctl26 = SU replica bank {line[9:0],mask} x 16 instances; with the 160 reused CLOSED qvm_data256_native it takes the E3 write state (40,960 + 2,160 FF) out of the VM parent. One register stage, 0 cycles.",
