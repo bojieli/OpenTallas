@@ -1,0 +1,111 @@
+{
+ "schema": "opentallas.s81.cthntc_plan.v1",
+ "parent": {
+  "w": 576.72,
+  "h": 844.56
+ },
+ "total": {
+  "joins": 16540,
+  "over500": 0,
+  "max_um": 494.088
+ },
+ "by_kind": {
+  "hrq": {
+   "n": 4096,
+   "max_um": 422.766,
+   "over500": 0,
+   "over440": 0
+  },
+  "yb_loc": {
+   "n": 256,
+   "max_um": 429.774,
+   "over500": 0,
+   "over440": 0
+  },
+  "nflt": {
+   "n": 16,
+   "max_um": 415.854,
+   "over500": 0,
+   "over440": 0
+  },
+  "request": {
+   "n": 1296,
+   "max_um": 362.382,
+   "over500": 0,
+   "over440": 0
+  },
+  "fv": {
+   "n": 28,
+   "max_um": 283.494,
+   "over500": 0,
+   "over440": 0
+  },
+  "fdx": {
+   "n": 416,
+   "max_um": 243.906,
+   "over500": 0,
+   "over440": 0
+  },
+  "ctpl_flag": {
+   "n": 16,
+   "max_um": 207.672,
+   "over500": 0,
+   "over440": 0
+  },
+  "hov_src": {
+   "n": 1,
+   "max_um": 26.496,
+   "over500": 0,
+   "over440": 0
+  },
+  "to_slice": {
+   "n": 2512,
+   "max_um": 342.096,
+   "over500": 0,
+   "over440": 0
+  },
+  "to_partner_slice": {
+   "n": 2048,
+   "max_um": 494.088,
+   "over500": 0,
+   "over440": 2048
+  },
+  "chain": {
+   "n": 4560,
+   "max_um": 461.04,
+   "over500": 0,
+   "over440": 4560
+  },
+  "yb_peer": {
+   "n": 768,
+   "max_um": 306.888,
+   "over500": 0,
+   "over440": 0
+  },
+  "flags": {
+   "n": 12,
+   "max_um": 288.744,
+   "over500": 0,
+   "over440": 0
+  },
+  "cs_rel": {
+   "n": 384,
+   "max_um": 288.456,
+   "over500": 0,
+   "over440": 0
+  },
+  "hov_rel": {
+   "n": 3,
+   "max_um": 288.456,
+   "over500": 0,
+   "over440": 0
+  },
+  "cs_src": {
+   "n": 128,
+   "max_um": 315.762,
+   "over500": 0,
+   "over440": 0
+  }
+ },
+ "scope": "GEOMETRY ONLY (pin-to-pin Manhattan); timing by the leaf gates/routes and the parent trial"
+}

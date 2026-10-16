@@ -1,0 +1,114 @@
+{
+ "name": "s81hc_ctrncol_w_ref",
+ "top": "ot_s81_hc_ctrn_col_w",
+ "kind": "tile",
+ "sources": [
+  "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_cth.sv",
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/hdc/ot_hdc_fp32_f12.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv",
+  "rtl/dsrom_sys/s81_suhc/ot_s81_hc_core.sv",
+  "rtl/dsrom_sys/s81_suhc/dsfd_sp_hc.sv",
+  "rtl/dsrom_sys/s81_ctrl/ot_s81_engine_adapter.sv",
+  "rtl/lib/ot_async_fifo.sv",
+  "rtl/lib/ot_reset_sync.sv",
+  "rtl/lib/ot_skid_buffer.sv",
+  "rtl/hdc/v41x/ot_dsrom_su_hcpost.sv",
+  "rtl/hdc/v41x/ot_dsrom_su_add6.sv",
+  "rtl/hdc/v41x/ot_dsrom_su_norm.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/hdc/ot_hdc_sfu.sv",
+  "rtl/hdc/ot_hdc_fpu.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+  "rtl/proto/ot_fp32_add_rne_pipe.sv",
+  "rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
+  "rtl/hdc/v41/ot_hdc_fsqrt.sv",
+  "rtl/hdc/v41/ot_hdc_fdiv.sv",
+  "rtl/hdc/v41/ot_hdc_softplus.sv",
+  "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv",
+  "rtl/hdc/v41/ot_hdc_actquant.sv",
+  "rtl/hdc/v41x/ot_dsrom_aq12.sv",
+  "rtl/hdc/v41x/ot_dsrom_divc.sv",
+  "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_return_columns.sv",
+  "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_cth_ntc.sv"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [],
+ "outline": {
+  "w": 144.18,
+  "h": 12.96,
+  "exact": true
+ },
+ "why_floorplan": "Per-column return slice (one register stage, 1,140 b: valid, header, own + partner (column c+2) payload); partner inputs on the W side (columns 2/3).",
+ "macros": [],
+ "pins": {
+  "S": [
+   "a_own",
+   "a_par",
+   "b_own",
+   "b_par",
+   "hdr_c",
+   "rv_c"
+  ],
+  "N": [
+   "a_own_out",
+   "a_par_out",
+   "b_own_out",
+   "b_par_out",
+   "hdr_out",
+   "rv_out"
+  ],
+  "W": [
+   "clk",
+   "rst_in"
+  ]
+ },
+ "refglob": "*",
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "job": {
+  "owner": "Claude:S-ENGRAM+NORM/HC-COLUMN",
+  "branch": "claude/s81-hccol-0600",
+  "tag": "a1",
+  "purpose": "New cth_ntc return slice replacing the 576.72-um ctrn strip: per-column bundles so every chain join stays inside its column.",
+  "views_to": "physical/ref_tile/s81hc_ctrncol_w_ref/views",
+  "record_to": "results/rtl/ref_tile/s81hc_ctrncol_w_ref",
+  "hold_merge": "cth_ntc parent component: the parent kit binds it after every child closes with native PASS; exactness = two-row chain proof + exact HC gate (RETCOL)",
+  "no_bench_reason": "Exactness at row / slab level: results/rtl/s81_return_columns_1015/row_proof (two-row chain vs the cth_nt monolithic return, same cycle, 5 mutants) and the exact HC gate with RETCOL 1; a leaf-only bench cannot model the column-to-column y / cs relays."
+ },
+ "params": {},
+ "children": [],
+ "inter": [],
+ "layer_cap": "M5",
+ "orfs_vars": {
+  "POST_IO_PLACEMENT_TCL": "tools/s81_suhc/inherited_exact_iop.tcl",
+  "OT_HC_NATIVE_IO_TCL": "/src/physical/s81_die_pins/v28_hc_cthntc/ot_s81_hc_ctrn_col_w.tcl"
+ },
+ "recipe": 2,
+ "io_tcl": "physical/s81_die_pins/v28_hc_cthntc/ot_s81_hc_ctrn_col_w.tcl",
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "Real RTL registers the boundary at its own stage (chain rd/rv -> rdq/rvq, y beat / cs relays, ybuf / psb captures, rdm / header / request / flag registers); a generic pin register would add a cycle to the fixed return calendar. hrq feeds the same-cycle merge (bank round trip) by design."
+ },
+ "structural_change": "ctrn (one register) split into four per-column slices with header / valid x4 and payload x2 replication; 0 cycles.",
+ "slot_change_request": "New cth_ntc leaf (top-down parent plan tools/s81/hc_cthntc_plan.py, physical/s81_die_pins/v28_hc_cthntc: 16,540 joins, 0 > 500 um, max 494 um)."
+}
