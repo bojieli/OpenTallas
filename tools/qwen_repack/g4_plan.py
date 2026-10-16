@@ -33,8 +33,8 @@ def build(nl=False):
            '// Pure clock rewiring around the unchanged rp2_45 body: zero added edges.\n' + rtl)
     (ROOT / f'rtl/physical/{top}.sv').write_text(rtl)
     regions = {'ck': copy.deepcopy(g['regions']['ck']),
-               'ck_rn': [[201.528, 550.8, 266.328, 572.4]],
-               'ck_rs': [[201.528, 583.2, 266.328, 604.8]]}
+               'ck_rn': [[212.328, 550.8, 255.528, 572.4]],
+               'ck_rs': [[212.328, 586.98, 255.528, 608.58]]}
     # Each macro's read-facing half-gutter. A 2.16 um shared-logic corridor
     # separates the halves; column gutters and outer bands also stay unfenced.
     row_gutters = {3: (639.312, 654.432), 4: (656.616, 671.736),

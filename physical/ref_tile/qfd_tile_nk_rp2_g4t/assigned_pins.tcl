@@ -2597,7 +2597,7 @@ place_pin -pin_name {ck_fa2} -layer M4 -location {0.096 312.396}
 place_pin -pin_name {ck_fa3} -layer M4 -location {0.096 412.908}
 place_pin -pin_name {ck_fa4} -layer M4 -location {457.824 487.884}
 place_pin -pin_name {ck} -layer M4 -location {457.824 425.004}
-place_pin -pin_name {ck_rs} -layer M4 -location {457.824 594.012}
+place_pin -pin_name {ck_rs} -layer M4 -location {457.824 597.804}
 place_pin -pin_name {ck_rn} -layer M4 -location {457.824 561.612}
 place_pin -pin_name {ck_rp0} -layer M4 -location {457.824 815.964}
 place_pin -pin_name {ck_rp1} -layer M4 -location {457.824 833.292}
