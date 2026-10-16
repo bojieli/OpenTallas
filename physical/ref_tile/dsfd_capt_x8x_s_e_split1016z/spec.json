@@ -121,7 +121,11 @@
     "threads": 8,
     "peak_ram_gb": 16
    }
-  ]
+  ],
+  "hold_eco": {
+   "hold_margin_ps": 3,
+   "why": "native capture <= 190 on every seam input: the default +18 ps ECO goal pads every input pin under ~37 ps of hold slack when one internal cross-entry arc misses (split1016z s_w: capture 168.6 -> 219.6); acceptance stays FF >= 0 with the 25 ps hold uncertainty and the 100 ps cross-entry die-skew reserve"
+  }
  },
  "clock_ports": [
   "ckv[0]",

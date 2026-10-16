@@ -1,0 +1,81 @@
+{
+ "tool": "tools/hier_contract/native_pin_audit.audit_one (TT; launch<=220 capture<=190)",
+ "date": "2026-10-16",
+ "stream": "S-VM-CAPT-X8S2",
+ "records": [
+  {
+   "cell": "dsfd_capt_x8x_s_e",
+   "view": "physical/ref_tile/dsfd_capt_x8x_s_e_split1016z/views/dsfd_capt_x8x_s_e",
+   "lib_cell": "dsfd_capt_x8x_s_e",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 149.6,
+   "spread_ps": 33.6,
+   "outputs": 848,
+   "inputs": 1665,
+   "launch_ps": 202.3,
+   "launch_pin": "t_vm[112]",
+   "capture_ps": 163.6,
+   "capture_pin": "b[22]",
+   "launch_over": 0,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "pass": true,
+   "fail_why": "",
+   "record_commit": "08eeded12",
+   "job": "dsfd_capt_x8x_s_e_split1016z-x43-b786448b1",
+   "etm_insertion_per_clock_pin_ps_ss_ff_tt": {
+    "ckv[0]": [
+     214.7,
+     104.4,
+     149.9
+    ],
+    "ckvb[0]": [
+     212.6,
+     107.7,
+     149.6
+    ]
+   }
+  },
+  {
+   "cell": "dsfd_capt_x8x_s_w",
+   "view": "physical/ref_tile/dsfd_capt_x8x_s_w_split1016z/views/dsfd_capt_x8x_s_w",
+   "lib_cell": "dsfd_capt_x8x_s_w",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 147.6,
+   "spread_ps": 27.2,
+   "outputs": 848,
+   "inputs": 1665,
+   "launch_ps": 204.1,
+   "launch_pin": "t_vm[233]",
+   "capture_ps": 219.6,
+   "capture_pin": "b[1197]",
+   "launch_over": 0,
+   "capture_over": 63,
+   "comb_pins": 0,
+   "comb_first": [],
+   "pass": false,
+   "fail_why": "capture 219.60541 > 190 (63 pins)",
+   "record_commit": "46578a017",
+   "job": "dsfd_capt_x8x_s_w_split1016z-x43-b786448b1",
+   "etm_insertion_per_clock_pin_ps_ss_ff_tt": {
+    "ckv[0]": [
+     205.9,
+     104.2,
+     145.3
+    ],
+    "ckvb[0]": [
+     206.9,
+     108.5,
+     147.2
+    ]
+   }
+  }
+ ]
+}

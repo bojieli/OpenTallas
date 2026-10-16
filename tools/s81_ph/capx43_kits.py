@@ -151,6 +151,16 @@ def spec_y(side, sp):
 
 NATIVE_Y = 'results/arch/s81_hub_parents_1016/native_audit_capture_1316/native_audit_x8x_split1016y.json'
 NATIVE_Y_FAIL = {'e': ('b[248]', 197.6, 38, 196.8), 'w': ('b[624]', 192.3, 2, 184.5)}   # pin, capture, pins over, launch
+# split1016z s_w (b786448b1) routed FF -1.43 on ONE cross-entry ad0 -> bd0 arc (100 ps die-skew hold reserve); the default
+# hold ECO (goal HM 18 + allowance -> window 36.9 ps) then padded 894 endpoints incl. 230 seam inputs: native capture
+# 168.6 pre-ECO -> 219.6 (b[1197], 63 pins).  s_e (no ECO) PASSES 163.6 / 202.3.  HOLD_ECO keeps a near-miss ECO on the
+# missing arcs: goal 3 ps + allowance -> window ~22 ps < the 25.5 ps worst seam-input hold slack of that route.
+NATIVE_Z = 'results/arch/s81_hub_parents_1016/native_audit_capture_1316/native_audit_x8x_split1016z.json'
+NATIVE_Z_FAIL = {'w': ('b[1197]', 219.6, 63, 204.1)}
+HOLD_ECO = {"hold_margin_ps": 3, "why": (
+    "native capture <= 190 on every seam input: the default +18 ps ECO goal pads every input pin under ~37 ps of hold slack "
+    "when one internal cross-entry arc misses (split1016z s_w: capture 168.6 -> 219.6); acceptance stays FF >= 0 with the "
+    "25 ps hold uncertainty and the 100 ps cross-entry die-skew reserve")}
 
 
 def spec_z(side, sp):
@@ -174,6 +184,15 @@ def spec_z(side, sp):
                                f"{n} pins): " + fix + ".  " + sp['structural_change'])
     sp['reroute_reason'] = {"kind": "pin_register", "source": NATIVE_Y, "cell": top, "capture_ps": cap,
                             "launch_ps": lw, "fix": fix}
+    if side in NATIVE_Z_FAIL:      # the split1016z view of this face is CLOSED but fails native: cite that receipt
+        zp, zc, zn, zl = NATIVE_Z_FAIL[side]
+        zfix = (f"re-route of the same split1016z kit with a near-miss hold ECO goal (hold_eco.hold_margin_ps "
+                f"{HOLD_ECO['hold_margin_ps']}): b786448b1 pre-ECO capture 168.6, FF -1.43 on one ad0 -> bd0 cross-entry arc; "
+                "the default ECO window (36.9 ps) padded 230 seam inputs")
+        sp['reroute_reason'] = {"kind": "pin_register", "source": NATIVE_Z, "cell": top, "capture_ps": zc,
+                                "launch_ps": zl, "fix": zfix}
+        sp['structural_change'] = f"split1016z {zp} {zc} ps ({zn} pins) after the default hold ECO: {zfix}.  " + sp['structural_change']
+    sp['job']['hold_eco'] = dict(HOLD_ECO)
     sp['job']['owner'] = 'claude:S-VM-CAPT-X8S2'
     sp['job']['branch'] = 'claude/svm-capt-x8s2-1016'
     return sp

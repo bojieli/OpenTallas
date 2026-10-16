@@ -1865,7 +1865,10 @@ def gen_job(s: dict, kd: str, commit: str | None, blocks: list) -> dict:
                                 "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"}],
                     "post_sdc": [f"{kd}/signoff.sdc", "physical/common_flow/link_budget_consistent.sdc"],
                     "macros": views},
-        "hold_eco": {"enabled": True, "session": "mm", "reason": "ref_tile: corrected FF hold flow"},
+        # spec job "hold_eco" (S-VM-CAPT-X8S2 2026-10-16): per-kit post-route hold ECO knobs (closure_loop start_hold_eco:
+        # hold_margin_ps / setup_filter_ps / ...) merged over the default, e.g. a pin-flop leaf whose native capture budget
+        # forbids the default +18 ps goal padding every input pin when one internal arc misses by a few ps
+        "hold_eco": {"enabled": True, "session": "mm", "reason": "ref_tile: corrected FF hold flow", **(j.get("hold_eco") or {})},
         "budget": {"enabled": False, "reason": "ref_tile: boundary budget 0.2 T applied in-run"},
         "record": [{"from": "{RUN}/record/views", "to": j.get("views_to", f"{kd}/views")},
                    {"from": "{RUN}/record/route", "to": j.get("record_to", f"results/rtl/ref_tile/{s['name']}") + f"/{name}"}],

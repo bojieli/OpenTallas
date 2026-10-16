@@ -93,7 +93,9 @@
  "hold_eco": {
   "enabled": true,
   "session": "mm",
-  "reason": "ref_tile: corrected FF hold flow"
+  "reason": "ref_tile: corrected FF hold flow",
+  "hold_margin_ps": 3,
+  "why": "native capture <= 190 on every seam input: the default +18 ps ECO goal pads every input pin under ~37 ps of hold slack when one internal cross-entry arc misses (split1016z s_w: capture 168.6 -> 219.6); acceptance stays FF >= 0 with the 25 ps hold uncertainty and the 100 ps cross-entry die-skew reserve"
  },
  "budget": {
   "enabled": false,
