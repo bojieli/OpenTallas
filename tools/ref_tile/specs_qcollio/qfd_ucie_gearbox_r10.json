@@ -140,11 +140,11 @@
  "conservative_timing_envelope": "All five roots are signed off as related same-PLL phase-0 roots at the common 833.333 ps leaf period. True periods: core 833.333, fdi/fdi_rx 1000, blk_tx/blk_rx 5000 (one PLL, aligned 5 ns frame). The r10 RTL has no core<->FDI path; every true cross-root setup relation is >= 833.333 ps (results/rtl/qwen_coll_io_1014/block_stage_sta_r10_1015/r10/record.json, ordinary STA from one 200 MHz reference, no exceptions) and every true hold relation is >= the modelled coincident-edge 0, so the common-period sign-off is strictly tighter than the true relation for every path. Die STA applies the true generated clocks.",
  "why_floorplan": "W face = core side (597+1 in, 597+1 out, fault); E face = UCIe FDI side (1043+1 TX, 1043+1 RX, fault; 2,089 pins over 216 um: the route places M4 pins at 2 tracks each in groups of 32, 172.8 um gave 1,785 slots (gate d861c9dd7 pin_fit FAIL)) to abut the PHY W-face pin block; S = five roots + reset. Outline from gate 1e991bc08: std area 7,662 um2 -> util ~0.52-0.54 with the +586 FF beat-3/pad registers. WIDTH 86.4 -> 129.6 (gate 59a5169a5 --cts FAIL DPL-0033): the r10 crossings are flop-to-flop at coincident edges of separate CTS roots, so FF hold repair after CTS inserts ~5,650 um2 of hold buffers (16,746 endpoints, ws -95.6 -> +10 ps; movable area 9,798 -> 15,448 um2 = 89.4% of the 86.4x216 core) and detailed placement cannot legalize. 129.6x216 (27,994 um2) gives ~55% after hold repair (the 1e991bc08 gate at this outline passed CTS); pre-CTS util ~0.28 is the expected util-band WARN, the room is the measured hold-buffer area, not slack.",
  "slot_change_request": "NEW leaf inside the compute-die IO collective band next to ot_qfd_ucie_x64_phy W face (pin block y 600..700.4). Outline provisional, sized by this gate; compute lead / geometry must grant the slot before routing.",
- "structural_change": "r10 replaces the r9 direct 1.2 GHz core <-> 1 GHz FDI gearbox (ordinary STA relation 166.7 ps, slack -48..-633 ps pre-placement) with a 200 MHz block stage: 4x3588 payload FF (r9: 5x3588), constant 19 core edges (r9: 24), same 1043-bit 4-of-5 FDI beat calendar. Gate 1e991bc08 WARNs fixed structurally: every boundary input registered before check logic (beat 3 captured full width, padding OR on registered bits; PHY valid pin flop), registered one-hot stage/beat enables replace binary decodes (2,088-load decode nets), outline 86.4x216 (util ~0.43; height fixed by the 2,089-pin FDI face). Gate d207fd319 FAIL DPL-0038 at util 0.55 after timing repair buffered 600-load select nets: stage/read selects now three copies (199 bits each) and FDI beat enables five copies (<=209 bits each), all <=256 loads, copies cross-checked by the fault logic.",
+ "structural_change": "r11 route 95790e7a6 hold flood was the multi-flop INPUT captures (each tx_frame bit -> 6 enabled stage flops, each phy_rx_frame bit -> 4 beat flops; 7,590 violators), not the clock crossings (all wide crossings measured +293..+342): r12 gives every data input exactly one pin register (txp core / rxp fdi_rx, padded + FIRM at the pin by recipe 2) and re-times stage words 0..4 / RX beats 0..2 one edge later with word 5 / beat 3 riding the pin register, 0 added cycles.",
  "job": {
   "owner": "Claude:Q-COLL",
   "branch": "claude/qwen-coll-io-1014",
-  "tag": "r11",
+  "tag": "r12",
   "purpose": "Harden the r11 UCIe gearbox leaf (r10 block stage + half-cycle fast-root negedge registers on every wide cross-root crossing; r10 a534fb815 EARLY_FAIL_HOLD -104 ps / 16,901 endpoints); TT/FF at 833.333 ps.",
   "benches": [
    {
@@ -173,5 +173,9 @@
    "results/rtl/qwen_coll_io_1014/block_stage_component_r10_1015",
    "results/rtl/qwen_coll_io_1014/block_stage_sta_r10_1015"
   ]
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "RTL is pin-registered (r12): every data input has exactly one pin flop (txp/txp_v core, rxp fdi_rx, pv_q fdi) and every output is a register (phy_tx_frame/phy_tx_valid fdi, rx_frame/rx_valid core, faults); the gearbox calendar is fixed to the block edges, a synthesized second register would break the 6:5 frame alignment"
  }
 }
