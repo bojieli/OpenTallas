@@ -9,8 +9,8 @@
  "clock_port": "ck",
  "reset_ports": [],
  "outline": {
-  "w": 10.8,
-  "h": 10.8
+  "w": 12.96,
+  "h": 12.96
  },
  "macros": [],
  "pins": {
@@ -26,8 +26,16 @@
  },
  "pin_ranges": {
   "ck": [
-   4.32,
-   6.48
+   5.4,
+   7.56
+  ],
+  "a": [
+   5.4,
+   7.56
+  ],
+  "b": [
+   5.4,
+   7.56
   ]
  },
  "recipe": 3,
@@ -54,7 +62,7 @@
   "owner": "Claude:Q-KVSYS-DIE",
   "branch": "claude/qkvsys-rly-std",
   "tag": "v1",
-  "purpose": "Qwen KV/system die relay STANDARD qkd_rlys_1: one register stage of width class 1 b (a W face in, b E face out, ck S), 10.8 x 10.8 um, M5 cap, W/E pins on M4 at 3 tracks (<= 0.15 pins/um, rule <= 8 pins/um/layer, VIS-ROM QKV-04), no reset (flush rule), 1 cycle/stage as the die plan; replaces the 21 generated qkd_rly_<W> masters as replicas (tools/qwen_kv_die/kv_rly_std.py, OT_KV_RLY_STD=1)",
+  "purpose": "Qwen KV/system die relay STANDARD qkd_rlys_1: one register stage of width class 1 b (a W face in, b E face out, ck S), 12.96 x 12.96 um, M5 cap, W/E pins on M4 at 3 tracks (<= 0.12 pins/um, rule <= 8 pins/um/layer, VIS-ROM QKV-04), no reset (flush rule), 1 cycle/stage as the die plan; replaces the 21 generated qkd_rly_<W> masters as replicas (tools/qwen_kv_die/kv_rly_std.py, OT_KV_RLY_STD=1)",
   "benches": [
    {
     "name": "exact_words",
