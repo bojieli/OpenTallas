@@ -13,7 +13,17 @@ set -uo pipefail
 KITENV=$1; NAME=$2; OUT=$3; STOP=${4:-}
 SRC=${SRC:?}; W=$OUT/$NAME; mkdir -p $W; cd $SRC
 OT_ENV_PD=${PD:-}; OT_ENV_NC=${NC:-}
-source $KITENV
+# A partly sourced kit must never fall through to default PG, pins or hooks.
+# Bash can print a compound-array parse error yet return 0 (and a later
+# assignment can also hide it when sourced). Syntax diagnostics are fatal too.
+if ! KIT_SYNTAX=$(bash -n "$KITENV" 2>&1) || [ -n "$KIT_SYNTAX" ]; then
+  printf 'REF_TILE invalid kit shell syntax: %s\n%s\n' "$KITENV" "$KIT_SYNTAX" >&2
+  exit 2
+fi
+if ! source "$KITENV"; then
+  printf 'REF_TILE could not load kit: %s\n' "$KITENV" >&2
+  exit 2
+fi
 [ -n "$OT_ENV_PD" ] && PD=$OT_ENV_PD; [ -n "$OT_ENV_NC" ] && NC=$OT_ENV_NC
 # PIN GROUPS (flowfix 2026-10-13): every run of this script -- the route, the gate's floorplan smoke and its --cts run --
 # chunks the --pin-region groups alike.  The job's route command set OT_PIN_GROUP_MAX=32 and the gate did not, so a
@@ -21,6 +31,11 @@ source $KITENV
 # The kit.env's own `export OT_PIN_GROUP_MAX=` (route.pin_balance) wins, then the caller's, then the route default
 # (tools/pin_fit.py ROUTE_PIN_GROUP_MAX; test_pin_fit.py keeps the two equal).
 export OT_PIN_GROUP_MAX=${OT_PIN_GROUP_MAX:-32}
+# CORNER AVOIDANCE (ROOT 2026-10-16): balanced pins (OT_PIN_BALANCE_H/V, place_pin) stay OT_PIN_CORNER_UM (1.0 um) off
+# the tile corners (run_abi3_physical.io_constraints_tcl).  place_pins keeps its own measured margin (first slot 0.732 um
+# from the corner, tools/pin_fit.py PPL_FIRST_SLOT_UM): no corner DRC seen on that path, and the gate's slot model
+# stays exact.
+export OT_PIN_CORNER_UM=${OT_PIN_CORNER_UM:-1.0}
 K=${KIT#/src/}
 D=/src/physical/qwen_die_masters
 hook() {
@@ -72,14 +87,29 @@ echo "$(date -Is) done flow=$rc sta=$src" >> $W/STATUS
 # LAYOUT IMAGES (owner rule 20:45 PT 2026-10-15): floorplan / post-place density / GRT congestion PNGs of the routed tile
 # in $W/layout (tools/ref_tile/layout_png.py, standard library only); never changes the route verdict
 ORFSW=$W/work/orfs
-ODB=$(ls $ORFSW/results/asap7/*/base/6_final.odb $ORFSW/results/asap7/*/base/5_1_grt.odb $ORFSW/results/asap7/*/base/3_place.odb 2>/dev/null | head -1)
+select_layout_odb() {
+  local odb_root=$1 odb_stage odb_path
+  for odb_stage in 6_final 5_1_grt 3_place; do
+    for odb_path in "$odb_root"/results/asap7/*/base/"$odb_stage.odb"; do
+      if [ -f "$odb_path" ]; then printf '%s\n' "$odb_path"; return 0; fi
+    done
+  done
+}
+ODB=$(select_layout_odb "$ORFSW")
 if [ -n "$ODB" ]; then
+  mkdir -p "$W/layout"
+  python3 - "$ODB" "$W/layout/source.json" <<'PY'
+import hashlib, json, pathlib, sys
+p = pathlib.Path(sys.argv[1])
+pathlib.Path(sys.argv[2]).write_text(json.dumps({"odb": str(p), "stage": p.stem,
+    "sha256": hashlib.sha256(p.read_bytes()).hexdigest()}, indent=2) + "\n")
+PY
   printf 'read_db /work/%s\nsource /src/tools/ref_tile/layout_dump.tcl\nexit\n' "${ODB#$ORFSW/}" > $ORFSW/layout_dump_run.tcl
   docker run --rm -e OT_LAYOUT_OUT=/work/layout_dump.json -e OT_LAYOUT_CLOCKS=$CLKPORT -e OT_LAYOUT_TOP=$TOP -v $SRC:/src:ro -v $ORFSW:/work \
     ${OPENTALLAS_ORFS_IMAGE:-openroad/orfs:latest} /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -no_init -exit \
     /work/layout_dump_run.tcl > $W/layout_dump.log 2>&1
   CRPT=$(ls $ORFSW/reports/asap7/*/base/congestion.rpt 2>/dev/null | head -1)
   [ -s $ORFSW/layout_dump.json ] && python3 tools/ref_tile/layout_png.py $ORFSW/layout_dump.json $W/layout \
-    ${CRPT:+--congestion $CRPT} --title "$NAME" >> $W/STATUS 2>&1
+    ${CRPT:+--congestion $CRPT} --title "$NAME ${ODB##*/}" >> $W/STATUS 2>&1
 fi
 [ $rc -eq 0 ] && [ $src -eq 0 ]
