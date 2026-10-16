@@ -8,6 +8,15 @@ p="$src/rtl/dsrom_sys/engram"
 files=("$src/rtl/hdc/v41/ot_hdc_engram_tables_shipped_pkg.sv" "$src/rtl/hdc/v41/ot_hdc_engram_hash_shipped.sv" "$p/ot_dsrom_engram_lookup.sv" "$p/static_lookup_1015/ot_s81_engram_hash_static.sv" "$p/static_lookup_1015/ot_s81_engram_rowbank_static_leaf.sv" "$p/static_lookup_1015/ot_s81_engram_lookup_static.sv" "$p/static_lookup_1015/dsfd_engram_lkp_static14.sv" "$p/static_lookup_1015/tb_s81_engram_lkp_static14.sv")
 sha256sum "${files[@]}" > "$out/source_sha256.txt"
 verilator --binary --timing -j 4 -Wno-fatal -DOT_ENGRAM_CRCMAT --top-module tb_s81_engram_lkp_static14 --Mdir "$out/obj" -o sim "${files[@]}" > "$out/build.log" 2>&1
+if [ -n "${3:-}" ]; then
+ # single-mutant mode (closure-loop expect=fail bench): run +MUT=$3 only, print its log, exit with its status
+ set +e
+ "$out/obj/sim" +MUT="$3" > "$out/mutant_$3.log" 2>&1
+ rc=$?
+ set -e
+ cat "$out/mutant_$3.log"
+ exit $rc
+fi
 "$out/obj/sim" > "$out/positive.log" 2>&1
 cat "$out/positive.log"
 for mut in 1 2 3 4 5 6 7; do

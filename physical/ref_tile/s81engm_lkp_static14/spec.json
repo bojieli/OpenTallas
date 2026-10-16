@@ -301,7 +301,9 @@
    "rtl/dsrom_sys/engram/static_lookup_1015/tb_s81_engram_lkp_static14.sv",
    "rtl/hdc/v41",
    "tools/s81_ph",
-   "tools/s81_ph/run_engram_lkp_static14.sh"
+   "tools/s81_ph/run_engram_hash_static_equiv.sh",
+   "tools/s81_ph/run_engram_lkp_static14.sh",
+   "tools/s81_ph/run_engram_static_1015.sh"
   ],
   "benches": [
    {
@@ -309,6 +311,72 @@
     "cmd": "mkdir -p {RUN}/es14 && bash tools/s81_ph/run_engram_lkp_static14.sh $PWD {RUN}/es14",
     "expect": "pass",
     "pass_regex": "STATIC PASS element pin-registered",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "static14_engine_exact",
+    "cmd": "mkdir -p {RUN}/eng && bash tools/s81_ph/run_engram_static_1015.sh $PWD {RUN}/eng",
+    "expect": "pass",
+    "pass_regex": "STATIC PASS windows16 requests96 outputs768",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "hash_static_equiv",
+    "cmd": "mkdir -p {RUN}/heq && bash tools/s81_ph/run_engram_hash_static_equiv.sh $PWD {RUN}/heq",
+    "expect": "pass",
+    "pass_regex": "EQUIV PASS rows",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "hash_static_equiv_mut1",
+    "cmd": "mkdir -p {RUN}/heqm && bash tools/s81_ph/run_engram_hash_static_equiv.sh $PWD {RUN}/heqm 1",
+    "expect": "fail",
+    "fail_regex": "EQUIV residue mismatch",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "static14_element_mut3",
+    "cmd": "mkdir -p {RUN}/es14m3 && bash tools/s81_ph/run_engram_lkp_static14.sh $PWD {RUN}/es14m3 3",
+    "expect": "fail",
+    "fail_regex": "STATIC .*mismatch|STATIC coverage missing",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "static14_element_mut4",
+    "cmd": "mkdir -p {RUN}/es14m4 && bash tools/s81_ph/run_engram_lkp_static14.sh $PWD {RUN}/es14m4 4",
+    "expect": "fail",
+    "fail_regex": "STATIC .*mismatch|STATIC coverage missing",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "static14_element_mut5",
+    "cmd": "mkdir -p {RUN}/es14m5 && bash tools/s81_ph/run_engram_lkp_static14.sh $PWD {RUN}/es14m5 5",
+    "expect": "fail",
+    "fail_regex": "STATIC .*mismatch|STATIC coverage missing",
     "threads": 4,
     "peak_ram_gb": 8,
     "needs": [
