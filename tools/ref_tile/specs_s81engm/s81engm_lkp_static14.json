@@ -291,7 +291,7 @@
  "job": {
   "owner": "Claude:S-ENGRAM+NORM",
   "branch": "claude/s81-static14-0600",
-  "tag": "st5-rdhop",
+  "tag": "st6-rdhop2",
   "purpose": "S81 Engram lookup element, STATIC 14-root form dsfd_engram_lkp_static14 (no ready/credit/release; fixed RETURN_AGE return, poison on missing/late atoms)",
   "structural_change": "Static successor of the credit wrapper dsfd_engram_lkp_14roots: ot_s81_engram_lookup_static (Codex 05:03 draft, preserved 257284f61) behind one input and one output pin register; win_cred/rel/hq_cred/o_cred removed, win_slot/hr_slot added. Element proof: STATIC PASS 16 windows/96 requests/768 beats/96 statuses vs ot_dsrom_engram_lookup reference, 7 mutants rejected.",
   "extra_paths": [
@@ -390,7 +390,8 @@
    "version": "20261016-0409",
    "why": "Source-pinned S-DIE grant results/physical/die_iter_1012/s81/grants/sdie_0030_engram_mix4.json accepts exact674 mapped pins including14 clock roots (ck, ck_seed, six hash, six rows). Same324x216 outline and all674 Tcl rectangles/layers unchanged. Native timing, child_lint and current parent GEN binding remain required."
   },
-  "hold_merge": "Component candidate only. Exact674pin/14root die grant accepted; current-source native launch/capture/spread, FFhold, child_lint, current parent GEN binding and external HBM RETURN_AGE bound remain unqualified."
+  "hold_merge": "Component candidate only. Exact674pin/14root die grant accepted; current-source native launch/capture/spread, FFhold, child_lint, current parent GEN binding and external HBM RETURN_AGE bound remain unqualified.",
+  "cycles_added": 1
  },
  "orfs_vars": {
   "POST_IO_PLACEMENT_TCL": "physical/s81_die_pins/v28_engram_static14_candidate/restore_native_rectangles.tcl"
@@ -399,5 +400,5 @@
   "enable": false,
   "reason": "RTL dsfd_engram_lkp_static14 already registers every data input and every output at its pin (one flop each, no logic in front/behind); flow pin registers would add a second stage per port"
  },
- "structural_change": " | st5 (ENGRAM-3 10-16): st4 EARLY_FAIL_HOLD at CTS stalled only on the rows->core full-cycle row read (e1 captures, min -39..-96 ps): each row bank now selects its atoms with the core one-hot selects and registers lo/hi/a8 on its own root's negedge; the core ORs the six banks into e1 on posedge (0 cycles; element/engine exact PASS, MUT3 FAIL)."
+ "structural_change": " | st5 (ENGRAM-3 10-16): st4 EARLY_FAIL_HOLD at CTS stalled only on the rows->core full-cycle row read (e1 captures, min -39..-96 ps): each row bank now selects its atoms with the core one-hot selects and registers lo/hi/a8 on its own root's negedge; the core ORs the six banks into e1 on posedge (0 cycles; element/engine exact PASS, MUT3 FAIL). | st6 (S-ELEM 10-16): st5 CTS gate (AGIdock ref_gate 20261016-112206) converged hold (426 -> 0) but TT placement setup -106.8 ps: st5 put logic inside its half-cycle root hops (core->rows one-hot AND-OR -95..-107 ps, rows->core six-bank OR -50..-92 ps). st6 makes every row-read crossing a flop-to-flop half-cycle hop with all logic inside one root on a full cycle: core negedge {hit, ek} per bank -> row posedge h_b -> row posedge atom select (payload + decode local to the row root) -> core negedge -> six-bank OR into e1 on the core posedge (half cycle inside the core); replicated core one-hot selects removed. +1 cycle on every row beat and status (S-FUNC notified); element/engine benches calendar 157/155."
 }

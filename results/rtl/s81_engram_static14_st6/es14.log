@@ -1,0 +1,24 @@
+ot-run: ot-epyc4       admits    -2 GB (avail 307, growth 261, headroom 48, waiters 3/120 GB) load 79/128 running 34 disk 601 GB 
+ot-run: -> ot-epyc4 (will queue: admits -122 GB < 8 GB)
+ot-heavy: waiting for memory on regular-crane: need 8 GB, admissible -3 GB: available 307 GB, growth charged 261 GB, young 61 GB, headroom 48 GB, real floor 227 GB
+ot-heavy: admitted on regular-crane as oth-ubuntu-1949691-1792182302 after 542 s
+STATIC PASS element pin-registered (+1 in/+1 out) windows16 requests96 outputs768 statuses96 all8straps fixed_return_age128
+- /srv/opentallas-scratch/claude/selem-st6/src/rtl/dsrom_sys/engram/static_lookup_1015/tb_s81_engram_lkp_static14.sv:78: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 4us; walltime 0.032 s; speed 122.060 us/s
+- Verilator: cpu 0.034 s on 1 threads; alloced 1020 MB
+tools/s81_ph/run_engram_lkp_static14.sh: line 22: 2014378 Aborted                    (core dumped) "$out/obj/sim" +MUT="$mut" > "$out/mutant_$mut.log" 2>&1
+STATIC mutant 1 rejected
+tools/s81_ph/run_engram_lkp_static14.sh: line 22: 2014973 Aborted                    (core dumped) "$out/obj/sim" +MUT="$mut" > "$out/mutant_$mut.log" 2>&1
+STATIC mutant 2 rejected
+tools/s81_ph/run_engram_lkp_static14.sh: line 22: 2015626 Aborted                    (core dumped) "$out/obj/sim" +MUT="$mut" > "$out/mutant_$mut.log" 2>&1
+STATIC mutant 3 rejected
+tools/s81_ph/run_engram_lkp_static14.sh: line 22: 2016114 Aborted                    (core dumped) "$out/obj/sim" +MUT="$mut" > "$out/mutant_$mut.log" 2>&1
+STATIC mutant 4 rejected
+tools/s81_ph/run_engram_lkp_static14.sh: line 22: 2016492 Aborted                    (core dumped) "$out/obj/sim" +MUT="$mut" > "$out/mutant_$mut.log" 2>&1
+STATIC mutant 5 rejected
+tools/s81_ph/run_engram_lkp_static14.sh: line 22: 2017196 Aborted                    (core dumped) "$out/obj/sim" +MUT="$mut" > "$out/mutant_$mut.log" 2>&1
+STATIC mutant 6 rejected
+tools/s81_ph/run_engram_lkp_static14.sh: line 22: 2017538 Aborted                    (core dumped) "$out/obj/sim" +MUT="$mut" > "$out/mutant_$mut.log" 2>&1
+STATIC mutant 7 rejected
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-1949691-1792182302): exit 0

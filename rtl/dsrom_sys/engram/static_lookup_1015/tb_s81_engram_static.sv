@@ -60,7 +60,7 @@ module tb_s81_engram_static;
    if(av)begin expected[an]={ac,ak,ad};an=an+1;end
    if(bv)begin
     if(bn>=an||{bc,bk,bd}!==expected[bn]||bsl!==((bn/48)%8))$fatal(1,"STATIC beat mismatch cycle%0d beat%0d",cycle,bn);
-    if(phase!=154+(bn%48))$fatal(1,"STATIC calendar mismatch phase%0d index%0d",phase,bn%48);
+    if(phase!=155+(bn%48))$fatal(1,"STATIC calendar mismatch phase%0d index%0d",phase,bn%48);
     for(i=0;i<32;i=i+1)
      if(bd[i*8+:8]!==((bn%48/8*37+bk*32*11+i*11+cycle/256)&255))
        $fatal(1,"STATIC independent byte mismatch beat%0d byte%0d",bn,i);

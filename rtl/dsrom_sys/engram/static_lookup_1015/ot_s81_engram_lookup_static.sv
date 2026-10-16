@@ -18,11 +18,11 @@
 //   seed -> hash : roll_s -> roll_n (ck_seed negedge) -> roll_h (column posedge), inside the hash;
 //   hash -> core : res_n (column negedge) -> res_c (ck posedge) -> the 8:1 strap select -> res[];
 //   seed -> core : removed (hdone = lastl[12]; the hash valid pipe was redundant with it);
-//   rows -> core : (st5) per-bank one-hot atom select registered on the row root's negedge -> OR of six banks into
-//                  e1 on the core posedge (the selects reach the bank on its negedge: core -> rows half cycle);
+//   rows -> core : (st6) core negedge {hit, ek} per bank -> row posedge h_b -> row posedge atom select b* (full cycle in
+//                  the row root) -> core negedge c* -> OR of six banks into e1 on the core posedge; +1 read cycle;
 //   core -> rows : wen_q/wdata_q -> per-bank wx_en/wx_d (ck negedge) -> leaf we_q/wd_q (row posedge) -> payload,
 //                  +1 write cycle inside the fixed drain (payload visible at age <= RETURN_AGE+2, first read RETURN_AGE+2).
-// Requests, row beats and statuses keep their cycles (0 schedule change).
+// Requests keep their cycles; st6 adds +1 cycle to every row beat and status (row read hop).
 import ot_hdc_engram_tables_shipped_pkg::*;
 
 module ot_s81_engram_lookup_static #(
@@ -295,7 +295,8 @@ module ot_s81_engram_lookup_static #(
     reg       emit_done_r;
     wire      emit_done = emit_done_r;
 
-    reg       e1_v, e2_v, e0q_v;
+    reg       e1_v, e2_v, e0q_v, e0r_v;
+    wire      e1_vn = e0r_v;                // PIPE 1 (st6): E1 captures the read two cycles after E0q
 
     wire      row_ok = (ej < CPR[2:0]);
     wire      room = 1'b1;
@@ -306,10 +307,11 @@ module ot_s81_engram_lookup_static #(
     reg [SLW-1:0] e1_s, e2_s, e3_s;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
-            ej <= 3'd0; ek <= 4'd0; emit_done_r <= 1'b0; e1_v <= 1'b0; e0q_v <= 1'b0;
+            ej <= 3'd0; ek <= 4'd0; emit_done_r <= 1'b0; e1_v <= 1'b0; e0q_v <= 1'b0; e0r_v <= 1'b0;
         end else begin
             e0q_v <= (PIPE != 0) && e0_go;
-            e1_v <= (PIPE != 0) ? e0q_v : e0_go;
+            e0r_v <= e0q_v;
+            e1_v <= (PIPE != 0) ? e0r_v : e0_go;
             if (st != S_EMIT) begin
                 ej <= 3'd0; ek <= 4'd0; emit_done_r <= 1'b0;
             end else if (e0_go) begin
@@ -331,57 +333,60 @@ module ot_s81_engram_lookup_static #(
                 e1_j <= ej; e1_k <= ek[2:0]; e1_s <= slot;
             end
         end else begin : g_sel1
-            // E0q: one-hot selects, one copy per 64-bit lane group
-            localparam integer NS = CPR * ATOMS;
-            reg [4*NS-1:0] slo, shi, sa8;        // copy g at [NS*g +: NS], bit jj*ATOMS + kk
-            reg [4*NS-1:0] nlo, nhi, na8;
-            reg [1:0]  q_off;
-            reg [2:0]  q_j, q_k;
-            reg [SLW-1:0] q_s;
-            integer g, jj, kk;
-            always @(*) begin
-                for (g = 0; g < 4; g = g + 1)
-                    for (jj = 0; jj < CPR; jj = jj + 1)
-                        for (kk = 0; kk < ATOMS; kk = kk + 1) begin
-                            nlo[NS*g + jj*ATOMS + kk] = (ej == jj) && (ek == kk);
-                            nhi[NS*g + jj*ATOMS + kk] = (ej == jj) && (ek + 1 == kk);
-                            na8[NS*g + jj*ATOMS + kk] = (ej == jj) && (kk == ATOMS - 1);
-                        end
+            // STATIC14 st6 (S-ELEM 10-16): the row read crosses the core <-> row roots only flop to flop, every crossing
+            // a HALF-CYCLE hop, all logic inside one root on a full cycle (st5 put the one-hot AND-OR and the six-bank OR
+            // inside its half-cycle hops: gate TT core->rows -95..-107 ps, rows->core -50..-92 ps). +1 cycle on the
+            // read (E0q -> E1 two cycles; every output beat and status one cycle later):
+            //   core NEGEDGE  qn[b]  = {e0_go && ej == b, ek}         (E0 decode, half cycle inside the core)
+            //   row  posedge  h_b    <= qn[b]                          (core -> row hop, 5 flops per bank)
+            //   row  posedge  b*     <= hit ? atoms ek / ek+1 / 8 : 0  (full cycle, payload and decode local to the row root)
+            //   core NEGEDGE  c*[b]  <= b*                              (row -> core hop)
+            //   core posedge  e1     <= OR of the six banks             (half cycle inside the core)
+            reg [1:0]  q_off, r_off;
+            reg [2:0]  q_j, q_k, r_j, r_k;
+            reg [SLW-1:0] q_s, r_s;
+            integer jj;
+            always @(posedge clk) begin
+                if (e0_go) begin q_off <= roff[ej]; q_j <= ej; q_k <= ek[2:0]; q_s <= slot; end
+                r_off <= q_off; r_j <= q_j; r_k <= q_k; r_s <= q_s;
             end
-            always @(posedge clk) if (e0_go) begin
-                slo <= nlo; shi <= nhi; sa8 <= na8;
-                q_off <= roff[ej]; q_j <= ej; q_k <= ek[2:0]; q_s <= slot;
-            end
-            // rows -> core read hop (STATIC14 st5, st4 EARLY_FAIL_HOLD at CTS on the e1 captures): each row bank selects
-            // its own atoms with the core's one-hot selects (core posedge -> this bank's negedge, half cycle) and registers
-            // the three 256-bit candidates on its OWN root's negative edge; the core ORs the six one-hot bank registers
-            // into e1 on its positive edge (half cycle). Same E0q -> E1 cycle as before, every crossing flop to flop.
-            reg [255:0] blo [0:CPR-1], bhi [0:CPR-1], ba8 [0:CPR-1];
+            reg [255:0] clo [0:CPR-1], chi [0:CPR-1], ca8 [0:CPR-1];
             genvar gb;
             for (gb = 0; gb < CPR; gb = gb + 1) begin : g_rdhop
-                reg [255:0] slo_b, shi_b, sa8_b;
-                integer g2, k2;
+                reg       qn_h;
+                reg [3:0] qn_k;
+                always @(negedge clk) begin qn_h <= e0_go && (ej == gb); qn_k <= ek; end
+                reg       h_b;
+                reg [3:0] k_b;
+                always @(posedge clk_rows[gb]) begin h_b <= qn_h; k_b <= qn_k; end
+                reg [ATOMS-1:0] dlo, dhi;
+                reg [255:0] lo_b, hi_b;
+                integer k2;
                 always @(*) begin
-                    slo_b = 256'd0; shi_b = 256'd0; sa8_b = 256'd0;
-                    for (g2 = 0; g2 < 4; g2 = g2 + 1)
-                        for (k2 = 0; k2 < ATOMS; k2 = k2 + 1) begin
-                            slo_b[64*g2 +: 64] = slo_b[64*g2 +: 64] | ({64{slo[NS*g2 + gb*ATOMS + k2]}} & rb[gb][k2][64*g2 +: 64]);
-                            shi_b[64*g2 +: 64] = shi_b[64*g2 +: 64] | ({64{shi[NS*g2 + gb*ATOMS + k2]}} & rb[gb][k2][64*g2 +: 64]);
-                            sa8_b[64*g2 +: 64] = sa8_b[64*g2 +: 64] | ({64{sa8[NS*g2 + gb*ATOMS + k2]}} & rb[gb][k2][64*g2 +: 64]);
-                        end
+                    for (k2 = 0; k2 < ATOMS; k2 = k2 + 1) begin
+                        dlo[k2] = h_b && (k_b == k2);
+                        dhi[k2] = h_b && (k_b + 4'd1 == k2);
+                    end
+                    lo_b = 256'd0; hi_b = 256'd0;
+                    for (k2 = 0; k2 < ATOMS; k2 = k2 + 1) begin
+                        lo_b = lo_b | ({256{dlo[k2]}} & rb[gb][k2]);
+                        hi_b = hi_b | ({256{dhi[k2]}} & rb[gb][k2]);
+                    end
                 end
-                always @(negedge clk_rows[gb]) begin blo[gb] <= slo_b; bhi[gb] <= shi_b; ba8[gb] <= sa8_b; end
+                reg [255:0] blo, bhi, ba8;
+                always @(posedge clk_rows[gb]) begin blo <= lo_b; bhi <= hi_b; ba8 <= {256{h_b}} & rb[gb][ATOMS-1]; end
+                always @(negedge clk) begin clo[gb] <= blo; chi[gb] <= bhi; ca8[gb] <= ba8; end
             end
             reg [255:0] vlo, vhi, va8;
             always @(*) begin
                 vlo = 256'd0; vhi = 256'd0; va8 = 256'd0;
                 for (jj = 0; jj < CPR; jj = jj + 1) begin
-                    vlo = vlo | blo[jj]; vhi = vhi | bhi[jj]; va8 = va8 | ba8[jj];
+                    vlo = vlo | clo[jj]; vhi = vhi | chi[jj]; va8 = va8 | ca8[jj];
                 end
             end
-            always @(posedge clk) if (e0q_v) begin
+            always @(posedge clk) if (e1_vn) begin
                 e1_lo <= vlo; e1_hi <= vhi; e1_a8 <= va8;
-                e1_off <= q_off; e1_j <= q_j; e1_k <= q_k; e1_s <= q_s;
+                e1_off <= r_off; e1_j <= r_j; e1_k <= r_k; e1_s <= r_s;
             end
         end
     endgenerate

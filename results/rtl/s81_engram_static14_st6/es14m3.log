@@ -1,0 +1,9 @@
+ot-run: ot-epyc4       admits    -2 GB (avail 307, growth 261, headroom 48, waiters 3/120 GB) load 79/128 running 34 disk 601 GB 
+ot-run: -> ot-epyc4 (will queue: admits -122 GB < 8 GB)
+ot-heavy: waiting for memory on regular-crane: need 8 GB, admissible -3 GB: available 307 GB, growth charged 261 GB, young 61 GB, headroom 48 GB, real floor 227 GB
+ot-heavy: admitted on regular-crane as oth-ubuntu-1949705-1792182302 after 542 s
+tools/s81_ph/run_engram_lkp_static14.sh: line 19: 2014522 Aborted                    (core dumped) "$out/obj/sim" +MUT="$3" > "$out/mutant_$3.log" 2>&1
+[158000] %Fatal: tb_s81_engram_lkp_static14.sv:63: Assertion failed in tb_s81_engram_lkp_static14: STATIC beat mismatch cycle157 beat0
+%Error: /srv/opentallas-scratch/claude/selem-st6/src/rtl/dsrom_sys/engram/static_lookup_1015/tb_s81_engram_lkp_static14.sv:63: Verilog $stop
+Aborting...
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-1949705-1792182302): exit 134
