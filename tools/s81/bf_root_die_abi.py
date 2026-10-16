@@ -28,7 +28,8 @@ def source_receipt():
                 required_before_adoption=['own TT/FF/DRC/native closure',
                                           'own per-root R/phi-R die delivery',
                                           'all actual pin/PG/neighbor incidents',
-                                          'static initialization release+1 ledger'])
+                                          'static initialization release+1 ledger',
+                                          'programme pin-to-core age2: source-bound OFF-1/DELTA0 producer and actual fault-observing calendar proof'])
 
 
 def split_xb_endpoint(port, bus_width):
