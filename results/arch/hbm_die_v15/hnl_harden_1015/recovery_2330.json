@@ -1,0 +1,12 @@
+{
+  "qualification_status": "HOLD",
+  "source_commit": "49705ce8a",
+  "reason": "Recovered production positive fails actual landing payload despite passing cursor lockstep. New controller and parent must not be qualified or routed until diagnosed.",
+  "lockstep_checks": 1921,
+  "production_failure": "actual landing SRAM payload at120 q0 ordinal0",
+  "original_log": "/tmp/claude-1000/hnl-harden/dma/m0.out",
+  "calendar_exact": "four quadrants 120 edges each PASS",
+  "calendar_mutants": "reset bypass, field shift, core extra edge fail",
+  "gates": "Completed 23:19/23:20 WARN-only; physical native export not available",
+  "parent_proposal": "Unadopted 511.92x360.72; exact current grant supplied separately by die lead."
+}

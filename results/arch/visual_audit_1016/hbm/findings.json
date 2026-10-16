@@ -1,0 +1,1565 @@
+{
+ "schema": "opentallas.visual_audit_1016.hbm.v1",
+ "stream": "VIS-HBM",
+ "date": "2026-10-16",
+ "scope": "HBM 660 v5: die plan, die case d2, every HBM tile with a placed/routed odb on the fleet",
+ "method": "remote tools/ref_tile/layout_dump.tcl on the latest odb of each job + tools/ref_tile/layout_png.py + ORFS reports/*.webp (final_worst_path, routing, clocks); die: compact.P.json grid scan and d2 manifest/run.tcl placement scan",
+ "findings": [
+  {
+   "id": "D1",
+   "severity": "P0",
+   "owner": "H-DIE",
+   "master": "die case d2 (d7eff7e8c)",
+   "job": "E1 d2 GRT/STA (H-DIE 00:40 launch)",
+   "images": [
+    "/home/ubuntu/artifacts/hdie-2330/die_d2/layout.png",
+    "results/arch/visual_audit_1016/hbm/contact_sheet_die.png"
+   ],
+   "what_i_see": "cyan stream-clock repeater chains run straight through the blue SM blocks (lines at y~4,250 / 17,050 and x~3,400 / 10,000 / 21,000)",
+   "measured": {
+    "die_clock_buffers": 53087,
+    "placed_inside_SM_outline": 15671,
+    "dks_inside": 15645,
+    "dkh_inside": 26,
+    "stream_model_insertion_ps": [
+     31564,
+     31626
+    ],
+    "hbm_model_insertion_ps": [
+     14265,
+     14317
+    ],
+    "global_root_um": [
+     13990,
+     10630
+    ],
+    "quad_pad_buffers_stream": {
+     "NE": 0,
+     "NW": 249,
+     "SE": 34,
+     "SW": 162
+    }
+   },
+   "structural_fix": "die_clock_tree._route allows runs over blocks (max_run_over_blocks_um 400) but then PLACES buffers FIRM on grid points inside ot_hbm_accel_smh_static outlines -> overlaps the GRT/DPL will reject or silently route through. Forbid buffer homes inside hard outlines (snap to channel), and replace the one central root with 4 quadrant roots (or an H-tree spine in the 600-um IDX channels) fed from the die clock entry: 31.6 ns modelled insertion = 38 cycles at 833 ps; per-quadrant root halves branch length and removes the NE/NW pad imbalance (0 vs 249).",
+   "geometry": null,
+   "round": [
+    {
+     "round": 1,
+     "date": "2026-10-16T01:00",
+     "status": "reported"
+    },
+    {
+     "round": 2,
+     "date": "2026-10-16T01:15",
+     "status": "open",
+     "evidence": "d2 GRT/STA still running on E1 (unit oth-ubuntu-2130580-1792135616); no d3 / clock-generator fix yet"
+    },
+    {
+     "round": 2,
+     "date": "2026-10-16T02:35",
+     "status": "fixed in case (GRT pending)",
+     "evidence": "a37c69eb8; VIS-HBM scan of /tmp/claude-1000/hdie0030/d3a/run.tcl: 0 of 24,156 placed die cells inside hard outlines; hbm quad 1,635 bufs 7.9 ns pads 1/2/0/4; stream htree 21,999 bufs 13.8 ns"
+    }
+   ]
+  },
+  {
+   "id": "D2",
+   "severity": "P0",
+   "owner": "H-DIE",
+   "master": "compact660_v5 plan",
+   "job": "results/arch/hbm_die_v15/compact660_v5",
+   "images": [
+    "results/arch/hbm_die_v15/compact660_v5/layout/die_floorplan.png"
+   ],
+   "what_i_see": "four empty rectangles at the die top/bottom beside the LK/EP column; SU/VM bands with white gaps; 600-um channel either side of IDX",
+   "measured": {
+    "die_mm2": 660.0,
+    "placed_mm2": 535.2,
+    "empty_mm2": 124.8,
+    "corner_voids_mm2": {
+     "top_right_of_EP x15920-21060 y19620-21280": 8.53,
+     "bottom_right_of_EP x16180-21060 y0-1620": 7.91,
+     "top_left_of_EP x9940-13320 y19620-21280": 5.61,
+     "bottom_left_of_EP x9940-13340 y0-1620": 5.51,
+     "below EP top x15000-17640 y17500-19620": 5.6
+    },
+    "idx_channels_mm2": 12.77,
+    "band_slivers_240um_x4_mm2": 12.4
+   },
+   "structural_fix": "~33 mm2 of corner voids sit next to the PHY/PC rows: move the SU heavy/SIDE/RF overflow (H-DIE: SU lower bound exceeds usable by 3.71 mm2) or the HC/COLL blocks there, or shift PHY_NW/SW right and PHY_NE/SE left to hug the EP column and shrink die width ~1.5 mm (660 -> ~630 mm2). The 240-um band slivers (4 x 12.9 mm) are below a useful block height: merge into the SU band or remove.",
+   "geometry": null,
+   "round": [
+    {
+     "round": 1,
+     "date": "2026-10-16T01:00",
+     "status": "reported"
+    },
+    {
+     "round": 2,
+     "date": "2026-10-16T01:15",
+     "status": "open",
+     "evidence": "no new plan revision"
+    },
+    {
+     "round": 2,
+     "date": "2026-10-16T02:35",
+     "status": "open (re-scoped to v6b 770 mm2)",
+     "evidence": "v5 band gap -> sfucore slots; SU overflow homes 0.595 mm2/quadrant in the PHY corner voids; v6b: ~30 mm2 corner voids + ~23 mm2 above HC/SFU still empty (H-DIE)"
+    }
+   ]
+  },
+  {
+   "id": "D3",
+   "severity": "P1",
+   "owner": "H-DIE",
+   "master": "compact660_v5 SM slots / SM_HBM relays",
+   "job": "d2 manifest sm_hbm_relays",
+   "images": [
+    "results/arch/hbm_die_v15/compact660_v5/layout/die_buses_pins.png"
+   ],
+   "what_i_see": "PC rows on the PHY edge feed SM rows 4-7 across the VM/SU band: long red PC->SM fans",
+   "measured": {
+    "sm_hbm_relay_len_um_max": 15309,
+    "sm_hbm_stages_max": 31,
+    "sm6_rows_stages": [
+     28,
+     22,
+     31,
+     25
+    ],
+    "bus_check_mean_stages_pin": {
+     "HBM_VM": 21.3,
+     "VM_HUB": 15.1,
+     "COLL_RING": 15.0,
+     "COLL_EP": 13.8,
+     "COLL_VM": 13.2,
+     "VM_RING": 11.0,
+     "SM_HBM": 8.7,
+     "SM_OUT": 8.1
+    },
+    "sm_slot_um": [
+     6609.6,
+     1712.08
+    ],
+    "sm_slot_total_mm2": 362.1,
+    "sm_tile_fill": 0.195
+   },
+   "structural_fix": "SM slots are 55% of the die at ~19.5% fill (H-SM rp3 body exceeds the slot width only because the frame is pin-bound, see T6): re-pack SM to its cell area and pull SM rows 4-7 next to their PC row (mirror the quadrant: PHY|PC|SM0-3|band|SM4-7 -> PC row in the middle, SMs both sides) -> SM_HBM max ~8 mm / 16 stages. HBM_VM 21 stages: VM slices belong next to the PC rows they read, not at the band inner end.",
+   "geometry": null,
+   "round": [
+    {
+     "round": 1,
+     "date": "2026-10-16T01:00",
+     "status": "reported"
+    },
+    {
+     "round": 2,
+     "date": "2026-10-16T01:15",
+     "status": "open",
+     "evidence": "no SM-near-PC plan yet"
+    }
+   ]
+  },
+  {
+   "id": "T1",
+   "severity": "P0",
+   "owner": "H-SM",
+   "master": "ot_hgi_sm_xload_cl2_ctl",
+   "job": "hgi_sm_xl2_ctl-cl2d-COMMIT-b0d45974d (NEEDS_RTL TT -92.5 / DRC 4)",
+   "images": [
+    "results/arch/visual_audit_1016/hbm/contact_sheet_tiles.png"
+   ],
+   "what_i_see": "empty 345.6 um square, all cells as a thin ring of pin flops on the perimeter plus one cluster at W-mid; worst path lane_en -> bsel runs diagonally W-mid -> SE corner (~450 um)",
+   "measured": {
+    "fill": 0.123,
+    "pins": 10786,
+    "pins_per_um": {
+     "W": 9.6,
+     "E": 9.1,
+     "N": 6.3,
+     "S": 6.2
+    },
+    "faces_occupied": "100% all 4",
+    "worst_ss_class": "lane_en -> bsel -454 ps, 24 levels"
+   },
+   "structural_fix": "pin-bound tile (10.8k pins on 1,382 um perimeter, 12% fill): split into face-local slices (N/S/E/W ctl slices, each with its own lane_en/bsel copy) or reshape to a long strip along its consumer edge; replicate lane_en per face so no select crosses the tile.",
+   "geometry": {
+    "die_um": [
+     345.6,
+     345.6
+    ],
+    "fill": 0.123,
+    "std_um2": 14709.1,
+    "block_um2": 0.0,
+    "n_macros": 0,
+    "min_edge_gap": null,
+    "macro_mm_gaps": [],
+    "faces": {
+     "S": {
+      "pins": 2156,
+      "span_um": 345.5,
+      "edge_um": 345.6,
+      "occ": 1.0,
+      "pins_per_um": 6.24,
+      "peak_pins_per_20um": 125,
+      "layers": {
+       "M5": 2156
+      }
+     },
+     "W": {
+      "pins": 3307,
+      "span_um": 345.4,
+      "edge_um": 345.6,
+      "occ": 1.0,
+      "pins_per_um": 9.58,
+      "peak_pins_per_20um": 252,
+      "layers": {
+       "M4": 3243,
+       "M5": 64
+      }
+     },
+     "N": {
+      "pins": 2181,
+      "span_um": 345.5,
+      "edge_um": 345.6,
+      "occ": 1.0,
+      "pins_per_um": 6.31,
+      "peak_pins_per_20um": 129,
+      "layers": {
+       "M5": 2179,
+       "M4": 2
+      }
+     },
+     "E": {
+      "pins": 3142,
+      "span_um": 345.4,
+      "edge_um": 345.6,
+      "occ": 1.0,
+      "pins_per_um": 9.1,
+      "peak_pins_per_20um": 243,
+      "layers": {
+       "M4": 3078,
+       "M5": 64
+      }
+     }
+    },
+    "pin_layers": {
+     "M5": 4463,
+     "M4": 6323
+    },
+    "n_pins": 10786,
+    "clock_pins": [
+     [
+      "clk",
+      "N",
+      172.6,
+      345.6
+     ]
+    ],
+    "density": {
+     "bins": 4096,
+     "mean": 0.123,
+     "p95": 0.543,
+     "max": 0.986,
+     "frac_gt_0p8": 0.004,
+     "frac_lt_0p1": 0.675
+    }
+   },
+   "round": [
+    {
+     "round": 1,
+     "date": "2026-10-16T01:00",
+     "status": "reported"
+    },
+    {
+     "round": 2,
+     "date": "2026-10-16T01:15",
+     "status": "open",
+     "evidence": "owner fix = cl2e RTL (registered lookahead lane_en->bsel); no cl2e gate/route yet; pin-bound 12% fill not addressed"
+    }
+   ]
+  },
+  {
+   "id": "T2",
+   "severity": "P0",
+   "owner": "H-SM",
+   "master": "ot_hgi_sm_xload_cl2_bdring",
+   "job": "hgi_sm_xl2_bdring-cl2d-COMMIT-b0d45974d (CLOSED TT +13.68; cl2c native FAIL L392.9/C511.7)",
+   "images": [
+    "results/arch/visual_audit_1016/hbm/contact_sheet_tiles.png"
+   ],
+   "what_i_see": "clock pin at W-centre, every cell sits in the E 60% next to the E pin face (2,080 pins), W 40% empty; launch clock crosses the whole width",
+   "measured": {
+    "fill": 0.225,
+    "clock_pin": "W (0,151.4)",
+    "E_pins": 2080,
+    "N_pins_in_31pct": 532,
+    "W_pins": 141
+   },
+   "structural_fix": "move clk to the E face (or N face at x~120) next to the logic mass and shrink width 172.8 -> ~110 um; native launch/capture fails are the cross-tile clock wire.",
+   "geometry": {
+    "die_um": [
+     172.8,
+     302.4
+    ],
+    "fill": 0.225,
+    "std_um2": 11734.1,
+    "block_um2": 0.0,
+    "n_macros": 0,
+    "min_edge_gap": null,
+    "macro_mm_gaps": [],
+    "faces": {
+     "E": {
+      "pins": 2080,
+      "span_um": 258.7,
+      "edge_um": 302.4,
+      "occ": 0.86,
+      "pins_per_um": 8.04,
+      "peak_pins_per_20um": 224,
+      "layers": {
+       "M4": 2048,
+       "M5": 32
+      }
+     },
+     "W": {
+      "pins": 141,
+      "span_um": 26.0,
+      "edge_um": 302.4,
+      "occ": 0.09,
+      "pins_per_um": 5.42,
+      "peak_pins_per_20um": 109,
+      "layers": {
+       "M4": 109,
+       "M5": 32
+      }
+     },
+     "N": {
+      "pins": 532,
+      "span_um": 53.7,
+      "edge_um": 172.8,
+      "occ": 0.31,
+      "pins_per_um": 9.91,
+      "peak_pins_per_20um": 201,
+      "layers": {
+       "M5": 532
+      }
+     }
+    },
+    "pin_layers": {
+     "M4": 2157,
+     "M5": 596
+    },
+    "n_pins": 2753,
+    "clock_pins": [
+     [
+      "clk",
+      "W",
+      0.0,
+      151.4
+     ]
+    ],
+    "density": {
+     "bins": 4096,
+     "mean": 0.225,
+     "p95": 0.55,
+     "max": 1.01,
+     "frac_gt_0p8": 0.022,
+     "frac_lt_0p1": 0.495
+    }
+   },
+   "round": [
+    {
+     "round": 1,
+     "date": "2026-10-16T01:00",
+     "status": "reported"
+    },
+    {
+     "round": 2,
+     "date": "2026-10-16T01:15",
+     "status": "open",
+     "evidence": "owner fix = cl2e (removes output inverter); clock-face move deferred unless cl2e native fails"
+    }
+   ]
+  },
+  {
+   "id": "T3",
+   "severity": "P0",
+   "owner": "H-SM",
+   "master": "hfd_vms_bank_strap_q0..q3 (270x270 v4 grant)",
+   "job": "vm_strap_q3 strap4hookfix NEEDS_RTL TT -111.27; q2 NEEDS_RTL; q0 strap2 -149.91",
+   "images": [
+    "results/arch/visual_audit_1016/hbm/contact_sheet_tiles.png",
+    "/tmp/claude-1000/visaudit/tiles/strap_q2_s4h/rep/final_routing.png"
+   ],
+   "what_i_see": "3-SRAM stack centred -> std cells only in a 30-46 um ring; clock N-centre; worst path wraps W side of the stack to the SE corner; heavy routing over the macros and dense W/E channels",
+   "measured": {
+    "fill": 0.61,
+    "pins": 4518,
+    "faces_occupied": "98% all 4",
+    "pins_per_um_E": 5.2,
+    "ring_width_um": [
+     29.2,
+     46
+    ],
+    "ss_worst": "g_write_leaf.sv -> s1w_d -386.6 ps 15 levels"
+   },
+   "structural_fix": "stack the SRAMs against one face (E, pins W) so logic is one contiguous ~75-um W region, and put clk at that region centre; or 2 SRAM columns with a central logic spine. Face pins: keep W/N/S for data, E only straps.",
+   "geometry": {
+    "die_um": [
+     270.0,
+     270.0
+    ],
+    "fill": 0.613,
+    "std_um2": 7713.3,
+    "block_um2": 36952.1,
+    "n_macros": 3,
+    "min_edge_gap": 29.23,
+    "macro_mm_gaps": [
+     0.02
+    ],
+    "faces": {
+     "N": {
+      "pins": 895,
+      "span_um": 265.5,
+      "edge_um": 270.0,
+      "occ": 0.98,
+      "pins_per_um": 3.37,
+      "peak_pins_per_20um": 112,
+      "layers": {
+       "M5": 871,
+       "M6": 24
+      }
+     },
+     "S": {
+      "pins": 1133,
+      "span_um": 265.5,
+      "edge_um": 270.0,
+      "occ": 0.98,
+      "pins_per_um": 4.27,
+      "peak_pins_per_20um": 110,
+      "layers": {
+       "M5": 1107,
+       "M6": 26
+      }
+     },
+     "E": {
+      "pins": 1383,
+      "span_um": 265.5,
+      "edge_um": 270.0,
+      "occ": 0.98,
+      "pins_per_um": 5.21,
+      "peak_pins_per_20um": 105,
+      "layers": {
+       "M4": 1383
+      }
+     },
+     "W": {
+      "pins": 1107,
+      "span_um": 265.5,
+      "edge_um": 270.0,
+      "occ": 0.98,
+      "pins_per_um": 4.17,
+      "peak_pins_per_20um": 84,
+      "layers": {
+       "M4": 1107
+      }
+     }
+    },
+    "pin_layers": {
+     "M5": 1978,
+     "M4": 2490,
+     "M6": 50
+    },
+    "n_pins": 4518,
+    "clock_pins": [
+     [
+      "clk",
+      "N",
+      135.0,
+      270.0
+     ]
+    ],
+    "density": {
+     "bins": 1912,
+     "mean": 0.221,
+     "p95": 0.753,
+     "max": 1.022,
+     "frac_gt_0p8": 0.038,
+     "frac_lt_0p1": 0.542
+    }
+   },
+   "round": [
+    {
+     "round": 1,
+     "date": "2026-10-16T01:00",
+     "status": "reported"
+    },
+    {
+     "round": 2,
+     "date": "2026-10-16T01:15",
+     "status": "open",
+     "evidence": "strap4hookfix (same geometry): q1 CLOSED TT +18.72; q0 -149.91 (strap2) -> -62.49; q2/q3 -111.27 unchanged. Owner path fix = strap5 RTL, not geometry; no strap5 gate yet"
+    },
+    {
+     "round": 2,
+     "date": "2026-10-16T02:05",
+     "status": "refuted for q1/q2/q3 (owner RTL fix closed them on the same geometry); open for q0",
+     "evidence": "strap5 2c0df5054: q2, q3 CLOSED TT +23.91 / FF +9.09 (from -111.27); q1 strap4hookfix CLOSED +18.72; q0 strap5 NEEDS_RTL TT -114.94 / FF +2.29"
+    }
+   ]
+  },
+  {
+   "id": "T4",
+   "severity": "P1",
+   "owner": "H-NETLIST",
+   "master": "hfd_hgi_vm_calendar (compact universal)",
+   "job": "hv15_vm_cal_u-compact2330-24eeb93bb (CLOSED, native FAIL L222/C206.2/spread 92.8)",
+   "images": [
+    "results/arch/visual_audit_1016/hbm/contact_sheet_tiles.png"
+   ],
+   "what_i_see": "one SRAM centred, logic in two clusters on the W and E faces; clock at W-low reaches the E cluster only by wrapping under the macro",
+   "measured": {
+    "fill": 0.514,
+    "die": [
+     220.32,
+     116.64
+    ],
+    "E_pins_in_15pct": 207,
+    "W_pins_in_25pct": 329,
+    "clock": "W (0,43.6)"
+   },
+   "structural_fix": "push the SRAM to the N edge so W and E clusters join under it (or move all IO to one face), clk at S-centre: spread 92.8 -> one cluster.",
+   "geometry": {
+    "die_um": [
+     220.32,
+     116.64
+    ],
+    "fill": 0.514,
+    "std_um2": 897.5,
+    "block_um2": 12317.4,
+    "n_macros": 1,
+    "min_edge_gap": 22.39,
+    "macro_mm_gaps": [],
+    "faces": {
+     "S": {
+      "pins": 74,
+      "span_um": 97.4,
+      "edge_um": 220.3,
+      "occ": 0.44,
+      "pins_per_um": 0.76,
+      "peak_pins_per_20um": 44,
+      "layers": {
+       "M5": 74
+      }
+     },
+     "E": {
+      "pins": 207,
+      "span_um": 17.9,
+      "edge_um": 116.6,
+      "occ": 0.15,
+      "pins_per_um": 11.59,
+      "peak_pins_per_20um": 207,
+      "layers": {
+       "M4": 187,
+       "M5": 20
+      }
+     },
+     "W": {
+      "pins": 329,
+      "span_um": 29.4,
+      "edge_um": 116.6,
+      "occ": 0.25,
+      "pins_per_um": 11.2,
+      "peak_pins_per_20um": 231,
+      "layers": {
+       "M4": 307,
+       "M5": 22
+      }
+     }
+    },
+    "pin_layers": {
+     "M5": 116,
+     "M4": 494
+    },
+    "n_pins": 610,
+    "clock_pins": [
+     [
+      "clk",
+      "W",
+      0.0,
+      43.6
+     ]
+    ],
+    "density": {
+     "bins": 2068,
+     "mean": 0.069,
+     "p95": 0.562,
+     "max": 1.074,
+     "frac_gt_0p8": 0.032,
+     "frac_lt_0p1": 0.869
+    }
+   },
+   "round": [
+    {
+     "round": 1,
+     "date": "2026-10-16T01:00",
+     "status": "reported"
+    },
+    {
+     "round": 2,
+     "date": "2026-10-16T01:15",
+     "status": "confirmed-provisional",
+     "evidence": "owner adopted (H-HARDEN cce3264d2: clk S-centre beside S outputs, clk_cap W, clk_mem W). Before: routed native L222/C206.2/spread 92.8 ps (24eeb93bb). After: gate CTS TT insertion 170.9 ps, spread 37.4 ps, 649 sinks (hv15_vm_cal_x gate PASS 01:05). Route not yet run: jobs REFUSED CLOSED_STANDS (slot-change request pending)"
+    },
+    {
+     "round": 2,
+     "date": "2026-10-16T01:45",
+     "status": "confirmed",
+     "evidence": "hv15_vm_cal_x-xcap0030-cce3264d2 CLOSED TT +45.93 / FF +24.17 / DRC 0 (record b2e290032); routed native PASS (main results/rtl/hbm_harden_0030/calendar_x_native.json, verified): launch 222.0 -> 179.0 ps, capture 206.2 -> 133.0 ps, spread 92.8 -> 37.2 ps (clk S-centre, R 147.5); clk_cap W rung R 85.6 / spread 8.1. SRAM stays centred (20-um N/S channels); clock no longer wraps under the macro."
+    }
+   ]
+  },
+  {
+   "id": "T5",
+   "severity": "P1",
+   "owner": "H-NETLIST",
+   "master": "ot_hgi_coll_static_vmwrite (spread)",
+   "job": "hcoll_vmwrite_static_v4_spread-spread2330-d5f938aea",
+   "images": [
+    "results/arch/visual_audit_1016/hbm/contact_sheet_tiles.png"
+   ],
+   "what_i_see": "103.7 x 388.8 strip, clock enters at the N end; launch path runs ~380 um to the S-W capture",
+   "measured": {
+    "fill": 0.21,
+    "pins": 5123,
+    "W_E_pins": [
+     2233,
+     2272
+    ],
+    "clock": "N (52,388.8)"
+   },
+   "structural_fix": "clock entry at mid-height of W or E face (y~194) halves the worst clock reach; consider 2 half-height tiles.",
+   "geometry": {
+    "die_um": [
+     103.68,
+     388.8
+    ],
+    "fill": 0.21,
+    "std_um2": 8484.3,
+    "block_um2": 0.0,
+    "n_macros": 0,
+    "min_edge_gap": null,
+    "macro_mm_gaps": [],
+    "faces": {
+     "N": {
+      "pins": 49,
+      "span_um": 93.3,
+      "edge_um": 103.7,
+      "occ": 0.9,
+      "pins_per_um": 0.53,
+      "peak_pins_per_20um": 11,
+      "layers": {
+       "M5": 49
+      }
+     },
+     "E": {
+      "pins": 2272,
+      "span_um": 380.0,
+      "edge_um": 388.8,
+      "occ": 0.98,
+      "pins_per_um": 5.98,
+      "peak_pins_per_20um": 137,
+      "layers": {
+       "M4": 2254,
+       "M5": 18
+      }
+     },
+     "W": {
+      "pins": 2233,
+      "span_um": 380.0,
+      "edge_um": 388.8,
+      "occ": 0.98,
+      "pins_per_um": 5.88,
+      "peak_pins_per_20um": 137,
+      "layers": {
+       "M4": 2213,
+       "M5": 20
+      }
+     },
+     "S": {
+      "pins": 569,
+      "span_um": 94.9,
+      "edge_um": 103.7,
+      "occ": 0.92,
+      "pins_per_um": 6.0,
+      "peak_pins_per_20um": 122,
+      "layers": {
+       "M5": 569
+      }
+     }
+    },
+    "pin_layers": {
+     "M5": 656,
+     "M4": 4467
+    },
+    "n_pins": 5123,
+    "clock_pins": [
+     [
+      "clk",
+      "N",
+      52.0,
+      388.8
+     ]
+    ],
+    "density": {
+     "bins": 4096,
+     "mean": 0.21,
+     "p95": 0.806,
+     "max": 1.09,
+     "frac_gt_0p8": 0.051,
+     "frac_lt_0p1": 0.476
+    }
+   },
+   "round": [
+    {
+     "round": 1,
+     "date": "2026-10-16T01:00",
+     "status": "reported"
+    },
+    {
+     "round": 2,
+     "date": "2026-10-16T01:15",
+     "status": "open",
+     "evidence": "no new spread revision"
+    }
+   ]
+  },
+  {
+   "id": "T6",
+   "severity": "P0",
+   "owner": "H-SM",
+   "master": "ot_hbm_accel_smh_tile_eg rp3",
+   "job": "smh_tile_rp3-rp3-76112f61f (running; rp2 GRT-0116, rp3 crashed x2 before)",
+   "images": [
+    "results/arch/visual_audit_1016/hbm/contact_sheet_tiles.png"
+   ],
+   "what_i_see": "W and E pin windows are each one 203-um block in the middle of a 1,192-um face; the rest of all four faces is empty",
+   "measured": {
+    "die": [
+     406.08,
+     1192.32
+    ],
+    "pins": 7766,
+    "W_E_pins_each": 3705,
+    "pins_per_um": 18.24,
+    "peak_per_20um": 366,
+    "face_occupancy": 0.17,
+    "fill": 0.494
+   },
+   "structural_fix": "18 pins/um on 2 layers is at the ASAP7 track limit and is the cause of the rp2 GRT overflow class: spread the W/E buses over >= 60% of the face (>= 700 um) or move half to M6 on N/S; the 4 tr_group blocks should sit at the pin windows.",
+   "geometry": {
+    "die_um": [
+     406.08,
+     1192.32
+    ],
+    "fill": 0.494,
+    "std_um2": 5026.8,
+    "block_um2": 234231.8,
+    "n_macros": 14,
+    "min_edge_gap": 0.0,
+    "macro_mm_gaps": [],
+    "faces": {
+     "W": {
+      "pins": 3705,
+      "span_um": 203.1,
+      "edge_um": 1192.3,
+      "occ": 0.17,
+      "pins_per_um": 18.24,
+      "peak_pins_per_20um": 366,
+      "layers": {
+       "M4": 2117,
+       "M6": 1588
+      }
+     },
+     "E": {
+      "pins": 3705,
+      "span_um": 203.1,
+      "edge_um": 1192.3,
+      "occ": 0.17,
+      "pins_per_um": 18.24,
+      "peak_pins_per_20um": 366,
+      "layers": {
+       "M4": 2117,
+       "M6": 1588
+      }
+     },
+     "N": {
+      "pins": 156,
+      "span_um": 87.4,
+      "edge_um": 406.1,
+      "occ": 0.22,
+      "pins_per_um": 1.79,
+      "peak_pins_per_20um": 42,
+      "layers": {
+       "M5": 156
+      }
+     },
+     "S": {
+      "pins": 200,
+      "span_um": 95.5,
+      "edge_um": 406.1,
+      "occ": 0.24,
+      "pins_per_um": 2.09,
+      "peak_pins_per_20um": 42,
+      "layers": {
+       "M5": 200
+      }
+     }
+    },
+    "pin_layers": {
+     "M4": 4234,
+     "M6": 3176,
+     "M5": 356
+    },
+    "n_pins": 7766,
+    "clock_pins": [
+     [
+      "clk",
+      "N",
+      242.4,
+      1192.2
+     ]
+    ],
+    "density": {
+     "bins": 3643,
+     "mean": 0.0,
+     "p95": 0.0,
+     "max": 0.0,
+     "frac_gt_0p8": 0.0,
+     "frac_lt_0p1": 1.0
+    }
+   },
+   "round": [
+    {
+     "round": 1,
+     "date": "2026-10-16T01:00",
+     "status": "reported"
+    },
+    {
+     "round": 2,
+     "date": "2026-10-16T01:15",
+     "status": "open",
+     "evidence": "rp3 route running on E4; no rp4 plan seen"
+    }
+   ]
+  },
+  {
+   "id": "T7",
+   "severity": "P1",
+   "owner": "H-SM",
+   "master": "ot_hbm_accel_smh_bdc d62",
+   "job": "smh_bdc_d62-d62-506b05dbf (route crashed x2)",
+   "images": [
+    "results/arch/visual_audit_1016/hbm/contact_sheet_tiles.png"
+   ],
+   "what_i_see": "1,094 of 1,158 pins on the S face; clock pin at the N-W corner, opposite the IO face",
+   "measured": {
+    "die": [
+     112.32,
+     116.64
+    ],
+    "S_pins": 1094,
+    "S_pins_per_um": 10.5,
+    "clock": "N (29.6,116.5)"
+   },
+   "structural_fix": "clock to S face centre (next to the IO flops) or split IO S/N.",
+   "geometry": {
+    "die_um": [
+     112.32,
+     116.64
+    ],
+    "fill": 0.577,
+    "std_um2": 7557.7,
+    "block_um2": 0.0,
+    "n_macros": 0,
+    "min_edge_gap": null,
+    "macro_mm_gaps": [],
+    "faces": {
+     "N": {
+      "pins": 62,
+      "span_um": 36.2,
+      "edge_um": 112.3,
+      "occ": 0.32,
+      "pins_per_um": 1.71,
+      "peak_pins_per_20um": 52,
+      "layers": {
+       "M5": 52,
+       "M6": 10
+      }
+     },
+     "S": {
+      "pins": 1094,
+      "span_um": 104.0,
+      "edge_um": 112.3,
+      "occ": 0.93,
+      "pins_per_um": 10.52,
+      "peak_pins_per_20um": 219,
+      "layers": {
+       "M5": 1084,
+       "M6": 10
+      }
+     },
+     "W": {
+      "pins": 2,
+      "span_um": 0.4,
+      "edge_um": 116.6,
+      "occ": 0.0,
+      "pins_per_um": 2.0,
+      "peak_pins_per_20um": 2,
+      "layers": {
+       "M6": 2
+      }
+     }
+    },
+    "pin_layers": {
+     "M5": 1136,
+     "M6": 22
+    },
+    "n_pins": 1158,
+    "clock_pins": [
+     [
+      "clk",
+      "N",
+      29.6,
+      116.5
+     ]
+    ],
+    "density": {
+     "bins": 4096,
+     "mean": 0.0,
+     "p95": 0.0,
+     "max": 0.0,
+     "frac_gt_0p8": 0.0,
+     "frac_lt_0p1": 1.0
+    }
+   },
+   "round": [
+    {
+     "round": 1,
+     "date": "2026-10-16T01:00",
+     "status": "reported"
+    },
+    {
+     "round": 2,
+     "date": "2026-10-16T01:15",
+     "status": "withdrawn",
+     "evidence": "owner dropped the d62 leaf re-harden (coordinator 23:2x); last run FLOORPLAN_MARGIN util 64.1%"
+    }
+   ]
+  },
+  {
+   "id": "T8",
+   "severity": "P1",
+   "owner": "H-DIE",
+   "master": "hdie_pc_ctrl_cfg (128 inst)",
+   "job": "gate hdie_pc_ctrl_cfg (placement setup -208.2 ps)",
+   "images": [
+    "/home/ubuntu/wt/hdie-1705/physical/ref_tile/hdie_pc_ctrl_cfg/gate_layout/density.png"
+   ],
+   "what_i_see": "two SRAMs centre-right; logic forms a C around the W side; E strip empty; clock pin W-low",
+   "measured": {
+    "fill": 0.41,
+    "pins": 1292
+   },
+   "structural_fix": "abut SRAMs to the E edge (pins facing W), logic becomes one W block; clk at W mid-height; 128 instances x the saved E strip ~0.6-0.9 mm2 die-wide.",
+   "geometry": null,
+   "round": [
+    {
+     "round": 1,
+     "date": "2026-10-16T01:00",
+     "status": "reported"
+    },
+    {
+     "round": 2,
+     "date": "2026-10-16T01:15",
+     "status": "open",
+     "evidence": "no new pc_ctrl_cfg geometry"
+    }
+   ]
+  },
+  {
+   "id": "T9",
+   "severity": "P1",
+   "owner": "H-SU",
+   "master": "ot_hbm_su_static_bank6_clock_physical r11 / ot_hbm_su_reduce_static r4",
+   "job": "closed views",
+   "images": [
+    "results/arch/visual_audit_1016/hbm/contact_sheet_tiles.png"
+   ],
+   "what_i_see": "bank6: 6 SRAMs, 684 um2 of std cells, 95% of free bins < 0.1 density; reduce: 2 SRAMs, pins squeezed into 5-6% of W/E faces",
+   "measured": {
+    "bank6_fill": 0.407,
+    "reduce_fill": 0.273,
+    "reduce_pins_per_um": [
+     14.2,
+     13.5
+    ]
+   },
+   "structural_fix": "SU is 3.71 mm2 over its band: re-outline bank6 to 20-um macro channels (~-20% area) and reduce to ~216 x 110; spread reduce W/E pins over >= 40% of the face.",
+   "geometry": {
+    "bank6": {
+     "die_um": [
+      390.96,
+      151.2
+     ],
+     "fill": 0.407,
+     "std_um2": 683.6,
+     "block_um2": 23349.5,
+     "n_macros": 6,
+     "min_edge_gap": 23.76,
+     "macro_mm_gaps": [
+      20.09,
+      21.6
+     ],
+     "faces": {
+      "W": {
+       "pins": 133,
+       "span_um": 66.7,
+       "edge_um": 151.2,
+       "occ": 0.44,
+       "pins_per_um": 1.99,
+       "peak_pins_per_20um": 67,
+       "layers": {
+        "M4": 105,
+        "M5": 28
+       }
+      },
+      "S": {
+       "pins": 47,
+       "span_um": 239.6,
+       "edge_um": 391.0,
+       "occ": 0.61,
+       "pins_per_um": 0.2,
+       "peak_pins_per_20um": 5,
+       "layers": {
+        "M3": 3,
+        "M5": 44
+       }
+      },
+      "N": {
+       "pins": 47,
+       "span_um": 239.7,
+       "edge_um": 391.0,
+       "occ": 0.61,
+       "pins_per_um": 0.2,
+       "peak_pins_per_20um": 5,
+       "layers": {
+        "M5": 47
+       }
+      },
+      "E": {
+       "pins": 227,
+       "span_um": 76.7,
+       "edge_um": 151.2,
+       "occ": 0.51,
+       "pins_per_um": 2.96,
+       "peak_pins_per_20um": 96,
+       "layers": {
+        "M4": 199,
+        "M5": 28
+       }
+      }
+     },
+     "pin_layers": {
+      "M4": 304,
+      "M3": 3,
+      "M5": 147
+     },
+     "n_pins": 454,
+     "clock_pins": [
+      [
+       "clk",
+       "W",
+       0.0,
+       72.9
+      ]
+     ],
+     "density": {
+      "bins": 2368,
+      "mean": 0.019,
+      "p95": 0.095,
+      "max": 0.646,
+      "frac_gt_0p8": 0.0,
+      "frac_lt_0p1": 0.952
+     }
+    },
+    "reduce": {
+     "die_um": [
+      216.0,
+      151.2
+     ],
+     "fill": 0.273,
+     "std_um2": 1148.3,
+     "block_um2": 7783.2,
+     "n_macros": 2,
+     "min_edge_gap": 23.76,
+     "macro_mm_gaps": [
+      21.6
+     ],
+     "faces": {
+      "N": {
+       "pins": 14,
+       "span_um": 59.4,
+       "edge_um": 216.0,
+       "occ": 0.27,
+       "pins_per_um": 0.24,
+       "peak_pins_per_20um": 6,
+       "layers": {
+        "M5": 14
+       }
+      },
+      "W": {
+       "pins": 126,
+       "span_um": 9.3,
+       "edge_um": 151.2,
+       "occ": 0.06,
+       "pins_per_um": 13.53,
+       "peak_pins_per_20um": 126,
+       "layers": {
+        "M4": 98,
+        "M5": 28
+       }
+      },
+      "E": {
+       "pins": 110,
+       "span_um": 7.8,
+       "edge_um": 151.2,
+       "occ": 0.05,
+       "pins_per_um": 14.15,
+       "peak_pins_per_20um": 110,
+       "layers": {
+        "M4": 82,
+        "M5": 28
+       }
+      },
+      "S": {
+       "pins": 12,
+       "span_um": 59.4,
+       "edge_um": 216.0,
+       "occ": 0.28,
+       "pins_per_um": 0.2,
+       "peak_pins_per_20um": 4,
+       "layers": {
+        "M5": 12
+       }
+      }
+     },
+     "pin_layers": {
+      "M5": 82,
+      "M4": 180
+     },
+     "n_pins": 262,
+     "clock_pins": [
+      [
+       "clk",
+       "N",
+       108.0,
+       151.2
+      ]
+     ],
+     "density": {
+      "bins": 3016,
+      "mean": 0.047,
+      "p95": 0.432,
+      "max": 0.991,
+      "frac_gt_0p8": 0.007,
+      "frac_lt_0p1": 0.898
+     }
+    }
+   },
+   "round": [
+    {
+     "round": 1,
+     "date": "2026-10-16T01:00",
+     "status": "reported"
+    },
+    {
+     "round": 2,
+     "date": "2026-10-16T01:15",
+     "status": "open",
+     "evidence": "H-SU bank r12 submit REFUSED LOCALLY 00:58: FileNotFoundError ot-run (tool not on PATH), nothing submitted"
+    },
+    {
+     "round": 2,
+     "date": "2026-10-16T01:25",
+     "status": "partially-refuted (estimate)",
+     "evidence": "H-SU: kit generator keeps >=20 um macro-to-pin-face + 2.16 um core margin and the 151.2 height is fixed by the row/track lattice; only the 33-um W/E margins shrink to 21.6 um -> bank6 slot 369.36 x 151.2 (accepted by H-DIE), -5.5% / -1.672 mm2 over 512 banks, not the ~20% I estimated. bank r12 re-gating. reduce r4 (ot_hbm_su_reduce_static, Codex:HBM-SU-structural job) ownership queried."
+    },
+    {
+     "round": 2,
+     "date": "2026-10-16T01:30",
+     "status": "reduce half: noted / no action",
+     "evidence": "H-SU: ot_hbm_su_reduce_static is 4 per die; 216x151.2 -> 216x110 saves 4 x 216 x 41.2 um2 = 0.036 mm2 (1% of the 3.7 mm2 SU deficit), not worth re-routing a CLOSED (TT +154.98) tile; W/E 14 pins/um revisited only if die GRT shows overflow at the reducer faces"
+    },
+    {
+     "round": 2,
+     "date": "2026-10-16T02:00",
+     "status": "confirmed (bank)",
+     "evidence": "bank r12 369.36 x 151.2 CLOSED TT +111.89 / FF +10.49 / DRC 0; routed native PASS L180.2 / C119.6 / spread 56.7 (main native_audit_r12.json, checked); -1.672 mm2 over 512 banks"
+    }
+   ]
+  },
+  {
+   "id": "T10",
+   "severity": "P2",
+   "owner": "H-SM",
+   "master": "ot_hgi_sm_xload_cl2_bfq",
+   "job": "cl2b CLOSED / cl2c route crashed x2",
+   "images": [
+    "results/arch/visual_audit_1016/hbm/contact_sheet_tiles.png"
+   ],
+   "what_i_see": "8 SRAMs in 2 columns, logic only in the centre column; 1,024 pins packed on the W half of the N face",
+   "measured": {
+    "fill": 0.328,
+    "std_um2": 2637
+   },
+   "structural_fix": "shrink outline (fill 33%); spread N pins over the full face.",
+   "geometry": {
+    "die_um": [
+     345.6,
+     298.08
+    ],
+    "fill": 0.328,
+    "std_um2": 2636.9,
+    "block_um2": 31132.6,
+    "n_macros": 8,
+    "min_edge_gap": 25.92,
+    "macro_mm_gaps": [
+     25.92
+    ],
+    "faces": {
+     "N": {
+      "pins": 1024,
+      "span_um": 195.0,
+      "edge_um": 345.6,
+      "occ": 0.56,
+      "pins_per_um": 5.25,
+      "peak_pins_per_20um": 201,
+      "layers": {
+       "M5": 1024
+      }
+     },
+     "W": {
+      "pins": 83,
+      "span_um": 8.7,
+      "edge_um": 298.1,
+      "occ": 0.03,
+      "pins_per_um": 9.59,
+      "peak_pins_per_20um": 83,
+      "layers": {
+       "M4": 27,
+       "M5": 56
+      }
+     },
+     "S": {
+      "pins": 272,
+      "span_um": 42.0,
+      "edge_um": 345.6,
+      "occ": 0.12,
+      "pins_per_um": 6.47,
+      "peak_pins_per_20um": 209,
+      "layers": {
+       "M5": 272
+      }
+     },
+     "E": {
+      "pins": 56,
+      "span_um": 0.0,
+      "edge_um": 298.1,
+      "occ": 0.0,
+      "pins_per_um": 56.0,
+      "peak_pins_per_20um": 56,
+      "layers": {
+       "M5": 56
+      }
+     }
+    },
+    "pin_layers": {
+     "M5": 1408,
+     "M4": 27
+    },
+    "n_pins": 1435,
+    "clock_pins": [
+     [
+      "clk",
+      "W",
+      0.0,
+      155.2
+     ]
+    ],
+    "density": {
+     "bins": 2656,
+     "mean": 0.039,
+     "p95": 0.283,
+     "max": 0.963,
+     "frac_gt_0p8": 0.007,
+     "frac_lt_0p1": 0.905
+    }
+   },
+   "round": [
+    {
+     "round": 1,
+     "date": "2026-10-16T01:00",
+     "status": "reported"
+    },
+    {
+     "round": 2,
+     "date": "2026-10-16T01:15",
+     "status": "open",
+     "evidence": "cl2c still routing"
+    }
+   ]
+  },
+  {
+   "id": "T11",
+   "severity": "P2",
+   "owner": "H-NETLIST",
+   "master": "ot_hgi_dma_back_static_vp4_controller",
+   "job": "hv15_dbk_vp4_ctl_stk0-rm1-12d5b43f5 CLOSED TT +71",
+   "images": [
+    "results/arch/visual_audit_1016/hbm/contact_sheet_tiles.png"
+   ],
+   "what_i_see": "over-full: red density across most of the tile",
+   "measured": {
+    "density_mean": 0.587,
+    "frac_bins_gt_0p8": 0.27,
+    "max": 1.41
+   },
+   "structural_fix": "grow 69 -> ~80 um on the next re-kit (stk strap DEDUPE) to stay under the 60% util rule.",
+   "geometry": {
+    "die_um": [
+     69.12,
+     69.12
+    ],
+    "fill": 0.587,
+    "std_um2": 2805.8,
+    "block_um2": 0.0,
+    "n_macros": 0,
+    "min_edge_gap": null,
+    "macro_mm_gaps": [],
+    "faces": {
+     "E": {
+      "pins": 306,
+      "span_um": 32.9,
+      "edge_um": 69.1,
+      "occ": 0.48,
+      "pins_per_um": 9.3,
+      "peak_pins_per_20um": 201,
+      "layers": {
+       "M4": 294,
+       "M5": 12
+      }
+     },
+     "N": {
+      "pins": 20,
+      "span_um": 1.8,
+      "edge_um": 69.1,
+      "occ": 0.03,
+      "pins_per_um": 10.96,
+      "peak_pins_per_20um": 20,
+      "layers": {
+       "M5": 20
+      }
+     },
+     "W": {
+      "pins": 353,
+      "span_um": 63.6,
+      "edge_um": 69.1,
+      "occ": 0.92,
+      "pins_per_um": 5.55,
+      "peak_pins_per_20um": 129,
+      "layers": {
+       "M4": 341,
+       "M5": 12
+      }
+     },
+     "S": {
+      "pins": 216,
+      "span_um": 25.2,
+      "edge_um": 69.1,
+      "occ": 0.37,
+      "pins_per_um": 8.56,
+      "peak_pins_per_20um": 169,
+      "layers": {
+       "M5": 216
+      }
+     }
+    },
+    "pin_layers": {
+     "M4": 635,
+     "M5": 260
+    },
+    "n_pins": 895,
+    "clock_pins": [
+     [
+      "clk",
+      "N",
+      51.2,
+      69.1
+     ]
+    ],
+    "density": {
+     "bins": 4096,
+     "mean": 0.587,
+     "p95": 1.062,
+     "max": 1.413,
+     "frac_gt_0p8": 0.27,
+     "frac_lt_0p1": 0.134
+    }
+   },
+   "round": [
+    {
+     "round": 1,
+     "date": "2026-10-16T01:00",
+     "status": "reported"
+    },
+    {
+     "round": 2,
+     "date": "2026-10-16T01:15",
+     "status": "open",
+     "evidence": "no re-kit yet"
+    }
+   ]
+  },
+  {
+   "id": "T12",
+   "severity": "P1",
+   "owner": "H-LKEP",
+   "master": "hfd_ep_static",
+   "job": "hep_static_ref_1015-ep1-COMMIT-2c0531bad EARLY_FAIL_CONGESTION (run data deleted)",
+   "images": [],
+   "what_i_see": "no image left (failed run deleted); H-LKEP log: 12 overflow edges in zero-capacity gcells just inside the INWARD SRAM faces of the 47-um centre channel",
+   "measured": {
+    "overflow_edges": 12,
+    "centre_channel_um": 47
+   },
+   "structural_fix": "macro pins face each other across a 47-um channel: rotate the columns so SRAM pins face OUTWARD to the band, or widen the channel to >= 2 x pin-escape (~90 um); render gate_layout before resubmit.",
+   "geometry": null,
+   "round": [
+    {
+     "round": 1,
+     "date": "2026-10-16T01:00",
+     "status": "reported"
+    },
+    {
+     "round": 2,
+     "date": "2026-10-16T01:15",
+     "status": "open",
+     "evidence": "owner adopted a structural change (route 3 kit e4e436536: macro rows separated by a 21.6-um horizontal channel), route queued; gate shows a new clock problem (R2-1)"
+    },
+    {
+     "round": 2,
+     "date": "2026-10-16T01:35",
+     "status": "confirmed-provisional",
+     "evidence": "route 2 GRT-0116 with 12 overflow edges at the inward SRAM faces -> route-3 kit e4e436536 (21.6-um channel between macro rows) trial GRT overflow 0, M2 16% (H-LKEP). Route itself pending. 90-um channel / outward rotation infeasible at the fixed 434.72 width (owner)."
+    },
+    {
+     "round": 2,
+     "date": "2026-10-16T02:20",
+     "status": "fix-in-gate (route 4)",
+     "evidence": "route 3 e4e436536 CLOSED TT +128.49 / FF +7.69 (congestion fix confirmed: 12 overflow edges -> 0) but native FAIL launch 223.2 (3 sd_tx pins) / capture 212.7 (sd_rx[1]); route 4: single IDLE pin flop, clock moved west on the S face"
+    }
+   ]
+  },
+  {
+   "id": "N1",
+   "severity": "INFO",
+   "owner": "all",
+   "master": "not inspectable",
+   "job": "completeness 1015",
+   "images": [],
+   "what_i_see": "27 of 39 HBM netlist masters are RTL-only (no route/odb); svc_v15 superseded; no image exists to inspect",
+   "measured": {
+    "rtl_only": 27,
+    "native_fail": 4,
+    "closed_native_pass": 1
+   },
+   "structural_fix": "owners: run the pre_route_gate (gate_layout) on every new kit; VIS-HBM re-inspects as images land.",
+   "geometry": null,
+   "round": [
+    {
+     "round": 1,
+     "date": "2026-10-16T01:00",
+     "status": "reported"
+    },
+    {
+     "round": 2,
+     "date": "2026-10-16T01:15",
+     "status": "info",
+     "evidence": ""
+    }
+   ]
+  },
+  {
+   "id": "R2-1",
+   "severity": "P1",
+   "owner": "H-LKEP",
+   "master": "hfd_ep_static route 3 kit",
+   "job": "hep_static_ref_1015-ep1-e4e436536 (QUEUED)",
+   "images": [
+    "/home/ubuntu/wt/h-lkep-1015/physical/ref_tile/hep_static_ref_1015/gate_layout/floorplan.png",
+    "/home/ubuntu/wt/h-lkep-1015/physical/ref_tile/hep_static_ref_1015/gate_layout/density.png",
+    "results/arch/visual_audit_1016/hbm/contact_sheet_round2.png"
+   ],
+   "what_i_see": "2x2 SRAM block in the top half; the bottom ~45% of the 434.7 x 315.4 tile is empty; logic hugs the W and S edges; clock pin at S-centre",
+   "measured": {
+    "gate_tt_insertion_ps": 444.9,
+    "gate_tt_spread_ps": 109.6,
+    "limits": [
+     300,
+     80
+    ],
+    "sinks": 7194,
+    "fill": 0.42,
+    "pins": {
+     "S": "1306 over 98%",
+     "W": "1084 over 49%",
+     "N": 0,
+     "E": 58
+    }
+   },
+   "structural_fix": "height 315 -> ~200 um so the macros sit next to the S pins; move clk to W mid-height or the SW corner beside the logic. The gate already fails the clock rule (444.9/109.6 vs 300/80), so do not spend route 3 as is.",
+   "geometry": null,
+   "round": [
+    {
+     "round": 2,
+     "date": "2026-10-16T01:15",
+     "status": "new"
+    },
+    {
+     "round": 2,
+     "date": "2026-10-16T01:35",
+     "status": "clock-rule claim refuted; native risk open",
+     "evidence": "H-LKEP: the 300/80 ps measured-form limit applies only above 15k sinks/root; 7,194 sinks -> gate PASS (memory clock-rule-measured-form agrees). Remaining measured risk: boundary insertion 348.3-396.4 ps (mean 370.9) vs native launch <= 220 / capture <= 190 ps -> native audit likely FAILs. Owner gating compact variant hep_static_cmp_1016 434.72 x 224.64, fill ~59%, rows 20 um from S face (my height fix adopted); clk stays S-centre (parent contract)."
+    }
+   ]
+  }
+ ],
+ "rounds": {
+  "1": {
+   "date": "2026-10-16T01:00",
+   "findings": 16
+  },
+  "2": {
+   "date": "2026-10-16T01:15",
+   "scored": 15,
+   "confirmed": 2,
+   "confirmed_provisional": 1,
+   "refuted": 1,
+   "withdrawn": 1,
+   "open": 13,
+   "hit_rate": "1 of 1 decided (provisional, gate-level; 0 refuted); 13 open because the owners' revisions (d3, strap5, cl2e, rp4, SU r12) had not produced a gate or route 15 min after pass 1; T9 area estimate corrected by owner (5.5% real vs ~20% claimed): direction confirmed, magnitude refuted; T12 confirmed at trial GRT (12 overflow edges -> 0); R2-1 clock-rule wording refuted by owner (limit is >15k sinks only), area part adopted as compact variant; T4 now fully confirmed (routed native PASS: L222/C206.2/sp92.8 -> L179/C133/sp37.2)",
+   "new_findings": 1
+  }
+ }
+}

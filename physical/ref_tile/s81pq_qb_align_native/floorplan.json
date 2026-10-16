@@ -31,16 +31,15 @@
  "pins": {
   "S": [
    "bc_hr",
+   "clk",
+   "rst_n",
    "bt_d"
   ],
   "N": [
    "bc_hr_q",
    "bt_d_q"
   ],
-  "W": [
-   "clk",
-   "rst_n"
-  ],
+  "W": [],
   "E": []
  },
  "clock_port": "clk",
@@ -73,6 +72,8 @@
   "physical/ref_tile_specs/s81pq_native/s81pq_qb_align_native_spread_pins.tcl",
   "physical/qwen_die_masters/io_flop_at_pins.tcl",
   "physical/qwen_die_masters/out_flop_release.tcl",
+  "physical/dsrom_window_source/leaf_iohold.tcl",
+  "physical/dsrom_window_source/leaf_inhold_release.tcl",
   "physical/dsrom_window_source/leaf_inhold.tcl",
   "physical/dsrom_window_source/leaf_inhold_release.tcl",
   "physical/ref_tile/s81pq_qb_align_native/pre_gpl.tcl",
