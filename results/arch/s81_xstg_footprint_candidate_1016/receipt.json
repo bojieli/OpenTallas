@@ -1,0 +1,65 @@
+{
+ "schema": "opentallas.s81.xstg_footprint_source_candidate.v1",
+ "status": "OFF_DEFAULT_SOURCE_CANDIDATE_NO_LIVE_GEN_ADOPTION",
+ "measured_source": "17b13fb0637869d53580a1084bdd250d18828d9b",
+ "observed_master": "dsfd_xstg_515",
+ "actual_view": {
+  "path": "physical/ref_tile/s81net_xstg_515/views/dsfd_xstg_515/dsfd_xstg_515.lef",
+  "sha256": "28664e4897fda0d5b11ba56501556c5c7a293210b5b38106d87063ef4e9569e8",
+  "size_um": [
+   75.6,
+   92.88
+  ],
+  "origin_um": [
+   0,
+   0
+  ],
+  "raw_table_verdict": "DIAGNOSTIC_CLOSED"
+ },
+ "measured_initial_slots": {
+  "size_um": [
+   17.256,
+   30.216
+  ],
+  "instances": [
+   "xsix_SW",
+   "xsco_SW"
+  ],
+  "same_origin_grow_overlap": [
+   {
+    "instance": "xsix_SW",
+    "other": "hix_SW",
+    "overlap_um": [
+     50.544,
+     82.056
+    ]
+   },
+   {
+    "instance": "xsco_SW",
+    "other": "hco_SW",
+    "overlap_um": [
+     50.544,
+     79.896
+    ]
+   }
+  ]
+ },
+ "cause": "SEL_XSTG branch borrows plain stn_dims([515], True); station footprint loader excludes dsfd_xstg_* and there is no subsequent resize.",
+ "candidate": "--xstg-bound-footprint uses hash-verified selected binding-table SIZE before beside_blk/P.near reserves occupancy. Missing view fails closed. Default sizing stays unchanged; no added registers/ports/cycles.",
+ "tests": [
+  "default sizing unchanged using stub plain-station dimensions",
+  "enabled path selects exact75.6x92.88 verified-view dimensions",
+  "missing bound view raises ValueError",
+  "Python compile passed"
+ ],
+ "pending": [
+  "Actual final GEN literal xstg/master/view-misfit reconciliation",
+  "Full-source build with opt-in candidate, correct incident placement and actual peer per-bit pins",
+  "Actual input/output/clock/root/reset phases, native timing and all incident cuts",
+  "Root review before future GEN recipe adoption"
+ ],
+ "live_jobs_unchanged": [
+  "c26b source17b13fb06",
+  "nl0030_26n source2e442504c"
+ ]
+}
