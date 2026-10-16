@@ -175,5 +175,9 @@
   "w": 345.6,
   "h": 297.0
  },
- "floorplan_note": "cl2a GRT-0116 (547 overflow, 372 on M4) sat in the 20-um channel between the two macro columns (x 140-167): both columns face it with their W/E M4 pin rows (412 + 411 pins per array). cl2b: 64.8-um centre channel and ~45-um outer channels, 26-um row channels; the mask registers were already per macro (64 kept FFs), not the cause."
+ "floorplan_note": "cl2a GRT-0116 (547 overflow, 372 on M4) sat in the 20-um channel between the two macro columns (x 140-167): both columns face it with their W/E M4 pin rows (412 + 411 pins per array). cl2b: 64.8-um centre channel and ~45-um outer channels, 26-um row channels; the mask registers were already per macro (64 kept FFs), not the cause.",
+ "pin_regs": {
+  "enable": false,
+  "reason": "OWNER RULE 19:50 met in RTL (rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv, x-load cl2 rewritten for this rule; +2 edges accepted by the coordinator): inputs land in per-macro pin flops (wp_d/wp_a/wp_ce/mask_hi/mask_lo/rp_ce/rp_a); output rwq is a register; a recipe-3 register would add a second stage on every port."
+ }
 }

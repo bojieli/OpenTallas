@@ -7,7 +7,9 @@
 //   (b) fanout: bs_a 8,642 loads (BD beat parity select), md[6][8] 5,635 (landing rotation select), bq_v 4,125 (xw mux);
 //   (c) depth: bw -> rq 21 levels ~797 ps (b_p x stride multiply + three adds + lane rotation add), rr -> l_d 6 levels.
 // Leaves (each its own single clock root, every root < 15k sinks by construction; same edges as cl, cycle for cycle):
-//   ot_hgi_sm_xload_cl2_ctl    clk     command, INCREMENTAL issue addressing (no multiply: running word registers),
+//   ot_hgi_sm_xload_cl2_ctl    clk + clk_eg (egress root: rw / BD-beat capture, beat select, xw pins; related phase 0;
+//                                      cl2a: one 16,281-sink root, pin-flop arrival 375..526 ps, IO hold repair stalled)
+//                                      command, INCREMENTAL issue addressing (no multiply: running word registers),
 //                                      rq, wave metadata, landing (replicated rotation selects), BF16 convert, emission
 //                                      sequencers with a one-edge LOOKAHEAD of the macro read enables, BD tags / write
 //                                      stage (one-hot ring enables), rw capture, beat select (replicated selects), xw pins.
@@ -36,6 +38,7 @@ module ot_hgi_sm_xload_cl2_ctl #(
     parameter integer NR     = 32        // select replicas (each drives 2048 / NR data bits)
 ) (
     input  wire               clk,
+    input  wire               clk_eg,    // egress root (rw / BD-beat pin capture, beat select, xw pins): related phase 0
     input  wire               rst_n,
     input  wire               x_v,
     input  wire [39:0]        x_base,
@@ -283,7 +286,7 @@ module ot_hgi_sm_xload_cl2_ctl #(
     end
     // ---- rw: the quarters' rw registers are captured at the ctl pins (egress edge + 1)
     reg [1023:0] rw;
-    always @(posedge clk) rw <= rwq;
+    always @(posedge clk_eg) rw <= rwq;
     // ---- beat select, replicated (ok, b) selects of ed[RDP-2] (each replica selects RB output bits)
     wire [2047:0] beats [0:NBMAX-1];
     genvar gb;
@@ -302,11 +305,11 @@ module ot_hgi_sm_xload_cl2_ctl #(
     end endgenerate
     wire [EW-1:0] e6 = ed[RDP-1];
     reg [7:0] e5r [0:NR-1];                // {ok, b} of ed[RDP-2], replicated
-    always @(posedge clk or negedge rn)
+    always @(posedge clk_eg or negedge rn)
         if (!rn) for (integer k = 0; k < NR; k = k + 1) e5r[k] <= 8'd0;
         else for (integer k = 0; k < NR; k = k + 1) e5r[k] <= {ed[RDP-3][EW-2], ed[RDP-3][6:0]};
     reg [2047:0] xbeat;
-    always @(posedge clk) for (integer k = 0; k < NR; k = k + 1) begin
+    always @(posedge clk_eg) for (integer k = 0; k < NR; k = k + 1) begin
         xbeat[k*RB +: RB] <= {RB{1'b0}};
         if (e5r[k][7]) for (integer x = 0; x < NBMAX; x = x + 1) if (e5r[k][6:0] == 7'(x)) xbeat[k*RB +: RB] <= beats[x][k*RB +: RB];
     end
@@ -444,19 +447,24 @@ module ot_hgi_sm_xload_cl2_ctl #(
     reg bc_v, bc_last; reg [6:0] bc_addr, bc_b; reg [2047:0] bq_c;
     reg [NR-1:0] bqvr;                     // bc_v replicated (xw data select)
     always @(posedge clk or negedge rn) begin
-        if (!rn) begin bq_v <= 1'b0; bq_last <= 1'b0; bc_v <= 1'b0; bc_last <= 1'b0; bqvr <= '0; end
-        else begin bq_v <= bs_v; bq_last <= bs_last; bc_v <= bq_v; bc_last <= bq_last; bqvr <= {NR{bq_v}}; end
+        if (!rn) begin bq_v <= 1'b0; bq_last <= 1'b0; end
+        else begin bq_v <= bs_v; bq_last <= bs_last; end
     end
-    always @(posedge clk) begin bq_addr <= bs_addr; bq_b <= bs_b; bc_addr <= bq_addr; bc_b <= bq_b; bq_c <= bq_d; end
-    // ---- xw pins
-    always @(posedge clk or negedge rn) begin
+    always @(posedge clk_eg or negedge rn) begin
+        if (!rn) begin bc_v <= 1'b0; bc_last <= 1'b0; bqvr <= '0; end
+        else begin bc_v <= bq_v; bc_last <= bq_last; bqvr <= {NR{bq_v}}; end
+    end
+    always @(posedge clk) begin bq_addr <= bs_addr; bq_b <= bs_b; end
+    always @(posedge clk_eg) begin bc_addr <= bq_addr; bc_b <= bq_b; bq_c <= bq_d; end
+    // ---- xw pins (egress root)
+    always @(posedge clk_eg or negedge rn) begin
         if (!rn) begin xw_en <= 1'b0; xw_last <= 1'b0; x_done <= 1'b0; end
         else begin
             xw_en <= e6[EW-1] || bc_v; xw_last <= (e6[EW-1] && e6[EW-3]) || bc_last;
             x_done <= xw_en && xw_last;
         end
     end
-    always @(posedge clk) begin
+    always @(posedge clk_eg) begin
         if (bc_v) begin xw_addr <= bc_addr; xw_grp <= bc_b; end
         else begin xw_addr <= e6[13:7]; xw_grp <= e6[6:0]; end
         for (integer k = 0; k < NR; k = k + 1) xw_data[k*RB +: RB] <= bqvr[k] ? bq_c[k*RB +: RB] : xbeat[k*RB +: RB];
@@ -614,7 +622,7 @@ module ot_hgi_sm_xload_static_cl2 #(
     wire [2047:0] l_d; wire qv_lo, qv_hi, qo_lo, qo_hi, qf_lo, qf_hi; wire [255:0] qq_lo, qq_hi; wire signed [9:0] qe_lo, qe_hi;
     wire [15:0] r_wsel; wire zlo, zhi; wire ea; wire [6:0] eb2; wire [PMAX*8-1:0] lane_en; wire [2047:0] bq_d;
     ot_hgi_sm_xload_cl2_ctl #(.PMAX(PMAX), .RD_LAT(RD_LAT), .MUT(MUT)) u_ctl (
-        .clk(clk), .rst_n(rst_n), .x_v(x_v), .x_base(x_base), .x_n(x_n), .x_p(x_p), .x_stride(x_stride), .x_space(x_space),
+        .clk(clk), .clk_eg(clk), .rst_n(rst_n), .x_v(x_v), .x_base(x_base), .x_n(x_n), .x_p(x_p), .x_stride(x_stride), .x_space(x_space),
         .x_fmt(x_fmt), .x_xb(x_xb), .x_busy(x_busy), .x_done(x_done), .x_fault(x_fault), .xw_en(xw_en), .xw_last(xw_last),
         .xw_addr(xw_addr), .xw_grp(xw_grp), .xw_data(xw_data), .rq(rq), .rr(rr), .rn_o(rn),
         .c_d(c_d), .c_wce(c_wce), .c_mhi(c_mhi), .c_mlo(c_mlo), .c_wa(c_wa), .r_ce(r_ce), .r_a(r_a), .rwq(rwq),
