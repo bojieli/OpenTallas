@@ -63,7 +63,17 @@ reg fab=0;
 wire cf;
 wire ovf;
 qfd_tt_ctlm_b2 #(.XPF_TRANSPORT_EDGES(1))dut(.ck_xpf(clk),.ck_me_sched(clk),.cp_active(cp_active),.cp(cp),.su_image_ready(su_image_ready),.control_stores_ready(control_stores_ready),.program_obs(program_obs),.layer_context_v(layer_context_v),.native_tok(native_tok),.native_pos(native_pos),.native_cmd(native_cmd),.native_ret(native_ret),.command_stage(command_stage),.ib(ib),.su_observe(su_observe),.xpf(xpf),.mer0(mer0),.mer1(mer1),.mer2(mer2),.mer3(mer3),.mer4(mer4),.mer5(mer5),.rf0(rf0),.rf1(rf1),.rf2(rf2),.rf3(rf3),.rf4(rf4),.rf5(rf5),.xflt(xflt),.b2_status_fault(b2_status_fault),.ck_head(clk),.ck_tree(clk),.tc0(tc0),.tc1(tc1),.am0(am0),.am1(am1),.lc0(lc0),.lc1(lc1),.tc2(tc2),.tc3(tc3),.am2(am2),.am3(am3),.lc2(lc2),.lc3(lc3),.tc4(tc4),.tc5(tc5),.am4(am4),.am5(am5),.lc4(lc4),.lc5(lc5),.ld(ld),.mee(mee),.meok(meok),.mx(mx),.pw(pw),.rsi(rs),.sel(sel),.st(st),.uf(uf),.xm(xm),.xs(xs),.kok(kok),.kwd(kwd),.fab(fab),.cf(cf),.ovf(ovf));
+reg [16:0] actual_frame,expected_frame;
+integer framechecks=0,nactive,g;
 initial begin
+if(dut.u_body.u_tree.u_tt.u_ctl.BANDF!=2||dut.u_body.u_tree.u_tt.u_ctl.TCUT!=6)$fatal(1,"actual controller selected wrong b2 source parameters");
+for(integer sp=7;sp<=12;sp=sp+1)for(integer p=0;p<24;p=p+1)begin
+ if(sp<=9)begin nactive=1<<(9-sp);g=(p/4)*nactive+(p%4);expected_frame={(1'((p%4)<nactive)),16'(g)};end
+ else begin g=p%4;expected_frame={(1'(p/4==0&&g<(3072>>sp))),16'(g)};end
+ actual_frame=dut.u_body.u_tree.u_tt.u_ctl.bframe(4'(sp),32'(p));
+ if(actual_frame[16]!==expected_frame[16]||(expected_frame[16]&&actual_frame[15:0]!==expected_frame[15:0]))$fatal(1,"actual controller BANDF2 frame mismatch sp%0d p%0d got%h want%h",sp,p,actual_frame,expected_frame);
+ framechecks=framechecks+1;
+end
 repeat(5)@(negedge clk);#0.01;rs=1;
 for(integer k=0;k<128;k=k+1)begin
 am0={1'(k>>0),51'(64'h123456789abcdef+64'(k)*17+64'd0)};
@@ -106,5 +116,5 @@ if(tc5!==dut.c2)$fatal(1,"TC fanout h5");
 if(lc5!=={dut.w_t_tv_e,dut.w_t_sel_e})$fatal(1,"LC map h5");
 if(mer5!==dut.w_me_clk_en)$fatal(1,"ME enable map h5");
 @(negedge clk);#0.01;end
-$display("PASS b2 literal controller ABI128vectors native body elaborated");$finish;end
+$display("PASS b2 literal controller ABI128vectors BANDF2frame144checks native body elaborated");$finish;end
 endmodule
