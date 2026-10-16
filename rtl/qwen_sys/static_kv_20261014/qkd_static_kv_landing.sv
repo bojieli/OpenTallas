@@ -56,8 +56,14 @@ module qkd_static_kv_landing_pc #(
     always @(posedge ck or negedge rn)
       if(!rn)begin arm_q<=0;put_q<=0;actual_q<=0;get_q<=0;end
       else begin arm_q<=arm;put_q<=expected_put;actual_q<=actual_valid;get_q<=get;end
+    // Row ordinal = the controller's STREAM position of the sector, for K and V alike: rows < T of a group arrive in
+    // ascending t, i.e. ascending {t[12:9], t[6], t[5:3] (K) / t[3:1] (V VMAP 1)} = {sec[6:3], sec[7], sec[2:0]}, a
+    // gap-free prefix at any T, so with <= 64 rows outstanding (ring bound) no two live rows share a row.
+    // (Q-VMWB 10-16: K used sec[7:0] = {t6, t[12:9], t[5:3]}: the t6 = 0 / 1 rows of one t[12:9] are 8 stream
+    // positions apart on the same row -> alias at mid T; kv_calendar T 2048 / 4096: slack -4 / -19 core edges.)
+    // MUT 3: the old K ordinal (bench negative control).
     function automatic [7:0] ordinal(input [9:0] sec);
-        ordinal=sec[9]?{sec[6:3],sec[7],sec[2:0]}:sec[7:0];
+        ordinal=(sec[9]||MUT!=3)?{sec[6:3],sec[7],sec[2:0]}:sec[7:0];
     endfunction
     wire gvm=(VMAP!=0)&&gv_q;
     wire [9:0] get_sector={gv_q,1'b0,gt_q[6],gt_q[12:9],gvm?gt_q[3:1]:gt_q[5:3]};
@@ -113,13 +119,14 @@ endmodule
 // VREQ=1 (Q-VMWB 2026-10-16, PV16): a second request face vreq_{valid,t} for the V gets issued by qkd_pv16_vport (the
 // pair's own request, demuxed by t[0]); K gets keep req_*.  Both faces are pin-registered, then merged into the get
 // register (+1 edge on BOTH K and V: VREQ=1 landing latency 6 / physical 8 edges).  The schedule is static: a K and a
-// V get on the same edge is a fault, never arbitrated.  A V get carries the epoch / layer of the last K get (QK
-// precedes PV in every layer; a stale value is caught by the PC's active epoch / layer check).  VREQ=0: unchanged.
+// V get on the same edge is a fault, never arbitrated.  A V get carries the epoch / layer the group was ARMED with
+// (arm / epoch / layer, latched here as in the PCs: a group with no K row at small T still serves V).  VREQ=0: unchanged.
 module qkd_static_kv_rowctl #(parameter integer VREQ=0)(
     input wire ck,rst_n,
     input wire req_valid,input wire [13:0] req_t,input wire req_v,
     input wire [15:0] req_epoch,input wire [5:0] req_layer,
     input wire vreq_valid,input wire [13:0] vreq_t,
+    input wire arm,input wire [15:0] epoch,input wire [5:0] layer,
     output wire [3:0] pc_get,output wire [55:0] pc_get_t,output wire [3:0] pc_get_v,
     output wire [63:0] pc_get_epoch,output wire [23:0] pc_get_layer,
     input wire [3:0] pc_valid,input wire [1023:0] pc_data,input wire [55:0] pc_t,
@@ -143,12 +150,15 @@ module qkd_static_kv_rowctl #(parameter integer VREQ=0)(
       (* keep *) reg [13:0] vtq;
       always @(posedge ck)vtq<=vreq_t;
       always @(posedge ck or negedge rn)if(!rn)vrq<=0;else vrq<=vreq_valid;
-      reg [15:0] ke;reg [5:0] kl;                  // epoch / layer of the last K get
+      (* keep *) reg aq;(* keep *) reg [15:0] aeq;(* keep *) reg [5:0] alq;
+      reg [15:0] ke;reg [5:0] kl;                  // epoch / layer the group is armed with
       reg mq;reg [13:0] mt;reg mv;reg [15:0] me;reg [5:0] ml;
       always @(posedge ck)begin
-        if(rq)begin ke<=eq;kl<=lq;end
-        mt<=vrq?vtq:tq;mv<=vrq|vq;me<=vrq?(rq?eq:ke):eq;ml<=vrq?(rq?lq:kl):lq;
+        aeq<=epoch;alq<=layer;
+        if(aq)begin ke<=aeq;kl<=alq;end
+        mt<=vrq?vtq:tq;mv<=vrq|vq;me<=vrq?ke:eq;ml<=vrq?kl:lq;
       end
+      always @(posedge ck or negedge rn)if(!rn)aq<=0;else aq<=arm;
       always @(posedge ck or negedge rn)if(!rn)mq<=0;else mq<=rq|vrq;
       assign collide=rq&vrq;
       assign pc_get={4{mq}};assign pc_get_t={4{mt}};assign pc_get_v={4{mv}};
@@ -199,7 +209,7 @@ module qkd_static_kv_landing_grp #(
     wire [23:0] gl,ol;
     wire [1023:0] od;
     qkd_static_kv_rowctl #(.VREQ(VREQ)) u_rowctl(
-      .ck(ck),.rst_n(rst_n),.req_valid(req_valid),.req_t(req_t),.req_v(req_v),.req_epoch(req_epoch),.req_layer(req_layer),.vreq_valid(vreq_valid),.vreq_t(vreq_t),
+      .ck(ck),.rst_n(rst_n),.req_valid(req_valid),.req_t(req_t),.req_v(req_v),.req_epoch(req_epoch),.req_layer(req_layer),.vreq_valid(vreq_valid),.vreq_t(vreq_t),.arm(arm),.epoch(epoch),.layer(layer),
       .pc_get(get),.pc_get_t(gt),.pc_get_v(gv),.pc_get_epoch(ge),.pc_get_layer(gl),
       .pc_valid(ov),.pc_data(od),.pc_t(ot),.pc_v(vv),.pc_epoch(oe),.pc_layer(ol),.pc_fault(pf),
       .rsp_valid(rsp_valid),.rsp_data(rsp_data),.rsp_t(rsp_t),.rsp_v(rsp_v),.rsp_epoch(rsp_epoch),.rsp_layer(rsp_layer),.fault(fault));

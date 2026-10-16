@@ -1,0 +1,105 @@
+{
+  "schema": "opentallas.ccf.bankpipe.unflattened_census.v1",
+  "source_commit": "b9cb68868",
+  "top_cells": 7,
+  "top_child_instances": 7,
+  "top_own_ff_bits": 0,
+  "top_own_comb_cells": 0,
+  "top_own_clock_buffers": 0,
+  "rows": [
+    {
+      "instance": "g_bank[0].u_b",
+      "module": "$paramod\\ot_s81_hc_ccf_bankpipe_bank\\DEPTH=s32'00000000000000000000000000100000",
+      "ff_bits": 2586,
+      "macro_clock_sinks": 1,
+      "root_sinks": 2587,
+      "comb_cells": 72,
+      "ports": {
+        "clk": [
+          5
+        ]
+      }
+    },
+    {
+      "instance": "g_bank[1].u_b",
+      "module": "$paramod\\ot_s81_hc_ccf_bankpipe_bank\\DEPTH=s32'00000000000000000000000000100000",
+      "ff_bits": 2586,
+      "macro_clock_sinks": 1,
+      "root_sinks": 2587,
+      "comb_cells": 72,
+      "ports": {
+        "clk": [
+          6
+        ]
+      }
+    },
+    {
+      "instance": "g_bank[2].u_b",
+      "module": "$paramod\\ot_s81_hc_ccf_bankpipe_bank\\DEPTH=s32'00000000000000000000000000100000",
+      "ff_bits": 2586,
+      "macro_clock_sinks": 1,
+      "root_sinks": 2587,
+      "comb_cells": 72,
+      "ports": {
+        "clk": [
+          7
+        ]
+      }
+    },
+    {
+      "instance": "g_bank[3].u_b",
+      "module": "$paramod\\ot_s81_hc_ccf_bankpipe_bank\\DEPTH=s32'00000000000000000000000000100000",
+      "ff_bits": 2586,
+      "macro_clock_sinks": 1,
+      "root_sinks": 2587,
+      "comb_cells": 72,
+      "ports": {
+        "clk": [
+          8
+        ]
+      }
+    },
+    {
+      "instance": "g_bank[4].u_b",
+      "module": "$paramod\\ot_s81_hc_ccf_bankpipe_bank\\DEPTH=s32'00000000000000000000000000100000",
+      "ff_bits": 2586,
+      "macro_clock_sinks": 1,
+      "root_sinks": 2587,
+      "comb_cells": 72,
+      "ports": {
+        "clk": [
+          9
+        ]
+      }
+    },
+    {
+      "instance": "u_n",
+      "module": "$paramod$6a99040b2650645a6adad01d5847e84e4be0f2f9\\ot_s81_hc_ccf_bankpipe_capture",
+      "ff_bits": 3697,
+      "macro_clock_sinks": 0,
+      "root_sinks": 3697,
+      "comb_cells": 0,
+      "ports": {
+        "clk": [
+          2
+        ]
+      }
+    },
+    {
+      "instance": "u_s",
+      "module": "$paramod$0caa9da017d5bc96d1cd72e5ccbd48be04ddaf21\\ot_s81_hc_ccf_bankpipe_control",
+      "ff_bits": 4975,
+      "macro_clock_sinks": 0,
+      "root_sinks": 4975,
+      "comb_cells": 1039,
+      "ports": {
+        "sk": [
+          3
+        ]
+      }
+    }
+  ],
+  "total_ff_bits": 21602,
+  "total_macro_clock_sinks": 5,
+  "note": "RTL proc+opt recursive bit census, not mapped CTS or physical qualification; macro functional model blackboxed only for structural count"
+}

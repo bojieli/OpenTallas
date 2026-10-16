@@ -134,7 +134,8 @@
      "iverilog"
     ]
    }
-  ]
+  ],
+  "structural_change": "Failure class of 1d140b89b (TT -73.01, 419 D pins) = in->reg logic depth from 27 UNREGISTERED cross-lane status pins (pcbad_all/full*_all -> landing_fault/start_ok -> fill_ok -> 512 seen flops + SRAM CE, 548 ps behind the E pins): v5/v5b registers them at both pins (sender output flops + receiver pin flops, STATUS_LAT=2 reference, new MUT4), moves the 8-lane AND/OR reduction in front of the receiver pin flop (3 flops, not 24), moves full*_all/pcbad_all from the E to the W face beside the control logic, and adds register-sink CTS clustering (16/30 um); gate a8d254f7c: in->reg +275.5, reg->reg +76.2, reg->macro +41.1 (was in->reg -73 at route)."
  },
  "outline": {
   "w": 257.04,

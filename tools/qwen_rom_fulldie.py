@@ -887,6 +887,7 @@ def masters(m, k=1, port_bits=None):
 
 CORNER_RULE = {}
 PIN_CENTRE = {}     # (master, port) -> face centre override (um), same die rule set
+PIN_REVERSE = set()  # (master, port): bit 0 at the HIGH end of its face span (KV die OT_KV_HOP; empty = unchanged)
 
 
 def _corner_keep(poss, along, step, cr, off, p, label):
@@ -959,6 +960,8 @@ def pin_rects(mst, k, wmap):
         cr = CORNER_RULE.get(mst.name)
         if cr and k == 1 and len(poss) > 2 * cr['tail']:
             poss = _corner_keep(poss, along, step, cr, off, p, f'{mst.name}.{port}')
+        if (mst.name, port) in PIN_REVERSE:
+            poss = poss[::-1]
         for i, nm in enumerate(names):
             pos = poss[i]
             if face == 'W':
