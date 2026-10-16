@@ -10335,9 +10335,17 @@ def _spread_ports(Mx, k):
 
 def _faces_r8(m, Mx, it, ports):
     if BF_FRONT_ROOT_ABI and it.master == 'dsfd_bf_front_roots':
-        assert _LAY_K[0] == 1, 'BF root ABI candidate requires literal unbundled physical pins'
-        from s81.bf_root_die_abi import populate_front
-        populate_front(Mx, ports)
+        if _LAY_K[0] == 1:
+            from s81.bf_root_die_abi import populate_front
+            populate_front(Mx, ports)
+        else:
+            # Bundled figures are projections only. Native geometry is always
+            # the complete literal k1 request and later this leaf's own view.
+            for face, names_ in [('N',['xb_data','io_n']), ('W',['c0','io_w']),
+                                 ('E',['c1','io_e']),
+                                 ('S',['qy0','qy1','x0','x1','go','cfg','st','ck','rs','xb_meta','f_prog','io_clk'])]:
+                _lay(Mx,face,[(p,ports[p][1]) for p in names_ if p in ports],
+                     'M4' if face in 'EW' else 'M5')
         return
     if _LAY_K[0] == 1 and BF_HIER == 450.144 and BF_ROUTE_H == 198.72 and it.master in ('dsfd_bf_front', 'dsfd_bf_col',
                                                                                          'dsfd_bf_front_static'):
