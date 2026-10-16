@@ -6155,6 +6155,23 @@ MESO_D8 = False                 # --meso-d8 (v6, default off): meso FIFOs DEPTH 
 HC_XFACE = False                # --hc-xface (S81-RERUN v7, default off): hc_s <-> hc_n exchange face to face across
                                 #   the corridor inside the HC column (out of the VCH-edge lane)
 SEL_XSTG = False                # --sel-xstg (S81-RERUN v8, default off): d8g1 meso crossing stage (1.5 T arcs + low guard)
+XSTG_BOUND_FOOTPRINT = False    # candidate only: reserve the verified xstg view before placement
+
+
+def xstg_dims(bits):
+    """Reserve the selected crossing stage's body before its neighbour search.
+
+    A crossing FIFO is larger than the plain station used by the legacy sizing
+    path. This opt-in uses the hash-verified binding table; it conveys geometry
+    only and does not qualify the view's clocks, timing or incident routes.
+    """
+    if not XSTG_BOUND_FOOTPRINT:
+        return stn_dims([bits], True)
+    master = f'dsfd_xstg_{bits}'
+    view = bound_views().get(master)
+    if view is None:
+        raise ValueError(f'--xstg-bound-footprint requires a verified view for {master}')
+    return view['w'], view['h']
                                 #   on the 8 end block -> selector / collector buses; +6 cycles
 LINK_SPLIT = False              # --link-split (S81-RERUN v8, default off; needs --link-fix): SerDes tx / rx through two
                                 #   256-b half-span stations (port slices), last hop <= 281 um; +1 cycle each way
@@ -8545,9 +8562,13 @@ def _svc_chains(m, CH8, P, cor, end_spec, hub_block):
                 # a crossing stage at the band block = the d8g1 meso FIFO (crossing arcs at 1.5 T - 60, low guard
                 # flop at 1.5 T; a single register cannot hold a +-385 ps window on data that changes every cycle),
                 # pins registered: +6 cycles (pin 1 + OFFSET 4 + out 1)
-                xw, xh = stn_dims([515], True)     # W / E data faces (a horizontal station's outline)
+                xw, xh = xstg_dims(515)           # candidate reserves the actual crossing FIFO body up front
                 xs = beside_blk(f'xs{tag}_{st}', 'dsfd_xstg_515', xw, xh, blk, face, 0.3 + 0.4 * (st[0] == 'N'))
                 xs.kind, xs.domain = 'xstg', blk.domain
+                if XSTG_BOUND_FOOTPRINT:
+                    m.setdefault('xstg_bound_footprints', {})[xs.name] = dict(
+                        master=xs.master, reserved_um=[xw, xh], at_um=[xs.x, xs.y],
+                        status='GEOMETRY_CANDIDATE_NOT_CLOCK_OR_ROUTE_QUALIFICATION')
                 xs.power_w = 2 * 515 * FLOP_CLK_W * 1.5
                 CH8.bus(f'h{tag}_{st}_x', 'local', 515, [(he.name, 'o'), (xs.name, 'i')])
                 CH8.bus(f'h{tag}_{st}_o', 'local', 515, [(xs.name, 'o'), (blk.name, f'{port}{st}')])
@@ -11127,6 +11148,8 @@ def die_options(ap):
                     'die interfaces (last segment <= 100 um; needs --hop-fix; default off)')
     ap.add_argument('--sel-xstg', action='store_true', help='r9: registered crossing stage on the end block -> '
                     'selector / collector buses (+1 cycle; default off)')
+    ap.add_argument('--xstg-bound-footprint', action='store_true', help='candidate: reserve the verified binding-table '
+                    'xstg SIZE before placement; requires its view and does not qualify clocks or routes')
     ap.add_argument('--link-split', action='store_true', help='r9: SerDes tx / rx through two 256-b half-span '
                     'stations (port slices; needs --link-fix; default off)')
     ap.add_argument('--hc-xface', action='store_true', help='r9: hc_s <-> hc_n exchange straight across the corridor '
@@ -11445,8 +11468,9 @@ def apply_options(a):
     FACE_PIN_INSET = 0.048 if getattr(a, 'face_pin_inset', False) else 0.0
     VCH_INTERLEAVE = bool(a.vch_interleave)
     HC_XFACE = bool(getattr(a, 'hc_xface', False))
-    global LINK_SPLIT, SEL_XSTG
+    global LINK_SPLIT, SEL_XSTG, XSTG_BOUND_FOOTPRINT
     SEL_XSTG = bool(getattr(a, 'sel_xstg', False))
+    XSTG_BOUND_FOOTPRINT = bool(getattr(a, 'xstg_bound_footprint', False))
     global PIN_RELAY, NXT_REACH, CHS, VCH8, HC_CORR, SPINE_W8
     PIN_RELAY = bool(getattr(a, 'pin_relay', False))
     NXT_REACH = bool(getattr(a, 'nxt_reach', False))
