@@ -1,6 +1,11 @@
 `timescale 1ns/1ps
 module tb_hbm_su_rf_route;
- parameter integer STAGES=64,MUT=0;
+ parameter integer STAGES=36,MUT=0;
+ `include "ot_hbm_su_rf_route_flows_v5.svh"
+ // die routes r = 4 src + dst (SW 0, SE 1, NW 2, NE 3), compact660_v5 per-stage relay masters
+ localparam [16*72-1:0] ALLF={FLOWS_NE_NE,FLOWS_NE_NW,FLOWS_NE_SE,FLOWS_NE_SW,FLOWS_NW_NE,FLOWS_NW_NW,FLOWS_NW_SE,FLOWS_NW_SW,
+                             FLOWS_SE_NE,FLOWS_SE_NW,FLOWS_SE_SE,FLOWS_SE_SW,FLOWS_SW_NE,FLOWS_SW_NW,FLOWS_SW_SE,FLOWS_SW_SW};
+ initial if(STAGES!=RF_ROUTE_STAGES_V5)$fatal(1,"STAGES must equal the die RF_RELAY");
  reg clk=0;always #5 clk=~clk;
  reg rst_n=0;
  reg [40:0] stimulus[0:15];
@@ -12,7 +17,7 @@ module tb_hbm_su_rf_route;
   for(genvar k=0;k<STAGES;k=k+1)begin:g_clock
    assign clocks[k]=(MUT==3&&r==5&&k==STAGES/2&&cycle>=200)?1'b0:clk;
   end
-  ot_hbm_su_rf_route #(.STAGES(STAGES),.FLOW(r%4),.MUT((r==5&&MUT<3)?MUT:0)) dut(
+  ot_hbm_su_rf_route #(.STAGES(STAGES),.FLOWS(ALLF[r*72+:72]),.MUT((r==5&&MUT<3)?MUT:0)) dut(
    .stage_clk(clocks),.stage_rst_n({STAGES{rst_n}}),.tuple_in(stimulus[r]),.tuple_out(result[r]));
  end
  always @(posedge clk)begin

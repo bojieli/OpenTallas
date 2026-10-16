@@ -8,7 +8,7 @@ for mut in 0 1 2 3;do
  "$vl" --binary --timing -O1 -j 2 -CFLAGS -O0 -Wno-fatal -Wno-lint -Wno-style \
   --top-module tb_hbm_su_rf_route -GMUT="$mut" --Mdir "$out/obj$mut" \
   rtl/lib/ot_rst_relay.sv rtl/hbm_accel/die_glue/ot_hbm_rly.sv \
-  rtl/hbm_accel/die_glue/hbfd_rly_masters.sv "$S/ot_hbm_su_rf_route.sv" "$S/tb_hbm_su_rf_route.sv" \
+  rtl/hbm_accel/die_glue/hbfd_rly_masters.sv -I"$S" "$S/ot_hbm_su_rf_route.sv" "$S/tb_hbm_su_rf_route.sv" \
   > "$out/build$mut.log" 2>&1
  set +e
  "$out/obj$mut/Vtb_hbm_su_rf_route" > "$out/run$mut.log" 2>&1
