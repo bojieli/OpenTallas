@@ -117,7 +117,7 @@
   "record_to": "results/rtl/ref_tile/s81hc_cseqh2_ref",
   "reroute_reason": {
    "kind": "slot_change",
-   "slot_change_request": "2026-10-16T02:58:29.003514-07:00 HC3 slot request: ot_s81_hc_cseq 155.52x155.52 -> 190.08x190.08 um. Preserve all pin faces and RTL/cycles; redistributed absolute pin coordinates require parent peer geometry regeneration. Boundary-local GRT congestion pr1 requires longer shoreline; diagnostic CTS gate only until S-DIE grant."
+   "slot_change_request": "GRANTED by S-DIE6e712a1ab, published main3ee815e01: results/physical/die_iter_1012/s81/grants/sdie_codex_hc3_slot_growth_1016.json; leaf routing only, enclosing comb580.312x851.04; actual parent pins/cuts/clock/all incident hops/adoption remain HELD."
   },
   "structural_change": "2026-10-16T02:58:29.003514-07:00 HC3 slot request: ot_s81_hc_cseq 155.52x155.52 -> 190.08x190.08 um. Preserve all pin faces and RTL/cycles; redistributed absolute pin coordinates require parent peer geometry regeneration. Boundary-local GRT congestion pr1 requires longer shoreline; diagnostic CTS gate only until S-DIE grant."
  },
@@ -149,5 +149,6 @@
  "pin_reg_split": true,
  "hold_pad": {
   "cell": "HB2xp67_ASAP7_75t_R"
- }
+ },
+ "slot_change_request": "GRANTED by S-DIE6e712a1ab, published main3ee815e01: results/physical/die_iter_1012/s81/grants/sdie_codex_hc3_slot_growth_1016.json; leaf routing only, enclosing comb580.312x851.04; actual parent pins/cuts/clock/all incident hops/adoption remain HELD."
 }
