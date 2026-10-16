@@ -191,15 +191,21 @@ module qfd_ucie_six_five #(parameter integer MUT=0)(
  // ---- checks: sticky faults only
  wire we_bad=(we==0)||((we&(we-1'b1))!=0)||({we[0],we[5:1]}!=rs)||
              (we_c[0]!=we)||(we_c[1]!=we)||(we_c[2]!=we)||(rs_c[0]!=rs)||(rs_c[1]!=rs)||(rs_c[2]!=rs);
- always @(posedge core_ck or negedge rst_n)
-  if(!rst_n)core_fault<=0;
+ // r14 (native capture rst_n 255 > 190 ps on r13: the FIRM fault pin flops at the W/E faces were rst_n's far async
+ // loads): each fault flop is cleared by its own reset capture flop (async assert from rst_n, released one edge after
+ // rst_n), a single near-pin load; the fault check window opens one edge later (rc_n/rf_n release later still)
+ reg rcf_n,rff_n;
+ always @(posedge core_ck or negedge rst_n)if(!rst_n)rcf_n<=0;else rcf_n<=1'b1;
+ always @(posedge fdi_ck or negedge rst_n)if(!rst_n)rff_n<=0;else rff_n<=1'b1;
+ always @(posedge core_ck or negedge rcf_n)
+  if(!rcf_n)core_fault<=0;
   else begin
    if(!rc_n && txp_v)core_fault<=1;            // word offered before the frame exists
    if(rc_n && ((bt^cs)!=we[1]))core_fault<=1;     // core frame not aligned to the block clock
    if(rc_n && we_bad)core_fault<=1;
   end
- always @(posedge fdi_ck or negedge rst_n)
-  if(!rst_n)fdi_fault<=0;
+ always @(posedge fdi_ck or negedge rff_n)
+  if(!rff_n)fdi_fault<=0;
   else if(rf_n)begin
    if((bt^fs)!=(tp==0))fdi_fault<=1;              // FDI frame not aligned to the block clock
    if(pv_q!=pv_exp)fdi_fault<=1;                  // PHY valid off its compiled calendar
