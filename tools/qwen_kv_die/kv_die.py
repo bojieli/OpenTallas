@@ -245,6 +245,7 @@ V144_DW = float(__import__('os').environ.get('OT_KV_V144_DW', '0'))
 # free relay apron between the north envelope's top and the gateway / sequencer / HOST band (the chains leaving the
 # north band fan out there before entering the side channels; v1.4.4 trial without it cornered the HOST trees)
 V144_APRON = float(__import__('os').environ.get('OT_KV_V144_APRON', '0'))
+V144_AHUB_MAX = float(__import__('os').environ.get('OT_KV_V144_AHUB_MAX', '1e9'))   # cap on the hub's south shift
 PV_TILE, PV_GAP, PV_CTL = 172.8, 21.6, 43.2
 PV_BLK = 3 * PV_TILE + 2 * PV_GAP                 # 561.6: one column = 8 slices around its join
 PV_ARR = (2 * PV_BLK + PV_GAP, 16 * PV_BLK + 15 * PV_GAP)   # 1,144.8 x 9,309.6
@@ -1200,7 +1201,8 @@ def _build(r=R, kv_wq_leaves=False, kv_wq_binary=False, kv_wq_leaf_s=False, kv_w
             if short > 0:
                 if V144_MODE == 'ahub':
                     spare_s = (s_hi - s_lo) - PVW[1]
-                    dy_ = min(up(short, LAT), math.floor(max(0.0, spare_s) / LAT + 1e-9) * LAT)
+                    dy_ = min(up(short, LAT), math.floor(max(0.0, spare_s) / LAT + 1e-9) * LAT,
+                              math.floor(V144_AHUB_MAX / LAT + 1e-9) * LAT)
                 gr_ = up(max(0.0, short - dy_), LAT)
             V144S.update(resolved=True, ahub_dy=round(dy_, 6), grow=round(gr_, 6), north_short_um=round(short, 3),
                          mode=V144_MODE)
@@ -1220,7 +1222,8 @@ def _build(r=R, kv_wq_leaves=False, kv_wq_binary=False, kv_wq_leaf_s=False, kv_w
         rgt = min(i.x for i in ins if i.x > xc + PVW[0] / 2 and i.y < Hk - 2000 and i.y > 2000
                   and not i.name.startswith(('pvw', 'ahub')))
         pv_geo = dict(mode=V144S.get('mode'), north_shortfall_um=V144S.get('north_short_um'), ahub_dy_um=V144S['ahub_dy'],
-                      die_growth_um=V144S['grow'], die_area_delta_mm2=round(Wk * V144S['grow'] / 1e6, 4),
+                      die_growth_um=V144S['grow'], centre_widening_um=V144_DW,
+                      die_area_delta_mm2=round((Wk * Hk - (Wk - V144_DW) * (Hk - V144S['grow'])) / 1e6, 4),
                       envelope_um=list(PVW), array_um=list(PV_ARR), strip_um=PV_STRIP,
                       pvw_0=dict(xy=[x_, y_s], orient='R0', stacks=['WS', 'ES'], kept_grant_y=y_s == PV_GRANT_Y0,
                                  south_room_um=[round(s_lo, 3), round(s_hi, 3)]),
