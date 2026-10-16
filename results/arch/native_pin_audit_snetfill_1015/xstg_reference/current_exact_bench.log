@@ -1,0 +1,21 @@
+ot-run: ot-epyc1tb     admits   477 GB (avail 704, growth 112, headroom 64, waiters 0/0 GB) load 105/128 running 14 disk 384 GB 
+ot-run: ot-epyc4       admits   535 GB (avail 761, growth 95, headroom 48, waiters 0/0 GB) load 66/128 running 15 disk 441 GB 
+ot-run: ot-pve1        admits   172 GB (avail 219, growth 8, headroom 32, waiters 0/0 GB) load 18/28 running 4 disk 1351 GB 
+ot-run: ot-agidock128  admits    71 GB (avail 108, growth 45, headroom 24, waiters 0/0 GB) load 13/64 running 9 disk 58 GB 
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-3644984-1792133746 after 0 s
+XSTG_STATIC PASS phase 1 trunk 3 first 5 words 293
+XSTG_STATIC PASS phase 1 trunk 11 first 13 words 293
+XSTG_STATIC PASS phase 4 trunk 3 first 5 words 293
+XSTG_STATIC PASS phase 4 trunk 11 first 13 words 293
+XSTG_STATIC PASS phase 9 trunk 3 first 5 words 292
+XSTG_STATIC PASS phase 9 trunk 11 first 13 words 292
+XSTG_STATIC_GATE PASS dsfd_xstg_515 6 runs
+FATAL: rtl/dsrom_sys/s81_static_net/test/tb_dsfd_xstg_static.sv:27: XSTG wrong fixed edge 117000 for source 5
+FATAL: rtl/dsrom_sys/s81_static_net/test/tb_dsfd_xstg_static.sv:27: XSTG wrong fixed edge 197000 for source 13
+FATAL: rtl/dsrom_sys/s81_static_net/test/tb_dsfd_xstg_static.sv:27: XSTG wrong fixed edge 120000 for source 5
+FATAL: rtl/dsrom_sys/s81_static_net/test/tb_dsfd_xstg_static.sv:27: XSTG wrong fixed edge 200000 for source 13
+FATAL: rtl/dsrom_sys/s81_static_net/test/tb_dsfd_xstg_static.sv:27: XSTG wrong fixed edge 125000 for source 5
+FATAL: rtl/dsrom_sys/s81_static_net/test/tb_dsfd_xstg_static.sv:27: XSTG wrong fixed edge 205000 for source 13
+XSTG_STATIC_GATE MUTANT REJECTED 6/6
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-3644984-1792133746): exit 0
