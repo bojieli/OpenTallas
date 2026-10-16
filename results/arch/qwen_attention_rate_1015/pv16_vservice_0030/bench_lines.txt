@@ -1,0 +1,27 @@
+PV16_VSERVICE FAIL T=1000 pair=0 mode=legacy_order vmut=0 words=0 errors=0 fault=1 vport_fault=00000000 out_age=217 got_age=-9 rows=512 pops=2048
+PV16_VSERVICE FAIL T=8192 pair=0 mode=legacy_order vmut=0 words=0 errors=0 fault=1 vport_fault=00000000 out_age=665 got_age=-9 rows=4096 pops=16384
+PV16_VSERVICE PASS T=1 pair=0 mode=steady vmut=0 words=512 errors=0 fault=0 vport_fault=00000000 out_age=169 got_age=169 rows=1 pops=4
+PV16_VSERVICE PASS T=100 pair=0 mode=steady vmut=0 words=512 errors=0 fault=0 vport_fault=00000000 out_age=169 got_age=169 rows=100 pops=400
+PV16_VSERVICE PASS T=129 pair=0 mode=steady vmut=0 words=512 errors=0 fault=0 vport_fault=00000000 out_age=169 got_age=169 rows=128 pops=512
+PV16_VSERVICE PASS T=300 pair=0 mode=steady vmut=0 words=512 errors=0 fault=0 vport_fault=00000000 out_age=185 got_age=185 rows=172 pops=688
+PV16_VSERVICE PASS T=1000 pair=0 mode=steady vmut=0 words=512 errors=0 fault=0 vport_fault=00000000 out_age=217 got_age=217 rows=512 pops=2048
+PV16_VSERVICE PASS T=2049 pair=0 mode=steady vmut=0 words=512 errors=0 fault=0 vport_fault=00000000 out_age=297 got_age=297 rows=1025 pops=4100
+PV16_VSERVICE PASS T=4097 pair=0 mode=steady vmut=0 words=512 errors=0 fault=0 vport_fault=00000000 out_age=425 got_age=425 rows=2049 pops=8196
+PV16_VSERVICE PASS T=8192 pair=0 mode=steady vmut=0 words=512 errors=0 fault=0 vport_fault=00000000 out_age=665 got_age=665 rows=4096 pops=16384
+PV16_VSERVICE PASS T=1 pair=1 mode=steady vmut=0 words=512 errors=0 fault=0 vport_fault=00000000 out_age=137 got_age=137 rows=0 pops=0
+PV16_VSERVICE PASS T=129 pair=1 mode=steady vmut=0 words=512 errors=0 fault=0 vport_fault=00000000 out_age=169 got_age=169 rows=1 pops=4
+PV16_VSERVICE PASS T=300 pair=1 mode=steady vmut=0 words=512 errors=0 fault=0 vport_fault=00000000 out_age=169 got_age=169 rows=128 pops=512
+PV16_VSERVICE PASS T=2049 pair=1 mode=steady vmut=0 words=512 errors=0 fault=0 vport_fault=00000000 out_age=281 got_age=281 rows=1024 pops=4096
+PV16_VSERVICE PASS T=4097 pair=1 mode=steady vmut=0 words=512 errors=0 fault=0 vport_fault=00000000 out_age=409 got_age=409 rows=2048 pops=8192
+PV16_VSERVICE PASS T=8192 pair=1 mode=steady vmut=0 words=512 errors=0 fault=0 vport_fault=00000000 out_age=665 got_age=665 rows=4096 pops=16384
+PV16_VSERVICE FAIL T=1000 pair=0 mode=steady vmut=1 words=0 errors=0 fault=1 vport_fault=11111111 out_age=217 got_age=-9 rows=512 pops=2048
+PV16_VSERVICE FAIL T=1000 pair=0 mode=steady vmut=0 words=512 errors=115 fault=0 vport_fault=00000000 out_age=217 got_age=217 rows=512 pops=2048
+PASS all36stages/all8192positions identities294912 sectors2359296 inverse-map/raw256/fullmask/TAG59/gen2/exactslots
+PASS all36stages/all8192positions identities294912 sectors2359296 inverse-map/raw256/fullmask/TAG59/gen2/exactslots
+OBSERVED_FAIL MUT1 BAD0 errors2 fault0
+OBSERVED_FAIL MUT2 BAD0 errors272 fault0
+OBSERVED_FAIL MUT3 BAD0 errors2 fault0
+OBSERVED_FAIL MUT4 BAD0 errors8 fault0
+OBSERVED_FAIL MUT5 BAD0 errors2 fault0
+OBSERVED_FAIL MUT6 BAD0 errors16 fault0
+PV16_VSERVICE FAIL T=1000 pair=0 mode=steady vmut=2 words=512 errors=256 fault=0 vport_fault=00000000 out_age=217 got_age=217 rows=512 pops=2048

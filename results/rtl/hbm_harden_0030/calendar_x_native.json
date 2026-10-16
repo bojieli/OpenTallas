@@ -1,0 +1,61 @@
+{
+ "cell": "hfd_hgi_vm_calendar",
+ "view": "physical/ref_tile/hv15_vm_cal_x/views/hfd_hgi_vm_calendar",
+ "lib_cell": "hfd_hgi_vm_calendar",
+ "insertion": true,
+ "ref_src": [
+  "insertion.json boundary mean",
+  "lib midrange"
+ ],
+ "R_ps": 147.5,
+ "spread_ps": 37.2,
+ "outputs": 223,
+ "inputs": 306,
+ "launch_ps": 179.0,
+ "launch_pin": "ordinal[20]",
+ "capture_ps": 133.0,
+ "capture_pin": "rst_n",
+ "launch_over": 0,
+ "capture_over": 0,
+ "comb_pins": 0,
+ "comb_first": [],
+ "pass": true,
+ "fail_why": "",
+ "per_clock_tt": {
+  "clk": {
+   "rise": 147.5,
+   "fall": 159.4,
+   "min": 129.3,
+   "max": 176.1,
+   "src": "insertion.json boundary mean",
+   "bmin": 137.7,
+   "bmax": 174.9,
+   "n": 225
+  },
+  "clk_cap": {
+   "rise": 85.6,
+   "fall": 92.8,
+   "min": 77.4,
+   "max": 89.4,
+   "src": "insertion.json boundary mean",
+   "bmin": 81.3,
+   "bmax": 89.4,
+   "n": 305
+  },
+  "clk_mem": {
+   "rise": 5.5,
+   "fall": 5.5,
+   "min": 5.5,
+   "max": 5.5,
+   "src": "lib midrange",
+   "bmin": 5.5,
+   "bmax": 5.5,
+   "n": null
+  }
+ },
+ "job": "hv15_vm_cal_x-xcap0030-cce3264d2",
+ "record": "b2e290032",
+ "routed": "CLOSED TT +45.93 / FF +24.17 ps DRC 0; SS -287.48 sensitivity",
+ "predecessor": "hv15_vm_cal_u-compact2330-24eeb93bb native FAIL launch 222.0 / capture 206.2 / spread 92.8 (results/rtl/hbm_harden_2330/calendar_native.json)",
+ "tool": "tools/hier_contract/native_pin_audit.py audit_one (TT, phi-R per clock)"
+}
