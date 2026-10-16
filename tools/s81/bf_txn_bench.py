@@ -130,6 +130,8 @@ def main():
     p.add_argument('--verilator', default='/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator')
     p.add_argument('--params', default='', help="extra shadow parameters, e.g. 'QZE=1,CG=0' (bf-icg 2026-10-08)")
     p.add_argument('--mutant', action='append', default=[], help='extra negative case NAME=DEFINE (must FAIL)')
+    p.add_argument('--positive-define', action='append', default=[],
+                   help='additional positive case NAME=DEFINE (same exactness checks as positive)')
     p.add_argument('--no-default-mutants', action='store_true', help='run only the --mutant negatives')
     p.add_argument('--die-pair', action='store_true',
                    help='recut: the shadow is the DIE composition of the pair (s81-die-rtl-bind 2026-10-14): dsfd_bf_front + '
@@ -209,7 +211,12 @@ def main():
         commit, dirty = (ROOT / 'SOURCE_COMMIT').read_text().strip() if (ROOT / 'SOURCE_COMMIT').exists() else 'unknown', None
     out = {'variant': a.variant, 'params': a.params, 'cases': {}, 'pass': True, 'refreshed': refreshed, 'source_commit': commit, 'dirty': dirty}
     pos = ['+define+QP_CHECK', '+define+QT_CHECK'] if a.variant == 'recut' else []
-    for name, defs in [('positive', pos)] + muts:
+    positives = [('positive', pos)] + [(x.split('=')[0], pos + ['+define+' + x.split('=', 1)[1]])
+                                      for x in a.positive_define]
+    positive_names = {name for name, _ in positives}
+    if len(positive_names) != len(positives) or positive_names & {name for name, _ in muts}:
+        p.error('case names must be unique across positive and mutant cases')
+    for name, defs in positives + muts:
         if a.only and name not in a.only:
             continue
         w = a.work / name
@@ -233,7 +240,7 @@ def main():
             r = subprocess.run([str(w / 'obj_bfcolumn' / 'Vtb_bfcolumn')], cwd=w, stdout=f, stderr=subprocess.STDOUT)
         log = (w / 'run.log').read_text()
         marks = [s for s in log.splitlines() if any(k in s for k in ('PASS', 'DIFF', 'TXN', 'NUMERICAL', 'FAIL', 'Fatal'))][:8]
-        if name == 'positive':
+        if name in positive_names:
             ok = (r.returncode == 0 and 'PASS independent-numerical BF=1' in log and 'PASS wake-source BF=1' in log
                   and 'TXN MATCH' in log and 'DIFF' not in log and 'HITFIX_CHECK FAIL' not in log)
         else:
