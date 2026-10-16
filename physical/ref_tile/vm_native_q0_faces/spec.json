@@ -406,7 +406,9 @@
    "ports": [
     "clk"
    ],
-   "inputs": [],
+   "inputs": [
+    "rst_n"
+   ],
    "outputs": []
   }
  }

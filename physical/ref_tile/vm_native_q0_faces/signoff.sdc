@@ -28,7 +28,7 @@ set ::ot_ce_leaf_roots 1
 set ::ot_ce_related_data 1
 set ::ot_ce_refs [dict create ]
 set ::ot_ce_counts [dict create ]
-set ::ot_ce_domains [dict create {n} {clock ot_io_n io_budget_ps 166.667 inputs {{bid} {sid} {rslot_v} {rslot} {wslot_v} {wslot} {rq2} {kq}} outputs {{rr2} {kq_done} {status}}} {s} {clock ot_io_s io_budget_ps 166.667 inputs {{rq3} {dq} {pq}} outputs {{rr3} {dq_done} {pr}}} {e} {clock ot_io_e io_budget_ps 166.667 inputs {{rq1} {wq1} {xq2}} outputs {{rr1} {wq_done1} {xq2_done} {eg}}} {w} {clock ot_io_w io_budget_ps 166.667 inputs {{rq0} {rq4} {wq0} {xq}} outputs {{rr0} {rr4} {wq_done0} {xq_done}}} {core} {clock core_clk io_budget_ps 166.667 inputs {} outputs {}}]
+set ::ot_ce_domains [dict create {n} {clock ot_io_n io_budget_ps 166.667 inputs {{bid} {sid} {rslot_v} {rslot} {wslot_v} {wslot} {rq2} {kq}} outputs {{rr2} {kq_done} {status}}} {s} {clock ot_io_s io_budget_ps 166.667 inputs {{rq3} {dq} {pq}} outputs {{rr3} {dq_done} {pr}}} {e} {clock ot_io_e io_budget_ps 166.667 inputs {{rq1} {wq1} {xq2}} outputs {{rr1} {wq_done1} {xq2_done} {eg}}} {w} {clock ot_io_w io_budget_ps 166.667 inputs {{rq0} {rq4} {wq0} {xq}} outputs {{rr0} {rr4} {wq_done0} {xq_done}}} {core} {clock core_clk io_budget_ps 166.667 inputs {{rst_n}} outputs {}}]
 set ::ot_ce_source_domains [dict create {clk_n} {n} {clk_s} {s} {clk_e} {e} {clk_w} {w} {clk} {core}]
 set ::ot_ce_explicit_domains 1
 set ::ot_ce_cts_roots {{clk} {clk_n} {clk_s} {clk_e} {clk_w}}

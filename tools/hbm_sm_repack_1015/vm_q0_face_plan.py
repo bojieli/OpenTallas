@@ -41,7 +41,7 @@ s['clock_entry_domains']={}
 for face in ['N','S','E','W']:
  c='clk_'+face.lower();ports=[p for p in old['pins'][face] if p not in ['clk','rst_n']];ins=[p for p in ports if p in ['rq0','rq1','rq2','rq3','rq4','wq0','wq1','dq','kq','xq','xq2','pq','bid','sid','rslot_v','rslot','wslot_v','wslot']]
  s['clock_entry_domains'][face.lower()]={'ratio':[1,1],'ports':[c],'inputs':ins,'outputs':[p for p in ports if p not in ins]}
-s['clock_entry_domains']['core']={'ratio':[1,1],'ports':['clk'],'inputs':[],'outputs':[]}
+s['clock_entry_domains']['core']={'ratio':[1,1],'ports':['clk'],'inputs':['rst_n'],'outputs':[]}
 s['job'].update(tag='faces0',purpose='Additive q0 face-local clocks: existing recipe3 input state and existing response state, no new edges. Physical grant/native proof required.',views_to='physical/ref_tile/vm_native_q0_faces/views',record_to='results/rtl/ref_tile/vm_native_q0_faces')
 s['job']['benches']=[{'name':'exact_real_memory','cmd':'bash rtl/hbm_accel/generic/vm/static/faces_q0/run.sh {RUN}/bench/q0_faces','expect':'pass','threads':1,'peak_ram_gb':4,'pass_regex':'Q0_FACE_CLOCKS BENCH PASS'}]
 s.pop('contract',None) # No grant exists; attach actual H-DIE contract only after review.

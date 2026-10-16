@@ -4755,6 +4755,7 @@ place_pin -pin_name {clk_in_hi} -layer M4 -location {0.000 291.612} -pin_size {0
 place_pin -pin_name {clk_out_lo} -layer M4 -location {142.560 97.212} -pin_size {0.084 0.024} -force_to_die_boundary
 place_pin -pin_name {clk_out_hi} -layer M4 -location {142.560 291.612} -pin_size {0.084 0.024} -force_to_die_boundary
 place_pin -pin_name {clk_cal} -layer M4 -location {0.000 300.012} -pin_size {0.084 0.024} -force_to_die_boundary
+global fp_b fp_u fp_bad fp_checked
 set fp_b [ord::get_db_block]
 set fp_u [$fp_b getDbUnitsPerMicron]
 set fp_bad 0

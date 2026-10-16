@@ -59,7 +59,7 @@ for label,face,ports,a,b in windows:
  metrics.append({'window':label,'data_bits':len(bits),'span_um':[a,b],'reserved_clock_centres_um':notches,'usable_face_um':round(usable,6),'allocation_um_per_bit':.096,'cut':cut,'minimum_physical_pin_pitch_um':round(min(y-x for x,y in zip(chosen,chosen[1:])),6)})
 for p,(face,pos) in clocks.items():emit(p,face,pos,True)
 # Verify the actual DB after literal placement, including the actual layer grid.
-lines += ['set fp_b [ord::get_db_block]', 'set fp_u [$fp_b getDbUnitsPerMicron]', 'set fp_bad 0', 'set fp_checked 0', '''
+lines += ['global fp_b fp_u fp_bad fp_checked', 'set fp_b [ord::get_db_block]', 'set fp_u [$fp_b getDbUnitsPerMicron]', 'set fp_bad 0', 'set fp_checked 0', '''
 proc writer_pin_check {name layer axis pos rect} {
  global fp_b fp_u fp_bad fp_checked
  set t [$fp_b findBTerm $name]
