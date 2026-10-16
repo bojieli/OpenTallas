@@ -10,6 +10,7 @@ import argparse
 import hashlib
 import json
 import os
+import re
 from pathlib import Path
 import subprocess
 
@@ -41,7 +42,25 @@ def main():
     for source, expected in h['source_sha256'].items():
         if hashlib.sha256((ROOT/source).read_bytes()).hexdigest() != expected:
             raise ValueError('Stale hierarchy source: ' + source)
-    physical_sources = [Path(str(f).replace('/ot_sram_1r1w_128x256_m1_r2c2.v', '/ot_sram_1r1w_128x256_m1_r2c2_bb.v').replace('/ot_rom_4096x72_m8.v', '/ot_rom_4096x72_m8_bb.v')) for f in sources]
+    physical_sources=[];transforms=[]
+    normalized=a.out/'physical_sources';normalized.mkdir(exist_ok=True)
+    for source in sources:
+        text=source.read_text();original=text
+        memory=source.name in ('ot_sram_1r1w_128x256_m1_r2c2.v','ot_rom_4096x72_m8.v')
+        if memory:
+            # A physical blackbox retains the functional header's exact image
+            # parameters, names and ports. Candidate simulation binds the real
+            # mapped macro model, never this empty physical elaboration header.
+            begin=text.index('module '+source.stem)
+            end=text.index(');',begin)+2
+            text='(* blackbox *)\n'+text[begin:end]+'\nendmodule\n'
+        text,n=re.subn(r'\bparameter\s+string\s+', 'parameter ',text)
+        if text!=original:
+            dest=normalized/(str(len(physical_sources))+'_'+source.name)
+            dest.write_text(text);physical_sources.append(dest.resolve())
+            transforms.append(dict(source=str(source.relative_to(ROOT)),physical=str(dest),memory_header_only=memory,string_parameter_types_removed=n,original_sha256=hashlib.sha256(original.encode()).hexdigest(),physical_sha256=hashlib.sha256(text.encode()).hexdigest()))
+        else:physical_sources.append(source)
+
     defs = ' '.join('-D' + d for d in h['defines'])
     read = 'read_verilog -sv -defer -DSYNTHESIS ' + defs + ' ' + ' '.join(map(str,physical_sources)) + ';\n'
     seed = read + 'hierarchy -check -top dsfd_sp_pq_produced;\nwrite_json ' + str((a.out/'hierarchy.json').resolve()) + ';\n'
@@ -96,7 +115,7 @@ def main():
                  extraction_tool_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
                  yosys_version=subprocess.check_output([a.yosys,'-V'],text=True).strip(),
                  hierarchy_sha256=hashlib.sha256(a.hierarchy.read_bytes()).hexdigest(),
-                 source_sha256=h['source_sha256'],defines=h['defines'],blackbox_datapath_modules=blackboxes,
+                 physical_elaboration_transforms=transforms,source_sha256=h['source_sha256'],defines=h['defines'],blackbox_datapath_modules=blackboxes,
                  moved_control_cells=len(controls),moved_lane_cells=len(lanes),retained_hard_leaf_instances=len(retained),
                  candidate_sha256=hashlib.sha256((a.out/'candidate.v').read_bytes()).hexdigest(),
                  native_qualified=False,physical_adopted=False)
